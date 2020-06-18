@@ -14,7 +14,7 @@
 ### PistonParameter 
 Class representing a piston parameter.
 
-**Kind**: global class  
+
 **Extends**: <code>StructParameter</code>  
 
 * [PistonParameter ⇐ <code>StructParameter</code>](#PistonParameter)
@@ -45,21 +45,21 @@ Create a piston parameter.
 ### getRodOutput
 The getRodOutput method.
 
-**Kind**: instance method of [<code>PistonParameter</code>](#PistonParameter)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="PistonParameter+getCapOutput"></a>
 
 ### getCapOutput
 The getCapOutput method.
 
-**Kind**: instance method of [<code>PistonParameter</code>](#PistonParameter)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="PistonParameter+setCrankXfo"></a>
 
 ### setCrankXfo
 The setCrankXfo method.
 
-**Kind**: instance method of [<code>PistonParameter</code>](#PistonParameter)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -70,13 +70,13 @@ The setCrankXfo method.
 ### init
 The init method.
 
-**Kind**: instance method of [<code>PistonParameter</code>](#PistonParameter)  
+
 <a name="PistonParameter+evaluate"></a>
 
 ### evaluate
 The evaluate method.
 
-**Kind**: instance method of [<code>PistonParameter</code>](#PistonParameter)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -89,7 +89,7 @@ The evaluate method.
 ### setOwner
 The setOwner method.
 
-**Kind**: instance method of [<code>PistonParameter</code>](#PistonParameter)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -100,14 +100,14 @@ The setOwner method.
 ### getOwner
 The getOwner method.
 
-**Kind**: instance method of [<code>PistonParameter</code>](#PistonParameter)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="PistonParameter+toJSON"></a>
 
 ### toJSON
 The toJSON method encodes this type as a json object for persistences.
 
-**Kind**: instance method of [<code>PistonParameter</code>](#PistonParameter)  
+
 **Returns**: <code>object</code> - - Returns the json object.  
 
 | Param | Type | Description |
@@ -120,7 +120,7 @@ The toJSON method encodes this type as a json object for persistences.
 ### fromJSON
 The fromJSON method decodes a json object for this type.
 
-**Kind**: instance method of [<code>PistonParameter</code>](#PistonParameter)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -134,7 +134,7 @@ The fromJSON method decodes a json object for this type.
 The clone method constructs a new pistom parameter, copies its values
 from this parameter and returns it.
 
-**Kind**: instance method of [<code>PistonParameter</code>](#PistonParameter)  
+
 **Returns**: [<code>PistonParameter</code>](#PistonParameter) - - Returns a new cloned piston parameter.  
 
 | Param | Type | Description |
@@ -146,7 +146,7 @@ from this parameter and returns it.
 ### PistonOperator 
 Class representing a piston operator.
 
-**Kind**: global class  
+
 **Extends**: <code>Operator</code>  
 
 * [PistonOperator ⇐ <code>Operator</code>](#PistonOperator)
@@ -174,7 +174,7 @@ Create a piston operator.
 ### setOwner
 The setOwner method.
 
-**Kind**: instance method of [<code>PistonOperator</code>](#PistonOperator)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -185,26 +185,26 @@ The setOwner method.
 ### getCrankOutput
 The getCrankOutput method.
 
-**Kind**: instance method of [<code>PistonOperator</code>](#PistonOperator)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="PistonOperator+init"></a>
 
 ### init
 The init method.
 
-**Kind**: instance method of [<code>PistonOperator</code>](#PistonOperator)  
+
 <a name="PistonOperator+evaluate"></a>
 
 ### evaluate
 The evaluate method.
 
-**Kind**: instance method of [<code>PistonOperator</code>](#PistonOperator)  
+
 <a name="PistonOperator+toJSON"></a>
 
 ### toJSON
 The toJSON method encodes this type as a json object for persistences.
 
-**Kind**: instance method of [<code>PistonOperator</code>](#PistonOperator)  
+
 **Returns**: <code>object</code> - - Returns the json object.  
 
 | Param | Type | Description |
@@ -217,7 +217,7 @@ The toJSON method encodes this type as a json object for persistences.
 ### fromJSON
 The fromJSON method decodes a json object for this type.
 
-**Kind**: instance method of [<code>PistonOperator</code>](#PistonOperator)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -231,4 +231,4 @@ The fromJSON method decodes a json object for this type.
 The destroy is called by the system to cause explicit resources cleanup.
 Users should never need to call this method directly.
 
-**Kind**: instance method of [<code>PistonOperator</code>](#PistonOperator)  
+

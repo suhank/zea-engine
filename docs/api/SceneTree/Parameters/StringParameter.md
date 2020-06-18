@@ -3,7 +3,7 @@
 ### StringParameter 
 Class representing a string parameter.
 
-**Kind**: global class  
+
 **Extends**: <code>Parameter</code>  
 
 * [StringParameter ⇐ <code>Parameter</code>](#StringParameter)
@@ -29,7 +29,7 @@ Create a string parameter.
 ### setMultiLine
 The setMultiLine method.
 
-**Kind**: instance method of [<code>StringParameter</code>](#StringParameter)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -40,14 +40,14 @@ The setMultiLine method.
 ### getMultiLine
 The getMultiLine method.
 
-**Kind**: instance method of [<code>StringParameter</code>](#StringParameter)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="StringParameter+readBinary"></a>
 
 ### readBinary
 The readBinary method.
 
-**Kind**: instance method of [<code>StringParameter</code>](#StringParameter)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -60,7 +60,7 @@ The readBinary method.
 The clone method constructs a new string parameter, copies its values
 from this parameter and returns it.
 
-**Kind**: instance method of [<code>StringParameter</code>](#StringParameter)  
+
 **Returns**: [<code>StringParameter</code>](#StringParameter) - - Returns a new string parameter.  
 
 | Param | Type | Description |

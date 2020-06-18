@@ -3,7 +3,7 @@
 ### Color 
 Class representing a color.
 
-**Kind**: global class  
+
 **Extends**: <code>AttrValue</code>  
 
 * [Color ⇐ <code>AttrValue</code>](#Color)
@@ -66,14 +66,14 @@ Creates a `Color` object with an RGBA structure.
 ### r 
 Getter for red channel.
 
-**Kind**: instance property of [<code>Color</code>](#Color)  
+
 **Returns**: <code>number</code> - - Returns the red channel.  
 <a name="Color+r"></a>
 
 ### r
 Setter for red channel.
 
-**Kind**: instance property of [<code>Color</code>](#Color)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -84,14 +84,14 @@ Setter for red channel.
 ### g 
 Getter for green channel.
 
-**Kind**: instance property of [<code>Color</code>](#Color)  
+
 **Returns**: <code>number</code> - - Returns the green channel.  
 <a name="Color+g"></a>
 
 ### g
 Setter for green channel.
 
-**Kind**: instance property of [<code>Color</code>](#Color)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -102,14 +102,14 @@ Setter for green channel.
 ### b 
 Getter for blue channel.
 
-**Kind**: instance property of [<code>Color</code>](#Color)  
+
 **Returns**: <code>number</code> - - Returns the blue channel.  
 <a name="Color+b"></a>
 
 ### b
 Setter for blue channel.
 
-**Kind**: instance property of [<code>Color</code>](#Color)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -120,14 +120,14 @@ Setter for blue channel.
 ### a 
 Getter for alpha channel.
 
-**Kind**: instance property of [<code>Color</code>](#Color)  
+
 **Returns**: <code>number</code> - - Returns the alpha channel.  
 <a name="Color+a"></a>
 
 ### a
 Setter for alpha value.
 
-**Kind**: instance property of [<code>Color</code>](#Color)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -138,7 +138,7 @@ Setter for alpha value.
 ### set
 Setter from scalar components.
 
-**Kind**: instance method of [<code>Color</code>](#Color)  
+
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -152,7 +152,7 @@ Setter from scalar components.
 ### setFromOther
 Sets current color state with another `Color` object.
 
-**Kind**: instance method of [<code>Color</code>](#Color)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -163,7 +163,7 @@ Sets current color state with another `Color` object.
 ### setFromScalarArray
 Setter from a scalar array.
 
-**Kind**: instance method of [<code>Color</code>](#Color)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -174,21 +174,21 @@ Setter from a scalar array.
 ### getAsRGBArray
 Getter from an RGB array.
 
-**Kind**: instance method of [<code>Color</code>](#Color)  
+
 **Returns**: <code>array</code> - - The return value.  
 <a name="Color+getAsRGBDict"></a>
 
 ### getAsRGBDict
 Getter from an RGB dict.
 
-**Kind**: instance method of [<code>Color</code>](#Color)  
+
 **Returns**: <code>object</code> - - The return value.  
 <a name="Color+setFromRGB"></a>
 
 ### setFromRGB
 Setter from a RGB value.
 
-**Kind**: instance method of [<code>Color</code>](#Color)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -202,7 +202,7 @@ Setter from a RGB value.
 ### setFromRGBArray
 Setter from an RGB array.
 
-**Kind**: instance method of [<code>Color</code>](#Color)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -213,7 +213,7 @@ Setter from an RGB array.
 ### setFromRGBDict
 Setter from an RGB dict.
 
-**Kind**: instance method of [<code>Color</code>](#Color)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -225,7 +225,7 @@ Setter from an RGB dict.
 Setter from a hexadecimal value.
 E.g. #ff0000
 
-**Kind**: instance method of [<code>Color</code>](#Color)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -237,7 +237,7 @@ E.g. #ff0000
 Setter from a CSS color name.
 E.g. "red"
 
-**Kind**: instance method of [<code>Color</code>](#Color)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -248,14 +248,14 @@ E.g. "red"
 ### toHex
 Returns the hexadecimal value of this color.
 
-**Kind**: instance method of [<code>Color</code>](#Color)  
+
 **Returns**: <code>string</code> - - Returns the hex value.  
 <a name="Color+equal"></a>
 
 ### equal
 Returns true if this color is exactly the same as other.
 
-**Kind**: instance method of [<code>Color</code>](#Color)  
+
 **Returns**: <code>boolean</code> - - Returns true or false.  
 
 | Param | Type | Description |
@@ -267,7 +267,7 @@ Returns true if this color is exactly the same as other.
 ### notequals
 Returns true if this color is NOT exactly the same as other.
 
-**Kind**: instance method of [<code>Color</code>](#Color)  
+
 **Returns**: <code>boolean</code> - - Returns true or false.  
 
 | Param | Type | Description |
@@ -279,7 +279,7 @@ Returns true if this color is NOT exactly the same as other.
 ### approxEqual
 Returns true if this color is approximately the same as other.
 
-**Kind**: instance method of [<code>Color</code>](#Color)  
+
 **Returns**: <code>boolean</code> - - Returns true or false.  
 
 | Param | Type | Description |
@@ -292,7 +292,7 @@ Returns true if this color is approximately the same as other.
 ### add
 Returns a new Color which is this Color added to other.
 
-**Kind**: instance method of [<code>Color</code>](#Color)  
+
 **Returns**: [<code>Color</code>](#Color) - - Returns a new color.  
 
 | Param | Type | Description |
@@ -304,7 +304,7 @@ Returns a new Color which is this Color added to other.
 ### subtract
 Returns a new color which is this color subtracted from other.
 
-**Kind**: instance method of [<code>Color</code>](#Color)  
+
 **Returns**: [<code>Color</code>](#Color) - - Returns a new color.  
 
 | Param | Type | Description |
@@ -316,7 +316,7 @@ Returns a new color which is this color subtracted from other.
 ### scale
 Scales this color by scalar and return the result as a new Vec4.
 
-**Kind**: instance method of [<code>Color</code>](#Color)  
+
 **Returns**: [<code>Color</code>](#Color) - - Returns a new color.  
 
 | Param | Type | Description |
@@ -328,7 +328,7 @@ Scales this color by scalar and return the result as a new Vec4.
 ### scaleInPlace
 Scales this color by scalar.
 
-**Kind**: instance method of [<code>Color</code>](#Color)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -339,7 +339,7 @@ Scales this color by scalar.
 ### applyGamma
 Apply gamma correction to this color
 
-**Kind**: instance method of [<code>Color</code>](#Color)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -350,7 +350,7 @@ Apply gamma correction to this color
 ### toLinear
 Converts to linear color space and returns a new color
 
-**Kind**: instance method of [<code>Color</code>](#Color)  
+
 **Returns**: [<code>Color</code>](#Color) - - Returns a new color.  
 
 | Param | Type | Default | Description |
@@ -362,7 +362,7 @@ Converts to linear color space and returns a new color
 ### toGamma
 Converts to gamma color space and returns a new color.
 
-**Kind**: instance method of [<code>Color</code>](#Color)  
+
 **Returns**: [<code>Color</code>](#Color) - - Returns a new color.  
 
 | Param | Type | Default | Description |
@@ -374,14 +374,14 @@ Converts to gamma color space and returns a new color.
 ### luminance
 Calculates and returns the relative luminance of the linear RGB component.
 
-**Kind**: instance method of [<code>Color</code>](#Color)  
+
 **Returns**: <code>number</code> - - The return value.  
 <a name="Color+lerp"></a>
 
 ### lerp
 Performs a linear interpolation between this color and other.
 
-**Kind**: instance method of [<code>Color</code>](#Color)  
+
 **Returns**: [<code>Color</code>](#Color) - - Returns a new color.  
 
 | Param | Type | Description |
@@ -394,28 +394,28 @@ Performs a linear interpolation between this color and other.
 ### clone
 Clones this color and returns a new color.
 
-**Kind**: instance method of [<code>Color</code>](#Color)  
+
 **Returns**: [<code>Color</code>](#Color) - - Returns a new color.  
 <a name="Color+asArray"></a>
 
 ### asArray
 Returns the type as an array. Often used to pass types to the GPU.
 
-**Kind**: instance method of [<code>Color</code>](#Color)  
+
 **Returns**: <code>array</code> - - Returns as an array.  
 <a name="Color+toJSON"></a>
 
 ### toJSON
 The toJSON method encodes this type as a json object for persistences.
 
-**Kind**: instance method of [<code>Color</code>](#Color)  
+
 **Returns**: <code>object</code> - - The json object.  
 <a name="Color+fromJSON"></a>
 
 ### fromJSON
 The fromJSON method decodes a json object for this type.
 
-**Kind**: instance method of [<code>Color</code>](#Color)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -426,14 +426,14 @@ The fromJSON method decodes a json object for this type.
 ### toCSSString
 Returns the CSS rgba string.
 
-**Kind**: instance method of [<code>Color</code>](#Color)  
+
 **Returns**: <code>string</code> - - The return value.  
 <a name="Color.random"></a>
 
 ### random
 Creates a random color.
 
-**Kind**: static method of [<code>Color</code>](#Color)  
+
 **Returns**: [<code>Color</code>](#Color) - - Returns a new random color.  
 
 | Param | Type | Default | Description |

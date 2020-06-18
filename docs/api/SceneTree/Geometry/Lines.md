@@ -3,7 +3,7 @@
 ### Lines 
 Class representing lines.
 
-**Kind**: global class  
+
 **Extends**: <code>BaseGeom</code>  
 
 * [Lines ⇐ <code>BaseGeom</code>](#Lines)
@@ -31,21 +31,21 @@ Create lines.
 ### getIndices
 The getIndices method.
 
-**Kind**: instance method of [<code>Lines</code>](#Lines)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="Lines+getNumSegments"></a>
 
 ### getNumSegments
 Getter for the number of segments.
 
-**Kind**: instance method of [<code>Lines</code>](#Lines)  
+
 **Returns**: <code>number</code> - - Returns the number of segments.  
 <a name="Lines+setNumSegments"></a>
 
 ### setNumSegments
 Getter for the number of segments.
 
-**Kind**: instance method of [<code>Lines</code>](#Lines)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -56,7 +56,7 @@ Getter for the number of segments.
 ### setSegment
 The setSegment method.
 
-**Kind**: instance method of [<code>Lines</code>](#Lines)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -69,7 +69,7 @@ The setSegment method.
 ### getSegmentVertexIndex
 The getSegmentVertexIndex method.
 
-**Kind**: instance method of [<code>Lines</code>](#Lines)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -82,7 +82,7 @@ The getSegmentVertexIndex method.
 ### addSegmentAttribute
 The addSegmentAttribute method.
 
-**Kind**: instance method of [<code>Lines</code>](#Lines)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -96,7 +96,7 @@ The addSegmentAttribute method.
 ### hasSegmentAttribute
 The hasSegmentAttribute method.
 
-**Kind**: instance method of [<code>Lines</code>](#Lines)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -108,7 +108,7 @@ The hasSegmentAttribute method.
 ### getSegmentAttribute
 The getSegmentAttribute method.
 
-**Kind**: instance method of [<code>Lines</code>](#Lines)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -120,14 +120,14 @@ The getSegmentAttribute method.
 ### genBuffers
 The genBuffers method.
 
-**Kind**: instance method of [<code>Lines</code>](#Lines)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="Lines+readBinary"></a>
 
 ### readBinary
 The readBinary method.
 
-**Kind**: instance method of [<code>Lines</code>](#Lines)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -139,7 +139,7 @@ The readBinary method.
 ### toJSON
 The toJSON method encodes this type as a json object for persistences.
 
-**Kind**: instance method of [<code>Lines</code>](#Lines)  
+
 **Returns**: <code>object</code> - - Returns the json object.  
 
 | Param | Type | Description |
@@ -152,7 +152,7 @@ The toJSON method encodes this type as a json object for persistences.
 ### fromJSON
 The fromJSON method decodes a json object for this type.
 
-**Kind**: instance method of [<code>Lines</code>](#Lines)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |

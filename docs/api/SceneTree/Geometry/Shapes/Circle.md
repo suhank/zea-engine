@@ -3,7 +3,7 @@
 ### Circle 
 A class for generating a circle shape.
 
-**Kind**: global class  
+
 **Extends**: <code>Lines</code>  
 <a name="new_Circle_new"></a>
 

@@ -3,7 +3,7 @@
 ### XfoParameter 
 Class representing a Xfo transform parameter.
 
-**Kind**: global class  
+
 **Extends**: <code>Parameter</code>  
 
 * [XfoParameter ⇐ <code>Parameter</code>](#XfoParameter)
@@ -27,7 +27,7 @@ Create a Xfo parameter.
 The clone method constructs a new Xfo parameter, copies its values
 from this parameter and returns it.
 
-**Kind**: instance method of [<code>XfoParameter</code>](#XfoParameter)  
+
 **Returns**: [<code>XfoParameter</code>](#XfoParameter) - - Returns a new Xfo parameter.  
 
 | Param | Type | Description |

@@ -3,7 +3,7 @@
 ### ObjAsset 
 Class representing an object asset.
 
-**Kind**: global class  
+
 **Extends**: <code>AssetItem</code>  
 
 * [ObjAsset ⇐ <code>AssetItem</code>](#ObjAsset)
@@ -26,12 +26,12 @@ Create an obj asset.
 ### getGeometryLibrary
 The getGeometryLibrary method.
 
-**Kind**: instance method of [<code>ObjAsset</code>](#ObjAsset)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="ObjAsset+getMaterialLibrary"></a>
 
 ### getMaterialLibrary
 The getMaterialLibrary method.
 
-**Kind**: instance method of [<code>ObjAsset</code>](#ObjAsset)  
+
 **Returns**: <code>any</code> - - The return value.  

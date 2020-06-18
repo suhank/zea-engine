@@ -3,7 +3,7 @@
 ### StructParameter 
 Class representing a struct parameter.
 
-**Kind**: global class  
+
 **Extends**: <code>Parameter</code>  
 
 * [StructParameter ⇐ <code>Parameter</code>](#StructParameter)
@@ -30,7 +30,7 @@ Create a struct parameter.
 ### getParameter
 The getParameter method.
 
-**Kind**: instance method of [<code>StructParameter</code>](#StructParameter)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -42,7 +42,7 @@ The getParameter method.
 ### getMember
 The getMember method.
 
-**Kind**: instance method of [<code>StructParameter</code>](#StructParameter)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -54,14 +54,14 @@ The getMember method.
 ### getMemberNames
 The getMemberNames method.
 
-**Kind**: instance method of [<code>StructParameter</code>](#StructParameter)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="StructParameter+toJSON"></a>
 
 ### toJSON
 The toJSON method encodes this type as a json object for persistences.
 
-**Kind**: instance method of [<code>StructParameter</code>](#StructParameter)  
+
 **Returns**: <code>object</code> - - Returns the json object.  
 
 | Param | Type | Description |
@@ -74,7 +74,7 @@ The toJSON method encodes this type as a json object for persistences.
 ### fromJSON
 The fromJSON method decodes a json object for this type.
 
-**Kind**: instance method of [<code>StructParameter</code>](#StructParameter)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -88,4 +88,4 @@ The fromJSON method decodes a json object for this type.
 The destroy is called by the system to cause explicit resources cleanup.
 Users should never need to call this method directly.
 
-**Kind**: instance method of [<code>StructParameter</code>](#StructParameter)  
+

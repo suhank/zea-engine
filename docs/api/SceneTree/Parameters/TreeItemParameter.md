@@ -3,7 +3,7 @@
 ### TreeItemParameter 
 Class representing a tree item parameter.
 
-**Kind**: global class  
+
 **Extends**: <code>Parameter</code>  
 
 * [TreeItemParameter ⇐ <code>Parameter</code>](#TreeItemParameter)
@@ -34,7 +34,7 @@ Create a tree item parameter.
 ### setOwner
 The setOwner method.
 
-**Kind**: instance method of [<code>TreeItemParameter</code>](#TreeItemParameter)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -45,14 +45,14 @@ The setOwner method.
 ### getOwner
 The getOwner method.
 
-**Kind**: instance method of [<code>TreeItemParameter</code>](#TreeItemParameter)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="TreeItemParameter+setFilterFn"></a>
 
 ### setFilterFn
 The setFilterFn method.
 
-**Kind**: instance method of [<code>TreeItemParameter</code>](#TreeItemParameter)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -63,14 +63,14 @@ The setFilterFn method.
 ### getFilterFn
 The getFilterFn method.
 
-**Kind**: instance method of [<code>TreeItemParameter</code>](#TreeItemParameter)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="TreeItemParameter+setValue"></a>
 
 ### setValue
 The setValue method.
 
-**Kind**: instance method of [<code>TreeItemParameter</code>](#TreeItemParameter)  
+
 **Returns**: <code>boolean</code> - - The return value.  
 
 | Param | Type | Description |
@@ -83,7 +83,7 @@ The setValue method.
 ### toJSON
 The toJSON method encodes this type as a json object for persistences.
 
-**Kind**: instance method of [<code>TreeItemParameter</code>](#TreeItemParameter)  
+
 **Returns**: <code>object</code> - - Returns the json object.  
 
 | Param | Type | Description |
@@ -96,7 +96,7 @@ The toJSON method encodes this type as a json object for persistences.
 ### fromJSON
 The fromJSON method decodes a json object for this type.
 
-**Kind**: instance method of [<code>TreeItemParameter</code>](#TreeItemParameter)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -110,7 +110,7 @@ The fromJSON method decodes a json object for this type.
 The clone method constructs a new tree item parameter, copies its values
 from this parameter and returns it.
 
-**Kind**: instance method of [<code>TreeItemParameter</code>](#TreeItemParameter)  
+
 **Returns**: [<code>TreeItemParameter</code>](#TreeItemParameter) - - Returns a new tree item parameter.  
 
 | Param | Type | Description |
@@ -123,4 +123,4 @@ from this parameter and returns it.
 The destroy is called by the system to cause explicit resources cleanup.
 Users should never need to call this method directly.
 
-**Kind**: instance method of [<code>TreeItemParameter</code>](#TreeItemParameter)  
+

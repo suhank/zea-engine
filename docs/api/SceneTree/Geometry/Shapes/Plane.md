@@ -3,7 +3,7 @@
 ### Plane 
 A class for generating a plane geometry.
 
-**Kind**: global class  
+
 **Extends**: <code>Mesh</code>  
 <a name="new_Plane_new"></a>
 

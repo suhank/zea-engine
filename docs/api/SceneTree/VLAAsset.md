@@ -3,7 +3,7 @@
 ### VLAAsset 
 Class representing a VLA asset.
 
-**Kind**: global class  
+
 **Extends**: <code>AssetItem</code>  
 
 * [VLAAsset ⇐ <code>AssetItem</code>](#VLAAsset)
@@ -27,7 +27,7 @@ Create a VLA asset.
 ### readBinary
 The readBinary method.
 
-**Kind**: instance method of [<code>VLAAsset</code>](#VLAAsset)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -40,7 +40,7 @@ The readBinary method.
 ### loadDataFile
 The loadDataFile method.
 
-**Kind**: instance method of [<code>VLAAsset</code>](#VLAAsset)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -52,7 +52,7 @@ The loadDataFile method.
 ### fromJSON
 The fromJSON method decodes a json object for this type.
 
-**Kind**: instance method of [<code>VLAAsset</code>](#VLAAsset)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |

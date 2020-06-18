@@ -1,3 +1,5 @@
+/* eslint-disable guard-for-in */
+/* eslint-disable valid-jsdoc */
 import { EventEmitter } from '../Utilities/EventEmitter'
 import { sgFactory } from './SGFactory.js'
 
@@ -6,14 +8,16 @@ import { sgFactory } from './SGFactory.js'
 // 'addPArameter' without the parameter instance.
 import { ParamFlags, ValueSetMode } from './Parameters/Parameter.js'
 
-
 let counter = 0
 
-/** Class representing a parameter owner in the scene tree.
+/**
+ * Class representing a parameter owner in the scene tree.
+ *
+ * @extends {EventEmitter}
  */
 class ParameterOwner extends EventEmitter {
   /**
-   * Create a parameter owner.
+   * Creates an instance of ParameterOwner.
    */
   constructor() {
     super()
@@ -23,11 +27,12 @@ class ParameterOwner extends EventEmitter {
     this.__paramMapping = {}
     this.__paramSignalIds = {}
   }
-  
+
   /**
    * Returns the unique id of the object. Every Object has a unique
    * identifier which is based on a counter that is incremented.
-   * @return {any} - The return value.
+   *
+   * @return {number} - The Id of the ParameterOwner object.
    */
   getId() {
     return this.__id
@@ -112,9 +117,8 @@ class ParameterOwner extends EventEmitter {
       console.warn('Replacing Parameter:' + name)
       this.removeParameter(name)
     }
-    this.__paramSignalIds[name] = param.addListener(
-      'valueChanged',
-      event => this.__parameterValueChanged({ ...event, param })
+    this.__paramSignalIds[name] = param.addListener('valueChanged', (event) =>
+      this.__parameterValueChanged({ ...event, param })
     )
     this.__params.push(param)
     this.__paramMapping[name] = this.__params.length - 1
@@ -135,9 +139,8 @@ class ParameterOwner extends EventEmitter {
       console.warn('Replacing Parameter:' + name)
       this.removeParameter(name)
     }
-    this.__paramSignalIds[name] = param.addListener(
-      'valueChanged',
-      event => this.__parameterValueChanged({ ...event, param })
+    this.__paramSignalIds[name] = param.addListener('valueChanged', (event) =>
+      this.__parameterValueChanged({ ...event, param })
     )
     this.__params.splice(index, 0, param)
 
@@ -161,10 +164,7 @@ class ParameterOwner extends EventEmitter {
     const index = this.__paramMapping[paramName]
     const param = this.__params[this.__paramMapping[paramName]]
 
-    param.removeListenerById(
-      'valueChanged',
-      this.__paramSignalIds[paramName]
-    )
+    param.removeListenerById('valueChanged', this.__paramSignalIds[paramName])
     this.__params.splice(index, 1)
     const paramMapping = {}
     for (let i = 0; i < this.__params.length; i++) {
@@ -183,14 +183,10 @@ class ParameterOwner extends EventEmitter {
     const name = param.getName()
     const index = this.__paramMapping[name]
     const prevparam = this.__params[this.__paramMapping[name]]
-    prevparam.removeListenerById(
-      'valueChanged',
-      this.__paramSignalIds[name]
-    )
+    prevparam.removeListenerById('valueChanged', this.__paramSignalIds[name])
 
-    this.__paramSignalIds[name] = param.addListener(
-      'valueChanged',
-      event => this.__parameterValueChanged({ ...event, param })
+    this.__paramSignalIds[name] = param.addListener('valueChanged', (event) =>
+      this.__parameterValueChanged({ ...event, param })
     )
     this.__params[index] = param
     return param
@@ -235,10 +231,10 @@ class ParameterOwner extends EventEmitter {
           if (pj.paramPath) {
             context.resolvePath(
               pj.paramPath,
-              param => {
+              (param) => {
                 this.replaceParameter(param)
               },
-              reason => {
+              (reason) => {
                 console.warn(
                   'Unable to resolve shared parameter:' + pj.paramPath
                 )

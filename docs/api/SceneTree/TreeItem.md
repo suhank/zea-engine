@@ -3,7 +3,7 @@
 ### TreeItem 
 Class representing a tree item in the scene tree.
 
-**Kind**: global class  
+
 **Extends**: <code>BaseItem</code>  
 
 * [TreeItem ⇐ <code>BaseItem</code>](#TreeItem)
@@ -79,13 +79,13 @@ Create a tree item.
 ### boundingBox
 Getter for a bounding box.
 
-**Kind**: instance property of [<code>TreeItem</code>](#TreeItem)  
+
 <a name="TreeItem+setFlag"></a>
 
 ### setFlag
 The setFlag method.
 
-**Kind**: instance method of [<code>TreeItem</code>](#TreeItem)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -96,7 +96,7 @@ The setFlag method.
 ### setOwner
 Sets the owner of the tree item.
 
-**Kind**: instance method of [<code>TreeItem</code>](#TreeItem)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -107,14 +107,14 @@ Sets the owner of the tree item.
 ### getParentItem
 Returns the parent of the tree item.
 
-**Kind**: instance method of [<code>TreeItem</code>](#TreeItem)  
+
 **Returns**: <code>any</code> - - Returns the parent item.  
 <a name="TreeItem+setParentItem"></a>
 
 ### setParentItem
 Sets the parent of the tree item.
 
-**Kind**: instance method of [<code>TreeItem</code>](#TreeItem)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -125,14 +125,14 @@ Sets the parent of the tree item.
 ### getLocalXfo
 Returns the local Xfo transform.
 
-**Kind**: instance method of [<code>TreeItem</code>](#TreeItem)  
+
 **Returns**: <code>Xfo</code> - - Returns the local Xfo.  
 <a name="TreeItem+setLocalXfo"></a>
 
 ### setLocalXfo
 Sets the local Xfo transform.
 
-**Kind**: instance method of [<code>TreeItem</code>](#TreeItem)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -144,7 +144,7 @@ Sets the local Xfo transform.
 ### getGlobalXfo
 Returns the global Xfo transform.
 
-**Kind**: instance method of [<code>TreeItem</code>](#TreeItem)  
+
 **Returns**: <code>Xfo</code> - - Returns the global Xfo.  
 
 | Param | Type | Description |
@@ -156,7 +156,7 @@ Returns the global Xfo transform.
 ### setGlobalXfo
 Sets the global Xfo transform.
 
-**Kind**: instance method of [<code>TreeItem</code>](#TreeItem)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -168,14 +168,14 @@ Sets the global Xfo transform.
 ### getVisible
 The getVisible method.
 
-**Kind**: instance method of [<code>TreeItem</code>](#TreeItem)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="TreeItem+setVisible"></a>
 
 ### setVisible
 The setVisible method.
 
-**Kind**: instance method of [<code>TreeItem</code>](#TreeItem)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -186,7 +186,7 @@ The setVisible method.
 ### propagateVisiblity
 The propagateVisiblity method.
 
-**Kind**: instance method of [<code>TreeItem</code>](#TreeItem)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -197,7 +197,7 @@ The propagateVisiblity method.
 ### addHighlight
 Add a hightlight to the tree item.
 
-**Kind**: instance method of [<code>TreeItem</code>](#TreeItem)  
+
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -210,7 +210,7 @@ Add a hightlight to the tree item.
 ### removeHighlight
 Remove a hightlight to the tree item.
 
-**Kind**: instance method of [<code>TreeItem</code>](#TreeItem)  
+
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -222,28 +222,28 @@ Remove a hightlight to the tree item.
 ### getHighlight
 Returns the color of the current hilghlight.
 
-**Kind**: instance method of [<code>TreeItem</code>](#TreeItem)  
+
 **Returns**: <code>Color</code> - - The color value.  
 <a name="TreeItem+isHighlighted"></a>
 
 ### isHighlighted
 Returns true if this items has a hilghlight color assigned.
 
-**Kind**: instance method of [<code>TreeItem</code>](#TreeItem)  
+
 **Returns**: <code>boolean</code> - - True if this item is hilghlighted.  
 <a name="TreeItem+getBoundingBox"></a>
 
 ### getBoundingBox
 The getBoundingBox method.
 
-**Kind**: instance method of [<code>TreeItem</code>](#TreeItem)  
+
 **Returns**: <code>Box3</code> - - The return value.  
 <a name="TreeItem+getChildren"></a>
 
 ### getChildren
 The getChildren method.
 
-**Kind**: instance method of [<code>TreeItem</code>](#TreeItem)  
+
 **Returns**: [<code>TreeItem</code>](#TreeItem) - - The return value.  
 <a name="TreeItem+numChildren"></a>
 
@@ -252,21 +252,21 @@ The getChildren method.
 
 The numChildren method.
 
-**Kind**: instance method of [<code>TreeItem</code>](#TreeItem)  
+
 **Returns**: <code>number</code> - - The return value.  
 <a name="TreeItem+getNumChildren"></a>
 
 ### getNumChildren
 The getNumChildren method.
 
-**Kind**: instance method of [<code>TreeItem</code>](#TreeItem)  
+
 **Returns**: <code>number</code> - - The return value.  
 <a name="TreeItem+generateUniqueName"></a>
 
 ### generateUniqueName
 Generate a unique name.
 
-**Kind**: instance method of [<code>TreeItem</code>](#TreeItem)  
+
 **Returns**: <code>string</code> - - Returns a unique name.  
 
 | Param | Type | Description |
@@ -278,7 +278,7 @@ Generate a unique name.
 ### insertChild
 Insert a child TreeItem.
 
-**Kind**: instance method of [<code>TreeItem</code>](#TreeItem)  
+
 **Returns**: <code>number</code> - - The index of the child item in this items children array.  
 
 | Param | Type | Default | Description |
@@ -293,7 +293,7 @@ Insert a child TreeItem.
 ### addChild
 Add a child TreeItem..
 
-**Kind**: instance method of [<code>TreeItem</code>](#TreeItem)  
+
 **Returns**: <code>number</code> - - The index of the child item in this items children array.  
 
 | Param | Type | Default | Description |
@@ -307,7 +307,7 @@ Add a child TreeItem..
 ### getChild
 The getChild method.
 
-**Kind**: instance method of [<code>TreeItem</code>](#TreeItem)  
+
 **Returns**: [<code>TreeItem</code>](#TreeItem) - - Return the child TreeItem.  
 
 | Param | Type | Description |
@@ -319,7 +319,7 @@ The getChild method.
 ### getChildByName
 The getChildByName method.
 
-**Kind**: instance method of [<code>TreeItem</code>](#TreeItem)  
+
 **Returns**: [<code>TreeItem</code>](#TreeItem) - - Return the child TreeItem.  
 
 | Param | Type | Description |
@@ -331,14 +331,14 @@ The getChildByName method.
 ### getChildNames
 The getChildNames method.
 
-**Kind**: instance method of [<code>TreeItem</code>](#TreeItem)  
+
 **Returns**: <code>array</code> - - An array of names for each child.  
 <a name="TreeItem+removeChild"></a>
 
 ### removeChild
 Remove a child tree item.
 
-**Kind**: instance method of [<code>TreeItem</code>](#TreeItem)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -349,7 +349,7 @@ Remove a child tree item.
 ### removeChildByName
 The removeChildByName method.
 
-**Kind**: instance method of [<code>TreeItem</code>](#TreeItem)  
+
 **Returns**: [<code>TreeItem</code>](#TreeItem) - - Return the child TreeItem.  
 
 | Param | Type | Description |
@@ -361,7 +361,7 @@ The removeChildByName method.
 ### removeChildByHandle
 Remove a child tree item by handle.
 
-**Kind**: instance method of [<code>TreeItem</code>](#TreeItem)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -372,13 +372,13 @@ Remove a child tree item by handle.
 ### removeAllChildren
 Remove all child TreeItems.
 
-**Kind**: instance method of [<code>TreeItem</code>](#TreeItem)  
+
 <a name="TreeItem+getChildIndex"></a>
 
 ### getChildIndex
 The getChildIndex method.
 
-**Kind**: instance method of [<code>TreeItem</code>](#TreeItem)  
+
 **Returns**: <code>object</code> - - The return value.  
 
 | Param | Type | Description |
@@ -390,7 +390,7 @@ The getChildIndex method.
 ### indexOfChild
 The indexOfChild method.
 
-**Kind**: instance method of [<code>TreeItem</code>](#TreeItem)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -402,7 +402,7 @@ The indexOfChild method.
 ### resolvePath
 The resolvePath method.
 
-**Kind**: instance method of [<code>TreeItem</code>](#TreeItem)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Default | Description |
@@ -417,7 +417,7 @@ Traverse the tree structure from this point down
 and fire the callback for each visited item.
 Note: Depth only used by selection sets for now.
 
-**Kind**: instance method of [<code>TreeItem</code>](#TreeItem)  
+
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -429,7 +429,7 @@ Note: Depth only used by selection sets for now.
 ### onMouseDown
 Causes an event to occur when a user presses a mouse button over an element.
 
-**Kind**: instance method of [<code>TreeItem</code>](#TreeItem)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -440,7 +440,7 @@ Causes an event to occur when a user presses a mouse button over an element.
 ### onMouseUp
 Causes an event to occur when a user releases a mouse button over a element.
 
-**Kind**: instance method of [<code>TreeItem</code>](#TreeItem)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -451,7 +451,7 @@ Causes an event to occur when a user releases a mouse button over a element.
 ### onMouseMove
 Causes an event to occur when the mouse pointer is moving while over an element.
 
-**Kind**: instance method of [<code>TreeItem</code>](#TreeItem)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -462,7 +462,7 @@ Causes an event to occur when the mouse pointer is moving while over an element.
 ### onMouseEnter
 Causes an event to occur when the mouse pointer is moved onto an element.
 
-**Kind**: instance method of [<code>TreeItem</code>](#TreeItem)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -473,7 +473,7 @@ Causes an event to occur when the mouse pointer is moved onto an element.
 ### onMouseLeave
 Causes an event to occur when the mouse pointer is moved out of an element.
 
-**Kind**: instance method of [<code>TreeItem</code>](#TreeItem)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -484,7 +484,7 @@ Causes an event to occur when the mouse pointer is moved out of an element.
 ### onWheel
 Causes an event to occur when the mouse wheel is rolled up or down over an element.
 
-**Kind**: instance method of [<code>TreeItem</code>](#TreeItem)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -495,7 +495,7 @@ Causes an event to occur when the mouse wheel is rolled up or down over an eleme
 ### toJSON
 The toJSON method encodes this type as a json object for persistences.
 
-**Kind**: instance method of [<code>TreeItem</code>](#TreeItem)  
+
 **Returns**: <code>object</code> - - Returns the json object.  
 
 | Param | Type | Description |
@@ -508,7 +508,7 @@ The toJSON method encodes this type as a json object for persistences.
 ### fromJSON
 The fromJSON method decodes a json object for this type.
 
-**Kind**: instance method of [<code>TreeItem</code>](#TreeItem)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -521,7 +521,7 @@ The fromJSON method decodes a json object for this type.
 ### readBinary
 The readBinary method.
 
-**Kind**: instance method of [<code>TreeItem</code>](#TreeItem)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -534,7 +534,7 @@ The readBinary method.
 The clone method constructs a new tree item, copies its values
 from this item and returns it.
 
-**Kind**: instance method of [<code>TreeItem</code>](#TreeItem)  
+
 **Returns**: [<code>TreeItem</code>](#TreeItem) - - Returns a new cloned tree item.  
 
 | Param | Type | Description |
@@ -546,7 +546,7 @@ from this item and returns it.
 ### copyFrom
 The copyFrom method.
 
-**Kind**: instance method of [<code>TreeItem</code>](#TreeItem)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -559,41 +559,41 @@ The copyFrom method.
 The destroy is called by the system to cause explicit resources cleanup.
 Users should never need to call this method directly.
 
-**Kind**: instance method of [<code>TreeItem</code>](#TreeItem)  
+
 <a name="TreeItem.SaveFlags"></a>
 
 ### SaveFlags 
 Getter for SaveFlags.
 
-**Kind**: static property of [<code>TreeItem</code>](#TreeItem)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="TreeItem.LoadFlags"></a>
 
 ### LoadFlags 
 Getter for LoadFlags.
 
-**Kind**: static property of [<code>TreeItem</code>](#TreeItem)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="TreeItem.CloneFlags"></a>
 
 ### CloneFlags 
 Getter for CloneFlags.
 
-**Kind**: static property of [<code>TreeItem</code>](#TreeItem)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="TreeItem.getSelectionOutlineColor"></a>
 
 ### getSelectionOutlineColor
 Returns the selection outline color.
 
-**Kind**: static method of [<code>TreeItem</code>](#TreeItem)  
+
 **Returns**: <code>Color</code> - - Returns a color.  
 <a name="TreeItem.setSelectionOutlineColor"></a>
 
 ### setSelectionOutlineColor
 Sets the selection outline color.
 
-**Kind**: static method of [<code>TreeItem</code>](#TreeItem)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -604,14 +604,14 @@ Sets the selection outline color.
 ### getBranchSelectionOutlineColor
 Returns the branch selection outline color.
 
-**Kind**: static method of [<code>TreeItem</code>](#TreeItem)  
+
 **Returns**: <code>Color</code> - - Returns a color.  
 <a name="TreeItem.setBranchSelectionOutlineColor"></a>
 
 ### setBranchSelectionOutlineColor
 Sets the branch selection outline color.
 
-**Kind**: static method of [<code>TreeItem</code>](#TreeItem)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |

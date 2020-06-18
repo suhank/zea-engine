@@ -3,7 +3,7 @@
 ### Mat3Parameter 
 Class representing a Mat3 (3x3 matrix) parameter.
 
-**Kind**: global class  
+
 **Extends**: <code>Parameter</code>  
 
 * [Mat3Parameter ⇐ <code>Parameter</code>](#Mat3Parameter)
@@ -27,7 +27,7 @@ Create a Mat3 parameter.
 The clone method constructs a new Mat3 parameter,
 copies its values from this parameter and returns it.
 
-**Kind**: instance method of [<code>Mat3Parameter</code>](#Mat3Parameter)  
+
 **Returns**: [<code>Mat3Parameter</code>](#Mat3Parameter) - - Returns a new cloned Mat3 parameter.  
 
 | Param | Type | Description |

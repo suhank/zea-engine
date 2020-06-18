@@ -3,7 +3,7 @@
 ### Operator 
 Class representing an operator.
 
-**Kind**: global class  
+
 **Extends**: <code>BaseItem</code>  
 
 * [Operator ⇐ <code>BaseItem</code>](#Operator)
@@ -35,7 +35,7 @@ Create an operator.
 ### addOutput
 The addOutput method.
 
-**Kind**: instance method of [<code>Operator</code>](#Operator)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -47,7 +47,7 @@ The addOutput method.
 ### removeOutput
 The removeOutput method.
 
-**Kind**: instance method of [<code>Operator</code>](#Operator)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -58,14 +58,14 @@ The removeOutput method.
 ### getNumOutputs
 Getter for the number of outputs in this operator.
 
-**Kind**: instance method of [<code>Operator</code>](#Operator)  
+
 **Returns**: <code>number</code> - - Returns the number of outputs.  
 <a name="Operator+getOutputByIndex"></a>
 
 ### getOutputByIndex
 The getOutputByIndex method.
 
-**Kind**: instance method of [<code>Operator</code>](#Operator)  
+
 **Returns**: <code>object</code> - - The return value.  
 
 | Param | Type | Description |
@@ -77,7 +77,7 @@ The getOutputByIndex method.
 ### getOutput
 The getOutput method.
 
-**Kind**: instance method of [<code>Operator</code>](#Operator)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -89,13 +89,13 @@ The getOutput method.
 ### evaluate
 The evaluate method.
 
-**Kind**: instance method of [<code>Operator</code>](#Operator)  
+
 <a name="Operator+toJSON"></a>
 
 ### toJSON
 The toJSON method encodes this type as a json object for persistences.
 
-**Kind**: instance method of [<code>Operator</code>](#Operator)  
+
 **Returns**: <code>object</code> - - Returns the json object.  
 
 | Param | Type | Description |
@@ -108,7 +108,7 @@ The toJSON method encodes this type as a json object for persistences.
 ### fromJSON
 The fromJSON method decodes a json object for this type.
 
-**Kind**: instance method of [<code>Operator</code>](#Operator)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -121,17 +121,17 @@ The fromJSON method decodes a json object for this type.
 ### detach
 The detach method.
 
-**Kind**: instance method of [<code>Operator</code>](#Operator)  
+
 <a name="Operator+reattach"></a>
 
 ### reattach
 The reattach method.
 
-**Kind**: instance method of [<code>Operator</code>](#Operator)  
+
 <a name="Operator+destroy"></a>
 
 ### destroy
 The destroy is called by the system to cause explicit resources cleanup.
 Users should never need to call this method directly.
 
-**Kind**: instance method of [<code>Operator</code>](#Operator)  
+

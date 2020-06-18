@@ -3,7 +3,7 @@
 ### BillboardItem 
 Class representing a billboard item in a scene tree.
 
-**Kind**: global class  
+
 **Extends**: <code>TreeItem</code>  
 <a name="new_BillboardItem_new"></a>
 

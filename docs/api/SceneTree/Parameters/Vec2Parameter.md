@@ -4,7 +4,7 @@
 Class representing a Vec2 parameter.
 A Vec2 represents a two-dimensional coordinate.
 
-**Kind**: global class  
+
 **Extends**: <code>Parameter</code>  
 
 * [Vec2Parameter ⇐ <code>Parameter</code>](#Vec2Parameter)
@@ -29,7 +29,7 @@ Create a Vec2 parameter.
 ### getRange
 The getRange method.
 
-**Kind**: instance method of [<code>Vec2Parameter</code>](#Vec2Parameter)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="Vec2Parameter+clone"></a>
 
@@ -37,7 +37,7 @@ The getRange method.
 The clone method constructs a new Vec2 parameter, copies its values
 from this parameter and returns it.
 
-**Kind**: instance method of [<code>Vec2Parameter</code>](#Vec2Parameter)  
+
 **Returns**: [<code>Vec2Parameter</code>](#Vec2Parameter) - - Returns a new Vec2 parameter.  
 
 | Param | Type | Description |

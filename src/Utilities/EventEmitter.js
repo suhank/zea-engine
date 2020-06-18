@@ -1,25 +1,28 @@
-
-import { BaseEvent } from './BaseEvent.js'
-
-/** Class representing a EventEmitter. */
+/**
+ * Allows objects to create and handle custom events.
+ * Closely similar to [EventEmitter](https://nodejs.org/api/events.html#events_class_eventemitter) in Node.
+ */
 class EventEmitter {
   /**
-   * Create an EventEmitter.
+   * Initializes an empty `slots` map that will host all the events,
+   * which implies that it doesn't allow multiple events with the same name.
+   * <br>
+   * Although each event can own more than one listener function.
    */
   constructor() {
     this.__slots = {}
   }
 
   /**
-   * Add a listener function to the EventEmiiter with the given eventName.
-   * When the given event is triggered, the listern function will be invoked.
+   * Adds an event with its listener function(Invoked functions when event is triggered) to the event list.
+   * Each event can have more than one listener function, although no duplication is allowed.
+   *
    * @param {string} eventName - The name of the event.
-   * @param {function} listener - The listener function.
-   * @return {any} - The return value.
+   * @param {function} listener - The listener function(callback).
+   * @return {number} - Number of listener funcitons the event has.
    */
   addListener(eventName, listener) {
-    if (listener == undefined)
-      throw new Error('a function callback must be passed to EventEmitter.addListener')
+    if (listener == undefined) throw new Error('a function callback must be passed to EventEmitter.addListener')
 
     if (!this.__slots[eventName]) this.__slots[eventName] = []
     const slots = this.__slots[eventName]
@@ -34,14 +37,14 @@ class EventEmitter {
   }
 
   /**
-   * Remove a listener function from the EvetEmitter.
+   * Removes a listener function from the specified event.
+   *
    * @param {string} eventName - The name of the event.
    * @param {function} listener - The listener function.
    */
   removeListener(eventName, listener) {
-    if (listener == undefined)
-      throw new Error('a function callback must be passed to EventEmitter.disconnect')
-      
+    if (listener == undefined) throw new Error('a function callback must be passed to EventEmitter.disconnect')
+
     const slots = this.__slots[eventName]
     const ids = []
     if (slots) {
@@ -54,10 +57,7 @@ class EventEmitter {
     if (ids.length == 0) {
       const name = this.getName ? this.getName() : this.constructor.name
       console.warn(
-        'Error in removeListener. listener :' +
-          listener.name +
-          ' was not connected to this event emitter:' +
-          name
+        'Error in removeListener. listener :' + listener.name + ' was not connected to this event emitter:' + name
       )
     } else {
       for (const id of ids) {
@@ -67,36 +67,38 @@ class EventEmitter {
   }
 
   /**
-   * The removeListenerById method.
+   * Removes a listener function from the specified event, using the specified index id.
+   *
    * @param {string} eventName - The name of the event.
    * @param {number} id - The id returned by addListener
    */
   removeListenerById(eventName, id) {
     const slots = this.__slots[eventName]
     if (!slots) {
-      const msg =
-        'callback :' + id + ' was not connected to this signal:' + eventName
+      const msg = 'callback :' + id + ' was not connected to this signal:' + eventName
       console.warn(msg)
       return
     }
     if (!slots[id]) throw new Error('Invalid ID')
     slots[id] = undefined
   }
-  
+
   /**
-   * Add a listener function to the EventEmiiter with the given eventName.
-   * When the given event is triggered, the listern function will be invoked.
+   * Adds an event with its listener function(Invoked functions when event is triggered) to the event list.
+   * Each event can have more than one listener function, although no duplication is allowed.
+   *
    * @param {string} eventName - The name of the event.
-   * @param {function} listener - The listener function.
-   * @return {any} - The return value.
+   * @param {function} listener - The listener function(callback).
+   * @return {number} - Number of listener funcitons the event has.
    */
   on(eventName, listener) {
     return this.addListener(eventName, listener)
   }
 
   /**
-   * Add a listener function to the EventEmiiter with the given eventName.
-   * When the given event is triggered, the listern function will be invoked.
+   * Initially it works the same as `addListener` and `on` methods, but the difference is that when the listener function is triggered,
+   * is also removed from the event slots, meaning that it won't execute anymore.
+   *
    * @param {string} eventName - The name of the event.
    * @param {function} listener - The listener function.
    */
@@ -106,11 +108,12 @@ class EventEmitter {
       this.removeListenerById(eventName, id)
     })
   }
-  
+
   /**
-   * The off method removes an event listener.
+   * Removes a listener function from the specified event, using the either the function or the index id. Depends on what is passed in.
+   *
    * @param {string} eventName - The name of the event.
-   * @param {function} listener - The listener function.
+   * @param {function|number} listener - The listener function or the id number.
    */
   off(eventName, listener) {
     if (typeof listener == 'number') {
@@ -121,8 +124,10 @@ class EventEmitter {
   }
 
   /**
-   * Emit the signal to all slots(observers)
-   * @param {BaseEvent} event - The event object.
+   * Triggers all listerner functions in an event.
+   *
+   * @param {string} eventName - The name of the event.
+   * @param {object|string|any} event - The data you want to pass down to all listener functions as parameter.
    */
   emit(eventName, event) {
     const slots = this.__slots[eventName]

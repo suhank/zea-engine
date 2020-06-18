@@ -3,7 +3,7 @@
 ### GLTexture2D 
 Class representing a GL texture 2D.
 
-**Kind**: global class  
+
 **Extends**: <code>RefCounted</code>  
 
 * [GLTexture2D ⇐ <code>RefCounted</code>](#GLTexture2D)
@@ -46,84 +46,84 @@ Create a GL texture 2D.
 ### glTex 
 The glTex method.
 
-**Kind**: instance property of [<code>GLTexture2D</code>](#GLTexture2D)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="GLTexture2D+isLoaded"></a>
 
 ### isLoaded
 The isLoaded method.
 
-**Kind**: instance method of [<code>GLTexture2D</code>](#GLTexture2D)  
+
 **Returns**: <code>boolean</code> - - The return value.  
 <a name="GLTexture2D+getTexture"></a>
 
 ### getTexture
 The getTexture method.
 
-**Kind**: instance method of [<code>GLTexture2D</code>](#GLTexture2D)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="GLTexture2D+getInternalFormat"></a>
 
 ### getInternalFormat
 The getInternalFormat method.
 
-**Kind**: instance method of [<code>GLTexture2D</code>](#GLTexture2D)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="GLTexture2D+getType"></a>
 
 ### getType
 The getType method.
 
-**Kind**: instance method of [<code>GLTexture2D</code>](#GLTexture2D)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="GLTexture2D+getTypeID"></a>
 
 ### getTypeID
 The getTypeID method.
 
-**Kind**: instance method of [<code>GLTexture2D</code>](#GLTexture2D)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="GLTexture2D+getFormat"></a>
 
 ### getFormat
 The getFormat method.
 
-**Kind**: instance method of [<code>GLTexture2D</code>](#GLTexture2D)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="GLTexture2D+getFormatID"></a>
 
 ### getFormatID
 The getFormatID method.
 
-**Kind**: instance method of [<code>GLTexture2D</code>](#GLTexture2D)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="GLTexture2D+getFilter"></a>
 
 ### getFilter
 The getFilter method.
 
-**Kind**: instance method of [<code>GLTexture2D</code>](#GLTexture2D)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="GLTexture2D+getWrap"></a>
 
 ### getWrap
 The getWrap method.
 
-**Kind**: instance method of [<code>GLTexture2D</code>](#GLTexture2D)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="GLTexture2D+getMipMapped"></a>
 
 ### getMipMapped
 The getMipMapped method.
 
-**Kind**: instance method of [<code>GLTexture2D</code>](#GLTexture2D)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="GLTexture2D+configure"></a>
 
 ### configure
 The configure method.
 
-**Kind**: instance method of [<code>GLTexture2D</code>](#GLTexture2D)  
+
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -135,7 +135,7 @@ The configure method.
 ### bufferData
 The bufferData method.
 
-**Kind**: instance method of [<code>GLTexture2D</code>](#GLTexture2D)  
+
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -150,13 +150,13 @@ The bufferData method.
 ### clear
 The clear method.
 
-**Kind**: instance method of [<code>GLTexture2D</code>](#GLTexture2D)  
+
 <a name="GLTexture2D+resize"></a>
 
 ### resize
 The resize method.
 
-**Kind**: instance method of [<code>GLTexture2D</code>](#GLTexture2D)  
+
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -170,21 +170,21 @@ The resize method.
 ### getSize
 The getSize method.
 
-**Kind**: instance method of [<code>GLTexture2D</code>](#GLTexture2D)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="GLTexture2D+getTexHdl"></a>
 
 ### getTexHdl
 The getTexHdl method.
 
-**Kind**: instance method of [<code>GLTexture2D</code>](#GLTexture2D)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="GLTexture2D+bind"></a>
 
 ### bind
 The bind method.
 
-**Kind**: instance method of [<code>GLTexture2D</code>](#GLTexture2D)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -197,7 +197,7 @@ The bind method.
 ### preBind
 The preBind method.
 
-**Kind**: instance method of [<code>GLTexture2D</code>](#GLTexture2D)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -210,7 +210,7 @@ The preBind method.
 ### bindToUniform
 The bindToUniform method.
 
-**Kind**: instance method of [<code>GLTexture2D</code>](#GLTexture2D)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -225,4 +225,4 @@ The bindToUniform method.
 The destroy is called by the system to cause explicit resources cleanup.
 Users should never need to call this method directly.
 
-**Kind**: instance method of [<code>GLTexture2D</code>](#GLTexture2D)  
+

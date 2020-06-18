@@ -3,7 +3,7 @@
 ### ProceduralSky 
 Class representing a procedural sky.
 
-**Kind**: global class  
+
 **Extends**: <code>RefCounted</code>  
 <a name="new_ProceduralSky_new"></a>
 

@@ -3,7 +3,7 @@
 ### InstanceItem 
 Class representing an instance item in a scene tree.
 
-**Kind**: global class  
+
 **Extends**: <code>TreeItem</code>  
 
 * [InstanceItem ⇐ <code>TreeItem</code>](#InstanceItem)
@@ -29,7 +29,7 @@ Create an instance item.
 ### setSrcTree
 The setSrcTree method.
 
-**Kind**: instance method of [<code>InstanceItem</code>](#InstanceItem)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -40,14 +40,14 @@ The setSrcTree method.
 ### getSrcTree
 The getSrcTree method.
 
-**Kind**: instance method of [<code>InstanceItem</code>](#InstanceItem)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="InstanceItem+readBinary"></a>
 
 ### readBinary
 The readBinary method.
 
-**Kind**: instance method of [<code>InstanceItem</code>](#InstanceItem)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -59,7 +59,7 @@ The readBinary method.
 ### toJSON
 The toJSON method encodes this type as a json object for persistences.
 
-**Kind**: instance method of [<code>InstanceItem</code>](#InstanceItem)  
+
 **Returns**: <code>object</code> - - Returns the json object.  
 
 | Param | Type | Default | Description |
@@ -72,7 +72,7 @@ The toJSON method encodes this type as a json object for persistences.
 ### fromJSON
 The fromJSON method decodes a json object for this type.
 
-**Kind**: instance method of [<code>InstanceItem</code>](#InstanceItem)  
+
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |

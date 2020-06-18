@@ -3,7 +3,7 @@
 ### EnvMap 
 Class representing an environment map.
 
-**Kind**: global class  
+
 **Extends**: <code>VLHImage</code>  
 
 * [EnvMap ⇐ <code>VLHImage</code>](#EnvMap)
@@ -30,14 +30,14 @@ Create an env map.
 ### getSampleSets
 The getSampleSets method.
 
-**Kind**: instance method of [<code>EnvMap</code>](#EnvMap)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="EnvMap+uvToDir"></a>
 
 ### uvToDir
 The uvToDir method.
 
-**Kind**: instance method of [<code>EnvMap</code>](#EnvMap)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -49,7 +49,7 @@ The uvToDir method.
 ### dirToUv
 The dirToUv method.
 
-**Kind**: instance method of [<code>EnvMap</code>](#EnvMap)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -61,7 +61,7 @@ The dirToUv method.
 ### uvToLuminance
 The uvToLuminance method.
 
-**Kind**: instance method of [<code>EnvMap</code>](#EnvMap)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -73,7 +73,7 @@ The uvToLuminance method.
 ### dirToLuminance
 The dirToLuminance method.
 
-**Kind**: instance method of [<code>EnvMap</code>](#EnvMap)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |

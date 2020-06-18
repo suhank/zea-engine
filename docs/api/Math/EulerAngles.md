@@ -4,7 +4,7 @@
 Class representing euler angles. Euler angles decribe rotating an object
 around its various axis in a specified axis order.
 
-**Kind**: global class  
+
 **Extends**: <code>AttrValue</code>  
 
 * [EulerAngles ⇐ <code>AttrValue</code>](#EulerAngles)
@@ -39,14 +39,14 @@ It could be either the `string` or the `number` value.
 ### x 
 Getter for x axis rotation.
 
-**Kind**: instance property of [<code>EulerAngles</code>](#EulerAngles)  
+
 **Returns**: <code>number</code> - - Returns the x axis rotation.  
 <a name="EulerAngles+x"></a>
 
 ### x
 Setter for x axis rotation.
 
-**Kind**: instance property of [<code>EulerAngles</code>](#EulerAngles)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -57,14 +57,14 @@ Setter for x axis rotation.
 ### y 
 Getter for y axis rotation.
 
-**Kind**: instance property of [<code>EulerAngles</code>](#EulerAngles)  
+
 **Returns**: <code>number</code> - - Returns the y axis rotation.  
 <a name="EulerAngles+y"></a>
 
 ### y
 Setter for y axis rotation.
 
-**Kind**: instance property of [<code>EulerAngles</code>](#EulerAngles)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -75,14 +75,14 @@ Setter for y axis rotation.
 ### z 
 Getter for z axis rotation.
 
-**Kind**: instance property of [<code>EulerAngles</code>](#EulerAngles)  
+
 **Returns**: <code>number</code> - - Returns the z axis rotation.  
 <a name="EulerAngles+z"></a>
 
 ### z
 Setter for z axis rotation.
 
-**Kind**: instance property of [<code>EulerAngles</code>](#EulerAngles)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -93,7 +93,7 @@ Setter for z axis rotation.
 ### set
 Sets the EulerAngles
 
-**Kind**: instance method of [<code>EulerAngles</code>](#EulerAngles)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |

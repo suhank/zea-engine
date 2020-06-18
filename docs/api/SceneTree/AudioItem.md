@@ -14,7 +14,7 @@
 ### AudioItem 
 Class representing an audio item in a scene tree.
 
-**Kind**: global class  
+
 **Extends**: <code>TreeItem</code>  
 
 * [AudioItem ⇐ <code>TreeItem</code>](#AudioItem)
@@ -37,14 +37,14 @@ Create an audio item.
 ### isLoaded
 The isLoaded method.
 
-**Kind**: instance method of [<code>AudioItem</code>](#AudioItem)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="AudioItem+setAudioStream"></a>
 
 ### setAudioStream
 The setAudioStream method.
 
-**Kind**: instance method of [<code>AudioItem</code>](#AudioItem)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -55,7 +55,7 @@ The setAudioStream method.
 ### FileAudioItem 
 Class representing a audio file item in a scene tree.
 
-**Kind**: global class  
+
 **Extends**: [<code>AudioItem</code>](#AudioItem)  
 
 * [FileAudioItem](#FileAudioItem)
@@ -78,7 +78,7 @@ Create a audio file item.
 ### isLoaded
 The isLoaded method.
 
-**Kind**: instance method of [<code>FileAudioItem</code>](#FileAudioItem)  
+
 **Overrides**: [<code>isLoaded</code>](#AudioItem+isLoaded)  
 **Returns**: <code>any</code> - - The return value.  
 <a name="AudioItem+setAudioStream"></a>
@@ -86,7 +86,7 @@ The isLoaded method.
 ### setAudioStream
 The setAudioStream method.
 
-**Kind**: instance method of [<code>FileAudioItem</code>](#FileAudioItem)  
+
 **Overrides**: [<code>setAudioStream</code>](#AudioItem+setAudioStream)  
 
 | Param | Type | Description |

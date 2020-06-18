@@ -3,7 +3,7 @@
 ### DataImage 
 Class representing a data image.
 
-**Kind**: global class  
+
 **Extends**: <code>BaseImage</code>  
 
 * [DataImage ⇐ <code>BaseImage</code>](#DataImage)
@@ -29,28 +29,28 @@ Create a data image.
 ### isLoaded
 The isLoaded method.
 
-**Kind**: instance method of [<code>DataImage</code>](#DataImage)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="DataImage+getName"></a>
 
 ### getName
 The getName method.
 
-**Kind**: instance method of [<code>DataImage</code>](#DataImage)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="DataImage+isStream"></a>
 
 ### isStream
 The isStream method.
 
-**Kind**: instance method of [<code>DataImage</code>](#DataImage)  
+
 **Returns**: <code>boolean</code> - - The return value.  
 <a name="DataImage+setData"></a>
 
 ### setData
 The setData method.
 
-**Kind**: instance method of [<code>DataImage</code>](#DataImage)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -63,5 +63,5 @@ The setData method.
 ### getParams
 The getParams method.
 
-**Kind**: instance method of [<code>DataImage</code>](#DataImage)  
+
 **Returns**: <code>any</code> - - The return value.  

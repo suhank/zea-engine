@@ -3,7 +3,7 @@
 ### BaseImage 
 Class representing a base image in the scene tree.
 
-**Kind**: global class  
+
 **Extends**: <code>BaseItem</code>  
 
 * [BaseImage ⇐ <code>BaseItem</code>](#BaseImage)
@@ -31,21 +31,21 @@ Create a base image.
 ### isLoaded
 Returns true if loaded.
 
-**Kind**: instance method of [<code>BaseImage</code>](#BaseImage)  
+
 **Returns**: <code>boolean</code> - - Returns a boolean.  
 <a name="BaseImage+getMapping"></a>
 
 ### getMapping
 The getMapping method.
 
-**Kind**: instance method of [<code>BaseImage</code>](#BaseImage)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="BaseImage+setMapping"></a>
 
 ### setMapping
 The setMapping method
 
-**Kind**: instance method of [<code>BaseImage</code>](#BaseImage)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -56,19 +56,19 @@ The setMapping method
 ### isStream
 The isStream method.
 
-**Kind**: instance method of [<code>BaseImage</code>](#BaseImage)  
+
 **Returns**: <code>boolean</code> - - Returns a boolean.  
 <a name="BaseImage+isStreamAtlas"></a>
 
 ### isStreamAtlas
 The isStreamAtlas method.
 
-**Kind**: instance method of [<code>BaseImage</code>](#BaseImage)  
+
 **Returns**: <code>boolean</code> - - Returns a boolean.  
 <a name="BaseImage+getParams"></a>
 
 ### getParams
 The getParams method.
 
-**Kind**: instance method of [<code>BaseImage</code>](#BaseImage)  
+
 **Returns**: <code>any</code> - - The return value.  

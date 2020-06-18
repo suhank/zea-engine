@@ -3,7 +3,7 @@
 ### Cone 
 A class for generating a cone geometry.
 
-**Kind**: global class  
+
 **Extends**: <code>Mesh</code>  
 
 * [Cone ⇐ <code>Mesh</code>](#Cone)
@@ -35,14 +35,14 @@ Create a cone.
 ### radius 
 Getter for the cone radius.
 
-**Kind**: instance property of [<code>Cone</code>](#Cone)  
+
 **Returns**: <code>number</code> - - Returns the radius.  
 <a name="Cone+radius"></a>
 
 ### radius
 Setter for the cone radius.
 
-**Kind**: instance property of [<code>Cone</code>](#Cone)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -53,14 +53,14 @@ Setter for the cone radius.
 ### height 
 Getter for the cone height.
 
-**Kind**: instance property of [<code>Cone</code>](#Cone)  
+
 **Returns**: <code>number</code> - - Returns the height.  
 <a name="Cone+height"></a>
 
 ### height
 Setter for the cone height.
 
-**Kind**: instance property of [<code>Cone</code>](#Cone)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -71,14 +71,14 @@ Setter for the cone height.
 ### detail 
 Getter for the cone detail.
 
-**Kind**: instance property of [<code>Cone</code>](#Cone)  
+
 **Returns**: <code>number</code> - - Returns the detail.  
 <a name="Cone+detail"></a>
 
 ### detail
 Setter for the cone detail.
 
-**Kind**: instance property of [<code>Cone</code>](#Cone)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -89,14 +89,14 @@ Setter for the cone detail.
 ### cap 
 Getter for the cone cap.
 
-**Kind**: instance property of [<code>Cone</code>](#Cone)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="Cone+cap"></a>
 
 ### cap
 Setter for the cone cap.
 
-**Kind**: instance property of [<code>Cone</code>](#Cone)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |

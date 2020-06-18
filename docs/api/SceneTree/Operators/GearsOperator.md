@@ -14,7 +14,7 @@
 ### GearParameter 
 Class representing a gear parameter.
 
-**Kind**: global class  
+
 **Extends**: <code>StructParameter</code>  
 
 * [GearParameter ⇐ <code>StructParameter</code>](#GearParameter)
@@ -41,35 +41,35 @@ Create a gear parameter.
 ### getOutput
 The getOutput method.
 
-**Kind**: instance method of [<code>GearParameter</code>](#GearParameter)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="GearParameter+getRatio"></a>
 
 ### getRatio
 Getter for the gear ratio.
 
-**Kind**: instance method of [<code>GearParameter</code>](#GearParameter)  
+
 **Returns**: <code>number</code> - - Returns the ratio.  
 <a name="GearParameter+getOffset"></a>
 
 ### getOffset
 getter for the gear offset.
 
-**Kind**: instance method of [<code>GearParameter</code>](#GearParameter)  
+
 **Returns**: <code>number</code> - - Returns the offset.  
 <a name="GearParameter+getAxis"></a>
 
 ### getAxis
 The getAxis method.
 
-**Kind**: instance method of [<code>GearParameter</code>](#GearParameter)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="GearParameter+toJSON"></a>
 
 ### toJSON
 The toJSON method encodes this type as a json object for persistences.
 
-**Kind**: instance method of [<code>GearParameter</code>](#GearParameter)  
+
 **Returns**: <code>object</code> - - Returns the json object.  
 
 | Param | Type | Description |
@@ -82,7 +82,7 @@ The toJSON method encodes this type as a json object for persistences.
 ### fromJSON
 The fromJSON method decodes a json object for this type.
 
-**Kind**: instance method of [<code>GearParameter</code>](#GearParameter)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -95,7 +95,7 @@ The fromJSON method decodes a json object for this type.
 ### GearsOperator 
 Class representing a gears operator.
 
-**Kind**: global class  
+
 **Extends**: <code>Operator</code>  
 
 * [GearsOperator ⇐ <code>Operator</code>](#GearsOperator)
@@ -120,23 +120,23 @@ Create a gears operator.
 ### evaluate
 The evaluate method.
 
-**Kind**: instance method of [<code>GearsOperator</code>](#GearsOperator)  
+
 <a name="GearsOperator+detach"></a>
 
 ### detach
 The detach method.
 
-**Kind**: instance method of [<code>GearsOperator</code>](#GearsOperator)  
+
 <a name="GearsOperator+reattach"></a>
 
 ### reattach
 The reattach method.
 
-**Kind**: instance method of [<code>GearsOperator</code>](#GearsOperator)  
+
 <a name="GearsOperator+destroy"></a>
 
 ### destroy
 The destroy is called by the system to cause explicit resources cleanup.
 Users should never need to call this method directly.
 
-**Kind**: instance method of [<code>GearsOperator</code>](#GearsOperator)  
+

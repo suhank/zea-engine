@@ -3,7 +3,7 @@
 ### VRController
 Class representing a VR controller.
 
-**Kind**: global class  
+
 
 * [VRController](#VRController)
     * [new VRController(vrviewport, inputSource, id)](#new-VRController)
@@ -36,70 +36,70 @@ Create a VR controller.
 ### getHandedness
 The getHandedness method.
 
-**Kind**: instance method of [<code>VRController</code>](#VRController)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="VRController+getId"></a>
 
 ### getId
 The getId method.
 
-**Kind**: instance method of [<code>VRController</code>](#VRController)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="VRController+getTreeItem"></a>
 
 ### getTreeItem
 The getTreeItem method.
 
-**Kind**: instance method of [<code>VRController</code>](#VRController)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="VRController+getTipItem"></a>
 
 ### getTipItem
 The getTipItem method.
 
-**Kind**: instance method of [<code>VRController</code>](#VRController)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="VRController+getTipXfo"></a>
 
 ### getTipXfo
 The getTipXfo method.
 
-**Kind**: instance method of [<code>VRController</code>](#VRController)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="VRController+getTouchPadValue"></a>
 
 ### getTouchPadValue
 The getTouchPadValue method.
 
-**Kind**: instance method of [<code>VRController</code>](#VRController)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="VRController+isButtonPressed"></a>
 
 ### isButtonPressed
 The isButtonPressed method.
 
-**Kind**: instance method of [<code>VRController</code>](#VRController)  
+
 **Returns**: <code>boolean</code> - - The return value.  
 <a name="VRController+getControllerStageLocalXfo"></a>
 
 ### getControllerStageLocalXfo
 The getControllerStageLocalXfo method.
 
-**Kind**: instance method of [<code>VRController</code>](#VRController)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="VRController+getControllerTipStageLocalXfo"></a>
 
 ### getControllerTipStageLocalXfo
 The getControllerTipStageLocalXfo method.
 
-**Kind**: instance method of [<code>VRController</code>](#VRController)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="VRController+updatePose"></a>
 
 ### updatePose
 The updatePose method.
 
-**Kind**: instance method of [<code>VRController</code>](#VRController)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -112,5 +112,5 @@ The updatePose method.
 ### getGeomItemAtTip
 The getGeomItemAtTip method.
 
-**Kind**: instance method of [<code>VRController</code>](#VRController)  
+
 **Returns**: <code>any</code> - - The return value.  

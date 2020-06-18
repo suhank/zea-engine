@@ -1,45 +1,49 @@
 <a name="EventEmitter"></a>
 
 ### EventEmitter
-Class representing a EventEmitter.
+Allows objects to create and handle custom events.
+Closely similar to [EventEmitter](https://nodejs.org/api/events.html#events_class_eventemitter) in Node.
 
-**Kind**: global class  
+
 
 * [EventEmitter](#EventEmitter)
     * [new EventEmitter()](#new-EventEmitter)
-    * [addListener(eventName, listener) ⇒ <code>any</code>](#addListener)
+    * [addListener(eventName, listener) ⇒ <code>number</code>](#addListener)
     * [removeListener(eventName, listener)](#removeListener)
     * [removeListenerById(eventName, id)](#removeListenerById)
-    * [on(eventName, listener) ⇒ <code>any</code>](#on)
+    * [on(eventName, listener) ⇒ <code>number</code>](#on)
     * [once(eventName, listener)](#once)
     * [off(eventName, listener)](#off)
-    * [emit(event)](#emit)
+    * [emit(eventName, event)](#emit)
 
 <a name="new_EventEmitter_new"></a>
 
 ### new EventEmitter
-Create an EventEmitter.
+Initializes an empty `slots` map that will host all the events,
+which implies that it doesn't allow multiple events with the same name.
+<br>
+Although each event can own more than one listener function.
 
 <a name="EventEmitter+addListener"></a>
 
 ### addListener
-Add a listener function to the EventEmiiter with the given eventName.
-When the given event is triggered, the listern function will be invoked.
+Adds an event with its listener function(Invoked functions when event is triggered) to the event list.
+Each event can have more than one listener function, although no duplication is allowed.
 
-**Kind**: instance method of [<code>EventEmitter</code>](#EventEmitter)  
-**Returns**: <code>any</code> - - The return value.  
+
+**Returns**: <code>number</code> - - Number of listener funcitons the event has.  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | eventName | <code>string</code> | The name of the event. |
-| listener | <code>function</code> | The listener function. |
+| listener | <code>function</code> | The listener function(callback). |
 
 <a name="EventEmitter+removeListener"></a>
 
 ### removeListener
-Remove a listener function from the EvetEmitter.
+Removes a listener function from the specified event.
 
-**Kind**: instance method of [<code>EventEmitter</code>](#EventEmitter)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -49,9 +53,9 @@ Remove a listener function from the EvetEmitter.
 <a name="EventEmitter+removeListenerById"></a>
 
 ### removeListenerById
-The removeListenerById method.
+Removes a listener function from the specified event, using the specified index id.
 
-**Kind**: instance method of [<code>EventEmitter</code>](#EventEmitter)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -61,24 +65,24 @@ The removeListenerById method.
 <a name="EventEmitter+on"></a>
 
 ### on
-Add a listener function to the EventEmiiter with the given eventName.
-When the given event is triggered, the listern function will be invoked.
+Adds an event with its listener function(Invoked functions when event is triggered) to the event list.
+Each event can have more than one listener function, although no duplication is allowed.
 
-**Kind**: instance method of [<code>EventEmitter</code>](#EventEmitter)  
-**Returns**: <code>any</code> - - The return value.  
+
+**Returns**: <code>number</code> - - Number of listener funcitons the event has.  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | eventName | <code>string</code> | The name of the event. |
-| listener | <code>function</code> | The listener function. |
+| listener | <code>function</code> | The listener function(callback). |
 
 <a name="EventEmitter+once"></a>
 
 ### once
-Add a listener function to the EventEmiiter with the given eventName.
-When the given event is triggered, the listern function will be invoked.
+Initially it works the same as `addListener` and `on` methods, but the difference is that when the listener function is triggered,
+is also removed from the event slots, meaning that it won't execute anymore.
 
-**Kind**: instance method of [<code>EventEmitter</code>](#EventEmitter)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -88,23 +92,24 @@ When the given event is triggered, the listern function will be invoked.
 <a name="EventEmitter+off"></a>
 
 ### off
-The off method removes an event listener.
+Removes a listener function from the specified event, using the either the function or the index id. Depends on what is passed in.
 
-**Kind**: instance method of [<code>EventEmitter</code>](#EventEmitter)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
 | eventName | <code>string</code> | The name of the event. |
-| listener | <code>function</code> | The listener function. |
+| listener | <code>function</code> \| <code>number</code> | The listener function or the id number. |
 
 <a name="EventEmitter+emit"></a>
 
 ### emit
-Emit the signal to all slots(observers)
+Triggers all listerner functions in an event.
 
-**Kind**: instance method of [<code>EventEmitter</code>](#EventEmitter)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
-| event | <code>BaseEvent</code> | The event object. |
+| eventName | <code>string</code> | The name of the event. |
+| event | <code>object</code> \| <code>string</code> \| <code>any</code> | The data you want to pass down to all listener functions as parameter. |
 

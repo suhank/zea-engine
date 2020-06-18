@@ -3,7 +3,7 @@
 ### GeomItem 
 Class representing a geometry item in a scene tree.
 
-**Kind**: global class  
+
 **Extends**: <code>BaseGeomItem</code>  
 
 * [GeomItem ⇐ <code>BaseGeomItem</code>](#GeomItem)
@@ -45,14 +45,14 @@ Create a geometry item.
 ### getGeometry
 Getter for geometry.
 
-**Kind**: instance method of [<code>GeomItem</code>](#GeomItem)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="GeomItem+setGeometry"></a>
 
 ### setGeometry
 Setter for geometry.
 
-**Kind**: instance method of [<code>GeomItem</code>](#GeomItem)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -64,14 +64,14 @@ Setter for geometry.
 ### getGeom
 Getter for geometry (getGeom is deprectated. Please use getGeometry).
 
-**Kind**: instance method of [<code>GeomItem</code>](#GeomItem)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="GeomItem+setGeom"></a>
 
 ### setGeom
 Setter for geometry. (setGeom is deprectated. Please use setGeometry).
 
-**Kind**: instance method of [<code>GeomItem</code>](#GeomItem)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -83,14 +83,14 @@ Setter for geometry. (setGeom is deprectated. Please use setGeometry).
 ### getMaterial
 Getter for material.
 
-**Kind**: instance method of [<code>GeomItem</code>](#GeomItem)  
+
 **Returns**: <code>Material</code> - - The return value.  
 <a name="GeomItem+setMaterial"></a>
 
 ### setMaterial
 Setter for material.
 
-**Kind**: instance method of [<code>GeomItem</code>](#GeomItem)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -102,14 +102,14 @@ Setter for material.
 ### getGeomOffsetXfo
 Getter for the geom offset Xfo translation.
 
-**Kind**: instance method of [<code>GeomItem</code>](#GeomItem)  
+
 **Returns**: <code>Xfo</code> - - Returns the geom offset Xfo.  
 <a name="GeomItem+setGeomOffsetXfo"></a>
 
 ### setGeomOffsetXfo
 Setter for the geom offset Xfo translation.
 
-**Kind**: instance method of [<code>GeomItem</code>](#GeomItem)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -120,21 +120,21 @@ Setter for the geom offset Xfo translation.
 ### getGeomMat4
 Getter for the geom Xfo translation.
 
-**Kind**: instance method of [<code>GeomItem</code>](#GeomItem)  
+
 **Returns**: <code>Xfo</code> - - Returns the geom Xfo.  
 <a name="GeomItem+getLightmapName"></a>
 
 ### getLightmapName
 Getter for a lightmap name.
 
-**Kind**: instance method of [<code>GeomItem</code>](#GeomItem)  
+
 **Returns**: <code>string</code> - - Returns the lightmap name.  
 <a name="GeomItem+getLightmapCoordsOffset"></a>
 
 ### getLightmapCoordsOffset
 Getter for a lightmap coordinate offset.
 
-**Kind**: instance method of [<code>GeomItem</code>](#GeomItem)  
+
 **Returns**: <code>any</code> - - Returns the lightmap coord offset.  
 <a name="GeomItem+applyAssetLightmapSettings"></a>
 
@@ -142,7 +142,7 @@ Getter for a lightmap coordinate offset.
 The root asset item pushes its offset to the geom items in the
 tree. This offsets the light coords for each geom.
 
-**Kind**: instance method of [<code>GeomItem</code>](#GeomItem)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -154,7 +154,7 @@ tree. This offsets the light coords for each geom.
 ### toJSON
 The toJSON method encodes this type as a json object for persistences.
 
-**Kind**: instance method of [<code>GeomItem</code>](#GeomItem)  
+
 **Returns**: <code>object</code> - - Returns the json object.  
 
 | Param | Type | Description |
@@ -167,7 +167,7 @@ The toJSON method encodes this type as a json object for persistences.
 ### fromJSON
 The fromJSON method decodes a json object for this type.
 
-**Kind**: instance method of [<code>GeomItem</code>](#GeomItem)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -179,7 +179,7 @@ The fromJSON method decodes a json object for this type.
 ### readBinary
 The readBinary method.
 
-**Kind**: instance method of [<code>GeomItem</code>](#GeomItem)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -191,7 +191,7 @@ The readBinary method.
 ### toString
 The toString method.
 
-**Kind**: instance method of [<code>GeomItem</code>](#GeomItem)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="GeomItem+clone"></a>
 
@@ -199,7 +199,7 @@ The toString method.
 The clone method constructs a new geom item, copies its values
 from this item and returns it.
 
-**Kind**: instance method of [<code>GeomItem</code>](#GeomItem)  
+
 **Returns**: [<code>GeomItem</code>](#GeomItem) - - Returns a new cloned geom item.  
 
 | Param | Type | Description |
@@ -211,7 +211,7 @@ from this item and returns it.
 ### copyFrom
 The copyFrom method.
 
-**Kind**: instance method of [<code>GeomItem</code>](#GeomItem)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -224,4 +224,4 @@ The copyFrom method.
 The destroy is called by the system to cause explicit resources cleanup.
 Users should never need to call this method directly.
 
-**Kind**: instance method of [<code>GeomItem</code>](#GeomItem)  
+

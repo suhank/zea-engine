@@ -3,7 +3,7 @@
 ### GLAudioItemsPass 
 Class representing a GL audio items pass.
 
-**Kind**: global class  
+
 **Extends**: <code>GLPass</code>  
 
 * [GLAudioItemsPass ⇐ <code>GLPass</code>](#GLAudioItemsPass)
@@ -22,7 +22,7 @@ Create a GL audio items pass.
 ### init
 The init method.
 
-**Kind**: instance method of [<code>GLAudioItemsPass</code>](#GLAudioItemsPass)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -34,7 +34,7 @@ The init method.
 ### addAudioSource
 The addAudioSource method.
 
-**Kind**: instance method of [<code>GLAudioItemsPass</code>](#GLAudioItemsPass)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -47,7 +47,7 @@ The addAudioSource method.
 ### draw
 The draw method.
 
-**Kind**: instance method of [<code>GLAudioItemsPass</code>](#GLAudioItemsPass)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |

@@ -3,7 +3,7 @@
 ### Camera 
 Class representing a camera in the scene tree.
 
-**Kind**: global class  
+
 **Extends**: <code>TreeItem</code>  
 
 * [Camera ⇐ <code>TreeItem</code>](#Camera)
@@ -39,14 +39,14 @@ Create a camera.
 ### getNear
 The getNear method.
 
-**Kind**: instance method of [<code>Camera</code>](#Camera)  
+
 **Returns**: <code>number</code> - - Returns the near value.  
 <a name="Camera+setNear"></a>
 
 ### setNear
 The setNear method.
 
-**Kind**: instance method of [<code>Camera</code>](#Camera)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -57,14 +57,14 @@ The setNear method.
 ### getFar
 The getFar method.
 
-**Kind**: instance method of [<code>Camera</code>](#Camera)  
+
 **Returns**: <code>number</code> - - Returns the far value.  
 <a name="Camera+setFar"></a>
 
 ### setFar
 The setFar method.
 
-**Kind**: instance method of [<code>Camera</code>](#Camera)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -76,7 +76,7 @@ The setFar method.
 Getter for the camera field of view (FOV).
 The FOV is how much of the scene the camera can see at once.
 
-**Kind**: instance method of [<code>Camera</code>](#Camera)  
+
 **Returns**: <code>number</code> - - Returns the FOV value.  
 <a name="Camera+setFov"></a>
 
@@ -84,7 +84,7 @@ The FOV is how much of the scene the camera can see at once.
 Setter for the camera field of view (FOV).
 The FOV is how much of the scene the camera can see at once.
 
-**Kind**: instance method of [<code>Camera</code>](#Camera)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -95,7 +95,7 @@ The FOV is how much of the scene the camera can see at once.
 ### setLensFocalLength
 Setter for the camera lens focal length.
 
-**Kind**: instance method of [<code>Camera</code>](#Camera)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -107,14 +107,14 @@ Setter for the camera lens focal length.
 ### getFocalDistance
 Getter for the camera focal length.
 
-**Kind**: instance method of [<code>Camera</code>](#Camera)  
+
 **Returns**: <code>any</code> - - Returns the lens focal length value..  
 <a name="Camera+setFocalDistance"></a>
 
 ### setFocalDistance
 Setter for the camera focal length.
 
-**Kind**: instance method of [<code>Camera</code>](#Camera)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -126,14 +126,14 @@ Setter for the camera focal length.
 ### getIsOrthographic
 The getIsOrthographic method.
 
-**Kind**: instance method of [<code>Camera</code>](#Camera)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="Camera+setIsOrthographic"></a>
 
 ### setIsOrthographic
 The setIsOrthographic method.
 
-**Kind**: instance method of [<code>Camera</code>](#Camera)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -145,7 +145,7 @@ The setIsOrthographic method.
 ### setPositionAndTarget
 Setter for the camera postion and target.
 
-**Kind**: instance method of [<code>Camera</code>](#Camera)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -158,14 +158,14 @@ Setter for the camera postion and target.
 ### getTargetPostion
 Getter for the target position.
 
-**Kind**: instance method of [<code>Camera</code>](#Camera)  
+
 **Returns**: <code>Vec3</code> - - Returns the target position.  
 <a name="Camera+frameView"></a>
 
 ### frameView
 The frameView method.
 
-**Kind**: instance method of [<code>Camera</code>](#Camera)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -178,7 +178,7 @@ The frameView method.
 ### updateProjectionMatrix
 The updateProjectionMatrix method.
 
-**Kind**: instance method of [<code>Camera</code>](#Camera)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |

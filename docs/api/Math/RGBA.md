@@ -3,7 +3,7 @@
 ### RGBA 
 Class representing the red, green, blue and alpha channel of a color.
 
-**Kind**: global class  
+
 **Extends**: <code>AttrValue</code>  
 
 * [RGBA ⇐ <code>AttrValue</code>](#RGBA)
@@ -62,14 +62,14 @@ Create a RGBA.
 ### r 
 Getter for red channel.
 
-**Kind**: instance property of [<code>RGBA</code>](#RGBA)  
+
 **Returns**: [<code>RGBA</code>](#RGBA) - - Returns the red channel.  
 <a name="RGBA+r"></a>
 
 ### r
 Setter for red channel.
 
-**Kind**: instance property of [<code>RGBA</code>](#RGBA)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -80,14 +80,14 @@ Setter for red channel.
 ### g 
 Getter for green channel.
 
-**Kind**: instance property of [<code>RGBA</code>](#RGBA)  
+
 **Returns**: [<code>RGBA</code>](#RGBA) - - Returns the green channel.  
 <a name="RGBA+g"></a>
 
 ### g
 Setter for green channel.
 
-**Kind**: instance property of [<code>RGBA</code>](#RGBA)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -98,14 +98,14 @@ Setter for green channel.
 ### b 
 Getter for blue channel.
 
-**Kind**: instance property of [<code>RGBA</code>](#RGBA)  
+
 **Returns**: [<code>RGBA</code>](#RGBA) - - Returns the blue channel.  
 <a name="RGBA+b"></a>
 
 ### b
 Setter for blue channel.
 
-**Kind**: instance property of [<code>RGBA</code>](#RGBA)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -116,14 +116,14 @@ Setter for blue channel.
 ### a 
 Getter for alpha channel.
 
-**Kind**: instance property of [<code>RGBA</code>](#RGBA)  
+
 **Returns**: [<code>RGBA</code>](#RGBA) - - Returns the alpha channel.  
 <a name="RGBA+a"></a>
 
 ### a
 Setter for alpha value.
 
-**Kind**: instance property of [<code>RGBA</code>](#RGBA)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -134,7 +134,7 @@ Setter for alpha value.
 ### set
 Setter from scalar components.
 
-**Kind**: instance method of [<code>RGBA</code>](#RGBA)  
+
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -148,7 +148,7 @@ Setter from scalar components.
 ### setFromOther
 Setter from another RGBA color.
 
-**Kind**: instance method of [<code>RGBA</code>](#RGBA)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -159,7 +159,7 @@ Setter from another RGBA color.
 ### setFromArray
 Setter from a scalar array.
 
-**Kind**: instance method of [<code>RGBA</code>](#RGBA)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -171,7 +171,7 @@ Setter from a scalar array.
 Setter from a hexadecimal value.
 E.g. #ff0000
 
-**Kind**: instance method of [<code>RGBA</code>](#RGBA)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -183,7 +183,7 @@ E.g. #ff0000
 Setter from a CSS color name.
 E.g. "red"
 
-**Kind**: instance method of [<code>RGBA</code>](#RGBA)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -194,14 +194,14 @@ E.g. "red"
 ### toHex
 Returns the hexadecimal value of this RGBA color.
 
-**Kind**: instance method of [<code>RGBA</code>](#RGBA)  
+
 **Returns**: <code>string</code> - - Returns the hex value.  
 <a name="RGBA+equal"></a>
 
 ### equal
 Returns true if this RGBA color is exactly the same as other.
 
-**Kind**: instance method of [<code>RGBA</code>](#RGBA)  
+
 **Returns**: <code>boolean</code> - - Returns true or false.  
 
 | Param | Type | Description |
@@ -213,7 +213,7 @@ Returns true if this RGBA color is exactly the same as other.
 ### notequals
 Returns true if this RGBA color is NOT exactly the same as other.
 
-**Kind**: instance method of [<code>RGBA</code>](#RGBA)  
+
 **Returns**: <code>boolean</code> - - Returns true or false.  
 
 | Param | Type | Description |
@@ -225,7 +225,7 @@ Returns true if this RGBA color is NOT exactly the same as other.
 ### approxEqual
 Returns true if this RGBA color is approximately the same as other.
 
-**Kind**: instance method of [<code>RGBA</code>](#RGBA)  
+
 **Returns**: <code>boolean</code> - - Returns true or false.  
 
 | Param | Type | Description |
@@ -238,7 +238,7 @@ Returns true if this RGBA color is approximately the same as other.
 ### add
 Returns a new RGBA color which is this RGBA color added to other.
 
-**Kind**: instance method of [<code>RGBA</code>](#RGBA)  
+
 **Returns**: [<code>RGBA</code>](#RGBA) - - Returns a new RGBA.  
 
 | Param | Type | Description |
@@ -250,7 +250,7 @@ Returns a new RGBA color which is this RGBA color added to other.
 ### subtract
 Returns a new RGBA color which is this RGBA color subtracted from other.
 
-**Kind**: instance method of [<code>RGBA</code>](#RGBA)  
+
 **Returns**: [<code>RGBA</code>](#RGBA) - - Returns a new RGBA.  
 
 | Param | Type | Description |
@@ -262,7 +262,7 @@ Returns a new RGBA color which is this RGBA color subtracted from other.
 ### scale
 Returns a new RGBA color which is this vector scaled by scalar.
 
-**Kind**: instance method of [<code>RGBA</code>](#RGBA)  
+
 **Returns**: [<code>RGBA</code>](#RGBA) - - Returns a new RGBA.  
 
 | Param | Type | Description |
@@ -274,7 +274,7 @@ Returns a new RGBA color which is this vector scaled by scalar.
 ### scaleInPlace
 Scales this RGBA color by scalar.
 
-**Kind**: instance method of [<code>RGBA</code>](#RGBA)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -285,7 +285,7 @@ Scales this RGBA color by scalar.
 ### applyGamma
 Apply gamma correction to this RGBA color.
 
-**Kind**: instance method of [<code>RGBA</code>](#RGBA)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -296,7 +296,7 @@ Apply gamma correction to this RGBA color.
 ### toLinear
 Converts to linear color space and returns a new color.
 
-**Kind**: instance method of [<code>RGBA</code>](#RGBA)  
+
 **Returns**: <code>Color</code> - - Returns a new RGBA.  
 
 | Param | Type | Default | Description |
@@ -308,7 +308,7 @@ Converts to linear color space and returns a new color.
 ### toGamma
 Converts to gamma color space and returns a new RGBA color.
 
-**Kind**: instance method of [<code>RGBA</code>](#RGBA)  
+
 **Returns**: [<code>RGBA</code>](#RGBA) - - Returns a new RGBA.  
 
 | Param | Type | Default | Description |
@@ -320,14 +320,14 @@ Converts to gamma color space and returns a new RGBA color.
 ### luminance
 Calculates and returns the relative luminance of the linear RGB component.
 
-**Kind**: instance method of [<code>RGBA</code>](#RGBA)  
+
 **Returns**: <code>number</code> - - The return value.  
 <a name="RGBA+lerp"></a>
 
 ### lerp
 Performs a linear interpolation between this RGBA color and other.
 
-**Kind**: instance method of [<code>RGBA</code>](#RGBA)  
+
 **Returns**: [<code>RGBA</code>](#RGBA) - - Returns a new RGBA.  
 
 | Param | Type | Description |
@@ -340,35 +340,35 @@ Performs a linear interpolation between this RGBA color and other.
 ### clone
 Clones this RGBA color and returns a new RGBA color.
 
-**Kind**: instance method of [<code>RGBA</code>](#RGBA)  
+
 **Returns**: [<code>RGBA</code>](#RGBA) - - Returns a new RGBA.  
 <a name="RGBA+asArray"></a>
 
 ### asArray
 Returns the type as an array. Often used to pass types to the GPU.
 
-**Kind**: instance method of [<code>RGBA</code>](#RGBA)  
+
 **Returns**: <code>array</code> - - Returns as an array.  
 <a name="RGBA+as3ComponentArray"></a>
 
 ### as3ComponentArray
 Returns the type as a 3 component array. Often used to pass types to the GPU.
 
-**Kind**: instance method of [<code>RGBA</code>](#RGBA)  
+
 **Returns**: <code>array</code> - - Returns as a 3 component array.  
 <a name="RGBA+toJSON"></a>
 
 ### toJSON
 The toJSON method encodes this type as a json object for persistences.
 
-**Kind**: instance method of [<code>RGBA</code>](#RGBA)  
+
 **Returns**: <code>object</code> - - The json object.  
 <a name="RGBA+fromJSON"></a>
 
 ### fromJSON
 The fromJSON method decodes a json object for this type.
 
-**Kind**: instance method of [<code>RGBA</code>](#RGBA)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -379,14 +379,14 @@ The fromJSON method decodes a json object for this type.
 ### toCSSString
 Returns the CSS rgba string.
 
-**Kind**: instance method of [<code>RGBA</code>](#RGBA)  
+
 **Returns**: <code>string</code> - - The return value.  
 <a name="RGBA.random"></a>
 
 ### random
 Creates a random RGBA.
 
-**Kind**: static method of [<code>RGBA</code>](#RGBA)  
+
 **Returns**: [<code>RGBA</code>](#RGBA) - - Returns a new random RGBA.  
 
 | Param | Type | Default | Description |

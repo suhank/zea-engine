@@ -3,7 +3,7 @@
 ### Cross 
 A class for generating a cross shape.
 
-**Kind**: global class  
+
 **Extends**: <code>Lines</code>  
 
 * [Cross ⇐ <code>Lines</code>](#Cross)
@@ -26,14 +26,14 @@ Create a cross.
 ### size 
 Getter for the cross size.
 
-**Kind**: instance property of [<code>Cross</code>](#Cross)  
+
 **Returns**: <code>number</code> - - Returns the size.  
 <a name="Cross+size"></a>
 
 ### size
 Setter for the cross size.
 
-**Kind**: instance property of [<code>Cross</code>](#Cross)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |

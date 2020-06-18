@@ -3,7 +3,7 @@
 ### PlaneType 
 Class representing a plane.
 
-**Kind**: global class  
+
 **Extends**: <code>AttrValue</code>  
 
 * [PlaneType ⇐ <code>AttrValue</code>](#PlaneType)
@@ -32,7 +32,7 @@ Create a plane.
 ### set
 Setter from scalar components.
 
-**Kind**: instance method of [<code>PlaneType</code>](#PlaneType)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -46,7 +46,7 @@ Setter from scalar components.
 ### divideScalar
 Thet divideScalar method
 
-**Kind**: instance method of [<code>PlaneType</code>](#PlaneType)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -57,7 +57,7 @@ Thet divideScalar method
 ### distanceToPoint
 Calculates the distance from a point to this place.
 
-**Kind**: instance method of [<code>PlaneType</code>](#PlaneType)  
+
 **Returns**: <code>number</code> - - The rreturn value.  
 
 | Param | Type | Description |
@@ -69,25 +69,25 @@ Calculates the distance from a point to this place.
 ### normalizeInPlace
 Normalize this plane in place modifying its values.
 
-**Kind**: instance method of [<code>PlaneType</code>](#PlaneType)  
+
 <a name="PlaneType+clone"></a>
 
 ### clone
 Clones this plane and returns a new plane.
 
-**Kind**: instance method of [<code>PlaneType</code>](#PlaneType)  
+
 **Returns**: <code>Plane</code> - - Returns a new plane.  
 <a name="PlaneType+toJSON"></a>
 
 ### toJSON
 The toJSON method encodes this type as a json object for persistences.
 
-**Kind**: instance method of [<code>PlaneType</code>](#PlaneType)  
+
 **Returns**: <code>object</code> - - The json object.  
 <a name="PlaneType+toString"></a>
 
 ### toString
 Calls `toJSON` method and stringifies it.
 
-**Kind**: instance method of [<code>PlaneType</code>](#PlaneType)  
+
 **Returns**: <code>string</code> - - The return value.  

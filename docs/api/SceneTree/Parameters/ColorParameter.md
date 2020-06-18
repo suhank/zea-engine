@@ -3,7 +3,7 @@
 ### ColorParameter 
 Class representing a color parameter.
 
-**Kind**: global class  
+
 **Extends**: <code>Parameter</code>  
 
 * [ColorParameter ⇐ <code>Parameter</code>](#ColorParameter)
@@ -27,7 +27,7 @@ Create a color parameter.
 ### readBinary
 The readBinary method.
 
-**Kind**: instance method of [<code>ColorParameter</code>](#ColorParameter)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -40,7 +40,7 @@ The readBinary method.
 The clone method constructs a new color parameter,
 copies its values from this parameter and returns it.
 
-**Kind**: instance method of [<code>ColorParameter</code>](#ColorParameter)  
+
 **Returns**: [<code>ColorParameter</code>](#ColorParameter) - - Returns a new cloned color parameter.  
 
 | Param | Type | Description |

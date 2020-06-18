@@ -3,7 +3,7 @@
 ### Cylinder 
 A class for generating a cylinder geometry.
 
-**Kind**: global class  
+
 **Extends**: <code>Mesh</code>  
 <a name="new_Cylinder_new"></a>
 

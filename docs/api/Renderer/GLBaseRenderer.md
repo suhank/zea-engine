@@ -3,7 +3,7 @@
 ### GLBaseRenderer 
 Class representing a GL base renderer.
 
-**Kind**: global class  
+
 **Extends**: <code>ParameterOwner</code>  
 
 * [GLBaseRenderer ⇐ <code>ParameterOwner</code>](#GLBaseRenderer)
@@ -77,13 +77,13 @@ Create a GL base renderer.
 ### gl
 Getter for gl.
 
-**Kind**: instance property of [<code>GLBaseRenderer</code>](#GLBaseRenderer)  
+
 <a name="GLBaseRenderer+addShaderPreprocessorDirective"></a>
 
 ### addShaderPreprocessorDirective
 The addShaderPreprocessorDirective method.
 
-**Kind**: instance method of [<code>GLBaseRenderer</code>](#GLBaseRenderer)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -95,28 +95,28 @@ The addShaderPreprocessorDirective method.
 ### getShaderPreproc
 The getShaderPreproc method.
 
-**Kind**: instance method of [<code>GLBaseRenderer</code>](#GLBaseRenderer)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="GLBaseRenderer+getWidth"></a>
 
 ### getWidth
 The getWidth method.
 
-**Kind**: instance method of [<code>GLBaseRenderer</code>](#GLBaseRenderer)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="GLBaseRenderer+getHeight"></a>
 
 ### getHeight
 The getHeight method.
 
-**Kind**: instance method of [<code>GLBaseRenderer</code>](#GLBaseRenderer)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="GLBaseRenderer+addViewport"></a>
 
 ### addViewport
 Add a viewport.
 
-**Kind**: instance method of [<code>GLBaseRenderer</code>](#GLBaseRenderer)  
+
 **Returns**: <code>GLViewport</code> - - The return value.  
 
 | Param | Type | Description |
@@ -128,7 +128,7 @@ Add a viewport.
 ### getViewport
 The getViewport method.
 
-**Kind**: instance method of [<code>GLBaseRenderer</code>](#GLBaseRenderer)  
+
 **Returns**: <code>GLViewport</code> - - The return value.  
 
 | Param | Type | Default | Description |
@@ -140,7 +140,7 @@ The getViewport method.
 ### getViewportAtPos
 The getViewportAtPos method.
 
-**Kind**: instance method of [<code>GLBaseRenderer</code>](#GLBaseRenderer)  
+
 **Returns**: <code>GLViewport</code> - - The return value.  
 
 | Param | Type | Description |
@@ -153,7 +153,7 @@ The getViewportAtPos method.
 ### activateViewport
 The activateViewport method.
 
-**Kind**: instance method of [<code>GLBaseRenderer</code>](#GLBaseRenderer)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -164,7 +164,7 @@ The activateViewport method.
 ### activateViewportAtPos
 The activateViewportAtPos method.
 
-**Kind**: instance method of [<code>GLBaseRenderer</code>](#GLBaseRenderer)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -176,32 +176,32 @@ The activateViewportAtPos method.
 ### getActiveViewport
 The getActiveViewport method.
 
-**Kind**: instance method of [<code>GLBaseRenderer</code>](#GLBaseRenderer)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="GLBaseRenderer+suspendDrawing"></a>
 
 ### suspendDrawing
 The suspendDrawing method.
 
-**Kind**: instance method of [<code>GLBaseRenderer</code>](#GLBaseRenderer)  
+
 <a name="GLBaseRenderer+resumeDrawing"></a>
 
 ### resumeDrawing
 The resumeDrawing method.
 
-**Kind**: instance method of [<code>GLBaseRenderer</code>](#GLBaseRenderer)  
+
 <a name="GLBaseRenderer+renderGeomDataFbos"></a>
 
 ### renderGeomDataFbos
 The renderGeomDataFbos method. Frame buffer (FBO).
 
-**Kind**: instance method of [<code>GLBaseRenderer</code>](#GLBaseRenderer)  
+
 <a name="GLBaseRenderer+setupGrid"></a>
 
 ### setupGrid
 Setup the grid in the scene.
 
-**Kind**: instance method of [<code>GLBaseRenderer</code>](#GLBaseRenderer)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -216,14 +216,14 @@ Setup the grid in the scene.
 ### getScene
 The getScene method.
 
-**Kind**: instance method of [<code>GLBaseRenderer</code>](#GLBaseRenderer)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="GLBaseRenderer+setScene"></a>
 
 ### setScene
 The setScene method.
 
-**Kind**: instance method of [<code>GLBaseRenderer</code>](#GLBaseRenderer)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -234,7 +234,7 @@ The setScene method.
 ### addTreeItem
 Add tree items to the scene.
 
-**Kind**: instance method of [<code>GLBaseRenderer</code>](#GLBaseRenderer)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -245,7 +245,7 @@ Add tree items to the scene.
 ### removeTreeItem
 Remove tree items from the scene.
 
-**Kind**: instance method of [<code>GLBaseRenderer</code>](#GLBaseRenderer)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -256,14 +256,14 @@ Remove tree items from the scene.
 ### getGL
 The getGL method.
 
-**Kind**: instance method of [<code>GLBaseRenderer</code>](#GLBaseRenderer)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="GLBaseRenderer+resizeFbos"></a>
 
 ### resizeFbos
 The resizeFbos method. Frame buffer (FBO).
 
-**Kind**: instance method of [<code>GLBaseRenderer</code>](#GLBaseRenderer)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -275,14 +275,14 @@ The resizeFbos method. Frame buffer (FBO).
 ### getDiv
 The getDiv method.
 
-**Kind**: instance method of [<code>GLBaseRenderer</code>](#GLBaseRenderer)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="GLBaseRenderer+setupWebGL"></a>
 
 ### setupWebGL
 The setupWebGL method.
 
-**Kind**: instance method of [<code>GLBaseRenderer</code>](#GLBaseRenderer)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -294,13 +294,13 @@ The setupWebGL method.
 ### bindEventHandlers
 The bindEventHandlers method.
 
-**Kind**: instance method of [<code>GLBaseRenderer</code>](#GLBaseRenderer)  
+
 <a name="GLBaseRenderer+setUndoRedoManager"></a>
 
 ### setUndoRedoManager
 The setUndoRedoManager method.
 
-**Kind**: instance method of [<code>GLBaseRenderer</code>](#GLBaseRenderer)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -311,21 +311,21 @@ The setUndoRedoManager method.
 ### getGLCanvas
 The getGLCanvas method.
 
-**Kind**: instance method of [<code>GLBaseRenderer</code>](#GLBaseRenderer)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="GLBaseRenderer+getScreenQuad"></a>
 
 ### getScreenQuad
 The getScreenQuad method.
 
-**Kind**: instance method of [<code>GLBaseRenderer</code>](#GLBaseRenderer)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="GLBaseRenderer+onWheel"></a>
 
 ### onWheel
 Causes an event to occur when the mouse wheel is rolled up or down over an element.
 
-**Kind**: instance method of [<code>GLBaseRenderer</code>](#GLBaseRenderer)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -336,7 +336,7 @@ Causes an event to occur when the mouse wheel is rolled up or down over an eleme
 ### frameAll
 The frameAll method.
 
-**Kind**: instance method of [<code>GLBaseRenderer</code>](#GLBaseRenderer)  
+
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -347,7 +347,7 @@ The frameAll method.
 ### getOrCreateShader
 The getOrCreateShader method.
 
-**Kind**: instance method of [<code>GLBaseRenderer</code>](#GLBaseRenderer)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -359,7 +359,7 @@ The getOrCreateShader method.
 ### addPass
 The addPass method.
 
-**Kind**: instance method of [<code>GLBaseRenderer</code>](#GLBaseRenderer)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Default | Description |
@@ -373,7 +373,7 @@ The addPass method.
 ### registerPass
 The registerPass method.
 
-**Kind**: instance method of [<code>GLBaseRenderer</code>](#GLBaseRenderer)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -385,7 +385,7 @@ The registerPass method.
 ### getPass
 The getPass method.
 
-**Kind**: instance method of [<code>GLBaseRenderer</code>](#GLBaseRenderer)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -397,7 +397,7 @@ The getPass method.
 ### findPass
 The findPass method.
 
-**Kind**: instance method of [<code>GLBaseRenderer</code>](#GLBaseRenderer)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -409,80 +409,80 @@ The findPass method.
 ### getGizmoPass
 The getGizmoPass method.
 
-**Kind**: instance method of [<code>GLBaseRenderer</code>](#GLBaseRenderer)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="GLBaseRenderer+supportsVR"></a>
 
 ### supportsVR
 The supportsVR method.
 
-**Kind**: instance method of [<code>GLBaseRenderer</code>](#GLBaseRenderer)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="GLBaseRenderer+getVRViewport"></a>
 
 ### getVRViewport
 The getVRViewport method.
 
-**Kind**: instance method of [<code>GLBaseRenderer</code>](#GLBaseRenderer)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="GLBaseRenderer+getXRViewport"></a>
 
 ### getXRViewport
 The getXRViewport method.
 
-**Kind**: instance method of [<code>GLBaseRenderer</code>](#GLBaseRenderer)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="GLBaseRenderer+isXRViewportPresenting"></a>
 
 ### isXRViewportPresenting
 The isXRViewportPresenting method.
 
-**Kind**: instance method of [<code>GLBaseRenderer</code>](#GLBaseRenderer)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="GLBaseRenderer+isContinuouslyDrawing"></a>
 
 ### isContinuouslyDrawing
 The isContinuouslyDrawing method.
 
-**Kind**: instance method of [<code>GLBaseRenderer</code>](#GLBaseRenderer)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="GLBaseRenderer+startContinuousDrawing"></a>
 
 ### startContinuousDrawing
 The startContinuousDrawing method.
 
-**Kind**: instance method of [<code>GLBaseRenderer</code>](#GLBaseRenderer)  
+
 <a name="GLBaseRenderer+stopContinuousDrawing"></a>
 
 ### stopContinuousDrawing
 The stopContinuousDrawing method.
 
-**Kind**: instance method of [<code>GLBaseRenderer</code>](#GLBaseRenderer)  
+
 <a name="GLBaseRenderer+toggleContinuousDrawing"></a>
 
 ### toggleContinuousDrawing
 The toggleContinuousDrawing method.
 
-**Kind**: instance method of [<code>GLBaseRenderer</code>](#GLBaseRenderer)  
+
 <a name="GLBaseRenderer+drawItemChanged"></a>
 
 ### drawItemChanged
 The drawItemChanged method.
 
-**Kind**: instance method of [<code>GLBaseRenderer</code>](#GLBaseRenderer)  
+
 <a name="GLBaseRenderer+requestRedraw"></a>
 
 ### requestRedraw
 Request a single redraw, usually in response to a signal/event.
 
-**Kind**: instance method of [<code>GLBaseRenderer</code>](#GLBaseRenderer)  
+
 **Returns**: <code>boolean</code> - - The return value.  
 <a name="GLBaseRenderer+bindGLBaseRenderer"></a>
 
 ### bindGLBaseRenderer
 The bindGLBaseRenderer method.
 
-**Kind**: instance method of [<code>GLBaseRenderer</code>](#GLBaseRenderer)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -493,7 +493,7 @@ The bindGLBaseRenderer method.
 ### drawScene
 The drawScene method.
 
-**Kind**: instance method of [<code>GLBaseRenderer</code>](#GLBaseRenderer)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -504,7 +504,7 @@ The drawScene method.
 ### drawHighlightedGeoms
 The drawHighlightedGeoms method.
 
-**Kind**: instance method of [<code>GLBaseRenderer</code>](#GLBaseRenderer)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -515,7 +515,7 @@ The drawHighlightedGeoms method.
 ### drawSceneGeomData
 The drawSceneGeomData method.
 
-**Kind**: instance method of [<code>GLBaseRenderer</code>](#GLBaseRenderer)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -526,7 +526,7 @@ The drawSceneGeomData method.
 ### registerPass
 The registerPass method.
 
-**Kind**: static method of [<code>GLBaseRenderer</code>](#GLBaseRenderer)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |

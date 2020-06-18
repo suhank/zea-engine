@@ -3,7 +3,7 @@
 ### Attribute
 Class representing an attribute.
 
-**Kind**: global class  
+
 
 * [Attribute](#Attribute)
     * [new Attribute(dataType, expectedSize, defaultValue)](#new-Attribute)
@@ -40,28 +40,28 @@ Create an attribute.
 ### length 
 Getter for length.
 
-**Kind**: instance property of [<code>Attribute</code>](#Attribute)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="Attribute+dataType"></a>
 
 ### dataType 
 Getter for data.
 
-**Kind**: instance property of [<code>Attribute</code>](#Attribute)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="Attribute+data"></a>
 
 ### data 
 Getter for data.
 
-**Kind**: instance property of [<code>Attribute</code>](#Attribute)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="Attribute+data"></a>
 
 ### data
 Setter for data.
 
-**Kind**: instance property of [<code>Attribute</code>](#Attribute)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -72,14 +72,14 @@ Setter for data.
 ### numElements 
 Getter for numElements.
 
-**Kind**: instance property of [<code>Attribute</code>](#Attribute)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="Attribute+resize"></a>
 
 ### resize
 The resize method.
 
-**Kind**: instance method of [<code>Attribute</code>](#Attribute)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -90,7 +90,7 @@ The resize method.
 ### initRange
 The initRange method.
 
-**Kind**: instance method of [<code>Attribute</code>](#Attribute)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -101,14 +101,14 @@ The initRange method.
 ### getCount
 The getCount method.
 
-**Kind**: instance method of [<code>Attribute</code>](#Attribute)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="Attribute+getFloat32Value"></a>
 
 ### getFloat32Value
 The getFloat32Value method.
 
-**Kind**: instance method of [<code>Attribute</code>](#Attribute)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -120,7 +120,7 @@ The getFloat32Value method.
 ### setFloat32Value
 The setFloat32Value method.
 
-**Kind**: instance method of [<code>Attribute</code>](#Attribute)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -132,7 +132,7 @@ The setFloat32Value method.
 ### getValueRef
 The getValueRef method.
 
-**Kind**: instance method of [<code>Attribute</code>](#Attribute)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -144,7 +144,7 @@ The getValueRef method.
 ### setValue
 The setValue method.
 
-**Kind**: instance method of [<code>Attribute</code>](#Attribute)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -156,7 +156,7 @@ The setValue method.
 ### toJSON
 The toJSON method encodes this type as a json object for persistences.
 
-**Kind**: instance method of [<code>Attribute</code>](#Attribute)  
+
 **Returns**: <code>object</code> - - Returns the json object.  
 
 | Param | Type | Description |
@@ -169,7 +169,7 @@ The toJSON method encodes this type as a json object for persistences.
 ### fromJSON
 The fromJSON method decodes a json object for this type.
 
-**Kind**: instance method of [<code>Attribute</code>](#Attribute)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -180,5 +180,5 @@ The fromJSON method decodes a json object for this type.
 ### toString
 The toString method.
 
-**Kind**: instance method of [<code>Attribute</code>](#Attribute)  
+
 **Returns**: <code>any</code> - - The return value.  

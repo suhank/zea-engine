@@ -10,7 +10,7 @@
 <a name="AtlasLayoutShader"></a>
 
 ### AtlasLayoutShader
-**Kind**: global class  
+
 <a name="new_AtlasLayoutShader_new"></a>
 
 ### new AtlasLayoutShader
@@ -24,7 +24,7 @@ Create an atlas layout shader.
 <a name="GLImageAtlas"></a>
 
 ### GLImageAtlas
-**Kind**: global class  
+
 
 * [GLImageAtlas](#GLImageAtlas)
     * [new GLImageAtlas(gl, name, format, type, clearColor)](#new-GLImageAtlas)
@@ -61,21 +61,21 @@ Create an image atlas..
 ### isLoaded
 The isLoaded method.
 
-**Kind**: instance method of [<code>GLImageAtlas</code>](#GLImageAtlas)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="GLImageAtlas+getMainImage"></a>
 
 ### getMainImage
 The getMainImage method.
 
-**Kind**: instance method of [<code>GLImageAtlas</code>](#GLImageAtlas)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="GLImageAtlas+addSubImage"></a>
 
 ### addSubImage
 The addSubImage method.
 
-**Kind**: instance method of [<code>GLImageAtlas</code>](#GLImageAtlas)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -87,7 +87,7 @@ The addSubImage method.
 ### removeSubImage
 The removeSubImage method.
 
-**Kind**: instance method of [<code>GLImageAtlas</code>](#GLImageAtlas)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -98,7 +98,7 @@ The removeSubImage method.
 ### getSubImage
 The getSubImage method.
 
-**Kind**: instance method of [<code>GLImageAtlas</code>](#GLImageAtlas)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -110,20 +110,20 @@ The getSubImage method.
 ### numSubImages
 The numSubImages method.
 
-**Kind**: instance method of [<code>GLImageAtlas</code>](#GLImageAtlas)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="GLImageAtlas+generateAtlasLayout"></a>
 
 ### generateAtlasLayout
 The generateAtlasLayout method.
 
-**Kind**: instance method of [<code>GLImageAtlas</code>](#GLImageAtlas)  
+
 <a name="GLImageAtlas+getLayoutData"></a>
 
 ### getLayoutData
 The getLayoutData method.
 
-**Kind**: instance method of [<code>GLImageAtlas</code>](#GLImageAtlas)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -135,7 +135,7 @@ The getLayoutData method.
 ### renderAtlas
 The renderAtlas method.
 
-**Kind**: instance method of [<code>GLImageAtlas</code>](#GLImageAtlas)  
+
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -147,14 +147,14 @@ The renderAtlas method.
 ### isReady
 The isReady method.
 
-**Kind**: instance method of [<code>GLImageAtlas</code>](#GLImageAtlas)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="GLImageAtlas+bindToUniform"></a>
 
 ### bindToUniform
 The bindToUniform method.
 
-**Kind**: instance method of [<code>GLImageAtlas</code>](#GLImageAtlas)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -167,11 +167,11 @@ The bindToUniform method.
 ### cleanup
 The cleanup method.
 
-**Kind**: instance method of [<code>GLImageAtlas</code>](#GLImageAtlas)  
+
 <a name="GLImageAtlas+destroy"></a>
 
 ### destroy
 The destroy is called by the system to cause explicit resources cleanup.
 Users should never need to call this method directly.
 
-**Kind**: instance method of [<code>GLImageAtlas</code>](#GLImageAtlas)  
+

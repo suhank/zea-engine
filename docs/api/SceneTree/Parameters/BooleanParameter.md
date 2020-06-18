@@ -3,7 +3,7 @@
 ### BooleanParameter 
 Class representing a boolean parameter.
 
-**Kind**: global class  
+
 **Extends**: <code>Parameter</code>  
 
 * [BooleanParameter ⇐ <code>Parameter</code>](#BooleanParameter)
@@ -27,7 +27,7 @@ Create a boolean parameter.
 The clone method constructs a new boolean parameter,
 copies its values from this parameter and returns it.
 
-**Kind**: instance method of [<code>BooleanParameter</code>](#BooleanParameter)  
+
 **Returns**: [<code>BooleanParameter</code>](#BooleanParameter) - - Returns a new cloned boolean parameter.  
 
 | Param | Type | Description |

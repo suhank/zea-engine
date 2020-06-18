@@ -3,7 +3,7 @@
 ### Ray
 Class representing a ray that emits from an origin in a specified direction.
 
-**Kind**: global class  
+
 
 * [Ray](#Ray)
     * [new Ray(start, dir)](#new-Ray)
@@ -32,7 +32,7 @@ Create a ray.
 ### closestPoint
 Get the closest point.
 
-**Kind**: instance method of [<code>Ray</code>](#Ray)  
+
 **Returns**: [<code>Ray</code>](#Ray) - - Returns a Ray.  
 
 | Param | Type | Description |
@@ -44,7 +44,7 @@ Get the closest point.
 ### pointAtDist
 Get the closest point at a distance.
 
-**Kind**: instance method of [<code>Ray</code>](#Ray)  
+
 **Returns**: [<code>Ray</code>](#Ray) - - Returns a Ray.  
 
 | Param | Type | Description |
@@ -56,7 +56,7 @@ Get the closest point at a distance.
 ### intersectRayVector
 Returns the two ray params that represent the closest point between the two rays.
 
-**Kind**: instance method of [<code>Ray</code>](#Ray)  
+
 **Returns**: [<code>Ray</code>](#Ray) - - Returns a Ray.  
 
 | Param | Type | Description |
@@ -69,7 +69,7 @@ Returns the two ray params that represent the closest point between the two rays
 Returns one ray param representing the intersection
 of this ray against the plane defined by the given ray.
 
-**Kind**: instance method of [<code>Ray</code>](#Ray)  
+
 **Returns**: <code>number</code> - - The return value.  
 
 | Param | Type | Description |
@@ -81,21 +81,21 @@ of this ray against the plane defined by the given ray.
 ### clone
 Clones this Ray and returns a new Ray.
 
-**Kind**: instance method of [<code>Ray</code>](#Ray)  
+
 **Returns**: [<code>Ray</code>](#Ray) - - Returns a new Ray.  
 <a name="Ray+toJSON"></a>
 
 ### toJSON
 The toJSON method encodes this type as a json object for persistences.
 
-**Kind**: instance method of [<code>Ray</code>](#Ray)  
+
 **Returns**: <code>object</code> - - The json object.  
 <a name="Ray+fromJSON"></a>
 
 ### fromJSON
 The fromJSON method decodes a json object for this type.
 
-**Kind**: instance method of [<code>Ray</code>](#Ray)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -106,5 +106,5 @@ The fromJSON method decodes a json object for this type.
 ### toString
 Calls `toJSON` method and stringifies it.
 
-**Kind**: instance method of [<code>Ray</code>](#Ray)  
+
 **Returns**: <code>string</code> - - The return value.  

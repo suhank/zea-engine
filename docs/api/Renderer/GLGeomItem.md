@@ -3,7 +3,7 @@
 ### GLGeomItem 
 This class abstracts the rendering of a collection of geometries to screen.
 
-**Kind**: global class  
+
 **Extends**: <code>EventEmitter</code>  
 
 * [GLGeomItem ⇐ <code>EventEmitter</code>](#GLGeomItem)
@@ -39,48 +39,48 @@ Create a GL geom item.
 ### getGeomItem
 The getGeomItem method.
 
-**Kind**: instance method of [<code>GLGeomItem</code>](#GLGeomItem)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="GLGeomItem+getGLGeom"></a>
 
 ### getGLGeom
 The getGLGeom method.
 
-**Kind**: instance method of [<code>GLGeomItem</code>](#GLGeomItem)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="GLGeomItem+getVisible"></a>
 
 ### getVisible
 The getVisible method.
 
-**Kind**: instance method of [<code>GLGeomItem</code>](#GLGeomItem)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="GLGeomItem+getId"></a>
 
 ### getId
 The getId method.
 
-**Kind**: instance method of [<code>GLGeomItem</code>](#GLGeomItem)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="GLGeomItem+getFlags"></a>
 
 ### getFlags
 The getFlags method.
 
-**Kind**: instance method of [<code>GLGeomItem</code>](#GLGeomItem)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="GLGeomItem+updateVisibility"></a>
 
 ### updateVisibility
 The updateVisibility method.
 
-**Kind**: instance method of [<code>GLGeomItem</code>](#GLGeomItem)  
+
 <a name="GLGeomItem+setCullState"></a>
 
 ### setCullState
 The setCullState method.
 
-**Kind**: instance method of [<code>GLGeomItem</code>](#GLGeomItem)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -91,20 +91,20 @@ The setCullState method.
 ### updateGeomMatrix
 The updateGeomMatrix method.
 
-**Kind**: instance method of [<code>GLGeomItem</code>](#GLGeomItem)  
+
 <a name="GLGeomItem+getGeomMatrixArray"></a>
 
 ### getGeomMatrixArray
 The getGeomMatrixArray method.
 
-**Kind**: instance method of [<code>GLGeomItem</code>](#GLGeomItem)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="GLGeomItem+bind"></a>
 
 ### bind
 The bind method.
 
-**Kind**: instance method of [<code>GLGeomItem</code>](#GLGeomItem)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -117,4 +117,4 @@ The bind method.
 The destroy is called by the system to cause explicit resources cleanup.
 Users should never need to call this method directly.
 
-**Kind**: instance method of [<code>GLGeomItem</code>](#GLGeomItem)  
+

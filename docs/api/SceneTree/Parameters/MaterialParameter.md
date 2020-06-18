@@ -3,7 +3,7 @@
 ### MaterialParameter 
 Class representing a material parameter.
 
-**Kind**: global class  
+
 **Extends**: <code>Parameter</code>  
 
 * [MaterialParameter ⇐ <code>Parameter</code>](#MaterialParameter)
@@ -30,7 +30,7 @@ Create a material parameter.
 ### setValue
 The setValue method.
 
-**Kind**: instance method of [<code>MaterialParameter</code>](#MaterialParameter)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -42,7 +42,7 @@ The setValue method.
 ### toJSON
 The toJSON method encodes this type as a json object for persistences.
 
-**Kind**: instance method of [<code>MaterialParameter</code>](#MaterialParameter)  
+
 **Returns**: <code>object</code> - - Returns the json object.  
 
 | Param | Type | Description |
@@ -55,7 +55,7 @@ The toJSON method encodes this type as a json object for persistences.
 ### fromJSON
 The fromJSON method decodes a json object for this type.
 
-**Kind**: instance method of [<code>MaterialParameter</code>](#MaterialParameter)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -69,7 +69,7 @@ The fromJSON method decodes a json object for this type.
 The clone method constructs a new material parameter, copies its values
 from this parameter and returns it.
 
-**Kind**: instance method of [<code>MaterialParameter</code>](#MaterialParameter)  
+
 **Returns**: [<code>MaterialParameter</code>](#MaterialParameter) - - Returns a new material parameter.  
 
 | Param | Type | Description |
@@ -82,4 +82,4 @@ from this parameter and returns it.
 The destroy is called by the system to cause explicit resources cleanup.
 Users should never need to call this method directly.
 
-**Kind**: instance method of [<code>MaterialParameter</code>](#MaterialParameter)  
+

@@ -3,7 +3,7 @@
 ### Mat4Parameter 
 Class representing a Mat4 (4x4 matrix) parameter.
 
-**Kind**: global class  
+
 **Extends**: <code>Parameter</code>  
 
 * [Mat4Parameter ⇐ <code>Parameter</code>](#Mat4Parameter)
@@ -27,7 +27,7 @@ Create a Mat4 parameter.
 The clone method constructs a new Mat4 parameter,
 copies its values from this parameter and returns it.
 
-**Kind**: instance method of [<code>Mat4Parameter</code>](#Mat4Parameter)  
+
 **Returns**: [<code>Mat4Parameter</code>](#Mat4Parameter) - - Returns a new cloned Mat4 parameter.  
 
 | Param | Type | Description |

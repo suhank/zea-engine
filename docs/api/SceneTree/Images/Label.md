@@ -3,7 +3,7 @@
 ### Label 
 Class representing a label.
 
-**Kind**: global class  
+
 **Extends**: <code>DataImage</code>  
 
 * [Label ⇐ <code>DataImage</code>](#Label)
@@ -30,26 +30,26 @@ Create a label.
 ### loadLabelData
 The loadLabelData method.
 
-**Kind**: instance method of [<code>Label</code>](#Label)  
+
 <a name="Label+renderLabelToImage"></a>
 
 ### renderLabelToImage
 Renders the label text to a canvas element ready to display,
 
-**Kind**: instance method of [<code>Label</code>](#Label)  
+
 <a name="Label+getParams"></a>
 
 ### getParams
 The getParams method.
 
-**Kind**: instance method of [<code>Label</code>](#Label)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="Label+toJSON"></a>
 
 ### toJSON
 The toJSON method encodes this type as a json object for persistences.
 
-**Kind**: instance method of [<code>Label</code>](#Label)  
+
 **Returns**: <code>object</code> - - Returns the json object.  
 
 | Param | Type | Description |
@@ -62,7 +62,7 @@ The toJSON method encodes this type as a json object for persistences.
 ### fromJSON
 The fromJSON method decodes a json object for this type.
 
-**Kind**: instance method of [<code>Label</code>](#Label)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |

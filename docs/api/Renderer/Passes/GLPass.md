@@ -3,7 +3,7 @@
 ### GLPass 
 This class abstracts the rendering of a collection of geometries to screen.
 
-**Kind**: global class  
+
 **Extends**: <code>ParameterOwner</code>  
 
 * [GLPass ⇐ <code>ParameterOwner</code>](#GLPass)
@@ -27,7 +27,7 @@ Create a GL pass.
 ### init
 The init method.
 
-**Kind**: instance method of [<code>GLPass</code>](#GLPass)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -39,7 +39,7 @@ The init method.
 ### setPassIndex
 The setPassIndex method.
 
-**Kind**: instance method of [<code>GLPass</code>](#GLPass)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -50,19 +50,19 @@ The setPassIndex method.
 ### startPresenting
 The startPresenting method.
 
-**Kind**: instance method of [<code>GLPass</code>](#GLPass)  
+
 <a name="GLPass+stopPresenting"></a>
 
 ### stopPresenting
 The stopPresenting method.
 
-**Kind**: instance method of [<code>GLPass</code>](#GLPass)  
+
 <a name="GLPass+draw"></a>
 
 ### draw
 The draw method.
 
-**Kind**: instance method of [<code>GLPass</code>](#GLPass)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -73,7 +73,7 @@ The draw method.
 ### drawHighlightedGeoms
 The drawHighlightedGeoms method.
 
-**Kind**: instance method of [<code>GLPass</code>](#GLPass)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -84,7 +84,7 @@ The drawHighlightedGeoms method.
 ### drawGeomData
 The drawGeomData method.
 
-**Kind**: instance method of [<code>GLPass</code>](#GLPass)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -95,7 +95,7 @@ The drawGeomData method.
 ### getGeomItemAndDist
 The getGeomItemAndDist method.
 
-**Kind**: instance method of [<code>GLPass</code>](#GLPass)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |

@@ -3,7 +3,7 @@
 ### BaseGeomItem 
 Class representing a base geometry item in a scene tree.
 
-**Kind**: global class  
+
 **Extends**: <code>TreeItem</code>  
 
 * [BaseGeomItem ⇐ <code>TreeItem</code>](#BaseGeomItem)
@@ -35,7 +35,7 @@ Create a base geometry item.
 ### setOverlay
 The setOverlay method.
 
-**Kind**: instance method of [<code>BaseGeomItem</code>](#BaseGeomItem)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -46,14 +46,14 @@ The setOverlay method.
 ### isOverlay
 The getLayers method.
 
-**Kind**: instance method of [<code>BaseGeomItem</code>](#BaseGeomItem)  
+
 **Returns**: <code>boolean</code> - - The return value.  
 <a name="BaseGeomItem+addLayer"></a>
 
 ### addLayer
 Adds a layer.
 
-**Kind**: instance method of [<code>BaseGeomItem</code>](#BaseGeomItem)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -64,21 +64,21 @@ Adds a layer.
 ### getLayers
 The getLayers method.
 
-**Kind**: instance method of [<code>BaseGeomItem</code>](#BaseGeomItem)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="BaseGeomItem+isCutawayEnabled"></a>
 
 ### isCutawayEnabled
 Checks if cutways are enabled.
 
-**Kind**: instance method of [<code>BaseGeomItem</code>](#BaseGeomItem)  
+
 **Returns**: <code>boolean</code> - - Returns true if enabled.  
 <a name="BaseGeomItem+setCutawayEnabled"></a>
 
 ### setCutawayEnabled
 Setter for enabling cutways.
 
-**Kind**: instance method of [<code>BaseGeomItem</code>](#BaseGeomItem)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -89,14 +89,14 @@ Setter for enabling cutways.
 ### getCutVector
 Getter for cutway vectors.
 
-**Kind**: instance method of [<code>BaseGeomItem</code>](#BaseGeomItem)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="BaseGeomItem+setCutVector"></a>
 
 ### setCutVector
 Setter for cutway vectors.
 
-**Kind**: instance method of [<code>BaseGeomItem</code>](#BaseGeomItem)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -107,14 +107,14 @@ Setter for cutway vectors.
 ### getCutDist
 Getter for the cutaway distance.
 
-**Kind**: instance method of [<code>BaseGeomItem</code>](#BaseGeomItem)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="BaseGeomItem+setCutDist"></a>
 
 ### setCutDist
 Setter for the cutaway distance.
 
-**Kind**: instance method of [<code>BaseGeomItem</code>](#BaseGeomItem)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -125,7 +125,7 @@ Setter for the cutaway distance.
 ### readBinary
 The readBinary method.
 
-**Kind**: instance method of [<code>BaseGeomItem</code>](#BaseGeomItem)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |

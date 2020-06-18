@@ -3,7 +3,7 @@
 ### HDRImageMixer 
 Class representing an HDR (high dynamic range) image mixer.
 
-**Kind**: global class  
+
 **Extends**: <code>BaseImage</code>  
 
 * [HDRImageMixer ⇐ <code>BaseImage</code>](#HDRImageMixer)
@@ -34,21 +34,21 @@ Create an HDR image mixer.
 ### isLoaded
 The isLoaded method.
 
-**Kind**: instance method of [<code>HDRImageMixer</code>](#HDRImageMixer)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="HDRImageMixer+isStream"></a>
 
 ### isStream
 The isStream method.
 
-**Kind**: instance method of [<code>HDRImageMixer</code>](#HDRImageMixer)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="HDRImageMixer+setURLs"></a>
 
 ### setURLs
 The setURLs method.
 
-**Kind**: instance method of [<code>HDRImageMixer</code>](#HDRImageMixer)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -59,7 +59,7 @@ The setURLs method.
 ### setURL
 The setURL method.
 
-**Kind**: instance method of [<code>HDRImageMixer</code>](#HDRImageMixer)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -71,7 +71,7 @@ The setURL method.
 ### setWeights
 The setWeights method.
 
-**Kind**: instance method of [<code>HDRImageMixer</code>](#HDRImageMixer)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -82,7 +82,7 @@ The setWeights method.
 ### setWeight
 The setWeights method.
 
-**Kind**: instance method of [<code>HDRImageMixer</code>](#HDRImageMixer)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -94,14 +94,14 @@ The setWeights method.
 ### getParams
 The getParams method.
 
-**Kind**: instance method of [<code>HDRImageMixer</code>](#HDRImageMixer)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="HDRImageMixer+toJSON"></a>
 
 ### toJSON
 The toJSON method encodes this type as a json object for persistences.
 
-**Kind**: instance method of [<code>HDRImageMixer</code>](#HDRImageMixer)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -113,7 +113,7 @@ The toJSON method encodes this type as a json object for persistences.
 ### fromJSON
 The fromJSON method decodes a json object for this type.
 
-**Kind**: instance method of [<code>HDRImageMixer</code>](#HDRImageMixer)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |

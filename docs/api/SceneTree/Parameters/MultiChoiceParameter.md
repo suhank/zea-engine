@@ -3,7 +3,7 @@
 ### MultiChoiceParameter 
 Class representing a multi choice parameter.
 
-**Kind**: global class  
+
 **Extends**: <code>NumberParameter</code>  
 
 * [MultiChoiceParameter ⇐ <code>NumberParameter</code>](#MultiChoiceParameter)
@@ -28,14 +28,14 @@ Create a multi choice parameter.
 ### getChoices
 The getChoices method.
 
-**Kind**: instance method of [<code>MultiChoiceParameter</code>](#MultiChoiceParameter)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="MultiChoiceParameter+setValue"></a>
 
 ### setValue
 The setValue method.
 
-**Kind**: instance method of [<code>MultiChoiceParameter</code>](#MultiChoiceParameter)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |

@@ -3,7 +3,7 @@
 ### Torus 
 A class for generating a torus geometry.
 
-**Kind**: global class  
+
 **Extends**: <code>Mesh</code>  
 
 * [Torus ⇐ <code>Mesh</code>](#Torus)
@@ -33,14 +33,14 @@ Create a torus.
 ### innerRadius 
 Getter for the inner radius.
 
-**Kind**: instance property of [<code>Torus</code>](#Torus)  
+
 **Returns**: <code>number</code> - - Returns the radius.  
 <a name="Torus+innerRadius"></a>
 
 ### innerRadius
 Setter for the inner radius.
 
-**Kind**: instance property of [<code>Torus</code>](#Torus)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -51,14 +51,14 @@ Setter for the inner radius.
 ### outerRadius 
 Getter for the outer radius.
 
-**Kind**: instance property of [<code>Torus</code>](#Torus)  
+
 **Returns**: <code>number</code> - - Returns the radius.  
 <a name="Torus+outerRadius"></a>
 
 ### outerRadius
 Setter for the outer radius.
 
-**Kind**: instance property of [<code>Torus</code>](#Torus)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -69,14 +69,14 @@ Setter for the outer radius.
 ### detail 
 Getter for the torus detail.
 
-**Kind**: instance property of [<code>Torus</code>](#Torus)  
+
 **Returns**: <code>number</code> - - Returns the detail.  
 <a name="Torus+detail"></a>
 
 ### detail
 Setter for the torus detail.
 
-**Kind**: instance property of [<code>Torus</code>](#Torus)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -87,5 +87,5 @@ Setter for the torus detail.
 ### toJSON
 The toJSON method encodes this type as a json object for persistences.
 
-**Kind**: instance method of [<code>Torus</code>](#Torus)  
+
 **Returns**: <code>object</code> - - Returns the json object.  

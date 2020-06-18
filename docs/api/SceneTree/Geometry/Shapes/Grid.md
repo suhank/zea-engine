@@ -3,7 +3,7 @@
 ### Grid 
 A class for generating a grid.
 
-**Kind**: global class  
+
 **Extends**: <code>Lines</code>  
 
 * [Grid ⇐ <code>Lines</code>](#Grid)
@@ -38,14 +38,14 @@ Create a grid.
 ### sizeX 
 Getter for the length of the grid along the X axis.
 
-**Kind**: instance property of [<code>Grid</code>](#Grid)  
+
 **Returns**: <code>number</code> - - Returns the length.  
 <a name="Grid+sizeX"></a>
 
 ### sizeX
 Setter for the length of the grid along the X axis.
 
-**Kind**: instance property of [<code>Grid</code>](#Grid)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -56,14 +56,14 @@ Setter for the length of the grid along the X axis.
 ### sizeY 
 Getter for the length of the grid along the Y axis.
 
-**Kind**: instance property of [<code>Grid</code>](#Grid)  
+
 **Returns**: <code>number</code> - - Returns the length.  
 <a name="Grid+sizeY"></a>
 
 ### sizeY
 Setter for the length of the grid along the U axis.
 
-**Kind**: instance property of [<code>Grid</code>](#Grid)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -74,14 +74,14 @@ Setter for the length of the grid along the U axis.
 ### divisionsX 
 Getter for the number of divisions along the X axis.
 
-**Kind**: instance property of [<code>Grid</code>](#Grid)  
+
 **Returns**: <code>number</code> - - Returns the number of divisions.  
 <a name="Grid+divisionsX"></a>
 
 ### divisionsX
 Setter for the number of divisions along the X axis.
 
-**Kind**: instance property of [<code>Grid</code>](#Grid)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -92,14 +92,14 @@ Setter for the number of divisions along the X axis.
 ### divisionsY 
 Getter for the number of divisions along the Y axis.
 
-**Kind**: instance property of [<code>Grid</code>](#Grid)  
+
 **Returns**: <code>number</code> - - Returns the number of divisions.  
 <a name="Grid+divisionsY"></a>
 
 ### divisionsY
 Setter for the number of divisions along the Y axis.
 
-**Kind**: instance property of [<code>Grid</code>](#Grid)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -110,7 +110,7 @@ Setter for the number of divisions along the Y axis.
 ### setSize
 Setter for the size of the grid.
 
-**Kind**: instance method of [<code>Grid</code>](#Grid)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -122,5 +122,5 @@ Setter for the size of the grid.
 ### toJSON
 The toJSON method encodes this type as a json object for persistences.
 
-**Kind**: instance method of [<code>Grid</code>](#Grid)  
+
 **Returns**: <code>object</code> - - Returns the json object.  

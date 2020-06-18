@@ -3,7 +3,7 @@
 ### Scene
 Class representing a scene in a scene tree.
 
-**Kind**: global class  
+
 
 * [Scene](#Scene)
     * [new Scene(resources)](#new-Scene)
@@ -32,28 +32,28 @@ Create a scene.
 ### getSettings
 The getRoot method.
 
-**Kind**: instance method of [<code>Scene</code>](#Scene)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="Scene+getRoot"></a>
 
 ### getRoot
 The getRoot method.
 
-**Kind**: instance method of [<code>Scene</code>](#Scene)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="Scene+getResourceLoader"></a>
 
 ### getResourceLoader
 The getResourceLoader method.
 
-**Kind**: instance method of [<code>Scene</code>](#Scene)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="Scene+setEnvMap"></a>
 
 ### setEnvMap
 The setEnvMap method.
 
-**Kind**: instance method of [<code>Scene</code>](#Scene)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -64,7 +64,7 @@ The setEnvMap method.
 ### addAsset
 The addAsset method.
 
-**Kind**: instance method of [<code>Scene</code>](#Scene)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -75,7 +75,7 @@ The addAsset method.
 ### setupGrid
 Set up the scene grid.
 
-**Kind**: instance method of [<code>Scene</code>](#Scene)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Default | Description |
@@ -89,7 +89,7 @@ Set up the scene grid.
 ### loadCommonAssetResource
 The loadCommonAssetResource method.
 
-**Kind**: instance method of [<code>Scene</code>](#Scene)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -101,7 +101,7 @@ The loadCommonAssetResource method.
 ### toJSON
 The toJSON method encodes this type as a json object for persistences.
 
-**Kind**: instance method of [<code>Scene</code>](#Scene)  
+
 **Returns**: <code>object</code> - - Returns the json object.  
 
 | Param | Type | Default | Description |
@@ -114,7 +114,7 @@ The toJSON method encodes this type as a json object for persistences.
 ### fromJSON
 The fromJSON method decodes a json object for this type.
 
-**Kind**: instance method of [<code>Scene</code>](#Scene)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |

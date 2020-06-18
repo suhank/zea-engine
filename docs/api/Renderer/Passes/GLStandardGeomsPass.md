@@ -3,7 +3,7 @@
 ### GLStandardGeomsPass 
 This class abstracts the rendering of a collection of geometries to screen.
 
-**Kind**: global class  
+
 **Extends**: <code>GLPass</code>  
 
 * [GLStandardGeomsPass ⇐ <code>GLPass</code>](#GLStandardGeomsPass)
@@ -36,7 +36,7 @@ Create a GL pass.
 ### init
 The init method.
 
-**Kind**: instance method of [<code>GLStandardGeomsPass</code>](#GLStandardGeomsPass)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -48,7 +48,7 @@ The init method.
 ### filterGeomItem
 The filterGeomItem method.
 
-**Kind**: instance method of [<code>GLStandardGeomsPass</code>](#GLStandardGeomsPass)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -60,7 +60,7 @@ The filterGeomItem method.
 ### addShader
 The addShader method.
 
-**Kind**: instance method of [<code>GLStandardGeomsPass</code>](#GLStandardGeomsPass)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -76,7 +76,7 @@ using this material. There should always be at least a single glshader
 and optionally a glgeomdatashader for rendering the goem data buffer
 and a glselectedshader for rendering selection hilghlights
 
-**Kind**: instance method of [<code>GLStandardGeomsPass</code>](#GLStandardGeomsPass)  
+
 **Returns**: <code>object</code> - - The object containing the shader instances.  
 
 | Param | Type | Description |
@@ -88,7 +88,7 @@ and a glselectedshader for rendering selection hilghlights
 ### addMaterial
 The addMaterial method.
 
-**Kind**: instance method of [<code>GLStandardGeomsPass</code>](#GLStandardGeomsPass)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -100,7 +100,7 @@ The addMaterial method.
 ### addGeom
 The addGeom method.
 
-**Kind**: instance method of [<code>GLStandardGeomsPass</code>](#GLStandardGeomsPass)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -112,7 +112,7 @@ The addGeom method.
 ### removeGeom
 The removeGeom method.
 
-**Kind**: instance method of [<code>GLStandardGeomsPass</code>](#GLStandardGeomsPass)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -123,7 +123,7 @@ The removeGeom method.
 ### addGeomItem
 The addGeomItem method.
 
-**Kind**: instance method of [<code>GLStandardGeomsPass</code>](#GLStandardGeomsPass)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -135,7 +135,7 @@ The addGeomItem method.
 ### removeGeomItem
 The removeGeomItem method.
 
-**Kind**: instance method of [<code>GLStandardGeomsPass</code>](#GLStandardGeomsPass)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -147,7 +147,7 @@ The removeGeomItem method.
 ### removeGLGeom
 The removeGLGeom method.
 
-**Kind**: instance method of [<code>GLStandardGeomsPass</code>](#GLStandardGeomsPass)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -159,7 +159,7 @@ The removeGLGeom method.
 ### getGeomItem
 The getGeomItem method.
 
-**Kind**: instance method of [<code>GLStandardGeomsPass</code>](#GLStandardGeomsPass)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -171,26 +171,26 @@ The getGeomItem method.
 ### newItemsReadyForLoading
 The newItemsReadyForLoading method.
 
-**Kind**: instance method of [<code>GLStandardGeomsPass</code>](#GLStandardGeomsPass)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="GLStandardGeomsPass+uploadGeomItems"></a>
 
 ### uploadGeomItems
 The uploadGeomItems method.
 
-**Kind**: instance method of [<code>GLStandardGeomsPass</code>](#GLStandardGeomsPass)  
+
 <a name="GLStandardGeomsPass+finalize"></a>
 
 ### finalize
 The finalize method.
 
-**Kind**: instance method of [<code>GLStandardGeomsPass</code>](#GLStandardGeomsPass)  
+
 <a name="GLStandardGeomsPass+bind"></a>
 
 ### bind
 The bind method.
 
-**Kind**: instance method of [<code>GLStandardGeomsPass</code>](#GLStandardGeomsPass)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -202,7 +202,7 @@ The bind method.
 ### bindShader
 The bindShader method.
 
-**Kind**: instance method of [<code>GLStandardGeomsPass</code>](#GLStandardGeomsPass)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -215,7 +215,7 @@ The bindShader method.
 ### bindMaterial
 The bindMaterial method.
 
-**Kind**: instance method of [<code>GLStandardGeomsPass</code>](#GLStandardGeomsPass)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |

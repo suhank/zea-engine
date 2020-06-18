@@ -3,7 +3,7 @@
 ### NumberParameter 
 Class representing a number parameter.
 
-**Kind**: global class  
+
 **Extends**: <code>Parameter</code>  
 
 * [NumberParameter ⇐ <code>Parameter</code>](#NumberParameter)
@@ -37,7 +37,7 @@ Create a number parameter.
 ### setValue
 The setValue method.
 
-**Kind**: instance method of [<code>NumberParameter</code>](#NumberParameter)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -49,7 +49,7 @@ The setValue method.
 ### getValue
 The getValue method.
 
-**Kind**: instance method of [<code>NumberParameter</code>](#NumberParameter)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -61,14 +61,14 @@ The getValue method.
 ### getRange
 The getRange method.
 
-**Kind**: instance method of [<code>NumberParameter</code>](#NumberParameter)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="NumberParameter+setRange"></a>
 
 ### setRange
 The setRange method.
 
-**Kind**: instance method of [<code>NumberParameter</code>](#NumberParameter)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -80,14 +80,14 @@ The setRange method.
 ### getStep
 The getStep method.
 
-**Kind**: instance method of [<code>NumberParameter</code>](#NumberParameter)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="NumberParameter+setStep"></a>
 
 ### setStep
 The setStep method.
 
-**Kind**: instance method of [<code>NumberParameter</code>](#NumberParameter)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -99,7 +99,7 @@ The setStep method.
 ### toJSON
 The toJSON method encodes this type as a json object for persistences.
 
-**Kind**: instance method of [<code>NumberParameter</code>](#NumberParameter)  
+
 **Returns**: <code>object</code> - - Returns the json object.  
 
 | Param | Type | Description |
@@ -112,7 +112,7 @@ The toJSON method encodes this type as a json object for persistences.
 ### fromJSON
 The fromJSON method decodes a json object for this type.
 
-**Kind**: instance method of [<code>NumberParameter</code>](#NumberParameter)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -125,7 +125,7 @@ The fromJSON method decodes a json object for this type.
 ### readBinary
 The readBinary method.
 
-**Kind**: instance method of [<code>NumberParameter</code>](#NumberParameter)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -138,7 +138,7 @@ The readBinary method.
 The clone method constructs a new number parameter, copies its values
 from this parameter and returns it.
 
-**Kind**: instance method of [<code>NumberParameter</code>](#NumberParameter)  
+
 **Returns**: [<code>NumberParameter</code>](#NumberParameter) - - Returns a new number parameter.  
 
 | Param | Type | Description |

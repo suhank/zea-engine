@@ -14,7 +14,7 @@
 ### Lightmap 
 Class representing a lightmap.
 
-**Kind**: global class  
+
 **Extends**: <code>RefCounted</code>  
 
 * [Lightmap ⇐ <code>RefCounted</code>](#Lightmap)
@@ -43,26 +43,26 @@ Create a lightmap.
 ### width
 Getter for width.
 
-**Kind**: instance property of [<code>Lightmap</code>](#Lightmap)  
+
 <a name="Lightmap+height"></a>
 
 ### height
 Getter for height.
 
-**Kind**: instance property of [<code>Lightmap</code>](#Lightmap)  
+
 <a name="Lightmap+isStream"></a>
 
 ### isStream
 The isStream method.
 
-**Kind**: instance method of [<code>Lightmap</code>](#Lightmap)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="Lightmap+loadResource"></a>
 
 ### loadResource
 The loadResource method.
 
-**Kind**: instance method of [<code>Lightmap</code>](#Lightmap)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -73,7 +73,7 @@ The loadResource method.
 ### fromJSON
 The fromJSON method decodes a json object for this type.
 
-**Kind**: instance method of [<code>Lightmap</code>](#Lightmap)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -84,7 +84,7 @@ The fromJSON method decodes a json object for this type.
 ### LightmapMixer 
 Class representing a lightmap mixer.
 
-**Kind**: global class  
+
 **Extends**: <code>ParameterOwner</code>  
 
 * [LightmapMixer ⇐ <code>ParameterOwner</code>](#LightmapMixer)
@@ -114,26 +114,26 @@ Create a lightmap mixer
 ### width
 Getter for width.
 
-**Kind**: instance property of [<code>LightmapMixer</code>](#LightmapMixer)  
+
 <a name="LightmapMixer+height"></a>
 
 ### height
 Getter for height.
 
-**Kind**: instance property of [<code>LightmapMixer</code>](#LightmapMixer)  
+
 <a name="LightmapMixer+isStream"></a>
 
 ### isStream
 The isStream method.
 
-**Kind**: instance method of [<code>LightmapMixer</code>](#LightmapMixer)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="LightmapMixer+loadResource"></a>
 
 ### loadResource
 The loadResource method.
 
-**Kind**: instance method of [<code>LightmapMixer</code>](#LightmapMixer)  
+
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -147,7 +147,7 @@ The loadResource method.
 ### setWeight
 The setWeight method.
 
-**Kind**: instance method of [<code>LightmapMixer</code>](#LightmapMixer)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -159,14 +159,14 @@ The setWeight method.
 ### numSubImages
 The numSubImages method.
 
-**Kind**: instance method of [<code>LightmapMixer</code>](#LightmapMixer)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="LightmapMixer+getSubImage"></a>
 
 ### getSubImage
 The getSubImage method.
 
-**Kind**: instance method of [<code>LightmapMixer</code>](#LightmapMixer)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -178,7 +178,7 @@ The getSubImage method.
 ### getSubImageWeight
 The getSubImageWeight method.
 
-**Kind**: instance method of [<code>LightmapMixer</code>](#LightmapMixer)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -190,7 +190,7 @@ The getSubImageWeight method.
 ### fromJSON
 The fromJSON method decodes a json object for this type.
 
-**Kind**: instance method of [<code>LightmapMixer</code>](#LightmapMixer)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |

@@ -1,13 +1,14 @@
 <a name="ParameterOwner"></a>
 
-### ParameterOwner
+### ParameterOwner 
 Class representing a parameter owner in the scene tree.
 
-**Kind**: global class  
 
-* [ParameterOwner](#ParameterOwner)
+**Extends**: <code>EventEmitter</code>  
+
+* [ParameterOwner ⇐ <code>EventEmitter</code>](#ParameterOwner)
     * [new ParameterOwner()](#new-ParameterOwner)
-    * [getId() ⇒ <code>any</code>](#getId)
+    * [getId() ⇒ <code>number</code>](#getId)
     * [numParameters() ⇒ <code>number</code>](#numParameters)
     * [getParameters() ⇒ <code>any</code>](#getParameters)
     * [getParameterIndex(paramName) ⇒ <code>any</code>](#getParameterIndex)
@@ -27,7 +28,7 @@ Class representing a parameter owner in the scene tree.
 <a name="new_ParameterOwner_new"></a>
 
 ### new ParameterOwner
-Create a parameter owner.
+Creates an instance of ParameterOwner.
 
 <a name="ParameterOwner+getId"></a>
 
@@ -35,28 +36,28 @@ Create a parameter owner.
 Returns the unique id of the object. Every Object has a unique
 identifier which is based on a counter that is incremented.
 
-**Kind**: instance method of [<code>ParameterOwner</code>](#ParameterOwner)  
-**Returns**: <code>any</code> - - The return value.  
+
+**Returns**: <code>number</code> - - The Id of the ParameterOwner object.  
 <a name="ParameterOwner+numParameters"></a>
 
 ### numParameters
 The numParameters method.
 
-**Kind**: instance method of [<code>ParameterOwner</code>](#ParameterOwner)  
+
 **Returns**: <code>number</code> - - The return value.  
 <a name="ParameterOwner+getParameters"></a>
 
 ### getParameters
 The getParameters method.
 
-**Kind**: instance method of [<code>ParameterOwner</code>](#ParameterOwner)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="ParameterOwner+getParameterIndex"></a>
 
 ### getParameterIndex
 The getParameterIndex method.
 
-**Kind**: instance method of [<code>ParameterOwner</code>](#ParameterOwner)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -68,7 +69,7 @@ The getParameterIndex method.
 ### getParameterByIndex
 The getParameterByIndex method.
 
-**Kind**: instance method of [<code>ParameterOwner</code>](#ParameterOwner)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -80,7 +81,7 @@ The getParameterByIndex method.
 ### hasParameter
 The hasParameter method.
 
-**Kind**: instance method of [<code>ParameterOwner</code>](#ParameterOwner)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -92,7 +93,7 @@ The hasParameter method.
 ### getParameter
 The getParameter method.
 
-**Kind**: instance method of [<code>ParameterOwner</code>](#ParameterOwner)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -104,7 +105,7 @@ The getParameter method.
 ### addParameter
 Add a parameter.
 
-**Kind**: instance method of [<code>ParameterOwner</code>](#ParameterOwner)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -116,7 +117,7 @@ Add a parameter.
 ### insertParameter
 Insert a parameter.
 
-**Kind**: instance method of [<code>ParameterOwner</code>](#ParameterOwner)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -129,7 +130,7 @@ Insert a parameter.
 ### removeParameter
 Remove a parameter.
 
-**Kind**: instance method of [<code>ParameterOwner</code>](#ParameterOwner)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -140,7 +141,7 @@ Remove a parameter.
 ### replaceParameter
 Replace a parameter.
 
-**Kind**: instance method of [<code>ParameterOwner</code>](#ParameterOwner)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -152,7 +153,7 @@ Replace a parameter.
 ### toJSON
 The toJSON method encodes this type as a json object for persistences.
 
-**Kind**: instance method of [<code>ParameterOwner</code>](#ParameterOwner)  
+
 **Returns**: <code>object</code> - - Returns the json object.  
 
 | Param | Type | Description |
@@ -165,7 +166,7 @@ The toJSON method encodes this type as a json object for persistences.
 ### fromJSON
 The fromJSON method decodes a json object for this type.
 
-**Kind**: instance method of [<code>ParameterOwner</code>](#ParameterOwner)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -178,7 +179,7 @@ The fromJSON method decodes a json object for this type.
 ### readBinary
 The readBinary method.
 
-**Kind**: instance method of [<code>ParameterOwner</code>](#ParameterOwner)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -190,14 +191,14 @@ The readBinary method.
 ### toString
 The toString method.
 
-**Kind**: instance method of [<code>ParameterOwner</code>](#ParameterOwner)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="ParameterOwner+copyFrom"></a>
 
 ### copyFrom
 The copyFrom method.
 
-**Kind**: instance method of [<code>ParameterOwner</code>](#ParameterOwner)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |

@@ -3,7 +3,7 @@
 ### SceneSettings 
 Class representing scene settings in a scene tree.
 
-**Kind**: global class  
+
 **Extends**: <code>BaseItem</code>  
 <a name="new_SceneSettings_new"></a>
 

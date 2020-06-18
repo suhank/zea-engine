@@ -3,7 +3,7 @@
 ### AssetItem 
 Class representing an asset item in a scene tree.
 
-**Kind**: global class  
+
 **Extends**: <code>TreeItem</code>  
 
 * [AssetItem ⇐ <code>TreeItem</code>](#AssetItem)
@@ -32,42 +32,42 @@ Create an asset item.
 ### isLoaded
 The isLoaded method.
 
-**Kind**: instance method of [<code>AssetItem</code>](#AssetItem)  
+
 **Returns**: <code>boolean</code> - - Returns true if the asset has already loaded its data.  
 <a name="AssetItem+getEngineDataVersion"></a>
 
 ### getEngineDataVersion
 The getGeometryLibrary method.
 
-**Kind**: instance method of [<code>AssetItem</code>](#AssetItem)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="AssetItem+getGeometryLibrary"></a>
 
 ### getGeometryLibrary
 The getGeometryLibrary method.
 
-**Kind**: instance method of [<code>AssetItem</code>](#AssetItem)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="AssetItem+getMaterialLibrary"></a>
 
 ### getMaterialLibrary
 The getMaterialLibrary method.
 
-**Kind**: instance method of [<code>AssetItem</code>](#AssetItem)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="AssetItem+getUnitsConversion"></a>
 
 ### getUnitsConversion
 The getUnitsConversion method.
 
-**Kind**: instance method of [<code>AssetItem</code>](#AssetItem)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="AssetItem+readBinary"></a>
 
 ### readBinary
 The readBinary method.
 
-**Kind**: instance method of [<code>AssetItem</code>](#AssetItem)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -79,7 +79,7 @@ The readBinary method.
 ### toJSON
 The toJSON method encodes this type as a json object for persistences.
 
-**Kind**: instance method of [<code>AssetItem</code>](#AssetItem)  
+
 **Returns**: <code>object</code> - - Returns the json object.  
 
 | Param | Type | Default | Description |
@@ -92,7 +92,7 @@ The toJSON method encodes this type as a json object for persistences.
 ### fromJSON
 The fromJSON method decodes a json object for this type.
 
-**Kind**: instance method of [<code>AssetItem</code>](#AssetItem)  
+
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |

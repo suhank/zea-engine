@@ -3,7 +3,7 @@
 ### FilePathParameter 
 Class representing a file path parameter.
 
-**Kind**: global class  
+
 **Extends**: <code>Parameter</code>  
 
 * [FilePathParameter ⇐ <code>Parameter</code>](#FilePathParameter)
@@ -43,7 +43,7 @@ Create a file path parameter.
 ### setSupportedExts
 The setSupportedExts method.
 
-**Kind**: instance method of [<code>FilePathParameter</code>](#FilePathParameter)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -54,14 +54,14 @@ The setSupportedExts method.
 ### getFilepath
 The getFilepath method.
 
-**Kind**: instance method of [<code>FilePathParameter</code>](#FilePathParameter)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="FilePathParameter+setFilepath"></a>
 
 ### setFilepath
 The setFilepath method.
 
-**Kind**: instance method of [<code>FilePathParameter</code>](#FilePathParameter)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -73,56 +73,56 @@ The setFilepath method.
 ### getFilename
 The getFilename method.
 
-**Kind**: instance method of [<code>FilePathParameter</code>](#FilePathParameter)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="FilePathParameter+getExt"></a>
 
 ### getExt
 The getExt method.
 
-**Kind**: instance method of [<code>FilePathParameter</code>](#FilePathParameter)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="FilePathParameter+getStem"></a>
 
 ### getStem
 The getStem method.
 
-**Kind**: instance method of [<code>FilePathParameter</code>](#FilePathParameter)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="FilePathParameter+getFileFolder"></a>
 
 ### getFileFolder
 The getFileFolder method.
 
-**Kind**: instance method of [<code>FilePathParameter</code>](#FilePathParameter)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="FilePathParameter+getFileFolderPath"></a>
 
 ### getFileFolderPath
 The getFileFolderPath method.
 
-**Kind**: instance method of [<code>FilePathParameter</code>](#FilePathParameter)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="FilePathParameter+getFile"></a>
 
 ### getFile
 The getFile method.
 
-**Kind**: instance method of [<code>FilePathParameter</code>](#FilePathParameter)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="FilePathParameter+getFileDesc"></a>
 
 ### getFileDesc
 The getFileDesc method.
 
-**Kind**: instance method of [<code>FilePathParameter</code>](#FilePathParameter)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="FilePathParameter+setUrl"></a>
 
 ### setUrl
 The setUrl method.
 
-**Kind**: instance method of [<code>FilePathParameter</code>](#FilePathParameter)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -134,14 +134,14 @@ The setUrl method.
 ### getUrl
 The getUrl method.
 
-**Kind**: instance method of [<code>FilePathParameter</code>](#FilePathParameter)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="FilePathParameter+setDirty"></a>
 
 ### setDirty
 The setDirty method.
 
-**Kind**: instance method of [<code>FilePathParameter</code>](#FilePathParameter)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -152,7 +152,7 @@ The setDirty method.
 ### setValue
 The setValue method.
 
-**Kind**: instance method of [<code>FilePathParameter</code>](#FilePathParameter)  
+
 **Returns**: <code>boolean</code> - - The return value.  
 
 | Param | Type | Description |
@@ -165,7 +165,7 @@ The setValue method.
 ### toJSON
 The toJSON method encodes this type as a json object for persistences.
 
-**Kind**: instance method of [<code>FilePathParameter</code>](#FilePathParameter)  
+
 **Returns**: <code>object</code> - - Returns the json object.  
 
 | Param | Type | Description |
@@ -178,7 +178,7 @@ The toJSON method encodes this type as a json object for persistences.
 ### fromJSON
 The fromJSON method decodes a json object for this type.
 
-**Kind**: instance method of [<code>FilePathParameter</code>](#FilePathParameter)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -192,7 +192,7 @@ The fromJSON method decodes a json object for this type.
 The clone method constructs a new file path parameter,
 copies its values from this parameter and returns it.
 
-**Kind**: instance method of [<code>FilePathParameter</code>](#FilePathParameter)  
+
 **Returns**: [<code>FilePathParameter</code>](#FilePathParameter) - - Returns a new cloned file path parameter.  
 
 | Param | Type | Description |
@@ -205,4 +205,4 @@ copies its values from this parameter and returns it.
 The destroy is called by the system to cause explicit resources cleanup.
 Users should never need to call this method directly.
 
-**Kind**: instance method of [<code>FilePathParameter</code>](#FilePathParameter)  
+

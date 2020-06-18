@@ -3,7 +3,7 @@
 ### GLRenderTarget
 Class representing a GL render target.
 
-**Kind**: global class  
+
 
 * [GLRenderTarget](#GLRenderTarget)
     * [new GLRenderTarget(gl, params)](#new-GLRenderTarget)
@@ -36,7 +36,7 @@ Create a GL render target.
 ### configure
 The configure method.
 
-**Kind**: instance method of [<code>GLRenderTarget</code>](#GLRenderTarget)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -47,7 +47,7 @@ The configure method.
 ### bindForWriting
 The bindForWriting method.
 
-**Kind**: instance method of [<code>GLRenderTarget</code>](#GLRenderTarget)  
+
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -59,7 +59,7 @@ The bindForWriting method.
 ### unbindForWriting
 The unbindForWriting method.
 
-**Kind**: instance method of [<code>GLRenderTarget</code>](#GLRenderTarget)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -70,7 +70,7 @@ The unbindForWriting method.
 ### clear
 The clear method.
 
-**Kind**: instance method of [<code>GLRenderTarget</code>](#GLRenderTarget)  
+
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -81,19 +81,19 @@ The clear method.
 ### bindForReading
 The bindForReading method.
 
-**Kind**: instance method of [<code>GLRenderTarget</code>](#GLRenderTarget)  
+
 <a name="GLRenderTarget+unbindForReading"></a>
 
 ### unbindForReading
 The unbindForReading method.
 
-**Kind**: instance method of [<code>GLRenderTarget</code>](#GLRenderTarget)  
+
 <a name="GLRenderTarget+bindColorTexture"></a>
 
 ### bindColorTexture
 The bindColorTexture method.
 
-**Kind**: instance method of [<code>GLRenderTarget</code>](#GLRenderTarget)  
+
 **Returns**: <code>boolean</code> - - The return value.  
 
 | Param | Type | Default | Description |
@@ -107,7 +107,7 @@ The bindColorTexture method.
 ### bindDepthTexture
 The bindDepthTexture method.
 
-**Kind**: instance method of [<code>GLRenderTarget</code>](#GLRenderTarget)  
+
 **Returns**: <code>boolean</code> - - The return value.  
 
 | Param | Type | Description |
@@ -120,13 +120,13 @@ The bindDepthTexture method.
 ### unbind
 The unbind method.
 
-**Kind**: instance method of [<code>GLRenderTarget</code>](#GLRenderTarget)  
+
 <a name="GLRenderTarget+resize"></a>
 
 ### resize
 The resize method.
 
-**Kind**: instance method of [<code>GLRenderTarget</code>](#GLRenderTarget)  
+
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -139,7 +139,7 @@ The resize method.
 ### bindToUniform
 The bindToUniform method.
 
-**Kind**: instance method of [<code>GLRenderTarget</code>](#GLRenderTarget)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -154,4 +154,4 @@ The bindToUniform method.
 The destroy is called by the system to cause explicit resources cleanup.
 Users should never need to call this method directly.
 
-**Kind**: instance method of [<code>GLRenderTarget</code>](#GLRenderTarget)  
+
