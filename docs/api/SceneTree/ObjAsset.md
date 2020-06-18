@@ -1,6 +1,6 @@
 <a name="ObjAsset"></a>
 
-## ObjAsset ⇐ <code>AssetItem</code>
+### ObjAsset 
 Class representing an object asset.
 
 **Kind**: global class  

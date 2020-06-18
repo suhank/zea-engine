@@ -1,4 +1,4 @@
-## Classes
+### Classes
 
 <dl>
 <dt><a href="#AudioItem">AudioItem</a> ⇐ <code>TreeItem</code></dt>
@@ -11,7 +11,7 @@
 
 <a name="AudioItem"></a>
 
-## AudioItem ⇐ <code>TreeItem</code>
+### AudioItem 
 Class representing an audio item in a scene tree.
 
 **Kind**: global class  
@@ -52,7 +52,7 @@ The setAudioStream method.
 
 <a name="FileAudioItem"></a>
 
-## FileAudioItem ⇐ [<code>AudioItem</code>](#AudioItem)
+### FileAudioItem 
 Class representing a audio file item in a scene tree.
 
 **Kind**: global class  

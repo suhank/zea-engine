@@ -1,6 +1,6 @@
 <a name="Ray"></a>
 
-## Ray
+### Ray
 Class representing a ray that emits from an origin in a specified direction.
 
 **Kind**: global class  
@@ -66,7 +66,8 @@ Returns the two ray params that represent the closest point between the two rays
 <a name="Ray+intersectRayPlane"></a>
 
 ### intersectRayPlane
-Returns one ray param representing the intersectionof this ray against the plane defined by the given ray.
+Returns one ray param representing the intersection
+of this ray against the plane defined by the given ray.
 
 **Kind**: instance method of [<code>Ray</code>](#Ray)  
 **Returns**: <code>number</code> - - The return value.  

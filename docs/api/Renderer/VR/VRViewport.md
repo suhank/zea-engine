@@ -1,6 +1,6 @@
 <a name="VRViewport"></a>
 
-## VRViewport ⇐ <code>GLBaseViewport</code>
+### VRViewport 
 Class representing a VR viewport.
 
 **Kind**: global class  

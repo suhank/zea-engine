@@ -1,6 +1,6 @@
 <a name="RGBA"></a>
 
-## RGBA ⇐ <code>AttrValue</code>
+### RGBA 
 Class representing the red, green, blue and alpha channel of a color.
 
 **Kind**: global class  
@@ -66,7 +66,7 @@ Getter for red channel.
 **Returns**: [<code>RGBA</code>](#RGBA) - - Returns the red channel.  
 <a name="RGBA+r"></a>
 
-### rgbA
+### r
 Setter for red channel.
 
 **Kind**: instance property of [<code>RGBA</code>](#RGBA)  
@@ -84,7 +84,7 @@ Getter for green channel.
 **Returns**: [<code>RGBA</code>](#RGBA) - - Returns the green channel.  
 <a name="RGBA+g"></a>
 
-### rgbA
+### g
 Setter for green channel.
 
 **Kind**: instance property of [<code>RGBA</code>](#RGBA)  
@@ -102,7 +102,7 @@ Getter for blue channel.
 **Returns**: [<code>RGBA</code>](#RGBA) - - Returns the blue channel.  
 <a name="RGBA+b"></a>
 
-### rgbA
+### b
 Setter for blue channel.
 
 **Kind**: instance property of [<code>RGBA</code>](#RGBA)  
@@ -120,7 +120,7 @@ Getter for alpha channel.
 **Returns**: [<code>RGBA</code>](#RGBA) - - Returns the alpha channel.  
 <a name="RGBA+a"></a>
 
-### rgbA
+### a
 Setter for alpha value.
 
 **Kind**: instance property of [<code>RGBA</code>](#RGBA)  
@@ -168,7 +168,8 @@ Setter from a scalar array.
 <a name="RGBA+setFromHex"></a>
 
 ### setFromHex
-Setter from a hexadecimal value.E.g. #ff0000
+Setter from a hexadecimal value.
+E.g. #ff0000
 
 **Kind**: instance method of [<code>RGBA</code>](#RGBA)  
 
@@ -179,7 +180,8 @@ Setter from a hexadecimal value.E.g. #ff0000
 <a name="RGBA+setFromCSSColorName"></a>
 
 ### setFromCSSColorName
-Setter from a CSS color name.E.g. "red"
+Setter from a CSS color name.
+E.g. "red"
 
 **Kind**: instance method of [<code>RGBA</code>](#RGBA)  
 

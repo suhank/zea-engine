@@ -1,6 +1,6 @@
 <a name="VRController"></a>
 
-## VRController
+### VRController
 Class representing a VR controller.
 
 **Kind**: global class  

@@ -1,4 +1,4 @@
-## Classes
+### Classes
 
 <dl>
 <dt><a href="#AtlasLayoutShader">AtlasLayoutShader</a></dt>
@@ -9,7 +9,7 @@
 
 <a name="AtlasLayoutShader"></a>
 
-## AtlasLayoutShader
+### AtlasLayoutShader
 **Kind**: global class  
 <a name="new_AtlasLayoutShader_new"></a>
 
@@ -23,7 +23,7 @@ Create an atlas layout shader.
 
 <a name="GLImageAtlas"></a>
 
-## GLImageAtlas
+### GLImageAtlas
 **Kind**: global class  
 
 * [GLImageAtlas](#GLImageAtlas)
@@ -171,6 +171,7 @@ The cleanup method.
 <a name="GLImageAtlas+destroy"></a>
 
 ### destroy
-The destroy is called by the system to cause explicit resources cleanup.Users should never need to call this method directly.
+The destroy is called by the system to cause explicit resources cleanup.
+Users should never need to call this method directly.
 
 **Kind**: instance method of [<code>GLImageAtlas</code>](#GLImageAtlas)  

@@ -1,6 +1,6 @@
 <a name="SphereType"></a>
 
-## SphereType ⇐ <code>AttrValue</code>
+### SphereType 
 Class representing a sphere.
 
 **Kind**: global class  

@@ -1,6 +1,6 @@
 <a name="AssetItem"></a>
 
-## AssetItem ⇐ <code>TreeItem</code>
+### AssetItem 
 Class representing an asset item in a scene tree.
 
 **Kind**: global class  

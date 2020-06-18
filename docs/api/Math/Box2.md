@@ -1,6 +1,6 @@
 <a name="Box2"></a>
 
-## Box2
+### Box2
 Represents a box in 2D space. Needing two Vec2 vectors describing the corners
 
 **Kind**: global class  
@@ -20,7 +20,12 @@ Represents a box in 2D space. Needing two Vec2 vectors describing the corners
 <a name="new_Box2_new"></a>
 
 ### new Box2
-Creates a Box2 object using Vec2s.In case the parameters are not passed by, their values are pre-defined:<br>p0 is a Vec2 with [`Number.POSITIVE_INFINITY`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/POSITIVE_INFINITY)<br>p1 is a Vec2 with [`Number.NEGATIVE_INFINITY`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/NEGATIVE_INFINITY)
+Creates a Box2 object using Vec2s.
+In case the parameters are not passed by, their values are pre-defined:
+<br>
+p0 is a Vec2 with [`Number.POSITIVE_INFINITY`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/POSITIVE_INFINITY)
+<br>
+p1 is a Vec2 with [`Number.NEGATIVE_INFINITY`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/NEGATIVE_INFINITY)
 
 
 | Param | Type | Description |
@@ -46,7 +51,8 @@ Sets both Vect2 points
 Resets the box2 back to an uninitialized state.
 
 **Kind**: instance method of [<code>Box2</code>](#Box2)  
-**See**: [`Number.POSITIVE_INFINITY`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/POSITIVE_INFINITY)and [`Number.NEGATIVE_INFINITY`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/NEGATIVE_INFINITY)  
+**See**: [`Number.POSITIVE_INFINITY`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/POSITIVE_INFINITY)
+and [`Number.NEGATIVE_INFINITY`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/NEGATIVE_INFINITY)  
 <a name="Box2+isValid"></a>
 
 ### isValid

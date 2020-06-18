@@ -1,7 +1,7 @@
-## Classes
+### Classes
 
 <dl>
-<dt><a href="#OperatorOutput">OperatorOutput</a></dt>
+<dt><a href="#OperatorOutput">OperatorOutput</a> ⇐ <code>EventEmitter</code></dt>
 <dd><p>Class representing an operator output.</p>
 </dd>
 <dt><a href="#XfoOperatorOutput">XfoOperatorOutput</a> ⇐ <code><a href="#OperatorOutput">OperatorOutput</a></code></dt>
@@ -11,12 +11,13 @@
 
 <a name="OperatorOutput"></a>
 
-## OperatorOutput
+### OperatorOutput 
 Class representing an operator output.
 
 **Kind**: global class  
+**Extends**: <code>EventEmitter</code>  
 
-* [OperatorOutput](#OperatorOutput)
+* [OperatorOutput ⇐ <code>EventEmitter</code>](#OperatorOutput)
     * [new OperatorOutput(name, filterFn)](#new-OperatorOutput)
     * [getName() ⇒ <code>any</code>](#getName)
     * [getFilterFn() ⇒ <code>any</code>](#getFilterFn)
@@ -98,7 +99,9 @@ The getValue method.
 <a name="OperatorOutput+setValue"></a>
 
 ### setValue
-The setValue method.Note: Sometimes outputs are used in places like statemachines,where we would want the change to cause an event.
+The setValue method.
+Note: Sometimes outputs are used in places like statemachines,
+where we would want the change to cause an event.
 
 **Kind**: instance method of [<code>OperatorOutput</code>](#OperatorOutput)  
 
@@ -180,7 +183,7 @@ The reattach method.
 **Kind**: instance method of [<code>OperatorOutput</code>](#OperatorOutput)  
 <a name="XfoOperatorOutput"></a>
 
-## XfoOperatorOutput ⇐ [<code>OperatorOutput</code>](#OperatorOutput)
+### XfoOperatorOutput 
 Class representing an Xfo operator output.
 
 **Kind**: global class  
@@ -281,7 +284,9 @@ The getValue method.
 <a name="OperatorOutput+setValue"></a>
 
 ### setValue
-The setValue method.Note: Sometimes outputs are used in places like statemachines,where we would want the change to cause an event.
+The setValue method.
+Note: Sometimes outputs are used in places like statemachines,
+where we would want the change to cause an event.
 
 **Kind**: instance method of [<code>XfoOperatorOutput</code>](#XfoOperatorOutput)  
 **Overrides**: [<code>setValue</code>](#OperatorOutput+setValue)  

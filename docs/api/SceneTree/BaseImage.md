@@ -1,6 +1,6 @@
 <a name="BaseImage"></a>
 
-## BaseImage ⇐ <code>BaseItem</code>
+### BaseImage 
 Class representing a base image in the scene tree.
 
 **Kind**: global class  

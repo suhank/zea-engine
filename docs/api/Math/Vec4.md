@@ -1,7 +1,9 @@
 <a name="Vec4"></a>
 
-## Vec4 ⇐ <code>AttrValue</code>
-Representing a Vec4(four-dimensional floating point vector).Vector classes in _zea-engine_ internally store values in [Float32Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array) andexpose getters and setters for the component values.
+### Vec4 
+Representing a Vec4(four-dimensional floating point vector).
+Vector classes in _zea-engine_ internally store values in [Float32Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array) and
+expose getters and setters for the component values.
 
 **Kind**: global class  
 **Extends**: <code>AttrValue</code>  
@@ -49,7 +51,15 @@ Representing a Vec4(four-dimensional floating point vector).Vector classes in _
 <a name="new_Vec4_new"></a>
 
 ### new Vec4
-/**Creates a Vec3.The type of values of the `(x, y, z)` coordenates can be [Float32Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array),[Uint32Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint32Array),[Int32Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array) and[ArrayBuffer](https://developer.mozilla.org/es/docs/Web/JavaScript/Referencia/Objetos_globales/ArrayBuffer).<br>You can also pass one JSON object parameter.
+/**
+Creates a Vec3.
+
+The type of values of the `(x, y, z)` coordenates can be [Float32Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array),
+[Uint32Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint32Array),
+[Int32Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array) and
+[ArrayBuffer](https://developer.mozilla.org/es/docs/Web/JavaScript/Referencia/Objetos_globales/ArrayBuffer).
+<br>
+You can also pass one JSON object parameter.
 
 
 | Param | Type | Default | Description |
@@ -68,7 +78,7 @@ Getter for `x` value.
 **Returns**: <code>number</code> - - Returns the x value.  
 <a name="Vec4+x"></a>
 
-### vec4
+### x
 Setter for `x` value.
 
 **Kind**: instance property of [<code>Vec4</code>](#Vec4)  
@@ -86,7 +96,7 @@ Getter for `y` value.
 **Returns**: <code>number</code> - - Returns the y value.  
 <a name="Vec4+y"></a>
 
-### vec4
+### y
 Setter for `y` value.
 
 **Kind**: instance property of [<code>Vec4</code>](#Vec4)  
@@ -97,7 +107,7 @@ Setter for `y` value.
 
 <a name="Vec4+z"></a>
 
-### vec4
+### z
 Getter for `z` value.
 
 **Kind**: instance property of [<code>Vec4</code>](#Vec4)  
@@ -108,7 +118,7 @@ Getter for `z` value.
 
 <a name="Vec4+z"></a>
 
-### vec4
+### z
 Setter for `z` value.
 
 **Kind**: instance property of [<code>Vec4</code>](#Vec4)  
@@ -119,7 +129,7 @@ Setter for `z` value.
 
 <a name="Vec4+t"></a>
 
-### vec4
+### t
 Getter for `t` value.
 
 **Kind**: instance property of [<code>Vec4</code>](#Vec4)  
@@ -130,7 +140,7 @@ Getter for `t` value.
 
 <a name="Vec4+t"></a>
 
-### vec4
+### t
 Setter for `t` value.
 
 **Kind**: instance property of [<code>Vec4</code>](#Vec4)  
@@ -340,7 +350,8 @@ Calculates the squared length of this Vec4.
 <a name="Vec4+normalize"></a>
 
 ### normalize
-Normalizes the Vec4 and returns it as a new Vec4.Multiplies coordenates value by the inverse of the vector length.
+Normalizes the Vec4 and returns it as a new Vec4.
+Multiplies coordenates value by the inverse of the vector length.
 
 **Kind**: instance method of [<code>Vec4</code>](#Vec4)  
 **Returns**: [<code>Vec4</code>](#Vec4) - - Returns the Vec4 normalized.  

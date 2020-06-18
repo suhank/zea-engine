@@ -1,6 +1,6 @@
 <a name="GeomItem"></a>
 
-## GeomItem ⇐ <code>BaseGeomItem</code>
+### GeomItem 
 Class representing a geometry item in a scene tree.
 
 **Kind**: global class  
@@ -139,7 +139,8 @@ Getter for a lightmap coordinate offset.
 <a name="GeomItem+applyAssetLightmapSettings"></a>
 
 ### applyAssetLightmapSettings
-The root asset item pushes its offset to the geom items in thetree. This offsets the light coords for each geom.
+The root asset item pushes its offset to the geom items in the
+tree. This offsets the light coords for each geom.
 
 **Kind**: instance method of [<code>GeomItem</code>](#GeomItem)  
 
@@ -195,7 +196,8 @@ The toString method.
 <a name="GeomItem+clone"></a>
 
 ### clone
-The clone method constructs a new geom item, copies its valuesfrom this item and returns it.
+The clone method constructs a new geom item, copies its values
+from this item and returns it.
 
 **Kind**: instance method of [<code>GeomItem</code>](#GeomItem)  
 **Returns**: [<code>GeomItem</code>](#GeomItem) - - Returns a new cloned geom item.  
@@ -219,6 +221,7 @@ The copyFrom method.
 <a name="GeomItem+destroy"></a>
 
 ### destroy
-The destroy is called by the system to cause explicit resources cleanup.Users should never need to call this method directly.
+The destroy is called by the system to cause explicit resources cleanup.
+Users should never need to call this method directly.
 
 **Kind**: instance method of [<code>GeomItem</code>](#GeomItem)  

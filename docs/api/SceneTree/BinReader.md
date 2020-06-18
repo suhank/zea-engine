@@ -1,6 +1,6 @@
 <a name="BinReader"></a>
 
-## BinReader
+### BinReader
 Class representing a bin reader.
 
 **Kind**: global class  

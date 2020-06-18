@@ -1,6 +1,6 @@
 <a name="Cuboid"></a>
 
-## Cuboid ⇐ <code>Mesh</code>
+### Cuboid 
 A class for generating a cuboid geometry.
 
 **Kind**: global class  

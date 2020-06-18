@@ -1,6 +1,6 @@
 <a name="Attribute"></a>
 
-## Attribute
+### Attribute
 Class representing an attribute.
 
 **Kind**: global class  
@@ -58,7 +58,7 @@ Getter for data.
 **Returns**: <code>any</code> - - The return value.  
 <a name="Attribute+data"></a>
 
-### dat
+### data
 Setter for data.
 
 **Kind**: instance property of [<code>Attribute</code>](#Attribute)  

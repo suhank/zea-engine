@@ -1,6 +1,6 @@
 <a name="LinesCuboid"></a>
 
-## LinesCuboid ⇐ <code>Lines</code>
+### LinesCuboid 
 A class for generating a lines cuboid shape.
 
 **Kind**: global class  

@@ -1,6 +1,6 @@
 <a name="TreeItem"></a>
 
-## TreeItem ⇐ <code>BaseItem</code>
+### TreeItem 
 Class representing a tree item in the scene tree.
 
 **Kind**: global class  
@@ -76,7 +76,7 @@ Create a tree item.
 
 <a name="TreeItem+boundingBox"></a>
 
-### boundingBo
+### boundingBox
 Getter for a bounding box.
 
 **Kind**: instance property of [<code>TreeItem</code>](#TreeItem)  
@@ -413,7 +413,9 @@ The resolvePath method.
 <a name="TreeItem+traverse"></a>
 
 ### traverse
-Traverse the tree structure from this point downand fire the callback for each visited item.Note: Depth only used by selection sets for now.
+Traverse the tree structure from this point down
+and fire the callback for each visited item.
+Note: Depth only used by selection sets for now.
 
 **Kind**: instance method of [<code>TreeItem</code>](#TreeItem)  
 
@@ -529,7 +531,8 @@ The readBinary method.
 <a name="TreeItem+clone"></a>
 
 ### clone
-The clone method constructs a new tree item, copies its valuesfrom this item and returns it.
+The clone method constructs a new tree item, copies its values
+from this item and returns it.
 
 **Kind**: instance method of [<code>TreeItem</code>](#TreeItem)  
 **Returns**: [<code>TreeItem</code>](#TreeItem) - - Returns a new cloned tree item.  
@@ -553,7 +556,8 @@ The copyFrom method.
 <a name="TreeItem+destroy"></a>
 
 ### destroy
-The destroy is called by the system to cause explicit resources cleanup.Users should never need to call this method directly.
+The destroy is called by the system to cause explicit resources cleanup.
+Users should never need to call this method directly.
 
 **Kind**: instance method of [<code>TreeItem</code>](#TreeItem)  
 <a name="TreeItem.SaveFlags"></a>

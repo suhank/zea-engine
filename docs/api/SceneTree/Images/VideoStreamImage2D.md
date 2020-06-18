@@ -1,6 +1,6 @@
 <a name="VideoStreamImage2D"></a>
 
-## VideoStreamImage2D ⇐ <code>BaseImage</code>
+### VideoStreamImage2D 
 Class representing a 2D video stream image.
 
 **Kind**: global class  

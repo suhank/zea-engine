@@ -1,6 +1,6 @@
 <a name="BaseItem"></a>
 
-## BaseItem ⇐ <code>ParameterOwner</code>
+### BaseItem 
 The base class for the scene tree. A base item has a name and parameters.
 
 **Kind**: global class  
@@ -109,7 +109,9 @@ Returns true if the flag if set, otherwise returns false.
 <a name="BaseItem+resolvePath"></a>
 
 ### resolvePath
-The resolvePath method traverses the subtree from this item downmatching each name in the path with a child until it reaches theend of the path.
+The resolvePath method traverses the subtree from this item down
+matching each name in the path with a child until it reaches the
+end of the path.
 
 **Kind**: instance method of [<code>BaseItem</code>](#BaseItem)  
 **Returns**: <code>any</code> - - The return value.  
@@ -122,7 +124,8 @@ The resolvePath method traverses the subtree from this item downmatching each n
 <a name="BaseItem+getOwner"></a>
 
 ### getOwner
-The getOwner method returns the current owner of the item.The item is a child of the current owner.
+The getOwner method returns the current owner of the item.
+The item is a child of the current owner.
 
 **Kind**: instance method of [<code>BaseItem</code>](#BaseItem)  
 **Returns**: <code>object</code> - - Returns the current owner.  
@@ -271,7 +274,8 @@ The readBinary method.
 <a name="BaseItem+clone"></a>
 
 ### clone
-Clones this bse item and returns a new base item.Note: Each class should implement clone to be clonable.
+Clones this bse item and returns a new base item.
+Note: Each class should implement clone to be clonable.
 
 **Kind**: instance method of [<code>BaseItem</code>](#BaseItem)  
 
@@ -282,7 +286,13 @@ Clones this bse item and returns a new base item.Note: Each class should implem
 <a name="BaseItem+copyFrom"></a>
 
 ### copyFrom
-When a BaseItem is cloned, initially the constructor iscalled to generate a new instance. This instance then copiesits values from the source using this method.This method copies any relevant data from the source object toensure that it represents a valid clone.Derived classes override this method to copy any relevantdata from the source object.
+When a BaseItem is cloned, initially the constructor is
+called to generate a new instance. This instance then copies
+its values from the source using this method.
+This method copies any relevant data from the source object to
+ensure that it represents a valid clone.
+Derived classes override this method to copy any relevant
+data from the source object.
 
 **Kind**: instance method of [<code>BaseItem</code>](#BaseItem)  
 
@@ -294,13 +304,15 @@ When a BaseItem is cloned, initially the constructor iscalled to generate a new
 <a name="BaseItem+destroy"></a>
 
 ### destroy
-The destroy is called by the system to cause explicit resources cleanup.Users should never need to call this method directly.
+The destroy is called by the system to cause explicit resources cleanup.
+Users should never need to call this method directly.
 
 **Kind**: instance method of [<code>BaseItem</code>](#BaseItem)  
 <a name="BaseItem.getNumBaseItems"></a>
 
 ### getNumBaseItems
-The getNumBaseItems method returns the total number of base items created.This method is used in debugging memory consumption.
+The getNumBaseItems method returns the total number of base items created.
+This method is used in debugging memory consumption.
 
 **Kind**: static method of [<code>BaseItem</code>](#BaseItem)  
 **Returns**: <code>number</code> - - Returns the total number of base items created.  

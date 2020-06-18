@@ -1,6 +1,6 @@
 <a name="MaterialColorParam"></a>
 
-## MaterialColorParam ⇐ <code>ColorParameter</code>
+### MaterialColorParam 
 Class representing a material color parameter.
 
 **Kind**: global class  
@@ -70,7 +70,8 @@ The readBinary method.
 <a name="MaterialColorParam+clone"></a>
 
 ### clone
-The clone method constructs a new material color parameter,copies its values from this parameter and returns it.
+The clone method constructs a new material color parameter,
+copies its values from this parameter and returns it.
 
 **Kind**: instance method of [<code>MaterialColorParam</code>](#MaterialColorParam)  
 **Returns**: [<code>MaterialColorParam</code>](#MaterialColorParam) - - Returns a new cloned material color parameter.  

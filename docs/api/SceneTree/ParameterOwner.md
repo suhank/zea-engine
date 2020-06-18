@@ -1,6 +1,6 @@
 <a name="ParameterOwner"></a>
 
-## ParameterOwner
+### ParameterOwner
 Class representing a parameter owner in the scene tree.
 
 **Kind**: global class  
@@ -23,7 +23,6 @@ Class representing a parameter owner in the scene tree.
     * [readBinary(reader, context)](#readBinary)
     * [toString() ⇒ <code>any</code>](#toString)
     * [copyFrom(src, flags)](#copyFrom)
-    * [destroy()](#destroy)
 
 <a name="new_ParameterOwner_new"></a>
 
@@ -33,7 +32,8 @@ Create a parameter owner.
 <a name="ParameterOwner+getId"></a>
 
 ### getId
-Returns the unique id of the object. Every Object has a uniqueidentifier which is based on a counter that is incremented.
+Returns the unique id of the object. Every Object has a unique
+identifier which is based on a counter that is incremented.
 
 **Kind**: instance method of [<code>ParameterOwner</code>](#ParameterOwner)  
 **Returns**: <code>any</code> - - The return value.  
@@ -204,9 +204,3 @@ The copyFrom method.
 | src | [<code>ParameterOwner</code>](#ParameterOwner) | The ParameterOwner copy from. |
 | flags | <code>number</code> | The flags value. |
 
-<a name="ParameterOwner+destroy"></a>
-
-### destroy
-The destroy is called by the system to cause explicit resources cleanup.Users should never need to call this method directly.
-
-**Kind**: instance method of [<code>ParameterOwner</code>](#ParameterOwner)  

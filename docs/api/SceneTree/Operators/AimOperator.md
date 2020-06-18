@@ -1,6 +1,6 @@
 <a name="AimOperator"></a>
 
-## AimOperator ⇐ <code>Operator</code>
+### AimOperator 
 An operator for aiming items at targets.
 
 **Kind**: global class  

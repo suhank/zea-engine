@@ -1,6 +1,6 @@
 <a name="Color"></a>
 
-## Color ⇐ <code>AttrValue</code>
+### Color 
 Class representing a color.
 
 **Kind**: global class  
@@ -70,7 +70,7 @@ Getter for red channel.
 **Returns**: <code>number</code> - - Returns the red channel.  
 <a name="Color+r"></a>
 
-### color
+### r
 Setter for red channel.
 
 **Kind**: instance property of [<code>Color</code>](#Color)  
@@ -88,7 +88,7 @@ Getter for green channel.
 **Returns**: <code>number</code> - - Returns the green channel.  
 <a name="Color+g"></a>
 
-### color
+### g
 Setter for green channel.
 
 **Kind**: instance property of [<code>Color</code>](#Color)  
@@ -106,7 +106,7 @@ Getter for blue channel.
 **Returns**: <code>number</code> - - Returns the blue channel.  
 <a name="Color+b"></a>
 
-### color
+### b
 Setter for blue channel.
 
 **Kind**: instance property of [<code>Color</code>](#Color)  
@@ -124,7 +124,7 @@ Getter for alpha channel.
 **Returns**: <code>number</code> - - Returns the alpha channel.  
 <a name="Color+a"></a>
 
-### color
+### a
 Setter for alpha value.
 
 **Kind**: instance property of [<code>Color</code>](#Color)  
@@ -222,7 +222,8 @@ Setter from an RGB dict.
 <a name="Color+setFromHex"></a>
 
 ### setFromHex
-Setter from a hexadecimal value.E.g. #ff0000
+Setter from a hexadecimal value.
+E.g. #ff0000
 
 **Kind**: instance method of [<code>Color</code>](#Color)  
 
@@ -233,7 +234,8 @@ Setter from a hexadecimal value.E.g. #ff0000
 <a name="Color+setFromCSSColorName"></a>
 
 ### setFromCSSColorName
-Setter from a CSS color name.E.g. "red"
+Setter from a CSS color name.
+E.g. "red"
 
 **Kind**: instance method of [<code>Color</code>](#Color)  
 

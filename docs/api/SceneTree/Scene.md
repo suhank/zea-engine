@@ -1,6 +1,6 @@
 <a name="Scene"></a>
 
-## Scene
+### Scene
 Class representing a scene in a scene tree.
 
 **Kind**: global class  

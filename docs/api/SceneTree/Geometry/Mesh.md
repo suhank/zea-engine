@@ -1,6 +1,6 @@
 <a name="Mesh"></a>
 
-## Mesh ⇐ <code>BaseGeom</code>
+### Mesh 
 Class representing a mesh.
 
 **Kind**: global class  

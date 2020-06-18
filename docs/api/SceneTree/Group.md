@@ -1,7 +1,29 @@
 <a name="Group"></a>
 
-## Group ⇐ <code>TreeItem</code>
-Class representing a group in the scene tree.
+### Group 
+Groups are a special type of `TreeItem` that allows you to gather/classify/organize/modify
+multiple items contained within the group. Items can be added to the group directly, or using
+the path. It doesn't host the actual items; it only contains the reference to them. All
+parameters set to the group are also set to the children; in other words, it is a faster way
+to apply common things to multiple items.
+
+== Parameters ===
+- 'CutAwayEnabled': erflkgm
+
+```
+const group = new Group("MyGroup")
+```
+
+```
+group.addItem(treeItem)
+```
+
+```
+group.resolveItems([
+   <path1>,
+   <path2>
+ ])
+```
 
 **Kind**: global class  
 **Extends**: <code>TreeItem</code>  
@@ -10,7 +32,6 @@ Class representing a group in the scene tree.
     * [new Group(name)](#new-Group)
     * _instance_
         * [setSelected(sel)](#setSelected)
-        * [calcGroupXfo() ⇒ <code>Xfo</code>](#calcGroupXfo)
         * [setPaths(paths)](#setPaths)
         * [resolveItems(paths)](#resolveItems)
         * [addItem(item, emit)](#addItem)
@@ -50,17 +71,11 @@ Returns a boolean indicating if this group is selectable.
 | --- | --- | --- |
 | sel | <code>boolean</code> | Boolean indicating the new selection state. |
 
-<a name="Group+calcGroupXfo"></a>
-
-### calcGroupXfo
-Calculate the group Xfo translate.
-
-**Kind**: instance method of [<code>Group</code>](#Group)  
-**Returns**: <code>Xfo</code> - - Returns a new Xfo.  
 <a name="Group+setPaths"></a>
 
 ### setPaths
-This method is mostly used in our demos,and should be removed from the interface
+This method is mostly used in our demos,
+and should be removed from the interface
 
 **Kind**: instance method of [<code>Group</code>](#Group)  
 
@@ -194,7 +209,8 @@ The fromJSON method decodes a json object for this type.
 <a name="Group+clone"></a>
 
 ### clone
-The clone method constructs a new group,copies its values and returns it.
+The clone method constructs a new group,
+copies its values and returns it.
 
 **Kind**: instance method of [<code>Group</code>](#Group)  
 **Returns**: [<code>Group</code>](#Group) - - Returns a new cloned group.  
@@ -218,7 +234,8 @@ The copyFrom method.
 <a name="Group+destroy"></a>
 
 ### destroy
-The destroy is called by the system to cause explicit resources cleanup.Users should never need to call this method directly.
+The destroy is called by the system to cause explicit resources cleanup.
+Users should never need to call this method directly.
 
 **Kind**: instance method of [<code>Group</code>](#Group)  
 <a name="Group.INITIAL_XFO_MODES"></a>

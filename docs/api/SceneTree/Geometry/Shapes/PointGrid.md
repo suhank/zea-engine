@@ -1,6 +1,6 @@
 <a name="PointGrid"></a>
 
-## PointGrid ⇐ <code>Points</code>
+### PointGrid 
 A class for generating a point grid.
 
 **Kind**: global class  
@@ -36,14 +36,16 @@ Create a point grid.
 <a name="PointGrid+x"></a>
 
 ### x 
-Getter for X.Is deprectated. Please use "getX".
+Getter for X.
+Is deprectated. Please use "getX".
 
 **Kind**: instance property of [<code>PointGrid</code>](#PointGrid)  
 **Returns**: <code>number</code> - - Returns the length.  
 <a name="PointGrid+x"></a>
 
-### pointGrid
-Setter for X.Is deprectated. Please use "setX".
+### x
+Setter for X.
+Is deprectated. Please use "setX".
 
 **Kind**: instance property of [<code>PointGrid</code>](#PointGrid)  
 
@@ -54,14 +56,16 @@ Setter for X.Is deprectated. Please use "setX".
 <a name="PointGrid+y"></a>
 
 ### y 
-Getter for Y.Is deprectated. Please use "getY".
+Getter for Y.
+Is deprectated. Please use "getY".
 
 **Kind**: instance property of [<code>PointGrid</code>](#PointGrid)  
 **Returns**: <code>number</code> - - Returns the length.  
 <a name="PointGrid+y"></a>
 
-### pointGrid
-Setter for Y.Is deprectated. Please use "setY".
+### y
+Setter for Y.
+Is deprectated. Please use "setY".
 
 **Kind**: instance property of [<code>PointGrid</code>](#PointGrid)  
 

@@ -1,7 +1,8 @@
 <a name="Mat3"></a>
 
-## Mat3 ⇐ <code>AttrValue</code>
-A class representing a 3x3 matrix.This matrix class is based on GLM, and is column major.
+### Mat3 
+A class representing a 3x3 matrix.
+This matrix class is based on GLM, and is column major.
 
 **Kind**: global class  
 **Extends**: <code>AttrValue</code>  
@@ -73,7 +74,7 @@ Getter for row 0, column 0.
 **Returns**: <code>number</code> - - Returns the m00 value.  
 <a name="Mat3+m00"></a>
 
-### m0
+### m00
 Setter for row 0, column 0.
 
 **Kind**: instance property of [<code>Mat3</code>](#Mat3)  
@@ -91,7 +92,7 @@ Getter for row 0, column 1.
 **Returns**: <code>number</code> - - Returns the m01 value.  
 <a name="Mat3+m01"></a>
 
-### m0
+### m01
 Setter for row 0, column 1.
 
 **Kind**: instance property of [<code>Mat3</code>](#Mat3)  
@@ -109,7 +110,7 @@ Getter for row 0, column 2.
 **Returns**: <code>number</code> - - Returns the m02 value.  
 <a name="Mat3+m02"></a>
 
-### m0
+### m02
 Setter for row 0, column 2.
 
 **Kind**: instance property of [<code>Mat3</code>](#Mat3)  
@@ -127,7 +128,7 @@ Getter for row 1, column 0.
 **Returns**: <code>number</code> - - Returns the m10 value.  
 <a name="Mat3+m10"></a>
 
-### m1
+### m10
 Setter for row 1, column 0.
 
 **Kind**: instance property of [<code>Mat3</code>](#Mat3)  
@@ -145,7 +146,7 @@ Getter for row 1, column 1
 **Returns**: <code>number</code> - - Returns the m11 value.  
 <a name="Mat3+m11"></a>
 
-### m1
+### m11
 Setter for row 1, column 1.
 
 **Kind**: instance property of [<code>Mat3</code>](#Mat3)  
@@ -163,7 +164,7 @@ Getter for row 1, column 2.
 **Returns**: <code>number</code> - - Returns the m12 value.  
 <a name="Mat3+m12"></a>
 
-### m1
+### m12
 Setter for row 1, column 2.
 
 **Kind**: instance property of [<code>Mat3</code>](#Mat3)  
@@ -181,7 +182,7 @@ Getter for row 2, column 0.
 **Returns**: <code>number</code> - - Returns the m20 value.  
 <a name="Mat3+m20"></a>
 
-### m2
+### m20
 Setter for row 2, column 0.
 
 **Kind**: instance property of [<code>Mat3</code>](#Mat3)  
@@ -199,7 +200,7 @@ Getter for row 2, column 1.
 **Returns**: <code>number</code> - - Returns the m21 value.  
 <a name="Mat3+m21"></a>
 
-### m2
+### m21
 Setter for row 2, column 1.
 
 **Kind**: instance property of [<code>Mat3</code>](#Mat3)  
@@ -217,7 +218,7 @@ Getter for row 2, column 2.
 **Returns**: <code>number</code> - - Returns the m22 value.  
 <a name="Mat3+m22"></a>
 
-### m2
+### m22
 Setter for row 2, column 2.
 
 **Kind**: instance property of [<code>Mat3</code>](#Mat3)  
@@ -235,7 +236,7 @@ Getter for the `x` axis.
 **Returns**: <code>Vec3</code> - - Returns the `x` axis as a Vec3.  
 <a name="Mat3+xAxis"></a>
 
-### xAxi
+### xAxis
 Setter for the `x` axis.
 
 **Kind**: instance property of [<code>Mat3</code>](#Mat3)  
@@ -246,13 +247,14 @@ Setter for the `x` axis.
 
 <a name="Mat3+yAxis"></a>
 
-### yAxi
-Getter for the `y` axis.* @return {Vec3} - Returns the `y` axis as a Vec3.
+### yAxis
+Getter for the `y` axis.
+* @return {Vec3} - Returns the `y` axis as a Vec3.
 
 **Kind**: instance property of [<code>Mat3</code>](#Mat3)  
 <a name="Mat3+yAxis"></a>
 
-### yAxi
+### yAxis
 Setter for the `y` axis.
 
 **Kind**: instance property of [<code>Mat3</code>](#Mat3)  
@@ -263,13 +265,14 @@ Setter for the `y` axis.
 
 <a name="Mat3+zAxis"></a>
 
-### zAxi
-Getter for the `z` axis.* @return {Vec3} - Returns the `z` axis as a Vec3.
+### zAxis
+Getter for the `z` axis.
+* @return {Vec3} - Returns the `z` axis as a Vec3.
 
 **Kind**: instance property of [<code>Mat3</code>](#Mat3)  
 <a name="Mat3+zAxis"></a>
 
-### zAxi
+### zAxis
 Setter for the `z` axis.
 
 **Kind**: instance property of [<code>Mat3</code>](#Mat3)  
@@ -306,7 +309,9 @@ Sets state of the Mat3 with the identity  Matrix
 <a name="Mat3+setFromMat"></a>
 
 ### setFromMat
-Sets state of the Mat3 from another Mat3<br>Note: works with either Mat3 or Mat4.
+Sets state of the Mat3 from another Mat3
+<br>
+Note: works with either Mat3 or Mat4.
 
 **Kind**: instance method of [<code>Mat3</code>](#Mat3)  
 
@@ -343,7 +348,8 @@ Inverts a Mat3.
 <a name="Mat3+transpose"></a>
 
 ### transpose
-Transposes (exchanges columns with rows) this matrixand returns the result as a new instance.
+Transposes (exchanges columns with rows) this matrix
+and returns the result as a new instance.
 
 **Kind**: instance method of [<code>Mat3</code>](#Mat3)  
 **Returns**: [<code>Mat3</code>](#Mat3) - - Return a new transposed Mat3.  

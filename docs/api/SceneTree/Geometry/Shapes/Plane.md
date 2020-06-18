@@ -1,6 +1,6 @@
 <a name="Plane"></a>
 
-## Plane ⇐ <code>Mesh</code>
+### Plane 
 A class for generating a plane geometry.
 
 **Kind**: global class  

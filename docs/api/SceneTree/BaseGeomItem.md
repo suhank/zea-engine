@@ -1,6 +1,6 @@
 <a name="BaseGeomItem"></a>
 
-## BaseGeomItem ⇐ <code>TreeItem</code>
+### BaseGeomItem 
 Class representing a base geometry item in a scene tree.
 
 **Kind**: global class  

@@ -1,6 +1,6 @@
 <a name="Grid"></a>
 
-## Grid ⇐ <code>Lines</code>
+### Grid 
 A class for generating a grid.
 
 **Kind**: global class  
@@ -42,7 +42,7 @@ Getter for the length of the grid along the X axis.
 **Returns**: <code>number</code> - - Returns the length.  
 <a name="Grid+sizeX"></a>
 
-### size
+### sizeX
 Setter for the length of the grid along the X axis.
 
 **Kind**: instance property of [<code>Grid</code>](#Grid)  
@@ -60,7 +60,7 @@ Getter for the length of the grid along the Y axis.
 **Returns**: <code>number</code> - - Returns the length.  
 <a name="Grid+sizeY"></a>
 
-### size
+### sizeY
 Setter for the length of the grid along the U axis.
 
 **Kind**: instance property of [<code>Grid</code>](#Grid)  
@@ -78,7 +78,7 @@ Getter for the number of divisions along the X axis.
 **Returns**: <code>number</code> - - Returns the number of divisions.  
 <a name="Grid+divisionsX"></a>
 
-### divisions
+### divisionsX
 Setter for the number of divisions along the X axis.
 
 **Kind**: instance property of [<code>Grid</code>](#Grid)  
@@ -96,7 +96,7 @@ Getter for the number of divisions along the Y axis.
 **Returns**: <code>number</code> - - Returns the number of divisions.  
 <a name="Grid+divisionsY"></a>
 
-### divisions
+### divisionsY
 Setter for the number of divisions along the Y axis.
 
 **Kind**: instance property of [<code>Grid</code>](#Grid)  

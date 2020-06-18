@@ -1,6 +1,6 @@
 <a name="VertexAttribute"></a>
 
-## VertexAttribute ⇐ <code>Attribute</code>
+### VertexAttribute 
 Class representing vertex attributes.
 
 **Kind**: global class  

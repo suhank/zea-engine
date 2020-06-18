@@ -1,6 +1,6 @@
 <a name="GLAudioItemsPass"></a>
 
-## GLAudioItemsPass ⇐ <code>GLPass</code>
+### GLAudioItemsPass 
 Class representing a GL audio items pass.
 
 **Kind**: global class  

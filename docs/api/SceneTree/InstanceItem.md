@@ -1,6 +1,6 @@
 <a name="InstanceItem"></a>
 
-## InstanceItem ⇐ <code>TreeItem</code>
+### InstanceItem 
 Class representing an instance item in a scene tree.
 
 **Kind**: global class  

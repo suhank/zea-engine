@@ -1,6 +1,6 @@
 <a name="SGFactory"></a>
 
-## SGFactory
+### SGFactory
 Class representing a SG factory.
 
 **Kind**: global class  

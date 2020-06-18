@@ -1,6 +1,6 @@
 <a name="MultiChoiceParameter"></a>
 
-## MultiChoiceParameter ⇐ <code>NumberParameter</code>
+### MultiChoiceParameter 
 Class representing a multi choice parameter.
 
 **Kind**: global class  

@@ -1,6 +1,6 @@
 <a name="BaseGeom"></a>
 
-## BaseGeom ⇐ <code>ParameterOwner</code>
+### BaseGeom 
 Class representing a base geometry.
 
 **Kind**: global class  
@@ -42,7 +42,7 @@ Create a base geom.
 
 <a name="BaseGeom+vertices"></a>
 
-### vertice
+### vertices
 Getter for vertices.
 
 **Kind**: instance property of [<code>BaseGeom</code>](#BaseGeom)  

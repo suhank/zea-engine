@@ -1,6 +1,6 @@
 <a name="GLTexture2D"></a>
 
-## GLTexture2D ⇐ <code>RefCounted</code>
+### GLTexture2D 
 Class representing a GL texture 2D.
 
 **Kind**: global class  
@@ -222,6 +222,7 @@ The bindToUniform method.
 <a name="GLTexture2D+destroy"></a>
 
 ### destroy
-The destroy is called by the system to cause explicit resources cleanup.Users should never need to call this method directly.
+The destroy is called by the system to cause explicit resources cleanup.
+Users should never need to call this method directly.
 
 **Kind**: instance method of [<code>GLTexture2D</code>](#GLTexture2D)  

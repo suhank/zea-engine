@@ -1,7 +1,10 @@
 <a name="Vec2"></a>
 
-## Vec2 ⇐ <code>AttrValue</code>
-Representing a Vec2(two-dimensional floating point vector).Vector classes in _zea-engine_ internally store values in [Float32Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array) andexpose getters and setters for the component values.
+### Vec2 
+Representing a Vec2(two-dimensional floating point vector).
+
+Vector classes in _zea-engine_ internally store values in [Float32Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array) and
+expose getters and setters for the component values.
 
 **Kind**: global class  
 **Extends**: <code>AttrValue</code>  
@@ -48,7 +51,14 @@ Representing a Vec2(two-dimensional floating point vector).Vector classes in _
 <a name="new_Vec2_new"></a>
 
 ### new Vec2
-Creates a Vec2.The type of values of the `(x, y)` coordenates can be [Float32Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array),[Uint32Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint32Array),[Int32Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array) and[ArrayBuffer](https://developer.mozilla.org/es/docs/Web/JavaScript/Referencia/Objetos_globales/ArrayBuffer).<br>You can also pass one JSON object parameter.
+Creates a Vec2.
+
+The type of values of the `(x, y)` coordenates can be [Float32Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array),
+[Uint32Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint32Array),
+[Int32Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array) and
+[ArrayBuffer](https://developer.mozilla.org/es/docs/Web/JavaScript/Referencia/Objetos_globales/ArrayBuffer).
+<br>
+You can also pass one JSON object parameter.
 
 
 | Param | Type | Default | Description |
@@ -65,7 +75,7 @@ Getter for `x` value.
 **Returns**: <code>number</code> - - Returns the x value.  
 <a name="Vec2+x"></a>
 
-### vec2
+### x
 Setter for `x` value.
 
 **Kind**: instance property of [<code>Vec2</code>](#Vec2)  
@@ -83,7 +93,7 @@ Getter for `y` value.
 **Returns**: <code>number</code> - - Returns the y value.  
 <a name="Vec2+y"></a>
 
-### vec2
+### y
 Setter for `y` value.
 
 **Kind**: instance property of [<code>Vec2</code>](#Vec2)  
@@ -288,7 +298,8 @@ Calculates the distance to another vector.
 <a name="Vec2+normalize"></a>
 
 ### normalize
-Normalizes the Vec2 and returns it as a new Vec2.Multiplies coordenates value by the inverse of the vector length.
+Normalizes the Vec2 and returns it as a new Vec2.
+Multiplies coordenates value by the inverse of the vector length.
 
 **Kind**: instance method of [<code>Vec2</code>](#Vec2)  
 **Returns**: [<code>Vec2</code>](#Vec2) - - Returns the Vec2 normalized.  

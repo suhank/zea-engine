@@ -1,6 +1,6 @@
 <a name="PlaneType"></a>
 
-## PlaneType ⇐ <code>AttrValue</code>
+### PlaneType 
 Class representing a plane.
 
 **Kind**: global class  

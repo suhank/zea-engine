@@ -1,6 +1,6 @@
 <a name="Xfo"></a>
 
-## Xfo
+### Xfo
 Class representing an Xfo transform.
 
 **Kind**: global class  
@@ -26,7 +26,9 @@ Class representing an Xfo transform.
 <a name="new_Xfo_new"></a>
 
 ### new Xfo
-Initializes the Xfo object.<br>**Note:** You can leave it empty and use other methods ti set the state of the class.
+Initializes the Xfo object.
+<br>
+**Note:** You can leave it empty and use other methods ti set the state of the class.
 
 
 | Param | Type | Description |
@@ -131,7 +133,9 @@ Sets the state of the Xfo object using Mat4.
 <a name="Xfo+setFromFloat32Array"></a>
 
 ### setFromFloat32Array
-Sets the state of the Xfo object using an `Float32array`.<br>**Note:** You can set the byteOffset in your `Float32array` object
+Sets the state of the Xfo object using an `Float32array`.
+<br>
+**Note:** You can set the byteOffset in your `Float32array` object
 
 **Kind**: instance method of [<code>Xfo</code>](#Xfo)  
 

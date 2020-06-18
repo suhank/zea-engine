@@ -1,6 +1,6 @@
 <a name="ExplodePartsOperator"></a>
 
-## ExplodePartsOperator ⇐ <code>ParameterOwner</code>
+### ExplodePartsOperator 
 Class representing an explode parts operator.
 
 **Kind**: global class  
@@ -58,6 +58,7 @@ The fromJSON method decodes a json object for this type.
 <a name="ExplodePartsOperator+destroy"></a>
 
 ### destroy
-The destroy is called by the system to cause explicit resources cleanup.Users should never need to call this method directly.
+The destroy is called by the system to cause explicit resources cleanup.
+Users should never need to call this method directly.
 
 **Kind**: instance method of [<code>ExplodePartsOperator</code>](#ExplodePartsOperator)  

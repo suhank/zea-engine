@@ -1,6 +1,6 @@
 <a name="GIFImage"></a>
 
-## GIFImage ⇐ <code>FileImage</code>
+### GIFImage 
 Class representing a GIF image.
 
 **Kind**: global class  

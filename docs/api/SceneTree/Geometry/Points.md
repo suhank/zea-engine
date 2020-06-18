@@ -1,6 +1,6 @@
 <a name="Points"></a>
 
-## Points ⇐ <code>BaseGeom</code>
+### Points 
 Class representing points.
 
 **Kind**: global class  

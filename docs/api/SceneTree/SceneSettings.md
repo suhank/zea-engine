@@ -1,6 +1,6 @@
 <a name="SceneSettings"></a>
 
-## SceneSettings ⇐ <code>BaseItem</code>
+### SceneSettings 
 Class representing scene settings in a scene tree.
 
 **Kind**: global class  

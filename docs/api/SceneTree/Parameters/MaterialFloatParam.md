@@ -1,6 +1,6 @@
 <a name="MaterialFloatParam"></a>
 
-## MaterialFloatParam ⇐ <code>NumberParameter</code>
+### MaterialFloatParam 
 Class representing a material float parameter.
 
 **Kind**: global class  
@@ -71,7 +71,8 @@ The readBinary method.
 <a name="MaterialFloatParam+clone"></a>
 
 ### clone
-The clone method constructs a new material float parameter,copies its values from this parameter and returns it.
+The clone method constructs a new material float parameter,
+copies its values from this parameter and returns it.
 
 **Kind**: instance method of [<code>MaterialFloatParam</code>](#MaterialFloatParam)  
 **Returns**: [<code>MaterialFloatParam</code>](#MaterialFloatParam) - - Returns a new cloned material float parameter.  

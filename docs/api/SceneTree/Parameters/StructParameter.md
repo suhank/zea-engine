@@ -1,6 +1,6 @@
 <a name="StructParameter"></a>
 
-## StructParameter ⇐ <code>Parameter</code>
+### StructParameter 
 Class representing a struct parameter.
 
 **Kind**: global class  
@@ -85,6 +85,7 @@ The fromJSON method decodes a json object for this type.
 <a name="StructParameter+destroy"></a>
 
 ### destroy
-The destroy is called by the system to cause explicit resources cleanup.Users should never need to call this method directly.
+The destroy is called by the system to cause explicit resources cleanup.
+Users should never need to call this method directly.
 
 **Kind**: instance method of [<code>StructParameter</code>](#StructParameter)  

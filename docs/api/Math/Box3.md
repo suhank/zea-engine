@@ -1,6 +1,6 @@
 <a name="Box3"></a>
 
-## Box3
+### Box3
 Represents a box in 3D space, needing two Vec3 vectors.
 
 **Kind**: global class  
@@ -30,7 +30,12 @@ Represents a box in 3D space, needing two Vec3 vectors.
 <a name="new_Box3_new"></a>
 
 ### new Box3
-Creates a Box3 object using Vec3s.In case the parameters are not passed by, their values are pre-defined:<br>p0 is a Vec2 with [`Number.POSITIVE_INFINITY`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/POSITIVE_INFINITY)<br>p1 is a Vec2 with [`Number.NEGATIVE_INFINITY`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/NEGATIVE_INFINITY)
+Creates a Box3 object using Vec3s.
+In case the parameters are not passed by, their values are pre-defined:
+<br>
+p0 is a Vec2 with [`Number.POSITIVE_INFINITY`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/POSITIVE_INFINITY)
+<br>
+p1 is a Vec2 with [`Number.NEGATIVE_INFINITY`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/NEGATIVE_INFINITY)
 
 
 | Param | Type | Description |
@@ -91,7 +96,8 @@ Expands the Box3 to contain the new point.
 <a name="Box3+addBox3"></a>
 
 ### addBox3
-Adds `Box3` to this `Box3`, of the Xfo instance is passed in the parametersit proceeds to apply the transform for the Vec3.
+Adds `Box3` to this `Box3`, of the Xfo instance is passed in the parameters
+it proceeds to apply the transform for the Vec3.
 
 **Kind**: instance method of [<code>Box3</code>](#Box3)  
 

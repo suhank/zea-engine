@@ -20,13 +20,14 @@
     "start": "rollup -c rollup.config.dev.js -w",
     "prepare": "yarn run build",
     "dist": "yarn publish --access=public",
-    "docs": "node buildApiDocs.js",
+    "docs": "adg",
     "testing-server": "node testing-server/index.js",
     "test": "karma start --single-run --browsers ChromeHeadless karma.conf.js",
     "testBrowser": "karma start --single-run karma.conf.js"
   },
   "dependencies": {},
   "devDependencies": {
+    "@zeainc/jsdocs2md": "^0.0.2-rc-1",
     "chai": "^4.2.0",
     "documentation": "^12.1.1",
     "eslint": "^6.5.1",

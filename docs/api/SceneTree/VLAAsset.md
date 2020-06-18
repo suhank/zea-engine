@@ -1,6 +1,6 @@
 <a name="VLAAsset"></a>
 
-## VLAAsset ⇐ <code>AssetItem</code>
+### VLAAsset 
 Class representing a VLA asset.
 
 **Kind**: global class  

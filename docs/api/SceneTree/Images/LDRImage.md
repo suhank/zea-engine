@@ -1,6 +1,6 @@
 <a name="LDRImage"></a>
 
-## LDRImage ⇐ <code>FileImage</code>
+### LDRImage 
 Class representing a LDR (low dynamic range) image.
 
 **Kind**: global class  

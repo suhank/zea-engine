@@ -1,6 +1,6 @@
 <a name="Operator"></a>
 
-## Operator ⇐ <code>BaseItem</code>
+### Operator 
 Class representing an operator.
 
 **Kind**: global class  
@@ -131,6 +131,7 @@ The reattach method.
 <a name="Operator+destroy"></a>
 
 ### destroy
-The destroy is called by the system to cause explicit resources cleanup.Users should never need to call this method directly.
+The destroy is called by the system to cause explicit resources cleanup.
+Users should never need to call this method directly.
 
 **Kind**: instance method of [<code>Operator</code>](#Operator)  

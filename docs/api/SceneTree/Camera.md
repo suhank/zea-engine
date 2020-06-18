@@ -1,6 +1,6 @@
 <a name="Camera"></a>
 
-## Camera ⇐ <code>TreeItem</code>
+### Camera 
 Class representing a camera in the scene tree.
 
 **Kind**: global class  
@@ -73,14 +73,16 @@ The setFar method.
 <a name="Camera+getFov"></a>
 
 ### getFov
-Getter for the camera field of view (FOV).The FOV is how much of the scene the camera can see at once.
+Getter for the camera field of view (FOV).
+The FOV is how much of the scene the camera can see at once.
 
 **Kind**: instance method of [<code>Camera</code>](#Camera)  
 **Returns**: <code>number</code> - - Returns the FOV value.  
 <a name="Camera+setFov"></a>
 
 ### setFov
-Setter for the camera field of view (FOV).The FOV is how much of the scene the camera can see at once.
+Setter for the camera field of view (FOV).
+The FOV is how much of the scene the camera can see at once.
 
 **Kind**: instance method of [<code>Camera</code>](#Camera)  
 

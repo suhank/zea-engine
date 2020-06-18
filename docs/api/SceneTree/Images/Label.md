@@ -1,6 +1,6 @@
 <a name="Label"></a>
 
-## Label ⇐ <code>DataImage</code>
+### Label 
 Class representing a label.
 
 **Kind**: global class  

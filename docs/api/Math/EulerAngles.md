@@ -1,7 +1,8 @@
 <a name="EulerAngles"></a>
 
-## EulerAngles ⇐ <code>AttrValue</code>
-Class representing euler angles. Euler angles decribe rotating an objectaround its various axis in a specified axis order.
+### EulerAngles 
+Class representing euler angles. Euler angles decribe rotating an object
+around its various axis in a specified axis order.
 
 **Kind**: global class  
 **Extends**: <code>AttrValue</code>  
@@ -19,7 +20,11 @@ Class representing euler angles. Euler angles decribe rotating an objectaround 
 <a name="new_EulerAngles_new"></a>
 
 ### new EulerAngles
-Create a euler angle. Recieves the xyz values in degrees and the order that the rotations are applied.<br>Order parameter values: `XYZ: 0`, `YZX: 1`, `ZXY: 2`, `XZY: 3`, `ZYX: 4`, `YXZ: 5`<br>It could be either the `string` or the `number` value.
+Create a euler angle. Recieves the xyz values in degrees and the order that the rotations are applied.
+<br>
+Order parameter values: `XYZ: 0`, `YZX: 1`, `ZXY: 2`, `XZY: 3`, `ZYX: 4`, `YXZ: 5`
+<br>
+It could be either the `string` or the `number` value.
 
 
 | Param | Type | Default | Description |
@@ -38,7 +43,7 @@ Getter for x axis rotation.
 **Returns**: <code>number</code> - - Returns the x axis rotation.  
 <a name="EulerAngles+x"></a>
 
-### eulerAngles
+### x
 Setter for x axis rotation.
 
 **Kind**: instance property of [<code>EulerAngles</code>](#EulerAngles)  
@@ -56,7 +61,7 @@ Getter for y axis rotation.
 **Returns**: <code>number</code> - - Returns the y axis rotation.  
 <a name="EulerAngles+y"></a>
 
-### eulerAngles
+### y
 Setter for y axis rotation.
 
 **Kind**: instance property of [<code>EulerAngles</code>](#EulerAngles)  
@@ -74,7 +79,7 @@ Getter for z axis rotation.
 **Returns**: <code>number</code> - - Returns the z axis rotation.  
 <a name="EulerAngles+z"></a>
 
-### eulerAngles
+### z
 Setter for z axis rotation.
 
 **Kind**: instance property of [<code>EulerAngles</code>](#EulerAngles)  

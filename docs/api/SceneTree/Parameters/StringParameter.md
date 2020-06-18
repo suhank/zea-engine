@@ -1,6 +1,6 @@
 <a name="StringParameter"></a>
 
-## StringParameter ⇐ <code>Parameter</code>
+### StringParameter 
 Class representing a string parameter.
 
 **Kind**: global class  
@@ -57,7 +57,8 @@ The readBinary method.
 <a name="StringParameter+clone"></a>
 
 ### clone
-The clone method constructs a new string parameter, copies its valuesfrom this parameter and returns it.
+The clone method constructs a new string parameter, copies its values
+from this parameter and returns it.
 
 **Kind**: instance method of [<code>StringParameter</code>](#StringParameter)  
 **Returns**: [<code>StringParameter</code>](#StringParameter) - - Returns a new string parameter.  

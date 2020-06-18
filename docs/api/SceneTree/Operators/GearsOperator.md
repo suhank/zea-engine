@@ -1,4 +1,4 @@
-## Classes
+### Classes
 
 <dl>
 <dt><a href="#GearParameter">GearParameter</a> ⇐ <code>StructParameter</code></dt>
@@ -11,7 +11,7 @@
 
 <a name="GearParameter"></a>
 
-## GearParameter ⇐ <code>StructParameter</code>
+### GearParameter 
 Class representing a gear parameter.
 
 **Kind**: global class  
@@ -92,7 +92,7 @@ The fromJSON method decodes a json object for this type.
 
 <a name="GearsOperator"></a>
 
-## GearsOperator ⇐ <code>Operator</code>
+### GearsOperator 
 Class representing a gears operator.
 
 **Kind**: global class  
@@ -136,6 +136,7 @@ The reattach method.
 <a name="GearsOperator+destroy"></a>
 
 ### destroy
-The destroy is called by the system to cause explicit resources cleanup.Users should never need to call this method directly.
+The destroy is called by the system to cause explicit resources cleanup.
+Users should never need to call this method directly.
 
 **Kind**: instance method of [<code>GearsOperator</code>](#GearsOperator)  

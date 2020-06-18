@@ -1,7 +1,9 @@
 <a name="AttrValue"></a>
 
-## AttrValue
-Base class for values that can be stored in vertex attributes.<br>**Note:** These values use [Float32Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array) values to store their data.
+### AttrValue
+Base class for values that can be stored in vertex attributes.
+<br>
+**Note:** These values use [Float32Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array) values to store their data.
 
 **Kind**: global class  
 
@@ -18,7 +20,9 @@ Base class for values that can be stored in vertex attributes.<br>**Note:** Th
 <a name="AttrValue+isValid"></a>
 
 ### isValid
-Verifies that all the numeric values inside the `this.__data` variable are a valid number.Returns `false` If at least one of the values is either [Infinity](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Referencia/Objetos_globales/Infinity) or[NaN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Referencia/Objetos_globales/NaN).
+Verifies that all the numeric values inside the `this.__data` variable are a valid number.
+Returns `false` If at least one of the values is either [Infinity](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Referencia/Objetos_globales/Infinity) or
+[NaN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Referencia/Objetos_globales/NaN).
 
 **Kind**: instance method of [<code>AttrValue</code>](#AttrValue)  
 **Returns**: <code>boolean</code> - - Returns the result as a boolean.  

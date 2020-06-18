@@ -1,6 +1,6 @@
 <a name="GLOverlayPass"></a>
 
-## GLOverlayPass ⇐ <code>GLOpaqueGeomsPass</code>
+### GLOverlayPass 
 Class representing a GL overlay pass.
 
 **Kind**: global class  

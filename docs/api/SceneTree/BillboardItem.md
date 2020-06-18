@@ -1,6 +1,6 @@
 <a name="BillboardItem"></a>
 
-## BillboardItem ⇐ <code>TreeItem</code>
+### BillboardItem 
 Class representing a billboard item in a scene tree.
 
 **Kind**: global class  

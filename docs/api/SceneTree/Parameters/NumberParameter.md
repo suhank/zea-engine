@@ -1,6 +1,6 @@
 <a name="NumberParameter"></a>
 
-## NumberParameter ⇐ <code>Parameter</code>
+### NumberParameter 
 Class representing a number parameter.
 
 **Kind**: global class  
@@ -135,7 +135,8 @@ The readBinary method.
 <a name="NumberParameter+clone"></a>
 
 ### clone
-The clone method constructs a new number parameter, copies its valuesfrom this parameter and returns it.
+The clone method constructs a new number parameter, copies its values
+from this parameter and returns it.
 
 **Kind**: instance method of [<code>NumberParameter</code>](#NumberParameter)  
 **Returns**: [<code>NumberParameter</code>](#NumberParameter) - - Returns a new number parameter.  

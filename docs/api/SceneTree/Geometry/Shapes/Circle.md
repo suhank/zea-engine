@@ -1,6 +1,6 @@
 <a name="Circle"></a>
 
-## Circle ⇐ <code>Lines</code>
+### Circle 
 A class for generating a circle shape.
 
 **Kind**: global class  

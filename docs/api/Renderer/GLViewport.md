@@ -1,6 +1,6 @@
 <a name="GLViewport"></a>
 
-## GLViewport ⇐ <code>GLBaseViewport</code>
+### GLViewport 
 Class representing a GL viewport.
 
 **Kind**: global class  
@@ -170,7 +170,8 @@ The getGeomDataFbo method.
 <a name="GLViewport+renderGeomDataFbo"></a>
 
 ### renderGeomDataFbo
-Renders the scene geometry to the viewports geom data bufferin preparation for mouse picking.
+Renders the scene geometry to the viewports geom data buffer
+in preparation for mouse picking.
 
 **Kind**: instance method of [<code>GLViewport</code>](#GLViewport)  
 <a name="GLViewport+invalidateGeomDataBuffer"></a>
@@ -195,7 +196,8 @@ The getGeomDataAtPos method.
 <a name="GLViewport+getGeomItemsInRect"></a>
 
 ### getGeomItemsInRect
-getGeomItemsInRectGathers all the geoms renders in a given rectangle of the viewport.
+getGeomItemsInRect
+Gathers all the geoms renders in a given rectangle of the viewport.
 
 **Kind**: instance method of [<code>GLViewport</code>](#GLViewport)  
 **Returns**: <code>Set</code> - - The return value.  

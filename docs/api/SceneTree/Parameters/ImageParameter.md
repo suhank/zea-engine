@@ -1,6 +1,6 @@
 <a name="ImageParameter"></a>
 
-## ImageParameter ⇐ <code>Parameter</code>
+### ImageParameter 
 Class representing an image parameter.
 
 **Kind**: global class  
@@ -53,7 +53,8 @@ The fromJSON method decodes a json object for this type.
 <a name="ImageParameter+clone"></a>
 
 ### clone
-The clone method constructs a new image parameter,copies its values from this parameter and returns it.
+The clone method constructs a new image parameter,
+copies its values from this parameter and returns it.
 
 **Kind**: instance method of [<code>ImageParameter</code>](#ImageParameter)  
 **Returns**: [<code>ImageParameter</code>](#ImageParameter) - - Returns a new cloned image parameter.  

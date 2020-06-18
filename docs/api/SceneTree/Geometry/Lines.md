@@ -1,6 +1,6 @@
 <a name="Lines"></a>
 
-## Lines ⇐ <code>BaseGeom</code>
+### Lines 
 Class representing lines.
 
 **Kind**: global class  

@@ -1,6 +1,6 @@
 <a name="Cone"></a>
 
-## Cone ⇐ <code>Mesh</code>
+### Cone 
 A class for generating a cone geometry.
 
 **Kind**: global class  
@@ -39,7 +39,7 @@ Getter for the cone radius.
 **Returns**: <code>number</code> - - Returns the radius.  
 <a name="Cone+radius"></a>
 
-### radiu
+### radius
 Setter for the cone radius.
 
 **Kind**: instance property of [<code>Cone</code>](#Cone)  
@@ -57,7 +57,7 @@ Getter for the cone height.
 **Returns**: <code>number</code> - - Returns the height.  
 <a name="Cone+height"></a>
 
-### heigh
+### height
 Setter for the cone height.
 
 **Kind**: instance property of [<code>Cone</code>](#Cone)  
@@ -75,7 +75,7 @@ Getter for the cone detail.
 **Returns**: <code>number</code> - - Returns the detail.  
 <a name="Cone+detail"></a>
 
-### detai
+### detail
 Setter for the cone detail.
 
 **Kind**: instance property of [<code>Cone</code>](#Cone)  
@@ -93,7 +93,7 @@ Getter for the cone cap.
 **Returns**: <code>any</code> - - The return value.  
 <a name="Cone+cap"></a>
 
-### ca
+### cap
 Setter for the cone cap.
 
 **Kind**: instance property of [<code>Cone</code>](#Cone)  

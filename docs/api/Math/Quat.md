@@ -1,7 +1,9 @@
 <a name="Quat"></a>
 
-## Quat ⇐ <code>AttrValue</code>
-Class representing a quaternion. Quaternions are used to represent rotationswithout encountering gimble lock. Based on complex numbers that are not easyto understand intuitively.
+### Quat 
+Class representing a quaternion. Quaternions are used to represent rotations
+without encountering gimble lock. Based on complex numbers that are not easy
+to understand intuitively.
 
 **Kind**: global class  
 **Extends**: <code>AttrValue</code>  
@@ -84,7 +86,7 @@ Getter for `x` axis rotation.
 **Returns**: <code>number</code> - - Returns the x axis rotation.  
 <a name="Quat+x"></a>
 
-### quat
+### x
 Setter for `x` axis rotation.
 
 **Kind**: instance property of [<code>Quat</code>](#Quat)  
@@ -102,7 +104,7 @@ Getter for `y` axis rotation.
 **Returns**: <code>number</code> - - Returns the y axis rotation.  
 <a name="Quat+y"></a>
 
-### quat
+### y
 Setter for `y` axis rotation.
 
 **Kind**: instance property of [<code>Quat</code>](#Quat)  
@@ -120,7 +122,7 @@ Getter for `z` axis rotation.
 **Returns**: <code>number</code> - - Returns the z axis rotation.  
 <a name="Quat+z"></a>
 
-### quat
+### z
 Setter for `z` axis rotation.
 
 **Kind**: instance property of [<code>Quat</code>](#Quat)  
@@ -138,7 +140,7 @@ Getter for `w` value.
 **Returns**: <code>number</code> - - Returns the w value.  
 <a name="Quat+w"></a>
 
-### quat
+### w
 Setter for `w`.
 
 **Kind**: instance property of [<code>Quat</code>](#Quat)  
@@ -427,7 +429,9 @@ Calculates the cross product of two Quats and returns the result as a new Quat.
 <a name="Quat+conjugate"></a>
 
 ### conjugate
-Returns the rotational conjugate of this Quat.Conjugation represents the same rotation of the Quat butin the opposite direction around the rotational axis.
+Returns the rotational conjugate of this Quat.
+Conjugation represents the same rotation of the Quat but
+in the opposite direction around the rotational axis.
 
 **Kind**: instance method of [<code>Quat</code>](#Quat)  
 **Returns**: [<code>Quat</code>](#Quat) - - the return value.  
@@ -441,7 +445,8 @@ Return the inverse of the `Quat`
 <a name="Quat+alignWith"></a>
 
 ### alignWith
-Aligns this quaternion with another one ensuring that the delta betweenthe Quat values is the shortest path over the hypersphere.
+Aligns this quaternion with another one ensuring that the delta between
+the Quat values is the shortest path over the hypersphere.
 
 **Kind**: instance method of [<code>Quat</code>](#Quat)  
 
@@ -475,7 +480,9 @@ Multiplies two Quats.
 <a name="Quat+rotateVec3"></a>
 
 ### rotateVec3
-Rotates a vector by this quaterion.Don't forget to normalize the quaternion unlessyou want axial translation as well as rotation.
+Rotates a vector by this quaterion.
+Don't forget to normalize the quaternion unless
+you want axial translation as well as rotation.
 
 **Kind**: instance method of [<code>Quat</code>](#Quat)  
 **Returns**: <code>Vec3</code> - - Returns a new Vec3.  

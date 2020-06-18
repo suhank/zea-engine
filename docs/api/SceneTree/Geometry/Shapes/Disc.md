@@ -1,6 +1,6 @@
 <a name="Disc"></a>
 
-## Disc ⇐ <code>Mesh</code>
+### Disc 
 A class for generating a disc geometry.
 
 **Kind**: global class  
@@ -33,7 +33,7 @@ Getter for the disc radius.
 **Returns**: <code>number</code> - - Returns the radius.  
 <a name="Disc+radius"></a>
 
-### radiu
+### radius
 Setter for disc radius.
 
 **Kind**: instance property of [<code>Disc</code>](#Disc)  
@@ -44,7 +44,7 @@ Setter for disc radius.
 
 <a name="Disc+sides"></a>
 
-### side
+### sides
 Setter for the number of sides.
 
 **Kind**: instance property of [<code>Disc</code>](#Disc)  

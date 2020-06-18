@@ -1,6 +1,6 @@
 <a name="GLRenderTarget"></a>
 
-## GLRenderTarget
+### GLRenderTarget
 Class representing a GL render target.
 
 **Kind**: global class  
@@ -151,6 +151,7 @@ The bindToUniform method.
 <a name="GLRenderTarget+destroy"></a>
 
 ### destroy
-The destroy is called by the system to cause explicit resources cleanup.Users should never need to call this method directly.
+The destroy is called by the system to cause explicit resources cleanup.
+Users should never need to call this method directly.
 
 **Kind**: instance method of [<code>GLRenderTarget</code>](#GLRenderTarget)  

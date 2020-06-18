@@ -1,6 +1,6 @@
 <a name="Rect"></a>
 
-## Rect ⇐ <code>Lines</code>
+### Rect 
 A class for generating a rectangle shape.
 
 **Kind**: global class  
@@ -35,7 +35,7 @@ Getter for the length of the rect along the X axis.
 **Returns**: <code>number</code> - - Returns the length.  
 <a name="Rect+x"></a>
 
-### rect
+### x
 Setter for the length of the rect along the X axis.
 
 **Kind**: instance property of [<code>Rect</code>](#Rect)  
@@ -53,7 +53,7 @@ Getter for the length of the rect along the Y axis.
 **Returns**: <code>number</code> - - Returns the length.  
 <a name="Rect+y"></a>
 
-### rect
+### y
 Setter for the length of the rect along the U axis.
 
 **Kind**: instance property of [<code>Rect</code>](#Rect)  

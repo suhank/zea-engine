@@ -1,6 +1,6 @@
 <a name="VLHImage"></a>
 
-## VLHImage ⇐ <code>BaseImage</code>
+### VLHImage 
 Class representing a VLH image.
 
 **Kind**: global class  

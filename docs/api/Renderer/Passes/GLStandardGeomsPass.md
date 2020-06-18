@@ -1,6 +1,6 @@
 <a name="GLStandardGeomsPass"></a>
 
-## GLStandardGeomsPass ⇐ <code>GLPass</code>
+### GLStandardGeomsPass 
 This class abstracts the rendering of a collection of geometries to screen.
 
 **Kind**: global class  
@@ -70,7 +70,11 @@ The addShader method.
 <a name="GLStandardGeomsPass+constructShaders"></a>
 
 ### constructShaders
-The constructShaders method.Given a material, generate the various shaders required to render objectsusing this material. There should always be at least a single glshaderand optionally a glgeomdatashader for rendering the goem data bufferand a glselectedshader for rendering selection hilghlights
+The constructShaders method.
+Given a material, generate the various shaders required to render objects
+using this material. There should always be at least a single glshader
+and optionally a glgeomdatashader for rendering the goem data buffer
+and a glselectedshader for rendering selection hilghlights
 
 **Kind**: instance method of [<code>GLStandardGeomsPass</code>](#GLStandardGeomsPass)  
 **Returns**: <code>object</code> - - The object containing the shader instances.  

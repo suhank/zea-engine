@@ -1,6 +1,6 @@
 <a name="Torus"></a>
 
-## Torus ⇐ <code>Mesh</code>
+### Torus 
 A class for generating a torus geometry.
 
 **Kind**: global class  
@@ -37,7 +37,7 @@ Getter for the inner radius.
 **Returns**: <code>number</code> - - Returns the radius.  
 <a name="Torus+innerRadius"></a>
 
-### innerRadiu
+### innerRadius
 Setter for the inner radius.
 
 **Kind**: instance property of [<code>Torus</code>](#Torus)  
@@ -55,7 +55,7 @@ Getter for the outer radius.
 **Returns**: <code>number</code> - - Returns the radius.  
 <a name="Torus+outerRadius"></a>
 
-### outerRadiu
+### outerRadius
 Setter for the outer radius.
 
 **Kind**: instance property of [<code>Torus</code>](#Torus)  
@@ -73,7 +73,7 @@ Getter for the torus detail.
 **Returns**: <code>number</code> - - Returns the detail.  
 <a name="Torus+detail"></a>
 
-### detai
+### detail
 Setter for the torus detail.
 
 **Kind**: instance property of [<code>Torus</code>](#Torus)  

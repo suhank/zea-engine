@@ -1,7 +1,8 @@
 <a name="Vec4Parameter"></a>
 
-## Vec4Parameter ⇐ <code>Parameter</code>
-Class representing a Vec4 parameter.A Vec4 represents a four-dimensional coordinate.
+### Vec4Parameter 
+Class representing a Vec4 parameter.
+A Vec4 represents a four-dimensional coordinate.
 
 **Kind**: global class  
 **Extends**: <code>Parameter</code>  
@@ -24,7 +25,8 @@ Create a Vec4 parameter.
 <a name="Vec4Parameter+clone"></a>
 
 ### clone
-The clone method constructs a new Vec4 parameter, copies its valuesfrom this parameter and returns it.
+The clone method constructs a new Vec4 parameter, copies its values
+from this parameter and returns it.
 
 **Kind**: instance method of [<code>Vec4Parameter</code>](#Vec4Parameter)  
 **Returns**: [<code>Vec4Parameter</code>](#Vec4Parameter) - - Returns a new Vec4 parameter.  

@@ -1,6 +1,6 @@
 <a name="Cylinder"></a>
 
-## Cylinder ⇐ <code>Mesh</code>
+### Cylinder 
 A class for generating a cylinder geometry.
 
 **Kind**: global class  

@@ -1,6 +1,6 @@
 <a name="GLPass"></a>
 
-## GLPass ⇐ <code>ParameterOwner</code>
+### GLPass 
 This class abstracts the rendering of a collection of geometries to screen.
 
 **Kind**: global class  

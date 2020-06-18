@@ -1,4 +1,4 @@
-## Classes
+### Classes
 
 <dl>
 <dt><a href="#PistonParameter">PistonParameter</a> ⇐ <code>StructParameter</code></dt>
@@ -11,7 +11,7 @@
 
 <a name="PistonParameter"></a>
 
-## PistonParameter ⇐ <code>StructParameter</code>
+### PistonParameter 
 Class representing a piston parameter.
 
 **Kind**: global class  
@@ -131,7 +131,8 @@ The fromJSON method decodes a json object for this type.
 <a name="PistonParameter+clone"></a>
 
 ### clone
-The clone method constructs a new pistom parameter, copies its valuesfrom this parameter and returns it.
+The clone method constructs a new pistom parameter, copies its values
+from this parameter and returns it.
 
 **Kind**: instance method of [<code>PistonParameter</code>](#PistonParameter)  
 **Returns**: [<code>PistonParameter</code>](#PistonParameter) - - Returns a new cloned piston parameter.  
@@ -142,7 +143,7 @@ The clone method constructs a new pistom parameter, copies its valuesfrom this 
 
 <a name="PistonOperator"></a>
 
-## PistonOperator ⇐ <code>Operator</code>
+### PistonOperator 
 Class representing a piston operator.
 
 **Kind**: global class  
@@ -227,6 +228,7 @@ The fromJSON method decodes a json object for this type.
 <a name="PistonOperator+destroy"></a>
 
 ### destroy
-The destroy is called by the system to cause explicit resources cleanup.Users should never need to call this method directly.
+The destroy is called by the system to cause explicit resources cleanup.
+Users should never need to call this method directly.
 
 **Kind**: instance method of [<code>PistonOperator</code>](#PistonOperator)  

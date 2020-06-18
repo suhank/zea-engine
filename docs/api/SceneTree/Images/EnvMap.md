@@ -1,6 +1,6 @@
 <a name="EnvMap"></a>
 
-## EnvMap ⇐ <code>VLHImage</code>
+### EnvMap 
 Class representing an environment map.
 
 **Kind**: global class  

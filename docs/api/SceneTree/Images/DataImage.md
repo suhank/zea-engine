@@ -1,6 +1,6 @@
 <a name="DataImage"></a>
 
-## DataImage ⇐ <code>BaseImage</code>
+### DataImage 
 Class representing a data image.
 
 **Kind**: global class  

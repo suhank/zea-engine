@@ -1,6 +1,6 @@
 <a name="CameraMouseAndKeyboard"></a>
 
-## CameraMouseAndKeyboard ⇐ <code>ParameterOwner</code>
+### CameraMouseAndKeyboard 
 Class representing a camera, mouse and keyboard.
 
 **Kind**: global class  

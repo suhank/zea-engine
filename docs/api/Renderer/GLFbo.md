@@ -1,6 +1,6 @@
 <a name="GLFbo"></a>
 
-## GLFbo
+### GLFbo
 This class abstracts the rendering of a collection of geometries to screen.
 
 **Kind**: global class  
@@ -46,31 +46,31 @@ Create a GLFbo.
 
 <a name="GLFbo+width"></a>
 
-### widt
+### width
 Getter for width.
 
 **Kind**: instance property of [<code>GLFbo</code>](#GLFbo)  
 <a name="GLFbo+height"></a>
 
-### heigh
+### height
 Getter for height.
 
 **Kind**: instance property of [<code>GLFbo</code>](#GLFbo)  
 <a name="GLFbo+size"></a>
 
-### siz
+### size
 Getter for size.
 
 **Kind**: instance property of [<code>GLFbo</code>](#GLFbo)  
 <a name="GLFbo+colorTexture"></a>
 
-### colorTextur
+### colorTexture
 Getter for colorTexture.
 
 **Kind**: instance property of [<code>GLFbo</code>](#GLFbo)  
 <a name="GLFbo+depthTextureGL"></a>
 
-### depthTextureG
+### depthTextureGL
 Getter for depthTextureGL.
 
 **Kind**: instance property of [<code>GLFbo</code>](#GLFbo)  
@@ -140,7 +140,9 @@ The setup method.
 <a name="GLFbo+resize"></a>
 
 ### resize
-Triggered Automatically when the texture resizes.TODO: fbos should manage the textures assigned to themE.g. resizing and preserving data.
+Triggered Automatically when the texture resizes.
+TODO: fbos should manage the textures assigned to them
+E.g. resizing and preserving data.
 
 **Kind**: instance method of [<code>GLFbo</code>](#GLFbo)  
 <a name="GLFbo+bindForWriting"></a>
@@ -235,6 +237,7 @@ The unbind method.
 <a name="GLFbo+destroy"></a>
 
 ### destroy
-The destroy is called by the system to cause explicit resources cleanup.Users should never need to call this method directly.
+The destroy is called by the system to cause explicit resources cleanup.
+Users should never need to call this method directly.
 
 **Kind**: instance method of [<code>GLFbo</code>](#GLFbo)  

@@ -1,6 +1,6 @@
 <a name="Material"></a>
 
-## Material ⇐ <code>BaseItem</code>
+### Material 
 Class representing a material in a scene tree.
 
 **Kind**: global class  
@@ -131,7 +131,8 @@ The readBinary method.
 <a name="Material+clone"></a>
 
 ### clone
-The clone method constructs a new material, copies its valuesfrom this material and returns it.
+The clone method constructs a new material, copies its values
+from this material and returns it.
 
 **Kind**: instance method of [<code>Material</code>](#Material)  
 **Returns**: [<code>Material</code>](#Material) - - Returns a new cloned material.  
@@ -155,6 +156,7 @@ The copyFrom method.
 <a name="Material+destroy"></a>
 
 ### destroy
-The destroy is called by the system to cause explicit resources cleanup.Users should never need to call this method directly.
+The destroy is called by the system to cause explicit resources cleanup.
+Users should never need to call this method directly.
 
 **Kind**: instance method of [<code>Material</code>](#Material)  

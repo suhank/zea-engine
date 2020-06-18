@@ -1,6 +1,6 @@
 <a name="ResourceLoader"></a>
 
-## ResourceLoader
+### ResourceLoader
 Class representing a resource loader.
 
 **Kind**: global class  

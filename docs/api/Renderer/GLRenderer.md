@@ -1,6 +1,6 @@
 <a name="GLRenderer"></a>
 
-## GLRenderer ⇐ <code>GLBaseRenderer</code>
+### GLRenderer 
 Class representing a GL renderer.
 
 **Kind**: global class  
@@ -49,13 +49,13 @@ Create a GL renderer.
 
 <a name="GLRenderer+exposure"></a>
 
-### exposur
+### exposure
 Getter for exposure.
 
 **Kind**: instance property of [<code>GLRenderer</code>](#GLRenderer)  
 <a name="GLRenderer+exposure"></a>
 
-### exposur
+### exposure
 Setter for exposure.
 
 **Kind**: instance property of [<code>GLRenderer</code>](#GLRenderer)  
@@ -66,13 +66,13 @@ Setter for exposure.
 
 <a name="GLRenderer+gamma"></a>
 
-### gamm
+### gamma
 Getter for gamma.
 
 **Kind**: instance property of [<code>GLRenderer</code>](#GLRenderer)  
 <a name="GLRenderer+gamma"></a>
 
-### gamm
+### gamma
 Setter for gamma.
 
 **Kind**: instance property of [<code>GLRenderer</code>](#GLRenderer)  
@@ -83,13 +83,13 @@ Setter for gamma.
 
 <a name="GLRenderer+displayEnvironment"></a>
 
-### displayEnvironmen
+### displayEnvironment
 Getter for displayEnvironment.
 
 **Kind**: instance property of [<code>GLRenderer</code>](#GLRenderer)  
 <a name="GLRenderer+displayEnvironment"></a>
 
-### displayEnvironmen
+### displayEnvironment
 Setter for displayEnvironment.
 
 **Kind**: instance property of [<code>GLRenderer</code>](#GLRenderer)  
@@ -100,13 +100,13 @@ Setter for displayEnvironment.
 
 <a name="GLRenderer+planeDist"></a>
 
-### planeDis
+### planeDist
 Getter for planeDist.
 
 **Kind**: instance property of [<code>GLRenderer</code>](#GLRenderer)  
 <a name="GLRenderer+planeDist"></a>
 
-### planeDis
+### planeDist
 Setter for planeDist.
 
 **Kind**: instance property of [<code>GLRenderer</code>](#GLRenderer)  
@@ -117,13 +117,13 @@ Setter for planeDist.
 
 <a name="GLRenderer+cutPlaneNormal"></a>
 
-### cutPlaneNorma
+### cutPlaneNormal
 Getter for cutPlaneNormal.
 
 **Kind**: instance property of [<code>GLRenderer</code>](#GLRenderer)  
 <a name="GLRenderer+cutPlaneNormal"></a>
 
-### cutPlaneNorma
+### cutPlaneNormal
 Setter for cutPlaneNormal.
 
 **Kind**: instance property of [<code>GLRenderer</code>](#GLRenderer)  

@@ -1,6 +1,6 @@
 <a name="BinWriter"></a>
 
-## BinWriter
+### BinWriter
 Class representing a bin writer.
 
 **Kind**: global class  

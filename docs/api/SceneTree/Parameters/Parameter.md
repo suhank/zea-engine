@@ -1,4 +1,4 @@
-## Classes
+### Classes
 
 <dl>
 <dt><a href="#BaseParameter">BaseParameter</a></dt>
@@ -11,7 +11,7 @@
 
 <a name="BaseParameter"></a>
 
-## BaseParameter
+### BaseParameter
 Class representing a base parameter.
 
 **Kind**: global class  
@@ -21,7 +21,7 @@ Class representing a base parameter.
     * [getName() ⇒ <code>string</code>](#getName)
     * [setName(name)](#setName)
     * [getOwner() ⇒ <code>any</code>](#getOwner)
-    * [addOwner(ownerItem)](#addOwner)
+    * [setOwner(ownerItem)](#setOwner)
     * [getPath() ⇒ <code>any</code>](#getPath)
     * [setFlag(flag)](#setFlag)
     * [clearFlag(flag)](#clearFlag)
@@ -74,10 +74,10 @@ Getter for the owner of the parameter.
 
 **Kind**: instance method of [<code>BaseParameter</code>](#BaseParameter)  
 **Returns**: <code>any</code> - - The return value.  
-<a name="BaseParameter+addOwner"></a>
+<a name="BaseParameter+setOwner"></a>
 
-### addOwner
-Adds the owner of the parameter.
+### setOwner
+Sets the owner of the parameter.
 
 **Kind**: instance method of [<code>BaseParameter</code>](#BaseParameter)  
 
@@ -239,7 +239,7 @@ The destroy method.
 **Kind**: instance method of [<code>BaseParameter</code>](#BaseParameter)  
 <a name="Parameter"></a>
 
-## Parameter ⇐ [<code>BaseParameter</code>](#BaseParameter)
+### Parameter 
 Class representing a parameter.
 
 **Kind**: global class  
@@ -259,7 +259,7 @@ Class representing a parameter.
     * [getName() ⇒ <code>string</code>](#getName)
     * [setName(name)](#setName)
     * [getOwner() ⇒ <code>any</code>](#getOwner)
-    * [addOwner(ownerItem)](#addOwner)
+    * [setOwner(ownerItem)](#setOwner)
     * [getPath() ⇒ <code>any</code>](#getPath)
     * [setFlag(flag)](#setFlag)
     * [clearFlag(flag)](#clearFlag)
@@ -333,7 +333,11 @@ The getValue method.
 <a name="Parameter+setValueDone"></a>
 
 ### setValueDone
-At the end of an interaction session of setting a value.E.g. moving a slider handle, or typing in some valuesthis method should be called to notify that that interaction is completeCode can listed to this event to trigger longer running actions likesaving a file or heavy computation.
+At the end of an interaction session of setting a value.
+E.g. moving a slider handle, or typing in some values
+this method should be called to notify that that interaction is complete
+Code can listed to this event to trigger longer running actions like
+saving a file or heavy computation.
 
 **Kind**: instance method of [<code>Parameter</code>](#Parameter)  
 
@@ -383,7 +387,8 @@ The readBinary method.
 <a name="Parameter+clone"></a>
 
 ### clone
-The clone method constructs a new parameter, copies its valuesfrom this parameter and returns it.
+The clone method constructs a new parameter, copies its values
+from this parameter and returns it.
 
 **Kind**: instance method of [<code>Parameter</code>](#Parameter)  
 **Overrides**: [<code>clone</code>](#BaseParameter+clone)  
@@ -421,13 +426,13 @@ Getter for the owner of the parameter.
 **Kind**: instance method of [<code>Parameter</code>](#Parameter)  
 **Overrides**: [<code>getOwner</code>](#BaseParameter+getOwner)  
 **Returns**: <code>any</code> - - The return value.  
-<a name="BaseParameter+addOwner"></a>
+<a name="BaseParameter+setOwner"></a>
 
-### addOwner
-Adds the owner of the parameter.
+### setOwner
+Sets the owner of the parameter.
 
 **Kind**: instance method of [<code>Parameter</code>](#Parameter)  
-**Overrides**: [<code>addOwner</code>](#BaseParameter+addOwner)  
+**Overrides**: [<code>setOwner</code>](#BaseParameter+setOwner)  
 
 | Param | Type | Description |
 | --- | --- | --- |

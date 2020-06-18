@@ -1,6 +1,6 @@
 <a name="CodeParameter"></a>
 
-## CodeParameter ⇐ <code>StringParameter</code>
+### CodeParameter 
 Class representing a code parameter.
 
 **Kind**: global class  
@@ -44,7 +44,8 @@ The getLanguage method.
 <a name="CodeParameter+clone"></a>
 
 ### clone
-The clone method constructs a new code parameter,copies its values from this parameter and returns it.
+The clone method constructs a new code parameter,
+copies its values from this parameter and returns it.
 
 **Kind**: instance method of [<code>CodeParameter</code>](#CodeParameter)  
 **Returns**: [<code>CodeParameter</code>](#CodeParameter) - - Returns a new cloned code parameter.  

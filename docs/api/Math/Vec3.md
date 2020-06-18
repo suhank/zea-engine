@@ -1,7 +1,9 @@
 <a name="Vec3"></a>
 
-## Vec3 ⇐ <code>AttrValue</code>
-Representing a Vec3(three-dimensional floating point vector).Vector classes in _zea-engine_ internally store values in [Float32Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array) andexpose getters and setters for the component values.
+### Vec3 
+Representing a Vec3(three-dimensional floating point vector).
+Vector classes in _zea-engine_ internally store values in [Float32Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array) and
+expose getters and setters for the component values.
 
 **Kind**: global class  
 **Extends**: <code>AttrValue</code>  
@@ -58,7 +60,14 @@ Representing a Vec3(three-dimensional floating point vector).Vector classes in 
 <a name="new_Vec3_new"></a>
 
 ### new Vec3
-Creates a Vec3.The type of values of the `(x, y, z)` coordenates can be [Float32Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array),[Uint32Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint32Array),[Int32Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array) and[ArrayBuffer](https://developer.mozilla.org/es/docs/Web/JavaScript/Referencia/Objetos_globales/ArrayBuffer).<br>You can also pass one JSON object parameter.
+Creates a Vec3.
+
+The type of values of the `(x, y, z)` coordenates can be [Float32Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array),
+[Uint32Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint32Array),
+[Int32Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array) and
+[ArrayBuffer](https://developer.mozilla.org/es/docs/Web/JavaScript/Referencia/Objetos_globales/ArrayBuffer).
+<br>
+You can also pass one JSON object parameter.
 
 
 | Param | Type | Default | Description |
@@ -76,7 +85,7 @@ Getter for `x` value.
 **Returns**: <code>number</code> - - Returns the x value.  
 <a name="Vec3+x"></a>
 
-### vec3
+### x
 Setter for `x` value.
 
 **Kind**: instance property of [<code>Vec3</code>](#Vec3)  
@@ -94,7 +103,7 @@ Getter for `y` value.
 **Returns**: <code>number</code> - - Returns the y value.  
 <a name="Vec3+y"></a>
 
-### vec3
+### y
 Setter for `y` value.
 
 **Kind**: instance property of [<code>Vec3</code>](#Vec3)  
@@ -112,7 +121,7 @@ Getter for `z` value.
 **Returns**: <code>number</code> - - Returns the z value.  
 <a name="Vec3+z"></a>
 
-### vec3
+### z
 Setter for `z` value.
 
 **Kind**: instance property of [<code>Vec3</code>](#Vec3)  
@@ -379,7 +388,8 @@ Calculates the distance to another Vec3.
 <a name="Vec3+normalize"></a>
 
 ### normalize
-Normalizes the Vec3 and returns it as a new Vec3.Multiplies coordenates value by the inverse of the vector length.
+Normalizes the Vec3 and returns it as a new Vec3.
+Multiplies coordenates value by the inverse of the vector length.
 
 **Kind**: instance method of [<code>Vec3</code>](#Vec3)  
 **Returns**: [<code>Vec3</code>](#Vec3) - - Returns the Vec3 normalized.  

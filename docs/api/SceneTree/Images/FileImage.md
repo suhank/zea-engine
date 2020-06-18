@@ -1,4 +1,4 @@
-## Classes
+### Classes
 
 <dl>
 <dt><a href="#FileImage">FileImage</a> ⇐ <code>BaseImage</code></dt>
@@ -11,7 +11,7 @@
 
 <a name="FileImage"></a>
 
-## FileImage ⇐ <code>BaseImage</code>
+### FileImage 
 Class representing a file image.
 
 **Kind**: global class  
@@ -135,7 +135,7 @@ The constructLoader method.
 
 <a name="FileImage2D"></a>
 
-## FileImage2D ⇐ [<code>FileImage</code>](#FileImage)
+### FileImage2D 
 Class representing a 2D file image.
 
 **Kind**: global class  
