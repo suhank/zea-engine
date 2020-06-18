@@ -15,6 +15,8 @@ uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
 
 <%include file="stack-gl/transpose.glsl"/>
+<%include file="drawItemId.glsl"/>
+<%include file="drawItemTexture.glsl"/>
 <%include file="modelMatrix.glsl"/>
 
 /* VS Outputs */
@@ -25,7 +27,8 @@ varying vec2 v_texCoords;
 
 
 void main(void) {
-    mat4 modelMatrix = getModelMatrix();
+    int drawItemId = getDrawItemId();
+    mat4 modelMatrix = getModelMatrix(drawItemId);
     mat4 modelViewMatrix = viewMatrix * modelMatrix;
 
     v_viewPos = (modelViewMatrix * vec4(positions, 1.0));
@@ -127,10 +130,9 @@ testingHarness.registerTest('MaterialsAndEnvironment/GifLoading', (domElement, r
     scene.setupGrid(60.0, 6);
 
     const setupGifPlayers = (name, pos)=>{
-        const path = "https://storage.googleapis.com/zea-playground-assets/zea-engine/" + name;
 
         const image =  new Z.GIFImage();
-        image.getParameter('FilePath').setUrl(path);
+        image.getParameter('FilePath').setUrl("Assets/" + name);
         const treeItem = new Z.TreeItem(image.getName());
 
         const atlasmaterial = new Z.Material('mat', 'FlatSurfaceShader');

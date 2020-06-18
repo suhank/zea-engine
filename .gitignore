@@ -1,13 +1,12 @@
 node_modules/
+testing-server/
 
 lib/
-dist/
+/dist/
 projects/
 Tests/Assets/
 SteamServer/
 Resources/Cache/
-
-docs/api
 
 *.log
 .tmuxp.json

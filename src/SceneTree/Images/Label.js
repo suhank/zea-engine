@@ -8,7 +8,6 @@ import {
 import { sgFactory } from '../SGFactory.js'
 import { DataImage } from './DataImage.js'
 import { labelManager } from './LabelManager.js'
-import { Signal } from '../../Utilities/index'
 
 // http://stackoverflow.com/questions/1255512/how-to-draw-a-rounded-rectangle-on-html-canvas
 /**
@@ -101,8 +100,8 @@ class Label extends DataImage {
     this.__canvasElem = document.createElement('canvas')
     const fontSize = 22
 
-    const libraryParam = this.addParameter(new StringParameter('library'))
-    this.addParameter(new StringParameter('text', ''))
+    const libraryParam = this.addParameter(new StringParameter('Library'))
+    this.addParameter(new StringParameter('Text', ''))
     // or load the label when it is loaded.
 
     // const setLabelTextToLibrary = ()=>{
@@ -111,47 +110,46 @@ class Label extends DataImage {
     //     const text = textParam.getValue();
     //     labelManager.setLabelTextToLibrary(library, name, text);
     // }
-    // textParam.valueChanged.connect(setLabelText);
+    // textParam.addListener('valueChanged', setLabelText);
 
-    this.addParameter(new ColorParameter('fontColor', new Color(0, 0, 0)))
-    // this.addParameter(new StringParameter('textAlign', 'left'))
-    // this.addParameter(MultiChoiceParameter('textAlign', 0, ['left', 'right']));
-    // this.addParameter(new BooleanParameter('fillText', true))
-    this.addParameter(new NumberParameter('margin', fontSize * 0.5))
-    this.addParameter(new NumberParameter('borderWidth', 2))
-    this.addParameter(new NumberParameter('borderRadius', fontSize * 0.5))
-    this.addParameter(new BooleanParameter('outline', false))
-    this.addParameter(new BooleanParameter('outlineColor', new Color(0, 0, 0)))
-    this.addParameter(new BooleanParameter('background', true))
+    this.addParameter(new ColorParameter('FontColor', new Color(0, 0, 0)))
+    // this.addParameter(new StringParameter('TextAlign', 'left'))
+    // this.addParameter(MultiChoiceParameter('TextAlign', 0, ['left', 'right']));
+    // this.addParameter(new BooleanParameter('FillText', true))
+    this.addParameter(new NumberParameter('Margin', fontSize * 0.5))
+    this.addParameter(new NumberParameter('BorderWidth', 2))
+    this.addParameter(new NumberParameter('BorderRadius', fontSize * 0.5))
+    this.addParameter(new BooleanParameter('Outline', false))
+    this.addParameter(new BooleanParameter('OutlineColor', new Color(0, 0, 0)))
+    this.addParameter(new BooleanParameter('Background', true))
     this.addParameter(
-      new ColorParameter('backgroundColor', new Color('#FBC02D'))
+      new ColorParameter('BackgroundColor', new Color('#FBC02D'))
     )
-    this.addParameter(new BooleanParameter('fillBackground', true))
-    this.addParameter(new BooleanParameter('strokeBackgroundOutline', true))
-    this.addParameter(new NumberParameter('fontSize', 22))
-    this.addParameter(new StringParameter('font', 'Helvetica'))
+    this.addParameter(new BooleanParameter('FillBackground', true))
+    this.addParameter(new BooleanParameter('StrokeBackgroundOutline', true))
+    this.addParameter(new NumberParameter('FontSize', 22))
+    this.addParameter(new StringParameter('Font', 'Helvetica'))
 
     const reload = () => {
       this.loadLabelData()
     }
-    this.nameChanged.connect(reload)
+    this.addListener('nameChanged', reload)
 
     if (library) libraryParam.setValue(library)
 
     this.__requestedRerender = false
     this.__needsRender = false
-    this.labelRendered = new Signal();
     this.loadLabelData()
   }
 
   /**
    * This method can be overrridden in derived classes
    * to perform general updates (see GLPass or BaseItem).
-   * @param {any} param - The param param.
-   * @param {any} mode - The mode param.
+   * @param {object} event - The event object.
    * @private
    */
-  __parameterValueChanged(param, mode) {
+  __parameterValueChanged(event) {
+    super.__parameterValueChanged(event)
     if (!this.__requestedRerender) {
       this.__requestedRerender = true
       this.loadLabelData()
@@ -167,15 +165,15 @@ class Label extends DataImage {
       this.__needsRender = true
       if (!this.__loaded) {
         this.__loaded = true
-        this.loaded.emit()
+        this.emit('loaded', {})
       } else {
-        this.updated.emit()
+        this.emit('updated', {})
       }
     }
 
     const loadText = () => {
       return new Promise(resolve => {
-        const library = this.getParameter('library').getValue()
+        const library = this.getParameter('Library').getValue()
         if (library == '') {
           resolve()
           return
@@ -190,7 +188,7 @@ class Label extends DataImage {
             const name = this.getName()
             // console.log("Text Loaded:" + name);
             const text = labelManager.getLabelText(library, name)
-            this.getParameter('text').setValue(text)
+            this.getParameter('Text').setValue(text)
           } catch (e) {
             // Note: if the text is not found in the labels pack
             // an exception is thrown, and we catch it here.
@@ -199,7 +197,8 @@ class Label extends DataImage {
           resolve()
         }
         if (!labelManager.isLibraryLoaded(library)) {
-          labelManager.labelLibraryLoaded.connect(loadedLibrary => {
+          labelManager.addListener('labelLibraryLoaded', event => {
+            const loadedLibrary = event.library
             if (loadedLibrary == library) getLibraryText()
           })
         } else {
@@ -210,8 +209,8 @@ class Label extends DataImage {
     const loadFont = () => {
       return new Promise(resolve => {
         if (document.fonts != undefined) {
-          const font = this.getParameter('font').getValue()
-          const fontSize = this.getParameter('fontSize').getValue()
+          const font = this.getParameter('Font').getValue()
+          const fontSize = this.getParameter('FontSize').getValue()
           document.fonts.load(fontSize + 'px "' + font + '"').then(() => {
             // console.log("Font Loaded:" + font);
             resolve()
@@ -233,23 +232,23 @@ class Label extends DataImage {
       alpha: true,
     })
 
-    let text = this.getParameter('text').getValue()
+    let text = this.getParameter('Text').getValue()
     if (text == '') text = this.getName()
 
-    const font = this.getParameter('font').getValue()
-    const fontColor = this.getParameter('fontColor').getValue()
-    const textAlign = 'left';//this.getParameter('textAlign').getValue()
-    const fontSize = this.getParameter('fontSize').getValue()
-    const margin = this.getParameter('margin').getValue()
-    const borderWidth = this.getParameter('borderWidth').getValue()
-    const borderRadius = this.getParameter('borderRadius').getValue()
-    const outline = this.getParameter('outline').getValue()
-    const outlineColor = this.getParameter('outlineColor').getValue()
-    const background = this.getParameter('background').getValue()
-    const backgroundColor = this.getParameter('backgroundColor').getValue()
-    const fillBackground = this.getParameter('fillBackground').getValue()
+    const font = this.getParameter('Font').getValue()
+    const fontColor = this.getParameter('FontColor').getValue()
+    const textAlign = 'left';//this.getParameter('TextAlign').getValue()
+    const fontSize = this.getParameter('FontSize').getValue()
+    const margin = this.getParameter('Margin').getValue()
+    const borderWidth = this.getParameter('BorderWidth').getValue()
+    const borderRadius = this.getParameter('BorderRadius').getValue()
+    const outline = this.getParameter('Outline').getValue()
+    const outlineColor = this.getParameter('OutlineColor').getValue()
+    const background = this.getParameter('Background').getValue()
+    const backgroundColor = this.getParameter('BackgroundColor').getValue()
+    const fillBackground = this.getParameter('FillBackground').getValue()
     const strokeBackgroundOutline = this.getParameter(
-      'strokeBackgroundOutline'
+      'StrokeBackgroundOutline'
     ).getValue()
 
     // let ratio = devicePixelRatio / backingStoreRatio;
@@ -310,7 +309,7 @@ class Label extends DataImage {
 
     this.__data = ctx2d.getImageData(0, 0, this.width, this.height)
     this.__needsRender = false
-    this.labelRendered.emit({
+    this.emit('labelRendered', {
       width: this.width,
       height: this.height,
       data: this.__data

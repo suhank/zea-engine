@@ -22,6 +22,21 @@ class Version {
   /**
    * Compare a version object against a version numbers array.
    * @param {array} numbers - The numbers value.
+   * @return {number} - return positive: v1 > v2, zero:v1 == v2, negative: v1 < v2 
+   */
+  compare(numbers) {
+    // https://stackoverflow.com/questions/6832596/how-to-compare-software-version-number-using-js-only-number
+    // 2nd answer.
+    const v1 = [this.major, this.minor, this.patch]
+    for (let i = 0; i < 3; i++) {
+      if (v1[i] !== numbers[i]) return v1[i] - numbers[i]
+    }
+    return 0
+  }
+
+  /**
+   * Compare a version object against a version numbers array.
+   * @param {array} numbers - The numbers value.
    * @return {boolean} - The return value.
    */
   equals(numbers) {

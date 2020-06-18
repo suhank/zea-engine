@@ -102,7 +102,7 @@ testingHarness.registerTest('DynamicScenes/StateMachine', (domElement, resources
         objAsset.getParameter('defaultShader').setValue('SimpleSurfaceShader');
         asset.addChild(objAsset);
 
-        objAsset.loaded.connect(function() {
+        objAsset.addEventListener('loaded', event => {
 
             let explodedPartsOp = new Z.ExplodePartsOperator('explodeOp');
             explodedPartsOp.getParameter('Dist').setValue(30.0);

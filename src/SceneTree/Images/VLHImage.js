@@ -30,8 +30,8 @@ class VLHImage extends BaseImage {
     this.type = 'FLOAT'
 
     const fileParam = this.addParameter(new FilePathParameter('FilePath'))
-    fileParam.valueChanged.connect(() => {
-      this.loaded.untoggle()
+    fileParam.addListener('valueChanged', () => {
+      this.loaded = false
 
       if (this.getName() == "") {
         // Generate a name from the file path.
@@ -95,9 +95,9 @@ class VLHImage extends BaseImage {
       }
       if (!this.__loaded) {
         this.__loaded = true
-        this.loaded.emit()
+        this.emit('loaded', {})
       } else {
-        this.updated.emit()
+        this.emit('updated', {})
       }
     }
     ldrPic.src = URL.createObjectURL(blob)

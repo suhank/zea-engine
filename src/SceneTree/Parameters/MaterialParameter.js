@@ -1,4 +1,3 @@
-import { Signal } from '../../Utilities/index'
 import { ParamFlags, ValueSetMode, Parameter } from './Parameter.js'
 import { materialLibraryManager } from '../MaterialLibraryManager.js'
 
@@ -13,7 +12,12 @@ class MaterialParameter extends Parameter {
    */
   constructor(name, value) {
     super(name, value, 'Material')
-    this.valueParameterValueChanged = new Signal()
+    this.__valueParameterValueChanged = this.__valueParameterValueChanged.bind(this)
+  }
+
+  // eslint-disable-next-line require-jsdoc
+  __valueParameterValueChanged(event) {
+    this.emit('valueParameterValueChanged', event)
   }
 
   /**
@@ -25,14 +29,14 @@ class MaterialParameter extends Parameter {
     // 0 == normal set. 1 = changed via cleaner fn, 2 = change by loading/cloning code.
     if (this.__value !== material) {
       if (this.__value) {
-        this.__value.parameterValueChanged.disconnect(
-          this.valueParameterValueChanged.emit
+        this.__value.removeListener('parameterValueChanged',
+          this.__valueParameterValueChanged
         )
       }
       this.__value = material
       if (this.__value) {
-        this.__value.parameterValueChanged.connect(
-          this.valueParameterValueChanged.emit
+        this.__value.addListener('parameterValueChanged',
+          this.__valueParameterValueChanged
         )
       }
       if (
@@ -43,7 +47,9 @@ class MaterialParameter extends Parameter {
       }
 
       // During the cleaning process, we don't want notifications.
-      if (mode != ValueSetMode.OPERATOR_SETVALUE) this.valueChanged.emit(mode)
+      if (mode != ValueSetMode.OPERATOR_SETVALUE) {
+        this.emit('valueChanged', { mode })
+      }
     }
   }
 
@@ -107,8 +113,8 @@ class MaterialParameter extends Parameter {
     // E.g. freeing GPU Memory.
 
     if (this.__value) {
-      this.__value.parameterValueChanged.disconnect(
-        this.valueParameterValueChanged.emit
+      this.__value.removeListener('parameterValueChanged',
+        this.__valueParameterValueChanged
       )
     }
   }

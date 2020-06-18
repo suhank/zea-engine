@@ -1,4 +1,3 @@
-import { Signal } from '../../Utilities/index'
 import { ValueSetMode, ParamFlags, Parameter } from './Parameter.js'
 import { resourceLoader } from '../ResourceLoader.js'
 
@@ -13,8 +12,6 @@ class FilePathParameter extends Parameter {
    */
   constructor(name, exts) {
     super(name, '', 'FilePath')
-
-    this.fileUpdated = new Signal()
     if (exts) this.setSupportedExts(exts)
   }
 
@@ -148,7 +145,7 @@ class FilePathParameter extends Parameter {
     ) {
       this.__flags |= ParamFlags.USER_EDITED
     }
-    this.valueChanged.emit(mode)
+    this.emit('valueChanged', { mode })
   }
 
   /**
@@ -208,16 +205,16 @@ class FilePathParameter extends Parameter {
     this.__value = value
     this.__file = file
 
-    resourceLoader.fileUpdated.connect(id => {
-      if (id == this.__value) {
+    resourceLoader.addListener('fileUpdated', event => {
+      if (event.fileId == this.__value) {
         this.__file = resourceLoader.getFile(this.__value)
-        this.fileUpdated.emit()
+        this.emit('fileUpdated', event)
       }
     })
 
     if (mode == ValueSetMode.USER_SETVALUE)
       this.__flags |= ParamFlags.USER_EDITED
-    this.valueChanged.emit(mode)
+    this.emit('valueChanged', { mode })
   }
   // ////////////////////////////////////////
   // Persistence

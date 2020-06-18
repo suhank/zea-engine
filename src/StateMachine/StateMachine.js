@@ -1,4 +1,3 @@
-import { Signal } from '../Utilities/index'
 import { BaseItem, ItemFlags, sgFactory } from '../SceneTree/index'
 
 /** A state machine is a mathematical model that describes the behavior of
@@ -19,17 +18,17 @@ class StateMachine extends BaseItem {
     this.__currentState
     this.__initialStateName
 
-    this.stateChanged = new Signal()
-
     // Always save state machines.
     // Then never come as part of the binary data.
     this.setFlag(ItemFlags.USER_EDITED)
 
     // Manually invoke the callbacks for cases where the StateMAchine
-    // is not beingn constructed by the SGFactory.
-    if (!sgFactory.isConstructing()) {
-      sgFactory.invokeCallbacks(this)
-    }
+    // is not being constructed by the SGFactory.
+    // TODO: Maybe in BaseItem.construct we should invoke the callbacks
+    // for all classes.
+    // if (!sgFactory.isConstructing()) {
+    //   sgFactory.invokeCallbacks(this)
+    // }
   }
 
   /**
@@ -69,7 +68,7 @@ class StateMachine extends BaseItem {
     this.__currentState = this.__states[name]
     this.__currentState.activate()
 
-    this.stateChanged.emit(name)
+    this.emit('stateChanged', { name })
   }
 
   /**

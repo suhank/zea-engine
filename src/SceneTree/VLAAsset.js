@@ -1,5 +1,4 @@
 import { Color } from '../Math/index'
-import { Signal } from '../Utilities/index'
 import { SystemDesc } from '../BrowserDetection.js'
 import { FilePathParameter, ColorParameter } from './Parameters/index'
 import { AssetItem } from './AssetItem.js'
@@ -18,24 +17,22 @@ class VLAAsset extends AssetItem {
    */
   constructor(name) {
     super(name)
-    this.loaded.setToggled(false)
-
+    this.loaded = false
     this.lightmap = null
 
     // A signal that is emitted once all the geoms are loaded.
     // Often the state machine will activate the first state
     // when this signal emits.
-    this.geomsLoaded = new Signal(true)
-    this.geomsLoaded.setToggled(false)
-    this.loaded.setToggled(false)
-    this.__geomLibrary.loaded.connect(()=>{
-      this.geomsLoaded.emit()
+    this.geomsLoaded = false
+    this.loaded = false
+    this.__geomLibrary.addListener('loaded', () => {
+      this.emit('geomsLoaded', {})
     })
 
     this.__datafileParam = this.addParameter(
       new FilePathParameter('DataFilePath')
     )
-    this.__datafileParam.valueChanged.connect(() => {
+    this.__datafileParam.addListener('valueChanged', () => {
       const file = this.__datafileParam.getFileDesc()
       if (!file) return
       console.log(file)
@@ -44,16 +41,16 @@ class VLAAsset extends AssetItem {
         this.setName(stem)
       }
 
-      this.geomsLoaded.setToggled(false)
+      this.geomsLoaded = false
       this.loadDataFile(
         () => {
-          if (!this.loaded.isToggled()) this.loaded.emit()
+          if (!this.loaded) this.emit('loaded', {})
         },
         () => {
-          // if(!this.loaded.isToggled()){
-          //   this.loaded.emit();
+          // if(!this.loaded){
+          //   this.emit('loaded', {});
           // }
-          // this.geomsLoaded.emit()
+          // this.emit('geomsLoaded', {})
         }
       )
     })
@@ -255,9 +252,9 @@ class VLAAsset extends AssetItem {
     // To ensure that the resource loader knows when
     // parsing is done, we listen to the GeomLibrary streamFileLoaded
     // signal. This is fired every time a file in the stream is finshed parsing.
-    this.__geomLibrary.streamFileParsed.connect(fraction => {
+    this.__geomLibrary.addListener('streamFileParsed', event => {
       // A chunk of geoms are now parsed, so update the resource loader.
-      resourceLoader.addWorkDone(fileId + 'geoms', fraction)
+      resourceLoader.addWorkDone(fileId + 'geoms', event.fraction)
     })
   }
 

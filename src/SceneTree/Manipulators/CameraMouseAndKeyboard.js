@@ -1,8 +1,7 @@
-import { SystemDesc } from '../../BrowserDetection.js'
 import { Vec2, Vec3, Quat, Xfo } from '../../Math/index'
-import { Signal } from '../../Utilities/index'
 import { ParameterOwner } from '../ParameterOwner.js'
 import { NumberParameter } from '../Parameters/index'
+import { SystemDesc } from '../../BrowserDetection.js'
 
 /** Class representing a camera, mouse and keyboard.
  * @extends ParameterOwner
@@ -37,8 +36,6 @@ class CameraMouseAndKeyboard extends ParameterOwner {
     this.__mouseWheelDollySpeedParam = this.addParameter(
       new NumberParameter('mouseWheelDollySpeed', 0.0005)
     )
-
-    this.movementFinished = new Signal()
   }
 
   /**
@@ -233,13 +230,16 @@ class CameraMouseAndKeyboard extends ParameterOwner {
     this.__mouseDownCameraTarget = camera.getGlobalXfo().tr.add(targetOffset)
     this.__mouseDownFocalDist = focalDistance
     
-    this.__dragListenerId = camera.getParameter("GlobalXfo").valueChanged.connect(this.__globalXfoChangedDuringDrag.bind(this))
+    this.__dragListenerId = camera.getParameter("GlobalXfo").on('valueChanged', this.__globalXfoChangedDuringDrag.bind(this))
   }
 
   __globalXfoChangedDuringDrag(mode) {
     if (!this.__calculatingDragAction) {
-      const camera = this.__mouseDownViewport.getCamera()
-      camera.getParameter("GlobalXfo").valueChanged.disconnectId(this.__dragListenerId)
+      if (this.__dragListenerId != null) {
+        const camera = this.__mouseDownViewport.getCamera()
+        camera.getParameter("GlobalXfo").removeListenerById('valueChanged', this.__dragListenerId)
+        this.__dragListenerId = null
+      }
       this.initDrag({ viewport: this.__mouseDownViewport, mousePos: this.__mouseDownPos } );
     }
   }
@@ -248,10 +248,10 @@ class CameraMouseAndKeyboard extends ParameterOwner {
    * @param {any} event - The event value.
    */
   endDrag(event) {
-    if (this.__dragListenerId) {
+    if (this.__dragListenerId != null) {
       const { viewport } = event
       const camera = viewport.getCamera()
-      camera.getParameter("GlobalXfo").valueChanged.disconnectId(this.__dragListenerId)
+      camera.getParameter("GlobalXfo").removeListenerById('valueChanged', this.__dragListenerId)
       this.__dragListenerId = null;
     }
     this.__mouseDown = false
@@ -322,7 +322,8 @@ class CameraMouseAndKeyboard extends ParameterOwner {
         this.__focusIntervalId = setTimeout(applyMovement, 20)
       } else {
         this.__focusIntervalId = undefined
-        this.movementFinished.emit()
+        this.emit('movementFinished', {})
+        camera.emit('movementFinished', {})
       }
     }
     applyMovement()
@@ -366,6 +367,8 @@ class CameraMouseAndKeyboard extends ParameterOwner {
     } else {
       this.__manipulationState = this.__defaultManipulationState
     }
+    event.stopPropagation()
+    event.preventDefault()
   }
 
   /**
@@ -398,6 +401,7 @@ class CameraMouseAndKeyboard extends ParameterOwner {
     this.__dragging = true
     this.__calculatingDragAction = false
     event.stopPropagation()
+    event.preventDefault()
   }
 
   /**
@@ -407,7 +411,11 @@ class CameraMouseAndKeyboard extends ParameterOwner {
    */
   onMouseUp(event) {
     if (this.__dragging) {
-      this.movementFinished.emit()
+      this.emit('movementFinished', {})
+      
+      const camera = event.viewport.getCamera()
+      camera.emit('movementFinished', {})
+      this.__dragging = false
       event.stopPropagation()
     }
     this.endDrag(event);
@@ -441,7 +449,8 @@ class CameraMouseAndKeyboard extends ParameterOwner {
         this.__mouseWheelZoomIntervalId = setTimeout(applyMovement, 10)
       } else {
         this.__mouseWheelZoomIntervalId = undefined
-        this.movementFinished.emit()
+        this.emit('movementFinished', {})
+        camera.emit('movementFinished', {})
       }
     }
     applyMovement()

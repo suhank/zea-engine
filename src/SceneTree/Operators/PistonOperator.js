@@ -34,10 +34,10 @@ class PistonParameter extends StructParameter {
     this.__rodoutput = new XfoOperatorOutput('Rod')
     this.__capoutput = new XfoOperatorOutput('Cap')
 
-    this.__pistonAngleParam.valueChanged.connect(this.init.bind(this))
-    this.__camPhaseParam.valueChanged.connect(this.init.bind(this))
-    this.__camLengthParam.valueChanged.connect(this.init.bind(this))
-    this.__rodLengthParam.valueChanged.connect(this.init.bind(this))
+    this.__pistonAngleParam.addListener('valueChanged', this.init.bind(this))
+    this.__camPhaseParam.addListener('valueChanged', this.init.bind(this))
+    this.__camLengthParam.addListener('valueChanged', this.init.bind(this))
+    this.__rodLengthParam.addListener('valueChanged', this.init.bind(this))
 
     this.__bindXfos = {}
   }
@@ -215,7 +215,7 @@ class PistonOperator extends Operator {
     const fps = 50
     const sampleTime = 1000 / fps
     const anglePerSample = 1 / (fps * 60)
-    rpmParam.valueChanged.connect(() => {
+    rpmParam.addListener('valueChanged', () => {
       let rpm = rpmParam.getValue()
       if (rpm > 0.0) {
         if (!this.__timeoutId) {
@@ -235,11 +235,11 @@ class PistonOperator extends Operator {
 
     // this.__crankParam = this.addParameter(new KinematicGroupParameter('Crank'));
     this.__crankOutput = this.addOutput(new XfoOperatorOutput('Crank'))
-    this.__crankOutput.paramSet.connect(this.init.bind(this))
+    this.__crankOutput.addListener('paramSet', this.init.bind(this))
     this.__crankAxisParam = this.addParameter(
       new Vec3Parameter('CrankAxis', new Vec3(1, 0, 0))
     )
-    this.__crankAxisParam.valueChanged.connect(() => {
+    this.__crankAxisParam.addListener('valueChanged', () => {
       // this.__baseCrankXfo.ori.setFromAxisAndAngle(this.__crankAxisParam.getValue(), 0.0);
       this.__baseCrankXfo.ori.setFromDirectionAndUpvector(
         this.__crankAxisParam.getValue(),
@@ -250,15 +250,15 @@ class PistonOperator extends Operator {
     this.__pistonsParam = this.addParameter(
       new ListParameter('Pistons', PistonParameter)
     )
-    this.__pistonsParam.elementAdded.connect(value => {
-      value.setCrankXfo(this.__baseCrankXfo)
+    this.__pistonsParam.addListener('elementAdded', event => {
+      event.elem.setCrankXfo(this.__baseCrankXfo)
 
-      this.addOutput(value.getRodOutput())
-      this.addOutput(value.getCapOutput())
+      this.addOutput(event.elem.getRodOutput())
+      this.addOutput(event.elem.getCapOutput())
     })
-    this.__pistonsParam.elementRemoved.connect(value => {
-      this.removeOutput(value.getRodOutput())
-      this.removeOutput(value.getCapOutput())
+    this.__pistonsParam.addListener('elementRemoved', event => {
+      this.removeOutput(event.elem.getRodOutput())
+      this.removeOutput(event.elem.getCapOutput())
     })
 
     this.__baseCrankXfo = new Xfo()
@@ -320,7 +320,7 @@ class PistonOperator extends Operator {
       piston.evaluate(quat, crankAxis, revolutions)
     }
 
-    this.postEval.emit(revolutions)
+    this.emit('postEval', {})
   }
 
   // ////////////////////////////////////////

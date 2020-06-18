@@ -1,4 +1,3 @@
-import { Signal } from '../../Utilities/index'
 import { ParamFlags, ValueSetMode, Parameter } from './Parameter.js'
 
 /** Class representing a tree item parameter.
@@ -13,7 +12,11 @@ class TreeItemParameter extends Parameter {
   constructor(name, filterFn = undefined) {
     super(name, undefined, 'TreeItem')
     this.__filterFn = filterFn
-    this.treeItemGlobalXfoChanged = new Signal()
+    this.__emittreeItemGlobalXfoChanged = this.__emittreeItemGlobalXfoChanged.bind(this)
+  }
+
+  __emittreeItemGlobalXfoChanged(event) {
+    this.emit('treeItemGlobalXfoChanged', event)
   }
 
   /**
@@ -59,14 +62,14 @@ class TreeItemParameter extends Parameter {
     if (this.__filterFn && !this.__filterFn(treeItem)) return false
     if (this.__value !== treeItem) {
       if (this.__value) {
-        this.__value.globalXfoChanged.disconnect(
-          this.treeItemGlobalXfoChanged.emit
+        this.__value.removeListener('globalXfoChanged', 
+          this.__emittreeItemGlobalXfoChanged
         )
       }
       this.__value = treeItem
       if (this.__value) {
-        this.__value.globalXfoChanged.connect(
-          this.treeItemGlobalXfoChanged.emit
+        this.__value.addListener('globalXfoChanged', 
+          this.__emittreeItemGlobalXfoChanged
         )
       }
       if (
@@ -75,7 +78,7 @@ class TreeItemParameter extends Parameter {
       ) {
         this.__flags |= ParamFlags.USER_EDITED
       }
-      this.valueChanged.emit(mode)
+      this.emit('valueChanged', { mode })
     }
   }
 
@@ -140,8 +143,8 @@ class TreeItemParameter extends Parameter {
    */
   destroy() {
     if (this.__value) {
-      this.__value.parameterValueChanged.disconnect(
-        this.valueParameterValueChanged.emit
+      this.__value.removeListener('globalXfoChanged', 
+        this.__emittreeItemGlobalXfoChanged
       )
     }
   }

@@ -18,15 +18,14 @@ class GLHDRImage extends GLTexture2D {
 
     this.__hdrImage = hdrImage
     this.__hdrImage.setMetadata('gltexture', this)
-    this.__hdrImage.updated.connect(() => {
+    const loadImage = () => {
       this.__unpackHDRImage(this.__hdrImage.getParams())
-    })
+    }
+    this.__hdrImage.addListener('updated', loadImage)
     if (this.__hdrImage.isLoaded()) {
-      this.__unpackHDRImage(this.__hdrImage.getParams())
+      loadImage()
     } else {
-      this.__hdrImage.loaded.connect(() => {
-        this.__unpackHDRImage(this.__hdrImage.getParams())
-      })
+      this.__hdrImage.addListener('loaded', loadImage)
     }
   }
 
@@ -123,7 +122,7 @@ class GLHDRImage extends GLTexture2D {
     //     this.__srcCDMTex = null;
     // }
 
-    this.updated.emit()
+    this.emit('updated', {})
   }
 
   /**

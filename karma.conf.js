@@ -4,6 +4,7 @@ module.exports = function (config) {
     files: [
       /* https://github.com/karma-runner/karma/issues/2955 */
       { pattern: 'dist/index.esm.js', type: 'module', included: true },
+      { pattern: 'public-resources/unpack.wasm', included: false },
       {
         pattern: 'node_modules/resemblejs/resemble.js',
         type: 'js',

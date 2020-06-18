@@ -1,4 +1,3 @@
-import { Signal } from '../Utilities/index'
 import {
   ValueSetMode,
   FilePathParameter,
@@ -20,8 +19,6 @@ class AudioItem extends TreeItem {
 
     this.__loaded = false
 
-    this.audioSourceCreated = new Signal()
-
     const fileParam = this.addParameter(new FilePathParameter('FilePath'))
     let audioSource
     let audioBuffer
@@ -31,9 +28,9 @@ class AudioItem extends TreeItem {
       audioSource.loop = loopParam.getValue()
       audioSource.muted = muteParam.getValue()
       audioSource.start(0)
-      this.audioSourceCreated.emit(audioSource)
+      this.emit('audioSourceCreated', { audioSource })
     }
-    fileParam.valueChanged.connect(() => {
+    fileParam.addListener('valueChanged', () => {
       const request = new XMLHttpRequest()
       request.open('GET', fileParam.getURL(), true)
       request.responseType = 'arraybuffer'
@@ -48,7 +45,7 @@ class AudioItem extends TreeItem {
           buffer => {
             audioBuffer = buffer
             this.__loaded = true
-            this.loaded.emit(true)
+            this.emit('loaded', {})
             if (autoplayParam.getValue()) startAudioPlayback()
           },
           e => {
@@ -65,8 +62,8 @@ class AudioItem extends TreeItem {
     const playStateParam = this.addParameter(
       new NumberParameter('PlayState', 0)
     )
-    playStateParam.valueChanged.connect(mode => {
-      if (mode != ValueSetMode.CUSTOM) {
+    playStateParam.addListener('valueChanged', event => {
+      if (mode.mode != ValueSetMode.CUSTOM) {
         switch (playStateParam.getValue()) {
           case 0:
             if (this.__loaded) {
@@ -115,10 +112,10 @@ class AudioItem extends TreeItem {
     this.addParameter(new NumberParameter('coneOuterAngle', 0))
     this.addParameter(new NumberParameter('coneOuterGain', 1))
 
-    muteParam.valueChanged.connect(() => {
+    muteParam.addListener('valueChanged', () => {
       if (audioSource) audioSource.muted = muteParam.getValue()
     })
-    loopParam.valueChanged.connect(() => {
+    loopParam.addListener('valueChanged', () => {
       if (audioSource) audioSource.loop = loopParam.getValue()
     })
 
@@ -128,8 +125,7 @@ class AudioItem extends TreeItem {
 
     // Note: Many parts of the code assume a 'loaded' signal.
     // We should probably deprecate and use only 'updated'.
-    this.loaded = new Signal(true)
-    this.loaded.setToggled(false)
+    this.loaded = false
   }
 
   /**
@@ -146,8 +142,8 @@ class AudioItem extends TreeItem {
    */
   setAudioStream() {
     this.__loaded = true
-    this.loaded.emit()
-    this.audioSourceCreated.emit(audioSource)
+    this.emit('loaded', {})
+    this.emit('audioSourceCreated', { audioSource })
   }
 }
 

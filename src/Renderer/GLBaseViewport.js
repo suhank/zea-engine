@@ -1,5 +1,4 @@
 import { Color } from '../Math/index'
-import { Signal } from '../Utilities/index'
 import { ParameterOwner, BaseImage, NumberParameter } from '../SceneTree/index'
 import { GLHDRImage } from './GLHDRImage.js'
 import { GLTexture2D } from './GLTexture2D.js'
@@ -20,15 +19,13 @@ class GLBaseViewport extends ParameterOwner {
       new NumberParameter('DoubleClickTimeMS', 200)
     )
     this.__fbo = undefined
-    this.updated = new Signal()
-    this.resized = new Signal()
 
-    this.__renderer.sceneSet.connect(() => {
+    const sceneSet = () => {
       const settings = renderer.getScene().settings
       const bgColorParam = settings.getParameter('BackgroundColor')
       const processBGValue = mode => {
         const value = bgColorParam.getValue()
-        let gl = this.__renderer.gl
+        const gl = this.__renderer.gl
         if (value instanceof BaseImage) {
           if (value.type === 'FLOAT') {
             this.__backgroundTexture = value
@@ -47,11 +44,13 @@ class GLBaseViewport extends ParameterOwner {
         } else {
           console.warn('Invalid background:' + value)
         }
-        this.updated.emit()
+        this.emit('updated', {})
       }
       processBGValue(bgColorParam.getValue())
-      bgColorParam.valueChanged.connect(processBGValue)
-    })
+      bgColorParam.addListener('valueChanged', processBGValue)
+    }
+
+    this.__renderer.addListener('sceneSet', sceneSet)
   }
 
   /**
@@ -156,7 +155,7 @@ class GLBaseViewport extends ParameterOwner {
     const settings = this.__renderer.getScene().settings
     const bgColorParam = settings.getParameter('BackgroundColor')
     bgColorParam.setValue(background)
-    this.updated.emit()
+    this.emit('updated', {})
   }
 
   /**
@@ -169,7 +168,7 @@ class GLBaseViewport extends ParameterOwner {
     this.__canvasHeight = canvasHeight
     this.__width = canvasWidth
     this.__height = canvasHeight
-    this.resized.emit()
+    this.emit('resized', { width: this.__width, height: this.__height })
   }
 
   // ///////////////////////////

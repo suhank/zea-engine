@@ -2,7 +2,7 @@ import {
   Vec3,
   Scene,
   GLRenderer,
-} from '../../node_modules/@zeainc/zea-engine/dist/zea-engine.esm.js'
+} from '../../node_modules/@zeainc/zea-engine/dist/index.esm.js'
 
 testingHarness.registerTest('Basic/HelloWorld', (domElement, resources) => {
   const scene = new Scene(resources)

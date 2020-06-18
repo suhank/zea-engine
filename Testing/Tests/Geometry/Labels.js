@@ -14,7 +14,7 @@ testingHarness.registerTest('Geometry/Labels', (domElement, resources)=> {
     const addLabel = (lineEndPos, pos, color, name)=> {
         const label = new Z.Label(name, 'Labels');
         label.getParameter('fontSize').setValue(48);
-        label.getParameter('fontColor').setValue(color);
+        label.getParameter('backgroundColor').setValue(color);
         const billboard = new Z.BillboardItem('billboard'+index, label);
         const xfo = new Z.Xfo(pos);
         billboard.setLocalXfo(xfo);

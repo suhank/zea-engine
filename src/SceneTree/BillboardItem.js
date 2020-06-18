@@ -24,6 +24,7 @@ class BillboardItem extends TreeItem {
     this.addParameter(new NumberParameter('Alpha', 1.0))
     this.addParameter(new ColorParameter('Color', new Color(1.0, 1.0, 1.0)))
     this.addParameter(new BooleanParameter('AlignedToCamera', false))
+    this.addParameter(new BooleanParameter('DrawOnTop', false))
   }
 }
 

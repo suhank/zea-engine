@@ -1,4 +1,4 @@
-import { Signal } from '../Utilities/index'
+import { EventEmitter } from '../Utilities/index'
 
 let counter = 0
 
@@ -9,17 +9,17 @@ let counter = 0
  *  be cleaned up when the JavaScript object is destroyed.
  * @private
  */
-class RefCounted {
+class RefCounted extends EventEmitter {
   /**
    * Create a ref counted object.
    */
   constructor() {
+    super()
     if (this.constructor.name == 'RefCounted') {
       throw new Error('RefCounted should not be instantiated directly.')
     }
     this.__id = ++counter
     this.__refs = []
-    this.destructing = new Signal()
     this.__destroyed = false
   }
 
@@ -110,7 +110,7 @@ class RefCounted {
   destroy() {
     this.__destroyed = true
     // console.log(this.constructor.name + " destructing");
-    this.destructing.emit(this)
+    this.emit('destructing', {})
   }
 }
 export { RefCounted }

@@ -41,7 +41,7 @@ testingHarness.registerTest('Groups/GroupMaterials', (domElement, resources)=> {
     renderer.resumeDrawing()
 
 
-    renderer.getViewport().mouseDownOnGeom.connect((event)=>{
+    renderer.getViewport().addEventListener('mouseDownOnGeom', event => {
         const geomItem = event.intersectionData.geomItem
         console.log(geomItem.getPath())
         if(!event.shiftKey && !event.altKey){

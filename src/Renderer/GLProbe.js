@@ -70,7 +70,7 @@ class GLProbe extends GLImageAtlas {
     if (!this.__convolved) {
       if (!this.__lodPyramid) {
         this.__lodPyramid = new ImagePyramid(gl, 'Probe Lods', srcGLTex, false)
-        this.__lodPyramid.updated.connect(() => {
+        this.__lodPyramid.addListener('updated', () => {
           // If the image pyramid updates, we need to re-convolve.
           this.convolveProbe(srcGLTex)
         })

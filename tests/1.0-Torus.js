@@ -20,9 +20,6 @@ describe('1.0-simple Torus', () => {
       renderer.frameAll()
 
       await compareRendererToRefImage('1.0-SimpleTorus.png', 2)
-    })
-
-    it('Cleanup', async () => {
       cleanup()
     })
   })

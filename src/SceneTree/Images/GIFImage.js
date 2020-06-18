@@ -81,7 +81,7 @@ class GIFImage extends FileImage {
           const image = new Image()
           image.crossOrigin = 'anonymous'
           image.src = fileDesc.assets.atlas.url
-          image.addEventListener('load', () => {
+          image.addListener('load', () => {
             resolve({
               width: fileDesc.assets.atlas.width,
               height: fileDesc.assets.atlas.height,
@@ -234,7 +234,7 @@ class GIFImage extends FileImage {
       // Playback
       this.__loaded = true
 
-      this.loaded.emit()
+      this.emit('loaded', {})
     })
   }
 }

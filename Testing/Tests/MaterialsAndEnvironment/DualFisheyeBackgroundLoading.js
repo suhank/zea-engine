@@ -9,8 +9,8 @@ testingHarness.registerTest('MaterialsAndEnvironment/DualFisheyeBackgroundLoadin
     const renderer = new Z.GLRenderer(domElement);
     renderer.getViewport().getCamera().setPositionAndTarget(new Z.Vec3(1,1,2), new Z.Vec3(0,0,2));
     renderer.setScene(scene);
-    bgMap.loaded.connect(() => {
-        renderer.requestRedraw();
-    });
+    bgMap.addEventListener('loaded', event => {
+        renderer.requestRedraw()
+    })
     renderer.resumeDrawing();
 });

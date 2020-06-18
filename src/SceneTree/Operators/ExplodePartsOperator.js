@@ -188,33 +188,33 @@ class ExplodePartsOperator extends Operator {
     this.__parentItemParam = this.addParameter(
       new TreeItemParameter('RelativeTo')
     )
-    this.__parentItemParam.valueChanged.connect(() => {
+    this.__parentItemParam.addListener('valueChanged', () => {
       // compute the local xfos
       const parentItem = this.__parentItemParam.getValue()
       if (parentItem)
         this.__invParentSpace = parentItem.getGlobalXfo().inverse()
       else this.__invParentSpace = undefined
     })
-    this.__parentItemParam.treeItemGlobalXfoChanged.connect(() => {
+    this.__parentItemParam.addListener('treeItemGlobalXfoChanged', () => {
       this.setDirty()
     })
 
     this.__itemsParam = this.addParameter(
       new ListParameter('Parts', ExplodePartParameter)
     )
-    this.__itemsParam.elementAdded.connect((value, index) => {
-      if (index > 0) {
-        const prevStage = this.__itemsParam.getElement(index - 1).getStage()
-        value.setStage(prevStage + 1)
+    this.__itemsParam.addListener('elementAdded', event => {
+      if (event.index > 0) {
+        const prevStage = this.__itemsParam.getElement(event.index-1).getStage();
+        event.elem.setStage(prevStage + 1)
         this.__stagesParam.setClean(prevStage + 2)
       } else {
         this.__stagesParam.setClean(1)
       }
-      this.addOutput(value.getOutput())
+      this.addOutput(event.elem.getOutput())
       this.setDirty()
     })
-    this.__itemsParam.elementRemoved.connect((value, index) => {
-      this.removeOutput(value.getOutput())
+    this.__itemsParam.addListener('elementRemoved', event => {
+      this.removeOutput(event.elem.getOutput())
     })
 
     this.__localXfos = []

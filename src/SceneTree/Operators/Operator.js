@@ -1,4 +1,3 @@
-import { Signal } from '../../Utilities/index'
 import { sgFactory } from '../SGFactory'
 import { ItemFlags, BaseItem } from '../BaseItem.js'
 
@@ -19,8 +18,6 @@ class Operator extends BaseItem {
     
     this.__outputs = []
     this.__evalOutput = this.__evalOutput.bind(this)
-
-    this.postEval = new Signal()
   }
 
   /**
@@ -44,7 +41,8 @@ class Operator extends BaseItem {
    * @param {any} mode - The mode param.
    * @private
    */
-  __parameterValueChanged(param, mode) {
+  __parameterValueChanged(event) {
+    super.__parameterValueChanged(event)
     this.setDirty()
   }
 
@@ -55,7 +53,8 @@ class Operator extends BaseItem {
    */
   addOutput(output) {
     this.__outputs.push(output)
-    output.paramSet.connect(param => {
+    output.addListener('paramSet', event => {
+      const { param } = event
       // output.setDirty(this.__evalOutput)
       param.bindOperator(this)
     })

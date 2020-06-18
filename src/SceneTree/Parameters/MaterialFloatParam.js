@@ -1,7 +1,5 @@
-import { Signal } from '../../Utilities/index'
 import { sgFactory } from '../SGFactory'
 import { NumberParameter } from './NumberParameter.js'
-
 import { BaseImage } from '../BaseImage.js'
 
 /** Class representing a material float parameter.
@@ -16,8 +14,6 @@ class MaterialFloatParam extends NumberParameter {
    */
   constructor(name, value, range) {
     super(name, value, range)
-    this.textureConnected = new Signal()
-    this.textureDisconnected = new Signal()
   }
 
   /**
@@ -29,7 +25,7 @@ class MaterialFloatParam extends NumberParameter {
   }
 
   // let imageUpdated = () => {
-  //     valueChanged.emit();
+  //     this.emit('valueChanged', , { mode: Parameter.ValueSetMode.USER_SETVALUE });
   // }
 
   /**
@@ -39,24 +35,24 @@ class MaterialFloatParam extends NumberParameter {
    */
   setImage(value, mode = 0) {
     const disconnectImage = () => {
-      // image.loaded.disconnect(imageUpdated);
-      // image.updated.disconnect(imageUpdated);
-      this.textureDisconnected.emit()
+      // image.removeListener('loaded', imageUpdated);
+      // image.removeListener('updated', imageUpdated);
+      this.emit('textureDisconnected', {})
     }
     if (value) {
       if (this.__image != undefined && this.__image !== value) {
         disconnectImage()
       }
       this.__image = value
-      // image.loaded.connect(imageUpdated);
-      // image.updated.connect(imageUpdated);
-      this.textureConnected.emit()
-      this.valueChanged.emit(mode)
+      // image.addListener('loaded', imageUpdated);
+      // image.addListener('updated', imageUpdated);
+      this.emit('textureConnected', {})
+      this.emit('valueChanged', { mode })
     } else {
       if (this.__image != undefined) {
         disconnectImage()
         this.__image = undefined
-        this.textureDisconnected.emit()
+        this.emit('textureDisconnected', {})
       }
     }
   }

@@ -76,7 +76,7 @@ class VideoStreamImage2D extends BaseImage {
           console.log('Webcam:[' + this.width + ', ' + this.height + ']')
           this.__data = domElement
           this.__loaded = true
-          this.loaded.emit(domElement)
+          this.emit('loaded', {})
 
           let prevFrame = 0
           const frameRate = 60
@@ -88,7 +88,7 @@ class VideoStreamImage2D extends BaseImage {
             // If so, then we emit and update, which will cause a redraw.
             const currentFrame = Math.floor(domElement.currentTime * frameRate)
             if (prevFrame != currentFrame) {
-              this.updated.emit()
+              this.emit('updated', {})
               prevFrame = currentFrame
             }
             setTimeout(timerCallback, 20) // Sample at 50fps.
@@ -112,7 +112,7 @@ class VideoStreamImage2D extends BaseImage {
     this.start()
     this.__data = video
     this.__loaded = true
-    this.loaded.emit(video)
+    this.emit('loaded', {})
   }
 
   // getAudioSource() {
@@ -131,7 +131,7 @@ class VideoStreamImage2D extends BaseImage {
    */
   start() {
     this.__intervalId = setInterval(() => {
-      this.updated.emit()
+      this.emit('updated', {})
     }, 20) // Sample at 50fps.
   }
 

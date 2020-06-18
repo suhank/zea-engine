@@ -1,6 +1,6 @@
 # Architectural Overview
 
-![Modular](_media/Zea-Modular-Architecture.png)
+![Modular](_media/modular-architecture.png)
 
 The Zea Engine was designed with several goals in mind. 
 

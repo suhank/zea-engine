@@ -1,4 +1,3 @@
-import { Signal } from '../../Utilities/index'
 import { ParamFlags, ValueSetMode, Parameter } from './Parameter.js'
 
 /** Class representing a geometry parameter.
@@ -13,8 +12,14 @@ class GeometryParameter extends Parameter {
    */
   constructor(name, value) {
     super(name, undefined, 'Geometry')
-    this.boundingBoxDirtied = new Signal()
     this.setValue(value)
+
+    this.__emitboundingBoxDirtied = this.__emitboundingBoxDirtied.bind(this)
+  }
+
+  // eslint-disable-next-line require-jsdoc
+  __emitboundingBoxDirtied(event) {
+    this.emit('boundingBoxChanged', event)
   }
 
   /**
@@ -26,11 +31,11 @@ class GeometryParameter extends Parameter {
     // 0 == normal set. 1 = changed via cleaner fn, 2 = change by loading/cloning code.
     if (this.__value !== geom) {
       if (this.__value) {
-        this.__value.boundingBoxDirtied.disconnect(this.boundingBoxDirtied.emit)
+        this.__value.removeListener('boundingBoxChanged', this.__emitboundingBoxDirtied)
       }
       this.__value = geom
       if (this.__value) {
-        this.__value.boundingBoxDirtied.connect(this.boundingBoxDirtied.emit)
+        this.__value.addListener('boundingBoxChanged', this.__emitboundingBoxDirtied)
       }
 
       if (
@@ -41,7 +46,7 @@ class GeometryParameter extends Parameter {
       }
 
       // During the cleaning process, we don't want notifications.
-      if (mode != ValueSetMode.OPERATOR_SETVALUE) this.valueChanged.emit(mode)
+      if (mode != ValueSetMode.OPERATOR_SETVALUE) this.emit('valueChanged', { mode })
     }
   }
 
@@ -93,7 +98,7 @@ class GeometryParameter extends Parameter {
     // e.g. freeing GPU Memory.
 
     if (this.__value) {
-      this.__value.boundingBoxDirtied.disconnect(this.boundingBoxDirtied.emit)
+      this.__value.removeListener('boundingBoxChanged', this.__emitboundingBoxDirtied)
     }
   }
 }

@@ -37,7 +37,7 @@ testingHarness.registerTest('DynamicScenes/Cutaway', (domElement, resources)=> {
     cutDir.setValue(new Z.Vec3(-1, 0, 0));
 
     objAsset.getParameter('ObjFilePath').setUrl("https://storage.googleapis.com/zea-playground-assets/zea-engine/CutawayAndExplode.obj");
-    objAsset.loaded.connect(function() {
+    objAsset.addEventListener('loaded', event => {
         renderer.frameAll();
         renderer.resumeDrawing();
 
@@ -56,12 +56,11 @@ testingHarness.registerTest('DynamicScenes/Cutaway', (domElement, resources)=> {
             animatingValue = false;
         };
         timeoutId = setTimeout(timerCallback, 1000); // half second delay
-        cutParam.valueChanged.connect(()=>{
+        cutParam.addEventListener('valueChanged', event => {
             if(!animatingValue) {
                 clearTimeout(timeoutId);
             }
         });
-
 
     });
 

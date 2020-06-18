@@ -1,5 +1,4 @@
 import { Color, Xfo, Box3 } from '../Math/index'
-import { Signal } from '../Utilities/index'
 import { sgFactory } from './SGFactory.js'
 import {
   ParamFlags,
@@ -53,11 +52,6 @@ class TreeItem extends BaseItem {
     this.__childItemsSignalIds = []
     this.__childItemsMapping = {}
 
-    this.mouseDown = new Signal()
-    this.mouseUp = new Signal()
-    this.mouseMove = new Signal()
-    this.mouseEnter = new Signal()
-    this.mouseLeave = new Signal()
 
     // /////////////////////////////////////
     // Add parameters.
@@ -75,31 +69,20 @@ class TreeItem extends BaseItem {
       new Parameter('BoundingBox', new Box3())
     )
 
-    this.parentChanged = this.ownerChanged
-    this.childAdded = new Signal()
-    this.childRemoved = new Signal()
-    // this.componentAdded = new Signal();
-    // this.componentRemoved = new Signal();
-    this.highlightChanged = new Signal()
-    this.visibilityChanged = new Signal()
-    this.localXfoChanged = this.__localXfoParam.valueChanged
-    this.globalXfoChanged = this.__globalXfoParam.valueChanged
-    this.boundingChanged = this.__boundingBoxParam.valueChanged
-
     // Bind handlers
     this._cleanGlobalXfo = this._cleanGlobalXfo.bind(this)
     this._setGlobalXfoDirty = this._setGlobalXfoDirty.bind(this)
     this._setBoundingBoxDirty = this._setBoundingBoxDirty.bind(this)
     this._cleanBoundingBox = this._cleanBoundingBox.bind(this)
 
-    this.__localXfoParam.valueChanged.connect(this._setGlobalXfoDirty)
+    this.__localXfoParam.on('valueChanged', this._setGlobalXfoDirty)
     
     // Note: if the user changes the global xfo, we compute the 
     // local xfo when it is needed (generally when GlobalXfo is pulled)
     // In the future, we will move this into the operators and ops
     // will support 'inversion' where the param asks the op to
     // proccess an input value.
-    const cleanLocalXfo = prevValue => {
+    const cleanLocalXfo = () => {
       const globalXfo = this.__globalXfoParam.getValue()
       if (this.__ownerItem !== undefined)
         return this.__ownerItem
@@ -108,18 +91,19 @@ class TreeItem extends BaseItem {
           .multiply(globalXfo)
       else return globalXfo
     }
-    this.__globalXfoParam.valueChanged.connect(mode => {
+    this.__globalXfoParam.on('valueChanged', (event) => {
       // Dirtiness propagates from Local to Global, but not vice versa.
       // We need to move to using operators to invert values.
       // This system of having ops connected in all directions
       // is super difficult to debug.
-      if (mode != ValueSetMode.OPERATOR_DIRTIED) {
+      if (event.mode != ValueSetMode.OPERATOR_DIRTIED) {
         this.__localXfoParam.setDirty(cleanLocalXfo)
       }
       this._setBoundingBoxDirty()
+      this.emit('globalXfoChanged', event)
     })
 
-    this.__visibleParam.valueChanged.connect(mode => {
+    this.__visibleParam.on('valueChanged', () => {
       this.__visibleCounter += this.__visibleParam.getValue() ? 1 : -1
       this.__updateVisiblity()
     })
@@ -127,7 +111,7 @@ class TreeItem extends BaseItem {
     // Note: one day we will remove the concept of 'selection' from the engine
     // and keep it only in UX. to Select an item, we will add it to the selectino
     // in the selection manager. Then the selection group will apply a highlight.
-    this.selectedChanged.connect(() => {
+    this.on('selectedChanged', () => {
       if (this.__selected) {
         this.addHighlight('selected', selectionOutlineColor, true)
       } else {
@@ -223,7 +207,7 @@ class TreeItem extends BaseItem {
    */
   setOwner(parentItem) {
     if (this.__ownerItem) {
-      this.__ownerItem.globalXfoChanged.disconnect(this._setGlobalXfoDirty)
+      this.__ownerItem.removeListener('globalXfoChanged', this._setGlobalXfoDirty)
 
       // The effect of the invisible owner is removed.
       if (!this.__ownerItem.getVisible()) this.__visibleCounter++
@@ -240,7 +224,7 @@ class TreeItem extends BaseItem {
       // The effect of the invisible owner is added.
       if (!this.__ownerItem.getVisible()) this.__visibleCounter--
 
-      this.__ownerItem.globalXfoChanged.connect(this._setGlobalXfoDirty)
+      this.__ownerItem.addListener('globalXfoChanged', this._setGlobalXfoDirty)
     }
 
     this.__updateVisiblity()
@@ -383,7 +367,7 @@ class TreeItem extends BaseItem {
         if (childItem instanceof TreeItem)
           childItem.propagateVisiblity(this.__visible ? 1 : -1)
       }
-      this.visibilityChanged.emit(visible)
+      this.emit('visibilityChanged',{ visible })
       return true
     }
     return false
@@ -407,7 +391,7 @@ class TreeItem extends BaseItem {
     }
     this.__highlights.push(name)
     this.__highlightMapping[name] = color
-    this.highlightChanged.emit()
+    this.emit('highlightChanged', { name, color })
 
     if (propagateToChildren) {
       this.__childItems.forEach(childItem => {
@@ -427,7 +411,7 @@ class TreeItem extends BaseItem {
       const id = this.__highlights.indexOf(name)
       this.__highlights.splice(id, 1)
       delete this.__highlightMapping[name]
-      this.highlightChanged.emit()
+      this.emit('highlightChanged', {})
     }
     if (propagateToChildren) {
       this.__childItems.forEach(childItem => {
@@ -635,11 +619,11 @@ class TreeItem extends BaseItem {
     }
 
     const signalIds = {}
-    signalIds.nameChangedId = childItem.nameChanged.connect((name, oldName) => {
+    signalIds.nameChangedId = childItem.addListener('nameChanged', event => {
       // Update the acceleration structure.
-      const index = this.__childItemsMapping[oldName]
-      delete this.__childItemsMapping[oldName]
-      this.__childItemsMapping[name] = index
+      const index = this.__childItemsMapping[event.oldName]
+      delete this.__childItemsMapping[event.oldName]
+      this.__childItemsMapping[event.newName] = index
     })
 
     let newLocalXfo
@@ -649,10 +633,10 @@ class TreeItem extends BaseItem {
           .inverse()
           .multiply(childItem.getGlobalXfo())
       }
-      signalIds.bboxChangedId = childItem.boundingChanged.connect(() => {
+      signalIds.bboxChangedId = childItem.addListener('boundingChanged', () => {
         this._setBoundingBoxDirty()
       })
-      signalIds.visChangedId = childItem.visibilityChanged.connect(
+      signalIds.visChangedId = childItem.addListener('visibilityChanged', 
         this._setBoundingBoxDirty
       )
     }
@@ -672,7 +656,7 @@ class TreeItem extends BaseItem {
     if (childItem.testFlag(ItemFlags.USER_EDITED))
       this.setFlag(ItemFlags.USER_EDITED)
 
-    this.childAdded.emit(childItem, index)
+    this.emit('childAdded', { childItem, index })
 
     return childItem
   }
@@ -742,11 +726,11 @@ class TreeItem extends BaseItem {
    */
   __unbindChild(index, childItem) {
     const signalIds = this.__childItemsSignalIds[index]
-    childItem.nameChanged.disconnectId(signalIds.nameChangedId)
+    childItem.removeListenerById('nameChanged', signalIds.nameChangedId)
 
     if (childItem instanceof TreeItem) {
-      childItem.boundingChanged.disconnectId(signalIds.bboxChangedId)
-      childItem.visibilityChanged.disconnectId(signalIds.visChangedId)
+      childItem.removeListenerById('boundingChanged', signalIds.bboxChangedId)
+      childItem.removeListenerById('visibilityChanged', signalIds.visChangedId)
     }
 
     this.__childItems.splice(index, 1)
@@ -758,7 +742,7 @@ class TreeItem extends BaseItem {
       this._setBoundingBoxDirty()
     }
 
-    this.childRemoved.emit(childItem, index)
+    this.emit('childRemoved', { childItem, index })
   }
 
   /**
@@ -912,7 +896,7 @@ class TreeItem extends BaseItem {
     }
     const __t = (treeItem, depth) => {
       if (callback(treeItem, depth) == false) return false
-      __c(treeItem, depth)
+      if (treeItem instanceof TreeItem) __c(treeItem, depth)
     }
     if (includeThis) __t(this, 1)
     else __c(this, 0)
@@ -926,7 +910,7 @@ class TreeItem extends BaseItem {
    * @param {MouseEvent} event - The mouse event that occurs.
    */
   onMouseDown(event) {
-    this.mouseDown.emit(event)
+    this.emit('mouseDown', event)
     if (event.propagating && this.__ownerItem) {
       this.__ownerItem.onMouseDown(event)
     }
@@ -937,7 +921,7 @@ class TreeItem extends BaseItem {
    * @param {MouseEvent} event - The mouse event that occurs.
    */
   onMouseUp(event) {
-    this.mouseUp.emit(event)
+    this.emit('mouseUp', event)
     if (event.propagating && this.__ownerItem) {
       this.__ownerItem.onMouseUp(event)
     }
@@ -948,7 +932,7 @@ class TreeItem extends BaseItem {
    * @param {MouseEvent} event - The mouse event that occurs.
    */
   onMouseMove(event) {
-    this.mouseMove.emit(event)
+    this.emit('mouseMove', event)
     if (event.propagating && this.__ownerItem) {
       this.__ownerItem.onMouseMove(event)
     }
@@ -959,7 +943,7 @@ class TreeItem extends BaseItem {
    * @param {MouseEvent} event - The mouse event that occurs.
    */
   onMouseEnter(event) {
-    this.mouseEnter.emit(event)
+    this.emit('mouseEnter', event)
     if (event.propagating && this.__ownerItem) {
       this.__ownerItem.onMouseEnter(event)
     }
@@ -970,7 +954,7 @@ class TreeItem extends BaseItem {
    * @param {MouseEvent} event - The mouse event that occurs.
    */
   onMouseLeave(event) {
-    this.mouseLeave.emit(event)
+    this.emit('mouseLeave', event)
     if (event.propagating && this.__ownerItem) {
       this.__ownerItem.onMouseLeave(event)
     }
@@ -1156,43 +1140,47 @@ class TreeItem extends BaseItem {
     if (numChildren > 0) {
       const toc = reader.loadUInt32Array(numChildren)
       for (let i = 0; i < numChildren; i++) {
-        reader.seek(toc[i]) // Reset the pointer to the start of the item data.
-        let childType = reader.loadStr()
+        try {
+          reader.seek(toc[i]) // Reset the pointer to the start of the item data.
+          let childType = reader.loadStr()
 
-        if (childType.startsWith('N') && childType.endsWith('E')) {
-          // ///////////////////////////////////////
-          // hack to work around a linux issue
-          // untill we have a fix.
-          const ppos = childType.indexOf('podium')
-          if (ppos != -1) {
-            if (parseInt(childType[ppos + 7]))
-              childType = childType.substring(ppos + 8, childType.length - 1)
-            else childType = childType.substring(ppos + 7, childType.length - 1)
+          if (childType.startsWith('N') && childType.endsWith('E')) {
+            // ///////////////////////////////////////
+            // hack to work around a linux issue
+            // untill we have a fix.
+            const ppos = childType.indexOf('podium')
+            if (ppos != -1) {
+              if (parseInt(childType[ppos + 7]))
+                childType = childType.substring(ppos + 8, childType.length - 1)
+              else childType = childType.substring(ppos + 7, childType.length - 1)
+            }
+            const lnpos = childType.indexOf('livenurbs')
+            if (lnpos != -1) {
+              childType = childType.substring(
+                childType.indexOf('CAD'),
+                childType.length - 1
+              )
+            }
           }
-          const lnpos = childType.indexOf('livenurbs')
-          if (lnpos != -1) {
-            childType = childType.substring(
-              childType.indexOf('CAD'),
-              childType.length - 1
+          // const childName = reader.loadStr();
+          const childItem = sgFactory.constructClass(childType)
+          if (!childItem) {
+            const childName = reader.loadStr()
+            console.warn(
+              'Unable to construct child:' + childName + ' of type:' + childType
             )
+            continue
           }
-        }
-        // const childName = reader.loadStr();
-        const childItem = sgFactory.constructClass(childType)
-        if (!childItem) {
-          const childName = reader.loadStr()
-          console.warn(
-            'Unable to construct child:' + childName + ' of type:' + childType
-          )
-          continue
-        }
-        reader.seek(toc[i]) // Reset the pointer to the start of the item data.
-        childItem.readBinary(reader, context)
+          reader.seek(toc[i]) // Reset the pointer to the start of the item data.
+          childItem.readBinary(reader, context)
 
-        // Flagging this node as a bin tree node. (A node generated from loading a binary file)
-        childItem.setFlag(ItemFlags.BIN_NODE)
-        
-        this.addChild(childItem, false, false)
+          // Flagging this node as a bin tree node. (A node generated from loading a binary file)
+          childItem.setFlag(ItemFlags.BIN_NODE)
+          
+          this.addChild(childItem, false, false)
+        } catch (e) {
+          console.warn("Error loading tree item: ", e)
+        }
       }
     }
   }
@@ -1232,7 +1220,7 @@ class TreeItem extends BaseItem {
     src.getChildren().forEach(srcChildItem => {
       if (srcChildItem) this.addChild(srcChildItem.clone(flags), false, false)
       // if(flags& CloneFlags.CLONE_FLAG_INSTANCED_TREE) {
-      //     src.childAdded.connect((childItem, index)=>{
+      //     src.addListener('childAdded', (childItem, index)=>{
       //         this.addChild(childItem.clone(flags), false);
       //     })
       // }
