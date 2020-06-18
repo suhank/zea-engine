@@ -70,8 +70,8 @@ class ResourceLoader extends EventEmitter {
     this.__workers = []
     this.__nextWorker = 0
 
+    let baseUrl
     if (globalThis.navigator) {
-      let baseUrl
       const scripts = document.getElementsByTagName('script')
       for (let i = 0; i < scripts.length; i++) {
         const script = scripts[i]
@@ -83,19 +83,19 @@ class ResourceLoader extends EventEmitter {
           break
         }
       }
-      if (!baseUrl) {
-        baseUrl = 'https://unpkg.com/@zeainc/zea-engine@0.1.3'
-      }
-      this.wasmUrl = baseUrl + '/public-resources/unpack.wasm'
-      this.addResourceURL(
-        'ZeaEngine/Vive.vla',
-        baseUrl + '/public-resources/Vive.vla'
-      )
-      this.addResourceURL(
-        'ZeaEngine/Oculus.vla',
-        baseUrl + '/public-resources/Oculus.vla'
-      )
     }
+    if (!baseUrl) {
+      baseUrl = 'https://unpkg.com/@zeainc/zea-engine@0.1.3'
+    }
+    this.wasmUrl = baseUrl + '/public-resources/unpack.wasm'
+    this.addResourceURL(
+      'ZeaEngine/Vive.vla',
+      baseUrl + '/public-resources/Vive.vla'
+    )
+    this.addResourceURL(
+      'ZeaEngine/Oculus.vla',
+      baseUrl + '/public-resources/Oculus.vla'
+    )
   }
 
   /**
@@ -264,21 +264,25 @@ class ResourceLoader extends EventEmitter {
    */
   __getWorker() {
     const __constructWorker = () => {
+      console.log("__constructWorker:")
       return new Promise((resolve) => {
+        const isNode = !globalThis.window
+        
         const worker = new ResourceLoaderWorker()
-        // const worker = new Worker(this.__resourceLoaderFile.url);
-
         worker.postMessage({
           type: 'init',
+          isNode,
           wasmUrl: this.wasmUrl,
         })
-        worker.onmessage = (event) => {
-          if (event.data.type === 'WASM_LOADED') {
+        const handleMessage = (message) => {
+          console.log("worker.onmessage:", message)
+          if (!message) return
+          if (message.data.type === 'WASM_LOADED') {
             resolve(worker)
-          } else if (event.data.type === 'FINISHED') {
-            const data = event.data
+          } else if (message.data.type === 'FINISHED') {
+            const data = message.data
 
-            // const file = this.__resources[event.data.resourceId]
+            // const file = this.__resources[message.data.resourceId]
             // const text = [
             //   '==================== unrarWebworker.js ====================',
             //   `Filename: ${file.name}`,
@@ -289,10 +293,10 @@ class ResourceLoader extends EventEmitter {
             // }
             // console.log(text.join('\n'))
 
-            this.addWorkDone(event.data.resourceId, 1) // loading done...
-            this.__onFinishedReceiveFileData(event.data)
-          } else if (event.data.type === 'ERROR') {
-            const data = event.data
+            this.addWorkDone(message.data.resourceId, 1) // loading done...
+            this.__onFinishedReceiveFileData(message.data)
+          } else if (message.data.type === 'ERROR') {
+            const data = message.data
             const file = this.__resources[data.resourceId]
             console.error(
               'Unable to load Resource:',
@@ -302,6 +306,20 @@ class ResourceLoader extends EventEmitter {
             )
           }
         }
+        if (isNode) {
+          worker.once('message', (message) => {
+            console.log(message)  // Prints 'Hello, world!'.
+            handleMessage()
+          })
+        } else {
+          worker.onmessage = (event) => {
+            console.log(message)  // Prints 'Hello, world!'.
+          }
+        }
+        /*
+        worker.onmessage = 
+        console.log("worker. assiged onmessage")
+        */
       })
     }
 
@@ -505,6 +523,7 @@ class ResourceLoader extends EventEmitter {
       .then((response) => checkStatus(response) && response.arrayBuffer())
       .then((buffer) => {
         this.__getWorker().then((worker) => {
+          console.log("postMessage:", buffer.byteLength)
           worker.postMessage({
             type: 'unpack',
             resourceId,

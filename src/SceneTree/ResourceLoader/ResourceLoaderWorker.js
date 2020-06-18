@@ -2,8 +2,9 @@
 /** Synchronously initialize the following scripts in order. 
  * @private
 */
+
 Module = {
-  ENVIRONMENT: 'WORKER'
+  ENVIRONMENT: 'NODE'
 };
 
 const WorkerScope = {}
@@ -127,40 +128,71 @@ function returnData(event, data) {
   self.postMessage(result, transferables);
 }
 
+
 /**
- * Listen for messages sent to the worker.
- * @private
+ * When the WASM runtime has been initialized on the unpack.js module, send a message indicating
+ * that the library is ready.
  */
-onmessage = function(event) {
-  if(event.data.type == 'init') {
-    unpack = initunpack(event.data.wasmUrl);
-    unpack.onRuntimeInitialized = () => postMessage({ type: 'WASM_LOADED' });
+
+const isNode = process
+let portOwner
+if (isNode) {
+  const { parentPort } = require('worker_threads');
+  portOwner = parentPort
+} else {
+  portOwner = globalThis
+}
+
+
+const sendMessage = function(message) {
+  console.log("ww message")
+  if (isNode) {
+    portOwner.postMessage(message);
+  } else {
+    self.postMessage(message);
   }
-  else if(event.data.type == 'fetch') {
-  	extract(event.data).then(unpacked => {
-      returnData(event, unpacked)
+}
+
+const handleMessage = function(message) {
+  console.log("ww message", message)
+  // sendMessage(message)
+  console.log("onmessage", message.type)
+  if(message.type == 'init') {
+    unpack = initunpack(message.wasmUrl);
+    unpack.onRuntimeInitialized = () => postMessage({ type: 'WASM_LOADED' });
+    // sendMessage({ type: 'WASM_LOADED' })
+  }
+  else if(message.type == 'fetch') {
+    extract(message).then(unpacked => {
+      returnData(message, unpacked)
     }, err => {
       const result = {
-          type: 'ERROR',
-          resourceId: event.data.resourceId,
-          url: event.data.url
+        type: 'ERROR',
+        resourceId: message.resourceId,
+        url: message.url
       };
-      self.postMessage(result);
+      sendMessage(result);
     })
   }
-  else if(event.data.type == 'unpack') {
-    const { buffer } = event.data;
+  else if(message.type == 'unpack') {
+    const { buffer } = message;
     
     if (!unpackBridge) { throw new Error('unpackBridge not detected'); }
     if (!unpack) { throw new Error('unpack not detected'); }
 
     const extractor = unpackBridge.createExtractorFromData(buffer)
     const unpacked = extractor.extractAll()
-    returnData(event, unpacked)
+    returnData(message, unpacked)
   }
-};
+}
 
-/**
- * When the WASM runtime has been initialized on the unpack.js module, send a message indicating
- * that the library is ready.
- */
+if (isNode) {
+  portOwner.once('message', (message) => {
+    handleMessage(message)
+  })
+} else {
+  globalThis.onmessage = function(message) {
+    handleMessage(message.data)
+  }
+}
+ 
