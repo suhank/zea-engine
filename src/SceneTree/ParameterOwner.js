@@ -264,7 +264,7 @@ class ParameterOwner extends EventEmitter {
   }
 
   /**
-   * Uses passed in BinReader class that contains an Int32 array with all parameters.
+   * Uses passed in BinReader object(containing an Int32 array with all the parameters) to reconstruct all parameters state.
    * <br>
    * In each iteration of the array, propType and propName are extracted and
    * used to build the right `Parameter` class. Then all of them are added to the object.

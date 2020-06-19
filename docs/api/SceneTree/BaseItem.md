@@ -1,7 +1,7 @@
 <a name="BaseItem"></a>
 
 ### BaseItem 
-The base class for the scene tree. A base item has a name and parameters.
+Base class for Items in the scene. It can be parameterized and can emit events.
 
 
 **Extends**: <code>ParameterOwner</code>  
@@ -12,10 +12,7 @@ The base class for the scene tree. A base item has a name and parameters.
         * [getName() ⇒ <code>string</code>](#getName)
         * [setName(name, mode)](#setName)
         * [getPath() ⇒ <code>array</code>](#getPath)
-        * [setFlag(flag)](#setFlag)
-        * [clearFlag(flag)](#clearFlag)
-        * [testFlag(flag) ⇒ <code>boolean</code>](#testFlag)
-        * [resolvePath(path, index) ⇒ <code>any</code>](#resolvePath)
+        * [resolvePath(path, index) \| <code>Parameter</code>](#resolvePath)
         * [getOwner() ⇒ <code>object</code>](#getOwner)
         * [setOwner(ownerItem)](#setOwner)
         * [getSelectable() ⇒ <code>boolean</code>](#getSelectable)
@@ -23,7 +20,7 @@ The base class for the scene tree. A base item has a name and parameters.
         * ~~[.isSelected()](#BaseItem+isSelected) ⇒ <code>boolean</code>~~
         * [getSelected() ⇒ <code>boolean</code>](#getSelected)
         * [setSelected(sel)](#setSelected)
-        * [getMetadata(key) ⇒ <code>object</code>](#getMetadata)
+        * [getMetadata(key) ⇒ <code>object</code> \| <code>string</code> \| <code>any</code>](#getMetadata)
         * [hasMetadata(key) ⇒ <code>boolean</code>](#hasMetadata)
         * [setMetadata(key, metaData)](#setMetadata)
         * [deleteMetadata(key)](#deleteMetadata)
@@ -39,7 +36,7 @@ The base class for the scene tree. A base item has a name and parameters.
 <a name="new_BaseItem_new"></a>
 
 ### new BaseItem
-Create a base item.
+Create a base item by defining its name.
 
 
 | Param | Type | Description |
@@ -56,9 +53,10 @@ Returns the name of the base item.
 <a name="BaseItem+setName"></a>
 
 ### setName
-Sets the name of the base item.
+Sets the name of the base item(Updates path).
 
 
+**Emits**: <code>event:&#x60;nameChanged&#x60; with &#x60;newName&#x60; and &#x60;oldName&#x60; data.</code>  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -72,40 +70,6 @@ Returns the current path of the item in the tree as an array of names.
 
 
 **Returns**: <code>array</code> - - Returns an array.  
-<a name="BaseItem+setFlag"></a>
-
-### setFlag
-The setFlag method.
-
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| flag | <code>number</code> | the flag value. |
-
-<a name="BaseItem+clearFlag"></a>
-
-### clearFlag
-The clearFlag method.
-
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| flag | <code>number</code> | the flag value. |
-
-<a name="BaseItem+testFlag"></a>
-
-### testFlag
-Returns true if the flag if set, otherwise returns false.
-
-
-**Returns**: <code>boolean</code> - - Returns a boolean indicating if the flag is set.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| flag | <code>number</code> | The flag to test. |
-
 <a name="BaseItem+resolvePath"></a>
 
 ### resolvePath
@@ -114,11 +78,11 @@ matching each name in the path with a child until it reaches the
 end of the path.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: [<code>BaseItem</code>](#BaseItem) \| <code>Parameter</code> - - The return value.  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| path | <code>any</code> | The path value. |
+| path | <code>array</code> | The path value. |
 | index | <code>number</code> | The index value. |
 
 <a name="BaseItem+getOwner"></a>
@@ -143,17 +107,17 @@ The setOwner method assigns a new owner to the item.
 <a name="BaseItem+getSelectable"></a>
 
 ### getSelectable
-The getSelectable method returns a boolean indicating if this item is selectable.
+Returns a boolean indicating if this item is selectable.
 
 
 **Returns**: <code>boolean</code> - - Returns a boolean indicating if the item is selectable.  
 <a name="BaseItem+setSelectable"></a>
 
 ### setSelectable
-The setSelectable method modifies the selectability of this item.
+Modifies the selectability of this item.
 
 
-**Returns**: <code>boolean</code> - - Returns a boolean.  
+**Returns**: <code>boolean</code> - - Returns true if value changed.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -168,19 +132,21 @@ The isSelected method.
 
 
 **Returns**: <code>boolean</code> - - The return value.  
+**See**: `getSelected` method  
 <a name="BaseItem+getSelected"></a>
 
 ### getSelected
-The getSelected method returns true if this item has been selected.
+Returns `true` if this item has been selected.
 
 
 **Returns**: <code>boolean</code> - - The current selection state.  
 <a name="BaseItem+setSelected"></a>
 
 ### setSelected
-The getSelected method changes the current state of the selection of this item.
+Changes the current state of the selection of this item.
 
 
+**Emits**: <code>event:&#x60;selectedChanged&#x60; with selected state</code>  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -189,54 +155,54 @@ The getSelected method changes the current state of the selection of this item.
 <a name="BaseItem+getMetadata"></a>
 
 ### getMetadata
-The getMetadata method.
+Gets Item's meta-data value by passing the `key` string.
 
 
-**Returns**: <code>object</code> - - Returns the metadata associated with the given key.  
+**Returns**: <code>object</code> \| <code>string</code> \| <code>any</code> - - Returns the metadata associated with the given key.  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| key | <code>any</code> | The key value under which to check for metadata. |
+| key | <code>string</code> | The key value under which to check for metadata. |
 
 <a name="BaseItem+hasMetadata"></a>
 
 ### hasMetadata
-The hasMetadata method checks to see if there is metadata for a given key.
+Checks to see if there is metadata for a given key.
 
 
-**Returns**: <code>boolean</code> - - Returns true if metadata exists under the given key, otherwise returns false.  
+**Returns**: <code>boolean</code> - - Returns `true` if metadata exists under the given key, otherwise returns `false`.  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| key | <code>any</code> | The key value. |
+| key | <code>string</code> | The key value under which to check for metadata. |
 
 <a name="BaseItem+setMetadata"></a>
 
 ### setMetadata
-The setMetadata method assigns metadata to a given key.
+Assigns metadata to a given key.
 
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| key | <code>any</code> | The key value. |
+| key | <code>string</code> | The key value under which the metadata is is going to be saved. |
 | metaData | <code>object</code> | The metaData value. |
 
 <a name="BaseItem+deleteMetadata"></a>
 
 ### deleteMetadata
-The deleteMetadata method removes metadata for a given key.
+Removes metadata for a given key.
 
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| key | <code>any</code> | The key value. |
+| key | <code>string</code> | The key value. |
 
 <a name="BaseItem+toJSON"></a>
 
 ### toJSON
-The toJSON method encodes the current object as a json object.
+Encodes the current object as a json object.
 
 
 **Returns**: <code>object</code> - - Returns the json object.  
@@ -249,7 +215,7 @@ The toJSON method encodes the current object as a json object.
 <a name="BaseItem+fromJSON"></a>
 
 ### fromJSON
-The fromJSON method decodes a json object for this type.
+Decodes a json object for this type.
 
 
 
@@ -262,20 +228,21 @@ The fromJSON method decodes a json object for this type.
 <a name="BaseItem+readBinary"></a>
 
 ### readBinary
-The readBinary method.
+Sets state of current Item(Including parameters) using a binary reader object.
 
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| reader | <code>object</code> | The reader value. |
+| reader | <code>BinReader</code> | The reader value. |
 | context | <code>object</code> | The context value. |
 
 <a name="BaseItem+clone"></a>
 
 ### clone
 Clones this bse item and returns a new base item.
-Note: Each class should implement clone to be clonable.
+<br>
+**Note:** Each class should implement clone to be clonable.
 
 
 
