@@ -161,3 +161,6 @@
 
 - Releases
   * [zea-engine-1.0.7](zea-engine-1.0.7.md)
+
+- Licenses
+  * [Acknowledgements](acknowledgements.md)
