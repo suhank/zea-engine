@@ -20,11 +20,7 @@
     "start": "rollup -c rollup.config.dev.js -w",
     "prepare": "yarn run build",
     "dist": "yarn publish --access=public",
-<<<<<<< HEAD
     "docs": "adg",
-=======
-    "docs": "node buildApiDocs.js",
->>>>>>> master
     "testing-server": "node testing-server/index.js",
     "test": "karma start --single-run --browsers ChromeHeadless karma.conf.js",
     "testBrowser": "karma start --single-run karma.conf.js"
