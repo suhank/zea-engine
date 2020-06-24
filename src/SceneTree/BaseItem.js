@@ -15,6 +15,10 @@ let numBaseItems = 0
 /**
  * Base class for Items in the scene. It can be parameterized and can emit events.
  *
+ * **Events**
+ * * nameChanged
+ * * selectedChanged
+ *
  * @extends {ParameterOwner}
  */
 class BaseItem extends ParameterOwner {

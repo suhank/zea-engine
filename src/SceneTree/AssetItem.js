@@ -5,7 +5,9 @@ import { GeomLibrary } from './GeomLibrary.js'
 import { MaterialLibrary } from './MaterialLibrary.js'
 import { sgFactory } from './SGFactory.js'
 
-/** Class representing an asset item in a scene tree.
+/**
+ * Represents a phisical object inside the scene.
+ *
  * @extends TreeItem
  */
 class AssetItem extends TreeItem {
