@@ -42,7 +42,6 @@ Class representing an Item in the scene tree with hierarchy capabilities(has chi
         * [removeHighlight(name, propagateToChildren)](#removeHighlight)
         * [getHighlight() ⇒ <code>Color</code>](#getHighlight)
         * [isHighlighted() ⇒ <code>boolean</code>](#isHighlighted)
-        * [getBoundingBox() ⇒ <code>Box3</code>](#getBoundingBox)
         * [getChildren() ⇒ <code>array</code>](#getChildren)
         * ~~[.numChildren()](#TreeItem+numChildren) ⇒ <code>number</code>~~
         * [getNumChildren() ⇒ <code>number</code>](#getNumChildren)
@@ -57,7 +56,7 @@ Class representing an Item in the scene tree with hierarchy capabilities(has chi
         * ~~[.removeChildByHandle(childItem)](#TreeItem+removeChildByHandle)~~
         * [removeAllChildren()](#removeAllChildren)
         * [getChildIndex(childItem) ⇒ <code>number</code>](#getChildIndex)
-        * ~~[.indexOfChild(childItem)](#TreeItem+indexOfChild) ⇒ <code>any</code>~~
+        * ~~[.indexOfChild(childItem)](#TreeItem+indexOfChild) ⇒ <code>number</code>~~
         * [resolvePath(path, index) ⇒ <code>BaseItem</code> \| <code>Parameter</code>](#resolvePath)
         * [traverse(callback, includeThis)](#traverse)
         * [onMouseDown(event)](#onMouseDown)
@@ -243,13 +242,6 @@ Returns `true` if this items has a hilghlight color assigned.
 
 
 **Returns**: <code>boolean</code> - - `True` if this item is hilghlighted.  
-<a name="TreeItem+getBoundingBox"></a>
-
-### getBoundingBox
-Returns bounding box parameter value.
-
-
-**Returns**: <code>Box3</code> - - The return value.  
 <a name="TreeItem+getChildren"></a>
 
 ### getChildren
@@ -405,13 +397,13 @@ Returns index position of the specified item.
 
 <a name="TreeItem+indexOfChild"></a>
 
-### ~~treeItem.indexOfChild(childItem) ⇒ <code>any</code>~~
+### ~~treeItem.indexOfChild(childItem) ⇒ <code>number</code>~~
 ***Deprecated***
 
 Returns index position of the specified item.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>number</code> - - The return value.  
 
 | Param | Type | Description |
 | --- | --- | --- |

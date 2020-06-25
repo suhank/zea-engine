@@ -465,10 +465,12 @@ class TreeItem extends BaseItem {
 
   /**
    * Returns bounding box parameter value.
-   *
+   * @deprecated
+   * @private
    * @return {Box3} - The return value.
    */
   getBoundingBox() {
+    console.warn("getter is deprectated. Please use 'getParameter('BoundingBox').getValue()'")
     return this.__boundingBoxParam.getValue()
   }
 
@@ -813,7 +815,7 @@ class TreeItem extends BaseItem {
    *
    * @deprecated
    * @param {object} childItem - The child TreeItem value.
-   * @return {any} - The return value.
+   * @return {number} - The return value.
    */
   indexOfChild(childItem) {
     console.warn('Deprecated method. Please use getChildIndex')
