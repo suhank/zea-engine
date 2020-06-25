@@ -74,7 +74,6 @@
   * [VRViewport](api/Renderer/VR/VRViewport)
 * [SceneTree](api/SceneTree/README)
  * [AssetItem](api/SceneTree/AssetItem)
- * [AudioItem](api/SceneTree/AudioItem)
  * [BaseGeomItem](api/SceneTree/BaseGeomItem)
  * [BaseImage](api/SceneTree/BaseImage)
  * [BaseItem](api/SceneTree/BaseItem)
