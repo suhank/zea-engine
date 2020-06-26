@@ -6,12 +6,12 @@ import { BooleanParameter } from './Parameters/index'
  * Represents a 2D image item, containing width and height.
  *
  * **Prameters**
- * * **AlphaFromLuminance(`BooleanParameter`):**
- * * **Invert(`BooleanParameter`):**
- * * **FlipY(`BooleanParameter`):**
+ * * **AlphaFromLuminance(`BooleanParameter`):** Sets alpha chanel to the luminance of the image and all color chanels to `0`.
+ * * **Invert(`BooleanParameter`):** Horizontally flips the image(Basically inverting X pixels).
+ * * **FlipY(`BooleanParameter`):** Vertically flips the image, meaning that it would be upside down if enabled.
  *
  * **Events**
- * * **parameterValueChanged**
+ * * **updated:** Triggered when the value of any of the parameters listed above changes.
  *
  * @extends BaseItem
  */

@@ -28,7 +28,7 @@ Create a VLH image.
 | Param | Type | Description |
 | --- | --- | --- |
 | name | <code>string</code> | The name value. |
-| params | <code>any</code> | The params value. |
+| params | <code>object</code> | The params value. |
 
 <a name="VLHImage+getDOMElement"></a>
 

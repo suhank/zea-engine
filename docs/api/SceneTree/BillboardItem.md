@@ -8,7 +8,7 @@ Can own any type of `BaseImage`.
 **Parameters**
 * **Image(`ImageParameter`):** Is the BaseImage you want to display on the board.
 * **PixelsPerMeter(`NumberParameter`):** Quality and Size of the board. The bigger the number, the smaller the board.
-* **Alpha(`NumberParameter`):**: Transparency of the board, from 0 to 1.
+* **Alpha(`NumberParameter`):** Transparency of the board, from 0 to 1.
 * **AlignedToCamera(`BooleanParameter`):** Faces or not the board to the camera at all time(Moves with camera movement).
 * **DrawOnTop(`BooleanParameter`):**
 

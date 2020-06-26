@@ -4,8 +4,8 @@
 Base class for Items in the scene. It can be parameterized and can emit events.
 
 **Events**
-* nameChanged
-* selectedChanged
+* **nameChanged:** Emitted every time the Item's name is change. mostly in `setName` method.
+* **selectedChanged:** Emitted `selected` status changes, mostly in `setSelected` method.
 
 
 **Extends**: <code>ParameterOwner</code>  

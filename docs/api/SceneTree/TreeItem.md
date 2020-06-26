@@ -11,15 +11,15 @@ Class representing an Item in the scene tree with hierarchy capabilities(has chi
 * **BoundingBox(`BoundingBox`):**
 
 **Events**
-* **globalXfoChanged**
-* **visibilityChanged**
-* **highlightChanged**
-* **childAdded**
-* **childRemoved**
-* **mouseDown**
-* **mouseUp**
-* **mouseMove**
-* **mouseEnter**
+* **globalXfoChanged:**
+* **visibilityChanged:**
+* **highlightChanged:**
+* **childAdded:** Emitted when a item is added as a child.
+* **childRemoved:** Emitted when an item is removed from the child nodes.
+* **mouseDown:** Emitted when a mouseDown event happens in an item.
+* **mouseUp:** Emitted when a mouseUp event happens in an item.
+* **mouseMove:** Emitted when a mouseMove event happens in an item.
+* **mouseEnter:** Emitted when a mouseEnter event happens in an item.
 
 
 **Extends**: <code>BaseItem</code>  

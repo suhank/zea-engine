@@ -1,7 +1,32 @@
 <a name="Label"></a>
 
 ### Label 
-Class representing a label.
+Represents a 2D label item the scene.
+Since adding displaying text in the scene is not an easy task,
+we've abstracted the complicated logic behind this class, transforming any text into a 2D image(`DataImage`).
+
+**Parameters**
+* **Library(`StringParameter`):**
+* **Text(`StringParameter`):**
+* **FontColor(`ColorParameter`):**
+* **Margin(`NumberParameter`):**
+* **BorderWidth(`NumberParameter`):**
+* **BorderRadius(`NumberParameter`):**
+* **Outline(`BooleanParameter`):**
+* **OutlineColor(`BooleanParameter`):**
+* **Background(`BooleanParameter`):**
+* **ColorParameter(`BackgroundColor`):**
+* **FillBackground(`BooleanParameter`):**
+* **StrokeBackgroundOutline(`BooleanParameter`):**
+* **FontSize(`NumberParameter`):**
+* **Font(`StringParameter`):**
+
+**Events**
+* **loaded:**
+* **updated:**
+* **labelRendered:**
+* **nameChanged:**
+* **labelLibraryLoaded:**
 
 
 **Extends**: <code>DataImage</code>  
@@ -10,7 +35,7 @@ Class representing a label.
     * [new Label(name, library)](#new-Label)
     * [loadLabelData()](#loadLabelData)
     * [renderLabelToImage()](#renderLabelToImage)
-    * [getParams() ⇒ <code>any</code>](#getParams)
+    * [getParams() ⇒ <code>object</code>](#getParams)
     * [toJSON(context, flags) ⇒ <code>object</code>](#toJSON)
     * [fromJSON(j, context, flags)](#fromJSON)
 
@@ -23,13 +48,11 @@ Create a label.
 | Param | Type | Description |
 | --- | --- | --- |
 | name | <code>string</code> | The name value. |
-| library | <code>any</code> | The library value. |
+| library | <code>string</code> | The library value. |
 
 <a name="Label+loadLabelData"></a>
 
 ### loadLabelData
-The loadLabelData method.
-
 
 <a name="Label+renderLabelToImage"></a>
 
@@ -43,7 +66,7 @@ Renders the label text to a canvas element ready to display,
 The getParams method.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>object</code> - - The return value.  
 <a name="Label+toJSON"></a>
 
 ### toJSON

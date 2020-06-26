@@ -1,7 +1,13 @@
 <a name="SceneSettings"></a>
 
 ### SceneSettings 
-Class representing scene settings in a scene tree.
+`BaseItem` type of class
+
+**Events**
+* **BackgroundColor(`ColorParameter`):**
+* **EnvMap(`ImageParameter`):**
+* **Display(`BooleanParameter`):**
+* **EnvMapLOD(`NumberParameter`):**
 
 
 **Extends**: <code>BaseItem</code>  

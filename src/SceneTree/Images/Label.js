@@ -1,10 +1,6 @@
+/* eslint-disable guard-for-in */
 import { Color } from '../../Math/index'
-import {
-  BooleanParameter,
-  NumberParameter,
-  ColorParameter,
-  StringParameter,
-} from '../Parameters/index'
+import { BooleanParameter, NumberParameter, ColorParameter, StringParameter } from '../Parameters/index'
 import { sgFactory } from '../SGFactory.js'
 import { DataImage } from './DataImage.js'
 import { labelManager } from './LabelManager.js'
@@ -30,17 +26,7 @@ import { labelManager } from './LabelManager.js'
  * @param {Number} [strokeWidth] - The strokeWidth param.
  * @private
  */
-function roundRect(
-  ctx,
-  x,
-  y,
-  width,
-  height,
-  radius,
-  fill,
-  stroke,
-  strokeWidth
-) {
+function roundRect(ctx, x, y, width, height, radius, fill, stroke, strokeWidth) {
   if (typeof stroke == 'undefined') {
     stroke = true
   }
@@ -85,14 +71,41 @@ function roundRect(
   }
 }
 
-/** Class representing a label.
+/**
+ * Represents a 2D label item the scene.
+ * Since adding displaying text in the scene is not an easy task,
+ * we've abstracted the complicated logic behind this class, transforming any text into a 2D image(`DataImage`).
+ *
+ * **Parameters**
+ * * **Library(`StringParameter`):**
+ * * **Text(`StringParameter`):**
+ * * **FontColor(`ColorParameter`):**
+ * * **Margin(`NumberParameter`):**
+ * * **BorderWidth(`NumberParameter`):**
+ * * **BorderRadius(`NumberParameter`):**
+ * * **Outline(`BooleanParameter`):**
+ * * **OutlineColor(`BooleanParameter`):**
+ * * **Background(`BooleanParameter`):**
+ * * **ColorParameter(`BackgroundColor`):**
+ * * **FillBackground(`BooleanParameter`):**
+ * * **StrokeBackgroundOutline(`BooleanParameter`):**
+ * * **FontSize(`NumberParameter`):**
+ * * **Font(`StringParameter`):**
+ *
+ * **Events**
+ * * **loaded:**
+ * * **updated:**
+ * * **labelRendered:**
+ * * **nameChanged:**
+ * * **labelLibraryLoaded:**
+ *
  * @extends DataImage
  */
 class Label extends DataImage {
   /**
    * Create a label.
    * @param {string} name - The name value.
-   * @param {any} library - The library value.
+   * @param {string} library - The library value.
    */
   constructor(name, library) {
     super(name)
@@ -122,9 +135,7 @@ class Label extends DataImage {
     this.addParameter(new BooleanParameter('Outline', false))
     this.addParameter(new BooleanParameter('OutlineColor', new Color(0, 0, 0)))
     this.addParameter(new BooleanParameter('Background', true))
-    this.addParameter(
-      new ColorParameter('BackgroundColor', new Color('#FBC02D'))
-    )
+    this.addParameter(new ColorParameter('BackgroundColor', new Color('#FBC02D')))
     this.addParameter(new BooleanParameter('FillBackground', true))
     this.addParameter(new BooleanParameter('StrokeBackgroundOutline', true))
     this.addParameter(new NumberParameter('FontSize', 22))
@@ -157,7 +168,8 @@ class Label extends DataImage {
   }
 
   /**
-   * The loadLabelData method.
+   * 
+   * @async
    */
   loadLabelData() {
     const onLoaded = () => {
@@ -172,7 +184,7 @@ class Label extends DataImage {
     }
 
     const loadText = () => {
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         const library = this.getParameter('Library').getValue()
         if (library == '') {
           resolve()
@@ -197,7 +209,7 @@ class Label extends DataImage {
           resolve()
         }
         if (!labelManager.isLibraryLoaded(library)) {
-          labelManager.addListener('labelLibraryLoaded', event => {
+          labelManager.addListener('labelLibraryLoaded', (event) => {
             const loadedLibrary = event.library
             if (loadedLibrary == library) getLibraryText()
           })
@@ -207,7 +219,7 @@ class Label extends DataImage {
       })
     }
     const loadFont = () => {
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         if (document.fonts != undefined) {
           const font = this.getParameter('Font').getValue()
           const fontSize = this.getParameter('FontSize').getValue()
@@ -237,7 +249,7 @@ class Label extends DataImage {
 
     const font = this.getParameter('Font').getValue()
     const fontColor = this.getParameter('FontColor').getValue()
-    const textAlign = 'left';//this.getParameter('TextAlign').getValue()
+    const textAlign = 'left' // this.getParameter('TextAlign').getValue()
     const fontSize = this.getParameter('FontSize').getValue()
     const margin = this.getParameter('Margin').getValue()
     const borderWidth = this.getParameter('BorderWidth').getValue()
@@ -247,9 +259,7 @@ class Label extends DataImage {
     const background = this.getParameter('Background').getValue()
     const backgroundColor = this.getParameter('BackgroundColor').getValue()
     const fillBackground = this.getParameter('FillBackground').getValue()
-    const strokeBackgroundOutline = this.getParameter(
-      'StrokeBackgroundOutline'
-    ).getValue()
+    const strokeBackgroundOutline = this.getParameter('StrokeBackgroundOutline').getValue()
 
     // let ratio = devicePixelRatio / backingStoreRatio;
     const marginAndBorder = margin + borderWidth
@@ -258,10 +268,10 @@ class Label extends DataImage {
     ctx2d.font = fontSize + 'px "' + font + '"'
     // console.log("renderLabelToImage:" + ctx2d.font);
     let width = 0
-    lines.forEach(line => {
+    lines.forEach((line) => {
       width = Math.max(ctx2d.measureText(line).width, width)
     })
-    const fontHeight = fontSize;//parseInt(fontSize)
+    const fontHeight = fontSize // parseInt(fontSize)
     this.width = Math.ceil(width + marginAndBorder * 2)
     this.height = Math.ceil(fontHeight * lines.length + marginAndBorder * 2)
     ctx2d.canvas.width = this.width
@@ -294,11 +304,7 @@ class Label extends DataImage {
     ctx2d.fillStyle = fontColor.toHex()
     ctx2d.textBaseline = 'hanging'
     lines.forEach((line, index) => {
-      ctx2d.fillText(
-        line,
-        marginAndBorder,
-        marginAndBorder + index * fontHeight
-      )
+      ctx2d.fillText(line, marginAndBorder, marginAndBorder + index * fontHeight)
     })
 
     if (outline) {
@@ -312,13 +318,13 @@ class Label extends DataImage {
     this.emit('labelRendered', {
       width: this.width,
       height: this.height,
-      data: this.__data
+      data: this.__data,
     })
   }
 
   /**
    * The getParams method.
-   * @return {any} - The return value.
+   * @return {object} - The return value.
    */
   getParams() {
     if (this.__needsRender) this.renderLabelToImage()
@@ -330,6 +336,7 @@ class Label extends DataImage {
 
   /**
    * The toJSON method encodes this type as a json object for persistences.
+   *
    * @param {object} context - The context value.
    * @param {number} flags - The flags value.
    * @return {object} - Returns the json object.
@@ -341,6 +348,7 @@ class Label extends DataImage {
 
   /**
    * The fromJSON method decodes a json object for this type.
+   *
    * @param {object} j - The json object this item must decode.
    * @param {object} context - The context value.
    * @param {number} flags - The flags value.
