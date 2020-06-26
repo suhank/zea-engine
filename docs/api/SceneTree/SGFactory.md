@@ -1,9 +1,9 @@
 <a name="SGFactory"></a>
 
-## SGFactory
+### SGFactory
 Class representing a SG factory.
 
-**Kind**: global class  
+
 
 * [SGFactory](#SGFactory)
     * [new SGFactory()](#new-SGFactory)
@@ -22,7 +22,7 @@ Create a SG factory.
 ### registerClass
 The registerClass method.
 
-**Kind**: instance method of [<code>SGFactory</code>](#SGFactory)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -34,7 +34,7 @@ The registerClass method.
 ### getClass
 The getClass method.
 
-**Kind**: instance method of [<code>SGFactory</code>](#SGFactory)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -46,7 +46,7 @@ The getClass method.
 ### getClassName
 The getClassName method.
 
-**Kind**: instance method of [<code>SGFactory</code>](#SGFactory)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -58,7 +58,7 @@ The getClassName method.
 ### constructClass
 The constructClass method.
 
-**Kind**: instance method of [<code>SGFactory</code>](#SGFactory)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |

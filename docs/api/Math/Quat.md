@@ -1,9 +1,11 @@
 <a name="Quat"></a>
 
-## Quat ⇐ <code>AttrValue</code>
-Class representing a quaternion. Quaternions are used to represent rotationswithout encountering gimble lock. Based on complex numbers that are not easyto understand intuitively.
+### Quat 
+Class representing a quaternion. Quaternions are used to represent rotations
+without encountering gimble lock. Based on complex numbers that are not easy
+to understand intuitively.
 
-**Kind**: global class  
+
 **Extends**: <code>AttrValue</code>  
 
 * [Quat ⇐ <code>AttrValue</code>](#Quat)
@@ -80,14 +82,14 @@ Creates a quaternion.
 ### x 
 Getter for `x` axis rotation.
 
-**Kind**: instance property of [<code>Quat</code>](#Quat)  
+
 **Returns**: <code>number</code> - - Returns the x axis rotation.  
 <a name="Quat+x"></a>
 
-### quat
+### x
 Setter for `x` axis rotation.
 
-**Kind**: instance property of [<code>Quat</code>](#Quat)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -98,14 +100,14 @@ Setter for `x` axis rotation.
 ### y 
 Getter for `y` axis rotation.
 
-**Kind**: instance property of [<code>Quat</code>](#Quat)  
+
 **Returns**: <code>number</code> - - Returns the y axis rotation.  
 <a name="Quat+y"></a>
 
-### quat
+### y
 Setter for `y` axis rotation.
 
-**Kind**: instance property of [<code>Quat</code>](#Quat)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -116,14 +118,14 @@ Setter for `y` axis rotation.
 ### z 
 Getter for `z` axis rotation.
 
-**Kind**: instance property of [<code>Quat</code>](#Quat)  
+
 **Returns**: <code>number</code> - - Returns the z axis rotation.  
 <a name="Quat+z"></a>
 
-### quat
+### z
 Setter for `z` axis rotation.
 
-**Kind**: instance property of [<code>Quat</code>](#Quat)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -134,14 +136,14 @@ Setter for `z` axis rotation.
 ### w 
 Getter for `w` value.
 
-**Kind**: instance property of [<code>Quat</code>](#Quat)  
+
 **Returns**: <code>number</code> - - Returns the w value.  
 <a name="Quat+w"></a>
 
-### quat
+### w
 Setter for `w`.
 
-**Kind**: instance property of [<code>Quat</code>](#Quat)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -152,7 +154,7 @@ Setter for `w`.
 ### set
 Setter from scalar components.
 
-**Kind**: instance method of [<code>Quat</code>](#Quat)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -166,7 +168,7 @@ Setter from scalar components.
 ### setDataArray
 Sets the state of the Quat class using a Float32Array.
 
-**Kind**: instance method of [<code>Quat</code>](#Quat)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -177,7 +179,7 @@ Sets the state of the Quat class using a Float32Array.
 ### setFromOther
 Setter from another vector.
 
-**Kind**: instance method of [<code>Quat</code>](#Quat)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -188,7 +190,7 @@ Setter from another vector.
 ### setFromEulerAngles
 Set this quat from a euler rotation.
 
-**Kind**: instance method of [<code>Quat</code>](#Quat)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -199,7 +201,7 @@ Set this quat from a euler rotation.
 ### toEulerAngles
 Converts Quat to an EulerAngles
 
-**Kind**: instance method of [<code>Quat</code>](#Quat)  
+
 **Returns**: <code>EulerAngles</code> - - The return value.  
 
 | Param | Type | Description |
@@ -211,7 +213,7 @@ Converts Quat to an EulerAngles
 ### setFromAxisAndAngle
 Set this quat to a rotation defined by an axis and an angle (in radians).
 
-**Kind**: instance method of [<code>Quat</code>](#Quat)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -223,7 +225,7 @@ Set this quat to a rotation defined by an axis and an angle (in radians).
 ### setFromDirectionAndUpvector
 Scales and calculates the cross product of the `Vec3` and sets the result in the Mat3
 
-**Kind**: instance method of [<code>Quat</code>](#Quat)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -235,7 +237,7 @@ Scales and calculates the cross product of the `Vec3` and sets the result in the
 ### setFrom2Vectors
 Sets the state of the `Quat` from two `Vec3`.
 
-**Kind**: instance method of [<code>Quat</code>](#Quat)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -247,7 +249,7 @@ Sets the state of the `Quat` from two `Vec3`.
 ### setFromMat3
 Set the quat from a Mat3.
 
-**Kind**: instance method of [<code>Quat</code>](#Quat)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -258,7 +260,7 @@ Set the quat from a Mat3.
 ### setFromMat4
 Set the quat from a Mat4.
 
-**Kind**: instance method of [<code>Quat</code>](#Quat)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -269,21 +271,21 @@ Set the quat from a Mat4.
 ### isIdentity
 Checks if the angle of the Quat is less that ` Number.EPSILON`
 
-**Kind**: instance method of [<code>Quat</code>](#Quat)  
+
 **Returns**: <code>boolean</code> - - Returns true or false.  
 <a name="Quat+getAngle"></a>
 
 ### getAngle
 Return the angle of the Quat.
 
-**Kind**: instance method of [<code>Quat</code>](#Quat)  
+
 **Returns**: <code>number</code> - - The return value.  
 <a name="Quat+equal"></a>
 
 ### equal
 Returns true if this Quat is exactly the same as other.
 
-**Kind**: instance method of [<code>Quat</code>](#Quat)  
+
 **Returns**: <code>boolean</code> - - Returns true or false.  
 
 | Param | Type | Description |
@@ -295,7 +297,7 @@ Returns true if this Quat is exactly the same as other.
 ### notequals
 Returns true if this Quat is NOT exactly the same other.
 
-**Kind**: instance method of [<code>Quat</code>](#Quat)  
+
 **Returns**: <code>boolean</code> - - Returns true or false.  
 
 | Param | Type | Description |
@@ -307,7 +309,7 @@ Returns true if this Quat is NOT exactly the same other.
 ### approxEqual
 Returns true if this Quat is approximately the same as other
 
-**Kind**: instance method of [<code>Quat</code>](#Quat)  
+
 **Returns**: <code>boolean</code> - - Returns true or false.  
 
 | Param | Type | Description |
@@ -320,7 +322,7 @@ Returns true if this Quat is approximately the same as other
 ### add
 Adds other to this Quat and return the result as a new Quat.
 
-**Kind**: instance method of [<code>Quat</code>](#Quat)  
+
 **Returns**: [<code>Quat</code>](#Quat) - - Returns a new Quat.  
 
 | Param | Type | Description |
@@ -332,7 +334,7 @@ Adds other to this Quat and return the result as a new Quat.
 ### addInPlace
 Adds other to this Quat.
 
-**Kind**: instance method of [<code>Quat</code>](#Quat)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -343,7 +345,7 @@ Adds other to this Quat.
 ### subtract
 Subtracts other from this Quat and returns the result as a new Quat.
 
-**Kind**: instance method of [<code>Quat</code>](#Quat)  
+
 **Returns**: [<code>Quat</code>](#Quat) - - Returns a new Quat.  
 
 | Param | Type | Description |
@@ -355,7 +357,7 @@ Subtracts other from this Quat and returns the result as a new Quat.
 ### scale
 Scales this Quat by scalar and returns the result as a new Quat.
 
-**Kind**: instance method of [<code>Quat</code>](#Quat)  
+
 **Returns**: [<code>Quat</code>](#Quat) - - Returns a new Vec3.  
 
 | Param | Type | Description |
@@ -367,7 +369,7 @@ Scales this Quat by scalar and returns the result as a new Quat.
 ### scaleInPlace
 Scales this Quat by scalar.
 
-**Kind**: instance method of [<code>Quat</code>](#Quat)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -378,34 +380,34 @@ Scales this Quat by scalar.
 ### length
 Calculates the length of this Quat.
 
-**Kind**: instance method of [<code>Quat</code>](#Quat)  
+
 **Returns**: <code>number</code> - - Returns the length.  
 <a name="Quat+lengthSquared"></a>
 
 ### lengthSquared
 Calculates the squared length of this Quat.
 
-**Kind**: instance method of [<code>Quat</code>](#Quat)  
+
 **Returns**: <code>number</code> - - Returns the length.  
 <a name="Quat+normalize"></a>
 
 ### normalize
 Normalizes the Quat and returns it as a new Quat.
 
-**Kind**: instance method of [<code>Quat</code>](#Quat)  
+
 **Returns**: [<code>Quat</code>](#Quat) - - Returns the Quat normalized.  
 <a name="Quat+normalizeInPlace"></a>
 
 ### normalizeInPlace
 Normalizes the Quat, modifying it and returning it normalized.
 
-**Kind**: instance method of [<code>Quat</code>](#Quat)  
+
 <a name="Quat+dot"></a>
 
 ### dot
 Calculates the dot product of two Quats.
 
-**Kind**: instance method of [<code>Quat</code>](#Quat)  
+
 **Returns**: <code>number</code> - - Returns the dot product.  
 
 | Param | Type | Description |
@@ -417,7 +419,7 @@ Calculates the dot product of two Quats.
 ### cross
 Calculates the cross product of two Quats and returns the result as a new Quat.
 
-**Kind**: instance method of [<code>Quat</code>](#Quat)  
+
 **Returns**: [<code>Quat</code>](#Quat) - - Returns the cross product as a new Quat.  
 
 | Param | Type | Description |
@@ -427,23 +429,26 @@ Calculates the cross product of two Quats and returns the result as a new Quat.
 <a name="Quat+conjugate"></a>
 
 ### conjugate
-Returns the rotational conjugate of this Quat.Conjugation represents the same rotation of the Quat butin the opposite direction around the rotational axis.
+Returns the rotational conjugate of this Quat.
+Conjugation represents the same rotation of the Quat but
+in the opposite direction around the rotational axis.
 
-**Kind**: instance method of [<code>Quat</code>](#Quat)  
+
 **Returns**: [<code>Quat</code>](#Quat) - - the return value.  
 <a name="Quat+inverse"></a>
 
 ### inverse
 Return the inverse of the `Quat`
 
-**Kind**: instance method of [<code>Quat</code>](#Quat)  
+
 **Returns**: [<code>Quat</code>](#Quat) - - Returns a new Quat.  
 <a name="Quat+alignWith"></a>
 
 ### alignWith
-Aligns this quaternion with another one ensuring that the delta betweenthe Quat values is the shortest path over the hypersphere.
+Aligns this quaternion with another one ensuring that the delta between
+the Quat values is the shortest path over the hypersphere.
 
-**Kind**: instance method of [<code>Quat</code>](#Quat)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -454,7 +459,7 @@ Aligns this quaternion with another one ensuring that the delta betweenthe Quat
 ### multiply
 Multiplies two Quats and returns the result as a new Quat.
 
-**Kind**: instance method of [<code>Quat</code>](#Quat)  
+
 **Returns**: [<code>Quat</code>](#Quat) - - Returns a new Quat.  
 
 | Param | Type | Description |
@@ -466,7 +471,7 @@ Multiplies two Quats and returns the result as a new Quat.
 ### multiplyInPlace
 Multiplies two Quats.
 
-**Kind**: instance method of [<code>Quat</code>](#Quat)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -475,9 +480,11 @@ Multiplies two Quats.
 <a name="Quat+rotateVec3"></a>
 
 ### rotateVec3
-Rotates a vector by this quaterion.Don't forget to normalize the quaternion unlessyou want axial translation as well as rotation.
+Rotates a vector by this quaterion.
+Don't forget to normalize the quaternion unless
+you want axial translation as well as rotation.
 
-**Kind**: instance method of [<code>Quat</code>](#Quat)  
+
 **Returns**: <code>Vec3</code> - - Returns a new Vec3.  
 
 | Param | Type | Description |
@@ -489,7 +496,7 @@ Rotates a vector by this quaterion.Don't forget to normalize the quaternion unl
 ### rotateX
 Rotates a quaternion by the given angle about the X axis.
 
-**Kind**: instance method of [<code>Quat</code>](#Quat)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -500,7 +507,7 @@ Rotates a quaternion by the given angle about the X axis.
 ### rotateY
 Rotates a quaternion by the given angle about the Y axis.
 
-**Kind**: instance method of [<code>Quat</code>](#Quat)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -511,7 +518,7 @@ Rotates a quaternion by the given angle about the Y axis.
 ### rotateZ
 Rotates a quaternion by the given angle about the Z axis.
 
-**Kind**: instance method of [<code>Quat</code>](#Quat)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -522,35 +529,35 @@ Rotates a quaternion by the given angle about the Z axis.
 ### toMat3
 Converts this Quat to a Mat3 (a 3x3 matrix).
 
-**Kind**: instance method of [<code>Quat</code>](#Quat)  
+
 **Returns**: <code>Mat3</code> - - TReturns a new Mat3.  
 <a name="Quat+getXaxis"></a>
 
 ### getXaxis
 Returns the X axis of this quaternion.
 
-**Kind**: instance method of [<code>Quat</code>](#Quat)  
+
 **Returns**: <code>Vec3</code> - - Returns the X axis as a Vec3.  
 <a name="Quat+getYaxis"></a>
 
 ### getYaxis
 Returns the Y axis of this quaternion.
 
-**Kind**: instance method of [<code>Quat</code>](#Quat)  
+
 **Returns**: <code>Vec3</code> - - Returns the Y axis as a Vec3.  
 <a name="Quat+getZaxis"></a>
 
 ### getZaxis
 Returns the Z axis of this quaternion.
 
-**Kind**: instance method of [<code>Quat</code>](#Quat)  
+
 **Returns**: <code>Vec3</code> - - Returns the Z axis as a Vec3.  
 <a name="Quat+mirror"></a>
 
 ### mirror
 Reflects this quaternion according to the axis provided.
 
-**Kind**: instance method of [<code>Quat</code>](#Quat)  
+
 **Returns**: [<code>Quat</code>](#Quat) - - Returns a new Quat.  
 
 | Param | Type | Description |
@@ -562,14 +569,14 @@ Reflects this quaternion according to the axis provided.
 ### toMat4
 Converts this Quat to a Mat4 (a 4x4 matrix).
 
-**Kind**: instance method of [<code>Quat</code>](#Quat)  
+
 **Returns**: <code>Mat4</code> - - Returns a new Mat4.  
 <a name="Quat+lerp"></a>
 
 ### lerp
 Performs a linear interpolation between two Quats.
 
-**Kind**: instance method of [<code>Quat</code>](#Quat)  
+
 **Returns**: [<code>Quat</code>](#Quat) - - Returns a new Quat.  
 
 | Param | Type | Description |
@@ -582,21 +589,21 @@ Performs a linear interpolation between two Quats.
 ### clone
 Clones this Quat and returns a new Quat.
 
-**Kind**: instance method of [<code>Quat</code>](#Quat)  
+
 **Returns**: [<code>Quat</code>](#Quat) - - Returns a new Quat.  
 <a name="Quat+toJSON"></a>
 
 ### toJSON
 The toJSON method encodes this type as a json object for persistences.
 
-**Kind**: instance method of [<code>Quat</code>](#Quat)  
+
 **Returns**: <code>object</code> - - The json object.  
 <a name="Quat+fromJSON"></a>
 
 ### fromJSON
 The fromJSON method decodes a json object for this type.
 
-**Kind**: instance method of [<code>Quat</code>](#Quat)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |

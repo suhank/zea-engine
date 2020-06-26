@@ -1,9 +1,9 @@
 <a name="AimOperator"></a>
 
-## AimOperator ⇐ <code>Operator</code>
+### AimOperator 
 An operator for aiming items at targets.
 
-**Kind**: global class  
+
 **Extends**: <code>Operator</code>  
 
 * [AimOperator ⇐ <code>Operator</code>](#AimOperator)
@@ -26,10 +26,10 @@ Create a gears operator.
 ### resetStretchRefDist
 The resetStretchRefDist method.
 
-**Kind**: instance method of [<code>AimOperator</code>](#AimOperator)  
+
 <a name="AimOperator+evaluate"></a>
 
 ### evaluate
 The evaluate method.
 
-**Kind**: instance method of [<code>AimOperator</code>](#AimOperator)  
+

@@ -1,9 +1,9 @@
 <a name="Mesh"></a>
 
-## Mesh ⇐ <code>BaseGeom</code>
+### Mesh 
 Class representing a mesh.
 
-**Kind**: global class  
+
 **Extends**: <code>BaseGeom</code>  
 
 * [Mesh ⇐ <code>BaseGeom</code>](#Mesh)
@@ -48,33 +48,33 @@ Create a mesh.
 ### init
 The init method.
 
-**Kind**: instance method of [<code>Mesh</code>](#Mesh)  
+
 <a name="Mesh+getFaceVertexIndices"></a>
 
 ### getFaceVertexIndices
 The getFaceVertexIndices method.
 
-**Kind**: instance method of [<code>Mesh</code>](#Mesh)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="Mesh+getFaceCounts"></a>
 
 ### getFaceCounts
 The getFaceCounts method.
 
-**Kind**: instance method of [<code>Mesh</code>](#Mesh)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="Mesh+clear"></a>
 
 ### clear
 The clear method.
 
-**Kind**: instance method of [<code>Mesh</code>](#Mesh)  
+
 <a name="Mesh+setFaceCounts"></a>
 
 ### setFaceCounts
 The setFaceCounts method.
 
-**Kind**: instance method of [<code>Mesh</code>](#Mesh)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -85,7 +85,7 @@ The setFaceCounts method.
 ### setFaceVertexIndices
 The setFaceVertexIndices method.
 
-**Kind**: instance method of [<code>Mesh</code>](#Mesh)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -96,7 +96,7 @@ The setFaceVertexIndices method.
 ### getFaceVertexIndices
 The getFaceVertexIndices method.
 
-**Kind**: instance method of [<code>Mesh</code>](#Mesh)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -108,7 +108,7 @@ The getFaceVertexIndices method.
 ### getFaceVertexIndex
 The getFaceVertexIndex method.
 
-**Kind**: instance method of [<code>Mesh</code>](#Mesh)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -121,14 +121,14 @@ The getFaceVertexIndex method.
 ### getNumFaces
 The getNumFaces method.
 
-**Kind**: instance method of [<code>Mesh</code>](#Mesh)  
+
 **Returns**: <code>number</code> - - The return value.  
 <a name="Mesh+addVertexAttribute"></a>
 
 ### addVertexAttribute
 The addVertexAttribute method.
 
-**Kind**: instance method of [<code>Mesh</code>](#Mesh)  
+
 **Returns**: <code>VertexAttribute</code> - - Returns a vertex attribute.  
 
 | Param | Type | Description |
@@ -142,7 +142,7 @@ The addVertexAttribute method.
 ### addFaceAttribute
 The addFaceAttribute method.
 
-**Kind**: instance method of [<code>Mesh</code>](#Mesh)  
+
 **Returns**: <code>Attribute</code> - - Returns a face attribute.  
 
 | Param | Type | Description |
@@ -156,7 +156,7 @@ The addFaceAttribute method.
 ### hasFaceAttribute
 The hasFaceAttribute method.
 
-**Kind**: instance method of [<code>Mesh</code>](#Mesh)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -168,7 +168,7 @@ The hasFaceAttribute method.
 ### getFaceAttribute
 The getFaceAttribute method.
 
-**Kind**: instance method of [<code>Mesh</code>](#Mesh)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -180,7 +180,7 @@ The getFaceAttribute method.
 ### addEdgeAttribute
 The addEdgeAttribute method.
 
-**Kind**: instance method of [<code>Mesh</code>](#Mesh)  
+
 **Returns**: <code>Attribute</code> - - Returns an edge attribute.  
 
 | Param | Type | Description |
@@ -194,7 +194,7 @@ The addEdgeAttribute method.
 ### hasEdgeAttribute
 The hasEdgeAttribute method.
 
-**Kind**: instance method of [<code>Mesh</code>](#Mesh)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -206,7 +206,7 @@ The hasEdgeAttribute method.
 ### getEdgeAttribute
 The getEdgeAttribute method.
 
-**Kind**: instance method of [<code>Mesh</code>](#Mesh)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -218,25 +218,25 @@ The getEdgeAttribute method.
 ### genTopologyInfo
 The genTopologyInfo method.
 
-**Kind**: instance method of [<code>Mesh</code>](#Mesh)  
+
 <a name="Mesh+computeFaceNormals"></a>
 
 ### computeFaceNormals
 The computeFaceNormals method.
 
-**Kind**: instance method of [<code>Mesh</code>](#Mesh)  
+
 <a name="Mesh+generateEdgeFlags"></a>
 
 ### generateEdgeFlags
 The generateEdgeFlags method.
 
-**Kind**: instance method of [<code>Mesh</code>](#Mesh)  
+
 <a name="Mesh+computeVertexNormals"></a>
 
 ### computeVertexNormals
 Compute vertex normals.
 
-**Kind**: instance method of [<code>Mesh</code>](#Mesh)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Default | Description |
@@ -248,14 +248,14 @@ Compute vertex normals.
 ### computeNumTriangles
 Compute the number of triangles.
 
-**Kind**: instance method of [<code>Mesh</code>](#Mesh)  
+
 **Returns**: <code>number</code> - - Returns the number of triangles.  
 <a name="Mesh+generateTriangulatedIndices"></a>
 
 ### generateTriangulatedIndices
 The generateTriangulatedIndices method.
 
-**Kind**: instance method of [<code>Mesh</code>](#Mesh)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -269,7 +269,7 @@ The generateTriangulatedIndices method.
 ### computeHardEdgesIndices
 The computeHardEdgesIndices method.
 
-**Kind**: instance method of [<code>Mesh</code>](#Mesh)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Default | Description |
@@ -281,14 +281,14 @@ The computeHardEdgesIndices method.
 ### getWireframeIndices
 The getWireframeIndices method.
 
-**Kind**: instance method of [<code>Mesh</code>](#Mesh)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="Mesh+genBuffers"></a>
 
 ### genBuffers
 The genBuffers method.
 
-**Kind**: instance method of [<code>Mesh</code>](#Mesh)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -300,13 +300,13 @@ The genBuffers method.
 ### freeBuffers
 The freeBuffers method.
 
-**Kind**: instance method of [<code>Mesh</code>](#Mesh)  
+
 <a name="Mesh+readBinary"></a>
 
 ### readBinary
 The readBinary method.
 
-**Kind**: instance method of [<code>Mesh</code>](#Mesh)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -318,7 +318,7 @@ The readBinary method.
 ### toJSON
 The toJSON method encodes this type as a json object for persistences.
 
-**Kind**: instance method of [<code>Mesh</code>](#Mesh)  
+
 **Returns**: <code>object</code> - - Returns the json object.  
 
 | Param | Type | Description |
@@ -331,7 +331,7 @@ The toJSON method encodes this type as a json object for persistences.
 ### fromJSON
 The fromJSON method decodes a json object for this type.
 
-**Kind**: instance method of [<code>Mesh</code>](#Mesh)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |

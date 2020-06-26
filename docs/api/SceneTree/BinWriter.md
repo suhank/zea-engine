@@ -1,9 +1,9 @@
 <a name="BinWriter"></a>
 
-## BinWriter
+### BinWriter
 Class representing a bin writer.
 
-**Kind**: global class  
+
 
 * [BinWriter](#BinWriter)
     * [new BinWriter(dataSize)](#new-BinWriter)
@@ -54,14 +54,14 @@ Create a bin writer.
 ### pos
 The pos method.
 
-**Kind**: instance method of [<code>BinWriter</code>](#BinWriter)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="BinWriter+seek"></a>
 
 ### seek
 The seek method.
 
-**Kind**: instance method of [<code>BinWriter</code>](#BinWriter)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -72,20 +72,20 @@ The seek method.
 ### seekEnd
 The seekEnd method.
 
-**Kind**: instance method of [<code>BinWriter</code>](#BinWriter)  
+
 <a name="BinWriter+getBuffer"></a>
 
 ### getBuffer
 The getBuffer method.
 
-**Kind**: instance method of [<code>BinWriter</code>](#BinWriter)  
+
 **Returns**: <code>ArrayBuffer</code> - - Returns an array buffer.  
 <a name="BinWriter+writeUInt8"></a>
 
 ### writeUInt8
 The writeUInt8 method.
 
-**Kind**: instance method of [<code>BinWriter</code>](#BinWriter)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -96,7 +96,7 @@ The writeUInt8 method.
 ### writeUInt16
 The writeUInt16 method.
 
-**Kind**: instance method of [<code>BinWriter</code>](#BinWriter)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -107,7 +107,7 @@ The writeUInt16 method.
 ### writeUInt32
 The writeUInt32 method.
 
-**Kind**: instance method of [<code>BinWriter</code>](#BinWriter)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -118,7 +118,7 @@ The writeUInt32 method.
 ### writeSInt32
 The writeSInt32 method.
 
-**Kind**: instance method of [<code>BinWriter</code>](#BinWriter)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -129,7 +129,7 @@ The writeSInt32 method.
 ### writeFloat16
 The writeFloat16 method.
 
-**Kind**: instance method of [<code>BinWriter</code>](#BinWriter)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -140,7 +140,7 @@ The writeFloat16 method.
 ### writeFloat32
 The writeFloat32 method.
 
-**Kind**: instance method of [<code>BinWriter</code>](#BinWriter)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -151,7 +151,7 @@ The writeFloat32 method.
 ### writeUInt8Array
 The writeUInt8Array method.
 
-**Kind**: instance method of [<code>BinWriter</code>](#BinWriter)  
+
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -163,7 +163,7 @@ The writeUInt8Array method.
 ### writeUInt16Array
 The writeUInt16Array method.
 
-**Kind**: instance method of [<code>BinWriter</code>](#BinWriter)  
+
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -175,7 +175,7 @@ The writeUInt16Array method.
 ### writeUInt32Array
 The writeUInt32Array method.
 
-**Kind**: instance method of [<code>BinWriter</code>](#BinWriter)  
+
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -187,7 +187,7 @@ The writeUInt32Array method.
 ### writeFloat32Array
 The writeFloat32Array method.
 
-**Kind**: instance method of [<code>BinWriter</code>](#BinWriter)  
+
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -199,7 +199,7 @@ The writeFloat32Array method.
 ### writeStr
 The writeStr method.
 
-**Kind**: instance method of [<code>BinWriter</code>](#BinWriter)  
+
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -211,7 +211,7 @@ The writeStr method.
 ### writeSInt32Vec2
 The writeSInt32Vec2 method.
 
-**Kind**: instance method of [<code>BinWriter</code>](#BinWriter)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -222,7 +222,7 @@ The writeSInt32Vec2 method.
 ### writeUInt32Vec2
 The writeUInt32Vec2 method.
 
-**Kind**: instance method of [<code>BinWriter</code>](#BinWriter)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -233,7 +233,7 @@ The writeUInt32Vec2 method.
 ### writeFloat16Vec2
 The writeFloat16Vec2 method.
 
-**Kind**: instance method of [<code>BinWriter</code>](#BinWriter)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -244,7 +244,7 @@ The writeFloat16Vec2 method.
 ### writeFloat32Vec2
 The writeFloat32Vec2 method.
 
-**Kind**: instance method of [<code>BinWriter</code>](#BinWriter)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -255,7 +255,7 @@ The writeFloat32Vec2 method.
 ### writeFloat16Vec3
 The writeFloat16Vec3 method.
 
-**Kind**: instance method of [<code>BinWriter</code>](#BinWriter)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -266,7 +266,7 @@ The writeFloat16Vec3 method.
 ### writeFloat32Vec3
 The writeFloat32Vec3 method.
 
-**Kind**: instance method of [<code>BinWriter</code>](#BinWriter)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -277,7 +277,7 @@ The writeFloat32Vec3 method.
 ### writeFloat16Quat
 The writeFloat16Quat method.
 
-**Kind**: instance method of [<code>BinWriter</code>](#BinWriter)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -288,7 +288,7 @@ The writeFloat16Quat method.
 ### writeFloat32Quat
 The writeFloat32Quat method.
 
-**Kind**: instance method of [<code>BinWriter</code>](#BinWriter)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -299,7 +299,7 @@ The writeFloat32Quat method.
 ### writeRGBFloat32Color
 The writeRGBFloat32Color method.
 
-**Kind**: instance method of [<code>BinWriter</code>](#BinWriter)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -310,7 +310,7 @@ The writeRGBFloat32Color method.
 ### writeRGBAFloat32Color
 The writeRGBAFloat32Color method.
 
-**Kind**: instance method of [<code>BinWriter</code>](#BinWriter)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -321,7 +321,7 @@ The writeRGBAFloat32Color method.
 ### writeRGBUInt8Color
 The writeRGBUInt8Color method.
 
-**Kind**: instance method of [<code>BinWriter</code>](#BinWriter)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -332,7 +332,7 @@ The writeRGBUInt8Color method.
 ### writeRGBAUInt8Color
 The writeRGBAUInt8Color method.
 
-**Kind**: instance method of [<code>BinWriter</code>](#BinWriter)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -343,7 +343,7 @@ The writeRGBAUInt8Color method.
 ### writeBox2
 The writeBox2 method.
 
-**Kind**: instance method of [<code>BinWriter</code>](#BinWriter)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -354,7 +354,7 @@ The writeBox2 method.
 ### writeBox3
 The writeBox3 method.
 
-**Kind**: instance method of [<code>BinWriter</code>](#BinWriter)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -365,7 +365,7 @@ The writeBox3 method.
 ### writePadd
 The writePadd method.
 
-**Kind**: instance method of [<code>BinWriter</code>](#BinWriter)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -376,7 +376,7 @@ The writePadd method.
 ### writeAlignment
 The writeAlignment method.
 
-**Kind**: instance method of [<code>BinWriter</code>](#BinWriter)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |

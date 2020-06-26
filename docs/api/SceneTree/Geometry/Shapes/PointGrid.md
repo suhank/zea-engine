@@ -1,9 +1,9 @@
 <a name="PointGrid"></a>
 
-## PointGrid ⇐ <code>Points</code>
+### PointGrid 
 A class for generating a point grid.
 
-**Kind**: global class  
+
 **Extends**: <code>Points</code>  
 
 * [PointGrid ⇐ <code>Points</code>](#PointGrid)
@@ -36,16 +36,18 @@ Create a point grid.
 <a name="PointGrid+x"></a>
 
 ### x 
-Getter for X.Is deprectated. Please use "getX".
+Getter for X.
+Is deprectated. Please use "getX".
 
-**Kind**: instance property of [<code>PointGrid</code>](#PointGrid)  
+
 **Returns**: <code>number</code> - - Returns the length.  
 <a name="PointGrid+x"></a>
 
-### pointGrid
-Setter for X.Is deprectated. Please use "setX".
+### x
+Setter for X.
+Is deprectated. Please use "setX".
 
-**Kind**: instance property of [<code>PointGrid</code>](#PointGrid)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -54,16 +56,18 @@ Setter for X.Is deprectated. Please use "setX".
 <a name="PointGrid+y"></a>
 
 ### y 
-Getter for Y.Is deprectated. Please use "getY".
+Getter for Y.
+Is deprectated. Please use "getY".
 
-**Kind**: instance property of [<code>PointGrid</code>](#PointGrid)  
+
 **Returns**: <code>number</code> - - Returns the length.  
 <a name="PointGrid+y"></a>
 
-### pointGrid
-Setter for Y.Is deprectated. Please use "setY".
+### y
+Setter for Y.
+Is deprectated. Please use "setY".
 
-**Kind**: instance property of [<code>PointGrid</code>](#PointGrid)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -74,14 +78,14 @@ Setter for Y.Is deprectated. Please use "setY".
 ### getX
 Getter for the length of the point grid along the X axis.
 
-**Kind**: instance method of [<code>PointGrid</code>](#PointGrid)  
+
 **Returns**: <code>number</code> - - Returns the length.  
 <a name="PointGrid+setX"></a>
 
 ### setX
 Setter for the length of the point grid along the X axis.
 
-**Kind**: instance method of [<code>PointGrid</code>](#PointGrid)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -92,14 +96,14 @@ Setter for the length of the point grid along the X axis.
 ### getY
 Getter for the length of the point grid along the Y axis.
 
-**Kind**: instance method of [<code>PointGrid</code>](#PointGrid)  
+
 **Returns**: <code>number</code> - - Returns the length.  
 <a name="PointGrid+setY"></a>
 
 ### setY
 Setter for the length of the point grid along the Y axis.
 
-**Kind**: instance method of [<code>PointGrid</code>](#PointGrid)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -110,7 +114,7 @@ Setter for the length of the point grid along the Y axis.
 ### setSize
 Setter for the size of the point grid.
 
-**Kind**: instance method of [<code>PointGrid</code>](#PointGrid)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -122,5 +126,5 @@ Setter for the size of the point grid.
 ### toJSON
 The toJSON method encodes this type as a json object for persistences.
 
-**Kind**: instance method of [<code>PointGrid</code>](#PointGrid)  
+
 **Returns**: <code>object</code> - - Returns the json object.  

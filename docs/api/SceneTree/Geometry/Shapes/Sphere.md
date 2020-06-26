@@ -1,9 +1,9 @@
 <a name="Sphere"></a>
 
-## Sphere ⇐ <code>Mesh</code>
+### Sphere 
 A class for generating a sphere geometry.
 
-**Kind**: global class  
+
 **Extends**: <code>Mesh</code>  
 <a name="new_Sphere_new"></a>
 

@@ -1,18 +1,18 @@
 <a name="AssetItem"></a>
 
-## AssetItem ⇐ <code>TreeItem</code>
-Class representing an asset item in a scene tree.
+### AssetItem 
+Represents a TreeItem with rendering and material capabilities.
 
-**Kind**: global class  
+
 **Extends**: <code>TreeItem</code>  
 
 * [AssetItem ⇐ <code>TreeItem</code>](#AssetItem)
     * [new AssetItem(name)](#new-AssetItem)
     * [isLoaded() ⇒ <code>boolean</code>](#isLoaded)
-    * [getEngineDataVersion() ⇒ <code>any</code>](#getEngineDataVersion)
-    * [getGeometryLibrary() ⇒ <code>any</code>](#getGeometryLibrary)
-    * [getMaterialLibrary() ⇒ <code>any</code>](#getMaterialLibrary)
-    * [getUnitsConversion() ⇒ <code>any</code>](#getUnitsConversion)
+    * [getEngineDataVersion() ⇒ <code>array</code>](#getEngineDataVersion)
+    * [getGeometryLibrary() ⇒ <code>GeomLibrary</code>](#getGeometryLibrary)
+    * [getMaterialLibrary() ⇒ <code>MaterialLibrary</code>](#getMaterialLibrary)
+    * [getUnitsConversion() ⇒ <code>number</code>](#getUnitsConversion)
     * [readBinary(reader, context)](#readBinary)
     * [toJSON(context, flags) ⇒ <code>object</code>](#toJSON)
     * [fromJSON(j, context, flags, onDone)](#fromJSON)
@@ -30,44 +30,44 @@ Create an asset item.
 <a name="AssetItem+isLoaded"></a>
 
 ### isLoaded
-The isLoaded method.
+Returns the loaded status of current item.
 
-**Kind**: instance method of [<code>AssetItem</code>](#AssetItem)  
+
 **Returns**: <code>boolean</code> - - Returns true if the asset has already loaded its data.  
 <a name="AssetItem+getEngineDataVersion"></a>
 
 ### getEngineDataVersion
-The getGeometryLibrary method.
+Returns the zea engine version as an array with major, minor, patch order.
 
-**Kind**: instance method of [<code>AssetItem</code>](#AssetItem)  
-**Returns**: <code>any</code> - - The return value.  
+
+**Returns**: <code>array</code> - - The return value.  
 <a name="AssetItem+getGeometryLibrary"></a>
 
 ### getGeometryLibrary
-The getGeometryLibrary method.
+Returns asset `GeomLibrary` that is in charge of rendering geometry data using workers.
 
-**Kind**: instance method of [<code>AssetItem</code>](#AssetItem)  
-**Returns**: <code>any</code> - - The return value.  
+
+**Returns**: <code>GeomLibrary</code> - - The return value.  
 <a name="AssetItem+getMaterialLibrary"></a>
 
 ### getMaterialLibrary
-The getMaterialLibrary method.
+Returns `MaterialLibrary` that is in charge of storing all materials of current Item.
 
-**Kind**: instance method of [<code>AssetItem</code>](#AssetItem)  
-**Returns**: <code>any</code> - - The return value.  
+
+**Returns**: <code>MaterialLibrary</code> - - The return value.  
 <a name="AssetItem+getUnitsConversion"></a>
 
 ### getUnitsConversion
-The getUnitsConversion method.
+Returns the scale factor of current item.
 
-**Kind**: instance method of [<code>AssetItem</code>](#AssetItem)  
-**Returns**: <code>any</code> - - The return value.  
+
+**Returns**: <code>number</code> - - The return value.  
 <a name="AssetItem+readBinary"></a>
 
 ### readBinary
 The readBinary method.
 
-**Kind**: instance method of [<code>AssetItem</code>](#AssetItem)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -79,7 +79,7 @@ The readBinary method.
 ### toJSON
 The toJSON method encodes this type as a json object for persistences.
 
-**Kind**: instance method of [<code>AssetItem</code>](#AssetItem)  
+
 **Returns**: <code>object</code> - - Returns the json object.  
 
 | Param | Type | Default | Description |
@@ -92,12 +92,12 @@ The toJSON method encodes this type as a json object for persistences.
 ### fromJSON
 The fromJSON method decodes a json object for this type.
 
-**Kind**: instance method of [<code>AssetItem</code>](#AssetItem)  
+
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
 | j | <code>object</code> |  | The json object this item must decode. |
 | context | <code>object</code> |  | The context value. |
 | flags | <code>number</code> | <code>0</code> | The flags value. |
-| onDone | <code>any</code> |  | The onDone value. |
+| onDone | <code>function</code> |  | Callback function executed when everything is done. |
 

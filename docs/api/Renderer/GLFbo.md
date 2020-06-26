@@ -1,9 +1,9 @@
 <a name="GLFbo"></a>
 
-## GLFbo
+### GLFbo
 This class abstracts the rendering of a collection of geometries to screen.
 
-**Kind**: global class  
+
 
 * [GLFbo](#GLFbo)
     * [new GLFbo(gl, colorTexture, createDepthTexture)](#new-GLFbo)
@@ -46,40 +46,40 @@ Create a GLFbo.
 
 <a name="GLFbo+width"></a>
 
-### widt
+### width
 Getter for width.
 
-**Kind**: instance property of [<code>GLFbo</code>](#GLFbo)  
+
 <a name="GLFbo+height"></a>
 
-### heigh
+### height
 Getter for height.
 
-**Kind**: instance property of [<code>GLFbo</code>](#GLFbo)  
+
 <a name="GLFbo+size"></a>
 
-### siz
+### size
 Getter for size.
 
-**Kind**: instance property of [<code>GLFbo</code>](#GLFbo)  
+
 <a name="GLFbo+colorTexture"></a>
 
-### colorTextur
+### colorTexture
 Getter for colorTexture.
 
-**Kind**: instance property of [<code>GLFbo</code>](#GLFbo)  
+
 <a name="GLFbo+depthTextureGL"></a>
 
-### depthTextureG
+### depthTextureGL
 Getter for depthTextureGL.
 
-**Kind**: instance property of [<code>GLFbo</code>](#GLFbo)  
+
 <a name="GLFbo+setClearColor"></a>
 
 ### setClearColor
 The setClearColor method.
 
-**Kind**: instance method of [<code>GLFbo</code>](#GLFbo)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -90,42 +90,42 @@ The setClearColor method.
 ### getWidth
 The getWidth method.
 
-**Kind**: instance method of [<code>GLFbo</code>](#GLFbo)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="GLFbo+getHeight"></a>
 
 ### getHeight
 The getHeight method.
 
-**Kind**: instance method of [<code>GLFbo</code>](#GLFbo)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="GLFbo+getSize"></a>
 
 ### getSize
 The getSize method.
 
-**Kind**: instance method of [<code>GLFbo</code>](#GLFbo)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="GLFbo+getColorTexture"></a>
 
 ### getColorTexture
 The getColorTexture method.
 
-**Kind**: instance method of [<code>GLFbo</code>](#GLFbo)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="GLFbo+getDepthTextureGL"></a>
 
 ### getDepthTextureGL
 The getDepthTextureGL method.
 
-**Kind**: instance method of [<code>GLFbo</code>](#GLFbo)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="GLFbo+setColorTexture"></a>
 
 ### setColorTexture
 The setColorTexture method.
 
-**Kind**: instance method of [<code>GLFbo</code>](#GLFbo)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -136,19 +136,21 @@ The setColorTexture method.
 ### setup
 The setup method.
 
-**Kind**: instance method of [<code>GLFbo</code>](#GLFbo)  
+
 <a name="GLFbo+resize"></a>
 
 ### resize
-Triggered Automatically when the texture resizes.TODO: fbos should manage the textures assigned to themE.g. resizing and preserving data.
+Triggered Automatically when the texture resizes.
+TODO: fbos should manage the textures assigned to them
+E.g. resizing and preserving data.
 
-**Kind**: instance method of [<code>GLFbo</code>](#GLFbo)  
+
 <a name="GLFbo+bindForWriting"></a>
 
 ### bindForWriting
 The bindForWriting method.
 
-**Kind**: instance method of [<code>GLFbo</code>](#GLFbo)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -159,7 +161,7 @@ The bindForWriting method.
 ### unbindForWriting
 The unbindForWriting method.
 
-**Kind**: instance method of [<code>GLFbo</code>](#GLFbo)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -170,7 +172,7 @@ The unbindForWriting method.
 ### bind
 The bind method.
 
-**Kind**: instance method of [<code>GLFbo</code>](#GLFbo)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -181,7 +183,7 @@ The bind method.
 ### unbind
 The unbind method.
 
-**Kind**: instance method of [<code>GLFbo</code>](#GLFbo)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -192,7 +194,7 @@ The unbind method.
 ### bindForReading
 The bindForReading method.
 
-**Kind**: instance method of [<code>GLFbo</code>](#GLFbo)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -203,7 +205,7 @@ The bindForReading method.
 ### unbindForReading
 The unbindForReading method.
 
-**Kind**: instance method of [<code>GLFbo</code>](#GLFbo)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -214,13 +216,13 @@ The unbindForReading method.
 ### clear
 The clear method.
 
-**Kind**: instance method of [<code>GLFbo</code>](#GLFbo)  
+
 <a name="GLFbo+bindAndClear"></a>
 
 ### bindAndClear
 The bindAndClear method.
 
-**Kind**: instance method of [<code>GLFbo</code>](#GLFbo)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -231,10 +233,11 @@ The bindAndClear method.
 ### unbind
 The unbind method.
 
-**Kind**: instance method of [<code>GLFbo</code>](#GLFbo)  
+
 <a name="GLFbo+destroy"></a>
 
 ### destroy
-The destroy is called by the system to cause explicit resources cleanup.Users should never need to call this method directly.
+The destroy is called by the system to cause explicit resources cleanup.
+Users should never need to call this method directly.
 
-**Kind**: instance method of [<code>GLFbo</code>](#GLFbo)  
+

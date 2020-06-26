@@ -1,9 +1,9 @@
 <a name="GLRenderer"></a>
 
-## GLRenderer ⇐ <code>GLBaseRenderer</code>
+### GLRenderer 
 Class representing a GL renderer.
 
-**Kind**: global class  
+
 **Extends**: <code>GLBaseRenderer</code>  
 
 * [GLRenderer ⇐ <code>GLBaseRenderer</code>](#GLRenderer)
@@ -49,16 +49,16 @@ Create a GL renderer.
 
 <a name="GLRenderer+exposure"></a>
 
-### exposur
+### exposure
 Getter for exposure.
 
-**Kind**: instance property of [<code>GLRenderer</code>](#GLRenderer)  
+
 <a name="GLRenderer+exposure"></a>
 
-### exposur
+### exposure
 Setter for exposure.
 
-**Kind**: instance property of [<code>GLRenderer</code>](#GLRenderer)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -66,16 +66,16 @@ Setter for exposure.
 
 <a name="GLRenderer+gamma"></a>
 
-### gamm
+### gamma
 Getter for gamma.
 
-**Kind**: instance property of [<code>GLRenderer</code>](#GLRenderer)  
+
 <a name="GLRenderer+gamma"></a>
 
-### gamm
+### gamma
 Setter for gamma.
 
-**Kind**: instance property of [<code>GLRenderer</code>](#GLRenderer)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -83,16 +83,16 @@ Setter for gamma.
 
 <a name="GLRenderer+displayEnvironment"></a>
 
-### displayEnvironmen
+### displayEnvironment
 Getter for displayEnvironment.
 
-**Kind**: instance property of [<code>GLRenderer</code>](#GLRenderer)  
+
 <a name="GLRenderer+displayEnvironment"></a>
 
-### displayEnvironmen
+### displayEnvironment
 Setter for displayEnvironment.
 
-**Kind**: instance property of [<code>GLRenderer</code>](#GLRenderer)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -100,16 +100,16 @@ Setter for displayEnvironment.
 
 <a name="GLRenderer+planeDist"></a>
 
-### planeDis
+### planeDist
 Getter for planeDist.
 
-**Kind**: instance property of [<code>GLRenderer</code>](#GLRenderer)  
+
 <a name="GLRenderer+planeDist"></a>
 
-### planeDis
+### planeDist
 Setter for planeDist.
 
-**Kind**: instance property of [<code>GLRenderer</code>](#GLRenderer)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -117,16 +117,16 @@ Setter for planeDist.
 
 <a name="GLRenderer+cutPlaneNormal"></a>
 
-### cutPlaneNorma
+### cutPlaneNormal
 Getter for cutPlaneNormal.
 
-**Kind**: instance property of [<code>GLRenderer</code>](#GLRenderer)  
+
 <a name="GLRenderer+cutPlaneNormal"></a>
 
-### cutPlaneNorma
+### cutPlaneNormal
 Setter for cutPlaneNormal.
 
-**Kind**: instance property of [<code>GLRenderer</code>](#GLRenderer)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -137,21 +137,21 @@ Setter for cutPlaneNormal.
 ### getGLEnvMap
 The getGLEnvMap method.
 
-**Kind**: instance method of [<code>GLRenderer</code>](#GLRenderer)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="GLRenderer+getEnvMapTex"></a>
 
 ### getEnvMapTex
 The getEnvMapTex method.
 
-**Kind**: instance method of [<code>GLRenderer</code>](#GLRenderer)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="GLRenderer+setScene"></a>
 
 ### setScene
 The setScene method.
 
-**Kind**: instance method of [<code>GLRenderer</code>](#GLRenderer)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -162,7 +162,7 @@ The setScene method.
 ### addTreeItem
 The addTreeItem method.
 
-**Kind**: instance method of [<code>GLRenderer</code>](#GLRenderer)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -173,7 +173,7 @@ The addTreeItem method.
 ### removeTreeItem
 The removeTreeItem method.
 
-**Kind**: instance method of [<code>GLRenderer</code>](#GLRenderer)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -184,7 +184,7 @@ The removeTreeItem method.
 ### addViewport
 The addViewport method.
 
-**Kind**: instance method of [<code>GLRenderer</code>](#GLRenderer)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -196,7 +196,7 @@ The addViewport method.
 ### onKeyPressed
 The onKeyPressed method.
 
-**Kind**: instance method of [<code>GLRenderer</code>](#GLRenderer)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -208,7 +208,7 @@ The onKeyPressed method.
 ### resizeFbos
 The resizeFbos method.
 
-**Kind**: instance method of [<code>GLRenderer</code>](#GLRenderer)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -220,20 +220,20 @@ The resizeFbos method.
 ### createSelectedGeomsFbo
 The createSelectedGeomsFbo method.
 
-**Kind**: instance method of [<code>GLRenderer</code>](#GLRenderer)  
+
 <a name="GLRenderer+getFbo"></a>
 
 ### getFbo
 The getFbo method.
 
-**Kind**: instance method of [<code>GLRenderer</code>](#GLRenderer)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="GLRenderer+createOffscreenFbo"></a>
 
 ### createOffscreenFbo
 The createOffscreenFbo method.
 
-**Kind**: instance method of [<code>GLRenderer</code>](#GLRenderer)  
+
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -244,27 +244,27 @@ The createOffscreenFbo method.
 ### createRayCastRenderTarget
 The createRayCastRenderTarget method.
 
-**Kind**: instance method of [<code>GLRenderer</code>](#GLRenderer)  
+
 <a name="GLRenderer+raycastWithRay"></a>
 
 ### raycastWithRay
 The raycast method.
 
-**Kind**: instance method of [<code>GLRenderer</code>](#GLRenderer)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="GLRenderer+raycast"></a>
 
 ### raycast
 The raycast method.
 
-**Kind**: instance method of [<code>GLRenderer</code>](#GLRenderer)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="GLRenderer+drawBackground"></a>
 
 ### drawBackground
 The drawBackground method.
 
-**Kind**: instance method of [<code>GLRenderer</code>](#GLRenderer)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -275,7 +275,7 @@ The drawBackground method.
 ### bindGLRenderer
 The bindGLRenderer method.
 
-**Kind**: instance method of [<code>GLRenderer</code>](#GLRenderer)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -286,7 +286,7 @@ The bindGLRenderer method.
 ### drawScene
 The drawScene method.
 
-**Kind**: instance method of [<code>GLRenderer</code>](#GLRenderer)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |

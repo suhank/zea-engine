@@ -1,9 +1,9 @@
 <a name="Box3"></a>
 
-## Box3
+### Box3
 Represents a box in 3D space, needing two Vec3 vectors.
 
-**Kind**: global class  
+
 
 * [Box3](#Box3)
     * [new Box3(p0, p1)](#new-Box3)
@@ -30,7 +30,12 @@ Represents a box in 3D space, needing two Vec3 vectors.
 <a name="new_Box3_new"></a>
 
 ### new Box3
-Creates a Box3 object using Vec3s.In case the parameters are not passed by, their values are pre-defined:<br>p0 is a Vec2 with [`Number.POSITIVE_INFINITY`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/POSITIVE_INFINITY)<br>p1 is a Vec2 with [`Number.NEGATIVE_INFINITY`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/NEGATIVE_INFINITY)
+Creates a Box3 object using Vec3s.
+In case the parameters are not passed by, their values are pre-defined:
+<br>
+p0 is a Vec2 with [`Number.POSITIVE_INFINITY`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/POSITIVE_INFINITY)
+<br>
+p1 is a Vec2 with [`Number.NEGATIVE_INFINITY`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/NEGATIVE_INFINITY)
 
 
 | Param | Type | Description |
@@ -43,21 +48,21 @@ Creates a Box3 object using Vec3s.In case the parameters are not passed by, the
 ### min 
 Getter for the lower (x, y, z) boundary of the box.
 
-**Kind**: instance property of [<code>Box3</code>](#Box3)  
+
 **Returns**: <code>Vec3</code> - - Returns the minumum Vec3.  
 <a name="Box3+max"></a>
 
 ### max 
 Getter for the upper (x, y, z) boundary of the box.
 
-**Kind**: instance property of [<code>Box3</code>](#Box3)  
+
 **Returns**: <code>Vec3</code> - - Returns the minumum Vec3.  
 <a name="Box3+set"></a>
 
 ### set
 Sets both Vect3 points
 
-**Kind**: instance method of [<code>Box3</code>](#Box3)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -69,20 +74,20 @@ Sets both Vect3 points
 ### reset
 Resets the box3 back to an uninitialized state.
 
-**Kind**: instance method of [<code>Box3</code>](#Box3)  
+
 <a name="Box3+isValid"></a>
 
 ### isValid
 Returns `true` if the box has been expanded to contain a point.
 
-**Kind**: instance method of [<code>Box3</code>](#Box3)  
+
 **Returns**: <code>boolean</code> - - The return value.  
 <a name="Box3+addPoint"></a>
 
 ### addPoint
 Expands the Box3 to contain the new point.
 
-**Kind**: instance method of [<code>Box3</code>](#Box3)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -91,9 +96,10 @@ Expands the Box3 to contain the new point.
 <a name="Box3+addBox3"></a>
 
 ### addBox3
-Adds `Box3` to this `Box3`, of the Xfo instance is passed in the parametersit proceeds to apply the transform for the Vec3.
+Adds `Box3` to this `Box3`, of the Xfo instance is passed in the parameters
+it proceeds to apply the transform for the Vec3.
 
-**Kind**: instance method of [<code>Box3</code>](#Box3)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -105,42 +111,42 @@ Adds `Box3` to this `Box3`, of the Xfo instance is passed in the parametersit p
 ### size
 Returns the size of the Box3.
 
-**Kind**: instance method of [<code>Box3</code>](#Box3)  
+
 **Returns**: [<code>Box3</code>](#Box3) - - Returns a Box3.  
 <a name="Box3+diagonal"></a>
 
 ### diagonal
 Returns the size of a Box3 - the same as size().
 
-**Kind**: instance method of [<code>Box3</code>](#Box3)  
+
 **Returns**: [<code>Box3</code>](#Box3) - - Returns a Box3.  
 <a name="Box3+center"></a>
 
 ### center
 Returns the center point of a Box3.
 
-**Kind**: instance method of [<code>Box3</code>](#Box3)  
+
 **Returns**: <code>Vec3</code> - - Returns a Vec3.  
 <a name="Box3+toMat4"></a>
 
 ### toMat4
 Converts this Box3 to a Mat4 (a 4x4 matrix).
 
-**Kind**: instance method of [<code>Box3</code>](#Box3)  
+
 **Returns**: <code>Mat4</code> - - Returns a new Mat4.  
 <a name="Box3+getBoundingSphere"></a>
 
 ### getBoundingSphere
 Calculates and returns the bounding Sphere of the Box3
 
-**Kind**: instance method of [<code>Box3</code>](#Box3)  
+
 **Returns**: <code>SphereType</code> - - The return value.  
 <a name="Box3+intersectsBox"></a>
 
 ### intersectsBox
 Determines if this Box3 intersects a plane.
 
-**Kind**: instance method of [<code>Box3</code>](#Box3)  
+
 **Returns**: <code>boolean</code> - - The return value.  
 
 | Param | Type | Description |
@@ -152,7 +158,7 @@ Determines if this Box3 intersects a plane.
 ### intersectsSphere
 Determines if this Box3 intersects a sphere.
 
-**Kind**: instance method of [<code>Box3</code>](#Box3)  
+
 **Returns**: <code>boolean</code> - - The return value.  
 
 | Param | Type | Description |
@@ -164,7 +170,7 @@ Determines if this Box3 intersects a sphere.
 ### intersectsPlane
 Determines if this Box3 intersects a plane.
 
-**Kind**: instance method of [<code>Box3</code>](#Box3)  
+
 **Returns**: <code>boolean</code> - - The return value.  
 
 | Param | Type | Description |
@@ -176,21 +182,21 @@ Determines if this Box3 intersects a plane.
 ### clone
 Clones this Box3 and returns a new Box3.
 
-**Kind**: instance method of [<code>Box3</code>](#Box3)  
+
 **Returns**: [<code>Box3</code>](#Box3) - - Returns a new Box3.  
 <a name="Box3+toJSON"></a>
 
 ### toJSON
 Encodes `Box3` Class as a JSON object for persistence.
 
-**Kind**: instance method of [<code>Box3</code>](#Box3)  
+
 **Returns**: <code>object</code> - - The json object.  
 <a name="Box3+fromJSON"></a>
 
 ### fromJSON
 Decodes a JSON object to set the state of this class.
 
-**Kind**: instance method of [<code>Box3</code>](#Box3)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -201,5 +207,5 @@ Decodes a JSON object to set the state of this class.
 ### toString
 Calls `toJSON` method and stringifies it.
 
-**Kind**: instance method of [<code>Box3</code>](#Box3)  
+
 **Returns**: <code>string</code> - - The return value.  

@@ -1,9 +1,9 @@
 <a name="Cuboid"></a>
 
-## Cuboid ⇐ <code>Mesh</code>
+### Cuboid 
 A class for generating a cuboid geometry.
 
-**Kind**: global class  
+
 **Extends**: <code>Mesh</code>  
 
 * [Cuboid ⇐ <code>Mesh</code>](#Cuboid)
@@ -30,7 +30,7 @@ Create a cuboid.
 ### setSize
 Setter for the size of the cuboid.
 
-**Kind**: instance method of [<code>Cuboid</code>](#Cuboid)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -43,7 +43,7 @@ Setter for the size of the cuboid.
 ### setBaseSize
 Setter for the base size of the cuboid.
 
-**Kind**: instance method of [<code>Cuboid</code>](#Cuboid)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -55,5 +55,5 @@ Setter for the base size of the cuboid.
 ### toJSON
 The toJSON method encodes this type as a json object for persistences.
 
-**Kind**: instance method of [<code>Cuboid</code>](#Cuboid)  
+
 **Returns**: <code>object</code> - - Returns the json object.  
