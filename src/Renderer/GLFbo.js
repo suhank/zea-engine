@@ -1,7 +1,9 @@
 import { SystemDesc } from '../BrowserDetection.js'
 import '../Math/index'
 
-/** This class abstracts the rendering of a collection of geometries to screen. */
+/** This class abstracts the rendering of a collection of geometries to screen.
+ * @private
+ */
 class GLFbo {
   /**
    * Create a GLFbo.
