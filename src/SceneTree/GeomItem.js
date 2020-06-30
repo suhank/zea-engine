@@ -5,38 +5,39 @@ import { GeometryParameter } from './Parameters/GeometryParameter'
 import { sgFactory } from './SGFactory.js'
 import { BaseGeomItem } from './BaseGeomItem.js'
 
-/** Class representing a geometry item in a scene tree.
+/**
+ * Class representing a geometry item in a scene tree.
+ * **Parameters:**
+ * * **Geometry(`GeometryParameter`):**
+ * * **Material(`MaterialParameter`):**
+ * * **GeomOffsetXfo(`XfoParameter`):**
+ * * **GeomMat(`Mat4Parameter`):**
+ *
+ * **Events:**
+ * * **geomXfoChanged:**
+ * * **materialAssigned:**
+ * * **geomAssigned:**
  * @extends BaseGeomItem
  */
 class GeomItem extends BaseGeomItem {
   /**
    * Create a geometry item.
    * @param {string} name - The name of the geom item.
-   * @param {any} geom - The geom value.
-   * @param {any} material - The material value.
+   * @param {BaseGeom} geom - The geom value.
+   * @param {Material} material - The material value.
    */
   constructor(name, geom = undefined, material = undefined) {
     super(name)
 
-    this.__geomParam = this.insertParameter(
-      new GeometryParameter('Geometry'),
-      0
-    )
+    this.__geomParam = this.insertParameter(new GeometryParameter('Geometry'), 0)
     this._setBoundingBoxDirty = this._setBoundingBoxDirty.bind(this)
     this.__geomParam.addListener('valueChanged', this._setBoundingBoxDirty)
-    this.__geomParam.addListener('boundingBoxChanged', 
-      this._setBoundingBoxDirty
-    )
-    this.__materialParam = this.insertParameter(
-      new MaterialParameter('Material'),
-      1
-    )
+    this.__geomParam.addListener('boundingBoxChanged', this._setBoundingBoxDirty)
+    this.__materialParam = this.insertParameter(new MaterialParameter('Material'), 1)
     this.__paramMapping['material'] = this.getParameterIndex(this.__materialParam)
 
     this.__lightmapCoordOffset = new Vec2()
-    this.__geomOffsetXfoParam = this.addParameter(
-      new XfoParameter('GeomOffsetXfo')
-    )
+    this.__geomOffsetXfoParam = this.addParameter(new XfoParameter('GeomOffsetXfo'))
     this.__geomMatParam = this.addParameter(new Mat4Parameter('GeomMat'))
 
     this.__cleanGeomMat = this.__cleanGeomMat.bind(this)
@@ -46,13 +47,13 @@ class GeomItem extends BaseGeomItem {
     this.__geomOffsetXfoParam.addListener('valueChanged', () => {
       this.__geomMatParam.setDirty(this.__cleanGeomMat)
     })
-    this.__geomMatParam.addListener('valueChanged', event => {
+    this.__geomMatParam.addListener('valueChanged', (event) => {
       this.emit('geomXfoChanged', event)
     })
-    this.__materialParam.addListener('valueChanged', event => {
+    this.__materialParam.addListener('valueChanged', (event) => {
       this.emit('materialAssigned', event)
     })
-    this.__geomParam.addListener('valueChanged', event => {
+    this.__geomParam.addListener('valueChanged', (event) => {
       this.emit('geomAssigned', event)
     })
 
@@ -260,11 +261,7 @@ class GeomItem extends BaseGeomItem {
     const geomOffsetXfoFlag = 1 << 2
     if (itemflags & geomOffsetXfoFlag) {
       this.__geomOffsetXfoParam.setValue(
-        new Xfo(
-          reader.loadFloat32Vec3(),
-          reader.loadFloat32Quat(),
-          reader.loadFloat32Vec3()
-        )
+        new Xfo(reader.loadFloat32Vec3(), reader.loadFloat32Quat(), reader.loadFloat32Vec3())
       )
     }
 
@@ -277,18 +274,13 @@ class GeomItem extends BaseGeomItem {
         const materialName = reader.loadStr()
         let material = materialLibrary.getMaterial(materialName)
         if (!material) {
-          console.warn(
-            "Geom :'" + this.name + "' Material not found:" + materialName
-          )
+          console.warn("Geom :'" + this.name + "' Material not found:" + materialName)
           material = materialLibrary.getMaterial('Default')
         }
         this.setMaterial(material, ValueSetMode.DATA_LOAD)
       } else {
         // Force nodes to have a material so we can see them.
-        this.setMaterial(
-          context.assetItem.getMaterialLibrary().getMaterial('Default'),
-          ValueSetMode.DATA_LOAD
-        )
+        this.setMaterial(context.assetItem.getMaterialLibrary().getMaterial('Default'), ValueSetMode.DATA_LOAD)
       }
     }
 
@@ -309,7 +301,8 @@ class GeomItem extends BaseGeomItem {
   /**
    * The clone method constructs a new geom item, copies its values
    * from this item and returns it.
-   * @param {number} flags - The flags value.
+   *
+   * @param {number} context - The flags value.
    * @return {GeomItem} - Returns a new cloned geom item.
    */
   clone(context) {
@@ -319,9 +312,10 @@ class GeomItem extends BaseGeomItem {
   }
 
   /**
-   * The copyFrom method.
+   * Copies current GeomItem with all its children.
+   *
    * @param {GeomItem} src - The geom item to copy from.
-   * @param {number} flags - The flags value.
+   * @param {number} context - The flags value.
    */
   copyFrom(src, context) {
     super.copyFrom(src, context)
@@ -329,8 +323,8 @@ class GeomItem extends BaseGeomItem {
 
     if (!src.getGeometry() && src.geomIndex != -1) {
       const geomLibrary = context.assetItem.getGeometryLibrary()
-      const geomIndex = src.geomIndex;
-      const onGeomLoaded = event => {
+      const geomIndex = src.geomIndex
+      const onGeomLoaded = (event) => {
         const { range } = event
         if (geomIndex >= range[0] && geomIndex < range[1]) {
           const geom = geomLibrary.getGeom(geomIndex)

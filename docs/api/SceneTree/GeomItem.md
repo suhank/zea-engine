@@ -24,8 +24,8 @@ Class representing a geometry item in a scene tree.
     * [fromJSON(json, context)](#fromJSON)
     * [readBinary(reader, context)](#readBinary)
     * [toString() ⇒ <code>any</code>](#toString)
-    * [clone(flags)](#clone)
-    * [copyFrom(src, flags)](#copyFrom)
+    * [clone(context)](#clone)
+    * [copyFrom(src, context)](#copyFrom)
     * [destroy()](#destroy)
 
 <a name="new_GeomItem_new"></a>
@@ -204,19 +204,19 @@ from this item and returns it.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| flags | <code>number</code> | The flags value. |
+| context | <code>number</code> | The flags value. |
 
 <a name="GeomItem+copyFrom"></a>
 
 ### copyFrom
-The copyFrom method.
+Copies current GeomItem with all its children.
 
 
 
 | Param | Type | Description |
 | --- | --- | --- |
 | src | [<code>GeomItem</code>](#GeomItem) | The geom item to copy from. |
-| flags | <code>number</code> | The flags value. |
+| context | <code>number</code> | The flags value. |
 
 <a name="GeomItem+destroy"></a>
 
