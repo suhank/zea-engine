@@ -59,7 +59,7 @@ Base images are static content, so the value for this method is always going to 
 <a name="BaseImage+getParams"></a>
 
 ### getParams
-Returns all params and class state values.
+Returns all parameters and class state values.
 
 
 **Returns**: <code>object</code> - - The return value.  

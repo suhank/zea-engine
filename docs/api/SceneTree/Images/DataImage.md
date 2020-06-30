@@ -65,7 +65,7 @@ Sets Image's data by recieving an bytes array.
 <a name="DataImage+getParams"></a>
 
 ### getParams
-Returns all params and class state values(Including data).
+Returns all parameters and class state values(Including data).
 
 
 **Returns**: <code>object</code> - - The return value.  

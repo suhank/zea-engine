@@ -74,7 +74,7 @@ class DataImage extends BaseImage {
   }
 
   /**
-   * Returns all params and class state values(Including data).
+   * Returns all parameters and class state values(Including data).
    *
    * @return {object} - The return value.
    */

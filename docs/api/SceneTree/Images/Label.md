@@ -2,11 +2,14 @@
 
 ### Label 
 Represents a 2D label item the scene.
-Since adding displaying text in the scene is not an easy task,
+Since displaying text in the scene is not an easy task,
 we've abstracted the complicated logic behind this class, transforming any text into a 2D image(`DataImage`).
 
+**Library List:**
+* LabelPack
+
 **Parameters**
-* **Library(`StringParameter`):**
+* **Library(`StringParameter`):** Library you wan to use for your label, see **Library List** above.
 * **Text(`StringParameter`):**
 * **FontColor(`ColorParameter`):**
 * **Margin(`NumberParameter`):**
@@ -22,11 +25,9 @@ we've abstracted the complicated logic behind this class, transforming any text 
 * **Font(`StringParameter`):**
 
 **Events**
-* **loaded:**
-* **updated:**
-* **labelRendered:**
-* **nameChanged:**
-* **labelLibraryLoaded:**
+* **loaded:** Triggered when label's data is loaded.
+* **updated:** Triggered when label's data changes.
+* **labelRendered:** Triggered when the text image is rendered. Contains `width`, `height` and data of the image.
 
 
 **Extends**: <code>DataImage</code>  
@@ -42,7 +43,7 @@ we've abstracted the complicated logic behind this class, transforming any text 
 <a name="new_Label_new"></a>
 
 ### new Label
-Create a label.
+Creates a label instance. Creating a canvas element that hosts the specified text.
 
 
 | Param | Type | Description |
@@ -53,17 +54,21 @@ Create a label.
 <a name="Label+loadLabelData"></a>
 
 ### loadLabelData
+Method in charge of basically do everything, set text, load/update it, get the library, load the font, etc.
+
 
 <a name="Label+renderLabelToImage"></a>
 
 ### renderLabelToImage
-Renders the label text to a canvas element ready to display,
+Renders the label text to a canvas element ready to display.
+Here is where all parameters are applied to the canvas containing the text,
+then the image data is extracted from the canvas context.
 
 
 <a name="Label+getParams"></a>
 
 ### getParams
-The getParams method.
+Returns all parameters and class state values(Including data).
 
 
 **Returns**: <code>object</code> - - The return value.  

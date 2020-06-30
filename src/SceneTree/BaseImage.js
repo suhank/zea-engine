@@ -85,7 +85,7 @@ class BaseImage extends BaseItem {
   }
 
   /**
-   * Returns all params and class state values.
+   * Returns all parameters and class state values.
    *
    * @return {object} - The return value.
    */

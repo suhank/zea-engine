@@ -4,7 +4,7 @@
 `BaseItem` type of class
 
 **Events**
-* **BackgroundColor(`ColorParameter`):**
+* **BackgroundColor(`ColorParameter`):** Changes background color of the scene
 * **EnvMap(`ImageParameter`):**
 * **Display(`BooleanParameter`):**
 * **EnvMapLOD(`NumberParameter`):**
