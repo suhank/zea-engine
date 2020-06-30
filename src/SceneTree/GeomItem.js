@@ -7,6 +7,7 @@ import { BaseGeomItem } from './BaseGeomItem.js'
 
 /**
  * Class representing a geometry item in a scene tree.
+ *
  * **Parameters:**
  * * **Geometry(`GeometryParameter`):**
  * * **Material(`MaterialParameter`):**
@@ -17,11 +18,12 @@ import { BaseGeomItem } from './BaseGeomItem.js'
  * * **geomXfoChanged:**
  * * **materialAssigned:**
  * * **geomAssigned:**
+ *
  * @extends BaseGeomItem
  */
 class GeomItem extends BaseGeomItem {
   /**
-   * Create a geometry item.
+   * Creates a geometry item.
    * @param {string} name - The name of the geom item.
    * @param {BaseGeom} geom - The geom value.
    * @param {Material} material - The material value.
@@ -63,7 +65,7 @@ class GeomItem extends BaseGeomItem {
 
   /**
    * The __cleanGeomMat method.
-   * @return {any} - The return value.
+   * @return {Mat4} - The return value.
    * @private
    */
   __cleanGeomMat() {
@@ -76,16 +78,18 @@ class GeomItem extends BaseGeomItem {
   // Geometry
 
   /**
-   * Getter for geometry.
-   * @return {any} - The return value.
+   * Returns `Geometry` parameter value.
+   *
+   * @return {BaseGeom} - The return value.
    */
   getGeometry() {
     return this.__geomParam.getValue()
   }
 
   /**
-   * Setter for geometry.
-   * @param {any} geom - The geom value.
+   * Sets geometry object to `Geometry` parameter.
+   *
+   * @param {BaseGeom} geom - The geom value.
    * @param {number} mode - The mode value.
    */
   setGeometry(geom, mode) {
@@ -94,7 +98,9 @@ class GeomItem extends BaseGeomItem {
 
   /**
    * Getter for geometry (getGeom is deprectated. Please use getGeometry).
-   * @return {any} - The return value.
+   *
+   * @deprecated
+   * @return {BaseGeom} - The return value.
    */
   getGeom() {
     console.warn("getGeom is deprectated. Please use 'getGeometry'")
@@ -103,8 +109,10 @@ class GeomItem extends BaseGeomItem {
 
   /**
    * Setter for geometry. (setGeom is deprectated. Please use setGeometry).
-   * @param {any} geom - The geom value.
-   * @return {any} - The return value.
+   *
+   * @deprecated
+   * @param {BaseGeom} geom - The geom value.
+   * @return {number} - The return value.
    */
   setGeom(geom) {
     console.warn("setGeom is deprectated. Please use 'setGeometry'")
@@ -112,7 +120,8 @@ class GeomItem extends BaseGeomItem {
   }
 
   /**
-   * Getter for material.
+   * Returns the specified value of `Material`parameter.
+   *
    * @return {Material} - The return value.
    */
   getMaterial() {
@@ -120,7 +129,8 @@ class GeomItem extends BaseGeomItem {
   }
 
   /**
-   * Setter for material.
+   * Sets material object to `Material` parameter.
+   *
    * @param {Material} material - The material value.
    * @param {number} mode - The mode value.
    */
@@ -131,7 +141,7 @@ class GeomItem extends BaseGeomItem {
   /**
    * The _cleanBoundingBox method.
    * @param {Box3} bbox - The bounding box value.
-   * @return {any} - The return value.
+   * @return {Box3} - The return value.
    * @private
    */
   _cleanBoundingBox(bbox) {
@@ -147,7 +157,8 @@ class GeomItem extends BaseGeomItem {
   // Xfos
 
   /**
-   * Getter for the geom offset Xfo translation.
+   * Returns the offset `Xfo` object specified in `GeomOffsetXfo` parameter.
+   *
    * @return {Xfo} - Returns the geom offset Xfo.
    */
   getGeomOffsetXfo() {
@@ -155,7 +166,8 @@ class GeomItem extends BaseGeomItem {
   }
 
   /**
-   * Setter for the geom offset Xfo translation.
+   * Sets `Xfo` object to `GeomOffsetXfo` parameter.
+   *
    * @param {Xfo} xfo - The Xfo value.
    */
   setGeomOffsetXfo(xfo) {
@@ -163,8 +175,9 @@ class GeomItem extends BaseGeomItem {
   }
 
   /**
-   * Getter for the geom Xfo translation.
-   * @return {Xfo} - Returns the geom Xfo.
+   * Returns `Mat4` object value of `GeomMat` parameter.
+   *
+   * @return {Mat4} - Returns the geom Xfo.
    */
   getGeomMat4() {
     return this.__geomMatParam.getValue()
@@ -174,7 +187,8 @@ class GeomItem extends BaseGeomItem {
   // Lightmaps
 
   /**
-   * Getter for a lightmap name.
+   * Returns lightmap name of the asset item.
+   *
    * @return {string} - Returns the lightmap name.
    */
   getLightmapName() {
@@ -182,8 +196,9 @@ class GeomItem extends BaseGeomItem {
   }
 
   /**
-   * Getter for a lightmap coordinate offset.
-   * @return {any} - Returns the lightmap coord offset.
+   * Returns lightmap coordinates offset object.
+   *
+   * @return {Vec2} - Returns the lightmap coord offset.
    */
   getLightmapCoordsOffset() {
     return this.__lightmapCoordOffset
@@ -192,8 +207,9 @@ class GeomItem extends BaseGeomItem {
   /**
    * The root asset item pushes its offset to the geom items in the
    * tree. This offsets the light coords for each geom.
+   *
    * @param {string} lightmapName - The lightmap name.
-   * @param {any} offset - The offset value.
+   * @param {Vec2} offset - The offset value.
    */
   applyAssetLightmapSettings(lightmapName, offset) {
     this.__lightmap = lightmapName
@@ -205,6 +221,7 @@ class GeomItem extends BaseGeomItem {
 
   /**
    * The toJSON method encodes this type as a json object for persistences.
+   *
    * @param {object} context - The context value.
    * @param {number} flags - The flags value.
    * @return {object} - Returns the json object.
@@ -216,6 +233,7 @@ class GeomItem extends BaseGeomItem {
 
   /**
    * The fromJSON method decodes a json object for this type.
+   *
    * @param {object} json - The json object this item must decode.
    * @param {object} context - The context value.
    */
@@ -225,7 +243,8 @@ class GeomItem extends BaseGeomItem {
   }
 
   /**
-   * The readBinary method.
+   * Sets state of current Item(Including lightmap offset & material) using a binary reader object.
+   *
    * @param {object} reader - The reader value.
    * @param {object} context - The context value.
    */
@@ -288,8 +307,9 @@ class GeomItem extends BaseGeomItem {
   }
 
   /**
-   * The toString method.
-   * @return {any} - The return value.
+   * Returns string representation of current object's state.
+   *
+   * @return {string} - The return value.
    */
   toString() {
     return JSON.stringify(this.toJSON(), null, 2)
