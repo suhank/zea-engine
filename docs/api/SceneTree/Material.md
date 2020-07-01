@@ -1,7 +1,8 @@
 <a name="Material"></a>
 
 ### Material 
-Class representing a material in a scene tree.
+Represents a type of `BaseItem` class that holds material configuration.
+Use this to apply materials to your assets or item parts.
 
 **Events**
 * **shaderNameChanged:** Triggered when the shader's name is set through `setShaderName` method.
@@ -34,7 +35,7 @@ Create a material
 | Param | Type | Description |
 | --- | --- | --- |
 | name | <code>string</code> | The name of the material. |
-| shaderName | <code>string</code> | The name of the shader. |
+| shaderName | <code>string</code> | Shader's class name. |
 
 <a name="Material+getShaderName"></a>
 

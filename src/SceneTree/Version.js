@@ -3,7 +3,10 @@
  */
 class Version {
   /**
-   * Create a bin reader.
+   * Creates a version.
+   * The version string should have the following structure: <br>
+   * major, minor and patch separated by a dot(`.`) and parts separated by a dash(`-`).
+   *
    * @param {str} versionStr - The version string value.
    */
   constructor(versionStr) {
@@ -23,6 +26,7 @@ class Version {
 
   /**
    * Compare a version object against a version numbers array.
+   *
    * @param {array} numbers - The numbers value.
    * @return {number} - return positive: v1 > v2, zero:v1 == v2, negative: v1 < v2
    */
@@ -38,6 +42,7 @@ class Version {
 
   /**
    * Compare a version object against a version numbers array.
+   *
    * @param {array} numbers - The numbers value.
    * @return {boolean} - The return value.
    */
@@ -47,6 +52,7 @@ class Version {
 
   /**
    * Compare a version object against a version numbers array.
+   *
    * @param {array} numbers - The numbers value.
    * @return {boolean} - The return value.
    */
@@ -65,6 +71,7 @@ class Version {
 
   /**
    * Compare a version object against a version numbers array.
+   *
    * @param {array} numbers - The numbers value.
    * @return {boolean} - The return value.
    */
@@ -74,6 +81,7 @@ class Version {
 
   /**
    * Compare a version object against a version numbers array.
+   *
    * @param {array} numbers - The numbers value.
    * @return {boolean} - The return value.
    */

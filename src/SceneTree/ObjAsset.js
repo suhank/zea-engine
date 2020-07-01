@@ -25,7 +25,7 @@ import { BooleanParameter, NumberParameter, StringParameter, FilePathParameter }
  * * **loadMtlFile(`BooleanParameter`):**
  * * **unitsConversion(`NumberParameter`):**
  * * **defaultShader(`StringParameter`):**
- * * **ObjFilePath(`FilePathParameter`):**
+ * * **ObjFilePath(`FilePathParameter`):** Used to specify the path to the file.
  *
  * **Events**
  * * **loaded:** Triggered once everything is loaded.

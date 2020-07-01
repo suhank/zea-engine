@@ -1,15 +1,28 @@
 <a name="ObjAsset"></a>
 
 ### ObjAsset 
-Class representing an object asset.
+Class designed to load and handle `.obj` files.
+Which define the grometry and other properties for objects.
+
+**Parameters**
+* **splitObjects(`BooleanParameter`):**
+* **splitGroupsIntoObjects(`BooleanParameter`):**
+* **loadMtlFile(`BooleanParameter`):**
+* **unitsConversion(`NumberParameter`):**
+* **defaultShader(`StringParameter`):**
+* **ObjFilePath(`FilePathParameter`):** Used to specify the path to the file.
+
+**Events**
+* **loaded:** Triggered once everything is loaded.
+* **geomsLoaded:** Triggered once all geometries are loaded.
 
 
 **Extends**: <code>AssetItem</code>  
 
 * [ObjAsset ⇐ <code>AssetItem</code>](#ObjAsset)
     * [new ObjAsset(name)](#new-ObjAsset)
-    * [getGeometryLibrary() ⇒ <code>any</code>](#getGeometryLibrary)
-    * [getMaterialLibrary() ⇒ <code>any</code>](#getMaterialLibrary)
+    * [getGeometryLibrary() ⇒ <code>GeomLibrary</code>](#getGeometryLibrary)
+    * [getMaterialLibrary() ⇒ <code>MaterialLibrary</code>](#getMaterialLibrary)
 
 <a name="new_ObjAsset_new"></a>
 
@@ -24,14 +37,14 @@ Create an obj asset.
 <a name="ObjAsset+getGeometryLibrary"></a>
 
 ### getGeometryLibrary
-The getGeometryLibrary method.
+Returns `GeomLibrary` object which hosts workers, buffers, streams and geometry objects.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>GeomLibrary</code> - - The return value.  
 <a name="ObjAsset+getMaterialLibrary"></a>
 
 ### getMaterialLibrary
-The getMaterialLibrary method.
+Returns `MaterialLibrary` object wich hosts images and `Material` objects.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>MaterialLibrary</code> - - The return value.  
