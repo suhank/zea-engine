@@ -1,13 +1,13 @@
 <a name="BinWriter"></a>
 
 ### BinWriter
-Class representing a bin writer.
+Writes `TypedArray` types in binary using a specific encoding.
 
 
 
 * [BinWriter](#BinWriter)
     * [new BinWriter(dataSize)](#new-BinWriter)
-    * [pos() ⇒ <code>any</code>](#pos)
+    * [pos() ⇒ <code>number</code>](#pos)
     * [seek(byteOffset)](#seek)
     * [seekEnd()](#seekEnd)
     * [getBuffer() ⇒ <code>ArrayBuffer</code>](#getBuffer)
@@ -55,7 +55,7 @@ Create a bin writer.
 The pos method.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>number</code> - - The return value.  
 <a name="BinWriter+seek"></a>
 
 ### seek
@@ -89,7 +89,7 @@ The writeUInt8 method.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| value | <code>any</code> | The value param. |
+| value | <code>number</code> | The value param. |
 
 <a name="BinWriter+writeUInt16"></a>
 
@@ -100,7 +100,7 @@ The writeUInt16 method.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| value | <code>any</code> | The value param. |
+| value | <code>number</code> | The value param. |
 
 <a name="BinWriter+writeUInt32"></a>
 
@@ -111,7 +111,7 @@ The writeUInt32 method.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| value | <code>any</code> | The value param. |
+| value | <code>number</code> | The value param. |
 
 <a name="BinWriter+writeSInt32"></a>
 
@@ -122,7 +122,7 @@ The writeSInt32 method.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| value | <code>any</code> | The value param. |
+| value | <code>number</code> | The value param. |
 
 <a name="BinWriter+writeFloat16"></a>
 
@@ -133,7 +133,7 @@ The writeFloat16 method.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| value | <code>any</code> | The value param. |
+| value | <code>number</code> | The value param. |
 
 <a name="BinWriter+writeFloat32"></a>
 
@@ -144,7 +144,7 @@ The writeFloat32 method.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| value | <code>any</code> | The value param. |
+| value | <code>number</code> | The value param. |
 
 <a name="BinWriter+writeUInt8Array"></a>
 
@@ -155,7 +155,7 @@ The writeUInt8Array method.
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| value | <code>any</code> |  | The value param. |
+| value | <code>Uint8Array</code> |  | The value param. |
 | writeSize | <code>boolean</code> | <code>true</code> | The writeSize value. |
 
 <a name="BinWriter+writeUInt16Array"></a>
@@ -167,7 +167,7 @@ The writeUInt16Array method.
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| value | <code>any</code> |  | The value param. |
+| value | <code>array</code> |  | The value param. |
 | writeSize | <code>boolean</code> | <code>true</code> | The writeSize value. |
 
 <a name="BinWriter+writeUInt32Array"></a>
@@ -179,7 +179,7 @@ The writeUInt32Array method.
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| value | <code>any</code> |  | The value param. |
+| value | <code>Uint32Array</code> |  | The value param. |
 | writeSize | <code>boolean</code> | <code>true</code> | The writeSize value. |
 
 <a name="BinWriter+writeFloat32Array"></a>
@@ -191,7 +191,7 @@ The writeFloat32Array method.
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| value | <code>any</code> |  | The value param. |
+| value | <code>Float32Array</code> |  | The value param. |
 | writeSize | <code>boolean</code> | <code>true</code> | The writeSize value. |
 
 <a name="BinWriter+writeStr"></a>
@@ -203,7 +203,7 @@ The writeStr method.
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| str | <code>any</code> |  | The str value. |
+| str | <code>string</code> |  | The str value. |
 | writeSize | <code>boolean</code> | <code>true</code> | The writeSize value. |
 
 <a name="BinWriter+writeSInt32Vec2"></a>
@@ -369,7 +369,7 @@ The writePadd method.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| size | <code>any</code> | The size value. |
+| size | <code>number</code> | The size value. |
 
 <a name="BinWriter+writeAlignment"></a>
 
@@ -380,5 +380,5 @@ The writeAlignment method.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| numBytes | <code>any</code> | The numBytes value. |
+| numBytes | <code>number</code> | The numBytes value. |
 

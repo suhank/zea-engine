@@ -1,6 +1,10 @@
+/* eslint-disable camelcase */
+/* eslint-disable no-unused-vars */
 import { Vec2, Vec3, Quat, Color, Box2, Box3 } from '../Math/index'
 
-/** Class representing a bin writer. */
+/**
+ * Writes `TypedArray` types in binary using a specific encoding.
+ */
 class BinWriter {
   /**
    * Create a bin writer.
@@ -15,7 +19,7 @@ class BinWriter {
 
   /**
    * The pos method.
-   * @return {any} - The return value.
+   * @return {number} - The return value.
    */
   pos() {
     return this.__byteOffset
@@ -66,7 +70,7 @@ class BinWriter {
 
   /**
    * The __reserve method.
-   * @param {any} offset - The offset value.
+   * @param {number} offset - The offset value.
    * @private
    */
   __reserve(offset) {
@@ -77,7 +81,7 @@ class BinWriter {
 
   /**
    * The __offset method.
-   * @param {any} byteCount - The byteCount value.
+   * @param {number} byteCount - The byteCount value.
    * @private
    */
   __offset(byteCount) {
@@ -89,7 +93,7 @@ class BinWriter {
 
   /**
    * The writeUInt8 method.
-   * @param {any} value - The value param.
+   * @param {number} value - The value param.
    */
   writeUInt8(value) {
     this.__reserve(1)
@@ -99,7 +103,7 @@ class BinWriter {
 
   /**
    * The writeUInt16 method.
-   * @param {any} value - The value param.
+   * @param {number} value - The value param.
    */
   writeUInt16(value) {
     this.__reserve(2)
@@ -109,7 +113,7 @@ class BinWriter {
 
   /**
    * The writeUInt32 method.
-   * @param {any} value - The value param.
+   * @param {number} value - The value param.
    */
   writeUInt32(value) {
     this.__reserve(4)
@@ -119,7 +123,7 @@ class BinWriter {
 
   /**
    * The writeSInt32 method.
-   * @param {any} value - The value param.
+   * @param {number} value - The value param.
    */
   writeSInt32(value) {
     this.__reserve(4)
@@ -129,7 +133,7 @@ class BinWriter {
 
   /**
    * The writeFloat16 method.
-   * @param {any} value - The value param.
+   * @param {number} value - The value param.
    */
   writeFloat16(value) {
     const uint16 = Math.encode16BitFloat(value)
@@ -138,7 +142,7 @@ class BinWriter {
 
   /**
    * The writeFloat32 method.
-   * @param {any} value - The value param.
+   * @param {number} value - The value param.
    */
   writeFloat32(value) {
     this.__reserve(4)
@@ -148,7 +152,7 @@ class BinWriter {
 
   /**
    * The writeUInt8Array method.
-   * @param {any} value - The value param.
+   * @param {Uint8Array} value - The value param.
    * @param {boolean} writeSize - The writeSize value.
    */
   writeUInt8Array(value, writeSize = true) {
@@ -162,7 +166,7 @@ class BinWriter {
 
   /**
    * The writeUInt16Array method.
-   * @param {any} value - The value param.
+   * @param {array} value - The value param.
    * @param {boolean} writeSize - The writeSize value.
    */
   writeUInt16Array(value, writeSize = true) {
@@ -176,7 +180,7 @@ class BinWriter {
 
   /**
    * The writeUInt32Array method.
-   * @param {any} value - The value param.
+   * @param {Uint32Array} value - The value param.
    * @param {boolean} writeSize - The writeSize value.
    */
   writeUInt32Array(value, writeSize = true) {
@@ -190,7 +194,7 @@ class BinWriter {
 
   /**
    * The writeFloat32Array method.
-   * @param {any} value - The value param.
+   * @param {Float32Array} value - The value param.
    * @param {boolean} writeSize - The writeSize value.
    */
   writeFloat32Array(value, writeSize = true) {
@@ -204,7 +208,7 @@ class BinWriter {
 
   /**
    * The writeStr method.
-   * @param {any} str - The str value.
+   * @param {string} str - The str value.
    * @param {boolean} writeSize - The writeSize value.
    */
   writeStr(str, writeSize = true) {
@@ -356,7 +360,7 @@ class BinWriter {
 
   /**
    * The writePadd method.
-   * @param {any} size - The size value.
+   * @param {number} size - The size value.
    */
   writePadd(size) {
     const bytes = size - this.__byteOffset
@@ -366,7 +370,7 @@ class BinWriter {
 
   /**
    * The writeAlignment method.
-   * @param {any} numBytes - The numBytes value.
+   * @param {number} numBytes - The numBytes value.
    */
   writeAlignment(numBytes) {
     const bytes = this.__byteOffset % numBytes

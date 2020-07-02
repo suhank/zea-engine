@@ -1,7 +1,7 @@
 <a name="BinReader"></a>
 
 ### BinReader
-Class representing a bin reader.
+Reads binary data in a specific encoding.
 
 
 
@@ -23,11 +23,11 @@ Class representing a bin reader.
     * [loadFloat16From2xUInt8() ⇒ <code>number</code>](#loadFloat16From2xUInt8)
     * [loadUInt32From2xUFloat16() ⇒ <code>number</code>](#loadUInt32From2xUFloat16)
     * [loadSInt32From2xFloat16() ⇒ <code>number</code>](#loadSInt32From2xFloat16)
-    * [loadFloat32() ⇒ <code>any</code>](#loadFloat32)
-    * [loadUInt8Array(size, clone) ⇒ <code>any</code>](#loadUInt8Array)
-    * [loadUInt16Array(size, clone) ⇒ <code>any</code>](#loadUInt16Array)
-    * [loadUInt32Array(size, clone) ⇒ <code>any</code>](#loadUInt32Array)
-    * [loadFloat32Array(size, clone) ⇒ <code>any</code>](#loadFloat32Array)
+    * [loadFloat32() ⇒ <code>number</code>](#loadFloat32)
+    * [loadUInt8Array(size, clone) ⇒ <code>Uint8Array</code>](#loadUInt8Array)
+    * [loadUInt16Array(size, clone) ⇒ <code>Uint16Array</code>](#loadUInt16Array)
+    * [loadUInt32Array(size, clone) ⇒ <code>Uint32Array</code>](#loadUInt32Array)
+    * [loadFloat32Array(size, clone) ⇒ <code>Float32Array</code>](#loadFloat32Array)
     * [loadStr() ⇒ <code>string</code>](#loadStr)
     * [loadStrArray() ⇒ <code>Array</code>](#loadStrArray)
     * [loadSInt32Vec2() ⇒ <code>Vec2</code>](#loadSInt32Vec2)
@@ -61,42 +61,42 @@ Create a bin reader.
 <a name="BinReader+isMobileDevice"></a>
 
 ### isMobileDevice 
-Getter for isMobileDevice.
+Returns state of whether or not the `BinReader` object was instanciated from a mobile device.
 
 
 **Returns**: <code>Boolean</code> - - Returns true is a mobile device is detected.  
 <a name="BinReader+data"></a>
 
 ### data 
-Getter for data.
+Returns the data buffer we're reading from.
 
 
 **Returns**: <code>Buffer</code> - - The data buffer we are reading from,  
 <a name="BinReader+byteLength"></a>
 
 ### byteLength 
-Getter for byteLength.
+Returns the length of the buffer.
 
 
 **Returns**: <code>number</code> - - The total length of the buffer  
 <a name="BinReader+remainingByteLength"></a>
 
 ### remainingByteLength 
-Getter for remainingByteLength.
+Returns remaining length of the buffer to read.
 
 
 **Returns**: <code>number</code> - - The reemaining length of the buffer to read.  
 <a name="BinReader+pos"></a>
 
 ### pos
-The pos method.
+Returns current byte offset in the buffer.
 
 
 **Returns**: <code>number</code> - - The current offset in the binary buffer  
 <a name="BinReader+seek"></a>
 
 ### seek
-The seek method.
+Sets the byte offset value.
 
 
 
@@ -107,7 +107,7 @@ The seek method.
 <a name="BinReader+advance"></a>
 
 ### advance
-The advance method.
+Adds offset bytes to current offset value.
 
 
 
@@ -118,80 +118,90 @@ The advance method.
 <a name="BinReader+loadUInt8"></a>
 
 ### loadUInt8
-The loadUInt8 method.
+Returns the unsigned Uint8 value at current byte offset position,
+and adds one byte to the offset.
 
 
 **Returns**: <code>number</code> - - The return value.  
 <a name="BinReader+loadUInt16"></a>
 
 ### loadUInt16
-The loadUInt16 method.
+Returns the unsigned Uint16 value at current byte offset position,
+and adds two bytes to the offset.
 
 
 **Returns**: <code>number</code> - - The return value.  
 <a name="BinReader+loadUInt32"></a>
 
 ### loadUInt32
-The loadUInt32 method.
+Returns the unsigned Uint32 value at current byte offset position,
+and adds four bytes to the offset.
 
 
 **Returns**: <code>number</code> - - The return value.  
 <a name="BinReader+loadSInt32"></a>
 
 ### loadSInt32
-The loadSInt32 method.
+Returns the signed Int32 value at current byte offset position,
+and adds four bytes to the offset.
 
 
 **Returns**: <code>number</code> - - The return value.  
 <a name="BinReader+loadFloat16"></a>
 
 ### loadFloat16
-The loadFloat16 method.
+Returns the Float16 value at current byte offset position,
+and adds four bytes to the offset.
 
 
 **Returns**: <code>number</code> - - The return value.  
 <a name="BinReader+loadUFloat16"></a>
 
 ### loadUFloat16
-The loadUFloat16 returns a float where the sign big indicates it is > 201.
+Returns the Float16 value at current byte offset position,
+and adds two bytes to the offset.
 
 
 **Returns**: <code>number</code> - - The return value.  
 <a name="BinReader+loadFloat16From2xUInt8"></a>
 
 ### loadFloat16From2xUInt8
-The loadFloat16From2xUInt8 method.
+Returns a single signed Float16 value at current byte offset position from 2 unsigned Int8 values,
+and adds two bytes to the offset.
 
 
 **Returns**: <code>number</code> - - The return value.  
 <a name="BinReader+loadUInt32From2xUFloat16"></a>
 
 ### loadUInt32From2xUFloat16
-The loadUInt32From2xUFloat16 loads a single Signed integer value from 2 Unsigned Float16 values.
+Loads and returns a single Signed integer value from 2 Unsigned Float16 values.
 
 
 **Returns**: <code>number</code> - - The return value.  
 <a name="BinReader+loadSInt32From2xFloat16"></a>
 
 ### loadSInt32From2xFloat16
-The loadSInt32From2xFloat16 loads a single Signed integer value from 2 signed Float16 values.
+Loads and returns a single Signed integer value from 2 signed Float16 values.
 
 
 **Returns**: <code>number</code> - - The return value.  
 <a name="BinReader+loadFloat32"></a>
 
 ### loadFloat32
-The loadFloat32 method.
+Returns the Float32 value at current byte offset position,
+and adds four bytes to the offset.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>number</code> - - The return value.  
 <a name="BinReader+loadUInt8Array"></a>
 
 ### loadUInt8Array
-The loadUInt8Array method.
+Reads buffer and return an unsinged Int8 array with the specified size,
+starting from current byte offset.<br>
+Byte offset is increased by the specified byte size.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>Uint8Array</code> - - The return value.  
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -201,10 +211,12 @@ The loadUInt8Array method.
 <a name="BinReader+loadUInt16Array"></a>
 
 ### loadUInt16Array
-The loadUInt16Array method.
+Reads buffer and return an unsinged Int16 array with the specified size,
+starting from current byte offset.<br>
+Byte offset is increased by the specified byte size x 2.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>Uint16Array</code> - - The return value.  
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -214,10 +226,12 @@ The loadUInt16Array method.
 <a name="BinReader+loadUInt32Array"></a>
 
 ### loadUInt32Array
-The loadUInt32Array method.
+Reads buffer and return an unsinged Int32 array with the specified size,
+starting from current byte offset.<br>
+Byte offset is increased by the specified byte size x 4.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>Uint32Array</code> - - The return value.  
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -227,10 +241,12 @@ The loadUInt32Array method.
 <a name="BinReader+loadFloat32Array"></a>
 
 ### loadFloat32Array
-The loadFloat32Array method.
+Reads buffer and return a Float32 array with the specified size,
+starting from current byte offset.<br>
+Byte offset is increased by the specified byte size x 4.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>Float32Array</code> - - The return value.  
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -240,112 +256,116 @@ The loadFloat32Array method.
 <a name="BinReader+loadStr"></a>
 
 ### loadStr
-The loadStr method.
+Returns next string.
+First looks for the string length description in the next four bytes in the buffer(Starting from byte offset).
 
 
 **Returns**: <code>string</code> - - The return value.  
 <a name="BinReader+loadStrArray"></a>
 
 ### loadStrArray
-The loadStrArray method.
+Returns an array of strings.
+First reading the size of the array then reading each string.
 
 
 **Returns**: <code>Array</code> - - The return value.  
 <a name="BinReader+loadSInt32Vec2"></a>
 
 ### loadSInt32Vec2
-The loadSInt32Vec2 method.
+Creates and returns a `Vec2` object with the next two signed Int32 values in the buffer.
 
 
 **Returns**: <code>Vec2</code> - - Returns a Vec2.  
 <a name="BinReader+loadUInt32Vec2"></a>
 
 ### loadUInt32Vec2
-The loadUInt32Vec2 method.
+Creates and returns a `Vec2` object with the next two unsigned Int32 values in the buffer.
 
 
 **Returns**: <code>Vec2</code> - - Returns a Vec2.  
 <a name="BinReader+loadFloat16Vec2"></a>
 
 ### loadFloat16Vec2
-The loadFloat16Vec2 method.
+Creates and returns a `Vec2` object with the next two Float16 values in the buffer.
 
 
 **Returns**: <code>Vec2</code> - - Returns a Vec2.  
 <a name="BinReader+loadFloat32Vec2"></a>
 
 ### loadFloat32Vec2
-The loadFloat32Vec2 method.
+Creates and returns a `Vec2` object with the next two Float32 values in the buffer.
 
 
 **Returns**: <code>Vec2</code> - - Returns a Vec2.  
 <a name="BinReader+loadFloat16Vec3"></a>
 
 ### loadFloat16Vec3
-The loadFloat16Vec3 method.
+Creates and returns a `Vec3` object with the next three Float16 values in the buffer.
 
 
 **Returns**: <code>Vec3</code> - - Returns a Vec3.  
 <a name="BinReader+loadFloat32Vec3"></a>
 
 ### loadFloat32Vec3
-The loadFloat32Vec3 method.
+Creates and returns a `Vec3` object with the next three Float32 values in the buffer.
 
 
 **Returns**: <code>Vec3</code> - - Returns a Vec3.  
 <a name="BinReader+loadFloat16Quat"></a>
 
 ### loadFloat16Quat
-The loadFloat16Quat method.
+Creates and returns a `Quat` object with the next four Float16 values in the buffer.
 
 
 **Returns**: <code>Quat</code> - - Returns a Quat.  
 <a name="BinReader+loadFloat32Quat"></a>
 
 ### loadFloat32Quat
-The loadFloat32Quat method.
+Creates and returns a `Quat` object with the next four Float32 values in the buffer.
 
 
 **Returns**: <code>Quat</code> - - Returns a Quat.  
 <a name="BinReader+loadRGBFloat32Color"></a>
 
 ### loadRGBFloat32Color
-The loadRGBFloat32Color method.
+Creates and returns a `Color` object with the next three Float32 values in the buffer.
 
 
 **Returns**: <code>Color</code> - - Returns a Color.  
 <a name="BinReader+loadRGBAFloat32Color"></a>
 
 ### loadRGBAFloat32Color
-The loadRGBAFloat32Color method.
+Creates and returns a RGBA `Color` object with the next four Float32 values in the buffer.
 
 
 **Returns**: <code>Color</code> - - Returns a Color.  
 <a name="BinReader+loadRGBUInt8Color"></a>
 
 ### loadRGBUInt8Color
-The loadRGBUInt8Color method.
+Creates and returns a `Color` object with the next three unsigned Int8 values in the buffer.
 
 
 **Returns**: <code>Color</code> - - Returns a Color.  
 <a name="BinReader+loadRGBAUInt8Color"></a>
 
 ### loadRGBAUInt8Color
-The loadRGBAUInt8Color method.
+Creates and returns a RGBA `Color` object with the next four unsigned Int8 values in the buffer.
 
 
 **Returns**: <code>Color</code> - - Returns a Color.  
 <a name="BinReader+loadBox2"></a>
 
 ### loadBox2
-The loadBox2 method.
+Creates and returns a `Box2` object with the next four Float32 values in the buffer.
+Next four because it creates two Vec2.
 
 
 **Returns**: <code>Box2</code> - - Returns a Box2.  
 <a name="BinReader+loadBox3"></a>
 
 ### loadBox3
-The loadBox3 method.
+Creates and returns a `Box2` object with the next six Float32 values in the buffer.
+Next four because it creates two Vec3.
 
 
 **Returns**: <code>Box3</code> - - Returns a Box3.  
@@ -358,5 +378,5 @@ The readPadd method.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| stride | <code>any</code> | The stride param. |
+| stride | <code>number</code> | The stride param. |
 
