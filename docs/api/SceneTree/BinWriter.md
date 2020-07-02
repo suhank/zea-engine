@@ -52,14 +52,14 @@ Create a bin writer.
 <a name="BinWriter+pos"></a>
 
 ### pos
-The pos method.
+Returns the byte offset possition.
 
 
 **Returns**: <code>number</code> - - The return value.  
 <a name="BinWriter+seek"></a>
 
 ### seek
-The seek method.
+Sets byte offset value.
 
 
 
@@ -76,14 +76,14 @@ The seekEnd method.
 <a name="BinWriter+getBuffer"></a>
 
 ### getBuffer
-The getBuffer method.
+Returns written buffer data to current point.
 
 
 **Returns**: <code>ArrayBuffer</code> - - Returns an array buffer.  
 <a name="BinWriter+writeUInt8"></a>
 
 ### writeUInt8
-The writeUInt8 method.
+Writes an unsigned Int8 value in current byte offset.
 
 
 
@@ -94,7 +94,7 @@ The writeUInt8 method.
 <a name="BinWriter+writeUInt16"></a>
 
 ### writeUInt16
-The writeUInt16 method.
+Writes an unsigned Int16 value in current byte offset.
 
 
 
@@ -105,7 +105,7 @@ The writeUInt16 method.
 <a name="BinWriter+writeUInt32"></a>
 
 ### writeUInt32
-The writeUInt32 method.
+Writes an unsigned Int32 value in current byte offset.
 
 
 
@@ -116,7 +116,7 @@ The writeUInt32 method.
 <a name="BinWriter+writeSInt32"></a>
 
 ### writeSInt32
-The writeSInt32 method.
+Writes a signed Int32 value in current byte offset.
 
 
 
@@ -127,7 +127,7 @@ The writeSInt32 method.
 <a name="BinWriter+writeFloat16"></a>
 
 ### writeFloat16
-The writeFloat16 method.
+Writes a Float16 value in current byte offset.
 
 
 
@@ -138,7 +138,7 @@ The writeFloat16 method.
 <a name="BinWriter+writeFloat32"></a>
 
 ### writeFloat32
-The writeFloat32 method.
+Writes a Float32 value in current byte offset.
 
 
 
@@ -149,7 +149,7 @@ The writeFloat32 method.
 <a name="BinWriter+writeUInt8Array"></a>
 
 ### writeUInt8Array
-The writeUInt8Array method.
+Writes an unsigned Int8 array value from current byte offset.
 
 
 
@@ -161,7 +161,7 @@ The writeUInt8Array method.
 <a name="BinWriter+writeUInt16Array"></a>
 
 ### writeUInt16Array
-The writeUInt16Array method.
+Writes an unsigned Int16 array value from current byte offset.
 
 
 
@@ -173,7 +173,7 @@ The writeUInt16Array method.
 <a name="BinWriter+writeUInt32Array"></a>
 
 ### writeUInt32Array
-The writeUInt32Array method.
+Writes an unsigned Int32 array value from current byte offset.
 
 
 
@@ -185,7 +185,7 @@ The writeUInt32Array method.
 <a name="BinWriter+writeFloat32Array"></a>
 
 ### writeFloat32Array
-The writeFloat32Array method.
+Writes a Float32 array value from current byte offset.
 
 
 
@@ -197,7 +197,7 @@ The writeFloat32Array method.
 <a name="BinWriter+writeStr"></a>
 
 ### writeStr
-The writeStr method.
+Writes string value in current position, first writing an unsigned Int32 describing its length, then adding the string in Float32 values.
 
 
 
@@ -209,7 +209,7 @@ The writeStr method.
 <a name="BinWriter+writeSInt32Vec2"></a>
 
 ### writeSInt32Vec2
-The writeSInt32Vec2 method.
+Writes a `Vec2` in the buffer using signed Int32 values(In `x,y` order).
 
 
 
@@ -220,7 +220,7 @@ The writeSInt32Vec2 method.
 <a name="BinWriter+writeUInt32Vec2"></a>
 
 ### writeUInt32Vec2
-The writeUInt32Vec2 method.
+Writes a `Vec2` in the buffer using unsigned Int32 values(In `x,y` order).
 
 
 
@@ -231,7 +231,7 @@ The writeUInt32Vec2 method.
 <a name="BinWriter+writeFloat16Vec2"></a>
 
 ### writeFloat16Vec2
-The writeFloat16Vec2 method.
+Writes a `Vec2` in the buffer using Float16 values(In `x,y` order).
 
 
 
@@ -242,7 +242,7 @@ The writeFloat16Vec2 method.
 <a name="BinWriter+writeFloat32Vec2"></a>
 
 ### writeFloat32Vec2
-The writeFloat32Vec2 method.
+Writes a `Vec2` in the buffer using Float32 values(In `x,y` order).
 
 
 
@@ -253,7 +253,7 @@ The writeFloat32Vec2 method.
 <a name="BinWriter+writeFloat16Vec3"></a>
 
 ### writeFloat16Vec3
-The writeFloat16Vec3 method.
+Writes a `Vec3` in the buffer using Float16 values(In `x,y,z` order).
 
 
 
@@ -264,7 +264,7 @@ The writeFloat16Vec3 method.
 <a name="BinWriter+writeFloat32Vec3"></a>
 
 ### writeFloat32Vec3
-The writeFloat32Vec3 method.
+Writes a `Vec3` in the buffer using Float32 values(In `x,y,z` order).
 
 
 
@@ -275,7 +275,7 @@ The writeFloat32Vec3 method.
 <a name="BinWriter+writeFloat16Quat"></a>
 
 ### writeFloat16Quat
-The writeFloat16Quat method.
+Writes a `Quat` in the buffer using Float16 values(In `x,y,z,w` order).
 
 
 
@@ -286,7 +286,7 @@ The writeFloat16Quat method.
 <a name="BinWriter+writeFloat32Quat"></a>
 
 ### writeFloat32Quat
-The writeFloat32Quat method.
+Writes a `Quat` in the buffer using Float32 values(In `x,y,z,w` order).
 
 
 
@@ -297,7 +297,7 @@ The writeFloat32Quat method.
 <a name="BinWriter+writeRGBFloat32Color"></a>
 
 ### writeRGBFloat32Color
-The writeRGBFloat32Color method.
+Writes a RGB `Color` in the buffer using Float32 values(In `r,g,b` order).
 
 
 
@@ -308,7 +308,7 @@ The writeRGBFloat32Color method.
 <a name="BinWriter+writeRGBAFloat32Color"></a>
 
 ### writeRGBAFloat32Color
-The writeRGBAFloat32Color method.
+Writes a RGBA `Color` in the buffer using Float32 values(In `r,g,b,a` order).
 
 
 
@@ -319,7 +319,7 @@ The writeRGBAFloat32Color method.
 <a name="BinWriter+writeRGBUInt8Color"></a>
 
 ### writeRGBUInt8Color
-The writeRGBUInt8Color method.
+Writes a RGB `Color` in the buffer using unsigned Int8 values(In `r,g,b` order).
 
 
 
@@ -330,7 +330,7 @@ The writeRGBUInt8Color method.
 <a name="BinWriter+writeRGBAUInt8Color"></a>
 
 ### writeRGBAUInt8Color
-The writeRGBAUInt8Color method.
+Writes a RGBA `Color` in the buffer using unsigned Int8 values(In `r,g,b,a` order).
 
 
 
@@ -341,7 +341,7 @@ The writeRGBAUInt8Color method.
 <a name="BinWriter+writeBox2"></a>
 
 ### writeBox2
-The writeBox2 method.
+Writes a `Box2` in the buffer using Floar32 values(In `p0,p1` order).
 
 
 
@@ -352,7 +352,7 @@ The writeBox2 method.
 <a name="BinWriter+writeBox3"></a>
 
 ### writeBox3
-The writeBox3 method.
+Writes a `Box3` in the buffer using Floar32 values(In `p0,p1` order).
 
 
 
