@@ -52,7 +52,7 @@ Create a bin writer.
 <a name="BinWriter+pos"></a>
 
 ### pos
-Returns the byte offset possition.
+Returns the byte offset position.
 
 
 **Returns**: <code>number</code> - - The return value.  

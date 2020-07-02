@@ -18,7 +18,7 @@ class BinWriter {
   }
 
   /**
-   * Returns the byte offset possition.
+   * Returns the byte offset position.
    *
    * @return {number} - The return value.
    */

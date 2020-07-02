@@ -14,7 +14,7 @@ const ValueGetMode = {
 const ValueSetMode = {
   USER_SETVALUE: 0 /* A value has being modified by a local user. emit events and set user edited flag */,
   REMOTEUSER_SETVALUE: 1 /* A value has being modified by a remote user. emit events and set user edited flag. may not trigger file save. */,
-  USER_SETVALUE_DONE: 2 /* A value has finished being interactivly set */,
+  USER_SETVALUE_DONE: 2 /* A value has finished being interactively set */,
   OPERATOR_SETVALUE: 3 /* No events*/,
   OPERATOR_DIRTIED: 4 /* Emitted when the param is dirtied. Generate events, but don't flag the parameter as user edited*/,
   COMPUTED_VALUE: 4 /* Generate events, but don't flag the parameter as user edited*/,
@@ -32,7 +32,12 @@ const ParamState = {
   CLEANING: 2,
 }
 
-/** Class representing a base parameter.
+/**
+ * Represents a reactive type of attribute that can be owned by a `ParameterOwner` class.
+ *
+ * **Events**
+ * * **nameChanged:** Triggered when the name of the parameter changes.
+ * * **valueChanged:** Triggered when the value of the parameter changes.
  */
 class BaseParameter extends EventEmitter {
   /**
@@ -54,7 +59,8 @@ class BaseParameter extends EventEmitter {
   }
 
   /**
-   * Getter for the base parameter name.
+   * Returns specified name of the parameter.
+   *
    * @return {string} - Returns the name.
    */
   getName() {
@@ -62,36 +68,41 @@ class BaseParameter extends EventEmitter {
   }
 
   /**
-   * Setter for the base parameter name.
+   * Sets the name of the current parameter.
+   *
    * @param {string} name - The base parameter name.
    */
   setName(name) {
     if (name != this.__name) {
       const prevName = this.__name
       this.__name = name
-      this.emit('nameChanged', { mode:this.__name }, prevName)
+      this.emit('nameChanged', { mode: this.__name, prevName })
     }
   }
 
   /**
-   * Getter for the owner of the parameter.
-   * @return {any} - The return value.
+   * Returns the owner item of the current parameter.
+   *
+   * @return {ParameterOwner} - The return value.
    */
   getOwner() {
     return this.ownerItem
   }
 
   /**
-   * Sets the owner of the parameter.
-   * @param {any} ownerItem - The ownerItem value.
+   * Sets the owner item of the current parameter.
+   *
+   * @param {ParameterOwner} ownerItem - The ownerItem value.
    */
   setOwner(ownerItem) {
     this.ownerItem = ownerItem
   }
 
   /**
-   * Getter for the parameter path.
-   * @return {any} - The return value.
+   * Returns the parameter's path as an array of strings.
+   * Includes owner's path in case it is owned by a `ParameterOwner`.
+   *
+   * @return {array} - The return value.
    */
   getPath() {
     const owner = this.getOwner()
@@ -109,6 +120,7 @@ class BaseParameter extends EventEmitter {
 
   /**
    * The setFlag method.
+   * @private
    * @param {number} flag - The flag value.
    */
   setFlag(flag) {
@@ -117,6 +129,7 @@ class BaseParameter extends EventEmitter {
 
   /**
    * The clearFlag method.
+   * @private
    * @param {number} flag - The flag value.
    */
   clearFlag(flag) {
@@ -125,6 +138,8 @@ class BaseParameter extends EventEmitter {
 
   /**
    * Returns true if the flag if set, otherwise returns false.
+   *
+   * @private
    * @param {number} flag - The flag to test.
    * @return {boolean} - Returns a boolean indicating if the flag is set.
    */
@@ -134,24 +149,32 @@ class BaseParameter extends EventEmitter {
 
   /**
    * The getValue method (TODO).
+   *
+   * @private
    */
   getValue() {
     // TODO
+    console.warn('@todo-review')
   }
 
   /**
    * The getValue method (TODO).
-   * @param {any} value - The value param.
+   *
+   * @private
+   * @param {object|string|number|any} value - The value param.
    */
   setValue(value) {
-    // TODO
+    console.warn('@todo-review')
   }
 
   /**
    * The setEnabled method.
-   * @param {any} state - The state value.
+   * @deprecated
+   * @private
+   * @param {object|string|number|any} state - The state value.
    */
   setEnabled(state) {
+    console.warn('@todo-review')
     console.warn('Deprecated Method: This method will be removed soon.')
     if (state) this.setFlag(ParamFlags.DISABLED)
     else this.clearFlag(ParamFlags.DISABLED)
@@ -159,14 +182,18 @@ class BaseParameter extends EventEmitter {
 
   /**
    * The isEnabled method.
+   * @deprecated
+   * @private
    */
   isEnabled() {
+    console.warn('@todo-review')
     console.warn('Deprecated Method: This method will be removed soon.')
     this.testFlag(ParamFlags.DISABLED)
   }
 
   /**
    * The bindOperator method.
+   *
    * @param {Operator} op - The cleanerFn value.
    */
   bindOperator(op) {
@@ -177,6 +204,7 @@ class BaseParameter extends EventEmitter {
 
   /**
    * The unbindOperator method.
+   *
    * @param {Operator} op - The cleanerFn value.
    * @return {boolean} - The return value.
    */
@@ -193,7 +221,9 @@ class BaseParameter extends EventEmitter {
 
   /**
    * The setDirty method.
-   * @param {any} cleanerFn - The cleanerFn value.
+   *
+   * @private
+   * @param {function} cleanerFn - The cleanerFn value.
    * @return {boolean} - The return value.
    */
   setDirty(cleanerFn) {
@@ -210,6 +240,8 @@ class BaseParameter extends EventEmitter {
 
   /**
    * The setDirtyFromOp method.
+   *
+   * @return {boolean}
    */
   setDirtyFromOp() {
     // As we migrate to bound ops, we will no longer call store
@@ -223,6 +255,8 @@ class BaseParameter extends EventEmitter {
 
   /**
    * The isDirty method.
+   *
+   * @private
    * @return {boolean} - Returns a boolean.
    */
   isDirty() {
@@ -258,7 +292,7 @@ class BaseParameter extends EventEmitter {
 
   /**
    * The removeCleanerFn method.
-   * @param {any} cleanerFn - The cleanerFn value.
+   * @param {function} cleanerFn - The cleanerFn value.
    * @return {number} - The return value.
    */
   removeCleanerFn(cleanerFn) {
@@ -283,6 +317,7 @@ class BaseParameter extends EventEmitter {
    * @param {number} flags - The flags value.
    */
   clone(flags) {
+    console.warn('@todo-review')
     console.error('TOOD: implment me')
   }
 
@@ -293,6 +328,7 @@ class BaseParameter extends EventEmitter {
     // Note: Some parameters hold refs to geoms/materials,
     // which need to be explicitly cleaned up.
     // E.g. freeing GPU Memory.
+    console.warn('@todo-review')
   }
 }
 
@@ -326,8 +362,7 @@ class Parameter extends BaseParameter {
    * @return {any} - The return value.
    */
   getValue(mode = ValueGetMode.NORMAL) {
-    if (/*mode == ValueGetMode.NORMAL && */ this.__state == ParamState.DIRTY)
-      this._clean()
+    if (/* mode == ValueGetMode.NORMAL && */ this.__state == ParamState.DIRTY) this._clean()
     return this.__value
   }
 
@@ -361,7 +396,7 @@ class Parameter extends BaseParameter {
 
     if (value == undefined) {
       // eslint-disable-next-line no-throw-literal
-      throw ("undefined was passed into the setvalue for param:" + this.getName())
+      throw 'undefined was passed into the setvalue for param:' + this.getName()
     }
 
     if (!value.fromJSON) {
@@ -369,10 +404,7 @@ class Parameter extends BaseParameter {
       if (this.__value == value) return
     }
     this.__value = value
-    if (
-      mode == ValueSetMode.USER_SETVALUE ||
-      mode == ValueSetMode.REMOTEUSER_SETVALUE
-    ) {
+    if (mode == ValueSetMode.USER_SETVALUE || mode == ValueSetMode.REMOTEUSER_SETVALUE) {
       this.setFlag(ParamFlags.USER_EDITED)
     }
 
@@ -403,8 +435,7 @@ class Parameter extends BaseParameter {
    * @return {object} - Returns the json object.
    */
   toJSON(context, flags) {
-    if (this.__value.toJSON)
-      return { value: this.__value.toJSON(context, flags) }
+    if (this.__value.toJSON) return { value: this.__value.toJSON(context, flags) }
     else return { value: this.__value }
   }
 
@@ -426,8 +457,7 @@ class Parameter extends BaseParameter {
     if (j.value.type && this.__value == undefined) {
       this.__value = sgFactory.constructClass(j.value.type)
     }
-    if (this.__value == undefined || !this.__value.fromJSON)
-      this.setValue(j.value, ValueSetMode.DATA_LOAD)
+    if (this.__value == undefined || !this.__value.fromJSON) this.setValue(j.value, ValueSetMode.DATA_LOAD)
     else {
       this.__value.fromJSON(j.value, context)
       this.emit('valueChanged', { mode: ValueSetMode.DATA_LOAD })
