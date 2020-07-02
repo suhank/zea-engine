@@ -5,11 +5,11 @@ Class designed to load and handle `.obj` files.
 Which define the grometry and other properties for objects.
 
 **Parameters**
-* **splitObjects(`BooleanParameter`):**
-* **splitGroupsIntoObjects(`BooleanParameter`):**
-* **loadMtlFile(`BooleanParameter`):**
-* **unitsConversion(`NumberParameter`):**
-* **defaultShader(`StringParameter`):**
+* **splitObjects(`BooleanParameter`):** _todo_
+* **splitGroupsIntoObjects(`BooleanParameter`):** _todo_
+* **loadMtlFile(`BooleanParameter`):** _todo_
+* **unitsConversion(`NumberParameter`):** _todo_
+* **defaultShader(`StringParameter`):** _todo_
 * **ObjFilePath(`FilePathParameter`):** Used to specify the path to the file.
 
 **Events**

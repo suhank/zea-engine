@@ -4,7 +4,7 @@
 Class representing an Item in the scene tree with hierarchy capabilities(has children).
 <br>
 <br>
-**Parameters:**
+**Parameters**
 * **Visible(`BooleanParameter`):** Shows/Hides the item.
 * **LocalXfo(`XfoParameter`):** _todo_
 * **GlobalXfo(`XfoParameter`):** _todo_

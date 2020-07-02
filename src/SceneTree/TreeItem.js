@@ -27,7 +27,7 @@ branchSelectionOutlineColor.a = 0.1
  * Class representing an Item in the scene tree with hierarchy capabilities(has children).
  * <br>
  * <br>
- * **Parameters:**
+ * **Parameters**
  * * **Visible(`BooleanParameter`):** Shows/Hides the item.
  * * **LocalXfo(`XfoParameter`):** _todo_
  * * **GlobalXfo(`XfoParameter`):** _todo_
@@ -43,6 +43,7 @@ branchSelectionOutlineColor.a = 0.1
  * * **mouseUp:** Emitted when a mouseUp event happens in an item.
  * * **mouseMove:** Emitted when a mouseMove event happens in an item.
  * * **mouseEnter:** Emitted when a mouseEnter event happens in an item.
+ *
  * @extends {BaseItem}
  */
 class TreeItem extends BaseItem {
