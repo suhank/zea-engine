@@ -6,9 +6,9 @@ Class representing an Item in the scene tree with hierarchy capabilities(has chi
 <br>
 **Parameters**
 * **Visible(`BooleanParameter`):** Shows/Hides the item.
-* **LocalXfo(`XfoParameter`):** _todo_
-* **GlobalXfo(`XfoParameter`):** _todo_
-* **BoundingBox(`BoundingBox`):** _todo_
+* **LocalXfo(`XfoParameter`):** Specifies the offset of this tree item from its parent.
+* **GlobalXfo(`XfoParameter`):** Provides the computed world Xfo of this tree item.
+* **BoundingBox(`BoundingBox`):** Provides the bounding box for the tree item and all of its children in the 3d scene.
 
 **Events**
 * **globalXfoChanged:** _todo_

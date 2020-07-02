@@ -9,7 +9,6 @@ Not only hosting parameters, but their events.
 
 * [ParameterOwner ⇐ <code>EventEmitter</code>](#ParameterOwner)
     * [new ParameterOwner()](#new-ParameterOwner)
-    * [getId() ⇒ <code>number</code>](#getId)
     * [numParameters() ⇒ <code>number</code>](#numParameters)
     * [getParameters() ⇒ <code>array</code>](#getParameters)
     * [getParameterIndex(paramName) ⇒ <code>number</code>](#getParameterIndex)
@@ -33,13 +32,6 @@ Creates an instance of ParameterOwner by initializing parameter hosting mappings
 <br>
 Every Object has a unique identifier which is based on a counter that is incremented.
 
-<a name="ParameterOwner+getId"></a>
-
-### getId
-Returns the unique id of the object.
-
-
-**Returns**: <code>number</code> - - The Id of the ParameterOwner object.  
 <a name="ParameterOwner+numParameters"></a>
 
 ### numParameters

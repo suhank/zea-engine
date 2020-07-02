@@ -1,8 +1,9 @@
 <a name="Vec3"></a>
 
 ### Vec3 
-Representing a Vec3(three-dimensional floating point vector).
-Vector classes in _zea-engine_ internally store values in [Float32Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array) and
+Represents a three dimensional coordinate, such as 3d scene values, or mesh vertex positions.
+
+Math types internally store values in [Float32Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array) and
 expose getters and setters for the component values.
 
 
@@ -72,21 +73,21 @@ You can also pass one JSON object parameter.
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| x | <code>number</code> | <code>0</code> | The x value. Default is 0. |
+| x | <code>Number</code> \| <code>Float32Array</code> \| <code>json</code> | <code>0</code> | The x value. Default is 0. |
 | y | <code>number</code> | <code>0</code> | The y value. Default is 0. |
 | z | <code>number</code> | <code>0</code> | The z value. Default is 0. |
 
 <a name="Vec3+x"></a>
 
 ### x 
-Getter for `x` value.
+Getter for `x` component.
 
 
-**Returns**: <code>number</code> - - Returns the x value.  
+**Returns**: <code>number</code> - - Returns the x component.  
 <a name="Vec3+x"></a>
 
 ### x
-Setter for `x` value.
+Setter for `x` component.
 
 
 
@@ -97,14 +98,14 @@ Setter for `x` value.
 <a name="Vec3+y"></a>
 
 ### y 
-Getter for `y` value.
+Getter for `y` component.
 
 
-**Returns**: <code>number</code> - - Returns the y value.  
+**Returns**: <code>number</code> - - Returns the y component.  
 <a name="Vec3+y"></a>
 
 ### y
-Setter for `y` value.
+Setter for `y` component.
 
 
 
@@ -115,14 +116,14 @@ Setter for `y` value.
 <a name="Vec3+z"></a>
 
 ### z 
-Getter for `z` value.
+Getter for `z` component.
 
 
-**Returns**: <code>number</code> - - Returns the z value.  
+**Returns**: <code>number</code> - - Returns the z component.  
 <a name="Vec3+z"></a>
 
 ### z
-Setter for `z` value.
+Setter for `z` component.
 
 
 
@@ -136,14 +137,14 @@ Setter for `z` value.
 Getter for `xy` swizzel.
 
 
-**Returns**: <code>Vec2</code> - - Returns the z value.  
+**Returns**: <code>Vec2</code> - - Returns the z component.  
 <a name="Vec3+yz"></a>
 
 ### yz 
 Getter for `yz` swizzel.
 
 
-**Returns**: <code>Vec2</code> - - Returns the z value.  
+**Returns**: <code>Vec2</code> - - Returns the z component.  
 <a name="Vec3+set"></a>
 
 ### set
@@ -153,9 +154,9 @@ Setter from scalar components.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| x | <code>number</code> | The x value. |
-| y | <code>number</code> | The y value. |
-| z | <code>number</code> | The y value. |
+| x | <code>number</code> | The x component. |
+| y | <code>number</code> | The y component. |
+| z | <code>number</code> | The y component. |
 
 <a name="Vec3+setDataArray"></a>
 

@@ -34,7 +34,7 @@ Clones this sphere and returns a new sphere.
 <a name="SphereType+intersectsBox"></a>
 
 ### intersectsBox
-Checks if this spehere intersects a box.
+Checks if this sphere intersects a box.
 
 
 **Returns**: <code>boolean</code> - - The return value.  

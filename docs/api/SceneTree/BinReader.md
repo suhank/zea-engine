@@ -1,7 +1,7 @@
 <a name="BinReader"></a>
 
 ### BinReader
-Reads binary data in a specific encoding.
+Reads binary data in a specific encoding. Used in loading binary data such as zcad files.
 
 
 

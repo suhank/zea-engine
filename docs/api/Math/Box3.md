@@ -1,7 +1,8 @@
 <a name="Box3"></a>
 
 ### Box3
-Represents a box in 3D space, needing two Vec3 vectors.
+Class representing a box in 3D space.
+Represents a box in 3D space defined by two Vec3 values which define opposing corners of the box.
 
 
 
