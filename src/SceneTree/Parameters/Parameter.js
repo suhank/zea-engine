@@ -332,15 +332,35 @@ class BaseParameter extends EventEmitter {
   }
 }
 
-/** Class representing a parameter.
+/**
+ * Represents a reactive type of attribute that can be owned by a `ParameterOwner` class.
+ * Plus the holding the parameter name and value, it also stores its data type,
+ * which is an addition for persistence capability.
+ *
  * @extends BaseParameter
  */
 class Parameter extends BaseParameter {
   /**
-   * Create a parameter.
+   * When initializing a new parameter, the passed in value could be anything.
+   * If it is a new type of value, just ensure you register it in the `SGFactory`.
+   *
+   * How to use it:
+   *
+   * ```javascript
+   *  // Creating a parameter object
+   *  const param = new Parameter('Title', 'Awesome Parameter', 'String')
+   *
+   *   // Capturing events
+   *  param.on('valueChanged', (...params) => console.log('Value changed!'))
+   *
+   *  // Changing parameter's value will cause `valueChanged` event to trigger.
+   *  param.setValue('A New Awesome Parameter')
+   *  // As result the console log code will execute: Value Changed!
+   * ```
+   *
    * @param {string} name - The name of the parameter.
-   * @param {any} value - The value of the parameter.
-   * @param {any} dataType - The data type of the parameter.
+   * @param {object|string|number|any} value - The value of the parameter.
+   * @param {string} dataType - The data type of the parameter.
    */
   constructor(name, value, dataType) {
     super(name)
@@ -349,17 +369,19 @@ class Parameter extends BaseParameter {
   }
 
   /**
-   * The getDataType method.
-   * @return {any} - The return value.
+   * Returns parameter's data type.
+   *
+   * @return {string} - The return value.
    */
   getDataType() {
     return this.__dataType
   }
 
   /**
-   * The getValue method.
+   * Returns parameter's value.
+   *
    * @param {number} mode - The mode value.
-   * @return {any} - The return value.
+   * @return {object|string|number|any} - The return value.
    */
   getValue(mode = ValueGetMode.NORMAL) {
     if (/* mode == ValueGetMode.NORMAL && */ this.__state == ParamState.DIRTY) this._clean()
@@ -367,16 +389,18 @@ class Parameter extends BaseParameter {
   }
 
   /**
-   * The setClean method.
-   * @param {any} value - The value param.
+   * Sets parameter's value directly.
+   *
+   * @param {object|string|number|any} value - The value param.
    */
   setClean(value) {
     this.__value = value
   }
 
   /**
-   * The getValue method.
-   * @param {any} value - The value param.
+   * Sets parameter's value, but runs a few internal cleaning processes.
+   *
+   * @param {object|string|number|any} value - The value param.
    * @param {number} mode - The mode param.
    */
   setValue(value, mode = ValueSetMode.USER_SETVALUE) {
@@ -396,7 +420,7 @@ class Parameter extends BaseParameter {
 
     if (value == undefined) {
       // eslint-disable-next-line no-throw-literal
-      throw 'undefined was passed into the setvalue for param:' + this.getName()
+      throw 'undefined was passed into the set value for param:' + this.getName()
     }
 
     if (!value.fromJSON) {
@@ -418,8 +442,6 @@ class Parameter extends BaseParameter {
    * this method should be called to notify that that interaction is complete
    * Code can listed to this event to trigger longer running actions like
    * saving a file or heavy computation.
-   * @param {any} value - The value param.
-   * @param {any} mode - The mode param.
    */
   setValueDone() {
     this.emit('valueChanged', { mode: ValueSetMode.USER_SETVALUE_DONE })
@@ -429,7 +451,8 @@ class Parameter extends BaseParameter {
   // Persistence
 
   /**
-   * The toJSON method encodes this type as a json object for persistences.
+   * The toJSON method encodes this type as a json object for persistence.
+   *
    * @param {object} context - The context value.
    * @param {number} flags - The flags value.
    * @return {object} - Returns the json object.
@@ -441,6 +464,7 @@ class Parameter extends BaseParameter {
 
   /**
    * The fromJSON method decodes a json object for this type.
+   *
    * @param {object} j - The json object this item must decode.
    * @param {object} context - The context value.
    * @param {number} flags - The flags value.
@@ -466,10 +490,13 @@ class Parameter extends BaseParameter {
 
   /**
    * The readBinary method.
+   *
+   * @private
    * @param {object} reader - The reader value.
    * @param {object} context - The context value.
    */
   readBinary(reader, context) {
+    console.warn('@todo-review')
     console.error('TODO')
   }
 
@@ -479,6 +506,7 @@ class Parameter extends BaseParameter {
   /**
    * The clone method constructs a new parameter, copies its values
    * from this parameter and returns it.
+   *
    * @param {number} flags - The flags value.
    * @return {Parameter} - Returns a new cloned parameter.
    */

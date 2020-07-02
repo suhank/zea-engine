@@ -10,7 +10,9 @@
 </ul>
 </dd>
 <dt><a href="#Parameter">Parameter</a> ⇐ <code><a href="#BaseParameter">BaseParameter</a></code></dt>
-<dd><p>Class representing a parameter.</p>
+<dd><p>Represents a reactive type of attribute that can be owned by a <code>ParameterOwner</code> class.
+Plus the holding the parameter name and value, it also stores its data type,
+which is an addition for persistence capability.</p>
 </dd>
 </dl>
 
@@ -154,21 +156,22 @@ The destroy method.
 <a name="Parameter"></a>
 
 ### Parameter 
-Class representing a parameter.
+Represents a reactive type of attribute that can be owned by a `ParameterOwner` class.
+Plus the holding the parameter name and value, it also stores its data type,
+which is an addition for persistence capability.
 
 
 **Extends**: [<code>BaseParameter</code>](#BaseParameter)  
 
 * [Parameter](#Parameter)
     * [new Parameter(name, value, dataType)](#new-Parameter)
-    * [getDataType() ⇒ <code>any</code>](#getDataType)
-    * [getValue(mode) ⇒ <code>any</code>](#getValue)
+    * [getDataType() ⇒ <code>string</code>](#getDataType)
+    * [getValue(mode) ⇒ <code>object</code> \| <code>string</code> \| <code>number</code> \| <code>any</code>](#getValue)
     * [setClean(value)](#setClean)
     * [setValue(value, mode)](#setValue)
-    * [setValueDone(value, mode)](#setValueDone)
+    * [setValueDone()](#setValueDone)
     * [toJSON(context, flags) ⇒ <code>object</code>](#toJSON)
     * [fromJSON(j, context, flags)](#fromJSON)
-    * [readBinary(reader, context)](#readBinary)
     * [clone(flags)](#clone)
     * [getName() ⇒ <code>string</code>](#getName)
     * [setName(name)](#setName)
@@ -184,30 +187,45 @@ Class representing a parameter.
 <a name="new_Parameter_new"></a>
 
 ### new Parameter
-Create a parameter.
+When initializing a new parameter, the passed in value could be anything.
+If it is a new type of value, just ensure you register it in the `SGFactory`.
+
+How to use it:
+
+```javascript
+ // Creating a parameter object
+ const param = new Parameter('Title', 'Awesome Parameter', 'String')
+
+  // Capturing events
+ param.on('valueChanged', (...params) => console.log('Value changed!'))
+
+ // Changing parameter's value will cause `valueChanged` event to trigger.
+ param.setValue('A New Awesome Parameter')
+ // As result the console log code will execute: Value Changed!
+```
 
 
 | Param | Type | Description |
 | --- | --- | --- |
 | name | <code>string</code> | The name of the parameter. |
-| value | <code>any</code> | The value of the parameter. |
-| dataType | <code>any</code> | The data type of the parameter. |
+| value | <code>object</code> \| <code>string</code> \| <code>number</code> \| <code>any</code> | The value of the parameter. |
+| dataType | <code>string</code> | The data type of the parameter. |
 
 <a name="Parameter+getDataType"></a>
 
 ### getDataType
-The getDataType method.
+Returns parameter's data type.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>string</code> - - The return value.  
 <a name="Parameter+getValue"></a>
 
 ### getValue
-The getValue method.
+Returns parameter's value.
 
 
 **Overrides**: <code>BaseParameter#getValue</code>  
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>object</code> \| <code>string</code> \| <code>number</code> \| <code>any</code> - - The return value.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -216,25 +234,25 @@ The getValue method.
 <a name="Parameter+setClean"></a>
 
 ### setClean
-The setClean method.
+Sets parameter's value directly.
 
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| value | <code>any</code> | The value param. |
+| value | <code>object</code> \| <code>string</code> \| <code>number</code> \| <code>any</code> | The value param. |
 
 <a name="Parameter+setValue"></a>
 
 ### setValue
-The getValue method.
+Sets parameter's value, but runs a few internal cleaning processes.
 
 
 **Overrides**: <code>BaseParameter#setValue</code>  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| value | <code>any</code> | The value param. |
+| value | <code>object</code> \| <code>string</code> \| <code>number</code> \| <code>any</code> | The value param. |
 | mode | <code>number</code> | The mode param. |
 
 <a name="Parameter+setValueDone"></a>
@@ -247,16 +265,10 @@ Code can listed to this event to trigger longer running actions like
 saving a file or heavy computation.
 
 
-
-| Param | Type | Description |
-| --- | --- | --- |
-| value | <code>any</code> | The value param. |
-| mode | <code>any</code> | The mode param. |
-
 <a name="Parameter+toJSON"></a>
 
 ### toJSON
-The toJSON method encodes this type as a json object for persistences.
+The toJSON method encodes this type as a json object for persistence.
 
 
 **Returns**: <code>object</code> - - Returns the json object.  
@@ -278,18 +290,6 @@ The fromJSON method decodes a json object for this type.
 | j | <code>object</code> | The json object this item must decode. |
 | context | <code>object</code> | The context value. |
 | flags | <code>number</code> | The flags value. |
-
-<a name="Parameter+readBinary"></a>
-
-### readBinary
-The readBinary method.
-
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| reader | <code>object</code> | The reader value. |
-| context | <code>object</code> | The context value. |
 
 <a name="Parameter+clone"></a>
 
