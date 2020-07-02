@@ -33,7 +33,7 @@ class ParameterOwner extends EventEmitter {
 
   /**
    * Returns the unique id of the object.
-   *
+   * @private
    * @return {number} - The Id of the ParameterOwner object.
    */
   getId() {

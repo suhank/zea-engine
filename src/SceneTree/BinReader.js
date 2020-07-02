@@ -2,7 +2,7 @@
 import { Vec2, Vec3, Quat, Color, Box2, Box3 } from '../Math/index'
 
 /**
- * Reads binary data in a specific encoding.
+ * Reads binary data in a specific encoding. Used in loading binary data such as zcad files.
  */
 class BinReader {
   /**

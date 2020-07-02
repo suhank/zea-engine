@@ -1,25 +1,38 @@
 /**
- * Allows objects to create and handle custom events.
- * Closely similar to [EventEmitter](https://nodejs.org/api/events.html#events_class_eventemitter) in Node.
+ * Provides an interface for emitting events under given names, and registering listeners to those events.
+ * This is a base class for most classes in the Scene Tree and Renderer, enabling observers to listen to changes throughout the system.
+ * The interface exposed is similar to [EventEmitter](https://nodejs.org/api/events.html#events_class_eventemitter) in Node.
+ *
+ * Similar to how the DOM event system in the browser works, events are registered by name.
+ * Example: Registering a listener for a custom event, and then emitting that event.
+ * ```javascript
+ *  const ee = new EventEmitter()
+ * 
+ *  ee.addListener('myEvent', (event) => {
+ *    console.log('My Event was emitted:', event)
+ *  })
+ * 
+ *  ee.emit('myEvent', { data: 42 })
+ * ```
+ * 
+ * 
  */
 class EventEmitter {
   /**
-   * Initializes an empty `slots` map that will host all the events,
-   * which implies that it doesn't allow multiple events with the same name.
+   * Initializes the EventEmitter in preparation for registering listeners.
    * <br>
-   * Although each event can own more than one listener function.
    */
   constructor() {
     this.__slots = {}
   }
 
   /**
-   * Adds an event with its listener function(Invoked functions when event is triggered) to the event list.
-   * Each event can have more than one listener function, although no duplication is allowed.
+   * Adds a listener function for a given event name.
+   * @private
    *
    * @param {string} eventName - The name of the event.
    * @param {function} listener - The listener function(callback).
-   * @return {number} - Number of listener funcitons the event has.
+   * @return {number} - Id to reference the listener.
    */
   addListener(eventName, listener) {
     if (listener == undefined) throw new Error('a function callback must be passed to EventEmitter.addListener')
@@ -38,12 +51,13 @@ class EventEmitter {
 
   /**
    * Removes a listener function from the specified event.
+   * @private
    *
    * @param {string} eventName - The name of the event.
    * @param {function} listener - The listener function.
    */
   removeListener(eventName, listener) {
-    if (listener == undefined) throw new Error('a function callback must be passed to EventEmitter.disconnect')
+    if (listener == undefined) throw new Error('a function callback must be passed to EventEmitter.removeListener')
 
     const slots = this.__slots[eventName]
     const ids = []
@@ -68,6 +82,7 @@ class EventEmitter {
 
   /**
    * Removes a listener function from the specified event, using the specified index id.
+   * @private
    *
    * @param {string} eventName - The name of the event.
    * @param {number} id - The id returned by addListener
@@ -84,29 +99,42 @@ class EventEmitter {
   }
 
   /**
-   * Adds an event with its listener function(Invoked functions when event is triggered) to the event list.
-   * Each event can have more than one listener function, although no duplication is allowed.
+   * Adds a listener function for a given event name.
+   * This function is simply an alias for 'addListener'. 
    *
    * @param {string} eventName - The name of the event.
    * @param {function} listener - The listener function(callback).
-   * @return {number} - Number of listener funcitons the event has.
+   * @return {number} - Id to reference the listener.
    */
   on(eventName, listener) {
     return this.addListener(eventName, listener)
   }
 
   /**
-   * Initially it works the same as `addListener` and `on` methods, but the difference is that when the listener function is triggered,
-   * is also removed from the event slots, meaning that it won't execute anymore.
+   * Similar to the `on` method with the difference that when the event is triggered,
+   * it is automatically unregistered meaning that the event listener will be triggered at most one time.
+   *
+   * Useful for events that we expect to trigger one time, such as when assets load.
+   * ```javascript
+   * const asset = new Asset();
+   * asset.once('loaded', () => {
+   *   console.log("Yay! the asset is loaded")
+   * })
+   * ```
    *
    * @param {string} eventName - The name of the event.
    * @param {function} listener - The listener function.
    */
   once(eventName, listener) {
-    const id = this.addListener(eventName, (event) => {
+    // const id = this.addListener(eventName, (event) => {
+    //   listener(event)
+    //   this.removeListenerById(eventName, id)
+    // })
+    const tmp = (event) => {
       listener(event)
-      this.removeListenerById(eventName, id)
-    })
+      this.removeListener(eventName, tmp)
+    }
+    this.addListener(eventName, tmp)
   }
 
   /**
@@ -124,7 +152,7 @@ class EventEmitter {
   }
 
   /**
-   * Triggers all listerner functions in an event.
+   * Triggers all listener functions in an event.
    *
    * @param {string} eventName - The name of the event.
    * @param {object|string|any} event - The data you want to pass down to all listener functions as parameter.
