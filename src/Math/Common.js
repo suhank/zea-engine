@@ -133,11 +133,16 @@ Math.remap = function (value, start1, end1, start2, end2) {
   return start2 + (end2 - start2) * ((value - start1) / (end1 - start1))
 }
 
+Math.convertFloat32ArrayToUInt16Array = function (float32Array) {
+  console.warn("Deprecated function. Please use the function 'convertFloat32ArrayToUInt16Array' exported by ZeaEngine");
+  convertFloat32ArrayToUInt16Array(float32Array)
+}
+
 // https://stackoverflow.com/questions/32633585/how-do-you-convert-to-half-floats-in-javascript
 /* This method is faster than the OpenEXR implementation (very often
  * used, eg. in Ogre), with the additional benefit of rounding, inspired
  * by James Tursa?s half-precision code. */
-Math.convertFloat32ArrayToUInt16Array = function (float32Array) {
+const convertFloat32ArrayToUInt16Array = function (float32Array) {
   const unit16s = new Uint16Array(float32Array.length)
   const int32View = new Int32Array(float32Array.buffer)
   const toUInt16 = (x) => {
@@ -318,5 +323,6 @@ export {
   UInt32,
   Float32,
   hashStr,
+  convertFloat32ArrayToUInt16Array,
   JSON_stringify_fixedPrecision,
 }

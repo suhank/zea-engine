@@ -3,8 +3,9 @@ import { typeRegistry } from './TypeRegistry.js'
 import { Vec2 } from './Vec2.js'
 
 /**
- * Representing a Vec3(three-dimensional floating point vector).
- * Vector classes in _zea-engine_ internally store values in {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array|Float32Array} and
+ * Represents a three dimensional coordinate, such as 3d scene values, or mesh vertex positions.
+ *
+ * Math types internally store values in {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array|Float32Array} and
  * expose getters and setters for the component values.
  *
  * @extends AttrValue
@@ -20,7 +21,7 @@ class Vec3 extends AttrValue {
    * <br>
    * You can also pass one JSON object parameter.
    *
-   * @param {number} x - The x value. Default is 0.
+   * @param {Number|Float32Array|json} x - The x value. Default is 0.
    * @param {number} y - The y value. Default is 0.
    * @param {number} z - The z value. Default is 0.
    */
@@ -44,16 +45,16 @@ class Vec3 extends AttrValue {
   }
 
   /**
-   * Getter for `x` value.
+   * Getter for `x` component.
    *
-   * @return {number} - Returns the x value.
+   * @return {number} - Returns the x component.
    */
   get x() {
     return this.__data[0]
   }
 
   /**
-   * Setter for `x` value.
+   * Setter for `x` component.
    *
    * @param {number} val - The val param.
    */
@@ -62,16 +63,16 @@ class Vec3 extends AttrValue {
   }
 
   /**
-   * Getter for `y` value.
+   * Getter for `y` component.
    *
-   * @return {number} - Returns the y value.
+   * @return {number} - Returns the y component.
    */
   get y() {
     return this.__data[1]
   }
 
   /**
-   * Setter for `y` value.
+   * Setter for `y` component.
    *
    * @param {number} val - The val param.
    */
@@ -80,16 +81,16 @@ class Vec3 extends AttrValue {
   }
 
   /**
-   * Getter for `z` value.
+   * Getter for `z` component.
    *
-   * @return {number} - Returns the z value.
+   * @return {number} - Returns the z component.
    */
   get z() {
     return this.__data[2]
   }
 
   /**
-   * Setter for `z` value.
+   * Setter for `z` component.
    *
    * @param {number} val - The val param.
    */
@@ -100,7 +101,7 @@ class Vec3 extends AttrValue {
   /**
    * Getter for `xy` swizzel.
    *
-   * @return {Vec2} - Returns the z value.
+   * @return {Vec2} - Returns the z component.
    */
   get xy() {
     return new Vec2(this.__data[0], this.__data[1])
@@ -109,7 +110,7 @@ class Vec3 extends AttrValue {
   /**
    * Getter for `yz` swizzel.
    *
-   * @return {Vec2} - Returns the z value.
+   * @return {Vec2} - Returns the z component.
    */
   get yz() {
     return new Vec2(this.__data[1], this.__data[2])
@@ -118,9 +119,9 @@ class Vec3 extends AttrValue {
   /**
    * Setter from scalar components.
    *
-   * @param {number} x - The x value.
-   * @param {number} y - The y value.
-   * @param {number} z - The y value.
+   * @param {number} x - The x component.
+   * @param {number} y - The y component.
+   * @param {number} z - The y component.
    */
   set(x, y, z) {
     this.x = x

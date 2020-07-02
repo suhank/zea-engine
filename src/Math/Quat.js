@@ -490,12 +490,7 @@ class Quat extends AttrValue {
    * @return {boolean} - Returns true or false.
    */
   equal(other) {
-    return (
-      this.x == other.x &&
-      this.y == other.y &&
-      this.z == other.z &&
-      this.w == other.w
-    )
+    return this.x == other.x && this.y == other.y && this.z == other.z && this.w == other.w
   }
 
   /**
@@ -504,13 +499,8 @@ class Quat extends AttrValue {
    * @param {Quat} other - The other Quat to compare with.
    * @return {boolean} - Returns true or false.
    */
-  notequals(other) {
-    return (
-      this.x != other.x &&
-      this.y != other.y &&
-      this.z != other.z &&
-      this.w != other.w
-    )
+  notEquals(other) {
+    return this.x != other.x && this.y != other.y && this.z != other.z && this.w != other.w
   }
 
   /**
