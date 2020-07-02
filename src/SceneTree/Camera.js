@@ -10,13 +10,13 @@ import { sgFactory } from './SGFactory'
  *
  * **Parameters**
  * * **isOrthographic(`BooleanParameter`):** Special type of view that represents 3D objects in two dimensions; `true` to enable.
- * * **fov(`NumberParameter`):**
- * * **near(`NumberParameter`):**
- * * **far(`NumberParameter`):**
- * * **focalDistance(`NumberParameter`):**
+ * * **fov(`NumberParameter`):** _todo_
+ * * **near(`NumberParameter`):** _todo_
+ * * **far(`NumberParameter`):** _todo_
+ * * **focalDistance(`NumberParameter`):** _todo_
  *
  * **Events**
- * * **projectionParamChanged:**
+ * * **projectionParamChanged:** _todo_
  * * **movementFinished:** Triggered when framing all the objects.
  * @extends TreeItem
  */

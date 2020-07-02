@@ -6,14 +6,14 @@ Class representing an Item in the scene tree with hierarchy capabilities(has chi
 <br>
 **Parameters:**
 * **Visible(`BooleanParameter`):** Shows/Hides the item.
-* **LocalXfo(`XfoParameter`):**
-* **GlobalXfo(`XfoParameter`):**
-* **BoundingBox(`BoundingBox`):**
+* **LocalXfo(`XfoParameter`):** _todo_
+* **GlobalXfo(`XfoParameter`):** _todo_
+* **BoundingBox(`BoundingBox`):** _todo_
 
 **Events**
-* **globalXfoChanged:**
-* **visibilityChanged:**
-* **highlightChanged:**
+* **globalXfoChanged:** _todo_
+* **visibilityChanged:** _todo_
+* **highlightChanged:** _todo_
 * **childAdded:** Emitted when a item is added as a child.
 * **childRemoved:** Emitted when an item is removed from the child nodes.
 * **mouseDown:** Emitted when a mouseDown event happens in an item.

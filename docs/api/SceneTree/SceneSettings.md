@@ -3,11 +3,11 @@
 ### SceneSettings 
 `BaseItem` type of class
 
-**Events**
+**Parameters**
 * **BackgroundColor(`ColorParameter`):** Changes background color of the scene
-* **EnvMap(`ImageParameter`):**
-* **Display(`BooleanParameter`):**
-* **EnvMapLOD(`NumberParameter`):**
+* **EnvMap(`ImageParameter`):** _todo_
+* **Display(`BooleanParameter`):** _todo_
+* **EnvMapLOD(`NumberParameter`):** _todo_
 
 
 **Extends**: <code>BaseItem</code>  

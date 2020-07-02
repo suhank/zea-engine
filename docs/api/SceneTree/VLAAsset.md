@@ -6,7 +6,7 @@ Which facilitates the migration of geometries from third party applications to t
 
 **Parameters**
 * **DataFilePath(`FilePathParameter`):** Used to specify the path to the file.
-* **LightmapTint(`ColorParameter`):**
+* **LightmapTint(`ColorParameter`):** _todo_
 
 **Events**
 * **loaded:** Triggered once everything is loaded.

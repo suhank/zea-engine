@@ -5,10 +5,10 @@ Class in charge of loading file resources, holding a reference to all of them.
 Manages workers, callbacks, resource tree and entities.
 
 **Events**
-* **loaded:**
-* **fileUpdated:**
-* **progressIncremented:**
-* **allResourcesLoaded:**
+* **loaded:** _todo_
+* **fileUpdated:** _todo_
+* **progressIncremented:** _todo_
+* **allResourcesLoaded:** _todo_
 
 
 

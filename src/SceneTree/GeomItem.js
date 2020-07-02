@@ -8,16 +8,16 @@ import { BaseGeomItem } from './BaseGeomItem.js'
 /**
  * Class representing a geometry item in a scene tree.
  *
- * **Parameters:**
- * * **Geometry(`GeometryParameter`):**
- * * **Material(`MaterialParameter`):**
- * * **GeomOffsetXfo(`XfoParameter`):**
- * * **GeomMat(`Mat4Parameter`):**
+ * **Parameters**
+ * * **Geometry(`GeometryParameter`):** _todo_
+ * * **Material(`MaterialParameter`):** _todo_
+ * * **GeomOffsetXfo(`XfoParameter`):** _todo_
+ * * **GeomMat(`Mat4Parameter`):** _todo_
  *
- * **Events:**
- * * **geomXfoChanged:**
- * * **materialAssigned:**
- * * **geomAssigned:**
+ * **Events**
+ * * **geomXfoChanged:** _todo_
+ * * **materialAssigned:** _todo_
+ * * **geomAssigned:** _todo_
  *
  * @extends BaseGeomItem
  */

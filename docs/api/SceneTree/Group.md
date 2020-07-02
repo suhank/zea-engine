@@ -8,14 +8,14 @@ All parameters set to the group are also set to the children; in other words, it
 to apply common things to multiple items.
 
 **Parameters**
-* **Items(`ItemSetParameter`):**
-* **Highlighted(`BooleanParameter`):**
-* **HighlightColor(`ColorParameter`):**
-* **HighlightFill(`NumberParameter`):**
-* **Material(`MaterialParameter`):**
-* **CutAwayEnabled(`BooleanParameter`):**
-* **CutPlaneNormal(`Vec3Parameter`):**
-* **CutPlaneDist(`NumberParameter`):**
+* **Items(`ItemSetParameter`):** _todo_
+* **Highlighted(`BooleanParameter`):** _todo_
+* **HighlightColor(`ColorParameter`):** _todo_
+* **HighlightFill(`NumberParameter`):** _todo_
+* **Material(`MaterialParameter`):** _todo_
+* **CutAwayEnabled(`BooleanParameter`):** _todo_
+* **CutPlaneNormal(`Vec3Parameter`):** _todo_
+* **CutPlaneDist(`NumberParameter`):** _todo_
 
 
 **Extends**: <code>TreeItem</code>  
