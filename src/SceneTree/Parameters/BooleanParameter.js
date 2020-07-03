@@ -4,6 +4,13 @@ import { sgFactory } from '../SGFactory'
 /**
  * Represents a specific type of parameter, that only stores boolean values.
  *
+ * i.e.:
+ * ```javascript
+ * const booleanParam = new BooleanParameter('MyBoolean', true)
+ * //'myParameterOwnerItem' is an instance of a 'ParameterOwner' class.
+ * // Remember that only 'ParameterOwner' and classes that extend from it can host 'Parameter' objects.
+ * myParameterOwnerItem.addParameter(booleanParam)
+ *
  * @extends Parameter
  */
 class BooleanParameter extends Parameter {

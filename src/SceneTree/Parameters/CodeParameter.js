@@ -4,6 +4,14 @@ import { StringParameter } from './StringParameter.js'
 /**
  * Represents a specific type of parameter, that only stores string values.
  *
+ * i.e.:
+ * ```javascript
+ * const booleanParam = new BooleanParameter('MyBoolean', true)
+ * //'myParameterOwnerItem' is an instance of a 'ParameterOwner' class.
+ * // Remember that only 'ParameterOwner' and classes that extend from it can host 'Parameter' objects.
+ * myParameterOwnerItem.addParameter(booleanParam)
+ * ```
+ *
  * @extends StringParameter
  */
 class CodeParameter extends StringParameter {

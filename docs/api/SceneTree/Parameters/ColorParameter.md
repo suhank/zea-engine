@@ -1,7 +1,15 @@
 <a name="ColorParameter"></a>
 
 ### ColorParameter 
-Class representing a color parameter.
+Represents a specific type of parameter, that only stores `Color` values.
+
+i.e.:
+```javascript
+const colorParam = new ColorParameter('MyColor', new Color(0, 254, 2))
+//'myParameterOwnerItem' is an instance of a 'ParameterOwner' class.
+// Remember that only 'ParameterOwner' and classes that extend from it can host 'Parameter' objects.
+myParameterOwnerItem.addParameter(colorParam)
+```
 
 
 **Extends**: <code>Parameter</code>  
@@ -20,18 +28,18 @@ Create a color parameter.
 | Param | Type | Description |
 | --- | --- | --- |
 | name | <code>string</code> | The name of the color parameter. |
-| value | <code>any</code> | The value of the parameter. |
+| value | <code>Color</code> | The value of the parameter. |
 
 <a name="ColorParameter+readBinary"></a>
 
 ### readBinary
-The readBinary method.
+Extracts `Color` values from a buffer, updating current parameter state.
 
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| reader | <code>object</code> | The reader value. |
+| reader | <code>BinReader</code> | The reader value. |
 | context | <code>object</code> | The context value. |
 
 <a name="ColorParameter+clone"></a>
