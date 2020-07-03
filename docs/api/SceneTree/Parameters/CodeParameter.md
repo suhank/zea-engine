@@ -1,7 +1,7 @@
 <a name="CodeParameter"></a>
 
 ### CodeParameter 
-Class representing a code parameter.
+Represents a specific type of parameter, that only stores string values.
 
 
 **Extends**: <code>StringParameter</code>  
@@ -9,38 +9,39 @@ Class representing a code parameter.
 * [CodeParameter ⇐ <code>StringParameter</code>](#CodeParameter)
     * [new CodeParameter(name, value)](#new-CodeParameter)
     * [setLanguage(lang)](#setLanguage)
-    * [getLanguage() ⇒ <code>any</code>](#getLanguage)
+    * [getLanguage() ⇒ <code>string</code>](#getLanguage)
     * [clone(flags)](#clone)
 
 <a name="new_CodeParameter_new"></a>
 
 ### new CodeParameter
-Create a code parameter.
+Creates a code parameter.
+The default language is `js`.
 
 
 | Param | Type | Description |
 | --- | --- | --- |
 | name | <code>string</code> | The name of the code parameter. |
-| value | <code>any</code> | The value of the parameter. |
+| value | <code>string</code> | The value of the parameter. |
 
 <a name="CodeParameter+setLanguage"></a>
 
 ### setLanguage
-The setLanguage method.
+Sets code language for parameter.
 
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| lang | <code>any</code> | The language value. |
+| lang | <code>string</code> | The language value. |
 
 <a name="CodeParameter+getLanguage"></a>
 
 ### getLanguage
-The getLanguage method.
+Returns code language of parameter.
 
 
-**Returns**: <code>any</code> - - Returns the language.  
+**Returns**: <code>string</code> - - Returns the language.  
 <a name="CodeParameter+clone"></a>
 
 ### clone

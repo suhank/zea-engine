@@ -1,7 +1,7 @@
 <a name="BooleanParameter"></a>
 
 ### BooleanParameter 
-Class representing a boolean parameter.
+Represents a specific type of parameter, that only stores boolean values.
 
 
 **Extends**: <code>Parameter</code>  
@@ -13,13 +13,13 @@ Class representing a boolean parameter.
 <a name="new_BooleanParameter_new"></a>
 
 ### new BooleanParameter
-Create a boolean parameter.
+Creates a new parameter with `Boolean` data type.
 
 
 | Param | Type | Description |
 | --- | --- | --- |
 | name | <code>string</code> | The name of the boolean parameter. |
-| value | <code>any</code> | The value of the parameter. |
+| value | <code>boolean</code> | The value of the parameter. |
 
 <a name="BooleanParameter+clone"></a>
 

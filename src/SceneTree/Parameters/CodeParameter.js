@@ -1,14 +1,18 @@
 import { sgFactory } from '../SGFactory'
 import { StringParameter } from './StringParameter.js'
 
-/** Class representing a code parameter.
+/**
+ * Represents a specific type of parameter, that only stores string values.
+ *
  * @extends StringParameter
  */
 class CodeParameter extends StringParameter {
   /**
-   * Create a code parameter.
+   * Creates a code parameter.
+   * The default language is `js`.
+   *
    * @param {string} name - The name of the code parameter.
-   * @param {any} value - The value of the parameter.
+   * @param {string} value - The value of the parameter.
    */
   constructor(name, value = '') {
     super(name, value, 'String')
@@ -16,16 +20,18 @@ class CodeParameter extends StringParameter {
   }
 
   /**
-   * The setLanguage method.
-   * @param {any} lang - The language value.
+   * Sets code language for parameter.
+   *
+   * @param {string} lang - The language value.
    */
   setLanguage(lang) {
     this.lang = lang
   }
 
   /**
-   * The getLanguage method.
-   * @return {any} - Returns the language.
+   * Returns code language of parameter.
+   *
+   * @return {string} - Returns the language.
    */
   getLanguage() {
     return this.lang
@@ -34,6 +40,7 @@ class CodeParameter extends StringParameter {
   /**
    * The clone method constructs a new code parameter,
    * copies its values from this parameter and returns it.
+   *
    * @param {number} flags - The flags value.
    * @return {CodeParameter} - Returns a new cloned code parameter.
    */
