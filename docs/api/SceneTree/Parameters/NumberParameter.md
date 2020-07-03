@@ -1,7 +1,14 @@
 <a name="NumberParameter"></a>
 
 ### NumberParameter 
-Class representing a number parameter.
+Represents a specific type of parameter, that only stores numeric values.
+
+```javascript
+const numberParam = new NumberParameter('MyNumber', 15)
+//'myParameterOwnerItem' is an instance of a 'ParameterOwner' class.
+// Remember that only 'ParameterOwner' and classes that extend from it can host 'Parameter' objects.
+myParameterOwnerItem.addParameter(numberParam)
+```
 
 
 **Extends**: <code>Parameter</code>  
@@ -9,11 +16,11 @@ Class representing a number parameter.
 * [NumberParameter ⇐ <code>Parameter</code>](#NumberParameter)
     * [new NumberParameter(name, value, range, step)](#new-NumberParameter)
     * [setValue(value, mode)](#setValue)
-    * [getValue(mode) ⇒ <code>any</code>](#getValue)
-    * [getRange() ⇒ <code>any</code>](#getRange)
-    * [setRange(range) ⇒ <code>any</code>](#setRange)
-    * [getStep() ⇒ <code>any</code>](#getStep)
-    * [setStep(step) ⇒ <code>any</code>](#setStep)
+    * [getValue(mode) ⇒ <code>number</code>](#getValue)
+    * [getRange() ⇒ <code>array</code>](#getRange)
+    * [setRange(range)](#setRange)
+    * [getStep() ⇒ <code>number</code>](#getStep)
+    * [setStep(step)](#setStep)
     * [toJSON(context, flags) ⇒ <code>object</code>](#toJSON)
     * [fromJSON(j, context, flags)](#fromJSON)
     * [readBinary(reader, context)](#readBinary)
@@ -29,28 +36,28 @@ Create a number parameter.
 | --- | --- | --- | --- |
 | name | <code>string</code> |  | The name of the number parameter. |
 | value | <code>number</code> | <code>0</code> | The value of the parameter. |
-| range | <code>any</code> |  | The range value. |
-| step | <code>any</code> |  | The step value. |
+| range | <code>array</code> |  | An array with two numbers. If defined, the parameter value will be clamped. |
+| step | <code>number</code> |  | The step value. If defined, the parameter value will be rounded to the nearest integer. |
 
 <a name="NumberParameter+setValue"></a>
 
 ### setValue
-The setValue method.
+Specifies the value of the parameter.
 
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| value | <code>any</code> | The value param. |
+| value | <code>number</code> | The value param. |
 | mode | <code>number</code> | The mode value. |
 
 <a name="NumberParameter+getValue"></a>
 
 ### getValue
-The getValue method.
+Sets parameter's value.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>number</code> - - The return value.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -59,45 +66,43 @@ The getValue method.
 <a name="NumberParameter+getRange"></a>
 
 ### getRange
-The getRange method.
+Returns the range to which the parameter is restrained.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>array</code> - - The return value.  
 <a name="NumberParameter+setRange"></a>
 
 ### setRange
-The setRange method.
+Sets the range to which the parameter is restrained.
 
 
-**Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| range | <code>any</code> | The range value. |
+| range | <code>array</code> | The range value. |
 
 <a name="NumberParameter+getStep"></a>
 
 ### getStep
-The getStep method.
+Returns the step number, which is the one used for rounding.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>number</code> - - The return value.  
 <a name="NumberParameter+setStep"></a>
 
 ### setStep
-The setStep method.
+Returns step value.
 
 
-**Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| step | <code>any</code> | The step value. |
+| step | <code>number</code> | The step value. |
 
 <a name="NumberParameter+toJSON"></a>
 
 ### toJSON
-The toJSON method encodes this type as a json object for persistences.
+The toJSON method encodes this type as a json object for persistence.
 
 
 **Returns**: <code>object</code> - - Returns the json object.  
@@ -123,13 +128,13 @@ The fromJSON method decodes a json object for this type.
 <a name="NumberParameter+readBinary"></a>
 
 ### readBinary
-The readBinary method.
+Extracts a number value from a buffer, updating current parameter state.
 
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| reader | <code>object</code> | The reader value. |
+| reader | <code>BinReader</code> | The reader value. |
 | context | <code>object</code> | The context value. |
 
 <a name="NumberParameter+clone"></a>
