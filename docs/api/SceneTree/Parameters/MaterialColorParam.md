@@ -1,9 +1,9 @@
 <a name="MaterialColorParam"></a>
 
-## MaterialColorParam ⇐ <code>ColorParameter</code>
+### MaterialColorParam 
 Class representing a material color parameter.
 
-**Kind**: global class  
+
 **Extends**: <code>ColorParameter</code>  
 
 * [MaterialColorParam ⇐ <code>ColorParameter</code>](#MaterialColorParam)
@@ -30,14 +30,14 @@ Create a material color parameter.
 ### getImage
 The getImage method.
 
-**Kind**: instance method of [<code>MaterialColorParam</code>](#MaterialColorParam)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="MaterialColorParam+setImage"></a>
 
 ### setImage
 The setImage method.
 
-**Kind**: instance method of [<code>MaterialColorParam</code>](#MaterialColorParam)  
+
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -49,7 +49,7 @@ The setImage method.
 ### setValue
 The setValue method.
 
-**Kind**: instance method of [<code>MaterialColorParam</code>](#MaterialColorParam)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -60,7 +60,7 @@ The setValue method.
 ### readBinary
 The readBinary method.
 
-**Kind**: instance method of [<code>MaterialColorParam</code>](#MaterialColorParam)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -70,9 +70,10 @@ The readBinary method.
 <a name="MaterialColorParam+clone"></a>
 
 ### clone
-The clone method constructs a new material color parameter,copies its values from this parameter and returns it.
+The clone method constructs a new material color parameter,
+copies its values from this parameter and returns it.
 
-**Kind**: instance method of [<code>MaterialColorParam</code>](#MaterialColorParam)  
+
 **Returns**: [<code>MaterialColorParam</code>](#MaterialColorParam) - - Returns a new cloned material color parameter.  
 
 | Param | Type | Description |

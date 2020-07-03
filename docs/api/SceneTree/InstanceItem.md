@@ -1,15 +1,15 @@
 <a name="InstanceItem"></a>
 
-## InstanceItem ⇐ <code>TreeItem</code>
-Class representing an instance item in a scene tree.
+### InstanceItem 
+TreeItem type of class designed for making duplications of parts of the tree.
 
-**Kind**: global class  
+
 **Extends**: <code>TreeItem</code>  
 
 * [InstanceItem ⇐ <code>TreeItem</code>](#InstanceItem)
     * [new InstanceItem(name)](#new-InstanceItem)
     * [setSrcTree(treeItem)](#setSrcTree)
-    * [getSrcTree() ⇒ <code>any</code>](#getSrcTree)
+    * [getSrcTree() ⇒ <code>TreeItem</code>](#getSrcTree)
     * [readBinary(reader, context)](#readBinary)
     * [toJSON(context, flags) ⇒ <code>object</code>](#toJSON)
     * [fromJSON(j, context, flags, onDone)](#fromJSON)
@@ -27,31 +27,31 @@ Create an instance item.
 <a name="InstanceItem+setSrcTree"></a>
 
 ### setSrcTree
-The setSrcTree method.
+Clones passed in `TreeItem` all the way down and adds it as a child of current item.
 
-**Kind**: instance method of [<code>InstanceItem</code>](#InstanceItem)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
-| treeItem | <code>any</code> | The treeItem value. |
+| treeItem | <code>TreeItem</code> | The treeItem value. |
 
 <a name="InstanceItem+getSrcTree"></a>
 
 ### getSrcTree
-The getSrcTree method.
+Returns the last `TreeItem` cloned.
 
-**Kind**: instance method of [<code>InstanceItem</code>](#InstanceItem)  
-**Returns**: <code>any</code> - - The return value.  
+
+**Returns**: <code>TreeItem</code> - - The return value.  
 <a name="InstanceItem+readBinary"></a>
 
 ### readBinary
-The readBinary method.
+Sets state of current Item(Including cloned item) using a binary reader object.
 
-**Kind**: instance method of [<code>InstanceItem</code>](#InstanceItem)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
-| reader | <code>object</code> | The reader value. |
+| reader | <code>BinReader</code> | The reader value. |
 | context | <code>object</code> | The context value. |
 
 <a name="InstanceItem+toJSON"></a>
@@ -59,7 +59,7 @@ The readBinary method.
 ### toJSON
 The toJSON method encodes this type as a json object for persistences.
 
-**Kind**: instance method of [<code>InstanceItem</code>](#InstanceItem)  
+
 **Returns**: <code>object</code> - - Returns the json object.  
 
 | Param | Type | Default | Description |
@@ -72,12 +72,16 @@ The toJSON method encodes this type as a json object for persistences.
 ### fromJSON
 The fromJSON method decodes a json object for this type.
 
-**Kind**: instance method of [<code>InstanceItem</code>](#InstanceItem)  
+
+**Todo**
+
+- [ ] Needs to be implemented.
+
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
 | j | <code>object</code> |  | The json object this item must decode. |
 | context | <code>object</code> |  | The context value. |
 | flags | <code>number</code> | <code>0</code> | The flags value. |
-| onDone | <code>any</code> |  | The onDone value. |
+| onDone | <code>function</code> |  | The onDone value. |
 

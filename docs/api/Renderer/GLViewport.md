@@ -1,9 +1,9 @@
 <a name="GLViewport"></a>
 
-## GLViewport ⇐ <code>GLBaseViewport</code>
+### GLViewport 
 Class representing a GL viewport.
 
-**Kind**: global class  
+
 **Extends**: <code>GLBaseViewport</code>  
 
 * [GLViewport ⇐ <code>GLBaseViewport</code>](#GLViewport)
@@ -58,7 +58,7 @@ Create a GL viewport.
 ### resize
 The resize method.
 
-**Kind**: instance method of [<code>GLViewport</code>](#GLViewport)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -70,14 +70,14 @@ The resize method.
 ### getCamera
 The getCamera method.
 
-**Kind**: instance method of [<code>GLViewport</code>](#GLViewport)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="GLViewport+setCamera"></a>
 
 ### setCamera
 The setCamera method.
 
-**Kind**: instance method of [<code>GLViewport</code>](#GLViewport)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -88,14 +88,14 @@ The setCamera method.
 ### getManipulator
 The getManipulator method.
 
-**Kind**: instance method of [<code>GLViewport</code>](#GLViewport)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="GLViewport+setManipulator"></a>
 
 ### setManipulator
 The setManipulator method.
 
-**Kind**: instance method of [<code>GLViewport</code>](#GLViewport)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -106,21 +106,21 @@ The setManipulator method.
 ### getProjectionMatrix
 The getProjectionMatrix method.
 
-**Kind**: instance method of [<code>GLViewport</code>](#GLViewport)  
+
 **Returns**: <code>Mat4</code> - - The return projection matrix for the viewport.  
 <a name="GLViewport+getViewMatrix"></a>
 
 ### getViewMatrix
 The getProjectionMatrix method.
 
-**Kind**: instance method of [<code>GLViewport</code>](#GLViewport)  
+
 **Returns**: <code>Mat4</code> - - The return projection matrix for the viewport.  
 <a name="GLViewport+setActive"></a>
 
 ### setActive
 The setActive method.
 
-**Kind**: instance method of [<code>GLViewport</code>](#GLViewport)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -131,7 +131,7 @@ The setActive method.
 ### frameView
 The frameView method.
 
-**Kind**: instance method of [<code>GLViewport</code>](#GLViewport)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -142,7 +142,7 @@ The frameView method.
 ### calcRayFromScreenPos
 Compute a ray into the scene based on a mouse coordinate.
 
-**Kind**: instance method of [<code>GLViewport</code>](#GLViewport)  
+
 **Returns**: <code>Ray</code> - - The return value.  
 
 | Param | Type | Description |
@@ -154,7 +154,7 @@ Compute a ray into the scene based on a mouse coordinate.
 ### createGeomDataFbo
 The createGeomDataFbo method.
 
-**Kind**: instance method of [<code>GLViewport</code>](#GLViewport)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -165,26 +165,27 @@ The createGeomDataFbo method.
 ### getGeomDataFbo
 The getGeomDataFbo method.
 
-**Kind**: instance method of [<code>GLViewport</code>](#GLViewport)  
+
 **Returns**: <code>GLFbo</code> - - The return value.  
 <a name="GLViewport+renderGeomDataFbo"></a>
 
 ### renderGeomDataFbo
-Renders the scene geometry to the viewports geom data bufferin preparation for mouse picking.
+Renders the scene geometry to the viewports geom data buffer
+in preparation for mouse picking.
 
-**Kind**: instance method of [<code>GLViewport</code>](#GLViewport)  
+
 <a name="GLViewport+invalidateGeomDataBuffer"></a>
 
 ### invalidateGeomDataBuffer
 The invalidateGeomDataBuffer method.
 
-**Kind**: instance method of [<code>GLViewport</code>](#GLViewport)  
+
 <a name="GLViewport+getGeomDataAtPos"></a>
 
 ### getGeomDataAtPos
 The getGeomDataAtPos method.
 
-**Kind**: instance method of [<code>GLViewport</code>](#GLViewport)  
+
 **Returns**: <code>object</code> - - The return value.  
 
 | Param | Type | Description |
@@ -195,9 +196,10 @@ The getGeomDataAtPos method.
 <a name="GLViewport+getGeomItemsInRect"></a>
 
 ### getGeomItemsInRect
-getGeomItemsInRectGathers all the geoms renders in a given rectangle of the viewport.
+getGeomItemsInRect
+Gathers all the geoms renders in a given rectangle of the viewport.
 
-**Kind**: instance method of [<code>GLViewport</code>](#GLViewport)  
+
 **Returns**: <code>Set</code> - - The return value.  
 
 | Param | Type | Description |
@@ -210,20 +212,20 @@ getGeomItemsInRectGathers all the geoms renders in a given rectangle of the vie
 ### getCapture
 The getCapture method.
 
-**Kind**: instance method of [<code>GLViewport</code>](#GLViewport)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="GLViewport+releaseCapture"></a>
 
 ### releaseCapture
 The releaseCapture method.
 
-**Kind**: instance method of [<code>GLViewport</code>](#GLViewport)  
+
 <a name="GLViewport+onMouseDown"></a>
 
 ### onMouseDown
 Causes an event to occur when a user presses a mouse button over an element.
 
-**Kind**: instance method of [<code>GLViewport</code>](#GLViewport)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -235,7 +237,7 @@ Causes an event to occur when a user presses a mouse button over an element.
 ### onMouseMove
 Causes an event to occur when the mouse pointer is moving while over an element.
 
-**Kind**: instance method of [<code>GLViewport</code>](#GLViewport)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -246,7 +248,7 @@ Causes an event to occur when the mouse pointer is moving while over an element.
 ### onMouseUp
 Causes an event to occur when a user releases a mouse button over a element.
 
-**Kind**: instance method of [<code>GLViewport</code>](#GLViewport)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -257,7 +259,7 @@ Causes an event to occur when a user releases a mouse button over a element.
 ### onMouseLeave
 Causes an event to occur when the mouse pointer is moved out of an element.
 
-**Kind**: instance method of [<code>GLViewport</code>](#GLViewport)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -268,7 +270,7 @@ Causes an event to occur when the mouse pointer is moved out of an element.
 ### onKeyPressed
 Causes an event to occurs when the user presses a key on the keyboard.
 
-**Kind**: instance method of [<code>GLViewport</code>](#GLViewport)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -280,7 +282,7 @@ Causes an event to occurs when the user presses a key on the keyboard.
 ### onKeyDown
 Causes an event to occur when the user is pressing a key on the keyboard.
 
-**Kind**: instance method of [<code>GLViewport</code>](#GLViewport)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -292,7 +294,7 @@ Causes an event to occur when the user is pressing a key on the keyboard.
 ### onKeyUp
 Causes an event to occur  when the user releases a key on the keyboard.
 
-**Kind**: instance method of [<code>GLViewport</code>](#GLViewport)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -304,7 +306,7 @@ Causes an event to occur  when the user releases a key on the keyboard.
 ### onWheel
 Causes an event to occur when the mouse wheel is rolled up or down over an element.
 
-**Kind**: instance method of [<code>GLViewport</code>](#GLViewport)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -315,7 +317,7 @@ Causes an event to occur when the mouse wheel is rolled up or down over an eleme
 ### onTouchStart
 Causes an event to occur when the user touches an element on a touch screen.
 
-**Kind**: instance method of [<code>GLViewport</code>](#GLViewport)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -326,7 +328,7 @@ Causes an event to occur when the user touches an element on a touch screen.
 ### onTouchMove
 The event that occurs when the user moves his/her finger across a touch screen.
 
-**Kind**: instance method of [<code>GLViewport</code>](#GLViewport)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -337,7 +339,7 @@ The event that occurs when the user moves his/her finger across a touch screen.
 ### onTouchEnd
 Causes an event to occur when the user removes his/her finger from an element.
 
-**Kind**: instance method of [<code>GLViewport</code>](#GLViewport)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -348,7 +350,7 @@ Causes an event to occur when the user removes his/her finger from an element.
 ### onTouchCancel
 Causes an event to occur when the touch event gets interrupted.
 
-**Kind**: instance method of [<code>GLViewport</code>](#GLViewport)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -359,4 +361,4 @@ Causes an event to occur when the touch event gets interrupted.
 ### draw
 The draw method.
 
-**Kind**: instance method of [<code>GLViewport</code>](#GLViewport)  
+

@@ -1,16 +1,37 @@
 <a name="Group"></a>
 
-## Group ⇐ <code>TreeItem</code>
-Class representing a group in the scene tree.
+### Group 
+Groups are a special type of `TreeItem` that allows you to gather/classify/organize/modify
+multiple items contained within the group. Items can be added to the group directly, or using
+the path. It doesn't host the actual items; it only contains the reference to them. All
+parameters set to the group are also set to the children; in other words, it is a faster way
+to apply common things to multiple items.
 
-**Kind**: global class  
+== Parameters ===
+- 'CutAwayEnabled': erflkgm
+
+```
+const group = new Group("MyGroup")
+```
+
+```
+group.addItem(treeItem)
+```
+
+```
+group.resolveItems([
+   <path1>,
+   <path2>
+ ])
+```
+
+
 **Extends**: <code>TreeItem</code>  
 
 * [Group ⇐ <code>TreeItem</code>](#Group)
     * [new Group(name)](#new-Group)
     * _instance_
         * [setSelected(sel)](#setSelected)
-        * [calcGroupXfo() ⇒ <code>Xfo</code>](#calcGroupXfo)
         * [setPaths(paths)](#setPaths)
         * [resolveItems(paths)](#resolveItems)
         * [addItem(item, emit)](#addItem)
@@ -44,25 +65,19 @@ Create a group.
 ### setSelected
 Returns a boolean indicating if this group is selectable.
 
-**Kind**: instance method of [<code>Group</code>](#Group)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
 | sel | <code>boolean</code> | Boolean indicating the new selection state. |
 
-<a name="Group+calcGroupXfo"></a>
-
-### calcGroupXfo
-Calculate the group Xfo translate.
-
-**Kind**: instance method of [<code>Group</code>](#Group)  
-**Returns**: <code>Xfo</code> - - Returns a new Xfo.  
 <a name="Group+setPaths"></a>
 
 ### setPaths
-This method is mostly used in our demos,and should be removed from the interface
+This method is mostly used in our demos,
+and should be removed from the interface
 
-**Kind**: instance method of [<code>Group</code>](#Group)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -73,7 +88,7 @@ This method is mostly used in our demos,and should be removed from the interfac
 ### resolveItems
 For backwards compatiblity.
 
-**Kind**: instance method of [<code>Group</code>](#Group)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -84,7 +99,7 @@ For backwards compatiblity.
 ### addItem
 Add an item to the group.
 
-**Kind**: instance method of [<code>Group</code>](#Group)  
+
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -96,7 +111,7 @@ Add an item to the group.
 ### removeItem
 Remove an item to the group.
 
-**Kind**: instance method of [<code>Group</code>](#Group)  
+
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -108,7 +123,7 @@ Remove an item to the group.
 ### clearItems
 Clear items from the group.
 
-**Kind**: instance method of [<code>Group</code>](#Group)  
+
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -119,14 +134,14 @@ Clear items from the group.
 ### getItems
 The getItems method.
 
-**Kind**: instance method of [<code>Group</code>](#Group)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="Group+setItems"></a>
 
 ### setItems
 The setItems method.
 
-**Kind**: instance method of [<code>Group</code>](#Group)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -137,7 +152,7 @@ The setItems method.
 ### onMouseDown
 Occurs when a user presses a mouse button over an element.
 
-**Kind**: instance method of [<code>Group</code>](#Group)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -148,7 +163,7 @@ Occurs when a user presses a mouse button over an element.
 ### onMouseUp
 Occurs when a user releases a mouse button over an element.
 
-**Kind**: instance method of [<code>Group</code>](#Group)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -159,7 +174,7 @@ Occurs when a user releases a mouse button over an element.
 ### onMouseMove
 Occur when the mouse pointer is moving  while over an element.
 
-**Kind**: instance method of [<code>Group</code>](#Group)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -170,7 +185,7 @@ Occur when the mouse pointer is moving  while over an element.
 ### toJSON
 The toJSON method encodes this type as a json object for persistences.
 
-**Kind**: instance method of [<code>Group</code>](#Group)  
+
 **Returns**: <code>object</code> - - Returns the json object.  
 
 | Param | Type | Description |
@@ -183,7 +198,7 @@ The toJSON method encodes this type as a json object for persistences.
 ### fromJSON
 The fromJSON method decodes a json object for this type.
 
-**Kind**: instance method of [<code>Group</code>](#Group)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -194,9 +209,10 @@ The fromJSON method decodes a json object for this type.
 <a name="Group+clone"></a>
 
 ### clone
-The clone method constructs a new group,copies its values and returns it.
+The clone method constructs a new group,
+copies its values and returns it.
 
-**Kind**: instance method of [<code>Group</code>](#Group)  
+
 **Returns**: [<code>Group</code>](#Group) - - Returns a new cloned group.  
 
 | Param | Type | Description |
@@ -208,7 +224,7 @@ The clone method constructs a new group,copies its values and returns it.
 ### copyFrom
 The copyFrom method.
 
-**Kind**: instance method of [<code>Group</code>](#Group)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -218,12 +234,13 @@ The copyFrom method.
 <a name="Group+destroy"></a>
 
 ### destroy
-The destroy is called by the system to cause explicit resources cleanup.Users should never need to call this method directly.
+The destroy is called by the system to cause explicit resources cleanup.
+Users should never need to call this method directly.
 
-**Kind**: instance method of [<code>Group</code>](#Group)  
+
 <a name="Group.INITIAL_XFO_MODES"></a>
 
 ### INITIAL
 Getter for INITIAL_XFO_MODES.
 
-**Kind**: static property of [<code>Group</code>](#Group)  
+

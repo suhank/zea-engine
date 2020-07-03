@@ -1,9 +1,9 @@
 <a name="CameraMouseAndKeyboard"></a>
 
-## CameraMouseAndKeyboard ⇐ <code>ParameterOwner</code>
+### CameraMouseAndKeyboard 
 Class representing a camera, mouse and keyboard.
 
-**Kind**: global class  
+
 **Extends**: <code>ParameterOwner</code>  
 
 * [CameraMouseAndKeyboard ⇐ <code>ParameterOwner</code>](#CameraMouseAndKeyboard)
@@ -47,7 +47,7 @@ Create a camera, mouse and keyboard
 ### setDefaultManipulationMode
 Setter for the default manipulation mode.
 
-**Kind**: instance method of [<code>CameraMouseAndKeyboard</code>](#CameraMouseAndKeyboard)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -58,7 +58,7 @@ Setter for the default manipulation mode.
 ### look
 The look method.
 
-**Kind**: instance method of [<code>CameraMouseAndKeyboard</code>](#CameraMouseAndKeyboard)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -70,7 +70,7 @@ The look method.
 ### orbit
 The orbit method.
 
-**Kind**: instance method of [<code>CameraMouseAndKeyboard</code>](#CameraMouseAndKeyboard)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -82,7 +82,7 @@ The orbit method.
 ### pan
 The pan method.
 
-**Kind**: instance method of [<code>CameraMouseAndKeyboard</code>](#CameraMouseAndKeyboard)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -94,7 +94,7 @@ The pan method.
 ### dolly
 The dolly method.
 
-**Kind**: instance method of [<code>CameraMouseAndKeyboard</code>](#CameraMouseAndKeyboard)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -106,7 +106,7 @@ The dolly method.
 ### panAndZoom
 The panAndZoom method.
 
-**Kind**: instance method of [<code>CameraMouseAndKeyboard</code>](#CameraMouseAndKeyboard)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -119,7 +119,7 @@ The panAndZoom method.
 ### initDrag
 The initDrag method.
 
-**Kind**: instance method of [<code>CameraMouseAndKeyboard</code>](#CameraMouseAndKeyboard)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -130,7 +130,7 @@ The initDrag method.
 ### endDrag
 The initDrag method.
 
-**Kind**: instance method of [<code>CameraMouseAndKeyboard</code>](#CameraMouseAndKeyboard)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -141,7 +141,7 @@ The initDrag method.
 ### aimFocus
 The aimFocus method.
 
-**Kind**: instance method of [<code>CameraMouseAndKeyboard</code>](#CameraMouseAndKeyboard)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -153,7 +153,7 @@ The aimFocus method.
 ### onMouseMove
 Causes an event to occur when the mouse pointer is moving while over an element.
 
-**Kind**: instance method of [<code>CameraMouseAndKeyboard</code>](#CameraMouseAndKeyboard)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -164,7 +164,7 @@ Causes an event to occur when the mouse pointer is moving while over an element.
 ### onDoubleClick
 Causes an event to occur when a user double clicks a mouse button over an element.
 
-**Kind**: instance method of [<code>CameraMouseAndKeyboard</code>](#CameraMouseAndKeyboard)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -175,7 +175,7 @@ Causes an event to occur when a user double clicks a mouse button over an elemen
 ### onMouseDown
 Causes an event to occur when the user starts to drag an element.
 
-**Kind**: instance method of [<code>CameraMouseAndKeyboard</code>](#CameraMouseAndKeyboard)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -186,7 +186,7 @@ Causes an event to occur when the user starts to drag an element.
 ### onMouseMove
 Causes an event to occur when an element is being dragged.
 
-**Kind**: instance method of [<code>CameraMouseAndKeyboard</code>](#CameraMouseAndKeyboard)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -197,7 +197,7 @@ Causes an event to occur when an element is being dragged.
 ### onMouseUp
 Causes an event to occur when the user has finished dragging an element.
 
-**Kind**: instance method of [<code>CameraMouseAndKeyboard</code>](#CameraMouseAndKeyboard)  
+
 **Returns**: <code>boolean</code> - - The return value.  
 
 | Param | Type | Description |
@@ -209,7 +209,7 @@ Causes an event to occur when the user has finished dragging an element.
 ### onWheel
 Causes an event to occur when the mouse wheel is rolled up or down over an element.
 
-**Kind**: instance method of [<code>CameraMouseAndKeyboard</code>](#CameraMouseAndKeyboard)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -220,7 +220,7 @@ Causes an event to occur when the mouse wheel is rolled up or down over an eleme
 ### onKeyPressed
 Causes an event to occurs when the user presses a key on the keyboard.
 
-**Kind**: instance method of [<code>CameraMouseAndKeyboard</code>](#CameraMouseAndKeyboard)  
+
 **Returns**: <code>boolean</code> - - The return value.  
 
 | Param | Type | Description |
@@ -233,7 +233,7 @@ Causes an event to occurs when the user presses a key on the keyboard.
 ### onKeyDown
 Causes an event to occur when the user is pressing a key on the keyboard.
 
-**Kind**: instance method of [<code>CameraMouseAndKeyboard</code>](#CameraMouseAndKeyboard)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -245,7 +245,7 @@ Causes an event to occur when the user is pressing a key on the keyboard.
 ### onKeyUp
 Causes an event to occur when the user releases a key on the keyboard.
 
-**Kind**: instance method of [<code>CameraMouseAndKeyboard</code>](#CameraMouseAndKeyboard)  
+
 **Returns**: <code>boolean</code> - - The return value.  
 
 | Param | Type | Description |
@@ -258,7 +258,7 @@ Causes an event to occur when the user releases a key on the keyboard.
 ### onTouchStart
 Causes an event to occur when the user touches an element on a touch screen.
 
-**Kind**: instance method of [<code>CameraMouseAndKeyboard</code>](#CameraMouseAndKeyboard)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -269,7 +269,7 @@ Causes an event to occur when the user touches an element on a touch screen.
 ### onTouchMove
 The event that occurs when the user moves his/her finger across a touch screen.
 
-**Kind**: instance method of [<code>CameraMouseAndKeyboard</code>](#CameraMouseAndKeyboard)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -280,7 +280,7 @@ The event that occurs when the user moves his/her finger across a touch screen.
 ### onTouchEnd
 Causes an event to occur when the user removes his/her finger from an element.
 
-**Kind**: instance method of [<code>CameraMouseAndKeyboard</code>](#CameraMouseAndKeyboard)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -291,7 +291,7 @@ Causes an event to occur when the user removes his/her finger from an element.
 ### onTouchCancel
 Causes an event to occur when the touch event gets interrupted.
 
-**Kind**: instance method of [<code>CameraMouseAndKeyboard</code>](#CameraMouseAndKeyboard)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -302,7 +302,7 @@ Causes an event to occur when the touch event gets interrupted.
 ### onDoubleTap
 Causes an event to occur when the user double taps an element on a touch screen.
 
-**Kind**: instance method of [<code>CameraMouseAndKeyboard</code>](#CameraMouseAndKeyboard)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |

@@ -1,20 +1,27 @@
 import { Color } from '../Math/index'
-import {
-  BooleanParameter,
-  NumberParameter,
-  ColorParameter,
-  ImageParameter,
-} from './Parameters/index'
+import { BooleanParameter, NumberParameter, ColorParameter, ImageParameter } from './Parameters/index'
 import { TreeItem } from './TreeItem.js'
 
-/** Class representing a billboard item in a scene tree.
+/**
+ * A special type of TreeItem(Item with hierarchical abilities) class that represents a banner in a 2D dimension.
+ * Can own any type of `BaseImage`.
+ * <br>
+ * <br>
+ * **Parameters**
+ * * **Image(`ImageParameter`):** Is the BaseImage you want to display on the board.
+ * * **PixelsPerMeter(`NumberParameter`):** Quality and Size of the board. The bigger the number, the smaller the board.
+ * * **Alpha(`NumberParameter`):** Transparency of the board, from 0 to 1.
+ * * **AlignedToCamera(`BooleanParameter`):** Faces or not the board to the camera at all time(Moves with camera movement).
+ * * **DrawOnTop(`BooleanParameter`):**
+ *
  * @extends TreeItem
  */
 class BillboardItem extends TreeItem {
   /**
-   * Create a billboard item.
+   * Creates a billboard item.
+   *
    * @param {string} name - The name of the billboard item.
-   * @param {any} image - The image value.
+   * @param {BaseImage} image - The image value.
    */
   constructor(name, image) {
     super(name)

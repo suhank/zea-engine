@@ -1,9 +1,9 @@
 <a name="VLHImage"></a>
 
-## VLHImage ⇐ <code>BaseImage</code>
+### VLHImage 
 Class representing a VLH image.
 
-**Kind**: global class  
+
 **Extends**: <code>BaseImage</code>  
 
 * [VLHImage ⇐ <code>BaseImage</code>](#VLHImage)
@@ -28,49 +28,49 @@ Create a VLH image.
 | Param | Type | Description |
 | --- | --- | --- |
 | name | <code>string</code> | The name value. |
-| params | <code>any</code> | The params value. |
+| params | <code>object</code> | The params value. |
 
 <a name="VLHImage+getDOMElement"></a>
 
 ### getDOMElement
 The getDOMElement method.
 
-**Kind**: instance method of [<code>VLHImage</code>](#VLHImage)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="VLHImage+getResourcePath"></a>
 
 ### getResourcePath
 The getResourcePath method.
 
-**Kind**: instance method of [<code>VLHImage</code>](#VLHImage)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="VLHImage+isStream"></a>
 
 ### isStream
 The isStream method.
 
-**Kind**: instance method of [<code>VLHImage</code>](#VLHImage)  
+
 **Returns**: <code>boolean</code> - - The return value.  
 <a name="VLHImage+isLoaded"></a>
 
 ### isLoaded
 The isLoaded method.
 
-**Kind**: instance method of [<code>VLHImage</code>](#VLHImage)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="VLHImage+getParams"></a>
 
 ### getParams
 The getParams method.
 
-**Kind**: instance method of [<code>VLHImage</code>](#VLHImage)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="VLHImage+setHDRTint"></a>
 
 ### setHDRTint
 The setHDRTint method.
 
-**Kind**: instance method of [<code>VLHImage</code>](#VLHImage)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -81,14 +81,14 @@ The setHDRTint method.
 ### getHDRTint
 The getHDRTint method.
 
-**Kind**: instance method of [<code>VLHImage</code>](#VLHImage)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="VLHImage+toJSON"></a>
 
 ### toJSON
 The toJSON method encodes this type as a json object for persistences.
 
-**Kind**: instance method of [<code>VLHImage</code>](#VLHImage)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -100,7 +100,7 @@ The toJSON method encodes this type as a json object for persistences.
 ### fromJSON
 The fromJSON method decodes a json object for this type.
 
-**Kind**: instance method of [<code>VLHImage</code>](#VLHImage)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -113,7 +113,7 @@ The fromJSON method decodes a json object for this type.
 ### readBinary
 The readBinary method.
 
-**Kind**: instance method of [<code>VLHImage</code>](#VLHImage)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |

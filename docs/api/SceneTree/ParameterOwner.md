@@ -1,87 +1,90 @@
 <a name="ParameterOwner"></a>
 
-## ParameterOwner
-Class representing a parameter owner in the scene tree.
+### ParameterOwner 
+Class that allows other classes to be parameterized by `Parameter` type of objects.
+Not only hosting parameters, but their events.
 
-**Kind**: global class  
 
-* [ParameterOwner](#ParameterOwner)
+**Extends**: <code>EventEmitter</code>  
+
+* [ParameterOwner ⇐ <code>EventEmitter</code>](#ParameterOwner)
     * [new ParameterOwner()](#new-ParameterOwner)
-    * [getId() ⇒ <code>any</code>](#getId)
+    * [getId() ⇒ <code>number</code>](#getId)
     * [numParameters() ⇒ <code>number</code>](#numParameters)
-    * [getParameters() ⇒ <code>any</code>](#getParameters)
-    * [getParameterIndex(paramName) ⇒ <code>any</code>](#getParameterIndex)
-    * [getParameterByIndex(index) ⇒ <code>any</code>](#getParameterByIndex)
-    * [hasParameter(paramName) ⇒ <code>any</code>](#hasParameter)
-    * [getParameter(paramName) ⇒ <code>any</code>](#getParameter)
-    * [addParameter(param) ⇒ <code>any</code>](#addParameter)
-    * [insertParameter(param, index) ⇒ <code>any</code>](#insertParameter)
+    * [getParameters() ⇒ <code>array</code>](#getParameters)
+    * [getParameterIndex(paramName) ⇒ <code>number</code>](#getParameterIndex)
+    * [getParameterByIndex(index) ⇒ <code>Parameter</code>](#getParameterByIndex)
+    * [hasParameter(paramName) ⇒ <code>boolean</code>](#hasParameter)
+    * [getParameter(paramName) ⇒ <code>Parameter</code>](#getParameter)
+    * [addParameter(param) ⇒ <code>Parameter</code>](#addParameter)
+    * [insertParameter(param, index) ⇒ <code>Parameter</code>](#insertParameter)
     * [removeParameter(paramName)](#removeParameter)
-    * [replaceParameter(param) ⇒ <code>any</code>](#replaceParameter)
+    * [replaceParameter(param) ⇒ <code>Parameter</code>](#replaceParameter)
     * [toJSON(context, flags) ⇒ <code>object</code>](#toJSON)
     * [fromJSON(j, context, flags)](#fromJSON)
     * [readBinary(reader, context)](#readBinary)
-    * [toString() ⇒ <code>any</code>](#toString)
+    * [toString() ⇒ <code>string</code>](#toString)
     * [copyFrom(src, flags)](#copyFrom)
-    * [destroy()](#destroy)
 
 <a name="new_ParameterOwner_new"></a>
 
 ### new ParameterOwner
-Create a parameter owner.
+Creates an instance of ParameterOwner by initializing parameter hosting mappings and events.
+<br>
+Every Object has a unique identifier which is based on a counter that is incremented.
 
 <a name="ParameterOwner+getId"></a>
 
 ### getId
-Returns the unique id of the object. Every Object has a uniqueidentifier which is based on a counter that is incremented.
+Returns the unique id of the object.
 
-**Kind**: instance method of [<code>ParameterOwner</code>](#ParameterOwner)  
-**Returns**: <code>any</code> - - The return value.  
+
+**Returns**: <code>number</code> - - The Id of the ParameterOwner object.  
 <a name="ParameterOwner+numParameters"></a>
 
 ### numParameters
-The numParameters method.
+Returns the number of parameters current object has.
 
-**Kind**: instance method of [<code>ParameterOwner</code>](#ParameterOwner)  
-**Returns**: <code>number</code> - - The return value.  
+
+**Returns**: <code>number</code> - - Amount of parameters in current object.  
 <a name="ParameterOwner+getParameters"></a>
 
 ### getParameters
-The getParameters method.
+Returns all the parameters of the object.
 
-**Kind**: instance method of [<code>ParameterOwner</code>](#ParameterOwner)  
-**Returns**: <code>any</code> - - The return value.  
+
+**Returns**: <code>array</code> - - Parameter List  
 <a name="ParameterOwner+getParameterIndex"></a>
 
 ### getParameterIndex
-The getParameterIndex method.
+Returns the index of a parameter in parameter list.
 
-**Kind**: instance method of [<code>ParameterOwner</code>](#ParameterOwner)  
-**Returns**: <code>any</code> - - The return value.  
+
+**Returns**: <code>number</code> - - Position in the array  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| paramName | <code>string</code> | The parameter name. |
+| paramName | <code>string</code> | Name of the parameter. |
 
 <a name="ParameterOwner+getParameterByIndex"></a>
 
 ### getParameterByIndex
-The getParameterByIndex method.
+Returns `Parameter` object in a given index
 
-**Kind**: instance method of [<code>ParameterOwner</code>](#ParameterOwner)  
-**Returns**: <code>any</code> - - The return value.  
+
+**Returns**: <code>Parameter</code> - - Parameter object value  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| index | <code>number</code> | The index value. |
+| index | <code>number</code> | Position of the parameter in the array |
 
 <a name="ParameterOwner+hasParameter"></a>
 
 ### hasParameter
-The hasParameter method.
+Validates if the specified parameter exists in the object.
 
-**Kind**: instance method of [<code>ParameterOwner</code>](#ParameterOwner)  
-**Returns**: <code>any</code> - - The return value.  
+
+**Returns**: <code>boolean</code> - - The return value.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -90,10 +93,10 @@ The hasParameter method.
 <a name="ParameterOwner+getParameter"></a>
 
 ### getParameter
-The getParameter method.
+Returns `Parameter` object using the given name
 
-**Kind**: instance method of [<code>ParameterOwner</code>](#ParameterOwner)  
-**Returns**: <code>any</code> - - The return value.  
+
+**Returns**: <code>Parameter</code> - - Parameter object value  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -102,34 +105,38 @@ The getParameter method.
 <a name="ParameterOwner+addParameter"></a>
 
 ### addParameter
-Add a parameter.
+Adds `Parameter` object to the owner's parameter list.
 
-**Kind**: instance method of [<code>ParameterOwner</code>](#ParameterOwner)  
-**Returns**: <code>any</code> - - The return value.  
+
+**Returns**: <code>Parameter</code> - - With `owner` and `valueChanged` event set.  
+**Emits**: <code>event:&#x60;parameterAdded&#x60; with the name of the param.</code>  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| param | <code>any</code> | The paramater to add. |
+| param | <code>Parameter</code> | The paramater to add. |
 
 <a name="ParameterOwner+insertParameter"></a>
 
 ### insertParameter
-Insert a parameter.
+Adds `Parameter` object to the owner's parameter list using the index.
+It replaces the event in the specified index.
 
-**Kind**: instance method of [<code>ParameterOwner</code>](#ParameterOwner)  
-**Returns**: <code>any</code> - - The return value.  
+
+**Returns**: <code>Parameter</code> - - With `owner` and `valueChanged` event set.  
+**Emits**: <code>event:&#x60;parameterAdded&#x60; with the name of the param.</code>  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| param | <code>any</code> | The parameter to insert. |
+| param | <code>Parameter</code> | The parameter to insert. |
 | index | <code>number</code> | The index value. |
 
 <a name="ParameterOwner+removeParameter"></a>
 
 ### removeParameter
-Remove a parameter.
+Removes `Parameter` from owner, by using parameter's name.
 
-**Kind**: instance method of [<code>ParameterOwner</code>](#ParameterOwner)  
+
+**Emits**: <code>event:&#x60;parameterRemoved&#x60; with the name of the param.</code>  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -138,21 +145,21 @@ Remove a parameter.
 <a name="ParameterOwner+replaceParameter"></a>
 
 ### replaceParameter
-Replace a parameter.
+Replaces old `Parameter` by passing a new one with the same name.
 
-**Kind**: instance method of [<code>ParameterOwner</code>](#ParameterOwner)  
-**Returns**: <code>any</code> - - The return value.  
+
+**Returns**: <code>Parameter</code> - - `Parameter` with `valueChanged` event set.  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| param | <code>any</code> | The parameter to replace. |
+| param | <code>Parameter</code> | The parameter to replace. |
 
 <a name="ParameterOwner+toJSON"></a>
 
 ### toJSON
 The toJSON method encodes this type as a json object for persistences.
 
-**Kind**: instance method of [<code>ParameterOwner</code>](#ParameterOwner)  
+
 **Returns**: <code>object</code> - - Returns the json object.  
 
 | Param | Type | Description |
@@ -165,7 +172,7 @@ The toJSON method encodes this type as a json object for persistences.
 ### fromJSON
 The fromJSON method decodes a json object for this type.
 
-**Kind**: instance method of [<code>ParameterOwner</code>](#ParameterOwner)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -176,37 +183,35 @@ The fromJSON method decodes a json object for this type.
 <a name="ParameterOwner+readBinary"></a>
 
 ### readBinary
-The readBinary method.
+Uses passed in BinReader object(containing an Int32 array with all the parameters) to reconstruct all parameters state.
+<br>
+In each iteration of the array, propType and propName are extracted and
+used to build the right `Parameter` class. Then all of them are added to the object.
 
-**Kind**: instance method of [<code>ParameterOwner</code>](#ParameterOwner)  
+
+**Emits**: <code>event:&#x60;parameterAdded&#x60; with the name of the param.</code>  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| reader | <code>object</code> | The reader value. |
+| reader | <code>BinReader</code> | The reader value. |
 | context | <code>object</code> | The context value. |
 
 <a name="ParameterOwner+toString"></a>
 
 ### toString
-The toString method.
+Converts object's JSON value and converts it to a string.
 
-**Kind**: instance method of [<code>ParameterOwner</code>](#ParameterOwner)  
-**Returns**: <code>any</code> - - The return value.  
+
+**Returns**: <code>string</code> - - String of object's parameter list state.  
 <a name="ParameterOwner+copyFrom"></a>
 
 ### copyFrom
-The copyFrom method.
+Copies Parameters from another `ParameterOwner` to current object.
 
-**Kind**: instance method of [<code>ParameterOwner</code>](#ParameterOwner)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
 | src | [<code>ParameterOwner</code>](#ParameterOwner) | The ParameterOwner copy from. |
 | flags | <code>number</code> | The flags value. |
 
-<a name="ParameterOwner+destroy"></a>
-
-### destroy
-The destroy is called by the system to cause explicit resources cleanup.Users should never need to call this method directly.
-
-**Kind**: instance method of [<code>ParameterOwner</code>](#ParameterOwner)  

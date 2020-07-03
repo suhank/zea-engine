@@ -1,9 +1,9 @@
 <a name="Disc"></a>
 
-## Disc ⇐ <code>Mesh</code>
+### Disc 
 A class for generating a disc geometry.
 
-**Kind**: global class  
+
 **Extends**: <code>Mesh</code>  
 
 * [Disc ⇐ <code>Mesh</code>](#Disc)
@@ -29,14 +29,14 @@ Create a disc.
 ### radius 
 Getter for the disc radius.
 
-**Kind**: instance property of [<code>Disc</code>](#Disc)  
+
 **Returns**: <code>number</code> - - Returns the radius.  
 <a name="Disc+radius"></a>
 
-### radiu
+### radius
 Setter for disc radius.
 
-**Kind**: instance property of [<code>Disc</code>](#Disc)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -44,10 +44,10 @@ Setter for disc radius.
 
 <a name="Disc+sides"></a>
 
-### side
+### sides
 Setter for the number of sides.
 
-**Kind**: instance property of [<code>Disc</code>](#Disc)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -58,5 +58,5 @@ Setter for the number of sides.
 ### toJSON
 The toJSON method encodes this type as a json object for persistences.
 
-**Kind**: instance method of [<code>Disc</code>](#Disc)  
+
 **Returns**: <code>object</code> - - Returns the json object.  

@@ -1,9 +1,15 @@
 <a name="SceneSettings"></a>
 
-## SceneSettings ⇐ <code>BaseItem</code>
-Class representing scene settings in a scene tree.
+### SceneSettings 
+`BaseItem` type of class
 
-**Kind**: global class  
+**Events**
+* **BackgroundColor(`ColorParameter`):**
+* **EnvMap(`ImageParameter`):**
+* **Display(`BooleanParameter`):**
+* **EnvMapLOD(`NumberParameter`):**
+
+
 **Extends**: <code>BaseItem</code>  
 <a name="new_SceneSettings_new"></a>
 

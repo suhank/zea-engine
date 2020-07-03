@@ -1,9 +1,9 @@
 <a name="ExplodePartsOperator"></a>
 
-## ExplodePartsOperator ⇐ <code>ParameterOwner</code>
+### ExplodePartsOperator 
 Class representing an explode parts operator.
 
-**Kind**: global class  
+
 **Extends**: <code>ParameterOwner</code>  
 
 * [ExplodePartsOperator ⇐ <code>ParameterOwner</code>](#ExplodePartsOperator)
@@ -28,13 +28,13 @@ Create an explode parts operator.
 ### evaluate
 The evaluate method.
 
-**Kind**: instance method of [<code>ExplodePartsOperator</code>](#ExplodePartsOperator)  
+
 <a name="ExplodePartsOperator+toJSON"></a>
 
 ### toJSON
 The toJSON method encodes this type as a json object for persistences.
 
-**Kind**: instance method of [<code>ExplodePartsOperator</code>](#ExplodePartsOperator)  
+
 **Returns**: <code>object</code> - - Returns the json object.  
 
 | Param | Type | Description |
@@ -47,7 +47,7 @@ The toJSON method encodes this type as a json object for persistences.
 ### fromJSON
 The fromJSON method decodes a json object for this type.
 
-**Kind**: instance method of [<code>ExplodePartsOperator</code>](#ExplodePartsOperator)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -58,6 +58,7 @@ The fromJSON method decodes a json object for this type.
 <a name="ExplodePartsOperator+destroy"></a>
 
 ### destroy
-The destroy is called by the system to cause explicit resources cleanup.Users should never need to call this method directly.
+The destroy is called by the system to cause explicit resources cleanup.
+Users should never need to call this method directly.
 
-**Kind**: instance method of [<code>ExplodePartsOperator</code>](#ExplodePartsOperator)  
+

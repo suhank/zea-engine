@@ -1,9 +1,12 @@
 <a name="BaseGeomItem"></a>
 
-## BaseGeomItem ⇐ <code>TreeItem</code>
-Class representing a base geometry item in a scene tree.
+### BaseGeomItem 
+Base class that represents geometry items with layering, overlaying and cut away features.
 
-**Kind**: global class  
+**Events**
+* **cutAwayChanged:** Triggered everytime the cutaway variables change(if enabled or not, the vector and the distance).
+
+
 **Extends**: <code>TreeItem</code>  
 
 * [BaseGeomItem ⇐ <code>TreeItem</code>](#BaseGeomItem)
@@ -11,12 +14,12 @@ Class representing a base geometry item in a scene tree.
     * [setOverlay(val)](#setOverlay)
     * [isOverlay() ⇒ <code>boolean</code>](#isOverlay)
     * [addLayer(name)](#addLayer)
-    * [getLayers() ⇒ <code>any</code>](#getLayers)
+    * [getLayers() ⇒ <code>array</code>](#getLayers)
     * [isCutawayEnabled() ⇒ <code>boolean</code>](#isCutawayEnabled)
     * [setCutawayEnabled(state)](#setCutawayEnabled)
-    * [getCutVector() ⇒ <code>any</code>](#getCutVector)
+    * [getCutVector() ⇒ <code>Vec3</code> \| <code>boolean</code>](#getCutVector)
     * [setCutVector(cutAwayVector)](#setCutVector)
-    * [getCutDist() ⇒ <code>any</code>](#getCutDist)
+    * [getCutDist() ⇒ <code>number</code>](#getCutDist)
     * [setCutDist(cutAwayDist)](#setCutDist)
     * [readBinary(reader, context)](#readBinary)
 
@@ -33,27 +36,35 @@ Create a base geometry item.
 <a name="BaseGeomItem+setOverlay"></a>
 
 ### setOverlay
-The setOverlay method.
+Sets overlay value.
 
-**Kind**: instance method of [<code>BaseGeomItem</code>](#BaseGeomItem)  
+
+**Todo**
+
+- [ ] Need to find the layer and add this item to it.
+
 
 | Param | Type | Description |
 | --- | --- | --- |
-| val | <code>any</code> | The val param. |
+| val | <code>boolean</code> | `true` to enable it. |
 
 <a name="BaseGeomItem+isOverlay"></a>
 
 ### isOverlay
-The getLayers method.
+Returns `true` if overlay is enabled for current item.
 
-**Kind**: instance method of [<code>BaseGeomItem</code>](#BaseGeomItem)  
+
 **Returns**: <code>boolean</code> - - The return value.  
 <a name="BaseGeomItem+addLayer"></a>
 
 ### addLayer
-Adds a layer.
+Adds a layer to current item.
 
-**Kind**: instance method of [<code>BaseGeomItem</code>](#BaseGeomItem)  
+
+**Todo**
+
+- [ ] Need to find the layer and add this item to it.
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -62,73 +73,73 @@ Adds a layer.
 <a name="BaseGeomItem+getLayers"></a>
 
 ### getLayers
-The getLayers method.
+Returns all layers in current item.
 
-**Kind**: instance method of [<code>BaseGeomItem</code>](#BaseGeomItem)  
-**Returns**: <code>any</code> - - The return value.  
+
+**Returns**: <code>array</code> - - The return value.  
 <a name="BaseGeomItem+isCutawayEnabled"></a>
 
 ### isCutawayEnabled
-Checks if cutways are enabled.
+Checks if cutaway is enabled.
 
-**Kind**: instance method of [<code>BaseGeomItem</code>](#BaseGeomItem)  
-**Returns**: <code>boolean</code> - - Returns true if enabled.  
+
+**Returns**: <code>boolean</code> - - Returns `true` if enabled.  
 <a name="BaseGeomItem+setCutawayEnabled"></a>
 
 ### setCutawayEnabled
-Setter for enabling cutways.
+Sets cutaway state.
 
-**Kind**: instance method of [<code>BaseGeomItem</code>](#BaseGeomItem)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
-| state | <code>any</code> | The state of the cutway. |
+| state | <code>boolean</code> | `true` to enable it, otherwise `false`. |
 
 <a name="BaseGeomItem+getCutVector"></a>
 
 ### getCutVector
-Getter for cutway vectors.
+Returns cutaway vector value.
 
-**Kind**: instance method of [<code>BaseGeomItem</code>](#BaseGeomItem)  
-**Returns**: <code>any</code> - - The return value.  
+
+**Returns**: <code>Vec3</code> \| <code>boolean</code> - - `Vec3` when it is set, `false` on default.  
 <a name="BaseGeomItem+setCutVector"></a>
 
 ### setCutVector
-Setter for cutway vectors.
+Sets cutaway vector value.
 
-**Kind**: instance method of [<code>BaseGeomItem</code>](#BaseGeomItem)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
-| cutAwayVector | <code>any</code> | The cutAwayVector value. |
+| cutAwayVector | <code>Vec3</code> | The cutAwayVector value. |
 
 <a name="BaseGeomItem+getCutDist"></a>
 
 ### getCutDist
 Getter for the cutaway distance.
 
-**Kind**: instance method of [<code>BaseGeomItem</code>](#BaseGeomItem)  
-**Returns**: <code>any</code> - - The return value.  
+
+**Returns**: <code>number</code> - - The return value.  
 <a name="BaseGeomItem+setCutDist"></a>
 
 ### setCutDist
-Setter for the cutaway distance.
+Sets cutaway distance value.
 
-**Kind**: instance method of [<code>BaseGeomItem</code>](#BaseGeomItem)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
-| cutAwayDist | <code>any</code> | The cutAwayDist value. |
+| cutAwayDist | <code>number</code> | The cutAwayDist value. |
 
 <a name="BaseGeomItem+readBinary"></a>
 
 ### readBinary
-The readBinary method.
+Sets state of current Item(Including layers & material) using a binary reader object.
 
-**Kind**: instance method of [<code>BaseGeomItem</code>](#BaseGeomItem)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
-| reader | <code>object</code> | The reader value. |
+| reader | <code>BinReader</code> | The reader value. |
 | context | <code>object</code> | The context value. |
 

@@ -1,9 +1,9 @@
 <a name="LDRImage"></a>
 
-## LDRImage ⇐ <code>FileImage</code>
+### LDRImage 
 Class representing a LDR (low dynamic range) image.
 
-**Kind**: global class  
+
 **Extends**: <code>FileImage</code>  
 
 * [LDRImage ⇐ <code>FileImage</code>](#LDRImage)
@@ -28,7 +28,7 @@ Create a LDR image.
 ### setCrossOrigin
 The setCrossOrigin method.
 
-**Kind**: instance method of [<code>LDRImage</code>](#LDRImage)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -39,7 +39,7 @@ The setCrossOrigin method.
 ### setImageURL
 The setImageURL method.
 
-**Kind**: instance method of [<code>LDRImage</code>](#LDRImage)  
+
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |

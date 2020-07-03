@@ -1,9 +1,9 @@
 <a name="BaseGeom"></a>
 
-## BaseGeom ⇐ <code>ParameterOwner</code>
+### BaseGeom 
 Class representing a base geometry.
 
-**Kind**: global class  
+
 **Extends**: <code>ParameterOwner</code>  
 
 * [BaseGeom ⇐ <code>ParameterOwner</code>](#BaseGeom)
@@ -42,23 +42,23 @@ Create a base geom.
 
 <a name="BaseGeom+vertices"></a>
 
-### vertice
+### vertices
 Getter for vertices.
 
-**Kind**: instance property of [<code>BaseGeom</code>](#BaseGeom)  
+
 <a name="BaseGeom+boundingBox"></a>
 
 ### boundingBox 
 The boundingBox method.
 
-**Kind**: instance property of [<code>BaseGeom</code>](#BaseGeom)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="BaseGeom+setDebugName"></a>
 
 ### setDebugName
 The setDebugName method.
 
-**Kind**: instance method of [<code>BaseGeom</code>](#BaseGeom)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -69,7 +69,7 @@ The setDebugName method.
 ### addVertexAttribute
 The addVertexAttribute method.
 
-**Kind**: instance method of [<code>BaseGeom</code>](#BaseGeom)  
+
 **Returns**: <code>Attribute</code> - - Returns an attribute.  
 
 | Param | Type | Description |
@@ -83,7 +83,7 @@ The addVertexAttribute method.
 ### hasVertexAttribute
 The hasVertexAttribute method.
 
-**Kind**: instance method of [<code>BaseGeom</code>](#BaseGeom)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -95,7 +95,7 @@ The hasVertexAttribute method.
 ### getVertexAttribute
 The getVertexAttribute method.
 
-**Kind**: instance method of [<code>BaseGeom</code>](#BaseGeom)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -107,7 +107,7 @@ The getVertexAttribute method.
 ### getVertexAttributes
 The getVertexAttributes method.
 
-**Kind**: instance method of [<code>BaseGeom</code>](#BaseGeom)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -119,21 +119,21 @@ The getVertexAttributes method.
 ### numVertices
 The numVertices method.
 
-**Kind**: instance method of [<code>BaseGeom</code>](#BaseGeom)  
+
 **Returns**: <code>number</code> - - The return value.  
 <a name="BaseGeom+getNumVertices"></a>
 
 ### getNumVertices
 The getNumVertices method.
 
-**Kind**: instance method of [<code>BaseGeom</code>](#BaseGeom)  
+
 **Returns**: <code>number</code> - - The return value.  
 <a name="BaseGeom+setNumVertices"></a>
 
 ### setNumVertices
 The setNumVertices method.
 
-**Kind**: instance method of [<code>BaseGeom</code>](#BaseGeom)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -144,7 +144,7 @@ The setNumVertices method.
 ### getVertex
 The getVertex method.
 
-**Kind**: instance method of [<code>BaseGeom</code>](#BaseGeom)  
+
 **Returns**: <code>Vec3</code> - - Returns a Vec3.  
 
 | Param | Type | Description |
@@ -156,7 +156,7 @@ The getVertex method.
 ### setVertex
 The setVertex method.
 
-**Kind**: instance method of [<code>BaseGeom</code>](#BaseGeom)  
+
 **Returns**: <code>Vec3</code> - - Returns a Vec3.  
 
 | Param | Type | Description |
@@ -169,7 +169,7 @@ The setVertex method.
 ### moveVertices
 The moveVertices method.
 
-**Kind**: instance method of [<code>BaseGeom</code>](#BaseGeom)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -180,7 +180,7 @@ The moveVertices method.
 ### transformVertices
 The transformVertices method.
 
-**Kind**: instance method of [<code>BaseGeom</code>](#BaseGeom)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -191,19 +191,19 @@ The transformVertices method.
 ### setBoundingBoxDirty
 The setBoundingBoxDirty method.
 
-**Kind**: instance method of [<code>BaseGeom</code>](#BaseGeom)  
+
 <a name="BaseGeom+updateBoundingBox"></a>
 
 ### updateBoundingBox
 The updateBoundingBox method.
 
-**Kind**: instance method of [<code>BaseGeom</code>](#BaseGeom)  
+
 <a name="BaseGeom+getMetadata"></a>
 
 ### getMetadata
 The getMetadata method.
 
-**Kind**: instance method of [<code>BaseGeom</code>](#BaseGeom)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -215,7 +215,7 @@ The getMetadata method.
 ### hasMetadata
 The hasMetadata method.
 
-**Kind**: instance method of [<code>BaseGeom</code>](#BaseGeom)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -227,7 +227,7 @@ The hasMetadata method.
 ### setMetadata
 The setMetadata method.
 
-**Kind**: instance method of [<code>BaseGeom</code>](#BaseGeom)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -239,7 +239,7 @@ The setMetadata method.
 ### deleteMetadata
 The deleteMetadata method.
 
-**Kind**: instance method of [<code>BaseGeom</code>](#BaseGeom)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -250,7 +250,7 @@ The deleteMetadata method.
 ### genBuffers
 The genBuffers method.
 
-**Kind**: instance method of [<code>BaseGeom</code>](#BaseGeom)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -262,13 +262,13 @@ The genBuffers method.
 ### freeBuffers
 The freeBuffers method.
 
-**Kind**: instance method of [<code>BaseGeom</code>](#BaseGeom)  
+
 <a name="BaseGeom+loadBaseGeomBinary"></a>
 
 ### loadBaseGeomBinary
 The loadBaseGeomBinary method.
 
-**Kind**: instance method of [<code>BaseGeom</code>](#BaseGeom)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -279,7 +279,7 @@ The loadBaseGeomBinary method.
 ### toJSON
 The toJSON method encodes this type as a json object for persistences.
 
-**Kind**: instance method of [<code>BaseGeom</code>](#BaseGeom)  
+
 **Returns**: <code>object</code> - - Returns the json object.  
 
 | Param | Type | Description |
@@ -292,7 +292,7 @@ The toJSON method encodes this type as a json object for persistences.
 ### fromJSON
 The fromJSON method decodes a json object for this type.
 
-**Kind**: instance method of [<code>BaseGeom</code>](#BaseGeom)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -305,5 +305,5 @@ The fromJSON method decodes a json object for this type.
 ### toString
 The toString method.
 
-**Kind**: instance method of [<code>BaseGeom</code>](#BaseGeom)  
+
 **Returns**: <code>any</code> - - The return value.  

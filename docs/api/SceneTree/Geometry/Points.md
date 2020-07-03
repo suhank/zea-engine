@@ -1,9 +1,9 @@
 <a name="Points"></a>
 
-## Points ⇐ <code>BaseGeom</code>
+### Points 
 Class representing points.
 
-**Kind**: global class  
+
 **Extends**: <code>BaseGeom</code>  
 
 * [Points ⇐ <code>BaseGeom</code>](#Points)
@@ -21,7 +21,7 @@ Create points.
 ### loadBin
 The loadBin method.
 
-**Kind**: instance method of [<code>Points</code>](#Points)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -32,7 +32,7 @@ The loadBin method.
 ### readBinary
 The readBinary method.
 
-**Kind**: instance method of [<code>Points</code>](#Points)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |

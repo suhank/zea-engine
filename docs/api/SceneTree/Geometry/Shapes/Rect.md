@@ -1,9 +1,9 @@
 <a name="Rect"></a>
 
-## Rect ⇐ <code>Lines</code>
+### Rect 
 A class for generating a rectangle shape.
 
-**Kind**: global class  
+
 **Extends**: <code>Lines</code>  
 
 * [Rect ⇐ <code>Lines</code>](#Rect)
@@ -31,14 +31,14 @@ Create a rect.
 ### x 
 Getter for the length of the rect along the X axis.
 
-**Kind**: instance property of [<code>Rect</code>](#Rect)  
+
 **Returns**: <code>number</code> - - Returns the length.  
 <a name="Rect+x"></a>
 
-### rect
+### x
 Setter for the length of the rect along the X axis.
 
-**Kind**: instance property of [<code>Rect</code>](#Rect)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -49,14 +49,14 @@ Setter for the length of the rect along the X axis.
 ### y 
 Getter for the length of the rect along the Y axis.
 
-**Kind**: instance property of [<code>Rect</code>](#Rect)  
+
 **Returns**: <code>number</code> - - Returns the length.  
 <a name="Rect+y"></a>
 
-### rect
+### y
 Setter for the length of the rect along the U axis.
 
-**Kind**: instance property of [<code>Rect</code>](#Rect)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -67,7 +67,7 @@ Setter for the length of the rect along the U axis.
 ### setSize
 Setter for the size of the rect.
 
-**Kind**: instance method of [<code>Rect</code>](#Rect)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -79,5 +79,5 @@ Setter for the size of the rect.
 ### toJSON
 The toJSON method encodes this type as a json object for persistences.
 
-**Kind**: instance method of [<code>Rect</code>](#Rect)  
+
 **Returns**: <code>object</code> - - Returns the json object.  

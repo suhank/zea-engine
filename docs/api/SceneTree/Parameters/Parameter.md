@@ -1,4 +1,4 @@
-## Classes
+### Classes
 
 <dl>
 <dt><a href="#BaseParameter">BaseParameter</a></dt>
@@ -11,17 +11,17 @@
 
 <a name="BaseParameter"></a>
 
-## BaseParameter
+### BaseParameter
 Class representing a base parameter.
 
-**Kind**: global class  
+
 
 * [BaseParameter](#BaseParameter)
     * [new BaseParameter(name)](#new-BaseParameter)
     * [getName() ⇒ <code>string</code>](#getName)
     * [setName(name)](#setName)
     * [getOwner() ⇒ <code>any</code>](#getOwner)
-    * [addOwner(ownerItem)](#addOwner)
+    * [setOwner(ownerItem)](#setOwner)
     * [getPath() ⇒ <code>any</code>](#getPath)
     * [setFlag(flag)](#setFlag)
     * [clearFlag(flag)](#clearFlag)
@@ -54,14 +54,14 @@ Create a base parameter.
 ### getName
 Getter for the base parameter name.
 
-**Kind**: instance method of [<code>BaseParameter</code>](#BaseParameter)  
+
 **Returns**: <code>string</code> - - Returns the name.  
 <a name="BaseParameter+setName"></a>
 
 ### setName
 Setter for the base parameter name.
 
-**Kind**: instance method of [<code>BaseParameter</code>](#BaseParameter)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -72,14 +72,14 @@ Setter for the base parameter name.
 ### getOwner
 Getter for the owner of the parameter.
 
-**Kind**: instance method of [<code>BaseParameter</code>](#BaseParameter)  
+
 **Returns**: <code>any</code> - - The return value.  
-<a name="BaseParameter+addOwner"></a>
+<a name="BaseParameter+setOwner"></a>
 
-### addOwner
-Adds the owner of the parameter.
+### setOwner
+Sets the owner of the parameter.
 
-**Kind**: instance method of [<code>BaseParameter</code>](#BaseParameter)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -90,14 +90,14 @@ Adds the owner of the parameter.
 ### getPath
 Getter for the parameter path.
 
-**Kind**: instance method of [<code>BaseParameter</code>](#BaseParameter)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="BaseParameter+setFlag"></a>
 
 ### setFlag
 The setFlag method.
 
-**Kind**: instance method of [<code>BaseParameter</code>](#BaseParameter)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -108,7 +108,7 @@ The setFlag method.
 ### clearFlag
 The clearFlag method.
 
-**Kind**: instance method of [<code>BaseParameter</code>](#BaseParameter)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -119,7 +119,7 @@ The clearFlag method.
 ### testFlag
 Returns true if the flag if set, otherwise returns false.
 
-**Kind**: instance method of [<code>BaseParameter</code>](#BaseParameter)  
+
 **Returns**: <code>boolean</code> - - Returns a boolean indicating if the flag is set.  
 
 | Param | Type | Description |
@@ -131,13 +131,13 @@ Returns true if the flag if set, otherwise returns false.
 ### getValue
 The getValue method (TODO).
 
-**Kind**: instance method of [<code>BaseParameter</code>](#BaseParameter)  
+
 <a name="BaseParameter+setValue"></a>
 
 ### setValue
 The getValue method (TODO).
 
-**Kind**: instance method of [<code>BaseParameter</code>](#BaseParameter)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -148,7 +148,7 @@ The getValue method (TODO).
 ### setEnabled
 The setEnabled method.
 
-**Kind**: instance method of [<code>BaseParameter</code>](#BaseParameter)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -159,13 +159,13 @@ The setEnabled method.
 ### isEnabled
 The isEnabled method.
 
-**Kind**: instance method of [<code>BaseParameter</code>](#BaseParameter)  
+
 <a name="BaseParameter+bindOperator"></a>
 
 ### bindOperator
 The bindOperator method.
 
-**Kind**: instance method of [<code>BaseParameter</code>](#BaseParameter)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -176,7 +176,7 @@ The bindOperator method.
 ### unbindOperator
 The unbindOperator method.
 
-**Kind**: instance method of [<code>BaseParameter</code>](#BaseParameter)  
+
 **Returns**: <code>boolean</code> - - The return value.  
 
 | Param | Type | Description |
@@ -188,7 +188,7 @@ The unbindOperator method.
 ### setDirty
 The setDirty method.
 
-**Kind**: instance method of [<code>BaseParameter</code>](#BaseParameter)  
+
 **Returns**: <code>boolean</code> - - The return value.  
 
 | Param | Type | Description |
@@ -200,20 +200,20 @@ The setDirty method.
 ### setDirtyFromOp
 The setDirtyFromOp method.
 
-**Kind**: instance method of [<code>BaseParameter</code>](#BaseParameter)  
+
 <a name="BaseParameter+isDirty"></a>
 
 ### isDirty
 The isDirty method.
 
-**Kind**: instance method of [<code>BaseParameter</code>](#BaseParameter)  
+
 **Returns**: <code>boolean</code> - - Returns a boolean.  
 <a name="BaseParameter+removeCleanerFn"></a>
 
 ### removeCleanerFn
 The removeCleanerFn method.
 
-**Kind**: instance method of [<code>BaseParameter</code>](#BaseParameter)  
+
 **Returns**: <code>number</code> - - The return value.  
 
 | Param | Type | Description |
@@ -225,7 +225,7 @@ The removeCleanerFn method.
 ### clone
 The clone method.
 
-**Kind**: instance method of [<code>BaseParameter</code>](#BaseParameter)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -236,13 +236,13 @@ The clone method.
 ### destroy
 The destroy method.
 
-**Kind**: instance method of [<code>BaseParameter</code>](#BaseParameter)  
+
 <a name="Parameter"></a>
 
-## Parameter ⇐ [<code>BaseParameter</code>](#BaseParameter)
+### Parameter 
 Class representing a parameter.
 
-**Kind**: global class  
+
 **Extends**: [<code>BaseParameter</code>](#BaseParameter)  
 
 * [Parameter](#Parameter)
@@ -259,7 +259,7 @@ Class representing a parameter.
     * [getName() ⇒ <code>string</code>](#getName)
     * [setName(name)](#setName)
     * [getOwner() ⇒ <code>any</code>](#getOwner)
-    * [addOwner(ownerItem)](#addOwner)
+    * [setOwner(ownerItem)](#setOwner)
     * [getPath() ⇒ <code>any</code>](#getPath)
     * [setFlag(flag)](#setFlag)
     * [clearFlag(flag)](#clearFlag)
@@ -291,14 +291,14 @@ Create a parameter.
 ### getDataType
 The getDataType method.
 
-**Kind**: instance method of [<code>Parameter</code>](#Parameter)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="Parameter+getValue"></a>
 
 ### getValue
 The getValue method.
 
-**Kind**: instance method of [<code>Parameter</code>](#Parameter)  
+
 **Overrides**: [<code>getValue</code>](#BaseParameter+getValue)  
 **Returns**: <code>any</code> - - The return value.  
 
@@ -311,7 +311,7 @@ The getValue method.
 ### setClean
 The setClean method.
 
-**Kind**: instance method of [<code>Parameter</code>](#Parameter)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -322,7 +322,7 @@ The setClean method.
 ### setValue
 The getValue method.
 
-**Kind**: instance method of [<code>Parameter</code>](#Parameter)  
+
 **Overrides**: [<code>setValue</code>](#BaseParameter+setValue)  
 
 | Param | Type | Description |
@@ -333,9 +333,13 @@ The getValue method.
 <a name="Parameter+setValueDone"></a>
 
 ### setValueDone
-At the end of an interaction session of setting a value.E.g. moving a slider handle, or typing in some valuesthis method should be called to notify that that interaction is completeCode can listed to this event to trigger longer running actions likesaving a file or heavy computation.
+At the end of an interaction session of setting a value.
+E.g. moving a slider handle, or typing in some values
+this method should be called to notify that that interaction is complete
+Code can listed to this event to trigger longer running actions like
+saving a file or heavy computation.
 
-**Kind**: instance method of [<code>Parameter</code>](#Parameter)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -347,7 +351,7 @@ At the end of an interaction session of setting a value.E.g. moving a slider ha
 ### toJSON
 The toJSON method encodes this type as a json object for persistences.
 
-**Kind**: instance method of [<code>Parameter</code>](#Parameter)  
+
 **Returns**: <code>object</code> - - Returns the json object.  
 
 | Param | Type | Description |
@@ -360,7 +364,7 @@ The toJSON method encodes this type as a json object for persistences.
 ### fromJSON
 The fromJSON method decodes a json object for this type.
 
-**Kind**: instance method of [<code>Parameter</code>](#Parameter)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -373,7 +377,7 @@ The fromJSON method decodes a json object for this type.
 ### readBinary
 The readBinary method.
 
-**Kind**: instance method of [<code>Parameter</code>](#Parameter)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -383,9 +387,10 @@ The readBinary method.
 <a name="Parameter+clone"></a>
 
 ### clone
-The clone method constructs a new parameter, copies its valuesfrom this parameter and returns it.
+The clone method constructs a new parameter, copies its values
+from this parameter and returns it.
 
-**Kind**: instance method of [<code>Parameter</code>](#Parameter)  
+
 **Overrides**: [<code>clone</code>](#BaseParameter+clone)  
 **Returns**: [<code>Parameter</code>](#Parameter) - - Returns a new cloned parameter.  
 
@@ -398,7 +403,7 @@ The clone method constructs a new parameter, copies its valuesfrom this paramet
 ### getName
 Getter for the base parameter name.
 
-**Kind**: instance method of [<code>Parameter</code>](#Parameter)  
+
 **Overrides**: [<code>getName</code>](#BaseParameter+getName)  
 **Returns**: <code>string</code> - - Returns the name.  
 <a name="BaseParameter+setName"></a>
@@ -406,7 +411,7 @@ Getter for the base parameter name.
 ### setName
 Setter for the base parameter name.
 
-**Kind**: instance method of [<code>Parameter</code>](#Parameter)  
+
 **Overrides**: [<code>setName</code>](#BaseParameter+setName)  
 
 | Param | Type | Description |
@@ -418,16 +423,16 @@ Setter for the base parameter name.
 ### getOwner
 Getter for the owner of the parameter.
 
-**Kind**: instance method of [<code>Parameter</code>](#Parameter)  
+
 **Overrides**: [<code>getOwner</code>](#BaseParameter+getOwner)  
 **Returns**: <code>any</code> - - The return value.  
-<a name="BaseParameter+addOwner"></a>
+<a name="BaseParameter+setOwner"></a>
 
-### addOwner
-Adds the owner of the parameter.
+### setOwner
+Sets the owner of the parameter.
 
-**Kind**: instance method of [<code>Parameter</code>](#Parameter)  
-**Overrides**: [<code>addOwner</code>](#BaseParameter+addOwner)  
+
+**Overrides**: [<code>setOwner</code>](#BaseParameter+setOwner)  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -438,7 +443,7 @@ Adds the owner of the parameter.
 ### getPath
 Getter for the parameter path.
 
-**Kind**: instance method of [<code>Parameter</code>](#Parameter)  
+
 **Overrides**: [<code>getPath</code>](#BaseParameter+getPath)  
 **Returns**: <code>any</code> - - The return value.  
 <a name="BaseParameter+setFlag"></a>
@@ -446,7 +451,7 @@ Getter for the parameter path.
 ### setFlag
 The setFlag method.
 
-**Kind**: instance method of [<code>Parameter</code>](#Parameter)  
+
 **Overrides**: [<code>setFlag</code>](#BaseParameter+setFlag)  
 
 | Param | Type | Description |
@@ -458,7 +463,7 @@ The setFlag method.
 ### clearFlag
 The clearFlag method.
 
-**Kind**: instance method of [<code>Parameter</code>](#Parameter)  
+
 **Overrides**: [<code>clearFlag</code>](#BaseParameter+clearFlag)  
 
 | Param | Type | Description |
@@ -470,7 +475,7 @@ The clearFlag method.
 ### testFlag
 Returns true if the flag if set, otherwise returns false.
 
-**Kind**: instance method of [<code>Parameter</code>](#Parameter)  
+
 **Overrides**: [<code>testFlag</code>](#BaseParameter+testFlag)  
 **Returns**: <code>boolean</code> - - Returns a boolean indicating if the flag is set.  
 
@@ -483,7 +488,7 @@ Returns true if the flag if set, otherwise returns false.
 ### setEnabled
 The setEnabled method.
 
-**Kind**: instance method of [<code>Parameter</code>](#Parameter)  
+
 **Overrides**: [<code>setEnabled</code>](#BaseParameter+setEnabled)  
 
 | Param | Type | Description |
@@ -495,14 +500,14 @@ The setEnabled method.
 ### isEnabled
 The isEnabled method.
 
-**Kind**: instance method of [<code>Parameter</code>](#Parameter)  
+
 **Overrides**: [<code>isEnabled</code>](#BaseParameter+isEnabled)  
 <a name="BaseParameter+bindOperator"></a>
 
 ### bindOperator
 The bindOperator method.
 
-**Kind**: instance method of [<code>Parameter</code>](#Parameter)  
+
 **Overrides**: [<code>bindOperator</code>](#BaseParameter+bindOperator)  
 
 | Param | Type | Description |
@@ -514,7 +519,7 @@ The bindOperator method.
 ### unbindOperator
 The unbindOperator method.
 
-**Kind**: instance method of [<code>Parameter</code>](#Parameter)  
+
 **Overrides**: [<code>unbindOperator</code>](#BaseParameter+unbindOperator)  
 **Returns**: <code>boolean</code> - - The return value.  
 
@@ -527,7 +532,7 @@ The unbindOperator method.
 ### setDirty
 The setDirty method.
 
-**Kind**: instance method of [<code>Parameter</code>](#Parameter)  
+
 **Overrides**: [<code>setDirty</code>](#BaseParameter+setDirty)  
 **Returns**: <code>boolean</code> - - The return value.  
 
@@ -540,14 +545,14 @@ The setDirty method.
 ### setDirtyFromOp
 The setDirtyFromOp method.
 
-**Kind**: instance method of [<code>Parameter</code>](#Parameter)  
+
 **Overrides**: [<code>setDirtyFromOp</code>](#BaseParameter+setDirtyFromOp)  
 <a name="BaseParameter+isDirty"></a>
 
 ### isDirty
 The isDirty method.
 
-**Kind**: instance method of [<code>Parameter</code>](#Parameter)  
+
 **Overrides**: [<code>isDirty</code>](#BaseParameter+isDirty)  
 **Returns**: <code>boolean</code> - - Returns a boolean.  
 <a name="BaseParameter+removeCleanerFn"></a>
@@ -555,7 +560,7 @@ The isDirty method.
 ### removeCleanerFn
 The removeCleanerFn method.
 
-**Kind**: instance method of [<code>Parameter</code>](#Parameter)  
+
 **Overrides**: [<code>removeCleanerFn</code>](#BaseParameter+removeCleanerFn)  
 **Returns**: <code>number</code> - - The return value.  
 
@@ -568,5 +573,5 @@ The removeCleanerFn method.
 ### destroy
 The destroy method.
 
-**Kind**: instance method of [<code>Parameter</code>](#Parameter)  
+
 **Overrides**: [<code>destroy</code>](#BaseParameter+destroy)  
