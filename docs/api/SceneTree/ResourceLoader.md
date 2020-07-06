@@ -107,7 +107,7 @@ The freeData method.
 <a name="ResourceLoader+getFilepath"></a>
 
 ### getFilepath
-The getFilepath method.
+Returns complete file path.
 
 
 **Returns**: <code>string</code> - - The return value.  

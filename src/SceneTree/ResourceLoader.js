@@ -323,7 +323,8 @@ class ResourceLoader extends EventEmitter {
   }
 
   /**
-   * The getFilepath method.
+   * Returns complete file path.
+   *
    * @param {string} resourceId - The resourceId value.
    * @return {string} - The return value.
    */
@@ -339,6 +340,7 @@ class ResourceLoader extends EventEmitter {
 
   /**
    * The resourceAvailable method.
+   *
    * @param {string} resourceId - The resourceId value.
    * @return {boolean} - The return value.
    */

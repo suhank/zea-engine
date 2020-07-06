@@ -3,6 +3,9 @@
 ### FilePathParameter 
 Represents a specific type of parameter, that only stores file data values.
 
+**Events**
+* **valueChanged:** Triggered when setting file's URL.
+
 
 **Extends**: <code>Parameter</code>  
 
@@ -40,7 +43,9 @@ Create a file path parameter.
 <a name="FilePathParameter+setSupportedExts"></a>
 
 ### setSupportedExts
-The setSupportedExts method.
+Sets supported extensions, if this supports more than one type of files, separate them with regex or(|).
+
+i.e.: jpg|png|gif
 
 
 
@@ -51,14 +56,14 @@ The setSupportedExts method.
 <a name="FilePathParameter+getFilepath"></a>
 
 ### getFilepath
-The getFilepath method.
+Returns complete file path.
 
 
 **Returns**: <code>string</code> - - The return value.  
 <a name="FilePathParameter+setFilepath"></a>
 
 ### setFilepath
-The setFilepath method.
+Resolves resourceId using the specified path and sets its value to the parameter.
 
 
 
@@ -70,21 +75,21 @@ The setFilepath method.
 <a name="FilePathParameter+getFilename"></a>
 
 ### getFilename
-The getFilename method.
+Returns parameter's file name
 
 
 **Returns**: <code>string</code> - - The return value.  
 <a name="FilePathParameter+getExt"></a>
 
 ### getExt
-The getExt method.
+Returns parameter's file extension
 
 
 **Returns**: <code>string</code> - - The return value.  
 <a name="FilePathParameter+getStem"></a>
 
 ### getStem
-The getStem method.
+Returns parameter's file name without extension
 
 
 **Returns**: <code>string</code> - - The return value.  
@@ -119,11 +124,13 @@ The getFileDesc method.
 <a name="FilePathParameter+setUrl"></a>
 
 ### setUrl
+Sets file data.
+
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| url | <code>string</code> | - |
+| url | <code>string</code> | the url value of the |
 | name | <code>string</code> | - |
 | mode | <code>number</code> | - |
 

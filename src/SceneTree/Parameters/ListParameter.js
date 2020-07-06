@@ -1,13 +1,28 @@
 import { ValueSetMode, ParamFlags, Parameter } from './Parameter.js'
 
-/** Class representing a list parameter.
+/**
+ * Represents a specific type of parameter, that only stores any type of list values.
+ *
+ * i.e.:
+ * ```javascript
+ * const listParam = new ListParameter('MyList', [1, 2, 3])
+ * //'myParameterOwnerItem' is an instance of a 'ParameterOwner' class.
+ * // Remember that only 'ParameterOwner' and classes that extend from it can host 'Parameter' objects.
+ * myParameterOwnerItem.addParameter(listParam)
+ * ```
+ *
+ * **Events**
+ * * **valueChanged:** Triggered when setting a value changes in the array(insert, add, remove).
+ * * **elementAdded:** Triggered when an element is added to the array(add, insert).
+ * * **elementRemoved:** Triggered when an element is removed from the array
+ *
  * @extends Parameter
  */
 class ListParameter extends Parameter {
   /**
    * Create a list parameter.
    * @param {string} name - The name of the list parameter.
-   * @param {any} dataType - The dataType value.
+   * @param {string} dataType - The dataType value.
    */
   constructor(name, dataType) {
     super(name, [])
@@ -18,6 +33,7 @@ class ListParameter extends Parameter {
    * The __filter method.
    * @param {any} item - The item value.
    * @return {boolean} - The return value.
+   *
    * @private
    */
   __filter(item) {
@@ -25,26 +41,29 @@ class ListParameter extends Parameter {
   }
 
   /**
-   * The getCount method.
-   * @return {any} - The return value.
+   * Returns the count of items in the array.
+   *
+   * @return {number} - The return value.
    */
   getCount() {
     return this.__value.length
   }
 
   /**
-   * The getElement method.
+   * Returns value from the array in the specified index.
+   *
    * @param {number} index - The index value.
-   * @return {any} - The return value.
+   * @return {object|string|number|any} - The return value.
    */
   getElement(index) {
     return this.__value[index]
   }
 
   /**
-   * The setElement method.
+   * Sets a value in the specified array's index.
+   *
    * @param {number} index - The index value.
-   * @param {any} value - The value value.
+   * @param {object|string|number|any} value - The value value.
    */
   setElement(index, value) {
     this.__value[index] = value
@@ -52,9 +71,10 @@ class ListParameter extends Parameter {
   }
 
   /**
-   * The addElement method.
-   * @param {any} elem - The elem value.
-   * @return {any} - The return value.
+   * Adds a new element at the end of the array pile.
+   *
+   * @param {object|string|number|any} elem - The elem value.
+   * @return {object|string|number|any} - The return value.
    */
   addElement(elem) {
     if (elem == undefined) elem = new this.__dataType()
@@ -70,7 +90,8 @@ class ListParameter extends Parameter {
   }
 
   /**
-   * The removeElement method.
+   * Removes an array element from the specified index
+   *
    * @param {number} index - The index value.
    */
   removeElement(index) {
@@ -82,9 +103,10 @@ class ListParameter extends Parameter {
   }
 
   /**
-   * The insertElement method.
-   * @param {any} index - The index value.
-   * @param {any} elem - The elem value.
+   * Inserts a new element in the specified index.
+   *
+   * @param {number} index - The index value.
+   * @param {object|string|number|any} elem - The elem value.
    */
   insertElement(index, elem) {
     if (!this.__filter(elem)) return
@@ -99,7 +121,8 @@ class ListParameter extends Parameter {
   // Persistence
 
   /**
-   * The toJSON method encodes this type as a json object for persistences.
+   * The toJSON method encodes this type as a json object for persistence.
+   *
    * @param {object} context - The context value.
    * @param {number} flags - The flags value.
    * @return {object} - Returns the json object.
@@ -118,6 +141,7 @@ class ListParameter extends Parameter {
 
   /**
    * The fromJSON method decodes a json object for this type.
+   *
    * @param {object} j - The json object this item must decode.
    * @param {object} context - The context value.
    * @param {number} flags - The flags value.
@@ -152,6 +176,7 @@ class ListParameter extends Parameter {
   /**
    * The clone method constructs a new list parameter, copies its values
    * from this parameter and returns it.
+   *
    * @param {number} flags - The flags value.
    * @return {ListParameter} - Returns a new list parameter.
    */

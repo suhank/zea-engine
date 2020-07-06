@@ -1,14 +1,15 @@
 <a name="CodeParameter"></a>
 
 ### CodeParameter 
-Represents a specific type of parameter, that only stores string values.
+Represents a specific type of parameter, that only stores `string` values.
 
 i.e.:
 ```javascript
-const booleanParam = new BooleanParameter('MyBoolean', true)
+const codeStr = `const sayHello = () => console.log('Hello World')`
+const codeParam = new CodeParameter('MyCode', codeStr)
 //'myParameterOwnerItem' is an instance of a 'ParameterOwner' class.
 // Remember that only 'ParameterOwner' and classes that extend from it can host 'Parameter' objects.
-myParameterOwnerItem.addParameter(booleanParam)
+myParameterOwnerItem.addParameter(codeParam)
 ```
 
 

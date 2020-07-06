@@ -2,7 +2,7 @@ import { Parameter } from './Parameter.js'
 import { sgFactory } from '../SGFactory'
 
 /**
- * Represents a specific type of parameter, that only stores boolean values.
+ * Represents a specific type of parameter, that only stores `boolean` values.
  *
  * i.e.:
  * ```javascript
@@ -10,7 +10,7 @@ import { sgFactory } from '../SGFactory'
  * //'myParameterOwnerItem' is an instance of a 'ParameterOwner' class.
  * // Remember that only 'ParameterOwner' and classes that extend from it can host 'Parameter' objects.
  * myParameterOwnerItem.addParameter(booleanParam)
- *
+ * ```
  * @extends Parameter
  */
 class BooleanParameter extends Parameter {

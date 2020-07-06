@@ -4,6 +4,9 @@ import { resourceLoader } from '../ResourceLoader.js'
 /**
  * Represents a specific type of parameter, that only stores file data values.
  *
+ * **Events**
+ * * **valueChanged:** Triggered when setting file's URL.
+ *
  * @extends Parameter
  */
 class FilePathParameter extends Parameter {
@@ -19,7 +22,9 @@ class FilePathParameter extends Parameter {
   }
 
   /**
-   * The setSupportedExts method.
+   * Sets supported extensions, if this supports more than one type of files, separate them with regex or(|).
+   *
+   * i.e.: jpg|png|gif
    *
    * @param {string} exts - The exts value.
    */
@@ -29,7 +34,7 @@ class FilePathParameter extends Parameter {
   }
 
   /**
-   * The getFilepath method.
+   * Returns complete file path.
    *
    * @return {string} - The return value.
    */
@@ -37,11 +42,12 @@ class FilePathParameter extends Parameter {
     if (this.__file) {
       return resourceLoader.getFilepath(this.__file.id)
     }
+
     return ''
   }
 
   /**
-   * The setFilepath method.
+   * Resolves resourceId using the specified path and sets its value to the parameter.
    *
    * @param {string} filePath - The filePath value.
    * @param {number} mode - The mode value.
@@ -56,7 +62,7 @@ class FilePathParameter extends Parameter {
   }
 
   /**
-   * The getFilename method.
+   * Returns parameter's file name
    *
    * @return {string} - The return value.
    */
@@ -67,7 +73,7 @@ class FilePathParameter extends Parameter {
   }
 
   /**
-   * The getExt method.
+   * Returns parameter's file extension
    *
    * @return {string} - The return value.
    */
@@ -78,7 +84,7 @@ class FilePathParameter extends Parameter {
   }
 
   /**
-   * The getStem method.
+   * Returns parameter's file name without extension
    *
    * @return {string} - The return value.
    */
@@ -136,9 +142,9 @@ class FilePathParameter extends Parameter {
   }
 
   /**
+   * Sets file data.
    *
-   *
-   * @param {string} url -
+   * @param {string} url - the url value of the
    * @param {string} name  -
    * @param {number} mode -
    */
@@ -180,6 +186,7 @@ class FilePathParameter extends Parameter {
 
   /**
    * Sets file parameter value receiving its resource id.
+   *
    * @param {string} value - The value param.
    * @param {number} mode - The mode value.
    * @return {boolean} - The return value.
