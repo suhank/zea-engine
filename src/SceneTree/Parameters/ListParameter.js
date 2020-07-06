@@ -5,7 +5,7 @@ import { ValueSetMode, ParamFlags, Parameter } from './Parameter.js'
  *
  * i.e.:
  * ```javascript
- * const listParam = new ListParameter('MyList', [1, 2, 3])
+ * const listParam = new ListParameter('MyList', GearParameter)
  * //'myParameterOwnerItem' is an instance of a 'ParameterOwner' class.
  * // Remember that only 'ParameterOwner' and classes that extend from it can host 'Parameter' objects.
  * myParameterOwnerItem.addParameter(listParam)
@@ -22,7 +22,7 @@ class ListParameter extends Parameter {
   /**
    * Create a list parameter.
    * @param {string} name - The name of the list parameter.
-   * @param {string} dataType - The dataType value.
+   * @param {string|Parameter} dataType - The dataType value.
    */
   constructor(name, dataType) {
     super(name, [])
@@ -31,7 +31,7 @@ class ListParameter extends Parameter {
 
   /**
    * The __filter method.
-   * @param {any} item - The item value.
+   * @param {string|Parameter} item - The item value.
    * @return {boolean} - The return value.
    *
    * @private
@@ -53,7 +53,7 @@ class ListParameter extends Parameter {
    * Returns value from the array in the specified index.
    *
    * @param {number} index - The index value.
-   * @return {object|string|number|any} - The return value.
+   * @return {Parameter|string} - The return value.
    */
   getElement(index) {
     return this.__value[index]
@@ -63,7 +63,7 @@ class ListParameter extends Parameter {
    * Sets a value in the specified array's index.
    *
    * @param {number} index - The index value.
-   * @param {object|string|number|any} value - The value value.
+   * @param {string|Parameter} value - The value value.
    */
   setElement(index, value) {
     this.__value[index] = value
@@ -73,8 +73,8 @@ class ListParameter extends Parameter {
   /**
    * Adds a new element at the end of the array pile.
    *
-   * @param {object|string|number|any} elem - The elem value.
-   * @return {object|string|number|any} - The return value.
+   * @param {string|Parameter} elem - The elem value.
+   * @return {string|Parameter} - The return value.
    */
   addElement(elem) {
     if (elem == undefined) elem = new this.__dataType()
@@ -106,7 +106,7 @@ class ListParameter extends Parameter {
    * Inserts a new element in the specified index.
    *
    * @param {number} index - The index value.
-   * @param {object|string|number|any} elem - The elem value.
+   * @param {string|Parameter} elem - The elem value.
    */
   insertElement(index, elem) {
     if (!this.__filter(elem)) return
@@ -152,7 +152,7 @@ class ListParameter extends Parameter {
       return
     }
     // Note: JSON data is only used to store user edits, so
-    // parameters loaed from JSON are considered user edited.
+    // parameters loaded from JSON are considered user edited.
     this.__flags |= ParamFlags.USER_EDITED
 
     this.__value = []
