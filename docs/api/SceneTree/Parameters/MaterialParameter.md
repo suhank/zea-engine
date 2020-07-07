@@ -13,6 +13,9 @@ const materialParam = new MaterialParameter('MyMaterial', material)
 // Remember that only 'ParameterOwner' and classes that extend from it can host 'Parameter' objects.
 myParameterOwnerItem.addParameter(materialParam)
 ```
+**Events**
+* **valueParameterValueChanged:**
+* **valueChanged:**
 
 
 **Extends**: <code>Parameter</code>  

@@ -6,6 +6,7 @@ import { resourceLoader } from '../ResourceLoader.js'
  *
  * **Events**
  * * **valueChanged:** Triggered when setting file's URL.
+ * * **fileUpdated:** Triggered when parameter's value is updated.
  *
  * @extends Parameter
  */

@@ -17,6 +17,11 @@ import { BaseImage } from '../BaseImage.js'
  * myParameterOwnerItem.addParameter(numberParam)
  * ```
  *
+ * * **Events**
+ * * **valueChanged:** Triggered every time the Image value changes
+ * * **textureDisconnected:** Triggered when Image value is cleaned/removed.
+ * * **textureConnected:** Triggered when the Image value is set.
+ *
  * @extends NumberParameter
  */
 class MaterialFloatParam extends NumberParameter {

@@ -12,6 +12,9 @@ import { Parameter } from './Parameter.js'
  * myParameterOwnerItem.addParameter(vec2Param)
  * ```
  *
+ * **Events**
+ * * **rangeChanged:** Triggered when rage array changes.
+ *
  * @extends Parameter
  */
 class Vec2Parameter extends Parameter {

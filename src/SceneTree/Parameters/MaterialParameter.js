@@ -14,6 +14,9 @@ import { materialLibraryManager } from '../MaterialLibraryManager.js'
  * // Remember that only 'ParameterOwner' and classes that extend from it can host 'Parameter' objects.
  * myParameterOwnerItem.addParameter(materialParam)
  * ```
+ * **Events**
+ * * **valueParameterValueChanged:** Triggered when parameter's value changes.
+ * * **valueChanged:** Triggered when parameter's value changes, except on cleaning processes.
  *
  * @extends Parameter
  */
