@@ -1,7 +1,20 @@
 <a name="TreeItemParameter"></a>
 
 ### TreeItemParameter 
-Class representing a tree item parameter.
+Represents a specific type of parameter, that only stores `TreeItem` values.
+
+i.e.:
+```javascript
+const treeItem = new TreeItem('tree1')
+const treeItemParam = new TreeItemParameter('MyTreeItem', treeItem)
+//'myParameterOwnerItem' is an instance of a 'ParameterOwner' class.
+// Remember that only 'ParameterOwner' and classes that extend from it can host 'Parameter' objects.
+myParameterOwnerItem.addParameter(treeItemParam)
+```
+
+**Events**
+* **treeItemGlobalXfoChanged:** Triggered when computed world Xfo of parameter's `TreeItem` changes.
+* **valueChanged:** Triggered when parameter's value changes.
 
 
 **Extends**: <code>Parameter</code>  
@@ -9,9 +22,9 @@ Class representing a tree item parameter.
 * [TreeItemParameter ⇐ <code>Parameter</code>](#TreeItemParameter)
     * [new TreeItemParameter(name, filterFn)](#new-TreeItemParameter)
     * [setOwner(owner)](#setOwner)
-    * [getOwner() ⇒ <code>any</code>](#getOwner)
+    * [getOwner() ⇒ <code>TreeItem</code>](#getOwner)
     * [setFilterFn(flterFn)](#setFilterFn)
-    * [getFilterFn() ⇒ <code>any</code>](#getFilterFn)
+    * [getFilterFn() ⇒ <code>function</code>](#getFilterFn)
     * [setValue(treeItem, mode) ⇒ <code>boolean</code>](#setValue)
     * [toJSON(context, flags) ⇒ <code>object</code>](#toJSON)
     * [fromJSON(j, context, flags)](#fromJSON)
@@ -27,26 +40,26 @@ Create a tree item parameter.
 | Param | Type | Description |
 | --- | --- | --- |
 | name | <code>string</code> | The name of the tree item parameter. |
-| filterFn | <code>any</code> | The filterFn value. |
+| filterFn | <code>function</code> | The filterFn value. |
 
 <a name="TreeItemParameter+setOwner"></a>
 
 ### setOwner
-The setOwner method.
+Sets parameter value's owner `TreeItem`.
 
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| owner | <code>any</code> | The owner value. |
+| owner | <code>TreeItem</code> | The owner value. |
 
 <a name="TreeItemParameter+getOwner"></a>
 
 ### getOwner
-The getOwner method.
+Returns parameter value's owner `TreeItem`.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>TreeItem</code> - - The return value.  
 <a name="TreeItemParameter+setFilterFn"></a>
 
 ### setFilterFn
@@ -56,7 +69,7 @@ The setFilterFn method.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| flterFn | <code>any</code> | The flterFn value. |
+| flterFn | <code>function</code> | The flterFn value. |
 
 <a name="TreeItemParameter+getFilterFn"></a>
 
@@ -64,24 +77,24 @@ The setFilterFn method.
 The getFilterFn method.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>function</code> - - The return value.  
 <a name="TreeItemParameter+setValue"></a>
 
 ### setValue
-The setValue method.
+Sets parameter's `TreeItem` value.
 
 
 **Returns**: <code>boolean</code> - - The return value.  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| treeItem | <code>any</code> | The treeItem value. |
+| treeItem | <code>TreeItem</code> | The treeItem value. |
 | mode | <code>number</code> | The mode value. |
 
 <a name="TreeItemParameter+toJSON"></a>
 
 ### toJSON
-The toJSON method encodes this type as a json object for persistences.
+The toJSON method encodes this type as a json object for persistence.
 
 
 **Returns**: <code>object</code> - - Returns the json object.  

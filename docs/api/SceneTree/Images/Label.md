@@ -5,12 +5,12 @@ Represents a 2D label item the scene.
 Since displaying text in the scene is not an easy task,
 we've abstracted the complicated logic behind this class, transforming any text into a 2D image(`DataImage`).
 
-**Library List:**
+**Library List**
 * LabelPack
 
 **Parameters**
 * **Library(`StringParameter`):** Library you wan to use for your label, see **Library List** above.
-* **Text(`StringParameter`):**
+* **Text(`StringParameter`):** 
 * **FontColor(`ColorParameter`):**
 * **Margin(`NumberParameter`):**
 * **BorderWidth(`NumberParameter`):**
@@ -21,7 +21,7 @@ we've abstracted the complicated logic behind this class, transforming any text 
 * **ColorParameter(`BackgroundColor`):**
 * **FillBackground(`BooleanParameter`):**
 * **StrokeBackgroundOutline(`BooleanParameter`):**
-* **FontSize(`NumberParameter`):**
+* **FontSize(`NumberParameter`):** Represents FontSize of the label
 * **Font(`StringParameter`):**
 
 **Events**

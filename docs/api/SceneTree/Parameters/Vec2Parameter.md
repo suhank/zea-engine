@@ -11,6 +11,9 @@ const vec2Param = new Vec2Parameter('MyVec2', new Vec2(1.2, 3.4))
 myParameterOwnerItem.addParameter(vec2Param)
 ```
 
+**Events**
+* **rangeChanged:** Triggered when rage array changes.
+
 
 **Extends**: <code>Parameter</code>  
 

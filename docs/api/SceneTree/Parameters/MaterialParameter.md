@@ -14,8 +14,8 @@ const materialParam = new MaterialParameter('MyMaterial', material)
 myParameterOwnerItem.addParameter(materialParam)
 ```
 **Events**
-* **valueParameterValueChanged:**
-* **valueChanged:**
+* **valueParameterValueChanged:** Triggered when parameter's value changes.
+* **valueChanged:** Triggered when parameter's value changes, except on cleaning processes.
 
 
 **Extends**: <code>Parameter</code>  

@@ -5,6 +5,7 @@ Represents a specific type of parameter, that only stores file data values.
 
 **Events**
 * **valueChanged:** Triggered when setting file's URL.
+* **fileUpdated:** Triggered when parameter's value is updated.
 
 
 **Extends**: <code>Parameter</code>  
