@@ -4,8 +4,8 @@
 Represents a BaseImage with the ability to load data.
 
 **Events**
-* **loaded**
-* **updated**
+* **loaded:** Triggered when the data is loaded.
+* **updated:** Triggered when the data is updated.
 
 
 **Extends**: <code>BaseImage</code>  

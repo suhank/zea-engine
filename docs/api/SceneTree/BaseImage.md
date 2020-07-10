@@ -3,8 +3,8 @@
 ### BaseImage 
 Represents a 2D image item, containing width and height.
 
-**Prameters**
-* **AlphaFromLuminance(`BooleanParameter`):** Sets alpha chanel to the luminance of the image and all color chanels to `0`.
+**Parameters**
+* **AlphaFromLuminance(`BooleanParameter`):** Sets alpha chanel to the luminance of the image and all color channels to `0`.
 * **Invert(`BooleanParameter`):** Horizontally flips the image(Basically inverting X pixels).
 * **FlipY(`BooleanParameter`):** Vertically flips the image, meaning that it would be upside down if enabled.
 
