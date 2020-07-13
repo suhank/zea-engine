@@ -1,25 +1,21 @@
-- Overview
+<!-- - Overview
   * [Introduction](introduction.md)
-  * [Architecture Overview](arch-overview.md)
-  * [Writing more pages](more-pages.md)
   * [Scene Tree](scene-tree.md)
-  * [Kinematics](kinematics.md)
+  * [Kinematics](kinematics.md) -->
 
 - Getting started
-  * [Get These Applications](getting-started/development-setup.md)
+  * [Setting up your workspace](getting-started/development-setup.md)
   * [Getting Started using Zea Engine](getting-started/get-started-with-engine.md)
   * [Using Zea Engine with NPM and Yarn](getting-started/using-npm-yarn.md)
   * [Using Zea Engine with React](getting-started/using-react.md)
 
-- Concepts
+<!-- - Tutorials
   * [Using Groups](concepts/groups.md)
   * [Notifications](concepts/notifications.md)
-
-- Customization
-  * [Configuration](configuration.md)
   * [Loading Custom Geometry](write-a-SG-plugin.md)
   * [Customizing the Scene Tree](write-a-SG-plugin.md)
   * [Customizing the Renderer](write-a-Renderer-plugin.md)
+   -->
 
 - How To
   * [Changing The Background](tutorials/changing-the-background.md)
@@ -33,8 +29,15 @@
   * [Loading custom points data](tutorials/custom-points.md)
   * [Launching a VR Session](tutorials/VR.md)
 
-- User Interfaces 
-  * [Zea User Interfaces Library](zea-web-components.md)
+- Main Concepts
+  * [Architecture Overview](arch-overview.md)
+
+<!-- - User Interfaces 
+  * [Zea User Interfaces Library](zea-web-components.md) -->
+
+- Technical Overview 
+  * Release Notes
+    * [zea-engine-1.1.0](release-notes/zea-engine-1.1.0.md)
 
 - API Reference
 [//]: <> (API)
@@ -158,6 +161,3 @@
   * [BaseEvent](api/Utilities/BaseEvent)
   * [EventEmitter](api/Utilities/EventEmitter)
 [//]: <> (API)
-
-- Releases
-  * [zea-engine-1.0.7](zea-engine-1.0.7.md)
