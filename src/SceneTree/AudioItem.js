@@ -1,12 +1,29 @@
-import {
-  ValueSetMode,
-  FilePathParameter,
-  BooleanParameter,
-  NumberParameter,
-} from './Parameters/index'
+/* eslint-disable constructor-super */
+import { ValueSetMode, FilePathParameter, BooleanParameter, NumberParameter } from './Parameters/index'
 import { TreeItem } from './TreeItem.js'
 
-/** Class representing an audio item in a scene tree.
+/**
+ * A special type of `TreeItem` that let you handle audio files.
+ * <br>
+ * <br>
+ * **Parameters**
+ * * **FilePath(`FilePathParameter`):**
+ * * **Autoplay(`BooleanParameter`):**
+ * * **PlayState(`NumberParameter`):**
+ * * **Mute(`BooleanParameter`):**
+ * * **Gain(`NumberParameter`):**
+ * * **Loop(`BooleanParameter):**
+ * * **SpatializeAudio(`BooleanParameter`):**
+ * * **refDistance(`NumberParameter`):**
+ * * **maxDistance(`NumberParameter`):**
+ * * **rolloffFactor(`NumberParameter`):**
+ * * **coneInnerAngle(`NumberParameter`):**
+ * * **coneOuterGain(`NumberParameter`):**
+ *
+ * **Events**
+ * * **loaded**
+ * * **audioSourceCreated**
+ * @private
  * @extends TreeItem
  */
 class AudioItem extends TreeItem {
@@ -42,13 +59,13 @@ class AudioItem extends TreeItem {
         // TODO: clean this up.
         window.ZeaAudioaudioCtx.decodeAudioData(
           audioData,
-          buffer => {
+          (buffer) => {
             audioBuffer = buffer
             this.__loaded = true
             this.emit('loaded', {})
             if (autoplayParam.getValue()) startAudioPlayback()
           },
-          e => {
+          (e) => {
             console.log('Error with decoding audio data' + e.err)
           }
         )
@@ -56,13 +73,9 @@ class AudioItem extends TreeItem {
 
       request.send()
     })
-    const autoplayParam = this.addParameter(
-      new BooleanParameter('Autoplay', false)
-    )
-    const playStateParam = this.addParameter(
-      new NumberParameter('PlayState', 0)
-    )
-    playStateParam.addListener('valueChanged', event => {
+    const autoplayParam = this.addParameter(new BooleanParameter('Autoplay', false))
+    const playStateParam = this.addParameter(new NumberParameter('PlayState', 0))
+    playStateParam.addListener('valueChanged', (event) => {
       if (mode.mode != ValueSetMode.CUSTOM) {
         switch (playStateParam.getValue()) {
           case 0:
@@ -119,7 +132,7 @@ class AudioItem extends TreeItem {
       if (audioSource) audioSource.loop = loopParam.getValue()
     })
 
-    this.mute = value => {
+    this.mute = (value) => {
       muteParam.setValue(value, ValueSetMode.CUSTOM)
     }
 
@@ -129,8 +142,9 @@ class AudioItem extends TreeItem {
   }
 
   /**
-   * The isLoaded method.
-   * @return {any} - The return value.
+   * Returns loaded status of the audio item
+   *
+   * @return {boolean} - `The return value`.
    */
   isLoaded() {
     return this.__loaded
@@ -148,6 +162,7 @@ class AudioItem extends TreeItem {
 }
 
 /** Class representing a audio file item in a scene tree.
+ * @ignore
  * @extends AudioItem
  */
 class FileAudioItem extends AudioItem {

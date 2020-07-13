@@ -1,3 +1,6 @@
+/* eslint-disable new-cap */
+/* eslint-disable require-jsdoc */
+/* eslint-disable camelcase */
 import { Vec2, Vec3 } from '../../Math/index'
 import { decodeText } from '../../Utilities/index'
 import { sgFactory } from '../SGFactory.js'
@@ -23,17 +26,10 @@ function abs_vec3(value) {
   return new Vec3(Math.abs(value.x), Math.abs(value.y), Math.abs(value.z))
 }
 function sectorize_vec2(value) {
-  return new Vec2(
-    step(0.0, value.x) * 2.0 - 1.0,
-    step(0.0, value.y) * 2.0 - 1.0
-  )
+  return new Vec2(step(0.0, value.x) * 2.0 - 1.0, step(0.0, value.y) * 2.0 - 1.0)
 }
 function sectorize_vec3(value) {
-  return new Vec3(
-    step(0.0, value.x) * 2.0 - 1.0,
-    step(0.0, value.y) * 2.0 - 1.0,
-    step(0.0, value.z) * 2.0 - 1.0
-  )
+  return new Vec3(step(0.0, value.x) * 2.0 - 1.0, step(0.0, value.y) * 2.0 - 1.0, step(0.0, value.z) * 2.0 - 1.0)
 }
 
 function latLongUVsFromDir(dir) {
@@ -89,10 +85,7 @@ function sphOctUvToDir(uv) {
   }
   if (sabsuv > 1.0) {
     const ts = Vec2(uv.y, uv.x)
-    uv = abs_vec2(ts)
-      .negate()
-      .add(new Vec2(1, 1))
-      .multiply(suv)
+    uv = abs_vec2(ts).negate().add(new Vec2(1, 1)).multiply(suv)
 
     sabsuv = sum_vec2(abs_vec2(uv))
   }
@@ -132,14 +125,11 @@ class EnvMap extends VLHImage {
     const samples = entries.samples
 
     if (samples) {
-      if (window.TextDecoder)
-        this.__sampleSets = JSON.parse(new TextDecoder('utf-8').decode(samples))
+      if (window.TextDecoder) this.__sampleSets = JSON.parse(new TextDecoder('utf-8').decode(samples))
       else this.__sampleSets = JSON.parse(decodeText(samples))
 
       if (this.__sampleSets.luminanceThumbnail)
-        this.__thumbSize = Math.sqrt(
-          this.__sampleSets.luminanceThumbnail.length
-        )
+        this.__thumbSize = Math.sqrt(this.__sampleSets.luminanceThumbnail.length)
     }
   }
 
@@ -189,9 +179,7 @@ class EnvMap extends VLHImage {
    * @return {any} - The return value.
    */
   uvToLuminance(uv) {
-    const thmbPixel =
-      Math.floor(uv.y * this.__thumbSize) * this.__thumbSize +
-      Math.floor(uv.x * this.__thumbSize)
+    const thmbPixel = Math.floor(uv.y * this.__thumbSize) * this.__thumbSize + Math.floor(uv.x * this.__thumbSize)
     return this.__sampleSets.luminanceThumbnail[thmbPixel]
   }
 

@@ -1,4 +1,4 @@
-## Classes
+### Classes
 
 <dl>
 <dt><a href="#FileImage">FileImage</a> ⇐ <code>BaseImage</code></dt>
@@ -11,10 +11,10 @@
 
 <a name="FileImage"></a>
 
-## FileImage ⇐ <code>BaseImage</code>
+### FileImage 
 Class representing a file image.
 
-**Kind**: global class  
+
 **Extends**: <code>BaseImage</code>  
 
 * [FileImage ⇐ <code>BaseImage</code>](#FileImage)
@@ -48,35 +48,35 @@ Create a file image.
 ### getFilepath
 The getFilepath method.
 
-**Kind**: instance method of [<code>FileImage</code>](#FileImage)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="FileImage+isStream"></a>
 
 ### isStream
 The isStream method.
 
-**Kind**: instance method of [<code>FileImage</code>](#FileImage)  
+
 **Returns**: <code>boolean</code> - - The return value.  
 <a name="FileImage+isLoaded"></a>
 
 ### isLoaded
 The isLoaded method.
 
-**Kind**: instance method of [<code>FileImage</code>](#FileImage)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="FileImage+getParams"></a>
 
 ### getParams
 The getParams method.
 
-**Kind**: instance method of [<code>FileImage</code>](#FileImage)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="FileImage+toJSON"></a>
 
 ### toJSON
 The toJSON method encodes this type as a json object for persistences.
 
-**Kind**: instance method of [<code>FileImage</code>](#FileImage)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -88,7 +88,7 @@ The toJSON method encodes this type as a json object for persistences.
 ### fromJSON
 The fromJSON method decodes a json object for this type.
 
-**Kind**: instance method of [<code>FileImage</code>](#FileImage)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -101,7 +101,7 @@ The fromJSON method decodes a json object for this type.
 ### readBinary
 The readBinary method.
 
-**Kind**: instance method of [<code>FileImage</code>](#FileImage)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -113,7 +113,7 @@ The readBinary method.
 ### registerLoader
 The registerLoader method.
 
-**Kind**: static method of [<code>FileImage</code>](#FileImage)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -125,7 +125,7 @@ The registerLoader method.
 ### constructLoader
 The constructLoader method.
 
-**Kind**: static method of [<code>FileImage</code>](#FileImage)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -135,10 +135,10 @@ The constructLoader method.
 
 <a name="FileImage2D"></a>
 
-## FileImage2D ⇐ [<code>FileImage</code>](#FileImage)
+### FileImage2D 
 Class representing a 2D file image.
 
-**Kind**: global class  
+
 **Extends**: [<code>FileImage</code>](#FileImage)  
 
 * [FileImage2D](#FileImage2D)
@@ -167,7 +167,7 @@ Create a file image 2D.
 ### getFilepath
 The getFilepath method.
 
-**Kind**: instance method of [<code>FileImage2D</code>](#FileImage2D)  
+
 **Overrides**: [<code>getFilepath</code>](#FileImage+getFilepath)  
 **Returns**: <code>any</code> - - The return value.  
 <a name="FileImage+isStream"></a>
@@ -175,7 +175,7 @@ The getFilepath method.
 ### isStream
 The isStream method.
 
-**Kind**: instance method of [<code>FileImage2D</code>](#FileImage2D)  
+
 **Overrides**: [<code>isStream</code>](#FileImage+isStream)  
 **Returns**: <code>boolean</code> - - The return value.  
 <a name="FileImage+isLoaded"></a>
@@ -183,7 +183,7 @@ The isStream method.
 ### isLoaded
 The isLoaded method.
 
-**Kind**: instance method of [<code>FileImage2D</code>](#FileImage2D)  
+
 **Overrides**: [<code>isLoaded</code>](#FileImage+isLoaded)  
 **Returns**: <code>any</code> - - The return value.  
 <a name="FileImage+getParams"></a>
@@ -191,7 +191,7 @@ The isLoaded method.
 ### getParams
 The getParams method.
 
-**Kind**: instance method of [<code>FileImage2D</code>](#FileImage2D)  
+
 **Overrides**: [<code>getParams</code>](#FileImage+getParams)  
 **Returns**: <code>any</code> - - The return value.  
 <a name="FileImage+toJSON"></a>
@@ -199,7 +199,7 @@ The getParams method.
 ### toJSON
 The toJSON method encodes this type as a json object for persistences.
 
-**Kind**: instance method of [<code>FileImage2D</code>](#FileImage2D)  
+
 **Overrides**: [<code>toJSON</code>](#FileImage+toJSON)  
 
 | Param | Type | Description |
@@ -212,7 +212,7 @@ The toJSON method encodes this type as a json object for persistences.
 ### fromJSON
 The fromJSON method decodes a json object for this type.
 
-**Kind**: instance method of [<code>FileImage2D</code>](#FileImage2D)  
+
 **Overrides**: [<code>fromJSON</code>](#FileImage+fromJSON)  
 
 | Param | Type | Description |
@@ -226,7 +226,7 @@ The fromJSON method decodes a json object for this type.
 ### readBinary
 The readBinary method.
 
-**Kind**: instance method of [<code>FileImage2D</code>](#FileImage2D)  
+
 **Overrides**: [<code>readBinary</code>](#FileImage+readBinary)  
 
 | Param | Type | Description |

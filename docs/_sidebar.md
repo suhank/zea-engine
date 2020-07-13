@@ -1,25 +1,21 @@
-- Overview
+<!-- - Overview
   * [Introduction](introduction.md)
-  * [Architecture Overview](arch-overview.md)
-  * [Writing more pages](more-pages.md)
   * [Scene Tree](scene-tree.md)
-  * [Kinematics](kinematics.md)
+  * [Kinematics](kinematics.md) -->
 
 - Getting started
-  * [Get These Applications](getting-started/development-setup.md)
+  * [Setting up your workspace](getting-started/development-setup.md)
   * [Getting Started using Zea Engine](getting-started/get-started-with-engine.md)
   * [Using Zea Engine with NPM and Yarn](getting-started/using-npm-yarn.md)
   * [Using Zea Engine with React](getting-started/using-react.md)
 
-- Concepts
+<!-- - Tutorials
   * [Using Groups](concepts/groups.md)
   * [Notifications](concepts/notifications.md)
-
-- Customization
-  * [Configuration](configuration.md)
   * [Loading Custom Geometry](write-a-SG-plugin.md)
   * [Customizing the Scene Tree](write-a-SG-plugin.md)
   * [Customizing the Renderer](write-a-Renderer-plugin.md)
+   -->
 
 - How To
   * [Changing The Background](tutorials/changing-the-background.md)
@@ -33,8 +29,16 @@
   * [Loading custom points data](tutorials/custom-points.md)
   * [Launching a VR Session](tutorials/VR.md)
 
-- User Interfaces 
-  * [Zea User Interfaces Library](zea-web-components.md)
+- Main Concepts
+  * [Architecture Overview](arch-overview.md)
+
+<!-- - User Interfaces 
+  * [Zea User Interfaces Library](zea-web-components.md) -->
+
+- Technical Overview 
+  * Release Notes
+    * [zea-engine-1.1.0](release-notes/zea-engine-1.1.0.md)
+  * [Acknowledgements](acknowledgements.md)
 
 - API Reference
 [//]: <> (API)
@@ -56,7 +60,9 @@
  * [Vec4](api/Math/Vec4)
  * [Xfo](api/Math/Xfo)
 * [Renderer](api/Renderer/README)
+ * [GLBaseRenderer](api/Renderer/GLBaseRenderer)
  * [GLFbo](api/Renderer/GLFbo)
+ * [GLGeomItem](api/Renderer/GLGeomItem)
  * [GLImageAtlas](api/Renderer/GLImageAtlas)
  * [GLRenderTarget](api/Renderer/GLRenderTarget)
  * [GLRenderer](api/Renderer/GLRenderer)
@@ -72,7 +78,6 @@
   * [VRViewport](api/Renderer/VR/VRViewport)
 * [SceneTree](api/SceneTree/README)
  * [AssetItem](api/SceneTree/AssetItem)
- * [AudioItem](api/SceneTree/AudioItem)
  * [BaseGeomItem](api/SceneTree/BaseGeomItem)
  * [BaseImage](api/SceneTree/BaseImage)
  * [BaseItem](api/SceneTree/BaseItem)
@@ -119,9 +124,12 @@
   * [EnvMap](api/SceneTree/Images/EnvMap)
   * [FileImage](api/SceneTree/Images/FileImage)
   * [GIFImage](api/SceneTree/Images/GIFImage)
+  * [HDRImageMixer](api/SceneTree/Images/HDRImageMixer)
   * [LDRImage](api/SceneTree/Images/LDRImage)
   * [LDRVideo](api/SceneTree/Images/LDRVideo)
   * [Label](api/SceneTree/Images/Label)
+  * [Lightmap](api/SceneTree/Images/Lightmap)
+  * [ProceduralSky](api/SceneTree/Images/ProceduralSky)
   * [VLHImage](api/SceneTree/Images/VLHImage)
   * [VideoStreamImage2D](api/SceneTree/Images/VideoStreamImage2D)
  * [Manipulators](api/SceneTree/Manipulators/README)
@@ -156,11 +164,7 @@
   * [Vec4Parameter](api/SceneTree/Parameters/Vec4Parameter)
   * [XfoParameter](api/SceneTree/Parameters/XfoParameter)
 * [Utilities](api/Utilities/README)
- * [Signal](api/Utilities/Signal)
+ * [BaseEvent](api/Utilities/BaseEvent)
+ * [EventEmitter](api/Utilities/EventEmitter)
 [//]: <> (API)
 
-- Releases
-  * [zea-engine-1.0.7](zea-engine-1.0.7.md)
-
-- Licenses
-  * [Acknowledgements](acknowledgements.md)

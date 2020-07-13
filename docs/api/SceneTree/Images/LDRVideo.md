@@ -1,9 +1,9 @@
 <a name="LDRVideo"></a>
 
-## LDRVideo ⇐ <code>FileImage</code>
+### LDRVideo 
 Class representing a LDR (low dynamic range) video.
 
-**Kind**: global class  
+
 **Extends**: <code>FileImage</code>  
 <a name="new_LDRVideo_new"></a>
 

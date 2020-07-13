@@ -1,19 +1,19 @@
 <a name="Scene"></a>
 
-## Scene
-Class representing a scene in a scene tree.
+### Scene
+Class representing the environment where all the displayed assets live.
 
-**Kind**: global class  
+
 
 * [Scene](#Scene)
     * [new Scene(resources)](#new-Scene)
-    * [getSettings() ⇒ <code>any</code>](#getSettings)
-    * [getRoot() ⇒ <code>any</code>](#getRoot)
-    * [getResourceLoader() ⇒ <code>any</code>](#getResourceLoader)
-    * [setEnvMap(envMap)](#setEnvMap)
-    * [addAsset(asset)](#addAsset)
-    * [setupGrid(gridSize, resolution, gridColor) ⇒ <code>any</code>](#setupGrid)
-    * [loadCommonAssetResource(resourceId) ⇒ <code>any</code>](#loadCommonAssetResource)
+    * [getSettings() ⇒ <code>BaseItem</code>](#getSettings)
+    * [getRoot() ⇒ <code>TreeItem</code>](#getRoot)
+    * [getResourceLoader() ⇒ <code>ResourceLoader</code>](#getResourceLoader)
+    * ~~[.setEnvMap(envMap)](#Scene+setEnvMap)~~
+    * ~~[.addAsset(asset)](#Scene+addAsset)~~
+    * [setupGrid(gridSize, resolution, gridColor) ⇒ <code>TreeItem</code>](#setupGrid)
+    * [loadCommonAssetResource(resourceId) ⇒ <code>VLAAsset</code>](#loadCommonAssetResource)
     * [toJSON(context, flags) ⇒ <code>object</code>](#toJSON)
     * [fromJSON(json, context)](#fromJSON)
 
@@ -25,58 +25,62 @@ Create a scene.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| resources | <code>any</code> | The resources value. |
+| resources | <code>object</code> | The resources value. |
 
 <a name="Scene+getSettings"></a>
 
 ### getSettings
 The getRoot method.
 
-**Kind**: instance method of [<code>Scene</code>](#Scene)  
-**Returns**: <code>any</code> - - The return value.  
+
+**Returns**: <code>BaseItem</code> - - The return value.  
 <a name="Scene+getRoot"></a>
 
 ### getRoot
-The getRoot method.
+Returns the scene's root item(`TreeItem`) that owns every item in the scene.
 
-**Kind**: instance method of [<code>Scene</code>](#Scene)  
-**Returns**: <code>any</code> - - The return value.  
+
+**Returns**: <code>TreeItem</code> - - The return value.  
 <a name="Scene+getResourceLoader"></a>
 
 ### getResourceLoader
-The getResourceLoader method.
+Returns resourceLoader object set on class initialization.
 
-**Kind**: instance method of [<code>Scene</code>](#Scene)  
-**Returns**: <code>any</code> - - The return value.  
+
+**Returns**: <code>ResourceLoader</code> - - The return value.  
 <a name="Scene+setEnvMap"></a>
 
-### setEnvMap
-The setEnvMap method.
+### ~~scene.setEnvMap(envMap)~~
+***Deprecated***
 
-**Kind**: instance method of [<code>Scene</code>](#Scene)  
+Sets Environment Map with the BaseImage you'd like to display in your scene background.
+
+
 
 | Param | Type | Description |
 | --- | --- | --- |
-| envMap | <code>any</code> | The envMap value. |
+| envMap | <code>EnvMap</code> | The envMap value. |
 
 <a name="Scene+addAsset"></a>
 
-### addAsset
-The addAsset method.
+### ~~scene.addAsset(asset)~~
+***Deprecated***
 
-**Kind**: instance method of [<code>Scene</code>](#Scene)  
+Adds a child item to the scene root item.
+
+
 
 | Param | Type | Description |
 | --- | --- | --- |
-| asset | <code>any</code> | The asset value. |
+| asset | <code>AssetItem</code> | The asset value. |
 
 <a name="Scene+setupGrid"></a>
 
 ### setupGrid
-Set up the scene grid.
+Sets up and displays the scene grid. Under the hood it is just another TreeItem with Geometry Items for the lines.
 
-**Kind**: instance method of [<code>Scene</code>](#Scene)  
-**Returns**: <code>any</code> - - The return value.  
+
+**Returns**: <code>TreeItem</code> - - The return value.  
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -87,21 +91,21 @@ Set up the scene grid.
 <a name="Scene+loadCommonAssetResource"></a>
 
 ### loadCommonAssetResource
-The loadCommonAssetResource method.
+Loads and return a file resource using the specified path.
 
-**Kind**: instance method of [<code>Scene</code>](#Scene)  
-**Returns**: <code>any</code> - - The return value.  
+
+**Returns**: <code>VLAAsset</code> - - The return value.  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| resourceId | <code>any</code> | The resourceId value. |
+| resourceId | <code>string</code> | The resourceId value. |
 
 <a name="Scene+toJSON"></a>
 
 ### toJSON
 The toJSON method encodes this type as a json object for persistences.
 
-**Kind**: instance method of [<code>Scene</code>](#Scene)  
+
 **Returns**: <code>object</code> - - Returns the json object.  
 
 | Param | Type | Default | Description |
@@ -114,7 +118,7 @@ The toJSON method encodes this type as a json object for persistences.
 ### fromJSON
 The fromJSON method decodes a json object for this type.
 
-**Kind**: instance method of [<code>Scene</code>](#Scene)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |

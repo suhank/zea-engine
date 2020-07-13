@@ -1,9 +1,9 @@
 <a name="GIFImage"></a>
 
-## GIFImage ⇐ <code>FileImage</code>
+### GIFImage 
 Class representing a GIF image.
 
-**Kind**: global class  
+
 **Extends**: <code>FileImage</code>  
 
 * [GIFImage ⇐ <code>FileImage</code>](#GIFImage)
@@ -27,7 +27,7 @@ Create a GIF image.
 ### getFrameDelay
 The getFrameDelay method.
 
-**Kind**: instance method of [<code>GIFImage</code>](#GIFImage)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |

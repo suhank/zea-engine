@@ -1,9 +1,11 @@
 <a name="Vec3"></a>
 
-## Vec3 ⇐ <code>AttrValue</code>
-Representing a Vec3(three-dimensional floating point vector).Vector classes in _zea-engine_ internally store values in [Float32Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array) andexpose getters and setters for the component values.
+### Vec3 
+Representing a Vec3(three-dimensional floating point vector).
+Vector classes in _zea-engine_ internally store values in [Float32Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array) and
+expose getters and setters for the component values.
 
-**Kind**: global class  
+
 **Extends**: <code>AttrValue</code>  
 
 * [Vec3 ⇐ <code>AttrValue</code>](#Vec3)
@@ -58,7 +60,14 @@ Representing a Vec3(three-dimensional floating point vector).Vector classes in 
 <a name="new_Vec3_new"></a>
 
 ### new Vec3
-Creates a Vec3.The type of values of the `(x, y, z)` coordenates can be [Float32Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array),[Uint32Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint32Array),[Int32Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array) and[ArrayBuffer](https://developer.mozilla.org/es/docs/Web/JavaScript/Referencia/Objetos_globales/ArrayBuffer).<br>You can also pass one JSON object parameter.
+Creates a Vec3.
+
+The type of values of the `(x, y, z)` coordenates can be [Float32Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array),
+[Uint32Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint32Array),
+[Int32Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array) and
+[ArrayBuffer](https://developer.mozilla.org/es/docs/Web/JavaScript/Referencia/Objetos_globales/ArrayBuffer).
+<br>
+You can also pass one JSON object parameter.
 
 
 | Param | Type | Default | Description |
@@ -72,14 +81,14 @@ Creates a Vec3.The type of values of the `(x, y, z)` coordenates can be [Float
 ### x 
 Getter for `x` value.
 
-**Kind**: instance property of [<code>Vec3</code>](#Vec3)  
+
 **Returns**: <code>number</code> - - Returns the x value.  
 <a name="Vec3+x"></a>
 
-### vec3
+### x
 Setter for `x` value.
 
-**Kind**: instance property of [<code>Vec3</code>](#Vec3)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -90,14 +99,14 @@ Setter for `x` value.
 ### y 
 Getter for `y` value.
 
-**Kind**: instance property of [<code>Vec3</code>](#Vec3)  
+
 **Returns**: <code>number</code> - - Returns the y value.  
 <a name="Vec3+y"></a>
 
-### vec3
+### y
 Setter for `y` value.
 
-**Kind**: instance property of [<code>Vec3</code>](#Vec3)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -108,14 +117,14 @@ Setter for `y` value.
 ### z 
 Getter for `z` value.
 
-**Kind**: instance property of [<code>Vec3</code>](#Vec3)  
+
 **Returns**: <code>number</code> - - Returns the z value.  
 <a name="Vec3+z"></a>
 
-### vec3
+### z
 Setter for `z` value.
 
-**Kind**: instance property of [<code>Vec3</code>](#Vec3)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -126,21 +135,21 @@ Setter for `z` value.
 ### xy 
 Getter for `xy` swizzel.
 
-**Kind**: instance property of [<code>Vec3</code>](#Vec3)  
+
 **Returns**: <code>Vec2</code> - - Returns the z value.  
 <a name="Vec3+yz"></a>
 
 ### yz 
 Getter for `yz` swizzel.
 
-**Kind**: instance property of [<code>Vec3</code>](#Vec3)  
+
 **Returns**: <code>Vec2</code> - - Returns the z value.  
 <a name="Vec3+set"></a>
 
 ### set
 Setter from scalar components.
 
-**Kind**: instance method of [<code>Vec3</code>](#Vec3)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -153,7 +162,7 @@ Setter from scalar components.
 ### setDataArray
 Sets the state of a Vec3 Object.
 
-**Kind**: instance method of [<code>Vec3</code>](#Vec3)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -164,7 +173,7 @@ Sets the state of a Vec3 Object.
 ### setFromOther
 Sets the state of a Vec3 Object from another Vec3.
 
-**Kind**: instance method of [<code>Vec3</code>](#Vec3)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -175,21 +184,21 @@ Sets the state of a Vec3 Object from another Vec3.
 ### isNull
 Checks if the coordenates of this Vec3 are 0 0 0.
 
-**Kind**: instance method of [<code>Vec3</code>](#Vec3)  
+
 **Returns**: <code>boolean</code> - - Returns `true` if the coordenates are(0, 0, 0), otherwise, `false`.  
 <a name="Vec3+is111"></a>
 
 ### is111
 Checks if the coordenates of this Vec3 are 1 1 1.
 
-**Kind**: instance method of [<code>Vec3</code>](#Vec3)  
+
 **Returns**: <code>boolean</code> - - Returns `true` if the coordenates are(1, 1, 1), otherwise, `false`.  
 <a name="Vec3+equal"></a>
 
 ### equal
 Checks if this Vec3 is exactly the same as another Vec3.
 
-**Kind**: instance method of [<code>Vec3</code>](#Vec3)  
+
 **Returns**: <code>boolean</code> - - Returns `true` if are the same Vector, otherwise, `false`.  
 
 | Param | Type | Description |
@@ -201,7 +210,7 @@ Checks if this Vec3 is exactly the same as another Vec3.
 ### notEquals
 Checks if this Vec2 is different from another Vec2.
 
-**Kind**: instance method of [<code>Vec3</code>](#Vec3)  
+
 **Returns**: <code>boolean</code> - - Returns `true` if the Vec3s are different, otherwise, `false`.  
 
 | Param | Type | Description |
@@ -213,7 +222,7 @@ Checks if this Vec2 is different from another Vec2.
 ### approxEqual
 Returns true if this Vec2 is approximately the same as other.
 
-**Kind**: instance method of [<code>Vec3</code>](#Vec3)  
+
 **Returns**: <code>boolean</code> - - Returns true or false.  
 
 | Param | Type | Description |
@@ -226,7 +235,7 @@ Returns true if this Vec2 is approximately the same as other.
 ### add
 Adds other to this Vec3 and return the result as a new Vec3.
 
-**Kind**: instance method of [<code>Vec3</code>](#Vec3)  
+
 **Returns**: [<code>Vec3</code>](#Vec3) - - Returns a new Vec3.  
 
 | Param | Type | Description |
@@ -238,7 +247,7 @@ Adds other to this Vec3 and return the result as a new Vec3.
 ### addInPlace
 Adds other to this Vec3.
 
-**Kind**: instance method of [<code>Vec3</code>](#Vec3)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -249,7 +258,7 @@ Adds other to this Vec3.
 ### subtract
 Subtracts other from this Vec3 and returns the result as a new Vec3.
 
-**Kind**: instance method of [<code>Vec3</code>](#Vec3)  
+
 **Returns**: [<code>Vec3</code>](#Vec3) - - Returns a new Vec3.  
 
 | Param | Type | Description |
@@ -261,7 +270,7 @@ Subtracts other from this Vec3 and returns the result as a new Vec3.
 ### subtractInPlace
 Subtracts other from this Vec3.
 
-**Kind**: instance method of [<code>Vec3</code>](#Vec3)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -272,7 +281,7 @@ Subtracts other from this Vec3.
 ### multiply
 Multiplies two Vec3s and returns the result as a new Vec3.
 
-**Kind**: instance method of [<code>Vec3</code>](#Vec3)  
+
 **Returns**: [<code>Vec3</code>](#Vec3) - - Returns a new Vec3.  
 
 | Param | Type | Description |
@@ -284,7 +293,7 @@ Multiplies two Vec3s and returns the result as a new Vec3.
 ### multiplyInPlace
 Multiplies two Vec3s.
 
-**Kind**: instance method of [<code>Vec3</code>](#Vec3)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -295,7 +304,7 @@ Multiplies two Vec3s.
 ### divide
 Divides two Vec3s and returns the result as a new Vec3.
 
-**Kind**: instance method of [<code>Vec3</code>](#Vec3)  
+
 **Returns**: [<code>Vec3</code>](#Vec3) - - Returns a new Vec3.  
 
 | Param | Type | Description |
@@ -307,7 +316,7 @@ Divides two Vec3s and returns the result as a new Vec3.
 ### divideInPlace
 Divides two Vec3s.
 
-**Kind**: instance method of [<code>Vec3</code>](#Vec3)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -318,7 +327,7 @@ Divides two Vec3s.
 ### scale
 Scales this Vec3 by scalar and returns the result as a new Vec3.
 
-**Kind**: instance method of [<code>Vec3</code>](#Vec3)  
+
 **Returns**: [<code>Vec3</code>](#Vec3) - - Returns a new Vec3.  
 
 | Param | Type | Description |
@@ -330,7 +339,7 @@ Scales this Vec3 by scalar and returns the result as a new Vec3.
 ### scaleInPlace
 Scales this Vec3 by scalar.
 
-**Kind**: instance method of [<code>Vec3</code>](#Vec3)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -341,35 +350,35 @@ Scales this Vec3 by scalar.
 ### negate
 Negates this Vec3 (x = -x, y = -y and z = -z), but returns the result as a new Vec3.
 
-**Kind**: instance method of [<code>Vec3</code>](#Vec3)  
+
 **Returns**: [<code>Vec3</code>](#Vec3) - - Returns a new Vec3.  
 <a name="Vec3+inverse"></a>
 
 ### inverse
 Returns the inverse of this Vec3, but returns. the result as a new Vec3
 
-**Kind**: instance method of [<code>Vec3</code>](#Vec3)  
+
 **Returns**: [<code>Vec3</code>](#Vec3) - - Returns a new Vec3.  
 <a name="Vec3+lengthSquared"></a>
 
 ### lengthSquared
 Calculates the squared length of this Vec3.
 
-**Kind**: instance method of [<code>Vec3</code>](#Vec3)  
+
 **Returns**: <code>number</code> - - Returns the length.  
 <a name="Vec3+length"></a>
 
 ### length
 Calculates the length of this Vec3.
 
-**Kind**: instance method of [<code>Vec3</code>](#Vec3)  
+
 **Returns**: <code>number</code> - - Returns the length.  
 <a name="Vec3+distanceTo"></a>
 
 ### distanceTo
 Calculates the distance to another Vec3.
 
-**Kind**: instance method of [<code>Vec3</code>](#Vec3)  
+
 **Returns**: <code>number</code> - - Returns the distance between vectors.  
 
 | Param | Type | Description |
@@ -379,23 +388,24 @@ Calculates the distance to another Vec3.
 <a name="Vec3+normalize"></a>
 
 ### normalize
-Normalizes the Vec3 and returns it as a new Vec3.Multiplies coordenates value by the inverse of the vector length.
+Normalizes the Vec3 and returns it as a new Vec3.
+Multiplies coordenates value by the inverse of the vector length.
 
-**Kind**: instance method of [<code>Vec3</code>](#Vec3)  
+
 **Returns**: [<code>Vec3</code>](#Vec3) - - Returns the Vec3 normalized.  
 <a name="Vec3+normalizeInPlace"></a>
 
 ### normalizeInPlace
 Normalizes this Vec3 multiplying coordenate values by the inverse of the vector length.
 
-**Kind**: instance method of [<code>Vec3</code>](#Vec3)  
+
 **Returns**: <code>number</code> - - The return value.  
 <a name="Vec3+resize"></a>
 
 ### resize
 Creates and returns a new Vec3 with the new coordenates(calculated with this Vec3 coordenates and the specified length).
 
-**Kind**: instance method of [<code>Vec3</code>](#Vec3)  
+
 **Returns**: [<code>Vec3</code>](#Vec3) - - The return value.  
 
 | Param | Type | Description |
@@ -407,7 +417,7 @@ Creates and returns a new Vec3 with the new coordenates(calculated with this Vec
 ### resizeInPlace
 Modifies current coordenates using the specified length.
 
-**Kind**: instance method of [<code>Vec3</code>](#Vec3)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -418,7 +428,7 @@ Modifies current coordenates using the specified length.
 ### dot
 Calculates the dot product of this Vec3 against another Vec3.
 
-**Kind**: instance method of [<code>Vec3</code>](#Vec3)  
+
 **Returns**: <code>number</code> - - Returns the dot product.  
 
 | Param | Type | Description |
@@ -430,7 +440,7 @@ Calculates the dot product of this Vec3 against another Vec3.
 ### cross
 Calculates the cross product of two Vec3s and returns the result as a new Vec3.
 
-**Kind**: instance method of [<code>Vec3</code>](#Vec3)  
+
 **Returns**: [<code>Vec3</code>](#Vec3) - - Returns the cross product as a new Vec3.  
 
 | Param | Type | Description |
@@ -442,7 +452,7 @@ Calculates the cross product of two Vec3s and returns the result as a new Vec3.
 ### angleTo
 Gets the angle between this Vec3 and b.
 
-**Kind**: instance method of [<code>Vec3</code>](#Vec3)  
+
 **Returns**: <code>number</code> - - Returns the angle in radians.  
 
 | Param | Type | Description |
@@ -454,7 +464,7 @@ Gets the angle between this Vec3 and b.
 ### lerp
 Performs a linear interpolation between this Vec3 and other.
 
-**Kind**: instance method of [<code>Vec3</code>](#Vec3)  
+
 **Returns**: [<code>Vec3</code>](#Vec3) - - Returns a new Vec3.  
 
 | Param | Type | Description |
@@ -467,14 +477,14 @@ Performs a linear interpolation between this Vec3 and other.
 ### abs
 Returns a new Vec3 whose component values are the abs of this Vec3s component values.
 
-**Kind**: instance method of [<code>Vec3</code>](#Vec3)  
+
 **Returns**: [<code>Vec3</code>](#Vec3) - - Returns a new Vec3.  
 <a name="Vec3+setRandomDir"></a>
 
 ### setRandomDir
 Sets the vector a random vector on the surface of a sphere with the radius of the givenn scale value.
 
-**Kind**: instance method of [<code>Vec3</code>](#Vec3)  
+
 **Returns**: [<code>Vec3</code>](#Vec3) - - The random Vec3.  
 
 | Param | Type | Default | Description |
@@ -486,7 +496,7 @@ Sets the vector a random vector on the surface of a sphere with the radius of th
 ### setRandom
 Generates a randome vector anywhere in the sphere defined by the provided scale value.
 
-**Kind**: instance method of [<code>Vec3</code>](#Vec3)  
+
 **Returns**: [<code>Vec3</code>](#Vec3) - - The random Vec3.  
 
 | Param | Type | Default | Description |
@@ -498,28 +508,28 @@ Generates a randome vector anywhere in the sphere defined by the provided scale 
 ### clone
 Clones this Vec3 and returns a new Vec3.
 
-**Kind**: instance method of [<code>Vec3</code>](#Vec3)  
+
 **Returns**: [<code>Vec3</code>](#Vec3) - - Returns a new Vec3.  
 <a name="Vec3+asArray"></a>
 
 ### asArray
 Returns the type as an array. Often used to pass types to the GPU.
 
-**Kind**: instance method of [<code>Vec3</code>](#Vec3)  
+
 **Returns**: <code>array</code> - - Returns as an array.  
 <a name="Vec3+toJSON"></a>
 
 ### toJSON
 Encodes Vec3 Class as a JSON object for persistence.
 
-**Kind**: instance method of [<code>Vec3</code>](#Vec3)  
+
 **Returns**: <code>object</code> - - The json object.  
 <a name="Vec3+fromJSON"></a>
 
 ### fromJSON
 Decodes a JSON object to set the state of this class.
 
-**Kind**: instance method of [<code>Vec3</code>](#Vec3)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |

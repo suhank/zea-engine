@@ -1,9 +1,9 @@
 <a name="VertexAttribute"></a>
 
-## VertexAttribute ⇐ <code>Attribute</code>
+### VertexAttribute 
 Class representing vertex attributes.
 
-**Kind**: global class  
+
 **Extends**: <code>Attribute</code>  
 
 * [VertexAttribute ⇐ <code>Attribute</code>](#VertexAttribute)
@@ -38,7 +38,7 @@ Create vertex attributes
 ### getFaceVertexValueRef
 The getFaceVertexValueRef method.
 
-**Kind**: instance method of [<code>VertexAttribute</code>](#VertexAttribute)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -51,7 +51,7 @@ The getFaceVertexValueRef method.
 ### setFaceVertexValue
 The setFaceVertexValue method.
 
-**Kind**: instance method of [<code>VertexAttribute</code>](#VertexAttribute)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -64,7 +64,7 @@ The setFaceVertexValue method.
 ### setFaceVertexValue
 The setFaceVertexValue_ByVertexIndex method.
 
-**Kind**: instance method of [<code>VertexAttribute</code>](#VertexAttribute)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -77,7 +77,7 @@ The setFaceVertexValue_ByVertexIndex method.
 ### setSplitVertexValue
 The setSplitVertexValue method.
 
-**Kind**: instance method of [<code>VertexAttribute</code>](#VertexAttribute)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -90,7 +90,7 @@ The setSplitVertexValue method.
 ### setSplitVertexValues
 The setSplitVertexValues method.
 
-**Kind**: instance method of [<code>VertexAttribute</code>](#VertexAttribute)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -103,21 +103,21 @@ The setSplitVertexValues method.
 ### getSplits
 The getSplits method.
 
-**Kind**: instance method of [<code>VertexAttribute</code>](#VertexAttribute)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="VertexAttribute+getSplitCount"></a>
 
 ### getSplitCount
 The getSplitCount method.
 
-**Kind**: instance method of [<code>VertexAttribute</code>](#VertexAttribute)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="VertexAttribute+generateSplitValues"></a>
 
 ### generateSplitValues
 The generateSplitValues method.
 
-**Kind**: instance method of [<code>VertexAttribute</code>](#VertexAttribute)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -130,7 +130,7 @@ The generateSplitValues method.
 ### toJSON
 The toJSON method encodes this type as a json object for persistences.
 
-**Kind**: instance method of [<code>VertexAttribute</code>](#VertexAttribute)  
+
 **Returns**: <code>object</code> - - Returns the json object.  
 
 | Param | Type | Description |
@@ -143,7 +143,7 @@ The toJSON method encodes this type as a json object for persistences.
 ### fromJSON
 The fromJSON method decodes a json object for this type.
 
-**Kind**: instance method of [<code>VertexAttribute</code>](#VertexAttribute)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -156,7 +156,7 @@ The fromJSON method decodes a json object for this type.
 ### loadSplitValues
 The loadSplitValues method.
 
-**Kind**: instance method of [<code>VertexAttribute</code>](#VertexAttribute)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
