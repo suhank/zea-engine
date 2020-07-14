@@ -3,6 +3,16 @@
 ### LinesCuboid 
 A class for generating a lines cuboid shape.
 
+**Parameters**
+* **x(`NumberParameter`):**
+* **y(`NumberParameter`):**
+* **z(`NumberParameter`):**
+* **BaseZAtZero(`NumberParameter`):**
+
+**Events**
+* **geomDataTopologyChanged:** Triggered when building the rect.
+* **geomDataChanged:** Triggered whenever the length of the rect changes in `X`or `Y`axes
+
 
 **Extends**: <code>Lines</code>  
 

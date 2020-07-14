@@ -8,11 +8,11 @@ const grid = new Grid(5, 5, 50, 50, true)
 ```
 
 **Parameters**
-* **x(`NumberParameter`):** Length of the grid side of `X` axis
-* **y(`NumberParameter`):** Number of lines to each side of `Y` axis
-* **xDivisions(`NumberParameter`):**
-* **yDivisions(`NumberParameter`):**
-* **skipCenterLines(`BooleanParameter`):**
+* **x(`NumberParameter`):** Length of the grid along the `X` axis.
+* **y(`NumberParameter`):** Length of the grid along the `Y` axis.
+* **xDivisions(`NumberParameter`):** Number of divisions along `X` axis
+* **yDivisions(`NumberParameter`):** Number of divisions along `Y` axis
+* **skipCenterLines(`BooleanParameter`):** Property that indicates whether to display the center grid lines or not
 
 
 **Extends**: <code>Lines</code>  
@@ -38,34 +38,34 @@ Create a grid.
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| x | <code>number</code> | <code>1</code> | The length of the grid along the X axis. |
-| y | <code>number</code> | <code>1</code> | The length of the grid along the Y axis. |
-| xDivisions | <code>number</code> | <code>10</code> | The number of divisions along both sides of the `X` axis. |
-| yDivisions | <code>number</code> | <code>10</code> | The number of divisions along both sides of the `Y` axis. |
+| x | <code>number</code> | <code>1</code> | The length of the grid along the `X` axis. |
+| y | <code>number</code> | <code>1</code> | The length of the grid along the `Y` axis. |
+| xDivisions | <code>number</code> | <code>10</code> | The number of divisions along `X` axis. |
+| yDivisions | <code>number</code> | <code>10</code> | The number of divisions along `Y` axis. |
 | skipCenterLines | <code>boolean</code> | <code>false</code> | A boolean indicating whether to display the center grid lines or not. |
 
 <a name="Grid+sizeX"></a>
 
 ### sizeX 
-Getter for the length of the grid along the X axis.
+Getter for the length of the grid along the `X` axis.
 
 
 **Returns**: <code>number</code> - - Returns the length.  
 <a name="Grid+sizeX"></a>
 
 ### sizeX
-Setter for the length of the grid along the X axis.
+Setter for the length of the grid along the `X` axis.
 
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| val | <code>number</code> | The length along the X axis. |
+| val | <code>number</code> | The length along the `X` axis. |
 
 <a name="Grid+sizeY"></a>
 
 ### sizeY 
-Getter for the length of the grid along the Y axis.
+Getter for the length of the grid along the `Y` axis.
 
 
 **Returns**: <code>number</code> - - Returns the length.  
@@ -78,19 +78,19 @@ Setter for the length of the grid along the U axis.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| val | <code>number</code> | The length along the Y axis. |
+| val | <code>number</code> | The length along the `Y` axis. |
 
 <a name="Grid+divisionsX"></a>
 
 ### divisionsX 
-Getter for the number of divisions along the X axis.
+Getter for the number of divisions along the `X` axis.
 
 
 **Returns**: <code>number</code> - - Returns the number of divisions.  
 <a name="Grid+divisionsX"></a>
 
 ### divisionsX
-Setter for the number of divisions along the X axis.
+Setter for the number of divisions along the `X` axis.
 
 
 
@@ -101,14 +101,14 @@ Setter for the number of divisions along the X axis.
 <a name="Grid+divisionsY"></a>
 
 ### divisionsY 
-Getter for the number of divisions along the Y axis.
+Getter for the number of divisions along the `Y` axis.
 
 
 **Returns**: <code>number</code> - - Returns the number of divisions.  
 <a name="Grid+divisionsY"></a>
 
 ### divisionsY
-Setter for the number of divisions along the Y axis.
+Setter for the number of divisions along the `Y` axis.
 
 
 
@@ -125,8 +125,8 @@ Setter for the size of the grid.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| x | <code>number</code> | The length along the X axis. |
-| y | <code>number</code> | The length along the Y axis. |
+| x | <code>number</code> | The length along the `X` axis. |
+| y | <code>number</code> | The length along the `Y` axis. |
 
 <a name="Grid+toJSON"></a>
 

@@ -2,7 +2,19 @@ import { Lines } from '../Lines.js'
 import { NumberParameter } from '../../Parameters/NumberParameter.js'
 import { sgFactory } from '../../SGFactory.js'
 
-/** A class for generating a lines cuboid shape.
+/**
+ * A class for generating a lines cuboid shape.
+ *
+ * **Parameters**
+ * * **x(`NumberParameter`):**
+ * * **y(`NumberParameter`):**
+ * * **z(`NumberParameter`):**
+ * * **BaseZAtZero(`NumberParameter`):**
+ *
+ * **Events**
+ * * **geomDataTopologyChanged:** Triggered when building the rect.
+ * * **geomDataChanged:** Triggered whenever the length of the rect changes in `X`or `Y`axes
+ *
  * @extends Lines
  */
 class LinesCuboid extends Lines {
@@ -19,12 +31,10 @@ class LinesCuboid extends Lines {
     this.__x = this.addParameter(new NumberParameter('x', x))
     this.__y = this.addParameter(new NumberParameter('y', y))
     this.__z = this.addParameter(new NumberParameter('z', z))
-    
-    this.__baseZAtZero = this.addParameter(
-      new NumberParameter('BaseZAtZero', baseZAtZero)
-    )
+
+    this.__baseZAtZero = this.addParameter(new NumberParameter('BaseZAtZero', baseZAtZero))
     this.__rebuild()
-    
+
     const resize = () => {
       this.__resize()
     }

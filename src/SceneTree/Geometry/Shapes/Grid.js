@@ -11,21 +11,21 @@ import { sgFactory } from '../../SGFactory.js'
  * ```
  *
  * **Parameters**
- * * **x(`NumberParameter`):** Length of the grid side of `X` axis
- * * **y(`NumberParameter`):** Number of lines to each side of `Y` axis
- * * **xDivisions(`NumberParameter`):**
- * * **yDivisions(`NumberParameter`):**
- * * **skipCenterLines(`BooleanParameter`):**
+ * * **x(`NumberParameter`):** Length of the grid along the `X` axis.
+ * * **y(`NumberParameter`):** Length of the grid along the `Y` axis.
+ * * **xDivisions(`NumberParameter`):** Number of divisions along `X` axis
+ * * **yDivisions(`NumberParameter`):** Number of divisions along `Y` axis
+ * * **skipCenterLines(`BooleanParameter`):** Property that indicates whether to display the center grid lines or not
  *
  * @extends Lines
  */
 class Grid extends Lines {
   /**
    * Create a grid.
-   * @param {number} x - The length of the grid along the X axis.
-   * @param {number} y - The length of the grid along the Y axis.
-   * @param {number} xDivisions - The number of divisions along both sides of the `X` axis.
-   * @param {number} yDivisions - The number of divisions along both sides of the `Y` axis.
+   * @param {number} x - The length of the grid along the `X` axis.
+   * @param {number} y - The length of the grid along the `Y` axis.
+   * @param {number} xDivisions - The number of divisions along `X` axis.
+   * @param {number} yDivisions - The number of divisions along `Y` axis.
    * @param {boolean} skipCenterLines - A boolean indicating whether to display the center grid lines or not.
    */
   constructor(x = 1.0, y = 1.0, xDivisions = 10, yDivisions = 10, skipCenterLines = false) {
@@ -43,7 +43,8 @@ class Grid extends Lines {
   }
 
   /**
-   * Getter for the length of the grid along the X axis.
+   * Getter for the length of the grid along the `X` axis.
+   *
    * @return {number} - Returns the length.
    */
   get sizeX() {
@@ -51,8 +52,9 @@ class Grid extends Lines {
   }
 
   /**
-   * Setter for the length of the grid along the X axis.
-   * @param {number} val - The length along the X axis.
+   * Setter for the length of the grid along the `X` axis.
+   *
+   * @param {number} val - The length along the `X` axis.
    */
   set sizeX(val) {
     this.__x = val
@@ -60,7 +62,8 @@ class Grid extends Lines {
   }
 
   /**
-   * Getter for the length of the grid along the Y axis.
+   * Getter for the length of the grid along the `Y` axis.
+   *
    * @return {number} - Returns the length.
    */
   get sizeY() {
@@ -70,7 +73,7 @@ class Grid extends Lines {
   /**
    * Setter for the length of the grid along the U axis.
    *
-   * @param {number} val - The length along the Y axis.
+   * @param {number} val - The length along the `Y` axis.
    */
   set sizeY(val) {
     this.__y = val
@@ -78,7 +81,7 @@ class Grid extends Lines {
   }
 
   /**
-   * Getter for the number of divisions along the X axis.
+   * Getter for the number of divisions along the `X` axis.
    *
    * @return {number} - Returns the number of divisions.
    */
@@ -87,7 +90,7 @@ class Grid extends Lines {
   }
 
   /**
-   * Setter for the number of divisions along the X axis.
+   * Setter for the number of divisions along the `X` axis.
    *
    * @param {number} val - The number of divisions.
    */
@@ -97,7 +100,7 @@ class Grid extends Lines {
   }
 
   /**
-   * Getter for the number of divisions along the Y axis.
+   * Getter for the number of divisions along the `Y` axis.
    *
    * @return {number} - Returns the number of divisions.
    */
@@ -106,7 +109,8 @@ class Grid extends Lines {
   }
 
   /**
-   * Setter for the number of divisions along the Y axis.
+   * Setter for the number of divisions along the `Y` axis.
+   *
    * @param {number} val - The number of divisions.
    */
   set divisionsY(val) {
@@ -116,8 +120,9 @@ class Grid extends Lines {
 
   /**
    * Setter for the size of the grid.
-   * @param {number} x - The length along the X axis.
-   * @param {number} y - The length along the Y axis.
+   *
+   * @param {number} x - The length along the `X` axis.
+   * @param {number} y - The length along the `Y` axis.
    */
   setSize(x, y) {
     this.__x = x
