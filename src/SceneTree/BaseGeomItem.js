@@ -3,7 +3,11 @@ import { TreeItem } from './TreeItem'
 import { Material } from './Material'
 import { ValueSetMode } from './Parameters/index'
 
-/** Class representing a base geometry item in a scene tree.
+/**
+ * Base class that represents geometry items with layering, overlaying and cut away features.
+ *
+ * **Events**
+ * * **cutAwayChanged:** Triggered everytime the cutaway variables change(if enabled or not, the vector and the distance).
  * @extends TreeItem
  */
 class BaseGeomItem extends TreeItem {
@@ -21,8 +25,10 @@ class BaseGeomItem extends TreeItem {
   }
 
   /**
-   * The setOverlay method.
-   * @param {any} val - The val param.
+   * Sets overlay value.
+   *
+   * @todo Need to find the layer and add this item to it.
+   * @param {boolean} val - `true` to enable it.
    */
   setOverlay(val) {
     // TODO: need to find the layer and add this item to it.
@@ -30,7 +36,8 @@ class BaseGeomItem extends TreeItem {
   }
 
   /**
-   * The getLayers method.
+   * Returns `true` if overlay is enabled for current item.
+   *
    * @return {boolean} - The return value.
    */
   isOverlay() {
@@ -38,7 +45,9 @@ class BaseGeomItem extends TreeItem {
   }
 
   /**
-   * Adds a layer.
+   * Adds a layer to current item.
+   *
+   * @todo Need to find the layer and add this item to it.
    * @param {string} name - The name of the layer.
    */
   addLayer(name) {
@@ -47,8 +56,9 @@ class BaseGeomItem extends TreeItem {
   }
 
   /**
-   * The getLayers method.
-   * @return {any} - The return value.
+   * Returns all layers in current item.
+   *
+   * @return {array} - The return value.
    */
   getLayers() {
     return this.__layers
@@ -58,16 +68,18 @@ class BaseGeomItem extends TreeItem {
   // Cutaways
 
   /**
-   * Checks if cutways are enabled.
-   * @return {boolean} - Returns true if enabled.
+   * Checks if cutaway is enabled.
+   *
+   * @return {boolean} - Returns `true` if enabled.
    */
   isCutawayEnabled() {
     return this.__cutAway
   }
 
   /**
-   * Setter for enabling cutways.
-   * @param {any} state - The state of the cutway.
+   * Sets cutaway state.
+   *
+   * @param {boolean} state - `true` to enable it, otherwise `false`.
    */
   setCutawayEnabled(state) {
     this.__cutAway = state
@@ -75,16 +87,18 @@ class BaseGeomItem extends TreeItem {
   }
 
   /**
-   * Getter for cutway vectors.
-   * @return {any} - The return value.
+   * Returns cutaway vector value.
+   *
+   * @return {Vec3|boolean} - `Vec3` when it is set, `false` on default.
    */
   getCutVector() {
     return this.__cutAwayVector
   }
 
   /**
-   * Setter for cutway vectors.
-   * @param {any} cutAwayVector - The cutAwayVector value.
+   * Sets cutaway vector value.
+   *
+   * @param {Vec3} cutAwayVector - The cutAwayVector value.
    */
   setCutVector(cutAwayVector) {
     this.__cutAwayVector = cutAwayVector
@@ -93,15 +107,17 @@ class BaseGeomItem extends TreeItem {
 
   /**
    * Getter for the cutaway distance.
-   * @return {any} - The return value.
+   *
+   * @return {number} - The return value.
    */
   getCutDist() {
     return this.__cutAwayDist
   }
 
   /**
-   * Setter for the cutaway distance.
-   * @param {any} cutAwayDist - The cutAwayDist value.
+   * Sets cutaway distance value.
+   *
+   * @param {number} cutAwayDist - The cutAwayDist value.
    */
   setCutDist(cutAwayDist) {
     this.__cutAwayDist = cutAwayDist
@@ -112,8 +128,9 @@ class BaseGeomItem extends TreeItem {
   // Persistence
 
   /**
-   * The readBinary method.
-   * @param {object} reader - The reader value.
+   * Sets state of current Item(Including layers & material) using a binary reader object.
+   *
+   * @param {BinReader} reader - The reader value.
    * @param {object} context - The context value.
    */
   readBinary(reader, context) {
@@ -130,9 +147,7 @@ class BaseGeomItem extends TreeItem {
         // material = materialLibrary.getMaterial('DefaultMaterial');
 
         material = new Material(materialName, 'SimpleSurfaceShader')
-        material
-          .getParameter('BaseColor')
-          .setValue(Color.random(0.25), ValueSetMode.DATA_LOAD)
+        material.getParameter('BaseColor').setValue(Color.random(0.25), ValueSetMode.DATA_LOAD)
         context.assetItem.getMaterialLibrary().addMaterial(material)
       }
       this.setMaterial(material, ValueSetMode.DATA_LOAD)

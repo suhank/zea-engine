@@ -1,9 +1,9 @@
 <a name="GLOverlayPass"></a>
 
-## GLOverlayPass ⇐ <code>GLOpaqueGeomsPass</code>
+### GLOverlayPass 
 Class representing a GL overlay pass.
 
-**Kind**: global class  
+
 **Extends**: <code>GLOpaqueGeomsPass</code>  
 
 * [GLOverlayPass ⇐ <code>GLOpaqueGeomsPass</code>](#GLOverlayPass)
@@ -28,7 +28,7 @@ Create a GL overlay pass.
 ### init
 The init method.
 
-**Kind**: instance method of [<code>GLOverlayPass</code>](#GLOverlayPass)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -40,7 +40,7 @@ The init method.
 ### filterGeomItem
 The filterGeomItem method.
 
-**Kind**: instance method of [<code>GLOverlayPass</code>](#GLOverlayPass)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -52,7 +52,7 @@ The filterGeomItem method.
 ### draw
 The draw method.
 
-**Kind**: instance method of [<code>GLOverlayPass</code>](#GLOverlayPass)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -63,7 +63,7 @@ The draw method.
 ### drawGeomData
 The drawGeomData method.
 
-**Kind**: instance method of [<code>GLOverlayPass</code>](#GLOverlayPass)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |

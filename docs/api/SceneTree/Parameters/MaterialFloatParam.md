@@ -1,9 +1,9 @@
 <a name="MaterialFloatParam"></a>
 
-## MaterialFloatParam ⇐ <code>NumberParameter</code>
+### MaterialFloatParam 
 Class representing a material float parameter.
 
-**Kind**: global class  
+
 **Extends**: <code>NumberParameter</code>  
 
 * [MaterialFloatParam ⇐ <code>NumberParameter</code>](#MaterialFloatParam)
@@ -31,14 +31,14 @@ Create a material float parameter.
 ### getImage
 The getImage method.
 
-**Kind**: instance method of [<code>MaterialFloatParam</code>](#MaterialFloatParam)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="MaterialFloatParam+setImage"></a>
 
 ### setImage
 The setImage method.
 
-**Kind**: instance method of [<code>MaterialFloatParam</code>](#MaterialFloatParam)  
+
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -50,7 +50,7 @@ The setImage method.
 ### setValue
 The setValue method.
 
-**Kind**: instance method of [<code>MaterialFloatParam</code>](#MaterialFloatParam)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -61,7 +61,7 @@ The setValue method.
 ### readBinary
 The readBinary method.
 
-**Kind**: instance method of [<code>MaterialFloatParam</code>](#MaterialFloatParam)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -71,9 +71,10 @@ The readBinary method.
 <a name="MaterialFloatParam+clone"></a>
 
 ### clone
-The clone method constructs a new material float parameter,copies its values from this parameter and returns it.
+The clone method constructs a new material float parameter,
+copies its values from this parameter and returns it.
 
-**Kind**: instance method of [<code>MaterialFloatParam</code>](#MaterialFloatParam)  
+
 **Returns**: [<code>MaterialFloatParam</code>](#MaterialFloatParam) - - Returns a new cloned material float parameter.  
 
 | Param | Type | Description |

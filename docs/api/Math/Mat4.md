@@ -1,9 +1,10 @@
 <a name="Mat4"></a>
 
-## Mat4 ⇐ <code>AttrValue</code>
-A class representing a 4x4 matrix.This matrix class is based on GLM, and is column major.
+### Mat4 
+A class representing a 4x4 matrix.
+This matrix class is based on GLM, and is column major.
 
-**Kind**: global class  
+
 **Extends**: <code>AttrValue</code>  
 
 * [Mat4 ⇐ <code>AttrValue</code>](#Mat4)
@@ -108,14 +109,14 @@ Initializes the Mat3 class with given data.
 ### m00 
 Getter for row 0, column 0.
 
-**Kind**: instance property of [<code>Mat4</code>](#Mat4)  
+
 **Returns**: <code>number</code> - - Returns the m00 value.  
 <a name="Mat4+m00"></a>
 
-### m0
+### m00
 Setter for row 0, column 0.
 
-**Kind**: instance property of [<code>Mat4</code>](#Mat4)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -126,14 +127,14 @@ Setter for row 0, column 0.
 ### m01 
 Getter for row 0, column 1.
 
-**Kind**: instance property of [<code>Mat4</code>](#Mat4)  
+
 **Returns**: <code>number</code> - - Returns the m01 value.  
 <a name="Mat4+m01"></a>
 
-### m0
+### m01
 Setter for row 0, column 1.
 
-**Kind**: instance property of [<code>Mat4</code>](#Mat4)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -144,14 +145,14 @@ Setter for row 0, column 1.
 ### m02 
 Getter for row 0, column 2.
 
-**Kind**: instance property of [<code>Mat4</code>](#Mat4)  
+
 **Returns**: <code>number</code> - - Returns the m02 value.  
 <a name="Mat4+m02"></a>
 
-### m0
+### m02
 Setter for row 0, column 2.
 
-**Kind**: instance property of [<code>Mat4</code>](#Mat4)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -162,14 +163,14 @@ Setter for row 0, column 2.
 ### m03 
 Getter for row 0, column 3.
 
-**Kind**: instance property of [<code>Mat4</code>](#Mat4)  
+
 **Returns**: <code>number</code> - - Returns the m03 value.  
 <a name="Mat4+m03"></a>
 
-### m0
+### m03
 Setter for row 0, column 3.
 
-**Kind**: instance property of [<code>Mat4</code>](#Mat4)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -180,14 +181,14 @@ Setter for row 0, column 3.
 ### m10 
 Getter for row 1, column 0.
 
-**Kind**: instance property of [<code>Mat4</code>](#Mat4)  
+
 **Returns**: <code>number</code> - - Returns the m10 value.  
 <a name="Mat4+m10"></a>
 
-### m1
+### m10
 Setter for row 1, column 0.
 
-**Kind**: instance property of [<code>Mat4</code>](#Mat4)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -198,14 +199,14 @@ Setter for row 1, column 0.
 ### m11 
 Getter for row 1, column 1.
 
-**Kind**: instance property of [<code>Mat4</code>](#Mat4)  
+
 **Returns**: <code>number</code> - - Returns the m11 value.  
 <a name="Mat4+m11"></a>
 
-### m1
+### m11
 Setter for row 1, column 1.
 
-**Kind**: instance property of [<code>Mat4</code>](#Mat4)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -216,14 +217,14 @@ Setter for row 1, column 1.
 ### m12 
 Getter for row 1, column 2.
 
-**Kind**: instance property of [<code>Mat4</code>](#Mat4)  
+
 **Returns**: <code>number</code> - - Returns the m12 value.  
 <a name="Mat4+m12"></a>
 
-### m1
+### m12
 Setter for row 1, column 2.
 
-**Kind**: instance property of [<code>Mat4</code>](#Mat4)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -234,14 +235,14 @@ Setter for row 1, column 2.
 ### m13 
 Getter for row 1, column 3.
 
-**Kind**: instance property of [<code>Mat4</code>](#Mat4)  
+
 **Returns**: <code>number</code> - - Returns the m13 value.  
 <a name="Mat4+m13"></a>
 
-### m1
+### m13
 Setter for row 1, column 3.
 
-**Kind**: instance property of [<code>Mat4</code>](#Mat4)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -252,14 +253,14 @@ Setter for row 1, column 3.
 ### m20 
 Getter for row 2, column 0.
 
-**Kind**: instance property of [<code>Mat4</code>](#Mat4)  
+
 **Returns**: <code>number</code> - - Returns the m20 value.  
 <a name="Mat4+m20"></a>
 
-### m2
+### m20
 Setter for row 2, column 0.
 
-**Kind**: instance property of [<code>Mat4</code>](#Mat4)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -270,14 +271,14 @@ Setter for row 2, column 0.
 ### m21 
 Getter for row 2, column 1.
 
-**Kind**: instance property of [<code>Mat4</code>](#Mat4)  
+
 **Returns**: <code>number</code> - - Returns the m21 value.  
 <a name="Mat4+m21"></a>
 
-### m2
+### m21
 Setter for row 2, column 1
 
-**Kind**: instance property of [<code>Mat4</code>](#Mat4)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -288,14 +289,14 @@ Setter for row 2, column 1
 ### m22 
 Getter for row 2, column 2.
 
-**Kind**: instance property of [<code>Mat4</code>](#Mat4)  
+
 **Returns**: <code>number</code> - - Returns the m22 value.  
 <a name="Mat4+m22"></a>
 
-### m2
+### m22
 Setter for row 2, column 2.
 
-**Kind**: instance property of [<code>Mat4</code>](#Mat4)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -306,14 +307,14 @@ Setter for row 2, column 2.
 ### m23 
 Getter for row 2, column 3.
 
-**Kind**: instance property of [<code>Mat4</code>](#Mat4)  
+
 **Returns**: <code>number</code> - - Returns the m23 value.  
 <a name="Mat4+m23"></a>
 
-### m2
+### m23
 Setter for row 2, column 3.
 
-**Kind**: instance property of [<code>Mat4</code>](#Mat4)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -324,14 +325,14 @@ Setter for row 2, column 3.
 ### m30 
 Getter for row 3, column 0
 
-**Kind**: instance property of [<code>Mat4</code>](#Mat4)  
+
 **Returns**: <code>number</code> - - Returns the m30 value.  
 <a name="Mat4+m30"></a>
 
-### m3
+### m30
 Setter for row 3, column 0.
 
-**Kind**: instance property of [<code>Mat4</code>](#Mat4)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -342,14 +343,14 @@ Setter for row 3, column 0.
 ### m31 
 Getter for row 3, column 1.
 
-**Kind**: instance property of [<code>Mat4</code>](#Mat4)  
+
 **Returns**: <code>number</code> - - Returns the m31 value.  
 <a name="Mat4+m31"></a>
 
-### m3
+### m31
 Setter for row 3, column 1.
 
-**Kind**: instance property of [<code>Mat4</code>](#Mat4)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -360,14 +361,14 @@ Setter for row 3, column 1.
 ### m32 
 Getter for row 3, column 2.
 
-**Kind**: instance property of [<code>Mat4</code>](#Mat4)  
+
 **Returns**: <code>number</code> - - Returns the m32 value.  
 <a name="Mat4+m32"></a>
 
-### m3
+### m32
 Setter for row 3, column 2.
 
-**Kind**: instance property of [<code>Mat4</code>](#Mat4)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -378,14 +379,14 @@ Setter for row 3, column 2.
 ### m33 
 Getter for row 3, column 3.
 
-**Kind**: instance property of [<code>Mat4</code>](#Mat4)  
+
 **Returns**: <code>number</code> - - Returns the m33 value.  
 <a name="Mat4+m33"></a>
 
-### m3
+### m33
 Setter for row 3, column 3.
 
-**Kind**: instance property of [<code>Mat4</code>](#Mat4)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -396,14 +397,14 @@ Setter for row 3, column 3.
 ### xAxis 
 Getter for the `x` axis.
 
-**Kind**: instance property of [<code>Mat4</code>](#Mat4)  
+
 **Returns**: <code>Vec3</code> - - Returns the `x` axis as a Vec3.  
 <a name="Mat4+xAxis"></a>
 
-### xAxi
+### xAxis
 Setter for the `x` axis.
 
-**Kind**: instance property of [<code>Mat4</code>](#Mat4)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -414,14 +415,14 @@ Setter for the `x` axis.
 ### yAxis 
 Getter for the `y` axis.
 
-**Kind**: instance property of [<code>Mat4</code>](#Mat4)  
+
 **Returns**: <code>Vec3</code> - - Returns the `y` axis as a Vec3.  
 <a name="Mat4+yAxis"></a>
 
-### yAxi
+### yAxis
 Setter for the `y` axis.
 
-**Kind**: instance property of [<code>Mat4</code>](#Mat4)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -432,14 +433,14 @@ Setter for the `y` axis.
 ### zAxis 
 Getter for the `z` axis.
 
-**Kind**: instance property of [<code>Mat4</code>](#Mat4)  
+
 **Returns**: <code>Vec3</code> - - Returns the `z` axis as a Vec3.  
 <a name="Mat4+zAxis"></a>
 
-### zAxi
+### zAxis
 Setter for the `z` axis.
 
-**Kind**: instance property of [<code>Mat4</code>](#Mat4)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -450,14 +451,14 @@ Setter for the `z` axis.
 ### translation 
 Getter for the translation of the matrix.
 
-**Kind**: instance property of [<code>Mat4</code>](#Mat4)  
+
 **Returns**: <code>Vec3</code> - - Returns the translation.  
 <a name="Mat4+translation"></a>
 
-### translatio
+### translation
 Setter for the translation of the matrix.
 
-**Kind**: instance property of [<code>Mat4</code>](#Mat4)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -468,7 +469,7 @@ Setter for the translation of the matrix.
 ### set
 Sets the state of the Mat4 class
 
-**Kind**: instance method of [<code>Mat4</code>](#Mat4)  
+
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -494,13 +495,13 @@ Sets the state of the Mat4 class
 ### setIdentity
 Sets state of the Mat4 with the identity  Matrix
 
-**Kind**: instance method of [<code>Mat4</code>](#Mat4)  
+
 <a name="Mat4+setDataArray"></a>
 
 ### setDataArray
 Sets the state of the Mat4 Object.
 
-**Kind**: instance method of [<code>Mat4</code>](#Mat4)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -509,9 +510,11 @@ Sets the state of the Mat4 Object.
 <a name="Mat4+setFromMat4"></a>
 
 ### setFromMat4
-Sets state of the Mat4 from another Mat4<br>Note: works with either Mat3 or Mat4.
+Sets state of the Mat4 from another Mat4
+<br>
+Note: works with either Mat3 or Mat4.
 
-**Kind**: instance method of [<code>Mat4</code>](#Mat4)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -522,7 +525,7 @@ Sets state of the Mat4 from another Mat4<br>Note: works with either Mat3 or Ma
 ### toMat3
 Converts a Mat4 to a Mat3.
 
-**Kind**: instance method of [<code>Mat4</code>](#Mat4)  
+
 **Returns**: <code>Mat3</code> - - Returns a new Mat3.  
 
 | Param | Type | Description |
@@ -534,34 +537,35 @@ Converts a Mat4 to a Mat3.
 ### transposeInPlace
 Transposes (exchanges columns with rows) this matrix.
 
-**Kind**: instance method of [<code>Mat4</code>](#Mat4)  
+
 <a name="Mat4+transpose"></a>
 
 ### transpose
-Transposes (exchanges columns with rows) this matrixand returns the result as a new instance.
+Transposes (exchanges columns with rows) this matrix
+and returns the result as a new instance.
 
-**Kind**: instance method of [<code>Mat4</code>](#Mat4)  
+
 **Returns**: [<code>Mat4</code>](#Mat4) - - Return a new transposed Mat4.  
 <a name="Mat4+inverse"></a>
 
 ### inverse
 Inverts a Mat4 not using SIMD and returns the result as a new instance.
 
-**Kind**: instance method of [<code>Mat4</code>](#Mat4)  
+
 **Returns**: [<code>Mat4</code>](#Mat4) - - Returns a new Mat4.  
 <a name="Mat4+invertInPlace"></a>
 
 ### invertInPlace
 Inverts a Mat4.
 
-**Kind**: instance method of [<code>Mat4</code>](#Mat4)  
+
 **Returns**: <code>boolean</code> - - The return value.  
 <a name="Mat4+setInverse"></a>
 
 ### setInverse
 Sets this matrix as the inverse of the given Mat4.
 
-**Kind**: instance method of [<code>Mat4</code>](#Mat4)  
+
 **Returns**: <code>null</code> - - In case the `determinant` can't be calculated, a `null` will be returned, otherwise, nothing is returned  
 
 | Param | Type | Description |
@@ -573,7 +577,7 @@ Sets this matrix as the inverse of the given Mat4.
 ### multiply
 Multiplies two Mat4s not using SIMD and returns the result as a new instance.
 
-**Kind**: instance method of [<code>Mat4</code>](#Mat4)  
+
 **Returns**: [<code>Mat4</code>](#Mat4) - - Returns a new Mat4.  
 
 | Param | Type | Description |
@@ -585,7 +589,7 @@ Multiplies two Mat4s not using SIMD and returns the result as a new instance.
 ### multiplyInPlace
 Multiplies two Mat4s in place explicitly not using SIMD.
 
-**Kind**: instance method of [<code>Mat4</code>](#Mat4)  
+
 **Returns**: [<code>Mat4</code>](#Mat4) - - Returns a new Mat4.  
 
 | Param | Type | Description |
@@ -597,7 +601,7 @@ Multiplies two Mat4s in place explicitly not using SIMD.
 ### postmultiplyInPlace
 Post multiplies two Mat4s in place explicitly not using SIMD.
 
-**Kind**: instance method of [<code>Mat4</code>](#Mat4)  
+
 **Returns**: <code>Mat3</code> - - Returns the result as a new Mat4.  
 
 | Param | Type | Description |
@@ -609,7 +613,7 @@ Post multiplies two Mat4s in place explicitly not using SIMD.
 ### translateInPlace
 Translate a Mat4 by the given vector not using SIMD.
 
-**Kind**: instance method of [<code>Mat4</code>](#Mat4)  
+
 **Returns**: [<code>Mat4</code>](#Mat4) - - The return value.  
 
 | Param | Type | Description |
@@ -621,7 +625,7 @@ Translate a Mat4 by the given vector not using SIMD.
 ### setLookAt
 Generates a look-at matrix with the given position, focal point, and up axis.
 
-**Kind**: instance method of [<code>Mat4</code>](#Mat4)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -632,9 +636,13 @@ Generates a look-at matrix with the given position, focal point, and up axis.
 <a name="Mat4+setRotation"></a>
 
 ### setRotation
-Creates a matrix from a given angle around a given axis.This is equivalent to (but much faster than):    mat4.identity(dest);    mat4.rotate(dest, dest, rad, axis);
+Creates a matrix from a given angle around a given axis.
+This is equivalent to (but much faster than):
 
-**Kind**: instance method of [<code>Mat4</code>](#Mat4)  
+    mat4.identity(dest);
+    mat4.rotate(dest, dest, rad, axis);
+
+
 **Returns**: [<code>Mat4</code>](#Mat4) - - The return value.  
 
 | Param | Type | Description |
@@ -645,9 +653,13 @@ Creates a matrix from a given angle around a given axis.This is equivalent to (
 <a name="Mat4+setXRotation"></a>
 
 ### setXRotation
-Creates a matrix from the given angle around the X axis.This is equivalent to (but much faster than):    mat4.identity(dest);    mat4.rotateX(dest, dest, rad);
+Creates a matrix from the given angle around the X axis.
+This is equivalent to (but much faster than):
 
-**Kind**: instance method of [<code>Mat4</code>](#Mat4)  
+    mat4.identity(dest);
+    mat4.rotateX(dest, dest, rad);
+
+
 **Returns**: [<code>Mat4</code>](#Mat4) - - The return value.  
 
 | Param | Type | Description |
@@ -657,9 +669,13 @@ Creates a matrix from the given angle around the X axis.This is equivalent to (
 <a name="Mat4+setYRotation"></a>
 
 ### setYRotation
-Creates a matrix from the given angle around the Y axis.This is equivalent to (but much faster than):    mat4.identity(dest);    mat4.rotateY(dest, dest, rad);
+Creates a matrix from the given angle around the Y axis.
+This is equivalent to (but much faster than):
 
-**Kind**: instance method of [<code>Mat4</code>](#Mat4)  
+    mat4.identity(dest);
+    mat4.rotateY(dest, dest, rad);
+
+
 **Returns**: [<code>Mat4</code>](#Mat4) - - The return value.  
 
 | Param | Type | Description |
@@ -669,9 +685,13 @@ Creates a matrix from the given angle around the Y axis.This is equivalent to (
 <a name="Mat4+setZRotation"></a>
 
 ### setZRotation
-Creates a matrix from the given angle around the Z axis.This is equivalent to (but much faster than):    mat4.identity(dest);    mat4.rotateZ(dest, dest, rad);
+Creates a matrix from the given angle around the Z axis.
+This is equivalent to (but much faster than):
 
-**Kind**: instance method of [<code>Mat4</code>](#Mat4)  
+    mat4.identity(dest);
+    mat4.rotateZ(dest, dest, rad);
+
+
 **Returns**: [<code>Mat4</code>](#Mat4) - - The return value.  
 
 | Param | Type | Description |
@@ -683,7 +703,7 @@ Creates a matrix from the given angle around the Z axis.This is equivalent to (
 ### transformVec4
 Transforms the Vec4 with a Mat4.
 
-**Kind**: instance method of [<code>Mat4</code>](#Mat4)  
+
 **Returns**: <code>Vec4</code> - - Return the result as a new Vec4.  
 
 | Param | Type | Description |
@@ -695,7 +715,7 @@ Transforms the Vec4 with a Mat4.
 ### transformVec3
 Transforms the Vec3 with a Mat4.
 
-**Kind**: instance method of [<code>Mat4</code>](#Mat4)  
+
 **Returns**: <code>Vec3</code> - - Return the result as a new Vec3.  
 
 | Param | Type | Description |
@@ -707,7 +727,7 @@ Transforms the Vec3 with a Mat4.
 ### rotateVec3
 Rotates a given `Vec3` and the result is returned as a new `Vec3`
 
-**Kind**: instance method of [<code>Mat4</code>](#Mat4)  
+
 **Returns**: <code>Vec3</code> - - Return the result as a new Vec3.  
 
 | Param | Type | Description |
@@ -719,7 +739,7 @@ Rotates a given `Vec3` and the result is returned as a new `Vec3`
 ### setPerspectiveMatrix
 Set the perspective from a Mat4.
 
-**Kind**: instance method of [<code>Mat4</code>](#Mat4)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -733,7 +753,7 @@ Set the perspective from a Mat4.
 ### setOrthographicMatrix
 Calculates the orthographic matrix and sets the state of the Mat4 class
 
-**Kind**: instance method of [<code>Mat4</code>](#Mat4)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -749,7 +769,7 @@ Calculates the orthographic matrix and sets the state of the Mat4 class
 ### setScale
 Scales Mat4 Matrix
 
-**Kind**: instance method of [<code>Mat4</code>](#Mat4)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -762,7 +782,7 @@ Scales Mat4 Matrix
 ### setFromMat3x4Array
 Transforms a 3x4 matrix into a 4x4 matrix and set the result to the Math4 state.
 
-**Kind**: instance method of [<code>Mat4</code>](#Mat4)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -773,21 +793,21 @@ Transforms a 3x4 matrix into a 4x4 matrix and set the result to the Math4 state.
 ### clone
 Clones this Mat4 returning a new instance.
 
-**Kind**: instance method of [<code>Mat4</code>](#Mat4)  
+
 **Returns**: [<code>Mat4</code>](#Mat4) - - Returns a new Mat4.  
 <a name="Mat4+toJSON"></a>
 
 ### toJSON
 The toJSON method encodes this type as a json object for persistences.
 
-**Kind**: instance method of [<code>Mat4</code>](#Mat4)  
+
 **Returns**: <code>object</code> - - The json object.  
 <a name="Mat4+fromJSON"></a>
 
 ### fromJSON
 The fromJSON method decodes a json object for this type.
 
-**Kind**: instance method of [<code>Mat4</code>](#Mat4)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |

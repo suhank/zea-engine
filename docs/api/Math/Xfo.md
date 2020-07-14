@@ -1,9 +1,9 @@
 <a name="Xfo"></a>
 
-## Xfo
+### Xfo
 Class representing an Xfo transform.
 
-**Kind**: global class  
+
 **See**: [`setFromOther`](#setFromOther) [`fromMat4`](#fromMat4) [`setFromFloat32Array`](#setFromFloat32Array) [`fromJSON`](#fromJSON)  
 
 * [Xfo](#Xfo)
@@ -26,7 +26,9 @@ Class representing an Xfo transform.
 <a name="new_Xfo_new"></a>
 
 ### new Xfo
-Initializes the Xfo object.<br>**Note:** You can leave it empty and use other methods ti set the state of the class.
+Initializes the Xfo object.
+<br>
+**Note:** You can leave it empty and use other methods ti set the state of the class.
 
 
 | Param | Type | Description |
@@ -40,7 +42,7 @@ Initializes the Xfo object.<br>**Note:** You can leave it empty and use other 
 ### set
 Sets the state of the Xfo object.
 
-**Kind**: instance method of [<code>Xfo</code>](#Xfo)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -53,7 +55,7 @@ Sets the state of the Xfo object.
 ### setFromOther
 Sets the state of the Xfo object using another Xfo object.
 
-**Kind**: instance method of [<code>Xfo</code>](#Xfo)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -64,14 +66,14 @@ Sets the state of the Xfo object using another Xfo object.
 ### isIdentity
 Verifies that the Xfo object is an `identity`, checking that the translation, orientation and scaling attributes are in their initial state.
 
-**Kind**: instance method of [<code>Xfo</code>](#Xfo)  
+
 **Returns**: <code>boolean</code> - - The return value.  
 <a name="Xfo+setLookAt"></a>
 
 ### setLookAt
 The setLookAt method.
 
-**Kind**: instance method of [<code>Xfo</code>](#Xfo)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -84,7 +86,7 @@ The setLookAt method.
 ### multiply
 Multiplies two Xfo transforms.
 
-**Kind**: instance method of [<code>Xfo</code>](#Xfo)  
+
 **Returns**: [<code>Xfo</code>](#Xfo) - - Returns an Xfo.  
 
 | Param | Type | Description |
@@ -96,14 +98,14 @@ Multiplies two Xfo transforms.
 ### inverse
 Returns the inverse of the Xfo object, but returns. the result as a new Xfo.
 
-**Kind**: instance method of [<code>Xfo</code>](#Xfo)  
+
 **Returns**: [<code>Xfo</code>](#Xfo) - - Returns a new Xfo.  
 <a name="Xfo+transformVec3"></a>
 
 ### transformVec3
 Tranforms Xfo object using a `Vec3` object. First scaling it, then rotating and finally adding the result to current translation object.
 
-**Kind**: instance method of [<code>Xfo</code>](#Xfo)  
+
 **Returns**: <code>Vec3</code> - - The return value.  
 
 | Param | Type | Description |
@@ -115,14 +117,14 @@ Tranforms Xfo object using a `Vec3` object. First scaling it, then rotating and 
 ### toMat4
 Converts this Xfo to a Mat4 (a 4x4 matrix).
 
-**Kind**: instance method of [<code>Xfo</code>](#Xfo)  
+
 **Returns**: <code>Mat4</code> - - Returns a new Mat4.  
 <a name="Xfo+fromMat4"></a>
 
 ### fromMat4
 Sets the state of the Xfo object using Mat4.
 
-**Kind**: instance method of [<code>Xfo</code>](#Xfo)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -131,9 +133,11 @@ Sets the state of the Xfo object using Mat4.
 <a name="Xfo+setFromFloat32Array"></a>
 
 ### setFromFloat32Array
-Sets the state of the Xfo object using an `Float32array`.<br>**Note:** You can set the byteOffset in your `Float32array` object
+Sets the state of the Xfo object using an `Float32array`.
+<br>
+**Note:** You can set the byteOffset in your `Float32array` object
 
-**Kind**: instance method of [<code>Xfo</code>](#Xfo)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -144,21 +148,21 @@ Sets the state of the Xfo object using an `Float32array`.<br>**Note:** You can
 ### clone
 Clones this Xfo and returns a new Xfo.
 
-**Kind**: instance method of [<code>Xfo</code>](#Xfo)  
+
 **Returns**: [<code>Xfo</code>](#Xfo) - - Returns a new Xfo.  
 <a name="Xfo+toJSON"></a>
 
 ### toJSON
 The toJSON method encodes this type as a json object for persistences.
 
-**Kind**: instance method of [<code>Xfo</code>](#Xfo)  
+
 **Returns**: <code>object</code> - - The json object.  
 <a name="Xfo+fromJSON"></a>
 
 ### fromJSON
 The fromJSON method decodes a json object for this type.
 
-**Kind**: instance method of [<code>Xfo</code>](#Xfo)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -169,5 +173,5 @@ The fromJSON method decodes a json object for this type.
 ### toString
 The fromJSON method decodes a json object for this type.
 
-**Kind**: instance method of [<code>Xfo</code>](#Xfo)  
+
 **Returns**: <code>string</code> - - The return value.  

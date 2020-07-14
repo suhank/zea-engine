@@ -12,7 +12,7 @@ class VLHImage extends BaseImage {
   /**
    * Create a VLH image.
    * @param {string} name - The name value.
-   * @param {any} params - The params value.
+   * @param {object} params - The params value.
    */
   constructor(name, params = {}) {
     let filepath
@@ -33,7 +33,7 @@ class VLHImage extends BaseImage {
     fileParam.addListener('valueChanged', () => {
       this.loaded = false
 
-      if (this.getName() == "") {
+      if (this.getName() == '') {
         // Generate a name from the file path.
         const stem = fileParam.getStem()
         const decorator = stem.substring(stem.length - 1)
@@ -112,7 +112,7 @@ class VLHImage extends BaseImage {
   __loadVLH(fileId, file) {
     this.type = 'FLOAT'
 
-    resourceLoader.loadUrl(fileId, file.url, entries => {
+    resourceLoader.loadUrl(fileId, file.url, (entries) => {
       if (!entries.ldr || !entries.cdm) {
         for (const name in entries) {
           if (name.endsWith('.jpg')) {
@@ -204,10 +204,7 @@ class VLHImage extends BaseImage {
       if (context.lod >= 0) {
         const suffixSt = resourcePath.lastIndexOf('.')
         if (suffixSt != -1) {
-          const lodPath =
-            resourcePath.substring(0, suffixSt) +
-            context.lod +
-            resourcePath.substring(suffixSt)
+          const lodPath = resourcePath.substring(0, suffixSt) + context.lod + resourcePath.substring(suffixSt)
           if (resourceLoader.resourceAvailable(lodPath)) {
             resourcePath = lodPath
           }

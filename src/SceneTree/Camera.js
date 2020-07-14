@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { Vec3, Box3, Xfo } from '../Math/index'
 import { TreeItem } from './TreeItem.js'
 import { ValueSetMode, BooleanParameter, NumberParameter } from './Parameters/index'
@@ -15,15 +16,11 @@ class Camera extends TreeItem {
     if (name == undefined) name = 'Camera'
     super(name)
 
-    this.__isOrthographicParam = this.addParameter(
-      new BooleanParameter('isOrthographic', false)
-    )
+    this.__isOrthographicParam = this.addParameter(new BooleanParameter('isOrthographic', false))
     this.__fovParam = this.addParameter(new NumberParameter('fov', 1.0))
     this.__nearParam = this.addParameter(new NumberParameter('near', 0.1))
     this.__farParam = this.addParameter(new NumberParameter('far', 1000.0))
-    this.__focalDistanceParam = this.addParameter(
-      new NumberParameter('focalDistance', 5.0)
-    )
+    this.__focalDistanceParam = this.addParameter(new NumberParameter('focalDistance', 5.0))
 
     // this.__viewMatParam = this.addParameter(new Parameter('viewMat', new Mat4()));
     // const _cleanViewMat = (xfo)=>{
@@ -32,8 +29,8 @@ class Camera extends TreeItem {
     // this.__globalXfoParam.addListener('valueChanged', (changeType)=>{
     //     this.__viewMatParam.setDirty(_cleanViewMat);
     // });
-    
-    const emitProjChanged = event => {
+
+    const emitProjChanged = (event) => {
       this.emit('projectionParamChanged', event)
     }
     this.__isOrthographicParam.addListener('valueChanged', emitProjChanged)
@@ -43,11 +40,7 @@ class Camera extends TreeItem {
 
     // Initial viewing coords of a person standing 3 meters away from the
     // center of the stage looking at something 1 meter off the ground.
-    this.setPositionAndTarget(
-      new Vec3(3, 3, 1.75),
-      new Vec3(0, 0, 1),
-      ValueSetMode.GENERATED_VALUE
-    )
+    this.setPositionAndTarget(new Vec3(3, 3, 1.75), new Vec3(0, 0, 1), ValueSetMode.GENERATED_VALUE)
     this.setLensFocalLength('28mm', ValueSetMode.GENERATED_VALUE)
   }
 
@@ -229,8 +222,7 @@ class Camera extends TreeItem {
    */
   frameView(viewport, treeItems, mode = ValueSetMode.USER_SETVALUE) {
     const boundingBox = new Box3()
-    for (const treeItem of treeItems)
-      boundingBox.addBox3(treeItem.getBoundingBox())
+    for (const treeItem of treeItems) boundingBox.addBox3(treeItem.getBoundingBox())
 
     if (!boundingBox.isValid()) {
       console.warn('Bounding box not valid.')
@@ -260,10 +252,8 @@ class Camera extends TreeItem {
     const newFocalDistanceX = (Math.abs(p.x) / Math.tan(0.5 * fovX)) * 1.2
     const newFocalDistanceY = (Math.abs(p.y) / Math.tan(0.5 * fovY)) * 1.2
 
-    const camSpaceBBoxDepth =
-      (transformedBBox.p0.z - transformedBBox.p1.z) * -0.5
-    const newFocalDistance =
-      Math.max(newFocalDistanceX, newFocalDistanceY) + camSpaceBBoxDepth
+    const camSpaceBBoxDepth = (transformedBBox.p0.z - transformedBBox.p1.z) * -0.5
+    const newFocalDistance = Math.max(newFocalDistanceX, newFocalDistanceY) + camSpaceBBoxDepth
 
     const dollyDist = newFocalDistance - focalDistance
     globalXfo.tr.addInPlace(cameraViewVec.scale(dollyDist))

@@ -1,12 +1,6 @@
 import { Color, Xfo, Box3 } from '../Math/index'
 import { sgFactory } from './SGFactory.js'
-import {
-  ParamFlags,
-  ValueSetMode,
-  Parameter,
-  BooleanParameter,
-  XfoParameter,
-} from './Parameters/index'
+import { ParamFlags, ValueSetMode, Parameter, BooleanParameter, XfoParameter } from './Parameters/index'
 import { ItemFlags, BaseItem } from './BaseItem.js'
 
 // Defines used to explicity specify types for WebGL.
@@ -26,18 +20,35 @@ const CloneFlags = {
 
 let selectionOutlineColor = new Color('#03E3AC')
 selectionOutlineColor.a = 0.1
-let branchSelectionOutlineColor = selectionOutlineColor.lerp(
-  new Color('white'),
-  0.5
-)
+let branchSelectionOutlineColor = selectionOutlineColor.lerp(new Color('white'), 0.5)
 branchSelectionOutlineColor.a = 0.1
 
-/** Class representing a tree item in the scene tree.
- * @extends BaseItem
+/**
+ * Class representing an Item in the scene tree with hierarchy capabilities(has children).
+ * <br>
+ * <br>
+ * **Parameters:**
+ * * **Visible(`BooleanParameter`):** Shows/Hides the item.
+ * * **LocalXfo(`XfoParameter`):**
+ * * **GlobalXfo(`XfoParameter`):**
+ * * **BoundingBox(`BoundingBox`):**
+ *
+ * **Events**
+ * * **globalXfoChanged:**
+ * * **visibilityChanged:**
+ * * **highlightChanged:**
+ * * **childAdded:** Emitted when a item is added as a child.
+ * * **childRemoved:** Emitted when an item is removed from the child nodes.
+ * * **mouseDown:** Emitted when a mouseDown event happens in an item.
+ * * **mouseUp:** Emitted when a mouseUp event happens in an item.
+ * * **mouseMove:** Emitted when a mouseMove event happens in an item.
+ * * **mouseEnter:** Emitted when a mouseEnter event happens in an item.
+ * @extends {BaseItem}
  */
 class TreeItem extends BaseItem {
   /**
-   * Create a tree item.
+   * Creates a tree item with the specified name.
+   *
    * @param {string} name - The name of the tree item.
    */
   constructor(name) {
@@ -52,22 +63,13 @@ class TreeItem extends BaseItem {
     this.__childItemsSignalIds = []
     this.__childItemsMapping = {}
 
-
     // /////////////////////////////////////
     // Add parameters.
 
-    this.__visibleParam = this.addParameter(
-      new BooleanParameter('Visible', true)
-    )
-    this.__localXfoParam = this.addParameter(
-      new XfoParameter('LocalXfo', new Xfo())
-    )
-    this.__globalXfoParam = this.addParameter(
-      new XfoParameter('GlobalXfo', new Xfo())
-    )
-    this.__boundingBoxParam = this.addParameter(
-      new Parameter('BoundingBox', new Box3())
-    )
+    this.__visibleParam = this.addParameter(new BooleanParameter('Visible', true))
+    this.__localXfoParam = this.addParameter(new XfoParameter('LocalXfo', new Xfo()))
+    this.__globalXfoParam = this.addParameter(new XfoParameter('GlobalXfo', new Xfo()))
+    this.__boundingBoxParam = this.addParameter(new Parameter('BoundingBox', new Box3()))
 
     // Bind handlers
     this._cleanGlobalXfo = this._cleanGlobalXfo.bind(this)
@@ -76,19 +78,15 @@ class TreeItem extends BaseItem {
     this._cleanBoundingBox = this._cleanBoundingBox.bind(this)
 
     this.__localXfoParam.on('valueChanged', this._setGlobalXfoDirty)
-    
-    // Note: if the user changes the global xfo, we compute the 
+
+    // Note: if the user changes the global xfo, we compute the
     // local xfo when it is needed (generally when GlobalXfo is pulled)
     // In the future, we will move this into the operators and ops
     // will support 'inversion' where the param asks the op to
     // proccess an input value.
     const cleanLocalXfo = () => {
       const globalXfo = this.__globalXfoParam.getValue()
-      if (this.__ownerItem !== undefined)
-        return this.__ownerItem
-          .getGlobalXfo()
-          .inverse()
-          .multiply(globalXfo)
+      if (this.__ownerItem !== undefined) return this.__ownerItem.getGlobalXfo().inverse().multiply(globalXfo)
       else return globalXfo
     }
     this.__globalXfoParam.on('valueChanged', (event) => {
@@ -121,24 +119,26 @@ class TreeItem extends BaseItem {
   }
 
   /**
-   * Getter for SaveFlags.
-   * @return {any} - The return value.
+   * Returns an ENUM object with save flags options.
+   *
+   * @return {object} - The return value.
    */
   static get SaveFlags() {
     return SaveFlags
   }
 
   /**
-   * Getter for LoadFlags.
-   * @return {any} - The return value.
+   * Returns an ENUM object with load flags options.
+   * @return {object} - The return value.
    */
   static get LoadFlags() {
     return LoadFlags
   }
 
   /**
-   * Getter for CloneFlags.
-   * @return {any} - The return value.
+   * Returns an ENUM object with clone flags options.
+   *
+   * @return {object} - The return value.
    */
   static get CloneFlags() {
     return CloneFlags
@@ -146,6 +146,7 @@ class TreeItem extends BaseItem {
 
   /**
    * Returns the selection outline color.
+   *
    * @return {Color} - Returns a color.
    */
   static getSelectionOutlineColor() {
@@ -154,6 +155,7 @@ class TreeItem extends BaseItem {
 
   /**
    * Sets the selection outline color.
+   *
    * @param {Color} color - The color value.
    */
   static setSelectionOutlineColor(color) {
@@ -162,6 +164,7 @@ class TreeItem extends BaseItem {
 
   /**
    * Returns the branch selection outline color.
+   *
    * @return {Color} - Returns a color.
    */
   static getBranchSelectionOutlineColor() {
@@ -170,6 +173,7 @@ class TreeItem extends BaseItem {
 
   /**
    * Sets the branch selection outline color.
+   *
    * @param {Color} color - The color value.
    */
   static setBranchSelectionOutlineColor(color) {
@@ -185,12 +189,13 @@ class TreeItem extends BaseItem {
    * @private
    */
   _childFlagsChanged(flags) {
-    if ((flags & ParamFlags.USER_EDITED) != 0)
-      this.setFlag(ItemFlags.USER_EDITED)
+    if ((flags & ParamFlags.USER_EDITED) != 0) this.setFlag(ItemFlags.USER_EDITED)
   }
 
   /**
-   * The setFlag method.
+   * Sets item flag by using an 'OR-assignation' operation then if current item is a child of another item,
+   * flags for the owner item is changed too.
+   *
    * @param {number} flag - The flag value.
    */
   setFlag(flag) {
@@ -202,8 +207,8 @@ class TreeItem extends BaseItem {
   // Parent Item
 
   /**
-   * Sets the owner of the tree item.
-   * @param {any} parentItem - The parent item.
+   * Sets the owner(another TreeItem) of the current TreeItem.
+   * @param {TreeItem} parentItem - The parent item.
    */
   setOwner(parentItem) {
     if (this.__ownerItem) {
@@ -242,16 +247,18 @@ class TreeItem extends BaseItem {
   }
 
   /**
-   * Returns the parent of the tree item.
-   * @return {any} - Returns the parent item.
+   * Returns the parent of current TreeItem.
+   *
+   * @return {TreeItem|undefined} - Returns the parent item.
    */
   getParentItem() {
     return this.getOwner()
   }
 
   /**
-   * Sets the parent of the tree item.
-   * @param {any} parentItem - The parent item.
+   * Sets the parent of current TreeItem.
+   *
+   * @param {TreeItem} parentItem - The parent item.
    */
   setParentItem(parentItem) {
     this.setOwner(parentItem)
@@ -261,7 +268,8 @@ class TreeItem extends BaseItem {
   // Global Matrix
 
   /**
-   * Returns the local Xfo transform.
+   * Returns the value of local Xfo transform parameter.
+   *
    * @return {Xfo} - Returns the local Xfo.
    */
   getLocalXfo() {
@@ -269,9 +277,10 @@ class TreeItem extends BaseItem {
   }
 
   /**
-   * Sets the local Xfo transform.
+   * Sets the local Xfo transform parameter.
+   *
    * @param {Xfo} xfo - The local xfo transform.
-   * @param {number} mode - The mode value.
+   * @param {number} mode - The mode value. **See:** `ValueSetMode` enum in `Parameter` class.
    */
   setLocalXfo(xfo, mode) {
     this.__localXfoParam.setValue(xfo, mode)
@@ -279,6 +288,7 @@ class TreeItem extends BaseItem {
 
   /**
    * Returns the global Xfo transform.
+   *
    * @param {number} mode - The mode value.
    * @return {Xfo} - Returns the global Xfo.
    */
@@ -289,7 +299,7 @@ class TreeItem extends BaseItem {
   /**
    * Sets the global Xfo transform.
    * @param {Xfo} xfo - The global xfo transform.
-   * @param {number} mode - The mode value.
+   * @param {number} mode - The mode value. **See:** `ValueSetMode` enum in `Parameter` class.
    */
   setGlobalXfo(xfo, mode) {
     const owner = this.getOwner()
@@ -329,8 +339,9 @@ class TreeItem extends BaseItem {
   // Visibility
 
   /**
-   * The getVisible method.
-   * @return {any} - The return value.
+   * Returns visible parameter value for current TreeItem.
+   *
+   * @return {boolean} - The visible param value.
    */
   getVisible() {
     // Should never be more than 1, but can be less than 0.
@@ -338,16 +349,18 @@ class TreeItem extends BaseItem {
   }
 
   /**
-   * The setVisible method.
-   * @param {any} val - The val param.
+   * Sets visible parameter value.
+   *
+   * @param {number} val - The val param.
    */
   setVisible(val) {
     this.__visibleParam.setValue(val)
   }
 
   /**
-   * The propagateVisiblity method.
-   * @param {any} val - The val param.
+   * Updates current TreeItem visible state and propagates its value to children elements.
+   *
+   * @param {number} val - The val param.
    */
   propagateVisiblity(val) {
     this.__visibleCounter += val
@@ -364,10 +377,9 @@ class TreeItem extends BaseItem {
     if (visible != this.__visible) {
       this.__visible = visible
       for (const childItem of this.__childItems) {
-        if (childItem instanceof TreeItem)
-          childItem.propagateVisiblity(this.__visible ? 1 : -1)
+        if (childItem instanceof TreeItem) childItem.propagateVisiblity(this.__visible ? 1 : -1)
       }
-      this.emit('visibilityChanged',{ visible })
+      this.emit('visibilityChanged', { visible })
       return true
     }
     return false
@@ -377,7 +389,8 @@ class TreeItem extends BaseItem {
   // Highlights
 
   /**
-   * Add a hightlight to the tree item.
+   * Adds a hightlight to the tree item.
+   *
    * @param {string} name - The name of the tree item.
    * @param {Color} color - The color of the highlight.
    * @param {boolean} propagateToChildren - A boolean indicating whether to propagate to children.
@@ -394,15 +407,15 @@ class TreeItem extends BaseItem {
     this.emit('highlightChanged', { name, color })
 
     if (propagateToChildren) {
-      this.__childItems.forEach(childItem => {
-        if (childItem instanceof TreeItem)
-          childItem.addHighlight(name, color, propagateToChildren)
+      this.__childItems.forEach((childItem) => {
+        if (childItem instanceof TreeItem) childItem.addHighlight(name, color, propagateToChildren)
       })
     }
   }
 
   /**
-   * Remove a hightlight to the tree item.
+   * Removes a hightlight to the tree item.
+   *
    * @param {string} name - The name of the tree item.
    * @param {boolean} propagateToChildren - A boolean indicating whether to propagate to children.
    */
@@ -414,27 +427,25 @@ class TreeItem extends BaseItem {
       this.emit('highlightChanged', {})
     }
     if (propagateToChildren) {
-      this.__childItems.forEach(childItem => {
-        if (childItem instanceof TreeItem)
-          childItem.removeHighlight(name, propagateToChildren)
+      this.__childItems.forEach((childItem) => {
+        if (childItem instanceof TreeItem) childItem.removeHighlight(name, propagateToChildren)
       })
     }
   }
 
   /**
    * Returns the color of the current hilghlight.
+   *
    * @return {Color} - The color value.
    */
   getHighlight() {
-    if (this.__highlights.length > 0)
-      return this.__highlightMapping[
-        this.__highlights[this.__highlights.length - 1]
-      ]
+    if (this.__highlights.length > 0) return this.__highlightMapping[this.__highlights[this.__highlights.length - 1]]
   }
 
   /**
-   * Returns true if this items has a hilghlight color assigned.
-   * @return {boolean} - True if this item is hilghlighted.
+   * Returns `true` if this items has a hilghlight color assigned.
+   *
+   * @return {boolean} - `True` if this item is hilghlighted.
    */
   isHighlighted() {
     return this.__highlights.length > 0
@@ -445,6 +456,7 @@ class TreeItem extends BaseItem {
 
   /**
    * Getter for a bounding box.
+   * @private
    */
   get boundingBox() {
     console.warn("getter is deprectated. Please use 'getBoundingBox'")
@@ -452,10 +464,13 @@ class TreeItem extends BaseItem {
   }
 
   /**
-   * The getBoundingBox method.
+   * Returns bounding box parameter value.
+   * @deprecated
+   * @private
    * @return {Box3} - The return value.
    */
   getBoundingBox() {
+    console.warn("getter is deprectated. Please use 'getParameter('BoundingBox').getValue()'")
     return this.__boundingBoxParam.getValue()
   }
 
@@ -467,12 +482,9 @@ class TreeItem extends BaseItem {
    */
   _cleanBoundingBox(bbox) {
     bbox.reset()
-    this.__childItems.forEach(childItem => {
+    this.__childItems.forEach((childItem) => {
       if (childItem instanceof TreeItem)
-        if (
-          childItem.getVisible() &&
-          !childItem.testFlag(ItemFlags.IGNORE_BBOX)
-        ) {
+        if (childItem.getVisible() && !childItem.testFlag(ItemFlags.IGNORE_BBOX)) {
           // console.log(" - ", childItem.constructor.name, childItem.getName(), childItem.getGlobalXfo().sc.x, childItem.getBoundingBox().toString())
           bbox.addBox3(childItem.getBoundingBox())
         }
@@ -504,15 +516,20 @@ class TreeItem extends BaseItem {
   // Children
 
   /**
-   * The getChildren method.
-   * @return {TreeItem} - The return value.
+   * Returns children list, but children are not required to have hierarchy structure(`TreeItem`).
+   * Meaning that it could be another kind of item than `TreeItem`.
+   * <br>
+   * i.e. **BaseImage**
+   *
+   * @return {array} - List of `BaseItem` owned by current TreeItem.
    */
   getChildren() {
     return this.__childItems
   }
 
   /**
-   * The numChildren method.
+   * Returns the number of child elements current `TreeItem` has.
+   *
    * @deprecated since version 0.0.80
    * @return {number} - The return value.
    */
@@ -522,7 +539,8 @@ class TreeItem extends BaseItem {
   }
 
   /**
-   * The getNumChildren method.
+   * Returns the number of child elements current `TreeItem` has.
+   *
    * @return {number} - The return value.
    */
   getNumChildren() {
@@ -530,7 +548,9 @@ class TreeItem extends BaseItem {
   }
 
   /**
-   * Generate a unique name.
+   * Verifies if there's a child with the specified name.
+   * If there's one, modifiers are applied to the name and returned.
+   *
    * @param {string} name - The name value.
    * @return {string} - Returns a unique name.
    */
@@ -538,20 +558,11 @@ class TreeItem extends BaseItem {
     if (!(name in this.__childItemsMapping)) return name
 
     let index = 1
-    if (
-      name.length > 4 &&
-      !Number.isNaN(parseInt(name.substring(name.length - 4)))
-    )
+    if (name.length > 4 && !Number.isNaN(parseInt(name.substring(name.length - 4))))
       index = parseInt(name.substr(name.length - 4))
-    else if (
-      name.length > 3 &&
-      !Number.isNaN(parseInt(name.substring(name.length - 3)))
-    )
+    else if (name.length > 3 && !Number.isNaN(parseInt(name.substring(name.length - 3))))
       index = parseInt(name.substr(name.length - 3))
-    else if (
-      name.length > 2 &&
-      !Number.isNaN(parseInt(name.substring(name.length - 2)))
-    )
+    else if (name.length > 2 && !Number.isNaN(parseInt(name.substring(name.length - 2))))
       index = parseInt(name.substr(name.length - 2))
 
     const names = []
@@ -591,8 +602,9 @@ class TreeItem extends BaseItem {
   }
 
   /**
-   * Insert a child TreeItem.
-   * @param {object} childItem - The child TreeItem to insert.
+   * Inserts a child. It accepts all kind of `BaseItem`, not only `TreeItem`.
+   *
+   * @param {BaseItem} childItem - The child BaseItem to insert.
    * @param {number} index - The index to add the child item.
    * @param {boolean} maintainXfo - Boolean that determines if the Xfo value is maintained.
    * @param {boolean} fixCollisions - Modify the name of the item to avoid name collisions.
@@ -604,22 +616,15 @@ class TreeItem extends BaseItem {
       if (fixCollisions) {
         childItem.setName(this.generateUniqueName(childItem.getName()))
       } else {
-        throw new Error(
-          "Item '" +
-            childItem.getName() +
-            "' is already a child of :" +
-            this.getPath()
-        )
+        throw new Error("Item '" + childItem.getName() + "' is already a child of :" + this.getPath())
       }
     }
     if (!(childItem instanceof BaseItem)) {
-      throw new Error(
-        'Object is is not a tree item :' + childItem.constructor.name
-      )
+      throw new Error('Object is is not a tree item :' + childItem.constructor.name)
     }
 
     const signalIds = {}
-    signalIds.nameChangedId = childItem.addListener('nameChanged', event => {
+    signalIds.nameChangedId = childItem.addListener('nameChanged', (event) => {
       // Update the acceleration structure.
       const index = this.__childItemsMapping[event.oldName]
       delete this.__childItemsMapping[event.oldName]
@@ -629,16 +634,12 @@ class TreeItem extends BaseItem {
     let newLocalXfo
     if (childItem instanceof TreeItem) {
       if (maintainXfo) {
-        newLocalXfo = this.getGlobalXfo()
-          .inverse()
-          .multiply(childItem.getGlobalXfo())
+        newLocalXfo = this.getGlobalXfo().inverse().multiply(childItem.getGlobalXfo())
       }
       signalIds.bboxChangedId = childItem.addListener('boundingChanged', () => {
         this._setBoundingBoxDirty()
       })
-      signalIds.visChangedId = childItem.addListener('visibilityChanged', 
-        this._setBoundingBoxDirty
-      )
+      signalIds.visChangedId = childItem.addListener('visibilityChanged', this._setBoundingBoxDirty)
     }
 
     this.__childItems.splice(index, 0, childItem)
@@ -653,8 +654,7 @@ class TreeItem extends BaseItem {
       this._setBoundingBoxDirty()
     }
 
-    if (childItem.testFlag(ItemFlags.USER_EDITED))
-      this.setFlag(ItemFlags.USER_EDITED)
+    if (childItem.testFlag(ItemFlags.USER_EDITED)) this.setFlag(ItemFlags.USER_EDITED)
 
     this.emit('childAdded', { childItem, index })
 
@@ -662,8 +662,9 @@ class TreeItem extends BaseItem {
   }
 
   /**
-   * Add a child TreeItem..
-   * @param {TreeItem} childItem - The child TreeItem to add.
+   * Adds a child. It accepts all kind of `BaseItem`, not only `TreeItem`.
+   *
+   * @param {BaseItem} childItem - The child BaseItem to add.
    * @param {boolean} maintainXfo - Boolean that determines if
    * the Global Xfo value is maintained. If true, when moving
    * items in the hierarchy from one parent to another, the local Xfo
@@ -683,18 +684,20 @@ class TreeItem extends BaseItem {
   }
 
   /**
-   * The getChild method.
+   * Returns child element in the specified index.
+   *
    * @param {number} index - The index to remove the child TreeItem.
-   * @return {TreeItem} - Return the child TreeItem.
+   * @return {BaseItem|undefined} - Return the child TreeItem.
    */
   getChild(index) {
     return this.__childItems[index]
   }
 
   /**
-   * The getChildByName method.
+   * Returns child element with the specified name.
+   *
    * @param {string} name - The name value.
-   * @return {TreeItem} - Return the child TreeItem.
+   * @return {BaseItem|null} - Return the child BaseItem.
    */
   getChildByName(name) {
     const index = this.__childItemsMapping[name]
@@ -705,7 +708,8 @@ class TreeItem extends BaseItem {
   }
 
   /**
-   * The getChildNames method.
+   * Returns children names as an array of strings.
+   *
    * @return {array} - An array of names for each child.
    */
   getChildNames() {
@@ -746,7 +750,8 @@ class TreeItem extends BaseItem {
   }
 
   /**
-   * Remove a child tree item.
+   * Removes a child BaseItem by specifying its index.
+   *
    * @param {number} index - The index value.
    */
   removeChild(index) {
@@ -758,9 +763,10 @@ class TreeItem extends BaseItem {
   }
 
   /**
-   * The removeChildByName method.
+   * Removes a child BaseItem by specifying its name.
+   *
    * @param {string} name - The name param.
-   * @return {TreeItem} - Return the child TreeItem.
+   * @return {BaseItem} - Return the child TreeItem.
    */
   removeChildByName(name) {
     const index = this.__childItemsMapping[name]
@@ -771,21 +777,20 @@ class TreeItem extends BaseItem {
   }
 
   /**
-   * Remove a child tree item by handle.
-   * @param {objTreeItemect} childItem - The child TreeItem to remove.
+   * Remove a child BasItem by passing in actual item object.
+   *
+   * @param {BaseItem} childItem - The child TreeItem to remove.
+   * @deprecated
    */
   removeChildByHandle(childItem) {
     console.warn('Deprecated method. Please use removeChild')
     const index = this.__childItems.indexOf(childItem)
-    if (index == -1)
-      throw new Error(
-        'Error in removeChildByHandle. Child not found:' + childItem.getName()
-      )
+    if (index == -1) throw new Error('Error in removeChildByHandle. Child not found:' + childItem.getName())
     this.removeChild(index)
   }
 
   /**
-   * Remove all child TreeItems.
+   * Removes all children Items.
    */
   removeAllChildren() {
     let index = this.__childItems.length
@@ -796,18 +801,21 @@ class TreeItem extends BaseItem {
   }
 
   /**
-   * The getChildIndex method.
-   * @param {TreeItem} childItem - The child TreeItem value.
-   * @return {object} - The return value.
+   * Returns index position of the specified item.
+   *
+   * @param {BaseItem} childItem - The child TreeItem value.
+   * @return {number} - Child index in children array.
    */
   getChildIndex(childItem) {
     return this.__childItems.indexOf(childItem)
   }
 
   /**
-   * The indexOfChild method.
+   * Returns index position of the specified item.
+   *
+   * @deprecated
    * @param {object} childItem - The child TreeItem value.
-   * @return {any} - The return value.
+   * @return {number} - The return value.
    */
   indexOfChild(childItem) {
     console.warn('Deprecated method. Please use getChildIndex')
@@ -822,10 +830,13 @@ class TreeItem extends BaseItem {
   // starts with the child elements.
 
   /**
-   * The resolvePath method.
-   * @param {any} path - The path value.
+   * The resolvePath method traverses the subtree from this item down
+   * matching each name in the path with a child until it reaches the
+   * end of the path.
+   *
+   * @param {array} path - The path value.
    * @param {number} index - The index value.
-   * @return {any} - The return value.
+   * @return {BaseItem|Parameter} - The return value.
    */
   resolvePath(path, index = 0) {
     if (typeof path == 'string') path = path.split('/')
@@ -884,7 +895,8 @@ class TreeItem extends BaseItem {
    * Traverse the tree structure from this point down
    * and fire the callback for each visited item.
    * Note: Depth only used by selection sets for now.
-   * @param {any} callback - The callback value.
+   *
+   * @param {function} callback - The callback value.
    * @param {boolean} includeThis - Fire the callback for this item.
    */
   traverse(callback, includeThis = true) {
@@ -907,6 +919,7 @@ class TreeItem extends BaseItem {
 
   /**
    * Causes an event to occur when a user presses a mouse button over an element.
+   *
    * @param {MouseEvent} event - The mouse event that occurs.
    */
   onMouseDown(event) {
@@ -918,6 +931,7 @@ class TreeItem extends BaseItem {
 
   /**
    * Causes an event to occur when a user releases a mouse button over a element.
+   *
    * @param {MouseEvent} event - The mouse event that occurs.
    */
   onMouseUp(event) {
@@ -929,6 +943,7 @@ class TreeItem extends BaseItem {
 
   /**
    * Causes an event to occur when the mouse pointer is moving while over an element.
+   *
    * @param {MouseEvent} event - The mouse event that occurs.
    */
   onMouseMove(event) {
@@ -940,6 +955,7 @@ class TreeItem extends BaseItem {
 
   /**
    * Causes an event to occur when the mouse pointer is moved onto an element.
+   *
    * @param {MouseEvent} event - The mouse event that occurs.
    */
   onMouseEnter(event) {
@@ -951,6 +967,7 @@ class TreeItem extends BaseItem {
 
   /**
    * Causes an event to occur when the mouse pointer is moved out of an element.
+   *
    * @param {MouseEvent} event - The mouse event that occurs.
    */
   onMouseLeave(event) {
@@ -962,6 +979,7 @@ class TreeItem extends BaseItem {
 
   /**
    * Causes an event to occur when the mouse wheel is rolled up or down over an element.
+   *
    * @param {WheelEvent } event - The wheel event that occurs.
    */
   onWheel(event) {
@@ -975,6 +993,7 @@ class TreeItem extends BaseItem {
 
   /**
    * The toJSON method encodes this type as a json object for persistences.
+   *
    * @param {object} context - The context value.
    * @param {number} flags - The flags value.
    * @return {object} - Returns the json object.
@@ -1010,6 +1029,7 @@ class TreeItem extends BaseItem {
 
   /**
    * The fromJSON method decodes a json object for this type.
+   *
    * @param {object} j - The json object this item must decode.
    * @param {object} context - The context value.
    * @param {number} flags - The flags value.
@@ -1103,8 +1123,9 @@ class TreeItem extends BaseItem {
   }
 
   /**
-   * The readBinary method.
-   * @param {object} reader - The reader value.
+   * Sets state of current Item(Including parameters & children) using a binary reader object.
+   *
+   * @param {BinReader} reader - The reader value.
    * @param {object} context - The context value.
    */
   readBinary(reader, context) {
@@ -1150,25 +1171,19 @@ class TreeItem extends BaseItem {
             // untill we have a fix.
             const ppos = childType.indexOf('podium')
             if (ppos != -1) {
-              if (parseInt(childType[ppos + 7]))
-                childType = childType.substring(ppos + 8, childType.length - 1)
+              if (parseInt(childType[ppos + 7])) childType = childType.substring(ppos + 8, childType.length - 1)
               else childType = childType.substring(ppos + 7, childType.length - 1)
             }
             const lnpos = childType.indexOf('livenurbs')
             if (lnpos != -1) {
-              childType = childType.substring(
-                childType.indexOf('CAD'),
-                childType.length - 1
-              )
+              childType = childType.substring(childType.indexOf('CAD'), childType.length - 1)
             }
           }
           // const childName = reader.loadStr();
           const childItem = sgFactory.constructClass(childType)
           if (!childItem) {
             const childName = reader.loadStr()
-            console.warn(
-              'Unable to construct child:' + childName + ' of type:' + childType
-            )
+            console.warn('Unable to construct child:' + childName + ' of type:' + childType)
             continue
           }
           reader.seek(toc[i]) // Reset the pointer to the start of the item data.
@@ -1176,10 +1191,10 @@ class TreeItem extends BaseItem {
 
           // Flagging this node as a bin tree node. (A node generated from loading a binary file)
           childItem.setFlag(ItemFlags.BIN_NODE)
-          
+
           this.addChild(childItem, false, false)
         } catch (e) {
-          console.warn("Error loading tree item: ", e)
+          console.warn('Error loading tree item: ', e)
         }
       }
     }
@@ -1191,6 +1206,7 @@ class TreeItem extends BaseItem {
   /**
    * The clone method constructs a new tree item, copies its values
    * from this item and returns it.
+   *
    * @param {number} flags - The flags value.
    * @return {TreeItem} - Returns a new cloned tree item.
    */
@@ -1201,7 +1217,8 @@ class TreeItem extends BaseItem {
   }
 
   /**
-   * The copyFrom method.
+   * Copies current TreeItem with all its children.
+   *
    * @param {TreeItem} src - The tree item to copy from.
    * @param {number} flags - The flags value.
    */
@@ -1217,7 +1234,7 @@ class TreeItem extends BaseItem {
     // if(flags& CloneFlags.CLONE_FLAG_INSTANCED_TREE)
     //     this.__localXfoParam = this.replaceParameter(src.getParameter('LocalXfo'));
 
-    src.getChildren().forEach(srcChildItem => {
+    src.getChildren().forEach((srcChildItem) => {
       if (srcChildItem) this.addChild(srcChildItem.clone(flags), false, false)
       // if(flags& CloneFlags.CLONE_FLAG_INSTANCED_TREE) {
       //     src.addListener('childAdded', (childItem, index)=>{

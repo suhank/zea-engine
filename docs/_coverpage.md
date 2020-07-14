@@ -7,7 +7,7 @@
 
 > A powerful visualization engine for CAD and BIM.
 
-- Fast 
+- Fast
 - Powerful
 - Customizable
 
@@ -16,4 +16,4 @@
 
 <!-- background color -->
 
-![color](#bbb)
+![color](#333333)

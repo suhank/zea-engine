@@ -1,12 +1,13 @@
 <a name="Version"></a>
 
-## Version
+### Version
 Class representing a version
 
-**Kind**: global class  
+
 
 * [Version](#Version)
     * [new Version(versionStr)](#new-Version)
+    * [compare(numbers) ⇒ <code>number</code>](#compare)
     * [equals(numbers) ⇒ <code>boolean</code>](#equals)
     * [lessThan(numbers) ⇒ <code>boolean</code>](#lessThan)
     * [greaterThan(numbers) ⇒ <code>boolean</code>](#greaterThan)
@@ -22,12 +23,24 @@ Create a bin reader.
 | --- | --- | --- |
 | versionStr | <code>str</code> | The version string value. |
 
+<a name="Version+compare"></a>
+
+### compare
+Compare a version object against a version numbers array.
+
+
+**Returns**: <code>number</code> - - return positive: v1 > v2, zero:v1 == v2, negative: v1 < v2  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| numbers | <code>array</code> | The numbers value. |
+
 <a name="Version+equals"></a>
 
 ### equals
 Compare a version object against a version numbers array.
 
-**Kind**: instance method of [<code>Version</code>](#Version)  
+
 **Returns**: <code>boolean</code> - - The return value.  
 
 | Param | Type | Description |
@@ -39,7 +52,7 @@ Compare a version object against a version numbers array.
 ### lessThan
 Compare a version object against a version numbers array.
 
-**Kind**: instance method of [<code>Version</code>](#Version)  
+
 **Returns**: <code>boolean</code> - - The return value.  
 
 | Param | Type | Description |
@@ -51,7 +64,7 @@ Compare a version object against a version numbers array.
 ### greaterThan
 Compare a version object against a version numbers array.
 
-**Kind**: instance method of [<code>Version</code>](#Version)  
+
 **Returns**: <code>boolean</code> - - The return value.  
 
 | Param | Type | Description |
@@ -63,7 +76,7 @@ Compare a version object against a version numbers array.
 ### greaterOrEqualThan
 Compare a version object against a version numbers array.
 
-**Kind**: instance method of [<code>Version</code>](#Version)  
+
 **Returns**: <code>boolean</code> - - The return value.  
 
 | Param | Type | Description |

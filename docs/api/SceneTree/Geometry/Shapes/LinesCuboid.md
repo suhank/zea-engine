@@ -1,9 +1,9 @@
 <a name="LinesCuboid"></a>
 
-## LinesCuboid ⇐ <code>Lines</code>
+### LinesCuboid 
 A class for generating a lines cuboid shape.
 
-**Kind**: global class  
+
 **Extends**: <code>Lines</code>  
 
 * [LinesCuboid ⇐ <code>Lines</code>](#LinesCuboid)
@@ -28,5 +28,5 @@ Create a lines cuboid.
 ### toJSON
 The toJSON method encodes this type as a json object for persistences.
 
-**Kind**: instance method of [<code>LinesCuboid</code>](#LinesCuboid)  
+
 **Returns**: <code>object</code> - - Returns the json object.  

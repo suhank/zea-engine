@@ -1,7 +1,7 @@
-## Classes
+### Classes
 
 <dl>
-<dt><a href="#OperatorOutput">OperatorOutput</a></dt>
+<dt><a href="#OperatorOutput">OperatorOutput</a> ⇐ <code>EventEmitter</code></dt>
 <dd><p>Class representing an operator output.</p>
 </dd>
 <dt><a href="#XfoOperatorOutput">XfoOperatorOutput</a> ⇐ <code><a href="#OperatorOutput">OperatorOutput</a></code></dt>
@@ -11,12 +11,13 @@
 
 <a name="OperatorOutput"></a>
 
-## OperatorOutput
+### OperatorOutput 
 Class representing an operator output.
 
-**Kind**: global class  
 
-* [OperatorOutput](#OperatorOutput)
+**Extends**: <code>EventEmitter</code>  
+
+* [OperatorOutput ⇐ <code>EventEmitter</code>](#OperatorOutput)
     * [new OperatorOutput(name, filterFn)](#new-OperatorOutput)
     * [getName() ⇒ <code>any</code>](#getName)
     * [getFilterFn() ⇒ <code>any</code>](#getFilterFn)
@@ -49,35 +50,35 @@ Create an operator output.
 ### getName
 The getName method.
 
-**Kind**: instance method of [<code>OperatorOutput</code>](#OperatorOutput)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="OperatorOutput+getFilterFn"></a>
 
 ### getFilterFn
 The getFilterFn method.
 
-**Kind**: instance method of [<code>OperatorOutput</code>](#OperatorOutput)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="OperatorOutput+isConnected"></a>
 
 ### isConnected
 The isConnected method.
 
-**Kind**: instance method of [<code>OperatorOutput</code>](#OperatorOutput)  
+
 **Returns**: <code>boolean</code> - - The return value.  
 <a name="OperatorOutput+getParam"></a>
 
 ### getParam
 The getParam method.
 
-**Kind**: instance method of [<code>OperatorOutput</code>](#OperatorOutput)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="OperatorOutput+setParam"></a>
 
 ### setParam
 The setParam method.
 
-**Kind**: instance method of [<code>OperatorOutput</code>](#OperatorOutput)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -88,7 +89,7 @@ The setParam method.
 ### getValue
 The getValue method.
 
-**Kind**: instance method of [<code>OperatorOutput</code>](#OperatorOutput)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -98,9 +99,11 @@ The getValue method.
 <a name="OperatorOutput+setValue"></a>
 
 ### setValue
-The setValue method.Note: Sometimes outputs are used in places like statemachines,where we would want the change to cause an event.
+The setValue method.
+Note: Sometimes outputs are used in places like statemachines,
+where we would want the change to cause an event.
 
-**Kind**: instance method of [<code>OperatorOutput</code>](#OperatorOutput)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -112,7 +115,7 @@ The setValue method.Note: Sometimes outputs are used in places like statemachin
 ### setClean
 The setClean method.
 
-**Kind**: instance method of [<code>OperatorOutput</code>](#OperatorOutput)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -123,7 +126,7 @@ The setClean method.
 ### setDirty
 The setDirty method.
 
-**Kind**: instance method of [<code>OperatorOutput</code>](#OperatorOutput)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -134,7 +137,7 @@ The setDirty method.
 ### removeCleanerFn
 The removeCleanerFn method.
 
-**Kind**: instance method of [<code>OperatorOutput</code>](#OperatorOutput)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -145,7 +148,7 @@ The removeCleanerFn method.
 ### toJSON
 The toJSON method encodes this type as a json object for persistences.
 
-**Kind**: instance method of [<code>OperatorOutput</code>](#OperatorOutput)  
+
 **Returns**: <code>object</code> - - Returns the json object.  
 
 | Param | Type | Description |
@@ -158,7 +161,7 @@ The toJSON method encodes this type as a json object for persistences.
 ### fromJSON
 The fromJSON method decodes a json object for this type.
 
-**Kind**: instance method of [<code>OperatorOutput</code>](#OperatorOutput)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -171,19 +174,19 @@ The fromJSON method decodes a json object for this type.
 ### detach
 The detach method.
 
-**Kind**: instance method of [<code>OperatorOutput</code>](#OperatorOutput)  
+
 <a name="OperatorOutput+reattach"></a>
 
 ### reattach
 The reattach method.
 
-**Kind**: instance method of [<code>OperatorOutput</code>](#OperatorOutput)  
+
 <a name="XfoOperatorOutput"></a>
 
-## XfoOperatorOutput ⇐ [<code>OperatorOutput</code>](#OperatorOutput)
+### XfoOperatorOutput 
 Class representing an Xfo operator output.
 
-**Kind**: global class  
+
 **Extends**: [<code>OperatorOutput</code>](#OperatorOutput)  
 
 * [XfoOperatorOutput](#XfoOperatorOutput)
@@ -219,14 +222,14 @@ Create an Xfo operator output.
 ### getInitialValue
 The getInitialValue method.
 
-**Kind**: instance method of [<code>XfoOperatorOutput</code>](#XfoOperatorOutput)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="XfoOperatorOutput+setParam"></a>
 
 ### setParam
 The setParam method.
 
-**Kind**: instance method of [<code>XfoOperatorOutput</code>](#XfoOperatorOutput)  
+
 **Overrides**: [<code>setParam</code>](#OperatorOutput+setParam)  
 
 | Param | Type | Description |
@@ -238,7 +241,7 @@ The setParam method.
 ### getName
 The getName method.
 
-**Kind**: instance method of [<code>XfoOperatorOutput</code>](#XfoOperatorOutput)  
+
 **Overrides**: [<code>getName</code>](#OperatorOutput+getName)  
 **Returns**: <code>any</code> - - The return value.  
 <a name="OperatorOutput+getFilterFn"></a>
@@ -246,7 +249,7 @@ The getName method.
 ### getFilterFn
 The getFilterFn method.
 
-**Kind**: instance method of [<code>XfoOperatorOutput</code>](#XfoOperatorOutput)  
+
 **Overrides**: [<code>getFilterFn</code>](#OperatorOutput+getFilterFn)  
 **Returns**: <code>any</code> - - The return value.  
 <a name="OperatorOutput+isConnected"></a>
@@ -254,7 +257,7 @@ The getFilterFn method.
 ### isConnected
 The isConnected method.
 
-**Kind**: instance method of [<code>XfoOperatorOutput</code>](#XfoOperatorOutput)  
+
 **Overrides**: [<code>isConnected</code>](#OperatorOutput+isConnected)  
 **Returns**: <code>boolean</code> - - The return value.  
 <a name="OperatorOutput+getParam"></a>
@@ -262,7 +265,7 @@ The isConnected method.
 ### getParam
 The getParam method.
 
-**Kind**: instance method of [<code>XfoOperatorOutput</code>](#XfoOperatorOutput)  
+
 **Overrides**: [<code>getParam</code>](#OperatorOutput+getParam)  
 **Returns**: <code>any</code> - - The return value.  
 <a name="OperatorOutput+getValue"></a>
@@ -270,7 +273,7 @@ The getParam method.
 ### getValue
 The getValue method.
 
-**Kind**: instance method of [<code>XfoOperatorOutput</code>](#XfoOperatorOutput)  
+
 **Overrides**: [<code>getValue</code>](#OperatorOutput+getValue)  
 **Returns**: <code>any</code> - - The return value.  
 
@@ -281,9 +284,11 @@ The getValue method.
 <a name="OperatorOutput+setValue"></a>
 
 ### setValue
-The setValue method.Note: Sometimes outputs are used in places like statemachines,where we would want the change to cause an event.
+The setValue method.
+Note: Sometimes outputs are used in places like statemachines,
+where we would want the change to cause an event.
 
-**Kind**: instance method of [<code>XfoOperatorOutput</code>](#XfoOperatorOutput)  
+
 **Overrides**: [<code>setValue</code>](#OperatorOutput+setValue)  
 
 | Param | Type | Description |
@@ -296,7 +301,7 @@ The setValue method.Note: Sometimes outputs are used in places like statemachin
 ### setClean
 The setClean method.
 
-**Kind**: instance method of [<code>XfoOperatorOutput</code>](#XfoOperatorOutput)  
+
 **Overrides**: [<code>setClean</code>](#OperatorOutput+setClean)  
 
 | Param | Type | Description |
@@ -308,7 +313,7 @@ The setClean method.
 ### setDirty
 The setDirty method.
 
-**Kind**: instance method of [<code>XfoOperatorOutput</code>](#XfoOperatorOutput)  
+
 **Overrides**: [<code>setDirty</code>](#OperatorOutput+setDirty)  
 
 | Param | Type | Description |
@@ -320,7 +325,7 @@ The setDirty method.
 ### removeCleanerFn
 The removeCleanerFn method.
 
-**Kind**: instance method of [<code>XfoOperatorOutput</code>](#XfoOperatorOutput)  
+
 **Overrides**: [<code>removeCleanerFn</code>](#OperatorOutput+removeCleanerFn)  
 
 | Param | Type | Description |
@@ -332,7 +337,7 @@ The removeCleanerFn method.
 ### toJSON
 The toJSON method encodes this type as a json object for persistences.
 
-**Kind**: instance method of [<code>XfoOperatorOutput</code>](#XfoOperatorOutput)  
+
 **Overrides**: [<code>toJSON</code>](#OperatorOutput+toJSON)  
 **Returns**: <code>object</code> - - Returns the json object.  
 
@@ -346,7 +351,7 @@ The toJSON method encodes this type as a json object for persistences.
 ### fromJSON
 The fromJSON method decodes a json object for this type.
 
-**Kind**: instance method of [<code>XfoOperatorOutput</code>](#XfoOperatorOutput)  
+
 **Overrides**: [<code>fromJSON</code>](#OperatorOutput+fromJSON)  
 
 | Param | Type | Description |
@@ -360,12 +365,12 @@ The fromJSON method decodes a json object for this type.
 ### detach
 The detach method.
 
-**Kind**: instance method of [<code>XfoOperatorOutput</code>](#XfoOperatorOutput)  
+
 **Overrides**: [<code>detach</code>](#OperatorOutput+detach)  
 <a name="OperatorOutput+reattach"></a>
 
 ### reattach
 The reattach method.
 
-**Kind**: instance method of [<code>XfoOperatorOutput</code>](#XfoOperatorOutput)  
+
 **Overrides**: [<code>reattach</code>](#OperatorOutput+reattach)  

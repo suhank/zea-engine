@@ -1,9 +1,9 @@
 <a name="ImageParameter"></a>
 
-## ImageParameter ⇐ <code>Parameter</code>
+### ImageParameter 
 Class representing an image parameter.
 
-**Kind**: global class  
+
 **Extends**: <code>Parameter</code>  
 
 * [ImageParameter ⇐ <code>Parameter</code>](#ImageParameter)
@@ -28,7 +28,7 @@ Create an image parameter.
 ### toJSON
 The toJSON method encodes this type as a json object for persistences.
 
-**Kind**: instance method of [<code>ImageParameter</code>](#ImageParameter)  
+
 **Returns**: <code>object</code> - - Returns the json object.  
 
 | Param | Type | Description |
@@ -41,7 +41,7 @@ The toJSON method encodes this type as a json object for persistences.
 ### fromJSON
 The fromJSON method decodes a json object for this type.
 
-**Kind**: instance method of [<code>ImageParameter</code>](#ImageParameter)  
+
 **Returns**: <code>object</code> - - Returns the json object.  
 
 | Param | Type | Description |
@@ -53,9 +53,10 @@ The fromJSON method decodes a json object for this type.
 <a name="ImageParameter+clone"></a>
 
 ### clone
-The clone method constructs a new image parameter,copies its values from this parameter and returns it.
+The clone method constructs a new image parameter,
+copies its values from this parameter and returns it.
 
-**Kind**: instance method of [<code>ImageParameter</code>](#ImageParameter)  
+
 **Returns**: [<code>ImageParameter</code>](#ImageParameter) - - Returns a new cloned image parameter.  
 
 | Param | Type | Description |

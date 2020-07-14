@@ -1,9 +1,9 @@
 <a name="ResourceLoader"></a>
 
-## ResourceLoader
+### ResourceLoader
 Class representing a resource loader.
 
-**Kind**: global class  
+
 
 * [ResourceLoader](#ResourceLoader)
     * [new ResourceLoader()](#new-ResourceLoader)
@@ -39,14 +39,14 @@ Create a resource loader.
 ### getRootFolder
 The getRootFolder method.
 
-**Kind**: instance method of [<code>ResourceLoader</code>](#ResourceLoader)  
+
 **Returns**: <code>any</code> - - The return value.  
 <a name="ResourceLoader+registerResourceCallback"></a>
 
 ### registerResourceCallback
 The registerResourceCallback method.
 
-**Kind**: instance method of [<code>ResourceLoader</code>](#ResourceLoader)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -58,7 +58,7 @@ The registerResourceCallback method.
 ### setResources
 The setResources method.
 
-**Kind**: instance method of [<code>ResourceLoader</code>](#ResourceLoader)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -69,7 +69,7 @@ The setResources method.
 ### addResourceURL
 The addResourceURL method.
 
-**Kind**: instance method of [<code>ResourceLoader</code>](#ResourceLoader)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -81,7 +81,7 @@ The addResourceURL method.
 ### updateFile
 The updateFile method.
 
-**Kind**: instance method of [<code>ResourceLoader</code>](#ResourceLoader)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -92,7 +92,7 @@ The updateFile method.
 ### freeData
 The freeData method.
 
-**Kind**: instance method of [<code>ResourceLoader</code>](#ResourceLoader)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -103,7 +103,7 @@ The freeData method.
 ### getFilepath
 The getFilepath method.
 
-**Kind**: instance method of [<code>ResourceLoader</code>](#ResourceLoader)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -115,7 +115,7 @@ The getFilepath method.
 ### resourceAvailable
 The resourceAvailable method.
 
-**Kind**: instance method of [<code>ResourceLoader</code>](#ResourceLoader)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -127,7 +127,7 @@ The resourceAvailable method.
 ### getFile
 The getFile method.
 
-**Kind**: instance method of [<code>ResourceLoader</code>](#ResourceLoader)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -139,7 +139,7 @@ The getFile method.
 ### resolveFilePathToId
 The resolveFilePathToId method.
 
-**Kind**: instance method of [<code>ResourceLoader</code>](#ResourceLoader)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -151,7 +151,7 @@ The resolveFilePathToId method.
 ### resolveFilepath
 The resolveFilepath method.
 
-**Kind**: instance method of [<code>ResourceLoader</code>](#ResourceLoader)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -163,7 +163,7 @@ The resolveFilepath method.
 ### resolveFile
 The resolveFile method.
 
-**Kind**: instance method of [<code>ResourceLoader</code>](#ResourceLoader)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -175,7 +175,7 @@ The resolveFile method.
 ### resolveURL
 The resolveURL method.
 
-**Kind**: instance method of [<code>ResourceLoader</code>](#ResourceLoader)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Description |
@@ -187,7 +187,7 @@ The resolveURL method.
 ### addWork
 Add work to the total work pile.. We never know how big the pile will get.
 
-**Kind**: instance method of [<code>ResourceLoader</code>](#ResourceLoader)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -199,7 +199,7 @@ Add work to the total work pile.. We never know how big the pile will get.
 ### addWorkDone
 Add work to the 'done' pile. The done pile should eventually match the total pile.
 
-**Kind**: instance method of [<code>ResourceLoader</code>](#ResourceLoader)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -211,7 +211,7 @@ Add work to the 'done' pile. The done pile should eventually match the total pil
 ### loadResource
 The loadResource method.
 
-**Kind**: instance method of [<code>ResourceLoader</code>](#ResourceLoader)  
+
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -224,7 +224,7 @@ The loadResource method.
 ### loadURL
 The loadURL method.
 
-**Kind**: instance method of [<code>ResourceLoader</code>](#ResourceLoader)  
+
 **Returns**: <code>any</code> - - The return value.  
 
 | Param | Type | Default | Description |
@@ -239,7 +239,7 @@ The loadURL method.
 ### loadUrl
 The loadUrl method.
 
-**Kind**: instance method of [<code>ResourceLoader</code>](#ResourceLoader)  
+
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -253,7 +253,7 @@ The loadUrl method.
 ### unpackBuffer
 The unpackBuffer method.
 
-**Kind**: instance method of [<code>ResourceLoader</code>](#ResourceLoader)  
+
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -267,13 +267,13 @@ The unpackBuffer method.
 ### suspend
 The suspend method.
 
-**Kind**: instance method of [<code>ResourceLoader</code>](#ResourceLoader)  
+
 <a name="ResourceLoader+traverse"></a>
 
 ### traverse
 The traverse method.
 
-**Kind**: instance method of [<code>ResourceLoader</code>](#ResourceLoader)  
+
 
 | Param | Type | Description |
 | --- | --- | --- |
