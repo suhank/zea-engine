@@ -222,7 +222,9 @@ class Camera extends TreeItem {
    */
   frameView(viewport, treeItems, mode = ValueSetMode.USER_SETVALUE) {
     const boundingBox = new Box3()
-    for (const treeItem of treeItems) boundingBox.addBox3(treeItem.getBoundingBox())
+    for (const treeItem of treeItems) {
+      boundingBox.addBox3(treeItem.getParameter('BoundingBox').getValue())
+    }
 
     if (!boundingBox.isValid()) {
       console.warn('Bounding box not valid.')
