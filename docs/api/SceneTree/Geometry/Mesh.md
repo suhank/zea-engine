@@ -1,7 +1,11 @@
 <a name="Mesh"></a>
 
 ### Mesh 
-Class representing a mesh.
+Class representing a mesh(Collection of vertices, edges and faces that define the shape of a 3D object).
+
+```
+const mesh = new Mesh(geomName)
+```
 
 
 **Extends**: <code>BaseGeom</code>  
@@ -9,30 +13,29 @@ Class representing a mesh.
 * [Mesh ⇐ <code>BaseGeom</code>](#Mesh)
     * [new Mesh()](#new-Mesh)
     * [init()](#init)
-    * [getFaceVertexIndices() ⇒ <code>any</code>](#getFaceVertexIndices)
-    * [getFaceCounts() ⇒ <code>any</code>](#getFaceCounts)
+    * [getFaceVertexIndices() ⇒ <code>Uint32Array</code>](#getFaceVertexIndices)
+    * [getFaceCounts() ⇒ <code>array</code>](#getFaceCounts)
     * [clear()](#clear)
     * [setFaceCounts(faceCounts)](#setFaceCounts)
     * [setFaceVertexIndices(faceIndex)](#setFaceVertexIndices)
-    * [getFaceVertexIndices(faceIndex) ⇒ <code>any</code>](#getFaceVertexIndices)
-    * [getFaceVertexIndex(faceIndex, facevertex) ⇒ <code>any</code>](#getFaceVertexIndex)
+    * [getFaceVertexIndices(faceIndex) ⇒ <code>array</code>](#getFaceVertexIndices)
+    * [getFaceVertexIndex(faceIndex, facevertex) ⇒ <code>number</code>](#getFaceVertexIndex)
     * [getNumFaces() ⇒ <code>number</code>](#getNumFaces)
     * [addVertexAttribute(name, dataType, defaultScalarValue) ⇒ <code>VertexAttribute</code>](#addVertexAttribute)
     * [addFaceAttribute(name, dataType, count) ⇒ <code>Attribute</code>](#addFaceAttribute)
-    * [hasFaceAttribute(name) ⇒ <code>any</code>](#hasFaceAttribute)
-    * [getFaceAttribute(name) ⇒ <code>any</code>](#getFaceAttribute)
+    * [hasFaceAttribute(name) ⇒ <code>boolean</code>](#hasFaceAttribute)
+    * [getFaceAttribute(name) ⇒ <code>boolean</code>](#getFaceAttribute)
     * [addEdgeAttribute(name, dataType, count) ⇒ <code>Attribute</code>](#addEdgeAttribute)
-    * [hasEdgeAttribute(name) ⇒ <code>any</code>](#hasEdgeAttribute)
+    * [hasEdgeAttribute(name) ⇒ <code>boolean</code>](#hasEdgeAttribute)
     * [getEdgeAttribute(name) ⇒ <code>any</code>](#getEdgeAttribute)
     * [genTopologyInfo()](#genTopologyInfo)
     * [computeFaceNormals()](#computeFaceNormals)
     * [generateEdgeFlags()](#generateEdgeFlags)
-    * [computeVertexNormals(hardAngle) ⇒ <code>any</code>](#computeVertexNormals)
+    * [computeVertexNormals(hardAngle) ⇒ <code>VertexAttribute</code>](#computeVertexNormals)
     * [computeNumTriangles() ⇒ <code>number</code>](#computeNumTriangles)
-    * [generateTriangulatedIndices(totalNumVertices, numUnSplitVertices, splitIndices) ⇒ <code>any</code>](#generateTriangulatedIndices)
-    * [computeHardEdgesIndices(hardAngle) ⇒ <code>any</code>](#computeHardEdgesIndices)
-    * [getWireframeIndices() ⇒ <code>any</code>](#getWireframeIndices)
-    * [genBuffers(opts) ⇒ <code>any</code>](#genBuffers)
+    * [generateTriangulatedIndices(totalNumVertices, numUnSplitVertices, splitIndices) ⇒ <code>Uint32Array</code>](#generateTriangulatedIndices)
+    * [computeHardEdgesIndices(hardAngle) ⇒ <code>array</code>](#computeHardEdgesIndices)
+    * [genBuffers(opts) ⇒ <code>object</code>](#genBuffers)
     * [freeBuffers()](#freeBuffers)
     * [readBinary(reader, context)](#readBinary)
     * [toJSON(context, flags) ⇒ <code>object</code>](#toJSON)
@@ -55,14 +58,14 @@ The init method.
 The getFaceVertexIndices method.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>Uint32Array</code> - - The return value.  
 <a name="Mesh+getFaceCounts"></a>
 
 ### getFaceCounts
 The getFaceCounts method.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>array</code> - - The return value.  
 <a name="Mesh+clear"></a>
 
 ### clear
@@ -78,7 +81,7 @@ The setFaceCounts method.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| faceCounts | <code>any</code> | The faceCounts value. |
+| faceCounts | <code>array</code> | The faceCounts value. |
 
 <a name="Mesh+setFaceVertexIndices"></a>
 
@@ -89,7 +92,7 @@ The setFaceVertexIndices method.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| faceIndex | <code>any</code> | The faceIndex value. |
+| faceIndex | <code>number</code> | The faceIndex value. |
 
 <a name="Mesh+getFaceVertexIndices"></a>
 
@@ -97,11 +100,11 @@ The setFaceVertexIndices method.
 The getFaceVertexIndices method.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>array</code> - - The return value.  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| faceIndex | <code>any</code> | The faceIndex value. |
+| faceIndex | <code>number</code> | The faceIndex value. |
 
 <a name="Mesh+getFaceVertexIndex"></a>
 
@@ -109,12 +112,12 @@ The getFaceVertexIndices method.
 The getFaceVertexIndex method.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>number</code> - - The return value.  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| faceIndex | <code>any</code> | The faceIndex value. |
-| facevertex | <code>any</code> | The facevertex value. |
+| faceIndex | <code>number</code> | The faceIndex value. |
+| facevertex | <code>number</code> | The facevertex value. |
 
 <a name="Mesh+getNumFaces"></a>
 
@@ -134,7 +137,7 @@ The addVertexAttribute method.
 | Param | Type | Description |
 | --- | --- | --- |
 | name | <code>string</code> | The name of the vertex attribute to add. |
-| dataType | <code>any</code> | The dataType value. |
+| dataType | <code>AttrValue</code> \| <code>number</code> | The dataType value. |
 | defaultScalarValue | <code>number</code> | The default scalar value. |
 
 <a name="Mesh+addFaceAttribute"></a>
@@ -148,8 +151,8 @@ The addFaceAttribute method.
 | Param | Type | Description |
 | --- | --- | --- |
 | name | <code>string</code> | The name of the face attribute to add. |
-| dataType | <code>any</code> | The data type. |
-| count | <code>any</code> | The count value. |
+| dataType | <code>AttrValue</code> \| <code>number</code> | The data type. |
+| count | <code>number</code> \| <code>TypedArray</code> | The count value. |
 
 <a name="Mesh+hasFaceAttribute"></a>
 
@@ -157,7 +160,7 @@ The addFaceAttribute method.
 The hasFaceAttribute method.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>boolean</code> - - The return value.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -169,7 +172,7 @@ The hasFaceAttribute method.
 The getFaceAttribute method.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>boolean</code> - - The return value.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -186,7 +189,7 @@ The addEdgeAttribute method.
 | Param | Type | Description |
 | --- | --- | --- |
 | name | <code>string</code> | The name of the edge attribute t oadd. |
-| dataType | <code>any</code> | The data type. |
+| dataType | <code>AttrValue</code> \| <code>number</code> | The data type. |
 | count | <code>number</code> | The default scalar value. |
 
 <a name="Mesh+hasEdgeAttribute"></a>
@@ -195,7 +198,7 @@ The addEdgeAttribute method.
 The hasEdgeAttribute method.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>boolean</code> - - The return value.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -237,7 +240,7 @@ The generateEdgeFlags method.
 Compute vertex normals.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>VertexAttribute</code> - - The return value.  
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -256,13 +259,13 @@ Compute the number of triangles.
 The generateTriangulatedIndices method.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>Uint32Array</code> - - The return value.  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | totalNumVertices | <code>number</code> | The total number of vertices. |
 | numUnSplitVertices | <code>number</code> | The total number of unsplit vertices. |
-| splitIndices | <code>any</code> | The splitIndices value. |
+| splitIndices | <code>array</code> | The splitIndices value. |
 
 <a name="Mesh+computeHardEdgesIndices"></a>
 
@@ -270,30 +273,23 @@ The generateTriangulatedIndices method.
 The computeHardEdgesIndices method.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>array</code> - - The return value.  
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
 | hardAngle | <code>number</code> | <code>1</code> | The hardAngle value in radians. |
 
-<a name="Mesh+getWireframeIndices"></a>
-
-### getWireframeIndices
-The getWireframeIndices method.
-
-
-**Returns**: <code>any</code> - - The return value.  
 <a name="Mesh+genBuffers"></a>
 
 ### genBuffers
 The genBuffers method.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>object</code> - - The return value.  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| opts | <code>any</code> | The opts value. |
+| opts | <code>object</code> | The opts value. |
 
 <a name="Mesh+freeBuffers"></a>
 

@@ -2,7 +2,9 @@ import { Lines } from '../Lines.js'
 import { NumberParameter } from '../../Parameters/NumberParameter.js'
 import { sgFactory } from '../../SGFactory.js'
 
-/** A class for generating a cross shape.
+/**
+ * A class for generating a cross shape.
+ *
  * @extends Lines
  */
 class Cross extends Lines {

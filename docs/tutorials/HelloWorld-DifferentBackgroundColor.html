@@ -13,7 +13,7 @@ import { Scene, GLRenderer, Color } from "../zea-engine/dist/index.esm.js"
 const domElement = document.getElementById("app");
 
 const scene = new Scene();
-scene.setupGrid(10.0, 10);
+scene.setupGrid(10.0, 50);
 
 const color = new Color('#887744')
 scene.getSettings().getParameter('BackgroundColor').setValue(color)

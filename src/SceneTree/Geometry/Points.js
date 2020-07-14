@@ -1,6 +1,11 @@
+/* eslint-disable camelcase */
 import { BaseGeom } from './BaseGeom.js'
 
-/** Class representing points.
+/**
+ * Class representing points.
+ *
+ * * **Events**
+ * * **boundingBoxChanged:** Triggered when the bounding box changes.
  * @extends BaseGeom
  */
 class Points extends BaseGeom {
@@ -13,7 +18,7 @@ class Points extends BaseGeom {
 
   /**
    * The loadBin method.
-   * @param {object} reader - The reader value.
+   * @param {BinReader} reader - The reader value.
    */
   loadBin(reader) {
     this.name = reader.loadStr()
@@ -65,8 +70,9 @@ class Points extends BaseGeom {
   // Persistence
 
   /**
-   * The readBinary method.
-   * @param {object} reader - The reader value.
+   * Sets state of current geometry(Including line segments) using a binary reader object.
+   *
+   * @param {BinReader} reader - The reader value.
    * @param {object} context - The context value.
    */
   readBinary(reader, context) {

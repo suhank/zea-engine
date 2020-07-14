@@ -1,7 +1,18 @@
 <a name="Grid"></a>
 
 ### Grid 
-A class for generating a grid.
+Represents a network of lines that cross each other to form a series of squares or rectangles.
+
+```
+const grid = new Grid(5, 5, 50, 50, true)
+```
+
+**Parameters**
+* **x(`NumberParameter`):** Length of the grid side of `X` axis
+* **y(`NumberParameter`):** Number of lines to each side of `Y` axis
+* **xDivisions(`NumberParameter`):**
+* **yDivisions(`NumberParameter`):**
+* **skipCenterLines(`BooleanParameter`):**
 
 
 **Extends**: <code>Lines</code>  
@@ -29,8 +40,8 @@ Create a grid.
 | --- | --- | --- | --- |
 | x | <code>number</code> | <code>1</code> | The length of the grid along the X axis. |
 | y | <code>number</code> | <code>1</code> | The length of the grid along the Y axis. |
-| xDivisions | <code>number</code> | <code>10</code> | The number of divisions along the X axis. |
-| yDivisions | <code>number</code> | <code>10</code> | The number of divisions along the X axis. |
+| xDivisions | <code>number</code> | <code>10</code> | The number of divisions along both sides of the `X` axis. |
+| yDivisions | <code>number</code> | <code>10</code> | The number of divisions along both sides of the `Y` axis. |
 | skipCenterLines | <code>boolean</code> | <code>false</code> | A boolean indicating whether to display the center grid lines or not. |
 
 <a name="Grid+sizeX"></a>
@@ -120,7 +131,7 @@ Setter for the size of the grid.
 <a name="Grid+toJSON"></a>
 
 ### toJSON
-The toJSON method encodes this type as a json object for persistences.
+The toJSON method encodes this type as a json object for persistence.
 
 
 **Returns**: <code>object</code> - - Returns the json object.  

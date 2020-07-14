@@ -1,22 +1,29 @@
 <a name="Lines"></a>
 
 ### Lines 
-Class representing lines.
+Class representing `GL_LINES` primitive drawings type, connecting dots(Vertices) using the specified indices.
+i.e. We have 4 points(vertices) but we don't know how they connect to each other,
+and that's why we need indices(Numbers indicating which vertex connects to which).
+In this case if we say that `indices` is `[0,1,2,3]`, it would connect the first vertex to the second,
+and the third to the fourth.
+
+```
+const lines = new Lines()
+```
+
+**Events**
+* **geomDataChanged:** Triggered when the data value of the geometry is set(This includes reading binary)
 
 
 **Extends**: <code>BaseGeom</code>  
 
 * [Lines ⇐ <code>BaseGeom</code>](#Lines)
     * [new Lines()](#new-Lines)
-    * [getIndices() ⇒ <code>any</code>](#getIndices)
+    * [getIndices() ⇒ <code>Uint32Array</code>](#getIndices)
     * [getNumSegments() ⇒ <code>number</code>](#getNumSegments)
-    * [setNumSegments(count)](#setNumSegments)
+    * [setNumSegments(numOfSegments)](#setNumSegments)
     * [setSegment(index, p0, p1)](#setSegment)
-    * [getSegmentVertexIndex(line, linevertex) ⇒ <code>any</code>](#getSegmentVertexIndex)
-    * [addSegmentAttribute(name, dataType, count) ⇒ <code>any</code>](#addSegmentAttribute)
-    * [hasSegmentAttribute(name) ⇒ <code>any</code>](#hasSegmentAttribute)
-    * [getSegmentAttribute(name) ⇒ <code>any</code>](#getSegmentAttribute)
-    * [genBuffers() ⇒ <code>any</code>](#genBuffers)
+    * [genBuffers() ⇒ <code>object</code>](#genBuffers)
     * [readBinary(reader, context)](#readBinary)
     * [toJSON(context, flags) ⇒ <code>object</code>](#toJSON)
     * [fromJSON(j, context, flags)](#fromJSON)
@@ -29,103 +36,53 @@ Create lines.
 <a name="Lines+getIndices"></a>
 
 ### getIndices
-The getIndices method.
+Returns the specified indices(Vertex connectors)
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>Uint32Array</code> - - The return value.  
 <a name="Lines+getNumSegments"></a>
 
 ### getNumSegments
-Getter for the number of segments.
+Returns the number of line segments.
 
 
 **Returns**: <code>number</code> - - Returns the number of segments.  
 <a name="Lines+setNumSegments"></a>
 
 ### setNumSegments
-Getter for the number of segments.
+Sets the number of line segments in the geometry.<br>
+**Important:** It resets indices values.
 
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| count | <code>number</code> | The count value. |
+| numOfSegments | <code>number</code> | The count value. |
 
 <a name="Lines+setSegment"></a>
 
 ### setSegment
-The setSegment method.
+Sets segment values in the specified index.
 
 
 
 | Param | Type | Description |
 | --- | --- | --- |
 | index | <code>number</code> | The index value. |
-| p0 | <code>any</code> | The p0 value. |
-| p1 | <code>any</code> | The p1 value. |
-
-<a name="Lines+getSegmentVertexIndex"></a>
-
-### getSegmentVertexIndex
-The getSegmentVertexIndex method.
-
-
-**Returns**: <code>any</code> - - The return value.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| line | <code>any</code> | The line value. |
-| linevertex | <code>any</code> | The linevertex value. |
-
-<a name="Lines+addSegmentAttribute"></a>
-
-### addSegmentAttribute
-The addSegmentAttribute method.
-
-
-**Returns**: <code>any</code> - - The return value.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| name | <code>string</code> | The name value. |
-| dataType | <code>any</code> | The dataType value. |
-| count | <code>number</code> | The count value. |
-
-<a name="Lines+hasSegmentAttribute"></a>
-
-### hasSegmentAttribute
-The hasSegmentAttribute method.
-
-
-**Returns**: <code>any</code> - - The return value.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| name | <code>string</code> | The name value. |
-
-<a name="Lines+getSegmentAttribute"></a>
-
-### getSegmentAttribute
-The getSegmentAttribute method.
-
-
-**Returns**: <code>any</code> - - The return value.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| name | <code>string</code> | The name value. |
+| p0 | <code>number</code> | The p0 value. |
+| p1 | <code>number</code> | The p1 value. |
 
 <a name="Lines+genBuffers"></a>
 
 ### genBuffers
-The genBuffers method.
+Returns vertex attributes buffers and its count.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>object</code> - - The return value.  
 <a name="Lines+readBinary"></a>
 
 ### readBinary
-The readBinary method.
+Sets state of current geometry(Including line segments) using a binary reader object.
 
 
 
@@ -137,7 +94,7 @@ The readBinary method.
 <a name="Lines+toJSON"></a>
 
 ### toJSON
-The toJSON method encodes this type as a json object for persistences.
+The toJSON method encodes this type as a json object for persistence.
 
 
 **Returns**: <code>object</code> - - Returns the json object.  

@@ -1,3 +1,5 @@
+/* eslint-disable camelcase */
+/* eslint-disable guard-for-in */
 import { Attribute } from './Attribute.js'
 import { Float32 } from '../../Math/index'
 
@@ -142,8 +144,7 @@ class VertexAttribute extends Attribute {
    */
   getSplitCount() {
     let splitCount = 0
-    for (const vertex in this.__splits)
-      splitCount += Object.keys(this.__splits[vertex]).length
+    for (const vertex in this.__splits) splitCount += Object.keys(this.__splits[vertex]).length
     return splitCount
   }
 
@@ -158,9 +159,7 @@ class VertexAttribute extends Attribute {
 
     const numUnSplitValues = this.length
     const count = this.length + splitCount
-    const numElems = this.__dataType.numElements
-      ? this.__dataType.numElements()
-      : 1
+    const numElems = this.__dataType.numElements ? this.__dataType.numElements() : 1
     const data = new Float32Array(count * numElems)
     for (let i = 0; i < this.__data.length; i++) data[i] = this.__data[i]
 
@@ -176,12 +175,9 @@ class VertexAttribute extends Attribute {
           // this attribue has a split value in its array.
           // we must use that value...
           const src = this.__splits[vertex][face]
-          if (this.__dataType == Float32)
-            data[tgt * numElems] = this.__splitValues[src]
+          if (this.__dataType == Float32) data[tgt * numElems] = this.__splitValues[src]
           else
-            this.__dataType
-              .createFromFloat32Buffer(data.buffer, tgt * numElems)
-              .setFromOther(this.__splitValues[src])
+            this.__dataType.createFromFloat32Buffer(data.buffer, tgt * numElems).setFromOther(this.__splitValues[src])
         } else {
           // Copy each scalar value to the new place in the array.
           const src = parseInt(vertex)
@@ -223,8 +219,7 @@ class VertexAttribute extends Attribute {
     super.fromJSON(json, context, flags)
     this.__splits = json.splits
     this.__splitValues = []
-    for (const valjson of json.splitValues)
-      this.__splitValues.push(this.__dataType.createFromJSON(valjson))
+    for (const valjson of json.splitValues) this.__splitValues.push(this.__dataType.createFromJSON(valjson))
   }
 
   /**
@@ -254,9 +249,7 @@ class VertexAttribute extends Attribute {
     const splitValues = reader.loadFloat32Array(numSplitValues * dim)
     this.__splitValues = []
     for (let i = 0; i < numSplitValues; i++) {
-      const val = this.__dataType.createFromFloat32Array(
-        splitValues.slice(i * dim, i * dim + dim)
-      )
+      const val = this.__dataType.createFromFloat32Array(splitValues.slice(i * dim, i * dim + dim))
       this.__splitValues.push(val)
     }
   }

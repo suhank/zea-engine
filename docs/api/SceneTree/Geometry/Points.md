@@ -3,6 +3,9 @@
 ### Points 
 Class representing points.
 
+* **Events**
+* **boundingBoxChanged:** Triggered when the bounding box changes.
+
 
 **Extends**: <code>BaseGeom</code>  
 
@@ -25,17 +28,17 @@ The loadBin method.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| reader | <code>object</code> | The reader value. |
+| reader | <code>BinReader</code> | The reader value. |
 
 <a name="Points+readBinary"></a>
 
 ### readBinary
-The readBinary method.
+Sets state of current geometry(Including line segments) using a binary reader object.
 
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| reader | <code>object</code> | The reader value. |
+| reader | <code>BinReader</code> | The reader value. |
 | context | <code>object</code> | The context value. |
 

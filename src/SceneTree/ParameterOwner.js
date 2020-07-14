@@ -316,7 +316,7 @@ class ParameterOwner extends EventEmitter {
    */
   copyFrom(src, flags) {
     // Note: Loop over the parameters in reverse order,
-    // this is because often, parameter depdenencies
+    // this is because often, parameter dependencies
     // are bottom to top (bottom params dependent on higher params).
     // This means that as a parameter is set with a new value
     // it will dirty the params below it.

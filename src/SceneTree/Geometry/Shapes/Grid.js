@@ -3,7 +3,20 @@ import { Lines } from '../Lines.js'
 import { BooleanParameter, NumberParameter } from '../../Parameters/index'
 import { sgFactory } from '../../SGFactory.js'
 
-/** A class for generating a grid.
+/**
+ * Represents a network of lines that cross each other to form a series of squares or rectangles.
+ *
+ * ```
+ * const grid = new Grid(5, 5, 50, 50, true)
+ * ```
+ *
+ * **Parameters**
+ * * **x(`NumberParameter`):** Length of the grid side of `X` axis
+ * * **y(`NumberParameter`):** Number of lines to each side of `Y` axis
+ * * **xDivisions(`NumberParameter`):**
+ * * **yDivisions(`NumberParameter`):**
+ * * **skipCenterLines(`BooleanParameter`):**
+ *
  * @extends Lines
  */
 class Grid extends Lines {
@@ -11,33 +24,20 @@ class Grid extends Lines {
    * Create a grid.
    * @param {number} x - The length of the grid along the X axis.
    * @param {number} y - The length of the grid along the Y axis.
-   * @param {number} xDivisions - The number of divisions along the X axis.
-   * @param {number} yDivisions - The number of divisions along the X axis.
+   * @param {number} xDivisions - The number of divisions along both sides of the `X` axis.
+   * @param {number} yDivisions - The number of divisions along both sides of the `Y` axis.
    * @param {boolean} skipCenterLines - A boolean indicating whether to display the center grid lines or not.
    */
-  constructor(
-    x = 1.0,
-    y = 1.0,
-    xDivisions = 10,
-    yDivisions = 10,
-    skipCenterLines = false
-  ) {
+  constructor(x = 1.0, y = 1.0, xDivisions = 10, yDivisions = 10, skipCenterLines = false) {
     super()
 
-    if (isNaN(x) || isNaN(y) || isNaN(xDivisions) || isNaN(yDivisions))
-      throw new Error('Invalid geom args')
+    if (isNaN(x) || isNaN(y) || isNaN(xDivisions) || isNaN(yDivisions)) throw new Error('Invalid geom args')
 
     this.__xParam = this.addParameter(new NumberParameter('x', x))
     this.__yParam = this.addParameter(new NumberParameter('y', y))
-    this.__xDivisionsParam = this.addParameter(
-      new NumberParameter('xDivisions', xDivisions)
-    )
-    this.__yDivisionsParam = this.addParameter(
-      new NumberParameter('yDivisions', yDivisions)
-    )
-    this.__skipCenterLinesParam = this.addParameter(
-      new BooleanParameter('skipCenterLines', skipCenterLines)
-    )
+    this.__xDivisionsParam = this.addParameter(new NumberParameter('xDivisions', xDivisions))
+    this.__yDivisionsParam = this.addParameter(new NumberParameter('yDivisions', yDivisions))
+    this.__skipCenterLinesParam = this.addParameter(new BooleanParameter('skipCenterLines', skipCenterLines))
 
     this.__rebuild()
   }
@@ -69,6 +69,7 @@ class Grid extends Lines {
 
   /**
    * Setter for the length of the grid along the U axis.
+   *
    * @param {number} val - The length along the Y axis.
    */
   set sizeY(val) {
@@ -78,6 +79,7 @@ class Grid extends Lines {
 
   /**
    * Getter for the number of divisions along the X axis.
+   *
    * @return {number} - Returns the number of divisions.
    */
   get divisionsX() {
@@ -86,6 +88,7 @@ class Grid extends Lines {
 
   /**
    * Setter for the number of divisions along the X axis.
+   *
    * @param {number} val - The number of divisions.
    */
   set divisionsX(val) {
@@ -95,6 +98,7 @@ class Grid extends Lines {
 
   /**
    * Getter for the number of divisions along the Y axis.
+   *
    * @return {number} - Returns the number of divisions.
    */
   get divisionsY() {
@@ -129,13 +133,8 @@ class Grid extends Lines {
     const xDivisions = this.__xDivisionsParam.getValue()
     const yDivisions = this.__yDivisionsParam.getValue()
 
-    const skipCenterLines =
-      this.__skipCenterLinesParam.getValue() &&
-      xDivisions % 2 == 0 &&
-      yDivisions % 2 == 0
-    this.setNumVertices(
-      (xDivisions + yDivisions + 2 - (skipCenterLines ? 1 : 0)) * 2
-    )
+    const skipCenterLines = this.__skipCenterLinesParam.getValue() && xDivisions % 2 == 0 && yDivisions % 2 == 0
+    this.setNumVertices((xDivisions + yDivisions + 2 - (skipCenterLines ? 1 : 0)) * 2)
     this.setNumSegments(xDivisions + yDivisions + 2 - (skipCenterLines ? 1 : 0))
     let idx = 0
     for (let i = 0; i <= xDivisions; i++) {
@@ -165,10 +164,7 @@ class Grid extends Lines {
     const xSize = this.__xParam.getValue()
     const ySize = this.__yParam.getValue()
 
-    const skipCenterLines =
-      this.__skipCenterLinesParam.getValue() &&
-      xDivisions % 2 == 0 &&
-      yDivisions % 2 == 0
+    const skipCenterLines = this.__skipCenterLinesParam.getValue() && xDivisions % 2 == 0 && yDivisions % 2 == 0
     let idx = 0
     for (let i = 0; i <= xDivisions; i++) {
       if (skipCenterLines && i == xDivisions / 2) continue
@@ -193,7 +189,8 @@ class Grid extends Lines {
   }
 
   /**
-   * The toJSON method encodes this type as a json object for persistences.
+   * The toJSON method encodes this type as a json object for persistence.
+   *
    * @return {object} - Returns the json object.
    */
   toJSON() {

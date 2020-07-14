@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { Vec2 } from '../../../Math/Vec2'
 import { Vec3 } from '../../../Math/Vec3'
 import { Mesh } from '../Mesh.js'
@@ -18,18 +19,11 @@ class Cone extends Mesh {
   constructor(radius = 0.5, height = 1.0, detail = 32, cap = true) {
     super()
 
-    if (isNaN(radius) || isNaN(height) || isNaN(detail))
-      throw new Error('Invalid geom args')
+    if (isNaN(radius) || isNaN(height) || isNaN(detail)) throw new Error('Invalid geom args')
 
-    this.__radiusParam = this.addParameter(
-      new NumberParameter('radius', radius)
-    )
-    this.__heightParam = this.addParameter(
-      new NumberParameter('height', height)
-    )
-    this.__detailParam = this.addParameter(
-      new NumberParameter('detail', detail >= 3 ? detail : 3, [3, 200], 1)
-    )
+    this.__radiusParam = this.addParameter(new NumberParameter('radius', radius))
+    this.__heightParam = this.addParameter(new NumberParameter('height', height))
+    this.__detailParam = this.addParameter(new NumberParameter('detail', detail >= 3 ? detail : 3, [3, 200], 1))
     this.__capParam = this.addParameter(new BooleanParameter('cap', cap))
 
     this.addVertexAttribute('texCoords', Vec2)
@@ -141,11 +135,7 @@ class Cone extends Mesh {
     this.getVertex(tipPoint).set(0.0, 0.0, height)
     for (let i = 0; i < nbSides; i++) {
       const theta = (i / nbSides) * 2.0 * Math.PI
-      this.getVertex(i).set(
-        radius * Math.cos(theta),
-        radius * Math.sin(theta),
-        0.0
-      )
+      this.getVertex(i).set(radius * Math.cos(theta), radius * Math.sin(theta), 0.0)
     }
     if (cap) {
       this.getVertex(basePoint).set(0.0, 0.0, 0.0)
@@ -171,8 +161,7 @@ class Cone extends Mesh {
 
     let normalElevation
     const divider = height
-    if (Math.abs(height) < 1.0e-12)
-      normalElevation = height < 0 ? -1.0e-12 : 1.0e-12
+    if (Math.abs(height) < 1.0e-12) normalElevation = height < 0 ? -1.0e-12 : 1.0e-12
     normalElevation = radius / divider
 
     let tri = 0
@@ -181,29 +170,9 @@ class Cone extends Mesh {
       const theta2 = (i / nbSides) * 2.0 * Math.PI
       const theta = (theta1 + theta2) * 0.5
 
-      normals.setFaceVertexValue(
-        tri,
-        0,
-        new Vec3(
-          Math.cos(theta1),
-          normalElevation,
-          Math.sin(theta1)
-        ).normalize()
-      )
-      normals.setFaceVertexValue(
-        tri,
-        1,
-        new Vec3(
-          Math.cos(theta2),
-          normalElevation,
-          Math.sin(theta2)
-        ).normalize()
-      )
-      normals.setFaceVertexValue(
-        tri,
-        2,
-        new Vec3(Math.cos(theta), normalElevation, Math.sin(theta)).normalize()
-      )
+      normals.setFaceVertexValue(tri, 0, new Vec3(Math.cos(theta1), normalElevation, Math.sin(theta1)).normalize())
+      normals.setFaceVertexValue(tri, 1, new Vec3(Math.cos(theta2), normalElevation, Math.sin(theta2)).normalize())
+      normals.setFaceVertexValue(tri, 2, new Vec3(Math.cos(theta), normalElevation, Math.sin(theta)).normalize())
       tri++
     }
     if (cap) {
@@ -255,11 +224,7 @@ class Cone extends Mesh {
     this.getVertex(tipPoint).set(0.0, 0.0, height)
     for (let i = 0; i < nbSides; i++) {
       const theta = (i / nbSides) * 2.0 * Math.PI
-      this.getVertex(i).set(
-        radius * Math.cos(theta),
-        radius * Math.sin(theta),
-        0.0
-      )
+      this.getVertex(i).set(radius * Math.cos(theta), radius * Math.sin(theta), 0.0)
     }
     if (this.__cap) {
       this.getVertex(basePoint).set(0.0, 0.0, 0.0)
