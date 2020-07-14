@@ -1,8 +1,10 @@
 [//]: <> (Author: Michael Smith)
-[//]: <> (Date: May 22, 2020; Revised May 28, 2020)
+[//]: <> (Date: May 22, 2020)
 
-# Quick Access
-Get started with the most viewed Zea Engine docs.
+# Introduction
+>We're so happy you're here! Take a moment and let out a sigh of relief because your life if about to get a lot simpler.
+
+If it's your first time using the engine, make sure you have the [Recommended Web Development Tools](getting-started/development-setup.md) installed on your local machine.
 
 ## Features
 ![Features](_media/zea-engine-features.png)

@@ -67,7 +67,7 @@
           response.json().then(function(data) {
 
             const search = [
-                '/',            
+                '/',
                 '/guide',
                 '/get-started',
                 '/tutorials/',
@@ -81,6 +81,9 @@
               loadSidebar: true,
               subMaxLevel: 6,
               loadNavbar: false,
+              alias: {
+                '/.*/_sidebar.md': '/_sidebar.md',
+              },
               search
             }
 

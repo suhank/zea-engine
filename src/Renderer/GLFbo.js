@@ -1,12 +1,15 @@
 import { SystemDesc } from '../BrowserDetection.js'
 import '../Math/index'
 
-/** This class abstracts the rendering of a collection of geometries to screen. */
+/**
+ * This class abstracts the rendering of a collection of geometries to screen.
+ */
 class GLFbo {
   /**
-   * Create a GLFbo.
-   * @param {any} gl - The gl value.
-   * @param {any} colorTexture - The colorTexture value.
+   * Creates a GL Framebuffer Object
+   *
+   * @param {WebGLRenderingContext | WebGL2RenderingContext | undefined} gl - The Canvas 3D Context.
+   * @param {GLTexture2D} colorTexture - Represents 2D Texture in GL.
    * @param {boolean} createDepthTexture - The createDepthTexture value.
    */
   constructor(gl, colorTexture, createDepthTexture = false) {
@@ -38,84 +41,91 @@ class GLFbo {
   }
 
   /**
-   * The setClearColor method.
-   * @param {any} clearColor - The clearColor value.
+   * Sets FBO clear color using RGBA array structure.
+   *
+   * @param {array} clearColor - The clearColor value.
    */
   setClearColor(clearColor) {
     this.__clearColor = clearColor
   }
 
   /**
-   * The getWidth method.
-   * @return {any} - The return value.
+   * Returns the `width` of the GL Texture
+   *
+   * @return {number} - The return value.
    */
   getWidth() {
     return this.__colorTexture.width
   }
 
   /**
-   * The getHeight method.
-   * @return {any} - The return value.
+   * Returns the `height` of the GL Texture
+   *
+   * @return {number} - The return value.
    */
   getHeight() {
     return this.__colorTexture.height
   }
 
   /**
-   * The getSize method.
-   * @return {any} - The return value.
+   * Returns the `width`(Index 0) and the `height`(Index 1) of the GL Texture.
+   *
+   * @return {array} - The return value.
    */
   getSize() {
     return [this.__colorTexture.width, this.__colorTexture.height]
   }
 
   /**
-   * The getColorTexture method.
-   * @return {any} - The return value.
+   * Returns the ColorTexture of the Fbo
+   *
+   * @return {GLTexture2D} - The return value.
    */
   getColorTexture() {
     return this.__colorTexture
   }
 
   /**
-   * The getDepthTextureGL method.
-   * @return {any} - The return value.
+   * Returns the value of the deptTexture property.
+   *
+   * @return {boolean} - The return value.
    */
   getDepthTextureGL() {
     return this.__depthTexture
   }
 
   /**
-   * Getter for width.
+   * Returns the `width` of the GL Texture
    */
   get width() {
     return this.__colorTexture.width
   }
 
   /**
-   * Getter for height.
+   * Returns the `height` of the GL Texture
    */
   get height() {
     return this.__colorTexture.height
   }
 
   /**
-   * Getter for size.
+   * Returns the `width`(Index 0) and the `height`(Index 1) of the GL Texture.
    */
   get size() {
     return [this.__colorTexture.width, this.__colorTexture.height]
   }
 
   /**
-   * Getter for colorTexture.
+   * Returns the ColorTexture of the Fbo
    */
   get colorTexture() {
     return this.__colorTexture
   }
 
   /**
-   * The setColorTexture method.
-   * @param {any} colorTexture - The colorTexture value.
+   * Sets ColorTexture of the Fbo.
+   *
+   * @param {GLTexture2D} colorTexture - The colorTexture value.
    */
   setColorTexture(colorTexture) {
     this.__colorTexture = colorTexture
@@ -129,7 +139,7 @@ class GLFbo {
   }
 
   /**
-   * Getter for depthTextureGL.
+   * Returns the value of the deptTexture property.
    */
   get depthTextureGL() {
     return this.__depthTexture
@@ -145,7 +155,7 @@ class GLFbo {
     if (gl.name == 'webgl2') gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, this.__fbo)
     else gl.bindFramebuffer(gl.FRAMEBUFFER, this.__fbo)
 
-    // TOSO: Migrate to using GLRenderTarget... This system is a mess.
+    // TODO: Migrate to using GLRenderTarget... This system is a mess.
     // if(gl.name == 'webgl2'){
     //     if (this.__colorTexture && this.__colorTexture.getType() == 'FLOAT' && this.__colorTexture.getFilter() == 'LINEAR') {
     //         if (!gl.__ext_float_linear)
@@ -272,7 +282,8 @@ class GLFbo {
 
   /**
    * Triggered Automatically when the texture resizes.
-   * TODO: fbos should manage the textures assigned to them
+   *
+   * @todo: Fbos should manage the textures assigned to them.
    * E.g. resizing and preserving data.
    */
   resize() {
@@ -369,8 +380,9 @@ class GLFbo {
   }
 
   /**
-   * The bindForWriting method.
-   * @param {any} renderstate - The renderstate value.
+   * Binds the Fbo to the canvas context, meaning that all WRITE operations will affect the current Fbo.
+   *
+   * @param {object} renderstate - The renderstate value.
    */
   bindForWriting(renderstate) {
     if (renderstate) {
@@ -384,8 +396,9 @@ class GLFbo {
   }
 
   /**
-   * The unbindForWriting method.
-   * @param {any} renderstate - The renderstate value.
+   * Unbinds the Fbo to the canvas context for WRITE operations.
+   *
+   * @param {object} renderstate - The renderstate value.
    */
   unbindForWriting(renderstate) {
     if (renderstate) renderstate.boundRendertarget = this.__prevBoundFbo
@@ -396,24 +409,27 @@ class GLFbo {
   }
 
   /**
-   * The bind method.
-   * @param {any} renderstate - The renderstate value.
+   * Binds the Fbo to the canvas context, meaning that all WRITE operations will affect the current Fbo.
+   *
+   * @param {object} renderstate - The renderstate value.
    */
   bind(renderstate) {
     this.bindForWriting(renderstate)
   }
 
   /**
-   * The unbind method.
-   * @param {any} renderstate - The renderstate value.
+   * Unbinds the Fbo to the canvas context for WRITE operations.
+   *
+   * @param {object} renderstate - The renderstate value.
    */
   unbind(renderstate) {
     this.unbindForWriting(renderstate)
   }
 
   /**
-   * The bindForReading method.
-   * @param {any} renderstate - The renderstate value.
+   * Binds the Fbo to the canvas context, meaning that all READ operations will affect the current Fbo.
+   *
+   * @param {object} renderstate - The renderstate value.
    */
   bindForReading() {
     const gl = this.__gl
@@ -422,8 +438,9 @@ class GLFbo {
   }
 
   /**
-   * The unbindForReading method.
-   * @param {any} renderstate - The renderstate value.
+   * Unbinds the Fbo to the canvas context for READ operations.
+   *
+   * @param {object} renderstate - The renderstate value.
    */
   unbindForReading() {
     const gl = this.__gl
@@ -432,7 +449,8 @@ class GLFbo {
   }
 
   /**
-   * The clear method.
+   * Enables all color components of the rendering context of the Fbo,
+   * specifying the default color values when clearing color buffers and clears the buffers to preset values.
    */
   clear() {
     const gl = this.__gl
@@ -446,8 +464,8 @@ class GLFbo {
   }
 
   /**
-   * The bindAndClear method.
-   * @param {any} renderstate - The renderstate value.
+   * Runs [`bind`](#bind) then [`clear`](#clear) methods.
+   * @param {object} renderstate - The renderstate value.
    */
   bindAndClear(renderstate) {
     this.bind(renderstate)
@@ -455,7 +473,7 @@ class GLFbo {
   }
 
   /**
-   * The unbind method.
+   * Unbinds the Fbo to the canvas context.
    */
   unbind() {
     const gl = this.__gl

@@ -7,15 +7,21 @@ You will need a code editor to create your solution. Zea recommends using Visual
 Visual Studio Code is a source-code editor developed by Microsoft for Windows, Linux and macOS. It includes embedded Git and support for debugging, syntax highlighting, intelligent code completion, snippets, and code refactoring.
 * https://code.visualstudio.com/
 
+
+## Command Shell
+Many of the commands in the 'How-To' and Tutorials need to be run in a command shell. For windows users, installing the Git Bash shell provides a powerful tool for running commands.
+https://git-scm.com/downloads
+
+<!-- 
 ## Code Version-Control System
 You will need a version-controlled environment for your development. You will also need to run Git Bash to locally host previews of your web development projects.
 
 Git is a distributed version-control system for tracking changes in source code during software development.
-* https://git-scm.com/downloads
-
+* -->
+<!-- 
 ## Cloud Hosting
 GitHub provides hosting for software development version control using Git.
-* https://desktop.github.com/
+* https://desktop.github.com/ -->
 
 ## JavaScript Runtime Environment
 Node.js is an open-source, cross-platform, JavaScript runtime environment that executes JavaScript code outside of a web browser.
