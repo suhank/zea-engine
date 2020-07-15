@@ -1,7 +1,11 @@
 <a name="Points"></a>
 
 ### Points 
-Class representing points.
+Class representing a point primitive drawing type, every vertex specified is a point.
+
+```
+const points = new Points()
+```
 
 * **Events**
 * **boundingBoxChanged:** Triggered when the bounding box changes.
@@ -22,7 +26,7 @@ Create points.
 <a name="Points+loadBin"></a>
 
 ### loadBin
-The loadBin method.
+Loads and populates `Points` object from a binary reader.
 
 
 

@@ -9,9 +9,14 @@ import { sgFactory } from '../../SGFactory.js'
  * const rect = new Rect(1.5, 2.0)
  * ```
  *
+ * **Parameters**
+ * * **x(`NumberParameter`):** Length of the rectangle along the `X` axis.
+ * * **y(`NumberParameter`):** Length of the rectangle along the `Y` axis.
+ *
  * **Events**
  * * **geomDataTopologyChanged:** Triggered when building the rect.
  * * **geomDataChanged:** Triggered whenever the length of the rect changes in `X`or `Y`axes
+ *
  *
  * @extends Lines
  */

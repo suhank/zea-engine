@@ -1,7 +1,23 @@
 <a name="Cylinder"></a>
 
 ### Cylinder 
-A class for generating a cylinder geometry.
+A class for generating a cylinder geometry. It is very much like a cuboid but with `N` number of sides.
+
+```
+const cylinder = new Cylinder(1.5, 2.0, 6)
+```
+
+**Parameters**
+* **radius(`NumberParameter`):** Specifies the radius of the cylinder.
+* **height(`NumberParameter`):** Specifies the height of the cone.
+* **sides(`NumberParameter`):** Specifies the number of subdivisions around the `Z` axis.
+* **loops(`NumberParameter`):** Specifies the number of subdivisions(stacks) on the `Z` axis.
+* **caps(`BooleanParameter`):** Specifies whether the ends of the cylinder are capped or open.
+* **baseZAtZero(`BooleanParameter`):** Property to start or not `Z` axis from position `0.
+
+**Events**
+* **geomDataTopologyChanged:** Triggered when sides, loops and caps parameters change.
+* **geomDataChanged:** Triggered when the radius, heigh and baseZAtZero parameters change.
 
 
 **Extends**: <code>Mesh</code>  

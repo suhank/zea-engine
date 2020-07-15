@@ -19,12 +19,8 @@ class Disc extends Mesh {
 
     if (isNaN(radius) || isNaN(sides)) throw new Error('Invalid geom args')
 
-    this.__radiusParam = this.addParameter(
-      new NumberParameter('radius', radius)
-    )
-    this.__sidesParam = this.addParameter(
-      new NumberParameter('sides', sides >= 3 ? sides : 3, [3, 200], 1)
-    )
+    this.__radiusParam = this.addParameter(new NumberParameter('radius', radius))
+    this.__sidesParam = this.addParameter(new NumberParameter('sides', sides >= 3 ? sides : 3, [3, 200], 1))
 
     this.addVertexAttribute('texCoords', Vec2)
     this.addVertexAttribute('normals', Vec3)
@@ -95,9 +91,7 @@ class Disc extends Mesh {
     texCoords.getValueRef(0).set(0.5, 0.5)
     for (let i = 0; i < nbSides; i++) {
       const phi = (i / nbSides) * 2.0 * Math.PI
-      texCoords
-        .getValueRef(i + 1)
-        .set(Math.sin(phi) * 0.5 + 0.5, Math.cos(phi) * 0.5 + 0.5)
+      texCoords.getValueRef(i + 1).set(Math.sin(phi) * 0.5 + 0.5, Math.cos(phi) * 0.5 + 0.5)
     }
 
     this.setBoundingBoxDirty()
@@ -114,11 +108,7 @@ class Disc extends Mesh {
     const radius = this.__radiusParam.getValue()
     for (let i = 0; i < nbSides; i++) {
       const phi = (i / nbSides) * 2.0 * Math.PI
-      this.getVertex(i + 1).set(
-        Math.sin(phi) * radius,
-        Math.cos(phi) * radius,
-        0.0
-      )
+      this.getVertex(i + 1).set(Math.sin(phi) * radius, Math.cos(phi) * radius, 0.0)
     }
     this.setBoundingBoxDirty()
   }

@@ -10,6 +10,11 @@ import { sgFactory } from '../../SGFactory.js'
  * const circle = new Circle(2.2, 12)
  * ```
  *
+ * **Parameters**
+ * * **Radius(`NumberParameter`):** Radius of the circle.
+ * * **Angle(`NumberParameter`):** Number of segments used to build the circle.
+ * * **NumSegments(`NumberParameter`):** Segments angle in radiants.
+ *
  * **Events**
  * * **geomDataChanged:** Triggered when the radius of the circle is changed.
  * * **geomDataTopologyChanged:** Triggered when the angle or the segments of the circle changes.

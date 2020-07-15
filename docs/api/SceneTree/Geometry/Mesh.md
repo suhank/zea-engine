@@ -1,18 +1,20 @@
 <a name="Mesh"></a>
 
 ### Mesh 
-Class representing a mesh(Collection of vertices, edges and faces that define the shape of a 3D object).
+Class representing a collection of triangle primitive drawing types, every three vertices forms a triangle.
 
 ```
-const mesh = new Mesh(geomName)
+const mesh = new Mesh()
 ```
+
+**Events**
+* **geomDataChanged:** Triggered when restoring Mesh state from a binary reader.
 
 
 **Extends**: <code>BaseGeom</code>  
 
 * [Mesh ⇐ <code>BaseGeom</code>](#Mesh)
     * [new Mesh()](#new-Mesh)
-    * [init()](#init)
     * [getFaceVertexIndices() ⇒ <code>Uint32Array</code>](#getFaceVertexIndices)
     * [getFaceCounts() ⇒ <code>array</code>](#getFaceCounts)
     * [clear()](#clear)
@@ -27,7 +29,7 @@ const mesh = new Mesh(geomName)
     * [getFaceAttribute(name) ⇒ <code>boolean</code>](#getFaceAttribute)
     * [addEdgeAttribute(name, dataType, count) ⇒ <code>Attribute</code>](#addEdgeAttribute)
     * [hasEdgeAttribute(name) ⇒ <code>boolean</code>](#hasEdgeAttribute)
-    * [getEdgeAttribute(name) ⇒ <code>any</code>](#getEdgeAttribute)
+    * [getEdgeAttribute(name) ⇒ <code>Attribute</code>](#getEdgeAttribute)
     * [genTopologyInfo()](#genTopologyInfo)
     * [computeFaceNormals()](#computeFaceNormals)
     * [generateEdgeFlags()](#generateEdgeFlags)
@@ -44,18 +46,12 @@ const mesh = new Mesh(geomName)
 <a name="new_Mesh_new"></a>
 
 ### new Mesh
-Create a mesh.
-
-<a name="Mesh+init"></a>
-
-### init
-The init method.
-
+Creates an instance of Mesh.
 
 <a name="Mesh+getFaceVertexIndices"></a>
 
 ### getFaceVertexIndices
-The getFaceVertexIndices method.
+Returns the specified indices(Vertex connectors)
 
 
 **Returns**: <code>Uint32Array</code> - - The return value.  
@@ -117,7 +113,7 @@ The getFaceVertexIndex method.
 | Param | Type | Description |
 | --- | --- | --- |
 | faceIndex | <code>number</code> | The faceIndex value. |
-| facevertex | <code>number</code> | The facevertex value. |
+| facevertex | <code>number</code> | The face vertex value. |
 
 <a name="Mesh+getNumFaces"></a>
 
@@ -129,7 +125,7 @@ The getNumFaces method.
 <a name="Mesh+addVertexAttribute"></a>
 
 ### addVertexAttribute
-The addVertexAttribute method.
+Adds a `VertexAttribute` to the geometry.
 
 
 **Returns**: <code>VertexAttribute</code> - - Returns a vertex attribute.  
@@ -210,7 +206,7 @@ The hasEdgeAttribute method.
 The getEdgeAttribute method.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>Attribute</code> - - The return value.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -306,13 +302,13 @@ The readBinary method.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| reader | <code>object</code> | The reader value. |
+| reader | <code>BinReader</code> | The reader value. |
 | context | <code>object</code> | The context value. |
 
 <a name="Mesh+toJSON"></a>
 
 ### toJSON
-The toJSON method encodes this type as a json object for persistences.
+The toJSON method encodes this type as a json object for persistence.
 
 
 **Returns**: <code>object</code> - - Returns the json object.  

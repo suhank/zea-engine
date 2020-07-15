@@ -9,17 +9,20 @@ import { Attribute } from './Attribute.js'
 import { VertexAttribute } from './VertexAttribute.js'
 
 /**
- * Class representing a mesh(Collection of vertices, edges and faces that define the shape of a 3D object).
+ * Class representing a collection of triangle primitive drawing types, every three vertices forms a triangle.
  *
  * ```
- * const mesh = new Mesh(geomName)
+ * const mesh = new Mesh()
  * ```
+ *
+ * **Events**
+ * * **geomDataChanged:** Triggered when restoring Mesh state from a binary reader.
  *
  * @extends BaseGeom
  */
 class Mesh extends BaseGeom {
   /**
-   * Create a mesh.
+   * Creates an instance of Mesh.
    */
   constructor() {
     super()
@@ -28,6 +31,7 @@ class Mesh extends BaseGeom {
 
   /**
    * The init method.
+   * @private
    */
   init() {
     this.__faceCounts = []
@@ -49,7 +53,8 @@ class Mesh extends BaseGeom {
   }
 
   /**
-   * The getFaceVertexIndices method.
+   * Returns the specified indices(Vertex connectors)
+   *
    * @return {Uint32Array} - The return value.
    */
   getFaceVertexIndices() {
@@ -134,7 +139,7 @@ class Mesh extends BaseGeom {
   /**
    * The getFaceVertexIndex method.
    * @param {number} faceIndex - The faceIndex value.
-   * @param {number} facevertex - The facevertex value.
+   * @param {number} facevertex - The face vertex value.
    * @return {number} - The return value.
    */
   getFaceVertexIndex(faceIndex, facevertex) {
@@ -154,7 +159,8 @@ class Mesh extends BaseGeom {
   // Vertex Attributes
 
   /**
-   * The addVertexAttribute method.
+   * Adds a `VertexAttribute` to the geometry.
+   *
    * @param {string} name - The name of the vertex attribute to add.
    * @param {AttrValue|number} dataType - The dataType value.
    * @param {number} defaultScalarValue - The default scalar value.
@@ -233,7 +239,7 @@ class Mesh extends BaseGeom {
   /**
    * The getEdgeAttribute method.
    * @param {string} name - The name of the edge attribute.
-   * @return {any} - The return value.
+   * @return {Attribute} - The return value.
    */
   getEdgeAttribute(name) {
     return this.__edgeAttributes.get(name)
@@ -800,7 +806,7 @@ class Mesh extends BaseGeom {
 
   /**
    * The readBinary method.
-   * @param {object} reader - The reader value.
+   * @param {BinReader} reader - The reader value.
    * @param {object} context - The context value.
    */
   readBinary(reader, context) {
@@ -884,7 +890,8 @@ class Mesh extends BaseGeom {
   }
 
   /**
-   * The toJSON method encodes this type as a json object for persistences.
+   * The toJSON method encodes this type as a json object for persistence.
+   *
    * @param {object} context - The context value.
    * @param {number} flags - The flags value.
    * @return {object} - Returns the json object.
@@ -900,6 +907,7 @@ class Mesh extends BaseGeom {
 
   /**
    * The fromJSON method decodes a json object for this type.
+   *
    * @param {object} j - The json object this item must decode.
    * @param {object} context - The context value.
    * @param {number} flags - The flags value.

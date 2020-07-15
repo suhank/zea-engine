@@ -5,13 +5,25 @@ import { Mesh } from '../Mesh.js'
 import { BooleanParameter, NumberParameter } from '../../Parameters/index'
 import { sgFactory } from '../../SGFactory.js'
 
-/** A class for generating a cone geometry.
+/**
+ * Represents a cone geometry.
+ *
+ * ```
+ * const cone = new Cone(1.2, 4.0)
+ * ```
+ *
+ * **Parameters**
+ * * **radius(`NumberParameter`):** Specifies the radius of the base of the cone.
+ * * **height(`NumberParameter`):** Specifies the height of the cone.
+ * * **detail(`NumberParameter`):** Specifies the number of subdivisions around the `Z` axis.
+ * * **cap(`BooleanParameter`):** Specifies whether the base of the cone is capped or open.
+ *
  * @extends Mesh
  */
 class Cone extends Mesh {
   /**
    * Create a cone.
-   * @param {number} radius - The radius of the cone at the base.
+   * @param {number} radius - The radius of the base of the cone.
    * @param {number} height - The height of the cone.
    * @param {number} detail - The detail of the cone.
    * @param {boolean} cap -  A boolean indicating whether the base of the cone is capped or open.
@@ -43,7 +55,8 @@ class Cone extends Mesh {
   }
 
   /**
-   * Getter for the cone radius.
+   * Returns radius parameter value.
+   *
    * @return {number} - Returns the radius.
    */
   get radius() {
@@ -51,7 +64,9 @@ class Cone extends Mesh {
   }
 
   /**
-   * Setter for the cone radius.
+   * Sets radius parameter value in parameter.<br>
+   * **Note:** Resizes the cone.
+   *
    * @param {number} val - The radius value.
    */
   set radius(val) {
@@ -60,7 +75,8 @@ class Cone extends Mesh {
   }
 
   /**
-   * Getter for the cone height.
+   * Returns height parameter value.
+   *
    * @return {number} - Returns the height.
    */
   get height() {
@@ -68,7 +84,9 @@ class Cone extends Mesh {
   }
 
   /**
-   * Setter for the cone height.
+   * Sets height parameter value.<br>
+   * **Note:** Resizes the cone.
+   *
    * @param {number} val - The height value.
    */
   set height(val) {
@@ -77,7 +95,8 @@ class Cone extends Mesh {
   }
 
   /**
-   * Getter for the cone detail.
+   * Returns details parameter value(Number of subdivisions around the `Z` axis).
+   *
    * @return {number} - Returns the detail.
    */
   get detail() {
@@ -85,7 +104,8 @@ class Cone extends Mesh {
   }
 
   /**
-   * Setter for the cone detail.
+   * Sets details parameter value(Number of subdivisions around the `Z` axis)
+   *
    * @param {number} val - The detail value.
    */
   set detail(val) {
@@ -94,15 +114,18 @@ class Cone extends Mesh {
   }
 
   /**
-   * Getter for the cone cap.
-   * @return {any} - The return value.
+   * Returns cap parameter value.
+   *
+   * @return {boolean} - The return value.
    */
   get cap() {
     return this.__capParam.getValue()
   }
 
   /**
-   * Setter for the cone cap.
+   * Sets `cap` parameter value.<br>
+   * **Note:** Resizes the cone.
+   *
    * @param {number} val - The val param.
    */
   set cap(val) {

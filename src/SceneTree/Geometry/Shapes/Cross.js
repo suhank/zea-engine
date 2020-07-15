@@ -11,6 +11,9 @@ import { sgFactory } from '../../SGFactory.js'
  * const cross = new Cross(1.5)
  * ```
  *
+ * **Parameters**
+ * * **size(`NumberParameter`):** Specifies the size of the cross.
+ *
  * @extends Lines
  */
 class Cross extends Lines {

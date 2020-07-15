@@ -2,10 +2,15 @@
 import { BaseGeom } from './BaseGeom.js'
 
 /**
- * Class representing points.
+ * Class representing a point primitive drawing type, every vertex specified is a point.
+ *
+ * ```
+ * const points = new Points()
+ * ```
  *
  * * **Events**
  * * **boundingBoxChanged:** Triggered when the bounding box changes.
+ *
  * @extends BaseGeom
  */
 class Points extends BaseGeom {
@@ -17,7 +22,8 @@ class Points extends BaseGeom {
   }
 
   /**
-   * The loadBin method.
+   * Loads and populates `Points` object from a binary reader.
+   *
    * @param {BinReader} reader - The reader value.
    */
   loadBin(reader) {

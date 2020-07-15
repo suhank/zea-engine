@@ -1,7 +1,7 @@
 <a name="Lines"></a>
 
 ### Lines 
-Class representing `GL_LINES` primitive drawings type, connecting dots(Vertices) using the specified indices.
+Class representing lines primitive drawing type, connecting vertices using the specified indices.
 i.e. We have 4 points(vertices) but we don't know how they connect to each other,
 and that's why we need indices(Numbers indicating which vertex connects to which).
 In this case if we say that `indices` is `[0,1,2,3]`, it would connect the first vertex to the second,

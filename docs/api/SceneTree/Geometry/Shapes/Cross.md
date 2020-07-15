@@ -9,6 +9,9 @@ Meaning that half of the line goes negative and half goes positive.
 const cross = new Cross(1.5)
 ```
 
+**Parameters**
+* **size(`NumberParameter`):** Specifies the size of the cross.
+
 
 **Extends**: <code>Lines</code>  
 
