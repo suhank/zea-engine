@@ -17,9 +17,9 @@ const vertexAttribute = new VertexAttribute(this, Float32, 0)
     * [setFaceVertexValue_ByVertexIndex(face, vertex, value)](#setFaceVertexValue_ByVertexIndex)
     * [setSplitVertexValue(vertex, face, value)](#setSplitVertexValue)
     * [setSplitVertexValues(vertex, faceGroup, value)](#setSplitVertexValues)
-    * [getSplits() ⇒ <code>any</code>](#getSplits)
-    * [getSplitCount() ⇒ <code>any</code>](#getSplitCount)
-    * [generateSplitValues(splitIndices, splitCount) ⇒ <code>any</code>](#generateSplitValues)
+    * [getSplits() ⇒ <code>array</code>](#getSplits)
+    * [getSplitCount() ⇒ <code>number</code>](#getSplitCount)
+    * [generateSplitValues(splitIndices, splitCount) ⇒ <code>Float32Array</code>](#generateSplitValues)
     * [toJSON(context, flags) ⇒ <code>object</code>](#toJSON)
     * [fromJSON(json, context, flags)](#fromJSON)
     * [loadSplitValues(reader)](#loadSplitValues)
@@ -61,7 +61,7 @@ The setFaceVertexValue method.
 | --- | --- | --- |
 | face | <code>number</code> | The face value. |
 | facevertex | <code>number</code> | The facevertex value. |
-| value | <code>any</code> | The value value. |
+| value | <code>AttrValue</code> | The value value. |
 
 <a name="VertexAttribute+setFaceVertexValue_ByVertexIndex"></a>
 
@@ -72,9 +72,9 @@ The setFaceVertexValue_ByVertexIndex method.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| face | <code>any</code> | The face value. |
-| vertex | <code>any</code> | The vertex value. |
-| value | <code>any</code> | The value value. |
+| face | <code>number</code> | The face value. |
+| vertex | <code>number</code> | The vertex value. |
+| value | <code>AttrValue</code> | The value value. |
 
 <a name="VertexAttribute+setSplitVertexValue"></a>
 
@@ -85,9 +85,9 @@ The setSplitVertexValue method.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| vertex | <code>any</code> | The vertex value. |
-| face | <code>any</code> | The face value. |
-| value | <code>any</code> | The value value. |
+| vertex | <code>number</code> | The vertex value. |
+| face | <code>number</code> | The face value. |
+| value | <code>AttrValue</code> | The value value. |
 
 <a name="VertexAttribute+setSplitVertexValues"></a>
 
@@ -98,9 +98,9 @@ The setSplitVertexValues method.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| vertex | <code>any</code> | The vertex value. |
-| faceGroup | <code>any</code> | The faceGroup value. |
-| value | <code>any</code> | The value value. |
+| vertex | <code>number</code> | The vertex value. |
+| faceGroup | <code>array</code> | The faceGroup value. |
+| value | <code>AttrValue</code> | The value value. |
 
 <a name="VertexAttribute+getSplits"></a>
 
@@ -108,25 +108,25 @@ The setSplitVertexValues method.
 The getSplits method.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>array</code> - - The return value.  
 <a name="VertexAttribute+getSplitCount"></a>
 
 ### getSplitCount
 The getSplitCount method.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>number</code> - - The return value.  
 <a name="VertexAttribute+generateSplitValues"></a>
 
 ### generateSplitValues
 The generateSplitValues method.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>Float32Array</code> - - The return value.  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| splitIndices | <code>any</code> | The splitIndices value. |
+| splitIndices | <code>array</code> | The splitIndices value. |
 | splitCount | <code>number</code> | The splitCount value. |
 
 <a name="VertexAttribute+toJSON"></a>
@@ -164,5 +164,5 @@ The loadSplitValues method.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| reader | <code>object</code> | The reader value. |
+| reader | <code>BinReader</code> | The reader value. |
 

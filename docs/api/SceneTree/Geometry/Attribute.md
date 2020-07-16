@@ -155,7 +155,7 @@ Sets `AttrValue` object in the specified index.
 <a name="Attribute+toJSON"></a>
 
 ### toJSON
-The toJSON method encodes this type as a json object for persistences.
+The toJSON method encodes this type as a json object for persistence.
 
 
 **Returns**: <code>object</code> - - Returns the json object.  

@@ -46,7 +46,7 @@ class VertexAttribute extends Attribute {
    * The setFaceVertexValue method.
    * @param {number} face - The face value.
    * @param {number} facevertex - The facevertex value.
-   * @param {any} value - The value value.
+   * @param {AttrValue} value - The value value.
    */
   setFaceVertexValue(face, facevertex, value) {
     const vertex = this.__geom.getFaceVertexIndex(face, facevertex)
@@ -55,9 +55,9 @@ class VertexAttribute extends Attribute {
 
   /**
    * The setFaceVertexValue_ByVertexIndex method.
-   * @param {any} face - The face value.
-   * @param {any} vertex - The vertex value.
-   * @param {any} value - The value value.
+   * @param {number} face - The face value.
+   * @param {number} vertex - The vertex value.
+   * @param {AttrValue} value - The value value.
    */
   setFaceVertexValue_ByVertexIndex(face, vertex, value) {
     const valueRef = this.getValueRef(vertex)
@@ -100,9 +100,9 @@ class VertexAttribute extends Attribute {
 
   /**
    * The setSplitVertexValue method.
-   * @param {any} vertex - The vertex value.
-   * @param {any} face - The face value.
-   * @param {any} value - The value value.
+   * @param {number} vertex - The vertex value.
+   * @param {number} face - The face value.
+   * @param {AttrValue} value - The value value.
    */
   setSplitVertexValue(vertex, face, value) {
     if (!(vertex in this.__splits)) this.__splits[vertex] = {}
@@ -117,9 +117,9 @@ class VertexAttribute extends Attribute {
 
   /**
    * The setSplitVertexValues method.
-   * @param {any} vertex - The vertex value.
-   * @param {any} faceGroup - The faceGroup value.
-   * @param {any} value - The value value.
+   * @param {number} vertex - The vertex value.
+   * @param {array} faceGroup - The faceGroup value.
+   * @param {AttrValue} value - The value value.
    */
   setSplitVertexValues(vertex, faceGroup, value) {
     if (!(vertex in this.__splits)) this.__splits[vertex] = {}
@@ -138,7 +138,7 @@ class VertexAttribute extends Attribute {
 
   /**
    * The getSplits method.
-   * @return {any} - The return value.
+   * @return {array} - The return value.
    */
   getSplits() {
     return this.__splits
@@ -146,7 +146,7 @@ class VertexAttribute extends Attribute {
 
   /**
    * The getSplitCount method.
-   * @return {any} - The return value.
+   * @return {number} - The return value.
    */
   getSplitCount() {
     let splitCount = 0
@@ -156,9 +156,9 @@ class VertexAttribute extends Attribute {
 
   /**
    * The generateSplitValues method.
-   * @param {any} splitIndices - The splitIndices value.
+   * @param {array} splitIndices - The splitIndices value.
    * @param {number} splitCount - The splitCount value.
-   * @return {any} - The return value.
+   * @return {Float32Array} - The return value.
    */
   generateSplitValues(splitIndices, splitCount) {
     if (splitCount == 0) return this.__data
@@ -232,7 +232,7 @@ class VertexAttribute extends Attribute {
 
   /**
    * The loadSplitValues method.
-   * @param {object} reader - The reader value.
+   * @param {BinReader} reader - The reader value.
    */
   loadSplitValues(reader) {
     const splitIndices = reader.loadUInt32Array()

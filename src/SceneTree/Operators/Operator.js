@@ -22,7 +22,7 @@ class Operator extends BaseItem {
 
   /**
    * This method sets the state of the operator to dirty which propagates
-   * to the outputs of this operator, and which wmay then propagate to other
+   * to the outputs of this operator, and which may then propagate to other
    * operators. When the scene is cleaned, which usually is caused by rendering
    * then the chain of operators are cleaned by triggering evaluation.
    * @param {any} param - The param param.

@@ -806,7 +806,8 @@ class Mesh extends BaseGeom {
   // Persistence
 
   /**
-   * The readBinary method.
+   * Restores mesh properties from a binary reader.
+   *
    * @param {BinReader} reader - The reader value.
    * @param {object} context - The context value.
    */

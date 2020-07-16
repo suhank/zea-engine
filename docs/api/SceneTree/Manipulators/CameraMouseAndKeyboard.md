@@ -1,7 +1,19 @@
 <a name="CameraMouseAndKeyboard"></a>
 
 ### CameraMouseAndKeyboard 
-Class representing a camera, mouse and keyboard.
+Class representing the viewport manipulator with camera, mouse and keyboard events.
+
+```
+const manipulator = new CameraMouseAndKeyboard()
+```
+
+**Parameters**
+* **orbitRate(`NumberParameter`):** _todo_
+* **dollySpeed(`NumberParameter`):** _todo_
+* **mouseWheelDollySpeed(`NumberParameter`):** _todo_
+
+**Events**
+* **movementFinished:** Triggered when the camera moves
 
 
 **Extends**: <code>ParameterOwner</code>  
@@ -14,18 +26,12 @@ Class representing a camera, mouse and keyboard.
     * [pan(event, dragVec)](#pan)
     * [dolly(event, dragVec)](#dolly)
     * [panAndZoom(event, panDelta, dragDist)](#panAndZoom)
-    * [initDrag(event)](#initDrag)
-    * [endDrag(event)](#endDrag)
-    * [aimFocus(event, pos)](#aimFocus)
     * [onMouseMove(event)](#onMouseMove)
     * [onDoubleClick(event)](#onDoubleClick)
     * [onMouseDown(event)](#onMouseDown)
     * [onMouseMove(event)](#onMouseMove)
-    * [onMouseUp(event) ⇒ <code>boolean</code>](#onMouseUp)
+    * [onMouseUp(event)](#onMouseUp)
     * [onWheel(event)](#onWheel)
-    * [onKeyPressed(key, event) ⇒ <code>boolean</code>](#onKeyPressed)
-    * [onKeyDown(key, event)](#onKeyDown)
-    * [onKeyUp(key, event) ⇒ <code>boolean</code>](#onKeyUp)
     * [onTouchStart(event)](#onTouchStart)
     * [onTouchMove(event)](#onTouchMove)
     * [onTouchEnd(event)](#onTouchEnd)
@@ -45,13 +51,13 @@ Create a camera, mouse and keyboard
 <a name="CameraMouseAndKeyboard+setDefaultManipulationMode"></a>
 
 ### setDefaultManipulationMode
-Setter for the default manipulation mode.
+Sets default manipulation mode.
 
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| mode | <code>mode</code> | The mode value. |
+| mode | <code>string</code> | The mode value. |
 
 <a name="CameraMouseAndKeyboard+look"></a>
 
@@ -62,32 +68,32 @@ The look method.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| event | <code>any</code> | The event value. |
-| dragVec | <code>any</code> | The drag vector value. |
+| event | <code>MouseEvent</code> | The event value. |
+| dragVec | <code>Vec2</code> | The drag vector value. |
 
 <a name="CameraMouseAndKeyboard+orbit"></a>
 
 ### orbit
-The orbit method.
+Rotates viewport camera about the target.
 
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| event | <code>any</code> | The event value. |
-| dragVec | <code>any</code> | The drag vector value. |
+| event | <code>MouseEvent</code> | The event value. |
+| dragVec | <code>Vec2</code> | The drag vector value. |
 
 <a name="CameraMouseAndKeyboard+pan"></a>
 
 ### pan
-The pan method.
+Rotates the camera around its own `X`,`Y` axes.
 
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| event | <code>any</code> | The event value. |
-| dragVec | <code>any</code> | The drag vector value. |
+| event | <code>MouseEvent</code> | The event value. |
+| dragVec | <code>Vec2</code> | The drag vector value. |
 
 <a name="CameraMouseAndKeyboard+dolly"></a>
 
@@ -98,55 +104,21 @@ The dolly method.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| event | <code>any</code> | The event value. |
-| dragVec | <code>any</code> | The drag vector value. |
+| event | <code>MouseEvent</code> | The event value. |
+| dragVec | <code>Vec2</code> | The drag vector value. |
 
 <a name="CameraMouseAndKeyboard+panAndZoom"></a>
 
 ### panAndZoom
-The panAndZoom method.
+Rotates the camera around its own `X`,`Y` axes and applies a zoom.
 
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| event | <code>any</code> | The event value. |
-| panDelta | <code>any</code> | The pan delta value. |
-| dragDist | <code>any</code> | The drag distance value. |
-
-<a name="CameraMouseAndKeyboard+initDrag"></a>
-
-### initDrag
-The initDrag method.
-
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| event | <code>any</code> | The event value. |
-
-<a name="CameraMouseAndKeyboard+endDrag"></a>
-
-### endDrag
-The initDrag method.
-
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| event | <code>any</code> | The event value. |
-
-<a name="CameraMouseAndKeyboard+aimFocus"></a>
-
-### aimFocus
-The aimFocus method.
-
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| event | <code>any</code> | The event value. |
-| pos | <code>any</code> | The position value. |
+| event | <code>MouseEvent</code> | The event value. |
+| panDelta | <code>Vec2</code> | The pan delta value. |
+| dragDist | <code>number</code> | The drag distance value. |
 
 <a name="CameraMouseAndKeyboard+onMouseMove"></a>
 
@@ -198,7 +170,6 @@ Causes an event to occur when an element is being dragged.
 Causes an event to occur when the user has finished dragging an element.
 
 
-**Returns**: <code>boolean</code> - - The return value.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -214,44 +185,6 @@ Causes an event to occur when the mouse wheel is rolled up or down over an eleme
 | Param | Type | Description |
 | --- | --- | --- |
 | event | <code>WheelEvent</code> | The wheel event that occurs. |
-
-<a name="CameraMouseAndKeyboard+onKeyPressed"></a>
-
-### onKeyPressed
-Causes an event to occurs when the user presses a key on the keyboard.
-
-
-**Returns**: <code>boolean</code> - - The return value.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| key | <code>any</code> | The key the user presses. |
-| event | <code>KeyboardEvent</code> | The keyboard event that occurs. |
-
-<a name="CameraMouseAndKeyboard+onKeyDown"></a>
-
-### onKeyDown
-Causes an event to occur when the user is pressing a key on the keyboard.
-
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| key | <code>any</code> | The key the user is pressing. |
-| event | <code>KeyboardEvent</code> | The keyboard event that occurs. |
-
-<a name="CameraMouseAndKeyboard+onKeyUp"></a>
-
-### onKeyUp
-Causes an event to occur when the user releases a key on the keyboard.
-
-
-**Returns**: <code>boolean</code> - - The return value.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| key | <code>any</code> | The key the user releases. |
-| event | <code>any</code> | The event that occurs. |
 
 <a name="CameraMouseAndKeyboard+onTouchStart"></a>
 

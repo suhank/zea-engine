@@ -296,7 +296,7 @@ The freeBuffers method.
 <a name="Mesh+readBinary"></a>
 
 ### readBinary
-The readBinary method.
+Restores mesh properties from a binary reader.
 
 
 
