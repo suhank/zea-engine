@@ -3,15 +3,21 @@
 import { Attribute } from './Attribute.js'
 import { Float32 } from '../../Math/index'
 
-/** Class representing vertex attributes.
+/**
+ * Class representing vertex attributes.
+ *
+ * ```
+ * const vertexAttribute = new VertexAttribute(this, Float32, 0)
+ * ```
+ *
  * @extends Attribute
  */
 class VertexAttribute extends Attribute {
   /**
    * Create vertex attributes
-   * @param {any} geom - The geom value.
-   * @param {any} dataType - The dataType value.
-   * @param {any} expectedSize - The expectedSize value.
+   * @param {Mesh} geom - The geom value.
+   * @param {AttrValue|number} dataType - The dataType value.
+   * @param {number|TypedArray} expectedSize - The expectedSize value.
    * @param {number} defaultScalarValue - The default scalar value.
    */
   constructor(geom, dataType, expectedSize, defaultScalarValue) {
@@ -24,9 +30,9 @@ class VertexAttribute extends Attribute {
 
   /**
    * The getFaceVertexValueRef method.
-   * @param {any} face - The face value.
-   * @param {any} facevertex - The facevertex value.
-   * @return {any} - The return value.
+   * @param {number} face - The face value.
+   * @param {number} facevertex - The face vertex value.
+   * @return {AttrValue} - The return value.
    */
   getFaceVertexValueRef(face, facevertex) {
     const vertex = this.__geom.getFaceVertexIndex(face, facevertex)
@@ -38,8 +44,8 @@ class VertexAttribute extends Attribute {
 
   /**
    * The setFaceVertexValue method.
-   * @param {any} face - The face value.
-   * @param {any} facevertex - The facevertex value.
+   * @param {number} face - The face value.
+   * @param {number} facevertex - The facevertex value.
    * @param {any} value - The value value.
    */
   setFaceVertexValue(face, facevertex, value) {
@@ -197,7 +203,8 @@ class VertexAttribute extends Attribute {
   }
 
   /**
-   * The toJSON method encodes this type as a json object for persistences.
+   * The toJSON method encodes this type as a json object for persistence.
+   *
    * @param {object} context - The context value.
    * @param {number} flags - The flags value.
    * @return {object} - Returns the json object.
@@ -211,6 +218,7 @@ class VertexAttribute extends Attribute {
 
   /**
    * The fromJSON method decodes a json object for this type.
+   *
    * @param {object} json - The json object this item must decode.
    * @param {object} context - The context value.
    * @param {number} flags - The flags value.

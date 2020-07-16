@@ -3,12 +3,16 @@
 ### VertexAttribute 
 Class representing vertex attributes.
 
+```
+const vertexAttribute = new VertexAttribute(this, Float32, 0)
+```
+
 
 **Extends**: <code>Attribute</code>  
 
 * [VertexAttribute ⇐ <code>Attribute</code>](#VertexAttribute)
     * [new VertexAttribute(geom, dataType, expectedSize, defaultScalarValue)](#new-VertexAttribute)
-    * [getFaceVertexValueRef(face, facevertex) ⇒ <code>any</code>](#getFaceVertexValueRef)
+    * [getFaceVertexValueRef(face, facevertex) ⇒ <code>AttrValue</code>](#getFaceVertexValueRef)
     * [setFaceVertexValue(face, facevertex, value)](#setFaceVertexValue)
     * [setFaceVertexValue_ByVertexIndex(face, vertex, value)](#setFaceVertexValue_ByVertexIndex)
     * [setSplitVertexValue(vertex, face, value)](#setSplitVertexValue)
@@ -28,9 +32,9 @@ Create vertex attributes
 
 | Param | Type | Description |
 | --- | --- | --- |
-| geom | <code>any</code> | The geom value. |
-| dataType | <code>any</code> | The dataType value. |
-| expectedSize | <code>any</code> | The expectedSize value. |
+| geom | <code>Mesh</code> | The geom value. |
+| dataType | <code>AttrValue</code> \| <code>number</code> | The dataType value. |
+| expectedSize | <code>number</code> \| <code>TypedArray</code> | The expectedSize value. |
 | defaultScalarValue | <code>number</code> | The default scalar value. |
 
 <a name="VertexAttribute+getFaceVertexValueRef"></a>
@@ -39,12 +43,12 @@ Create vertex attributes
 The getFaceVertexValueRef method.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>AttrValue</code> - - The return value.  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| face | <code>any</code> | The face value. |
-| facevertex | <code>any</code> | The facevertex value. |
+| face | <code>number</code> | The face value. |
+| facevertex | <code>number</code> | The face vertex value. |
 
 <a name="VertexAttribute+setFaceVertexValue"></a>
 
@@ -55,8 +59,8 @@ The setFaceVertexValue method.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| face | <code>any</code> | The face value. |
-| facevertex | <code>any</code> | The facevertex value. |
+| face | <code>number</code> | The face value. |
+| facevertex | <code>number</code> | The facevertex value. |
 | value | <code>any</code> | The value value. |
 
 <a name="VertexAttribute+setFaceVertexValue_ByVertexIndex"></a>
@@ -128,7 +132,7 @@ The generateSplitValues method.
 <a name="VertexAttribute+toJSON"></a>
 
 ### toJSON
-The toJSON method encodes this type as a json object for persistences.
+The toJSON method encodes this type as a json object for persistence.
 
 
 **Returns**: <code>object</code> - - Returns the json object.  

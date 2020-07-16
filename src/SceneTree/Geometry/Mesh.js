@@ -605,6 +605,7 @@ class Mesh extends BaseGeom {
    * @private
    */
   getWireframeIndices() {
+    console.warn('@todo-review - This returns nothing')
     return indices
   }
 

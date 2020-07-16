@@ -5,14 +5,25 @@ import { Mesh } from '../Mesh.js'
 import { NumberParameter } from '../../Parameters/index'
 import { sgFactory } from '../../SGFactory.js'
 
-/** A class for generating a disc geometry.
+/**
+ * A class for generating a disc geometry.
+ *
+ * ```
+ * const disc = new Disc(2.0, 22)
+ * ```
+ *
+ * **Parameters**
+ * * **radius(`NumberParameter`):** Specifies the radius of the disc.
+ * * **sides(`NumberParameter`):** Specifies the resolution, or the disc subdivisions around `Z` axis.
+ *
  * @extends Mesh
  */
 class Disc extends Mesh {
   /**
-   * Create a disc.
-   * @param {number} radius - The radius of the disc.
-   * @param {number} sides - The number of sides.
+   * Creates an instance of Disc.
+   *
+   * @param {number} [radius=0.5] - The radius of the disc.
+   * @param {number} [sides=32] - The number of sides.
    */
   constructor(radius = 0.5, sides = 32) {
     super()
@@ -28,7 +39,8 @@ class Disc extends Mesh {
   }
 
   /**
-   * Getter for the disc radius.
+   * Returns the value of the `radius` parameter.
+   *
    * @return {number} - Returns the radius.
    */
   get radius() {
@@ -36,7 +48,8 @@ class Disc extends Mesh {
   }
 
   /**
-   * Setter for disc radius.
+   * Sets the value of the `radius` parameter.
+   *
    * @param {number} val - The radius value.
    */
   set radius(val) {
@@ -45,7 +58,7 @@ class Disc extends Mesh {
   }
 
   /**
-   * Setter for the number of sides.
+   * Sets the value of the `sides` parameter.
    * @param {number} val - The number of sides.
    */
   set sides(val) {
@@ -114,7 +127,8 @@ class Disc extends Mesh {
   }
 
   /**
-   * The toJSON method encodes this type as a json object for persistences.
+   * The toJSON method encodes this type as a json object for persistence.
+   *
    * @return {object} - Returns the json object.
    */
   toJSON() {
