@@ -1,13 +1,10 @@
-<!-- - Overview
-  * [Introduction](introduction.md)
-  * [Scene Tree](scene-tree.md)
-  * [Kinematics](kinematics.md) -->
 
+- Main Concepts
+  * [Architecture Overview](arch-overview.md)
+  
 - Getting started
   * [Setting up your workspace](getting-started/development-setup.md)
   * [Getting Started using Zea Engine](getting-started/get-started-with-engine.md)
-  * [Using Zea Engine with NPM and Yarn](getting-started/using-npm-yarn.md)
-  * [Using Zea Engine with React](getting-started/using-react.md)
 
 <!-- - Tutorials
   * [Using Groups](concepts/groups.md)
@@ -15,6 +12,7 @@
   * [Loading Custom Geometry](write-a-SG-plugin.md)
   * [Customizing the Scene Tree](write-a-SG-plugin.md)
   * [Customizing the Renderer](write-a-Renderer-plugin.md)
+  * [Using Zea Engine with React](getting-started/using-react.md)
    -->
 
 - How To
@@ -29,8 +27,6 @@
   * [Loading custom points data](tutorials/custom-points.md)
   * [Launching a VR Session](tutorials/VR.md)
 
-- Main Concepts
-  * [Architecture Overview](arch-overview.md)
 
 <!-- - User Interfaces 
   * [Zea User Interfaces Library](zea-web-components.md) -->
