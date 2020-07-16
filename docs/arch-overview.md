@@ -23,11 +23,15 @@ To allow an infinite number of use cases for Zea Engine, all aspects of the tool
 
 The Scene tree structures the data that is rendered by the renderer. The Scene tree provides a hierarchy of nodes, each containing data in the form of Parameters, and potentially custom JavaScript objects.
 
-**Why a Tree and not a DAG?**
+
+> For more information on the main building block of the tree, please refer to the [TreeItem](api/SceneTree/TreeItem) documentation.
+
+
+**Why a Tree and not a Graph**
 
 ![tree-vs-dag](_media/tree-vs-dag.svg)
 
-Many scene descriptions and described as a Direct Acyclic Graph(DAG), instead of a tree. A DAG is more flexible in that any item can have 1 or more parents. A DAG provides an elegant definition of instancing because it implies that any item in the DAG can have 1 or more transformations in the 3d scene. A scene tree, in contrast, implies that any tree item can have one and only one transformation in the 3d scene. While this constraint creates some limitations on how data can be organized, it simplifies many aspects of how a developer interacts with and understands the scene they are building.
+Many scene descriptions and described as a Scene Graph, or even a Direct Acyclic Graph(DAG). A Graph is more flexible in that any item can have 1 or more parents. A Graph provides an elegant definition of instancing because it implies that any item in the Graph can have 1 or more transformations in the 3d scene. A scene tree, in contrast, implies that any tree item can have one and only one transformation in the 3d scene. While this constraint creates some limitations on how data can be organized, it simplifies many aspects of how a developer interacts with and understands the scene they are building.
 
 ## Parameters
 
