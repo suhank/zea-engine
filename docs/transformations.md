@@ -4,6 +4,12 @@ In this document we will cover how transformations are computed and how they are
 
 ![transformations-robot-hierarchy](_media/transformations-robot-hierarchy.svg)
 
+## Coordinate System
+
+Each application defines a coordinate system for its data and this decision impacts which direction is 'Up' within the scene. Most applications choose between using the 'Z' axis as up, or using the 'Y' axis. There is no correct answer, within any domain, from games to Film VFX, to CAD and design, there are differences between apps. The Zea Engine was authored to have the 'Z-axis' as the up axis. This means the Zea Engine agrees with some apps, such as Revit and 3dsmax, but disagrees with other apps, such as Maya, or Catia. 
+
+Generally the fix for this is to simply rotate data being loaded to fit the coordinate system it is being viewed in.
+
 ## Tree Structure and hierarchical transformations
 
 Often, in a 3D scene, it is convenient to specify the transformations of scene elements relative to each-other. For instance, items sitting on a table should move along with the table; items in a box should move with the box; and the transformations of the links of a robot arm make sense to write in terms of the transformations of their parent links.
