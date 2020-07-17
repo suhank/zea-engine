@@ -155,11 +155,7 @@ class Vec3 extends AttrValue {
    * @return {boolean} - Returns `true` if the coordenates are(0, 0, 0), otherwise, `false`.
    */
   isNull() {
-    return (
-      Math.abs(this.x) < Number.EPSILON &&
-      Math.abs(this.y) < Number.EPSILON &&
-      Math.abs(this.z) < Number.EPSILON
-    )
+    return Math.abs(this.x) < Number.EPSILON && Math.abs(this.y) < Number.EPSILON && Math.abs(this.z) < Number.EPSILON
   }
 
   /**
@@ -176,13 +172,37 @@ class Vec3 extends AttrValue {
   }
 
   /**
+   * @deprecated
    * Checks if this Vec3 is exactly the same as another Vec3.
    *
    * @param {Vec3} other - The other Vec3 to compare with.
    * @return {boolean} - Returns `true` if are the same Vector, otherwise, `false`.
    */
   equal(other) {
+    console.warn('Deprecated. Use #isEqual instead.')
+    return this.equals(other)
+  }
+
+  /**
+   * Checks if this Vec3 is exactly the same as another Vec3.
+   *
+   * @param {Vec3} other - The other Vec3 to compare with.
+   * @return {boolean} - Returns `true` if are the same Vector, otherwise, `false`.
+   */
+  isEqual(other) {
     return this.x == other.x && this.y == other.y && this.z == other.z
+  }
+
+  /**
+   * @deprecated
+   * Checks if this Vec2 is different from another Vec2.
+   *
+   * @param {Vec3} other - The other Vec3 to compare with.
+   * @return {boolean} - Returns `true` if the Vec3s are different, otherwise, `false`.
+   */
+  notEquals(other) {
+    console.warn('Deprecated. Use #notEqual instead.')
+    return this.notEqual(other)
   }
 
   /**
@@ -191,7 +211,7 @@ class Vec3 extends AttrValue {
    * @param {Vec3} other - The other Vec3 to compare with.
    * @return {boolean} - Returns `true` if the Vec3s are different, otherwise, `false`.
    */
-  notEquals(other) {
+  notEqual(other) {
     return this.x != other.x && this.y != other.y && this.z != other.z
   }
 
@@ -374,21 +394,14 @@ class Vec3 extends AttrValue {
    * @return {Vec3} - Returns the Vec3 normalized.
    */
   normalize() {
-    let len =
-      this.__data[0] * this.__data[0] +
-      this.__data[1] * this.__data[1] +
-      this.__data[2] * this.__data[2]
+    let len = this.__data[0] * this.__data[0] + this.__data[1] * this.__data[1] + this.__data[2] * this.__data[2]
     if (len < Number.EPSILON) {
       return new Vec3()
     }
 
     // TODO: evaluate use of glm_invsqrt here?
     len = 1.0 / Math.sqrt(len)
-    return new Vec3(
-      this.__data[0] * len,
-      this.__data[1] * len,
-      this.__data[2] * len
-    )
+    return new Vec3(this.__data[0] * len, this.__data[1] * len, this.__data[2] * len)
   }
 
   /**
@@ -397,10 +410,7 @@ class Vec3 extends AttrValue {
    * @return {number} - The return value.
    */
   normalizeInPlace() {
-    let len =
-      this.__data[0] * this.__data[0] +
-      this.__data[1] * this.__data[1] +
-      this.__data[2] * this.__data[2]
+    let len = this.__data[0] * this.__data[0] + this.__data[1] * this.__data[1] + this.__data[2] * this.__data[2]
     if (len < Number.EPSILON) {
       return
     }
@@ -420,19 +430,12 @@ class Vec3 extends AttrValue {
    * @return {Vec3} - The return value.
    */
   resize(length) {
-    const currlen =
-      this.__data[0] * this.__data[0] +
-      this.__data[1] * this.__data[1] +
-      this.__data[2] * this.__data[2]
+    const currlen = this.__data[0] * this.__data[0] + this.__data[1] * this.__data[1] + this.__data[2] * this.__data[2]
     if (currlen < Number.EPSILON) {
       return
     }
     const scl = length / Math.sqrt(currlen)
-    return new Vec3(
-      this.__data[0] * scl,
-      this.__data[1] * scl,
-      this.__data[2] * scl
-    )
+    return new Vec3(this.__data[0] * scl, this.__data[1] * scl, this.__data[2] * scl)
   }
 
   /**
@@ -441,10 +444,7 @@ class Vec3 extends AttrValue {
    * @param {number} length - The length value.
    */
   resizeInPlace(length) {
-    const currlen =
-      this.__data[0] * this.__data[0] +
-      this.__data[1] * this.__data[1] +
-      this.__data[2] * this.__data[2]
+    const currlen = this.__data[0] * this.__data[0] + this.__data[1] * this.__data[1] + this.__data[2] * this.__data[2]
     if (currlen < Number.EPSILON) {
       return
     }
@@ -507,11 +507,7 @@ class Vec3 extends AttrValue {
     const ax = this.x
     const ay = this.y
     const az = this.z
-    return new Vec3(
-      ax + t * (other.x - ax),
-      ay + t * (other.y - ay),
-      az + t * (other.z - az)
-    )
+    return new Vec3(ax + t * (other.x - ax), ay + t * (other.y - ay), az + t * (other.z - az))
   }
 
   /**
