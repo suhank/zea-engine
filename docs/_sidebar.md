@@ -1,7 +1,8 @@
 
 - Main Concepts
   * [Architecture Overview](arch-overview.md)
-  
+  * [Transformations](transformations.md)
+
 - Getting started
   * [Setting up your workspace](getting-started/development-setup.md)
   * [Getting Started using Zea Engine](getting-started/get-started-with-engine.md)
