@@ -2,7 +2,36 @@
 
 Zea Engine is used to build interactive web applications using JavaScript. In this tutorial we will learn how to load the engine in the browser and set up a very basic scene.
 
+
 [GetStarted0](./zea-engine-demo-0/index.html ':include :type=iframe width=100% height=800px')
+
+## Introduction to NPM and Unpkg
+
+Zea distributes its libraries via NPM. NPM is the world’s largest package manager and distributes files for the majority of JavaScript libraries.
+
+> To see the list of pages available from Zea Inc. access the NPM page for zea:
+https://www.npmjs.com/settings/zeainc/packages
+
+### Unpkg.com
+Libraries hosted on NPM can be accessed using a variety of techniques, and this tutorial will several several of them. One of the easiest ways to access packages from NPM, is to use tools like Unpkg. Unpkg generates URLs for each file in each package on NPM, making it possible to load into the browser directly without needing to download the entire package.
+
+> For example, the unpkg url for the engine on NPM is the following: https://unpkg.com/@zeainc/zea-engine
+
+If you open that URL in the browser, you will see it display the file contents of the compiled engine. You may also notice that the URL was redirected to contain the full path to latest version, and in that version, the CommonJS build of the engine.
+
+> https://unpkg.com/@zeainc/zea-engine@1.1.0/dist/index.cjs.js
+
+#### Accessing the latest ES6 Module
+
+In this tutorial we will start off by loading the engine directly off unpkg as an ES6 Module. Within the engine dist folder, there are 2 build files. A CommonJS build, and an esm build. Developers should use the esm build.
+
+To load this file, you can specify the path within the package.
+
+https://unpkg.com/@zeainc/zea-engine/dist/index.esm.js
+
+> Note: we omitted the version number, which means we default to the latest version. Initially that is fine, but for more control over which version you wish to load, you will need to download the packages to your system. This is covered later in the tutorial.
+
+
 
 ## Basic Setup
 First let's create a directory for our demo project:
@@ -67,6 +96,10 @@ const renderer = new GLRenderer(domElement);
 // Connecting the Renderer to the scene so that the renderer starts to render the scene.
 renderer.setScene(scene);
 ```
+
+
+![getting-started-0](../_media/getting-started-0.png)
+
 
 <!-- Download the source here: <a id="raw-url" href="./getting-started/zea-engine-demo-0/index.html" download>Download</a> -->
 
@@ -158,6 +191,8 @@ Available on:
 
 Loading the given URL in the browser should now generate the following result.
 
+
+![getting-started-1](../_media/getting-started-1.png)
 
 Download the source here: zea-engine-demo-1
 
@@ -298,6 +333,8 @@ For more info visit https://webpack.js.org/guides/code-splitting/
  
 Your output may vary a bit, but if the build is successful then you are good to go. Also, don't worry about the warning, we'll tackle that later.
 Open index.html in your browser and, if everything went right, you should see the following:
+
+![getting-started-3](../_media/getting-started-3.png)
 
 Download the source here: zea-engine-demo-3
 
