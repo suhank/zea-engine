@@ -1,7 +1,11 @@
 <a name="Material"></a>
 
 ### Material 
-Class representing a material in a scene tree.
+Represents a type of `BaseItem` class that holds material configuration.
+Use this to apply materials to your assets or item parts.
+
+**Events**
+* **shaderNameChanged:** Triggered when the shader's name is set through `setShaderName` method.
 
 
 **Extends**: <code>BaseItem</code>  
@@ -13,7 +17,7 @@ Class representing a material in a scene tree.
     * [removeAllTextures()](#removeAllTextures)
     * [getParamTextures() ⇒ <code>object</code>](#getParamTextures)
     * [isTransparent() ⇒ <code>boolean</code>](#isTransparent)
-    * [getShaderClass() ⇒ <code>any</code>](#getShaderClass)
+    * [getShaderClass() ⇒ <code>string</code> \| <code>undefined</code>](#getShaderClass)
     * [modifyParams(paramValues, shaderName)](#modifyParams)
     * [toJSON(context, flags) ⇒ <code>object</code>](#toJSON)
     * [fromJSON(j, context, flags)](#fromJSON)
@@ -31,7 +35,7 @@ Create a material
 | Param | Type | Description |
 | --- | --- | --- |
 | name | <code>string</code> | The name of the material. |
-| shaderName | <code>string</code> | The name of the shader. |
+| shaderName | <code>string</code> | Shader's class name. |
 
 <a name="Material+getShaderName"></a>
 
@@ -43,7 +47,9 @@ Getter for the shader name.
 <a name="Material+setShaderName"></a>
 
 ### setShaderName
-Setter for the shader name.
+Sets shader by using the name of the class with the script.
+It is important that the shader is registered in `SGFactory`, otherwise it will error.
+See all classes that extend from `GLShader`.
 
 
 
@@ -54,40 +60,40 @@ Setter for the shader name.
 <a name="Material+removeAllTextures"></a>
 
 ### removeAllTextures
-Remove all textures.
+Remove all textures from Material's parameters.
 
 
 <a name="Material+getParamTextures"></a>
 
 ### getParamTextures
-The getParamTextures method.
+Returns all texture parameters in current Material.
 
 
 **Returns**: <code>object</code> - - The return value.  
 <a name="Material+isTransparent"></a>
 
 ### isTransparent
-Checks if the material is transparent.
+Checks if the material is transparent by checking the `Opacity` parameter.
 
 
 **Returns**: <code>boolean</code> - - Returns true if the material is transparent.  
 <a name="Material+getShaderClass"></a>
 
 ### getShaderClass
-The getShaderClass method.
+Returns shader's class of current material, if set. Otherwise it returns `undefined`
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>string</code> \| <code>undefined</code> - - The return value.  
 <a name="Material+modifyParams"></a>
 
 ### modifyParams
-The modifyParams method.
+Let you modify or set the shader and all the parameters of current material.
 
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| paramValues | <code>any</code> | The paramValues. |
+| paramValues | <code>object</code> | The paramValues. |
 | shaderName | <code>string</code> | The shader name. |
 
 <a name="Material+toJSON"></a>
@@ -119,13 +125,13 @@ The fromJSON method decodes a json object for this type.
 <a name="Material+readBinary"></a>
 
 ### readBinary
-The readBinary method.
+Sets state of current Item(Including Shaders and Materials) using a binary reader object.
 
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| reader | <code>object</code> | The reader value. |
+| reader | <code>BinReader</code> | The reader value. |
 | context | <code>object</code> | The context value. |
 
 <a name="Material+clone"></a>
@@ -144,7 +150,7 @@ from this material and returns it.
 <a name="Material+copyFrom"></a>
 
 ### copyFrom
-The copyFrom method.
+When a Material is copied, first runs `BaseItem` copyFrom method, then sets shader.
 
 
 

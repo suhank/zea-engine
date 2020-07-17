@@ -1,33 +1,36 @@
 <a name="GLTexture2D"></a>
 
 ### GLTexture2D 
-Class representing a GL texture 2D.
+Represents a texture that contains 2-dimensional images.
+<br>
+Images have width and height, but no depth.
 
 
 **Extends**: <code>RefCounted</code>  
 
 * [GLTexture2D ⇐ <code>RefCounted</code>](#GLTexture2D)
     * [new GLTexture2D(gl, params)](#new-GLTexture2D)
-    * [glTex ⇒ <code>any</code>](#glTex)
+    * [glTex ⇒ <code>WebGLTexture</code>](#glTex)
     * [isLoaded() ⇒ <code>boolean</code>](#isLoaded)
-    * [getTexture() ⇒ <code>any</code>](#getTexture)
-    * [getInternalFormat() ⇒ <code>any</code>](#getInternalFormat)
-    * [getType() ⇒ <code>any</code>](#getType)
-    * [getTypeID() ⇒ <code>any</code>](#getTypeID)
-    * [getFormat() ⇒ <code>any</code>](#getFormat)
-    * [getFormatID() ⇒ <code>any</code>](#getFormatID)
+    * [getTexture() ⇒ <code>BaseImage</code>](#getTexture)
+    * [getInternalFormat() ⇒ <code>GLenum</code> \| <code>enum</code>](#getInternalFormat)
+    * [getType() ⇒ <code>GLenum</code> \| <code>enum</code>](#getType)
+    * [getTypeID() ⇒ <code>GLenum</code> \| <code>enum</code>](#getTypeID)
+    * [getFormat() ⇒ <code>GLenum</code> \| <code>enum</code>](#getFormat)
+    * [getFormatID() ⇒ <code>GLenum</code> \| <code>enum</code>](#getFormatID)
     * [getFilter() ⇒ <code>any</code>](#getFilter)
-    * [getWrap() ⇒ <code>any</code>](#getWrap)
-    * [getMipMapped() ⇒ <code>any</code>](#getMipMapped)
+    * [getWrap() ⇒ <code>GLenum</code> \| <code>enum</code>](#getWrap)
+    * [getMipMapped() ⇒ <code>GLenum</code> \| <code>enum</code>](#getMipMapped)
     * [configure(params, emit)](#configure)
     * [bufferData(data, width, height, bind, emit)](#bufferData)
     * [clear()](#clear)
     * [resize(width, height, preserveData, emit)](#resize)
-    * [getSize() ⇒ <code>any</code>](#getSize)
-    * [getTexHdl() ⇒ <code>any</code>](#getTexHdl)
-    * [bind(renderstate, unif) ⇒ <code>any</code>](#bind)
-    * [preBind(unif, unifs) ⇒ <code>any</code>](#preBind)
-    * [bindToUniform(renderstate, unif, bindings) ⇒ <code>any</code>](#bindToUniform)
+    * [populate(dataArray, width, height, offsetX, offsetY, bind)](#populate)
+    * [getSize() ⇒ <code>array</code>](#getSize)
+    * [getTexHdl() ⇒ <code>WebGLTexture</code>](#getTexHdl)
+    * ~~[.bind(renderstate, unif)](#GLTexture2D+bind) ⇒ <code>any</code>~~
+    * [preBind(unif, unifs) ⇒ <code>object</code>](#preBind)
+    * [bindToUniform(renderstate, unif, bindings) ⇒ <code>boolean</code>](#bindToUniform)
     * [destroy()](#destroy)
 
 <a name="new_GLTexture2D_new"></a>
@@ -38,65 +41,65 @@ Create a GL texture 2D.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| gl | <code>any</code> | The gl value. |
-| params | <code>any</code> | The params value. |
+| gl | <code>WebGLRenderingContext</code> \| <code>WebGL2RenderingContext</code> \| <code>undefined</code> | The gl value. |
+| params | <code>BaseImage</code> \| <code>object</code> | The params value. |
 
 <a name="GLTexture2D+glTex"></a>
 
 ### glTex 
-The glTex method.
+Returns the value of the WebGLTexture value
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>WebGLTexture</code> - - The return value.  
 <a name="GLTexture2D+isLoaded"></a>
 
 ### isLoaded
-The isLoaded method.
+Returns the loaded status of the 2D Texture
 
 
 **Returns**: <code>boolean</code> - - The return value.  
 <a name="GLTexture2D+getTexture"></a>
 
 ### getTexture
-The getTexture method.
+Returns the `BaseImage` of the GL Texture
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>BaseImage</code> - - The return value.  
 <a name="GLTexture2D+getInternalFormat"></a>
 
 ### getInternalFormat
-The getInternalFormat method.
+Returns the specified value of the color components in the texture.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>GLenum</code> \| <code>enum</code> - - The return value.  
 <a name="GLTexture2D+getType"></a>
 
 ### getType
-The getType method.
+Returns the value of the specified data type of the texel data.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>GLenum</code> \| <code>enum</code> - - The return value.  
 <a name="GLTexture2D+getTypeID"></a>
 
 ### getTypeID
-The getTypeID method.
+Returns the value of the specified data type of the texel data.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>GLenum</code> \| <code>enum</code> - - The return value.  
 <a name="GLTexture2D+getFormat"></a>
 
 ### getFormat
-The getFormat method.
+Returns the value of the specified texel data. It must be the same as the `internalFormat`
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>GLenum</code> \| <code>enum</code> - - The return value.  
 <a name="GLTexture2D+getFormatID"></a>
 
 ### getFormatID
-The getFormatID method.
+Returns the value of the specified texel data. It must be the same as the `internalFormat`
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>GLenum</code> \| <code>enum</code> - - The return value.  
 <a name="GLTexture2D+getFilter"></a>
 
 ### getFilter
@@ -107,39 +110,40 @@ The getFilter method.
 <a name="GLTexture2D+getWrap"></a>
 
 ### getWrap
-The getWrap method.
+Returns the value of the specified wrapping function for texture coordinate
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>GLenum</code> \| <code>enum</code> - - The return value.  
 <a name="GLTexture2D+getMipMapped"></a>
 
 ### getMipMapped
-The getMipMapped method.
+Returns the value of the specified binding point.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>GLenum</code> \| <code>enum</code> - - The return value.  
 <a name="GLTexture2D+configure"></a>
 
 ### configure
-The configure method.
+Builds the GLTexture2D using the specified parameters object.
+Parameters must have the `BaseImage` properties structure.
 
 
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| params | <code>any</code> |  | The params value. |
+| params | <code>object</code> |  | The params value. |
 | emit | <code>boolean</code> | <code>true</code> | The emit value. |
 
 <a name="GLTexture2D+bufferData"></a>
 
 ### bufferData
-The bufferData method.
+Initializes and creates the buffer of the object's data store.
 
 
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| data | <code>any</code> |  | The data value. |
+| data | <code>Image</code> \| <code>ImageData</code> \| <code>HTMLCanvasElement</code> \| <code>HTMLImageElement</code> \| <code>HTMLVideoElement</code> \| <code>object</code> |  | The data value. |
 | width | <code>number</code> |  | The width value. |
 | height | <code>number</code> |  | The height value. |
 | bind | <code>boolean</code> | <code>true</code> | The bind value. |
@@ -148,7 +152,7 @@ The bufferData method.
 <a name="GLTexture2D+clear"></a>
 
 ### clear
-The clear method.
+Clears the buffers to preset values
 
 
 <a name="GLTexture2D+resize"></a>
@@ -165,23 +169,41 @@ The resize method.
 | preserveData | <code>boolean</code> | <code>false</code> | The preserveData value. |
 | emit | <code>boolean</code> | <code>true</code> | The emit value. |
 
+<a name="GLTexture2D+populate"></a>
+
+### populate
+Upload data for the image to the GPU.
+
+
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| dataArray | <code>Uint16Array</code> |  | The dataArray value. |
+| width | <code>number</code> |  | The width value |
+| height | <code>number</code> |  | The height value |
+| offsetX | <code>number</code> | <code>0</code> | The offsetX value |
+| offsetY | <code>number</code> | <code>0</code> | The offsetY value |
+| bind | <code>boolean</code> | <code>true</code> | The bind value |
+
 <a name="GLTexture2D+getSize"></a>
 
 ### getSize
-The getSize method.
+Returns the `width`(Index 0) and the `height`(Index 1) of the GL Texture.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>array</code> - - The return value.  
 <a name="GLTexture2D+getTexHdl"></a>
 
 ### getTexHdl
-The getTexHdl method.
+Returns the value of the WebGLTexture value
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>WebGLTexture</code> - - The return value.  
 <a name="GLTexture2D+bind"></a>
 
-### bind
+### ~~glTexture2D.bind(renderstate, unif) ⇒ <code>any</code>~~
+***Deprecated***
+
 The bind method.
 
 
@@ -198,26 +220,26 @@ The bind method.
 The preBind method.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>object</code> - - The return value.  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| unif | <code>any</code> | The unif value. |
-| unifs | <code>any</code> | The unifs value. |
+| unif | <code>object</code> | The unif value. |
+| unifs | <code>object</code> | The unifs value. |
 
 <a name="GLTexture2D+bindToUniform"></a>
 
 ### bindToUniform
-The bindToUniform method.
+Binds Texture to the Uniform attribute.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>boolean</code> - - The return value.  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| renderstate | <code>any</code> | The renderstate value. |
-| unif | <code>any</code> | The unif value. |
-| bindings | <code>any</code> | The bindings value. |
+| renderstate | <code>object</code> | The renderstate value. |
+| unif | <code>object</code> | The unif value. |
+| bindings | <code>object</code> | The bindings value. |
 
 <a name="GLTexture2D+destroy"></a>
 

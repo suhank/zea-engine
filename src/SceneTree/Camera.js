@@ -4,12 +4,26 @@ import { TreeItem } from './TreeItem.js'
 import { ValueSetMode, BooleanParameter, NumberParameter } from './Parameters/index'
 import { sgFactory } from './SGFactory'
 
-/** Class representing a camera in the scene tree.
+/**
+ * Represents a view of the scene vertex coordinates. Since it is a `TreeItem`,
+ * translation modifiers are supported, so you can move the camera around.
+ *
+ * **Parameters**
+ * * **isOrthographic(`BooleanParameter`):** Special type of view that represents 3D objects in two dimensions; `true` to enable.
+ * * **fov(`NumberParameter`):** _todo_
+ * * **near(`NumberParameter`):** _todo_
+ * * **far(`NumberParameter`):** _todo_
+ * * **focalDistance(`NumberParameter`):** _todo_
+ *
+ * **Events**
+ * * **projectionParamChanged:** _todo_
+ * * **movementFinished:** Triggered when framing all the objects.
  * @extends TreeItem
  */
 class Camera extends TreeItem {
   /**
-   * Create a camera.
+   * Instanciates a camera object, setting default configuration like zoom, target and positioning.
+   *
    * @param {string} name - The name of the camera.
    */
   constructor(name = undefined) {
@@ -48,7 +62,8 @@ class Camera extends TreeItem {
   // Getters/setters.
 
   /**
-   * The getNear method.
+   * Returns `near` parameter value.
+   *
    * @return {number} - Returns the near value.
    */
   getNear() {
@@ -56,7 +71,8 @@ class Camera extends TreeItem {
   }
 
   /**
-   * The setNear method.
+   * Sets `near` parameter value
+   *
    * @param {number} value - The near value.
    */
   setNear(value) {
@@ -64,7 +80,8 @@ class Camera extends TreeItem {
   }
 
   /**
-   * The getFar method.
+   * Returns `far` parameter value.
+   *
    * @return {number} - Returns the far value.
    */
   getFar() {
@@ -72,7 +89,8 @@ class Camera extends TreeItem {
   }
 
   /**
-   * The setFar method.
+   * Sets `far` parameter value
+   *
    * @param {number} value - The far value.
    */
   setFar(value) {
@@ -82,6 +100,7 @@ class Camera extends TreeItem {
   /**
    * Getter for the camera field of view (FOV).
    * The FOV is how much of the scene the camera can see at once.
+   *
    * @return {number} - Returns the FOV value.
    */
   getFov() {
@@ -91,6 +110,7 @@ class Camera extends TreeItem {
   /**
    * Setter for the camera field of view (FOV).
    * The FOV is how much of the scene the camera can see at once.
+   *
    * @param {number} value - The FOV value.
    */
   setFov(value) {
@@ -98,8 +118,14 @@ class Camera extends TreeItem {
   }
 
   /**
-   * Setter for the camera lens focal length.
-   * @param {number} value - The lens focal length value.
+   * Setter for the camera lens focal length. Updates `fov` parameter value after a small math procedure.
+   *
+   * **Focal Lenth accepted values:** 10mm, 11mm, 12mm, 14mm, 15mm, 17mm, 18mm,
+   * 19mm, 20mm, 24mm, 28mm, 30mm, 35mm, 45mm, 50mm, 55mm, 60mm, 70mm, 75mm, 80mm,
+   * 85mm, 90mm, 100mm, 105mm, 120mm, 125mm, 135mm, 150mm, 170mm, 180mm, 210mm, 300mm,
+   * 400mm, 500mm, 600mm, 800mm
+   *
+   * @param {string} value - The lens focal length value.
    * @param {number} mode - The mode value.
    */
   setLensFocalLength(value, mode = ValueSetMode.USER_SETVALUE) {
@@ -150,15 +176,18 @@ class Camera extends TreeItem {
   }
 
   /**
-   * Getter for the camera focal length.
-   * @return {any} - Returns the lens focal length value..
+   * Returns `focalDistance` parameter value.
+   *
+   * @return {number} - Returns the lens focal length value..
    */
   getFocalDistance() {
     return this.__focalDistanceParam.getValue()
   }
 
   /**
-   * Setter for the camera focal length.
+   * Sets `focalDistance` parameter value.
+   *
+   * @errors on dist value lower or less than zero.
    * @param {number} dist - The focal distance value.
    * @param {number} mode - The mode value.
    */
@@ -170,16 +199,17 @@ class Camera extends TreeItem {
   }
 
   /**
-   * The getIsOrthographic method.
-   * @return {any} - The return value.
+   * Returns `isOrthographic` parameter value.
+   * @return {boolean} - The return value.
    */
   getIsOrthographic() {
     return this.__isOrthographicParam.getValue()
   }
 
   /**
-   * The setIsOrthographic method.
-   * @param {any} value - The value param.
+   * Sets `focalDistance` parameter value.
+   *
+   * @param {boolean} value - The value param.
    * @param {number} mode - The mode value.
    */
   setIsOrthographic(value, mode = ValueSetMode.USER_SETVALUE) {
@@ -188,6 +218,11 @@ class Camera extends TreeItem {
 
   /**
    * Setter for the camera postion and target.
+   * As described at the start of the class, this is a `TreeItem`,
+   * which means we can move it around using translation modifiers.
+   * You can do it this way or using the changing `TreeItem` parameters,
+   * although we recommend this one because it also changes focal distance.
+   *
    * @param {Vec3} position - The position of the camera.
    * @param {Vec3} target - The target of the camera.
    * @param {number} mode - The mode value.
@@ -215,9 +250,11 @@ class Camera extends TreeItem {
   // ///////////////////////////
 
   /**
-   * The frameView method.
-   * @param {any} viewport - The viewport value.
-   * @param {any} treeItems - The treeItems value.
+   * Calculates a new bounding box for all the items passed in `treeItems` array
+   * and moves the camera to a point where we can see all of them, preserving parameters configurations.
+   *
+   * @param {GLBaseViewport} viewport - The viewport value.
+   * @param {array} treeItems - The treeItems value.
    * @param {number} mode - The mode value.
    */
   frameView(viewport, treeItems, mode = ValueSetMode.USER_SETVALUE) {
@@ -266,9 +303,10 @@ class Camera extends TreeItem {
   }
 
   /**
-   * The updateProjectionMatrix method.
-   * @param {any} mat - The mat value.
-   * @param {any} aspect - The aspect value.
+   * Sets camera perspective from a Mat4 object.
+   *
+   * @param {Mat4} mat - The mat value.
+   * @param {number} aspect - The aspect value.
    */
   updateProjectionMatrix(mat, aspect) {
     const isOrthographic = this.__isOrthographicParam.getValue()

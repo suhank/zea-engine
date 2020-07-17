@@ -2,7 +2,19 @@ import { Lines } from '../Lines.js'
 import { NumberParameter } from '../../Parameters/NumberParameter.js'
 import { sgFactory } from '../../SGFactory.js'
 
-/** A class for generating a lines cuboid shape.
+/**
+ * A class for generating a lines cuboid shape(Without faces).
+ *
+ * **Parameters**
+ * * **x(`NumberParameter`):** Length of the line cuboid along the `X` axis
+ * * **y(`NumberParameter`):** Length of the line cuboid along the `Y` axis
+ * * **z(`NumberParameter`):** Length of the line cuboid along the `Z` axis
+ * * **BaseZAtZero(`NumberParameter`):** Property to start or not `Z` axis from position `0.
+ *
+ * **Events**
+ * * **geomDataTopologyChanged:** Triggered when building the rect.
+ * * **geomDataChanged:** Triggered whenever the length of the rectangle changes in `X`, `Y` or `Z` axes
+ *
  * @extends Lines
  */
 class LinesCuboid extends Lines {
@@ -19,12 +31,10 @@ class LinesCuboid extends Lines {
     this.__x = this.addParameter(new NumberParameter('x', x))
     this.__y = this.addParameter(new NumberParameter('y', y))
     this.__z = this.addParameter(new NumberParameter('z', z))
-    
-    this.__baseZAtZero = this.addParameter(
-      new NumberParameter('BaseZAtZero', baseZAtZero)
-    )
+
+    this.__baseZAtZero = this.addParameter(new NumberParameter('BaseZAtZero', baseZAtZero))
     this.__rebuild()
-    
+
     const resize = () => {
       this.__resize()
     }
@@ -92,7 +102,8 @@ class LinesCuboid extends Lines {
   }
 
   /**
-   * The toJSON method encodes this type as a json object for persistences.
+   * The toJSON method encodes this type as a json object for persistence.
+   *
    * @return {object} - Returns the json object.
    */
   toJSON() {

@@ -3,8 +3,8 @@ import { AttrValue } from './AttrValue.js'
 import { typeRegistry } from './TypeRegistry.js'
 import { Vec3 } from './Vec3.js'
 /**
- * Representing a Vec4(four-dimensional floating point vector).
- * Vector classes in _zea-engine_ internally store values in {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array|Float32Array} and
+ * Represents a four-dimensional coordinate.
+ * Math types internally store values in {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array|Float32Array} and
  * expose getters and setters for the component values.
  *
  * @extends AttrValue
@@ -12,16 +12,16 @@ import { Vec3 } from './Vec3.js'
 class Vec4 extends AttrValue {
   /**
    /**
-   * Creates a Vec3.
+   * Creates a Vec4.
    *
-   * The type of values of the `(x, y, z)` coordenates can be {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array|Float32Array},
+   * The type of values of the `(x, y, z, t)` coordinates can be {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array|Float32Array},
    * {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint32Array|Uint32Array},
    * {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array|Int32Array} and
    * {@link https://developer.mozilla.org/es/docs/Web/JavaScript/Referencia/Objetos_globales/ArrayBuffer|ArrayBuffer}.
    * <br>
    * You can also pass one JSON object parameter.
    * 
-   * @param {number} x - The x value. Default is 0.
+   * @param {Number|Float32Array|json} x - The x value. Default is 0.
    * @param {number} y - The y value. Default is 0.
    * @param {number} z - The y value. Default is 0.
    * @param {number} t - The t value. Default is 0.
@@ -215,7 +215,7 @@ class Vec4 extends AttrValue {
   }
 
   /**
-   * Adds other to this Vec4.
+   * Adds other to this Vec4 mutating the values of this instance
    *
    * @param {Vec4} other - The other Vec4 to add.
    */
@@ -242,7 +242,7 @@ class Vec4 extends AttrValue {
   }
 
   /**
-   * Subtracts other from this Vec4.
+   * Subtracts other from this Vec4 mutating the values of this instance
    *
    * @param {Vec4} other - The other Vec4 to subtract.
    */
@@ -269,7 +269,7 @@ class Vec4 extends AttrValue {
   }
 
   /**
-   * Multiplies two Vec4s.
+   * Multiplies two Vec4s mutating the values of this instance
    *
    * @param {Vec4} other - The other Vec4 to multiply with.
    */

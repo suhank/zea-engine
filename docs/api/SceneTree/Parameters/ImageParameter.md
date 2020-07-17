@@ -1,7 +1,17 @@
 <a name="ImageParameter"></a>
 
 ### ImageParameter 
-Class representing an image parameter.
+Represents a specific type of parameter, that only stores `BaseImage` values.
+
+i.e.:
+```javascript
+// Since `Label` is a `BaseImage` implementation, it helps us with the example.
+const label = new Label('My awesome label', 'LabelPack')
+const imageParam = new ImageParameter('MyImage', label)
+//'myParameterOwnerItem' is an instance of a 'ParameterOwner' class.
+// Remember that only 'ParameterOwner' and classes that extend from it can host 'Parameter' objects.
+myParameterOwnerItem.addParameter(imageParam)
+```
 
 
 **Extends**: <code>Parameter</code>  
@@ -21,12 +31,12 @@ Create an image parameter.
 | Param | Type | Description |
 | --- | --- | --- |
 | name | <code>string</code> | The name of the image parameter. |
-| value | <code>any</code> | The value of the parameter. |
+| value | <code>BaseImage</code> | The value of the parameter. |
 
 <a name="ImageParameter+toJSON"></a>
 
 ### toJSON
-The toJSON method encodes this type as a json object for persistences.
+The toJSON method encodes this type as a json object for persistence.
 
 
 **Returns**: <code>object</code> - - Returns the json object.  

@@ -10,7 +10,7 @@ Can own any type of `BaseImage`.
 * **PixelsPerMeter(`NumberParameter`):** Quality and Size of the board. The bigger the number, the smaller the board.
 * **Alpha(`NumberParameter`):** Transparency of the board, from 0 to 1.
 * **AlignedToCamera(`BooleanParameter`):** Faces or not the board to the camera at all time(Moves with camera movement).
-* **DrawOnTop(`BooleanParameter`):**
+* **DrawOnTop(`BooleanParameter`):** _todo_
 
 
 **Extends**: <code>TreeItem</code>  

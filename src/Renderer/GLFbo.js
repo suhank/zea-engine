@@ -13,12 +13,8 @@ class GLFbo {
    * @param {boolean} createDepthTexture - The createDepthTexture value.
    */
   constructor(gl, colorTexture, createDepthTexture = false) {
-    if (
-      SystemDesc.isIOSDevice &&
-      (colorTexture.getType() == 'FLOAT' ||
-        colorTexture.getType() == 'HALF_FLOAT')
-    ) {
-      // So iOS simply refuses to bind aything to a render target except a UNSIGNED_BYTE texture.
+    if (SystemDesc.isIOSDevice && (colorTexture.getType() == 'FLOAT' || colorTexture.getType() == 'HALF_FLOAT')) {
+      // So iOS simply refuses to bind anything to a render target except a UNSIGNED_BYTE texture.
       // See the subtle error message here: "floating-point render targets not supported -- this is legal"
       // https://www.khronos.org/registry/webgl/conformance-suites/1.0.2/conformance/extensions/oes-texture-float.html
       console.error('IOS devices are unable to render to float textures.')
@@ -129,13 +125,7 @@ class GLFbo {
    */
   setColorTexture(colorTexture) {
     this.__colorTexture = colorTexture
-    gl.framebufferTexture2D(
-      gl.FRAMEBUFFER,
-      gl.COLOR_ATTACHMENT0,
-      gl.TEXTURE_2D,
-      this.__colorTexture.glTex,
-      0
-    )
+    gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.__colorTexture.glTex, 0)
   }
 
   /**
@@ -184,21 +174,8 @@ class GLFbo {
 
     if (this.__colorTexture) {
       if (gl.name == 'webgl2')
-        gl.framebufferTexture2D(
-          gl.DRAW_FRAMEBUFFER,
-          gl.COLOR_ATTACHMENT0,
-          gl.TEXTURE_2D,
-          this.__colorTexture.glTex,
-          0
-        )
-      else
-        gl.framebufferTexture2D(
-          gl.FRAMEBUFFER,
-          gl.COLOR_ATTACHMENT0,
-          gl.TEXTURE_2D,
-          this.__colorTexture.glTex,
-          0
-        )
+        gl.framebufferTexture2D(gl.DRAW_FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.__colorTexture.glTex, 0)
+      else gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.__colorTexture.glTex, 0)
     }
 
     // Create the depth texture
@@ -207,18 +184,8 @@ class GLFbo {
         // Create the depth buffer
         const depthBuffer = gl.createRenderbuffer()
         gl.bindRenderbuffer(gl.RENDERBUFFER, depthBuffer)
-        gl.renderbufferStorage(
-          gl.RENDERBUFFER,
-          gl.DEPTH_COMPONENT16,
-          this.width,
-          this.height
-        )
-        gl.framebufferRenderbuffer(
-          gl.FRAMEBUFFER,
-          gl.DEPTH_ATTACHMENT,
-          gl.RENDERBUFFER,
-          depthBuffer
-        )
+        gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT16, this.width, this.height)
+        gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, depthBuffer)
       } else {
         gl.activeTexture(gl.TEXTURE0)
         this.__depthTexture = gl.createTexture()
@@ -244,13 +211,7 @@ class GLFbo {
             gl.UNSIGNED_INT,
             null
           )
-          gl.framebufferTexture2D(
-            gl.DRAW_FRAMEBUFFER,
-            gl.DEPTH_ATTACHMENT,
-            gl.TEXTURE_2D,
-            this.__depthTexture,
-            0
-          )
+          gl.framebufferTexture2D(gl.DRAW_FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.TEXTURE_2D, this.__depthTexture, 0)
         } else {
           gl.texImage2D(
             gl.TEXTURE_2D,
@@ -263,13 +224,7 @@ class GLFbo {
             gl.UNSIGNED_INT,
             null
           )
-          gl.framebufferTexture2D(
-            gl.FRAMEBUFFER,
-            gl.DEPTH_ATTACHMENT,
-            gl.TEXTURE_2D,
-            this.__depthTexture,
-            0
-          )
+          gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.TEXTURE_2D, this.__depthTexture, 0)
         }
       }
     }
@@ -293,13 +248,7 @@ class GLFbo {
 
     // The color texture is destoryed and re-created when it is resized,
     // so we must re-bind it here.
-    gl.framebufferTexture2D(
-      gl.FRAMEBUFFER,
-      gl.COLOR_ATTACHMENT0,
-      gl.TEXTURE_2D,
-      this.__colorTexture.glTex,
-      0
-    )
+    gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.__colorTexture.glTex, 0)
     if (this.__depthTexture) {
       gl.activeTexture(gl.TEXTURE0)
       gl.bindTexture(gl.TEXTURE_2D, this.__depthTexture)
@@ -341,8 +290,7 @@ class GLFbo {
     const gl = this.__gl
 
     let check
-    if (gl.name == 'webgl2')
-      check = gl.checkFramebufferStatus(gl.DRAW_FRAMEBUFFER)
+    if (gl.name == 'webgl2') check = gl.checkFramebufferStatus(gl.DRAW_FRAMEBUFFER)
     else check = gl.checkFramebufferStatus(gl.FRAMEBUFFER)
     if (check !== gl.FRAMEBUFFER_COMPLETE) {
       gl.bindTexture(gl.TEXTURE_2D, null)
@@ -364,9 +312,7 @@ class GLFbo {
         case gl.FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:
           throw new Error('There is no attachment.')
         case gl.FRAMEBUFFER_INCOMPLETE_DIMENSIONS:
-          throw new Error(
-            'Height and width of the attachment are not the same.'
-          )
+          throw new Error('Height and width of the attachment are not the same.')
         case gl.FRAMEBUFFER_INCOMPLETE_DIMENSIONS:
           throw new Error(
             'The format of the attachment is not supported or if depth and stencil attachments are not the same renderbuffer.'
@@ -403,8 +349,7 @@ class GLFbo {
   unbindForWriting(renderstate) {
     if (renderstate) renderstate.boundRendertarget = this.__prevBoundFbo
     const gl = this.__gl
-    if (gl.name == 'webgl2')
-      gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, this.__prevBoundFbo)
+    if (gl.name == 'webgl2') gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, this.__prevBoundFbo)
     else gl.bindFramebuffer(gl.FRAMEBUFFER, this.__prevBoundFbo)
   }
 

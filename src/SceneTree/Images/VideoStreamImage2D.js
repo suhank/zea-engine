@@ -2,6 +2,7 @@ import { sgFactory } from '../SGFactory.js'
 import { BaseImage } from '../BaseImage.js'
 
 /** Class representing a 2D video stream image.
+ * @private
  * @extends BaseImage
  */
 class VideoStreamImage2D extends BaseImage {

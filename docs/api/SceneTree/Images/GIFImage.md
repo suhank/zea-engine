@@ -3,12 +3,26 @@
 ### GIFImage 
 Class representing a GIF image.
 
+```
+const image = new GIFImage()
+image.getParameter('FilePath').setUrl("https://storage.googleapis.com/zea-playground-assets/zea-engine/texture.gif")
+```
+
+**Parameters**
+* **StreamAtlasDesc:**
+* **StreamAtlasIndex:**
+
+**Events**
+* **loaded:** Triggered when the gif data is loaded.
+
+**File Types:** gif
+
 
 **Extends**: <code>FileImage</code>  
 
 * [GIFImage ⇐ <code>FileImage</code>](#GIFImage)
     * [new GIFImage(name, filePath, params)](#new-GIFImage)
-    * [getFrameDelay(index) ⇒ <code>any</code>](#getFrameDelay)
+    * [getFrameDelay(index) ⇒ <code>number</code>](#getFrameDelay)
 
 <a name="new_GIFImage_new"></a>
 
@@ -19,8 +33,8 @@ Create a GIF image.
 | Param | Type | Description |
 | --- | --- | --- |
 | name | <code>string</code> | The name value. |
-| filePath | <code>any</code> | The filePath value. |
-| params | <code>any</code> | The params value. |
+| filePath | <code>string</code> \| <code>object</code> | The filePath value. |
+| params | <code>object</code> | The params value. |
 
 <a name="GIFImage+getFrameDelay"></a>
 
@@ -28,7 +42,7 @@ Create a GIF image.
 The getFrameDelay method.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>number</code> - - The return value.  
 
 | Param | Type | Description |
 | --- | --- | --- |

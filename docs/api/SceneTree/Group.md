@@ -3,27 +3,19 @@
 ### Group 
 Groups are a special type of `TreeItem` that allows you to gather/classify/organize/modify
 multiple items contained within the group. Items can be added to the group directly, or using
-the path. It doesn't host the actual items; it only contains the reference to them. All
-parameters set to the group are also set to the children; in other words, it is a faster way
+its path.
+All parameters set to the group are also set to the children; in other words, it's a faster way
 to apply common things to multiple items.
 
-== Parameters ===
-- 'CutAwayEnabled': erflkgm
-
-```
-const group = new Group("MyGroup")
-```
-
-```
-group.addItem(treeItem)
-```
-
-```
-group.resolveItems([
-   <path1>,
-   <path2>
- ])
-```
+**Parameters**
+* **Items(`ItemSetParameter`):** _todo_
+* **Highlighted(`BooleanParameter`):** _todo_
+* **HighlightColor(`ColorParameter`):** _todo_
+* **HighlightFill(`NumberParameter`):** _todo_
+* **Material(`MaterialParameter`):** _todo_
+* **CutAwayEnabled(`BooleanParameter`):** _todo_
+* **CutPlaneNormal(`Vec3Parameter`):** _todo_
+* **CutPlaneDist(`NumberParameter`):** _todo_
 
 
 **Extends**: <code>TreeItem</code>  
@@ -32,16 +24,12 @@ group.resolveItems([
     * [new Group(name)](#new-Group)
     * _instance_
         * [setSelected(sel)](#setSelected)
-        * [setPaths(paths)](#setPaths)
         * [resolveItems(paths)](#resolveItems)
         * [addItem(item, emit)](#addItem)
         * [removeItem(item, emit)](#removeItem)
         * [clearItems(emit)](#clearItems)
-        * [getItems() ⇒ <code>any</code>](#getItems)
+        * [getItems() ⇒ <code>array</code>](#getItems)
         * [setItems(items)](#setItems)
-        * [onMouseDown(event)](#onMouseDown)
-        * [onMouseUp(event)](#onMouseUp)
-        * [onMouseMove(event)](#onMouseMove)
         * [toJSON(context, flags) ⇒ <code>object</code>](#toJSON)
         * [fromJSON(j, context, flags)](#fromJSON)
         * [clone(flags)](#clone)
@@ -53,7 +41,7 @@ group.resolveItems([
 <a name="new_Group_new"></a>
 
 ### new Group
-Create a group.
+Creates an instance of a group.
 
 
 | Param | Type | Description |
@@ -63,7 +51,7 @@ Create a group.
 <a name="Group+setSelected"></a>
 
 ### setSelected
-Returns a boolean indicating if this group is selectable.
+Changes selection's state of the group with all items it owns.
 
 
 
@@ -71,114 +59,69 @@ Returns a boolean indicating if this group is selectable.
 | --- | --- | --- |
 | sel | <code>boolean</code> | Boolean indicating the new selection state. |
 
-<a name="Group+setPaths"></a>
-
-### setPaths
-This method is mostly used in our demos,
-and should be removed from the interface
-
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| paths | <code>any</code> | The paths value. |
-
 <a name="Group+resolveItems"></a>
 
 ### resolveItems
-For backwards compatiblity.
+Uses the specified list of paths to look and get each `BaseItem` object and add it to Group's `Items` parameter.
 
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| paths | <code>any</code> | The paths value. |
+| paths | <code>array</code> | The paths value. |
 
 <a name="Group+addItem"></a>
 
 ### addItem
-Add an item to the group.
+Adds an item to the group(See `Items` parameter).
 
 
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| item | <code>any</code> |  | The item value. |
+| item | <code>BaseItem</code> |  | The item value. |
 | emit | <code>boolean</code> | <code>true</code> | The emit value. |
 
 <a name="Group+removeItem"></a>
 
 ### removeItem
-Remove an item to the group.
+Removes an item from the group(See `Items` parameter).
 
 
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| item | <code>any</code> |  | The item value. |
+| item | <code>BaseItem</code> |  | The item value. |
 | emit | <code>boolean</code> | <code>true</code> | The emit value. |
 
 <a name="Group+clearItems"></a>
 
 ### clearItems
-Clear items from the group.
+Removes all items from the group and kind of returns the object to the default state.
 
 
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| emit | <code>boolean</code> | <code>true</code> | The emit value. |
+| emit | <code>boolean</code> | <code>true</code> | `true` triggers `valueChanged` event. |
 
 <a name="Group+getItems"></a>
 
 ### getItems
-The getItems method.
+Returns the list of `BaseItem` objects owned by the group.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>array</code> - - The return value.  
 <a name="Group+setItems"></a>
 
 ### setItems
-The setItems method.
+Removes old items in current group and adds new ones.
 
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| items | <code>any</code> | The items value. |
-
-<a name="Group+onMouseDown"></a>
-
-### onMouseDown
-Occurs when a user presses a mouse button over an element.
-
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| event | <code>MouseEvent</code> | The mouse event that occurs. |
-
-<a name="Group+onMouseUp"></a>
-
-### onMouseUp
-Occurs when a user releases a mouse button over an element.
-
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| event | <code>MouseEvent</code> | The mouse event that occurs. |
-
-<a name="Group+onMouseMove"></a>
-
-### onMouseMove
-Occur when the mouse pointer is moving  while over an element.
-
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| event | <code>MouseEvent</code> | The mouse event that occurs. |
+| items | <code>array</code> | List of `BaseItem` you want to add to the group |
 
 <a name="Group+toJSON"></a>
 
@@ -222,7 +165,7 @@ copies its values and returns it.
 <a name="Group+copyFrom"></a>
 
 ### copyFrom
-The copyFrom method.
+Copies current Group with all owned items.
 
 
 
@@ -241,6 +184,13 @@ Users should never need to call this method directly.
 <a name="Group.INITIAL_XFO_MODES"></a>
 
 ### INITIAL
-Getter for INITIAL_XFO_MODES.
+Returns enum of available xfo modes.
+
+| Name | Default |
+| --- | --- |
+| manual | <code>0</code> |
+| first | <code>1</code> |
+| average | <code>2</code> |
+| globalOri | <code>3</code> |
 
 

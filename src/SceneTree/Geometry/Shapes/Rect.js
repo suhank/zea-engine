@@ -2,14 +2,29 @@ import { Lines } from '../Lines.js'
 import { NumberParameter } from '../../Parameters/NumberParameter.js'
 import { sgFactory } from '../../SGFactory.js'
 
-/** A class for generating a rectangle shape.
+/**
+ * A class for generating a rectangle shape.
+ *
+ * ```
+ * const rect = new Rect(1.5, 2.0)
+ * ```
+ *
+ * **Parameters**
+ * * **x(`NumberParameter`):** Length of the rectangle along the `X` axis.
+ * * **y(`NumberParameter`):** Length of the rectangle along the `Y` axis.
+ *
+ * **Events**
+ * * **geomDataTopologyChanged:** Triggered when building the rect.
+ * * **geomDataChanged:** Triggered whenever the length of the rect changes in `X`or `Y`axes
+ *
+ *
  * @extends Lines
  */
 class Rect extends Lines {
   /**
    * Create a rect.
-   * @param {number} x - The length of the rect along the X axis.
-   * @param {number} y - The length of the rect along the Y axis.
+   * @param {number} x - The length of the rect along the `X` axis.
+   * @param {number} y - The length of the rect along the `Y` axis.
    */
   constructor(x = 1.0, y = 1.0) {
     super()
@@ -24,7 +39,8 @@ class Rect extends Lines {
   }
 
   /**
-   * Getter for the length of the rect along the X axis.
+   * Getter for the length of the rect along the `X` axis.
+   *
    * @return {number} - Returns the length.
    */
   get x() {
@@ -32,15 +48,17 @@ class Rect extends Lines {
   }
 
   /**
-   * Setter for the length of the rect along the X axis.
-   * @param {number} val - The length along the X axis.
+   * Setter for the length of the rect along the `X` axis.
+   *
+   * @param {number} val - The length along the `X` axis.
    */
   set x(val) {
     this.__x.setValue(val)
   }
 
   /**
-   * Getter for the length of the rect along the Y axis.
+   * Getter for the length of the rect along the `Y` axis.
+   *
    * @return {number} - Returns the length.
    */
   get y() {
@@ -49,7 +67,8 @@ class Rect extends Lines {
 
   /**
    * Setter for the length of the rect along the U axis.
-   * @param {number} val - The length along the Y axis.
+   *
+   * @param {number} val - The length along the `Y` axis.
    */
   set y(val) {
     this.__y.setValue(val)
@@ -57,8 +76,9 @@ class Rect extends Lines {
 
   /**
    * Setter for the size of the rect.
-   * @param {number} x - The length along the X axis.
-   * @param {number} y - The length along the Y axis.
+   *
+   * @param {number} x - The length along the `X` axis.
+   * @param {number} y - The length along the `Y` axis.
    */
   setSize(x, y) {
     this.__x.setValue(x, -1)
@@ -99,7 +119,8 @@ class Rect extends Lines {
   }
 
   /**
-   * The toJSON method encodes this type as a json object for persistences.
+   * The toJSON method encodes this type as a json object for persistence.
+   *
    * @return {object} - Returns the json object.
    */
   toJSON() {

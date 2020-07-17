@@ -1,11 +1,7 @@
 import { Quat } from '../../Math/index'
 import { Operator } from './Operator.js'
 import { XfoOperatorOutput } from './OperatorOutput.js'
-import {
-  NumberParameter,
-  MultiChoiceParameter,
-  XfoParameter,
-} from '../Parameters/index'
+import { NumberParameter, MultiChoiceParameter, XfoParameter } from '../Parameters/index'
 import { sgFactory } from '../SGFactory.js'
 
 /** An operator for aiming items at targets.
@@ -21,14 +17,7 @@ class AimOperator extends Operator {
 
     this.addParameter(new NumberParameter('Weight', 1))
     this.addParameter(
-      new MultiChoiceParameter('Axis', 0, [
-        '+X Axis',
-        '-X Axis',
-        '+Y Axis',
-        '-Y Axis',
-        '+Z Axis',
-        '-Z Axis',
-      ])
+      new MultiChoiceParameter('Axis', 0, ['+X Axis', '-X Axis', '+Y Axis', '-Y Axis', '+Z Axis', '-Z Axis'])
     )
 
     this.addParameter(new NumberParameter('Stretch', 0.0))

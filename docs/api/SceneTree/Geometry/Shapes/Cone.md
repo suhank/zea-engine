@@ -1,7 +1,17 @@
 <a name="Cone"></a>
 
 ### Cone 
-A class for generating a cone geometry.
+Represents a cone geometry.
+
+```
+const cone = new Cone(1.2, 4.0)
+```
+
+**Parameters**
+* **radius(`NumberParameter`):** Specifies the radius of the base of the cone.
+* **height(`NumberParameter`):** Specifies the height of the cone.
+* **detail(`NumberParameter`):** Specifies the number of subdivisions around the `Z` axis.
+* **cap(`BooleanParameter`):** Specifies whether the base of the cone is capped or open.
 
 
 **Extends**: <code>Mesh</code>  
@@ -14,7 +24,7 @@ A class for generating a cone geometry.
     * [height](#height)
     * [detail ⇒ <code>number</code>](#detail)
     * [detail](#detail)
-    * [cap ⇒ <code>any</code>](#cap)
+    * [cap ⇒ <code>boolean</code>](#cap)
     * [cap](#cap)
 
 <a name="new_Cone_new"></a>
@@ -25,7 +35,7 @@ Create a cone.
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| radius | <code>number</code> | <code>0.5</code> | The radius of the cone at the base. |
+| radius | <code>number</code> | <code>0.5</code> | The radius of the base of the cone. |
 | height | <code>number</code> | <code>1</code> | The height of the cone. |
 | detail | <code>number</code> | <code>32</code> | The detail of the cone. |
 | cap | <code>boolean</code> | <code>true</code> | A boolean indicating whether the base of the cone is capped or open. |
@@ -33,14 +43,15 @@ Create a cone.
 <a name="Cone+radius"></a>
 
 ### radius 
-Getter for the cone radius.
+Returns radius parameter value.
 
 
 **Returns**: <code>number</code> - - Returns the radius.  
 <a name="Cone+radius"></a>
 
 ### radius
-Setter for the cone radius.
+Sets radius parameter value in parameter.<br>
+**Note:** Resizes the cone.
 
 
 
@@ -51,14 +62,15 @@ Setter for the cone radius.
 <a name="Cone+height"></a>
 
 ### height 
-Getter for the cone height.
+Returns height parameter value.
 
 
 **Returns**: <code>number</code> - - Returns the height.  
 <a name="Cone+height"></a>
 
 ### height
-Setter for the cone height.
+Sets height parameter value.<br>
+**Note:** Resizes the cone.
 
 
 
@@ -69,14 +81,14 @@ Setter for the cone height.
 <a name="Cone+detail"></a>
 
 ### detail 
-Getter for the cone detail.
+Returns details parameter value(Number of subdivisions around the `Z` axis).
 
 
 **Returns**: <code>number</code> - - Returns the detail.  
 <a name="Cone+detail"></a>
 
 ### detail
-Setter for the cone detail.
+Sets details parameter value(Number of subdivisions around the `Z` axis)
 
 
 
@@ -87,14 +99,15 @@ Setter for the cone detail.
 <a name="Cone+cap"></a>
 
 ### cap 
-Getter for the cone cap.
+Returns cap parameter value.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>boolean</code> - - The return value.  
 <a name="Cone+cap"></a>
 
 ### cap
-Setter for the cone cap.
+Sets `cap` parameter value.<br>
+**Note:** Resizes the cone.
 
 
 

@@ -5,11 +5,11 @@ import { BooleanParameter, NumberParameter, ColorParameter, ImageParameter } fro
 /**
  * `BaseItem` type of class
  *
- * **Events**
- * * **BackgroundColor(`ColorParameter`):**
- * * **EnvMap(`ImageParameter`):**
- * * **Display(`BooleanParameter`):**
- * * **EnvMapLOD(`NumberParameter`):**
+ * **Parameters**
+ * * **BackgroundColor(`ColorParameter`):** Changes background color of the scene
+ * * **EnvMap(`ImageParameter`):** _todo_
+ * * **Display(`BooleanParameter`):** _todo_
+ * * **EnvMapLOD(`NumberParameter`):** _todo_
  * @extends BaseItem
  */
 class SceneSettings extends BaseItem {

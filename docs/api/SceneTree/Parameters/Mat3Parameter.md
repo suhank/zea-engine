@@ -1,7 +1,15 @@
 <a name="Mat3Parameter"></a>
 
 ### Mat3Parameter 
-Class representing a Mat3 (3x3 matrix) parameter.
+Represents a specific type of parameter, that only stores Mat3(3x3 matrix) values.
+
+i.e.:
+```javascript
+const mat3Param = new Ma3Parameter('MyMat3', new Mat3(...args))
+//'myParameterOwnerItem' is an instance of a 'ParameterOwner' class.
+// Remember that only 'ParameterOwner' and classes that extend from it can host 'Parameter' objects.
+myParameterOwnerItem.addParameter(mat3Param)
+```
 
 
 **Extends**: <code>Parameter</code>  
@@ -19,7 +27,7 @@ Create a Mat3 parameter.
 | Param | Type | Description |
 | --- | --- | --- |
 | name | <code>string</code> | The name of the Mat3 parameter. |
-| value | <code>any</code> | The value of the parameter. |
+| value | <code>Vec3</code> | The value of the parameter. |
 
 <a name="Mat3Parameter+clone"></a>
 

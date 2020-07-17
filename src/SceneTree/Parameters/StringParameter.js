@@ -1,14 +1,24 @@
 import { sgFactory } from '../SGFactory'
 import { Parameter, ValueSetMode } from './Parameter.js'
 
-/** Class representing a string parameter.
+/**
+ * Represents a specific type of parameter, that only stores Mat4(4x4 matrix) values.
+ *
+ * i.e.:
+ * ```javascript
+ * const stringParam = new StringParameter('MyString', 'A String value goes here')
+ * //'myParameterOwnerItem' is an instance of a 'ParameterOwner' class.
+ * // Remember that only 'ParameterOwner' and classes that extend from it can host 'Parameter' objects.
+ * myParameterOwnerItem.addParameter(stringParam)
+ * ```
+ *
  * @extends Parameter
  */
 class StringParameter extends Parameter {
   /**
    * Create a string parameter.
    * @param {string} name - The name of the material color parameter.
-   * @param {any} value - The value of the parameter.
+   * @param {string} value - The value of the parameter.
    */
   constructor(name, value = '') {
     super(name, value, 'String')
@@ -16,24 +26,27 @@ class StringParameter extends Parameter {
   }
 
   /**
-   * The setMultiLine method.
-   * @param {any} multiLine - The multiLine value.
+   * Sets flag that indicates if the string contains new line feeds.
+   *
+   * @param {boolean} multiLine - The multiLine value.
    */
   setMultiLine(multiLine) {
     this.multiLine = multiLine
   }
 
   /**
-   * The getMultiLine method.
-   * @return {any} - The return value.
+   * Returns multi-line flag value.
+   *
+   * @return {boolean} - The return value.
    */
   getMultiLine() {
     return this.multiLine
   }
 
   /**
-   * The readBinary method.
-   * @param {object} reader - The reader value.
+   * Extracts the string value from a buffer, updating current parameter state.
+   *
+   * @param {BinReader} reader - The reader value.
    * @param {object} context - The context value.
    */
   readBinary(reader, context) {
@@ -44,6 +57,7 @@ class StringParameter extends Parameter {
   /**
    * The clone method constructs a new string parameter, copies its values
    * from this parameter and returns it.
+   *
    * @param {number} flags - The flags value.
    * @return {StringParameter} - Returns a new string parameter.
    */

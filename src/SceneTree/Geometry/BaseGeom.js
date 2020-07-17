@@ -1,3 +1,6 @@
+/* eslint-disable require-jsdoc */
+/* eslint-disable guard-for-in */
+/* eslint-disable camelcase */
 import { Vec2, Vec3, Box2, Box3, typeRegistry } from '../../Math/index'
 import { ParameterOwner } from '../ParameterOwner.js'
 import { Attribute } from './Attribute.js'
@@ -9,7 +12,12 @@ function isTypedArray(obj) {
   return !!obj && obj.byteLength !== undefined
 }
 
-/** Class representing a base geometry.
+/**
+ * Represents a base class for 3D geometry items.
+ *
+ * **Events**
+ * * **boundingBoxChanged:** Triggered when the bounding box changes.
+ *
  * @extends ParameterOwner
  */
 class BaseGeom extends ParameterOwner {
@@ -26,7 +34,8 @@ class BaseGeom extends ParameterOwner {
   }
 
   /**
-   * The setDebugName method.
+   * Establishes a name for the geometry.
+   *
    * @param {string} name - The debug name value.
    */
   setDebugName(name) {
@@ -34,10 +43,11 @@ class BaseGeom extends ParameterOwner {
   }
 
   /**
-   * The addVertexAttribute method.
+   * Adds a new vertex attribute to the geometry.
+   *
    * @param {string} name - The name of the vertex attribute.
-   * @param {any} dataType - The dataType value.
-   * @param {number} defaultScalarValue - Thedefault scalar value.
+   * @param {AttrValue|number} dataType - The dataType value.
+   * @param {number} defaultScalarValue - The default scalar value.
    * @return {Attribute} - Returns an attribute.
    */
   addVertexAttribute(name, dataType, defaultScalarValue = undefined) {
@@ -45,55 +55,53 @@ class BaseGeom extends ParameterOwner {
     if (isTypedArray(defaultScalarValue)) {
       attr = new Attribute(dataType, defaultScalarValue)
     } else {
-      attr = new Attribute(
-        dataType,
-        this.vertices != undefined ? this.vertices.length : 0,
-        defaultScalarValue
-      )
+      attr = new Attribute(dataType, this.vertices != undefined ? this.vertices.length : 0, defaultScalarValue)
     }
     this.__vertexAttributes.set(name, attr)
     return attr
   }
 
   /**
-   * The hasVertexAttribute method.
+   * Checks if the the geometry has an attribute with the specified name.
+   *
    * @param {string} name - The name of the vertex attribute.
-   * @return {any} - The return value.
+   * @return {boolean} - The return value.
    */
   hasVertexAttribute(name) {
     return this.__vertexAttributes.has(name)
   }
 
   /**
-   * The getVertexAttribute method.
+   * Returns vertex attribute with the specified name.
+   *
    * @param {string} name - The name of the vertex attribute.
-   * @return {any} - The return value.
+   * @return {Attribute} - The return value.
    */
   getVertexAttribute(name) {
     return this.__vertexAttributes.get(name)
   }
 
   /**
-   * The getVertexAttributes method.
-   * @param {string} name - The name of the vertex attribute.
-   * @return {any} - The return value.
+   * Returns all vertex attributes in an object with their names.
+   *
+   * @return {object} - The return value.
    */
-  getVertexAttributes(name) {
+  getVertexAttributes() {
     const vertexAttributes = {}
-    for (const [key, attr] of this.__vertexAttributes.entries())
-      vertexAttributes[key] = attr
+    for (const [key, attr] of this.__vertexAttributes.entries()) vertexAttributes[key] = attr
     return vertexAttributes
   }
 
   /**
-   * Getter for vertices.
+   * Returns 'positions' vertex attribute.
    */
   get vertices() {
     return this.__vertexAttributes.get('positions')
   }
 
   /**
-   * The numVertices method.
+   * Returns the number of vertex attributes.
+   *
    * @return {number} - The return value.
    */
   numVertices() {
@@ -101,7 +109,8 @@ class BaseGeom extends ParameterOwner {
   }
 
   /**
-   * The getNumVertices method.
+   * Returns the number of vertex attributes.
+   *
    * @return {number} - The return value.
    */
   getNumVertices() {
@@ -109,14 +118,16 @@ class BaseGeom extends ParameterOwner {
   }
 
   /**
-   * The setNumVertices method.
+   * Sets the number of vertices the geometry has.
+   *
    * @param {number} count - The count value.
    */
   setNumVertices(count) {
     // If this works, remove the old version.
     // for (let [key, attr] of this.__vertexAttributes.entries())
     //     attr.resize(count);
-    this.__vertexAttributes.forEach(attr => attr.resize(count))
+    console.warn('@todo-review', 'Is this setting numVertices?')
+    this.__vertexAttributes.forEach((attr) => attr.resize(count))
   }
 
   /**
@@ -135,20 +146,16 @@ class BaseGeom extends ParameterOwner {
    * @return {Vec3} - Returns a Vec3.
    */
   setVertex(index, vec3) {
-    return Vec3.createFromFloat32Buffer(
-      this.vertices.data.buffer,
-      index * 3
-    ).setFromOther(vec3)
+    return Vec3.createFromFloat32Buffer(this.vertices.data.buffer, index * 3).setFromOther(vec3)
   }
 
   /**
    * The moveVertices method.
-   * @param {any} delta - The delta value.
+   * @param {Vec3} delta - The delta value.
    */
   moveVertices(delta) {
     const vertices = this.vertices
-    for (let i = 0; i < vertices.length; i++)
-      vertices.getValueRef(i).addInPlace(delta)
+    for (let i = 0; i < vertices.length; i++) vertices.getValueRef(i).addInPlace(delta)
     this.setBoundingBoxDirty()
   }
 
@@ -171,7 +178,7 @@ class BaseGeom extends ParameterOwner {
 
   /**
    * The boundingBox method.
-   * @return {any} - The return value.
+   * @return {Vec3} - The return value.
    */
   get boundingBox() {
     if (this.__boundingBoxDirty) this.updateBoundingBox()
@@ -202,26 +209,29 @@ class BaseGeom extends ParameterOwner {
   // Metadata
 
   /**
-   * The getMetadata method.
-   * @param {any} key - The key value.
-   * @return {any} - The return value.
+   * Returns metadata value of the specified name.
+   *
+   * @param {string} key - The key value.
+   * @return {object} - The return value.
    */
   getMetadata(key) {
     return this.__metaData.get(key)
   }
 
   /**
-   * The hasMetadata method.
-   * @param {any} key - The key value.
-   * @return {any} - The return value.
+   * Verifies if geometry's metadata contains a value with the specified key.
+   *
+   * @param {string} key - The key value.
+   * @return {boolean} - The return value.
    */
   hasMetadata(key) {
     return this.__metaData.has(key)
   }
 
   /**
-   * The setMetadata method.
-   * @param {any} key - The key value.
+   * Sets metadata value to the geometry.
+   *
+   * @param {string} key - The key value.
    * @param {object} metaData - The metaData value.
    */
   setMetadata(key, metaData) {
@@ -229,8 +239,9 @@ class BaseGeom extends ParameterOwner {
   }
 
   /**
-   * The deleteMetadata method.
-   * @param {any} key - The key value.
+   * Removes metadata value from the geometry with the specified key.
+   *
+   * @param {string} key - The key value.
    */
   deleteMetadata(key) {
     this.__metaData.delete(key)
@@ -240,9 +251,10 @@ class BaseGeom extends ParameterOwner {
   // Memory
 
   /**
-   * The genBuffers method.
-   * @param {any} opts - The opts value.
-   * @return {any} - The return value.
+   * Returns vertex attributes buffers and its count.
+   *
+   * @param {object} opts - The opts value.
+   * @return {object} - The return value.
    */
   genBuffers(opts) {
     const attrBuffers = {}
@@ -276,8 +288,9 @@ class BaseGeom extends ParameterOwner {
   // Persistence
 
   /**
-   * The loadBaseGeomBinary method.
-   * @param {object} reader - The reader value.
+   * Sets state of current Geometry(Including Vertices and Bounding Box) using a binary reader object.
+   *
+   * @param {BinReader} reader - The reader value.
    */
   loadBaseGeomBinary(reader) {
     this.name = reader.loadStr()
@@ -292,13 +305,11 @@ class BaseGeom extends ParameterOwner {
     let texCoordsAttr
     if (flags & (1 << 1)) {
       normalsAttr = this.getVertexAttribute('normals')
-      if (!normalsAttr)
-        normalsAttr = this.addVertexAttribute('normals', Vec3, 0.0)
+      if (!normalsAttr) normalsAttr = this.addVertexAttribute('normals', Vec3, 0.0)
     }
     if (flags & (1 << 2)) {
       texCoordsAttr = this.getVertexAttribute('texCoords')
-      if (!texCoordsAttr)
-        texCoordsAttr = this.addVertexAttribute('texCoords', Vec2, 0.0)
+      if (!texCoordsAttr) texCoordsAttr = this.addVertexAttribute('texCoords', Vec2, 0.0)
     }
 
     const parse8BitPositionsArray = (range, offset, sclVec, positions_8bit) => {
@@ -328,19 +339,11 @@ class BaseGeom extends ParameterOwner {
         normalsAttr.setValue(i, normal)
       }
     }
-    const parse8BitTextureCoordsArray = (
-      range,
-      offset,
-      sclVec,
-      texCoords_8bit
-    ) => {
+    const parse8BitTextureCoordsArray = (range, offset, sclVec, texCoords_8bit) => {
       // if (sclVec.isNull())
       //     sclVec.set(1, 1, 1);
       for (let i = range[0]; i < range[1]; i++) {
-        const textureCoord = new Vec2(
-          texCoords_8bit[i * 2 + 0] / 255.0,
-          texCoords_8bit[i * 2 + 1] / 255.0
-        )
+        const textureCoord = new Vec2(texCoords_8bit[i * 2 + 0] / 255.0, texCoords_8bit[i * 2 + 1] / 255.0)
         textureCoord.multiplyInPlace(sclVec)
         textureCoord.addInPlace(offset)
         texCoordsAttr.setValue(i, textureCoord)
@@ -352,41 +355,20 @@ class BaseGeom extends ParameterOwner {
       {
         const box3 = this.__boundingBox
         const positions_8bit = reader.loadUInt8Array(numVerts * 3)
-        parse8BitPositionsArray(
-          [0, numVerts],
-          box3.p0,
-          box3.diagonal(),
-          positions_8bit
-        )
+        parse8BitPositionsArray([0, numVerts], box3.p0, box3.diagonal(), positions_8bit)
       }
 
       if (normalsAttr) {
-        const box3 = new Box3(
-          reader.loadFloat32Vec3(),
-          reader.loadFloat32Vec3()
-        )
+        const box3 = new Box3(reader.loadFloat32Vec3(), reader.loadFloat32Vec3())
         const normals_8bit = reader.loadUInt8Array(numVerts * 3)
-        parse8BitNormalsArray(
-          [0, numVerts],
-          box3.p0,
-          box3.diagonal(),
-          normals_8bit
-        )
+        parse8BitNormalsArray([0, numVerts], box3.p0, box3.diagonal(), normals_8bit)
 
         normalsAttr.loadSplitValues(reader)
       }
       if (texCoordsAttr) {
-        const box2 = new Box2(
-          reader.loadFloat32Vec2(),
-          reader.loadFloat32Vec2()
-        )
+        const box2 = new Box2(reader.loadFloat32Vec2(), reader.loadFloat32Vec2())
         const texCoords_8bit = reader.loadUInt8Array(numVerts * 2)
-        parse8BitTextureCoordsArray(
-          [0, numVerts],
-          box2.p0,
-          box2.diagonal(),
-          texCoords_8bit
-        )
+        parse8BitTextureCoordsArray([0, numVerts], box2.p0, box2.diagonal(), texCoords_8bit)
 
         texCoordsAttr.loadSplitValues(reader)
       }
@@ -395,25 +377,16 @@ class BaseGeom extends ParameterOwner {
       let offset = 0
       for (let i = 0; i < numClusters; i++) {
         const count = reader.loadUInt32()
-        const box3 = new Box3(
-          reader.loadFloat32Vec3(),
-          reader.loadFloat32Vec3()
-        )
+        const box3 = new Box3(reader.loadFloat32Vec3(), reader.loadFloat32Vec3())
         const clusterData = {
           range: [offset, offset + count],
           bbox: box3,
         }
         if (normalsAttr) {
-          clusterData.normalsRange = new Box3(
-            reader.loadFloat32Vec3(),
-            reader.loadFloat32Vec3()
-          )
+          clusterData.normalsRange = new Box3(reader.loadFloat32Vec3(), reader.loadFloat32Vec3())
         }
         if (texCoordsAttr) {
-          clusterData.texCoordsRange = new Box2(
-            reader.loadFloat32Vec2(),
-            reader.loadFloat32Vec2()
-          )
+          clusterData.texCoordsRange = new Box2(reader.loadFloat32Vec2(), reader.loadFloat32Vec2())
         }
 
         clusters.push(clusterData)
@@ -432,31 +405,16 @@ class BaseGeom extends ParameterOwner {
       for (let i = 0; i < numClusters; i++) {
         {
           const box3 = clusters[i].bbox
-          parse8BitPositionsArray(
-            clusters[i].range,
-            box3.p0,
-            box3.diagonal(),
-            positions_8bit
-          )
+          parse8BitPositionsArray(clusters[i].range, box3.p0, box3.diagonal(), positions_8bit)
         }
 
         if (normalsAttr) {
           const box3 = clusters[i].normalsRange
-          parse8BitNormalsArray(
-            clusters[i].range,
-            box3.p0,
-            box3.diagonal(),
-            normals_8bit
-          )
+          parse8BitNormalsArray(clusters[i].range, box3.p0, box3.diagonal(), normals_8bit)
         }
         if (texCoordsAttr) {
           const box2 = clusters[i].texCoordsRange
-          parse8BitTextureCoordsArray(
-            clusters[i].range,
-            box2.p0,
-            box2.diagonal(),
-            texCoords_8bit
-          )
+          parse8BitTextureCoordsArray(clusters[i].range, box2.p0, box2.diagonal(), texCoords_8bit)
         }
       }
       if (normalsAttr) {
@@ -469,7 +427,8 @@ class BaseGeom extends ParameterOwner {
   }
 
   /**
-   * The toJSON method encodes this type as a json object for persistences.
+   * The toJSON method encodes this type as a json object for persistence.
+   *
    * @param {object} context - The context value.
    * @param {number} flags - The flags value.
    * @return {object} - Returns the json object.
@@ -492,6 +451,7 @@ class BaseGeom extends ParameterOwner {
 
   /**
    * The fromJSON method decodes a json object for this type.
+   *
    * @param {object} json - The json object this item must decode.
    * @param {object} context - The context value.
    * @param {number} flags - The flags value.
@@ -503,12 +463,7 @@ class BaseGeom extends ParameterOwner {
       const attrJSON = json.vertexAttributes[name]
       if (!attr) {
         const dataType = typeRegistry.getType(attrJSON.dataType)
-        attr = new VertexAttribute(
-          this,
-          dataType,
-          0,
-          attrJSON.defaultScalarValue
-        )
+        attr = new VertexAttribute(this, dataType, 0, attrJSON.defaultScalarValue)
         this.__vertexAttributes.set(name, attr)
       }
       attr.fromJSON(attrJSON)
@@ -516,8 +471,9 @@ class BaseGeom extends ParameterOwner {
   }
 
   /**
-   * The toString method.
-   * @return {any} - The return value.
+   * Returns geometry data value in json format.
+   *
+   * @return {string} - The return value.
    */
   toString() {
     return JSON.stringify(this.toJSON(), null, 2)

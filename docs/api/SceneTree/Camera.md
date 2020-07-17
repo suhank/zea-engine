@@ -1,7 +1,19 @@
 <a name="Camera"></a>
 
 ### Camera 
-Class representing a camera in the scene tree.
+Represents a view of the scene vertex coordinates. Since it is a `TreeItem`,
+translation modifiers are supported, so you can move the camera around.
+
+**Parameters**
+* **isOrthographic(`BooleanParameter`):** Special type of view that represents 3D objects in two dimensions; `true` to enable.
+* **fov(`NumberParameter`):** _todo_
+* **near(`NumberParameter`):** _todo_
+* **far(`NumberParameter`):** _todo_
+* **focalDistance(`NumberParameter`):** _todo_
+
+**Events**
+* **projectionParamChanged:** _todo_
+* **movementFinished:** Triggered when framing all the objects.
 
 
 **Extends**: <code>TreeItem</code>  
@@ -15,9 +27,9 @@ Class representing a camera in the scene tree.
     * [getFov() ⇒ <code>number</code>](#getFov)
     * [setFov(value)](#setFov)
     * [setLensFocalLength(value, mode)](#setLensFocalLength)
-    * [getFocalDistance() ⇒ <code>any</code>](#getFocalDistance)
+    * [getFocalDistance() ⇒ <code>number</code>](#getFocalDistance)
     * [setFocalDistance(dist, mode)](#setFocalDistance)
-    * [getIsOrthographic() ⇒ <code>any</code>](#getIsOrthographic)
+    * [getIsOrthographic() ⇒ <code>boolean</code>](#getIsOrthographic)
     * [setIsOrthographic(value, mode)](#setIsOrthographic)
     * [setPositionAndTarget(position, target, mode)](#setPositionAndTarget)
     * [getTargetPostion() ⇒ <code>Vec3</code>](#getTargetPostion)
@@ -27,7 +39,7 @@ Class representing a camera in the scene tree.
 <a name="new_Camera_new"></a>
 
 ### new Camera
-Create a camera.
+Instanciates a camera object, setting default configuration like zoom, target and positioning.
 
 
 | Param | Type | Description |
@@ -37,14 +49,14 @@ Create a camera.
 <a name="Camera+getNear"></a>
 
 ### getNear
-The getNear method.
+Returns `near` parameter value.
 
 
 **Returns**: <code>number</code> - - Returns the near value.  
 <a name="Camera+setNear"></a>
 
 ### setNear
-The setNear method.
+Sets `near` parameter value
 
 
 
@@ -55,14 +67,14 @@ The setNear method.
 <a name="Camera+getFar"></a>
 
 ### getFar
-The getFar method.
+Returns `far` parameter value.
 
 
 **Returns**: <code>number</code> - - Returns the far value.  
 <a name="Camera+setFar"></a>
 
 ### setFar
-The setFar method.
+Sets `far` parameter value
 
 
 
@@ -93,28 +105,34 @@ The FOV is how much of the scene the camera can see at once.
 <a name="Camera+setLensFocalLength"></a>
 
 ### setLensFocalLength
-Setter for the camera lens focal length.
+Setter for the camera lens focal length. Updates `fov` parameter value after a small math procedure.
+
+**Focal Lenth accepted values:** 10mm, 11mm, 12mm, 14mm, 15mm, 17mm, 18mm,
+19mm, 20mm, 24mm, 28mm, 30mm, 35mm, 45mm, 50mm, 55mm, 60mm, 70mm, 75mm, 80mm,
+85mm, 90mm, 100mm, 105mm, 120mm, 125mm, 135mm, 150mm, 170mm, 180mm, 210mm, 300mm,
+400mm, 500mm, 600mm, 800mm
 
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| value | <code>number</code> | The lens focal length value. |
+| value | <code>string</code> | The lens focal length value. |
 | mode | <code>number</code> | The mode value. |
 
 <a name="Camera+getFocalDistance"></a>
 
 ### getFocalDistance
-Getter for the camera focal length.
+Returns `focalDistance` parameter value.
 
 
-**Returns**: <code>any</code> - - Returns the lens focal length value..  
+**Returns**: <code>number</code> - - Returns the lens focal length value..  
 <a name="Camera+setFocalDistance"></a>
 
 ### setFocalDistance
-Setter for the camera focal length.
+Sets `focalDistance` parameter value.
 
 
+**Errors**: on dist value lower or less than zero.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -124,26 +142,30 @@ Setter for the camera focal length.
 <a name="Camera+getIsOrthographic"></a>
 
 ### getIsOrthographic
-The getIsOrthographic method.
+Returns `isOrthographic` parameter value.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>boolean</code> - - The return value.  
 <a name="Camera+setIsOrthographic"></a>
 
 ### setIsOrthographic
-The setIsOrthographic method.
+Sets `focalDistance` parameter value.
 
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| value | <code>any</code> | The value param. |
+| value | <code>boolean</code> | The value param. |
 | mode | <code>number</code> | The mode value. |
 
 <a name="Camera+setPositionAndTarget"></a>
 
 ### setPositionAndTarget
 Setter for the camera postion and target.
+As described at the start of the class, this is a `TreeItem`,
+which means we can move it around using translation modifiers.
+You can do it this way or using the changing `TreeItem` parameters,
+although we recommend this one because it also changes focal distance.
 
 
 
@@ -163,25 +185,26 @@ Getter for the target position.
 <a name="Camera+frameView"></a>
 
 ### frameView
-The frameView method.
+Calculates a new bounding box for all the items passed in `treeItems` array
+and moves the camera to a point where we can see all of them, preserving parameters configurations.
 
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| viewport | <code>any</code> | The viewport value. |
-| treeItems | <code>any</code> | The treeItems value. |
+| viewport | <code>GLBaseViewport</code> | The viewport value. |
+| treeItems | <code>array</code> | The treeItems value. |
 | mode | <code>number</code> | The mode value. |
 
 <a name="Camera+updateProjectionMatrix"></a>
 
 ### updateProjectionMatrix
-The updateProjectionMatrix method.
+Sets camera perspective from a Mat4 object.
 
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| mat | <code>any</code> | The mat value. |
-| aspect | <code>any</code> | The aspect value. |
+| mat | <code>Mat4</code> | The mat value. |
+| aspect | <code>number</code> | The aspect value. |
 

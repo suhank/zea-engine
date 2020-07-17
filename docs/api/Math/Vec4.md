@@ -1,8 +1,8 @@
 <a name="Vec4"></a>
 
 ### Vec4 
-Representing a Vec4(four-dimensional floating point vector).
-Vector classes in _zea-engine_ internally store values in [Float32Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array) and
+Represents a four-dimensional coordinate.
+Math types internally store values in [Float32Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array) and
 expose getters and setters for the component values.
 
 
@@ -52,9 +52,9 @@ expose getters and setters for the component values.
 
 ### new Vec4
 /**
-Creates a Vec3.
+Creates a Vec4.
 
-The type of values of the `(x, y, z)` coordenates can be [Float32Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array),
+The type of values of the `(x, y, z, t)` coordinates can be [Float32Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array),
 [Uint32Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint32Array),
 [Int32Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array) and
 [ArrayBuffer](https://developer.mozilla.org/es/docs/Web/JavaScript/Referencia/Objetos_globales/ArrayBuffer).
@@ -64,7 +64,7 @@ You can also pass one JSON object parameter.
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| x | <code>number</code> | <code>0</code> | The x value. Default is 0. |
+| x | <code>Number</code> \| <code>Float32Array</code> \| <code>json</code> | <code>0</code> | The x value. Default is 0. |
 | y | <code>number</code> | <code>0</code> | The y value. Default is 0. |
 | z | <code>number</code> | <code>0</code> | The y value. Default is 0. |
 | t | <code>number</code> | <code>0</code> | The t value. Default is 0. |
@@ -233,7 +233,7 @@ Adds other to this Vec4 and returns the result as a new Vec4.
 <a name="Vec4+addInPlace"></a>
 
 ### addInPlace
-Adds other to this Vec4.
+Adds other to this Vec4 mutating the values of this instance
 
 
 
@@ -256,7 +256,7 @@ Subtracts other from this Vec4 and returns then result as a new Vec4.
 <a name="Vec4+subtractInPlace"></a>
 
 ### subtractInPlace
-Subtracts other from this Vec4.
+Subtracts other from this Vec4 mutating the values of this instance
 
 
 
@@ -279,7 +279,7 @@ Multiplies two Vec4s and returns the result as a new Vec4.
 <a name="Vec4+multiplyInPlace"></a>
 
 ### multiplyInPlace
-Multiplies two Vec4s.
+Multiplies two Vec4s mutating the values of this instance
 
 
 

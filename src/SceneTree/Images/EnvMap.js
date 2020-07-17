@@ -99,14 +99,15 @@ function sphOctUvToDir(uv) {
   return new Vec3(sOrient * suv.x * sPitch, cOrient * suv.y * sPitch, cPitch)
 }
 
-/** Class representing an environment map.
+/**
+ * Class representing an environment map.
  * @extends VLHImage
  */
 class EnvMap extends VLHImage {
   /**
    * Create an env map.
    * @param {string} name - The name value.
-   * @param {any} params - The params value.
+   * @param {object} params - The params value.
    */
   constructor(name, params = {}) {
     super(name, params)
@@ -116,7 +117,7 @@ class EnvMap extends VLHImage {
 
   /**
    * The __decodeData method.
-   * @param {any} entries - The entries value.
+   * @param {object} entries - The entries value.
    * @private
    */
   __decodeData(entries) {
@@ -135,7 +136,7 @@ class EnvMap extends VLHImage {
 
   /**
    * The getSampleSets method.
-   * @return {any} - The return value.
+   * @return {object} - The return value.
    */
   getSampleSets() {
     return this.__sampleSets
@@ -143,8 +144,8 @@ class EnvMap extends VLHImage {
 
   /**
    * The uvToDir method.
-   * @param {any} uv - The uv value.
-   * @return {any} - The return value.
+   * @param {Vec2} uv - The uv value.
+   * @return {Vec2|Vec3} - The return value.
    */
   uvToDir(uv) {
     switch (this.mapping) {
@@ -158,9 +159,10 @@ class EnvMap extends VLHImage {
   }
 
   /**
-   * The dirToUv method.
-   * @param {any} dir - The dir value.
-   * @return {any} - The return value.
+   * Converts position into UV.
+   *
+   * @param {Vec2|Vec3} dir - The dir value.
+   * @return {Vec2} - The return value.
    */
   dirToUv(dir) {
     switch (this.mapping) {
@@ -174,9 +176,10 @@ class EnvMap extends VLHImage {
   }
 
   /**
-   * The uvToLuminance method.
-   * @param {any} uv - The uv value.
-   * @return {any} - The return value.
+   * Converts a `Vec2` into luminance.
+   *
+   * @param {Vec2} uv - The uv value.
+   * @return {number} - The return value.
    */
   uvToLuminance(uv) {
     const thmbPixel = Math.floor(uv.y * this.__thumbSize) * this.__thumbSize + Math.floor(uv.x * this.__thumbSize)
@@ -184,9 +187,10 @@ class EnvMap extends VLHImage {
   }
 
   /**
-   * The dirToLuminance method.
-   * @param {any} dir - The dir value.
-   * @return {any} - The return value.
+   * Converts `Vec2` coordinates into luminance.
+   *
+   * @param {object} dir - The dir value.
+   * @return {number} - The return value.
    */
   dirToLuminance(dir) {
     return this.uvToLuminance(this.dirToUv(dir))

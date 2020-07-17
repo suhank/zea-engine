@@ -1,8 +1,15 @@
 <a name="Vec3Parameter"></a>
 
 ### Vec3Parameter 
-Class representing a Vec3 parameter.
-A Vec3 represents a three-dimensional coordinate.
+Represents a specific type of parameter, that only stores Vec3(three-dimensional coordinate) values.
+
+i.e.:
+```javascript
+const vec3Param = new Vec3Parameter('MyVec3', new Vec3(1.2, 3.4, 1))
+//'myParameterOwnerItem' is an instance of a 'ParameterOwner' class.
+// Remember that only 'ParameterOwner' and classes that extend from it can host 'Parameter' objects.
+myParameterOwnerItem.addParameter(vec3Param)
+```
 
 
 **Extends**: <code>Parameter</code>  
@@ -20,8 +27,8 @@ Create a Vec3 parameter.
 | Param | Type | Description |
 | --- | --- | --- |
 | name | <code>string</code> | The name of the Vec3 parameter. |
-| value | <code>any</code> | The value of the parameter. |
-| range | <code>any</code> | The range value. |
+| value | <code>Vec3</code> | The value of the parameter. |
+| range | <code>array</code> | The range value is an array of two `Vec2` objects. |
 
 <a name="Vec3Parameter+clone"></a>
 

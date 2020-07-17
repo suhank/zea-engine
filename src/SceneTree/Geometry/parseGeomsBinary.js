@@ -1,3 +1,4 @@
+/* eslint-disable guard-for-in */
 import { Points } from './Points.js'
 import { Lines } from './Lines.js'
 import { Mesh } from './Mesh.js'
@@ -7,31 +8,26 @@ import { typeRegistry } from '../../Math/TypeRegistry.js'
 
 // key, toc, geomIndexOffset, geomsRange, isMobileDevice, bufferSlice, genBuffersOpts, context
 const parseGeomsBinary = (data, callback) => {
-
   // eslint-disable-next-line guard-for-in
-  for(let key in data.context.versions) {
-    const v = data.context.versions[key];
-    const version =  new Version();
+  for (const key in data.context.versions) {
+    const v = data.context.versions[key]
+    const version = new Version()
     version.major = v.major
     version.minor = v.minor
     version.patch = v.patch
     version.branch = v.branch
-    data.context.versions[key] = version;
+    data.context.versions[key] = version
   }
   const geomDatas = []
   const offset = data.toc[data.geomsRange[0]]
   // console.log("offset:" +  offset);
   const transferables = []
   for (let i = data.geomsRange[0]; i < data.geomsRange[1]; i++) {
-    const reader = new BinReader(
-      data.bufferSlice,
-      data.toc[i] - offset,
-      data.isMobileDevice
-    )
+    const reader = new BinReader(data.bufferSlice, data.toc[i] - offset, data.isMobileDevice)
     const className = reader.loadStr()
     const pos = reader.pos()
     // const name = reader.loadStr()
-    //console.log(i + ":" + offset + " className:" +  className  + " name:" +  name/* + " pos:" + (data.toc[i] - offset) + " bufferSlice.byteLength:" +  bufferSlice.byteLength*/);
+    // console.log(i + ":" + offset + " className:" +  className  + " name:" +  name/* + " pos:" + (data.toc[i] - offset) + " bufferSlice.byteLength:" +  bufferSlice.byteLength*/);
     let geom
     switch (className) {
       case 'Points':
@@ -58,7 +54,7 @@ const parseGeomsBinary = (data, callback) => {
     const geomBuffers = geom.genBuffers(data.genBuffersOpts)
     if (geomBuffers.indices) transferables.push(geomBuffers.indices.buffer)
     for (const attrName in geomBuffers.attrBuffers) {
-      // Note: The type value assigned to the attribute can 
+      // Note: The type value assigned to the attribute can
       // not be transfered back to the main thread. Convert to
       // the type name here and send back as a string.
       const attrData = geomBuffers.attrBuffers[attrName]
