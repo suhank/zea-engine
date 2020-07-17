@@ -35,10 +35,11 @@
 
 
 - Plugins and Tools
-  * [Zea UX](zea-web-components.md)
+  * [Zea UX](http://zea.live/zea-ux/)
   * [Zea User Interfaces Library](zea-web-components.md)
   * [Zea CAD](http://zea.live/zea-cad)
   * [Zea Collab](http://zea.live/zea-collab)
+  <!-- * [Zea Pointclouds](http://zea.live/zea-pointclouds) -->
 
 
 - Technical Overview 
