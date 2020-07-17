@@ -64,6 +64,23 @@ Operators are used to compute new values for Parameters within the scene tree. O
 ![operators-ABC](_media/operators-ABC.svg)
 *In this diagram above, the value of Parameter C is calculated by Operator A using the values of Parameter A and Parameter B as inputs.*
 
+## Lazy Evaluation
+When a parameter is modified, by a user action or other mechanism such as a timer, the parameter emits a message to inform any connected operators that its value is now different, and the operators will need to calculate new values for the parameters connected to its outputs.
+
+However, the operator does not immediately start this calculation. Instead it waits to see if anything in the system requires this new value of its outputs to be calculated. It does this by emitting a message to its outputs to tell them that their values have also changed. The parameters that receive this message simply set themselves as ‘dirty’ and emit their own message further into the scene tree.
+These messages propagate throughout the tree until they reach an observer that is connected to a parameter and requests its updated value. 
+On request, the operator requests the operators to finally calculate the updated value. Each operator asks it inputs for their values, which causes them to ask any input parameters for their values. This propagates back up the scene tree until it reaches the original operator whose value was modified.
+
+
+![operators-lazy-evaluation](_media/operators-lazy-evaluation.svg)
+> Parameter 1 is changed by some mechanism. Maybe a timer changes its value periodically or a user edits it using a user interface component.If Parameter 1 is changed, then Parameters 2 and 3 become ‘dirty’ and this propagates to 4, 5 & 6. An Observer, potentially the renderer, or another user interface component, is watching Parameters 4 & 5. It receives an event indicating that they have become dirty, so it retrieves their values. This causes Op 1 and then Op 2 to evaluate producing the new updated values for Parameters 4 & 5. No Observer is watching Param 6, so Op 3 is not evaluated and so Param 6 value is never calculated. Param 6 remains dirty until its value is needed.
+
+### Benefits of Lazy Evaluation
+Lazy evaluation enables connected observers like the Renderer, to batch evaluations of the scene tree at the frequency of rendering. This can lead to efficiencies as the scene does not get evaluated in between rendered frames. 
+It can also be helpful if items are hidden from view, at which point, the renderer no longer requests their values. The value of hidden objects are not updated, unless something requests their value like a connected user interface. 
+
+
+
 ### Scene Tree Class Hierarchy
 
 ![scene-class-hierarchy](_media/scene-class-hierarchy.svg)
