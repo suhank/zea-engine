@@ -31,7 +31,7 @@ import {
   labelManager,
   Scene,
   GLRenderer 
-} from "../zea-engine/dist/index.esm.js"
+} from "../dist/index.esm.js"
 
 const domElement = document.getElementById("viewport");
 
@@ -51,9 +51,9 @@ fetch("data/LabelPack.labels")
 let index = 0;
 const addLabel = (lineEndPos, pos, color, name)=> {
   const label = new Label(name, 'LabelPack');
-  label.getParameter('fontSize').setValue(48);
-  label.getParameter('fontColor').setValue(color);
-  label.getParameter('backgroundColor').setValue(new Color(0.3, 0.3, 0.3));
+  label.getParameter('FontSize').setValue(48);
+  label.getParameter('FontColor').setValue(color);
+  label.getParameter('BackgroundColor').setValue(new Color(0.3, 0.3, 0.3));
   
   const billboard = new BillboardItem('billboard'+index, label);
   const xfo = new Xfo(pos);

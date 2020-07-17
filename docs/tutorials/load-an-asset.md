@@ -29,6 +29,11 @@ Constructing the Asset object that will be responsible for loading the data. The
 ```javascript
 renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(10, 10, 5), new Vec3(0, 0, 3))
 ```
+The asset to be loaded is bigger than can fit on scree, so we need to move the camera back a bit to get a better view.
+
+
+# Load and test
+Now your HTML file should look like this.
 
 ```html
 <!DOCTYPE html>
