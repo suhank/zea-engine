@@ -18,10 +18,10 @@
   * [Using Zea Engine with React](getting-started/using-react.md)
    -->
 
+
 - How To
   * [Changing The Background](tutorials/changing-the-background.md)
   * [Load an Asset File](tutorials/load-an-asset.md)
-  <!-- * [Setting up an Environment Map](tutorials/setting-up-an-environment-map.md) -->
   * [Setting up Groups and Highlights](tutorials/highlights.md)
   * [Setting up Labels](tutorials/labels.md)
   * [Setting up multilingual Labels](tutorials/multilingual-labels.md)
@@ -32,8 +32,13 @@
   * [Launching a VR Session](tutorials/VR.md)
 
 
-<!-- - User Interfaces 
-  * [Zea User Interfaces Library](zea-web-components.md) -->
+- Plugins and Tools
+  * [Zea UX](http://zea.live/zea-ux/)
+  * [Zea User Interfaces Library](zea-web-components.md)
+  * [Zea CAD](http://zea.live/zea-cad)
+  * [Zea Collab](http://zea.live/zea-collab)
+  <!-- * [Zea Pointclouds](http://zea.live/zea-pointclouds) -->
+
 
 - Technical Overview 
   * Release Notes

@@ -9,7 +9,7 @@ The Zea Web Components library was built using [StencilJS](https://stenciljs.com
 
 ## Live Examples
 
-[Zea Web Components Library](http://web-components-staging.zea.live/ ':include :type=iframe width=100% height=1000px')
+[Zea Web Components Library](http://web-components-staging.zea.live)
 
 
 
