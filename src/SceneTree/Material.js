@@ -162,8 +162,6 @@ class Material extends BaseItem {
    */
   __makeParameterTexturable(param) {
     makeParameterTexturable(param)
-    // param.addListener('textureConnected', this.textureConnected.emit);
-    // param.addListener('textureDisconnected', this.textureDisconnected.emit);
   }
 
   /**
