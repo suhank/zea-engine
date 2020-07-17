@@ -2,6 +2,7 @@
 - Main Concepts
   * [Architecture Overview](arch-overview.md)
   * [Transformations](transformations.md)
+  * [Events](events.md)
 
 - Getting started
   * [Setting up your workspace](getting-started/development-setup.md)
