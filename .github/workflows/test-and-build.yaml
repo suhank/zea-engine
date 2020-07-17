@@ -2,9 +2,9 @@ name: Test and build
 
 on:
   push:
-    branches: [automated-testing]
+    branches: [master, dev]
   pull_request:
-    branches: [automated-testing]
+    branches: [master, dev]
 
 jobs:
   build:
