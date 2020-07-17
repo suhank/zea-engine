@@ -24,7 +24,7 @@ Class representing the red, green, blue and alpha channel of a color.
         * [setFromCSSColorName(name)](#setFromCSSColorName)
         * [toHex() ⇒ <code>string</code>](#toHex)
         * [equal(other) ⇒ <code>boolean</code>](#equal)
-        * [notequals(other) ⇒ <code>boolean</code>](#notequals)
+        * [notEquals(other) ⇒ <code>boolean</code>](#notEquals)
         * [approxEqual(other, precision) ⇒ <code>boolean</code>](#approxEqual)
         * [add(other)](#add)
         * [subtract(other)](#subtract)
@@ -208,9 +208,9 @@ Returns true if this RGBA color is exactly the same as other.
 | --- | --- | --- |
 | other | [<code>RGBA</code>](#RGBA) | The other RGBA to compare with. |
 
-<a name="RGBA+notequals"></a>
+<a name="RGBA+notEquals"></a>
 
-### notequals
+### notEquals
 Returns true if this RGBA color is NOT exactly the same as other.
 
 

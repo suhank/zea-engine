@@ -1,3 +1,6 @@
+/* eslint-disable require-jsdoc */
+/* eslint-disable no-unused-vars */
+/* eslint-disable guard-for-in */
 import { hashStr } from '../Math/index'
 import { EventEmitter } from '../Utilities/index'
 
@@ -48,7 +51,16 @@ export function mergeDeep(target, ...sources) {
   return mergeDeep(target, ...sources)
 }
 
-/** Class representing a resource loader. */
+/**
+ * Class in charge of loading file resources, holding a reference to all of them.
+ * Manages workers, callbacks, resource tree and entities.
+ *
+ * **Events**
+ * * **loaded:** _todo_
+ * * **fileUpdated:** _todo_
+ * * **progressIncremented:** _todo_
+ * * **allResourcesLoaded:** _todo_
+ */
 class ResourceLoader extends EventEmitter {
   /**
    * Create a resource loader.
@@ -96,11 +108,19 @@ class ResourceLoader extends EventEmitter {
         baseUrl + '/public-resources/Oculus.vla'
       )
     }
+
+    if (!baseUrl) {
+      baseUrl = 'https://unpkg.com/@zeainc/zea-engine@0.1.3'
+    }
+    this.wasmUrl = baseUrl + '/public-resources/unpack.wasm'
+    this.addResourceURL('ZeaEngine/Vive.vla', baseUrl + '/public-resources/Vive.vla')
+    this.addResourceURL('ZeaEngine/Oculus.vla', baseUrl + '/public-resources/Oculus.vla')
   }
 
   /**
-   * The getRootFolder method.
-   * @return {any} - The return value.
+   * Returns the resources tree object.
+   *
+   * @return {object} - The return value.
    */
   getRootFolder() {
     return this.__resourcesTree
@@ -108,8 +128,8 @@ class ResourceLoader extends EventEmitter {
 
   /**
    * The registerResourceCallback method.
-   * @param {any} filter - The filter value.
-   * @param {any} fn - The fn value.
+   * @param {string} filter - The filter value.
+   * @param {function} fn - The fn value.
    */
   registerResourceCallback(filter, fn) {
     this.__resourceRegisterCallbacks[filter] = fn
@@ -122,14 +142,13 @@ class ResourceLoader extends EventEmitter {
 
   /**
    * The __applyCallbacks method.
-   * @param {any} resourcesDict - The resourcesDict value.
+   * @param {object} resourcesDict - The resourcesDict value.
    * @private
    */
   __applyCallbacks(resourcesDict) {
     const applyCallbacks = (resource) => {
       for (const filter in this.__resourceRegisterCallbacks) {
-        if (resource.name.includes(filter))
-          this.__resourceRegisterCallbacks[filter](resource)
+        if (resource.name.includes(filter)) this.__resourceRegisterCallbacks[filter](resource)
       }
     }
     for (const key in resourcesDict) {
@@ -140,7 +159,7 @@ class ResourceLoader extends EventEmitter {
 
   /**
    * The __buildTree method.
-   * @param {any} resources - The resources param.
+   * @param {object} resources - The resources param.
    * @private
    */
   __buildTree(resources) {
@@ -157,9 +176,7 @@ class ResourceLoader extends EventEmitter {
           buildEntity(resource.parent)
         }
       }
-      const parent = resource.parent
-        ? this.__resourcesTreeEntities[resource.parent]
-        : this.__resourcesTree
+      const parent = resource.parent ? this.__resourcesTreeEntities[resource.parent] : this.__resourcesTree
       // console.log((parent.name ? parent.name + '/' : '') + resource.name)
       parent.children[resource.name] = resource
       this.__resourcesTreeEntities[resourceId] = resource
@@ -172,7 +189,7 @@ class ResourceLoader extends EventEmitter {
 
   /**
    * The setResources method.
-   * @param {any} resources - The resources value.
+   * @param {object} resources - The resources value.
    */
   setResources(resources) {
     this.__resources = Object.assign(this.__resources, resources)
@@ -182,8 +199,8 @@ class ResourceLoader extends EventEmitter {
 
   /**
    * The addResourceURL method.
-   * @param {any} resourcePath - The resourcePath value.
-   * @param {any} url - The url value.
+   * @param {string} resourcePath - The resourcePath value.
+   * @param {string} url - The url value.
    */
   addResourceURL(resourcePath, url) {
     const parts = resourcePath.split('/')
@@ -237,7 +254,7 @@ class ResourceLoader extends EventEmitter {
 
   /**
    * The updateFile method.
-   * @param {any} file - The file value.
+   * @param {object} file - The file value.
    */
   updateFile(file) {
     const newFile = !(file.id in this.__resources)
@@ -294,20 +311,14 @@ class ResourceLoader extends EventEmitter {
           } else if (event.data.type === 'ERROR') {
             const data = event.data
             const file = this.__resources[data.resourceId]
-            console.error(
-              'Unable to load Resource:',
-              file ? file.name : data.resourceId,
-              ' With url:',
-              data.url
-            )
+            console.error('Unable to load Resource:', file ? file.name : data.resourceId, ' With url:', data.url)
           }
         }
       })
     }
 
     this.__nextWorker = (this.__nextWorker + 1) % 3
-    if (this.__workers[this.__nextWorker] == undefined)
-      this.__workers[this.__nextWorker] = __constructWorker()
+    if (this.__workers[this.__nextWorker] == undefined) this.__workers[this.__nextWorker] = __constructWorker()
     return this.__workers[this.__nextWorker]
   }
 
@@ -321,9 +332,10 @@ class ResourceLoader extends EventEmitter {
   }
 
   /**
-   * The getFilepath method.
-   * @param {any} resourceId - The resourceId value.
-   * @return {any} - The return value.
+   * Returns complete file path.
+   *
+   * @param {string} resourceId - The resourceId value.
+   * @return {string} - The return value.
    */
   getFilepath(resourceId) {
     let curr = this.__resources[resourceId]
@@ -337,14 +349,13 @@ class ResourceLoader extends EventEmitter {
 
   /**
    * The resourceAvailable method.
-   * @param {any} resourceId - The resourceId value.
-   * @return {any} - The return value.
+   *
+   * @param {string} resourceId - The resourceId value.
+   * @return {boolean} - The return value.
    */
   resourceAvailable(resourceId) {
     if (resourceId.indexOf('.') > 0) {
-      console.warn(
-        'Deprecation warning for resourceAvailable. Value should be a file id, not a path.'
-      )
+      console.warn('Deprecation warning for resourceAvailable. Value should be a file id, not a path.')
       return this.resolveFilepath(resourceId) != undefined
     }
     return resourceId in this.__resources
@@ -352,8 +363,8 @@ class ResourceLoader extends EventEmitter {
 
   /**
    * The getFile method.
-   * @param {any} resourceId - The resourceId value.
-   * @return {any} - The return value.
+   * @param {string} resourceId - The resourceId value.
+   * @return {object} - The return value.
    */
   getFile(resourceId) {
     return this.__resources[resourceId]
@@ -361,8 +372,8 @@ class ResourceLoader extends EventEmitter {
 
   /**
    * The resolveFilePathToId method.
-   * @param {any} filePath - The filePath value.
-   * @return {any} - The return value.
+   * @param {string} filePath - The filePath value.
+   * @return {string} - The return value.
    */
   resolveFilePathToId(filePath) {
     if (!filePath) {
@@ -375,8 +386,8 @@ class ResourceLoader extends EventEmitter {
 
   /**
    * The resolveFilepath method.
-   * @param {any} filePath - The filePath value.
-   * @return {any} - The return value.
+   * @param {string} filePath - The filePath value.
+   * @return {object} - The return value.
    */
   resolveFilepath(filePath) {
     const parts = filePath.split('/')
@@ -394,20 +405,24 @@ class ResourceLoader extends EventEmitter {
 
   /**
    * The resolveFile method.
-   * @param {any} filePath - The filePath value.
-   * @return {any} - The return value.
+   * @deprecated
+   * @param {string} filePath - The filePath value.
+   * @return {object} - The return value.
    */
   resolveFile(filePath) {
+    console.warn('@todo-review')
     console.warn('Deprecation warning for resolveFile. Use resolveFilepath.')
     return this.resolveFilepath(filePath)
   }
 
   /**
    * The resolveURL method.
-   * @param {any} filePath - The filePath value.
-   * @return {any} - The return value.
+   * @deprecated
+   * @param {string} filePath - The filePath value.
+   * @return {string} - The return value.
    */
   resolveURL(filePath) {
+    console.warn('@todo-review')
     console.warn('Deprecation warning for resolveURL. Use resolveFilepath.')
     const file = this.resolveFilepath(filePath)
     if (file) return file.url
@@ -415,8 +430,9 @@ class ResourceLoader extends EventEmitter {
 
   /**
    * Add work to the total work pile.. We never know how big the pile will get.
-   * @param {any} resourceId - The resourceId value.
-   * @param {any} amount - The amount value.
+   *
+   * @param {string} resourceId - The resourceId value.
+   * @param {number} amount - The amount value.
    */
   addWork(resourceId, amount) {
     this.__totalWork += amount
@@ -426,8 +442,9 @@ class ResourceLoader extends EventEmitter {
 
   /**
    * Add work to the 'done' pile. The done pile should eventually match the total pile.
-   * @param {any} resourceId - The resourceId value.
-   * @param {any} amount - The amount value.
+   *
+   * @param {string} resourceId - The resourceId value.
+   * @param {number} amount - The amount value.
    */
   addWorkDone(resourceId, amount) {
     this.__doneWork += amount
@@ -444,18 +461,15 @@ class ResourceLoader extends EventEmitter {
 
   /**
    * The loadResource method.
-   * @param {any} resourceId - The resourceId value.
-   * @param {any} callback - The callback value.
+   * @param {string} resourceId - The resourceId value.
+   * @param {function} callback - The callback value.
    * @param {boolean} addLoadWork - The addLoadWork value.
    */
   loadResource(resourceId, callback, addLoadWork = true) {
     const file = this.getFile(resourceId)
     if (!file) {
       throw new Error(
-        "Invalid resource Id:'" +
-          resourceId +
-          "' not found in Resources:" +
-          JSON.stringify(this.__resources, null, 2)
+        "Invalid resource Id:'" + resourceId + "' not found in Resources:" + JSON.stringify(this.__resources, null, 2)
       )
     }
 
@@ -464,22 +478,25 @@ class ResourceLoader extends EventEmitter {
 
   /**
    * The loadURL method.
-   * @param {any} resourceId - The resourceId value.
-   * @param {any} url - The url value.
-   * @param {any} callback - The callback value.
+   * @param {string} resourceId - The resourceId value.
+   * @param {string} url - The url value.
+   * @param {function} callback - The callback value.
    * @param {boolean} addLoadWork - The addLoadWork value.
    * @return {any} - The return value.
+   * @deprecated
+   * @private
    */
   loadURL(resourceId, url, callback, addLoadWork = true) {
+    console.warn('@todo-review')
     console.warn('Please call loadUrl instead,')
     return this.loadUrl(resourceId, url, callback, addLoadWork)
   }
 
   /**
    * The loadUrl method.
-   * @param {any} resourceId - The resourceId value.
-   * @param {any} url - The url value.
-   * @param {any} callback - The callback value.
+   * @param {string} resourceId - The resourceId value.
+   * @param {string} url - The url value.
+   * @param {function} callback - The callback value.
    * @param {boolean} addLoadWork - The addLoadWork value.
    */
   loadUrl(resourceId, url, callback, addLoadWork = true) {
@@ -516,10 +533,11 @@ class ResourceLoader extends EventEmitter {
 
   /**
    * The unpackBuffer method.
-   * @param {any} resourceId - The resourceId value.
+   * @param {string} resourceId - The resourceId value.
    * @param {Buffer} buffer - The binary buffer to unpack.
-   * @param {any} callback - The callback value.
+   * @param {function} callback - The callback value.
    * @param {boolean} addLoadWork - The addLoadWork value.
+   * @return {Promise} -
    */
   unpackBuffer(resourceId, buffer, callback, addLoadWork = true) {
     return new Promise((resolve, reject) => {
@@ -553,7 +571,7 @@ class ResourceLoader extends EventEmitter {
 
   /**
    * The __onFinishedReceiveFileData method.
-   * @param {any} fileData - The fileData value.
+   * @param {object} fileData - The fileData value.
    * @private
    */
   __onFinishedReceiveFileData(fileData) {
@@ -579,7 +597,7 @@ class ResourceLoader extends EventEmitter {
 
   /**
    * The traverse method.
-   * @param {any} callback - The callback value.
+   * @param {function} callback - The callback value.
    */
   traverse(callback) {
     const __c = (fsItem) => {

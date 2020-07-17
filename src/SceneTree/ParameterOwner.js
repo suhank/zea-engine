@@ -33,7 +33,7 @@ class ParameterOwner extends EventEmitter {
 
   /**
    * Returns the unique id of the object.
-   *
+   * @private
    * @return {number} - The Id of the ParameterOwner object.
    */
   getId() {
@@ -43,11 +43,22 @@ class ParameterOwner extends EventEmitter {
   // --- Params ---
 
   /**
+   * @deprecated
    * Returns the number of parameters current object has.
    *
    * @return {number} - Amount of parameters in current object.
    */
   numParameters() {
+    console.warn('Deprecated. Use #getNumParameters instead.')
+    return this.getNumParameters()
+  }
+
+  /**
+   * Returns the number of parameters current object has.
+   *
+   * @return {number} - Amount of parameters in current object.
+   */
+  getNumParameters() {
     return this.__params.length
   }
 
@@ -316,7 +327,7 @@ class ParameterOwner extends EventEmitter {
    */
   copyFrom(src, flags) {
     // Note: Loop over the parameters in reverse order,
-    // this is because often, parameter depdenencies
+    // this is because often, parameter dependencies
     // are bottom to top (bottom params dependent on higher params).
     // This means that as a parameter is set with a new value
     // it will dirty the params below it.

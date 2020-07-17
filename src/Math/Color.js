@@ -3,7 +3,7 @@ import { AttrValue } from './AttrValue.js'
 import { typeRegistry } from './TypeRegistry.js'
 
 /**
- * Class representing a color.
+ * Class representing a color as 4 floating point values.
  *
  * @extends AttrValue
  */
@@ -425,12 +425,7 @@ class Color extends AttrValue {
    * @return {boolean} - Returns true or false.
    */
   equal(other) {
-    return (
-      this.r == other.r &&
-      this.g == other.g &&
-      this.b == other.b &&
-      this.a == other.a
-    )
+    return this.r == other.r && this.g == other.g && this.b == other.b && this.a == other.a
   }
 
   /**
@@ -439,13 +434,8 @@ class Color extends AttrValue {
    * @param {Color} other - The other color to compare with.
    * @return {boolean} - Returns true or false.
    */
-  notequals(other) {
-    return (
-      this.r != other.r &&
-      this.g != other.g &&
-      this.b != other.b &&
-      this.a != other.a
-    )
+  notEquals(other) {
+    return this.r != other.r && this.g != other.g && this.b != other.b && this.a != other.a
   }
 
   /**
@@ -471,12 +461,7 @@ class Color extends AttrValue {
    * @return {Color} - Returns a new color.
    */
   add(other) {
-    return new Color(
-      this.r + other.r,
-      this.g + other.g,
-      this.b + other.b,
-      this.a + other.a
-    )
+    return new Color(this.r + other.r, this.g + other.g, this.b + other.b, this.a + other.a)
   }
 
   /**
@@ -486,12 +471,7 @@ class Color extends AttrValue {
    * @return {Color} - Returns a new color.
    */
   subtract(other) {
-    return new Color(
-      this.r - other.r,
-      this.g - other.g,
-      this.b - other.b,
-      this.a - other.a
-    )
+    return new Color(this.r - other.r, this.g - other.g, this.b - other.b, this.a - other.a)
   }
 
   /**
@@ -501,12 +481,7 @@ class Color extends AttrValue {
    * @return {Color} - Returns a new color.
    */
   scale(scalar) {
-    return new Color(
-      this.r * scalar,
-      this.g * scalar,
-      this.b * scalar,
-      this.a * scalar
-    )
+    return new Color(this.r * scalar, this.g * scalar, this.b * scalar, this.a * scalar)
   }
 
   /**
@@ -527,12 +502,7 @@ class Color extends AttrValue {
    * @param {number} gamma - The gamma value.
    */
   applyGamma(gamma) {
-    this.set(
-      Math.pow(this.r, gamma),
-      Math.pow(this.g, gamma),
-      Math.pow(this.b, gamma),
-      this.a
-    )
+    this.set(Math.pow(this.r, gamma), Math.pow(this.g, gamma), Math.pow(this.b, gamma), this.a)
   }
 
   /**
@@ -542,12 +512,7 @@ class Color extends AttrValue {
    * @return {Color} - Returns a new color.
    */
   toLinear(gamma = 2.2) {
-    return new Color(
-      Math.pow(this.r, gamma),
-      Math.pow(this.g, gamma),
-      Math.pow(this.b, gamma),
-      this.a
-    )
+    return new Color(Math.pow(this.r, gamma), Math.pow(this.g, gamma), Math.pow(this.b, gamma), this.a)
   }
 
   /**
@@ -586,12 +551,7 @@ class Color extends AttrValue {
     const ag = this.g
     const ab = this.b
     const aa = this.a
-    return new Color(
-      ar + t * (other.r - ar),
-      ag + t * (other.g - ag),
-      ab + t * (other.b - ab),
-      aa + t * (other.a - aa)
-    )
+    return new Color(ar + t * (other.r - ar), ag + t * (other.g - ag), ab + t * (other.b - ab), aa + t * (other.a - aa))
   }
 
   /**
@@ -617,12 +577,7 @@ class Color extends AttrValue {
         randomAlpha ? Math.random() * (1.0 + gammaOffset) : 1.0
       )
     } else {
-      return new Color(
-        Math.random(),
-        Math.random(),
-        Math.random(),
-        randomAlpha ? Math.random() : 1.0
-      )
+      return new Color(Math.random(), Math.random(), Math.random(), randomAlpha ? Math.random() : 1.0)
     }
   }
 
@@ -632,12 +587,7 @@ class Color extends AttrValue {
    * @return {Color} - Returns a new color.
    */
   clone() {
-    return new Color(
-      this.__data[0],
-      this.__data[1],
-      this.__data[2],
-      this.__data[3]
-    )
+    return new Color(this.__data[0], this.__data[1], this.__data[2], this.__data[3])
   }
 
   /**

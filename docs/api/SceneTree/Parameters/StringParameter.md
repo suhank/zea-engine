@@ -1,7 +1,15 @@
 <a name="StringParameter"></a>
 
 ### StringParameter 
-Class representing a string parameter.
+Represents a specific type of parameter, that only stores Mat4(4x4 matrix) values.
+
+i.e.:
+```javascript
+const stringParam = new StringParameter('MyString', 'A String value goes here')
+//'myParameterOwnerItem' is an instance of a 'ParameterOwner' class.
+// Remember that only 'ParameterOwner' and classes that extend from it can host 'Parameter' objects.
+myParameterOwnerItem.addParameter(stringParam)
+```
 
 
 **Extends**: <code>Parameter</code>  
@@ -9,7 +17,7 @@ Class representing a string parameter.
 * [StringParameter ⇐ <code>Parameter</code>](#StringParameter)
     * [new StringParameter(name, value)](#new-StringParameter)
     * [setMultiLine(multiLine)](#setMultiLine)
-    * [getMultiLine() ⇒ <code>any</code>](#getMultiLine)
+    * [getMultiLine() ⇒ <code>boolean</code>](#getMultiLine)
     * [readBinary(reader, context)](#readBinary)
     * [clone(flags)](#clone)
 
@@ -22,36 +30,36 @@ Create a string parameter.
 | Param | Type | Description |
 | --- | --- | --- |
 | name | <code>string</code> | The name of the material color parameter. |
-| value | <code>any</code> | The value of the parameter. |
+| value | <code>string</code> | The value of the parameter. |
 
 <a name="StringParameter+setMultiLine"></a>
 
 ### setMultiLine
-The setMultiLine method.
+Sets flag that indicates if the string contains new line feeds.
 
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| multiLine | <code>any</code> | The multiLine value. |
+| multiLine | <code>boolean</code> | The multiLine value. |
 
 <a name="StringParameter+getMultiLine"></a>
 
 ### getMultiLine
-The getMultiLine method.
+Returns multi-line flag value.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>boolean</code> - - The return value.  
 <a name="StringParameter+readBinary"></a>
 
 ### readBinary
-The readBinary method.
+Extracts the string value from a buffer, updating current parameter state.
 
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| reader | <code>object</code> | The reader value. |
+| reader | <code>BinReader</code> | The reader value. |
 | context | <code>object</code> | The context value. |
 
 <a name="StringParameter+clone"></a>

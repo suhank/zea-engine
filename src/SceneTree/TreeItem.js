@@ -27,22 +27,23 @@ branchSelectionOutlineColor.a = 0.1
  * Class representing an Item in the scene tree with hierarchy capabilities(has children).
  * <br>
  * <br>
- * **Parameters:**
+ * **Parameters**
  * * **Visible(`BooleanParameter`):** Shows/Hides the item.
- * * **LocalXfo(`XfoParameter`):**
- * * **GlobalXfo(`XfoParameter`):**
- * * **BoundingBox(`BoundingBox`):**
+ * * **LocalXfo(`XfoParameter`):** Specifies the offset of this tree item from its parent.
+ * * **GlobalXfo(`XfoParameter`):** Provides the computed world Xfo of this tree item.
+ * * **BoundingBox(`BoundingBox`):** Provides the bounding box for the tree item and all of its children in the 3d scene.
  *
  * **Events**
- * * **globalXfoChanged:**
- * * **visibilityChanged:**
- * * **highlightChanged:**
+ * * **globalXfoChanged:** _todo_
+ * * **visibilityChanged:** _todo_
+ * * **highlightChanged:** _todo_
  * * **childAdded:** Emitted when a item is added as a child.
  * * **childRemoved:** Emitted when an item is removed from the child nodes.
  * * **mouseDown:** Emitted when a mouseDown event happens in an item.
  * * **mouseUp:** Emitted when a mouseUp event happens in an item.
  * * **mouseMove:** Emitted when a mouseMove event happens in an item.
  * * **mouseEnter:** Emitted when a mouseEnter event happens in an item.
+ *
  * @extends {BaseItem}
  */
 class TreeItem extends BaseItem {

@@ -1,14 +1,27 @@
 <a name="MultiChoiceParameter"></a>
 
 ### MultiChoiceParameter 
-Class representing a multi choice parameter.
+Represents a specific type of parameter, that stores multiple choice(array) values.
+
+i.e.:
+```javascript
+const multiChoiceParameter =  new MultiChoiceParameter('InitialXfoMode', GROUP_INITIAL_XFO_MODES.average, [
+                                 'manual',
+                                 'first',
+                                 'average',
+                                 'global',
+                               ])
+//'myParameterOwnerItem' is an instance of a 'ParameterOwner' class.
+// Remember that only 'ParameterOwner' and classes that extend from it can host 'Parameter' objects.
+myParameterOwnerItem.addParameter(multiChoiceParameter)
+```
 
 
 **Extends**: <code>NumberParameter</code>  
 
 * [MultiChoiceParameter ⇐ <code>NumberParameter</code>](#MultiChoiceParameter)
     * [new MultiChoiceParameter(name, index, choices)](#new-MultiChoiceParameter)
-    * [getChoices() ⇒ <code>any</code>](#getChoices)
+    * [getChoices() ⇒ <code>array</code>](#getChoices)
     * [setValue(value, mode)](#setValue)
 
 <a name="new_MultiChoiceParameter_new"></a>
@@ -21,24 +34,24 @@ Create a multi choice parameter.
 | --- | --- | --- |
 | name | <code>string</code> | The name of the multi choice parameter. |
 | index | <code>number</code> | The index value. |
-| choices | <code>any</code> | The choices value. |
+| choices | <code>array</code> | The choices value. |
 
 <a name="MultiChoiceParameter+getChoices"></a>
 
 ### getChoices
-The getChoices method.
+Returns choices array.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>array</code> - - The return value.  
 <a name="MultiChoiceParameter+setValue"></a>
 
 ### setValue
-The setValue method.
+Sets parameter index value.
 
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| value | <code>any</code> | The value param. |
+| value | <code>string</code> \| <code>number</code> | The value param. |
 | mode | <code>number</code> | The mode value. |
 

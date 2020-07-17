@@ -1,16 +1,17 @@
 <a name="SGFactory"></a>
 
 ### SGFactory
-Class representing a SG factory.
+Factory class desinged build objects from persisted data.
+Class name as a string is required because on minification processes class names changes.
 
 
 
 * [SGFactory](#SGFactory)
     * [new SGFactory()](#new-SGFactory)
     * [registerClass(classname, cls)](#registerClass)
-    * [getClass(classname) ⇒ <code>any</code>](#getClass)
-    * [getClassName(inst) ⇒ <code>any</code>](#getClassName)
-    * [constructClass(classname) ⇒ <code>any</code>](#constructClass)
+    * [getClass(classname) ⇒ <code>function</code> \| <code>undefined</code>](#getClass)
+    * [getClassName(inst) ⇒ <code>string</code>](#getClassName)
+    * [constructClass(classname) ⇒ <code>object</code> \| <code>null</code>](#constructClass)
 
 <a name="new_SGFactory_new"></a>
 
@@ -20,48 +21,52 @@ Create a SG factory.
 <a name="SGFactory+registerClass"></a>
 
 ### registerClass
-The registerClass method.
+Registers a new class in the factory.
 
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| classname | <code>any</code> | The classname value. |
-| cls | <code>any</code> | The cls value. |
+| classname | <code>string</code> | The classname value. |
+| cls | <code>function</code> | The class function. |
 
 <a name="SGFactory+getClass"></a>
 
 ### getClass
-The getClass method.
+Returns class function by specifying its name.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>function</code> \| <code>undefined</code> - - Returns class function if exists.  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| classname | <code>any</code> | The classname value. |
+| classname | <code>string</code> | The class name value. |
 
 <a name="SGFactory+getClassName"></a>
 
 ### getClassName
-The getClassName method.
+Returns class name using passing an instantiated object.
+If it is not registered, the name in constructor is returned.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>string</code> - - Returns class name.  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| inst | <code>any</code> | The inst value. |
+| inst | <code>object</code> | Instanciated class |
 
 <a name="SGFactory+constructClass"></a>
 
 ### constructClass
-The constructClass method.
+Accepting the class name and N number of arguments, instantiates a new object of the specified class.
+If the class is not registered, then `null` is returned. <br>
+**Note:** Although the class arguments are not literally specified in the parameters,
+you can pass them(As many as needed).
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>object</code> \| <code>null</code> - - The return value.  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| classname | <code>any</code> | The classname value. |
+| classname | <code>string</code> | The classname value. |
 

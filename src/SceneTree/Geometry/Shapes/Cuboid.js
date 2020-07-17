@@ -4,7 +4,18 @@ import { Mesh } from '../Mesh.js'
 import { BooleanParameter, NumberParameter } from '../../Parameters/index'
 import { sgFactory } from '../../SGFactory.js'
 
-/** A class for generating a cuboid geometry.
+/**
+ * A class for generating a cuboid geometry.
+ *
+ * **Parameters**
+ * * **x(`NumberParameter`):** Length of the line cuboid along the `X` axis
+ * * **y(`NumberParameter`):** Length of the line cuboid along the `Y` axis
+ * * **z(`NumberParameter`):** Length of the line cuboid along the `Z` axis
+ * * **BaseZAtZero(`NumberParameter`):** Property to start or not `Z` axis from position `0.
+ *
+ * **Events**
+ * * **geomDataChanged:** Triggered whenever the length of the cuboid changes in `X`, `Y` or `Z` axes
+ *
  * @extends Mesh
  */
 class Cuboid extends Mesh {
@@ -23,9 +34,7 @@ class Cuboid extends Mesh {
     this.__xParam = this.addParameter(new NumberParameter('x', x))
     this.__yParam = this.addParameter(new NumberParameter('y', y))
     this.__zParam = this.addParameter(new NumberParameter('z', z))
-    this.__baseZAtZeroParam = this.addParameter(
-      new BooleanParameter('baseZAtZero', baseZAtZero)
-    )
+    this.__baseZAtZeroParam = this.addParameter(new BooleanParameter('baseZAtZero', baseZAtZero))
 
     this.setFaceCounts([0, 6])
     this.setFaceVertexIndices(0, 0, 1, 2, 3)
@@ -52,6 +61,7 @@ class Cuboid extends Mesh {
 
   /**
    * Setter for the size of the cuboid.
+   *
    * @param {number} x - The length of the edges along the X axis.
    * @param {number} y - The length of the edges along the Y axis.
    * @param {number} z - The length of the edges along the Z axis.
@@ -64,6 +74,7 @@ class Cuboid extends Mesh {
 
   /**
    * Setter for the base size of the cuboid.
+   *
    * @param {number} x - The length of the edges along the X axis.
    * @param {number} y - The length of the edges along the Y axis.
    */
@@ -144,7 +155,8 @@ class Cuboid extends Mesh {
   }
 
   /**
-   * The toJSON method encodes this type as a json object for persistences.
+   * The toJSON method encodes this type as a json object for persistence.
+   *
    * @return {object} - Returns the json object.
    */
   toJSON() {

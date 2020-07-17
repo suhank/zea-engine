@@ -1,7 +1,16 @@
 <a name="Cross"></a>
 
 ### Cross 
-A class for generating a cross shape.
+A class for generating a cross shape, drawing a line on the `X,Y,Z` axes.
+The axis line length is the `size` you specify, but the middle of the line is positioned in the coordinate `(0, 0, 0)` .
+Meaning that half of the line goes negative and half goes positive.
+
+```
+const cross = new Cross(1.5)
+```
+
+**Parameters**
+* **size(`NumberParameter`):** Specifies the size of the cross.
 
 
 **Extends**: <code>Lines</code>  

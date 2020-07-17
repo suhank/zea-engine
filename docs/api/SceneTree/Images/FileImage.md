@@ -40,8 +40,8 @@ Create a file image.
 | Param | Type | Description |
 | --- | --- | --- |
 | name | <code>string</code> | The name value. |
-| filePath | <code>any</code> | The filePath value. |
-| params | <code>any</code> | The params value. |
+| filePath | <code>string</code> | The filePath value. |
+| params | <code>object</code> | The params value. |
 
 <a name="FileImage+getFilepath"></a>
 

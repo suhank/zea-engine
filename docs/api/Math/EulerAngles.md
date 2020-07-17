@@ -1,7 +1,7 @@
 <a name="EulerAngles"></a>
 
 ### EulerAngles 
-Class representing euler angles. Euler angles decribe rotating an object
+Class representing euler angles. Euler angles describe rotating an object
 around its various axis in a specified axis order.
 
 
@@ -20,7 +20,7 @@ around its various axis in a specified axis order.
 <a name="new_EulerAngles_new"></a>
 
 ### new EulerAngles
-Create a euler angle. Recieves the xyz values in degrees and the order that the rotations are applied.
+Create a euler angle. Receives the xyz values in degrees and the order that the rotations are applied.
 <br>
 Order parameter values: `XYZ: 0`, `YZX: 1`, `ZXY: 2`, `XZY: 3`, `ZYX: 4`, `YXZ: 5`
 <br>

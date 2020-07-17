@@ -3,8 +3,9 @@ import { typeRegistry } from './TypeRegistry.js'
 import { Vec2 } from './Vec2.js'
 
 /**
- * Representing a Vec3(three-dimensional floating point vector).
- * Vector classes in _zea-engine_ internally store values in {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array|Float32Array} and
+ * Represents a three dimensional coordinate, such as 3d scene values, or mesh vertex positions.
+ *
+ * Math types internally store values in {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array|Float32Array} and
  * expose getters and setters for the component values.
  *
  * @extends AttrValue
@@ -20,7 +21,7 @@ class Vec3 extends AttrValue {
    * <br>
    * You can also pass one JSON object parameter.
    *
-   * @param {number} x - The x value. Default is 0.
+   * @param {Number|Float32Array|json} x - The x value. Default is 0.
    * @param {number} y - The y value. Default is 0.
    * @param {number} z - The z value. Default is 0.
    */
@@ -44,16 +45,16 @@ class Vec3 extends AttrValue {
   }
 
   /**
-   * Getter for `x` value.
+   * Getter for `x` component.
    *
-   * @return {number} - Returns the x value.
+   * @return {number} - Returns the x component.
    */
   get x() {
     return this.__data[0]
   }
 
   /**
-   * Setter for `x` value.
+   * Setter for `x` component.
    *
    * @param {number} val - The val param.
    */
@@ -62,16 +63,16 @@ class Vec3 extends AttrValue {
   }
 
   /**
-   * Getter for `y` value.
+   * Getter for `y` component.
    *
-   * @return {number} - Returns the y value.
+   * @return {number} - Returns the y component.
    */
   get y() {
     return this.__data[1]
   }
 
   /**
-   * Setter for `y` value.
+   * Setter for `y` component.
    *
    * @param {number} val - The val param.
    */
@@ -80,16 +81,16 @@ class Vec3 extends AttrValue {
   }
 
   /**
-   * Getter for `z` value.
+   * Getter for `z` component.
    *
-   * @return {number} - Returns the z value.
+   * @return {number} - Returns the z component.
    */
   get z() {
     return this.__data[2]
   }
 
   /**
-   * Setter for `z` value.
+   * Setter for `z` component.
    *
    * @param {number} val - The val param.
    */
@@ -100,7 +101,7 @@ class Vec3 extends AttrValue {
   /**
    * Getter for `xy` swizzel.
    *
-   * @return {Vec2} - Returns the z value.
+   * @return {Vec2} - Returns the z component.
    */
   get xy() {
     return new Vec2(this.__data[0], this.__data[1])
@@ -109,7 +110,7 @@ class Vec3 extends AttrValue {
   /**
    * Getter for `yz` swizzel.
    *
-   * @return {Vec2} - Returns the z value.
+   * @return {Vec2} - Returns the z component.
    */
   get yz() {
     return new Vec2(this.__data[1], this.__data[2])
@@ -118,9 +119,9 @@ class Vec3 extends AttrValue {
   /**
    * Setter from scalar components.
    *
-   * @param {number} x - The x value.
-   * @param {number} y - The y value.
-   * @param {number} z - The y value.
+   * @param {number} x - The x component.
+   * @param {number} y - The y component.
+   * @param {number} z - The y component.
    */
   set(x, y, z) {
     this.x = x
@@ -154,11 +155,7 @@ class Vec3 extends AttrValue {
    * @return {boolean} - Returns `true` if the coordenates are(0, 0, 0), otherwise, `false`.
    */
   isNull() {
-    return (
-      Math.abs(this.x) < Number.EPSILON &&
-      Math.abs(this.y) < Number.EPSILON &&
-      Math.abs(this.z) < Number.EPSILON
-    )
+    return Math.abs(this.x) < Number.EPSILON && Math.abs(this.y) < Number.EPSILON && Math.abs(this.z) < Number.EPSILON
   }
 
   /**
@@ -175,13 +172,37 @@ class Vec3 extends AttrValue {
   }
 
   /**
+   * @deprecated
    * Checks if this Vec3 is exactly the same as another Vec3.
    *
    * @param {Vec3} other - The other Vec3 to compare with.
    * @return {boolean} - Returns `true` if are the same Vector, otherwise, `false`.
    */
   equal(other) {
+    console.warn('Deprecated. Use #isEqual instead.')
+    return this.equals(other)
+  }
+
+  /**
+   * Checks if this Vec3 is exactly the same as another Vec3.
+   *
+   * @param {Vec3} other - The other Vec3 to compare with.
+   * @return {boolean} - Returns `true` if are the same Vector, otherwise, `false`.
+   */
+  isEqual(other) {
     return this.x == other.x && this.y == other.y && this.z == other.z
+  }
+
+  /**
+   * @deprecated
+   * Checks if this Vec2 is different from another Vec2.
+   *
+   * @param {Vec3} other - The other Vec3 to compare with.
+   * @return {boolean} - Returns `true` if the Vec3s are different, otherwise, `false`.
+   */
+  notEquals(other) {
+    console.warn('Deprecated. Use #notEqual instead.')
+    return this.notEqual(other)
   }
 
   /**
@@ -190,7 +211,7 @@ class Vec3 extends AttrValue {
    * @param {Vec3} other - The other Vec3 to compare with.
    * @return {boolean} - Returns `true` if the Vec3s are different, otherwise, `false`.
    */
-  notEquals(other) {
+  notEqual(other) {
     return this.x != other.x && this.y != other.y && this.z != other.z
   }
 
@@ -373,21 +394,14 @@ class Vec3 extends AttrValue {
    * @return {Vec3} - Returns the Vec3 normalized.
    */
   normalize() {
-    let len =
-      this.__data[0] * this.__data[0] +
-      this.__data[1] * this.__data[1] +
-      this.__data[2] * this.__data[2]
+    let len = this.__data[0] * this.__data[0] + this.__data[1] * this.__data[1] + this.__data[2] * this.__data[2]
     if (len < Number.EPSILON) {
       return new Vec3()
     }
 
     // TODO: evaluate use of glm_invsqrt here?
     len = 1.0 / Math.sqrt(len)
-    return new Vec3(
-      this.__data[0] * len,
-      this.__data[1] * len,
-      this.__data[2] * len
-    )
+    return new Vec3(this.__data[0] * len, this.__data[1] * len, this.__data[2] * len)
   }
 
   /**
@@ -396,10 +410,7 @@ class Vec3 extends AttrValue {
    * @return {number} - The return value.
    */
   normalizeInPlace() {
-    let len =
-      this.__data[0] * this.__data[0] +
-      this.__data[1] * this.__data[1] +
-      this.__data[2] * this.__data[2]
+    let len = this.__data[0] * this.__data[0] + this.__data[1] * this.__data[1] + this.__data[2] * this.__data[2]
     if (len < Number.EPSILON) {
       return
     }
@@ -419,19 +430,12 @@ class Vec3 extends AttrValue {
    * @return {Vec3} - The return value.
    */
   resize(length) {
-    const currlen =
-      this.__data[0] * this.__data[0] +
-      this.__data[1] * this.__data[1] +
-      this.__data[2] * this.__data[2]
+    const currlen = this.__data[0] * this.__data[0] + this.__data[1] * this.__data[1] + this.__data[2] * this.__data[2]
     if (currlen < Number.EPSILON) {
       return
     }
     const scl = length / Math.sqrt(currlen)
-    return new Vec3(
-      this.__data[0] * scl,
-      this.__data[1] * scl,
-      this.__data[2] * scl
-    )
+    return new Vec3(this.__data[0] * scl, this.__data[1] * scl, this.__data[2] * scl)
   }
 
   /**
@@ -440,10 +444,7 @@ class Vec3 extends AttrValue {
    * @param {number} length - The length value.
    */
   resizeInPlace(length) {
-    const currlen =
-      this.__data[0] * this.__data[0] +
-      this.__data[1] * this.__data[1] +
-      this.__data[2] * this.__data[2]
+    const currlen = this.__data[0] * this.__data[0] + this.__data[1] * this.__data[1] + this.__data[2] * this.__data[2]
     if (currlen < Number.EPSILON) {
       return
     }
@@ -506,11 +507,7 @@ class Vec3 extends AttrValue {
     const ax = this.x
     const ay = this.y
     const az = this.z
-    return new Vec3(
-      ax + t * (other.x - ax),
-      ay + t * (other.y - ay),
-      az + t * (other.z - az)
-    )
+    return new Vec3(ax + t * (other.x - ax), ay + t * (other.y - ay), az + t * (other.z - az))
   }
 
   /**

@@ -1,3 +1,4 @@
+/* eslint-disable require-jsdoc */
 import { Float32, UInt32, SInt32 } from '../../Math/index'
 import { typeRegistry } from '../../Math/TypeRegistry.js'
 
@@ -5,13 +6,15 @@ function isTypedArray(obj) {
   return !!obj && obj.byteLength !== undefined
 }
 
-/** Class representing an attribute. */
+/**
+ * Class representing an attribute.
+ */
 class Attribute {
   /**
    * Create an attribute.
-   * @param {any} dataType - The dataType value.
-   * @param {any} expectedSize - The expectedSize value.
-   * @param {any} defaultValue - The defaultValue value.
+   * @param {AttrValue|number} dataType - The dataType value.
+   * @param {number|TypedArray} expectedSize - The expectedSize value.
+   * @param {number} defaultValue - The defaultValue value.
    */
   constructor(dataType, expectedSize, defaultValue = undefined) {
     this.__dataType = dataType
@@ -29,8 +32,7 @@ class Attribute {
           throw new Error('Invalid data type for attribute:' + dataType)
       }
     }
-    this.__defaultElementValue =
-      defaultValue != undefined ? defaultValue : Number.MAX_VALUE
+    this.__defaultElementValue = defaultValue != undefined ? defaultValue : Number.MAX_VALUE
     if (isTypedArray(expectedSize)) {
       this.__data = expectedSize
     } else {
@@ -40,8 +42,10 @@ class Attribute {
   }
 
   /**
-   * The resize method.
-   * @param {any} size - The size value.
+   * Resizes current data array to to a new size.
+   * In case the new size is bigger than current size, the new values are filled up with default ones.
+   *
+   * @param {number} size - The size value.
    */
   resize(size) {
     const prevLength = this.__data.length
@@ -55,8 +59,9 @@ class Attribute {
   }
 
   /**
-   * The initRange method.
-   * @param {any} start - The start value.
+   * Fills up data values with default ones starting from the specified index.
+   *
+   * @param {number} start - The start value.
    */
   initRange(start) {
     // Initialize the values to invalid values.
@@ -66,112 +71,108 @@ class Attribute {
   }
 
   /**
-   * The getCount method.
-   * @return {any} - The return value.
+   * Returns the count of attribute values in the data.
+   *
+   * @return {number} - The return value.
    */
   getCount() {
     return this.__data.length / this.__dimension
   }
 
   /**
-   * Getter for length.
-   * @return {any} - The return value.
+   * Returns the count of attribute values in the data.
+   *
+   * @return {number} - The return value.
    */
   get length() {
     return this.__data.length / this.__dimension
   }
 
   /**
-   * Getter for data.
-   * @return {any} - The return value.
+   * Returns the type of attribute value.
+   *
+   * @return {AttrValue|number} - The return value.
    */
   get dataType() {
     return this.__dataType
   }
 
   /**
-   * Getter for data.
-   * @return {any} - The return value.
+   * Returns current data array.
+   *
+   * @return {TypedArray} - The return value.
    */
   get data() {
     return this.__data
   }
 
   /**
-   * Setter for data.
-   * @param {any} data - The data value.
+   * Sets data value.
+   *
+   * @param {TypedArray} data - The data value.
    */
   set data(data) {
     this.__data = data
   }
 
   /**
-   * Getter for numElements.
-   * @return {any} - The return value.
+   * Returns the number of elements stored in each `AttrValue`.
+   *
+   * @return {number} - The return value.
    */
   get numElements() {
     return this.__dimension
   }
 
   /**
-   * The getFloat32Value method.
+   * Returns data value of the specified index.
+   *
    * @param {number} index - The index value.
-   * @return {any} - The return value.
+   * @return {number} - The return value.
    */
   getFloat32Value(index) {
     return this.__data[index]
   }
 
   /**
-   * The setFloat32Value method.
+   * Sets data value in the specified index.
+   *
    * @param {number} index - The index value.
-   * @param {any} value - The value param.
+   * @param {number} value - The value param.
    */
   setFloat32Value(index, value) {
     this.__data[index] = value
   }
 
   /**
-   * The getValueRef method.
+   * Returns the `AttrValue` object placed in the specified index.
+   *
    * @param {number} index - The index value.
-   * @return {any} - The return value.
+   * @return {AttrValue} - The return value.
    */
   getValueRef(index) {
     const numElems = this.__dimension
     if (index >= this.__data.length / numElems)
-      throw new Error(
-        'Invalid vertex index:' +
-          index +
-          '. Num Vertices:' +
-          this.__data.length / 3
-      )
-    return this.__dataType.createFromFloat32Buffer(
-      this.__data.buffer,
-      index * numElems
-    )
+      throw new Error('Invalid vertex index:' + index + '. Num Vertices:' + this.__data.length / 3)
+    return this.__dataType.createFromFloat32Buffer(this.__data.buffer, index * numElems)
   }
 
   /**
-   * The setValue method.
+   * Sets `AttrValue` object in the specified index.
+   *
    * @param {number} index - The index value.
-   * @param {any} value - The value param.
+   * @param {AttrValue} value - The value param.
    */
   setValue(index, value) {
     const numElems = this.__dimension
     if (index >= this.__data.length / numElems)
-      throw new Error(
-        'Invalid vertex index:' +
-          index +
-          '. Num Vertices:' +
-          this.__data.length / 3
-      )
-    this.__dataType
-      .createFromFloat32Buffer(this.__data.buffer, index * numElems)
-      .setFromOther(value)
+      throw new Error('Invalid vertex index:' + index + '. Num Vertices:' + this.__data.length / 3)
+    this.__dataType.createFromFloat32Buffer(this.__data.buffer, index * numElems).setFromOther(value)
   }
 
   /**
-   * The toJSON method encodes this type as a json object for persistences.
+   * The toJSON method encodes this type as a json object for persistence.
+   *
    * @param {object} context - The context value.
    * @param {number} flags - The flags value.
    * @return {object} - Returns the json object.
@@ -187,6 +188,7 @@ class Attribute {
 
   /**
    * The fromJSON method decodes a json object for this type.
+   *
    * @param {object} j - The json object this item must decode.
    */
   fromJSON(j) {
@@ -194,8 +196,9 @@ class Attribute {
   }
 
   /**
-   * The toString method.
-   * @return {any} - The return value.
+   * Returns the string representation of the object's state.
+   *
+   * @return {string} - The return value.
    */
   toString() {
     return JSON.stringify(this.toJSON(), null, 2)

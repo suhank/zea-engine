@@ -1,3 +1,6 @@
+/* eslint-disable guard-for-in */
+/* eslint-disable camelcase */
+/* eslint-disable no-array-constructor */
 import { Vec2, Vec3, Xfo, Color } from '../Math/index'
 import { Async } from '../Utilities/index'
 import { GeomItem } from './GeomItem'
@@ -8,16 +11,26 @@ import { Material } from './Material.js'
 import { resourceLoader } from './ResourceLoader.js'
 import { GeomLibrary } from './GeomLibrary.js'
 import { MaterialLibrary } from './MaterialLibrary.js'
-import {
-  BooleanParameter,
-  NumberParameter,
-  StringParameter,
-  FilePathParameter,
-} from './Parameters/index'
+import { BooleanParameter, NumberParameter, StringParameter, FilePathParameter } from './Parameters/index'
 
 // AssetItem.registerDataLoader('.obj', ObjDataLoader);
 
-/** Class representing an object asset.
+/**
+ * Class designed to load and handle `.obj` files.
+ * Which define the grometry and other properties for objects.
+ *
+ * **Parameters**
+ * * **splitObjects(`BooleanParameter`):** _todo_
+ * * **splitGroupsIntoObjects(`BooleanParameter`):** _todo_
+ * * **loadMtlFile(`BooleanParameter`):** _todo_
+ * * **unitsConversion(`NumberParameter`):** _todo_
+ * * **defaultShader(`StringParameter`):** _todo_
+ * * **ObjFilePath(`FilePathParameter`):** Used to specify the path to the file.
+ *
+ * **Events**
+ * * **loaded:** Triggered once everything is loaded.
+ * * **geomsLoaded:** Triggered once all geometries are loaded.
+ *
  * @extends AssetItem
  */
 class ObjAsset extends AssetItem {
@@ -57,16 +70,18 @@ class ObjAsset extends AssetItem {
   }
 
   /**
-   * The getGeometryLibrary method.
-   * @return {any} - The return value.
+   * Returns `GeomLibrary` object which hosts workers, buffers, streams and geometry objects.
+   *
+   * @return {GeomLibrary} - The return value.
    */
   getGeometryLibrary() {
     return this.geomLibrary
   }
 
   /**
-   * The getMaterialLibrary method.
-   * @return {any} - The return value.
+   * Returns `MaterialLibrary` object wich hosts images and `Material` objects.
+   *
+   * @return {MaterialLibrary} - The return value.
    */
   getMaterialLibrary() {
     return this.materials
@@ -74,33 +89,25 @@ class ObjAsset extends AssetItem {
 
   /**
    * The __loadObj method.
-   * @param {any} onDone - The onDone value.
-   * @param {any} onGeomsLoaded - The onGeomsLoaded value.
+   * @param {function} onDone - The onDone value.
+   * @param {function} onGeomsLoaded - The onGeomsLoaded value.
    * @private
    */
   __loadObj(onDone, onGeomsLoaded) {
     const stem = this.objfileParam.getStem()
 
-    const parseMtlData = mtlFileData => {
+    const parseMtlData = (mtlFileData) => {
       const lines = mtlFileData.split('\n')
       const WHITESPACE_RE = /\s+/
       let material
 
-      const parseColor = function(elements) {
+      const parseColor = function (elements) {
         if (elements.length == 3)
-          return new Color(
-            parseFloat(elements[0]),
-            parseFloat(elements[1]),
-            parseFloat(elements[2])
-          )
-        else
-          throw new Error(
-            'Unable to parse a color from the following parts:' +
-              elements.join('_')
-          )
+          return new Color(parseFloat(elements[0]), parseFloat(elements[1]), parseFloat(elements[2]))
+        else throw new Error('Unable to parse a color from the following parts:' + elements.join('_'))
       }
 
-      const parseMap = elements => {
+      const parseMap = (elements) => {
         const fileFolder = this.objfileParam.getFileFolder()
         return new FileImage(elements[0], fileFolder + elements[0])
       }
@@ -108,8 +115,7 @@ class ObjAsset extends AssetItem {
       for (let i = 0; i < lines.length; i++) {
         let line = lines[i].trim()
         if (line.startsWith('#')) continue
-        if (line.indexOf('#') != -1)
-          line = line.substring(0, line.indexOf('#')).trim()
+        if (line.indexOf('#') != -1) line = line.substring(0, line.indexOf('#')).trim()
         const elements = line.split(WHITESPACE_RE)
         const key = elements.shift()
         const value = elements.join(' ')
@@ -126,19 +132,13 @@ class ObjAsset extends AssetItem {
             material.getParameter('BaseColor').setValue(parseMap(elements))
             break
           case 'Ks':
-            const specular =
-              (parseFloat(elements[0]) +
-                parseFloat(elements[1]) +
-                parseFloat(elements[2])) /
-              3.0
+            const specular = (parseFloat(elements[0]) + parseFloat(elements[1]) + parseFloat(elements[2])) / 3.0
             material.roughness = 1.0 - specular
             material.getParameter('Roughness').setValue(1.0 - specular)
             material.getParameter('Reflectance').setValue(specular)
             break
           case 'map_Ks':
-            material
-              .getParameter('Roughness')
-              .setValue(parseMap(elements /* flags=TEXTURE_INVERT */))
+            material.getParameter('Roughness').setValue(parseMap(elements /* flags=TEXTURE_INVERT */))
             material.getParameter('Reflectance').setValue(0.2)
             break
           case 'd':
@@ -152,9 +152,7 @@ class ObjAsset extends AssetItem {
             material.getParameter('alpha').setValue(parseFloat(elements))
             break
           case 'map_bump':
-            material
-              .getParameter('normal')
-              .setValue(parseMap(elements /* flags=BUMP_TO_NORMAL */))
+            material.getParameter('normal').setValue(parseMap(elements /* flags=BUMP_TO_NORMAL */))
             break
           default:
           // console.warn("Unhandled material parameter: '" + key +"' in:" + filePath);
@@ -168,9 +166,9 @@ class ObjAsset extends AssetItem {
       buildChildItems()
     })
 
-    const loadMtlFile = mtlFile => {
-      return new Promise(resolve => {
-        loadTextfile(mtlFile.url, fileData => {
+    const loadMtlFile = (mtlFile) => {
+      return new Promise((resolve) => {
+        loadTextfile(mtlFile.url, (fileData) => {
           resourceLoader.addWorkDone(stem, 1)
           parseMtlData(fileData)
           async.decAsyncCount()
@@ -186,7 +184,7 @@ class ObjAsset extends AssetItem {
 
     const geomDatas = {}
 
-    const parseObjData = async fileData => {
+    const parseObjData = async (fileData) => {
       // performance.mark("parseObjData");
 
       // array of lines separated by the newline
@@ -195,7 +193,7 @@ class ObjAsset extends AssetItem {
 
       let currGeom = undefined
       let currMtl = undefined
-      const newGeom = name => {
+      const newGeom = (name) => {
         let suffix = 0
         while (name in geomDatas) {
           suffix++
@@ -219,17 +217,14 @@ class ObjAsset extends AssetItem {
       }
       newGeom(stem)
 
-      const splitGroupsIntoObjects = this.getParameter(
-        'splitGroupsIntoObjects'
-      ).getValue()
+      const splitGroupsIntoObjects = this.getParameter('splitGroupsIntoObjects').getValue()
 
       const stop = false
       // let numPolys = 0;
       for (let i = 0; i < lines.length && !stop; i++) {
         let line = lines[i].trim()
         if (line.startsWith('#')) continue
-        if (line.indexOf('#') != -1)
-          line = line.substring(0, line.indexOf('#')).trim()
+        if (line.indexOf('#') != -1) line = line.substring(0, line.indexOf('#')).trim()
         const elements = line.split(WHITESPACE_RE)
         const key = elements.shift()
         const value = elements.join(' ')
@@ -260,13 +255,13 @@ class ObjAsset extends AssetItem {
             if (splitGroupsIntoObjects) newGeom(elements.join('_'))
             break
           case 'v':
-            vertices.push(elements.map(i => parseFloat(i)))
+            vertices.push(elements.map((i) => parseFloat(i)))
             break
           case 'vt':
-            texCoords.push(elements.map(i => parseFloat(i)))
+            texCoords.push(elements.map((i) => parseFloat(i)))
             break
           case 'vn':
-            normals.push(elements.map(i => parseFloat(i)))
+            normals.push(elements.map((i) => parseFloat(i)))
             break
           case 'f': {
             const v_poly = []
@@ -274,7 +269,7 @@ class ObjAsset extends AssetItem {
             const vn_poly = []
             for (let j = 0, eleLen = elements.length; j < eleLen; j++) {
               // v/vt/vn
-              const indices = elements[j].split('/').map(i => parseInt(i) - 1)
+              const indices = elements[j].split('/').map((i) => parseInt(i) - 1)
               const v = indices[0]
 
               // v_poly.push(v);
@@ -352,10 +347,8 @@ class ObjAsset extends AssetItem {
 
       let normalsAttr
       let texCoordsAttr
-      if (geomData.normalIndices.length > 0)
-        normalsAttr = mesh.addVertexAttribute('normals', Vec3)
-      if (geomData.texCoordIndices.length > 0)
-        texCoordsAttr = mesh.addVertexAttribute('texCoords', Vec2)
+      if (geomData.normalIndices.length > 0) normalsAttr = mesh.addVertexAttribute('normals', Vec3)
+      if (geomData.texCoordIndices.length > 0) texCoordsAttr = mesh.addVertexAttribute('texCoords', Vec2)
 
       for (let i = 0; i < geomData.vertexIndices.length; i++) {
         const v_poly = geomData.vertexIndices[i]
@@ -365,24 +358,14 @@ class ObjAsset extends AssetItem {
         if (normalsAttr) {
           const vn_poly = geomData.normalIndices[i]
           for (let j = 0; j < vn_poly.length; j++) {
-            const value = new Vec3(
-              normals[vn_poly[j]][0],
-              normals[vn_poly[j]][1],
-              normals[vn_poly[j]][2]
-            )
+            const value = new Vec3(normals[vn_poly[j]][0], normals[vn_poly[j]][1], normals[vn_poly[j]][2])
             normalsAttr.setFaceVertexValue(i, j, value)
           }
         }
-        if (
-          texCoordsAttr &&
-          geomData.texCoordIndices.length == geomData.vertexIndices.length
-        ) {
+        if (texCoordsAttr && geomData.texCoordIndices.length == geomData.vertexIndices.length) {
           const vt_poly = geomData.texCoordIndices[i]
           for (let j = 0; j < vt_poly.length; j++) {
-            const value = new Vec2(
-              texCoords[vt_poly[j]][0],
-              texCoords[vt_poly[j]][1]
-            )
+            const value = new Vec2(texCoords[vt_poly[j]][0], texCoords[vt_poly[j]][1])
             texCoordsAttr.setFaceVertexValue(i, j, value)
           }
         }
@@ -398,17 +381,12 @@ class ObjAsset extends AssetItem {
       mesh.moveVertices(delta.negate())
       geomItem.setLocalXfo(new Xfo(delta))
 
-      if (
-        geomData.material != undefined &&
-        this.materials.hasMaterial(geomData.material)
-      ) {
+      if (geomData.material != undefined && this.materials.hasMaterial(geomData.material)) {
         geomItem.setMaterial(this.materials.getMaterial(geomData.material))
       } else {
         const defaultShader = this.getParameter('defaultShader').getValue()
         const material = new Material(geomName + 'mat')
-        material.setShaderName(
-          defaultShader != '' ? defaultShader : 'StandardSurfaceShader'
-        )
+        material.setShaderName(defaultShader != '' ? defaultShader : 'StandardSurfaceShader')
         const baseColorParam = material.getParameter('BaseColor')
         if (baseColorParam) baseColorParam.setValue(Color.random(0.5))
         else {
@@ -430,7 +408,7 @@ class ObjAsset extends AssetItem {
       const file = this.objfileParam.getFileDesc()
       const stem = this.objfileParam.getStem()
       resourceLoader.addWork(stem, 2)
-      loadTextfile(file.url, fileData => {
+      loadTextfile(file.url, (fileData) => {
         resourceLoader.addWorkDone(stem, 1)
         parseObjData(fileData)
         resourceLoader.addWorkDone(stem, 1)

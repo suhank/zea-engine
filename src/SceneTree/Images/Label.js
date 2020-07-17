@@ -73,12 +73,15 @@ function roundRect(ctx, x, y, width, height, radius, fill, stroke, strokeWidth) 
 
 /**
  * Represents a 2D label item the scene.
- * Since adding displaying text in the scene is not an easy task,
+ * Since displaying text in the scene is not an easy task,
  * we've abstracted the complicated logic behind this class, transforming any text into a 2D image(`DataImage`).
  *
+ * **Library List**
+ * * LabelPack
+ *
  * **Parameters**
- * * **Library(`StringParameter`):**
- * * **Text(`StringParameter`):**
+ * * **Library(`StringParameter`):** Library you wan to use for your label, see **Library List** above.
+ * * **Text(`StringParameter`):** 
  * * **FontColor(`ColorParameter`):**
  * * **Margin(`NumberParameter`):**
  * * **BorderWidth(`NumberParameter`):**
@@ -89,21 +92,20 @@ function roundRect(ctx, x, y, width, height, radius, fill, stroke, strokeWidth) 
  * * **ColorParameter(`BackgroundColor`):**
  * * **FillBackground(`BooleanParameter`):**
  * * **StrokeBackgroundOutline(`BooleanParameter`):**
- * * **FontSize(`NumberParameter`):**
+ * * **FontSize(`NumberParameter`):** Represents FontSize of the label
  * * **Font(`StringParameter`):**
  *
  * **Events**
- * * **loaded:**
- * * **updated:**
- * * **labelRendered:**
- * * **nameChanged:**
- * * **labelLibraryLoaded:**
+ * * **loaded:** Triggered when label's data is loaded.
+ * * **updated:** Triggered when label's data changes.
+ * * **labelRendered:** Triggered when the text image is rendered. Contains `width`, `height` and data of the image.
  *
  * @extends DataImage
  */
 class Label extends DataImage {
   /**
-   * Create a label.
+   * Creates a label instance. Creating a canvas element that hosts the specified text.
+   *
    * @param {string} name - The name value.
    * @param {string} library - The library value.
    */
@@ -154,8 +156,9 @@ class Label extends DataImage {
   }
 
   /**
-   * This method can be overrridden in derived classes
+   * This method can be overridden in derived classes
    * to perform general updates (see GLPass or BaseItem).
+   *
    * @param {object} event - The event object.
    * @private
    */
@@ -168,8 +171,7 @@ class Label extends DataImage {
   }
 
   /**
-   * 
-   * @async
+   * Method in charge of basically do everything, set text, load/update it, get the library, load the font, etc.
    */
   loadLabelData() {
     const onLoaded = () => {
@@ -236,7 +238,9 @@ class Label extends DataImage {
   }
 
   /**
-   * Renders the label text to a canvas element ready to display,
+   * Renders the label text to a canvas element ready to display.
+   * Here is where all parameters are applied to the canvas containing the text,
+   * then the image data is extracted from the canvas context.
    */
   renderLabelToImage() {
     // console.log("renderLabelToImage")
@@ -323,7 +327,8 @@ class Label extends DataImage {
   }
 
   /**
-   * The getParams method.
+   *  Returns all parameters and class state values(Including data).
+   *
    * @return {object} - The return value.
    */
   getParams() {

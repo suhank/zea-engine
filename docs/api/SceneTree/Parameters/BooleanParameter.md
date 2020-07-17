@@ -1,7 +1,15 @@
 <a name="BooleanParameter"></a>
 
 ### BooleanParameter 
-Class representing a boolean parameter.
+Represents a specific type of parameter, that only stores `boolean` values.
+
+i.e.:
+```javascript
+const booleanParam = new BooleanParameter('MyBoolean', true)
+//'myParameterOwnerItem' is an instance of a 'ParameterOwner' class.
+// Remember that only 'ParameterOwner' and classes that extend from it can host 'Parameter' objects.
+myParameterOwnerItem.addParameter(booleanParam)
+```
 
 
 **Extends**: <code>Parameter</code>  
@@ -13,13 +21,13 @@ Class representing a boolean parameter.
 <a name="new_BooleanParameter_new"></a>
 
 ### new BooleanParameter
-Create a boolean parameter.
+Creates a new parameter with `Boolean` data type.
 
 
 | Param | Type | Description |
 | --- | --- | --- |
 | name | <code>string</code> | The name of the boolean parameter. |
-| value | <code>any</code> | The value of the parameter. |
+| value | <code>boolean</code> | The value of the parameter. |
 
 <a name="BooleanParameter+clone"></a>
 

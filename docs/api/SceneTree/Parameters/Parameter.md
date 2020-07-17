@@ -2,17 +2,28 @@
 
 <dl>
 <dt><a href="#BaseParameter">BaseParameter</a></dt>
-<dd><p>Class representing a base parameter.</p>
+<dd><p>Represents a reactive type of attribute that can be owned by a <code>ParameterOwner</code> class.</p>
+<p><strong>Events</strong></p>
+<ul>
+<li><strong>nameChanged:</strong> Triggered when the name of the parameter changes.</li>
+<li><strong>valueChanged:</strong> Triggered when the value of the parameter changes.</li>
+</ul>
 </dd>
 <dt><a href="#Parameter">Parameter</a> ⇐ <code><a href="#BaseParameter">BaseParameter</a></code></dt>
-<dd><p>Class representing a parameter.</p>
+<dd><p>Represents a reactive type of attribute that can be owned by a <code>ParameterOwner</code> class.
+Plus the holding the parameter name and value, it also stores its data type,
+which is an addition for persistence capability.</p>
 </dd>
 </dl>
 
 <a name="BaseParameter"></a>
 
 ### BaseParameter
-Class representing a base parameter.
+Represents a reactive type of attribute that can be owned by a `ParameterOwner` class.
+
+**Events**
+* **nameChanged:** Triggered when the name of the parameter changes.
+* **valueChanged:** Triggered when the value of the parameter changes.
 
 
 
@@ -20,21 +31,12 @@ Class representing a base parameter.
     * [new BaseParameter(name)](#new-BaseParameter)
     * [getName() ⇒ <code>string</code>](#getName)
     * [setName(name)](#setName)
-    * [getOwner() ⇒ <code>any</code>](#getOwner)
+    * [getOwner() ⇒ <code>ParameterOwner</code>](#getOwner)
     * [setOwner(ownerItem)](#setOwner)
-    * [getPath() ⇒ <code>any</code>](#getPath)
-    * [setFlag(flag)](#setFlag)
-    * [clearFlag(flag)](#clearFlag)
-    * [testFlag(flag) ⇒ <code>boolean</code>](#testFlag)
-    * [getValue()](#getValue)
-    * [setValue(value)](#setValue)
-    * [setEnabled(state)](#setEnabled)
-    * [isEnabled()](#isEnabled)
+    * [getPath() ⇒ <code>array</code>](#getPath)
     * [bindOperator(op)](#bindOperator)
     * [unbindOperator(op) ⇒ <code>boolean</code>](#unbindOperator)
-    * [setDirty(cleanerFn) ⇒ <code>boolean</code>](#setDirty)
-    * [setDirtyFromOp()](#setDirtyFromOp)
-    * [isDirty() ⇒ <code>boolean</code>](#isDirty)
+    * [setDirtyFromOp() ⇒ <code>boolean</code>](#setDirtyFromOp)
     * [removeCleanerFn(cleanerFn) ⇒ <code>number</code>](#removeCleanerFn)
     * [clone(flags)](#clone)
     * [destroy()](#destroy)
@@ -52,14 +54,14 @@ Create a base parameter.
 <a name="BaseParameter+getName"></a>
 
 ### getName
-Getter for the base parameter name.
+Returns specified name of the parameter.
 
 
 **Returns**: <code>string</code> - - Returns the name.  
 <a name="BaseParameter+setName"></a>
 
 ### setName
-Setter for the base parameter name.
+Sets the name of the current parameter.
 
 
 
@@ -70,96 +72,29 @@ Setter for the base parameter name.
 <a name="BaseParameter+getOwner"></a>
 
 ### getOwner
-Getter for the owner of the parameter.
+Returns the owner item of the current parameter.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>ParameterOwner</code> - - The return value.  
 <a name="BaseParameter+setOwner"></a>
 
 ### setOwner
-Sets the owner of the parameter.
+Sets the owner item of the current parameter.
 
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| ownerItem | <code>any</code> | The ownerItem value. |
+| ownerItem | <code>ParameterOwner</code> | The ownerItem value. |
 
 <a name="BaseParameter+getPath"></a>
 
 ### getPath
-Getter for the parameter path.
+Returns the parameter's path as an array of strings.
+Includes owner's path in case it is owned by a `ParameterOwner`.
 
 
-**Returns**: <code>any</code> - - The return value.  
-<a name="BaseParameter+setFlag"></a>
-
-### setFlag
-The setFlag method.
-
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| flag | <code>number</code> | The flag value. |
-
-<a name="BaseParameter+clearFlag"></a>
-
-### clearFlag
-The clearFlag method.
-
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| flag | <code>number</code> | The flag value. |
-
-<a name="BaseParameter+testFlag"></a>
-
-### testFlag
-Returns true if the flag if set, otherwise returns false.
-
-
-**Returns**: <code>boolean</code> - - Returns a boolean indicating if the flag is set.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| flag | <code>number</code> | The flag to test. |
-
-<a name="BaseParameter+getValue"></a>
-
-### getValue
-The getValue method (TODO).
-
-
-<a name="BaseParameter+setValue"></a>
-
-### setValue
-The getValue method (TODO).
-
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| value | <code>any</code> | The value param. |
-
-<a name="BaseParameter+setEnabled"></a>
-
-### setEnabled
-The setEnabled method.
-
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| state | <code>any</code> | The state value. |
-
-<a name="BaseParameter+isEnabled"></a>
-
-### isEnabled
-The isEnabled method.
-
-
+**Returns**: <code>array</code> - - The return value.  
 <a name="BaseParameter+bindOperator"></a>
 
 ### bindOperator
@@ -183,31 +118,12 @@ The unbindOperator method.
 | --- | --- | --- |
 | op | <code>Operator</code> | The cleanerFn value. |
 
-<a name="BaseParameter+setDirty"></a>
-
-### setDirty
-The setDirty method.
-
-
-**Returns**: <code>boolean</code> - - The return value.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| cleanerFn | <code>any</code> | The cleanerFn value. |
-
 <a name="BaseParameter+setDirtyFromOp"></a>
 
 ### setDirtyFromOp
 The setDirtyFromOp method.
 
 
-<a name="BaseParameter+isDirty"></a>
-
-### isDirty
-The isDirty method.
-
-
-**Returns**: <code>boolean</code> - - Returns a boolean.  
 <a name="BaseParameter+removeCleanerFn"></a>
 
 ### removeCleanerFn
@@ -218,7 +134,7 @@ The removeCleanerFn method.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| cleanerFn | <code>any</code> | The cleanerFn value. |
+| cleanerFn | <code>function</code> | The cleanerFn value. |
 
 <a name="BaseParameter+clone"></a>
 
@@ -240,67 +156,76 @@ The destroy method.
 <a name="Parameter"></a>
 
 ### Parameter 
-Class representing a parameter.
+Represents a reactive type of attribute that can be owned by a `ParameterOwner` class.
+Plus the holding the parameter name and value, it also stores its data type,
+which is an addition for persistence capability.
 
 
 **Extends**: [<code>BaseParameter</code>](#BaseParameter)  
 
 * [Parameter](#Parameter)
     * [new Parameter(name, value, dataType)](#new-Parameter)
-    * [getDataType() ⇒ <code>any</code>](#getDataType)
-    * [getValue(mode) ⇒ <code>any</code>](#getValue)
+    * [getDataType() ⇒ <code>string</code>](#getDataType)
+    * [getValue(mode) ⇒ <code>object</code> \| <code>string</code> \| <code>number</code> \| <code>any</code>](#getValue)
     * [setClean(value)](#setClean)
     * [setValue(value, mode)](#setValue)
-    * [setValueDone(value, mode)](#setValueDone)
+    * [setValueDone()](#setValueDone)
     * [toJSON(context, flags) ⇒ <code>object</code>](#toJSON)
     * [fromJSON(j, context, flags)](#fromJSON)
-    * [readBinary(reader, context)](#readBinary)
     * [clone(flags)](#clone)
     * [getName() ⇒ <code>string</code>](#getName)
     * [setName(name)](#setName)
-    * [getOwner() ⇒ <code>any</code>](#getOwner)
+    * [getOwner() ⇒ <code>ParameterOwner</code>](#getOwner)
     * [setOwner(ownerItem)](#setOwner)
-    * [getPath() ⇒ <code>any</code>](#getPath)
-    * [setFlag(flag)](#setFlag)
-    * [clearFlag(flag)](#clearFlag)
-    * [testFlag(flag) ⇒ <code>boolean</code>](#testFlag)
-    * [setEnabled(state)](#setEnabled)
-    * [isEnabled()](#isEnabled)
+    * [getPath() ⇒ <code>array</code>](#getPath)
     * [bindOperator(op)](#bindOperator)
     * [unbindOperator(op) ⇒ <code>boolean</code>](#unbindOperator)
-    * [setDirty(cleanerFn) ⇒ <code>boolean</code>](#setDirty)
-    * [setDirtyFromOp()](#setDirtyFromOp)
-    * [isDirty() ⇒ <code>boolean</code>](#isDirty)
+    * [setDirtyFromOp() ⇒ <code>boolean</code>](#setDirtyFromOp)
     * [removeCleanerFn(cleanerFn) ⇒ <code>number</code>](#removeCleanerFn)
     * [destroy()](#destroy)
 
 <a name="new_Parameter_new"></a>
 
 ### new Parameter
-Create a parameter.
+When initializing a new parameter, the passed in value could be anything.
+If it is a new type of value, just ensure you register it in the `SGFactory`.
+
+How to use it:
+
+```javascript
+ // Creating a parameter object
+ const param = new Parameter('Title', 'Awesome Parameter', 'String')
+
+  // Capturing events
+ param.on('valueChanged', (...params) => console.log('Value changed!'))
+
+ // Changing parameter's value will cause `valueChanged` event to trigger.
+ param.setValue('A New Awesome Parameter')
+ // As result the console log code will execute: Value Changed!
+```
 
 
 | Param | Type | Description |
 | --- | --- | --- |
 | name | <code>string</code> | The name of the parameter. |
-| value | <code>any</code> | The value of the parameter. |
-| dataType | <code>any</code> | The data type of the parameter. |
+| value | <code>object</code> \| <code>string</code> \| <code>number</code> \| <code>any</code> | The value of the parameter. |
+| dataType | <code>string</code> | The data type of the parameter. |
 
 <a name="Parameter+getDataType"></a>
 
 ### getDataType
-The getDataType method.
+Returns parameter's data type.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>string</code> - - The return value.  
 <a name="Parameter+getValue"></a>
 
 ### getValue
-The getValue method.
+Returns parameter's value.
 
 
-**Overrides**: [<code>getValue</code>](#BaseParameter+getValue)  
-**Returns**: <code>any</code> - - The return value.  
+**Overrides**: <code>BaseParameter#getValue</code>  
+**Returns**: <code>object</code> \| <code>string</code> \| <code>number</code> \| <code>any</code> - - The return value.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -309,25 +234,25 @@ The getValue method.
 <a name="Parameter+setClean"></a>
 
 ### setClean
-The setClean method.
+Sets parameter's value directly.
 
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| value | <code>any</code> | The value param. |
+| value | <code>object</code> \| <code>string</code> \| <code>number</code> \| <code>any</code> | The value param. |
 
 <a name="Parameter+setValue"></a>
 
 ### setValue
-The getValue method.
+Sets parameter's value, but runs a few internal cleaning processes.
 
 
-**Overrides**: [<code>setValue</code>](#BaseParameter+setValue)  
+**Overrides**: <code>BaseParameter#setValue</code>  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| value | <code>any</code> | The value param. |
+| value | <code>object</code> \| <code>string</code> \| <code>number</code> \| <code>any</code> | The value param. |
 | mode | <code>number</code> | The mode param. |
 
 <a name="Parameter+setValueDone"></a>
@@ -340,16 +265,10 @@ Code can listed to this event to trigger longer running actions like
 saving a file or heavy computation.
 
 
-
-| Param | Type | Description |
-| --- | --- | --- |
-| value | <code>any</code> | The value param. |
-| mode | <code>any</code> | The mode param. |
-
 <a name="Parameter+toJSON"></a>
 
 ### toJSON
-The toJSON method encodes this type as a json object for persistences.
+The toJSON method encodes this type as a json object for persistence.
 
 
 **Returns**: <code>object</code> - - Returns the json object.  
@@ -372,18 +291,6 @@ The fromJSON method decodes a json object for this type.
 | context | <code>object</code> | The context value. |
 | flags | <code>number</code> | The flags value. |
 
-<a name="Parameter+readBinary"></a>
-
-### readBinary
-The readBinary method.
-
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| reader | <code>object</code> | The reader value. |
-| context | <code>object</code> | The context value. |
-
 <a name="Parameter+clone"></a>
 
 ### clone
@@ -401,7 +308,7 @@ from this parameter and returns it.
 <a name="BaseParameter+getName"></a>
 
 ### getName
-Getter for the base parameter name.
+Returns specified name of the parameter.
 
 
 **Overrides**: [<code>getName</code>](#BaseParameter+getName)  
@@ -409,7 +316,7 @@ Getter for the base parameter name.
 <a name="BaseParameter+setName"></a>
 
 ### setName
-Setter for the base parameter name.
+Sets the name of the current parameter.
 
 
 **Overrides**: [<code>setName</code>](#BaseParameter+setName)  
@@ -421,87 +328,32 @@ Setter for the base parameter name.
 <a name="BaseParameter+getOwner"></a>
 
 ### getOwner
-Getter for the owner of the parameter.
+Returns the owner item of the current parameter.
 
 
 **Overrides**: [<code>getOwner</code>](#BaseParameter+getOwner)  
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>ParameterOwner</code> - - The return value.  
 <a name="BaseParameter+setOwner"></a>
 
 ### setOwner
-Sets the owner of the parameter.
+Sets the owner item of the current parameter.
 
 
 **Overrides**: [<code>setOwner</code>](#BaseParameter+setOwner)  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| ownerItem | <code>any</code> | The ownerItem value. |
+| ownerItem | <code>ParameterOwner</code> | The ownerItem value. |
 
 <a name="BaseParameter+getPath"></a>
 
 ### getPath
-Getter for the parameter path.
+Returns the parameter's path as an array of strings.
+Includes owner's path in case it is owned by a `ParameterOwner`.
 
 
 **Overrides**: [<code>getPath</code>](#BaseParameter+getPath)  
-**Returns**: <code>any</code> - - The return value.  
-<a name="BaseParameter+setFlag"></a>
-
-### setFlag
-The setFlag method.
-
-
-**Overrides**: [<code>setFlag</code>](#BaseParameter+setFlag)  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| flag | <code>number</code> | The flag value. |
-
-<a name="BaseParameter+clearFlag"></a>
-
-### clearFlag
-The clearFlag method.
-
-
-**Overrides**: [<code>clearFlag</code>](#BaseParameter+clearFlag)  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| flag | <code>number</code> | The flag value. |
-
-<a name="BaseParameter+testFlag"></a>
-
-### testFlag
-Returns true if the flag if set, otherwise returns false.
-
-
-**Overrides**: [<code>testFlag</code>](#BaseParameter+testFlag)  
-**Returns**: <code>boolean</code> - - Returns a boolean indicating if the flag is set.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| flag | <code>number</code> | The flag to test. |
-
-<a name="BaseParameter+setEnabled"></a>
-
-### setEnabled
-The setEnabled method.
-
-
-**Overrides**: [<code>setEnabled</code>](#BaseParameter+setEnabled)  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| state | <code>any</code> | The state value. |
-
-<a name="BaseParameter+isEnabled"></a>
-
-### isEnabled
-The isEnabled method.
-
-
-**Overrides**: [<code>isEnabled</code>](#BaseParameter+isEnabled)  
+**Returns**: <code>array</code> - - The return value.  
 <a name="BaseParameter+bindOperator"></a>
 
 ### bindOperator
@@ -527,19 +379,6 @@ The unbindOperator method.
 | --- | --- | --- |
 | op | <code>Operator</code> | The cleanerFn value. |
 
-<a name="BaseParameter+setDirty"></a>
-
-### setDirty
-The setDirty method.
-
-
-**Overrides**: [<code>setDirty</code>](#BaseParameter+setDirty)  
-**Returns**: <code>boolean</code> - - The return value.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| cleanerFn | <code>any</code> | The cleanerFn value. |
-
 <a name="BaseParameter+setDirtyFromOp"></a>
 
 ### setDirtyFromOp
@@ -547,14 +386,6 @@ The setDirtyFromOp method.
 
 
 **Overrides**: [<code>setDirtyFromOp</code>](#BaseParameter+setDirtyFromOp)  
-<a name="BaseParameter+isDirty"></a>
-
-### isDirty
-The isDirty method.
-
-
-**Overrides**: [<code>isDirty</code>](#BaseParameter+isDirty)  
-**Returns**: <code>boolean</code> - - Returns a boolean.  
 <a name="BaseParameter+removeCleanerFn"></a>
 
 ### removeCleanerFn
@@ -566,7 +397,7 @@ The removeCleanerFn method.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| cleanerFn | <code>any</code> | The cleanerFn value. |
+| cleanerFn | <code>function</code> | The cleanerFn value. |
 
 <a name="BaseParameter+destroy"></a>
 
