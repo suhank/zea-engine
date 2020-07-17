@@ -37,7 +37,7 @@ scene.getSettings().getParameter('BackgroundColor').setValue(color)
 ```
 
 
-[Different Background Color](./HelloWorld-DifferentBackgroundColor.html ':include :type=iframe width=100% height=800px')
+[Different Background Color](./ChangeBackgroundColor.html ':include :type=iframe width=100% height=800px')
 
 Click here to download the file to your computer to try it for yourself: 
-<a id="raw-url" href="./tutorials/HelloWorld-DifferentBackgroundColor.html" download>Download</a>
+<a id="raw-url" href="./tutorials/ChangeBackgroundColor.html" download>Download</a>

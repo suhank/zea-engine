@@ -3,8 +3,13 @@ import { resourceLoader } from '../ResourceLoader.js'
 import { loadTextfile, loadBinfile } from '../Utils.js'
 
 // eslint-disable-next-line require-jsdoc
-function getFirstBrowserLanguage() {
+function getLanguage() {
   if (!globalThis.navigator) return "en"
+
+  // Check if a language is explicitly selected.
+  const searchParams = new URLSearchParams(window.location.search)
+  if (searchParams.has("lang"))
+    return searchParams.get("lang")
 
   const nav = window.navigator
   const browserLanguagePropertyKeys = [
@@ -16,12 +21,22 @@ function getFirstBrowserLanguage() {
   let i
   let language
 
+  
+  const clean = (language) => {
+    if (language.startsWith('en')) return 'En'
+    else if (language.startsWith('es')) return 'Es'
+    else if (language.startsWith('fr')) return 'Fr'
+    else if (language.startsWith('gb') || language.startsWith('de'))
+      return 'Gb'
+    return language
+  }
+
   // support for HTML 5.1 "navigator.languages"
   if (Array.isArray(nav.languages)) {
     for (i = 0; i < nav.languages.length; i++) {
       language = nav.languages[i]
       if (language && language.length) {
-        return language
+        return clean(language)
       }
     }
   }
@@ -30,7 +45,7 @@ function getFirstBrowserLanguage() {
   for (i = 0; i < browserLanguagePropertyKeys.length; i++) {
     language = nav[browserLanguagePropertyKeys[i]]
     if (language && language.length) {
-      return language
+      return clean(language)
     }
   }
 
@@ -48,12 +63,7 @@ class LabelManager extends EventEmitter {
     super()
     this.__labelLibraries = {}
 
-    const language = getFirstBrowserLanguage()
-    if (language.startsWith('en')) this.__language = 'En'
-    else if (language.startsWith('es')) this.__language = 'Es'
-    else if (language.startsWith('fr')) this.__language = 'Fr'
-    else if (language.startsWith('gb') || language.startsWith('de'))
-      this.__language = 'Gb'
+    this.__language = getLanguage()
 
     this.__foundLabelLibraries = {}
 
@@ -108,7 +118,7 @@ class LabelManager extends EventEmitter {
   loadLibrary(name, json) {
     this.__foundLabelLibraries[name] = true
     this.__labelLibraries[name] = json
-    this.labelLibraryLoaded.emit(name)
+    this.emit('labelLibraryLoaded', { library: name })
   }
 
   /**
