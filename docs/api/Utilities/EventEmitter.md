@@ -22,21 +22,24 @@ Example: Registering a listener for a custom event, and then emitting that event
 * [EventEmitter](#EventEmitter)
     * [new EventEmitter()](#new-EventEmitter)
     * [on(eventName, listener) ⇒ <code>number</code>](#on)
-    * [once(eventName, listener)](#once)
+    * [once()](#once)
     * [off(eventName, listener)](#off)
+    * ~~[.addListener(eventName, listener)](#EventEmitter+addListener) ⇒ <code>number</code>~~
+    * ~~[.removeListener(eventName, listener)](#EventEmitter+removeListener)~~
+    * ~~[.removeListenerById(eventName, id)](#EventEmitter+removeListenerById)~~
     * [emit(eventName, event)](#emit)
 
 <a name="new_EventEmitter_new"></a>
 
 ### new EventEmitter
-Initializes the EventEmitter in preparation for registering listeners.
+Initializes an empty `listeners` map that will host all the events,
+which implies that it doesn't allow multiple events with the same name.
 <br>
 
 <a name="EventEmitter+on"></a>
 
 ### on
 Adds a listener function for a given event name.
-This function is simply an alias for 'addListener'.
 
 
 **Returns**: <code>number</code> - - Id to reference the listener.  
@@ -61,16 +64,10 @@ asset.once('loaded', () => {
 ```
 
 
-
-| Param | Type | Description |
-| --- | --- | --- |
-| eventName | <code>string</code> | The name of the event. |
-| listener | <code>function</code> | The listener function. |
-
 <a name="EventEmitter+off"></a>
 
 ### off
-Removes a listener function from the specified event, using the either the function or the index id. Depends on what is passed in.
+Removes a listener function from the specified event, using either the function or the index id. Depends on what is passed in.
 
 
 
@@ -78,6 +75,43 @@ Removes a listener function from the specified event, using the either the funct
 | --- | --- | --- |
 | eventName | <code>string</code> | The name of the event. |
 | listener | <code>function</code> \| <code>number</code> | The listener function or the id number. |
+
+<a name="EventEmitter+addListener"></a>
+
+### ~~eventEmitter.addListener(eventName, listener) ⇒ <code>number</code>~~
+***Deprecated***
+
+
+**Returns**: <code>number</code> - - Id to reference the listener.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| eventName | <code>string</code> | The name of the event. |
+| listener | <code>function</code> | The listener function(callback). |
+
+<a name="EventEmitter+removeListener"></a>
+
+### ~~eventEmitter.removeListener(eventName, listener)~~
+***Deprecated***
+
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| eventName | <code>string</code> | The name of the event. |
+| listener | <code>function</code> | The listener function. |
+
+<a name="EventEmitter+removeListenerById"></a>
+
+### ~~eventEmitter.removeListenerById(eventName, id)~~
+***Deprecated***
+
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| eventName | <code>string</code> | The name of the event. |
+| id | <code>number</code> | The id returned by addListener |
 
 <a name="EventEmitter+emit"></a>
 

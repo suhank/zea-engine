@@ -9,7 +9,8 @@ Not only hosting parameters, but their events.
 
 * [ParameterOwner ⇐ <code>EventEmitter</code>](#ParameterOwner)
     * [new ParameterOwner()](#new-ParameterOwner)
-    * [numParameters() ⇒ <code>number</code>](#numParameters)
+    * ~~[.numParameters()](#ParameterOwner+numParameters) ⇒ <code>number</code>~~
+    * [getNumParameters() ⇒ <code>number</code>](#getNumParameters)
     * [getParameters() ⇒ <code>array</code>](#getParameters)
     * [getParameterIndex(paramName) ⇒ <code>number</code>](#getParameterIndex)
     * [getParameterByIndex(index) ⇒ <code>Parameter</code>](#getParameterByIndex)
@@ -34,7 +35,14 @@ Every Object has a unique identifier which is based on a counter that is increme
 
 <a name="ParameterOwner+numParameters"></a>
 
-### numParameters
+### ~~parameterOwner.numParameters() ⇒ <code>number</code>~~
+***Deprecated***
+
+
+**Returns**: <code>number</code> - - Amount of parameters in current object.  
+<a name="ParameterOwner+getNumParameters"></a>
+
+### getNumParameters
 Returns the number of parameters current object has.
 
 

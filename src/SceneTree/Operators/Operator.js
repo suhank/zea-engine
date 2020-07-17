@@ -1,7 +1,9 @@
 import { sgFactory } from '../SGFactory'
 import { ItemFlags, BaseItem } from '../BaseItem.js'
 
-/** Class representing an operator.
+/**
+ * Class representing an operator.
+ *
  * @extends BaseItem
  */
 class Operator extends BaseItem {
@@ -15,7 +17,7 @@ class Operator extends BaseItem {
     // Items which can be constructed by a user (not loaded in binary data).
     // Should always have this flag set.
     this.setFlag(ItemFlags.USER_EDITED)
-    
+
     this.__outputs = []
     this.__evalOutput = this.__evalOutput.bind(this)
   }
@@ -25,8 +27,6 @@ class Operator extends BaseItem {
    * to the outputs of this operator, and which may then propagate to other
    * operators. When the scene is cleaned, which usually is caused by rendering
    * then the chain of operators are cleaned by triggering evaluation.
-   * @param {any} param - The param param.
-   * @param {any} mode - The mode param.
    * @private
    */
   setDirty() {
@@ -35,10 +35,10 @@ class Operator extends BaseItem {
   }
 
   /**
-   * This method can be overrridden in derived classes
+   * This method can be overridden in derived classes
    * to perform general updates (see GLPass or BaseItem).
-   * @param {any} param - The param param.
-   * @param {any} mode - The mode param.
+   *
+   * @param {object} event
    * @private
    */
   __parameterValueChanged(event) {
@@ -48,12 +48,12 @@ class Operator extends BaseItem {
 
   /**
    * The addOutput method.
-   * @param {any} output - The output value.
-   * @return {any} - The return value.
+   * @param {OperatorOutput} output - The output value.
+   * @return {array} - The return value.
    */
   addOutput(output) {
     this.__outputs.push(output)
-    output.addListener('paramSet', event => {
+    output.addListener('paramSet', (event) => {
       const { param } = event
       // output.setDirty(this.__evalOutput)
       param.bindOperator(this)
@@ -63,7 +63,7 @@ class Operator extends BaseItem {
 
   /**
    * The removeOutput method.
-   * @param {any} output - The output value.
+   * @param {OperatorOutput} output - The output value.
    */
   removeOutput(output) {
     if (output.getParam()) output.getParam().unbindOperator(this)
@@ -90,7 +90,7 @@ class Operator extends BaseItem {
   /**
    * The getOutput method.
    * @param {string} name - The name value.
-   * @return {any} - The return value.
+   * @return {OperatorOutput} - The return value.
    */
   getOutput(name) {
     for (const o of this.__outputs) {
@@ -119,7 +119,7 @@ class Operator extends BaseItem {
    * @private
    */
   __opInputChanged() {
-    // For each output, install a function to evalate the operator
+    // For each output, install a function to evaluate the operator
     // Note: when the operator evaluates, it will remove the cleaners
     // on all outputs. This means that after the first operator to
     // cause an evaluation, all outputs are considered clean.
@@ -137,7 +137,8 @@ class Operator extends BaseItem {
   // Persistence
 
   /**
-   * The toJSON method encodes this type as a json object for persistences.
+   * The toJSON method encodes this type as a json object for persistence.
+   *
    * @param {object} context - The context value.
    * @param {number} flags - The flags value.
    * @return {object} - Returns the json object.
@@ -157,6 +158,7 @@ class Operator extends BaseItem {
 
   /**
    * The fromJSON method decodes a json object for this type.
+   *
    * @param {object} j - The json object this item must decode.
    * @param {object} context - The context value.
    * @param {number} flags - The flags value.
@@ -181,14 +183,14 @@ class Operator extends BaseItem {
    * The detach method.
    */
   detach() {
-    this.__outputs.forEach(output => output.detach())
+    this.__outputs.forEach((output) => output.detach())
   }
 
   /**
    * The reattach method.
    */
   reattach() {
-    this.__outputs.forEach(output => output.reattach())
+    this.__outputs.forEach((output) => output.reattach())
   }
 
   /**

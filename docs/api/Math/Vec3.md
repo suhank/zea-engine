@@ -24,8 +24,10 @@ expose getters and setters for the component values.
     * [setFromOther(other)](#setFromOther)
     * [isNull() ⇒ <code>boolean</code>](#isNull)
     * [is111() ⇒ <code>boolean</code>](#is111)
-    * [equal(other) ⇒ <code>boolean</code>](#equal)
-    * [notEquals(other) ⇒ <code>boolean</code>](#notEquals)
+    * ~~[.equal(other)](#Vec3+equal) ⇒ <code>boolean</code>~~
+    * [isEqual(other) ⇒ <code>boolean</code>](#isEqual)
+    * ~~[.notEquals(other)](#Vec3+notEquals) ⇒ <code>boolean</code>~~
+    * [notEqual(other) ⇒ <code>boolean</code>](#notEqual)
     * [approxEqual(other, precision) ⇒ <code>boolean</code>](#approxEqual)
     * [add(other)](#add)
     * [addInPlace(other)](#addInPlace)
@@ -196,7 +198,19 @@ Checks if the coordenates of this Vec3 are 1 1 1.
 **Returns**: <code>boolean</code> - - Returns `true` if the coordenates are(1, 1, 1), otherwise, `false`.  
 <a name="Vec3+equal"></a>
 
-### equal
+### ~~vec3.equal(other) ⇒ <code>boolean</code>~~
+***Deprecated***
+
+
+**Returns**: <code>boolean</code> - - Returns `true` if are the same Vector, otherwise, `false`.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| other | [<code>Vec3</code>](#Vec3) | The other Vec3 to compare with. |
+
+<a name="Vec3+isEqual"></a>
+
+### isEqual
 Checks if this Vec3 is exactly the same as another Vec3.
 
 
@@ -208,7 +222,19 @@ Checks if this Vec3 is exactly the same as another Vec3.
 
 <a name="Vec3+notEquals"></a>
 
-### notEquals
+### ~~vec3.notEquals(other) ⇒ <code>boolean</code>~~
+***Deprecated***
+
+
+**Returns**: <code>boolean</code> - - Returns `true` if the Vec3s are different, otherwise, `false`.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| other | [<code>Vec3</code>](#Vec3) | The other Vec3 to compare with. |
+
+<a name="Vec3+notEqual"></a>
+
+### notEqual
 Checks if this Vec2 is different from another Vec2.
 
 

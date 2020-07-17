@@ -8,11 +8,11 @@ Class representing an operator.
 
 * [Operator ⇐ <code>BaseItem</code>](#Operator)
     * [new Operator(name)](#new-Operator)
-    * [addOutput(output) ⇒ <code>any</code>](#addOutput)
+    * [addOutput(output) ⇒ <code>array</code>](#addOutput)
     * [removeOutput(output)](#removeOutput)
     * [getNumOutputs() ⇒ <code>number</code>](#getNumOutputs)
     * [getOutputByIndex(index) ⇒ <code>object</code>](#getOutputByIndex)
-    * [getOutput(name) ⇒ <code>any</code>](#getOutput)
+    * [getOutput(name) ⇒ <code>OperatorOutput</code>](#getOutput)
     * [evaluate()](#evaluate)
     * [toJSON(context, flags) ⇒ <code>object</code>](#toJSON)
     * [fromJSON(j, context, flags)](#fromJSON)
@@ -36,11 +36,11 @@ Create an operator.
 The addOutput method.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>array</code> - - The return value.  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| output | <code>any</code> | The output value. |
+| output | <code>OperatorOutput</code> | The output value. |
 
 <a name="Operator+removeOutput"></a>
 
@@ -51,7 +51,7 @@ The removeOutput method.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| output | <code>any</code> | The output value. |
+| output | <code>OperatorOutput</code> | The output value. |
 
 <a name="Operator+getNumOutputs"></a>
 
@@ -78,7 +78,7 @@ The getOutputByIndex method.
 The getOutput method.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>OperatorOutput</code> - - The return value.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -93,7 +93,7 @@ The evaluate method.
 <a name="Operator+toJSON"></a>
 
 ### toJSON
-The toJSON method encodes this type as a json object for persistences.
+The toJSON method encodes this type as a json object for persistence.
 
 
 **Returns**: <code>object</code> - - Returns the json object.  
