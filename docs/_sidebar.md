@@ -20,11 +20,11 @@
 
 - How To
   * [Changing The Background](tutorials/changing-the-background.md)
-  * [Setting up an Environment Map](tutorials/setting-up-an-environment-map.md)
-  * [Setting up the Groups and Highlights](tutorials/highlights.md)
-  * [Setting up the Labels](tutorials/labels.md)
-  * [Setting up the multilingual Labels](tutorials/multilingual-labels.md)
-  * [Setting up the Explode Operator](tutorials/explode-operator.md)
+  <!-- * [Setting up an Environment Map](tutorials/setting-up-an-environment-map.md) -->
+  * [Setting up Groups and Highlights](tutorials/highlights.md)
+  * [Setting up Labels](tutorials/labels.md)
+  * [Setting up multilingual Labels](tutorials/multilingual-labels.md)
+  * [Setting up an Explode Operator](tutorials/explode-operator.md)
   * [Setting up the Gears Operator](tutorials/gears-operator.md)
   * [Setting up Cutaways](tutorials/cutaways.md)
   * [Loading custom points data](tutorials/custom-points.md)
