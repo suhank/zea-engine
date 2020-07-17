@@ -3,6 +3,7 @@
   * [Architecture Overview](arch-overview.md)
   * [Transformations](transformations.md)
   * [Events](events.md)
+  * [Geometry and Rendering](geometry-rendering.md)
 
 - Getting started
   * [Setting up your workspace](getting-started/development-setup.md)
