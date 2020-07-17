@@ -5,11 +5,9 @@
   * [Events](events.md)
   * [Geometry and Rendering](geometry-rendering.md)
 
-
 - Getting started
   * [Setting up your workspace](getting-started/development-setup.md)
   * [Getting Started using Zea Engine](getting-started/get-started-with-engine.md)
-
 
 <!-- - Tutorials
   * [Using Groups](concepts/groups.md)
