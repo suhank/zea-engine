@@ -71,13 +71,16 @@ class BaseParameter extends EventEmitter {
    * Sets the name of the current parameter.
    *
    * @param {string} name - The base parameter name.
+   * @return {Parameter} - The instance itself.
    */
   setName(name) {
-    if (name != this.__name) {
-      const prevName = this.__name
-      this.__name = name
-      this.emit('nameChanged', { mode: this.__name, prevName })
+    if (name === this.__name) {
+      return this
     }
+
+    const prevName = this.__name
+    this.__name = name
+    this.emit('nameChanged', { mode: this.__name, prevName })
   }
 
   /**
