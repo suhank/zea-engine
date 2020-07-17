@@ -16,6 +16,47 @@ Zea Engine was designed to follow the highly versatile and powerful scene repres
 ## Extensibility
 To allow an infinite number of use cases for Zea Engine, all aspects of the toolkit from the scene tree, interaction system and also the renderer support extension through plugins that can implement custom behaviors and features. The Scene Tree is a pluggable system that supports custom tree nodes to be added which can contain any type of data, expose custom functions, and provide interaction tools. These custom tree nodes can be persisted and restored like the builtin nodes and enable the scene tree to be extended to handle any data representation required. The Operator system that computes changes in the Scene Tree data is pluggable so custom procedural motion or effects can be implemented. The Renderer supports plugins that can take responsibility for displaying custom nodes in the tree, making it possible to integrate any custom rendering effects, while integrating with existing rendering solutions, and supporting features such as VR or AR.
 
+# DOM Analogy
+
+The architecture of the Engine is analogous to the architecture of the DOM and the browser. The DOM provides a flexible and powerful model for building web applications, and so the Engine was designed around similar principals.
+
+Within the browser, we have a DOM, which is a tree structure of elements that define various aspects of the rendered page.
+
+**Document > Scene**
+
+The Document object in the browser is analogous to the Scene object in the Engine.
+
+**Div > TreeItem**
+
+Within the DOM, there are HTML elements that are used purely for layout. The \<div\> is an element within the tree that is often used for layout, to provide position for child items. 
+Within the engine, the TreeItem provides a similar purpose. The TreeItem is not rendered in any way, but can be used to position child elements relative to itself. The Tree item defines the structure of the tree.
+
+**Image / Text > GeomItem**
+
+The rendered items of the DOM tree such as text or image nodes are analogous to the GeomItem, and other nodes that are rendered to screen by the renderer.
+
+**HTML -> JSON / Asset files**
+
+The Browser loads an HTML file , parses the XML and uses this data to build the DOM tree. Similarly, the engine can load various file formats that are parsed and used to build the scene tree.
+
+## Events
+Another important way that the engine was modeled on the browser is the way events are captured, bubbled, and handled. The engine emulates the way the browser implements these important stages and provides a similar interface to interacting with 3d geometry as the DOM does for 2d elements in the page.
+
+> The techniques used to make objects draggable in the DOM can be applied to making geometry draggable in a 3d scene. Of course, the math is in 3d, instead of 2d which can be a lot more complex.
+
+## Web Components
+An important new feature in modern browsers is web components. This feature makes it possible for developers to implement new custom DOM elements. Custom web  components make the DOM tree 'pluggable', and enables a developer to extend the definition of the DOM.
+
+> For an introduction to Web Components, read the following: https://developer.mozilla.org/en-US/docs/Web/Web_Components
+
+In the same way, plugin developers working with the engine and define custom tree nodes, rendering plugins and math types that integrate with the builtin classes.
+
+### Registry
+These custom DOM elements can be specified in the HTML code and as the browser is parsing the XML, it checks in the CustomElementRegistry for these custom nodes.
+https://developer.mozilla.org/en-US/docs/Web/API/CustomElementRegistry
+
+The Engine provides a similar registry that plugin developers can register custom tree items with. These custom tree items can then be saved and loaded along with all of the builtin tree items that are provided by the engine.
+
 # Scene Tree
 
 ![scene-tree](_media/scene-tree.svg)
