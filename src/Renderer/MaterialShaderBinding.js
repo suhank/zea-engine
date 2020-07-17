@@ -271,11 +271,9 @@ class ColorUniformBinding {
      * The update method.
      */
     update()
-    if (param.textureConnected) {
-      param.addListener('textureConnected', () => {
-        connectImage(param.getImage())
-      })
-    }
+    param.addListener('textureConnected', () => {
+      connectImage(param.getImage())
+    })
     param.addListener('valueChanged', update)
 
     this.uniform1i = gl.uniform1i.bind(gl)

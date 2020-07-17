@@ -92,6 +92,7 @@ class GLRenderer extends GLBaseRenderer {
    * @private
    */
   __bindEnvMap(env) {
+    const gl = this.__gl
     if (env instanceof EnvMap) {
       this.__glEnvMap = env.getMetadata('gltexture')
       if (!this.__glEnvMap) {
@@ -99,9 +100,9 @@ class GLRenderer extends GLBaseRenderer {
           this.addShaderPreprocessorDirective('ENABLE_SPECULAR')
           this.__glEnvMap = new GLEnvMap(this, env, this.__preproc)
         } else if (env.isStreamAtlas()) {
-          this.__glEnvMap = new GLImageStream(this.__gl, env)
+          this.__glEnvMap = new GLImageStream(gl, env)
         } else {
-          this.__glEnvMap = new GLTexture2D(this.__gl, env)
+          this.__glEnvMap = new GLTexture2D(gl, env)
         }
       }
     } else {

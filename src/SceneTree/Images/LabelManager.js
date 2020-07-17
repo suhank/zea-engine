@@ -4,6 +4,8 @@ import { loadTextfile, loadBinfile } from '../Utils.js'
 
 // eslint-disable-next-line require-jsdoc
 function getFirstBrowserLanguage() {
+  if (!globalThis.navigator) return "en"
+
   const nav = window.navigator
   const browserLanguagePropertyKeys = [
     'language',
@@ -64,7 +66,7 @@ class LabelManager extends EventEmitter {
       })
     })
 
-    if (window.XLSX) {
+    if (globalThis.navigator && window.XLSX) {
       // Note: example taken from here..
       // https://stackoverflow.com/questions/8238407/how-to-parse-excel-file-in-javascript-html5
       // and here:

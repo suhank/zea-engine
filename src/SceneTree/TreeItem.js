@@ -487,7 +487,7 @@ class TreeItem extends BaseItem {
       if (childItem instanceof TreeItem)
         if (childItem.getVisible() && !childItem.testFlag(ItemFlags.IGNORE_BBOX)) {
           // console.log(" - ", childItem.constructor.name, childItem.getName(), childItem.getGlobalXfo().sc.x, childItem.getBoundingBox().toString())
-          bbox.addBox3(childItem.getBoundingBox())
+          bbox.addBox3(childItem.getParameter('BoundingBox').getValue())
         }
     })
     // console.log(this.getName(), bbox.toString())

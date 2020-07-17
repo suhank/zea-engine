@@ -18,7 +18,7 @@ const imageDataLibrary = {}
 
 const imageLoaders = {}
 
-const supportWebp = navigator.userAgent.indexOf('Chrome') !== -1 // || navigator.userAgent.indexOf("Samsung");
+const supportWebp = globalThis.navigator && navigator.userAgent.indexOf('Chrome') !== -1
 
 /** Class representing a file image.
  * @extends BaseImage

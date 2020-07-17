@@ -4,7 +4,7 @@ import { SystemDesc } from '../../BrowserDetection.js'
 import { NumberParameter } from '../Parameters/index'
 import { FileImage } from './FileImage.js'
 
-const supportWebp = navigator.userAgent.indexOf('Chrome') !== -1 // || navigator.userAgent.indexOf("Samsung");
+const supportWebp = globalThis.navigator && navigator.userAgent.indexOf('Chrome') !== -1
 
 /**
  * Class representing a LDR (low dynamic range) image.

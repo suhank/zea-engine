@@ -29,8 +29,14 @@ function getBrowserDesc() {
   let verOffset
   let ix
 
+  if (navigator.brave) {
+    browserName = 'Brave'
+    verOffset = nAgt.indexOf('Chrome')
+    fullVersion = nAgt.substring(verOffset + 7, nAgt.indexOf(' ', verOffset + 7))
+  }
+
   // In Opera, the true version is after "Opera" or after "Version"
-  if ((verOffset = nAgt.indexOf('Opera')) != -1) {
+  else if ((verOffset = nAgt.indexOf('Opera')) != -1) {
     browserName = 'Opera'
     fullVersion = nAgt.substring(verOffset + 6)
     if ((verOffset = nAgt.indexOf('Version')) != -1)
@@ -47,7 +53,7 @@ function getBrowserDesc() {
   // In Chrome, the true version is after "Chrome"
   else if ((verOffset = nAgt.indexOf('Chrome')) != -1) {
     browserName = 'Chrome'
-    fullVersion = nAgt.substring(verOffset + 7)
+    fullVersion = nAgt.substring(verOffset + 7, nAgt.indexOf(' ', verOffset + 7))
   }
 
   // TOOD: Parse Samsung userAgent
@@ -152,6 +158,16 @@ function isWebGLSupported() {
 }
 
 function getSystemDesc() {
+  if (!globalThis.navigator) {
+    return {
+      isMobileDevice: false,
+      isIOSDevice: false,
+      browserName: "Node",
+      webGLSupported: false,
+      gpuDesc: null,
+      deviceCategory: "High",
+    }
+  }
   const isMobile = isMobileDevice()
   const browserDesc = getBrowserDesc()
   const gpuDesc = getGPUDesc()
@@ -265,5 +281,6 @@ function getSystemDesc() {
 }
 
 const SystemDesc = getSystemDesc()
+console.log(SystemDesc)
 
 export { SystemDesc }
