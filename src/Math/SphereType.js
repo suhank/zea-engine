@@ -36,27 +36,13 @@ class SphereType extends AttrValue {
   }
 
   /**
-   * Checks if this spehere intersects a box.
+   * Checks if this sphere intersects a box.
    *
    * @param {Box3} box - The box value.
    * @return {boolean} - The return value.
    */
   intersectsBox(box) {
     return box.intersectsSphere(this)
-  }
-
-  // ////////////////////////////////////////
-  // Static Methods
-
-  /**
-   * Creates a new sphere.
-   *
-   * @param {...object} ...args - The ...args param.
-   * @return {Sphere} - Returns a new sphere.
-   * @private
-   */
-  static create(...args) {
-    return new Sphere(...args)
   }
 
   // ///////////////////////////
@@ -81,6 +67,20 @@ class SphereType extends AttrValue {
    */
   toString() {
     return JSON_stringify_fixedPrecision(this.toJSON())
+  }
+  
+  // ////////////////////////////////////////
+  // Static Methods
+
+  /**
+   * Creates a new sphere.
+   *
+   * @param {...object} ...args - The ...args param.
+   * @return {Sphere} - Returns a new sphere.
+   * @private
+   */
+  static create(...args) {
+    return new Sphere(...args)
   }
 }
 

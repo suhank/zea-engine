@@ -379,7 +379,7 @@ class RGBA extends AttrValue {
    * @param {RGBA} other -  The other RGBA to compare with.
    * @return {boolean} - Returns true or false.
    */
-  notequals(other) {
+  notEquals(other) {
     return (
       this.r != other.r &&
       this.g != other.g &&

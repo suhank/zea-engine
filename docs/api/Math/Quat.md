@@ -31,7 +31,7 @@ to understand intuitively.
     * [isIdentity() ⇒ <code>boolean</code>](#isIdentity)
     * [getAngle() ⇒ <code>number</code>](#getAngle)
     * [equal(other) ⇒ <code>boolean</code>](#equal)
-    * [notequals(other) ⇒ <code>boolean</code>](#notequals)
+    * [notEquals(other) ⇒ <code>boolean</code>](#notEquals)
     * [approxEqual(other, precision) ⇒ <code>boolean</code>](#approxEqual)
     * [add(other)](#add)
     * [addInPlace(other)](#addInPlace)
@@ -292,9 +292,9 @@ Returns true if this Quat is exactly the same as other.
 | --- | --- | --- |
 | other | [<code>Quat</code>](#Quat) | The other Quat to compare with. |
 
-<a name="Quat+notequals"></a>
+<a name="Quat+notEquals"></a>
 
-### notequals
+### notEquals
 Returns true if this Quat is NOT exactly the same other.
 
 

@@ -1,17 +1,30 @@
 <a name="ListParameter"></a>
 
 ### ListParameter 
-Class representing a list parameter.
+Represents a specific type of parameter, that only stores any type of list values.
+
+i.e.:
+```javascript
+const listParam = new ListParameter('MyList', GearParameter)
+//'myParameterOwnerItem' is an instance of a 'ParameterOwner' class.
+// Remember that only 'ParameterOwner' and classes that extend from it can host 'Parameter' objects.
+myParameterOwnerItem.addParameter(listParam)
+```
+
+**Events**
+* **valueChanged:** Triggered when setting a value changes in the array(insert, add, remove).
+* **elementAdded:** Triggered when an element is added to the array(add, insert).
+* **elementRemoved:** Triggered when an element is removed from the array
 
 
 **Extends**: <code>Parameter</code>  
 
 * [ListParameter ⇐ <code>Parameter</code>](#ListParameter)
     * [new ListParameter(name, dataType)](#new-ListParameter)
-    * [getCount() ⇒ <code>any</code>](#getCount)
-    * [getElement(index) ⇒ <code>any</code>](#getElement)
+    * [getCount() ⇒ <code>number</code>](#getCount)
+    * [getElement(index) ⇒ <code>Parameter</code> \| <code>string</code>](#getElement)
     * [setElement(index, value)](#setElement)
-    * [addElement(elem) ⇒ <code>any</code>](#addElement)
+    * [addElement(elem) ⇒ <code>string</code> \| <code>Parameter</code>](#addElement)
     * [removeElement(index)](#removeElement)
     * [insertElement(index, elem)](#insertElement)
     * [toJSON(context, flags) ⇒ <code>object</code>](#toJSON)
@@ -28,22 +41,22 @@ Create a list parameter.
 | Param | Type | Description |
 | --- | --- | --- |
 | name | <code>string</code> | The name of the list parameter. |
-| dataType | <code>any</code> | The dataType value. |
+| dataType | <code>string</code> \| <code>Parameter</code> | The dataType value. |
 
 <a name="ListParameter+getCount"></a>
 
 ### getCount
-The getCount method.
+Returns the count of items in the array.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>number</code> - - The return value.  
 <a name="ListParameter+getElement"></a>
 
 ### getElement
-The getElement method.
+Returns value from the array in the specified index.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>Parameter</code> \| <code>string</code> - - The return value.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -52,31 +65,31 @@ The getElement method.
 <a name="ListParameter+setElement"></a>
 
 ### setElement
-The setElement method.
+Sets a value in the specified array's index.
 
 
 
 | Param | Type | Description |
 | --- | --- | --- |
 | index | <code>number</code> | The index value. |
-| value | <code>any</code> | The value value. |
+| value | <code>string</code> \| <code>Parameter</code> | The value value. |
 
 <a name="ListParameter+addElement"></a>
 
 ### addElement
-The addElement method.
+Adds a new element at the end of the array pile.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>string</code> \| <code>Parameter</code> - - The return value.  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| elem | <code>any</code> | The elem value. |
+| elem | <code>string</code> \| <code>Parameter</code> | The elem value. |
 
 <a name="ListParameter+removeElement"></a>
 
 ### removeElement
-The removeElement method.
+Removes an array element from the specified index
 
 
 
@@ -87,19 +100,19 @@ The removeElement method.
 <a name="ListParameter+insertElement"></a>
 
 ### insertElement
-The insertElement method.
+Inserts a new element in the specified index.
 
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| index | <code>any</code> | The index value. |
-| elem | <code>any</code> | The elem value. |
+| index | <code>number</code> | The index value. |
+| elem | <code>string</code> \| <code>Parameter</code> | The elem value. |
 
 <a name="ListParameter+toJSON"></a>
 
 ### toJSON
-The toJSON method encodes this type as a json object for persistences.
+The toJSON method encodes this type as a json object for persistence.
 
 
 **Returns**: <code>object</code> - - Returns the json object.  

@@ -27,8 +27,8 @@ class FileImage extends BaseImage {
   /**
    * Create a file image.
    * @param {string} name - The name value.
-   * @param {any} filePath - The filePath value.
-   * @param {any} params - The params value.
+   * @param {string} filePath - The filePath value.
+   * @param {object} params - The params value.
    */
   constructor(name, filePath = '', params = {}) {
     if (filePath.constructor == Object) {

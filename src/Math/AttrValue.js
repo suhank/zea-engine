@@ -2,13 +2,13 @@
 import { JSON_stringify_fixedPrecision } from './Common.js'
 
 /**
- * Base class for values that can be stored in vertex attributes.
+ * Base class for Math types that can be stored in vertex attributes.
  * <br>
  * **Note:** These values use {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array|Float32Array} values to store their data.
  */
 class AttrValue {
   /**
-   * Verifies that all the numeric values inside the `this.__data` variable are a valid number.
+   * Verifies if the values stored in this Math type are valid numeric values.
    * Returns `false` If at least one of the values is either {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Referencia/Objetos_globales/Infinity|Infinity} or
    * {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Referencia/Objetos_globales/NaN|NaN}.
    *
@@ -23,12 +23,12 @@ class AttrValue {
   }
 
   /**
-   * Creates a new value to wrap memory in an existing buffer.
+   * This method is a factory function for creating new instances of math types, given an existing Float32Array buffer.
+   * Each Math type implements this function to return an constructed value.
    *
    * @param {ArrayBuffer} buffer - the buffer value.
    * @param {number} offset - the offset value.
-   *
-   * @todo Implement this function
+   * @return {AttrValue} - Returns the constructed value.
    */
   static createFromFloat32Buffer(buffer, offset) {
     throw new Error(
@@ -38,8 +38,7 @@ class AttrValue {
 
   /**
    * Returns the number of Float32 elements used by this type. Used to calculate storage requirements for large arrays of this type.
-   *
-   * @todo Implement this function
+   * @return {number} - Returns the number of float values stored in this math type.
    */
   static numElements() {
     throw new Error(
@@ -48,7 +47,7 @@ class AttrValue {
   }
 
   /**
-   * Returns current Vec2 data as array. Often used to pass types to the GPU.
+   * Returns current Math type data as array. Often used to pass types to the GPU.
    *
    * @return {array} - Returns the result as an array.
    */
@@ -57,7 +56,7 @@ class AttrValue {
   }
 
   /**
-   * Calls `toJSON` method and stringifies it.
+   * Converts this Math type to a string in JSON format.
    *
    * @return {string} - The return value.
    */
@@ -67,9 +66,8 @@ class AttrValue {
   }
 
   /**
-   * Represents the state of your class as a JSON Object.
-   *
-   * @todo Implement this function in the derived class.
+   * Converts this Math type to a JSON object.
+   * @return {object} - The json object.
    */
   toJSON() {
     throw new Error(

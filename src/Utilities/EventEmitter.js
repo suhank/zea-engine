@@ -1,148 +1,179 @@
 /**
- * Allows objects to create and handle custom events.
- * Closely similar to [EventEmitter](https://nodejs.org/api/events.html#events_class_eventemitter) in Node.
+ * Provides an interface for emitting events under given names, and registering listeners to those events.
+ * This is a base class for most classes in the Scene Tree and Renderer, enabling observers to listen to changes throughout the system.
+ * The interface exposed is similar to [EventEmitter](https://nodejs.org/api/events.html#events_class_eventemitter) in Node.
+ *
+ * Similar to how the DOM event system in the browser works, events are registered by name.
+ * Example: Registering a listener for a custom event, and then emitting that event.
+ * ```javascript
+ *  const ee = new EventEmitter()
+ * 
+ *  ee.addListener('myEvent', (event) => {
+ *    console.log('My Event was emitted:', event)
+ *  })
+ * 
+ *  ee.emit('myEvent', { data: 42 })
+ * ```
+ * 
+ * 
  */
 class EventEmitter {
   /**
-   * Initializes an empty `slots` map that will host all the events,
+   * Initializes an empty `listeners` map that will host all the events,
    * which implies that it doesn't allow multiple events with the same name.
    * <br>
-   * Although each event can own more than one listener function.
    */
   constructor() {
-    this.__slots = {}
+    this.listeners = {}
   }
 
   /**
-   * Adds an event with its listener function(Invoked functions when event is triggered) to the event list.
-   * Each event can have more than one listener function, although no duplication is allowed.
+   * Adds a listener function for a given event name.
    *
    * @param {string} eventName - The name of the event.
    * @param {function} listener - The listener function(callback).
-   * @return {number} - Number of listener funcitons the event has.
+   * @return {number} - Id to reference the listener.
    */
-  addListener(eventName, listener) {
-    if (listener == undefined) throw new Error('a function callback must be passed to EventEmitter.addListener')
-
-    if (!this.__slots[eventName]) this.__slots[eventName] = []
-    const slots = this.__slots[eventName]
-
-    if (slots.indexOf(listener) != -1) {
-      console.warn("listener '" + listener.name + "' already connected to EventEmitter with eventName:" + eventName)
-      return
+  on(eventName, listener) {
+    if (!listener) {
+      throw new Error('Missing callback function (listener).')
     }
-    const id = slots.length
-    slots[id] = listener
+
+    if (!this.listeners[eventName]) {
+      this.listeners[eventName] = []
+    }
+
+    const listeners = this.listeners[eventName]
+
+    if (listeners.indexOf(listener) != -1) {
+      throw new Error(`Listener "${listener.name}" already connected to event "${eventName}".`)
+    }
+
+    // TODO: Deprecate alongside #addListener.
+    const id = listeners.length
+    listeners[id] = listener
+
     return id
   }
 
   /**
-   * Removes a listener function from the specified event.
+   * Similar to the `on` method with the difference that when the event is triggered,
+   * it is automatically unregistered meaning that the event listener will be triggered at most one time.
    *
-   * @param {string} eventName - The name of the event.
-   * @param {function} listener - The listener function.
-   */
-  removeListener(eventName, listener) {
-    if (listener == undefined) throw new Error('a function callback must be passed to EventEmitter.disconnect')
-
-    const slots = this.__slots[eventName]
-    const ids = []
-    if (slots) {
-      slots.forEach((item, index) => {
-        if (item === listener) {
-          ids.push(index)
-        }
-      })
-    }
-    if (ids.length == 0) {
-      const name = this.getName ? this.getName() : this.constructor.name
-      console.warn(
-        'Error in removeListener. listener :' + listener.name + ' was not connected to this event emitter:' + name
-      )
-    } else {
-      for (const id of ids) {
-        slots[id] = undefined
-      }
-    }
-  }
-
-  /**
-   * Removes a listener function from the specified event, using the specified index id.
+   * Useful for events that we expect to trigger one time, such as when assets load.
+   * ```javascript
+   * const asset = new Asset();
+   * asset.once('loaded', () => {
+   *   console.log("Yay! the asset is loaded")
+   * })
+   * ```
    *
-   * @param {string} eventName - The name of the event.
-   * @param {number} id - The id returned by addListener
-   */
-  removeListenerById(eventName, id) {
-    const slots = this.__slots[eventName]
-    if (!slots) {
-      const msg = 'callback :' + id + ' was not connected to this signal:' + eventName
-      console.warn(msg)
-      return
-    }
-    if (!slots[id]) throw new Error('Invalid ID')
-    slots[id] = undefined
-  }
-
-  /**
-   * Adds an event with its listener function(Invoked functions when event is triggered) to the event list.
-   * Each event can have more than one listener function, although no duplication is allowed.
-   *
-   * @param {string} eventName - The name of the event.
-   * @param {function} listener - The listener function(callback).
-   * @return {number} - Number of listener funcitons the event has.
-   */
-  on(eventName, listener) {
-    return this.addListener(eventName, listener)
-  }
-
-  /**
-   * Initially it works the same as `addListener` and `on` methods, but the difference is that when the listener function is triggered,
-   * is also removed from the event slots, meaning that it won't execute anymore.
-   *
-   * @param {string} eventName - The name of the event.
-   * @param {function} listener - The listener function.
    */
   once(eventName, listener) {
-    const id = this.addListener(eventName, (event) => {
+    const cb = (event) => {
       listener(event)
-      this.removeListenerById(eventName, id)
-    })
+      this.off(eventName, cb)
+    }
+
+    this.on(eventName, cb)
   }
 
   /**
-   * Removes a listener function from the specified event, using the either the function or the index id. Depends on what is passed in.
+   * Removes a listener function from the specified event, using either the function or the index id. Depends on what is passed in.
    *
    * @param {string} eventName - The name of the event.
    * @param {function|number} listener - The listener function or the id number.
    */
   off(eventName, listener) {
+    if (!listener) {
+      throw new Error('Missing callback function (listener).')
+    }
+
     if (typeof listener == 'number') {
       this.removeListenerById(eventName, listener)
+      return
+    }
+
+    const listeners = this.listeners[eventName] || []
+
+    const ids = []
+
+    listeners.forEach((e, i) => {
+      if (e === listener) {
+        ids.push(i)
+      }
+    })
+
+    if (ids.length == 0) {
+      throw new Error(`Listener "${listener.name}" is not connected to "${eventName}" event`)
     } else {
-      this.removeListener(eventName, listener)
+      for (const id of ids) {
+        listeners[id] = undefined
+      }
     }
   }
 
   /**
-   * Triggers all listerner functions in an event.
+   * @deprecated Use #on instead.
+   *
+   * @param {string} eventName - The name of the event.
+   * @param {function} listener - The listener function(callback).
+   * @return {number} - Id to reference the listener.
+   */
+  addListener(eventName, listener) {
+    console.warn('Deprecated. Use #on instead.')
+
+    return this.on(eventName, listener)
+  }
+
+  /**
+   * @deprecated Use #off instead.
+   *
+   * @param {string} eventName - The name of the event.
+   * @param {function} listener - The listener function.
+   */
+  removeListener(eventName, listener) {
+    console.warn('Deprecated. Use #off instead.')
+
+    this.off(eventName, listener)
+  }
+
+  /**
+   * @deprecated Use #off, passing the listener itself instead of the id.
+   *
+   * @param {string} eventName - The name of the event.
+   * @param {number} id - The id returned by addListener
+   */
+  removeListenerById(eventName, id) {
+    console.warn('Deprecated. Use #off, passing the listener itself instead of the id.')
+
+    const listeners = this.listeners[eventName]
+
+    if (!listeners) {
+      console.warn('callback :' + id + ' was not connected to this signal:' + eventName)
+      return
+    }
+
+    if (!listeners[id]) throw new Error('Invalid ID')
+
+    listeners[id] = undefined
+  }
+
+  /**
+   * Triggers all listener functions in an event.
    *
    * @param {string} eventName - The name of the event.
    * @param {object|string|any} event - The data you want to pass down to all listener functions as parameter.
    */
   emit(eventName, event) {
-    const slots = this.__slots[eventName]
-    if (!slots) {
-      return
-    }
+    const listeners = this.listeners[eventName] || []
 
-    const len = slots.length
-    for (let i = 0; i < len; i++) {
-      const fn = slots[i]
-      // Skip disconnected slots.
+    listeners.forEach((fn) => {
+      // Skip disconnected listeners.
       if (fn) {
         fn(event)
       }
-    }
+    })
   }
 }
 

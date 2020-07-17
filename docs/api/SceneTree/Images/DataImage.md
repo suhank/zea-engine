@@ -4,8 +4,8 @@
 Represents a BaseImage with the ability to load data.
 
 **Events**
-* **loaded**
-* **updated**
+* **loaded:** Triggered when the data is loaded.
+* **updated:** Triggered when the data is updated.
 
 
 **Extends**: <code>BaseImage</code>  
@@ -65,7 +65,7 @@ Sets Image's data by recieving an bytes array.
 <a name="DataImage+getParams"></a>
 
 ### getParams
-Returns all params and class state values(Including data).
+Returns all parameters and class state values(Including data).
 
 
 **Returns**: <code>object</code> - - The return value.  

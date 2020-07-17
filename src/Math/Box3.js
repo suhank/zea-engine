@@ -5,9 +5,9 @@ import { Mat4 } from './Mat4.js'
 import { SphereType } from './SphereType.js'
 import { typeRegistry } from './TypeRegistry.js'
 
-/** Class representing a box in 3D space. */
 /**
- * Represents a box in 3D space, needing two Vec3 vectors.
+ * Class representing a box in 3D space.
+ * Represents a box in 3D space defined by two Vec3 values which define opposing corners of the box.
  */
 class Box3 {
   /**

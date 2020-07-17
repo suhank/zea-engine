@@ -1,16 +1,26 @@
 <a name="StructParameter"></a>
 
 ### StructParameter 
-Class representing a struct parameter.
+Represents a specific type of parameter, that stores multiple parameters in object format.
+
+i.e.:
+```javascript
+const structParam = new StructParameter('MyStructParam')
+//'myParameterOwnerItem' is an instance of a 'ParameterOwner' class.
+// Remember that only 'ParameterOwner' and classes that extend from it can host 'Parameter' objects.
+myParameterOwnerItem.addParameter(structParam)
+```
+
+**Events**
+* **valueChanged:** Triggered whenever parameter's value changes.
 
 
 **Extends**: <code>Parameter</code>  
 
 * [StructParameter ⇐ <code>Parameter</code>](#StructParameter)
     * [new StructParameter(name)](#new-StructParameter)
-    * [getParameter(name) ⇒ <code>any</code>](#getParameter)
-    * [getMember(name) ⇒ <code>any</code>](#getMember)
-    * [getMemberNames() ⇒ <code>any</code>](#getMemberNames)
+    * [getMember(name) ⇒ <code>Parameter</code>](#getMember)
+    * [getMemberNames() ⇒ <code>array</code>](#getMemberNames)
     * [toJSON(context, flags) ⇒ <code>object</code>](#toJSON)
     * [fromJSON(j, context, flags)](#fromJSON)
     * [destroy()](#destroy)
@@ -25,25 +35,13 @@ Create a struct parameter.
 | --- | --- | --- |
 | name | <code>string</code> | The name of the struct parameter. |
 
-<a name="StructParameter+getParameter"></a>
-
-### getParameter
-The getParameter method.
-
-
-**Returns**: <code>any</code> - - The return value.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| name | <code>string</code> | The parameter name. |
-
 <a name="StructParameter+getMember"></a>
 
 ### getMember
-The getMember method.
+Looks for a member parameter with the specified name and returns it.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>Parameter</code> - - The return value.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -52,14 +50,14 @@ The getMember method.
 <a name="StructParameter+getMemberNames"></a>
 
 ### getMemberNames
-The getMemberNames method.
+Returns the name of all parameters in StructParameter.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>array</code> - - The return value.  
 <a name="StructParameter+toJSON"></a>
 
 ### toJSON
-The toJSON method encodes this type as a json object for persistences.
+The toJSON method encodes this type as a json object for persistence.
 
 
 **Returns**: <code>object</code> - - Returns the json object.  

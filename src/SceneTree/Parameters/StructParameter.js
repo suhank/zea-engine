@@ -1,6 +1,19 @@
 import { ParamFlags, Parameter } from './Parameter.js'
 
-/** Class representing a struct parameter.
+/**
+ * Represents a specific type of parameter, that stores multiple parameters in object format.
+ *
+ * i.e.:
+ * ```javascript
+ * const structParam = new StructParameter('MyStructParam')
+ * //'myParameterOwnerItem' is an instance of a 'ParameterOwner' class.
+ * // Remember that only 'ParameterOwner' and classes that extend from it can host 'Parameter' objects.
+ * myParameterOwnerItem.addParameter(structParam)
+ * ```
+ *
+ * **Events**
+ * * **valueChanged:** Triggered whenever parameter's value changes.
+ *
  * @extends Parameter
  */
 class StructParameter extends Parameter {
@@ -15,8 +28,8 @@ class StructParameter extends Parameter {
 
   /**
    * The _addMember method.
-   * @param {any} parameter - The parameter value.
-   * @return {any} - The return value.
+   * @param {Parameter} parameter - The parameter value.
+   * @return {Parameter} - The return value.
    * @private
    */
   _addMember(parameter) {
@@ -32,8 +45,10 @@ class StructParameter extends Parameter {
 
   /**
    * The getParameter method.
+   *
+   * @private
    * @param {string} name - The parameter name.
-   * @return {any} - The return value.
+   * @return {Parameter} - The return value.
    */
   getParameter(name) {
     for (const p of this.__members) {
@@ -42,17 +57,20 @@ class StructParameter extends Parameter {
   }
 
   /**
-   * The getMember method.
+   * Looks for a member parameter with the specified name and returns it.
+   *
    * @param {string} name - The parameter name.
-   * @return {any} - The return value.
+   * @return {Parameter} - The return value.
    */
   getMember(name) {
+    console.warn('@todo-review')
     return this.getParameter(name)
   }
 
   /**
-   * The getMemberNames method.
-   * @return {any} - The return value.
+   * Returns the name of all parameters in StructParameter.
+   *
+   * @return {array} - The return value.
    */
   getMemberNames() {
     const names = []
@@ -67,7 +85,8 @@ class StructParameter extends Parameter {
   // Persistence
 
   /**
-   * The toJSON method encodes this type as a json object for persistences.
+   * The toJSON method encodes this type as a json object for persistence.
+   *
    * @param {object} context - The context value.
    * @param {number} flags - The flags value.
    * @return {object} - Returns the json object.
@@ -83,6 +102,7 @@ class StructParameter extends Parameter {
 
   /**
    * The fromJSON method decodes a json object for this type.
+   *
    * @param {object} j - The json object this item must decode.
    * @param {object} context - The context value.
    * @param {number} flags - The flags value.
@@ -93,7 +113,7 @@ class StructParameter extends Parameter {
       return
     }
     // Note: JSON data is only used to store user edits, so
-    // parameters loaed from JSON are considered user edited.
+    // parameters loaded from JSON are considered user edited.
     this.__flags |= ParamFlags.USER_EDITED
 
     for (let i = 0; i < j.members.length; i++) {
