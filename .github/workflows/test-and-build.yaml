@@ -23,4 +23,3 @@ jobs:
       - run: yarn install --frozen-lockfile --ignore-scripts
       - run: yarn run build
       - run: yarn test
-      - run: yarn run test:visual
