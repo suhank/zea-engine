@@ -20,6 +20,7 @@
 
 - How To
   * [Changing The Background](tutorials/changing-the-background.md)
+  * [Load an Asset File](tutorials/load-an-asset.md)
   <!-- * [Setting up an Environment Map](tutorials/setting-up-an-environment-map.md) -->
   * [Setting up Groups and Highlights](tutorials/highlights.md)
   * [Setting up Labels](tutorials/labels.md)
