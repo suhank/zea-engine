@@ -82,8 +82,8 @@ class ResourceLoader extends EventEmitter {
     this.__workers = []
     this.__nextWorker = 0
 
+    let baseUrl
     if (globalThis.navigator) {
-      let baseUrl
       const scripts = document.getElementsByTagName('script')
       for (let i = 0; i < scripts.length; i++) {
         const script = scripts[i]
