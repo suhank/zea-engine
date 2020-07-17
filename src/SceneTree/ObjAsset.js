@@ -40,7 +40,7 @@ class ObjAsset extends AssetItem {
     this.addParameter(new NumberParameter('unitsConversion', 1.0))
     this.addParameter(new StringParameter('defaultShader', ''))
 
-    this.objfileParam = this.addParameter(new FilePathParameter('ObjFilePath'))
+    this.objfileParam = this.addParameter(new FilePathParameter('FilePath'))
     this.objfileParam.addListener('valueChanged', () => {
       this.loaded = false
       this.__loadObj(
@@ -409,16 +409,6 @@ class ObjAsset extends AssetItem {
         material.setShaderName(
           defaultShader != '' ? defaultShader : 'StandardSurfaceShader'
         )
-        const baseColorParam = material.getParameter('BaseColor')
-        if (baseColorParam) baseColorParam.setValue(Color.random(0.5))
-        else {
-          const colorParam = material.getParameter('Color')
-          if (colorParam) colorParam.setValue(Color.random(0.5))
-        }
-        const roughnessParam = material.getParameter('Roughness')
-        if (roughnessParam) roughnessParam.setValue(0.6)
-        const reflectanceParam = material.getParameter('Reflectance')
-        if (reflectanceParam) reflectanceParam.setValue(0.2)
         this.materials.addMaterial(material)
         geomItem.setMaterial(material)
       }
