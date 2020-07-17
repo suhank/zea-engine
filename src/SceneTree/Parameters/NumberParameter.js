@@ -1,4 +1,4 @@
-import { sgFactory } from '../SGFactory'
+import { sgFactory } from '../SGFactory.js'
 import { ValueSetMode, Parameter } from './Parameter.js'
 
 /**
