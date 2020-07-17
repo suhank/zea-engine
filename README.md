@@ -3,6 +3,7 @@
 A high performance 3D rendering engine for the web.
 
 ![Test and build](https://github.com/ZeaInc/zea-engine/workflows/Test%20and%20build/badge.svg)
+![Coverage: Statements](coverage/badge-statements.svg)
 [![npm](https://img.shields.io/npm/v/@zeainc/zea-engine?style=flat-square)](https://www.npmjs.com/package/@zeainc/zea-engine)
 [![Code style: Prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
 
