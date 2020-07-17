@@ -1,5 +1,5 @@
-import { EventEmitter } from '../../Utilities/EventEmitter'
-import { sgFactory } from '../SGFactory'
+import { EventEmitter } from '../../Utilities/EventEmitter.js'
+import { sgFactory } from '../SGFactory.js'
 
 const ValueGetMode = {
   NORMAL: 0,
@@ -365,7 +365,7 @@ class Parameter extends BaseParameter {
   constructor(name, value, dataType) {
     super(name)
     this.__value = value
-    this.__dataType = dataType ? dataType : value.constructor.name
+    this.__dataType = dataType ? dataType : undefined
   }
 
   /**
