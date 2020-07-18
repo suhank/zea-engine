@@ -8,7 +8,7 @@
  * ```javascript
  *  const ee = new EventEmitter()
  * 
- *  ee.addListener('myEvent', (event) => {
+ *  ee.on('myEvent', (event) => {
  *    console.log('My Event was emitted:', event)
  *  })
  * 

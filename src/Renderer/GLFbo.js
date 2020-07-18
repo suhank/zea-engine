@@ -30,7 +30,7 @@ class GLFbo {
     this.resize = this.resize.bind(this)
 
     if (this.__colorTexture) {
-      this.__colorTexture.addListener('resized', this.resize)
+      this.__colorTexture.on('resized', this.resize)
     }
 
     this.setup()

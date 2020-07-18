@@ -50,7 +50,7 @@ class MaterialParameter extends Parameter {
       }
       this.__value = material
       if (this.__value) {
-        this.__value.addListener('parameterValueChanged', this.__valueParameterValueChanged)
+        this.__value.on('parameterValueChanged', this.__valueParameterValueChanged)
       }
       if (mode == ValueSetMode.USER_SETVALUE || mode == ValueSetMode.REMOTEUSER_SETVALUE) {
         this.__flags |= ParamFlags.USER_EDITED

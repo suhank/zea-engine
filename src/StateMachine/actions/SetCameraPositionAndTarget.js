@@ -70,7 +70,7 @@ class SetCameraPositionAndTarget extends StateAction {
           settingCameraDirection = false
         }
       }
-      camera.addListener('globalXfoChanged', onCameraChanged)
+      camera.on('globalXfoChanged', onCameraChanged)
       const timerCallback = () => {
         if (!settingCameraDirection) {
           return

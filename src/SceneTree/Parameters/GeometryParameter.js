@@ -35,7 +35,7 @@ class GeometryParameter extends Parameter {
       }
       this.__value = geom
       if (this.__value) {
-        this.__value.addListener('boundingBoxChanged', this.__emitboundingBoxDirtied)
+        this.__value.on('boundingBoxChanged', this.__emitboundingBoxDirtied)
       }
 
       if (

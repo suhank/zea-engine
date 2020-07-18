@@ -100,7 +100,7 @@ class GLMaterialGeomItemSets {
       this.geomItemSets.push(geomItemSet)
 
       this.drawCount += geomItemSet.drawCount
-      geomItemSet.addListener('drawCountChanged', this.__drawCountChanged)
+      geomItemSet.on('drawCountChanged', this.__drawCountChanged)
     } else {
       console.warn('geomItemSet already added to GLMaterialGeomItemSets')
     }
