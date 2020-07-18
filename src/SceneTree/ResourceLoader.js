@@ -5,7 +5,7 @@ import { hashStr } from '../Math/index'
 import { EventEmitter } from '../Utilities/index'
 
 // const asyncLoading = true;
-import ResourceLoaderWorker from 'web-worker:./ResourceLoader/ResourceLoaderWorker.js'
+// import ResourceLoaderWorker from 'web-worker:./ResourceLoader/ResourceLoaderWorker.js'
 // For synchronous loading, uncomment these lines.
 // import {
 //     ResourceLoaderWorker_onmessage

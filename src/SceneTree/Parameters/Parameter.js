@@ -1,11 +1,6 @@
 import { EventEmitter } from '../../Utilities/EventEmitter.js'
 import { sgFactory } from '../SGFactory.js'
 
-const ValueGetMode = {
-  NORMAL: 0,
-  OPERATOR_GETVALUE: 1,
-}
-
 // Note: In some cases we want the parameter to emit a notification
 // and cause the update of the scene during evaluation (like statemachine updates).
 // But we also don't want the parameter value to then
@@ -171,39 +166,39 @@ class BaseParameter extends EventEmitter {
     console.warn('@todo-review')
   }
 
-  /**
-   * The setEnabled method.
-   * @deprecated
-   * @private
-   * @param {object|string|number|any} state - The state value.
-   */
-  setEnabled(state) {
-    console.warn('@todo-review')
-    console.warn('Deprecated Method: This method will be removed soon.')
-    if (state) this.setFlag(ParamFlags.DISABLED)
-    else this.clearFlag(ParamFlags.DISABLED)
-  }
+  // /**
+  //  * The setEnabled method.
+  //  * @deprecated
+  //  * @private
+  //  * @param {object|string|number|any} state - The state value.
+  //  */
+  // setEnabled(state) {
+  //   console.warn('@todo-review')
+  //   console.warn('Deprecated Method: This method will be removed soon.')
+  //   if (state) this.setFlag(ParamFlags.DISABLED)
+  //   else this.clearFlag(ParamFlags.DISABLED)
+  // }
 
-  /**
-   * The isEnabled method.
-   * @deprecated
-   * @private
-   */
-  isEnabled() {
-    console.warn('@todo-review')
-    console.warn('Deprecated Method: This method will be removed soon.')
-    this.testFlag(ParamFlags.DISABLED)
-  }
+  // /**
+  //  * The isEnabled method.
+  //  * @deprecated
+  //  * @private
+  //  */
+  // isEnabled() {
+  //   console.warn('@todo-review')
+  //   console.warn('Deprecated Method: This method will be removed soon.')
+  //   this.testFlag(ParamFlags.DISABLED)
+  // }
 
   /**
    * The bindOperator method.
    *
-   * @param {Operator} op - The cleanerFn value.
+   * @param {Operator} op - The OperatorOutput value.
    */
-  bindOperator(op) {
-    this.__boundOps.push(op)
+  bindOperatorOutput(operatorOutput) {
+    this.__boundOps.push(operatorOutput)
     this.__state = ParamState.DIRTY
-    this.emit('valueChanged', { mode: ValueSetMode.OPERATOR_DIRTIED }) // changed via cleaner fn
+    this.emit('valueChanged'/*, { mode: ValueSetMode.OPERATOR_DIRTIED }*/) 
   }
 
   /**
@@ -212,15 +207,15 @@ class BaseParameter extends EventEmitter {
    * @param {Operator} op - The cleanerFn value.
    * @return {boolean} - The return value.
    */
-  unbindOperator(op) {
+  unbindOperator(operatorOutput) {
     // If already dirty, simply return.
-    const index = this.__boundOps.indexOf(op)
+    const index = this.__boundOps.indexOf(operatorOutput)
     if (index == -1) {
       return false
     }
     this.__boundOps.splice(index, 1)
     this.__state = ParamState.DIRTY
-    this.emit('valueChanged', { mode: ValueSetMode.OPERATOR_DIRTIED }) // changed via cleaner fn
+    this.emit('valueChanged'/*, { mode: ValueSetMode.OPERATOR_DIRTIED }*/) 
   }
 
   /**
@@ -230,27 +225,27 @@ class BaseParameter extends EventEmitter {
    * @param {function} cleanerFn - The cleanerFn value.
    * @return {boolean} - The return value.
    */
-  setDirty(cleanerFn) {
-    // If already dirty, simply return.
-    if (this.__cleanerFns.indexOf(cleanerFn) != -1) {
-      return false
-    }
-    this.__cleanerFns.push(cleanerFn)
-    this.__state = ParamState.DIRTY
-    this.__dirtyOpIndex = 0
+  // setDirty(cleanerFn) {
+  //   // If already dirty, simply return.
+  //   if (this.__cleanerFns.indexOf(cleanerFn) != -1) {
+  //     return false
+  //   }
+  //   this.__cleanerFns.push(cleanerFn)
+  //   this.__state = ParamState.DIRTY
+  //   this.__dirtyOpIndex = 0
 
-    this.emit('valueChanged', { mode: ValueSetMode.OPERATOR_DIRTIED }) // changed via cleaner fn
-    return true
-  }
+  //   this.emit('valueChanged'/*, { mode: ValueSetMode.OPERATOR_DIRTIED }*/) 
+  //   return true
+  // }
 
   /**
-   * The setDirtyFromOp method.
+   * The setDirty method.
    *
    * @return {boolean}
    */
-  setDirtyFromOp(op) {
+  setDirty(op) {
     // As we migrate to bound ops, we will no longer call store
-    // cleaner fns and intead simply propagate.
+    // cleaner fns and instead simply propagate.
     let dirtyId
     if (this.__dirtyOpIndex == -1) {
       dirtyId = this.__boundOps.indexOf(op)
@@ -262,7 +257,7 @@ class BaseParameter extends EventEmitter {
     if (dirtyId != this.__dirtyOpIndex) {
       this.__state = ParamState.DIRTY
       this.__dirtyOpIndex = dirtyId
-      this.emit('valueChanged', { mode: ValueSetMode.OPERATOR_DIRTIED }) // changed via cleaner fn
+      this.emit('valueChanged'/*, { mode: ValueSetMode.OPERATOR_DIRTIED }*/) 
     }
     return true
   }
@@ -297,16 +292,16 @@ class BaseParameter extends EventEmitter {
 
     // console.log("Cleaning:", this.getPath())
     // Note: we always evaluate all the ops in the stack, not just the dirty ones.
-    // A bas op might comptue global Xfo, and a subsequen modifies it.
+    // A bas op might compute global Xfo, and a subsequently modifies it.
     // for (const op of this.__boundOps) {
     //   op.evaluate()
     // }
     if (this.__dirtyOpIndex != -1) {
       for (let i = this.__dirtyOpIndex; i < this.__boundOps.length; i++) {
-        const op = this.__boundOps[i]
+        const operatorOutput = this.__boundOps[i]
         // The op can get the current value and modify it in place
         // and set the output to clean.
-        op.evaluate()
+        operatorOutput.getOperator().evaluate()
       }
     }
     
@@ -329,22 +324,22 @@ class BaseParameter extends EventEmitter {
    * @param {function} cleanerFn - The cleanerFn value.
    * @return {number} - The return value.
    */
-  removeCleanerFn(cleanerFn) {
-    // Once operators store a dirty flag, then the op sets its
-    // self to clean before outputting.
-    const index = this.__cleanerFns.indexOf(cleanerFn)
-    if (index == -1) {
-      // Note: when a getValue is called, first the cleaners array is reset
-      // and then the cleaners are called (see above)
-      // When an operator is applied to multiple outputs, then one of the outputs
-      // already has its cleaners array reset.
-      // Due to the asynchronous nature of evaluate, multiple cleanings might occur
-      // throw ("Error. Cleaner Fn not applied to this parameter:" + cleanerFn.name);
+  // removeCleanerFn(cleanerFn) {
+  //   // Once operators store a dirty flag, then the op sets its
+  //   // self to clean before outputting.
+  //   const index = this.__cleanerFns.indexOf(cleanerFn)
+  //   if (index == -1) {
+  //     // Note: when a getValue is called, first the cleaners array is reset
+  //     // and then the cleaners are called (see above)
+  //     // When an operator is applied to multiple outputs, then one of the outputs
+  //     // already has its cleaners array reset.
+  //     // Due to the asynchronous nature of evaluate, multiple cleanings might occur
+  //     // throw ("Error. Cleaner Fn not applied to this parameter:" + cleanerFn.name);
 
-      return 0
-    }
-    this.__cleanerFns.splice(index, 1)
-  }
+  //     return 0
+  //   }
+  //   this.__cleanerFns.splice(index, 1)
+  // }
 
   /**
    * The clone method.
@@ -417,7 +412,7 @@ class Parameter extends BaseParameter {
    * @param {number} mode - The mode value.
    * @return {object|string|number|any} - The return value.
    */
-  getValue(mode = ValueGetMode.NORMAL) {
+  getValue(/*mode = ValueGetMode.NORMAL*/) {
     if (/* mode == ValueGetMode.NORMAL && */ this.__state == ParamState.DIRTY) this._clean()
     return this.__value
   }
@@ -472,12 +467,13 @@ class Parameter extends BaseParameter {
       if (this.__value == value) return
     }
     this.__value = value
-    if (mode == ValueSetMode.USER_SETVALUE || mode == ValueSetMode.REMOTEUSER_SETVALUE) {
-      this.setFlag(ParamFlags.USER_EDITED)
-    }
+    // if (mode == ValueSetMode.USER_SETVALUE || mode == ValueSetMode.REMOTEUSER_SETVALUE) {
+    //   this.setFlag(ParamFlags.USER_EDITED)
+    // }
 
     // During the cleaning process, we don't want notifications.
-    if (mode != ValueSetMode.OPERATOR_SETVALUE) this.emit('valueChanged', { mode })
+    // if (mode != ValueSetMode.OPERATOR_SETVALUE) 
+    this.emit('valueChanged', { mode })
   }
 
   /**
@@ -486,10 +482,9 @@ class Parameter extends BaseParameter {
    * this method should be called to notify that that interaction is complete
    * Code can listed to this event to trigger longer running actions like
    * saving a file or heavy computation.
-   */
   setValueDone() {
     this.emit('valueChanged', { mode: ValueSetMode.USER_SETVALUE_DONE })
-  }
+  }*/
 
   // ////////////////////////////////////////
   // Persistence
@@ -562,4 +557,4 @@ class Parameter extends BaseParameter {
   }
 }
 
-export { ParamFlags, ValueGetMode, ValueSetMode, BaseParameter, Parameter }
+export { ParamFlags, ValueSetMode, Parameter }

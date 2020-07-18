@@ -1,20 +1,22 @@
 import { ValueSetMode, ValueGetMode } from '../Parameters/index'
-import { sgFactory } from '../SGFactory'
-import { EventEmitter } from '../../Utilities/index'
+
+const OperatorOutputMode = {
+  OP_WRITE: 0,
+  OP_READ_WRITE: 1,
+}
+
 
 /** Class representing an operator output.
- * @extends EventEmitter
  */
-class OperatorOutput extends EventEmitter {
+class OperatorOutput {
   /**
    * Create an operator output.
    * @param {string} name - The name value.
-   * @param {any} filterFn - The filterFn value.
+   * @param {OperatorOutputMode} mode - The filterFn value.
    */
-  constructor(name, filterFn) {
-    super()
+  constructor(name, mode) {
     this.__name = name
-    this.__filterFn = filterFn
+    this.__mode = mode
     this._param = undefined
     this.detached = false
   }
@@ -27,12 +29,12 @@ class OperatorOutput extends EventEmitter {
     return this.__name
   }
 
-  /**
-   * The getFilterFn method.
-   * @return {any} - The return value.
-   */
-  getFilterFn() {
-    return this.__filterFn
+  setOperator(op) {
+    this.__op = op
+  }
+
+  getOperator() {
+    return this.__op
   }
 
   /**
@@ -57,7 +59,7 @@ class OperatorOutput extends EventEmitter {
    */
   setParam(param) {
     this._param = param
-    this.emit('paramSet', { param })
+    this._param.bindOperatorOutput(this)
   }
 
   /**
@@ -96,14 +98,15 @@ class OperatorOutput extends EventEmitter {
    * The setDirty method.
    * @param {any} fn - The fn value.
    */
-  setDirty(fn) {
+  setDirty() {
     if (this._param) {
-      this._param.setDirty(fn)
+      this._param.setDirty(this)
     }
   }
-  setDirtyFromOp(op) {
+
+  setDirty() {
     if (this._param) {
-      this._param.setDirtyFromOp(op)
+      this._param.setDirty(this)
     }
   }
 
@@ -137,7 +140,6 @@ class OperatorOutput extends EventEmitter {
   toJSON(context, flags) {
     const paramPath = this._param ? this._param.getPath() : ''
     return {
-      type: sgFactory.getClassName(this),
       paramPath:
         context && context.makeRelative
           ? context.makeRelative(paramPath)
@@ -173,42 +175,40 @@ class OperatorOutput extends EventEmitter {
     }
   }
 
-  /**
-   * The detach method.
-   */
-  detach() {
-    // This function is called when we want to suspend an operator
-    // from functioning because it is deleted and on the undo stack.
-    // Once operators have persistent connections,
-    // we will simply uninstall the output from the parameter.
-    this.detached = true
-  }
+  // /**
+  //  * The detach method.
+  //  */
+  // detach() {
+  //   // This function is called when we want to suspend an operator
+  //   // from functioning because it is deleted and on the undo stack.
+  //   // Once operators have persistent connections,
+  //   // we will simply uninstall the output from the parameter.
+  //   this.detached = true
+  // }
 
-  /**
-   * The reattach method.
-   */
-  reattach() {
-    this.detached = false
-  }
+  // /**
+  //  * The reattach method.
+  //  */
+  // reattach() {
+  //   this.detached = false
+  // }
 }
-sgFactory.registerClass('OperatorOutput', OperatorOutput)
 
 /** Class representing an Xfo operator output.
  * @extends OperatorOutput
- */
 class XfoOperatorOutput extends OperatorOutput {
   /**
    * Create an Xfo operator output.
    * @param {string} name - The name value.
-   */
+   * /
   constructor(name) {
-    super(name, p => p.getDataType() == 'Xfo')
+    super(name)
   }
 
   /**
    * The getInitialValue method.
    * @return {any} - The return value.
-   */
+   * /
   getInitialValue() {
     return this._initialParamValue
   }
@@ -216,7 +216,7 @@ class XfoOperatorOutput extends OperatorOutput {
   /**
    * The setParam method.
    * @param {any} param - The param value.
-   */
+   * /
   setParam(param) {
     // Note: sometimes the param value is changed after binding.
     // e.g. The group Xfo is updated after the operator
@@ -245,6 +245,5 @@ class XfoOperatorOutput extends OperatorOutput {
     this.emit('paramSet', { param })
   }
 }
-sgFactory.registerClass('XfoOperatorOutput', XfoOperatorOutput)
-
-export { OperatorOutput, XfoOperatorOutput }
+*/
+export { OperatorOutput, OperatorOutputMode }

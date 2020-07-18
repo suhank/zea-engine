@@ -18,6 +18,7 @@ class Operator extends BaseItem {
     // Should always have this flag set.
     this.setFlag(ItemFlags.USER_EDITED)
 
+    this.__inputs = []
     this.__outputs = []
     this.__evalOutput = this.__evalOutput.bind(this)
   }
@@ -30,8 +31,7 @@ class Operator extends BaseItem {
    * @private
    */
   setDirty() {
-    // for (const o of this.__outputs) o.setDirty(this.__evalOutput)
-    for (const o of this.__outputs) o.setDirtyFromOp(this)
+    for (const o of this.__outputs) o.setDirty(this)
   }
 
   /**
@@ -47,17 +47,66 @@ class Operator extends BaseItem {
   }
 
   /**
+   * The addInput method.
+   * @param {OperatorInput} output - The output value.
+   * @return {array} - The return value.
+   */
+  addInput(input) {
+    input.setOperator(this)
+    this.__inputs.push(input)
+    // input.on('paramSet', (event) => {
+    //   const { param } = event
+    //   // input.setDirty(this.__evalInput)
+    //   param.bindOperator(this)
+    // })
+    return input
+  }
+
+  /**
+   * The removeInput method.
+   * @param {OperatorInput} input - The input value.
+   */
+  removeInput(input) {
+    if (input.getParam()) input.getParam().unbindOperator(this)
+    this.__inputs.splice(this.__inputs.indexOf(input), 1)
+  }
+
+  /**
+   * Getter for the number of inputs in this operator.
+   * @return {number} - Returns the number of inputs.
+   */
+  getNumInputs() {
+    return this.__inputs.length
+  }
+
+  /**
+   * The getInputByIndex method.
+   * @param {number} index - The index value.
+   * @return {object} - The return value.
+   */
+  getInputByIndex(index) {
+    return this.__inputs[index]
+  }
+
+  /**
+   * The getInput method.
+   * @param {string} name - The name value.
+   * @return {OperatorInput} - The return value.
+   */
+  getInput(name) {
+    for (const o of this.__inputs) {
+      if (o.getName() == name) return o
+    }
+  }
+  
+  /**
    * The addOutput method.
    * @param {OperatorOutput} output - The output value.
    * @return {array} - The return value.
    */
   addOutput(output) {
+    output.setOperator(this)
     this.__outputs.push(output)
-    output.on('paramSet', (event) => {
-      const { param } = event
-      // output.setDirty(this.__evalOutput)
-      param.bindOperator(this)
-    })
     return output
   }
 
@@ -98,6 +147,7 @@ class Operator extends BaseItem {
     }
   }
 
+
   /**
    * The __evalOutput method.
    * @param {any} cleanedParam - The cleanedParam value.
@@ -112,18 +162,6 @@ class Operator extends BaseItem {
     // Why does the cleaner need to return a value?
     // Usually operators are connected to multiple outputs.
     // return getter(1);
-  }
-
-  /**
-   * The __opInputChanged method.
-   * @private
-   */
-  __opInputChanged() {
-    // For each output, install a function to evaluate the operator
-    // Note: when the operator evaluates, it will remove the cleaners
-    // on all outputs. This means that after the first operator to
-    // cause an evaluation, all outputs are considered clean.
-    this.setDirty()
   }
 
   /**
@@ -174,7 +212,7 @@ class Operator extends BaseItem {
 
       // Force an evaluation of the operator as soon as loading is done.
       context.addPLCB(() => {
-        this.__opInputChanged()
+        this.setDirty()
       })
     }
   }
