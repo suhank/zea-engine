@@ -219,12 +219,12 @@ class ColorUniformBinding {
     }
 
     let boundImage
-    let imageLoadedId
-    const imageLoaded = () => {
-      genGLTex(boundImage)
-    }
+    let imageLoaded
     const connectImage = image => {
       if (!image.isLoaded()) {
+        imageLoaded = () => {
+          genGLTex(boundImage)
+        }
         image.on('loaded', imageLoaded)
       } else {
         genGLTex(image)
@@ -234,23 +234,23 @@ class ColorUniformBinding {
 
     const disconnectImage = () => {
       const gltexture = boundImage.getMetadata('gltexture')
-      gltexture.removeRef(this);
+      gltexture.removeRef(this)
       this.texBinding = null
       this.gltexture = null
       this.textureType = null
       this.bind = this.bindValue
 
-      if (imageLoadedId) {
-        boundImage.removeListenerById('loaded', imageLoadedId)
+      if (imageLoaded) {
+        boundImage.off('loaded', imageLoaded)
       }
       boundImage = null
-      imageLoadedId = null
+      imageLoaded = null
       glmaterial.emit('updated', {})
     }
 
     const update = () => {
       // Sometimes the value of a color param is an image.
-      const value = param.getValue(false)
+      const value = param.getValue()
       this.__vals = value.asArray()
 
       if (this.__textureUnif) {

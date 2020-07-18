@@ -367,8 +367,8 @@ class GLBaseRenderer extends ParameterOwner {
     // Note: we can have BaseItems in the tree now.
     if (!(treeItem instanceof TreeItem)) return
 
-    treeItem.removeListener('childAdded', this.__childItemAdded)
-    treeItem.removeListener('childRemoved', this.__childItemRemoved)
+    treeItem.off('childAdded', this.__childItemAdded)
+    treeItem.off('childRemoved', this.__childItemRemoved)
 
     for (const passCbs of this.__passCallbacks) {
       if (!passCbs.itemRemovedFn) continue
@@ -921,7 +921,7 @@ class GLBaseRenderer extends ParameterOwner {
 
         xrvp.on('viewChanged', emitViewChanged)
       } else {
-        xrvp.removeListener('viewChanged', emitViewChanged)
+        xrvp.off('viewChanged', emitViewChanged)
         this.emit('updated', {})
 
         for (const key in this.__passes) {

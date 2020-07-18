@@ -269,10 +269,10 @@ class GeomItem extends BaseGeomItem {
           const geom = geomLibrary.getGeom(geomIndex)
           if (geom) this.setGeometry(geom, ValueSetMode.DATA_LOAD)
           else console.warn('Geom not loaded:', this.getName())
-          geomLibrary.removeListenerById('rangeLoaded', connid)
+          geomLibrary.off('rangeLoaded', onGeomLoaded)
         }
       }
-      const connid = geomLibrary.on('rangeLoaded', onGeomLoaded)
+      geomLibrary.on('rangeLoaded', onGeomLoaded)
     }
 
     // this.setVisibility(j.visibility);
@@ -350,10 +350,10 @@ class GeomItem extends BaseGeomItem {
           const geom = geomLibrary.getGeom(geomIndex)
           if (geom) this.setGeometry(geom, ValueSetMode.DATA_LOAD)
           else console.warn('Geom not loaded:', this.getName())
-          geomLibrary.removeListenerById('rangeLoaded', connid)
+          geomLibrary.off('rangeLoaded', onGeomLoaded)
         }
       }
-      const connid = geomLibrary.on('rangeLoaded', onGeomLoaded)
+      geomLibrary.on('rangeLoaded', onGeomLoaded)
     }
 
     // Geom Xfo should be dirty after cloning.

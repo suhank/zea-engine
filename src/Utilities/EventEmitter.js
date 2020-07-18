@@ -90,6 +90,7 @@ class EventEmitter {
     }
 
     if (typeof listener == 'number') {
+      console.warn('Deprecated. Un-register using the original listener instead.')
       this.removeListenerById(eventName, listener)
       return
     }

@@ -214,7 +214,7 @@ class TreeItem extends BaseItem {
    */
   setOwner(parentItem) {
     if (this.__ownerItem) {
-      this.__ownerItem.removeListener('globalXfoChanged', this._setGlobalXfoDirty)
+      this.__ownerItem.off('globalXfoChanged', this._setGlobalXfoDirty)
 
       // The effect of the invisible owner is removed.
       if (!this.__ownerItem.getVisible()) this.__visibleCounter++

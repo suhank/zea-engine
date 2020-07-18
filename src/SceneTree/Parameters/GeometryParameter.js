@@ -31,7 +31,7 @@ class GeometryParameter extends Parameter {
     // 0 == normal set. 1 = changed via cleaner fn, 2 = change by loading/cloning code.
     if (this.__value !== geom) {
       if (this.__value) {
-        this.__value.removeListener('boundingBoxChanged', this.__emitboundingBoxDirtied)
+        this.__value.off('boundingBoxChanged', this.__emitboundingBoxDirtied)
       }
       this.__value = geom
       if (this.__value) {
@@ -98,7 +98,7 @@ class GeometryParameter extends Parameter {
     // e.g. freeing GPU Memory.
 
     if (this.__value) {
-      this.__value.removeListener('boundingBoxChanged', this.__emitboundingBoxDirtied)
+      this.__value.off('boundingBoxChanged', this.__emitboundingBoxDirtied)
     }
   }
 }

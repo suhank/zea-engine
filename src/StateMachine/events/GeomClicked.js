@@ -52,7 +52,7 @@ class GeomClicked extends StateEvent {
    */
   deactivate() {
     if (this.__geom) {
-      this.__geom.removeListener('mouseDown', this.__geomClicked)
+      this.__geom.off('mouseDown', this.__geomClicked)
     }
     this.__activated = false
     super.deactivate()

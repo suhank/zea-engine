@@ -434,7 +434,7 @@ class GLFbo {
     gl.bindFramebuffer(gl.FRAMEBUFFER, null)
     gl.deleteFramebuffer(this.__fbo)
     this.__fbo = null
-    this.__colorTexture.removeListener('resized', this.resize)
+    this.__colorTexture.off('resized', this.resize)
   }
 }
 

@@ -46,7 +46,7 @@ class MaterialParameter extends Parameter {
     // 0 == normal set. 1 = changed via cleaner fn, 2 = change by loading/cloning code.
     if (this.__value !== material) {
       if (this.__value) {
-        this.__value.removeListener('parameterValueChanged', this.__valueParameterValueChanged)
+        this.__value.off('parameterValueChanged', this.__valueParameterValueChanged)
       }
       this.__value = material
       if (this.__value) {
@@ -124,7 +124,7 @@ class MaterialParameter extends Parameter {
     // E.g. freeing GPU Memory.
 
     if (this.__value) {
-      this.__value.removeListener('parameterValueChanged', this.__valueParameterValueChanged)
+      this.__value.off('parameterValueChanged', this.__valueParameterValueChanged)
     }
   }
 }
