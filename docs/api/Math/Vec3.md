@@ -1,7 +1,7 @@
 <a name="Vec3"></a>
 
 ### Vec3 
-Represents a three dimensional coordinate, such as 3d scene values, or mesh vertex positions.
+Represents a three dimensional coordinate, such as 3D scene values, or mesh vertex positions.
 
 Math types internally store values in [Float32Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array) and
 expose getters and setters for the component values.

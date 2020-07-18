@@ -66,6 +66,7 @@ String.prototype.rtrim = function () {
 }
 
 // pads left
+// TODO deprecate and remove if not used
 String.prototype.lpad = function (padString, length) {
   let str = this
   while (str.length < length) str = padString + str
@@ -89,19 +90,28 @@ function JSON_stringify_fixedPrecision(val, space = 0, precision = 5) {
   )
 }
 
-Math.randomInt = function (min, max) {
+const randomInt = (min, max) => {
   min = Math.ceil(min)
   max = Math.floor(max)
   return Math.floor(Math.random() * (max - min)) + min
 }
 
-Math.lerp = (a, b, t) => {
+Math.randomInt = randomInt
+
+const lerp = (a, b, t) => {
   return a + t * (b - a)
 }
 
-Math.clamp = function (value, min, max) {
+Math.lerp = (a, b, t) => {
+  console.warn('TODO deprecated')
+  return lerp(a, b, t)
+}
+
+const clamp = (value, min, max) => {
   return Math.min(Math.max(value, min), max)
 }
+
+Math.clamp = clamp
 
 Math.nearestPow2 = function (value) {
   return Math.pow(2, Math.round(Math.log(value) / Math.log(2)))
@@ -134,7 +144,7 @@ Math.remap = function (value, start1, end1, start2, end2) {
 }
 
 Math.convertFloat32ArrayToUInt16Array = function (float32Array) {
-  console.warn("Deprecated function. Please use the function 'convertFloat32ArrayToUInt16Array' exported by ZeaEngine");
+  console.warn("Deprecated function. Please use the function 'convertFloat32ArrayToUInt16Array' exported by ZeaEngine")
   convertFloat32ArrayToUInt16Array(float32Array)
 }
 
@@ -314,7 +324,14 @@ Math.linStep = (edge0, edge1, x) => {
   return Math.clamp((x - edge0) / (edge1 - edge0), 0.0, 1.0)
 }
 
+const common = {
+  clamp,
+  lerp,
+  randomInt,
+}
+
 export {
+  common,
   UInt8,
   SInt8,
   SInt16,
