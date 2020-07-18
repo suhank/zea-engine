@@ -64,6 +64,7 @@ Returns specified name of the parameter.
 Sets the name of the current parameter.
 
 
+**Returns**: [<code>Parameter</code>](#Parameter) - - The instance itself.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -320,6 +321,7 @@ Sets the name of the current parameter.
 
 
 **Overrides**: [<code>setName</code>](#BaseParameter+setName)  
+**Returns**: [<code>Parameter</code>](#Parameter) - - The instance itself.  
 
 | Param | Type | Description |
 | --- | --- | --- |

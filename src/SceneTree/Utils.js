@@ -3,25 +3,25 @@ const getFileFolder = function(filePath) {
 }
 
 const loadfile = function(url, responseType, onSucceed, onFail, onProgress) {
-  const xhr = new XMLHttpRequest()
-  xhr.responseType = responseType
   try {
-    xhr.addListener('timeout', function(event) {
+    const xhr = new XMLHttpRequest()
+    xhr.responseType = responseType
+    xhr.addEventListener('timeout', function(event) {
       throw new Error('The request for ' + url + ' timed out.')
     })
-    xhr.addListener('error', function(event) {
+    xhr.addEventListener('error', function(event) {
       throw new Error(
         'The request for ' + url + ': xhr.readyState:' + xhr.readyState
       )
       onFail(xhr.statusText)
     })
-    xhr.addListener('abort', function(event) {
+    xhr.addEventListener('abort', function(event) {
       throw new Error(
         'The request for ' + url + ': xhr.readyState:' + xhr.readyState
       )
       onFail(xhr.statusText)
     })
-    xhr.addListener('loadend', function(event) {
+    xhr.addEventListener('loadend', function(event) {
       if (xhr.status == 200) onSucceed(xhr)
       else onFail(xhr.statusText)
     })

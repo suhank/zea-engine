@@ -1374,11 +1374,13 @@
   dependencies:
     "@types/yargs-parser" "*"
 
-"@zeainc/jsdocs2md@^0.0.2-rc-1":
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/@zeainc/jsdocs2md/-/jsdocs2md-0.0.2.tgz#509fd98a12a245e580ea6d5a38191c78a0dbb492"
-  integrity sha512-sIERsfHVCwyJh3mg6BgLV+uoIdZxlxWON0duXo/nkx74sUxbnAhb3X95UJ6jXshopQfJ+8tPI75tsuBBIwTB5w==
+"@zeainc/jsdocs2md@^0.0.3":
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/@zeainc/jsdocs2md/-/jsdocs2md-0.0.3.tgz#ed33bb5eebe6ce4da526acdddded070b789b3893"
+  integrity sha512-lETXqXnMRua9wqRyYvZzlFvJ/5uoKGruthZvnHUIN61vC7gK8NoLBrAQ8DvlfFRjAoDm6X/mwsk2hOMxMT3zbQ==
   dependencies:
+    chokidar "^3.4.0"
+    colors "^1.4.0"
     jsdoc-to-markdown "^5.0.3"
     meow "^7.0.1"
     rimraf "^3.0.2"
@@ -2159,7 +2161,7 @@ chokidar@^2.0.4:
   optionalDependencies:
     fsevents "^1.2.7"
 
-chokidar@^3.0.0:
+chokidar@^3.0.0, chokidar@^3.4.0:
   version "3.4.1"
   resolved "https://registry.yarnpkg.com/chokidar/-/chokidar-3.4.1.tgz#e905bdecf10eaa0a0b1db0c664481cc4cbc22ba1"
   integrity sha512-TQTJyr2stihpC4Sya9hs2Xh+O2wf+igjL36Y75xx2WdHuiICcn/XJza46Jwt0eT5hVpQOzo3FpY3cj3RVYLX0g==
