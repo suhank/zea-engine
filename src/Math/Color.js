@@ -1,13 +1,17 @@
+/* eslint-disable require-jsdoc */
 import { AttrValue } from './AttrValue.js'
 import { typeRegistry } from './TypeRegistry.js'
 
-/** Class representing a color.
+/**
+ * Class representing a color as 4 floating point values.
+ *
  * @extends AttrValue
  */
 class Color extends AttrValue {
   /**
-   * Create a color.
-   * @param {number} r - The red channel of a color.
+   * Creates a `Color` object with an RGBA structure.
+   *
+   * @param {number | string | Float32Array | ArrayBuffer} r - The red channel of a color.
    * @param {number} g - The green channel of a color.
    * @param {number} b - The blue channel of a color.
    * @param {number} a - The alpha (transparency) channel of a color.
@@ -40,7 +44,8 @@ class Color extends AttrValue {
 
   /**
    * Getter for red channel.
-   * @return {Color} - Returns the red channel.
+   *
+   * @return {number} - Returns the red channel.
    */
   get r() {
     return this.__data[0]
@@ -48,6 +53,7 @@ class Color extends AttrValue {
 
   /**
    * Setter for red channel.
+   *
    * @param {number} val - The val param.
    */
   set r(val) {
@@ -56,7 +62,8 @@ class Color extends AttrValue {
 
   /**
    * Getter for green channel.
-   * @return {Color} - Returns the green channel.
+   *
+   * @return {number} - Returns the green channel.
    */
   get g() {
     return this.__data[1]
@@ -72,7 +79,8 @@ class Color extends AttrValue {
 
   /**
    * Getter for blue channel.
-   * @return {Color} - Returns the blue channel.
+   *
+   * @return {number} - Returns the blue channel.
    */
   get b() {
     return this.__data[2]
@@ -80,6 +88,7 @@ class Color extends AttrValue {
 
   /**
    * Setter for blue channel.
+   *
    * @param {number} val - The val param.
    */
   set b(val) {
@@ -88,13 +97,15 @@ class Color extends AttrValue {
 
   /**
    * Getter for alpha channel.
-   * @return {Color} - Returns the alpha channel.
+   *
+   * @return {number} - Returns the alpha channel.
    */
   get a() {
     return this.__data[3]
   }
   /**
    * Setter for alpha value.
+   *
    * @param {number} val - The val param.
    */
   set a(val) {
@@ -103,6 +114,7 @@ class Color extends AttrValue {
 
   /**
    * Setter from scalar components.
+   *
    * @param {number} r - The red channel.
    * @param {number} g  - The green channel.
    * @param {number} b  - The blue channel.
@@ -116,7 +128,8 @@ class Color extends AttrValue {
   }
 
   /**
-   * Setter from another color.
+   * Sets current color state with another `Color` object.
+   *
    * @param {Color} other - The other color to set from.
    */
   setFromOther(other) {
@@ -128,7 +141,8 @@ class Color extends AttrValue {
 
   /**
    * Setter from a scalar array.
-   * @param {any} vals - The vals param.
+   *
+   * @param {Float32Array} vals - The vals param.
    */
   setFromScalarArray(vals) {
     this.r = vals[0]
@@ -139,7 +153,8 @@ class Color extends AttrValue {
 
   /**
    * Getter from an RGB array.
-   * @return {Color} - The return value.
+   *
+   * @return {array} - The return value.
    */
   getAsRGBArray() {
     return [this.r * 255, this.g * 255, this.b * 255]
@@ -147,7 +162,8 @@ class Color extends AttrValue {
 
   /**
    * Getter from an RGB dict.
-   * @return {Color} - The return value.
+   *
+   * @return {object} - The return value.
    */
   getAsRGBDict() {
     return {
@@ -159,6 +175,7 @@ class Color extends AttrValue {
 
   /**
    * Setter from a RGB value.
+   *
    * @param {number} r - The red channel.
    * @param {number} g  - The green channel.
    * @param {number} b  - The blue channel.
@@ -173,7 +190,8 @@ class Color extends AttrValue {
 
   /**
    * Setter from an RGB array.
-   * @param {any} vals - The vals param.
+   *
+   * @param {Float32Array} vals - The vals param.
    */
   setFromRGBArray(vals) {
     this.r = vals[0] / 255
@@ -184,7 +202,8 @@ class Color extends AttrValue {
 
   /**
    * Setter from an RGB dict.
-   * @param {any} vals - The vals param.
+   *
+   * @param {Float32Array} vals - The vals param.
    */
   setFromRGBDict(vals) {
     this.r = vals.r / 255
@@ -223,7 +242,7 @@ class Color extends AttrValue {
    * @param {string} name - The CSS color name.
    */
   setFromCSSColorName(name) {
-    const colourNameToHex = colour => {
+    const colourNameToHex = (colour) => {
       const colors = {
         aliceblue: '#f0f8ff',
         antiquewhite: '#faebd7',
@@ -382,7 +401,8 @@ class Color extends AttrValue {
 
   /**
    * Returns the hexadecimal value of this color.
-   * @return {number} - Returns the hex value.
+   *
+   * @return {string} - Returns the hex value.
    */
   toHex() {
     function componentToHex(c) {
@@ -400,34 +420,27 @@ class Color extends AttrValue {
 
   /**
    * Returns true if this color is exactly the same as other.
+   *
    * @param {Color} other - The other color to compare with.
    * @return {boolean} - Returns true or false.
    */
   equal(other) {
-    return (
-      this.r == other.r &&
-      this.g == other.g &&
-      this.b == other.b &&
-      this.a == other.a
-    )
+    return this.r == other.r && this.g == other.g && this.b == other.b && this.a == other.a
   }
 
   /**
    * Returns true if this color is NOT exactly the same as other.
+   *
    * @param {Color} other - The other color to compare with.
    * @return {boolean} - Returns true or false.
    */
-  notequals(other) {
-    return (
-      this.r != other.r &&
-      this.g != other.g &&
-      this.b != other.b &&
-      this.a != other.a
-    )
+  notEquals(other) {
+    return this.r != other.r && this.g != other.g && this.b != other.b && this.a != other.a
   }
 
   /**
    * Returns true if this color is approximately the same as other.
+   *
    * @param {Color} other - The other color to compare with.
    * @param {number} precision - The precision to which the values must match.
    * @return {boolean} - Returns true or false.
@@ -442,49 +455,38 @@ class Color extends AttrValue {
   }
 
   /**
-   * Returns a new color which is this color added to other.
+   * Returns a new Color which is this Color added to other.
+   *
    * @param {Color} other - The other color to add.
    * @return {Color} - Returns a new color.
    */
   add(other) {
-    return new Color(
-      this.r + other.r,
-      this.g + other.g,
-      this.b + other.b,
-      this.a + other.a
-    )
+    return new Color(this.r + other.r, this.g + other.g, this.b + other.b, this.a + other.a)
   }
 
   /**
    * Returns a new color which is this color subtracted from other.
+   *
    * @param {Color} other - The other color to subtract.
    * @return {Color} - Returns a new color.
    */
   subtract(other) {
-    return new Color(
-      this.r - other.r,
-      this.g - other.g,
-      this.b - other.b,
-      this.a - other.a
-    )
+    return new Color(this.r - other.r, this.g - other.g, this.b - other.b, this.a - other.a)
   }
 
   /**
    * Scales this color by scalar and return the result as a new Vec4.
+   *
    * @param {number} scalar - The scalar value.
    * @return {Color} - Returns a new color.
    */
   scale(scalar) {
-    return new Color(
-      this.r * scalar,
-      this.g * scalar,
-      this.b * scalar,
-      this.a * scalar
-    )
+    return new Color(this.r * scalar, this.g * scalar, this.b * scalar, this.a * scalar)
   }
 
   /**
    * Scales this color by scalar.
+   *
    * @param {number} scalar - The scalar value.
    */
   scaleInPlace(scalar) {
@@ -495,34 +497,27 @@ class Color extends AttrValue {
   }
 
   /**
-   * Apply gamma correction to this color.
+   * Apply gamma correction to this color
+   *
    * @param {number} gamma - The gamma value.
    */
   applyGamma(gamma) {
-    this.set(
-      Math.pow(this.r, gamma),
-      Math.pow(this.g, gamma),
-      Math.pow(this.b, gamma),
-      this.a
-    )
+    this.set(Math.pow(this.r, gamma), Math.pow(this.g, gamma), Math.pow(this.b, gamma), this.a)
   }
 
   /**
-   * Converts to linear color space and returns a new color.
+   * Converts to linear color space and returns a new color
+   *
    * @param {number} gamma - The gamma value.
    * @return {Color} - Returns a new color.
    */
   toLinear(gamma = 2.2) {
-    return new Color(
-      Math.pow(this.r, gamma),
-      Math.pow(this.g, gamma),
-      Math.pow(this.b, gamma),
-      this.a
-    )
+    return new Color(Math.pow(this.r, gamma), Math.pow(this.g, gamma), Math.pow(this.b, gamma), this.a)
   }
 
   /**
    * Converts to gamma color space and returns a new color.
+   *
    * @param {number} gamma - The gamma value.
    * @return {Color} - Returns a new color.
    */
@@ -536,7 +531,8 @@ class Color extends AttrValue {
   }
 
   /**
-   * The luminance method.
+   * Calculates and returns the relative luminance of the linear RGB component.
+   *
    * @return {number} - The return value.
    */
   luminance() {
@@ -545,6 +541,7 @@ class Color extends AttrValue {
 
   /**
    * Performs a linear interpolation between this color and other.
+   *
    * @param {Color} other - The other color to interpolate between.
    * @param {number} t - Interpolation amount between the two inputs.
    * @return {Color} - Returns a new color.
@@ -554,16 +551,12 @@ class Color extends AttrValue {
     const ag = this.g
     const ab = this.b
     const aa = this.a
-    return new Color(
-      ar + t * (other.r - ar),
-      ag + t * (other.g - ag),
-      ab + t * (other.b - ab),
-      aa + t * (other.a - aa)
-    )
+    return new Color(ar + t * (other.r - ar), ag + t * (other.g - ag), ab + t * (other.b - ab), aa + t * (other.a - aa))
   }
 
   /**
    * Creates a random color.
+   *
    * @param {number} gammaOffset - The gamma offset.
    * @param {boolean} randomAlpha - Determines whether the alpha channel is random.
    * @return {Color} - Returns a new random color.
@@ -584,30 +577,22 @@ class Color extends AttrValue {
         randomAlpha ? Math.random() * (1.0 + gammaOffset) : 1.0
       )
     } else {
-      return new Color(
-        Math.random(),
-        Math.random(),
-        Math.random(),
-        randomAlpha ? Math.random() : 1.0
-      )
+      return new Color(Math.random(), Math.random(), Math.random(), randomAlpha ? Math.random() : 1.0)
     }
   }
 
   /**
    * Clones this color and returns a new color.
+   *
    * @return {Color} - Returns a new color.
    */
   clone() {
-    return new Color(
-      this.__data[0],
-      this.__data[1],
-      this.__data[2],
-      this.__data[3]
-    )
+    return new Color(this.__data[0], this.__data[1], this.__data[2], this.__data[3])
   }
 
   /**
    * Returns the type as an array. Often used to pass types to the GPU.
+   *
    * @return {array} - Returns as an array.
    */
   asArray() {
@@ -616,7 +601,9 @@ class Color extends AttrValue {
 
   /**
    * Returns the type as a 3 component array. Often used to pass types to the GPU.
+   *
    * @return {array} - Returns as a 3 component array.
+   * @private
    */
   as3ComponentArray() {
     return [this.__data[0], this.__data[1], this.__data[2]]
@@ -629,6 +616,7 @@ class Color extends AttrValue {
    * Creates a new color.
    * @param {...object} ...args - The ...args param.
    * @return {Color} - Returns a new color.
+   * @private
    */
   static create(...args) {
     return new Color(...args)
@@ -639,6 +627,7 @@ class Color extends AttrValue {
    * @param {ArrayBuffer} buffer - The buffer value.
    * @param {number} offset - The offset value.
    * @return {Color} - Returns a new color.
+   * @private
    */
   static createFromFloat32Buffer(buffer, offset = 0) {
     return new Color(buffer, offset * 4) // 4 bytes per 32bit float
@@ -647,6 +636,7 @@ class Color extends AttrValue {
   /**
    * Returns the number of Float32 elements used by this type. Used to calculate storage requirements for large arrays of this type.
    * @return {number} - The return value.
+   * @private
    */
   static numElements() {
     return 4
@@ -657,6 +647,7 @@ class Color extends AttrValue {
 
   /**
    * The toJSON method encodes this type as a json object for persistences.
+   *
    * @return {object} - The json object.
    */
   toJSON() {
@@ -670,6 +661,7 @@ class Color extends AttrValue {
 
   /**
    * The fromJSON method decodes a json object for this type.
+   *
    * @param {object} j - The json object.
    */
   fromJSON(j) {
@@ -680,8 +672,9 @@ class Color extends AttrValue {
   }
 
   /**
-   * The toCSSString method.
-   * @return {any} - The return value.
+   * Returns the CSS rgba string.
+   *
+   * @return {string} - The return value.
    */
   toCSSString() {
     return (

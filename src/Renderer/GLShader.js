@@ -1,8 +1,17 @@
-import { Signal } from '../Utilities'
-import { BaseItem } from '../SceneTree'
+import { BaseItem } from '../SceneTree/index'
+
+// Every instance of every shader should have a unique id.
+// This is so that we can uniquely identify the bound shader during
+// rendering. Materials and geometries cache bindings to shaders.
+// And need the id to be unique. (Note: we used to use the constructor.name
+// which was only unique if the same shader was constructed once, and
+// never unique in release mode after the port to Rollup)
+let shaderInstanceId = 0
+
 
 /** Class representing a GL shader.
  * @extends BaseItem
+ * @private
  */
 class GLShader extends BaseItem {
   /**
@@ -32,7 +41,8 @@ class GLShader extends BaseItem {
 
     this.__shaderProgramHdls = {}
     this.__gltextures = {}
-    this.updated = new Signal()
+
+    this.__id = shaderInstanceId++
 
     this.invisibleToGeomBuffer = false
   }
@@ -333,14 +343,13 @@ class GLShader extends BaseItem {
    * @return {any} - The return value.
    */
   compileForTarget(key, shaderopts) {
-    if (!key) {
-      key = this.constructor.name
-    }
-    let shaderCompilationResult = this.__shaderProgramHdls[key]
+    const shaderkey = key ? this.__id + key : this.__id
+    let shaderCompilationResult = this.__shaderProgramHdls[shaderkey]
     if (!shaderCompilationResult) {
       if (shaderCompilationResult !== false) {
         shaderCompilationResult = this.__createProgram(shaderopts)
-        this.__shaderProgramHdls[key] = shaderCompilationResult
+        shaderCompilationResult.shaderkey = shaderkey
+        this.__shaderProgramHdls[shaderkey] = shaderCompilationResult
       }
     }
     return shaderCompilationResult
@@ -375,15 +384,15 @@ class GLShader extends BaseItem {
       const shaderProgramHdl = shaderCompilationResult.shaderProgramHdl
 
       gl.useProgram(shaderProgramHdl)
-      renderstate.shaderkey = this.constructor.name
       renderstate.glshader = this
+      renderstate.shaderkey = shaderCompilationResult.shaderkey
+      renderstate.unifs = shaderCompilationResult.unifs
+      renderstate.attrs = shaderCompilationResult.attrs
+
       renderstate.boundTextures = 0
       renderstate.boundLightmap = undefined
       // Make sure we clear the binding cached.
       renderstate.glgeom = undefined
-
-      renderstate.unifs = shaderCompilationResult.unifs
-      renderstate.attrs = shaderCompilationResult.attrs
 
       // Once the shader has been bound, we allow the renderer to bind any
       // of its global uniform values. (e.g. env map values etc...)

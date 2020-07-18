@@ -1,16 +1,29 @@
+/* eslint-disable no-unused-vars */
 import { Vec2 } from '../../../Math/Vec2'
 import { Vec3 } from '../../../Math/Vec3'
 import { Mesh } from '../Mesh.js'
-import { BooleanParameter, NumberParameter } from '../../Parameters'
+import { BooleanParameter, NumberParameter } from '../../Parameters/index'
 import { sgFactory } from '../../SGFactory.js'
 
-/** A class for generating a cone geometry.
+/**
+ * Represents a cone geometry.
+ *
+ * ```
+ * const cone = new Cone(1.2, 4.0)
+ * ```
+ *
+ * **Parameters**
+ * * **radius(`NumberParameter`):** Specifies the radius of the base of the cone.
+ * * **height(`NumberParameter`):** Specifies the height of the cone.
+ * * **detail(`NumberParameter`):** Specifies the number of subdivisions around the `Z` axis.
+ * * **cap(`BooleanParameter`):** Specifies whether the base of the cone is capped or open.
+ *
  * @extends Mesh
  */
 class Cone extends Mesh {
   /**
    * Create a cone.
-   * @param {number} radius - The radius of the cone at the base.
+   * @param {number} radius - The radius of the base of the cone.
    * @param {number} height - The height of the cone.
    * @param {number} detail - The detail of the cone.
    * @param {boolean} cap -  A boolean indicating whether the base of the cone is capped or open.
@@ -18,18 +31,11 @@ class Cone extends Mesh {
   constructor(radius = 0.5, height = 1.0, detail = 32, cap = true) {
     super()
 
-    if (isNaN(radius) || isNaN(height) || isNaN(detail))
-      throw new Error('Invalid geom args')
+    if (isNaN(radius) || isNaN(height) || isNaN(detail)) throw new Error('Invalid geom args')
 
-    this.__radiusParam = this.addParameter(
-      new NumberParameter('radius', radius)
-    )
-    this.__heightParam = this.addParameter(
-      new NumberParameter('height', height)
-    )
-    this.__detailParam = this.addParameter(
-      new NumberParameter('detail', detail >= 3 ? detail : 3, [3, 200], 1)
-    )
+    this.__radiusParam = this.addParameter(new NumberParameter('radius', radius))
+    this.__heightParam = this.addParameter(new NumberParameter('height', height))
+    this.__detailParam = this.addParameter(new NumberParameter('detail', detail >= 3 ? detail : 3, [3, 200], 1))
     this.__capParam = this.addParameter(new BooleanParameter('cap', cap))
 
     this.addVertexAttribute('texCoords', Vec2)
@@ -42,14 +48,15 @@ class Cone extends Mesh {
     const rebuild = () => {
       this.__rebuild()
     }
-    this.__radiusParam.valueChanged.connect(resize)
-    this.__heightParam.valueChanged.connect(resize)
-    this.__detailParam.valueChanged.connect(rebuild)
-    this.__capParam.valueChanged.connect(rebuild)
+    this.__radiusParam.addListener('valueChanged', resize)
+    this.__heightParam.addListener('valueChanged', resize)
+    this.__detailParam.addListener('valueChanged', rebuild)
+    this.__capParam.addListener('valueChanged', rebuild)
   }
 
   /**
-   * Getter for the cone radius.
+   * Returns radius parameter value.
+   *
    * @return {number} - Returns the radius.
    */
   get radius() {
@@ -57,7 +64,9 @@ class Cone extends Mesh {
   }
 
   /**
-   * Setter for the cone radius.
+   * Sets radius parameter value in parameter.<br>
+   * **Note:** Resizes the cone.
+   *
    * @param {number} val - The radius value.
    */
   set radius(val) {
@@ -66,7 +75,8 @@ class Cone extends Mesh {
   }
 
   /**
-   * Getter for the cone height.
+   * Returns height parameter value.
+   *
    * @return {number} - Returns the height.
    */
   get height() {
@@ -74,7 +84,9 @@ class Cone extends Mesh {
   }
 
   /**
-   * Setter for the cone height.
+   * Sets height parameter value.<br>
+   * **Note:** Resizes the cone.
+   *
    * @param {number} val - The height value.
    */
   set height(val) {
@@ -83,7 +95,8 @@ class Cone extends Mesh {
   }
 
   /**
-   * Getter for the cone detail.
+   * Returns details parameter value(Number of subdivisions around the `Z` axis).
+   *
    * @return {number} - Returns the detail.
    */
   get detail() {
@@ -91,7 +104,8 @@ class Cone extends Mesh {
   }
 
   /**
-   * Setter for the cone detail.
+   * Sets details parameter value(Number of subdivisions around the `Z` axis)
+   *
    * @param {number} val - The detail value.
    */
   set detail(val) {
@@ -100,15 +114,18 @@ class Cone extends Mesh {
   }
 
   /**
-   * Getter for the cone cap.
-   * @return {any} - The return value.
+   * Returns cap parameter value.
+   *
+   * @return {boolean} - The return value.
    */
   get cap() {
     return this.__capParam.getValue()
   }
 
   /**
-   * Setter for the cone cap.
+   * Sets `cap` parameter value.<br>
+   * **Note:** Resizes the cone.
+   *
    * @param {number} val - The val param.
    */
   set cap(val) {
@@ -141,11 +158,7 @@ class Cone extends Mesh {
     this.getVertex(tipPoint).set(0.0, 0.0, height)
     for (let i = 0; i < nbSides; i++) {
       const theta = (i / nbSides) * 2.0 * Math.PI
-      this.getVertex(i).set(
-        radius * Math.cos(theta),
-        radius * Math.sin(theta),
-        0.0
-      )
+      this.getVertex(i).set(radius * Math.cos(theta), radius * Math.sin(theta), 0.0)
     }
     if (cap) {
       this.getVertex(basePoint).set(0.0, 0.0, 0.0)
@@ -171,8 +184,7 @@ class Cone extends Mesh {
 
     let normalElevation
     const divider = height
-    if (Math.abs(height) < 1.0e-12)
-      normalElevation = height < 0 ? -1.0e-12 : 1.0e-12
+    if (Math.abs(height) < 1.0e-12) normalElevation = height < 0 ? -1.0e-12 : 1.0e-12
     normalElevation = radius / divider
 
     let tri = 0
@@ -181,29 +193,9 @@ class Cone extends Mesh {
       const theta2 = (i / nbSides) * 2.0 * Math.PI
       const theta = (theta1 + theta2) * 0.5
 
-      normals.setFaceVertexValue(
-        tri,
-        0,
-        new Vec3(
-          Math.cos(theta1),
-          normalElevation,
-          Math.sin(theta1)
-        ).normalize()
-      )
-      normals.setFaceVertexValue(
-        tri,
-        1,
-        new Vec3(
-          Math.cos(theta2),
-          normalElevation,
-          Math.sin(theta2)
-        ).normalize()
-      )
-      normals.setFaceVertexValue(
-        tri,
-        2,
-        new Vec3(Math.cos(theta), normalElevation, Math.sin(theta)).normalize()
-      )
+      normals.setFaceVertexValue(tri, 0, new Vec3(Math.cos(theta1), normalElevation, Math.sin(theta1)).normalize())
+      normals.setFaceVertexValue(tri, 1, new Vec3(Math.cos(theta2), normalElevation, Math.sin(theta2)).normalize())
+      normals.setFaceVertexValue(tri, 2, new Vec3(Math.cos(theta), normalElevation, Math.sin(theta)).normalize())
       tri++
     }
     if (cap) {
@@ -255,11 +247,7 @@ class Cone extends Mesh {
     this.getVertex(tipPoint).set(0.0, 0.0, height)
     for (let i = 0; i < nbSides; i++) {
       const theta = (i / nbSides) * 2.0 * Math.PI
-      this.getVertex(i).set(
-        radius * Math.cos(theta),
-        radius * Math.sin(theta),
-        0.0
-      )
+      this.getVertex(i).set(radius * Math.cos(theta), radius * Math.sin(theta), 0.0)
     }
     if (this.__cap) {
       this.getVertex(basePoint).set(0.0, 0.0, 0.0)

@@ -1,16 +1,24 @@
-import { Vec3 } from '../../Math'
+import { Vec3 } from '../../Math/index'
 import { Parameter } from './Parameter.js'
 
-/** Class representing a Vec3 parameter.
- * A Vec3 represents a three-dimensional coordinate.
+/**
+ * Represents a specific type of parameter, that only stores Vec3(three-dimensional coordinate) values.
+ *
+ * i.e.:
+ * ```javascript
+ * const vec3Param = new Vec3Parameter('MyVec3', new Vec3(1.2, 3.4, 1))
+ * //'myParameterOwnerItem' is an instance of a 'ParameterOwner' class.
+ * // Remember that only 'ParameterOwner' and classes that extend from it can host 'Parameter' objects.
+ * myParameterOwnerItem.addParameter(vec3Param)
+ * ```
  * @extends Parameter
  */
 class Vec3Parameter extends Parameter {
   /**
    * Create a Vec3 parameter.
    * @param {string} name - The name of the Vec3 parameter.
-   * @param {any} value - The value of the parameter.
-   * @param {any} range - The range value.
+   * @param {Vec3} value - The value of the parameter.
+   * @param {array} range - The range value is an array of two `Vec2` objects.
    */
   constructor(name, value, range = undefined) {
     super(name, value ? value : new Vec3(), 'Vec3')
@@ -19,6 +27,7 @@ class Vec3Parameter extends Parameter {
   /**
    * The clone method constructs a new Vec3 parameter, copies its values
    * from this parameter and returns it.
+   *
    * @param {number} flags - The flags value.
    * @return {Vec3Parameter} - Returns a new Vec3 parameter.
    */

@@ -4,7 +4,9 @@ import { GLRenderer } from '../GLRenderer.js'
 
 import { GLGeomItemSet } from '../GLGeomItemSet.js'
 
-/** Class representing GL shader materials. */
+/** Class representing GL shader materials. 
+ * @private
+*/
 class GLShaderMaterials {
   /**
    * Create a GL shader material.
@@ -56,7 +58,9 @@ class GLShaderMaterials {
   }
 }
 
-/** Class representing GL material geom item sets. */
+/** Class representing GL material geom item sets. 
+ * @private
+*/
 class GLMaterialGeomItemSets {
   /**
    * Create a GL material geom item set.
@@ -96,10 +100,7 @@ class GLMaterialGeomItemSets {
       this.geomItemSets.push(geomItemSet)
 
       this.drawCount += geomItemSet.drawCount
-      geomItemSet.drawCountChanged.connect(this.__drawCountChanged)
-      geomItemSet.destructing.connect(() => {
-        this.removeGeomItemSet(geomItemSet)
-      })
+      geomItemSet.addListener('drawCountChanged', this.__drawCountChanged)
     } else {
       console.warn('geomItemSet already added to GLMaterialGeomItemSets')
     }
@@ -112,7 +113,7 @@ class GLMaterialGeomItemSets {
   removeGeomItemSet(geomItemSet) {
     const index = this.geomItemSets.indexOf(geomItemSet)
     this.geomItemSets.splice(index, 1)
-    geomItemSet.drawCountChanged.disconnect(this.__drawCountChanged)
+    geomItemSet.removeListener('drawCountChanged', this.__drawCountChanged)
   }
 
   /**
@@ -138,6 +139,7 @@ class GLMaterialGeomItemSets {
 
 /** Class representing a GL opaque geoms pass.
  * @extends GLStandardGeomsPass
+ * @private
  */
 class GLOpaqueGeomsPass extends GLStandardGeomsPass {
   /**
@@ -174,6 +176,10 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
     if (shaderClass) {
       if (shaderClass.isTransparent()) return false
       if (shaderClass.isOverlay()) return false
+
+      const baseColorParam = geomItem.getMaterial().getParameter('BaseColor')
+      if (baseColorParam && baseColorParam.getValue().a < 1.0) return false
+
       return true
     }
     return false
@@ -401,7 +407,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
     gl.depthFunc(gl.LESS)
     gl.depthMask(true)
 
-    // for (let glshaderMaterials of this.__glshadermaterials) {
+    // eslint-disable-next-line guard-for-in
     for (const shaderName in this.__glshadermaterials) {
       const glshaderMaterials = this.__glshadermaterials[shaderName]
       if (!glshaderMaterials.glgeomdatashader) continue

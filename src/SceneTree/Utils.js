@@ -3,9 +3,9 @@ const getFileFolder = function(filePath) {
 }
 
 const loadfile = function(url, responseType, onSucceed, onFail, onProgress) {
-  const xhr = new XMLHttpRequest()
-  xhr.responseType = responseType
   try {
+    const xhr = new XMLHttpRequest()
+    xhr.responseType = responseType
     xhr.addEventListener('timeout', function(event) {
       throw new Error('The request for ' + url + ' timed out.')
     })
@@ -105,7 +105,7 @@ const loadXMLfile = function(
   )
 }
 
-const loadBinfile = function(
+const loadBinfile = function (
   url,
   onSucceed,
   onFail = undefined,

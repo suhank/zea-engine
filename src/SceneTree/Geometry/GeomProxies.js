@@ -1,10 +1,10 @@
-import { Signal } from '../../Utilities'
-import { Box3 } from '../../Math'
+import { Box3 } from '../../Math/index'
 import { RefCounted } from '../RefCounted.js'
 import { typeRegistry } from '../../Math/TypeRegistry.js'
 
 /** Class representing a base geometry proxy.
  * @extends RefCounted
+ * @private
  */
 class BaseProxy extends RefCounted {
   /**
@@ -29,10 +29,6 @@ class BaseProxy extends RefCounted {
     this.boundingBox.p1.__data = data.bbox.p1.__data
 
     this.__metaData = new Map()
-
-    this.boundingBoxDirtied = new Signal()
-    this.geomDataChanged = new Signal()
-    this.geomDataTopologyChanged = new Signal()
   }
 
   /**
@@ -100,6 +96,7 @@ class BaseProxy extends RefCounted {
 
 /** Class representing a points proxy.
  * @extends BaseProxy
+ * @private
  */
 class PointsProxy extends BaseProxy {
   /**
@@ -113,6 +110,7 @@ class PointsProxy extends BaseProxy {
 
 /** Class representing a lines proxy.
  * @extends BaseProxy
+ * @private
  */
 class LinesProxy extends BaseProxy {
   /**
@@ -126,6 +124,7 @@ class LinesProxy extends BaseProxy {
 
 /** Class representing a mesh proxy.
  * @extends BaseProxy
+ * @private
  */
 class MeshProxy extends BaseProxy {
   /**

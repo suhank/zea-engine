@@ -1,14 +1,24 @@
-import { Color } from '../Math'
-import { Signal } from '../Utilities'
+import { Color } from '../Math/index'
 import { SystemDesc } from '../BrowserDetection.js'
-import { FilePathParameter, ColorParameter } from './Parameters'
+import { FilePathParameter, ColorParameter } from './Parameters/index'
 import { AssetItem } from './AssetItem.js'
 import { BinReader } from './BinReader.js'
 import { resourceLoader } from './ResourceLoader.js'
 import { sgFactory } from './SGFactory.js'
-// import { EnvMap, Lightmap, LightmapMixer } from './Images'
+import { Version } from './Version.js'
 
-/** Class representing a VLA asset.
+/**
+ * Class designed to load and handle `.vla` files.
+ * Which facilitates the migration of geometries from third party applications to the Digistar planetarium dome projection.
+ *
+ * **Parameters**
+ * * **DataFilePath(`FilePathParameter`):** Used to specify the path to the file.
+ * * **LightmapTint(`ColorParameter`):** _todo_
+ *
+ * **Events**
+ * * **loaded:** Triggered once everything is loaded.
+ * * **geomsLoaded:** Triggered once all geometries are loaded.
+ *
  * @extends AssetItem
  */
 class VLAAsset extends AssetItem {
@@ -18,42 +28,38 @@ class VLAAsset extends AssetItem {
    */
   constructor(name) {
     super(name)
-    this.loaded.setToggled(false)
-
+    this.loaded = false
     this.lightmap = null
 
     // A signal that is emitted once all the geoms are loaded.
     // Often the state machine will activate the first state
     // when this signal emits.
-    this.geomsLoaded = new Signal(true)
-    this.geomsLoaded.setToggled(false)
-    this.loaded.setToggled(false)
-    this.__geomLibrary.loaded.connect(()=>{
-      this.geomsLoaded.emit()
+    this.geomsLoaded = false
+    this.loaded = false
+    this.__geomLibrary.addListener('loaded', () => {
+      this.emit('geomsLoaded', {})
     })
 
-    this.__datafileParam = this.addParameter(
-      new FilePathParameter('DataFilePath')
-    )
-    this.__datafileParam.valueChanged.connect(() => {
+    this.__datafileParam = this.addParameter(new FilePathParameter('DataFilePath'))
+    this.__datafileParam.addListener('valueChanged', () => {
       const file = this.__datafileParam.getFileDesc()
       if (!file) return
       console.log(file)
-      if (this.getName() == sgFactory.getClassName(this)) {
+      if (this.getName() == '') {
         const stem = this.__datafileParam.getStem()
         this.setName(stem)
       }
 
-      this.geomsLoaded.setToggled(false)
+      this.geomsLoaded = false
       this.loadDataFile(
         () => {
-          if (!this.loaded.isToggled()) this.loaded.emit()
+          if (!this.loaded) this.emit('loaded', {})
         },
         () => {
-          // if(!this.loaded.isToggled()){
-          //   this.loaded.emit();
+          // if(!this.loaded){
+          //   this.emit('loaded', {});
           // }
-          // this.geomsLoaded.emit()
+          // this.emit('geomsLoaded', {})
         }
       )
     })
@@ -61,48 +67,42 @@ class VLAAsset extends AssetItem {
     this.addParameter(new ColorParameter('LightmapTint', new Color(1, 1, 1, 1)))
   }
 
-  /**
-   * The getLightmap method.
-   * @return {Lightmap} - The return lightmap.
-   */
-  getLightmap() {
-    return this.lightmap
-  }
-
   // ////////////////////////////////////////
   // Persistence
 
   /**
-   * The readBinary method.
-   * @param {object} reader - The reader value.
+   * Sets state of current asset using a binary reader object.
+   *
+   * @param {BinReader} reader - The reader value.
    * @param {object} context - The context value.
-   * @return {any} - The return value.
+   * @return {number} - The return value.
    */
   readBinary(reader, context) {
-    if (context.version != -1) { // Necessary for the smart lok
-      const version = new ZeaEngine.Version()
+    if (context.version != -1) {
+      // Necessary for the smart lok
+      const version = new Version()
       version.patch = context.version
       context.versions = { 'zea-mesh': version, 'zea-engine': version }
-      context.meshSdk = "FBX";
+      context.meshSdk = 'FBX'
     } else {
       const v = reader.loadUInt8()
       reader.seek(0)
       // 10 == ascii code for newline. Note: previous non-semver only reached 7
       if (v != 10) {
-        const version = new ZeaEngine.Version()
+        const version = new Version()
         version.patch = reader.loadUInt32()
         context.versions = { 'zea-mesh': version, 'zea-engine': version }
-        context.meshSdk = "FBX";
+        context.meshSdk = 'FBX'
       } else {
         // Now we split the mesh out from the engine version.
-        const version = new ZeaEngine.Version(reader.loadStr())
+        const version = new Version(reader.loadStr())
         context.versions = { 'zea-mesh': version }
-        context.meshSdk = "FBX";
+        context.meshSdk = 'FBX'
       }
     }
     this.meshfileversion = context.versions['zea-mesh']
     this.meshSdk = context.meshSdk
-    console.log("Loading CAD File version:", context.versions['zea-mesh'], " exported using SDK:", context.meshSdk)
+    console.log('Loading CAD File version:', context.versions['zea-mesh'], ' exported using SDK:', context.meshSdk)
 
     const numGeomsFiles = reader.loadUInt32()
 
@@ -118,7 +118,7 @@ class VLAAsset extends AssetItem {
     //       this.getParameter('FilePath').getValue()
     //   )
     // }
-    
+
     // Perpare the geom library for loading
     // This helps with progress bars, so we know how many geoms are coming in total.
     // Note: the geom library encodes in its binary buffer the number of geoms.
@@ -132,20 +132,15 @@ class VLAAsset extends AssetItem {
     }
     this.__geomLibrary.setNumGeoms(reader.loadUInt32())
 
-    // Load the lightmap if available.
-    // const folder = this.__datafileParam.getFileFolderPath();
-    // const stem = this.__datafileParam.getStem()
-    // const lod = context.lightmapLOD;
-    // const lightmapPath = `${folder}${stem}_${lightmapName}_Lightmap${lod}.vlh`
-    // this.lightmap = new Lightmap(lightmapPath, this, atlasSize)
-
     return numGeomsFiles
   }
 
   /**
-   * The loadDataFile method.
-   * @param {any} onDone - The onDone value.
-   * @param {any} onGeomsDone - The onGeomsDone value.
+   * Loads all the geometries and metadata from the `.vla` file.
+   *
+   * @private
+   * @param {function} onDone - The onDone value.
+   * @param {function} onGeomsDone - The onGeomsDone value.
    */
   loadDataFile(onDone, onGeomsDone) {
     const file = this.__datafileParam.getFileDesc()
@@ -162,7 +157,7 @@ class VLAAsset extends AssetItem {
     const isVLFile = new RegExp('\\.(vla)$', 'i').test(file.name)
     const vlgeomFiles = []
 
-    const loadBinary = entries => {
+    const loadBinary = (entries) => {
       // Load the tree file. This file contains
       // the scene tree of the asset, and also
       // tells us how many geom files will need to be loaded.
@@ -170,15 +165,9 @@ class VLAAsset extends AssetItem {
       let version = -1
       let treeReader
       if (entries.tree2) {
-        treeReader = new BinReader(
-          entries.tree2.buffer,
-          0,
-          SystemDesc.isMobileDevice
-        )
+        treeReader = new BinReader(entries.tree2.buffer, 0, SystemDesc.isMobileDevice)
       } else {
-        const entry = entries.tree
-          ? entries.tree
-          : entries[Object.keys(entries)[0]]
+        const entry = entries.tree ? entries.tree : entries[Object.keys(entries)[0]]
         treeReader = new BinReader(entry.buffer, 0, SystemDesc.isMobileDevice)
         version = 0
       }
@@ -192,9 +181,7 @@ class VLAAsset extends AssetItem {
         // Check that the number of geom files we have
         // match the cound given by the file.
         if (numGeomsFiles != vlgeomFiles.length)
-          console.error(
-            'The number of GeomFiles does not match the count given by the VLA file.'
-          )
+          console.error('The number of GeomFiles does not match the count given by the VLA file.')
       }
 
       onDone()
@@ -235,11 +222,11 @@ class VLAAsset extends AssetItem {
     }
 
     const loadGeomsfile = (index, geomFileUrl) => {
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         resourceLoader.loadUrl(
           fileId + index,
           geomFileUrl,
-          entries => {
+          (entries) => {
             const geomsData = entries[Object.keys(entries)[0]]
             this.__geomLibrary.readBinaryBuffer(fileId, geomsData.buffer)
             resolve()
@@ -255,10 +242,9 @@ class VLAAsset extends AssetItem {
       resourceLoader.loadResource(fileId, loadBinary)
     } else if (file.metadata.ConvertFile) {
       let vlaFile
-      file.metadata.ConvertFile.map(metadataFile => {
+      file.metadata.ConvertFile.map((metadataFile) => {
         if (metadataFile.filename.endsWith('.vla')) vlaFile = metadataFile
-        else if (metadataFile.filename.endsWith('.vlageoms'))
-          vlgeomFiles.push(metadataFile)
+        else if (metadataFile.filename.endsWith('.vlageoms')) vlgeomFiles.push(metadataFile)
       })
       if (vlaFile) {
         resourceLoader.loadUrl(fileId, vlaFile.url, loadBinary)
@@ -270,17 +256,18 @@ class VLAAsset extends AssetItem {
     // To ensure that the resource loader knows when
     // parsing is done, we listen to the GeomLibrary streamFileLoaded
     // signal. This is fired every time a file in the stream is finshed parsing.
-    this.__geomLibrary.streamFileParsed.connect(fraction => {
+    this.__geomLibrary.addListener('streamFileParsed', (event) => {
       // A chunk of geoms are now parsed, so update the resource loader.
-      resourceLoader.addWorkDone(fileId + 'geoms', fraction)
+      resourceLoader.addWorkDone(fileId + 'geoms', event.fraction)
     })
   }
 
   /**
    * The fromJSON method decodes a json object for this type.
+   *
    * @param {object} j - The json object this item must decode.
    * @param {object} context - The context value.
-   * @param {any} onDone - The onDone value.
+   * @param {function} onDone - The onDone value.
    */
   fromJSON(j, context, onDone) {
     if (!context) context = {}

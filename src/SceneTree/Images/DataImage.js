@@ -3,7 +3,12 @@ import { BaseImage } from '../BaseImage.js'
 
 // let ResourceLoaderWorker = require("worker-loader?inline!./ResourceLoaderWorker.js");
 
-/** Class representing a data image.
+/**
+ * Represents a BaseImage with the ability to load data.
+ *
+ * **Events**
+ * * **loaded:** Triggered when the data is loaded.
+ * * **updated:** Triggered when the data is updated.
  * @extends BaseImage
  */
 class DataImage extends BaseImage {
@@ -26,23 +31,25 @@ class DataImage extends BaseImage {
   }
 
   /**
-   * The isLoaded method.
-   * @return {any} - The return value.
+   * Returns an indicator of current item's loaded state.
+   * @return {boolean} - `true` if bytes data is fully loaded, `false` otherwise.
    */
   isLoaded() {
     return this.__loaded
   }
 
   /**
-   * The getName method.
-   * @return {any} - The return value.
+   * Returns the item's name.
+   *
+   * @return {string} - The return value.
    */
   getName() {
     return this.__name
   }
 
   /**
-   * The isStream method.
+   * Images are static content, so the value for this method is always going to be `false`
+   *
    * @return {boolean} - The return value.
    */
   isStream() {
@@ -50,10 +57,11 @@ class DataImage extends BaseImage {
   }
 
   /**
-   * The setData method.
-   * @param {any} width - The width value.
-   * @param {any} height - The height value.
-   * @param {any} data - The data value.
+   * Sets Image's data by recieving an bytes array.
+   *
+   * @param {number} width - The width value.
+   * @param {number} height - The height value.
+   * @param {Uint8Array} data - The data value.
    */
   setData(width, height, data) {
     this.width = width
@@ -61,13 +69,14 @@ class DataImage extends BaseImage {
     this.__data = data
     if (!this.__loaded) {
       this.__loaded = true
-      this.loaded.emit()
-    } else this.updated.emit()
+      this.emit('loaded', {})
+    } else this.emit('updated', {})
   }
 
   /**
-   * The getParams method.
-   * @return {any} - The return value.
+   * Returns all parameters and class state values(Including data).
+   *
+   * @return {object} - The return value.
    */
   getParams() {
     const params = super.getParams()

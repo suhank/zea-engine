@@ -11,9 +11,11 @@ import {
   Vec3,
   Vec4,
   RGBA,
-} from '../Math'
+} from '../Math/index'
 
-/** Class representing a geom shader binding. */
+/** Class representing a geom shader binding. 
+ * @private
+*/
 class GeomShaderBinding {
   /**
    * Create a geom shader binding.
@@ -171,7 +173,9 @@ class GeomShaderBinding {
   destroy() {}
 }
 
-/** Class representing vertex array objects (VAO) geom shader binding. */
+/** Class representing vertex array objects (VAO) geom shader binding. 
+ * @private
+*/
 class VAOGeomShaderBinding {
   /**
    * Create VAO geom shader binding.

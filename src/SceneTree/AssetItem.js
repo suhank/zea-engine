@@ -1,4 +1,3 @@
-import { Signal } from '../Utilities'
 import { Version } from './Version.js'
 import { TreeItem } from './TreeItem.js'
 import { Group } from './Group.js'
@@ -6,7 +5,9 @@ import { GeomLibrary } from './GeomLibrary.js'
 import { MaterialLibrary } from './MaterialLibrary.js'
 import { sgFactory } from './SGFactory.js'
 
-/** Class representing an asset item in a scene tree.
+/**
+ * Represents a TreeItem with rendering and material capabilities.
+ *
  * @extends TreeItem
  */
 class AssetItem extends TreeItem {
@@ -19,40 +20,48 @@ class AssetItem extends TreeItem {
 
     this.__geomLibrary = new GeomLibrary()
     this.__materials = new MaterialLibrary()
-
-    this.loaded = new Signal(true)
-    // Assets that are generated inline can be considered loaded
-    // (e.g. the ground plane). So we set loaded to true, unless a file is specified.
-    this.loaded.setToggled(true)
+    this.loaded = false
   }
 
   /**
-   * The isLoaded method.
+   * Returns the loaded status of current item.
+   *
    * @return {boolean} - Returns true if the asset has already loaded its data.
    */
   isLoaded() {
-    return this.loaded.isToggled()
+    return this.loaded
   }
 
   /**
-   * The getGeometryLibrary method.
-   * @return {any} - The return value.
+   * Returns the zea engine version as an array with major, minor, patch order.
+   *
+   * @return {array} - The return value.
+   */
+  getEngineDataVersion() {
+    return this.__engineDataVersion
+  }
+
+  /**
+   * Returns asset `GeomLibrary` that is in charge of rendering geometry data using workers.
+   *
+   * @return {GeomLibrary} - The return value.
    */
   getGeometryLibrary() {
     return this.__geomLibrary
   }
 
   /**
-   * The getMaterialLibrary method.
-   * @return {any} - The return value.
+   * Returns `MaterialLibrary` that is in charge of storing all materials of current Item.
+   *
+   * @return {MaterialLibrary} - The return value.
    */
   getMaterialLibrary() {
     return this.__materials
   }
 
   /**
-   * The getUnitsConversion method.
-   * @return {any} - The return value.
+   * Returns the scale factor of current item.
+   * @return {number} - The return value.
    */
   getUnitsConversion() {
     return this.__unitsScale
@@ -72,9 +81,10 @@ class AssetItem extends TreeItem {
     context.numGeomItems = 0
 
     if (!context.versions['zea-engine']) {
-      context.versions['zea-engine'] = new ZeaEngine.Version(reader.loadStr())
+      context.versions['zea-engine'] = new Version(reader.loadStr())
     }
-    console.log("Loading Engine File version:", context.versions['zea-engine'])
+    this.__engineDataVersion = context.versions['zea-engine']
+    console.log('Loading Engine File version:', context.versions['zea-engine'])
 
     let layerRoot
     const layers = {}
@@ -150,20 +160,18 @@ class AssetItem extends TreeItem {
 
   /**
    * The toJSON method encodes this type as a json object for persistences.
+   *
    * @param {object} context - The context value.
    * @param {number} flags - The flags value.
    * @return {object} - Returns the json object.
    */
   toJSON(context = {}, flags = 0) {
-    context.makeRelative = path => {
+    context.makeRelative = (path) => {
       const assetPath = this.getPath()
       const start = path.slice(0, assetPath.length)
       for (let i = 0; i < start.length - 1; i++) {
         if (start[i] != assetPath[i]) {
-          console.warn(
-            'Param Path is not relative to the asset. May not be able to be resolved at load time:' +
-              path
-          )
+          console.warn('Param Path is not relative to the asset. May not be able to be resolved at load time:' + path)
           return path
         }
       }
@@ -179,10 +187,11 @@ class AssetItem extends TreeItem {
 
   /**
    * The fromJSON method decodes a json object for this type.
+   *
    * @param {object} j - The json object this item must decode.
    * @param {object} context - The context value.
    * @param {number} flags - The flags value.
-   * @param {any} onDone - The onDone value.
+   * @param {function} onDone - Callback function executed when everything is done.
    */
   fromJSON(j, context = {}, flags = 0, onDone) {
     if (!context) context = {}
@@ -218,7 +227,7 @@ class AssetItem extends TreeItem {
         })
       }
     }
-    context.addPLCB = plcb => plcbs.push(plcb)
+    context.addPLCB = (plcb) => plcbs.push(plcb)
 
     // Avoid loading the FilePath as we are already loading json data.
     // if (j.params && j.params.FilePath) {

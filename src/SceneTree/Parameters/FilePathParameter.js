@@ -1,26 +1,33 @@
-import { Signal } from '../../Utilities'
 import { ValueSetMode, ParamFlags, Parameter } from './Parameter.js'
 import { resourceLoader } from '../ResourceLoader.js'
 
-/** Class representing a file path parameter.
+/**
+ * Represents a specific type of parameter, that only stores file data values.
+ *
+ * **Events**
+ * * **valueChanged:** Triggered when setting file's URL.
+ * * **fileUpdated:** Triggered when parameter's value is updated.
+ *
  * @extends Parameter
  */
 class FilePathParameter extends Parameter {
   /**
    * Create a file path parameter.
+   *
    * @param {string} name - The name of the file path parameter.
-   * @param {any} exts - The exts value.
+   * @param {string} exts - The exts value.
    */
   constructor(name, exts) {
     super(name, '', 'FilePath')
-
-    this.fileUpdated = new Signal()
     if (exts) this.setSupportedExts(exts)
   }
 
   /**
-   * The setSupportedExts method.
-   * @param {any} exts - The exts value.
+   * Sets supported extensions, if this supports more than one type of files, separate them with regex or(|).
+   *
+   * i.e.: jpg|png|gif
+   *
+   * @param {string} exts - The exts value.
    */
   setSupportedExts(exts) {
     // Note: supported Extensions should be in the format ext1|exts2|ext3
@@ -28,19 +35,22 @@ class FilePathParameter extends Parameter {
   }
 
   /**
-   * The getFilepath method.
-   * @return {any} - The return value.
+   * Returns complete file path.
+   *
+   * @return {string} - The return value.
    */
   getFilepath() {
     if (this.__file) {
       return resourceLoader.getFilepath(this.__file.id)
     }
+
     return ''
   }
 
   /**
-   * The setFilepath method.
-   * @param {any} filePath - The filePath value.
+   * Resolves resourceId using the specified path and sets its value to the parameter.
+   *
+   * @param {string} filePath - The filePath value.
    * @param {number} mode - The mode value.
    */
   setFilepath(filePath, mode) {
@@ -53,8 +63,9 @@ class FilePathParameter extends Parameter {
   }
 
   /**
-   * The getFilename method.
-   * @return {any} - The return value.
+   * Returns parameter's file name
+   *
+   * @return {string} - The return value.
    */
   getFilename() {
     if (this.__file) {
@@ -63,8 +74,9 @@ class FilePathParameter extends Parameter {
   }
 
   /**
-   * The getExt method.
-   * @return {any} - The return value.
+   * Returns parameter's file extension
+   *
+   * @return {string} - The return value.
    */
   getExt() {
     const filename = this.getFilename()
@@ -73,8 +85,9 @@ class FilePathParameter extends Parameter {
   }
 
   /**
-   * The getStem method.
-   * @return {any} - The return value.
+   * Returns parameter's file name without extension
+   *
+   * @return {string} - The return value.
    */
   getStem() {
     const filename = this.getFilename()
@@ -86,8 +99,9 @@ class FilePathParameter extends Parameter {
   }
 
   /**
-   * The getFileFolder method.
-   * @return {any} - The return value.
+   * Returns parent folder for of current parameter file.
+   *
+   * @return {object} - The return value.
    */
   getFileFolder() {
     if (this.__file) {
@@ -97,8 +111,9 @@ class FilePathParameter extends Parameter {
   }
 
   /**
-   * The getFileFolderPath method.
-   * @return {any} - The return value.
+   * Returns parent folder for of current parameter file.
+   *
+   * @return {string} - The return value.
    */
   getFileFolderPath() {
     const filePath = this.getFilepath()
@@ -108,8 +123,9 @@ class FilePathParameter extends Parameter {
   }
 
   /**
-   * The getFile method.
-   * @return {any} - The return value.
+   * Returns file object, which contains the url, resourceId and the name.
+   *
+   * @return {object} - The return value.
    */
   getFile() {
     return this.__file
@@ -117,45 +133,25 @@ class FilePathParameter extends Parameter {
 
   /**
    * The getFileDesc method.
-   * @return {any} - The return value.
+   * @return {object} - The return value.
    */
   getFileDesc() {
+    console.warn('@todo-review')
     // Can we settle on a convention?
     // console.warn("Deprecated method: 'getFileDesc'. Please use 'getFile'")
     return this.__file
   }
 
   /**
-   * The setUrl method.
-   * @param {any} url - The url value.
-   * @param {number} mode - The mode value.
+   * Sets file data.
+   *
+   * @param {string} url - the url value of the
+   * @param {string} name  -
+   * @param {number} mode -
    */
   setUrl(url, name, mode = ValueSetMode.USER_SETVALUE) {
     const parts = url.split('/')
-    if (!name)
-      name = parts[parts.length - 1]
-
-    if (!url.startsWith('http:') && !url.startsWith('blob:')) {
-      // Convert this relative url to an absolute.
-      // Note: this is necessary because the HTTP requests
-      // are invoked from the worker where the current file context
-      // is not known.
-      let rootURL = window.location.href.split('#')[0]
-      rootURL = rootURL.split('?')[0]
-      if (rootURL.endsWith('.html') || rootURL.endsWith('.html')) {
-        rootURL = rootURL.substring(0, rootURL.lastIndexOf('/')) + '/'
-      }
-      const base = rootURL
-      if (parts[0] == '.') parts.shift()
-      else if (parts[0] == '..') {
-        item = item.substring(3)
-        const baseparts = base.split('/')
-        baseparts.pop()
-        baseparts.pop()
-        base = baseparts.join('/') + '/'
-      }
-      url = base + url
-    }
+    if (!name) name = parts[parts.length - 1]
 
     this.__value = name
     this.__file = {
@@ -164,18 +160,16 @@ class FilePathParameter extends Parameter {
       url,
     }
 
-    if (
-      mode == ValueSetMode.USER_SETVALUE ||
-      mode == ValueSetMode.REMOTEUSER_SETVALUE
-    ) {
+    if (mode == ValueSetMode.USER_SETVALUE || mode == ValueSetMode.REMOTEUSER_SETVALUE) {
       this.__flags |= ParamFlags.USER_EDITED
     }
-    this.valueChanged.emit(mode)
+    this.emit('valueChanged', { mode })
   }
 
   /**
-   * The getUrl method.
-   * @return {any} - The return value.
+   * Returns the file url string.
+   *
+   * @return {string} - The return value.
    */
   getUrl() {
     return this.__file ? this.__file.url : undefined
@@ -183,15 +177,18 @@ class FilePathParameter extends Parameter {
 
   /**
    * The setDirty method.
-   * @param {any} cleanerFn - The cleanerFn value.
+   * @private
+   * @param {function} cleanerFn - The cleanerFn value.
    */
   setDirty(cleanerFn) {
-    throw new Error('Cannot drive a filepath param from an oporator')
+    console.warn('@todo-review')
+    throw new Error('Cannot drive a filepath param from an operator')
   }
 
   /**
-   * The setValue method.
-   * @param {any} value - The value param.
+   * Sets file parameter value receiving its resource id.
+   *
+   * @param {string} value - The value param.
    * @param {number} mode - The mode value.
    * @return {boolean} - The return value.
    */
@@ -201,9 +198,7 @@ class FilePathParameter extends Parameter {
       throw new Error('Invalid value for setValue.')
     }
     if (value.indexOf('.') > 0) {
-      console.warn(
-        'Deprecation warning for setValue. setValue should now only take a file id, not a path.'
-      )
+      console.warn('Deprecation warning for setValue. setValue should now only take a file id, not a path.')
       return this.setFilepath(value, mode)
     }
     // Note: equality tests only work on simple types.
@@ -213,7 +208,7 @@ class FilePathParameter extends Parameter {
     }
 
     // Note: the file path is selected by using the file browser
-    // For now it can return an aboslute path(within the project)
+    // For now it can return an absolute path(within the project)
     // and we convert to relative when we save.
     const resourceId = value
     if (!resourceLoader.resourceAvailable(resourceId)) {
@@ -230,22 +225,22 @@ class FilePathParameter extends Parameter {
     this.__value = value
     this.__file = file
 
-    resourceLoader.fileUpdated.connect(id => {
-      if (id == this.__value) {
+    resourceLoader.addListener('fileUpdated', (event) => {
+      if (event.fileId == this.__value) {
         this.__file = resourceLoader.getFile(this.__value)
-        this.fileUpdated.emit()
+        this.emit('fileUpdated', event)
       }
     })
 
-    if (mode == ValueSetMode.USER_SETVALUE)
-      this.__flags |= ParamFlags.USER_EDITED
-    this.valueChanged.emit(mode)
+    if (mode == ValueSetMode.USER_SETVALUE) this.__flags |= ParamFlags.USER_EDITED
+    this.emit('valueChanged', { mode })
   }
   // ////////////////////////////////////////
   // Persistence
 
   /**
-   * The toJSON method encodes this type as a json object for persistences.
+   * The toJSON method encodes this type as a json object for persistence.
+   *
    * @param {object} context - The context value.
    * @param {number} flags - The flags value.
    * @return {object} - Returns the json object.
@@ -265,6 +260,7 @@ class FilePathParameter extends Parameter {
 
   /**
    * The fromJSON method decodes a json object for this type.
+   *
    * @param {object} j - The json object this item must decode.
    * @param {object} context - The context value.
    * @param {number} flags - The flags value.
@@ -299,6 +295,7 @@ class FilePathParameter extends Parameter {
   /**
    * The clone method constructs a new file path parameter,
    * copies its values from this parameter and returns it.
+   *
    * @param {number} flags - The flags value.
    * @return {FilePathParameter} - Returns a new cloned file path parameter.
    */

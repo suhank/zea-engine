@@ -1,14 +1,25 @@
-import { Mat4 } from '../../Math'
+import { Mat4 } from '../../Math/index'
 import { Parameter } from './Parameter.js'
 
-/** Class representing a Mat4 (4x4 matrix) parameter.
+/**
+ * Represents a specific type of parameter, that only stores Mat4(4x4 matrix) values.
+ *
+ * i.e.:
+ * ```javascript
+ * const mat4Param = new Ma3Parameter('MyMat4', new Mat4(...args))
+ * //'myParameterOwnerItem' is an instance of a 'ParameterOwner' class.
+ * // Remember that only 'ParameterOwner' and classes that extend from it can host 'Parameter' objects.
+ * myParameterOwnerItem.addParameter(mat4Param)
+ * ```
+ *
  * @extends Parameter
  */
 class Mat4Parameter extends Parameter {
   /**
    * Create a Mat4 parameter.
+   *
    * @param {string} name - The name of the Mat4 parameter.
-   * @param {any} value - The value of the parameter.
+   * @param {Mat4} value - The value of the parameter.
    */
   constructor(name, value) {
     super(name, value ? value : new Mat4(), 'Mat4')
@@ -17,6 +28,7 @@ class Mat4Parameter extends Parameter {
   /**
    * The clone method constructs a new Mat4 parameter,
    * copies its values from this parameter and returns it.
+   *
    * @param {number} flags - The flags value.
    * @return {Mat4Parameter} - Returns a new cloned Mat4 parameter.
    */

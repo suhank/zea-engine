@@ -5,6 +5,7 @@ import { generateShaderGeomBinding } from './GeomShaderBinding.js'
 
 /** Class representing a GL environment map.
  * @extends GLProbe
+ * @private
  */
 class GLEnvMap extends GLProbe {
   /**
@@ -40,22 +41,16 @@ class GLEnvMap extends GLProbe {
       gl.__quadIndexBuffer
     )
 
-    // srcGLTex.updated.connect(() => {
-    //     this.convolveProbe(srcGLTex);
-    // });
     if (this.__envMap.isLoaded()) {
       this.convolveProbe(srcGLTex)
     } else {
-      this.__envMap.loaded.connect(() => {
+      const loaded = () => {
         // console.log(this.__envMap.getName() + " loaded");
         this.convolveProbe(srcGLTex)
-        this.loaded.emit()
-      })
+        this.emit('loaded', {})
+      }
+      this.__envMap.addListener('loaded', loaded)
     }
-    srcGLTex.destructing.connect(() => {
-      console.log(this.__envMap.getName() + ' destructing')
-      this.destroy()
-    })
   }
 
   /**

@@ -1,20 +1,24 @@
+/* eslint-disable new-cap */
+/* eslint-disable camelcase */
 import { JSON_stringify_fixedPrecision } from './Common.js'
 import { Vec3 } from './Vec3.js'
 import { PlaneType } from './PlaneType.js'
 import { typeRegistry } from './TypeRegistry.js'
 
-/** Class representing a Frustum. Frustums are used to determine what
+/**
+ * Class representing a Frustum. Frustums are used to determine what
  * is inside the camera's field of view.
+ * @private
  * */
 class Frustum {
   /**
    * Create a Frustum
-   * @param {any} p0 - the p0 value.
-   * @param {any} p1 - the p1 value.
-   * @param {any} p2 - the p2 value.
-   * @param {any} p3 - the p3 value.
-   * @param {any} p4 - the p4 value.
-   * @param {any} p5 - the p5 value.
+   * @param {PlaneType} p0 - the p0 value.
+   * @param {PlaneType} p1 - the p1 value.
+   * @param {PlaneType} p2 - the p2 value.
+   * @param {PlaneType} p3 - the p3 value.
+   * @param {PlaneType} p4 - the p4 value.
+   * @param {PlaneType} p5 - the p5 value.
    */
   constructor(p0, p1, p2, p3, p4, p5) {
     this.planes = [
@@ -42,7 +46,7 @@ class Frustum {
     planes[4].set(m.m03 - m.m02, m.m13 - m.m12, m.m23 - m.m22, m.m33 - m.m32)
     planes[5].set(m.m03 + m.m02, m.m13 + m.m12, m.m23 + m.m22, m.m33 + m.m32)
 
-    planes.forEach(plane => plane.normalizeInPlace())
+    planes.forEach((plane) => plane.normalizeInPlace())
   }
 
   /**
@@ -73,6 +77,7 @@ class Frustum {
 
   /**
    * The toJSON method encodes this type as a json object for persistences.
+   *
    * @return {object} - The json object.
    */
   toJSON() {
@@ -88,6 +93,7 @@ class Frustum {
 
   /**
    * The fromJSON method decodes a json object for this type.
+   *
    * @param {object} j - The json object.
    */
   fromJSON(j) {
@@ -100,8 +106,9 @@ class Frustum {
   }
 
   /**
-   * The toString method.
-   * @return {any} - The return value.
+   * Calls `toJSON` method and stringifies it.
+   *
+   * @return {string} - The return value.
    */
   toString() {
     return JSON_stringify_fixedPrecision(this.toJSON())

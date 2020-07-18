@@ -1,15 +1,19 @@
 import '../SceneTree/GeomItem.js'
 
-import { Signal } from '../Utilities'
+import { EventEmitter } from '../Utilities/index'
 
-/** This class abstracts the rendering of a collection of geometries to screen. */
-class GLGeomItemSet {
+/** This class abstracts the rendering of a collection of geometries to screen.
+ * @extends EventEmitter
+ * @private
+ */
+class GLGeomItemSet extends EventEmitter {
   /**
    * Create a GL geom item set.
    * @param {any} gl - The gl value.
    * @param {any} glgeom - The glgeom value.
    */
   constructor(gl, glgeom) {
+    super()
     this.gl = gl
     this.glgeom = glgeom
     this.glgeomItems = []
@@ -25,9 +29,6 @@ class GLGeomItemSet {
 
     // this.inverted = false;
     this.lightmapName = undefined
-
-    this.drawCountChanged = new Signal()
-    this.destructing = new Signal()
 
     this.visibleItems = []
     this.highlightedItems = []
@@ -84,7 +85,7 @@ class GLGeomItemSet {
     }
     if (glgeomItem.visible) {
       this.visibleItems.push(index)
-      this.drawCountChanged.emit(1)
+      this.emit('drawCountChanged', { count: 1 })
     }
     if (glgeomItem.getGeomItem().isHighlighted()) {
       this.highlightedItems.push(index)
@@ -97,7 +98,7 @@ class GLGeomItemSet {
 
     const signalIds = {}
 
-    signalIds.sel = glgeomItem.highlightChanged.connect(() => {
+    const highlightChanged = () => {
       if (glgeomItem.getGeomItem().isHighlighted()) {
         // Note: highlightChanged is fired when the color changes
         // or another hilight is added over the top. We avoid
@@ -109,18 +110,20 @@ class GLGeomItemSet {
       }
       // console.log("highlightChanged:", glgeomItem.getGeomItem().getName(), glgeomItem.getGeomItem().isHighlighted(), this.highlightedItems)
       this.highlightedIdsBufferDirty = true
-    })
-
-    signalIds.vis = glgeomItem.visibilityChanged.connect(visible => {
+    }
+    signalIds.hil = glgeomItem.on('highlightChanged', highlightChanged)
+    const visibilityChanged = (event) => {
+      const visible = event.visible
       if (visible) {
         this.visibleItems.push(index)
-        this.drawCountChanged.emit(1)
+        this.emit('drawCountChanged', { count: 1 })
       } else {
         this.visibleItems.splice(this.visibleItems.indexOf(index), 1)
-        this.drawCountChanged.emit(-1)
+        this.emit('drawCountChanged', { count: -1 })
       }
       this.drawIdsBufferDirty = true
-    })
+    }
+    signalIds.vis = glgeomItem.on('visibilityChanged', visibilityChanged)
 
     this.glgeomItems[index] = glgeomItem
     this.glgeomItemSignalIds[index] = signalIds
@@ -135,8 +138,8 @@ class GLGeomItemSet {
   removeGeomItem(glgeomItem) {
     const index = this.glgeomItems.indexOf(glgeomItem)
     const signalIds = this.glgeomItemSignalIds[index]
-    glgeomItem.highlightChanged.disconnectId(signalIds.sel)
-    glgeomItem.visibilityChanged.disconnectId(signalIds.vis)
+    glgeomItem.removeListenerById('highlightChanged', signalIds.hil)
+    glgeomItem.removeListenerById('visibilityChanged', signalIds.vis)
 
     this.glgeomItems[index] = null
     this.glgeomItemSignalIds[index] = null
@@ -145,7 +148,7 @@ class GLGeomItemSet {
 
     if (glgeomItem.visible) {
       this.visibleItems.splice(this.visibleItems.indexOf(index), 1)
-      this.drawCountChanged.emit(-1)
+      this.emit('drawCountChanged', { count: -1 })
     }
     const highlighted = glgeomItem.getGeomItem().isHighlighted()
     if (highlighted) {
@@ -364,7 +367,7 @@ class GLGeomItemSet {
    * Users should never need to call this method directly.
    */
   destroy() {
-    this.destructing.emit()
+    this.emit('destructing', {})
   }
 }
 

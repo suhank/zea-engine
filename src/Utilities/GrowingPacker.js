@@ -1,8 +1,8 @@
 // Taken from here: https://github.com/jakesgordon/bin-packing/blob/master/js/packer.growing.js
 
 import {
-  Signal
-} from './Signal'
+  EventEmitter
+} from './EventEmitter'
 
 
 /******************************************************************************
@@ -64,16 +64,15 @@ Example:
 
 ******************************************************************************/
 
-class GrowingPacker {
+class GrowingPacker extends EventEmitter {
   constructor(w = 0, h = 0) {
+    super()
     this.root = {
       x: 0,
       y: 0,
       w: w,
       h: h
-    };
-
-    this.resized = new Signal();
+    }
   }
 
   fit(blocks) {
@@ -90,7 +89,7 @@ class GrowingPacker {
       resized = true;
     }
     if(resized){
-      this.resized.emit(this.root.w, this.root.h);
+      this.emit('resized', { width: this.root.w, height: this.root.h })
     }
     const eachBlock = (block) => {
       block.fit = this.__addBlock(block)
@@ -117,7 +116,7 @@ class GrowingPacker {
       resized = true;
     }
     if(resized){
-      this.resized.emit(this.root.w, this.root.h);
+      this.emit('resized', { width: this.root.w, height: this.root.h })
     }
     const node = this.findNode(this.root, block.w, block.h);
     if (node)
@@ -190,7 +189,7 @@ class GrowingPacker {
     let res;
     if (node)
       res = this.splitNode(node, w, h);
-    this.resized.emit(this.root.w, this.root.h);
+    this.emit('resized', { width: this.root.w, height: this.root.h })
     return res;
   }
 
@@ -213,7 +212,7 @@ class GrowingPacker {
     let res;
     if (node)
       res = this.splitNode(node, w, h);
-    this.resized.emit(this.root.w, this.root.h);
+    this.emit('resized', { width: this.root.w, height: this.root.h })
     return res;
   }
 

@@ -1,19 +1,20 @@
 import { GLPass, PassType } from './GLPass.js'
 import { GLRenderer } from '../GLRenderer.js'
 
-import { AudioItem, GeomItem } from '../../SceneTree'
+import { AudioItem, GeomItem } from '../../SceneTree/index'
 
 const AudioContext =
+  globalThis.navigator && (
   window.AudioContext || // Default
   window.webkitAudioContext || // Safari and old versions of Chrome
-  false
+  false)
 
 let audioCtx
 if (AudioContext) {
   // Do whatever you want using the Web Audio API
   audioCtx = new AudioContext()
   // ...
-} else {
+} else if (globalThis.navigator) {
   // Web Audio API is not supported
   // Alert the user
   alert(
@@ -46,7 +47,8 @@ class GLAudioItemsPass extends GLPass {
     this.__renderer.registerPass(
       treeItem => {
         if (treeItem instanceof AudioItem) {
-          treeItem.audioSourceCreated.connect(audioSource => {
+          treeItem.addListener('audioSourceCreated', event => {
+            const { audioSource } = event
             this.addAudioSource(treeItem, audioSource, treeItem)
           })
           return true
@@ -61,7 +63,7 @@ class GLAudioItemsPass extends GLPass {
               baseColorParam.getImage()
             ) {
               const image = baseColorParam.getImage()
-              image.loaded.connect(() => {
+              image.addListener('loaded', () => {
                 if (image.getAudioSource) {
                   const audioSource = image.getAudioSource()
                   if (
@@ -102,7 +104,7 @@ class GLAudioItemsPass extends GLPass {
       // param.value = vlParam.getValue();
       param.setValueAtTime(vlParam.getValue(), 0)
       param.setValueAtTime(vlParam.getValue(), 5)
-      vlParam.valueChanged.connect(() => {
+      vlParam.addListener('valueChanged', () => {
         // param.setTargetAtTime(vlParam.getValue(), audioCtx.currentTime);
         param.value = vlParam.getValue()
       })
@@ -114,23 +116,23 @@ class GLAudioItemsPass extends GLPass {
       connectVLParamToAudioNodeParam(gainParam, gainNode.gain)
     }
 
-    source.connect(gainNode)
+  ('gasource', inNode)
 
     const spatializeParam = parameterOwner.getParameter('SpatializeAudio')
     if (spatializeParam && spatializeParam.getValue() == false) {
-      source.connect(audioCtx.destination)
+    ('ausource', dioCtx.destination)
     } else {
       const panner = audioCtx.createPanner()
       panner.panningModel = 'HRTF'
       panner.distanceModel = 'inverse'
-      source.connect(panner)
-      panner.connect(audioCtx.destination)
+    ('pasource', nner)
+    ('aupanner', dioCtx.destination)
 
       const connectVLParamToAudioNode = paramName => {
         const vlParam = parameterOwner.getParameter(paramName)
         if (!vlParam) return
         panner[paramName] = vlParam.getValue()
-        vlParam.valueChanged.connect(() => {
+        vlParam.addListener('valueChanged', () => {
           panner[paramName] = vlParam.getValue()
         })
       }
@@ -181,7 +183,7 @@ class GLAudioItemsPass extends GLPass {
         // setVelocity()
       }
       updatePannerNodePosition()
-      treeItem.globalXfoChanged.connect(changeType => {
+      treeItem.addListener('globalXfoChanged', event => {
         updatePannerNodePosition()
       })
     }
@@ -193,7 +195,7 @@ class GLAudioItemsPass extends GLPass {
       parameterOwner,
     })
 
-    this.updated.emit()
+    this.emit('updated', {})
   }
 
   /**
@@ -254,5 +256,10 @@ class GLAudioItemsPass extends GLPass {
 }
 
 GLRenderer.registerPass(GLAudioItemsPass, PassType.OVERLAY)
+
+// Hack so Audio Item can access the context.
+if (globalThis.navigator && window) {
+  window.ZeaAudioaudioCtx = audioCtx;
+}
 
 export { GLAudioItemsPass, audioCtx }

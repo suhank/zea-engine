@@ -1,4 +1,4 @@
-import { Vec3, Quat } from '../../Math'
+import { Vec3, Quat } from '../../Math/index'
 import { Operator } from './Operator.js'
 import { XfoOperatorOutput } from './OperatorOutput.js'
 import {
@@ -6,7 +6,8 @@ import {
   NumberParameter,
   Vec3Parameter,
   ListParameter,
-} from '../Parameters'
+  Parameter,
+} from '../Parameters/index'
 import { sgFactory } from '../SGFactory.js'
 
 /** Class representing a gear parameter.
@@ -107,7 +108,7 @@ class GearsOperator extends Operator {
     )
     const rpmParam = this.addParameter(new NumberParameter('RPM', 0.0)) // revolutions per minute
     this.__timeoutId
-    rpmParam.valueChanged.connect(() => {
+    rpmParam.addListener('valueChanged', () => {
       const rpm = rpmParam.getValue()
       if (Math.abs(rpm) > 0.0) {
         if (!this.__timeoutId) {
@@ -129,11 +130,11 @@ class GearsOperator extends Operator {
     this.__gearsParam = this.addParameter(
       new ListParameter('Gears', GearParameter)
     )
-    this.__gearsParam.elementAdded.connect((value, index) => {
-      this.addOutput(value.getOutput())
+    this.__gearsParam.addListener('elementAdded', event => {
+      this.addOutput(event.elem.getOutput())
     })
-    this.__gearsParam.elementRemoved.connect((value, index) => {
-      this.removeOutput(index)
+    this.__gearsParam.addListener('elementRemoved', event => {
+      this.removeOutput(event.index)
     })
 
     this.__gears = []
@@ -190,7 +191,7 @@ class GearsOperator extends Operator {
     super.reattach()
 
     // Restart the operator.
-    this.getParameter('RPM').valueChanged.emit()
+    this.getParameter('RPM').emit('valueChanged', { mode: Parameter.ValueSetMode.USER_SETVALUE })
   }
 
   /**

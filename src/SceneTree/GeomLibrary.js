@@ -1,29 +1,30 @@
 import { SystemDesc } from '../BrowserDetection.js'
-import { Signal } from '../Utilities'
 import { BinReader } from './BinReader.js'
 import { loadBinfile } from './Utils.js'
 import { PointsProxy, LinesProxy, MeshProxy } from './Geometry/GeomProxies.js'
+import { EventEmitter } from '../Utilities/index'
 
 // The GeomLibrary parses geometry data using workers.
 // This can be difficult to debug, so you can disable this 
 // by setting the following boolena to false, and uncommenting
 // the import of parseGeomsBinary
 const multiThreadParsing = true
-const GeomParserWorker = require('worker-loader?inline!./Geometry/GeomParserWorker.js')
+
+import GeomParserWorker from 'web-worker:./Geometry/GeomParserWorker.js'
+
 // import {
 //     parseGeomsBinary
 // } from './Geometry/parseGeomsBinary.js';
 
-/** Class representing a geometry library. */
-class GeomLibrary {
+/** Class representing a geometry library.
+ * @private
+ */
+class GeomLibrary extends EventEmitter {
   /**
    * Create a geom library.
    */
   constructor() {
-    this.rangeLoaded = new Signal()
-    this.streamFileParsed = new Signal()
-    this.loaded = new Signal(true)
-
+    super()
     this.__streamInfos = {}
     this.__genBuffersOpts = {}
 
@@ -139,7 +140,7 @@ class GeomLibrary {
     }
 
     if (numGeoms == 0) {
-      this.streamFileParsed.emit(1)
+      this.emit('streamFileParsed', {})
       return numGeoms
     }
     if (this.__numGeoms == 0) {
@@ -257,7 +258,7 @@ class GeomLibrary {
       }
       this.geoms[offset + i] = proxy
     }
-    this.rangeLoaded.emit(storedRange)
+    this.emit('rangeLoaded', { range: storedRange })
 
     const loaded = storedRange[1] - storedRange[0]
     // console.log("GeomLibrary Loaded:" + loaded);
@@ -268,7 +269,7 @@ class GeomLibrary {
     streamInfo.done += loaded
     // console.log(key + " Loaded:" + streamInfo.done + " of :" + streamInfo.total);
     if (streamInfo.done == streamInfo.total) {
-      this.streamFileParsed.emit(1)
+      this.emit('streamFileParsed', { count: 1 })
     }
 
     // Once all the geoms from all the files are loaded and parsed
@@ -278,7 +279,7 @@ class GeomLibrary {
     if (this.__loaded == this.__numGeoms) {
       // console.log("GeomLibrary Loaded:" + this.__name + " count:" + geomDatas.length + " loaded:" + this.__loaded);
       this.__terminateWorkers()
-      this.loaded.emit()
+      this.emit('loaded',)
     }
   }
 

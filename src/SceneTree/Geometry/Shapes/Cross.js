@@ -2,7 +2,18 @@ import { Lines } from '../Lines.js'
 import { NumberParameter } from '../../Parameters/NumberParameter.js'
 import { sgFactory } from '../../SGFactory.js'
 
-/** A class for generating a cross shape.
+/**
+ * A class for generating a cross shape, drawing a line on the `X,Y,Z` axes.
+ * The axis line length is the `size` you specify, but the middle of the line is positioned in the coordinate `(0, 0, 0)` .
+ * Meaning that half of the line goes negative and half goes positive.
+ *
+ * ```
+ * const cross = new Cross(1.5)
+ * ```
+ *
+ * **Parameters**
+ * * **size(`NumberParameter`):** Specifies the size of the cross.
+ *
  * @extends Lines
  */
 class Cross extends Lines {
@@ -21,11 +32,12 @@ class Cross extends Lines {
     const resize = () => {
       this.__resize()
     }
-    this.__sizeParam.valueChanged.connect(resize)
+    this.__sizeParam.addListener('valueChanged', resize)
   }
 
   /**
    * Getter for the cross size.
+   *
    * @return {number} - Returns the size.
    */
   get size() {
@@ -34,6 +46,7 @@ class Cross extends Lines {
 
   /**
    * Setter for the cross size.
+   *
    * @param {number} val - The size value.
    */
   set size(val) {

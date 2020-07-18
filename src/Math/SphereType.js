@@ -1,9 +1,13 @@
+/* eslint-disable new-cap */
+/* eslint-disable camelcase */
 import { JSON_stringify_fixedPrecision } from './Common.js'
 import { AttrValue } from './AttrValue.js'
 import { typeRegistry } from './TypeRegistry.js'
 import { Vec3 } from './Vec3.js'
 
-/** Class representing a sphere.
+/**
+ * Class representing a sphere.
+ *
  * @extends AttrValue
  */
 class SphereType extends AttrValue {
@@ -24,6 +28,7 @@ class SphereType extends AttrValue {
 
   /**
    * Clones this sphere and returns a new sphere.
+   *
    * @return {Sphere} - Returns a new sphere.
    */
   clone() {
@@ -31,24 +36,13 @@ class SphereType extends AttrValue {
   }
 
   /**
-   * Checks if this spehere intersects a box.
-   * @param {any} box - The box value.
-   * @return {any} - The return value.
+   * Checks if this sphere intersects a box.
+   *
+   * @param {Box3} box - The box value.
+   * @return {boolean} - The return value.
    */
   intersectsBox(box) {
     return box.intersectsSphere(this)
-  }
-
-  // ////////////////////////////////////////
-  // Static Methods
-
-  /**
-   * Creates a new sphere.
-   * @param {...object} ...args - The ...args param.
-   * @return {Sphere} - Returns a new sphere.
-   */
-  static create(...args) {
-    return new Sphere(...args)
   }
 
   // ///////////////////////////
@@ -56,6 +50,7 @@ class SphereType extends AttrValue {
 
   /**
    * The toJSON method encodes this type as a json object for persistences.
+   *
    * @return {object} - The json object.
    */
   toJSON() {
@@ -66,11 +61,26 @@ class SphereType extends AttrValue {
   }
 
   /**
-   * The toString method.
-   * @return {any} - The return value.
+   * Calls `toJSON` method and stringifies it.
+   *
+   * @return {string} - The return value.
    */
   toString() {
     return JSON_stringify_fixedPrecision(this.toJSON())
+  }
+  
+  // ////////////////////////////////////////
+  // Static Methods
+
+  /**
+   * Creates a new sphere.
+   *
+   * @param {...object} ...args - The ...args param.
+   * @return {Sphere} - Returns a new sphere.
+   * @private
+   */
+  static create(...args) {
+    return new Sphere(...args)
   }
 }
 

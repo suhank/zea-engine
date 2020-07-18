@@ -1,39 +1,36 @@
-import { Signal } from '../Utilities'
+import { RefCounted } from '../SceneTree/index'
 import { generateShaderGeomBinding } from './GeomShaderBinding.js'
 
-/** Class representing a GL geom. */
-class GLGeom {
+/** Class representing a GL geom.
+ * @private
+ */
+class GLGeom extends RefCounted {
   /**
    * Create a GL geom.
    * @param {any} gl - The gl value.
    * @param {any} geom - The geom value.
    */
   constructor(gl, geom) {
+    super()
     this.__gl = gl
     this.__geom = geom
     this.__glattrs = {}
 
     this.__glattrbuffers = {}
     this.__shaderBindings = {}
-    this.destructing = new Signal()
-    this.updated = new Signal()
 
     const updateBuffers = opts => {
       this.updateBuffers(opts)
-      this.updated.emit()
+      this.emit('updated', {})
     }
-    this.__geom.geomDataChanged.connect(updateBuffers)
+    this.__geom.addListener('geomDataChanged', updateBuffers)
 
     const regenBuffers = opts => {
       this.clearShaderBindings()
       this.updateBuffers(opts)
-      this.updated.emit()
+      this.emit('updated', {})
     }
-    this.__geom.geomDataTopologyChanged.connect(regenBuffers)
-
-    this.__geom.destructing.connect(() => {
-      this.destroy()
-    })
+    this.__geom.addListener('geomDataTopologyChanged', regenBuffers)
   }
 
   /**
@@ -161,7 +158,7 @@ class GLGeom {
 
     this.__shaderBindings = {}
     this.__destroyed = true
-    this.destructing.emit(this)
+    // this.emit('destructing', {})
   }
 }
 

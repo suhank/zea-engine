@@ -1,8 +1,16 @@
-import { Signal } from '../../Utilities'
+import { EventEmitter } from '../../Utilities/index'
 import { resourceLoader } from '../ResourceLoader.js'
 import { loadTextfile, loadBinfile } from '../Utils.js'
 
-const getFirstBrowserLanguage = function() {
+// eslint-disable-next-line require-jsdoc
+function getLanguage() {
+  if (!globalThis.navigator) return "en"
+
+  // Check if a language is explicitly selected.
+  const searchParams = new URLSearchParams(window.location.search)
+  if (searchParams.has("lang"))
+    return searchParams.get("lang")
+
   const nav = window.navigator
   const browserLanguagePropertyKeys = [
     'language',
@@ -13,12 +21,22 @@ const getFirstBrowserLanguage = function() {
   let i
   let language
 
+  
+  const clean = (language) => {
+    if (language.startsWith('en')) return 'En'
+    else if (language.startsWith('es')) return 'Es'
+    else if (language.startsWith('fr')) return 'Fr'
+    else if (language.startsWith('gb') || language.startsWith('de'))
+      return 'Gb'
+    return language
+  }
+
   // support for HTML 5.1 "navigator.languages"
   if (Array.isArray(nav.languages)) {
     for (i = 0; i < nav.languages.length; i++) {
       language = nav.languages[i]
       if (language && language.length) {
-        return language
+        return clean(language)
       }
     }
   }
@@ -27,28 +45,25 @@ const getFirstBrowserLanguage = function() {
   for (i = 0; i < browserLanguagePropertyKeys.length; i++) {
     language = nav[browserLanguagePropertyKeys[i]]
     if (language && language.length) {
-      return language
+      return clean(language)
     }
   }
 
   return null
 }
 
-/** Class representing a label manager. */
-class LabelManager {
+/** Class representing a label manager.
+ * @private
+ */
+class LabelManager extends EventEmitter {
   /**
    * Create a label manager.
    */
   constructor() {
+    super()
     this.__labelLibraries = {}
-    this.labelLibraryLoaded = new Signal()
 
-    const language = getFirstBrowserLanguage()
-    if (language.startsWith('en')) this.__language = 'En'
-    else if (language.startsWith('es')) this.__language = 'Es'
-    else if (language.startsWith('fr')) this.__language = 'Fr'
-    else if (language.startsWith('gb') || language.startsWith('de'))
-      this.__language = 'Gb'
+    this.__language = getLanguage()
 
     this.__foundLabelLibraries = {}
 
@@ -57,11 +72,11 @@ class LabelManager {
       this.__foundLabelLibraries[stem] = file
       loadTextfile(file.url, text => {
         this.__labelLibraries[stem] = JSON.parse(text)
-        this.labelLibraryLoaded.emit(stem)
+        this.emit('labelLibraryLoaded', { library: stem })
       })
     })
 
-    if (window.XLSX) {
+    if (globalThis.navigator && window.XLSX) {
       // Note: example taken from here..
       // https://stackoverflow.com/questions/8238407/how-to-parse-excel-file-in-javascript-html5
       // and here:
@@ -89,10 +104,21 @@ class LabelManager {
           })
 
           this.__labelLibraries[stem] = json
-          this.labelLibraryLoaded.emit(stem)
+          this.emit('labelLibraryLoaded', { library: stem })
         })
       })
     }
+  }
+
+  /**
+   * Load a label library into the manager.
+   * @param {string} name - The name of the library.
+   * @param {json} json - The json data of of the library.
+   */
+  loadLibrary(name, json) {
+    this.__foundLabelLibraries[name] = true
+    this.__labelLibraries[name] = json
+    this.emit('labelLibraryLoaded', { library: name })
   }
 
   /**

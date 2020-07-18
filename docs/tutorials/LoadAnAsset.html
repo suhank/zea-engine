@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Load an Asset</title>
+    <meta charset="UTF-8"/>
+  </head>
+  <body>
+    <div id="app"></div>
+  </body>
+  <script type=module>
+import { 
+  Vec3,
+  EulerAngles,
+  Xfo,
+  ObjAsset,
+  Scene, 
+  GLRenderer
+} from "../dist/index.esm.js"
+
+const domElement = document.getElementById("app");
+
+const scene = new Scene();
+scene.setupGrid(10.0, 10);
+
+const objAsset = new ObjAsset('cow')
+objAsset.getParameter('FilePath').setUrl('data/cow.obj')
+scene.getRoot().addChild(objAsset)
+
+const xfo = new Xfo();
+xfo.tr.set(0, 0, 3.55)
+xfo.ori.setFromEulerAngles(new EulerAngles(90 * (Math.PI / 180), 0, 0))
+objAsset.getParameter('GlobalXfo').setValue(xfo)
+
+const renderer = new GLRenderer(domElement);
+renderer.setScene(scene);
+renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(10, 10, 5), new Vec3(0, 0, 3))
+  </script>
+</html>

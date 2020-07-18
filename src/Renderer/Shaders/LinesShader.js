@@ -1,5 +1,5 @@
-import { Color } from '../../Math'
-import { sgFactory } from '../../SceneTree'
+import { Color } from '../../Math/index'
+import { sgFactory } from '../../SceneTree/index'
 import { shaderLibrary } from '../ShaderLibrary.js'
 import { GLShader } from '../GLShader.js'
 import './GLSL/stack-gl/transpose.js'
@@ -40,7 +40,7 @@ void main(void) {
       `
 precision highp float;
 
-uniform color Color;
+uniform color BaseColor;
 uniform float Opacity;
 
 #ifdef ENABLE_ES3
@@ -50,7 +50,7 @@ void main(void) {
 #ifndef ENABLE_ES3
     vec4 fragColor;
 #endif
-    fragColor = Color;
+    fragColor = BaseColor;
     fragColor.a *= Opacity;
     
 #ifndef ENABLE_ES3
@@ -64,7 +64,7 @@ void main(void) {
 
   static getParamDeclarations() {
     const paramDescs = super.getParamDeclarations()
-    paramDescs.push({ name: 'Color', defaultValue: new Color(1.0, 1.0, 0.5) })
+    paramDescs.push({ name: 'BaseColor', defaultValue: new Color(1.0, 1.0, 0.5) })
     paramDescs.push({ name: 'Opacity', defaultValue: 1.0 })
     return paramDescs
   }

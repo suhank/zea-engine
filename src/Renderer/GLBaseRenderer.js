@@ -1,5 +1,4 @@
-import { Signal } from '../Utilities'
-import { TreeItem, sgFactory } from '../SceneTree'
+import { TreeItem, sgFactory, ParameterOwner } from '../SceneTree/index'
 import { SystemDesc } from '../BrowserDetection.js'
 import { onResize } from '../external/onResize.js'
 import { create3DContext } from './GLContext.js'
@@ -16,14 +15,17 @@ let mouseLeft = false
 
 const registeredPasses = {}
 
-/** Class representing a GL base renderer. */
-class GLBaseRenderer {
+/** Class representing a GL base renderer.
+ * @extends ParameterOwner
+ */
+class GLBaseRenderer extends ParameterOwner {
   /**
    * Create a GL base renderer.
    * @param {any} canvasDiv - The canvasDiv value.
    * @param {any} options - The options value.
    */
   constructor(canvasDiv, options = {}) {
+    super()
     if (!SystemDesc.gpuDesc) {
       console.warn('Unable to create renderer')
       return
@@ -33,8 +35,8 @@ class GLBaseRenderer {
     this.__passes = {}
     this.__passCallbacks = []
 
-    this.addTreeItem = this.addTreeItem.bind(this)
-    this.removeTreeItem = this.removeTreeItem.bind(this)
+    this.__childItemAdded = this.__childItemAdded.bind(this)
+    this.__childItemRemoved = this.__childItemRemoved.bind(this)
 
     this.__viewports = []
     this.__activeViewport = undefined
@@ -51,18 +53,6 @@ class GLBaseRenderer {
     // Function Bindings.
     this.renderGeomDataFbos = this.renderGeomDataFbos.bind(this)
     this.requestRedraw = this.requestRedraw.bind(this)
-
-    this.resized = new Signal()
-    this.keyPressed = new Signal()
-    this.sceneSet = new Signal(true)
-    this.vrViewportSetup = new Signal(true)
-    this.sessionClientSetup = new Signal(true)
-
-    // Signals to abstract the user view.
-    // i.e. when a user switches to VR mode, the signals
-    // simply emit the new VR data.
-    this.viewChanged = new Signal()
-    this.redrawOccured = new Signal()
 
     this.setupWebGL(canvasDiv, options.webglOptions ? options.webglOptions : {})
     this.bindEventHandlers()
@@ -95,7 +85,9 @@ class GLBaseRenderer {
             // this.__gl.setCompatibleXRDevice(device);
             this.__gl.makeXRCompatible().then(() => {
               this.__xrViewport = this.__setupXRViewport()
-              this.vrViewportSetup.emit(this.__xrViewport)
+              this.emit('xrViewportSetup', {
+                xrViewport: this.__xrViewport,
+              })
               resolve(this.__xrViewport)
             })
           }
@@ -122,7 +114,7 @@ class GLBaseRenderer {
           }
 
           // TODO:
-          // navigator.xr.addEventListener('devicechange', checkForXRSupport);
+          // navigator.xr.addListener('devicechange', checkForXRSupport);
         }
       }
     })
@@ -178,15 +170,19 @@ class GLBaseRenderer {
    */
   addViewport(name) {
     const vp = new GLViewport(this, name, this.getWidth(), this.getHeight())
-    vp.updated.connect(() => {
-      this.requestRedraw()
-    })
-
+    
     vp.createGeomDataFbo(this.__floatGeomBuffer)
 
-    vp.viewChanged.connect(data => {
-      if (!this.__xrViewportPresenting) this.viewChanged.emit(data)
-    })
+    const updated = () => {
+      this.requestRedraw()
+    }
+    const viewChanged = data => {
+      if (!this.__xrViewportPresenting) {
+        this.emit('viewChanged', data)
+      }
+    }
+    vp.addListener('updated', updated)
+    vp.addListener('viewChanged', viewChanged)
 
     this.__viewports.push(vp)
     return vp
@@ -323,7 +319,14 @@ class GLBaseRenderer {
     if (this.__gizmoContext)
       this.__gizmoContext.setSelectionManager(scene.getSelectionManager())
 
-    this.sceneSet.emit(this.__scene)
+    this.emit('sceneSet', { scene: this.__scene })
+  }
+
+  __childItemAdded(event) {
+    this.addTreeItem(event.childItem)
+  }
+  __childItemRemoved(event) {
+    this.removeTreeItem(event.childItem)
   }
 
   /**
@@ -333,9 +336,6 @@ class GLBaseRenderer {
   addTreeItem(treeItem) {
     // Note: we can have BaseItems in the tree now.
     if (!(treeItem instanceof TreeItem)) return
-    if (treeItem.isDestroyed()) {
-      throw new Error('treeItem is destroyed:' + treeItem.getPath())
-    }
 
     for (const passCbs of this.__passCallbacks) {
       const rargs = {
@@ -353,8 +353,8 @@ class GLBaseRenderer {
       if (childItem) this.addTreeItem(childItem)
     }
 
-    treeItem.childAdded.connect(this.addTreeItem)
-    treeItem.childRemoved.connect(this.removeTreeItem)
+    treeItem.addListener('childAdded', this.__childItemAdded)
+    treeItem.addListener('childRemoved', this.__childItemRemoved)
 
     this.renderGeomDataFbos()
   }
@@ -367,8 +367,8 @@ class GLBaseRenderer {
     // Note: we can have BaseItems in the tree now.
     if (!(treeItem instanceof TreeItem)) return
 
-    treeItem.childAdded.disconnect(this.addTreeItem)
-    treeItem.childRemoved.disconnect(this.removeTreeItem)
+    treeItem.removeListener('childAdded', this.__childItemAdded)
+    treeItem.removeListener('childRemoved', this.__childItemRemoved)
 
     for (const passCbs of this.__passCallbacks) {
       if (!passCbs.itemRemovedFn) continue
@@ -440,7 +440,10 @@ class GLBaseRenderer {
 
       this.resizeFbos(this.__glcanvas.width, this.__glcanvas.height)
 
-      this.resized.emit(this.__glcanvas.width, this.__glcanvas.height)
+      this.emit('resized', {
+        width: this.__glcanvas.width,
+        height: this.__glcanvas.height
+      })
       this.requestRedraw()
     }
   }
@@ -471,7 +474,7 @@ class GLBaseRenderer {
     this.__glcanvasDiv = canvasDiv
     this.__glcanvasDiv.appendChild(this.__glcanvas)
 
-    onResize(this.__glcanvas, event => {
+    onResize(this.__glcanvas, (event) => {
       this.__onResize()
     })
     this.__onResize()
@@ -539,16 +542,21 @@ class GLBaseRenderer {
       return this.__glcanvas.width > 0 && this.__glcanvas.height
     }
 
-    const calcRendererCoords = event => {
+    const calcRendererCoords = (event) => {
       const rect = this.__glcanvas.getBoundingClientRect()
       // Disabling devicePixelRatio for now. See: __onResize
       const dpr = 1.0;//window.devicePixelRatio
+      // Note: the rendererX/Y values are relative to the viewport,
+      // but are available outside the viewport. So when a mouse
+      // drag occurs, and drags outside the viewport, these values
+      // provide consistent coords.
+      // offsetX/Y are only valid inside the viewport and so cause
+      // jumps when the mouse leaves the viewport.
       event.rendererX = (event.clientX - rect.left) * dpr
       event.rendererY = (event.clientY - rect.top) * dpr
     }
 
-    this.__glcanvas.addEventListener('mouseenter', event => {
-      event.stopPropagation()
+    this.__glcanvas.addEventListener('mouseenter', (event) => {
       event.undoRedoManager = this.undoRedoManager
       if (!mouseIsDown) {
         activeGLRenderer = this
@@ -558,9 +566,8 @@ class GLBaseRenderer {
         mouseLeft = false
       }
     })
-    this.__glcanvas.addEventListener('mouseleave', event => {
+    this.__glcanvas.addEventListener('mouseleave', (event) => {
       if (activeGLRenderer != this || !isValidCanvas()) return
-      event.stopPropagation()
       event.undoRedoManager = this.undoRedoManager
       if (!mouseIsDown) {
         const vp = activeGLRenderer.getActiveViewport()
@@ -573,8 +580,7 @@ class GLBaseRenderer {
         mouseLeft = true
       }
     })
-    this.__glcanvas.addEventListener('mousedown', event => {
-      event.stopPropagation()
+    this.__glcanvas.addEventListener('mousedown', (event) => {
       event.undoRedoManager = this.undoRedoManager
       calcRendererCoords(event)
       mouseIsDown = true
@@ -587,12 +593,9 @@ class GLBaseRenderer {
       mouseLeft = false
       return false
     })
-    document.addEventListener('mouseup', event => {
+    document.addEventListener('mouseup', (event) => {
       if (activeGLRenderer != this || !isValidCanvas()) return
-      event.stopPropagation()
       event.undoRedoManager = this.undoRedoManager
-      // if(mouseIsDown && mouseMoveDist < 0.01)
-      //     mouseClick(event);
       calcRendererCoords(event)
       mouseIsDown = false
       const vp = activeGLRenderer.getActiveViewport()
@@ -610,19 +613,17 @@ class GLBaseRenderer {
       return false
     })
 
-    // document.addEventListener('dblclick', (event)=>{
+    // document.addEventListener('dblclick', (event) =>{
     //     event.preventDefault();
     //     event.stopPropagation();
     // });
-    // document.addEventListener('click', (event)=>{
+    // document.addEventListener('click', (event) =>{
     //     event.preventDefault();
     //     event.stopPropagation();
     // });
 
-    document.addEventListener('mousemove', event => {
+    document.addEventListener('mousemove', (event) => {
       if (activeGLRenderer != this || !isValidCanvas()) return
-      event.preventDefault()
-      event.stopPropagation()
       event.undoRedoManager = this.undoRedoManager
       calcRendererCoords(event)
       if (!mouseIsDown)
@@ -635,19 +636,17 @@ class GLBaseRenderer {
       return false
     })
 
-    const onWheel = event => {
+    const onWheel = (event) => {
       if (activeGLRenderer != this || !isValidCanvas()) return
       if (activeGLRenderer) {
-        event.stopPropagation()
         event.undoRedoManager = this.undoRedoManager
-        if (!window.addEventListener) event.preventDefault()
         this.onWheel(event)
       }
       return false
     }
     if (window.addEventListener)
       /** DOMMouseScroll is for mozilla. */
-      window.addEventListener('wheel', onWheel, { passive: true })
+      window.addEventListener('wheel', onWheel, { passive: false })
     else {
       /** IE/Opera. */
       window.onmousewheel = document.onmousewheel = onWheel
@@ -657,7 +656,7 @@ class GLBaseRenderer {
       return false
     }
 
-    document.addEventListener('keypress', event => {
+    document.addEventListener('keypress', (event) => {
       if (activeGLRenderer != this || !isValidCanvas()) return
       const key = String.fromCharCode(event.keyCode).toLowerCase()
       const vp = activeGLRenderer.getActiveViewport()
@@ -666,7 +665,7 @@ class GLBaseRenderer {
       }
     })
 
-    document.addEventListener('keydown', event => {
+    document.addEventListener('keydown', (event) => {
       if (activeGLRenderer != this || !isValidCanvas()) return
       const key = String.fromCharCode(event.keyCode).toLowerCase()
       const vp = activeGLRenderer.getActiveViewport()
@@ -675,7 +674,7 @@ class GLBaseRenderer {
       }
     })
 
-    document.addEventListener('keyup', event => {
+    document.addEventListener('keyup', (event) => {
       if (activeGLRenderer != this || !isValidCanvas()) return
       const key = String.fromCharCode(event.keyCode).toLowerCase()
       const vp = activeGLRenderer.getActiveViewport()
@@ -686,7 +685,7 @@ class GLBaseRenderer {
 
     this.__glcanvas.addEventListener(
       'touchstart',
-      event => {
+      (event) => {
         event.stopPropagation()
         event.undoRedoManager = this.undoRedoManager
         for (let i = 0; i < event.touches.length; i++) {
@@ -699,7 +698,7 @@ class GLBaseRenderer {
 
     this.__glcanvas.addEventListener(
       'touchmove',
-      event => {
+      (event) => {
         event.stopPropagation()
         event.undoRedoManager = this.undoRedoManager
         for (let i = 0; i < event.touches.length; i++) {
@@ -712,7 +711,7 @@ class GLBaseRenderer {
 
     this.__glcanvas.addEventListener(
       'touchend',
-      event => {
+      (event) => {
         event.stopPropagation()
         event.undoRedoManager = this.undoRedoManager
         for (let i = 0; i < event.touches.length; i++) {
@@ -725,7 +724,7 @@ class GLBaseRenderer {
 
     this.__glcanvas.addEventListener(
       'touchcancel',
-      event => {
+      (event) => {
         event.stopPropagation()
         event.undoRedoManager = this.undoRedoManager
         this.getViewport().onTouchCancel(event)
@@ -810,7 +809,7 @@ class GLBaseRenderer {
     }
     index += this.__passes[passtype].length
 
-    pass.updated.connect(this.requestRedraw.bind(this))
+    pass.addListener('updated', this.requestRedraw)
     pass.init(this, index)
     this.__passes[passtype].push(pass)
 
@@ -902,8 +901,13 @@ class GLBaseRenderer {
   __setupXRViewport() {
     // Always get the last display. Additional displays are added at the end.(e.g. [Polyfill, HMD])
     const xrvp = new VRViewport(this)
+    
+    const emitViewChanged = (event) => {
+      this.emit('viewChanged', event)
+    }
 
-    xrvp.presentingChanged.connect(state => {
+    xrvp.addListener('presentingChanged', (event) => {
+      const state = event.state
       this.__xrViewportPresenting = state
       if (state) {
         // Let the passes know that VR is starting.
@@ -915,9 +919,10 @@ class GLBaseRenderer {
           }
         }
 
-        xrvp.viewChanged.connect(this.viewChanged.emit)
+        xrvp.addListener('viewChanged', emitViewChanged)
       } else {
-        xrvp.viewChanged.disconnect(this.viewChanged.emit)
+        xrvp.removeListener('viewChanged', emitViewChanged)
+        this.emit('updated', {})
 
         for (const key in this.__passes) {
           const passSet = this.__passes[key]
@@ -925,13 +930,13 @@ class GLBaseRenderer {
             pass.stopPresenting()
           }
         }
-
-        this.viewChanged.emit({
+        const event = {
           interfaceType: 'CameraAndPointer',
           viewXfo: this.getViewport()
             .getCamera()
             .getGlobalXfo(),
-        })
+        }
+        this.emit('viewChanged', event)
 
         this.resizeFbos(this.__glcanvas.width, this.__glcanvas.height)
         this.requestRedraw()

@@ -1,26 +1,39 @@
-import { Signal } from '../../Utilities'
 import { ValueSetMode, ParamFlags, Parameter } from './Parameter.js'
 
-/** Class representing a list parameter.
+/**
+ * Represents a specific type of parameter, that only stores any type of list values.
+ *
+ * i.e.:
+ * ```javascript
+ * const listParam = new ListParameter('MyList', GearParameter)
+ * //'myParameterOwnerItem' is an instance of a 'ParameterOwner' class.
+ * // Remember that only 'ParameterOwner' and classes that extend from it can host 'Parameter' objects.
+ * myParameterOwnerItem.addParameter(listParam)
+ * ```
+ *
+ * **Events**
+ * * **valueChanged:** Triggered when setting a value changes in the array(insert, add, remove).
+ * * **elementAdded:** Triggered when an element is added to the array(add, insert).
+ * * **elementRemoved:** Triggered when an element is removed from the array
+ *
  * @extends Parameter
  */
 class ListParameter extends Parameter {
   /**
    * Create a list parameter.
    * @param {string} name - The name of the list parameter.
-   * @param {any} dataType - The dataType value.
+   * @param {string|Parameter} dataType - The dataType value.
    */
   constructor(name, dataType) {
     super(name, [])
     this.__dataType = dataType
-    this.elementAdded = new Signal()
-    this.elementRemoved = new Signal()
   }
 
   /**
    * The __filter method.
-   * @param {any} item - The item value.
+   * @param {string|Parameter} item - The item value.
    * @return {boolean} - The return value.
+   *
    * @private
    */
   __filter(item) {
@@ -28,36 +41,40 @@ class ListParameter extends Parameter {
   }
 
   /**
-   * The getCount method.
-   * @return {any} - The return value.
+   * Returns the count of items in the array.
+   *
+   * @return {number} - The return value.
    */
   getCount() {
     return this.__value.length
   }
 
   /**
-   * The getElement method.
+   * Returns value from the array in the specified index.
+   *
    * @param {number} index - The index value.
-   * @return {any} - The return value.
+   * @return {Parameter|string} - The return value.
    */
   getElement(index) {
     return this.__value[index]
   }
 
   /**
-   * The setElement method.
+   * Sets a value in the specified array's index.
+   *
    * @param {number} index - The index value.
-   * @param {any} value - The value value.
+   * @param {string|Parameter} value - The value value.
    */
   setElement(index, value) {
     this.__value[index] = value
-    this.valueChanged.emit(ValueSetMode.USER_SETVALUE)
+    this.emit('valueChanged', { mode: ValueSetMode.USER_SETVALUE })
   }
 
   /**
-   * The addElement method.
-   * @param {any} elem - The elem value.
-   * @return {any} - The return value.
+   * Adds a new element at the end of the array pile.
+   *
+   * @param {string|Parameter} elem - The elem value.
+   * @return {string|Parameter} - The return value.
    */
   addElement(elem) {
     if (elem == undefined) elem = new this.__dataType()
@@ -67,42 +84,45 @@ class ListParameter extends Parameter {
 
     this.__value.push(elem)
     this.__flags |= ParamFlags.USER_EDITED
-    this.elementAdded.emit(elem, this.__value.length - 1)
-    this.valueChanged.emit(ValueSetMode.USER_SETVALUE)
+    this.emit('elementAdded', { elem, index: this.__value.length - 1 })
+    this.emit('valueChanged', { mode: ValueSetMode.USER_SETVALUE })
     return elem
   }
 
   /**
-   * The removeElement method.
+   * Removes an array element from the specified index
+   *
    * @param {number} index - The index value.
    */
   removeElement(index) {
     const elem = this.__value[index]
     this.__value.splice(index, 1)
     this.__flags |= ParamFlags.USER_EDITED
-    this.elementRemoved.emit(elem, index)
-    this.valueChanged.emit(ValueSetMode.USER_SETVALUE)
+    this.emit('elementRemoved', { elem, index })
+    this.emit('valueChanged', { mode: ValueSetMode.USER_SETVALUE })
   }
 
   /**
-   * The insertElement method.
-   * @param {any} index - The index value.
-   * @param {any} elem - The elem value.
+   * Inserts a new element in the specified index.
+   *
+   * @param {number} index - The index value.
+   * @param {string|Parameter} elem - The elem value.
    */
   insertElement(index, elem) {
     if (!this.__filter(elem)) return
     this.__value.splice(index, 0, elem)
     // this.setValue(this.__value);
     this.__flags |= ParamFlags.USER_EDITED
-    this.elementAdded.emit(elem, index)
-    this.valueChanged.emit(ValueSetMode.USER_SETVALUE)
+    this.emit('elementAdded', { elem, index })
+    this.emit('valueChanged', { mode: ValueSetMode.USER_SETVALUE })
   }
 
   // ////////////////////////////////////////
   // Persistence
 
   /**
-   * The toJSON method encodes this type as a json object for persistences.
+   * The toJSON method encodes this type as a json object for persistence.
+   *
    * @param {object} context - The context value.
    * @param {number} flags - The flags value.
    * @return {object} - Returns the json object.
@@ -121,6 +141,7 @@ class ListParameter extends Parameter {
 
   /**
    * The fromJSON method decodes a json object for this type.
+   *
    * @param {object} j - The json object this item must decode.
    * @param {object} context - The context value.
    * @param {number} flags - The flags value.
@@ -131,7 +152,7 @@ class ListParameter extends Parameter {
       return
     }
     // Note: JSON data is only used to store user edits, so
-    // parameters loaed from JSON are considered user edited.
+    // parameters loaded from JSON are considered user edited.
     this.__flags |= ParamFlags.USER_EDITED
 
     this.__value = []
@@ -144,9 +165,9 @@ class ListParameter extends Parameter {
         elem.fromJSON(j.items[i], context)
       }
       this.__value.push(elem)
-      this.elementAdded.emit(elem, this.__value.length - 1)
+      this.emit('elementAdded', { elem, index: this.__value.length - 1 })
     }
-    this.valueChanged.emit(ValueSetMode.DATA_LOAD)
+    this.emit('valueChanged', { mode: ValueSetMode.DATA_LOAD })
   }
 
   // ////////////////////////////////////////
@@ -155,6 +176,7 @@ class ListParameter extends Parameter {
   /**
    * The clone method constructs a new list parameter, copies its values
    * from this parameter and returns it.
+   *
    * @param {number} flags - The flags value.
    * @return {ListParameter} - Returns a new list parameter.
    */

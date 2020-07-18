@@ -68,6 +68,7 @@ const Math_log2 = function(value) {
 
 /** Class representing an image pyramid.
  * @extends GLImageAtlas
+ * @private
  */
 class ImagePyramid extends GLImageAtlas {
   /**
@@ -84,19 +85,19 @@ class ImagePyramid extends GLImageAtlas {
     this.__srcGLTex = srcGLTex
     this.__fbos = []
 
-    srcGLTex.updated.connect(() => {
+    srcGLTex.addListener('updated', () => {
       this.renderAtlas(destroySrcImage)
     })
     if (this.__srcGLTex.isLoaded()) {
       this.generateAtlasLayout(minTileSize)
       this.renderAtlas(destroySrcImage)
     } else {
-      this.__srcGLTex.updated.connect(() => {
+      this.__srcGLTex.addListener('updated', () => {
         this.generateAtlasLayout(minTileSize)
         this.renderAtlas(destroySrcImage)
       })
     }
-    srcGLTex.destructing.connect(() => {
+    srcGLTex.addListener('destructing', () => {
       console.log(this.__srcGLTex.getName() + ' ImagePyramid destructing')
       this.destroy()
     })

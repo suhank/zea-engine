@@ -1,4 +1,4 @@
-import { Signal } from '../Utilities'
+import { EventEmitter } from '../Utilities/index'
 
 import '../SceneTree/GeomItem.js'
 
@@ -9,8 +9,10 @@ const GLGeomItemChangeType = {
   HIGHLIGHT_CHANGED: 3,
 }
 
-/** This class abstracts the rendering of a collection of geometries to screen. */
-class GLGeomItem {
+/** This class abstracts the rendering of a collection of geometries to screen.
+ * @extends EventEmitter
+ */
+class GLGeomItem extends EventEmitter {
   /**
    * Create a GL geom item.
    * @param {any} gl - The gl value.
@@ -20,6 +22,7 @@ class GLGeomItem {
    * @param {number} flags - The flags value.
    */
   constructor(gl, geomItem, glGeom, id, flags = null) {
+    super()
     this.gl = gl
     this.geomItem = geomItem
     this.glGeom = glGeom
@@ -34,37 +37,38 @@ class GLGeomItem {
     // }
 
     this.lightmapName = geomItem.getLightmapName()
-    this.updated = new Signal()
-    this.destructing = new Signal()
-    this.visibilityChanged = new Signal()
-    this.highlightChanged = geomItem.highlightChanged
 
     this.updateVisibility = this.updateVisibility.bind(this)
     this.updateVisibility = this.updateVisibility.bind(this)
     this.destroy = this.destroy.bind(this)
 
     if (!gl.floatTexturesSupported) {
-      this.updateXfo = geomXfo => {
+      this.updateXfo = () => {
         this.updateGeomMatrix()
       }
     } else {
-      this.updateXfo = geomXfo => {
-        this.updated.emit(GLGeomItemChangeType.GEOMITEM_CHANGED)
+      this.updateXfo = () => {
+        this.emit('updated', { type: GLGeomItemChangeType.GEOMITEM_CHANGED })
       }
     }
 
-    this.geomItem.geomXfoChanged.connect(this.updateXfo)
-    this.geomItem.visibilityChanged.connect(this.updateVisibility)
-    this.geomItem.cutAwayChanged.connect(() => {
-      this.updated.emit(GLGeomItemChangeType.GEOMITEM_CHANGED)
-    })
-    this.geomItem.destructing.connect(this.destroy)
-    this.highlightChangedId = this.geomItem.highlightChanged.connect(() => {
-      this.updated.emit(GLGeomItemChangeType.HIGHLIGHT_CHANGED)
-    })
-    this.glGeom.updated.connect(() => {
-      this.updated.emit(GLGeomItemChangeType.GEOM_CHANGED)
-    })
+    const cutAwayChanged = () => {
+      this.emit('updated', { type: GLGeomItemChangeType.GEOMITEM_CHANGED })
+    }
+    const highlightChanged = () => {
+      this.emit('updated', { type: GLGeomItemChangeType.HIGHLIGHT_CHANGED })
+      this.emit('highlightChanged')
+    }
+    const glGeomUpdated = () => {
+      this.emit('updated', { type: GLGeomItemChangeType.GEOM_CHANGED })
+    }
+
+    this.geomItem.addListener('geomXfoChanged', this.updateXfo)
+    this.geomItem.addListener('visibilityChanged', this.updateVisibility)
+    this.geomItem.addListener('cutAwayChanged', cutAwayChanged)
+    this.geomItem.addListener('destructing', this.destroy)
+    this.highlightChangedId = this.geomItem.addListener('highlightChanged', highlightChanged)
+    this.glGeom.addListener('updated', glGeomUpdated)
 
     const lightmapCoordsOffset = this.geomItem.getLightmapCoordsOffset()
     const materialId = 0
@@ -125,8 +129,8 @@ class GLGeomItem {
     const visible = geomVisible && !this.culled
     if (this.visible != visible) {
       this.visible = visible
-      this.visibilityChanged.emit(visible)
-      this.updated.emit()
+      this.emit('visibilityChanged', { visible })
+      this.emit('updated', {})
     }
   }
 
@@ -214,11 +218,18 @@ class GLGeomItem {
    * Users should never need to call this method directly.
    */
   destroy() {
-    this.geomItem.visibilityChanged.disconnect(this.updateVisibility)
-    this.geomItem.geomXfoChanged.disconnect(this.updateXfo)
-    this.geomItem.highlightChanged.disconnectId(this.highlightChangedId)
-    this.geomItem.destructing.disconnect(this.destroy)
-    this.destructing.emit(this)
+    this.geomItem.removeListener(
+      'visibilityChanged',
+      this.updateVisibility
+    )
+    this.geomItem.removeListener('geomXfoChanged', this.updateXfo)
+    this.geomItem.removeListenerById(
+      'highlightChanged',
+      this.highlightChangedId
+    )
+
+    // this.geomItem.removeListenerById('destructing', this.destroy)
+    // this.emit('destructing', {})
   }
 }
 

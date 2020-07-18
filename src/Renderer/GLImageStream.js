@@ -1,24 +1,26 @@
-import { Signal } from '../Utilities'
+import { RefCounted } from '../SceneTree/index'
 import { GLTexture2D } from './GLTexture2D.js'
 
 import './Shaders/GLSL/ImageStream.js'
 
-/** Class representing a GL image stream. */
-class GLImageStream {
+/** Class representing a GL image stream.
+ * @private
+ */
+class GLImageStream extends RefCounted {
   /**
    * Create a GL image stream.
    * @param {any} gl - The gl value.
    * @param {any} streamImage - The streamImage value.
    */
   constructor(gl, streamImage) {
+    super()
     this.__gl = gl
     this.__streamImage = streamImage
-    this.ready = new Signal(true)
-    this.updated = new Signal()
-    this.resized = new Signal()
     this.__descParam = this.__streamImage.getParameter('StreamAtlasDesc')
     this.__indexParam = this.__streamImage.getParameter('StreamAtlasIndex')
-    this.__indexParam.valueChanged.connect(this.updated.emit)
+    this.__indexParam.addListener('valueChanged', () => {
+      this.emit('updated', {})
+    })
 
     // To support playing back the same image atlas through many different streams.
     // (e.g. the same Gif progress bar in many places)
@@ -37,7 +39,7 @@ class GLImageStream {
     if (this.__streamImage.isLoaded()) {
       configure()
     } else {
-      this.__streamImage.loaded.connect(() => {
+      this.__indexParam.addListener('loaded', () => {
         configure()
       })
     }

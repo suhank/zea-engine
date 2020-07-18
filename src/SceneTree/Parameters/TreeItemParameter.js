@@ -1,32 +1,53 @@
-import { Signal } from '../../Utilities'
+/* eslint-disable require-jsdoc */
 import { ParamFlags, ValueSetMode, Parameter } from './Parameter.js'
 
-/** Class representing a tree item parameter.
+/**
+ * Represents a specific type of parameter, that only stores `TreeItem` values.
+ *
+ * i.e.:
+ * ```javascript
+ * const treeItem = new TreeItem('tree1')
+ * const treeItemParam = new TreeItemParameter('MyTreeItem', treeItem)
+ * //'myParameterOwnerItem' is an instance of a 'ParameterOwner' class.
+ * // Remember that only 'ParameterOwner' and classes that extend from it can host 'Parameter' objects.
+ * myParameterOwnerItem.addParameter(treeItemParam)
+ * ```
+ *
+ * **Events**
+ * * **treeItemGlobalXfoChanged:** Triggered when computed world Xfo of parameter's `TreeItem` changes.
+ * * **valueChanged:** Triggered when parameter's value changes.
+ *
  * @extends Parameter
  */
 class TreeItemParameter extends Parameter {
   /**
    * Create a tree item parameter.
    * @param {string} name - The name of the tree item parameter.
-   * @param {any} filterFn - The filterFn value.
+   * @param {function} filterFn - The filterFn value.
    */
   constructor(name, filterFn = undefined) {
     super(name, undefined, 'TreeItem')
     this.__filterFn = filterFn
-    this.treeItemGlobalXfoChanged = new Signal()
+    this.__emittreeItemGlobalXfoChanged = this.__emittreeItemGlobalXfoChanged.bind(this)
+  }
+
+  __emittreeItemGlobalXfoChanged(event) {
+    this.emit('treeItemGlobalXfoChanged', event)
   }
 
   /**
-   * The setOwner method.
-   * @param {any} owner - The owner value.
+   * Sets parameter value's owner `TreeItem`.
+   *
+   * @param {TreeItem} owner - The owner value.
    */
   setOwner(owner) {
     this.__owner = owner
   }
 
   /**
-   * The getOwner method.
-   * @return {any} - The return value.
+   * Returns parameter value's owner `TreeItem`.
+   *
+   * @return {TreeItem} - The return value.
    */
   getOwner() {
     return this.__owner
@@ -34,7 +55,7 @@ class TreeItemParameter extends Parameter {
 
   /**
    * The setFilterFn method.
-   * @param {any} flterFn - The flterFn value.
+   * @param {function} flterFn - The flterFn value.
    */
   setFilterFn() {
     this.__filterFn = filterFn
@@ -42,15 +63,16 @@ class TreeItemParameter extends Parameter {
 
   /**
    * The getFilterFn method.
-   * @return {any} - The return value.
+   * @return {function} - The return value.
    */
   getFilterFn() {
     return this.__filterFn
   }
 
   /**
-   * The setValue method.
-   * @param {any} treeItem - The treeItem value.
+   * Sets parameter's `TreeItem` value.
+   *
+   * @param {TreeItem} treeItem - The treeItem value.
    * @param {number} mode - The mode value.
    * @return {boolean} - The return value.
    */
@@ -59,25 +81,16 @@ class TreeItemParameter extends Parameter {
     if (this.__filterFn && !this.__filterFn(treeItem)) return false
     if (this.__value !== treeItem) {
       if (this.__value) {
-        this.__value.globalXfoChanged.disconnect(
-          this.treeItemGlobalXfoChanged.emit
-        )
-        this.__value.removeRef(this)
+        this.__value.removeListener('globalXfoChanged', this.__emittreeItemGlobalXfoChanged)
       }
       this.__value = treeItem
       if (this.__value) {
-        this.__value.addRef(this)
-        this.__value.globalXfoChanged.connect(
-          this.treeItemGlobalXfoChanged.emit
-        )
+        this.__value.addListener('globalXfoChanged', this.__emittreeItemGlobalXfoChanged)
       }
-      if (
-        mode == ValueSetMode.USER_SETVALUE ||
-        mode == ValueSetMode.REMOTEUSER_SETVALUE
-      ) {
+      if (mode == ValueSetMode.USER_SETVALUE || mode == ValueSetMode.REMOTEUSER_SETVALUE) {
         this.__flags |= ParamFlags.USER_EDITED
       }
-      this.valueChanged.emit(mode)
+      this.emit('valueChanged', { mode })
     }
   }
 
@@ -85,7 +98,8 @@ class TreeItemParameter extends Parameter {
   // Persistence
 
   /**
-   * The toJSON method encodes this type as a json object for persistences.
+   * The toJSON method encodes this type as a json object for persistence.
+   *
    * @param {object} context - The context value.
    * @param {number} flags - The flags value.
    * @return {object} - Returns the json object.
@@ -99,6 +113,7 @@ class TreeItemParameter extends Parameter {
 
   /**
    * The fromJSON method decodes a json object for this type.
+   *
    * @param {object} j - The json object this item must decode.
    * @param {object} context - The context value.
    * @param {number} flags - The flags value.
@@ -110,13 +125,11 @@ class TreeItemParameter extends Parameter {
     }
     context.resolvePath(
       j.value,
-      treeItem => {
+      (treeItem) => {
         this.setValue(treeItem)
       },
       () => {
-        console.warn(
-          'Unable to resolve tree item parameter value:' + pj.paramPath
-        )
+        console.warn('Unable to resolve tree item parameter value:' + pj.paramPath)
       }
     )
     this.__flags |= ParamFlags.USER_EDITED
@@ -128,6 +141,7 @@ class TreeItemParameter extends Parameter {
   /**
    * The clone method constructs a new tree item parameter, copies its values
    * from this parameter and returns it.
+   *
    * @param {number} flags - The flags value.
    * @return {TreeItemParameter} - Returns a new tree item parameter.
    */
@@ -142,10 +156,7 @@ class TreeItemParameter extends Parameter {
    */
   destroy() {
     if (this.__value) {
-      this.__value.parameterValueChanged.disconnect(
-        this.valueParameterValueChanged.emit
-      )
-      this.__value.removeRef(this)
+      this.__value.removeListener('globalXfoChanged', this.__emittreeItemGlobalXfoChanged)
     }
   }
 }

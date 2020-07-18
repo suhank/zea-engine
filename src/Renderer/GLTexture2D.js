@@ -1,22 +1,24 @@
-import { Signal } from '../Utilities'
-import { BaseImage, RefCounted } from '../SceneTree'
+import { BaseImage, RefCounted } from '../SceneTree/index'
 
-/** Class representing a GL texture 2D.
+/**
+ * Represents a texture that contains 2-dimensional images.
+ * <br>
+ * Images have width and height, but no depth.
+ *
  * @extends RefCounted
  */
 class GLTexture2D extends RefCounted {
   /**
    * Create a GL texture 2D.
-   * @param {any} gl - The gl value.
-   * @param {any} params - The params value.
+   *
+   * @param {WebGLRenderingContext | WebGL2RenderingContext | undefined} gl - The gl value.
+   * @param {BaseImage | object} params - The params value.
    */
   constructor(gl, params) {
     super()
     this.__gl = gl
 
-    this.ready = new Signal(true)
-    this.updated = new Signal()
-    this.resized = new Signal()
+    this.ready = false
 
     this.width = 0
     this.height = 0
@@ -36,25 +38,23 @@ class GLTexture2D extends RefCounted {
           const data = params.data
           this.bufferData(data, width, height)
         }
+        this.__texture.addListener('updated', imageUpdated)
         if (this.__texture.isLoaded()) {
           this.configure(this.__texture.getParams())
-          this.__texture.updated.connect(imageUpdated)
         } else {
-          this.__texture.loaded.connect(() => {
+          this.__texture.addListener('loaded', () => {
             this.configure(this.__texture.getParams())
-            this.__texture.updated.connect(imageUpdated)
           })
         }
-        this.__texture.destructing.connect(() => {
-          console.log(this.__texture.getName() + ' destructing')
-          this.destroy()
-        })
-      } else this.configure(params)
+      } else {
+        this.configure(params)
+      }
     }
   }
 
   /**
-   * The isLoaded method.
+   * Returns the loaded status of the 2D Texture
+   *
    * @return {boolean} - The return value.
    */
   isLoaded() {
@@ -62,48 +62,54 @@ class GLTexture2D extends RefCounted {
   }
 
   /**
-   * The getTexture method.
-   * @return {any} - The return value.
+   * Returns the `BaseImage` of the GL Texture
+   *
+   * @return {BaseImage} - The return value.
    */
   getTexture() {
     return this.__texture
   }
 
   /**
-   * The getInternalFormat method.
-   * @return {any} - The return value.
+   * Returns the specified value of the color components in the texture.
+   *
+   * @return {GLenum | enum} - The return value.
    */
   getInternalFormat() {
     return this.__internalFormat
   }
 
   /**
-   * The getType method.
-   * @return {any} - The return value.
+   * Returns the value of the specified data type of the texel data.
+   *
+   * @return {GLenum | enum} - The return value.
    */
   getType() {
     return this.__typeParam
   }
 
   /**
-   * The getTypeID method.
-   * @return {any} - The return value.
+   * Returns the value of the specified data type of the texel data.
+   *
+   * @return {GLenum | enum} - The return value.
    */
   getTypeID() {
     return this.__type
   }
 
   /**
-   * The getFormat method.
-   * @return {any} - The return value.
+   * Returns the value of the specified texel data. It must be the same as the `internalFormat`
+   *
+   * @return {GLenum | enum} - The return value.
    */
   getFormat() {
     return this.__formatParam
   }
 
   /**
-   * The getFormatID method.
-   * @return {any} - The return value.
+   * Returns the value of the specified texel data. It must be the same as the `internalFormat`
+   *
+   * @return {GLenum | enum} - The return value.
    */
   getFormatID() {
     return this.__format
@@ -118,24 +124,29 @@ class GLTexture2D extends RefCounted {
   }
 
   /**
-   * The getWrap method.
-   * @return {any} - The return value.
+   * Returns the value of the specified wrapping function for texture coordinate
+   *
+   * @return {GLenum | enum} - The return value.
    */
   getWrap() {
     return this.__wrapParam
   }
 
   /**
-   * The getMipMapped method.
-   * @return {any} - The return value.
+   * Returns the value of the specified binding point.
+   *
+   * @return {GLenum | enum} - The return value.
    */
   getMipMapped() {
     return this.__mipMapped
   }
 
   /**
-   * The configure method.
-   * @param {any} params - The params value.
+   * Builds the GLTexture2D using the specified parameters object.
+   * Parameters must have the `BaseImage` properties structure.
+   *
+   * @param {object} params - The params value.
+   *
    * @param {boolean} emit - The emit value.
    */
   configure(params, emit = true) {
@@ -341,7 +352,7 @@ class GLTexture2D extends RefCounted {
       this.resize(width, height, false, false)
     }
     if (!this.__loaded) {
-      this.ready.emit()
+      this.emit('ready', {})
       this.__loaded = true
     }
   }
@@ -366,8 +377,9 @@ class GLTexture2D extends RefCounted {
   }
 
   /**
-   * The bufferData method.
-   * @param {any} data - The data value.
+   * Initializes and creates the buffer of the object's data store.
+   *
+   * @param {Image | ImageData | HTMLCanvasElement | HTMLImageElement | HTMLVideoElement | object} data - The data value.
    * @param {number} width - The width value.
    * @param {number} height - The height value.
    * @param {boolean} bind - The bind value.
@@ -498,12 +510,12 @@ class GLTexture2D extends RefCounted {
     }
 
     if (emit) {
-      this.updated.emit()
+      this.emit('updated', {})
     }
   }
 
   /**
-   * The clear method.
+   * Clears the buffers to preset values
    */
   clear() {
     const gl = this.__gl
@@ -657,16 +669,24 @@ class GLTexture2D extends RefCounted {
       this.height = height
 
       if (emit) {
-        this.resized.emit(width, height)
+        this.emit('resized', { width, height })
       }
     }
   }
 
-  // Upload data for the image to the GPU.
-  populate(dataArray, width, height, offsetX=0, offsetY=0, bind=true) {
+  /**
+   * Upload data for the image to the GPU.
+   *
+   * @param {Uint16Array} dataArray - The dataArray value.
+   * @param {number} width - The width value
+   * @param {number} height - The height value
+   * @param {number} offsetX - The offsetX value
+   * @param {number} offsetY - The offsetY value
+   * @param {boolean} bind - The bind value
+   */
+  populate(dataArray, width, height, offsetX = 0, offsetY = 0, bind = true) {
     const gl = this.__gl
-    if (bind)
-      gl.bindTexture(gl.TEXTURE_2D, this.__gltex)
+    if (bind) gl.bindTexture(gl.TEXTURE_2D, this.__gltex)
     gl.texSubImage2D(
       gl.TEXTURE_2D,
       0,
@@ -681,24 +701,27 @@ class GLTexture2D extends RefCounted {
   }
 
   /**
-   * The getSize method.
-   * @return {any} - The return value.
+   * Returns the `width`(Index 0) and the `height`(Index 1) of the GL Texture.
+   *
+   * @return {array} - The return value.
    */
   getSize() {
     return [this.width, this.height]
   }
 
   /**
-   * The glTex method.
-   * @return {any} - The return value.
+   * Returns the value of the WebGLTexture value
+   *
+   * @return {WebGLTexture} - The return value.
    */
   get glTex() {
     return this.__gltex
   }
 
   /**
-   * The getTexHdl method.
-   * @return {any} - The return value.
+   * Returns the value of the WebGLTexture value
+   *
+   * @return {WebGLTexture} - The return value.
    */
   getTexHdl() {
     return this.__gltex
@@ -709,6 +732,7 @@ class GLTexture2D extends RefCounted {
    * @param {any} renderstate - The renderstate value.
    * @param {any} unif - The unif value.
    * @return {any} - The return value.
+   * @deprecated
    */
   bind(renderstate, unif) {
     console.warn("'bind' is deprecated. Please use 'bindToUniform'")
@@ -717,9 +741,9 @@ class GLTexture2D extends RefCounted {
 
   /**
    * The preBind method.
-   * @param {any} unif - The unif value.
-   * @param {any} unifs - The unifs value.
-   * @return {any} - The return value.
+   * @param {object} unif - The unif value.
+   * @param {object} unifs - The unifs value.
+   * @return {object} - The return value.
    */
   preBind(unif, unifs) {
     return {
@@ -729,11 +753,12 @@ class GLTexture2D extends RefCounted {
   }
 
   /**
-   * The bindToUniform method.
-   * @param {any} renderstate - The renderstate value.
-   * @param {any} unif - The unif value.
-   * @param {any} bindings - The bindings value.
-   * @return {any} - The return value.
+   * Binds Texture to the Uniform attribute.
+   *
+   * @param {object} renderstate - The renderstate value.
+   * @param {object} unif - The unif value.
+   * @param {object} bindings - The bindings value.
+   * @return {boolean} - The return value.
    */
   bindToUniform(renderstate, unif, bindings) {
     if (!this.__loaded) {

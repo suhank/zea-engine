@@ -8,6 +8,15 @@ shaderLibrary.setShaderModule(
 int ftoi(float val){
     return int(floor(val + 0.5));
 }
+ivec2 ftoi(vec2 v2) {
+    return ivec2(ftoi(v2.x), ftoi(v2.y));
+}
+ivec3 ftoi(vec3 v4) {
+    return ivec3(ftoi(v4.x), ftoi(v4.y), ftoi(v4.z));
+}
+ivec4 ftoi(vec4 v4) {
+    return ivec4(ftoi(v4.x), ftoi(v4.y), ftoi(v4.z), ftoi(v4.w));
+}
 
 #ifdef ENABLE_ES3
 
@@ -90,7 +99,7 @@ vec4 fetchTexel(sampler2D texture, ivec2 textureSize, ivec2 texCoord) {
 }
 
 
-#endif
+#endif // ENABLE_ES3
 
 int uvToPixelIndex(vec2 uv, int textureSize){
     return int(uv.x * float(textureSize)) + (int(floor(uv.y * float(textureSize))) * textureSize);

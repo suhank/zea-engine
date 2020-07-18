@@ -1,19 +1,40 @@
 import { sgFactory } from '../SGFactory.js'
 import { resourceLoader } from '../ResourceLoader.js'
 
-import { BooleanParameter, NumberParameter } from '../Parameters'
+import { BooleanParameter, NumberParameter } from '../Parameters/index'
 
 import { FileImage } from './FileImage.js'
 
-/** Class representing a LDR (low dynamic range) video.
+/**
+ * Class representing a LDR (low dynamic range) video.
+ *
+ * ```
+ * const video = new LDRVideo()
+ * video.getParameter('FilePath').setUrl("https://storage.googleapis.com/zea-playground-assets/zea-engine/video.mp4")
+ * ```
+ *
+ * **Parameters**
+ * * **Mute(`BooleanParameter`):** Mutes video volume.
+ * * **Loop(`BooleanParameter`):** Repeats video over and over again.
+ * * **Gain(`NumberParameter`):** Sets loudness of the video before going through any processing.
+ * * **SpatializeAudio(`BooleanParameter`):** Enables/Disables spatial(Surrounding) audio.
+ * * **refDistance(`NumberParameter`):** _todo_
+ * * **maxDistance(`NumberParameter`):** _todo_
+ * * **rolloffFactor(`NumberParameter`):** _todo_
+ * * **coneInnerAngle(`NumberParameter`):** _todo_
+ * * **coneOuterAngle(`NumberParameter`):** _todo_
+ * * **coneOuterGain(`NumberParameter`):** _todo_
+ *
+ * **File Types:** mp4, ogg
+ *
  * @extends FileImage
  */
 class LDRVideo extends FileImage {
   /**
    * Create a LDR video.
    * @param {string} name - The name value.
-   * @param {any} filePath - The filePath value.
-   * @param {any} params - The params value.
+   * @param {string} filePath - The filePath value.
+   * @param {object} params - The params value.
    */
   constructor(name, filePath, params) {
     super(name, filePath, params)
@@ -34,7 +55,7 @@ class LDRVideo extends FileImage {
 
   /**
    * The __loadData method.
-   * @param {any} fileDesc - The fileDesc value.
+   * @param {object} fileDesc - The fileDesc value.
    * @private
    */
   __loadData(fileDesc) {
@@ -52,20 +73,20 @@ class LDRVideo extends FileImage {
     }
 
     document.body.appendChild(videoElem)
-    videoElem.addEventListener(
+    videoElem.addListener(
       'loadedmetadata',
       () => {
         // videoElem.play();
 
         const muteParam = this.getParameter('Mute')
         videoElem.muted = muteParam.getValue()
-        muteParam.valueChanged.connect(() => {
+        muteParam.addListener('valueChanged', () => {
           videoElem.muted = muteParam.getValue()
         })
 
         const loopParam = this.getParameter('Loop')
         videoElem.loop = loopParam.getValue()
-        loopParam.valueChanged.connect(() => {
+        loopParam.addListener('valueChanged', () => {
           videoElem.loop = loopParam.getValue()
         })
 
@@ -74,7 +95,7 @@ class LDRVideo extends FileImage {
         this.__data = videoElem
         this.__loaded = true
         resourceLoader.addWorkDone(fileDesc.id, 1)
-        this.loaded.emit(videoElem)
+        this.emit('loaded', {})
 
         let prevFrame = 0
         const frameRate = 29.97
@@ -86,7 +107,7 @@ class LDRVideo extends FileImage {
           // If so, then we emit and update, which will cause a redraw.
           const currentFrame = Math.floor(videoElem.currentTime * frameRate)
           if (prevFrame != currentFrame) {
-            this.updated.emit()
+            this.emit('updated', {})
             prevFrame = currentFrame
           }
           setTimeout(timerCallback, 20) // Sample at 50fps.

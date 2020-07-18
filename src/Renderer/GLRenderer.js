@@ -1,11 +1,10 @@
 import { SystemDesc } from '../BrowserDetection.js'
-import { Signal } from '../Utilities'
-import { Vec3, Xfo, Mat4, Ray } from '../Math'
+import { Vec3, Xfo, Mat4, Ray } from '../Math/index'
 import {
   Plane,
   VLAAsset,
   EnvMap,
-} from '../SceneTree'
+} from '../SceneTree/index'
 import { GLFbo } from './GLFbo.js'
 import { GLRenderTarget } from './GLRenderTarget.js'
 import { GLHDRImage } from './GLHDRImage.js'
@@ -53,7 +52,6 @@ class GLRenderer extends GLBaseRenderer {
 
     this.__glEnvMap = undefined
     this.__glBackgroundMap = undefined
-    this.envMapAssigned = new Signal(true)
 
     this.__glLightmaps = {}
     this.__displayEnvironment = true
@@ -94,6 +92,7 @@ class GLRenderer extends GLBaseRenderer {
    * @private
    */
   __bindEnvMap(env) {
+    const gl = this.__gl
     if (env instanceof EnvMap) {
       this.__glEnvMap = env.getMetadata('gltexture')
       if (!this.__glEnvMap) {
@@ -101,9 +100,9 @@ class GLRenderer extends GLBaseRenderer {
           this.addShaderPreprocessorDirective('ENABLE_SPECULAR')
           this.__glEnvMap = new GLEnvMap(this, env, this.__preproc)
         } else if (env.isStreamAtlas()) {
-          this.__glEnvMap = new GLImageStream(this.__gl, env)
+          this.__glEnvMap = new GLImageStream(gl, env)
         } else {
-          this.__glEnvMap = new GLTexture2D(this.__gl, env)
+          this.__glEnvMap = new GLTexture2D(gl, env)
         }
       }
     } else {
@@ -119,8 +118,8 @@ class GLRenderer extends GLBaseRenderer {
           this.__glBackgroundMap = new GLTexture2D(gl, backgroundMap)
         }
       }
-      this.__glBackgroundMap.loaded.connect(this.requestRedraw)
-      this.__glBackgroundMap.updated.connect(this.requestRedraw)
+      this.__glBackgroundMap.addListener('loaded', this.requestRedraw)
+      this.__glBackgroundMap.addListener('updated', this.requestRedraw)
       if (!this.__backgroundMapShader) {
         if (!gl.__quadVertexIdsBuffer) gl.setupInstancedQuad()
         switch (backgroundMap.getMapping()) {
@@ -154,10 +153,10 @@ class GLRenderer extends GLBaseRenderer {
       // console.warn('Unsupported EnvMap:' + env)
       return
     }
-    this.__glEnvMap.loaded.connect(this.requestRedraw)
-    this.__glEnvMap.updated.connect(this.requestRedraw)
+    this.__glEnvMap.addListener('loaded', this.requestRedraw)
+    this.__glEnvMap.addListener('updated', this.requestRedraw)
 
-    this.envMapAssigned.emit(this.__glEnvMap)
+    this.emit('envMapAssigned', { envMap: this.__glEnvMap })
   }
 
   /**
@@ -186,12 +185,12 @@ class GLRenderer extends GLBaseRenderer {
     if (envMapParam.getValue() != undefined) {
       this.__bindEnvMap(envMapParam.getValue())
     }
-    envMapParam.valueChanged.connect(() => {
+    envMapParam.addListener('valueChanged', () => {
       this.__bindEnvMap(envMapParam.getValue())
     })
     const displayEnvMapParam = scene.settings.getParameter('Display EnvMap')
     this.__displayEnvironment = displayEnvMapParam.getValue()
-    displayEnvMapParam.valueChanged.connect(() => {
+    displayEnvMapParam.addListener('valueChanged', () => {
       this.__displayEnvironment = displayEnvMapParam.getValue()
       this.requestRedraw()
     })
@@ -213,7 +212,7 @@ class GLRenderer extends GLBaseRenderer {
         if (!gllightmap) {
           gllightmap = new GLHDRImage(this.__gl, lightmap.image)
         }
-        gllightmap.updated.connect(data => {
+        gllightmap.addListener('updated', data => {
           this.requestRedraw()
         })
         this.__glLightmaps[name] = {
@@ -222,7 +221,7 @@ class GLRenderer extends GLBaseRenderer {
         }
       }
       const vlaAsset = treeItem
-      vlaAsset.loaded.connect(() => {
+      vlaAsset.addListener('loaded', () => {
         if (this.__glEnvMap && vlaAsset.getLightmap()) {
           addLightmap(vlaAsset.getName(), vlaAsset.getLightmap())
         }
@@ -714,7 +713,8 @@ class GLRenderer extends GLBaseRenderer {
     //     gl.bindTexture(gl.TEXTURE_2D, null);
     // }
 
-    this.redrawOccured.emit()
+
+    this.emit('redrawOccured', {})
   }
 }
 

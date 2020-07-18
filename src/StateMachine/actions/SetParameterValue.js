@@ -1,12 +1,13 @@
 import { sgFactory } from '../../SceneTree/SGFactory.js'
 
-import { ValueSetMode, NumberParameter } from '../../SceneTree/Parameters'
-import { OperatorOutput } from '../../SceneTree/Operators'
+import { ValueSetMode, NumberParameter } from '../../SceneTree/Parameters/index'
+import { OperatorOutput } from '../../SceneTree/Operators/index'
 
 import { StateAction } from '../StateAction.js'
 
 /** A state machine action that sets parameter values.
  * @extends StateAction
+ * @private
  */
 class SetParameterValue extends StateAction {
   /**
@@ -23,18 +24,18 @@ class SetParameterValue extends StateAction {
     )
 
     this.__outParam = this.addOutput(new OperatorOutput('Param'))
-    this.__outParam.paramSet.connect(() => {
-      if (
+    this.__outParam.addListener('paramSet', (event) => {
+      const { param } = event
+      if (param &&
         !this.__valueParam ||
-        this.__outParam.getParam().getDataType() !=
-          this.__valueParam.getDataType()
+        param.getDataType() != this.__valueParam.getDataType()
       ) {
-        const param = this.__outParam.getParam().clone()
-        param.setName('Value')
+        const valueParam = param.clone()
+        valueParam.setName('Value')
         if (this.__outParam.getInitialValue)
-          param.setValue(this.__outParam.getInitialValue())
-        else param.setValue(this.__outParam.getParam().getValue())
-        this.__valueParam = this.addParameter(param)
+          valueParam.setValue(this.__outParam.getInitialValue())
+        else valueParam.setValue(param.getValue())
+        this.__valueParam = this.addParameter(valueParam)
       }
     })
   }
@@ -85,6 +86,17 @@ class SetParameterValue extends StateAction {
       }
     }
   }
+  
+  /**
+   * The deactivate method.
+   */
+  deactivate() {
+    if (this.__timeoutId) {
+      clearTimeout(this.__timeoutId)
+      this.__timeoutId = undefined
+    }
+    super.deactivate()
+  }
 
   /**
    * The cancel the action.
@@ -108,7 +120,7 @@ class SetParameterValue extends StateAction {
   toJSON(context, flags) {
     const j = super.toJSON(context, flags)
     if (this.__valueParam) {
-      j.valueParamType = this.__valueParam.constructor.name
+      j.valueParamType = sgFactory.getClassName(this.__valueParam)
     }
     return j
   }

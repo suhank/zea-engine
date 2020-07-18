@@ -1,7 +1,6 @@
 import { SystemDesc } from '../../BrowserDetection.js'
-import { Vec3, Mat4, Xfo } from '../../Math'
-import { Signal } from '../../Utilities'
-import { TreeItem } from '../../SceneTree'
+import { Vec3, Mat4, Xfo } from '../../Math/index'
+import { TreeItem } from '../../SceneTree/index'
 import { GLBaseViewport } from '../GLBaseViewport.js'
 import { VRHead } from './VRHead.js'
 import { VRController } from './VRController.js'
@@ -50,21 +49,6 @@ class VRViewport extends GLBaseViewport {
     this.__rightViewMatrix = new Mat4()
     this.__rightProjectionMatrix = new Mat4()
 
-    // ////////////////////////////////////////////
-    // Signals
-    this.resized = new Signal()
-
-    // Signals to abstract the user view.
-    // i.e. when a user switches to VR mode, the signals
-    // simply emit the new VR data.
-    this.viewChanged = new Signal()
-    this.presentingChanged = new Signal()
-
-    this.controllerAdded = new Signal()
-    this.controllerButtonDown = new Signal()
-    this.controllerButtonUp = new Signal()
-    this.controllerDoubleClicked = new Signal()
-    this.controllerTouchpadTouched = new Signal()
   }
 
   /**
@@ -188,7 +172,8 @@ class VRViewport extends GLBaseViewport {
       // Resources
 
       // Note: when the VRViewport is setup
-      this.__renderer.sceneSet.connect(scene => {
+      const sceneSet = event => {
+        const scene = event.scene
         const resourceLoader = scene.getResourceLoader()
 
         let assetPath
@@ -209,7 +194,7 @@ class VRViewport extends GLBaseViewport {
           this.__vrAsset = this.__renderer
             .getScene()
             .loadCommonAssetResource(hmdAssetId)
-          this.__vrAsset.loaded.connect(() => {
+          this.__vrAsset.addListener('loaded', () => {
             const materialLibrary = this.__vrAsset.getMaterialLibrary()
             const materialNames = materialLibrary.getMaterialNames()
             for (const name of materialNames) {
@@ -222,7 +207,8 @@ class VRViewport extends GLBaseViewport {
             resolve(this.__vrAsset)
           })
         } else reject()
-      })
+      }
+      this.__renderer.addListener('sceneSet', sceneSet)
     })
     return this.__hmdAssetPromise
   }
@@ -231,14 +217,13 @@ class VRViewport extends GLBaseViewport {
    * The startPresenting method.
    */
   startPresenting() {
+    return new Promise((resolve, reject) => {
+      
     // https://github.com/immersive-web/webxr/blob/master/explainer.md
 
     const gl = this.__renderer.gl
-    // Note: we should not need to load the resources here
-    // They could be loaded only once the controllers are
-    // being created. However, I can't see the controllers if
-    // the loading is defered
-    this.loadHMDResources().then(() => {
+
+    const __startPresenting = () => {
       navigator.xr
         .requestSession('immersive-vr', {
           requiredFeatures: ['local-floor'],
@@ -246,26 +231,32 @@ class VRViewport extends GLBaseViewport {
         }).then(session => {
           this.__renderer.__xrViewportPresenting = true
 
-          // Add an output canvas that will allow XR to also send a view
-          // back the monitor.
-          const mirrorCanvas = document.createElement('canvas')
-          mirrorCanvas.style.position = 'relative'
-          mirrorCanvas.style.left = '0px'
-          mirrorCanvas.style.top = '0px'
-          mirrorCanvas.style.width = '100%'
-          mirrorCanvas.style.height = '100%'
+          let mirrorCanvas;
+          if (!SystemDesc.isMobileDevice) {
+            // Add an output canvas that will allow XR to also send a view
+            // back the monitor.
+            mirrorCanvas = document.createElement('canvas')
+            mirrorCanvas.style.position = 'relative'
+            mirrorCanvas.style.left = '0px'
+            mirrorCanvas.style.top = '0px'
+            mirrorCanvas.style.width = '100%'
+            mirrorCanvas.style.height = '100%'
 
-          this.__renderer
-            .getDiv()
-            .replaceChild(mirrorCanvas, this.__renderer.getGLCanvas())
-
-          session.addEventListener('end', event => {
-            this.__stageTreeItem.setVisible(false)
             this.__renderer
               .getDiv()
-              .replaceChild(this.__renderer.getGLCanvas(), mirrorCanvas)
+              .replaceChild(mirrorCanvas, this.__renderer.getGLCanvas())
+
+            session.addListener('end', event => {
+                this.__renderer
+                  .getDiv()
+                  .replaceChild(this.__renderer.getGLCanvas(), mirrorCanvas)
+            })
+          }
+
+          session.addListener('end', event => {
+            this.__stageTreeItem.setVisible(false)
             this.__session = null
-            this.presentingChanged.emit(false)
+            this.emit('presentingChanged', { state: false })
           })
 
           const onSelectStart = ev => {
@@ -284,8 +275,7 @@ class VRViewport extends GLBaseViewport {
                 downTime - controller.__prevDownTime <
                 this.__doubleClickTimeMSParam.getValue()
               ) {
-                this.controllerDoubleClicked.emit(
-                  {
+                this.emit('controllerDoubleClicked', {
                     button: 1,
                     controller,
                     vleStopPropagation: false,
@@ -296,7 +286,7 @@ class VRViewport extends GLBaseViewport {
               } else {
                 controller.__prevDownTime = downTime
 
-                this.controllerButtonDown.emit(
+                this.emit('controllerButtonDown',
                   {
                     button: 1,
                     controller,
@@ -314,7 +304,7 @@ class VRViewport extends GLBaseViewport {
             ]
             if (controller) {
               console.log('controller:', ev.inputSource.handedness, ' up')
-              this.controllerButtonUp.emit(
+              this.emit('controllerButtonUp',
                 {
                   button: 1,
                   controller,
@@ -325,8 +315,8 @@ class VRViewport extends GLBaseViewport {
               )
             }
           }
-          session.addEventListener('selectstart', onSelectStart)
-          session.addEventListener('selectend', onSelectEnd)
+          session.addListener('selectstart', onSelectStart)
+          session.addListener('selectend', onSelectEnd)
 
           this.__session = session
 
@@ -339,7 +329,7 @@ class VRViewport extends GLBaseViewport {
             baseLayer: new XRWebGLLayer(session, gl, {
               compositionDisabled: session.mode == 'inline',
             }),
-            outputContext: mirrorCanvas.getContext('xrpresent'),
+            outputContext: mirrorCanvas ? mirrorCanvas.getContext('xrpresent') : null,
           })
           // ////////////////////////////
 
@@ -362,7 +352,7 @@ class VRViewport extends GLBaseViewport {
           // approximately the right place.
           //   console.log('Falling back to floor-level reference space');
           session
-            .requestReferenceSpace('local-floor')
+            .requestReferenceSpace(SystemDesc.isMobileDevice ? 'local' : 'local-floor')
             .catch(e => {
               // if (!session.mode.startsWith('immersive')) {
                 // If we're in inline mode, our underlying platform may not support
@@ -387,17 +377,31 @@ class VRViewport extends GLBaseViewport {
             .then(refSpace => {
               this.__refSpace = refSpace
               this.__stageTreeItem.setVisible(true)
-              this.presentingChanged.emit(true)
+              this.emit('presentingChanged', { state: true })
               this.__startSession()
+
+              resolve()
             })
             .catch(e => {
               console.warn(e.message)
+              reject("Unable to start XR Session:" + e.message)
             })
         })
         .catch(e => {
           console.warn(e.message)
         })
-    }) // end loadHMDResources
+    }
+
+    if (SystemDesc.isMobileDevice) {
+      __startPresenting()
+    } else {
+      // Note: we should not need to load the resources here
+      // They could be loaded only once the controllers are
+      // being created. However, I can't see the controllers if
+      // the loading is defered
+      this.loadHMDResources().then(__startPresenting)
+    }
+    })
   }
 
   /**
@@ -437,10 +441,10 @@ class VRViewport extends GLBaseViewport {
    */
   __createController(id, inputSource) {
     console.log('creating controller:', inputSource.handedness)
-    const vrController = new VRController(this, inputSource, id)
-    this.__vrControllersMap[inputSource.handedness] = vrController
-    this.__vrControllers[id] = vrController
-    this.controllerAdded.emit(vrController)
+    const controller = new VRController(this, inputSource, id)
+    this.__vrControllersMap[inputSource.handedness] = controller
+    this.__vrControllers[id] = controller
+    this.emit('controllerAdded', { controller })
     return vrController
   }
 
@@ -541,6 +545,7 @@ class VRViewport extends GLBaseViewport {
     renderstate.viewScale = 1.0 / this.__stageScale
     renderstate.cameraMatrix = renderstate.viewXfo.toMat4()
     renderstate.region = this.__region
+    renderstate.vrPresenting = true // Some rendering is ajusted slightly in VR. e.g. Billboards
 
     this.__renderer.drawScene(renderstate)
 
@@ -560,7 +565,7 @@ class VRViewport extends GLBaseViewport {
       controllers: this.__vrControllers,
       vrviewport: this,
     }
-    this.viewChanged.emit(data, this)
+    this.emit('viewChanged', data)
   }
 
 

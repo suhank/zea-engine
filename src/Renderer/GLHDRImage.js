@@ -5,6 +5,7 @@ import { generateShaderGeomBinding } from './GeomShaderBinding.js'
 
 /** Class representing a GL high dynamic range (HDR) image.
  * @extends GLTexture2D
+ * @private
  */
 class GLHDRImage extends GLTexture2D {
   /**
@@ -17,20 +18,15 @@ class GLHDRImage extends GLTexture2D {
 
     this.__hdrImage = hdrImage
     this.__hdrImage.setMetadata('gltexture', this)
-    this.__hdrImage.updated.connect(() => {
+    const loadImage = () => {
       this.__unpackHDRImage(this.__hdrImage.getParams())
-    })
-    if (this.__hdrImage.isLoaded()) {
-      this.__unpackHDRImage(this.__hdrImage.getParams())
-    } else {
-      this.__hdrImage.loaded.connect(() => {
-        this.__unpackHDRImage(this.__hdrImage.getParams())
-      })
     }
-    this.__hdrImage.destructing.connect(() => {
-      console.log(this.__hdrImage.getName() + ' destructing')
-      this.destroy()
-    })
+    this.__hdrImage.addListener('updated', loadImage)
+    if (this.__hdrImage.isLoaded()) {
+      loadImage()
+    } else {
+      this.__hdrImage.addListener('loaded', loadImage)
+    }
   }
 
   /**
@@ -126,7 +122,7 @@ class GLHDRImage extends GLTexture2D {
     //     this.__srcCDMTex = null;
     // }
 
-    this.updated.emit()
+    this.emit('updated', {})
   }
 
   /**

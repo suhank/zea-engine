@@ -1,10 +1,11 @@
 import { sgFactory } from '../../SceneTree/SGFactory.js'
 
-import { StringParameter } from '../../SceneTree/Parameters'
+import { StringParameter } from '../../SceneTree/Parameters/index'
 import { StateEvent } from '../StateEvent.js'
 
 /** Triggers an state machine event to occur when a key is pressed.
  * @extends StateEvent
+ * @private
  */
 class KeyPressedEvent extends StateEvent {
   /**

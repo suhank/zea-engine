@@ -1,17 +1,16 @@
 import { Color } from '../Math/Color.js'
-import { Signal } from '../Utilities/Signal.js'
+import { EventEmitter } from '../Utilities/index'
 import { processTextureParams } from './processTextureParams.js'
 
 /** Class representing a GL render target. */
-class GLRenderTarget {
+class GLRenderTarget extends EventEmitter {
   /**
    * Create a GL render target.
    * @param {any} gl - The gl value.
    * @param {any} params - The params value.
    */
   constructor(gl, params) {
-    this.resized = new Signal()
-    this.updated = new Signal()
+    super()
     this.__gl = gl
     this.textureTargets = []
     this.depthTexture = null
@@ -331,7 +330,7 @@ class GLRenderTarget {
       this.__gltex = gltex;
       this.__updateGLTexParams();
       if (emit) {
-          this.resized.emit(width, height);
+        this.emit('resized' { width, height });
       }
     }
 
@@ -396,6 +395,27 @@ class GLRenderTarget {
     }
 
     return true
+  }
+
+  
+
+  /**
+   * The destroy is called by the system to cause explicit resources cleanup.
+   * Users should never need to call this method directly.
+   */
+  destroy() {
+    const gl = this.__gl
+    this.textureTargets.forEach(colorTexture => {
+      gl.deleteTexture(colorTexture)
+    })
+    this.textureTargets = []
+    if (this.depthTexture) {
+      gl.deleteTexture(this.depthTexture)
+      this.depthTexture = null
+    }
+    if (this.frameBuffer){
+      gl.deleteFramebuffer(this.frameBuffer)
+    }
   }
 }
 export { GLRenderTarget }

@@ -1,9 +1,20 @@
-import { SInt32, UInt32, Float32, Vec2, Vec3, Vec4, Color, Mat4 } from '../Math'
+import {
+  SInt32,
+  UInt32,
+  Float32,
+  Vec2,
+  Vec3,
+  Vec4,
+  Color,
+  Mat4,
+} from '../Math/index'
 import { GLTexture2D } from './GLTexture2D.js'
 import { GLHDRImage } from './GLHDRImage.js'
 import { GLImageStream } from './GLImageStream.js'
 
-/** Class representing simple uniform binding. */
+/** Class representing simple uniform binding.
+ * @private
+ */
 class SimpleUniformBinding {
   /**
    * Create simple uniform binding.
@@ -33,9 +44,9 @@ class SimpleUniformBinding {
     }
 
     this.__val = param.getValue()
-    param.valueChanged.connect(() => {
+    param.addListener('valueChanged', () => {
       this.__val = param.getValue()
-      glmaterial.updated.emit()
+      glmaterial.emit('updated', {})
     })
   }
 
@@ -58,7 +69,9 @@ class SimpleUniformBinding {
   destroy() {}
 }
 
-/** Class representing complex uniform binding. */
+/** Class representing complex uniform binding. 
+ * @private
+*/
 class ComplexUniformBinding {
   /**
    * Create complex uniform binding.
@@ -83,9 +96,9 @@ class ComplexUniformBinding {
     }
 
     this.__vals = param.getValue().asArray()
-    param.valueChanged.connect(() => {
+    param.addListener('valueChanged', () => {
       this.__vals = param.getValue().asArray()
-      glmaterial.updated.emit()
+      glmaterial.emit('updated', {})
     })
   }
 
@@ -108,7 +121,9 @@ class ComplexUniformBinding {
   destroy() {}
 }
 
-/** Class representing material uniform binding. */
+/** Class representing material uniform binding. 
+ * @private
+*/
 class MatrixUniformBinding {
   /**
    * Create material uniform binding.
@@ -130,9 +145,9 @@ class MatrixUniformBinding {
     }
 
     this.__vals = param.getValue().asArray()
-    param.valueChanged.connect(() => {
+    param.addListener('valueChanged', () => {
       this.__val = param.getValue().asArray()
-      glmaterial.updated.emit()
+      glmaterial.emit('updated', {})
     })
   }
 
@@ -155,7 +170,9 @@ class MatrixUniformBinding {
   destroy() {}
 }
 
-/** Class representing color uniform binding. */
+/** Class representing color uniform binding. 
+ * @private
+*/
 class ColorUniformBinding {
   /**
    * Create color uniform binding.
@@ -191,13 +208,14 @@ class ColorUniformBinding {
         }
       }
       this.texBinding = gltexture.preBind(this.__textureUnif, unifs)
-      gltexture.updated.connect(() => {
-        glmaterial.updated.emit()
+      gltexture.addListener('updated', () => {
+        glmaterial.emit('updated', {})
       })
       this.gltexture = gltexture
+      this.gltexture.addRef(this)
       this.textureType = textureType
       this.bind = this.bindTexture
-      glmaterial.updated.emit()
+      glmaterial.emit('updated', {})
     }
 
     let boundImage
@@ -207,7 +225,7 @@ class ColorUniformBinding {
     }
     const connectImage = image => {
       if (!image.isLoaded()) {
-        image.loaded.connect(imageLoaded)
+        image.addListener('loaded', imageLoaded)
       } else {
         genGLTex(image)
       }
@@ -216,18 +234,18 @@ class ColorUniformBinding {
 
     const disconnectImage = () => {
       const gltexture = boundImage.getMetadata('gltexture')
-      gltexture.destroy()
+      gltexture.removeRef(this);
       this.texBinding = null
       this.gltexture = null
       this.textureType = null
       this.bind = this.bindValue
 
       if (imageLoadedId) {
-        boundImage.loaded.disconnectId(imageLoadedId)
+        boundImage.removeListenerById('loaded', imageLoadedId)
       }
       boundImage = null
       imageLoadedId = null
-      glmaterial.updated.emit()
+      glmaterial.emit('updated', {})
     }
 
     const update = () => {
@@ -246,19 +264,17 @@ class ColorUniformBinding {
           disconnectImage()
         }
       }
-      glmaterial.updated.emit()
+      glmaterial.emit('updated',)
     }
 
     /**
      * The update method.
      */
     update()
-    if (param.textureConnected) {
-      param.textureConnected.connect(() => {
-        connectImage(param.getImage())
-      })
-    }
-    param.valueChanged.connect(update)
+    param.addListener('textureConnected', () => {
+      connectImage(param.getImage())
+    })
+    param.addListener('valueChanged', update)
 
     this.uniform1i = gl.uniform1i.bind(gl)
     this.uniform4fv = gl.uniform4fv.bind(gl)
@@ -289,7 +305,9 @@ class ColorUniformBinding {
 
 const logged = {}
 
-/** Class representing material shader binding. */
+/** Class representing material shader binding. 
+ * @private
+*/
 class MaterialShaderBinding {
   /**
    * Create material shader binding.

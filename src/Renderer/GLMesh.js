@@ -3,6 +3,7 @@ import '../SceneTree/Geometry/Mesh.js'
 
 /** Class representing a GL mesh.
  * @extends GLGeom
+ * @private
  */
 class GLMesh extends GLGeom {
   /**

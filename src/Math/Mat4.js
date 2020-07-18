@@ -3,14 +3,17 @@ import { Vec3 } from './Vec3.js'
 import { Mat3 } from './Mat3.js'
 import { typeRegistry } from './TypeRegistry.js'
 
-/** A class representing a 4x4 matrix.
+/**
+ * A class representing a 4x4 matrix.
  * This matrix class is based on GLM, and is column major.
+ *
  * @extends AttrValue
  */
 class Mat4 extends AttrValue {
   /**
-   * Create a Mat4.
-   * @param {number} m00 - Row 0, column 0.
+   * Initializes the Mat3 class with given data.
+   *
+   * @param {number | Float32Array | ArrayBuffer} m00 - Row 0, column 0.
    * @param {number} m01 - Row 0, column 1.
    * @param {number} m02 - Row 0, column 2.
    * @param {number} m03 - Row 0, column 3.
@@ -81,6 +84,7 @@ class Mat4 extends AttrValue {
 
   /**
    * Getter for row 0, column 0.
+   *
    * @return {number} - Returns the m00 value.
    */
   get m00() {
@@ -89,6 +93,7 @@ class Mat4 extends AttrValue {
 
   /**
    * Setter for row 0, column 0.
+   *
    * @param {number} val - The val param.
    */
   set m00(val) {
@@ -97,6 +102,7 @@ class Mat4 extends AttrValue {
 
   /**
    * Getter for row 0, column 1.
+   *
    * @return {number} - Returns the m01 value.
    */
   get m01() {
@@ -105,6 +111,7 @@ class Mat4 extends AttrValue {
 
   /**
    * Setter for row 0, column 1.
+   *
    * @param {number} val - The val param.
    */
   set m01(val) {
@@ -113,6 +120,7 @@ class Mat4 extends AttrValue {
 
   /**
    * Getter for row 0, column 2.
+   *
    * @return {number} - Returns the m02 value.
    */
   get m02() {
@@ -121,6 +129,7 @@ class Mat4 extends AttrValue {
 
   /**
    * Setter for row 0, column 2.
+   *
    * @param {number} val - The val param.
    */
   set m02(val) {
@@ -129,6 +138,7 @@ class Mat4 extends AttrValue {
 
   /**
    * Getter for row 0, column 3.
+   *
    * @return {number} - Returns the m03 value.
    */
   get m03() {
@@ -137,6 +147,7 @@ class Mat4 extends AttrValue {
 
   /**
    * Setter for row 0, column 3.
+   *
    * @param {number} val - The val param.
    */
   set m03(val) {
@@ -145,6 +156,7 @@ class Mat4 extends AttrValue {
 
   /**
    * Getter for row 1, column 0.
+   *
    * @return {number} - Returns the m10 value.
    */
   get m10() {
@@ -153,6 +165,7 @@ class Mat4 extends AttrValue {
 
   /**
    * Setter for row 1, column 0.
+   *
    * @param {number} val - The val param.
    */
   set m10(val) {
@@ -161,6 +174,7 @@ class Mat4 extends AttrValue {
 
   /**
    * Getter for row 1, column 1.
+   *
    * @return {number} - Returns the m11 value.
    */
   get m11() {
@@ -169,6 +183,7 @@ class Mat4 extends AttrValue {
 
   /**
    * Setter for row 1, column 1.
+   *
    * @param {number} val - The val param.
    */
   set m11(val) {
@@ -177,6 +192,7 @@ class Mat4 extends AttrValue {
 
   /**
    * Getter for row 1, column 2.
+   *
    * @return {number} - Returns the m12 value.
    */
   get m12() {
@@ -185,6 +201,7 @@ class Mat4 extends AttrValue {
 
   /**
    * Setter for row 1, column 2.
+   *
    * @param {number} val - The val param.
    */
   set m12(val) {
@@ -193,6 +210,7 @@ class Mat4 extends AttrValue {
 
   /**
    * Getter for row 1, column 3.
+   *
    * @return {number} - Returns the m13 value.
    */
   get m13() {
@@ -201,6 +219,7 @@ class Mat4 extends AttrValue {
 
   /**
    * Setter for row 1, column 3.
+   *
    * @param {number} val - The val param.
    */
   set m13(val) {
@@ -209,6 +228,7 @@ class Mat4 extends AttrValue {
 
   /**
    * Getter for row 2, column 0.
+   *
    * @return {number} - Returns the m20 value.
    */
   get m20() {
@@ -217,6 +237,7 @@ class Mat4 extends AttrValue {
 
   /**
    * Setter for row 2, column 0.
+   *
    * @param {number} val - The val param.
    */
   set m20(val) {
@@ -225,6 +246,7 @@ class Mat4 extends AttrValue {
 
   /**
    * Getter for row 2, column 1.
+   *
    * @return {number} - Returns the m21 value.
    */
   get m21() {
@@ -232,7 +254,8 @@ class Mat4 extends AttrValue {
   }
 
   /**
-   * Setter for row 2, column 1.
+   * Setter for row 2, column 1
+   * 
    * @param {number} val - The val param.
    */
   set m21(val) {
@@ -241,6 +264,7 @@ class Mat4 extends AttrValue {
 
   /**
    * Getter for row 2, column 2.
+   *
    * @return {number} - Returns the m22 value.
    */
   get m22() {
@@ -249,6 +273,7 @@ class Mat4 extends AttrValue {
 
   /**
    * Setter for row 2, column 2.
+   *
    * @param {number} val - The val param.
    */
   set m22(val) {
@@ -257,6 +282,7 @@ class Mat4 extends AttrValue {
 
   /**
    * Getter for row 2, column 3.
+   *
    * @return {number} - Returns the m23 value.
    */
   get m23() {
@@ -265,6 +291,7 @@ class Mat4 extends AttrValue {
 
   /**
    * Setter for row 2, column 3.
+   *
    * @param {number} val - The val param.
    */
   set m23(val) {
@@ -272,7 +299,8 @@ class Mat4 extends AttrValue {
   }
 
   /**
-   * Getter for row 3, column 0.
+   * Getter for row 3, column 0
+   *
    * @return {number} - Returns the m30 value.
    */
   get m30() {
@@ -281,6 +309,7 @@ class Mat4 extends AttrValue {
 
   /**
    * Setter for row 3, column 0.
+   *
    * @param {number} val - The val param.
    */
   set m30(val) {
@@ -289,6 +318,7 @@ class Mat4 extends AttrValue {
 
   /**
    * Getter for row 3, column 1.
+   *
    * @return {number} - Returns the m31 value.
    */
   get m31() {
@@ -297,6 +327,7 @@ class Mat4 extends AttrValue {
 
   /**
    * Setter for row 3, column 1.
+   *
    * @param {number} val - The val param.
    */
   set m31(val) {
@@ -305,6 +336,7 @@ class Mat4 extends AttrValue {
 
   /**
    * Getter for row 3, column 2.
+   *
    * @return {number} - Returns the m32 value.
    */
   get m32() {
@@ -313,6 +345,7 @@ class Mat4 extends AttrValue {
 
   /**
    * Setter for row 3, column 2.
+   *
    * @param {number} val - The val param.
    */
   set m32(val) {
@@ -321,6 +354,7 @@ class Mat4 extends AttrValue {
 
   /**
    * Getter for row 3, column 3.
+   *
    * @return {number} - Returns the m33 value.
    */
   get m33() {
@@ -329,6 +363,7 @@ class Mat4 extends AttrValue {
 
   /**
    * Setter for row 3, column 3.
+   *
    * @param {number} val - The val param.
    */
   set m33(val) {
@@ -336,15 +371,17 @@ class Mat4 extends AttrValue {
   }
 
   /**
-   * Getter for the x axis.
-   * @return {Vec3} - Returns the x axis as a Vec3.
+   * Getter for the `x` axis.
+   *
+   * @return {Vec3} - Returns the `x` axis as a Vec3.
    */
   get xAxis() {
     return Vec3.createFromFloat32Buffer(this.__data.buffer, 0)
   }
 
   /**
-   * Setter for the x axis.
+   * Setter for the `x` axis.
+   *
    * @param {Vec3} vec3 - The vec3 value.
    */
   set xAxis(vec3) {
@@ -352,15 +389,17 @@ class Mat4 extends AttrValue {
   }
 
   /**
-   * Getter for the y axis.
-   * @return {Vec3} - Returns the y axis as a Vec3.
+   * Getter for the `y` axis.
+   *
+   * @return {Vec3} - Returns the `y` axis as a Vec3.
    */
   get yAxis() {
     return Vec3.createFromFloat32Buffer(this.__data.buffer, 4)
   }
 
   /**
-   * Setter for the y axis.
+   * Setter for the `y` axis.
+   *
    * @param {Vec3} vec3 - The vec3 value.
    */
   set yAxis(vec3) {
@@ -368,15 +407,17 @@ class Mat4 extends AttrValue {
   }
 
   /**
-   * Getter for the z axis.
-   * @return {Vec3} - Returns the z axis as a Vec3.
+   * Getter for the `z` axis.
+   * 
+   * @return {Vec3} - Returns the `z` axis as a Vec3.
    */
   get zAxis() {
     return Vec3.createFromFloat32Buffer(this.__data.buffer, 8)
   }
 
   /**
-   * Setter for the z axis.
+   * Setter for the `z` axis.
+   *
    * @param {Vec3} vec3 - The vec3 value.
    */
   set zAxis(vec3) {
@@ -385,6 +426,7 @@ class Mat4 extends AttrValue {
 
   /**
    * Getter for the translation of the matrix.
+   *
    * @return {Vec3} - Returns the translation.
    */
   get translation() {
@@ -393,6 +435,7 @@ class Mat4 extends AttrValue {
 
   /**
    * Setter for the translation of the matrix.
+   *
    * @param {Vec3} vec3 - The translation.
    */
   set translation(vec3) {
@@ -403,7 +446,8 @@ class Mat4 extends AttrValue {
   // Setters
 
   /**
-   * The set method.
+   * Sets the state of the Mat4 class
+   *
    * @param {number} m00 - Row 0, column 0.
    * @param {number} m01 - Row 0, column 1.
    * @param {number} m02 - Row 0, column 2.
@@ -458,22 +502,26 @@ class Mat4 extends AttrValue {
   }
 
   /**
-   * The setIdentity method.
+   * Sets state of the Mat4 with the identity  Matrix
    */
   setIdentity() {
     this.set()
   }
 
   /**
-   * The setDataArray method.
-   * @param {any} float32Array - The float32Array value.
+   * Sets the state of the Mat4 Object.
+   *
+   * @param {Float32Array} float32Array - The float32Array value.
    */
   setDataArray(float32Array) {
     this.__data = float32Array
   }
 
   /**
-   * The setFromMat method.
+   * Sets state of the Mat4 from another Mat4
+   * <br>
+   * Note: works with either Mat3 or Mat4.
+   *
    * @param {Mat4} mat4 - The mat4 value.
    */
   setFromMat4(mat4) {
@@ -497,6 +545,7 @@ class Mat4 extends AttrValue {
 
   /**
    * Converts a Mat4 to a Mat3.
+   *
    * @param {Mat4} mat4 - The Mat4 value to convert.
    * @return {Mat3} - Returns a new Mat3.
    */
@@ -543,6 +592,7 @@ class Mat4 extends AttrValue {
   /**
    * Transposes (exchanges columns with rows) this matrix
    * and returns the result as a new instance.
+   *
    * @return {Mat4} - Return a new transposed Mat4.
    */
   transpose() {
@@ -568,7 +618,8 @@ class Mat4 extends AttrValue {
 
   /**
    * Inverts a Mat4 not using SIMD and returns the result as a new instance.
-   * @return {any} - Returns a new Mat4.
+   *
+   * @return {Mat4} - Returns a new Mat4.
    */
   inverse() {
     const a00 = this.__data[0]
@@ -633,6 +684,7 @@ class Mat4 extends AttrValue {
 
   /**
    * Inverts a Mat4.
+   *
    * @return {boolean} - The return value.
    */
   invertInPlace() {
@@ -699,8 +751,9 @@ class Mat4 extends AttrValue {
 
   /**
    * Sets this matrix as the inverse of the given Mat4.
+   *
    * @param {Mat4} mat4 - The mat4 value.
-   * @return {any} - The return value.
+   * @return {null} - In case the `determinant` can't be calculated, a `null` will be returned, otherwise, nothing is returned
    */
   setInverse(mat4) {
     const a00 = mat4.__data[0]
@@ -765,6 +818,7 @@ class Mat4 extends AttrValue {
 
   /**
    * Multiplies two Mat4s not using SIMD and returns the result as a new instance.
+   *
    * @param {Mat4} other - The other Mat4 to multiply with.
    * @return {Mat4} - Returns a new Mat4.
    */
@@ -829,6 +883,7 @@ class Mat4 extends AttrValue {
 
   /**
    * Multiplies two Mat4s in place explicitly not using SIMD.
+   *
    * @param {Mat4} other - The other Mat4 to multiply with.
    * @return {Mat4} - Returns a new Mat4.
    */
@@ -893,6 +948,7 @@ class Mat4 extends AttrValue {
 
   /**
    * Post multiplies two Mat4s in place explicitly not using SIMD.
+   *
    * @param {Mat4} other - The other Mat4 to multiply with.
    * @return {Mat3} - Returns the result as a new Mat4.
    */
@@ -957,6 +1013,7 @@ class Mat4 extends AttrValue {
 
   /**
    * Translate a Mat4 by the given vector not using SIMD.
+   *
    * @param {Vec3} v3 - The given vector to translate along.
    * @return {Mat4} - The return value.
    */
@@ -974,6 +1031,7 @@ class Mat4 extends AttrValue {
 
   /**
    * Generates a look-at matrix with the given position, focal point, and up axis.
+   *
    * @param {Vec3} pos - Position of the viewer.
    * @param {Vec3} target - Point the viewer is looking at.
    * @param {Vec3} up - Vec3 pointing up.
@@ -1177,7 +1235,8 @@ class Mat4 extends AttrValue {
 
   /**
    * Transforms the Vec4 with a Mat4.
-   * @param {any} vec - The vec value.
+   *
+   * @param {Vec4} vec - The vec value.
    * @return {Vec4} - Return the result as a new Vec4.
    */
   transformVec4(vec) {
@@ -1195,8 +1254,9 @@ class Mat4 extends AttrValue {
   }
 
   /**
-   * The transformVec3 method.
-   * @param {any} vec - The vec value.
+   * Transforms the Vec3 with a Mat4.
+   *
+   * @param {Vec3} vec - The vec value.
    * @return {Vec3} - Return the result as a new Vec3.
    */
   transformVec3(vec) {
@@ -1212,8 +1272,8 @@ class Mat4 extends AttrValue {
   }
 
   /**
-   * The rotateVec3 method.
-   * @param {any} vec - The vec value.
+   * Rotates a given `Vec3` and the result is returned as a new `Vec3`
+   * @param {Vec3} vec - The vec value.
    * @return {Vec3} - Return the result as a new Vec3.
    */
   rotateVec3(vec) {
@@ -1230,10 +1290,11 @@ class Mat4 extends AttrValue {
 
   /**
    * Set the perspective from a Mat4.
-   * @param {any} fovy - The fovy value.
-   * @param {any} aspect - The aspect value.
-   * @param {any} near - The near value.
-   * @param {any} far - The far value.
+   *
+   * @param {number} fovy - The fovy value.
+   * @param {number} aspect - The aspect value.
+   * @param {number} near - The near value.
+   * @param {number} far - The far value.
    */
   setPerspectiveMatrix(fovy, aspect, near, far) {
     const f = Math.tan(Math.PI * 0.5 - 0.5 * fovy)
@@ -1261,13 +1322,14 @@ class Mat4 extends AttrValue {
   }
 
   /**
-   * The setOrthographicMatrix method.
-   * @param {any} left - The left value.
-   * @param {any} right - The right value.
-   * @param {any} bottom - The bottom value.
-   * @param {any} top - The top value.
-   * @param {any} near - The near value.
-   * @param {any} far - The far value.
+   * Calculates the orthographic matrix and sets the state of the Mat4 class
+   *
+   * @param {number} left - The left value.
+   * @param {number} right - The right value.
+   * @param {number} bottom - The bottom value.
+   * @param {number} top - The top value.
+   * @param {number} near - The near value.
+   * @param {number} far - The far value.
    */
   setOrthographicMatrix(left, right, bottom, top, near, far) {
     const lr = 1 / (left - right)
@@ -1296,7 +1358,8 @@ class Mat4 extends AttrValue {
   }
 
   /**
-   * The setScale method.
+   * Scales Mat4 Matrix
+   *
    * @param {number} x - The x value.
    * @param {number} y - The y value.
    * @param {number} z - The z value.
@@ -1312,8 +1375,9 @@ class Mat4 extends AttrValue {
   }
 
   /**
-   * The setFromMat3x4Array method.
-   * @param {any} m3x4 - The m3x4 value.
+   * Transforms a 3x4 matrix into a 4x4 matrix and set the result to the Math4 state.
+   *
+   * @param {array} m3x4 - The m3x4 value.
    */
   setFromMat3x4Array(m3x4) {
     /* eslint-disable prettier/prettier*/
@@ -1340,9 +1404,11 @@ class Mat4 extends AttrValue {
 
   /**
    * Creates a new Mat4 to wrap existing memory in a buffer.
+   *
    * @param {ArrayBuffer} buffer - The buffer value.
    * @param {number} offset - The offset value.
    * @return {Mat4} - Returns a new Mat4.
+   * @private
    */
   static createFromFloat32Buffer(buffer, offset = 0) {
     return new Mat4(buffer, offset * 4) // 4 bytes per 32bit float
@@ -1350,6 +1416,7 @@ class Mat4 extends AttrValue {
 
   /**
    * Clones this Mat4 returning a new instance.
+   *
    * @return {Mat4} - Returns a new Mat4.
    */
   clone() {
@@ -1380,6 +1447,7 @@ class Mat4 extends AttrValue {
    * Creates a new Mat4.
    * @param {...object} ...args - The ...args param.
    * @return {Mat4} - Returns a new Mat4.
+   * @private
    */
   static create(...args) {
     return new Mat4(...args)
@@ -1390,6 +1458,7 @@ class Mat4 extends AttrValue {
 
   /**
    * The toJSON method encodes this type as a json object for persistences.
+   *
    * @return {object} - The json object.
    */
   toJSON() {
@@ -1397,7 +1466,8 @@ class Mat4 extends AttrValue {
   }
 
   /**
-   * The fromJSON method.
+   * The fromJSON method decodes a json object for this type.
+   *
    * @param {object} json - The json param.
    */
   fromJSON(json) {
