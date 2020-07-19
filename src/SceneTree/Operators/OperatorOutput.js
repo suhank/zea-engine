@@ -14,9 +14,9 @@ class OperatorOutput {
    * @param {string} name - The name value.
    * @param {OperatorOutputMode} mode - The filterFn value.
    */
-  constructor(name, mode) {
+  constructor(name, mode=OperatorOutputMode.OP_WRITE) {
     this.__name = name
-    this.__mode = mode
+    this._mode = mode
     this._param = undefined
     this.detached = false
   }
@@ -30,11 +30,16 @@ class OperatorOutput {
   }
 
   setOperator(op) {
-    this.__op = op
+    this._op = op
   }
 
   getOperator() {
-    return this.__op
+    return this._op
+  }
+
+
+  getMode() {
+    return this._mode
   }
 
   /**
@@ -63,38 +68,6 @@ class OperatorOutput {
   }
 
   /**
-   * The getValue method.
-   * @param {boolean} mode - The mode param.
-   * @return {any} - The return value.
-   */
-  getValue(mode = ValueGetMode.OPERATOR_GETVALUE) {
-    if (this._param) return this._param.getValue(mode)
-  }
-
-  /**
-   * The setValue method.
-   * Note: Sometimes outputs are used in places like statemachines,
-   * where we would want the change to cause an event.
-   * @param {any} value - The value param.
-   * @param {boolean} mode - The mode value.
-   */
-  setValue(value, mode = ValueSetMode.OPERATOR_SETVALUE) {
-    if (this._param) {
-      this._param.setValue(value, mode)
-    }
-  }
-
-  /**
-   * The setClean method.
-   * @param {any} value - The value param.
-   */
-  setClean(value) {
-    if (this._param) {
-      this._param.setClean(value)
-    }
-  }
-
-  /**
    * The setDirty method.
    * @param {any} fn - The fn value.
    */
@@ -104,28 +77,39 @@ class OperatorOutput {
     }
   }
 
-  setDirty() {
-    if (this._param) {
-      this._param.setDirty(this)
-    }
+  /**
+   * The getValue method.
+   * @param {boolean} mode - The mode param.
+   * @return {any} - The return value.
+   */
+  getValue() {
+    if (this._param) return this._param.getValueFromOp()
   }
 
   /**
-   * The setCleanFromOp method.
+   * The setValue method.
+   * Note: FIXME Sometimes outputs are used in places like statemachines,
+   * where we would want the change to cause an event.
+   * Note: when a user sets a parameter value that is being driven by
+   * an operator, the operator can propagate the value back up the chain
+   * to its inputs.
    * @param {any} value - The value param.
    */
-  setCleanFromOp(value, op) {
+  setValue(value) {
     if (this._param) {
-      this._param.setClean(value, op)
+      value = this._op.setValue(value, this)
     }
+    return value
   }
 
   /**
-   * The removeCleanerFn method.
-   * @param {any} fn - The fn value.
+   * The setClean method.
+   * @param {any} value - The value param.
    */
-  removeCleanerFn(fn) {
-    if (this._param) this._param.removeCleanerFn(fn)
+  setClean(value) {
+    if (this._param) {
+      this._param.setCleanFromOp(value, this)
+    }
   }
 
   // ////////////////////////////////////////

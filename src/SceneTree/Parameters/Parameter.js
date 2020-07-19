@@ -34,24 +34,36 @@ const ParamState = {
  * * **nameChanged:** Triggered when the name of the parameter changes.
  * * **valueChanged:** Triggered when the value of the parameter changes.
  */
-class BaseParameter extends EventEmitter {
+class Parameter extends EventEmitter {
   /**
    * Create a base parameter.
    * @param {string} name - The name of the base parameter.
    */
-  constructor(name) {
-    super()
+  constructor(name, value, dataType) {
+    super(name)
+  
     this.__name = name
-    this.__cleanerFns = []
+    this.__value = value
+    this.__dataType = dataType ? dataType : undefined
+    // this.__cleanerFns = []
     this.__boundOps = []
-    this.__state = ParamState.CLEAN
-    this.__dirtyOpIndex = -1
+    // this.__state = ParamState.CLEAN
+    this.__dirtyOpIndex = this.__boundOps.length
     this.__flags = 0
 
     this.getName = this.getName.bind(this)
     this.setName = this.setName.bind(this)
     this.getValue = this.getValue.bind(this)
     this.setValue = this.setValue.bind(this)
+  }
+  
+  /**
+   * The clone method.
+   * @param {number} flags - The flags value.
+   */
+  clone(flags) {
+    console.warn('@todo-review')
+    console.error('TOOD: implment me')
   }
 
   /**
@@ -118,6 +130,15 @@ class BaseParameter extends EventEmitter {
   }
 
   /**
+   * Returns parameter's data type.
+   *
+   * @return {string} - The return value.
+   */
+  getDataType() {
+    return this.__dataType
+  }
+
+  /**
    * The setFlag method.
    * @private
    * @param {number} flag - The flag value.
@@ -146,26 +167,6 @@ class BaseParameter extends EventEmitter {
     return (this.__flags & flag) != 0
   }
 
-  /**
-   * The getValue method (TODO).
-   *
-   * @private
-   */
-  getValue() {
-    // TODO
-    console.warn('@todo-review')
-  }
-
-  /**
-   * The getValue method (TODO).
-   *
-   * @private
-   * @param {object|string|number|any} value - The value param.
-   */
-  setValue(value) {
-    console.warn('@todo-review')
-  }
-
   // /**
   //  * The setEnabled method.
   //  * @deprecated
@@ -189,6 +190,9 @@ class BaseParameter extends EventEmitter {
   //   console.warn('Deprecated Method: This method will be removed soon.')
   //   this.testFlag(ParamFlags.DISABLED)
   // }
+
+  //////////////////////////////////////////////////
+  // Operator bindings
 
   /**
    * The bindOperator method.
@@ -243,15 +247,11 @@ class BaseParameter extends EventEmitter {
    *
    * @return {boolean}
    */
-  setDirty(op) {
+  setDirty(operatorOutput) {
     // As we migrate to bound ops, we will no longer call store
     // cleaner fns and instead simply propagate.
-    let dirtyId
-    if (this.__dirtyOpIndex == -1) {
-      dirtyId = this.__boundOps.indexOf(op)
-    } else {
-      dirtyId = Math.min(this.__dirtyOpIndex, this.__boundOps.indexOf(op))
-    }
+    const dirtyId = Math.min(this.__dirtyOpIndex, this.__boundOps.indexOf(operatorOutput))
+    
     // console.log("setDirtyFromOp:", this.getPath(), dirtyId, this.__dirtyOpIndex)
     // if (this.__state == ParamState.CLEAN) {
     if (dirtyId != this.__dirtyOpIndex) {
@@ -261,16 +261,6 @@ class BaseParameter extends EventEmitter {
     }
     return true
   }
-  
-  /**
-   * The setCleanFromOp method.
-   * @param {any} value - The value param.
-   */
-  setCleanFromOp(value, op) {
-    this.__value = value
-    this.__dirtyOpIndex = this.__boundOps.indexOf(op) + 1
-  }
-
 
   /**
    * The isDirty method.
@@ -279,8 +269,27 @@ class BaseParameter extends EventEmitter {
    * @return {boolean} - Returns a boolean.
    */
   isDirty() {
-    return this.__state == ParamState.DIRTY
+    return this.__dirtyOpIndex < this.__boundOps.length
     // return this.__cleanerFns.length > 0
+  }
+  
+  /**
+   * The setCleanFromOp method.
+   * @param {any} value - The value param.
+   */
+  setCleanFromOp(value, operatorOutput) {
+    this.__value = value
+
+    // As each operator writes its value, the dirty value is incremented
+    this.__dirtyOpIndex = this.__boundOps.indexOf(operatorOutput) + 1
+  }
+
+  /**
+   * The setCleanFromOp method.
+   * @param {any} value - The value param.
+   */
+  getValueFromOp() {
+    return this.__value
   }
 
   /**
@@ -288,7 +297,7 @@ class BaseParameter extends EventEmitter {
    * @private
    */
   _clean() {
-    this.__state = ParamState.CLEANING
+    // this.__state = ParamState.CLEANING
 
     // console.log("Cleaning:", this.getPath())
     // Note: we always evaluate all the ops in the stack, not just the dirty ones.
@@ -296,27 +305,25 @@ class BaseParameter extends EventEmitter {
     // for (const op of this.__boundOps) {
     //   op.evaluate()
     // }
-    if (this.__dirtyOpIndex != -1) {
-      for (let i = this.__dirtyOpIndex; i < this.__boundOps.length; i++) {
-        const operatorOutput = this.__boundOps[i]
-        // The op can get the current value and modify it in place
-        // and set the output to clean.
-        operatorOutput.getOperator().evaluate()
-      }
+    for (let i = this.__dirtyOpIndex; i < this.__boundOps.length; i++) {
+      const operatorOutput = this.__boundOps[i]
+      // The op can get the current value and modify it in place
+      // and set the output to clean.
+      operatorOutput.getOperator().evaluate()
     }
     
     // Clean the param before we start evaluating the connected op.
     // This is so that operators can read from the current value
     // to compute the next.
-    const fns = this.__cleanerFns
-    this.__cleanerFns = []
-    for (const fn of fns) {
-      const res = fn(this.__value)
-      if (res != undefined) this.__value = res
-    }
+    // const fns = this.__cleanerFns
+    // this.__cleanerFns = []
+    // for (const fn of fns) {
+    //   const res = fn(this.__value)
+    //   if (res != undefined) this.__value = res
+    // }
 
-    if (this.__dirtyOpIndex == this.__boundOps.length)
-      this.__state = ParamState.CLEAN
+    // if (this.__dirtyOpIndex == this.__boundOps.length)
+    //   this.__state = ParamState.CLEAN
   }
 
   /**
@@ -342,88 +349,14 @@ class BaseParameter extends EventEmitter {
   // }
 
   /**
-   * The clone method.
-   * @param {number} flags - The flags value.
-   */
-  clone(flags) {
-    console.warn('@todo-review')
-    console.error('TOOD: implment me')
-  }
-
-  /**
-   * The destroy method.
-   */
-  destroy() {
-    // Note: Some parameters hold refs to geoms/materials,
-    // which need to be explicitly cleaned up.
-    // E.g. freeing GPU Memory.
-    console.warn('@todo-review')
-  }
-}
-
-/**
- * Represents a reactive type of attribute that can be owned by a `ParameterOwner` class.
- * Plus the holding the parameter name and value, it also stores its data type,
- * which is an addition for persistence capability.
- *
- * @extends BaseParameter
- */
-class Parameter extends BaseParameter {
-  /**
-   * When initializing a new parameter, the passed in value could be anything.
-   * If it is a new type of value, just ensure you register it in the `SGFactory`.
-   *
-   * How to use it:
-   *
-   * ```javascript
-   *  // Creating a parameter object
-   *  const param = new Parameter('Title', 'Awesome Parameter', 'String')
-   *
-   *   // Capturing events
-   *  param.on('valueChanged', (...params) => console.log('Value changed!'))
-   *
-   *  // Changing parameter's value will cause `valueChanged` event to trigger.
-   *  param.setValue('A New Awesome Parameter')
-   *  // As result the console log code will execute: Value Changed!
-   * ```
-   *
-   * @param {string} name - The name of the parameter.
-   * @param {object|string|number|any} value - The value of the parameter.
-   * @param {string} dataType - The data type of the parameter.
-   */
-  constructor(name, value, dataType) {
-    super(name)
-    this.__value = value
-    this.__dataType = dataType ? dataType : undefined
-  }
-
-  /**
-   * Returns parameter's data type.
-   *
-   * @return {string} - The return value.
-   */
-  getDataType() {
-    return this.__dataType
-  }
-
-  /**
    * Returns parameter's value.
    *
    * @param {number} mode - The mode value.
    * @return {object|string|number|any} - The return value.
    */
-  getValue(/*mode = ValueGetMode.NORMAL*/) {
-    if (/* mode == ValueGetMode.NORMAL && */ this.__state == ParamState.DIRTY) this._clean()
+  getValue() {
+    if (this.__dirtyOpIndex < this.__boundOps.length) this._clean()
     return this.__value
-  }
-
-  /**
-   * Sets parameter's value directly.
-   *
-   * @param {object|string|number|any} value - The value param.
-   */
-  setClean(value) {
-    this.__value = value
   }
 
   /**
@@ -454,12 +387,10 @@ class Parameter extends BaseParameter {
 
     if (this.__boundOps.length > 0) {
       for (let i = this.__boundOps.length - 1; i >= 0; i--) {
-        const op = this.__boundOps[i]
-        if (op.setValue) {
-          value = op.setValue(value)
-        }
+        const operatorOutput = this.__boundOps[i]
+        value = operatorOutput.setValue(value)
+        if (operatorOutput.getMode() == 0/*OP_WRITE*/) return;
       }
-      return;
     }
 
     if (!value.fromJSON) {

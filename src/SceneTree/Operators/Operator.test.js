@@ -31,15 +31,14 @@ class ScaleFloatOperator extends Operator {
   }
 
   evaluate() {
-    let scaleValue = 1.0;
+    let scaleValue = 1.0
     const inParam = this.getInput("ScaleValue").getParam()
     if (inParam) {
-      scaleValue = inParam.getValue();
+      scaleValue = inParam.getValue()
     }
-    // Read the value, modify and return. 
-    const outParam = this.getOutput("Result").getParam()
-    let value = outParam.operatorGetValue();
-    outParam.operatorSetValue(value * scaleValue);
+    // Read the value, modify and return.
+    const value = this.getOutput("Result").getValue()
+    this.getOutput("Result").setClean(value * scaleValue)
   }
 }
 
@@ -59,7 +58,30 @@ describe('Operator', () => {
     aParam.setValue(3)
     bParam.setValue(2.5)
 
+    expect(myParam.isDirty()).toEqual(true)
     expect(myParam.getValue()).toEqual(5.5)
+    expect(myParam.isDirty()).toEqual(false)
+  })
+
+  it('ScaleFloatOperator', () => {
+    const scaleOperator = new ScaleFloatOperator()
+
+
+    const scaleParam = new NumberParameter('A', 2)
+    const resultParam = new NumberParameter('MyParam', 3)
+
+    scaleOperator.getInput("ScaleValue").setParam(scaleParam)
+    scaleOperator.getOutput("Result").setParam(resultParam)
+
+    expect(resultParam.isDirty()).toEqual(true)
+    expect(resultParam.getValue()).toEqual(6)
+    expect(resultParam.isDirty()).toEqual(false)
+    
+    scaleParam.setValue(4)
+
+    expect(resultParam.isDirty()).toEqual(true)
+    expect(resultParam.getValue()).toEqual(24)
+    expect(resultParam.isDirty()).toEqual(false)
   })
 
 })

@@ -171,6 +171,21 @@ class Operator extends BaseItem {
     throw new Error('Not yet implemented')
   }
 
+
+  /**
+   * The setValue method.
+   * Note: FIXME Sometimes outputs are used in places like statemachines,
+   * where we would want the change to cause an event.
+   * Note: when a user sets a parameter value that is being driven by
+   * an operator, the operator can propagate the value back up the chain
+   * to its inputs.
+   * @param {any} value - The value param.
+   */
+  setValue(value, output) {
+    // TODO: Implement me for custom manipulations.
+    return value
+  }
+
   // ////////////////////////////////////////
   // Persistence
 
