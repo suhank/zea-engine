@@ -1,10 +1,4 @@
-import { ValueSetMode, ValueGetMode } from '../Parameters/index'
-
-const OperatorOutputMode = {
-  OP_WRITE: 0,
-  OP_READ_WRITE: 1,
-}
-
+import { OperatorOutputMode } from '../Parameters/index'
 
 /** Class representing an operator output.
  */
@@ -14,7 +8,7 @@ class OperatorOutput {
    * @param {string} name - The name value.
    * @param {OperatorOutputMode} mode - The filterFn value.
    */
-  constructor(name, mode=OperatorOutputMode.OP_WRITE) {
+  constructor(name, mode = OperatorOutputMode.OP_WRITE) {
     this.__name = name
     this._mode = mode
     this._param = undefined
@@ -22,28 +16,39 @@ class OperatorOutput {
   }
 
   /**
-   * The getName method.
-   * @return {any} - The return value.
+   * Returns name of the output.
+   * @return {string} - The name string.
    */
   getName() {
     return this.__name
   }
 
+  /**
+   * Sets operator that owns this output. Called by the operator when adding outputs
+   * @param {Operator} - The operator object.
+   */
   setOperator(op) {
     this._op = op
   }
 
+  /**
+   * Returns operator that owns this output.
+   * @return {Operator} - The operator object.
+   */
   getOperator() {
     return this._op
   }
 
-
+  /**
+   * Returns mode that the output writes to be parameter. Must be a number from OperatorOutputMode
+   * @return {OperatorOutputMode} - The mode value.
+   */
   getMode() {
     return this._mode
   }
 
   /**
-   * The isConnected method.
+   * Returns true if this output is connected to a parameter.
    * @return {boolean} - The return value.
    */
   isConnected() {
@@ -59,8 +64,8 @@ class OperatorOutput {
   }
 
   /**
-   * The setParam method.
-   * @param {any} param - The param value.
+   * Sets the Parameter for this out put to write to.
+   * @param {Parameter} param - The param value.
    */
   setParam(param) {
     this._param = param
@@ -68,8 +73,7 @@ class OperatorOutput {
   }
 
   /**
-   * The setDirty method.
-   * @param {any} fn - The fn value.
+   * Propagates dirty to the connected parameter.
    */
   setDirty() {
     if (this._param) {
@@ -94,6 +98,7 @@ class OperatorOutput {
    * an operator, the operator can propagate the value back up the chain
    * to its inputs.
    * @param {any} value - The value param.
+   * @return {any} - The modified value.
    */
   setValue(value) {
     if (this._param) {
@@ -124,10 +129,7 @@ class OperatorOutput {
   toJSON(context, flags) {
     const paramPath = this._param ? this._param.getPath() : ''
     return {
-      paramPath:
-        context && context.makeRelative
-          ? context.makeRelative(paramPath)
-          : paramPath,
+      paramPath: context && context.makeRelative ? context.makeRelative(paramPath) : paramPath,
     }
   }
 
@@ -148,86 +150,11 @@ class OperatorOutput {
           this.setParam(param)
         },
         reason => {
-          console.warn(
-            "Operator Output: '" +
-              this.getName() +
-              "'. Unable to load item:" +
-              j.paramPath
-          )
+          console.warn("OperatorOutput: '" + this.getName() + "'. Unable to connect to:" + j.paramPath)
         }
       )
     }
   }
-
-  // /**
-  //  * The detach method.
-  //  */
-  // detach() {
-  //   // This function is called when we want to suspend an operator
-  //   // from functioning because it is deleted and on the undo stack.
-  //   // Once operators have persistent connections,
-  //   // we will simply uninstall the output from the parameter.
-  //   this.detached = true
-  // }
-
-  // /**
-  //  * The reattach method.
-  //  */
-  // reattach() {
-  //   this.detached = false
-  // }
 }
 
-/** Class representing an Xfo operator output.
- * @extends OperatorOutput
-class XfoOperatorOutput extends OperatorOutput {
-  /**
-   * Create an Xfo operator output.
-   * @param {string} name - The name value.
-   * /
-  constructor(name) {
-    super(name)
-  }
-
-  /**
-   * The getInitialValue method.
-   * @return {any} - The return value.
-   * /
-  getInitialValue() {
-    return this._initialParamValue
-  }
-
-  /**
-   * The setParam method.
-   * @param {any} param - The param value.
-   * /
-  setParam(param) {
-    // Note: sometimes the param value is changed after binding.
-    // e.g. The group Xfo is updated after the operator
-    // that binds to it is loaded. It could also change if a user
-    // Is adding items to the group using the UI. Therefore, the
-    // initial Xfo needs to be updated.
-    const init = () => {
-      this._initialParamValue = param.getValue()
-      if (this._initialParamValue.clone)
-        this._initialParamValue = this._initialParamValue.clone()
-
-      if (this._initialParamValue == undefined) throw new Error('WTF?')
-    }
-    init()
-    // param.on('valueChanged', event => {
-    //   if (
-    //     event.mode == ValueSetMode.USER_SETVALUE ||
-    //     event.mode == ValueSetMode.REMOTEUSER_SETVALUE ||
-    //     event.mode == ValueSetMode.DATA_LOAD
-    //   ) {
-    //     init()
-    //   }
-    // })
-
-    this._param = param
-    this.emit('paramSet', { param })
-  }
-}
-*/
 export { OperatorOutput, OperatorOutputMode }

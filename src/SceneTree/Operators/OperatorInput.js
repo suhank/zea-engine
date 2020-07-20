@@ -1,15 +1,11 @@
-
-import { sgFactory } from '../SGFactory'
-
-/** Class representing an operator output.
+/** Class representing an operator input.
  */
-class OperatorInput  {
+class OperatorInput {
   /**
-   * Create an operator output.
+   * Create an operator input.
    * @param {string} name - The name value.
    */
   constructor(name) {
-    // super()
     this.__name = name
     this._param = undefined
     this._paramValueChanged = this._paramValueChanged.bind(this)
@@ -23,12 +19,24 @@ class OperatorInput  {
     return this.__name
   }
 
+  /**
+   * Sets operator that owns this input. Called by the operator when adding inputs
+   * @param {Operator} - The operator object.
+   */
   setOperator(op) {
-    this.__op = op
+    this._op = op
   }
 
   /**
-   * The isConnected method.
+   * Returns operator that owns this input.
+   * @return {Operator} - The operator object.
+   */
+  getOperator() {
+    return this._op
+  }
+
+  /**
+   * Returns true if this input is connected to a parameter.
    * @return {boolean} - The return value.
    */
   isConnected() {
@@ -43,13 +51,18 @@ class OperatorInput  {
     return this._param
   }
 
+  /**
+   * @private
+   * The handler function for when the input paramter changes.
+   * @param {object} - The event object.
+   */
   _paramValueChanged(event) {
     if (this.__op) this.__op.setDirty(this.__name)
   }
 
   /**
-   * The setParam method.
-   * @param {any} param - The param value.
+   * Assigns the Paramter to be used to provide the input value.
+   * @param {Parameter} param - The param value.
    */
   setParam(param) {
     if (this._param) {
@@ -59,7 +72,6 @@ class OperatorInput  {
     if (this._param) {
       this._param.on("valueChanged", this._paramValueChanged)
     }
-    // this.emit('paramSet', { param })
   }
 
   /**
@@ -72,8 +84,6 @@ class OperatorInput  {
 
   /**
    * The setValue method.
-   * Note: Sometimes outputs are used in places like statemachines,
-   * where we would want the change to cause an event.
    * @param {any} value - The value param.
    */
   setValue(value) {
@@ -86,7 +96,7 @@ class OperatorInput  {
   // Persistence
 
   /**
-   * The toJSON method encodes this type as a json object for persistences.
+   * The toJSON method encodes this type as a json object for persistence.
    * @param {object} context - The context value.
    * @param {number} flags - The flags value.
    * @return {object} - Returns the json object.
@@ -94,9 +104,7 @@ class OperatorInput  {
   toJSON(context, flags) {
     const paramPath = this._param ? this._param.getPath() : ''
     return {
-      paramPath: context && context.makeRelative
-          ? context.makeRelative(paramPath)
-          : paramPath,
+      paramPath: context && context.makeRelative ? context.makeRelative(paramPath) : paramPath,
     }
   }
 
@@ -117,12 +125,7 @@ class OperatorInput  {
           this.setParam(param)
         },
         reason => {
-          console.warn(
-            "Operator Output: '" +
-              this.getName() +
-              "'. Unable to load item:" +
-              j.paramPath
-          )
+          console.warn("OperatorInput: '" + this.getName() + "'. Unable to connect to:" + j.paramPath)
         }
       )
     }
