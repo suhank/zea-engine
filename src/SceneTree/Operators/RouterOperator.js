@@ -16,26 +16,14 @@ class RouterOperator extends Operator {
    */
   constructor(name) {
     super(name)
-
     this.__input = this.addInput(new OperatorInput('Input'))
-    this.__multipliersParam = this.addParameter(new ListParameter('Multipliers', NumberParameter))
-    this.__multipliersParam.on('elementAdded', (event) => {
-      event.elem.setValue(1.0)
-      this.addOutput(new OperatorOutput('Output'))
-      this.setDirty()
-    })
-    this.__multipliersParam.on('elementRemoved', (event) => {
-      this.removeOutput(this.getOutputByIndex(event.index))
-    })
   }
 
   /**
    * The addRoute method.
    */
   addRoute() {
-    const index = this.__multipliersParam.getCount()
-    this.__multipliersParam.addElement(new NumberParameter("Mult" + index))
-    return this.getOutputByIndex(index)
+    return this.addOutput(new OperatorOutput('Output' + this.__outputs.length))
   }
 
   /**
@@ -43,21 +31,18 @@ class RouterOperator extends Operator {
    */
   evaluate() {
     if (this.__input.isConnected()) {
-      const input = this.__input.getValue()
-      const multipliers = this.__multipliersParam.getValue()
+      const inputValue = this.__input.getValue()
       let i = this.__outputs.length
       while (i--) {
         const output = this.__outputs[i]
-        const multiplier = multipliers[i].getValue()
-        output.setValue(input * multiplier)
+        output.setClean(inputValue)
       }
     } else {
       let i = this.__outputs.length
       while (i--) {
-        output.setValue(0.0)
+        output.setClean(0.0)
       }
     }
-    this.emit('postEval', {})
   }
 
   // ////////////////////////////////////////
