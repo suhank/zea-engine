@@ -1,7 +1,6 @@
 import { sgFactory } from '../../SceneTree/SGFactory.js'
 
 import { ValueSetMode, NumberParameter } from '../../SceneTree/Parameters/index'
-import { OperatorOutput } from '../../SceneTree/Operators/index'
 
 import { StateAction } from '../StateAction.js'
 
@@ -15,31 +14,31 @@ class SetParameterValue extends StateAction {
    */
   constructor() {
     super()
+    this.__interpTimeParam = this.addParameter(new NumberParameter('InterpTime', 1.0))
+    this.__updateFrequencyParam = this.addParameter(new NumberParameter('UpdateFrequency', 30))
+  }
 
-    this.__interpTimeParam = this.addParameter(
-      new NumberParameter('InterpTime', 1.0)
-    )
-    this.__updateFrequencyParam = this.addParameter(
-      new NumberParameter('UpdateFrequency', 30)
-    )
-
-    this.__outParam = this.addOutput(new OperatorOutput('Param'))
-    this.__outParam.on('paramSet', (event) => {
-      const { param } = event
-      if ((param && !this.__valueParam) || param.getDataType() != this.__valueParam.getDataType()) {
-        const valueParam = param.clone()
-        valueParam.setName('Value')
-        valueParam.setValue(param.getValue())
-        this.__valueParam = this.addParameter(valueParam)
-      }
-    })
+  /**
+   * Sets the Parameter object to be controlled by this StateAction.
+   * @param {Paramter} param - The Parameter object.
+   * @return {object} - Returns the json object.
+   */
+  setParam(param) {
+    this.__outParam = param
+    if ((param && !this.__valueParam) || param.getDataType() != this.__valueParam.getDataType()) {
+      const valueParam = param.clone()
+      valueParam.setName('Value')
+      valueParam.setValue(param.getValue())
+      this.__valueParam = this.addParameter(valueParam)
+    }
+    return param
   }
 
   /**
    * Activate the action.
    */
   activate() {
-    if (this.__outParam.isConnected()) {
+    if (this.__outParam) {
       const interpTime = this.__interpTimeParam.getValue()
       if (interpTime > 0.0) {
         const updateFrequency = this.__updateFrequencyParam.getValue()
