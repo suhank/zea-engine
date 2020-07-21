@@ -114,7 +114,7 @@ class TreeItem extends BaseItem {
     this.onMouseMove = this.onMouseMove.bind(this)
     this.onMouseEnter = this.onMouseEnter.bind(this)
     this.onMouseLeave = this.onMouseLeave.bind(this)
-    
+
     // /////////////////////////////////////
     // Add parameters.
 
@@ -741,12 +741,12 @@ class TreeItem extends BaseItem {
    * @param {boolean} fixCollisions - Modify the name of the item to avoid
    * name collisions with other chidrent of the same parent.
    * If false, an exception wll be thrown instead if a name collision occurs.
-   * @return {number} - The index of the child item in this items children array.
+   * @return {BaseItem} childItem - The child BaseItem that was added.
    */
   addChild(childItem, maintainXfo = true, fixCollisions = true) {
     const index = this.__childItems.length
     this.insertChild(childItem, index, maintainXfo, fixCollisions)
-    return index
+    return childItem
   }
 
   /**
