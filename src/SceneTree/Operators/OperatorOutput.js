@@ -12,6 +12,7 @@ class OperatorOutput {
     this.__name = name
     this._mode = mode
     this._param = undefined
+    this._paramBindIndex = -1
     this.detached = false
   }
 
@@ -25,7 +26,7 @@ class OperatorOutput {
 
   /**
    * Sets operator that owns this output. Called by the operator when adding outputs
-   * @param {Operator} - The operator object.
+   * @param {Operator} op - The operator object.
    */
   setOperator(op) {
     this._op = op
@@ -67,9 +68,9 @@ class OperatorOutput {
    * Sets the Parameter for this out put to write to.
    * @param {Parameter} param - The param value.
    */
-  setParam(param) {
+  setParam(param, index=-1) {
     this._param = param
-    this._param.bindOperatorOutput(this)
+    this._paramBindIndex = this._param.bindOperatorOutput(this, index)
   }
 
   /**
@@ -130,6 +131,7 @@ class OperatorOutput {
     const paramPath = this._param ? this._param.getPath() : ''
     return {
       paramPath: context && context.makeRelative ? context.makeRelative(paramPath) : paramPath,
+      paramBindIndex: this._paramBindIndex,
     }
   }
 
@@ -147,7 +149,7 @@ class OperatorOutput {
       context.resolvePath(
         j.paramPath,
         param => {
-          this.setParam(param)
+          this.setParam(param, j.paramBindIndex)
         },
         reason => {
           console.warn("OperatorOutput: '" + this.getName() + "'. Unable to connect to:" + j.paramPath)

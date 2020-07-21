@@ -35,7 +35,7 @@ class BaseItem extends ParameterOwner {
     this.__flags = 0
 
     // Note: one day we will remove the concept of 'selection' from the engine
-    // and keep it only in UX. to Select an item, we will add it to the selectino
+    // and keep it only in UX. to Select an item, we will add it to the selection
     // in the selection manager. Then the selection group will apply a highlight.
     this.__selectable = true
     this.__selected = false
@@ -104,10 +104,10 @@ class BaseItem extends ParameterOwner {
    * @private
    */
   __updatePath() {
+    console.log(this.getName(),this.__ownerItem == undefined )
     if (this.__ownerItem == undefined) this.__path = [this.__name]
     else {
-      this.__path = this.__ownerItem.getPath().slice()
-      this.__path.push(this.__name)
+      this.__path = [...this.__ownerItem.getPath(), this.__name]
     }
   }
 
@@ -162,7 +162,10 @@ class BaseItem extends ParameterOwner {
    * @param {number} index - The index value.
    * @return {BaseItem|Parameter} - The return value.
    */
-  resolvePath(path, index) {
+  resolvePath(path, index = 0) {
+    if (index == 0) {
+      if (path[0] == '.' || path[0] == this.__name) index++
+    }
     if (index == path.length) {
       return this
     }
@@ -175,7 +178,7 @@ class BaseItem extends ParameterOwner {
     if (param) {
       return param
     }
-    throw new Error('Invalid path:' + path + ' member not found')
+    throw new Error('Invalid path:' + path + '['+index+'] member not found')
   }
 
   // ////////////////////////////////////////
@@ -362,14 +365,14 @@ class BaseItem extends ParameterOwner {
   // Clone and Destroy
 
   /**
-   * Clones this bse item and returns a new base item.
+   * Clones this base item and returns a new base item.
    * <br>
    * **Note:** Each class should implement clone to be clonable.
    *
    * @param {number} flags - The flags value.
    */
   clone(flags) {
-    throw new Error(this.constructor.name + ' does not implment its clone method')
+    throw new Error(this.constructor.name + ' does not implement its clone method')
   }
 
   /**

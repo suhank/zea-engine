@@ -21,7 +21,7 @@ class OperatorInput {
 
   /**
    * Sets operator that owns this input. Called by the operator when adding inputs
-   * @param {Operator} - The operator object.
+   * @param {Operator} op - The operator object.
    */
   setOperator(op) {
     this._op = op
@@ -54,10 +54,10 @@ class OperatorInput {
   /**
    * @private
    * The handler function for when the input paramter changes.
-   * @param {object} - The event object.
+   * @param {object} event - The event object.
    */
   _paramValueChanged(event) {
-    if (this.__op) this.__op.setDirty(this.__name)
+    if (this._op) this._op.setDirty(this.__name)
   }
 
   /**

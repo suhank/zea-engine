@@ -128,7 +128,7 @@ class ParameterOwner extends EventEmitter {
    * Adds `Parameter` object to the owner's parameter list.
    *
    * @emits `parameterAdded` with the name of the param.
-   * @param {Parameter} param - The paramater to add.
+   * @param {Parameter} param - The parameter to add.
    * @return {Parameter} - With `owner` and `valueChanged` event set.
    */
   addParameter(param) {
@@ -151,6 +151,7 @@ class ParameterOwner extends EventEmitter {
       console.warn('Replacing Parameter:' + name)
       this.removeParameter(name)
     }
+    param.setOwner(this)
     const paramChangedHandler = (event) => this.__parameterValueChanged({ ...event, param })
     param.on('valueChanged', paramChangedHandler)
     this.__paramEventHandlers[name] = paramChangedHandler

@@ -31,7 +31,7 @@ class Operator extends BaseItem {
    * @private
    */
   setDirty() {
-    for (const o of this.__outputs) o.setDirty(this)
+    for (const o of this.__outputs) o.setDirty()
   }
 
   /**
@@ -54,11 +54,6 @@ class Operator extends BaseItem {
   addInput(input) {
     input.setOperator(this)
     this.__inputs.push(input)
-    // input.on('paramSet', (event) => {
-    //   const { param } = event
-    //   // input.setDirty(this.__evalInput)
-    //   param.bindOperator(this)
-    // })
     return input
   }
 
@@ -98,7 +93,7 @@ class Operator extends BaseItem {
       if (o.getName() == name) return o
     }
   }
-  
+
   /**
    * The addOutput method.
    * @param {OperatorOutput} output - The output value.
@@ -147,7 +142,6 @@ class Operator extends BaseItem {
     }
   }
 
-
   /**
    * The __evalOutput method.
    * @param {any} cleanedParam - The cleanedParam value.
@@ -166,11 +160,13 @@ class Operator extends BaseItem {
 
   /**
    * The evaluate method.
+   * Computes the values of each of the outputs based on the values of the inputs
+   * and the values of outputs with mode OP_READ_WRITE.
+   * This method must be implemented by all Operators.
    */
   evaluate() {
     throw new Error('Not yet implemented')
   }
-
 
   /**
    * The setValue method.
@@ -180,6 +176,7 @@ class Operator extends BaseItem {
    * an operator, the operator can propagate the value back up the chain
    * to its inputs.
    * @param {any} value - The value param.
+   * @return {number} - Returns the number of outputs.
    */
   setValue(value, output) {
     // TODO: Implement me for custom manipulations.
@@ -200,12 +197,17 @@ class Operator extends BaseItem {
     const j = super.toJSON(context, flags)
     j.type = sgFactory.getClassName(this)
 
-    const oj = []
-    for (const o of this.__outputs) {
-      oj.push(o.toJSON(context, flags))
+    const inputs = []
+    for (const input of this.__inputs) {
+      inputs.push(input.toJSON(context, flags))
     }
+    j.inputs = inputs
 
-    j.outputs = oj
+    const outputs = []
+    for (const output of this.__outputs) {
+      outputs.push(output.toJSON(context, flags))
+    }
+    j.outputs = outputs
     return j
   }
 
@@ -219,40 +221,22 @@ class Operator extends BaseItem {
   fromJSON(j, context, flags) {
     super.fromJSON(j, context, flags)
 
+    if (j.inputs) {
+      for (let i = 0; i < this.__inputs.length; i++) {
+        const output = this.__inputs[i]
+        output.fromJSON(j.inputs[i], context)
+      }
+    }
     if (j.outputs) {
       for (let i = 0; i < this.__outputs.length; i++) {
         const output = this.__outputs[i]
         output.fromJSON(j.outputs[i], context)
       }
-
-      // Force an evaluation of the operator as soon as loading is done.
-      context.addPLCB(() => {
-        this.setDirty()
-      })
     }
-  }
-
-  /**
-   * The detach method.
-   */
-  detach() {
-    this.__outputs.forEach((output) => output.detach())
-  }
-
-  /**
-   * The reattach method.
-   */
-  reattach() {
-    this.__outputs.forEach((output) => output.reattach())
-  }
-
-  /**
-   * The destroy is called by the system to cause explicit resources cleanup.
-   * Users should never need to call this method directly.
-   */
-  destroy() {
-    super.destroy()
-    this.__outputs = []
+    // Force an evaluation of the operator as soon as loading is done.
+    // context.addPLCB(() => {
+    //   this.setDirty()
+    // })
   }
 }
 

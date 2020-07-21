@@ -114,17 +114,11 @@ class Parameter extends EventEmitter {
    * @return {array} - The return value.
    */
   getPath() {
-    const owner = this.getOwner()
-    if (owner && owner.getName) {
-      if (owner.getPath) {
-        const path = owner.getPath().slice()
-        path.push(this.__name)
-        return path
-      } else {
-        return [owner.getName(), this.__name]
-      }
+    if (this.ownerItem && this.ownerItem.getName) {
+      return [...this.ownerItem.getPath(), this.__name]
+    } else {
+      return [this.__name]
     }
-    return [this.__name]
   }
 
   /**
@@ -173,9 +167,11 @@ class Parameter extends EventEmitter {
    *
    * @param {Operator} op - The OperatorOutput value.
    */
-  bindOperatorOutput(operatorOutput) {
-    this.__boundOps.push(operatorOutput)
-    this.emit('valueChanged'/*, { mode: ValueSetMode.OPERATOR_DIRTIED }*/) 
+  bindOperatorOutput(operatorOutput, index = -1) {
+    if (index == -1) index = this.__boundOps.length
+    this.__boundOps.splice(index, 0, operatorOutput)
+    this.emit('valueChanged'/*, { mode: ValueSetMode.OPERATOR_DIRTIED }*/)
+    return index
   }
 
   /**
