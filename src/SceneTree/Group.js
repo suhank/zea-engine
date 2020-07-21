@@ -654,7 +654,9 @@ class Group extends TreeItem {
     const items = Array.from(this.__itemsParam.getValue())
     items.forEach((item) => {
       if (item instanceof TreeItem) {
-        if (item.getVisible() && !item.testFlag(ItemFlags.IGNORE_BBOX)) result.addBox3(item.getBoundingBox())
+        if (item.getVisible() && !item.testFlag(ItemFlags.IGNORE_BBOX)) {
+          result.addBox3(item.getParameter('BoundingBox').getValue())
+        }
       }
     })
     return result
