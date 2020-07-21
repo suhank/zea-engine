@@ -202,15 +202,16 @@ class Parameter extends EventEmitter {
     // to clean the parameter.
     let dirtyId = Math.min(this.__dirtyOpIndex, this.__boundOps.indexOf(operatorOutput))
     for (; ; dirtyId--) {
-      if (this.__boundOps[dirtyId].getMode() == OperatorOutputMode.OP_WRITE || dirtyId == 0) break
+      if (dirtyId == 0 || this.__boundOps[dirtyId].getMode() == OperatorOutputMode.OP_WRITE) break
     }
 
     // console.log("setDirtyFromOp:", this.getPath(), dirtyId, this.__dirtyOpIndex)
     if (dirtyId != this.__dirtyOpIndex) {
       this.__dirtyOpIndex = dirtyId
       this.emit('valueChanged'/*, { mode: ValueSetMode.OPERATOR_DIRTIED }*/) 
+      return true
     }
-    return true
+    return false
   }
 
   /**
@@ -247,8 +248,6 @@ class Parameter extends EventEmitter {
    * @private
    */
   _clean() {
-    // console.log("Cleaning:", this.getPath())
-
     // to clean te parameter, we need to start from the first bound op
     // that needs to be evaluated, and go down the stack from there.
     for (let i = this.__dirtyOpIndex; i < this.__boundOps.length; i++) {

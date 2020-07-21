@@ -640,7 +640,7 @@ class Group extends TreeItem {
   setItems(items) {
     this.clearItems(false)
     this.__itemsParam.setItems(items)
-
+    this.calcGroupXfo()
   }
 
   /**

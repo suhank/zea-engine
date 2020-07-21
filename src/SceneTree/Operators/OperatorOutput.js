@@ -68,7 +68,7 @@ class OperatorOutput {
    * Sets the Parameter for this out put to write to.
    * @param {Parameter} param - The param value.
    */
-  setParam(param, index=-1) {
+  setParam(param, index = -1) {
     this._param = param
     this._paramBindIndex = this._param.bindOperatorOutput(this, index)
   }

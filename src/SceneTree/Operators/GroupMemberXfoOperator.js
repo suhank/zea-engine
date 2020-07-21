@@ -1,3 +1,4 @@
+import { Xfo } from '../../Math/Xfo'
 import { Operator } from './Operator'
 import { OperatorOutput, OperatorOutputMode } from './OperatorOutput'
 import { OperatorInput } from './OperatorInput'
@@ -25,16 +26,19 @@ class GroupTransformXfoOperator extends Operator {
   setBindXfo(bindXfo) {
     this.bindXfo = bindXfo
     this.invBindXfo = bindXfo.inverse()
+    this.setDirty()
   }
 
   /**
    * The evaluate method.
    */
   evaluate() {
+    const groupTransformOutput = this.getOutput('GroupTransformXfo')
     if (this.invBindXfo) {
       const groupGlobalXfo = this.getInput('GroupGlobalXfo').getValue()
-      const groupTransformXfo = this.getOutput('GroupTransformXfo')
-      groupTransformXfo.setClean(groupGlobalXfo.multiply(this.invBindXfo))
+      groupTransformOutput.setClean(groupGlobalXfo.multiply(this.invBindXfo))
+    } else {
+      groupTransformOutput.setClean(new Xfo())
     }
   }
 }
