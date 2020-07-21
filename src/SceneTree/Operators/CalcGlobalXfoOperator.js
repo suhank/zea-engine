@@ -1,5 +1,5 @@
 // import { Operator } from './Operator.js'
-// import { XfoOperatorOutput } from './OperatorOutput.js'
+// import { OperatorOutput } from './OperatorOutput.js'
 // import { XfoParameter } from '../Parameters/index'
 import { sgFactory } from '../SGFactory.js'
 
@@ -16,7 +16,7 @@ class CalcGlobalXfoOperator extends Operator {
     super(name)
     this.addParameter(new XfoParameter('ParentGlobal'))
     this.addParameter(new XfoParameter('LocalXfo'))
-    this.addOutput(new XfoOperatorOutput('GlobalXfo'))
+    this.addOutput(new OperatorOutput('GlobalXfo'))
   }
 
   /**

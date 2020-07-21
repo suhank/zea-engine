@@ -49,72 +49,71 @@ class ScaleFloatOperator extends Operator {
 sgFactory.registerClass('ScaleFloatOperator', ScaleFloatOperator)
 
 describe('Operator', () => {
-  // it('AddFloatsOperator', () => {
-  //   const addOperator = new AddFloatsOperator()
+  it('AddFloatsOperator', () => {
+    const addOperator = new AddFloatsOperator()
 
-  //   const aParam = new NumberParameter('A')
-  //   const bParam = new NumberParameter('B')
-  //   const myParam = new NumberParameter('MyParam')
+    const aParam = new NumberParameter('A')
+    const bParam = new NumberParameter('B')
+    const myParam = new NumberParameter('MyParam')
 
-  //   addOperator.getInput("A").setParam(aParam)
-  //   addOperator.getInput("B").setParam(bParam)
-  //   addOperator.getOutput("C").setParam(myParam)
+    addOperator.getInput("A").setParam(aParam)
+    addOperator.getInput("B").setParam(bParam)
+    addOperator.getOutput("C").setParam(myParam)
 
-  //   aParam.setValue(3)
-  //   bParam.setValue(2.5)
+    aParam.setValue(3)
+    bParam.setValue(2.5)
 
-  //   expect(myParam.isDirty()).toEqual(true)
-  //   expect(myParam.getValue()).toEqual(5.5)
-  //   expect(myParam.isDirty()).toEqual(false)
-  // })
+    expect(myParam.isDirty()).toEqual(true)
+    expect(myParam.getValue()).toEqual(5.5)
+    expect(myParam.isDirty()).toEqual(false)
+  })
 
-  // it('ScaleFloatOperator', () => {
-  //   const scaleOperator = new ScaleFloatOperator()
+  it('ScaleFloatOperator', () => {
+    const scaleOperator = new ScaleFloatOperator()
 
-  //   const scaleParam = new NumberParameter('A', 2)
-  //   const resultParam = new NumberParameter('MyParam', 3)
+    const scaleParam = new NumberParameter('A', 2)
+    const resultParam = new NumberParameter('MyParam', 3)
 
-  //   scaleOperator.getInput("ScaleValue").setParam(scaleParam)
-  //   scaleOperator.getOutput("Result").setParam(resultParam)
+    scaleOperator.getInput("ScaleValue").setParam(scaleParam)
+    scaleOperator.getOutput("Result").setParam(resultParam)
 
-  //   expect(resultParam.isDirty()).toEqual(true)
-  //   expect(resultParam.getValue()).toEqual(6)
-  //   expect(resultParam.isDirty()).toEqual(false)
+    expect(resultParam.isDirty()).toEqual(true)
+    expect(resultParam.getValue()).toEqual(6)
+    expect(resultParam.isDirty()).toEqual(false)
 
-  //   scaleParam.setValue(4)
+    scaleParam.setValue(4)
 
-  //   expect(resultParam.isDirty()).toEqual(true)
-  //   expect(resultParam.getValue()).toEqual(24)
-  //   expect(resultParam.isDirty()).toEqual(false)
-  // })
+    expect(resultParam.isDirty()).toEqual(true)
+    expect(resultParam.getValue()).toEqual(24)
+    expect(resultParam.isDirty()).toEqual(false)
+  })
 
-  // it('AddScaleFloatOperator', () => {
-  //   const addOperator = new AddFloatsOperator()
-  //   const aParam = new NumberParameter('A', 2)
-  //   const bParam = new NumberParameter('B', 3.5)
-  //   const myParam = new NumberParameter('AddScaleFloatOperator-MyParam')
+  it('AddScaleFloatOperator', () => {
+    const addOperator = new AddFloatsOperator()
+    const aParam = new NumberParameter('A', 2)
+    const bParam = new NumberParameter('B', 3.5)
+    const myParam = new NumberParameter('AddScaleFloatOperator-MyParam')
 
-  //   addOperator.getInput("A").setParam(aParam)
-  //   addOperator.getInput("B").setParam(bParam)
-  //   addOperator.getOutput("C").setParam(myParam)
+    addOperator.getInput("A").setParam(aParam)
+    addOperator.getInput("B").setParam(bParam)
+    addOperator.getOutput("C").setParam(myParam)
 
-  //   const scaleOperator = new ScaleFloatOperator()
-  //   const scaleParam = new NumberParameter('A', 2)
+    const scaleOperator = new ScaleFloatOperator()
+    const scaleParam = new NumberParameter('A', 2)
 
-  //   scaleOperator.getInput("ScaleValue").setParam(scaleParam)
-  //   scaleOperator.getOutput("Result").setParam(myParam)
+    scaleOperator.getInput("ScaleValue").setParam(scaleParam)
+    scaleOperator.getOutput("Result").setParam(myParam)
 
-  //   expect(myParam.isDirty()).toEqual(true)
-  //   expect(myParam.getValue()).toEqual(11)
-  //   expect(myParam.isDirty()).toEqual(false)
+    expect(myParam.isDirty()).toEqual(true)
+    expect(myParam.getValue()).toEqual(11)
+    expect(myParam.isDirty()).toEqual(false)
 
-  //   scaleParam.setValue(1)
+    scaleParam.setValue(1)
 
-  //   expect(myParam.isDirty()).toEqual(true)
-  //   expect(myParam.getValue()).toEqual(5.5)
-  //   expect(myParam.isDirty()).toEqual(false)
-  // })
-
+    expect(myParam.isDirty()).toEqual(true)
+    expect(myParam.getValue()).toEqual(5.5)
+    expect(myParam.isDirty()).toEqual(false)
+  })
   
   it('save to JSON (serialization).', () => {
     const addOperator = new AddFloatsOperator()

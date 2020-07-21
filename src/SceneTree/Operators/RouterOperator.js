@@ -1,6 +1,7 @@
 import { Operator } from './Operator.js'
+import { OperatorInput } from './OperatorInput.js'
 import { OperatorOutput } from './OperatorOutput.js'
-import { ValueGetMode, NumberParameter, ListParameter } from '../Parameters/index'
+import { NumberParameter, ListParameter } from '../Parameters/index'
 
 import { sgFactory } from '../SGFactory.js'
 
@@ -16,15 +17,13 @@ class RouterOperator extends Operator {
   constructor(name) {
     super(name)
 
-    this.__inputParam = this.addParameter(new NumberParameter('Input'))
-    this.__multipliersParam = this.addParameter(
-      new ListParameter('Multipliers', NumberParameter)
-    )
-    this.__multipliersParam.on('elementAdded', event => {
+    this.__input = this.addInput(new OperatorInput('Input'))
+    this.__multipliersParam = this.addParameter(new ListParameter('Multipliers', NumberParameter))
+    this.__multipliersParam.on('elementAdded', (event) => {
       event.elem.setValue(1.0)
       this.addOutput(new OperatorOutput('Output'))
     })
-    this.__multipliersParam.on('elementRemoved', event => {
+    this.__multipliersParam.on('elementRemoved', (event) => {
       this.removeOutput(this.getOutputByIndex(event.index))
     })
   }
@@ -42,13 +41,13 @@ class RouterOperator extends Operator {
    * The evaluate method.
    */
   evaluate() {
-    const input = this.__inputParam.getValue(ValueGetMode.OPERATOR_GETVALUE)
-    const mults = this.__multipliersParam.getValue()
+    const input = this.__input.getValue()
+    const multipliers = this.__multipliersParam.getValue()
     let i = this.__outputs.length
     while (i--) {
       const output = this.__outputs[i]
-      const mult = mults[i].getValue(ValueGetMode.OPERATOR_GETVALUE)
-      output.setValue(input * mult)
+      const multiplier = multipliers[i].getValue()
+      output.setValue(input * multiplier)
     }
     this.emit('postEval', {})
   }

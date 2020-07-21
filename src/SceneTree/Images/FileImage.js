@@ -7,12 +7,8 @@ import { GIF } from '../../external/gifuct-js.js'
 import { resourceLoader } from '../ResourceLoader.js'
 import { SystemDesc } from '../../BrowserDetection.js'
 
-import {
-  BooleanParameter,
-  NumberParameter,
-  Vec4Parameter,
-  FilePathParameter,
-} from '../Parameters/index'
+import { BooleanParameter, NumberParameter, Vec4Parameter } from '../Parameters/index'
+import { FilePathParameter } from '../Parameters/FilePathParameter'
 
 const imageDataLibrary = {}
 

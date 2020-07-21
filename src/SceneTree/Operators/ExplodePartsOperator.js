@@ -1,6 +1,6 @@
 import { Vec2, Vec3 } from '../../Math/index'
 import { Operator } from './Operator.js'
-import { XfoOperatorOutput } from './OperatorOutput.js'
+import { OperatorOutput } from './OperatorOutput.js'
 import {
   ValueSetMode,
   BooleanParameter,
@@ -41,7 +41,7 @@ class ExplodePartParameter extends StructParameter {
     this.__multiplierParam = this._addMember(
       new NumberParameter('Multiplier', 1.0)
     )
-    this.__output = new XfoOperatorOutput('Part')
+    this.__output = new OperatorOutput('Part')
   }
 
   /**
@@ -116,7 +116,7 @@ class ExplodePartParameter extends StructParameter {
 
     let explodeDir = this.__axisParam.getValue()
     const multiplier = this.__multiplierParam.getValue()
-    const initialXfo = this.__output.getInitialValue()
+    const initialXfo = this.__output.getValue()
     let xfo
     if (parentXfo) {
       xfo = parentDelta.multiply(initialXfo)
@@ -124,7 +124,7 @@ class ExplodePartParameter extends StructParameter {
       xfo.tr.addInPlace(explodeDir.scale(dist * multiplier))
     } else {
       // Get the current value without triggering an eval
-      xfo = this.__output.getValue()
+      xfo = initialXfo
       xfo.tr = initialXfo.tr.add(explodeDir.scale(dist * multiplier))
     }
 

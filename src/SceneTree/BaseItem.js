@@ -104,7 +104,6 @@ class BaseItem extends ParameterOwner {
    * @private
    */
   __updatePath() {
-    console.log(this.getName(),this.__ownerItem == undefined )
     if (this.__ownerItem == undefined) this.__path = [this.__name]
     else {
       this.__path = [...this.__ownerItem.getPath(), this.__name]

@@ -26,15 +26,10 @@ class SetParameterValue extends StateAction {
     this.__outParam = this.addOutput(new OperatorOutput('Param'))
     this.__outParam.on('paramSet', (event) => {
       const { param } = event
-      if (param &&
-        !this.__valueParam ||
-        param.getDataType() != this.__valueParam.getDataType()
-      ) {
+      if ((param && !this.__valueParam) || param.getDataType() != this.__valueParam.getDataType()) {
         const valueParam = param.clone()
         valueParam.setName('Value')
-        if (this.__outParam.getInitialValue)
-          valueParam.setValue(this.__outParam.getInitialValue())
-        else valueParam.setValue(param.getValue())
+        valueParam.setValue(param.getValue())
         this.__valueParam = this.addParameter(valueParam)
       }
     })
@@ -56,32 +51,23 @@ class SetParameterValue extends StateAction {
           step++
           if (step < steps) {
             const t = step / steps
-            const smooth_t = Math.smoothStep(0.0, 1.0, t)
-            const newVal = Math.lerp(paramValueStart, paramValueEnd, smooth_t)
+            const smoothT = Math.smoothStep(0.0, 1.0, t)
+            const newVal = Math.lerp(paramValueStart, paramValueEnd, smoothT)
             // Note: In this case, we want the parameter to emit a notification
             // and cause the update of the scene. But we also don't want the parameter value to then
             // be considered modified so it is saved to the JSON file. I'm not sure how to address this.
             // We need to check what happens if a parameter emits a 'valueChanged' during cleaning. (maybe it gets ignored)
             this.__outParam.setValue(newVal, ValueSetMode.GENERATED_VALUE)
-            this.__timeoutId = window.setTimeout(
-              timerCallback,
-              1000 / updateFrequency
-            )
+            this.__timeoutId = window.setTimeout(timerCallback, 1000 / updateFrequency)
           } else {
-            this.__outParam.setValue(
-              this.__valueParam.getValue(),
-              ValueSetMode.GENERATED_VALUE
-            )
+            this.__outParam.setValue(this.__valueParam.getValue(), ValueSetMode.GENERATED_VALUE)
             this.__timeoutId = undefined
             this.__onDone()
           }
         }
         timerCallback()
       } else {
-        this.__outParam.setValue(
-          this.__valueParam.getValue(),
-          ValueSetMode.GENERATED_VALUE
-        )
+        this.__outParam.setValue(this.__valueParam.getValue(), ValueSetMode.GENERATED_VALUE)
         this.__onDone()
       }
     }
