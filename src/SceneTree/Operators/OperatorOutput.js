@@ -157,6 +157,27 @@ class OperatorOutput {
       )
     }
   }
+
+  /**
+   * The detach method is called when an operator is being removed from the scene tree.
+   * It removes all connections to parameters in the scene.
+   */
+  detach() {
+    // This function is called when we want to suspend an operator
+    // from functioning because it is deleted and on the undo stack.
+    // Once operators have persistent connections,
+    // we will simply uninstall the output from the parameter.
+    this.detached = true
+    this._paramBindIndex = this._param.unbindOperator(this, index)
+  }
+
+  /**
+   * The reattach method can be called when re-instating an operator in the scene.
+   */
+  reattach() {
+    this.detached = false
+    this._paramBindIndex = this._param.bindOperatorOutput(this, this._paramBindIndex)
+  }
 }
 
 export { OperatorOutput, OperatorOutputMode }

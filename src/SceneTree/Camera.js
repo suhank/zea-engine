@@ -22,7 +22,7 @@ import { sgFactory } from './SGFactory'
  */
 class Camera extends TreeItem {
   /**
-   * Instanciates a camera object, setting default configuration like zoom, target and positioning.
+   * Instantiates a camera object, setting default configuration like zoom, target and positioning.
    *
    * @param {string} name - The name of the camera.
    */

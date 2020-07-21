@@ -1,46 +1,67 @@
-// import { Operator } from './Operator.js'
-// import { OperatorOutput } from './OperatorOutput.js'
-// import { XfoParameter } from '../Parameters/index'
-import { sgFactory } from '../SGFactory.js'
+import { Operator } from './Operator.js'
+import { OperatorInput } from './OperatorInput.js'
+import { OperatorOutput } from './OperatorOutput.js'
 
-/** An operator for aiming items at targets.
+/** The operator the calculates the global Xfo of a TreeItem based on its parents GlobalXfo and its own LocalXfo
  * @extends Operator
  * @private
- * /
+ */
 class CalcGlobalXfoOperator extends Operator {
   /**
-   * Create a gears operator.
+   * Create a CalcGlobalXfoOperator operator.
    * @param {string} name - The name value.
-   * /
-  constructor(name) {
-    super(name)
-    this.addParameter(new XfoParameter('ParentGlobal'))
-    this.addParameter(new XfoParameter('LocalXfo'))
-    this.addOutput(new OperatorOutput('GlobalXfo'))
+   */
+  constructor(globalXfoParam, localXfoParam) {
+    super("CalcGlobalXfoOperator")
+    this.addInput(new OperatorInput('ParentGlobal'))
+    this.addInput(new OperatorInput('LocalXfo')).setParam(localXfoParam)
+    this.addOutput(new OperatorOutput('GlobalXfo')).setParam(globalXfoParam)
+  }
+
+  /**
+   * The setValue method.
+   * @param {Xfo} value - the new value being set on the GlobalXfo
+   */
+  setValue(value) {
+    const localXfoParam = this.getInput('LocalXfo').getParam()
+    const parentGlobalInput = this.getInput('ParentGlobal')
+    if (parentGlobalInput.isConnected()) {
+      const parentGlobalXfo = parentGlobalInput.getValue()
+      localXfoParam.setValue(parentGlobalXfo.inverse().multiply(value))
+    } else {
+      localXfoParam.setValue(value)
+    }
   }
 
   /**
    * The evaluate method.
-   * /
+   */
   evaluate() {
-    const parentGlobalXfo = this.getParameter('ParentGlobal').getValue()
-    const localXfo = this.getParameter('LocalXfo').getValue()
-    this.getOutputByIndex(0).setClean(parentGlobalXfo.multiply(localXfo))
+    const localXfo = this.getInput('LocalXfo').getValue()
+    const parentGlobalInput = this.getInput('ParentGlobal')
+    const globalXfoOutput = this.getOutput('GlobalXfo')
+    if (parentGlobalInput.isConnected()) {
+      const parentGlobalXfo = parentGlobalInput.getValue()
+      globalXfoOutput.setClean(parentGlobalXfo.multiply(localXfo), this)
+    } else {
+      globalXfoOutput.setClean(localXfo, this)
+    }
   }
 }
 
-sgFactory.registerClass('CalcGlobalXfoOperator', CalcGlobalXfoOperator)
+// sgFactory.registerClass('CalcGlobalXfoOperator', CalcGlobalXfoOperator)
 
-*/
+export { CalcGlobalXfoOperator }
+
 
 /** An operator for aiming items at targets.
  * @extends Operator
  *
- */
+ * /
 class CalcGlobalXfoOperator {
   /**
    * Create a CalcGlobalXfoOperator operator.
-   */
+   * /
   constructor(globalXfoParam, localXfoParam) {
     this.setDirty = this.setDirty.bind(this)
 
@@ -53,19 +74,19 @@ class CalcGlobalXfoOperator {
 
   /**
    * The setGlobalXfoParam method.
-   */
+   * /
   setGlobalXfoParam(globalXfoParam) {
   }
 
   /**
    * The setLocalXfoParam method.
-   */
+   * /
   setLocalXfoParam(localXfoParam) {
   }
 
   /**
    * The setParentGlobal method.
-   */
+   * /
   setParentGlobalParam(parentGlobalXfoParam) {
     if (this.parentGlobalXfoParam)
       this.parentGlobalXfoParam.valueChanged.disconnect(this.setDirty)
@@ -77,14 +98,14 @@ class CalcGlobalXfoOperator {
 
   /**
    * The setDirty method.
-   */
+   * /
   setDirty() {
     this.globalXfoParam.setDirtyFromOp(this)
   }
 
   /**
    * The setValue method.
-   */
+   * /
   setValue(value, mode) {
     if (this.parentGlobalXfoParam) {
       const parentGlobaXfo = this.parentGlobalXfoParam.getValue()
@@ -99,7 +120,7 @@ class CalcGlobalXfoOperator {
 
   /**
    * The evaluate method.
-   */
+   * /
   evaluate() {
     const localXfo = this.localXfoParam.getValue()
     if (this.parentGlobalXfoParam) {
@@ -112,5 +133,5 @@ class CalcGlobalXfoOperator {
 }
 
 sgFactory.registerClass('CalcGlobalXfoOperator', CalcGlobalXfoOperator)
+*/
 
-export { CalcGlobalXfoOperator }

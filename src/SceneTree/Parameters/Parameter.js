@@ -188,7 +188,8 @@ class Parameter extends EventEmitter {
     }
     this.__boundOps.splice(index, 1)
     this.__dirtyOpIndex = 0
-    this.emit('valueChanged'/*, { mode: ValueSetMode.OPERATOR_DIRTIED }*/) 
+    this.emit('valueChanged'/*, { mode: ValueSetMode.OPERATOR_DIRTIED }*/)
+    return index
   }
 
   /**

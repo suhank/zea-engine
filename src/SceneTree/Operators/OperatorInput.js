@@ -66,11 +66,11 @@ class OperatorInput {
    */
   setParam(param) {
     if (this._param) {
-      this._param.off("valueChanged", this._paramValueChanged)
+      this._param.off('valueChanged', this._paramValueChanged)
     }
     this._param = param
     if (this._param) {
-      this._param.on("valueChanged", this._paramValueChanged)
+      this._param.on('valueChanged', this._paramValueChanged)
     }
   }
 
@@ -130,7 +130,30 @@ class OperatorInput {
       )
     }
   }
-}
 
+  /**
+   * The detach method is called when an operator is being removed from the scene tree.
+   * It removes all connections to parameters in the scene.
+   */
+  detach() {
+    // This function is called when we want to suspend an operator
+    // from functioning because it is deleted and on the undo stack.
+    // Once operators have persistent connections,
+    // we will simply uninstall the output from the parameter.
+    if (this._param) {
+      this._param.off('valueChanged', this._paramValueChanged)
+    }
+  }
+
+  /**
+   * The reattach method can be called when re-instating an operator in the scene.
+   */
+  reattach() {
+    this.detached = false
+    if (this._param) {
+      this._param.on('valueChanged', this._paramValueChanged)
+    }
+  }
+}
 
 export { OperatorInput }

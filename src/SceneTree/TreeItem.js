@@ -24,6 +24,50 @@ selectionOutlineColor.a = 0.1
 let branchSelectionOutlineColor = selectionOutlineColor.lerp(new Color('white'), 0.5)
 branchSelectionOutlineColor.a = 0.1
 
+
+/**
+ * Represents a specific type of parameter, that only stores Vec3(three-dimensional coordinate) values.
+ *
+ * i.e.:
+ * ```javascript
+ * const vec3Param = new Vec3Parameter('MyVec3', new Vec3(1.2, 3.4, 1))
+ * //'myParameterOwnerItem' is an instance of a 'ParameterOwner' class.
+ * // Remember that only 'ParameterOwner' and classes that extend from it can host 'Parameter' objects.
+ * myParameterOwnerItem.addParameter(vec3Param)
+ * ```
+ * @extends Parameter
+ */
+class BoundingBoxParameter extends Parameter {
+  /**
+   * Create a Vec3 parameter.
+   * @param {treeItem} treeItem - The tree item to compute the bounding box for.
+   * @param {Vec3} value - The value of the parameter.
+   * @param {array} range - The range value is an array of two `Vec2` objects.
+   */
+  constructor(name, treeItem) {
+    super(name, new Box3(), 'Box3')
+    this.treeItem = treeItem
+    this.dirty = true
+  }
+
+  setDirty() {
+    this.dirty = true
+    this.emit("valueChanged")
+  }
+
+  /**
+   * Returns bounding box value
+   *
+   * @return {Box3} - The return value.
+   */
+  getValue() {
+    if (this.dirty) {
+      this.__value = this.treeItem. _cleanBoundingBox(this.__value)
+    }
+    return this.__value
+  }
+}
+
 /**
  * Class representing an Item in the scene tree with hierarchy capabilities(has children).
  * <br>
@@ -65,22 +109,28 @@ class TreeItem extends BaseItem {
     this.__childItemsEventHandlers = []
     this.__childItemsMapping = {}
 
+    this.onMouseDown = this.onMouseDown.bind(this)
+    this.onMouseUp = this.onMouseUp.bind(this)
+    this.onMouseMove = this.onMouseMove.bind(this)
+    this.onMouseEnter = this.onMouseEnter.bind(this)
+    this.onMouseLeave = this.onMouseLeave.bind(this)
+    
     // /////////////////////////////////////
     // Add parameters.
 
     this.__visibleParam = this.addParameter(new BooleanParameter('Visible', true))
     this.__localXfoParam = this.addParameter(new XfoParameter('LocalXfo', new Xfo()))
     this.__globalXfoParam = this.addParameter(new XfoParameter('GlobalXfo', new Xfo()))
-    this.__boundingBoxParam = this.addParameter(new Parameter('BoundingBox', new Box3()))
+    this.__boundingBoxParam = this.addParameter(new BoundingBoxParameter('BoundingBox', this))
 
     // Bind handlers
     // this._cleanGlobalXfo = this._cleanGlobalXfo.bind(this)
     // this._setGlobalXfoDirty = this._setGlobalXfoDirty.bind(this)
     this._setBoundingBoxDirty = this._setBoundingBoxDirty.bind(this)
-    this._cleanBoundingBox = this._cleanBoundingBox.bind(this)
+    // this._cleanBoundingBox = this._cleanBoundingBox.bind(this)
     this._childNameChanged = this._childNameChanged.bind(this)
 
-    this.__localXfoParam.on('valueChanged', this._setGlobalXfoDirty)
+    // this.__localXfoParam.on('valueChanged', this._setGlobalXfoDirty)
 
     // Note: if the user changes the global xfo, we compute the
     // local xfo when it is needed (generally when GlobalXfo is pulled)
@@ -238,10 +288,10 @@ class TreeItem extends BaseItem {
       // The effect of the invisible owner is added.
       if (!this.__ownerItem.getVisible()) this.__visibleCounter--
 
-      this.globalXfoOp.setParentGlobalParam(this.__ownerItem.getParameter('GlobalXfo'));
+      this.globalXfoOp.getInput('ParentGlobal').setParam(this.__ownerItem.getParameter('GlobalXfo'))
       // this.__ownerItem.on('globalXfoChanged', this._setGlobalXfoDirty)
     } else {
-      this.globalXfoOp.setParentGlobalParam(null)
+      this.globalXfoOp.getInput('ParentGlobal').setParam(null)
     }
 
     this.__updateVisiblity()
@@ -521,7 +571,7 @@ class TreeItem extends BaseItem {
   _setBoundingBoxDirty() {
     if (this.__boundingBoxParam) {
       // Will cause boundingChanged to emit
-      this.__boundingBoxParam.setDirty(this._cleanBoundingBox)
+      this.__boundingBoxParam.setDirty()//this._cleanBoundingBox)
     }
   }
 

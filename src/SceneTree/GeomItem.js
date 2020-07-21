@@ -4,6 +4,41 @@ import { MaterialParameter } from './Parameters/MaterialParameter'
 import { GeometryParameter } from './Parameters/GeometryParameter'
 import { sgFactory } from './SGFactory.js'
 import { BaseGeomItem } from './BaseGeomItem.js'
+import { Operator } from './Operators/Operator.js'
+import { OperatorInput } from './Operators/OperatorInput.js'
+import { OperatorOutput } from './Operators/OperatorOutput.js'
+
+
+/** The operator the calculates the global Xfo of a TreeItem based on its parents GlobalXfo and its own LocalXfo
+ * @extends Operator
+ * @private
+ */
+class CalcGeomMatOperator extends Operator {
+  /**
+   * Create a gears operator.
+   * @param {string} name - The name value.
+   */
+  constructor(globalXfoParam, geomOffsetXfoParam, geomMatParam) {
+    super("CalcGeomMatOperator")
+    this.addInput(new OperatorInput('GlobalXfo')).setParam(globalXfoParam)
+    this.addInput(new OperatorInput('GeomOffsetXfo')).setParam(geomOffsetXfoParam)
+    this.addOutput(new OperatorOutput('GeomMat')).setParam(geomMatParam)
+  }
+
+  /**
+   * The evaluate method.
+   */
+  evaluate() {
+    const globalXfo = this.getInput('GlobalXfo').getValue()
+    const geomOffsetXfo = this.getInput('GeomOffsetXfo').getValue()
+    const geomMatOutput = this.getOutput('GeomMat')
+    
+    const globalMat4 = globalXfo.toMat4()
+    const geomOffsetMat4 = geomOffsetXfo.toMat4()
+    geomMatOutput.setClean(globalMat4.multiply(geomOffsetMat4))
+  }
+}
+
 
 /**
  * Class representing a geometry item in a scene tree.
@@ -42,22 +77,24 @@ class GeomItem extends BaseGeomItem {
     this.__geomOffsetXfoParam = this.addParameter(new XfoParameter('GeomOffsetXfo'))
     this.__geomMatParam = this.addParameter(new Mat4Parameter('GeomMat'))
 
-    this.__cleanGeomMat = this.__cleanGeomMat.bind(this)
-    this.__globalXfoParam.on('valueChanged', () => {
-      this.__geomMatParam.setDirty(this.__cleanGeomMat)
-    })
-    this.__geomOffsetXfoParam.on('valueChanged', () => {
-      this.__geomMatParam.setDirty(this.__cleanGeomMat)
-    })
-    this.__geomMatParam.on('valueChanged', (event) => {
-      this.emit('geomXfoChanged', event)
-    })
+    // this.__cleanGeomMat = this.__cleanGeomMat.bind(this)
+    // this.__globalXfoParam.on('valueChanged', () => {
+    //   this.__geomMatParam.setDirty(this.__cleanGeomMat)
+    // })
+    // this.__geomOffsetXfoParam.on('valueChanged', () => {
+    //   this.__geomMatParam.setDirty(this.__cleanGeomMat)
+    // })
+    // this.__geomMatParam.on('valueChanged', (event) => {
+    //   this.emit('geomXfoChanged', event)
+    // })
     this.__materialParam.on('valueChanged', (event) => {
       this.emit('materialAssigned', event)
     })
     this.__geomParam.on('valueChanged', (event) => {
       this.emit('geomAssigned', event)
     })
+
+    this.calcGeomMatOperator = new CalcGeomMatOperator(this.__globalXfoParam, this.__geomOffsetXfoParam, this.__geomMatParam)
 
     if (geom) this.setGeometry(geom, ValueSetMode.DATA_LOAD)
     if (material) this.setMaterial(material, ValueSetMode.DATA_LOAD)
@@ -67,12 +104,12 @@ class GeomItem extends BaseGeomItem {
    * The __cleanGeomMat method.
    * @return {Mat4} - The return value.
    * @private
-   */
   __cleanGeomMat() {
     const globalMat4 = this.__globalXfoParam.getValue().toMat4()
     const geomOffsetMat4 = this.__geomOffsetXfoParam.getValue().toMat4()
     return globalMat4.multiply(geomOffsetMat4)
   }
+   */
 
   // ////////////////////////////////////////
   // Geometry

@@ -238,6 +238,22 @@ class Operator extends BaseItem {
     //   this.setDirty()
     // })
   }
+
+  /**
+   * The detach method.
+   */
+  detach() {
+    this.__inputs.forEach((input) => input.detach())
+    this.__outputs.forEach((output) => output.detach())
+  }
+
+  /**
+   * The reattach method.
+   */
+  reattach() {
+    this.__inputs.forEach((input) => input.reattach())
+    this.__outputs.forEach((output) => output.reattach())
+  }
 }
 
 export { Operator }

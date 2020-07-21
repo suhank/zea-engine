@@ -60,7 +60,8 @@ class GLGeomItem extends EventEmitter {
       this.emit('updated', { type: GLGeomItemChangeType.GEOM_CHANGED })
     }
 
-    this.geomItem.on('geomXfoChanged', this.updateXfo)
+    this.geomItem.getParameter('GeomMat').on('valueChanged', this.updateXfo)
+    // this.geomItem.on('geomXfoChanged', this.updateXfo)
     this.geomItem.on('visibilityChanged', this.updateVisibility)
     this.geomItem.on('cutAwayChanged', this.cutAwayChanged)
     this.geomItem.on('highlightChanged', this.highlightChanged)
@@ -216,7 +217,9 @@ class GLGeomItem extends EventEmitter {
    * Users should never need to call this method directly.
    */
   destroy() {
-    this.geomItem.off('geomXfoChanged', this.updateXfo)
+    // this.geomItem.off('geomXfoChanged', this.updateXfo)
+    
+    this.geomItem.getParameter('GeomMat').off('valueChanged', this.updateXfo)
     this.geomItem.off('visibilityChanged', this.updateVisibility)
     this.geomItem.off('cutAwayChanged', this.cutAwayChanged)
     this.geomItem.off('highlightChanged', this.highlightChanged)

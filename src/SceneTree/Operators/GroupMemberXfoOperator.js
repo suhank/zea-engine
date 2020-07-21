@@ -1,6 +1,6 @@
 import { Operator } from './Operator'
-
-
+import { OperatorOutput, OperatorOutputMode } from './OperatorOutput'
+import { OperatorInput } from './OperatorInput'
 
 /** An operator for aiming items at targets.
  * @extends Operator
@@ -14,8 +14,8 @@ class GroupTransformXfoOperator extends Operator {
    */
   constructor(groupGlobalXfoParam, groupTransformXfoParam) {
     super()
-    this.addInput(new OperatorOutput('GroupGlobalXfo')).setParam(groupGlobalXfoParam)
-    this.addOutput(new OperatorInput('GroupTransformXfo')).setParam(groupTransformXfoParam)
+    this.addInput(new OperatorInput('GroupGlobalXfo')).setParam(groupGlobalXfoParam)
+    this.addOutput(new OperatorOutput('GroupTransformXfo')).setParam(groupTransformXfoParam)
   }
 
   /**
@@ -31,13 +31,16 @@ class GroupTransformXfoOperator extends Operator {
    * The evaluate method.
    */
   evaluate() {
-    const groupGlobalXfo = this.getInput('GroupGlobalXfo').getParam().getValue()
-    const groupTransformXfo = this.getOutput('GroupTransformXfo')
-    groupTransformXfo.setClean(groupGlobalXfo.multiply(this.invBindXfo))
+    if (this.invBindXfo) {
+      const groupGlobalXfo = this.getInput('GroupGlobalXfo').getValue()
+      const groupTransformXfo = this.getOutput('GroupTransformXfo')
+      groupTransformXfo.setClean(groupGlobalXfo.multiply(this.invBindXfo))
+    }
   }
 }
 
-/** An operator for aiming items at targets.
+/** An operator for modifying group members by the groups Xfo
+ * @private
  * @extends Operator
  *
  */
@@ -50,18 +53,35 @@ class GroupMemberXfoOperator extends Operator {
   constructor(groupTransformXfoParam, memberXfoGlobalParam) {
     super()
     this.addInput(new OperatorInput('GroupTransformXfo')).setParam(groupTransformXfoParam)
-    this.addOutput(new OperatorOutput('MemberGlobalXfo', OperatorOutputMode.OP_READ_WRITE)).setParam(memberXfoGlobalParam)
+    this.addOutput(new OperatorOutput('MemberGlobalXfo', OperatorOutputMode.OP_READ_WRITE)).setParam(
+      memberXfoGlobalParam
+    )
+
+    this._enabled = true
+  }
+
+  disable() {
+    this._enabled = false
+    this.setDirty()
+  }
+
+  enable() {
+    this._enabled = true
+    this.setDirty()
   }
 
   /**
    * The evaluate method.
    */
   evaluate() {
-    const groupTransformXfo = this.getInput('GroupTransformXfo').getParam().getValue()
-    const memberGlobalXfo = this.getOutput('MemberGlobalXfo')
-    // Read the value, modify and return.
-    const value = memberGlobalXfo.getValue()
-    memberGlobalXfo.setClean(groupTransformXfo.multiply(value))
+    const memberGlobalXfoOutput = this.getOutput('MemberGlobalXfo')
+    const memberGlobalXfo = memberGlobalXfoOutput.getValue()
+    if (this._enabled) {
+      const groupTransformXfo = this.getInput('GroupTransformXfo').getParam().getValue()
+      memberGlobalXfoOutput.setClean(groupTransformXfo.multiply(memberGlobalXfo))
+    } else {
+      memberGlobalXfoOutput.setClean(memberGlobalXfo)
+    }
   }
 }
 

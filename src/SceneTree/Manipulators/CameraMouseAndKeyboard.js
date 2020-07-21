@@ -426,14 +426,11 @@ class CameraMouseAndKeyboard extends ParameterOwner {
    */
   onMouseUp(event) {
     if (this.__dragging) {
+      this.endDrag(event)
       this.emit('movementFinished', {})
-
-      const camera = event.viewport.getCamera()
-      camera.emit('movementFinished', {})
-      this.__dragging = false
+      event.viewport.getCamera().emit('movementFinished', {})
       event.stopPropagation()
     }
-    this.endDrag(event)
   }
 
   /**
