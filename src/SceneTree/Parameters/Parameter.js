@@ -170,6 +170,8 @@ class Parameter extends EventEmitter {
   bindOperatorOutput(operatorOutput, index = -1) {
     if (index == -1) index = this.__boundOps.length
     this.__boundOps.splice(index, 0, operatorOutput)
+    // this.setDirty(operatorOutput)
+    this.__dirtyOpIndex = 0
     this.emit('valueChanged'/*, { mode: ValueSetMode.OPERATOR_DIRTIED }*/)
     return index
   }
@@ -228,33 +230,54 @@ class Parameter extends EventEmitter {
    * The setCleanFromOp method.
    * @param {any} value - The value param.
    */
-  setCleanFromOp(value, operatorOutput) {
+  setCleanFromOp(value, operatorOutput, index) {
+    if (index > this.__dirtyOpIndex + 1) {
+      const op = operatorOutput.getOperator()
+      throw(`Parameter: ${this.constructor.name} with name: ${this.getName()} is not cleaning all outputs during evaluation of op:: ${op.constructor.name} with name: ${op.getName()}`)
+    }
     this.__value = value
 
     // As each operator writes its value, the dirty value is incremented
-    this.__dirtyOpIndex = this.__boundOps.indexOf(operatorOutput) + 1
+    this.__dirtyOpIndex = index + 1
   }
 
   /**
-   * The setCleanFromOp method.
-   * @param {any} value - The value param.
+   * During operator evaluation, operators can use this method to retrieve the existing
+   * value of one of their outputs.
+   * @param {number} index - The index of the bound OperatorOutput to evaluate up to.
+   * @return {object|string|number|any} - The return value.
    */
-  getValueFromOp() {
+  getValueFromOp(index) {
+    // Note: during evaluation of an Operator that writes to multiple outputs,
+    // it can write to an output with an IO setting, which means it retrieves
+    // the previous value while calculating the next.
+    if (this.__dirtyOpIndex < index) {
+      this._clean(index)
+    }
     return this.__value
   }
 
   /**
-   * The _clean method.
-   * @private
+   * Cleans the parameter up tp the index of the specified index of the bound OperatorOutput
+   * @param {number} index - The index of the bound OperatorOutput to evaluate up to.
    */
-  _clean() {
+  _clean(index) {
+    // if (this.__boundOps.length > 1) {
+    //   console.log(this.getPath())
+    // }
     // to clean te parameter, we need to start from the first bound op
     // that needs to be evaluated, and go down the stack from there.
-    for (let i = this.__dirtyOpIndex; i < this.__boundOps.length; i++) {
-      const operatorOutput = this.__boundOps[i]
+    // for (; this.__dirtyOpIndex < index; this.__dirtyOpIndex++) {
+    while (this.__dirtyOpIndex < index) {
+      const operatorOutput = this.__boundOps[this.__dirtyOpIndex]
       // The op can get the current value and modify it in place
       // and set the output to clean.
       operatorOutput.getOperator().evaluate()
+    }
+
+    if (this.__dirtyOpIndex < index) {
+      const op = this.__boundOps[this.__dirtyOpIndex].getOperator()
+      throw(`Operator: ${op.constructor.name} with name: ${op.getName()} is not cleaning its outputs during evaluation`)
     }
   }
 
@@ -265,7 +288,9 @@ class Parameter extends EventEmitter {
    * @return {object|string|number|any} - The return value.
    */
   getValue() {
-    if (this.__dirtyOpIndex < this.__boundOps.length) this._clean()
+    if (this.__dirtyOpIndex < this.__boundOps.length) {
+      this._clean(this.__boundOps.length)
+    }
     return this.__value
   }
 

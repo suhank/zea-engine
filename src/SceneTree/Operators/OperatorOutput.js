@@ -88,7 +88,7 @@ class OperatorOutput {
    * @return {any} - The return value.
    */
   getValue() {
-    if (this._param) return this._param.getValueFromOp()
+    if (this._param) return this._param.getValueFromOp(this._paramBindIndex)
   }
 
   /**
@@ -114,7 +114,7 @@ class OperatorOutput {
    */
   setClean(value) {
     if (this._param) {
-      this._param.setCleanFromOp(value, this)
+      this._param.setCleanFromOp(value, this, this._paramBindIndex)
     }
   }
 
