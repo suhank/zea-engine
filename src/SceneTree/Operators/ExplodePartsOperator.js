@@ -1,6 +1,6 @@
 import { Vec2, Vec3 } from '../../Math/index'
 import { Operator } from './Operator.js'
-import { OperatorOutput } from './OperatorOutput.js'
+import { OperatorOutput, OperatorOutputMode } from './OperatorOutput.js'
 import {
   ValueSetMode,
   BooleanParameter,
@@ -41,7 +41,7 @@ class ExplodePartParameter extends StructParameter {
     this.__multiplierParam = this._addMember(
       new NumberParameter('Multiplier', 1.0)
     )
-    this.__output = new OperatorOutput('Part')
+    this.__output = new OperatorOutput('Part', OperatorOutputMode.OP_READ_WRITE)
   }
 
   /**
@@ -103,9 +103,7 @@ class ExplodePartParameter extends StructParameter {
       // starting with stage 0. then 1 ...
       let t = stage / stages
       if (centered) t -= 0.5
-      dist =
-        explodeDist *
-        Math.linStep(movement.x, movement.y, Math.max(0, explode - t))
+      dist = explodeDist * Math.linStep(movement.x, movement.y, Math.max(0, explode - t))
     } else {
       // Else all the parts are spread out across the explode distance.
       let t = 1.0 - stage / stages
@@ -116,18 +114,12 @@ class ExplodePartParameter extends StructParameter {
 
     let explodeDir = this.__axisParam.getValue()
     const multiplier = this.__multiplierParam.getValue()
-    const initialXfo = this.__output.getValue()
-    let xfo
+    let xfo = this.__output.getValue()
     if (parentXfo) {
-      xfo = parentDelta.multiply(initialXfo)
+      xfo = parentDelta.multiply(xfo)
       explodeDir = parentXfo.ori.rotateVec3(explodeDir)
-      xfo.tr.addInPlace(explodeDir.scale(dist * multiplier))
-    } else {
-      // Get the current value without triggering an eval
-      xfo = initialXfo
-      xfo.tr = initialXfo.tr.add(explodeDir.scale(dist * multiplier))
     }
-
+    xfo.tr.addInPlace(explodeDir.scale(dist * multiplier))
     this.__output.setClean(xfo)
   }
 
@@ -202,13 +194,13 @@ class ExplodePartsOperator extends Operator {
     this.__itemsParam = this.addParameter(
       new ListParameter('Parts', ExplodePartParameter)
     )
-    this.__itemsParam.on('elementAdded', event => {
+    this.__itemsParam.on('elementAdded', (event) => {
       if (event.index > 0) {
-        const prevStage = this.__itemsParam.getElement(event.index-1).getStage();
+        const prevStage = this.__itemsParam.getElement(event.index - 1).getStage()
         event.elem.setStage(prevStage + 1)
-        this.__stagesParam.setClean(prevStage + 2)
+        this.__stagesParam.setValue(prevStage + 2)
       } else {
-        this.__stagesParam.setClean(1)
+        this.__stagesParam.setValue(1)
       }
       this.addOutput(event.elem.getOutput())
       this.setDirty()
@@ -278,18 +270,6 @@ class ExplodePartsOperator extends Operator {
    */
   fromJSON(j, context, flags) {
     super.fromJSON(j, context, flags)
-  }
-
-  // ////////////////////////////////////////
-  // Destroy
-
-  /**
-   * The destroy is called by the system to cause explicit resources cleanup.
-   * Users should never need to call this method directly.
-   */
-  destroy() {
-    clearTimeout(this.__timeoutId)
-    super.destroy()
   }
 }
 

@@ -22,6 +22,7 @@ class RouterOperator extends Operator {
     this.__multipliersParam.on('elementAdded', (event) => {
       event.elem.setValue(1.0)
       this.addOutput(new OperatorOutput('Output'))
+      this.setDirty()
     })
     this.__multipliersParam.on('elementRemoved', (event) => {
       this.removeOutput(this.getOutputByIndex(event.index))
@@ -33,7 +34,7 @@ class RouterOperator extends Operator {
    */
   addRoute() {
     const index = this.__multipliersParam.getCount()
-    this.__multipliersParam.addElement(new NumberParameter("Mult"+index))
+    this.__multipliersParam.addElement(new NumberParameter("Mult" + index))
     return this.getOutputByIndex(index)
   }
 
@@ -41,13 +42,20 @@ class RouterOperator extends Operator {
    * The evaluate method.
    */
   evaluate() {
-    const input = this.__input.getValue()
-    const multipliers = this.__multipliersParam.getValue()
-    let i = this.__outputs.length
-    while (i--) {
-      const output = this.__outputs[i]
-      const multiplier = multipliers[i].getValue()
-      output.setValue(input * multiplier)
+    if (this.__input.isConnected()) {
+      const input = this.__input.getValue()
+      const multipliers = this.__multipliersParam.getValue()
+      let i = this.__outputs.length
+      while (i--) {
+        const output = this.__outputs[i]
+        const multiplier = multipliers[i].getValue()
+        output.setValue(input * multiplier)
+      }
+    } else {
+      let i = this.__outputs.length
+      while (i--) {
+        output.setValue(0.0)
+      }
     }
     this.emit('postEval', {})
   }
