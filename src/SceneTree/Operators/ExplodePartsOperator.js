@@ -236,16 +236,7 @@ class ExplodePartsOperator extends Operator {
     const items = this.__itemsParam.getValue()
     for (let i = 0; i < items.length; i++) {
       const part = items[i]
-      part.evaluate(
-        explode,
-        explodeDist,
-        offset,
-        stages,
-        cascade,
-        centered,
-        parentXfo,
-        parentDelta
-      )
+      part.evaluate(explode, explodeDist, offset, stages, cascade, centered, parentXfo, parentDelta)
     }
   }
 

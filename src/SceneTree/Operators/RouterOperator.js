@@ -21,6 +21,7 @@ class RouterOperator extends Operator {
 
   /**
    * The addRoute method.
+   * @return {OperatorOutput} - The added output.
    */
   addRoute() {
     return this.addOutput(new OperatorOutput('Output' + this.__outputs.length))
@@ -43,37 +44,6 @@ class RouterOperator extends Operator {
         output.setClean(0.0)
       }
     }
-  }
-
-  // ////////////////////////////////////////
-  // Persistence
-
-  /**
-   * The toJSON method encodes this type as a json object for persistences.
-   * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
-   * @return {object} - Returns the json object.
-   */
-  toJSON(context, flags) {
-    return super.toJSON(context, flags)
-  }
-
-  /**
-   * The fromJSON method decodes a json object for this type.
-   * @param {object} j - The json object this item must decode.
-   * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
-   */
-  fromJSON(j, context, flags) {
-    super.fromJSON(j, context, flags)
-  }
-
-  /**
-   * The destroy is called by the system to cause explicit resources cleanup.
-   * Users should never need to call this method directly.
-   */
-  destroy() {
-    super.destroy()
   }
 }
 

@@ -54,14 +54,14 @@ class Parameter extends EventEmitter {
     this.getValue = this.getValue.bind(this)
     this.setValue = this.setValue.bind(this)
   }
-  
+
   /**
    * The clone method.
    * @param {number} flags - The flags value.
    */
   clone(flags) {
-    console.warn('@todo-review')
-    console.error('TOOD: implment me')
+    const cloneded = new Parameter(this.__name, this.__value, this.__dataType)
+    return cloneded
   }
 
   /**
@@ -159,50 +159,55 @@ class Parameter extends EventEmitter {
     return (this.__flags & flag) != 0
   }
 
-  //////////////////////////////////////////////////
+  // ////////////////////////////////////////////////
   // Operator bindings
 
   /**
-   * The bindOperator method.
+   * Binds an OperatorOutput to this parameter. 
    *
-   * @param {Operator} op - The OperatorOutput value.
+   * @param {OperatorOutput} operatorOutput - The output that we are unbinding from the Parameter
+   * @param {number} index - The index(optional) that the output is being bound at.
+   * @return {number} - The index of the bound output.
    */
   bindOperatorOutput(operatorOutput, index = -1) {
     if (index == -1) index = this.__boundOps.length
     this.__boundOps.splice(index, 0, operatorOutput)
-    // this.setDirty(operatorOutput)
+    // Update the remaining binding indices
+    for (let i = index; i < this.__boundOps.length; i++) {
+      this.__boundOps[i].setParamBindIndex(i)
+    }
     this.__dirtyOpIndex = 0
-    this.emit('valueChanged'/*, { mode: ValueSetMode.OPERATOR_DIRTIED }*/)
+    this.emit('valueChanged')
     return index
   }
 
   /**
    * The unbindOperator method.
    *
-   * @param {Operator} op - The cleanerFn value.
+   * @param {OperatorOutput} operatorOutput - The output that we are unbinding from the Parameter
    * @return {boolean} - The return value.
    */
   unbindOperator(operatorOutput) {
-    // If already dirty, simply return.
-    const index = this.__boundOps.indexOf(operatorOutput)
-    if (index == -1) {
-      return false
-    }
+    const index = operatorOutput.getParamBindIndex()
     this.__boundOps.splice(index, 1)
+    // Update the remaining binding indices
+    for (let i = index; i < this.__boundOps.length; i++) {
+      this.__boundOps[i].setParamBindIndex(i)
+    }
     this.__dirtyOpIndex = 0
-    this.emit('valueChanged'/*, { mode: ValueSetMode.OPERATOR_DIRTIED }*/)
+    this.emit('valueChanged')
     return index
   }
 
   /**
-   * The setDirty method.
-   *
-   * @return {boolean}
+   * The setDirty method dirties this Parameter so subsequent calls to getValue will cause an evaluation of its bound operators.
+   * @param {OperatorOutput} operatorOutput - The cleanerFn value.
+   * @return {boolean} true if the Parameter was made dirty, else false if it was already dirty.
    */
   setDirty(operatorOutput) {
     // Determine the first operator in the stack that must evaluate
     // to clean the parameter.
-    let dirtyId = Math.min(this.__dirtyOpIndex, this.__boundOps.indexOf(operatorOutput))
+    let dirtyId = Math.min(this.__dirtyOpIndex, operatorOutput.getParamBindIndex())
     for (; ; dirtyId--) {
       if (dirtyId == 0 || this.__boundOps[dirtyId].getMode() == OperatorOutputMode.OP_WRITE) break
     }
@@ -210,27 +215,38 @@ class Parameter extends EventEmitter {
     // console.log("setDirtyFromOp:", this.getPath(), dirtyId, this.__dirtyOpIndex)
     if (dirtyId != this.__dirtyOpIndex) {
       this.__dirtyOpIndex = dirtyId
-      this.emit('valueChanged'/*, { mode: ValueSetMode.OPERATOR_DIRTIED }*/) 
+      this.emit('valueChanged')
       return true
     }
     return false
   }
 
   /**
-   * The isDirty method.
+   * Returns true if this parameter is currently dirty and will evaluate its bound
+   * operators if its value is requested by a call to getValue.
    *
-   * @private
    * @return {boolean} - Returns a boolean.
    */
   isDirty() {
     return this.__dirtyOpIndex < this.__boundOps.length
   }
-  
+
   /**
    * The setCleanFromOp method.
-   * @param {any} value - The value param.
+   * @param {any} value - The computed value to be stored in the Parameter.
+   * @param {OperatorOutput} operatorOutput - The source output on the operator that is setting the value.
+   * @param {number} index - The index of the bound OperatorOutput.
    */
   setCleanFromOp(value, operatorOutput, index) {
+    if (index < this.__dirtyOpIndex) {
+      // We see this message when parameters are evaluated as soon as a change is detected instead of 
+      // in batches. Now that all rendering code is pulling data only during the render cycle, we ara
+      // not seeing it anymore. However, maybe with a UI open, it will start emitting this warning. 
+      // Note: this would be caused, if a Parameter is already cleaned by an Operator, and yet the Operator
+      // is re-evaluating. I am not sure how this can occur.
+      const op = operatorOutput.getOperator()
+      console.warn(`Operator:: ${op.constructor.name} with name: ${op.getName()} is being cleaned immediately, instead of lazily.`)
+    }
     if (index > this.__dirtyOpIndex + 1) {
       const op = operatorOutput.getOperator()
       throw(`Parameter: ${this.constructor.name} with name: ${this.getName()} is not cleaning all outputs during evaluation of op:: ${op.constructor.name} with name: ${op.getName()}`)
