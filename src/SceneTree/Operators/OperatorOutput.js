@@ -74,6 +74,24 @@ class OperatorOutput {
   }
 
   /**
+   * Returns the index of the binding on the parameter of this OperatorOutput
+   * up to date.
+   * @return {number} index - The index of the binding on the parameter.
+   */
+  getParamBindIndex() {
+    return this._paramBindIndex
+  }
+
+  /**
+   * If bindings change on a Parameter, it will call this method to ensure the output index is
+   * up to date.
+   * @param {number} index - The index of the binding on the parameter.
+   */
+  setParamBindIndex(index) {
+    this._paramBindIndex = index
+  }
+
+  /**
    * Propagates dirty to the connected parameter.
    */
   setDirty() {
