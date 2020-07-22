@@ -30,19 +30,6 @@ class NumberParameter extends Parameter {
   }
 
   /**
-   * Sets parameter's value.
-   *
-   * @return {number} - The return value.
-   */
-  getValue() {
-    // Still not sure if we should clamp the output.
-    // if(this.__range) {
-    //     return Math.clamp(super.getValue(), this.__range[0], this.__range[1]);
-    // }
-    return super.getValue()
-  }
-
-  /**
    * Returns the range to which the parameter is restrained.
    *
    * @return {array} - The return value.
