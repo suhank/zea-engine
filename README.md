@@ -31,27 +31,43 @@ Note: The Zea Engine documentation uses `yarn` commands, but `npm` will also wor
 - `yarn run build` - Produces the production version of ZeaEngine.
 - `yarn run build:watch` - Produces the development version of ZeaEngine and triggers a re-compilation on file changes.
 
-## Running automated tests
+## Running unit tests
 
 In your development environment you can run:
 
-```
+```bash
 yarn test
 ```
 
 Or, to trigger a re-compilation on file changes:
 
-```
+```bash
 yarn run test:watch
 ```
 
 In your CI environment you can run:
 
-```
+```bash
 yarn install --frozen-lockfile --ignore-scripts
 yarn run build
 yarn test
 ```
+
+## Debugging unit tests
+
+1. In your development environment, run:
+
+```bash
+yarn run test:debug
+```
+
+2. In your Chromium based browser, use this address to open the inspector: `chrome://inspect/#devices`
+
+3. From the list of targets, click the one that corresponds to the Zea Engine.
+
+4. Use the [debugger statement](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/debugger) to add breakpoints to your code.
+
+5. Your browser will reload and now you're ready to start debugging.
 
 ## Typical development workflow
 
@@ -67,6 +83,6 @@ yarn test
 
 The npm scripts hook takes care of the heavy lifting, you only need to run:
 
-```
+```bash
 yarn publish
 ```
