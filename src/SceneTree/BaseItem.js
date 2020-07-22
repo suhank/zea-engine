@@ -64,7 +64,7 @@ class BaseItem extends ParameterOwner {
    */
   __parameterValueChanged(event) {
     super.__parameterValueChanged(event)
-    if (event.mode & ParamFlags.USER_EDITED) {
+    if (event.mode & ItemFlags.USER_EDITED) {
       this.setFlag(ItemFlags.USER_EDITED)
     }
   }

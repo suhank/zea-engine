@@ -32,13 +32,12 @@ class CalcGeomMatOperator extends Operator {
     const globalXfo = this.getInput('GlobalXfo').getValue()
     const geomOffsetXfo = this.getInput('GeomOffsetXfo').getValue()
     const geomMatOutput = this.getOutput('GeomMat')
-    
+
     const globalMat4 = globalXfo.toMat4()
     const geomOffsetMat4 = geomOffsetXfo.toMat4()
     geomMatOutput.setClean(globalMat4.multiply(geomOffsetMat4))
   }
 }
-
 
 /**
  * Class representing a geometry item in a scene tree.
@@ -60,10 +59,10 @@ class GeomItem extends BaseGeomItem {
   /**
    * Creates a geometry item.
    * @param {string} name - The name of the geom item.
-   * @param {BaseGeom} geom - The geom value.
+   * @param {BaseGeom} geometry - The geometry value.
    * @param {Material} material - The material value.
    */
-  constructor(name, geom = undefined, material = undefined) {
+  constructor(name, geometry = undefined, material = undefined) {
     super(name)
 
     this.__geomParam = this.insertParameter(new GeometryParameter('Geometry'), 0)
@@ -100,20 +99,9 @@ class GeomItem extends BaseGeomItem {
       this.__geomMatParam
     )
 
-    if (geom) this.getParameter('Geometry').loadValue(geom)
-    if (material) this.getParameter('Material').loadValue(materialFlag)
+    if (geometry) this.getParameter('Geometry').loadValue(geometry)
+    if (material) this.getParameter('Material').loadValue(material)
   }
-
-  /**
-   * The __cleanGeomMat method.
-   * @return {Mat4} - The return value.
-   * @private
-  __cleanGeomMat() {
-    const globalMat4 = this.__globalXfoParam.getValue().toMat4()
-    const geomOffsetMat4 = this.__geomOffsetXfoParam.getValue().toMat4()
-    return globalMat4.multiply(geomOffsetMat4)
-  }
-   */
 
   // ////////////////////////////////////////
   // Geometry
@@ -137,25 +125,25 @@ class GeomItem extends BaseGeomItem {
   }
 
   /**
-   * Getter for geometry (getGeom is deprectated. Please use getGeometry).
+   * Getter for geometry (getGeom is deprecated. Please use getGeometry).
    *
    * @deprecated
    * @return {BaseGeom} - The return value.
    */
   getGeom() {
-    console.warn("getGeom is deprectated. Please use 'getGeometry'")
+    console.warn("getGeom is deprecated. Please use 'getGeometry'")
     return this.getGeometry()
   }
 
   /**
-   * Setter for geometry. (setGeom is deprectated. Please use setGeometry).
+   * Setter for geometry. (setGeom is deprecated. Please use setGeometry).
    *
    * @deprecated
    * @param {BaseGeom} geom - The geom value.
    * @return {number} - The return value.
    */
   setGeom(geom) {
-    console.warn("setGeom is deprectated. Please use 'setGeometry'")
+    console.warn("setGeom is deprecated. Please use 'setGeometry'")
     return this.setGeometry(geom)
   }
 

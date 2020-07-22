@@ -5,7 +5,7 @@ import { sgFactory } from './SGFactory.js'
 
 // Explicit import of files to avoid importing all the parameter types.
 // Note: Soon these imports should be removed, once all code avoids calling
-// 'addPArameter' without the parameter instance.
+// 'addParameter' without the parameter instance.
 import { ParamFlags, Parameter } from './Parameters/Parameter.js'
 
 let counter = 0

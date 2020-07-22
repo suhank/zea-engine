@@ -242,7 +242,7 @@ class TreeItem extends BaseItem {
    * @private
    */
   _childFlagsChanged(flags) {
-    if ((flags & ParamFlags.USER_EDITED) != 0) this.setFlag(ItemFlags.USER_EDITED)
+    if ((flags & ItemFlags.USER_EDITED) != 0) this.setFlag(ItemFlags.USER_EDITED)
   }
 
   /**

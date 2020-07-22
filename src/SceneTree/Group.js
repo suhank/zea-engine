@@ -1,7 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { Vec3, Color, Xfo } from '../Math/index'
 import {
-  ValueSetMode,
   BooleanParameter,
   NumberParameter,
   Vec3Parameter,
@@ -350,10 +349,10 @@ class Group extends TreeItem {
             const m = p.getValue()
             if (m != material) {
               p.__backupMaterial = m
-              p.setValue(material)
+              p.loadValue(material)
             }
           } else if (p.__backupMaterial) {
-            p.setValue(p.__backupMaterial)
+            p.loadValue(p.__backupMaterial)
           }
         }
       }, false)
@@ -449,7 +448,7 @@ class Group extends TreeItem {
             const m = p.getValue()
             if (m != material) {
               p.__backupMaterial = m
-              p.setValue(material)
+              p.loadValue(material)
             }
           }
         }
