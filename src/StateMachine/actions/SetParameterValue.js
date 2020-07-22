@@ -15,7 +15,12 @@ class SetParameterValue extends StateAction {
   constructor() {
     super()
     this.__interpTimeParam = this.addParameter(new NumberParameter('InterpTime', 1.0))
-    this.__updateFrequencyParam = this.addParameter(new NumberParameter('UpdateFrequency', 30))
+
+    // Note: if the update frequency here can be faster than the renderer, it means each
+    // rendered frame there is an updated values. This keeps movement smooth.
+    // This is very apparent when moving the camera, while changing other values. If the 2 changes
+    // are slower than rendering, then we see juddering.
+    this.__updateFrequencyParam = this.addParameter(new NumberParameter('UpdateFrequency', 100))
   }
 
   /**
@@ -71,7 +76,7 @@ class SetParameterValue extends StateAction {
       }
     }
   }
-  
+
   /**
    * The deactivate method.
    */
