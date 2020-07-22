@@ -156,7 +156,7 @@ class TreeItem extends BaseItem {
 
     this.__visibleParam.on('valueChanged', () => {
       this.__visibleCounter += this.__visibleParam.getValue() ? 1 : -1
-      this.__updateVisiblity()
+      this.__updateVisibility()
     })
 
     // Note: one day we will remove the concept of 'selection' from the engine
@@ -288,7 +288,7 @@ class TreeItem extends BaseItem {
       this.globalXfoOp.getInput('ParentGlobal').setParam(null)
     }
 
-    this.__updateVisiblity()
+    this.__updateVisibility()
   }
 
   /**
@@ -408,22 +408,22 @@ class TreeItem extends BaseItem {
    *
    * @param {number} val - The val param.
    */
-  propagateVisiblity(val) {
+  propagateVisibility(val) {
     this.__visibleCounter += val
-    this.__updateVisiblity()
+    this.__updateVisibility()
   }
 
   /**
-   * The __updateVisiblity method.
+   * The __updateVisibility method.
    * @return {boolean} - Returns a boolean.
    * @private
    */
-  __updateVisiblity() {
+  __updateVisibility() {
     const visible = this.__visibleCounter > 0
     if (visible != this.__visible) {
       this.__visible = visible
       for (const childItem of this.__childItems) {
-        if (childItem instanceof TreeItem) childItem.propagateVisiblity(this.__visible ? 1 : -1)
+        if (childItem instanceof TreeItem) childItem.propagateVisibility(this.__visible ? 1 : -1)
       }
       this.emit('visibilityChanged', { visible })
       return true

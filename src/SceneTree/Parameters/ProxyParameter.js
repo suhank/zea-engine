@@ -27,6 +27,11 @@ class ProxyParameter extends Parameter {
     this.sourceParameter.on('valueChanged', this.__proxyValueChanged.bind(this));
   }
 
+  /**
+   * @private
+   * Handles propagating the valueChanged event from the source param
+   * @param {any} value - The value param.
+   */
   __proxyValueChanged(event) {
     this.emit('valueChanged', event)
   }
@@ -61,7 +66,7 @@ class ProxyParameter extends Parameter {
   // Persistence
 
   /**
-   * The toJSON method encodes this type as a json object for persistences.
+   * The toJSON method encodes this type as a json object for persistence.
    * @param {object} context - The context value.
    * @param {number} flags - The flags value.
    * @return {object} - Returns the json object.

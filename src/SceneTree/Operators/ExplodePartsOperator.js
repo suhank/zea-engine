@@ -2,7 +2,6 @@ import { Vec2, Vec3 } from '../../Math/index'
 import { Operator } from './Operator.js'
 import { OperatorOutput, OperatorOutputMode } from './OperatorOutput.js'
 import {
-  ValueSetMode,
   BooleanParameter,
   NumberParameter,
   Vec2Parameter,
@@ -181,8 +180,7 @@ class ExplodePartsOperator extends Operator {
     this.__parentItemParam.on('valueChanged', () => {
       // compute the local xfos
       const parentItem = this.__parentItemParam.getValue()
-      if (parentItem)
-        this.__invParentSpace = parentItem.getGlobalXfo().inverse()
+      if (parentItem) this.__invParentSpace = parentItem.getGlobalXfo().inverse()
       else this.__invParentSpace = undefined
     })
     this.__parentItemParam.on('treeItemGlobalXfoChanged', () => {
