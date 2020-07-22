@@ -1,7 +1,7 @@
 import { Vec3, Quat } from '../../Math/index'
 import { Operator } from './Operator.js'
 import { OperatorOutput, OperatorOutputMode } from './OperatorOutput.js'
-import { StructParameter, NumberParameter, Vec3Parameter, ListParameter, Parameter } from '../Parameters/index'
+import { StructParameter, NumberParameter, Vec3Parameter, ListParameter } from '../Parameters/index'
 import { sgFactory } from '../SGFactory.js'
 
 /** Class representing a gear parameter.
@@ -179,7 +179,7 @@ class GearsOperator extends Operator {
     super.reattach()
 
     // Restart the operator.
-    this.getParameter('RPM').emit('valueChanged', { mode: Parameter.ValueSetMode.USER_SETVALUE })
+    this.getParameter('RPM').emit('valueChanged', {})
   }
 
   /**

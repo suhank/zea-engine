@@ -88,7 +88,7 @@ class OperatorInput {
    */
   setValue(value) {
     if (this._param) {
-      this._param.setValue(value, mode)
+      this._param.setValue(value)
     }
   }
 

@@ -86,7 +86,7 @@ class Parameter extends EventEmitter {
 
     const prevName = this.__name
     this.__name = name
-    this.emit('nameChanged', { mode: this.__name, prevName })
+    this.emit('nameChanged', { newName: this.__name, prevName })
   }
 
   /**
@@ -177,7 +177,7 @@ class Parameter extends EventEmitter {
       this.__boundOps[i].setParamBindIndex(i)
     }
     this.__dirtyOpIndex = 0
-    this.emit('valueChanged')
+    this.emit('valueChanged', { mode: 0 })
     return index
   }
 
@@ -195,7 +195,7 @@ class Parameter extends EventEmitter {
       this.__boundOps[i].setParamBindIndex(i)
     }
     this.__dirtyOpIndex = 0
-    this.emit('valueChanged')
+    this.emit('valueChanged', { mode: 0 })
     return index
   }
 
@@ -215,7 +215,7 @@ class Parameter extends EventEmitter {
     // console.log("setDirtyFromOp:", this.getPath(), dirtyId, this.__dirtyOpIndex)
     if (dirtyId != this.__dirtyOpIndex) {
       this.__dirtyOpIndex = dirtyId
-      this.emit('valueChanged')
+      this.emit('valueChanged', { mode: 0 })
       return true
     }
     return false
@@ -303,7 +303,10 @@ class Parameter extends EventEmitter {
    * @param {number} mode - The mode value.
    * @return {object|string|number|any} - The return value.
    */
-  getValue() {
+  getValue(mode) {
+    if (mode != undefined) {
+      console.warn("WARNING in Parameter.setValue: 'mode' is deprecated.")
+    }
     if (this.__dirtyOpIndex < this.__boundOps.length) {
       this._clean(this.__boundOps.length)
     }
@@ -314,12 +317,14 @@ class Parameter extends EventEmitter {
    * Sets parameter's value, but runs a few internal cleaning processes.
    *
    * @param {object|string|number|any} value - The value param.
-   * @param {number} mode - The mode param.
    */
-  setValue(value, mode = ValueSetMode.USER_SETVALUE) {
+  setValue(value, mode) {
     if (value == undefined) {
       // eslint-disable-next-line no-throw-literal
       throw 'undefined was passed into the set value for param:' + this.getName()
+    }
+    if (mode != undefined) {
+      console.warn("WARNING in Parameter.setValue: 'mode' is deprecated.")
     }
 
     if (this.__boundOps.length > 0) {
@@ -338,11 +343,21 @@ class Parameter extends EventEmitter {
 
     // Note: only users call 'setValue'. Operators call 'setCleanFromOp'
     if (this.__flags & ParamFlags.USER_EDITED) this.setFlag(ParamFlags.USER_EDITED)
-    this.emit('valueChanged', { mode })
+    this.emit('valueChanged', { mode: ParamFlags.USER_EDITED })
   }
 
   // ////////////////////////////////////////
   // Persistence
+
+  /**
+   * The loadValue is used to change the value of a parameter, without triggering a 
+   * valueChanges, or setting the USER_EDITED state.
+   *
+   * @param {any} value - The context value.
+   */
+  loadValue(value) {
+    this.__value = value
+  }
 
   /**
    * The toJSON method encodes this type as a json object for persistence.
@@ -375,11 +390,12 @@ class Parameter extends EventEmitter {
     if (j.value.type && this.__value == undefined) {
       this.__value = sgFactory.constructClass(j.value.type)
     }
-    if (this.__value == undefined || !this.__value.fromJSON) this.setValue(j.value, ValueSetMode.DATA_LOAD)
-    else {
+    if (this.__value == undefined || !this.__value.fromJSON) {
+      this.__value = j.value
+    } else {
       this.__value.fromJSON(j.value, context)
-      this.emit('valueChanged', { mode: ValueSetMode.DATA_LOAD })
     }
+    this.emit('valueChanged', { mode: 0 })
   }
 
   /**

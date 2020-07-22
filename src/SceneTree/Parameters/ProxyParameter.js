@@ -21,15 +21,14 @@ class ProxyParameter extends Parameter {
   /**
    * The setValue method.
    * @param {any} value - The value param.
-   * @param {number} mode - The mode value.
    */
   setSourceParameter(sourceParameter) {
     this.sourceParameter = sourceParameter;
     this.sourceParameter.on('valueChanged', this.__proxyValueChanged.bind(this));
   }
 
-  __proxyValueChanged(mode) {
-    this.emit('valueChanged', { mode })
+  __proxyValueChanged(event) {
+    this.emit('valueChanged', event)
   }
 
 
@@ -45,19 +44,17 @@ class ProxyParameter extends Parameter {
   /**
    * The setValue method.
    * @param {any} value - The value param.
-   * @param {number} mode - The mode value.
    */
-  setValue(value, mode) {
-    // this.sourceParameter.setValue(value, mode)
+  setValue(value) {
+    // this.sourceParameter.setValue(value)
   }
 
   /**
    * The getValue method.
-   * @param {number} mode - The mode value.
    * @return {any} - The return value.
    */
-  getValue(mode) {
-    return this.sourceParameter.getValue(mode)
+  getValue() {
+    return this.sourceParameter.getValue()
   }
 
   // ////////////////////////////////////////
@@ -113,6 +110,7 @@ class ProxyParameter extends Parameter {
    * The clone method constructs a new number parameter, copies its values
    * from this parameter and returns it.
    * @param {number} flags - The flags value.
+   * @param {object} context - The context object.
    * @return {ProxyParameter} - Returns a new number parameter.
    */
   clone(flags, context) {
@@ -136,12 +134,7 @@ class ProxyParameter extends Parameter {
         clonedParam.setSourceParameter(param)
       },
       reason => {
-        console.warn(
-          "Error cloning Proxy Param: '" +
-            this.getName() +
-            "'. Unable to connect to:" +
-            j.sourceParameter
-        )
+        console.warn("Error cloning Proxy Param: '" + this.getName() + "'. Unable to connect to:" + j.sourceParameter)
       }
     )
   }

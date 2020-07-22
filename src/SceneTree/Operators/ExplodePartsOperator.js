@@ -46,20 +46,18 @@ class ExplodePartParameter extends StructParameter {
 
   /**
    * The getStage method.
-   * @param {number} mode - The mode value.
    * @return {any} - The return value.
    */
-  getStage(mode = ValueSetMode.USER_GETVALUE) {
-    return this.__stageParam.getValue(mode)
+  getStage() {
+    return this.__stageParam.getValue()
   }
 
   /**
    * The setStage method.
    * @param {any} stage - The stage value.
-   * @param {number} mode - The mode value.
    */
-  setStage(stage, mode = ValueSetMode.USER_SETVALUE) {
-    this.__stageParam.setValue(stage, mode)
+  setStage(stage) {
+    this.__stageParam.setValue(stage)
   }
 
   /**

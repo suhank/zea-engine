@@ -1,6 +1,6 @@
 import { Color, Xfo, Box3 } from '../Math/index'
 import { sgFactory } from './SGFactory.js'
-import { ParamFlags, ValueSetMode, Parameter, BooleanParameter, XfoParameter } from './Parameters/index'
+import { ParamFlags, Parameter, BooleanParameter, XfoParameter } from './Parameters/index'
 import { ItemFlags, BaseItem } from './BaseItem.js'
 import { CalcGlobalXfoOperator } from './Operators/CalcGlobalXfoOperator.js'
 
@@ -149,14 +149,8 @@ class TreeItem extends BaseItem {
 
     this.globalXfoOp = new CalcGlobalXfoOperator(this.__globalXfoParam, this.__localXfoParam);
     this.__globalXfoParam.on('valueChanged', (event) => {
-      // Dirtiness propagates from Local to Global, but not vice versa.
-      // We need to move to using operators to invert values.
-      // This system of having ops connected in all directions
-      // is super difficult to debug.
-      // if (mode != ValueSetMode.OPERATOR_DIRTIED) {
-      //   this.__localXfoParam.setDirty(cleanLocalXfo)
-      // }
       this._setBoundingBoxDirty()
+      // Note: deprecate this event.
       this.emit('globalXfoChanged', event)
     })
 
@@ -342,37 +336,26 @@ class TreeItem extends BaseItem {
    * Sets the local Xfo transform parameter.
    *
    * @param {Xfo} xfo - The local xfo transform.
-   * @param {number} mode - The mode value. **See:** `ValueSetMode` enum in `Parameter` class.
    */
-  setLocalXfo(xfo, mode) {
-    this.__localXfoParam.setValue(xfo, mode)
+  setLocalXfo(xfo) {
+    this.__localXfoParam.setValue(xfo)
   }
 
   /**
    * Returns the global Xfo transform.
    *
-   * @param {number} mode - The mode value.
    * @return {Xfo} - Returns the global Xfo.
    */
-  getGlobalXfo(mode) {
-    return this.__globalXfoParam.getValue(mode)
+  getGlobalXfo() {
+    return this.__globalXfoParam.getValue()
   }
 
   /**
    * Sets the global Xfo transform.
    * @param {Xfo} xfo - The global xfo transform.
-   * @param {number} mode - The mode value. **See:** `ValueSetMode` enum in `Parameter` class.
    */
-  setGlobalXfo(xfo, mode) {
-    this.__globalXfoParam.setValue(xfo, mode)
-    // const owner = this.getOwner()
-    // if (owner) {
-    //   const parentXfo = owner.getGlobalXfo()
-    //   const localXfo = parentXfo.inverse().multiply(xfo)
-    //   this.__localXfoParam.setValue(localXfo, mode)
-    // } else {
-    //   this.__globalXfoParam.setValue(xfo, mode)
-    // }
+  setGlobalXfo(xfo) {
+    this.__globalXfoParam.setValue(xfo)
   }
 
   /**
@@ -1212,15 +1195,13 @@ class TreeItem extends BaseItem {
       xfo.ori = reader.loadFloat32Quat()
       xfo.sc.set(reader.loadFloat32())
       // console.log(this.getPath() + " TreeItem:" + xfo.toString());
-      this.__localXfoParam.setValue(xfo, ValueSetMode.DATA_LOAD)
+      this.__localXfoParam.loadValue(xfo)
     }
 
     const bboxFlag = 1 << 3
-    if (itemflags & bboxFlag)
-      this.__boundingBoxParam.setValue(
-        new Box3(reader.loadFloat32Vec3(), reader.loadFloat32Vec3()),
-        ValueSetMode.DATA_LOAD
-      )
+    if (itemflags & bboxFlag) {
+      this.__boundingBoxParam.loadValue(new Box3(reader.loadFloat32Vec3(), reader.loadFloat32Vec3()))
+    }
 
     const numChildren = reader.loadUInt32()
     if (numChildren > 0) {

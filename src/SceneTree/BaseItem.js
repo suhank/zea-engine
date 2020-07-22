@@ -1,6 +1,5 @@
 /* eslint-disable no-unused-vars */
 import { sgFactory } from './SGFactory.js'
-import { ValueSetMode } from './Parameters/Parameter.js'
 import { ParameterOwner } from './ParameterOwner.js'
 import { BinReader } from './BinReader.js'
 
@@ -65,7 +64,7 @@ class BaseItem extends ParameterOwner {
    */
   __parameterValueChanged(event) {
     super.__parameterValueChanged(event)
-    if (event.mode == ValueSetMode.USER_SETVALUE || event.mode == ValueSetMode.REMOTEUSER_SETVALUE) {
+    if (event.mode & ParamFlags.USER_EDITED) {
       this.setFlag(ItemFlags.USER_EDITED)
     }
   }
@@ -87,14 +86,13 @@ class BaseItem extends ParameterOwner {
    *
    * @emits `nameChanged` with `newName` and `oldName` data.
    * @param {string} name - The base item name.
-   * @param {number} mode - The mode value
    */
-  setName(name, mode = ValueSetMode.USER_SETVALUE) {
+  setName(name) {
     if (this.__name != name) {
       const oldName = this.__name
       this.__name = name
       this.__updatePath()
-      this.emit('nameChanged', { newName: name, oldName, mode })
+      this.emit('nameChanged', { newName: name, oldName })
     }
   }
 

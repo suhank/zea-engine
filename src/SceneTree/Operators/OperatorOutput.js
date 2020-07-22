@@ -6,11 +6,11 @@ class OperatorOutput {
   /**
    * Create an operator output.
    * @param {string} name - The name value.
-   * @param {OperatorOutputMode} mode - The filterFn value.
+   * @param {OperatorOutputMode} operatorOutputMode - The mode which the OperatorOutput uses to bind to its target parameter.
    */
-  constructor(name, mode = OperatorOutputMode.OP_WRITE) {
+  constructor(name, operatorOutputMode = OperatorOutputMode.OP_WRITE) {
     this.__name = name
-    this._mode = mode
+    this._mode = operatorOutputMode
     this._param = undefined
     this._paramBindIndex = -1
     this.detached = false
@@ -102,7 +102,6 @@ class OperatorOutput {
 
   /**
    * The getValue method.
-   * @param {boolean} mode - The mode param.
    * @return {any} - The return value.
    */
   getValue() {

@@ -264,7 +264,7 @@ class Group extends TreeItem {
       })
       xfo.tr.scaleInPlace(1 / numTreeItems)
     } else {
-      throw new Error('Invalid mode.')
+      throw new Error('Invalid GROUP_XFO_MODES.')
     }
 
 
@@ -341,6 +341,7 @@ class Group extends TreeItem {
   __updateMaterial() {
     const material = this.getParameter('Material').getValue()
 
+    // TODO: Bind an operator 
     Array.from(this.__itemsParam.getValue()).forEach((item) => {
       item.traverse((treeItem) => {
         if (treeItem instanceof TreeItem && treeItem.hasParameter('Material')) {
@@ -349,10 +350,10 @@ class Group extends TreeItem {
             const m = p.getValue()
             if (m != material) {
               p.__backupMaterial = m
-              p.setValue(material, ValueSetMode.GENERATED_VALUE)
+              p.setValue(material)
             }
           } else if (p.__backupMaterial) {
-            p.setValue(p.__backupMaterial, ValueSetMode.GENERATED_VALUE)
+            p.setValue(p.__backupMaterial)
           }
         }
       }, false)
@@ -440,6 +441,7 @@ class Group extends TreeItem {
     // Update the Material
     const material = this.getParameter('Material').getValue()
     if (material) {
+      // TODO: Bind an operator instead
       item.traverse((treeItem) => {
         if (treeItem instanceof TreeItem && treeItem.hasParameter('Material')) {
           const p = treeItem.getParameter('Material')
@@ -447,7 +449,7 @@ class Group extends TreeItem {
             const m = p.getValue()
             if (m != material) {
               p.__backupMaterial = m
-              p.setValue(material, ValueSetMode.GENERATED_VALUE)
+              p.setValue(material)
             }
           }
         }

@@ -1,5 +1,5 @@
 import { Vec2, Xfo } from '../Math/index'
-import { ValueSetMode, XfoParameter, Mat4Parameter } from './Parameters/index'
+import { XfoParameter, Mat4Parameter } from './Parameters/index'
 import { MaterialParameter } from './Parameters/MaterialParameter'
 import { GeometryParameter } from './Parameters/GeometryParameter'
 import { sgFactory } from './SGFactory.js'
@@ -94,10 +94,14 @@ class GeomItem extends BaseGeomItem {
       this.emit('geomAssigned', event)
     })
 
-    this.calcGeomMatOperator = new CalcGeomMatOperator(this.__globalXfoParam, this.__geomOffsetXfoParam, this.__geomMatParam)
+    this.calcGeomMatOperator = new CalcGeomMatOperator(
+      this.__globalXfoParam,
+      this.__geomOffsetXfoParam,
+      this.__geomMatParam
+    )
 
-    if (geom) this.setGeometry(geom, ValueSetMode.DATA_LOAD)
-    if (material) this.setMaterial(material, ValueSetMode.DATA_LOAD)
+    if (geom) this.getParameter('Geometry').loadValue(geom)
+    if (material) this.getParameter('Material').loadValue(materialFlag)
   }
 
   /**
@@ -127,10 +131,9 @@ class GeomItem extends BaseGeomItem {
    * Sets geometry object to `Geometry` parameter.
    *
    * @param {BaseGeom} geom - The geom value.
-   * @param {number} mode - The mode value.
    */
-  setGeometry(geom, mode) {
-    this.__geomParam.setValue(geom, mode)
+  setGeometry(geom) {
+    this.__geomParam.setValue(geom)
   }
 
   /**
@@ -169,10 +172,9 @@ class GeomItem extends BaseGeomItem {
    * Sets material object to `Material` parameter.
    *
    * @param {Material} material - The material value.
-   * @param {number} mode - The mode value.
    */
-  setMaterial(material, mode) {
-    this.__materialParam.setValue(material, mode)
+  setMaterial(material) {
+    this.__materialParam.setValue(material)
   }
 
   /**
@@ -297,14 +299,14 @@ class GeomItem extends BaseGeomItem {
     const geomLibrary = context.assetItem.getGeometryLibrary()
     const geom = geomLibrary.getGeom(geomIndex)
     if (geom) {
-      this.setGeometry(geom, ValueSetMode.DATA_LOAD)
+      this.getParameter('Geometry').loadValue(geom)
     } else {
       this.geomIndex = geomIndex
       const onGeomLoaded = (event) => {
         const { range } = event
         if (geomIndex >= range[0] && geomIndex < range[1]) {
           const geom = geomLibrary.getGeom(geomIndex)
-          if (geom) this.setGeometry(geom, ValueSetMode.DATA_LOAD)
+          if (geom) this.getParameter('Geometry').loadValue(geom)
           else console.warn('Geom not loaded:', this.getName())
           geomLibrary.off('rangeLoaded', onGeomLoaded)
         }
@@ -333,10 +335,10 @@ class GeomItem extends BaseGeomItem {
           console.warn("Geom :'" + this.name + "' Material not found:" + materialName)
           material = materialLibrary.getMaterial('Default')
         }
-        this.setMaterial(material, ValueSetMode.DATA_LOAD)
+        this.getParameter('Material').loadValue(material)
       } else {
         // Force nodes to have a material so we can see them.
-        this.setMaterial(context.assetItem.getMaterialLibrary().getMaterial('Default'), ValueSetMode.DATA_LOAD)
+        this.getParameter('Material').loadValue(context.assetItem.getMaterialLibrary().getMaterial('Default'))
       }
     }
 
@@ -385,7 +387,7 @@ class GeomItem extends BaseGeomItem {
         const { range } = event
         if (geomIndex >= range[0] && geomIndex < range[1]) {
           const geom = geomLibrary.getGeom(geomIndex)
-          if (geom) this.setGeometry(geom, ValueSetMode.DATA_LOAD)
+          if (geom) this.getParameter('Geometry').loadValue(geom)
           else console.warn('Geom not loaded:', this.getName())
           geomLibrary.off('rangeLoaded', onGeomLoaded)
         }

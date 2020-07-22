@@ -1,4 +1,4 @@
-import { ParamFlags, ValueSetMode, Parameter } from './Parameter.js'
+import { ParamFlags, Parameter } from './Parameter.js'
 import { materialLibraryManager } from '../MaterialLibraryManager.js'
 
 /**
@@ -40,9 +40,8 @@ class MaterialParameter extends Parameter {
    * Sets `Material` value of the parameter.
    *
    * @param {Material} material - The material param.
-   * @param {number} mode - The mode param.
    */
-  setValue(material, mode = ValueSetMode.USER_SETVALUE) {
+  setValue(material) {
     // 0 == normal set. 1 = changed via cleaner fn, 2 = change by loading/cloning code.
     if (this.__value !== material) {
       if (this.__value) {
@@ -52,14 +51,11 @@ class MaterialParameter extends Parameter {
       if (this.__value) {
         this.__value.on('parameterValueChanged', this.__valueParameterValueChanged)
       }
-      if (mode == ValueSetMode.USER_SETVALUE || mode == ValueSetMode.REMOTEUSER_SETVALUE) {
-        this.__flags |= ParamFlags.USER_EDITED
-      }
+      
+      this.__flags |= ParamFlags.USER_EDITED
 
       // During the cleaning process, we don't want notifications.
-      if (mode != ValueSetMode.OPERATOR_SETVALUE) {
-        this.emit('valueChanged', { mode })
-      }
+      this.emit('valueChanged', { mode: ParamFlags.USER_EDITED })
     }
   }
 

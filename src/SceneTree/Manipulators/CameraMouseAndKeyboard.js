@@ -52,10 +52,10 @@ class CameraMouseAndKeyboard extends ParameterOwner {
   /**
    * Sets default manipulation mode.
    *
-   * @param {string} mode - The mode value.
+   * @param {string} manipulationMode - The manipulation mode value. Can be 'orbit', or 'look'
    */
-  setDefaultManipulationMode(mode) {
-    this.__defaultManipulationState = mode
+  setDefaultManipulationMode(manipulationMode) {
+    this.__defaultManipulationState = manipulationMode
   }
 
   /**
