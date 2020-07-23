@@ -62,9 +62,9 @@ describe('Operator', () => {
     aParam.setValue(3)
     bParam.setValue(2.5)
 
-    expect(myParam.isDirty()).toEqual(true)
-    expect(myParam.getValue()).toEqual(5.5)
-    expect(myParam.isDirty()).toEqual(false)
+    expect(myParam.isDirty()).toBe(true)
+    expect(myParam.getValue()).toBe(5.5)
+    expect(myParam.isDirty()).toBe(false)
   })
 
   it('ScaleFloatOperator', () => {
@@ -76,15 +76,15 @@ describe('Operator', () => {
     scaleOperator.getInput('ScaleValue').setParam(scaleParam)
     scaleOperator.getOutput('Result').setParam(resultParam)
 
-    expect(resultParam.isDirty()).toEqual(true)
-    expect(resultParam.getValue()).toEqual(6)
-    expect(resultParam.isDirty()).toEqual(false)
+    expect(resultParam.isDirty()).toBe(true)
+    expect(resultParam.getValue()).toBe(6)
+    expect(resultParam.isDirty()).toBe(false)
 
     scaleParam.setValue(4)
 
-    expect(resultParam.isDirty()).toEqual(true)
-    expect(resultParam.getValue()).toEqual(24)
-    expect(resultParam.isDirty()).toEqual(false)
+    expect(resultParam.isDirty()).toBe(true)
+    expect(resultParam.getValue()).toBe(24)
+    expect(resultParam.isDirty()).toBe(false)
   })
 
   it('AddScaleFloatOperator', () => {
@@ -103,15 +103,15 @@ describe('Operator', () => {
     scaleOperator.getInput('ScaleValue').setParam(scaleParam)
     scaleOperator.getOutput('Result').setParam(myParam)
 
-    expect(myParam.isDirty()).toEqual(true)
-    expect(myParam.getValue()).toEqual(11)
-    expect(myParam.isDirty()).toEqual(false)
+    expect(myParam.isDirty()).toBe(true)
+    expect(myParam.getValue()).toBe(11)
+    expect(myParam.isDirty()).toBe(false)
 
     scaleParam.setValue(1)
 
-    expect(myParam.isDirty()).toEqual(true)
-    expect(myParam.getValue()).toEqual(5.5)
-    expect(myParam.isDirty()).toEqual(false)
+    expect(myParam.isDirty()).toBe(true)
+    expect(myParam.getValue()).toBe(5.5)
+    expect(myParam.isDirty()).toBe(false)
   })
 
   it('save to JSON (serialization).', () => {
@@ -130,7 +130,7 @@ describe('Operator', () => {
 
     const expOutput =
       '{"name":"","type":"AddFloatsOperator","inputs":[{"paramPath":["Foo","A"]},{"paramPath":["Foo","B"]}],"outputs":[{"paramPath":["Foo","MyParam"],"paramBindIndex":0}]}'
-    expect(JSON.stringify(addOperator.toJSON())).toEqual(expOutput)
+    expect(JSON.stringify(addOperator.toJSON())).toBe(expOutput)
   })
 
   it('load from JSON (serialization).', () => {
@@ -155,8 +155,8 @@ describe('Operator', () => {
     parameterOwner.getParameter('A').setValue(3)
     parameterOwner.getParameter('B').setValue(2.5)
 
-    expect(parameterOwner.getParameter('MyParam').isDirty()).toEqual(true)
-    expect(parameterOwner.getParameter('MyParam').getValue()).toEqual(5.5)
-    expect(parameterOwner.getParameter('MyParam').isDirty()).toEqual(false)
+    expect(parameterOwner.getParameter('MyParam').isDirty()).toBe(true)
+    expect(parameterOwner.getParameter('MyParam').getValue()).toBe(5.5)
+    expect(parameterOwner.getParameter('MyParam').isDirty()).toBe(false)
   })
 })
