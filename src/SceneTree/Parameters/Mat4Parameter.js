@@ -26,6 +26,16 @@ class Mat4Parameter extends Parameter {
   }
 
   /**
+   * Extracts a number value from a buffer, updating current parameter state.
+   *
+   * @param {BinReader} reader - The reader value.
+   * @param {object} context - The context value.
+   */
+  readBinary(reader, context) {
+    this.__value.readBinary(reader)
+  }
+
+  /**
    * The clone method constructs a new Mat4 parameter,
    * copies its values from this parameter and returns it.
    *

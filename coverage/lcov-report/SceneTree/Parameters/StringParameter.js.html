@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">22.22% </span>
+                <span class="strong">77.78% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>2/9</span>
+                <span class='fraction'>7/9</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/1</span>
+                <span class='fraction'>1/1</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">60% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/5</span>
+                <span class='fraction'>3/5</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">22.22% </span>
+                <span class="strong">77.78% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>2/9</span>
+                <span class='fraction'>7/9</span>
             </div>
         
             
@@ -55,7 +55,7 @@
             Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
         </p>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line medium'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -152,8 +152,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">20x</span>
+<span class="cline-any cline-yes">20x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -181,7 +181,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -192,13 +192,13 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { sgFactory } from '../SGFactory'
@@ -223,9 +223,9 @@ class StringParameter extends Parameter {
    * @param {string} name - The name of the material color parameter.
    * @param {string} value - The value of the parameter.
    */
-<span class="fstat-no" title="function not covered" >  co</span>nstructor(name, value = <span class="branch-0 cbranch-no" title="branch not covered" >'')</span> {
-<span class="cstat-no" title="statement not covered" >    super(name, value, 'String')</span>
-<span class="cstat-no" title="statement not covered" >    this.multiLine = false</span>
+  constructor(name, value = '') {
+    super(name, value, 'String')
+    this.multiLine = false
   }
 &nbsp;
   /**
@@ -252,8 +252,8 @@ class StringParameter extends Parameter {
    * @param {BinReader} reader - The reader value.
    * @param {object} context - The context value.
    */
-<span class="fstat-no" title="function not covered" >  re</span>adBinary(reader, context) {
-<span class="cstat-no" title="statement not covered" >    this.__value = reader.loadStr()</span>
+  readBinary(reader, context) {
+    this.__value = reader.loadStr()
   }
 &nbsp;
   /**
@@ -263,9 +263,9 @@ class StringParameter extends Parameter {
    * @param {number} flags - The flags value.
    * @return {StringParameter} - Returns a new string parameter.
    */
-<span class="fstat-no" title="function not covered" >  cl</span>one(flags) {
-    const clonedParam = <span class="cstat-no" title="statement not covered" >new StringParameter(this.__name, this.__value)</span>
-<span class="cstat-no" title="statement not covered" >    return clonedParam</span>
+  clone(flags) {
+    const clonedParam = new StringParameter(this.__name, this.__value)
+    return clonedParam
   }
 }
 &nbsp;
@@ -280,7 +280,7 @@ export { StringParameter }
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Fri Jul 24 2020 11:54:46 GMT-0500 (Colombia Standard Time)
+                at Fri Jul 24 2020 12:55:04 GMT-0500 (Colombia Standard Time)
             </div>
         </div>
         <script src="../../prettify.js"></script>

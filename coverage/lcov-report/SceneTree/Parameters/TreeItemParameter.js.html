@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">34.38% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/32</span>
+                <span class='fraction'>11/32</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">35.29% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/17</span>
+                <span class='fraction'>6/17</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">15.38% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/13</span>
+                <span class='fraction'>2/13</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">36.67% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/30</span>
+                <span class='fraction'>11/30</span>
             </div>
         
             
@@ -247,9 +247,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -298,17 +298,17 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -408,10 +408,10 @@ class TreeItemParameter extends Parameter {
    * @param {string} name - The name of the tree item parameter.
    * @param {function} filterFn - The filterFn value.
    */
-<span class="fstat-no" title="function not covered" >  co</span>nstructor(name, filterFn = <span class="branch-0 cbranch-no" title="branch not covered" >undefined)</span> {
-<span class="cstat-no" title="statement not covered" >    super(name, undefined, 'TreeItem')</span>
-<span class="cstat-no" title="statement not covered" >    this.__filterFn = filterFn</span>
-<span class="cstat-no" title="statement not covered" >    this.__emittreeItemGlobalXfoChanged = this.__emittreeItemGlobalXfoChanged.bind(this)</span>
+  constructor(name, filterFn = undefined) {
+    super(name, undefined, 'TreeItem')
+    this.__filterFn = filterFn
+    this.__emittreeItemGlobalXfoChanged = this.__emittreeItemGlobalXfoChanged.bind(this)
   }
 &nbsp;
 <span class="fstat-no" title="function not covered" >  __</span>emittreeItemGlobalXfoChanged(event) {
@@ -458,19 +458,19 @@ class TreeItemParameter extends Parameter {
    * @param {TreeItem} treeItem - The treeItem value
    * @return {boolean} - The return value.
    */
-<span class="fstat-no" title="function not covered" >  se</span>tValue(treeItem) {
+  setValue(treeItem) {
     // 0 == normal set. 1 = changed via cleaner fn, 2=change by loading/cloning code.
-<span class="cstat-no" title="statement not covered" >    if (this.__filterFn &amp;&amp; !this.__filterFn(treeItem)) <span class="cstat-no" title="statement not covered" >return false</span></span>
-<span class="cstat-no" title="statement not covered" >    if (this.__value !== treeItem) {</span>
-<span class="cstat-no" title="statement not covered" >      if (this.__value) {</span>
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (this.__filterFn &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >!this.__filterFn(treeItem))</span> <span class="cstat-no" title="statement not covered" >return false</span>
+    <span class="missing-if-branch" title="else path not taken" >E</span>if (this.__value !== treeItem) {
+      <span class="missing-if-branch" title="if path not taken" >I</span>if (this.__value) {
 <span class="cstat-no" title="statement not covered" >        this.__value.off('globalXfoChanged', this.__emittreeItemGlobalXfoChanged)</span>
       }
-<span class="cstat-no" title="statement not covered" >      this.__value = treeItem</span>
-<span class="cstat-no" title="statement not covered" >      if (this.__value) {</span>
-<span class="cstat-no" title="statement not covered" >        this.__value.on('globalXfoChanged', this.__emittreeItemGlobalXfoChanged)</span>
+      this.__value = treeItem
+      <span class="missing-if-branch" title="else path not taken" >E</span>if (this.__value) {
+        this.__value.on('globalXfoChanged', this.__emittreeItemGlobalXfoChanged)
       }
-<span class="cstat-no" title="statement not covered" >      this.__flags |= ParamFlags.USER_EDITED</span>
-<span class="cstat-no" title="statement not covered" >      this.emit('valueChanged', { mode: ParamFlags.USER_EDITED })</span>
+      this.__flags |= ParamFlags.USER_EDITED
+      this.emit('valueChanged', { mode: ParamFlags.USER_EDITED })
     }
   }
 &nbsp;
@@ -550,7 +550,7 @@ export { TreeItemParameter /* ,
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Fri Jul 24 2020 11:54:46 GMT-0500 (Colombia Standard Time)
+                at Fri Jul 24 2020 12:55:04 GMT-0500 (Colombia Standard Time)
             </div>
         </div>
         <script src="../../prettify.js"></script>

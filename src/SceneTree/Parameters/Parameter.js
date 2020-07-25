@@ -36,8 +36,26 @@ const OperatorOutputMode = {
  */
 class Parameter extends EventEmitter {
   /**
-   * Create a base parameter.
-   * @param {string} name - The name of the base parameter.
+   * When initializing a new parameter, the passed in value could be anything.
+   * If it is a new type of value, just ensure you register it in the `SGFactory`.
+   *
+   * How to use it:
+   *
+   * ```javascript
+   *  // Creating a parameter object
+   *  const param = new Parameter('Title', 'Awesome Parameter Value', 'String')
+   *
+   *   // Capturing events
+   *  param.on('valueChanged', (...params) => console.log('Value changed!'))
+   *
+   *  // Changing parameter's value will cause `valueChanged` event to trigger.
+   *  param.setValue('A New Awesome Parameter Value')
+   *  // As result the console log code will execute: Value Changed!
+   * ```
+   *
+   * @param {string} name - The name of the parameter.
+   * @param {object|string|number|any} value - The value of the parameter.
+   * @param {string} dataType - The data type of the parameter.
    */
   constructor(name, value, dataType) {
     super(name)
@@ -275,6 +293,7 @@ class Parameter extends EventEmitter {
 
   /**
    * Cleans the parameter up tp the index of the specified index of the bound OperatorOutput
+   *
    * @param {number} index - The index of the bound OperatorOutput to evaluate up to.
    */
   _clean(index) {
@@ -336,7 +355,7 @@ class Parameter extends EventEmitter {
     }
 
     if (!value.fromJSON) {
-      // Note: equality tests on anything but simple values is going to be super expenseive.
+      // Note: equality tests on anything but simple values is going to be super expensive.
       if (this.__value == value) return
     }
     this.__value = value
@@ -402,13 +421,11 @@ class Parameter extends EventEmitter {
   /**
    * The readBinary method.
    *
-   * @private
    * @param {object} reader - The reader value.
    * @param {object} context - The context value.
    */
   readBinary(reader, context) {
-    console.warn('@todo-review')
-    console.error('TODO')
+    console.warn(`TODO: Parameter: ${this.constructor.name} with name: ${this.__name} does not implement readBinary`)
   }
 
   // ////////////////////////////////////////

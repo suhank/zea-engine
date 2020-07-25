@@ -1,5 +1,4 @@
 import { ParamFlags, Parameter } from './Parameter.js'
-import { materialLibraryManager } from '../MaterialLibraryManager.js'
 
 /**
  * Represents a specific type of parameter, that only stores `Material` values.
@@ -88,10 +87,17 @@ class MaterialParameter extends Parameter {
       console.warn('Invalid Parameter JSON')
       return
     }
-    const materialPath = j.value
 
-    const material = materialLibraryManager.resolveMaterialFromPath(materialPath)
-    if (material) this.setValue(material)
+    if (j.value instanceof array || j.value instanceof string) {
+      if (context && context.assetItem) {
+        const materialLibrary = context.assetItem.getMaterialLibrary()
+        const material = materialLibrary.getMaterial(j.value instanceof array ? j.value[1] : j.value)
+        if (material) {
+          this.loadValue(material)
+        }
+      }
+    }
+
     this.__flags |= ParamFlags.USER_EDITED
   }
 

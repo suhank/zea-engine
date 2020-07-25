@@ -1,7 +1,5 @@
 import { TreeItem } from './TreeItem'
 
-console.warn = () => {}
-
 describe('TreeItem', () => {
   it('is visible by default.', () => {
     const treeItem = new TreeItem('Foo')
@@ -167,6 +165,6 @@ describe('TreeItem', () => {
 
     const expOutput = '{"x":1,"y":2,"z":3}'
 
-    console.log(parent.toJSON())
+    // console.log(parent.toJSON())
   })
 })

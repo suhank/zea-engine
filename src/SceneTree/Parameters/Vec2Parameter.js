@@ -1,5 +1,5 @@
 import { Vec2 } from '../../Math/index'
-import { Parameter } from './Parameter.js'
+import { Parameter, ValueSetMode } from './Parameter.js'
 
 /**
  * Represents a specific type of parameter, that only stores Vec2(two-dimensional coordinate) values.
@@ -49,6 +49,16 @@ class Vec2Parameter extends Parameter {
     // Should be an array [0, 20]
     this.__range = range
     this.emit('rangeChanged', { range })
+  }
+
+   /**
+   * Extracts a number value from a buffer, updating current parameter state.
+   *
+   * @param {BinReader} reader - The reader value.
+   * @param {object} context - The context value.
+   */
+  readBinary(reader, context) {
+    this.__value.readBinary(reader)
   }
 
   /**
