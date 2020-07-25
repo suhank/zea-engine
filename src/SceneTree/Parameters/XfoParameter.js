@@ -1,5 +1,5 @@
 import { Xfo } from '../../Math/index'
-import { Parameter } from './Parameter.js'
+import { Parameter, ValueSetMode } from './Parameter.js'
 
 /**
  * Represents a specific type of parameter, that only stores `Xfo` transform values.
@@ -33,7 +33,9 @@ class XfoParameter extends Parameter {
    * @param {object} context - The context value.
    */
   readBinary(reader, context) {
-    this.__value.readBinary(reader)
+    const value = new Xfo()
+    value.readBinary(reader)
+    this.setValue(value, ValueSetMode.DATA_LOAD)
   }
 
   // ////////////////////////////////////////

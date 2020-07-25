@@ -1,5 +1,5 @@
 import { Vec4 } from '../../Math/index'
-import { Parameter } from './Parameter.js'
+import { Parameter, ValueSetMode } from './Parameter.js'
 
 /**
  * Represents a specific type of parameter, that only stores Vec3(four-dimensional coordinate) values.
@@ -34,7 +34,9 @@ class Vec4Parameter extends Parameter {
    * @param {object} context - The context value.
    */
   readBinary(reader, context) {
-    this.__value.readBinary(reader)
+    const value = new Vec4()
+    value.readBinary(reader)
+    this.setValue(value, ValueSetMode.DATA_LOAD)
   }
 
   // ////////////////////////////////////////
