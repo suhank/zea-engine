@@ -167,12 +167,8 @@ class Mesh extends BaseGeom {
    * @return {VertexAttribute} - Returns a vertex attribute.
    */
   addVertexAttribute(name, dataType, defaultScalarValue = undefined) {
-    const attr = new VertexAttribute(
-      this,
-      dataType,
-      this.vertices != undefined ? this.vertices.length : 0,
-      defaultScalarValue
-    )
+    const positions = this.getVertexAttribute('positions')
+    const attr = new VertexAttribute(this, dataType, positions != undefined ? positions.length : 0, defaultScalarValue)
     this.__vertexAttributes.set(name, attr)
     return attr
   }
@@ -259,6 +255,7 @@ class Mesh extends BaseGeom {
     this.faceEdges = [] // the edges bordering each face.
     this.numEdges = 0
 
+    const positions = this.getVertexAttribute('positions')
     const getEdgeIndex = (v0, v1) => {
       let tmp0 = v0
       let tmp1 = v1
@@ -273,8 +270,8 @@ class Mesh extends BaseGeom {
         return connectedVertices[key]
       }
 
-      const p0 = this.vertices.getValueRef(tmp0)
-      const p1 = this.vertices.getValueRef(tmp1)
+      const p0 = positions.getValueRef(tmp0)
+      const p1 = positions.getValueRef(tmp1)
       const edgeVec = p1.subtract(p0)
 
       const edgeIndex = this.edgeFaces.length / 2
@@ -345,17 +342,17 @@ class Mesh extends BaseGeom {
    * The computeFaceNormals method.
    */
   computeFaceNormals() {
-    const vertices = this.vertices
+    const positions = this.getVertexAttribute('positions')
     const faceNormals = this.addFaceAttribute('normals', Vec3)
     const numFaces = this.getNumFaces()
     for (let faceIndex = 0; faceIndex < numFaces; faceIndex++) {
       const faceVerts = this.getFaceVertexIndices(faceIndex)
-      const p0 = vertices.getValueRef(faceVerts[0])
-      const p1 = vertices.getValueRef(faceVerts[1])
+      const p0 = positions.getValueRef(faceVerts[0])
+      const p1 = positions.getValueRef(faceVerts[1])
       let prev = p1
       const faceNormal = new Vec3()
       for (let j = 2; j < faceVerts.length; j++) {
-        const pn = vertices.getValueRef(faceVerts[j])
+        const pn = positions.getValueRef(faceVerts[j])
         const v0 = prev.subtract(p0)
         const v1 = pn.subtract(p0)
         faceNormal.addInPlace(v0.cross(v1).normalize())
@@ -366,7 +363,7 @@ class Mesh extends BaseGeom {
         // This is simply an authoring issue.
         // console.warn("Invalid Mesh topology");
         // if(debugMesh){
-        //     printf("Face vertices are coincident face:%i", i);
+        //     printf("Face positions are coincident face:%i", i);
         //     for (let j = 0; j < faceVerts.length; j++)
         //         printf("v:%i", this.__faceVertexIndices[ numFacesVertices + (i*faceVerts.length) + j ]);
         //     printf("\n");
@@ -385,14 +382,14 @@ class Mesh extends BaseGeom {
 
     if (!this.hasFaceAttribute('normals')) this.computeFaceNormals()
 
-    const vertices = this.vertices
+    const positions = this.getVertexAttribute('positions')
     const faceNormals = this.getFaceAttribute('normals')
     this.edgeVecs = []
     this.edgeAngles = new Float32Array(this.numEdges)
     for (let i = 0; i < this.edgeFaces.length; i += 2) {
       const v0 = this.edgeVerts[i]
       const v1 = this.edgeVerts[i + 1]
-      const e_vec = vertices.getValueRef(v1).subtract(vertices.getValueRef(v0))
+      const e_vec = positions.getValueRef(v1).subtract(positions.getValueRef(v0))
       e_vec.normalizeInPlace()
       this.edgeVecs.push(e_vec)
 
@@ -420,7 +417,6 @@ class Mesh extends BaseGeom {
 
     this.generateEdgeFlags()
 
-    const vertices = this.vertices
     const faceNormals = this.getFaceAttribute('normals')
     const normalsAttr = this.addVertexAttribute('normals', Vec3)
 
@@ -641,7 +637,8 @@ class Mesh extends BaseGeom {
       }
     }
 
-    const numUnSplitVertices = this.vertices.length
+    const positions = this.getVertexAttribute('positions')
+    const numUnSplitVertices = positions.length
     const totalNumVertices = numUnSplitVertices + splitCount
 
     let indices
@@ -847,7 +844,7 @@ class Mesh extends BaseGeom {
     // Clusters
     const numClusters = reader.loadUInt32()
     if (numClusters > 0) {
-      const positionsAttr = this.vertices
+      const positionsAttr = this.getVertexAttribute('positions')
       const lightmapCoordsAttr = this.addVertexAttribute('lightmapCoords', Vec2)
       // let clusterIDsAttr = this.addVertexAttribute('clusterIDs', Float32);
       for (let i = 0; i < numClusters; i++) {

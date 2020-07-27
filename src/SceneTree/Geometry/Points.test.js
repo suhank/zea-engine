@@ -1,8 +1,6 @@
 import { Points } from './Points'
 import { Vec2, Vec3, Box3 } from '../../Math'
 
-console.warn = () => {}
-
 describe('Points', () => {
   test('Check for default positions attribute.', () => {
     const points = new Points()
