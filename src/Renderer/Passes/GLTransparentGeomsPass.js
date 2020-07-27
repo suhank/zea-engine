@@ -55,28 +55,33 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
     const material = geomItem.getMaterial()
     const shaderName = material.getShaderName()
     const shaders = this.constructShaders(shaderName)
+
+    // @todo - make sure we remove materials and GeomItems from the base pass.
+    // This code will leak memory for these classes as we are not cleaning them up.
     const glmaterial = this.addMaterial(material)
     const glgeomitem = super.addGeomItem(geomItem)
 
-    const visibilityChangedId = geomItem.on('visibilityChanged', (event) => {
+    const visibilityChanged = (event) => {
       if (event.visible) {
         this.visibleItems.push(item)
       } else {
         const index = this.visibleItems.indexOf(item)
         this.visibleItems.splice(index, 1)
       }
-    })
-    const geomXfoChangedId = geomItem.getParameter('GeomMat').on('valueChanged', () => {
+    }
+    const geomXfoChanged = () => {
       this.resort = true
-    })
+    }
+    geomItem.on('visibilityChanged', visibilityChanged)
+    geomItem.getParameter('GeomMat').on('valueChanged', geomXfoChanged)
 
     const item = {
       geomItem,
       shaders,
       glmaterial,
       glgeomitem,
-      visibilityChangedId,
-      geomXfoChangedId,
+      visibilityChanged,
+      geomXfoChanged,
     }
     let itemindex
     if (this.freeList.length > 0) itemindex = this.freeList.pop()
@@ -100,6 +105,10 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
 
     const itemindex = geomItem.getMetadata('itemIndex')
     const item = this.transparentItems[itemindex]
+
+    geomItem.off('visibilityChanged', item.visibilityChanged)
+    geomItem.getParameter('GeomMat').off('valueChanged', item.geomXfoChanged)
+
     this.transparentItems[itemindex] = null
     this.freeList.push(itemindex)
 
