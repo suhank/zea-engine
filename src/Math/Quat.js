@@ -26,6 +26,7 @@ class Quat extends AttrValue {
     super()
 
     if (x instanceof ArrayBuffer) {
+      console.warn(`deprecated, please use new Vec4(new Float32Array(buffer, byteOffset, 4))`)
       const buffer = x
       const byteOffset = y
       this.__data = new Float32Array(buffer, byteOffset, 4)
@@ -1052,7 +1053,7 @@ class Quat extends AttrValue {
    * @private
    */
   static createFromFloat32Buffer(buffer, offset = 0) {
-    return new Quat(buffer, offset * 4) // 4 bytes per 32bit float
+    return new Quat(new Float32Array(buffer, offset * 4, 4)) // 4 bytes per 32bit float
   }
 
   /**
