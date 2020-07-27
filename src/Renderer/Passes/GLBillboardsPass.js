@@ -88,7 +88,7 @@ class GLBillboardsPass extends GLPass {
     billboard.setMetadata('GLBillboardsPass_Index', index)
 
     const visibilityChanged = () => {
-      if (billboard.getVisible()) {
+      if (billboard.isVisible()) {
         this.__drawCount++
         // The billboard Xfo might have changed while it was
         // not visible. We need to update here.
@@ -99,7 +99,7 @@ class GLBillboardsPass extends GLPass {
     billboard.on('visibilityChanged', visibilityChanged)
 
     const xfoChanged = () => {
-      if (billboard.getVisible()) {
+      if (billboard.isVisible()) {
         this.__dirtyBillboards.add(index)
         this.emit('updated', {})
       }
@@ -107,14 +107,14 @@ class GLBillboardsPass extends GLPass {
     billboard.getParameter('GlobalXfo').on('valueChanged', xfoChanged)
 
     const alphaChanged = () => {
-      if (billboard.getVisible()) {
+      if (billboard.isVisible()) {
         this.__dirtyBillboards.add(index)
         this.emit('updated', {})
       }
     }
     billboard.getParameter('Alpha').on('valueChanged', alphaChanged)
 
-    if (billboard.getVisible()) this.__drawCount++
+    if (billboard.isVisible()) this.__drawCount++
 
     this.__billboards[index] = {
       billboard,
@@ -156,7 +156,7 @@ class GLBillboardsPass extends GLPass {
     this.__billboards[index] = null
     this.__freeIndices.push(index)
 
-    if (billboard.getVisible()) this.__drawCount--
+    if (billboard.isVisible()) this.__drawCount--
 
     this.indexArrayUpdateNeeded = true
     this.__requestUpdate()
@@ -234,7 +234,7 @@ class GLBillboardsPass extends GLPass {
     this.__indexArray = new Float32Array(this.__drawCount)
     let offset = 0
     for (let i = 0; i < this.__billboards.length; i++) {
-      if (this.__billboards[i] && this.__billboards[i].billboard.getVisible()) {
+      if (this.__billboards[i] && this.__billboards[i].billboard.isVisible()) {
         this.__indexArray[offset] = i
         offset++
       }
@@ -355,7 +355,7 @@ class GLBillboardsPass extends GLPass {
     }
 
     const billboardData = this.__billboards[index]
-    if (!billboardData.billboard.getVisible()) return
+    if (!billboardData.billboard.isVisible()) return
 
     const gl = this.__gl
 
@@ -389,7 +389,7 @@ class GLBillboardsPass extends GLPass {
   sort(cameraPos) {
     for (const billboardData of this.__billboards) {
       const { billboard } = billboardData
-      if (billboard && billboard.getVisible()) {
+      if (billboard && billboard.isVisible()) {
         const xfo = billboard.getParameter('GlobalXfo').getValue()
         billboardData.dist = xfo.tr.distanceTo(cameraPos)
       }

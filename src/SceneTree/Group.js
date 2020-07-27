@@ -128,7 +128,7 @@ class Group extends TreeItem {
    */
   __updateVisibility() {
     if (super.__updateVisibility()) {
-      const value = this.getVisible()
+      const value = this.isVisible()
       Array.from(this.__itemsParam.getValue()).forEach((item) => {
         if (item instanceof TreeItem) item.propagateVisibility(value ? 1 : -1)
       })
@@ -482,7 +482,7 @@ class Group extends TreeItem {
       item.removeHighlight('groupItemHighlight' + this.getId(), true)
     }
 
-    if (!this.getVisible()) {
+    if (!this.isVisible()) {
       // Increment the Visibility counter which might cause
       // this item to become visible.
       // It will stay invisible if its parent is invisible, or if
@@ -600,7 +600,7 @@ class Group extends TreeItem {
     const items = Array.from(this.__itemsParam.getValue())
     items.forEach((item) => {
       if (item instanceof TreeItem) {
-        if (item.getVisible() && !item.testFlag(ItemFlags.IGNORE_BBOX)) {
+        if (item.isVisible() && !item.testFlag(ItemFlags.IGNORE_BBOX)) {
           result.addBox3(item.getParameter('BoundingBox').getValue())
         }
       }
