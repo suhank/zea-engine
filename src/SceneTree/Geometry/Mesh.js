@@ -843,46 +843,6 @@ class Mesh extends BaseGeom {
     }
     this.__numPopulatedFaceVertexIndices = offset
 
-    // ///////////////////////////////////
-    // Clusters
-    const numClusters = reader.loadUInt32()
-    if (numClusters > 0) {
-      const positionsAttr = this.vertices
-      const lightmapCoordsAttr = this.addVertexAttribute('lightmapCoords', Vec2)
-      // let clusterIDsAttr = this.addVertexAttribute('clusterIDs', Float32);
-      for (let i = 0; i < numClusters; i++) {
-        const xfo = new Xfo(reader.loadFloat32Vec3(), reader.loadFloat32Quat())
-        const coordsScale = reader.loadFloat32()
-        const offset = reader.loadFloat32Vec2()
-        const offsetRange = reader.loadSInt32Vec2()
-        const bytes = reader.loadUInt8()
-        let clusterFaceIndiceDeltas
-        if (bytes == 1) clusterFaceIndiceDeltas = reader.loadUInt8Array()
-        else if (bytes == 2) clusterFaceIndiceDeltas = reader.loadUInt16Array()
-        else clusterFaceIndiceDeltas = reader.loadUInt32Array()
-        let prevFace = 0
-        for (const delta of clusterFaceIndiceDeltas) {
-          let face = delta + offsetRange.x
-          face += prevFace
-          prevFace = face
-          const vertexIndices = this.getFaceVertexIndices(face)
-          for (const vertexIndex of vertexIndices) {
-            const pos = positionsAttr.getValueRef(vertexIndex)
-            const tmp = xfo.transformVec3(pos)
-            const lightmapCoord = new Vec2(tmp.x, tmp.z) // Discard y, use x,z
-            lightmapCoord.scaleInPlace(coordsScale)
-            lightmapCoord.addInPlace(offset)
-            lightmapCoordsAttr.setFaceVertexValue_ByVertexIndex(face, vertexIndex, lightmapCoord)
-
-            // for debugging.
-            // clusterIDsAttr.setFaceVertexValue_ByVertexIndex(face, vertexIndex, i);
-          }
-        }
-
-        // Now compute the Uvs for the vertices.
-      }
-    }
-
     if (!this.hasVertexAttribute('normals')) {
       this.computeVertexNormals()
     }
