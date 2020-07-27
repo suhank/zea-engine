@@ -379,14 +379,13 @@ class ObjAsset extends AssetItem {
       // This is so that transparent objects can render correctly, and the
       // transform gizmo becomes centered on each geom(for testing)
       const delta = mesh.boundingBox.center()
-      // mesh.moveVertices(delta.negate())
       {
         const offset = delta.negate()
         const positions = mesh.getVertexAttribute('positions')
         for (let i = 0; i < positions.length; i++) positions.getValueRef(i).addInPlace(offset)
         mesh.setBoundingBoxDirty()
       }
-      geomItem.setLocalXfo(new Xfo(delta))
+      geomItem.getParameter('LocalXfo').setValue(new Xfo(delta))
 
       if (geomData.material != undefined && this.materials.hasMaterial(geomData.material)) {
         geomItem.setMaterial(this.materials.getMaterial(geomData.material))

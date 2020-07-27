@@ -468,7 +468,7 @@ class TreeItem extends BaseItem {
     this.__childItems.forEach((childItem) => {
       if (childItem instanceof TreeItem)
         if (childItem.isVisible() && !childItem.testFlag(ItemFlags.IGNORE_BBOX)) {
-          // console.log(" - ", childItem.constructor.name, childItem.getName(), childItem.getGlobalXfo().sc.x, childItem.getBoundingBox().toString())
+          // console.log(" - ", childItem.constructor.name, childItem.getName(), childItem.getParameter('GlobalXfo').getValue().sc.x, childItem.getBoundingBox().toString())
           bbox.addBox3(childItem.getParameter('BoundingBox').getValue())
         }
     })
@@ -623,7 +623,9 @@ class TreeItem extends BaseItem {
     let newLocalXfo
     if (childItem instanceof TreeItem) {
       if (maintainXfo) {
-        newLocalXfo = this.getGlobalXfo().inverse().multiply(childItem.getGlobalXfo())
+        const globalXfo = this.getParameter('GlobalXfo').getValue()
+        const childGlobalXfo = childItem.getParameter('GlobalXfo').getValue()
+        newLocalXfo = globalXfo.inverse().multiply(childGlobalXfo)
       }
       childItem.on('boundingChanged', this._setBoundingBoxDirty)
       childItem.on('visibilityChanged', this._setBoundingBoxDirty)
@@ -636,7 +638,7 @@ class TreeItem extends BaseItem {
     childItem.setOwner(this)
 
     if (childItem instanceof TreeItem) {
-      if (maintainXfo) childItem.setLocalXfo(newLocalXfo)
+      if (maintainXfo) childItem.getParameter('LocalXfo').setValue(newLocalXfo)
       this._setBoundingBoxDirty()
     }
 
