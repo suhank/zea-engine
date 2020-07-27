@@ -50,7 +50,7 @@ class MaterialParameter extends Parameter {
       if (this.__value) {
         this.__value.on('parameterValueChanged', this.__valueParameterValueChanged)
       }
-      
+
       this.__flags |= ParamFlags.USER_EDITED
 
       // During the cleaning process, we don't want notifications.
@@ -93,7 +93,7 @@ class MaterialParameter extends Parameter {
         const materialLibrary = context.assetItem.getMaterialLibrary()
         const material = materialLibrary.getMaterial(j.value instanceof array ? j.value[1] : j.value)
         if (material) {
-          this.setValue(material, ValueSetMode.DATA_LOAD)
+          this.loadValue(material)
         }
       }
     }
