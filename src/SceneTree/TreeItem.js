@@ -3,6 +3,7 @@ import { sgFactory } from './SGFactory.js'
 import { ParamFlags, Parameter, BooleanParameter, XfoParameter } from './Parameters/index'
 import { ItemFlags, BaseItem } from './BaseItem.js'
 import { CalcGlobalXfoOperator } from './Operators/CalcGlobalXfoOperator.js'
+import { BoundingBoxParameter } from './Parameters/BoundingBoxParameter.js'
 
 // Defines used to explicity specify types for WebGL.
 const SaveFlags = {
@@ -23,49 +24,6 @@ let selectionOutlineColor = new Color('#03E3AC')
 selectionOutlineColor.a = 0.1
 let branchSelectionOutlineColor = selectionOutlineColor.lerp(new Color('white'), 0.5)
 branchSelectionOutlineColor.a = 0.1
-
-/**
- * Represents a specific type of parameter, that only stores Vec3(three-dimensional coordinate) values.
- *
- * i.e.:
- * ```javascript
- * const vec3Param = new Vec3Parameter('MyVec3', new Vec3(1.2, 3.4, 1))
- * //'myParameterOwnerItem' is an instance of a 'ParameterOwner' class.
- * // Remember that only 'ParameterOwner' and classes that extend from it can host 'Parameter' objects.
- * myParameterOwnerItem.addParameter(vec3Param)
- * ```
- * @extends Parameter
- */
-class BoundingBoxParameter extends Parameter {
-  /**
-   * Create a Vec3 parameter.
-   * @param {treeItem} treeItem - The tree item to compute the bounding box for.
-   * @param {Vec3} value - The value of the parameter.
-   * @param {array} range - The range value is an array of two `Vec2` objects.
-   */
-  constructor(name, treeItem) {
-    super(name, new Box3(), 'Box3')
-    this.treeItem = treeItem
-    this.dirty = true
-  }
-
-  setDirty() {
-    this.dirty = true
-    this.emit('valueChanged')
-  }
-
-  /**
-   * Returns bounding box value
-   *
-   * @return {Box3} - The return value.
-   */
-  getValue() {
-    if (this.dirty) {
-      this.__value = this.treeItem._cleanBoundingBox(this.__value)
-    }
-    return this.__value
-  }
-}
 
 /**
  * Class representing an Item in the scene tree with hierarchy capabilities (has children).
@@ -127,28 +85,8 @@ class TreeItem extends BaseItem {
     this.__boundingBoxParam = this.addParameter(new BoundingBoxParameter('BoundingBox', this))
 
     // Bind handlers
-    // this._cleanGlobalXfo = this._cleanGlobalXfo.bind(this)
-    // this._setGlobalXfoDirty = this._setGlobalXfoDirty.bind(this)
     this._setBoundingBoxDirty = this._setBoundingBoxDirty.bind(this)
-    // this._cleanBoundingBox = this._cleanBoundingBox.bind(this)
     this._childNameChanged = this._childNameChanged.bind(this)
-
-    // this.__localXfoParam.on('valueChanged', this._setGlobalXfoDirty)
-
-    // Note: if the user changes the global xfo, we compute the
-    // local xfo when it is needed (generally when GlobalXfo is pulled)
-    // In the future, we will move this into the operators and ops
-    // will support 'inversion' where the param asks the op to
-    // process an input value.
-    // const cleanLocalXfo = prevValue => {
-    //   const globalXfo = this.__globalXfoParam.getValue()
-    //   if (this.__ownerItem !== undefined)
-    //     return this.__ownerItem
-    //       .getGlobalXfo()
-    //       .inverse()
-    //       .multiply(globalXfo)
-    //   else return globalXfo
-    // }
 
     this.globalXfoOp = new CalcGlobalXfoOperator(this.__globalXfoParam, this.__localXfoParam)
     this.__globalXfoParam.on('valueChanged', (event) => {
@@ -163,7 +101,7 @@ class TreeItem extends BaseItem {
     })
 
     // Note: one day we will remove the concept of 'selection' from the engine
-    // and keep it only in UX. to Select an item, we will add it to the selectino
+    // and keep it only in UX. to Select an item, we will add it to the selection
     // in the selection manager. Then the selection group will apply a highlight.
     this.on('selectedChanged', () => {
       if (this.__selected) {
@@ -369,29 +307,6 @@ class TreeItem extends BaseItem {
     this.__globalXfoParam.setValue(xfo)
   }
 
-  /**
-   * The _cleanGlobalXfo method.
-   * @param {any} prevValue - The prevValue value.
-   * @return {any} - The return value.
-   * @private
-   */
-  // _cleanGlobalXfo(prevValue) {
-  //   const parentItem = this.getParentItem()
-  //   const localXfo = this.__localXfoParam.getValue()
-  //   if (parentItem !== undefined) {
-  //     const parentGlobal = parentItem.getGlobalXfo()
-  //     return parentGlobal.multiply(localXfo)
-  //   } else return localXfo
-  // }
-
-  /**
-   * The _setGlobalXfoDirty method.
-   * @private
-   */
-  // _setGlobalXfoDirty() {
-  //   this.__globalXfoParam.setDirty(this._cleanGlobalXfo)
-  // }
-
   // ////////////////////////////////////////
   // Visibility
 
@@ -527,7 +442,7 @@ class TreeItem extends BaseItem {
    * @private
    */
   get boundingBox() {
-    console.warn("getter is deprectated. Please use 'getBoundingBox'")
+    console.warn("getter is deprecated. Please use 'getBoundingBox'")
     return this.getBoundingBox()
   }
 
@@ -538,7 +453,7 @@ class TreeItem extends BaseItem {
    * @return {Box3} - The return value.
    */
   getBoundingBox() {
-    console.warn("getter is deprectated. Please use 'getParameter('BoundingBox').getValue()'")
+    console.warn("getter is deprecated. Please use 'getParameter('BoundingBox').getValue()'")
     return this.__boundingBoxParam.getValue()
   }
 
