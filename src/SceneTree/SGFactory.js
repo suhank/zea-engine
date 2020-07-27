@@ -1,7 +1,7 @@
 /* eslint-disable new-cap */
 /* eslint-disable prefer-rest-params */
 /**
- * Factory class desinged build objects from persisted data.
+ * Factory class designed build objects from persisted data.
  * Class name as a string is required because on minification processes class names changes.
  */
 class SGFactory {

@@ -1,5 +1,6 @@
 import { BaseGeom, SAVE_FLAG_SKIP_GEOMDATA } from './BaseGeom.js'
 import { Attribute } from './Attribute.js'
+import { sgFactory } from '../SGFactory.js'
 
 /**
  * Class representing lines primitive drawing type, connecting vertices using the specified indices.
@@ -202,5 +203,7 @@ class Lines extends BaseGeom {
     this.__indices = Uint32Array.from(j.indices)
   }
 }
+
+sgFactory.registerClass('Lines', Lines)
 
 export { Lines }

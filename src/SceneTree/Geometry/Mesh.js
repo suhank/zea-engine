@@ -7,6 +7,7 @@ import { BaseGeom, SAVE_FLAG_SKIP_GEOMDATA } from './BaseGeom.js'
 import { Attribute } from './Attribute.js'
 
 import { VertexAttribute } from './VertexAttribute.js'
+import { sgFactory } from '../SGFactory.js'
 
 /**
  * Class representing a collection of triangle primitive drawing types, every three vertices forms a triangle.
@@ -917,5 +918,7 @@ class Mesh extends BaseGeom {
     if (j.faceVertexIndices) this.__faceVertexIndices = Uint32Array.from(j.faceVertexIndices)
   }
 }
+
+sgFactory.registerClass('Mesh', Mesh)
 
 export { Mesh }
