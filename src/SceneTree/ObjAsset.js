@@ -380,7 +380,7 @@ class ObjAsset extends AssetItem {
       // transform gizmo becomes centered on each geom(for testing)
       const delta = mesh.boundingBox.center()
       mesh.moveVertices(delta.negate())
-      geomItem.setLocalXfo(new Xfo(delta))
+      geomItem.getParameter('LocalXfo').setValue(new Xfo(delta))
 
       if (geomData.material != undefined && this.materials.hasMaterial(geomData.material)) {
         geomItem.setMaterial(this.materials.getMaterial(geomData.material))
