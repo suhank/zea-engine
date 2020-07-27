@@ -20,9 +20,6 @@ export * from './StandardSurfaceShader.js'
 export * from './StandardSurfaceGeomDataShader.js'
 export * from './StandardSurfaceSelectedGeomsShader.js'
 
-export * from './HandleShader.js'
-export * from './HandleGeomDataShader.js'
-
 export * from './TransparentSurfaceShader.js'
 export * from './ScreenSpaceShader.js'
 export * from './ToolIconShader.js'
