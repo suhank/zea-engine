@@ -8,7 +8,6 @@ import { Operator } from './Operators/Operator.js'
 import { OperatorInput } from './Operators/OperatorInput.js'
 import { OperatorOutput } from './Operators/OperatorOutput.js'
 
-
 /** The operator the calculates the global Xfo of a TreeItem based on its parents GlobalXfo and its own LocalXfo
  * @extends Operator
  * @private
@@ -19,7 +18,7 @@ class CalcGeomMatOperator extends Operator {
    * @param {string} name - The name value.
    */
   constructor(globalXfoParam, geomOffsetXfoParam, geomMatParam) {
-    super("CalcGeomMatOperator")
+    super('CalcGeomMatOperator')
     this.addInput(new OperatorInput('GlobalXfo')).setParam(globalXfoParam)
     this.addInput(new OperatorInput('GeomOffsetXfo')).setParam(geomOffsetXfoParam)
     this.addOutput(new OperatorOutput('GeomMat')).setParam(geomMatParam)
@@ -72,7 +71,6 @@ class GeomItem extends BaseGeomItem {
     this.__materialParam = this.insertParameter(new MaterialParameter('Material'), 1)
     this.__paramMapping['material'] = this.getParameterIndex(this.__materialParam)
 
-    this.__lightmapCoordOffset = new Vec2()
     this.__geomOffsetXfoParam = this.addParameter(new XfoParameter('GeomOffsetXfo'))
     this.__geomMatParam = this.addParameter(new Mat4Parameter('GeomMat'))
 
@@ -211,39 +209,6 @@ class GeomItem extends BaseGeomItem {
   }
 
   // ///////////////////////////
-  // Lightmaps
-
-  /**
-   * Returns lightmap name of the asset item.
-   *
-   * @return {string} - Returns the lightmap name.
-   */
-  getLightmapName() {
-    return this.__lightmapName
-  }
-
-  /**
-   * Returns lightmap coordinates offset object.
-   *
-   * @return {Vec2} - Returns the lightmap coord offset.
-   */
-  getLightmapCoordsOffset() {
-    return this.__lightmapCoordOffset
-  }
-
-  /**
-   * The root asset item pushes its offset to the geom items in the
-   * tree. This offsets the light coords for each geom.
-   *
-   * @param {string} lightmapName - The lightmap name.
-   * @param {Vec2} offset - The offset value.
-   */
-  applyAssetLightmapSettings(lightmapName, offset) {
-    this.__lightmap = lightmapName
-    this.__lightmapCoordOffset.addInPlace(offset)
-  }
-
-  // ///////////////////////////
   // Debugging
 
   /**
@@ -270,7 +235,7 @@ class GeomItem extends BaseGeomItem {
   }
 
   /**
-   * Sets state of current Item(Including lightmap offset & material) using a binary reader object.
+   * Loads state of the Item from a binary object.
    *
    * @param {object} reader - The reader value.
    * @param {object} context - The context value.
@@ -279,8 +244,6 @@ class GeomItem extends BaseGeomItem {
     super.readBinary(reader, context)
 
     context.numGeomItems++
-
-    this.__lightmapName = context.assetItem.getName()
 
     const itemflags = reader.loadUInt8()
     const geomIndex = reader.loadUInt32()
@@ -330,7 +293,9 @@ class GeomItem extends BaseGeomItem {
       }
     }
 
-    this.__lightmapCoordOffset = reader.loadFloat32Vec2()
+    // Note: deprecated value. Not sure if we need to load this here.
+    // I think not, but need to test first.
+    const lightmapCoordOffset = reader.loadFloat32Vec2()
   }
 
   /**
@@ -366,7 +331,6 @@ class GeomItem extends BaseGeomItem {
    */
   copyFrom(src, context) {
     super.copyFrom(src, context)
-    this.__lightmapCoordOffset = src.__lightmapCoordOffset
 
     if (!src.getGeometry() && src.geomIndex != -1) {
       const geomLibrary = context.assetItem.getGeometryLibrary()

@@ -1,6 +1,4 @@
-import { Color } from '../Math/index'
 import { SystemDesc } from '../BrowserDetection.js'
-import { ColorParameter } from './Parameters/index'
 import { FilePathParameter } from './Parameters/FilePathParameter'
 import { AssetItem } from './AssetItem.js'
 import { BinReader } from './BinReader.js'
@@ -14,7 +12,6 @@ import { Version } from './Version.js'
  *
  * **Parameters**
  * * **DataFilePath(`FilePathParameter`):** Used to specify the path to the file.
- * * **LightmapTint(`ColorParameter`):** _todo_
  *
  * **Events**
  * * **loaded:** Triggered once everything is loaded.
@@ -30,7 +27,6 @@ class VLAAsset extends AssetItem {
   constructor(name) {
     super(name)
     this.loaded = false
-    this.lightmap = null
 
     // A signal that is emitted once all the geoms are loaded.
     // Often the state machine will activate the first state
@@ -64,8 +60,6 @@ class VLAAsset extends AssetItem {
         }
       )
     })
-
-    this.addParameter(new ColorParameter('LightmapTint', new Color(1, 1, 1, 1)))
   }
 
   // ////////////////////////////////////////
