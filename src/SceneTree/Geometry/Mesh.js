@@ -36,10 +36,7 @@ class Mesh extends BaseGeom {
    */
   init() {
     this.__faceCounts = []
-    this.__faceVertexCounts = new Uint8Array()
-    this.__faceOffsets = new Uint32Array()
     this.__faceVertexIndices = new Uint32Array()
-    this.__numPopulatedFaceVertexIndices = 0
 
     this.__faceAttributes = new Map()
     this.__edgeAttributes = new Map()
@@ -71,12 +68,19 @@ class Mesh extends BaseGeom {
   }
 
   /**
+   * The getNumFaces method.
+   * @return {number} - The return value.
+   */
+  getNumFaces() {
+    return this.__faceCounts.length == 0 ? 0 : this.__faceCounts.reduce((numFaces, fc) => (numFaces += fc))
+  }
+
+  /**
    * The clear method.
    */
   clear() {
     this.__faceVertexIndices = undefined
     this.__faceCounts = []
-    this.__numPopulatedFaceVertexIndices = 0
   }
 
   /**
@@ -86,26 +90,75 @@ class Mesh extends BaseGeom {
    * @param {array} faceCounts - The faceCounts value.
    */
   setFaceCounts(faceCounts) {
-    if (this.__numPopulatedFaceVertexIndices) {
-      throw new Error(
-        "Cannot set face counts on a mesh that is already populated. Please call 'clear' before re-building the mesh."
-      )
-    }
-    this.__faceCounts = faceCounts
-
     let numFaces = 0
     let numFacesVertices = 0
     let numVertsPerFace = 3
-    for (const fc of this.__faceCounts) {
+    for (const fc of faceCounts) {
       numFaces += fc
       numFacesVertices += fc * numVertsPerFace
       numVertsPerFace++
     }
-    this.__faceVertexCounts = new Uint8Array(numFaces)
-    this.__faceOffsets = new Uint32Array(numFaces)
-    this.__faceVertexIndices = new Uint32Array(numFacesVertices)
+
+    const prevNumFaces = this.getNumFaces()
+    if (prevNumFaces == 0) {
+      this.__faceVertexIndices = new Uint32Array(numFacesVertices)
+    } else {
+      const faceVertexIndices = new Uint32Array(numFacesVertices)
+
+      // Now we preserve the existing indices if they fit within the new faceVertexIndices array.
+      let startSrc = 0
+      let startTgt = 0
+      numFacesVertices = 0
+      numVertsPerFace = 3
+      faceCounts.forEach((fc, index) => {
+        const endSrc = startSrc + Math.min(fc, this.__faceCounts[index]) * numVertsPerFace
+        faceVertexIndices.set(this.__faceVertexIndices.slice(startSrc, endSrc), startTgt)
+        startSrc += this.__faceCounts[index] * numVertsPerFace
+        startTgt += fc * numVertsPerFace
+        numVertsPerFace++
+      })
+      this.__faceVertexIndices = faceVertexIndices
+    }
+    this.__faceCounts = faceCounts
 
     for (const attr of this.__faceAttributes) attr.resize(numFaces)
+  }
+
+  /**
+   * The getFaceVertexCount method.
+   * @param {number} faceIndex - The faceIndex value.
+   * @return {number} - The return value.
+   */
+  getFaceVertexCount(faceIndex) {
+    let idx = 0
+    let count = 0
+    this.__faceCounts.some((fc, index) => {
+      idx += fc
+      if (idx > faceIndex) {
+        count = index + 3
+        return true
+      }
+    })
+    return count
+  }
+
+  /**
+   * The getFaceVertexCount method.
+   * @param {number} faceIndex - The faceIndex value.
+   * @return {number} - The return value.
+   */
+  getFaceVertexOffset(faceIndex) {
+    let idx = 0
+    let offset = 0
+    this.__faceCounts.some((fc, index) => {
+      if (idx + fc > faceIndex) {
+        offset += (faceIndex - idx) * (index + 3)
+        return true
+      }
+      idx += fc
+      offset += fc * (index + 3)
+    })
+    return offset
   }
 
   /**
@@ -114,14 +167,18 @@ class Mesh extends BaseGeom {
    */
   setFaceVertexIndices(faceIndex) {
     const vertexIndices = Array.prototype.slice.call(arguments, 1)
-
-    const start = this.__numPopulatedFaceVertexIndices
-    for (let i = 0; i < vertexIndices.length; i++) {
-      this.__faceVertexIndices[start + i] = vertexIndices[i]
+    // const faceVertexCount = this.__faceVertexCounts[faceIndex] + 3
+    const faceVertexCount = this.getFaceVertexCount(faceIndex)
+    if (vertexIndices.length != faceVertexCount) {
+      throw new Error(
+        `Invalid indices for face:${faceIndex} vertexIndices:${vertexIndices}. Expected ${faceVertexCount} indices`
+      )
     }
-    this.__faceVertexCounts[faceIndex] = vertexIndices.length - 3
-    this.__faceOffsets[faceIndex] = start
-    this.__numPopulatedFaceVertexIndices += vertexIndices.length
+
+    const offset = this.getFaceVertexOffset(faceIndex)
+    for (let i = 0; i < vertexIndices.length; i++) {
+      this.__faceVertexIndices[offset + i] = vertexIndices[i]
+    }
   }
 
   /**
@@ -131,10 +188,11 @@ class Mesh extends BaseGeom {
    */
   getFaceVertexIndices(faceIndex) {
     const vertexIndices = []
-    const start = this.__faceOffsets[faceIndex]
-    const count = this.__faceVertexCounts[faceIndex] + 3
+    const offset = this.getFaceVertexOffset(faceIndex)
+    // const count = this.__faceVertexCounts[faceIndex] + 3
+    const count = this.getFaceVertexCount(faceIndex)
     for (let i = 0; i < count; i++) {
-      vertexIndices.push(this.__faceVertexIndices[start + i])
+      vertexIndices.push(this.__faceVertexIndices[offset + i])
     }
     return vertexIndices
   }
@@ -146,16 +204,8 @@ class Mesh extends BaseGeom {
    * @return {number} - The return value.
    */
   getFaceVertexIndex(faceIndex, facevertex) {
-    const start = this.__faceOffsets[faceIndex]
-    return this.__faceVertexIndices[start + facevertex]
-  }
-
-  /**
-   * The getNumFaces method.
-   * @return {number} - The return value.
-   */
-  getNumFaces() {
-    return this.__faceVertexCounts.length
+    const offset = this.getFaceVertexOffset(faceIndex)
+    return this.__faceVertexIndices[offset + facevertex]
   }
 
   // ///////////////////////////
@@ -816,7 +866,9 @@ class Mesh extends BaseGeom {
   readBinary(reader, context) {
     super.loadBaseGeomBinary(reader)
     this.setFaceCounts(reader.loadUInt32Array())
-    this.__faceVertexCounts = reader.loadUInt8Array(this.__faceVertexCounts.length)
+
+    // Note: we can remove this. We can infer this from the above faceCounts array.
+    const faceVertexCounts = reader.loadUInt8Array(this.getNumFaces())
     const offsetRange = reader.loadSInt32Vec2()
     const bytes = reader.loadUInt8()
     let faceVertexIndexDeltas
@@ -827,15 +879,16 @@ class Mesh extends BaseGeom {
     const numFaces = this.getNumFaces()
     let offset = 0
     let prevCount = 0
+    let faceOffsets = []
     for (let faceIndex = 0; faceIndex < numFaces; faceIndex++) {
-      const count = this.__faceVertexCounts[faceIndex] + 3
-      this.__faceOffsets[faceIndex] = offset
+      const count = this.getFaceVertexCount(faceIndex)
+      faceOffsets[faceIndex] = offset
       for (let j = 0; j < count; j++) {
         const faceVertex = offset + j
         const delta = faceVertexIndexDeltas[faceVertex] + offsetRange.x
         if (faceIndex == 0) this.__faceVertexIndices[faceVertex] = delta
         else {
-          let prevFaceVertex = this.__faceOffsets[faceIndex - 1]
+          let prevFaceVertex = faceOffsets[faceIndex - 1]
           prevFaceVertex += j < prevCount ? j : prevCount - 1
           this.__faceVertexIndices[faceVertex] = this.__faceVertexIndices[prevFaceVertex] + delta
         }

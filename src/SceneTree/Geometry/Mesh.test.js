@@ -5,6 +5,25 @@ describe('Mesh', () => {
   test('Check for default positions attribute.', () => {
     const mesh = new Mesh()
     expect(mesh.hasVertexAttribute('positions')).toBe(true)
+    expect(mesh.getNumFaces()).toBe(0)
+  })
+
+  test('Check various face counts and offset', () => {
+    const mesh = new Mesh()
+    mesh.setFaceCounts([7, 5, 3])
+    mesh.setFaceVertexIndices(3, 0, 1, 2)
+    mesh.setFaceVertexIndices(9, 0, 1, 2, 3)
+    mesh.setFaceVertexIndices(13, 0, 1, 2, 3, 4)
+    expect(() => {
+      mesh.setFaceVertexIndices(14, 0, 1, 2, 3, 4, 5)
+    }).toThrow()
+
+    expect(mesh.getFaceVertexCount(3)).toBe(3)
+    expect(mesh.getFaceVertexCount(9)).toBe(4)
+    expect(mesh.getFaceVertexCount(13)).toBe(5)
+    expect(mesh.getFaceVertexIndices(3)).toEqual([0, 1, 2])
+    expect(mesh.getFaceVertexIndices(9)).toEqual([0, 1, 2, 3])
+    expect(mesh.getFaceVertexIndices(13)).toEqual([0, 1, 2, 3, 4])
   })
 
   test('Check for setting up a single triangle', () => {
@@ -20,6 +39,8 @@ describe('Mesh', () => {
     mesh.setFaceCounts([1])
     mesh.setFaceVertexIndices(0, 0, 1, 2)
 
+    expect(mesh.getNumFaces()).toBe(1)
+    expect(mesh.getFaceVertexCount(0)).toBe(3)
     expect(mesh.getFaceVertexIndices(0)).toEqual([0, 1, 2])
 
     expect(mesh.getVertexAttribute('positions').length).toBe(numVertices)
@@ -119,19 +140,23 @@ describe('Mesh', () => {
     expect(JSON.stringify(mesh.toJSON())).toMatchSnapshot()
   })
 
-  test.skip('Check resizing bigger the face indices.', () => {
+  test('Check resizing bigger the face indices.', () => {
     const mesh = new Mesh()
     const numVertices = 4
     mesh.setNumVertices(numVertices)
 
-    mesh.setFaceCounts([1])
+    // one triangle and one quad.
+    mesh.setFaceCounts([1, 1])
     mesh.setFaceVertexIndices(0, 0, 1, 2)
+    mesh.setFaceVertexIndices(1, 0, 1, 2, 3)
 
-    mesh.setFaceCounts([2])
+    // Now we add another triangle
+    mesh.setFaceCounts([2, 1])
     mesh.setFaceVertexIndices(1, 2, 1, 3)
 
     expect(mesh.getFaceVertexIndices(0)).toEqual([0, 1, 2])
     expect(mesh.getFaceVertexIndices(1)).toEqual([2, 1, 3])
+    expect(mesh.getFaceVertexIndices(2)).toEqual([0, 1, 2, 3])
   })
 
   test.skip('Check resizing smaller the face indices.', () => {
@@ -139,13 +164,17 @@ describe('Mesh', () => {
     const numVertices = 4
     mesh.setNumVertices(numVertices)
 
-    mesh.setFaceCounts([2])
+    // two triangleas and one quad.
+    mesh.setFaceCounts([2, 1])
     mesh.setFaceVertexIndices(0, 0, 1, 2)
     mesh.setFaceVertexIndices(1, 2, 1, 3)
+    mesh.setFaceVertexIndices(1, 2, 1, 3)
 
-    mesh.setFaceCounts([1])
+    // remove a triangle. Now one triangle and one quad.
+    mesh.setFaceCounts([1, 1])
 
     expect(mesh.getFaceVertexIndices(0)).toEqual([0, 1, 2])
+    expect(mesh.getFaceVertexIndices(1)).toEqual([0, 1, 2, 3])
   })
 
   test('Check generated buffers', () => {
