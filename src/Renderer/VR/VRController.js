@@ -26,9 +26,7 @@ class VRController {
 
     // this.setVisible(true);
 
-    this.__treeItem = new TreeItem(
-      'VRController:' + inputSource.handedness + id
-    )
+    this.__treeItem = new TreeItem('VRController:' + inputSource.handedness + id)
     // Controller coordinate system
     // X = Horizontal.
     // Y = Up.
@@ -47,24 +45,21 @@ class VRController {
       tipXfo.tr.set(0.0, -0.05, -0.13)
       // Flip the tip around so +z is forwards.
       // tipXfo.ori.setFromAxisAndAngle(new Vec3(0, 1, 0), Math.PI)
-      this.__tip.setLocalXfo(tipXfo)
+      this.__tip.getParameter('LocalXfo').setValue(tipXfo)
       this.__treeItem.addChild(this.__tip, false)
       vrviewport.getTreeItem().addChild(this.__treeItem)
 
       this.__activeVolumeSize = 0.04
 
-      vrviewport.loadHMDResources().then(asset => {
+      vrviewport.loadHMDResources().then((asset) => {
         asset.on('loaded', () => {
           let srcControllerTree
-          if (id == 0)
-            srcControllerTree = asset.getChildByName('LeftController')
-          else if (id == 1)
-            srcControllerTree = asset.getChildByName('RightController')
-          if (!srcControllerTree)
-            srcControllerTree = asset.getChildByName('Controller')
+          if (id == 0) srcControllerTree = asset.getChildByName('LeftController')
+          else if (id == 1) srcControllerTree = asset.getChildByName('RightController')
+          if (!srcControllerTree) srcControllerTree = asset.getChildByName('Controller')
           const controllerTree = srcControllerTree.clone()
 
-          controllerTree.setLocalXfo(
+          controllerTree.getParameter('LocalXfo').setValue(
             new Xfo(
               new Vec3(0, -0.035, -0.085),
               new Quat({ setFromAxisAndAngle: [new Vec3(0, 1, 0), Math.PI] }),
@@ -114,7 +109,7 @@ class VRController {
    * @return {any} - The return value.
    */
   getTipXfo() {
-    return this.__tip.getGlobalXfo()
+    return this.__tip.getParameter('GlobalXfo').getValue()
   }
 
   /**
@@ -176,7 +171,7 @@ class VRController {
     // this.__xfo.ori.set(ori.x, ori.y, ori.z, ori.x);
     // //////////////////////////////
 
-    this.__treeItem.setLocalXfo(this.__xfo)
+    this.__treeItem.getParameter('LocalXfo').setValue(this.__xfo)
 
     // Reset the geom at tip so it will be recomuted if necessary
     this.__geomAtTip = undefined
@@ -231,7 +226,7 @@ class VRController {
     this.__hitTested = true
 
     const renderer = this.__vrviewport.getRenderer()
-    const xfo = this.__tip.getGlobalXfo()
+    const xfo = this.__tip.getParameter('GlobalXfo').getValue()
     const vol = this.__activeVolumeSize
     this.__intersectionData = renderer.raycastWithXfo(xfo, vol, vol)
     return this.__intersectionData

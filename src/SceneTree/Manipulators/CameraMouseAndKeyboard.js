@@ -71,7 +71,7 @@ class CameraMouseAndKeyboard extends ParameterOwner {
     const orbitRate = this.__orbitRateParam.getValue()
 
     if (this.__keyboardMovement) {
-      const globalXfo = camera.getGlobalXfo()
+      const globalXfo = camera.getParameter('GlobalXfo').getValue()
       this.__mouseDownCameraXfo = globalXfo.clone()
       this.__mouseDownZaxis = globalXfo.ori.getZaxis()
       const targetOffset = this.__mouseDownZaxis.scale(-focalDistance)
@@ -94,9 +94,9 @@ class CameraMouseAndKeyboard extends ParameterOwner {
       // TODO: debug this potential regression. we now use the generic method which emits a signal.
       // Avoid generating a signal because we have an animation frame occurring.
       // see: onKeyPressed
-      camera.setGlobalXfo(globalXfo)
+      camera.getParameter('GlobalXfo').setValue(globalXfo)
     } else {
-      camera.setGlobalXfo(globalXfo)
+      camera.getParameter('GlobalXfo').setValue(globalXfo)
     }
   }
 
@@ -114,7 +114,7 @@ class CameraMouseAndKeyboard extends ParameterOwner {
     const orbitRate = this.__orbitRateParam.getValue()
 
     if (this.__keyboardMovement) {
-      const globalXfo = camera.getGlobalXfo()
+      const globalXfo = camera.getParameter('GlobalXfo').getValue()
       this.__mouseDownCameraXfo = globalXfo.clone()
       this.__mouseDownZaxis = globalXfo.ori.getZaxis()
       const targetOffset = this.__mouseDownZaxis.scale(-focalDistance)
@@ -139,9 +139,9 @@ class CameraMouseAndKeyboard extends ParameterOwner {
       // TODO: debug this potential regression. we now use the generic method which emits a signal.
       // Avoid generating a signal because we have an animation frame occurring.
       // see: onKeyPressed
-      camera.setGlobalXfo(globalXfo)
+      camera.getParameter('GlobalXfo').setValue(globalXfo)
     } else {
-      camera.setGlobalXfo(globalXfo)
+      camera.getParameter('GlobalXfo').setValue(globalXfo)
     }
   }
 
@@ -166,7 +166,7 @@ class CameraMouseAndKeyboard extends ParameterOwner {
     delta.tr = xAxis.scale(-(dragVec.x / viewport.getWidth()) * cameraPlaneWidth)
     delta.tr.addInPlace(yAxis.scale((dragVec.y / viewport.getHeight()) * cameraPlaneHeight))
 
-    camera.setGlobalXfo(this.__mouseDownCameraXfo.multiply(delta))
+    camera.getParameter('GlobalXfo').setValue(this.__mouseDownCameraXfo.multiply(delta))
   }
 
   /**
@@ -181,7 +181,7 @@ class CameraMouseAndKeyboard extends ParameterOwner {
     const dollyDist = dragVec.x * this.__dollySpeedParam.getValue()
     const delta = new Xfo()
     delta.tr.set(0, 0, dollyDist)
-    camera.setGlobalXfo(this.__mouseDownCameraXfo.multiply(delta))
+    camera.getParameter('GlobalXfo').setValue(this.__mouseDownCameraXfo.multiply(delta))
   }
 
   /**
@@ -210,7 +210,7 @@ class CameraMouseAndKeyboard extends ParameterOwner {
     const zoomDist = dragDist * focalDistance
     camera.setFocalDistance(this.__mouseDownFocalDist + zoomDist)
     delta.tr.z += zoomDist
-    camera.setGlobalXfo(this.__mouseDownCameraXfo.multiply(delta))
+    camera.getParameter('GlobalXfo').setValue(this.__mouseDownCameraXfo.multiply(delta))
   }
 
   /**
@@ -229,10 +229,10 @@ class CameraMouseAndKeyboard extends ParameterOwner {
     this.__mouseDownPos = event.mousePos
     this.__mouseDownViewport = viewport
     this.__mouseDragDelta.set(0, 0)
-    this.__mouseDownCameraXfo = camera.getGlobalXfo().clone()
+    this.__mouseDownCameraXfo = camera.getParameter('GlobalXfo').getValue().clone()
     this.__mouseDownZaxis = this.__mouseDownCameraXfo.ori.getZaxis()
     const targetOffset = this.__mouseDownZaxis.scale(-focalDistance)
-    this.__mouseDownCameraTarget = camera.getGlobalXfo().tr.add(targetOffset)
+    this.__mouseDownCameraTarget = camera.getParameter('GlobalXfo').getValue().tr.add(targetOffset)
     this.__mouseDownFocalDist = focalDistance
 
     camera.getParameter('GlobalXfo').on('valueChanged', this.__globalXfoChangedDuringDrag)
@@ -286,7 +286,7 @@ class CameraMouseAndKeyboard extends ParameterOwner {
     const count = 20
     let i = 0
     const applyMovement = () => {
-      const initlalGlobalXfo = camera.getGlobalXfo()
+      const initlalGlobalXfo = camera.getParameter('GlobalXfo').getValue()
       const initlalDist = camera.getFocalDistance()
       const dir = pos.subtract(initlalGlobalXfo.tr)
       const dist = dir.normalizeInPlace()
@@ -328,7 +328,7 @@ class CameraMouseAndKeyboard extends ParameterOwner {
       globalXfo.ori = initlalGlobalXfo.ori.lerp(targetGlobalXfo.ori, t)
 
       camera.setFocalDistance(initlalDist + (dist - initlalDist) * t)
-      camera.setGlobalXfo(globalXfo)
+      camera.getParameter('GlobalXfo').setValue(globalXfo)
 
       i++
       if (i <= count) {
@@ -359,7 +359,8 @@ class CameraMouseAndKeyboard extends ParameterOwner {
   onDoubleClick(event) {
     if (event.intersectionData) {
       const camera = event.viewport.getCamera()
-      const pos = camera.getGlobalXfo().tr.add(event.mouseRay.dir.scale(event.intersectionData.dist))
+      const cameraGlobalXfo = camera.getParameter('GlobalXfo').getValue()
+      const pos = cameraGlobalXfo.tr.add(event.mouseRay.dir.scale(event.intersectionData.dist))
       this.aimFocus(event, pos)
     }
   }
@@ -370,7 +371,6 @@ class CameraMouseAndKeyboard extends ParameterOwner {
    * @param {MouseEvent} event - The mouse event that occurs.
    */
   onMouseDown(event) {
-
     // this.initDrag(event)
     if (this.__dragging) {
       const camera = this.__mouseDownViewport.getCamera()
@@ -450,7 +450,7 @@ class CameraMouseAndKeyboard extends ParameterOwner {
     const camera = viewport.getCamera()
     const mouseWheelDollySpeed = this.__mouseWheelDollySpeedParam.getValue()
     const modulator = event.shiftKey ? 0.1 : 0.5
-    const xfo = camera.getGlobalXfo()
+    const xfo = camera.getParameter('GlobalXfo').getValue()
     const movementVec = xfo.ori.getZaxis()
     if (this.__mouseWheelZoomIntervalId) clearInterval(this.__mouseWheelZoomIntervalId)
     let count = 0
@@ -459,7 +459,7 @@ class CameraMouseAndKeyboard extends ParameterOwner {
       const zoomDist = event.deltaY * mouseWheelDollySpeed * focalDistance * modulator
       xfo.tr.addInPlace(movementVec.scale(zoomDist))
       if (this.__defaultManipulationState == 'orbit') camera.setFocalDistance(camera.getFocalDistance() + zoomDist)
-      camera.setGlobalXfo(xfo)
+      camera.getParameter('GlobalXfo').setValue(xfo)
 
       count++
       if (count < 10) {
@@ -486,7 +486,7 @@ class CameraMouseAndKeyboard extends ParameterOwner {
     const camera = viewport.getCamera()
     const delta = new Xfo()
     delta.tr = this.__velocity.normalize().scale(this.__maxVel)
-    camera.setGlobalXfo(camera.getGlobalXfo().multiply(delta))
+    camera.getParameter('GlobalXfo').setValue(camera.getParameter('GlobalXfo').getValue().multiply(delta))
   }
 
   /**
@@ -727,7 +727,10 @@ class CameraMouseAndKeyboard extends ParameterOwner {
     if (event.intersectionData) {
       const { viewport } = event
       const camera = viewport.getCamera()
-      const pos = camera.getGlobalXfo().tr.add(event.touchRay.dir.scale(event.intersectionData.dist))
+      const pos = camera
+        .getParameter('GlobalXfo')
+        .getValue()
+        .tr.add(event.touchRay.dir.scale(event.intersectionData.dist))
       this.aimFocus(event, pos)
     }
     event.preventDefault()

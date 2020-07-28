@@ -236,7 +236,7 @@ class Camera extends TreeItem {
    */
   getTargetPostion() {
     const focalDistance = this.__focalDistanceParam.getValue()
-    const xfo = this.getGlobalXfo()
+    const xfo = this.getParameter('GlobalXfo').getValue()
     const target = xfo.ori.getZaxis()
     target.scaleInPlace(-focalDistance)
     target.addInPlace(xfo.tr)
@@ -265,7 +265,7 @@ class Camera extends TreeItem {
     const focalDistance = this.__focalDistanceParam.getValue()
     const fovY = this.__fovParam.getValue()
 
-    const globalXfo = this.getGlobalXfo().clone()
+    const globalXfo = this.getParameter('GlobalXfo').getValue().clone()
     const cameraViewVec = globalXfo.ori.getZaxis()
     const targetOffset = cameraViewVec.scale(-focalDistance)
     const currTarget = globalXfo.tr.add(targetOffset)
@@ -293,7 +293,7 @@ class Camera extends TreeItem {
     globalXfo.tr.addInPlace(cameraViewVec.scale(dollyDist))
 
     this.setFocalDistance(newFocalDistance)
-    this.setGlobalXfo(globalXfo)
+    this.getParameter('GlobalXfo').setValue(globalXfo)
     this.emit('movementFinished')
   }
 
