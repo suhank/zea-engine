@@ -59,7 +59,7 @@ class KinematicGroupParameter extends ListParameter {
    * @return {Xfo} - The xfo value.
    */
   getXfo() {
-    if (this.__value.length > 0) return this.__value[0].getGlobalXfo(())
+    if (this.__value.length > 0) return this.__value[0].getParameter('GlobalXfo').getValue(())
   }
 
   /**
@@ -68,9 +68,9 @@ class KinematicGroupParameter extends ListParameter {
    */
   setXfo(xfo) {
     if (this.__value.length > 0) {
-      this.__value[0].setGlobalXfo(xfo)
+      this.__value[0].getParameter('GlobalXfo').setValue(xfo)
       for (let i = 1; i < this.__value.length; i++) {
-        this.__value[i].setGlobalXfo(xfo.multiply(this.__deltaXfos[i]))
+        this.__value[i].getParameter('GlobalXfo').setValue(xfo.multiply(this.__deltaXfos[i]))
       }
     }
   }

@@ -33,9 +33,7 @@ class XfoParameter extends Parameter {
    * @param {object} context - The context value.
    */
   readBinary(reader, context) {
-    const value = new Xfo()
-    value.readBinary(reader)
-    this.setValue(value, ValueSetMode.DATA_LOAD)
+    this.__value.readBinary(reader)
   }
 
   // ////////////////////////////////////////
