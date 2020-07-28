@@ -70,11 +70,23 @@ class Lines extends BaseGeom {
    * @param {number} p0 - The p0 value.
    * @param {number} p1 - The p1 value.
    */
-  setSegment(index, p0, p1) {
+  setSegmentVertexIndices(index, p0, p1) {
     if (index >= this.__indices.length / 2)
       throw new Error('Invalid line index:' + index + '. Num Segments:' + this.__indices.length / 2)
     this.__indices[index * 2 + 0] = p0
     this.__indices[index * 2 + 1] = p1
+  }
+
+  /**
+   * Sets segment values in the specified index.
+   *
+   * @param {number} index - The index value.
+   * @param {number} p0 - The p0 value.
+   * @param {number} p1 - The p1 value.
+   */
+  setSegment(index, p0, p1) {
+    console.warn(`deprecated use #setSegmentVertexIndices`)
+    this.setSegmentVertexIndices(index, p0, p1)
   }
 
   /**

@@ -1,5 +1,5 @@
 import { Lines } from './Lines'
-import { Vec2, Vec3, Box3 } from '../../Math'
+import { Vec3 } from '../../Math'
 
 describe('Lines', () => {
   test('Check for default positions attribute.', () => {
@@ -18,8 +18,8 @@ describe('Lines', () => {
     positions.getValueRef(2).set(2, 1, -3)
 
     lines.setNumSegments(2)
-    lines.setSegment(0, 0, 1)
-    lines.setSegment(1, 1, 2)
+    lines.setSegmentVertexIndices(0, 0, 1)
+    lines.setSegmentVertexIndices(1, 1, 2)
 
     expect(lines.getSegmentVertexIndex(1, 0)).toBe(1)
     expect(lines.getSegmentVertexIndex(1, 1)).toBe(2)
@@ -33,11 +33,11 @@ describe('Lines', () => {
     lines.setNumVertices(numVertices)
 
     lines.setNumSegments(2)
-    lines.setSegment(0, 0, 1)
-    lines.setSegment(1, 1, 2)
+    lines.setSegmentVertexIndices(0, 0, 1)
+    lines.setSegmentVertexIndices(1, 1, 2)
 
     lines.setNumSegments(3)
-    lines.setSegment(2, 2, 0)
+    lines.setSegmentVertexIndices(2, 2, 0)
 
     expect(lines.getSegmentVertexIndex(1, 0)).toBe(1)
     expect(lines.getSegmentVertexIndex(1, 1)).toBe(2)
@@ -50,9 +50,9 @@ describe('Lines', () => {
     lines.setNumVertices(numVertices)
 
     lines.setNumSegments(3)
-    lines.setSegment(0, 0, 1)
-    lines.setSegment(1, 1, 2)
-    lines.setSegment(2, 2, 0)
+    lines.setSegmentVertexIndices(0, 0, 1)
+    lines.setSegmentVertexIndices(1, 1, 2)
+    lines.setSegmentVertexIndices(2, 2, 0)
 
     lines.setNumSegments(2)
 
@@ -72,8 +72,8 @@ describe('Lines', () => {
     positions.getValueRef(2).set(2, 1, -3)
 
     lines.setNumSegments(2)
-    lines.setSegment(0, 0, 1)
-    lines.setSegment(1, 1, 2)
+    lines.setSegmentVertexIndices(0, 0, 1)
+    lines.setSegmentVertexIndices(1, 1, 2)
 
     expect(lines.getSegmentVertexIndex(1, 0)).toBe(1)
     expect(lines.getSegmentVertexIndex(1, 1)).toBe(2)
@@ -102,8 +102,8 @@ describe('Lines', () => {
     positions.getValueRef(2).set(2, 1, -3)
 
     lines.setNumSegments(2)
-    lines.setSegment(0, 0, 1)
-    lines.setSegment(1, 1, 2)
+    lines.setSegmentVertexIndices(0, 0, 1)
+    lines.setSegmentVertexIndices(1, 1, 2)
 
     expect(JSON.stringify(lines.toJSON())).toMatchSnapshot()
   })
