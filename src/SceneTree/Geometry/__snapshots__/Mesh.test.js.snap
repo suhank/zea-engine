@@ -1,0 +1,5 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Mesh Check for setting up 2 neighboring quads 1`] = `"{\\"type\\":\\"Mesh\\",\\"numVertices\\":6,\\"vertexAttributes\\":{\\"positions\\":{\\"data\\":[0,-1,-1,0,-1,1,0,1,1,0,1,-1,1,1,1,1,1,-1],\\"dataType\\":\\"Vec3\\",\\"defaultValue\\":0,\\"length\\":6,\\"splits\\":{},\\"splitValues\\":[]},\\"normals\\":{\\"data\\":[null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],\\"dataType\\":\\"Vec3\\",\\"defaultValue\\":1.7976931348623157e+308,\\"length\\":6,\\"splits\\":{},\\"splitValues\\":[]}},\\"faceCounts\\":[0,1],\\"faceVertexIndices\\":[0,1,2,3]}"`;
+
+exports[`Mesh saves to JSON (serialization). 1`] = `"{\\"type\\":\\"Mesh\\",\\"numVertices\\":3,\\"vertexAttributes\\":{\\"positions\\":{\\"data\\":[1,2,3,-1,-2,-3,2,1,-3],\\"dataType\\":\\"Vec3\\",\\"defaultValue\\":0,\\"length\\":3,\\"splits\\":{},\\"splitValues\\":[]}},\\"faceCounts\\":[1],\\"faceVertexIndices\\":[0,1,2]}"`;

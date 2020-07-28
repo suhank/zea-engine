@@ -80,7 +80,9 @@ class Mesh extends BaseGeom {
   }
 
   /**
-   * The setFaceCounts method.
+   * Sets the number of faces on the mesh using an array specifying the counts per polygon size.
+   * The first item in the array specifies the number of triangles, the second, the number of quads, the 3rd, the number o f5 sided polygons etc..
+   * e.g. to specify 2 triangles, and 7 quads, we would pass [2, 7]
    * @param {array} faceCounts - The faceCounts value.
    */
   setFaceCounts(faceCounts) {
