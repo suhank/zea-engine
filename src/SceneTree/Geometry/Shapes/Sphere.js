@@ -16,9 +16,6 @@ import { sgFactory } from '../../SGFactory.js'
  * * **sides(`NumberParameter`):** Specifies the number of subdivisions around the `Z` axis.
  * * **loops(`NumberParameter`):** Specifies the number of subdivisions(stacks) along the `Z` axis.
  *
- * **Events**
- * * **geomDataTopologyChanged:** Triggered when `radius` value changes
- * * **geomDataChanged:** Triggered when `sides` or `loops` values change.
  * @extends Mesh
  */
 class Sphere extends Mesh {

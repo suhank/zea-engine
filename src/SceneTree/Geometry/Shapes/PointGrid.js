@@ -148,15 +148,15 @@ class PointGrid extends Points {
         }
       }
     }
-
-    this.__resize()
+    this.__resize(false)
+    this.emit('geomDataTopologyChanged', {})
   }
 
   /**
    * The __resize method.
    * @private
    */
-  __resize() {
+  __resize(emit = true) {
     for (let i = 0; i < this.__yDivisions; i++) {
       const y = (i / (this.__yDivisions - 1) - 0.5) * this.__y
       for (let j = 0; j < this.__xDivisions; j++) {
@@ -165,6 +165,7 @@ class PointGrid extends Points {
       }
     }
     this.setBoundingBoxDirty()
+    if (emit) this.emit('geomDataChanged', {})
   }
 
   /**

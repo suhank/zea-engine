@@ -149,6 +149,7 @@ class Torus extends Mesh {
     }
 
     this.setBoundingBoxDirty()
+    this.emit('geomDataTopologyChanged', {})
   }
 
   /**
@@ -179,6 +180,7 @@ class Torus extends Mesh {
     }
 
     this.setBoundingBoxDirty()
+    this.emit('geomDataChanged', {})
   }
 
   /**

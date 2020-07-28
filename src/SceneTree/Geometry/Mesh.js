@@ -17,7 +17,8 @@ import { sgFactory } from '../SGFactory.js'
  * ```
  *
  * **Events**
- * * **geomDataChanged:** Triggered when restoring Mesh state from a binary reader.
+ * * **geomDataTopologyChanged:** Triggered when the topology of the mesh has been changed.
+ * * **geomDataChanged:** Triggered when the vertices of the mesh have changed, but not necessarily the topology.
  *
  * @extends BaseGeom
  */

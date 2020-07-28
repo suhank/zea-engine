@@ -123,6 +123,7 @@ class Disc extends Mesh {
       this.getVertex(i + 1).set(Math.sin(phi) * radius, Math.cos(phi) * radius, 0.0)
     }
     this.setBoundingBoxDirty()
+    this.emit('geomDataChanged', {})
   }
 
   /**

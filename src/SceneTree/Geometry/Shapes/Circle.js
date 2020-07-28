@@ -15,10 +15,6 @@ import { sgFactory } from '../../SGFactory.js'
  * * **Angle(`NumberParameter`):** Number of segments used to build the circle.
  * * **NumSegments(`NumberParameter`):** Segments angle in radiants.
  *
- * **Events**
- * * **geomDataChanged:** Triggered when the radius of the circle is changed.
- * * **geomDataTopologyChanged:** Triggered when the angle or the segments of the circle changes.
- *
  * @extends Lines
  */
 class Circle extends Lines {

@@ -16,10 +16,6 @@ import { NumberParameter } from '../../Parameters/index'
  * * **DetailX(`NumberParameter`):** Number of divisions along `X`axis.
  * * **DetailY(`NumberParameter`):** Number of divisions along `Y`axis.
  *
- * **Events**
- * * **geomDataTopologyChanged:** Triggered
- * * **geomDataChanged:** Triggered when `X` and `Y`values change.
- *
  * @extends Mesh
  */
 class Plane extends Mesh {
