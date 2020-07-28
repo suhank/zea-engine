@@ -28,7 +28,7 @@ class GLGeomItem extends EventEmitter {
     this.glGeom = glGeom
     this.id = id
     this.flags = flags
-    this.visible = this.geomItem.getVisible()
+    this.visible = this.geomItem.isVisible()
     this.culled = false
 
     // if(glGeom.__numTriangles) {
@@ -96,11 +96,11 @@ class GLGeomItem extends EventEmitter {
   }
 
   /**
-   * The getVisible method.
+   * The isVisible method.
    * @return {any} - The return value.
    */
-  getVisible() {
-    return this.geomItem.getVisible()
+  isVisible() {
+    return this.geomItem.isVisible()
   }
 
   /**
@@ -123,7 +123,7 @@ class GLGeomItem extends EventEmitter {
    * The updateVisibility method.
    */
   updateVisibility() {
-    const geomVisible = this.geomItem.getVisible()
+    const geomVisible = this.geomItem.isVisible()
     const visible = geomVisible && !this.culled
     if (this.visible != visible) {
       this.visible = visible

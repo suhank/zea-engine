@@ -41,9 +41,8 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
       if (shaderClass.isTransparent()) return true
       if (shaderClass.isOverlay()) return false
 
-      const baseColorParam = geomItem.getMaterial().getParameter("BaseColor")
-      if (baseColorParam && baseColorParam.getValue().a < 0.999)
-        return true;
+      const baseColorParam = geomItem.getMaterial().getParameter('BaseColor')
+      if (baseColorParam && baseColorParam.getValue().a < 0.999) return true
     }
     return false
   }
@@ -56,35 +55,40 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
     const material = geomItem.getMaterial()
     const shaderName = material.getShaderName()
     const shaders = this.constructShaders(shaderName)
+
+    // @todo - make sure we remove materials and GeomItems from the base pass.
+    // This code will leak memory for these classes as we are not cleaning them up.
     const glmaterial = this.addMaterial(material)
     const glgeomitem = super.addGeomItem(geomItem)
 
-    const visibilityChangedId = geomItem.on('visibilityChanged', event => {
+    const visibilityChanged = (event) => {
       if (event.visible) {
         this.visibleItems.push(item)
       } else {
         const index = this.visibleItems.indexOf(item)
         this.visibleItems.splice(index, 1)
       }
-    })
-    const geomXfoChangedId = geomItem.getParameter('GeomMat').on('valueChanged', () => {
+    }
+    const geomXfoChanged = () => {
       this.resort = true
-    })
+    }
+    geomItem.on('visibilityChanged', visibilityChanged)
+    geomItem.getParameter('GeomMat').on('valueChanged', geomXfoChanged)
 
     const item = {
       geomItem,
       shaders,
       glmaterial,
       glgeomitem,
-      visibilityChangedId,
-      geomXfoChangedId,
+      visibilityChanged,
+      geomXfoChanged,
     }
     let itemindex
     if (this.freeList.length > 0) itemindex = this.freeList.pop()
     else itemindex = this.transparentItems.length
     this.transparentItems[itemindex] = item
     geomItem.setMetadata('itemIndex', itemindex)
-    if (geomItem.getVisible()) {
+    if (geomItem.isVisible()) {
       this.visibleItems.push(item)
     }
 
@@ -101,6 +105,10 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
 
     const itemindex = geomItem.getMetadata('itemIndex')
     const item = this.transparentItems[itemindex]
+
+    geomItem.off('visibilityChanged', item.visibilityChanged)
+    geomItem.getParameter('GeomMat').off('valueChanged', item.geomXfoChanged)
+
     this.transparentItems[itemindex] = null
     this.freeList.push(itemindex)
 
@@ -117,13 +125,10 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
       const mat4 = transparentItem.glgeomitem.geomItem.getGeomMat4()
       transparentItem.dist = mat4.translation.distanceTo(viewPos)
     }
-    this.visibleItems.sort((a, b) =>
-      a.dist > b.dist ? -1 : a.dist < b.dist ? 1 : 0
-    )
+    this.visibleItems.sort((a, b) => (a.dist > b.dist ? -1 : a.dist < b.dist ? 1 : 0))
     this.prevSortCameraPos = viewPos
     this.resort = false
   }
-
 
   _drawItem(renderstate, transparentItem, cache) {
     if (cache.currentglMaterial != transparentItem.glmaterial) {
@@ -194,8 +199,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
 
     const viewPos = renderstate.viewXfo.tr
     // TODO: Avoid sorting if the camera did not movemore than 30cm
-    if (this.resort || viewPos.distanceTo(this.prevSortCameraPos) > 0.3)
-      this.sortItems(viewPos)
+    if (this.resort || viewPos.distanceTo(this.prevSortCameraPos) > 0.3) this.sortItems(viewPos)
 
     gl.enable(gl.DEPTH_TEST)
     gl.depthFunc(gl.LESS)
@@ -225,7 +229,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
 
     gl.disable(gl.BLEND)
   }
-  
+
   /**
    * The drawHighlightedGeoms method.
    * @param {any} renderstate - The renderstate value.

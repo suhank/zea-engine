@@ -14,10 +14,7 @@ import { ItemFlags } from './BaseItem'
 import { TreeItem } from './TreeItem'
 import { BaseGeomItem } from './BaseGeomItem'
 import { sgFactory } from './SGFactory.js'
-import {
-  GroupTransformXfoOperator,
-  GroupMemberXfoOperator
-} from './Operators/GroupMemberXfoOperator.js'
+import { GroupTransformXfoOperator, GroupMemberXfoOperator } from './Operators/GroupMemberXfoOperator.js'
 
 const GROUP_XFO_MODES = {
   disabled: 0,
@@ -131,7 +128,7 @@ class Group extends TreeItem {
    */
   __updateVisibility() {
     if (super.__updateVisibility()) {
-      const value = this.getVisible()
+      const value = this.isVisible()
       Array.from(this.__itemsParam.getValue()).forEach((item) => {
         if (item instanceof TreeItem) item.propagateVisibility(value ? 1 : -1)
       })
@@ -147,7 +144,7 @@ class Group extends TreeItem {
    * @private
    */
   __updateHighlight() {
-    // Make this function async so that we don't pull on the 
+    // Make this function async so that we don't pull on the
     // graph immediately when we receive a notification.
     // Note: propagating using an operator would be much better.
     new Promise((resolve) => {
@@ -192,15 +189,15 @@ class Group extends TreeItem {
     const items = Array.from(this.__itemsParam.getValue())
     if (items.length == 0) return new Xfo()
     this.calculatingGroupXfo = true
-    
+
     this.memberXfoOps.forEach((op) => op.disable())
-    
+
     // TODO: Disable the group operator?
     const initialXfoMode = this.__initialXfoModeParam.getValue()
     let xfo
     if (initialXfoMode == GROUP_XFO_MODES.manual) {
       // The xfo is manually set by the current global xfo.
-      // this.invGroupXfo = this.getGlobalXfo().inverse()
+      // this.invGroupXfo = this.getParameter('GlobalXfo').getValue().inverse()
       this.groupTransformOp.setBindXfo(this.getParameter('GlobalXfo').getValue())
       this.calculatingGroupXfo = false
       this.groupXfoDirty = false
@@ -241,7 +238,7 @@ class Group extends TreeItem {
 
     // Note: if the Group global param becomes dirty
     // then it stops propagating dirty to its members.
-    // const newGlobal = this.getGlobalXfo() // force a cleaning.
+    // const newGlobal = this.getParameter('GlobalXfo').getValue() // force a cleaning.
     // this.invGroupXfo = newGlobal.inverse()
 
     this.getParameter('GlobalXfo').setValue(xfo)
@@ -260,7 +257,7 @@ class Group extends TreeItem {
    * @private
    */
   __updateMaterial() {
-    // Make this function async so that we don't pull on the 
+    // Make this function async so that we don't pull on the
     // graph immediately when we receive a notification.
     // Note: propagating using an operator would be much better.
     new Promise((resolve) => {
@@ -295,7 +292,7 @@ class Group extends TreeItem {
    * @private
    */
   __updateCutaway() {
-    // Make this function async so that we don't pull on the 
+    // Make this function async so that we don't pull on the
     // graph immediately when we receive a notification.
     // Note: propagating using an operator would be much better.
     new Promise((resolve) => {
@@ -329,8 +326,7 @@ class Group extends TreeItem {
   }
 
   setOwner(owner) {
-    if (!this.searchRoot || this.searchRoot == this.getOwner())
-      this.searchRoot = owner
+    if (!this.searchRoot || this.searchRoot == this.getOwner()) this.searchRoot = owner
     super.setOwner(owner)
   }
 
@@ -428,7 +424,7 @@ class Group extends TreeItem {
       }, true)
     }
 
-    if (!this.getVisible()) {
+    if (!this.isVisible()) {
       // Decrement the visibility counter which might cause
       // this item to become invisible. (or it might already be invisible.)
       item.propagateVisibility(-1)
@@ -455,12 +451,12 @@ class Group extends TreeItem {
       this._bindXfoDirty = true
     }
 
-    // this.memberXfoOps[index] = item.getGlobalXfo()
+    // this.memberXfoOps[index] = item.getParameter('GlobalXfo').getValue()
     // eventHandlers.globalXfoChanged = (event) => {
     //   // If the item's xfo changees, potentially through its own hierarchy
     //   // then we need to re-bind here.
     //   if (!this.propagatingXfoToItems) {
-    //     this.memberXfoOps[index] = item.getGlobalXfo()
+    //     this.memberXfoOps[index] = item.getParameter('GlobalXfo').getValue()
     //     this.groupXfoDirty = true
     //     updateGlobalXfo()
     //   }
@@ -486,7 +482,7 @@ class Group extends TreeItem {
       item.removeHighlight('groupItemHighlight' + this.getId(), true)
     }
 
-    if (!this.getVisible()) {
+    if (!this.isVisible()) {
       // Increment the Visibility counter which might cause
       // this item to become visible.
       // It will stay invisible if its parent is invisible, or if
@@ -604,7 +600,7 @@ class Group extends TreeItem {
     const items = Array.from(this.__itemsParam.getValue())
     items.forEach((item) => {
       if (item instanceof TreeItem) {
-        if (item.getVisible() && !item.testFlag(ItemFlags.IGNORE_BBOX)) {
+        if (item.isVisible() && !item.testFlag(ItemFlags.IGNORE_BBOX)) {
           result.addBox3(item.getParameter('BoundingBox').getValue())
         }
       }
