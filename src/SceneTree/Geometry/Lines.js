@@ -54,12 +54,13 @@ class Lines extends BaseGeom {
    * @param {number} numOfSegments - The count value.
    */
   setNumSegments(numOfSegments) {
-    const indices = new Uint32Array(numOfSegments * 2)
-    // indices.set(this.__indices)
-    // for (let i=0;i<this.__indices.length; i++) {
-    //     indices[i] = this.__indices[i];
-    // }
-    this.__indices = indices
+    if (numOfSegments > this.getNumSegments()) {
+      const indices = new Uint32Array(numOfSegments * 2)
+      indices.set(this.__indices)
+      this.__indices = indices
+    } else {
+      this.__indices = this.__indices.slice(0, numOfSegments * 2)
+    }
   }
 
   /**
@@ -117,9 +118,6 @@ class Lines extends BaseGeom {
     buffers.indices = indices
     return buffers
   }
-
-  // ////////////////////////////////////////
-  // Persistence
 
   // ////////////////////////////////////////
   // Persistence

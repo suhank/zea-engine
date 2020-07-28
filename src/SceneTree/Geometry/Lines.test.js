@@ -27,6 +27,40 @@ describe('Lines', () => {
     expect(lines.getVertexAttribute('positions').length).toBe(numVertices)
   })
 
+  test('Check resizing bigger the line segment indices.', () => {
+    const lines = new Lines()
+    const numVertices = 3
+    lines.setNumVertices(numVertices)
+
+    lines.setNumSegments(2)
+    lines.setSegment(0, 0, 1)
+    lines.setSegment(1, 1, 2)
+
+    lines.setNumSegments(3)
+    lines.setSegment(2, 2, 0)
+
+    expect(lines.getSegmentVertexIndex(1, 0)).toBe(1)
+    expect(lines.getSegmentVertexIndex(1, 1)).toBe(2)
+    expect(lines.getIndices(1, 1)).toEqual(new Uint32Array([0, 1, 1, 2, 2, 0]))
+  })
+
+  test('Check resizing smaller the line segment indices.', () => {
+    const lines = new Lines()
+    const numVertices = 3
+    lines.setNumVertices(numVertices)
+
+    lines.setNumSegments(3)
+    lines.setSegment(0, 0, 1)
+    lines.setSegment(1, 1, 2)
+    lines.setSegment(2, 2, 0)
+
+    lines.setNumSegments(2)
+
+    expect(lines.getSegmentVertexIndex(1, 0)).toBe(1)
+    expect(lines.getSegmentVertexIndex(1, 1)).toBe(2)
+    expect(lines.getIndices(1, 1)).toEqual(new Uint32Array([0, 1, 1, 2]))
+  })
+
   test('Check generated buffers', () => {
     const lines = new Lines()
     const numVertices = 3
