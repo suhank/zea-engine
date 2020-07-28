@@ -26,6 +26,26 @@ describe('Mesh', () => {
     expect(mesh.getFaceVertexIndices(13)).toEqual([0, 1, 2, 3, 4])
   })
 
+  test('Check adding faces one at a time', () => {
+    const mesh = new Mesh()
+
+    mesh.addFace([0, 1, 2])
+    mesh.addFace([0, 1, 2, 3])
+    mesh.addFace([0, 1, 2, 3, 4])
+    mesh.addFace([0, 1, 2])
+    mesh.addFace([0, 1, 2, 3, 4, 5])
+
+    expect(mesh.getFaceVertexCount(0)).toBe(3)
+    expect(mesh.getFaceVertexCount(2)).toBe(4)
+    expect(mesh.getFaceVertexCount(3)).toBe(5)
+    expect(mesh.getFaceVertexCount(1)).toBe(3)
+    expect(mesh.getFaceVertexIndices(0)).toEqual([0, 1, 2])
+    expect(mesh.getFaceVertexIndices(2)).toEqual([0, 1, 2, 3])
+    expect(mesh.getFaceVertexIndices(3)).toEqual([0, 1, 2, 3, 4])
+    expect(mesh.getFaceVertexIndices(1)).toEqual([0, 1, 2])
+    expect(mesh.getFaceVertexIndices(4)).toEqual([0, 1, 2, 3, 4, 5])
+  })
+
   test('Check for setting up a single triangle', () => {
     const mesh = new Mesh()
     const numVertices = 3

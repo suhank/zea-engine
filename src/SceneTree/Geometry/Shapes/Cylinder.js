@@ -121,7 +121,7 @@ class Cylinder extends Mesh {
     // setNormals
     const normals = this.getVertexAttribute('normals')
 
-    // Now set the attrbute values
+    // Now set the attribute values
     faceIndex = 0
     for (let i = 0; i < nbLoops - 1; i++) {
       for (let j = 0; j < nbSides; j++) {
@@ -160,13 +160,6 @@ class Cylinder extends Mesh {
 
     // Now set the attrbute values
     faceIndex = 0
-    for (let i = 0; i < nbSides; i++) {
-      texCoords.setFaceVertexValue(faceIndex, 0, new Vec2((i + 1) / nbSides, 0.0))
-      texCoords.setFaceVertexValue(faceIndex, 2, new Vec2((i + 1) / nbSides, 1.0))
-      texCoords.setFaceVertexValue(faceIndex, 1, new Vec2(i / nbSides, 0.0))
-      texCoords.setFaceVertexValue(faceIndex, 3, new Vec2(i / nbSides, 1.0))
-      faceIndex++
-    }
     if (caps) {
       for (let i = 0; i < nbSides; i++) {
         texCoords.setFaceVertexValue(faceIndex, 0, new Vec2(i / nbSides, 0.0))
@@ -182,7 +175,14 @@ class Cylinder extends Mesh {
       }
     }
 
-    // this.setBoundingBoxDirty();
+    for (let i = 0; i < nbSides; i++) {
+      texCoords.setFaceVertexValue(faceIndex, 0, new Vec2((i + 1) / nbSides, 0.0))
+      texCoords.setFaceVertexValue(faceIndex, 2, new Vec2((i + 1) / nbSides, 1.0))
+      texCoords.setFaceVertexValue(faceIndex, 1, new Vec2(i / nbSides, 0.0))
+      texCoords.setFaceVertexValue(faceIndex, 3, new Vec2(i / nbSides, 1.0))
+      faceIndex++
+    }
+
     this.emit('geomDataTopologyChanged', {})
     this.__resize()
   }

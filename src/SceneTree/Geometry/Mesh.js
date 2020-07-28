@@ -167,7 +167,6 @@ class Mesh extends BaseGeom {
    */
   setFaceVertexIndices(faceIndex) {
     const vertexIndices = Array.prototype.slice.call(arguments, 1)
-    // const faceVertexCount = this.__faceVertexCounts[faceIndex] + 3
     const faceVertexCount = this.getFaceVertexCount(faceIndex)
     if (vertexIndices.length != faceVertexCount) {
       throw new Error(
@@ -182,6 +181,38 @@ class Mesh extends BaseGeom {
   }
 
   /**
+   * Adds a new face to the mesh
+   * @param {array} vertexIndices - The vertex indices of the face.
+   * @return {number} - The index of the face in the mesh.
+   */
+  addFace(vertexIndices) {
+    const faceCounts = [...this.__faceCounts]
+    if (faceCounts.length <= vertexIndices.length - 3) {
+      faceCounts[vertexIndices.length - 3] = 1
+    } else {
+      faceCounts[vertexIndices.length - 3]++
+    }
+    this.setFaceCounts(faceCounts)
+
+    // Calculate the offset in the faceVertexIndces of this new face.
+    let faceIndex = 0
+    let offset = 0
+    this.__faceCounts.some((fc, index) => {
+      if (index + 3 == vertexIndices.length) {
+        faceIndex += fc - 1
+        offset += (fc - 1) * (index + 3)
+        return true
+      }
+      faceIndex += fc
+      offset += fc * (index + 3)
+    })
+    for (let i = 0; i < vertexIndices.length; i++) {
+      this.__faceVertexIndices[offset + i] = vertexIndices[i]
+    }
+    return faceIndex
+  }
+
+  /**
    * The getFaceVertexIndices method.
    * @param {number} faceIndex - The faceIndex value.
    * @return {array} - The return value.
@@ -189,7 +220,6 @@ class Mesh extends BaseGeom {
   getFaceVertexIndices(faceIndex) {
     const vertexIndices = []
     const offset = this.getFaceVertexOffset(faceIndex)
-    // const count = this.__faceVertexCounts[faceIndex] + 3
     const count = this.getFaceVertexCount(faceIndex)
     for (let i = 0; i < count; i++) {
       vertexIndices.push(this.__faceVertexIndices[offset + i])
