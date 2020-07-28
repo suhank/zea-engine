@@ -40,6 +40,32 @@ describe('Points', () => {
     expect(points.getBoundingBox()).toEqual(box3)
   })
 
+  test('Check resizing bigger the number of vertices.', () => {
+    const points = new Points()
+
+    points.setNumVertices(3)
+    const positions = points.getVertexAttribute('positions')
+    positions.getValueRef(0).set(1, 2, 3)
+    positions.getValueRef(1).set(-1, -2, -3)
+    positions.getValueRef(2).set(2, 1, -3)
+
+    points.setNumVertices(4)
+    expect(positions.getValueRef(0)).toEqual(new Vec3(1, 2, 3))
+  })
+
+  test('Check resizing smaller the number of vertices.', () => {
+    const points = new Points()
+
+    points.setNumVertices(3)
+    const positions = points.getVertexAttribute('positions')
+    positions.getValueRef(0).set(1, 2, 3)
+    positions.getValueRef(1).set(-1, -2, -3)
+    positions.getValueRef(2).set(2, 1, -3)
+
+    points.setNumVertices(2)
+    expect(positions.getValueRef(0)).toEqual(new Vec3(1, 2, 3))
+  })
+
   test('Check generated buffers', () => {
     const points = new Points()
     const numVertices = 3
