@@ -52,15 +52,6 @@ class Mesh extends BaseGeom {
   }
 
   /**
-   * Returns the specified indices(Vertex connectors)
-   *
-   * @return {Uint32Array} - The return value.
-   */
-  getFaceVertexIndices() {
-    return this.__faceVertexIndices
-  }
-
-  /**
    * The getFaceCounts method.
    * @return {array} - The return value.
    */
@@ -214,9 +205,9 @@ class Mesh extends BaseGeom {
   }
 
   /**
-   * The getFaceVertexIndices method.
-   * @param {number} faceIndex - The faceIndex value.
-   * @return {array} - The return value.
+   * Returns the vertex indices of the specified face.
+   * @param {number} faceIndex - The index of the specified face
+   * @return {array} - An array of indices into the vertex attributes
    */
   getFaceVertexIndices(faceIndex) {
     const vertexIndices = []
@@ -229,10 +220,10 @@ class Mesh extends BaseGeom {
   }
 
   /**
-   * The getFaceVertexIndex method.
+   * Returns a single vertex index for a given face and facevertex.
    * @param {number} faceIndex - The faceIndex value.
-   * @param {number} facevertex - The face vertex value.
-   * @return {number} - The return value.
+   * @param {number} facevertex - The face vertex is the index within the face. So the first vertex index is 0.
+   * @return {number} - The vertex index
    */
   getFaceVertexIndex(faceIndex, facevertex) {
     const offset = this.getFaceVertexOffset(faceIndex)
@@ -846,8 +837,6 @@ class Mesh extends BaseGeom {
    * @return {Uint32Array} - The return value.
    */
   generateTriangulatedIndices(totalNumVertices, numUnSplitVertices, splitIndices) {
-    // let faceVertexIndices = this.getFaceVertexIndices();
-
     const trisCount = this.computeNumTriangles()
 
     let trianglulatedIndices
@@ -1002,7 +991,7 @@ class Mesh extends BaseGeom {
    */
   fromJSON(j, context, flags) {
     super.fromJSON(j, context, flags)
-    if (j.faceCounts) this.__faceCounts = Uint32Array.from(j.faceCounts)
+    if (j.faceCounts) this.__faceCounts = j.faceCounts
     if (j.faceVertexIndices) this.__faceVertexIndices = Uint32Array.from(j.faceVertexIndices)
   }
 }

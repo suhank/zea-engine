@@ -242,7 +242,7 @@ describe('Mesh', () => {
     expect(JSON.stringify(mesh.toJSON())).toMatchSnapshot()
   })
 
-  test.skip('loads from JSON (serialization).', () => {
+  test('loads from JSON (serialization).', () => {
     const mesh = new Mesh()
     const input = {
       type: 'Mesh',
@@ -257,11 +257,13 @@ describe('Mesh', () => {
           splitValues: [],
         },
       },
+      faceCounts: [1],
       faceVertexIndices: [0, 1, 2],
     }
     mesh.fromJSON(input)
 
     expect(mesh.getVertexAttribute('positions').length).toBe(3)
-    expect(mesh.getFaceCounts()).toEqual([2])
+    expect(mesh.getFaceCounts()).toEqual([1])
+    expect(mesh.getFaceVertexIndices(0)).toEqual([0, 1, 2])
   })
 })
