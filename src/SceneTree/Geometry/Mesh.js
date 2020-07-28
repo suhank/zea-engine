@@ -427,7 +427,7 @@ class Mesh extends BaseGeom {
     // provided on the attributes. We cache values and use hard coded constants.
     const faceNormalsBuffer = faceNormals.data.buffer
     const getFaceNormal = (index) => {
-      return new Vec3(faceNormalsBuffer, index * 12) // 3 conmponents at 4 bytes each.
+      return Vec3.createFromFloat32Buffer(faceNormalsBuffer, index * 3) // 3 conmponents at 4 bytes each.
     }
     const vertexNormalsArray = normalsAttr.data
     const setVertexNormal = (index, value) => {
@@ -527,59 +527,6 @@ class Mesh extends BaseGeom {
   }
 
   /**
-   * Compute the number of triangles.
-   * @return {number} - Returns the number of triangles.
-   */
-  computeNumTriangles() {
-    let numVertsPerFace = 3
-    let trisCount = 0
-    for (const fc of this.__faceCounts) {
-      trisCount += fc * (numVertsPerFace - 2)
-      numVertsPerFace++
-    }
-    return trisCount
-  }
-
-  /**
-   * The generateTriangulatedIndices method.
-   * @param {number} totalNumVertices - The total number of vertices.
-   * @param {number} numUnSplitVertices - The total number of unsplit vertices.
-   * @param {array} splitIndices - The splitIndices value.
-   * @return {Uint32Array} - The return value.
-   */
-  generateTriangulatedIndices(totalNumVertices, numUnSplitVertices, splitIndices) {
-    // let faceVertexIndices = this.getFaceVertexIndices();
-
-    const trisCount = this.computeNumTriangles()
-
-    let trianglulatedIndices
-    if (totalNumVertices < Math.pow(2, 8)) trianglulatedIndices = new Uint8Array(trisCount * 3)
-    else if (totalNumVertices < Math.pow(2, 16)) trianglulatedIndices = new Uint16Array(trisCount * 3)
-    else trianglulatedIndices = new Uint32Array(trisCount * 3)
-
-    let triangleVertex = 0
-    const addTriangleVertexIndex = function (vertex, faceIndex) {
-      if (vertex in splitIndices && faceIndex in splitIndices[vertex])
-        vertex = numUnSplitVertices + splitIndices[vertex][faceIndex]
-      trianglulatedIndices[triangleVertex] = vertex
-      triangleVertex++
-    }
-    const numFaces = this.getNumFaces()
-    for (let faceIndex = 0; faceIndex < numFaces; faceIndex++) {
-      const faceVerts = this.getFaceVertexIndices(faceIndex)
-      for (let j = 0; j < faceVerts.length; j++) {
-        if (j >= 3) {
-          // For each aditional triangle, we have to add 2 indices.
-          addTriangleVertexIndex(faceVerts[0], faceIndex)
-          addTriangleVertexIndex(faceVerts[j - 1], faceIndex)
-        }
-        addTriangleVertexIndex(faceVerts[j], faceIndex)
-      }
-    }
-    return trianglulatedIndices
-  }
-
-  /**
    * The computeHardEdgesIndices method.
    * @param {number} hardAngle - The hardAngle value in radians.
    * @return {array} - The return value.
@@ -609,7 +556,7 @@ class Mesh extends BaseGeom {
   }
 
   // ////////////////////////////////////////
-  // Memory
+  // Rendering
 
   /**
    * The genBuffers method.
@@ -792,6 +739,61 @@ class Mesh extends BaseGeom {
     }
 
     return result
+  }
+
+  /**
+   * Compute the number of triangles. For higher degree polygons, they are divided into multiple triangles for rendering.
+   * @return {number} - Returns the number of triangles.
+   */
+  computeNumTriangles() {
+    let numVertsPerFace = 3
+    let trisCount = 0
+    for (const fc of this.__faceCounts) {
+      trisCount += fc * (numVertsPerFace - 2)
+      numVertsPerFace++
+    }
+    return trisCount
+  }
+
+  /**
+   * To prepare data for rendering, the indices for the polygons is used to compute a new index buffer based on
+   * only triangles. This is used during rendering and the resulting indices uploaded ot the GPU  by GLMesh class.
+   *
+   * @param {number} totalNumVertices - The total number of vertices.
+   * @param {number} numUnSplitVertices - The total number of unsplit vertices.
+   * @param {array} splitIndices - The splitIndices value.
+   * @return {Uint32Array} - The return value.
+   */
+  generateTriangulatedIndices(totalNumVertices, numUnSplitVertices, splitIndices) {
+    // let faceVertexIndices = this.getFaceVertexIndices();
+
+    const trisCount = this.computeNumTriangles()
+
+    let trianglulatedIndices
+    if (totalNumVertices < Math.pow(2, 8)) trianglulatedIndices = new Uint8Array(trisCount * 3)
+    else if (totalNumVertices < Math.pow(2, 16)) trianglulatedIndices = new Uint16Array(trisCount * 3)
+    else trianglulatedIndices = new Uint32Array(trisCount * 3)
+
+    let triangleVertex = 0
+    const addTriangleVertexIndex = function (vertex, faceIndex) {
+      if (vertex in splitIndices && faceIndex in splitIndices[vertex])
+        vertex = numUnSplitVertices + splitIndices[vertex][faceIndex]
+      trianglulatedIndices[triangleVertex] = vertex
+      triangleVertex++
+    }
+    const numFaces = this.getNumFaces()
+    for (let faceIndex = 0; faceIndex < numFaces; faceIndex++) {
+      const faceVerts = this.getFaceVertexIndices(faceIndex)
+      for (let j = 0; j < faceVerts.length; j++) {
+        if (j >= 3) {
+          // For each aditional triangle, we have to add 2 indices.
+          addTriangleVertexIndex(faceVerts[0], faceIndex)
+          addTriangleVertexIndex(faceVerts[j - 1], faceIndex)
+        }
+        addTriangleVertexIndex(faceVerts[j], faceIndex)
+      }
+    }
+    return trianglulatedIndices
   }
 
   /**

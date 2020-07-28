@@ -73,17 +73,17 @@ describe('Mesh', () => {
     normals.setFaceVertexValue(0, 2, new Vec3(-1, 0, 0))
     normals.setFaceVertexValue(0, 3, new Vec3(-1, 0, 0))
 
-    // The second face has normals along the -Y axis
-    normals.setFaceVertexValue(1, 0, new Vec3(0, -1, 0))
-    normals.setFaceVertexValue(1, 1, new Vec3(0, -1, 0))
-    normals.setFaceVertexValue(1, 2, new Vec3(0, -1, 0))
-    normals.setFaceVertexValue(1, 3, new Vec3(0, -1, 0))
+    // The second face has normals along the Y axis
+    normals.setFaceVertexValue(1, 0, new Vec3(0, 1, 0))
+    normals.setFaceVertexValue(1, 1, new Vec3(0, 1, 0))
+    normals.setFaceVertexValue(1, 2, new Vec3(0, 1, 0))
+    normals.setFaceVertexValue(1, 3, new Vec3(0, 1, 0))
 
     expect(mesh.getFaceVertexIndices(0)).toEqual([0, 1, 2, 3])
     expect(mesh.getFaceVertexIndices(1)).toEqual([3, 2, 4, 5])
   })
 
-  test('Check for setting up 2 neighboring quads', () => {
+  test('Check computing normals on 2 neighboring quads', () => {
     const mesh = new Mesh()
     const numVertices = 6
     mesh.setNumVertices(numVertices)
@@ -96,11 +96,25 @@ describe('Mesh', () => {
     positions.getValueRef(4).set(1, 1, 1)
     positions.getValueRef(5).set(1, 1, -1)
 
-    mesh.setFaceCounts([0, 1])
+    mesh.setFaceCounts([0, 2, 0])
     mesh.setFaceVertexIndices(0, 0, 1, 2, 3)
     mesh.setFaceVertexIndices(1, 3, 2, 4, 5)
 
     mesh.computeVertexNormals()
+
+    // Now check that the 2 faces have normals
+    const faceNormals = mesh.getFaceAttribute('normals')
+    expect(faceNormals.getValueRef(0)).toEqual(new Vec3(-1, 0, 0))
+    expect(faceNormals.getValueRef(1)).toEqual(new Vec3(0, 1, 0))
+
+    // Now we check that the 2 normal values for the ve
+    // vertex id 2 is used by Face 0 at facevertex 2, and Face 1 and facevertex index 1
+    // vertex id 3 is used by Face 0 at facevertex 3, and Face 1 and facevertex index 0
+    const normals = mesh.getVertexAttribute('normals')
+    expect(normals.getFaceVertexValueRef(0, 2)).toEqual(new Vec3(-1, 0, 0))
+    expect(normals.getFaceVertexValueRef(1, 1)).toEqual(new Vec3(0, 1, 0))
+    expect(normals.getFaceVertexValueRef(0, 3)).toEqual(new Vec3(-1, 0, 0))
+    expect(normals.getFaceVertexValueRef(1, 0)).toEqual(new Vec3(0, 1, 0))
 
     expect(JSON.stringify(mesh.toJSON())).toMatchSnapshot()
   })
