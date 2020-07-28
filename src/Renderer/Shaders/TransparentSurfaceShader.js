@@ -47,9 +47,6 @@ void main(void) {
     vec4 viewPos    = modelViewMatrix * pos;
     gl_Position     = projectionMatrix * viewPos;
 
-    // mat4 mvp = projectionMatrix * viewMatrix * modelMatrix;
-    // gl_Position = mvp * vec4((lightmapCoords + geomItemData.xy), 0., 1.);
-
     v_worldPos      = (modelMatrix * pos).xyz;
 
     mat3 normalMatrix = mat3(transpose(inverse(modelViewMatrix)));

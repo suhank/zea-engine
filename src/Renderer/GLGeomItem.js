@@ -63,16 +63,20 @@ class GLGeomItem extends EventEmitter {
     }
 
     this.geomItem.getParameter('GeomMat').on('valueChanged', this.geomMatrixChanged)
-    // this.geomItem.on('geomXfoChanged', this.geomMatrixChanged)
     this.geomItem.on('visibilityChanged', this.updateVisibility)
     this.geomItem.on('cutAwayChanged', this.cutAwayChanged)
     this.geomItem.on('highlightChanged', this.highlightChanged)
     this.glGeom.on('updated', this.glGeomUpdated)
 
-    const lightmapCoordsOffset = this.geomItem.getLightmapCoordsOffset()
-    const materialId = 0
-    const geomId = 0
-    this.geomData = [lightmapCoordsOffset.x, lightmapCoordsOffset.y, materialId, geomId]
+    if (!gl.floatTexturesSupported) {
+      const materialId = 0
+      let flags = 0
+      if (this.geomItem.isCutawayEnabled()) {
+        const GEOMITEM_FLAG_CUTAWAY = 1 // 1<<0;
+        flags |= GEOMITEM_FLAG_CUTAWAY
+      }
+      this.geomData = [flags, materialId, 0, 0]
+    }
   }
 
   /**
@@ -164,26 +168,6 @@ class GLGeomItem extends EventEmitter {
     if (unif) {
       gl.uniform1i(unif.location, this.id)
     }
-
-    if (renderstate.lightmaps && unifs.lightmap) {
-      if (renderstate.boundLightmap != this.lightmapName) {
-        const gllightmap = renderstate.lightmaps[this.lightmapName]
-        if (gllightmap && gllightmap.glimage.isLoaded()) {
-          gllightmap.glimage.bindToUniform(renderstate, unifs.lightmap)
-          gl.uniform2fv(unifs.lightmapSize.location, gllightmap.atlasSize.asArray())
-          if (unifs.lightmapConnected) {
-            gl.uniform1i(unifs.lightmapConnected.location, true)
-          }
-          renderstate.boundLightmap = this.lightmapName
-        } else {
-          // disable lightmaps. Revert to default lighting.
-          if (unifs.lightmapConnected) {
-            gl.uniform1i(unifs.lightmapConnected.location, false)
-          }
-        }
-      }
-    }
-
     return true
   }
 
