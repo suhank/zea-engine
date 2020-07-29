@@ -67,10 +67,11 @@ class Sphere extends Mesh {
     // ////////////////////////////
     // Set Vertex Positions
 
+    const positions = this.getVertexAttribute('positions')
     const normals = this.getVertexAttribute('normals')
     const normal = new Vec3(0.0, 0.0, 1.0)
     let vertex = 0
-    this.getVertex(vertex).set(0.0, 0.0, radius)
+    positions.getValueRef(vertex).set(0.0, 0.0, radius)
     normals.getValueRef(vertex).set(0.0, 0.0, 1.0)
     vertex++
 
@@ -81,12 +82,12 @@ class Sphere extends Mesh {
         normal.set(Math.sin(theta) * Math.cos(phi), Math.sin(theta) * Math.sin(phi), Math.cos(theta))
 
         // Set positions and normals at the same time.
-        this.getVertex(vertex).setFromOther(normal.scale(radius))
+        positions.getValueRef(vertex).setFromOther(normal.scale(radius))
         normals.getValueRef(vertex).setFromOther(normal)
         vertex++
       }
     }
-    this.getVertex(vertex).set(0.0, 0.0, -radius)
+    positions.getValueRef(vertex).set(0.0, 0.0, -radius)
     normals.getValueRef(vertex).set(0.0, 0.0, -1.0)
     vertex++
 
@@ -159,9 +160,10 @@ class Sphere extends Mesh {
 
     // ////////////////////////////
     // Set Vertex Positions
+    const positions = this.getVertexAttribute('positions')
     let vertex = 0
     const normal = new Vec3(0.0, 0.0, 1.0)
-    this.getVertex(vertex).set(0.0, 0.0, radius)
+    positions.getValueRef(vertex).set(0.0, 0.0, radius)
     vertex++
 
     for (let i = 0; i < nbLoops; i++) {
@@ -171,11 +173,11 @@ class Sphere extends Mesh {
         normal.set(Math.sin(theta) * Math.cos(phi), Math.sin(theta) * Math.sin(phi), Math.cos(theta))
 
         // Set positions and normals at the same time.
-        this.getVertex(vertex).setFromOther(normal.scale(radius))
+        positions.getValueRef(vertex).setFromOther(normal.scale(radius))
         vertex++
       }
     }
-    this.getVertex(vertex).set(0.0, 0.0, -radius)
+    positions.getValueRef(vertex).set(0.0, 0.0, -radius)
     vertex++
 
     this.setBoundingBoxDirty()
