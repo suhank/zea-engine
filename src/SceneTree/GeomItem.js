@@ -1,4 +1,4 @@
-import { Vec2, Xfo } from '../Math/index'
+import { Xfo } from '../Math/index'
 import { XfoParameter, Mat4Parameter } from './Parameters/index'
 import { MaterialParameter } from './Parameters/MaterialParameter'
 import { GeometryParameter } from './Parameters/GeometryParameter'
@@ -42,15 +42,10 @@ class CalcGeomMatOperator extends Operator {
  * Class representing a geometry item in a scene tree.
  *
  * **Parameters**
- * * **Geometry(`GeometryParameter`):** _todo_
- * * **Material(`MaterialParameter`):** _todo_
- * * **GeomOffsetXfo(`XfoParameter`):** _todo_
- * * **GeomMat(`Mat4Parameter`):** _todo_
- *
- * **Events**
- * * **geomXfoChanged:** _todo_
- * * **materialAssigned:** _todo_
- * * **geomAssigned:** _todo_
+ * * **Geometry(`GeometryParameter`):** The geometry to be rendered for this GeomItem
+ * * **Material(`MaterialParameter`):** The Material to use when rendering this GeomItem
+ * * **GeomOffsetXfo(`XfoParameter`):** Provides an offset transformation that is applied only to the geometry and not inherited by child items.
+ * * **GeomMat(`Mat4Parameter`):** Calculated from the GlobalXfo and the GeomOffsetXfo, this matrix is provided to the renderer for rendering.
  *
  * @extends BaseGeomItem
  */
@@ -64,32 +59,15 @@ class GeomItem extends BaseGeomItem {
   constructor(name, geometry = undefined, material = undefined) {
     super(name)
 
-    this.__geomParam = this.insertParameter(new GeometryParameter('Geometry'), 0)
+    this.__geomParam = this.addParameter(new GeometryParameter('Geometry'))
     this._setBoundingBoxDirty = this._setBoundingBoxDirty.bind(this)
     this.__geomParam.on('valueChanged', this._setBoundingBoxDirty)
     this.__geomParam.on('boundingBoxChanged', this._setBoundingBoxDirty)
-    this.__materialParam = this.insertParameter(new MaterialParameter('Material'), 1)
+    this.__materialParam = this.addParameter(new MaterialParameter('Material'))
     this.__paramMapping['material'] = this.getParameterIndex(this.__materialParam)
 
     this.__geomOffsetXfoParam = this.addParameter(new XfoParameter('GeomOffsetXfo'))
     this.__geomMatParam = this.addParameter(new Mat4Parameter('GeomMat'))
-
-    // this.__cleanGeomMat = this.__cleanGeomMat.bind(this)
-    // this.__globalXfoParam.on('valueChanged', () => {
-    //   this.__geomMatParam.setDirty(this.__cleanGeomMat)
-    // })
-    // this.__geomOffsetXfoParam.on('valueChanged', () => {
-    //   this.__geomMatParam.setDirty(this.__cleanGeomMat)
-    // })
-    // this.__geomMatParam.on('valueChanged', (event) => {
-    //   this.emit('geomXfoChanged', event)
-    // })
-    this.__materialParam.on('valueChanged', (event) => {
-      this.emit('materialAssigned', event)
-    })
-    this.__geomParam.on('valueChanged', (event) => {
-      this.emit('geomAssigned', event)
-    })
 
     this.calcGeomMatOperator = new CalcGeomMatOperator(
       this.__globalXfoParam,
@@ -110,6 +88,7 @@ class GeomItem extends BaseGeomItem {
    * @return {BaseGeom} - The return value.
    */
   getGeometry() {
+    console.warn(`deprecated. please use 'getParameter('Geometry').getValue`)
     return this.__geomParam.getValue()
   }
 
@@ -119,6 +98,7 @@ class GeomItem extends BaseGeomItem {
    * @param {BaseGeom} geom - The geom value.
    */
   setGeometry(geom) {
+    console.warn(`deprecated. please use 'getParameter('Geometry').setValue`)
     this.__geomParam.setValue(geom)
   }
 
@@ -129,7 +109,7 @@ class GeomItem extends BaseGeomItem {
    * @return {BaseGeom} - The return value.
    */
   getGeom() {
-    console.warn("getGeom is deprecated. Please use 'getGeometry'")
+    console.warn(`deprecated. please use 'getParameter('Geometry').getValue`)
     return this.getGeometry()
   }
 
@@ -151,6 +131,7 @@ class GeomItem extends BaseGeomItem {
    * @return {Material} - The return value.
    */
   getMaterial() {
+    console.warn(`deprecated. please use 'getParameter('Material').getValue`)
     return this.__materialParam.getValue()
   }
 
@@ -160,6 +141,7 @@ class GeomItem extends BaseGeomItem {
    * @param {Material} material - The material value.
    */
   setMaterial(material) {
+    console.warn(`deprecated. please use 'getParameter('Material').setValue`)
     this.__materialParam.setValue(material)
   }
 
