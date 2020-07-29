@@ -40,6 +40,19 @@
     .markdown-section a, .sidebar ul li.active>a {
       color: #965CB8;
     }
+
+    footer div#copyright {
+      margin-bottom: 1rem;
+    }
+
+    footer div#cc {
+      display: flex;
+      align-items: center;
+    }
+
+    footer div#cc img {
+      margin-right: 1rem;
+    }
   </style>
 </head>
 <body>
@@ -82,7 +95,25 @@
               alias: {
                 '/.*/_sidebar.md': '/_sidebar.md',
               },
-              search
+              search,
+              plugins: [
+                function(hook) {
+                  var footer = [
+                    '<hr/>',
+                    '<footer>',
+                    '<div id="copyright">Copyright &copy;2020 <a href="http://zea.live/">Zea</a>. </div>',
+                    '<div id="cc">',
+                    '<img src="_media/copyright.png" alt="copyright" />',
+                    '<span>Except where otherwise noted, work provided on Zea Docs is licensed under a <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" target="_blank">Creative Commons Attribution-NonCommercial-ShareAlike 3.0</a> Unported License.</span>',
+                    '</div>',
+                    '</footer>'
+                  ].join('');
+
+                  hook.afterEach(function(html) {
+                    return html + footer;
+                  });
+                }
+              ]
             }
 
             loadScript("//cdn.jsdelivr.net/npm/docsify@4")
