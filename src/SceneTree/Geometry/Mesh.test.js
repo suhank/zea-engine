@@ -26,6 +26,22 @@ describe('Mesh', () => {
     expect(mesh.getFaceVertexIndices(13)).toEqual([0, 1, 2, 3, 4])
   })
 
+  test('Check adding a triangle', () => {
+    const mesh = new Mesh()
+    // The first face is a quad.
+    mesh.addFace([0, 1, 2])
+    expect(mesh.getNumFaces()).toBe(1)
+    expect(mesh.getFaceVertexIndices(0)).toEqual([0, 1, 2])
+  })
+
+  test('Check adding a quad', () => {
+    const mesh = new Mesh()
+    // The first face is a quad.
+    mesh.addFace([0, 1, 2, 3])
+    expect(mesh.getNumFaces()).toBe(1)
+    expect(mesh.getFaceVertexIndices(0)).toEqual([0, 1, 2, 3])
+  })
+
   test('Check adding faces one at a time', () => {
     const mesh = new Mesh()
 

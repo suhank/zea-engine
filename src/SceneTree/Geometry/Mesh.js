@@ -180,13 +180,14 @@ class Mesh extends BaseGeom {
   addFace(vertexIndices) {
     const faceCounts = [...this.__faceCounts]
     if (faceCounts.length <= vertexIndices.length - 3) {
+      for (let i = faceCounts.length; i < vertexIndices.length - 3; i++) faceCounts[i] = 0
       faceCounts[vertexIndices.length - 3] = 1
     } else {
       faceCounts[vertexIndices.length - 3]++
     }
     this.setFaceCounts(faceCounts)
 
-    // Calculate the offset in the faceVertexIndces of this new face.
+    // Calculate the offset in the faceVertexIndices of this new face.
     let faceIndex = 0
     let offset = 0
     this.__faceCounts.some((fc, index) => {
@@ -198,9 +199,7 @@ class Mesh extends BaseGeom {
       faceIndex += fc
       offset += fc * (index + 3)
     })
-    for (let i = 0; i < vertexIndices.length; i++) {
-      this.__faceVertexIndices[offset + i] = vertexIndices[i]
-    }
+    this.__faceVertexIndices.set(vertexIndices, offset)
     return faceIndex
   }
 
