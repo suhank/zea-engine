@@ -84,6 +84,31 @@ class Xfo {
   }
 
   /**
+   * Checks if this Vec3 is exactly the same as another Vec3.
+   *
+   * @param {Vec3} other - The other Vec3 to compare with.
+   * @return {boolean} - Returns `true` if are the same Vector, otherwise, `false`.
+   */
+  isEqual(other) {
+    return this.tr.isEqual(other.tr) && this.ori.isEqual(other.ori) && this.sc.isEqual(other.sc)
+  }
+
+  /**
+   * Returns true if this Vec2 is approximately the same as other.
+   *
+   * @param {Vec3} other - The other Vec3 to compare with.
+   * @param {number} precision - The precision to which the values must match.
+   * @return {boolean} - Returns true or false.
+   */
+  approxEqual(other, precision = Number.EPSILON) {
+    return (
+      (other.tr ? this.tr.approxEqual(other.tr, precision) : true) &&
+      (other.ori ? this.ori.approxEqual(other.ori, precision) : true) &&
+      (other.sc ? this.sc.approxEqual(other.sc, precision) : true)
+    )
+  }
+
+  /**
    * The setLookAt method.
    * @param {Vec3} pos - The position value.
    * @param {Vec3} target - The target value.
@@ -140,12 +165,9 @@ class Xfo {
       // and with non-uniform scale. Then parent them together. If they
       // remain stationary, after parenting, then this math is correct.
       result.sc = result.ori.rotateVec3(this.sc)
-      if (Math.sign(result.sc.x) != Math.sign(this.sc.x))
-        result.sc.x = -result.sc.x
-      if (Math.sign(result.sc.y) != Math.sign(this.sc.y))
-        result.sc.y = -result.sc.y
-      if (Math.sign(result.sc.z) != Math.sign(this.sc.z))
-        result.sc.z = -result.sc.z
+      if (Math.sign(result.sc.x) != Math.sign(this.sc.x)) result.sc.x = -result.sc.x
+      if (Math.sign(result.sc.y) != Math.sign(this.sc.y)) result.sc.y = -result.sc.y
+      if (Math.sign(result.sc.z) != Math.sign(this.sc.z)) result.sc.z = -result.sc.z
     } else {
       result.sc = this.sc.inverse()
     }
@@ -169,24 +191,7 @@ class Xfo {
    * @return {Mat4} - Returns a new Mat4.
    */
   toMat4() {
-    const scl = new Mat4(
-      this.sc.x,
-      0,
-      0,
-      0,
-      0,
-      this.sc.y,
-      0,
-      0,
-      0,
-      0,
-      this.sc.z,
-      0,
-      0,
-      0,
-      0,
-      1.0
-    )
+    const scl = new Mat4(this.sc.x, 0, 0, 0, 0, this.sc.y, 0, 0, 0, 0, this.sc.z, 0, 0, 0, 0, 1.0)
 
     const rot = this.ori.toMat4()
 
