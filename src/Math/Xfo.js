@@ -9,7 +9,7 @@ import { typeRegistry } from './TypeRegistry.js'
 const sc_helper = new Vec3(1, 1, 1)
 
 /**
- * Class representing an Xfo transform.
+ * Class representing an Xfo transform, which is a transformation decomposed into 3 component values. Translation, Orientation, and Scaling.
  */
 class Xfo {
   /**
