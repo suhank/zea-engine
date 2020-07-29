@@ -89,17 +89,17 @@ describe('Xfo', () => {
     expect(transformedTr.toJSON()).toEqual({ x: 25, y: -34, z: -27 })
   })
 
-  it.skip('returns Mat4 representation of the xfo', () => {
+  it('returns Mat4 representation of the xfo', () => {
     const xfo = new Xfo(new Vec3(1, 2, 3), new Quat(1, 0, 0, 0), new Vec3(8, 9, 10))
     const mat4 = xfo.toMat4()
+    console.log(mat4.toJSON())
 
-    expect(mat4).toEqual(new Mat4(8, 0, 0, 0, 0, -9, 0, 0, 0, 0, -10, 0, 0, 0, 0, 1))
+    expect(mat4).toEqual(new Mat4(8, 0, 0, 0, 0, -9, 0, 0, 0, 0, -10, 0, 1, 2, 3, 1))
   })
 
-  it.skip('restores xfo from a Mat4', () => {
-    const xfo = new Xfo(new Vec3(1, 2, 3), new Quat(0, 1, 0, 0), new Vec3(8, 9, 10))
+  it('restores xfo from a Mat4', () => {
+    const xfo = new Xfo(new Vec3(1, 2, 3), new Quat(0, 1, 0, 0))
     const mat4 = xfo.toMat4()
-    console.log(mat4.toString())
 
     const restoredXfo = new Xfo()
     restoredXfo.fromMat4(mat4)
