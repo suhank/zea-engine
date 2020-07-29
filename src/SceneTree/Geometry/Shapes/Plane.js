@@ -70,7 +70,7 @@ class Plane extends Mesh {
         const v1 = (detailX + 1) * (i + 1) + (j + 1)
         const v2 = (detailX + 1) * i + (j + 1)
         const v3 = (detailX + 1) * i + j
-        this.setFaceVertexIndices(quadId, v0, v1, v2, v3)
+        this.setFaceVertexIndices(quadId, [v0, v1, v2, v3])
         quadId = quadId + 1
       }
     }

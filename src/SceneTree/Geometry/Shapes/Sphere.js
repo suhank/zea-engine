@@ -100,7 +100,7 @@ class Sphere extends Mesh {
       const v0 = 0
       const v1 = ((j + 1) % nbSides) + 1
       const v2 = j + 1
-      this.setFaceVertexIndices(faceIndex, v0, v1, v2)
+      this.setFaceVertexIndices(faceIndex, [v0, v1, v2])
 
       const uv0 = new Vec2(0.5, 0.0)
       const uv1 = new Vec2(1.0 - (j + 1) / nbSides, 0.0)
@@ -116,7 +116,7 @@ class Sphere extends Mesh {
       const v0 = numVertices - 1
       const v1 = nbSides * (nbLoops - 1) + j + 1
       const v2 = nbSides * (nbLoops - 1) + ((j + 1) % nbSides) + 1
-      this.setFaceVertexIndices(faceIndex, v0, v1, v2)
+      this.setFaceVertexIndices(faceIndex, [v0, v1, v2])
 
       const uv0 = new Vec2(1.0 - j / nbSides, nbLoops / (nbLoops + 1))
       const uv1 = new Vec2(1.0 - (j + 1) / nbSides, nbLoops / (nbLoops + 1))
@@ -134,7 +134,7 @@ class Sphere extends Mesh {
         const v1 = nbSides * i + ((j + 1) % nbSides) + 1
         const v2 = nbSides * (i + 1) + ((j + 1) % nbSides) + 1
         const v3 = nbSides * (i + 1) + j + 1
-        this.setFaceVertexIndices(faceIndex, v0, v1, v2, v3)
+        this.setFaceVertexIndices(faceIndex, [v0, v1, v2, v3])
 
         texCoords.setFaceVertexValue(faceIndex, 0, new Vec2(i / nbLoops, j / nbLoops))
         texCoords.setFaceVertexValue(faceIndex, 1, new Vec2(i / nbLoops, (j + 1) / nbLoops))

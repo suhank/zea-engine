@@ -90,12 +90,12 @@ class Cone extends Mesh {
     this.setFaceCounts([nbSides + (cap ? nbSides : 0)])
     for (let i = 0; i < nbSides; i++) {
       const j = (i + 1) % nbSides
-      this.setFaceVertexIndices(i, j, i, tipPoint)
+      this.setFaceVertexIndices(i, [j, i, tipPoint])
     }
     if (cap) {
       for (let i = 0; i < nbSides; i++) {
         const j = (i + 1) % nbSides
-        this.setFaceVertexIndices(nbSides + i, i, j, basePoint)
+        this.setFaceVertexIndices(nbSides + i, [i, j, basePoint])
       }
     }
 

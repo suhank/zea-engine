@@ -91,14 +91,14 @@ class Cylinder extends Mesh {
         const v0 = numVertices - 1
         const v1 = j
         const v2 = (j + 1) % nbSides
-        this.setFaceVertexIndices(faceIndex++, v0, v1, v2)
+        this.setFaceVertexIndices(faceIndex++, [v0, v1, v2])
       }
       // Top caps topology
       for (let j = 0; j < nbSides; j++) {
         const v0 = nbSides * (nbLoops - 1) + j
         const v1 = numVertices - 2
         const v2 = nbSides * (nbLoops - 1) + ((j + 1) % nbSides)
-        this.setFaceVertexIndices(faceIndex++, v0, v1, v2)
+        this.setFaceVertexIndices(faceIndex++, [v0, v1, v2])
       }
     }
 
@@ -109,7 +109,7 @@ class Cylinder extends Mesh {
         const v1 = nbSides * i + j
         const v2 = nbSides * (i + 1) + j
         const v3 = nbSides * (i + 1) + ((j + 1) % nbSides)
-        this.setFaceVertexIndices(faceIndex++, v0, v1, v2, v3)
+        this.setFaceVertexIndices(faceIndex++, [v0, v1, v2, v3])
       }
     }
 

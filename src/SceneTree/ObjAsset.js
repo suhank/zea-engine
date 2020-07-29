@@ -353,7 +353,7 @@ class ObjAsset extends AssetItem {
 
       for (let i = 0; i < geomData.vertexIndices.length; i++) {
         const v_poly = geomData.vertexIndices[i]
-        mesh.setFaceVertexIndices(i, ...v_poly)
+        mesh.setFaceVertexIndices(i, v_poly)
 
         // Set the texCoords and normals...
         if (normalsAttr) {

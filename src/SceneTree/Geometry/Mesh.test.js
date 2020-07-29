@@ -11,11 +11,11 @@ describe('Mesh', () => {
   test('Check various face counts and offset', () => {
     const mesh = new Mesh()
     mesh.setFaceCounts([7, 5, 3])
-    mesh.setFaceVertexIndices(3, 0, 1, 2)
-    mesh.setFaceVertexIndices(9, 0, 1, 2, 3)
-    mesh.setFaceVertexIndices(13, 0, 1, 2, 3, 4)
+    mesh.setFaceVertexIndices(3, [0, 1, 2])
+    mesh.setFaceVertexIndices(9, [0, 1, 2, 3])
+    mesh.setFaceVertexIndices(13, [0, 1, 2, 3, 4])
     expect(() => {
-      mesh.setFaceVertexIndices(14, 0, 1, 2, 3, 4, 5)
+      mesh.setFaceVertexIndices(14, [0, 1, 2, 3, 4, 5])
     }).toThrow()
 
     expect(mesh.getFaceVertexCount(3)).toBe(3)
@@ -73,7 +73,7 @@ describe('Mesh', () => {
     positions.getValueRef(2).set(2, 1, -3)
 
     mesh.setFaceCounts([1])
-    mesh.setFaceVertexIndices(0, 0, 1, 2)
+    mesh.setFaceVertexIndices(0, [0, 1, 2])
 
     expect(mesh.getNumFaces()).toBe(1)
     expect(mesh.getFaceVertexCount(0)).toBe(3)
@@ -100,7 +100,7 @@ describe('Mesh', () => {
     normals.getValueRef(3).set(-1, 0, 0)
 
     mesh.setFaceCounts([0, 1])
-    mesh.setFaceVertexIndices(0, 0, 1, 2, 3)
+    mesh.setFaceVertexIndices(0, [0, 1, 2, 3])
 
     expect(mesh.getFaceVertexIndices(0)).toEqual([0, 1, 2, 3])
   })
@@ -119,8 +119,8 @@ describe('Mesh', () => {
     positions.getValueRef(5).set(1, 1, -1)
 
     mesh.setFaceCounts([0, 2])
-    mesh.setFaceVertexIndices(0, 0, 1, 2, 3)
-    mesh.setFaceVertexIndices(1, 3, 2, 4, 5)
+    mesh.setFaceVertexIndices(0, [0, 1, 2, 3])
+    mesh.setFaceVertexIndices(1, [3, 2, 4, 5])
 
     const normals = mesh.addVertexAttribute('normals', Vec3, 0.0)
 
@@ -154,8 +154,8 @@ describe('Mesh', () => {
     positions.getValueRef(5).set(1, 1, -1)
 
     mesh.setFaceCounts([0, 2, 0])
-    mesh.setFaceVertexIndices(0, 0, 1, 2, 3)
-    mesh.setFaceVertexIndices(1, 3, 2, 4, 5)
+    mesh.setFaceVertexIndices(0, [0, 1, 2, 3])
+    mesh.setFaceVertexIndices(1, [3, 2, 4, 5])
 
     mesh.computeVertexNormals()
 
@@ -183,12 +183,12 @@ describe('Mesh', () => {
 
     // one triangle and one quad.
     mesh.setFaceCounts([1, 1])
-    mesh.setFaceVertexIndices(0, 0, 1, 2)
-    mesh.setFaceVertexIndices(1, 0, 1, 2, 3)
+    mesh.setFaceVertexIndices(0, [0, 1, 2])
+    mesh.setFaceVertexIndices(1, [0, 1, 2, 3])
 
     // Now we add another triangle
     mesh.setFaceCounts([2, 1])
-    mesh.setFaceVertexIndices(1, 2, 1, 3)
+    mesh.setFaceVertexIndices(1, [2, 1, 3])
 
     expect(mesh.getFaceVertexIndices(0)).toEqual([0, 1, 2])
     expect(mesh.getFaceVertexIndices(1)).toEqual([2, 1, 3])
@@ -202,9 +202,9 @@ describe('Mesh', () => {
 
     // two triangleas and one quad.
     mesh.setFaceCounts([2, 1])
-    mesh.setFaceVertexIndices(0, 0, 1, 2)
-    mesh.setFaceVertexIndices(1, 2, 1, 3)
-    mesh.setFaceVertexIndices(1, 2, 1, 3)
+    mesh.setFaceVertexIndices(0, [0, 1, 2])
+    mesh.setFaceVertexIndices(1, [2, 1, 3])
+    mesh.setFaceVertexIndices(1, [2, 1, 3])
 
     // remove a triangle. Now one triangle and one quad.
     mesh.setFaceCounts([1, 1])
@@ -224,7 +224,7 @@ describe('Mesh', () => {
     positions.getValueRef(2).set(2, 1, -3)
 
     mesh.setFaceCounts([1])
-    mesh.setFaceVertexIndices(0, 0, 1, 2)
+    mesh.setFaceVertexIndices(0, [0, 1, 2])
 
     expect(mesh.genBuffers()).toEqual({
       attrBuffers: {
@@ -253,7 +253,7 @@ describe('Mesh', () => {
     positions.getValueRef(2).set(2, 1, -3)
 
     mesh.setFaceCounts([1])
-    mesh.setFaceVertexIndices(0, 0, 1, 2)
+    mesh.setFaceVertexIndices(0, [0, 1, 2])
 
     expect(JSON.stringify(mesh.toJSON())).toMatchSnapshot()
   })

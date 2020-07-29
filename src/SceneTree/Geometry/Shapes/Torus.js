@@ -138,7 +138,7 @@ class Torus extends Mesh {
         const v1 = nbSlices * i + jp
         const v2 = nbSlices * ip + jp
         const v3 = nbSlices * ip + j
-        this.setFaceVertexIndices(faceIndex, v0, v1, v2, v3)
+        this.setFaceVertexIndices(faceIndex, [v0, v1, v2, v3])
 
         texCoords.setFaceVertexValue(faceIndex, 0, new Vec2(i / nbLoops, j / nbLoops))
         texCoords.setFaceVertexValue(faceIndex, 1, new Vec2(i / nbLoops, (j + 1) / nbLoops))

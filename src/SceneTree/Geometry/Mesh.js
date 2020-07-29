@@ -156,9 +156,13 @@ class Mesh extends BaseGeom {
   /**
    * The setFaceVertexIndices method.
    * @param {number} faceIndex - The faceIndex value.
+   * @param {array} vertexIndices - The array of vertex indices for this face value.
    */
-  setFaceVertexIndices(faceIndex) {
-    const vertexIndices = Array.prototype.slice.call(arguments, 1)
+  setFaceVertexIndices(faceIndex, vertexIndices) {
+    if (arguments.length != 2) {
+      console.warn(`deprecated interface. Please pass vertexIndices as an array`)
+      vertexIndices = Array.prototype.slice.call(arguments, 1)
+    }
     const faceVertexCount = this.getFaceVertexCount(faceIndex)
     if (vertexIndices.length != faceVertexCount) {
       throw new Error(
@@ -833,7 +837,7 @@ class Mesh extends BaseGeom {
    * @param {number} totalNumVertices - The total number of vertices.
    * @param {number} numUnSplitVertices - The total number of unsplit vertices.
    * @param {array} splitIndices - The splitIndices value.
-   * @return {Uint32Array} - The return value.
+   * @return {TypedArray} - Retures a typed array containing the triangulated indices.
    */
   generateTriangulatedIndices(totalNumVertices, numUnSplitVertices, splitIndices) {
     const trisCount = this.computeNumTriangles()
