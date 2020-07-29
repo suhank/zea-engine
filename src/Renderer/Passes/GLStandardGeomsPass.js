@@ -42,13 +42,14 @@ class GLStandardGeomsPass extends GLPass {
           if (!treeItem.getMetadata('glgeomItem')) {
             const checkGeom = (geomItem) => {
               if (this.filterGeomItem(geomItem)) {
-                if (treeItem.getGeometry() == undefined) {
+                const geomParam = treeItem.getParameter('Geometry')
+                if (geomParam.getValue() == undefined) {
                   // we will add this geomitem once it recieves its geom.
                   // TODO: what happens if the item is removed from the tree
                   // and then geom assigned? (maybe inmpossible with our tools)
                   // e.g. a big asset loaded, added to the tree, then removed again
                   // The geoms will get assigned after the tree is removed.
-                  treeItem.on('geomAssigned', () => {
+                  geomParam.on('valueChanged', () => {
                     this.addGeomItem(geomItem)
                   })
                 } else {

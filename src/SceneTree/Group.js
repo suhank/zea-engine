@@ -613,32 +613,33 @@ class Group extends TreeItem {
 
   /**
    * Occurs when a user presses a mouse button over an element.
+   * Note: these methods are useful for debugging mouse event propagation to groups
+   *
    * @private
    * @param {MouseEvent} event - The mouse event that occurs.
    */
   onMouseDown(event) {
-    console.warn('@todo-review')
     super.onMouseDown(event)
   }
 
   /**
    * Occurs when a user releases a mouse button over an element.
+   * Note: these methods are useful for debugging mouse event propagation to groups
    *
    * @private
    * @param {MouseEvent} event - The mouse event that occurs.
    */
   onMouseUp(event) {
-    console.warn('@todo-review')
     super.onMouseUp(event)
   }
 
   /**
    * Occur when the mouse pointer is moving  while over an element.
+   * Note: these methods are useful for debugging mouse event propagation to groups
    * @private
    * @param {MouseEvent} event - The mouse event that occurs.
    */
   onMouseMove(event) {
-    console.warn('@todo-review')
     super.onMouseMove(event)
   }
 

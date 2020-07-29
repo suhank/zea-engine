@@ -67,6 +67,7 @@ class Vec2 extends AttrValue {
     if (x instanceof Float32Array || x instanceof Uint32Array || x instanceof Int32Array) {
       this.__data = x
     } else if (x instanceof ArrayBuffer) {
+      console.warn(`deprecated, please use new Vec4(new Float32Array(buffer, byteOffset, 4))`)
       const buffer = x
       const byteOffset = y
       this.__data = new Float32Array(buffer, byteOffset, 2)
@@ -498,7 +499,7 @@ class Vec2 extends AttrValue {
    * @private
    */
   static createFromFloat32Buffer(buffer, offset = 0) {
-    return new Vec2(buffer, offset * 4) // 4 bytes per 32bit float
+    return new Vec2(new Float32Array(buffer, offset * 4, 2)) // 4 bytes per 32bit float
   }
 
   /**

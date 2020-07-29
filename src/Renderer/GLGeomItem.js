@@ -176,8 +176,6 @@ class GLGeomItem extends EventEmitter {
    * Users should never need to call this method directly.
    */
   destroy() {
-    // this.geomItem.off('geomXfoChanged', this.geomMatrixChanged)
-
     this.geomItem.getParameter('GeomMat').off('valueChanged', this.geomMatrixChanged)
     this.geomItem.off('visibilityChanged', this.updateVisibility)
     this.geomItem.off('cutAwayChanged', this.cutAwayChanged)

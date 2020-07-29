@@ -1,7 +1,9 @@
 import { BaseGeom, SAVE_FLAG_SKIP_GEOMDATA } from './BaseGeom.js'
 import { Attribute } from './Attribute.js'
+import { sgFactory } from '../SGFactory.js'
 
 /**
+ *
  * Class representing lines primitive drawing type, connecting vertices using the specified indices.
  * i.e. We have 4 points(vertices) but we don't know how they connect to each other,
  * and that's why we need indices(Numbers indicating which vertex connects to which).
@@ -24,14 +26,13 @@ class Lines extends BaseGeom {
   constructor() {
     super()
     this.__indices = new Uint32Array()
-    this.__segmentAttributes = new Map()
     this.lineThickness = 0.0
   }
 
   /**
    * Returns the specified indices(Vertex connectors)
    *
-   * @return {Uint32Array} - The return value.
+   * @return {Uint32Array} - The indices index array.
    */
   getIndices() {
     return this.__indices
@@ -53,12 +54,27 @@ class Lines extends BaseGeom {
    * @param {number} numOfSegments - The count value.
    */
   setNumSegments(numOfSegments) {
-    const indices = new Uint32Array(numOfSegments * 2)
-    // indices.set(this.__indices)
-    // for (let i=0;i<this.__indices.length; i++) {
-    //     indices[i] = this.__indices[i];
-    // }
-    this.__indices = indices
+    if (numOfSegments > this.getNumSegments()) {
+      const indices = new Uint32Array(numOfSegments * 2)
+      indices.set(this.__indices)
+      this.__indices = indices
+    } else {
+      this.__indices = this.__indices.slice(0, numOfSegments * 2)
+    }
+  }
+
+  /**
+   * Sets segment values in the specified index.
+   *
+   * @param {number} index - The index value.
+   * @param {number} p0 - The p0 value.
+   * @param {number} p1 - The p1 value.
+   */
+  setSegmentVertexIndices(index, p0, p1) {
+    if (index >= this.__indices.length / 2)
+      throw new Error('Invalid line index:' + index + '. Num Segments:' + this.__indices.length / 2)
+    this.__indices[index * 2 + 0] = p0
+    this.__indices[index * 2 + 1] = p1
   }
 
   /**
@@ -69,10 +85,8 @@ class Lines extends BaseGeom {
    * @param {number} p1 - The p1 value.
    */
   setSegment(index, p0, p1) {
-    if (index >= this.__indices.length / 2)
-      throw new Error('Invalid line index:' + index + '. Num Segments:' + this.__indices.length / 2)
-    this.__indices[index * 2 + 0] = p0
-    this.__indices[index * 2 + 1] = p1
+    console.warn(`deprecated use #setSegmentVertexIndices`)
+    this.setSegmentVertexIndices(index, p0, p1)
   }
 
   /**
@@ -84,42 +98,8 @@ class Lines extends BaseGeom {
    * @private
    */
   getSegmentVertexIndex(line, lineVertex) {
-    const numLines = this.numLines
-    if (line < numLines) return this.__indices[line * 2 + lineVertex]
-  }
-
-  /**
-   * The addSegmentAttribute method.
-   * @param {string} name - The name value.
-   * @param {AttrValue|number} dataType - The dataType value.
-   * @param {number} count - The count value.
-   * @return {AttrValue} - The return value.
-   * @private
-   */
-  addSegmentAttribute(name, dataType, count = undefined) {
-    const attr = new Attribute(dataType, count != undefined ? count : this.polygonCount)
-    this.__segmentAttributes.set(name, attr)
-    return attr
-  }
-
-  /**
-   * The hasSegmentAttribute method.
-   * @param {string} name - The name value.
-   * @return {boolean} - The return value.
-   * @private
-   */
-  hasSegmentAttribute(name) {
-    return this.__segmentAttributes.has(name)
-  }
-
-  /**
-   * The getSegmentAttribute method.
-   * @param {string} name - The name value.
-   * @return {AttrValue} - The return value.
-   * @private
-   */
-  getSegmentAttribute(name) {
-    return this.__segmentAttributes.get(name)
+    const numSegments = this.getNumSegments()
+    if (line < numSegments) return this.__indices[line * 2 + lineVertex]
   }
 
   // ////////////////////////////////////////
@@ -150,9 +130,6 @@ class Lines extends BaseGeom {
     buffers.indices = indices
     return buffers
   }
-
-  // ////////////////////////////////////////
-  // Persistence
 
   // ////////////////////////////////////////
   // Persistence
@@ -202,5 +179,7 @@ class Lines extends BaseGeom {
     this.__indices = Uint32Array.from(j.indices)
   }
 }
+
+sgFactory.registerClass('Lines', Lines)
 
 export { Lines }

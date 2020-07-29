@@ -62,14 +62,6 @@ class GLBaseViewport extends ParameterOwner {
   }
 
   /**
-   * The getName method.
-   * @return {any} - The return value.
-   */
-  getName() {
-    return this.__name
-  }
-
-  /**
    * The getBl method.
    * @return {any} - The return value.
    */

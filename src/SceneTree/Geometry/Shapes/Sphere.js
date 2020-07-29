@@ -16,9 +16,6 @@ import { sgFactory } from '../../SGFactory.js'
  * * **sides(`NumberParameter`):** Specifies the number of subdivisions around the `Z` axis.
  * * **loops(`NumberParameter`):** Specifies the number of subdivisions(stacks) along the `Z` axis.
  *
- * **Events**
- * * **geomDataTopologyChanged:** Triggered when `radius` value changes
- * * **geomDataChanged:** Triggered when `sides` or `loops` values change.
  * @extends Mesh
  */
 class Sphere extends Mesh {
@@ -70,10 +67,11 @@ class Sphere extends Mesh {
     // ////////////////////////////
     // Set Vertex Positions
 
+    const positions = this.getVertexAttribute('positions')
     const normals = this.getVertexAttribute('normals')
     const normal = new Vec3(0.0, 0.0, 1.0)
     let vertex = 0
-    this.getVertex(vertex).set(0.0, 0.0, radius)
+    positions.getValueRef(vertex).set(0.0, 0.0, radius)
     normals.getValueRef(vertex).set(0.0, 0.0, 1.0)
     vertex++
 
@@ -84,12 +82,12 @@ class Sphere extends Mesh {
         normal.set(Math.sin(theta) * Math.cos(phi), Math.sin(theta) * Math.sin(phi), Math.cos(theta))
 
         // Set positions and normals at the same time.
-        this.getVertex(vertex).setFromOther(normal.scale(radius))
+        positions.getValueRef(vertex).setFromOther(normal.scale(radius))
         normals.getValueRef(vertex).setFromOther(normal)
         vertex++
       }
     }
-    this.getVertex(vertex).set(0.0, 0.0, -radius)
+    positions.getValueRef(vertex).set(0.0, 0.0, -radius)
     normals.getValueRef(vertex).set(0.0, 0.0, -1.0)
     vertex++
 
@@ -103,7 +101,7 @@ class Sphere extends Mesh {
       const v0 = 0
       const v1 = ((j + 1) % nbSides) + 1
       const v2 = j + 1
-      this.setFaceVertexIndices(faceIndex, v0, v1, v2)
+      this.setFaceVertexIndices(faceIndex, [v0, v1, v2])
 
       const uv0 = new Vec2(0.5, 0.0)
       const uv1 = new Vec2(1.0 - (j + 1) / nbSides, 0.0)
@@ -119,7 +117,7 @@ class Sphere extends Mesh {
       const v0 = numVertices - 1
       const v1 = nbSides * (nbLoops - 1) + j + 1
       const v2 = nbSides * (nbLoops - 1) + ((j + 1) % nbSides) + 1
-      this.setFaceVertexIndices(faceIndex, v0, v1, v2)
+      this.setFaceVertexIndices(faceIndex, [v0, v1, v2])
 
       const uv0 = new Vec2(1.0 - j / nbSides, nbLoops / (nbLoops + 1))
       const uv1 = new Vec2(1.0 - (j + 1) / nbSides, nbLoops / (nbLoops + 1))
@@ -137,7 +135,7 @@ class Sphere extends Mesh {
         const v1 = nbSides * i + ((j + 1) % nbSides) + 1
         const v2 = nbSides * (i + 1) + ((j + 1) % nbSides) + 1
         const v3 = nbSides * (i + 1) + j + 1
-        this.setFaceVertexIndices(faceIndex, v0, v1, v2, v3)
+        this.setFaceVertexIndices(faceIndex, [v0, v1, v2, v3])
 
         texCoords.setFaceVertexValue(faceIndex, 0, new Vec2(i / nbLoops, j / nbLoops))
         texCoords.setFaceVertexValue(faceIndex, 1, new Vec2(i / nbLoops, (j + 1) / nbLoops))
@@ -162,9 +160,10 @@ class Sphere extends Mesh {
 
     // ////////////////////////////
     // Set Vertex Positions
+    const positions = this.getVertexAttribute('positions')
     let vertex = 0
     const normal = new Vec3(0.0, 0.0, 1.0)
-    this.getVertex(vertex).set(0.0, 0.0, radius)
+    positions.getValueRef(vertex).set(0.0, 0.0, radius)
     vertex++
 
     for (let i = 0; i < nbLoops; i++) {
@@ -174,11 +173,11 @@ class Sphere extends Mesh {
         normal.set(Math.sin(theta) * Math.cos(phi), Math.sin(theta) * Math.sin(phi), Math.cos(theta))
 
         // Set positions and normals at the same time.
-        this.getVertex(vertex).setFromOther(normal.scale(radius))
+        positions.getValueRef(vertex).setFromOther(normal.scale(radius))
         vertex++
       }
     }
-    this.getVertex(vertex).set(0.0, 0.0, -radius)
+    positions.getValueRef(vertex).set(0.0, 0.0, -radius)
     vertex++
 
     this.setBoundingBoxDirty()

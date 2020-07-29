@@ -13,9 +13,6 @@ import { sgFactory } from '../../SGFactory.js'
  * * **z(`NumberParameter`):** Length of the line cuboid along the `Z` axis
  * * **BaseZAtZero(`NumberParameter`):** Property to start or not `Z` axis from position `0.
  *
- * **Events**
- * * **geomDataChanged:** Triggered whenever the length of the cuboid changes in `X`, `Y` or `Z` axes
- *
  * @extends Mesh
  */
 class Cuboid extends Mesh {
@@ -37,14 +34,14 @@ class Cuboid extends Mesh {
     this.__baseZAtZeroParam = this.addParameter(new BooleanParameter('baseZAtZero', baseZAtZero))
 
     this.setFaceCounts([0, 6])
-    this.setFaceVertexIndices(0, 0, 1, 2, 3)
-    this.setFaceVertexIndices(1, 7, 6, 5, 4)
+    this.setFaceVertexIndices(0, [0, 1, 2, 3])
+    this.setFaceVertexIndices(1, [7, 6, 5, 4])
 
-    this.setFaceVertexIndices(2, 1, 0, 4, 5)
-    this.setFaceVertexIndices(3, 3, 2, 6, 7)
+    this.setFaceVertexIndices(2, [1, 0, 4, 5])
+    this.setFaceVertexIndices(3, [3, 2, 6, 7])
 
-    this.setFaceVertexIndices(4, 0, 3, 7, 4)
-    this.setFaceVertexIndices(5, 2, 1, 5, 6)
+    this.setFaceVertexIndices(4, [0, 3, 7, 4])
+    this.setFaceVertexIndices(5, [2, 1, 5, 6])
     this.setNumVertices(8)
     this.addVertexAttribute('texCoords', Vec2)
     this.addVertexAttribute('normals', Vec3)

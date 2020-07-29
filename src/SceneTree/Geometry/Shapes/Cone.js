@@ -55,85 +55,6 @@ class Cone extends Mesh {
   }
 
   /**
-   * Returns radius parameter value.
-   *
-   * @return {number} - Returns the radius.
-   */
-  get radius() {
-    return this.__radiusParam.getValue()
-  }
-
-  /**
-   * Sets radius parameter value in parameter.<br>
-   * **Note:** Resizes the cone.
-   *
-   * @param {number} val - The radius value.
-   */
-  set radius(val) {
-    this.__radiusParam.setValue(val)
-    this.__resize()
-  }
-
-  /**
-   * Returns height parameter value.
-   *
-   * @return {number} - Returns the height.
-   */
-  get height() {
-    return this.__heightParam.getValue()
-  }
-
-  /**
-   * Sets height parameter value.<br>
-   * **Note:** Resizes the cone.
-   *
-   * @param {number} val - The height value.
-   */
-  set height(val) {
-    this.__heightParam.setValue(val)
-    this.__resize()
-  }
-
-  /**
-   * Returns details parameter value(Number of subdivisions around the `Z` axis).
-   *
-   * @return {number} - Returns the detail.
-   */
-  get detail() {
-    return this.__detailParam.getValue()
-  }
-
-  /**
-   * Sets details parameter value(Number of subdivisions around the `Z` axis)
-   *
-   * @param {number} val - The detail value.
-   */
-  set detail(val) {
-    this.__detailParam.setValue(val)
-    this.__rebuild()
-  }
-
-  /**
-   * Returns cap parameter value.
-   *
-   * @return {boolean} - The return value.
-   */
-  get cap() {
-    return this.__capParam.getValue()
-  }
-
-  /**
-   * Sets `cap` parameter value.<br>
-   * **Note:** Resizes the cone.
-   *
-   * @param {number} val - The val param.
-   */
-  set cap(val) {
-    this.__capParam.setValue(val)
-    this.__rebuild()
-  }
-
-  /**
    * The __rebuild method.
    * @private
    */
@@ -169,12 +90,12 @@ class Cone extends Mesh {
     this.setFaceCounts([nbSides + (cap ? nbSides : 0)])
     for (let i = 0; i < nbSides; i++) {
       const j = (i + 1) % nbSides
-      this.setFaceVertexIndices(i, j, i, tipPoint)
+      this.setFaceVertexIndices(i, [j, i, tipPoint])
     }
     if (cap) {
       for (let i = 0; i < nbSides; i++) {
         const j = (i + 1) % nbSides
-        this.setFaceVertexIndices(nbSides + i, i, j, basePoint)
+        this.setFaceVertexIndices(nbSides + i, [i, j, basePoint])
       }
     }
 
@@ -229,6 +150,7 @@ class Cone extends Mesh {
     }
 
     this.setBoundingBoxDirty()
+    this.emit('geomDataTopologyChanged', {})
   }
 
   /**
@@ -254,6 +176,7 @@ class Cone extends Mesh {
     }
 
     this.setBoundingBoxDirty()
+    this.emit('geomDataChanged', {})
   }
 }
 
