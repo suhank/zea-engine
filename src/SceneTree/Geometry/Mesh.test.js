@@ -78,6 +78,7 @@ describe('Mesh', () => {
     expect(mesh.getNumFaces()).toBe(1)
     expect(mesh.getFaceVertexCount(0)).toBe(3)
     expect(mesh.getFaceVertexIndices(0)).toEqual([0, 1, 2])
+    expect(mesh.computeHardEdgesIndices()).toEqual(new Uint32Array([0, 1, 1, 2, 0, 2]))
 
     expect(mesh.getVertexAttribute('positions').length).toBe(numVertices)
   })
@@ -101,6 +102,7 @@ describe('Mesh', () => {
 
     mesh.setFaceCounts([0, 1])
     mesh.setFaceVertexIndices(0, [0, 1, 2, 3])
+    expect(mesh.computeHardEdgesIndices()).toEqual(new Uint32Array([0, 1, 1, 2, 2, 3, 0, 3]))
 
     expect(mesh.getFaceVertexIndices(0)).toEqual([0, 1, 2, 3])
   })
