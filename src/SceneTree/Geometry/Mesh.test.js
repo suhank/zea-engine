@@ -176,6 +176,44 @@ describe('Mesh', () => {
     expect(JSON.stringify(mesh.toJSON())).toMatchSnapshot()
   })
 
+  test('Check computing edge indices', () => {
+    const mesh = new Mesh()
+    const numVertices = 6
+    mesh.setNumVertices(numVertices)
+
+    const positions = mesh.getVertexAttribute('positions')
+    positions.getValueRef(0).set(0, -1, -1)
+    positions.getValueRef(1).set(0, -1, 1)
+    positions.getValueRef(2).set(0, 1, 1)
+    positions.getValueRef(3).set(0, 1, -1)
+    positions.getValueRef(4).set(0, 2, 1)
+    positions.getValueRef(5).set(0, 2, -1)
+
+    mesh.addFace([0, 1, 2, 3])
+    mesh.addFace([3, 2, 4, 5])
+
+    expect(mesh.computeHardEdgesIndices()).toEqual(new Uint32Array([0, 1, 1, 2, 0, 3, 2, 4, 4, 5, 3, 5]))
+  })
+
+  test('Check computing edge indices (hard edge in the middle)', () => {
+    const mesh = new Mesh()
+    const numVertices = 6
+    mesh.setNumVertices(numVertices)
+
+    const positions = mesh.getVertexAttribute('positions')
+    positions.getValueRef(0).set(0, -1, -1)
+    positions.getValueRef(1).set(0, -1, 1)
+    positions.getValueRef(2).set(0, 1, 1)
+    positions.getValueRef(3).set(0, 1, -1)
+    positions.getValueRef(4).set(1, 1, 1)
+    positions.getValueRef(5).set(1, 1, -1)
+
+    mesh.addFace([0, 1, 2, 3])
+    mesh.addFace([3, 2, 4, 5])
+
+    expect(mesh.computeHardEdgesIndices()).toEqual(new Uint32Array([0, 1, 1, 2, 2, 3, 0, 3, 2, 4, 4, 5, 3, 5]))
+  })
+
   test('Check resizing bigger the face indices.', () => {
     const mesh = new Mesh()
     const numVertices = 4

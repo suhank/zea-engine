@@ -171,8 +171,6 @@ class GLMesh extends GLGeom {
   generateHardEdgesVAO() {
     if (!this.__vao) return false
 
-    if (!this.__geom.edgeVerts) this.__geom.generateHardEdgesFlags()
-
     // generate the wireframes VAO.
     // It can share buffers with the regular VAO, but provide a different index buffer.
     if (this.__hardEdgesVao) this.__ext.deleteVertexArrayOES(this.__hardEdgesVao)
@@ -181,7 +179,7 @@ class GLMesh extends GLGeom {
 
     const gl = this.__gl
     const hardEdgeIndexBuffer = gl.createBuffer()
-    const hardEdgeIndices = Uint32Array.from(this.__geom.computeHardEdgesIndices())
+    const hardEdgeIndices = this.__geom.computeHardEdgesIndices()
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, hardEdgeIndexBuffer)
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, hardEdgeIndices, gl.STATIC_DRAW)
 

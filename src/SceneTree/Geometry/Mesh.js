@@ -10,7 +10,10 @@ import { VertexAttribute } from './VertexAttribute.js'
 import { sgFactory } from '../SGFactory.js'
 
 /**
- * Class representing a collection of triangle primitive drawing types, every three vertices forms a triangle.
+ * The Mesh class provides a flexible and fast polygon mesh representation. It supports polygons of arbitrary complexity,
+ * from basic triangles and quads to pentagons more.
+ * It supports storing per face attributes, and per edge attributes.
+ * The Mesh class handles converting its internal representation of polygons into a simpler triangles representation for rendering.
  *
  * ```
  * const mesh = new Mesh()
@@ -47,7 +50,6 @@ class Mesh extends BaseGeom {
     this.edgeVerts = undefined
     this.vertexEdges = undefined
     this.numEdges = 0
-    this.edgeFlags = new Uint32Array()
     this.edgeAngles = new Float32Array()
   }
 
@@ -117,7 +119,7 @@ class Mesh extends BaseGeom {
   }
 
   /**
-   * The getFaceVertexCount method.
+   * Returns the number of vertices indexed by this face
    * @param {number} faceIndex - The faceIndex value.
    * @return {number} - The return value.
    */
@@ -135,7 +137,7 @@ class Mesh extends BaseGeom {
   }
 
   /**
-   * The getFaceVertexCount method.
+   * Returns the offset of the face indices within the entire index array.
    * @param {number} faceIndex - The faceIndex value.
    * @return {number} - The return value.
    */
@@ -169,11 +171,8 @@ class Mesh extends BaseGeom {
         `Invalid indices for face:${faceIndex} vertexIndices:${vertexIndices}. Expected ${faceVertexCount} indices`
       )
     }
-
     const offset = this.getFaceVertexOffset(faceIndex)
-    for (let i = 0; i < vertexIndices.length; i++) {
-      this.__faceVertexIndices[offset + i] = vertexIndices[i]
-    }
+    this.__faceVertexIndices.set(vertexIndices, offset)
   }
 
   /**
@@ -417,7 +416,7 @@ class Mesh extends BaseGeom {
   }
 
   /**
-   * The computeFaceNormals method.
+   * Computes a normal value per face by averaging the triangle normals of the face.
    */
   computeFaceNormals() {
     const positions = this.getVertexAttribute('positions')
@@ -446,16 +445,16 @@ class Mesh extends BaseGeom {
         //         printf("v:%i", this.__faceVertexIndices[ numFacesVertices + (i*faceVerts.length) + j ]);
         //     printf("\n");
         // }
+      } else {
+        faceNormals.setValue(faceIndex, faceNormal.normalize())
       }
-
-      faceNormals.setValue(faceIndex, faceNormal.normalize())
     }
   }
 
   /**
-   * The generateEdgeFlags method.
+   * Calculates the angles at each edge between the adjoining faces
    */
-  generateEdgeFlags() {
+  calculateEdgeAngles() {
     if (this.vertexEdges == undefined) this.genTopologyInfo()
 
     if (!this.hasFaceAttribute('normals')) this.computeFaceNormals()
@@ -493,7 +492,7 @@ class Mesh extends BaseGeom {
   computeVertexNormals(hardAngle = 1.0 /* radians */) {
     // console.log("computeVertexNormals");
 
-    this.generateEdgeFlags()
+    this.calculateEdgeAngles()
 
     const faceNormals = this.getFaceAttribute('normals')
     const normalsAttr = this.addVertexAttribute('normals', Vec3)
@@ -607,17 +606,19 @@ class Mesh extends BaseGeom {
    * @return {array} - The return value.
    */
   computeHardEdgesIndices(hardAngle = 1.0) {
+    if (!this.edgeVerts) this.calculateEdgeAngles()
+
     const hardEdges = []
     const addEdge = (index) => {
       hardEdges.push(this.edgeVerts[index])
       hardEdges.push(this.edgeVerts[index + 1])
     }
-    for (let i = 0; i < this.edgeFlags.length; i += 2) {
-      if (this.edgeAngles[i / 2] > hardAngle) {
-        addEdge(i)
+    for (let i = 0; i < this.edgeAngles.length; i++) {
+      if (this.edgeAngles[i] > hardAngle) {
+        addEdge(i * 2)
       }
     }
-    return hardEdges
+    return Uint32Array.from(hardEdges)
   }
 
   /**
