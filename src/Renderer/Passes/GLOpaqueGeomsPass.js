@@ -89,7 +89,7 @@ class GLMaterialGeomItemSets {
    * @private
    */
   __drawCountChanged(change) {
-    this.drawCount += change
+    this.drawCount += change.count
   }
 
   /**
@@ -99,8 +99,6 @@ class GLMaterialGeomItemSets {
   addGeomItemSet(geomItemSet) {
     if (this.geomItemSets.indexOf(geomItemSet) == -1) {
       this.geomItemSets.push(geomItemSet)
-
-      this.drawCount += geomItemSet.drawCount
       geomItemSet.on('drawCountChanged', this.__drawCountChanged)
     } else {
       console.warn('geomItemSet already added to GLMaterialGeomItemSets')
