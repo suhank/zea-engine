@@ -173,12 +173,13 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
    * @return {boolean} - The return value.
    */
   filterGeomItem(geomItem) {
-    const shaderClass = geomItem.getMaterial().getShaderClass()
+    const material = geomItem.getParameter('Material').getValue()
+    const shaderClass = material.getShaderClass()
     if (shaderClass) {
       if (shaderClass.isTransparent()) return false
       if (shaderClass.isOverlay()) return false
 
-      const baseColorParam = geomItem.getMaterial().getParameter('BaseColor')
+      const baseColorParam = material.getParameter('BaseColor')
       if (baseColorParam && baseColorParam.getValue().a < 1.0) return false
 
       return true
@@ -192,7 +193,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
    * @return {boolean} - The return value.
    */
   addGeomItem(geomItem) {
-    const material = geomItem.getMaterial()
+    const material = geomItem.getParameter('Material').getValue()
     const shaderName = material.getShaderName()
     const shaders = this.constructShaders(shaderName)
     let glshader = shaders.glshader

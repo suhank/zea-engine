@@ -457,8 +457,8 @@ class GLViewport extends GLBaseViewport {
 
       const intersectionData = this.getGeomDataAtPos(event.mousePos, event.mouseRay)
       if (intersectionData != undefined) {
-        // console.log("onMouseDown on Geom"); // + " Material:" + geomItem.getMaterial().name);
-        // console.log(intersectionData.geomItem.getPath()); // + " Material:" + geomItem.getMaterial().name);
+        // console.log("onMouseDown on Geom"); // + " Material:" + geomItem.getParameter('Material').getValue().getName());
+        // console.log(intersectionData.geomItem.getPath()); // + " Material:" + geomItem.getParameter('Material').getValue().getName());
         event.intersectionData = intersectionData
       }
     }
@@ -684,8 +684,8 @@ class GLViewport extends GLBaseViewport {
 
       const intersectionData = this.getGeomDataAtPos(touchPos, event.touchRay)
       if (intersectionData != undefined) {
-        // console.log("onMouseDown on Geom"); // + " Material:" + geomItem.getMaterial().name);
-        // console.log(intersectionData.geomItem.getPath()); // + " Material:" + geomItem.getMaterial().name);
+        // console.log("onMouseDown on Geom"); // + " Material:" + geomItem.getParameter('Material').getValue().getName());
+        // console.log(intersectionData.geomItem.getPath()); // + " Material:" + geomItem.getParameter('Material').getValue().getName());
         event.intersectionData = intersectionData
         intersectionData.geomItem.onMouseDown(event, intersectionData)
         if (!event.propagating) return

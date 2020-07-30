@@ -110,7 +110,7 @@ class GeomItem extends BaseGeomItem {
    */
   getGeom() {
     console.warn(`deprecated. please use 'getParameter('Geometry').getValue`)
-    return this.getGeometry()
+    return this.__geomParam.getValue()
   }
 
   /**
@@ -121,8 +121,8 @@ class GeomItem extends BaseGeomItem {
    * @return {number} - The return value.
    */
   setGeom(geom) {
-    console.warn("setGeom is deprecated. Please use 'setGeometry'")
-    return this.setGeometry(geom)
+    console.warn("setGeom is deprecated. Please use 'getParameter('Geometry').setValue'")
+    return this.__geomParam.setValue(geom)
   }
 
   /**
@@ -153,7 +153,7 @@ class GeomItem extends BaseGeomItem {
    */
   _cleanBoundingBox(bbox) {
     bbox = super._cleanBoundingBox(bbox)
-    const geom = this.getGeometry()
+    const geom = this.__geomParam.getValue()
     if (geom) {
       bbox.addBox3(geom.boundingBox, this.getGeomMat4())
     }
@@ -314,7 +314,7 @@ class GeomItem extends BaseGeomItem {
   copyFrom(src, context) {
     super.copyFrom(src, context)
 
-    if (!src.getGeometry() && src.geomIndex != -1) {
+    if (!src.getParameter('Geometry').getValue() && src.geomIndex != -1) {
       const geomLibrary = context.assetItem.getGeometryLibrary()
       const geomIndex = src.geomIndex
       const onGeomLoaded = (event) => {
