@@ -461,14 +461,7 @@ class GLStandardGeomsPass extends GLPass {
         this.__drawItemsTexture.populate(dataArray, width, height, xoffset, yoffset, false)
       } else {
         const unit16s = MathFunctions.convertFloat32ArrayToUInt16Array(dataArray)
-        this.__drawItemsTexture.populate(
-          unit16s,
-          width,
-          height,
-          xoffset,
-          yoffset,
-          false
-        )
+        this.__drawItemsTexture.populate(unit16s, width, height, xoffset, yoffset, false)
       }
 
       i += uploadCount - 1

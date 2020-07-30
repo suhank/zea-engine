@@ -68,7 +68,7 @@ class SphereType extends AttrValue {
   toString() {
     return StringFunctions.stringifyJSONWithFixedPrecision(this.toJSON())
   }
-  
+
   // ////////////////////////////////////////
   // Static Methods
 

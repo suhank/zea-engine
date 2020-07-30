@@ -379,17 +379,7 @@ class GLBillboardsPass extends GLPass {
       gl.texSubImage2D(gl.TEXTURE_2D, 0, xoffset, yoffset, width, height, gl[format], gl[type], dataArray)
     } else {
       const unit16s = MathFunctions.convertFloat32ArrayToUInt16Array(dataArray)
-      gl.texSubImage2D(
-        gl.TEXTURE_2D,
-        0,
-        xoffset,
-        yoffset,
-        width,
-        height,
-        gl[format],
-        gl[type],
-        unit16s
-      )
+      gl.texSubImage2D(gl.TEXTURE_2D, 0, xoffset, yoffset, width, height, gl[format], gl[type], unit16s)
     }
   }
 

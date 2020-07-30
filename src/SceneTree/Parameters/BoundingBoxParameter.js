@@ -1,4 +1,3 @@
-
 import { Parameter } from './Parameter'
 import { Box3 } from '../../Math/Box3'
 

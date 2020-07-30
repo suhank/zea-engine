@@ -81,8 +81,7 @@ class GLShader extends BaseItem {
     if (!shaderopts) shaderopts = gl.shaderopts
     if (shaderopts) {
       if (shaderopts.repl) {
-        for (const key in shaderopts.repl)
-          glsl = StringFunctions.replaceAll(glsl, key, shaderopts.repl[key])
+        for (const key in shaderopts.repl) glsl = StringFunctions.replaceAll(glsl, key, shaderopts.repl[key])
       }
       if (shaderopts.defines) glsl = shaderopts.defines + glsl
     }
