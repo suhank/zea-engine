@@ -18,8 +18,8 @@ class GLShader extends BaseItem {
    * Create a GL shader.
    * @param {any} gl - The gl value.
    */
-  constructor(gl) {
-    super()
+  constructor(gl, name) {
+    super(name)
     if (!gl) {
       throw new Error('gl context must be passed to shader constructor')
     }
