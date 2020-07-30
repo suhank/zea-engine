@@ -16,10 +16,6 @@ import { NumberParameter } from '../../Parameters/index'
  * * **DetailX(`NumberParameter`):** Number of divisions along `X`axis.
  * * **DetailY(`NumberParameter`):** Number of divisions along `Y`axis.
  *
- * **Events**
- * * **geomDataTopologyChanged:** Triggered
- * * **geomDataChanged:** Triggered when `X` and `Y`values change.
- *
  * @extends Mesh
  */
 class Plane extends Mesh {
@@ -74,7 +70,7 @@ class Plane extends Mesh {
         const v1 = (detailX + 1) * (i + 1) + (j + 1)
         const v2 = (detailX + 1) * i + (j + 1)
         const v3 = (detailX + 1) * i + j
-        this.setFaceVertexIndices(quadId, v0, v1, v2, v3)
+        this.setFaceVertexIndices(quadId, [v0, v1, v2, v3])
         quadId = quadId + 1
       }
     }

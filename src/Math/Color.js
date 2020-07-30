@@ -22,6 +22,7 @@ class Color extends AttrValue {
     if (r instanceof Float32Array) {
       this.__data = r
     } else if (r instanceof ArrayBuffer) {
+      console.warn(`deprecated, please use new Vec4(new Float32Array(buffer, byteOffset, 4))`)
       const buffer = r
       const byteOffset = g
       this.__data = new Float32Array(buffer, byteOffset, 4)
@@ -630,7 +631,7 @@ class Color extends AttrValue {
    * @private
    */
   static createFromFloat32Buffer(buffer, offset = 0) {
-    return new Color(buffer, offset * 4) // 4 bytes per 32bit float
+    return new Color(new Float32Array(buffer, offset * 4, 4)) // 4 bytes per 32bit float
   }
 
   /**

@@ -52,11 +52,12 @@ class BaseGeom extends ParameterOwner {
    * @return {Attribute} - Returns an attribute.
    */
   addVertexAttribute(name, dataType, defaultScalarValue = undefined) {
+    const positions = this.getVertexAttribute('positions')
     let attr
     if (isTypedArray(defaultScalarValue)) {
       attr = new Attribute(dataType, defaultScalarValue)
     } else {
-      attr = new Attribute(dataType, this.vertices != undefined ? this.vertices.length : 0, defaultScalarValue)
+      attr = new Attribute(dataType, positions != undefined ? positions.length : 0, defaultScalarValue)
     }
     this.__vertexAttributes.set(name, attr)
     return attr
@@ -95,8 +96,10 @@ class BaseGeom extends ParameterOwner {
 
   /**
    * Returns 'positions' vertex attribute.
+   * @deprecated
    */
   get vertices() {
+    console.warn("deprecated use #getVertexAttribute('positions')")
     return this.__vertexAttributes.get('positions')
   }
 
@@ -130,29 +133,35 @@ class BaseGeom extends ParameterOwner {
   }
 
   /**
-   * The getVertex method.
+   * Returns the position attribute value of the given vertex
+   * @deprecated
    * @param {number} index - The index value.
    * @return {Vec3} - Returns a Vec3.
    */
   getVertex(index) {
+    console.warn(`deprecated use #getVertexAttribute('positions').getValueRef()`)
     return Vec3.createFromFloat32Buffer(this.vertices.data.buffer, index * 3)
   }
 
   /**
-   * The setVertex method.
+   * Sets the position attribute value of the given vertex
+   * @deprecated
    * @param {index} index - The index value.
-   * @param {Vec3} vec3 - The vec3 value.
+   * @param {Vec3} value - The value value.
    * @return {Vec3} - Returns a Vec3.
    */
-  setVertex(index, vec3) {
-    return Vec3.createFromFloat32Buffer(this.vertices.data.buffer, index * 3).setFromOther(vec3)
+  setVertex(index, value) {
+    console.warn(`deprecated use #getVertexAttribute('positions').getValueRef().setFromOther(value)`)
+    return Vec3.createFromFloat32Buffer(this.vertices.data.buffer, index * 3).setFromOther(value)
   }
 
   /**
-   * The moveVertices method.
+   * Applies an offset to each of the vertices in the geometry.
+   * @deprecated
    * @param {Vec3} delta - The delta value.
    */
   moveVertices(delta) {
+    console.warn(`deprecated use #getVertexAttribute('positions').getValueRef()`)
     const vertices = this.vertices
     for (let i = 0; i < vertices.length; i++) vertices.getValueRef(i).addInPlace(delta)
     this.setBoundingBoxDirty()
@@ -160,9 +169,11 @@ class BaseGeom extends ParameterOwner {
 
   /**
    * The transformVertices method.
+   * @deprecated
    * @param {Xfo} xfo - The xfo tranform.
    */
   transformVertices(xfo) {
+    console.warn(`deprecated, please transform the vertices manually`)
     const vertices = this.vertices
     for (let i = 0; i < vertices.length; i++) {
       const v = vertices.getValueRef(i)
@@ -176,10 +187,21 @@ class BaseGeom extends ParameterOwner {
   // BoundingBox
 
   /**
-   * The boundingBox method.
+   * Returns the bounding box for geometry.
+   * @deprecated
    * @return {Vec3} - The return value.
    */
   get boundingBox() {
+    console.warn(`deprecated, please use #getBoundingBox()`)
+    if (this.__boundingBoxDirty) this.updateBoundingBox()
+    return this.__boundingBox
+  }
+
+  /**
+   * Returns the bounding box for geometry.
+   * @return {Vec3} - The return value.
+   */
+  getBoundingBox() {
     if (this.__boundingBoxDirty) this.updateBoundingBox()
     return this.__boundingBox
   }
@@ -196,10 +218,10 @@ class BaseGeom extends ParameterOwner {
    * The updateBoundingBox method.
    */
   updateBoundingBox() {
-    const vertices = this.vertices
+    const positions = this.getVertexAttribute('positions')
     const bbox = new Box3()
-    const numVerts = vertices.length
-    for (let i = 0; i < numVerts; i++) bbox.addPoint(vertices.getValueRef(i))
+    const numVerts = positions.length
+    for (let i = 0; i < numVerts; i++) bbox.addPoint(positions.getValueRef(i))
     this.__boundingBox = bbox
     this.__boundingBoxDirty = false
   }
@@ -260,7 +282,7 @@ class BaseGeom extends ParameterOwner {
     for (const [attrName, attr] of this.__vertexAttributes) {
       attrBuffers[attrName] = {
         values: attr.data,
-        count: attr.size,
+        count: attr.length,
         dataType: attr.dataType,
         normalized: attr.normalized,
       }
@@ -285,7 +307,6 @@ class BaseGeom extends ParameterOwner {
 
   // ////////////////////////////////////////
   // Persistence
-
   /**
    * Sets state of current Geometry(Including Vertices and Bounding Box) using a binary reader object.
    *
@@ -299,7 +320,7 @@ class BaseGeom extends ParameterOwner {
     this.__boundingBox.set(reader.loadFloat32Vec3(), reader.loadFloat32Vec3())
 
     this.setNumVertices(numVerts)
-    const positionsAttr = this.vertices
+    const positionsAttr = this.getVertexAttribute('positions')
     let normalsAttr
     let texCoordsAttr
     if (flags & (1 << 1)) {
@@ -436,6 +457,7 @@ class BaseGeom extends ParameterOwner {
     let json = super.toJSON(context, flags)
     if (!json) json = {}
     json.type = sgFactory.getClassName(this)
+    json.numVertices = this.__numVertices
 
     if (!(flags & SAVE_FLAG_SKIP_GEOMDATA)) {
       const vertexAttributes = {}
@@ -457,6 +479,7 @@ class BaseGeom extends ParameterOwner {
    */
   fromJSON(json, context, flags) {
     super.fromJSON(json, context, flags)
+    this.setNumVertices(json.numVertices)
     for (const name in json.vertexAttributes) {
       let attr = this.__vertexAttributes.get(name)
       const attrJSON = json.vertexAttributes[name]

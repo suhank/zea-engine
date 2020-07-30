@@ -11,10 +11,6 @@ import { sgFactory } from '../../SGFactory.js'
  * * **z(`NumberParameter`):** Length of the line cuboid along the `Z` axis
  * * **BaseZAtZero(`NumberParameter`):** Property to start or not `Z` axis from position `0.
  *
- * **Events**
- * * **geomDataTopologyChanged:** Triggered when building the rect.
- * * **geomDataChanged:** Triggered whenever the length of the rectangle changes in `X`, `Y` or `Z` axes
- *
  * @extends Lines
  */
 class LinesCuboid extends Lines {

@@ -36,25 +36,6 @@ class Cross extends Lines {
   }
 
   /**
-   * Getter for the cross size.
-   *
-   * @return {number} - Returns the size.
-   */
-  get size() {
-    return this.__size
-  }
-
-  /**
-   * Setter for the cross size.
-   *
-   * @param {number} val - The size value.
-   */
-  set size(val) {
-    this.__size = val
-    this.__resize()
-  }
-
-  /**
    * The __rebuild method.
    * @private
    */
@@ -80,6 +61,7 @@ class Cross extends Lines {
     this.getVertex(4).set(0, 0, 0.5 * size)
     this.getVertex(5).set(0, 0, -0.5 * size)
     this.setBoundingBoxDirty()
+    this.emit('geomDataChanged', {})
   }
 }
 sgFactory.registerClass('Cross', Cross)

@@ -25,7 +25,7 @@
     "testing-server": "node testing-server/index.js",
     "test": "jest",
     "test:coverage": "jest --coverage",
-    "test:debug": "node --inspect node_modules/.bin/jest --runInBand --watch",
+    "test:debug": "node --inspect ./node_modules/jest/bin/jest.js --runInBand --watch",
     "test:watch": "jest --watch",
     "test:visual": "karma start --single-run --browsers ChromeHeadless karma.conf.js",
     "test:visual:watch": "karma start --auto-watch --browsers ChromeHeadless karma.conf.js",

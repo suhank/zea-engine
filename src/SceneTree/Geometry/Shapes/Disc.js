@@ -85,7 +85,7 @@ class Disc extends Mesh {
     for (let j = 0; j < nbSides; j++) {
       const v1 = (j % nbSides) + 1
       const v2 = ((j + 1) % nbSides) + 1
-      this.setFaceVertexIndices(j, 0, v1, v2)
+      this.setFaceVertexIndices(j, [0, v1, v2])
     }
 
     // ////////////////////////////
@@ -123,6 +123,7 @@ class Disc extends Mesh {
       this.getVertex(i + 1).set(Math.sin(phi) * radius, Math.cos(phi) * radius, 0.0)
     }
     this.setBoundingBoxDirty()
+    this.emit('geomDataChanged', {})
   }
 
   /**

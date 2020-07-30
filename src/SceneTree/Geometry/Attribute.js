@@ -50,12 +50,15 @@ class Attribute {
   resize(size) {
     const prevLength = this.__data.length
     const newLength = size * this.__dimension
-    const data = new Float32Array(newLength)
-    for (let i = 0; i < Math.min(this.__data.length, newLength); i++) {
-      data[i] = this.__data[i]
+
+    if (newLength > prevLength) {
+      const data = new Float32Array(newLength)
+      data.set(this.__data)
+      this.__data = data
+      this.initRange(prevLength)
+    } else {
+      this.__data = this.__data.slice(0, newLength)
     }
-    if (this.__data.length < newLength) this.__data = data
-    this.initRange(prevLength)
   }
 
   /**

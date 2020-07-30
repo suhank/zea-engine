@@ -1,5 +1,6 @@
 /* eslint-disable camelcase */
 import { BaseGeom } from './BaseGeom.js'
+import { sgFactory } from '../SGFactory.js'
 
 /**
  * Class representing a point primitive drawing type, every vertex specified is a point.
@@ -31,7 +32,7 @@ class Points extends BaseGeom {
     const numVerts = reader.loadUInt32()
     this.__boundingBox.set(reader.loadFloat32Vec3(), reader.loadFloat32Vec3())
     this.setNumVertices(numVerts)
-    const vertices = this.vertices
+    const positions = this.getVertexAttribute('positions')
 
     if (numVerts < 256) {
       const bboxMat = this.__boundingBox.toMat4()
@@ -42,7 +43,7 @@ class Points extends BaseGeom {
           posAttr_8bit[i * 3 + 1] / 255.0,
           posAttr_8bit[i * 3 + 2] / 255.0
         )
-        vertices.setValue(i, bboxMat.transformVec3(pos))
+        positions.setValue(i, bboxMat.transformVec3(pos))
       }
     } else {
       const numClusters = reader.loadUInt32()
@@ -66,7 +67,7 @@ class Points extends BaseGeom {
             posAttr_8bit[j * 3 + 1] / 255.0,
             posAttr_8bit[j * 3 + 2] / 255.0
           )
-          vertices.setValue(j, bboxMat.transformVec3(pos))
+          positions.setValue(j, bboxMat.transformVec3(pos))
         }
       }
     }
@@ -88,5 +89,7 @@ class Points extends BaseGeom {
     this.emit('geomDataChanged', {})
   }
 }
+
+sgFactory.registerClass('Points', Points)
 
 export { Points }
