@@ -63,7 +63,6 @@ class StructParameter extends Parameter {
    * @return {Parameter} - The return value.
    */
   getMember(name) {
-    console.warn('@todo-review')
     return this.getParameter(name)
   }
 

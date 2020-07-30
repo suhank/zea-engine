@@ -87,7 +87,8 @@ class MaterialColorParam extends ColorParameter {
    * @param {BaseImage|Color} value - The value param.
    */
   setValue(value) {
-    console.warn('@todo-review: Should we accept different type of values?')
+    // Note: instead of supporting images or colors, we should replace the ColorParameter with an ImageParameter when assigning textures
+    // console.warn('@todo-review: Should we accept different type of values?')
     if (value instanceof BaseImage) {
       this.setImage(value)
     } else {
