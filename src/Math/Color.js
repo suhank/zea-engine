@@ -643,19 +643,6 @@ class Color extends AttrValue {
   }
 
   /**
-   * This method is a factory function for creating new instances of math types, given an existing ArrayBuffer.
-   * Each Math type implements this function to return an constructed value.
-   *
-   * @static
-   * @param {ArrayBuffer} buffer
-   * @param {number} byteOffset
-   * @return {AttrValue} - Returns the constructed value.
-   */
-  static createFromBuffer(buffer, byteOffset) {
-    return new Color(new Float32Array(buffer, byteOffset))
-  }
-
-  /**
    * Returns the number of Float32 elements used by this type. Used to calculate storage requirements for large arrays of this type.
    * @return {number} - The return value.
    * @private
