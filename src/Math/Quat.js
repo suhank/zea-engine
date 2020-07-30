@@ -25,7 +25,9 @@ class Quat extends AttrValue {
   constructor(x = 0, y = 0, z = 0, w = 1) {
     super()
 
-    if (x instanceof ArrayBuffer) {
+    if (x instanceof Float32Array) {
+      this.__data = x
+    } else if (x instanceof ArrayBuffer) {
       console.warn(`deprecated, please use new Vec4(new Float32Array(buffer, byteOffset, 4))`)
       const buffer = x
       const byteOffset = y
