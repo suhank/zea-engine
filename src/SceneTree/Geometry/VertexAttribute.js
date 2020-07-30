@@ -182,8 +182,7 @@ class VertexAttribute extends Attribute {
           // we must use that value...
           const src = this.__splits[vertex][face]
           if (this.__dataType == Float32) data[tgt * numElems] = this.__splitValues[src]
-          else
-            this.__dataType.createFromFloat32Buffer(data.buffer, tgt * numElems).setFromOther(this.__splitValues[src])
+          else this.__dataType.createFromBuffer(data.buffer, tgt * numElems * 4).setFromOther(this.__splitValues[src])
         } else {
           // Copy each scalar value to the new place in the array.
           const src = parseInt(vertex)

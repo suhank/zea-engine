@@ -157,7 +157,7 @@ class Attribute {
     const numElems = this.__dimension
     if (index >= this.__data.length / numElems)
       throw new Error('Invalid vertex index:' + index + '. Num Vertices:' + this.__data.length / 3)
-    return this.__dataType.createFromFloat32Buffer(this.__data.buffer, index * numElems)
+    return this.__dataType.createFromBuffer(this.__data.buffer, index * numElems * 4)
   }
 
   /**
@@ -170,7 +170,7 @@ class Attribute {
     const numElems = this.__dimension
     if (index >= this.__data.length / numElems)
       throw new Error('Invalid vertex index:' + index + '. Num Vertices:' + this.__data.length / 3)
-    this.__dataType.createFromFloat32Buffer(this.__data.buffer, index * numElems).setFromOther(value)
+    this.__dataType.createFromBuffer(this.__data.buffer, index * numElems * 4).setFromOther(value)
   }
 
   /**

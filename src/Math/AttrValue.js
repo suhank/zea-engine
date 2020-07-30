@@ -29,8 +29,23 @@ class AttrValue {
    * @param {ArrayBuffer} buffer - the buffer value.
    * @param {number} offset - the offset value.
    * @return {AttrValue} - Returns the constructed value.
+   * @deprecated
+   * @private
    */
   static createFromFloat32Buffer(buffer, offset) {
+    throw new Error('Not yet implemented for this type:' + this.constructor.name)
+  }
+
+  /**
+   * This method is a factory function for creating new instances of math types, given an existing ArrayBuffer.
+   * Each Math type implements this function to return an constructed value.
+   *
+   * @static
+   * @param {ArrayBuffer} buffer
+   * @param {number} byteOffset
+   * @return {AttrValue} - Returns the constructed value.
+   */
+  static createFromBuffer(buffer, byteOffset) {
     throw new Error('Not yet implemented for this type:' + this.constructor.name)
   }
 

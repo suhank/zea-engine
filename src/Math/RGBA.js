@@ -555,10 +555,24 @@ class RGBA extends AttrValue {
    * @param {ArrayBuffer} buffer - The buffer value.
    * @param {number} offset - The offset value.
    * @return {RGBA} - Returns a new color.
+   * @deprecated
    * @private
    */
   static createFromFloat32Buffer(buffer, offset = 0) {
-    return new RGBA(buffer, offset * 4) // 4 bytes per 32bit float
+    console.warn('Deprecated, use #createFromBuffer instead')
+    return this.createFromBuffer(buffer, offset * 4)
+  }
+
+  /**
+   * Creates an instance of a `RGBA` using an ArrayBuffer.
+   *
+   * @static
+   * @param {ArrayBuffer} buffer - The buffer value.
+   * @param {number} byteOffset - The offset value.
+   * @return {RGBA} - Returns a new RGBA.
+   */
+  static createFromBuffer(buffer, byteOffset) {
+    return new RGBA(new Uint8Array(buffer, byteOffset, 4)) // 4 bytes per 32bit float
   }
 
   /**
