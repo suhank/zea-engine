@@ -155,7 +155,7 @@ class GeomItem extends BaseGeomItem {
     bbox = super._cleanBoundingBox(bbox)
     const geom = this.__geomParam.getValue()
     if (geom) {
-      bbox.addBox3(geom.boundingBox, this.getGeomMat4())
+      bbox.addBox3(geom.getBoundingBox(), this.getGeomMat4())
     }
     return bbox
   }

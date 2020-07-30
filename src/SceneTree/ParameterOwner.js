@@ -316,7 +316,7 @@ class ParameterOwner extends EventEmitter {
     // are bottom to top (bottom params dependent on higher params).
     // This means that as a parameter is set with a new value
     // it will dirty the params below it.
-    let i = src.numParameters()
+    let i = src.getNumParameters()
     while (i--) {
       const srcParam = src.getParameterByIndex(i)
       const param = this.getParameter(srcParam.getName())

@@ -105,6 +105,7 @@ class Torus extends Mesh {
     // ////////////////////////////
     // Set Vertex Positions
 
+    const positions = this.getVertexAttribute('positions')
     const normals = this.getVertexAttribute('normals')
     let vertex = 0
     for (let i = 0; i < nbLoops; i++) {
@@ -120,7 +121,7 @@ class Torus extends Mesh {
         const d = this.__outerRadius + cphi * this.__innerRadius
 
         // Set positions and normals at the same time.
-        this.getVertex(vertex).set(ctheta * d, stheta * d, this.__innerRadius * sphi)
+        positions.getValueRef(vertex).set(ctheta * d, stheta * d, this.__innerRadius * sphi)
         normals.getValueRef(vertex).set(ctheta * cphi, stheta * cphi, sphi)
         vertex++
       }
@@ -160,6 +161,7 @@ class Torus extends Mesh {
     const nbSlices = this.__detail
     const nbLoops = this.__detail * 2
 
+    const positions = this.getVertexAttribute('positions')
     const vertex = 0
     for (let i = 0; i < nbLoops; i++) {
       const theta = (i / nbLoops) * 2.0 * Math.PI
@@ -174,7 +176,7 @@ class Torus extends Mesh {
         const d = this.__outerRadius + cphi * this.__innerRadius
 
         // Set positions and normals at the same time.
-        this.getVertex(vertex).set(ctheta * d, stheta * d, this.__innerRadius * sphi)
+        positions.getValueRef(vertex).set(ctheta * d, stheta * d, this.__innerRadius * sphi)
         index++
       }
     }

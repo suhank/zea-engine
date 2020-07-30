@@ -141,7 +141,7 @@ class VRController {
    * @return {any} - The return value.
    */
   getControllerTipStageLocalXfo() {
-    return this.__xfo.multiply(this.__tip.getLocalXfo())
+    return this.__xfo.multiply(this.__tip.getParameter('LocalXfo').getValue())
   }
 
   // ////////////////////////////////

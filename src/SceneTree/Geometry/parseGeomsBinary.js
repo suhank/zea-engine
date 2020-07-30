@@ -69,14 +69,15 @@ const parseGeomsBinary = (data, callback) => {
     }
 
     // Transfer the bbox point buffers.
-    transferables.push(geom.boundingBox.p0.__data.buffer)
-    transferables.push(geom.boundingBox.p1.__data.buffer)
+    const bbox = geom.getBoundingBox()
+    transferables.push(bbox.p0.__data.buffer)
+    transferables.push(bbox.p1.__data.buffer)
 
     geomDatas.push({
       name: geom.name,
       type: className,
       geomBuffers,
-      bbox: geom.boundingBox,
+      bbox,
     })
   }
   callback(

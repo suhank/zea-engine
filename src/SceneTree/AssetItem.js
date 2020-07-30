@@ -132,7 +132,7 @@ class AssetItem extends TreeItem {
       this.__unitsScale = scaleFactor
 
       // Apply units change to existing Xfo (avoid changing tr).
-      const xfo = this.getLocalXfo().clone()
+      const xfo = this.getParameter('LocalXfo').getValue().clone()
       xfo.sc.scaleInPlace(scaleFactor)
       this.getParameter('LocalXfo').setValue(xfo)
     }

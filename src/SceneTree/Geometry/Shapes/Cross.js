@@ -42,9 +42,9 @@ class Cross extends Lines {
   __rebuild() {
     this.setNumVertices(6)
     this.setNumSegments(3)
-    this.setSegment(0, 0, 1)
-    this.setSegment(1, 2, 3)
-    this.setSegment(2, 4, 5)
+    this.setSegmentVertexIndices(0, 0, 1)
+    this.setSegmentVertexIndices(1, 2, 3)
+    this.setSegmentVertexIndices(2, 4, 5)
     this.__resize()
   }
 
@@ -54,12 +54,13 @@ class Cross extends Lines {
    */
   __resize() {
     const size = this.__sizeParam.getValue()
-    this.getVertex(0).set(-0.5 * size, 0, 0)
-    this.getVertex(1).set(0.5 * size, 0, 0)
-    this.getVertex(2).set(0, 0.5 * size, 0)
-    this.getVertex(3).set(0, -0.5 * size, 0)
-    this.getVertex(4).set(0, 0, 0.5 * size)
-    this.getVertex(5).set(0, 0, -0.5 * size)
+    const positions = this.getVertexAttribute('positions')
+    positions.getValueRef(0).set(-0.5 * size, 0, 0)
+    positions.getValueRef(1).set(0.5 * size, 0, 0)
+    positions.getValueRef(2).set(0, 0.5 * size, 0)
+    positions.getValueRef(3).set(0, -0.5 * size, 0)
+    positions.getValueRef(4).set(0, 0, 0.5 * size)
+    positions.getValueRef(5).set(0, 0, -0.5 * size)
     this.setBoundingBoxDirty()
     this.emit('geomDataChanged', {})
   }

@@ -75,14 +75,15 @@ class Cone extends Mesh {
 
     // ////////////////////////////
     // Set Vertex Positions
+    const positions = this.getVertexAttribute('positions')
 
-    this.getVertex(tipPoint).set(0.0, 0.0, height)
+    positions.getValueRef(tipPoint).set(0.0, 0.0, height)
     for (let i = 0; i < nbSides; i++) {
       const theta = (i / nbSides) * 2.0 * Math.PI
-      this.getVertex(i).set(radius * Math.cos(theta), radius * Math.sin(theta), 0.0)
+      positions.getValueRef(i).set(radius * Math.cos(theta), radius * Math.sin(theta), 0.0)
     }
     if (cap) {
-      this.getVertex(basePoint).set(0.0, 0.0, 0.0)
+      positions.getValueRef(basePoint).set(0.0, 0.0, 0.0)
     }
 
     // ////////////////////////////
@@ -166,13 +167,14 @@ class Cone extends Mesh {
     const tipPoint = nbSides
     const basePoint = nbSides + 1
 
-    this.getVertex(tipPoint).set(0.0, 0.0, height)
+    const positions = this.getVertexAttribute('positions')
+    positions.getValueRef(tipPoint).set(0.0, 0.0, height)
     for (let i = 0; i < nbSides; i++) {
       const theta = (i / nbSides) * 2.0 * Math.PI
-      this.getVertex(i).set(radius * Math.cos(theta), radius * Math.sin(theta), 0.0)
+      positions.getValueRef(i).set(radius * Math.cos(theta), radius * Math.sin(theta), 0.0)
     }
     if (this.__cap) {
-      this.getVertex(basePoint).set(0.0, 0.0, 0.0)
+      positions.getValueRef(basePoint).set(0.0, 0.0, 0.0)
     }
 
     this.setBoundingBoxDirty()

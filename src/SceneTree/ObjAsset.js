@@ -378,7 +378,7 @@ class ObjAsset extends AssetItem {
       // Move the transform of the geom item to the center of the geom.
       // This is so that transparent objects can render correctly, and the
       // transform gizmo becomes centered on each geom(for testing)
-      const delta = mesh.boundingBox.center()
+      const delta = mesh.getBoundingBox().center()
       {
         const offset = delta.negate()
         const positions = mesh.getVertexAttribute('positions')
