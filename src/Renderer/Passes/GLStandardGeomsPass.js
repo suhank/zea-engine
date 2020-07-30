@@ -10,6 +10,7 @@ import { GLMesh } from '../GLMesh.js'
 import { GLMaterial } from '../GLMaterial.js'
 import { GLGeomItemChangeType, GLGeomItem } from '../GLGeomItem.js'
 import { GLTexture2D } from '../GLTexture2D.js'
+import MathFunctions from '../../Utilities/MathFunctions'
 
 const pixelsPerItem = 6 // The number of RGBA pixels per draw item.
 
@@ -399,7 +400,7 @@ class GLStandardGeomsPass extends GLPass {
     let size = Math.round(Math.sqrt(this.__drawItems.length * pixelsPerItem) + 0.5)
     // Only support power 2 textures. Else we get strange corruption on some GPUs
     // in some scenes.
-    size = Math.nextPow2(size)
+    size = MathFunctions.nextPow2(size)
     // Size should be a multiple of pixelsPerItem, so each geom item is always contiguous
     // in memory. (makes updating a lot easier. See __updateItemInstanceData below)
     if (size % pixelsPerItem != 0) size += pixelsPerItem - (size % pixelsPerItem)
@@ -459,8 +460,15 @@ class GLStandardGeomsPass extends GLPass {
       if (typeId == gl.FLOAT) {
         this.__drawItemsTexture.populate(dataArray, width, height, xoffset, yoffset, false)
       } else {
-        const unit16s = Math.convertFloat32ArrayToUInt16Array(dataArray)
-        this.__drawItemsTexture.populate(unit16s, width, height, xoffset, yoffset, false)
+        const unit16s = MathFunctions.convertFloat32ArrayToUInt16Array(dataArray)
+        this.__drawItemsTexture.populate(
+          unit16s,
+          width,
+          height,
+          xoffset,
+          yoffset,
+          false
+        )
       }
 
       i += uploadCount - 1

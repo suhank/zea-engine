@@ -1,4 +1,5 @@
 import { BaseItem } from '../SceneTree/index'
+import StringFunctions from '../Utilities/StringFunctions'
 
 // Every instance of every shader should have a unique id.
 // This is so that we can uniquely identify the bound shader during
@@ -80,17 +81,18 @@ class GLShader extends BaseItem {
     if (!shaderopts) shaderopts = gl.shaderopts
     if (shaderopts) {
       if (shaderopts.repl) {
-        for (const key in shaderopts.repl) glsl = glsl.replaceAll(key, shaderopts.repl[key])
+        for (const key in shaderopts.repl)
+          glsl = StringFunctions.replaceAll(glsl, key, shaderopts.repl[key])
       }
       if (shaderopts.defines) glsl = shaderopts.defines + glsl
     }
 
     let prefix
     if (gl.name == 'webgl2') {
-      glsl = glsl.replaceAll('attribute', 'in')
-      if (name == 'vertexShader') glsl = glsl.replaceAll('varying', 'out')
-      else glsl = glsl.replaceAll('varying', 'in')
-      glsl = glsl.replaceAll('texture2D', 'texture')
+      glsl = StringFunctions.replaceAll(glsl, 'attribute', 'in')
+      if (name == 'vertexShader') glsl = StringFunctions.replaceAll(glsl, 'varying', 'out')
+      else glsl = StringFunctions.replaceAll(glsl, 'varying', 'in')
+      glsl = StringFunctions.replaceAll(glsl, 'texture2D', 'texture')
 
       prefix = '#version 300 es\n'
       glsl = prefix + glsl
@@ -126,12 +128,12 @@ class GLShader extends BaseItem {
       const numberedLinesWithErrors = []
       const lines = glsl.split('\n')
       for (let i = 0; i < lines.length; i++) {
-        numberedLinesWithErrors.push((i + 1 + ':').lpad(' ', 3) + lines[i])
+        numberedLinesWithErrors.push((i + 1 + ':').padStart(' ', 3) + lines[i])
         if (i + 1 in errorLines) {
           const errors = errorLines[i + 1]
           for (const error of errors) {
             numberedLinesWithErrors.push(error)
-            numberedLinesWithErrors.push('-'.lpad('-', error.length))
+            numberedLinesWithErrors.push('-'.padStart('-', error.length))
           }
         }
       }

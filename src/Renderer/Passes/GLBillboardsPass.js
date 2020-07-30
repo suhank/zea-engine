@@ -6,6 +6,7 @@ import { GLImageAtlas } from '../GLImageAtlas.js'
 import { GLTexture2D } from '../GLTexture2D.js'
 import { generateShaderGeomBinding } from '../GeomShaderBinding.js'
 import { GLRenderer } from '../GLRenderer.js'
+import MathFunctions from '../../Utilities/MathFunctions'
 
 const pixelsPerItem = 5 // The number of pixels per draw item.
 
@@ -300,7 +301,7 @@ class GLBillboardsPass extends GLPass {
       let size = Math.round(Math.sqrt((this.__billboards.length - this.__freeIndices.length) * pixelsPerItem) + 0.5)
       // Note: the following few lines need a cleanup.
       // We should be using power of 2 textures. The problem is that pot texture sizes don't
-      // align with the 6 pixels per draw item. So we need to upload a slightly bigger teture
+      // align with the 6 pixels per draw item. So we need to upload a slightly bigger texture
       // but upload the 'usable' size.
 
       // Only support power 2 textures. Else we get strange corruption on some GPUs
@@ -377,8 +378,18 @@ class GLBillboardsPass extends GLPass {
     if (type == 'FLOAT') {
       gl.texSubImage2D(gl.TEXTURE_2D, 0, xoffset, yoffset, width, height, gl[format], gl[type], dataArray)
     } else {
-      const unit16s = Math.convertFloat32ArrayToUInt16Array(dataArray)
-      gl.texSubImage2D(gl.TEXTURE_2D, 0, xoffset, yoffset, width, height, gl[format], gl[type], unit16s)
+      const unit16s = MathFunctions.convertFloat32ArrayToUInt16Array(dataArray)
+      gl.texSubImage2D(
+        gl.TEXTURE_2D,
+        0,
+        xoffset,
+        yoffset,
+        width,
+        height,
+        gl[format],
+        gl[type],
+        unit16s
+      )
     }
   }
 
