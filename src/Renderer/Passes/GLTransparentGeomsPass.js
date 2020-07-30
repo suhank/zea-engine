@@ -174,12 +174,13 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
       currentglGeom: null,
     }
     for (const transparentItem of this.visibleItems) {
-      if (cache.currentglShader != transparentItem.shaders.glshader) {
+      const glshader = transparentItem.shaders.glshader
+      if (cache.currentglShader != glshader) {
         // Some passes, like the depth pass, bind custom uniforms.
-        if (!this.bindShader(renderstate, transparentItem.shaders.glshader)) {
+        if (!this.bindShader(renderstate, glshader)) {
           continue
         }
-        cache.currentglShader = transparentItem.shaders.glshader
+        cache.currentglShader = glshader
       }
 
       this._drawItem(renderstate, transparentItem, cache)
