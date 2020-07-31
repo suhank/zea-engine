@@ -189,6 +189,11 @@ class ExplodePartsOperator extends Operator {
    * The evaluate method.
    */
   evaluate() {
+    // console.log(`Operator: evaluate: ${this.getName()}`)
+    if (this.__evaluating) {
+      console.warn(`Cycle Detected`)
+    }
+    this.__evaluating = true
     const stages = this.__stagesParam.getValue()
     const explode = this._explodeParam.getValue()
     // const explodeDir = this.getParameter('Axis').getValue();
@@ -209,6 +214,7 @@ class ExplodePartsOperator extends Operator {
       const part = items[i]
       part.evaluate(explode, explodeDist, offset, stages, cascade, centered, parentXfo, parentDelta)
     }
+    this.__evaluating = false
   }
 
   // ////////////////////////////////////////

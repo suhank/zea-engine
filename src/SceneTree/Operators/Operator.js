@@ -21,6 +21,7 @@ class Operator extends BaseItem {
     this.__inputs = []
     this.__outputs = []
     this.__evalOutput = this.__evalOutput.bind(this)
+    this.__evaluating = false
   }
 
   /**
@@ -253,6 +254,10 @@ class Operator extends BaseItem {
   reattach() {
     this.__inputs.forEach((input) => input.reattach())
     this.__outputs.forEach((output) => output.reattach())
+  }
+
+  rebind() {
+    this.__outputs.forEach((output) => output.rebind())
   }
 }
 
