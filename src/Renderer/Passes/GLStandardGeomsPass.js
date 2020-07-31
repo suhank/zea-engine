@@ -338,22 +338,22 @@ class GLStandardGeomsPass extends GLPass {
       flags |= GEOMITEM_FLAG_CUTAWAY
     }
 
-    const pix0 = Vec4.createFromBuffer(dataArray.buffer, offset + 0)
+    const pix0 = Vec4.createFromBuffer(dataArray.buffer, (offset + 0) * 4)
     pix0.set(flags, materialId, 0, 0)
 
     // /////////////////////////
     // Geom Matrix
     const mat4 = geomItem.getGeomMat4()
-    const pix1 = Vec4.createFromBuffer(dataArray.buffer, offset + 4)
-    const pix2 = Vec4.createFromBuffer(dataArray.buffer, offset + 8)
-    const pix3 = Vec4.createFromBuffer(dataArray.buffer, offset + 12)
+    const pix1 = Vec4.createFromBuffer(dataArray.buffer, (offset + 4) * 4)
+    const pix2 = Vec4.createFromBuffer(dataArray.buffer, (offset + 8) * 4)
+    const pix3 = Vec4.createFromBuffer(dataArray.buffer, (offset + 12) * 4)
     pix1.set(mat4.xAxis.x, mat4.yAxis.x, mat4.zAxis.x, mat4.translation.x)
     pix2.set(mat4.xAxis.y, mat4.yAxis.y, mat4.zAxis.y, mat4.translation.y)
     pix3.set(mat4.xAxis.z, mat4.yAxis.z, mat4.zAxis.z, mat4.translation.z)
 
     // /////////////////////////
     // Hilight
-    const pix4 = Vec4.createFromBuffer(dataArray.buffer, offset + 16)
+    const pix4 = Vec4.createFromBuffer(dataArray.buffer, (offset + 16) * 4)
     if (geomItem.isHighlighted()) {
       const highlight = geomItem.getHighlight()
       pix4.set(highlight.r, highlight.g, highlight.b, highlight.a)
@@ -361,7 +361,7 @@ class GLStandardGeomsPass extends GLPass {
 
     // /////////////////////////
     // Cutaway
-    const pix5 = Vec4.createFromBuffer(dataArray.buffer, offset + 20)
+    const pix5 = Vec4.createFromBuffer(dataArray.buffer, (offset + 20) * 4)
     if (geomItem.isCutawayEnabled()) {
       const cutAwayVector = geomItem.getCutVector()
       const cutAwayDist = geomItem.getCutDist()
