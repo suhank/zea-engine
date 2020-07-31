@@ -114,12 +114,13 @@ class Plane extends Mesh {
     const sizeY = this.__sizeYParam.getValue()
     const detailX = this.__detailXParam.getValue()
     const detailY = this.__detailYParam.getValue()
+    const positions = this.getVertexAttribute('positions')
     let voff = 0
     for (let i = 0; i <= detailY; i++) {
       const y = (i / detailY - 0.5) * sizeY
       for (let j = 0; j <= detailX; j++) {
         const x = (j / detailX - 0.5) * sizeX
-        this.getVertex(voff).set(x, y, 0.0)
+        positions.getValueRef(voff).set(x, y, 0.0)
         voff++
       }
     }

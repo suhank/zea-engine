@@ -78,7 +78,8 @@ class Disc extends Mesh {
 
     // ////////////////////////////
     // Set Vertex Positions
-    this.getVertex(0).set(0.0, 0.0, 0.0)
+    const positions = this.getVertexAttribute('positions')
+    positions.getValueRef(0).set(0.0, 0.0, 0.0)
 
     // ////////////////////////////
     // Build the topology
@@ -118,9 +119,10 @@ class Disc extends Mesh {
   __resize() {
     const nbSides = this.__sidesParam.getValue()
     const radius = this.__radiusParam.getValue()
+    const positions = this.getVertexAttribute('positions')
     for (let i = 0; i < nbSides; i++) {
       const phi = (i / nbSides) * 2.0 * Math.PI
-      this.getVertex(i + 1).set(Math.sin(phi) * radius, Math.cos(phi) * radius, 0.0)
+      positions.getValueRef(i + 1).set(Math.sin(phi) * radius, Math.cos(phi) * radius, 0.0)
     }
     this.setBoundingBoxDirty()
     this.emit('geomDataChanged', {})

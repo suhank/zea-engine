@@ -132,9 +132,10 @@ class AssetItem extends TreeItem {
       this.__unitsScale = scaleFactor
 
       // Apply units change to existing Xfo (avoid changing tr).
-      const xfo = this.getLocalXfo().clone()
+      const localXfoParam = this.getParameter('LocalXfo')
+      const xfo = localXfoParam.getValue()
       xfo.sc.scaleInPlace(scaleFactor)
-      this.getParameter('LocalXfo').setValue(xfo)
+      localXfoParam.setValue(xfo)
     }
 
     if (context.versions['zea-engine'].greaterThan([0, 0, 6])) {

@@ -24,9 +24,10 @@ class BaseProxy extends RefCounted {
       }
     }
 
-    this.boundingBox = new Box3()
-    this.boundingBox.p0.__data = data.bbox.p0.__data
-    this.boundingBox.p1.__data = data.bbox.p1.__data
+    const boundingBox = new Box3()
+    boundingBox.p0.__data = data.bbox.p0.__data
+    boundingBox.p1.__data = data.bbox.p1.__data
+    this.setBoundingBox(boundingBox)
 
     this.__metaData = new Map()
   }
