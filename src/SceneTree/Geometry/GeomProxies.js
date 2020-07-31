@@ -1,12 +1,12 @@
 import { Box3 } from '../../Math/index'
-import { RefCounted } from '../RefCounted.js'
+import { EventEmitter } from '../../Utilities/EventEmitter.js'
 import { typeRegistry } from '../../Math/TypeRegistry.js'
 
 /** Class representing a base geometry proxy.
- * @extends RefCounted
+ * @extends EventEmitter
  * @private
  */
-class BaseProxy extends RefCounted {
+class BaseProxy extends EventEmitter {
   /**
    * Create a base proxy.
    * @param {any} data - The data value.
@@ -24,10 +24,9 @@ class BaseProxy extends RefCounted {
       }
     }
 
-    const boundingBox = new Box3()
-    boundingBox.p0.__data = data.bbox.p0.__data
-    boundingBox.p1.__data = data.bbox.p1.__data
-    this.setBoundingBox(boundingBox)
+    this.boundingBox = new Box3()
+    this.boundingBox.p0.__data = data.bbox.p0.__data
+    this.boundingBox.p1.__data = data.bbox.p1.__data
 
     this.__metaData = new Map()
   }

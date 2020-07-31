@@ -69,6 +69,9 @@ class OperatorOutput {
    * @param {Parameter} param - The param value.
    */
   setParam(param, index = -1) {
+    if (this._param) {
+      this._param.unbindOperator(this, index)
+    }
     this._param = param
     this._paramBindIndex = this._param.bindOperatorOutput(this, index)
   }
@@ -96,7 +99,7 @@ class OperatorOutput {
    */
   setDirty() {
     if (this._param) {
-      this._param.setDirty(this)
+      this._param.setDirty(this._paramBindIndex)
     }
   }
 
@@ -131,7 +134,7 @@ class OperatorOutput {
    */
   setClean(value) {
     if (this._param) {
-      this._param.setCleanFromOp(value, this, this._paramBindIndex)
+      this._param.setCleanFromOp(value, this._paramBindIndex)
     }
   }
 
@@ -185,7 +188,7 @@ class OperatorOutput {
     // Once operators have persistent connections,
     // we will simply uninstall the output from the parameter.
     this.detached = true
-    this._paramBindIndex = this._param.unbindOperator(this, index)
+    this._paramBindIndex = this._param.unbindOperator(this)
   }
 
   /**
@@ -194,6 +197,16 @@ class OperatorOutput {
   reattach() {
     this.detached = false
     this._paramBindIndex = this._param.bindOperatorOutput(this, this._paramBindIndex)
+  }
+
+  /**
+   * The rebind rebinds the outputs to be at the top of the stack for its parameter.
+   */
+  rebind() {
+    if (this._param) {
+      this._param.unbindOperator(this)
+      this._paramBindIndex = this._param.bindOperatorOutput(this)
+    }
   }
 }
 

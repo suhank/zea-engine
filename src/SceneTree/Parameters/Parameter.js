@@ -64,6 +64,7 @@ class Parameter extends EventEmitter {
     this.__dataType = dataType ? dataType : undefined
     this.__boundOps = []
     this.__dirtyOpIndex = this.__boundOps.length
+    this.__cleaning = false
     this.__flags = 0
 
     this.getName = this.getName.bind(this)
@@ -221,17 +222,19 @@ class Parameter extends EventEmitter {
    * @param {OperatorOutput} operatorOutput - The cleanerFn value.
    * @return {boolean} true if the Parameter was made dirty, else false if it was already dirty.
    */
-  setDirty(operatorOutput) {
-    // Determine the first operator in the stack that must evaluate
-    // to clean the parameter.
-    let dirtyId = Math.min(this.__dirtyOpIndex, operatorOutput.getParamBindIndex())
-    for (; ; dirtyId--) {
-      if (dirtyId == 0 || this.__boundOps[dirtyId].getMode() == OperatorOutputMode.OP_WRITE) break
-    }
-
-    // console.log("setDirtyFromOp:", this.getPath(), dirtyId, this.__dirtyOpIndex)
-    if (dirtyId != this.__dirtyOpIndex) {
-      this.__dirtyOpIndex = dirtyId
+  setDirty(index) {
+    // Determine the first operator in the stack that must evaluate to clean the parameter.
+    if (index < this.__dirtyOpIndex) {
+      // Walk back down the stack and dirty each of the other bound operators.
+      // If we must dirty all operators in the stack from the last OP_WRITE to the end.
+      for (this.__dirtyOpIndex--; this.__dirtyOpIndex > 0; this.__dirtyOpIndex--) {
+        // Dirty all the other bound ops in the stack until we hit an OP_WRITE
+        if (this.__dirtyOpIndex != index) {
+          // This will cause the other outputs of the operator to become dirty.
+          this.__boundOps[this.__dirtyOpIndex].getOperator().setDirty()
+        }
+        if (this.__boundOps[this.__dirtyOpIndex].getMode() == OperatorOutputMode.OP_WRITE) break
+      }
       this.emit('valueChanged', { mode: 0 })
       return true
     }
@@ -249,30 +252,56 @@ class Parameter extends EventEmitter {
   }
 
   /**
+   * Returns the index of the first 'dirty' binding in the stack. This will be the index of the
+   * first operator that will evaluate when the parameter needs to be cleaned.
+   *
+   * @return {number} - The index of the dirty binding in the binding stack.
+   */
+  getDirtyBindingIndex() {
+    return this.__dirtyOpIndex
+  }
+
+  /**
    * The setCleanFromOp method.
    * @param {any} value - The computed value to be stored in the Parameter.
-   * @param {OperatorOutput} operatorOutput - The source output on the operator that is setting the value.
    * @param {number} index - The index of the bound OperatorOutput.
    */
-  setCleanFromOp(value, operatorOutput, index) {
-    if (index < this.__dirtyOpIndex) {
-      // We see this message when parameters are evaluated as soon as a change is detected instead of
-      // in batches. Now that all rendering code is pulling data only during the render cycle, we ara
-      // not seeing it anymore. However, maybe with a UI open, it will start emitting this warning.
-      // Note: this would be caused, if a Parameter is already cleaned by an Operator, and yet the Operator
-      // is re-evaluating. I am not sure how this can occur.
-      const op = operatorOutput.getOperator()
-      console.warn(
-        `Operator:: ${op.constructor.name} with name: ${op.getName()} is being cleaned immediately, instead of lazily.`
-      )
-    }
-    if (index > this.__dirtyOpIndex + 1) {
-      const op = operatorOutput.getOperator()
-      throw `Parameter: ${
-        this.constructor.name
-      } with name: ${this.getName()} is not cleaning all outputs during evaluation of op:: ${
-        op.constructor.name
-      } with name: ${op.getName()}`
+  setCleanFromOp(value, index) {
+    // console.log('setCleanFromOp:', index)
+    // if (this.__boundOps.length == 3) {
+    //   // console.log(this.getPath())
+    //   console.log('.')
+    // }
+    if (index != this.__dirtyOpIndex) {
+      if (index < this.__dirtyOpIndex) {
+        // This can happen when an operator in the folowing case.
+
+        // ParamA [OpC, OpB, OpA]
+        // ParamB [OpC, OpA]
+        // When OpB dirties ParamA, and is evaluated, ParamB is considered clean because OpA was never dirtied
+
+        // We see this message when parameters are evaluated as soon as a change is detected instead of
+        // in batches. Now that all rendering code is pulling data only during the render cycle, we ara
+        // not seeing it anymore. However, maybe with a UI open, it will start emitting this warning.
+        // Note: this would be caused, if a Parameter is already cleaned by an Operator, and yet the Operator
+        // is re-evaluating. I am not sure how this can occur.
+        // const op = operatorOutput.getOperator()
+        // console.log(
+        //   `Operator:: ${
+        //     op.constructor.name
+        //   } with name: ${op.getName()} is being cleaned immediately, instead of lazily.`
+        // )
+        console.log(`Parameter is cleaned when it was already clean to that point in the stack:`, this.getPath())
+      } else {
+        const op = this.__boundOps[index].getOperator()
+        throw new Error(
+          `Parameter: ${
+            this.constructor.name
+          } with name: ${this.getName()} is not cleaning all outputs during evaluation of op:: ${
+            op.constructor.name
+          } with name: ${op.getName()}`
+        )
+      }
     }
     this.__value = value
 
@@ -302,8 +331,13 @@ class Parameter extends EventEmitter {
    * @param {number} index - The index of the bound OperatorOutput to evaluate up to.
    */
   _clean(index) {
-    // if (this.__boundOps.length > 1) {
-    //   console.log(this.getPath())
+    if (this.__cleaning) {
+      throw new Error(`Cycle detected when cleaning: ${this.getPath()}. Operators need to be rebound to fix errors`)
+    }
+    this.__cleaning = true
+    // if (this.__boundOps.length == 3) {
+    //   // console.log(this.getPath())
+    //   console.log('.')
     // }
     // to clean te parameter, we need to start from the first bound op
     // that needs to be evaluated, and go down the stack from there.
@@ -315,10 +349,13 @@ class Parameter extends EventEmitter {
       operatorOutput.getOperator().evaluate()
     }
 
-    if (this.__dirtyOpIndex < index) {
+    if (this.__dirtyOpIndex != index) {
       const op = this.__boundOps[this.__dirtyOpIndex].getOperator()
-      throw `Operator: ${op.constructor.name} with name: ${op.getName()} is not cleaning its outputs during evaluation`
+      throw new Error(
+        `Operator: ${op.constructor.name} with name: ${op.getName()} is not cleaning its outputs during evaluation`
+      )
     }
+    this.__cleaning = false
   }
 
   /**

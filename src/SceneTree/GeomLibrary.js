@@ -184,7 +184,9 @@ class GeomLibrary extends EventEmitter {
             isMobileDevice: reader.isMobileDevice,
             bufferSlice,
             genBuffersOpts: this.__genBuffersOpts,
-            context,
+            context: {
+              versions: context.versions,
+            },
           },
           [bufferSlice]
         )

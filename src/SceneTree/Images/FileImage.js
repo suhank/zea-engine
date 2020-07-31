@@ -56,7 +56,7 @@ class FileImage extends BaseImage {
         }
       }
 
-      const fileDesc = fileParam.getFileDesc()
+      const fileDesc = fileParam.getFile()
       if (fileDesc) {
         this.__loadData(fileDesc)
       }

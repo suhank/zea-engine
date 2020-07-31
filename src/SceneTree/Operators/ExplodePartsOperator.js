@@ -189,6 +189,7 @@ class ExplodePartsOperator extends Operator {
    * The evaluate method.
    */
   evaluate() {
+    // console.log(`Operator: evaluate: ${this.getName()}`)
     const stages = this.__stagesParam.getValue()
     const explode = this._explodeParam.getValue()
     // const explodeDir = this.getParameter('Axis').getValue();
