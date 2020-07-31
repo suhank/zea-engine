@@ -222,13 +222,11 @@ class Parameter extends EventEmitter {
    * @return {boolean} true if the Parameter was made dirty, else false if it was already dirty.
    */
   setDirty(index) {
-    // // console.log("setDirtyFromOp:", this.getPath(), dirtyId, this.__dirtyOpIndex)
-
     // Determine the first operator in the stack that must evaluate to clean the parameter.
     if (index < this.__dirtyOpIndex) {
       // Walk back down the stack and dirty each of the other bound operators.
       // If we must dirty all operators in the stack from the last OP_WRITE to the end.
-      for (this.__dirtyOpIndex--; this.__dirtyOpIndex >= 0; this.__dirtyOpIndex--) {
+      for (this.__dirtyOpIndex--; this.__dirtyOpIndex > 0; this.__dirtyOpIndex--) {
         // Dirty all the other bound ops in the stack until we hit an OP_WRITE
         if (this.__dirtyOpIndex != index) {
           // This will cause the other outputs of the operator to become dirty.
@@ -253,12 +251,22 @@ class Parameter extends EventEmitter {
   }
 
   /**
+   * Returns the index of the first 'dirty' binding in the stack. This will be the index of the
+   * first operator that will evaluate when the parameter needs to be cleaned.
+   *
+   * @return {number} - The index of the dirty binding in the binding stack.
+   */
+  getDirtyBindingIndex() {
+    return this.__dirtyOpIndex
+  }
+
+  /**
    * The setCleanFromOp method.
    * @param {any} value - The computed value to be stored in the Parameter.
    * @param {number} index - The index of the bound OperatorOutput.
    */
   setCleanFromOp(value, index) {
-    // console.log(this.getPath(), 'setCleanFromOp:', index)
+    // console.log('setCleanFromOp:', index)
     // if (this.__boundOps.length == 3) {
     //   // console.log(this.getPath())
     //   console.log('.')
