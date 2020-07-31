@@ -21,7 +21,6 @@ class Operator extends BaseItem {
     this.__inputs = []
     this.__outputs = []
     this.__evalOutput = this.__evalOutput.bind(this)
-    this.__evaluating = false
   }
 
   /**

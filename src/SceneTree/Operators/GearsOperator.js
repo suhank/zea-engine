@@ -131,10 +131,6 @@ class GearsOperator extends Operator {
    */
   evaluate() {
     // console.log(`Operator: evaluate: ${this.getName()}`)
-    if (this.__evaluating) {
-      console.warn(`Cycle Detected`)
-    }
-    this.__evaluating = true
     const revolutions = this.__revolutionsParam.getValue()
     const gears = this.__gearsParam.getValue()
     for (const gear of gears) {
@@ -158,7 +154,6 @@ class GearsOperator extends Operator {
       xfo.ori = quat.multiply(xfo.ori)
       output.setClean(xfo)
     }
-    this.__evaluating = false
   }
 
   /**

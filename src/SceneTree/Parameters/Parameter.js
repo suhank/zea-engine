@@ -64,6 +64,7 @@ class Parameter extends EventEmitter {
     this.__dataType = dataType ? dataType : undefined
     this.__boundOps = []
     this.__dirtyOpIndex = this.__boundOps.length
+    this.__cleaning = false
     this.__flags = 0
 
     this.getName = this.getName.bind(this)
@@ -330,6 +331,10 @@ class Parameter extends EventEmitter {
    * @param {number} index - The index of the bound OperatorOutput to evaluate up to.
    */
   _clean(index) {
+    if (this.__cleaning) {
+      throw new Error(`Cycle detected when cleaning: ${this.getPath()}. Operators need to be rebound to fix errors`)
+    }
+    this.__cleaning = true
     // if (this.__boundOps.length == 3) {
     //   // console.log(this.getPath())
     //   console.log('.')
@@ -346,8 +351,11 @@ class Parameter extends EventEmitter {
 
     if (this.__dirtyOpIndex != index) {
       const op = this.__boundOps[this.__dirtyOpIndex].getOperator()
-      throw `Operator: ${op.constructor.name} with name: ${op.getName()} is not cleaning its outputs during evaluation`
+      throw new Error(
+        `Operator: ${op.constructor.name} with name: ${op.getName()} is not cleaning its outputs during evaluation`
+      )
     }
+    this.__cleaning = false
   }
 
   /**
