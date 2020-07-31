@@ -1014,10 +1014,24 @@ class Quat extends AttrValue {
    * @param {ArrayBuffer} buffer - The buffer value.
    * @param {number} offset - The offset value.
    * @return {Quat} - Returns a new Quat.
+   * @deprecated
    * @private
    */
   static createFromFloat32Buffer(buffer, offset = 0) {
-    return new Quat(new Float32Array(buffer, offset * 4, 4)) // 4 bytes per 32bit float
+    console.warn('Deprecated, use #createFromBuffer instead')
+    return this.createFromBuffer(buffer, offset * 4)
+  }
+
+  /**
+   * Creates an instance of a `Quat` using an ArrayBuffer.
+   *
+   * @static
+   * @param {ArrayBuffer} buffer - The buffer value.
+   * @param {number} byteOffset - The offset value.
+   * @return {Quat} - Returns a new Quat.
+   */
+  static createFromBuffer(buffer, byteOffset) {
+    return new Quat(new Float32Array(buffer, byteOffset, 4)) // 4 bytes per 32bit float
   }
 
   /**

@@ -26,7 +26,10 @@ class Mat3 extends AttrValue {
   constructor(m00 = 1, m01 = 0, m02 = 0, m10 = 0, m11 = 1, m12 = 0, m20 = 0, m21 = 0, m22 = 1) {
     super()
 
-    if (m00 instanceof ArrayBuffer) {
+    if (m00 instanceof Float32Array || m00 instanceof Uint32Array) {
+      this.__data = m00
+    } else if (m00 instanceof ArrayBuffer) {
+      console.warn(`Deprecated, please use new Vec3(new Float32Array(buffer, byteOffset, 9))`)
       const buffer = m00
       const byteOffset = m01
       this.__data = new Float32Array(buffer, byteOffset, 9)
@@ -206,7 +209,7 @@ class Mat3 extends AttrValue {
    * @return {Vec3} - Returns the `x` axis as a Vec3.
    */
   get xAxis() {
-    return Vec3.createFromFloat32Buffer(this.__data.buffer, 0)
+    return Vec3.createFromBuffer(this.__data.buffer, 0)
   }
 
   /**
@@ -223,7 +226,7 @@ class Mat3 extends AttrValue {
    * * @return {Vec3} - Returns the `y` axis as a Vec3.
    */
   get yAxis() {
-    return Vec3.createFromFloat32Buffer(this.__data.buffer, 3)
+    return Vec3.createFromBuffer(this.__data.buffer, 3 * 4)
   }
 
   /**
@@ -239,7 +242,7 @@ class Mat3 extends AttrValue {
    * * @return {Vec3} - Returns the `z` axis as a Vec3.
    */
   get zAxis() {
-    return Vec3.createFromFloat32Buffer(this.__data.buffer, 6)
+    return Vec3.createFromBuffer(this.__data.buffer, 6 * 4)
   }
 
   /**
@@ -501,10 +504,24 @@ class Mat3 extends AttrValue {
    * @param {ArrayBuffer} buffer - The buffer value.
    * @param {number} offset - The offset value.
    * @return {Mat3} - Returns a new Mat3.
+   * @deprecated
    * @private
    */
   static createFromFloat32Buffer(buffer, offset = 0) {
-    return new Mat3(buffer, offset * 4) // 4 bytes per 32bit float
+    console.warn('Deprecated, use #createFromBuffer instead')
+    return this.createFromBuffer(buffer, offset * 4)
+  }
+
+  /**
+   * Creates an instance of a `Mat3` using an ArrayBuffer.
+   *
+   * @static
+   * @param {ArrayBuffer} buffer - The buffer value.
+   * @param {number} byteOffset - The offset value.
+   * @return {Mat3} - Returns a new Mat3.
+   */
+  static createFromBuffer(buffer, byteOffset) {
+    return new Mat3(new Float32Array(buffer, byteOffset, 9)) // 4 bytes per 32bit float
   }
 
   // ///////////////////////////
