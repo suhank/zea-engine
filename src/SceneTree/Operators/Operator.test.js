@@ -145,6 +145,8 @@ describe('Operator', () => {
       this.getOutput('OutputA').setClean(valueA * scaleValue)
       const valueB = this.getOutput('OutputB').getValue()
       this.getOutput('OutputB').setClean(valueB * scaleValue)
+
+      this.emit('evaluated')
     }
   }
 
@@ -160,7 +162,7 @@ describe('Operator', () => {
     // Then the scale operators scale that value using the 'scaleAB' and 'scaleBC' values.
     //     Param A: > ['setA', 'scaleAB']
     //     Param B: > ['setB', 'scaleAB', 'scaleBC']
-    //     Param A: > ['setC', 'scaleBC']
+    //     Param C: > ['setC', 'scaleBC']
     // Parameter 'B' is modified by both scale operators.
     const setA = new SetFloatOperator('setA', 2)
     setA.getOutput('Output').setParam(aParam)
@@ -218,6 +220,90 @@ describe('Operator', () => {
     expect(aParam.isDirty()).toBe(false)
     expect(bParam.isDirty()).toBe(false)
     expect(cParam.isDirty()).toBe(false)
+  })
+
+  it('test creating an cyclic dependency', () => {
+    const aParam = new NumberParameter('A')
+    const bParam = new NumberParameter('B')
+    const scaleABParam1 = new NumberParameter('scaleABParam1', 2)
+    const scaleABParam2 = new NumberParameter('scaleABParam2', 2)
+
+    const setA = new SetFloatOperator('setA', 2)
+    setA.getOutput('Output').setParam(aParam)
+    const setB = new SetFloatOperator('setB', 2)
+    setB.getOutput('Output').setParam(bParam)
+
+    const scaleAB1 = new ScaleFloatsOperator('scaleAB1')
+    scaleAB1.getInput('ScaleValue').setParam(scaleABParam1)
+    const scaleAB2 = new ScaleFloatsOperator('scaleAB2')
+    scaleAB2.getInput('ScaleValue').setParam(scaleABParam2)
+
+    // Now we are going to mix up the bindings.
+    // In theory, we should see an operator writing
+    // to an output our of schedule. Meaning that
+    // scaleAB1 should write the value of
+
+    // Bind aParam: > ['scaleAB1', 'scaleAB2']
+    scaleAB1.getOutput('OutputA').setParam(aParam)
+    scaleAB2.getOutput('OutputA').setParam(aParam)
+
+    // Bind bParam: > ['scaleAB2', 'scaleAB1']
+    scaleAB2.getOutput('OutputB').setParam(bParam)
+    scaleAB1.getOutput('OutputB').setParam(bParam)
+
+    expect(aParam.isDirty()).toBe(true)
+    expect(bParam.isDirty()).toBe(true)
+
+    // This throws because we cannot evaluated scaleAB1 because its
+    // input value depends on the value of scaleAB2, whose input also
+    // depends on the output of scaleAB1
+    expect(bParam.getValue).toThrow()
+  })
+
+  it('test rebind to fix a cyclic dependency', () => {
+    const aParam = new NumberParameter('A')
+    const bParam = new NumberParameter('B')
+    const scaleABParam1 = new NumberParameter('scaleABParam1', 2)
+    const scaleABParam2 = new NumberParameter('scaleABParam2', 2)
+
+    const setA = new SetFloatOperator('setA', 2)
+    setA.getOutput('Output').setParam(aParam)
+    const setB = new SetFloatOperator('setB', 2)
+    setB.getOutput('Output').setParam(bParam)
+
+    const scaleAB1 = new ScaleFloatsOperator('scaleAB1')
+    scaleAB1.getInput('ScaleValue').setParam(scaleABParam1)
+    const scaleAB2 = new ScaleFloatsOperator('scaleAB2')
+    scaleAB2.getInput('ScaleValue').setParam(scaleABParam2)
+
+    // Now we are going to mix up the bindings.
+    // In theory, we should see an operator writing
+    // to an output our of schedule. Meaning that
+    // scaleAB1 should write the value of
+
+    // Bind aParam: > ['scaleAB1', 'scaleAB2']
+    scaleAB1.getOutput('OutputA').setParam(aParam)
+    scaleAB2.getOutput('OutputA').setParam(aParam)
+
+    // Bind bParam: > ['scaleAB2', 'scaleAB1']
+    scaleAB2.getOutput('OutputB').setParam(bParam)
+    scaleAB1.getOutput('OutputB').setParam(bParam)
+
+    expect(aParam.isDirty()).toBe(true)
+    expect(bParam.isDirty()).toBe(true)
+
+    // This throws because we cannot evaluated scaleAB1 because its
+    // input value depends on the value of scaleAB2, whose input also
+    // depends on the output of scaleAB1
+    // expect(bParam.getValue).toThrow()
+
+    // Rebind forces the operators to remove and re-add bindings, which flattens the bindings and fixes the problem.
+    scaleAB1.rebind()
+    scaleAB2.rebind()
+
+    scaleABParam1.setValue(3)
+    expect(aParam.getValue()).toBe(12) // (3 * 2) * 2
+    expect(bParam.getValue()).toBe(12) // (3 * 2) * 2
   })
 
   it('save to JSON (serialization).', () => {
