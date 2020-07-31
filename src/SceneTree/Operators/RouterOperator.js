@@ -3,7 +3,7 @@ import { OperatorInput } from './OperatorInput.js'
 import { OperatorOutput } from './OperatorOutput.js'
 import { NumberParameter, ListParameter } from '../Parameters/index'
 
-import { sgFactory } from '../SGFactory.js'
+import Registry from '../../Registry'
 
 /** Class representing a router operator.
  * @extends Operator
@@ -47,6 +47,6 @@ class RouterOperator extends Operator {
   }
 }
 
-sgFactory.registerClass('RouterOperator', RouterOperator)
+Registry.register('RouterOperator', RouterOperator)
 
 export { RouterOperator }

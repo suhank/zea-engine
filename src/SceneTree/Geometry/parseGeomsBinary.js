@@ -4,7 +4,7 @@ import { Lines } from './Lines.js'
 import { Mesh } from './Mesh.js'
 import { BinReader } from '../BinReader.js'
 import { Version } from '../Version.js'
-import { typeRegistry } from '../../Math/TypeRegistry.js'
+import Registry from '../../Registry'
 
 // key, toc, geomIndexOffset, geomsRange, isMobileDevice, bufferSlice, genBuffersOpts, context
 const parseGeomsBinary = (data, callback) => {
@@ -58,7 +58,7 @@ const parseGeomsBinary = (data, callback) => {
       // not be transfered back to the main thread. Convert to
       // the type name here and send back as a string.
       const attrData = geomBuffers.attrBuffers[attrName]
-      const typeName = typeRegistry.getTypeName(attrData.dataType)
+      const typeName = Registry.getBlueprintName(attrData.dataType)
       attrData.dataType = typeName
 
       transferables.push(attrData.values.buffer)

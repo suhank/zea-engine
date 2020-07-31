@@ -1,5 +1,5 @@
 import { AttrValue } from './AttrValue.js'
-import { typeRegistry } from './TypeRegistry.js'
+import Registry from '../Registry'
 import { Vec2 } from './Vec2.js'
 
 /**
@@ -663,6 +663,6 @@ class Vec3 extends AttrValue {
   }
 }
 
-typeRegistry.registerType('Vec3', Vec3)
+Registry.register('Vec3', Vec3)
 
 export { Vec3 }

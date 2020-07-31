@@ -7,7 +7,7 @@ import { BaseGeom, SAVE_FLAG_SKIP_GEOMDATA } from './BaseGeom.js'
 import { Attribute } from './Attribute.js'
 
 import { VertexAttribute } from './VertexAttribute.js'
-import { sgFactory } from '../SGFactory.js'
+import Registry from '../../Registry'
 
 /**
  * The Mesh class provides a flexible and fast polygon mesh representation. It supports polygons of arbitrary complexity,
@@ -960,6 +960,6 @@ class Mesh extends BaseGeom {
   }
 }
 
-sgFactory.registerClass('Mesh', Mesh)
+Registry.register('Mesh', Mesh)
 
 export { Mesh }

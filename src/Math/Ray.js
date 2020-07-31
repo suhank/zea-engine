@@ -2,7 +2,7 @@
 /* eslint-disable camelcase */
 import StringFunctions from '../Utilities/StringFunctions'
 import { Vec3 } from './Vec3.js'
-import { typeRegistry } from './TypeRegistry.js'
+import Registry from '../Registry'
 
 /**
  * Class representing a ray that emits from an origin in a specified direction.
@@ -182,6 +182,6 @@ class Ray {
   }
 }
 
-typeRegistry.registerType('Ray', Ray)
+Registry.register('Ray', Ray)
 
 export { Ray }

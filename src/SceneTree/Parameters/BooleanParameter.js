@@ -1,5 +1,5 @@
 import { Parameter } from './Parameter.js'
-import { sgFactory } from '../SGFactory'
+import Registry from '../../Registry'
 
 /**
  * Represents a specific type of parameter, that only stores `boolean` values.
@@ -37,6 +37,6 @@ class BooleanParameter extends Parameter {
   }
 }
 
-sgFactory.registerClass('BooleanParameter', BooleanParameter)
+Registry.register('BooleanParameter', BooleanParameter)
 
 export { BooleanParameter }

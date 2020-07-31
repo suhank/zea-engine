@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
-import { sgFactory } from './SGFactory.js'
 import { ParameterOwner } from './ParameterOwner.js'
 import { BinReader } from './BinReader.js'
+import Registry from '../Registry'
 
 const ItemFlags = {
   USER_EDITED: 1 << 1,
@@ -324,7 +324,7 @@ class BaseItem extends ParameterOwner {
       // modifications to those items, and if, when loading
       // the node no longer exists, then the json loader
       // simply keeps going. (no errors).
-      if (!this.testFlag(ItemFlags.BIN_NODE)) j.type = sgFactory.getClassName(this)
+      if (!this.testFlag(ItemFlags.BIN_NODE)) j.type = Registry.getBlueprintName(this)
     }
     return j
   }

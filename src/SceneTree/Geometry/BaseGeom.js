@@ -1,10 +1,10 @@
 /* eslint-disable require-jsdoc */
 /* eslint-disable guard-for-in */
 /* eslint-disable camelcase */
-import { Vec2, Vec3, Box2, Box3, typeRegistry } from '../../Math/index'
+import { Vec2, Vec3, Box2, Box3 } from '../../Math/index'
 import { ParameterOwner } from '../ParameterOwner.js'
 import { Attribute } from './Attribute.js'
-import { sgFactory } from '../SGFactory.js'
+import Registry from '../../Registry'
 
 // Defines used to explicity specify types for WebGL.
 const SAVE_FLAG_SKIP_GEOMDATA = 1 << 10
@@ -456,7 +456,7 @@ class BaseGeom extends ParameterOwner {
   toJSON(context, flags) {
     let json = super.toJSON(context, flags)
     if (!json) json = {}
-    json.type = sgFactory.getClassName(this)
+    json.type = Registry.getBlueprintName(this)
     json.numVertices = this.__numVertices
 
     if (!(flags & SAVE_FLAG_SKIP_GEOMDATA)) {
@@ -484,7 +484,7 @@ class BaseGeom extends ParameterOwner {
       let attr = this.__vertexAttributes.get(name)
       const attrJSON = json.vertexAttributes[name]
       if (!attr) {
-        const dataType = typeRegistry.getType(attrJSON.dataType)
+        const dataType = Registry.getBlueprint(attrJSON.dataType)
         attr = new VertexAttribute(this, dataType, 0, attrJSON.defaultScalarValue)
         this.__vertexAttributes.set(name, attr)
       }

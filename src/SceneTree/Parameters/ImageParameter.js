@@ -1,5 +1,5 @@
 import { Parameter } from './Parameter.js'
-import { sgFactory } from '../SGFactory.js'
+import Registry from '../../Registry'
 
 /**
  * Represents a specific type of parameter, that only stores `BaseImage` values.
@@ -40,7 +40,7 @@ class ImageParameter extends Parameter {
   toJSON(context, flags) {
     const j = super.toJSON(context, flags)
     if (this.__value) {
-      j.imageType = sgFactory.getClassName(this.__value)
+      j.imageType = Registry.getBlueprintName(this.__value)
     }
     return j
   }
@@ -55,7 +55,7 @@ class ImageParameter extends Parameter {
    */
   fromJSON(j, context, flags) {
     if (j.imageType) {
-      this.__value = sgFactory.constructClass(j.imageType)
+      this.__value = Registry.constructClass(j.imageType)
     }
     return super.fromJSON(j, context, flags)
   }

@@ -4,7 +4,7 @@ import { OperatorOutput, OperatorOutputMode } from './OperatorOutput.js'
 import { NumberParameter, Vec3Parameter, StructParameter, ListParameter } from '../Parameters/index'
 import MathFunctions from '../../Utilities/MathFunctions'
 
-import { sgFactory } from '../SGFactory.js'
+import Registry from '../../Registry'
 
 /** Class representing a piston parameter.
  * @extends StructParameter
@@ -326,6 +326,6 @@ class PistonOperator extends Operator {
   }
 }
 
-sgFactory.registerClass('PistonOperator', PistonOperator)
+Registry.register('PistonOperator', PistonOperator)
 
 export { PistonOperator }

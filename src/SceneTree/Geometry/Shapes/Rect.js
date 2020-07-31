@@ -1,6 +1,6 @@
 import { Lines } from '../Lines.js'
 import { NumberParameter } from '../../Parameters/NumberParameter.js'
-import { sgFactory } from '../../SGFactory.js'
+import Registry from '../../../Registry'
 
 /**
  * A class for generating a rectangle shape.
@@ -126,6 +126,7 @@ class Rect extends Lines {
     return json
   }
 }
-sgFactory.registerClass('Rect', Rect)
+
+Registry.register('Rect', Rect)
 
 export { Rect }

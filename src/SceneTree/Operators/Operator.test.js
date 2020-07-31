@@ -4,7 +4,7 @@ import { NumberParameter } from '../Parameters/NumberParameter'
 import { BaseItem } from '../BaseItem'
 import { OperatorInput } from './OperatorInput'
 import { OperatorOutput, OperatorOutputMode } from './OperatorOutput'
-import { sgFactory } from '../SGFactory.js'
+import Registry from '../../Registry'
 
 class AddFloatsOperator extends Operator {
   constructor(name) {
@@ -21,7 +21,7 @@ class AddFloatsOperator extends Operator {
   }
 }
 
-sgFactory.registerClass('AddFloatsOperator', AddFloatsOperator)
+Registry.register('AddFloatsOperator', AddFloatsOperator)
 
 // Note: this operatore modifies a value in the output attribute
 // By reading and then changing. This feature allows us to combine operators
@@ -45,7 +45,7 @@ class ScaleFloatOperator extends Operator {
   }
 }
 
-sgFactory.registerClass('ScaleFloatOperator', ScaleFloatOperator)
+Registry.register('ScaleFloatOperator', ScaleFloatOperator)
 
 describe('Operator', () => {
   it('AddFloatsOperator', () => {

@@ -1,6 +1,6 @@
 import { Lines } from '../Lines.js'
 import { NumberParameter } from '../../Parameters/NumberParameter.js'
-import { sgFactory } from '../../SGFactory.js'
+import Registry from '../../../Registry'
 
 /**
  * A class for generating a cross shape, drawing a line on the `X,Y,Z` axes.
@@ -64,6 +64,7 @@ class Cross extends Lines {
     this.emit('geomDataChanged', {})
   }
 }
-sgFactory.registerClass('Cross', Cross)
+
+Registry.register('Cross', Cross)
 
 export { Cross }

@@ -11,7 +11,7 @@ import {
   TreeItemParameter,
 } from '../Parameters/index'
 
-import { sgFactory } from '../SGFactory.js'
+import Registry from '../../Registry'
 import MathFunctions from '../../Utilities/MathFunctions'
 
 /** Class representing an explode part parameter.
@@ -235,6 +235,6 @@ class ExplodePartsOperator extends Operator {
   }
 }
 
-sgFactory.registerClass('ExplodePartsOperator', ExplodePartsOperator)
+Registry.register('ExplodePartsOperator', ExplodePartsOperator)
 
 export { ExplodePartsOperator }

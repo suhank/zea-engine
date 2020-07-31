@@ -1,5 +1,5 @@
 import { Color } from '../../Math/index'
-import { sgFactory } from '../../SceneTree/index'
+import Registry from '../../Registry'
 import { shaderLibrary } from '../ShaderLibrary'
 import { GLShader } from '../GLShader.js'
 
@@ -265,9 +265,9 @@ void main(void) {
   }
 }
 
-sgFactory.registerClass('FatPointsShader', FatPointsShader)
-sgFactory.registerClass('FatPointsGeomDataShader', FatPointsGeomDataShader)
-sgFactory.registerClass('FatPointsSelectedShader', FatPointsSelectedShader)
+Registry.register('FatPointsShader', FatPointsShader)
+Registry.register('FatPointsGeomDataShader', FatPointsGeomDataShader)
+Registry.register('FatPointsSelectedShader', FatPointsSelectedShader)
 
 // Note: due to a bug in webpack, if these classes are not exported,
 // then we get a mangling of the code _only_in_release_mode_.

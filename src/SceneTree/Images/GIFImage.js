@@ -1,7 +1,7 @@
 /* eslint-disable prefer-promise-reject-errors */
 import { Vec4 } from '../../Math/index'
 import { loadBinfile } from '../Utils.js'
-import { sgFactory } from '../SGFactory.js'
+import Registry from '../../Registry'
 import { FileImage } from './FileImage.js'
 
 import { GIF } from '../../external/gifuct-js.js'
@@ -238,6 +238,6 @@ class GIFImage extends FileImage {
 }
 
 FileImage.registerLoader('gif', GIFImage)
-sgFactory.registerClass('GIFImage', GIFImage)
+Registry.register('GIFImage', GIFImage)
 
 export { GIFImage }

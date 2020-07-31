@@ -1,7 +1,7 @@
 import { Lines } from '../Lines.js'
 
 import { NumberParameter } from '../../Parameters/index'
-import { sgFactory } from '../../SGFactory.js'
+import Registry from '../../../Registry'
 
 /**
  * A class for generating a circle shape using line segments.
@@ -76,5 +76,6 @@ class Circle extends Lines {
     if (emit) this.emit('geomDataChanged', {})
   }
 }
-sgFactory.registerClass('Circle', Circle)
+
+Registry.register('Circle', Circle)
 export { Circle }

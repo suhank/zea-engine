@@ -2,7 +2,7 @@
 /* eslint-disable guard-for-in */
 import { Vec2, Vec3, Color } from '../Math/index'
 import { BaseItem } from './BaseItem.js'
-import { sgFactory } from './SGFactory.js'
+import Registry from '../Registry'
 import { Parameter, NumberParameter, Vec2Parameter, Vec3Parameter, ColorParameter } from './Parameters/index'
 import MathFunctions from '../Utilities/MathFunctions'
 
@@ -65,7 +65,7 @@ class Material extends BaseItem {
 
   /**
    * Sets shader by using the name of the class with the script.
-   * It is important that the shader is registered in `SGFactory`, otherwise it will error.
+   * It is important that the shader is registered in `Registry`, otherwise it will error.
    * See all classes that extend from `GLShader`.
    *
    * @param {string} shaderName - The shader name.
@@ -73,7 +73,7 @@ class Material extends BaseItem {
   setShaderName(shaderName) {
     if (this.__shaderName == shaderName) return
 
-    const shaderClass = sgFactory.getClass(shaderName)
+    const shaderClass = Registry.getBlueprint(shaderName)
     if (!shaderClass) throw new Error('Error setting Shader. Shader not found:' + shaderName)
 
     const paramDescs = shaderClass.getParamDeclarations()
@@ -172,7 +172,7 @@ class Material extends BaseItem {
    * @return {string|undefined} - The return value.
    */
   getShaderClass() {
-    return sgFactory.getClass(this.getShaderName())
+    return Registry.getBlueprint(this.getShaderName())
   }
 
   /**

@@ -1,6 +1,6 @@
 import { Box3 } from '../../Math/index'
 import { RefCounted } from '../RefCounted.js'
-import { typeRegistry } from '../../Math/TypeRegistry.js'
+import Registry from '../../Registry'
 
 /** Class representing a base geometry proxy.
  * @extends RefCounted
@@ -19,7 +19,7 @@ class BaseProxy extends RefCounted {
       // eslint-disable-next-line guard-for-in
       for (const attrName in this.__buffers.attrBuffers) {
         const attrData = this.__buffers.attrBuffers[attrName]
-        const dataType = typeRegistry.getType(attrData.dataType)
+        const dataType = Registry.getBlueprint(attrData.dataType)
         attrData.dataType = dataType
       }
     }

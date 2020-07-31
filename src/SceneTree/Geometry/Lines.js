@@ -1,6 +1,6 @@
 import { BaseGeom, SAVE_FLAG_SKIP_GEOMDATA } from './BaseGeom.js'
 import { Attribute } from './Attribute.js'
-import { sgFactory } from '../SGFactory.js'
+import Registry from '../../Registry'
 
 /**
  *
@@ -180,6 +180,6 @@ class Lines extends BaseGeom {
   }
 }
 
-sgFactory.registerClass('Lines', Lines)
+Registry.register('Lines', Lines)
 
 export { Lines }

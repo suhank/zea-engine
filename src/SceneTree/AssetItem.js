@@ -3,7 +3,7 @@ import { TreeItem } from './TreeItem.js'
 import { Group } from './Group.js'
 import { GeomLibrary } from './GeomLibrary.js'
 import { MaterialLibrary } from './MaterialLibrary.js'
-import { sgFactory } from './SGFactory.js'
+import Registry from '../Registry'
 
 /**
  * Represents a TreeItem with rendering and material capabilities.
@@ -244,6 +244,6 @@ class AssetItem extends TreeItem {
   }
 }
 
-sgFactory.registerClass('AssetItem', AssetItem)
+Registry.register('AssetItem', AssetItem)
 
 export { AssetItem }

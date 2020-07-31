@@ -3,7 +3,7 @@ import { Vec3 } from '../../../Math/Vec3'
 import { Mesh } from '../Mesh.js'
 
 import { NumberParameter } from '../../Parameters/index'
-import { sgFactory } from '../../SGFactory.js'
+import Registry from '../../../Registry'
 
 /**
  * A class for generating a disc geometry.
@@ -138,6 +138,6 @@ class Disc extends Mesh {
   }
 }
 
-sgFactory.registerClass('Disc', Disc)
+Registry.register('Disc', Disc)
 
 export { Disc }

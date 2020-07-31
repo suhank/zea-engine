@@ -1,7 +1,7 @@
 /* eslint-disable guard-for-in */
 /* eslint-disable valid-jsdoc */
 import { EventEmitter } from '../Utilities/EventEmitter'
-import { sgFactory } from './SGFactory.js'
+import Registry from '../Registry'
 
 // Explicit import of files to avoid importing all the parameter types.
 // Note: Soon these imports should be removed, once all code avoids calling
@@ -280,7 +280,7 @@ class ParameterOwner extends EventEmitter {
         const propName = reader.loadStr()
         let param = this.getParameter(propName)
         if (!param) {
-          param = sgFactory.constructClass(propType, propName)
+          param = Registry.constructClass(propType, propName)
           if (!param) {
             console.error('Unable to construct prop:' + propName + ' of type:' + propType)
             continue

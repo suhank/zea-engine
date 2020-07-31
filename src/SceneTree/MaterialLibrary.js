@@ -1,6 +1,6 @@
 import { SystemDesc } from '../BrowserDetection.js'
 import { EventEmitter } from '../Utilities/index'
-import { sgFactory } from './SGFactory.js'
+import Registry from '../Registry'
 import { Material } from './Material.js'
 import { FileImage } from './Images/index'
 
@@ -217,7 +217,7 @@ class MaterialLibrary extends EventEmitter {
     const numTextures = reader.loadUInt32()
     for (let i = 0; i < numTextures; i++) {
       const type = reader.loadStr()
-      const texture = sgFactory.constructClass(type, undefined)
+      const texture = Registry.constructClass(type, undefined)
       texture.readBinary(reader, context)
       this.__images[texture.getName()] = texture
     }

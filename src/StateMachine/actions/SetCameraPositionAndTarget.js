@@ -1,4 +1,4 @@
-import { sgFactory } from '../../SceneTree/SGFactory.js'
+import Registry from '../../Registry'
 
 import { Camera } from '../../SceneTree/Camera.js'
 import { NumberParameter, Vec3Parameter, TreeItemParameter } from '../../SceneTree/Parameters/index'
@@ -136,5 +136,5 @@ class SetCameraPositionAndTarget extends StateAction {
   }
 }
 
-sgFactory.registerClass('SetCameraPositionAndTarget', SetCameraPositionAndTarget)
+Registry.register('SetCameraPositionAndTarget', SetCameraPositionAndTarget)
 export { SetCameraPositionAndTarget }

@@ -1,5 +1,5 @@
 import { Color } from '../../Math/index'
-import { sgFactory } from '../SGFactory'
+import Registry from '../../Registry'
 import { Parameter } from './Parameter.js'
 
 /**
@@ -53,6 +53,6 @@ class ColorParameter extends Parameter {
   }
 }
 
-sgFactory.registerClass('ColorParameter', ColorParameter)
+Registry.register('ColorParameter', ColorParameter)
 
 export { ColorParameter }

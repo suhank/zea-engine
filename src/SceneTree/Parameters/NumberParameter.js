@@ -1,4 +1,4 @@
-import { sgFactory } from '../SGFactory.js'
+import Registry from '../../Registry'
 import { Parameter } from './Parameter.js'
 
 /**
@@ -124,9 +124,9 @@ class NumberParameter extends Parameter {
   }
 }
 
-sgFactory.registerClass('NumberParameter', NumberParameter)
-sgFactory.registerClass('Property_SInt32', NumberParameter)
-sgFactory.registerClass('Property_UInt32', NumberParameter)
-sgFactory.registerClass('Property_Float32', NumberParameter)
+Registry.register('NumberParameter', NumberParameter)
+Registry.register('Property_SInt32', NumberParameter)
+Registry.register('Property_UInt32', NumberParameter)
+Registry.register('Property_Float32', NumberParameter)
 
 export { NumberParameter }

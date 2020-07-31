@@ -116,7 +116,7 @@ void main(void) {
     }
 };
 
-ZeaEngine.sgFactory.registerClass('GIFSurfaceShader', GIFSurfaceShader);
+ZeaEngine.Registry.register('GIFSurfaceShader', GIFSurfaceShader);
 
 testingHarness.registerTest('MaterialsAndEnvironment/GifLoading', (domElement, resources)=> {
     const Z = ZeaEngine;

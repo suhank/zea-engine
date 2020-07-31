@@ -1,4 +1,4 @@
-import { sgFactory } from '../SGFactory'
+import Registry from '../../Registry'
 import { NumberParameter } from './NumberParameter.js'
 import { BaseImage } from '../BaseImage.js'
 
@@ -118,6 +118,6 @@ class MaterialFloatParam extends NumberParameter {
   }
 }
 
-sgFactory.registerClass('MaterialFloatParam', MaterialFloatParam)
+Registry.register('MaterialFloatParam', MaterialFloatParam)
 
 export { MaterialFloatParam }

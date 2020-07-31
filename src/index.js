@@ -11,6 +11,7 @@ import * as Math from './Math/index'
 import * as Utilities from './Utilities/index'
 import * as SceneTree from './SceneTree/index'
 import * as Renderer from './Renderer/index'
+import Registry from './Registry.js'
 
 const ZeaEngine = {
   onResize,
@@ -19,6 +20,7 @@ const ZeaEngine = {
   ...Utilities,
   ...SceneTree,
   ...Renderer,
+  Registry,
 }
 
 export default ZeaEngine

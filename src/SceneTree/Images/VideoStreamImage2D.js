@@ -1,4 +1,4 @@
-import { sgFactory } from '../SGFactory.js'
+import Registry from '../../Registry'
 import { BaseImage } from '../BaseImage.js'
 
 /** Class representing a 2D video stream image.
@@ -160,6 +160,6 @@ class VideoStreamImage2D extends BaseImage {
   }
 }
 
-sgFactory.registerClass('VideoStreamImage2D', VideoStreamImage2D)
+Registry.register('VideoStreamImage2D', VideoStreamImage2D)
 
 export { VideoStreamImage2D }

@@ -1,4 +1,4 @@
-import { sgFactory } from '../SGFactory'
+import Registry from '../../Registry'
 import { Parameter } from './Parameter.js'
 
 /**
@@ -66,7 +66,7 @@ class StringParameter extends Parameter {
   }
 }
 
-sgFactory.registerClass('StringParameter', StringParameter)
-sgFactory.registerClass('Property_String', StringParameter)
+Registry.register('StringParameter', StringParameter)
+Registry.register('Property_String', StringParameter)
 
 export { StringParameter }

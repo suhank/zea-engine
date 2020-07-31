@@ -1,6 +1,6 @@
 /* eslint-disable require-jsdoc */
 import { AttrValue } from './AttrValue.js'
-import { typeRegistry } from './TypeRegistry.js'
+import Registry from '../Registry'
 
 /**
  * Class representing the red, green, blue and alpha channel of a color.
@@ -619,6 +619,6 @@ class RGBA extends AttrValue {
   }
 }
 
-typeRegistry.registerType('RGBA', RGBA)
+Registry.register('RGBA', RGBA)
 
 export { RGBA }

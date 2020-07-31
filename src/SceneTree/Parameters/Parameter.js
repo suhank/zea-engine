@@ -1,5 +1,5 @@
 import { EventEmitter } from '../../Utilities/EventEmitter.js'
-import { sgFactory } from '../SGFactory.js'
+import Registry from '../../Registry'
 
 // Note: In some cases we want the parameter to emit a notification
 // and cause the update of the scene during evaluation (like statemachine updates).
@@ -36,7 +36,7 @@ const OperatorOutputMode = {
 class Parameter extends EventEmitter {
   /**
    * When initializing a new parameter, the passed in value could be anything.
-   * If it is a new type of value, just ensure you register it in the `SGFactory`.
+   * If it is a new type of value, just ensure you register it in the `Registry`.
    *
    * How to use it:
    *
@@ -413,7 +413,7 @@ class Parameter extends EventEmitter {
     this.setFlag(ParamFlags.USER_EDITED)
 
     if (j.value.type && this.__value == undefined) {
-      this.__value = sgFactory.constructClass(j.value.type)
+      this.__value = Registry.constructClass(j.value.type)
     }
     if (this.__value == undefined || !this.__value.fromJSON) {
       this.__value = j.value
