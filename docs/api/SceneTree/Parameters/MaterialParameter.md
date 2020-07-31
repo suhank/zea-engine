@@ -1,7 +1,21 @@
 <a name="MaterialParameter"></a>
 
 ### MaterialParameter 
-Class representing a material parameter.
+Represents a specific type of parameter, that only stores `Material` values.
+
+i.e.:
+```javascript
+const material = new Material('itemMaterial', 'SimpleSurfaceShader')
+material.getParameter('BaseColor').setValue(new Color(89 / 255, 182 / 255, 92 / 255))
+
+const materialParam = new MaterialParameter('MyMaterial', material)
+//'myParameterOwnerItem' is an instance of a 'ParameterOwner' class.
+// Remember that only 'ParameterOwner' and classes that extend from it can host 'Parameter' objects.
+myParameterOwnerItem.addParameter(materialParam)
+```
+**Events**
+* **valueParameterValueChanged:** Triggered when parameter's value changes.
+* **valueChanged:** Triggered when parameter's value changes, except on cleaning processes.
 
 
 **Extends**: <code>Parameter</code>  
@@ -23,24 +37,24 @@ Create a material parameter.
 | Param | Type | Description |
 | --- | --- | --- |
 | name | <code>string</code> | The name of the material parameter. |
-| value | <code>any</code> | The value of the parameter. |
+| value | <code>Material</code> | The value of the parameter. |
 
 <a name="MaterialParameter+setValue"></a>
 
 ### setValue
-The setValue method.
+Sets `Material` value of the parameter.
 
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| material | <code>any</code> | The material param. |
+| material | <code>Material</code> | The material param. |
 | mode | <code>number</code> | The mode param. |
 
 <a name="MaterialParameter+toJSON"></a>
 
 ### toJSON
-The toJSON method encodes this type as a json object for persistences.
+The toJSON method encodes this type as a json object for persistence.
 
 
 **Returns**: <code>object</code> - - Returns the json object.  

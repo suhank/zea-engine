@@ -4,7 +4,7 @@ import { GLImageAtlas } from './GLImageAtlas.js'
 
 import './Shaders/GLSL/ImagePyramid.js'
 
-const Math_log2 = function(value) {
+const Math_log2 = function (value) {
   // IE11 doesn't support Math.log2.
   return Math.log2(value)
   // return Math.log( value ) / Math.log( 2 ) - 2;
@@ -85,19 +85,19 @@ class ImagePyramid extends GLImageAtlas {
     this.__srcGLTex = srcGLTex
     this.__fbos = []
 
-    srcGLTex.addListener('updated', () => {
+    srcGLTex.on('updated', () => {
       this.renderAtlas(destroySrcImage)
     })
     if (this.__srcGLTex.isLoaded()) {
       this.generateAtlasLayout(minTileSize)
       this.renderAtlas(destroySrcImage)
     } else {
-      this.__srcGLTex.addListener('updated', () => {
+      this.__srcGLTex.on('updated', () => {
         this.generateAtlasLayout(minTileSize)
         this.renderAtlas(destroySrcImage)
       })
     }
-    srcGLTex.addListener('destructing', () => {
+    srcGLTex.on('destructing', () => {
       console.log(this.__srcGLTex.getName() + ' ImagePyramid destructing')
       this.destroy()
     })

@@ -1,10 +1,6 @@
 import { SystemDesc } from '../BrowserDetection.js'
 import { Vec3, Xfo, Mat4, Ray } from '../Math/index'
-import {
-  Plane,
-  VLAAsset,
-  EnvMap,
-} from '../SceneTree/index'
+import { Plane, VLAAsset, EnvMap } from '../SceneTree/index'
 import { GLFbo } from './GLFbo.js'
 import { GLRenderTarget } from './GLRenderTarget.js'
 import { GLHDRImage } from './GLHDRImage.js'
@@ -53,10 +49,8 @@ class GLRenderer extends GLBaseRenderer {
     this.__glEnvMap = undefined
     this.__glBackgroundMap = undefined
 
-    this.__glLightmaps = {}
     this.__displayEnvironment = true
     this.__debugMode = 0
-    this.__debugLightmaps = false
     this._planeDist = 0.0
     this.__cutPlaneNormal = new Vec3(1, 0, 0)
 
@@ -66,15 +60,10 @@ class GLRenderer extends GLBaseRenderer {
 
     this.addShaderPreprocessorDirective('ENABLE_INLINE_GAMMACORRECTION')
 
-    if (!options.disableLightmaps)
-      this.addShaderPreprocessorDirective('ENABLE_LIGHTMAPS')
-    if (!options.disableTextures)
-      this.addShaderPreprocessorDirective('ENABLE_TEXTURES')
+    if (!options.disableTextures) this.addShaderPreprocessorDirective('ENABLE_TEXTURES')
 
     if (!SystemDesc.isMobileDevice) {
-      if (!options.disableSpecular)
-        this.addShaderPreprocessorDirective('ENABLE_SPECULAR')
-      // this.addShaderPreprocessorDirective('ENABLE_DEBUGGING_LIGHTMAPS');
+      if (!options.disableSpecular) this.addShaderPreprocessorDirective('ENABLE_SPECULAR')
     }
 
     this.__outlineShader = new OutlinesShader(gl)
@@ -118,8 +107,8 @@ class GLRenderer extends GLBaseRenderer {
           this.__glBackgroundMap = new GLTexture2D(gl, backgroundMap)
         }
       }
-      this.__glBackgroundMap.addListener('loaded', this.requestRedraw)
-      this.__glBackgroundMap.addListener('updated', this.requestRedraw)
+      this.__glBackgroundMap.on('loaded', this.requestRedraw)
+      this.__glBackgroundMap.on('updated', this.requestRedraw)
       if (!this.__backgroundMapShader) {
         if (!gl.__quadVertexIdsBuffer) gl.setupInstancedQuad()
         switch (backgroundMap.getMapping()) {
@@ -133,9 +122,7 @@ class GLRenderer extends GLBaseRenderer {
             this.__backgroundMapShader = new SterioLatLongEnvMapShader(gl)
             break
           case 'dualfisheye':
-            this.__backgroundMapShader = new DualFishEyeToLatLongBackgroundShader(
-              gl
-            )
+            this.__backgroundMapShader = new DualFishEyeToLatLongBackgroundShader(gl)
             break
           case 'uv':
           default:
@@ -153,8 +140,8 @@ class GLRenderer extends GLBaseRenderer {
       // console.warn('Unsupported EnvMap:' + env)
       return
     }
-    this.__glEnvMap.addListener('loaded', this.requestRedraw)
-    this.__glEnvMap.addListener('updated', this.requestRedraw)
+    this.__glEnvMap.on('loaded', this.requestRedraw)
+    this.__glEnvMap.on('updated', this.requestRedraw)
 
     this.emit('envMapAssigned', { envMap: this.__glEnvMap })
   }
@@ -185,12 +172,12 @@ class GLRenderer extends GLBaseRenderer {
     if (envMapParam.getValue() != undefined) {
       this.__bindEnvMap(envMapParam.getValue())
     }
-    envMapParam.addListener('valueChanged', () => {
+    envMapParam.on('valueChanged', () => {
       this.__bindEnvMap(envMapParam.getValue())
     })
     const displayEnvMapParam = scene.settings.getParameter('Display EnvMap')
     this.__displayEnvironment = displayEnvMapParam.getValue()
-    displayEnvMapParam.addListener('valueChanged', () => {
+    displayEnvMapParam.on('valueChanged', () => {
       this.__displayEnvironment = displayEnvMapParam.getValue()
       this.requestRedraw()
     })
@@ -198,47 +185,6 @@ class GLRenderer extends GLBaseRenderer {
     super.setScene(scene)
   }
 
-  /**
-   * The addTreeItem method.
-   * @param {any} treeItem - The treeItem param.
-   */
-  addTreeItem(treeItem) {
-    super.addTreeItem(treeItem)
-
-    // Note: we can have BaseItems in the tree now.
-    if (treeItem instanceof VLAAsset) {
-      const addLightmap = (name, lightmap) => {
-        let gllightmap = lightmap.image.getMetadata('gltexture')
-        if (!gllightmap) {
-          gllightmap = new GLHDRImage(this.__gl, lightmap.image)
-        }
-        gllightmap.addListener('updated', data => {
-          this.requestRedraw()
-        })
-        this.__glLightmaps[name] = {
-          atlasSize: lightmap.atlasSize,
-          glimage: gllightmap,
-        }
-      }
-      const vlaAsset = treeItem
-      vlaAsset.addListener('loaded', () => {
-        if (this.__glEnvMap && vlaAsset.getLightmap()) {
-          addLightmap(vlaAsset.getName(), vlaAsset.getLightmap())
-        }
-      })
-    }
-  }
-
-  /**
-   * The removeTreeItem method.
-   * @param {any} treeItem - The treeItem param.
-   */
-  removeTreeItem(treeItem) {
-    super.removeTreeItem(treeItem)
-
-    // TODO: Remove the lightmap.
-
-  }
   /**
    * The addViewport method.
    * @param {string} name - The name value.
@@ -382,14 +328,10 @@ class GLRenderer extends GLBaseRenderer {
       width: this.__glcanvas.width <= 1 ? 1 : this.__glcanvas.width,
       height: this.__glcanvas.height <= 1 ? 1 : this.__glcanvas.height,
     })
-    this.__highlightedGeomsBufferFbo = new GLFbo(
-      gl,
-      this.__highlightedGeomsBuffer,
-      true
-    )
+    this.__highlightedGeomsBufferFbo = new GLFbo(gl, this.__highlightedGeomsBuffer, true)
     this.__highlightedGeomsBufferFbo.setClearColor([0, 0, 0, 0])
   }
-  
+
   /**
    * The getFbo method.
    * @return {any} - The return value.
@@ -434,14 +376,13 @@ class GLRenderer extends GLBaseRenderer {
       filter: 'NEAREST',
       width: 3,
       height: 3,
-      numColorChannels: 1
+      numColorChannels: 1,
     })
     this.__rayCastRenderTargetProjMatrix = new Mat4()
     this.rayCastDist = 0
     this.rayCastArea = 0
   }
 
-  
   /**
    * The raycast method.
    * @return {any} - The return value.
@@ -451,7 +392,7 @@ class GLRenderer extends GLBaseRenderer {
     xfo.setLookAt(ray.start, ray.start.add(ray.dir))
     return this.raycast(xfo, ray, dist, area, mask)
   }
-  
+
   raycastWithXfo(xfo, dist, area = 0.01, mask = ALL_PASSES) {
     const ray = new Ray(xfo.tr, xfo.ori.getZaxis().negate())
     return this.raycast(xfo, ray, dist, area, mask)
@@ -512,7 +453,7 @@ class GLRenderer extends GLBaseRenderer {
     // Starting with the center pixel (4),
     // then left and right (3, 5)
     // Then top bottom (1, 7)
-    const checkPixel = id => geomDatas[id * 4 + 3] != 0
+    const checkPixel = (id) => geomDatas[id * 4 + 3] != 0
     const dataPixels = [4, 3, 5, 1, 7]
     let geomData
     for (const pixelID of dataPixels) {
@@ -557,10 +498,7 @@ class GLRenderer extends GLBaseRenderer {
       this.__glBackgroundMap.bindToUniform(renderstate, unifs.backgroundImage)
       this.__backgroundMapShaderBinding.bind(renderstate)
       gl.drawQuad()
-    } else if (
-      this.__glEnvMap &&
-      this.__glEnvMap.draw /* Note: video env maps cannot be drawn directly.*/
-    ) {
+    } else if (this.__glEnvMap && this.__glEnvMap.draw /* Note: video env maps cannot be drawn directly.*/) {
       this.__glEnvMap.draw(renderstate)
     }
   }
@@ -575,15 +513,10 @@ class GLRenderer extends GLBaseRenderer {
     renderstate.envMap = this.__glEnvMap
     renderstate.exposure = this.__exposure
     renderstate.gamma = this.__gamma
-    renderstate.lightmaps = this.__glLightmaps
-    renderstate.boundLightmap = undefined
-    // renderstate.debugLightmaps = this.__debugLightmaps;
-    // renderstate.planeDist = this._planeDist;
-    // renderstate.planeNormal = this.__cutPlaneNormal;
 
     const gl = this.__gl
     const bindGLBaseRendererUnifs = renderstate.bindRendererUnifs
-    renderstate.bindRendererUnifs = unifs => {
+    renderstate.bindRendererUnifs = (unifs) => {
       bindGLBaseRendererUnifs(unifs)
 
       if (this.__glEnvMap) {
@@ -663,15 +596,8 @@ class GLRenderer extends GLBaseRenderer {
       gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA) // For add
 
       const unifs = renderstate.unifs
-      this.__highlightedGeomsBuffer.bindToUniform(
-        renderstate,
-        unifs.highlightDataTexture
-      )
-      gl.uniform2f(
-        unifs.highlightDataTextureSize.location,
-        renderstate.region[2],
-        renderstate.region[3]
-      )
+      this.__highlightedGeomsBuffer.bindToUniform(renderstate, unifs.highlightDataTexture)
+      gl.uniform2f(unifs.highlightDataTextureSize.location, renderstate.region[2], renderstate.region[3])
       this.quad.bindAndDraw(renderstate)
 
       gl.disable(gl.BLEND)
@@ -712,7 +638,6 @@ class GLRenderer extends GLBaseRenderer {
     //     // track down.
     //     gl.bindTexture(gl.TEXTURE_2D, null);
     // }
-
 
     this.emit('redrawOccured', {})
   }

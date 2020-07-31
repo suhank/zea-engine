@@ -3,31 +3,35 @@ import { Vec3 } from '../../../Math/Vec3'
 import { Mesh } from '../Mesh.js'
 import { NumberParameter } from '../../Parameters/index'
 
-/** A class for generating a plane geometry.
+/**
+ * A class for generating a plane geometry.
+ *
+ * ```
+ * const plane = new Plane(2.0, 1.5, 10, 10)
+ * ```
+ *
+ * **Parameters**
+ * * **SizeX(`NumberParameter`):** Length of the plane along `X` axis.
+ * * **SizeY(`NumberParameter`):** Length of the plane along `Y` axis.
+ * * **DetailX(`NumberParameter`):** Number of divisions along `X`axis.
+ * * **DetailY(`NumberParameter`):** Number of divisions along `Y`axis.
+ *
  * @extends Mesh
  */
 class Plane extends Mesh {
   /**
    * Create a plane.
-   * @param {number} SizeX - The length of the plane along the X axis.
-   * @param {number} SizeY - The length of the plane along the Y axis.
-   * @param {number} DetailX - The number of divisions along the X axis.
-   * @param {number} DetailY - The number of divisions along the Y axis.
-   * @param {boolean} addNormals - The addNormals value.
-   * @param {boolean} addTextureCoords - The addTextureCoords value.
+   * @param {number} [SizeX=1.0] - The length of the plane along the X axis.
+   * @param {number} [SizeY=1.0] - The length of the plane along the Y axis.
+   * @param {number} [DetailX=1] - The number of divisions along the X axis.
+   * @param {number} [DetailY=1] - The number of divisions along the Y axis.
+   * @param {boolean} [addNormals=true] - The addNormals value.
+   * @param {boolean} [addTextureCoords=true] - The addTextureCoords value.
    */
-  constructor(
-    SizeX = 1.0,
-    SizeY = 1.0,
-    DetailX = 1,
-    DetailY = 1,
-    addNormals = true,
-    addTextureCoords = true
-  ) {
+  constructor(SizeX = 1.0, SizeY = 1.0, DetailX = 1, DetailY = 1, addNormals = true, addTextureCoords = true) {
     super()
 
-    if (isNaN(SizeX) || isNaN(SizeY) || isNaN(DetailX) || isNaN(DetailY))
-      throw new Error('Invalid geom args')
+    if (isNaN(SizeX) || isNaN(SizeY) || isNaN(DetailX) || isNaN(DetailY)) throw new Error('Invalid geom args')
 
     this.__sizeXParam = this.addParameter(new NumberParameter('SizeX', SizeX))
     this.__sizeYParam = this.addParameter(new NumberParameter('SizeY', SizeY))
@@ -36,17 +40,17 @@ class Plane extends Mesh {
     if (addNormals) this.addVertexAttribute('normals', Vec3)
     if (addTextureCoords) this.addVertexAttribute('texCoords', Vec2)
     this.__rebuild()
-    
+
     const resize = () => {
       this.__resize()
     }
     const rebuild = () => {
       this.__rebuild()
     }
-    this.__sizeXParam.addListener('valueChanged', resize)
-    this.__sizeYParam.addListener('valueChanged', resize)
-    this.__detailXParam.addListener('valueChanged', rebuild)
-    this.__detailYParam.addListener('valueChanged', rebuild)
+    this.__sizeXParam.on('valueChanged', resize)
+    this.__sizeYParam.on('valueChanged', resize)
+    this.__detailXParam.on('valueChanged', rebuild)
+    this.__detailYParam.on('valueChanged', rebuild)
   }
 
   /**
@@ -66,7 +70,7 @@ class Plane extends Mesh {
         const v1 = (detailX + 1) * (i + 1) + (j + 1)
         const v2 = (detailX + 1) * i + (j + 1)
         const v3 = (detailX + 1) * i + j
-        this.setFaceVertexIndices(quadId, v0, v1, v2, v3)
+        this.setFaceVertexIndices(quadId, [v0, v1, v2, v3])
         quadId = quadId + 1
       }
     }
@@ -101,19 +105,22 @@ class Plane extends Mesh {
 
   /**
    * The __resize method.
+   *
    * @private
+   * @param {boolean} [emit=true] - If `true` emits `geomDataChanged` event.
    */
   __resize(emit = true) {
     const sizeX = this.__sizeXParam.getValue()
     const sizeY = this.__sizeYParam.getValue()
     const detailX = this.__detailXParam.getValue()
     const detailY = this.__detailYParam.getValue()
+    const positions = this.getVertexAttribute('positions')
     let voff = 0
     for (let i = 0; i <= detailY; i++) {
       const y = (i / detailY - 0.5) * sizeY
       for (let j = 0; j <= detailX; j++) {
         const x = (j / detailX - 0.5) * sizeX
-        this.getVertex(voff).set(x, y, 0.0)
+        positions.getValueRef(voff).set(x, y, 0.0)
         voff++
       }
     }

@@ -3,25 +3,32 @@ import { resourceLoader } from '../ResourceLoader.js'
 import { loadTextfile, loadBinfile } from '../Utils.js'
 
 // eslint-disable-next-line require-jsdoc
-function getFirstBrowserLanguage() {
-  if (!globalThis.navigator) return "en"
+function getLanguage() {
+  if (!globalThis.navigator) return 'en'
+
+  // Check if a language is explicitly selected.
+  const searchParams = new URLSearchParams(window.location.search)
+  if (searchParams.has('lang')) return searchParams.get('lang')
 
   const nav = window.navigator
-  const browserLanguagePropertyKeys = [
-    'language',
-    'browserLanguage',
-    'systemLanguage',
-    'userLanguage',
-  ]
+  const browserLanguagePropertyKeys = ['language', 'browserLanguage', 'systemLanguage', 'userLanguage']
   let i
   let language
+
+  const clean = (language) => {
+    if (language.startsWith('en')) return 'En'
+    else if (language.startsWith('es')) return 'Es'
+    else if (language.startsWith('fr')) return 'Fr'
+    else if (language.startsWith('gb') || language.startsWith('de')) return 'Gb'
+    return language
+  }
 
   // support for HTML 5.1 "navigator.languages"
   if (Array.isArray(nav.languages)) {
     for (i = 0; i < nav.languages.length; i++) {
       language = nav.languages[i]
       if (language && language.length) {
-        return language
+        return clean(language)
       }
     }
   }
@@ -30,7 +37,7 @@ function getFirstBrowserLanguage() {
   for (i = 0; i < browserLanguagePropertyKeys.length; i++) {
     language = nav[browserLanguagePropertyKeys[i]]
     if (language && language.length) {
-      return language
+      return clean(language)
     }
   }
 
@@ -48,19 +55,14 @@ class LabelManager extends EventEmitter {
     super()
     this.__labelLibraries = {}
 
-    const language = getFirstBrowserLanguage()
-    if (language.startsWith('en')) this.__language = 'En'
-    else if (language.startsWith('es')) this.__language = 'Es'
-    else if (language.startsWith('fr')) this.__language = 'Fr'
-    else if (language.startsWith('gb') || language.startsWith('de'))
-      this.__language = 'Gb'
+    this.__language = getLanguage()
 
     this.__foundLabelLibraries = {}
 
-    resourceLoader.registerResourceCallback('.labels', file => {
+    resourceLoader.registerResourceCallback('.labels', (file) => {
       const stem = file.name.split('.')[0] // trim off the extension
       this.__foundLabelLibraries[stem] = file
-      loadTextfile(file.url, text => {
+      loadTextfile(file.url, (text) => {
         this.__labelLibraries[stem] = JSON.parse(text)
         this.emit('labelLibraryLoaded', { library: stem })
       })
@@ -71,22 +73,20 @@ class LabelManager extends EventEmitter {
       // https://stackoverflow.com/questions/8238407/how-to-parse-excel-file-in-javascript-html5
       // and here:
       // https://github.com/SheetJS/js-xlsx/tree/master/demos/xhr
-      resourceLoader.registerResourceCallback('.xlsx', file => {
+      resourceLoader.registerResourceCallback('.xlsx', (file) => {
         const stem = file.name.split('.')[0] // trim off the extension
         this.__foundLabelLibraries[stem] = file
-        loadBinfile(file.url, data => {
+        loadBinfile(file.url, (data) => {
           const unit8array = new Uint8Array(data)
           const workbook = XLSX.read(unit8array, {
             type: 'array',
           })
 
           const json = {}
-          workbook.SheetNames.forEach(function(sheetName) {
+          workbook.SheetNames.forEach(function (sheetName) {
             // Here is your object
-            const rows = XLSX.utils.sheet_to_row_object_array(
-              workbook.Sheets[sheetName]
-            )
-            rows.forEach(function(row) {
+            const rows = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheetName])
+            rows.forEach(function (row) {
               const identifier = row.Identifier
               delete row.Identifier
               json[identifier] = row
@@ -108,7 +108,7 @@ class LabelManager extends EventEmitter {
   loadLibrary(name, json) {
     this.__foundLabelLibraries[name] = true
     this.__labelLibraries[name] = json
-    this.labelLibraryLoaded.emit(name)
+    this.emit('labelLibraryLoaded', { library: name })
   }
 
   /**
@@ -161,13 +161,7 @@ class LabelManager extends EventEmitter {
     const labelText = label[this.__language]
     if (!labelText) {
       if (label['En']) return label['En']
-      throw new Error(
-        "labelText: '" +
-          language +
-          "' not found in Label. Found: [" +
-          Object.keys(label) +
-          ']'
-      )
+      throw new Error("labelText: '" + language + "' not found in Label. Found: [" + Object.keys(label) + ']')
     }
     return labelText
   }
@@ -194,7 +188,7 @@ class LabelManager extends EventEmitter {
   }
 
   setLanguage(ln) {
-    this.__language = ln;
+    this.__language = ln
   }
 }
 

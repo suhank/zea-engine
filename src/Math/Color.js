@@ -3,7 +3,7 @@ import { AttrValue } from './AttrValue.js'
 import { typeRegistry } from './TypeRegistry.js'
 
 /**
- * Class representing a color.
+ * Class representing a color as 4 floating point values.
  *
  * @extends AttrValue
  */
@@ -22,6 +22,7 @@ class Color extends AttrValue {
     if (r instanceof Float32Array) {
       this.__data = r
     } else if (r instanceof ArrayBuffer) {
+      console.warn(`deprecated, please use new Vec4(new Float32Array(buffer, byteOffset, 4))`)
       const buffer = r
       const byteOffset = g
       this.__data = new Float32Array(buffer, byteOffset, 4)
@@ -387,8 +388,7 @@ class Color extends AttrValue {
         yellowgreen: '#9acd32',
       }
 
-      if (typeof colors[colour.toLowerCase()] != 'undefined')
-        return colors[colour.toLowerCase()]
+      if (typeof colors[colour.toLowerCase()] != 'undefined') return colors[colour.toLowerCase()]
 
       return false
     }
@@ -410,12 +410,7 @@ class Color extends AttrValue {
       const hex = int.toString(16)
       return hex.length == 1 ? '0' + hex : hex
     }
-    return (
-      '#' +
-      componentToHex(this.r) +
-      componentToHex(this.g) +
-      componentToHex(this.b)
-    )
+    return '#' + componentToHex(this.r) + componentToHex(this.g) + componentToHex(this.b)
   }
 
   /**
@@ -425,12 +420,7 @@ class Color extends AttrValue {
    * @return {boolean} - Returns true or false.
    */
   equal(other) {
-    return (
-      this.r == other.r &&
-      this.g == other.g &&
-      this.b == other.b &&
-      this.a == other.a
-    )
+    return this.r == other.r && this.g == other.g && this.b == other.b && this.a == other.a
   }
 
   /**
@@ -439,13 +429,8 @@ class Color extends AttrValue {
    * @param {Color} other - The other color to compare with.
    * @return {boolean} - Returns true or false.
    */
-  notequals(other) {
-    return (
-      this.r != other.r &&
-      this.g != other.g &&
-      this.b != other.b &&
-      this.a != other.a
-    )
+  notEquals(other) {
+    return this.r != other.r && this.g != other.g && this.b != other.b && this.a != other.a
   }
 
   /**
@@ -471,12 +456,7 @@ class Color extends AttrValue {
    * @return {Color} - Returns a new color.
    */
   add(other) {
-    return new Color(
-      this.r + other.r,
-      this.g + other.g,
-      this.b + other.b,
-      this.a + other.a
-    )
+    return new Color(this.r + other.r, this.g + other.g, this.b + other.b, this.a + other.a)
   }
 
   /**
@@ -486,12 +466,7 @@ class Color extends AttrValue {
    * @return {Color} - Returns a new color.
    */
   subtract(other) {
-    return new Color(
-      this.r - other.r,
-      this.g - other.g,
-      this.b - other.b,
-      this.a - other.a
-    )
+    return new Color(this.r - other.r, this.g - other.g, this.b - other.b, this.a - other.a)
   }
 
   /**
@@ -501,12 +476,7 @@ class Color extends AttrValue {
    * @return {Color} - Returns a new color.
    */
   scale(scalar) {
-    return new Color(
-      this.r * scalar,
-      this.g * scalar,
-      this.b * scalar,
-      this.a * scalar
-    )
+    return new Color(this.r * scalar, this.g * scalar, this.b * scalar, this.a * scalar)
   }
 
   /**
@@ -527,12 +497,7 @@ class Color extends AttrValue {
    * @param {number} gamma - The gamma value.
    */
   applyGamma(gamma) {
-    this.set(
-      Math.pow(this.r, gamma),
-      Math.pow(this.g, gamma),
-      Math.pow(this.b, gamma),
-      this.a
-    )
+    this.set(Math.pow(this.r, gamma), Math.pow(this.g, gamma), Math.pow(this.b, gamma), this.a)
   }
 
   /**
@@ -542,12 +507,7 @@ class Color extends AttrValue {
    * @return {Color} - Returns a new color.
    */
   toLinear(gamma = 2.2) {
-    return new Color(
-      Math.pow(this.r, gamma),
-      Math.pow(this.g, gamma),
-      Math.pow(this.b, gamma),
-      this.a
-    )
+    return new Color(Math.pow(this.r, gamma), Math.pow(this.g, gamma), Math.pow(this.b, gamma), this.a)
   }
 
   /**
@@ -586,12 +546,7 @@ class Color extends AttrValue {
     const ag = this.g
     const ab = this.b
     const aa = this.a
-    return new Color(
-      ar + t * (other.r - ar),
-      ag + t * (other.g - ag),
-      ab + t * (other.b - ab),
-      aa + t * (other.a - aa)
-    )
+    return new Color(ar + t * (other.r - ar), ag + t * (other.g - ag), ab + t * (other.b - ab), aa + t * (other.a - aa))
   }
 
   /**
@@ -617,12 +572,7 @@ class Color extends AttrValue {
         randomAlpha ? Math.random() * (1.0 + gammaOffset) : 1.0
       )
     } else {
-      return new Color(
-        Math.random(),
-        Math.random(),
-        Math.random(),
-        randomAlpha ? Math.random() : 1.0
-      )
+      return new Color(Math.random(), Math.random(), Math.random(), randomAlpha ? Math.random() : 1.0)
     }
   }
 
@@ -632,12 +582,7 @@ class Color extends AttrValue {
    * @return {Color} - Returns a new color.
    */
   clone() {
-    return new Color(
-      this.__data[0],
-      this.__data[1],
-      this.__data[2],
-      this.__data[3]
-    )
+    return new Color(this.__data[0], this.__data[1], this.__data[2], this.__data[3])
   }
 
   /**
@@ -677,10 +622,24 @@ class Color extends AttrValue {
    * @param {ArrayBuffer} buffer - The buffer value.
    * @param {number} offset - The offset value.
    * @return {Color} - Returns a new color.
+   * @deprecated
    * @private
    */
   static createFromFloat32Buffer(buffer, offset = 0) {
-    return new Color(buffer, offset * 4) // 4 bytes per 32bit float
+    console.warn('Deprecated, use #createFromBuffer instead')
+    return this.createFromBuffer(buffer, offset * 4)
+  }
+
+  /**
+   * Creates an instance of a `Color` using an ArrayBuffer.
+   *
+   * @static
+   * @param {ArrayBuffer} buffer - The buffer value.
+   * @param {number} byteOffset - The offset value.
+   * @return {Color} - Returns a new color.
+   */
+  static createFromBuffer(buffer, byteOffset) {
+    return new Color(new Float32Array(buffer, byteOffset, 4)) // 4 bytes per 32bit float
   }
 
   /**
@@ -696,7 +655,7 @@ class Color extends AttrValue {
   // Persistence
 
   /**
-   * The toJSON method encodes this type as a json object for persistences.
+   * The toJSON method encodes this type as a json object for persistence.
    *
    * @return {object} - The json object.
    */
@@ -719,6 +678,18 @@ class Color extends AttrValue {
     this.g = j.g
     this.b = j.b
     this.a = j.a
+  }
+
+  /**
+   * Loads the state of the value from a binary reader.
+   *
+   * @param {BinReader} reader - The reader value.
+   */
+  readBinary(reader) {
+    this.r = reader.loadFloat32()
+    this.g = reader.loadFloat32()
+    this.b = reader.loadFloat32()
+    this.a = reader.loadFloat32()
   }
 
   /**

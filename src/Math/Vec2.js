@@ -2,9 +2,9 @@ import { AttrValue } from './AttrValue.js'
 import { typeRegistry } from './TypeRegistry.js'
 
 /**
- * Representing a Vec2(two-dimensional floating point vector).
+ * Representing a Vec2(two-dimensional floating point vector). A Vec2 is for representing 2 dimensional values, such as screen coordinates or pixel coordinates within an image.
  *
- * Vector classes in _zea-engine_ internally store values in {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array|Float32Array} and
+ * Math types internally store values in {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array|Float32Array} and
  * expose getters and setters for the component values.
  *
  * @extends AttrValue
@@ -13,26 +13,61 @@ class Vec2 extends AttrValue {
   /**
    * Creates a Vec2.
    *
-   * The type of values of the `(x, y)` coordenates can be {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array|Float32Array},
+   * The type of values of the `(x, y)` coordinates can be {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array|Float32Array},
    * {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint32Array|Uint32Array},
    * {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array|Int32Array} and
    * {@link https://developer.mozilla.org/es/docs/Web/JavaScript/Referencia/Objetos_globales/ArrayBuffer|ArrayBuffer}.
    * <br>
-   * You can also pass one JSON object parameter.
    *
-   * @param {Number} x - The x value. Default is 0.
+   * ```javascript
+   *  const myVec2 = new Vec2(1.2, 3.4)
+   * ```
+   *
+   * Given an array of floats, create a Vec2 that wraps some part of it.
+   * ```javascript
+   *  const floatArray = new Float32Array(6)
+   *  floatArray[0] = 1.2
+   *  floatArray[1] = 3.4
+   *  const myVec2 = new Vec2(floatArray)
+   *  console.log(myVec2.toJSON())
+   * ```
+   * The resulting output
+   * ```json
+   *  > { x:1.2, y:3.4 }
+   * ```
+   *
+   * Given an array of floats, create a Vec2 that wraps some part of it.
+   * ```javascript
+   *  const floatArray = new Float32Array(6)
+   *  floatArray[0] = 1.2
+   *  floatArray[1] = 3.4
+   *  floatArray[2] = 5.6
+   *  floatArray[3] = 7.8
+   *  floatArray[4] = 9.0
+   *  floatArray[5] = 1.9
+   *  const myVec2 = new Vec2(floatArray.buffer, 8)
+   *  console.log(myVec2.toJSON())
+   * ```
+   * The resulting output
+   * ```json
+   *  > { x:5.6, y:7.8 }
+   * ```
+   *
+   * You can also pass one JSON object parameter.
+   * ```javascript
+   *  const myVec2 = new Vec2({ x:1.2, y:3.4 })
+   * ```
+   *
+   * @param {Number|Float32Array|Uint32Array|json} x - The x value. Default is 0.
    * @param {Number} y - The y value. Default is 0.
    */
   constructor(x = 0, y = 0) {
     super()
 
-    if (
-      x instanceof Float32Array ||
-      x instanceof Uint32Array ||
-      x instanceof Int32Array
-    ) {
+    if (x instanceof Float32Array || x instanceof Uint32Array || x instanceof Int32Array) {
       this.__data = x
     } else if (x instanceof ArrayBuffer) {
+      console.warn(`deprecated, please use new Vec4(new Float32Array(buffer, byteOffset, 4))`)
       const buffer = x
       const byteOffset = y
       this.__data = new Float32Array(buffer, byteOffset, 2)
@@ -47,15 +82,15 @@ class Vec2 extends AttrValue {
   }
 
   /**
-   * Getter for `x` value.
-   * @return {number} - Returns the x value.
+   * Getter for `x` component.
+   * @return {number} - Returns the x component.
    */
   get x() {
     return this.__data[0]
   }
 
   /**
-   * Setter for `x` value.
+   * Setter for `x` component.
    * @param {number} val - The val param.
    */
   set x(val) {
@@ -63,15 +98,15 @@ class Vec2 extends AttrValue {
   }
 
   /**
-   * Getter for `y` value.
-   * @return {number} - Returns the y value.
+   * Getter for `y` component.
+   * @return {number} - Returns the y component.
    */
   get y() {
     return this.__data[1]
   }
 
   /**
-   * Setter for `y` value.
+   * Setter for `y` component.
    * @param {number} val - The val param.
    */
   set y(val) {
@@ -80,8 +115,8 @@ class Vec2 extends AttrValue {
 
   /**
    * Setter from scalar components.
-   * @param {number} x - The x value.
-   * @param {number} y  - The y value.
+   * @param {number} x - The x component.
+   * @param {number} y  - The y component.
    */
   set(x, y) {
     this.__data[0] = x
@@ -101,11 +136,35 @@ class Vec2 extends AttrValue {
   /**
    * Checks if this Vec2 is exactly the same as another Vec2.
    *
+   * @deprecated
    * @param {Vec2} other - The other Vec2 to compare with.
    * @return {boolean} - Returns `true` if are the same Vector, otherwise, `false`.
    */
   equal(other) {
+    console.warn('Deprecated. Use #isEqual instead.')
+    return this.isEqual(other)
+  }
+
+  /**
+   * Checks if this Vec2 is exactly the same as another Vec2.
+   *
+   * @param {Vec2} other - The other Vec2 to compare with.
+   * @return {boolean} - Returns `true` if are the same Vector, otherwise, `false`.
+   */
+  isEqual(other) {
     return this.x == other.x && this.y == other.y
+  }
+
+  /**
+   * Checks if this Vec2 is different from another Vec2.
+   *
+   * @deprecated
+   * @param {Vec2} other - The other Vec2 to compare with.
+   * @return {boolean} - Returns `true` if the Vec2s are different, otherwise, `false`.
+   */
+  notEquals(other) {
+    console.warn('Deprecated. Use #notEqual instead.')
+    return this.notEqual(other)
   }
 
   /**
@@ -114,7 +173,7 @@ class Vec2 extends AttrValue {
    * @param {Vec2} other - The other Vec2 to compare with.
    * @return {boolean} - Returns `true` if the Vec2s are different, otherwise, `false`.
    */
-  notEquals(other) {
+  notEqual(other) {
     return this.x != other.x && this.y != other.y
   }
 
@@ -126,10 +185,7 @@ class Vec2 extends AttrValue {
    * @return {boolean} - Returns true or false.
    */
   approxEqual(other, precision = Number.EPSILON) {
-    return (
-      Math.abs(this.x - other.x) < precision &&
-      Math.abs(this.y - other.y) < precision
-    )
+    return Math.abs(this.x - other.x) < precision && Math.abs(this.y - other.y) < precision
   }
 
   /**
@@ -354,10 +410,7 @@ class Vec2 extends AttrValue {
   rotate(angle) {
     const cosa = Math.cos(angle)
     const sina = Math.sin(angle)
-    return new Vec2(
-      this.x * cosa - this.y * sina,
-      this.x * sina + this.y * cosa
-    )
+    return new Vec2(this.x * cosa - this.y * sina, this.x * sina + this.y * cosa)
   }
 
   /**
@@ -436,10 +489,24 @@ class Vec2 extends AttrValue {
    * @param {ArrayBuffer} buffer - The buffer value.
    * @param {number} offset - The offset value.
    * @return {Vec2} - Returns a new Vec2.
+   * @deprecated
    * @private
    */
   static createFromFloat32Buffer(buffer, offset = 0) {
-    return new Vec2(buffer, offset * 4) // 4 bytes per 32bit float
+    console.warn('Deprecated, use #createFromBuffer instead')
+    return this.createFromBuffer(buffer, offset * 4)
+  }
+
+  /**
+   * Creates an instance of a `Vec2` using an ArrayBuffer.
+   *
+   * @static
+   * @param {ArrayBuffer} buffer - The buffer value.
+   * @param {number} byteOffset - The offset value.
+   * @return {Vec2} - Returns a new Vec2.
+   */
+  static createFromBuffer(buffer, byteOffset) {
+    return new Vec2(new Float32Array(buffer, byteOffset, 2)) // 4 bytes per 32bit float
   }
 
   /**
@@ -485,6 +552,16 @@ class Vec2 extends AttrValue {
   fromJSON(j) {
     this.x = j.x
     this.y = j.y
+  }
+
+  /**
+   * Loads the state of the value from a binary reader.
+   *
+   * @param {BinReader} reader - The reader value.
+   */
+  readBinary(reader) {
+    this.x = reader.loadFloat32()
+    this.y = reader.loadFloat32()
   }
 }
 

@@ -1,3 +1,4 @@
+/* eslint-disable prefer-promise-reject-errors */
 import { Vec4 } from '../../Math/index'
 import { loadBinfile } from '../Utils.js'
 import { sgFactory } from '../SGFactory.js'
@@ -7,16 +8,33 @@ import { GIF } from '../../external/gifuct-js.js'
 import { resourceLoader } from '../ResourceLoader.js'
 
 import { NumberParameter, Vec4Parameter } from '../Parameters/index'
+import MathFunctions from '../../Utilities/MathFunctions'
 
-/** Class representing a GIF image.
+/**
+ * Class representing a GIF image.
+ *
+ * ```
+ * const image = new GIFImage()
+ * image.getParameter('FilePath').setUrl("https://storage.googleapis.com/zea-playground-assets/zea-engine/texture.gif")
+ * ```
+ *
+ * **Parameters**
+ * * **StreamAtlasDesc:**
+ * * **StreamAtlasIndex:**
+ *
+ * **Events**
+ * * **loaded:** Triggered when the gif data is loaded.
+ *
+ * **File Types:** gif
+ *
  * @extends FileImage
  */
 class GIFImage extends FileImage {
   /**
    * Create a GIF image.
    * @param {string} name - The name value.
-   * @param {any} filePath - The filePath value.
-   * @param {any} params - The params value.
+   * @param {string|object} filePath - The filePath value.
+   * @param {object} params - The params value.
    */
   constructor(name, filePath = '', params = {}) {
     super(name, filePath, params)
@@ -34,10 +52,9 @@ class GIFImage extends FileImage {
 
     let playing
     let frame = 0
-    const incrementFrame = numFrames => {
+    const incrementFrame = (numFrames) => {
       frameParam.setValue(frame)
-      if (playing)
-        setTimeout(() => incrementFrame(numFrames), this.getFrameDelay(frame))
+      if (playing) setTimeout(() => incrementFrame(numFrames), this.getFrameDelay(frame))
       frame = (frame + 1) % numFrames
     }
     this.play = () => {
@@ -55,7 +72,7 @@ class GIFImage extends FileImage {
   /**
    * The getFrameDelay method.
    * @param {number} index - The index value.
-   * @return {any} - The return value.
+   * @return {number} - The return value.
    */
   getFrameDelay(index) {
     // Note: Frame delays are in centisecs (not millisecs which the timers will require.)
@@ -64,7 +81,7 @@ class GIFImage extends FileImage {
 
   /**
    * The __loadData method.
-   * @param {any} fileDesc - The fileDesc value.
+   * @param {object} fileDesc - The fileDesc value.
    * @private
    */
   __loadData(fileDesc) {
@@ -78,17 +95,17 @@ class GIFImage extends FileImage {
         resourceLoader.addWork(fileDesc.id, 1)
 
         if (fileDesc.assets && fileDesc.assets.atlas) {
-          const image = new Image()
-          image.crossOrigin = 'anonymous'
-          image.src = fileDesc.assets.atlas.url
-          image.addListener('load', () => {
+          const imageElem = new Image()
+          imageElem.crossOrigin = 'anonymous'
+          imageElem.src = fileDesc.assets.atlas.url
+          imageElem.addEventListener('load', () => {
             resolve({
               width: fileDesc.assets.atlas.width,
               height: fileDesc.assets.atlas.height,
               atlasSize: fileDesc.assets.atlas.atlasSize,
               frameDelays: fileDesc.assets.atlas.frameDelays,
               frameRange: [0, fileDesc.assets.atlas.frameDelays.length],
-              imageData: image,
+              imageData: imageElem,
             })
             resourceLoader.addWorkDone(fileDesc.id, 1)
           })
@@ -97,7 +114,7 @@ class GIFImage extends FileImage {
 
         loadBinfile(
           fileDesc.url,
-          data => {
+          (data) => {
             console.warn('Unpacking Gif client side:' + fileDesc.name)
 
             const start = performance.now()
@@ -109,9 +126,9 @@ class GIFImage extends FileImage {
             // do something with the frame data
             const sideLength = Math.sqrt(frames.length)
             const atlasSize = [sideLength, sideLength]
-            if (Math.fract(sideLength) > 0.0) {
+            if (MathFunctions.fract(sideLength) > 0.0) {
               atlasSize[0] = Math.floor(atlasSize[0] + 1)
-              if (Math.fract(sideLength) > 0.5) {
+              if (MathFunctions.fract(sideLength) > 0.5) {
                 atlasSize[1] = Math.floor(atlasSize[1] + 1)
               } else {
                 atlasSize[1] = Math.floor(atlasSize[1])
@@ -142,22 +159,15 @@ class GIFImage extends FileImage {
             const renderFrame = (frame, index) => {
               const dims = frame.dims
 
-              // Note: the server side library returns centisecs for
+              // Note: the server side library returns centisecs (1/100 second) for
               // frame delays, so normalize here so that client and servers
               // valueus are in the
               frameDelays.push(frame.delay / 10)
 
-              if (
-                !frameImageData ||
-                dims.width != frameImageData.width ||
-                dims.height != frameImageData.height
-              ) {
+              if (!frameImageData || dims.width != frameImageData.width || dims.height != frameImageData.height) {
                 tempCanvas.width = dims.width
                 tempCanvas.height = dims.height
-                frameImageData = tempCtx.createImageData(
-                  dims.width,
-                  dims.height
-                )
+                frameImageData = tempCtx.createImageData(dims.width, dims.height)
               }
 
               // set the patch data as an override
@@ -167,18 +177,13 @@ class GIFImage extends FileImage {
               // Note: undocumented disposal method.
               // See Ids here: https://github.com/theturtle32/Flash-Animated-GIF-Library/blob/master/AS3GifPlayer/src/com/worlize/gif/constants/DisposalType.as
               // From what I can gather, 2 means we should clear the background first.
-              // this seems towork with Gifs featuring moving transparency.
+              // this seems to work with Gifs featuring moving transparency.
               // For fully opaque gifs, we should avoid this.
-              if (frame.disposalType == 2)
-                gifCtx.clearRect(0, 0, gifCanvas.width, gifCanvas.height)
+              if (frame.disposalType == 2) gifCtx.clearRect(0, 0, gifCanvas.width, gifCanvas.height)
 
               gifCtx.drawImage(tempCanvas, dims.left, dims.top)
 
-              atlasCtx.drawImage(
-                gifCanvas,
-                (index % atlasSize[0]) * width,
-                Math.floor(index / atlasSize[0]) * height
-              )
+              atlasCtx.drawImage(gifCanvas, (index % atlasSize[0]) * width, Math.floor(index / atlasSize[0]) * height)
             }
 
             for (let i = 0; i < frames.length; i++) {
@@ -187,12 +192,7 @@ class GIFImage extends FileImage {
             }
             resourceLoader.addWorkDone(fileDesc.id, 1)
 
-            const imageData = atlasCtx.getImageData(
-              0,
-              0,
-              atlasCanvas.width,
-              atlasCanvas.height
-            )
+            const imageData = atlasCtx.getImageData(0, 0, atlasCanvas.width, atlasCanvas.height)
 
             const ms = performance.now() - start
             console.log(`Decode GIF '${fileDesc.name}' time:` + ms)
@@ -206,10 +206,8 @@ class GIFImage extends FileImage {
               imageData,
             })
           },
-          statusText => {
-            console.warn(
-              'Unable to Load URL:' + statusText + ':' + fileDesc.url
-            )
+          (statusText) => {
+            console.warn('Unable to Load URL:' + statusText + ':' + fileDesc.url)
             reject()
           }
         )
@@ -218,7 +216,7 @@ class GIFImage extends FileImage {
       imageDataLibrary[fileDesc.id] = this.__resourcePromise
     }
 
-    this.__resourcePromise.then(unpackedData => {
+    this.__resourcePromise.then((unpackedData) => {
       this.width = unpackedData.width
       this.height = unpackedData.height
 

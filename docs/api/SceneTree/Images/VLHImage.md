@@ -3,18 +3,23 @@
 ### VLHImage 
 Class representing a VLH image.
 
+**Parameters**
+* **FilePath(`FilePathParameter`):** Used to specify the path to the file.
+
+**Events**
+* **loaded:** Triggered when image data is loaded.
+* **updated:** Triggered when image data is updated.
+
 
 **Extends**: <code>BaseImage</code>  
 
 * [VLHImage ⇐ <code>BaseImage</code>](#VLHImage)
     * [new VLHImage(name, params)](#new-VLHImage)
-    * [getDOMElement() ⇒ <code>any</code>](#getDOMElement)
-    * [getResourcePath() ⇒ <code>any</code>](#getResourcePath)
+    * [getDOMElement() ⇒ <code>HTMLElement</code>](#getDOMElement)
+    * [getResourcePath() ⇒ <code>string</code>](#getResourcePath)
     * [isStream() ⇒ <code>boolean</code>](#isStream)
-    * [isLoaded() ⇒ <code>any</code>](#isLoaded)
-    * [getParams() ⇒ <code>any</code>](#getParams)
-    * [setHDRTint(hdrtint)](#setHDRTint)
-    * [getHDRTint() ⇒ <code>any</code>](#getHDRTint)
+    * [isLoaded() ⇒ <code>boolean</code>](#isLoaded)
+    * [getParams() ⇒ <code>object</code>](#getParams)
     * [toJSON(context, flags)](#toJSON)
     * [fromJSON(json, context, flags)](#fromJSON)
     * [readBinary(reader, context)](#readBinary)
@@ -33,60 +38,42 @@ Create a VLH image.
 <a name="VLHImage+getDOMElement"></a>
 
 ### getDOMElement
-The getDOMElement method.
+Returns DOM Element.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>HTMLElement</code> - - The return value.  
 <a name="VLHImage+getResourcePath"></a>
 
 ### getResourcePath
-The getResourcePath method.
+Returns `FilePath` parameter's value.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>string</code> - - The return value.  
 <a name="VLHImage+isStream"></a>
 
 ### isStream
-The isStream method.
+Returns if the data is a stream or not.
 
 
 **Returns**: <code>boolean</code> - - The return value.  
 <a name="VLHImage+isLoaded"></a>
 
 ### isLoaded
-The isLoaded method.
+Returns the status of the data, whether is loaded or not.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>boolean</code> - - The return value.  
 <a name="VLHImage+getParams"></a>
 
 ### getParams
-The getParams method.
+Returns all parameters and class state values.
 
 
-**Returns**: <code>any</code> - - The return value.  
-<a name="VLHImage+setHDRTint"></a>
-
-### setHDRTint
-The setHDRTint method.
-
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| hdrtint | <code>any</code> | The hdrtint value. |
-
-<a name="VLHImage+getHDRTint"></a>
-
-### getHDRTint
-The getHDRTint method.
-
-
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>object</code> - - The return value.  
 <a name="VLHImage+toJSON"></a>
 
 ### toJSON
-The toJSON method encodes this type as a json object for persistences.
+The toJSON method encodes this type as a json object for persistence.
 
 
 
@@ -111,12 +98,12 @@ The fromJSON method decodes a json object for this type.
 <a name="VLHImage+readBinary"></a>
 
 ### readBinary
-The readBinary method.
+Sets state of current Image using a binary reader object, and adds it to the resource loader.
 
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| reader | <code>object</code> | The reader value. |
+| reader | <code>BinReader</code> | The reader value. |
 | context | <code>object</code> | The context value. |
 

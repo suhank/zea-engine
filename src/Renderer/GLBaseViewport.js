@@ -15,15 +15,13 @@ class GLBaseViewport extends ParameterOwner {
   constructor(renderer) {
     super()
     this.__renderer = renderer
-    this.__doubleClickTimeMSParam = this.addParameter(
-      new NumberParameter('DoubleClickTimeMS', 200)
-    )
+    this.__doubleClickTimeMSParam = this.addParameter(new NumberParameter('DoubleClickTimeMS', 200))
     this.__fbo = undefined
 
     const sceneSet = () => {
       const settings = renderer.getScene().settings
       const bgColorParam = settings.getParameter('BackgroundColor')
-      const processBGValue = mode => {
+      const processBGValue = () => {
         const value = bgColorParam.getValue()
         const gl = this.__renderer.gl
         if (value instanceof BaseImage) {
@@ -46,11 +44,11 @@ class GLBaseViewport extends ParameterOwner {
         }
         this.emit('updated', {})
       }
-      processBGValue(bgColorParam.getValue())
-      bgColorParam.addListener('valueChanged', processBGValue)
+      processBGValue()
+      bgColorParam.on('valueChanged', processBGValue)
     }
 
-    this.__renderer.addListener('sceneSet', sceneSet)
+    this.__renderer.on('sceneSet', sceneSet)
   }
 
   /**
@@ -59,14 +57,6 @@ class GLBaseViewport extends ParameterOwner {
    */
   getRenderer() {
     return this.__renderer
-  }
-
-  /**
-   * The getName method.
-   * @return {any} - The return value.
-   */
-  getName() {
-    return this.__name
   }
 
   /**
@@ -140,7 +130,7 @@ class GLBaseViewport extends ParameterOwner {
    * @return {any} - The return value.
    */
   getBackground() {
-    console.warn("Deprecated Function. Please access the Scene Settings object.")
+    console.warn('Deprecated Function. Please access the Scene Settings object.')
     const settings = this.__renderer.getScene().settings
     const bgColorParam = settings.getParameter('BackgroundColor')
     return bgColorParam.getValue()
@@ -151,7 +141,7 @@ class GLBaseViewport extends ParameterOwner {
    * @param {any} background - The background value.
    */
   setBackground(background) {
-    console.warn("Deprecated Function. Please access the Scene Settings object.")
+    console.warn('Deprecated Function. Please access the Scene Settings object.')
     const settings = this.__renderer.getScene().settings
     const bgColorParam = settings.getParameter('BackgroundColor')
     bgColorParam.setValue(background)

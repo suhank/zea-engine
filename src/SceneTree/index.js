@@ -12,10 +12,12 @@ export * from './BinWriter.js'
 export * from './Parameters/index'
 // Explicit export of parameters that are not included in the
 // moduled defined by the index file in the folder. (see Parameters/index.js)
+export * from './Parameters/FilePathParameter.js'
 export * from './Parameters/MaterialParameter.js'
 export * from './Parameters/MaterialFloatParam.js'
 export * from './Parameters/MaterialColorParam.js'
 // export * from './Parameters/GeometryParameter.js'
+export * from './Parameters/FilePathParameter.js'
 export * from './Geometry/index'
 export * from './Images/index'
 

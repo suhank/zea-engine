@@ -55,10 +55,10 @@ function dirToSphOctUv(normal) {
   const aNorm_xy = new Vec2(aNorm.x, aNorm.y)
 
   let dir = max_vec2(aNorm_xy, 1e-20)
-  const orient = Math.atan2(dir.x, dir.y) / Math.HALF_PI
+  const orient = Math.atan2(dir.x, dir.y) / (Math.PI * 0.5)
 
   dir = max_vec2(new Vec2(aNorm.z, aNorm_xy.length()), 1e-20)
-  const pitch = Math.atan2(dir.y, dir.x) / Math.HALF_PI
+  const pitch = Math.atan2(dir.y, dir.x) / (Math.PI * 0.5)
 
   let uv = new Vec2(sNorm.x * orient, sNorm.y * (1.0 - orient))
   uv.scaleInPlace(pitch)
@@ -90,7 +90,7 @@ function sphOctUvToDir(uv) {
     sabsuv = sum_vec2(abs_vec2(uv))
   }
 
-  const orient = (Math.abs(uv.x) / sabsuv) * Math.HALF_PI
+  const orient = (Math.abs(uv.x) / sabsuv) * (Math.PI * 0.5)
   const sOrient = Math.sin(orient)
   const cOrient = Math.cos(orient)
   const sPitch = Math.sin(pitch)
@@ -99,14 +99,15 @@ function sphOctUvToDir(uv) {
   return new Vec3(sOrient * suv.x * sPitch, cOrient * suv.y * sPitch, cPitch)
 }
 
-/** Class representing an environment map.
+/**
+ * Class representing an environment map.
  * @extends VLHImage
  */
 class EnvMap extends VLHImage {
   /**
    * Create an env map.
    * @param {string} name - The name value.
-   * @param {any} params - The params value.
+   * @param {object} params - The params value.
    */
   constructor(name, params = {}) {
     super(name, params)
@@ -116,7 +117,7 @@ class EnvMap extends VLHImage {
 
   /**
    * The __decodeData method.
-   * @param {any} entries - The entries value.
+   * @param {object} entries - The entries value.
    * @private
    */
   __decodeData(entries) {
@@ -135,7 +136,7 @@ class EnvMap extends VLHImage {
 
   /**
    * The getSampleSets method.
-   * @return {any} - The return value.
+   * @return {object} - The return value.
    */
   getSampleSets() {
     return this.__sampleSets
@@ -143,8 +144,8 @@ class EnvMap extends VLHImage {
 
   /**
    * The uvToDir method.
-   * @param {any} uv - The uv value.
-   * @return {any} - The return value.
+   * @param {Vec2} uv - The uv value.
+   * @return {Vec2|Vec3} - The return value.
    */
   uvToDir(uv) {
     switch (this.mapping) {
@@ -158,9 +159,10 @@ class EnvMap extends VLHImage {
   }
 
   /**
-   * The dirToUv method.
-   * @param {any} dir - The dir value.
-   * @return {any} - The return value.
+   * Converts position into UV.
+   *
+   * @param {Vec2|Vec3} dir - The dir value.
+   * @return {Vec2} - The return value.
    */
   dirToUv(dir) {
     switch (this.mapping) {
@@ -174,9 +176,10 @@ class EnvMap extends VLHImage {
   }
 
   /**
-   * The uvToLuminance method.
-   * @param {any} uv - The uv value.
-   * @return {any} - The return value.
+   * Converts a `Vec2` into luminance.
+   *
+   * @param {Vec2} uv - The uv value.
+   * @return {number} - The return value.
    */
   uvToLuminance(uv) {
     const thmbPixel = Math.floor(uv.y * this.__thumbSize) * this.__thumbSize + Math.floor(uv.x * this.__thumbSize)
@@ -184,9 +187,10 @@ class EnvMap extends VLHImage {
   }
 
   /**
-   * The dirToLuminance method.
-   * @param {any} dir - The dir value.
-   * @return {any} - The return value.
+   * Converts `Vec2` coordinates into luminance.
+   *
+   * @param {object} dir - The dir value.
+   * @return {number} - The return value.
    */
   dirToLuminance(dir) {
     return this.uvToLuminance(this.dirToUv(dir))

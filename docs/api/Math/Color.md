@@ -1,7 +1,7 @@
 <a name="Color"></a>
 
 ### Color 
-Class representing a color.
+Class representing a color as 4 floating point values.
 
 
 **Extends**: <code>AttrValue</code>  
@@ -29,7 +29,7 @@ Class representing a color.
         * [setFromCSSColorName(name)](#setFromCSSColorName)
         * [toHex() ⇒ <code>string</code>](#toHex)
         * [equal(other) ⇒ <code>boolean</code>](#equal)
-        * [notequals(other) ⇒ <code>boolean</code>](#notequals)
+        * [notEquals(other) ⇒ <code>boolean</code>](#notEquals)
         * [approxEqual(other, precision) ⇒ <code>boolean</code>](#approxEqual)
         * [add(other)](#add)
         * [subtract(other)](#subtract)
@@ -262,9 +262,9 @@ Returns true if this color is exactly the same as other.
 | --- | --- | --- |
 | other | [<code>Color</code>](#Color) | The other color to compare with. |
 
-<a name="Color+notequals"></a>
+<a name="Color+notEquals"></a>
 
-### notequals
+### notEquals
 Returns true if this color is NOT exactly the same as other.
 
 

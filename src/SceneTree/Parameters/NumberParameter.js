@@ -1,7 +1,16 @@
-import { sgFactory } from '../SGFactory'
-import { ValueSetMode, Parameter } from './Parameter.js'
+import { sgFactory } from '../SGFactory.js'
+import { Parameter } from './Parameter.js'
 
-/** Class representing a number parameter.
+/**
+ * Represents a specific type of parameter, that only stores numeric values.
+ *
+ * ```javascript
+ * const numberParam = new NumberParameter('MyNumber', 15)
+ * //'myParameterOwnerItem' is an instance of a 'ParameterOwner' class.
+ * // Remember that only 'ParameterOwner' and classes that extend from it can host 'Parameter' objects.
+ * myParameterOwnerItem.addParameter(numberParam)
+ * ```
+ *
  * @extends Parameter
  */
 class NumberParameter extends Parameter {
@@ -9,90 +18,60 @@ class NumberParameter extends Parameter {
    * Create a number parameter.
    * @param {string} name - The name of the number parameter.
    * @param {number} value - The value of the parameter.
-   * @param {any} range - The range value.
-   * @param {any} step - The step value.
+   * @param {array} range - An array with two numbers. If defined, the parameter value will be clamped.
+   * @param {number} step - The step value. If defined, the parameter value will be rounded to the nearest integer.
    */
   constructor(name, value = 0, range = undefined, step = undefined) {
     super(name, value, 'Number')
     // The value might not have a range.
-    if (range && !Array.isArray(range))
-      console.error('Range value must be an array of 2 numbers.')
+    if (range && !Array.isArray(range)) console.error('Range value must be an array of 2 numbers.')
     this.__range = range
     this.__step = step
   }
 
   /**
-   * The setValue method.
-   * @param {any} value - The value param.
-   * @param {number} mode - The mode value.
-   */
-  setValue(value, mode) {
-    if (mode == ValueSetMode.USER_SETVALUE) {
-      if (this.__range) {
-        value = Math.clamp(value, this.__range[0], this.__range[1])
-      }
-      if (this.__step) {
-        value = Math.round(value / this.__step) * this.__step
-      }
-    }
-    super.setValue(value, mode)
-  }
-
-  /**
-   * The getValue method.
-   * @param {number} mode - The mode value.
-   * @return {any} - The return value.
-   */
-  getValue(mode) {
-    // Still not sure if we should clamp the output.
-    // if(this.__range) {
-    //     return Math.clamp(super.getValue(), this.__range[0], this.__range[1]);
-    // }
-    return super.getValue(mode)
-  }
-
-  /**
-   * The getRange method.
-   * @return {any} - The return value.
+   * Returns the range to which the parameter is restrained.
+   *
+   * @return {array} - The return value.
    */
   getRange() {
     return this.__range
   }
 
   /**
-   * The setRange method.
-   * @param {any} range - The range value.
-   * @return {any} - The return value.
+   * Sets the range to which the parameter is restrained.
+   *
+   * @param {array} range - The range value.
    */
   setRange(range) {
     // Should be an array [0, 20]
     this.__range = range
-    return this
   }
 
   /**
-   * The getStep method.
-   * @return {any} - The return value.
+   * Returns the step number, which is the one used for rounding.
+   *
+   * @return {number} - The return value.
    */
   getStep() {
     return this.__step
   }
 
   /**
-   * The setStep method.
-   * @param {any} step - The step value.
-   * @return {any} - The return value.
+   * Returns step value.
+   *
+   * @param {number} step - The step value.
    */
   setStep(step) {
     this.__step = step
-    return this
   }
 
   // ////////////////////////////////////////
   // Persistence
 
   /**
-   * The toJSON method encodes this type as a json object for persistences.
+   * The toJSON method encodes this type as a json object for persistence.
+   *
    * @param {object} context - The context value.
    * @param {number} flags - The flags value.
    * @return {object} - Returns the json object.
@@ -106,6 +85,7 @@ class NumberParameter extends Parameter {
 
   /**
    * The fromJSON method decodes a json object for this type.
+   *
    * @param {object} j - The json object this item must decode.
    * @param {object} context - The context value.
    * @param {number} flags - The flags value.
@@ -117,13 +97,13 @@ class NumberParameter extends Parameter {
   }
 
   /**
-   * The readBinary method.
-   * @param {object} reader - The reader value.
+   * Extracts a number value from a buffer, updating current parameter state.
+   *
+   * @param {BinReader} reader - The reader value.
    * @param {object} context - The context value.
    */
   readBinary(reader, context) {
-    const value = reader.loadFloat32()
-    this.setValue(value, ValueSetMode.DATA_LOAD)
+    this.__value = reader.loadFloat32()
   }
 
   // ////////////////////////////////////////
@@ -132,6 +112,7 @@ class NumberParameter extends Parameter {
   /**
    * The clone method constructs a new number parameter, copies its values
    * from this parameter and returns it.
+   *
    * @param {number} flags - The flags value.
    * @return {NumberParameter} - Returns a new number parameter.
    */

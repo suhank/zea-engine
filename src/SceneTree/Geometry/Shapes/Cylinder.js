@@ -5,7 +5,21 @@ import { Mesh } from '../Mesh.js'
 import { BooleanParameter, NumberParameter } from '../../Parameters/index'
 import { sgFactory } from '../../SGFactory.js'
 
-/** A class for generating a cylinder geometry.
+/**
+ * A class for generating a cylinder geometry. It is very much like a cuboid but with `N` number of sides.
+ *
+ * ```
+ * const cylinder = new Cylinder(1.5, 2.0, 6)
+ * ```
+ *
+ * **Parameters**
+ * * **radius(`NumberParameter`):** Specifies the radius of the cylinder.
+ * * **height(`NumberParameter`):** Specifies the height of the cone.
+ * * **sides(`NumberParameter`):** Specifies the number of subdivisions around the `Z` axis.
+ * * **loops(`NumberParameter`):** Specifies the number of subdivisions(stacks) on the `Z` axis.
+ * * **caps(`BooleanParameter`):** Specifies whether the ends of the cylinder are capped or open.
+ * * **baseZAtZero(`BooleanParameter`):** Property to start or not `Z` axis from position `0.
+ *
  * @extends Mesh
  */
 class Cylinder extends Mesh {
@@ -18,35 +32,17 @@ class Cylinder extends Mesh {
    * @param {boolean} caps - A boolean indicating whether the ends of the cylinder are capped or open.
    * @param {boolean} baseZAtZero - The baseZAtZero value.
    */
-  constructor(
-    radius = 0.5,
-    height = 1.0,
-    sides = 32,
-    loops = 2,
-    caps = true,
-    baseZAtZero = false
-  ) {
+  constructor(radius = 0.5, height = 1.0, sides = 32, loops = 2, caps = true, baseZAtZero = false) {
     super()
 
-    if (isNaN(radius) || isNaN(height) || isNaN(sides) || isNaN(loops))
-      throw new Error('Invalid geom args')
+    if (isNaN(radius) || isNaN(height) || isNaN(sides) || isNaN(loops)) throw new Error('Invalid geom args')
 
-    this.__radiusParam = this.addParameter(
-      new NumberParameter('radius', radius)
-    )
-    this.__heightParam = this.addParameter(
-      new NumberParameter('height', height)
-    )
-    this.__sidesParam = this.addParameter(
-      new NumberParameter('sides', sides >= 3 ? sides : 3, [3, 200], 1)
-    )
-    this.__loopsParam = this.addParameter(
-      new NumberParameter('loops', loops >= 2 ? loops : 2, [1, 200], 1)
-    )
+    this.__radiusParam = this.addParameter(new NumberParameter('radius', radius))
+    this.__heightParam = this.addParameter(new NumberParameter('height', height))
+    this.__sidesParam = this.addParameter(new NumberParameter('sides', sides >= 3 ? sides : 3, [3, 200], 1))
+    this.__loopsParam = this.addParameter(new NumberParameter('loops', loops >= 2 ? loops : 2, [1, 200], 1))
     this.__capsParam = this.addParameter(new BooleanParameter('caps', caps))
-    this.__baseZAtZeroParam = this.addParameter(
-      new BooleanParameter('baseZAtZero', baseZAtZero)
-    )
+    this.__baseZAtZeroParam = this.addParameter(new BooleanParameter('baseZAtZero', baseZAtZero))
 
     this.addVertexAttribute('texCoords', Vec2)
     this.addVertexAttribute('normals', Vec3)
@@ -58,12 +54,12 @@ class Cylinder extends Mesh {
     const rebuild = () => {
       this.__rebuild()
     }
-    this.__radiusParam.addListener('valueChanged', resize)
-    this.__heightParam.addListener('valueChanged', resize)
-    this.__sidesParam.addListener('valueChanged', rebuild)
-    this.__loopsParam.addListener('valueChanged', rebuild)
-    this.__capsParam.addListener('valueChanged', rebuild)
-    this.__baseZAtZeroParam.addListener('valueChanged', resize)
+    this.__radiusParam.on('valueChanged', resize)
+    this.__heightParam.on('valueChanged', resize)
+    this.__sidesParam.on('valueChanged', rebuild)
+    this.__loopsParam.on('valueChanged', rebuild)
+    this.__capsParam.on('valueChanged', rebuild)
+    this.__baseZAtZeroParam.on('valueChanged', resize)
   }
 
   /**
@@ -88,16 +84,6 @@ class Cylinder extends Mesh {
     // ////////////////////////////
     // Build the topology
     let faceIndex = 0
-    // build the topology for the body of the cylinder
-    for (let i = 0; i < nbLoops - 1; i++) {
-      for (let j = 0; j < nbSides; j++) {
-        const v0 = nbSides * i + ((j + 1) % nbSides)
-        const v1 = nbSides * i + j
-        const v2 = nbSides * (i + 1) + j
-        const v3 = nbSides * (i + 1) + ((j + 1) % nbSides)
-        this.setFaceVertexIndices(faceIndex++, v0, v1, v2, v3)
-      }
-    }
 
     if (caps) {
       // Bottom caps topology
@@ -105,14 +91,25 @@ class Cylinder extends Mesh {
         const v0 = numVertices - 1
         const v1 = j
         const v2 = (j + 1) % nbSides
-        this.setFaceVertexIndices(faceIndex++, v0, v1, v2)
+        this.setFaceVertexIndices(faceIndex++, [v0, v1, v2])
       }
       // Top caps topology
       for (let j = 0; j < nbSides; j++) {
         const v0 = nbSides * (nbLoops - 1) + j
         const v1 = numVertices - 2
         const v2 = nbSides * (nbLoops - 1) + ((j + 1) % nbSides)
-        this.setFaceVertexIndices(faceIndex++, v0, v1, v2)
+        this.setFaceVertexIndices(faceIndex++, [v0, v1, v2])
+      }
+    }
+
+    // build the topology for the body of the cylinder
+    for (let i = 0; i < nbLoops - 1; i++) {
+      for (let j = 0; j < nbSides; j++) {
+        const v0 = nbSides * i + ((j + 1) % nbSides)
+        const v1 = nbSides * i + j
+        const v2 = nbSides * (i + 1) + j
+        const v3 = nbSides * (i + 1) + ((j + 1) % nbSides)
+        this.setFaceVertexIndices(faceIndex++, [v0, v1, v2, v3])
       }
     }
 
@@ -120,7 +117,7 @@ class Cylinder extends Mesh {
     // setNormals
     const normals = this.getVertexAttribute('normals')
 
-    // Now set the attrbute values
+    // Now set the attribute values
     faceIndex = 0
     for (let i = 0; i < nbLoops - 1; i++) {
       for (let j = 0; j < nbSides; j++) {
@@ -159,53 +156,29 @@ class Cylinder extends Mesh {
 
     // Now set the attrbute values
     faceIndex = 0
-    for (let i = 0; i < nbSides; i++) {
-      texCoords.setFaceVertexValue(
-        faceIndex,
-        0,
-        new Vec2((i + 1) / nbSides, 0.0)
-      )
-      texCoords.setFaceVertexValue(
-        faceIndex,
-        2,
-        new Vec2((i + 1) / nbSides, 1.0)
-      )
-      texCoords.setFaceVertexValue(faceIndex, 1, new Vec2(i / nbSides, 0.0))
-      texCoords.setFaceVertexValue(faceIndex, 3, new Vec2(i / nbSides, 1.0))
-      faceIndex++
-    }
     if (caps) {
       for (let i = 0; i < nbSides; i++) {
         texCoords.setFaceVertexValue(faceIndex, 0, new Vec2(i / nbSides, 0.0))
-        texCoords.setFaceVertexValue(
-          faceIndex,
-          1,
-          new Vec2((i + 1) / nbSides, 0.0)
-        )
-        texCoords.setFaceVertexValue(
-          faceIndex,
-          2,
-          new Vec2((i + 0.5) / nbSides, 1.0)
-        )
+        texCoords.setFaceVertexValue(faceIndex, 1, new Vec2((i + 1) / nbSides, 0.0))
+        texCoords.setFaceVertexValue(faceIndex, 2, new Vec2((i + 0.5) / nbSides, 1.0))
         faceIndex++
       }
       for (let i = 0; i < nbSides; i++) {
         texCoords.setFaceVertexValue(faceIndex, 0, new Vec2(i / nbSides, 0.0))
-        texCoords.setFaceVertexValue(
-          faceIndex,
-          1,
-          new Vec2((i + 1) / nbSides, 0.0)
-        )
-        texCoords.setFaceVertexValue(
-          faceIndex,
-          2,
-          new Vec2((i + 0.5) / nbSides, 1.0)
-        )
+        texCoords.setFaceVertexValue(faceIndex, 1, new Vec2((i + 1) / nbSides, 0.0))
+        texCoords.setFaceVertexValue(faceIndex, 2, new Vec2((i + 0.5) / nbSides, 1.0))
         faceIndex++
       }
     }
 
-    // this.setBoundingBoxDirty();
+    for (let i = 0; i < nbSides; i++) {
+      texCoords.setFaceVertexValue(faceIndex, 0, new Vec2((i + 1) / nbSides, 0.0))
+      texCoords.setFaceVertexValue(faceIndex, 2, new Vec2((i + 1) / nbSides, 1.0))
+      texCoords.setFaceVertexValue(faceIndex, 1, new Vec2(i / nbSides, 0.0))
+      texCoords.setFaceVertexValue(faceIndex, 3, new Vec2(i / nbSides, 1.0))
+      faceIndex++
+    }
+
     this.emit('geomDataTopologyChanged', {})
     this.__resize()
   }
@@ -229,29 +202,19 @@ class Cylinder extends Mesh {
     let vertex = 0
     let zoff = 0.5
     if (baseZAtZero) zoff = 0.0
+
+    const positions = this.getVertexAttribute('positions')
     for (let i = 0; i < nbLoops; i++) {
       const z = (i / (nbLoops - 1)) * height - height * zoff
       for (let j = 0; j < nbSides; j++) {
         const phi = (j / nbSides) * 2.0 * Math.PI
-        this.getVertex(vertex).set(
-          Math.sin(phi) * radius,
-          Math.cos(phi) * radius,
-          z
-        )
+        positions.getValueRef(vertex).set(Math.sin(phi) * radius, Math.cos(phi) * radius, z)
         vertex++
       }
     }
     if (caps) {
-      this.getVertex(numVertices - 1).set(
-        0.0,
-        0.0,
-        height * (baseZAtZero ? 0.0 : -0.5)
-      )
-      this.getVertex(numVertices - 2).set(
-        0.0,
-        0.0,
-        height * (baseZAtZero ? 1.0 : 0.5)
-      )
+      positions.getValueRef(numVertices - 1).set(0.0, 0.0, height * (baseZAtZero ? 0.0 : -0.5))
+      positions.getValueRef(numVertices - 2).set(0.0, 0.0, height * (baseZAtZero ? 1.0 : 0.5))
     }
 
     this.setBoundingBoxDirty()

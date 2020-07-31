@@ -1,7 +1,7 @@
 import { sgFactory } from '../SGFactory'
 import { Parameter } from './Parameter.js'
 
-/** Class representing a proxy parameter. Proxies are used to connect 
+/** Class representing a proxy parameter. Proxies are used to connect
  * a parameter on one object with another. An existing parameter is
  * replaced with a proxy that binds to a parameter on another object.
  * @extends Parameter
@@ -21,17 +21,20 @@ class ProxyParameter extends Parameter {
   /**
    * The setValue method.
    * @param {any} value - The value param.
-   * @param {number} mode - The mode value.
    */
   setSourceParameter(sourceParameter) {
-    this.sourceParameter = sourceParameter;
-    this.sourceParameter.addListener('valueChanged', this.__proxyValueChanged.bind(this));
+    this.sourceParameter = sourceParameter
+    this.sourceParameter.on('valueChanged', this.__proxyValueChanged.bind(this))
   }
 
-  __proxyValueChanged(mode) {
-    this.emit('valueChanged', { mode })
+  /**
+   * @private
+   * Handles propagating the valueChanged event from the source param
+   * @param {any} value - The value param.
+   */
+  __proxyValueChanged(event) {
+    this.emit('valueChanged', event)
   }
-
 
   /**
    * The getDataType method.
@@ -41,37 +44,34 @@ class ProxyParameter extends Parameter {
     return this.sourceParameter.getDataType()
   }
 
-
   /**
    * The setValue method.
    * @param {any} value - The value param.
-   * @param {number} mode - The mode value.
    */
-  setValue(value, mode) {
-    // this.sourceParameter.setValue(value, mode)
+  setValue(value) {
+    // this.sourceParameter.setValue(value)
   }
 
   /**
    * The getValue method.
-   * @param {number} mode - The mode value.
    * @return {any} - The return value.
    */
-  getValue(mode) {
-    return this.sourceParameter.getValue(mode)
+  getValue() {
+    return this.sourceParameter.getValue()
   }
 
   // ////////////////////////////////////////
   // Persistence
 
   /**
-   * The toJSON method encodes this type as a json object for persistences.
+   * The toJSON method encodes this type as a json object for persistence.
    * @param {object} context - The context value.
    * @param {number} flags - The flags value.
    * @return {object} - Returns the json object.
    */
   toJSON(context, flags) {
     const j = super.toJSON(context, flags)
-    if (this.sourceParameter) j.sourceParameter = this.sourceParameter.getPath();
+    if (this.sourceParameter) j.sourceParameter = this.sourceParameter.getPath()
     return j
   }
 
@@ -89,16 +89,11 @@ class ProxyParameter extends Parameter {
       // are loaded last.
       context.resolvePath(
         j.sourceParameter,
-        param => {
+        (param) => {
           this.setSourceParameter(param)
         },
-        reason => {
-          console.warn(
-            "Error loading Proxy Param: '" +
-              this.getName() +
-              "'. Unable to connect to:" +
-              j.sourceParameter
-          )
+        (reason) => {
+          console.warn("Error loading Proxy Param: '" + this.getName() + "'. Unable to connect to:" + j.sourceParameter)
         }
       )
     }
@@ -113,12 +108,13 @@ class ProxyParameter extends Parameter {
    * The clone method constructs a new number parameter, copies its values
    * from this parameter and returns it.
    * @param {number} flags - The flags value.
+   * @param {object} context - The context object.
    * @return {ProxyParameter} - Returns a new number parameter.
    */
   clone(flags, context) {
     const clonedParam = new ProxyParameter(this.__name, this.__value)
     if (this.sourceParameter) {
-      this.connectToClonedSourceParam(context);
+      this.connectToClonedSourceParam(context)
     }
     return clonedParam
   }
@@ -132,16 +128,11 @@ class ProxyParameter extends Parameter {
   connectToClonedSourceParam(context) {
     context.resolveClonedItem(
       this.sourceParameter,
-      param => {
+      (param) => {
         clonedParam.setSourceParameter(param)
       },
-      reason => {
-        console.warn(
-          "Error cloning Proxy Param: '" +
-            this.getName() +
-            "'. Unable to connect to:" +
-            j.sourceParameter
-        )
+      (reason) => {
+        console.warn("Error cloning Proxy Param: '" + this.getName() + "'. Unable to connect to:" + j.sourceParameter)
       }
     )
   }

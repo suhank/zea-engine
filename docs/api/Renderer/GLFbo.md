@@ -13,11 +13,11 @@ This class abstracts the rendering of a collection of geometries to screen.
     * [colorTexture](#colorTexture)
     * [depthTextureGL](#depthTextureGL)
     * [setClearColor(clearColor)](#setClearColor)
-    * [getWidth() ⇒ <code>any</code>](#getWidth)
-    * [getHeight() ⇒ <code>any</code>](#getHeight)
-    * [getSize() ⇒ <code>any</code>](#getSize)
-    * [getColorTexture() ⇒ <code>any</code>](#getColorTexture)
-    * [getDepthTextureGL() ⇒ <code>any</code>](#getDepthTextureGL)
+    * [getWidth() ⇒ <code>number</code>](#getWidth)
+    * [getHeight() ⇒ <code>number</code>](#getHeight)
+    * [getSize() ⇒ <code>array</code>](#getSize)
+    * [getColorTexture() ⇒ <code>GLTexture2D</code>](#getColorTexture)
+    * [getDepthTextureGL() ⇒ <code>boolean</code>](#getDepthTextureGL)
     * [setColorTexture(colorTexture)](#setColorTexture)
     * [setup()](#setup)
     * [resize()](#resize)
@@ -35,101 +35,101 @@ This class abstracts the rendering of a collection of geometries to screen.
 <a name="new_GLFbo_new"></a>
 
 ### new GLFbo
-Create a GLFbo.
+Creates a GL Framebuffer Object
 
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| gl | <code>any</code> |  | The gl value. |
-| colorTexture | <code>any</code> |  | The colorTexture value. |
+| gl | <code>WebGLRenderingContext</code> \| <code>WebGL2RenderingContext</code> \| <code>undefined</code> |  | The Canvas 3D Context. |
+| colorTexture | <code>GLTexture2D</code> |  | Represents 2D Texture in GL. |
 | createDepthTexture | <code>boolean</code> | <code>false</code> | The createDepthTexture value. |
 
 <a name="GLFbo+width"></a>
 
 ### width
-Getter for width.
+Returns the `width` of the GL Texture
 
 
 <a name="GLFbo+height"></a>
 
 ### height
-Getter for height.
+Returns the `height` of the GL Texture
 
 
 <a name="GLFbo+size"></a>
 
 ### size
-Getter for size.
+Returns the `width`(Index 0) and the `height`(Index 1) of the GL Texture.
 
 
 <a name="GLFbo+colorTexture"></a>
 
 ### colorTexture
-Getter for colorTexture.
+Returns the ColorTexture of the Fbo
 
 
 <a name="GLFbo+depthTextureGL"></a>
 
 ### depthTextureGL
-Getter for depthTextureGL.
+Returns the value of the deptTexture property.
 
 
 <a name="GLFbo+setClearColor"></a>
 
 ### setClearColor
-The setClearColor method.
+Sets FBO clear color using RGBA array structure.
 
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| clearColor | <code>any</code> | The clearColor value. |
+| clearColor | <code>array</code> | The clearColor value. |
 
 <a name="GLFbo+getWidth"></a>
 
 ### getWidth
-The getWidth method.
+Returns the `width` of the GL Texture
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>number</code> - - The return value.  
 <a name="GLFbo+getHeight"></a>
 
 ### getHeight
-The getHeight method.
+Returns the `height` of the GL Texture
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>number</code> - - The return value.  
 <a name="GLFbo+getSize"></a>
 
 ### getSize
-The getSize method.
+Returns the `width`(Index 0) and the `height`(Index 1) of the GL Texture.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>array</code> - - The return value.  
 <a name="GLFbo+getColorTexture"></a>
 
 ### getColorTexture
-The getColorTexture method.
+Returns the ColorTexture of the Fbo
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>GLTexture2D</code> - - The return value.  
 <a name="GLFbo+getDepthTextureGL"></a>
 
 ### getDepthTextureGL
-The getDepthTextureGL method.
+Returns the value of the deptTexture property.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>boolean</code> - - The return value.  
 <a name="GLFbo+setColorTexture"></a>
 
 ### setColorTexture
-The setColorTexture method.
+Sets ColorTexture of the Fbo.
 
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| colorTexture | <code>any</code> | The colorTexture value. |
+| colorTexture | <code>GLTexture2D</code> | The colorTexture value. |
 
 <a name="GLFbo+setup"></a>
 
@@ -141,97 +141,98 @@ The setup method.
 
 ### resize
 Triggered Automatically when the texture resizes.
-TODO: fbos should manage the textures assigned to them
-E.g. resizing and preserving data.
 
 
+**Todo:**: Fbos should manage the textures assigned to them.
+E.g. resizing and preserving data.  
 <a name="GLFbo+bindForWriting"></a>
 
 ### bindForWriting
-The bindForWriting method.
+Binds the Fbo to the canvas context, meaning that all WRITE operations will affect the current Fbo.
 
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| renderstate | <code>any</code> | The renderstate value. |
+| renderstate | <code>object</code> | The renderstate value. |
 
 <a name="GLFbo+unbindForWriting"></a>
 
 ### unbindForWriting
-The unbindForWriting method.
+Unbinds the Fbo to the canvas context for WRITE operations.
 
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| renderstate | <code>any</code> | The renderstate value. |
+| renderstate | <code>object</code> | The renderstate value. |
 
 <a name="GLFbo+bind"></a>
 
 ### bind
-The bind method.
+Binds the Fbo to the canvas context, meaning that all WRITE operations will affect the current Fbo.
 
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| renderstate | <code>any</code> | The renderstate value. |
+| renderstate | <code>object</code> | The renderstate value. |
 
 <a name="GLFbo+unbind"></a>
 
 ### unbind
-The unbind method.
+Unbinds the Fbo to the canvas context for WRITE operations.
 
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| renderstate | <code>any</code> | The renderstate value. |
+| renderstate | <code>object</code> | The renderstate value. |
 
 <a name="GLFbo+bindForReading"></a>
 
 ### bindForReading
-The bindForReading method.
+Binds the Fbo to the canvas context, meaning that all READ operations will affect the current Fbo.
 
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| renderstate | <code>any</code> | The renderstate value. |
+| renderstate | <code>object</code> | The renderstate value. |
 
 <a name="GLFbo+unbindForReading"></a>
 
 ### unbindForReading
-The unbindForReading method.
+Unbinds the Fbo to the canvas context for READ operations.
 
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| renderstate | <code>any</code> | The renderstate value. |
+| renderstate | <code>object</code> | The renderstate value. |
 
 <a name="GLFbo+clear"></a>
 
 ### clear
-The clear method.
+Enables all color components of the rendering context of the Fbo,
+specifying the default color values when clearing color buffers and clears the buffers to preset values.
 
 
 <a name="GLFbo+bindAndClear"></a>
 
 ### bindAndClear
-The bindAndClear method.
+Runs [`bind`](#bind) then [`clear`](#clear) methods.
 
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| renderstate | <code>any</code> | The renderstate value. |
+| renderstate | <code>object</code> | The renderstate value. |
 
 <a name="GLFbo+unbind"></a>
 
 ### unbind
-The unbind method.
+Unbinds the Fbo to the canvas context.
 
 
 <a name="GLFbo+destroy"></a>

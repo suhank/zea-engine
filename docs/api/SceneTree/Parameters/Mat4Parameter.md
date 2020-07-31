@@ -1,7 +1,15 @@
 <a name="Mat4Parameter"></a>
 
 ### Mat4Parameter 
-Class representing a Mat4 (4x4 matrix) parameter.
+Represents a specific type of parameter, that only stores Mat4(4x4 matrix) values.
+
+i.e.:
+```javascript
+const mat4Param = new Ma3Parameter('MyMat4', new Mat4(...args))
+//'myParameterOwnerItem' is an instance of a 'ParameterOwner' class.
+// Remember that only 'ParameterOwner' and classes that extend from it can host 'Parameter' objects.
+myParameterOwnerItem.addParameter(mat4Param)
+```
 
 
 **Extends**: <code>Parameter</code>  
@@ -19,7 +27,7 @@ Create a Mat4 parameter.
 | Param | Type | Description |
 | --- | --- | --- |
 | name | <code>string</code> | The name of the Mat4 parameter. |
-| value | <code>any</code> | The value of the parameter. |
+| value | <code>Mat4</code> | The value of the parameter. |
 
 <a name="Mat4Parameter+clone"></a>
 

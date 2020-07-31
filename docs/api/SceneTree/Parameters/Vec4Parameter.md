@@ -1,8 +1,15 @@
 <a name="Vec4Parameter"></a>
 
 ### Vec4Parameter 
-Class representing a Vec4 parameter.
-A Vec4 represents a four-dimensional coordinate.
+Represents a specific type of parameter, that only stores Vec3(four-dimensional coordinate) values.
+
+i.e.:
+```javascript
+const vec4Param = new Vec4Parameter('MyVec4', new Vec4(1.2, 3.4, 1, 4.2))
+//'myParameterOwnerItem' is an instance of a 'ParameterOwner' class.
+// Remember that only 'ParameterOwner' and classes that extend from it can host 'Parameter' objects.
+myParameterOwnerItem.addParameter(vec4Param)
+```
 
 
 **Extends**: <code>Parameter</code>  
@@ -20,7 +27,7 @@ Create a Vec4 parameter.
 | Param | Type | Description |
 | --- | --- | --- |
 | name | <code>string</code> | The name of the Vec4 parameter. |
-| value | <code>any</code> | The value of the parameter. |
+| value | <code>Vec4</code> | The value of the parameter. |
 
 <a name="Vec4Parameter+clone"></a>
 

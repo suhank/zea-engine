@@ -4,7 +4,15 @@ import { Mesh } from '../Mesh.js'
 import { BooleanParameter, NumberParameter } from '../../Parameters/index'
 import { sgFactory } from '../../SGFactory.js'
 
-/** A class for generating a cuboid geometry.
+/**
+ * A class for generating a cuboid geometry.
+ *
+ * **Parameters**
+ * * **x(`NumberParameter`):** Length of the line cuboid along the `X` axis
+ * * **y(`NumberParameter`):** Length of the line cuboid along the `Y` axis
+ * * **z(`NumberParameter`):** Length of the line cuboid along the `Z` axis
+ * * **BaseZAtZero(`NumberParameter`):** Property to start or not `Z` axis from position `0.
+ *
  * @extends Mesh
  */
 class Cuboid extends Mesh {
@@ -23,19 +31,17 @@ class Cuboid extends Mesh {
     this.__xParam = this.addParameter(new NumberParameter('x', x))
     this.__yParam = this.addParameter(new NumberParameter('y', y))
     this.__zParam = this.addParameter(new NumberParameter('z', z))
-    this.__baseZAtZeroParam = this.addParameter(
-      new BooleanParameter('baseZAtZero', baseZAtZero)
-    )
+    this.__baseZAtZeroParam = this.addParameter(new BooleanParameter('baseZAtZero', baseZAtZero))
 
     this.setFaceCounts([0, 6])
-    this.setFaceVertexIndices(0, 0, 1, 2, 3)
-    this.setFaceVertexIndices(1, 7, 6, 5, 4)
+    this.setFaceVertexIndices(0, [0, 1, 2, 3])
+    this.setFaceVertexIndices(1, [7, 6, 5, 4])
 
-    this.setFaceVertexIndices(2, 1, 0, 4, 5)
-    this.setFaceVertexIndices(3, 3, 2, 6, 7)
+    this.setFaceVertexIndices(2, [1, 0, 4, 5])
+    this.setFaceVertexIndices(3, [3, 2, 6, 7])
 
-    this.setFaceVertexIndices(4, 0, 3, 7, 4)
-    this.setFaceVertexIndices(5, 2, 1, 5, 6)
+    this.setFaceVertexIndices(4, [0, 3, 7, 4])
+    this.setFaceVertexIndices(5, [2, 1, 5, 6])
     this.setNumVertices(8)
     this.addVertexAttribute('texCoords', Vec2)
     this.addVertexAttribute('normals', Vec3)
@@ -44,14 +50,15 @@ class Cuboid extends Mesh {
     const resize = () => {
       this.__resize()
     }
-    this.__xParam.addListener('valueChanged', resize)
-    this.__yParam.addListener('valueChanged', resize)
-    this.__zParam.addListener('valueChanged', resize)
-    this.__baseZAtZeroParam.addListener('valueChanged', resize)
+    this.__xParam.on('valueChanged', resize)
+    this.__yParam.on('valueChanged', resize)
+    this.__zParam.on('valueChanged', resize)
+    this.__baseZAtZeroParam.on('valueChanged', resize)
   }
 
   /**
    * Setter for the size of the cuboid.
+   *
    * @param {number} x - The length of the edges along the X axis.
    * @param {number} y - The length of the edges along the Y axis.
    * @param {number} z - The length of the edges along the Z axis.
@@ -64,6 +71,7 @@ class Cuboid extends Mesh {
 
   /**
    * Setter for the base size of the cuboid.
+   *
    * @param {number} x - The length of the edges along the X axis.
    * @param {number} y - The length of the edges along the Y axis.
    */
@@ -117,34 +125,35 @@ class Cuboid extends Mesh {
 
   /**
    * The __resize method.
-   * @param {number} mode - The mode value.
    * @private
    */
-  __resize(mode) {
+  __resize() {
     const x = this.__xParam.getValue()
     const y = this.__yParam.getValue()
     const z = this.__zParam.getValue()
     const baseZAtZero = this.__baseZAtZeroParam.getValue()
     let zoff = 0.5
+    const positions = this.getVertexAttribute('positions')
     if (baseZAtZero) zoff = 1.0
-    this.getVertex(0).set(0.5 * x, -0.5 * y, zoff * z)
-    this.getVertex(1).set(0.5 * x, 0.5 * y, zoff * z)
-    this.getVertex(2).set(-0.5 * x, 0.5 * y, zoff * z)
-    this.getVertex(3).set(-0.5 * x, -0.5 * y, zoff * z)
+    positions.getValueRef(0).set(0.5 * x, -0.5 * y, zoff * z)
+    positions.getValueRef(1).set(0.5 * x, 0.5 * y, zoff * z)
+    positions.getValueRef(2).set(-0.5 * x, 0.5 * y, zoff * z)
+    positions.getValueRef(3).set(-0.5 * x, -0.5 * y, zoff * z)
 
     zoff = -0.5
     if (baseZAtZero) zoff = 0.0
-    this.getVertex(4).set(0.5 * x, -0.5 * y, zoff * z)
-    this.getVertex(5).set(0.5 * x, 0.5 * y, zoff * z)
-    this.getVertex(6).set(-0.5 * x, 0.5 * y, zoff * z)
-    this.getVertex(7).set(-0.5 * x, -0.5 * y, zoff * z)
+    positions.getValueRef(4).set(0.5 * x, -0.5 * y, zoff * z)
+    positions.getValueRef(5).set(0.5 * x, 0.5 * y, zoff * z)
+    positions.getValueRef(6).set(-0.5 * x, 0.5 * y, zoff * z)
+    positions.getValueRef(7).set(-0.5 * x, -0.5 * y, zoff * z)
 
     this.setBoundingBoxDirty()
     this.emit('geomDataChanged', {})
   }
 
   /**
-   * The toJSON method encodes this type as a json object for persistences.
+   * The toJSON method encodes this type as a json object for persistence.
+   *
    * @return {object} - Returns the json object.
    */
   toJSON() {

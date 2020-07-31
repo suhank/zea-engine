@@ -3,11 +3,15 @@
 ### Torus 
 A class for generating a torus geometry.
 
+```
+const torus = new Torus(0.4, 1.3)
+```
+
 
 **Extends**: <code>Mesh</code>  
 
 * [Torus ⇐ <code>Mesh</code>](#Torus)
-    * [new Torus(innerRadius, outerRadius, detail)](#new-Torus)
+    * [new Torus([innerRadius], [outerRadius], [detail])](#new-Torus)
     * [innerRadius ⇒ <code>number</code>](#innerRadius)
     * [innerRadius](#innerRadius)
     * [outerRadius ⇒ <code>number</code>](#outerRadius)
@@ -19,14 +23,14 @@ A class for generating a torus geometry.
 <a name="new_Torus_new"></a>
 
 ### new Torus
-Create a torus.
+Creates an instance of Torus.
 
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| innerRadius | <code>number</code> | <code>0.5</code> | The inner radius of the torus. |
-| outerRadius | <code>number</code> | <code>1</code> | The outer radius of the torus. |
-| detail | <code>number</code> | <code>32</code> | The detail of the cone. |
+| [innerRadius] | <code>number</code> | <code>0.5</code> | The inner radius of the torus. |
+| [outerRadius] | <code>number</code> | <code>1.0</code> | The outer radius of the torus. |
+| [detail] | <code>number</code> | <code>32</code> | The detail of the cone. |
 
 <a name="Torus+innerRadius"></a>
 
@@ -85,7 +89,7 @@ Setter for the torus detail.
 <a name="Torus+toJSON"></a>
 
 ### toJSON
-The toJSON method encodes this type as a json object for persistences.
+The toJSON method encodes this type as a json object for persistence.
 
 
 **Returns**: <code>object</code> - - Returns the json object.  

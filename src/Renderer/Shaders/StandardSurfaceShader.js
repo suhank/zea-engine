@@ -28,7 +28,6 @@ attribute vec3 normals;
 #ifdef ENABLE_TEXTURES
 attribute vec2 texCoords;
 #endif
-attribute vec2 lightmapCoords;
 
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
@@ -39,9 +38,6 @@ uniform mat4 projectionMatrix;
 <%include file="drawItemTexture.glsl"/>
 <%include file="modelMatrix.glsl"/>
 
-// attribute float clusterIDs;
-// uniform vec2 lightmapSize;
-
 /* VS Outputs */
 varying float v_drawItemId;
 varying vec4 v_geomItemData;
@@ -50,10 +46,6 @@ varying vec3 v_viewNormal;
 #ifdef ENABLE_TEXTURES
 varying vec2 v_textureCoord;
 #endif
-// varying vec2 v_lightmapCoord;
-// #ifdef ENABLE_DEBUGGING_LIGHTMAPS
-// varying float v_clusterID;
-// #endif
 varying vec3 v_worldPos;
 /* VS Outputs */
 
@@ -75,14 +67,6 @@ void main(void) {
 
 #ifdef ENABLE_TEXTURES
     v_textureCoord  = texCoords;
-#endif
-
-    // v_lightmapCoord = (lightmapCoords + v_geomItemData.zw) / lightmapSize;
-
-    // mat4 mvp = projectionMatrix * viewMatrix * modelMatrix;
-    // gl_Position = mvp * vec4((lightmapCoords + v_geomItemData.zw), 0., 1.);
-#ifdef ENABLE_DEBUGGING_LIGHTMAPS
-    v_clusterID = clusterIDs;
 #endif
 
     v_worldPos      = (modelMatrix * pos).xyz;
@@ -114,21 +98,8 @@ varying vec3 v_viewNormal;
 #ifdef ENABLE_TEXTURES
 varying vec2 v_textureCoord;
 #endif
-// varying vec2 v_lightmapCoord;
-// #ifdef ENABLE_DEBUGGING_LIGHTMAPS
-// varying float v_clusterID;
-// #endif
 varying vec3 v_worldPos;
 /* VS Outputs */
-
-
-// uniform sampler2D lightmap;
-// uniform bool lightmapConnected;
-// #ifdef ENABLE_DEBUGGING_LIGHTMAPS
-// <%include file="debugColors.glsl"/>
-// uniform vec2 lightmapSize;
-// uniform bool debugLightmapTexelSize;
-// #endif
 
 uniform color cutColor;
 vec4 getCutaway(int id) {
@@ -251,39 +222,11 @@ void main(void) {
     }
 
     vec3 irradiance;
-    // if(lightmapConnected){
-    //     irradiance = texture2D(lightmap, v_lightmapCoord).rgb;
-    // }
-    // else{
 #ifndef ENABLE_SPECULAR
-        irradiance = sampleEnvMap(normal, 1.0);
+      irradiance = sampleEnvMap(normal, 1.0);
 #else
-        irradiance = vec3(dot(normal, viewVector));
+      irradiance = vec3(dot(normal, viewVector));
 #endif
-        
-    // }
-
-// #ifdef ENABLE_DEBUGGING_LIGHTMAPS
-//     if(debugLightmapTexelSize)
-//     {
-//         vec2 coord_texelSpace = (v_lightmapCoord * lightmapSize) - v_geomItemData.zw;
-//         //vec2 coord_texelSpace = (v_textureCoord * lightmapSize);
-//         float total = floor(coord_texelSpace.x) +
-//                       floor(coord_texelSpace.y);
-                      
-//         vec3 clustercolor = getDebugColor(v_clusterID);
-
-//         material.metallic = 0.0;
-//         material.reflectance = 0.0;
-//         if(mod(total,2.0)==0.0){
-//             material.baseColor = clustercolor;
-//             irradiance = vec3(1.0);
-//         }
-//         else{
-//             material.baseColor = material.baseColor * 1.5;
-//         }
-//     }
-// #endif
 
 #ifndef ENABLE_SPECULAR
     vec3 radiance = material.baseColor * irradiance;

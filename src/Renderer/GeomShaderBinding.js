@@ -1,21 +1,9 @@
-import {
-  UInt8,
-  SInt8,
-  UInt16,
-  SInt16,
-  UInt32,
-  SInt32,
-  Float32,
-  Color,
-  Vec2,
-  Vec3,
-  Vec4,
-  RGBA,
-} from '../Math/index'
+import { Color, Vec2, Vec3, Vec4, RGBA } from '../Math/index'
+import { UInt8, SInt8, UInt16, SInt16, UInt32, SInt32, Float32 } from '../Utilities/MathFunctions'
 
-/** Class representing a geom shader binding. 
+/** Class representing a geom shader binding.
  * @private
-*/
+ */
 class GeomShaderBinding {
   /**
    * Create a geom shader binding.
@@ -110,27 +98,18 @@ class GeomShaderBinding {
           elementSize = 1
           dataType = gl.UNSIGNED_BYTE
           break
-        default: throw("Unhandled Type")
+        default:
+          throw 'Unhandled Type'
       }
 
       const stride = dimension * elementSize
-      const offset =
-        glattrbuffer.offset != undefined
-          ? glattrbuffer.offset * dimension * elementSize
-          : 0
+      const offset = glattrbuffer.offset != undefined ? glattrbuffer.offset * dimension * elementSize : 0
       const normalized = glattrbuffer.normalized == true
       const instanced = attrDesc.instanced
 
       gl.enableVertexAttribArray(location)
       gl.bindBuffer(gl.ARRAY_BUFFER, glattrbuffer.buffer)
-      gl.vertexAttribPointer(
-        location,
-        dimension,
-        dataType,
-        normalized,
-        stride,
-        offset
-      )
+      gl.vertexAttribPointer(location, dimension, dataType, normalized, stride, offset)
 
       if (gl.vertexAttribDivisor) {
         if (instanced == true) {
@@ -173,9 +152,9 @@ class GeomShaderBinding {
   destroy() {}
 }
 
-/** Class representing vertex array objects (VAO) geom shader binding. 
+/** Class representing vertex array objects (VAO) geom shader binding.
  * @private
-*/
+ */
 class VAOGeomShaderBinding {
   /**
    * Create VAO geom shader binding.
@@ -262,27 +241,18 @@ class VAOGeomShaderBinding {
           elementSize = 1
           dataType = gl.UNSIGNED_BYTE
           break
-        default: throw("Unhandled Type")
+        default:
+          throw 'Unhandled Type'
       }
 
       const stride = dimension * elementSize
-      const offset =
-        glattrbuffer.offset != undefined
-          ? glattrbuffer.offset * dimension * elementSize
-          : 0
+      const offset = glattrbuffer.offset != undefined ? glattrbuffer.offset * dimension * elementSize : 0
       const normalized = glattrbuffer.normalized == true
       const instanced = attrDesc.instanced
 
       gl.enableVertexAttribArray(location)
       gl.bindBuffer(gl.ARRAY_BUFFER, glattrbuffer.buffer)
-      gl.vertexAttribPointer(
-        location,
-        dimension,
-        dataType,
-        normalized,
-        stride,
-        offset
-      )
+      gl.vertexAttribPointer(location, dimension, dataType, normalized, stride, offset)
       if (instanced) {
         gl.vertexAttribDivisor(location, 1) // This makes it instanced
       } else {
@@ -302,8 +272,7 @@ class VAOGeomShaderBinding {
    */
   bind(renderstate) {
     this.__gl.bindVertexArray(this.__vao)
-    if (this.__indexBuffer)
-      this.__gl.bindBuffer(this.__gl.ELEMENT_ARRAY_BUFFER, this.__indexBuffer)
+    if (this.__indexBuffer) this.__gl.bindBuffer(this.__gl.ELEMENT_ARRAY_BUFFER, this.__indexBuffer)
     return true
   }
 
@@ -335,12 +304,7 @@ class VAOGeomShaderBinding {
   }
 }
 
-function generateShaderGeomBinding(
-  gl,
-  shaderAttrs,
-  glattrbuffers,
-  indexBuffer
-) {
+function generateShaderGeomBinding(gl, shaderAttrs, glattrbuffers, indexBuffer) {
   if (gl.createVertexArray == null) {
     return new GeomShaderBinding(gl, shaderAttrs, glattrbuffers, indexBuffer)
   } else {

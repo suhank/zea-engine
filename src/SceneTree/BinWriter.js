@@ -1,6 +1,11 @@
+/* eslint-disable camelcase */
+/* eslint-disable no-unused-vars */
 import { Vec2, Vec3, Quat, Color, Box2, Box3 } from '../Math/index'
+import MathFunctions from '../Utilities/MathFunctions'
 
-/** Class representing a bin writer. */
+/**
+ * Writes `TypedArray` types in binary using a specific encoding.
+ */
 class BinWriter {
   /**
    * Create a bin writer.
@@ -14,15 +19,17 @@ class BinWriter {
   }
 
   /**
-   * The pos method.
-   * @return {any} - The return value.
+   * Returns the byte offset position.
+   *
+   * @return {number} - The return value.
    */
   pos() {
     return this.__byteOffset
   }
 
   /**
-   * The seek method.
+   * Sets byte offset value.
+   *
    * @param {number} byteOffset - The byteOffset value.
    */
   seek(byteOffset) {
@@ -37,7 +44,8 @@ class BinWriter {
   }
 
   /**
-   * The getBuffer method.
+   * Returns written buffer data to current point.
+   *
    * @return {ArrayBuffer} - Returns an array buffer.
    */
   getBuffer() {
@@ -66,7 +74,7 @@ class BinWriter {
 
   /**
    * The __reserve method.
-   * @param {any} offset - The offset value.
+   * @param {number} offset - The offset value.
    * @private
    */
   __reserve(offset) {
@@ -77,7 +85,7 @@ class BinWriter {
 
   /**
    * The __offset method.
-   * @param {any} byteCount - The byteCount value.
+   * @param {number} byteCount - The byteCount value.
    * @private
    */
   __offset(byteCount) {
@@ -88,8 +96,9 @@ class BinWriter {
   }
 
   /**
-   * The writeUInt8 method.
-   * @param {any} value - The value param.
+   * Writes an unsigned Int8 value in current byte offset.
+   *
+   * @param {number} value - The value param.
    */
   writeUInt8(value) {
     this.__reserve(1)
@@ -98,8 +107,8 @@ class BinWriter {
   }
 
   /**
-   * The writeUInt16 method.
-   * @param {any} value - The value param.
+   * Writes an unsigned Int16 value in current byte offset.
+   * @param {number} value - The value param.
    */
   writeUInt16(value) {
     this.__reserve(2)
@@ -108,8 +117,8 @@ class BinWriter {
   }
 
   /**
-   * The writeUInt32 method.
-   * @param {any} value - The value param.
+   * Writes an unsigned Int32 value in current byte offset.
+   * @param {number} value - The value param.
    */
   writeUInt32(value) {
     this.__reserve(4)
@@ -118,8 +127,8 @@ class BinWriter {
   }
 
   /**
-   * The writeSInt32 method.
-   * @param {any} value - The value param.
+   * Writes a signed Int32 value in current byte offset.
+   * @param {number} value - The value param.
    */
   writeSInt32(value) {
     this.__reserve(4)
@@ -128,17 +137,19 @@ class BinWriter {
   }
 
   /**
-   * The writeFloat16 method.
-   * @param {any} value - The value param.
+   * Writes a Float16 value in current byte offset.
+   *
+   * @param {number} value - The value param.
    */
   writeFloat16(value) {
-    const uint16 = Math.encode16BitFloat(value)
+    const uint16 = MathFunctions.encode16BitFloat(value)
     this.writeUInt16(uint16)
   }
 
   /**
-   * The writeFloat32 method.
-   * @param {any} value - The value param.
+   * Writes a Float32 value in current byte offset.
+   *
+   * @param {number} value - The value param.
    */
   writeFloat32(value) {
     this.__reserve(4)
@@ -147,8 +158,9 @@ class BinWriter {
   }
 
   /**
-   * The writeUInt8Array method.
-   * @param {any} value - The value param.
+   * Writes an unsigned Int8 array value from current byte offset.
+   *
+   * @param {Uint8Array} value - The value param.
    * @param {boolean} writeSize - The writeSize value.
    */
   writeUInt8Array(value, writeSize = true) {
@@ -161,8 +173,9 @@ class BinWriter {
   }
 
   /**
-   * The writeUInt16Array method.
-   * @param {any} value - The value param.
+   * Writes an unsigned Int16 array value from current byte offset.
+   *
+   * @param {array} value - The value param.
    * @param {boolean} writeSize - The writeSize value.
    */
   writeUInt16Array(value, writeSize = true) {
@@ -175,8 +188,9 @@ class BinWriter {
   }
 
   /**
-   * The writeUInt32Array method.
-   * @param {any} value - The value param.
+   * Writes an unsigned Int32 array value from current byte offset.
+   *
+   * @param {Uint32Array} value - The value param.
    * @param {boolean} writeSize - The writeSize value.
    */
   writeUInt32Array(value, writeSize = true) {
@@ -189,8 +203,9 @@ class BinWriter {
   }
 
   /**
-   * The writeFloat32Array method.
-   * @param {any} value - The value param.
+   * Writes a Float32 array value from current byte offset.
+   *
+   * @param {Float32Array} value - The value param.
    * @param {boolean} writeSize - The writeSize value.
    */
   writeFloat32Array(value, writeSize = true) {
@@ -203,21 +218,22 @@ class BinWriter {
   }
 
   /**
-   * The writeStr method.
-   * @param {any} str - The str value.
+   * Writes string value in current position, first writing an unsigned Int32 describing its length, then adding the string in Float32 values.
+   *
+   * @param {string} str - The str value.
    * @param {boolean} writeSize - The writeSize value.
    */
   writeStr(str, writeSize = true) {
-    const count = value.length
+    const count = str.length
     this.__reserve(count * 4 + (writeSize ? 4 : 0))
     if (writeSize) this.writeUInt32(count)
     for (let i = 0; i < count; i++) {
-      this.writeFloat32(value.charCodeAt(i))
+      this.writeFloat32(str.charCodeAt(i))
     }
   }
 
   /**
-   * The writeSInt32Vec2 method.
+   * Writes a `Vec2` in the buffer using signed Int32 values(In `x,y` order).
    * @param {Vec2} value - The Vec2 to write.
    */
   writeSInt32Vec2(value) {
@@ -226,7 +242,8 @@ class BinWriter {
   }
 
   /**
-   * The writeUInt32Vec2 method.
+   * Writes a `Vec2` in the buffer using unsigned Int32 values(In `x,y` order).
+   *
    * @param {Vec2} value - The Vec2 to write.
    */
   writeUInt32Vec2(value) {
@@ -235,7 +252,7 @@ class BinWriter {
   }
 
   /**
-   * The writeFloat16Vec2 method.
+   * Writes a `Vec2` in the buffer using Float16 values(In `x,y` order).
    * @param {Vec2} value - The Vec2 to write.
    */
   writeFloat16Vec2(value) {
@@ -244,7 +261,8 @@ class BinWriter {
   }
 
   /**
-   * The writeFloat32Vec2 method.
+   * Writes a `Vec2` in the buffer using Float32 values(In `x,y` order).
+   *
    * @param {Vec2} value - The Vec2 to write.
    */
   writeFloat32Vec2(value) {
@@ -253,7 +271,8 @@ class BinWriter {
   }
 
   /**
-   * The writeFloat16Vec3 method.
+   * Writes a `Vec3` in the buffer using Float16 values(In `x,y,z` order).
+   *
    * @param {Vec3} value - The Vec3 to write.
    */
   writeFloat16Vec3(value) {
@@ -263,7 +282,7 @@ class BinWriter {
   }
 
   /**
-   * The writeFloat32Vec3 method.
+   * Writes a `Vec3` in the buffer using Float32 values(In `x,y,z` order).
    * @param {Vec3} value - The Vec3 to write.
    */
   writeFloat32Vec3(value) {
@@ -273,7 +292,8 @@ class BinWriter {
   }
 
   /**
-   * The writeFloat16Quat method.
+   * Writes a `Quat` in the buffer using Float16 values(In `x,y,z,w` order).
+   *
    * @param {Quat} value - The Quat to write.
    */
   writeFloat16Quat(value) {
@@ -284,7 +304,8 @@ class BinWriter {
   }
 
   /**
-   * The writeFloat32Quat method.
+   * Writes a `Quat` in the buffer using Float32 values(In `x,y,z,w` order).
+   *
    * @param {Quat} value - The Quat to write.
    */
   writeFloat32Quat(value) {
@@ -295,7 +316,8 @@ class BinWriter {
   }
 
   /**
-   * The writeRGBFloat32Color method.
+   * Writes a RGB `Color` in the buffer using Float32 values(In `r,g,b` order).
+   *
    * @param {Color} value - The Color to write.
    */
   writeRGBFloat32Color(value) {
@@ -305,7 +327,8 @@ class BinWriter {
   }
 
   /**
-   * The writeRGBAFloat32Color method.
+   * Writes a RGBA `Color` in the buffer using Float32 values(In `r,g,b,a` order).
+   *
    * @param {Color} value - The Color to write.
    */
   writeRGBAFloat32Color(value) {
@@ -316,7 +339,8 @@ class BinWriter {
   }
 
   /**
-   * The writeRGBUInt8Color method.
+   * Writes a RGB `Color` in the buffer using unsigned Int8 values(In `r,g,b` order).
+   *
    * @param {Color} value - The Color to write.
    */
   writeRGBUInt8Color(value) {
@@ -326,7 +350,8 @@ class BinWriter {
   }
 
   /**
-   * The writeRGBAUInt8Color method.
+   * Writes a RGBA `Color` in the buffer using unsigned Int8 values(In `r,g,b,a` order).
+   *
    * @param {Color} value - The Color to write.
    */
   writeRGBAUInt8Color(value) {
@@ -337,7 +362,8 @@ class BinWriter {
   }
 
   /**
-   * The writeBox2 method.
+   * Writes a `Box2` in the buffer using Floar32 values(In `p0,p1` order).
+   *
    * @param {Box2} value - The Box2 to write.
    */
   writeBox2(value) {
@@ -346,7 +372,8 @@ class BinWriter {
   }
 
   /**
-   * The writeBox3 method.
+   * Writes a `Box3` in the buffer using Floar32 values(In `p0,p1` order).
+   *
    * @param {Box3} value - The Box3 to write.
    */
   writeBox3(value) {
@@ -356,7 +383,7 @@ class BinWriter {
 
   /**
    * The writePadd method.
-   * @param {any} size - The size value.
+   * @param {number} size - The size value.
    */
   writePadd(size) {
     const bytes = size - this.__byteOffset
@@ -366,7 +393,7 @@ class BinWriter {
 
   /**
    * The writeAlignment method.
-   * @param {any} numBytes - The numBytes value.
+   * @param {number} numBytes - The numBytes value.
    */
   writeAlignment(numBytes) {
     const bytes = this.__byteOffset % numBytes

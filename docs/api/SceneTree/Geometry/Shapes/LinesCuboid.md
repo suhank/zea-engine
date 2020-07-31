@@ -1,7 +1,17 @@
 <a name="LinesCuboid"></a>
 
 ### LinesCuboid 
-A class for generating a lines cuboid shape.
+A class for generating a lines cuboid shape(Without faces).
+
+**Parameters**
+* **x(`NumberParameter`):** Length of the line cuboid along the `X` axis
+* **y(`NumberParameter`):** Length of the line cuboid along the `Y` axis
+* **z(`NumberParameter`):** Length of the line cuboid along the `Z` axis
+* **BaseZAtZero(`NumberParameter`):** Property to start or not `Z` axis from position `0.
+
+**Events**
+* **geomDataTopologyChanged:** Triggered when building the rect.
+* **geomDataChanged:** Triggered whenever the length of the rectangle changes in `X`, `Y` or `Z` axes
 
 
 **Extends**: <code>Lines</code>  
@@ -26,7 +36,7 @@ Create a lines cuboid.
 <a name="LinesCuboid+toJSON"></a>
 
 ### toJSON
-The toJSON method encodes this type as a json object for persistences.
+The toJSON method encodes this type as a json object for persistence.
 
 
 **Returns**: <code>object</code> - - Returns the json object.  

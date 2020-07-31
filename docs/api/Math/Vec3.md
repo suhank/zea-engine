@@ -1,8 +1,9 @@
 <a name="Vec3"></a>
 
 ### Vec3 
-Representing a Vec3(three-dimensional floating point vector).
-Vector classes in _zea-engine_ internally store values in [Float32Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array) and
+Represents a three dimensional coordinate, such as 3D scene values, or mesh vertex positions.
+
+Math types internally store values in [Float32Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array) and
 expose getters and setters for the component values.
 
 
@@ -23,8 +24,10 @@ expose getters and setters for the component values.
     * [setFromOther(other)](#setFromOther)
     * [isNull() ⇒ <code>boolean</code>](#isNull)
     * [is111() ⇒ <code>boolean</code>](#is111)
-    * [equal(other) ⇒ <code>boolean</code>](#equal)
-    * [notEquals(other) ⇒ <code>boolean</code>](#notEquals)
+    * ~~[.equal(other)](#Vec3+equal) ⇒ <code>boolean</code>~~
+    * [isEqual(other) ⇒ <code>boolean</code>](#isEqual)
+    * ~~[.notEquals(other)](#Vec3+notEquals) ⇒ <code>boolean</code>~~
+    * [notEqual(other) ⇒ <code>boolean</code>](#notEqual)
     * [approxEqual(other, precision) ⇒ <code>boolean</code>](#approxEqual)
     * [add(other)](#add)
     * [addInPlace(other)](#addInPlace)
@@ -72,21 +75,21 @@ You can also pass one JSON object parameter.
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| x | <code>number</code> | <code>0</code> | The x value. Default is 0. |
+| x | <code>Number</code> \| <code>Float32Array</code> \| <code>json</code> | <code>0</code> | The x value. Default is 0. |
 | y | <code>number</code> | <code>0</code> | The y value. Default is 0. |
 | z | <code>number</code> | <code>0</code> | The z value. Default is 0. |
 
 <a name="Vec3+x"></a>
 
 ### x 
-Getter for `x` value.
+Getter for `x` component.
 
 
-**Returns**: <code>number</code> - - Returns the x value.  
+**Returns**: <code>number</code> - - Returns the x component.  
 <a name="Vec3+x"></a>
 
 ### x
-Setter for `x` value.
+Setter for `x` component.
 
 
 
@@ -97,14 +100,14 @@ Setter for `x` value.
 <a name="Vec3+y"></a>
 
 ### y 
-Getter for `y` value.
+Getter for `y` component.
 
 
-**Returns**: <code>number</code> - - Returns the y value.  
+**Returns**: <code>number</code> - - Returns the y component.  
 <a name="Vec3+y"></a>
 
 ### y
-Setter for `y` value.
+Setter for `y` component.
 
 
 
@@ -115,14 +118,14 @@ Setter for `y` value.
 <a name="Vec3+z"></a>
 
 ### z 
-Getter for `z` value.
+Getter for `z` component.
 
 
-**Returns**: <code>number</code> - - Returns the z value.  
+**Returns**: <code>number</code> - - Returns the z component.  
 <a name="Vec3+z"></a>
 
 ### z
-Setter for `z` value.
+Setter for `z` component.
 
 
 
@@ -136,14 +139,14 @@ Setter for `z` value.
 Getter for `xy` swizzel.
 
 
-**Returns**: <code>Vec2</code> - - Returns the z value.  
+**Returns**: <code>Vec2</code> - - Returns the z component.  
 <a name="Vec3+yz"></a>
 
 ### yz 
 Getter for `yz` swizzel.
 
 
-**Returns**: <code>Vec2</code> - - Returns the z value.  
+**Returns**: <code>Vec2</code> - - Returns the z component.  
 <a name="Vec3+set"></a>
 
 ### set
@@ -153,9 +156,9 @@ Setter from scalar components.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| x | <code>number</code> | The x value. |
-| y | <code>number</code> | The y value. |
-| z | <code>number</code> | The y value. |
+| x | <code>number</code> | The x component. |
+| y | <code>number</code> | The y component. |
+| z | <code>number</code> | The y component. |
 
 <a name="Vec3+setDataArray"></a>
 
@@ -195,7 +198,19 @@ Checks if the coordenates of this Vec3 are 1 1 1.
 **Returns**: <code>boolean</code> - - Returns `true` if the coordenates are(1, 1, 1), otherwise, `false`.  
 <a name="Vec3+equal"></a>
 
-### equal
+### ~~vec3.equal(other) ⇒ <code>boolean</code>~~
+***Deprecated***
+
+
+**Returns**: <code>boolean</code> - - Returns `true` if are the same Vector, otherwise, `false`.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| other | [<code>Vec3</code>](#Vec3) | The other Vec3 to compare with. |
+
+<a name="Vec3+isEqual"></a>
+
+### isEqual
 Checks if this Vec3 is exactly the same as another Vec3.
 
 
@@ -207,7 +222,19 @@ Checks if this Vec3 is exactly the same as another Vec3.
 
 <a name="Vec3+notEquals"></a>
 
-### notEquals
+### ~~vec3.notEquals(other) ⇒ <code>boolean</code>~~
+***Deprecated***
+
+
+**Returns**: <code>boolean</code> - - Returns `true` if the Vec3s are different, otherwise, `false`.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| other | [<code>Vec3</code>](#Vec3) | The other Vec3 to compare with. |
+
+<a name="Vec3+notEqual"></a>
+
+### notEqual
 Checks if this Vec2 is different from another Vec2.
 
 

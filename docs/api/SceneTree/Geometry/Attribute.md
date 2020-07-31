@@ -7,21 +7,21 @@ Class representing an attribute.
 
 * [Attribute](#Attribute)
     * [new Attribute(dataType, expectedSize, defaultValue)](#new-Attribute)
-    * [length ⇒ <code>any</code>](#length)
-    * [dataType ⇒ <code>any</code>](#dataType)
-    * [data ⇒ <code>any</code>](#data)
+    * [length ⇒ <code>number</code>](#length)
+    * [dataType ⇒ <code>AttrValue</code> \| <code>number</code>](#dataType)
+    * [data ⇒ <code>TypedArray</code>](#data)
     * [data](#data)
-    * [numElements ⇒ <code>any</code>](#numElements)
+    * [numElements ⇒ <code>number</code>](#numElements)
     * [resize(size)](#resize)
     * [initRange(start)](#initRange)
-    * [getCount() ⇒ <code>any</code>](#getCount)
-    * [getFloat32Value(index) ⇒ <code>any</code>](#getFloat32Value)
+    * [getCount() ⇒ <code>number</code>](#getCount)
+    * [getFloat32Value(index) ⇒ <code>number</code>](#getFloat32Value)
     * [setFloat32Value(index, value)](#setFloat32Value)
-    * [getValueRef(index) ⇒ <code>any</code>](#getValueRef)
+    * [getValueRef(index) ⇒ <code>AttrValue</code>](#getValueRef)
     * [setValue(index, value)](#setValue)
     * [toJSON(context, flags) ⇒ <code>object</code>](#toJSON)
     * [fromJSON(j)](#fromJSON)
-    * [toString() ⇒ <code>any</code>](#toString)
+    * [toString() ⇒ <code>string</code>](#toString)
 
 <a name="new_Attribute_new"></a>
 
@@ -31,85 +31,86 @@ Create an attribute.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| dataType | <code>any</code> | The dataType value. |
-| expectedSize | <code>any</code> | The expectedSize value. |
-| defaultValue | <code>any</code> | The defaultValue value. |
+| dataType | <code>AttrValue</code> \| <code>number</code> | The dataType value. |
+| expectedSize | <code>number</code> \| <code>TypedArray</code> | The expectedSize value. |
+| defaultValue | <code>number</code> | The defaultValue value. |
 
 <a name="Attribute+length"></a>
 
 ### length 
-Getter for length.
+Returns the count of attribute values in the data.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>number</code> - - The return value.  
 <a name="Attribute+dataType"></a>
 
 ### dataType 
-Getter for data.
+Returns the type of attribute value.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>AttrValue</code> \| <code>number</code> - - The return value.  
 <a name="Attribute+data"></a>
 
 ### data 
-Getter for data.
+Returns current data array.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>TypedArray</code> - - The return value.  
 <a name="Attribute+data"></a>
 
 ### data
-Setter for data.
+Sets data value.
 
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| data | <code>any</code> | The data value. |
+| data | <code>TypedArray</code> | The data value. |
 
 <a name="Attribute+numElements"></a>
 
 ### numElements 
-Getter for numElements.
+Returns the number of elements stored in each `AttrValue`.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>number</code> - - The return value.  
 <a name="Attribute+resize"></a>
 
 ### resize
-The resize method.
+Resizes current data array to to a new size.
+In case the new size is bigger than current size, the new values are filled up with default ones.
 
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| size | <code>any</code> | The size value. |
+| size | <code>number</code> | The size value. |
 
 <a name="Attribute+initRange"></a>
 
 ### initRange
-The initRange method.
+Fills up data values with default ones starting from the specified index.
 
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| start | <code>any</code> | The start value. |
+| start | <code>number</code> | The start value. |
 
 <a name="Attribute+getCount"></a>
 
 ### getCount
-The getCount method.
+Returns the count of attribute values in the data.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>number</code> - - The return value.  
 <a name="Attribute+getFloat32Value"></a>
 
 ### getFloat32Value
-The getFloat32Value method.
+Returns data value of the specified index.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>number</code> - - The return value.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -118,22 +119,22 @@ The getFloat32Value method.
 <a name="Attribute+setFloat32Value"></a>
 
 ### setFloat32Value
-The setFloat32Value method.
+Sets data value in the specified index.
 
 
 
 | Param | Type | Description |
 | --- | --- | --- |
 | index | <code>number</code> | The index value. |
-| value | <code>any</code> | The value param. |
+| value | <code>number</code> | The value param. |
 
 <a name="Attribute+getValueRef"></a>
 
 ### getValueRef
-The getValueRef method.
+Returns the `AttrValue` object placed in the specified index.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>AttrValue</code> - - The return value.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -142,19 +143,19 @@ The getValueRef method.
 <a name="Attribute+setValue"></a>
 
 ### setValue
-The setValue method.
+Sets `AttrValue` object in the specified index.
 
 
 
 | Param | Type | Description |
 | --- | --- | --- |
 | index | <code>number</code> | The index value. |
-| value | <code>any</code> | The value param. |
+| value | <code>AttrValue</code> | The value param. |
 
 <a name="Attribute+toJSON"></a>
 
 ### toJSON
-The toJSON method encodes this type as a json object for persistences.
+The toJSON method encodes this type as a json object for persistence.
 
 
 **Returns**: <code>object</code> - - Returns the json object.  
@@ -178,7 +179,7 @@ The fromJSON method decodes a json object for this type.
 <a name="Attribute+toString"></a>
 
 ### toString
-The toString method.
+Returns the string representation of the object's state.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>string</code> - - The return value.  

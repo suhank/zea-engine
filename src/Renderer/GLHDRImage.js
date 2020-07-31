@@ -21,11 +21,11 @@ class GLHDRImage extends GLTexture2D {
     const loadImage = () => {
       this.__unpackHDRImage(this.__hdrImage.getParams())
     }
-    this.__hdrImage.addListener('updated', loadImage)
+    this.__hdrImage.on('updated', loadImage)
     if (this.__hdrImage.isLoaded()) {
       loadImage()
     } else {
-      this.__hdrImage.addListener('loaded', loadImage)
+      this.__hdrImage.on('loaded', loadImage)
     }
   }
 
@@ -77,12 +77,7 @@ class GLHDRImage extends GLTexture2D {
 
       this.__unpackHDRShader = new UnpackHDRShader(gl)
       const shaderComp = this.__unpackHDRShader.compileForTarget('GLHDRImage')
-      this.__shaderBinding = generateShaderGeomBinding(
-        gl,
-        shaderComp.attrs,
-        gl.__quadattrbuffers,
-        gl.__quadIndexBuffer
-      )
+      this.__shaderBinding = generateShaderGeomBinding(gl, shaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer)
     } else {
       this.__srcLDRTex.bufferData(ldr)
       this.__srcCDMTex.bufferData(cdm)

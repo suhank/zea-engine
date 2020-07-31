@@ -1,7 +1,14 @@
 <a name="Points"></a>
 
 ### Points 
-Class representing points.
+Class representing a point primitive drawing type, every vertex specified is a point.
+
+```
+const points = new Points()
+```
+
+* **Events**
+* **boundingBoxChanged:** Triggered when the bounding box changes.
 
 
 **Extends**: <code>BaseGeom</code>  
@@ -19,23 +26,23 @@ Create points.
 <a name="Points+loadBin"></a>
 
 ### loadBin
-The loadBin method.
+Loads and populates `Points` object from a binary reader.
 
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| reader | <code>object</code> | The reader value. |
+| reader | <code>BinReader</code> | The reader value. |
 
 <a name="Points+readBinary"></a>
 
 ### readBinary
-The readBinary method.
+Sets state of current geometry(Including line segments) using a binary reader object.
 
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| reader | <code>object</code> | The reader value. |
+| reader | <code>BinReader</code> | The reader value. |
 | context | <code>object</code> | The context value. |
 

@@ -2,21 +2,27 @@ import { Vec2 } from '../../../Math/Vec2'
 import { Vec3 } from '../../../Math/Vec3'
 import { Mesh } from '../Mesh.js'
 
-/** A class for generating a torus geometry.
+/**
+ * A class for generating a torus geometry.
+ *
+ * ```
+ * const torus = new Torus(0.4, 1.3)
+ * ```
+ *
  * @extends Mesh
  */
 class Torus extends Mesh {
   /**
-   * Create a torus.
-   * @param {number} innerRadius - The inner radius of the torus.
-   * @param {number} outerRadius - The outer radius of the torus.
-   * @param {number} detail - The detail of the cone.
+   * Creates an instance of Torus.
+   *
+   * @param {number} [innerRadius=0.5] - The inner radius of the torus.
+   * @param {number} [outerRadius=1.0] - The outer radius of the torus.
+   * @param {number} [detail=32] - The detail of the cone.
    */
   constructor(innerRadius = 0.5, outerRadius = 1.0, detail = 32) {
     super()
 
-    if (isNaN(innerRadius) || isNaN(outerRadius) || isNaN(detail))
-      throw new Error('Invalid geom args')
+    if (isNaN(innerRadius) || isNaN(outerRadius) || isNaN(detail)) throw new Error('Invalid geom args')
 
     this.__innerRadius = innerRadius
     this.__outerRadius = outerRadius
@@ -29,6 +35,7 @@ class Torus extends Mesh {
 
   /**
    * Getter for the inner radius.
+   *
    * @return {number} - Returns the radius.
    */
   get innerRadius() {
@@ -37,6 +44,7 @@ class Torus extends Mesh {
 
   /**
    * Setter for the inner radius.
+   *
    * @param {number} val - The radius value.
    */
   set innerRadius(val) {
@@ -46,6 +54,7 @@ class Torus extends Mesh {
 
   /**
    * Getter for the outer radius.
+   *
    * @return {number} - Returns the radius.
    */
   get outerRadius() {
@@ -54,6 +63,7 @@ class Torus extends Mesh {
 
   /**
    * Setter for the outer radius.
+   *
    * @param {number} val - The radius value.
    */
   set outerRadius(val) {
@@ -63,6 +73,7 @@ class Torus extends Mesh {
 
   /**
    * Getter for the torus detail.
+   *
    * @return {number} - Returns the detail.
    */
   get detail() {
@@ -71,6 +82,7 @@ class Torus extends Mesh {
 
   /**
    * Setter for the torus detail.
+   *
    * @param {number} val - The detail value.
    */
   set detail(val) {
@@ -93,6 +105,7 @@ class Torus extends Mesh {
     // ////////////////////////////
     // Set Vertex Positions
 
+    const positions = this.getVertexAttribute('positions')
     const normals = this.getVertexAttribute('normals')
     let vertex = 0
     for (let i = 0; i < nbLoops; i++) {
@@ -108,11 +121,7 @@ class Torus extends Mesh {
         const d = this.__outerRadius + cphi * this.__innerRadius
 
         // Set positions and normals at the same time.
-        this.getVertex(vertex).set(
-          ctheta * d,
-          stheta * d,
-          this.__innerRadius * sphi
-        )
+        positions.getValueRef(vertex).set(ctheta * d, stheta * d, this.__innerRadius * sphi)
         normals.getValueRef(vertex).set(ctheta * cphi, stheta * cphi, sphi)
         vertex++
       }
@@ -130,33 +139,18 @@ class Torus extends Mesh {
         const v1 = nbSlices * i + jp
         const v2 = nbSlices * ip + jp
         const v3 = nbSlices * ip + j
-        this.setFaceVertexIndices(faceIndex, v0, v1, v2, v3)
+        this.setFaceVertexIndices(faceIndex, [v0, v1, v2, v3])
 
-        texCoords.setFaceVertexValue(
-          faceIndex,
-          0,
-          new Vec2(i / nbLoops, j / nbLoops)
-        )
-        texCoords.setFaceVertexValue(
-          faceIndex,
-          1,
-          new Vec2(i / nbLoops, (j + 1) / nbLoops)
-        )
-        texCoords.setFaceVertexValue(
-          faceIndex,
-          2,
-          new Vec2((i + 1) / nbLoops, (j + 1) / nbLoops)
-        )
-        texCoords.setFaceVertexValue(
-          faceIndex,
-          3,
-          new Vec2((i + 1) / nbLoops, j / nbLoops)
-        )
+        texCoords.setFaceVertexValue(faceIndex, 0, new Vec2(i / nbLoops, j / nbLoops))
+        texCoords.setFaceVertexValue(faceIndex, 1, new Vec2(i / nbLoops, (j + 1) / nbLoops))
+        texCoords.setFaceVertexValue(faceIndex, 2, new Vec2((i + 1) / nbLoops, (j + 1) / nbLoops))
+        texCoords.setFaceVertexValue(faceIndex, 3, new Vec2((i + 1) / nbLoops, j / nbLoops))
         faceIndex++
       }
     }
 
     this.setBoundingBoxDirty()
+    this.emit('geomDataTopologyChanged', {})
   }
 
   /**
@@ -167,6 +161,7 @@ class Torus extends Mesh {
     const nbSlices = this.__detail
     const nbLoops = this.__detail * 2
 
+    const positions = this.getVertexAttribute('positions')
     const vertex = 0
     for (let i = 0; i < nbLoops; i++) {
       const theta = (i / nbLoops) * 2.0 * Math.PI
@@ -181,20 +176,17 @@ class Torus extends Mesh {
         const d = this.__outerRadius + cphi * this.__innerRadius
 
         // Set positions and normals at the same time.
-        this.getVertex(vertex).set(
-          ctheta * d,
-          stheta * d,
-          this.__innerRadius * sphi
-        )
+        positions.getValueRef(vertex).set(ctheta * d, stheta * d, this.__innerRadius * sphi)
         index++
       }
     }
 
     this.setBoundingBoxDirty()
+    this.emit('geomDataChanged', {})
   }
 
   /**
-   * The toJSON method encodes this type as a json object for persistences.
+   * The toJSON method encodes this type as a json object for persistence.
    * @return {object} - Returns the json object.
    */
   toJSON() {

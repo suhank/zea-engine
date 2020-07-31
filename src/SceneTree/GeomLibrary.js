@@ -5,7 +5,7 @@ import { PointsProxy, LinesProxy, MeshProxy } from './Geometry/GeomProxies.js'
 import { EventEmitter } from '../Utilities/index'
 
 // The GeomLibrary parses geometry data using workers.
-// This can be difficult to debug, so you can disable this 
+// This can be difficult to debug, so you can disable this
 // by setting the following boolena to false, and uncommenting
 // the import of parseGeomsBinary
 const multiThreadParsing = true
@@ -56,13 +56,8 @@ class GeomLibrary extends EventEmitter {
    */
   __constructWorker() {
     const worker = new GeomParserWorker()
-    worker.onmessage = event => {
-      this.__recieveGeomDatas(
-        event.data.key,
-        event.data.geomDatas,
-        event.data.geomIndexOffset,
-        event.data.geomsRange
-      )
+    worker.onmessage = (event) => {
+      this.__recieveGeomDatas(event.data.key, event.data.geomDatas, event.data.geomIndexOffset, event.data.geomsRange)
     }
     return worker
   }
@@ -113,10 +108,10 @@ class GeomLibrary extends EventEmitter {
   loadUrl(fileUrl) {
     loadBinfile(
       fileUrl,
-      data => {
+      (data) => {
         this.loadBin(data)
       },
-      statusText => {
+      (statusText) => {
         console.warn(statusText)
       }
     )
@@ -197,7 +192,8 @@ class GeomLibrary extends EventEmitter {
       } else {
         // ////////////////////////////////////////////
         // Main Threaded Parsing
-        parseGeomsBinary({
+        parseGeomsBinary(
+          {
             key,
             toc,
             geomIndexOffset,
@@ -205,16 +201,12 @@ class GeomLibrary extends EventEmitter {
             isMobileDevice: reader.isMobileDevice,
             bufferSlice,
             genBuffersOpts: this.__genBuffersOpts,
-            context
+            context,
           },
-          (data, transferables)=>{
-            this.__recieveGeomDatas(
-              data.key,
-              data.geomDatas,
-              data.geomIndexOffset,
-              data.geomsRange
-            );
-          });
+          (data, transferables) => {
+            this.__recieveGeomDatas(data.key, data.geomDatas, data.geomIndexOffset, data.geomsRange)
+          }
+        )
       }
     }
     return numGeoms
@@ -279,7 +271,7 @@ class GeomLibrary extends EventEmitter {
     if (this.__loaded == this.__numGeoms) {
       // console.log("GeomLibrary Loaded:" + this.__name + " count:" + geomDatas.length + " loaded:" + this.__loaded);
       this.__terminateWorkers()
-      this.emit('loaded',)
+      this.emit('loaded')
     }
   }
 

@@ -3,8 +3,8 @@ import { AttrValue } from './AttrValue.js'
 import { typeRegistry } from './TypeRegistry.js'
 import { Vec3 } from './Vec3.js'
 /**
- * Representing a Vec4(four-dimensional floating point vector).
- * Vector classes in _zea-engine_ internally store values in {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array|Float32Array} and
+ * Represents a four-dimensional coordinate.
+ * Math types internally store values in {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array|Float32Array} and
  * expose getters and setters for the component values.
  *
  * @extends AttrValue
@@ -12,16 +12,16 @@ import { Vec3 } from './Vec3.js'
 class Vec4 extends AttrValue {
   /**
    /**
-   * Creates a Vec3.
+   * Creates a Vec4.
    *
-   * The type of values of the `(x, y, z)` coordenates can be {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array|Float32Array},
+   * The type of values of the `(x, y, z, t)` coordinates can be {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array|Float32Array},
    * {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint32Array|Uint32Array},
    * {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array|Int32Array} and
    * {@link https://developer.mozilla.org/es/docs/Web/JavaScript/Referencia/Objetos_globales/ArrayBuffer|ArrayBuffer}.
    * <br>
    * You can also pass one JSON object parameter.
    * 
-   * @param {number} x - The x value. Default is 0.
+   * @param {Number|Float32Array|json} x - The x value. Default is 0.
    * @param {number} y - The y value. Default is 0.
    * @param {number} z - The y value. Default is 0.
    * @param {number} t - The t value. Default is 0.
@@ -29,7 +29,10 @@ class Vec4 extends AttrValue {
   constructor(x = 0, y = 0, z = 0, t = 0) {
     super()
 
-    if (x instanceof ArrayBuffer) {
+    if (x instanceof Float32Array || x instanceof Uint32Array) {
+      this.__data = x
+    } else if (x instanceof ArrayBuffer) {
+      console.warn(`deprecated, please use new Vec4(new Float32Array(buffer, byteOffset, 4))`)
       const buffer = x
       const byteOffset = y
       this.__data = new Float32Array(buffer, byteOffset, 4)
@@ -156,16 +159,35 @@ class Vec4 extends AttrValue {
   /**
    * Checks if this Vec4 is exactly the same as another Vec4.
    *
+   * @deprecated
    * @param {Vec4} other - The other Vec4 to compare with.
    * @return {boolean} - Returns true or false.
    */
   equal(other) {
-    return (
-      this.x == other.x &&
-      this.y == other.y &&
-      this.z == other.z &&
-      this.t == other.t
-    )
+    console.warn('Deprecated. Use #isEqual instead.')
+    return this.isEqual(other)
+  }
+
+  /**
+   * Checks if this Vec4 is exactly the same as another Vec4.
+   *
+   * @param {Vec4} other - The other Vec4 to compare with.
+   * @return {boolean} - Returns true or false.
+   */
+  isEqual(other) {
+    return this.x == other.x && this.y == other.y && this.z == other.z && this.t == other.t
+  }
+
+  /**
+   * Checks if this Vec4 is different from another Vec4.
+   *
+   * @deprecated
+   * @param {Vec4} other - The other Vec4 to compare with.
+   * @return {boolean} - Returns true or false.
+   */
+  notEquals(other) {
+    console.warn('Deprecated. Use #notEqual instead.')
+    return this.notEqual(other)
   }
 
   /**
@@ -174,13 +196,8 @@ class Vec4 extends AttrValue {
    * @param {Vec4} other - The other Vec4 to compare with.
    * @return {boolean} - Returns true or false.
    */
-  notEquals(other) {
-    return (
-      this.x != other.x &&
-      this.y != other.y &&
-      this.z != other.z &&
-      this.t != other.t
-    )
+  notEqual(other) {
+    return this.x != other.x && this.y != other.y && this.z != other.z && this.t != other.t
   }
 
   /**
@@ -206,16 +223,11 @@ class Vec4 extends AttrValue {
    * @return {Vec4} - Returns a new Vec4.
    */
   add(other) {
-    return new Vec4(
-      this.x + other.x,
-      this.y + other.y,
-      this.z + other.z,
-      this.t + other.t
-    )
+    return new Vec4(this.x + other.x, this.y + other.y, this.z + other.z, this.t + other.t)
   }
 
   /**
-   * Adds other to this Vec4.
+   * Adds other to this Vec4 mutating the values of this instance
    *
    * @param {Vec4} other - The other Vec4 to add.
    */
@@ -233,16 +245,11 @@ class Vec4 extends AttrValue {
    * @return {Vec4} - Returns a new Vec4.
    */
   subtract(other) {
-    return new Vec4(
-      this.x - other.x,
-      this.y - other.y,
-      this.z - other.z,
-      this.t - other.t
-    )
+    return new Vec4(this.x - other.x, this.y - other.y, this.z - other.z, this.t - other.t)
   }
 
   /**
-   * Subtracts other from this Vec4.
+   * Subtracts other from this Vec4 mutating the values of this instance
    *
    * @param {Vec4} other - The other Vec4 to subtract.
    */
@@ -260,16 +267,11 @@ class Vec4 extends AttrValue {
    * @return {Vec4} - Returns a new Vec4.
    */
   multiply(other) {
-    return new Vec4(
-      this.x * other.x,
-      this.y * other.y,
-      this.z * other.z,
-      this.t * other.t
-    )
+    return new Vec4(this.x * other.x, this.y * other.y, this.z * other.z, this.t * other.t)
   }
 
   /**
-   * Multiplies two Vec4s.
+   * Multiplies two Vec4s mutating the values of this instance
    *
    * @param {Vec4} other - The other Vec4 to multiply with.
    */
@@ -287,12 +289,7 @@ class Vec4 extends AttrValue {
    * @return {Vec4} - Returns a new Vec4.
    */
   divide(other) {
-    return new Vec4(
-      this.x / other.x,
-      this.y / other.y,
-      this.z / other.z,
-      this.t / other.t
-    )
+    return new Vec4(this.x / other.x, this.y / other.y, this.z / other.z, this.t / other.t)
   }
 
   /**
@@ -314,12 +311,7 @@ class Vec4 extends AttrValue {
    * @return {Vec4} - The return value.
    */
   scale(scalar) {
-    return new Vec4(
-      this.x * scalar,
-      this.y * scalar,
-      this.z * scalar,
-      this.t * scalar
-    )
+    return new Vec4(this.x * scalar, this.y * scalar, this.z * scalar, this.t * scalar)
   }
 
   /**
@@ -420,12 +412,7 @@ class Vec4 extends AttrValue {
     const bz = other.z
     const bt = other.t
 
-    return new Vec4(
-      ay * bz - az * by,
-      az * bt - at * bz,
-      at * bx - ax * bt,
-      ax * by - ay * bx
-    )
+    return new Vec4(ay * bz - az * by, az * bt - at * bz, at * bx - ax * bt, ax * by - ay * bx)
   }
 
   /**
@@ -458,12 +445,7 @@ class Vec4 extends AttrValue {
     const ay = this.y
     const az = this.z
     at = this.t
-    return new Vec4(
-      ax + t * (other.x - ax),
-      ay + t * (other.y - ay),
-      az + t * (other.z - az),
-      at + t * (other.t - at)
-    )
+    return new Vec4(ax + t * (other.x - ax), ay + t * (other.y - ay), az + t * (other.z - az), at + t * (other.t - at))
   }
 
   /**
@@ -489,12 +471,7 @@ class Vec4 extends AttrValue {
    * @return {Vec4} - Returns a new Vec4.
    */
   clone() {
-    return new Vec4(
-      this.__data[0],
-      this.__data[1],
-      this.__data[2],
-      this.__data[3]
-    )
+    return new Vec4(this.__data[0], this.__data[1], this.__data[2], this.__data[3])
   }
 
   /**
@@ -533,10 +510,24 @@ class Vec4 extends AttrValue {
    * @param {ArrayBuffer} buffer - The buffer value.
    * @param {number} offset - The offset value.
    * @return {Vec4} - Returns a new Vec3.
+   * @deprecated
    * @private
    */
   static createFromFloat32Buffer(buffer, offset = 0) {
-    return new Vec4(buffer, offset * 4) // 4 bytes per 32bit float
+    console.warn('Deprecated, use #createFromBuffer instead')
+    return new Vec4(new Float32Array(buffer, offset * 4, 4)) // 4 bytes per 32bit float
+  }
+
+  /**
+   * Creates an instance of a `Vec4` using an ArrayBuffer.
+   *
+   * @static
+   * @param {ArrayBuffer} buffer - The buffer value.
+   * @param {number} byteOffset - The offset value.
+   * @return {Vec4} - Returns a new Vec4.
+   */
+  static createFromBuffer(buffer, byteOffset) {
+    return new Vec4(new Float32Array(buffer, byteOffset, 4)) // 4 bytes per 32bit float
   }
 
   /**
@@ -552,7 +543,7 @@ class Vec4 extends AttrValue {
   // Persistence
 
   /**
-   * The toJSON method encodes this type as a json object for persistences.
+   * The toJSON method encodes this type as a json object for persistence.
    * @return {object} - The json object.
    */
   toJSON() {
@@ -562,6 +553,30 @@ class Vec4 extends AttrValue {
       z: this.z,
       t: this.t,
     }
+  }
+
+  /**
+   * Decodes a JSON object to set the state of this class.
+   *
+   * @param {object} j - The json object.
+   */
+  fromJSON(j) {
+    this.x = j.x
+    this.y = j.y
+    this.z = j.z
+    this.t = j.t
+  }
+
+  /**
+   * Loads the state of the value from a binary reader.
+   *
+   * @param {BinReader} reader - The reader value.
+   */
+  readBinary(reader) {
+    this.x = reader.loadFloat32()
+    this.y = reader.loadFloat32()
+    this.z = reader.loadFloat32()
+    this.t = reader.loadFloat32()
   }
 }
 

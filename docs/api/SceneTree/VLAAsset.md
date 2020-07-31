@@ -1,15 +1,23 @@
 <a name="VLAAsset"></a>
 
 ### VLAAsset 
-Class representing a VLA asset.
+Class designed to load and handle `.vla` files.
+Which facilitates the migration of geometries from third party applications to the Digistar planetarium dome projection.
+
+**Parameters**
+* **DataFilePath(`FilePathParameter`):** Used to specify the path to the file.
+* **LightmapTint(`ColorParameter`):** _todo_
+
+**Events**
+* **loaded:** Triggered once everything is loaded.
+* **geomsLoaded:** Triggered once all geometries are loaded.
 
 
 **Extends**: <code>AssetItem</code>  
 
 * [VLAAsset ⇐ <code>AssetItem</code>](#VLAAsset)
     * [new VLAAsset(name)](#new-VLAAsset)
-    * [readBinary(reader, context) ⇒ <code>any</code>](#readBinary)
-    * [loadDataFile(onDone, onGeomsDone)](#loadDataFile)
+    * [readBinary(reader, context) ⇒ <code>number</code>](#readBinary)
     * [fromJSON(j, context, onDone)](#fromJSON)
 
 <a name="new_VLAAsset_new"></a>
@@ -25,27 +33,15 @@ Create a VLA asset.
 <a name="VLAAsset+readBinary"></a>
 
 ### readBinary
-The readBinary method.
+Sets state of current asset using a binary reader object.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>number</code> - - The return value.  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| reader | <code>object</code> | The reader value. |
+| reader | <code>BinReader</code> | The reader value. |
 | context | <code>object</code> | The context value. |
-
-<a name="VLAAsset+loadDataFile"></a>
-
-### loadDataFile
-The loadDataFile method.
-
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| onDone | <code>any</code> | The onDone value. |
-| onGeomsDone | <code>any</code> | The onGeomsDone value. |
 
 <a name="VLAAsset+fromJSON"></a>
 
@@ -58,5 +54,5 @@ The fromJSON method decodes a json object for this type.
 | --- | --- | --- |
 | j | <code>object</code> | The json object this item must decode. |
 | context | <code>object</code> | The context value. |
-| onDone | <code>any</code> | The onDone value. |
+| onDone | <code>function</code> | The onDone value. |
 

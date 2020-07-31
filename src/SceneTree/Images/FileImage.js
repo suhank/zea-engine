@@ -7,12 +7,9 @@ import { GIF } from '../../external/gifuct-js.js'
 import { resourceLoader } from '../ResourceLoader.js'
 import { SystemDesc } from '../../BrowserDetection.js'
 
-import {
-  BooleanParameter,
-  NumberParameter,
-  Vec4Parameter,
-  FilePathParameter,
-} from '../Parameters/index'
+import { BooleanParameter, NumberParameter, Vec4Parameter } from '../Parameters/index'
+import { FilePathParameter } from '../Parameters/FilePathParameter'
+import MathFunctions from '../../Utilities/MathFunctions'
 
 const imageDataLibrary = {}
 
@@ -27,17 +24,15 @@ class FileImage extends BaseImage {
   /**
    * Create a file image.
    * @param {string} name - The name value.
-   * @param {any} filePath - The filePath value.
-   * @param {any} params - The params value.
+   * @param {string} filePath - The filePath value.
+   * @param {object} params - The params value.
    */
   constructor(name, filePath = '', params = {}) {
     if (filePath.constructor == Object) {
       params = filePath
     }
     if (name != undefined && name.lastIndexOf('.') != -1) {
-      console.warn(
-        'Deprecated signature. Please provide a name and filepath to the image constructor'
-      )
+      console.warn('Deprecated signature. Please provide a name and filepath to the image constructor')
       name = name.substring(name.lastIndexOf('/') + 1, name.lastIndexOf('.'))
     }
 
@@ -46,9 +41,9 @@ class FileImage extends BaseImage {
     this.__loaded = false
 
     const fileParam = this.addParameter(new FilePathParameter('FilePath'))
-    fileParam.addListener('valueChanged', () => {
+    fileParam.on('valueChanged', () => {
       this.loaded = false
-      if (this.getName() == "") {
+      if (this.getName() == '') {
         // Generate a name from the file path.
         const stem = fileParam.getStem()
         const decorator = stem.substring(stem.length - 1)
@@ -159,49 +154,41 @@ class FileImage extends BaseImage {
       if (imageElem.complete) {
         loaded()
       } else {
-        imageElem.addListener('load', loaded)
+        imageElem.addEventListener('load', loaded)
       }
     } else {
       resourceLoader.addWork(fileDesc.id, 1)
 
-      const prefSizeParam = this.addParameter(
-        new NumberParameter('PreferredSize', -1)
-      )
+      const prefSizeParam = this.addParameter(new NumberParameter('PreferredSize', -1))
 
       let url = fileDesc.url
       if (fileDesc.assets && Object.keys(fileDesc.assets).length > 0) {
         function chooseImage(params, filterAssets) {
           // Note: this is a filter to remove any corrupt data
           // generate by our broken server side processing system.
-          filterAssets = filterAssets.filter(asset => asset !== null)
+          filterAssets = filterAssets.filter((asset) => asset !== null)
 
           if (supportWebp) {
-            const resultFilter = filterAssets.filter(
-              asset => asset.format === 'webp'
-            )
+            const resultFilter = filterAssets.filter((asset) => asset.format === 'webp')
 
             if (resultFilter.length > 1) {
               filterAssets = resultFilter
             }
           } else {
-            filterAssets = filterAssets.filter(asset => asset.format !== 'webp')
+            filterAssets = filterAssets.filter((asset) => asset.format !== 'webp')
           }
 
           if (params.maxSize) {
-            filterAssets = filterAssets.filter(
-              asset => asset.w <= params.maxSize
-            )
+            filterAssets = filterAssets.filter((asset) => asset.w <= params.maxSize)
           }
           if (params.filter) {
-            const resultFilter = filterAssets.filter(
-              asset => asset.url.indexOf(params.filter) !== -1
-            )
+            const resultFilter = filterAssets.filter((asset) => asset.url.indexOf(params.filter) !== -1)
             if (resultFilter.length > 1) {
               filterAssets = resultFilter
             }
           }
           if (params.prefSize) {
-            filterAssets = filterAssets.map(asset =>
+            filterAssets = filterAssets.map((asset) =>
               Object.assign(
                 {
                   score: Math.abs(params.prefSize - asset.w),
@@ -212,9 +199,7 @@ class FileImage extends BaseImage {
 
             // return low score, close to desire
             // return _.sortBy(score, "score")[0].option.url;
-            filterAssets.sort((a, b) =>
-              a.score > b.score ? 1 : a.score < b.score ? -1 : 0
-            )
+            filterAssets.sort((a, b) => (a.score > b.score ? 1 : a.score < b.score ? -1 : 0))
           }
           if (filterAssets.length > 0) return filterAssets[0]
         }
@@ -251,8 +236,8 @@ class FileImage extends BaseImage {
       imageElem.crossOrigin = 'anonymous'
       imageElem.src = url
 
-      imageElem.addListener('load', loaded)
-      imageElem.addListener('load', () => {
+      imageElem.addEventListener('load', loaded)
+      imageElem.addEventListener('load', () => {
         resourceLoader.addWorkDone(fileDesc.id, 1)
       })
       imageDataLibrary[fileDesc.id] = imageElem
@@ -305,17 +290,17 @@ class FileImage extends BaseImage {
     }
 
     document.body.appendChild(videoElem)
-    videoElem.addListener(
+    videoElem.on(
       'loadedmetadata',
       () => {
         // videoElem.play();
 
         videoElem.muted = muteParam.getValue()
-        muteParam.addListener('valueChanged', () => {
+        muteParam.on('valueChanged', () => {
           videoElem.muted = muteParam.getValue()
         })
         videoElem.loop = loopParam.getValue()
-        loopParam.addListener('valueChanged', () => {
+        loopParam.on('valueChanged', () => {
           videoElem.loop = loopParam.getValue()
         })
 
@@ -345,7 +330,7 @@ class FileImage extends BaseImage {
             }
             timerCallback()
           },
-          e => {
+          (e) => {
             console.log('Autoplay was prevented.', e, e.message)
           }
         )
@@ -379,14 +364,14 @@ class FileImage extends BaseImage {
     let hdrtint = new Color(1, 1, 1, 1)
     // let stream = 'stream' in params ? params['stream'] : false;
 
-    this.setHDRTint = value => {
+    this.setHDRTint = (value) => {
       hdrtint = value
     }
     this.getHDRTint = () => {
       return hdrtint
     }
 
-    resourceLoader.loadUrl(fileDesc.id, fileDesc.url, entries => {
+    resourceLoader.loadUrl(fileDesc.id, fileDesc.url, (entries) => {
       let ldr
       let cdm
       for (const name in entries) {
@@ -455,17 +440,17 @@ class FileImage extends BaseImage {
         resourceLoader.addWork(fileDesc.id, 1)
 
         if (fileDesc.assets && fileDesc.assets.atlas) {
-          const image = new Image()
-          image.crossOrigin = 'anonymous'
-          image.src = fileDesc.assets.atlas.url
-          image.addListener('load', () => {
+          const imageElem = new Image()
+          imageElem.crossOrigin = 'anonymous'
+          imageElem.src = fileDesc.assets.atlas.url
+          imageElem.addEventListener('load', () => {
             resolve({
               width: fileDesc.assets.atlas.width,
               height: fileDesc.assets.atlas.height,
               atlasSize: fileDesc.assets.atlas.atlasSize,
               frameDelays: fileDesc.assets.atlas.frameDelays,
               frameRange: [0, fileDesc.assets.atlas.frameDelays.length],
-              imageData: image,
+              imageData: imageElem,
             })
             resourceLoader.addWorkDone(fileDesc.id, 1)
           })
@@ -474,7 +459,7 @@ class FileImage extends BaseImage {
 
         loadBinfile(
           fileDesc.url,
-          data => {
+          (data) => {
             console.warn('Unpacking Gif client side:' + fileDesc.name)
 
             const start = performance.now()
@@ -486,9 +471,9 @@ class FileImage extends BaseImage {
             // do something with the frame data
             const sideLength = Math.sqrt(frames.length)
             const atlasSize = [sideLength, sideLength]
-            if (Math.fract(sideLength) > 0.0) {
+            if (MathFunctions.fract(sideLength) > 0.0) {
               atlasSize[0] = Math.floor(atlasSize[0] + 1)
-              if (Math.fract(sideLength) > 0.5) {
+              if (MathFunctions.fract(sideLength) > 0.5) {
                 atlasSize[1] = Math.floor(atlasSize[1] + 1)
               } else {
                 atlasSize[1] = Math.floor(atlasSize[1])
@@ -524,17 +509,10 @@ class FileImage extends BaseImage {
               // valueus are in the
               frameDelays.push(frame.delay / 10)
 
-              if (
-                !frameImageData ||
-                dims.width != frameImageData.width ||
-                dims.height != frameImageData.height
-              ) {
+              if (!frameImageData || dims.width != frameImageData.width || dims.height != frameImageData.height) {
                 tempCanvas.width = dims.width
                 tempCanvas.height = dims.height
-                frameImageData = tempCtx.createImageData(
-                  dims.width,
-                  dims.height
-                )
+                frameImageData = tempCtx.createImageData(dims.width, dims.height)
               }
 
               // set the patch data as an override
@@ -546,16 +524,11 @@ class FileImage extends BaseImage {
               // From what I can gather, 2 means we should clear the background first.
               // this seems towork with Gifs featuring moving transparency.
               // For fully opaque gifs, we should avoid this.
-              if (frame.disposalType == 2)
-                gifCtx.clearRect(0, 0, gifCanvas.width, gifCanvas.height)
+              if (frame.disposalType == 2) gifCtx.clearRect(0, 0, gifCanvas.width, gifCanvas.height)
 
               gifCtx.drawImage(tempCanvas, dims.left, dims.top)
 
-              atlasCtx.drawImage(
-                gifCanvas,
-                (index % atlasSize[0]) * width,
-                Math.floor(index / atlasSize[0]) * height
-              )
+              atlasCtx.drawImage(gifCanvas, (index % atlasSize[0]) * width, Math.floor(index / atlasSize[0]) * height)
             }
 
             for (let i = 0; i < frames.length; i++) {
@@ -564,12 +537,7 @@ class FileImage extends BaseImage {
             }
             resourceLoader.addWorkDone(fileDesc.id, 1)
 
-            const imageData = atlasCtx.getImageData(
-              0,
-              0,
-              atlasCanvas.width,
-              atlasCanvas.height
-            )
+            const imageData = atlasCtx.getImageData(0, 0, atlasCanvas.width, atlasCanvas.height)
 
             const ms = performance.now() - start
             console.log(`Decode GIF '${fileDesc.name}' time:` + ms)
@@ -583,10 +551,8 @@ class FileImage extends BaseImage {
               imageData,
             })
           },
-          statusText => {
-            console.warn(
-              'Unable to Load URL:' + statusText + ':' + fileDesc.url
-            )
+          (statusText) => {
+            console.warn('Unable to Load URL:' + statusText + ':' + fileDesc.url)
             reject()
           }
         )
@@ -595,7 +561,7 @@ class FileImage extends BaseImage {
       imageDataLibrary[fileDesc.id] = resourcePromise
     }
 
-    resourcePromise.then(unpackedData => {
+    resourcePromise.then((unpackedData) => {
       this.width = unpackedData.width
       this.height = unpackedData.height
 
@@ -606,7 +572,7 @@ class FileImage extends BaseImage {
 
       this.__data = unpackedData.imageData
 
-      this.getFrameDelay = index => {
+      this.getFrameDelay = (index) => {
         // Note: Frame delays are in centisecs (not millisecs which the timers will require.)
         return unpackedData.frameDelays[index] * 10
       }
@@ -696,10 +662,7 @@ class FileImage extends BaseImage {
       if (context.lod >= 0) {
         const suffixSt = filePath.lastIndexOf('.')
         if (suffixSt != -1) {
-          const lodPath =
-            filePath.substring(0, suffixSt) +
-            context.lod +
-            filePath.substring(suffixSt)
+          const lodPath = filePath.substring(0, suffixSt) + context.lod + filePath.substring(suffixSt)
           if (resourceLoader.resolveFilepath(lodPath)) {
             filePath = lodPath
           }
@@ -720,9 +683,7 @@ class FileImage2D extends FileImage {
    * @param {any} params - The params value.
    */
   constructor(filePath, params = {}) {
-    console.warn(
-      'FileImage2D is becoming deprecated in favor of simple FileImage'
-    )
+    console.warn('FileImage2D is becoming deprecated in favor of simple FileImage')
     super(filePath, params)
   }
 }

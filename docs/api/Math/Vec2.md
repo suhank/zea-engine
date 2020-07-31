@@ -1,9 +1,9 @@
 <a name="Vec2"></a>
 
 ### Vec2 
-Representing a Vec2(two-dimensional floating point vector).
+Representing a Vec2(two-dimensional floating point vector). A Vec2 is for representing 2 dimensional values, such as screen coordinates or pixel coordinates within an image.
 
-Vector classes in _zea-engine_ internally store values in [Float32Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array) and
+Math types internally store values in [Float32Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array) and
 expose getters and setters for the component values.
 
 
@@ -17,8 +17,10 @@ expose getters and setters for the component values.
     * [y](#y)
     * [set(x, y)](#set)
     * [setFromOther(other)](#setFromOther)
-    * [equal(other) ⇒ <code>boolean</code>](#equal)
-    * [notEquals(other) ⇒ <code>boolean</code>](#notEquals)
+    * ~~[.equal(other)](#Vec2+equal) ⇒ <code>boolean</code>~~
+    * [isEqual(other) ⇒ <code>boolean</code>](#isEqual)
+    * ~~[.notEquals(other)](#Vec2+notEquals) ⇒ <code>boolean</code>~~
+    * [notEqual(other) ⇒ <code>boolean</code>](#notEqual)
     * [approxEqual(other, precision) ⇒ <code>boolean</code>](#approxEqual)
     * [add(other)](#add)
     * [addInPlace(other)](#addInPlace)
@@ -53,30 +55,68 @@ expose getters and setters for the component values.
 ### new Vec2
 Creates a Vec2.
 
-The type of values of the `(x, y)` coordenates can be [Float32Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array),
+The type of values of the `(x, y)` coordinates can be [Float32Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array),
 [Uint32Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint32Array),
 [Int32Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array) and
 [ArrayBuffer](https://developer.mozilla.org/es/docs/Web/JavaScript/Referencia/Objetos_globales/ArrayBuffer).
 <br>
+
+```javascript
+ const myVec2 = new Vec2(1.2, 3.4)
+```
+
+Given an array of floats, create a Vec2 that wraps some part of it.
+```javascript
+ const floatArray = new Float32Array(6)
+ floatArray[0] = 1.2
+ floatArray[1] = 3.4
+ const myVec2 = new Vec2(floatArray)
+ console.log(myVec2.toJSON())
+```
+The resulting output
+```json
+ > { x:1.2, y:3.4 }
+```
+
+Given an array of floats, create a Vec2 that wraps some part of it.
+```javascript
+ const floatArray = new Float32Array(6)
+ floatArray[0] = 1.2
+ floatArray[1] = 3.4
+ floatArray[2] = 5.6
+ floatArray[3] = 7.8
+ floatArray[4] = 9.0
+ floatArray[5] = 1.9
+ const myVec2 = new Vec2(floatArray.buffer, 8)
+ console.log(myVec2.toJSON())
+```
+The resulting output
+```json
+ > { x:5.6, y:7.8 }
+```
+
 You can also pass one JSON object parameter.
+```javascript
+ const myVec2 = new Vec2({ x:1.2, y:3.4 })
+```
 
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| x | <code>Number</code> | <code>0</code> | The x value. Default is 0. |
+| x | <code>Number</code> \| <code>Float32Array</code> \| <code>Uint32Array</code> \| <code>json</code> | <code>0</code> | The x value. Default is 0. |
 | y | <code>Number</code> | <code>0</code> | The y value. Default is 0. |
 
 <a name="Vec2+x"></a>
 
 ### x 
-Getter for `x` value.
+Getter for `x` component.
 
 
-**Returns**: <code>number</code> - - Returns the x value.  
+**Returns**: <code>number</code> - - Returns the x component.  
 <a name="Vec2+x"></a>
 
 ### x
-Setter for `x` value.
+Setter for `x` component.
 
 
 
@@ -87,14 +127,14 @@ Setter for `x` value.
 <a name="Vec2+y"></a>
 
 ### y 
-Getter for `y` value.
+Getter for `y` component.
 
 
-**Returns**: <code>number</code> - - Returns the y value.  
+**Returns**: <code>number</code> - - Returns the y component.  
 <a name="Vec2+y"></a>
 
 ### y
-Setter for `y` value.
+Setter for `y` component.
 
 
 
@@ -111,8 +151,8 @@ Setter from scalar components.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| x | <code>number</code> | The x value. |
-| y | <code>number</code> | The y value. |
+| x | <code>number</code> | The x component. |
+| y | <code>number</code> | The y component. |
 
 <a name="Vec2+setFromOther"></a>
 
@@ -127,7 +167,21 @@ Replaces this Vec2 data with the Vec2 data passed as parameter.
 
 <a name="Vec2+equal"></a>
 
-### equal
+### ~~vec2.equal(other) ⇒ <code>boolean</code>~~
+***Deprecated***
+
+Checks if this Vec2 is exactly the same as another Vec2.
+
+
+**Returns**: <code>boolean</code> - - Returns `true` if are the same Vector, otherwise, `false`.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| other | [<code>Vec2</code>](#Vec2) | The other Vec2 to compare with. |
+
+<a name="Vec2+isEqual"></a>
+
+### isEqual
 Checks if this Vec2 is exactly the same as another Vec2.
 
 
@@ -139,7 +193,21 @@ Checks if this Vec2 is exactly the same as another Vec2.
 
 <a name="Vec2+notEquals"></a>
 
-### notEquals
+### ~~vec2.notEquals(other) ⇒ <code>boolean</code>~~
+***Deprecated***
+
+Checks if this Vec2 is different from another Vec2.
+
+
+**Returns**: <code>boolean</code> - - Returns `true` if the Vec2s are different, otherwise, `false`.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| other | [<code>Vec2</code>](#Vec2) | The other Vec2 to compare with. |
+
+<a name="Vec2+notEqual"></a>
+
+### notEqual
 Checks if this Vec2 is different from another Vec2.
 
 

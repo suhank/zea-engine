@@ -3,10 +3,11 @@ import { GLStandardGeomsPass } from './GLStandardGeomsPass.js'
 import { GLRenderer } from '../GLRenderer.js'
 
 import { GLGeomItemSet } from '../GLGeomItemSet.js'
+import MathFunctions from '../../Utilities/MathFunctions'
 
-/** Class representing GL shader materials. 
+/** Class representing GL shader materials.
  * @private
-*/
+ */
 class GLShaderMaterials {
   /**
    * Create a GL shader material.
@@ -58,9 +59,9 @@ class GLShaderMaterials {
   }
 }
 
-/** Class representing GL material geom item sets. 
+/** Class representing GL material geom item sets.
  * @private
-*/
+ */
 class GLMaterialGeomItemSets {
   /**
    * Create a GL material geom item set.
@@ -88,7 +89,7 @@ class GLMaterialGeomItemSets {
    * @private
    */
   __drawCountChanged(change) {
-    this.drawCount += change
+    this.drawCount += change.count
   }
 
   /**
@@ -98,9 +99,7 @@ class GLMaterialGeomItemSets {
   addGeomItemSet(geomItemSet) {
     if (this.geomItemSets.indexOf(geomItemSet) == -1) {
       this.geomItemSets.push(geomItemSet)
-
-      this.drawCount += geomItemSet.drawCount
-      geomItemSet.addListener('drawCountChanged', this.__drawCountChanged)
+      geomItemSet.on('drawCountChanged', this.__drawCountChanged)
     } else {
       console.warn('geomItemSet already added to GLMaterialGeomItemSets')
     }
@@ -113,7 +112,7 @@ class GLMaterialGeomItemSets {
   removeGeomItemSet(geomItemSet) {
     const index = this.geomItemSets.indexOf(geomItemSet)
     this.geomItemSets.splice(index, 1)
-    geomItemSet.removeListener('drawCountChanged', this.__drawCountChanged)
+    geomItemSet.off('drawCountChanged', this.__drawCountChanged)
   }
 
   /**
@@ -172,12 +171,13 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
    * @return {boolean} - The return value.
    */
   filterGeomItem(geomItem) {
-    const shaderClass = geomItem.getMaterial().getShaderClass()
+    const material = geomItem.getParameter('Material').getValue()
+    const shaderClass = material.getShaderClass()
     if (shaderClass) {
       if (shaderClass.isTransparent()) return false
       if (shaderClass.isOverlay()) return false
 
-      const baseColorParam = geomItem.getMaterial().getParameter('BaseColor')
+      const baseColorParam = material.getParameter('BaseColor')
       if (baseColorParam && baseColorParam.getValue().a < 1.0) return false
 
       return true
@@ -191,7 +191,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
    * @return {boolean} - The return value.
    */
   addGeomItem(geomItem) {
-    const material = geomItem.getMaterial()
+    const material = geomItem.getParameter('Material').getValue()
     const shaderName = material.getShaderName()
     const shaders = this.constructShaders(shaderName)
     let glshader = shaders.glshader
@@ -215,9 +215,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
       this.__glshadermaterials[shaderName] = glshaderMaterials
     }
 
-    let glmaterialGeomItemSets = glshaderMaterials.findMaterialGeomItemSets(
-      glmaterial
-    )
+    let glmaterialGeomItemSets = glshaderMaterials.findMaterialGeomItemSets(glmaterial)
     if (!glmaterialGeomItemSets) {
       glmaterialGeomItemSets = new GLMaterialGeomItemSets(glmaterial)
       glshaderMaterials.addMaterialGeomItemSets(glmaterialGeomItemSets)
@@ -263,17 +261,12 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
    */
   removeMaterial(material) {
     const glshaderMaterials = this.__glshadermaterials[material.hash]
-    if (
-      !glshaderMaterials ||
-      glshaderMaterials != material.getMetadata('glshaderMaterials')
-    ) {
+    if (!glshaderMaterials || glshaderMaterials != material.getMetadata('glshaderMaterials')) {
       console.warn('Material not found in pass')
       return
     }
 
-    const glmaterialGeomItemSets = material.getMetadata(
-      'glmaterialGeomItemSets'
-    )
+    const glmaterialGeomItemSets = material.getMetadata('glmaterialGeomItemSets')
     glshaderMaterials.removeMaterialGeomItemSets(glmaterialGeomItemSets)
   }
 
@@ -290,13 +283,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
         const glmaterialGeomItemSets = glshaderMaterials.getMaterialGeomItemSets()
         for (const glmaterialGeomItemSet of glmaterialGeomItemSets) {
           if (glmaterialGeomItemSet.drawCount == 0) continue
-          if (
-            this.bindMaterial(
-              renderstate,
-              glmaterialGeomItemSet.getGLMaterial(),
-              true
-            )
-          ) {
+          if (this.bindMaterial(renderstate, glmaterialGeomItemSet.getGLMaterial(), true)) {
             const glgeomitemsets = glmaterialGeomItemSet.getGeomItemSets()
             for (const gldrawitemset of glgeomitemsets) {
               gldrawitemset.draw(renderstate)
@@ -350,8 +337,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
     for (const shaderName in this.__glshadermaterials) {
       const glshaderMaterials = this.__glshadermaterials[shaderName]
       if (!glshaderMaterials.glselectedshader) continue
-      if (!this.bindShader(renderstate, glshaderMaterials.glselectedshader))
-        continue
+      if (!this.bindShader(renderstate, glshaderMaterials.glselectedshader)) continue
 
       const glmaterialGeomItemSets = glshaderMaterials.getMaterialGeomItemSets()
       for (const glmaterialGeomItemSet of glmaterialGeomItemSets) {
@@ -381,7 +367,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
       dist = geomData[3]
     } else {
       itemId = geomData[0] + (geomData[1] << 8)
-      dist = Math.decode16BitFloatFrom2xUInt8([geomData[2], geomData[3]])
+      dist = MathFunctions.decode16BitFloatFrom2xUInt8([geomData[2], geomData[3]])
     }
 
     const glgeomItem = this.__drawItems[itemId]
@@ -411,8 +397,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
     for (const shaderName in this.__glshadermaterials) {
       const glshaderMaterials = this.__glshadermaterials[shaderName]
       if (!glshaderMaterials.glgeomdatashader) continue
-      if (!this.bindShader(renderstate, glshaderMaterials.glgeomdatashader))
-        continue
+      if (!this.bindShader(renderstate, glshaderMaterials.glgeomdatashader)) continue
 
       {
         const unif = renderstate.unifs.floatGeomBuffer
@@ -429,21 +414,11 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
 
       const glmaterialGeomItemSets = glshaderMaterials.getMaterialGeomItemSets()
       for (const glmaterialGeomItemSet of glmaterialGeomItemSets) {
-        if (
-          glmaterialGeomItemSet.drawCount == 0 ||
-          !glmaterialGeomItemSet.visibleInGeomDataBuffer
-        )
-          continue
+        if (glmaterialGeomItemSet.drawCount == 0 || !glmaterialGeomItemSet.visibleInGeomDataBuffer) continue
         // Sometimes materials contain params required for rendering.
         // e.g. PointSize.
         // Note: avoid generating warnings for missing uniforms.
-        if (
-          this.bindMaterial(
-            renderstate,
-            glmaterialGeomItemSet.getGLMaterial(),
-            false
-          )
-        ) {
+        if (this.bindMaterial(renderstate, glmaterialGeomItemSet.getGLMaterial(), false)) {
           const glgeomitemsets = glmaterialGeomItemSet.getGeomItemSets()
           for (const gldrawitemset of glgeomitemsets) {
             gldrawitemset.draw(renderstate)

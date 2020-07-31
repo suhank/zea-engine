@@ -1,7 +1,10 @@
 <a name="BaseGeom"></a>
 
 ### BaseGeom 
-Class representing a base geometry.
+Represents a base class for 3D geometry items.
+
+**Events**
+* **boundingBoxChanged:** Triggered when the bounding box changes.
 
 
 **Extends**: <code>ParameterOwner</code>  
@@ -9,12 +12,12 @@ Class representing a base geometry.
 * [BaseGeom ⇐ <code>ParameterOwner</code>](#BaseGeom)
     * [new BaseGeom()](#new-BaseGeom)
     * [vertices](#vertices)
-    * [boundingBox ⇒ <code>any</code>](#boundingBox)
+    * [boundingBox ⇒ <code>Vec3</code>](#boundingBox)
     * [setDebugName(name)](#setDebugName)
     * [addVertexAttribute(name, dataType, defaultScalarValue) ⇒ <code>Attribute</code>](#addVertexAttribute)
-    * [hasVertexAttribute(name) ⇒ <code>any</code>](#hasVertexAttribute)
-    * [getVertexAttribute(name) ⇒ <code>any</code>](#getVertexAttribute)
-    * [getVertexAttributes(name) ⇒ <code>any</code>](#getVertexAttributes)
+    * [hasVertexAttribute(name) ⇒ <code>boolean</code>](#hasVertexAttribute)
+    * [getVertexAttribute(name) ⇒ <code>Attribute</code>](#getVertexAttribute)
+    * [getVertexAttributes() ⇒ <code>object</code>](#getVertexAttributes)
     * [numVertices() ⇒ <code>number</code>](#numVertices)
     * [getNumVertices() ⇒ <code>number</code>](#getNumVertices)
     * [setNumVertices(count)](#setNumVertices)
@@ -24,16 +27,16 @@ Class representing a base geometry.
     * [transformVertices(xfo)](#transformVertices)
     * [setBoundingBoxDirty()](#setBoundingBoxDirty)
     * [updateBoundingBox()](#updateBoundingBox)
-    * [getMetadata(key) ⇒ <code>any</code>](#getMetadata)
-    * [hasMetadata(key) ⇒ <code>any</code>](#hasMetadata)
+    * [getMetadata(key) ⇒ <code>object</code>](#getMetadata)
+    * [hasMetadata(key) ⇒ <code>boolean</code>](#hasMetadata)
     * [setMetadata(key, metaData)](#setMetadata)
     * [deleteMetadata(key)](#deleteMetadata)
-    * [genBuffers(opts) ⇒ <code>any</code>](#genBuffers)
+    * [genBuffers(opts) ⇒ <code>object</code>](#genBuffers)
     * [freeBuffers()](#freeBuffers)
     * [loadBaseGeomBinary(reader)](#loadBaseGeomBinary)
     * [toJSON(context, flags) ⇒ <code>object</code>](#toJSON)
     * [fromJSON(json, context, flags)](#fromJSON)
-    * [toString() ⇒ <code>any</code>](#toString)
+    * [toString() ⇒ <code>string</code>](#toString)
 
 <a name="new_BaseGeom_new"></a>
 
@@ -43,7 +46,7 @@ Create a base geom.
 <a name="BaseGeom+vertices"></a>
 
 ### vertices
-Getter for vertices.
+Returns 'positions' vertex attribute.
 
 
 <a name="BaseGeom+boundingBox"></a>
@@ -52,11 +55,11 @@ Getter for vertices.
 The boundingBox method.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>Vec3</code> - - The return value.  
 <a name="BaseGeom+setDebugName"></a>
 
 ### setDebugName
-The setDebugName method.
+Establishes a name for the geometry.
 
 
 
@@ -67,7 +70,7 @@ The setDebugName method.
 <a name="BaseGeom+addVertexAttribute"></a>
 
 ### addVertexAttribute
-The addVertexAttribute method.
+Adds a new vertex attribute to the geometry.
 
 
 **Returns**: <code>Attribute</code> - - Returns an attribute.  
@@ -75,16 +78,16 @@ The addVertexAttribute method.
 | Param | Type | Description |
 | --- | --- | --- |
 | name | <code>string</code> | The name of the vertex attribute. |
-| dataType | <code>any</code> | The dataType value. |
-| defaultScalarValue | <code>number</code> | Thedefault scalar value. |
+| dataType | <code>AttrValue</code> \| <code>number</code> | The dataType value. |
+| defaultScalarValue | <code>number</code> | The default scalar value. |
 
 <a name="BaseGeom+hasVertexAttribute"></a>
 
 ### hasVertexAttribute
-The hasVertexAttribute method.
+Checks if the the geometry has an attribute with the specified name.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>boolean</code> - - The return value.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -93,10 +96,10 @@ The hasVertexAttribute method.
 <a name="BaseGeom+getVertexAttribute"></a>
 
 ### getVertexAttribute
-The getVertexAttribute method.
+Returns vertex attribute with the specified name.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>Attribute</code> - - The return value.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -105,33 +108,28 @@ The getVertexAttribute method.
 <a name="BaseGeom+getVertexAttributes"></a>
 
 ### getVertexAttributes
-The getVertexAttributes method.
+Returns all vertex attributes in an object with their names.
 
 
-**Returns**: <code>any</code> - - The return value.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| name | <code>string</code> | The name of the vertex attribute. |
-
+**Returns**: <code>object</code> - - The return value.  
 <a name="BaseGeom+numVertices"></a>
 
 ### numVertices
-The numVertices method.
+Returns the number of vertex attributes.
 
 
 **Returns**: <code>number</code> - - The return value.  
 <a name="BaseGeom+getNumVertices"></a>
 
 ### getNumVertices
-The getNumVertices method.
+Returns the number of vertex attributes.
 
 
 **Returns**: <code>number</code> - - The return value.  
 <a name="BaseGeom+setNumVertices"></a>
 
 ### setNumVertices
-The setNumVertices method.
+Sets the number of vertices the geometry has.
 
 
 
@@ -173,7 +171,7 @@ The moveVertices method.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| delta | <code>any</code> | The delta value. |
+| delta | <code>Vec3</code> | The delta value. |
 
 <a name="BaseGeom+transformVertices"></a>
 
@@ -201,61 +199,61 @@ The updateBoundingBox method.
 <a name="BaseGeom+getMetadata"></a>
 
 ### getMetadata
-The getMetadata method.
+Returns metadata value of the specified name.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>object</code> - - The return value.  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| key | <code>any</code> | The key value. |
+| key | <code>string</code> | The key value. |
 
 <a name="BaseGeom+hasMetadata"></a>
 
 ### hasMetadata
-The hasMetadata method.
+Verifies if geometry's metadata contains a value with the specified key.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>boolean</code> - - The return value.  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| key | <code>any</code> | The key value. |
+| key | <code>string</code> | The key value. |
 
 <a name="BaseGeom+setMetadata"></a>
 
 ### setMetadata
-The setMetadata method.
+Sets metadata value to the geometry.
 
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| key | <code>any</code> | The key value. |
+| key | <code>string</code> | The key value. |
 | metaData | <code>object</code> | The metaData value. |
 
 <a name="BaseGeom+deleteMetadata"></a>
 
 ### deleteMetadata
-The deleteMetadata method.
+Removes metadata value from the geometry with the specified key.
 
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| key | <code>any</code> | The key value. |
+| key | <code>string</code> | The key value. |
 
 <a name="BaseGeom+genBuffers"></a>
 
 ### genBuffers
-The genBuffers method.
+Returns vertex attributes buffers and its count.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>object</code> - - The return value.  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| opts | <code>any</code> | The opts value. |
+| opts | <code>object</code> | The opts value. |
 
 <a name="BaseGeom+freeBuffers"></a>
 
@@ -266,18 +264,18 @@ The freeBuffers method.
 <a name="BaseGeom+loadBaseGeomBinary"></a>
 
 ### loadBaseGeomBinary
-The loadBaseGeomBinary method.
+Sets state of current Geometry(Including Vertices and Bounding Box) using a binary reader object.
 
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| reader | <code>object</code> | The reader value. |
+| reader | <code>BinReader</code> | The reader value. |
 
 <a name="BaseGeom+toJSON"></a>
 
 ### toJSON
-The toJSON method encodes this type as a json object for persistences.
+The toJSON method encodes this type as a json object for persistence.
 
 
 **Returns**: <code>object</code> - - Returns the json object.  
@@ -303,7 +301,7 @@ The fromJSON method decodes a json object for this type.
 <a name="BaseGeom+toString"></a>
 
 ### toString
-The toString method.
+Returns geometry data value in json format.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>string</code> - - The return value.  

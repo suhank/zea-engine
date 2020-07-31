@@ -1,7 +1,7 @@
 <a name="Version"></a>
 
 ### Version
-Class representing a version
+Class designed to store version data. Widely used in the zea engine for backwards compatibility.
 
 
 
@@ -16,7 +16,9 @@ Class representing a version
 <a name="new_Version_new"></a>
 
 ### new Version
-Create a bin reader.
+Creates a version.
+The version string should have the following structure: <br>
+major, minor and patch separated by a dot(`.`) and parts separated by a dash(`-`).
 
 
 | Param | Type | Description |

@@ -1,6 +1,6 @@
 /* eslint-disable new-cap */
 /* eslint-disable camelcase */
-import { JSON_stringify_fixedPrecision } from './Common.js'
+import StringFunctions from '../Utilities/StringFunctions'
 import { AttrValue } from './AttrValue.js'
 import { typeRegistry } from './TypeRegistry.js'
 import { Vec3 } from './Vec3.js'
@@ -36,7 +36,7 @@ class SphereType extends AttrValue {
   }
 
   /**
-   * Checks if this spehere intersects a box.
+   * Checks if this sphere intersects a box.
    *
    * @param {Box3} box - The box value.
    * @return {boolean} - The return value.
@@ -45,25 +45,11 @@ class SphereType extends AttrValue {
     return box.intersectsSphere(this)
   }
 
-  // ////////////////////////////////////////
-  // Static Methods
-
-  /**
-   * Creates a new sphere.
-   *
-   * @param {...object} ...args - The ...args param.
-   * @return {Sphere} - Returns a new sphere.
-   * @private
-   */
-  static create(...args) {
-    return new Sphere(...args)
-  }
-
   // ///////////////////////////
   // Persistence
 
   /**
-   * The toJSON method encodes this type as a json object for persistences.
+   * The toJSON method encodes this type as a json object for persistence.
    *
    * @return {object} - The json object.
    */
@@ -80,7 +66,21 @@ class SphereType extends AttrValue {
    * @return {string} - The return value.
    */
   toString() {
-    return JSON_stringify_fixedPrecision(this.toJSON())
+    return StringFunctions.stringifyJSONWithFixedPrecision(this.toJSON())
+  }
+
+  // ////////////////////////////////////////
+  // Static Methods
+
+  /**
+   * Creates a new sphere.
+   *
+   * @param {...object} ...args - The ...args param.
+   * @return {Sphere} - Returns a new sphere.
+   * @private
+   */
+  static create(...args) {
+    return new Sphere(...args)
   }
 }
 

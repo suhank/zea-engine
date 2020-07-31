@@ -2,6 +2,7 @@ import { sgFactory } from '../SGFactory.js'
 import { BaseImage } from '../BaseImage.js'
 
 /** Class representing a 2D video stream image.
+ * @private
  * @extends BaseImage
  */
 class VideoStreamImage2D extends BaseImage {
@@ -66,9 +67,9 @@ class VideoStreamImage2D extends BaseImage {
         audio: false,
         video,
       })
-      .then(mediaStream => {
+      .then((mediaStream) => {
         domElement.srcObject = mediaStream
-        domElement.onloadedmetadata = e => {
+        domElement.onloadedmetadata = (e) => {
           domElement.play()
 
           this.width = domElement.videoWidth
@@ -96,7 +97,7 @@ class VideoStreamImage2D extends BaseImage {
           timerCallback()
         }
       })
-      .catch(function(err) {
+      .catch(function (err) {
         /* handle the error */
       })
   }

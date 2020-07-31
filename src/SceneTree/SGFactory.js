@@ -1,4 +1,9 @@
-/** Class representing a SG factory. */
+/* eslint-disable new-cap */
+/* eslint-disable prefer-rest-params */
+/**
+ * Factory class designed build objects from persisted data.
+ * Class name as a string is required because on minification processes class names changes.
+ */
 class SGFactory {
   /**
    * Create a SG factory.
@@ -10,9 +15,10 @@ class SGFactory {
   }
 
   /**
-   * The registerClass method.
-   * @param {any} classname - The classname value.
-   * @param {any} cls - The cls value.
+   * Registers a new class in the factory.
+   *
+   * @param {string} classname - The classname value.
+   * @param {function} cls - The class function.
    */
   registerClass(classname, cls) {
     this.__registeredClasses[classname] = {
@@ -34,19 +40,21 @@ class SGFactory {
   }
 
   /**
-   * The getClass method.
-   * @param {any} classname - The classname value.
-   * @return {any} - The return value.
+   * Returns class function by specifying its name.
+   *
+   * @param {string} classname - The class name value.
+   * @return {function|undefined} - Returns class function if exists.
    */
   getClass(classname) {
-    if (this.__registeredClasses[classname])
-      return this.__registeredClasses[classname].cls
+    if (this.__registeredClasses[classname]) return this.__registeredClasses[classname].cls
   }
 
   /**
-   * The getClassName method.
-   * @param {any} inst - The inst value.
-   * @return {any} - The return value.
+   * Returns class name using passing an instantiated object.
+   * If it is not registered, the name in constructor is returned.
+   *
+   * @param {object} inst - Instanciated class
+   * @return {string} - Returns class name.
    */
   getClassName(inst) {
     const id = this.__classList.indexOf(inst.constructor)
@@ -60,9 +68,13 @@ class SGFactory {
   }
 
   /**
-   * The constructClass method.
-   * @param {any} classname - The classname value.
-   * @return {any} - The return value.
+   * Accepting the class name and N number of arguments, instantiates a new object of the specified class.
+   * If the class is not registered, then `null` is returned. <br>
+   * **Note:** Although the class arguments are not literally specified in the parameters,
+   * you can pass them(As many as needed).
+   *
+   * @param {string} classname - The classname value.
+   * @return {object|null} - The return value.
    */
   constructClass(classname /* , ...args */) {
     const classData = this.__registeredClasses[classname]

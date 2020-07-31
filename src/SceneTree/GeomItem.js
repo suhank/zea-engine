@@ -1,143 +1,161 @@
-import { Vec2, Xfo } from '../Math/index'
-import { ValueSetMode, XfoParameter, Mat4Parameter } from './Parameters/index'
+import { Xfo } from '../Math/index'
+import { XfoParameter, Mat4Parameter } from './Parameters/index'
 import { MaterialParameter } from './Parameters/MaterialParameter'
 import { GeometryParameter } from './Parameters/GeometryParameter'
 import { sgFactory } from './SGFactory.js'
 import { BaseGeomItem } from './BaseGeomItem.js'
+import { Operator } from './Operators/Operator.js'
+import { OperatorInput } from './Operators/OperatorInput.js'
+import { OperatorOutput } from './Operators/OperatorOutput.js'
 
-/** Class representing a geometry item in a scene tree.
+/** The operator the calculates the global Xfo of a TreeItem based on its parents GlobalXfo and its own LocalXfo
+ * @extends Operator
+ * @private
+ */
+class CalcGeomMatOperator extends Operator {
+  /**
+   * Create a gears operator.
+   * @param {string} name - The name value.
+   */
+  constructor(globalXfoParam, geomOffsetXfoParam, geomMatParam) {
+    super('CalcGeomMatOperator')
+    this.addInput(new OperatorInput('GlobalXfo')).setParam(globalXfoParam)
+    this.addInput(new OperatorInput('GeomOffsetXfo')).setParam(geomOffsetXfoParam)
+    this.addOutput(new OperatorOutput('GeomMat')).setParam(geomMatParam)
+  }
+
+  /**
+   * The evaluate method.
+   */
+  evaluate() {
+    const globalXfo = this.getInput('GlobalXfo').getValue()
+    const geomOffsetXfo = this.getInput('GeomOffsetXfo').getValue()
+    const geomMatOutput = this.getOutput('GeomMat')
+
+    const globalMat4 = globalXfo.toMat4()
+    const geomOffsetMat4 = geomOffsetXfo.toMat4()
+    geomMatOutput.setClean(globalMat4.multiply(geomOffsetMat4))
+  }
+}
+
+/**
+ * Class representing a geometry item in a scene tree.
+ *
+ * **Parameters**
+ * * **Geometry(`GeometryParameter`):** The geometry to be rendered for this GeomItem
+ * * **Material(`MaterialParameter`):** The Material to use when rendering this GeomItem
+ * * **GeomOffsetXfo(`XfoParameter`):** Provides an offset transformation that is applied only to the geometry and not inherited by child items.
+ * * **GeomMat(`Mat4Parameter`):** Calculated from the GlobalXfo and the GeomOffsetXfo, this matrix is provided to the renderer for rendering.
+ *
  * @extends BaseGeomItem
  */
 class GeomItem extends BaseGeomItem {
   /**
-   * Create a geometry item.
+   * Creates a geometry item.
    * @param {string} name - The name of the geom item.
-   * @param {any} geom - The geom value.
-   * @param {any} material - The material value.
+   * @param {BaseGeom} geometry - The geometry value.
+   * @param {Material} material - The material value.
    */
-  constructor(name, geom = undefined, material = undefined) {
+  constructor(name, geometry = undefined, material = undefined) {
     super(name)
 
-    this.__geomParam = this.insertParameter(
-      new GeometryParameter('Geometry'),
-      0
-    )
+    this.__geomParam = this.addParameter(new GeometryParameter('Geometry'))
     this._setBoundingBoxDirty = this._setBoundingBoxDirty.bind(this)
-    this.__geomParam.addListener('valueChanged', this._setBoundingBoxDirty)
-    this.__geomParam.addListener('boundingBoxChanged', 
-      this._setBoundingBoxDirty
-    )
-    this.__materialParam = this.insertParameter(
-      new MaterialParameter('Material'),
-      1
-    )
+    this.__geomParam.on('valueChanged', this._setBoundingBoxDirty)
+    this.__geomParam.on('boundingBoxChanged', this._setBoundingBoxDirty)
+    this.__materialParam = this.addParameter(new MaterialParameter('Material'))
     this.__paramMapping['material'] = this.getParameterIndex(this.__materialParam)
 
-    this.__lightmapCoordOffset = new Vec2()
-    this.__geomOffsetXfoParam = this.addParameter(
-      new XfoParameter('GeomOffsetXfo')
-    )
+    this.__geomOffsetXfoParam = this.addParameter(new XfoParameter('GeomOffsetXfo'))
     this.__geomMatParam = this.addParameter(new Mat4Parameter('GeomMat'))
 
-    this.__cleanGeomMat = this.__cleanGeomMat.bind(this)
-    this.__globalXfoParam.addListener('valueChanged', () => {
-      this.__geomMatParam.setDirty(this.__cleanGeomMat)
-    })
-    this.__geomOffsetXfoParam.addListener('valueChanged', () => {
-      this.__geomMatParam.setDirty(this.__cleanGeomMat)
-    })
-    this.__geomMatParam.addListener('valueChanged', event => {
-      this.emit('geomXfoChanged', event)
-    })
-    this.__materialParam.addListener('valueChanged', event => {
-      this.emit('materialAssigned', event)
-    })
-    this.__geomParam.addListener('valueChanged', event => {
-      this.emit('geomAssigned', event)
-    })
+    this.calcGeomMatOperator = new CalcGeomMatOperator(
+      this.__globalXfoParam,
+      this.__geomOffsetXfoParam,
+      this.__geomMatParam
+    )
 
-    if (geom) this.setGeometry(geom, ValueSetMode.DATA_LOAD)
-    if (material) this.setMaterial(material, ValueSetMode.DATA_LOAD)
-  }
-
-  /**
-   * The __cleanGeomMat method.
-   * @return {any} - The return value.
-   * @private
-   */
-  __cleanGeomMat() {
-    const globalMat4 = this.__globalXfoParam.getValue().toMat4()
-    const geomOffsetMat4 = this.__geomOffsetXfoParam.getValue().toMat4()
-    return globalMat4.multiply(geomOffsetMat4)
+    if (geometry) this.getParameter('Geometry').loadValue(geometry)
+    if (material) this.getParameter('Material').loadValue(material)
   }
 
   // ////////////////////////////////////////
   // Geometry
 
   /**
-   * Getter for geometry.
-   * @return {any} - The return value.
+   * Returns `Geometry` parameter value.
+   *
+   * @return {BaseGeom} - The return value.
    */
   getGeometry() {
+    console.warn(`deprecated. please use 'getParameter('Geometry').getValue`)
     return this.__geomParam.getValue()
   }
 
   /**
-   * Setter for geometry.
-   * @param {any} geom - The geom value.
-   * @param {number} mode - The mode value.
+   * Sets geometry object to `Geometry` parameter.
+   *
+   * @param {BaseGeom} geom - The geom value.
    */
-  setGeometry(geom, mode) {
-    this.__geomParam.setValue(geom, mode)
+  setGeometry(geom) {
+    console.warn(`deprecated. please use 'getParameter('Geometry').setValue`)
+    this.__geomParam.setValue(geom)
   }
 
   /**
-   * Getter for geometry (getGeom is deprectated. Please use getGeometry).
-   * @return {any} - The return value.
+   * Getter for geometry (getGeom is deprecated. Please use getGeometry).
+   *
+   * @deprecated
+   * @return {BaseGeom} - The return value.
    */
   getGeom() {
-    console.warn("getGeom is deprectated. Please use 'getGeometry'")
-    return this.getGeometry()
+    console.warn(`deprecated. please use 'getParameter('Geometry').getValue`)
+    return this.__geomParam.getValue()
   }
 
   /**
-   * Setter for geometry. (setGeom is deprectated. Please use setGeometry).
-   * @param {any} geom - The geom value.
-   * @return {any} - The return value.
+   * Setter for geometry. (setGeom is deprecated. Please use setGeometry).
+   *
+   * @deprecated
+   * @param {BaseGeom} geom - The geom value.
+   * @return {number} - The return value.
    */
   setGeom(geom) {
-    console.warn("setGeom is deprectated. Please use 'setGeometry'")
-    return this.setGeometry(geom)
+    console.warn("setGeom is deprecated. Please use 'getParameter('Geometry').setValue'")
+    return this.__geomParam.setValue(geom)
   }
 
   /**
-   * Getter for material.
+   * Returns the specified value of `Material`parameter.
+   *
    * @return {Material} - The return value.
    */
   getMaterial() {
+    console.warn(`deprecated. please use 'getParameter('Material').getValue`)
     return this.__materialParam.getValue()
   }
 
   /**
-   * Setter for material.
+   * Sets material object to `Material` parameter.
+   *
    * @param {Material} material - The material value.
-   * @param {number} mode - The mode value.
    */
-  setMaterial(material, mode) {
-    this.__materialParam.setValue(material, mode)
+  setMaterial(material) {
+    console.warn(`deprecated. please use 'getParameter('Material').setValue`)
+    this.__materialParam.setValue(material)
   }
 
   /**
    * The _cleanBoundingBox method.
    * @param {Box3} bbox - The bounding box value.
-   * @return {any} - The return value.
+   * @return {Box3} - The return value.
    * @private
    */
   _cleanBoundingBox(bbox) {
     bbox = super._cleanBoundingBox(bbox)
-    const geom = this.getGeometry()
+    const geom = this.__geomParam.getValue()
     if (geom) {
-      bbox.addBox3(geom.boundingBox, this.getGeomMat4())
+      bbox.addBox3(geom.getBoundingBox(), this.getGeomMat4())
     }
     return bbox
   }
@@ -146,7 +164,8 @@ class GeomItem extends BaseGeomItem {
   // Xfos
 
   /**
-   * Getter for the geom offset Xfo translation.
+   * Returns the offset `Xfo` object specified in `GeomOffsetXfo` parameter.
+   *
    * @return {Xfo} - Returns the geom offset Xfo.
    */
   getGeomOffsetXfo() {
@@ -154,7 +173,8 @@ class GeomItem extends BaseGeomItem {
   }
 
   /**
-   * Setter for the geom offset Xfo translation.
+   * Sets `Xfo` object to `GeomOffsetXfo` parameter.
+   *
    * @param {Xfo} xfo - The Xfo value.
    */
   setGeomOffsetXfo(xfo) {
@@ -162,41 +182,12 @@ class GeomItem extends BaseGeomItem {
   }
 
   /**
-   * Getter for the geom Xfo translation.
-   * @return {Xfo} - Returns the geom Xfo.
+   * Returns `Mat4` object value of `GeomMat` parameter.
+   *
+   * @return {Mat4} - Returns the geom Xfo.
    */
   getGeomMat4() {
     return this.__geomMatParam.getValue()
-  }
-
-  // ///////////////////////////
-  // Lightmaps
-
-  /**
-   * Getter for a lightmap name.
-   * @return {string} - Returns the lightmap name.
-   */
-  getLightmapName() {
-    return this.__lightmapName
-  }
-
-  /**
-   * Getter for a lightmap coordinate offset.
-   * @return {any} - Returns the lightmap coord offset.
-   */
-  getLightmapCoordsOffset() {
-    return this.__lightmapCoordOffset
-  }
-
-  /**
-   * The root asset item pushes its offset to the geom items in the
-   * tree. This offsets the light coords for each geom.
-   * @param {string} lightmapName - The lightmap name.
-   * @param {any} offset - The offset value.
-   */
-  applyAssetLightmapSettings(lightmapName, offset) {
-    this.__lightmap = lightmapName
-    this.__lightmapCoordOffset.addInPlace(offset)
   }
 
   // ///////////////////////////
@@ -204,6 +195,7 @@ class GeomItem extends BaseGeomItem {
 
   /**
    * The toJSON method encodes this type as a json object for persistences.
+   *
    * @param {object} context - The context value.
    * @param {number} flags - The flags value.
    * @return {object} - Returns the json object.
@@ -215,6 +207,7 @@ class GeomItem extends BaseGeomItem {
 
   /**
    * The fromJSON method decodes a json object for this type.
+   *
    * @param {object} json - The json object this item must decode.
    * @param {object} context - The context value.
    */
@@ -224,7 +217,8 @@ class GeomItem extends BaseGeomItem {
   }
 
   /**
-   * The readBinary method.
+   * Loads state of the Item from a binary object.
+   *
    * @param {object} reader - The reader value.
    * @param {object} context - The context value.
    */
@@ -233,26 +227,24 @@ class GeomItem extends BaseGeomItem {
 
     context.numGeomItems++
 
-    this.__lightmapName = context.assetItem.getName()
-
     const itemflags = reader.loadUInt8()
     const geomIndex = reader.loadUInt32()
     const geomLibrary = context.assetItem.getGeometryLibrary()
     const geom = geomLibrary.getGeom(geomIndex)
     if (geom) {
-      this.setGeometry(geom, ValueSetMode.DATA_LOAD)
+      this.getParameter('Geometry').loadValue(geom)
     } else {
       this.geomIndex = geomIndex
       const onGeomLoaded = (event) => {
         const { range } = event
         if (geomIndex >= range[0] && geomIndex < range[1]) {
           const geom = geomLibrary.getGeom(geomIndex)
-          if (geom) this.setGeometry(geom, ValueSetMode.DATA_LOAD)
+          if (geom) this.getParameter('Geometry').loadValue(geom)
           else console.warn('Geom not loaded:', this.getName())
-          geomLibrary.removeListenerById('rangeLoaded', connid)
+          geomLibrary.off('rangeLoaded', onGeomLoaded)
         }
       }
-      const connid = geomLibrary.addListener('rangeLoaded', onGeomLoaded)
+      geomLibrary.on('rangeLoaded', onGeomLoaded)
     }
 
     // this.setVisibility(j.visibility);
@@ -260,11 +252,7 @@ class GeomItem extends BaseGeomItem {
     const geomOffsetXfoFlag = 1 << 2
     if (itemflags & geomOffsetXfoFlag) {
       this.__geomOffsetXfoParam.setValue(
-        new Xfo(
-          reader.loadFloat32Vec3(),
-          reader.loadFloat32Quat(),
-          reader.loadFloat32Vec3()
-        )
+        new Xfo(reader.loadFloat32Vec3(), reader.loadFloat32Quat(), reader.loadFloat32Vec3())
       )
     }
 
@@ -277,27 +265,25 @@ class GeomItem extends BaseGeomItem {
         const materialName = reader.loadStr()
         let material = materialLibrary.getMaterial(materialName)
         if (!material) {
-          console.warn(
-            "Geom :'" + this.name + "' Material not found:" + materialName
-          )
+          console.warn("Geom :'" + this.name + "' Material not found:" + materialName)
           material = materialLibrary.getMaterial('Default')
         }
-        this.setMaterial(material, ValueSetMode.DATA_LOAD)
+        this.getParameter('Material').loadValue(material)
       } else {
         // Force nodes to have a material so we can see them.
-        this.setMaterial(
-          context.assetItem.getMaterialLibrary().getMaterial('Default'),
-          ValueSetMode.DATA_LOAD
-        )
+        this.getParameter('Material').loadValue(context.assetItem.getMaterialLibrary().getMaterial('Default'))
       }
     }
 
-    this.__lightmapCoordOffset = reader.loadFloat32Vec2()
+    // Note: deprecated value. Not sure if we need to load this here.
+    // I think not, but need to test first.
+    const lightmapCoordOffset = reader.loadFloat32Vec2()
   }
 
   /**
-   * The toString method.
-   * @return {any} - The return value.
+   * Returns string representation of current object's state.
+   *
+   * @return {string} - The return value.
    */
   toString() {
     return JSON.stringify(this.toJSON(), null, 2)
@@ -309,7 +295,8 @@ class GeomItem extends BaseGeomItem {
   /**
    * The clone method constructs a new geom item, copies its values
    * from this item and returns it.
-   * @param {number} flags - The flags value.
+   *
+   * @param {number} context - The flags value.
    * @return {GeomItem} - Returns a new cloned geom item.
    */
   clone(context) {
@@ -319,27 +306,27 @@ class GeomItem extends BaseGeomItem {
   }
 
   /**
-   * The copyFrom method.
+   * Copies current GeomItem with all its children.
+   *
    * @param {GeomItem} src - The geom item to copy from.
-   * @param {number} flags - The flags value.
+   * @param {number} context - The flags value.
    */
   copyFrom(src, context) {
     super.copyFrom(src, context)
-    this.__lightmapCoordOffset = src.__lightmapCoordOffset
 
-    if (!src.getGeometry() && src.geomIndex != -1) {
+    if (!src.getParameter('Geometry').getValue() && src.geomIndex != -1) {
       const geomLibrary = context.assetItem.getGeometryLibrary()
-      const geomIndex = src.geomIndex;
-      const onGeomLoaded = event => {
+      const geomIndex = src.geomIndex
+      const onGeomLoaded = (event) => {
         const { range } = event
         if (geomIndex >= range[0] && geomIndex < range[1]) {
           const geom = geomLibrary.getGeom(geomIndex)
-          if (geom) this.setGeometry(geom, ValueSetMode.DATA_LOAD)
+          if (geom) this.getParameter('Geometry').loadValue(geom)
           else console.warn('Geom not loaded:', this.getName())
-          geomLibrary.removeListenerById('rangeLoaded', connid)
+          geomLibrary.off('rangeLoaded', onGeomLoaded)
         }
       }
-      const connid = geomLibrary.addListener('rangeLoaded', onGeomLoaded)
+      geomLibrary.on('rangeLoaded', onGeomLoaded)
     }
 
     // Geom Xfo should be dirty after cloning.

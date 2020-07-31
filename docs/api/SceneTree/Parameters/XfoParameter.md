@@ -1,7 +1,14 @@
 <a name="XfoParameter"></a>
 
 ### XfoParameter 
-Class representing a Xfo transform parameter.
+Represents a specific type of parameter, that only stores `Xfo` transform values.
+
+```javascript
+const xfoParam = new XfoParameter('MyXfo', new Xfo(new Vec3(1.2, 3.4, 1)))
+//'myParameterOwnerItem' is an instance of a 'ParameterOwner' class.
+// Remember that only 'ParameterOwner' and classes that extend from it can host 'Parameter' objects.
+myParameterOwnerItem.addParameter(xfoParam)
+```
 
 
 **Extends**: <code>Parameter</code>  
@@ -19,7 +26,7 @@ Create a Xfo parameter.
 | Param | Type | Description |
 | --- | --- | --- |
 | name | <code>string</code> | The name of the Xfo parameter. |
-| value | <code>any</code> | The value of the parameter. |
+| value | <code>Xfo</code> | The value of the parameter. |
 
 <a name="XfoParameter+clone"></a>
 

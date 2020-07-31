@@ -1,7 +1,9 @@
 import { Color, Xfo, Box3 } from '../Math/index'
 import { sgFactory } from './SGFactory.js'
-import { ParamFlags, ValueSetMode, Parameter, BooleanParameter, XfoParameter } from './Parameters/index'
+import { ParamFlags, Parameter, BooleanParameter, XfoParameter } from './Parameters/index'
 import { ItemFlags, BaseItem } from './BaseItem.js'
+import { CalcGlobalXfoOperator } from './Operators/CalcGlobalXfoOperator.js'
+import { BoundingBoxParameter } from './Parameters/BoundingBoxParameter.js'
 
 // Defines used to explicity specify types for WebGL.
 const SaveFlags = {
@@ -24,32 +26,37 @@ let branchSelectionOutlineColor = selectionOutlineColor.lerp(new Color('white'),
 branchSelectionOutlineColor.a = 0.1
 
 /**
- * Class representing an Item in the scene tree with hierarchy capabilities(has children).
+ * Class representing an Item in the scene tree with hierarchy capabilities (has children).
+ * It has the capability to add and remove children.
  * <br>
  * <br>
- * **Parameters:**
+ * **Parameters**
  * * **Visible(`BooleanParameter`):** Shows/Hides the item.
- * * **LocalXfo(`XfoParameter`):**
- * * **GlobalXfo(`XfoParameter`):**
- * * **BoundingBox(`BoundingBox`):**
+ * * **LocalXfo(`XfoParameter`):** Specifies the offset of this tree item from its parent.
+ * * **GlobalXfo(`XfoParameter`):** Provides the computed world Xfo of this tree item.
+ * * **BoundingBox(`BoundingBox`):** Provides the bounding box for the tree item and all of its children in the 3d scene.
  *
  * **Events**
- * * **globalXfoChanged:**
- * * **visibilityChanged:**
- * * **highlightChanged:**
+ * * **globalXfoChanged:** _todo_
+ * * **visibilityChanged:** _todo_
+ * * **highlightChanged:** _todo_
  * * **childAdded:** Emitted when a item is added as a child.
  * * **childRemoved:** Emitted when an item is removed from the child nodes.
  * * **mouseDown:** Emitted when a mouseDown event happens in an item.
  * * **mouseUp:** Emitted when a mouseUp event happens in an item.
  * * **mouseMove:** Emitted when a mouseMove event happens in an item.
  * * **mouseEnter:** Emitted when a mouseEnter event happens in an item.
+ *
  * @extends {BaseItem}
  */
 class TreeItem extends BaseItem {
   /**
    * Creates a tree item with the specified name.
    *
-   * @param {string} name - The name of the tree item.
+   * @param {string} name - The name of the tree item. It's the identifier of the tree item.
+   * It's an identifier intended to be human readable.
+   * It's included in the path that we use to access a particular item.
+   * It's used to display it in the tree.
    */
   constructor(name) {
     super(name)
@@ -60,8 +67,14 @@ class TreeItem extends BaseItem {
     this.__highlights = []
 
     this.__childItems = []
-    this.__childItemsSignalIds = []
+    this.__childItemsEventHandlers = []
     this.__childItemsMapping = {}
+
+    this.onMouseDown = this.onMouseDown.bind(this)
+    this.onMouseUp = this.onMouseUp.bind(this)
+    this.onMouseMove = this.onMouseMove.bind(this)
+    this.onMouseEnter = this.onMouseEnter.bind(this)
+    this.onMouseLeave = this.onMouseLeave.bind(this)
 
     // /////////////////////////////////////
     // Add parameters.
@@ -69,45 +82,26 @@ class TreeItem extends BaseItem {
     this.__visibleParam = this.addParameter(new BooleanParameter('Visible', true))
     this.__localXfoParam = this.addParameter(new XfoParameter('LocalXfo', new Xfo()))
     this.__globalXfoParam = this.addParameter(new XfoParameter('GlobalXfo', new Xfo()))
-    this.__boundingBoxParam = this.addParameter(new Parameter('BoundingBox', new Box3()))
+    this.__boundingBoxParam = this.addParameter(new BoundingBoxParameter('BoundingBox', this))
 
     // Bind handlers
-    this._cleanGlobalXfo = this._cleanGlobalXfo.bind(this)
-    this._setGlobalXfoDirty = this._setGlobalXfoDirty.bind(this)
     this._setBoundingBoxDirty = this._setBoundingBoxDirty.bind(this)
-    this._cleanBoundingBox = this._cleanBoundingBox.bind(this)
+    this._childNameChanged = this._childNameChanged.bind(this)
 
-    this.__localXfoParam.on('valueChanged', this._setGlobalXfoDirty)
-
-    // Note: if the user changes the global xfo, we compute the
-    // local xfo when it is needed (generally when GlobalXfo is pulled)
-    // In the future, we will move this into the operators and ops
-    // will support 'inversion' where the param asks the op to
-    // proccess an input value.
-    const cleanLocalXfo = () => {
-      const globalXfo = this.__globalXfoParam.getValue()
-      if (this.__ownerItem !== undefined) return this.__ownerItem.getGlobalXfo().inverse().multiply(globalXfo)
-      else return globalXfo
-    }
+    this.globalXfoOp = new CalcGlobalXfoOperator(this.__globalXfoParam, this.__localXfoParam)
     this.__globalXfoParam.on('valueChanged', (event) => {
-      // Dirtiness propagates from Local to Global, but not vice versa.
-      // We need to move to using operators to invert values.
-      // This system of having ops connected in all directions
-      // is super difficult to debug.
-      if (event.mode != ValueSetMode.OPERATOR_DIRTIED) {
-        this.__localXfoParam.setDirty(cleanLocalXfo)
-      }
       this._setBoundingBoxDirty()
+      // Note: deprecate this event.
       this.emit('globalXfoChanged', event)
     })
 
     this.__visibleParam.on('valueChanged', () => {
       this.__visibleCounter += this.__visibleParam.getValue() ? 1 : -1
-      this.__updateVisiblity()
+      this.__updateVisibility()
     })
 
     // Note: one day we will remove the concept of 'selection' from the engine
-    // and keep it only in UX. to Select an item, we will add it to the selectino
+    // and keep it only in UX. to Select an item, we will add it to the selection
     // in the selection manager. Then the selection group will apply a highlight.
     this.on('selectedChanged', () => {
       if (this.__selected) {
@@ -189,7 +183,7 @@ class TreeItem extends BaseItem {
    * @private
    */
   _childFlagsChanged(flags) {
-    if ((flags & ParamFlags.USER_EDITED) != 0) this.setFlag(ItemFlags.USER_EDITED)
+    if ((flags & ItemFlags.USER_EDITED) != 0) this.setFlag(ItemFlags.USER_EDITED)
   }
 
   /**
@@ -207,32 +201,35 @@ class TreeItem extends BaseItem {
   // Parent Item
 
   /**
-   * Sets the owner(another TreeItem) of the current TreeItem.
+   * Sets the owner (another TreeItem) of the current TreeItem.
    * @param {TreeItem} parentItem - The parent item.
    */
   setOwner(parentItem) {
     if (this.__ownerItem) {
-      this.__ownerItem.removeListener('globalXfoChanged', this._setGlobalXfoDirty)
+      // this.__ownerItem.off('globalXfoChanged', this._setGlobalXfoDirty)
 
       // The effect of the invisible owner is removed.
-      if (!this.__ownerItem.getVisible()) this.__visibleCounter++
+      if (!this.__ownerItem.isVisible()) this.__visibleCounter++
       const index = this.__ownerItem.getChildIndex(this)
       if (index >= 0) this.__ownerItem.__unbindChild(index, this)
     }
 
     super.setOwner(parentItem)
 
-    this._setGlobalXfoDirty()
+    // this._setGlobalXfoDirty()
     if (this.__ownerItem) {
       this.setSelectable(this.__ownerItem.getSelectable(), true)
 
       // The effect of the invisible owner is added.
-      if (!this.__ownerItem.getVisible()) this.__visibleCounter--
+      if (!this.__ownerItem.isVisible()) this.__visibleCounter--
 
-      this.__ownerItem.addListener('globalXfoChanged', this._setGlobalXfoDirty)
+      this.globalXfoOp.getInput('ParentGlobal').setParam(this.__ownerItem.getParameter('GlobalXfo'))
+      // this.__ownerItem.on('globalXfoChanged', this._setGlobalXfoDirty)
+    } else {
+      this.globalXfoOp.getInput('ParentGlobal').setParam(null)
     }
 
-    this.__updateVisiblity()
+    this.__updateVisibility()
   }
 
   /**
@@ -268,82 +265,68 @@ class TreeItem extends BaseItem {
   // Global Matrix
 
   /**
+   * @deprecated
    * Returns the value of local Xfo transform parameter.
    *
    * @return {Xfo} - Returns the local Xfo.
    */
   getLocalXfo() {
+    console.warn(`Deprecated. use "getParameter('LocalXfo').getValue()"`)
     return this.__localXfoParam.getValue()
   }
 
   /**
+   * @deprecated
    * Sets the local Xfo transform parameter.
    *
    * @param {Xfo} xfo - The local xfo transform.
-   * @param {number} mode - The mode value. **See:** `ValueSetMode` enum in `Parameter` class.
    */
-  setLocalXfo(xfo, mode) {
-    this.__localXfoParam.setValue(xfo, mode)
+  setLocalXfo(xfo) {
+    console.warn(`Deprecated. use "getParameter('LocalXfo').setValue(xfo)"`)
+    this.__localXfoParam.setValue(xfo)
   }
 
   /**
+   * @deprecated
    * Returns the global Xfo transform.
    *
-   * @param {number} mode - The mode value.
    * @return {Xfo} - Returns the global Xfo.
    */
-  getGlobalXfo(mode) {
-    return this.__globalXfoParam.getValue(mode)
+  getGlobalXfo() {
+    console.warn(`Deprecated. use "getParameter('GlobalXfo').getValue()"`)
+    return this.__globalXfoParam.getValue()
   }
 
   /**
+   * @deprecated
    * Sets the global Xfo transform.
    * @param {Xfo} xfo - The global xfo transform.
-   * @param {number} mode - The mode value. **See:** `ValueSetMode` enum in `Parameter` class.
    */
-  setGlobalXfo(xfo, mode) {
-    const owner = this.getOwner()
-    if (owner) {
-      const parentXfo = owner.getGlobalXfo()
-      const localXfo = parentXfo.inverse().multiply(xfo)
-      this.__localXfoParam.setValue(localXfo, mode)
-    } else {
-      this.__globalXfoParam.setValue(xfo, mode)
-    }
-  }
-
-  /**
-   * The _cleanGlobalXfo method.
-   * @param {any} prevValue - The prevValue value.
-   * @return {any} - The return value.
-   * @private
-   */
-  _cleanGlobalXfo(prevValue) {
-    const parentItem = this.getParentItem()
-    const localXfo = this.__localXfoParam.getValue()
-    if (parentItem !== undefined) {
-      const parentGlobal = parentItem.getGlobalXfo()
-      return parentGlobal.multiply(localXfo)
-    } else return localXfo
-  }
-
-  /**
-   * The _setGlobalXfoDirty method.
-   * @private
-   */
-  _setGlobalXfoDirty() {
-    this.__globalXfoParam.setDirty(this._cleanGlobalXfo)
+  setGlobalXfo(xfo) {
+    console.warn(`Deprecated. use "getParameter('GlobalXfo').setValue(xfo)"`)
+    this.__globalXfoParam.setValue(xfo)
   }
 
   // ////////////////////////////////////////
   // Visibility
 
   /**
+   * @deprecated
    * Returns visible parameter value for current TreeItem.
    *
    * @return {boolean} - The visible param value.
    */
   getVisible() {
+    console.warn('Deprecated. Use #isVisible')
+    return this.isVisible()
+  }
+
+  /**
+   * Returns visible parameter value for current TreeItem.
+   *
+   * @return {boolean} - The visible param value.
+   */
+  isVisible() {
     // Should never be more than 1, but can be less than 0.
     return this.__visibleCounter > 0
   }
@@ -362,22 +345,22 @@ class TreeItem extends BaseItem {
    *
    * @param {number} val - The val param.
    */
-  propagateVisiblity(val) {
+  propagateVisibility(val) {
     this.__visibleCounter += val
-    this.__updateVisiblity()
+    this.__updateVisibility()
   }
 
   /**
-   * The __updateVisiblity method.
+   * The __updateVisibility method.
    * @return {boolean} - Returns a boolean.
    * @private
    */
-  __updateVisiblity() {
+  __updateVisibility() {
     const visible = this.__visibleCounter > 0
     if (visible != this.__visible) {
       this.__visible = visible
       for (const childItem of this.__childItems) {
-        if (childItem instanceof TreeItem) childItem.propagateVisiblity(this.__visible ? 1 : -1)
+        if (childItem instanceof TreeItem) childItem.propagateVisibility(this.__visible ? 1 : -1)
       }
       this.emit('visibilityChanged', { visible })
       return true
@@ -459,18 +442,18 @@ class TreeItem extends BaseItem {
    * @private
    */
   get boundingBox() {
-    console.warn("getter is deprectated. Please use 'getBoundingBox'")
+    console.warn("getter is deprecated. Please use 'getBoundingBox'")
     return this.getBoundingBox()
   }
 
   /**
-   * Returns bounding box parameter value.
    * @deprecated
+   * Returns bounding box parameter value.
    * @private
    * @return {Box3} - The return value.
    */
   getBoundingBox() {
-    console.warn("getter is deprectated. Please use 'getParameter('BoundingBox').getValue()'")
+    console.warn("getter is deprecated. Please use 'getParameter('BoundingBox').getValue()'")
     return this.__boundingBoxParam.getValue()
   }
 
@@ -484,9 +467,9 @@ class TreeItem extends BaseItem {
     bbox.reset()
     this.__childItems.forEach((childItem) => {
       if (childItem instanceof TreeItem)
-        if (childItem.getVisible() && !childItem.testFlag(ItemFlags.IGNORE_BBOX)) {
-          // console.log(" - ", childItem.constructor.name, childItem.getName(), childItem.getGlobalXfo().sc.x, childItem.getBoundingBox().toString())
-          bbox.addBox3(childItem.getBoundingBox())
+        if (childItem.isVisible() && !childItem.testFlag(ItemFlags.IGNORE_BBOX)) {
+          // console.log(" - ", childItem.constructor.name, childItem.getName(), childItem.getParameter('GlobalXfo').getValue().sc.x, childItem.getBoundingBox().toString())
+          bbox.addBox3(childItem.getParameter('BoundingBox').getValue())
         }
     })
     // console.log(this.getName(), bbox.toString())
@@ -508,7 +491,7 @@ class TreeItem extends BaseItem {
   _setBoundingBoxDirty() {
     if (this.__boundingBoxParam) {
       // Will cause boundingChanged to emit
-      this.__boundingBoxParam.setDirty(this._cleanBoundingBox)
+      this.__boundingBoxParam.setDirty() //this._cleanBoundingBox)
     }
   }
 
@@ -534,7 +517,7 @@ class TreeItem extends BaseItem {
    * @return {number} - The return value.
    */
   numChildren() {
-    console.warn('Deprecated method. Please use getNumChildren')
+    console.warn('Deprecated. Use #getNumChildren')
     return this.__childItems.length
   }
 
@@ -602,6 +585,18 @@ class TreeItem extends BaseItem {
   }
 
   /**
+   * The _childNameChanged event hander.
+   * @param {any} start - The start value.
+   * @private
+   */
+  _childNameChanged(event) {
+    // Update the acceleration structure.
+    const index = this.__childItemsMapping[event.oldName]
+    delete this.__childItemsMapping[event.oldName]
+    this.__childItemsMapping[event.newName] = index
+  }
+
+  /**
    * Inserts a child. It accepts all kind of `BaseItem`, not only `TreeItem`.
    *
    * @param {BaseItem} childItem - The child BaseItem to insert.
@@ -623,34 +618,27 @@ class TreeItem extends BaseItem {
       throw new Error('Object is is not a tree item :' + childItem.constructor.name)
     }
 
-    const signalIds = {}
-    signalIds.nameChangedId = childItem.addListener('nameChanged', (event) => {
-      // Update the acceleration structure.
-      const index = this.__childItemsMapping[event.oldName]
-      delete this.__childItemsMapping[event.oldName]
-      this.__childItemsMapping[event.newName] = index
-    })
+    childItem.on('nameChanged', this._childNameChanged)
 
     let newLocalXfo
     if (childItem instanceof TreeItem) {
       if (maintainXfo) {
-        newLocalXfo = this.getGlobalXfo().inverse().multiply(childItem.getGlobalXfo())
+        const globalXfo = this.getParameter('GlobalXfo').getValue()
+        const childGlobalXfo = childItem.getParameter('GlobalXfo').getValue()
+        newLocalXfo = globalXfo.inverse().multiply(childGlobalXfo)
       }
-      signalIds.bboxChangedId = childItem.addListener('boundingChanged', () => {
-        this._setBoundingBoxDirty()
-      })
-      signalIds.visChangedId = childItem.addListener('visibilityChanged', this._setBoundingBoxDirty)
+      childItem.on('boundingChanged', this._setBoundingBoxDirty)
+      childItem.on('visibilityChanged', this._setBoundingBoxDirty)
     }
 
     this.__childItems.splice(index, 0, childItem)
-    this.__childItemsSignalIds.splice(index, 0, signalIds)
     this.__childItemsMapping[childItem.getName()] = index
     this.__updateMapping(index)
 
     childItem.setOwner(this)
 
     if (childItem instanceof TreeItem) {
-      if (maintainXfo) childItem.setLocalXfo(newLocalXfo)
+      if (maintainXfo) childItem.getParameter('LocalXfo').setValue(newLocalXfo)
       this._setBoundingBoxDirty()
     }
 
@@ -675,12 +663,12 @@ class TreeItem extends BaseItem {
    * @param {boolean} fixCollisions - Modify the name of the item to avoid
    * name collisions with other chidrent of the same parent.
    * If false, an exception wll be thrown instead if a name collision occurs.
-   * @return {number} - The index of the child item in this items children array.
+   * @return {BaseItem} childItem - The child BaseItem that was added.
    */
   addChild(childItem, maintainXfo = true, fixCollisions = true) {
     const index = this.__childItems.length
     this.insertChild(childItem, index, maintainXfo, fixCollisions)
-    return index
+    return childItem
   }
 
   /**
@@ -729,16 +717,15 @@ class TreeItem extends BaseItem {
    * @private
    */
   __unbindChild(index, childItem) {
-    const signalIds = this.__childItemsSignalIds[index]
-    childItem.removeListenerById('nameChanged', signalIds.nameChangedId)
+    childItem.off('nameChanged', this._childNameChanged)
 
     if (childItem instanceof TreeItem) {
-      childItem.removeListenerById('boundingChanged', signalIds.bboxChangedId)
-      childItem.removeListenerById('visibilityChanged', signalIds.visChangedId)
+      childItem.off('boundingChanged', this._setBoundingBoxDirty)
+      childItem.off('visibilityChanged', this._setBoundingBoxDirty)
     }
 
     this.__childItems.splice(index, 1)
-    this.__childItemsSignalIds.splice(index, 1)
+    this.__childItemsEventHandlers.splice(index, 1)
     delete this.__childItemsMapping[childItem.getName()]
     this.__updateMapping(index)
 
@@ -756,10 +743,13 @@ class TreeItem extends BaseItem {
    */
   removeChild(index) {
     const childItem = this.__childItems[index]
-    if (childItem) {
-      this.__unbindChild(index, childItem)
-      childItem.setOwner(undefined)
+
+    if (!childItem) {
+      return
     }
+
+    this.__unbindChild(index, childItem)
+    childItem.setOwner(undefined)
   }
 
   /**
@@ -777,13 +767,12 @@ class TreeItem extends BaseItem {
   }
 
   /**
-   * Remove a child BasItem by passing in actual item object.
+   * @deprecated
    *
    * @param {BaseItem} childItem - The child TreeItem to remove.
-   * @deprecated
    */
   removeChildByHandle(childItem) {
-    console.warn('Deprecated method. Please use removeChild')
+    console.warn('Deprecated. Use #removeChild')
     const index = this.__childItems.indexOf(childItem)
     if (index == -1) throw new Error('Error in removeChildByHandle. Child not found:' + childItem.getName())
     this.removeChild(index)
@@ -811,14 +800,14 @@ class TreeItem extends BaseItem {
   }
 
   /**
+   * @deprecated
    * Returns index position of the specified item.
    *
-   * @deprecated
    * @param {object} childItem - The child TreeItem value.
    * @return {number} - The return value.
    */
   indexOfChild(childItem) {
-    console.warn('Deprecated method. Please use getChildIndex')
+    console.warn('Deprecated Use #getChildIndex')
     return this.getChildIndex(childItem)
   }
 
@@ -906,12 +895,17 @@ class TreeItem extends BaseItem {
         if (childItem) __t(childItem, depth + 1)
       }
     }
+
     const __t = (treeItem, depth) => {
       if (callback(treeItem, depth) == false) return false
       if (treeItem instanceof TreeItem) __c(treeItem, depth)
     }
-    if (includeThis) __t(this, 1)
-    else __c(this, 0)
+
+    if (includeThis) {
+      __t(this, 1)
+    } else {
+      __c(this, 0)
+    }
   }
 
   // ///////////////////////
@@ -992,7 +986,8 @@ class TreeItem extends BaseItem {
   // Persistence
 
   /**
-   * The toJSON method encodes this type as a json object for persistences.
+   * The toJSON method serializes this instance as a JSON.
+   * It can be used for persistence, data transfer, etc.
    *
    * @param {object} context - The context value.
    * @param {number} flags - The flags value.
@@ -1024,11 +1019,12 @@ class TreeItem extends BaseItem {
         }
       }
     }
+
     return j
   }
 
   /**
-   * The fromJSON method decodes a json object for this type.
+   * The fromJSON method takes a JSON and deserializes into an instance of this type.
    *
    * @param {object} j - The json object this item must decode.
    * @param {object} context - The context value.
@@ -1037,7 +1033,7 @@ class TreeItem extends BaseItem {
   fromJSON(j, context, flags) {
     super.fromJSON(j, context, flags)
 
-    context.numTreeItems++
+    if (context && !Number.isNaN(context.numTreeItems)) context.numTreeItems++
 
     // Note: JSON data is only used to store user edits, so
     // parameters loaded from JSON are considered user edited.
@@ -1147,15 +1143,13 @@ class TreeItem extends BaseItem {
       xfo.ori = reader.loadFloat32Quat()
       xfo.sc.set(reader.loadFloat32())
       // console.log(this.getPath() + " TreeItem:" + xfo.toString());
-      this.__localXfoParam.setValue(xfo, ValueSetMode.DATA_LOAD)
+      this.__localXfoParam.loadValue(xfo)
     }
 
     const bboxFlag = 1 << 3
-    if (itemflags & bboxFlag)
-      this.__boundingBoxParam.setValue(
-        new Box3(reader.loadFloat32Vec3(), reader.loadFloat32Vec3()),
-        ValueSetMode.DATA_LOAD
-      )
+    if (itemflags & bboxFlag) {
+      this.__boundingBoxParam.loadValue(new Box3(reader.loadFloat32Vec3(), reader.loadFloat32Vec3()))
+    }
 
     const numChildren = reader.loadUInt32()
     if (numChildren > 0) {
@@ -1237,7 +1231,7 @@ class TreeItem extends BaseItem {
     src.getChildren().forEach((srcChildItem) => {
       if (srcChildItem) this.addChild(srcChildItem.clone(flags), false, false)
       // if(flags& CloneFlags.CLONE_FLAG_INSTANCED_TREE) {
-      //     src.addListener('childAdded', (childItem, index)=>{
+      //     src.on('childAdded', (childItem, index)=>{
       //         this.addChild(childItem.clone(flags), false);
       //     })
       // }

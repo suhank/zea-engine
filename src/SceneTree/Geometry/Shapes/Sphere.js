@@ -4,31 +4,35 @@ import { Mesh } from '../Mesh.js'
 import { NumberParameter } from '../../Parameters/NumberParameter.js'
 import { sgFactory } from '../../SGFactory.js'
 
-/** A class for generating a sphere geometry.
+/**
+ * A class for generating a sphere geometry.
+ *
+ * ```
+ * const sphere = new Sphere(1.4, 13)
+ * ```
+ *
+ * **Parameters**
+ * * **radius(`NumberParameter`):** Radius of the sphere.
+ * * **sides(`NumberParameter`):** Specifies the number of subdivisions around the `Z` axis.
+ * * **loops(`NumberParameter`):** Specifies the number of subdivisions(stacks) along the `Z` axis.
+ *
  * @extends Mesh
  */
 class Sphere extends Mesh {
   /**
-   * Create a sphere.
-   * @param {number} radius - The radius of the sphere.
-   * @param {number} sides - The number of sides.
-   * @param {number} loops - The number of loops.
+   * Creates an instance of Sphere.
+   * @param {number} [radius=1.0] - The radius of the sphere.
+   * @param {number} [sides=12] - The number of sides.
+   * @param {number} [loops=12] - The number of loops.
    */
   constructor(radius = 1.0, sides = 12, loops = 12) {
     super()
 
-    if (isNaN(radius) || isNaN(sides) || isNaN(loops))
-      throw new Error('Invalid geom args')
+    if (isNaN(radius) || isNaN(sides) || isNaN(loops)) throw new Error('Invalid geom args')
 
-    this.__radiusParam = this.addParameter(
-      new NumberParameter('radius', radius)
-    )
-    this.__sidesParam = this.addParameter(
-      new NumberParameter('sides', sides >= 3 ? sides : 3, [3, 200], 1)
-    )
-    this.__loopsParam = this.addParameter(
-      new NumberParameter('loops', loops >= 3 ? loops : 3, [3, 200], 1)
-    )
+    this.__radiusParam = this.addParameter(new NumberParameter('radius', radius))
+    this.__sidesParam = this.addParameter(new NumberParameter('sides', sides >= 3 ? sides : 3, [3, 200], 1))
+    this.__loopsParam = this.addParameter(new NumberParameter('loops', loops >= 3 ? loops : 3, [3, 200], 1))
 
     this.addVertexAttribute('texCoords', Vec2)
     this.addVertexAttribute('normals', Vec3)
@@ -40,9 +44,9 @@ class Sphere extends Mesh {
     const rebuild = () => {
       this.__rebuild()
     }
-    this.__radiusParam.addListener('valueChanged', resize)
-    this.__sidesParam.addListener('valueChanged', rebuild)
-    this.__loopsParam.addListener('valueChanged', rebuild)
+    this.__radiusParam.on('valueChanged', resize)
+    this.__sidesParam.on('valueChanged', rebuild)
+    this.__loopsParam.on('valueChanged', rebuild)
   }
 
   /**
@@ -63,10 +67,11 @@ class Sphere extends Mesh {
     // ////////////////////////////
     // Set Vertex Positions
 
+    const positions = this.getVertexAttribute('positions')
     const normals = this.getVertexAttribute('normals')
     const normal = new Vec3(0.0, 0.0, 1.0)
     let vertex = 0
-    this.getVertex(vertex).set(0.0, 0.0, radius)
+    positions.getValueRef(vertex).set(0.0, 0.0, radius)
     normals.getValueRef(vertex).set(0.0, 0.0, 1.0)
     vertex++
 
@@ -74,19 +79,15 @@ class Sphere extends Mesh {
       const theta = ((i + 1) / (nbLoops + 1)) * Math.PI
       for (let j = 0; j < nbSides; j++) {
         const phi = (j / nbSides) * 2.0 * Math.PI
-        normal.set(
-          Math.sin(theta) * Math.cos(phi),
-          Math.sin(theta) * Math.sin(phi),
-          Math.cos(theta)
-        )
+        normal.set(Math.sin(theta) * Math.cos(phi), Math.sin(theta) * Math.sin(phi), Math.cos(theta))
 
         // Set positions and normals at the same time.
-        this.getVertex(vertex).setFromOther(normal.scale(radius))
+        positions.getValueRef(vertex).setFromOther(normal.scale(radius))
         normals.getValueRef(vertex).setFromOther(normal)
         vertex++
       }
     }
-    this.getVertex(vertex).set(0.0, 0.0, -radius)
+    positions.getValueRef(vertex).set(0.0, 0.0, -radius)
     normals.getValueRef(vertex).set(0.0, 0.0, -1.0)
     vertex++
 
@@ -100,7 +101,7 @@ class Sphere extends Mesh {
       const v0 = 0
       const v1 = ((j + 1) % nbSides) + 1
       const v2 = j + 1
-      this.setFaceVertexIndices(faceIndex, v0, v1, v2)
+      this.setFaceVertexIndices(faceIndex, [v0, v1, v2])
 
       const uv0 = new Vec2(0.5, 0.0)
       const uv1 = new Vec2(1.0 - (j + 1) / nbSides, 0.0)
@@ -116,7 +117,7 @@ class Sphere extends Mesh {
       const v0 = numVertices - 1
       const v1 = nbSides * (nbLoops - 1) + j + 1
       const v2 = nbSides * (nbLoops - 1) + ((j + 1) % nbSides) + 1
-      this.setFaceVertexIndices(faceIndex, v0, v1, v2)
+      this.setFaceVertexIndices(faceIndex, [v0, v1, v2])
 
       const uv0 = new Vec2(1.0 - j / nbSides, nbLoops / (nbLoops + 1))
       const uv1 = new Vec2(1.0 - (j + 1) / nbSides, nbLoops / (nbLoops + 1))
@@ -134,28 +135,12 @@ class Sphere extends Mesh {
         const v1 = nbSides * i + ((j + 1) % nbSides) + 1
         const v2 = nbSides * (i + 1) + ((j + 1) % nbSides) + 1
         const v3 = nbSides * (i + 1) + j + 1
-        this.setFaceVertexIndices(faceIndex, v0, v1, v2, v3)
+        this.setFaceVertexIndices(faceIndex, [v0, v1, v2, v3])
 
-        texCoords.setFaceVertexValue(
-          faceIndex,
-          0,
-          new Vec2(i / nbLoops, j / nbLoops)
-        )
-        texCoords.setFaceVertexValue(
-          faceIndex,
-          1,
-          new Vec2(i / nbLoops, (j + 1) / nbLoops)
-        )
-        texCoords.setFaceVertexValue(
-          faceIndex,
-          2,
-          new Vec2((i + 1) / nbLoops, (j + 1) / nbLoops)
-        )
-        texCoords.setFaceVertexValue(
-          faceIndex,
-          3,
-          new Vec2((i + 1) / nbLoops, j / nbLoops)
-        )
+        texCoords.setFaceVertexValue(faceIndex, 0, new Vec2(i / nbLoops, j / nbLoops))
+        texCoords.setFaceVertexValue(faceIndex, 1, new Vec2(i / nbLoops, (j + 1) / nbLoops))
+        texCoords.setFaceVertexValue(faceIndex, 2, new Vec2((i + 1) / nbLoops, (j + 1) / nbLoops))
+        texCoords.setFaceVertexValue(faceIndex, 3, new Vec2((i + 1) / nbLoops, j / nbLoops))
         faceIndex++
       }
     }
@@ -175,27 +160,24 @@ class Sphere extends Mesh {
 
     // ////////////////////////////
     // Set Vertex Positions
+    const positions = this.getVertexAttribute('positions')
     let vertex = 0
     const normal = new Vec3(0.0, 0.0, 1.0)
-    this.getVertex(vertex).set(0.0, 0.0, radius)
+    positions.getValueRef(vertex).set(0.0, 0.0, radius)
     vertex++
 
     for (let i = 0; i < nbLoops; i++) {
       const theta = ((i + 1) / (nbLoops + 1)) * Math.PI
       for (let j = 0; j < nbSides; j++) {
         const phi = (j / nbSides) * 2.0 * Math.PI
-        normal.set(
-          Math.sin(theta) * Math.cos(phi),
-          Math.sin(theta) * Math.sin(phi),
-          Math.cos(theta)
-        )
+        normal.set(Math.sin(theta) * Math.cos(phi), Math.sin(theta) * Math.sin(phi), Math.cos(theta))
 
         // Set positions and normals at the same time.
-        this.getVertex(vertex).setFromOther(normal.scale(radius))
+        positions.getValueRef(vertex).setFromOther(normal.scale(radius))
         vertex++
       }
     }
-    this.getVertex(vertex).set(0.0, 0.0, -radius)
+    positions.getValueRef(vertex).set(0.0, 0.0, -radius)
     vertex++
 
     this.setBoundingBoxDirty()

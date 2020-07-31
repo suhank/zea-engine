@@ -3,6 +3,15 @@
 ### Cuboid 
 A class for generating a cuboid geometry.
 
+**Parameters**
+* **x(`NumberParameter`):** Length of the line cuboid along the `X` axis
+* **y(`NumberParameter`):** Length of the line cuboid along the `Y` axis
+* **z(`NumberParameter`):** Length of the line cuboid along the `Z` axis
+* **BaseZAtZero(`NumberParameter`):** Property to start or not `Z` axis from position `0.
+
+**Events**
+* **geomDataChanged:** Triggered whenever the length of the cuboid changes in `X`, `Y` or `Z` axes
+
 
 **Extends**: <code>Mesh</code>  
 
@@ -53,7 +62,7 @@ Setter for the base size of the cuboid.
 <a name="Cuboid+toJSON"></a>
 
 ### toJSON
-The toJSON method encodes this type as a json object for persistences.
+The toJSON method encodes this type as a json object for persistence.
 
 
 **Returns**: <code>object</code> - - Returns the json object.  
