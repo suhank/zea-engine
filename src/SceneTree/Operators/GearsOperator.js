@@ -130,6 +130,7 @@ class GearsOperator extends Operator {
    * The evaluate method.
    */
   evaluate() {
+    // console.log(`Operator: evaluate: ${this.getName()}`)
     const revolutions = this.__revolutionsParam.getValue()
     const gears = this.__gearsParam.getValue()
     for (const gear of gears) {

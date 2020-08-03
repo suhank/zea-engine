@@ -401,7 +401,7 @@ class ObjAsset extends AssetItem {
     }
 
     const loadObjData = () => {
-      const file = this.objfileParam.getFileDesc()
+      const file = this.objfileParam.getFile()
       const stem = this.objfileParam.getStem()
       resourceLoader.addWork(stem, 2)
       loadTextfile(file.url, (fileData) => {

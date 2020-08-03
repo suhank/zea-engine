@@ -254,6 +254,10 @@ class Operator extends BaseItem {
     this.__inputs.forEach((input) => input.reattach())
     this.__outputs.forEach((output) => output.reattach())
   }
+
+  rebind() {
+    this.__outputs.forEach((output) => output.rebind())
+  }
 }
 
 export { Operator }

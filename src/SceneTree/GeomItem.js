@@ -239,7 +239,7 @@ class GeomItem extends BaseGeomItem {
         const { range } = event
         if (geomIndex >= range[0] && geomIndex < range[1]) {
           const geom = geomLibrary.getGeom(geomIndex)
-          if (geom) this.getParameter('Geometry').loadValue(geom)
+          if (geom) this.getParameter('Geometry').setValue(geom)
           else console.warn('Geom not loaded:', this.getName())
           geomLibrary.off('rangeLoaded', onGeomLoaded)
         }
@@ -258,7 +258,7 @@ class GeomItem extends BaseGeomItem {
 
     // BaseGeomItem now handles loading materials.
     // if (context.version < 4) {
-    if (context.versions['zea-engine'].lessThan([0, 0, 4])) {
+    if (context.versions['zea-engine'].compare([0, 0, 4]) < 0) {
       const materialFlag = 1 << 3
       if (itemflags & materialFlag) {
         const materialLibrary = context.assetItem.getMaterialLibrary()
