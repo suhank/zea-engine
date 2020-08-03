@@ -21,19 +21,19 @@ Web applications leverage the the web browser, already available on all modern d
 
 ## Getting Started
 
-To gain a deeper understanding of the engine and how it works, please review the [Architecture Overview](arch-overview.md).
+To gain a deeper understanding of the engine and how it works, please read the [Architecture Overview](arch-overview.md).
 
 If you are new to web development make sure to read the [Recommended Web Development Tools](getting-started/development-setup.md) to get setup.
 
-If it's your first time using the engine, make sure you have the [Getting Started Using the Engine](getting-started/get-started-with-engine.md) to learn how to work with the engine.
+If it's your first time using the engine, make sure you read the [Getting Started Using the Engine](getting-started/get-started-with-engine.md) to learn how to work with the engine.
 
 If you are primarily interested in working with CAD data, you can find information on the Zea CAD Plugin on the [Plugins and Tools](plugins-and-tools.md) page.
 
 ## Licensing
 
-These docs allow developers to get started with the Zea Engine by downloading free and open-source demo content and using Zea's publicly distributed client-side libraries. To evaluate the engine with your proprietary content you need a restricted non-commercial evaluation license. To build a commercial application, you need a commercial licensing agreement.
+These docs allow developers to get started with the Zea Engine by downloading free and open-source demo content and using Zea's publicly distributed client-side libraries. To evaluate the engine with your proprietary content you will access to our server side libraries and a restricted non-commercial evaluation license. To build a commercial application, you need a commercial licensing agreement.
 
-For questions on licensing, please fill out the contact form on our website.
+> For questions on licensing, please fill out the contact form on our website: [zea.live](https://zea.live/)
 
 ### Good-To-Know
 
