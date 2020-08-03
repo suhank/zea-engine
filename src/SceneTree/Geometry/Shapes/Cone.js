@@ -13,10 +13,10 @@ import { sgFactory } from '../../SGFactory.js'
  * ```
  *
  * **Parameters**
- * * **radius(`NumberParameter`):** Specifies the radius of the base of the cone.
- * * **height(`NumberParameter`):** Specifies the height of the cone.
- * * **detail(`NumberParameter`):** Specifies the number of subdivisions around the `Z` axis.
- * * **cap(`BooleanParameter`):** Specifies whether the base of the cone is capped or open.
+ * * **Radius(`NumberParameter`):** Specifies the radius of the base of the cone.
+ * * **Height(`NumberParameter`):** Specifies the height of the cone.
+ * * **Detail(`NumberParameter`):** Specifies the number of subdivisions around the `Z` axis.
+ * * **Cap(`BooleanParameter`):** Specifies whether the base of the cone is capped or open.
  *
  * @extends Mesh
  */
@@ -33,10 +33,10 @@ class Cone extends Mesh {
 
     if (isNaN(radius) || isNaN(height) || isNaN(detail)) throw new Error('Invalid geom args')
 
-    this.__radiusParam = this.addParameter(new NumberParameter('radius', radius))
-    this.__heightParam = this.addParameter(new NumberParameter('height', height))
-    this.__detailParam = this.addParameter(new NumberParameter('detail', detail >= 3 ? detail : 3, [3, 200], 1))
-    this.__capParam = this.addParameter(new BooleanParameter('cap', cap))
+    this.__radiusParam = this.addParameter(new NumberParameter('Radius', radius))
+    this.__heightParam = this.addParameter(new NumberParameter('Height', height))
+    this.__detailParam = this.addParameter(new NumberParameter('Detail', detail >= 3 ? detail : 3, [3, 200], 1))
+    this.__capParam = this.addParameter(new BooleanParameter('Cap', cap))
 
     this.addVertexAttribute('texCoords', Vec2)
     this.addVertexAttribute('normals', Vec3)

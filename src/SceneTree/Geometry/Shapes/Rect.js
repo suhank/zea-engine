@@ -122,9 +122,23 @@ class Rect extends Lines {
    */
   toJSON() {
     const json = super.toJSON()
-    json['x'] = this.__x
-    json['y'] = this.__y
+    json['x'] = this.__x.toJSON()
+    json['y'] = this.__y.toJSON()
     return json
+  }
+
+  /**
+   * The fromJSON method decodes a json object for this type.
+   *
+   * @param {object} j - The json object this item must decode.
+   * @param {object} context - The context value.
+   * @param {number} flags - The flags value.
+   */
+  fromJSON(j, context, flags) {
+    super.fromJSON(j, context, flags)
+
+    this.__x.fromJSON(j.x)
+    this.__y.fromJSON(j.y)
   }
 }
 sgFactory.registerClass('Rect', Rect)

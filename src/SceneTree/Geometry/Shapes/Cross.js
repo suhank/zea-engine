@@ -12,7 +12,7 @@ import { sgFactory } from '../../SGFactory.js'
  * ```
  *
  * **Parameters**
- * * **size(`NumberParameter`):** Specifies the size of the cross.
+ * * **Size(`NumberParameter`):** Specifies the size of the cross.
  *
  * @extends Lines
  */
@@ -26,7 +26,7 @@ class Cross extends Lines {
 
     if (isNaN(size)) throw new Error('Invalid geom args')
 
-    this.__sizeParam = this.addParameter(new NumberParameter('size', size))
+    this.__sizeParam = this.addParameter(new NumberParameter('Size', size))
     this.__rebuild()
 
     const resize = () => {

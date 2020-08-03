@@ -113,11 +113,24 @@ class Grid extends Lines {
    */
   toJSON() {
     const json = super.toJSON()
-    json['x'] = this.__x
-    json['z'] = this.__y
-    json['xDivisions'] = this.__xDivisions
-    json['yDivisions'] = this.__yDivisions
     return json
+  }
+
+  /**
+   * The fromJSON method decodes a json object for this type.
+   *
+   * @param {object} j - The json object this item must decode.
+   * @param {object} context - The context value.
+   * @param {number} flags - The flags value.
+   */
+  fromJSON(j, context, flags) {
+    super.fromJSON(j, context, flags)
+
+    this.__xParam.fromJSON(j.x)
+    this.__yParam.fromJSON(j.z)
+    this.__xDivisionsParam.fromJSON(j.xDivisions)
+    this.__yDivisionsParam.fromJSON(j.yDivisions)
+    this.__skipCenterLinesParam.fromJSON(j.skipCenterLines)
   }
 }
 
