@@ -7,7 +7,7 @@
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
   "author": "Zea Inc.",
-  "license": "ISC",
+  "license": "LicenseRef-LICENSE",
   "files": [
     "/dist/index.cjs.js",
     "/dist/index.esm.js",
@@ -31,8 +31,7 @@
     "test:visual:watch": "karma start --auto-watch --browsers ChromeHeadless karma.conf.js",
     "test:visual:debug": "karma start --auto-watch --single-run karma.conf.js"
   },
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "@zeainc/jsdocs2md": "^0.0.3",
     "chai": "^4.2.0",
