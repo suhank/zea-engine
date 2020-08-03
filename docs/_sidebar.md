@@ -1,4 +1,4 @@
-<!-- prettier-ignore -->
+
 - Main Concepts
 
   * [Architecture Overview](arch-overview.md)
@@ -21,7 +21,6 @@
    -->
 
 - How To
-
   * [Changing The Background](tutorials/changing-the-background.md)
   * [Load an Asset File](tutorials/load-an-asset.md)
   * [Setting up Groups and Highlights](tutorials/highlights.md)
