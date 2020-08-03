@@ -9,6 +9,7 @@
   "author": "Zea Inc.",
   "license": "LicenseRef-LICENSE",
   "files": [
+    "/LICENSE",
     "/dist/index.cjs.js",
     "/dist/index.esm.js",
     "/public-resources/**",
