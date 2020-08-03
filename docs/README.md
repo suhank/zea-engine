@@ -31,6 +31,8 @@ If you are primarily interested in working with CAD data, you can find informati
 
 ## Licensing
 
+The Zea Engine is distributed via NPM under a proprietary closed source license which gives developers the rights to evaluate Zea Engine and build non-commercial applications. By downloading the Zea Engine, your agree to be bound by the terms and conditions of this license available on the Zea Website: [zea.live](https://zea.live/)
+
 These docs allow developers to get started with the Zea Engine by downloading free and open-source demo content and using Zea's publicly distributed client-side libraries. 
 
 To evaluate the engine with your proprietary content, you will need to access our server-side libraries and a restricted non-commercial evaluation license. 
