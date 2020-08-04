@@ -95,7 +95,9 @@ class ObjAsset extends AssetItem {
    * @private
    */
   __loadObj(onDone, onGeomsLoaded) {
-    const stem = this.objfileParam.getStem()
+    const fileId = this.objfileParam.getValue()
+    const fileFolder = filePath.substring(0, filePath.lastIndexOf('/')) + '/'
+    const filename = fileId.substring(fileId.lastIndexOf('/'))
 
     const parseMtlData = (mtlFileData) => {
       const lines = mtlFileData.split('\n')
@@ -109,7 +111,6 @@ class ObjAsset extends AssetItem {
       }
 
       const parseMap = (elements) => {
-        const fileFolder = this.objfileParam.getFileFolder()
         return new FileImage(elements[0], fileFolder + elements[0])
       }
 
@@ -170,10 +171,10 @@ class ObjAsset extends AssetItem {
     const loadMtlFile = (mtlFile) => {
       return new Promise((resolve) => {
         loadTextfile(mtlFile.url, (fileData) => {
-          resourceLoader.addWorkDone(stem, 1)
+          resourceLoader.addWorkDone(fileId, 1)
           parseMtlData(fileData)
           async.decAsyncCount()
-          resourceLoader.addWorkDone(stem, 1)
+          resourceLoader.addWorkDone(fileId, 1)
           resolve()
         })
       })
@@ -216,7 +217,7 @@ class ObjAsset extends AssetItem {
         }
         geomDatas[name] = currGeom
       }
-      newGeom(stem)
+      newGeom(filename)
 
       const splitGroupsIntoObjects = this.getParameter('splitGroupsIntoObjects').getValue()
 
@@ -239,7 +240,6 @@ class ObjAsset extends AssetItem {
             // Load and parse the mat lib.
             async.incAsyncCount()
             resourceLoader.addWork(stem, 2)
-            const fileFolder = this.objfileParam.getFileFolderPath()
             const mtlFile = resourceLoader.resolveFilepath(fileFolder + value)
             if (mtlFile) {
               await loadMtlFile(mtlFile)
@@ -401,13 +401,12 @@ class ObjAsset extends AssetItem {
     }
 
     const loadObjData = () => {
-      const file = this.objfileParam.getFile()
-      const stem = this.objfileParam.getStem()
-      resourceLoader.addWork(stem, 2)
+      const fileId = this.objfileParam.getValue()
+      resourceLoader.addWork(fileId, 2)
       loadTextfile(file.url, (fileData) => {
-        resourceLoader.addWorkDone(stem, 1)
+        resourceLoader.addWorkDone(fileId, 1)
         parseObjData(fileData)
-        resourceLoader.addWorkDone(stem, 1)
+        resourceLoader.addWorkDone(fileId, 1)
       })
     }
 

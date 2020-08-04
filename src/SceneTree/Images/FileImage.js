@@ -107,7 +107,11 @@ class FileImage extends BaseImage {
    * @private
    */
   __loadData(fileDesc) {
-    const ext = this.getParameter('FilePath').getExt()
+    const fileId = this.getParameter('FilePath').getValue()
+    const stem = fileId.split(fileId.lastIndexOf('.'))[0]
+    const suffixSt = filename.lastIndexOf('.')
+    if (suffixSt != -1) return filename.substring(suffixSt).toLowerCase()
+    const ext = this.getParameter('FilePath').get()
     if (ext == '.jpg' || ext == '.png' || ext == '.webp') {
       this.__loadLDRImage(fileDesc, ext)
     } else if (ext == '.mp4' || ext == '.ogg') {
@@ -592,14 +596,6 @@ class FileImage extends BaseImage {
 
       this.emit('loaded', {})
     })
-  }
-
-  /**
-   * The getFilepath method.
-   * @return {any} - The return value.
-   */
-  getFilepath() {
-    return this.getParameter('FilePath').getValue()
   }
 
   /**

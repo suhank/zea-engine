@@ -14,16 +14,16 @@ class MaterialLibraryManager extends EventEmitter {
     super()
     this.__materialLibraries = {}
 
-    resourceLoader.registerResourceCallback('.matlib', (file) => {
-      loadTextfile(file.url, (data) => {
-        const stem = file.name.split('.')[0] // trim off the extension
-        const j = JSON.parse(data)
-        const matlib = new MaterialLibrary(stem)
-        matlib.fromJSON(j)
-        this.__materialLibraries[stem] = matlib
-        this.emit('materialLibraryLoaded', { matlib })
-      })
-    })
+    // resourceLoader.registerResourceCallback('.matlib', (file) => {
+    //   loadTextfile(file.url, (data) => {
+    //     const stem = file.name.split('.')[0] // trim off the extension
+    //     const j = JSON.parse(data)
+    //     const matlib = new MaterialLibrary(stem)
+    //     matlib.fromJSON(j)
+    //     this.__materialLibraries[stem] = matlib
+    //     this.emit('materialLibraryLoaded', { matlib })
+    //   })
+    // })
   }
 
   /**

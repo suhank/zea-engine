@@ -17,21 +17,8 @@ class FilePathParameter extends Parameter {
    * @param {string} name - The name of the file path parameter.
    * @param {string} exts - The exts value.
    */
-  constructor(name, exts) {
+  constructor(name) {
     super(name, '', 'FilePath')
-    if (exts) this.setSupportedExts(exts)
-  }
-
-  /**
-   * Sets supported extensions, if this supports more than one type of files, separate them with regex or(|).
-   *
-   * i.e.: jpg|png|gif
-   *
-   * @param {string} exts - The exts value.
-   */
-  setSupportedExts(exts) {
-    // Note: supported Extensions should be in the format ext1|exts2|ext3
-    this.__reextensions = new RegExp('\\.(' + exts + ')$', 'i')
   }
 
   /**
@@ -40,8 +27,8 @@ class FilePathParameter extends Parameter {
    * @return {string} - The return value.
    */
   getFilepath() {
-    if (this.__file) {
-      return resourceLoader.getFilepath(this.__file.id)
+    if (this.__value) {
+      return resourceLoader.getFilepath(this.__value)
     }
 
     return ''
@@ -53,12 +40,7 @@ class FilePathParameter extends Parameter {
    * @param {string} filePath - The filePath value.
    */
   setFilepath(filePath) {
-    const resourceId = resourceLoader.resolveFilePathToId(filePath)
-    if (!resourceId) {
-      console.warn('Resource unavailable:' + filePath)
-      return
-    }
-    this.setValue(resourceId)
+    this.setValue(resourceLoader.resolveFileId(filePath))
   }
 
   /**
@@ -67,9 +49,7 @@ class FilePathParameter extends Parameter {
    * @return {string} - The return value.
    */
   getFilename() {
-    if (this.__file) {
-      return this.__file.name
-    }
+    return resourceLoader.resolveFilename(this.__value)
   }
 
   /**
@@ -98,47 +78,12 @@ class FilePathParameter extends Parameter {
   }
 
   /**
-   * Returns parent folder for of current parameter file.
-   *
-   * @return {object} - The return value.
-   */
-  getFileFolder() {
-    if (this.__file) {
-      if (this.__file.parent) return resourceLoader.getFile(this.__file.parent)
-      return resourceLoader.getRootFolder()
-    }
-  }
-
-  /**
-   * Returns parent folder for of current parameter file.
-   *
-   * @return {string} - The return value.
-   */
-  getFileFolderPath() {
-    const filePath = this.getFilepath()
-    if (filePath) {
-      return filePath.substring(0, filePath.lastIndexOf('/')) + '/'
-    }
-  }
-
-  /**
    * Returns file object, which contains the url, resourceId and the name.
    *
    * @return {object} - The return value.
    */
   getFile() {
-    return this.__file
-  }
-
-  /**
-   * The getFileDesc method.
-   * @return {object} - The return value.
-   */
-  getFileDesc() {
-    console.warn('@todo-review')
-    // Can we settle on a convention?
-    // console.warn("Deprecated method: 'getFileDesc'. Please use 'getFile'")
-    return this.__file
+    return { url: this.getUrl(), name: this.getFilename() }
   }
 
   /**
@@ -148,37 +93,17 @@ class FilePathParameter extends Parameter {
    * @param {string} name - (optional) the name of the file that the Url points to.
    */
   setUrl(url, name) {
-    const parts = url.split('/')
-    if (!name) name = parts[parts.length - 1]
-
-    this.__value = name
-    this.__file = {
-      id: url,
-      name,
-      url,
-    }
-
-    this.__flags |= ParamFlags.USER_EDITED
-    this.emit('valueChanged', { mode: ParamFlags.USER_EDITED })
+    this.setValue(resourceLoader.resolveFileId(url))
   }
 
   /**
    * Returns the file url string.
    *
+   * @param {string} key - an optional key value that the resource loader can user to more precisely determine the URL.
    * @return {string} - The return value.
    */
-  getUrl() {
-    return this.__file ? this.__file.url : undefined
-  }
-
-  /**
-   * The setDirty method.
-   * @private
-   * @param {function} cleanerFn - The cleanerFn value.
-   */
-  setDirty(cleanerFn) {
-    console.warn('@todo-review')
-    throw new Error('Cannot drive a filepath param from an operator')
+  getUrl(key = undefined) {
+    return resourceLoader.resolveURL(this.__value, key)
   }
 
   /**
@@ -188,13 +113,8 @@ class FilePathParameter extends Parameter {
    * @return {boolean} - The return value.
    */
   setValue(value) {
-    // 0 == normal set. 1 = changed via cleaner fn, 2 = change by loading/cloning code.
     if (value == undefined) {
       throw new Error('Invalid value for setValue.')
-    }
-    if (value.indexOf('.') > 0) {
-      console.warn('Deprecation warning for setValue. setValue should now only take a file id, not a path.')
-      return this.setFilepath(value)
     }
     // Note: equality tests only work on simple types.
     // Important here because file changes cause reloads..
@@ -202,30 +122,7 @@ class FilePathParameter extends Parameter {
       return
     }
 
-    // Note: the file path is selected by using the file browser
-    // For now it can return an absolute path(within the project)
-    // and we convert to relative when we save.
-    const resourceId = value
-    if (!resourceLoader.resourceAvailable(resourceId)) {
-      console.warn('Resource unavailable:' + resourceId)
-      return
-    }
-
-    const file = resourceLoader.getFile(resourceId)
-    if (this.__reextensions && !this.__reextensions.test(file.name)) {
-      console.warn('Unsupported file type:' + file.name)
-      return false
-    }
-
     this.__value = value
-    this.__file = file
-
-    resourceLoader.on('fileUpdated', (event) => {
-      if (event.fileId == this.__value) {
-        this.__file = resourceLoader.getFile(this.__value)
-        this.emit('fileUpdated', event)
-      }
-    })
 
     this.__flags |= ParamFlags.USER_EDITED
     this.emit('valueChanged', { mode: ParamFlags.USER_EDITED })
@@ -244,11 +141,7 @@ class FilePathParameter extends Parameter {
     if ((this.__flags & ParamFlags.USER_EDITED) == 0) return
     const j = {}
     if (this.__file) {
-      j.value = this.__file.id
-      // For cases where the file ID changed.
-      // e.g. if a file was deleted from the system, and
-      // then re-added
-      j.filepath = resourceLoader.getFilepath(this.__file.id)
+      j.value = this.__value
     }
     return j
   }
@@ -262,21 +155,7 @@ class FilePathParameter extends Parameter {
    */
   fromJSON(j, context, flags) {
     if (j.value) {
-      if (j.value.indexOf('.') > 0) {
-        this.__value = j.value
-      } else {
-        if (resourceLoader.resourceAvailable(j.value)) {
-          this.__value = j.value
-          this.__flags |= ParamFlags.USER_EDITED
-        }
-      }
-    } else if (j.filepath) {
-      const resourceId = resourceLoader.resolveFilePathToId(j.filepath)
-      if (!resourceId) {
-        console.warn('Resource unavailable:' + j.filepath)
-      } else {
-        this.__value = resourceId
-      }
+      this.__value = j.value
     }
   }
 
@@ -294,14 +173,6 @@ class FilePathParameter extends Parameter {
     const clonedParam = new FilePathParameter(this.__name)
     clonedParam.__file = this.__file
     return clonedParam
-  }
-
-  /**
-   * The destroy is called by the system to cause explicit resources cleanup.
-   * Users should never need to call this method directly.
-   */
-  destroy() {
-    super.destroy()
   }
 }
 

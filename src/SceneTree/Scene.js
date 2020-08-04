@@ -6,6 +6,7 @@ import { Grid } from './Geometry/Shapes/Grid.js'
 import { ItemFlags } from './BaseItem.js'
 import { GeomItem } from './GeomItem.js'
 import { resourceLoader } from './ResourceLoader.js'
+import { DriveAdaptor } from './ResourceLoader/DriveAdaptor.js'
 import { SceneSettings } from './SceneSettings.js'
 import { VLAAsset } from './VLAAsset.js'
 
@@ -21,7 +22,7 @@ class Scene {
    */
   constructor(resources) {
     if (resources) {
-      resourceLoader.setResources(resources)
+      resourceLoader.setAdaptor(new DriveAdaptor(resources))
     }
     this.settings = new SceneSettings('Scene Settings')
     this.root = new TreeItem('root')
