@@ -83,7 +83,7 @@ class FilePathParameter extends Parameter {
    * @return {object} - The return value.
    */
   getFile() {
-    return { url: this.getUrl(), name: this.getFilename() }
+    return { id: this.__value, url: this.getUrl(), name: this.getFilename() }
   }
 
   /**
