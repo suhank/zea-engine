@@ -66,9 +66,7 @@ class MaterialParameter extends Parameter {
    * @return {object} - Returns the json object.
    */
   toJSON(context) {
-    return {
-      value: this.__value.getPath(),
-    }
+    return this.__value ? { value: this.__value.getPath() } : undefined
   }
 
   /**

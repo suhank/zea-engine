@@ -1,7 +1,6 @@
 import { Operator } from './Operator.js'
 import { OperatorInput } from './OperatorInput.js'
 import { OperatorOutput } from './OperatorOutput.js'
-import { NumberParameter, ListParameter } from '../Parameters/index'
 
 import { sgFactory } from '../SGFactory.js'
 

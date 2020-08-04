@@ -171,10 +171,9 @@ class MaterialLibrary extends EventEmitter {
   /**
    * The toJSON method encodes the current object as a json object.
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    * @return {object} - Returns the json object.
    */
-  toJSON(context = {}, flags = 0) {
+  toJSON(context = {}) {
     return {
       numMaterials: this.geoms.length(),
     }
@@ -184,9 +183,8 @@ class MaterialLibrary extends EventEmitter {
    * The fromJSON method decodes a json object for this type.
    * @param {object} j - The json object this item must decode.
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    */
-  fromJSON(j, context = {}, flags = 0) {
+  fromJSON(j, context = {}) {
     context.lod = this.lod
     for (const name in j.textures) {
       const image = new FileImage(name)

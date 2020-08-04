@@ -3,12 +3,6 @@ import { sgFactory } from './SGFactory.js'
 import { ParameterOwner } from './ParameterOwner.js'
 import { BinReader } from './BinReader.js'
 
-const ItemFlags = {
-  USER_EDITED: 1 << 1,
-  IGNORE_BBOX: 1 << 2,
-  BIN_NODE: 1 << 3, // This node was generated when loading a binary file.
-  INVISIBLE: 1 << 4, // This node was generated when loading a binary file.
-}
 let numBaseItems = 0
 
 /**
@@ -31,7 +25,6 @@ class BaseItem extends ParameterOwner {
     this.__name = name ? name : ''
     this.__path = [this.__name]
     this.__ownerItem = undefined // TODO: will create a circular ref. Figure out and use weak refs
-    this.__flags = 0
 
     // Note: one day we will remove the concept of 'selection' from the engine
     // and keep it only in UX. to Select an item, we will add it to the selection
@@ -55,18 +48,6 @@ class BaseItem extends ParameterOwner {
    */
   static getNumBaseItems() {
     return numBaseItems
-  }
-
-  /**
-   * The __parameterValueChanged method.
-   * @param {object} event - The event object.
-   * @private
-   */
-  __parameterValueChanged(event) {
-    super.__parameterValueChanged(event)
-    if (event.mode & ItemFlags.USER_EDITED) {
-      this.setFlag(ItemFlags.USER_EDITED)
-    }
   }
 
   // ////////////////////////////////////////
@@ -117,38 +98,8 @@ class BaseItem extends ParameterOwner {
     return this.__path
   }
 
-  // ////////////////////////////////////////
-  // Flags
 
-  /**
-   * @private
-   * @param {number} flag - the flag value.
-   */
-  setFlag(flag) {
-    this.__flags |= flag
-  }
-
-  /**
-   * The clearFlag method.
-   * @private
-   * @param {number} flag - the flag value.
-   */
-  clearFlag(flag) {
-    this.__flags &= ~flag
-  }
-
-  /**
-   * Returns true if the flag if set, otherwise returns false.
-   * @private
-   * @param {number} flag - The flag to test.
-   * @return {boolean} - Returns a boolean indicating if the flag is set.
-   */
-  testFlag(flag) {
-    return (this.__flags & flag) != 0
-  }
-
-  // ////////////////////////////////////////
-  // Path Traversial
+  // Path Traversal
 
   /**
    * The resolvePath method traverses the subtree from this item down
@@ -310,22 +261,15 @@ class BaseItem extends ParameterOwner {
    * Encodes the current object as a json object.
    *
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    * @return {object} - Returns the json object.
    */
-  toJSON(context, flags) {
-    let j = super.toJSON(context, flags)
-    if (!j && this.testFlag(ItemFlags.USER_EDITED)) j = {}
+  toJSON(context) {
+    const j = super.toJSON(context)
     if (j) {
       j.name = this.__name
-
-      // Binary Tree nodes should only be re-created
-      // by loading binary data. The JSON tree just stores
-      // modifications to those items, and if, when loading
-      // the node no longer exists, then the json loader
-      // simply keeps going. (no errors).
-      if (!this.testFlag(ItemFlags.BIN_NODE)) j.type = sgFactory.getClassName(this)
+      j.type = sgFactory.getClassName(this)
     }
+
     return j
   }
 
@@ -334,14 +278,10 @@ class BaseItem extends ParameterOwner {
    *
    * @param {object} j - The json object this item must decode.
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    */
-  fromJSON(j, context, flags) {
+  fromJSON(j, context) {
     if (j.name) this.__name = j.name
-    super.fromJSON(j, context, flags)
-    // Note: JSON data is only used to store user edits, so
-    // parameters loaded from JSON are considered user edited.
-    this.__flags |= ItemFlags.USER_EDITED
+    super.fromJSON(j, context)
   }
 
   /**
@@ -365,10 +305,8 @@ class BaseItem extends ParameterOwner {
    * Clones this base item and returns a new base item.
    * <br>
    * **Note:** Each class should implement clone to be clonable.
-   *
-   * @param {number} flags - The flags value.
    */
-  clone(flags) {
+  clone() {
     throw new Error(this.constructor.name + ' does not implement its clone method')
   }
 
@@ -382,10 +320,9 @@ class BaseItem extends ParameterOwner {
    * data from the source object.
    *
    * @param {BaseItem} src - The BaseItem to copy from.
-   * @param {number} flags - The flags value.
    */
-  copyFrom(src, flags) {
-    super.copyFrom(src, flags)
+  copyFrom(src) {
+    super.copyFrom(src)
     this.setName(src.getName())
   }
 
@@ -398,4 +335,4 @@ class BaseItem extends ParameterOwner {
   }
 }
 
-export { ItemFlags, BaseItem }
+export { BaseItem }

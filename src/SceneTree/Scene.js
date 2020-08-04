@@ -3,7 +3,6 @@ import { Material } from './Material.js'
 import { TreeItem } from './TreeItem.js'
 import { Lines } from './Geometry/Lines.js'
 import { Grid } from './Geometry/Shapes/Grid.js'
-import { ItemFlags } from './BaseItem.js'
 import { GeomItem } from './GeomItem.js'
 import { resourceLoader } from './ResourceLoader.js'
 import { SceneSettings } from './SceneSettings.js'
@@ -112,11 +111,8 @@ class Scene {
     zAxisLineItem.setGeomOffsetXfo(geomOffset)
     gridTreeItem.addChild(zAxisLineItem, false)
     gridTreeItem.setSelectable(false, true)
-    gridTreeItem.setFlag(ItemFlags.IGNORE_BBOX)
+    // gridTreeItem.setFlag(ItemFlags.IGNORE_BBOX)
 
-    // Avoid persisting the grid and hide in the tree view.
-    gridTreeItem.clearFlag(ItemFlags.USER_EDITED)
-    gridTreeItem.setFlag(ItemFlags.INVISIBLE)
     this.root.addChild(gridTreeItem, false)
 
     return gridTreeItem
@@ -142,16 +138,15 @@ class Scene {
   // Persistence
 
   /**
-   * The toJSON method encodes this type as a json object for persistences.
+   * The toJSON method encodes this type as a json object for persistence.
    *
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    * @return {object} - Returns the json object.
    */
-  toJSON(context = {}, flags = 0) {
+  toJSON(context = {}) {
     context.makeRelative = (path) => path
     const json = {
-      root: this.root.toJSON(context, flags),
+      root: this.root.toJSON(context),
     }
     return json
   }
