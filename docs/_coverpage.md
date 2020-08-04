@@ -5,7 +5,7 @@
 
 # Zea Engine
 
-> A powerful visualization engine for CAD and BIM.
+> Solve tough visualization problems in design, manufacturing, and construction.
 
 
 <ul style="display:inline-block">
