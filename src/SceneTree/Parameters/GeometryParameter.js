@@ -1,4 +1,4 @@
-import { ParamFlags, Parameter } from './Parameter.js'
+import { Parameter } from './Parameter.js'
 
 /** Class representing a geometry parameter.
  * @extends Parameter
@@ -37,8 +37,7 @@ class GeometryParameter extends Parameter {
         this.__value.on('boundingBoxChanged', this.__emitBoundingBoxDirtied)
       }
 
-      this.__flags |= ParamFlags.USER_EDITED
-      this.emit('valueChanged', { mode: ParamFlags.USER_EDITED })
+      this.emit('valueChanged', {})
     }
   }
 
@@ -48,22 +47,20 @@ class GeometryParameter extends Parameter {
   /**
    * The toJSON method encodes this type as a json object for persistence.
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    * @return {object} - Returns the json object.
    */
-  toJSON(context, flags) {
-    return super.toJSON(context, flags)
+  toJSON(context) {
+    return super.toJSON(context)
   }
 
   /**
    * The fromJSON method decodes a json object for this type.
    * @param {object} j - The json object this item must decode.
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    * @return {object} - Returns the json object.
    */
-  fromJSON(j, context, flags) {
-    return super.fromJSON(j, context, flags)
+  fromJSON(j, context) {
+    return super.fromJSON(j, context)
   }
 
   // ////////////////////////////////////////
@@ -72,10 +69,9 @@ class GeometryParameter extends Parameter {
   /**
    * The clone method constructs a new geometry parameter, copies its values
    * from this parameter and returns it.
-   * @param {number} flags - The flags value.
    * @return {GeometryParameter} - Returns a new geometry parameter.
    */
-  clone(flags) {
+  clone() {
     const clonedParam = new GeometryParameter(this.__name, this.__value)
     return clonedParam
   }

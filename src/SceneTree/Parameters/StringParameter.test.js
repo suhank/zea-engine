@@ -26,12 +26,11 @@ describe('StringParameter', () => {
     const parameter = new StringParameter('param1', '', 'String')
 
     const mockFn = jest.fn()
-    const event = { mode: 2 }
     parameter.on('valueChanged', mockFn)
 
     parameter.setValue('Test')
 
-    expect(mockFn).toHaveBeenCalledWith(event)
+    expect(mockFn).toHaveBeenCalled()
   })
 
   it('sets owner item', () => {

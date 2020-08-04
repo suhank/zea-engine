@@ -1,6 +1,6 @@
 import { Color, Xfo, Box3 } from '../Math/index'
 import { sgFactory } from './SGFactory.js'
-import { ParamFlags, Parameter, BooleanParameter, XfoParameter } from './Parameters/index'
+import { BooleanParameter, XfoParameter } from './Parameters/index'
 import { ItemFlags, BaseItem } from './BaseItem.js'
 import { CalcGlobalXfoOperator } from './Operators/CalcGlobalXfoOperator.js'
 import { BoundingBoxParameter } from './Parameters/BoundingBoxParameter.js'
@@ -491,7 +491,7 @@ class TreeItem extends BaseItem {
   _setBoundingBoxDirty() {
     if (this.__boundingBoxParam) {
       // Will cause boundingChanged to emit
-      this.__boundingBoxParam.setDirty() //this._cleanBoundingBox)
+      this.__boundingBoxParam.setDirty() // this._cleanBoundingBox)
     }
   }
 

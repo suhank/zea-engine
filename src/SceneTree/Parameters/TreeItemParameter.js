@@ -1,5 +1,5 @@
 /* eslint-disable require-jsdoc */
-import { ParamFlags, Parameter } from './Parameter.js'
+import { Parameter } from './Parameter.js'
 
 /**
  * Represents a specific type of parameter, that only stores `TreeItem` values.
@@ -86,8 +86,8 @@ class TreeItemParameter extends Parameter {
       if (this.__value) {
         this.__value.on('globalXfoChanged', this.__emittreeItemGlobalXfoChanged)
       }
-      this.__flags |= ParamFlags.USER_EDITED
-      this.emit('valueChanged', { mode: ParamFlags.USER_EDITED })
+
+      this.emit('valueChanged', {})
     }
   }
 
@@ -98,11 +98,9 @@ class TreeItemParameter extends Parameter {
    * The toJSON method encodes this type as a json object for persistence.
    *
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    * @return {object} - Returns the json object.
    */
-  toJSON(context, flags) {
-    if ((this.__flags & ParamFlags.USER_EDITED) == 0) return
+  toJSON(context) {
     return {
       value: context.makeRelative(this.__value.getPath()),
     }
@@ -113,9 +111,8 @@ class TreeItemParameter extends Parameter {
    *
    * @param {object} j - The json object this item must decode.
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    */
-  fromJSON(j, context, flags) {
+  fromJSON(j, context) {
     if (j.value == undefined) {
       console.warn('Invalid Parameter JSON')
       return
@@ -129,7 +126,6 @@ class TreeItemParameter extends Parameter {
         console.warn('Unable to resolve tree item parameter value:' + pj.paramPath)
       }
     )
-    this.__flags |= ParamFlags.USER_EDITED
   }
 
   // ////////////////////////////////////////
@@ -139,10 +135,9 @@ class TreeItemParameter extends Parameter {
    * The clone method constructs a new tree item parameter, copies its values
    * from this parameter and returns it.
    *
-   * @param {number} flags - The flags value.
    * @return {TreeItemParameter} - Returns a new tree item parameter.
    */
-  clone(flags) {
+  clone() {
     const clonedParam = new TreeItemParameter(this.__name, this.__filterFn)
     return clonedParam
   }
@@ -158,5 +153,4 @@ class TreeItemParameter extends Parameter {
   }
 }
 
-export { TreeItemParameter /* ,
-  TreeItemListParameter */ }
+export { TreeItemParameter }

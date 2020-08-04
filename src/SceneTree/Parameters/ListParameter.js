@@ -1,4 +1,4 @@
-import { ParamFlags, Parameter } from './Parameter.js'
+import { Parameter } from './Parameter.js'
 
 /**
  * Represents a specific type of parameter, that only stores any type of list values.
@@ -67,7 +67,7 @@ class ListParameter extends Parameter {
    */
   setElement(index, value) {
     this.__value[index] = value
-    this.emit('valueChanged', { mode: ParamFlags.USER_EDITED })
+    this.emit('valueChanged', {})
   }
 
   /**
@@ -83,9 +83,8 @@ class ListParameter extends Parameter {
     }
 
     this.__value.push(elem)
-    this.__flags |= ParamFlags.USER_EDITED
     this.emit('elementAdded', { elem, index: this.__value.length - 1 })
-    this.emit('valueChanged', { mode: ParamFlags.USER_EDITED })
+    this.emit('valueChanged', {})
     return elem
   }
 
@@ -97,9 +96,8 @@ class ListParameter extends Parameter {
   removeElement(index) {
     const elem = this.__value[index]
     this.__value.splice(index, 1)
-    this.__flags |= ParamFlags.USER_EDITED
     this.emit('elementRemoved', { elem, index })
-    this.emit('valueChanged', { mode: ParamFlags.USER_EDITED })
+    this.emit('valueChanged', {})
   }
 
   /**
@@ -112,9 +110,8 @@ class ListParameter extends Parameter {
     if (!this.__filter(elem)) return
     this.__value.splice(index, 0, elem)
     // this.setValue(this.__value);
-    this.__flags |= ParamFlags.USER_EDITED
     this.emit('elementAdded', { elem, index })
-    this.emit('valueChanged', { mode: ParamFlags.USER_EDITED })
+    this.emit('valueChanged', {})
   }
 
   // ////////////////////////////////////////
@@ -124,15 +121,13 @@ class ListParameter extends Parameter {
    * The toJSON method encodes this type as a json object for persistence.
    *
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    * @return {object} - Returns the json object.
    */
-  toJSON(context, flags) {
-    if ((this.__flags & ParamFlags.USER_EDITED) == 0) return
+  toJSON(context) {
     const items = []
     for (const p of this.__value) {
       if (typeof this.__dataType === 'string') items.push(p)
-      else items.push(p.toJSON(context, flags))
+      else items.push(p.toJSON(context))
     }
     return {
       items,
@@ -144,16 +139,12 @@ class ListParameter extends Parameter {
    *
    * @param {object} j - The json object this item must decode.
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    */
-  fromJSON(j, context, flags) {
+  fromJSON(j, context) {
     if (j.items == undefined) {
       console.warn('Invalid Parameter JSON')
       return
     }
-    // Note: JSON data is only used to store user edits, so
-    // parameters loaded from JSON are considered user edited.
-    this.__flags |= ParamFlags.USER_EDITED
 
     this.__value = []
     for (let i = 0; i < j.items.length; i++) {
@@ -178,10 +169,9 @@ class ListParameter extends Parameter {
    * The clone method constructs a new list parameter, copies its values
    * from this parameter and returns it.
    *
-   * @param {number} flags - The flags value.
    * @return {ListParameter} - Returns a new list parameter.
    */
-  clone(flags) {
+  clone() {
     const clonedValue = this.__value.slice(0)
     const clonedParam = new ListParameter(this.__name, this.__dataType)
     clonedParam.setValue(clonedValue)

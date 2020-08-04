@@ -177,10 +177,9 @@ class Attribute {
    * The toJSON method encodes this type as a json object for persistence.
    *
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    * @return {object} - Returns the json object.
    */
-  toJSON(context, flags) {
+  toJSON(context) {
     return {
       data: Array.from(this.__data),
       dataType: typeRegistry.getTypeName(this.__dataType),

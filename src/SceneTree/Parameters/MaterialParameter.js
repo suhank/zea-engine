@@ -1,4 +1,4 @@
-import { ParamFlags, ValueSetMode, Parameter } from './Parameter.js'
+import { Parameter } from './Parameter.js'
 
 /**
  * Represents a specific type of parameter, that only stores `Material` values.
@@ -51,10 +51,8 @@ class MaterialParameter extends Parameter {
         this.__value.on('parameterValueChanged', this.__valueParameterValueChanged)
       }
 
-      this.__flags |= ParamFlags.USER_EDITED
-
       // During the cleaning process, we don't want notifications.
-      this.emit('valueChanged', { mode: ParamFlags.USER_EDITED })
+      this.emit('valueChanged', {})
     }
   }
 
@@ -65,11 +63,9 @@ class MaterialParameter extends Parameter {
    * The toJSON method encodes this type as a json object for persistence.
    *
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    * @return {object} - Returns the json object.
    */
-  toJSON(context, flags) {
-    if ((this.__flags & ParamFlags.USER_EDITED) == 0) return
+  toJSON(context) {
     return {
       value: this.__value.getPath(),
     }
@@ -80,9 +76,8 @@ class MaterialParameter extends Parameter {
    *
    * @param {object} j - The json object this item must decode.
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    */
-  fromJSON(j, context, flags) {
+  fromJSON(j, context) {
     if (j.value == undefined) {
       console.warn('Invalid Parameter JSON')
       return
@@ -97,8 +92,6 @@ class MaterialParameter extends Parameter {
         }
       }
     }
-
-    this.__flags |= ParamFlags.USER_EDITED
   }
 
   // ////////////////////////////////////////
@@ -108,10 +101,9 @@ class MaterialParameter extends Parameter {
    * The clone method constructs a new material parameter, copies its values
    * from this parameter and returns it.
    *
-   * @param {number} flags - The flags value.
    * @return {MaterialParameter} - Returns a new material parameter.
    */
-  clone(flags) {
+  clone() {
     const clonedParam = new MaterialParameter(this.__name, this.__value)
     return clonedParam
   }
