@@ -11,14 +11,12 @@ import ResourceLoaderWorker from 'web-worker:./ResourceLoader/ResourceLoaderWork
 // } from './ResourceLoaderWorker.js';
 
 /**
- * Class in charge of loading file resources, holding a reference to all of them.
- * Manages workers, callbacks, resource tree and entities.
+ * Class for delegating resource loading, enabling an abstraction of a cloud file system to be implemented.
  *
  * **Events**
- * * **loaded:** _todo_
- * * **fileUpdated:** _todo_
- * * **progressIncremented:** _todo_
- * * **allResourcesLoaded:** _todo_
+ * * **loaded:** emitted when a file has finished loading
+ * * **progressIncremented:** emitted when a loading of processing task has been incremented
+ * * **allResourcesLoaded:** emitted when all outstanding resources are loaded. This event can be used to signal the completion of load.
  */
 class ResourceLoader extends EventEmitter {
   /**

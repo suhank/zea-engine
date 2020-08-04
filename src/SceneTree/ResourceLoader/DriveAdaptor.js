@@ -43,6 +43,8 @@ export function mergeDeep(target, ...sources) {
 /**
  * Class in charge of loading file resources, holding a reference to all of them.
  * Manages workers, callbacks, resource tree and entities.
+ *
+ * @private
  */
 class DriveAdaptor {
   /**
