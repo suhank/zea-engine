@@ -7,9 +7,8 @@
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
   "author": "Zea Inc.",
-  "license": "SEE LICENSE IN LICENSE",
+  "license": "SEE LICENSE IN LICENSE.md",
   "files": [
-    "/LICENSE",
     "/dist/index.cjs.js",
     "/dist/index.esm.js",
     "/public-resources/**",
