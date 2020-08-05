@@ -426,7 +426,7 @@ class TreeItem extends BaseItem {
   _setBoundingBoxDirty() {
     if (this.__boundingBoxParam) {
       // Will cause boundingChanged to emit
-      this.__boundingBoxParam.setDirty() // this._cleanBoundingBox)
+      this.__boundingBoxParam.setDirty()
     }
   }
 

@@ -313,6 +313,7 @@ class BaseGeom extends ParameterOwner {
    */
   loadBaseGeomBinary(reader) {
     this.name = reader.loadStr()
+    const flags = reader.loadUInt8()
     this.debugColor = reader.loadRGBFloat32Color()
     const numVerts = reader.loadUInt32()
     this.__boundingBox.set(reader.loadFloat32Vec3(), reader.loadFloat32Vec3())
@@ -320,11 +321,16 @@ class BaseGeom extends ParameterOwner {
     this.setNumVertices(numVerts)
     const positionsAttr = this.getVertexAttribute('positions')
 
-    let normalsAttr = this.getVertexAttribute('normals')
-    if (!normalsAttr) normalsAttr = this.addVertexAttribute('normals', Vec3, 0.0)
-
-    let texCoordsAttr = this.getVertexAttribute('texCoords')
-    if (!texCoordsAttr) texCoordsAttr = this.addVertexAttribute('texCoords', Vec2, 0.0)
+    let normalsAttr
+    let texCoordsAttr
+    if (flags & (1 << 1)) {
+      normalsAttr = this.getVertexAttribute('normals')
+      if (!normalsAttr) normalsAttr = this.addVertexAttribute('normals', Vec3, 0.0)
+    }
+    if (flags & (1 << 2)) {
+      texCoordsAttr = this.getVertexAttribute('texCoords')
+      if (!texCoordsAttr) texCoordsAttr = this.addVertexAttribute('texCoords', Vec2, 0.0)
+    }
 
     const parse8BitPositionsArray = (range, offset, sclVec, positions_8bit) => {
       for (let i = range[0]; i < range[1]; i++) {
