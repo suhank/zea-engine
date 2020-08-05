@@ -1,5 +1,10 @@
 import { Color, Xfo, Vec3 } from '../Math/index'
-import { TreeItem, Material, Grid, GeomItem, Lines } from './index'
+import { TreeItem } from './TreeItem'
+import { Material } from './Material'
+import { GeomItem } from './GeomItem'
+import { Grid } from './Geometry/Shapes/Grid'
+import { Lines } from './Geometry/Lines'
+import { sgFactory } from './SGFactory.js'
 
 /**
  *
@@ -54,5 +59,7 @@ export default class GridTreeItem extends TreeItem {
     return bBox
   }
 }
+
+sgFactory.registerClass('GridTreeItem', GridTreeItem)
 
 export { GridTreeItem }
