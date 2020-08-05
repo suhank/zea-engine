@@ -45,3 +45,6 @@ export * from './ObjAsset.js'
 
 export * from './Operators/index'
 export * from './Manipulators/index'
+
+// Added this for backwards compatibility, removing later on
+export * from './SGFactory.js'
