@@ -1,12 +1,12 @@
-import { TreeItem } from './TreeItem'
-import { Color } from '../Math'
+import { Color, Xfo, Vec3 } from '../Math/index'
+import { TreeItem, Material, Grid, GeomItem, Lines } from './index'
 
 /**
  *
  *
  * @extends {TreeItem}
  */
-export default class GridTree extends TreeItem {
+export default class GridTreeItem extends TreeItem {
   /**
    * Creates an instance of GridTree.
    *
@@ -16,10 +16,11 @@ export default class GridTree extends TreeItem {
    */
   constructor(gridSize = 5, resolution = 50, gridColor = new Color('#DCDCDC')) {
     super('GridTree')
-    /* const gridMaterial = new Material('gridMaterial', 'LinesShader')
+
+    const gridMaterial = new Material('gridMaterial', 'LinesShader')
     gridMaterial.getParameter('BaseColor').setValue(gridColor)
     const grid = new Grid(gridSize, gridSize, resolution, resolution, true)
-    gridTreeItem.addChild(new GeomItem('GridItem', grid, gridMaterial), false)
+    this.addChild(new GeomItem('GridItem', grid, gridMaterial), false)
     const axisLine = new Lines()
     axisLine.setNumVertices(2)
     axisLine.setNumSegments(1)
@@ -29,27 +30,29 @@ export default class GridTree extends TreeItem {
     positions.getValueRef(1).set(gridSize * 0.5, 0.0, 0.0)
     const gridXAxisMaterial = new Material('gridXAxisMaterial', 'LinesShader')
     gridXAxisMaterial.getParameter('BaseColor').setValue(new Color(gridColor.luminance(), 0, 0))
-    gridTreeItem.addChild(new GeomItem('xAxisLine', axisLine, gridXAxisMaterial), false)
+    this.addChild(new GeomItem('xAxisLine', axisLine, gridXAxisMaterial), false)
     const gridZAxisMaterial = new Material('gridZAxisMaterial', 'LinesShader')
     gridZAxisMaterial.getParameter('BaseColor').setValue(new Color(0, gridColor.luminance(), 0))
     const geomOffset = new Xfo()
     geomOffset.ori.setFromAxisAndAngle(new Vec3(0, 0, 1), Math.PI * 0.5)
     const zAxisLineItem = new GeomItem('yAxisLine', axisLine, gridZAxisMaterial)
     zAxisLineItem.setGeomOffsetXfo(geomOffset)
-    gridTreeItem.addChild(zAxisLineItem, false)
-    gridTreeItem.setSelectable(false, true)
-    // gridTreeItem.setFlag(ItemFlags.IGNORE_BBOX)
-
-    this.root.addChild(gridTreeItem, false) */
+    this.addChild(zAxisLineItem, false)
+    this.setSelectable(false, true)
+    const bBox = this._cleanBoundingBox(this.__boundingBoxParam.getValue())
+    this.__boundingBoxParam.setValue(bBox)
   }
 
   /**
    *
+   * @private
    * @param {Box3} bBox
-   * @return {Box3} - Resetted Bounding Box
+   * @return {Box3} - Reset Bounding Box
    */
   _cleanBoundingBox(bBox) {
     bBox.reset()
     return bBox
   }
 }
+
+export { GridTreeItem }
