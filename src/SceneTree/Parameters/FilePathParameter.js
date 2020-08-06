@@ -115,10 +115,9 @@ class FilePathParameter extends Parameter {
   }
 
   /**
-   * Sets file parameter value receiving its resource id.
+   * Sets file parameter value
    *
    * @param {string} value - The value param.
-   * @return {boolean} - The return value.
    */
   setValue(value) {
     if (value == undefined) {
