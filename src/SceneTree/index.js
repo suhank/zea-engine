@@ -37,7 +37,6 @@ export * from './Material.js'
 export * from './BaseImage.js'
 
 export * from './MaterialLibrary.js'
-// export * from './MaterialLibraryManager.js'
 
 export * from './Scene.js'
 
