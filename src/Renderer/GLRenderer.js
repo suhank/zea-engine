@@ -75,8 +75,6 @@ class GLRenderer extends GLBaseRenderer {
     const setupSplashScreen = (holdTime) => {
       const logoBlob = new Blob([logo], { type: 'image/svg+xml' })
       const logoUrl = URL.createObjectURL(logoBlob)
-      console.log(logoUrl)
-
       const image = document.createElement('img')
       image.addEventListener('load', () => {
         URL.revokeObjectURL(logoUrl), { once: true }
