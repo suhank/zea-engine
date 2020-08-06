@@ -1,4 +1,5 @@
 import webWorkerLoader from 'rollup-plugin-web-worker-loader'
+import svg from 'rollup-plugin-svg'
 
 import pkg from './package.json'
 
@@ -12,7 +13,7 @@ export default [
   {
     input: 'src/index.js',
     external: [...Object.keys(pkg.dependencies)],
-    plugins: [webWorkerLoader()],
+    plugins: [webWorkerLoader(), svg()],
     output: [
       { file: pkg.main, format: 'cjs' },
       { file: pkg.module, format: 'es' },
