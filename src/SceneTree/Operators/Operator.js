@@ -185,13 +185,13 @@ class Operator extends BaseItem {
 
     const inputs = []
     this.__inputs.forEach((input) => {
-      inputs.push(input.toJSON(context, flags))
+      inputs.push(input.toJSON(context))
     })
     j.inputs = inputs
 
     const outputs = []
     this.__outputs.forEach((output) => {
-      outputs.push(output.toJSON(context, flags))
+      outputs.push(output.toJSON(context))
     })
     j.outputs = outputs
     return j

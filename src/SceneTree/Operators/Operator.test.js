@@ -369,9 +369,7 @@ describe('Operator', () => {
     aParam.setValue(3)
     bParam.setValue(2.5)
 
-    const expOutput =
-      '{"name":"","type":"AddFloatsOperator","inputs":[{"name":"A","paramPath":["Foo","A"]},{"name":"B","paramPath":["Foo","B"]}],"outputs":[{"name":"C","paramPath":["Foo","MyParam"],"paramBindIndex":0}]}'
-    expect(JSON.stringify(addOperator.toJSON())).toBe(expOutput)
+    expect(JSON.stringify(addOperator.toJSON())).toMatchSnapshot()
   })
 
   test('load from JSON (serialization).', () => {
