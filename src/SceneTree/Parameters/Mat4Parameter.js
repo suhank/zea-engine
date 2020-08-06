@@ -39,10 +39,9 @@ class Mat4Parameter extends Parameter {
    * The clone method constructs a new Mat4 parameter,
    * copies its values from this parameter and returns it.
    *
-   * @param {number} flags - The flags value.
    * @return {Mat4Parameter} - Returns a new cloned Mat4 parameter.
    */
-  clone(flags) {
+  clone() {
     const clonedParam = new Mat4Parameter(this.__name, this.__value.clone())
     return clonedParam
   }

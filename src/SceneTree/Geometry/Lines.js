@@ -1,5 +1,4 @@
-import { BaseGeom, SAVE_FLAG_SKIP_GEOMDATA } from './BaseGeom.js'
-import { Attribute } from './Attribute.js'
+import { BaseGeom } from './BaseGeom.js'
 import { sgFactory } from '../SGFactory.js'
 
 /**
@@ -156,14 +155,12 @@ class Lines extends BaseGeom {
    * The toJSON method encodes this type as a json object for persistence.
    *
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    * @return {object} - Returns the json object.
    */
-  toJSON(context, flags) {
-    const j = super.toJSON(context, flags)
-    if (!(flags & SAVE_FLAG_SKIP_GEOMDATA)) {
-      j.indices = Array.from(this.__indices)
-    }
+  toJSON(context) {
+    const j = super.toJSON(context)
+    j.indices = Array.from(this.__indices)
+
     return j
   }
 
@@ -172,10 +169,9 @@ class Lines extends BaseGeom {
    *
    * @param {object} j - The json object this item must decode.
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    */
-  fromJSON(j, context, flags) {
-    super.fromJSON(j, context, flags)
+  fromJSON(j, context) {
+    super.fromJSON(j, context)
     this.__indices = Uint32Array.from(j.indices)
   }
 }

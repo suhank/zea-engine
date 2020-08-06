@@ -1,4 +1,4 @@
-import { ParamFlags, Parameter } from './Parameter.js'
+import { Parameter } from './Parameter.js'
 import { resourceLoader } from '../ResourceLoader.js'
 
 /**
@@ -158,8 +158,7 @@ class FilePathParameter extends Parameter {
       url,
     }
 
-    this.__flags |= ParamFlags.USER_EDITED
-    this.emit('valueChanged', { mode: ParamFlags.USER_EDITED })
+    this.emit('valueChanged', {})
   }
 
   /**
@@ -227,8 +226,7 @@ class FilePathParameter extends Parameter {
       }
     })
 
-    this.__flags |= ParamFlags.USER_EDITED
-    this.emit('valueChanged', { mode: ParamFlags.USER_EDITED })
+    this.emit('valueChanged', {})
   }
   // ////////////////////////////////////////
   // Persistence
@@ -237,11 +235,9 @@ class FilePathParameter extends Parameter {
    * The toJSON method encodes this type as a json object for persistence.
    *
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    * @return {object} - Returns the json object.
    */
-  toJSON(context, flags) {
-    if ((this.__flags & ParamFlags.USER_EDITED) == 0) return
+  toJSON(context) {
     const j = {}
     if (this.__file) {
       j.value = this.__file.id
@@ -258,16 +254,14 @@ class FilePathParameter extends Parameter {
    *
    * @param {object} j - The json object this item must decode.
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    */
-  fromJSON(j, context, flags) {
+  fromJSON(j, context) {
     if (j.value) {
       if (j.value.indexOf('.') > 0) {
         this.__value = j.value
       } else {
         if (resourceLoader.resourceAvailable(j.value)) {
           this.__value = j.value
-          this.__flags |= ParamFlags.USER_EDITED
         }
       }
     } else if (j.filepath) {
@@ -287,10 +281,9 @@ class FilePathParameter extends Parameter {
    * The clone method constructs a new file path parameter,
    * copies its values from this parameter and returns it.
    *
-   * @param {number} flags - The flags value.
    * @return {FilePathParameter} - Returns a new cloned file path parameter.
    */
-  clone(flags) {
+  clone() {
     const clonedParam = new FilePathParameter(this.__name)
     clonedParam.__file = this.__file
     return clonedParam

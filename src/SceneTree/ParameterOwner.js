@@ -6,7 +6,6 @@ import { sgFactory } from './SGFactory.js'
 // Explicit import of files to avoid importing all the parameter types.
 // Note: Soon these imports should be removed, once all code avoids calling
 // 'addParameter' without the parameter instance.
-import { ParamFlags, Parameter } from './Parameters/Parameter.js'
 
 let counter = 0
 
@@ -207,18 +206,16 @@ class ParameterOwner extends EventEmitter {
   // Persistence
 
   /**
-   * The toJSON method encodes this type as a json object for persistences.
+   * The toJSON method encodes this type as a json object for persistence.
    *
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    * @return {object} - Returns the json object.
    */
-  toJSON(context, flags) {
+  toJSON(context) {
     const paramsJSON = {}
     let savedParams = 0
     for (const param of this.__params) {
-      if (!param.testFlag(ParamFlags.USER_EDITED)) continue
-      const paramJSON = param.toJSON(context, flags)
+      const paramJSON = param.toJSON(context)
       if (paramJSON) {
         paramsJSON[param.getName()] = paramJSON
         savedParams++
@@ -232,9 +229,8 @@ class ParameterOwner extends EventEmitter {
    *
    * @param {object} j - The json object this item must decode.
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    */
-  fromJSON(j, context, flags) {
+  fromJSON(j, context) {
     if (j.params) {
       for (const key in j.params) {
         const pj = j.params[key]
@@ -307,9 +303,8 @@ class ParameterOwner extends EventEmitter {
    * Copies Parameters from another `ParameterOwner` to current object.
    *
    * @param {ParameterOwner} src - The ParameterOwner copy from.
-   * @param {number} flags - The flags value.
    */
-  copyFrom(src, flags) {
+  copyFrom(src) {
     // Note: Loop over the parameters in reverse order,
     // this is because often, parameter dependencies
     // are bottom to top (bottom params dependent on higher params).
