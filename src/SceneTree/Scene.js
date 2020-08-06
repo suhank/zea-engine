@@ -1,6 +1,7 @@
 import { Color } from '../Math/index'
 import { TreeItem } from './TreeItem.js'
 import { resourceLoader } from './ResourceLoader.js'
+import { DriveAdapter } from './ResourceLoader/DriveAdapter.js'
 import { SceneSettings } from './SceneSettings.js'
 import { VLAAsset } from './VLAAsset.js'
 import GridTreeItem from './GridTreeItem'
@@ -17,7 +18,7 @@ class Scene {
    */
   constructor(resources) {
     if (resources) {
-      resourceLoader.setResources(resources)
+      resourceLoader.setAdapter(new DriveAdapter(resources))
     }
     this.settings = new SceneSettings('Scene Settings')
     this.root = new TreeItem('root')

@@ -42,7 +42,7 @@ class GIFImage extends FileImage {
     this.format = 'RGBA'
     this.type = 'UNSIGNED_BYTE'
     this.__streamAtlas = true
-    this.getParameter('FilePath').setSupportedExts('gif')
+    // this.getParameter('FilePath').setSupportedExts('gif')
 
     this.addParameter(new Vec4Parameter('StreamAtlasDesc'))
     this.addParameter(new NumberParameter('StreamAtlasIndex', 0))
@@ -207,8 +207,9 @@ class GIFImage extends FileImage {
             })
           },
           (statusText) => {
-            console.warn('Unable to Load URL:' + statusText + ':' + fileDesc.url)
-            reject()
+            const msg = 'Unable to Load URL:' + statusText + ':' + fileDesc.url
+            console.warn(msg)
+            reject(msg)
           }
         )
       })
