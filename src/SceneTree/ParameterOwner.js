@@ -212,6 +212,7 @@ class ParameterOwner extends EventEmitter {
    * @return {object} - Returns the json object.
    */
   toJSON(context) {
+    const json = {}
     const paramsJSON = {}
     let savedParams = 0
     for (const param of this.__params) {
@@ -221,7 +222,8 @@ class ParameterOwner extends EventEmitter {
         savedParams++
       }
     }
-    if (savedParams > 0) return { params: paramsJSON }
+    if (savedParams > 0) json.params = paramsJSON
+    return json
   }
 
   /**
