@@ -230,6 +230,7 @@ class GeomItem extends BaseGeomItem {
 
     context.numGeomItems++
 
+    const itemFlags = reader.loadUInt8()
     const geomIndex = reader.loadUInt32()
     const geomLibrary = context.assetItem.getGeometryLibrary()
     const geom = geomLibrary.getGeom(geomIndex)
@@ -249,21 +250,32 @@ class GeomItem extends BaseGeomItem {
       geomLibrary.on('rangeLoaded', onGeomLoaded)
     }
 
-    this.__geomOffsetXfoParam.setValue(
-      new Xfo(reader.loadFloat32Vec3(), reader.loadFloat32Quat(), reader.loadFloat32Vec3())
-    )
+    // this.setVisibility(j.visibility);
+    // Note: to save space, some values are skipped if they are identity values
+    const geomOffsetXfoFlag = 1 << 2
+    if (itemFlags & geomOffsetXfoFlag) {
+      this.__geomOffsetXfoParam.setValue(
+        new Xfo(reader.loadFloat32Vec3(), reader.loadFloat32Quat(), reader.loadFloat32Vec3())
+      )
+    }
 
     // BaseGeomItem now handles loading materials.
     // if (context.version < 4) {
     if (context.versions['zea-engine'].compare([0, 0, 4]) < 0) {
-      const materialLibrary = context.assetItem.getMaterialLibrary()
-      const materialName = reader.loadStr()
-      let material = materialLibrary.getMaterial(materialName)
-      if (!material) {
-        console.warn("Geom :'" + this.name + "' Material not found:" + materialName)
-        material = materialLibrary.getMaterial('Default')
+      const materialFlag = 1 << 3
+      if (itemFlags & materialFlag) {
+        const materialLibrary = context.assetItem.getMaterialLibrary()
+        const materialName = reader.loadStr()
+        let material = materialLibrary.getMaterial(materialName)
+        if (!material) {
+          console.warn("Geom :'" + this.name + "' Material not found:" + materialName)
+          material = materialLibrary.getMaterial('Default')
+        }
+        this.getParameter('Material').loadValue(material)
+      } else {
+        // Force nodes to have a material so we can see them.
+        this.getParameter('Material').loadValue(context.assetItem.getMaterialLibrary().getMaterial('Default'))
       }
-      this.getParameter('Material').loadValue(material)
     }
 
     // Note: deprecated value. Not sure if we need to load this here.
