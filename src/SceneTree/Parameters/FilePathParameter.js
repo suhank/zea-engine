@@ -108,11 +108,10 @@ class FilePathParameter extends Parameter {
   /**
    * Returns the file url string.
    *
-   * @param {string} key - an optional key value that the resource loader can user to more precisely determine the URL.
    * @return {string} - The return value.
    */
-  getUrl(key = undefined) {
-    return resourceLoader.resolveURL(this.__value, key)
+  getUrl() {
+    return resourceLoader.resolveURL(this.__value)
   }
 
   /**

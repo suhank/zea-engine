@@ -137,11 +137,10 @@ class ResourceLoader extends EventEmitter {
   /**
    * Given some value, which could be an IR or a path, return the unique identifier.
    * @param {string} value - The file value.
-   * @param {string} key - The key value.
    * @return {string} - The resolved fileId if an adaptor is installed, else the original value.
    */
-  resolveFileId(value, key = undefined) {
-    if (this.__adaptor) return this.__adaptor.resolveFileId(value, key)
+  resolveFileId(value) {
+    if (this.__adaptor) return this.__adaptor.resolveFileId(value)
     return value
   }
 
@@ -149,11 +148,10 @@ class ResourceLoader extends EventEmitter {
    * The resolveFilename method.
    * @deprecated
    * @param {string} value - The file value.
-   * @param {string} key - The key value.
    * @return {string} - The resolved URL if an adaptor is installed, else the original value.
    */
-  resolveFilename(value, key = undefined) {
-    if (this.__adaptor) return this.__adaptor.resolveFilename(value, key)
+  resolveFilename(value) {
+    if (this.__adaptor) return this.__adaptor.resolveFilename(value)
     const filename = value.split(value.lastIndexOf('/'))[1]
     return filename
   }
@@ -162,11 +160,10 @@ class ResourceLoader extends EventEmitter {
    * The resolveURL method.
    * @deprecated
    * @param {string} value - The file value.
-   * @param {string} key - The key value.
    * @return {string} - The resolved URL if an adaptor is installed, else the original value.
    */
-  resolveURL(value, key = undefined) {
-    if (this.__adaptor) return this.__adaptor.resolveURL(value, key)
+  resolveURL(value) {
+    if (this.__adaptor) return this.__adaptor.resolveURL(value)
     return value
   }
 

@@ -303,10 +303,9 @@ class DriveAdaptor {
    * The resolveFilename method.
    * @deprecated
    * @param {string} value - The file value.
-   * @param {string} key - The key value.
    * @return {string} - The resolved URL if an adaptor is installed, else the original value.
    */
-  resolveFilename(value, key = undefined) {
+  resolveFilename(value) {
     return this.__resources[value].name
   }
 
@@ -314,10 +313,9 @@ class DriveAdaptor {
    * The resolveURL method.
    * @deprecated
    * @param {string} value - The file value.
-   * @param {string} key - The key value.
    * @return {string} - The resolved URL if an adaptor is installed, else the original value.
    */
-  resolveURL(value, key = undefined) {
+  resolveURL(value) {
     return this.__resources[value].url
   }
 
