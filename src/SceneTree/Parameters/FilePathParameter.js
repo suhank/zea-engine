@@ -82,6 +82,15 @@ class FilePathParameter extends Parameter {
    *
    * @return {object} - The return value.
    */
+  getFileDesc() {
+    return this.getFile()
+  }
+
+  /**
+   * Returns file object, which contains the url, resourceId and the name.
+   *
+   * @return {object} - The return value.
+   */
   getFile() {
     return { id: this.__value, url: this.getUrl(), name: this.getFilename() }
   }
