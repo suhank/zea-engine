@@ -1,24 +1,9 @@
 import { Color, Xfo, Box3 } from '../Math/index'
 import { sgFactory } from './SGFactory.js'
-import { ParamFlags, Parameter, BooleanParameter, XfoParameter } from './Parameters/index'
-import { ItemFlags, BaseItem } from './BaseItem.js'
+import { BooleanParameter, XfoParameter } from './Parameters/index'
+import { BaseItem } from './BaseItem.js'
 import { CalcGlobalXfoOperator } from './Operators/CalcGlobalXfoOperator.js'
 import { BoundingBoxParameter } from './Parameters/BoundingBoxParameter.js'
-
-// Defines used to explicity specify types for WebGL.
-const SaveFlags = {
-  SAVE_FLAG_SKIP_CHILDREN: 1 << 0,
-}
-
-const LoadFlags = {
-  // When loading the values of a bin tree, as opposed
-  // to loading a full json defined tree.
-  LOAD_FLAG_LOADING_BIN_TREE_VALUES: 1 << 4,
-}
-
-const CloneFlags = {
-  CLONE_FLAG_INSTANCED_TREE: 1 << 0,
-}
 
 let selectionOutlineColor = new Color('#03E3AC')
 selectionOutlineColor.a = 0.1
@@ -113,32 +98,6 @@ class TreeItem extends BaseItem {
   }
 
   /**
-   * Returns an ENUM object with save flags options.
-   *
-   * @return {object} - The return value.
-   */
-  static get SaveFlags() {
-    return SaveFlags
-  }
-
-  /**
-   * Returns an ENUM object with load flags options.
-   * @return {object} - The return value.
-   */
-  static get LoadFlags() {
-    return LoadFlags
-  }
-
-  /**
-   * Returns an ENUM object with clone flags options.
-   *
-   * @return {object} - The return value.
-   */
-  static get CloneFlags() {
-    return CloneFlags
-  }
-
-  /**
    * Returns the selection outline color.
    *
    * @return {Color} - Returns a color.
@@ -174,30 +133,6 @@ class TreeItem extends BaseItem {
     branchSelectionOutlineColor = color
   }
 
-  // ////////////////////////////////////////
-  // Flags
-
-  /**
-   * The _childFlagsChanged method.
-   * @param {number} flags - The flags value.
-   * @private
-   */
-  _childFlagsChanged(flags) {
-    if ((flags & ItemFlags.USER_EDITED) != 0) this.setFlag(ItemFlags.USER_EDITED)
-  }
-
-  /**
-   * Sets item flag by using an 'OR-assignation' operation then if current item is a child of another item,
-   * flags for the owner item is changed too.
-   *
-   * @param {number} flag - The flag value.
-   */
-  setFlag(flag) {
-    super.setFlag(flag)
-    if (this.__ownerItem) this.__ownerItem._childFlagsChanged(flag)
-  }
-
-  // ////////////////////////////////////////
   // Parent Item
 
   /**
@@ -467,7 +402,7 @@ class TreeItem extends BaseItem {
     bbox.reset()
     this.__childItems.forEach((childItem) => {
       if (childItem instanceof TreeItem)
-        if (childItem.isVisible() && !childItem.testFlag(ItemFlags.IGNORE_BBOX)) {
+        if (childItem.isVisible()) {
           // console.log(" - ", childItem.constructor.name, childItem.getName(), childItem.getParameter('GlobalXfo').getValue().sc.x, childItem.getBoundingBox().toString())
           bbox.addBox3(childItem.getParameter('BoundingBox').getValue())
         }
@@ -491,7 +426,7 @@ class TreeItem extends BaseItem {
   _setBoundingBoxDirty() {
     if (this.__boundingBoxParam) {
       // Will cause boundingChanged to emit
-      this.__boundingBoxParam.setDirty() //this._cleanBoundingBox)
+      this.__boundingBoxParam.setDirty()
     }
   }
 
@@ -641,8 +576,6 @@ class TreeItem extends BaseItem {
       if (maintainXfo) childItem.getParameter('LocalXfo').setValue(newLocalXfo)
       this._setBoundingBoxDirty()
     }
-
-    if (childItem.testFlag(ItemFlags.USER_EDITED)) this.setFlag(ItemFlags.USER_EDITED)
 
     this.emit('childAdded', { childItem, index })
 
@@ -990,32 +923,27 @@ class TreeItem extends BaseItem {
    * It can be used for persistence, data transfer, etc.
    *
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    * @return {object} - Returns the json object.
    */
-  toJSON(context, flags) {
-    if (!this.testFlag(ItemFlags.USER_EDITED)) return
+  toJSON(context) {
+    const j = super.toJSON(context)
 
-    const j = super.toJSON(context, flags)
-
-    // Some Items, such as the SliderSceneWidget do not need thier children
+    // Some Items, such as the SliderSceneWidget do not need their children
     // to be saved.
-    if (!(flags & SaveFlags.SAVE_FLAG_SKIP_CHILDREN)) {
-      const childItemsJSON = {}
-      for (const childItem of this.__childItems) {
-        if (childItem) {
-          const childJSON = childItem.toJSON(context, flags)
-          if (childJSON) childItemsJSON[childItem.getName()] = childJSON
-        }
+    const childItemsJSON = {}
+    for (const childItem of this.__childItems) {
+      if (childItem) {
+        const childJSON = childItem.toJSON(context)
+        if (childJSON) childItemsJSON[childItem.getName()] = childJSON
       }
-      if (Object.keys(childItemsJSON).length > 0) {
-        if (j) {
-          j.children = childItemsJSON
-        } else {
-          j = {
-            name: this.__name,
-            children: childItemsJSON,
-          }
+    }
+    if (Object.keys(childItemsJSON).length > 0) {
+      if (j) {
+        j.children = childItemsJSON
+      } else {
+        j = {
+          name: this.__name,
+          children: childItemsJSON,
         }
       }
     }
@@ -1028,16 +956,11 @@ class TreeItem extends BaseItem {
    *
    * @param {object} j - The json object this item must decode.
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    */
-  fromJSON(j, context, flags) {
-    super.fromJSON(j, context, flags)
+  fromJSON(j, context) {
+    super.fromJSON(j, context)
 
     if (context && !Number.isNaN(context.numTreeItems)) context.numTreeItems++
-
-    // Note: JSON data is only used to store user edits, so
-    // parameters loaded from JSON are considered user edited.
-    this.setFlag(ItemFlags.USER_EDITED)
 
     // if ('bbox' in j){
     //     let box = new Box3();
@@ -1053,14 +976,14 @@ class TreeItem extends BaseItem {
           // existing tree generated by loading a bin data file.
           let childItem = this.getChildByName(childJson.name)
           if (childItem) {
-            childItem.fromJSON(childJson, context, flags)
+            childItem.fromJSON(childJson, context)
           } else {
             if (childJson.type) {
               childItem = sgFactory.constructClass(childJson.type)
               if (childItem) {
                 // Note: we should load the json first, as it
                 // may contain the unique name of the item.
-                childItem.fromJSON(childJson, context, flags)
+                childItem.fromJSON(childJson, context)
                 this.addChild(childItem, false, false)
               }
             } else {
@@ -1079,7 +1002,7 @@ class TreeItem extends BaseItem {
           // existing tree generated by loading a bin data file.
           let childItem = this.getChildByName(childName)
           if (childItem) {
-            childItem.fromJSON(childJson, context, flags)
+            childItem.fromJSON(childJson, context)
           } else if (childJson.type) {
             childItem = sgFactory.constructClass(childJson.type)
             if (childItem) {
@@ -1092,7 +1015,7 @@ class TreeItem extends BaseItem {
               // We prefer to add a child afer its loaded, because sometimes
               // In the tree is asset items, who will only toggled as
               // unloaded once they are loaded(else they are considered inline assets.)
-              childItem.fromJSON(childJson, context, flags)
+              childItem.fromJSON(childJson, context)
               this.addChild(childItem, false, false)
             }
           } else {
@@ -1134,7 +1057,6 @@ class TreeItem extends BaseItem {
     // const visibilityFlag = 1 << 1
     // this.setVisible(itemflags&visibilityFlag);
 
-    // this.setVisible(j.visibility);
     // Note: to save space, some values are skipped if they are identity values
     const localXfoFlag = 1 << 2
     if (itemflags & localXfoFlag) {
@@ -1183,9 +1105,6 @@ class TreeItem extends BaseItem {
           reader.seek(toc[i]) // Reset the pointer to the start of the item data.
           childItem.readBinary(reader, context)
 
-          // Flagging this node as a bin tree node. (A node generated from loading a binary file)
-          childItem.setFlag(ItemFlags.BIN_NODE)
-
           this.addChild(childItem, false, false)
         } catch (e) {
           console.warn('Error loading tree item: ', e)
@@ -1201,12 +1120,11 @@ class TreeItem extends BaseItem {
    * The clone method constructs a new tree item, copies its values
    * from this item and returns it.
    *
-   * @param {number} flags - The flags value.
    * @return {TreeItem} - Returns a new cloned tree item.
    */
-  clone(flags) {
+  clone() {
     const cloned = new TreeItem()
-    cloned.copyFrom(this, flags)
+    cloned.copyFrom(this)
     return cloned
   }
 
@@ -1214,10 +1132,9 @@ class TreeItem extends BaseItem {
    * Copies current TreeItem with all its children.
    *
    * @param {TreeItem} src - The tree item to copy from.
-   * @param {number} flags - The flags value.
    */
-  copyFrom(src, flags) {
-    super.copyFrom(src, flags)
+  copyFrom(src) {
+    super.copyFrom(src)
 
     // Share a local Xfo
     // Note: disabled for now.
@@ -1225,16 +1142,8 @@ class TreeItem extends BaseItem {
     // have a unique LocalXfoParam, as it must be re-set.
     // (The root of the tree is a cloned and attached to an Instance node that provides the transform)
 
-    // if(flags& CloneFlags.CLONE_FLAG_INSTANCED_TREE)
-    //     this.__localXfoParam = this.replaceParameter(src.getParameter('LocalXfo'));
-
     src.getChildren().forEach((srcChildItem) => {
-      if (srcChildItem) this.addChild(srcChildItem.clone(flags), false, false)
-      // if(flags& CloneFlags.CLONE_FLAG_INSTANCED_TREE) {
-      //     src.on('childAdded', (childItem, index)=>{
-      //         this.addChild(childItem.clone(flags), false);
-      //     })
-      // }
+      if (srcChildItem) this.addChild(srcChildItem.clone(), false, false)
     })
   }
 
@@ -1250,4 +1159,4 @@ class TreeItem extends BaseItem {
 
 sgFactory.registerClass('TreeItem', TreeItem)
 
-export { SaveFlags, LoadFlags, CloneFlags, TreeItem }
+export { TreeItem }

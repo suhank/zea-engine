@@ -7,7 +7,6 @@ import { Attribute } from './Attribute.js'
 import { sgFactory } from '../SGFactory.js'
 
 // Defines used to explicity specify types for WebGL.
-const SAVE_FLAG_SKIP_GEOMDATA = 1 << 10
 function isTypedArray(obj) {
   return !!obj && obj.byteLength !== undefined
 }
@@ -321,6 +320,7 @@ class BaseGeom extends ParameterOwner {
 
     this.setNumVertices(numVerts)
     const positionsAttr = this.getVertexAttribute('positions')
+
     let normalsAttr
     let texCoordsAttr
     if (flags & (1 << 1)) {
@@ -450,23 +450,21 @@ class BaseGeom extends ParameterOwner {
    * The toJSON method encodes this type as a json object for persistence.
    *
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    * @return {object} - Returns the json object.
    */
-  toJSON(context, flags) {
-    let json = super.toJSON(context, flags)
+  toJSON(context) {
+    let json = super.toJSON(context)
     if (!json) json = {}
     json.type = sgFactory.getClassName(this)
     json.numVertices = this.__numVertices
 
-    if (!(flags & SAVE_FLAG_SKIP_GEOMDATA)) {
-      const vertexAttributes = {}
-      for (const [key, attr] of this.__vertexAttributes.entries()) {
-        // if (!opts || !('attrList' in opts) || opts.attrList.indexOf(key) != -1)
-        vertexAttributes[key] = attr.toJSON(context, flags)
-      }
-      json.vertexAttributes = vertexAttributes
+    const vertexAttributes = {}
+    for (const [key, attr] of this.__vertexAttributes.entries()) {
+      // if (!opts || !('attrList' in opts) || opts.attrList.indexOf(key) != -1)
+      vertexAttributes[key] = attr.toJSON(context)
     }
+    json.vertexAttributes = vertexAttributes
+
     return json
   }
 
@@ -475,10 +473,9 @@ class BaseGeom extends ParameterOwner {
    *
    * @param {object} json - The json object this item must decode.
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    */
-  fromJSON(json, context, flags) {
-    super.fromJSON(json, context, flags)
+  fromJSON(json, context) {
+    super.fromJSON(json, context)
     this.setNumVertices(json.numVertices)
     for (const name in json.vertexAttributes) {
       let attr = this.__vertexAttributes.get(name)
@@ -501,4 +498,4 @@ class BaseGeom extends ParameterOwner {
     return JSON.stringify(this.toJSON(), null, 2)
   }
 }
-export { BaseGeom, SAVE_FLAG_SKIP_GEOMDATA }
+export { BaseGeom }

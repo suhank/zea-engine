@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable valid-jsdoc */
 import { Xfo } from '../Math/index'
-import { TreeItem, CloneFlags } from './TreeItem.js'
+import { TreeItem } from './TreeItem.js'
 import { sgFactory } from './SGFactory.js'
 
 /**
@@ -38,10 +38,6 @@ class InstanceItem extends TreeItem {
         this.addChild(clonedChild, false)
       })
     }
-
-    // this.__srcTree.on('childAdded', event => {
-    //     this.addChild(event.child.clone(CloneFlags.CLONE_FLAG_INSTANCED_TREE), false)
-    // })
   }
 
   /**
@@ -74,14 +70,13 @@ class InstanceItem extends TreeItem {
   }
 
   /**
-   * The toJSON method encodes this type as a json object for persistences.
+   * The toJSON method encodes this type as a json object for persistence.
    *
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    * @return {object} - Returns the json object.
    */
-  toJSON(context = {}, flags = 0) {
-    const j = super.toJSON(context, flags)
+  toJSON(context = {}) {
+    const j = super.toJSON(context)
     return j
   }
 
@@ -91,10 +86,9 @@ class InstanceItem extends TreeItem {
    * @todo Needs to be implemented.
    * @param {object} j - The json object this item must decode.
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    * @param {function} onDone - The onDone value.
    */
-  fromJSON(j, context = {}, flags = 0, onDone) {}
+  fromJSON(j, context = {}, onDone) {}
 }
 
 sgFactory.registerClass('InstanceItem', InstanceItem)

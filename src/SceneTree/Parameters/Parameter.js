@@ -1,26 +1,6 @@
 import { EventEmitter } from '../../Utilities/EventEmitter.js'
 import { sgFactory } from '../SGFactory.js'
 
-// Note: In some cases we want the parameter to emit a notification
-// and cause the update of the scene during evaluation (like statemachine updates).
-// But we also don't want the parameter value to then
-// be considered modified so it is saved to the JSON file. I'm not sure how to address this.
-// We need to check what happens if a parameter emits a 'valueChanged' during cleaning (maybe it gets ignored).
-const ValueSetMode = {
-  USER_SETVALUE: 0 /* A value has being modified by a local user. emit events and set user edited flag */,
-  REMOTEUSER_SETVALUE: 1 /* A value has being modified by a remote user. emit events and set user edited flag. may not trigger file save. */,
-  USER_SETVALUE_DONE: 2 /* A value has finished being interactively set */,
-  OPERATOR_SETVALUE: 3 /* No events*/,
-  OPERATOR_DIRTIED: 4 /* Emitted when the param is dirtied. Generate events, but don't flag the parameter as user edited*/,
-  COMPUTED_VALUE: 4 /* Generate events, but don't flag the parameter as user edited*/,
-  GENERATED_VALUE: 4 /* Generate events, but don't flag the parameter as user edited*/,
-  DATA_LOAD: 4 /* Generate events, but don't flag the parameter as user edited*/,
-}
-const ParamFlags = {
-  USER_EDITED: 1 << 1,
-  DISABLED: 1 << 2,
-}
-
 const OperatorOutputMode = {
   OP_WRITE: 0,
   OP_READ_WRITE: 1,
@@ -65,7 +45,6 @@ class Parameter extends EventEmitter {
     this.__boundOps = []
     this.__dirtyOpIndex = this.__boundOps.length
     this.__cleaning = false
-    this.__flags = 0
 
     this.getName = this.getName.bind(this)
     this.setName = this.setName.bind(this)
@@ -74,12 +53,13 @@ class Parameter extends EventEmitter {
   }
 
   /**
-   * The clone method.
-   * @param {number} flags - The flags value.
+   * Copies and returns the exact clone of current parameter
+   *
+   * @return {Parameter} - Clone of current parameter
    */
-  clone(flags) {
-    const cloneded = new Parameter(this.__name, this.__value, this.__dataType)
-    return cloneded
+  clone() {
+    const clonedParameter = new Parameter(this.__name, this.__value, this.__dataType)
+    return clonedParameter
   }
 
   /**
@@ -148,35 +128,6 @@ class Parameter extends EventEmitter {
     return this.__dataType
   }
 
-  /**
-   * The setFlag method.
-   * @private
-   * @param {number} flag - The flag value.
-   */
-  setFlag(flag) {
-    this.__flags |= flag
-  }
-
-  /**
-   * The clearFlag method.
-   * @private
-   * @param {number} flag - The flag value.
-   */
-  clearFlag(flag) {
-    this.__flags &= ~flag
-  }
-
-  /**
-   * Returns true if the flag if set, otherwise returns false.
-   *
-   * @private
-   * @param {number} flag - The flag to test.
-   * @return {boolean} - Returns a boolean indicating if the flag is set.
-   */
-  testFlag(flag) {
-    return (this.__flags & flag) != 0
-  }
-
   // ////////////////////////////////////////////////
   // Operator bindings
 
@@ -218,9 +169,10 @@ class Parameter extends EventEmitter {
   }
 
   /**
-   * The setDirty method dirties this Parameter so subsequent calls to getValue will cause an evaluation of its bound operators.
-   * @param {OperatorOutput} operatorOutput - The cleanerFn value.
-   * @return {boolean} true if the Parameter was made dirty, else false if it was already dirty.
+   * Dirties this Parameter so subsequent calls to `getValue` will cause an evaluation of its bound operators.
+   *
+   * @param {number} index - Index of the operator
+   * @return {boolean} - `true` if the Parameter was made dirty, else `false` if it was already dirty.
    */
   setDirty(index) {
     // Determine the first operator in the stack that must evaluate to clean the parameter.
@@ -235,9 +187,11 @@ class Parameter extends EventEmitter {
         }
         if (this.__boundOps[this.__dirtyOpIndex].getMode() == OperatorOutputMode.OP_WRITE) break
       }
+
       this.emit('valueChanged', { mode: 0 })
       return true
     }
+
     return false
   }
 
@@ -375,9 +329,10 @@ class Parameter extends EventEmitter {
   }
 
   /**
-   * Sets parameter's value, but runs a few internal cleaning processes.
+   * Sets value of the parameter.
    *
    * @param {object|string|number|any} value - The value param.
+   * @param {number} mode - This is deprecated now.
    */
   setValue(value, mode) {
     if (value == undefined) {
@@ -392,7 +347,7 @@ class Parameter extends EventEmitter {
       for (let i = this.__boundOps.length - 1; i >= 0; i--) {
         const operatorOutput = this.__boundOps[i]
         value = operatorOutput.setValue(value)
-        if (operatorOutput.getMode() == 0 /*OP_WRITE*/) return
+        if (operatorOutput.getMode() == 0 /* OP_WRITE */) return
       }
     }
 
@@ -403,8 +358,7 @@ class Parameter extends EventEmitter {
     this.__value = value
 
     // Note: only users call 'setValue'. Operators call 'setCleanFromOp'
-    if (this.__flags & ParamFlags.USER_EDITED) this.setFlag(ParamFlags.USER_EDITED)
-    this.emit('valueChanged', { mode: ParamFlags.USER_EDITED })
+    this.emit('valueChanged', {})
   }
 
   // ////////////////////////////////////////
@@ -425,11 +379,10 @@ class Parameter extends EventEmitter {
    * It can be used for persistence, data transfer, etc.
    *
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    * @return {object} - Returns the json object.
    */
-  toJSON(context, flags) {
-    if (this.__value.toJSON) return { value: this.__value.toJSON(context, flags) }
+  toJSON(context) {
+    if (this.__value.toJSON) return { value: this.__value.toJSON(context) }
     else return { value: this.__value }
   }
 
@@ -438,16 +391,12 @@ class Parameter extends EventEmitter {
    *
    * @param {object} j - The json object this item must decode.
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    */
-  fromJSON(j, context, flags) {
+  fromJSON(j, context) {
     if (j.value == undefined) {
       console.warn('Invalid Parameter JSON')
       return
     }
-    // Since JSON data is only used to store user edits,
-    // parameters loaded from JSON are considered user edited.
-    this.setFlag(ParamFlags.USER_EDITED)
 
     if (j.value.type && this.__value == undefined) {
       this.__value = sgFactory.constructClass(j.value.type)
@@ -477,10 +426,9 @@ class Parameter extends EventEmitter {
    * The clone method constructs a new parameter, copies its values
    * from this parameter and returns it.
    *
-   * @param {number} flags - The flags value.
    * @return {Parameter} - Returns a new cloned parameter.
    */
-  clone(flags) {
+  clone() {
     const clonedValue = this.__value
     if (clonedValue.clone) clonedValue = clonedValue.clone()
     const clonedParam = new Parameter(this.__name, clonedValue, this.__dataType)
@@ -488,4 +436,4 @@ class Parameter extends EventEmitter {
   }
 }
 
-export { ParamFlags, ValueSetMode, OperatorOutputMode, Parameter }
+export { OperatorOutputMode, Parameter }

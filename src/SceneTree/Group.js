@@ -10,7 +10,6 @@ import {
   MultiChoiceParameter,
 } from './Parameters/index'
 import { MaterialParameter } from './Parameters/MaterialParameter.js'
-import { ItemFlags } from './BaseItem'
 import { TreeItem } from './TreeItem'
 import { BaseGeomItem } from './BaseGeomItem'
 import { sgFactory } from './SGFactory.js'
@@ -53,9 +52,6 @@ class Group extends TreeItem {
     super(name)
 
     // Items which can be constructed by a user (not loaded in binary data.)
-    // Should always have this flag set.
-    this.setFlag(ItemFlags.USER_EDITED)
-
     this.groupXfoDirty = false
     this.calculatingGroupXfo = false
     this.dirty = false
@@ -600,7 +596,7 @@ class Group extends TreeItem {
     const items = Array.from(this.__itemsParam.getValue())
     items.forEach((item) => {
       if (item instanceof TreeItem) {
-        if (item.isVisible() && !item.testFlag(ItemFlags.IGNORE_BBOX)) {
+        if (item.isVisible()) {
           result.addBox3(item.getParameter('BoundingBox').getValue())
         }
       }
@@ -647,14 +643,13 @@ class Group extends TreeItem {
   // Persistence
 
   /**
-   * The toJSON method encodes this type as a json object for persistences.
+   * The toJSON method encodes this type as a json object for persistence.
    *
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    * @return {object} - Returns the json object.
    */
-  toJSON(context, flags) {
-    const j = super.toJSON(context, flags)
+  toJSON(context) {
+    const j = super.toJSON(context)
     const items = Array.from(this.__itemsParam.getValue())
     const treeItems = []
     items.forEach((p) => {
@@ -670,14 +665,9 @@ class Group extends TreeItem {
    *
    * @param {object} j - The json object this item must decode.
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    */
-  fromJSON(j, context, flags) {
-    super.fromJSON(j, context, flags)
-
-    // Note: JSON data is only used to store user edits, so
-    // parameters loaed from JSON are considered user edited.
-    this.setFlag(ItemFlags.USER_EDITED)
+  fromJSON(j, context) {
+    super.fromJSON(j, context)
 
     if (!j.treeItems) {
       console.warn('Invalid Parameter JSON')
@@ -717,12 +707,11 @@ class Group extends TreeItem {
    * The clone method constructs a new group,
    * copies its values and returns it.
    *
-   * @param {number} flags - The flags value.
    * @return {Group} - Returns a new cloned group.
    */
-  clone(flags) {
+  clone() {
     const cloned = new Group()
-    cloned.copyFrom(this, flags)
+    cloned.copyFrom(this)
     return cloned
   }
 
@@ -730,10 +719,9 @@ class Group extends TreeItem {
    * Copies current Group with all owned items.
    *
    * @param {Group} src - The group to copy from.
-   * @param {number} flags - The flags value.
    */
-  copyFrom(src, flags) {
-    super.copyFrom(src, flags)
+  copyFrom(src) {
+    super.copyFrom(src)
   }
 }
 

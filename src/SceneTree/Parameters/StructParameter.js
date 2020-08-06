@@ -1,4 +1,4 @@
-import { ParamFlags, Parameter } from './Parameter.js'
+import { Parameter } from './Parameter.js'
 
 /**
  * Represents a specific type of parameter, that stores multiple parameters in object format.
@@ -38,7 +38,6 @@ class StructParameter extends Parameter {
       this.__value[parameter.getName()] = parameter.getValue()
     })
     this.__members.push(parameter)
-    this.__flags |= ParamFlags.USER_EDITED
     this.emit('valueChanged', {})
     return parameter
   }
@@ -87,13 +86,11 @@ class StructParameter extends Parameter {
    * The toJSON method encodes this type as a json object for persistence.
    *
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    * @return {object} - Returns the json object.
    */
-  toJSON(context, flags) {
-    if ((this.__flags & ParamFlags.USER_EDITED) == 0) return
+  toJSON(context) {
     const members = []
-    for (const p of this.__members) members.push(p.toJSON(context, flags))
+    for (const p of this.__members) members.push(p.toJSON(context))
     return {
       members,
     }
@@ -104,16 +101,12 @@ class StructParameter extends Parameter {
    *
    * @param {object} j - The json object this item must decode.
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    */
-  fromJSON(j, context, flags) {
+  fromJSON(j, context) {
     if (j.members == undefined) {
       console.warn('Invalid Parameter JSON')
       return
     }
-    // Note: JSON data is only used to store user edits, so
-    // parameters loaded from JSON are considered user edited.
-    this.__flags |= ParamFlags.USER_EDITED
 
     for (let i = 0; i < j.members.length; i++) {
       if (j.members[i]) {

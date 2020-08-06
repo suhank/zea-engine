@@ -109,10 +109,9 @@ class MaterialFloatParam extends NumberParameter {
    * The clone method constructs a new material float parameter,
    * copies its values from this parameter and returns it.
    *
-   * @param {number} flags - The flags value.
    * @return {MaterialFloatParam} - Returns a new cloned material float parameter.
    */
-  clone(flags) {
+  clone() {
     const clonedParam = new MaterialFloatParam(this.__name, this.__value.clone())
     return clonedParam
   }

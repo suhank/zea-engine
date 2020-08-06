@@ -1,5 +1,5 @@
 import { Xfo } from '../../Math/index'
-import { Parameter, ValueSetMode } from './Parameter.js'
+import { Parameter } from './Parameter.js'
 
 /**
  * Represents a specific type of parameter, that only stores `Xfo` transform values.
@@ -43,10 +43,9 @@ class XfoParameter extends Parameter {
    * The clone method constructs a new Xfo parameter, copies its values
    * from this parameter and returns it.
    *
-   * @param {number} flags - The flags value.
    * @return {XfoParameter} - Returns a new Xfo parameter.
    */
-  clone(flags) {
+  clone() {
     const clonedParam = new XfoParameter(this.__name, this.__value.clone())
     return clonedParam
   }
