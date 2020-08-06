@@ -1052,13 +1052,26 @@ class TreeItem extends BaseItem {
 
     context.numTreeItems++
 
-    const xfo = new Xfo()
-    xfo.tr = reader.loadFloat32Vec3()
-    xfo.ori = reader.loadFloat32Quat()
-    xfo.sc.set(reader.loadFloat32())
-    // console.log(this.getPath() + " TreeItem:" + xfo.toString());
-    this.__localXfoParam.loadValue(xfo)
-    this.__boundingBoxParam.loadValue(new Box3(reader.loadFloat32Vec3(), reader.loadFloat32Vec3()))
+    const itemflags = reader.loadUInt8()
+
+    // const visibilityFlag = 1 << 1
+    // this.setVisible(itemflags&visibilityFlag);
+
+    // Note: to save space, some values are skipped if they are identity values
+    const localXfoFlag = 1 << 2
+    if (itemflags & localXfoFlag) {
+      const xfo = new Xfo()
+      xfo.tr = reader.loadFloat32Vec3()
+      xfo.ori = reader.loadFloat32Quat()
+      xfo.sc.set(reader.loadFloat32())
+      // console.log(this.getPath() + " TreeItem:" + xfo.toString());
+      this.__localXfoParam.loadValue(xfo)
+    }
+
+    const bboxFlag = 1 << 3
+    if (itemflags & bboxFlag) {
+      this.__boundingBoxParam.loadValue(new Box3(reader.loadFloat32Vec3(), reader.loadFloat32Vec3()))
+    }
 
     const numChildren = reader.loadUInt32()
     if (numChildren > 0) {
