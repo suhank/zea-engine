@@ -549,8 +549,9 @@ class FileImage extends BaseImage {
             })
           },
           (statusText) => {
-            console.warn('Unable to Load URL:' + statusText + ':' + file.url)
-            reject()
+            const msg = 'Unable to Load URL:' + statusText + ':' + fileDesc.url
+            console.warn(msg)
+            reject(msg)
           }
         )
       })

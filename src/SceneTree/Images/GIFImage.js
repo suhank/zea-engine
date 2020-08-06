@@ -207,8 +207,9 @@ class GIFImage extends FileImage {
             })
           },
           (statusText) => {
-            console.warn('Unable to Load URL:' + statusText + ':' + fileDesc.url)
-            reject()
+            const msg = 'Unable to Load URL:' + statusText + ':' + fileDesc.url
+            console.warn(msg)
+            reject(msg)
           }
         )
       })
