@@ -165,19 +165,19 @@ class ParameterOwner extends EventEmitter {
   /**
    * Removes `Parameter` from owner, by using parameter's name.
    * @emits `parameterRemoved` with the name of the param.
-   * @param {string} paramName - The parameter name.
+   * @param {string} name - The parameter name.
    */
-  removeParameter(paramName) {
-    if (this.__paramMapping[paramName] == undefined) {
-      console.throw('Unable to remove Parameter:' + paramName)
+  removeParameter(name) {
+    if (this.__paramMapping[name] == undefined) {
+      throw new Error('Unable to remove Parameter:' + name)
     }
-    const index = this.__paramMapping[paramName]
-    const param = this.__params[this.__paramMapping[paramName]]
+    const index = this.__paramMapping[name]
+    const param = this.__params[this.__paramMapping[name]]
 
-    param.off('valueChanged', this.__paramEventHandlers[paramName])
+    param.off('valueChanged', this.__paramEventHandlers[name])
     this.__params.splice(index, 1)
 
-    delete this.__paramMapping[paramName]
+    delete this.__paramMapping[name]
     for (let i = index; i < this.__params.length; i++) {
       this.__paramMapping[this.__params[i].getName()] = i
     }
@@ -193,8 +193,8 @@ class ParameterOwner extends EventEmitter {
    */
   replaceParameter(param) {
     const name = param.getName()
-    if (this.__paramMapping[paramName] == undefined) {
-      console.throw('Unable to replace Parameter:' + paramName)
+    if (this.__paramMapping[name] == undefined) {
+      throw new Error('Unable to replace Parameter:' + paramName)
     }
     const index = this.__paramMapping[name]
     this.removeParameter(name)
@@ -212,6 +212,7 @@ class ParameterOwner extends EventEmitter {
    * @return {object} - Returns the json object.
    */
   toJSON(context) {
+    const json = {}
     const paramsJSON = {}
     let savedParams = 0
     for (const param of this.__params) {
@@ -221,7 +222,8 @@ class ParameterOwner extends EventEmitter {
         savedParams++
       }
     }
-    if (savedParams > 0) return { params: paramsJSON }
+    if (savedParams > 0) json.params = paramsJSON
+    return json
   }
 
   /**

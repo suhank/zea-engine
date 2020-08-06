@@ -1,5 +1,7 @@
 import Registry from '../../Registry'
 import { BaseItem } from '../BaseItem.js'
+import { OperatorInput } from './OperatorInput'
+import { OperatorOutput } from './OperatorOutput'
 
 /**
  * Class representing an operator.
@@ -13,10 +15,8 @@ class Operator extends BaseItem {
    */
   constructor(name) {
     super(name)
-
-    this.__inputs = []
-    this.__outputs = []
-    this.__evalOutput = this.__evalOutput.bind(this)
+    this.__inputs = new Map()
+    this.__outputs = new Map()
   }
 
   /**
@@ -27,7 +27,7 @@ class Operator extends BaseItem {
    * @private
    */
   setDirty() {
-    for (const o of this.__outputs) o.setDirty()
+    this.__outputs.forEach((output) => output.setDirty())
   }
 
   /**
@@ -44,22 +44,27 @@ class Operator extends BaseItem {
 
   /**
    * The addInput method.
-   * @param {OperatorInput} input - The output value.
+   * @param {string|OperatorInput} input - The name of the input, or the input object
    * @return {array} - The return value.
    */
   addInput(input) {
+    if (typeof input == 'string') input = new OperatorInput(input)
     input.setOperator(this)
-    this.__inputs.push(input)
+    this.__inputs.set(input.getName(), input)
     return input
   }
 
   /**
    * The removeInput method.
-   * @param {OperatorInput} input - The input value.
+   * @param {string|OperatorInput} input - The name of the input, or the input object
    */
   removeInput(input) {
-    if (input.getParam()) input.getParam().unbindOperator(this)
-    this.__inputs.splice(this.__inputs.indexOf(input), 1)
+    if (typeof input == 'string') input = this.getInput(input)
+    if (!(input instanceof OperatorInput)) {
+      throw new Error('Invalid parameter for removeInput:', input)
+    }
+    if (input.getParam()) input.setParam(null)
+    this.__inputs.delete(input.getName())
   }
 
   /**
@@ -67,7 +72,7 @@ class Operator extends BaseItem {
    * @return {number} - Returns the number of inputs.
    */
   getNumInputs() {
-    return this.__inputs.length
+    return this.__inputs.size
   }
 
   /**
@@ -76,7 +81,7 @@ class Operator extends BaseItem {
    * @return {object} - The return value.
    */
   getInputByIndex(index) {
-    return this.__inputs[index]
+    return Array.from(this.__inputs.values())[index]
   }
 
   /**
@@ -85,29 +90,32 @@ class Operator extends BaseItem {
    * @return {OperatorInput} - The return value.
    */
   getInput(name) {
-    for (const o of this.__inputs) {
-      if (o.getName() == name) return o
-    }
+    return this.__inputs.get(name)
   }
 
   /**
    * The addOutput method.
-   * @param {OperatorOutput} output - The output value.
+   * @param {string|OperatorOutput} output - The name of the output, or the output object
    * @return {array} - The return value.
    */
   addOutput(output) {
+    if (typeof output == 'string') output = new OperatorOutput(output)
     output.setOperator(this)
-    this.__outputs.push(output)
+    this.__outputs.set(output.getName(), output)
     return output
   }
 
   /**
    * The removeOutput method.
-   * @param {OperatorOutput} output - The output value.
+   * @param {string|OperatorOutput} output - The name of the output, or the output object
    */
   removeOutput(output) {
-    if (output.getParam()) output.getParam().unbindOperator(this)
-    this.__outputs.splice(this.__outputs.indexOf(output), 1)
+    if (typeof output == 'string') output = this.getOutput(output)
+    if (!(output instanceof OperatorOutput)) {
+      throw new Error('Invalid parameter for removeOutput:', output)
+    }
+    if (output.getParam()) output.setParam(null)
+    this.__outputs.delete(output.getName())
   }
 
   /**
@@ -115,7 +123,7 @@ class Operator extends BaseItem {
    * @return {number} - Returns the number of outputs.
    */
   getNumOutputs() {
-    return this.__outputs.length
+    return this.__outputs.size
   }
 
   /**
@@ -124,7 +132,7 @@ class Operator extends BaseItem {
    * @return {object} - The return value.
    */
   getOutputByIndex(index) {
-    return this.__outputs[index]
+    return Array.from(this.__outputs.values())[index]
   }
 
   /**
@@ -133,25 +141,7 @@ class Operator extends BaseItem {
    * @return {OperatorOutput} - The return value.
    */
   getOutput(name) {
-    for (const o of this.__outputs) {
-      if (o.getName() == name) return o
-    }
-  }
-
-  /**
-   * The __evalOutput method.
-   * @param {any} cleanedParam - The cleanedParam value.
-   * @private
-   */
-  __evalOutput(cleanedParam /* value, getter */) {
-    for (const o of this.__outputs) {
-      o.removeCleanerFn(this.__evalOutput)
-    }
-    this.evaluate()
-
-    // Why does the cleaner need to return a value?
-    // Usually operators are connected to multiple outputs.
-    // return getter(1);
+    return this.__outputs.get(name)
   }
 
   /**
@@ -172,6 +162,7 @@ class Operator extends BaseItem {
    * an operator, the operator can propagate the value back up the chain
    * to its inputs.
    * @param {any} value - The value param.
+   * @param {OperatorOutput} output - The output that we are receiving the setValue from
    * @return {number} - Returns the number of outputs.
    */
   setValue(value) {
@@ -193,15 +184,15 @@ class Operator extends BaseItem {
     j.type = Registry.getBlueprintName(this)
 
     const inputs = []
-    for (const input of this.__inputs) {
+    this.__inputs.forEach((input) => {
       inputs.push(input.toJSON(context))
-    }
+    })
     j.inputs = inputs
 
     const outputs = []
-    for (const output of this.__outputs) {
+    this.__outputs.forEach((output) => {
       outputs.push(output.toJSON(context))
-    }
+    })
     j.outputs = outputs
     return j
   }
@@ -216,21 +207,33 @@ class Operator extends BaseItem {
     super.fromJSON(j, context)
 
     if (j.inputs) {
-      for (let i = 0; i < this.__inputs.length; i++) {
-        const output = this.__inputs[i]
-        output.fromJSON(j.inputs[i], context)
-      }
+      j.inputs.forEach((inputJson, index) => {
+        let input
+        if (inputJson.name) {
+          input = this.getInput(inputJson.name)
+          if (!input) {
+            input = this.addInput(inputJson.name)
+          }
+        } else {
+          input = this.getInputByIndex(index)
+        }
+        input.fromJSON(inputJson, context)
+      })
     }
     if (j.outputs) {
-      for (let i = 0; i < this.__outputs.length; i++) {
-        const output = this.__outputs[i]
-        output.fromJSON(j.outputs[i], context)
-      }
+      j.outputs.forEach((outputJson, index) => {
+        let output
+        if (outputJson.name) {
+          output = this.getOutput(outputJson.name)
+          if (!output) {
+            output = this.addOutput(outputJson.name)
+          }
+        } else {
+          output = this.getOutputByIndex(index)
+        }
+        output.fromJSON(outputJson, context)
+      })
     }
-    // Force an evaluation of the operator as soon as loading is done.
-    // context.addPLCB(() => {
-    //   this.setDirty()
-    // })
   }
 
   /**

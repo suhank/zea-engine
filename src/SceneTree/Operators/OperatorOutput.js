@@ -73,7 +73,9 @@ class OperatorOutput {
       this._param.unbindOperator(this, index)
     }
     this._param = param
-    this._paramBindIndex = this._param.bindOperatorOutput(this, index)
+    if (this._param) {
+      this._paramBindIndex = this._param.bindOperatorOutput(this, index)
+    }
   }
 
   /**
@@ -149,6 +151,7 @@ class OperatorOutput {
   toJSON(context) {
     const paramPath = this._param ? this._param.getPath() : ''
     return {
+      name: this.__name,
       paramPath: context && context.makeRelative ? context.makeRelative(paramPath) : paramPath,
       paramBindIndex: this._paramBindIndex,
     }

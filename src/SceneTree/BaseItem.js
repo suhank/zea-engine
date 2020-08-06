@@ -98,7 +98,6 @@ class BaseItem extends ParameterOwner {
     return this.__path
   }
 
-
   // Path Traversal
 
   /**
@@ -265,11 +264,8 @@ class BaseItem extends ParameterOwner {
    */
   toJSON(context) {
     const j = super.toJSON(context)
-    if (j) {
-      j.name = this.__name
-      j.type = Registry.getBlueprintName(this)
-    }
-
+    j.name = this.__name
+    j.type = Registry.getBlueprintName(this)
     return j
   }
 
