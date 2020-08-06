@@ -2,7 +2,7 @@ import { Quat } from '../../Math/index'
 import { Operator } from './Operator.js'
 import { OperatorOutput, OperatorOutputMode } from './OperatorOutput.js'
 import { NumberParameter, MultiChoiceParameter, XfoParameter } from '../Parameters/index'
-import { sgFactory } from '../SGFactory.js'
+import Registry from '../../Registry'
 
 /** An operator for aiming items at targets.
  * @extends Operator
@@ -109,6 +109,6 @@ class AimOperator extends Operator {
   }
 }
 
-sgFactory.registerClass('AimOperator', AimOperator)
+Registry.register('AimOperator', AimOperator)
 
 export { AimOperator }

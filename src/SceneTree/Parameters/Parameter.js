@@ -1,5 +1,5 @@
 import { EventEmitter } from '../../Utilities/EventEmitter.js'
-import { sgFactory } from '../SGFactory.js'
+import Registry from '../../Registry'
 
 const OperatorOutputMode = {
   OP_WRITE: 0,
@@ -16,7 +16,7 @@ const OperatorOutputMode = {
 class Parameter extends EventEmitter {
   /**
    * When initializing a new parameter, the passed in value could be anything.
-   * If it is a new type of value, just ensure you register it in the `SGFactory`.
+   * If it is a new type of value, just ensure you register it in the `Registry`.
    *
    * How to use it:
    *
@@ -399,7 +399,7 @@ class Parameter extends EventEmitter {
     }
 
     if (j.value.type && this.__value == undefined) {
-      this.__value = sgFactory.constructClass(j.value.type)
+      this.__value = Registry.constructClass(j.value.type)
     }
     if (this.__value == undefined || !this.__value.fromJSON) {
       this.__value = j.value

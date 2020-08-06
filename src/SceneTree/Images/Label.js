@@ -1,7 +1,7 @@
 /* eslint-disable guard-for-in */
 import { Color } from '../../Math/index'
 import { BooleanParameter, NumberParameter, ColorParameter, StringParameter } from '../Parameters/index'
-import { sgFactory } from '../SGFactory.js'
+import Registry from '../../Registry'
 import { DataImage } from './DataImage.js'
 import { labelManager } from './LabelManager.js'
 
@@ -362,6 +362,6 @@ class Label extends DataImage {
   }
 }
 
-sgFactory.registerClass('Label', Label)
+Registry.register('Label', Label)
 
 export { Label }

@@ -1,4 +1,4 @@
-import { sgFactory } from '../SGFactory.js'
+import Registry from '../../Registry'
 import { BaseImage } from '../BaseImage.js'
 
 // let ResourceLoaderWorker = require("worker-loader?inline!./ResourceLoaderWorker.js");
@@ -85,7 +85,7 @@ class DataImage extends BaseImage {
   }
 }
 
-sgFactory.registerClass('DataImage2D', DataImage)
-sgFactory.registerClass('DataImage', DataImage)
+Registry.register('DataImage2D', DataImage)
+Registry.register('DataImage', DataImage)
 
 export { DataImage }

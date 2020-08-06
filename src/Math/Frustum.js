@@ -3,7 +3,7 @@
 import StringFunctions from '../Utilities/StringFunctions'
 import { Vec3 } from './Vec3.js'
 import { PlaneType } from './PlaneType.js'
-import { typeRegistry } from './TypeRegistry.js'
+import Registry from '../Registry'
 
 /**
  * Class representing a Frustum. Frustums are used to determine what
@@ -115,6 +115,6 @@ class Frustum {
   }
 }
 
-typeRegistry.registerType('Frustum', Frustum)
+Registry.register('Frustum', Frustum)
 
 export { Frustum }

@@ -1,5 +1,5 @@
 import { Color } from '../../Math/index'
-import { sgFactory } from '../../SceneTree/index'
+import Registry from '../../Registry'
 import { shaderLibrary } from '../ShaderLibrary'
 import { GLShader } from '../GLShader.js'
 
@@ -73,6 +73,6 @@ void main(void) {
   }
 }
 
-sgFactory.registerClass('PointsShader', PointsShader)
+Registry.register('PointsShader', PointsShader)
 
 export { PointsShader }

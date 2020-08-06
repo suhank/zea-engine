@@ -1,5 +1,5 @@
 /* eslint-disable require-jsdoc */
-import { sgFactory } from '../SGFactory.js'
+import Registry from '../../Registry'
 import { SystemDesc } from '../../BrowserDetection.js'
 import { NumberParameter } from '../Parameters/index'
 import { FileImage } from './FileImage.js'
@@ -190,6 +190,6 @@ class LDRImage extends FileImage {
 }
 
 FileImage.registerLoader('jpg|jpeg|png', LDRImage)
-sgFactory.registerClass('LDRImage', LDRImage)
+Registry.register('LDRImage', LDRImage)
 
 export { LDRImage }

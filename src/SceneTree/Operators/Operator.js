@@ -1,4 +1,4 @@
-import { sgFactory } from '../SGFactory'
+import Registry from '../../Registry'
 import { BaseItem } from '../BaseItem.js'
 import { OperatorInput } from './OperatorInput'
 import { OperatorOutput } from './OperatorOutput'
@@ -181,7 +181,7 @@ class Operator extends BaseItem {
    */
   toJSON(context) {
     const j = super.toJSON(context)
-    j.type = sgFactory.getClassName(this)
+    j.type = Registry.getBlueprintName(this)
 
     const inputs = []
     this.__inputs.forEach((input) => {

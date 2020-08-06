@@ -1,7 +1,7 @@
 /* eslint-disable new-cap */
 import { AttrValue } from './AttrValue.js'
 import { Vec3 } from './Vec3.js'
-import { typeRegistry } from './TypeRegistry.js'
+import Registry from '../Registry'
 
 /**
  * A class representing a 3x3 matrix.
@@ -567,6 +567,6 @@ class Mat3 extends AttrValue {
   }
 }
 
-typeRegistry.registerType('Mat3', Mat3)
+Registry.register('Mat3', Mat3)
 
 export { Mat3 }

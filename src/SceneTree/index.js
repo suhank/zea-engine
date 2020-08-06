@@ -2,7 +2,6 @@ export * from './RefCounted.js'
 export * from './ParameterOwner.js'
 export * from './BaseItem.js'
 export * from './Utils.js'
-export * from './SGFactory.js'
 export * from './ResourceLoader.js'
 
 export * from './Version.js'
@@ -46,3 +45,6 @@ export * from './ObjAsset.js'
 
 export * from './Operators/index'
 export * from './Manipulators/index'
+
+// Added this for backwards compatibility, removing later on
+export * from './SGFactory.js'

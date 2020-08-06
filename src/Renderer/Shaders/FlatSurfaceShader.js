@@ -1,5 +1,5 @@
 import { Color } from '../../Math/Color'
-import { sgFactory } from '../../SceneTree/index'
+import Registry from '../../Registry'
 import { shaderLibrary } from '../ShaderLibrary.js'
 import { GLShader } from '../GLShader.js'
 import './GLSL/stack-gl/transpose.js'
@@ -121,5 +121,5 @@ void main(void) {
   }
 }
 
-sgFactory.registerClass('FlatSurfaceShader', FlatSurfaceShader)
+Registry.register('FlatSurfaceShader', FlatSurfaceShader)
 export { FlatSurfaceShader }

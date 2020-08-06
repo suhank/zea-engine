@@ -15,5 +15,3 @@ export * from './Box3.js'
 export * from './Frustum.js'
 export * from './PlaneType.js'
 export * from './SphereType.js'
-
-export * from './TypeRegistry.js'

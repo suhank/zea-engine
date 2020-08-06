@@ -1,6 +1,6 @@
 /* eslint-disable require-jsdoc */
 import { Float32, UInt32, SInt32 } from '../../Utilities/MathFunctions'
-import { typeRegistry } from '../../Math/TypeRegistry.js'
+import Registry from '../../Registry'
 
 function isTypedArray(obj) {
   return !!obj && obj.byteLength !== undefined
@@ -182,7 +182,7 @@ class Attribute {
   toJSON(context) {
     return {
       data: Array.from(this.__data),
-      dataType: typeRegistry.getTypeName(this.__dataType),
+      dataType: Registry.getBlueprintName(this.__dataType),
       defaultValue: this.__defaultElementValue,
       length: this.__data.length / this.__dimension,
     }

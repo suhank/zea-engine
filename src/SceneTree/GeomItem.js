@@ -2,7 +2,7 @@ import { Xfo } from '../Math/index'
 import { XfoParameter, Mat4Parameter } from './Parameters/index'
 import { MaterialParameter } from './Parameters/MaterialParameter'
 import { GeometryParameter } from './Parameters/GeometryParameter'
-import { sgFactory } from './SGFactory.js'
+import Registry from '../Registry'
 import { BaseGeomItem } from './BaseGeomItem.js'
 import { Operator } from './Operators/Operator.js'
 import { OperatorInput } from './Operators/OperatorInput.js'
@@ -347,6 +347,6 @@ class GeomItem extends BaseGeomItem {
   }
 }
 
-sgFactory.registerClass('GeomItem', GeomItem)
+Registry.register('GeomItem', GeomItem)
 
 export { GeomItem }

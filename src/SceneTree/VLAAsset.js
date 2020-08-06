@@ -3,7 +3,7 @@ import { FilePathParameter } from './Parameters/FilePathParameter'
 import { AssetItem } from './AssetItem.js'
 import { BinReader } from './BinReader.js'
 import { resourceLoader } from './ResourceLoader.js'
-import { sgFactory } from './SGFactory.js'
+import Registry from '../Registry'
 import { Version } from './Version.js'
 
 /**
@@ -279,6 +279,6 @@ class VLAAsset extends AssetItem {
   }
 }
 
-sgFactory.registerClass('VLAAsset', VLAAsset)
+Registry.register('VLAAsset', VLAAsset)
 
 export { VLAAsset }

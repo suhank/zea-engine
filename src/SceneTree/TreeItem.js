@@ -1,5 +1,5 @@
 import { Color, Xfo, Box3 } from '../Math/index'
-import { sgFactory } from './SGFactory.js'
+import Registry from '../Registry'
 import { BooleanParameter, XfoParameter } from './Parameters/index'
 import { BaseItem } from './BaseItem.js'
 import { CalcGlobalXfoOperator } from './Operators/CalcGlobalXfoOperator.js'
@@ -979,7 +979,7 @@ class TreeItem extends BaseItem {
             childItem.fromJSON(childJson, context)
           } else {
             if (childJson.type) {
-              childItem = sgFactory.constructClass(childJson.type)
+              childItem = Registry.constructClass(childJson.type)
               if (childItem) {
                 // Note: we should load the json first, as it
                 // may contain the unique name of the item.
@@ -1004,7 +1004,7 @@ class TreeItem extends BaseItem {
           if (childItem) {
             childItem.fromJSON(childJson, context)
           } else if (childJson.type) {
-            childItem = sgFactory.constructClass(childJson.type)
+            childItem = Registry.constructClass(childJson.type)
             if (childItem) {
               // Note: we add the child now before loading.
               // This is because certain items. (e.g. Groups)
@@ -1032,7 +1032,7 @@ class TreeItem extends BaseItem {
 
     // if (j.components) {
     //   for (const cj of j.components) {
-    //     const component = sgFactory.constructClass(cj.type ? cj.type : cj.name)
+    //     const component = Registry.constructClass(cj.type ? cj.type : cj.name)
     //     if (component) {
     //       component.fromJSON(cj, context)
     //       this.addComponent(component)
@@ -1096,7 +1096,7 @@ class TreeItem extends BaseItem {
             }
           }
           // const childName = reader.loadStr();
-          const childItem = sgFactory.constructClass(childType)
+          const childItem = Registry.constructClass(childType)
           if (!childItem) {
             const childName = reader.loadStr()
             console.warn('Unable to construct child:' + childName + ' of type:' + childType)
@@ -1157,6 +1157,6 @@ class TreeItem extends BaseItem {
   }
 }
 
-sgFactory.registerClass('TreeItem', TreeItem)
+Registry.register('TreeItem', TreeItem)
 
 export { TreeItem }
