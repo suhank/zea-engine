@@ -92,7 +92,6 @@ describe('Xfo', () => {
   it('returns Mat4 representation of the xfo', () => {
     const xfo = new Xfo(new Vec3(1, 2, 3), new Quat(1, 0, 0, 0), new Vec3(8, 9, 10))
     const mat4 = xfo.toMat4()
-    console.log(mat4.toJSON())
 
     expect(mat4).toEqual(new Mat4(8, 0, 0, 0, 0, -9, 0, 0, 0, 0, -10, 0, 1, 2, 3, 1))
   })

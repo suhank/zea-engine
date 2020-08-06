@@ -1,13 +1,9 @@
-import { Vec3, Xfo, Color } from '../Math/index'
-import { Material } from './Material.js'
+import { Color } from '../Math/index'
 import { TreeItem } from './TreeItem.js'
-import { Lines } from './Geometry/Lines.js'
-import { Grid } from './Geometry/Shapes/Grid.js'
-import { ItemFlags } from './BaseItem.js'
-import { GeomItem } from './GeomItem.js'
 import { resourceLoader } from './ResourceLoader.js'
 import { SceneSettings } from './SceneSettings.js'
 import { VLAAsset } from './VLAAsset.js'
+import GridTreeItem from './GridTreeItem'
 
 const defaultGridColor = new Color('#DCDCDC')
 
@@ -28,7 +24,7 @@ class Scene {
     this.root.addChild(this.settings)
 
     // Common resources are used by systems such at the renderer and VR controllers.
-    // Any asset that will probably be used my multiple differeint independent objects
+    // Any asset that will probably be used my multiple different independent objects
     // should be loaded here. (For now, it is being used to load VR Controller assets.)
     this.__commonResources = {}
   }
@@ -86,37 +82,10 @@ class Scene {
    * @param {number} gridSize - The size of the grid.
    * @param {number} resolution - The resolution of the grid.
    * @param {Color} gridColor - The color of the grid.
-   * @return {TreeItem} - The return value.
+   * @return {GridTreeItem} - The return value.
    */
   setupGrid(gridSize = 5, resolution = 50, gridColor = defaultGridColor) {
-    const gridTreeItem = new TreeItem('Grid')
-    const gridMaterial = new Material('gridMaterial', 'LinesShader')
-    gridMaterial.getParameter('BaseColor').setValue(gridColor)
-    const grid = new Grid(gridSize, gridSize, resolution, resolution, true)
-    gridTreeItem.addChild(new GeomItem('GridItem', grid, gridMaterial), false)
-    const axisLine = new Lines()
-    axisLine.setNumVertices(2)
-    axisLine.setNumSegments(1)
-    axisLine.setSegmentVertexIndices(0, 0, 1)
-    const positions = axisLine.getVertexAttribute('positions')
-    positions.getValueRef(0).set(gridSize * -0.5, 0.0, 0.0)
-    positions.getValueRef(1).set(gridSize * 0.5, 0.0, 0.0)
-    const gridXAxisMaterial = new Material('gridXAxisMaterial', 'LinesShader')
-    gridXAxisMaterial.getParameter('BaseColor').setValue(new Color(gridColor.luminance(), 0, 0))
-    gridTreeItem.addChild(new GeomItem('xAxisLine', axisLine, gridXAxisMaterial), false)
-    const gridZAxisMaterial = new Material('gridZAxisMaterial', 'LinesShader')
-    gridZAxisMaterial.getParameter('BaseColor').setValue(new Color(0, gridColor.luminance(), 0))
-    const geomOffset = new Xfo()
-    geomOffset.ori.setFromAxisAndAngle(new Vec3(0, 0, 1), Math.PI * 0.5)
-    const zAxisLineItem = new GeomItem('yAxisLine', axisLine, gridZAxisMaterial)
-    zAxisLineItem.setGeomOffsetXfo(geomOffset)
-    gridTreeItem.addChild(zAxisLineItem, false)
-    gridTreeItem.setSelectable(false, true)
-    gridTreeItem.setFlag(ItemFlags.IGNORE_BBOX)
-
-    // Avoid persisting the grid and hide in the tree view.
-    gridTreeItem.clearFlag(ItemFlags.USER_EDITED)
-    gridTreeItem.setFlag(ItemFlags.INVISIBLE)
+    const gridTreeItem = new GridTreeItem(gridSize, resolution, gridColor)
     this.root.addChild(gridTreeItem, false)
 
     return gridTreeItem
@@ -142,16 +111,15 @@ class Scene {
   // Persistence
 
   /**
-   * The toJSON method encodes this type as a json object for persistences.
+   * The toJSON method encodes this type as a json object for persistence.
    *
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    * @return {object} - Returns the json object.
    */
-  toJSON(context = {}, flags = 0) {
+  toJSON(context = {}) {
     context.makeRelative = (path) => path
     const json = {
-      root: this.root.toJSON(context, flags),
+      root: this.root.toJSON(context),
     }
     return json
   }

@@ -205,11 +205,10 @@ class Material extends BaseItem {
    * The toJSON method encodes the current object as a json object.
    *
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    * @return {object} - Returns the json object.
    */
-  toJSON(context, flags = 0) {
-    return super.toJSON(context, flags)
+  toJSON(context) {
+    return super.toJSON(context)
   }
 
   /**
@@ -217,15 +216,14 @@ class Material extends BaseItem {
    *
    * @param {object} j - The json object this item must decode.
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    */
-  fromJSON(j, context = {}, flags = 0) {
+  fromJSON(j, context = {}) {
     if (!j.shader) {
       console.warn('Invalid Material JSON')
       return
     }
     this.setShaderName(j.shader)
-    super.fromJSON(j, context, flags)
+    super.fromJSON(j, context)
     // let props = this.__params;
     // for (let key in j) {
     //     let value;
@@ -307,12 +305,11 @@ class Material extends BaseItem {
    * The clone method constructs a new material, copies its values
    * from this material and returns it.
    *
-   * @param {number} flags - The flags value.
    * @return {Material} - Returns a new cloned material.
    */
-  clone(flags) {
+  clone() {
     const cloned = new Material()
-    cloned.copyFrom(this, flags)
+    cloned.copyFrom(this)
     return cloned
   }
 
@@ -320,10 +317,9 @@ class Material extends BaseItem {
    * When a Material is copied, first runs `BaseItem` copyFrom method, then sets shader.
    *
    * @param {Material} src - The material to copy from.
-   * @param {number} flags - The flags value.
    */
-  copyFrom(src, flags) {
-    super.copyFrom(src, flags)
+  copyFrom(src) {
+    super.copyFrom(src)
     this.setShaderName(src.getShaderName())
     for (const srcParam of src.getParameters()) {
       const param = src.getParameter(srcParam.getName())

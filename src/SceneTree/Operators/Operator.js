@@ -1,5 +1,5 @@
 import Registry from '../../Registry'
-import { ItemFlags, BaseItem } from '../BaseItem.js'
+import { BaseItem } from '../BaseItem.js'
 
 /**
  * Class representing an operator.
@@ -13,10 +13,6 @@ class Operator extends BaseItem {
    */
   constructor(name) {
     super(name)
-
-    // Items which can be constructed by a user (not loaded in binary data).
-    // Should always have this flag set.
-    this.setFlag(ItemFlags.USER_EDITED)
 
     this.__inputs = []
     this.__outputs = []
@@ -48,7 +44,7 @@ class Operator extends BaseItem {
 
   /**
    * The addInput method.
-   * @param {OperatorInput} output - The output value.
+   * @param {OperatorInput} input - The output value.
    * @return {array} - The return value.
    */
   addInput(input) {
@@ -170,7 +166,7 @@ class Operator extends BaseItem {
 
   /**
    * The setValue method.
-   * Note: FIXME Sometimes outputs are used in places like statemachines,
+   * Note: FIXME Sometimes outputs are used in places like state-machines,
    * where we would want the change to cause an event.
    * Note: when a user sets a parameter value that is being driven by
    * an operator, the operator can propagate the value back up the chain
@@ -178,7 +174,7 @@ class Operator extends BaseItem {
    * @param {any} value - The value param.
    * @return {number} - Returns the number of outputs.
    */
-  setValue(value, output) {
+  setValue(value) {
     // TODO: Implement me for custom manipulations.
     return value
   }
@@ -190,22 +186,21 @@ class Operator extends BaseItem {
    * The toJSON method encodes this type as a json object for persistence.
    *
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    * @return {object} - Returns the json object.
    */
-  toJSON(context, flags) {
-    const j = super.toJSON(context, flags)
+  toJSON(context) {
+    const j = super.toJSON(context)
     j.type = Registry.getBlueprintName(this)
 
     const inputs = []
     for (const input of this.__inputs) {
-      inputs.push(input.toJSON(context, flags))
+      inputs.push(input.toJSON(context))
     }
     j.inputs = inputs
 
     const outputs = []
     for (const output of this.__outputs) {
-      outputs.push(output.toJSON(context, flags))
+      outputs.push(output.toJSON(context))
     }
     j.outputs = outputs
     return j
@@ -216,10 +211,9 @@ class Operator extends BaseItem {
    *
    * @param {object} j - The json object this item must decode.
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    */
-  fromJSON(j, context, flags) {
-    super.fromJSON(j, context, flags)
+  fromJSON(j, context) {
+    super.fromJSON(j, context)
 
     if (j.inputs) {
       for (let i = 0; i < this.__inputs.length; i++) {
@@ -255,6 +249,9 @@ class Operator extends BaseItem {
     this.__outputs.forEach((output) => output.reattach())
   }
 
+  /**
+   * The rebind method.
+   */
   rebind() {
     this.__outputs.forEach((output) => output.rebind())
   }

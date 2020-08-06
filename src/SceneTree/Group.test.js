@@ -179,8 +179,10 @@ describe('Group', () => {
 
     group.addItem(treeItem2)
 
-    const expOutput = '{"name":"Foo","type":"Group","treeItems":[["treeItem1","treeItem2"]]}'
-    expect(JSON.stringify(group.toJSON())).toEqual(expOutput)
+    const expOutput =
+      '{"params":{"Visible":{"value":true},"LocalXfo":{"value":{"tr":{"x":0,"y":0,"z":0},"ori":{"x":0,"y":0,"z":0,"w":1}}},"GlobalXfo":{"value":{"tr":{"x":0,"y":0,"z":0},"ori":{"x":0,"y":0,"z":0,"w":1}}},"BoundingBox":{"value":{"p0":{"x":null,"y":null,"z":null},"p1":{"x":null,"y":null,"z":null}}},"Items":{},"InitialXfoMode":{"value":3,"range":[0,4],"step":1},"Highlighted":{"value":false},"HighlightColor":{"value":{"r":0.5,"g":0.5,"b":1,"a":1}},"HighlightFill":{"value":0,"range":[0,1]},"CutAwayEnabled":{"value":false},"CutPlaneNormal":{"value":{"x":1,"y":0,"z":0}},"CutPlaneDist":{"value":0},"GroupTransform":{"value":{"tr":{"x":0,"y":0,"z":0},"ori":{"x":0,"y":0,"z":0,"w":1}}}},"name":"Foo","type":"Group","treeItems":[["treeItem1","treeItem2"]]}'
+    const outputJSON = group.toJSON()
+    expect(JSON.stringify(outputJSON)).toEqual(expOutput)
   })
 
   it('loads from JSON (serialization).', () => {
@@ -191,19 +193,17 @@ describe('Group', () => {
     treeItem1.addChild(treeItem2)
     treeItem1.addChild(group)
 
-    const input = {
-      params: { LocalXfo: { value: { tr: { x: 0, y: 0, z: 0 }, ori: { x: 0, y: 0, z: 0, w: 1 } } } },
-      name: 'Foo',
-      type: 'Group',
-      treeItems: [['treeItem1', 'treeItem2']],
-    }
+    const inputStr =
+      '{"params":{"Visible":{"value":true},"LocalXfo":{"value":{"tr":{"x":0,"y":0,"z":0},"ori":{"x":0,"y":0,"z":0,"w":1}}},"GlobalXfo":{"value":{"tr":{"x":0,"y":0,"z":0},"ori":{"x":0,"y":0,"z":0,"w":1}}},"BoundingBox":{"value":{"p0":{"x":null,"y":null,"z":null},"p1":{"x":null,"y":null,"z":null}}},"Items":{},"InitialXfoMode":{"value":3,"range":[0,4],"step":1},"Highlighted":{"value":false},"HighlightColor":{"value":{"r":0.5,"g":0.5,"b":1,"a":1}},"HighlightFill":{"value":0,"range":[0,1]},"CutAwayEnabled":{"value":false},"CutPlaneNormal":{"value":{"x":1,"y":0,"z":0}},"CutPlaneDist":{"value":0},"GroupTransform":{"value":{"tr":{"x":0,"y":0,"z":0},"ori":{"x":0,"y":0,"z":0,"w":1}}}},"name":"Foo","type":"Group","treeItems":[["treeItem1","treeItem2"]]}'
+    const input = JSON.parse(inputStr)
+
     group.fromJSON(input, {
       numTreeItems: 0,
       resolvePath: (path, cb) => {
         cb(treeItem1.resolvePath(path))
       },
     })
-    expect(group.getParameter('Items').getItem(0)).toBe(treeItem2)
+    expect(JSON.stringify(group.toJSON())).toEqual(inputStr)
   })
 
   it('fails when loading from JSON (serialization) with no context.', () => {

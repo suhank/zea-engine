@@ -117,10 +117,9 @@ class MaterialColorParam extends ColorParameter {
    * The clone method constructs a new material color parameter,
    * copies its values from this parameter and returns it.
    *
-   * @param {number} flags - The flags value.
    * @return {MaterialColorParam} - Returns a new cloned material color parameter.
    */
-  clone(flags) {
+  clone() {
     const clonedParam = new MaterialColorParam(this.__name, this.__value.clone())
     return clonedParam
   }

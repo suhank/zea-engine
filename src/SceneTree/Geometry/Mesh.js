@@ -2,8 +2,8 @@
 /* eslint-disable guard-for-in */
 /* eslint-disable no-unused-vars */
 /* eslint-disable camelcase */
-import { Vec2, Vec3, Xfo } from '../../Math/index'
-import { BaseGeom, SAVE_FLAG_SKIP_GEOMDATA } from './BaseGeom.js'
+import { Vec3 } from '../../Math/Vec3'
+import { BaseGeom } from './BaseGeom.js'
 import { Attribute } from './Attribute.js'
 
 import { VertexAttribute } from './VertexAttribute.js'
@@ -934,15 +934,13 @@ class Mesh extends BaseGeom {
    * The toJSON method encodes this type as a json object for persistence.
    *
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    * @return {object} - Returns the json object.
    */
-  toJSON(context, flags) {
-    const j = super.toJSON(context, flags)
-    if (!(flags & SAVE_FLAG_SKIP_GEOMDATA)) {
-      j.faceCounts = Array.from(this.__faceCounts)
-      j.faceVertexIndices = Array.from(this.__faceVertexIndices)
-    }
+  toJSON(context) {
+    const j = super.toJSON(context)
+    j.faceCounts = Array.from(this.__faceCounts)
+    j.faceVertexIndices = Array.from(this.__faceVertexIndices)
+
     return j
   }
 
@@ -951,10 +949,9 @@ class Mesh extends BaseGeom {
    *
    * @param {object} j - The json object this item must decode.
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    */
-  fromJSON(j, context, flags) {
-    super.fromJSON(j, context, flags)
+  fromJSON(j, context) {
+    super.fromJSON(j, context)
     if (j.faceCounts) this.__faceCounts = j.faceCounts
     if (j.faceVertexIndices) this.__faceVertexIndices = Uint32Array.from(j.faceVertexIndices)
   }

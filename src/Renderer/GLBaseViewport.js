@@ -150,8 +150,8 @@ class GLBaseViewport extends ParameterOwner {
 
   /**
    * The resize method.
-   * @param {any} width - The src value.
-   * @param {any} height - The flags value.
+   * @param {any} canvasWidth - The canvasWidth value.
+   * @param {any} canvasHeight - The canvasHeight value.
    */
   resize(canvasWidth, canvasHeight) {
     this.__canvasWidth = canvasWidth

@@ -44,10 +44,9 @@ class Vec3Parameter extends Parameter {
    * The clone method constructs a new Vec3 parameter, copies its values
    * from this parameter and returns it.
    *
-   * @param {number} flags - The flags value.
    * @return {Vec3Parameter} - Returns a new Vec3 parameter.
    */
-  clone(flags) {
+  clone() {
     const clonedParam = new Vec3Parameter(this.__name, this.__value.clone())
     return clonedParam
   }

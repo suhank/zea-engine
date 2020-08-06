@@ -1,5 +1,6 @@
 /* eslint-disable camelcase */
 import StringFunctions from '../Utilities/StringFunctions'
+import MathFunctions from '../Utilities/MathFunctions'
 import { Vec3 } from './Vec3.js'
 import { Mat4 } from './Mat4.js'
 import { SphereType } from './SphereType.js'
@@ -315,8 +316,20 @@ class Box3 {
    * @param {object} j - The json object.
    */
   fromJSON(j) {
-    this.p0.fromJSON(j.p0)
-    this.p1.fromJSON(j.p1)
+    // We need to verify that p0 and p1 axes are numeric, so in case they are not, we restore them to their default values.
+    // This, because 'Infinity' and '-Infinity' are stringified as 'null'.
+    const p0 = {
+      x: MathFunctions.isNumeric(j.p0.x) ? j.p0.x : Number.POSITIVE_INFINITY,
+      y: MathFunctions.isNumeric(j.p0.y) ? j.p0.y : Number.POSITIVE_INFINITY,
+      z: MathFunctions.isNumeric(j.p0.z) ? j.p0.z : Number.POSITIVE_INFINITY,
+    }
+    const p1 = {
+      x: MathFunctions.isNumeric(j.p1.x) ? j.p1.x : Number.NEGATIVE_INFINITY,
+      y: MathFunctions.isNumeric(j.p1.y) ? j.p1.y : Number.NEGATIVE_INFINITY,
+      z: MathFunctions.isNumeric(j.p1.z) ? j.p1.z : Number.NEGATIVE_INFINITY,
+    }
+    this.p0.fromJSON(p0)
+    this.p1.fromJSON(p1)
   }
 
   /**

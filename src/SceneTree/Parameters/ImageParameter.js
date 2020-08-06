@@ -34,11 +34,10 @@ class ImageParameter extends Parameter {
    * The toJSON method encodes this type as a json object for persistence.
    *
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    * @return {object} - Returns the json object.
    */
-  toJSON(context, flags) {
-    const j = super.toJSON(context, flags)
+  toJSON(context) {
+    const j = super.toJSON(context)
     if (this.__value) {
       j.imageType = Registry.getBlueprintName(this.__value)
     }
@@ -50,14 +49,13 @@ class ImageParameter extends Parameter {
    *
    * @param {object} j - The json object this item must decode.
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    * @return {object} - Returns the json object.
    */
-  fromJSON(j, context, flags) {
+  fromJSON(j, context) {
     if (j.imageType) {
       this.__value = Registry.constructClass(j.imageType)
     }
-    return super.fromJSON(j, context, flags)
+    return super.fromJSON(j, context)
   }
 
   // ////////////////////////////////////////
@@ -67,10 +65,9 @@ class ImageParameter extends Parameter {
    * The clone method constructs a new image parameter,
    * copies its values from this parameter and returns it.
    *
-   * @param {number} flags - The flags value.
    * @return {ImageParameter} - Returns a new cloned image parameter.
    */
-  clone(flags) {
+  clone() {
     const clonedParam = new ImageParameter(this.__name, this.__value)
     return clonedParam
   }

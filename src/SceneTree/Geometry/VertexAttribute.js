@@ -205,11 +205,10 @@ class VertexAttribute extends Attribute {
    * The toJSON method encodes this type as a json object for persistence.
    *
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    * @return {object} - Returns the json object.
    */
-  toJSON(context, flags) {
-    const json = super.toJSON(context, flags)
+  toJSON(context) {
+    const json = super.toJSON(context)
     json.splits = this.__splits
     json.splitValues = this.__splitValues
     return json
@@ -220,10 +219,9 @@ class VertexAttribute extends Attribute {
    *
    * @param {object} json - The json object this item must decode.
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    */
-  fromJSON(json, context, flags) {
-    super.fromJSON(json, context, flags)
+  fromJSON(json, context) {
+    super.fromJSON(json, context)
     this.__splits = json.splits
     this.__splitValues = []
     for (const valjson of json.splitValues) this.__splitValues.push(this.__dataType.createFromJSON(valjson))
