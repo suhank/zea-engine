@@ -222,12 +222,14 @@ class VertexAttribute extends Attribute {
    */
   fromJSON(json, context) {
     super.fromJSON(json, context)
-    this.__splits = json.splits
+    this.__splits = json.splits || {}
     this.__splitValues = []
-    for (const jsonVal of json.splitValues) {
-      const dateTypeInstance = new this.__dataType()
-      dateTypeInstance.fromJSON(jsonVal)
-      this.__splitValues.push(dateTypeInstance)
+    if (json.splitValues) {
+      for (const jsonVal of json.splitValues) {
+        const dateTypeInstance = new this.__dataType()
+        dateTypeInstance.fromJSON(jsonVal)
+        this.__splitValues.push(dateTypeInstance)
+      }
     }
   }
 

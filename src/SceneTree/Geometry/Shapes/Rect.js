@@ -10,8 +10,8 @@ import Registry from '../../../Registry'
  * ```
  *
  * **Parameters**
- * * **x(`NumberParameter`):** Length of the rectangle along the `X` axis.
- * * **y(`NumberParameter`):** Length of the rectangle along the `Y` axis.
+ * * **X(`NumberParameter`):** Length of the rectangle along the `X` axis.
+ * * **Y(`NumberParameter`):** Length of the rectangle along the `Y` axis.
  *
  *
  * @extends Lines
@@ -27,9 +27,9 @@ class Rect extends Lines {
 
     if (isNaN(x) || isNaN(y)) throw new Error('Invalid geom args')
 
-    this.__x = this.addParameter(new NumberParameter('x', x))
+    this.__x = this.addParameter(new NumberParameter('X', x))
     this.__x.on('valueChanged', this.__resize.bind(this))
-    this.__y = this.addParameter(new NumberParameter('y', y))
+    this.__y = this.addParameter(new NumberParameter('Y', y))
     this.__y.on('valueChanged', this.__resize.bind(this))
     this.__rebuild()
   }
@@ -77,8 +77,8 @@ class Rect extends Lines {
    * @param {number} y - The length along the `Y` axis.
    */
   setSize(x, y) {
-    this.__x.setValue(x, -1)
-    this.__y.setValue(y, -1)
+    this.__x.setValue(x)
+    this.__y.setValue(y)
     this.__resize()
   }
 
@@ -113,32 +113,6 @@ class Rect extends Lines {
     positions.getValueRef(3).set(-0.5 * x, 0.5 * y, 0.0)
     this.setBoundingBoxDirty()
     if (emit) this.emit('geomDataChanged', {})
-  }
-
-  /**
-   * The toJSON method encodes this type as a json object for persistence.
-   *
-   * @return {object} - Returns the json object.
-   */
-  toJSON() {
-    const json = super.toJSON()
-    json['x'] = this.__x.toJSON()
-    json['y'] = this.__y.toJSON()
-    return json
-  }
-
-  /**
-   * The fromJSON method decodes a json object for this type.
-   *
-   * @param {object} j - The json object this item must decode.
-   * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
-   */
-  fromJSON(j, context, flags) {
-    super.fromJSON(j, context, flags)
-
-    this.__x.fromJSON(j.x)
-    this.__y.fromJSON(j.y)
   }
 }
 

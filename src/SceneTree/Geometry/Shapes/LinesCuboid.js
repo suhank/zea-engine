@@ -6,9 +6,9 @@ import Registry from '../../../Registry'
  * A class for generating a lines cuboid shape(Without faces).
  *
  * **Parameters**
- * * **x(`NumberParameter`):** Length of the line cuboid along the `X` axis
- * * **y(`NumberParameter`):** Length of the line cuboid along the `Y` axis
- * * **z(`NumberParameter`):** Length of the line cuboid along the `Z` axis
+ * * **X(`NumberParameter`):** Length of the line cuboid along the `X` axis
+ * * **Y(`NumberParameter`):** Length of the line cuboid along the `Y` axis
+ * * **Z(`NumberParameter`):** Length of the line cuboid along the `Z` axis
  * * **BaseZAtZero(`NumberParameter`):** Property to start or not `Z` axis from position `0.
  *
  * @extends Lines
@@ -24,9 +24,9 @@ class LinesCuboid extends Lines {
   constructor(x = 1.0, y = 1.0, z = 1.0, baseZAtZero = false) {
     super()
 
-    this.__x = this.addParameter(new NumberParameter('x', x))
-    this.__y = this.addParameter(new NumberParameter('y', y))
-    this.__z = this.addParameter(new NumberParameter('z', z))
+    this.__x = this.addParameter(new NumberParameter('X', x))
+    this.__y = this.addParameter(new NumberParameter('Y', y))
+    this.__z = this.addParameter(new NumberParameter('Z', z))
 
     this.__baseZAtZero = this.addParameter(new NumberParameter('BaseZAtZero', baseZAtZero))
     this.__rebuild()
@@ -70,9 +70,11 @@ class LinesCuboid extends Lines {
 
   /**
    * The __resize method.
+   *
+   * @param {boolean} [emit=true]
    * @private
    */
-  __resize() {
+  __resize(emit = true) {
     const x = this.__x.getValue()
     const y = this.__y.getValue()
     const z = this.__z.getValue()
@@ -95,17 +97,6 @@ class LinesCuboid extends Lines {
 
     this.setBoundingBoxDirty()
     if (emit) this.emit('geomDataChanged', {})
-  }
-
-  /**
-   * The toJSON method encodes this type as a json object for persistence.
-   *
-   * @return {object} - Returns the json object.
-   */
-  toJSON() {
-    const json = super.toJSON()
-    json['size'] = this.__size
-    return json
   }
 }
 

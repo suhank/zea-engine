@@ -13,12 +13,12 @@ import Registry from '../../../Registry'
  * ```
  *
  * **Parameters**
- * * **radius(`NumberParameter`):** Specifies the radius of the cylinder.
- * * **height(`NumberParameter`):** Specifies the height of the cone.
- * * **sides(`NumberParameter`):** Specifies the number of subdivisions around the `Z` axis.
- * * **loops(`NumberParameter`):** Specifies the number of subdivisions(stacks) on the `Z` axis.
- * * **caps(`BooleanParameter`):** Specifies whether the ends of the cylinder are capped or open.
- * * **baseZAtZero(`BooleanParameter`):** Property to start or not `Z` axis from position `0.
+ * * **Radius(`NumberParameter`):** Specifies the radius of the cylinder.
+ * * **Height(`NumberParameter`):** Specifies the height of the cone.
+ * * **Sides(`NumberParameter`):** Specifies the number of subdivisions around the `Z` axis.
+ * * **Loops(`NumberParameter`):** Specifies the number of subdivisions(stacks) on the `Z` axis.
+ * * **Caps(`BooleanParameter`):** Specifies whether the ends of the cylinder are capped or open.
+ * * **BaseZAtZero(`BooleanParameter`):** Property to start or not `Z` axis from position `0.
  *
  * @extends Mesh
  */
@@ -37,12 +37,12 @@ class Cylinder extends Mesh {
 
     if (isNaN(radius) || isNaN(height) || isNaN(sides) || isNaN(loops)) throw new Error('Invalid geom args')
 
-    this.__radiusParam = this.addParameter(new NumberParameter('radius', radius))
-    this.__heightParam = this.addParameter(new NumberParameter('height', height))
-    this.__sidesParam = this.addParameter(new NumberParameter('sides', sides >= 3 ? sides : 3, [3, 200], 1))
-    this.__loopsParam = this.addParameter(new NumberParameter('loops', loops >= 2 ? loops : 2, [1, 200], 1))
-    this.__capsParam = this.addParameter(new BooleanParameter('caps', caps))
-    this.__baseZAtZeroParam = this.addParameter(new BooleanParameter('baseZAtZero', baseZAtZero))
+    this.__radiusParam = this.addParameter(new NumberParameter('Radius', radius))
+    this.__heightParam = this.addParameter(new NumberParameter('Height', height))
+    this.__sidesParam = this.addParameter(new NumberParameter('Sides', sides >= 3 ? sides : 3, [3, 200], 1))
+    this.__loopsParam = this.addParameter(new NumberParameter('Loops', loops >= 2 ? loops : 2, [1, 200], 1))
+    this.__capsParam = this.addParameter(new BooleanParameter('Caps', caps))
+    this.__baseZAtZeroParam = this.addParameter(new BooleanParameter('BaseZAtZero', baseZAtZero))
 
     this.addVertexAttribute('texCoords', Vec2)
     this.addVertexAttribute('normals', Vec3)

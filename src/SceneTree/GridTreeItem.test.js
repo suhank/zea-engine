@@ -4,7 +4,7 @@ import GridTreeItem from './GridTreeItem'
 import { LinesShader } from '../Renderer/Shaders/LinesShader'
 import { Color } from '../Math/Color'
 
-describe('GridTreeItem', () => {
+describe.skip('GridTreeItem', () => {
   it('Setup GridTreeItem', () => {
     const grid = new GridTreeItem(5, 5, new Color('#99CCCC'))
     const expectedOutput =

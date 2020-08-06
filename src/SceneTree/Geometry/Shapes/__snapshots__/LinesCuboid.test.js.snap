@@ -1,0 +1,81 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LinesCuboid saves to JSON (serialization). 1`] = `
+Object {
+  "indices": Array [
+    0,
+    1,
+    1,
+    2,
+    2,
+    3,
+    3,
+    0,
+    4,
+    5,
+    5,
+    6,
+    6,
+    7,
+    7,
+    4,
+    0,
+    4,
+    1,
+    5,
+    2,
+    6,
+    3,
+    7,
+  ],
+  "numVertices": 8,
+  "params": Object {
+    "BaseZAtZero": Object {
+      "value": true,
+    },
+    "X": Object {
+      "value": 2,
+    },
+    "Y": Object {
+      "value": 2,
+    },
+    "Z": Object {
+      "value": 2,
+    },
+  },
+  "type": "LinesCuboid",
+  "vertexAttributes": Object {
+    "positions": Object {
+      "data": Array [
+        1,
+        -1,
+        2,
+        1,
+        1,
+        2,
+        -1,
+        1,
+        2,
+        -1,
+        -1,
+        2,
+        1,
+        -1,
+        0,
+        1,
+        1,
+        0,
+        -1,
+        1,
+        0,
+        -1,
+        -1,
+        0,
+      ],
+      "dataType": "Vec3",
+      "defaultValue": 0,
+      "length": 8,
+    },
+  },
+}
+`;

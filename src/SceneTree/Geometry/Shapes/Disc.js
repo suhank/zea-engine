@@ -13,8 +13,8 @@ import Registry from '../../../Registry'
  * ```
  *
  * **Parameters**
- * * **radius(`NumberParameter`):** Specifies the radius of the disc.
- * * **sides(`NumberParameter`):** Specifies the resolution, or the disc subdivisions around `Z` axis.
+ * * **Radius(`NumberParameter`):** Specifies the radius of the disc.
+ * * **Sides(`NumberParameter`):** Specifies the resolution, or the disc subdivisions around `Z` axis.
  *
  * @extends Mesh
  */
@@ -30,8 +30,8 @@ class Disc extends Mesh {
 
     if (isNaN(radius) || isNaN(sides)) throw new Error('Invalid geom args')
 
-    this.__radiusParam = this.addParameter(new NumberParameter('radius', radius))
-    this.__sidesParam = this.addParameter(new NumberParameter('sides', sides >= 3 ? sides : 3, [3, 200], 1))
+    this.__radiusParam = this.addParameter(new NumberParameter('Radius', radius))
+    this.__sidesParam = this.addParameter(new NumberParameter('Sides', sides >= 3 ? sides : 3, [3, 200], 1))
 
     this.addVertexAttribute('texCoords', Vec2)
     this.addVertexAttribute('normals', Vec3)
@@ -126,17 +126,6 @@ class Disc extends Mesh {
     }
     this.setBoundingBoxDirty()
     this.emit('geomDataChanged', {})
-  }
-
-  /**
-   * The toJSON method encodes this type as a json object for persistence.
-   *
-   * @return {object} - Returns the json object.
-   */
-  toJSON() {
-    const json = super.toJSON()
-    json['radius'] = this.__radius
-    return json
   }
 }
 

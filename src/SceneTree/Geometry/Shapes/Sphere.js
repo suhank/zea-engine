@@ -12,9 +12,9 @@ import Registry from '../../../Registry'
  * ```
  *
  * **Parameters**
- * * **radius(`NumberParameter`):** Radius of the sphere.
- * * **sides(`NumberParameter`):** Specifies the number of subdivisions around the `Z` axis.
- * * **loops(`NumberParameter`):** Specifies the number of subdivisions(stacks) along the `Z` axis.
+ * * **Radius(`NumberParameter`):** Radius of the sphere.
+ * * **Sides(`NumberParameter`):** Specifies the number of subdivisions around the `Z` axis.
+ * * **Loops(`NumberParameter`):** Specifies the number of subdivisions(stacks) along the `Z` axis.
  *
  * @extends Mesh
  */
@@ -30,9 +30,9 @@ class Sphere extends Mesh {
 
     if (isNaN(radius) || isNaN(sides) || isNaN(loops)) throw new Error('Invalid geom args')
 
-    this.__radiusParam = this.addParameter(new NumberParameter('radius', radius))
-    this.__sidesParam = this.addParameter(new NumberParameter('sides', sides >= 3 ? sides : 3, [3, 200], 1))
-    this.__loopsParam = this.addParameter(new NumberParameter('loops', loops >= 3 ? loops : 3, [3, 200], 1))
+    this.__radiusParam = this.addParameter(new NumberParameter('Radius', radius))
+    this.__sidesParam = this.addParameter(new NumberParameter('Sides', sides >= 3 ? sides : 3, [3, 200], 1))
+    this.__loopsParam = this.addParameter(new NumberParameter('Loops', loops >= 3 ? loops : 3, [3, 200], 1))
 
     this.addVertexAttribute('texCoords', Vec2)
     this.addVertexAttribute('normals', Vec3)
