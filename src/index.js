@@ -4,6 +4,7 @@ export * from './Math/index'
 export * from './Utilities/index'
 export * from './SceneTree/index'
 export * from './Renderer/index'
+export * from './Registry'
 
 import { onResize } from './external/onResize.js'
 import * as BrowserDetection from './BrowserDetection.js'
