@@ -2,7 +2,7 @@ import { Vec2, Vec3 } from '../../../Math/index'
 import { Mesh } from '../Mesh.js'
 
 import { NumberParameter } from '../../Parameters/NumberParameter.js'
-import { sgFactory } from '../../SGFactory.js'
+import Registry from '../../../Registry'
 
 /**
  * A class for generating a sphere geometry.
@@ -184,6 +184,7 @@ class Sphere extends Mesh {
     this.emit('geomDataChanged', {})
   }
 }
-sgFactory.registerClass('Sphere', Sphere)
+
+Registry.register('Sphere', Sphere)
 
 export { Sphere }

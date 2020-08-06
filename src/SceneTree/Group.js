@@ -12,7 +12,7 @@ import {
 import { MaterialParameter } from './Parameters/MaterialParameter.js'
 import { TreeItem } from './TreeItem'
 import { BaseGeomItem } from './BaseGeomItem'
-import { sgFactory } from './SGFactory.js'
+import Registry from '../Registry'
 import { GroupTransformXfoOperator, GroupMemberXfoOperator } from './Operators/GroupMemberXfoOperator.js'
 
 const GROUP_XFO_MODES = {
@@ -725,6 +725,6 @@ class Group extends TreeItem {
   }
 }
 
-sgFactory.registerClass('Group', Group)
+Registry.register('Group', Group)
 
 export { Group }

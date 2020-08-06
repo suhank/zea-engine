@@ -1,6 +1,6 @@
 import { shaderLibrary } from '../ShaderLibrary'
 import { GLShader } from '../GLShader.js'
-import { sgFactory } from '../../SceneTree/index'
+import Registry from '../../Registry'
 
 import './GLSL/stack-gl/inverse.js'
 import './GLSL/stack-gl/transpose.js'
@@ -83,5 +83,5 @@ void main(void) {
   }
 }
 
-sgFactory.registerClass('StandardSurfaceSelectedGeomsShader', StandardSurfaceSelectedGeomsShader)
+Registry.register('StandardSurfaceSelectedGeomsShader', StandardSurfaceSelectedGeomsShader)
 export { StandardSurfaceSelectedGeomsShader }

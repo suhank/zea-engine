@@ -1,5 +1,5 @@
 import { AttrValue } from './AttrValue.js'
-import { typeRegistry } from './TypeRegistry.js'
+import Registry from '../Registry'
 
 /**
  * Class representing euler angles. Euler angles describe rotating an object
@@ -128,6 +128,6 @@ class EulerAngles extends AttrValue {
   }
 }
 
-typeRegistry.registerType('EulerAngles', EulerAngles)
+Registry.register('EulerAngles', EulerAngles)
 
 export { EulerAngles }

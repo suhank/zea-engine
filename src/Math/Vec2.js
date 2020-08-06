@@ -1,5 +1,5 @@
 import { AttrValue } from './AttrValue.js'
-import { typeRegistry } from './TypeRegistry.js'
+import Registry from '../Registry'
 
 /**
  * Representing a Vec2(two-dimensional floating point vector). A Vec2 is for representing 2 dimensional values, such as screen coordinates or pixel coordinates within an image.
@@ -565,6 +565,6 @@ class Vec2 extends AttrValue {
   }
 }
 
-typeRegistry.registerType('Vec2', Vec2)
+Registry.register('Vec2', Vec2)
 
 export { Vec2 }

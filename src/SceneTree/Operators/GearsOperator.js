@@ -2,7 +2,7 @@ import { Vec3, Quat } from '../../Math/index'
 import { Operator } from './Operator.js'
 import { OperatorOutput, OperatorOutputMode } from './OperatorOutput.js'
 import { StructParameter, NumberParameter, Vec3Parameter, ListParameter } from '../Parameters/index'
-import { sgFactory } from '../SGFactory.js'
+import Registry from '../../Registry'
 
 /** Class representing a gear parameter.
  * @extends StructParameter
@@ -190,6 +190,6 @@ class GearsOperator extends Operator {
   }
 }
 
-sgFactory.registerClass('GearsOperator', GearsOperator)
+Registry.register('GearsOperator', GearsOperator)
 
 export { GearsOperator }

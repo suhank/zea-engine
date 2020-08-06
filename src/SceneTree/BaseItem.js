@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
-import { sgFactory } from './SGFactory.js'
 import { ParameterOwner } from './ParameterOwner.js'
 import { BinReader } from './BinReader.js'
+import Registry from '../Registry'
 
 let numBaseItems = 0
 
@@ -267,7 +267,7 @@ class BaseItem extends ParameterOwner {
     const j = super.toJSON(context)
     if (j) {
       j.name = this.__name
-      j.type = sgFactory.getClassName(this)
+      j.type = Registry.getBlueprintName(this)
     }
 
     return j

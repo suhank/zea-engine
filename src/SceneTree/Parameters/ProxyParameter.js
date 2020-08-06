@@ -1,4 +1,4 @@
-import { sgFactory } from '../SGFactory'
+import Registry from '../../Registry'
 import { Parameter } from './Parameter.js'
 
 /** Class representing a proxy parameter. Proxies are used to connect
@@ -136,6 +136,6 @@ class ProxyParameter extends Parameter {
   }
 }
 
-sgFactory.registerClass('ProxyParameter', ProxyParameter)
+Registry.register('ProxyParameter', ProxyParameter)
 
 export { ProxyParameter }

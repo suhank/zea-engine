@@ -1,6 +1,6 @@
 import { Vec4, Color } from '../../Math/index'
 import { loadBinfile } from '../Utils.js'
-import { sgFactory } from '../SGFactory.js'
+import Registry from '../../Registry'
 import { BaseImage } from '../BaseImage.js'
 
 import { GIF } from '../../external/gifuct-js.js'
@@ -686,7 +686,7 @@ class FileImage2D extends FileImage {
   }
 }
 
-sgFactory.registerClass('FileImage2D', FileImage)
-sgFactory.registerClass('FileImage', FileImage)
+Registry.register('FileImage2D', FileImage)
+Registry.register('FileImage', FileImage)
 
 export { FileImage, FileImage2D }

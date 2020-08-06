@@ -1,5 +1,5 @@
 import { Color } from '../../Math/index'
-import { sgFactory } from '../../SceneTree/index'
+import Registry from '../../Registry'
 import { shaderLibrary } from '../ShaderLibrary.js'
 import { GLShader } from '../GLShader.js'
 import './GLSL/stack-gl/transpose.js'
@@ -224,5 +224,5 @@ void main(void) {
   }
 }
 
-sgFactory.registerClass('TransparentSurfaceShader', TransparentSurfaceShader)
+Registry.register('TransparentSurfaceShader', TransparentSurfaceShader)
 export { TransparentSurfaceShader }

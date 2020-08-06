@@ -1,4 +1,4 @@
-import { sgFactory } from '../SGFactory'
+import Registry from '../../Registry'
 import { ColorParameter } from './ColorParameter.js'
 import { BaseImage } from '../BaseImage.js'
 
@@ -125,6 +125,6 @@ class MaterialColorParam extends ColorParameter {
   }
 }
 
-sgFactory.registerClass('MaterialColorParam', MaterialColorParam)
+Registry.register('MaterialColorParam', MaterialColorParam)
 
 export { MaterialColorParam }

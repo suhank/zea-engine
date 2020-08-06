@@ -1,5 +1,5 @@
 import { Color } from '../../Math/index'
-import { sgFactory } from '../SGFactory.js'
+import Registry from '../../Registry'
 import { BaseImage } from '../BaseImage.js'
 import { resourceLoader } from '../ResourceLoader.js'
 import { FilePathParameter } from '../Parameters/FilePathParameter'
@@ -231,6 +231,6 @@ class VLHImage extends BaseImage {
   }
 }
 
-sgFactory.registerClass('VLHImage', VLHImage)
+Registry.register('VLHImage', VLHImage)
 
 export { VLHImage }

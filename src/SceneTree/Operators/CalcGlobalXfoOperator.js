@@ -49,6 +49,6 @@ class CalcGlobalXfoOperator extends Operator {
   }
 }
 
-// sgFactory.registerClass('CalcGlobalXfoOperator', CalcGlobalXfoOperator)
+// Registry.register('CalcGlobalXfoOperator', CalcGlobalXfoOperator)
 
 export { CalcGlobalXfoOperator }

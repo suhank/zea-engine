@@ -1,7 +1,7 @@
 import { Lines } from '../Lines.js'
 
 import { BooleanParameter, NumberParameter } from '../../Parameters/index'
-import { sgFactory } from '../../SGFactory.js'
+import Registry from '../../../Registry'
 
 /**
  * Represents a network of lines that cross each other to form a series of squares or rectangles.
@@ -121,6 +121,6 @@ class Grid extends Lines {
   }
 }
 
-sgFactory.registerClass('Grid', Grid)
+Registry.register('Grid', Grid)
 
 export { Grid }

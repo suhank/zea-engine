@@ -2,7 +2,7 @@
 /* eslint-disable valid-jsdoc */
 import { Xfo } from '../Math/index'
 import { TreeItem } from './TreeItem.js'
-import { sgFactory } from './SGFactory.js'
+import Registry from '../Registry'
 
 /**
  * TreeItem type of class designed for making duplications of parts of the tree.
@@ -91,6 +91,6 @@ class InstanceItem extends TreeItem {
   fromJSON(j, context = {}, onDone) {}
 }
 
-sgFactory.registerClass('InstanceItem', InstanceItem)
+Registry.register('InstanceItem', InstanceItem)
 
 export { InstanceItem }

@@ -4,7 +4,7 @@ import MathFunctions from '../Utilities/MathFunctions'
 import { Vec3 } from './Vec3.js'
 import { Mat4 } from './Mat4.js'
 import { SphereType } from './SphereType.js'
-import { typeRegistry } from './TypeRegistry.js'
+import Registry from '../Registry'
 
 /**
  * Class representing a box in 3D space.
@@ -364,6 +364,6 @@ class Box3 {
   }
 }
 
-typeRegistry.registerType('Box3', Box3)
+Registry.register('Box3', Box3)
 
 export { Box3 }

@@ -1,11 +1,10 @@
 import GridTreeItem from './GridTreeItem'
-import { sgFactory } from './SGFactory'
+// Although we're not directly using LinesShader, we import it so it registers itself in the registry.
+// eslint-disable-next-line no-unused-vars
 import { LinesShader } from '../Renderer/Shaders/LinesShader'
 import { Color } from '../Math/Color'
 
 describe('GridTreeItem', () => {
-  beforeAll(() => sgFactory.registerClass('LinesShader', LinesShader))
-
   it('Setup GridTreeItem', () => {
     const grid = new GridTreeItem(5, 5, new Color('#99CCCC'))
     const expectedOutput =

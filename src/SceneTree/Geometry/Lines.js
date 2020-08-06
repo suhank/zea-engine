@@ -1,5 +1,5 @@
 import { BaseGeom } from './BaseGeom.js'
-import { sgFactory } from '../SGFactory.js'
+import Registry from '../../Registry'
 
 /**
  *
@@ -176,6 +176,6 @@ class Lines extends BaseGeom {
   }
 }
 
-sgFactory.registerClass('Lines', Lines)
+Registry.register('Lines', Lines)
 
 export { Lines }

@@ -4,7 +4,7 @@ import { Material } from './Material'
 import { GeomItem } from './GeomItem'
 import { Grid } from './Geometry/Shapes/Grid'
 import { Lines } from './Geometry/Lines'
-import { sgFactory } from './SGFactory.js'
+import Registry from '../Registry'
 
 /**
  *
@@ -60,6 +60,6 @@ export default class GridTreeItem extends TreeItem {
   }
 }
 
-sgFactory.registerClass('GridTreeItem', GridTreeItem)
+Registry.register('GridTreeItem', GridTreeItem)
 
 export { GridTreeItem }
