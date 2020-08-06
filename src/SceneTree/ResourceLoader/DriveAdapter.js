@@ -46,7 +46,7 @@ export function mergeDeep(target, ...sources) {
  *
  * @private
  */
-class DriveAdaptor {
+class DriveAdapter {
   /**
    * Create a resource loader.
    */
@@ -303,7 +303,7 @@ class DriveAdaptor {
    * The resolveFilename method.
    * @deprecated
    * @param {string} value - The file value.
-   * @return {string} - The resolved URL if an adaptor is installed, else the original value.
+   * @return {string} - The resolved URL if an adapter is installed, else the original value.
    */
   resolveFilename(value) {
     return this.__resources[value].name
@@ -313,7 +313,7 @@ class DriveAdaptor {
    * The resolveURL method.
    * @deprecated
    * @param {string} value - The file value.
-   * @return {string} - The resolved URL if an adaptor is installed, else the original value.
+   * @return {string} - The resolved URL if an adapter is installed, else the original value.
    */
   resolveURL(value) {
     return this.__resources[value].url
@@ -338,4 +338,4 @@ class DriveAdaptor {
   }
 }
 
-export { DriveAdaptor }
+export { DriveAdapter }

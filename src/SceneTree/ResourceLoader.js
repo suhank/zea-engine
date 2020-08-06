@@ -24,7 +24,7 @@ class ResourceLoader extends EventEmitter {
    */
   constructor() {
     super()
-    this.__adaptor = undefined
+    this.__adapter = undefined
     this.__totalWork = 0
     this.__doneWork = 0
     this.__callbacks = {}
@@ -58,19 +58,19 @@ class ResourceLoader extends EventEmitter {
   }
 
   /**
-   * The setAdaptor method.
-   * @param {object} adaptor - The adaptor object.
+   * The setAdapter method.
+   * @param {object} adapter - The adapter object.
    */
-  setAdaptor(adaptor) {
-    this.__adaptor = adaptor
+  setAdapter(adapter) {
+    this.__adapter = adapter
   }
 
   /**
-   * The getAdaptor method.
-   * @return {object} - The adaptor object.
+   * The getAdapter method.
+   * @return {object} - The adapter object.
    */
-  getAdaptor() {
-    return this.__adaptor
+  getAdapter() {
+    return this.__adapter
   }
 
   // /////////////////////////////////////////////////
@@ -137,10 +137,10 @@ class ResourceLoader extends EventEmitter {
   /**
    * Given some value, which could be an IR or a path, return the unique identifier.
    * @param {string} value - The file value.
-   * @return {string} - The resolved fileId if an adaptor is installed, else the original value.
+   * @return {string} - The resolved fileId if an adapter is installed, else the original value.
    */
   resolveFileId(value) {
-    if (this.__adaptor) return this.__adaptor.resolveFileId(value)
+    if (this.__adapter) return this.__adapter.resolveFileId(value)
     return value
   }
 
@@ -148,10 +148,10 @@ class ResourceLoader extends EventEmitter {
    * The resolveFilename method.
    * @deprecated
    * @param {string} value - The file value.
-   * @return {string} - The resolved URL if an adaptor is installed, else the original value.
+   * @return {string} - The resolved URL if an adapter is installed, else the original value.
    */
   resolveFilename(value) {
-    if (this.__adaptor) return this.__adaptor.resolveFilename(value)
+    if (this.__adapter) return this.__adapter.resolveFilename(value)
     const filename = value.split(value.lastIndexOf('/'))[1]
     return filename
   }
@@ -160,10 +160,10 @@ class ResourceLoader extends EventEmitter {
    * The resolveURL method.
    * @deprecated
    * @param {string} value - The file value.
-   * @return {string} - The resolved URL if an adaptor is installed, else the original value.
+   * @return {string} - The resolved URL if an adapter is installed, else the original value.
    */
   resolveURL(value) {
-    if (this.__adaptor) return this.__adaptor.resolveURL(value)
+    if (this.__adapter) return this.__adapter.resolveURL(value)
     return value
   }
 
