@@ -2,9 +2,9 @@ import StringFunctions from '../../Utilities/StringFunctions'
 
 /**
  * Simple object check.
+ * @private
  * @param {any} item - The item value.
  * @return {boolean} - The return value.
- * @private
  */
 export function isObject(item) {
   return item && typeof item === 'object' && !Array.isArray(item)
@@ -12,10 +12,10 @@ export function isObject(item) {
 
 /**
  * Deep merge two objects.
+ * @private
  * @param {any} target - The target value.
  * @param {...object} ...sources - The ...sources value.
  * @return {any} - The return value.
- * @private
  */
 export function mergeDeep(target, ...sources) {
   if (!sources.length) return target
