@@ -20,79 +20,48 @@ describe('Circle', () => {
     expect(circle.getParameter('NumSegments').getValue()).toBe(64)
   })
 
-  // There's an issue with flags, that are preventing parameters to be exported.
-  it.skip('saves to JSON (serialization).', () => {
+  it('saves to JSON (serialization).', () => {
     const circle = new Circle(2, 6, Math.PI * 2)
-    debugger
     const outputJSON = circle.toJSON()
-    const expectedOutput = {
-      type: 'Circle',
-      numVertices: 6,
-      vertexAttributes: {
-        positions: {
-          data: [
-            1,
-            0,
-            0,
-            0.5,
-            0.8660253882408142,
-            0,
-            -0.5,
-            0.8660253882408142,
-            0,
-            -1,
-            1.2246468525851679e-16,
-            0,
-            -0.5,
-            -0.8660253882408142,
-            0,
-            0.5,
-            -0.8660253882408142,
-            0,
-          ],
-          dataType: 'Vec3',
-          defaultValue: 0,
-          length: 6,
-        },
-      },
-      indices: [0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 0],
-      Angle: { value: Math.PI * 2 },
-      NumSegments: {
-        range: [3, 200],
-        step: 1,
-        value: 6,
-      },
-      Radius: { value: 1 },
-    }
 
-    expect(outputJSON).toEqual(expectedOutput)
+    expect(outputJSON).toMatchSnapshot()
   })
 
-  it.skip('restores from JSON (serialization).', () => {
+  it('restores from JSON (serialization).', () => {
     const circle = new Circle()
     const expectedOutput = {
-      type: 'Circle',
+      indices: [0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 0],
       numVertices: 6,
+      params: {
+        Angle: { value: 6.283185307179586 },
+        NumSegments: {
+          range: [3, 200],
+          step: 1,
+          value: 6,
+        },
+        Radius: { value: 2 },
+      },
+      type: 'Circle',
       vertexAttributes: {
         positions: {
           data: [
+            2,
+            0,
+            0,
             1,
-            0,
-            0,
-            0.5,
-            0.8660253882408142,
-            0,
-            -0.5,
-            0.8660253882408142,
+            1.7320507764816284,
             0,
             -1,
-            1.2246468525851679e-16,
+            1.7320507764816284,
             0,
-            -0.5,
-            -0.8660253882408142,
+            -2,
+            2.4492937051703357e-16,
             0,
-            0.5,
-            -0.8660253882408142,
+            -1,
+            -1.7320507764816284,
+            0,
+            1,
+            -1.7320507764816284,
             0,
           ],
           dataType: 'Vec3',
@@ -100,19 +69,10 @@ describe('Circle', () => {
           length: 6,
         },
       },
-      indices: [0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 0],
-      Angle: { value: Math.PI * 2 },
-      NumSegments: {
-        range: [3, 200],
-        step: 1,
-        value: 6,
-      },
-      Radius: { value: 2 },
     }
     circle.fromJSON(expectedOutput)
 
-    const newCircle = new Circle(2, 6, Math.PI)
-    // console.log(JSON.stringify(newCircle.toJSON(), null, 2))
+    const newCircle = new Circle(2, 6, Math.PI * 2)
     expect(circle.toJSON()).toEqual(newCircle.toJSON())
   })
 })
