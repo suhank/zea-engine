@@ -48,7 +48,7 @@ class ScaleFloatOperator extends Operator {
 sgFactory.registerClass('ScaleFloatOperator', ScaleFloatOperator)
 
 describe('Operator', () => {
-  it('test AddFloatsOperator', () => {
+  test('AddFloatsOperator', () => {
     const addOperator = new AddFloatsOperator()
 
     const aParam = new NumberParameter('A')
@@ -67,7 +67,7 @@ describe('Operator', () => {
     expect(myParam.isDirty()).toBe(false)
   })
 
-  it('test ScaleFloatOperator', () => {
+  test('ScaleFloatOperator', () => {
     const scaleOperator = new ScaleFloatOperator()
 
     const scaleParam = new NumberParameter('A', 2)
@@ -87,7 +87,7 @@ describe('Operator', () => {
     expect(resultParam.isDirty()).toBe(false)
   })
 
-  it('test combining AddFloatsOperator and ScaleFloatOperator', () => {
+  test('combining AddFloatsOperator and ScaleFloatOperator', () => {
     const addOperator = new AddFloatsOperator()
     const aParam = new NumberParameter('A', 2)
     const bParam = new NumberParameter('B', 3.5)
@@ -114,7 +114,7 @@ describe('Operator', () => {
     expect(myParam.isDirty()).toBe(false)
   })
 
-  it('test dynamically changing inputs and outputs', () => {
+  test('dynamically changing inputs and outputs', () => {
     const operator = new Operator()
     const aParam = new NumberParameter('A', 2)
     const bParam = new NumberParameter('B', 3.5)
@@ -199,7 +199,7 @@ describe('Operator', () => {
     }
   }
 
-  it('test horizontal dirty propagation', () => {
+  test('horizontal dirty propagation', () => {
     const aParam = new NumberParameter('A')
     const bParam = new NumberParameter('B')
     const cParam = new NumberParameter('C')
@@ -271,7 +271,7 @@ describe('Operator', () => {
     expect(cParam.isDirty()).toBe(false)
   })
 
-  it('test creating an cyclic dependency', () => {
+  test('creating an cyclic dependency caused by mixing OP_READ_WRITE layering', () => {
     const aParam = new NumberParameter('A')
     const bParam = new NumberParameter('B')
     const scaleABParam1 = new NumberParameter('scaleABParam1', 2)
@@ -309,7 +309,7 @@ describe('Operator', () => {
     expect(bParam.getValue).toThrow()
   })
 
-  it('test rebind to fix a cyclic dependency', () => {
+  test('rebind to fix a cyclic dependency caused by mixing OP_READ_WRITE layering', () => {
     const aParam = new NumberParameter('A')
     const bParam = new NumberParameter('B')
     const scaleABParam1 = new NumberParameter('scaleABParam1', 2)
@@ -355,7 +355,7 @@ describe('Operator', () => {
     expect(bParam.getValue()).toBe(12) // (3 * 2) * 2
   })
 
-  it.skip('save to JSON (serialization).', () => {
+  test('save to JSON (serialization).', () => {
     const addOperator = new AddFloatsOperator()
     const parameterOwner = new BaseItem('Foo')
     const aParam = parameterOwner.addParameter(new NumberParameter('A'))
@@ -374,7 +374,7 @@ describe('Operator', () => {
     expect(JSON.stringify(addOperator.toJSON())).toBe(expOutput)
   })
 
-  it('load from JSON (serialization).', () => {
+  test('load from JSON (serialization).', () => {
     const parameterOwner = new BaseItem('Foo')
     parameterOwner.addParameter(new NumberParameter('A'))
     parameterOwner.addParameter(new NumberParameter('B'))
