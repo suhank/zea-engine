@@ -2,8 +2,8 @@
 import { Vec3, Box3, Xfo } from '../Math/index'
 import { TreeItem } from './TreeItem.js'
 import { BooleanParameter, NumberParameter } from './Parameters/index'
-import { sgFactory } from './SGFactory'
 import MathFunctions from '../Utilities/MathFunctions'
+import Registry from '../Registry'
 
 /**
  * Represents a view of the scene vertex coordinates. Since it is a `TreeItem`,
@@ -313,6 +313,6 @@ class Camera extends TreeItem {
   }
 }
 
-sgFactory.registerClass('Camera', Camera)
+Registry.register('Camera', Camera)
 
 export { Camera }

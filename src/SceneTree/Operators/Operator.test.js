@@ -4,7 +4,7 @@ import { NumberParameter } from '../Parameters/NumberParameter'
 import { BaseItem } from '../BaseItem'
 import { OperatorInput } from './OperatorInput'
 import { OperatorOutput, OperatorOutputMode } from './OperatorOutput'
-import { sgFactory } from '../SGFactory.js'
+import Registry from '../../Registry'
 
 class AddFloatsOperator extends Operator {
   constructor(name) {
@@ -21,9 +21,9 @@ class AddFloatsOperator extends Operator {
   }
 }
 
-sgFactory.registerClass('AddFloatsOperator', AddFloatsOperator)
+Registry.register('AddFloatsOperator', AddFloatsOperator)
 
-// Note: this operatore modifies a value in the output attribute
+// Note: this operator modifies a value in the output attribute
 // By reading and then changing. This feature allows us to combine operators
 // to compute complex results. (See BoundingBox operators).
 class ScaleFloatOperator extends Operator {
@@ -45,10 +45,10 @@ class ScaleFloatOperator extends Operator {
   }
 }
 
-sgFactory.registerClass('ScaleFloatOperator', ScaleFloatOperator)
+Registry.register('ScaleFloatOperator', ScaleFloatOperator)
 
 describe('Operator', () => {
-  it('AddFloatsOperator', () => {
+  test('AddFloatsOperator', () => {
     const addOperator = new AddFloatsOperator()
 
     const aParam = new NumberParameter('A')
@@ -67,7 +67,7 @@ describe('Operator', () => {
     expect(myParam.isDirty()).toBe(false)
   })
 
-  it('ScaleFloatOperator', () => {
+  test('ScaleFloatOperator', () => {
     const scaleOperator = new ScaleFloatOperator()
 
     const scaleParam = new NumberParameter('A', 2)
@@ -87,7 +87,7 @@ describe('Operator', () => {
     expect(resultParam.isDirty()).toBe(false)
   })
 
-  it('AddScaleFloatOperator', () => {
+  test('combining AddFloatsOperator and ScaleFloatOperator', () => {
     const addOperator = new AddFloatsOperator()
     const aParam = new NumberParameter('A', 2)
     const bParam = new NumberParameter('B', 3.5)
@@ -112,6 +112,55 @@ describe('Operator', () => {
     expect(myParam.isDirty()).toBe(true)
     expect(myParam.getValue()).toBe(5.5)
     expect(myParam.isDirty()).toBe(false)
+  })
+
+  test('dynamically changing inputs and outputs', () => {
+    const operator = new Operator()
+    const aParam = new NumberParameter('A', 2)
+    const bParam = new NumberParameter('B', 3.5)
+    const cParam = new NumberParameter('C')
+
+    operator.addInput(new OperatorInput('A')).setParam(aParam)
+    operator.addInput(new OperatorInput('B')).setParam(bParam)
+    operator.addOutput(new OperatorOutput('C')).setParam(cParam)
+
+    expect(operator.getNumInputs()).toBe(2)
+    expect(operator.getNumOutputs()).toBe(1)
+
+    expect(aParam.isDirty()).toBe(false)
+    expect(bParam.isDirty()).toBe(false)
+    expect(cParam.isDirty()).toBe(true)
+
+    operator.getInput('A').setParam(null)
+    operator.getInput('B').setParam(null)
+    operator.getOutput('C').setParam(null)
+
+    expect(aParam.isDirty()).toBe(false)
+    expect(bParam.isDirty()).toBe(false)
+    expect(cParam.isDirty()).toBe(false)
+
+    operator.removeInput(operator.getInput('A'))
+    operator.removeInput(operator.getInput('B'))
+    operator.removeOutput(operator.getOutput('C'))
+
+    expect(operator.getNumInputs()).toBe(0)
+    expect(operator.getNumOutputs()).toBe(0)
+
+    operator.addInput(new OperatorInput('A')).setParam(aParam)
+    operator.addInput(new OperatorInput('B')).setParam(bParam)
+    operator.addOutput(new OperatorOutput('C')).setParam(cParam)
+
+    expect(aParam.isDirty()).toBe(false)
+    expect(bParam.isDirty()).toBe(false)
+    expect(cParam.isDirty()).toBe(true)
+
+    operator.removeInput(operator.getInput('A'))
+    operator.removeInput(operator.getInput('B'))
+    operator.removeOutput(operator.getOutput('C'))
+
+    expect(aParam.isDirty()).toBe(false)
+    expect(bParam.isDirty()).toBe(false)
+    expect(cParam.isDirty()).toBe(false)
   })
 
   class SetFloatOperator extends Operator {
@@ -150,7 +199,7 @@ describe('Operator', () => {
     }
   }
 
-  it('test horizontal dirty propagation', () => {
+  test('horizontal dirty propagation', () => {
     const aParam = new NumberParameter('A')
     const bParam = new NumberParameter('B')
     const cParam = new NumberParameter('C')
@@ -222,7 +271,7 @@ describe('Operator', () => {
     expect(cParam.isDirty()).toBe(false)
   })
 
-  it('test creating an cyclic dependency', () => {
+  test('creating an cyclic dependency caused by mixing OP_READ_WRITE layering', () => {
     const aParam = new NumberParameter('A')
     const bParam = new NumberParameter('B')
     const scaleABParam1 = new NumberParameter('scaleABParam1', 2)
@@ -260,7 +309,7 @@ describe('Operator', () => {
     expect(bParam.getValue).toThrow()
   })
 
-  it('test rebind to fix a cyclic dependency', () => {
+  test('rebind to fix a cyclic dependency caused by mixing OP_READ_WRITE layering', () => {
     const aParam = new NumberParameter('A')
     const bParam = new NumberParameter('B')
     const scaleABParam1 = new NumberParameter('scaleABParam1', 2)
@@ -306,7 +355,7 @@ describe('Operator', () => {
     expect(bParam.getValue()).toBe(12) // (3 * 2) * 2
   })
 
-  it('save to JSON (serialization).', () => {
+  test('save to JSON (serialization).', () => {
     const addOperator = new AddFloatsOperator()
     const parameterOwner = new BaseItem('Foo')
     const aParam = parameterOwner.addParameter(new NumberParameter('A'))
@@ -320,12 +369,10 @@ describe('Operator', () => {
     aParam.setValue(3)
     bParam.setValue(2.5)
 
-    const expOutput =
-      '{"name":"","type":"AddFloatsOperator","inputs":[{"paramPath":["Foo","A"]},{"paramPath":["Foo","B"]}],"outputs":[{"paramPath":["Foo","MyParam"],"paramBindIndex":0}]}'
-    expect(JSON.stringify(addOperator.toJSON())).toBe(expOutput)
+    expect(JSON.stringify(addOperator.toJSON())).toMatchSnapshot()
   })
 
-  it('load from JSON (serialization).', () => {
+  test('load from JSON (serialization).', () => {
     const parameterOwner = new BaseItem('Foo')
     parameterOwner.addParameter(new NumberParameter('A'))
     parameterOwner.addParameter(new NumberParameter('B'))
@@ -335,8 +382,11 @@ describe('Operator', () => {
     const input = {
       name: '',
       type: 'AddFloatsOperator',
-      inputs: [{ paramPath: ['Foo', 'A'] }, { paramPath: ['Foo', 'B'] }],
-      outputs: [{ paramPath: ['Foo', 'MyParam'], paramBindIndex: 0 }],
+      inputs: [
+        { name: 'A', paramPath: ['Foo', 'A'] },
+        { name: 'B', paramPath: ['Foo', 'B'] },
+      ],
+      outputs: [{ name: 'C', paramPath: ['Foo', 'MyParam'], paramBindIndex: 0 }],
     }
     addOperator.fromJSON(input, {
       resolvePath: (path, cb) => {

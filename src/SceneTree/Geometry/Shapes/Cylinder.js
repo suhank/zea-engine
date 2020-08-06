@@ -3,7 +3,7 @@ import { Vec3 } from '../../../Math/Vec3'
 import { Mesh } from '../Mesh.js'
 
 import { BooleanParameter, NumberParameter } from '../../Parameters/index'
-import { sgFactory } from '../../SGFactory.js'
+import Registry from '../../../Registry'
 
 /**
  * A class for generating a cylinder geometry. It is very much like a cuboid but with `N` number of sides.
@@ -222,6 +222,6 @@ class Cylinder extends Mesh {
   }
 }
 
-sgFactory.registerClass('Cylinder', Cylinder)
+Registry.register('Cylinder', Cylinder)
 
 export { Cylinder }

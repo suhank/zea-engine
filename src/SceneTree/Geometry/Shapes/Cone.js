@@ -3,7 +3,7 @@ import { Vec2 } from '../../../Math/Vec2'
 import { Vec3 } from '../../../Math/Vec3'
 import { Mesh } from '../Mesh.js'
 import { BooleanParameter, NumberParameter } from '../../Parameters/index'
-import { sgFactory } from '../../SGFactory.js'
+import Registry from '../../../Registry'
 
 /**
  * Represents a cone geometry.
@@ -182,5 +182,5 @@ class Cone extends Mesh {
   }
 }
 
-sgFactory.registerClass('Cone', Cone)
+Registry.register('Cone', Cone)
 export { Cone }

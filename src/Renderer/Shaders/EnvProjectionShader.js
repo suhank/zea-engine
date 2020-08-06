@@ -1,5 +1,5 @@
 import { Color, Vec3 } from '../../Math/index'
-import { sgFactory } from '../../SceneTree/index'
+import Registry from '../../Registry'
 import { GLShader } from '../GLShader.js'
 import { shaderLibrary } from '../ShaderLibrary.js'
 
@@ -113,7 +113,7 @@ void main(void) {
   }
 }
 
-sgFactory.registerClass('OctahedralEnvProjectionShader', OctahedralEnvProjectionShader)
+Registry.register('OctahedralEnvProjectionShader', OctahedralEnvProjectionShader)
 
 class LatLongEnvProjectionShader extends EnvProjectionShader {
   constructor(gl) {
@@ -165,5 +165,5 @@ void main(void) {
   }
 }
 
-sgFactory.registerClass('LatLongEnvProjectionShader', LatLongEnvProjectionShader)
+Registry.register('LatLongEnvProjectionShader', LatLongEnvProjectionShader)
 export { EnvProjectionShader, OctahedralEnvProjectionShader, LatLongEnvProjectionShader }

@@ -1,4 +1,4 @@
-import { sgFactory } from '../SGFactory'
+import Registry from '../../Registry'
 import { ColorParameter } from './ColorParameter.js'
 import { BaseImage } from '../BaseImage.js'
 
@@ -117,15 +117,14 @@ class MaterialColorParam extends ColorParameter {
    * The clone method constructs a new material color parameter,
    * copies its values from this parameter and returns it.
    *
-   * @param {number} flags - The flags value.
    * @return {MaterialColorParam} - Returns a new cloned material color parameter.
    */
-  clone(flags) {
+  clone() {
     const clonedParam = new MaterialColorParam(this.__name, this.__value.clone())
     return clonedParam
   }
 }
 
-sgFactory.registerClass('MaterialColorParam', MaterialColorParam)
+Registry.register('MaterialColorParam', MaterialColorParam)
 
 export { MaterialColorParam }

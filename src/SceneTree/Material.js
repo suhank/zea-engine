@@ -2,7 +2,7 @@
 /* eslint-disable guard-for-in */
 import { Vec2, Vec3, Color } from '../Math/index'
 import { BaseItem } from './BaseItem.js'
-import { sgFactory } from './SGFactory.js'
+import Registry from '../Registry'
 import { Parameter, NumberParameter, Vec2Parameter, Vec3Parameter, ColorParameter } from './Parameters/index'
 import MathFunctions from '../Utilities/MathFunctions'
 
@@ -65,7 +65,7 @@ class Material extends BaseItem {
 
   /**
    * Sets shader by using the name of the class with the script.
-   * It is important that the shader is registered in `SGFactory`, otherwise it will error.
+   * It is important that the shader is registered in `Registry`, otherwise it will error.
    * See all classes that extend from `GLShader`.
    *
    * @param {string} shaderName - The shader name.
@@ -73,7 +73,7 @@ class Material extends BaseItem {
   setShaderName(shaderName) {
     if (this.__shaderName == shaderName) return
 
-    const shaderClass = sgFactory.getClass(shaderName)
+    const shaderClass = Registry.getBlueprint(shaderName)
     if (!shaderClass) throw new Error('Error setting Shader. Shader not found:' + shaderName)
 
     const paramDescs = shaderClass.getParamDeclarations()
@@ -172,7 +172,7 @@ class Material extends BaseItem {
    * @return {string|undefined} - The return value.
    */
   getShaderClass() {
-    return sgFactory.getClass(this.getShaderName())
+    return Registry.getBlueprint(this.getShaderName())
   }
 
   /**
@@ -205,11 +205,10 @@ class Material extends BaseItem {
    * The toJSON method encodes the current object as a json object.
    *
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    * @return {object} - Returns the json object.
    */
-  toJSON(context, flags = 0) {
-    return super.toJSON(context, flags)
+  toJSON(context) {
+    return super.toJSON(context)
   }
 
   /**
@@ -217,15 +216,14 @@ class Material extends BaseItem {
    *
    * @param {object} j - The json object this item must decode.
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    */
-  fromJSON(j, context = {}, flags = 0) {
+  fromJSON(j, context = {}) {
     if (!j.shader) {
       console.warn('Invalid Material JSON')
       return
     }
     this.setShaderName(j.shader)
-    super.fromJSON(j, context, flags)
+    super.fromJSON(j, context)
     // let props = this.__params;
     // for (let key in j) {
     //     let value;
@@ -307,12 +305,11 @@ class Material extends BaseItem {
    * The clone method constructs a new material, copies its values
    * from this material and returns it.
    *
-   * @param {number} flags - The flags value.
    * @return {Material} - Returns a new cloned material.
    */
-  clone(flags) {
+  clone() {
     const cloned = new Material()
-    cloned.copyFrom(this, flags)
+    cloned.copyFrom(this)
     return cloned
   }
 
@@ -320,10 +317,9 @@ class Material extends BaseItem {
    * When a Material is copied, first runs `BaseItem` copyFrom method, then sets shader.
    *
    * @param {Material} src - The material to copy from.
-   * @param {number} flags - The flags value.
    */
-  copyFrom(src, flags) {
-    super.copyFrom(src, flags)
+  copyFrom(src) {
+    super.copyFrom(src)
     this.setShaderName(src.getShaderName())
     for (const srcParam of src.getParameters()) {
       const param = src.getParameter(srcParam.getName())

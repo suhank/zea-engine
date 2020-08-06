@@ -3,7 +3,7 @@
 /* eslint-disable camelcase */
 import { Vec2, Vec3 } from '../../Math/index'
 import { decodeText } from '../../Utilities/index'
-import { sgFactory } from '../SGFactory.js'
+import Registry from '../../Registry'
 import { VLHImage } from './VLHImage.js'
 
 const EnvMapMapping = {
@@ -197,6 +197,6 @@ class EnvMap extends VLHImage {
   }
 }
 
-sgFactory.registerClass('EnvMap', EnvMap)
+Registry.register('EnvMap', EnvMap)
 
 export { EnvMap }

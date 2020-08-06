@@ -2,7 +2,7 @@
 import StringFunctions from '../Utilities/StringFunctions'
 
 import { Vec2 } from './Vec2'
-import { typeRegistry } from './TypeRegistry.js'
+import Registry from '../Registry'
 
 /**
  * Represents a box in 2D space. Needing two Vec2 vectors describing the corners
@@ -152,6 +152,6 @@ class Box2 {
   }
 }
 
-typeRegistry.registerType('Box2', Box2)
+Registry.register('Box2', Box2)
 
 export { Box2 }

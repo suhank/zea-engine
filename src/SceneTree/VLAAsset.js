@@ -3,7 +3,7 @@ import { FilePathParameter } from './Parameters/FilePathParameter'
 import { AssetItem } from './AssetItem.js'
 import { BinReader } from './BinReader.js'
 import { resourceLoader } from './ResourceLoader.js'
-import { sgFactory } from './SGFactory.js'
+import Registry from '../Registry'
 import { Version } from './Version.js'
 
 /**
@@ -39,14 +39,6 @@ class VLAAsset extends AssetItem {
 
     this.__datafileParam = this.addParameter(new FilePathParameter('DataFilePath'))
     this.__datafileParam.on('valueChanged', () => {
-      const file = this.__datafileParam.getFile()
-      if (!file) return
-      console.log(file)
-      if (this.getName() == '') {
-        const stem = this.__datafileParam.getStem()
-        this.setName(stem)
-      }
-
       this.geomsLoaded = false
       this.loadDataFile(
         () => {
@@ -132,19 +124,12 @@ class VLAAsset extends AssetItem {
    * @param {function} onGeomsDone - The onGeomsDone value.
    */
   loadDataFile(onDone, onGeomsDone) {
-    const file = this.__datafileParam.getFile()
-    if (!file) {
-      console.warn('VLAAsset data file not found.')
-      return
-    }
-
-    const folder = this.__datafileParam.getFileFolderPath()
     const fileId = this.__datafileParam.getValue()
-    const stem = this.__datafileParam.getStem()
+    const url = this.__datafileParam.getUrl()
+    const folder = url.lastIndexOf('/') > -1 ? url.substring(0, url.lastIndexOf('/')) + '/' : ''
+    const filename = url.lastIndexOf('/') > -1 ? url.substring(url.lastIndexOf('/') + 1) : ''
+    const stem = filename.substring(0, filename.lastIndexOf('.'))
     let numGeomsFiles = 0
-
-    const isVLFile = new RegExp('\\.(vla)$', 'i').test(file.name)
-    const vlgeomFiles = []
 
     const context = {
       assetItem: this,
@@ -168,22 +153,15 @@ class VLAAsset extends AssetItem {
       // Necessary for the smart lok
       numGeomsFiles = this.readBinary(treeReader, context)
 
-      if (!isVLFile) {
-        // Check that the number of geom files we have
-        // match the cound given by the file.
-        if (numGeomsFiles != vlgeomFiles.length)
-          console.error('The number of GeomFiles does not match the count given by the VLA file.')
-      }
-
       onDone()
 
       if (numGeomsFiles == 0 && entries.geoms0) {
-        resourceLoader.addWork(fileId + 'geoms', 1) // (load + parse + extra)
+        resourceLoader.addWork(fileId, 1) // (load + parse + extra)
         this.__geomLibrary.readBinaryBuffer(fileId, entries.geoms0.buffer, context)
         onGeomsDone()
       } else {
         // add the work for the the geom files....
-        resourceLoader.addWork(fileId + 'geoms', 4 * numGeomsFiles) // (load + parse + extra)
+        resourceLoader.addWork(fileId, 4 * numGeomsFiles) // (load + parse + extra)
 
         // Note: Lets just load all the goem files in parallel.
         loadAllGeomFiles()
@@ -194,16 +172,8 @@ class VLAAsset extends AssetItem {
       const promises = []
       for (let geomFileID = 0; geomFileID < numGeomsFiles; geomFileID++) {
         // console.log('LoadingGeom File:', geomFileID)
-        if (isVLFile) {
-          const nextGeomFileName = folder + stem + geomFileID + '.vlageoms'
-          const geomFile = resourceLoader.resolveFilepath(nextGeomFileName)
-          if (geomFile) promises.push(loadGeomsfile(geomFileID, geomFile.url, context))
-          else {
-            throw new Error('VLA Geoms file not found:' + nextGeomFileName)
-          }
-        } else {
-          promises.push(loadGeomsfile(geomFileID, vlgeomFiles[geomFileID].url))
-        }
+        const geomFileUrl = folder + stem + geomFileID + '.vlageoms'
+        promises.push(loadGeomsfile(geomFileID, geomFileUrl, context))
       }
       Promise.all(promises).then(() => {
         if (onGeomsDone) onGeomsDone()
@@ -222,32 +192,19 @@ class VLAAsset extends AssetItem {
           },
           false
         ) // <----
-        // Note: Don't add load work as we already pre-added it at the begining
+        // Note: Don't add load work as we already pre-added it at the beginning
         // and after the Tree file was loaded...
       })
     }
 
-    if (isVLFile) {
-      resourceLoader.loadResource(fileId, loadBinary)
-    } else if (file.metadata.ConvertFile) {
-      let vlaFile
-      file.metadata.ConvertFile.map((metadataFile) => {
-        if (metadataFile.filename.endsWith('.vla')) vlaFile = metadataFile
-        else if (metadataFile.filename.endsWith('.vlageoms')) vlgeomFiles.push(metadataFile)
-      })
-      if (vlaFile) {
-        resourceLoader.loadUrl(fileId, vlaFile.url, loadBinary)
-      } else {
-        console.warn('ConvertFile metadata contains no vla file.')
-      }
-    }
+    resourceLoader.loadUrl(fileId, url, loadBinary)
 
     // To ensure that the resource loader knows when
     // parsing is done, we listen to the GeomLibrary streamFileLoaded
     // signal. This is fired every time a file in the stream is finshed parsing.
     this.__geomLibrary.on('streamFileParsed', (event) => {
       // A chunk of geoms are now parsed, so update the resource loader.
-      resourceLoader.addWorkDone(fileId + 'geoms', event.fraction)
+      resourceLoader.addWorkDone(fileId, event.fraction)
     })
   }
 
@@ -279,6 +236,6 @@ class VLAAsset extends AssetItem {
   }
 }
 
-sgFactory.registerClass('VLAAsset', VLAAsset)
+Registry.register('VLAAsset', VLAAsset)
 
 export { VLAAsset }

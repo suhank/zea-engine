@@ -1,5 +1,3 @@
-import { ParamFlags } from './Parameter.js'
-
 import { ListParameter } from './ListParameter.js'
 import { TreeItemParameter } from './TreeItemParameter.js'
 
@@ -101,14 +99,12 @@ class KinematicGroupParameter extends ListParameter {
   // Persistence
 
   /**
-   * The toJSON method encodes this type as a json object for persistences.
+   * The toJSON method encodes this type as a json object for persistence.
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    * @return {object} - Returns the json object.
    */
-  toJSON(context, flags) {
-    // return super.toJSON(context, flags);
-    if ((this.__flags & ParamFlags.USER_EDITED) == 0) return
+  toJSON(context) {
+    // return super.toJSON(context);
     const treeItems = []
     for (const p of this.__value) treeItems.push(context.makeRelative(p.getPath()))
     return {
@@ -120,16 +116,12 @@ class KinematicGroupParameter extends ListParameter {
    * The fromJSON method decodes a json object for this type.
    * @param {object} j - The json object this item must decode.
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    */
-  fromJSON(j, context, flags) {
+  fromJSON(j, context) {
     if (j.treeItems == undefined) {
       console.warn('Invalid Parameter JSON')
       return
     }
-    // Note: JSON data is only used to store user edits, so
-    // parameters loaed from JSON are considered user edited.
-    this.__flags |= ParamFlags.USER_EDITED
 
     for (let i = 0; i < j.treeItems.length; i++) {
       context.resolvePath(
@@ -154,10 +146,9 @@ class KinematicGroupParameter extends ListParameter {
   /**
    * The clone method constructs a new kinematic group parameter,
    * copies its values from this parameter and returns it.
-   * @param {number} flags - The flags value.
    * @return {FilePathParameter} - Returns a new cloned kinematic group parameter.
    */
-  clone(flags) {
+  clone() {
     const clonedParam = new KinematicGroupParameter(this.__name, clonedValue, this.__dataType)
     return clonedParam
   }

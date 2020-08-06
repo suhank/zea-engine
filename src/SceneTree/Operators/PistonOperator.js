@@ -4,7 +4,7 @@ import { OperatorOutput, OperatorOutputMode } from './OperatorOutput.js'
 import { NumberParameter, Vec3Parameter, StructParameter, ListParameter } from '../Parameters/index'
 import MathFunctions from '../../Utilities/MathFunctions'
 
-import { sgFactory } from '../SGFactory.js'
+import Registry from '../../Registry'
 
 /** Class representing a piston parameter.
  * @extends StructParameter
@@ -143,13 +143,12 @@ class PistonParameter extends StructParameter {
   // Persistence
 
   /**
-   * The toJSON method encodes this type as a json object for persistences.
+   * The toJSON method encodes this type as a json object for persistence.
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    * @return {object} - Returns the json object.
    */
-  toJSON(context, flags) {
-    const j = super.toJSON(context, flags)
+  toJSON(context) {
+    const j = super.toJSON(context)
     return j
   }
 
@@ -157,22 +156,21 @@ class PistonParameter extends StructParameter {
    * The fromJSON method decodes a json object for this type.
    * @param {object} j - The json object this item must decode.
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    */
-  fromJSON(j, context, flags) {
-    super.fromJSON(j, context, flags)
+  fromJSON(j, context) {
+    super.fromJSON(j, context)
   }
 
   // ////////////////////////////////////////
   // Clone
 
   /**
-   * The clone method constructs a new pistom parameter, copies its values
+   * The clone method constructs a new piston parameter, copies its values
    * from this parameter and returns it.
-   * @param {number} flags - The flags value.
+   *
    * @return {PistonParameter} - Returns a new cloned piston parameter.
    */
-  clone(flags) {
+  clone() {
     const clonedParam = new PistonParameter(this.__name, this.__value)
     return clonedParam
   }
@@ -294,22 +292,22 @@ class PistonOperator extends Operator {
 
   /**
    * The toJSON method encodes this type as a json object for persistence.
+   *
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    * @return {object} - Returns the json object.
    */
-  toJSON(context, flags) {
-    return super.toJSON(context, flags)
+  toJSON(context) {
+    return super.toJSON(context)
   }
 
   /**
    * The fromJSON method decodes a json object for this type.
+   *
    * @param {object} j - The json object this item must decode.
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    */
-  fromJSON(j, context, flags) {
-    super.fromJSON(j, context, flags)
+  fromJSON(j, context) {
+    super.fromJSON(j, context)
     if (j.crankOutput) {
       this.__crankOutput.fromJSON(j.crankOutput, context)
     }
@@ -326,6 +324,6 @@ class PistonOperator extends Operator {
   }
 }
 
-sgFactory.registerClass('PistonOperator', PistonOperator)
+Registry.register('PistonOperator', PistonOperator)
 
 export { PistonOperator }

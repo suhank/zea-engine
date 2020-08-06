@@ -1,7 +1,7 @@
 import { AttrValue } from './AttrValue.js'
 import { Vec3 } from './Vec3.js'
 import { Mat3 } from './Mat3.js'
-import { typeRegistry } from './TypeRegistry.js'
+import Registry from '../Registry'
 
 /**
  * A class representing a 4x4 matrix.
@@ -1457,6 +1457,6 @@ class Mat4 extends AttrValue {
   }
 }
 
-typeRegistry.registerType('Mat4', Mat4)
+Registry.register('Mat4', Mat4)
 
 export { Mat4 }

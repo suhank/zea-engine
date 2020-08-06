@@ -97,13 +97,14 @@ class OperatorInput {
 
   /**
    * The toJSON method encodes this type as a json object for persistence.
+   *
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    * @return {object} - Returns the json object.
    */
-  toJSON(context, flags) {
+  toJSON(context) {
     const paramPath = this._param ? this._param.getPath() : ''
     return {
+      name: this.__name,
       paramPath: context && context.makeRelative ? context.makeRelative(paramPath) : paramPath,
     }
   }
@@ -112,9 +113,8 @@ class OperatorInput {
    * The fromJSON method decodes a json object for this type.
    * @param {object} j - The json object this item must decode.
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    */
-  fromJSON(j, context, flags) {
+  fromJSON(j, context) {
     if (j.paramPath) {
       // Note: the tree should have fully loaded by the time we are loading operators
       // even new items and groups should have been created. Operators and state machines

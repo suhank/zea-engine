@@ -1,4 +1,4 @@
-import { sgFactory } from '../SGFactory'
+import Registry from '../../Registry'
 import { Parameter } from './Parameter.js'
 
 /** Class representing a proxy parameter. Proxies are used to connect
@@ -66,11 +66,10 @@ class ProxyParameter extends Parameter {
   /**
    * The toJSON method encodes this type as a json object for persistence.
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    * @return {object} - Returns the json object.
    */
-  toJSON(context, flags) {
-    const j = super.toJSON(context, flags)
+  toJSON(context) {
+    const j = super.toJSON(context)
     if (this.sourceParameter) j.sourceParameter = this.sourceParameter.getPath()
     return j
   }
@@ -79,10 +78,9 @@ class ProxyParameter extends Parameter {
    * The fromJSON method decodes a json object for this type.
    * @param {object} j - The json object this item must decode.
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    */
-  fromJSON(j, context, flags) {
-    super.fromJSON(j, context, flags)
+  fromJSON(j, context) {
+    super.fromJSON(j, context)
     if (j.sourceParameter) {
       // Note: the tree should have fully loaded by the time we are loading operators
       // even new items and groups should have been created. Operators and state machines
@@ -107,11 +105,11 @@ class ProxyParameter extends Parameter {
   /**
    * The clone method constructs a new number parameter, copies its values
    * from this parameter and returns it.
-   * @param {number} flags - The flags value.
+   *
    * @param {object} context - The context object.
    * @return {ProxyParameter} - Returns a new number parameter.
    */
-  clone(flags, context) {
+  clone(context) {
     const clonedParam = new ProxyParameter(this.__name, this.__value)
     if (this.sourceParameter) {
       this.connectToClonedSourceParam(context)
@@ -123,7 +121,7 @@ class ProxyParameter extends Parameter {
    * During cloning, we need to reconnect references to other items in the tree
    * These other items may/may not be being cloned also, and so we need to request
    * the context that it resolve the item.
-   * @param {CloneContext} context - The context object htat can resolve references.
+   * @param {CloneContext} context - The context object that can resolve references.
    */
   connectToClonedSourceParam(context) {
     context.resolveClonedItem(
@@ -138,6 +136,6 @@ class ProxyParameter extends Parameter {
   }
 }
 
-sgFactory.registerClass('ProxyParameter', ProxyParameter)
+Registry.register('ProxyParameter', ProxyParameter)
 
 export { ProxyParameter }

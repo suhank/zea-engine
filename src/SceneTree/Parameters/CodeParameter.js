@@ -1,4 +1,4 @@
-import { sgFactory } from '../SGFactory'
+import Registry from '../../Registry'
 import { StringParameter } from './StringParameter.js'
 
 /**
@@ -50,15 +50,14 @@ class CodeParameter extends StringParameter {
    * The clone method constructs a new code parameter,
    * copies its values from this parameter and returns it.
    *
-   * @param {number} flags - The flags value.
    * @return {CodeParameter} - Returns a new cloned code parameter.
    */
-  clone(flags) {
+  clone() {
     const clonedParam = new CodeParameter(this.__name, this.__value)
     return clonedParam
   }
 }
 
-sgFactory.registerClass('CodeParameter', CodeParameter)
+Registry.register('CodeParameter', CodeParameter)
 
 export { CodeParameter }

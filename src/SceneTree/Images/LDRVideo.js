@@ -1,4 +1,4 @@
-import { sgFactory } from '../SGFactory.js'
+import Registry from '../../Registry'
 import { resourceLoader } from '../ResourceLoader.js'
 
 import { BooleanParameter, NumberParameter } from '../Parameters/index'
@@ -135,6 +135,6 @@ class LDRVideo extends FileImage {
 }
 
 FileImage.registerLoader('mp4|ogg', LDRVideo)
-sgFactory.registerClass('LDRVideo', LDRVideo)
+Registry.register('LDRVideo', LDRVideo)
 
 export { LDRVideo }

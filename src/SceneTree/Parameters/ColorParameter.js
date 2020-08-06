@@ -1,5 +1,5 @@
 import { Color } from '../../Math/index'
-import { sgFactory } from '../SGFactory'
+import Registry from '../../Registry'
 import { Parameter } from './Parameter.js'
 
 /**
@@ -44,15 +44,14 @@ class ColorParameter extends Parameter {
    * The clone method constructs a new color parameter,
    * copies its values from this parameter and returns it.
    *
-   * @param {number} flags - The flags value.
    * @return {ColorParameter} - Returns a new cloned color parameter.
    */
-  clone(flags) {
+  clone() {
     const clonedParam = new ColorParameter(this.__name, this.__value.clone())
     return clonedParam
   }
 }
 
-sgFactory.registerClass('ColorParameter', ColorParameter)
+Registry.register('ColorParameter', ColorParameter)
 
 export { ColorParameter }

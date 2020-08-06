@@ -3,7 +3,7 @@ import { TreeItem } from './TreeItem.js'
 import { Group } from './Group.js'
 import { GeomLibrary } from './GeomLibrary.js'
 import { MaterialLibrary } from './MaterialLibrary.js'
-import { sgFactory } from './SGFactory.js'
+import Registry from '../Registry'
 
 /**
  * Represents a TreeItem with rendering and material capabilities.
@@ -160,13 +160,12 @@ class AssetItem extends TreeItem {
   }
 
   /**
-   * The toJSON method encodes this type as a json object for persistences.
+   * The toJSON method encodes this type as a json object for persistence.
    *
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    * @return {object} - Returns the json object.
    */
-  toJSON(context = {}, flags = 0) {
+  toJSON(context = {}) {
     context.makeRelative = (path) => {
       const assetPath = this.getPath()
       const start = path.slice(0, assetPath.length)
@@ -182,7 +181,7 @@ class AssetItem extends TreeItem {
       return relativePath
     }
     context.assetItem = this
-    const j = super.toJSON(context, flags)
+    const j = super.toJSON(context)
     return j
   }
 
@@ -191,10 +190,9 @@ class AssetItem extends TreeItem {
    *
    * @param {object} j - The json object this item must decode.
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    * @param {function} onDone - Callback function executed when everything is done.
    */
-  fromJSON(j, context = {}, flags = 0, onDone) {
+  fromJSON(j, context = {}, onDone) {
     if (!context) context = {}
 
     context.assetItem = this
@@ -235,7 +233,7 @@ class AssetItem extends TreeItem {
     //   delete j.params.FilePath
     // }
 
-    super.fromJSON(j, context, flags)
+    super.fromJSON(j, context)
 
     // Invoke all the post-load callbacks to resolve any
     // remaning references.
@@ -245,6 +243,6 @@ class AssetItem extends TreeItem {
   }
 }
 
-sgFactory.registerClass('AssetItem', AssetItem)
+Registry.register('AssetItem', AssetItem)
 
 export { AssetItem }

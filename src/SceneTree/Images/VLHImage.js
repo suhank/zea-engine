@@ -1,5 +1,5 @@
 import { Color } from '../../Math/index'
-import { sgFactory } from '../SGFactory.js'
+import Registry from '../../Registry'
 import { BaseImage } from '../BaseImage.js'
 import { resourceLoader } from '../ResourceLoader.js'
 import { FilePathParameter } from '../Parameters/FilePathParameter'
@@ -195,18 +195,16 @@ class VLHImage extends BaseImage {
    * The toJSON method encodes this type as a json object for persistence.
    *
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    */
-  toJSON(context, flags) {}
+  toJSON(context) {}
 
   /**
    * The fromJSON method decodes a json object for this type.
    *
    * @param {object} json - The json object this item must decode.
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    */
-  fromJSON(json, context, flags) {}
+  fromJSON(json, context) {}
 
   /**
    * Sets state of current Image using a binary reader object, and adds it to the resource loader.
@@ -233,6 +231,6 @@ class VLHImage extends BaseImage {
   }
 }
 
-sgFactory.registerClass('VLHImage', VLHImage)
+Registry.register('VLHImage', VLHImage)
 
 export { VLHImage }

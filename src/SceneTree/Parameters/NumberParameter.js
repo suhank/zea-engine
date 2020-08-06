@@ -1,4 +1,4 @@
-import { sgFactory } from '../SGFactory.js'
+import Registry from '../../Registry'
 import { Parameter } from './Parameter.js'
 
 /**
@@ -73,11 +73,10 @@ class NumberParameter extends Parameter {
    * The toJSON method encodes this type as a json object for persistence.
    *
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    * @return {object} - Returns the json object.
    */
-  toJSON(context, flags) {
-    const j = super.toJSON(context, flags)
+  toJSON(context) {
+    const j = super.toJSON(context)
     if (this.__range) j.range = this.__range
     if (this.__step) j.step = this.__step
     return j
@@ -88,10 +87,9 @@ class NumberParameter extends Parameter {
    *
    * @param {object} j - The json object this item must decode.
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    */
-  fromJSON(j, context, flags) {
-    super.fromJSON(j, context, flags)
+  fromJSON(j, context) {
+    super.fromJSON(j, context)
     if (j.range) this.__range = j.range
     if (j.step) this.__step = j.step
   }
@@ -113,10 +111,9 @@ class NumberParameter extends Parameter {
    * The clone method constructs a new number parameter, copies its values
    * from this parameter and returns it.
    *
-   * @param {number} flags - The flags value.
    * @return {NumberParameter} - Returns a new number parameter.
    */
-  clone(flags) {
+  clone() {
     const clonedParam = new NumberParameter(this.__name, this.__value)
     clonedParam.__range = this.__range
     clonedParam.__step = this.__step
@@ -124,9 +121,9 @@ class NumberParameter extends Parameter {
   }
 }
 
-sgFactory.registerClass('NumberParameter', NumberParameter)
-sgFactory.registerClass('Property_SInt32', NumberParameter)
-sgFactory.registerClass('Property_UInt32', NumberParameter)
-sgFactory.registerClass('Property_Float32', NumberParameter)
+Registry.register('NumberParameter', NumberParameter)
+Registry.register('Property_SInt32', NumberParameter)
+Registry.register('Property_UInt32', NumberParameter)
+Registry.register('Property_Float32', NumberParameter)
 
 export { NumberParameter }

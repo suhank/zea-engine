@@ -1,7 +1,7 @@
 /* eslint-disable prefer-promise-reject-errors */
 import { Vec4 } from '../../Math/index'
 import { loadBinfile } from '../Utils.js'
-import { sgFactory } from '../SGFactory.js'
+import Registry from '../../Registry'
 import { FileImage } from './FileImage.js'
 
 import { GIF } from '../../external/gifuct-js.js'
@@ -42,7 +42,7 @@ class GIFImage extends FileImage {
     this.format = 'RGBA'
     this.type = 'UNSIGNED_BYTE'
     this.__streamAtlas = true
-    this.getParameter('FilePath').setSupportedExts('gif')
+    // this.getParameter('FilePath').setSupportedExts('gif')
 
     this.addParameter(new Vec4Parameter('StreamAtlasDesc'))
     this.addParameter(new NumberParameter('StreamAtlasIndex', 0))
@@ -207,8 +207,9 @@ class GIFImage extends FileImage {
             })
           },
           (statusText) => {
-            console.warn('Unable to Load URL:' + statusText + ':' + fileDesc.url)
-            reject()
+            const msg = 'Unable to Load URL:' + statusText + ':' + fileDesc.url
+            console.warn(msg)
+            reject(msg)
           }
         )
       })
@@ -238,6 +239,6 @@ class GIFImage extends FileImage {
 }
 
 FileImage.registerLoader('gif', GIFImage)
-sgFactory.registerClass('GIFImage', GIFImage)
+Registry.register('GIFImage', GIFImage)
 
 export { GIFImage }

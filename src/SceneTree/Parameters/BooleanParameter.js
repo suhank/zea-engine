@@ -1,5 +1,5 @@
 import { Parameter } from './Parameter.js'
-import { sgFactory } from '../SGFactory'
+import Registry from '../../Registry'
 
 /**
  * Represents a specific type of parameter, that only stores `boolean` values.
@@ -28,15 +28,14 @@ class BooleanParameter extends Parameter {
    * The clone method constructs a new boolean parameter,
    * copies its values from this parameter and returns it.
    *
-   * @param {number} flags - The flags value.
    * @return {BooleanParameter} - Returns a new cloned boolean parameter.
    */
-  clone(flags) {
+  clone() {
     const clonedParam = new BooleanParameter(this.__name, this.__value)
     return clonedParam
   }
 }
 
-sgFactory.registerClass('BooleanParameter', BooleanParameter)
+Registry.register('BooleanParameter', BooleanParameter)
 
 export { BooleanParameter }

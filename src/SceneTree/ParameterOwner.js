@@ -1,12 +1,11 @@
 /* eslint-disable guard-for-in */
 /* eslint-disable valid-jsdoc */
 import { EventEmitter } from '../Utilities/EventEmitter'
-import { sgFactory } from './SGFactory.js'
+import Registry from '../Registry'
 
 // Explicit import of files to avoid importing all the parameter types.
 // Note: Soon these imports should be removed, once all code avoids calling
 // 'addParameter' without the parameter instance.
-import { ParamFlags, Parameter } from './Parameters/Parameter.js'
 
 let counter = 0
 
@@ -166,19 +165,19 @@ class ParameterOwner extends EventEmitter {
   /**
    * Removes `Parameter` from owner, by using parameter's name.
    * @emits `parameterRemoved` with the name of the param.
-   * @param {string} paramName - The parameter name.
+   * @param {string} name - The parameter name.
    */
-  removeParameter(paramName) {
-    if (this.__paramMapping[paramName] == undefined) {
-      console.throw('Unable to remove Parameter:' + paramName)
+  removeParameter(name) {
+    if (this.__paramMapping[name] == undefined) {
+      throw new Error('Unable to remove Parameter:' + name)
     }
-    const index = this.__paramMapping[paramName]
-    const param = this.__params[this.__paramMapping[paramName]]
+    const index = this.__paramMapping[name]
+    const param = this.__params[this.__paramMapping[name]]
 
-    param.off('valueChanged', this.__paramEventHandlers[paramName])
+    param.off('valueChanged', this.__paramEventHandlers[name])
     this.__params.splice(index, 1)
 
-    delete this.__paramMapping[paramName]
+    delete this.__paramMapping[name]
     for (let i = index; i < this.__params.length; i++) {
       this.__paramMapping[this.__params[i].getName()] = i
     }
@@ -194,8 +193,8 @@ class ParameterOwner extends EventEmitter {
    */
   replaceParameter(param) {
     const name = param.getName()
-    if (this.__paramMapping[paramName] == undefined) {
-      console.throw('Unable to replace Parameter:' + paramName)
+    if (this.__paramMapping[name] == undefined) {
+      throw new Error('Unable to replace Parameter:' + paramName)
     }
     const index = this.__paramMapping[name]
     this.removeParameter(name)
@@ -207,24 +206,24 @@ class ParameterOwner extends EventEmitter {
   // Persistence
 
   /**
-   * The toJSON method encodes this type as a json object for persistences.
+   * The toJSON method encodes this type as a json object for persistence.
    *
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    * @return {object} - Returns the json object.
    */
-  toJSON(context, flags) {
+  toJSON(context) {
+    const json = {}
     const paramsJSON = {}
     let savedParams = 0
     for (const param of this.__params) {
-      if (!param.testFlag(ParamFlags.USER_EDITED)) continue
-      const paramJSON = param.toJSON(context, flags)
+      const paramJSON = param.toJSON(context)
       if (paramJSON) {
         paramsJSON[param.getName()] = paramJSON
         savedParams++
       }
     }
-    if (savedParams > 0) return { params: paramsJSON }
+    if (savedParams > 0) json.params = paramsJSON
+    return json
   }
 
   /**
@@ -232,9 +231,8 @@ class ParameterOwner extends EventEmitter {
    *
    * @param {object} j - The json object this item must decode.
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    */
-  fromJSON(j, context, flags) {
+  fromJSON(j, context) {
     if (j.params) {
       for (const key in j.params) {
         const pj = j.params[key]
@@ -279,7 +277,7 @@ class ParameterOwner extends EventEmitter {
         const propName = reader.loadStr()
         let param = this.getParameter(propName)
         if (!param) {
-          param = sgFactory.constructClass(propType, propName)
+          param = Registry.constructClass(propType, propName)
           if (!param) {
             console.error('Unable to construct prop:' + propName + ' of type:' + propType)
             continue
@@ -307,9 +305,8 @@ class ParameterOwner extends EventEmitter {
    * Copies Parameters from another `ParameterOwner` to current object.
    *
    * @param {ParameterOwner} src - The ParameterOwner copy from.
-   * @param {number} flags - The flags value.
    */
-  copyFrom(src, flags) {
+  copyFrom(src) {
     // Note: Loop over the parameters in reverse order,
     // this is because often, parameter dependencies
     // are bottom to top (bottom params dependent on higher params).

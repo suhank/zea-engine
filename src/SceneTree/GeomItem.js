@@ -2,7 +2,7 @@ import { Xfo } from '../Math/index'
 import { XfoParameter, Mat4Parameter } from './Parameters/index'
 import { MaterialParameter } from './Parameters/MaterialParameter'
 import { GeometryParameter } from './Parameters/GeometryParameter'
-import { sgFactory } from './SGFactory.js'
+import Registry from '../Registry'
 import { BaseGeomItem } from './BaseGeomItem.js'
 import { Operator } from './Operators/Operator.js'
 import { OperatorInput } from './Operators/OperatorInput.js'
@@ -14,8 +14,12 @@ import { OperatorOutput } from './Operators/OperatorOutput.js'
  */
 class CalcGeomMatOperator extends Operator {
   /**
-   * Create a gears operator.
-   * @param {string} name - The name value.
+   *Creates an instance of CalcGeomMatOperator.
+   *
+   * @param {*} globalXfoParam
+   * @param {*} geomOffsetXfoParam
+   * @param {*} geomMatParam
+   * @memberof CalcGeomMatOperator
    */
   constructor(globalXfoParam, geomOffsetXfoParam, geomMatParam) {
     super('CalcGeomMatOperator')
@@ -194,14 +198,13 @@ class GeomItem extends BaseGeomItem {
   // Debugging
 
   /**
-   * The toJSON method encodes this type as a json object for persistences.
+   * The toJSON method encodes this type as a json object for persistence.
    *
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    * @return {object} - Returns the json object.
    */
-  toJSON(context, flags) {
-    const json = super.toJSON(context, flags)
+  toJSON(context) {
+    const json = super.toJSON(context)
     return json
   }
 
@@ -227,7 +230,7 @@ class GeomItem extends BaseGeomItem {
 
     context.numGeomItems++
 
-    const itemflags = reader.loadUInt8()
+    const itemFlags = reader.loadUInt8()
     const geomIndex = reader.loadUInt32()
     const geomLibrary = context.assetItem.getGeometryLibrary()
     const geom = geomLibrary.getGeom(geomIndex)
@@ -250,7 +253,7 @@ class GeomItem extends BaseGeomItem {
     // this.setVisibility(j.visibility);
     // Note: to save space, some values are skipped if they are identity values
     const geomOffsetXfoFlag = 1 << 2
-    if (itemflags & geomOffsetXfoFlag) {
+    if (itemFlags & geomOffsetXfoFlag) {
       this.__geomOffsetXfoParam.setValue(
         new Xfo(reader.loadFloat32Vec3(), reader.loadFloat32Quat(), reader.loadFloat32Vec3())
       )
@@ -260,7 +263,7 @@ class GeomItem extends BaseGeomItem {
     // if (context.version < 4) {
     if (context.versions['zea-engine'].compare([0, 0, 4]) < 0) {
       const materialFlag = 1 << 3
-      if (itemflags & materialFlag) {
+      if (itemFlags & materialFlag) {
         const materialLibrary = context.assetItem.getMaterialLibrary()
         const materialName = reader.loadStr()
         let material = materialLibrary.getMaterial(materialName)
@@ -296,7 +299,7 @@ class GeomItem extends BaseGeomItem {
    * The clone method constructs a new geom item, copies its values
    * from this item and returns it.
    *
-   * @param {number} context - The flags value.
+   * @param {number} context - The context value.
    * @return {GeomItem} - Returns a new cloned geom item.
    */
   clone(context) {
@@ -309,7 +312,7 @@ class GeomItem extends BaseGeomItem {
    * Copies current GeomItem with all its children.
    *
    * @param {GeomItem} src - The geom item to copy from.
-   * @param {number} context - The flags value.
+   * @param {number} context - The context value.
    */
   copyFrom(src, context) {
     super.copyFrom(src, context)
@@ -344,6 +347,6 @@ class GeomItem extends BaseGeomItem {
   }
 }
 
-sgFactory.registerClass('GeomItem', GeomItem)
+Registry.register('GeomItem', GeomItem)
 
 export { GeomItem }

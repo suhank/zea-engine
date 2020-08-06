@@ -1,9 +1,11 @@
-import { TreeItem, sgFactory, ParameterOwner } from '../SceneTree/index'
+import { TreeItem, ParameterOwner } from '../SceneTree/index'
 import { SystemDesc } from '../BrowserDetection.js'
 import { onResize } from '../external/onResize.js'
 import { create3DContext } from './GLContext.js'
 import { GLScreenQuad } from './GLScreenQuad.js'
 import { GLViewport } from './GLViewport.js'
+import Registry from '../Registry'
+
 // import {
 //     GLTexture2D
 // } from './GLTexture2D.js';
@@ -770,8 +772,8 @@ class GLBaseRenderer extends ParameterOwner {
   getOrCreateShader(shaderName) {
     let glshader = this.__shaders[shaderName]
     if (!glshader) {
-      glshader = sgFactory.constructClass(shaderName, this.__gl)
-      if (!glshader) console.error('Shader not registered with the SGFactory:', shaderName)
+      glshader = Registry.constructClass(shaderName, this.__gl)
+      if (!glshader) console.error('Shader not registered with the Registry:', shaderName)
       this.__shaders[shaderName] = glshader
     }
     return glshader

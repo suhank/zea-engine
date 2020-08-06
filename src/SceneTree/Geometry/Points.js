@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 import { BaseGeom } from './BaseGeom.js'
-import { sgFactory } from '../SGFactory.js'
+import Registry from '../../Registry'
 
 /**
  * Class representing a point primitive drawing type, every vertex specified is a point.
@@ -90,6 +90,6 @@ class Points extends BaseGeom {
   }
 }
 
-sgFactory.registerClass('Points', Points)
+Registry.register('Points', Points)
 
 export { Points }

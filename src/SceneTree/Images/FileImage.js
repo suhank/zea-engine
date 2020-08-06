@@ -1,6 +1,6 @@
 import { Vec4, Color } from '../../Math/index'
 import { loadBinfile } from '../Utils.js'
-import { sgFactory } from '../SGFactory.js'
+import Registry from '../../Registry'
 import { BaseImage } from '../BaseImage.js'
 
 import { GIF } from '../../external/gifuct-js.js'
@@ -56,9 +56,8 @@ class FileImage extends BaseImage {
         }
       }
 
-      const fileDesc = fileParam.getFile()
-      if (fileDesc) {
-        this.__loadData(fileDesc)
+      if (fileParam.getValue()) {
+        this.__loadData()
       }
     })
 
@@ -103,35 +102,34 @@ class FileImage extends BaseImage {
 
   /**
    * The __loadData method.
-   * @param {any} fileDesc - The fileDesc value.
    * @private
    */
-  __loadData(fileDesc) {
-    const ext = this.getParameter('FilePath').getExt()
+  __loadData() {
+    const ext = this.getParameter('FilePath').get()
     if (ext == '.jpg' || ext == '.png' || ext == '.webp') {
-      this.__loadLDRImage(fileDesc, ext)
+      this.__loadLDRImage(ext)
     } else if (ext == '.mp4' || ext == '.ogg') {
-      this.__loadLDRVideo(fileDesc)
+      this.__loadLDRVideo()
       // } else if (ext == '.ldralpha') {
-      //     this.__loadLDRAlpha(fileDesc, ext);
+      //     this.__loadLDRAlpha(file, ext);
     } else if (ext == '.vlh') {
-      this.__loadVLH(fileDesc)
+      this.__loadVLH()
     } else if (ext == '.gif') {
-      this.__loadGIF(fileDesc)
+      this.__loadGIF()
     } else if (ext == '.svg') {
       console.warn('SVG Image not yet supported')
     } else {
-      throw new Error('Unsupported file type. Check the ext:' + fileDesc)
+      throw new Error('Unsupported file type. Check the ext:' + file)
     }
   }
 
   /**
    * The __loadLDRImage method.
-   * @param {any} fileDesc - The fileDesc value.
-   * @param {any} ext - The ext value.
+   * @param {string} ext - The file extension.
    * @private
    */
-  __loadLDRImage(fileDesc, ext) {
+  __loadLDRImage(ext) {
+    const file = this.getParameter('FilePath').getFile()
     if (ext == '.jpg') {
       this.format = 'RGB'
     } else if (ext == '.png') {
@@ -149,20 +147,20 @@ class FileImage extends BaseImage {
       this.__loaded = true
       this.emit('loaded', {})
     }
-    if (fileDesc.id in imageDataLibrary) {
-      imageElem = imageDataLibrary[fileDesc.id]
+    if (file.id in imageDataLibrary) {
+      imageElem = imageDataLibrary[file.id]
       if (imageElem.complete) {
         loaded()
       } else {
         imageElem.addEventListener('load', loaded)
       }
     } else {
-      resourceLoader.addWork(fileDesc.id, 1)
+      resourceLoader.addWork(file.id, 1)
 
       const prefSizeParam = this.addParameter(new NumberParameter('PreferredSize', -1))
 
-      let url = fileDesc.url
-      if (fileDesc.assets && Object.keys(fileDesc.assets).length > 0) {
+      let url = file.url
+      if (file.assets && Object.keys(file.assets).length > 0) {
         function chooseImage(params, filterAssets) {
           // Note: this is a filter to remove any corrupt data
           // generate by our broken server side processing system.
@@ -208,15 +206,15 @@ class FileImage extends BaseImage {
         }
         const prefSize = prefSizeParam.getValue()
         if (prefSize == -1) {
-          if (fileDesc.assets.reduce) params.prefSize = fileDesc.assets.reduce.w
+          if (file.assets.reduce) params.prefSize = file.assets.reduce.w
         } else {
           params.prefSize = prefSize
         }
-        const asset = chooseImage(params, Object.values(fileDesc.assets))
+        const asset = chooseImage(params, Object.values(file.assets))
         if (asset) {
           console.log(
             'Selected image:' +
-              fileDesc.name +
+              file.name +
               ' format:' +
               asset.format +
               ' :' +
@@ -229,7 +227,7 @@ class FileImage extends BaseImage {
           url = asset.url
         }
       } else {
-        console.warn('Images not processed for this file:' + fileDesc.name)
+        console.warn('Images not processed for this file:' + file.name)
       }
 
       imageElem = new Image()
@@ -238,9 +236,9 @@ class FileImage extends BaseImage {
 
       imageElem.addEventListener('load', loaded)
       imageElem.addEventListener('load', () => {
-        resourceLoader.addWorkDone(fileDesc.id, 1)
+        resourceLoader.addWorkDone(file.id, 1)
       })
-      imageDataLibrary[fileDesc.id] = imageElem
+      imageDataLibrary[file.id] = imageElem
     }
   }
 
@@ -264,14 +262,14 @@ class FileImage extends BaseImage {
 
   /**
    * The __loadLDRVideo method.
-   * @param {any} fileDesc - The fileDesc value.
-   * @param {any} ext - The ext value.
+   * @param {string} ext - The file extension.
    * @private
    */
-  __loadLDRVideo(fileDesc) {
+  __loadLDRVideo() {
+    const file = this.getParameter('FilePath').getFile()
     this.format = 'RGB'
     this.type = 'UNSIGNED_BYTE'
-    resourceLoader.addWork(fileDesc.id, 1)
+    resourceLoader.addWork(file.id, 1)
 
     // Note: mute needs to be turned off by an action from the user.
     // Audio is disabled by default now in chrome.
@@ -308,7 +306,7 @@ class FileImage extends BaseImage {
         this.height = videoElem.videoWidth
         this.__data = videoElem
         this.__loaded = true
-        resourceLoader.addWorkDone(fileDesc.id, 1)
+        resourceLoader.addWorkDone(file.id, 1)
         this.emit('loaded', {})
 
         videoElem.play().then(
@@ -348,17 +346,17 @@ class FileImage extends BaseImage {
       },
       false
     )
-    videoElem.src = fileDesc.url
+    videoElem.src = file.url
     // videoElem.load();
   }
 
   /**
    * The __loadVLH method.
-   * @param {any} fileDesc - The fileDesc value.
-   * @param {any} ext - The ext value.
+   * @param {string} ext - The file extension.
    * @private
    */
-  __loadVLH(fileDesc) {
+  __loadVLH() {
+    const file = this.getParameter('FilePath').getFile()
     this.type = 'FLOAT'
 
     let hdrtint = new Color(1, 1, 1, 1)
@@ -371,7 +369,7 @@ class FileImage extends BaseImage {
       return hdrtint
     }
 
-    resourceLoader.loadUrl(fileDesc.id, fileDesc.url, (entries) => {
+    resourceLoader.loadUrl(file.id, file.url, (entries) => {
       let ldr
       let cdm
       for (const name in entries) {
@@ -386,7 +384,7 @@ class FileImage extends BaseImage {
       ldrPic.onload = () => {
         this.width = ldrPic.width
         this.height = ldrPic.height
-        // console.log(fileDesc.name + ": [" + this.width + ", " + this.height + "]");
+        // console.log(file.name + ": [" + this.width + ", " + this.height + "]");
         this.__data = {
           ldr: ldrPic,
           cdm: cdm,
@@ -404,19 +402,18 @@ class FileImage extends BaseImage {
 
   /**
    * The __loadGIF method.
-   * @param {any} fileDesc - The fileDesc value.
-   * @param {any} ext - The ext value.
+   * @param {string} ext - The file extension.
    * @private
    */
-  __loadGIF(fileDesc) {
+  __loadGIF() {
+    const file = this.getParameter('FilePath').getFile()
     this.format = 'RGBA'
     this.type = 'UNSIGNED_BYTE'
     this.__streamAtlas = true
 
     // this.__streamAtlasDesc = new Vec4();
     this.addParameter(new Vec4Parameter('StreamAtlasDesc', new Vec4()))
-    this.addParameter(new NumberParameter('StreamAtlasIndex', 0))
-    this.getParameter('StreamAtlasIndex').setRange([0, 1])
+    this.addParameter(new NumberParameter('StreamAtlasIndex', 0)).setRange([0, 1])
 
     this.getFrameDelay = () => {
       return 20
@@ -433,34 +430,34 @@ class FileImage extends BaseImage {
       playing = false
     }
     let resourcePromise
-    if (fileDesc.id in imageDataLibrary) {
-      resourcePromise = imageDataLibrary[fileDesc.id]
+    if (file.id in imageDataLibrary) {
+      resourcePromise = imageDataLibrary[file.id]
     } else {
       resourcePromise = new Promise((resolve, reject) => {
-        resourceLoader.addWork(fileDesc.id, 1)
+        resourceLoader.addWork(file.id, 1)
 
-        if (fileDesc.assets && fileDesc.assets.atlas) {
+        if (file.assets && file.assets.atlas) {
           const imageElem = new Image()
           imageElem.crossOrigin = 'anonymous'
-          imageElem.src = fileDesc.assets.atlas.url
+          imageElem.src = file.assets.atlas.url
           imageElem.addEventListener('load', () => {
             resolve({
-              width: fileDesc.assets.atlas.width,
-              height: fileDesc.assets.atlas.height,
-              atlasSize: fileDesc.assets.atlas.atlasSize,
-              frameDelays: fileDesc.assets.atlas.frameDelays,
-              frameRange: [0, fileDesc.assets.atlas.frameDelays.length],
+              width: file.assets.atlas.width,
+              height: file.assets.atlas.height,
+              atlasSize: file.assets.atlas.atlasSize,
+              frameDelays: file.assets.atlas.frameDelays,
+              frameRange: [0, file.assets.atlas.frameDelays.length],
               imageData: imageElem,
             })
-            resourceLoader.addWorkDone(fileDesc.id, 1)
+            resourceLoader.addWorkDone(file.id, 1)
           })
           return
         }
 
         loadBinfile(
-          fileDesc.url,
+          file.url,
           (data) => {
-            console.warn('Unpacking Gif client side:' + fileDesc.name)
+            console.warn('Unpacking Gif client side:' + file.name)
 
             const start = performance.now()
 
@@ -535,12 +532,12 @@ class FileImage extends BaseImage {
               // console.log(frame);
               renderFrame(frames[i], i)
             }
-            resourceLoader.addWorkDone(fileDesc.id, 1)
+            resourceLoader.addWorkDone(file.id, 1)
 
             const imageData = atlasCtx.getImageData(0, 0, atlasCanvas.width, atlasCanvas.height)
 
             const ms = performance.now() - start
-            console.log(`Decode GIF '${fileDesc.name}' time:` + ms)
+            console.log(`Decode GIF '${file.name}' time:` + ms)
 
             resolve({
               width: atlasCanvas.width,
@@ -552,13 +549,14 @@ class FileImage extends BaseImage {
             })
           },
           (statusText) => {
-            console.warn('Unable to Load URL:' + statusText + ':' + fileDesc.url)
-            reject()
+            const msg = 'Unable to Load URL:' + statusText + ':' + fileDesc.url
+            console.warn(msg)
+            reject(msg)
           }
         )
       })
 
-      imageDataLibrary[fileDesc.id] = resourcePromise
+      imageDataLibrary[file.id] = resourcePromise
     }
 
     resourcePromise.then((unpackedData) => {
@@ -595,14 +593,6 @@ class FileImage extends BaseImage {
   }
 
   /**
-   * The getFilepath method.
-   * @return {any} - The return value.
-   */
-  getFilepath() {
-    return this.getParameter('FilePath').getValue()
-  }
-
-  /**
    * The isStream method.
    * @return {boolean} - The return value.
    */
@@ -634,19 +624,17 @@ class FileImage extends BaseImage {
   // Persistence
 
   /**
-   * The toJSON method encodes this type as a json object for persistences.
+   * The toJSON method encodes this type as a json object for persistence.
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    */
-  toJSON(context, flags) {}
+  toJSON(context) {}
 
   /**
    * The fromJSON method decodes a json object for this type.
    * @param {object} json - The json object this item must decode.
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    */
-  fromJSON(json, context, flags) {}
+  fromJSON(json, context) {}
 
   /**
    * The readBinary method.
@@ -688,7 +676,7 @@ class FileImage2D extends FileImage {
   }
 }
 
-sgFactory.registerClass('FileImage2D', FileImage)
-sgFactory.registerClass('FileImage', FileImage)
+Registry.register('FileImage2D', FileImage)
+Registry.register('FileImage', FileImage)
 
 export { FileImage, FileImage2D }

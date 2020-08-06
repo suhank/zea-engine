@@ -1,7 +1,7 @@
 /* eslint-disable guard-for-in */
 import { Color } from '../../Math/index'
 import { BooleanParameter, NumberParameter, ColorParameter, StringParameter } from '../Parameters/index'
-import { sgFactory } from '../SGFactory.js'
+import Registry from '../../Registry'
 import { DataImage } from './DataImage.js'
 import { labelManager } from './LabelManager.js'
 
@@ -340,14 +340,13 @@ class Label extends DataImage {
   // Persistence
 
   /**
-   * The toJSON method encodes this type as a json object for persistences.
+   * The toJSON method encodes this type as a json object for persistence.
    *
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    * @return {object} - Returns the json object.
    */
-  toJSON(context, flags) {
-    const j = super.toJSON(context, flags)
+  toJSON(context) {
+    const j = super.toJSON(context)
     return j
   }
 
@@ -356,14 +355,13 @@ class Label extends DataImage {
    *
    * @param {object} j - The json object this item must decode.
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    */
-  fromJSON(j, context, flags) {
-    super.fromJSON(j, context, flags)
+  fromJSON(j, context) {
+    super.fromJSON(j, context)
     this.__getLabelText()
   }
 }
 
-sgFactory.registerClass('Label', Label)
+Registry.register('Label', Label)
 
 export { Label }

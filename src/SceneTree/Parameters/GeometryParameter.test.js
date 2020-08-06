@@ -24,14 +24,14 @@ describe('GeometryParameter', () => {
     expect(geometryParameter.getValue()).toEqual(geomItem)
   })
 
-  /*it('saves to JSON (serialization).', () => {
+  /* it('saves to JSON (serialization).', () => {
     const geometryParameter = new GeometryParameter()
     const cylinder = new Cylinder(5, 0.2, 32)
     const geomItem = new GeomItem('gear', cylinder)
     geometryParameter.setValue(geomItem)
     console.log(geometryParameter.toJSON())
 
-    expect(geometryParameter.toJSON()).toEqual({ value: { a: 1, b: 0, g: 0, r: 1 } })
+    expect(geometryParameter.toJSON()).toEqual(false)
   })
 
   it('loads from JSON (serialization).', () => {
@@ -42,7 +42,7 @@ describe('GeometryParameter', () => {
     expect(geometryParameter.getValue()).toEqual(new Geometry(1.0, 0.0, 0.0))
   })*/
 
-  it('clones parameter object', () => {
+  it.skip('clones parameter object', () => {
     const parameter = new GeometryParameter('TestParameter')
     const cylinder = new Cylinder(5, 0.2, 32)
     const geomItem = new GeomItem('gear', cylinder)
@@ -50,6 +50,6 @@ describe('GeometryParameter', () => {
 
     const parameter2 = parameter.clone()
 
-    expect(parameter.toJSON()).toEqual(parameter2.toJSON())
+    expect(parameter.toJSON()).toBe(parameter2.toJSON())
   })
 })

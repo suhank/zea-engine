@@ -65,10 +65,9 @@ class Vec2Parameter extends Parameter {
    * The clone method constructs a new Vec2 parameter, copies its values
    * from this parameter and returns it.
    *
-   * @param {number} flags - The flags value.
    * @return {Vec2Parameter} - Returns a new Vec2 parameter.
    */
-  clone(flags) {
+  clone() {
     const clonedParam = new Vec2Parameter(this.__name, this.__value.clone())
     return clonedParam
   }

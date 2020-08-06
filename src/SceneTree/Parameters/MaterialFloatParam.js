@@ -1,4 +1,4 @@
-import { sgFactory } from '../SGFactory'
+import Registry from '../../Registry'
 import { NumberParameter } from './NumberParameter.js'
 import { BaseImage } from '../BaseImage.js'
 
@@ -109,15 +109,14 @@ class MaterialFloatParam extends NumberParameter {
    * The clone method constructs a new material float parameter,
    * copies its values from this parameter and returns it.
    *
-   * @param {number} flags - The flags value.
    * @return {MaterialFloatParam} - Returns a new cloned material float parameter.
    */
-  clone(flags) {
+  clone() {
     const clonedParam = new MaterialFloatParam(this.__name, this.__value.clone())
     return clonedParam
   }
 }
 
-sgFactory.registerClass('MaterialFloatParam', MaterialFloatParam)
+Registry.register('MaterialFloatParam', MaterialFloatParam)
 
 export { MaterialFloatParam }
