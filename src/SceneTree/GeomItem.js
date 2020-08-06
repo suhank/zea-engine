@@ -110,7 +110,7 @@ class GeomItem extends BaseGeomItem {
    */
   getGeom() {
     console.warn(`deprecated. please use 'getParameter('Geometry').getValue`)
-    return this.getGeometry()
+    return this.__geomParam.getValue()
   }
 
   /**
@@ -121,8 +121,8 @@ class GeomItem extends BaseGeomItem {
    * @return {number} - The return value.
    */
   setGeom(geom) {
-    console.warn("setGeom is deprecated. Please use 'setGeometry'")
-    return this.setGeometry(geom)
+    console.warn("setGeom is deprecated. Please use 'getParameter('Geometry').setValue'")
+    return this.__geomParam.setValue(geom)
   }
 
   /**
@@ -153,9 +153,9 @@ class GeomItem extends BaseGeomItem {
    */
   _cleanBoundingBox(bbox) {
     bbox = super._cleanBoundingBox(bbox)
-    const geom = this.getGeometry()
+    const geom = this.__geomParam.getValue()
     if (geom) {
-      bbox.addBox3(geom.boundingBox, this.getGeomMat4())
+      bbox.addBox3(geom.getBoundingBox(), this.getGeomMat4())
     }
     return bbox
   }
@@ -239,7 +239,7 @@ class GeomItem extends BaseGeomItem {
         const { range } = event
         if (geomIndex >= range[0] && geomIndex < range[1]) {
           const geom = geomLibrary.getGeom(geomIndex)
-          if (geom) this.getParameter('Geometry').loadValue(geom)
+          if (geom) this.getParameter('Geometry').setValue(geom)
           else console.warn('Geom not loaded:', this.getName())
           geomLibrary.off('rangeLoaded', onGeomLoaded)
         }
@@ -258,7 +258,7 @@ class GeomItem extends BaseGeomItem {
 
     // BaseGeomItem now handles loading materials.
     // if (context.version < 4) {
-    if (context.versions['zea-engine'].lessThan([0, 0, 4])) {
+    if (context.versions['zea-engine'].compare([0, 0, 4]) < 0) {
       const materialFlag = 1 << 3
       if (itemflags & materialFlag) {
         const materialLibrary = context.assetItem.getMaterialLibrary()
@@ -314,7 +314,7 @@ class GeomItem extends BaseGeomItem {
   copyFrom(src, context) {
     super.copyFrom(src, context)
 
-    if (!src.getGeometry() && src.geomIndex != -1) {
+    if (!src.getParameter('Geometry').getValue() && src.geomIndex != -1) {
       const geomLibrary = context.assetItem.getGeometryLibrary()
       const geomIndex = src.geomIndex
       const onGeomLoaded = (event) => {

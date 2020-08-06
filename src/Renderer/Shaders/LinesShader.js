@@ -8,7 +8,7 @@ import './GLSL/modelMatrix.js'
 
 class LinesShader extends GLShader {
   constructor(gl) {
-    super(gl)
+    super(gl, 'LinesShader')
     this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader(
       'LinesShader.vertexShader',
       `

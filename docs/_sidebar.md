@@ -1,9 +1,11 @@
 
 - Main Concepts
+
   * [Architecture Overview](arch-overview.md)
   * [Transformations](transformations.md)
   * [Events](events.md)
   * [Geometry and Rendering](geometry-rendering.md)
+  * [Plugins and Tools](plugins-and-tools.md)
 
 - Getting started
   * [Setting up your workspace](getting-started/development-setup.md)
@@ -18,7 +20,6 @@
   * [Using Zea Engine with React](getting-started/using-react.md)
    -->
 
-
 - How To
   * [Changing The Background](tutorials/changing-the-background.md)
   * [Load an Asset File](tutorials/load-an-asset.md)
@@ -31,22 +32,15 @@
   * [Loading custom points data](tutorials/custom-points.md)
   * [Launching a VR Session](tutorials/VR.md)
 
+- Technical Overview
 
-- Plugins and Tools
-  * [Zea UX](http://zea.live/zea-ux/)
-  * [Zea User Interfaces Library](zea-web-components.md)
-  * [Zea CAD](http://zea.live/zea-cad)
-  * [Zea Collab](http://zea.live/zea-collab)
-  <!-- * [Zea Pointclouds](http://zea.live/zea-pointclouds) -->
-
-
-- Technical Overview 
   * Release Notes
     * [zea-engine-1.1.0](release-notes/zea-engine-1.1.0.md)
   * [Acknowledgements](acknowledgements.md)
 
 - API Reference
-[//]: <> (API)
+  [//]: <> (API)
+
 * [Math](api/Math/README)
   * [AttrValue](api/Math/AttrValue)
   * [Box2](api/Math/Box2)
@@ -167,5 +161,4 @@
 * [Utilities](api/Utilities/README)
   * [BaseEvent](api/Utilities/BaseEvent)
   * [EventEmitter](api/Utilities/EventEmitter)
-[//]: <> (API)
-
+    [//]: <> (API)

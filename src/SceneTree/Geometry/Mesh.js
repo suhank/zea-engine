@@ -501,7 +501,7 @@ class Mesh extends BaseGeom {
     // provided on the attributes. We cache values and use hard coded constants.
     const faceNormalsBuffer = faceNormals.data.buffer
     const getFaceNormal = (index) => {
-      return Vec3.createFromFloat32Buffer(faceNormalsBuffer, index * 3) // 3 conmponents at 4 bytes each.
+      return Vec3.createFromBuffer(faceNormalsBuffer, index * 3 * 4) // 3 components at 4 bytes each.
     }
     const vertexNormalsArray = normalsAttr.data
     const setVertexNormal = (index, value) => {

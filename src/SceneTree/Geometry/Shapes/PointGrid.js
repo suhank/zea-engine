@@ -154,14 +154,16 @@ class PointGrid extends Points {
 
   /**
    * The __resize method.
+   * @param {number} emit - emit a 'geomDataChanged' event.
    * @private
    */
   __resize(emit = true) {
+    const positions = this.getVertexAttribute('positions')
     for (let i = 0; i < this.__yDivisions; i++) {
       const y = (i / (this.__yDivisions - 1) - 0.5) * this.__y
       for (let j = 0; j < this.__xDivisions; j++) {
         const x = (j / (this.__xDivisions - 1) - 0.5) * this.__x
-        this.getVertex(i * this.__xDivisions + j).set(x, y, 0.0)
+        positions.getValueRef(i * this.__xDivisions + j).set(x, y, 0.0)
       }
     }
     this.setBoundingBoxDirty()

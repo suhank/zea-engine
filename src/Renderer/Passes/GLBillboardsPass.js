@@ -181,16 +181,16 @@ class GLBillboardsPass extends GLPass {
     const alpha = billboard.getParameter('Alpha').getValue()
     const color = billboard.getParameter('Color').getValue()
     const offset = index * pixelsPerItem * 4
-    const col0 = Vec4.createFromFloat32Buffer(dataArray.buffer, offset)
-    const col1 = Vec4.createFromFloat32Buffer(dataArray.buffer, offset + 4)
-    const col2 = Vec4.createFromFloat32Buffer(dataArray.buffer, offset + 8)
-    const col3 = Vec4.createFromFloat32Buffer(dataArray.buffer, offset + 12)
+    const col0 = Vec4.createFromBuffer(dataArray.buffer, offset * 4)
+    const col1 = Vec4.createFromBuffer(dataArray.buffer, (offset + 4) * 4)
+    const col2 = Vec4.createFromBuffer(dataArray.buffer, (offset + 8) * 4)
+    const col3 = Vec4.createFromBuffer(dataArray.buffer, (offset + 12) * 4)
     col0.set(mat4.xAxis.x, mat4.yAxis.x, mat4.zAxis.x, mat4.translation.x)
     col1.set(mat4.xAxis.y, mat4.yAxis.y, mat4.zAxis.y, mat4.translation.y)
     col2.set(mat4.xAxis.z, mat4.yAxis.z, mat4.zAxis.z, mat4.translation.z)
     col3.set(scale, flags, billboardData.imageIndex, alpha)
 
-    const col4 = Vec4.createFromFloat32Buffer(dataArray.buffer, offset + 16)
+    const col4 = Vec4.createFromBuffer(dataArray.buffer, (offset + 16) * 4)
     col4.set(color.r, color.g, color.b, color.a)
   }
 

@@ -133,18 +133,19 @@ class Cuboid extends Mesh {
     const z = this.__zParam.getValue()
     const baseZAtZero = this.__baseZAtZeroParam.getValue()
     let zoff = 0.5
+    const positions = this.getVertexAttribute('positions')
     if (baseZAtZero) zoff = 1.0
-    this.getVertex(0).set(0.5 * x, -0.5 * y, zoff * z)
-    this.getVertex(1).set(0.5 * x, 0.5 * y, zoff * z)
-    this.getVertex(2).set(-0.5 * x, 0.5 * y, zoff * z)
-    this.getVertex(3).set(-0.5 * x, -0.5 * y, zoff * z)
+    positions.getValueRef(0).set(0.5 * x, -0.5 * y, zoff * z)
+    positions.getValueRef(1).set(0.5 * x, 0.5 * y, zoff * z)
+    positions.getValueRef(2).set(-0.5 * x, 0.5 * y, zoff * z)
+    positions.getValueRef(3).set(-0.5 * x, -0.5 * y, zoff * z)
 
     zoff = -0.5
     if (baseZAtZero) zoff = 0.0
-    this.getVertex(4).set(0.5 * x, -0.5 * y, zoff * z)
-    this.getVertex(5).set(0.5 * x, 0.5 * y, zoff * z)
-    this.getVertex(6).set(-0.5 * x, 0.5 * y, zoff * z)
-    this.getVertex(7).set(-0.5 * x, -0.5 * y, zoff * z)
+    positions.getValueRef(4).set(0.5 * x, -0.5 * y, zoff * z)
+    positions.getValueRef(5).set(0.5 * x, 0.5 * y, zoff * z)
+    positions.getValueRef(6).set(-0.5 * x, 0.5 * y, zoff * z)
+    positions.getValueRef(7).set(-0.5 * x, -0.5 * y, zoff * z)
 
     this.setBoundingBoxDirty()
     this.emit('geomDataChanged', {})

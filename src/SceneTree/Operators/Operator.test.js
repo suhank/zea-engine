@@ -114,6 +114,198 @@ describe('Operator', () => {
     expect(myParam.isDirty()).toBe(false)
   })
 
+  class SetFloatOperator extends Operator {
+    constructor(name, value) {
+      super(name)
+      this.value = value
+      this.addOutput(new OperatorOutput('Output', OperatorOutputMode.OP_WRITE))
+    }
+
+    evaluate() {
+      this.getOutput('Output').setClean(this.value)
+    }
+  }
+
+  class ScaleFloatsOperator extends Operator {
+    constructor(name) {
+      super(name)
+      this.addInput(new OperatorInput('ScaleValue'))
+      this.addOutput(new OperatorOutput('OutputA', OperatorOutputMode.OP_READ_WRITE))
+      this.addOutput(new OperatorOutput('OutputB', OperatorOutputMode.OP_READ_WRITE))
+    }
+
+    evaluate() {
+      let scaleValue = 2.0
+      const inParam = this.getInput('ScaleValue').getParam()
+      if (inParam) {
+        scaleValue = inParam.getValue()
+      }
+      // Read the value, modify and return both values
+      const valueA = this.getOutput('OutputA').getValue()
+      this.getOutput('OutputA').setClean(valueA * scaleValue)
+      const valueB = this.getOutput('OutputB').getValue()
+      this.getOutput('OutputB').setClean(valueB * scaleValue)
+
+      this.emit('evaluated')
+    }
+  }
+
+  it('test horizontal dirty propagation', () => {
+    const aParam = new NumberParameter('A')
+    const bParam = new NumberParameter('B')
+    const cParam = new NumberParameter('C')
+    const scaleABParam = new NumberParameter('scaleABParam', 2)
+    const scaleBCParam = new NumberParameter('scaleBCParam', 2)
+
+    // In the following configuration, we have 3 parameters being driven by
+    // 5 different operators. The 'setA/B/C' operators initialize the values to 2
+    // Then the scale operators scale that value using the 'scaleAB' and 'scaleBC' values.
+    //     Param A: > ['setA', 'scaleAB']
+    //     Param B: > ['setB', 'scaleAB', 'scaleBC']
+    //     Param C: > ['setC', 'scaleBC']
+    // Parameter 'B' is modified by both scale operators.
+    const setA = new SetFloatOperator('setA', 2)
+    setA.getOutput('Output').setParam(aParam)
+    const setB = new SetFloatOperator('setB', 2)
+    setB.getOutput('Output').setParam(bParam)
+    const setC = new SetFloatOperator('setC', 2)
+    setC.getOutput('Output').setParam(cParam)
+
+    const scaleAB = new ScaleFloatsOperator('scaleAB')
+    scaleAB.getOutput('OutputA').setParam(aParam)
+    scaleAB.getOutput('OutputB').setParam(bParam)
+    scaleAB.getInput('ScaleValue').setParam(scaleABParam)
+
+    const scaleBC = new ScaleFloatsOperator('scaleBC')
+    scaleBC.getOutput('OutputA').setParam(bParam)
+    scaleBC.getOutput('OutputB').setParam(cParam)
+    scaleBC.getInput('ScaleValue').setParam(scaleBCParam)
+
+    expect(aParam.isDirty()).toBe(true)
+    expect(bParam.isDirty()).toBe(true)
+    expect(cParam.isDirty()).toBe(true)
+    expect(aParam.getValue()).toBe(4)
+    expect(bParam.getValue()).toBe(8)
+    expect(cParam.getValue()).toBe(4)
+    expect(aParam.isDirty()).toBe(false)
+    expect(bParam.isDirty()).toBe(false)
+    expect(cParam.isDirty()).toBe(false)
+
+    // Now we do something interesting.
+    // We modify scaleAB, which will dirty A and B.
+    // However, because ParamB becomes dirty, and it must dirty its
+    // entire stack up to the last 'OP_WRITE' connected output,
+    // then it also propagates dirty up to scaleBC operator, which then
+    // propagates down to all its outputs, which includes C
+    scaleABParam.setValue(3)
+
+    expect(aParam.isDirty()).toBe(true)
+    expect(bParam.isDirty()).toBe(true)
+    expect(cParam.isDirty()).toBe(true) // cParam becomes dirty because bParam becomes dirty
+    expect(aParam.getValue()).toBe(6) // 3 * 2
+    expect(bParam.getValue()).toBe(12) // (3 * 2) * 2
+    expect(cParam.getValue()).toBe(4) // 2 * 2
+    expect(aParam.isDirty()).toBe(false)
+    expect(bParam.isDirty()).toBe(false)
+    expect(cParam.isDirty()).toBe(false)
+
+    scaleBCParam.setValue(3)
+
+    expect(aParam.isDirty()).toBe(true)
+    expect(bParam.isDirty()).toBe(true)
+    expect(cParam.isDirty()).toBe(true)
+    expect(aParam.getValue()).toBe(6) // 3 * 2
+    expect(bParam.getValue()).toBe(18) // (3 * 2) * 2
+    expect(cParam.getValue()).toBe(6) // 3 * 2
+    expect(aParam.isDirty()).toBe(false)
+    expect(bParam.isDirty()).toBe(false)
+    expect(cParam.isDirty()).toBe(false)
+  })
+
+  it('test creating an cyclic dependency', () => {
+    const aParam = new NumberParameter('A')
+    const bParam = new NumberParameter('B')
+    const scaleABParam1 = new NumberParameter('scaleABParam1', 2)
+    const scaleABParam2 = new NumberParameter('scaleABParam2', 2)
+
+    const setA = new SetFloatOperator('setA', 2)
+    setA.getOutput('Output').setParam(aParam)
+    const setB = new SetFloatOperator('setB', 2)
+    setB.getOutput('Output').setParam(bParam)
+
+    const scaleAB1 = new ScaleFloatsOperator('scaleAB1')
+    scaleAB1.getInput('ScaleValue').setParam(scaleABParam1)
+    const scaleAB2 = new ScaleFloatsOperator('scaleAB2')
+    scaleAB2.getInput('ScaleValue').setParam(scaleABParam2)
+
+    // Now we are going to mix up the bindings.
+    // In theory, we should see an operator writing
+    // to an output our of schedule. Meaning that
+    // scaleAB1 should write the value of
+
+    // Bind aParam: > ['scaleAB1', 'scaleAB2']
+    scaleAB1.getOutput('OutputA').setParam(aParam)
+    scaleAB2.getOutput('OutputA').setParam(aParam)
+
+    // Bind bParam: > ['scaleAB2', 'scaleAB1']
+    scaleAB2.getOutput('OutputB').setParam(bParam)
+    scaleAB1.getOutput('OutputB').setParam(bParam)
+
+    expect(aParam.isDirty()).toBe(true)
+    expect(bParam.isDirty()).toBe(true)
+
+    // This throws because we cannot evaluated scaleAB1 because its
+    // input value depends on the value of scaleAB2, whose input also
+    // depends on the output of scaleAB1
+    expect(bParam.getValue).toThrow()
+  })
+
+  it('test rebind to fix a cyclic dependency', () => {
+    const aParam = new NumberParameter('A')
+    const bParam = new NumberParameter('B')
+    const scaleABParam1 = new NumberParameter('scaleABParam1', 2)
+    const scaleABParam2 = new NumberParameter('scaleABParam2', 2)
+
+    const setA = new SetFloatOperator('setA', 2)
+    setA.getOutput('Output').setParam(aParam)
+    const setB = new SetFloatOperator('setB', 2)
+    setB.getOutput('Output').setParam(bParam)
+
+    const scaleAB1 = new ScaleFloatsOperator('scaleAB1')
+    scaleAB1.getInput('ScaleValue').setParam(scaleABParam1)
+    const scaleAB2 = new ScaleFloatsOperator('scaleAB2')
+    scaleAB2.getInput('ScaleValue').setParam(scaleABParam2)
+
+    // Now we are going to mix up the bindings.
+    // In theory, we should see an operator writing
+    // to an output our of schedule. Meaning that
+    // scaleAB1 should write the value of
+
+    // Bind aParam: > ['scaleAB1', 'scaleAB2']
+    scaleAB1.getOutput('OutputA').setParam(aParam)
+    scaleAB2.getOutput('OutputA').setParam(aParam)
+
+    // Bind bParam: > ['scaleAB2', 'scaleAB1']
+    scaleAB2.getOutput('OutputB').setParam(bParam)
+    scaleAB1.getOutput('OutputB').setParam(bParam)
+
+    expect(aParam.isDirty()).toBe(true)
+    expect(bParam.isDirty()).toBe(true)
+
+    // This throws because we cannot evaluated scaleAB1 because its
+    // input value depends on the value of scaleAB2, whose input also
+    // depends on the output of scaleAB1
+    // expect(bParam.getValue).toThrow()
+
+    // Rebind forces the operators to remove and re-add bindings, which flattens the bindings and fixes the problem.
+    scaleAB1.rebind()
+    scaleAB2.rebind()
+
+    scaleABParam1.setValue(3)
+    expect(aParam.getValue()).toBe(12) // (3 * 2) * 2
+    expect(bParam.getValue()).toBe(12) // (3 * 2) * 2
+  })
+
   it('save to JSON (serialization).', () => {
     const addOperator = new AddFloatsOperator()
     const parameterOwner = new BaseItem('Foo')

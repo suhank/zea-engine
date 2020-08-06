@@ -58,14 +58,14 @@ class Grid extends Lines {
       if (skipCenterLines && i == xDivisions / 2) continue
       const v0 = idx * 2
       const v1 = idx * 2 + 1
-      this.setSegment(idx, v0, v1)
+      this.setSegmentVertexIndices(idx, v0, v1)
       idx++
     }
     for (let i = 0; i <= yDivisions; i++) {
       if (skipCenterLines && i == xDivisions / 2) continue
       const v0 = idx * 2
       const v1 = idx * 2 + 1
-      this.setSegment(idx, v0, v1)
+      this.setSegmentVertexIndices(idx, v0, v1)
       idx++
     }
     this.__resize()
@@ -76,6 +76,7 @@ class Grid extends Lines {
    * @private
    */
   __resize() {
+    const positions = this.getVertexAttribute('positions')
     const xDivisions = this.__xDivisionsParam.getValue()
     const yDivisions = this.__yDivisionsParam.getValue()
     const xSize = this.__xParam.getValue()
@@ -88,8 +89,8 @@ class Grid extends Lines {
       const v0 = idx * 2
       const v1 = idx * 2 + 1
       const x = (i / xDivisions - 0.5) * xSize
-      this.getVertex(v0).set(x, -0.5 * ySize, 0.0)
-      this.getVertex(v1).set(x, 0.5 * ySize, 0.0)
+      positions.getValueRef(v0).set(x, -0.5 * ySize, 0.0)
+      positions.getValueRef(v1).set(x, 0.5 * ySize, 0.0)
       idx++
     }
     for (let i = 0; i <= yDivisions; i++) {
@@ -97,8 +98,8 @@ class Grid extends Lines {
       const v0 = idx * 2
       const v1 = idx * 2 + 1
       const y = (i / yDivisions - 0.5) * ySize
-      this.getVertex(v0).set(-0.5 * xSize, y, 0.0)
-      this.getVertex(v1).set(0.5 * xSize, y, 0.0)
+      positions.getValueRef(v0).set(-0.5 * xSize, y, 0.0)
+      positions.getValueRef(v1).set(0.5 * xSize, y, 0.0)
       idx++
     }
 

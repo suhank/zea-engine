@@ -50,20 +50,20 @@ class LinesCuboid extends Lines {
   __rebuild() {
     this.setNumVertices(8)
     this.setNumSegments(12)
-    this.setSegment(0, 0, 1)
-    this.setSegment(1, 1, 2)
-    this.setSegment(2, 2, 3)
-    this.setSegment(3, 3, 0)
+    this.setSegmentVertexIndices(0, 0, 1)
+    this.setSegmentVertexIndices(1, 1, 2)
+    this.setSegmentVertexIndices(2, 2, 3)
+    this.setSegmentVertexIndices(3, 3, 0)
 
-    this.setSegment(4, 4, 5)
-    this.setSegment(5, 5, 6)
-    this.setSegment(6, 6, 7)
-    this.setSegment(7, 7, 4)
+    this.setSegmentVertexIndices(4, 4, 5)
+    this.setSegmentVertexIndices(5, 5, 6)
+    this.setSegmentVertexIndices(6, 6, 7)
+    this.setSegmentVertexIndices(7, 7, 4)
 
-    this.setSegment(8, 0, 4)
-    this.setSegment(9, 1, 5)
-    this.setSegment(10, 2, 6)
-    this.setSegment(11, 3, 7)
+    this.setSegmentVertexIndices(8, 0, 4)
+    this.setSegmentVertexIndices(9, 1, 5)
+    this.setSegmentVertexIndices(10, 2, 6)
+    this.setSegmentVertexIndices(11, 3, 7)
     this.__resize(false)
     this.emit('geomDataTopologyChanged', {})
   }
@@ -78,19 +78,20 @@ class LinesCuboid extends Lines {
     const z = this.__z.getValue()
     const baseZAtZero = this.__baseZAtZero.getValue()
 
+    const positions = this.getVertexAttribute('positions')
     let zoff = 0.5
     if (baseZAtZero) zoff = 1.0
-    this.getVertex(0).set(0.5 * x, -0.5 * y, zoff * z)
-    this.getVertex(1).set(0.5 * x, 0.5 * y, zoff * z)
-    this.getVertex(2).set(-0.5 * x, 0.5 * y, zoff * z)
-    this.getVertex(3).set(-0.5 * x, -0.5 * y, zoff * z)
+    positions.getValueRef(0).set(0.5 * x, -0.5 * y, zoff * z)
+    positions.getValueRef(1).set(0.5 * x, 0.5 * y, zoff * z)
+    positions.getValueRef(2).set(-0.5 * x, 0.5 * y, zoff * z)
+    positions.getValueRef(3).set(-0.5 * x, -0.5 * y, zoff * z)
 
     zoff = -0.5
     if (baseZAtZero) zoff = 0.0
-    this.getVertex(4).set(0.5 * x, -0.5 * y, zoff * z)
-    this.getVertex(5).set(0.5 * x, 0.5 * y, zoff * z)
-    this.getVertex(6).set(-0.5 * x, 0.5 * y, zoff * z)
-    this.getVertex(7).set(-0.5 * x, -0.5 * y, zoff * z)
+    positions.getValueRef(4).set(0.5 * x, -0.5 * y, zoff * z)
+    positions.getValueRef(5).set(0.5 * x, 0.5 * y, zoff * z)
+    positions.getValueRef(6).set(-0.5 * x, 0.5 * y, zoff * z)
+    positions.getValueRef(7).set(-0.5 * x, -0.5 * y, zoff * z)
 
     this.setBoundingBoxDirty()
     if (emit) this.emit('geomDataChanged', {})

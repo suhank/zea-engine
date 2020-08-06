@@ -46,4 +46,11 @@ describe('Vec3', () => {
 
     expect(vec3.length()).toBeCloseTo(3.741)
   })
+
+  it('creates Vec3 from buffer', () => {
+    const float32Array = Float32Array.of(8, 5, 6)
+    const vec3 = Vec3.createFromBuffer(float32Array.buffer, 0)
+
+    expect(vec3).toEqual(new Vec3(8, 5, 6))
+  })
 })

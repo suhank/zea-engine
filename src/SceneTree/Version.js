@@ -27,7 +27,7 @@ class Version {
   /**
    * Compare a version object against a version numbers array.
    *
-   * @param {array} numbers - The numbers value.
+   * @param {array} numbers - An array containing 3 version numbers. [Major, Minor, Patch]
    * @return {number} - return positive: v1 > v2, zero:v1 == v2, negative: v1 < v2
    */
   compare(numbers) {

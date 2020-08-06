@@ -37,12 +37,13 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
    * @return {boolean} - The return value.
    */
   filterGeomItem(geomItem) {
-    const shaderClass = geomItem.getMaterial().getShaderClass()
+    const material = geomItem.getParameter('Material').getValue()
+    const shaderClass = material.getShaderClass()
     if (shaderClass) {
       if (shaderClass.isTransparent()) return true
       if (shaderClass.isOverlay()) return false
 
-      const baseColorParam = geomItem.getMaterial().getParameter('BaseColor')
+      const baseColorParam = material.getParameter('BaseColor')
       if (baseColorParam && baseColorParam.getValue().a < 0.999) return true
     }
     return false
@@ -53,7 +54,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
    * @param {any} geomItem - The geomItem value.
    */
   addGeomItem(geomItem) {
-    const material = geomItem.getMaterial()
+    const material = geomItem.getParameter('Material').getValue()
     const shaderName = material.getShaderName()
     const shaders = this.constructShaders(shaderName)
 
@@ -173,12 +174,13 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
       currentglGeom: null,
     }
     for (const transparentItem of this.visibleItems) {
-      if (cache.currentglShader != transparentItem.shaders.glshader) {
+      const glshader = transparentItem.shaders.glshader
+      if (cache.currentglShader != glshader) {
         // Some passes, like the depth pass, bind custom uniforms.
-        if (!this.bindShader(renderstate, transparentItem.shaders.glshader)) {
+        if (!this.bindShader(renderstate, glshader)) {
           continue
         }
-        cache.currentglShader = transparentItem.shaders.glshader
+        cache.currentglShader = glshader
       }
 
       this._drawItem(renderstate, transparentItem, cache)

@@ -39,7 +39,7 @@ class VLAAsset extends AssetItem {
 
     this.__datafileParam = this.addParameter(new FilePathParameter('DataFilePath'))
     this.__datafileParam.on('valueChanged', () => {
-      const file = this.__datafileParam.getFileDesc()
+      const file = this.__datafileParam.getFile()
       if (!file) return
       console.log(file)
       if (this.getName() == '') {
@@ -73,28 +73,22 @@ class VLAAsset extends AssetItem {
    * @return {number} - The return value.
    */
   readBinary(reader, context) {
-    if (context.version != -1) {
+    if (context.versions['zea-engine']) {
       // Necessary for the smart lok
-      const version = new Version()
-      version.patch = context.version
-      context.versions = { 'zea-mesh': version, 'zea-engine': version }
-      context.meshSdk = 'FBX'
     } else {
       const v = reader.loadUInt8()
       reader.seek(0)
-      // 10 == ascii code for newline. Note: previous non-semver only reached 7
-      if (v != 10) {
+      // Note: previous non-semver only reached 7
+      if (v > 7) {
         const version = new Version()
         version.patch = reader.loadUInt32()
-        context.versions = { 'zea-mesh': version, 'zea-engine': version }
-        context.meshSdk = 'FBX'
+        context.versions['zea-engine'] = version
       } else {
         // Now we split the mesh out from the engine version.
-        const version = new Version(reader.loadStr())
-        context.versions = { 'zea-mesh': version }
-        context.meshSdk = 'FBX'
+        context.versions['zea-engine'] = new Version(reader.loadStr())
       }
     }
+    context.meshSdk = 'FBX'
     this.meshfileversion = context.versions['zea-mesh']
     this.meshSdk = context.meshSdk
     console.log('Loading CAD File version:', context.versions['zea-mesh'], ' exported using SDK:', context.meshSdk)
@@ -120,7 +114,7 @@ class VLAAsset extends AssetItem {
     // No need to set it here. (and the number is now incorrect for a reason I do not understand.)
 
     // if (context.version < 5) {
-    if (context.versions['zea-engine'].lessThan([0, 0, 5])) {
+    if (context.versions['zea-engine'].compare([0, 0, 5]) < 0) {
       // Some data is no longer being read at the end of the buffer
       // so we skip to the end here.
       reader.seek(reader.byteLength - 4)
@@ -138,7 +132,7 @@ class VLAAsset extends AssetItem {
    * @param {function} onGeomsDone - The onGeomsDone value.
    */
   loadDataFile(onDone, onGeomsDone) {
-    const file = this.__datafileParam.getFileDesc()
+    const file = this.__datafileParam.getFile()
     if (!file) {
       console.warn('VLAAsset data file not found.')
       return
@@ -152,25 +146,27 @@ class VLAAsset extends AssetItem {
     const isVLFile = new RegExp('\\.(vla)$', 'i').test(file.name)
     const vlgeomFiles = []
 
+    const context = {
+      assetItem: this,
+      versions: {},
+    }
+
     const loadBinary = (entries) => {
       // Load the tree file. This file contains
       // the scene tree of the asset, and also
       // tells us how many geom files will need to be loaded.
 
-      let version = -1
       let treeReader
       if (entries.tree2) {
         treeReader = new BinReader(entries.tree2.buffer, 0, SystemDesc.isMobileDevice)
       } else {
         const entry = entries.tree ? entries.tree : entries[Object.keys(entries)[0]]
         treeReader = new BinReader(entry.buffer, 0, SystemDesc.isMobileDevice)
-        version = 0
+        context.versions['zea-engine'] = new Version()
       }
 
-      numGeomsFiles = this.readBinary(treeReader, {
-        assetItem: this,
-        version,
-      })
+      // Necessary for the smart lok
+      numGeomsFiles = this.readBinary(treeReader, context)
 
       if (!isVLFile) {
         // Check that the number of geom files we have
@@ -183,9 +179,7 @@ class VLAAsset extends AssetItem {
 
       if (numGeomsFiles == 0 && entries.geoms0) {
         resourceLoader.addWork(fileId + 'geoms', 1) // (load + parse + extra)
-        this.__geomLibrary.readBinaryBuffer(fileId, entries.geoms0.buffer, {
-          version,
-        })
+        this.__geomLibrary.readBinaryBuffer(fileId, entries.geoms0.buffer, context)
         onGeomsDone()
       } else {
         // add the work for the the geom files....
@@ -203,7 +197,7 @@ class VLAAsset extends AssetItem {
         if (isVLFile) {
           const nextGeomFileName = folder + stem + geomFileID + '.vlageoms'
           const geomFile = resourceLoader.resolveFilepath(nextGeomFileName)
-          if (geomFile) promises.push(loadGeomsfile(geomFileID, geomFile.url))
+          if (geomFile) promises.push(loadGeomsfile(geomFileID, geomFile.url, context))
           else {
             throw new Error('VLA Geoms file not found:' + nextGeomFileName)
           }
@@ -223,7 +217,7 @@ class VLAAsset extends AssetItem {
           geomFileUrl,
           (entries) => {
             const geomsData = entries[Object.keys(entries)[0]]
-            this.__geomLibrary.readBinaryBuffer(fileId, geomsData.buffer)
+            this.__geomLibrary.readBinaryBuffer(fileId, geomsData.buffer, context)
             resolve()
           },
           false

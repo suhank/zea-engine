@@ -510,10 +510,24 @@ class Vec4 extends AttrValue {
    * @param {ArrayBuffer} buffer - The buffer value.
    * @param {number} offset - The offset value.
    * @return {Vec4} - Returns a new Vec3.
+   * @deprecated
    * @private
    */
   static createFromFloat32Buffer(buffer, offset = 0) {
+    console.warn('Deprecated, use #createFromBuffer instead')
     return new Vec4(new Float32Array(buffer, offset * 4, 4)) // 4 bytes per 32bit float
+  }
+
+  /**
+   * Creates an instance of a `Vec4` using an ArrayBuffer.
+   *
+   * @static
+   * @param {ArrayBuffer} buffer - The buffer value.
+   * @param {number} byteOffset - The offset value.
+   * @return {Vec4} - Returns a new Vec4.
+   */
+  static createFromBuffer(buffer, byteOffset) {
+    return new Vec4(new Float32Array(buffer, byteOffset, 4)) // 4 bytes per 32bit float
   }
 
   /**

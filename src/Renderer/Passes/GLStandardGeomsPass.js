@@ -40,19 +40,22 @@ class GLStandardGeomsPass extends GLPass {
     this.__renderer.registerPass(
       (treeItem) => {
         if (treeItem instanceof GeomItem) {
-          if (!treeItem.getMetadata('glgeomItem')) {
+          const geomItem = treeItem
+          if (!geomItem.getMetadata('glgeomItem')) {
             const checkGeom = (geomItem) => {
               if (this.filterGeomItem(geomItem)) {
-                const geomParam = treeItem.getParameter('Geometry')
+                const geomParam = geomItem.getParameter('Geometry')
                 if (geomParam.getValue() == undefined) {
-                  // we will add this geomitem once it recieves its geom.
+                  // we will add this geomItem once it receives its geom.
                   // TODO: what happens if the item is removed from the tree
-                  // and then geom assigned? (maybe inmpossible with our tools)
+                  // and then geom assigned? (maybe impossible with our tools)
                   // e.g. a big asset loaded, added to the tree, then removed again
                   // The geoms will get assigned after the tree is removed.
-                  geomParam.on('valueChanged', () => {
+                  const geomAssigned = () => {
                     this.addGeomItem(geomItem)
-                  })
+                    geomParam.off('valueChanged', geomAssigned)
+                  }
+                  geomParam.on('valueChanged', geomAssigned)
                 } else {
                   this.addGeomItem(geomItem)
                 }
@@ -62,12 +65,12 @@ class GLStandardGeomsPass extends GLPass {
               }
             }
 
-            if (treeItem.getMaterial() == undefined) {
-              console.warn('Scene item :' + treeItem.getPath() + ' has no material')
+            if (geomItem.getParameter('Material').getValue() == undefined) {
+              console.warn('Scene item :' + geomItem.getPath() + ' has no material')
               // TODO: listen for when the material is assigned.(like geoms below)
               return false
             } else {
-              return checkGeom(treeItem)
+              return checkGeom(geomItem)
             }
           } else {
             return false
@@ -194,10 +197,11 @@ class GLStandardGeomsPass extends GLPass {
    * @return {any} - The return value.
    */
   addGeomItem(geomItem) {
-    // let glmaterialGeomItemSets = this.addMaterial(geomItem.getMaterial());
+    // const material = geomItem.getParameter('Material').getValue()
+    // let glmaterialGeomItemSets = this.addMaterial(material);
     // if (!glmaterialGeomItemSets)
     //     return;
-    const glgeom = this.addGeom(geomItem.getGeometry())
+    const glgeom = this.addGeom(geomItem.getParameter('Geometry').getValue())
 
     const flags = 1
     let index
@@ -253,7 +257,7 @@ class GLStandardGeomsPass extends GLPass {
     // I'm not sure if we ever clean up the renderer properly
     // when geoms are removed. (Run Instancing test and see if
     // GLGeom is ever destoryed when instance counts drop to zero.)
-    // this.removeGeom(geomItem.getGeometry())
+    // this.removeGeom(geomItem.getParameter('Geometry').getValue())
 
     const glgeomItem = geomItem.getMetadata('glgeomItem')
 
@@ -338,22 +342,22 @@ class GLStandardGeomsPass extends GLPass {
       flags |= GEOMITEM_FLAG_CUTAWAY
     }
 
-    const pix0 = Vec4.createFromFloat32Buffer(dataArray.buffer, offset + 0)
+    const pix0 = Vec4.createFromBuffer(dataArray.buffer, (offset + 0) * 4)
     pix0.set(flags, materialId, 0, 0)
 
     // /////////////////////////
     // Geom Matrix
     const mat4 = geomItem.getGeomMat4()
-    const pix1 = Vec4.createFromFloat32Buffer(dataArray.buffer, offset + 4)
-    const pix2 = Vec4.createFromFloat32Buffer(dataArray.buffer, offset + 8)
-    const pix3 = Vec4.createFromFloat32Buffer(dataArray.buffer, offset + 12)
+    const pix1 = Vec4.createFromBuffer(dataArray.buffer, (offset + 4) * 4)
+    const pix2 = Vec4.createFromBuffer(dataArray.buffer, (offset + 8) * 4)
+    const pix3 = Vec4.createFromBuffer(dataArray.buffer, (offset + 12) * 4)
     pix1.set(mat4.xAxis.x, mat4.yAxis.x, mat4.zAxis.x, mat4.translation.x)
     pix2.set(mat4.xAxis.y, mat4.yAxis.y, mat4.zAxis.y, mat4.translation.y)
     pix3.set(mat4.xAxis.z, mat4.yAxis.z, mat4.zAxis.z, mat4.translation.z)
 
     // /////////////////////////
     // Hilight
-    const pix4 = Vec4.createFromFloat32Buffer(dataArray.buffer, offset + 16)
+    const pix4 = Vec4.createFromBuffer(dataArray.buffer, (offset + 16) * 4)
     if (geomItem.isHighlighted()) {
       const highlight = geomItem.getHighlight()
       pix4.set(highlight.r, highlight.g, highlight.b, highlight.a)
@@ -361,7 +365,7 @@ class GLStandardGeomsPass extends GLPass {
 
     // /////////////////////////
     // Cutaway
-    const pix5 = Vec4.createFromFloat32Buffer(dataArray.buffer, offset + 20)
+    const pix5 = Vec4.createFromBuffer(dataArray.buffer, (offset + 20) * 4)
     if (geomItem.isCutawayEnabled()) {
       const cutAwayVector = geomItem.getCutVector()
       const cutAwayDist = geomItem.getCutDist()

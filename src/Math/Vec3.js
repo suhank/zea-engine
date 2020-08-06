@@ -599,10 +599,24 @@ class Vec3 extends AttrValue {
    * @param {ArrayBuffer} buffer - The buffer value.
    * @param {number} offset - The offset value.
    * @return {Vec3} - Returns a new Vec3.
+   * @deprecated
    * @private
    */
   static createFromFloat32Buffer(buffer, offset = 0) {
-    return new Vec3(new Float32Array(buffer, offset * 4, 3)) // 4 bytes per 32bit float
+    console.warn('Deprecated, use #createFromBuffer instead')
+    return this.createFromBuffer(buffer, offset * 4)
+  }
+
+  /**
+   * Creates an instance of a `Vec3` using an ArrayBuffer.
+   *
+   * @static
+   * @param {ArrayBuffer} buffer - The buffer value.
+   * @param {number} byteOffset - The offset value.
+   * @return {Vec3} - Returns a new Vec3.
+   */
+  static createFromBuffer(buffer, byteOffset) {
+    return new Vec3(new Float32Array(buffer, byteOffset, 3)) // 4 bytes per 32bit float
   }
 
   /**

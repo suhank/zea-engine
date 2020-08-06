@@ -359,7 +359,7 @@ class Mat4 extends AttrValue {
    * @return {Vec3} - Returns the `x` axis as a Vec3.
    */
   get xAxis() {
-    return Vec3.createFromFloat32Buffer(this.__data.buffer, 0)
+    return Vec3.createFromBuffer(this.__data.buffer, 0)
   }
 
   /**
@@ -377,7 +377,7 @@ class Mat4 extends AttrValue {
    * @return {Vec3} - Returns the `y` axis as a Vec3.
    */
   get yAxis() {
-    return Vec3.createFromFloat32Buffer(this.__data.buffer, 4)
+    return Vec3.createFromBuffer(this.__data.buffer, 4 * 4)
   }
 
   /**
@@ -395,7 +395,7 @@ class Mat4 extends AttrValue {
    * @return {Vec3} - Returns the `z` axis as a Vec3.
    */
   get zAxis() {
-    return Vec3.createFromFloat32Buffer(this.__data.buffer, 8)
+    return Vec3.createFromBuffer(this.__data.buffer, 8 * 4)
   }
 
   /**
@@ -413,7 +413,7 @@ class Mat4 extends AttrValue {
    * @return {Vec3} - Returns the translation.
    */
   get translation() {
-    return Vec3.createFromFloat32Buffer(this.__data.buffer, 12)
+    return Vec3.createFromBuffer(this.__data.buffer, 12 * 4)
   }
 
   /**
@@ -1367,10 +1367,24 @@ class Mat4 extends AttrValue {
    * @param {ArrayBuffer} buffer - The buffer value.
    * @param {number} offset - The offset value.
    * @return {Mat4} - Returns a new Mat4.
+   * @deprecated
    * @private
    */
   static createFromFloat32Buffer(buffer, offset = 0) {
-    return new Mat4(buffer, offset * 4) // 4 bytes per 32bit float
+    console.warn('Deprecated, use #createFromBuffer instead')
+    return this.createFromBuffer(buffer, offset * 4)
+  }
+
+  /**
+   * Creates an instance of a `Mat4` using an ArrayBuffer.
+   *
+   * @static
+   * @param {ArrayBuffer} buffer - The buffer value.
+   * @param {number} byteOffset - The offset value.
+   * @return {Mat4} - Returns a new Mat4.
+   */
+  static createFromBuffer(buffer, byteOffset) {
+    return new Mat4(new Float32Array(buffer, byteOffset, 16)) // 4 bytes per 32bit float
   }
 
   /**

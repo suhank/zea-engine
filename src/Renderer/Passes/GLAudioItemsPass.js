@@ -54,7 +54,7 @@ class GLAudioItemsPass extends GLPass {
           return true
         }
         if (treeItem instanceof GeomItem) {
-          const material = treeItem.getMaterial()
+          const material = treeItem.getParameter('Material').getValue()
           if (material) {
             const baseColorParam = material.getParameter('BaseColor')
             if (baseColorParam && baseColorParam.getImage && baseColorParam.getImage()) {

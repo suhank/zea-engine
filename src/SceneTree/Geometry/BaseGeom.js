@@ -140,7 +140,7 @@ class BaseGeom extends ParameterOwner {
    */
   getVertex(index) {
     console.warn(`deprecated use #getVertexAttribute('positions').getValueRef()`)
-    return Vec3.createFromFloat32Buffer(this.vertices.data.buffer, index * 3)
+    return Vec3.createFromBuffer(this.vertices.data.buffer, index * 3 * 4)
   }
 
   /**
@@ -152,7 +152,7 @@ class BaseGeom extends ParameterOwner {
    */
   setVertex(index, value) {
     console.warn(`deprecated use #getVertexAttribute('positions').getValueRef().setFromOther(value)`)
-    return Vec3.createFromFloat32Buffer(this.vertices.data.buffer, index * 3).setFromOther(value)
+    return Vec3.createFromBuffer(this.vertices.data.buffer, index * 3 * 4).setFromOther(value)
   }
 
   /**

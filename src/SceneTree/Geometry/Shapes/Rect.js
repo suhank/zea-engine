@@ -89,27 +89,28 @@ class Rect extends Lines {
   __rebuild() {
     this.setNumVertices(4)
     this.setNumSegments(4)
-    this.setSegment(0, 0, 1)
-    this.setSegment(1, 1, 2)
-    this.setSegment(2, 2, 3)
-    this.setSegment(3, 3, 0)
+    this.setSegmentVertexIndices(0, 0, 1)
+    this.setSegmentVertexIndices(1, 1, 2)
+    this.setSegmentVertexIndices(2, 2, 3)
+    this.setSegmentVertexIndices(3, 3, 0)
     this.__resize(false)
     this.emit('geomDataTopologyChanged', {})
   }
 
   /**
    * The __resize method.
-   * @param {number} emit - The emit value.
+   * @param {number} emit - emit a 'geomDataChanged' event.
    * @private
    */
   __resize(emit) {
     const x = this.__x.getValue()
     const y = this.__y.getValue()
 
-    this.getVertex(0).set(-0.5 * x, -0.5 * y, 0.0)
-    this.getVertex(1).set(0.5 * x, -0.5 * y, 0.0)
-    this.getVertex(2).set(0.5 * x, 0.5 * y, 0.0)
-    this.getVertex(3).set(-0.5 * x, 0.5 * y, 0.0)
+    const positions = this.getVertexAttribute('positions')
+    positions.getValueRef(0).set(-0.5 * x, -0.5 * y, 0.0)
+    positions.getValueRef(1).set(0.5 * x, -0.5 * y, 0.0)
+    positions.getValueRef(2).set(0.5 * x, 0.5 * y, 0.0)
+    positions.getValueRef(3).set(-0.5 * x, 0.5 * y, 0.0)
     this.setBoundingBoxDirty()
     if (emit) this.emit('geomDataChanged', {})
   }

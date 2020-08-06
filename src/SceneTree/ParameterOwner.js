@@ -272,8 +272,7 @@ class ParameterOwner extends EventEmitter {
   readBinary(reader, context) {
     // TODO: make this work
 
-    // if (context.version >= 3) {
-    if (context.versions['zea-engine'].greaterOrEqualThan([0, 0, 3])) {
+    if (context.versions['zea-engine'].compare([0, 0, 3]) >= 0) {
       const numProps = reader.loadUInt32()
       for (let i = 0; i < numProps; i++) {
         const propType = reader.loadStr()
@@ -316,7 +315,7 @@ class ParameterOwner extends EventEmitter {
     // are bottom to top (bottom params dependent on higher params).
     // This means that as a parameter is set with a new value
     // it will dirty the params below it.
-    let i = src.numParameters()
+    let i = src.getNumParameters()
     while (i--) {
       const srcParam = src.getParameterByIndex(i)
       const param = this.getParameter(srcParam.getName())

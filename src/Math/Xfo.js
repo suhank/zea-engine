@@ -176,7 +176,7 @@ class Xfo {
   }
 
   /**
-   * Tranforms Xfo object using a `Vec3` object. First scaling it, then rotating and finally adding the result to current translation object.
+   * Transforms Xfo object using a `Vec3` object. First scaling it, then rotating and finally adding the result to current translation object.
    *
    * @param {Vec3} vec3 - The vec3 value.
    * @return {Vec3} - The return value.

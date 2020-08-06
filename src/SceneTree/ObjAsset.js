@@ -378,7 +378,7 @@ class ObjAsset extends AssetItem {
       // Move the transform of the geom item to the center of the geom.
       // This is so that transparent objects can render correctly, and the
       // transform gizmo becomes centered on each geom(for testing)
-      const delta = mesh.boundingBox.center()
+      const delta = mesh.getBoundingBox().center()
       {
         const offset = delta.negate()
         const positions = mesh.getVertexAttribute('positions')
@@ -388,20 +388,20 @@ class ObjAsset extends AssetItem {
       geomItem.getParameter('LocalXfo').setValue(new Xfo(delta))
 
       if (geomData.material != undefined && this.materials.hasMaterial(geomData.material)) {
-        geomItem.setMaterial(this.materials.getMaterial(geomData.material))
+        geomItem.getParameter('Material').setValue(this.materials.getMaterial(geomData.material))
       } else {
         const defaultShader = this.getParameter('defaultShader').getValue()
         const material = new Material(geomName + 'mat')
         material.setShaderName(defaultShader != '' ? defaultShader : 'StandardSurfaceShader')
         this.materials.addMaterial(material)
-        geomItem.setMaterial(material)
+        geomItem.getParameter('Material').setValue(material)
       }
 
       this.addChild(geomItem, false)
     }
 
     const loadObjData = () => {
-      const file = this.objfileParam.getFileDesc()
+      const file = this.objfileParam.getFile()
       const stem = this.objfileParam.getStem()
       resourceLoader.addWork(stem, 2)
       loadTextfile(file.url, (fileData) => {

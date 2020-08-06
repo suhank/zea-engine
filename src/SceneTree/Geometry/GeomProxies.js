@@ -1,12 +1,12 @@
 import { Box3 } from '../../Math/index'
-import { RefCounted } from '../RefCounted.js'
+import { EventEmitter } from '../../Utilities/EventEmitter.js'
 import Registry from '../../Registry'
 
 /** Class representing a base geometry proxy.
- * @extends RefCounted
+ * @extends EventEmitter
  * @private
  */
-class BaseProxy extends RefCounted {
+class BaseProxy extends EventEmitter {
   /**
    * Create a base proxy.
    * @param {any} data - The data value.
