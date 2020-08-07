@@ -1,6 +1,6 @@
 import { SystemDesc } from '../BrowserDetection.js'
 import { Vec3, Xfo, Mat4, Ray } from '../Math/index'
-import { Plane, VLAAsset, EnvMap } from '../SceneTree/index'
+import { Plane, EnvMap } from '../SceneTree/index'
 import { GLFbo } from './GLFbo.js'
 import { GLRenderTarget } from './GLRenderTarget.js'
 import { GLHDRImage } from './GLHDRImage.js'
@@ -17,11 +17,9 @@ import {
 } from './Shaders/EnvMapShader.js'
 import { generateShaderGeomBinding } from './GeomShaderBinding.js'
 
-// import {
-//     PostProcessing
-// } from './Shaders/PostProcessing.js';
 import { OutlinesShader } from './Shaders/OutlinesShader.js'
 import { GLMesh } from './GLMesh.js'
+import logo from './logo-zea.svg'
 
 const ALL_PASSES = PassType.OPAQUE | PassType.TRANSPARENT | PassType.OVERLAY
 
@@ -69,10 +67,40 @@ class GLRenderer extends GLBaseRenderer {
     this.__outlineShader = new OutlinesShader(gl)
     this.quad = new GLMesh(gl, new Plane(1, 1))
 
-    // this.__glshaderScreenPostProcess = new PostProcessing(gl);
-
     this.createSelectedGeomsFbo()
     this.createRayCastRenderTarget()
+
+    // ///////////////////////////////////////////////////
+    // setup the splash screen
+    const setupSplashScreen = (holdTime) => {
+      const logoBlob = new Blob([logo], { type: 'image/svg+xml' })
+      const logoUrl = URL.createObjectURL(logoBlob)
+      const image = document.createElement('img')
+      image.addEventListener('load', () => {
+        URL.revokeObjectURL(logoUrl), { once: true }
+        image.style.opacity = 1
+        const tick = () => {
+          // Prevent people from removing the image node.
+          if (!image.parentElement != canvasDiv) canvasDiv.appendChild(image)
+          image.style.opacity = +image.style.opacity - 0.02
+          if (+image.style.opacity > 0) {
+            ;(window.requestAnimationFrame && requestAnimationFrame(tick)) || setTimeout(tick, 16)
+          } else {
+            canvasDiv.removeChild(image)
+          }
+        }
+        setTimeout(tick, holdTime)
+      })
+      image.style.width = canvasDiv.clientWidth * 0.3 + 'px'
+      image.style.position = 'absolute'
+      image.style.top = '50%'
+      image.style.left = '50%'
+      image.style.transform = 'translate(-50%, -50%)'
+      image.style['pointer-events'] = 'none'
+      image.src = logoUrl
+      canvasDiv.appendChild(image)
+    }
+    setupSplashScreen(1500)
   }
 
   /**
