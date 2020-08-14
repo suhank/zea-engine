@@ -12,10 +12,6 @@ const sphere = new Sphere(1.4, 13)
 * **sides(`NumberParameter`):** Specifies the number of subdivisions around the `Z` axis.
 * **loops(`NumberParameter`):** Specifies the number of subdivisions(stacks) along the `Z` axis.
 
-**Events**
-* **geomDataTopologyChanged:** Triggered when `radius` value changes
-* **geomDataChanged:** Triggered when `sides` or `loops` values change.
-
 
 **Extends**: <code>Mesh</code>  
 <a name="new_Sphere_new"></a>

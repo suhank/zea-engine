@@ -22,7 +22,7 @@ myParameterOwnerItem.addParameter(multiChoiceParameter)
 * [MultiChoiceParameter ⇐ <code>NumberParameter</code>](#MultiChoiceParameter)
     * [new MultiChoiceParameter(name, index, choices)](#new-MultiChoiceParameter)
     * [getChoices() ⇒ <code>array</code>](#getChoices)
-    * [setValue(value, mode)](#setValue)
+    * [setValue(value)](#setValue)
 
 <a name="new_MultiChoiceParameter_new"></a>
 
@@ -53,5 +53,4 @@ Sets parameter index value.
 | Param | Type | Description |
 | --- | --- | --- |
 | value | <code>string</code> \| <code>number</code> | The value param. |
-| mode | <code>number</code> | The mode value. |
 

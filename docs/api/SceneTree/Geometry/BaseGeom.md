@@ -11,8 +11,8 @@ Represents a base class for 3D geometry items.
 
 * [BaseGeom ⇐ <code>ParameterOwner</code>](#BaseGeom)
     * [new BaseGeom()](#new-BaseGeom)
-    * [vertices](#vertices)
-    * [boundingBox ⇒ <code>Vec3</code>](#boundingBox)
+    * ~~[.vertices](#BaseGeom+vertices)~~
+    * ~~[.boundingBox](#BaseGeom+boundingBox) ⇒ <code>Vec3</code>~~
     * [setDebugName(name)](#setDebugName)
     * [addVertexAttribute(name, dataType, defaultScalarValue) ⇒ <code>Attribute</code>](#addVertexAttribute)
     * [hasVertexAttribute(name) ⇒ <code>boolean</code>](#hasVertexAttribute)
@@ -21,10 +21,11 @@ Represents a base class for 3D geometry items.
     * [numVertices() ⇒ <code>number</code>](#numVertices)
     * [getNumVertices() ⇒ <code>number</code>](#getNumVertices)
     * [setNumVertices(count)](#setNumVertices)
-    * [getVertex(index) ⇒ <code>Vec3</code>](#getVertex)
-    * [setVertex(index, vec3) ⇒ <code>Vec3</code>](#setVertex)
-    * [moveVertices(delta)](#moveVertices)
-    * [transformVertices(xfo)](#transformVertices)
+    * ~~[.getVertex(index)](#BaseGeom+getVertex) ⇒ <code>Vec3</code>~~
+    * ~~[.setVertex(index, value)](#BaseGeom+setVertex) ⇒ <code>Vec3</code>~~
+    * ~~[.moveVertices(delta)](#BaseGeom+moveVertices)~~
+    * ~~[.transformVertices(xfo)](#BaseGeom+transformVertices)~~
+    * [getBoundingBox() ⇒ <code>Vec3</code>](#getBoundingBox)
     * [setBoundingBoxDirty()](#setBoundingBoxDirty)
     * [updateBoundingBox()](#updateBoundingBox)
     * [getMetadata(key) ⇒ <code>object</code>](#getMetadata)
@@ -34,8 +35,8 @@ Represents a base class for 3D geometry items.
     * [genBuffers(opts) ⇒ <code>object</code>](#genBuffers)
     * [freeBuffers()](#freeBuffers)
     * [loadBaseGeomBinary(reader)](#loadBaseGeomBinary)
-    * [toJSON(context, flags) ⇒ <code>object</code>](#toJSON)
-    * [fromJSON(json, context, flags)](#fromJSON)
+    * [toJSON(context) ⇒ <code>object</code>](#toJSON)
+    * [fromJSON(json, context)](#fromJSON)
     * [toString() ⇒ <code>string</code>](#toString)
 
 <a name="new_BaseGeom_new"></a>
@@ -45,14 +46,18 @@ Create a base geom.
 
 <a name="BaseGeom+vertices"></a>
 
-### vertices
+### ~~baseGeom.vertices~~
+***Deprecated***
+
 Returns 'positions' vertex attribute.
 
 
 <a name="BaseGeom+boundingBox"></a>
 
-### boundingBox 
-The boundingBox method.
+### ~~baseGeom.boundingBox ⇒ <code>Vec3</code>~~
+***Deprecated***
+
+Returns the bounding box for geometry.
 
 
 **Returns**: <code>Vec3</code> - - The return value.  
@@ -139,8 +144,10 @@ Sets the number of vertices the geometry has.
 
 <a name="BaseGeom+getVertex"></a>
 
-### getVertex
-The getVertex method.
+### ~~baseGeom.getVertex(index) ⇒ <code>Vec3</code>~~
+***Deprecated***
+
+Returns the position attribute value of the given vertex
 
 
 **Returns**: <code>Vec3</code> - - Returns a Vec3.  
@@ -151,8 +158,10 @@ The getVertex method.
 
 <a name="BaseGeom+setVertex"></a>
 
-### setVertex
-The setVertex method.
+### ~~baseGeom.setVertex(index, value) ⇒ <code>Vec3</code>~~
+***Deprecated***
+
+Sets the position attribute value of the given vertex
 
 
 **Returns**: <code>Vec3</code> - - Returns a Vec3.  
@@ -160,12 +169,14 @@ The setVertex method.
 | Param | Type | Description |
 | --- | --- | --- |
 | index | <code>index</code> | The index value. |
-| vec3 | <code>Vec3</code> | The vec3 value. |
+| value | <code>Vec3</code> | The value value. |
 
 <a name="BaseGeom+moveVertices"></a>
 
-### moveVertices
-The moveVertices method.
+### ~~baseGeom.moveVertices(delta)~~
+***Deprecated***
+
+Applies an offset to each of the vertices in the geometry.
 
 
 
@@ -175,7 +186,9 @@ The moveVertices method.
 
 <a name="BaseGeom+transformVertices"></a>
 
-### transformVertices
+### ~~baseGeom.transformVertices(xfo)~~
+***Deprecated***
+
 The transformVertices method.
 
 
@@ -184,6 +197,13 @@ The transformVertices method.
 | --- | --- | --- |
 | xfo | <code>Xfo</code> | The xfo tranform. |
 
+<a name="BaseGeom+getBoundingBox"></a>
+
+### getBoundingBox
+Returns the bounding box for geometry.
+
+
+**Returns**: <code>Vec3</code> - - The return value.  
 <a name="BaseGeom+setBoundingBoxDirty"></a>
 
 ### setBoundingBoxDirty
@@ -283,7 +303,6 @@ The toJSON method encodes this type as a json object for persistence.
 | Param | Type | Description |
 | --- | --- | --- |
 | context | <code>object</code> | The context value. |
-| flags | <code>number</code> | The flags value. |
 
 <a name="BaseGeom+fromJSON"></a>
 
@@ -296,7 +315,6 @@ The fromJSON method decodes a json object for this type.
 | --- | --- | --- |
 | json | <code>object</code> | The json object this item must decode. |
 | context | <code>object</code> | The context value. |
-| flags | <code>number</code> | The flags value. |
 
 <a name="BaseGeom+toString"></a>
 

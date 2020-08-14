@@ -19,7 +19,7 @@ myParameterOwnerItem.addParameter(codeParam)
     * [new CodeParameter(name, value)](#new-CodeParameter)
     * [setLanguage(lang)](#setLanguage)
     * [getLanguage() ⇒ <code>string</code>](#getLanguage)
-    * [clone(flags)](#clone)
+    * [clone()](#clone)
 
 <a name="new_CodeParameter_new"></a>
 
@@ -59,8 +59,3 @@ copies its values from this parameter and returns it.
 
 
 **Returns**: [<code>CodeParameter</code>](#CodeParameter) - - Returns a new cloned code parameter.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| flags | <code>number</code> | The flags value. |
-

@@ -26,10 +26,10 @@ myParameterOwnerItem.addParameter(matColorParam)
 * [MaterialColorParam ⇐ <code>ColorParameter</code>](#MaterialColorParam)
     * [new MaterialColorParam(name, value)](#new-MaterialColorParam)
     * [getImage() ⇒ <code>BaseImage</code>](#getImage)
-    * [setImage(value, mode)](#setImage)
+    * [setImage(value)](#setImage)
     * [setValue(value)](#setValue)
     * [readBinary(reader, context)](#readBinary)
-    * [clone(flags)](#clone)
+    * [clone()](#clone)
 
 <a name="new_MaterialColorParam_new"></a>
 
@@ -56,10 +56,9 @@ Sets `BaseImage` texture value in parameter.
 
 
 
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| value | <code>BaseImage</code> |  | The value param. |
-| mode | <code>number</code> | <code>0</code> | The mode param. |
+| Param | Type | Description |
+| --- | --- | --- |
+| value | <code>BaseImage</code> | The value param. |
 
 <a name="MaterialColorParam+setValue"></a>
 
@@ -92,8 +91,3 @@ copies its values from this parameter and returns it.
 
 
 **Returns**: [<code>MaterialColorParam</code>](#MaterialColorParam) - - Returns a new cloned material color parameter.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| flags | <code>number</code> | The flags value. |
-

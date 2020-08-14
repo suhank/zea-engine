@@ -1,7 +1,8 @@
 <a name="TreeItem"></a>
 
 ### TreeItem 
-Class representing an Item in the scene tree with hierarchy capabilities(has children).
+Class representing an Item in the scene tree with hierarchy capabilities (has children).
+It has the capability to add and remove children.
 <br>
 <br>
 **Parameters**
@@ -27,17 +28,17 @@ Class representing an Item in the scene tree with hierarchy capabilities(has chi
 * [TreeItem ⇐ <code>BaseItem</code>](#TreeItem)
     * [new TreeItem(name)](#new-TreeItem)
     * _instance_
-        * [setFlag(flag)](#setFlag)
         * [setOwner(parentItem)](#setOwner)
         * [getParentItem() \| <code>undefined</code>](#getParentItem)
         * [setParentItem(parentItem)](#setParentItem)
-        * [getLocalXfo() ⇒ <code>Xfo</code>](#getLocalXfo)
-        * [setLocalXfo(xfo, mode)](#setLocalXfo)
-        * [getGlobalXfo(mode) ⇒ <code>Xfo</code>](#getGlobalXfo)
-        * [setGlobalXfo(xfo, mode)](#setGlobalXfo)
-        * [getVisible() ⇒ <code>boolean</code>](#getVisible)
+        * ~~[.getLocalXfo()](#TreeItem+getLocalXfo) ⇒ <code>Xfo</code>~~
+        * ~~[.setLocalXfo(xfo)](#TreeItem+setLocalXfo)~~
+        * ~~[.getGlobalXfo()](#TreeItem+getGlobalXfo) ⇒ <code>Xfo</code>~~
+        * ~~[.setGlobalXfo(xfo)](#TreeItem+setGlobalXfo)~~
+        * ~~[.getVisible()](#TreeItem+getVisible) ⇒ <code>boolean</code>~~
+        * [isVisible() ⇒ <code>boolean</code>](#isVisible)
         * [setVisible(val)](#setVisible)
-        * [propagateVisiblity(val)](#propagateVisiblity)
+        * [propagateVisibility(val)](#propagateVisibility)
         * [addHighlight(name, color, propagateToChildren)](#addHighlight)
         * [removeHighlight(name, propagateToChildren)](#removeHighlight)
         * [getHighlight() ⇒ <code>Color</code>](#getHighlight)
@@ -47,7 +48,7 @@ Class representing an Item in the scene tree with hierarchy capabilities(has chi
         * [getNumChildren() ⇒ <code>number</code>](#getNumChildren)
         * [generateUniqueName(name) ⇒ <code>string</code>](#generateUniqueName)
         * [insertChild(childItem, index, maintainXfo, fixCollisions) ⇒ <code>number</code>](#insertChild)
-        * [addChild(childItem, maintainXfo, fixCollisions) ⇒ <code>number</code>](#addChild)
+        * [addChild(childItem, maintainXfo, fixCollisions) ⇒ <code>BaseItem</code>](#addChild)
         * [getChild(index) ⇒ <code>BaseItem</code> \| <code>undefined</code>](#getChild)
         * [getChildByName(name) ⇒ <code>BaseItem</code> \| <code>null</code>](#getChildByName)
         * [getChildNames() ⇒ <code>array</code>](#getChildNames)
@@ -65,16 +66,13 @@ Class representing an Item in the scene tree with hierarchy capabilities(has chi
         * [onMouseEnter(event)](#onMouseEnter)
         * [onMouseLeave(event)](#onMouseLeave)
         * [onWheel(event)](#onWheel)
-        * [toJSON(context, flags) ⇒ <code>object</code>](#toJSON)
-        * [fromJSON(j, context, flags)](#fromJSON)
+        * [toJSON(context) ⇒ <code>object</code>](#toJSON)
+        * [fromJSON(j, context)](#fromJSON)
         * [readBinary(reader, context)](#readBinary)
-        * [clone(flags)](#clone)
-        * [copyFrom(src, flags)](#copyFrom)
+        * [clone()](#clone)
+        * [copyFrom(src)](#copyFrom)
         * [destroy()](#destroy)
     * _static_
-        * [SaveFlags ⇒ <code>object</code>](#SaveFlags)
-        * [LoadFlags ⇒ <code>object</code>](#LoadFlags)
-        * [CloneFlags ⇒ <code>object</code>](#CloneFlags)
         * [getSelectionOutlineColor() ⇒ <code>Color</code>](#getSelectionOutlineColor)
         * [setSelectionOutlineColor(color)](#setSelectionOutlineColor)
         * [getBranchSelectionOutlineColor() ⇒ <code>Color</code>](#getBranchSelectionOutlineColor)
@@ -88,24 +86,12 @@ Creates a tree item with the specified name.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| name | <code>string</code> | The name of the tree item. |
-
-<a name="TreeItem+setFlag"></a>
-
-### setFlag
-Sets item flag by using an 'OR-assignation' operation then if current item is a child of another item,
-flags for the owner item is changed too.
-
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| flag | <code>number</code> | The flag value. |
+| name | <code>string</code> | The name of the tree item. It's the identifier of the tree item. It's an identifier intended to be human readable. It's included in the path that we use to access a particular item. It's used to display it in the tree. |
 
 <a name="TreeItem+setOwner"></a>
 
 ### setOwner
-Sets the owner(another TreeItem) of the current TreeItem.
+Sets the owner (another TreeItem) of the current TreeItem.
 
 
 
@@ -133,50 +119,50 @@ Sets the parent of current TreeItem.
 
 <a name="TreeItem+getLocalXfo"></a>
 
-### getLocalXfo
-Returns the value of local Xfo transform parameter.
+### ~~treeItem.getLocalXfo() ⇒ <code>Xfo</code>~~
+***Deprecated***
 
 
 **Returns**: <code>Xfo</code> - - Returns the local Xfo.  
 <a name="TreeItem+setLocalXfo"></a>
 
-### setLocalXfo
-Sets the local Xfo transform parameter.
+### ~~treeItem.setLocalXfo(xfo)~~
+***Deprecated***
 
 
 
 | Param | Type | Description |
 | --- | --- | --- |
 | xfo | <code>Xfo</code> | The local xfo transform. |
-| mode | <code>number</code> | The mode value. **See:** `ValueSetMode` enum in `Parameter` class. |
 
 <a name="TreeItem+getGlobalXfo"></a>
 
-### getGlobalXfo
-Returns the global Xfo transform.
+### ~~treeItem.getGlobalXfo() ⇒ <code>Xfo</code>~~
+***Deprecated***
 
 
 **Returns**: <code>Xfo</code> - - Returns the global Xfo.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| mode | <code>number</code> | The mode value. |
-
 <a name="TreeItem+setGlobalXfo"></a>
 
-### setGlobalXfo
-Sets the global Xfo transform.
+### ~~treeItem.setGlobalXfo(xfo)~~
+***Deprecated***
 
 
 
 | Param | Type | Description |
 | --- | --- | --- |
 | xfo | <code>Xfo</code> | The global xfo transform. |
-| mode | <code>number</code> | The mode value. **See:** `ValueSetMode` enum in `Parameter` class. |
 
 <a name="TreeItem+getVisible"></a>
 
-### getVisible
+### ~~treeItem.getVisible() ⇒ <code>boolean</code>~~
+***Deprecated***
+
+
+**Returns**: <code>boolean</code> - - The visible param value.  
+<a name="TreeItem+isVisible"></a>
+
+### isVisible
 Returns visible parameter value for current TreeItem.
 
 
@@ -192,9 +178,9 @@ Sets visible parameter value.
 | --- | --- | --- |
 | val | <code>number</code> | The val param. |
 
-<a name="TreeItem+propagateVisiblity"></a>
+<a name="TreeItem+propagateVisibility"></a>
 
-### propagateVisiblity
+### propagateVisibility
 Updates current TreeItem visible state and propagates its value to children elements.
 
 
@@ -302,7 +288,7 @@ Inserts a child. It accepts all kind of `BaseItem`, not only `TreeItem`.
 Adds a child. It accepts all kind of `BaseItem`, not only `TreeItem`.
 
 
-**Returns**: <code>number</code> - - The index of the child item in this items children array.  
+**Returns**: <code>BaseItem</code> - childItem - The child BaseItem that was added.  
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -369,8 +355,6 @@ Removes a child BaseItem by specifying its name.
 ### ~~treeItem.removeChildByHandle(childItem)~~
 ***Deprecated***
 
-Remove a child BasItem by passing in actual item object.
-
 
 
 | Param | Type | Description |
@@ -399,8 +383,6 @@ Returns index position of the specified item.
 
 ### ~~treeItem.indexOfChild(childItem) ⇒ <code>number</code>~~
 ***Deprecated***
-
-Returns index position of the specified item.
 
 
 **Returns**: <code>number</code> - - The return value.  
@@ -507,7 +489,8 @@ Causes an event to occur when the mouse wheel is rolled up or down over an eleme
 <a name="TreeItem+toJSON"></a>
 
 ### toJSON
-The toJSON method encodes this type as a json object for persistences.
+The toJSON method serializes this instance as a JSON.
+It can be used for persistence, data transfer, etc.
 
 
 **Returns**: <code>object</code> - - Returns the json object.  
@@ -515,12 +498,11 @@ The toJSON method encodes this type as a json object for persistences.
 | Param | Type | Description |
 | --- | --- | --- |
 | context | <code>object</code> | The context value. |
-| flags | <code>number</code> | The flags value. |
 
 <a name="TreeItem+fromJSON"></a>
 
 ### fromJSON
-The fromJSON method decodes a json object for this type.
+The fromJSON method takes a JSON and deserializes into an instance of this type.
 
 
 
@@ -528,7 +510,6 @@ The fromJSON method decodes a json object for this type.
 | --- | --- | --- |
 | j | <code>object</code> | The json object this item must decode. |
 | context | <code>object</code> | The context value. |
-| flags | <code>number</code> | The flags value. |
 
 <a name="TreeItem+readBinary"></a>
 
@@ -550,11 +531,6 @@ from this item and returns it.
 
 
 **Returns**: [<code>TreeItem</code>](#TreeItem) - - Returns a new cloned tree item.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| flags | <code>number</code> | The flags value. |
-
 <a name="TreeItem+copyFrom"></a>
 
 ### copyFrom
@@ -565,7 +541,6 @@ Copies current TreeItem with all its children.
 | Param | Type | Description |
 | --- | --- | --- |
 | src | [<code>TreeItem</code>](#TreeItem) | The tree item to copy from. |
-| flags | <code>number</code> | The flags value. |
 
 <a name="TreeItem+destroy"></a>
 
@@ -574,27 +549,6 @@ The destroy is called by the system to cause explicit resources cleanup.
 Users should never need to call this method directly.
 
 
-<a name="TreeItem.SaveFlags"></a>
-
-### SaveFlags 
-Returns an ENUM object with save flags options.
-
-
-**Returns**: <code>object</code> - - The return value.  
-<a name="TreeItem.LoadFlags"></a>
-
-### LoadFlags 
-Returns an ENUM object with load flags options.
-
-
-**Returns**: <code>object</code> - - The return value.  
-<a name="TreeItem.CloneFlags"></a>
-
-### CloneFlags 
-Returns an ENUM object with clone flags options.
-
-
-**Returns**: <code>object</code> - - The return value.  
 <a name="TreeItem.getSelectionOutlineColor"></a>
 
 ### getSelectionOutlineColor

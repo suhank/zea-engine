@@ -15,16 +15,14 @@ myParameterOwnerItem.addParameter(numberParam)
 
 * [NumberParameter ⇐ <code>Parameter</code>](#NumberParameter)
     * [new NumberParameter(name, value, range, step)](#new-NumberParameter)
-    * [setValue(value, mode)](#setValue)
-    * [getValue(mode) ⇒ <code>number</code>](#getValue)
     * [getRange() ⇒ <code>array</code>](#getRange)
     * [setRange(range)](#setRange)
     * [getStep() ⇒ <code>number</code>](#getStep)
     * [setStep(step)](#setStep)
-    * [toJSON(context, flags) ⇒ <code>object</code>](#toJSON)
-    * [fromJSON(j, context, flags)](#fromJSON)
+    * [toJSON(context) ⇒ <code>object</code>](#toJSON)
+    * [fromJSON(j, context)](#fromJSON)
     * [readBinary(reader, context)](#readBinary)
-    * [clone(flags)](#clone)
+    * [clone()](#clone)
 
 <a name="new_NumberParameter_new"></a>
 
@@ -38,30 +36,6 @@ Create a number parameter.
 | value | <code>number</code> | <code>0</code> | The value of the parameter. |
 | range | <code>array</code> |  | An array with two numbers. If defined, the parameter value will be clamped. |
 | step | <code>number</code> |  | The step value. If defined, the parameter value will be rounded to the nearest integer. |
-
-<a name="NumberParameter+setValue"></a>
-
-### setValue
-Specifies the value of the parameter.
-
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| value | <code>number</code> | The value param. |
-| mode | <code>number</code> | The mode value. |
-
-<a name="NumberParameter+getValue"></a>
-
-### getValue
-Sets parameter's value.
-
-
-**Returns**: <code>number</code> - - The return value.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| mode | <code>number</code> | The mode value. |
 
 <a name="NumberParameter+getRange"></a>
 
@@ -110,7 +84,6 @@ The toJSON method encodes this type as a json object for persistence.
 | Param | Type | Description |
 | --- | --- | --- |
 | context | <code>object</code> | The context value. |
-| flags | <code>number</code> | The flags value. |
 
 <a name="NumberParameter+fromJSON"></a>
 
@@ -123,7 +96,6 @@ The fromJSON method decodes a json object for this type.
 | --- | --- | --- |
 | j | <code>object</code> | The json object this item must decode. |
 | context | <code>object</code> | The context value. |
-| flags | <code>number</code> | The flags value. |
 
 <a name="NumberParameter+readBinary"></a>
 
@@ -145,8 +117,3 @@ from this parameter and returns it.
 
 
 **Returns**: [<code>NumberParameter</code>](#NumberParameter) - - Returns a new number parameter.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| flags | <code>number</code> | The flags value. |
-

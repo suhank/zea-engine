@@ -25,10 +25,10 @@ myParameterOwnerItem.addParameter(treeItemParam)
     * [getOwner() ⇒ <code>TreeItem</code>](#getOwner)
     * [setFilterFn(flterFn)](#setFilterFn)
     * [getFilterFn() ⇒ <code>function</code>](#getFilterFn)
-    * [setValue(treeItem, mode) ⇒ <code>boolean</code>](#setValue)
-    * [toJSON(context, flags) ⇒ <code>object</code>](#toJSON)
-    * [fromJSON(j, context, flags)](#fromJSON)
-    * [clone(flags)](#clone)
+    * [setValue(treeItem) ⇒ <code>boolean</code>](#setValue)
+    * [toJSON(context) ⇒ <code>object</code>](#toJSON)
+    * [fromJSON(j, context)](#fromJSON)
+    * [clone()](#clone)
     * [destroy()](#destroy)
 
 <a name="new_TreeItemParameter_new"></a>
@@ -88,8 +88,7 @@ Sets parameter's `TreeItem` value.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| treeItem | <code>TreeItem</code> | The treeItem value. |
-| mode | <code>number</code> | The mode value. |
+| treeItem | <code>TreeItem</code> | The treeItem value |
 
 <a name="TreeItemParameter+toJSON"></a>
 
@@ -102,7 +101,6 @@ The toJSON method encodes this type as a json object for persistence.
 | Param | Type | Description |
 | --- | --- | --- |
 | context | <code>object</code> | The context value. |
-| flags | <code>number</code> | The flags value. |
 
 <a name="TreeItemParameter+fromJSON"></a>
 
@@ -115,7 +113,6 @@ The fromJSON method decodes a json object for this type.
 | --- | --- | --- |
 | j | <code>object</code> | The json object this item must decode. |
 | context | <code>object</code> | The context value. |
-| flags | <code>number</code> | The flags value. |
 
 <a name="TreeItemParameter+clone"></a>
 
@@ -125,11 +122,6 @@ from this parameter and returns it.
 
 
 **Returns**: [<code>TreeItemParameter</code>](#TreeItemParameter) - - Returns a new tree item parameter.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| flags | <code>number</code> | The flags value. |
-
 <a name="TreeItemParameter+destroy"></a>
 
 ### destroy

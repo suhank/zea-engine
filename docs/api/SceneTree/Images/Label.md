@@ -10,7 +10,7 @@ we've abstracted the complicated logic behind this class, transforming any text 
 
 **Parameters**
 * **Library(`StringParameter`):** Library you wan to use for your label, see **Library List** above.
-* **Text(`StringParameter`):** 
+* **Text(`StringParameter`):**
 * **FontColor(`ColorParameter`):**
 * **Margin(`NumberParameter`):**
 * **BorderWidth(`NumberParameter`):**
@@ -37,8 +37,8 @@ we've abstracted the complicated logic behind this class, transforming any text 
     * [loadLabelData()](#loadLabelData)
     * [renderLabelToImage()](#renderLabelToImage)
     * [getParams() ⇒ <code>object</code>](#getParams)
-    * [toJSON(context, flags) ⇒ <code>object</code>](#toJSON)
-    * [fromJSON(j, context, flags)](#fromJSON)
+    * [toJSON(context) ⇒ <code>object</code>](#toJSON)
+    * [fromJSON(j, context)](#fromJSON)
 
 <a name="new_Label_new"></a>
 
@@ -75,7 +75,7 @@ Returns all parameters and class state values(Including data).
 <a name="Label+toJSON"></a>
 
 ### toJSON
-The toJSON method encodes this type as a json object for persistences.
+The toJSON method encodes this type as a json object for persistence.
 
 
 **Returns**: <code>object</code> - - Returns the json object.  
@@ -83,7 +83,6 @@ The toJSON method encodes this type as a json object for persistences.
 | Param | Type | Description |
 | --- | --- | --- |
 | context | <code>object</code> | The context value. |
-| flags | <code>number</code> | The flags value. |
 
 <a name="Label+fromJSON"></a>
 
@@ -96,5 +95,4 @@ The fromJSON method decodes a json object for this type.
 | --- | --- | --- |
 | j | <code>object</code> | The json object this item must decode. |
 | context | <code>object</code> | The context value. |
-| flags | <code>number</code> | The flags value. |
 

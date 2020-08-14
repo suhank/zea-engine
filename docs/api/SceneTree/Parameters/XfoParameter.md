@@ -15,7 +15,8 @@ myParameterOwnerItem.addParameter(xfoParam)
 
 * [XfoParameter ⇐ <code>Parameter</code>](#XfoParameter)
     * [new XfoParameter(name, value)](#new-XfoParameter)
-    * [clone(flags)](#clone)
+    * [readBinary(reader, context)](#readBinary)
+    * [clone()](#clone)
 
 <a name="new_XfoParameter_new"></a>
 
@@ -28,6 +29,18 @@ Create a Xfo parameter.
 | name | <code>string</code> | The name of the Xfo parameter. |
 | value | <code>Xfo</code> | The value of the parameter. |
 
+<a name="XfoParameter+readBinary"></a>
+
+### readBinary
+Extracts a number value from a buffer, updating current parameter state.
+
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| reader | <code>BinReader</code> | The reader value. |
+| context | <code>object</code> | The context value. |
+
 <a name="XfoParameter+clone"></a>
 
 ### clone
@@ -36,8 +49,3 @@ from this parameter and returns it.
 
 
 **Returns**: [<code>XfoParameter</code>](#XfoParameter) - - Returns a new Xfo parameter.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| flags | <code>number</code> | The flags value. |
-

@@ -20,7 +20,8 @@ myParameterOwnerItem.addParameter(vec2Param)
 * [Vec2Parameter ⇐ <code>Parameter</code>](#Vec2Parameter)
     * [new Vec2Parameter(name, value, range)](#new-Vec2Parameter)
     * [getRange() ⇒ <code>array</code>](#getRange)
-    * [clone(flags)](#clone)
+    * [readBinary(reader, context)](#readBinary)
+    * [clone()](#clone)
 
 <a name="new_Vec2Parameter_new"></a>
 
@@ -41,6 +42,18 @@ Returns the range of values in which current parameter can be.
 
 
 **Returns**: <code>array</code> - - The return value.  
+<a name="Vec2Parameter+readBinary"></a>
+
+### readBinary
+Extracts a number value from a buffer, updating current parameter state.
+
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| reader | <code>BinReader</code> | The reader value. |
+| context | <code>object</code> | The context value. |
+
 <a name="Vec2Parameter+clone"></a>
 
 ### clone
@@ -49,8 +62,3 @@ from this parameter and returns it.
 
 
 **Returns**: [<code>Vec2Parameter</code>](#Vec2Parameter) - - Returns a new Vec2 parameter.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| flags | <code>number</code> | The flags value. |
-

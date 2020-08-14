@@ -1,196 +1,115 @@
 <a name="ResourceLoader"></a>
 
 ### ResourceLoader
-Class in charge of loading file resources, holding a reference to all of them.
-Manages workers, callbacks, resource tree and entities.
+Class for delegating resource loading, enabling an abstraction of a cloud file system to be implemented.
 
 **Events**
-* **loaded:** _todo_
-* **fileUpdated:** _todo_
-* **progressIncremented:** _todo_
-* **allResourcesLoaded:** _todo_
+* **loaded:** emitted when a file has finished loading
+* **progressIncremented:** emitted when a loading of processing task has been incremented
+* **allResourcesLoaded:** emitted when all outstanding resources are loaded. This event can be used to signal the completion of load.
 
 
 
 * [ResourceLoader](#ResourceLoader)
     * [new ResourceLoader()](#new-ResourceLoader)
-    * [getRootFolder() ⇒ <code>object</code>](#getRootFolder)
-    * [registerResourceCallback(filter, fn)](#registerResourceCallback)
-    * [setResources(resources)](#setResources)
-    * [addResourceURL(resourcePath, url)](#addResourceURL)
-    * [updateFile(file)](#updateFile)
-    * [freeData(buffer)](#freeData)
-    * [getFilepath(resourceId) ⇒ <code>string</code>](#getFilepath)
-    * [resourceAvailable(resourceId) ⇒ <code>boolean</code>](#resourceAvailable)
-    * [getFile(resourceId) ⇒ <code>object</code>](#getFile)
-    * [resolveFilePathToId(filePath) ⇒ <code>string</code>](#resolveFilePathToId)
-    * [resolveFilepath(filePath) ⇒ <code>object</code>](#resolveFilepath)
-    * ~~[.resolveFile(filePath)](#ResourceLoader+resolveFile) ⇒ <code>object</code>~~
-    * ~~[.resolveURL(filePath)](#ResourceLoader+resolveURL) ⇒ <code>string</code>~~
+    * [setAdapter(adapter)](#setAdapter)
+    * [getAdapter() ⇒ <code>object</code>](#getAdapter)
+    * [resolveFileId(value) ⇒ <code>string</code>](#resolveFileId)
+    * ~~[.resolveFilename(value)](#ResourceLoader+resolveFilename) ⇒ <code>string</code>~~
+    * ~~[.resolveURL(value)](#ResourceLoader+resolveURL) ⇒ <code>string</code>~~
+    * [loadUrl(resourceId, url, callback, addLoadWork)](#loadUrl)
+    * [loadCommonAssetResource(resourceId) ⇒ <code>VLAAsset</code>](#loadCommonAssetResource)
     * [addWork(resourceId, amount)](#addWork)
     * [addWorkDone(resourceId, amount)](#addWorkDone)
-    * [loadResource(resourceId, callback, addLoadWork)](#loadResource)
-    * [loadUrl(resourceId, url, callback, addLoadWork)](#loadUrl)
-    * [unpackBuffer(resourceId, buffer, callback, addLoadWork) ⇒ <code>Promise</code>](#unpackBuffer)
-    * [suspend()](#suspend)
-    * [traverse(callback)](#traverse)
 
 <a name="new_ResourceLoader_new"></a>
 
 ### new ResourceLoader
 Create a resource loader.
 
-<a name="ResourceLoader+getRootFolder"></a>
+<a name="ResourceLoader+setAdapter"></a>
 
-### getRootFolder
-Returns the resources tree object.
-
-
-**Returns**: <code>object</code> - - The return value.  
-<a name="ResourceLoader+registerResourceCallback"></a>
-
-### registerResourceCallback
-The registerResourceCallback method.
+### setAdapter
+The setAdapter method.
 
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| filter | <code>string</code> | The filter value. |
-| fn | <code>function</code> | The fn value. |
+| adapter | <code>object</code> | The adapter object. |
 
-<a name="ResourceLoader+setResources"></a>
+<a name="ResourceLoader+getAdapter"></a>
 
-### setResources
-The setResources method.
-
+### getAdapter
+The getAdapter method.
 
 
-| Param | Type | Description |
-| --- | --- | --- |
-| resources | <code>object</code> | The resources value. |
+**Returns**: <code>object</code> - - The adapter object.  
+<a name="ResourceLoader+resolveFileId"></a>
 
-<a name="ResourceLoader+addResourceURL"></a>
-
-### addResourceURL
-The addResourceURL method.
+### resolveFileId
+Given some value, which could be an IR or a path, return the unique identifier.
 
 
+**Returns**: <code>string</code> - - The resolved fileId if an adapter is installed, else the original value.  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| resourcePath | <code>string</code> | The resourcePath value. |
-| url | <code>string</code> | The url value. |
+| value | <code>string</code> | The file value. |
 
-<a name="ResourceLoader+updateFile"></a>
+<a name="ResourceLoader+resolveFilename"></a>
 
-### updateFile
-The updateFile method.
-
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| file | <code>object</code> | The file value. |
-
-<a name="ResourceLoader+freeData"></a>
-
-### freeData
-The freeData method.
-
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| buffer | <code>ArrayBuffer</code> | The buffer value. |
-
-<a name="ResourceLoader+getFilepath"></a>
-
-### getFilepath
-Returns complete file path.
-
-
-**Returns**: <code>string</code> - - The return value.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| resourceId | <code>string</code> | The resourceId value. |
-
-<a name="ResourceLoader+resourceAvailable"></a>
-
-### resourceAvailable
-The resourceAvailable method.
-
-
-**Returns**: <code>boolean</code> - - The return value.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| resourceId | <code>string</code> | The resourceId value. |
-
-<a name="ResourceLoader+getFile"></a>
-
-### getFile
-The getFile method.
-
-
-**Returns**: <code>object</code> - - The return value.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| resourceId | <code>string</code> | The resourceId value. |
-
-<a name="ResourceLoader+resolveFilePathToId"></a>
-
-### resolveFilePathToId
-The resolveFilePathToId method.
-
-
-**Returns**: <code>string</code> - - The return value.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| filePath | <code>string</code> | The filePath value. |
-
-<a name="ResourceLoader+resolveFilepath"></a>
-
-### resolveFilepath
-The resolveFilepath method.
-
-
-**Returns**: <code>object</code> - - The return value.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| filePath | <code>string</code> | The filePath value. |
-
-<a name="ResourceLoader+resolveFile"></a>
-
-### ~~resourceLoader.resolveFile(filePath) ⇒ <code>object</code>~~
+### ~~resourceLoader.resolveFilename(value) ⇒ <code>string</code>~~
 ***Deprecated***
 
-The resolveFile method.
+The resolveFilename method.
 
 
-**Returns**: <code>object</code> - - The return value.  
+**Returns**: <code>string</code> - - The resolved URL if an adapter is installed, else the original value.  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| filePath | <code>string</code> | The filePath value. |
+| value | <code>string</code> | The file value. |
 
 <a name="ResourceLoader+resolveURL"></a>
 
-### ~~resourceLoader.resolveURL(filePath) ⇒ <code>string</code>~~
+### ~~resourceLoader.resolveURL(value) ⇒ <code>string</code>~~
 ***Deprecated***
 
 The resolveURL method.
 
 
-**Returns**: <code>string</code> - - The return value.  
+**Returns**: <code>string</code> - - The resolved URL if an adapter is installed, else the original value.  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| filePath | <code>string</code> | The filePath value. |
+| value | <code>string</code> | The file value. |
+
+<a name="ResourceLoader+loadUrl"></a>
+
+### loadUrl
+The loadUrl method.
+
+
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| resourceId | <code>string</code> |  | The resourceId value. |
+| url | <code>string</code> |  | The url value. |
+| callback | <code>function</code> |  | The callback value. |
+| addLoadWork | <code>boolean</code> | <code>true</code> | The addLoadWork value. |
+
+<a name="ResourceLoader+loadCommonAssetResource"></a>
+
+### loadCommonAssetResource
+Loads and return a file resource using the specified path.
+
+
+**Returns**: <code>VLAAsset</code> - - The return value.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| resourceId | <code>string</code> | The resourceId value. |
 
 <a name="ResourceLoader+addWork"></a>
 
@@ -215,63 +134,4 @@ Add work to the 'done' pile. The done pile should eventually match the total pil
 | --- | --- | --- |
 | resourceId | <code>string</code> | The resourceId value. |
 | amount | <code>number</code> | The amount value. |
-
-<a name="ResourceLoader+loadResource"></a>
-
-### loadResource
-The loadResource method.
-
-
-
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| resourceId | <code>string</code> |  | The resourceId value. |
-| callback | <code>function</code> |  | The callback value. |
-| addLoadWork | <code>boolean</code> | <code>true</code> | The addLoadWork value. |
-
-<a name="ResourceLoader+loadUrl"></a>
-
-### loadUrl
-The loadUrl method.
-
-
-
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| resourceId | <code>string</code> |  | The resourceId value. |
-| url | <code>string</code> |  | The url value. |
-| callback | <code>function</code> |  | The callback value. |
-| addLoadWork | <code>boolean</code> | <code>true</code> | The addLoadWork value. |
-
-<a name="ResourceLoader+unpackBuffer"></a>
-
-### unpackBuffer
-The unpackBuffer method.
-
-
-**Returns**: <code>Promise</code> - -  
-
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| resourceId | <code>string</code> |  | The resourceId value. |
-| buffer | <code>Buffer</code> |  | The binary buffer to unpack. |
-| callback | <code>function</code> |  | The callback value. |
-| addLoadWork | <code>boolean</code> | <code>true</code> | The addLoadWork value. |
-
-<a name="ResourceLoader+suspend"></a>
-
-### suspend
-The suspend method.
-
-
-<a name="ResourceLoader+traverse"></a>
-
-### traverse
-The traverse method.
-
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| callback | <code>function</code> | The callback value. |
 

@@ -16,7 +16,8 @@ myParameterOwnerItem.addParameter(mat4Param)
 
 * [Mat4Parameter ⇐ <code>Parameter</code>](#Mat4Parameter)
     * [new Mat4Parameter(name, value)](#new-Mat4Parameter)
-    * [clone(flags)](#clone)
+    * [readBinary(reader, context)](#readBinary)
+    * [clone()](#clone)
 
 <a name="new_Mat4Parameter_new"></a>
 
@@ -29,6 +30,18 @@ Create a Mat4 parameter.
 | name | <code>string</code> | The name of the Mat4 parameter. |
 | value | <code>Mat4</code> | The value of the parameter. |
 
+<a name="Mat4Parameter+readBinary"></a>
+
+### readBinary
+Extracts a number value from a buffer, updating current parameter state.
+
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| reader | <code>BinReader</code> | The reader value. |
+| context | <code>object</code> | The context value. |
+
 <a name="Mat4Parameter+clone"></a>
 
 ### clone
@@ -37,8 +50,3 @@ copies its values from this parameter and returns it.
 
 
 **Returns**: [<code>Mat4Parameter</code>](#Mat4Parameter) - - Returns a new cloned Mat4 parameter.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| flags | <code>number</code> | The flags value. |
-

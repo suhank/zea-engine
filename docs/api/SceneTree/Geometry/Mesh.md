@@ -1,28 +1,34 @@
 <a name="Mesh"></a>
 
 ### Mesh 
-Class representing a collection of triangle primitive drawing types, every three vertices forms a triangle.
+The Mesh class provides a flexible and fast polygon mesh representation. It supports polygons of arbitrary complexity,
+from basic triangles and quads to pentagons more.
+It supports storing per face attributes, and per edge attributes.
+The Mesh class handles converting its internal representation of polygons into a simpler triangles representation for rendering.
 
 ```
 const mesh = new Mesh()
 ```
 
 **Events**
-* **geomDataChanged:** Triggered when restoring Mesh state from a binary reader.
+* **geomDataTopologyChanged:** Triggered when the topology of the mesh has been changed.
+* **geomDataChanged:** Triggered when the vertices of the mesh have changed, but not necessarily the topology.
 
 
 **Extends**: <code>BaseGeom</code>  
 
 * [Mesh ⇐ <code>BaseGeom</code>](#Mesh)
     * [new Mesh()](#new-Mesh)
-    * [getFaceVertexIndices() ⇒ <code>Uint32Array</code>](#getFaceVertexIndices)
     * [getFaceCounts() ⇒ <code>array</code>](#getFaceCounts)
+    * [getNumFaces() ⇒ <code>number</code>](#getNumFaces)
     * [clear()](#clear)
     * [setFaceCounts(faceCounts)](#setFaceCounts)
-    * [setFaceVertexIndices(faceIndex)](#setFaceVertexIndices)
+    * [getFaceVertexCount(faceIndex) ⇒ <code>number</code>](#getFaceVertexCount)
+    * [getFaceVertexOffset(faceIndex) ⇒ <code>number</code>](#getFaceVertexOffset)
+    * [setFaceVertexIndices(faceIndex, vertexIndices)](#setFaceVertexIndices)
+    * [addFace(vertexIndices) ⇒ <code>number</code>](#addFace)
     * [getFaceVertexIndices(faceIndex) ⇒ <code>array</code>](#getFaceVertexIndices)
     * [getFaceVertexIndex(faceIndex, facevertex) ⇒ <code>number</code>](#getFaceVertexIndex)
-    * [getNumFaces() ⇒ <code>number</code>](#getNumFaces)
     * [addVertexAttribute(name, dataType, defaultScalarValue) ⇒ <code>VertexAttribute</code>](#addVertexAttribute)
     * [addFaceAttribute(name, dataType, count) ⇒ <code>Attribute</code>](#addFaceAttribute)
     * [hasFaceAttribute(name) ⇒ <code>boolean</code>](#hasFaceAttribute)
@@ -32,29 +38,22 @@ const mesh = new Mesh()
     * [getEdgeAttribute(name) ⇒ <code>Attribute</code>](#getEdgeAttribute)
     * [genTopologyInfo()](#genTopologyInfo)
     * [computeFaceNormals()](#computeFaceNormals)
-    * [generateEdgeFlags()](#generateEdgeFlags)
+    * [calculateEdgeAngles()](#calculateEdgeAngles)
     * [computeVertexNormals(hardAngle) ⇒ <code>VertexAttribute</code>](#computeVertexNormals)
-    * [computeNumTriangles() ⇒ <code>number</code>](#computeNumTriangles)
-    * [generateTriangulatedIndices(totalNumVertices, numUnSplitVertices, splitIndices) ⇒ <code>Uint32Array</code>](#generateTriangulatedIndices)
     * [computeHardEdgesIndices(hardAngle) ⇒ <code>array</code>](#computeHardEdgesIndices)
     * [genBuffers(opts) ⇒ <code>object</code>](#genBuffers)
+    * [computeNumTriangles() ⇒ <code>number</code>](#computeNumTriangles)
+    * [generateTriangulatedIndices(totalNumVertices, numUnSplitVertices, splitIndices) ⇒ <code>TypedArray</code>](#generateTriangulatedIndices)
     * [freeBuffers()](#freeBuffers)
     * [readBinary(reader, context)](#readBinary)
-    * [toJSON(context, flags) ⇒ <code>object</code>](#toJSON)
-    * [fromJSON(j, context, flags)](#fromJSON)
+    * [toJSON(context) ⇒ <code>object</code>](#toJSON)
+    * [fromJSON(j, context)](#fromJSON)
 
 <a name="new_Mesh_new"></a>
 
 ### new Mesh
 Creates an instance of Mesh.
 
-<a name="Mesh+getFaceVertexIndices"></a>
-
-### getFaceVertexIndices
-Returns the specified indices(Vertex connectors)
-
-
-**Returns**: <code>Uint32Array</code> - - The return value.  
 <a name="Mesh+getFaceCounts"></a>
 
 ### getFaceCounts
@@ -62,6 +61,13 @@ The getFaceCounts method.
 
 
 **Returns**: <code>array</code> - - The return value.  
+<a name="Mesh+getNumFaces"></a>
+
+### getNumFaces
+The getNumFaces method.
+
+
+**Returns**: <code>number</code> - - The return value.  
 <a name="Mesh+clear"></a>
 
 ### clear
@@ -71,13 +77,39 @@ The clear method.
 <a name="Mesh+setFaceCounts"></a>
 
 ### setFaceCounts
-The setFaceCounts method.
+Sets the number of faces on the mesh using an array specifying the counts per polygon size.
+The first item in the array specifies the number of triangles, the second, the number of quads, the 3rd, the number o f5 sided polygons etc..
+e.g. to specify 2 triangles, and 7 quads, we would pass [2, 7]
 
 
 
 | Param | Type | Description |
 | --- | --- | --- |
 | faceCounts | <code>array</code> | The faceCounts value. |
+
+<a name="Mesh+getFaceVertexCount"></a>
+
+### getFaceVertexCount
+Returns the number of vertices indexed by this face
+
+
+**Returns**: <code>number</code> - - The return value.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| faceIndex | <code>number</code> | The faceIndex value. |
+
+<a name="Mesh+getFaceVertexOffset"></a>
+
+### getFaceVertexOffset
+Returns the offset of the face indices within the entire index array.
+
+
+**Returns**: <code>number</code> - - The return value.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| faceIndex | <code>number</code> | The faceIndex value. |
 
 <a name="Mesh+setFaceVertexIndices"></a>
 
@@ -89,39 +121,45 @@ The setFaceVertexIndices method.
 | Param | Type | Description |
 | --- | --- | --- |
 | faceIndex | <code>number</code> | The faceIndex value. |
+| vertexIndices | <code>array</code> | The array of vertex indices for this face value. |
+
+<a name="Mesh+addFace"></a>
+
+### addFace
+Adds a new face to the mesh
+
+
+**Returns**: <code>number</code> - - The index of the face in the mesh.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| vertexIndices | <code>array</code> | The vertex indices of the face. |
 
 <a name="Mesh+getFaceVertexIndices"></a>
 
 ### getFaceVertexIndices
-The getFaceVertexIndices method.
+Returns the vertex indices of the specified face.
 
 
-**Returns**: <code>array</code> - - The return value.  
+**Returns**: <code>array</code> - - An array of indices into the vertex attributes  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| faceIndex | <code>number</code> | The faceIndex value. |
+| faceIndex | <code>number</code> | The index of the specified face |
 
 <a name="Mesh+getFaceVertexIndex"></a>
 
 ### getFaceVertexIndex
-The getFaceVertexIndex method.
+Returns a single vertex index for a given face and facevertex.
 
 
-**Returns**: <code>number</code> - - The return value.  
+**Returns**: <code>number</code> - - The vertex index  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | faceIndex | <code>number</code> | The faceIndex value. |
-| facevertex | <code>number</code> | The face vertex value. |
+| facevertex | <code>number</code> | The face vertex is the index within the face. So the first vertex index is 0. |
 
-<a name="Mesh+getNumFaces"></a>
-
-### getNumFaces
-The getNumFaces method.
-
-
-**Returns**: <code>number</code> - - The return value.  
 <a name="Mesh+addVertexAttribute"></a>
 
 ### addVertexAttribute
@@ -221,13 +259,13 @@ The genTopologyInfo method.
 <a name="Mesh+computeFaceNormals"></a>
 
 ### computeFaceNormals
-The computeFaceNormals method.
+Computes a normal value per face by averaging the triangle normals of the face.
 
 
-<a name="Mesh+generateEdgeFlags"></a>
+<a name="Mesh+calculateEdgeAngles"></a>
 
-### generateEdgeFlags
-The generateEdgeFlags method.
+### calculateEdgeAngles
+Calculates the angles at each edge between the adjoining faces
 
 
 <a name="Mesh+computeVertexNormals"></a>
@@ -241,27 +279,6 @@ Compute vertex normals.
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
 | hardAngle | <code>number</code> | <code>1</code> | The hardAngle value in radians. |
-
-<a name="Mesh+computeNumTriangles"></a>
-
-### computeNumTriangles
-Compute the number of triangles.
-
-
-**Returns**: <code>number</code> - - Returns the number of triangles.  
-<a name="Mesh+generateTriangulatedIndices"></a>
-
-### generateTriangulatedIndices
-The generateTriangulatedIndices method.
-
-
-**Returns**: <code>Uint32Array</code> - - The return value.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| totalNumVertices | <code>number</code> | The total number of vertices. |
-| numUnSplitVertices | <code>number</code> | The total number of unsplit vertices. |
-| splitIndices | <code>array</code> | The splitIndices value. |
 
 <a name="Mesh+computeHardEdgesIndices"></a>
 
@@ -286,6 +303,28 @@ The genBuffers method.
 | Param | Type | Description |
 | --- | --- | --- |
 | opts | <code>object</code> | The opts value. |
+
+<a name="Mesh+computeNumTriangles"></a>
+
+### computeNumTriangles
+Compute the number of triangles. For higher degree polygons, they are divided into multiple triangles for rendering.
+
+
+**Returns**: <code>number</code> - - Returns the number of triangles.  
+<a name="Mesh+generateTriangulatedIndices"></a>
+
+### generateTriangulatedIndices
+To prepare data for rendering, the indices for the polygons is used to compute a new index buffer based on
+only triangles. This is used during rendering and the resulting indices uploaded ot the GPU  by GLMesh class.
+
+
+**Returns**: <code>TypedArray</code> - - Retures a typed array containing the triangulated indices.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| totalNumVertices | <code>number</code> | The total number of vertices. |
+| numUnSplitVertices | <code>number</code> | The total number of unsplit vertices. |
+| splitIndices | <code>array</code> | The splitIndices value. |
 
 <a name="Mesh+freeBuffers"></a>
 
@@ -316,7 +355,6 @@ The toJSON method encodes this type as a json object for persistence.
 | Param | Type | Description |
 | --- | --- | --- |
 | context | <code>object</code> | The context value. |
-| flags | <code>number</code> | The flags value. |
 
 <a name="Mesh+fromJSON"></a>
 
@@ -329,5 +367,4 @@ The fromJSON method decodes a json object for this type.
 | --- | --- | --- |
 | j | <code>object</code> | The json object this item must decode. |
 | context | <code>object</code> | The context value. |
-| flags | <code>number</code> | The flags value. |
 

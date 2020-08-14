@@ -10,13 +10,11 @@ This class abstracts the rendering of a collection of geometries to screen.
     * [new GLGeomItem(gl, geomItem, glGeom, id, flags)](#new-GLGeomItem)
     * [getGeomItem() ⇒ <code>any</code>](#getGeomItem)
     * [getGLGeom() ⇒ <code>any</code>](#getGLGeom)
-    * [getVisible() ⇒ <code>any</code>](#getVisible)
+    * [isVisible() ⇒ <code>any</code>](#isVisible)
     * [getId() ⇒ <code>any</code>](#getId)
     * [getFlags() ⇒ <code>any</code>](#getFlags)
     * [updateVisibility()](#updateVisibility)
     * [setCullState(culled)](#setCullState)
-    * [updateGeomMatrix()](#updateGeomMatrix)
-    * [getGeomMatrixArray() ⇒ <code>any</code>](#getGeomMatrixArray)
     * [bind(renderstate) ⇒ <code>any</code>](#bind)
     * [destroy()](#destroy)
 
@@ -48,10 +46,10 @@ The getGLGeom method.
 
 
 **Returns**: <code>any</code> - - The return value.  
-<a name="GLGeomItem+getVisible"></a>
+<a name="GLGeomItem+isVisible"></a>
 
-### getVisible
-The getVisible method.
+### isVisible
+The isVisible method.
 
 
 **Returns**: <code>any</code> - - The return value.  
@@ -86,19 +84,6 @@ The setCullState method.
 | --- | --- | --- |
 | culled | <code>any</code> | The culled value. |
 
-<a name="GLGeomItem+updateGeomMatrix"></a>
-
-### updateGeomMatrix
-The updateGeomMatrix method.
-
-
-<a name="GLGeomItem+getGeomMatrixArray"></a>
-
-### getGeomMatrixArray
-The getGeomMatrixArray method.
-
-
-**Returns**: <code>any</code> - - The return value.  
 <a name="GLGeomItem+bind"></a>
 
 ### bind

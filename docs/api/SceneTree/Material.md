@@ -19,11 +19,11 @@ Use this to apply materials to your assets or item parts.
     * [isTransparent() ⇒ <code>boolean</code>](#isTransparent)
     * [getShaderClass() ⇒ <code>string</code> \| <code>undefined</code>](#getShaderClass)
     * [modifyParams(paramValues, shaderName)](#modifyParams)
-    * [toJSON(context, flags) ⇒ <code>object</code>](#toJSON)
-    * [fromJSON(j, context, flags)](#fromJSON)
+    * [toJSON(context) ⇒ <code>object</code>](#toJSON)
+    * [fromJSON(j, context)](#fromJSON)
     * [readBinary(reader, context)](#readBinary)
-    * [clone(flags)](#clone)
-    * [copyFrom(src, flags)](#copyFrom)
+    * [clone()](#clone)
+    * [copyFrom(src)](#copyFrom)
     * [destroy()](#destroy)
 
 <a name="new_Material_new"></a>
@@ -48,7 +48,7 @@ Getter for the shader name.
 
 ### setShaderName
 Sets shader by using the name of the class with the script.
-It is important that the shader is registered in `SGFactory`, otherwise it will error.
+It is important that the shader is registered in `Registry`, otherwise it will error.
 See all classes that extend from `GLShader`.
 
 
@@ -104,10 +104,9 @@ The toJSON method encodes the current object as a json object.
 
 **Returns**: <code>object</code> - - Returns the json object.  
 
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| context | <code>object</code> |  | The context value. |
-| flags | <code>number</code> | <code>0</code> | The flags value. |
+| Param | Type | Description |
+| --- | --- | --- |
+| context | <code>object</code> | The context value. |
 
 <a name="Material+fromJSON"></a>
 
@@ -116,11 +115,10 @@ The fromJSON method decodes a json object for this type.
 
 
 
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| j | <code>object</code> |  | The json object this item must decode. |
-| context | <code>object</code> |  | The context value. |
-| flags | <code>number</code> | <code>0</code> | The flags value. |
+| Param | Type | Description |
+| --- | --- | --- |
+| j | <code>object</code> | The json object this item must decode. |
+| context | <code>object</code> | The context value. |
 
 <a name="Material+readBinary"></a>
 
@@ -142,11 +140,6 @@ from this material and returns it.
 
 
 **Returns**: [<code>Material</code>](#Material) - - Returns a new cloned material.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| flags | <code>number</code> | The flags value. |
-
 <a name="Material+copyFrom"></a>
 
 ### copyFrom
@@ -157,7 +150,6 @@ When a Material is copied, first runs `BaseItem` copyFrom method, then sets shad
 | Param | Type | Description |
 | --- | --- | --- |
 | src | [<code>Material</code>](#Material) | The material to copy from. |
-| flags | <code>number</code> | The flags value. |
 
 <a name="Material+destroy"></a>
 

@@ -21,8 +21,8 @@ myParameterOwnerItem.addParameter(structParam)
     * [new StructParameter(name)](#new-StructParameter)
     * [getMember(name) ⇒ <code>Parameter</code>](#getMember)
     * [getMemberNames() ⇒ <code>array</code>](#getMemberNames)
-    * [toJSON(context, flags) ⇒ <code>object</code>](#toJSON)
-    * [fromJSON(j, context, flags)](#fromJSON)
+    * [toJSON(context) ⇒ <code>object</code>](#toJSON)
+    * [fromJSON(j, context)](#fromJSON)
     * [destroy()](#destroy)
 
 <a name="new_StructParameter_new"></a>
@@ -65,7 +65,6 @@ The toJSON method encodes this type as a json object for persistence.
 | Param | Type | Description |
 | --- | --- | --- |
 | context | <code>object</code> | The context value. |
-| flags | <code>number</code> | The flags value. |
 
 <a name="StructParameter+fromJSON"></a>
 
@@ -78,7 +77,6 @@ The fromJSON method decodes a json object for this type.
 | --- | --- | --- |
 | j | <code>object</code> | The json object this item must decode. |
 | context | <code>object</code> | The context value. |
-| flags | <code>number</code> | The flags value. |
 
 <a name="StructParameter+destroy"></a>
 

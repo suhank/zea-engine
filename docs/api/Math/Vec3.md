@@ -11,54 +11,58 @@ expose getters and setters for the component values.
 
 * [Vec3 ⇐ <code>AttrValue</code>](#Vec3)
     * [new Vec3(x, y, z)](#new-Vec3)
-    * [x ⇒ <code>number</code>](#x)
-    * [x](#x)
-    * [y ⇒ <code>number</code>](#y)
-    * [y](#y)
-    * [z ⇒ <code>number</code>](#z)
-    * [z](#z)
-    * [xy ⇒ <code>Vec2</code>](#xy)
-    * [yz ⇒ <code>Vec2</code>](#yz)
-    * [set(x, y, z)](#set)
-    * [setDataArray(float32Array)](#setDataArray)
-    * [setFromOther(other)](#setFromOther)
-    * [isNull() ⇒ <code>boolean</code>](#isNull)
-    * [is111() ⇒ <code>boolean</code>](#is111)
-    * ~~[.equal(other)](#Vec3+equal) ⇒ <code>boolean</code>~~
-    * [isEqual(other) ⇒ <code>boolean</code>](#isEqual)
-    * ~~[.notEquals(other)](#Vec3+notEquals) ⇒ <code>boolean</code>~~
-    * [notEqual(other) ⇒ <code>boolean</code>](#notEqual)
-    * [approxEqual(other, precision) ⇒ <code>boolean</code>](#approxEqual)
-    * [add(other)](#add)
-    * [addInPlace(other)](#addInPlace)
-    * [subtract(other)](#subtract)
-    * [subtractInPlace(other)](#subtractInPlace)
-    * [multiply(other)](#multiply)
-    * [multiplyInPlace(other)](#multiplyInPlace)
-    * [divide(vec3)](#divide)
-    * [divideInPlace(vec3)](#divideInPlace)
-    * [scale(scalar)](#scale)
-    * [scaleInPlace(scalar)](#scaleInPlace)
-    * [negate()](#negate)
-    * [inverse()](#inverse)
-    * [lengthSquared() ⇒ <code>number</code>](#lengthSquared)
-    * [length() ⇒ <code>number</code>](#length)
-    * [distanceTo(other) ⇒ <code>number</code>](#distanceTo)
-    * [normalize()](#normalize)
-    * [normalizeInPlace() ⇒ <code>number</code>](#normalizeInPlace)
-    * [resize(length)](#resize)
-    * [resizeInPlace(length)](#resizeInPlace)
-    * [dot(other) ⇒ <code>number</code>](#dot)
-    * [cross(other)](#cross)
-    * [angleTo(other) ⇒ <code>number</code>](#angleTo)
-    * [lerp(other, t)](#lerp)
-    * [abs()](#abs)
-    * [setRandomDir(scale)](#setRandomDir)
-    * [setRandom(scale)](#setRandom)
-    * [clone()](#clone)
-    * [asArray() ⇒ <code>array</code>](#asArray)
-    * [toJSON() ⇒ <code>object</code>](#toJSON)
-    * [fromJSON(j)](#fromJSON)
+    * _instance_
+        * [x ⇒ <code>number</code>](#x)
+        * [x](#x)
+        * [y ⇒ <code>number</code>](#y)
+        * [y](#y)
+        * [z ⇒ <code>number</code>](#z)
+        * [z](#z)
+        * [xy ⇒ <code>Vec2</code>](#xy)
+        * [yz ⇒ <code>Vec2</code>](#yz)
+        * [set(x, y, z)](#set)
+        * [setDataArray(float32Array)](#setDataArray)
+        * [setFromOther(other)](#setFromOther)
+        * [isNull() ⇒ <code>boolean</code>](#isNull)
+        * [is111() ⇒ <code>boolean</code>](#is111)
+        * ~~[.equal(other)](#Vec3+equal) ⇒ <code>boolean</code>~~
+        * [isEqual(other) ⇒ <code>boolean</code>](#isEqual)
+        * ~~[.notEquals(other)](#Vec3+notEquals) ⇒ <code>boolean</code>~~
+        * [notEqual(other) ⇒ <code>boolean</code>](#notEqual)
+        * [approxEqual(other, precision) ⇒ <code>boolean</code>](#approxEqual)
+        * [add(other)](#add)
+        * [addInPlace(other)](#addInPlace)
+        * [subtract(other)](#subtract)
+        * [subtractInPlace(other)](#subtractInPlace)
+        * [multiply(other)](#multiply)
+        * [multiplyInPlace(other)](#multiplyInPlace)
+        * [divide(vec3)](#divide)
+        * [divideInPlace(vec3)](#divideInPlace)
+        * [scale(scalar)](#scale)
+        * [scaleInPlace(scalar)](#scaleInPlace)
+        * [negate()](#negate)
+        * [inverse()](#inverse)
+        * [lengthSquared() ⇒ <code>number</code>](#lengthSquared)
+        * [length() ⇒ <code>number</code>](#length)
+        * [distanceTo(other) ⇒ <code>number</code>](#distanceTo)
+        * [normalize()](#normalize)
+        * [normalizeInPlace() ⇒ <code>number</code>](#normalizeInPlace)
+        * [resize(length)](#resize)
+        * [resizeInPlace(length)](#resizeInPlace)
+        * [dot(other) ⇒ <code>number</code>](#dot)
+        * [cross(other)](#cross)
+        * [angleTo(other) ⇒ <code>number</code>](#angleTo)
+        * [lerp(other, t)](#lerp)
+        * [abs()](#abs)
+        * [setRandomDir(scale)](#setRandomDir)
+        * [setRandom(scale)](#setRandom)
+        * [clone()](#clone)
+        * [asArray() ⇒ <code>array</code>](#asArray)
+        * [toJSON() ⇒ <code>object</code>](#toJSON)
+        * [fromJSON(j)](#fromJSON)
+        * [readBinary(reader)](#readBinary)
+    * _static_
+        * [createFromBuffer(buffer, byteOffset)](#createFromBuffer)
 
 <a name="new_Vec3_new"></a>
 
@@ -561,4 +565,28 @@ Decodes a JSON object to set the state of this class.
 | Param | Type | Description |
 | --- | --- | --- |
 | j | <code>object</code> | The json object. |
+
+<a name="Vec3+readBinary"></a>
+
+### readBinary
+Loads the state of the value from a binary reader.
+
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| reader | <code>BinReader</code> | The reader value. |
+
+<a name="Vec3.createFromBuffer"></a>
+
+### createFromBuffer
+Creates an instance of a `Vec3` using an ArrayBuffer.
+
+
+**Returns**: [<code>Vec3</code>](#Vec3) - - Returns a new Vec3.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| buffer | <code>ArrayBuffer</code> | The buffer value. |
+| byteOffset | <code>number</code> | The offset value. |
 

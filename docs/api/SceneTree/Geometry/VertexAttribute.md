@@ -20,8 +20,8 @@ const vertexAttribute = new VertexAttribute(this, Float32, 0)
     * [getSplits() ⇒ <code>array</code>](#getSplits)
     * [getSplitCount() ⇒ <code>number</code>](#getSplitCount)
     * [generateSplitValues(splitIndices, splitCount) ⇒ <code>Float32Array</code>](#generateSplitValues)
-    * [toJSON(context, flags) ⇒ <code>object</code>](#toJSON)
-    * [fromJSON(json, context, flags)](#fromJSON)
+    * [toJSON(context) ⇒ <code>object</code>](#toJSON)
+    * [fromJSON(json, context)](#fromJSON)
     * [loadSplitValues(reader)](#loadSplitValues)
 
 <a name="new_VertexAttribute_new"></a>
@@ -140,7 +140,6 @@ The toJSON method encodes this type as a json object for persistence.
 | Param | Type | Description |
 | --- | --- | --- |
 | context | <code>object</code> | The context value. |
-| flags | <code>number</code> | The flags value. |
 
 <a name="VertexAttribute+fromJSON"></a>
 
@@ -153,7 +152,6 @@ The fromJSON method decodes a json object for this type.
 | --- | --- | --- |
 | json | <code>object</code> | The json object this item must decode. |
 | context | <code>object</code> | The context value. |
-| flags | <code>number</code> | The flags value. |
 
 <a name="VertexAttribute+loadSplitValues"></a>
 

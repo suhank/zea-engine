@@ -20,8 +20,8 @@ Class representing a VLH image.
     * [isStream() ⇒ <code>boolean</code>](#isStream)
     * [isLoaded() ⇒ <code>boolean</code>](#isLoaded)
     * [getParams() ⇒ <code>object</code>](#getParams)
-    * [toJSON(context, flags)](#toJSON)
-    * [fromJSON(json, context, flags)](#fromJSON)
+    * [toJSON(context)](#toJSON)
+    * [fromJSON(json, context)](#fromJSON)
     * [readBinary(reader, context)](#readBinary)
 
 <a name="new_VLHImage_new"></a>
@@ -80,7 +80,6 @@ The toJSON method encodes this type as a json object for persistence.
 | Param | Type | Description |
 | --- | --- | --- |
 | context | <code>object</code> | The context value. |
-| flags | <code>number</code> | The flags value. |
 
 <a name="VLHImage+fromJSON"></a>
 
@@ -93,7 +92,6 @@ The fromJSON method decodes a json object for this type.
 | --- | --- | --- |
 | json | <code>object</code> | The json object this item must decode. |
 | context | <code>object</code> | The context value. |
-| flags | <code>number</code> | The flags value. |
 
 <a name="VLHImage+readBinary"></a>
 

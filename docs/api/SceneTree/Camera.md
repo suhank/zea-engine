@@ -26,20 +26,20 @@ translation modifiers are supported, so you can move the camera around.
     * [setFar(value)](#setFar)
     * [getFov() ⇒ <code>number</code>](#getFov)
     * [setFov(value)](#setFov)
-    * [setLensFocalLength(value, mode)](#setLensFocalLength)
+    * [setLensFocalLength(value)](#setLensFocalLength)
     * [getFocalDistance() ⇒ <code>number</code>](#getFocalDistance)
-    * [setFocalDistance(dist, mode)](#setFocalDistance)
+    * [setFocalDistance(dist)](#setFocalDistance)
     * [getIsOrthographic() ⇒ <code>boolean</code>](#getIsOrthographic)
-    * [setIsOrthographic(value, mode)](#setIsOrthographic)
-    * [setPositionAndTarget(position, target, mode)](#setPositionAndTarget)
+    * [setIsOrthographic(value)](#setIsOrthographic)
+    * [setPositionAndTarget(position, target)](#setPositionAndTarget)
     * [getTargetPostion() ⇒ <code>Vec3</code>](#getTargetPostion)
-    * [frameView(viewport, treeItems, mode)](#frameView)
+    * [frameView(viewport, treeItems)](#frameView)
     * [updateProjectionMatrix(mat, aspect)](#updateProjectionMatrix)
 
 <a name="new_Camera_new"></a>
 
 ### new Camera
-Instanciates a camera object, setting default configuration like zoom, target and positioning.
+Instantiates a camera object, setting default configuration like zoom, target and positioning.
 
 
 | Param | Type | Description |
@@ -117,7 +117,6 @@ Setter for the camera lens focal length. Updates `fov` parameter value after a s
 | Param | Type | Description |
 | --- | --- | --- |
 | value | <code>string</code> | The lens focal length value. |
-| mode | <code>number</code> | The mode value. |
 
 <a name="Camera+getFocalDistance"></a>
 
@@ -137,7 +136,6 @@ Sets `focalDistance` parameter value.
 | Param | Type | Description |
 | --- | --- | --- |
 | dist | <code>number</code> | The focal distance value. |
-| mode | <code>number</code> | The mode value. |
 
 <a name="Camera+getIsOrthographic"></a>
 
@@ -156,7 +154,6 @@ Sets `focalDistance` parameter value.
 | Param | Type | Description |
 | --- | --- | --- |
 | value | <code>boolean</code> | The value param. |
-| mode | <code>number</code> | The mode value. |
 
 <a name="Camera+setPositionAndTarget"></a>
 
@@ -173,7 +170,6 @@ although we recommend this one because it also changes focal distance.
 | --- | --- | --- |
 | position | <code>Vec3</code> | The position of the camera. |
 | target | <code>Vec3</code> | The target of the camera. |
-| mode | <code>number</code> | The mode value. |
 
 <a name="Camera+getTargetPostion"></a>
 
@@ -194,7 +190,6 @@ and moves the camera to a point where we can see all of them, preserving paramet
 | --- | --- | --- |
 | viewport | <code>GLBaseViewport</code> | The viewport value. |
 | treeItems | <code>array</code> | The treeItems value. |
-| mode | <code>number</code> | The mode value. |
 
 <a name="Camera+updateProjectionMatrix"></a>
 

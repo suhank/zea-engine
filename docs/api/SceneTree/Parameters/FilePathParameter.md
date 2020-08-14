@@ -12,23 +12,19 @@ Represents a specific type of parameter, that only stores file data values.
 
 * [FilePathParameter ⇐ <code>Parameter</code>](#FilePathParameter)
     * [new FilePathParameter(name, exts)](#new-FilePathParameter)
-    * [setSupportedExts(exts)](#setSupportedExts)
     * [getFilepath() ⇒ <code>string</code>](#getFilepath)
-    * [setFilepath(filePath, mode)](#setFilepath)
+    * [setFilepath(filePath)](#setFilepath)
     * [getFilename() ⇒ <code>string</code>](#getFilename)
     * [getExt() ⇒ <code>string</code>](#getExt)
     * [getStem() ⇒ <code>string</code>](#getStem)
-    * [getFileFolder() ⇒ <code>object</code>](#getFileFolder)
-    * [getFileFolderPath() ⇒ <code>string</code>](#getFileFolderPath)
-    * [getFile() ⇒ <code>object</code>](#getFile)
     * [getFileDesc() ⇒ <code>object</code>](#getFileDesc)
-    * [setUrl(url, name, mode)](#setUrl)
+    * [getFile() ⇒ <code>object</code>](#getFile)
+    * [setUrl(url, name)](#setUrl)
     * [getUrl() ⇒ <code>string</code>](#getUrl)
-    * [setValue(value, mode) ⇒ <code>boolean</code>](#setValue)
-    * [toJSON(context, flags) ⇒ <code>object</code>](#toJSON)
-    * [fromJSON(j, context, flags)](#fromJSON)
-    * [clone(flags)](#clone)
-    * [destroy()](#destroy)
+    * [setValue(value)](#setValue)
+    * [toJSON(context) ⇒ <code>object</code>](#toJSON)
+    * [fromJSON(j, context)](#fromJSON)
+    * [clone()](#clone)
 
 <a name="new_FilePathParameter_new"></a>
 
@@ -39,19 +35,6 @@ Create a file path parameter.
 | Param | Type | Description |
 | --- | --- | --- |
 | name | <code>string</code> | The name of the file path parameter. |
-| exts | <code>string</code> | The exts value. |
-
-<a name="FilePathParameter+setSupportedExts"></a>
-
-### setSupportedExts
-Sets supported extensions, if this supports more than one type of files, separate them with regex or(|).
-
-i.e.: jpg|png|gif
-
-
-
-| Param | Type | Description |
-| --- | --- | --- |
 | exts | <code>string</code> | The exts value. |
 
 <a name="FilePathParameter+getFilepath"></a>
@@ -71,7 +54,6 @@ Resolves resourceId using the specified path and sets its value to the parameter
 | Param | Type | Description |
 | --- | --- | --- |
 | filePath | <code>string</code> | The filePath value. |
-| mode | <code>number</code> | The mode value. |
 
 <a name="FilePathParameter+getFilename"></a>
 
@@ -94,31 +76,17 @@ Returns parameter's file name without extension
 
 
 **Returns**: <code>string</code> - - The return value.  
-<a name="FilePathParameter+getFileFolder"></a>
+<a name="FilePathParameter+getFileDesc"></a>
 
-### getFileFolder
-Returns parent folder for of current parameter file.
-
-
-**Returns**: <code>object</code> - - The return value.  
-<a name="FilePathParameter+getFileFolderPath"></a>
-
-### getFileFolderPath
-Returns parent folder for of current parameter file.
-
-
-**Returns**: <code>string</code> - - The return value.  
-<a name="FilePathParameter+getFile"></a>
-
-### getFile
+### getFileDesc
 Returns file object, which contains the url, resourceId and the name.
 
 
 **Returns**: <code>object</code> - - The return value.  
-<a name="FilePathParameter+getFileDesc"></a>
+<a name="FilePathParameter+getFile"></a>
 
-### getFileDesc
-The getFileDesc method.
+### getFile
+Returns file object, which contains the url, resourceId and the name.
 
 
 **Returns**: <code>object</code> - - The return value.  
@@ -132,8 +100,7 @@ Sets file data.
 | Param | Type | Description |
 | --- | --- | --- |
 | url | <code>string</code> | the url value of the |
-| name | <code>string</code> | - |
-| mode | <code>number</code> | - |
+| name | <code>string</code> | (optional) the name of the file that the Url points to. |
 
 <a name="FilePathParameter+getUrl"></a>
 
@@ -145,15 +112,13 @@ Returns the file url string.
 <a name="FilePathParameter+setValue"></a>
 
 ### setValue
-Sets file parameter value receiving its resource id.
+Sets file parameter value
 
 
-**Returns**: <code>boolean</code> - - The return value.  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | value | <code>string</code> | The value param. |
-| mode | <code>number</code> | The mode value. |
 
 <a name="FilePathParameter+toJSON"></a>
 
@@ -166,7 +131,6 @@ The toJSON method encodes this type as a json object for persistence.
 | Param | Type | Description |
 | --- | --- | --- |
 | context | <code>object</code> | The context value. |
-| flags | <code>number</code> | The flags value. |
 
 <a name="FilePathParameter+fromJSON"></a>
 
@@ -179,7 +143,6 @@ The fromJSON method decodes a json object for this type.
 | --- | --- | --- |
 | j | <code>object</code> | The json object this item must decode. |
 | context | <code>object</code> | The context value. |
-| flags | <code>number</code> | The flags value. |
 
 <a name="FilePathParameter+clone"></a>
 
@@ -189,15 +152,3 @@ copies its values from this parameter and returns it.
 
 
 **Returns**: [<code>FilePathParameter</code>](#FilePathParameter) - - Returns a new cloned file path parameter.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| flags | <code>number</code> | The flags value. |
-
-<a name="FilePathParameter+destroy"></a>
-
-### destroy
-The destroy is called by the system to cause explicit resources cleanup.
-Users should never need to call this method directly.
-
-

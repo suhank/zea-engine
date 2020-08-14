@@ -9,43 +9,47 @@ This matrix class is based on GLM, and is column major.
 
 * [Mat3 ⇐ <code>AttrValue</code>](#Mat3)
     * [new Mat3(m00, m01, m02, m10, m11, m12, m20, m21, m22)](#new-Mat3)
-    * [m00 ⇒ <code>number</code>](#m00)
-    * [m00](#m00)
-    * [m01 ⇒ <code>number</code>](#m01)
-    * [m01](#m01)
-    * [m02 ⇒ <code>number</code>](#m02)
-    * [m02](#m02)
-    * [m10 ⇒ <code>number</code>](#m10)
-    * [m10](#m10)
-    * [m11 ⇒ <code>number</code>](#m11)
-    * [m11](#m11)
-    * [m12 ⇒ <code>number</code>](#m12)
-    * [m12](#m12)
-    * [m20 ⇒ <code>number</code>](#m20)
-    * [m20](#m20)
-    * [m21 ⇒ <code>number</code>](#m21)
-    * [m21](#m21)
-    * [m22 ⇒ <code>number</code>](#m22)
-    * [m22](#m22)
-    * [xAxis ⇒ <code>Vec3</code>](#xAxis)
-    * [xAxis](#xAxis)
-    * [yAxis](#yAxis)
-    * [yAxis](#yAxis)
-    * [zAxis](#zAxis)
-    * [zAxis](#zAxis)
-    * [set(m00, m01, m02, m10, m11, m12, m20, m21, m22)](#set)
-    * [setIdentity()](#setIdentity)
-    * [setFromMat(mat)](#setFromMat)
-    * [setFromDirectionAndUpvector(dir, up)](#setFromDirectionAndUpvector)
-    * [inverse()](#inverse)
-    * [invertInPlace() ⇒ <code>boolean</code>](#invertInPlace)
-    * [transpose()](#transpose)
-    * [transposeInPlace()](#transposeInPlace)
-    * [transformVec3(vec3) ⇒ <code>Vec3</code>](#transformVec3)
-    * [clone()](#clone)
-    * [toJSON() ⇒ <code>object</code>](#toJSON)
-    * [fromJSON(json)](#fromJSON)
-    * [toString() ⇒ <code>string</code>](#toString)
+    * _instance_
+        * [m00 ⇒ <code>number</code>](#m00)
+        * [m00](#m00)
+        * [m01 ⇒ <code>number</code>](#m01)
+        * [m01](#m01)
+        * [m02 ⇒ <code>number</code>](#m02)
+        * [m02](#m02)
+        * [m10 ⇒ <code>number</code>](#m10)
+        * [m10](#m10)
+        * [m11 ⇒ <code>number</code>](#m11)
+        * [m11](#m11)
+        * [m12 ⇒ <code>number</code>](#m12)
+        * [m12](#m12)
+        * [m20 ⇒ <code>number</code>](#m20)
+        * [m20](#m20)
+        * [m21 ⇒ <code>number</code>](#m21)
+        * [m21](#m21)
+        * [m22 ⇒ <code>number</code>](#m22)
+        * [m22](#m22)
+        * [xAxis ⇒ <code>Vec3</code>](#xAxis)
+        * [xAxis](#xAxis)
+        * [yAxis](#yAxis)
+        * [yAxis](#yAxis)
+        * [zAxis](#zAxis)
+        * [zAxis](#zAxis)
+        * [set(m00, m01, m02, m10, m11, m12, m20, m21, m22)](#set)
+        * [setIdentity()](#setIdentity)
+        * [setFromMat(mat)](#setFromMat)
+        * [setFromDirectionAndUpvector(dir, up)](#setFromDirectionAndUpvector)
+        * [inverse()](#inverse)
+        * [invertInPlace() ⇒ <code>boolean</code>](#invertInPlace)
+        * [transpose()](#transpose)
+        * [transposeInPlace()](#transposeInPlace)
+        * [transformVec3(vec3) ⇒ <code>Vec3</code>](#transformVec3)
+        * [clone()](#clone)
+        * [readBinary(reader)](#readBinary)
+        * [toJSON() ⇒ <code>object</code>](#toJSON)
+        * [fromJSON(json)](#fromJSON)
+        * [toString() ⇒ <code>string</code>](#toString)
+    * _static_
+        * [createFromBuffer(buffer, byteOffset)](#createFromBuffer)
 
 <a name="new_Mat3_new"></a>
 
@@ -378,10 +382,21 @@ Clones this Mat3 returning a new instance.
 
 
 **Returns**: [<code>Mat3</code>](#Mat3) - - Returns a new Mat3.  
+<a name="Mat3+readBinary"></a>
+
+### readBinary
+Loads the state of the value from a binary reader.
+
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| reader | <code>BinReader</code> | The reader value. |
+
 <a name="Mat3+toJSON"></a>
 
 ### toJSON
-The toJSON method encodes this type as a json object for persistences.
+The toJSON method encodes this type as a json object for persistence.
 
 
 **Returns**: <code>object</code> - - The json object.  
@@ -403,3 +418,16 @@ Calls `toJSON` method and stringifies it.
 
 
 **Returns**: <code>string</code> - - The return value.  
+<a name="Mat3.createFromBuffer"></a>
+
+### createFromBuffer
+Creates an instance of a `Mat3` using an ArrayBuffer.
+
+
+**Returns**: [<code>Mat3</code>](#Mat3) - - Returns a new Mat3.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| buffer | <code>ArrayBuffer</code> | The buffer value. |
+| byteOffset | <code>number</code> | The offset value. |
+

@@ -19,7 +19,7 @@ Class representing an attribute.
     * [setFloat32Value(index, value)](#setFloat32Value)
     * [getValueRef(index) ⇒ <code>AttrValue</code>](#getValueRef)
     * [setValue(index, value)](#setValue)
-    * [toJSON(context, flags) ⇒ <code>object</code>](#toJSON)
+    * [toJSON(context) ⇒ <code>object</code>](#toJSON)
     * [fromJSON(j)](#fromJSON)
     * [toString() ⇒ <code>string</code>](#toString)
 
@@ -163,7 +163,6 @@ The toJSON method encodes this type as a json object for persistence.
 | Param | Type | Description |
 | --- | --- | --- |
 | context | <code>object</code> | The context value. |
-| flags | <code>number</code> | The flags value. |
 
 <a name="Attribute+fromJSON"></a>
 

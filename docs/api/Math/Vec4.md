@@ -10,46 +10,50 @@ expose getters and setters for the component values.
 
 * [Vec4 ⇐ <code>AttrValue</code>](#Vec4)
     * [new Vec4(x, y, z, t)](#new-Vec4)
-    * [x ⇒ <code>number</code>](#x)
-    * [x](#x)
-    * [y ⇒ <code>number</code>](#y)
-    * [y](#y)
-    * [z](#z)
-    * [z](#z)
-    * [t](#t)
-    * [t](#t)
-    * [xyz ⇒ <code>number</code>](#xyz)
-    * [set(x, y, z, t)](#set)
-    * [setFromOther(other)](#setFromOther)
-    * ~~[.equal(other)](#Vec4+equal) ⇒ <code>boolean</code>~~
-    * [isEqual(other) ⇒ <code>boolean</code>](#isEqual)
-    * ~~[.notEquals(other)](#Vec4+notEquals) ⇒ <code>boolean</code>~~
-    * [notEqual(other) ⇒ <code>boolean</code>](#notEqual)
-    * [approxEqual(other, precision) ⇒ <code>boolean</code>](#approxEqual)
-    * [add(other)](#add)
-    * [addInPlace(other)](#addInPlace)
-    * [subtract(other)](#subtract)
-    * [subtractInPlace(other)](#subtractInPlace)
-    * [multiply(other)](#multiply)
-    * [multiplyInPlace(other)](#multiplyInPlace)
-    * [divide(other)](#divide)
-    * [divideInPlace(other)](#divideInPlace)
-    * [scale(scalar)](#scale)
-    * [scaleInPlace(scalar)](#scaleInPlace)
-    * [length() ⇒ <code>number</code>](#length)
-    * [lengthSquared() ⇒ <code>number</code>](#lengthSquared)
-    * [normalize()](#normalize)
-    * [normalizeInPlace()](#normalizeInPlace)
-    * [dot(other) ⇒ <code>number</code>](#dot)
-    * [cross(other)](#cross)
-    * [angleTo(other) ⇒ <code>number</code>](#angleTo)
-    * [lerp(other, t)](#lerp)
-    * [random(scale)](#random)
-    * [clone()](#clone)
-    * [toVec3() ⇒ <code>Vec3</code>](#toVec3)
-    * [asArray() ⇒ <code>aray</code>](#asArray)
-    * [toJSON() ⇒ <code>object</code>](#toJSON)
-    * [fromJSON(j)](#fromJSON)
+    * _instance_
+        * [x ⇒ <code>number</code>](#x)
+        * [x](#x)
+        * [y ⇒ <code>number</code>](#y)
+        * [y](#y)
+        * [z](#z)
+        * [z](#z)
+        * [t](#t)
+        * [t](#t)
+        * [xyz ⇒ <code>number</code>](#xyz)
+        * [set(x, y, z, t)](#set)
+        * [setFromOther(other)](#setFromOther)
+        * ~~[.equal(other)](#Vec4+equal) ⇒ <code>boolean</code>~~
+        * [isEqual(other) ⇒ <code>boolean</code>](#isEqual)
+        * ~~[.notEquals(other)](#Vec4+notEquals) ⇒ <code>boolean</code>~~
+        * [notEqual(other) ⇒ <code>boolean</code>](#notEqual)
+        * [approxEqual(other, precision) ⇒ <code>boolean</code>](#approxEqual)
+        * [add(other)](#add)
+        * [addInPlace(other)](#addInPlace)
+        * [subtract(other)](#subtract)
+        * [subtractInPlace(other)](#subtractInPlace)
+        * [multiply(other)](#multiply)
+        * [multiplyInPlace(other)](#multiplyInPlace)
+        * [divide(other)](#divide)
+        * [divideInPlace(other)](#divideInPlace)
+        * [scale(scalar)](#scale)
+        * [scaleInPlace(scalar)](#scaleInPlace)
+        * [length() ⇒ <code>number</code>](#length)
+        * [lengthSquared() ⇒ <code>number</code>](#lengthSquared)
+        * [normalize()](#normalize)
+        * [normalizeInPlace()](#normalizeInPlace)
+        * [dot(other) ⇒ <code>number</code>](#dot)
+        * [cross(other)](#cross)
+        * [angleTo(other) ⇒ <code>number</code>](#angleTo)
+        * [lerp(other, t)](#lerp)
+        * [random(scale)](#random)
+        * [clone()](#clone)
+        * [toVec3() ⇒ <code>Vec3</code>](#toVec3)
+        * [asArray() ⇒ <code>aray</code>](#asArray)
+        * [toJSON() ⇒ <code>object</code>](#toJSON)
+        * [fromJSON(j)](#fromJSON)
+        * [readBinary(reader)](#readBinary)
+    * _static_
+        * [createFromBuffer(buffer, byteOffset)](#createFromBuffer)
 
 <a name="new_Vec4_new"></a>
 
@@ -491,4 +495,28 @@ Decodes a JSON object to set the state of this class.
 | Param | Type | Description |
 | --- | --- | --- |
 | j | <code>object</code> | The json object. |
+
+<a name="Vec4+readBinary"></a>
+
+### readBinary
+Loads the state of the value from a binary reader.
+
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| reader | <code>BinReader</code> | The reader value. |
+
+<a name="Vec4.createFromBuffer"></a>
+
+### createFromBuffer
+Creates an instance of a `Vec4` using an ArrayBuffer.
+
+
+**Returns**: [<code>Vec4</code>](#Vec4) - - Returns a new Vec4.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| buffer | <code>ArrayBuffer</code> | The buffer value. |
+| byteOffset | <code>number</code> | The offset value. |
 

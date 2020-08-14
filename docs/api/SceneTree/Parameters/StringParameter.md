@@ -19,7 +19,7 @@ myParameterOwnerItem.addParameter(stringParam)
     * [setMultiLine(multiLine)](#setMultiLine)
     * [getMultiLine() ⇒ <code>boolean</code>](#getMultiLine)
     * [readBinary(reader, context)](#readBinary)
-    * [clone(flags)](#clone)
+    * [clone()](#clone)
 
 <a name="new_StringParameter_new"></a>
 
@@ -70,8 +70,3 @@ from this parameter and returns it.
 
 
 **Returns**: [<code>StringParameter</code>](#StringParameter) - - Returns a new string parameter.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| flags | <code>number</code> | The flags value. |
-

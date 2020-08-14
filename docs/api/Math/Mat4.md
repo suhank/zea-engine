@@ -9,75 +9,79 @@ This matrix class is based on GLM, and is column major.
 
 * [Mat4 ⇐ <code>AttrValue</code>](#Mat4)
     * [new Mat4(m00, m01, m02, m03, m10, m11, m12, m13, m20, m21, m22, m23, m30, m31, m32, m33)](#new-Mat4)
-    * [m00 ⇒ <code>number</code>](#m00)
-    * [m00](#m00)
-    * [m01 ⇒ <code>number</code>](#m01)
-    * [m01](#m01)
-    * [m02 ⇒ <code>number</code>](#m02)
-    * [m02](#m02)
-    * [m03 ⇒ <code>number</code>](#m03)
-    * [m03](#m03)
-    * [m10 ⇒ <code>number</code>](#m10)
-    * [m10](#m10)
-    * [m11 ⇒ <code>number</code>](#m11)
-    * [m11](#m11)
-    * [m12 ⇒ <code>number</code>](#m12)
-    * [m12](#m12)
-    * [m13 ⇒ <code>number</code>](#m13)
-    * [m13](#m13)
-    * [m20 ⇒ <code>number</code>](#m20)
-    * [m20](#m20)
-    * [m21 ⇒ <code>number</code>](#m21)
-    * [m21](#m21)
-    * [m22 ⇒ <code>number</code>](#m22)
-    * [m22](#m22)
-    * [m23 ⇒ <code>number</code>](#m23)
-    * [m23](#m23)
-    * [m30 ⇒ <code>number</code>](#m30)
-    * [m30](#m30)
-    * [m31 ⇒ <code>number</code>](#m31)
-    * [m31](#m31)
-    * [m32 ⇒ <code>number</code>](#m32)
-    * [m32](#m32)
-    * [m33 ⇒ <code>number</code>](#m33)
-    * [m33](#m33)
-    * [xAxis ⇒ <code>Vec3</code>](#xAxis)
-    * [xAxis](#xAxis)
-    * [yAxis ⇒ <code>Vec3</code>](#yAxis)
-    * [yAxis](#yAxis)
-    * [zAxis ⇒ <code>Vec3</code>](#zAxis)
-    * [zAxis](#zAxis)
-    * [translation ⇒ <code>Vec3</code>](#translation)
-    * [translation](#translation)
-    * [set(m00, m01, m02, m03, m10, m11, m12, m13, m20, m21, m22, m23, m30, m31, m32, m33)](#set)
-    * [setIdentity()](#setIdentity)
-    * [setDataArray(float32Array)](#setDataArray)
-    * [setFromMat4(mat4)](#setFromMat4)
-    * [toMat3(mat4) ⇒ <code>Mat3</code>](#toMat3)
-    * [transposeInPlace()](#transposeInPlace)
-    * [transpose()](#transpose)
-    * [inverse()](#inverse)
-    * [invertInPlace() ⇒ <code>boolean</code>](#invertInPlace)
-    * [setInverse(mat4) ⇒ <code>null</code>](#setInverse)
-    * [multiply(other)](#multiply)
-    * [multiplyInPlace(other)](#multiplyInPlace)
-    * [postmultiplyInPlace(other) ⇒ <code>Mat3</code>](#postmultiplyInPlace)
-    * [translateInPlace(v3)](#translateInPlace)
-    * [setLookAt(pos, target, up)](#setLookAt)
-    * [setRotation(axis, rad)](#setRotation)
-    * [setXRotation(rad)](#setXRotation)
-    * [setYRotation(rad)](#setYRotation)
-    * [setZRotation(rad)](#setZRotation)
-    * [transformVec4(vec) ⇒ <code>Vec4</code>](#transformVec4)
-    * [transformVec3(vec) ⇒ <code>Vec3</code>](#transformVec3)
-    * [rotateVec3(vec) ⇒ <code>Vec3</code>](#rotateVec3)
-    * [setPerspectiveMatrix(fovy, aspect, near, far)](#setPerspectiveMatrix)
-    * [setOrthographicMatrix(left, right, bottom, top, near, far)](#setOrthographicMatrix)
-    * [setScale(x, y, z)](#setScale)
-    * [setFromMat3x4Array(m3x4)](#setFromMat3x4Array)
-    * [clone()](#clone)
-    * [toJSON() ⇒ <code>object</code>](#toJSON)
-    * [fromJSON(json)](#fromJSON)
+    * _instance_
+        * [m00 ⇒ <code>number</code>](#m00)
+        * [m00](#m00)
+        * [m01 ⇒ <code>number</code>](#m01)
+        * [m01](#m01)
+        * [m02 ⇒ <code>number</code>](#m02)
+        * [m02](#m02)
+        * [m03 ⇒ <code>number</code>](#m03)
+        * [m03](#m03)
+        * [m10 ⇒ <code>number</code>](#m10)
+        * [m10](#m10)
+        * [m11 ⇒ <code>number</code>](#m11)
+        * [m11](#m11)
+        * [m12 ⇒ <code>number</code>](#m12)
+        * [m12](#m12)
+        * [m13 ⇒ <code>number</code>](#m13)
+        * [m13](#m13)
+        * [m20 ⇒ <code>number</code>](#m20)
+        * [m20](#m20)
+        * [m21 ⇒ <code>number</code>](#m21)
+        * [m21](#m21)
+        * [m22 ⇒ <code>number</code>](#m22)
+        * [m22](#m22)
+        * [m23 ⇒ <code>number</code>](#m23)
+        * [m23](#m23)
+        * [m30 ⇒ <code>number</code>](#m30)
+        * [m30](#m30)
+        * [m31 ⇒ <code>number</code>](#m31)
+        * [m31](#m31)
+        * [m32 ⇒ <code>number</code>](#m32)
+        * [m32](#m32)
+        * [m33 ⇒ <code>number</code>](#m33)
+        * [m33](#m33)
+        * [xAxis ⇒ <code>Vec3</code>](#xAxis)
+        * [xAxis](#xAxis)
+        * [yAxis ⇒ <code>Vec3</code>](#yAxis)
+        * [yAxis](#yAxis)
+        * [zAxis ⇒ <code>Vec3</code>](#zAxis)
+        * [zAxis](#zAxis)
+        * [translation ⇒ <code>Vec3</code>](#translation)
+        * [translation](#translation)
+        * [set(m00, m01, m02, m03, m10, m11, m12, m13, m20, m21, m22, m23, m30, m31, m32, m33)](#set)
+        * [setIdentity()](#setIdentity)
+        * [setDataArray(float32Array)](#setDataArray)
+        * [setFromMat4(mat4)](#setFromMat4)
+        * [toMat3(mat4) ⇒ <code>Mat3</code>](#toMat3)
+        * [transposeInPlace()](#transposeInPlace)
+        * [transpose()](#transpose)
+        * [inverse()](#inverse)
+        * [invertInPlace() ⇒ <code>boolean</code>](#invertInPlace)
+        * [setInverse(mat4) ⇒ <code>null</code>](#setInverse)
+        * [multiply(other)](#multiply)
+        * [multiplyInPlace(other)](#multiplyInPlace)
+        * [postmultiplyInPlace(other) ⇒ <code>Mat3</code>](#postmultiplyInPlace)
+        * [translateInPlace(v3)](#translateInPlace)
+        * [setLookAt(pos, target, up)](#setLookAt)
+        * [setRotation(axis, rad)](#setRotation)
+        * [setXRotation(rad)](#setXRotation)
+        * [setYRotation(rad)](#setYRotation)
+        * [setZRotation(rad)](#setZRotation)
+        * [transformVec4(vec) ⇒ <code>Vec4</code>](#transformVec4)
+        * [transformVec3(vec) ⇒ <code>Vec3</code>](#transformVec3)
+        * [rotateVec3(vec) ⇒ <code>Vec3</code>](#rotateVec3)
+        * [setPerspectiveMatrix(fovy, aspect, near, far)](#setPerspectiveMatrix)
+        * [setOrthographicMatrix(left, right, bottom, top, near, far)](#setOrthographicMatrix)
+        * [setScale(x, y, z)](#setScale)
+        * [setFromMat3x4Array(m3x4)](#setFromMat3x4Array)
+        * [clone()](#clone)
+        * [toJSON() ⇒ <code>object</code>](#toJSON)
+        * [fromJSON(json)](#fromJSON)
+        * [readBinary(reader)](#readBinary)
+    * _static_
+        * [createFromBuffer(buffer, byteOffset)](#createFromBuffer)
 
 <a name="new_Mat4_new"></a>
 
@@ -798,7 +802,7 @@ Clones this Mat4 returning a new instance.
 <a name="Mat4+toJSON"></a>
 
 ### toJSON
-The toJSON method encodes this type as a json object for persistences.
+The toJSON method encodes this type as a json object for persistence.
 
 
 **Returns**: <code>object</code> - - The json object.  
@@ -812,4 +816,28 @@ The fromJSON method decodes a json object for this type.
 | Param | Type | Description |
 | --- | --- | --- |
 | json | <code>object</code> | The json param. |
+
+<a name="Mat4+readBinary"></a>
+
+### readBinary
+Loads the state of the value from a binary reader.
+
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| reader | <code>BinReader</code> | The reader value. |
+
+<a name="Mat4.createFromBuffer"></a>
+
+### createFromBuffer
+Creates an instance of a `Mat4` using an ArrayBuffer.
+
+
+**Returns**: [<code>Mat4</code>](#Mat4) - - Returns a new Mat4.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| buffer | <code>ArrayBuffer</code> | The buffer value. |
+| byteOffset | <code>number</code> | The offset value. |
 

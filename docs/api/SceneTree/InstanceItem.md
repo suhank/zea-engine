@@ -11,8 +11,8 @@ TreeItem type of class designed for making duplications of parts of the tree.
     * [setSrcTree(treeItem)](#setSrcTree)
     * [getSrcTree() ⇒ <code>TreeItem</code>](#getSrcTree)
     * [readBinary(reader, context)](#readBinary)
-    * [toJSON(context, flags) ⇒ <code>object</code>](#toJSON)
-    * [fromJSON(j, context, flags, onDone)](#fromJSON)
+    * [toJSON(context) ⇒ <code>object</code>](#toJSON)
+    * [fromJSON(j, context, onDone)](#fromJSON)
 
 <a name="new_InstanceItem_new"></a>
 
@@ -57,15 +57,14 @@ Sets state of current Item(Including cloned item) using a binary reader object.
 <a name="InstanceItem+toJSON"></a>
 
 ### toJSON
-The toJSON method encodes this type as a json object for persistences.
+The toJSON method encodes this type as a json object for persistence.
 
 
 **Returns**: <code>object</code> - - Returns the json object.  
 
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| context | <code>object</code> |  | The context value. |
-| flags | <code>number</code> | <code>0</code> | The flags value. |
+| Param | Type | Description |
+| --- | --- | --- |
+| context | <code>object</code> | The context value. |
 
 <a name="InstanceItem+fromJSON"></a>
 
@@ -78,10 +77,9 @@ The fromJSON method decodes a json object for this type.
 - [ ] Needs to be implemented.
 
 
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| j | <code>object</code> |  | The json object this item must decode. |
-| context | <code>object</code> |  | The context value. |
-| flags | <code>number</code> | <code>0</code> | The flags value. |
-| onDone | <code>function</code> |  | The onDone value. |
+| Param | Type | Description |
+| --- | --- | --- |
+| j | <code>object</code> | The json object this item must decode. |
+| context | <code>object</code> | The context value. |
+| onDone | <code>function</code> | The onDone value. |
 

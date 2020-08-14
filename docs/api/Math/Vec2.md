@@ -11,44 +11,48 @@ expose getters and setters for the component values.
 
 * [Vec2 ⇐ <code>AttrValue</code>](#Vec2)
     * [new Vec2(x, y)](#new-Vec2)
-    * [x ⇒ <code>number</code>](#x)
-    * [x](#x)
-    * [y ⇒ <code>number</code>](#y)
-    * [y](#y)
-    * [set(x, y)](#set)
-    * [setFromOther(other)](#setFromOther)
-    * ~~[.equal(other)](#Vec2+equal) ⇒ <code>boolean</code>~~
-    * [isEqual(other) ⇒ <code>boolean</code>](#isEqual)
-    * ~~[.notEquals(other)](#Vec2+notEquals) ⇒ <code>boolean</code>~~
-    * [notEqual(other) ⇒ <code>boolean</code>](#notEqual)
-    * [approxEqual(other, precision) ⇒ <code>boolean</code>](#approxEqual)
-    * [add(other)](#add)
-    * [addInPlace(other)](#addInPlace)
-    * [subtract(other)](#subtract)
-    * [subtractInPlace(other)](#subtractInPlace)
-    * [scale(scalar)](#scale)
-    * [scaleInPlace(scalar)](#scaleInPlace)
-    * [invert()](#invert)
-    * [invertInPlace()](#invertInPlace)
-    * [multiply(other)](#multiply)
-    * [multiplyInPlace(other)](#multiplyInPlace)
-    * [lengthSquared() ⇒ <code>number</code>](#lengthSquared)
-    * [length() ⇒ <code>number</code>](#length)
-    * [distanceTo(other) ⇒ <code>number</code>](#distanceTo)
-    * [normalize()](#normalize)
-    * [normalizeInPlace()](#normalizeInPlace)
-    * [dot(other) ⇒ <code>number</code>](#dot)
-    * [cross(other) ⇒ <code>number</code>](#cross)
-    * [angleTo(other) ⇒ <code>number</code>](#angleTo)
-    * [signedAngleTo(other) ⇒ <code>number</code>](#signedAngleTo)
-    * [rotate(angle)](#rotate)
-    * [lerp(other, t)](#lerp)
-    * [setRandomDir(scale)](#setRandomDir)
-    * [setRandom(scale)](#setRandom)
-    * [clone()](#clone)
-    * [asArray() ⇒ <code>array</code>](#asArray)
-    * [toJSON() ⇒ <code>object</code>](#toJSON)
-    * [fromJSON(j)](#fromJSON)
+    * _instance_
+        * [x ⇒ <code>number</code>](#x)
+        * [x](#x)
+        * [y ⇒ <code>number</code>](#y)
+        * [y](#y)
+        * [set(x, y)](#set)
+        * [setFromOther(other)](#setFromOther)
+        * ~~[.equal(other)](#Vec2+equal) ⇒ <code>boolean</code>~~
+        * [isEqual(other) ⇒ <code>boolean</code>](#isEqual)
+        * ~~[.notEquals(other)](#Vec2+notEquals) ⇒ <code>boolean</code>~~
+        * [notEqual(other) ⇒ <code>boolean</code>](#notEqual)
+        * [approxEqual(other, precision) ⇒ <code>boolean</code>](#approxEqual)
+        * [add(other)](#add)
+        * [addInPlace(other)](#addInPlace)
+        * [subtract(other)](#subtract)
+        * [subtractInPlace(other)](#subtractInPlace)
+        * [scale(scalar)](#scale)
+        * [scaleInPlace(scalar)](#scaleInPlace)
+        * [invert()](#invert)
+        * [invertInPlace()](#invertInPlace)
+        * [multiply(other)](#multiply)
+        * [multiplyInPlace(other)](#multiplyInPlace)
+        * [lengthSquared() ⇒ <code>number</code>](#lengthSquared)
+        * [length() ⇒ <code>number</code>](#length)
+        * [distanceTo(other) ⇒ <code>number</code>](#distanceTo)
+        * [normalize()](#normalize)
+        * [normalizeInPlace()](#normalizeInPlace)
+        * [dot(other) ⇒ <code>number</code>](#dot)
+        * [cross(other) ⇒ <code>number</code>](#cross)
+        * [angleTo(other) ⇒ <code>number</code>](#angleTo)
+        * [signedAngleTo(other) ⇒ <code>number</code>](#signedAngleTo)
+        * [rotate(angle)](#rotate)
+        * [lerp(other, t)](#lerp)
+        * [setRandomDir(scale)](#setRandomDir)
+        * [setRandom(scale)](#setRandom)
+        * [clone()](#clone)
+        * [asArray() ⇒ <code>array</code>](#asArray)
+        * [toJSON() ⇒ <code>object</code>](#toJSON)
+        * [fromJSON(j)](#fromJSON)
+        * [readBinary(reader)](#readBinary)
+    * _static_
+        * [createFromBuffer(buffer, byteOffset)](#createFromBuffer)
 
 <a name="new_Vec2_new"></a>
 
@@ -505,4 +509,28 @@ Decodes a JSON object to set the state of this class.
 | Param | Type | Description |
 | --- | --- | --- |
 | j | <code>object</code> | The json object. |
+
+<a name="Vec2+readBinary"></a>
+
+### readBinary
+Loads the state of the value from a binary reader.
+
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| reader | <code>BinReader</code> | The reader value. |
+
+<a name="Vec2.createFromBuffer"></a>
+
+### createFromBuffer
+Creates an instance of a `Vec2` using an ArrayBuffer.
+
+
+**Returns**: [<code>Vec2</code>](#Vec2) - - Returns a new Vec2.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| buffer | <code>ArrayBuffer</code> | The buffer value. |
+| byteOffset | <code>number</code> | The offset value. |
 

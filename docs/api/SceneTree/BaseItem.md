@@ -14,7 +14,7 @@ Base class for Items in the scene. It can be parameterized and can emit events.
     * [new BaseItem(name)](#new-BaseItem)
     * _instance_
         * [getName() ⇒ <code>string</code>](#getName)
-        * [setName(name, mode)](#setName)
+        * [setName(name)](#setName)
         * [getPath() ⇒ <code>array</code>](#getPath)
         * [resolvePath(path, index) \| <code>Parameter</code>](#resolvePath)
         * [getOwner() ⇒ <code>object</code>](#getOwner)
@@ -28,11 +28,11 @@ Base class for Items in the scene. It can be parameterized and can emit events.
         * [hasMetadata(key) ⇒ <code>boolean</code>](#hasMetadata)
         * [setMetadata(key, metaData)](#setMetadata)
         * [deleteMetadata(key)](#deleteMetadata)
-        * [toJSON(context, flags) ⇒ <code>object</code>](#toJSON)
-        * [fromJSON(j, context, flags)](#fromJSON)
+        * [toJSON(context) ⇒ <code>object</code>](#toJSON)
+        * [fromJSON(j, context)](#fromJSON)
         * [readBinary(reader, context)](#readBinary)
-        * [clone(flags)](#clone)
-        * [copyFrom(src, flags)](#copyFrom)
+        * [clone()](#clone)
+        * [copyFrom(src)](#copyFrom)
         * [destroy()](#destroy)
     * _static_
         * [getNumBaseItems() ⇒ <code>number</code>](#getNumBaseItems)
@@ -65,7 +65,6 @@ Sets the name of the base item(Updates path).
 | Param | Type | Description |
 | --- | --- | --- |
 | name | <code>string</code> | The base item name. |
-| mode | <code>number</code> | The mode value |
 
 <a name="BaseItem+getPath"></a>
 
@@ -84,10 +83,10 @@ end of the path.
 
 **Returns**: [<code>BaseItem</code>](#BaseItem) \| <code>Parameter</code> - - The return value.  
 
-| Param | Type | Description |
-| --- | --- | --- |
-| path | <code>array</code> | The path value. |
-| index | <code>number</code> | The index value. |
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| path | <code>array</code> |  | The path value. |
+| index | <code>number</code> | <code>0</code> | The index value. |
 
 <a name="BaseItem+getOwner"></a>
 
@@ -214,7 +213,6 @@ Encodes the current object as a json object.
 | Param | Type | Description |
 | --- | --- | --- |
 | context | <code>object</code> | The context value. |
-| flags | <code>number</code> | The flags value. |
 
 <a name="BaseItem+fromJSON"></a>
 
@@ -227,7 +225,6 @@ Decodes a json object for this type.
 | --- | --- | --- |
 | j | <code>object</code> | The json object this item must decode. |
 | context | <code>object</code> | The context value. |
-| flags | <code>number</code> | The flags value. |
 
 <a name="BaseItem+readBinary"></a>
 
@@ -244,15 +241,10 @@ Sets state of current Item(Including parameters) using a binary reader object.
 <a name="BaseItem+clone"></a>
 
 ### clone
-Clones this bse item and returns a new base item.
+Clones this base item and returns a new base item.
 <br>
 **Note:** Each class should implement clone to be clonable.
 
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| flags | <code>number</code> | The flags value. |
 
 <a name="BaseItem+copyFrom"></a>
 
@@ -270,7 +262,6 @@ data from the source object.
 | Param | Type | Description |
 | --- | --- | --- |
 | src | [<code>BaseItem</code>](#BaseItem) | The BaseItem to copy from. |
-| flags | <code>number</code> | The flags value. |
 
 <a name="BaseItem+destroy"></a>
 

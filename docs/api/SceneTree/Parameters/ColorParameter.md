@@ -17,7 +17,7 @@ myParameterOwnerItem.addParameter(colorParam)
 * [ColorParameter ⇐ <code>Parameter</code>](#ColorParameter)
     * [new ColorParameter(name, value)](#new-ColorParameter)
     * [readBinary(reader, context)](#readBinary)
-    * [clone(flags)](#clone)
+    * [clone()](#clone)
 
 <a name="new_ColorParameter_new"></a>
 
@@ -50,8 +50,3 @@ copies its values from this parameter and returns it.
 
 
 **Returns**: [<code>ColorParameter</code>](#ColorParameter) - - Returns a new cloned color parameter.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| flags | <code>number</code> | The flags value. |
-

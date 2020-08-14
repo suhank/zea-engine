@@ -14,8 +14,8 @@ Represents a TreeItem with rendering and material capabilities.
     * [getMaterialLibrary() ⇒ <code>MaterialLibrary</code>](#getMaterialLibrary)
     * [getUnitsConversion() ⇒ <code>number</code>](#getUnitsConversion)
     * [readBinary(reader, context)](#readBinary)
-    * [toJSON(context, flags) ⇒ <code>object</code>](#toJSON)
-    * [fromJSON(j, context, flags, onDone)](#fromJSON)
+    * [toJSON(context) ⇒ <code>object</code>](#toJSON)
+    * [fromJSON(j, context, onDone)](#fromJSON)
 
 <a name="new_AssetItem_new"></a>
 
@@ -77,15 +77,14 @@ The readBinary method.
 <a name="AssetItem+toJSON"></a>
 
 ### toJSON
-The toJSON method encodes this type as a json object for persistences.
+The toJSON method encodes this type as a json object for persistence.
 
 
 **Returns**: <code>object</code> - - Returns the json object.  
 
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| context | <code>object</code> |  | The context value. |
-| flags | <code>number</code> | <code>0</code> | The flags value. |
+| Param | Type | Description |
+| --- | --- | --- |
+| context | <code>object</code> | The context value. |
 
 <a name="AssetItem+fromJSON"></a>
 
@@ -94,10 +93,9 @@ The fromJSON method decodes a json object for this type.
 
 
 
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| j | <code>object</code> |  | The json object this item must decode. |
-| context | <code>object</code> |  | The context value. |
-| flags | <code>number</code> | <code>0</code> | The flags value. |
-| onDone | <code>function</code> |  | Callback function executed when everything is done. |
+| Param | Type | Description |
+| --- | --- | --- |
+| j | <code>object</code> | The json object this item must decode. |
+| context | <code>object</code> | The context value. |
+| onDone | <code>function</code> | Callback function executed when everything is done. |
 

@@ -27,9 +27,9 @@ myParameterOwnerItem.addParameter(listParam)
     * [addElement(elem) ⇒ <code>string</code> \| <code>Parameter</code>](#addElement)
     * [removeElement(index)](#removeElement)
     * [insertElement(index, elem)](#insertElement)
-    * [toJSON(context, flags) ⇒ <code>object</code>](#toJSON)
-    * [fromJSON(j, context, flags)](#fromJSON)
-    * [clone(flags)](#clone)
+    * [toJSON(context) ⇒ <code>object</code>](#toJSON)
+    * [fromJSON(j, context)](#fromJSON)
+    * [clone()](#clone)
     * [destroy()](#destroy)
 
 <a name="new_ListParameter_new"></a>
@@ -120,7 +120,6 @@ The toJSON method encodes this type as a json object for persistence.
 | Param | Type | Description |
 | --- | --- | --- |
 | context | <code>object</code> | The context value. |
-| flags | <code>number</code> | The flags value. |
 
 <a name="ListParameter+fromJSON"></a>
 
@@ -133,7 +132,6 @@ The fromJSON method decodes a json object for this type.
 | --- | --- | --- |
 | j | <code>object</code> | The json object this item must decode. |
 | context | <code>object</code> | The context value. |
-| flags | <code>number</code> | The flags value. |
 
 <a name="ListParameter+clone"></a>
 
@@ -143,11 +141,6 @@ from this parameter and returns it.
 
 
 **Returns**: [<code>ListParameter</code>](#ListParameter) - - Returns a new list parameter.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| flags | <code>number</code> | The flags value. |
-
 <a name="ListParameter+destroy"></a>
 
 ### destroy

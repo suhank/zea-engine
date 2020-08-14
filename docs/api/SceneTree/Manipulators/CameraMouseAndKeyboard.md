@@ -20,7 +20,7 @@ const manipulator = new CameraMouseAndKeyboard()
 
 * [CameraMouseAndKeyboard ⇐ <code>ParameterOwner</code>](#CameraMouseAndKeyboard)
     * [new CameraMouseAndKeyboard(name)](#new-CameraMouseAndKeyboard)
-    * [setDefaultManipulationMode(mode)](#setDefaultManipulationMode)
+    * [setDefaultManipulationMode(manipulationMode)](#setDefaultManipulationMode)
     * [look(event, dragVec)](#look)
     * [orbit(event, dragVec)](#orbit)
     * [pan(event, dragVec)](#pan)
@@ -57,7 +57,7 @@ Sets default manipulation mode.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| mode | <code>string</code> | The mode value. |
+| manipulationMode | <code>string</code> | The manipulation mode value. Can be 'orbit', or 'look' |
 
 <a name="CameraMouseAndKeyboard+look"></a>
 

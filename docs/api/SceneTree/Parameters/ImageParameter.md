@@ -18,9 +18,9 @@ myParameterOwnerItem.addParameter(imageParam)
 
 * [ImageParameter ⇐ <code>Parameter</code>](#ImageParameter)
     * [new ImageParameter(name, value)](#new-ImageParameter)
-    * [toJSON(context, flags) ⇒ <code>object</code>](#toJSON)
-    * [fromJSON(j, context, flags) ⇒ <code>object</code>](#fromJSON)
-    * [clone(flags)](#clone)
+    * [toJSON(context) ⇒ <code>object</code>](#toJSON)
+    * [fromJSON(j, context) ⇒ <code>object</code>](#fromJSON)
+    * [clone()](#clone)
 
 <a name="new_ImageParameter_new"></a>
 
@@ -44,7 +44,6 @@ The toJSON method encodes this type as a json object for persistence.
 | Param | Type | Description |
 | --- | --- | --- |
 | context | <code>object</code> | The context value. |
-| flags | <code>number</code> | The flags value. |
 
 <a name="ImageParameter+fromJSON"></a>
 
@@ -58,7 +57,6 @@ The fromJSON method decodes a json object for this type.
 | --- | --- | --- |
 | j | <code>object</code> | The json object this item must decode. |
 | context | <code>object</code> | The context value. |
-| flags | <code>number</code> | The flags value. |
 
 <a name="ImageParameter+clone"></a>
 
@@ -68,8 +66,3 @@ copies its values from this parameter and returns it.
 
 
 **Returns**: [<code>ImageParameter</code>](#ImageParameter) - - Returns a new cloned image parameter.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| flags | <code>number</code> | The flags value. |
-

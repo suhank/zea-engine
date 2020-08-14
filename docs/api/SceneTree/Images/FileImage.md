@@ -20,12 +20,11 @@ Class representing a file image.
 * [FileImage ⇐ <code>BaseImage</code>](#FileImage)
     * [new FileImage(name, filePath, params)](#new-FileImage)
     * _instance_
-        * [getFilepath() ⇒ <code>any</code>](#getFilepath)
         * [isStream() ⇒ <code>boolean</code>](#isStream)
         * [isLoaded() ⇒ <code>any</code>](#isLoaded)
         * [getParams() ⇒ <code>any</code>](#getParams)
-        * [toJSON(context, flags)](#toJSON)
-        * [fromJSON(json, context, flags)](#fromJSON)
+        * [toJSON(context)](#toJSON)
+        * [fromJSON(json, context)](#fromJSON)
         * [readBinary(reader, context)](#readBinary)
     * _static_
         * [registerLoader(exts, loaderClass)](#registerLoader)
@@ -43,13 +42,6 @@ Create a file image.
 | filePath | <code>string</code> | The filePath value. |
 | params | <code>object</code> | The params value. |
 
-<a name="FileImage+getFilepath"></a>
-
-### getFilepath
-The getFilepath method.
-
-
-**Returns**: <code>any</code> - - The return value.  
 <a name="FileImage+isStream"></a>
 
 ### isStream
@@ -74,14 +66,13 @@ The getParams method.
 <a name="FileImage+toJSON"></a>
 
 ### toJSON
-The toJSON method encodes this type as a json object for persistences.
+The toJSON method encodes this type as a json object for persistence.
 
 
 
 | Param | Type | Description |
 | --- | --- | --- |
 | context | <code>object</code> | The context value. |
-| flags | <code>number</code> | The flags value. |
 
 <a name="FileImage+fromJSON"></a>
 
@@ -94,7 +85,6 @@ The fromJSON method decodes a json object for this type.
 | --- | --- | --- |
 | json | <code>object</code> | The json object this item must decode. |
 | context | <code>object</code> | The context value. |
-| flags | <code>number</code> | The flags value. |
 
 <a name="FileImage+readBinary"></a>
 
@@ -143,12 +133,11 @@ Class representing a 2D file image.
 
 * [FileImage2D](#FileImage2D)
     * [new FileImage2D(filePath, params)](#new-FileImage2D)
-    * [getFilepath() ⇒ <code>any</code>](#getFilepath)
     * [isStream() ⇒ <code>boolean</code>](#isStream)
     * [isLoaded() ⇒ <code>any</code>](#isLoaded)
     * [getParams() ⇒ <code>any</code>](#getParams)
-    * [toJSON(context, flags)](#toJSON)
-    * [fromJSON(json, context, flags)](#fromJSON)
+    * [toJSON(context)](#toJSON)
+    * [fromJSON(json, context)](#fromJSON)
     * [readBinary(reader, context)](#readBinary)
 
 <a name="new_FileImage2D_new"></a>
@@ -162,14 +151,6 @@ Create a file image 2D.
 | filePath | <code>any</code> | The filePath value. |
 | params | <code>any</code> | The params value. |
 
-<a name="FileImage+getFilepath"></a>
-
-### getFilepath
-The getFilepath method.
-
-
-**Overrides**: [<code>getFilepath</code>](#FileImage+getFilepath)  
-**Returns**: <code>any</code> - - The return value.  
 <a name="FileImage+isStream"></a>
 
 ### isStream
@@ -197,7 +178,7 @@ The getParams method.
 <a name="FileImage+toJSON"></a>
 
 ### toJSON
-The toJSON method encodes this type as a json object for persistences.
+The toJSON method encodes this type as a json object for persistence.
 
 
 **Overrides**: [<code>toJSON</code>](#FileImage+toJSON)  
@@ -205,7 +186,6 @@ The toJSON method encodes this type as a json object for persistences.
 | Param | Type | Description |
 | --- | --- | --- |
 | context | <code>object</code> | The context value. |
-| flags | <code>number</code> | The flags value. |
 
 <a name="FileImage+fromJSON"></a>
 
@@ -219,7 +199,6 @@ The fromJSON method decodes a json object for this type.
 | --- | --- | --- |
 | json | <code>object</code> | The json object this item must decode. |
 | context | <code>object</code> | The context value. |
-| flags | <code>number</code> | The flags value. |
 
 <a name="FileImage+readBinary"></a>
 

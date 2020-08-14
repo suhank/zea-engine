@@ -22,10 +22,10 @@ myParameterOwnerItem.addParameter(materialParam)
 
 * [MaterialParameter ⇐ <code>Parameter</code>](#MaterialParameter)
     * [new MaterialParameter(name, value)](#new-MaterialParameter)
-    * [setValue(material, mode)](#setValue)
-    * [toJSON(context, flags) ⇒ <code>object</code>](#toJSON)
-    * [fromJSON(j, context, flags)](#fromJSON)
-    * [clone(flags)](#clone)
+    * [setValue(material)](#setValue)
+    * [toJSON(context) ⇒ <code>object</code>](#toJSON)
+    * [fromJSON(j, context)](#fromJSON)
+    * [clone()](#clone)
     * [destroy()](#destroy)
 
 <a name="new_MaterialParameter_new"></a>
@@ -49,7 +49,6 @@ Sets `Material` value of the parameter.
 | Param | Type | Description |
 | --- | --- | --- |
 | material | <code>Material</code> | The material param. |
-| mode | <code>number</code> | The mode param. |
 
 <a name="MaterialParameter+toJSON"></a>
 
@@ -62,7 +61,6 @@ The toJSON method encodes this type as a json object for persistence.
 | Param | Type | Description |
 | --- | --- | --- |
 | context | <code>object</code> | The context value. |
-| flags | <code>number</code> | The flags value. |
 
 <a name="MaterialParameter+fromJSON"></a>
 
@@ -75,7 +73,6 @@ The fromJSON method decodes a json object for this type.
 | --- | --- | --- |
 | j | <code>object</code> | The json object this item must decode. |
 | context | <code>object</code> | The context value. |
-| flags | <code>number</code> | The flags value. |
 
 <a name="MaterialParameter+clone"></a>
 
@@ -85,11 +82,6 @@ from this parameter and returns it.
 
 
 **Returns**: [<code>MaterialParameter</code>](#MaterialParameter) - - Returns a new material parameter.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| flags | <code>number</code> | The flags value. |
-
 <a name="MaterialParameter+destroy"></a>
 
 ### destroy

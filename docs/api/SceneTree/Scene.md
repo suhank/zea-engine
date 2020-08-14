@@ -12,9 +12,8 @@ Class representing the environment where all the displayed assets live.
     * [getResourceLoader() ⇒ <code>ResourceLoader</code>](#getResourceLoader)
     * ~~[.setEnvMap(envMap)](#Scene+setEnvMap)~~
     * ~~[.addAsset(asset)](#Scene+addAsset)~~
-    * [setupGrid(gridSize, resolution, gridColor) ⇒ <code>TreeItem</code>](#setupGrid)
-    * [loadCommonAssetResource(resourceId) ⇒ <code>VLAAsset</code>](#loadCommonAssetResource)
-    * [toJSON(context, flags) ⇒ <code>object</code>](#toJSON)
+    * [setupGrid(gridSize, resolution, gridColor) ⇒ <code>GridTreeItem</code>](#setupGrid)
+    * [toJSON(context) ⇒ <code>object</code>](#toJSON)
     * [fromJSON(json, context)](#fromJSON)
 
 <a name="new_Scene_new"></a>
@@ -77,10 +76,14 @@ Adds a child item to the scene root item.
 <a name="Scene+setupGrid"></a>
 
 ### setupGrid
-Sets up and displays the scene grid. Under the hood it is just another TreeItem with Geometry Items for the lines.
+Sets up and displays the scene grid of a given size and resolution. The Grid is oriented on the XY plane
+and highlights the X and Y axes with Red and Green lines. Grids are useful in displaying scene scale and coordinate system.
+The Grid geometry does not return a bounding box and so does not effect the bounding of the scene.
+The GridTreeItem display a grid of a given size and resolution. The Grid is oriented on the XY plane
+and highlights the X and Y axes with Red and Green lines.
 
 
-**Returns**: <code>TreeItem</code> - - The return value.  
+**Returns**: <code>GridTreeItem</code> - - The return value.  
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -88,30 +91,17 @@ Sets up and displays the scene grid. Under the hood it is just another TreeItem 
 | resolution | <code>number</code> | <code>50</code> | The resolution of the grid. |
 | gridColor | <code>Color</code> |  | The color of the grid. |
 
-<a name="Scene+loadCommonAssetResource"></a>
-
-### loadCommonAssetResource
-Loads and return a file resource using the specified path.
-
-
-**Returns**: <code>VLAAsset</code> - - The return value.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| resourceId | <code>string</code> | The resourceId value. |
-
 <a name="Scene+toJSON"></a>
 
 ### toJSON
-The toJSON method encodes this type as a json object for persistences.
+The toJSON method encodes this type as a json object for persistence.
 
 
 **Returns**: <code>object</code> - - Returns the json object.  
 
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| context | <code>object</code> |  | The context value. |
-| flags | <code>number</code> | <code>0</code> | The flags value. |
+| Param | Type | Description |
+| --- | --- | --- |
+| context | <code>object</code> | The context value. |
 
 <a name="Scene+fromJSON"></a>
 

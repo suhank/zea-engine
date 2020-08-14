@@ -22,11 +22,12 @@ const lines = new Lines()
     * [getIndices() ⇒ <code>Uint32Array</code>](#getIndices)
     * [getNumSegments() ⇒ <code>number</code>](#getNumSegments)
     * [setNumSegments(numOfSegments)](#setNumSegments)
+    * [setSegmentVertexIndices(index, p0, p1)](#setSegmentVertexIndices)
     * [setSegment(index, p0, p1)](#setSegment)
     * [genBuffers() ⇒ <code>object</code>](#genBuffers)
     * [readBinary(reader, context)](#readBinary)
-    * [toJSON(context, flags) ⇒ <code>object</code>](#toJSON)
-    * [fromJSON(j, context, flags)](#fromJSON)
+    * [toJSON(context) ⇒ <code>object</code>](#toJSON)
+    * [fromJSON(j, context)](#fromJSON)
 
 <a name="new_Lines_new"></a>
 
@@ -39,7 +40,7 @@ Create lines.
 Returns the specified indices(Vertex connectors)
 
 
-**Returns**: <code>Uint32Array</code> - - The return value.  
+**Returns**: <code>Uint32Array</code> - - The indices index array.  
 <a name="Lines+getNumSegments"></a>
 
 ### getNumSegments
@@ -58,6 +59,19 @@ Sets the number of line segments in the geometry.<br>
 | Param | Type | Description |
 | --- | --- | --- |
 | numOfSegments | <code>number</code> | The count value. |
+
+<a name="Lines+setSegmentVertexIndices"></a>
+
+### setSegmentVertexIndices
+Sets segment values in the specified index.
+
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| index | <code>number</code> | The index value. |
+| p0 | <code>number</code> | The p0 value. |
+| p1 | <code>number</code> | The p1 value. |
 
 <a name="Lines+setSegment"></a>
 
@@ -102,7 +116,6 @@ The toJSON method encodes this type as a json object for persistence.
 | Param | Type | Description |
 | --- | --- | --- |
 | context | <code>object</code> | The context value. |
-| flags | <code>number</code> | The flags value. |
 
 <a name="Lines+fromJSON"></a>
 
@@ -115,5 +128,4 @@ The fromJSON method decodes a json object for this type.
 | --- | --- | --- |
 | j | <code>object</code> | The json object this item must decode. |
 | context | <code>object</code> | The context value. |
-| flags | <code>number</code> | The flags value. |
 

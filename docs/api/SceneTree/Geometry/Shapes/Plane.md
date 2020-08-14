@@ -13,10 +13,6 @@ const plane = new Plane(2.0, 1.5, 10, 10)
 * **DetailX(`NumberParameter`):** Number of divisions along `X`axis.
 * **DetailY(`NumberParameter`):** Number of divisions along `Y`axis.
 
-**Events**
-* **geomDataTopologyChanged:** Triggered
-* **geomDataChanged:** Triggered when `X` and `Y`values change.
-
 
 **Extends**: <code>Mesh</code>  
 <a name="new_Plane_new"></a>

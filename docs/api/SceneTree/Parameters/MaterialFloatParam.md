@@ -26,10 +26,10 @@ myParameterOwnerItem.addParameter(numberParam)
 * [MaterialFloatParam ⇐ <code>NumberParameter</code>](#MaterialFloatParam)
     * [new MaterialFloatParam(name, value, range)](#new-MaterialFloatParam)
     * [getImage() ⇒ <code>BaseImage</code>](#getImage)
-    * [setImage(value, mode)](#setImage)
+    * [setImage(value)](#setImage)
     * [setValue(value)](#setValue)
     * [readBinary(reader, context)](#readBinary)
-    * [clone(flags)](#clone)
+    * [clone()](#clone)
 
 <a name="new_MaterialFloatParam_new"></a>
 
@@ -57,10 +57,9 @@ Sets `BaseImage` texture value in parameter.
 
 
 
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| value | <code>BaseImage</code> |  | The value value. |
-| mode | <code>number</code> | <code>0</code> | The mode value. |
+| Param | Type | Description |
+| --- | --- | --- |
+| value | <code>BaseImage</code> | The value value. |
 
 <a name="MaterialFloatParam+setValue"></a>
 
@@ -93,8 +92,3 @@ copies its values from this parameter and returns it.
 
 
 **Returns**: [<code>MaterialFloatParam</code>](#MaterialFloatParam) - - Returns a new cloned material float parameter.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| flags | <code>number</code> | The flags value. |
-

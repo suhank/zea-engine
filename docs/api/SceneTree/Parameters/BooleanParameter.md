@@ -16,7 +16,7 @@ myParameterOwnerItem.addParameter(booleanParam)
 
 * [BooleanParameter ⇐ <code>Parameter</code>](#BooleanParameter)
     * [new BooleanParameter(name, value)](#new-BooleanParameter)
-    * [clone(flags)](#clone)
+    * [clone()](#clone)
 
 <a name="new_BooleanParameter_new"></a>
 
@@ -37,8 +37,3 @@ copies its values from this parameter and returns it.
 
 
 **Returns**: [<code>BooleanParameter</code>](#BooleanParameter) - - Returns a new cloned boolean parameter.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| flags | <code>number</code> | The flags value. |
-

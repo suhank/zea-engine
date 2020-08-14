@@ -35,7 +35,7 @@ Compare a version object against a version numbers array.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| numbers | <code>array</code> | The numbers value. |
+| numbers | <code>array</code> | An array containing 3 version numbers. [Major, Minor, Patch] |
 
 <a name="Version+equals"></a>
 

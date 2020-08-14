@@ -18,13 +18,13 @@ Not only hosting parameters, but their events.
     * [getParameter(paramName) ⇒ <code>Parameter</code>](#getParameter)
     * [addParameter(param) ⇒ <code>Parameter</code>](#addParameter)
     * [insertParameter(param, index) ⇒ <code>Parameter</code>](#insertParameter)
-    * [removeParameter(paramName)](#removeParameter)
+    * [removeParameter(name)](#removeParameter)
     * [replaceParameter(param) ⇒ <code>Parameter</code>](#replaceParameter)
-    * [toJSON(context, flags) ⇒ <code>object</code>](#toJSON)
-    * [fromJSON(j, context, flags)](#fromJSON)
+    * [toJSON(context) ⇒ <code>object</code>](#toJSON)
+    * [fromJSON(j, context)](#fromJSON)
     * [readBinary(reader, context)](#readBinary)
     * [toString() ⇒ <code>string</code>](#toString)
-    * [copyFrom(src, flags)](#copyFrom)
+    * [copyFrom(src)](#copyFrom)
 
 <a name="new_ParameterOwner_new"></a>
 
@@ -113,7 +113,7 @@ Adds `Parameter` object to the owner's parameter list.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| param | <code>Parameter</code> | The paramater to add. |
+| param | <code>Parameter</code> | The parameter to add. |
 
 <a name="ParameterOwner+insertParameter"></a>
 
@@ -140,7 +140,7 @@ Removes `Parameter` from owner, by using parameter's name.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| paramName | <code>string</code> | The parameter name. |
+| name | <code>string</code> | The parameter name. |
 
 <a name="ParameterOwner+replaceParameter"></a>
 
@@ -157,7 +157,7 @@ Replaces old `Parameter` by passing a new one with the same name.
 <a name="ParameterOwner+toJSON"></a>
 
 ### toJSON
-The toJSON method encodes this type as a json object for persistences.
+The toJSON method encodes this type as a json object for persistence.
 
 
 **Returns**: <code>object</code> - - Returns the json object.  
@@ -165,7 +165,6 @@ The toJSON method encodes this type as a json object for persistences.
 | Param | Type | Description |
 | --- | --- | --- |
 | context | <code>object</code> | The context value. |
-| flags | <code>number</code> | The flags value. |
 
 <a name="ParameterOwner+fromJSON"></a>
 
@@ -178,7 +177,6 @@ The fromJSON method decodes a json object for this type.
 | --- | --- | --- |
 | j | <code>object</code> | The json object this item must decode. |
 | context | <code>object</code> | The context value. |
-| flags | <code>number</code> | The flags value. |
 
 <a name="ParameterOwner+readBinary"></a>
 
@@ -213,5 +211,4 @@ Copies Parameters from another `ParameterOwner` to current object.
 | Param | Type | Description |
 | --- | --- | --- |
 | src | [<code>ParameterOwner</code>](#ParameterOwner) | The ParameterOwner copy from. |
-| flags | <code>number</code> | The flags value. |
 

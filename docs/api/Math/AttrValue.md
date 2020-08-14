@@ -14,7 +14,7 @@ Base class for Math types that can be stored in vertex attributes.
         * [toString() ⇒ <code>string</code>](#toString)
         * [toJSON() ⇒ <code>object</code>](#toJSON)
     * _static_
-        * [createFromFloat32Buffer(buffer, offset)](#createFromFloat32Buffer)
+        * [createFromBuffer(buffer, byteOffset)](#createFromBuffer)
         * [numElements() ⇒ <code>number</code>](#numElements)
 
 <a name="AttrValue+isValid"></a>
@@ -47,19 +47,19 @@ Converts this Math type to a JSON object.
 
 
 **Returns**: <code>object</code> - - The json object.  
-<a name="AttrValue.createFromFloat32Buffer"></a>
+<a name="AttrValue.createFromBuffer"></a>
 
-### createFromFloat32Buffer
-This method is a factory function for creating new instances of math types, given an existing Float32Array buffer.
+### createFromBuffer
+This method is a factory function for creating new instances of math types, given an existing ArrayBuffer.
 Each Math type implements this function to return an constructed value.
 
 
 **Returns**: [<code>AttrValue</code>](#AttrValue) - - Returns the constructed value.  
 
-| Param | Type | Description |
-| --- | --- | --- |
-| buffer | <code>ArrayBuffer</code> | the buffer value. |
-| offset | <code>number</code> | the offset value. |
+| Param | Type |
+| --- | --- |
+| buffer | <code>ArrayBuffer</code> | 
+| byteOffset | <code>number</code> | 
 
 <a name="AttrValue.numElements"></a>
 

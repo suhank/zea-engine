@@ -46,7 +46,7 @@ Checks if this sphere intersects a box.
 <a name="SphereType+toJSON"></a>
 
 ### toJSON
-The toJSON method encodes this type as a json object for persistences.
+The toJSON method encodes this type as a json object for persistence.
 
 
 **Returns**: <code>object</code> - - The json object.  

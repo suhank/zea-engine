@@ -43,6 +43,7 @@ Class representing the red, green, blue and alpha channel of a color.
         * [toCSSString() ⇒ <code>string</code>](#toCSSString)
     * _static_
         * [random(gammaOffset, randomAlpha)](#random)
+        * [createFromBuffer(buffer, byteOffset)](#createFromBuffer)
 
 <a name="new_RGBA_new"></a>
 
@@ -393,4 +394,17 @@ Creates a random RGBA.
 | --- | --- | --- | --- |
 | gammaOffset | <code>number</code> | <code>0</code> | The gamma offset. |
 | randomAlpha | <code>boolean</code> | <code>false</code> | Determines whether the alpha channel is random. |
+
+<a name="RGBA.createFromBuffer"></a>
+
+### createFromBuffer
+Creates an instance of a `RGBA` using an ArrayBuffer.
+
+
+**Returns**: [<code>RGBA</code>](#RGBA) - - Returns a new RGBA.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| buffer | <code>ArrayBuffer</code> | The buffer value. |
+| byteOffset | <code>number</code> | The offset value. |
 

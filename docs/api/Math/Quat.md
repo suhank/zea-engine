@@ -10,59 +10,63 @@ to understand intuitively.
 
 * [Quat ⇐ <code>AttrValue</code>](#Quat)
     * [new Quat(x, y, z, w)](#new-Quat)
-    * [x ⇒ <code>number</code>](#x)
-    * [x](#x)
-    * [y ⇒ <code>number</code>](#y)
-    * [y](#y)
-    * [z ⇒ <code>number</code>](#z)
-    * [z](#z)
-    * [w ⇒ <code>number</code>](#w)
-    * [w](#w)
-    * [set(x, y, z, w)](#set)
-    * [setDataArray(float32Array)](#setDataArray)
-    * [setFromOther(other)](#setFromOther)
-    * [setFromEulerAngles(eulerAngles)](#setFromEulerAngles)
-    * [toEulerAngles(rotationOrder) ⇒ <code>EulerAngles</code>](#toEulerAngles)
-    * [setFromAxisAndAngle(axis, angle)](#setFromAxisAndAngle)
-    * [setFromDirectionAndUpvector(dir, up)](#setFromDirectionAndUpvector)
-    * [setFrom2Vectors(v0, v1)](#setFrom2Vectors)
-    * [setFromMat3(mat3)](#setFromMat3)
-    * [setFromMat4(mat4)](#setFromMat4)
-    * [isIdentity() ⇒ <code>boolean</code>](#isIdentity)
-    * [getAngle() ⇒ <code>number</code>](#getAngle)
-    * [equal(other) ⇒ <code>boolean</code>](#equal)
-    * [notEquals(other) ⇒ <code>boolean</code>](#notEquals)
-    * [approxEqual(other, precision) ⇒ <code>boolean</code>](#approxEqual)
-    * [add(other)](#add)
-    * [addInPlace(other)](#addInPlace)
-    * [subtract(other)](#subtract)
-    * [scale(scalar)](#scale)
-    * [scaleInPlace(scalar)](#scaleInPlace)
-    * [length() ⇒ <code>number</code>](#length)
-    * [lengthSquared() ⇒ <code>number</code>](#lengthSquared)
-    * [normalize()](#normalize)
-    * [normalizeInPlace()](#normalizeInPlace)
-    * [dot(other) ⇒ <code>number</code>](#dot)
-    * [cross(other)](#cross)
-    * [conjugate()](#conjugate)
-    * [inverse()](#inverse)
-    * [alignWith(other)](#alignWith)
-    * [multiply(other)](#multiply)
-    * [multiplyInPlace(other)](#multiplyInPlace)
-    * [rotateVec3(vec3) ⇒ <code>Vec3</code>](#rotateVec3)
-    * [rotateX(rad)](#rotateX)
-    * [rotateY(rad)](#rotateY)
-    * [rotateZ(rad)](#rotateZ)
-    * [toMat3() ⇒ <code>Mat3</code>](#toMat3)
-    * [getXaxis() ⇒ <code>Vec3</code>](#getXaxis)
-    * [getYaxis() ⇒ <code>Vec3</code>](#getYaxis)
-    * [getZaxis() ⇒ <code>Vec3</code>](#getZaxis)
-    * [mirror(axisIndex)](#mirror)
-    * [toMat4() ⇒ <code>Mat4</code>](#toMat4)
-    * [lerp(other, t)](#lerp)
-    * [clone()](#clone)
-    * [toJSON() ⇒ <code>object</code>](#toJSON)
-    * [fromJSON(j)](#fromJSON)
+    * _instance_
+        * [x ⇒ <code>number</code>](#x)
+        * [x](#x)
+        * [y ⇒ <code>number</code>](#y)
+        * [y](#y)
+        * [z ⇒ <code>number</code>](#z)
+        * [z](#z)
+        * [w ⇒ <code>number</code>](#w)
+        * [w](#w)
+        * [set(x, y, z, w)](#set)
+        * [setDataArray(float32Array)](#setDataArray)
+        * [setFromOther(other)](#setFromOther)
+        * [setFromEulerAngles(eulerAngles)](#setFromEulerAngles)
+        * [toEulerAngles(rotationOrder) ⇒ <code>EulerAngles</code>](#toEulerAngles)
+        * [setFromAxisAndAngle(axis, angle)](#setFromAxisAndAngle)
+        * [setFromDirectionAndUpvector(dir, up)](#setFromDirectionAndUpvector)
+        * [setFrom2Vectors(v0, v1)](#setFrom2Vectors)
+        * [setFromMat3(mat3)](#setFromMat3)
+        * [setFromMat4(mat4)](#setFromMat4)
+        * [isIdentity() ⇒ <code>boolean</code>](#isIdentity)
+        * [getAngle() ⇒ <code>number</code>](#getAngle)
+        * [equal(other) ⇒ <code>boolean</code>](#equal)
+        * [notEquals(other) ⇒ <code>boolean</code>](#notEquals)
+        * [approxEqual(other, precision) ⇒ <code>boolean</code>](#approxEqual)
+        * [add(other)](#add)
+        * [addInPlace(other)](#addInPlace)
+        * [subtract(other)](#subtract)
+        * [scale(scalar)](#scale)
+        * [scaleInPlace(scalar)](#scaleInPlace)
+        * [length() ⇒ <code>number</code>](#length)
+        * [lengthSquared() ⇒ <code>number</code>](#lengthSquared)
+        * [normalize()](#normalize)
+        * [normalizeInPlace()](#normalizeInPlace)
+        * [dot(other) ⇒ <code>number</code>](#dot)
+        * [cross(other)](#cross)
+        * [conjugate()](#conjugate)
+        * [inverse()](#inverse)
+        * [alignWith(other)](#alignWith)
+        * [multiply(other)](#multiply)
+        * [multiplyInPlace(other)](#multiplyInPlace)
+        * [rotateVec3(vec3) ⇒ <code>Vec3</code>](#rotateVec3)
+        * [rotateX(rad)](#rotateX)
+        * [rotateY(rad)](#rotateY)
+        * [rotateZ(rad)](#rotateZ)
+        * [toMat3() ⇒ <code>Mat3</code>](#toMat3)
+        * [getXaxis() ⇒ <code>Vec3</code>](#getXaxis)
+        * [getYaxis() ⇒ <code>Vec3</code>](#getYaxis)
+        * [getZaxis() ⇒ <code>Vec3</code>](#getZaxis)
+        * [mirror(axisIndex)](#mirror)
+        * [toMat4() ⇒ <code>Mat4</code>](#toMat4)
+        * [lerp(other, t)](#lerp)
+        * [clone()](#clone)
+        * [toJSON() ⇒ <code>object</code>](#toJSON)
+        * [fromJSON(j)](#fromJSON)
+        * [readBinary(reader)](#readBinary)
+    * _static_
+        * [createFromBuffer(buffer, byteOffset)](#createFromBuffer)
 
 <a name="new_Quat_new"></a>
 
@@ -241,8 +245,8 @@ Sets the state of the `Quat` from two `Vec3`.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| v0 | <code>Vec3</code> | The v0 vector. |
-| v1 | <code>Vec3</code> | The v1 vector. |
+| v0 | <code>Vec3</code> | The v0 unit vector. |
+| v1 | <code>Vec3</code> | The v1 unit vector. |
 
 <a name="Quat+setFromMat3"></a>
 
@@ -608,4 +612,28 @@ The fromJSON method decodes a json object for this type.
 | Param | Type | Description |
 | --- | --- | --- |
 | j | <code>object</code> | The json object. |
+
+<a name="Quat+readBinary"></a>
+
+### readBinary
+Loads the state of the value from a binary reader.
+
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| reader | <code>BinReader</code> | The reader value. |
+
+<a name="Quat.createFromBuffer"></a>
+
+### createFromBuffer
+Creates an instance of a `Quat` using an ArrayBuffer.
+
+
+**Returns**: [<code>Quat</code>](#Quat) - - Returns a new Quat.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| buffer | <code>ArrayBuffer</code> | The buffer value. |
+| byteOffset | <code>number</code> | The offset value. |
 

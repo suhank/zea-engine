@@ -21,8 +21,6 @@ Class representing a GL renderer.
     * [getGLEnvMap() ⇒ <code>any</code>](#getGLEnvMap)
     * [getEnvMapTex() ⇒ <code>any</code>](#getEnvMapTex)
     * [setScene(scene)](#setScene)
-    * [addTreeItem(treeItem)](#addTreeItem)
-    * [removeTreeItem(treeItem)](#removeTreeItem)
     * [addViewport(name) ⇒ <code>any</code>](#addViewport)
     * [onKeyPressed(key, event)](#onKeyPressed)
     * [resizeFbos(width, height)](#resizeFbos)
@@ -156,28 +154,6 @@ The setScene method.
 | Param | Type | Description |
 | --- | --- | --- |
 | scene | <code>any</code> | The scene value. |
-
-<a name="GLRenderer+addTreeItem"></a>
-
-### addTreeItem
-The addTreeItem method.
-
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| treeItem | <code>any</code> | The treeItem param. |
-
-<a name="GLRenderer+removeTreeItem"></a>
-
-### removeTreeItem
-The removeTreeItem method.
-
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| treeItem | <code>any</code> | The treeItem param. |
 
 <a name="GLRenderer+addViewport"></a>
 

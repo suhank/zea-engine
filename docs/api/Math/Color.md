@@ -44,9 +44,11 @@ Class representing a color as 4 floating point values.
         * [asArray() ⇒ <code>array</code>](#asArray)
         * [toJSON() ⇒ <code>object</code>](#toJSON)
         * [fromJSON(j)](#fromJSON)
+        * [readBinary(reader)](#readBinary)
         * [toCSSString() ⇒ <code>string</code>](#toCSSString)
     * _static_
         * [random(gammaOffset, randomAlpha)](#random)
+        * [createFromBuffer(buffer, byteOffset)](#createFromBuffer)
 
 <a name="new_Color_new"></a>
 
@@ -406,7 +408,7 @@ Returns the type as an array. Often used to pass types to the GPU.
 <a name="Color+toJSON"></a>
 
 ### toJSON
-The toJSON method encodes this type as a json object for persistences.
+The toJSON method encodes this type as a json object for persistence.
 
 
 **Returns**: <code>object</code> - - The json object.  
@@ -420,6 +422,17 @@ The fromJSON method decodes a json object for this type.
 | Param | Type | Description |
 | --- | --- | --- |
 | j | <code>object</code> | The json object. |
+
+<a name="Color+readBinary"></a>
+
+### readBinary
+Loads the state of the value from a binary reader.
+
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| reader | <code>BinReader</code> | The reader value. |
 
 <a name="Color+toCSSString"></a>
 
@@ -440,4 +453,17 @@ Creates a random color.
 | --- | --- | --- | --- |
 | gammaOffset | <code>number</code> | <code>0</code> | The gamma offset. |
 | randomAlpha | <code>boolean</code> | <code>false</code> | Determines whether the alpha channel is random. |
+
+<a name="Color.createFromBuffer"></a>
+
+### createFromBuffer
+Creates an instance of a `Color` using an ArrayBuffer.
+
+
+**Returns**: [<code>Color</code>](#Color) - - Returns a new color.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| buffer | <code>ArrayBuffer</code> | The buffer value. |
+| byteOffset | <code>number</code> | The offset value. |
 

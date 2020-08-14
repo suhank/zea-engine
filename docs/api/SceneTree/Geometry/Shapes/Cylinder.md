@@ -15,10 +15,6 @@ const cylinder = new Cylinder(1.5, 2.0, 6)
 * **caps(`BooleanParameter`):** Specifies whether the ends of the cylinder are capped or open.
 * **baseZAtZero(`BooleanParameter`):** Property to start or not `Z` axis from position `0.
 
-**Events**
-* **geomDataTopologyChanged:** Triggered when sides, loops and caps parameters change.
-* **geomDataChanged:** Triggered when the radius, heigh and baseZAtZero parameters change.
-
 
 **Extends**: <code>Mesh</code>  
 <a name="new_Cylinder_new"></a>

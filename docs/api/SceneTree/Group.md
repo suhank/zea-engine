@@ -24,17 +24,17 @@ to apply common things to multiple items.
     * [new Group(name)](#new-Group)
     * _instance_
         * [setSelected(sel)](#setSelected)
+        * [setSearchRoot(treeItem)](#setSearchRoot)
         * [resolveItems(paths)](#resolveItems)
         * [addItem(item, emit)](#addItem)
         * [removeItem(item, emit)](#removeItem)
         * [clearItems(emit)](#clearItems)
         * [getItems() ⇒ <code>array</code>](#getItems)
         * [setItems(items)](#setItems)
-        * [toJSON(context, flags) ⇒ <code>object</code>](#toJSON)
-        * [fromJSON(j, context, flags)](#fromJSON)
-        * [clone(flags)](#clone)
-        * [copyFrom(src, flags)](#copyFrom)
-        * [destroy()](#destroy)
+        * [toJSON(context) ⇒ <code>object</code>](#toJSON)
+        * [fromJSON(j, context)](#fromJSON)
+        * [clone()](#clone)
+        * [copyFrom(src)](#copyFrom)
     * _static_
         * [INITIAL_XFO_MODES](#INITIAL_XFO_MODES)
 
@@ -58,6 +58,17 @@ Changes selection's state of the group with all items it owns.
 | Param | Type | Description |
 | --- | --- | --- |
 | sel | <code>boolean</code> | Boolean indicating the new selection state. |
+
+<a name="Group+setSearchRoot"></a>
+
+### setSearchRoot
+sets the root item to be used as the search root.
+
+
+
+| Param | Type |
+| --- | --- |
+| treeItem | <code>TreeItem</code> | 
 
 <a name="Group+resolveItems"></a>
 
@@ -126,7 +137,7 @@ Removes old items in current group and adds new ones.
 <a name="Group+toJSON"></a>
 
 ### toJSON
-The toJSON method encodes this type as a json object for persistences.
+The toJSON method encodes this type as a json object for persistence.
 
 
 **Returns**: <code>object</code> - - Returns the json object.  
@@ -134,7 +145,6 @@ The toJSON method encodes this type as a json object for persistences.
 | Param | Type | Description |
 | --- | --- | --- |
 | context | <code>object</code> | The context value. |
-| flags | <code>number</code> | The flags value. |
 
 <a name="Group+fromJSON"></a>
 
@@ -147,7 +157,6 @@ The fromJSON method decodes a json object for this type.
 | --- | --- | --- |
 | j | <code>object</code> | The json object this item must decode. |
 | context | <code>object</code> | The context value. |
-| flags | <code>number</code> | The flags value. |
 
 <a name="Group+clone"></a>
 
@@ -157,11 +166,6 @@ copies its values and returns it.
 
 
 **Returns**: [<code>Group</code>](#Group) - - Returns a new cloned group.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| flags | <code>number</code> | The flags value. |
-
 <a name="Group+copyFrom"></a>
 
 ### copyFrom
@@ -172,14 +176,6 @@ Copies current Group with all owned items.
 | Param | Type | Description |
 | --- | --- | --- |
 | src | [<code>Group</code>](#Group) | The group to copy from. |
-| flags | <code>number</code> | The flags value. |
-
-<a name="Group+destroy"></a>
-
-### destroy
-The destroy is called by the system to cause explicit resources cleanup.
-Users should never need to call this method directly.
-
 
 <a name="Group.INITIAL_XFO_MODES"></a>
 

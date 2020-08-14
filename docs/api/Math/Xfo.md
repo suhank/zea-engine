@@ -1,7 +1,7 @@
 <a name="Xfo"></a>
 
 ### Xfo
-Class representing an Xfo transform.
+Class representing an Xfo transform, which is a transformation decomposed into 3 component values. Translation, Orientation, and Scaling.
 
 
 **See**: [`setFromOther`](#setFromOther) [`fromMat4`](#fromMat4) [`setFromFloat32Array`](#setFromFloat32Array) [`fromJSON`](#fromJSON)  
@@ -11,6 +11,8 @@ Class representing an Xfo transform.
     * [set(tr, ori, sc)](#set)
     * [setFromOther(other)](#setFromOther)
     * [isIdentity() ⇒ <code>boolean</code>](#isIdentity)
+    * [isEqual(other) ⇒ <code>boolean</code>](#isEqual)
+    * [approxEqual(other, precision) ⇒ <code>boolean</code>](#approxEqual)
     * [setLookAt(pos, target, up)](#setLookAt)
     * [multiply(xfo)](#multiply)
     * [inverse()](#inverse)
@@ -21,6 +23,7 @@ Class representing an Xfo transform.
     * [clone()](#clone)
     * [toJSON() ⇒ <code>object</code>](#toJSON)
     * [fromJSON(j)](#fromJSON)
+    * [readBinary(reader)](#readBinary)
     * [toString() ⇒ <code>string</code>](#toString)
 
 <a name="new_Xfo_new"></a>
@@ -68,6 +71,31 @@ Verifies that the Xfo object is an `identity`, checking that the translation, or
 
 
 **Returns**: <code>boolean</code> - - The return value.  
+<a name="Xfo+isEqual"></a>
+
+### isEqual
+Checks if this Vec3 is exactly the same as another Vec3.
+
+
+**Returns**: <code>boolean</code> - - Returns `true` if are the same Vector, otherwise, `false`.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| other | <code>Vec3</code> | The other Vec3 to compare with. |
+
+<a name="Xfo+approxEqual"></a>
+
+### approxEqual
+Returns true if this Vec2 is approximately the same as other.
+
+
+**Returns**: <code>boolean</code> - - Returns true or false.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| other | <code>Vec3</code> | The other Vec3 to compare with. |
+| precision | <code>number</code> | The precision to which the values must match. |
+
 <a name="Xfo+setLookAt"></a>
 
 ### setLookAt
@@ -103,7 +131,7 @@ Returns the inverse of the Xfo object, but returns. the result as a new Xfo.
 <a name="Xfo+transformVec3"></a>
 
 ### transformVec3
-Tranforms Xfo object using a `Vec3` object. First scaling it, then rotating and finally adding the result to current translation object.
+Transforms Xfo object using a `Vec3` object. First scaling it, then rotating and finally adding the result to current translation object.
 
 
 **Returns**: <code>Vec3</code> - - The return value.  
@@ -167,6 +195,17 @@ The fromJSON method decodes a json object for this type.
 | Param | Type | Description |
 | --- | --- | --- |
 | j | <code>object</code> | The json object. |
+
+<a name="Xfo+readBinary"></a>
+
+### readBinary
+Loads the state of the value from a binary reader.
+
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| reader | <code>BinReader</code> | The reader value. |
 
 <a name="Xfo+toString"></a>
 
