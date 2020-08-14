@@ -95,9 +95,9 @@ class ObjAsset extends AssetItem {
    * @private
    */
   __loadObj(onDone, onGeomsLoaded) {
-    const fileId = this.objfileParam.getValue()
-    const fileFolder = filePath.substring(0, filePath.lastIndexOf('/')) + '/'
-    const filename = fileId.substring(fileId.lastIndexOf('/'))
+    const url = this.objfileParam.getUrl()
+    const fileFolder = url.substring(0, url.lastIndexOf('/')) + '/'
+    const filename = url.substring(url.lastIndexOf('/') + 1)
 
     const parseMtlData = (mtlFileData) => {
       const lines = mtlFileData.split('\n')
@@ -211,8 +211,7 @@ class ObjAsset extends AssetItem {
           numVertices: 0,
           numTexCoords: 0,
           numNormals: 0,
-          numTris: 0,
-          numQuads: 0,
+          faceCounts: [],
           material: currMtl,
         }
         geomDatas[name] = currGeom
@@ -295,11 +294,10 @@ class ObjAsset extends AssetItem {
             if (vn_poly.length > 0) currGeom.normalIndices.push(vn_poly)
             if (vt_poly.length > 0) currGeom.texCoordIndices.push(vt_poly)
 
-            if (v_poly.length == 3) {
-              currGeom.numTris++
-            } else {
-              currGeom.numQuads++
+            if (currGeom.faceCounts[v_poly.length - 3] == undefined) {
+              currGeom.faceCounts[v_poly.length - 3] = []
             }
+            currGeom.faceCounts[v_poly.length - 3]++
             // numPolys++;
             // if(numPolys == 16000)
             //     stop = true;
@@ -330,7 +328,7 @@ class ObjAsset extends AssetItem {
     const buildChildItem = (geomName, geomData) => {
       const numVertices = geomData.numVertices
       const mesh = new Mesh(geomName)
-      mesh.setFaceCounts([geomData.numTris, geomData.numQuads])
+      mesh.setFaceCounts(geomData.faceCounts)
       mesh.setNumVertices(numVertices)
       const positionsAttr = mesh.getVertexAttribute('positions')
       const unitsConversion = this.getParameter('unitsConversion').getValue()
@@ -351,23 +349,30 @@ class ObjAsset extends AssetItem {
       if (geomData.normalIndices.length > 0) normalsAttr = mesh.addVertexAttribute('normals', Vec3)
       if (geomData.texCoordIndices.length > 0) texCoordsAttr = mesh.addVertexAttribute('texCoords', Vec2)
 
+      const loadedFaces = Array(geomData.faceCounts.length).fill(0)
       for (let i = 0; i < geomData.vertexIndices.length; i++) {
         const v_poly = geomData.vertexIndices[i]
-        mesh.setFaceVertexIndices(i, v_poly)
+        let faceId = 0
+        for (let j = 0; j < v_poly.length - 3; ++j) {
+          faceId += geomData.faceCounts[j]
+        }
+        faceId += loadedFaces[v_poly.length - 3]
+        loadedFaces[v_poly.length - 3]++
+        mesh.setFaceVertexIndices(faceId, v_poly)
 
         // Set the texCoords and normals...
         if (normalsAttr) {
           const vn_poly = geomData.normalIndices[i]
           for (let j = 0; j < vn_poly.length; j++) {
             const value = new Vec3(normals[vn_poly[j]][0], normals[vn_poly[j]][1], normals[vn_poly[j]][2])
-            normalsAttr.setFaceVertexValue(i, j, value)
+            normalsAttr.setFaceVertexValue(faceId, j, value)
           }
         }
         if (texCoordsAttr && geomData.texCoordIndices.length == geomData.vertexIndices.length) {
           const vt_poly = geomData.texCoordIndices[i]
           for (let j = 0; j < vt_poly.length; j++) {
             const value = new Vec2(texCoords[vt_poly[j]][0], texCoords[vt_poly[j]][1])
-            texCoordsAttr.setFaceVertexValue(i, j, value)
+            texCoordsAttr.setFaceVertexValue(faceId, j, value)
           }
         }
       }
@@ -403,7 +408,7 @@ class ObjAsset extends AssetItem {
     const loadObjData = () => {
       const fileId = this.objfileParam.getValue()
       resourceLoader.addWork(fileId, 2)
-      loadTextfile(file.url, (fileData) => {
+      loadTextfile(url, (fileData) => {
         resourceLoader.addWorkDone(fileId, 1)
         parseObjData(fileData)
         resourceLoader.addWorkDone(fileId, 1)
