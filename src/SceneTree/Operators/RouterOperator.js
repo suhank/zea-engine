@@ -23,7 +23,7 @@ class RouterOperator extends Operator {
    * @return {OperatorOutput} - The added output.
    */
   addRoute() {
-    return this.addOutput(new OperatorOutput('Output' + this.__outputs.length))
+    return this.addOutput(new OperatorOutput('Output' + this.__outputs.size))
   }
 
   /**
@@ -32,14 +32,15 @@ class RouterOperator extends Operator {
   evaluate() {
     if (this.__input.isConnected()) {
       const inputValue = this.__input.getValue()
-      let i = this.__outputs.length
+      let i = this.__outputs.size
       while (i--) {
-        const output = this.__outputs[i]
+        const output = this.getOutputByIndex(i)
         output.setClean(inputValue)
       }
     } else {
-      let i = this.__outputs.length
+      let i = this.__outputs.size
       while (i--) {
+        const output = this.getOutputByIndex(i)
         output.setClean(0.0)
       }
     }
