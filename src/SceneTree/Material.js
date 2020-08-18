@@ -336,4 +336,6 @@ class Material extends BaseItem {
     super.destroy()
   }
 }
+
+export default Material
 export { Material }

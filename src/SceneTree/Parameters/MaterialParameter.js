@@ -81,10 +81,10 @@ class MaterialParameter extends Parameter {
       return
     }
 
-    if (j.value instanceof array || j.value instanceof string) {
+    if (j.value instanceof Array || j.value instanceof string) {
       if (context && context.assetItem) {
         const materialLibrary = context.assetItem.getMaterialLibrary()
-        const material = materialLibrary.getMaterial(j.value instanceof array ? j.value[1] : j.value)
+        const material = materialLibrary.getMaterial(j.value instanceof Array ? j.value[1] : j.value)
         if (material) {
           this.loadValue(material)
         }

@@ -520,8 +520,8 @@ class TreeItem extends BaseItem {
   }
 
   /**
-   * The _childNameChanged event hander.
-   * @param {any} start - The start value.
+   * The _childNameChanged event handler.
+   * @param {object} event - The start value.
    * @private
    */
   _childNameChanged(event) {

@@ -187,4 +187,5 @@ class Sphere extends Mesh {
 
 Registry.register('Sphere', Sphere)
 
+export default Sphere
 export { Sphere }

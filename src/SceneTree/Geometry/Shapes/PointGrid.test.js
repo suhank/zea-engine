@@ -27,7 +27,6 @@ describe('PointGrid', () => {
   // There's an issue with flags, that are preventing parameters to be exported.
   it.skip('saves to JSON (serialization).', () => {
     const pointGrid = new PointGrid(3, 3, 6, 6, true)
-    debugger
     const outputJSON = pointGrid.toJSON()
     console.log(outputJSON)
 
