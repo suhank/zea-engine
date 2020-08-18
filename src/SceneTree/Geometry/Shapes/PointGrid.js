@@ -1,5 +1,7 @@
 import { Vec2 } from '../../../Math/Vec2'
 import { Points } from '../Points.js'
+import { NumberParameter } from '../../Parameters/index'
+import Registry from '../../../Registry'
 
 /**
  * Represents an ordered grid of points along `X` and `Y` axes.
@@ -8,6 +10,11 @@ import { Points } from '../Points.js'
  * const pointGrid = new PointGrid(2.2, 1.5, 12, 12)
  * ```
  *
+ * **Parameters**
+ * * **X(`NumberParameter`):** Length of the grid along the `X` axis.
+ * * **Y(`NumberParameter`):** Length of the grid along the `Y` axis.
+ * * **XDivisions(`NumberParameter`):** Number of divisions along `X` axis
+ * * **YDivisions(`NumberParameter`):** Number of divisions along `Y` axis
  * @extends Points
  */
 class PointGrid extends Points {
@@ -24,111 +31,20 @@ class PointGrid extends Points {
     super()
 
     if (isNaN(x) || isNaN(y) || isNaN(xDivisions) || isNaN(yDivisions)) throw new Error('Invalid geom args')
+    this.__x = this.addParameter(new NumberParameter('X', x))
+    this.__y = this.addParameter(new NumberParameter('Y', y))
+    this.__xDivisions = this.addParameter(new NumberParameter('XDivisions', xDivisions))
+    this.__yDivisions = this.addParameter(new NumberParameter('YDivisions', yDivisions))
 
-    this.__x = x
-    this.__y = y
-    this.__xDivisions = xDivisions
-    this.__yDivisions = yDivisions
     if (addTextureCoords) this.addVertexAttribute('texCoords', Vec2)
     this.__rebuild()
-  }
 
-  /**
-   * Getter for X.
-   * Is deprecated. Please use "getX".
-   *
-   * @deprecated
-   * @return {number} - Returns the length.
-   */
-  get x() {
-    console.warn("getter is deprecated. Please use 'getX'")
-    return this.getX()
-  }
+    const resize = () => {
+      this.__resize()
+    }
 
-  /**
-   * Setter for X.
-   * Is deprecated. Please use "setX".
-   *
-   * @deprecated
-   * @param {number} val - The length along the X axis.
-   */
-  set x(val) {
-    console.warn("getter is deprecated. Please use 'setX'")
-    this.setX(val)
-  }
-
-  /**
-   * Getter for Y.
-   * Is deprecated. Please use "getY".
-   *
-   * @deprecated
-   * @return {number} - Returns the length.
-   */
-  get y() {
-    console.warn("getter is deprecated. Please use 'getY'")
-    return this.getY()
-  }
-
-  /**
-   * Setter for Y.
-   * Is deprecated. Please use "setY".
-   *
-   * @deprecated
-   * @param {number} val - The length along the Y axis.
-   */
-  set y(val) {
-    console.warn("getter is deprecated. Please use 'setY'")
-    this.setY(val)
-  }
-
-  /**
-   * Getter for the length of the point grid along the `X` axis.
-   *
-   * @return {number} - Returns the length.
-   */
-  getX() {
-    return this.__x
-  }
-
-  /**
-   * Setter for the length of the point grid along the `X` axis.
-   *
-   * @param {number} val - The length along the `X` axis.
-   */
-  setX(val) {
-    this.__x = val
-    this.__resize()
-  }
-
-  /**
-   * Getter for the length of the point grid along the `Y` axis.
-   *
-   * @return {number} - Returns the length.
-   */
-  getY() {
-    return this.__y
-  }
-
-  /**
-   * Setter for the length of the point grid along the `Y` axis.
-   *
-   * @param {number} val - The length along the Y axis.
-   */
-  setY(val) {
-    this.__y = val
-    this.__resize()
-  }
-
-  /**
-   * Setter for the size of the point grid.
-   *
-   * @param {number} x - The length along the `X` axis.
-   * @param {number} y - The length along the `Y` axis.
-   */
-  setSize(x, y) {
-    this.__x = x
-    this.__y = y
-    this.__resize()
+    this.__x.on('valueChanged', resize)
+    this.__y.on('valueChanged', resize)
   }
 
   /**
@@ -169,20 +85,7 @@ class PointGrid extends Points {
     this.setBoundingBoxDirty()
     if (emit) this.emit('geomDataChanged', {})
   }
-
-  /**
-   * The toJSON method encodes this type as a json object for persistence.
-   *
-   * @return {object} - Returns the json object.
-   */
-  toJSON() {
-    const json = super.toJSON()
-    json['x'] = this.__x
-    json['y'] = this.__y
-    json['xDivisions'] = this.__xDivisions
-    json['yDivisions'] = this.__yDivisions
-    return json
-  }
 }
 
+Registry.register('PointGrid', PointGrid)
 export { PointGrid }

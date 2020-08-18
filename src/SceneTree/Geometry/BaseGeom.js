@@ -5,6 +5,7 @@ import { Vec2, Vec3, Box2, Box3 } from '../../Math/index'
 import { ParameterOwner } from '../ParameterOwner.js'
 import { Attribute } from './Attribute.js'
 import Registry from '../../Registry'
+import { VertexAttribute } from './VertexAttribute'
 
 // Defines used to explicity specify types for WebGL.
 function isTypedArray(obj) {
@@ -456,7 +457,7 @@ class BaseGeom extends ParameterOwner {
     let json = super.toJSON(context)
     if (!json) json = {}
     json.type = Registry.getBlueprintName(this)
-    json.numVertices = this.__numVertices
+    json.numVertices = this.__numVertices || 0
 
     const vertexAttributes = {}
     for (const [key, attr] of this.__vertexAttributes.entries()) {

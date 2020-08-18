@@ -11,11 +11,11 @@ import Registry from '../../../Registry'
  * ```
  *
  * **Parameters**
- * * **x(`NumberParameter`):** Length of the grid along the `X` axis.
- * * **y(`NumberParameter`):** Length of the grid along the `Y` axis.
- * * **xDivisions(`NumberParameter`):** Number of divisions along `X` axis
- * * **yDivisions(`NumberParameter`):** Number of divisions along `Y` axis
- * * **skipCenterLines(`BooleanParameter`):** Property that indicates whether to display the center grid lines or not
+ * * **X(`NumberParameter`):** Length of the grid along the `X` axis.
+ * * **Y(`NumberParameter`):** Length of the grid along the `Y` axis.
+ * * **XDivisions(`NumberParameter`):** Number of divisions along `X` axis
+ * * **YDivisions(`NumberParameter`):** Number of divisions along `Y` axis
+ * * **SkipCenterLines(`BooleanParameter`):** Property that indicates whether to display the center grid lines or not
  *
  * @extends Lines
  */
@@ -33,11 +33,11 @@ class Grid extends Lines {
 
     if (isNaN(x) || isNaN(y) || isNaN(xDivisions) || isNaN(yDivisions)) throw new Error('Invalid geom args')
 
-    this.__xParam = this.addParameter(new NumberParameter('x', x))
-    this.__yParam = this.addParameter(new NumberParameter('y', y))
-    this.__xDivisionsParam = this.addParameter(new NumberParameter('xDivisions', xDivisions))
-    this.__yDivisionsParam = this.addParameter(new NumberParameter('yDivisions', yDivisions))
-    this.__skipCenterLinesParam = this.addParameter(new BooleanParameter('skipCenterLines', skipCenterLines))
+    this.__xParam = this.addParameter(new NumberParameter('X', x))
+    this.__yParam = this.addParameter(new NumberParameter('Y', y))
+    this.__xDivisionsParam = this.addParameter(new NumberParameter('XDivisions', xDivisions))
+    this.__yDivisionsParam = this.addParameter(new NumberParameter('YDivisions', yDivisions))
+    this.__skipCenterLinesParam = this.addParameter(new BooleanParameter('SkipCenterLines', skipCenterLines))
 
     this.__rebuild()
   }
@@ -104,20 +104,6 @@ class Grid extends Lines {
     }
 
     this.setBoundingBoxDirty()
-  }
-
-  /**
-   * The toJSON method encodes this type as a json object for persistence.
-   *
-   * @return {object} - Returns the json object.
-   */
-  toJSON() {
-    const json = super.toJSON()
-    json['x'] = this.__x
-    json['z'] = this.__y
-    json['xDivisions'] = this.__xDivisions
-    json['yDivisions'] = this.__yDivisions
-    return json
   }
 }
 

@@ -1,6 +1,7 @@
 import { Vec2 } from '../../../Math/Vec2'
 import { Vec3 } from '../../../Math/Vec3'
 import { Mesh } from '../Mesh.js'
+import Registry from '../../../Registry'
 
 /**
  * A class for generating a torus geometry.
@@ -184,18 +185,8 @@ class Torus extends Mesh {
     this.setBoundingBoxDirty()
     this.emit('geomDataChanged', {})
   }
-
-  /**
-   * The toJSON method encodes this type as a json object for persistence.
-   * @return {object} - Returns the json object.
-   */
-  toJSON() {
-    const json = super.toJSON()
-    json['x'] = this.__x
-    json['y'] = this.__y
-    json['z'] = this.__z
-    return json
-  }
 }
+
+Registry.register('Torus', Torus)
 
 export { Torus }

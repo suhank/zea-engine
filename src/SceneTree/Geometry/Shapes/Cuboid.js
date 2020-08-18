@@ -28,10 +28,10 @@ class Cuboid extends Mesh {
 
     if (isNaN(x) || isNaN(y) || isNaN(z)) throw new Error('Invalid geom args')
 
-    this.__xParam = this.addParameter(new NumberParameter('x', x))
-    this.__yParam = this.addParameter(new NumberParameter('y', y))
-    this.__zParam = this.addParameter(new NumberParameter('z', z))
-    this.__baseZAtZeroParam = this.addParameter(new BooleanParameter('baseZAtZero', baseZAtZero))
+    this.__xParam = this.addParameter(new NumberParameter('X', x))
+    this.__yParam = this.addParameter(new NumberParameter('Y', y))
+    this.__zParam = this.addParameter(new NumberParameter('Z', z))
+    this.__baseZAtZeroParam = this.addParameter(new BooleanParameter('BaseZAtZero', baseZAtZero))
 
     this.setFaceCounts([0, 6])
     this.setFaceVertexIndices(0, [0, 1, 2, 3])
@@ -149,19 +149,6 @@ class Cuboid extends Mesh {
 
     this.setBoundingBoxDirty()
     this.emit('geomDataChanged', {})
-  }
-
-  /**
-   * The toJSON method encodes this type as a json object for persistence.
-   *
-   * @return {object} - Returns the json object.
-   */
-  toJSON() {
-    const json = super.toJSON()
-    json['x'] = this.__x
-    json['y'] = this.__y
-    json['z'] = this.__z
-    return json
   }
 }
 

@@ -1,5 +1,5 @@
 /* eslint-disable require-jsdoc */
-import { Float32, UInt32, SInt32 } from '../../Utilities/MathFunctions'
+import { Float32, UInt32, SInt32, MathFunctions } from '../../Utilities/MathFunctions'
 import Registry from '../../Registry'
 
 function isTypedArray(obj) {
@@ -196,7 +196,10 @@ class Attribute {
    * @param {object} j - The json object this item must decode.
    */
   fromJSON(j) {
-    this.__data = Float32Array.from(j.data)
+    const data = j.data.map((dataElement) =>
+      MathFunctions.isNumeric(dataElement) ? dataElement : Number.POSITIVE_INFINITY
+    )
+    this.__data = Float32Array.from(data)
   }
 
   /**
