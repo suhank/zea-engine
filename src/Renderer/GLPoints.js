@@ -40,8 +40,33 @@ class GLPoints extends GLGeom {
       }
     }
 
-    this.__numVerts = geomBuffers.numVertices
+    this.__numVertices = geomBuffers.numVertices
     this.__vboState = 2
+  }
+
+  /**
+   * The updateBuffers method.
+   * @param {any} opts - The opts value.
+   */
+  updateBuffers(opts) {
+    const gl = this.__gl
+    const geomBuffers = this.__geom.genBuffers()
+
+    // Update the vertex attribute buffers
+    const numVertsChanged = geomBuffers.numVertices != this.__numVertices
+    for (const attrName in geomBuffers.attrBuffers) {
+      const attrData = geomBuffers.attrBuffers[attrName]
+      const glattr = this.__glattrbuffers[attrName]
+      if (numVertsChanged) {
+        gl.deleteBuffer(glattr.buffer)
+        glattr.buffer = gl.createBuffer()
+      }
+      gl.bindBuffer(gl.ARRAY_BUFFER, glattr.buffer)
+      gl.bufferData(gl.ARRAY_BUFFER, attrData.values, gl.STATIC_DRAW)
+    }
+
+    // Cache the size so we know later if it changed (see below)
+    this.__numVertices = geomBuffers.numVertices
   }
 
   /**
@@ -76,9 +101,9 @@ class GLPoints extends GLGeom {
   draw(renderstate) {
     const gl = this.__gl
     if (renderstate.unifs.PointSize) {
-      gl.drawElementsInstanced(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0, this.__numVerts)
+      gl.drawElementsInstanced(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0, this.__numVertices)
     } else {
-      gl.drawArrays(gl.POINTS, 0, this.__numVerts)
+      gl.drawArrays(gl.POINTS, 0, this.__numVertices)
     }
   }
 
@@ -87,7 +112,7 @@ class GLPoints extends GLGeom {
    * @param {any} instanceCount - The instanceCount value.
    */
   drawInstanced(instanceCount) {
-    this.__gl.drawArraysInstanced(this.__gl.POINTS, 0, this.__numVerts, instanceCount)
+    this.__gl.drawArraysInstanced(this.__gl.POINTS, 0, this.__numVertices, instanceCount)
   }
 }
 export { GLPoints }
