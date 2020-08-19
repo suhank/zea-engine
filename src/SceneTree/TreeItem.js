@@ -1146,15 +1146,6 @@ class TreeItem extends BaseItem {
       if (srcChildItem) this.addChild(srcChildItem.clone(), false, false)
     })
   }
-
-  /**
-   * The destroy is called by the system to cause explicit resources cleanup.
-   * Users should never need to call this method directly.
-   */
-  destroy() {
-    this.removeAllChildren()
-    super.destroy()
-  }
 }
 
 Registry.register('TreeItem', TreeItem)

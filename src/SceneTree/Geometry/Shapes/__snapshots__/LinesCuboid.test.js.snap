@@ -28,7 +28,6 @@ Object {
     3,
     7,
   ],
-  "numVertices": 8,
   "params": Object {
     "BaseZAtZero": Object {
       "value": true,
@@ -44,38 +43,6 @@ Object {
     },
   },
   "type": "LinesCuboid",
-  "vertexAttributes": Object {
-    "positions": Object {
-      "data": Array [
-        1,
-        -1,
-        2,
-        1,
-        1,
-        2,
-        -1,
-        1,
-        2,
-        -1,
-        -1,
-        2,
-        1,
-        -1,
-        0,
-        1,
-        1,
-        0,
-        -1,
-        1,
-        0,
-        -1,
-        -1,
-        0,
-      ],
-      "dataType": "Vec3",
-      "defaultValue": 0,
-      "length": 8,
-    },
-  },
+  "vertexAttributes": Object {},
 }
 `;

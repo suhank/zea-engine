@@ -324,12 +324,6 @@ class ParameterOwner extends EventEmitter {
       }
     }
   }
-
-  /**
-   * The destroy is called by the system to cause explicit resources cleanup.
-   * Users should never need to call this method directly.
-   */
-  destroy() {}
 }
 
 export { ParameterOwner }

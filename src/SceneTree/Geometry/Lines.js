@@ -178,4 +178,5 @@ class Lines extends BaseGeom {
 
 Registry.register('Lines', Lines)
 
+export default Lines
 export { Lines }
