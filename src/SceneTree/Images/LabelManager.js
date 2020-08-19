@@ -65,7 +65,8 @@ class LabelManager extends EventEmitter {
    * @param {json} json - The json data of of the library.
    */
   loadLibrary(name, url) {
-    const stem = name.split(name.lastIndexOf('.'))[0]
+    const stem = name.substring(0, name.lastIndexOf('.'))
+    this.__foundLabelLibraries[stem] = url
 
     if (name.endsWith('.labels')) {
       loadTextfile(url, (text) => {
@@ -77,14 +78,11 @@ class LabelManager extends EventEmitter {
       // https://stackoverflow.com/questions/8238407/how-to-parse-excel-file-in-javascript-html5
       // and here:
       // https://github.com/SheetJS/js-xlsx/tree/master/demos/xhr
-      const stem = file.name.split('.')[0] // trim off the extension
-      this.__foundLabelLibraries[stem] = file
-      loadBinfile(file.url, (data) => {
+      loadBinfile(url, (data) => {
         const unit8array = new Uint8Array(data)
         const workbook = XLSX.read(unit8array, {
           type: 'array',
         })
-
         const json = {}
         workbook.SheetNames.forEach(function (sheetName) {
           // Here is your object
