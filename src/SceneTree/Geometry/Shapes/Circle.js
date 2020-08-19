@@ -67,7 +67,7 @@ class Circle extends Lines {
    * @param {boolean} emit - The emit value.
    * @private
    */
-  __resize(mode) {
+  __resize(emit) {
     const radius = this.__radius.getValue()
     const segs = this.__numSegments.getValue()
     const step = this.__angle.getValue() / segs
