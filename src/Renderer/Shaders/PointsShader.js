@@ -18,6 +18,7 @@ attribute vec3 positions;
 
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
+uniform float PointSize;
 
 <%include file="stack-gl/transpose.glsl"/>
 <%include file="stack-gl/inverse.glsl"/>
@@ -32,6 +33,8 @@ void main(void) {
   mat4 modelMatrix = getModelMatrix(drawItemId);
   mat4 modelViewProjectionMatrix = projectionMatrix * viewMatrix * modelMatrix;
   gl_Position = modelViewProjectionMatrix * vec4(positions, 1.);
+  
+  gl_PointSize = PointSize;
 }
 `
     )
@@ -69,6 +72,7 @@ void main(void) {
       name: 'BaseColor',
       defaultValue: new Color(1.0, 1.0, 0.5),
     })
+    paramDescs.push({ name: 'PointSize', defaultValue: 2.0 })
     return paramDescs
   }
 }
