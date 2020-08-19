@@ -760,7 +760,7 @@ class TreeItem extends BaseItem {
    * @param {number} index - The index value.
    * @return {BaseItem|Parameter} - The return value.
    */
-  resolvePath(path, index = 0) {
+  resolvePath(path, index = 0, displayError = false) {
     if (typeof path == 'string') path = path.split('/')
 
     if (index == 0) {
@@ -804,11 +804,13 @@ class TreeItem extends BaseItem {
         return param
       }
 
-      // Note: consuming code should generate errors if necssary.
-      // In some cases, this _should_ return null and errors messages ares imply distracting.
-      // report("Unable to resolve path '"+"/".join(path)+"' after:"+this.getName());
-      // console.warn("Unable to resolve path :" + (path) + " after:" + this.getName() + "\nNo child, component or property called :" + path[index]);
-      return null
+      // Note: consuming code should catch and display errors if necessary.
+      // Silent failures are extremely difficult to debug.
+      throw new Error(
+        `Unable to resolve path : [${path.toString()}] after: ${this.getName()} \nNo child or parameter called : "${
+          path[index]
+        }"`
+      )
     }
     return childItem.resolvePath(path, index + 1)
   }
