@@ -193,11 +193,7 @@ class Group extends TreeItem {
     let xfo
     if (initialXfoMode == GROUP_XFO_MODES.manual) {
       // The xfo is manually set by the current global xfo.
-      // this.invGroupXfo = this.getParameter('GlobalXfo').getValue().inverse()
-      this.groupTransformOp.setBindXfo(this.getParameter('GlobalXfo').getValue())
-      this.calculatingGroupXfo = false
-      this.groupXfoDirty = false
-      return
+      xfo = this.getParameter('GlobalXfo').getValue()
     } else if (initialXfoMode == GROUP_XFO_MODES.first) {
       if (items[0] instanceof TreeItem) {
         xfo = items[0].getParameter('GlobalXfo').getValue()

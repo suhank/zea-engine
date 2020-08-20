@@ -778,26 +778,9 @@ class TreeItem extends BaseItem {
       return this
     }
 
-    // if (path[index] == '>' && index == path.length - 2) {
-    //   if (this.hasComponent(path[index + 1])) {
-    //     const component = this.getComponent(path[index + 1])
-    //     return component.resolvePath(path, index + 2)
-    //   }
-    // }
-
     const childName = path[index]
     const childItem = this.getChildByName(childName)
     if (childItem == undefined) {
-      // Maybe the name is a component name.
-      // if (this.hasComponent(path[index])) {
-      //   const component = this.getComponent(path[index])
-      //   if (index == path.length) {
-      //     return component
-      //   } else {
-      //     return component.resolvePath(path, index + 1)
-      //   }
-      // }
-
       // Maybe the name is a parameter name.
       const param = this.getParameter(path[index])
       if (param) {
