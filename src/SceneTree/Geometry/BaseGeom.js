@@ -463,7 +463,7 @@ class BaseGeom extends ParameterOwner {
 
     const vertexAttributes = {}
     for (const [key, attr] of this.__vertexAttributes.entries()) {
-      if (!context || !('skipAttributes' in context) || context.skipAttributes.indexOf(key) === -1)
+      if (!context || !('skipAttributes' in context) || !context.skipAttributes.includes(key))
         vertexAttributes[key] = attr.toJSON(context)
     }
     json.vertexAttributes = vertexAttributes
