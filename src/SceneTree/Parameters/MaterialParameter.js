@@ -67,7 +67,14 @@ class MaterialParameter extends Parameter {
    * @return {object} - Returns the json object.
    */
   toJSON(context) {
-    return this.__value ? { value: this.__value.toJSON(context) } : undefined
+    let j
+    if (this.__value) {
+      j = {
+        value: !context || !context.onlyPath ? this.__value.toJSON(context) : this.__value.getPath(),
+      }
+    }
+
+    return j
   }
 
   /**
@@ -82,9 +89,19 @@ class MaterialParameter extends Parameter {
       return
     }
 
-    const material = new Material()
-    material.fromJSON(j.value, context)
-    this.loadValue(material)
+    if (j.value instanceof Array || j.value instanceof String) {
+      if (context && context.assetItem) {
+        const materialLibrary = context.assetItem.getMaterialLibrary()
+        const material = materialLibrary.getMaterial(j.value instanceof array ? j.value[1] : j.value)
+        if (material) {
+          this.loadValue(material)
+        }
+      }
+    } else {
+      const material = new Material()
+      material.fromJSON(j.value, context)
+      this.loadValue(material)
+    }
   }
 
   // ////////////////////////////////////////

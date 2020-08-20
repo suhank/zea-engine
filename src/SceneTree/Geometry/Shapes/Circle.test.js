@@ -30,7 +30,6 @@ describe('Circle', () => {
   it('restores from JSON (serialization).', () => {
     const circle = new Circle()
     const expectedOutput = {
-      indices: [0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 0],
       params: {
         Angle: { value: 6.283185307179586 },
         NumSegments: {

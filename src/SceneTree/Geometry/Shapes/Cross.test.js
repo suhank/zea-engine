@@ -22,7 +22,6 @@ describe('Cross', () => {
       params: { Size: { value: 4 } },
       type: 'Cross',
       vertexAttributes: {},
-      indices: [0, 1, 2, 3, 4, 5],
     })
   })
 
@@ -32,7 +31,6 @@ describe('Cross', () => {
       params: { Size: { value: 4 } },
       type: 'Cross',
       vertexAttributes: {},
-      indices: [0, 1, 2, 3, 4, 5],
     })
 
     const newCross = new Cross(4)

@@ -2,18 +2,6 @@
 
 exports[`Grid saves to JSON (serialization). 1`] = `
 Object {
-  "indices": Array [
-    0,
-    1,
-    2,
-    3,
-    4,
-    5,
-    6,
-    7,
-    0,
-    0,
-  ],
   "params": Object {
     "SkipCenterLines": Object {
       "value": true,

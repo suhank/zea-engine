@@ -25,12 +25,6 @@ class ProceduralLines extends Lines {
   }
 
   /**
-   * Rebuilding Geometry
-   *
-   */
-  __rebuild() {}
-
-  /**
    * The fromJSON method decodes a json object for this type.
    *
    * @param {object} j - The json object this item must decode.
@@ -38,7 +32,6 @@ class ProceduralLines extends Lines {
    */
   fromJSON(j, context) {
     super.fromJSON(j, context)
-    this.__rebuild()
   }
 }
 

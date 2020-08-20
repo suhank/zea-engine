@@ -2,20 +2,6 @@
 
 exports[`Circle saves to JSON (serialization). 1`] = `
 Object {
-  "indices": Array [
-    0,
-    1,
-    1,
-    2,
-    2,
-    3,
-    3,
-    4,
-    4,
-    5,
-    5,
-    0,
-  ],
   "params": Object {
     "Angle": Object {
       "value": 6.283185307179586,

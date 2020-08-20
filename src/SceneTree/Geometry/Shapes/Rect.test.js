@@ -31,7 +31,6 @@ describe('Rect', () => {
       },
       type: 'Rect',
       vertexAttributes: {},
-      indices: [0, 1, 1, 2, 2, 3, 3, 0],
     }
 
     expect(outputJSON).toEqual(expectedOutput)
@@ -44,7 +43,6 @@ describe('Rect', () => {
       type: 'Rect',
       numVertices: 4,
       vertexAttributes: {},
-      indices: [0, 1, 1, 2, 2, 3, 3, 0],
     }
     rect.fromJSON(expectedOutput)
 
