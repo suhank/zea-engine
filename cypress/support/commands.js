@@ -25,5 +25,3 @@
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 
 import '@percy/cypress'
-
-// require('@cypress/snapshot').register()
