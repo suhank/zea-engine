@@ -15,10 +15,13 @@
       color: #E0E0E0;
     }
 
+    .download-section {
+      display: flex;
+    }
+
     .download-btn {
-      color: #222323;
-      position: relative;
       cursor: pointer;
+      margin-left: auto;
     }
 
     section.cover .cover-main>p:last-child a:last-child {
@@ -80,14 +83,17 @@
           // Examine the text in the response
           response.json().then(function(data) {
 
-            const search = [
+            const search = {
+              paths: [
                 '/',
                 '/guide',
                 '/get-started',
                 '/tutorials/',
                 '/tutorials/gears-operator',
                 ...data.searchToc
-              ]
+              ],
+              depth: 6,
+            }
 
             window.$docsify = {
               name:'Zea Engine Docs',
@@ -128,5 +134,9 @@
         console.log('Fetch Error :-S', err);
       });
   </script>
+
+  <script src="https://unpkg.com/jszip@3.1.5/dist/jszip.min.js"></script>
+  <script src="https://unpkg.com/file-saver@2.0.0-rc.2/dist/FileSaver.min.js"></script>
+  <script src="downloadTutorial.js"></script>
 </body>
 </html>

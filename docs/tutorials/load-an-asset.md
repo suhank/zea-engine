@@ -12,6 +12,13 @@ This tutorial builds on concepts covered in the following pages:
 
 [Load An Asset](./LoadAnAsset.html ':include :type=iframe width=100% height=800px')
 
+<div class="download-section">
+  <a class="download-btn" title="Download"
+    onClick="downloadTutorial('load-assets-1.zip', ['/tutorials/LoadAnAsset.html', '/tutorials/data/cow.obj'])" download>
+    Download
+  </a>
+</div>
+<br>
 
 ## Constructing the Asset
 
@@ -53,7 +60,7 @@ import {
   ObjAsset,
   Scene, 
   GLRenderer
-} from "../dist/index.esm.js"
+} from "https://unpkg.com/@zeainc/zea-engine@1.0.7/dist/index.esm.js"
 
 const domElement = document.getElementById("app");
 
@@ -91,6 +98,3 @@ The value of 3.55 in the Z direction is enough to correct this problem.
 
 
 ![load-asset1](../_media/load-asset1.png)
-
-Click here to download the file to your computer to try it for yourself: 
-<a id="raw-url" href="./tutorials/LoadAnAsset.html" download>Download</a>

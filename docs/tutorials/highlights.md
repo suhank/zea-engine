@@ -70,6 +70,11 @@ setInterval(function(){
 
 [highlights](./highlights.html ':include :type=iframe width=100% height=800px')
 
-Click here to download the file to your computer to try it for yourself: 
-<a id="raw-url" href="./tutorials/highlights.html" download>Download</a>
+<div class="download-section">
+  <a class="download-btn" title="Download"
+    onClick="downloadTutorial('highlights.zip', ['/tutorials/highlights.html'])" download>
+    Download
+  </a>
+</div>
+<br>
 
