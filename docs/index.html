@@ -84,15 +84,9 @@
           response.json().then(function(data) {
 
             const search = {
-              paths: [
-                '/',
-                '/guide',
-                '/get-started',
-                '/tutorials/',
-                '/tutorials/gears-operator',
-                ...data.searchToc
-              ],
+              paths: 'auto',
               depth: 6,
+              namespace: 'engine-nsp'
             }
 
             window.$docsify = {
