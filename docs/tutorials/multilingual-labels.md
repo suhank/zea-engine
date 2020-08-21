@@ -15,4 +15,10 @@ fetch("LabelPack.labels")
 
 [MultilingualLabels](./MultilingualLabels.html ':include :type=iframe width=100% height=800px')
 
-<a id="raw-url" href="./tutorials/MultilingualLabels.html" download>Download</a>
+<div class="download-section">
+  <a class="download-btn" title="Download"
+    onClick="downloadTutorial('labels.zip', ['/tutorials/MultilingualLabels.html', '/tutorials/data/LabelPack.labels'])" download>
+    Download
+  </a>
+</div>
+<br>

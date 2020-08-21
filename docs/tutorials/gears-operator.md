@@ -81,10 +81,12 @@ renderer.resumeDrawing();
 
 [GearsOperator](./GearsOperator.html ':include :type=iframe width=100% height=800px')
 
-Click here to download the file to your computer to try it for yourself: 
-<a id="raw-url" href="./tutorials/GearsOperator.html" download>Download</a>
-
-<!-- 
-[zea_engine_DynamicScenes_Gears](https://codesandbox.io/embed/zeaenginedynamicscenesgears-4yhoz?fontsize=14&theme=dark ':include :type=iframe width=100% height=600px allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr" sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"') -->
+<div class="download-section">
+  <a class="download-btn" title="Download"
+    onClick="downloadTutorial('gears-operator.zip', ['/tutorials/GearsOperator.html'])" download>
+    Download
+  </a>
+</div>
+<br>
 
 

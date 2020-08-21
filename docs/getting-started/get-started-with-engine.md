@@ -5,6 +5,14 @@ Zea Engine is used to build interactive web applications using JavaScript. In th
 
 [GetStarted0](./zea-engine-demo-0/index.html ':include :type=iframe width=100% height=800px')
 
+<div class="download-section">
+  <a class="download-btn" title="Download"
+    onClick="downloadTutorial('getting-started-0.zip', ['/getting-started/zea-engine-demo-0/index.html'])" download>
+    Download
+  </a>
+</div>
+<br>
+
 ## Introduction to NPM and Unpkg
 
 Zea distributes its libraries via NPM. NPM is the world’s largest package manager and distributes files for the majority of JavaScript libraries.
@@ -100,15 +108,13 @@ renderer.setScene(scene);
 
 ![getting-started-0](../_media/getting-started-0.png)
 
-
-<!-- Download the source here: <a id="raw-url" href="./getting-started/zea-engine-demo-0/index.html" download>Download</a> -->
-
+<div class="download-section">
+  <a class="download-btn" title="Download"
+    onClick="downloadTutorial('getting-started-0.zip', ['/getting-started/zea-engine-demo-0/index.html'])" download>
+    Download
+  </a>
+</div>
 <br>
-Download the source here: <a class="download-btn" title="Download"
-  onClick="downloadTutorial('getting-started-0.zip', ['./getting-started/zea-engine-demo-0/index.html'])" download>
-  Download
-</a>
-
 
 # Setting up a src directory
 
@@ -194,7 +200,13 @@ Loading the given URL in the browser should now generate the following result.
 
 ![getting-started-1](../_media/getting-started-1.png)
 
-Download the source here: zea-engine-demo-1
+<div class="download-section">
+  <a class="download-btn" title="Download"
+    onClick="downloadTutorial('getting-started-1.zip', ['/getting-started/zea-engine-demo-1/index.html', '/getting-started/zea-engine-demo-1/src/index.js'])" download>
+    Download
+  </a>
+</div>
+<br>
 
 # Installing Engine Locally
 As a project gows, it becomes preferable to use NPM to manage downloading packages for us. To start using npm, initialize the package.json file and add the engine as one of the dependencies.
@@ -238,8 +250,14 @@ import {
 ```
 Now instead of loading zea-engine off the unpkg servers, we’ll load it out of our own local system. This gives us more control over which version we use, and means all data is now served off our own system.
 
-
-Download the source here: zea-engine-demo-2
+<div class="download-section">
+  <span>Download the source here: &nbsp;</span>
+  <a class="download-btn" title="Download" style="margin: 0"
+    onClick="downloadTutorial('getting-started-2.zip', ['/getting-started/zea-engine-demo-2/index.html', '/getting-started/zea-engine-demo-2/src/index.js', '/getting-started/zea-engine-demo-2/package.json'])" download>
+    Download
+  </a>
+</div>
+<br>
 
 # Using Webpack to bundle the engine
 webpack is used to compile JavaScript modules and is a popular tool in web development. T For more information on getting started using webpack then we recommend reading follow the following tutorial: https://webpack.js.org/guides/getting-started/ 
@@ -336,7 +354,13 @@ Open index.html in your browser and, if everything went right, you should see th
 
 ![getting-started-3](../_media/getting-started-3.png)
 
-Download the source here: zea-engine-demo-3
+<div class="download-section">
+  <a class="download-btn" title="Download"
+    onClick="downloadTutorial('getting-started-3.zip', ['/getting-started/zea-engine-demo-3/package.json', '/getting-started/zea-engine-demo-3/dist/index.html', '/getting-started/zea-engine-demo-3/src/index.js', '/getting-started/zea-engine-demo-3/webpack.config.js'])" download>
+    Download
+  </a>
+</div>
+<br>
 
 > Note: webpack has transpiled the es6 modules into standard javascript, which does not have the Same Origin policy enforced on es6 modules. 
 > This means you can > load the HTML file directly without running the server. However, if you still have the server running, you can also use the served url.

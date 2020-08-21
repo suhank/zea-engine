@@ -30,5 +30,12 @@ vrButton.addEventListener('mouseup', () =>{
 })
 ```
 
-
 [VR](./VR.html ':include :type=iframe width=100% height=800px')
+
+<div class="download-section">
+  <a class="download-btn" title="Download"
+    onClick="downloadTutorial('vr.zip', ['/tutorials/VR.html', '/tutorials/img/vricon.png'])" download>
+    Download
+  </a>
+</div>
+<br>
