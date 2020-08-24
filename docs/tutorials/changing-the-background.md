@@ -41,7 +41,7 @@ scene.getSettings().getParameter('BackgroundColor').setValue(color)
 
 <div class="download-section">
   <a class="download-btn" title="Download"
-    onClick="downloadTutorial('change-background-color.zip', ['/tutorials/ChangeBackgroundColor.html'])" download>
+    onClick="downloadTutorial('change-background-color.zip', ['./tutorials/ChangeBackgroundColor.html'])" download>
     Download
   </a>
 </div>

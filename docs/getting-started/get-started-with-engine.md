@@ -7,7 +7,7 @@ Zea Engine is used to build interactive web applications using JavaScript. In th
 
 <div class="download-section">
   <a class="download-btn" title="Download"
-    onClick="downloadTutorial('getting-started-0.zip', ['/getting-started/zea-engine-demo-0/index.html'])" download>
+    onClick="downloadTutorial('getting-started-0.zip', ['./getting-started/zea-engine-demo-0/index.html'])" download>
     Download
   </a>
 </div>
@@ -110,7 +110,7 @@ renderer.setScene(scene);
 
 <div class="download-section">
   <a class="download-btn" title="Download"
-    onClick="downloadTutorial('getting-started-0.zip', ['/getting-started/zea-engine-demo-0/index.html'])" download>
+    onClick="downloadTutorial('getting-started-0.zip', ['./getting-started/zea-engine-demo-0/index.html'])" download>
     Download
   </a>
 </div>
@@ -202,7 +202,7 @@ Loading the given URL in the browser should now generate the following result.
 
 <div class="download-section">
   <a class="download-btn" title="Download"
-    onClick="downloadTutorial('getting-started-1.zip', ['/getting-started/zea-engine-demo-1/index.html', '/getting-started/zea-engine-demo-1/src/index.js'])" download>
+    onClick="downloadTutorial('getting-started-1.zip', ['./getting-started/zea-engine-demo-1/index.html', './getting-started/zea-engine-demo-1/src/index.js'])" download>
     Download
   </a>
 </div>
@@ -253,7 +253,7 @@ Now instead of loading zea-engine off the unpkg servers, we’ll load it out of 
 <div class="download-section">
   <span>Download the source here: &nbsp;</span>
   <a class="download-btn" title="Download" style="margin: 0"
-    onClick="downloadTutorial('getting-started-2.zip', ['/getting-started/zea-engine-demo-2/index.html', '/getting-started/zea-engine-demo-2/src/index.js', '/getting-started/zea-engine-demo-2/package.json'])" download>
+    onClick="downloadTutorial('getting-started-2.zip', ['./getting-started/zea-engine-demo-2/index.html', './getting-started/zea-engine-demo-2/src/index.js', './getting-started/zea-engine-demo-2/package.json'])" download>
     Download
   </a>
 </div>
@@ -356,7 +356,7 @@ Open index.html in your browser and, if everything went right, you should see th
 
 <div class="download-section">
   <a class="download-btn" title="Download"
-    onClick="downloadTutorial('getting-started-3.zip', ['/getting-started/zea-engine-demo-3/package.json', '/getting-started/zea-engine-demo-3/dist/index.html', '/getting-started/zea-engine-demo-3/src/index.js', '/getting-started/zea-engine-demo-3/webpack.config.js'])" download>
+    onClick="downloadTutorial('getting-started-3.zip', ['./getting-started/zea-engine-demo-3/package.json', './getting-started/zea-engine-demo-3/dist/index.html', './getting-started/zea-engine-demo-3/src/index.js', './getting-started/zea-engine-demo-3/webpack.config.js'])" download>
     Download
   </a>
 </div>

@@ -17,7 +17,7 @@ fetch("LabelPack.labels")
 
 <div class="download-section">
   <a class="download-btn" title="Download"
-    onClick="downloadTutorial('labels.zip', ['/tutorials/MultilingualLabels.html', '/tutorials/data/LabelPack.labels'])" download>
+    onClick="downloadTutorial('labels.zip', ['./tutorials/MultilingualLabels.html', './tutorials/data/LabelPack.labels'])" download>
     Download
   </a>
 </div>
