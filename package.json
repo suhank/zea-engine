@@ -9,7 +9,7 @@
   "author": "Zea Inc.",
   "license": "SEE LICENSE IN LICENSE.md",
   "files": [
-    "dist/",
+    "dist/*.js",
     "public-resources/",
     "buildApiDocs.js"
   ],
