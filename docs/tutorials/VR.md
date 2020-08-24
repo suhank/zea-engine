@@ -34,7 +34,7 @@ vrButton.addEventListener('mouseup', () =>{
 
 <div class="download-section">
   <a class="download-btn" title="Download"
-    onClick="downloadTutorial('vr.zip', ['/tutorials/VR.html', '/tutorials/img/vricon.png'])" download>
+    onClick="downloadTutorial('vr.zip', ['./tutorials/VR.html', './tutorials/img/vricon.png'])" download>
     Download
   </a>
 </div>

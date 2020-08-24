@@ -48,7 +48,7 @@ renderer.resumeDrawing();
 
 <div class="download-section">
   <a class="download-btn" title="Download"
-    onClick="downloadTutorial('labels.zip', ['/tutorials/Labels.html'])" download>
+    onClick="downloadTutorial('labels.zip', ['./tutorials/Labels.html'])" download>
     Download
   </a>
 </div>

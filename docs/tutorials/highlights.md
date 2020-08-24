@@ -72,7 +72,7 @@ setInterval(function(){
 
 <div class="download-section">
   <a class="download-btn" title="Download"
-    onClick="downloadTutorial('highlights.zip', ['/tutorials/highlights.html'])" download>
+    onClick="downloadTutorial('highlights.zip', ['./tutorials/highlights.html'])" download>
     Download
   </a>
 </div>

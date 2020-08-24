@@ -14,7 +14,7 @@ This tutorial builds on concepts covered in the following pages:
 
 <div class="download-section">
   <a class="download-btn" title="Download"
-    onClick="downloadTutorial('load-assets-1.zip', ['/tutorials/LoadAnAsset.html', '/tutorials/data/cow.obj'])" download>
+    onClick="downloadTutorial('load-assets-1.zip', ['./tutorials/LoadAnAsset.html', './tutorials/data/cow.obj'])" download>
     Download
   </a>
 </div>
