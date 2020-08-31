@@ -138,7 +138,7 @@ class AssetItem extends TreeItem {
       localXfoParam.setValue(xfo)
     }
 
-    if (context.versions['zea-engine'].greaterThan([0, 0, 6])) {
+    if (context.versions['zea-engine'].compare([0, 0, 6]) > 0) {
       // Loading units modifies our Xfo, which then propagates up
       // the tree forcing a re-computation. Better just do it at
       // the start.
@@ -150,8 +150,8 @@ class AssetItem extends TreeItem {
     super.readBinary(reader, context)
 
     if (
-      context.versions['zea-engine'].greaterOrEqualThan([0, 0, 5]) &&
-      context.versions['zea-engine'].lessThan([0, 0, 7])
+      context.versions['zea-engine'].compare([0, 0, 5]) >= 0 &&
+      context.versions['zea-engine'].compare([0, 0, 7]) < 0
     ) {
       loadUnits()
     }

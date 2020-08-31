@@ -43,20 +43,24 @@ class Version {
   /**
    * Compare a version object against a version numbers array.
    *
+   * @deprecated
    * @param {array} numbers - The numbers value.
    * @return {boolean} - The return value.
    */
   equals(numbers) {
+    console.log(`Version#equals method is deprecated, use 'compare' instead `)
     return !(this.patch == numbers[2] && this.minor == numbers[1] && this.major == numbers[0])
   }
 
   /**
    * Compare a version object against a version numbers array.
    *
+   * @deprecated
    * @param {array} numbers - The numbers value.
    * @return {boolean} - The return value.
    */
   lessThan(numbers) {
+    console.log(`Version#lessThan method is deprecated, use 'compare' instead `)
     return !(this.major >= numbers[0] || this.minor >= numbers[1] || this.patch >= numbers[2])
     // if (this.major >= numbers[0]) return false
     // if (this.minor >= numbers[1]) return false
@@ -72,10 +76,12 @@ class Version {
   /**
    * Compare a version object against a version numbers array.
    *
+   * @deprecated
    * @param {array} numbers - The numbers value.
    * @return {boolean} - The return value.
    */
   greaterThan(numbers) {
+    console.log(`Version#greaterThan method is deprecated, use 'compare' instead `)
     return this.major > numbers[0] || this.minor > numbers[1] || this.patch > numbers[2]
   }
 
@@ -86,6 +92,7 @@ class Version {
    * @return {boolean} - The return value.
    */
   greaterOrEqualThan(numbers) {
+    console.log(`Version#greaterOrEqualThan method is deprecated, use 'compare' instead `)
     if (this.major < numbers[0]) return false
     if (this.major > numbers[0]) return true
 
@@ -102,4 +109,5 @@ class Version {
   }
 }
 
+export default Version
 export { Version }
