@@ -26,10 +26,7 @@
   * [Setting up Groups and Highlights](tutorials/highlights.md)
   * [Setting up Labels](tutorials/labels.md)
   * [Setting up multilingual Labels](tutorials/multilingual-labels.md)
-  * [Setting up an Explode Operator](tutorials/explode-operator.md)
-  * [Setting up the Gears Operator](tutorials/gears-operator.md)
-  * [Setting up Cutaways](tutorials/cutaways.md)
-  * [Loading custom points data](tutorials/custom-points.md)
+  <!-- * [Loading custom points data](tutorials/custom-points.md) -->
   * [Launching a VR Session](tutorials/VR.md)
 
 - Technical Overview
