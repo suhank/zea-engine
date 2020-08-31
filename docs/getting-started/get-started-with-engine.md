@@ -394,7 +394,7 @@ If you are getting a syntax error in the middle of minified JavaScript when open
 
 # Conclusion
 
-Now that you have a basic web application working, you can move onto adding geomtries to to the scene.
+Now that you have a basic web application working, you can move onto adding geometries to to the scene.
 
  * [Getting Started with Zea CAD](https://zea.live/zea-cad/#/getting-started/get-started-with-zea-cad)
  * [Load a Point Cloud](http://zea.live/zea-pointclouds/#/tutorials/load-a-point-cloud)
