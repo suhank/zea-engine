@@ -30,12 +30,14 @@ renderer.resumeDrawing();
 </html>
 ```
 
+Construct a new color value using a hex color code to specify the value of the color. He color codes are simple string values that encode colors. You can read more about them here [https://htmlcolorcodes.com/](https://htmlcolorcodes.com/).
+
+The SceneSettings object contains parameter called 'BackgroundColor' that can be set to change the background color.
 
 ```javascript
 const color = new Color('#887744')
 scene.getSettings().getParameter('BackgroundColor').setValue(color)
 ```
-
 
 [Different Background Color](./ChangeBackgroundColor.html ':include :type=iframe width=100% height=800px')
 
