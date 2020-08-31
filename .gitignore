@@ -10,3 +10,4 @@ Resources/Cache/
 *.log
 .tmuxp.json
 package-lock.json
+.envrc*
