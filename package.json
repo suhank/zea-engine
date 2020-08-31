@@ -21,7 +21,7 @@
     "docs": "cp CHANGELOG.md docs/ && adg --config adg.config.json",
     "docs-w": "cp CHANGELOG.md docs/ && adg -w --config=adg.config.json",
     "release": "standard-version",
-    "start": "cp -R dist/ testing-e2e/dist/ && es-dev-server -r testing-e2e",
+    "start": "./launch-e2e.sh",
     "testing-server": "node testing-server/index.js",
     "test": "jest",
     "test:coverage": "jest --coverage",
