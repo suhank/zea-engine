@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>memory-test</title>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <div id="app"></div>
+
+    <script type="module">
+      import {
+        Vec3,
+        EulerAngles,
+        Xfo,
+        Color,
+        Cuboid,
+        Material,
+        GeomItem,
+        TreeItem,
+        Scene,
+        GLRenderer,
+      } from './libs/zea-engine/dist/index.esm.js'
+
+      const domElement = document.getElementById('app')
+
+      const scene = new Scene()
+      scene.setupGrid(10.0, 10)
+
+      const renderer = new GLRenderer(domElement, { hideSplash: true, webglOptions: { antialias: false } })
+      renderer.setScene(scene)
+
+      //
+      const count = 160000
+      const dim = Math.round(Math.cbrt(count))
+      const cuboid = new Cuboid(0.3, 0.4, 0.5)
+      const start = performance.now()
+
+      for (let i = 0; i < dim; i++) {
+        const treeItemI = new TreeItem('TreeItem' + i)
+        for (let j = 0; j < dim; j++) {
+          const material = new Material('mat', 'FlatSurfaceShader')
+          material.getParameter('BaseColor').setValue(Color.random(0.4))
+          const treeItemJ = new TreeItem('TreeItem' + j)
+          for (let k = 0; k < dim; k++) {
+            const geomItem = new GeomItem('Geom' + k, cuboid, material)
+
+            const xfo = new Xfo()
+            xfo.tr.set(i, j, k)
+            geomItem.getParameter('GlobalXfo').setValue(xfo)
+
+            treeItemJ.addChild(geomItem)
+          }
+          treeItemI.addChild(treeItemJ)
+        }
+        scene.getRoot().addChild(treeItemI)
+      }
+      renderer.frameAll()
+
+      console.log(
+        "Done 'MemoryTest_GeomItemsArray' GeomItem count:",
+        dim * dim * dim,
+        ' time:',
+        performance.now() - start,
+        'ms'
+      )
+    </script>
+  </body>
+</html>
