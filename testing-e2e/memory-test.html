@@ -26,19 +26,16 @@
       const scene = new Scene()
       scene.setupGrid(10.0, 10)
 
-      const renderer = new GLRenderer(domElement, { hideSplash: true, webglOptions: { antialias: false } })
-      renderer.setScene(scene)
-
       //
       const count = 160000
       const dim = Math.round(Math.cbrt(count))
       const cuboid = new Cuboid(0.3, 0.4, 0.5)
-      const start = performance.now()
+      const t0 = performance.now()
 
       for (let i = 0; i < dim; i++) {
         const treeItemI = new TreeItem('TreeItem' + i)
         for (let j = 0; j < dim; j++) {
-          const material = new Material('mat', 'FlatSurfaceShader')
+          const material = new Material('mat', 'SimpleSurfaceShader')
           material.getParameter('BaseColor').setValue(Color.random(0.4))
           const treeItemJ = new TreeItem('TreeItem' + j)
           for (let k = 0; k < dim; k++) {
@@ -54,15 +51,20 @@
         }
         scene.getRoot().addChild(treeItemI)
       }
+      const t1 = performance.now()
+
+      const renderer = new GLRenderer(domElement, { hideSplash: true, webglOptions: { antialias: false } })
+      renderer.setScene(scene)
       renderer.frameAll()
 
+      const t2 = performance.now()
       console.log(
-        "Done 'MemoryTest_GeomItemsArray' GeomItem count:",
-        dim * dim * dim,
-        ' time:',
-        performance.now() - start,
-        'ms'
+        `Done memory test. GeomItem count:${dim * dim * dim}. Create Scene time: ${t1 - t0}ms. Load GPU time: ${
+          t2 - t1
+        }ms`
       )
+
+      window.postMessage(`done-Loading`)
     </script>
   </body>
 </html>
