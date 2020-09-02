@@ -4,7 +4,7 @@
 Class representing a GL audio items pass.
 
 
-**Extends**: <code>GLPass</code>  
+**Extends**: <code>[GLPass](api/Renderer/Passes/GLPass.md)</code>  
 
 * [GLAudioItemsPass ⇐ <code>GLPass</code>](#GLAudioItemsPass)
     * [new GLAudioItemsPass()](#new-GLAudioItemsPass)

@@ -36,7 +36,7 @@
   "devDependencies": {
     "@babel/preset-env": "^7.10.4",
     "@percy/cypress": "^2.3.1",
-    "@zeainc/jsdocs2md": "^0.0.3",
+    "@zeainc/jsdocs2md": "^0.0.7",
     "cypress": "^4.12.1",
     "docsify-cli": "^4.4.1",
     "es-dev-server": "^1.57.2",

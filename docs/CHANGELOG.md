@@ -1,5 +1,29 @@
 # Changelog
 
+
+## 1.3.0 (2020-08-20)
+
+
+### Features
+
+* Added PointSize parameter to PointsShader now that it's working in Chrome.
+* Implemented new 'tumbler' manipulation mode on CameraMouseAndKeyboard manipulator to emulate the behavior of various CAD packages.
+* TreeItem.resolvePath now throws an exception if the path cannot be resolved.
+
+
+### Bug Fixes
+
+* Regressions in the code for procedural lines and material parameter.
+* Bug causing circle to throw excepetion when generating.
+* Bug that prevented updating points geometry dynamically.
+* Issues related to loading label packs in the labelManager.
+* Regression in Group when using the 'manual' Initial Xfo mode.
+* Regression in ObjLoader caused by changes to Mesh topology.
+* Regressions in RouterOperator due to changes to OperatorOutputs map on Operator.
+* Reverted Torus to simpler detail setting. Consistent with Sphere Cone, and Circle.
+* Updated all snapshots with new output format.
+
+
 ## 1.2.0 (2020-08-14)
 
 

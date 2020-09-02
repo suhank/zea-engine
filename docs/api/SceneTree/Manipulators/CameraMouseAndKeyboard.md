@@ -8,35 +8,40 @@ const manipulator = new CameraMouseAndKeyboard()
 ```
 
 **Parameters**
-* **orbitRate(`NumberParameter`):** _todo_
-* **dollySpeed(`NumberParameter`):** _todo_
-* **mouseWheelDollySpeed(`NumberParameter`):** _todo_
+* **orbitRate([`NumberParameter`](api/SceneTree/Parameters/NumberParameter.md)):** _todo_
+* **dollySpeed([`NumberParameter`](api/SceneTree/Parameters/NumberParameter.md)):** _todo_
+* **mouseWheelDollySpeed([`NumberParameter`](api/SceneTree/Parameters/NumberParameter.md)):** _todo_
 
 **Events**
 * **movementFinished:** Triggered when the camera moves
 
 
-**Extends**: <code>ParameterOwner</code>  
+**Extends**: <code>[ParameterOwner](api/SceneTree/ParameterOwner.md)</code>  
 
 * [CameraMouseAndKeyboard ⇐ <code>ParameterOwner</code>](#CameraMouseAndKeyboard)
     * [new CameraMouseAndKeyboard(name)](#new-CameraMouseAndKeyboard)
-    * [setDefaultManipulationMode(manipulationMode)](#setDefaultManipulationMode)
-    * [look(event, dragVec)](#look)
-    * [orbit(event, dragVec)](#orbit)
-    * [pan(event, dragVec)](#pan)
-    * [dolly(event, dragVec)](#dolly)
-    * [panAndZoom(event, panDelta, dragDist)](#panAndZoom)
-    * [onMouseMove(event)](#onMouseMove)
-    * [onDoubleClick(event)](#onDoubleClick)
-    * [onMouseDown(event)](#onMouseDown)
-    * [onMouseMove(event)](#onMouseMove)
-    * [onMouseUp(event)](#onMouseUp)
-    * [onWheel(event)](#onWheel)
-    * [onTouchStart(event)](#onTouchStart)
-    * [onTouchMove(event)](#onTouchMove)
-    * [onTouchEnd(event)](#onTouchEnd)
-    * [onTouchCancel(event)](#onTouchCancel)
-    * [onDoubleTap(event)](#onDoubleTap)
+    * _instance_
+        * [setDefaultManipulationMode(manipulationMode)](#setDefaultManipulationMode)
+        * [look(event, dragVec)](#look)
+        * [turntable(event, dragVec)](#turntable)
+        * [tumble(event, dragVec)](#tumble)
+        * [trackball(event, dragVec)](#trackball)
+        * [pan(event, dragVec)](#pan)
+        * [dolly(event, dragVec)](#dolly)
+        * [panAndZoom(event, panDelta, dragDist)](#panAndZoom)
+        * [onMouseMove(event)](#onMouseMove)
+        * [onDoubleClick(event)](#onDoubleClick)
+        * [onMouseDown(event)](#onMouseDown)
+        * [onMouseMove(event)](#onMouseMove)
+        * [onMouseUp(event)](#onMouseUp)
+        * [onWheel(event)](#onWheel)
+        * [onTouchStart(event)](#onTouchStart)
+        * [onTouchMove(event)](#onTouchMove)
+        * [onTouchEnd(event)](#onTouchEnd)
+        * [onTouchCancel(event)](#onTouchCancel)
+        * [onDoubleTap(event)](#onDoubleTap)
+    * _static_
+        * [MANIPULATION_MODES](#MANIPULATION_MODES)
 
 <a name="new_CameraMouseAndKeyboard_new"></a>
 
@@ -52,12 +57,13 @@ Create a camera, mouse and keyboard
 
 ### setDefaultManipulationMode
 Sets default manipulation mode.
+The value can be on of the keys in #CameraMouseAndKeyboard.MANIPULATION_MODES
 
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| manipulationMode | <code>string</code> | The manipulation mode value. Can be 'orbit', or 'look' |
+| manipulationMode | <code>string</code> | The manipulation mode value. |
 
 <a name="CameraMouseAndKeyboard+look"></a>
 
@@ -69,11 +75,11 @@ The look method.
 | Param | Type | Description |
 | --- | --- | --- |
 | event | <code>MouseEvent</code> | The event value. |
-| dragVec | <code>Vec2</code> | The drag vector value. |
+| dragVec | <code>[Vec2](api/Math/Vec2.md)</code> | The drag vector value. |
 
-<a name="CameraMouseAndKeyboard+orbit"></a>
+<a name="CameraMouseAndKeyboard+turntable"></a>
 
-### orbit
+### turntable
 Rotates viewport camera about the target.
 
 
@@ -81,7 +87,31 @@ Rotates viewport camera about the target.
 | Param | Type | Description |
 | --- | --- | --- |
 | event | <code>MouseEvent</code> | The event value. |
-| dragVec | <code>Vec2</code> | The drag vector value. |
+| dragVec | <code>[Vec2](api/Math/Vec2.md)</code> | The drag vector value. |
+
+<a name="CameraMouseAndKeyboard+tumble"></a>
+
+### tumble
+Rotates viewport camera about the target.
+
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| event | <code>MouseEvent</code> | The event value. |
+| dragVec | <code>[Vec2](api/Math/Vec2.md)</code> | The drag vector value. |
+
+<a name="CameraMouseAndKeyboard+trackball"></a>
+
+### trackball
+Rotates viewport camera about the target.
+
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| event | <code>MouseEvent</code> | The event value. |
+| dragVec | <code>[Vec2](api/Math/Vec2.md)</code> | The drag vector value. |
 
 <a name="CameraMouseAndKeyboard+pan"></a>
 
@@ -93,7 +123,7 @@ Rotates the camera around its own `X`,`Y` axes.
 | Param | Type | Description |
 | --- | --- | --- |
 | event | <code>MouseEvent</code> | The event value. |
-| dragVec | <code>Vec2</code> | The drag vector value. |
+| dragVec | <code>[Vec2](api/Math/Vec2.md)</code> | The drag vector value. |
 
 <a name="CameraMouseAndKeyboard+dolly"></a>
 
@@ -105,7 +135,7 @@ The dolly method.
 | Param | Type | Description |
 | --- | --- | --- |
 | event | <code>MouseEvent</code> | The event value. |
-| dragVec | <code>Vec2</code> | The drag vector value. |
+| dragVec | <code>[Vec2](api/Math/Vec2.md)</code> | The drag vector value. |
 
 <a name="CameraMouseAndKeyboard+panAndZoom"></a>
 
@@ -117,7 +147,7 @@ Rotates the camera around its own `X`,`Y` axes and applies a zoom.
 | Param | Type | Description |
 | --- | --- | --- |
 | event | <code>MouseEvent</code> | The event value. |
-| panDelta | <code>Vec2</code> | The pan delta value. |
+| panDelta | <code>[Vec2](api/Math/Vec2.md)</code> | The pan delta value. |
 | dragDist | <code>number</code> | The drag distance value. |
 
 <a name="CameraMouseAndKeyboard+onMouseMove"></a>
@@ -234,6 +264,17 @@ Causes an event to occur when the touch event gets interrupted.
 
 ### onDoubleTap
 Causes an event to occur when the user double taps an element on a touch screen.
+
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| event | <code>TouchEvent</code> | The touch event that occurs. |
+
+<a name="CameraMouseAndKeyboard.MANIPULATION_MODES"></a>
+
+### MANIPULATION
+Returns a dictionary of support manipulation modes.
 
 
 

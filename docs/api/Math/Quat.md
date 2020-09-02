@@ -6,7 +6,7 @@ without encountering gimble lock. Based on complex numbers that are not easy
 to understand intuitively.
 
 
-**Extends**: <code>AttrValue</code>  
+**Extends**: <code>[AttrValue](api/Math/AttrValue.md)</code>  
 
 * [Quat ⇐ <code>AttrValue</code>](#Quat)
     * [new Quat(x, y, z, w)](#new-Quat)
@@ -198,7 +198,7 @@ Set this quat from a euler rotation.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| eulerAngles | <code>EulerAngles</code> | The euler angles rotation. |
+| eulerAngles | <code>[EulerAngles](api/Math/EulerAngles.md)</code> | The euler angles rotation. |
 
 <a name="Quat+toEulerAngles"></a>
 
@@ -206,7 +206,7 @@ Set this quat from a euler rotation.
 Converts Quat to an EulerAngles
 
 
-**Returns**: <code>EulerAngles</code> - - The return value.  
+**Returns**: <code>[EulerAngles](api/Math/EulerAngles.md)</code> - - The return value.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -221,7 +221,7 @@ Set this quat to a rotation defined by an axis and an angle (in radians).
 
 | Param | Type | Description |
 | --- | --- | --- |
-| axis | <code>Vec3</code> | The axis value. |
+| axis | <code>[Vec3](api/Math/Vec3.md)</code> | The axis value. |
 | angle | <code>number</code> | The axis angle. |
 
 <a name="Quat+setFromDirectionAndUpvector"></a>
@@ -233,8 +233,8 @@ Scales and calculates the cross product of the `Vec3` and sets the result in the
 
 | Param | Type | Description |
 | --- | --- | --- |
-| dir | <code>Vec3</code> | The direction value. |
-| up | <code>Vec3</code> | The up angle. |
+| dir | <code>[Vec3](api/Math/Vec3.md)</code> | The direction value. |
+| up | <code>[Vec3](api/Math/Vec3.md)</code> | The up angle. |
 
 <a name="Quat+setFrom2Vectors"></a>
 
@@ -245,8 +245,8 @@ Sets the state of the `Quat` from two `Vec3`.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| v0 | <code>Vec3</code> | The v0 unit vector. |
-| v1 | <code>Vec3</code> | The v1 unit vector. |
+| v0 | <code>[Vec3](api/Math/Vec3.md)</code> | The v0 unit vector. |
+| v1 | <code>[Vec3](api/Math/Vec3.md)</code> | The v1 unit vector. |
 
 <a name="Quat+setFromMat3"></a>
 
@@ -257,7 +257,7 @@ Set the quat from a Mat3.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| mat3 | <code>Mat3</code> | The mat3 value. |
+| mat3 | <code>[Mat3](api/Math/Mat3.md)</code> | The mat3 value. |
 
 <a name="Quat+setFromMat4"></a>
 
@@ -268,7 +268,7 @@ Set the quat from a Mat4.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| mat4 | <code>Mat4</code> | The mat4 value. |
+| mat4 | <code>[Mat4](api/Math/Mat4.md)</code> | The mat4 value. |
 
 <a name="Quat+isIdentity"></a>
 
@@ -489,11 +489,11 @@ Don't forget to normalize the quaternion unless
 you want axial translation as well as rotation.
 
 
-**Returns**: <code>Vec3</code> - - Returns a new Vec3.  
+**Returns**: <code>[Vec3](api/Math/Vec3.md)</code> - - Returns a new Vec3.  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| vec3 | <code>Vec3</code> | The vec3 value. |
+| vec3 | <code>[Vec3](api/Math/Vec3.md)</code> | The vec3 value. |
 
 <a name="Quat+rotateX"></a>
 
@@ -534,28 +534,28 @@ Rotates a quaternion by the given angle about the Z axis.
 Converts this Quat to a Mat3 (a 3x3 matrix).
 
 
-**Returns**: <code>Mat3</code> - - TReturns a new Mat3.  
+**Returns**: <code>[Mat3](api/Math/Mat3.md)</code> - - TReturns a new Mat3.  
 <a name="Quat+getXaxis"></a>
 
 ### getXaxis
 Returns the X axis of this quaternion.
 
 
-**Returns**: <code>Vec3</code> - - Returns the X axis as a Vec3.  
+**Returns**: <code>[Vec3](api/Math/Vec3.md)</code> - - Returns the X axis as a Vec3.  
 <a name="Quat+getYaxis"></a>
 
 ### getYaxis
 Returns the Y axis of this quaternion.
 
 
-**Returns**: <code>Vec3</code> - - Returns the Y axis as a Vec3.  
+**Returns**: <code>[Vec3](api/Math/Vec3.md)</code> - - Returns the Y axis as a Vec3.  
 <a name="Quat+getZaxis"></a>
 
 ### getZaxis
 Returns the Z axis of this quaternion.
 
 
-**Returns**: <code>Vec3</code> - - Returns the Z axis as a Vec3.  
+**Returns**: <code>[Vec3](api/Math/Vec3.md)</code> - - Returns the Z axis as a Vec3.  
 <a name="Quat+mirror"></a>
 
 ### mirror
@@ -574,7 +574,7 @@ Reflects this quaternion according to the axis provided.
 Converts this Quat to a Mat4 (a 4x4 matrix).
 
 
-**Returns**: <code>Mat4</code> - - Returns a new Mat4.  
+**Returns**: <code>[Mat4](api/Math/Mat4.md)</code> - - Returns a new Mat4.  
 <a name="Quat+lerp"></a>
 
 ### lerp
@@ -622,7 +622,7 @@ Loads the state of the value from a binary reader.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| reader | <code>BinReader</code> | The reader value. |
+| reader | <code>[BinReader](api/SceneTree/BinReader.md)</code> | The reader value. |
 
 <a name="Quat.createFromBuffer"></a>
 
@@ -637,3 +637,6 @@ Creates an instance of a `Quat` using an ArrayBuffer.
 | buffer | <code>ArrayBuffer</code> | The buffer value. |
 | byteOffset | <code>number</code> | The offset value. |
 
+
+
+### [Class Tests](api/Math/Quat.test)

@@ -17,7 +17,7 @@ myParameterOwnerItem.addParameter(treeItemParam)
 * **valueChanged:** Triggered when parameter's value changes.
 
 
-**Extends**: <code>Parameter</code>  
+**Extends**: <code>[Parameter](api/SceneTree/Parameters/Parameter.md)</code>  
 
 * [TreeItemParameter ⇐ <code>Parameter</code>](#TreeItemParameter)
     * [new TreeItemParameter(name, filterFn)](#new-TreeItemParameter)
@@ -51,7 +51,7 @@ Sets parameter value's owner `TreeItem`.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| owner | <code>TreeItem</code> | The owner value. |
+| owner | <code>[TreeItem](api/SceneTree/TreeItem.md)</code> | The owner value. |
 
 <a name="TreeItemParameter+getOwner"></a>
 
@@ -59,7 +59,7 @@ Sets parameter value's owner `TreeItem`.
 Returns parameter value's owner `TreeItem`.
 
 
-**Returns**: <code>TreeItem</code> - - The return value.  
+**Returns**: <code>[TreeItem](api/SceneTree/TreeItem.md)</code> - - The return value.  
 <a name="TreeItemParameter+setFilterFn"></a>
 
 ### setFilterFn
@@ -88,7 +88,7 @@ Sets parameter's `TreeItem` value.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| treeItem | <code>TreeItem</code> | The treeItem value |
+| treeItem | <code>[TreeItem](api/SceneTree/TreeItem.md)</code> | The treeItem value |
 
 <a name="TreeItemParameter+toJSON"></a>
 
@@ -129,3 +129,6 @@ The destroy is called by the system to cause explicit resources cleanup.
 Users should never need to call this method directly.
 
 
+
+
+### [Class Tests](api/SceneTree/Parameters/TreeItemParameter.test)

@@ -50,3 +50,6 @@ Transforms the given string into a numeric value.
 | --- | --- | --- |
 | str | <code>\*</code> | - |
 
+
+
+### [Class Tests](api/Utilities/StringFunctions.test)

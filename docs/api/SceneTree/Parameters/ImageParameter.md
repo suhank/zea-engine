@@ -14,7 +14,7 @@ myParameterOwnerItem.addParameter(imageParam)
 ```
 
 
-**Extends**: <code>Parameter</code>  
+**Extends**: <code>[Parameter](api/SceneTree/Parameters/Parameter.md)</code>  
 
 * [ImageParameter ⇐ <code>Parameter</code>](#ImageParameter)
     * [new ImageParameter(name, value)](#new-ImageParameter)
@@ -31,7 +31,7 @@ Create an image parameter.
 | Param | Type | Description |
 | --- | --- | --- |
 | name | <code>string</code> | The name of the image parameter. |
-| value | <code>BaseImage</code> | The value of the parameter. |
+| value | <code>[BaseImage](api/SceneTree/BaseImage.md)</code> | The value of the parameter. |
 
 <a name="ImageParameter+toJSON"></a>
 

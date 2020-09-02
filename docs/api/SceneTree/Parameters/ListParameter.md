@@ -17,7 +17,7 @@ myParameterOwnerItem.addParameter(listParam)
 * **elementRemoved:** Triggered when an element is removed from the array
 
 
-**Extends**: <code>Parameter</code>  
+**Extends**: <code>[Parameter](api/SceneTree/Parameters/Parameter.md)</code>  
 
 * [ListParameter ⇐ <code>Parameter</code>](#ListParameter)
     * [new ListParameter(name, dataType)](#new-ListParameter)
@@ -41,7 +41,7 @@ Create a list parameter.
 | Param | Type | Description |
 | --- | --- | --- |
 | name | <code>string</code> | The name of the list parameter. |
-| dataType | <code>string</code> \| <code>Parameter</code> | The dataType value. |
+| dataType | <code>string</code> \| <code>[Parameter](api/SceneTree/Parameters/Parameter.md)</code> | The dataType value. |
 
 <a name="ListParameter+getCount"></a>
 
@@ -72,7 +72,7 @@ Sets a value in the specified array's index.
 | Param | Type | Description |
 | --- | --- | --- |
 | index | <code>number</code> | The index value. |
-| value | <code>string</code> \| <code>Parameter</code> | The value value. |
+| value | <code>string</code> \| <code>[Parameter](api/SceneTree/Parameters/Parameter.md)</code> | The value value. |
 
 <a name="ListParameter+addElement"></a>
 
@@ -84,7 +84,7 @@ Adds a new element at the end of the array pile.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| elem | <code>string</code> \| <code>Parameter</code> | The elem value. |
+| elem | <code>string</code> \| <code>[Parameter](api/SceneTree/Parameters/Parameter.md)</code> | The elem value. |
 
 <a name="ListParameter+removeElement"></a>
 
@@ -107,7 +107,7 @@ Inserts a new element in the specified index.
 | Param | Type | Description |
 | --- | --- | --- |
 | index | <code>number</code> | The index value. |
-| elem | <code>string</code> \| <code>Parameter</code> | The elem value. |
+| elem | <code>string</code> \| <code>[Parameter](api/SceneTree/Parameters/Parameter.md)</code> | The elem value. |
 
 <a name="ListParameter+toJSON"></a>
 
@@ -148,3 +148,6 @@ The destroy is called by the system to cause explicit resources cleanup.
 Users should never need to call this method directly.
 
 
+
+
+### [Class Tests](api/SceneTree/Parameters/ListParameter.test)

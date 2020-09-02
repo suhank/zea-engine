@@ -254,3 +254,6 @@ Transforms an array of Float 32 to an array of unsigned Int16.
 | --- | --- | --- |
 | float32Array | <code>Float32Array</code> | - |
 
+
+
+### [Class Tests](api/Utilities/MathFunctions.test)

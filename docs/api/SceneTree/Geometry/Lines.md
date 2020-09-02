@@ -15,7 +15,7 @@ const lines = new Lines()
 * **geomDataChanged:** Triggered when the data value of the geometry is set(This includes reading binary)
 
 
-**Extends**: <code>BaseGeom</code>  
+**Extends**: <code>[BaseGeom](api/SceneTree/Geometry/BaseGeom.md)</code>  
 
 * [Lines ⇐ <code>BaseGeom</code>](#Lines)
     * [new Lines()](#new-Lines)
@@ -129,3 +129,6 @@ The fromJSON method decodes a json object for this type.
 | j | <code>object</code> | The json object this item must decode. |
 | context | <code>object</code> | The context value. |
 
+
+
+### [Class Tests](api/SceneTree/Geometry/Lines.test)

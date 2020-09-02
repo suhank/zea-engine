@@ -30,8 +30,8 @@ p1 is a Vec2 with [`Number.NEGATIVE_INFINITY`](https://developer.mozilla.org/en-
 
 | Param | Type | Description |
 | --- | --- | --- |
-| p0 | <code>Vec2</code> | A point representing the corners of a 2D box. |
-| p1 | <code>Vec2</code> | A point representing the corners of a 2D box. |
+| p0 | <code>[Vec2](api/Math/Vec2.md)</code> | A point representing the corners of a 2D box. |
+| p1 | <code>[Vec2](api/Math/Vec2.md)</code> | A point representing the corners of a 2D box. |
 
 <a name="Box2+set"></a>
 
@@ -42,8 +42,8 @@ Sets both Vect2 points
 
 | Param | Type | Description |
 | --- | --- | --- |
-| p0 | <code>Vec2</code> | A point representing the corners of a 2D box. |
-| p1 | <code>Vec2</code> | A point representing the corners of a 2D box. |
+| p0 | <code>[Vec2](api/Math/Vec2.md)</code> | A point representing the corners of a 2D box. |
+| p1 | <code>[Vec2](api/Math/Vec2.md)</code> | A point representing the corners of a 2D box. |
 
 <a name="Box2+reset"></a>
 
@@ -69,7 +69,7 @@ Expands the Box2 to contain the new point.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| point | <code>Vec2</code> | A point represents the corners of a 2D box. |
+| point | <code>[Vec2](api/Math/Vec2.md)</code> | A point represents the corners of a 2D box. |
 
 <a name="Box2+size"></a>
 
@@ -91,7 +91,7 @@ Returns the size of a Box2 - the same as size().
 Returns the center point of a Box2.
 
 
-**Returns**: <code>Vec2</code> - - Returns a Vec2.  
+**Returns**: <code>[Vec2](api/Math/Vec2.md)</code> - - Returns a Vec2.  
 <a name="Box2+toJSON"></a>
 
 ### toJSON
@@ -106,3 +106,6 @@ Calls `toJSON` method and stringifies it.
 
 
 **Returns**: <code>string</code> - - The return value.  
+
+
+### [Class Tests](api/Math/Box2.test)

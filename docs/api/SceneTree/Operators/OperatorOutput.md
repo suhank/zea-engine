@@ -53,7 +53,7 @@ Sets operator that owns this output. Called by the operator when adding outputs
 
 | Param | Type | Description |
 | --- | --- | --- |
-| op | <code>Operator</code> | The operator object. |
+| op | <code>[Operator](api/SceneTree/Operators/Operator.md)</code> | The operator object. |
 
 <a name="OperatorOutput+getOperator"></a>
 
@@ -61,7 +61,7 @@ Sets operator that owns this output. Called by the operator when adding outputs
 Returns operator that owns this output.
 
 
-**Returns**: <code>Operator</code> - - The operator object.  
+**Returns**: <code>[Operator](api/SceneTree/Operators/Operator.md)</code> - - The operator object.  
 <a name="OperatorOutput+getMode"></a>
 
 ### getMode
@@ -92,7 +92,7 @@ Sets the Parameter for this out put to write to.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| param | <code>Parameter</code> | The param value. |
+| param | <code>[Parameter](api/SceneTree/Parameters/Parameter.md)</code> | The param value. |
 
 <a name="OperatorOutput+getParamBindIndex"></a>
 

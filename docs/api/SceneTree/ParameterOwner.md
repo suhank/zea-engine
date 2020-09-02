@@ -5,7 +5,7 @@ Class that allows other classes to be parameterized by `Parameter` type of objec
 Not only hosting parameters, but their events.
 
 
-**Extends**: <code>EventEmitter</code>  
+**Extends**: <code>[EventEmitter](api/Utilities/EventEmitter.md)</code>  
 
 * [ParameterOwner ⇐ <code>EventEmitter</code>](#ParameterOwner)
     * [new ParameterOwner()](#new-ParameterOwner)
@@ -72,7 +72,7 @@ Returns the index of a parameter in parameter list.
 Returns `Parameter` object in a given index
 
 
-**Returns**: <code>Parameter</code> - - Parameter object value  
+**Returns**: <code>[Parameter](api/SceneTree/Parameters/Parameter.md)</code> - - Parameter object value  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -96,7 +96,7 @@ Validates if the specified parameter exists in the object.
 Returns `Parameter` object using the given name
 
 
-**Returns**: <code>Parameter</code> - - Parameter object value  
+**Returns**: <code>[Parameter](api/SceneTree/Parameters/Parameter.md)</code> - - Parameter object value  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -108,12 +108,12 @@ Returns `Parameter` object using the given name
 Adds `Parameter` object to the owner's parameter list.
 
 
-**Returns**: <code>Parameter</code> - - With `owner` and `valueChanged` event set.  
+**Returns**: <code>[Parameter](api/SceneTree/Parameters/Parameter.md)</code> - - With `owner` and `valueChanged` event set.  
 **Emits**: <code>event:&#x60;parameterAdded&#x60; with the name of the param.</code>  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| param | <code>Parameter</code> | The parameter to add. |
+| param | <code>[Parameter](api/SceneTree/Parameters/Parameter.md)</code> | The parameter to add. |
 
 <a name="ParameterOwner+insertParameter"></a>
 
@@ -122,12 +122,12 @@ Adds `Parameter` object to the owner's parameter list using the index.
 It replaces the event in the specified index.
 
 
-**Returns**: <code>Parameter</code> - - With `owner` and `valueChanged` event set.  
+**Returns**: <code>[Parameter](api/SceneTree/Parameters/Parameter.md)</code> - - With `owner` and `valueChanged` event set.  
 **Emits**: <code>event:&#x60;parameterAdded&#x60; with the name of the param.</code>  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| param | <code>Parameter</code> | The parameter to insert. |
+| param | <code>[Parameter](api/SceneTree/Parameters/Parameter.md)</code> | The parameter to insert. |
 | index | <code>number</code> | The index value. |
 
 <a name="ParameterOwner+removeParameter"></a>
@@ -148,11 +148,11 @@ Removes `Parameter` from owner, by using parameter's name.
 Replaces old `Parameter` by passing a new one with the same name.
 
 
-**Returns**: <code>Parameter</code> - - `Parameter` with `valueChanged` event set.  
+**Returns**: <code>[Parameter](api/SceneTree/Parameters/Parameter.md)</code> - - `Parameter` with `valueChanged` event set.  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| param | <code>Parameter</code> | The parameter to replace. |
+| param | <code>[Parameter](api/SceneTree/Parameters/Parameter.md)</code> | The parameter to replace. |
 
 <a name="ParameterOwner+toJSON"></a>
 
@@ -191,7 +191,7 @@ used to build the right `Parameter` class. Then all of them are added to the obj
 
 | Param | Type | Description |
 | --- | --- | --- |
-| reader | <code>BinReader</code> | The reader value. |
+| reader | <code>[BinReader](api/SceneTree/BinReader.md)</code> | The reader value. |
 | context | <code>object</code> | The context value. |
 
 <a name="ParameterOwner+toString"></a>
@@ -212,3 +212,6 @@ Copies Parameters from another `ParameterOwner` to current object.
 | --- | --- | --- |
 | src | [<code>ParameterOwner</code>](#ParameterOwner) | The ParameterOwner copy from. |
 
+
+
+### [Class Tests](api/SceneTree/ParameterOwner.test)

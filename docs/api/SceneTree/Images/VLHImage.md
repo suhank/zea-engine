@@ -4,14 +4,14 @@
 Class representing a VLH image.
 
 **Parameters**
-* **FilePath(`FilePathParameter`):** Used to specify the path to the file.
+* **FilePath([`FilePathParameter`](api/SceneTree/Parameters/FilePathParameter.md)):** Used to specify the path to the file.
 
 **Events**
 * **loaded:** Triggered when image data is loaded.
 * **updated:** Triggered when image data is updated.
 
 
-**Extends**: <code>BaseImage</code>  
+**Extends**: <code>[BaseImage](api/SceneTree/BaseImage.md)</code>  
 
 * [VLHImage ⇐ <code>BaseImage</code>](#VLHImage)
     * [new VLHImage(name, params)](#new-VLHImage)
@@ -102,6 +102,6 @@ Sets state of current Image using a binary reader object, and adds it to the res
 
 | Param | Type | Description |
 | --- | --- | --- |
-| reader | <code>BinReader</code> | The reader value. |
+| reader | <code>[BinReader](api/SceneTree/BinReader.md)</code> | The reader value. |
 | context | <code>object</code> | The context value. |
 

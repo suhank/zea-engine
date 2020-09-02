@@ -8,13 +8,13 @@ const plane = new Plane(2.0, 1.5, 10, 10)
 ```
 
 **Parameters**
-* **SizeX(`NumberParameter`):** Length of the plane along `X` axis.
-* **SizeY(`NumberParameter`):** Length of the plane along `Y` axis.
-* **DetailX(`NumberParameter`):** Number of divisions along `X`axis.
-* **DetailY(`NumberParameter`):** Number of divisions along `Y`axis.
+* **SizeX([`NumberParameter`](api/SceneTree/Parameters/NumberParameter.md)):** Length of the plane along `X` axis.
+* **SizeY([`NumberParameter`](api/SceneTree/Parameters/NumberParameter.md)):** Length of the plane along `Y` axis.
+* **DetailX([`NumberParameter`](api/SceneTree/Parameters/NumberParameter.md)):** Number of divisions along `X`axis.
+* **DetailY([`NumberParameter`](api/SceneTree/Parameters/NumberParameter.md)):** Number of divisions along `Y`axis.
 
 
-**Extends**: <code>Mesh</code>  
+**Extends**: <code>[ProceduralMesh](api/SceneTree/Geometry/Shapes/ProceduralMesh.md)</code>  
 <a name="new_Plane_new"></a>
 
 ### new Plane
@@ -30,3 +30,6 @@ Create a plane.
 | [addNormals] | <code>boolean</code> | <code>true</code> | The addNormals value. |
 | [addTextureCoords] | <code>boolean</code> | <code>true</code> | The addTextureCoords value. |
 
+
+
+### [Class Tests](api/SceneTree/Geometry/Shapes/Plane.test)

@@ -9,21 +9,21 @@ video.getParameter('FilePath').setUrl("https://storage.googleapis.com/zea-playgr
 ```
 
 **Parameters**
-* **Mute(`BooleanParameter`):** Mutes video volume.
-* **Loop(`BooleanParameter`):** Repeats video over and over again.
-* **Gain(`NumberParameter`):** Sets loudness of the video before going through any processing.
-* **SpatializeAudio(`BooleanParameter`):** Enables/Disables spatial(Surrounding) audio.
-* **refDistance(`NumberParameter`):** _todo_
-* **maxDistance(`NumberParameter`):** _todo_
-* **rolloffFactor(`NumberParameter`):** _todo_
-* **coneInnerAngle(`NumberParameter`):** _todo_
-* **coneOuterAngle(`NumberParameter`):** _todo_
-* **coneOuterGain(`NumberParameter`):** _todo_
+* **Mute([`BooleanParameter`](api/SceneTree/Parameters/BooleanParameter.md)):** Mutes video volume.
+* **Loop([`BooleanParameter`](api/SceneTree/Parameters/BooleanParameter.md)):** Repeats video over and over again.
+* **Gain([`NumberParameter`](api/SceneTree/Parameters/NumberParameter.md)):** Sets loudness of the video before going through any processing.
+* **SpatializeAudio([`BooleanParameter`](api/SceneTree/Parameters/BooleanParameter.md)):** Enables/Disables spatial(Surrounding) audio.
+* **refDistance([`NumberParameter`](api/SceneTree/Parameters/NumberParameter.md)):** _todo_
+* **maxDistance([`NumberParameter`](api/SceneTree/Parameters/NumberParameter.md)):** _todo_
+* **rolloffFactor([`NumberParameter`](api/SceneTree/Parameters/NumberParameter.md)):** _todo_
+* **coneInnerAngle([`NumberParameter`](api/SceneTree/Parameters/NumberParameter.md)):** _todo_
+* **coneOuterAngle([`NumberParameter`](api/SceneTree/Parameters/NumberParameter.md)):** _todo_
+* **coneOuterGain([`NumberParameter`](api/SceneTree/Parameters/NumberParameter.md)):** _todo_
 
 **File Types:** mp4, ogg
 
 
-**Extends**: <code>FileImage</code>  
+**Extends**: <code>[FileImage](api/SceneTree/Images/FileImage.md)</code>  
 <a name="new_LDRVideo_new"></a>
 
 ### new LDRVideo

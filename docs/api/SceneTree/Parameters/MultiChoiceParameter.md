@@ -17,7 +17,7 @@ myParameterOwnerItem.addParameter(multiChoiceParameter)
 ```
 
 
-**Extends**: <code>NumberParameter</code>  
+**Extends**: <code>[NumberParameter](api/SceneTree/Parameters/NumberParameter.md)</code>  
 
 * [MultiChoiceParameter ⇐ <code>NumberParameter</code>](#MultiChoiceParameter)
     * [new MultiChoiceParameter(name, index, choices)](#new-MultiChoiceParameter)
@@ -54,3 +54,6 @@ Sets parameter index value.
 | --- | --- | --- |
 | value | <code>string</code> \| <code>number</code> | The value param. |
 
+
+
+### [Class Tests](api/SceneTree/Parameters/MultiChoiceParameter.test)

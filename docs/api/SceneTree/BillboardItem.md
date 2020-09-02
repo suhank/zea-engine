@@ -6,14 +6,14 @@ Can own any type of `BaseImage`.
 <br>
 <br>
 **Parameters**
-* **Image(`ImageParameter`):** Is the BaseImage you want to display on the board.
-* **PixelsPerMeter(`NumberParameter`):** Quality and Size of the board. The bigger the number, the smaller the board.
-* **Alpha(`NumberParameter`):** Transparency of the board, from 0 to 1.
-* **AlignedToCamera(`BooleanParameter`):** Faces or not the board to the camera at all time(Moves with camera movement).
-* **DrawOnTop(`BooleanParameter`):** _todo_
+* **Image([`ImageParameter`](api/SceneTree/Parameters/ImageParameter.md)):** Is the BaseImage you want to display on the board.
+* **PixelsPerMeter([`NumberParameter`](api/SceneTree/Parameters/NumberParameter.md)):** Quality and Size of the board. The bigger the number, the smaller the board.
+* **Alpha([`NumberParameter`](api/SceneTree/Parameters/NumberParameter.md)):** Transparency of the board, from 0 to 1.
+* **AlignedToCamera([`BooleanParameter`](api/SceneTree/Parameters/BooleanParameter.md)):** Faces or not the board to the camera at all time(Moves with camera movement).
+* **DrawOnTop([`BooleanParameter`](api/SceneTree/Parameters/BooleanParameter.md)):** _todo_
 
 
-**Extends**: <code>TreeItem</code>  
+**Extends**: <code>[TreeItem](api/SceneTree/TreeItem.md)</code>  
 <a name="new_BillboardItem_new"></a>
 
 ### new BillboardItem
@@ -23,5 +23,5 @@ Creates a billboard item.
 | Param | Type | Description |
 | --- | --- | --- |
 | name | <code>string</code> | The name of the billboard item. |
-| image | <code>BaseImage</code> | The image value. |
+| image | <code>[BaseImage](api/SceneTree/BaseImage.md)</code> | The image value. |
 

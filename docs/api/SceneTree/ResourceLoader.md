@@ -105,7 +105,7 @@ The loadUrl method.
 Loads and return a file resource using the specified path.
 
 
-**Returns**: <code>VLAAsset</code> - - The return value.  
+**Returns**: <code>[VLAAsset](api/SceneTree/VLAAsset.md)</code> - - The return value.  
 
 | Param | Type | Description |
 | --- | --- | --- |

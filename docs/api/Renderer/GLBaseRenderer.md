@@ -4,7 +4,7 @@
 Class representing a GL base renderer.
 
 
-**Extends**: <code>ParameterOwner</code>  
+**Extends**: <code>[ParameterOwner](api/SceneTree/ParameterOwner.md)</code>  
 
 * [GLBaseRenderer ⇐ <code>ParameterOwner</code>](#GLBaseRenderer)
     * [new GLBaseRenderer(canvasDiv, options)](#new-GLBaseRenderer)
@@ -117,7 +117,7 @@ The getHeight method.
 Add a viewport.
 
 
-**Returns**: <code>GLViewport</code> - - The return value.  
+**Returns**: <code>[GLViewport](api/Renderer/GLViewport.md)</code> - - The return value.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -129,7 +129,7 @@ Add a viewport.
 The getViewport method.
 
 
-**Returns**: <code>GLViewport</code> - - The return value.  
+**Returns**: <code>[GLViewport](api/Renderer/GLViewport.md)</code> - - The return value.  
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -141,7 +141,7 @@ The getViewport method.
 The getViewportAtPos method.
 
 
-**Returns**: <code>GLViewport</code> - - The return value.  
+**Returns**: <code>[GLViewport](api/Renderer/GLViewport.md)</code> - - The return value.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -157,7 +157,7 @@ The activateViewport method.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| vp | <code>GLViewport</code> | The viewport. |
+| vp | <code>[GLViewport](api/Renderer/GLViewport.md)</code> | The viewport. |
 
 <a name="GLBaseRenderer+activateViewportAtPos"></a>
 
@@ -207,7 +207,7 @@ Setup the grid in the scene.
 | Param | Type | Description |
 | --- | --- | --- |
 | gridSize | <code>any</code> | The size of the grid. |
-| gridColor | <code>Color</code> | The color of the grid. |
+| gridColor | <code>[Color](api/Math/Color.md)</code> | The color of the grid. |
 | resolution | <code>any</code> | The resolution of the grid. |
 | lineThickness | <code>any</code> | The thickness of the grid lines. |
 

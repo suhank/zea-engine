@@ -12,7 +12,7 @@ myParameterOwnerItem.addParameter(stringParam)
 ```
 
 
-**Extends**: <code>Parameter</code>  
+**Extends**: <code>[Parameter](api/SceneTree/Parameters/Parameter.md)</code>  
 
 * [StringParameter ⇐ <code>Parameter</code>](#StringParameter)
     * [new StringParameter(name, value)](#new-StringParameter)
@@ -59,7 +59,7 @@ Extracts the string value from a buffer, updating current parameter state.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| reader | <code>BinReader</code> | The reader value. |
+| reader | <code>[BinReader](api/SceneTree/BinReader.md)</code> | The reader value. |
 | context | <code>object</code> | The context value. |
 
 <a name="StringParameter+clone"></a>
@@ -70,3 +70,6 @@ from this parameter and returns it.
 
 
 **Returns**: [<code>StringParameter</code>](#StringParameter) - - Returns a new string parameter.  
+
+
+### [Class Tests](api/SceneTree/Parameters/StringParameter.test)

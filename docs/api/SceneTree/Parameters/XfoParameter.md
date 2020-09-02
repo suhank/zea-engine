@@ -11,7 +11,7 @@ myParameterOwnerItem.addParameter(xfoParam)
 ```
 
 
-**Extends**: <code>Parameter</code>  
+**Extends**: <code>[Parameter](api/SceneTree/Parameters/Parameter.md)</code>  
 
 * [XfoParameter ⇐ <code>Parameter</code>](#XfoParameter)
     * [new XfoParameter(name, value)](#new-XfoParameter)
@@ -27,7 +27,7 @@ Create a Xfo parameter.
 | Param | Type | Description |
 | --- | --- | --- |
 | name | <code>string</code> | The name of the Xfo parameter. |
-| value | <code>Xfo</code> | The value of the parameter. |
+| value | <code>[Xfo](api/Math/Xfo.md)</code> | The value of the parameter. |
 
 <a name="XfoParameter+readBinary"></a>
 
@@ -38,7 +38,7 @@ Extracts a number value from a buffer, updating current parameter state.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| reader | <code>BinReader</code> | The reader value. |
+| reader | <code>[BinReader](api/SceneTree/BinReader.md)</code> | The reader value. |
 | context | <code>object</code> | The context value. |
 
 <a name="XfoParameter+clone"></a>
@@ -49,3 +49,6 @@ from this parameter and returns it.
 
 
 **Returns**: [<code>XfoParameter</code>](#XfoParameter) - - Returns a new Xfo parameter.  
+
+
+### [Class Tests](api/SceneTree/Parameters/XfoParameter.test)
