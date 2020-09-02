@@ -4,13 +4,13 @@
 `BaseItem` type of class
 
 **Parameters**
-* **BackgroundColor(`ColorParameter`):** Changes background color of the scene
-* **EnvMap(`ImageParameter`):** _todo_
-* **Display(`BooleanParameter`):** _todo_
-* **EnvMapLOD(`NumberParameter`):** _todo_
+* **BackgroundColor([`ColorParameter`](api/SceneTree/Parameters/ColorParameter.md)):** Changes background color of the scene
+* **EnvMap([`ImageParameter`](api/SceneTree/Parameters/ImageParameter.md)):** _todo_
+* **Display([`BooleanParameter`](api/SceneTree/Parameters/BooleanParameter.md)):** _todo_
+* **EnvMapLOD([`NumberParameter`](api/SceneTree/Parameters/NumberParameter.md)):** _todo_
 
 
-**Extends**: <code>BaseItem</code>  
+**Extends**: <code>[BaseItem](api/SceneTree/BaseItem.md)</code>  
 <a name="new_SceneSettings_new"></a>
 
 ### new SceneSettings

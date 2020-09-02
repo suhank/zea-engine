@@ -11,7 +11,7 @@ const points = new Points()
 * **boundingBoxChanged:** Triggered when the bounding box changes.
 
 
-**Extends**: <code>BaseGeom</code>  
+**Extends**: <code>[BaseGeom](api/SceneTree/Geometry/BaseGeom.md)</code>  
 
 * [Points ⇐ <code>BaseGeom</code>](#Points)
     * [new Points()](#new-Points)
@@ -32,7 +32,7 @@ Loads and populates `Points` object from a binary reader.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| reader | <code>BinReader</code> | The reader value. |
+| reader | <code>[BinReader](api/SceneTree/BinReader.md)</code> | The reader value. |
 
 <a name="Points+readBinary"></a>
 
@@ -43,6 +43,9 @@ Sets state of current geometry(Including line segments) using a binary reader ob
 
 | Param | Type | Description |
 | --- | --- | --- |
-| reader | <code>BinReader</code> | The reader value. |
+| reader | <code>[BinReader](api/SceneTree/BinReader.md)</code> | The reader value. |
 | context | <code>object</code> | The context value. |
 
+
+
+### [Class Tests](api/SceneTree/Geometry/Points.test)

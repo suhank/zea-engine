@@ -4,7 +4,7 @@
 This class abstracts the rendering of a collection of geometries to screen.
 
 
-**Extends**: <code>GLPass</code>  
+**Extends**: <code>[GLPass](api/Renderer/Passes/GLPass.md)</code>  
 
 * [GLStandardGeomsPass ⇐ <code>GLPass</code>](#GLStandardGeomsPass)
     * [new GLStandardGeomsPass()](#new-GLStandardGeomsPass)

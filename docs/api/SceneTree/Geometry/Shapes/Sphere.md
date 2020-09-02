@@ -8,12 +8,12 @@ const sphere = new Sphere(1.4, 13)
 ```
 
 **Parameters**
-* **radius(`NumberParameter`):** Radius of the sphere.
-* **sides(`NumberParameter`):** Specifies the number of subdivisions around the `Z` axis.
-* **loops(`NumberParameter`):** Specifies the number of subdivisions(stacks) along the `Z` axis.
+* **Radius([`NumberParameter`](api/SceneTree/Parameters/NumberParameter.md)):** Radius of the sphere.
+* **Sides([`NumberParameter`](api/SceneTree/Parameters/NumberParameter.md)):** Specifies the number of subdivisions around the `Z` axis.
+* **Loops([`NumberParameter`](api/SceneTree/Parameters/NumberParameter.md)):** Specifies the number of subdivisions(stacks) along the `Z` axis.
 
 
-**Extends**: <code>Mesh</code>  
+**Extends**: <code>[ProceduralMesh](api/SceneTree/Geometry/Shapes/ProceduralMesh.md)</code>  
 <a name="new_Sphere_new"></a>
 
 ### new Sphere
@@ -26,3 +26,6 @@ Creates an instance of Sphere.
 | [sides] | <code>number</code> | <code>12</code> | The number of sides. |
 | [loops] | <code>number</code> | <code>12</code> | The number of loops. |
 
+
+
+### [Class Tests](api/SceneTree/Geometry/Shapes/Sphere.test)

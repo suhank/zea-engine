@@ -8,9 +8,9 @@ Class designed to store version data. Widely used in the zea engine for backward
 * [Version](#Version)
     * [new Version(versionStr)](#new-Version)
     * [compare(numbers) ⇒ <code>number</code>](#compare)
-    * [equals(numbers) ⇒ <code>boolean</code>](#equals)
-    * [lessThan(numbers) ⇒ <code>boolean</code>](#lessThan)
-    * [greaterThan(numbers) ⇒ <code>boolean</code>](#greaterThan)
+    * ~~[.equals(numbers)](#Version+equals) ⇒ <code>boolean</code>~~
+    * ~~[.lessThan(numbers)](#Version+lessThan) ⇒ <code>boolean</code>~~
+    * ~~[.greaterThan(numbers)](#Version+greaterThan) ⇒ <code>boolean</code>~~
     * [greaterOrEqualThan(numbers) ⇒ <code>boolean</code>](#greaterOrEqualThan)
 
 <a name="new_Version_new"></a>
@@ -39,7 +39,9 @@ Compare a version object against a version numbers array.
 
 <a name="Version+equals"></a>
 
-### equals
+### ~~version.equals(numbers) ⇒ <code>boolean</code>~~
+***Deprecated***
+
 Compare a version object against a version numbers array.
 
 
@@ -51,7 +53,9 @@ Compare a version object against a version numbers array.
 
 <a name="Version+lessThan"></a>
 
-### lessThan
+### ~~version.lessThan(numbers) ⇒ <code>boolean</code>~~
+***Deprecated***
+
 Compare a version object against a version numbers array.
 
 
@@ -63,7 +67,9 @@ Compare a version object against a version numbers array.
 
 <a name="Version+greaterThan"></a>
 
-### greaterThan
+### ~~version.greaterThan(numbers) ⇒ <code>boolean</code>~~
+***Deprecated***
+
 Compare a version object against a version numbers array.
 
 
@@ -85,3 +91,6 @@ Compare a version object against a version numbers array.
 | --- | --- | --- |
 | numbers | <code>array</code> | The numbers value. |
 
+
+
+### [Class Tests](api/SceneTree/Version.test)

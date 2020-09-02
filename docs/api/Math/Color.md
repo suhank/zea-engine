@@ -4,7 +4,7 @@
 Class representing a color as 4 floating point values.
 
 
-**Extends**: <code>AttrValue</code>  
+**Extends**: <code>[AttrValue](api/Math/AttrValue.md)</code>  
 
 * [Color ⇐ <code>AttrValue</code>](#Color)
     * [new Color(r, g, b, a)](#new-Color)
@@ -432,7 +432,7 @@ Loads the state of the value from a binary reader.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| reader | <code>BinReader</code> | The reader value. |
+| reader | <code>[BinReader](api/SceneTree/BinReader.md)</code> | The reader value. |
 
 <a name="Color+toCSSString"></a>
 
@@ -467,3 +467,6 @@ Creates an instance of a `Color` using an ArrayBuffer.
 | buffer | <code>ArrayBuffer</code> | The buffer value. |
 | byteOffset | <code>number</code> | The offset value. |
 
+
+
+### [Class Tests](api/Math/Color.test)

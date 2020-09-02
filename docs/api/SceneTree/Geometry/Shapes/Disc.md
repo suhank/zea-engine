@@ -8,18 +8,17 @@ const disc = new Disc(2.0, 22)
 ```
 
 **Parameters**
-* **radius(`NumberParameter`):** Specifies the radius of the disc.
-* **sides(`NumberParameter`):** Specifies the resolution, or the disc subdivisions around `Z` axis.
+* **Radius([`NumberParameter`](api/SceneTree/Parameters/NumberParameter.md)):** Specifies the radius of the disc.
+* **Sides([`NumberParameter`](api/SceneTree/Parameters/NumberParameter.md)):** Specifies the resolution, or the disc subdivisions around `Z` axis.
 
 
-**Extends**: <code>Mesh</code>  
+**Extends**: <code>[ProceduralMesh](api/SceneTree/Geometry/Shapes/ProceduralMesh.md)</code>  
 
-* [Disc ⇐ <code>Mesh</code>](#Disc)
+* [Disc ⇐ <code>ProceduralMesh</code>](#Disc)
     * [new Disc([radius], [sides])](#new-Disc)
     * [radius ⇒ <code>number</code>](#radius)
     * [radius](#radius)
     * [sides](#sides)
-    * [toJSON() ⇒ <code>object</code>](#toJSON)
 
 <a name="new_Disc_new"></a>
 
@@ -61,10 +60,6 @@ Sets the value of the `sides` parameter.
 | --- | --- | --- |
 | val | <code>number</code> | The number of sides. |
 
-<a name="Disc+toJSON"></a>
-
-### toJSON
-The toJSON method encodes this type as a json object for persistence.
 
 
-**Returns**: <code>object</code> - - Returns the json object.  
+### [Class Tests](api/SceneTree/Geometry/Shapes/Disc.test)

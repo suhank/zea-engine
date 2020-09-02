@@ -7,22 +7,14 @@ Represents an ordered grid of points along `X` and `Y` axes.
 const pointGrid = new PointGrid(2.2, 1.5, 12, 12)
 ```
 
+**Parameters**
+* **X([`NumberParameter`](api/SceneTree/Parameters/NumberParameter.md)):** Length of the grid along the `X` axis.
+* **Y([`NumberParameter`](api/SceneTree/Parameters/NumberParameter.md)):** Length of the grid along the `Y` axis.
+* **XDivisions([`NumberParameter`](api/SceneTree/Parameters/NumberParameter.md)):** Number of divisions along `X` axis
+* **YDivisions([`NumberParameter`](api/SceneTree/Parameters/NumberParameter.md)):** Number of divisions along `Y` axis
 
-**Extends**: <code>Points</code>  
 
-* [PointGrid ⇐ <code>Points</code>](#PointGrid)
-    * [new PointGrid([x], [y], [xDivisions], [yDivisions], [addTextureCoords])](#new-PointGrid)
-    * ~~[.x](#PointGrid+x) ⇒ <code>number</code>~~
-    * ~~[.x](#PointGrid+x)~~
-    * ~~[.y](#PointGrid+y) ⇒ <code>number</code>~~
-    * ~~[.y](#PointGrid+y)~~
-    * [getX() ⇒ <code>number</code>](#getX)
-    * [setX(val)](#setX)
-    * [getY() ⇒ <code>number</code>](#getY)
-    * [setY(val)](#setY)
-    * [setSize(x, y)](#setSize)
-    * [toJSON() ⇒ <code>object</code>](#toJSON)
-
+**Extends**: <code>[ProceduralPoints](api/SceneTree/Geometry/Shapes/ProceduralPoints.md)</code>  
 <a name="new_PointGrid_new"></a>
 
 ### new PointGrid
@@ -37,106 +29,6 @@ Creates an instance of PointGrid.
 | [yDivisions] | <code>number</code> | <code>1</code> | The number of divisions along the Y axis. |
 | [addTextureCoords] | <code>boolean</code> | <code>false</code> | The addTextureCoords value. |
 
-<a name="PointGrid+x"></a>
-
-### ~~pointGrid.x ⇒ <code>number</code>~~
-***Deprecated***
-
-Getter for X.
-Is deprecated. Please use "getX".
 
 
-**Returns**: <code>number</code> - - Returns the length.  
-<a name="PointGrid+x"></a>
-
-### ~~pointGrid.x~~
-***Deprecated***
-
-Setter for X.
-Is deprecated. Please use "setX".
-
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| val | <code>number</code> | The length along the X axis. |
-
-<a name="PointGrid+y"></a>
-
-### ~~pointGrid.y ⇒ <code>number</code>~~
-***Deprecated***
-
-Getter for Y.
-Is deprecated. Please use "getY".
-
-
-**Returns**: <code>number</code> - - Returns the length.  
-<a name="PointGrid+y"></a>
-
-### ~~pointGrid.y~~
-***Deprecated***
-
-Setter for Y.
-Is deprecated. Please use "setY".
-
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| val | <code>number</code> | The length along the Y axis. |
-
-<a name="PointGrid+getX"></a>
-
-### getX
-Getter for the length of the point grid along the `X` axis.
-
-
-**Returns**: <code>number</code> - - Returns the length.  
-<a name="PointGrid+setX"></a>
-
-### setX
-Setter for the length of the point grid along the `X` axis.
-
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| val | <code>number</code> | The length along the `X` axis. |
-
-<a name="PointGrid+getY"></a>
-
-### getY
-Getter for the length of the point grid along the `Y` axis.
-
-
-**Returns**: <code>number</code> - - Returns the length.  
-<a name="PointGrid+setY"></a>
-
-### setY
-Setter for the length of the point grid along the `Y` axis.
-
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| val | <code>number</code> | The length along the Y axis. |
-
-<a name="PointGrid+setSize"></a>
-
-### setSize
-Setter for the size of the point grid.
-
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| x | <code>number</code> | The length along the `X` axis. |
-| y | <code>number</code> | The length along the `Y` axis. |
-
-<a name="PointGrid+toJSON"></a>
-
-### toJSON
-The toJSON method encodes this type as a json object for persistence.
-
-
-**Returns**: <code>object</code> - - Returns the json object.  
+### [Class Tests](api/SceneTree/Geometry/Shapes/PointGrid.test)

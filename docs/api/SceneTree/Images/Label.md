@@ -9,20 +9,20 @@ we've abstracted the complicated logic behind this class, transforming any text 
 * LabelPack
 
 **Parameters**
-* **Library(`StringParameter`):** Library you wan to use for your label, see **Library List** above.
-* **Text(`StringParameter`):**
-* **FontColor(`ColorParameter`):**
-* **Margin(`NumberParameter`):**
-* **BorderWidth(`NumberParameter`):**
-* **BorderRadius(`NumberParameter`):**
-* **Outline(`BooleanParameter`):**
-* **OutlineColor(`BooleanParameter`):**
-* **Background(`BooleanParameter`):**
+* **Library([`StringParameter`](api/SceneTree/Parameters/StringParameter.md)):** Library you wan to use for your label, see **Library List** above.
+* **Text([`StringParameter`](api/SceneTree/Parameters/StringParameter.md)):**
+* **FontColor([`ColorParameter`](api/SceneTree/Parameters/ColorParameter.md)):**
+* **Margin([`NumberParameter`](api/SceneTree/Parameters/NumberParameter.md)):**
+* **BorderWidth([`NumberParameter`](api/SceneTree/Parameters/NumberParameter.md)):**
+* **BorderRadius([`NumberParameter`](api/SceneTree/Parameters/NumberParameter.md)):**
+* **Outline([`BooleanParameter`](api/SceneTree/Parameters/BooleanParameter.md)):**
+* **OutlineColor([`BooleanParameter`](api/SceneTree/Parameters/BooleanParameter.md)):**
+* **Background([`BooleanParameter`](api/SceneTree/Parameters/BooleanParameter.md)):**
 * **ColorParameter(`BackgroundColor`):**
-* **FillBackground(`BooleanParameter`):**
-* **StrokeBackgroundOutline(`BooleanParameter`):**
-* **FontSize(`NumberParameter`):** Represents FontSize of the label
-* **Font(`StringParameter`):**
+* **FillBackground([`BooleanParameter`](api/SceneTree/Parameters/BooleanParameter.md)):**
+* **StrokeBackgroundOutline([`BooleanParameter`](api/SceneTree/Parameters/BooleanParameter.md)):**
+* **FontSize([`NumberParameter`](api/SceneTree/Parameters/NumberParameter.md)):** Represents FontSize of the label
+* **Font([`StringParameter`](api/SceneTree/Parameters/StringParameter.md)):**
 
 **Events**
 * **loaded:** Triggered when label's data is loaded.
@@ -30,7 +30,7 @@ we've abstracted the complicated logic behind this class, transforming any text 
 * **labelRendered:** Triggered when the text image is rendered. Contains `width`, `height` and data of the image.
 
 
-**Extends**: <code>DataImage</code>  
+**Extends**: <code>[DataImage](api/SceneTree/Images/DataImage.md)</code>  
 
 * [Label ⇐ <code>DataImage</code>](#Label)
     * [new Label(name, library)](#new-Label)

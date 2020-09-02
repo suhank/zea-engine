@@ -125,3 +125,6 @@ Triggers all listener functions in an event.
 | eventName | <code>string</code> | The name of the event. |
 | event | <code>object</code> \| <code>string</code> \| <code>any</code> | The data you want to pass down to all listener functions as parameter. |
 
+
+
+### [Class Tests](api/Utilities/EventEmitter.test)

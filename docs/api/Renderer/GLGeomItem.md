@@ -4,7 +4,7 @@
 This class abstracts the rendering of a collection of geometries to screen.
 
 
-**Extends**: <code>EventEmitter</code>  
+**Extends**: <code>[EventEmitter](api/Utilities/EventEmitter.md)</code>  
 
 * [GLGeomItem ⇐ <code>EventEmitter</code>](#GLGeomItem)
     * [new GLGeomItem(gl, geomItem, glGeom, id, flags)](#new-GLGeomItem)

@@ -8,17 +8,17 @@ All parameters set to the group are also set to the children; in other words, it
 to apply common things to multiple items.
 
 **Parameters**
-* **Items(`ItemSetParameter`):** _todo_
-* **Highlighted(`BooleanParameter`):** _todo_
-* **HighlightColor(`ColorParameter`):** _todo_
-* **HighlightFill(`NumberParameter`):** _todo_
-* **Material(`MaterialParameter`):** _todo_
-* **CutAwayEnabled(`BooleanParameter`):** _todo_
-* **CutPlaneNormal(`Vec3Parameter`):** _todo_
-* **CutPlaneDist(`NumberParameter`):** _todo_
+* **Items([`ItemSetParameter`](api/SceneTree/Parameters/ItemSetParameter.md)):** _todo_
+* **Highlighted([`BooleanParameter`](api/SceneTree/Parameters/BooleanParameter.md)):** _todo_
+* **HighlightColor([`ColorParameter`](api/SceneTree/Parameters/ColorParameter.md)):** _todo_
+* **HighlightFill([`NumberParameter`](api/SceneTree/Parameters/NumberParameter.md)):** _todo_
+* **Material([`MaterialParameter`](api/SceneTree/Parameters/MaterialParameter.md)):** _todo_
+* **CutAwayEnabled([`BooleanParameter`](api/SceneTree/Parameters/BooleanParameter.md)):** _todo_
+* **CutPlaneNormal([`Vec3Parameter`](api/SceneTree/Parameters/Vec3Parameter.md)):** _todo_
+* **CutPlaneDist([`NumberParameter`](api/SceneTree/Parameters/NumberParameter.md)):** _todo_
 
 
-**Extends**: <code>TreeItem</code>  
+**Extends**: <code>[TreeItem](api/SceneTree/TreeItem.md)</code>  
 
 * [Group ⇐ <code>TreeItem</code>](#Group)
     * [new Group(name)](#new-Group)
@@ -68,7 +68,7 @@ sets the root item to be used as the search root.
 
 | Param | Type |
 | --- | --- |
-| treeItem | <code>TreeItem</code> | 
+| treeItem | <code>[TreeItem](api/SceneTree/TreeItem.md)</code> | 
 
 <a name="Group+resolveItems"></a>
 
@@ -90,7 +90,7 @@ Adds an item to the group(See `Items` parameter).
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| item | <code>BaseItem</code> |  | The item value. |
+| item | <code>[BaseItem](api/SceneTree/BaseItem.md)</code> |  | The item value. |
 | emit | <code>boolean</code> | <code>true</code> | The emit value. |
 
 <a name="Group+removeItem"></a>
@@ -102,7 +102,7 @@ Removes an item from the group(See `Items` parameter).
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| item | <code>BaseItem</code> |  | The item value. |
+| item | <code>[BaseItem](api/SceneTree/BaseItem.md)</code> |  | The item value. |
 | emit | <code>boolean</code> | <code>true</code> | The emit value. |
 
 <a name="Group+clearItems"></a>
@@ -190,3 +190,6 @@ Returns enum of available xfo modes.
 | globalOri | <code>3</code> |
 
 
+
+
+### [Class Tests](api/SceneTree/Group.test)

@@ -46,7 +46,7 @@ Sets operator that owns this input. Called by the operator when adding inputs
 
 | Param | Type | Description |
 | --- | --- | --- |
-| op | <code>Operator</code> | The operator object. |
+| op | <code>[Operator](api/SceneTree/Operators/Operator.md)</code> | The operator object. |
 
 <a name="OperatorInput+getOperator"></a>
 
@@ -54,7 +54,7 @@ Sets operator that owns this input. Called by the operator when adding inputs
 Returns operator that owns this input.
 
 
-**Returns**: <code>Operator</code> - - The operator object.  
+**Returns**: <code>[Operator](api/SceneTree/Operators/Operator.md)</code> - - The operator object.  
 <a name="OperatorInput+isConnected"></a>
 
 ### isConnected
@@ -78,7 +78,7 @@ Assigns the Paramter to be used to provide the input value.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| param | <code>Parameter</code> | The param value. |
+| param | <code>[Parameter](api/SceneTree/Parameters/Parameter.md)</code> | The param value. |
 
 <a name="OperatorInput+getValue"></a>
 

@@ -12,7 +12,7 @@ myParameterOwnerItem.addParameter(booleanParam)
 ```
 
 
-**Extends**: <code>Parameter</code>  
+**Extends**: <code>[Parameter](api/SceneTree/Parameters/Parameter.md)</code>  
 
 * [BooleanParameter ⇐ <code>Parameter</code>](#BooleanParameter)
     * [new BooleanParameter(name, value)](#new-BooleanParameter)
@@ -37,3 +37,6 @@ copies its values from this parameter and returns it.
 
 
 **Returns**: [<code>BooleanParameter</code>](#BooleanParameter) - - Returns a new cloned boolean parameter.  
+
+
+### [Class Tests](api/SceneTree/Parameters/BooleanParameter.test)

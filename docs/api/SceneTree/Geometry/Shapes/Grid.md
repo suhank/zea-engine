@@ -8,19 +8,14 @@ const grid = new Grid(5, 5, 50, 50, true)
 ```
 
 **Parameters**
-* **x(`NumberParameter`):** Length of the grid along the `X` axis.
-* **y(`NumberParameter`):** Length of the grid along the `Y` axis.
-* **xDivisions(`NumberParameter`):** Number of divisions along `X` axis
-* **yDivisions(`NumberParameter`):** Number of divisions along `Y` axis
-* **skipCenterLines(`BooleanParameter`):** Property that indicates whether to display the center grid lines or not
+* **X([`NumberParameter`](api/SceneTree/Parameters/NumberParameter.md)):** Length of the grid along the `X` axis.
+* **Y([`NumberParameter`](api/SceneTree/Parameters/NumberParameter.md)):** Length of the grid along the `Y` axis.
+* **XDivisions([`NumberParameter`](api/SceneTree/Parameters/NumberParameter.md)):** Number of divisions along `X` axis
+* **YDivisions([`NumberParameter`](api/SceneTree/Parameters/NumberParameter.md)):** Number of divisions along `Y` axis
+* **SkipCenterLines([`BooleanParameter`](api/SceneTree/Parameters/BooleanParameter.md)):** Property that indicates whether to display the center grid lines or not
 
 
-**Extends**: <code>Lines</code>  
-
-* [Grid ⇐ <code>Lines</code>](#Grid)
-    * [new Grid(x, y, xDivisions, yDivisions, skipCenterLines)](#new-Grid)
-    * [toJSON() ⇒ <code>object</code>](#toJSON)
-
+**Extends**: <code>[ProceduralLines](api/SceneTree/Geometry/Shapes/ProceduralLines.md)</code>  
 <a name="new_Grid_new"></a>
 
 ### new Grid
@@ -35,10 +30,6 @@ Create a grid.
 | yDivisions | <code>number</code> | <code>10</code> | The number of divisions along `Y` axis. |
 | skipCenterLines | <code>boolean</code> | <code>false</code> | A boolean indicating whether to display the center grid lines or not. |
 
-<a name="Grid+toJSON"></a>
-
-### toJSON
-The toJSON method encodes this type as a json object for persistence.
 
 
-**Returns**: <code>object</code> - - Returns the json object.  
+### [Class Tests](api/SceneTree/Geometry/Shapes/Grid.test)

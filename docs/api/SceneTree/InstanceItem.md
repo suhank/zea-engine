@@ -4,7 +4,7 @@
 TreeItem type of class designed for making duplications of parts of the tree.
 
 
-**Extends**: <code>TreeItem</code>  
+**Extends**: <code>[TreeItem](api/SceneTree/TreeItem.md)</code>  
 
 * [InstanceItem ⇐ <code>TreeItem</code>](#InstanceItem)
     * [new InstanceItem(name)](#new-InstanceItem)
@@ -33,7 +33,7 @@ Clones passed in `TreeItem` all the way down and adds it as a child of current i
 
 | Param | Type | Description |
 | --- | --- | --- |
-| treeItem | <code>TreeItem</code> | The treeItem value. |
+| treeItem | <code>[TreeItem](api/SceneTree/TreeItem.md)</code> | The treeItem value. |
 
 <a name="InstanceItem+getSrcTree"></a>
 
@@ -41,7 +41,7 @@ Clones passed in `TreeItem` all the way down and adds it as a child of current i
 Returns the last `TreeItem` cloned.
 
 
-**Returns**: <code>TreeItem</code> - - The return value.  
+**Returns**: <code>[TreeItem](api/SceneTree/TreeItem.md)</code> - - The return value.  
 <a name="InstanceItem+readBinary"></a>
 
 ### readBinary
@@ -51,7 +51,7 @@ Sets state of current Item(Including cloned item) using a binary reader object.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| reader | <code>BinReader</code> | The reader value. |
+| reader | <code>[BinReader](api/SceneTree/BinReader.md)</code> | The reader value. |
 | context | <code>object</code> | The context value. |
 
 <a name="InstanceItem+toJSON"></a>
