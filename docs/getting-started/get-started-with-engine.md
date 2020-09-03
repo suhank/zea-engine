@@ -2,16 +2,12 @@
 
 Zea Engine is used to build interactive web applications using JavaScript. In this tutorial, we will learn how to load the engine in the browser and set up your first scene.
 
-
 [GetStarted0](./zea-engine-demo-0/index.html ':include :type=iframe width=100% height=800px')
 
-<div class="download-section">
-  <a class="download-btn" title="Download"
-    onClick="downloadTutorial('getting-started-0.zip', ['./getting-started/zea-engine-demo-0/index.html'])" download>
-    Download
-  </a>
-</div>
-<br>
+# Prerequisites
+
+Before commencing this tutorial, please be sure to review the [Development Setup](getting-started/development-setup.md) guide and ensure you have the recommended tools installed.
+
 
 ## Introduction to NPM and Unpkg
 
@@ -116,16 +112,16 @@ const renderer = new GLRenderer(domElement);
 renderer.setScene(scene);
 ```
 
-
 ![getting-started-0](../_media/getting-started-0.png)
 
 <div class="download-section">
-  <a class="download-btn" title="Download"
+  <span>Download the source here: &nbsp;</span>
+  <a class="download-btn" title="Download" style="margin: 0"
     onClick="downloadTutorial('getting-started-0.zip', ['./getting-started/zea-engine-demo-0/index.html'])" download>
     Download
   </a>
-</div>
-<br>
+</div><br>
+
 
 # Setting up a src directory
 
@@ -154,8 +150,6 @@ const renderer = new GLRenderer(domElement);
 renderer.setScene(scene);
 renderer.resumeDrawing();
 ```
-
-> "../node_modules/@zeainc/zea-engine/dist/index.esm.js"
 
 The module path now needs to resolve up one folder before traversing down into the node_modules folder.
  
@@ -213,12 +207,16 @@ Loading the given URL in the browser should now generate the following result.
 ![getting-started-1](../_media/getting-started-1.png)
 
 <div class="download-section">
-  <a class="download-btn" title="Download"
+  <span>Download the source here: &nbsp;</span>
+  <a class="download-btn" title="Download" style="margin: 0"
     onClick="downloadTutorial('getting-started-1.zip', ['./getting-started/zea-engine-demo-1/index.html', './getting-started/zea-engine-demo-1/src/index.js'])" download>
     Download
   </a>
 </div>
-<br>
+
+> Note: After downloading and extracting the archive, you will need to run 'npm install' in the folder to cause npm to download the
+engine package specified in the package.json file.
+
 
 # Installing Engine Locally
 As a project grows, it becomes preferable to use NPM to manage downloading packages for us. To start using npm, initialize the package.json file and add the engine as one of the dependencies.
@@ -268,9 +266,9 @@ Instead of loading zea-engine off the Unpkg servers, we'll load it from a local 
     Download
   </a>
 </div>
-<br>
 
-*Note: After downloading and extracting the 'getting-started-2.zip' archive, you will need to run 'npm install' in the folder to cause npm to download the engine package specified in the package.json file.*
+> Note: After downloading and extracting the archive, you will need to run 'npm install' in the folder to cause npm to download the
+engine package specified in the package.json file.
 
 # Using Webpack to bundle the engine
 Webpack is used to compile JavaScript modules and is a popular tool in web development. For more information on getting started using Webpack, we recommend reading follow the following tutorial: https://webpack.js.org/guides/getting-started/ 
@@ -380,14 +378,14 @@ If you are getting a syntax error in the middle of minified JavaScript when open
 ![getting-started-3](../_media/getting-started-3.png)
 
 <div class="download-section">
-  <a class="download-btn" title="Download"
+  <span>Download the source here: &nbsp;</span>
+  <a class="download-btn" title="Download" style="margin: 0"
     onClick="downloadTutorial('getting-started-3.zip', ['./getting-started/zea-engine-demo-3/package.json', './getting-started/zea-engine-demo-3/dist/index.html', './getting-started/zea-engine-demo-3/src/index.js', './getting-started/zea-engine-demo-3/webpack.config.js'])" download>
     Download
   </a>
 </div>
-<br>
 
-> Note: After downloading and extracting the 'getting-started-3.zip' archive, you will need to run the following commands in the folder
+> Note: After downloading and extracting the archive, you will need to run the following commands in the folder
 > 1. 'npm install'
 > 2. 'npx webpack'
 
