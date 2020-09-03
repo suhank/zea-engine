@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>memory-test</title>
+    <title>Memory test - Zea Engine</title>
+
     <meta charset="UTF-8" />
   </head>
   <body>
@@ -24,21 +25,22 @@
       const domElement = document.getElementById('app')
 
       const scene = new Scene()
-      scene.setupGrid(10.0, 10)
 
-      //
       const count = 160000
       const dim = Math.round(Math.cbrt(count))
       const cuboid = new Cuboid(0.3, 0.4, 0.5)
-      const t0 = performance.now()
+
+      console.time('Create scene')
 
       for (let i = 0; i < dim; i++) {
         const treeItemI = new TreeItem('TreeItem' + i)
+
         for (let j = 0; j < dim; j++) {
           const material = new Material('mat', 'SimpleSurfaceShader')
-          material.getParameter('BaseColor').setValue(Color.random(0.4))
           const treeItemJ = new TreeItem('TreeItem' + j)
+
           for (let k = 0; k < dim; k++) {
+            material.getParameter('BaseColor').setValue(new Color(i / dim, j / dim, k / dim))
             const geomItem = new GeomItem('Geom' + k, cuboid, material)
 
             const xfo = new Xfo()
@@ -47,24 +49,24 @@
 
             treeItemJ.addChild(geomItem)
           }
+
           treeItemI.addChild(treeItemJ)
         }
+
         scene.getRoot().addChild(treeItemI)
       }
-      const t1 = performance.now()
+
+      console.timeEnd('Create scene')
+
+      console.time('Load GPU')
 
       const renderer = new GLRenderer(domElement, { hideSplash: true, webglOptions: { antialias: false } })
       renderer.setScene(scene)
       renderer.frameAll()
 
-      const t2 = performance.now()
-      console.log(
-        `Done memory test. GeomItem count:${dim * dim * dim}. Create Scene time: ${t1 - t0}ms. Load GPU time: ${
-          t2 - t1
-        }ms`
-      )
+      console.timeEnd('Load GPU')
 
-      window.postMessage(`done-Loading`)
+      console.log(`Done memory test. GeomItem count: ${dim * dim * dim}.`)
     </script>
   </body>
 </html>
