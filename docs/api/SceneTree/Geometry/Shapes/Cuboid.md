@@ -4,19 +4,18 @@
 A class for generating a cuboid geometry.
 
 **Parameters**
-* **x(`NumberParameter`):** Length of the line cuboid along the `X` axis
-* **y(`NumberParameter`):** Length of the line cuboid along the `Y` axis
-* **z(`NumberParameter`):** Length of the line cuboid along the `Z` axis
-* **BaseZAtZero(`NumberParameter`):** Property to start or not `Z` axis from position `0.
+* **x([`NumberParameter`](api/SceneTree/Parameters/NumberParameter.md)):** Length of the line cuboid along the `X` axis
+* **y([`NumberParameter`](api/SceneTree/Parameters/NumberParameter.md)):** Length of the line cuboid along the `Y` axis
+* **z([`NumberParameter`](api/SceneTree/Parameters/NumberParameter.md)):** Length of the line cuboid along the `Z` axis
+* **BaseZAtZero([`NumberParameter`](api/SceneTree/Parameters/NumberParameter.md)):** Property to start or not `Z` axis from position `0.
 
 
-**Extends**: <code>Mesh</code>  
+**Extends**: <code>[ProceduralMesh](api/SceneTree/Geometry/Shapes/ProceduralMesh.md)</code>  
 
-* [Cuboid ⇐ <code>Mesh</code>](#Cuboid)
+* [Cuboid ⇐ <code>ProceduralMesh</code>](#Cuboid)
     * [new Cuboid(x, y, z, baseZAtZero)](#new-Cuboid)
     * [setSize(x, y, z)](#setSize)
     * [setBaseSize(x, y)](#setBaseSize)
-    * [toJSON() ⇒ <code>object</code>](#toJSON)
 
 <a name="new_Cuboid_new"></a>
 
@@ -56,10 +55,6 @@ Setter for the base size of the cuboid.
 | x | <code>number</code> | The length of the edges along the X axis. |
 | y | <code>number</code> | The length of the edges along the Y axis. |
 
-<a name="Cuboid+toJSON"></a>
-
-### toJSON
-The toJSON method encodes this type as a json object for persistence.
 
 
-**Returns**: <code>object</code> - - Returns the json object.  
+### [Class Tests](api/SceneTree/Geometry/Shapes/Cuboid.test)

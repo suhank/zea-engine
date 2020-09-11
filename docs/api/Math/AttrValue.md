@@ -68,3 +68,6 @@ Returns the number of Float32 elements used by this type. Used to calculate stor
 
 
 **Returns**: <code>number</code> - - Returns the number of float values stored in this math type.  
+
+
+### [Class Tests](api/Math/AttrValue.test)

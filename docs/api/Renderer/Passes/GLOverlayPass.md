@@ -4,7 +4,7 @@
 Class representing a GL overlay pass.
 
 
-**Extends**: <code>GLOpaqueGeomsPass</code>  
+**Extends**: <code>[GLOpaqueGeomsPass](api/Renderer/Passes/GLOpaqueGeomsPass.md)</code>  
 
 * [GLOverlayPass ⇐ <code>GLOpaqueGeomsPass</code>](#GLOverlayPass)
     * [new GLOverlayPass(name)](#new-GLOverlayPass)

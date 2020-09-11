@@ -7,7 +7,7 @@ Math types internally store values in [Float32Array](https://developer.mozilla.o
 expose getters and setters for the component values.
 
 
-**Extends**: <code>AttrValue</code>  
+**Extends**: <code>[AttrValue](api/Math/AttrValue.md)</code>  
 
 * [Vec3 ⇐ <code>AttrValue</code>](#Vec3)
     * [new Vec3(x, y, z)](#new-Vec3)
@@ -143,14 +143,14 @@ Setter for `z` component.
 Getter for `xy` swizzel.
 
 
-**Returns**: <code>Vec2</code> - - Returns the z component.  
+**Returns**: <code>[Vec2](api/Math/Vec2.md)</code> - - Returns the z component.  
 <a name="Vec3+yz"></a>
 
 ### yz 
 Getter for `yz` swizzel.
 
 
-**Returns**: <code>Vec2</code> - - Returns the z component.  
+**Returns**: <code>[Vec2](api/Math/Vec2.md)</code> - - Returns the z component.  
 <a name="Vec3+set"></a>
 
 ### set
@@ -575,7 +575,7 @@ Loads the state of the value from a binary reader.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| reader | <code>BinReader</code> | The reader value. |
+| reader | <code>[BinReader](api/SceneTree/BinReader.md)</code> | The reader value. |
 
 <a name="Vec3.createFromBuffer"></a>
 
@@ -590,3 +590,6 @@ Creates an instance of a `Vec3` using an ArrayBuffer.
 | buffer | <code>ArrayBuffer</code> | The buffer value. |
 | byteOffset | <code>number</code> | The offset value. |
 
+
+
+### [Class Tests](api/Math/Vec3.test)

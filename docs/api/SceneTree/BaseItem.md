@@ -8,7 +8,7 @@ Base class for Items in the scene. It can be parameterized and can emit events.
 * **selectedChanged:** Emitted `selected` status changes, mostly in `setSelected` method.
 
 
-**Extends**: <code>ParameterOwner</code>  
+**Extends**: <code>[ParameterOwner](api/SceneTree/ParameterOwner.md)</code>  
 
 * [BaseItem ⇐ <code>ParameterOwner</code>](#BaseItem)
     * [new BaseItem(name)](#new-BaseItem)
@@ -33,7 +33,6 @@ Base class for Items in the scene. It can be parameterized and can emit events.
         * [readBinary(reader, context)](#readBinary)
         * [clone()](#clone)
         * [copyFrom(src)](#copyFrom)
-        * [destroy()](#destroy)
     * _static_
         * [getNumBaseItems() ⇒ <code>number</code>](#getNumBaseItems)
 
@@ -235,7 +234,7 @@ Sets state of current Item(Including parameters) using a binary reader object.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| reader | <code>BinReader</code> | The reader value. |
+| reader | <code>[BinReader](api/SceneTree/BinReader.md)</code> | The reader value. |
 | context | <code>object</code> | The context value. |
 
 <a name="BaseItem+clone"></a>
@@ -263,13 +262,6 @@ data from the source object.
 | --- | --- | --- |
 | src | [<code>BaseItem</code>](#BaseItem) | The BaseItem to copy from. |
 
-<a name="BaseItem+destroy"></a>
-
-### destroy
-The destroy is called by the system to cause explicit resources cleanup.
-Users should never need to call this method directly.
-
-
 <a name="BaseItem.getNumBaseItems"></a>
 
 ### getNumBaseItems
@@ -278,3 +270,6 @@ This method is used in debugging memory consumption.
 
 
 **Returns**: <code>number</code> - - Returns the total number of base items created.  
+
+
+### [Class Tests](api/SceneTree/BaseItem.test)

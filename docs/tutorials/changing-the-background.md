@@ -39,12 +39,12 @@ const color = new Color('#887744')
 scene.getSettings().getParameter('BackgroundColor').setValue(color)
 ```
 
-[Different Background Color](./ChangeBackgroundColor.html ':include :type=iframe width=100% height=800px')
-
-<div class="download-section">
-  <a class="download-btn" title="Download"
-    onClick="downloadTutorial('change-background-color.zip', ['./tutorials/ChangeBackgroundColor.html'])" download>
-    Download
-  </a>
+<!-- Copy and Paste Me -->
+<div class="glitch-embed-wrap" style="height: 420px; width: 100%;">
+  <iframe
+    src="https://glitch.com/embed/#!/embed/change-background?path=package.json&previewSize=100"
+    title="change-background on Glitch"
+    allow="geolocation; microphone; camera; midi; vr; encrypted-media"
+    style="height: 100%; width: 100%; border: 0;">
+  </iframe>
 </div>
-<br>

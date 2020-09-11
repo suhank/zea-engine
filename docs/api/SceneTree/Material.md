@@ -8,7 +8,7 @@ Use this to apply materials to your assets or item parts.
 * **shaderNameChanged:** Triggered when the shader's name is set through `setShaderName` method.
 
 
-**Extends**: <code>BaseItem</code>  
+**Extends**: <code>[BaseItem](api/SceneTree/BaseItem.md)</code>  
 
 * [Material ⇐ <code>BaseItem</code>](#Material)
     * [new Material(name, shaderName)](#new-Material)
@@ -24,7 +24,6 @@ Use this to apply materials to your assets or item parts.
     * [readBinary(reader, context)](#readBinary)
     * [clone()](#clone)
     * [copyFrom(src)](#copyFrom)
-    * [destroy()](#destroy)
 
 <a name="new_Material_new"></a>
 
@@ -129,7 +128,7 @@ Sets state of current Item(Including Shaders and Materials) using a binary reade
 
 | Param | Type | Description |
 | --- | --- | --- |
-| reader | <code>BinReader</code> | The reader value. |
+| reader | <code>[BinReader](api/SceneTree/BinReader.md)</code> | The reader value. |
 | context | <code>object</code> | The context value. |
 
 <a name="Material+clone"></a>
@@ -151,10 +150,6 @@ When a Material is copied, first runs `BaseItem` copyFrom method, then sets shad
 | --- | --- | --- |
 | src | [<code>Material</code>](#Material) | The material to copy from. |
 
-<a name="Material+destroy"></a>
-
-### destroy
-The destroy is called by the system to cause explicit resources cleanup.
-Users should never need to call this method directly.
 
 
+### [Class Tests](api/SceneTree/Material.test)

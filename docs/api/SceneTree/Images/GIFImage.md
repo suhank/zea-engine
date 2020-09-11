@@ -18,7 +18,7 @@ image.getParameter('FilePath').setUrl("https://storage.googleapis.com/zea-playgr
 **File Types:** gif
 
 
-**Extends**: <code>FileImage</code>  
+**Extends**: <code>[FileImage](api/SceneTree/Images/FileImage.md)</code>  
 
 * [GIFImage ⇐ <code>FileImage</code>](#GIFImage)
     * [new GIFImage(name, filePath, params)](#new-GIFImage)

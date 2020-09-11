@@ -564,16 +564,18 @@ class Color extends AttrValue {
         gammaOffset + Math.random() * (1.0 - gammaOffset),
         randomAlpha ? gammaOffset + Math.random() * (1.0 - gammaOffset) : 1.0
       )
-    } else if (gammaOffset < 0.0) {
+    }
+
+    if (gammaOffset < 0.0) {
       return new Color(
         Math.random() * (1.0 + gammaOffset),
         Math.random() * (1.0 + gammaOffset),
         Math.random() * (1.0 + gammaOffset),
         randomAlpha ? Math.random() * (1.0 + gammaOffset) : 1.0
       )
-    } else {
-      return new Color(Math.random(), Math.random(), Math.random(), randomAlpha ? Math.random() : 1.0)
     }
+
+    return new Color(Math.random(), Math.random(), Math.random(), randomAlpha ? Math.random() : 1.0)
   }
 
   /**

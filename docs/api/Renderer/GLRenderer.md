@@ -4,7 +4,7 @@
 Class representing a GL renderer.
 
 
-**Extends**: <code>GLBaseRenderer</code>  
+**Extends**: <code>[GLBaseRenderer](api/Renderer/GLBaseRenderer.md)</code>  
 
 * [GLRenderer ⇐ <code>GLBaseRenderer</code>](#GLRenderer)
     * [new GLRenderer(canvasDiv, options)](#new-GLRenderer)
@@ -22,7 +22,6 @@ Class representing a GL renderer.
     * [getEnvMapTex() ⇒ <code>any</code>](#getEnvMapTex)
     * [setScene(scene)](#setScene)
     * [addViewport(name) ⇒ <code>any</code>](#addViewport)
-    * [onKeyPressed(key, event)](#onKeyPressed)
     * [resizeFbos(width, height)](#resizeFbos)
     * [createSelectedGeomsFbo()](#createSelectedGeomsFbo)
     * [getFbo() ⇒ <code>any</code>](#getFbo)
@@ -166,18 +165,6 @@ The addViewport method.
 | Param | Type | Description |
 | --- | --- | --- |
 | name | <code>string</code> | The name value. |
-
-<a name="GLRenderer+onKeyPressed"></a>
-
-### onKeyPressed
-The onKeyPressed method.
-
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| key | <code>any</code> | The key value. |
-| event | <code>any</code> | The event value. |
 
 <a name="GLRenderer+resizeFbos"></a>
 

@@ -8,12 +8,12 @@ const circle = new Circle(2.2, 12)
 ```
 
 **Parameters**
-* **Radius(`NumberParameter`):** Radius of the circle.
-* **Angle(`NumberParameter`):** Number of segments used to build the circle.
-* **NumSegments(`NumberParameter`):** Segments angle in radiants.
+* **Radius([`NumberParameter`](api/SceneTree/Parameters/NumberParameter.md)):** Radius of the circle.
+* **Angle([`NumberParameter`](api/SceneTree/Parameters/NumberParameter.md)):** Number of segments used to build the circle.
+* **NumSegments([`NumberParameter`](api/SceneTree/Parameters/NumberParameter.md)):** Segments angle in radiants.
 
 
-**Extends**: <code>Lines</code>  
+**Extends**: <code>[ProceduralLines](api/SceneTree/Geometry/Shapes/ProceduralLines.md)</code>  
 <a name="new_Circle_new"></a>
 
 ### new Circle
@@ -26,3 +26,6 @@ Creates an instance of Circle.
 | numSegments | <code>number</code> | <code>32</code> | The number of segments. |
 | angle | <code>number</code> |  | Arc segments angle(radians) |
 
+
+
+### [Class Tests](api/SceneTree/Geometry/Shapes/Circle.test)

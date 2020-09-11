@@ -23,7 +23,7 @@
         TreeItem,
         Material,
         Group,
-      } from './dist/index.esm.js'
+      } from './libs/zea-engine/dist/index.esm.js'
 
       const scene = new Scene()
       const domElement = document.getElementById('app')
@@ -67,6 +67,7 @@
       addMeshShape(new Torus(0.4, 1.3), -3, 4)
 
       renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(25, 25, 13), new Vec3(10, 0, 0))
+      renderer.frameAll()
     </script>
   </body>
 </html>

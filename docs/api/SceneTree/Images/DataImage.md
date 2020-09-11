@@ -8,7 +8,7 @@ Represents a BaseImage with the ability to load data.
 * **updated:** Triggered when the data is updated.
 
 
-**Extends**: <code>BaseImage</code>  
+**Extends**: <code>[BaseImage](api/SceneTree/BaseImage.md)</code>  
 
 * [DataImage ⇐ <code>BaseImage</code>](#DataImage)
     * [new DataImage(name)](#new-DataImage)

@@ -4,7 +4,7 @@
 This class abstracts the rendering of a collection of geometries to screen.
 
 
-**Extends**: <code>ParameterOwner</code>  
+**Extends**: <code>[ParameterOwner](api/SceneTree/ParameterOwner.md)</code>  
 
 * [GLPass ⇐ <code>ParameterOwner</code>](#GLPass)
     * [new GLPass()](#new-GLPass)

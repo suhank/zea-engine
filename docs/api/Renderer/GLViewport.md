@@ -4,7 +4,7 @@
 Class representing a GL viewport.
 
 
-**Extends**: <code>GLBaseViewport</code>  
+**Extends**: <code>[GLBaseViewport](api/Renderer/GLBaseViewport.md)</code>  
 
 * [GLViewport ⇐ <code>GLBaseViewport</code>](#GLViewport)
     * [new GLViewport(renderer, name, width, height)](#new-GLViewport)
@@ -30,9 +30,9 @@ Class representing a GL viewport.
     * [onMouseMove(event)](#onMouseMove)
     * [onMouseUp(event)](#onMouseUp)
     * [onMouseLeave(event)](#onMouseLeave)
-    * [onKeyPressed(key, event)](#onKeyPressed)
-    * [onKeyDown(key, event)](#onKeyDown)
-    * [onKeyUp(key, event)](#onKeyUp)
+    * [onKeyPressed(event)](#onKeyPressed)
+    * [onKeyDown(event)](#onKeyDown)
+    * [onKeyUp(event)](#onKeyUp)
     * [onWheel(event)](#onWheel)
     * [onTouchStart(event)](#onTouchStart)
     * [onTouchMove(event)](#onTouchMove)
@@ -107,14 +107,14 @@ The setManipulator method.
 The getProjectionMatrix method.
 
 
-**Returns**: <code>Mat4</code> - - The return projection matrix for the viewport.  
+**Returns**: <code>[Mat4](api/Math/Mat4.md)</code> - - The return projection matrix for the viewport.  
 <a name="GLViewport+getViewMatrix"></a>
 
 ### getViewMatrix
 The getProjectionMatrix method.
 
 
-**Returns**: <code>Mat4</code> - - The return projection matrix for the viewport.  
+**Returns**: <code>[Mat4](api/Math/Mat4.md)</code> - - The return projection matrix for the viewport.  
 <a name="GLViewport+setActive"></a>
 
 ### setActive
@@ -143,11 +143,11 @@ The frameView method.
 Compute a ray into the scene based on a mouse coordinate.
 
 
-**Returns**: <code>Ray</code> - - The return value.  
+**Returns**: <code>[Ray](api/Math/Ray.md)</code> - - The return value.  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| screenPos | <code>Vec2</code> | The screen position. |
+| screenPos | <code>[Vec2](api/Math/Vec2.md)</code> | The screen position. |
 
 <a name="GLViewport+createGeomDataFbo"></a>
 
@@ -166,7 +166,7 @@ The createGeomDataFbo method.
 The getGeomDataFbo method.
 
 
-**Returns**: <code>GLFbo</code> - - The return value.  
+**Returns**: <code>[GLFbo](api/Renderer/GLFbo.md)</code> - - The return value.  
 <a name="GLViewport+renderGeomDataFbo"></a>
 
 ### renderGeomDataFbo
@@ -190,8 +190,8 @@ The getGeomDataAtPos method.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| screenPos | <code>Vec2</code> | The screen position. |
-| mouseRay | <code>Ray</code> | The mouseRay value. |
+| screenPos | <code>[Vec2](api/Math/Vec2.md)</code> | The screen position. |
+| mouseRay | <code>[Ray](api/Math/Ray.md)</code> | The mouseRay value. |
 
 <a name="GLViewport+getGeomItemsInRect"></a>
 
@@ -204,8 +204,8 @@ Gathers all the geoms renders in a given rectangle of the viewport.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| tl | <code>Vec2</code> | The top left value of the rectangle. |
-| br | <code>Vec2</code> | The bottom right corner of the rectangle. |
+| tl | <code>[Vec2](api/Math/Vec2.md)</code> | The top left value of the rectangle. |
+| br | <code>[Vec2](api/Math/Vec2.md)</code> | The bottom right corner of the rectangle. |
 
 <a name="GLViewport+getCapture"></a>
 
@@ -274,7 +274,6 @@ Causes an event to occurs when the user presses a key on the keyboard.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| key | <code>string</code> | The key the user presses. |
 | event | <code>KeyboardEvent</code> | The event that occurs. |
 
 <a name="GLViewport+onKeyDown"></a>
@@ -286,7 +285,6 @@ Causes an event to occur when the user is pressing a key on the keyboard.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| key | <code>string</code> | The key the user is pressing. |
 | event | <code>KeyboardEvent</code> | The event that occurs. |
 
 <a name="GLViewport+onKeyUp"></a>
@@ -298,7 +296,6 @@ Causes an event to occur  when the user releases a key on the keyboard.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| key | <code>string</code> | The key the user releases |
 | event | <code>KeyboardEvent</code> | The event that occurs. |
 
 <a name="GLViewport+onWheel"></a>

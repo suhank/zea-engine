@@ -1,7 +1,7 @@
+cypress/screenshots/
 node_modules/
-testing-server/
 
-lib/
+libs/
 dist/
 projects/
 Tests/Assets/
@@ -11,3 +11,4 @@ Resources/Cache/
 *.log
 .tmuxp.json
 package-lock.json
+.envrc*

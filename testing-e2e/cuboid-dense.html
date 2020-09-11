@@ -7,7 +7,7 @@
     <div id="app"></div>
 
     <script type="module">
-      import { GLRenderer, Scene, Vec3, Color, Cuboid, Material, GeomItem } from '../dist/index.esm.js'
+      import { GLRenderer, Scene, Vec3, Color, Cuboid, Material, GeomItem } from './libs/zea-engine/dist/index.esm.js'
 
       const scene = new Scene()
       const domElement = document.getElementById('app')
@@ -19,6 +19,7 @@
 
       const geomItem = new GeomItem('Cuboid', new Cuboid(1.5, 2.0, 0.1), standardMaterial)
       scene.getRoot().addChild(geomItem)
+      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, 2.7), new Vec3(0, 0, 0.4))
       renderer.frameAll()
     </script>
   </body>

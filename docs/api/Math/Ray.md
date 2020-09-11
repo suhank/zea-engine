@@ -24,8 +24,8 @@ Create a ray.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| start | <code>Vec3</code> | The origin of the ray. |
-| dir | <code>Vec3</code> | The direction of the ray. |
+| start | <code>[Vec3](api/Math/Vec3.md)</code> | The origin of the ray. |
+| dir | <code>[Vec3](api/Math/Vec3.md)</code> | The direction of the ray. |
 
 <a name="Ray+closestPoint"></a>
 
@@ -37,7 +37,7 @@ Get the closest point.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| point | <code>Vec3</code> | The point in 3D space. |
+| point | <code>[Vec3](api/Math/Vec3.md)</code> | The point in 3D space. |
 
 <a name="Ray+pointAtDist"></a>
 
@@ -49,7 +49,7 @@ Get the closest point at a distance.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| dist | <code>Vec3</code> | The distance value. |
+| dist | <code>[Vec3](api/Math/Vec3.md)</code> | The distance value. |
 
 <a name="Ray+intersectRayVector"></a>
 
@@ -74,7 +74,7 @@ of this ray against the plane defined by the given ray.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| plane | <code>Vec3</code> | The plane to intersect with. |
+| plane | <code>[Vec3](api/Math/Vec3.md)</code> | The plane to intersect with. |
 
 <a name="Ray+clone"></a>
 
@@ -108,3 +108,6 @@ Calls `toJSON` method and stringifies it.
 
 
 **Returns**: <code>string</code> - - The return value.  
+
+
+### [Class Tests](api/Math/Ray.test)

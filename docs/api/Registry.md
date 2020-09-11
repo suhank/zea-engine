@@ -83,3 +83,6 @@ you can pass them(As many as needed).
 | --- | --- | --- |
 | blueprintName | <code>string</code> | Name of the registered blueprint(Class, type, etc) |
 
+
+
+### [Class Tests](api/./Registry.test)

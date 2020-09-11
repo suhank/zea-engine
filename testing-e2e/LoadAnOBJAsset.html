@@ -8,7 +8,7 @@
     <div id="app"></div>
 
     <script type="module">
-      import { Vec3, EulerAngles, Xfo, ObjAsset, Scene, GLRenderer } from '../dist/index.esm.js'
+      import { Vec3, EulerAngles, Xfo, ObjAsset, Scene, GLRenderer } from './libs/zea-engine/dist/index.esm.js'
 
       const domElement = document.getElementById('app')
 
@@ -26,7 +26,6 @@
 
       const renderer = new GLRenderer(domElement, { hideSplash: true, webglOptions: { antialias: false } })
       renderer.setScene(scene)
-      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(10, 10, 5), new Vec3(0, 0, 3))
 
       objAsset.on('loaded', () => {
         window.postMessage(`done-Loading`)

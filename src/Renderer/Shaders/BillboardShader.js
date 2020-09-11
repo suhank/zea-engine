@@ -139,10 +139,9 @@ void main(void) {
     gl_Position = modelViewProjectionMatrix * vec4(quadVertex.x * width, (quadVertex.y + 0.5) * height, 0.0, 1.0);
   }
 
-  // Note: nowhere are we setting this flag
   bool drawOnTop = (flags & (1<<3)) != 0;
   if(drawOnTop){
-    gl_Position.z -= 0.05;
+    gl_Position.z = mix(gl_Position.z, -1.0, 0.5);
   }
 }
 `

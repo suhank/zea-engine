@@ -4,7 +4,7 @@
 Class representing a VR viewport.
 
 
-**Extends**: <code>GLBaseViewport</code>  
+**Extends**: <code>[GLBaseViewport](api/Renderer/GLBaseViewport.md)</code>  
 
 * [VRViewport ⇐ <code>GLBaseViewport</code>](#VRViewport)
     * [new VRViewport(renderer)](#new-VRViewport)
@@ -71,7 +71,7 @@ The getVRHead method.
 The getXfo method.
 
 
-**Returns**: <code>Xfo</code> - - The return value.  
+**Returns**: <code>[Xfo](api/Math/Xfo.md)</code> - - The return value.  
 <a name="VRViewport+setXfo"></a>
 
 ### setXfo
@@ -81,7 +81,7 @@ The setXfo method.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| xfo | <code>Xfo</code> | The xfo value. |
+| xfo | <code>[Xfo](api/Math/Xfo.md)</code> | The xfo value. |
 
 <a name="VRViewport+getControllers"></a>
 

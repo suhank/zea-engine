@@ -18,6 +18,7 @@ attribute vec3 positions;
 
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
+uniform float Overlay;
 
 <%include file="stack-gl/transpose.glsl"/>
 <%include file="drawItemId.glsl"/>
@@ -27,10 +28,14 @@ uniform mat4 projectionMatrix;
 /* VS Outputs */
 
 void main(void) {
-    int drawItemId = getDrawItemId();
-    mat4 modelMatrix = getModelMatrix(drawItemId);
-    mat4 modelViewProjectionMatrix = projectionMatrix * viewMatrix * modelMatrix;
-    gl_Position = modelViewProjectionMatrix * vec4(positions, 1.0);
+  int drawItemId = getDrawItemId();
+  mat4 modelMatrix = getModelMatrix(drawItemId);
+  mat4 modelViewProjectionMatrix = projectionMatrix * viewMatrix * modelMatrix;
+  gl_Position = modelViewProjectionMatrix * vec4(positions, 1.0);
+    
+  if(Overlay > 0.0){
+    gl_Position.z = mix(gl_Position.z, -1.0, Overlay);
+  }
 }
 `
     )
@@ -44,17 +49,18 @@ uniform color BaseColor;
 uniform float Opacity;
 
 #ifdef ENABLE_ES3
-    out vec4 fragColor;
+  out vec4 fragColor;
 #endif
+
 void main(void) {
 #ifndef ENABLE_ES3
-    vec4 fragColor;
+  vec4 fragColor;
 #endif
-    fragColor = BaseColor;
-    fragColor.a *= Opacity;
+  fragColor = BaseColor;
+  fragColor.a *= Opacity;
     
 #ifndef ENABLE_ES3
-    gl_FragColor = fragColor;
+  gl_FragColor = fragColor;
 #endif
 }
 `
@@ -66,6 +72,7 @@ void main(void) {
     const paramDescs = super.getParamDeclarations()
     paramDescs.push({ name: 'BaseColor', defaultValue: new Color(1.0, 1.0, 0.5) })
     paramDescs.push({ name: 'Opacity', defaultValue: 1.0 })
+    paramDescs.push({ name: 'Overlay', defaultValue: 0.0 })
     return paramDescs
   }
 
