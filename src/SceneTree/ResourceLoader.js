@@ -38,17 +38,36 @@ class ResourceLoader extends EventEmitter {
       for (let i = 0; i < scripts.length; i++) {
         const script = scripts[i]
         if (script.src.includes('zea-engine')) {
+          // Note: the WASM file is a resource that must be loaded with the engine. If we know the URL for the
+          // engine library, then we can determine the URL for the WASM file.
+          // This code generates a URL for the WASM file based on the position of 'zea-engine' in the path.
+          // e.g.
+          // https://cdn.jsdelivr.net/combine/npm/@zeainc/zea-engine@umd
+          // or
+          // https://unpkg.com/@zeainc/zea-engine@1.5.0/dist/index.cjs.js
+          // or
+          // Trim off all the parts after the engine section, and then append the parts for public resources.
           const parts = script.src.split('/')
-          parts.pop()
-          parts.pop()
+          const enginePartIndex = parts.findIndex((part) => part.includes('zea-engine'))
+          while (parts.length > enginePartIndex + 1) parts.pop()
+
+          // Now unpack combined urls to get just the engine part.
+          // e.g.
+          // cdn.jsdelivr.net/combine/npm/@zeainc/zea-engine@umd,npm/@zeainc/zea-ux@umd,npm/@zeainc/zea-kinematics@umd"
+          if (parts[parts.length - 1].includes(',')) {
+            parts[parts.length - 1] = parts[parts.length - 1].split(',')[0]
+          }
           baseUrl = parts.join('/')
           break
         }
       }
+      // If no wasm url can be found, fallback to this one.
       if (!baseUrl) {
         baseUrl = 'https://unpkg.com/@zeainc/zea-engine@0.1.3'
       }
       this.wasmUrl = baseUrl + '/public-resources/unpack.wasm'
+    } else {
+      // If loading in Node.js... TODO.
     }
 
     if (!baseUrl) {
