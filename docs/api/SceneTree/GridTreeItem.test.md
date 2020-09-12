@@ -1,6 +1,6 @@
-<a name="Tests for `TreeItem` Class"></a>
+<a name="Tests for `GridTreeItem` Class"></a>
 
-### Tests for TreeItem Class
+### Tests for GridTreeItem Class
 
 Use this code to guide yourself on how to implement this class.
 ```javascript

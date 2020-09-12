@@ -4,7 +4,7 @@
 
 Use this code to guide yourself on how to implement this class.
 ```javascript
-import Registry from './Registry'
+import { Registry } from './Registry'
 import { Vec3 } from './Math/Vec3'
 
 describe('Registry', () => {

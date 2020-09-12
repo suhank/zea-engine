@@ -1,11 +1,12 @@
 <a name="OperatorOutput"></a>
 
-### OperatorOutput
+### OperatorOutput 
 Class representing an operator output.
 
 
+**Extends**: <code>[EventEmitter](api/Utilities/EventEmitter.md)</code>  
 
-* [OperatorOutput](#OperatorOutput)
+* [OperatorOutput ⇐ <code>EventEmitter</code>](#OperatorOutput)
     * [new OperatorOutput(name, operatorOutputMode)](#new-OperatorOutput)
     * [getName() ⇒ <code>string</code>](#getName)
     * [setOperator(op)](#setOperator)

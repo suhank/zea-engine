@@ -4,7 +4,7 @@
 
 Use this code to guide yourself on how to implement this class.
 ```javascript
-import StringFunctions from './StringFunctions'
+import { StringFunctions } from './StringFunctions'
 import { Vec3 } from '../Math/Vec3'
 
 describe('StringFunctions', () => {

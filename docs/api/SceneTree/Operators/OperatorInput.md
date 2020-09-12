@@ -1,11 +1,12 @@
 <a name="OperatorInput"></a>
 
-### OperatorInput
+### OperatorInput 
 Class representing an operator input.
 
 
+**Extends**: <code>[EventEmitter](api/Utilities/EventEmitter.md)</code>  
 
-* [OperatorInput](#OperatorInput)
+* [OperatorInput ⇐ <code>EventEmitter</code>](#OperatorInput)
     * [new OperatorInput(name)](#new-OperatorInput)
     * [getName() ⇒ <code>any</code>](#getName)
     * [setOperator(op)](#setOperator)

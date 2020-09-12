@@ -4,7 +4,7 @@
 
 Use this code to guide yourself on how to implement this class.
 ```javascript
-import Version from './Version'
+import { Version } from './Version'
 
 describe('Version', () => {
   test('Check for default version value.', () => {

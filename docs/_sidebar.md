@@ -100,6 +100,8 @@
   * [Camera](api/SceneTree/Camera)
   * [GeomItem](api/SceneTree/GeomItem)
   * [GeomItem.test](api/SceneTree/GeomItem.test)
+  * [GridTreeItem](api/SceneTree/GridTreeItem)
+  * [GridTreeItem.test](api/SceneTree/GridTreeItem.test)
   * [Group](api/SceneTree/Group)
   * [Group.test](api/SceneTree/Group.test)
   * [InstanceItem](api/SceneTree/InstanceItem)

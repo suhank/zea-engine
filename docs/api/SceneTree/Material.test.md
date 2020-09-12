@@ -4,9 +4,9 @@
 
 Use this code to guide yourself on how to implement this class.
 ```javascript
-import Material from './Material'
+import { Material } from './Material'
 import '../Renderer/Shaders/SimpleSurfaceShader'
-import Color from '../Math/Color'
+import { Color } from '../Math/Color'
 
 describe('Material', () => {
   it('Calling set shaders name', () => {
