@@ -6,7 +6,7 @@ A high performance 3D rendering engine for the web.
 ![Coverage: Statements](coverage/badge-statements.svg)
 [![npm](https://img.shields.io/npm/v/@zeainc/zea-engine?style=flat-square)](https://www.npmjs.com/package/@zeainc/zea-engine)
 [![Code style: Prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
-[![This project is using Percy.io for visual regression testing.](https://percy.io/static/images/percy-badge.svg)](https://percy.io/8e6d4888/Zea-Engine-E2E)
+[![This project is using Percy.io for visual regression testing.](https://percy.io/static/images/percy-badge.svg)](https://percy.io/36dba56e/zea-engine)
 
 ## Docs
 
