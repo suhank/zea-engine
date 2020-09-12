@@ -1,6 +1,34 @@
 # Changelog
 
 
+## [2.0.0] (2020-09-12)
+
+
+### ⚠ BREAKING CHANGES
+
+* **npm:** Raw imports are no longer supported.
+
+### Features
+
+* Added 'Overlay' option to LinesShader so lines can be rendered overlaid on scene geoms.
+* Added support to make Points and Lines drawn as Overlay.
+* SystemDesc now correctly detects RTX based GPUs.
+
+
+### Bug Fixes
+
+* Docs search now have their own namespace.
+* Dynamic updates to lines topology now is reflected in the renderer.
+* GeomProxy was missing a method to reteive the bounding box, which caused regression when loading polygon meshes from zcad files.
+* Updated Version class, deprecating old methods.
+* Wasm file resolving from script tag.
+
+
+### Build
+
+* **npm:** Add UMD support.
+
+
 ## 1.3.0 (2020-08-20)
 
 
