@@ -2,12 +2,10 @@
 
 Zea Engine is used to build interactive web applications using JavaScript. In this tutorial, we will learn how to load the engine in the browser and set up your first scene.
 
-
-<!-- Copy and Paste Me -->
 <div class="glitch-embed-wrap" style="height: 420px; width: 100%;">
   <iframe
-    src="https://glitch.com/embed/#!/embed/rollup-rollup-starter-app?path=public/bundle.js&previewSize=100"
-    title="rollup-rollup-starter-app on Glitch"
+    src="https://glitch.com/embed/#!/embed/zea-web-demo?path=index.html&previewSize=100"
+    title="zea-web-demo on Glitch"
     allow="geolocation; microphone; camera; midi; vr; encrypted-media"
     style="height: 100%; width: 100%; border: 0;">
   </iframe>
@@ -29,7 +27,7 @@ Libraries hosted on NPM can be accessed using various techniques, and this tutor
 
 If you open that URL in the browser, you will see it display the compiled engine's file contents. You may also notice that the URL redirects to contain the full path to the latest version, and in that version, the CommonJS build of the engine.
 
-> https://unpkg.com/@zeainc/zea-engine@1.1.0/dist/index.cjs.js
+> https://unpkg.com/@zeainc/zea-engine/dist/index.umd.js
 
 #### Accessing the latest ES6 Module
 
@@ -72,33 +70,24 @@ First, let's create a directory for our demo project:
  <body>
     <div id="app"></div>
   </body>
+
+  <script crossorigin src="//cdn.jsdelivr.net/combine/npm/@zeainc/zea-engine"></script>
   <script type="module">
- 
-import { 
-  Scene,
-  GLRenderer 
-} from "https://unpkg.com/@zeainc/zea-engine/dist/index.esm.js"
- 
+    const { Scene, GLRenderer } = globalThis.zeaEngine
   </script>
 </html>
- 
 ```
 
-Zea Engine leverages the new 'modules' feature to load JavaScript code as ES6 modules. For more information on the new Modules feature in JavaScript, we encourage you to read the documentation found here: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules
-And the many other resources available online.
+Zea Engine is exported using [UMD](https://github.com/umdjs/umd) module format, which is intended to work everywhere(Client or Server).
+When importing the script in your html, it will setup the "zeaEngine" object in the global scope, which is accessible through `window` or `globalThis` objects.
+
 
 The module script allows us to directly import classes defined in the engine into the scope of the running script. 
 
 ```javascript
-import { 
-  Scene,
-  GLRenderer 
-} from "https://unpkg.com/@zeainc/zea-engine/dist/index.esm.js"
+const { Scene, GLRenderer } = globalThis.zeaEngine
 ```
-
-The lines above explicitly require Scene and GLRenderer to be present and load it directly from zea-engine (no global scope pollution). 
-Loading from zea-engine avoids polluting the global namespace with objects while allowing other reusable modules to import the engine and extend its classes. 
-
+Now, we can use the classes of the engine to leverage our development.
  
 ```javascript
 // Retrieves the div from the DOM tree that the renderer will attach the canvas element to.
@@ -133,10 +122,7 @@ renderer.setScene(scene);
 **src/index.js**
 
 ```javascript
-import { 
-  Scene,
-  GLRenderer 
-} from "../node_modules/@zeainc/zea-engine/dist/index.esm.js"
+const { Scene, GLRenderer } = globalThis.zeaEngine
  
 const domElement = document.getElementById("app");
  
@@ -166,10 +152,7 @@ The module path now needs to resolve up one folder before traversing down into t
 +    <script type="module" src="src/index.js"></script>
 -  <script type="module">
 -
-- import { 
--   Scene,
--   GLRenderer 
-- } from "./node_modules/@zeainc/zea-engine/dist/index.esm.js"
+- const { Scene, GLRenderer } = globalThis.zeaEngine
 
 - const domElement = document.getElementById("app");
 
