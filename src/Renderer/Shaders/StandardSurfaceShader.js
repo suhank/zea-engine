@@ -101,10 +101,23 @@ varying vec2 v_textureCoord;
 varying vec3 v_worldPos;
 /* VS Outputs */
 
+
 uniform color cutColor;
+
+#ifdef ENABLE_FLOAT_TEXTURES
 vec4 getCutaway(int id) {
     return fetchTexel(instancesTexture, instancesTextureSize, (id * pixelsPerItem) + 5);
 }
+
+#else
+
+uniform vec4 cutawayData;
+
+vec4 getCutaway(int id) {
+    return cutawayData;
+}
+
+#endif
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION
 uniform float exposure;
@@ -113,20 +126,16 @@ uniform float exposure;
 uniform mat4 cameraMatrix;
 
 uniform color BaseColor;
-uniform float EmissiveStrength;
-
-
-#ifdef ENABLE_SPECULAR
 uniform float Roughness;
 uniform float Metallic;
 uniform float Reflectance;
-#endif
+uniform float EmissiveStrength;
 
 #ifdef ENABLE_TEXTURES
 uniform sampler2D BaseColorTex;
 uniform int BaseColorTexType;
 
-#ifdef ENABLE_SPECULAR
+#ifdef ENABLE_PBR
 uniform sampler2D RoughnessTex;
 uniform int RoughnessTexType;
 
@@ -166,9 +175,10 @@ void main(void) {
             return;
         }
         else if(!gl_FrontFacing){
+#ifdef ENABLE_ES3
             fragColor = cutColor;
-#ifndef ENABLE_ES3
-            gl_FragColor = fragColor;
+#else
+            gl_FragColor = cutColor;
 #endif
             return;
         }
@@ -181,7 +191,7 @@ void main(void) {
     material.BaseColor     = BaseColor.rgb;
     float emission         = EmissiveStrength;
 
-#ifdef ENABLE_SPECULAR
+#ifdef ENABLE_PBR
     material.roughness     = Roughness;
     material.metallic      = Metallic;
     material.reflectance   = Reflectance;
@@ -193,7 +203,7 @@ void main(void) {
     vec2 texCoord          = vec2(v_textureCoord.x, 1.0 - v_textureCoord.y);
     material.baseColor     = getColorParamValue(BaseColor, BaseColorTex, BaseColorTexType, texCoord).rgb;
 
-#ifdef ENABLE_SPECULAR
+#ifdef ENABLE_PBR
     material.roughness     = getLuminanceParamValue(Roughness, RoughnessTex, RoughnessTexType, texCoord);
     material.metallic      = getLuminanceParamValue(Metallic, MetallicTex, MetallicTexType, texCoord);
     material.reflectance   = getLuminanceParamValue(Reflectance, ReflectanceTex, ReflectanceTexType, texCoord);
@@ -205,7 +215,7 @@ void main(void) {
     //vec3 surfacePos = -v_viewPos;
 
 #ifdef ENABLE_TEXTURES
-#ifdef ENABLE_SPECULAR
+#ifdef ENABLE_PBR
     if(NormalTexType != 0){
         vec3 textureNormal_tangentspace = normalize(texture2D(NormalTex, texCoord).rgb * 2.0 - 1.0);
         viewNormal = normalize(mix(viewNormal, textureNormal_tangentspace, 0.3));
@@ -221,17 +231,12 @@ void main(void) {
         //material.baseColor = vec3(1.0, 0.0, 0.0);
     }
 
-    vec3 irradiance;
-#ifndef ENABLE_SPECULAR
-      irradiance = sampleEnvMap(normal, 1.0);
-#else
-      irradiance = vec3(dot(normal, viewVector));
-#endif
-
-#ifndef ENABLE_SPECULAR
-    vec3 radiance = material.baseColor * irradiance;
-#else
+#ifdef ENABLE_PBR
+    vec3 irradiance = sampleEnvMap(normal, 1.0);
     vec3 radiance = pbrSurfaceRadiance(material, irradiance, normal, viewVector);
+#else
+    vec3 irradiance = vec3(dot(normal, viewVector));
+    vec3 radiance = material.baseColor * irradiance;
 #endif
 
 #ifndef ENABLE_ES3

@@ -85,7 +85,7 @@ uniform float planeAngle;
 uniform color BaseColor;
 uniform float Opacity;
 
-#ifdef ENABLE_SPECULAR
+#ifdef ENABLE_PBR
 <%include file="math/constants.glsl"/>
 <%include file="GGX_Specular.glsl"/>
 <%include file="PBRSurfaceRadiance.glsl"/>
@@ -125,7 +125,7 @@ void main(void) {
     material.baseColor      = BaseColor.rgb;
     float opacity           = Opacity;
 
-#ifdef ENABLE_SPECULAR
+#ifdef ENABLE_PBR
     material.roughness      = Roughness;
     material.metallic       = Metallic;
     material.reflectance    = Reflectance;
@@ -143,7 +143,7 @@ void main(void) {
     float opacity           = getLuminanceParamValue(Opacity, OpacityTex, OpacityTexType, texCoords);
 #endif
 
-#ifndef ENABLE_SPECULAR
+#ifndef ENABLE_PBR
     gl_FragColor = vec4(material.baseColor.rgb, opacity);
 #else
 

@@ -54,7 +54,7 @@ class CameraMouseAndKeyboard extends ParameterOwner {
 
     this.__globalXfoChangedDuringDrag = this.__globalXfoChangedDuringDrag.bind(this)
 
-    this.__orbitRateParam = this.addParameter(new NumberParameter('orbitRate', SystemDesc.isMobileDevice ? -0.3 : 1))
+    this.__orbitRateParam = this.addParameter(new NumberParameter('orbitRate', SystemDesc.isMobileDevice ? -0.1 : 1))
     this.__dollySpeedParam = this.addParameter(new NumberParameter('dollySpeed', 0.02))
     this.__mouseWheelDollySpeedParam = this.addParameter(new NumberParameter('mouseWheelDollySpeed', 0.0005))
   }
