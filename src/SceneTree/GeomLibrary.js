@@ -89,9 +89,17 @@ class GeomLibrary extends EventEmitter {
   }
 
   /**
+   * Returns the number of geometries the GeomLibrary has, or will have at the end of loading.
+   * @return {number} - The number of geometries.
+   */
+  getNumGeoms() {
+    return this.__numGeoms
+  }
+
+  /**
    * The getGeom method.
    * @param {number} index - The index value.
-   * @return {any} - The return value.
+   * @return {BaseGeom} - The stored geometry
    */
   getGeom(index) {
     if (index >= this.geoms.length) {
