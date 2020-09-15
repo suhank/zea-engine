@@ -324,7 +324,9 @@ class GeomItem extends BaseGeomItem {
         const { range } = event
         if (geomIndex >= range[0] && geomIndex < range[1]) {
           const geom = geomLibrary.getGeom(geomIndex)
-          if (geom) this.getParameter('Geometry').loadValue(geom)
+          // Note: we need the 'valueChanged' event to be received by the
+          // renderer to then load the geometry into the GPU.
+          if (geom) this.getParameter('Geometry').setValue(geom)
           else console.warn('Geom not loaded:', this.getName())
           geomLibrary.off('rangeLoaded', onGeomLoaded)
         }
