@@ -262,7 +262,10 @@ class Group extends TreeItem {
             const p = treeItem.getParameter('Material')
             if (material) {
               const m = p.getValue()
-              if (m != material) {
+
+              // TODO: How do we filter material assignments? this is a nasty hack.
+              // but else we end up assigning surface materials to our edges.
+              if (m != material && (!m || m.getShaderName() != 'LinesShader')) {
                 p.__backupMaterial = m
                 p.loadValue(material)
               }
@@ -383,7 +386,9 @@ class Group extends TreeItem {
           const p = treeItem.getParameter('Material')
           if (material) {
             const m = p.getValue()
-            if (m != material) {
+            // TODO: How do we filter material assignments? this is a nasty hack.
+            // but else we end up assigning surface materials to our edges.
+            if (m != material && (!m || m.getShaderName() != 'LinesShader')) {
               p.__backupMaterial = m
               p.loadValue(material)
             }
