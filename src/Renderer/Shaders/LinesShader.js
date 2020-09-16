@@ -26,16 +26,24 @@ uniform float Overlay;
 <%include file="modelMatrix.glsl"/>
 
 /* VS Outputs */
+varying float v_drawItemId;
+varying vec4 v_geomItemData;
+varying vec3 v_worldPos;
 
 void main(void) {
   int drawItemId = getDrawItemId();
+  v_drawItemId = float(drawItemId);
+  v_geomItemData  = getInstanceData(drawItemId);
+
   mat4 modelMatrix = getModelMatrix(drawItemId);
   mat4 modelViewProjectionMatrix = projectionMatrix * viewMatrix * modelMatrix;
   gl_Position = modelViewProjectionMatrix * vec4(positions, 1.0);
     
-  if(Overlay > 0.0){
-    gl_Position.z = mix(gl_Position.z, -1.0, Overlay);
-  }
+  
+  gl_Position.z = mix(gl_Position.z, -1.0, Overlay);
+  
+  vec4 pos = vec4(positions, 1.);
+  v_worldPos      = (modelMatrix * pos).xyz;
 }
 `
     )
@@ -45,8 +53,33 @@ void main(void) {
       `
 precision highp float;
 
+
 uniform color BaseColor;
 uniform float Opacity;
+
+
+<%include file="drawItemTexture.glsl"/>
+<%include file="cutaways.glsl"/>
+
+#ifdef ENABLE_FLOAT_TEXTURES
+vec4 getCutaway(int id) {
+    return fetchTexel(instancesTexture, instancesTextureSize, (id * pixelsPerItem) + 5);
+}
+
+#else
+
+uniform vec4 cutawayData;
+
+vec4 getCutaway(int id) {
+    return cutawayData;
+}
+
+#endif
+
+/* VS Outputs */
+varying float v_drawItemId;
+varying vec4 v_geomItemData;
+varying vec3 v_worldPos;
 
 #ifdef ENABLE_ES3
   out vec4 fragColor;
@@ -56,8 +89,27 @@ void main(void) {
 #ifndef ENABLE_ES3
   vec4 fragColor;
 #endif
+
+  int drawItemId = int(v_drawItemId + 0.5);
+  int flags = int(v_geomItemData.r + 0.5);
+
+  // Cutaways
+  if(testFlag(flags, GEOMITEM_FLAG_CUTAWAY)) 
+  {
+      vec4 cutAwayData   = getCutaway(drawItemId);
+      vec3 planeNormal = cutAwayData.xyz;
+      float planeDist = cutAwayData.w;
+      if(cutaway(v_worldPos, planeNormal, planeDist)){
+          discard;
+          return;
+      }
+  }
+
+
   fragColor = BaseColor;
   fragColor.a *= Opacity;
+
+
     
 #ifndef ENABLE_ES3
   gl_FragColor = fragColor;
