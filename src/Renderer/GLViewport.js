@@ -548,7 +548,9 @@ class GLViewport extends GLBaseViewport {
     if (event.intersectionData != undefined) {
       if (event.intersectionData.geomItem != this.mouseOverItem) {
         if (this.mouseOverItem) {
-          const leaveEvent = { ...event, geomItem: this.mouseOverItem }
+          // Note: spread operators cause errors on iOS 11
+          const leaveEvent = { geomItem: this.mouseOverItem }
+          for (let key in event) leaveEvent[key] = event[key]
           this.emit('mouseLeaveGeom', leaveEvent)
           if (leaveEvent.propagating) this.mouseOverItem.onMouseLeave(leaveEvent)
         }
@@ -560,7 +562,9 @@ class GLViewport extends GLBaseViewport {
       event.intersectionData.geomItem.onMouseMove(event)
       if (!event.propagating || this.capturedItem) return
     } else if (this.mouseOverItem) {
-      const leaveEvent = { ...event, geomItem: this.mouseOverItem }
+      // Note: spread operators cause errors on iOS 11
+      const leaveEvent = { geomItem: this.mouseOverItem }
+      for (let key in event) leaveEvent[key] = event[key]
       this.emit('mouseLeaveGeom', leaveEvent)
       if (leaveEvent.propagating) this.mouseOverItem.onMouseLeave(leaveEvent)
       this.mouseOverItem = null

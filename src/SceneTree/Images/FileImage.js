@@ -15,7 +15,7 @@ const imageDataLibrary = {}
 
 const imageLoaders = {}
 
-const supportWebp = globalThis.navigator && navigator.userAgent.indexOf('Chrome') !== -1
+const supportWebp = window.navigator && navigator.userAgent.indexOf('Chrome') !== -1
 
 /** Class representing a file image.
  * @extends BaseImage

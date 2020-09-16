@@ -33,7 +33,8 @@ class ResourceLoader extends EventEmitter {
     this.__nextWorker = 0
 
     let baseUrl
-    if (globalThis.navigator) {
+    // Note: globalThis causes errors on Safari.
+    if (window.navigator) {
       const scripts = document.getElementsByTagName('script')
       for (let i = 0; i < scripts.length; i++) {
         const script = scripts[i]

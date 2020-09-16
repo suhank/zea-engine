@@ -135,6 +135,8 @@ function getGPUDesc() {
     gpuVendor = 'Intel'
   } else if (renderer.match(/Mali/i)) {
     gpuVendor = 'ARM'
+  } else if (renderer.match(/Apple/i)) {
+    gpuVendor = 'Apple'
   } else if (renderer.match(/Adreno/i)) {
     gpuVendor = 'Adreno'
   } else {
@@ -150,13 +152,9 @@ function getGPUDesc() {
   }
 }
 
-// eslint-disable-next-line require-jsdoc
-function isWebGLSupported() {
-  return getGPUDesc() != undefined
-}
-
 const SystemDesc = (function () {
-  if (!globalThis.navigator) {
+  // Note: globalThis causes errors on Safari.
+  if (!window.navigator) {
     return {
       isMobileDevice: false,
       isIOSDevice: false,
@@ -278,8 +276,8 @@ const SystemDesc = (function () {
   }
 })()
 
-if (!globalThis.ZeaSystemDesc) {
-  globalThis.ZeaSystemDesc = SystemDesc
+if (!window.ZeaSystemDesc) {
+  window.ZeaSystemDesc = SystemDesc
 }
 
 export { SystemDesc }
