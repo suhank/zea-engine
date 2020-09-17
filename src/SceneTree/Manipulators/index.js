@@ -1,1 +1,1 @@
-export * from './CameraMouseAndKeyboard.js'
+export * from './CameraManipulator.js'
