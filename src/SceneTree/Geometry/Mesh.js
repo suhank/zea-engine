@@ -536,7 +536,7 @@ class Mesh extends BaseGeom {
       const addFaceToGroup = (face) => {
         let inGroup = false
         for (const faceGroup of faceGroups) {
-          inGroup = faceGroup.indexOf(face) != -1
+          inGroup = faceGroup.includes(face)
           if (inGroup) break
         }
         if (!inGroup) faceGroups.push([face])
@@ -548,8 +548,8 @@ class Mesh extends BaseGeom {
           let f0groupIndex = -1
           let f1groupIndex = -1
           for (let groupIndex = 0; groupIndex < faceGroups.length; groupIndex++) {
-            if (f0groupIndex == -1 && faceGroups[groupIndex].indexOf(f0) != -1) f0groupIndex = groupIndex
-            if (f1groupIndex == -1 && faceGroups[groupIndex].indexOf(f1) != -1) f1groupIndex = groupIndex
+            if (f0groupIndex == -1 && faceGroups[groupIndex].includes(f0)) f0groupIndex = groupIndex
+            if (f1groupIndex == -1 && faceGroups[groupIndex].includes(f1)) f1groupIndex = groupIndex
           }
           if (f0groupIndex == -1 && f1groupIndex == -1) {
             faceGroups.push([f0, f1])

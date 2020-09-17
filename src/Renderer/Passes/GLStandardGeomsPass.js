@@ -230,14 +230,14 @@ class GLStandardGeomsPass extends GLPass {
       }
       switch (event.type) {
         case GLGeomItemChangeType.GEOMITEM_CHANGED:
-          if (this.__dirtyItemIndices.indexOf(index) != -1) return
+          if (this.__dirtyItemIndices.includes(index)) return
           this.__dirtyItemIndices.push(index)
           break
         case GLGeomItemChangeType.GEOM_CHANGED:
         case GLGeomItemChangeType.VISIBILITY_CHANGED:
           break
         case GLGeomItemChangeType.HIGHLIGHT_CHANGED:
-          if (this.__dirtyItemIndices.indexOf(index) != -1) return
+          if (this.__dirtyItemIndices.includes(index)) return
           this.__dirtyItemIndices.push(index)
           this.__renderer.requestRedraw()
           return

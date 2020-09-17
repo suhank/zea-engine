@@ -15,7 +15,7 @@ const imageDataLibrary = {}
 
 const imageLoaders = {}
 
-const supportWebp = window.navigator && navigator.userAgent.indexOf('Chrome') !== -1
+const supportWebp = window.navigator && navigator.userAgent.includes('Chrome')
 
 /** Class representing a file image.
  * @extends BaseImage
@@ -31,7 +31,7 @@ class FileImage extends BaseImage {
     if (filePath.constructor == Object) {
       params = filePath
     }
-    if (name != undefined && name.lastIndexOf('.') != -1) {
+    if (name != undefined && name.includes('.')) {
       console.warn('Deprecated signature. Please provide a name and filepath to the image constructor')
       name = name.substring(name.lastIndexOf('/') + 1, name.lastIndexOf('.'))
     }
@@ -180,7 +180,7 @@ class FileImage extends BaseImage {
             filterAssets = filterAssets.filter((asset) => asset.w <= params.maxSize)
           }
           if (params.filter) {
-            const resultFilter = filterAssets.filter((asset) => asset.url.indexOf(params.filter) !== -1)
+            const resultFilter = filterAssets.filter((asset) => asset.url.includes(params.filter))
             if (resultFilter.length > 1) {
               filterAssets = resultFilter
             }

@@ -595,22 +595,22 @@ class CameraMouseAndKeyboard extends ParameterOwner {
     const key = String.fromCharCode(event.keyCode).toLowerCase()
     switch (key) {
       case 'w':
-        if (this.__keysPressed.indexOf(key) != -1)
+        if (this.__keysPressed.includes(key))
           return false;
         this.__velocity.z -= 1.0;
         break;
       case 's':
-        if (this.__keysPressed.indexOf(key) != -1)
+        if (this.__keysPressed.includes(key))
           return false;
         this.__velocity.z += 1.0;
         break;
       case 'a':
-        if (this.__keysPressed.indexOf(key) != -1)
+        if (this.__keysPressed.includes(key))
           return false;
         this.__velocity.x -= 1.0;
         break;
       case 'd':
-        if (this.__keysPressed.indexOf(key) != -1)
+        if (this.__keysPressed.includes(key))
           return false;
         this.__velocity.x += 1.0;
         break;
