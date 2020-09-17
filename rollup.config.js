@@ -4,15 +4,15 @@ import webWorkerLoader from 'rollup-plugin-web-worker-loader'
 
 import pkg from './package.json'
 
-const isProduction = !process.env.ROLLUP_WATCH
-
-const sourcemap = !isProduction
-
 const plugins = [webWorkerLoader(), svg()]
+
+const isProduction = !process.env.ROLLUP_WATCH
 
 if (isProduction) {
   plugins.push(terser())
 }
+
+const sourcemap = !isProduction
 
 export default [
   // Browser-friendly UMD build.
