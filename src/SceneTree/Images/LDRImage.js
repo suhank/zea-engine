@@ -4,7 +4,7 @@ import { SystemDesc } from '../../SystemDesc.js'
 import { NumberParameter } from '../Parameters/index'
 import { FileImage } from './FileImage.js'
 
-const supportWebp = globalThis.navigator && navigator.userAgent.indexOf('Chrome') !== -1
+const supportWebp = window.navigator && navigator.userAgent.includes('Chrome')
 
 /**
  * Class representing a LDR (low dynamic range) image.
@@ -86,7 +86,7 @@ class LDRImage extends FileImage {
           filterAssets = filterAssets.filter((asset) => asset.w <= params.maxSize)
         }
         if (params.filter) {
-          const resultFilter = filterAssets.filter((asset) => asset.url.indexOf(params.filter) !== -1)
+          const resultFilter = filterAssets.filter((asset) => asset.url.includes(params.filter))
           if (resultFilter.length > 1) {
             filterAssets = resultFilter
           }

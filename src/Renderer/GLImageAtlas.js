@@ -437,18 +437,21 @@ class GLImageAtlas extends GLRenderTarget {
    * @return {any} - The return value.
    */
   bindToUniform(renderstate, unif) {
-    if (!this.__atlasLayoutTexture) return false
-
     super.bindToUniform(renderstate, unif)
 
     const unifs = renderstate.unifs
-    const atlasLayoutUnif = unifs[unif.name + '_layout']
-    if (atlasLayoutUnif) this.__atlasLayoutTexture.bindToUniform(renderstate, atlasLayoutUnif)
 
-    const atlasDescUnif = unifs[unif.name + '_desc']
-    if (atlasDescUnif)
-      this.__gl.uniform4f(atlasDescUnif.location, this.width, this.height, this.__atlasLayoutTexture.width, 0.0)
+    if (this.__atlasLayoutTexture) {
+      const atlasLayoutUnif = unifs[unif.name + '_layout']
+      if (atlasLayoutUnif) this.__atlasLayoutTexture.bindToUniform(renderstate, atlasLayoutUnif)
 
+      const atlasDescUnif = unifs[unif.name + '_desc']
+      if (atlasDescUnif)
+        this.__gl.uniform4f(atlasDescUnif.location, this.width, this.height, this.__atlasLayoutTexture.width, 0.0)
+    } else {
+      const atlasDescUnif = unifs[unif.name + '_desc']
+      if (atlasDescUnif) this.__gl.uniform4f(atlasDescUnif.location, this.width, this.height, 0.0, 0.0)
+    }
     return true
   }
 

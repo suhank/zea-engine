@@ -78,6 +78,23 @@ precision highp float;
 <%include file="stack-gl/gamma.glsl"/>
 <%include file="materialparams.glsl"/>
 
+uniform color cutColor;
+
+#ifdef ENABLE_FLOAT_TEXTURES
+vec4 getCutaway(int id) {
+    return fetchTexel(instancesTexture, instancesTextureSize, (id * pixelsPerItem) + 5);
+}
+
+#else
+
+uniform vec4 cutawayData;
+
+vec4 getCutaway(int id) {
+    return cutawayData;
+}
+
+#endif
+
 /* VS Outputs */
 varying float v_drawItemId;
 varying vec4 v_geomItemData;
@@ -94,18 +111,12 @@ uniform color BaseColor;
 uniform float Opacity;
 
 #ifdef ENABLE_TEXTURES
-
 uniform sampler2D BaseColorTex;
 uniform int BaseColorTexType;
 uniform sampler2D OpacityTex;
 uniform int OpacityTexType;
-
-uniform color cutColor;
-vec4 getCutaway(int id) {
-    return fetchTexel(instancesTexture, instancesTextureSize, (id * pixelsPerItem) + 5);
-}
-
 #endif
+
 
 #ifdef ENABLE_ES3
     out vec4 fragColor;
@@ -126,9 +137,10 @@ void main(void) {
             return;
         }
         else if(!gl_FrontFacing){
+#ifdef ENABLE_ES3
             fragColor = cutColor;
-#ifndef ENABLE_ES3
-            gl_FragColor = fragColor;
+#else
+            gl_FragColor = cutColor;
 #endif
             return;
         }

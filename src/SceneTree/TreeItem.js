@@ -500,7 +500,7 @@ class TreeItem extends BaseItem {
       }
 
       uniqueName = name + suffix
-      if (names.indexOf(uniqueName) == -1) break
+      if (!names.includes(uniqueName)) break
       index++
     }
     return uniqueName

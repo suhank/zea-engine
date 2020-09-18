@@ -4,7 +4,8 @@ import { loadTextfile, loadBinfile } from '../Utils.js'
 
 // eslint-disable-next-line require-jsdoc
 function getLanguage() {
-  if (!globalThis.navigator) return 'en'
+  // Note: globalThis causes errors on Safari.
+  if (!window.navigator) return 'en'
 
   // Check if a language is explicitly selected.
   const searchParams = new URLSearchParams(window.location.search)
@@ -73,7 +74,7 @@ class LabelManager extends EventEmitter {
         this.__labelLibraries[stem] = JSON.parse(text)
         this.emit('labelLibraryLoaded', { library: stem })
       })
-    } else if (name.endsWith('.xlsx') && globalThis.navigator && window.XLSX) {
+    } else if (name.endsWith('.xlsx') && window.navigator && window.XLSX) {
       // Note: example taken from here..
       // https://stackoverflow.com/questions/8238407/how-to-parse-excel-file-in-javascript-html5
       // and here:

@@ -4,9 +4,9 @@ import { GLRenderer } from '../GLRenderer.js'
 import { AudioItem, GeomItem } from '../../SceneTree/index'
 
 const AudioContext =
-  globalThis.navigator &&
+  window.navigator &&
   (window.AudioContext || // Default
-  window.webkitAudioContext || // Safari and old versions of Chrome
+    window.webkitAudioContext || // Safari and old versions of Chrome
     false)
 
 let audioCtx
@@ -14,7 +14,7 @@ if (AudioContext) {
   // Do whatever you want using the Web Audio API
   audioCtx = new AudioContext()
   // ...
-} else if (globalThis.navigator) {
+} else if (window.navigator) {
   // Web Audio API is not supported
   // Alert the user
   alert(
@@ -248,7 +248,7 @@ class GLAudioItemsPass extends GLPass {
 GLRenderer.registerPass(GLAudioItemsPass, PassType.OVERLAY)
 
 // Hack so Audio Item can access the context.
-if (globalThis.navigator && window) {
+if (window.navigator) {
   window.ZeaAudioaudioCtx = audioCtx
 }
 

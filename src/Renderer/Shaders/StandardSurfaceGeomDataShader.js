@@ -71,9 +71,21 @@ uniform int floatGeomBuffer;
 uniform int passId;
 
 uniform color cutColor;
+
+#ifdef ENABLE_FLOAT_TEXTURES
 vec4 getCutaway(int id) {
     return fetchTexel(instancesTexture, instancesTextureSize, (id * pixelsPerItem) + 5);
 }
+
+#else
+
+uniform vec4 cutawayData;
+
+vec4 getCutaway(int id) {
+    return cutawayData;
+}
+
+#endif
 
 varying float v_drawItemId;
 varying vec4 v_geomItemData;
@@ -100,13 +112,6 @@ void main(void) {
       float planeDist = cutAwayData.w;
       if(cutaway(v_worldPos, planeNormal, planeDist)){
           discard;
-          return;
-      }
-      else if(!gl_FrontFacing){
-          fragColor = cutColor;
-  #ifndef ENABLE_ES3
-          gl_FragColor = fragColor;
-  #endif
           return;
       }
   }

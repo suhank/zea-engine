@@ -150,7 +150,13 @@ class ParameterOwner extends EventEmitter {
       this.removeParameter(name)
     }
     param.setOwner(this)
-    const paramChangedHandler = (event) => this.__parameterValueChanged({ ...event, param })
+    const paramChangedHandler = (event) => {
+      // Note: spread operators cause errors on iOS 11.
+      const newEvent = { param }
+      for (let key in event) newEvent[key] = event[key]
+      this.__parameterValueChanged(newEvent)
+    }
+
     param.on('valueChanged', paramChangedHandler)
     this.__paramEventHandlers[name] = paramChangedHandler
     this.__params.splice(index, 0, param)

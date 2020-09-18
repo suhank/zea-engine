@@ -38,13 +38,13 @@ int getDrawItemId() {
 shaderLibrary.setShaderModule(
   'drawItemTexture.glsl',
   `
+<%include file="GLSLUtils.glsl"/>
+  
 
 #ifdef ENABLE_FLOAT_TEXTURES
 
 uniform sampler2D instancesTexture;
 uniform highp int instancesTextureSize;
-
-<%include file="GLSLUtils.glsl"/>
 
 const int pixelsPerItem = 6;
 

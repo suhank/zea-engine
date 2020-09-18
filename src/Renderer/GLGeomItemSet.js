@@ -77,7 +77,7 @@ class GLGeomItemSet extends EventEmitter {
         // Note: highlightChanged is fired when the color changes
         // or another hilight is added over the top. We avoid
         // adding the same index again here. (TODO: use Set?)
-        if (this.highlightedItems.indexOf(index) != -1) return
+        if (this.highlightedItems.includes(index)) return
         this.highlightedItems.push(index)
       } else {
         this.highlightedItems.splice(this.highlightedItems.indexOf(index), 1)
