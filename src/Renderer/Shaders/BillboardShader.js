@@ -20,11 +20,12 @@ uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
 uniform mat4 cameraMatrix;
 
+<%include file="GLSLUtils.glsl"/>
+
 #ifdef ENABLE_FLOAT_TEXTURES
 
 instancedattribute float instanceIds;
 
-<%include file="GLSLUtils.glsl"/>
 <%include file="stack-gl/transpose.glsl"/>
 <%include file="utils/imageAtlas.glsl"/>
 
@@ -119,7 +120,11 @@ void main(void) {
   float width = layoutData.z * atlasBillboards_desc.x * scl;
   float height = layoutData.w * atlasBillboards_desc.y * scl;
   int flags = int(billboardData.y);
-  bool alignedToCamera = (flags & (1<<2)) != 0;
+
+  
+  // Use cross platform bit flags methods
+  bool alignedToCamera = testFlag(flags, 4); // flag = (1<<2)
+
   mat4 modelViewProjectionMatrix;
   if(alignedToCamera){
     if (inVR == 0) {
@@ -139,7 +144,8 @@ void main(void) {
     gl_Position = modelViewProjectionMatrix * vec4(quadVertex.x * width, (quadVertex.y + 0.5) * height, 0.0, 1.0);
   }
 
-  bool drawOnTop = (flags & (1<<3)) != 0;
+  // Use cross platform bit flags methods
+  bool drawOnTop = testFlag(flags, 8); // flag = 1 << 3
   if(drawOnTop){
     gl_Position.z = mix(gl_Position.z, -1.0, 0.5);
   }

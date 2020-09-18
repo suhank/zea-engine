@@ -117,7 +117,7 @@ class ObjAsset extends AssetItem {
       for (let i = 0; i < lines.length; i++) {
         let line = lines[i].trim()
         if (line.startsWith('#')) continue
-        if (line.indexOf('#') != -1) line = line.substring(0, line.indexOf('#')).trim()
+        if (line.includes('#')) line = line.substring(0, line.indexOf('#')).trim()
         const elements = line.split(WHITESPACE_RE)
         const key = elements.shift()
         const value = elements.join(' ')
@@ -225,7 +225,7 @@ class ObjAsset extends AssetItem {
       for (let i = 0; i < lines.length && !stop; i++) {
         let line = lines[i].trim()
         if (line.startsWith('#')) continue
-        if (line.indexOf('#') != -1) line = line.substring(0, line.indexOf('#')).trim()
+        if (line.includes('#')) line = line.substring(0, line.indexOf('#')).trim()
         const elements = line.split(WHITESPACE_RE)
         const key = elements.shift()
         const value = elements.join(' ')

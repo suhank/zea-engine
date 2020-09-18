@@ -51,24 +51,22 @@ class GLRenderer extends GLBaseRenderer {
     this.__debugMode = 0
     this._planeDist = 0.0
     this.__cutPlaneNormal = new Vec3(1, 0, 0)
+    this.rayCastDist = 0
+    this.rayCastArea = 0
 
     const gl = this.__gl
 
     this.__debugTextures = [undefined]
 
     this.addShaderPreprocessorDirective('ENABLE_INLINE_GAMMACORRECTION')
-
-    if (!options.disableTextures) this.addShaderPreprocessorDirective('ENABLE_TEXTURES')
-
-    if (!SystemDesc.isMobileDevice) {
-      if (!options.disableSpecular) this.addShaderPreprocessorDirective('ENABLE_SPECULAR')
+    if (!options.disableTextures) {
+      this.addShaderPreprocessorDirective('ENABLE_TEXTURES')
     }
 
     this.__outlineShader = new OutlinesShader(gl)
     this.quad = new GLMesh(gl, new Plane(1, 1))
 
     this.createSelectedGeomsFbo()
-    this.createRayCastRenderTarget()
 
     // ///////////////////////////////////////////////////
     // setup the splash screen
@@ -117,7 +115,7 @@ class GLRenderer extends GLBaseRenderer {
       this.__glEnvMap = env.getMetadata('gltexture')
       if (!this.__glEnvMap) {
         if (env.type === 'FLOAT') {
-          this.addShaderPreprocessorDirective('ENABLE_SPECULAR')
+          this.addShaderPreprocessorDirective('ENABLE_PBR')
           this.__glEnvMap = new GLEnvMap(this, env, this.__preproc)
         } else if (env.isStreamAtlas()) {
           this.__glEnvMap = new GLImageStream(gl, env)
@@ -379,26 +377,6 @@ class GLRenderer extends GLBaseRenderer {
   // Raycasting
 
   /**
-   * The createRayCastRenderTarget method.
-   */
-  createRayCastRenderTarget() {
-    // The geom data buffer is a 3x3 data buffer.
-    // See getGeomItemAtTip below
-    const gl = this.__gl
-    this.__rayCastRenderTarget = new GLRenderTarget(gl, {
-      type: 'FLOAT',
-      format: 'RGBA',
-      filter: 'NEAREST',
-      width: 3,
-      height: 3,
-      numColorChannels: 1,
-    })
-    this.__rayCastRenderTargetProjMatrix = new Mat4()
-    this.rayCastDist = 0
-    this.rayCastArea = 0
-  }
-
-  /**
    * The raycast method.
    * @return {any} - The return value.
    */
@@ -429,6 +407,18 @@ class GLRenderer extends GLBaseRenderer {
       )
       this.rayCastDist = dist
       this.rayCastArea = area
+    }
+
+    if (!this.__rayCastRenderTarget) {
+      this.__rayCastRenderTarget = new GLRenderTarget(gl, {
+        type: 'FLOAT',
+        format: 'RGBA',
+        filter: 'NEAREST',
+        width: 3,
+        height: 3,
+        numColorChannels: 1,
+      })
+      this.__rayCastRenderTargetProjMatrix = new Mat4()
     }
 
     const gl = this.__gl

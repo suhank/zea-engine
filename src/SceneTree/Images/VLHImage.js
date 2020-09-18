@@ -24,7 +24,7 @@ class VLHImage extends BaseImage {
    */
   constructor(name, params = {}) {
     let filepath
-    if (name != undefined && name.lastIndexOf('.') != -1) {
+    if (name != undefined && name.includes('.')) {
       filepath = name
       name = name.substring(name.lastIndexOf('/') + 1, name.lastIndexOf('.'))
     }

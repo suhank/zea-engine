@@ -45,7 +45,7 @@ class EventEmitter {
 
     const listeners = this.listeners[eventName]
 
-    if (listeners.indexOf(listener) != -1) {
+    if (listeners.includes(listener)) {
       throw new Error(`Listener "${listener.name}" already connected to event "${eventName}".`)
     }
 

@@ -97,7 +97,7 @@ class GLMaterialGeomItemSets {
    * @param {any} geomItemSet - The geomItemSet value.
    */
   addGeomItemSet(geomItemSet) {
-    if (this.geomItemSets.indexOf(geomItemSet) == -1) {
+    if (!this.geomItemSets.includes(geomItemSet)) {
       this.geomItemSets.push(geomItemSet)
       geomItemSet.on('drawCountChanged', this.__drawCountChanged)
     } else {

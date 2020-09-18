@@ -31,6 +31,9 @@ class GLGeomItem extends EventEmitter {
     this.visible = this.geomItem.isVisible()
     this.culled = false
 
+    this.cutDataChanged = false
+    this.cutData = [0, 0, 0, 0]
+
     // if(glGeom.__numTriangles) {
     //   numSceneMeshTriangles += glGeom.__numTriangles
     //   console.log(this.geomItem.getName(), glGeom.__numTriangles, numSceneMeshTriangles)
@@ -43,7 +46,7 @@ class GLGeomItem extends EventEmitter {
       this.geomMatrixDirty = true
       this.geomMatrixChanged = () => {
         this.geomMatrixDirty = true
-        this.updateGeomMatrix()
+        this.emit('updated')
       }
     } else {
       this.geomMatrixChanged = () => {
@@ -52,7 +55,11 @@ class GLGeomItem extends EventEmitter {
     }
 
     this.cutAwayChanged = () => {
-      this.emit('updated', { type: GLGeomItemChangeType.GEOMITEM_CHANGED })
+      if (!gl.floatTexturesSupported) {
+        this.cutDataChanged = true
+      } else {
+        this.emit('updated', { type: GLGeomItemChangeType.GEOMITEM_CHANGED })
+      }
     }
     this.highlightChanged = () => {
       this.emit('updated', { type: GLGeomItemChangeType.HIGHLIGHT_CHANGED })
@@ -160,7 +167,18 @@ class GLGeomItem extends EventEmitter {
       }
       const drawItemDataunif = unifs.drawItemData
       if (drawItemDataunif) {
-        gl.uniform4f(drawItemDataunif.location, this.geomData)
+        gl.uniform4fv(drawItemDataunif.location, this.geomData)
+      }
+      const cutawayDataunif = unifs.cutawayData
+      if (cutawayDataunif) {
+        if (this.cutDataChanged) {
+          if (this.geomItem.isCutawayEnabled()) {
+            const cutAwayVector = this.geomItem.getCutVector()
+            const cutAwayDist = this.geomItem.getCutDist()
+            this.cutData = [cutAwayVector.x, cutAwayVector.y, cutAwayVector.z, cutAwayDist]
+          }
+        }
+        gl.uniform4fv(cutawayDataunif.location, this.cutData)
       }
     }
 

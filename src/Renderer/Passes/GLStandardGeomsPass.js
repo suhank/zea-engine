@@ -222,16 +222,22 @@ class GLStandardGeomsPass extends GLPass {
     geomItem.setMetadata('glgeomItem', glgeomItem)
 
     glgeomItem.on('updated', (event) => {
+      if (!event) {
+        // On mobile devices without support for floating point textures
+        // we just need to redraw.
+        this.__renderer.drawItemChanged()
+        return
+      }
       switch (event.type) {
         case GLGeomItemChangeType.GEOMITEM_CHANGED:
-          if (this.__dirtyItemIndices.indexOf(index) != -1) return
+          if (this.__dirtyItemIndices.includes(index)) return
           this.__dirtyItemIndices.push(index)
           break
         case GLGeomItemChangeType.GEOM_CHANGED:
         case GLGeomItemChangeType.VISIBILITY_CHANGED:
           break
         case GLGeomItemChangeType.HIGHLIGHT_CHANGED:
-          if (this.__dirtyItemIndices.indexOf(index) != -1) return
+          if (this.__dirtyItemIndices.includes(index)) return
           this.__dirtyItemIndices.push(index)
           this.__renderer.requestRedraw()
           return
@@ -391,14 +397,8 @@ class GLStandardGeomsPass extends GLPass {
   uploadGeomItems() {
     const gl = this.__gl
     if (!gl.floatTexturesSupported) {
-      // Pull on the GeomXfo params. This will trigger the lazy evaluation of the operators in the scene.
-      const len = this.__dirtyItemIndices.length
-      for (let i = 0; i < len; i++) {
-        const drawItem = this.__drawItems[this.__dirtyItemIndices[i]]
-        if (drawItem) {
-          drawItem.updateGeomMatrix()
-        }
-      }
+      // During rendering, the GeomMat will be Pplled.
+      // This will trigger the lazy evaluation of the operators in the scene.
       this.__dirtyItemIndices = []
       // this.emit('renderTreeUpdated', {});
       return

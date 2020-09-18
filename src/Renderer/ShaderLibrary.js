@@ -91,7 +91,7 @@ class ShaderLibrary {
         result.numLines++
         continue
       }
-      if (trimmedline.indexOf('//') != -1) {
+      if (trimmedline.includes('//')) {
         trimmedline = trimmedline.slice(0, trimmedline.indexOf('//')).trim()
       }
 
@@ -194,7 +194,7 @@ class ShaderLibrary {
         }
         if (trimmedline.startsWith('struct')) {
           let membersStr = ''
-          if (trimmedline.indexOf('}') != -1) {
+          if (trimmedline.includes('}')) {
             membersStr = trimmedline.substring(trimmedline.indexOf('{') + 1, trimmedline.indexOf('}') - 1)
           } else {
             i++
@@ -202,7 +202,7 @@ class ShaderLibrary {
               line += lines[i] + '\n'
               membersStr += line.trim()
               i++
-              if (membersStr.indexOf('}') != -1) break
+              if (membersStr.includes('}')) break
             }
           }
           const structMembers = membersStr.substring(membersStr.indexOf('{') + 1, membersStr.indexOf('}') - 1)

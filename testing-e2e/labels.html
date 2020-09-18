@@ -16,6 +16,8 @@
       const renderer = new GLRenderer(domElement, { hideSplash: true, webglOptions: { antialias: false } })
       renderer.setScene(scene)
 
+      // scene.setupGrid(4, 4)
+
       const asset = new TreeItem('labels')
       scene.getRoot().addChild(asset)
 
@@ -29,9 +31,10 @@
 
           const billboard = new BillboardItem('billboard' + index, label)
           const xfo = new Xfo(pos)
-          billboard.setLocalXfo(xfo)
+          billboard.getParameter('LocalXfo').setValue(xfo)
           billboard.getParameter('PixelsPerMeter').setValue(300)
           billboard.getParameter('AlignedToCamera').setValue(true)
+          billboard.getParameter('DrawOnTop').setValue(true)
           billboard.getParameter('Alpha').setValue(1)
           // billboard.getParameter('lineEnd').addElement(lineEndPos)
           // billboard.getChildByName('line0').getMaterial().getParameter('Color').setValue(new Color(.7, .7, .7))

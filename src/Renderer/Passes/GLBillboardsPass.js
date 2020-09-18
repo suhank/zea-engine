@@ -175,6 +175,9 @@ class GLBillboardsPass extends GLPass {
     const mat4 = billboard.getParameter('GlobalXfo').getValue().toMat4()
     const ppm = billboard.getParameter('PixelsPerMeter').getValue()
     const scale = 1 / ppm
+
+    // Until webgl2 is standard, we will avoid using bit flags.
+    // instead, we will use decimals.
     let flags = 0
     if (billboard.getParameter('AlignedToCamera').getValue()) flags |= 1 << 2
     if (billboard.getParameter('DrawOnTop').getValue()) flags |= 1 << 3
@@ -287,6 +290,7 @@ class GLBillboardsPass extends GLPass {
           const scale = 1 / ppm
           let flags = 0
           if (billboard.getParameter('AlignedToCamera').getValue()) flags |= 1 << 2
+          if (billboard.getParameter('DrawOnTop').getValue()) flags |= 1 << 3
           const alpha = billboard.getParameter('Alpha').getValue()
           const color = billboard.getParameter('Color').getValue()
 
@@ -417,7 +421,7 @@ class GLBillboardsPass extends GLPass {
    * @param {any} renderstate - The renderstate value.
    */
   draw(renderstate) {
-    if (this.__drawCount == 0 || !this.__atlas.isReady() || this.__updateRequested) {
+    if (this.__drawCount == 0 || this.__updateRequested) {
       return
     }
 
@@ -464,9 +468,6 @@ class GLBillboardsPass extends GLPass {
     if (!gl.floatTexturesSupported || !gl.drawElementsInstanced) {
       const len = this.__indexArray.length
       for (let i = 0; i < len; i++) {
-        // this.__drawItems[i].bind(renderstate);
-        // this.__glgeom.draw();
-
         gl.uniformMatrix4fv(unifs.modelMatrix.location, false, this.__modelMatrixArray[i])
         gl.uniform4fv(unifs.billboardData.location, this.__billboardDataArray[i])
         gl.uniform4fv(unifs.tintColor.location, this.__tintColorArray[i])

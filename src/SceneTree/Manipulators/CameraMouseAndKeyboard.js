@@ -54,7 +54,7 @@ class CameraMouseAndKeyboard extends ParameterOwner {
 
     this.__globalXfoChangedDuringDrag = this.__globalXfoChangedDuringDrag.bind(this)
 
-    this.__orbitRateParam = this.addParameter(new NumberParameter('orbitRate', SystemDesc.isMobileDevice ? -0.3 : 1))
+    this.__orbitRateParam = this.addParameter(new NumberParameter('orbitRate', SystemDesc.isMobileDevice ? -0.1 : 1))
     this.__dollySpeedParam = this.addParameter(new NumberParameter('dollySpeed', 0.02))
     this.__mouseWheelDollySpeedParam = this.addParameter(new NumberParameter('mouseWheelDollySpeed', 0.0005))
   }
@@ -595,22 +595,22 @@ class CameraMouseAndKeyboard extends ParameterOwner {
     const key = String.fromCharCode(event.keyCode).toLowerCase()
     switch (key) {
       case 'w':
-        if (this.__keysPressed.indexOf(key) != -1)
+        if (this.__keysPressed.includes(key))
           return false;
         this.__velocity.z -= 1.0;
         break;
       case 's':
-        if (this.__keysPressed.indexOf(key) != -1)
+        if (this.__keysPressed.includes(key))
           return false;
         this.__velocity.z += 1.0;
         break;
       case 'a':
-        if (this.__keysPressed.indexOf(key) != -1)
+        if (this.__keysPressed.includes(key))
           return false;
         this.__velocity.x -= 1.0;
         break;
       case 'd':
-        if (this.__keysPressed.indexOf(key) != -1)
+        if (this.__keysPressed.includes(key))
           return false;
         this.__velocity.x += 1.0;
         break;
