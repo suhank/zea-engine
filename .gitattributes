@@ -15,3 +15,7 @@
 *.mzp filter=lfs diff=lfs merge=lfs -text 
 
 *.png filter=lfs diff=lfs merge=lfs -text
+
+# keep line endings LF
+# https://docs.github.com/en/github/using-git/configuring-git-to-handle-line-endings
+* text eol=lf
