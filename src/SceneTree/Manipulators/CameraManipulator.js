@@ -61,7 +61,7 @@ const MANIPULATION_MODES = {
  * To set different default values for mobile or desktop set a different value based on the SystemDesc.isMobileDevice flag.
  * ```
  * const customManipulator = renderer.getViewport().getManipulator()
- * customManipulator.getParameter('orbitRate').setValue(SystemDesc.isMobileDevice ? -0.3 : 1)
+ * customManipulator.getParameter('orbitRate').setValue(SystemDesc.isMobileDevice ? 0.3 : 1)
  * ```
  *
  * **Events**
@@ -92,7 +92,7 @@ class CameraManipulator extends ParameterOwner {
 
     this.__globalXfoChangedDuringDrag = this.__globalXfoChangedDuringDrag.bind(this)
 
-    this.__orbitRateParam = this.addParameter(new NumberParameter('orbitRate', SystemDesc.isMobileDevice ? -0.1 : 1))
+    this.__orbitRateParam = this.addParameter(new NumberParameter('orbitRate', SystemDesc.isMobileDevice ? 0.3 : 1))
     this.__dollySpeedParam = this.addParameter(new NumberParameter('dollySpeed', 0.02))
     this.__mouseWheelDollySpeedParam = this.addParameter(new NumberParameter('mouseWheelDollySpeed', 0.0005))
   }
@@ -466,13 +466,6 @@ class CameraManipulator extends ParameterOwner {
   }
 
   /**
-   * Causes an event to occur when the mouse pointer is moving while over an element.
-   *
-   * @param {MouseEvent} event - The mouse event that occurs.
-   */
-  onMouseMove(event) {}
-
-  /**
    * Causes an event to occur when a user double clicks a mouse button over an element.
    *
    * @param {MouseEvent} event - The mouse event that occurs.
@@ -744,7 +737,6 @@ class CameraManipulator extends ParameterOwner {
    * @param {TouchEvent} event - The touch event that occurs.
    */
   onTouchStart(event) {
-    console.log('onTouchStart')
     event.preventDefault()
     event.stopPropagation()
 
@@ -777,7 +769,7 @@ class CameraManipulator extends ParameterOwner {
       const touch = touches[0]
       const touchPos = new Vec2(touch.pageX, touch.pageY)
       const touchData = this.__ongoingTouches[touch.identifier]
-      const dragVec = touchData.pos.subtract(touchPos)
+      const dragVec = touchPos.subtract(touchData.pos)
       switch (this.__defaultManipulationState) {
         case MANIPULATION_MODES.look:
           // TODO: scale panning here.
