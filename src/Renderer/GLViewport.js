@@ -4,7 +4,7 @@ import { GLBaseViewport } from './GLBaseViewport.js'
 import { GLFbo } from './GLFbo.js'
 import { GLTexture2D } from './GLTexture2D.js'
 
-import { CameraMouseAndKeyboard } from '../SceneTree/index'
+import { CameraManipulator } from '../SceneTree/index'
 
 /** Class representing a GL viewport.
  *
@@ -42,7 +42,7 @@ class GLViewport extends GLBaseViewport {
     // Each user has a separate camera, and so the default
     //  camera cannot be part of the scene.
     this.setCamera(new Camera('Default'))
-    this.setManipulator(new CameraMouseAndKeyboard())
+    this.setManipulator(new CameraManipulator())
 
     this.resize(width, height)
   }

@@ -15,23 +15,61 @@ const MANIPULATION_MODES = {
 }
 
 /**
- * Class representing the viewport manipulator with camera, mouse and keyboard events.
+ * Class for defining and interaction model of the camera.
+ *
+ * The CameraManipulator supports a variety of manipulation modes, and hotkeys/modifier keys
+ * that allow the user to rapidly switch between modes, such as 'turntable' and 'pan'.
+ * A detailed explanation of various camera manipulation modes can be found
+ * here: https://www.mattkeeter.com/projects/rotation/
+ *
+ * **MANIPULATION_MODES**
+ * * **pan:** Translates the camera sideways according the the camera's current orientation. Activated by the right mouse button, or two fingered touches on mobile.
+ * * **dolly:** Translates the camera forwards and backwards according the the camera's current orientation. Activated by holding the ctrl and alt keys while using the left mouse button, or the mouse wheel, or two fingered touches on mobile.
+ * * **focussing:** Focusses the camera on a specific 3d point in the scene. Activated by double clicking, or double tapping on a geometry in the 3d view.
+ * * **look:** Rotates the camera around its own position. Useful for simulating looking by turning ones head inside a scene. Activated by holding the ctrl key and right mouse button.
+ * * **turntable:** Rotates the camera around the current camera target, using the turntable style manipulation described above. Activated by the left mouse button.
+ * * **tumbler:** Rotates the camera around the current camera target, using the tumbler style manipulation described above. Activated by the left mouse button.
+ * * **trackball:** Rotates the camera around the current camera target, using the trackball style manipulation described above. Activated by the left mouse button.
+ *
+ * The default manipulation mode, is the mode that is active with only the left mouse button. The default manipulation mode is currently 'turntable'.
+ *
+ * To Assign a different default manipulation mode, retrieve the manipulator from the viewport
+ * and set the default mode.
+ * ```
+ * const customManipulator = renderer.getViewport().getManipulator()
+ * customManipulator.setDefaultManipulationMode(CameraManipulator.MANIPULATION_MODES.trackball);
+ * ```
+ *
+ * This class is the default manipulator, and can be replaced with custom manipulators.
  *
  * ```
- * const manipulator = new CameraMouseAndKeyboard()
+ * const customManipulator = new CustomCameraManipulator()
+ * renderer.getViewport().setManipulator(customManipulator);
  * ```
+ *
  *
  * **Parameters**
- * * **orbitRate(`NumberParameter`):** _todo_
- * * **dollySpeed(`NumberParameter`):** _todo_
- * * **mouseWheelDollySpeed(`NumberParameter`):** _todo_
+ * * **orbitRate(`NumberParameter`):** The rate at which mouse or touch interactions are translated camera orientation changes.
+ * * **dollySpeed(`NumberParameter`):** The rate at which the mouse button or touch interactions are translated camera dolly movement.
+ * * **mouseWheelDollySpeed(`NumberParameter`):** The rate at which the mouse wheel interactions are translated camera dolly movement.
+ *
+ *   Note: this value defaults to different values for touch based interfaces to mouse based input.
+ *   For mobile devices, the orbit rate defaults to -0.3, and for mouse based interaction, the value defaults to 1.
+ *   A value of 1 means that the camera will rotate 180 degrees for a mouse interaction that spans from the left border of the viewport to the right border.
+ *   Some applications might require lower, or higher default values
+ *
+ * To set different default values for mobile or desktop set a different value based on the SystemDesc.isMobileDevice flag.
+ * ```
+ * const customManipulator = renderer.getViewport().getManipulator()
+ * customManipulator.getParameter('orbitRate').setValue(SystemDesc.isMobileDevice ? 0.3 : 1)
+ * ```
  *
  * **Events**
- * * **movementFinished:** Triggered when the camera moves
+ * * **movementFinished:** Triggered when a camera movement is finished. E.g. when the user releases the mouse after a dolly, or after the focussing action has completed.
  *
  * @extends ParameterOwner
  */
-class CameraMouseAndKeyboard extends ParameterOwner {
+class CameraManipulator extends ParameterOwner {
   /**
    * Create a camera, mouse and keyboard
    * @param {string} name - The name value.
@@ -54,14 +92,14 @@ class CameraMouseAndKeyboard extends ParameterOwner {
 
     this.__globalXfoChangedDuringDrag = this.__globalXfoChangedDuringDrag.bind(this)
 
-    this.__orbitRateParam = this.addParameter(new NumberParameter('orbitRate', SystemDesc.isMobileDevice ? -0.1 : 1))
+    this.__orbitRateParam = this.addParameter(new NumberParameter('orbitRate', SystemDesc.isMobileDevice ? 0.3 : 1))
     this.__dollySpeedParam = this.addParameter(new NumberParameter('dollySpeed', 0.02))
     this.__mouseWheelDollySpeedParam = this.addParameter(new NumberParameter('mouseWheelDollySpeed', 0.0005))
   }
 
   /**
    * Sets default manipulation mode.
-   * The value can be on of the keys in #CameraMouseAndKeyboard.MANIPULATION_MODES
+   * The value can be on of the keys in #CameraManipulator.MANIPULATION_MODES
    *
    * @param {string} manipulationMode - The manipulation mode value.
    */
@@ -428,13 +466,6 @@ class CameraMouseAndKeyboard extends ParameterOwner {
   }
 
   /**
-   * Causes an event to occur when the mouse pointer is moving while over an element.
-   *
-   * @param {MouseEvent} event - The mouse event that occurs.
-   */
-  onMouseMove(event) {}
-
-  /**
    * Causes an event to occur when a user double clicks a mouse button over an element.
    *
    * @param {MouseEvent} event - The mouse event that occurs.
@@ -706,7 +737,6 @@ class CameraMouseAndKeyboard extends ParameterOwner {
    * @param {TouchEvent} event - The touch event that occurs.
    */
   onTouchStart(event) {
-    console.log('onTouchStart')
     event.preventDefault()
     event.stopPropagation()
 
@@ -739,7 +769,7 @@ class CameraMouseAndKeyboard extends ParameterOwner {
       const touch = touches[0]
       const touchPos = new Vec2(touch.pageX, touch.pageY)
       const touchData = this.__ongoingTouches[touch.identifier]
-      const dragVec = touchData.pos.subtract(touchPos)
+      const dragVec = touchPos.subtract(touchData.pos)
       switch (this.__defaultManipulationState) {
         case MANIPULATION_MODES.look:
           // TODO: scale panning here.
@@ -845,4 +875,4 @@ class CameraMouseAndKeyboard extends ParameterOwner {
   }
 }
 
-export { CameraMouseAndKeyboard }
+export { CameraManipulator }
