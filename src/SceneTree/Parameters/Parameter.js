@@ -146,6 +146,7 @@ class Parameter extends EventEmitter {
       this.__boundOps[i].setParamBindIndex(i)
     }
     // If we weren't already dirty, make sure to emit a 'valueChanged' anyway.
+    this.__findFirstOP_WRITE()
     if (!this.setDirty(index)) this.emit('valueChanged', { mode: 0 })
     return index
   }
@@ -163,8 +164,22 @@ class Parameter extends EventEmitter {
     for (let i = index; i < this.__boundOps.length; i++) {
       this.__boundOps[i].setParamBindIndex(i)
     }
+    this.__findFirstOP_WRITE()
     this.setDirty(Math.max(0, index - 1))
     return index
+  }
+
+  /**
+   * Find the first operator in our stack which writes using an OP_WRITE connection.
+   * All operators before this op can be ignored during dirty propagation.
+   * @private
+   */
+  __findFirstOP_WRITE() {
+    this.__firstOP_WRITE = this.__boundOps.length
+    for (this.__firstOP_WRITE--; this.__firstOP_WRITE > 0; this.__firstOP_WRITE--) {
+      // Find the first OP_WRITE binding. (Note: we could cache this)
+      if (this.__boundOps[this.__firstOP_WRITE].getMode() == OperatorOutputMode.OP_WRITE) break
+    }
   }
 
   /**
@@ -176,15 +191,10 @@ class Parameter extends EventEmitter {
   setDirty(index) {
     // Determine the first operator in the stack that must evaluate to clean the parameter.
     if (index < this.__dirtyOpIndex) {
-      // Walk back down the stack and dirty each of the other bound operators.
       // If we must dirty all operators in the stack from the last OP_WRITE to the end.
       // Note: If a setDirty call comes from an op that precedes an OP_WRITE operator, we
       // can safely discard it, as its output will have no effect on the value of this parameter.
-      let newDirtyIndex = this.__dirtyOpIndex
-      for (newDirtyIndex--; newDirtyIndex > 0; newDirtyIndex--) {
-        // Find the first OP_WRITE binding. (Note: we could cache this)
-        if (this.__boundOps[newDirtyIndex].getMode() == OperatorOutputMode.OP_WRITE) break
-      }
+      let newDirtyIndex = this.__firstOP_WRITE
       if (newDirtyIndex <= index) {
         this.__dirtyOpIndex = newDirtyIndex
         for (newDirtyIndex++; newDirtyIndex < this.__boundOps.length; newDirtyIndex++) {
