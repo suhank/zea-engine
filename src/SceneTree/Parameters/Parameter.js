@@ -186,7 +186,6 @@ class Parameter extends EventEmitter {
         }
         if (this.__boundOps[this.__dirtyOpIndex].getMode() == OperatorOutputMode.OP_WRITE) break
       }
-      console.log(`setDirty:`, index, this.getPath())
 
       this.emit('valueChanged', { mode: 0 })
       return true
