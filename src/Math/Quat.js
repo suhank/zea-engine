@@ -124,6 +124,16 @@ class Quat extends AttrValue {
   }
 
   /**
+   * Checks if this Quat is exactly the same as another Quat.
+   *
+   * @param {Quat} other - The other Quat to compare with.
+   * @return {boolean} - Returns `true` if are the same Vector, otherwise, `false`.
+   */
+  isEqual(other) {
+    return this.x == other.x && this.y == other.y && this.z == other.z && this.w == other.w
+  }
+
+  /**
    * Setter from scalar components.
    *
    * @param {number} x - The x axis rotation.
