@@ -1,4 +1,3 @@
-import { Registry } from '../../Registry'
 import { Parameter } from './Parameter.js'
 
 /**
@@ -128,7 +127,5 @@ class StructParameter extends Parameter {
     for (const p of this.__members) p.destroy()
   }
 }
-
-Registry.register('StructParameter', StructParameter)
 
 export { StructParameter }

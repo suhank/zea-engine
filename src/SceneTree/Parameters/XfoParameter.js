@@ -1,4 +1,3 @@
-import { Registry } from '../../Registry'
 import { Xfo } from '../../Math/index'
 import { Parameter } from './Parameter.js'
 
@@ -51,7 +50,5 @@ class XfoParameter extends Parameter {
     return clonedParam
   }
 }
-
-Registry.register('XfoParameter', XfoParameter)
 
 export { XfoParameter }

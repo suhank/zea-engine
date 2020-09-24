@@ -1,4 +1,3 @@
-import { Registry } from '../../Registry'
 import { Parameter } from './Parameter.js'
 
 /** Class representing a geometry parameter.
@@ -91,7 +90,5 @@ class GeometryParameter extends Parameter {
     }
   }
 }
-
-Registry.register('GeometryParameter', GeometryParameter)
 
 export { GeometryParameter }

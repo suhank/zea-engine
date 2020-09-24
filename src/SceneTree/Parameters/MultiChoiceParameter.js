@@ -1,4 +1,3 @@
-import { Registry } from '../../Registry'
 import { NumberParameter } from './NumberParameter.js'
 
 /**
@@ -52,7 +51,5 @@ class MultiChoiceParameter extends NumberParameter {
     }
   }
 }
-
-Registry.register('MultiChoiceParameter', MultiChoiceParameter)
 
 export { MultiChoiceParameter }

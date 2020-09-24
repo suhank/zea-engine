@@ -1,4 +1,3 @@
-import { Registry } from '../../Registry'
 import { Parameter } from './Parameter.js'
 
 /**
@@ -72,7 +71,5 @@ class ImageParameter extends Parameter {
     return clonedParam
   }
 }
-
-Registry.register('ImageParameter', ImageParameter)
 
 export { ImageParameter }

@@ -1,4 +1,3 @@
-import { Registry } from '../../Registry'
 import { Mat4 } from '../../Math/index'
 import { Parameter } from './Parameter.js'
 
@@ -47,7 +46,5 @@ class Mat4Parameter extends Parameter {
     return clonedParam
   }
 }
-
-Registry.register('Mat4Parameter', Mat4Parameter)
 
 export { Mat4Parameter }
