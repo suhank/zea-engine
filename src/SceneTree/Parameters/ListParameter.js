@@ -1,3 +1,4 @@
+import { Registry } from '../../Registry'
 import { Parameter } from './Parameter.js'
 
 /**
@@ -189,5 +190,7 @@ class ListParameter extends Parameter {
     }
   }
 }
+
+Registry.register('ListParameter', ListParameter)
 
 export { ListParameter }
