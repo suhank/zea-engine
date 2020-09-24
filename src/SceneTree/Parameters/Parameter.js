@@ -251,7 +251,7 @@ class Parameter extends EventEmitter {
         )
       }
     } else {
-      console.log(`cleaned:`, this.getPath())
+      // console.log(`cleaned:`, this.getPath())
     }
     this.__value = value
 
