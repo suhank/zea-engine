@@ -169,31 +169,31 @@ class Quat extends AttrValue {
 
     switch (eulerAngles.order) {
       case 0:
-        /* 'XYZ' */
+        // 'XYZ'
         ordered.set(eulerAngles.x, -eulerAngles.y, eulerAngles.z)
         break
       case 1:
-        /* 'YZX' */
+        // 'YZX'
         ordered.set(eulerAngles.y, -eulerAngles.z, eulerAngles.x)
         break
       case 2:
-        /* 'ZXY' */
+        // 'ZXY'
         ordered.set(eulerAngles.z, -eulerAngles.x, eulerAngles.y)
         break
       case 3:
-        /* 'XZY' */
+        // 'XZY'
         ordered.set(eulerAngles.x, eulerAngles.z, eulerAngles.y)
         break
       case 4:
-        /* 'ZYX' */
+        // 'ZYX'
         ordered.set(eulerAngles.z, eulerAngles.y, eulerAngles.x)
         break
       case 5:
-        /* 'YXZ' */
+        // 'YXZ'
         ordered.set(eulerAngles.y, eulerAngles.x, eulerAngles.z)
         break
       default:
-        throw new Error('sdrty')
+        throw new Error('Invalid EulerAngles order:', eulerAngles.order)
     }
 
     const ti = ordered.x * 0.5
@@ -217,43 +217,43 @@ class Quat extends AttrValue {
 
     switch (eulerAngles.order) {
       case 0:
-        /* ' XYZ' */
+        // ' XYZ'
         this.x = ai
         this.y = -aj
         this.z = ak
         break
       case 1:
-        /* 'YZX' */
+        // 'YZX'
         this.x = ak
         this.y = ai
         this.z = -aj
         break
       case 2:
-        /* 'ZXY' */
+        // 'ZXY'
         this.x = -aj
         this.y = ak
         this.z = ai
         break
       case 3:
-        /* 'XZY' */
+        // 'XZY'
         this.x = ai
         this.y = ak
         this.z = aj
         break
       case 4:
-        /* 'ZYX' */
+        // 'ZYX'
         this.x = ak
         this.y = aj
         this.z = ai
         break
       case 5:
-        /* 'YXZ' */
+        // 'YXZ'
         this.x = aj
         this.y = ai
         this.z = ak
         break
       default:
-        throw new Error('sdrty')
+        throw new Error('Invalid EulerAngles order:', eulerAngles.order)
     }
   }
 
