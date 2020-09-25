@@ -21,6 +21,7 @@
     "dist": "yarn publish --access=public",
     "docs": "cp CHANGELOG.md docs/ && adg --config adg.config.json",
     "docs-w": "cp CHANGELOG.md docs/ && adg -w --config=adg.config.json",
+    "docs:serve": "docsify serve docs/",
     "generate": "plop",
     "release": "standard-version",
     "start": "es-dev-server",
