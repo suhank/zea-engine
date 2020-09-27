@@ -9,7 +9,7 @@
 
 - Getting started
   * [Setting up your workspace](getting-started/development-setup.md)
-  * [Getting Started using Zea Engine](getting-started/get-started-with-engine.md)
+  * [Getting started with the Zea Engine](getting-started/get-started-with-engine.md)
 
 <!-- - Tutorials
   * [Using Groups](concepts/groups.md)
