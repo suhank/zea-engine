@@ -19,6 +19,7 @@ to understand intuitively.
         * [z](#z)
         * [w ⇒ <code>number</code>](#w)
         * [w](#w)
+        * [isEqual(other) ⇒ <code>boolean</code>](#isEqual)
         * [set(x, y, z, w)](#set)
         * [setDataArray(float32Array)](#setDataArray)
         * [setFromOther(other)](#setFromOther)
@@ -152,6 +153,18 @@ Setter for `w`.
 | Param | Type | Description |
 | --- | --- | --- |
 | val | <code>number</code> | The val param. |
+
+<a name="Quat+isEqual"></a>
+
+### isEqual
+Checks if this Quat is exactly the same as another Quat.
+
+
+**Returns**: <code>boolean</code> - - Returns `true` if are the same Vector, otherwise, `false`.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| other | [<code>Quat</code>](#Quat) | The other Quat to compare with. |
 
 <a name="Quat+set"></a>
 

@@ -69,8 +69,8 @@ It has the capability to add and remove children.
         * [toJSON(context) ⇒ <code>object</code>](#toJSON)
         * [fromJSON(j, context)](#fromJSON)
         * [readBinary(reader, context)](#readBinary)
-        * [clone()](#clone)
-        * [copyFrom(src)](#copyFrom)
+        * [clone(context)](#clone)
+        * [copyFrom(src, context)](#copyFrom)
     * _static_
         * [getSelectionOutlineColor() ⇒ <code>Color</code>](#getSelectionOutlineColor)
         * [setSelectionOutlineColor(color)](#setSelectionOutlineColor)
@@ -530,6 +530,11 @@ from this item and returns it.
 
 
 **Returns**: [<code>TreeItem</code>](#TreeItem) - - Returns a new cloned tree item.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| context | <code>object</code> | The context value. |
+
 <a name="TreeItem+copyFrom"></a>
 
 ### copyFrom
@@ -540,6 +545,7 @@ Copies current TreeItem with all its children.
 | Param | Type | Description |
 | --- | --- | --- |
 | src | [<code>TreeItem</code>](#TreeItem) | The tree item to copy from. |
+| context | <code>object</code> | The context value. |
 
 <a name="TreeItem.getSelectionOutlineColor"></a>
 

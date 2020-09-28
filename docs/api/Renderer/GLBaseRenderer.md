@@ -7,7 +7,7 @@ Class representing a GL base renderer.
 **Extends**: <code>[ParameterOwner](api/SceneTree/ParameterOwner.md)</code>  
 
 * [GLBaseRenderer ⇐ <code>ParameterOwner</code>](#GLBaseRenderer)
-    * [new GLBaseRenderer(canvasDiv, options)](#new-GLBaseRenderer)
+    * [new GLBaseRenderer($canvas, options)](#new-GLBaseRenderer)
     * _instance_
         * [gl](#gl)
         * [addShaderPreprocessorDirective(name, value)](#addShaderPreprocessorDirective)
@@ -31,7 +31,7 @@ Class representing a GL base renderer.
         * [getGL() ⇒ <code>any</code>](#getGL)
         * [resizeFbos(width, height)](#resizeFbos)
         * [getDiv() ⇒ <code>any</code>](#getDiv)
-        * [setupWebGL(canvasDiv, webglOptions)](#setupWebGL)
+        * [setupWebGL($canvas, webglOptions)](#setupWebGL)
         * [bindEventHandlers()](#bindEventHandlers)
         * [setUndoRedoManager(undoRedoManager)](#setUndoRedoManager)
         * [getGLCanvas() ⇒ <code>any</code>](#getGLCanvas)
@@ -69,7 +69,7 @@ Create a GL base renderer.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| canvasDiv | <code>any</code> | The canvasDiv value. |
+| $canvas | <code>any</code> | The $canvas value. |
 | options | <code>any</code> | The options value. |
 
 <a name="GLBaseRenderer+gl"></a>
@@ -286,7 +286,7 @@ The setupWebGL method.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| canvasDiv | <code>any</code> | The canvasDiv value. |
+| $canvas | <code>any</code> | The $canvas value. |
 | webglOptions | <code>any</code> | The webglOptions value. |
 
 <a name="GLBaseRenderer+bindEventHandlers"></a>
