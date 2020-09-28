@@ -1,5 +1,7 @@
 # Getting started with the Zea Engine
 
+ℹ️ Before we begin, please make sure you're already familiar with [Setting up your workspace](getting-started/development-setup.md).
+
 The Zea Engine is useful for building interactive web applications with JavaScript.
 
 In this tutorial, we will learn how to load the Zea Engine in the browser and set up your first scene: the grid below.
@@ -122,7 +124,7 @@ const renderer = new GLRenderer($canvas)
 renderer.setScene(scene)
 ```
 
-### Running a local server
+## Running a local server
 
 The index.html file can not be loaded without a local server, since the index.js file would be blocked by [the CORS policy](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS). To be able to load our page in the browser, we will use [es-dev-server](https://www.npmjs.com/package/es-dev-server), a web server for development without bundling.
 
@@ -144,13 +146,13 @@ es-dev-server started on http://localhost:8000
 
 ![getting-started-grid](../_media/getting-started-grid.png ':class=screenshot')
 
-# Remix your own Zea Engine app
+## Remix your own Zea Engine app
 
 Using what we just learned, you can now remix your own Zea Engine apps. Try, for example, changing the number of divisions within the grid:
 
 https://glitch.com/edit/#!/zea-demo-grid
 
-# Debugging Zea Engine apps
+## Debugging Zea Engine apps
 
 ℹ️ Please make sure you're already familiar with [debugging JavaScript in Chrome DevTools](https://developers.google.com/web/tools/chrome-devtools/javascript).
 
