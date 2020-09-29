@@ -163,8 +163,8 @@ describe('Mesh', () => {
 
     // Now check that the 2 faces have normals
     const faceNormals = mesh.getFaceAttribute('normals')
-    expect(faceNormals.getValueRef(0)).toEqual(new Vec3(-1, 0, 0))
-    expect(faceNormals.getValueRef(1)).toEqual(new Vec3(0, 1, 0))
+    expect(faceNormals.getValueRef(0)).toEqual(new Vec3(1, 0, 0))
+    expect(faceNormals.getValueRef(1)).toEqual(new Vec3(0, -1, 0))
 
     // Now we check that the 2 normal values for the ve
     // vertex id 2 is used by Face 0 at facevertex 2, and Face 1 and facevertex index 1
