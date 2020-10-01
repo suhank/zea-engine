@@ -611,7 +611,7 @@ class Quat extends AttrValue {
 
     // TODO: evaluate use of glm_invsqrt here?
     len = 1 / Math.sqrt(len)
-    return new Quat(x * len, y * len, z * len)
+    return new Quat(x * len, y * len, z * len, w * len)
   }
 
   /**
