@@ -170,10 +170,10 @@ describe('Mesh', () => {
     // vertex id 2 is used by Face 0 at facevertex 2, and Face 1 and facevertex index 1
     // vertex id 3 is used by Face 0 at facevertex 3, and Face 1 and facevertex index 0
     const normals = mesh.getVertexAttribute('normals')
-    expect(normals.getFaceVertexValueRef(0, 2)).toEqual(new Vec3(-1, 0, 0))
-    expect(normals.getFaceVertexValueRef(1, 1)).toEqual(new Vec3(0, 1, 0))
-    expect(normals.getFaceVertexValueRef(0, 3)).toEqual(new Vec3(-1, 0, 0))
-    expect(normals.getFaceVertexValueRef(1, 0)).toEqual(new Vec3(0, 1, 0))
+    expect(normals.getFaceVertexValueRef(0, 2)).toEqual(new Vec3(1, 0, 0))
+    expect(normals.getFaceVertexValueRef(1, 1)).toEqual(new Vec3(0, -1, 0))
+    expect(normals.getFaceVertexValueRef(0, 3)).toEqual(new Vec3(1, 0, 0))
+    expect(normals.getFaceVertexValueRef(1, 0)).toEqual(new Vec3(0, -1, 0))
 
     expect(JSON.stringify(mesh.toJSON())).toMatchSnapshot()
   })
