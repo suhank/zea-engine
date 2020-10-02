@@ -13,9 +13,9 @@ class GeometryParameter extends Parameter {
    */
   constructor(name, value) {
     super(name, undefined, 'Geometry')
-    this.setValue(value)
 
     this.__emitBoundingBoxDirtied = this.__emitBoundingBoxDirtied.bind(this)
+    this.setValue(value)
   }
 
   // eslint-disable-next-line require-jsdoc
