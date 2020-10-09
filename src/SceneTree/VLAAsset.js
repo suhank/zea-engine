@@ -14,7 +14,7 @@ import { Version } from './Version.js'
  * * **DataFilePath(`FilePathParameter`):** Used to specify the path to the file.
  *
  * **Events**
- * * **loaded:** Triggered once everything is loaded.
+ * * **loaded:** Triggered once the tree is loaded. Note: the tree bounding box is valid once the tree is loaded.
  * * **geomsLoaded:** Triggered once all geometries are loaded.
  *
  * @extends AssetItem
@@ -28,7 +28,7 @@ class VLAAsset extends AssetItem {
     super(name)
     this.loaded = false
 
-    // A signal that is emitted once all the geoms are loaded.
+    // A signal that is emitted once all the geometries are loaded.
     // Often the state machine will activate the first state
     // when this signal emits.
     this.geomsLoaded = false
@@ -37,8 +37,9 @@ class VLAAsset extends AssetItem {
       this.emit('geomsLoaded', {})
     })
 
-    this.__datafileParam = this.addParameter(new FilePathParameter('DataFilePath'))
-    this.__datafileParam.on('valueChanged', () => {
+    this.__fileParam = this.addParameter(new FilePathParameter('FilePath'))
+    this.addParameterDeprecationMapping('DataFilePath', 'FilePath') // Note: migrating from 'DataFilePath' to 'FilePath'
+    this.__fileParam.on('valueChanged', () => {
       this.geomsLoaded = false
       this.loadDataFile(
         () => {
@@ -77,12 +78,11 @@ class VLAAsset extends AssetItem {
         context.versions['zea-engine'] = version
       } else {
         // Now we split the mesh out from the engine version.
-        context.versions['zea-engine'] = new Version(reader.loadStr())
+        context.versions['zea-mesh'] = new Version(reader.loadStr())
       }
     }
-    context.meshSdk = 'FBX'
+
     this.meshfileversion = context.versions['zea-mesh']
-    this.meshSdk = context.meshSdk
     console.log('Loading CAD File version:', context.versions['zea-mesh'], ' exported using SDK:', context.meshSdk)
 
     const numGeomsFiles = reader.loadUInt32()
@@ -106,10 +106,11 @@ class VLAAsset extends AssetItem {
     // No need to set it here. (and the number is now incorrect for a reason I do not understand.)
 
     // if (context.version < 5) {
-    if (context.versions['zea-engine'].compare([0, 0, 5]) < 0) {
+    if (context.versions['zea-engine'].compare([2, 1, 0]) < 0) {
       // Some data is no longer being read at the end of the buffer
       // so we skip to the end here.
-      reader.seek(reader.byteLength - 4)
+      // reader.seek(reader.byteLength - 4)
+      const atlasSize = reader.loadFloat32Vec2()
     }
     this.__geomLibrary.setNumGeoms(reader.loadUInt32())
 
@@ -124,8 +125,8 @@ class VLAAsset extends AssetItem {
    * @param {function} onGeomsDone - The onGeomsDone value.
    */
   loadDataFile(onDone, onGeomsDone) {
-    const fileId = this.__datafileParam.getValue()
-    const url = this.__datafileParam.getUrl()
+    const fileId = this.__fileParam.getValue()
+    const url = this.__fileParam.getUrl()
     const folder = url.lastIndexOf('/') > -1 ? url.substring(0, url.lastIndexOf('/')) + '/' : ''
     const filename = url.lastIndexOf('/') > -1 ? url.substring(url.lastIndexOf('/') + 1) : ''
     const stem = filename.substring(0, filename.lastIndexOf('.'))
@@ -136,7 +137,7 @@ class VLAAsset extends AssetItem {
       versions: {},
     }
 
-    const loadBinary = (entries) => {
+    resourceLoader.loadArchive(url, (entries) => {
       // Load the tree file. This file contains
       // the scene tree of the asset, and also
       // tells us how many geom files will need to be loaded.
@@ -155,9 +156,10 @@ class VLAAsset extends AssetItem {
 
       onDone()
 
-      if (numGeomsFiles == 0 && entries.geoms0) {
+      if (numGeomsFiles == 0 && (entries.geoms1 || entries.geoms)) {
+        const geoms = entries.geoms ? entries.geoms : entries.geoms1
         resourceLoader.addWork(fileId, 1) // (load + parse + extra)
-        this.__geomLibrary.readBinaryBuffer(fileId, entries.geoms0.buffer, context)
+        this.__geomLibrary.readBinaryBuffer(fileId, geoms.buffer, context)
         onGeomsDone()
       } else {
         // add the work for the the geom files....
@@ -166,7 +168,7 @@ class VLAAsset extends AssetItem {
         // Note: Lets just load all the goem files in parallel.
         loadAllGeomFiles()
       }
-    }
+    })
 
     const loadAllGeomFiles = () => {
       const promises = []
@@ -229,7 +231,7 @@ class VLAAsset extends AssetItem {
       this.__datafileLoaded = loadAssetJSON
       const filePathJSON = j.params.DataFilePath
       delete j.params.DataFilePath
-      this.__datafileParam.fromJSON(filePathJSON, context)
+      this.__fileParam.fromJSON(filePathJSON, context)
     } else {
       loadAssetJSON()
     }
