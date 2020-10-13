@@ -384,6 +384,7 @@ class GLTexture2D extends RefCounted {
             break
           case gl.RG:
             numChannels = 2
+            gl.pixelStorei(gl.UNPACK_ALIGNMENT, 2)
             break
           case gl.RGB:
             numChannels = 3
