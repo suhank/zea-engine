@@ -24,8 +24,8 @@
 
 
       const asset = new VLAAsset()
-      asset.getParameter('DataFilePath').setValue('../Resources/Oculus.vla')
-      asset.on('loaded', () => {
+      asset.getParameter('DataFilePath').setValue('../public-resources/Oculus.vla')
+      asset.getGeometryLibrary().on('loaded', () => {
         const HMD = asset.getChildByName('HMD')
         HMD.getParameter('LocalXfo').setValue(new Xfo(new Vec3(0, 0, 200)))
 

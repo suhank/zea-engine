@@ -25,7 +25,7 @@
       
       const asset = new VLAAsset()
       asset.getParameter('DataFilePath').setValue('../public-resources/Vive.vla')
-      asset.on('loaded', () => {
+      asset.getGeometryLibrary().on('loaded', () => {
         const HMD = asset.getChildByName('HMD')
         HMD.getParameter('LocalXfo').setValue(new Xfo(new Vec3(0, 0, 200)))
 
