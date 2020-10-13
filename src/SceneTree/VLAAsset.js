@@ -77,26 +77,10 @@ class VLAAsset extends AssetItem {
 
     super.readBinary(reader, context)
 
-    // Strangely, reading the latest HMD files gives us 12 bytes
-    // at the end and the next 4 == 0. Not sure why.
-    // setNumGeoms sets 0, but this doesn't bother the loading
-    // so simply leaving for now.
-    // if (reader.remainingByteLength != 4) {
-    //   throw new Error(
-    //     'File needs to be re-exported:' +
-    //       this.getParameter('FilePath').getValue()
-    //   )
-    // }
-
-    // Perpare the geom library for loading
-    // This helps with progress bars, so we know how many geoms are coming in total.
-    // Note: the geom library encodes in its binary buffer the number of geoms.
-    // No need to set it here. (and the number is now incorrect for a reason I do not understand.)
-
-    // if (context.version < 5) {
     if (context.versions['zea-engine'].compare([0, 0, 5]) < 0) {
       // Some data is no longer being read at the end of the buffer
       // so we skip to the end here.
+      // The data was the atlas size of the lightmap that we no longer support.
       reader.seek(reader.byteLength - 4)
     }
     this.__geomLibrary.setNumGeoms(reader.loadUInt32())
