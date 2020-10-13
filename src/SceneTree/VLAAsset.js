@@ -68,22 +68,10 @@ class VLAAsset extends AssetItem {
     if (context.versions['zea-engine']) {
       // Necessary for the smart lok
     } else {
-      const v = reader.loadUInt8()
-      reader.seek(0)
-      // Note: previous non-semver only reached 7
-      if (v > 7) {
-        const version = new Version()
-        version.patch = reader.loadUInt32()
-        context.versions['zea-engine'] = version
-      } else {
-        // Now we split the mesh out from the engine version.
-        context.versions['zea-engine'] = new Version(reader.loadStr())
-      }
+      // Now we split the mesh out from the engine version.
+      context.versions['zea-mesh'] = new Version(reader.loadStr())
     }
-    context.meshSdk = 'FBX'
-    this.meshfileversion = context.versions['zea-mesh']
-    this.meshSdk = context.meshSdk
-    console.log('Loading CAD File version:', context.versions['zea-mesh'], ' exported using SDK:', context.meshSdk)
+    console.log('Loading Mesh File version:', context.versions['zea-mesh'])
 
     const numGeomsFiles = reader.loadUInt32()
 
@@ -155,9 +143,9 @@ class VLAAsset extends AssetItem {
 
       onDone()
 
-      if (numGeomsFiles == 0 && entries.geoms0) {
+      if (numGeomsFiles == 0 && entries.geoms) {
         resourceLoader.addWork(fileId, 1) // (load + parse + extra)
-        this.__geomLibrary.readBinaryBuffer(fileId, entries.geoms0.buffer, context)
+        this.__geomLibrary.readBinaryBuffer(fileId, entries.geoms.buffer, context)
         onGeomsDone()
       } else {
         // add the work for the the geom files....
