@@ -69,47 +69,19 @@ class VLAAsset extends AssetItem {
     if (context.versions['zea-engine']) {
       // Necessary for the smart lok
     } else {
-      const v = reader.loadUInt8()
-      reader.seek(0)
-      // Note: previous non-semver only reached 7
-      if (v > 7) {
-        const version = new Version()
-        version.patch = reader.loadUInt32()
-        context.versions['zea-engine'] = version
-      } else {
-        // Now we split the mesh out from the engine version.
-        context.versions['zea-mesh'] = new Version(reader.loadStr())
-      }
+      // Now we split the mesh out from the engine version.
+      context.versions['zea-mesh'] = new Version(reader.loadStr())
     }
-
-    this.meshfileversion = context.versions['zea-mesh']
-    console.log('Loading CAD File version:', context.versions['zea-mesh'], ' exported using SDK:', context.meshSdk)
+    console.log('Loading Mesh File version:', context.versions['zea-mesh'])
 
     const numGeomsFiles = reader.loadUInt32()
 
     super.readBinary(reader, context)
 
-    // Strangely, reading the latest HMD files gives us 12 bytes
-    // at the end and the next 4 == 0. Not sure why.
-    // setNumGeoms sets 0, but this doesn't bother the loading
-    // so simply leaving for now.
-    // if (reader.remainingByteLength != 4) {
-    //   throw new Error(
-    //     'File needs to be re-exported:' +
-    //       this.getParameter('FilePath').getValue()
-    //   )
-    // }
-
-    // Perpare the geom library for loading
-    // This helps with progress bars, so we know how many geoms are coming in total.
-    // Note: the geom library encodes in its binary buffer the number of geoms.
-    // No need to set it here. (and the number is now incorrect for a reason I do not understand.)
-
-    // if (context.version < 5) {
     if (context.versions['zea-engine'].compare([2, 1, 0]) < 0) {
       // Some data is no longer being read at the end of the buffer
       // so we skip to the end here.
-      // reader.seek(reader.byteLength - 4)
+      // The data was the atlas size of the lightmap that we no longer support.
       const atlasSize = reader.loadFloat32Vec2()
     }
     this.__geomLibrary.setNumGeoms(reader.loadUInt32())
@@ -137,7 +109,7 @@ class VLAAsset extends AssetItem {
       versions: {},
     }
 
-    resourceLoader.loadArchive(url, (entries) => {
+    const loadBinary = (entries) => {
       // Load the tree file. This file contains
       // the scene tree of the asset, and also
       // tells us how many geom files will need to be loaded.
@@ -156,10 +128,9 @@ class VLAAsset extends AssetItem {
 
       onDone()
 
-      if (numGeomsFiles == 0 && (entries.geoms1 || entries.geoms)) {
-        const geoms = entries.geoms ? entries.geoms : entries.geoms1
+      if (numGeomsFiles == 0 && entries.geoms) {
         resourceLoader.addWork(fileId, 1) // (load + parse + extra)
-        this.__geomLibrary.readBinaryBuffer(fileId, geoms.buffer, context)
+        this.__geomLibrary.readBinaryBuffer(fileId, entries.geoms.buffer, context)
         onGeomsDone()
       } else {
         // add the work for the the geom files....
@@ -168,7 +139,7 @@ class VLAAsset extends AssetItem {
         // Note: Lets just load all the goem files in parallel.
         loadAllGeomFiles()
       }
-    })
+    }
 
     const loadAllGeomFiles = () => {
       const promises = []
