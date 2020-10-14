@@ -121,7 +121,7 @@ class ParameterOwner extends EventEmitter {
    */
   getParameter(paramName) {
     let index = this.__paramMapping[paramName]
-    if (index == -1) {
+    if (index == undefined) {
       const newParamName = this.deprecatedParamMapping[paramName]
       if (!newParamName) return null
       else {
