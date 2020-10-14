@@ -139,7 +139,7 @@ class VLAAsset extends AssetItem {
         // Note: Lets just load all the goem files in parallel.
         loadAllGeomFiles()
       }
-    })
+    }
 
     const loadAllGeomFiles = () => {
       const promises = []
