@@ -366,7 +366,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
       itemId = Math.round(geomData[1])
       dist = geomData[3]
     } else {
-      itemId = geomData[0] + (geomData[1] << 8)
+      itemId = geomData[0] + ((geomData[1] & 63) << 8)
       dist = MathFunctions.decode16BitFloatFrom2xUInt8([geomData[2], geomData[3]])
     }
 
@@ -414,7 +414,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
 
       const glmaterialGeomItemSets = glshaderMaterials.getMaterialGeomItemSets()
       for (const glmaterialGeomItemSet of glmaterialGeomItemSets) {
-        if (glmaterialGeomItemSet.drawCount == 0 || !glmaterialGeomItemSet.visibleInGeomDataBuffer) continue
+        if (glmaterialGeomItemSet.drawCount == 0) continue
         // Sometimes materials contain params required for rendering.
         // e.g. PointSize.
         // Note: avoid generating warnings for missing uniforms.

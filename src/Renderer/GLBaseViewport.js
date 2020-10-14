@@ -3,20 +3,23 @@ import { ParameterOwner, BaseImage, NumberParameter } from '../SceneTree/index'
 import { GLHDRImage } from './GLHDRImage.js'
 import { GLTexture2D } from './GLTexture2D.js'
 
-/** Class representing a GL base viewport.
+/**
+ * Class representing a GL base viewport.
  * @extends ParameterOwner
  * @private
  */
 class GLBaseViewport extends ParameterOwner {
   /**
    * Create a GL base viewport.
-   * @param {any} renderer - The renderer value.
+   * @param {GLRenderer} renderer - The renderer value.
    */
   constructor(renderer) {
     super()
     this.__renderer = renderer
     this.__doubleClickTimeMSParam = this.addParameter(new NumberParameter('DoubleClickTimeMS', 200))
     this.__fbo = undefined
+    // Since there is not multi touch on `PointerEvent`, we need to store pointers pressed.
+    this.__ongoingPointers = []
 
     const sceneSet = () => {
       const settings = renderer.getScene().settings
@@ -163,32 +166,49 @@ class GLBaseViewport extends ParameterOwner {
 
   // ///////////////////////////
   // Events
-
   /**
-   * Causes an event to occur when a user presses a mouse button over an element.
-   * @param {any} event - The event that occurs.
-   * @return {boolean} - The return value.
+   * Handler of the `pointerdown` event fired when the pointer device is initially pressed.
+   *
+   * @param {MouseEvent|TouchEvent} event - The DOM event produced by a pointer
    */
-  onMouseDown(event) {
-    return false
+  onPointerDown(event) {
+    console.warn('@GLBaseViewport#onPointerDown - Implement me!')
   }
 
   /**
-   * Causes an event to occur when a user releases a mouse button over a element.
-   * @param {any} event - The event that occurs.
-   * @return {boolean} - The return value.
+   * Handler of the `pointerup` event fired when the pointer device is finally released.
+   *
+   * @param {MouseEvent|TouchEvent} event - The DOM event produced by a pointer
    */
-  onMouseUp(event) {
-    return false
+  onPointerUp(event) {
+    console.warn('@GLBaseViewport#onPointerUp - Implement me!')
   }
 
   /**
-   * Causes an event to occur when the mouse pointer is moving while over an element.
-   * @param {any} event - The event that occurs.
-   * @return {boolean} - The return value.
+   * Handler of the `pointermove` event fired when the pointer device changes coordinates, and the pointer has not been cancelled
+   *
+   * @param {MouseEvent|TouchEvent} event - The DOM event produced by a pointer
    */
-  onMouseMove(event) {
-    return false
+  onPointerMove(event) {
+    console.warn('@GLBaseViewport#onPointerMove - Implement me!')
+  }
+
+  /**
+   * Handler of the `pointerenter` event fired when the pointer device is moved into the hit test boundaries of an element.
+   *
+   * @param {MouseEvent|TouchEvent} event - The DOM event produced by a pointer
+   */
+  onPointerEnter(event) {
+    console.warn('@GLBaseViewport#onPointerEnter - Implement me!')
+  }
+
+  /**
+   * Handler of the `pointerleave` event fired when the pointer device is moved out of the hit test boundaries of an element.
+   *
+   * @param {MouseEvent|TouchEvent} event - The DOM event produced by a pointer
+   */
+  onPointerLeave(event) {
+    console.warn('@GLBaseViewport#onPointerLeave - Implement me!')
   }
 
   /**
@@ -228,6 +248,15 @@ class GLBaseViewport extends ParameterOwner {
    */
   onKeyUp(event) {
     return false
+  }
+
+  /**
+   *
+   * @param {id} pointerId
+   * @return {number} - index result of the find.
+   */
+  _getOngoingPointerIndexById(pointerId) {
+    return this.__ongoingPointers.findIndex((pointer) => pointer.pointerId === pointerId)
   }
 }
 

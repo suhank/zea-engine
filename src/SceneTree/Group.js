@@ -370,11 +370,11 @@ class Group extends TreeItem {
   __bindItem(item, index) {
     if (!(item instanceof TreeItem)) return
 
-    item.on('mouseDown', this.onMouseDown)
-    item.on('mouseUp', this.onMouseUp)
-    item.on('mouseMove', this.onMouseMove)
-    item.on('mouseEnter', this.onMouseEnter)
-    item.on('mouseLeave', this.onMouseLeave)
+    item.on('pointerDown', this.onPointerDown)
+    item.on('pointerUp', this.onPointerUp)
+    item.on('pointerMove', this.onPointerMove)
+    item.on('pointerEnter', this.onPointerEnter)
+    item.on('pointerLeave', this.onPointerLeave)
 
     // ///////////////////////////////
     // Update the Material
@@ -495,11 +495,11 @@ class Group extends TreeItem {
       }
     }, true)
 
-    item.off('mouseDown', this.onMouseDown)
-    item.off('mouseUp', this.onMouseUp)
-    item.off('mouseMove', this.onMouseMove)
-    item.off('mouseEnter', this.onMouseEnter)
-    item.off('mouseLeave', this.onMouseLeave)
+    item.off('pointerDown', this.onPointerDown)
+    item.off('pointerUp', this.onPointerUp)
+    item.off('pointerMove', this.onPointerMove)
+    item.off('pointerEnter', this.onPointerEnter)
+    item.off('pointerLeave', this.onPointerLeave)
 
     if (item instanceof TreeItem) {
       this.memberXfoOps[index].detach()
@@ -615,8 +615,8 @@ class Group extends TreeItem {
    * @private
    * @param {MouseEvent} event - The mouse event that occurs.
    */
-  onMouseDown(event) {
-    super.onMouseDown(event)
+  onPointerDown(event) {
+    super.onPointerDown(event)
   }
 
   /**
@@ -626,8 +626,8 @@ class Group extends TreeItem {
    * @private
    * @param {MouseEvent} event - The mouse event that occurs.
    */
-  onMouseUp(event) {
-    super.onMouseUp(event)
+  onPointerUp(event) {
+    super.onPointerUp(event)
   }
 
   /**
@@ -636,8 +636,8 @@ class Group extends TreeItem {
    * @private
    * @param {MouseEvent} event - The mouse event that occurs.
    */
-  onMouseMove(event) {
-    super.onMouseMove(event)
+  onPointerMove(event) {
+    super.onPointerMove(event)
   }
 
   // ////////////////////////////////////////

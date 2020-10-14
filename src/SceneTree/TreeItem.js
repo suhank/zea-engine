@@ -27,10 +27,10 @@ branchSelectionOutlineColor.a = 0.1
  * * **highlightChanged:** _todo_
  * * **childAdded:** Emitted when a item is added as a child.
  * * **childRemoved:** Emitted when an item is removed from the child nodes.
- * * **mouseDown:** Emitted when a mouseDown event happens in an item.
- * * **mouseUp:** Emitted when a mouseUp event happens in an item.
- * * **mouseMove:** Emitted when a mouseMove event happens in an item.
- * * **mouseEnter:** Emitted when a mouseEnter event happens in an item.
+ * * **pointerDown:** Emitted when a pointerDown event happens in an item.
+ * * **pointerUp:** Emitted when a pointerUp event happens in an item.
+ * * **pointerMove:** Emitted when a pointerMove event happens in an item.
+ * * **pointerEnter:** Emitted when a pointerEnter event happens in an item.
  *
  * @extends {BaseItem}
  */
@@ -55,11 +55,11 @@ class TreeItem extends BaseItem {
     this.__childItemsEventHandlers = []
     this.__childItemsMapping = {}
 
-    this.onMouseDown = this.onMouseDown.bind(this)
-    this.onMouseUp = this.onMouseUp.bind(this)
-    this.onMouseMove = this.onMouseMove.bind(this)
-    this.onMouseEnter = this.onMouseEnter.bind(this)
-    this.onMouseLeave = this.onMouseLeave.bind(this)
+    this.onPointerDown = this.onPointerDown.bind(this)
+    this.onPointerUp = this.onPointerUp.bind(this)
+    this.onPointerMove = this.onPointerMove.bind(this)
+    this.onPointerEnter = this.onPointerEnter.bind(this)
+    this.onPointerLeave = this.onPointerLeave.bind(this)
 
     // /////////////////////////////////////
     // Add parameters.
@@ -830,38 +830,41 @@ class TreeItem extends BaseItem {
   // Events
 
   /**
-   * Causes an event to occur when a user presses a mouse button over an element.
+   * Causes an event to occur when a user presses a pointer(mouse, touch, pencil, etc.) over an element.
    *
-   * @param {MouseEvent} event - The mouse event that occurs.
+   * @param {PointerEvent} event - The event value
    */
-  onMouseDown(event) {
-    this.emit('mouseDown', event)
+  onPointerDown(event) {
+    this.emit('pointerDown', event)
+
     if (event.propagating && this.__ownerItem) {
-      this.__ownerItem.onMouseDown(event)
+      this.__ownerItem.onPointerDown(event)
     }
   }
 
   /**
    * Causes an event to occur when a user releases a mouse button over a element.
    *
-   * @param {MouseEvent} event - The mouse event that occurs.
+   * @param {PointerEvent} event - The mouse event that occurs.
    */
-  onMouseUp(event) {
-    this.emit('mouseUp', event)
+  onPointerUp(event) {
+    this.emit('pointerUp', event)
+
     if (event.propagating && this.__ownerItem) {
-      this.__ownerItem.onMouseUp(event)
+      this.__ownerItem.onPointerUp(event)
     }
   }
 
   /**
-   * Causes an event to occur when the mouse pointer is moving while over an element.
+   * Causes an event to occur when the pointer is moving while over an element.
    *
-   * @param {MouseEvent} event - The mouse event that occurs.
+   * @param {PointerEvent} event - The mouse event that occurs.
    */
-  onMouseMove(event) {
-    this.emit('mouseMove', event)
+  onPointerMove(event) {
+    this.emit('pointerMove', event)
+
     if (event.propagating && this.__ownerItem) {
-      this.__ownerItem.onMouseMove(event)
+      this.__ownerItem.onPointerMove(event)
     }
   }
 
@@ -870,10 +873,10 @@ class TreeItem extends BaseItem {
    *
    * @param {MouseEvent} event - The mouse event that occurs.
    */
-  onMouseEnter(event) {
-    this.emit('mouseEnter', event)
+  onPointerEnter(event) {
+    this.emit('pointerEnter', event)
     if (event.propagating && this.__ownerItem) {
-      this.__ownerItem.onMouseEnter(event)
+      this.__ownerItem.onPointerEnter(event)
     }
   }
 
@@ -882,10 +885,10 @@ class TreeItem extends BaseItem {
    *
    * @param {MouseEvent} event - The mouse event that occurs.
    */
-  onMouseLeave(event) {
-    this.emit('mouseLeave', event)
+  onPointerLeave(event) {
+    this.emit('pointerLeave', event)
     if (event.propagating && this.__ownerItem) {
-      this.__ownerItem.onMouseLeave(event)
+      this.__ownerItem.onPointerLeave(event)
     }
   }
 

@@ -67,16 +67,15 @@ customManipulator.getParameter('orbitRate').setValue(SystemDesc.isMobileDevice ?
         * [pan(event, dragVec)](#pan)
         * [dolly(event, dragVec)](#dolly)
         * [panAndZoom(event, panDelta, dragDist)](#panAndZoom)
-        * [onDoubleClick(event)](#onDoubleClick)
-        * [onMouseDown(event)](#onMouseDown)
-        * [onMouseMove(event)](#onMouseMove)
-        * [onMouseUp(event)](#onMouseUp)
+        * [onPointerDoublePress(event)](#onPointerDoublePress)
+        * [onPointerDown(event)](#onPointerDown)
+        * [onPointerMove(event)](#onPointerMove)
+        * [_onMouseMove(event)](#_onMouseMove)
+        * [onPointerUp(event)](#onPointerUp)
         * [onWheel(event)](#onWheel)
-        * [onTouchStart(event)](#onTouchStart)
-        * [onTouchMove(event)](#onTouchMove)
+        * [_onTouchStart(event)](#_onTouchStart)
         * [onTouchEnd(event)](#onTouchEnd)
         * [onTouchCancel(event)](#onTouchCancel)
-        * [onDoubleTap(event)](#onDoubleTap)
     * _static_
         * [MANIPULATION_MODES](#MANIPULATION_MODES)
 
@@ -187,31 +186,31 @@ Rotates the camera around its own `X`,`Y` axes and applies a zoom.
 | panDelta | <code>[Vec2](api/Math/Vec2.md)</code> | The pan delta value. |
 | dragDist | <code>number</code> | The drag distance value. |
 
-<a name="CameraManipulator+onDoubleClick"></a>
+<a name="CameraManipulator+onPointerDoublePress"></a>
 
-### onDoubleClick
-Causes an event to occur when a user double clicks a mouse button over an element.
+### onPointerDoublePress
+Causes an event to occur when a user double presses a pointer over an element.
 
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| event | <code>MouseEvent</code> | The mouse event that occurs. |
+| event | <code>MouseEvent</code> \| <code>TouchEvent</code> | The pointer event that occurs |
 
-<a name="CameraManipulator+onMouseDown"></a>
+<a name="CameraManipulator+onPointerDown"></a>
 
-### onMouseDown
+### onPointerDown
 Causes an event to occur when the user starts to drag an element.
 
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| event | <code>MouseEvent</code> | The mouse event that occurs. |
+| event | <code>PointerEvent</code> | The mouse event that occurs. |
 
-<a name="CameraManipulator+onMouseMove"></a>
+<a name="CameraManipulator+onPointerMove"></a>
 
-### onMouseMove
+### onPointerMove
 Causes an event to occur when an element is being dragged.
 
 
@@ -220,9 +219,20 @@ Causes an event to occur when an element is being dragged.
 | --- | --- | --- |
 | event | <code>MouseEvent</code> | The mouse event that occurs. |
 
-<a name="CameraManipulator+onMouseUp"></a>
+<a name="CameraManipulator+_onMouseMove"></a>
 
-### onMouseUp
+### cameraManipulator
+The event that occurs when the user moves the pointer across a screen.
+
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| event | <code>MouseEvent</code> | The event value |
+
+<a name="CameraManipulator+onPointerUp"></a>
+
+### onPointerUp
 Causes an event to occur when the user has finished dragging an element.
 
 
@@ -242,21 +252,10 @@ Causes an event to occur when the mouse wheel is rolled up or down over an eleme
 | --- | --- | --- |
 | event | <code>WheelEvent</code> | The wheel event that occurs. |
 
-<a name="CameraManipulator+onTouchStart"></a>
+<a name="CameraManipulator+_onTouchStart"></a>
 
-### onTouchStart
+### cameraManipulator
 Causes an event to occur when the user touches an element on a touch screen.
-
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| event | <code>TouchEvent</code> | The touch event that occurs. |
-
-<a name="CameraManipulator+onTouchMove"></a>
-
-### onTouchMove
-The event that occurs when the user moves his/her finger across a touch screen.
 
 
 
@@ -279,17 +278,6 @@ Causes an event to occur when the user removes his/her finger from an element.
 
 ### onTouchCancel
 Causes an event to occur when the touch event gets interrupted.
-
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| event | <code>TouchEvent</code> | The touch event that occurs. |
-
-<a name="CameraManipulator+onDoubleTap"></a>
-
-### onDoubleTap
-Causes an event to occur when the user double taps an element on a touch screen.
 
 
 

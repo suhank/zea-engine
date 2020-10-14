@@ -277,7 +277,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
       itemId = Math.round(geomData[1])
       dist = geomData[3]
     } else {
-      itemId = geomData[0] + (geomData[1] << 8)
+      itemId = geomData[0] + ((geomData[1] & 63) << 8)
       dist = MathFunctions.decode16BitFloatFrom2xUInt8([geomData[2], geomData[3]])
     }
 
@@ -311,7 +311,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
     }
     for (const transparentItem of this.visibleItems) {
       const shaders = transparentItem.shaders
-      if (shaders.glgeomdatashader) {
+      if (!shaders.glgeomdatashader) {
         continue
       }
       if (cache.currentglShader != shaders.glgeomdatashader) {
