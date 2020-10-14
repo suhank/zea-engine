@@ -38,14 +38,16 @@ class Grid extends ProceduralLines {
     this.__yDivisionsParam = this.addParameter(new NumberParameter('YDivisions', yDivisions))
     this.__skipCenterLinesParam = this.addParameter(new BooleanParameter('SkipCenterLines', skipCenterLines))
 
-    this.__rebuild()
+    this.topologyParams.push('XDivisions')
+    this.topologyParams.push('YDivisions')
+    this.topologyParams.push('SkipCenterLines')
   }
 
   /**
-   * The __rebuild method.
+   * The rebuild method.
    * @private
    */
-  __rebuild() {
+  rebuild() {
     const xDivisions = this.__xDivisionsParam.getValue()
     const yDivisions = this.__yDivisionsParam.getValue()
 
@@ -67,14 +69,14 @@ class Grid extends ProceduralLines {
       this.setSegmentVertexIndices(idx, v0, v1)
       idx++
     }
-    this.__resize()
+    this.resize()
   }
 
   /**
-   * The __resize method.
+   * The resize method.
    * @private
    */
-  __resize() {
+  resize() {
     const positions = this.getVertexAttribute('positions')
     const xDivisions = this.__xDivisionsParam.getValue()
     const yDivisions = this.__yDivisionsParam.getValue()
@@ -101,8 +103,6 @@ class Grid extends ProceduralLines {
       positions.getValueRef(v1).set(0.5 * xSize, y, 0.0)
       idx++
     }
-
-    this.setBoundingBoxDirty()
   }
 }
 

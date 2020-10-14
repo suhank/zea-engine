@@ -45,29 +45,17 @@ class Cylinder extends ProceduralMesh {
 
     this.addVertexAttribute('texCoords', Vec2)
     this.addVertexAttribute('normals', Vec3)
-    this.__rebuild()
 
-    const resize = () => {
-      this.__resize()
-    }
-    const rebuild = () => {
-      this.__rebuild()
-    }
-    this.__radiusParam.on('valueChanged', resize)
-    this.__heightParam.on('valueChanged', resize)
-    this.__sidesParam.on('valueChanged', rebuild)
-    this.__loopsParam.on('valueChanged', rebuild)
-    this.__capsParam.on('valueChanged', rebuild)
-    this.__baseZAtZeroParam.on('valueChanged', resize)
+    this.topologyParams.push('Sides')
+    this.topologyParams.push('Loops')
+    this.topologyParams.push('Caps')
   }
 
   /**
-   * The __rebuild method.
+   * The rebuild method.
    * @private
    */
-  __rebuild() {
-    this.clear()
-
+  rebuild() {
     const nbSides = this.__sidesParam.getValue()
     const nbLoops = this.__loopsParam.getValue()
     const caps = this.__capsParam.getValue()
@@ -178,15 +166,14 @@ class Cylinder extends ProceduralMesh {
       faceIndex++
     }
 
-    this.emit('geomDataTopologyChanged', {})
-    this.__resize()
+    this.resize()
   }
 
   /**
-   * The __resize method.
+   * The resize method.
    * @private
    */
-  __resize() {
+  resize() {
     const nbSides = this.__sidesParam.getValue()
     const nbLoops = this.__loopsParam.getValue()
     const radius = this.__radiusParam.getValue()
@@ -217,9 +204,6 @@ class Cylinder extends ProceduralMesh {
     }
 
     this.computeVertexNormals()
-
-    this.setBoundingBoxDirty()
-    this.emit('geomDataChanged', {})
   }
 }
 

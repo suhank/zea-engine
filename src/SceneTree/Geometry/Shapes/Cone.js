@@ -40,27 +40,16 @@ class Cone extends ProceduralMesh {
 
     this.addVertexAttribute('texCoords', Vec2)
     this.addVertexAttribute('normals', Vec3)
-    this.__rebuild()
 
-    const resize = () => {
-      this.__resize()
-    }
-    const rebuild = () => {
-      this.__rebuild()
-    }
-    this.__radiusParam.on('valueChanged', resize)
-    this.__heightParam.on('valueChanged', resize)
-    this.__detailParam.on('valueChanged', rebuild)
-    this.__capParam.on('valueChanged', rebuild)
+    this.topologyParams.push('Detail')
+    this.topologyParams.push('Cap')
   }
 
   /**
-   * The __rebuild method.
+   * The rebuild method.
    * @private
    */
-  __rebuild() {
-    this.clear()
-
+  rebuild() {
     const nbSides = this.__detailParam.getValue()
     const radius = this.__radiusParam.getValue()
     const height = this.__heightParam.getValue()
@@ -120,17 +109,14 @@ class Cone extends ProceduralMesh {
       }
     }
 
-    this.setBoundingBoxDirty()
-    this.emit('geomDataTopologyChanged', {})
-
-    this.__resize()
+    this.resize()
   }
 
   /**
-   * The __resize method.
+   * The resize method.
    * @private
    */
-  __resize() {
+  resize() {
     const nbSides = this.__detailParam.getValue()
     const radius = this.__radiusParam.getValue()
     const height = this.__heightParam.getValue()
@@ -148,11 +134,8 @@ class Cone extends ProceduralMesh {
     if (this.__cap) {
       positions.getValueRef(basePoint).set(0.0, 0.0, 0.0)
     }
-
+    
     this.computeVertexNormals()
-
-    this.setBoundingBoxDirty()
-    this.emit('geomDataChanged', {})
   }
 }
 
