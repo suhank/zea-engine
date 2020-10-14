@@ -22,17 +22,15 @@
       renderer.setScene(scene)
       renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(0.5, 0.5, 0.5), new Vec3(0, 0, 0))
 
-
       const asset = new VLAAsset()
       asset.getParameter('DataFilePath').setValue('../public-resources/Oculus.vla')
       asset.getGeometryLibrary().on('loaded', () => {
         const HMD = asset.getChildByName('HMD')
         HMD.getParameter('LocalXfo').setValue(new Xfo(new Vec3(0, 0, 200)))
 
-
         const LeftController = asset.getChildByName('LeftController')
         LeftController.getParameter('LocalXfo').setValue(new Xfo(new Vec3(-200, 0, 0)))
-        
+
         const RightController = asset.getChildByName('RightController')
         RightController.getParameter('LocalXfo').setValue(new Xfo(new Vec3(200, 0, 0)))
 
@@ -40,7 +38,7 @@
       })
       scene.getRoot().addChild(asset)
 
-      renderer.getViewport().on('mouseDownOnGeom', (event)=>{
+      renderer.getViewport().on('mouseDownOnGeom', (event) => {
         console.log(event.intersectionData.geomItem.getName())
       })
 

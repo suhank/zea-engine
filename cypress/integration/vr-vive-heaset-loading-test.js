@@ -1,9 +1,4 @@
 describe('vr-vive-heaset-loading-test', () => {
-  it('Captures a snapshot', () => {
-    cy.visit('testing-e2e/vr-vive-heaset-loading-test.html')
-    cy.get('canvas').percySnapshot('vr-vive-heaset-loading-test')
-  })
-
   it('Captures snapshots of variants', () => {
     cy.visit('testing-e2e/vr-vive-heaset-loading-test.html', {
       onBeforeLoad(win) {

@@ -136,7 +136,7 @@ class ResourceLoader extends EventEmitter {
             this.__onFinishedReceiveFileData(event.data)
           } else if (event.data.type === 'ERROR') {
             const data = event.data
-            console.error('Unable to load Resource:', data.resourceId, ' With url:', data.url)
+            console.error(`Unable to load Resource: ${data.resourceId} With url: ${data.url}`)
           }
         }
       })

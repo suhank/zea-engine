@@ -1,9 +1,4 @@
 describe('vr-oculus-heaset-loading-test', () => {
-  it('Captures a snapshot', () => {
-    cy.visit('testing-e2e/vr-oculus-heaset-loading-test.html')
-    cy.get('canvas').percySnapshot('vr-oculus-heaset-loading-test')
-  })
-
   it('Captures snapshots of variants', () => {
     cy.visit('testing-e2e/vr-oculus-heaset-loading-test.html', {
       onBeforeLoad(win) {
