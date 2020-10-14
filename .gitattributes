@@ -14,3 +14,9 @@
 # keep line endings LF
 # https://docs.github.com/en/github/using-git/configuring-git-to-handle-line-endings
 * text eol=lf
+
+*.vlh binary
+*.vla binary
+*.vlenv binary
+*.zenv binary
+*.zmesh binary
