@@ -17,6 +17,7 @@
   "scripts": {
     "build": "rollup -c",
     "build:watch": "rollup -w -c",
+    "dev": "npm-run-all --parallel build:watch start:watch",
     "prepare": "yarn run build",
     "dist": "yarn publish --access=public",
     "docs": "cp CHANGELOG.md docs/ && adg --config adg.config.json",
@@ -50,6 +51,7 @@
     "ink-docstrap": "^1.3.2",
     "jest": "^26.1.0",
     "jest-coverage-badges": "^1.1.2",
+    "npm-run-all": "^4.1.5",
     "plop": "^2.7.4",
     "prettier": "^2.1.1",
     "rollup": "^2.26.11",
