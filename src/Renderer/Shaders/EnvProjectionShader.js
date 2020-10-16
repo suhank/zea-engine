@@ -1,5 +1,5 @@
-import { Color, Vec3 } from '../../Math'
-import { sgFactory } from '../../SceneTree'
+import { Color, Vec3 } from '../../Math/index'
+import { Registry } from '../../Registry'
 import { GLShader } from '../GLShader.js'
 import { shaderLibrary } from '../ShaderLibrary.js'
 
@@ -7,6 +7,7 @@ import './GLSL/stack-gl/inverse.js'
 import './GLSL/stack-gl/transpose.js'
 import './GLSL/envmap-equirect.js'
 import './GLSL/envmap-octahedral.js'
+import './GLSL/drawItemTexture.js'
 import './GLSL/modelMatrix.js'
 
 class EnvProjectionShader extends GLShader {
@@ -25,6 +26,7 @@ uniform vec3 projectionCenter;
 
 <%include file="stack-gl/inverse.glsl"/>
 <%include file="stack-gl/transpose.glsl"/>
+<%include file="drawItemTexture.glsl"/>
 <%include file="modelMatrix.glsl"/>
 
 /* VS Outputs */
@@ -32,8 +34,9 @@ varying vec3 v_worldDir;
  
 void main()
 {
+  int drawItemId = getDrawItemId();
   vec4 pos = vec4(positions, 1.);
-  mat4 modelMatrix = getModelMatrix();
+  mat4 modelMatrix = getModelMatrix(drawItemId);
   mat4 modelViewProjectionMatrix = projectionMatrix * viewMatrix * modelMatrix;
 
   gl_Position = modelViewProjectionMatrix * pos;
@@ -110,10 +113,7 @@ void main(void) {
   }
 }
 
-sgFactory.registerClass(
-  'OctahedralEnvProjectionShader',
-  OctahedralEnvProjectionShader
-)
+Registry.register('OctahedralEnvProjectionShader', OctahedralEnvProjectionShader)
 
 class LatLongEnvProjectionShader extends EnvProjectionShader {
   constructor(gl) {
@@ -165,12 +165,5 @@ void main(void) {
   }
 }
 
-sgFactory.registerClass(
-  'LatLongEnvProjectionShader',
-  LatLongEnvProjectionShader
-)
-export {
-  EnvProjectionShader,
-  OctahedralEnvProjectionShader,
-  LatLongEnvProjectionShader,
-}
+Registry.register('LatLongEnvProjectionShader', LatLongEnvProjectionShader)
+export { EnvProjectionShader, OctahedralEnvProjectionShader, LatLongEnvProjectionShader }

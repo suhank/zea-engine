@@ -1,8 +1,8 @@
-import { Signal } from '../../Utilities'
 import { Parameter } from './Parameter.js'
 
 /** Class representing an item set parameter.
  * @extends Parameter
+ * @private
  */
 class ItemSetParameter extends Parameter {
   /**
@@ -14,8 +14,6 @@ class ItemSetParameter extends Parameter {
     super(name, undefined, 'BaseItem')
     this.__items = new Set()
     this.__filterFn = filterFn // Note: the filter Fn indicates that users will edit the set.
-    this.itemAdded = new Signal()
-    this.itemRemoved = new Signal()
   }
 
   /**
@@ -46,42 +44,44 @@ class ItemSetParameter extends Parameter {
   /**
    * The addItem method.
    * @param {any} item - The item value.
-   * @param {boolean} emit - The emit value.
+   * @param {boolean} emitValueChanged - The emit value.
    * @return {boolean} - The return value.
    */
-  addItem(item, emit = true) {
+  addItem(item, emitValueChanged = true) {
     if (this.__filterFn && !this.__filterFn(item)) {
       console.warn('ItemSet __filterFn rejecting item:', item.getPath())
       return false
     }
     this.__items.add(item)
     const index = Array.from(this.__items).indexOf(item)
-    this.itemAdded.emit(item, index)
-    if (emit) this.valueChanged.emit()
+    this.emit('itemAdded', { item, index })
+    if (emitValueChanged) this.emit('valueChanged', {})
     return index
   }
 
   /**
-   * The addItems method.
-   * @param {any} items - The index value.
-   * @param {boolean} emit - The emit value.
+   * Adds items to the parameter value
+   *
+   * @param {Set} items - list of items to add to the parameter
+   * @param {boolean} [emitValueChanged=true]
+   * @memberof ItemSetParameter
    */
-  addItems(items, emit = true) {
-    items.forEach(item => this.addItem(item, false))
-    if (emit) this.valueChanged.emit()
+  addItems(items, emitValueChanged = true) {
+    items.forEach((item) => this.addItem(item, false))
+    if (emitValueChanged) this.emit('valueChanged', {})
   }
 
   /**
    * The removeItem method.
    * @param {any} index - The index value.
-   * @param {boolean} emit - The emit param.
+   * @param {boolean} emitValueChanged - The emit param.
    * @return {any} - The return value.
    */
-  removeItem(index, emit = true) {
+  removeItem(index, emitValueChanged = true) {
     const item = Array.from(this.__items)[index]
     this.__items.delete(item)
-    this.itemRemoved.emit(item, index)
-    if (emit) this.valueChanged.emit()
+    this.emit('itemRemoved', { item, index })
+    if (emitValueChanged) this.emit('valueChanged', {})
     return item
   }
 
@@ -102,16 +102,16 @@ class ItemSetParameter extends Parameter {
         this.addItem(item, false)
       }
     }
-    if (emit) this.valueChanged.emit()
+    if (emit) this.emit('valueChanged', {})
   }
 
   /**
    * The clearItems method.
    * @param {boolean} emit - The emit value.
    */
-  clearItems(emit = true) {
+  clearItems(emitValueChanged = true) {
     this.__items.clear()
-    if (emit) this.valueChanged.emit()
+    if (emitValueChanged) this.emit('valueChanged', {})
   }
 
   /**
@@ -134,12 +134,11 @@ class ItemSetParameter extends Parameter {
   // Persistence
 
   /**
-   * The toJSON method encodes this type as a json object for persistences.
+   * The toJSON method encodes this type as a json object for persistence.
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
-   * @return {any} - The return value.
+   * @return {object} - The return value.
    */
-  toJSON(context, flags) {
+  toJSON(context) {
     return {}
   }
 
@@ -147,9 +146,8 @@ class ItemSetParameter extends Parameter {
    * The fromJSON method decodes a json object for this type.
    * @param {object} j - The json object this item must decode.
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    */
-  fromJSON(j, context, flags) {}
+  fromJSON(j, context) {}
 
   // ////////////////////////////////////////
   // Clone
@@ -157,10 +155,10 @@ class ItemSetParameter extends Parameter {
   /**
    * The clone method constructs a item set new parameter, copies its values
    * from this parameter and returns it.
-   * @param {number} flags - The flags value.
+   *
    * @return {ItemSetParameter} - Returns a new item set parameter.
    */
-  clone(flags) {
+  clone() {
     const clonedParam = new ItemSetParameter(this.__name, this.__filterFn)
     return clonedParam
   }

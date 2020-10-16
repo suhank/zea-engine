@@ -1,12 +1,12 @@
-import { Signal } from '../../Utilities'
-import { Box3 } from '../../Math'
-import { RefCounted } from '../RefCounted.js'
-import { typeRegistry } from '../../Math/TypeRegistry.js'
+import { Box3 } from '../../Math/index'
+import { EventEmitter } from '../../Utilities/EventEmitter.js'
+import { Registry } from '../../Registry'
 
 /** Class representing a base geometry proxy.
- * @extends RefCounted
+ * @extends EventEmitter
+ * @private
  */
-class BaseProxy extends RefCounted {
+class BaseProxy extends EventEmitter {
   /**
    * Create a base proxy.
    * @param {any} data - The data value.
@@ -19,7 +19,7 @@ class BaseProxy extends RefCounted {
       // eslint-disable-next-line guard-for-in
       for (const attrName in this.__buffers.attrBuffers) {
         const attrData = this.__buffers.attrBuffers[attrName]
-        const dataType = typeRegistry.getType(attrData.dataType)
+        const dataType = Registry.getBlueprint(attrData.dataType)
         attrData.dataType = dataType
       }
     }
@@ -29,10 +29,14 @@ class BaseProxy extends RefCounted {
     this.boundingBox.p1.__data = data.bbox.p1.__data
 
     this.__metaData = new Map()
+  }
 
-    this.boundingBoxDirtied = new Signal()
-    this.geomDataChanged = new Signal()
-    this.geomDataTopologyChanged = new Signal()
+  /**
+   * Returns the bounding box for geometry.
+   * @return {Vec3} - The return value.
+   */
+  getBoundingBox() {
+    return this.boundingBox
   }
 
   /**
@@ -100,6 +104,7 @@ class BaseProxy extends RefCounted {
 
 /** Class representing a points proxy.
  * @extends BaseProxy
+ * @private
  */
 class PointsProxy extends BaseProxy {
   /**
@@ -113,6 +118,7 @@ class PointsProxy extends BaseProxy {
 
 /** Class representing a lines proxy.
  * @extends BaseProxy
+ * @private
  */
 class LinesProxy extends BaseProxy {
   /**
@@ -126,6 +132,7 @@ class LinesProxy extends BaseProxy {
 
 /** Class representing a mesh proxy.
  * @extends BaseProxy
+ * @private
  */
 class MeshProxy extends BaseProxy {
   /**

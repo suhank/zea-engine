@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Disc saves to JSON (serialization). 1`] = `
+Object {
+  "params": Object {
+    "Radius": Object {
+      "value": 3,
+    },
+    "Sides": Object {
+      "range": Array [
+        3,
+        200,
+      ],
+      "step": 1,
+      "value": 16,
+    },
+  },
+  "type": "Disc",
+  "vertexAttributes": Object {},
+}
+`;

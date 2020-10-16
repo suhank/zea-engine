@@ -1,296 +1,113 @@
-import { hashStr } from '../Math'
-import { Signal } from '../Utilities'
-// import { VLAAsset } from './VLAAsset.js'
+/* eslint-disable require-jsdoc */
+/* eslint-disable no-unused-vars */
+/* eslint-disable guard-for-in */
+import { EventEmitter } from '../Utilities/index'
 
 // const asyncLoading = true;
-const ResourceLoaderWorker = require('worker-loader?inline!./ResourceLoader/ResourceLoaderWorker.js')
+import ResourceLoaderWorker from 'web-worker:./ResourceLoader/ResourceLoaderWorker.js'
 // For synchronous loading, uncomment these lines.
 // import {
 //     ResourceLoaderWorker_onmessage
 // } from './ResourceLoaderWorker.js';
 
-/**
- * Simple object check.
- * @param {any} item - The item value.
- * @return {boolean} - The return value.
- */
-export function isObject(item) {
-  return item && typeof item === 'object' && !Array.isArray(item)
-}
-
-/**
- * Deep merge two objects.
- * @param {any} target - The target value.
- * @param {...object} ...sources - The ...sources value.
- * @return {any} - The return value.
- */
-export function mergeDeep(target, ...sources) {
-  if (!sources.length) return target
-  const source = sources.shift()
-
-  if (isObject(target) && isObject(source)) {
-    for (const key in source) {
-      if (isObject(source[key])) {
-        if (!target[key])
-          Object.assign(target, {
-            [key]: {},
-          })
-        mergeDeep(target[key], source[key])
-      } else {
-        Object.assign(target, {
-          [key]: source[key],
-        })
-      }
-    }
+function checkStatus(response) {
+  if (!response.ok) {
+    throw new Error(`HTTP ${response.status} - ${response.statusText}`)
   }
-
-  return mergeDeep(target, ...sources)
+  return response
 }
 
-/** Class representing a resource loader. */
-class ResourceLoader {
+/**
+ * Class for delegating resource loading, enabling an abstraction of a cloud file system to be implemented.
+ *
+ * **Events**
+ * * **loaded:** emitted when a file has finished loading
+ * * **progressIncremented:** emitted when a loading of processing task has been incremented
+ * * **allResourcesLoaded:** emitted when all outstanding resources are loaded. This event can be used to signal the completion of load.
+ */
+class ResourceLoader extends EventEmitter {
   /**
    * Create a resource loader.
    */
   constructor() {
-    this.loaded = new Signal()
-    this.progressIncremented = new Signal()
-    this.allResourcesLoaded = new Signal()
-    this.fileUpdated = new Signal()
-
+    super()
+    this.__adapter = undefined
     this.__totalWork = 0
-    this.__totalWorkByCategory = {}
     this.__doneWork = 0
-    this.__doneWorkByCategory = {}
-    this.__resourceRegisterCallbacks = {}
     this.__callbacks = {}
-    this.__resources = {}
-    this.__resourcesTreeEntities = {}
-    this.__resourcesTree = {
-      children: {},
-    }
-
-    // Common resources are used by systems such at the renderer and VR controllers.
-    // Any asset that will probably be used my multiple differeint independent objects
-    // should be loaded here. (For now, it is being used to load VR Controller assets.)
-    this.__commonResources = {}
+    this.promiseCache = {}
 
     this.__workers = []
     this.__nextWorker = 0
 
-    if (
-      window.location.origin.startsWith('https://api.visualive.io') ||
-      window.location.origin.startsWith('https://apistage.visualive.io')
-    ) {
-      // For embeds using the old generated page system.
-      this.wasmUrl = 'https://assets-visualive.storage.googleapis.com/oR3y6kdDu'
-    } else {
-      let visualiveEngineUrl
+    let baseUrl
+    // Note: globalThis causes errors on Safari.
+    if (window.navigator) {
       const scripts = document.getElementsByTagName('script')
       for (let i = 0; i < scripts.length; i++) {
         const script = scripts[i]
         if (script.src.includes('zea-engine')) {
-          visualiveEngineUrl = script.src
+          // Note: the Wasm file is a resource that must be loaded with the engine. If we know the URL for the
+          // engine library, then we can determine the URL for the Wasm file.
+          // This code generates a URL for the Wasm file based on the position of 'zea-engine' in the path.
+          // e.g.
+          // https://cdn.jsdelivr.net/combine/npm/@zeainc/zea-engine@umd
+          // or
+          // https://unpkg.com/@zeainc/zea-engine@1.5.0/dist/index.cjs.js
+          // or
+          // Trim off all the parts after the engine section, and then append the parts for public resources.
+          const parts = script.src.split('/')
+          const enginePartIndex = parts.findIndex((part) => part.includes('zea-engine'))
+          while (parts.length > enginePartIndex + 1) parts.pop()
+
+          // Now unpack combined urls to get just the engine part.
+          // e.g.
+          // cdn.jsdelivr.net/combine/npm/@zeainc/zea-engine@umd,npm/@zeainc/zea-ux@umd,npm/@zeainc/zea-kinematics@umd"
+          if (parts[parts.length - 1].includes(',')) {
+            parts[parts.length - 1] = parts[parts.length - 1].split(',')[0]
+          }
+          baseUrl = parts.join('/')
           break
         }
       }
-      if (!visualiveEngineUrl)
-        throw new Error('Unable to determine Zea Engine URL')
-      const parts = visualiveEngineUrl.split('/')
-      parts.pop()
-      parts.pop()
-      this.wasmUrl = parts.join('/') + '/public-resources/unpack.wasm'
-
-      this.addResourceURL(
-        'ZeaEngine/Vive.vla',
-        parts.join('/') + '/public-resources/Vive.vla'
-      )
-      this.addResourceURL(
-        'ZeaEngine/Oculus.vla',
-        parts.join('/') + '/public-resources/Oculus.vla'
-      )
-    }
-  }
-
-  /**
-   * The getRootFolder method.
-   * @return {any} - The return value.
-   */
-  getRootFolder() {
-    return this.__resourcesTree
-  }
-
-  /**
-   * The registerResourceCallback method.
-   * @param {any} filter - The filter value.
-   * @param {any} fn - The fn value.
-   */
-  registerResourceCallback(filter, fn) {
-    this.__resourceRegisterCallbacks[filter] = fn
-
-    for (const key in this.__resources) {
-      const file = this.__resources[key]
-      if (file.name.includes(filter)) fn(file)
-    }
-  }
-
-  /**
-   * The loadCommonAssetResource method.
-   * @param {any} resourceId - The resourceId value.
-   * @return {any} - The return value.
-   */
-  loadCommonAssetResource(resourceId) {
-    if (resourceId in this.__commonResources) {
-      return this.__commonResources[resourceId]
-    }
-    const asset = new VLAAsset()
-    asset.getParameter('DataFilePath').setValue(resourceId)
-    this.__commonResources[resourceId] = asset
-    return asset
-  }
-
-  /**
-   * The __applyCallbacks method.
-   * @param {any} resourcesDict - The resourcesDict value.
-   * @private
-   */
-  __applyCallbacks(resourcesDict) {
-    const applyCallbacks = resource => {
-      for (const filter in this.__resourceRegisterCallbacks) {
-        if (resource.name.includes(filter))
-          this.__resourceRegisterCallbacks[filter](resource)
+      // If no Wasm url can be found, fallback to this one.
+      if (!baseUrl) {
+        baseUrl = 'https://unpkg.com/@zeainc/zea-engine@0.1.3'
       }
+      this.wasmUrl = baseUrl + '/public-resources/unpack.wasm'
+    } else {
+      // If loading in Node.js... TODO.
     }
-    for (const key in resourcesDict) {
-      const resource = resourcesDict[key]
-      if (resource.url) applyCallbacks(resource)
+
+    if (!baseUrl) {
+      baseUrl = 'https://unpkg.com/@zeainc/zea-engine@0.1.3'
     }
+    this.wasmUrl = baseUrl + '/public-resources/unpack.wasm'
+
+    // Common resources are used by systems such at the renderer and VR controllers.
+    // Any asset that will probably be used my multiple different independent objects
+    // should be loaded here. (For now, it is being used to load VR Controller assets.)
+    this.__commonResources = {}
   }
 
   /**
-   * The __buildTree method.
-   * @param {any} resources - The resources param.
-   * @private
+   * The setAdapter method.
+   * @param {object} adapter - The adapter object.
    */
-  __buildTree(resources) {
-    const buildEntity = resourceId => {
-      if (this.__resourcesTreeEntities[resourceId]) return
-
-      const resource = resources[resourceId]
-      resource.id = resourceId
-      if (resource.type === 'folder' || resource.type === 'dependency') {
-        resource.children = {}
-      }
-      if (resource.parent) {
-        if (!this.__resourcesTreeEntities[resource.parent]) {
-          buildEntity(resource.parent)
-        }
-      }
-      const parent = resource.parent
-        ? this.__resourcesTreeEntities[resource.parent]
-        : this.__resourcesTree
-      // console.log((parent.name ? parent.name + '/' : '') + resource.name)
-      parent.children[resource.name] = resource
-      this.__resourcesTreeEntities[resourceId] = resource
-    }
-
-    for (const key in resources) {
-      buildEntity(key)
-    }
+  setAdapter(adapter) {
+    this.__adapter = adapter
   }
 
   /**
-   * The setResources method.
-   * @param {any} resources - The resources value.
+   * The getAdapter method.
+   * @return {object} - The adapter object.
    */
-  setResources(resources) {
-    this.__resources = Object.assign(this.__resources, resources)
-    this.__buildTree(resources)
-    this.__applyCallbacks(resources)
+  getAdapter() {
+    return this.__adapter
   }
 
-  /**
-   * The addResourceURL method.
-   * @param {any} resourcePath - The resourcePath value.
-   * @param {any} url - The url value.
-   */
-  addResourceURL(resourcePath, url) {
-    const parts = resourcePath.split('/')
-    const filename = parts.pop()
-    if (!url) {
-      let rootURL = window.location.href.split('#')[0]
-      rootURL = rootURL.split('?')[0]
-      if (rootURL.endsWith('.html') || rootURL.endsWith('.html')) {
-        rootURL = rootURL.substring(0, rootURL.lastIndexOf('/')) + '/'
-      }
-      const base = rootURL
-      if (parts[0] == '.') parts.shift()
-      else if (parts[0] == '..') {
-        item = item.substring(3)
-        const baseparts = base.split('/')
-        baseparts.pop()
-        baseparts.pop()
-        base = baseparts.join('/') + '/'
-      }
-      url = base + resourcePath
-    }
-    let parentId
-    const tmp = {}
-    for (const part of parts) {
-      const key = hashStr(part)
-      if (!(key in this.__resources)) {
-        this.__resources[key] = {
-          name: part,
-          type: 'folder',
-          parent: parentId,
-        }
-        tmp[key] = this.__resources[key]
-      }
-      parentId = key
-    }
-
-    const key = hashStr(filename)
-    const resource = {
-      name: filename,
-      url,
-      parent: parentId,
-      id: key,
-    }
-    this.__resources[key] = resource
-
-    tmp[key] = resource
-
-    this.__buildTree(tmp)
-    this.__applyCallbacks(tmp)
-  }
-
-  /**
-   * The updateFile method.
-   * @param {any} file - The file value.
-   */
-  updateFile(file) {
-    const newFile = !(file.id in this.__resources)
-    this.__resources[file.id] = file
-    if (newFile) {
-      console.log('New file added')
-      const resources = {}
-      resources[file.id] = file
-      this.__buildTree(resources)
-    }
-    this.fileUpdated.emit(file.id)
-  }
-
-  /**
-   * The freeData method.
-   * @param {ArrayBuffer} buffer - The buffer value.
-   */
-  freeData(buffer) {
-    // Note: Explicitly transfer data to a web worker and then
-    // terminate the worker. (hacky way to free TypedArray memory explicitly)
-    // let worker = new FreeMemWorker();
-    // worker.postMessage(buffer, [buffer]);
-    // worker.terminate();
-  }
+  // /////////////////////////////////////////////////
+  // Workers
 
   /**
    * The __getWorker method.
@@ -299,7 +116,7 @@ class ResourceLoader {
    */
   __getWorker() {
     const __constructWorker = () => {
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         const worker = new ResourceLoaderWorker()
         // const worker = new Worker(this.__resourceLoaderFile.url);
 
@@ -307,16 +124,14 @@ class ResourceLoader {
           type: 'init',
           wasmUrl: this.wasmUrl,
         })
-        worker.onmessage = event => {
+        worker.onmessage = (event) => {
           if (event.data.type === 'WASM_LOADED') {
             resolve(worker)
           } else if (event.data.type === 'FINISHED') {
-            const data = event.data
-
-            // const file = this.__resources[event.data.resourceId]
+            // const data = event.data
             // const text = [
-            //   '==================== unrarWebworker.js ====================',
-            //   `Filename: ${file.name}`,
+            //   '==================== ResourceLoaderWorker.js ====================',
+            //   `Filename: ${data.resourceId}`,
             //   '------------------------------------------------------',
             // ];
             // for(const file in data.entries) {
@@ -324,25 +139,17 @@ class ResourceLoader {
             // }
             // console.log(text.join('\n'))
 
-            this.addWorkDone(event.data.resourceId, 1) // loading done...
             this.__onFinishedReceiveFileData(event.data)
           } else if (event.data.type === 'ERROR') {
             const data = event.data
-            const file = this.__resources[data.resourceId]
-            console.error(
-              'Unable to load Resource:',
-              file ? file.name : data.resourceId,
-              ' With url:',
-              data.url
-            )
+            console.error(`Unable to load Resource: ${data.resourceId} With url: ${data.url}`)
           }
         }
       })
     }
 
     this.__nextWorker = (this.__nextWorker + 1) % 3
-    if (this.__workers[this.__nextWorker] == undefined)
-      this.__workers[this.__nextWorker] = __constructWorker()
+    if (this.__workers[this.__nextWorker] == undefined) this.__workers[this.__nextWorker] = __constructWorker()
     return this.__workers[this.__nextWorker]
   }
 
@@ -355,152 +162,51 @@ class ResourceLoader {
     this.__workers = []
   }
 
+  // /////////////////////////////////////////////////
+  // URLS
+
   /**
-   * The getFilepath method.
-   * @param {any} resourceId - The resourceId value.
-   * @return {any} - The return value.
+   * Given some value, which could be an IR or a path, return the unique identifier.
+   * @param {string} value - The file value.
+   * @return {string} - The resolved fileId if an adapter is installed, else the original value.
    */
-  getFilepath(resourceId) {
-    let curr = this.__resources[resourceId]
-    const path = [curr.name]
-    while (curr.parent) {
-      curr = this.__resources[curr.parent]
-      path.splice(0, 0, curr.name)
-    }
-    return path.join('/')
+  resolveFileId(value) {
+    if (this.__adapter) return this.__adapter.resolveFileId(value)
+    return value
   }
 
   /**
-   * The resourceAvailable method.
-   * @param {any} resourceId - The resourceId value.
-   * @return {any} - The return value.
+   * The resolveFilename method.
+   * @deprecated
+   * @param {string} value - The file value.
+   * @return {string} - The resolved URL if an adapter is installed, else the original value.
    */
-  resourceAvailable(resourceId) {
-    if (resourceId.indexOf('.') > 0) {
-      console.warn(
-        'Deprecation warning for resourceAvailable. Value should be a file id, not a path.'
-      )
-      return this.resolveFilepath(resourceId) != undefined
-    }
-    return resourceId in this.__resources
-  }
-
-  /**
-   * The getFile method.
-   * @param {any} resourceId - The resourceId value.
-   * @return {any} - The return value.
-   */
-  getFile(resourceId) {
-    return this.__resources[resourceId]
-  }
-
-  /**
-   * The resolveFilePathToId method.
-   * @param {any} filePath - The filePath value.
-   * @return {any} - The return value.
-   */
-  resolveFilePathToId(filePath) {
-    if (!filePath) {
-      console.warn('Invalid file path:', filePath)
-      return
-    }
-    const file = this.resolveFilepath(filePath)
-    if (file) return file.id
-  }
-
-  /**
-   * The resolveFilepath method.
-   * @param {any} filePath - The filePath value.
-   * @return {any} - The return value.
-   */
-  resolveFilepath(filePath) {
-    const parts = filePath.split('/')
-    if (parts[0] == '.' || parts[0] == '') parts.shift()
-    let curr = this.__resourcesTree
-    for (const part of parts) {
-      if (part in curr.children) curr = curr.children[part]
-      else {
-        console.warn('Unable to resolve key:' + part + ' of path:' + filePath)
-        return null
-      }
-    }
-    return curr
-  }
-
-  /**
-   * The resolveFile method.
-   * @param {any} filePath - The filePath value.
-   * @return {any} - The return value.
-   */
-  resolveFile(filePath) {
-    console.warn('Deprecation warning for resolveFile. Use resolveFilepath.')
-    return this.resolveFilepath(filePath)
+  resolveFilename(value) {
+    if (this.__adapter) return this.__adapter.resolveFilename(value)
+    const filename = value.split(value.lastIndexOf('/'))[1]
+    return filename
   }
 
   /**
    * The resolveURL method.
-   * @param {any} filePath - The filePath value.
-   * @return {any} - The return value.
+   * @deprecated
+   * @param {string} value - The file value.
+   * @return {string} - The resolved URL if an adapter is installed, else the original value.
    */
-  resolveURL(filePath) {
-    console.warn('Deprecation warning for resolveURL. Use resolveFilepath.')
-    const file = this.resolveFilepath(filePath)
-    if (file) return file.url
-  }
-
-  /**
-   * Add work to the total work pile.. We never know how big the pile will get.
-   * @param {any} resourceId - The resourceId value.
-   * @param {any} amount - The amount value.
-   */
-  addWork(resourceId, amount) {
-    this.__totalWork += amount
-    this.progressIncremented.emit((this.__doneWork / this.__totalWork) * 100)
-  }
-
-  /**
-   * Add work to the 'done' pile. The done pile should eventually match the total pile.
-   * @param {any} resourceId - The resourceId value.
-   * @param {any} amount - The amount value.
-   */
-  addWorkDone(resourceId, amount) {
-    this.__doneWork += amount
-    this.progressIncremented.emit((this.__doneWork / this.__totalWork) * 100)
-    if (this.__doneWork > this.__totalWork) {
-      throw new Error('Mismatch between work loaded and work done.')
-    }
-    if (this.__doneWork == this.__totalWork) {
-      this.allResourcesLoaded.emit()
-    }
-  }
-
-  /**
-   * The loadResource method.
-   * @param {any} resourceId - The resourceId value.
-   * @param {any} callback - The callback value.
-   * @param {boolean} addLoadWork - The addLoadWork value.
-   */
-  loadResource(resourceId, callback, addLoadWork = true) {
-    const file = this.getFile(resourceId)
-    if (!file) {
-      throw new Error(
-        "Invalid resource Id:'" +
-          resourceId +
-          "' not found in Resources:" +
-          JSON.stringify(this.__resources, null, 2)
-      )
-    }
-
-    this.loadUrl(resourceId, file.url, callback, addLoadWork)
+  resolveURL(value) {
+    if (this.__adapter) return this.__adapter.resolveURL(value)
+    return value
   }
 
   /**
    * The loadURL method.
-   * @param {any} resourceId - The resourceId value.
-   * @param {any} url - The url value.
-   * @param {any} callback - The callback value.
+   * @param {string} resourceId - The resourceId value.
+   * @param {string} url - The url value.
+   * @param {function} callback - The callback value.
    * @param {boolean} addLoadWork - The addLoadWork value.
    * @return {any} - The return value.
+   * @deprecated
+   * @private
    */
   loadURL(resourceId, url, callback, addLoadWork = true) {
     console.warn('Please call loadUrl instead,')
@@ -509,36 +215,115 @@ class ResourceLoader {
 
   /**
    * The loadUrl method.
-   * @param {any} resourceId - The resourceId value.
-   * @param {any} url - The url value.
-   * @param {any} callback - The callback value.
+   * @param {string} resourceId - The resourceId value.
+   * @param {string} url - The url value.
+   * @param {function} callback - The callback value.
    * @param {boolean} addLoadWork - The addLoadWork value.
    */
   loadUrl(resourceId, url, callback, addLoadWork = true) {
-    if (addLoadWork) {
-      this.addWork(resourceId, 3) // Add work in 2 chunks. Loading, unpacking, parsing.
-    } else {
-      // the work for loading and parsing the work is already registered..
-      // See BinAsset. It knows that it will load a sequwnce of files
-      // and has already registered this work once is determined the
-      // toal number of files in the stream.
-    }
-
-    if (!(resourceId in this.__callbacks)) this.__callbacks[resourceId] = []
-    this.__callbacks[resourceId].push(callback)
-
-    this.__getWorker().then(worker => {
-      worker.postMessage({
-        type: 'fetch',
-        resourceId,
-        url,
-      })
+    console.warn(`deprecated use #loadArchive`)
+    this.loadArchive(url).then((entries) => {
+      callback(entries)
     })
   }
 
   /**
+   * Loads a JSON file, returning a promise that resolves to the JSON data value.
+   * Note: using the resource loader to centralize data loading enables progress to be tracked and displayed
+   * @param {string} url - The url of the data to load.
+   * @return {Promise} - The promise value.
+   */
+  loadJSON(url) {
+    if (this.promiseCache[url]) return this.promiseCache[url]
+
+    this.addWork(url, 1)
+
+    const promise = new Promise(
+      (resolve, reject) => {
+        fetch(url).then((response) => {
+          this.addWorkDone(url, 1)
+          if (checkStatus(response)) resolve(response.json())
+          else reject(response.status)
+        })
+      },
+      () => {}
+    )
+
+    this.promiseCache[url] = promise
+    return promise
+  }
+
+  /**
+   * Loads a text file, returning a promise that resolves to the JSON data value.
+   * Note: using the resource loader to centralize data loading enables progress to be tracked and displayed
+   * @param {string} url - The url of the data to load.
+   * @return {Promise} - The promise value.
+   */
+  loadText(url) {
+    if (this.promiseCache[url]) return this.promiseCache[url]
+
+    this.addWork(url, 1)
+
+    const promise = new Promise(
+      (resolve, reject) => {
+        fetch(url).then((response) => {
+          this.addWorkDone(url, 1)
+          if (checkStatus(response)) resolve(response.text())
+          else reject(response.status)
+        })
+      },
+      () => {}
+    )
+
+    this.promiseCache[url] = promise
+    return promise
+  }
+
+  /**
+   * Loads an archive file, returning a promise that resolves to the JSON data value.
+   * Note: using the resource loader to centralize data loading enables progress to be tracked and displayed
+   * @param {string} url - The url of the data to load.
+   * @return {Promise} - The promise value.
+   */
+  loadArchive(url) {
+    if (this.promiseCache[url]) return this.promiseCache[url]
+
+    this.addWork(url, 2) // Add work in 2 chunks. Loading, unpacking.
+
+    const promise = new Promise(
+      (resolve, reject) => {
+        if (!(url in this.__callbacks)) this.__callbacks[url] = []
+        this.__callbacks[url].push(resolve)
+        fetch(url)
+          .then((response) => {
+            this.addWorkDone(url, 1)
+            if (checkStatus(response)) return response.arrayBuffer()
+            else reject(response.status)
+          })
+          .then((buffer) => {
+            const resourceId = url
+            if (!(resourceId in this.__callbacks)) this.__callbacks[resourceId] = []
+            this.__callbacks[resourceId].push(resolve)
+
+            this.__getWorker().then((worker) => {
+              worker.postMessage({
+                type: 'unpack',
+                resourceId,
+                buffer,
+              })
+            })
+          })
+      },
+      () => {}
+    )
+
+    this.promiseCache[url] = promise
+    return promise
+  }
+
+  /**
    * The __onFinishedReceiveFileData method.
-   * @param {any} fileData - The fileData value.
+   * @param {object} fileData - The fileData value.
    * @private
    */
   __onFinishedReceiveFileData(fileData) {
@@ -551,32 +336,57 @@ class ResourceLoader {
       }
       delete this.__callbacks[resourceId]
     }
-    this.loaded.emit(resourceId)
-    this.addWorkDone(resourceId, 1) // parsing done...
+    this.emit('loaded', { resourceId })
   }
 
   /**
-   * The suspend method.
+   * Loads and return a file resource using the specified path.
+   *
+   * @param {string} resourceId - The resourceId value.
+   * @return {VLAAsset} - The return value.
    */
-  suspend() {
-    this.__terminateWorkers()
+  loadCommonAssetResource(resourceId) {
+    if (resourceId in this.__commonResources) {
+      return this.__commonResources[resourceId]
+    }
+    const asset = new VLAAsset()
+    asset.getParameter('DataFilePath').setValue(resourceId)
+    this.__commonResources[resourceId] = asset
+    return asset
+  }
+
+  // /////////////////////////////////////////////////
+  // Work
+
+  /**
+   * Add work to the total work pile.. We never know how big the pile will get.
+   *
+   * @param {string} resourceId - The resourceId value.
+   * @param {number} amount - The amount value.
+   */
+  addWork(resourceId, amount) {
+    this.__totalWork += amount
+    const percent = (this.__doneWork / this.__totalWork) * 100
+    this.emit('progressIncremented', { percent })
   }
 
   /**
-   * The traverse method.
-   * @param {any} callback - The callback value.
+   * Add work to the 'done' pile. The done pile should eventually match the total pile.
+   *
+   * @param {string} resourceId - The resourceId value.
+   * @param {number} amount - The amount value.
    */
-  traverse(callback) {
-    const __c = fsItem => {
-      for (const childItemName in fsItem.children) {
-        __t(fsItem.children[childItemName])
-      }
+  addWorkDone(resourceId, amount) {
+    this.__doneWork += amount
+
+    const percent = (this.__doneWork / this.__totalWork) * 100
+    this.emit('progressIncremented', { percent })
+    if (this.__doneWork > this.__totalWork) {
+      throw new Error('Mismatch between work loaded and work done.')
     }
-    const __t = fsItem => {
-      if (callback(fsItem) == false) return false
-      if (fsItem.children) __c(fsItem)
+    if (this.__doneWork == this.__totalWork) {
+      this.emit('allResourcesLoaded', {})
     }
-    __c(this.__resourcesTree, 0)
   }
 }
 

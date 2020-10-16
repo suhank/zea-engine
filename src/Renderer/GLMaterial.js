@@ -1,8 +1,11 @@
-import { Signal } from '../Utilities'
+import { EventEmitter } from '../Utilities/index'
 import { MaterialShaderBinding } from './MaterialShaderBinding.js'
 
-/** Class representing a GL material. */
-class GLMaterial /* extends BaseItem why do we inherit base item here?*/ {
+/** Class representing a GL material.
+ * @extends EventEmitter
+ * @private
+ */
+class GLMaterial extends EventEmitter {
   /**
    * Create a GL material.
    * @param {any} gl - The gl value.
@@ -10,19 +13,14 @@ class GLMaterial /* extends BaseItem why do we inherit base item here?*/ {
    * @param {any} glshader - The glshader value.
    */
   constructor(gl, material, glshader) {
-    // super(name);
+    super()
     this.__gl = gl
     this.__material = material
     this.__glshader = glshader
 
-    this.updated = new Signal()
-    this.destructing = new Signal()
-
-    this.__material.destructing.connect(() => {
-      this.destructing.emit(this) // Note: propagate this signal so the GLPass can remove the item.
-    })
-
     this.__shaderBindings = {}
+
+    material.on('parameterValueChanged', () => this.emit('updated'))
   }
 
   /**
@@ -42,34 +40,18 @@ class GLMaterial /* extends BaseItem why do we inherit base item here?*/ {
   }
 
   /**
-   * The generateShaderBinding method.
-   */
-  generateShaderBinding() {
-    const params = this.__material.getParameters()
-    for (const param of params) {
-      bindParam(gl, param)
-    }
-  }
-
-  /**
    * The bind method.
    * @param {any} renderstate - The renderstate value.
    * @param {any} warnMissingUnifs - The renderstate value.
    * @return {any} - The return value.
    */
   bind(renderstate, warnMissingUnifs) {
-    // console.log("Material:" + this.__material.getName());
     this.__boundTexturesBeforeMaterial = renderstate.boundTextures
 
     let shaderBinding = this.__shaderBindings[renderstate.shaderkey]
     if (!shaderBinding) {
       const gl = this.__gl
-      shaderBinding = new MaterialShaderBinding(
-        gl,
-        this,
-        renderstate.unifs,
-        warnMissingUnifs
-      )
+      shaderBinding = new MaterialShaderBinding(gl, this, renderstate.unifs, warnMissingUnifs)
       this.__shaderBindings[renderstate.shaderkey] = shaderBinding
     }
     return shaderBinding.bind(renderstate)

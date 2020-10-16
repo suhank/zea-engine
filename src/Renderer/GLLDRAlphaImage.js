@@ -5,6 +5,7 @@ import { generateShaderGeomBinding } from './GeomShaderBinding.js'
 
 /** Class representing a GL (low dynamic range) LDR alpha image.
  * @extends GLTexture2D
+ * @private
  */
 class GLLDRAlphaImage extends GLTexture2D {
   /**
@@ -16,20 +17,16 @@ class GLLDRAlphaImage extends GLTexture2D {
     super(gl)
 
     this.__hdrImage = hdrImage
-    this.__hdrImage.updated.connect(() => {
+    this.__hdrImage.on('updated', () => {
       this.__unpackLDRAlpha(this.__hdrImage.getParams())
     })
     if (this.__hdrImage.isLoaded()) {
       this.__unpackLDRAlpha(this.__hdrImage.getParams())
     } else {
-      this.__hdrImage.loaded.connect(() => {
+      this.__hdrImage.on('loaded', () => {
         this.__unpackLDRAlpha(this.__hdrImage.getParams())
       })
     }
-    this.__hdrImage.destructing.connect(() => {
-      console.log(this.__hdrImage.getName() + ' destructing')
-      this.destroy()
-    })
   }
 
   /**
@@ -77,12 +74,7 @@ class GLLDRAlphaImage extends GLTexture2D {
       })
       this.__unpackLDRAlphaShader = new UnpackLDRAlphaImageShader(gl)
       const shaderComp = this.__unpackLDRAlphaShader.compileForTarget()
-      this.__shaderBinding = generateShaderGeomBinding(
-        gl,
-        shaderComp.attrs,
-        gl.__quadattrbuffers,
-        gl.__quadIndexBuffer
-      )
+      this.__shaderBinding = generateShaderGeomBinding(gl, shaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer)
     } else {
       this.__srcLDRTex.bufferData(ldr)
       this.__srcAlphaTex.bufferData(alpha)
@@ -120,7 +112,7 @@ class GLLDRAlphaImage extends GLTexture2D {
       this.__srcAlphaTex = null
     }
 
-    this.updated.emit()
+    this.emit('updated', {})
   }
 
   /**

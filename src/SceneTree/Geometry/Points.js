@@ -1,6 +1,17 @@
+/* eslint-disable camelcase */
 import { BaseGeom } from './BaseGeom.js'
+import { Registry } from '../../Registry'
 
-/** Class representing points.
+/**
+ * Class representing a point primitive drawing type, every vertex specified is a point.
+ *
+ * ```
+ * const points = new Points()
+ * ```
+ *
+ * * **Events**
+ * * **boundingBoxChanged:** Triggered when the bounding box changes.
+ *
  * @extends BaseGeom
  */
 class Points extends BaseGeom {
@@ -12,15 +23,16 @@ class Points extends BaseGeom {
   }
 
   /**
-   * The loadBin method.
-   * @param {object} reader - The reader value.
+   * Loads and populates `Points` object from a binary reader.
+   *
+   * @param {BinReader} reader - The reader value.
    */
   loadBin(reader) {
     this.name = reader.loadStr()
     const numVerts = reader.loadUInt32()
     this.__boundingBox.set(reader.loadFloat32Vec3(), reader.loadFloat32Vec3())
     this.setNumVertices(numVerts)
-    const vertices = this.vertices
+    const positions = this.getVertexAttribute('positions')
 
     if (numVerts < 256) {
       const bboxMat = this.__boundingBox.toMat4()
@@ -31,7 +43,7 @@ class Points extends BaseGeom {
           posAttr_8bit[i * 3 + 1] / 255.0,
           posAttr_8bit[i * 3 + 2] / 255.0
         )
-        vertices.setValue(i, bboxMat.transformVec3(pos))
+        positions.setValue(i, bboxMat.transformVec3(pos))
       }
     } else {
       const numClusters = reader.loadUInt32()
@@ -55,7 +67,7 @@ class Points extends BaseGeom {
             posAttr_8bit[j * 3 + 1] / 255.0,
             posAttr_8bit[j * 3 + 2] / 255.0
           )
-          vertices.setValue(j, bboxMat.transformVec3(pos))
+          positions.setValue(j, bboxMat.transformVec3(pos))
         }
       }
     }
@@ -65,16 +77,19 @@ class Points extends BaseGeom {
   // Persistence
 
   /**
-   * The readBinary method.
-   * @param {object} reader - The reader value.
+   * Sets state of current geometry(Including line segments) using a binary reader object.
+   *
+   * @param {BinReader} reader - The reader value.
    * @param {object} context - The context value.
    */
   readBinary(reader, context) {
     super.loadBaseGeomBinary(reader)
 
     // this.computeVertexNormals();
-    this.geomDataChanged.emit()
+    this.emit('geomDataChanged', {})
   }
 }
+
+Registry.register('Points', Points)
 
 export { Points }

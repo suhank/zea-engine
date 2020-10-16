@@ -1,29 +1,30 @@
-import { SystemDesc } from '../BrowserDetection.js'
-import { Signal } from '../Utilities'
+import { SystemDesc } from '../SystemDesc.js'
 import { BinReader } from './BinReader.js'
 import { loadBinfile } from './Utils.js'
 import { PointsProxy, LinesProxy, MeshProxy } from './Geometry/GeomProxies.js'
+import { EventEmitter } from '../Utilities/index'
+import { resourceLoader } from './ResourceLoader.js'
 
 // The GeomLibrary parses geometry data using workers.
-// This can be difficult to debug, so you can disable this 
+// This can be difficult to debug, so you can disable this
 // by setting the following boolena to false, and uncommenting
 // the import of parseGeomsBinary
 const multiThreadParsing = true
-const GeomParserWorker = require('worker-loader?inline!./Geometry/GeomParserWorker.js')
+
+import GeomParserWorker from 'web-worker:./Geometry/GeomParserWorker.js'
+
 // import {
 //     parseGeomsBinary
 // } from './Geometry/parseGeomsBinary.js';
 
-/** Class representing a geometry library. */
-class GeomLibrary {
+/** Class representing a geometry library.
+ */
+class GeomLibrary extends EventEmitter {
   /**
    * Create a geom library.
    */
   constructor() {
-    this.rangeLoaded = new Signal()
-    this.streamFileParsed = new Signal()
-    this.loaded = new Signal(true)
-
+    super()
     this.__streamInfos = {}
     this.__genBuffersOpts = {}
 
@@ -43,9 +44,17 @@ class GeomLibrary {
    * The clear method.
    */
   clear() {
-    this.__loaded = 0
-    this.__numGeoms = 0
+    this.__loadedCount = 0
+    this.__numGeoms = -1
     this.geoms = []
+  }
+
+  /**
+   * The returns true if all the geometries have been loaded and the loaded event has already been emitted.
+   * @return {Boolean} - True if all geometries are already loaded, else false.
+   */
+  isLoaded() {
+    return this.__loadedCount == this.__numGeoms
   }
 
   /**
@@ -55,13 +64,8 @@ class GeomLibrary {
    */
   __constructWorker() {
     const worker = new GeomParserWorker()
-    worker.onmessage = event => {
-      this.__recieveGeomDatas(
-        event.data.key,
-        event.data.geomDatas,
-        event.data.geomIndexOffset,
-        event.data.geomsRange
-      )
+    worker.onmessage = (event) => {
+      this.__recieveGeomDatas(event.data.key, event.data.geomDatas, event.data.geomIndexOffset, event.data.geomsRange)
     }
     return worker
   }
@@ -93,9 +97,17 @@ class GeomLibrary {
   }
 
   /**
+   * Returns the number of geometries the GeomLibrary has, or will have at the end of loading.
+   * @return {number} - The number of geometries.
+   */
+  getNumGeoms() {
+    return this.__numGeoms
+  }
+
+  /**
    * The getGeom method.
    * @param {number} index - The index value.
-   * @return {any} - The return value.
+   * @return {BaseGeom} - The stored geometry
    */
   getGeom(index) {
     if (index >= this.geoms.length) {
@@ -106,19 +118,13 @@ class GeomLibrary {
   }
 
   /**
-   * The loadUrl method.
+   * The loadArchive method.
    * @param {any} fileUrl - The fileUrl value.
    */
-  loadUrl(fileUrl) {
-    loadBinfile(
-      fileUrl,
-      data => {
-        this.loadBin(data)
-      },
-      statusText => {
-        console.warn(statusText)
-      }
-    )
+  loadArchive(fileUrl) {
+    resourceLoader.loadArchive(fileUrl).then((entries) => {
+      this.loadBin(entries)
+    })
   }
 
   /**
@@ -139,10 +145,10 @@ class GeomLibrary {
     }
 
     if (numGeoms == 0) {
-      this.streamFileParsed.emit(1)
+      this.emit('streamFileParsed', {})
       return numGeoms
     }
-    if (this.__numGeoms == 0) {
+    if (this.__numGeoms == -1) {
       // Note: for loading geom streams, we need to know the total number
       // ahead of time to be able to generate accurate progress reports.
       this.__numGeoms = numGeoms
@@ -151,70 +157,73 @@ class GeomLibrary {
 
     const toc = reader.loadUInt32Array(numGeoms)
 
-    let numCores = window.navigator.hardwareConcurrency
-    if (!numCores) {
-      if (isMobile) numCores = 2
-      else numCores = 4
-    }
-    const numGeomsPerWorkload = Math.max(1, Math.floor(numGeoms / numCores + 1))
-
-    // TODO: Use SharedArrayBuffer once available.
-    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SharedArrayBuffer
-
-    let offset = 0
-    while (offset < numGeoms) {
-      const bufferSlice_start = toc[offset]
-      let bufferSlice_end
-      let geomsRange
-      if (offset + numGeomsPerWorkload >= numGeoms) {
-        geomsRange = [offset, numGeoms]
-        bufferSlice_end = buffer.byteLength
-      } else {
-        geomsRange = [offset, offset + numGeomsPerWorkload]
-        bufferSlice_end = toc[geomsRange[1]]
+    if (multiThreadParsing) {
+      let numCores = window.navigator.hardwareConcurrency
+      if (!numCores) {
+        if (isMobile) numCores = 2
+        else numCores = 4
       }
-      const bufferSlice = buffer.slice(bufferSlice_start, bufferSlice_end)
-      offset += numGeomsPerWorkload
+      const numGeomsPerWorkload = Math.max(1, Math.floor(numGeoms / numCores + 1))
 
-      // ////////////////////////////////////////////
-      // Multi Threaded Parsing
-      if (multiThreadParsing) {
-        this.__workers[this.__nextWorker].postMessage(
-          {
-            key,
-            toc,
-            geomIndexOffset,
-            geomsRange,
-            isMobileDevice: reader.isMobileDevice,
-            bufferSlice,
-            genBuffersOpts: this.__genBuffersOpts,
-            context,
-          },
-          [bufferSlice]
-        )
-        this.__nextWorker = (this.__nextWorker + 1) % this.__workers.length
-      } else {
+      // TODO: Use SharedArrayBuffer once available.
+      // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SharedArrayBuffer
+
+      let offset = 0
+      while (offset < numGeoms) {
+        const bufferSlice_start = toc[offset]
+        let bufferSlice_end
+        let geomsRange
+        if (offset + numGeomsPerWorkload >= numGeoms) {
+          geomsRange = [offset, numGeoms]
+          bufferSlice_end = buffer.byteLength
+        } else {
+          geomsRange = [offset, offset + numGeomsPerWorkload]
+          bufferSlice_end = toc[geomsRange[1]]
+        }
+        const bufferSlice = buffer.slice(bufferSlice_start, bufferSlice_end)
+        offset += numGeomsPerWorkload
+
         // ////////////////////////////////////////////
-        // Main Threaded Parsing
-        parseGeomsBinary({
-            key,
-            toc,
-            geomIndexOffset,
-            geomsRange,
-            isMobileDevice: reader.isMobileDevice,
-            bufferSlice,
-            genBuffersOpts: this.__genBuffersOpts,
-            context
-          },
-          (data, transferables)=>{
-            this.__recieveGeomDatas(
-              data.key,
-              data.geomDatas,
-              data.geomIndexOffset,
-              data.geomsRange
-            );
-          });
+        // Multi Threaded Parsing
+          this.__workers[this.__nextWorker].postMessage(
+            {
+              key,
+              toc,
+              geomIndexOffset,
+              geomsRange,
+              isMobileDevice: reader.isMobileDevice,
+              bufferSlice,
+              genBuffersOpts: this.__genBuffersOpts,
+              context: {
+                versions: context.versions,
+              },
+            },
+            [bufferSlice]
+          )
+          this.__nextWorker = (this.__nextWorker + 1) % this.__workers.length
       }
+    } else {
+      // ////////////////////////////////////////////
+      // Main Threaded Parsing
+      const bufferSlice = buffer.slice(toc[0], buffer.byteLength)
+      const geomsRange = [0, numGeoms]
+      // const geomsRange = [3, 4]
+      // const bufferSlice = buffer.slice(toc[3], toc[4])
+      parseGeomsBinary(
+        {
+          key,
+          toc,
+          geomIndexOffset,
+          geomsRange,
+          isMobileDevice: reader.isMobileDevice,
+          bufferSlice,
+          genBuffersOpts: this.__genBuffersOpts,
+          context,
+        },
+        (data, transferables) => {
+          this.__recieveGeomDatas(data.key, data.geomDatas, data.geomIndexOffset, data.geomsRange)
+        }
+      )
     }
     return numGeoms
   }
@@ -257,7 +266,7 @@ class GeomLibrary {
       }
       this.geoms[offset + i] = proxy
     }
-    this.rangeLoaded.emit(storedRange)
+    this.emit('rangeLoaded', { range: storedRange })
 
     const loaded = storedRange[1] - storedRange[0]
     // console.log("GeomLibrary Loaded:" + loaded);
@@ -268,17 +277,17 @@ class GeomLibrary {
     streamInfo.done += loaded
     // console.log(key + " Loaded:" + streamInfo.done + " of :" + streamInfo.total);
     if (streamInfo.done == streamInfo.total) {
-      this.streamFileParsed.emit(1)
+      this.emit('streamFileParsed', { count: 1 })
     }
 
     // Once all the geoms from all the files are loaded and parsed
     // fire the loaded signal.
-    this.__loaded += loaded
-    // console.log("this.__loaded:" + this.__loaded +" this.__numGeoms:" + this.__numGeoms);
-    if (this.__loaded == this.__numGeoms) {
-      // console.log("GeomLibrary Loaded:" + this.__name + " count:" + geomDatas.length + " loaded:" + this.__loaded);
+    this.__loadedCount += loaded
+    // console.log("this.__loadedCount:" + this.__loadedCount +" this.__numGeoms:" + this.__numGeoms);
+    if (this.__loadedCount == this.__numGeoms) {
+      // console.log("GeomLibrary Loaded:" + this.__name + " count:" + geomDatas.length + " loaded:" + this.__loadedCount);
       this.__terminateWorkers()
-      this.loaded.emit()
+      this.emit('loaded')
     }
   }
 

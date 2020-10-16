@@ -1,7 +1,9 @@
-import { Mat4, Xfo } from '../../Math'
-import { TreeItem } from '../../SceneTree'
+import { Mat4, Xfo } from '../../Math/index'
+import { TreeItem } from '../../SceneTree/index'
 
-/** Class representing a VR head. */
+/** Class representing a VR head.
+ * @private
+ */
 class VRHead {
   /**
    * Create a VR head.
@@ -35,7 +37,7 @@ class VRHead {
     // const ori = pose.transform.orientation;
     // this.__localXfo.ori.set(ori.x, ori.y, ori.z, ori.x);
 
-    this.__treeItem.setLocalXfo(this.__localXfo)
+    this.__treeItem.getParameter('LocalXfo').setValue(this.__localXfo)
   }
 
   /**

@@ -1,4 +1,4 @@
-import { sgFactory } from '../../SceneTree'
+import { Registry } from '../../Registry'
 import { FlatSurfaceShader } from './FlatSurfaceShader.js'
 
 class FlatAlphaSurfaceShader extends FlatSurfaceShader {
@@ -12,5 +12,5 @@ class FlatAlphaSurfaceShader extends FlatSurfaceShader {
   }
 }
 
-sgFactory.registerClass('FlatAlphaSurfaceShader', FlatAlphaSurfaceShader)
+Registry.register('FlatAlphaSurfaceShader', FlatAlphaSurfaceShader)
 export { FlatAlphaSurfaceShader }

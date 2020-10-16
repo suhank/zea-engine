@@ -11,6 +11,7 @@ shaderLibrary.setShaderModule(
 <%include file="utils/imagePyramid.glsl"/>
 
 // uniform ImageAtlas envMap;
+// see: GLImageAtlas.js: line 460.
 uniform sampler2D   envMapPyramid;
 uniform sampler2D   envMapPyramid_layout;
 uniform vec4        envMapPyramid_desc;

@@ -1,8 +1,11 @@
-import { Signal } from '../../Utilities'
-import { sgFactory } from '../SGFactory'
-import { ItemFlags, BaseItem } from '../BaseItem.js'
+import { Registry } from '../../Registry'
+import { BaseItem } from '../BaseItem.js'
+import { OperatorInput } from './OperatorInput'
+import { OperatorOutput } from './OperatorOutput'
 
-/** Class representing an operator.
+/**
+ * Class representing an operator.
+ *
  * @extends BaseItem
  */
 class Operator extends BaseItem {
@@ -12,63 +15,110 @@ class Operator extends BaseItem {
    */
   constructor(name) {
     super(name)
-
-    // Items which can be constructed by a user (not loaded in binary data).
-    // Should always have this flag set.
-    this.setFlag(ItemFlags.USER_EDITED)
-    
-    this.__outputs = []
-    this.__evalOutput = this.__evalOutput.bind(this)
-
-    this.postEval = new Signal()
+    this.__inputs = new Map()
+    this.__outputs = new Map()
   }
 
   /**
    * This method sets the state of the operator to dirty which propagates
-   * to the outputs of this operator, and which wmay then propagate to other
+   * to the outputs of this operator, and which may then propagate to other
    * operators. When the scene is cleaned, which usually is caused by rendering
    * then the chain of operators are cleaned by triggering evaluation.
-   * @param {any} param - The param param.
-   * @param {any} mode - The mode param.
    * @private
    */
   setDirty() {
-    // for (const o of this.__outputs) o.setDirty(this.__evalOutput)
-    for (const o of this.__outputs) o.setDirtyFromOp()
+    this.__outputs.forEach((output) => output.setDirty())
   }
 
   /**
-   * This method can be overrridden in derived classes
+   * This method can be overridden in derived classes
    * to perform general updates (see GLPass or BaseItem).
-   * @param {any} param - The param param.
-   * @param {any} mode - The mode param.
+   *
+   * @param {object} event
    * @private
    */
-  __parameterValueChanged(param, mode) {
+  __parameterValueChanged(event) {
+    super.__parameterValueChanged(event)
     this.setDirty()
   }
 
   /**
+   * The addInput method.
+   * @param {string|OperatorInput} input - The name of the input, or the input object
+   * @return {array} - The return value.
+   */
+  addInput(input) {
+    if (typeof input == 'string') input = new OperatorInput(input)
+    input.setOperator(this)
+    this.__inputs.set(input.getName(), input)
+    this.setDirty()
+    return input
+  }
+
+  /**
+   * The removeInput method.
+   * @param {string|OperatorInput} input - The name of the input, or the input object
+   */
+  removeInput(input) {
+    if (typeof input == 'string') input = this.getInput(input)
+    if (!(input instanceof OperatorInput)) {
+      throw new Error('Invalid parameter for removeInput:', input)
+    }
+    if (input.getParam()) input.setParam(null)
+    this.__inputs.delete(input.getName())
+  }
+
+  /**
+   * Getter for the number of inputs in this operator.
+   * @return {number} - Returns the number of inputs.
+   */
+  getNumInputs() {
+    return this.__inputs.size
+  }
+
+  /**
+   * The getInputByIndex method.
+   * @param {number} index - The index value.
+   * @return {object} - The return value.
+   */
+  getInputByIndex(index) {
+    return Array.from(this.__inputs.values())[index]
+  }
+
+  /**
+   * The getInput method.
+   * @param {string} name - The name value.
+   * @return {OperatorInput} - The return value.
+   */
+  getInput(name) {
+    return this.__inputs.get(name)
+  }
+
+  /**
    * The addOutput method.
-   * @param {any} output - The output value.
-   * @return {any} - The return value.
+   * @param {string|OperatorOutput} output - The name of the output, or the output object
+   * @return {array} - The return value.
    */
   addOutput(output) {
-    this.__outputs.push(output)
-    output.paramSet.connect(param => {
-      // output.setDirty(this.__evalOutput)
-      param.bindOperator(this)
-    })
+    if (typeof output == 'string') output = new OperatorOutput(output)
+    output.setOperator(this)
+    if (this.getOutput(output.getName())) throw new Error(`Operator output already exists ${output.getName()}`)
+    this.__outputs.set(output.getName(), output)
+    this.setDirty()
     return output
   }
 
   /**
    * The removeOutput method.
-   * @param {any} output - The output value.
+   * @param {string|OperatorOutput} output - The name of the output, or the output object
    */
   removeOutput(output) {
-    if (output.getParam()) output.getParam().unbindOperator(this)
-    this.__outputs.splice(this.__outputs.indexOf(output), 1)
+    if (typeof output == 'string') output = this.getOutput(output)
+    if (!(output instanceof OperatorOutput)) {
+      throw new Error('Invalid parameter for removeOutput:', output)
+    }
+    if (output.getParam()) output.setParam(null)
+    this.__outputs.delete(output.getName())
   }
 
   /**
@@ -76,7 +126,7 @@ class Operator extends BaseItem {
    * @return {number} - Returns the number of outputs.
    */
   getNumOutputs() {
-    return this.__outputs.length
+    return this.__outputs.size
   }
 
   /**
@@ -85,95 +135,105 @@ class Operator extends BaseItem {
    * @return {object} - The return value.
    */
   getOutputByIndex(index) {
-    return this.__outputs[index]
+    return Array.from(this.__outputs.values())[index]
   }
 
   /**
    * The getOutput method.
    * @param {string} name - The name value.
-   * @return {any} - The return value.
+   * @return {OperatorOutput} - The return value.
    */
   getOutput(name) {
-    for (const o of this.__outputs) {
-      if (o.getName() == name) return o
-    }
-  }
-
-  /**
-   * The __evalOutput method.
-   * @param {any} cleanedParam - The cleanedParam value.
-   * @private
-   */
-  __evalOutput(cleanedParam /* value, getter */) {
-    for (const o of this.__outputs) {
-      o.removeCleanerFn(this.__evalOutput)
-    }
-    this.evaluate()
-
-    // Why does the cleaner need to return a value?
-    // Usually operators are connected to multiple outputs.
-    // return getter(1);
-  }
-
-  /**
-   * The __opInputChanged method.
-   * @private
-   */
-  __opInputChanged() {
-    // For each output, install a function to evalate the operator
-    // Note: when the operator evaluates, it will remove the cleaners
-    // on all outputs. This means that after the first operator to
-    // cause an evaluation, all outputs are considered clean.
-    this.setDirty()
+    return this.__outputs.get(name)
   }
 
   /**
    * The evaluate method.
+   * Computes the values of each of the outputs based on the values of the inputs
+   * and the values of outputs with mode OP_READ_WRITE.
+   * This method must be implemented by all Operators.
    */
   evaluate() {
     throw new Error('Not yet implemented')
+  }
+
+  /**
+   * When the value on a Parameter is modified by a user by calling 'setValue,
+   * then if any operators are bound, the value of the Parameter cannot be modified
+   * directly as it is the result of a computation. Instead, the Parameter calls
+   * 'backPropagateValue' on the Operator to cause the Operator to handle propagating
+   * the value to one or more of its inputs.
+   * to its inputs.
+   * @param {any} value - The value param.
+   * @return {any} - The modified value.
+   */
+  backPropagateValue(value) {
+    // TODO: Implement me for custom manipulations.
+    return value
   }
 
   // ////////////////////////////////////////
   // Persistence
 
   /**
-   * The toJSON method encodes this type as a json object for persistences.
+   * The toJSON method encodes this type as a json object for persistence.
+   *
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    * @return {object} - Returns the json object.
    */
-  toJSON(context, flags) {
-    const j = super.toJSON(context, flags)
-    j.type = sgFactory.getClassName(this)
+  toJSON(context) {
+    const j = super.toJSON(context)
+    j.type = Registry.getBlueprintName(this)
 
-    const oj = []
-    for (const o of this.__outputs) {
-      oj.push(o.toJSON(context, flags))
-    }
+    const inputs = []
+    this.__inputs.forEach((input) => {
+      inputs.push(input.toJSON(context))
+    })
+    j.inputs = inputs
 
-    j.outputs = oj
+    const outputs = []
+    this.__outputs.forEach((output) => {
+      outputs.push(output.toJSON(context))
+    })
+    j.outputs = outputs
     return j
   }
 
   /**
    * The fromJSON method decodes a json object for this type.
+   *
    * @param {object} j - The json object this item must decode.
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    */
-  fromJSON(j, context, flags) {
-    super.fromJSON(j, context, flags)
+  fromJSON(j, context) {
+    super.fromJSON(j, context)
 
+    if (j.inputs) {
+      j.inputs.forEach((inputJson, index) => {
+        let input
+        if (inputJson.name) {
+          input = this.getInput(inputJson.name)
+          if (!input) {
+            input = this.addInput(inputJson.name)
+          }
+        } else {
+          input = this.getInputByIndex(index)
+        }
+        input.fromJSON(inputJson, context)
+      })
+    }
     if (j.outputs) {
-      for (let i = 0; i < this.__outputs.length; i++) {
-        const output = this.__outputs[i]
-        output.fromJSON(j.outputs[i], context)
-      }
-
-      // Force an evaluation of the operator as soon as loading is done.
-      context.addPLCB(() => {
-        this.__opInputChanged()
+      j.outputs.forEach((outputJson, index) => {
+        let output
+        if (outputJson.name) {
+          output = this.getOutput(outputJson.name)
+          if (!output) {
+            output = this.addOutput(outputJson.name)
+          }
+        } else {
+          output = this.getOutputByIndex(index)
+        }
+        output.fromJSON(outputJson, context)
       })
     }
   }
@@ -182,23 +242,23 @@ class Operator extends BaseItem {
    * The detach method.
    */
   detach() {
-    this.__outputs.forEach(output => output.detach())
+    this.__inputs.forEach((input) => input.detach())
+    this.__outputs.forEach((output) => output.detach())
   }
 
   /**
    * The reattach method.
    */
   reattach() {
-    this.__outputs.forEach(output => output.reattach())
+    this.__inputs.forEach((input) => input.reattach())
+    this.__outputs.forEach((output) => output.reattach())
   }
 
   /**
-   * The destroy is called by the system to cause explicit resources cleanup.
-   * Users should never need to call this method directly.
+   * The rebind method.
    */
-  destroy() {
-    super.destroy()
-    this.__outputs = []
+  rebind() {
+    this.__outputs.forEach((output) => output.rebind())
   }
 }
 

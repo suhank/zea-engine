@@ -1,13 +1,30 @@
-import { Signal } from '../Utilities'
-import {
-  ValueSetMode,
-  FilePathParameter,
-  BooleanParameter,
-  NumberParameter,
-} from './Parameters'
+/* eslint-disable constructor-super */
+import { BooleanParameter, NumberParameter } from './Parameters/index'
+import { FilePathParameter } from './Parameters/FilePathParameter'
 import { TreeItem } from './TreeItem.js'
 
-/** Class representing an audio item in a scene tree.
+/**
+ * A special type of `TreeItem` that let you handle audio files.
+ * <br>
+ * <br>
+ * **Parameters**
+ * * **FilePath(`FilePathParameter`):**
+ * * **Autoplay(`BooleanParameter`):**
+ * * **PlayState(`NumberParameter`):**
+ * * **Mute(`BooleanParameter`):**
+ * * **Gain(`NumberParameter`):**
+ * * **Loop(`BooleanParameter):**
+ * * **SpatializeAudio(`BooleanParameter`):**
+ * * **refDistance(`NumberParameter`):**
+ * * **maxDistance(`NumberParameter`):**
+ * * **rolloffFactor(`NumberParameter`):**
+ * * **coneInnerAngle(`NumberParameter`):**
+ * * **coneOuterGain(`NumberParameter`):**
+ *
+ * **Events**
+ * * **loaded**
+ * * **audioSourceCreated**
+ * @private
  * @extends TreeItem
  */
 class AudioItem extends TreeItem {
@@ -20,20 +37,18 @@ class AudioItem extends TreeItem {
 
     this.__loaded = false
 
-    this.audioSourceCreated = new Signal()
-
     const fileParam = this.addParameter(new FilePathParameter('FilePath'))
     let audioSource
     let audioBuffer
     const startAudioPlayback = () => {
-      audioSource = ZeaEngine.audioCtx.createBufferSource()
+      audioSource = window.ZeaAudioaudioCtx.createBufferSource()
       audioSource.buffer = audioBuffer
       audioSource.loop = loopParam.getValue()
       audioSource.muted = muteParam.getValue()
       audioSource.start(0)
-      this.audioSourceCreated.emit(audioSource)
+      this.emit('audioSourceCreated', { audioSource })
     }
-    fileParam.valueChanged.connect(() => {
+    fileParam.on('valueChanged', () => {
       const request = new XMLHttpRequest()
       request.open('GET', fileParam.getURL(), true)
       request.responseType = 'arraybuffer'
@@ -43,15 +58,15 @@ class AudioItem extends TreeItem {
         // Note: this code is not pretty and should not access the global object
         // However, its difficult to handle this case.
         // TODO: clean this up.
-        ZeaEngine.audioCtx.decodeAudioData(
+        window.ZeaAudioaudioCtx.decodeAudioData(
           audioData,
-          buffer => {
+          (buffer) => {
             audioBuffer = buffer
             this.__loaded = true
-            this.loaded.emit(true)
+            this.emit('loaded', {})
             if (autoplayParam.getValue()) startAudioPlayback()
           },
-          e => {
+          (e) => {
             console.log('Error with decoding audio data' + e.err)
           }
         )
@@ -59,29 +74,23 @@ class AudioItem extends TreeItem {
 
       request.send()
     })
-    const autoplayParam = this.addParameter(
-      new BooleanParameter('Autoplay', false)
-    )
-    const playStateParam = this.addParameter(
-      new NumberParameter('PlayState', 0)
-    )
-    playStateParam.valueChanged.connect(mode => {
-      if (mode != ValueSetMode.CUSTOM) {
-        switch (playStateParam.getValue()) {
-          case 0:
-            if (this.__loaded) {
-              if (audioSource) {
-                audioSource.stop(0)
-                audioSource = undefined
-              }
+    const autoplayParam = this.addParameter(new BooleanParameter('Autoplay', false))
+    const playStateParam = this.addParameter(new NumberParameter('PlayState', 0))
+    playStateParam.on('valueChanged', (event) => {
+      switch (playStateParam.getValue()) {
+        case 0:
+          if (this.__loaded) {
+            if (audioSource) {
+              audioSource.stop(0)
+              audioSource = undefined
             }
-            break
-          case 1:
-            if (this.__loaded) {
-              startAudioPlayback()
-            }
-            break
-        }
+          }
+          break
+        case 1:
+          if (this.__loaded) {
+            startAudioPlayback()
+          }
+          break
       }
     })
 
@@ -90,13 +99,13 @@ class AudioItem extends TreeItem {
     }
 
     this.play = () => {
-      playStateParam.setValue(1, ValueSetMode.CUSTOM)
+      playStateParam.setValue(1)
     }
     this.stop = () => {
-      playStateParam.setValue(0, ValueSetMode.CUSTOM)
+      playStateParam.setValue(0)
     }
     this.pause = () => {
-      playStateParam.setValue(0, ValueSetMode.CUSTOM)
+      playStateParam.setValue(0)
     }
 
     this.getAudioSource = () => {
@@ -115,26 +124,26 @@ class AudioItem extends TreeItem {
     this.addParameter(new NumberParameter('coneOuterAngle', 0))
     this.addParameter(new NumberParameter('coneOuterGain', 1))
 
-    muteParam.valueChanged.connect(() => {
+    muteParam.on('valueChanged', () => {
       if (audioSource) audioSource.muted = muteParam.getValue()
     })
-    loopParam.valueChanged.connect(() => {
+    loopParam.on('valueChanged', () => {
       if (audioSource) audioSource.loop = loopParam.getValue()
     })
 
-    this.mute = value => {
-      muteParam.setValue(value, ValueSetMode.CUSTOM)
+    this.mute = (value) => {
+      muteParam.setValue(value)
     }
 
     // Note: Many parts of the code assume a 'loaded' signal.
     // We should probably deprecate and use only 'updated'.
-    this.loaded = new Signal(true)
-    this.loaded.setToggled(false)
+    this.loaded = false
   }
 
   /**
-   * The isLoaded method.
-   * @return {any} - The return value.
+   * Returns loaded status of the audio item
+   *
+   * @return {boolean} - `The return value`.
    */
   isLoaded() {
     return this.__loaded
@@ -146,12 +155,13 @@ class AudioItem extends TreeItem {
    */
   setAudioStream() {
     this.__loaded = true
-    this.loaded.emit()
-    this.audioSourceCreated.emit(audioSource)
+    this.emit('loaded', {})
+    this.emit('audioSourceCreated', { audioSource })
   }
 }
 
 /** Class representing a audio file item in a scene tree.
+ * @ignore
  * @extends AudioItem
  */
 class FileAudioItem extends AudioItem {

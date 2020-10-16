@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Grid saves to JSON (serialization). 1`] = `
+Object {
+  "params": Object {
+    "SkipCenterLines": Object {
+      "value": true,
+    },
+    "X": Object {
+      "value": 4,
+    },
+    "XDivisions": Object {
+      "value": 2,
+    },
+    "Y": Object {
+      "value": 4,
+    },
+    "YDivisions": Object {
+      "value": 2,
+    },
+  },
+  "type": "Grid",
+  "vertexAttributes": Object {},
+}
+`;

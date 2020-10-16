@@ -1,8 +1,9 @@
-import { Signal } from '../../Utilities'
-import { ParamFlags, ValueSetMode, Parameter } from './Parameter.js'
+import { Registry } from '../../Registry'
+import { Parameter } from './Parameter.js'
 
 /** Class representing a geometry parameter.
  * @extends Parameter
+ * @private
  */
 class GeometryParameter extends Parameter {
   /**
@@ -12,37 +13,32 @@ class GeometryParameter extends Parameter {
    */
   constructor(name, value) {
     super(name, undefined, 'Geometry')
-    this.boundingBoxDirtied = new Signal()
+
+    this.__emitBoundingBoxDirtied = this.__emitBoundingBoxDirtied.bind(this)
     this.setValue(value)
+  }
+
+  // eslint-disable-next-line require-jsdoc
+  __emitBoundingBoxDirtied(event) {
+    this.emit('boundingBoxChanged', event)
   }
 
   /**
    * The setValue method.
    * @param {any} geom - The geom value.
-   * @param {any} mode - The mode value.
    */
-  setValue(geom, mode = ValueSetMode.USER_SETVALUE) {
+  setValue(geom) {
     // 0 == normal set. 1 = changed via cleaner fn, 2 = change by loading/cloning code.
     if (this.__value !== geom) {
       if (this.__value) {
-        this.__value.boundingBoxDirtied.disconnect(this.boundingBoxDirtied.emit)
-        this.__value.removeRef(this)
+        this.__value.off('boundingBoxChanged', this.__emitBoundingBoxDirtied)
       }
       this.__value = geom
       if (this.__value) {
-        this.__value.addRef(this)
-        this.__value.boundingBoxDirtied.connect(this.boundingBoxDirtied.emit)
+        this.__value.on('boundingBoxChanged', this.__emitBoundingBoxDirtied)
       }
 
-      if (
-        mode == ValueSetMode.USER_SETVALUE ||
-        mode == ValueSetMode.REMOTEUSER_SETVALUE
-      ) {
-        this.__flags |= ParamFlags.USER_EDITED
-      }
-
-      // During the cleaning process, we don't want notifications.
-      if (mode != ValueSetMode.OPERATOR_SETVALUE) this.valueChanged.emit(mode)
+      this.emit('valueChanged', {})
     }
   }
 
@@ -50,24 +46,22 @@ class GeometryParameter extends Parameter {
   // Persistence
 
   /**
-   * The toJSON method encodes this type as a json object for persistences.
+   * The toJSON method encodes this type as a json object for persistence.
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    * @return {object} - Returns the json object.
    */
-  toJSON(context, flags) {
-    return super.toJSON(context, flags)
+  toJSON(context) {
+    return super.toJSON(context)
   }
 
   /**
    * The fromJSON method decodes a json object for this type.
    * @param {object} j - The json object this item must decode.
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    * @return {object} - Returns the json object.
    */
-  fromJSON(j, context, flags) {
-    return super.fromJSON(j, context, flags)
+  fromJSON(j, context) {
+    return super.fromJSON(j, context)
   }
 
   // ////////////////////////////////////////
@@ -76,10 +70,9 @@ class GeometryParameter extends Parameter {
   /**
    * The clone method constructs a new geometry parameter, copies its values
    * from this parameter and returns it.
-   * @param {number} flags - The flags value.
    * @return {GeometryParameter} - Returns a new geometry parameter.
    */
-  clone(flags) {
+  clone() {
     const clonedParam = new GeometryParameter(this.__name, this.__value)
     return clonedParam
   }
@@ -94,10 +87,11 @@ class GeometryParameter extends Parameter {
     // e.g. freeing GPU Memory.
 
     if (this.__value) {
-      this.__value.boundingBoxDirtied.disconnect(this.boundingBoxDirtied.emit)
-      this.__value.removeRef(this)
+      this.__value.off('boundingBoxChanged', this.__emitBoundingBoxDirtied)
     }
   }
 }
+
+Registry.register('GeometryParameter', GeometryParameter)
 
 export { GeometryParameter }

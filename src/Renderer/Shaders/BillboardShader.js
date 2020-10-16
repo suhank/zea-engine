@@ -20,11 +20,12 @@ uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
 uniform mat4 cameraMatrix;
 
+<%include file="GLSLUtils.glsl"/>
+
 #ifdef ENABLE_FLOAT_TEXTURES
 
 instancedattribute float instanceIds;
 
-<%include file="GLSLUtils.glsl"/>
 <%include file="stack-gl/transpose.glsl"/>
 <%include file="utils/imageAtlas.glsl"/>
 
@@ -67,8 +68,9 @@ uniform vec4 billboardData;
 uniform vec4 tintColor;
 uniform vec4 layoutData;
 
-
 #endif
+
+uniform int inVR;
 
 mat4 calcLookAtMatrix(vec3 origin, vec3 target, float roll) {
   // vec3 rr = vec3(sin(roll), 0.0, cos(roll));
@@ -115,25 +117,37 @@ void main(void) {
   v_texCoord += layoutData.xy;
 
   float scl = billboardData.x;
-  float width = layoutData.z * atlasBillboards_desc.x * scl * 0.002;
-  float height = layoutData.w * atlasBillboards_desc.y * scl * 0.002;
+  float width = layoutData.z * atlasBillboards_desc.x * scl;
+  float height = layoutData.w * atlasBillboards_desc.y * scl;
   int flags = int(billboardData.y);
-  bool alignedToCamera = flags > 0;
+
+  
+  // Use cross platform bit flags methods
+  bool alignedToCamera = testFlag(flags, 4); // flag = (1<<2)
+
+  mat4 modelViewProjectionMatrix;
   if(alignedToCamera){
-    vec3 cameraPos = vec3(cameraMatrix[3][0], cameraMatrix[3][1], cameraMatrix[3][2]);
-    vec3 billboardPos = vec3(modelMatrix[3][0], modelMatrix[3][1], modelMatrix[3][2]);
-    mat4 lookAt = calcLookAtMatrix(billboardPos, cameraPos, 0.0);
-    mat4 modelViewProjectionMatrix = projectionMatrix * viewMatrix * lookAt;
-    gl_Position = modelViewProjectionMatrix * vec4(quadVertex.x * width, (quadVertex.y + 0.5) * height, 0.0, 1.0);
+    if (inVR == 0) {
+      gl_Position = (viewMatrix * modelMatrix) * vec4(0.0, 0.0, 0.0, 1.0);
+      gl_Position += vec4(quadVertex.x * width, (quadVertex.y + 0.5) * height, 0.0, 0.0);
+      gl_Position = projectionMatrix * gl_Position;
+    } else {
+      vec3 cameraPos = vec3(cameraMatrix[3][0], cameraMatrix[3][1], cameraMatrix[3][2]);
+      vec3 billboardPos = vec3(modelMatrix[3][0], modelMatrix[3][1], modelMatrix[3][2]);
+      mat4 lookAt = calcLookAtMatrix(billboardPos, cameraPos, 0.0);
+      mat4 modelViewProjectionMatrix = projectionMatrix * viewMatrix * lookAt;
+      gl_Position = modelViewProjectionMatrix * vec4(quadVertex.x * width, (quadVertex.y + 0.5) * height, 0.0, 1.0);
+    }
   }
   else{
-    mat4 modelViewProjectionMatrix = projectionMatrix * viewMatrix * modelMatrix;
+    modelViewProjectionMatrix = projectionMatrix * viewMatrix * modelMatrix;
     gl_Position = modelViewProjectionMatrix * vec4(quadVertex.x * width, (quadVertex.y + 0.5) * height, 0.0, 1.0);
   }
 
-  bool overlay = flags > 0;
-  if(overlay){
-    gl_Position.z -= 0.05;
+  // Use cross platform bit flags methods
+  bool drawOnTop = testFlag(flags, 8); // flag = 1 << 3
+  if(drawOnTop){
+    gl_Position.z = mix(gl_Position.z, -1.0, 0.5);
   }
 }
 `

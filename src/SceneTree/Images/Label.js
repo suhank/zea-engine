@@ -1,11 +1,7 @@
-import { Color } from '../../Math'
-import {
-  BooleanParameter,
-  NumberParameter,
-  ColorParameter,
-  StringParameter,
-} from '../Parameters'
-import { sgFactory } from '../SGFactory.js'
+/* eslint-disable guard-for-in */
+import { Color } from '../../Math/index'
+import { BooleanParameter, NumberParameter, ColorParameter, StringParameter } from '../Parameters/index'
+import { Registry } from '../../Registry'
 import { DataImage } from './DataImage.js'
 import { labelManager } from './LabelManager.js'
 
@@ -28,18 +24,9 @@ import { labelManager } from './LabelManager.js'
  * @param {Boolean} [fill = false] - Whether to fill the rectangle.
  * @param {Boolean} [stroke = true] - Whether to stroke the rectangle.
  * @param {Number} [strokeWidth] - The strokeWidth param.
+ * @private
  */
-function roundRect(
-  ctx,
-  x,
-  y,
-  width,
-  height,
-  radius,
-  fill,
-  stroke,
-  strokeWidth
-) {
+function roundRect(ctx, x, y, width, height, radius, fill, stroke, strokeWidth) {
   if (typeof stroke == 'undefined') {
     stroke = true
   }
@@ -84,14 +71,43 @@ function roundRect(
   }
 }
 
-/** Class representing a label.
+/**
+ * Represents a 2D label item the scene.
+ * Since displaying text in the scene is not an easy task,
+ * we've abstracted the complicated logic behind this class, transforming any text into a 2D image(`DataImage`).
+ *
+ * **Library List**
+ * * LabelPack
+ *
+ * **Parameters**
+ * * **Library(`StringParameter`):** Library you wan to use for your label, see **Library List** above.
+ * * **Text(`StringParameter`):**
+ * * **FontColor(`ColorParameter`):**
+ * * **Margin(`NumberParameter`):**
+ * * **BorderWidth(`NumberParameter`):**
+ * * **BorderRadius(`NumberParameter`):**
+ * * **Outline(`BooleanParameter`):**
+ * * **OutlineColor(`BooleanParameter`):**
+ * * **Background(`BooleanParameter`):**
+ * * **ColorParameter(`BackgroundColor`):**
+ * * **FillBackground(`BooleanParameter`):**
+ * * **StrokeBackgroundOutline(`BooleanParameter`):**
+ * * **FontSize(`NumberParameter`):** Represents FontSize of the label
+ * * **Font(`StringParameter`):**
+ *
+ * **Events**
+ * * **loaded:** Triggered when label's data is loaded.
+ * * **updated:** Triggered when label's data changes.
+ * * **labelRendered:** Triggered when the text image is rendered. Contains `width`, `height` and data of the image.
+ *
  * @extends DataImage
  */
 class Label extends DataImage {
   /**
-   * Create a label.
+   * Creates a label instance. Creating a canvas element that hosts the specified text.
+   *
    * @param {string} name - The name value.
-   * @param {any} library - The library value.
+   * @param {string} library - The library value.
    */
   constructor(name, library) {
     super(name)
@@ -99,8 +115,8 @@ class Label extends DataImage {
     this.__canvasElem = document.createElement('canvas')
     const fontSize = 22
 
-    const libraryParam = this.addParameter(new StringParameter('library'))
-    this.addParameter(new StringParameter('text', ''))
+    const libraryParam = this.addParameter(new StringParameter('Library'))
+    this.addParameter(new StringParameter('Text', ''))
     // or load the label when it is loaded.
 
     // const setLabelTextToLibrary = ()=>{
@@ -109,30 +125,28 @@ class Label extends DataImage {
     //     const text = textParam.getValue();
     //     labelManager.setLabelTextToLibrary(library, name, text);
     // }
-    // textParam.valueChanged.connect(setLabelText);
+    // textParam.on('valueChanged', setLabelText);
 
-    this.addParameter(new ColorParameter('fontColor', new Color(0, 0, 0)))
-    // this.addParameter(new StringParameter('textAlign', 'left'))
-    // this.addParameter(MultiChoiceParameter('textAlign', 0, ['left', 'right']));
-    // this.addParameter(new BooleanParameter('fillText', true))
-    this.addParameter(new NumberParameter('margin', fontSize * 0.5))
-    this.addParameter(new NumberParameter('borderWidth', 2))
-    this.addParameter(new NumberParameter('borderRadius', fontSize * 0.5))
-    this.addParameter(new BooleanParameter('outline', false))
-    this.addParameter(new BooleanParameter('outlineColor', new Color(0, 0, 0)))
-    this.addParameter(new BooleanParameter('background', true))
-    this.addParameter(
-      new ColorParameter('backgroundColor', new Color('#FBC02D'))
-    )
-    this.addParameter(new BooleanParameter('fillBackground', true))
-    this.addParameter(new BooleanParameter('strokeBackgroundOutline', true))
-    this.addParameter(new NumberParameter('fontSize', 22))
-    this.addParameter(new StringParameter('font', 'Helvetica'))
+    this.addParameter(new ColorParameter('FontColor', new Color(0, 0, 0)))
+    // this.addParameter(new StringParameter('TextAlign', 'left'))
+    // this.addParameter(MultiChoiceParameter('TextAlign', 0, ['left', 'right']));
+    // this.addParameter(new BooleanParameter('FillText', true))
+    this.addParameter(new NumberParameter('Margin', fontSize * 0.5))
+    this.addParameter(new NumberParameter('BorderWidth', 2))
+    this.addParameter(new NumberParameter('BorderRadius', fontSize * 0.5))
+    this.addParameter(new BooleanParameter('Outline', false))
+    this.addParameter(new BooleanParameter('OutlineColor', new Color(0, 0, 0)))
+    this.addParameter(new BooleanParameter('Background', true))
+    this.addParameter(new ColorParameter('BackgroundColor', new Color('#FBC02D')))
+    this.addParameter(new BooleanParameter('FillBackground', true))
+    this.addParameter(new BooleanParameter('StrokeBackgroundOutline', true))
+    this.addParameter(new NumberParameter('FontSize', 22))
+    this.addParameter(new StringParameter('Font', 'Helvetica'))
 
     const reload = () => {
       this.loadLabelData()
     }
-    this.nameChanged.connect(reload)
+    this.on('nameChanged', reload)
 
     if (library) libraryParam.setValue(library)
 
@@ -142,13 +156,14 @@ class Label extends DataImage {
   }
 
   /**
-   * This method can be overrridden in derived classes
+   * This method can be overridden in derived classes
    * to perform general updates (see GLPass or BaseItem).
-   * @param {any} param - The param param.
-   * @param {any} mode - The mode param.
+   *
+   * @param {object} event - The event object.
    * @private
    */
-  __parameterValueChanged(param, mode) {
+  __parameterValueChanged(event) {
+    super.__parameterValueChanged(event)
     if (!this.__requestedRerender) {
       this.__requestedRerender = true
       this.loadLabelData()
@@ -156,7 +171,7 @@ class Label extends DataImage {
   }
 
   /**
-   * The loadLabelData method.
+   * Method in charge of basically do everything, set text, load/update it, get the library, load the font, etc.
    */
   loadLabelData() {
     const onLoaded = () => {
@@ -164,15 +179,15 @@ class Label extends DataImage {
       this.__needsRender = true
       if (!this.__loaded) {
         this.__loaded = true
-        this.loaded.emit()
+        this.emit('loaded', {})
       } else {
-        this.updated.emit()
+        this.emit('updated', {})
       }
     }
 
     const loadText = () => {
-      return new Promise(resolve => {
-        const library = this.getParameter('library').getValue()
+      return new Promise((resolve) => {
+        const library = this.getParameter('Library').getValue()
         if (library == '') {
           resolve()
           return
@@ -187,7 +202,7 @@ class Label extends DataImage {
             const name = this.getName()
             // console.log("Text Loaded:" + name);
             const text = labelManager.getLabelText(library, name)
-            this.getParameter('text').setValue(text)
+            this.getParameter('Text').setValue(text)
           } catch (e) {
             // Note: if the text is not found in the labels pack
             // an exception is thrown, and we catch it here.
@@ -196,7 +211,8 @@ class Label extends DataImage {
           resolve()
         }
         if (!labelManager.isLibraryLoaded(library)) {
-          labelManager.labelLibraryLoaded.connect(loadedLibrary => {
+          labelManager.on('labelLibraryLoaded', (event) => {
+            const loadedLibrary = event.library
             if (loadedLibrary == library) getLibraryText()
           })
         } else {
@@ -205,10 +221,10 @@ class Label extends DataImage {
       })
     }
     const loadFont = () => {
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         if (document.fonts != undefined) {
-          const font = this.getParameter('font').getValue()
-          const fontSize = this.getParameter('fontSize').getValue()
+          const font = this.getParameter('Font').getValue()
+          const fontSize = this.getParameter('FontSize').getValue()
           document.fonts.load(fontSize + 'px "' + font + '"').then(() => {
             // console.log("Font Loaded:" + font);
             resolve()
@@ -222,32 +238,32 @@ class Label extends DataImage {
   }
 
   /**
-   * Renders the label text to a canvas element ready to display,
+   * Renders the label text to a canvas element ready to display.
+   * Here is where all parameters are applied to the canvas containing the text,
+   * then the image data is extracted from the canvas context.
    */
   renderLabelToImage() {
-    console.log("renderLabelToImage")
+    // console.log("renderLabelToImage")
     const ctx2d = this.__canvasElem.getContext('2d', {
       alpha: true,
     })
 
-    let text = this.getParameter('text').getValue()
+    let text = this.getParameter('Text').getValue()
     if (text == '') text = this.getName()
 
-    const font = this.getParameter('font').getValue()
-    const fontColor = this.getParameter('fontColor').getValue()
-    const textAlign = 'left';//this.getParameter('textAlign').getValue()
-    const fontSize = this.getParameter('fontSize').getValue()
-    const margin = this.getParameter('margin').getValue()
-    const borderWidth = this.getParameter('borderWidth').getValue()
-    const borderRadius = this.getParameter('borderRadius').getValue()
-    const outline = this.getParameter('outline').getValue()
-    const outlineColor = this.getParameter('outlineColor').getValue()
-    const background = this.getParameter('background').getValue()
-    const backgroundColor = this.getParameter('backgroundColor').getValue()
-    const fillBackground = this.getParameter('fillBackground').getValue()
-    const strokeBackgroundOutline = this.getParameter(
-      'strokeBackgroundOutline'
-    ).getValue()
+    const font = this.getParameter('Font').getValue()
+    const fontColor = this.getParameter('FontColor').getValue()
+    const textAlign = 'left' // this.getParameter('TextAlign').getValue()
+    const fontSize = this.getParameter('FontSize').getValue()
+    const margin = this.getParameter('Margin').getValue()
+    const borderWidth = this.getParameter('BorderWidth').getValue()
+    const borderRadius = this.getParameter('BorderRadius').getValue()
+    const outline = this.getParameter('Outline').getValue()
+    const outlineColor = this.getParameter('OutlineColor').getValue()
+    const background = this.getParameter('Background').getValue()
+    const backgroundColor = this.getParameter('BackgroundColor').getValue()
+    const fillBackground = this.getParameter('FillBackground').getValue()
+    const strokeBackgroundOutline = this.getParameter('StrokeBackgroundOutline').getValue()
 
     // let ratio = devicePixelRatio / backingStoreRatio;
     const marginAndBorder = margin + borderWidth
@@ -256,10 +272,10 @@ class Label extends DataImage {
     ctx2d.font = fontSize + 'px "' + font + '"'
     // console.log("renderLabelToImage:" + ctx2d.font);
     let width = 0
-    lines.forEach(line => {
+    lines.forEach((line) => {
       width = Math.max(ctx2d.measureText(line).width, width)
     })
-    const fontHeight = parseInt(fontSize)
+    const fontHeight = fontSize // parseInt(fontSize)
     this.width = Math.ceil(width + marginAndBorder * 2)
     this.height = Math.ceil(fontHeight * lines.length + marginAndBorder * 2)
     ctx2d.canvas.width = this.width
@@ -292,11 +308,7 @@ class Label extends DataImage {
     ctx2d.fillStyle = fontColor.toHex()
     ctx2d.textBaseline = 'hanging'
     lines.forEach((line, index) => {
-      ctx2d.fillText(
-        line,
-        marginAndBorder,
-        marginAndBorder + index * fontHeight
-      )
+      ctx2d.fillText(line, marginAndBorder, marginAndBorder + index * fontHeight)
     })
 
     if (outline) {
@@ -307,11 +319,17 @@ class Label extends DataImage {
 
     this.__data = ctx2d.getImageData(0, 0, this.width, this.height)
     this.__needsRender = false
+    this.emit('labelRendered', {
+      width: this.width,
+      height: this.height,
+      data: this.__data,
+    })
   }
 
   /**
-   * The getParams method.
-   * @return {any} - The return value.
+   *  Returns all parameters and class state values(Including data).
+   *
+   * @return {object} - The return value.
    */
   getParams() {
     if (this.__needsRender) this.renderLabelToImage()
@@ -322,28 +340,28 @@ class Label extends DataImage {
   // Persistence
 
   /**
-   * The toJSON method encodes this type as a json object for persistences.
+   * The toJSON method encodes this type as a json object for persistence.
+   *
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    * @return {object} - Returns the json object.
    */
-  toJSON(context, flags) {
-    const j = super.toJSON(context, flags)
+  toJSON(context) {
+    const j = super.toJSON(context)
     return j
   }
 
   /**
    * The fromJSON method decodes a json object for this type.
+   *
    * @param {object} j - The json object this item must decode.
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    */
-  fromJSON(j, context, flags) {
-    super.fromJSON(j, context, flags)
+  fromJSON(j, context) {
+    super.fromJSON(j, context)
     this.__getLabelText()
   }
 }
 
-sgFactory.registerClass('Label', Label)
+Registry.register('Label', Label)
 
 export { Label }

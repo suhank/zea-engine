@@ -1,5 +1,5 @@
-import { Color } from '../../Math'
-import { sgFactory } from '../../SceneTree'
+import { Color } from '../../Math/index'
+import { Registry } from '../../Registry'
 import { shaderLibrary } from '../ShaderLibrary.js'
 import { GLShader } from '../GLShader.js'
 
@@ -9,9 +9,11 @@ import './GLSL/stack-gl/gamma.js'
 import './GLSL/materialparams.js'
 import './GLSL/GGX_Specular.js'
 import './GLSL/PBRSurface.js'
+import './GLSL/drawItemTexture.js'
 import './GLSL/modelMatrix.js'
 import './GLSL/debugColors.js'
 import './GLSL/ImagePyramid.js'
+import './GLSL/cutaways.js'
 
 class StandardSurfaceShader extends GLShader {
   constructor(gl) {
@@ -26,39 +28,35 @@ attribute vec3 normals;
 #ifdef ENABLE_TEXTURES
 attribute vec2 texCoords;
 #endif
-attribute vec2 lightmapCoords;
 
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
 
 <%include file="stack-gl/transpose.glsl"/>
 <%include file="stack-gl/inverse.glsl"/>
+<%include file="drawItemId.glsl"/>
+<%include file="drawItemTexture.glsl"/>
 <%include file="modelMatrix.glsl"/>
 
-attribute float clusterIDs;
-uniform vec2 lightmapSize;
-uniform color cutColor;
-
 /* VS Outputs */
+varying float v_drawItemId;
 varying vec4 v_geomItemData;
 varying vec3 v_viewPos;
 varying vec3 v_viewNormal;
 #ifdef ENABLE_TEXTURES
 varying vec2 v_textureCoord;
 #endif
-varying vec2 v_lightmapCoord;
-#ifdef ENABLE_DEBUGGING_LIGHTMAPS
-varying float v_clusterID;
-#endif
 varying vec3 v_worldPos;
-varying vec4 v_cutAwayData;
 /* VS Outputs */
 
+
 void main(void) {
-    v_geomItemData = getInstanceData();
+    int drawItemId = getDrawItemId();
+    v_drawItemId = float(drawItemId);
+    v_geomItemData = getInstanceData(drawItemId);
 
     vec4 pos = vec4(positions, 1.);
-    mat4 modelMatrix = getModelMatrix();
+    mat4 modelMatrix = getModelMatrix(drawItemId);
     mat4 modelViewMatrix = viewMatrix * modelMatrix;
     vec4 viewPos    = modelViewMatrix * pos;
     gl_Position     = projectionMatrix * viewPos;
@@ -71,16 +69,7 @@ void main(void) {
     v_textureCoord  = texCoords;
 #endif
 
-    v_lightmapCoord = (lightmapCoords + v_geomItemData.zw) / lightmapSize;
-
-    // mat4 mvp = projectionMatrix * viewMatrix * modelMatrix;
-    // gl_Position = mvp * vec4((lightmapCoords + v_geomItemData.zw), 0., 1.);
-#ifdef ENABLE_DEBUGGING_LIGHTMAPS
-    v_clusterID = clusterIDs;
-#endif
-
     v_worldPos      = (modelMatrix * pos).xyz;
-    v_cutAwayData   = getCutaway();
 }
 `
     )
@@ -91,36 +80,43 @@ void main(void) {
 precision highp float;
 
 <%include file="math/constants.glsl"/>
-<%include file="GLSLUtils.glsl"/>
+<%include file="drawItemTexture.glsl"/>
+<%include file="cutaways.glsl"/>
+
+
 <%include file="stack-gl/gamma.glsl"/>
 <%include file="materialparams.glsl"/>
 
 <%include file="GGX_Specular.glsl"/>
 <%include file="PBRSurfaceRadiance.glsl"/>
-<%include file="cutaways.glsl"/>
 
 /* VS Outputs */
+varying float v_drawItemId;
 varying vec4 v_geomItemData;
 varying vec3 v_viewPos;
 varying vec3 v_viewNormal;
 #ifdef ENABLE_TEXTURES
 varying vec2 v_textureCoord;
 #endif
-varying vec2 v_lightmapCoord;
-#ifdef ENABLE_DEBUGGING_LIGHTMAPS
-varying float v_clusterID;
-#endif
 varying vec3 v_worldPos;
-varying vec4 v_cutAwayData;
 /* VS Outputs */
 
 
-uniform sampler2D lightmap;
-uniform bool lightmapConnected;
-#ifdef ENABLE_DEBUGGING_LIGHTMAPS
-<%include file="debugColors.glsl"/>
-uniform vec2 lightmapSize;
-uniform bool debugLightmapTexelSize;
+uniform color cutColor;
+
+#ifdef ENABLE_FLOAT_TEXTURES
+vec4 getCutaway(int id) {
+    return fetchTexel(instancesTexture, instancesTextureSize, (id * pixelsPerItem) + 5);
+}
+
+#else
+
+uniform vec4 cutawayData;
+
+vec4 getCutaway(int id) {
+    return cutawayData;
+}
+
 #endif
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION
@@ -130,20 +126,16 @@ uniform float exposure;
 uniform mat4 cameraMatrix;
 
 uniform color BaseColor;
-uniform float EmissiveStrength;
-
-
-#ifdef ENABLE_SPECULAR
 uniform float Roughness;
 uniform float Metallic;
 uniform float Reflectance;
-#endif
+uniform float EmissiveStrength;
 
 #ifdef ENABLE_TEXTURES
 uniform sampler2D BaseColorTex;
 uniform int BaseColorTexType;
 
-#ifdef ENABLE_SPECULAR
+#ifdef ENABLE_PBR
 uniform sampler2D RoughnessTex;
 uniform int RoughnessTexType;
 
@@ -161,7 +153,6 @@ uniform int NormalTexType;
 uniform sampler2D EmissiveStrengthTex;
 uniform int EmissiveStrengthTexType;
 
-uniform color cutColor;
 
 #endif
 
@@ -171,20 +162,23 @@ out vec4 fragColor;
 #endif
 
 void main(void) {
+    int drawItemId = int(v_drawItemId + 0.5);
 
-    int flags = int(v_geomItemData.r);
+    int flags = int(v_geomItemData.r + 0.5);
     // Cutaways
     if(testFlag(flags, GEOMITEM_FLAG_CUTAWAY)) {
-        vec3 planeNormal = v_cutAwayData.xyz;
-        float planeDist = v_cutAwayData.w;
+        vec4 cutAwayData   = getCutaway(drawItemId);
+        vec3 planeNormal = cutAwayData.xyz;
+        float planeDist = cutAwayData.w;
         if(cutaway(v_worldPos, planeNormal, planeDist)){
             discard;
             return;
         }
         else if(!gl_FrontFacing){
+#ifdef ENABLE_ES3
             fragColor = cutColor;
-#ifndef ENABLE_ES3
-            gl_FragColor = fragColor;
+#else
+            gl_FragColor = cutColor;
 #endif
             return;
         }
@@ -197,7 +191,7 @@ void main(void) {
     material.BaseColor     = BaseColor.rgb;
     float emission         = EmissiveStrength;
 
-#ifdef ENABLE_SPECULAR
+#ifdef ENABLE_PBR
     material.roughness     = Roughness;
     material.metallic      = Metallic;
     material.reflectance   = Reflectance;
@@ -209,7 +203,7 @@ void main(void) {
     vec2 texCoord          = vec2(v_textureCoord.x, 1.0 - v_textureCoord.y);
     material.baseColor     = getColorParamValue(BaseColor, BaseColorTex, BaseColorTexType, texCoord).rgb;
 
-#ifdef ENABLE_SPECULAR
+#ifdef ENABLE_PBR
     material.roughness     = getLuminanceParamValue(Roughness, RoughnessTex, RoughnessTexType, texCoord);
     material.metallic      = getLuminanceParamValue(Metallic, MetallicTex, MetallicTexType, texCoord);
     material.reflectance   = getLuminanceParamValue(Reflectance, ReflectanceTex, ReflectanceTexType, texCoord);
@@ -221,7 +215,7 @@ void main(void) {
     //vec3 surfacePos = -v_viewPos;
 
 #ifdef ENABLE_TEXTURES
-#ifdef ENABLE_SPECULAR
+#ifdef ENABLE_PBR
     if(NormalTexType != 0){
         vec3 textureNormal_tangentspace = normalize(texture2D(NormalTex, texCoord).rgb * 2.0 - 1.0);
         viewNormal = normalize(mix(viewNormal, textureNormal_tangentspace, 0.3));
@@ -237,45 +231,12 @@ void main(void) {
         //material.baseColor = vec3(1.0, 0.0, 0.0);
     }
 
-    vec3 irradiance;
-    if(lightmapConnected){
-        irradiance = texture2D(lightmap, v_lightmapCoord).rgb;
-    }
-    else{
-#ifndef ENABLE_SPECULAR
-        irradiance = sampleEnvMap(normal, 1.0);
-#else
-        irradiance = vec3(dot(normal, viewVector));
-#endif
-        
-    }
-
-#ifdef ENABLE_DEBUGGING_LIGHTMAPS
-    if(debugLightmapTexelSize)
-    {
-        vec2 coord_texelSpace = (v_lightmapCoord * lightmapSize) - v_geomItemData.zw;
-        //vec2 coord_texelSpace = (v_textureCoord * lightmapSize);
-        float total = floor(coord_texelSpace.x) +
-                      floor(coord_texelSpace.y);
-                      
-        vec3 clustercolor = getDebugColor(v_clusterID);
-
-        material.metallic = 0.0;
-        material.reflectance = 0.0;
-        if(mod(total,2.0)==0.0){
-            material.baseColor = clustercolor;
-            irradiance = vec3(1.0);
-        }
-        else{
-            material.baseColor = material.baseColor * 1.5;
-        }
-    }
-#endif
-
-#ifndef ENABLE_SPECULAR
-    vec3 radiance = material.baseColor * irradiance;
-#else
+#ifdef ENABLE_PBR
+    vec3 irradiance = sampleEnvMap(normal, 1.0);
     vec3 radiance = pbrSurfaceRadiance(material, irradiance, normal, viewVector);
+#else
+    vec3 irradiance = vec3(dot(normal, viewVector));
+    vec3 radiance = material.baseColor * irradiance;
 #endif
 
 #ifndef ENABLE_ES3
@@ -331,5 +292,5 @@ void main(void) {
   }
 }
 
-sgFactory.registerClass('StandardSurfaceShader', StandardSurfaceShader)
+Registry.register('StandardSurfaceShader', StandardSurfaceShader)
 export { StandardSurfaceShader }

@@ -1,9 +1,13 @@
-import { JSON_stringify_fixedPrecision } from './Common.js'
+/* eslint-disable new-cap */
+/* eslint-disable camelcase */
+import { StringFunctions } from '../Utilities/StringFunctions'
 import { AttrValue } from './AttrValue.js'
-import { typeRegistry } from './TypeRegistry.js'
+import { Registry } from '../Registry'
 import { Vec3 } from './Vec3.js'
 
-/** Class representing a sphere.
+/**
+ * Class representing a sphere.
+ *
  * @extends AttrValue
  */
 class SphereType extends AttrValue {
@@ -24,6 +28,7 @@ class SphereType extends AttrValue {
 
   /**
    * Clones this sphere and returns a new sphere.
+   *
    * @return {Sphere} - Returns a new sphere.
    */
   clone() {
@@ -31,31 +36,21 @@ class SphereType extends AttrValue {
   }
 
   /**
-   * Checks if this spehere intersects a box.
-   * @param {any} box - The box value.
-   * @return {any} - The return value.
+   * Checks if this sphere intersects a box.
+   *
+   * @param {Box3} box - The box value.
+   * @return {boolean} - The return value.
    */
   intersectsBox(box) {
     return box.intersectsSphere(this)
-  }
-
-  // ////////////////////////////////////////
-  // Static Methods
-
-  /**
-   * Creates a new sphere.
-   * @param {...object} ...args - The ...args param.
-   * @return {Sphere} - Returns a new sphere.
-   */
-  static create(...args) {
-    return new Sphere(...args)
   }
 
   // ///////////////////////////
   // Persistence
 
   /**
-   * The toJSON method encodes this type as a json object for persistences.
+   * The toJSON method encodes this type as a json object for persistence.
+   *
    * @return {object} - The json object.
    */
   toJSON() {
@@ -66,14 +61,29 @@ class SphereType extends AttrValue {
   }
 
   /**
-   * The toString method.
-   * @return {any} - The return value.
+   * Calls `toJSON` method and stringifies it.
+   *
+   * @return {string} - The return value.
    */
   toString() {
-    return JSON_stringify_fixedPrecision(this.toJSON())
+    return StringFunctions.stringifyJSONWithFixedPrecision(this.toJSON())
+  }
+
+  // ////////////////////////////////////////
+  // Static Methods
+
+  /**
+   * Creates a new sphere.
+   *
+   * @param {...object} ...args - The ...args param.
+   * @return {Sphere} - Returns a new sphere.
+   * @private
+   */
+  static create(...args) {
+    return new Sphere(...args)
   }
 }
 
-typeRegistry.registerType('SphereType', SphereType)
+Registry.register('SphereType', SphereType)
 
 export { SphereType }

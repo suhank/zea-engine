@@ -1,0 +1,494 @@
+
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Code coverage report for src/SceneTree/Geometry/Shapes/Torus.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../../../prettify.css" />
+    <link rel="stylesheet" href="../../../../base.css" />
+    <link rel="shortcut icon" type="image/x-icon" href="../../../../favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+    
+<body>
+<div class='wrapper'>
+    <div class='pad1'>
+        <h1><a href="../../../../index.html">All files</a> / <a href="index.html">src/SceneTree/Geometry/Shapes</a> Torus.js</h1>
+        <div class='clearfix'>
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">12.33% </span>
+                <span class="quiet">Statements</span>
+                <span class='fraction'>9/73</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">80% </span>
+                <span class="quiet">Branches</span>
+                <span class='fraction'>8/10</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">33.33% </span>
+                <span class="quiet">Functions</span>
+                <span class='fraction'>1/3</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">13.64% </span>
+                <span class="quiet">Lines</span>
+                <span class='fraction'>9/66</span>
+            </div>
+        
+            
+        </div>
+        <p class="quiet">
+            Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
+        </p>
+    </div>
+    <div class='status-line low'></div>
+    <pre><table class="coverage">
+<tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
+<a name='L2'></a><a href='#L2'>2</a>
+<a name='L3'></a><a href='#L3'>3</a>
+<a name='L4'></a><a href='#L4'>4</a>
+<a name='L5'></a><a href='#L5'>5</a>
+<a name='L6'></a><a href='#L6'>6</a>
+<a name='L7'></a><a href='#L7'>7</a>
+<a name='L8'></a><a href='#L8'>8</a>
+<a name='L9'></a><a href='#L9'>9</a>
+<a name='L10'></a><a href='#L10'>10</a>
+<a name='L11'></a><a href='#L11'>11</a>
+<a name='L12'></a><a href='#L12'>12</a>
+<a name='L13'></a><a href='#L13'>13</a>
+<a name='L14'></a><a href='#L14'>14</a>
+<a name='L15'></a><a href='#L15'>15</a>
+<a name='L16'></a><a href='#L16'>16</a>
+<a name='L17'></a><a href='#L17'>17</a>
+<a name='L18'></a><a href='#L18'>18</a>
+<a name='L19'></a><a href='#L19'>19</a>
+<a name='L20'></a><a href='#L20'>20</a>
+<a name='L21'></a><a href='#L21'>21</a>
+<a name='L22'></a><a href='#L22'>22</a>
+<a name='L23'></a><a href='#L23'>23</a>
+<a name='L24'></a><a href='#L24'>24</a>
+<a name='L25'></a><a href='#L25'>25</a>
+<a name='L26'></a><a href='#L26'>26</a>
+<a name='L27'></a><a href='#L27'>27</a>
+<a name='L28'></a><a href='#L28'>28</a>
+<a name='L29'></a><a href='#L29'>29</a>
+<a name='L30'></a><a href='#L30'>30</a>
+<a name='L31'></a><a href='#L31'>31</a>
+<a name='L32'></a><a href='#L32'>32</a>
+<a name='L33'></a><a href='#L33'>33</a>
+<a name='L34'></a><a href='#L34'>34</a>
+<a name='L35'></a><a href='#L35'>35</a>
+<a name='L36'></a><a href='#L36'>36</a>
+<a name='L37'></a><a href='#L37'>37</a>
+<a name='L38'></a><a href='#L38'>38</a>
+<a name='L39'></a><a href='#L39'>39</a>
+<a name='L40'></a><a href='#L40'>40</a>
+<a name='L41'></a><a href='#L41'>41</a>
+<a name='L42'></a><a href='#L42'>42</a>
+<a name='L43'></a><a href='#L43'>43</a>
+<a name='L44'></a><a href='#L44'>44</a>
+<a name='L45'></a><a href='#L45'>45</a>
+<a name='L46'></a><a href='#L46'>46</a>
+<a name='L47'></a><a href='#L47'>47</a>
+<a name='L48'></a><a href='#L48'>48</a>
+<a name='L49'></a><a href='#L49'>49</a>
+<a name='L50'></a><a href='#L50'>50</a>
+<a name='L51'></a><a href='#L51'>51</a>
+<a name='L52'></a><a href='#L52'>52</a>
+<a name='L53'></a><a href='#L53'>53</a>
+<a name='L54'></a><a href='#L54'>54</a>
+<a name='L55'></a><a href='#L55'>55</a>
+<a name='L56'></a><a href='#L56'>56</a>
+<a name='L57'></a><a href='#L57'>57</a>
+<a name='L58'></a><a href='#L58'>58</a>
+<a name='L59'></a><a href='#L59'>59</a>
+<a name='L60'></a><a href='#L60'>60</a>
+<a name='L61'></a><a href='#L61'>61</a>
+<a name='L62'></a><a href='#L62'>62</a>
+<a name='L63'></a><a href='#L63'>63</a>
+<a name='L64'></a><a href='#L64'>64</a>
+<a name='L65'></a><a href='#L65'>65</a>
+<a name='L66'></a><a href='#L66'>66</a>
+<a name='L67'></a><a href='#L67'>67</a>
+<a name='L68'></a><a href='#L68'>68</a>
+<a name='L69'></a><a href='#L69'>69</a>
+<a name='L70'></a><a href='#L70'>70</a>
+<a name='L71'></a><a href='#L71'>71</a>
+<a name='L72'></a><a href='#L72'>72</a>
+<a name='L73'></a><a href='#L73'>73</a>
+<a name='L74'></a><a href='#L74'>74</a>
+<a name='L75'></a><a href='#L75'>75</a>
+<a name='L76'></a><a href='#L76'>76</a>
+<a name='L77'></a><a href='#L77'>77</a>
+<a name='L78'></a><a href='#L78'>78</a>
+<a name='L79'></a><a href='#L79'>79</a>
+<a name='L80'></a><a href='#L80'>80</a>
+<a name='L81'></a><a href='#L81'>81</a>
+<a name='L82'></a><a href='#L82'>82</a>
+<a name='L83'></a><a href='#L83'>83</a>
+<a name='L84'></a><a href='#L84'>84</a>
+<a name='L85'></a><a href='#L85'>85</a>
+<a name='L86'></a><a href='#L86'>86</a>
+<a name='L87'></a><a href='#L87'>87</a>
+<a name='L88'></a><a href='#L88'>88</a>
+<a name='L89'></a><a href='#L89'>89</a>
+<a name='L90'></a><a href='#L90'>90</a>
+<a name='L91'></a><a href='#L91'>91</a>
+<a name='L92'></a><a href='#L92'>92</a>
+<a name='L93'></a><a href='#L93'>93</a>
+<a name='L94'></a><a href='#L94'>94</a>
+<a name='L95'></a><a href='#L95'>95</a>
+<a name='L96'></a><a href='#L96'>96</a>
+<a name='L97'></a><a href='#L97'>97</a>
+<a name='L98'></a><a href='#L98'>98</a>
+<a name='L99'></a><a href='#L99'>99</a>
+<a name='L100'></a><a href='#L100'>100</a>
+<a name='L101'></a><a href='#L101'>101</a>
+<a name='L102'></a><a href='#L102'>102</a>
+<a name='L103'></a><a href='#L103'>103</a>
+<a name='L104'></a><a href='#L104'>104</a>
+<a name='L105'></a><a href='#L105'>105</a>
+<a name='L106'></a><a href='#L106'>106</a>
+<a name='L107'></a><a href='#L107'>107</a>
+<a name='L108'></a><a href='#L108'>108</a>
+<a name='L109'></a><a href='#L109'>109</a>
+<a name='L110'></a><a href='#L110'>110</a>
+<a name='L111'></a><a href='#L111'>111</a>
+<a name='L112'></a><a href='#L112'>112</a>
+<a name='L113'></a><a href='#L113'>113</a>
+<a name='L114'></a><a href='#L114'>114</a>
+<a name='L115'></a><a href='#L115'>115</a>
+<a name='L116'></a><a href='#L116'>116</a>
+<a name='L117'></a><a href='#L117'>117</a>
+<a name='L118'></a><a href='#L118'>118</a>
+<a name='L119'></a><a href='#L119'>119</a>
+<a name='L120'></a><a href='#L120'>120</a>
+<a name='L121'></a><a href='#L121'>121</a>
+<a name='L122'></a><a href='#L122'>122</a>
+<a name='L123'></a><a href='#L123'>123</a>
+<a name='L124'></a><a href='#L124'>124</a>
+<a name='L125'></a><a href='#L125'>125</a>
+<a name='L126'></a><a href='#L126'>126</a>
+<a name='L127'></a><a href='#L127'>127</a>
+<a name='L128'></a><a href='#L128'>128</a>
+<a name='L129'></a><a href='#L129'>129</a>
+<a name='L130'></a><a href='#L130'>130</a>
+<a name='L131'></a><a href='#L131'>131</a>
+<a name='L132'></a><a href='#L132'>132</a>
+<a name='L133'></a><a href='#L133'>133</a>
+<a name='L134'></a><a href='#L134'>134</a>
+<a name='L135'></a><a href='#L135'>135</a>
+<a name='L136'></a><a href='#L136'>136</a>
+<a name='L137'></a><a href='#L137'>137</a>
+<a name='L138'></a><a href='#L138'>138</a>
+<a name='L139'></a><a href='#L139'>139</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { Vec2 } from '../../../Math/Vec2'
+import { Vec3 } from '../../../Math/Vec3'
+import { ProceduralMesh } from './ProceduralMesh'
+import { Registry } from '../../../Registry'
+import { NumberParameter } from '../../Parameters/NumberParameter'
+&nbsp;
+/**
+ * A class for generating a torus geometry.
+ *
+ * ```
+ * const torus = new Torus(0.4, 1.3)
+ * ```
+ *
+ * @extends ProceduralMesh
+ */
+class Torus extends ProceduralMesh {
+  /**
+   * Creates an instance of Torus.
+   *
+   * @param {number} [innerRadius=0.5] - The inner radius of the torus.
+   * @param {number} [outerRadius=3] - The outer radius of the torus.
+   * @param {number} [detail=32] - The detail of the cone.
+   * @param {number} [loops=6] - The number of loops.
+   */
+  constructor(innerRadius = 0.5, outerRadius = 3, detail = 32) {
+    super()
+&nbsp;
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (isNaN(innerRadius) || isNaN(outerRadius) || isNaN(detail)) <span class="cstat-no" title="statement not covered" >throw new Error('Invalid geom args')</span>
+&nbsp;
+    this.__innerRadiusParam = this.addParameter(new NumberParameter('InnerRadius', innerRadius))
+    this.__outerRadiusParam = this.addParameter(new NumberParameter('OuterRadius', outerRadius))
+    this.__detailParam = this.addParameter(new NumberParameter('Detail', detail &gt;= 3 ? detail : <span class="branch-1 cbranch-no" title="branch not covered" >3,</span> [3, 200], 1))
+&nbsp;
+    this.addVertexAttribute('texCoords', Vec2)
+    this.addVertexAttribute('normals', Vec3)
+    
+    this.topologyParams.push('Detail')
+  }
+&nbsp;
+  /**
+   * The rebuild method.
+   * @private
+   */
+<span class="fstat-no" title="function not covered" >  re</span>build() {
+    const innerRadius = <span class="cstat-no" title="statement not covered" >this.__innerRadiusParam.getValue()</span>
+    const outerRadius = <span class="cstat-no" title="statement not covered" >this.__outerRadiusParam.getValue()</span>
+    const detail = <span class="cstat-no" title="statement not covered" >this.__detailParam.getValue()</span>
+    const nbSlices = <span class="cstat-no" title="statement not covered" >detail</span>
+    const nbLoops = <span class="cstat-no" title="statement not covered" >detail * 2</span>
+    const numVertices = <span class="cstat-no" title="statement not covered" >nbSlices * nbLoops</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    this.setNumVertices(numVertices)</span>
+<span class="cstat-no" title="statement not covered" >    this.setFaceCounts([0, nbSlices * nbLoops])</span>
+&nbsp;
+    // ////////////////////////////
+    // Set Vertex Positions
+&nbsp;
+    const positions = <span class="cstat-no" title="statement not covered" >this.getVertexAttribute('positions')</span>
+    const normals = <span class="cstat-no" title="statement not covered" >this.getVertexAttribute('normals')</span>
+    let vertex = <span class="cstat-no" title="statement not covered" >0</span>
+<span class="cstat-no" title="statement not covered" >    for (let i = <span class="cstat-no" title="statement not covered" >0;</span> i &lt; nbLoops; i++) {</span>
+      const theta = <span class="cstat-no" title="statement not covered" >-((i / nbLoops) * 2.0 * Math.PI)</span>
+      const ctheta = <span class="cstat-no" title="statement not covered" >Math.cos(theta)</span>
+      const stheta = <span class="cstat-no" title="statement not covered" >Math.sin(theta)</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >      for (let j = <span class="cstat-no" title="statement not covered" >0;</span> j &lt; nbSlices; j++) {</span>
+        const phi = <span class="cstat-no" title="statement not covered" >(j / nbSlices) * 2.0 * Math.PI</span>
+&nbsp;
+        const sphi = <span class="cstat-no" title="statement not covered" >Math.sin(phi)</span>
+        const cphi = <span class="cstat-no" title="statement not covered" >Math.cos(phi)</span>
+        const d = <span class="cstat-no" title="statement not covered" >outerRadius + cphi * innerRadius</span>
+&nbsp;
+        // Set positions and normals at the same time.
+<span class="cstat-no" title="statement not covered" >        positions.getValueRef(vertex).set(ctheta * d, stheta * d, innerRadius * sphi)</span>
+<span class="cstat-no" title="statement not covered" >        normals.getValueRef(vertex).set(ctheta * cphi, stheta * cphi, sphi)</span>
+<span class="cstat-no" title="statement not covered" >        vertex++</span>
+      }
+    }
+&nbsp;
+    // ////////////////////////////
+    // Build the topology and texCoords
+    const texCoords = <span class="cstat-no" title="statement not covered" >this.getVertexAttribute('texCoords')</span>
+    let faceIndex = <span class="cstat-no" title="statement not covered" >0</span>
+<span class="cstat-no" title="statement not covered" >    for (let i = <span class="cstat-no" title="statement not covered" >0;</span> i &lt; nbLoops; i++) {</span>
+<span class="cstat-no" title="statement not covered" >      for (let j = <span class="cstat-no" title="statement not covered" >0;</span> j &lt; nbSlices; j++) {</span>
+        const ip = <span class="cstat-no" title="statement not covered" >(i + 1) % nbLoops</span>
+        const jp = <span class="cstat-no" title="statement not covered" >(j + 1) % nbSlices</span>
+        const v0 = <span class="cstat-no" title="statement not covered" >nbSlices * i + j</span>
+        const v1 = <span class="cstat-no" title="statement not covered" >nbSlices * i + jp</span>
+        const v2 = <span class="cstat-no" title="statement not covered" >nbSlices * ip + jp</span>
+        const v3 = <span class="cstat-no" title="statement not covered" >nbSlices * ip + j</span>
+<span class="cstat-no" title="statement not covered" >        this.setFaceVertexIndices(faceIndex, [v0, v1, v2, v3])</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        texCoords.setFaceVertexValue(faceIndex, 0, new Vec2(i / nbLoops, j / nbLoops))</span>
+<span class="cstat-no" title="statement not covered" >        texCoords.setFaceVertexValue(faceIndex, 1, new Vec2(i / nbLoops, (j + 1) / nbLoops))</span>
+<span class="cstat-no" title="statement not covered" >        texCoords.setFaceVertexValue(faceIndex, 2, new Vec2((i + 1) / nbLoops, (j + 1) / nbLoops))</span>
+<span class="cstat-no" title="statement not covered" >        texCoords.setFaceVertexValue(faceIndex, 3, new Vec2((i + 1) / nbLoops, j / nbLoops))</span>
+<span class="cstat-no" title="statement not covered" >        faceIndex++</span>
+      }
+    }
+  }
+&nbsp;
+  /**
+   * The resize method.
+   * @private
+   */
+<span class="fstat-no" title="function not covered" >  re</span>size() {
+    const innerRadius = <span class="cstat-no" title="statement not covered" >this.__innerRadiusParam.getValue()</span>
+    const outerRadius = <span class="cstat-no" title="statement not covered" >this.__outerRadiusParam.getValue()</span>
+    const detail = <span class="cstat-no" title="statement not covered" >this.__detailParam.getValue()</span>
+    const nbSlices = <span class="cstat-no" title="statement not covered" >detail</span>
+    const nbLoops = <span class="cstat-no" title="statement not covered" >detail * 2</span>
+&nbsp;
+    const positions = <span class="cstat-no" title="statement not covered" >this.getVertexAttribute('positions')</span>
+    let vertex = <span class="cstat-no" title="statement not covered" >0</span>
+<span class="cstat-no" title="statement not covered" >    for (let i = <span class="cstat-no" title="statement not covered" >0;</span> i &lt; nbLoops; i++) {</span>
+      const theta = <span class="cstat-no" title="statement not covered" >(i / nbLoops) * 2.0 * Math.PI</span>
+      const ctheta = <span class="cstat-no" title="statement not covered" >Math.cos(theta)</span>
+      const stheta = <span class="cstat-no" title="statement not covered" >Math.sin(theta)</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >      for (let j = <span class="cstat-no" title="statement not covered" >0;</span> j &lt; nbSlices; j++) {</span>
+        const phi = <span class="cstat-no" title="statement not covered" >(j / nbSlices) * 2.0 * Math.PI</span>
+&nbsp;
+        const sphi = <span class="cstat-no" title="statement not covered" >Math.sin(phi)</span>
+        const cphi = <span class="cstat-no" title="statement not covered" >Math.cos(phi)</span>
+        const d = <span class="cstat-no" title="statement not covered" >outerRadius + cphi * innerRadius</span>
+&nbsp;
+        // Set positions and normals at the same time.
+<span class="cstat-no" title="statement not covered" >        positions.getValueRef(vertex).set(ctheta * d, stheta * d, innerRadius * sphi)</span>
+<span class="cstat-no" title="statement not covered" >        vertex++</span>
+      }
+    }
+  }
+}
+&nbsp;
+Registry.register('Torus', Torus)
+&nbsp;
+export { Torus }
+&nbsp;</pre></td></tr></table></pre>
+
+                <div class='push'></div><!-- for sticky footer -->
+            </div><!-- /wrapper -->
+            <div class='footer quiet pad2 space-top1 center small'>
+                Code coverage generated by
+                <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
+                at Thu Oct 15 2020 15:04:47 GMT-0500 (Colombia Standard Time)
+            </div>
+        </div>
+        <script src="../../../../prettify.js"></script>
+        <script>
+            window.onload = function () {
+                prettyPrint();
+            };
+        </script>
+        <script src="../../../../sorter.js"></script>
+        <script src="../../../../block-navigation.js"></script>
+    </body>
+</html>
+    

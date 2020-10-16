@@ -1,129 +1,167 @@
-import { Signal } from '../Utilities'
-import { RefCounted } from './RefCounted.js'
-import { sgFactory } from './SGFactory.js'
+/* eslint-disable guard-for-in */
+/* eslint-disable valid-jsdoc */
+import { EventEmitter } from '../Utilities/EventEmitter'
+import { Registry } from '../Registry'
 
-// Explicit impport of files to avoid importing all the parameter types.
+// Explicit import of files to avoid importing all the parameter types.
 // Note: Soon these imports should be removed, once all code avoids calling
-// 'addPArameter' without the parameter instance.
-import { ParamFlags, ValueSetMode } from './Parameters/Parameter.js'
+// 'addParameter' without the parameter instance.
 
-/** Class representing a parameter owner in the scene tree.
- * @extends RefCounted
+let counter = 0
+
+/**
+ * Class that allows other classes to be parameterized by `Parameter` type of objects.
+ * Not only hosting parameters, but their events.
+ *
+ * @extends {EventEmitter}
  */
-class ParameterOwner extends RefCounted {
+class ParameterOwner extends EventEmitter {
   /**
-   * Create a parameter owner.
+   * Creates an instance of ParameterOwner by initializing parameter hosting mappings and events.
+   * <br>
+   * Every Object has a unique identifier which is based on a counter that is incremented.
    */
   constructor() {
     super()
+    this.__id = ++counter
 
     this.__params = []
     this.__paramMapping = {}
-    this.__paramSignalIds = {}
-
-    // Paramters are not intended to be dynamic.
-    // Instead they are part of the mixin architecture.
-    // Note: Materials add/remove paramters when the
-    // shader name is changed.
-    this.parameterAdded = new Signal()
-    this.parameterRemoved = new Signal()
-    this.parameterValueChanged = new Signal()
+    this.deprecatedParamMapping = {}
+    this.__paramEventHandlers = {}
   }
 
-  // ////////////////////////////////////////
-  // Params
+  /**
+   * Returns the unique id of the object.
+   * @private
+   * @return {number} - The Id of the ParameterOwner object.
+   */
+  getId() {
+    return this.__id
+  }
+
+  // --- Params ---
 
   /**
-   * The numParameters method.
-   * @return {number} - The return value.
+   * @deprecated
+   * Returns the number of parameters current object has.
+   *
+   * @return {number} - Amount of parameters in current object.
    */
   numParameters() {
+    console.warn('Deprecated. Use #getNumParameters instead.')
+    return this.getNumParameters()
+  }
+
+  /**
+   * Returns the number of parameters current object has.
+   *
+   * @return {number} - Amount of parameters in current object.
+   */
+  getNumParameters() {
     return this.__params.length
   }
 
   /**
-   * The getParameters method.
-   * @return {any} - The return value.
+   * Returns all the parameters of the object.
+   *
+   * @return {array} - Parameter List
    */
   getParameters() {
     return this.__params
   }
 
   /**
-   * The getParameterIndex method.
-   * @param {string} paramName - The parameter name.
-   * @return {any} - The return value.
+   * Returns the index of a parameter in parameter list.
+   *
+   * @param {string} paramName - Name of the parameter.
+   * @return {number} - Position in the array
    */
   getParameterIndex(paramName) {
     return this.__paramMapping[paramName]
   }
 
   /**
-   * The getParameterByIndex method.
-   * @param {number} index - The index value.
-   * @return {any} - The return value.
+   * Returns `Parameter` object in a given index
+   *
+   * @param {number} index - Position of the parameter in the array
+   * @return {Parameter} - Parameter object value
    */
   getParameterByIndex(index) {
     return this.__params[index]
   }
 
   /**
-   * The hasParameter method.
+   * Validates if the specified parameter exists in the object.
+   *
    * @param {string} paramName - The parameter name.
-   * @return {any} - The return value.
+   * @return {boolean} - The return value.
    */
   hasParameter(paramName) {
     return paramName in this.__paramMapping
   }
 
   /**
-   * The getParameter method.
+   * Add a mapping from one name to a new parameter.
+   * This is used to handle migrating parameters to new names.
+   *
+   * @param {string} key - The parameter name.
    * @param {string} paramName - The parameter name.
-   * @return {any} - The return value.
+   * @return {boolean} - The return value.
+   */
+  addParameterDeprecationMapping(key, paramName) {
+    this.deprecatedParamMapping[key] = paramName
+  }
+
+  /**
+   * Returns `Parameter` object using the given name
+   *
+   * @param {string} paramName - The parameter name.
+   * @return {Parameter} - Parameter object value
    */
   getParameter(paramName) {
-    const index = this.__paramMapping[paramName]
-    if (index == -1) return null
+    let index = this.__paramMapping[paramName]
+    if (index == undefined) {
+      const newParamName = this.deprecatedParamMapping[paramName]
+      if (!newParamName) return null
+      else {
+        console.warn(`Parameter name ${paramName} is now deprecated. Please use ${newParamName} instead.`)
+        index = this.__paramMapping[newParamName]
+      }
+    }
     return this.__params[index]
   }
 
   /**
-   * This method can be overrridden in derived classes
+   * This method can be overridden in derived classes
    * to perform general updates (see GLPass or BaseItem).
-   * @param {any} param - The param param.
-   * @param {any} mode - The mode param.
+   * @param {object} event - The event object emitted by the parameter.
    * @private
    */
-  __parameterValueChanged(param, mode) {
-    this.parameterValueChanged.emit(param, mode)
+  __parameterValueChanged(event) {
+    this.emit('parameterValueChanged', event)
   }
 
   /**
-   * Add a parameter.
-   * @param {any} param - The paramater to add.
-   * @return {any} - The return value.
+   * Adds `Parameter` object to the owner's parameter list.
+   *
+   * @emits `parameterAdded` with the name of the param.
+   * @param {Parameter} param - The parameter to add.
+   * @return {Parameter} - With `owner` and `valueChanged` event set.
    */
   addParameter(param) {
-    const name = param.getName()
-    if (this.__paramMapping[name] != undefined) {
-      console.warn('Replacing Parameter:' + name)
-      this.removeParameter(name)
-    }
-    this.__paramSignalIds[name] = param.valueChanged.connect(mode =>
-      this.__parameterValueChanged(param, mode)
-    )
-    param.addRef(this)
-    this.__params.push(param)
-    this.__paramMapping[name] = this.__params.length - 1
-    this.parameterAdded.emit(name)
-    return param
+    return this.insertParameter(param, this.__params.length)
   }
 
   /**
-   * Insert a parameter.
-   * @param {any} param - The parameter to insert.
+   * Adds `Parameter` object to the owner's parameter list using the index.
+   * It replaces the event in the specified index.
+   *
+   *
+   * @emits `parameterAdded` with the name of the param.
+   * @param {Parameter} param - The parameter to insert.
    * @param {number} index - The index value.
-   * @return {any} - The return value.
+   * @return {Parameter} - With `owner` and `valueChanged` event set.
    */
   insertParameter(param, index) {
     const name = param.getName()
@@ -131,59 +169,62 @@ class ParameterOwner extends RefCounted {
       console.warn('Replacing Parameter:' + name)
       this.removeParameter(name)
     }
-    this.__paramSignalIds[name] = param.valueChanged.connect(mode =>
-      this.__parameterValueChanged(param, mode)
-    )
-    param.addRef(this)
+    param.setOwner(this)
+    const paramChangedHandler = (event) => {
+      // Note: spread operators cause errors on iOS 11.
+      const newEvent = { param }
+      for (let key in event) newEvent[key] = event[key]
+      this.__parameterValueChanged(newEvent)
+    }
+
+    param.on('valueChanged', paramChangedHandler)
+    this.__paramEventHandlers[name] = paramChangedHandler
     this.__params.splice(index, 0, param)
 
-    const paramMapping = {}
-    for (let i = 0; i < this.__params.length; i++) {
-      paramMapping[this.__params[i].getName()] = i
+    for (let i = index; i < this.__params.length; i++) {
+      this.__paramMapping[this.__params[i].getName()] = i
     }
-    this.__paramMapping = paramMapping
-    this.parameterAdded.emit(name)
+    this.emit('parameterAdded', { name })
     return param
   }
 
   /**
-   * Remove a parameter.
-   * @param {string} paramName - The parameter name.
+   * Removes `Parameter` from owner, by using parameter's name.
+   * @emits `parameterRemoved` with the name of the param.
+   * @param {string} name - The parameter name.
    */
-  removeParameter(paramName) {
-    if (this.__paramMapping[paramName] == undefined) {
-      console.throw('Unable to Remove Parameter:' + paramName)
+  removeParameter(name) {
+    if (this.__paramMapping[name] == undefined) {
+      throw new Error('Unable to remove Parameter:' + name)
     }
-    const index = this.__paramMapping[paramName]
-    const param = this.__params[this.__paramMapping[paramName]]
-    param.removeRef(this)
-    param.valueChanged.disconnectId(this.__paramSignalIds[paramName])
+    const index = this.__paramMapping[name]
+    const param = this.__params[this.__paramMapping[name]]
+
+    param.off('valueChanged', this.__paramEventHandlers[name])
     this.__params.splice(index, 1)
-    const paramMapping = {}
-    for (let i = 0; i < this.__params.length; i++) {
-      paramMapping[this.__params[i].getName()] = i
+
+    delete this.__paramMapping[name]
+    for (let i = index; i < this.__params.length; i++) {
+      this.__paramMapping[this.__params[i].getName()] = i
     }
-    this.__paramMapping = paramMapping
-    this.parameterRemoved.emit(paramName)
+
+    this.emit('parameterRemoved', { name })
   }
 
   /**
-   * Replace a parameter.
-   * @param {any} param - The parameter to replace.
-   * @return {any} - The return value.
+   * Replaces old `Parameter` by passing a new one with the same name.
+   *
+   * @param {Parameter} param - The parameter to replace.
+   * @return {Parameter} - `Parameter` with `valueChanged` event set.
    */
   replaceParameter(param) {
     const name = param.getName()
+    if (this.__paramMapping[name] == undefined) {
+      throw new Error('Unable to replace Parameter:' + paramName)
+    }
     const index = this.__paramMapping[name]
-    const prevparam = this.__params[this.__paramMapping[name]]
-    prevparam.removeRef(this)
-    prevparam.valueChanged.disconnectId(this.__paramSignalIds[name])
-
-    param.addRef(this)
-    this.__paramSignalIds[name] = param.valueChanged.connect(mode =>
-      this.__parameterValueChanged(param, mode)
-    )
-    this.__params[index] = param
+    this.removeParameter(name)
+    this.insertParameter(param, index)
     return param
   }
 
@@ -191,39 +232,33 @@ class ParameterOwner extends RefCounted {
   // Persistence
 
   /**
-   * The toJSON method encodes this type as a json object for persistences.
+   * The toJSON method encodes this type as a json object for persistence.
+   *
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    * @return {object} - Returns the json object.
    */
-  toJSON(context, flags) {
+  toJSON(context) {
+    const json = {}
     const paramsJSON = {}
     let savedParams = 0
     for (const param of this.__params) {
-      if (!param.testFlag(ParamFlags.USER_EDITED)) continue
-      if (param.numRefs() > 1 && param.getRefIndex(this) != 0) {
-        paramsJSON[param.getName()] = {
-          paramPath: context.makeRelative(param.getPath()),
-        }
+      const paramJSON = param.toJSON(context)
+      if (paramJSON) {
+        paramsJSON[param.getName()] = paramJSON
         savedParams++
-      } else {
-        const paramJSON = param.toJSON(context, flags)
-        if (paramJSON) {
-          paramsJSON[param.getName()] = paramJSON
-          savedParams++
-        }
       }
     }
-    if (savedParams > 0) return { params: paramsJSON }
+    if (savedParams > 0) json.params = paramsJSON
+    return json
   }
 
   /**
    * The fromJSON method decodes a json object for this type.
+   *
    * @param {object} j - The json object this item must decode.
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    */
-  fromJSON(j, context, flags) {
+  fromJSON(j, context) {
     if (j.params) {
       for (const key in j.params) {
         const pj = j.params[key]
@@ -233,13 +268,11 @@ class ParameterOwner extends RefCounted {
           if (pj.paramPath) {
             context.resolvePath(
               pj.paramPath,
-              param => {
+              (param) => {
                 this.replaceParameter(param)
               },
-              reason => {
-                console.warn(
-                  'Unable to resolve shared parameter:' + pj.paramPath
-                )
+              (reason) => {
+                console.warn('Unable to resolve shared parameter:' + pj.paramPath)
               }
             )
           } else {
@@ -251,25 +284,28 @@ class ParameterOwner extends RefCounted {
   }
 
   /**
-   * The readBinary method.
-   * @param {object} reader - The reader value.
+   * Uses passed in BinReader object(containing an Int32 array with all the parameters) to reconstruct all parameters state.
+   * <br>
+   * In each iteration of the array, propType and propName are extracted and
+   * used to build the right `Parameter` class. Then all of them are added to the object.
+   *
+   * @emits `parameterAdded` with the name of the param.
+   * @param {BinReader} reader - The reader value.
    * @param {object} context - The context value.
    */
   readBinary(reader, context) {
     // TODO: make this work
 
-    if (context.version >= 3) {
+    if (context.versions['zea-engine'].compare([0, 0, 3]) >= 0) {
       const numProps = reader.loadUInt32()
       for (let i = 0; i < numProps; i++) {
         const propType = reader.loadStr()
         const propName = reader.loadStr()
         let param = this.getParameter(propName)
         if (!param) {
-          param = sgFactory.constructClass(propType, propName)
+          param = Registry.constructClass(propType, propName)
           if (!param) {
-            console.error(
-              'Unable to construct prop:' + propName + ' of type:' + propType
-            )
+            console.error('Unable to construct prop:' + propName + ' of type:' + propType)
             continue
           }
           this.addParameter(param)
@@ -280,8 +316,9 @@ class ParameterOwner extends RefCounted {
   }
 
   /**
-   * The toString method.
-   * @return {any} - The return value.
+   * Converts object's JSON value and converts it to a string.
+   *
+   * @return {string} - String of object's parameter list state.
    */
   toString() {
     return JSON.stringify(this.toJSON(), null, 2)
@@ -291,38 +328,28 @@ class ParameterOwner extends RefCounted {
   // Clone and Destroy
 
   /**
-   * The copyFrom method.
+   * Copies Parameters from another `ParameterOwner` to current object.
+   *
    * @param {ParameterOwner} src - The ParameterOwner copy from.
-   * @param {number} flags - The flags value.
+   * @param {object} context - The context value.
    */
-  copyFrom(src, flags) {
+  copyFrom(src, context) {
     // Note: Loop over the parameters in reverse order,
-    // this is because often, parameter depdenencies
+    // this is because often, parameter dependencies
     // are bottom to top (bottom params dependent on higher params).
     // This means that as a parameter is set with a new value
     // it will dirty the params below it.
-    let i = src.numParameters()
+    let i = src.getNumParameters()
     while (i--) {
       const srcParam = src.getParameterByIndex(i)
       const param = this.getParameter(srcParam.getName())
       if (param) {
         // Note: we are not cloning the values.
-        param.setValue(srcParam.getValue(), ValueSetMode.OPERATOR_SETVALUE)
+        param.loadValue(srcParam.getValue())
       } else {
-        this.addParameter(srcParam.clone())
+        this.addParameter(srcParam.clone(context))
       }
     }
-  }
-
-  /**
-   * The destroy is called by the system to cause explicit resources cleanup.
-   * Users should never need to call this method directly.
-   */
-  destroy() {
-    for (const param of this.__params) {
-      param.destroy()
-    }
-    super.destroy()
   }
 }
 

@@ -1,17 +1,16 @@
-import { Vec2, Vec4, Color } from '../Math'
+import { Vec2, Vec4, Color } from '../Math/index'
 
-import { Async, GrowingPacker } from '../Utilities'
+import { Async, GrowingPacker } from '../Utilities/index'
 
-import { BaseImage } from '../SceneTree'
+import { BaseImage } from '../SceneTree/index'
 import { shaderLibrary } from './ShaderLibrary'
 import { GLShader } from './GLShader.js'
 import { GLTexture2D } from './GLTexture2D.js'
 import { GLRenderTarget } from './GLRenderTarget.js'
 import { generateShaderGeomBinding } from './GeomShaderBinding.js'
+import { MathFunctions } from '../Utilities/MathFunctions'
 
-/** Class representing an atlas layout shader.
- * @extends GLShader
- */
+// eslint-disable-next-line require-jsdoc
 class AtlasLayoutShader extends GLShader {
   /**
    * Create an atlas layout shader.
@@ -125,9 +124,7 @@ void main(void) {
 
 import './Shaders/GLSL/ImageAtlas.js'
 
-/** Class representing an image atlas.
- * @extends GLRenderTarget
- */
+// eslint-disable-next-line require-jsdoc
 class GLImageAtlas extends GLRenderTarget {
   /**
    * Create an image atlas..
@@ -146,7 +143,11 @@ class GLImageAtlas extends GLRenderTarget {
     this.__subImages = []
     this.__layoutNeedsRegeneration = false
     this.__async = new Async()
-    this.loaded = this.__async.ready
+    this.loaded = false
+    this.__async.on('ready', () => {
+      this.loaded = true
+      this.emit('loaded', {})
+    })
   }
 
   /**
@@ -175,20 +176,22 @@ class GLImageAtlas extends GLRenderTarget {
       const gltexture = new GLTexture2D(this.__gl, subImage)
       if (!subImage.isLoaded()) {
         this.__async.incAsyncCount()
-        subImage.loaded.connect(() => {
+        subImage.on('loaded', () => {
           this.__async.decAsyncCount()
         })
       }
       subImage.setMetadata('ImageAtlas_gltex', gltexture)
       gltexture.addRef(this)
-      subImage.updated.connect(() => {
+
+      const updated = () => {
         // TODO: Check to see if the new dimensions
-        // do not match the previous. If not, then we 
+        // do not match the previous. If not, then we
         // need to relayout. wE could also avlid a complete
         // relaout by reremoving and re-adding this image.
         this.__layoutNeedsRegeneration = true
         this.renderAtlas()
-      })
+      }
+      subImage.on('updated', updated)
       this.__subImages.push(gltexture)
     } else {
       subImage.addRef(this) // subImage is a GLTexture2D
@@ -287,10 +290,7 @@ class GLImageAtlas extends GLRenderTarget {
     this.configure({
       width,
       height,
-      format:
-        this.__typeParam == 'FLOAT' && this.__formatParam == 'RGB'
-          ? 'RGBA'
-          : this.__formatParam,
+      format: this.__typeParam == 'FLOAT' && this.__formatParam == 'RGB' ? 'RGBA' : this.__formatParam,
       type: this.__typeParam,
       filter: 'LINEAR',
     })
@@ -316,11 +316,10 @@ class GLImageAtlas extends GLRenderTarget {
     let size = Math.round(Math.sqrt(this.__layout.length * pixelsPerItem) + 0.5)
     // Only support power 2 textures. Else we get strange corruption on some GPUs
     // in some scenes.
-    size = Math.nextPow2(size)
+    size = MathFunctions.nextPow2(size)
     // Size should be a multiple of pixelsPerItem, so each geom item is always contiguous
     // in memory. (makes updating a lot easier. See __updateItemInstanceData below)
-    if (size % pixelsPerItem != 0)
-      size += pixelsPerItem - (size % pixelsPerItem)
+    if (size % pixelsPerItem != 0) size += pixelsPerItem - (size % pixelsPerItem)
 
     if (!gl.floatTexturesSupported) {
       this.__layoutVec4s = []
@@ -333,12 +332,10 @@ class GLImageAtlas extends GLRenderTarget {
         ]
       })
     } else {
-      const dataArray = new Float32Array(
-        size * size * 4
-      ) /* each pixel has 4 floats*/
+      const dataArray = new Float32Array(size * size * 4) /* each pixel has 4 floats*/
       for (let i = 0; i < this.__layout.length; i++) {
         const layoutItem = this.__layout[i]
-        const vec4 = Vec4.createFromFloat32Buffer(dataArray.buffer, i * 4)
+        const vec4 = Vec4.createFromBuffer(dataArray.buffer, i * 4 * 4)
         vec4.set(
           layoutItem.pos.x / width,
           layoutItem.pos.y / height,
@@ -401,18 +398,15 @@ class GLImageAtlas extends GLRenderTarget {
 
     const unifs = renderstate.unifs
     for (let j = off; j < this.__subImages.length; j++) {
-      const image = this.__subImages[j]
+      const glimage = this.__subImages[j]
 
       const layoutItem = this.__layout[j]
-      image.bindToUniform(renderstate, unifs.srctexture)
+      glimage.bindToUniform(renderstate, unifs.srctexture)
       gl.uniform2fv(unifs.pos.location, layoutItem.pos.multiply(scl).asArray())
-      gl.uniform2fv(
-        unifs.size.location,
-        layoutItem.size.multiply(scl).asArray()
-      )
-      gl.uniform2f(unifs.srctextureDim.location, image.width, image.height)
-      gl.uniform1i(unifs.alphaFromLuminance.location, image.alphaFromLuminance)
-      gl.uniform1i(unifs.invert.location, image.invert)
+      gl.uniform2fv(unifs.size.location, layoutItem.size.multiply(scl).asArray())
+      gl.uniform2f(unifs.srctextureDim.location, glimage.width, glimage.height)
+      gl.uniform1i(unifs.alphaFromLuminance.location, glimage.alphaFromLuminance)
+      gl.uniform1i(unifs.invert.location, glimage.invert)
       gl.drawQuad()
 
       // After rendering the texture, we can reuse the texture unit.
@@ -425,7 +419,7 @@ class GLImageAtlas extends GLRenderTarget {
 
     this.unbind(renderstate)
     // this.__fbo.unbind()
-    this.updated.emit()
+    this.emit('updated', {})
   }
 
   /**
@@ -443,25 +437,21 @@ class GLImageAtlas extends GLRenderTarget {
    * @return {any} - The return value.
    */
   bindToUniform(renderstate, unif) {
-    if (!this.__atlasLayoutTexture) return false
-
     super.bindToUniform(renderstate, unif)
 
     const unifs = renderstate.unifs
-    const atlasLayoutUnif = unifs[unif.name + '_layout']
-    if (atlasLayoutUnif)
-      this.__atlasLayoutTexture.bindToUniform(renderstate, atlasLayoutUnif)
 
-    const atlasDescUnif = unifs[unif.name + '_desc']
-    if (atlasDescUnif)
-      this.__gl.uniform4f(
-        atlasDescUnif.location,
-        this.width,
-        this.height,
-        this.__atlasLayoutTexture.width,
-        0.0
-      )
+    if (this.__atlasLayoutTexture) {
+      const atlasLayoutUnif = unifs[unif.name + '_layout']
+      if (atlasLayoutUnif) this.__atlasLayoutTexture.bindToUniform(renderstate, atlasLayoutUnif)
 
+      const atlasDescUnif = unifs[unif.name + '_desc']
+      if (atlasDescUnif)
+        this.__gl.uniform4f(atlasDescUnif.location, this.width, this.height, this.__atlasLayoutTexture.width, 0.0)
+    } else {
+      const atlasDescUnif = unifs[unif.name + '_desc']
+      if (atlasDescUnif) this.__gl.uniform4f(atlasDescUnif.location, this.width, this.height, 0.0, 0.0)
+    }
     return true
   }
 
@@ -469,8 +459,8 @@ class GLImageAtlas extends GLRenderTarget {
    * The cleanup method.
    */
   cleanup() {
-    for (const image of this.__subImages) {
-      image.removeRef(this)
+    for (const glimage of this.__subImages) {
+      glimage.removeRef(this)
     }
     this.__subImages = []
     this.destroy()
@@ -487,4 +477,3 @@ class GLImageAtlas extends GLRenderTarget {
 }
 
 export { GLImageAtlas }
-

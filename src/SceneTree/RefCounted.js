@@ -1,4 +1,4 @@
-import { Signal } from '../Utilities'
+import { EventEmitter } from '../Utilities/index'
 
 let counter = 0
 
@@ -7,18 +7,19 @@ let counter = 0
  *  of resources. This is necessary when JavaScript
  *  objects own references to GPU resources that need to
  *  be cleaned up when the JavaScript object is destroyed.
+ * @private
  */
-class RefCounted {
+class RefCounted extends EventEmitter {
   /**
    * Create a ref counted object.
    */
   constructor() {
+    super()
     if (this.constructor.name == 'RefCounted') {
       throw new Error('RefCounted should not be instantiated directly.')
     }
     this.__id = ++counter
     this.__refs = []
-    this.destructing = new Signal()
     this.__destroyed = false
   }
 
@@ -45,8 +46,7 @@ class RefCounted {
    * @return {boolean} - The return value.
    */
   addRef(referer) {
-    if (!referer)
-      throw new Error('Error in RefCounted.addRef: Must provide a referer')
+    if (!referer) throw new Error('Error in RefCounted.addRef: Must provide a referer')
 
     // Note: an object can be reffeed multiple times.
     // e.g. we can create a temporary ref while we re-attach a tree item to a new parent.
@@ -59,14 +59,9 @@ class RefCounted {
    * @param {any} referer - The referer value.
    */
   removeRef(referer) {
-    if (!referer)
-      throw new Error('Error in RefCounted.removeRef: Must provide a referer')
-    // console.log(this.constructor.name + " removeRef:" + referer.constructor.name);
+    if (!referer) throw new Error('Error in RefCounted.removeRef: Must provide a referer')
     const index = this.__refs.indexOf(referer)
-    if (index == -1)
-      throw new Error(
-        'Error in RefCounted.removeRef: referer not found in refs list.'
-      )
+    if (index == -1) throw new Error('Error in RefCounted.removeRef: referer not found in refs list.')
 
     this.__refs.splice(index, 1)
     if (this.__refs.length == 0) {
@@ -110,7 +105,7 @@ class RefCounted {
   destroy() {
     this.__destroyed = true
     // console.log(this.constructor.name + " destructing");
-    this.destructing.emit(this)
+    this.emit('destructing', {})
   }
 }
 export { RefCounted }

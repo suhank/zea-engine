@@ -1,22 +1,30 @@
-import { Color } from '../../Math'
-import { sgFactory } from '../SGFactory.js'
+import { Color } from '../../Math/index'
+import { Registry } from '../../Registry'
 import { BaseImage } from '../BaseImage.js'
 import { resourceLoader } from '../ResourceLoader.js'
+import { FilePathParameter } from '../Parameters/FilePathParameter'
 
-import { FilePathParameter } from '../Parameters'
-
-/** Class representing a VLH image.
+/**
+ * Class representing a VLH image.
+ *
+ * **Parameters**
+ * * **FilePath(`FilePathParameter`):** Used to specify the path to the file.
+ *
+ * **Events**
+ * * **loaded:** Triggered when image data is loaded.
+ * * **updated:** Triggered when image data is updated.
+ *
  * @extends BaseImage
  */
 class VLHImage extends BaseImage {
   /**
    * Create a VLH image.
    * @param {string} name - The name value.
-   * @param {any} params - The params value.
+   * @param {object} params - The params value.
    */
   constructor(name, params = {}) {
     let filepath
-    if (name != undefined && name.lastIndexOf('.') != -1) {
+    if (name != undefined && name.includes('.')) {
       filepath = name
       name = name.substring(name.lastIndexOf('/') + 1, name.lastIndexOf('.'))
     }
@@ -30,10 +38,10 @@ class VLHImage extends BaseImage {
     this.type = 'FLOAT'
 
     const fileParam = this.addParameter(new FilePathParameter('FilePath'))
-    fileParam.valueChanged.connect(() => {
-      this.loaded.untoggle()
+    fileParam.on('valueChanged', () => {
+      this.loaded = false
 
-      if (this.getName() == sgFactory.getClassName(this)) {
+      if (this.getName() == '') {
         // Generate a name from the file path.
         const stem = fileParam.getStem()
         const decorator = stem.substring(stem.length - 1)
@@ -57,16 +65,18 @@ class VLHImage extends BaseImage {
   }
 
   /**
-   * The getDOMElement method.
-   * @return {any} - The return value.
+   * Returns DOM Element.
+   *
+   * @return {HTMLElement} - The return value.
    */
   getDOMElement() {
     return this.__domElement
   }
 
   /**
-   * The getResourcePath method.
-   * @return {any} - The return value.
+   * Returns `FilePath` parameter's value.
+   *
+   * @return {string} - The return value.
    */
   getResourcePath() {
     return this.getParameter('FilePath').getValue()
@@ -74,7 +84,7 @@ class VLHImage extends BaseImage {
 
   /**
    * The __decodeData method.
-   * @param {any} entries - The entries value.
+   * @param {object} entries - The entries value.
    * @private
    */
   __decodeData(entries) {
@@ -95,9 +105,9 @@ class VLHImage extends BaseImage {
       }
       if (!this.__loaded) {
         this.__loaded = true
-        this.loaded.emit()
+        this.emit('loaded', {})
       } else {
-        this.updated.emit()
+        this.emit('updated', {})
       }
     }
     ldrPic.src = URL.createObjectURL(blob)
@@ -105,14 +115,14 @@ class VLHImage extends BaseImage {
 
   /**
    * The __loadVLH method.
-   * @param {any} fileId - The fileId value.
-   * @param {any} file - The file value.
+   * @param {string} fileId - The fileId value.
+   * @param {object} file - The file value.
    * @private
    */
   __loadVLH(fileId, file) {
     this.type = 'FLOAT'
 
-    resourceLoader.loadUrl(fileId, file.url, entries => {
+    resourceLoader.loadArchive(file.url).then((entries) => {
       if (!entries.ldr || !entries.cdm) {
         for (const name in entries) {
           if (name.endsWith('.jpg')) {
@@ -129,7 +139,8 @@ class VLHImage extends BaseImage {
   }
 
   /**
-   * The isStream method.
+   * Returns if the data is a stream or not.
+   *
    * @return {boolean} - The return value.
    */
   isStream() {
@@ -137,16 +148,18 @@ class VLHImage extends BaseImage {
   }
 
   /**
-   * The isLoaded method.
-   * @return {any} - The return value.
+   * Returns the status of the data, whether is loaded or not.
+   *
+   * @return {boolean} - The return value.
    */
   isLoaded() {
     return this.__loaded
   }
 
   /**
-   * The getParams method.
-   * @return {any} - The return value.
+   * Returns all parameters and class state values.
+   *
+   * @return {object} - The return value.
    */
   getParams() {
     const params = super.getParams()
@@ -159,7 +172,8 @@ class VLHImage extends BaseImage {
 
   /**
    * The setHDRTint method.
-   * @param {any} hdrtint - The hdrtint value.
+   * @private
+   * @param {Color} hdrtint - The hdrtint value.
    */
   setHDRTint(hdrtint) {
     this.__hdrtint = hdrtint
@@ -167,7 +181,8 @@ class VLHImage extends BaseImage {
 
   /**
    * The getHDRTint method.
-   * @return {any} - The return value.
+   * @private
+   * @return {Color} - The return value.
    */
   getHDRTint() {
     return this.__hdrtint
@@ -177,23 +192,24 @@ class VLHImage extends BaseImage {
   // Persistence
 
   /**
-   * The toJSON method encodes this type as a json object for persistences.
+   * The toJSON method encodes this type as a json object for persistence.
+   *
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    */
-  toJSON(context, flags) {}
+  toJSON(context) {}
 
   /**
    * The fromJSON method decodes a json object for this type.
+   *
    * @param {object} json - The json object this item must decode.
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    */
-  fromJSON(json, context, flags) {}
+  fromJSON(json, context) {}
 
   /**
-   * The readBinary method.
-   * @param {object} reader - The reader value.
+   * Sets state of current Image using a binary reader object, and adds it to the resource loader.
+   *
+   * @param {BinReader} reader - The reader value.
    * @param {object} context - The context value.
    */
   readBinary(reader, context) {
@@ -204,10 +220,7 @@ class VLHImage extends BaseImage {
       if (context.lod >= 0) {
         const suffixSt = resourcePath.lastIndexOf('.')
         if (suffixSt != -1) {
-          const lodPath =
-            resourcePath.substring(0, suffixSt) +
-            context.lod +
-            resourcePath.substring(suffixSt)
+          const lodPath = resourcePath.substring(0, suffixSt) + context.lod + resourcePath.substring(suffixSt)
           if (resourceLoader.resourceAvailable(lodPath)) {
             resourcePath = lodPath
           }
@@ -218,6 +231,6 @@ class VLHImage extends BaseImage {
   }
 }
 
-sgFactory.registerClass('VLHImage', VLHImage)
+Registry.register('VLHImage', VLHImage)
 
 export { VLHImage }

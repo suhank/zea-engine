@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Memory test - Zea Engine</title>
+
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <div id="app"></div>
+
+    <script src="../dist/index.umd.js"></script>
+
+    <script type="module">
+      const { Vec3, EulerAngles, Xfo, Color, Cuboid, Material, GeomItem, TreeItem, Scene, GLRenderer } = zeaEngine
+
+      const domElement = document.getElementById('app')
+
+      const scene = new Scene()
+
+      const count = 160000
+      const dim = Math.round(Math.cbrt(count))
+      const cuboid = new Cuboid(0.3, 0.4, 0.5)
+
+      console.time('Create scene')
+
+      for (let i = 0; i < dim; i++) {
+        const treeItemI = new TreeItem('TreeItem' + i)
+
+        for (let j = 0; j < dim; j++) {
+          const material = new Material('mat', 'SimpleSurfaceShader')
+          const treeItemJ = new TreeItem('TreeItem' + j)
+
+          for (let k = 0; k < dim; k++) {
+            material.getParameter('BaseColor').setValue(new Color(i / dim, j / dim, k / dim))
+            const geomItem = new GeomItem('Geom' + k, cuboid, material)
+
+            const xfo = new Xfo()
+            xfo.tr.set(i, j, k)
+            geomItem.getParameter('GlobalXfo').setValue(xfo)
+
+            treeItemJ.addChild(geomItem)
+          }
+
+          treeItemI.addChild(treeItemJ)
+        }
+
+        scene.getRoot().addChild(treeItemI)
+      }
+
+      console.timeEnd('Create scene')
+
+      console.time('Load GPU')
+
+      const renderer = new GLRenderer(domElement, { hideSplash: true, webglOptions: { antialias: false } })
+      renderer.setScene(scene)
+      renderer.frameAll()
+
+      console.timeEnd('Load GPU')
+
+      console.log(`Done memory test. GeomItem count: ${dim * dim * dim}.`)
+    </script>
+  </body>
+</html>

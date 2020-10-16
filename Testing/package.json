@@ -1,0 +1,9 @@
+{
+  "name": "ZeaEngineTests",
+  "version": "0.0.1",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "@zeainc/zea-engine": "^0.0.95"
+  }
+}

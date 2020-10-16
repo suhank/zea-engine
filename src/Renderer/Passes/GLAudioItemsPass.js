@@ -1,19 +1,20 @@
 import { GLPass, PassType } from './GLPass.js'
 import { GLRenderer } from '../GLRenderer.js'
 
-import { AudioItem, GeomItem } from '../../SceneTree'
+import { AudioItem, GeomItem } from '../../SceneTree/index'
 
 const AudioContext =
-  window.AudioContext || // Default
-  window.webkitAudioContext || // Safari and old versions of Chrome
-  false
+  window.navigator &&
+  (window.AudioContext || // Default
+    window.webkitAudioContext || // Safari and old versions of Chrome
+    false)
 
 let audioCtx
 if (AudioContext) {
   // Do whatever you want using the Web Audio API
   audioCtx = new AudioContext()
   // ...
-} else {
+} else if (window.navigator) {
   // Web Audio API is not supported
   // Alert the user
   alert(
@@ -42,44 +43,53 @@ class GLAudioItemsPass extends GLPass {
     super.init(renderer, passIndex)
 
     if (!audioCtx) return
-
-    this.__renderer.registerPass(
-      treeItem => {
-        if (treeItem instanceof AudioItem) {
-          treeItem.audioSourceCreated.connect(audioSource => {
-            this.addAudioSource(treeItem, audioSource, treeItem)
-          })
-          return true
-        }
-        if (treeItem instanceof GeomItem) {
-          const material = treeItem.getMaterial()
-          if (material) {
-            const baseColorParam = material.getParameter('BaseColor')
-            if (
-              baseColorParam &&
-              baseColorParam.getImage &&
-              baseColorParam.getImage()
-            ) {
-              const image = baseColorParam.getImage()
-              image.loaded.connect(() => {
-                if (image.getAudioSource) {
-                  const audioSource = image.getAudioSource()
-                  if (
-                    audioSource instanceof HTMLMediaElement ||
-                    audioSource instanceof AudioBufferSourceNode
-                  )
-                    this.addAudioSource(treeItem, audioSource, image)
-                }
-              })
-            }
-          }
-          // Let other passes handle this item.
-          return false
-        }
-      },
-      treeItem => {}
-    )
   }
+
+  /**
+   * The itemAddedToScene method is called on each pass when a new item
+   * is added to the scene, and the renderer must decide how to render it.
+   * It allows Passes to select geometries to handle the drawing of.
+   * @param {TreeItem} treeItem - The treeItem value.
+   * @param {object} rargs - Extra return values are passed back in this object.
+   * The object contains a parameter 'continueInSubTree', which can be set to false,
+   * so the subtree of this node will not be traversed after this node is handled.
+   * @return {Boolean} - The return value.
+   */
+  itemAddedToScene(treeItem, rargs) {
+    if (treeItem instanceof AudioItem) {
+      treeItem.on('audioSourceCreated', (event) => {
+        const { audioSource } = event
+        this.addAudioSource(treeItem, audioSource, treeItem)
+      })
+      return true
+    }
+    if (treeItem instanceof GeomItem) {
+      const material = treeItem.getParameter('Material').getValue()
+      if (material) {
+        const baseColorParam = material.getParameter('BaseColor')
+        if (baseColorParam && baseColorParam.getImage && baseColorParam.getImage()) {
+          const image = baseColorParam.getImage()
+          image.on('loaded', () => {
+            if (image.getAudioSource) {
+              const audioSource = image.getAudioSource()
+              if (audioSource instanceof HTMLMediaElement || audioSource instanceof AudioBufferSourceNode)
+                this.addAudioSource(treeItem, audioSource, image)
+            }
+          })
+        }
+      }
+      // Let other passes handle this item.
+      return false
+    }
+  }
+  /**
+   * The itemRemovedFromScene method is called on each pass when aa item
+   * is removed to the scene, and the pass must handle cleaning up any resources.
+   * @param {TreeItem} treeItem - The treeItem value.
+   * @param {object} rargs - Extra return values are passed back in this object.
+   * @return {Boolean} - The return value.
+   */
+  itemRemovedFromScene(treeItem, rargs) {}
 
   /**
    * The addAudioSource method.
@@ -91,8 +101,7 @@ class GLAudioItemsPass extends GLPass {
     if (audioSource.addedToCollector) return
 
     let source
-    if (audioSource instanceof HTMLMediaElement)
-      source = audioCtx.createMediaElementSource(audioSource)
+    if (audioSource instanceof HTMLMediaElement) source = audioCtx.createMediaElementSource(audioSource)
     else if (audioSource instanceof AudioBufferSourceNode) source = audioSource
     else source = audioCtx.createMediaStreamSource(audioSource)
 
@@ -102,7 +111,7 @@ class GLAudioItemsPass extends GLPass {
       // param.value = vlParam.getValue();
       param.setValueAtTime(vlParam.getValue(), 0)
       param.setValueAtTime(vlParam.getValue(), 5)
-      vlParam.valueChanged.connect(() => {
+      vlParam.on('valueChanged', () => {
         // param.setTargetAtTime(vlParam.getValue(), audioCtx.currentTime);
         param.value = vlParam.getValue()
       })
@@ -114,23 +123,21 @@ class GLAudioItemsPass extends GLPass {
       connectVLParamToAudioNodeParam(gainParam, gainNode.gain)
     }
 
-    source.connect(gainNode)
+    'gasource', inNode
 
     const spatializeParam = parameterOwner.getParameter('SpatializeAudio')
     if (spatializeParam && spatializeParam.getValue() == false) {
-      source.connect(audioCtx.destination)
+      'ausource', dioCtx.destination
     } else {
       const panner = audioCtx.createPanner()
       panner.panningModel = 'HRTF'
-      panner.distanceModel = 'inverse'
-      source.connect(panner)
-      panner.connect(audioCtx.destination)
+      panner.distanceModel = 'inverse'('pasource', nner)('aupanner', dioCtx.destination)
 
-      const connectVLParamToAudioNode = paramName => {
+      const connectVLParamToAudioNode = (paramName) => {
         const vlParam = parameterOwner.getParameter(paramName)
         if (!vlParam) return
         panner[paramName] = vlParam.getValue()
-        vlParam.valueChanged.connect(() => {
+        vlParam.on('valueChanged', () => {
           panner[paramName] = vlParam.getValue()
         })
       }
@@ -152,7 +159,7 @@ class GLAudioItemsPass extends GLPass {
 
         let mat4
         if (treeItem instanceof GeomItem) mat4 = treeItem.getGeomMat4()
-        else mat4 = treeItem.getGlobalXfo().toMat4()
+        else mat4 = treeItem.getParameter('GlobalXfo').getValue().toMat4()
         const tr = mat4.translation
         // if (panner.positionX) {
         //     // panner.positionX.setTargetAtTime(xfo.tr.x, audioCtx.currentTime);
@@ -181,7 +188,7 @@ class GLAudioItemsPass extends GLPass {
         // setVelocity()
       }
       updatePannerNodePosition()
-      treeItem.globalXfoChanged.connect(changeType => {
+      treeItem.on('globalXfoChanged', (event) => {
         updatePannerNodePosition()
       })
     }
@@ -193,7 +200,7 @@ class GLAudioItemsPass extends GLPass {
       parameterOwner,
     })
 
-    this.updated.emit()
+    this.emit('updated', {})
   }
 
   /**
@@ -253,6 +260,9 @@ class GLAudioItemsPass extends GLPass {
   }
 }
 
-GLRenderer.registerPass(GLAudioItemsPass, PassType.OVERLAY)
+// Hack so Audio Item can access the context.
+if (window.navigator) {
+  window.ZeaAudioaudioCtx = audioCtx
+}
 
 export { GLAudioItemsPass, audioCtx }

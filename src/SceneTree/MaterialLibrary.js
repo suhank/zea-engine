@@ -1,22 +1,23 @@
-import { SystemDesc } from '../BrowserDetection.js'
-import { Signal } from '../Utilities'
-import { sgFactory } from './SGFactory.js'
+import { SystemDesc } from '../SystemDesc.js'
+import { EventEmitter } from '../Utilities/index'
+import { Registry } from '../Registry'
 import { Material } from './Material.js'
-import { FileImage } from './Images'
+import { FileImage } from './Images/index'
 
-/** Class representing a material library in a scene tree. */
-class MaterialLibrary {
+/** Class representing a material library in a scene tree.
+ * @private
+ */
+class MaterialLibrary extends EventEmitter {
   /**
    * Create a material library.
    * @param {string} name - The name of the material library.
    */
   constructor(name = 'MaterialLibrary') {
+    super()
     this.__name = name
 
     this.lod = 0
     if (SystemDesc.isMobileDevice) this.lod = 1
-    this.loaded = new Signal()
-
     this.clear()
   }
 
@@ -93,9 +94,7 @@ class MaterialLibrary {
   getMaterial(name, assert = true) {
     const res = this.__materials[name]
     if (!res && assert) {
-      throw new Error(
-        'Material:' + name + ' not found in library:' + this.getMaterialNames()
-      )
+      throw new Error('Material:' + name + ' not found in library:' + this.getMaterialNames())
     }
     return res
   }
@@ -127,9 +126,7 @@ class MaterialLibrary {
   getImage(name, assert = true) {
     const res = this.__images[name]
     if (!res && assert) {
-      throw new Error(
-        'Image:' + name + ' not found in library:' + this.getImageNames()
-      )
+      throw new Error('Image:' + name + ' not found in library:' + this.getImageNames())
     }
     return res
   }
@@ -174,10 +171,9 @@ class MaterialLibrary {
   /**
    * The toJSON method encodes the current object as a json object.
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    * @return {object} - Returns the json object.
    */
-  toJSON(context = {}, flags = 0) {
+  toJSON(context = {}) {
     return {
       numMaterials: this.geoms.length(),
     }
@@ -187,9 +183,8 @@ class MaterialLibrary {
    * The fromJSON method decodes a json object for this type.
    * @param {object} j - The json object this item must decode.
    * @param {object} context - The context value.
-   * @param {number} flags - The flags value.
    */
-  fromJSON(j, context = {}, flags = 0) {
+  fromJSON(j, context = {}) {
     context.lod = this.lod
     for (const name in j.textures) {
       const image = new FileImage(name)
@@ -209,7 +204,7 @@ class MaterialLibrary {
    * @param {object} context - The context value.
    */
   readBinary(reader, context = {}) {
-    if (context.version == undefined) context.version = 0
+    // if (context.version == undefined) context.version = 0
 
     this.name = reader.loadStr()
 
@@ -220,7 +215,7 @@ class MaterialLibrary {
     const numTextures = reader.loadUInt32()
     for (let i = 0; i < numTextures; i++) {
       const type = reader.loadStr()
-      const texture = sgFactory.constructClass(type, undefined)
+      const texture = Registry.constructClass(type, undefined)
       texture.readBinary(reader, context)
       this.__images[texture.getName()] = texture
     }
@@ -235,7 +230,7 @@ class MaterialLibrary {
       }
     }
 
-    this.loaded.emit()
+    this.emit('loaded', {})
   }
 
   /**

@@ -1,9 +1,10 @@
 import { Color } from '../../Math/Color'
-import { sgFactory } from '../../SceneTree'
+import { Registry } from '../../Registry'
 import { shaderLibrary } from '../ShaderLibrary.js'
 import { GLShader } from '../GLShader.js'
 import './GLSL/stack-gl/transpose.js'
 import './GLSL/stack-gl/gamma.js'
+import './GLSL/drawItemTexture.js'
 import './GLSL/modelMatrix.js'
 
 class FlatSurfaceShader extends GLShader {
@@ -24,6 +25,8 @@ uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
 
 <%include file="stack-gl/transpose.glsl"/>
+<%include file="drawItemId.glsl"/>
+<%include file="drawItemTexture.glsl"/>
 <%include file="modelMatrix.glsl"/>
 
 /* VS Outputs */
@@ -34,7 +37,8 @@ varying vec2 v_textureCoord;
 
 
 void main(void) {
-    mat4 modelMatrix = getModelMatrix();
+  int drawItemId = getDrawItemId();
+    mat4 modelMatrix = getModelMatrix(drawItemId);
     mat4 modelViewMatrix = viewMatrix * modelMatrix;
 
     vec4 viewPos = (modelViewMatrix * vec4(positions, 1.0));
@@ -77,7 +81,7 @@ void main(void) {
 #ifndef ENABLE_TEXTURES
     vec4 baseColor = BaseColor;
 #else
-    vec4 baseColor      = getColorParamValue(BaseColor, BaseColorTex, BaseColorTexType, v_textureCoord);
+    vec4 baseColor = getColorParamValue(BaseColor, BaseColorTex, BaseColorTexType, v_textureCoord);
 #endif
 
 #ifndef ENABLE_ES3
@@ -117,5 +121,5 @@ void main(void) {
   }
 }
 
-sgFactory.registerClass('FlatSurfaceShader', FlatSurfaceShader)
+Registry.register('FlatSurfaceShader', FlatSurfaceShader)
 export { FlatSurfaceShader }

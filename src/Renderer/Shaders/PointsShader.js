@@ -1,5 +1,5 @@
-import { Color } from '../../Math'
-import { sgFactory } from '../../SceneTree'
+import { Color } from '../../Math/index'
+import { Registry } from '../../Registry'
 import { shaderLibrary } from '../ShaderLibrary'
 import { GLShader } from '../GLShader.js'
 
@@ -18,17 +18,28 @@ attribute vec3 positions;
 
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
+uniform float PointSize;
+uniform float Overlay;
 
 <%include file="stack-gl/transpose.glsl"/>
 <%include file="stack-gl/inverse.glsl"/>
+<%include file="drawItemId.glsl"/>
+<%include file="drawItemTexture.glsl"/>
 <%include file="modelMatrix.glsl"/>
 
 /* VS Outputs */
 
 void main(void) {
-  mat4 modelMatrix = getModelMatrix();
+  int drawItemId = getDrawItemId();
+  mat4 modelMatrix = getModelMatrix(drawItemId);
   mat4 modelViewProjectionMatrix = projectionMatrix * viewMatrix * modelMatrix;
   gl_Position = modelViewProjectionMatrix * vec4(positions, 1.);
+  
+  gl_PointSize = PointSize;
+  
+  if(Overlay > 0.0){
+    gl_Position.z = mix(gl_Position.z, -1.0, Overlay);
+  }
 }
 `
     )
@@ -66,10 +77,12 @@ void main(void) {
       name: 'BaseColor',
       defaultValue: new Color(1.0, 1.0, 0.5),
     })
+    paramDescs.push({ name: 'PointSize', defaultValue: 2.0 })
+    paramDescs.push({ name: 'Overlay', defaultValue: 0.0 })
     return paramDescs
   }
 }
 
-sgFactory.registerClass('PointsShader', PointsShader)
+Registry.register('PointsShader', PointsShader)
 
 export { PointsShader }

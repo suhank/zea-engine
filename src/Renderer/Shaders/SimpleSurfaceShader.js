@@ -1,10 +1,11 @@
-import { Color } from '../../Math'
-import { sgFactory } from '../../SceneTree'
+import { Color } from '../../Math/index'
+import { Registry } from '../../Registry'
 import { shaderLibrary } from '../ShaderLibrary.js'
 import { GLShader } from '../GLShader.js'
 
 import './GLSL/stack-gl/transpose.js'
 import './GLSL/stack-gl/gamma.js'
+import './GLSL/drawItemTexture.js'
 import './GLSL/modelMatrix.js'
 import './GLSL/materialparams.js'
 
@@ -28,9 +29,12 @@ uniform mat4 projectionMatrix;
 
 <%include file="stack-gl/transpose.glsl"/>
 <%include file="stack-gl/inverse.glsl"/>
+<%include file="drawItemId.glsl"/>
+<%include file="drawItemTexture.glsl"/>
 <%include file="modelMatrix.glsl"/>
 
 /* VS Outputs */
+varying float v_drawItemId;
 varying vec4 v_geomItemData;
 varying vec3 v_viewPos;
 varying vec3 v_viewNormal;
@@ -38,13 +42,14 @@ varying vec3 v_viewNormal;
 varying vec2 v_textureCoord;
 #endif
 varying vec3 v_worldPos;
-varying vec4 v_cutAwayData;
 
 void main(void) {
-    v_geomItemData  = getInstanceData();
+    int drawItemId = getDrawItemId();
+    v_drawItemId = float(drawItemId);
+    v_geomItemData  = getInstanceData(drawItemId);
 
     vec4 pos = vec4(positions, 1.);
-    mat4 modelMatrix = getModelMatrix();
+    mat4 modelMatrix = getModelMatrix(drawItemId);
     mat4 modelViewMatrix = viewMatrix * modelMatrix;
     vec4 viewPos    = modelViewMatrix * pos;
     gl_Position     = projectionMatrix * viewPos;
@@ -59,7 +64,6 @@ void main(void) {
 #endif
 
     v_worldPos      = (modelMatrix * pos).xyz;
-    v_cutAwayData = getCutaway();
 }
 `
     )
@@ -69,12 +73,30 @@ void main(void) {
       `
 precision highp float;
 
+<%include file="drawItemTexture.glsl"/>
+<%include file="cutaways.glsl"/>
 <%include file="stack-gl/gamma.glsl"/>
 <%include file="materialparams.glsl"/>
-<%include file="GLSLUtils.glsl"/>
-<%include file="cutaways.glsl"/>
+
+uniform color cutColor;
+
+#ifdef ENABLE_FLOAT_TEXTURES
+vec4 getCutaway(int id) {
+    return fetchTexel(instancesTexture, instancesTextureSize, (id * pixelsPerItem) + 5);
+}
+
+#else
+
+uniform vec4 cutawayData;
+
+vec4 getCutaway(int id) {
+    return cutawayData;
+}
+
+#endif
 
 /* VS Outputs */
+varying float v_drawItemId;
 varying vec4 v_geomItemData;
 varying vec3 v_viewPos;
 varying vec3 v_viewNormal;
@@ -82,7 +104,6 @@ varying vec3 v_viewNormal;
 varying vec2 v_textureCoord;
 #endif
 varying vec3 v_worldPos;
-varying vec4 v_cutAwayData;
 
 uniform mat4 cameraMatrix;
 
@@ -90,36 +111,36 @@ uniform color BaseColor;
 uniform float Opacity;
 
 #ifdef ENABLE_TEXTURES
-
 uniform sampler2D BaseColorTex;
 uniform int BaseColorTexType;
 uniform sampler2D OpacityTex;
 uniform int OpacityTexType;
-
-uniform color cutColor;
-
 #endif
+
 
 #ifdef ENABLE_ES3
     out vec4 fragColor;
 #endif
 
 void main(void) {
+    int drawItemId = int(v_drawItemId + 0.5);
 
     int flags = int(v_geomItemData.r + 0.5);
     // Cutaways
     if(testFlag(flags, GEOMITEM_FLAG_CUTAWAY)) 
     {
-        vec3 planeNormal = v_cutAwayData.xyz;
-        float planeDist = v_cutAwayData.w;
+        vec4 cutAwayData   = getCutaway(drawItemId);
+        vec3 planeNormal = cutAwayData.xyz;
+        float planeDist = cutAwayData.w;
         if(cutaway(v_worldPos, planeNormal, planeDist)){
             discard;
             return;
         }
         else if(!gl_FrontFacing){
+#ifdef ENABLE_ES3
             fragColor = cutColor;
-#ifndef ENABLE_ES3
-            gl_FragColor = fragColor;
+#else
+            gl_FragColor = cutColor;
 #endif
             return;
         }
@@ -183,5 +204,5 @@ void main(void) {
   }
 }
 
-sgFactory.registerClass('SimpleSurfaceShader', SimpleSurfaceShader)
+Registry.register('SimpleSurfaceShader', SimpleSurfaceShader)
 export { SimpleSurfaceShader }

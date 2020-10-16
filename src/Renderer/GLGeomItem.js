@@ -1,4 +1,4 @@
-import { Signal } from '../Utilities'
+import { EventEmitter } from '../Utilities/index'
 
 import '../SceneTree/GeomItem.js'
 
@@ -9,8 +9,10 @@ const GLGeomItemChangeType = {
   HIGHLIGHT_CHANGED: 3,
 }
 
-/** This class abstracts the rendering of a collection of geometries to screen. */
-class GLGeomItem {
+/** This class abstracts the rendering of a collection of geometries to screen.
+ * @extends EventEmitter
+ */
+class GLGeomItem extends EventEmitter {
   /**
    * Create a GL geom item.
    * @param {any} gl - The gl value.
@@ -19,62 +21,69 @@ class GLGeomItem {
    * @param {any} id - The id value.
    * @param {number} flags - The flags value.
    */
-  constructor(gl, geomItem, glGeom, id, flags = null) {
+  constructor(gl, geomItem, glGeom, id, supportInstancing = false) {
+    super()
     this.gl = gl
     this.geomItem = geomItem
     this.glGeom = glGeom
     this.id = id
-    this.flags = flags
-    this.visible = this.geomItem.getVisible()
+    this.supportInstancing = supportInstancing
+    this.visible = this.geomItem.isVisible()
     this.culled = false
+
+    this.cutDataChanged = false
+    this.cutData = [0, 0, 0, 0]
 
     // if(glGeom.__numTriangles) {
     //   numSceneMeshTriangles += glGeom.__numTriangles
     //   console.log(this.geomItem.getName(), glGeom.__numTriangles, numSceneMeshTriangles)
     // }
 
-    this.lightmapName = geomItem.getLightmapName()
-    this.updated = new Signal()
-    this.destructing = new Signal()
-    this.visibilityChanged = new Signal()
-    this.highlightChanged = geomItem.highlightChanged
-
-    this.updateVisibility = this.updateVisibility.bind(this)
     this.updateVisibility = this.updateVisibility.bind(this)
     this.destroy = this.destroy.bind(this)
 
-    if (!gl.floatTexturesSupported) {
-      this.updateXfo = geomXfo => {
-        this.updateGeomMatrix()
+    if (!this.supportInstancing) {
+      this.geomMatrixDirty = true
+      this.geomMatrixChanged = () => {
+        this.geomMatrixDirty = true
+        this.emit('updated')
       }
     } else {
-      this.updateXfo = geomXfo => {
-        this.updated.emit(GLGeomItemChangeType.GEOMITEM_CHANGED)
+      this.geomMatrixChanged = () => {
+        this.emit('updated', { type: GLGeomItemChangeType.GEOMITEM_CHANGED })
       }
     }
 
-    this.geomItem.geomXfoChanged.connect(this.updateXfo)
-    this.geomItem.visibilityChanged.connect(this.updateVisibility)
-    this.geomItem.cutAwayChanged.connect(() => {
-      this.updated.emit(GLGeomItemChangeType.GEOMITEM_CHANGED)
-    })
-    this.geomItem.destructing.connect(this.destroy)
-    this.highlightChangedId = this.geomItem.highlightChanged.connect(() => {
-      this.updated.emit(GLGeomItemChangeType.HIGHLIGHT_CHANGED)
-    })
-    this.glGeom.updated.connect(() => {
-      this.updated.emit(GLGeomItemChangeType.GEOM_CHANGED)
-    })
+    this.cutAwayChanged = () => {
+      if (!this.supportInstancing) {
+        this.cutDataChanged = true
+      } else {
+        this.emit('updated', { type: GLGeomItemChangeType.GEOMITEM_CHANGED })
+      }
+    }
+    this.highlightChanged = () => {
+      this.emit('updated', { type: GLGeomItemChangeType.HIGHLIGHT_CHANGED })
+      this.emit('highlightChanged')
+    }
+    this.glGeomUpdated = () => {
+      this.emit('updated', { type: GLGeomItemChangeType.GEOM_CHANGED })
+    }
 
-    const lightmapCoordsOffset = this.geomItem.getLightmapCoordsOffset()
-    const materialId = 0
-    const geomId = 0
-    this.geomData = [
-      lightmapCoordsOffset.x,
-      lightmapCoordsOffset.y,
-      materialId,
-      geomId,
-    ]
+    this.geomItem.getParameter('GeomMat').on('valueChanged', this.geomMatrixChanged)
+    this.geomItem.on('visibilityChanged', this.updateVisibility)
+    this.geomItem.on('cutAwayChanged', this.cutAwayChanged)
+    this.geomItem.on('highlightChanged', this.highlightChanged)
+    this.glGeom.on('updated', this.glGeomUpdated)
+
+    if (!this.supportInstancing) {
+      const materialId = 0
+      let flags = 0
+      if (this.geomItem.isCutawayEnabled()) {
+        const GEOMITEM_FLAG_CUTAWAY = 1 // 1<<0;
+        flags |= GEOMITEM_FLAG_CUTAWAY
+      }
+      this.geomData = [flags, materialId, 0, 0]
+    }
   }
 
   /**
@@ -94,11 +103,11 @@ class GLGeomItem {
   }
 
   /**
-   * The getVisible method.
+   * The isVisible method.
    * @return {any} - The return value.
    */
-  getVisible() {
-    return this.geomItem.getVisible()
+  isVisible() {
+    return this.geomItem.isVisible()
   }
 
   /**
@@ -110,23 +119,15 @@ class GLGeomItem {
   }
 
   /**
-   * The getFlags method.
-   * @return {any} - The return value.
-   */
-  getFlags() {
-    return this.flags
-  }
-
-  /**
    * The updateVisibility method.
    */
   updateVisibility() {
-    const geomVisible = this.geomItem.getVisible()
+    const geomVisible = this.geomItem.isVisible()
     const visible = geomVisible && !this.culled
     if (this.visible != visible) {
       this.visible = visible
-      this.visibilityChanged.emit(visible)
-      this.updated.emit()
+      this.emit('visibilityChanged', { visible })
+      this.emit('updated', {})
     }
   }
 
@@ -140,22 +141,6 @@ class GLGeomItem {
   }
 
   /**
-   * The updateGeomMatrix method.
-   */
-  updateGeomMatrix() {
-    // Pull on the GeomXfo param. This will trigger the lazy evaluation of the operators in the scene.
-    this.modelMatrixArray = this.geomItem.getGeomMat4().asArray()
-  }
-
-  /**
-   * The getGeomMatrixArray method.
-   * @return {any} - The return value.
-   */
-  getGeomMatrixArray() {
-    return this.modelMatrixArray
-  }
-
-  /**
    * The bind method.
    * @param {any} renderstate - The renderstate value.
    * @return {any} - The return value.
@@ -164,18 +149,28 @@ class GLGeomItem {
     const gl = this.gl
     const unifs = renderstate.unifs
 
-    if (!gl.floatTexturesSupported) {
+    if (!this.supportInstancing) {
       const modelMatrixunif = unifs.modelMatrix
       if (modelMatrixunif) {
-        gl.uniformMatrix4fv(
-          modelMatrixunif.location,
-          false,
-          this.modelMatrixArray
-        )
+        if (this.geomMatrixDirty) {
+          this.modelMatrixArray = this.geomItem.getGeomMat4().asArray()
+        }
+        gl.uniformMatrix4fv(modelMatrixunif.location, false, this.modelMatrixArray)
       }
       const drawItemDataunif = unifs.drawItemData
       if (drawItemDataunif) {
-        gl.uniform4f(drawItemDataunif.location, this.geomData)
+        gl.uniform4fv(drawItemDataunif.location, this.geomData)
+      }
+      const cutawayDataunif = unifs.cutawayData
+      if (cutawayDataunif) {
+        if (this.cutDataChanged) {
+          if (this.geomItem.isCutawayEnabled()) {
+            const cutAwayVector = this.geomItem.getCutVector()
+            const cutAwayDist = this.geomItem.getCutDist()
+            this.cutData = [cutAwayVector.x, cutAwayVector.y, cutAwayVector.z, cutAwayDist]
+          }
+        }
+        gl.uniform4fv(cutawayDataunif.location, this.cutData)
       }
     }
 
@@ -183,29 +178,6 @@ class GLGeomItem {
     if (unif) {
       gl.uniform1i(unif.location, this.id)
     }
-
-    if (renderstate.lightmaps && unifs.lightmap) {
-      if (renderstate.boundLightmap != this.lightmapName) {
-        const gllightmap = renderstate.lightmaps[this.lightmapName]
-        if (gllightmap && gllightmap.glimage.isLoaded()) {
-          gllightmap.glimage.bindToUniform(renderstate, unifs.lightmap)
-          gl.uniform2fv(
-            unifs.lightmapSize.location,
-            gllightmap.atlasSize.asArray()
-          )
-          if (unifs.lightmapConnected) {
-            gl.uniform1i(unifs.lightmapConnected.location, true)
-          }
-          renderstate.boundLightmap = this.lightmapName
-        } else {
-          // disable lightmaps. Revert to default lighting.
-          if (unifs.lightmapConnected) {
-            gl.uniform1i(unifs.lightmapConnected.location, false)
-          }
-        }
-      }
-    }
-
     return true
   }
 
@@ -214,11 +186,11 @@ class GLGeomItem {
    * Users should never need to call this method directly.
    */
   destroy() {
-    this.geomItem.visibilityChanged.disconnect(this.updateVisibility)
-    this.geomItem.geomXfoChanged.disconnect(this.updateXfo)
-    this.geomItem.highlightChanged.disconnectId(this.highlightChangedId)
-    this.geomItem.destructing.disconnect(this.destroy)
-    this.destructing.emit(this)
+    this.geomItem.getParameter('GeomMat').off('valueChanged', this.geomMatrixChanged)
+    this.geomItem.off('visibilityChanged', this.updateVisibility)
+    this.geomItem.off('cutAwayChanged', this.cutAwayChanged)
+    this.geomItem.off('highlightChanged', this.highlightChanged)
+    this.glGeom.off('updated', this.glGeomUpdated)
   }
 }
 

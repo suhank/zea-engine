@@ -1,10 +1,12 @@
 import { Color } from '../Math/Color.js'
-import { Signal } from '../Utilities'
 import { TreeItem } from './TreeItem'
 import { Material } from './Material'
-import { ValueSetMode } from './Parameters'
 
-/** Class representing a base geometry item in a scene tree.
+/**
+ * Base class that represents geometry items with layering, overlaying and cut away features.
+ *
+ * **Events**
+ * * **cutAwayChanged:** Triggered everytime the cutaway variables change(if enabled or not, the vector and the distance).
  * @extends TreeItem
  */
 class BaseGeomItem extends TreeItem {
@@ -18,14 +20,14 @@ class BaseGeomItem extends TreeItem {
     this.__cutAway = false
     this.__cutAwayVector = false
     this.__cutAwayDist = false
-    this.cutAwayChanged = new Signal()
-
     this.__layers = []
   }
 
   /**
-   * The setOverlay method.
-   * @param {any} val - The val param.
+   * Sets overlay value.
+   *
+   * @todo Need to find the layer and add this item to it.
+   * @param {boolean} val - `true` to enable it.
    */
   setOverlay(val) {
     // TODO: need to find the layer and add this item to it.
@@ -33,7 +35,8 @@ class BaseGeomItem extends TreeItem {
   }
 
   /**
-   * The getLayers method.
+   * Returns `true` if overlay is enabled for current item.
+   *
    * @return {boolean} - The return value.
    */
   isOverlay() {
@@ -41,7 +44,9 @@ class BaseGeomItem extends TreeItem {
   }
 
   /**
-   * Adds a layer.
+   * Adds a layer to current item.
+   *
+   * @todo Need to find the layer and add this item to it.
    * @param {string} name - The name of the layer.
    */
   addLayer(name) {
@@ -50,8 +55,9 @@ class BaseGeomItem extends TreeItem {
   }
 
   /**
-   * The getLayers method.
-   * @return {any} - The return value.
+   * Returns all layers in current item.
+   *
+   * @return {array} - The return value.
    */
   getLayers() {
     return this.__layers
@@ -61,70 +67,75 @@ class BaseGeomItem extends TreeItem {
   // Cutaways
 
   /**
-   * Checks if cutways are enabled.
-   * @return {boolean} - Returns true if enabled.
+   * Checks if cutaway is enabled.
+   *
+   * @return {boolean} - Returns `true` if enabled.
    */
   isCutawayEnabled() {
     return this.__cutAway
   }
 
   /**
-   * Setter for enabling cutways.
-   * @param {any} state - The state of the cutway.
+   * Sets cutaway state.
+   *
+   * @param {boolean} state - `true` to enable it, otherwise `false`.
    */
   setCutawayEnabled(state) {
     this.__cutAway = state
-    this.cutAwayChanged.emit()
+    this.emit('cutAwayChanged', {})
   }
 
   /**
-   * Getter for cutway vectors.
-   * @param {any} cutAwayVector - The cutAwayVector value.
-   * @return {any} - The return value.
+   * Returns cutaway vector value.
+   *
+   * @return {Vec3|boolean} - `Vec3` when it is set, `false` on default.
    */
-  getCutVector(cutAwayVector) {
+  getCutVector() {
     return this.__cutAwayVector
   }
 
   /**
-   * Setter for cutway vectors.
-   * @param {any} cutAwayVector - The cutAwayVector value.
+   * Sets cutaway vector value.
+   *
+   * @param {Vec3} cutAwayVector - The cutAwayVector value.
    */
   setCutVector(cutAwayVector) {
     this.__cutAwayVector = cutAwayVector
-    this.cutAwayChanged.emit()
+    this.emit('cutAwayChanged', {})
   }
 
   /**
    * Getter for the cutaway distance.
-   * @param {any} cutAwayDist - The cutAwayDist value.
-   * @return {any} - The return value.
+   *
+   * @return {number} - The return value.
    */
-  getCutDist(cutAwayDist) {
+  getCutDist() {
     return this.__cutAwayDist
   }
 
   /**
-   * Setter for the cutaway distance.
-   * @param {any} cutAwayDist - The cutAwayDist value.
+   * Sets cutaway distance value.
+   *
+   * @param {number} cutAwayDist - The cutAwayDist value.
    */
   setCutDist(cutAwayDist) {
     this.__cutAwayDist = cutAwayDist
-    this.cutAwayChanged.emit()
+    this.emit('cutAwayChanged', {})
   }
 
   // ///////////////////////////
   // Persistence
 
   /**
-   * The readBinary method.
-   * @param {object} reader - The reader value.
+   * Sets state of current Item(Including layers & material) using a binary reader object.
+   *
+   * @param {BinReader} reader - The reader value.
    * @param {object} context - The context value.
    */
   readBinary(reader, context) {
     super.readBinary(reader, context)
 
-    if (context.version >= 4) {
+    if (context.versions['zea-engine'].compare([0, 0, 4]) >= 0) {
       const materialName = reader.loadStr()
       // const materialName = 'Material' + this.__bodyDescId;
 
@@ -135,12 +146,10 @@ class BaseGeomItem extends TreeItem {
         // material = materialLibrary.getMaterial('DefaultMaterial');
 
         material = new Material(materialName, 'SimpleSurfaceShader')
-        material
-          .getParameter('BaseColor')
-          .setValue(Color.random(0.25), ValueSetMode.DATA_LOAD)
+        material.getParameter('BaseColor').loadValue(Color.random(0.25))
         context.assetItem.getMaterialLibrary().addMaterial(material)
       }
-      this.setMaterial(material, ValueSetMode.DATA_LOAD)
+      this.getParameter('Material').loadValue(material)
 
       this.__layers = reader.loadStrArray()
       if (this.__layers.length > 0) {

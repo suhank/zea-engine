@@ -1,28 +1,44 @@
-import { Signal } from '../../Utilities'
-import { sgFactory } from '../SGFactory'
+import { Registry } from '../../Registry'
 import { ColorParameter } from './ColorParameter.js'
-
 import { BaseImage } from '../BaseImage.js'
 
-/** Class representing a material color parameter.
+/**
+ * Represents a specific type of parameter, that stores `Color` and `BaseImage` texture values.
+ *
+ * i.e.:
+ * ```javascript
+ * const image = new LDRImage();
+ * image.getParameter('FilePath').setUrl("https://storage.googleapis.com/zea-playground-assets/zea-engine/texture.png")
+ *
+ * const matColorParam = new MaterialColorParam('MyMaterialColor', new Color(0, 254, 2))
+ * matColorParam.setImage(image)
+ * //'myParameterOwnerItem' is an instance of a 'ParameterOwner' class.
+ * // Remember that only 'ParameterOwner' and classes that extend from it can host 'Parameter' objects.
+ * myParameterOwnerItem.addParameter(matColorParam)
+ * ```
+ *
+ * **Events**
+ * * **valueChanged:** Triggered every time the Image value changes
+ * * **textureDisconnected:** Triggered when Image value is cleaned/removed.
+ * * **textureConnected:** Triggered when the Image value is set.
+ *
  * @extends ColorParameter
  */
 class MaterialColorParam extends ColorParameter {
   /**
    * Create a material color parameter.
    * @param {string} name - The name of the material color parameter.
-   * @param {any} value - The value of the parameter.
+   * @param {Color} value - The value of the parameter.
    */
   constructor(name, value) {
     super(name, value)
-    this.textureConnected = new Signal()
-    this.textureDisconnected = new Signal()
     this.__imageUpdated = this.__imageUpdated.bind(this)
   }
 
   /**
-   * The getImage method.
-   * @return {any} - The return value.
+   * Returns `BaseImage` texture of the Material.
+   *
+   * @return {BaseImage} - The return value.
    */
   getImage() {
     return this.__image
@@ -33,45 +49,46 @@ class MaterialColorParam extends ColorParameter {
    * @private
    */
   __imageUpdated() {
-    this.valueChanged.emit()
+    this.emit('valueChanged', {})
   }
 
   /**
-   * The setImage method.
-   * @param {any} value - The value param.
-   * @param {number} mode - The mode param.
+   * Sets `BaseImage` texture value in parameter.
+   *
+   * @param {BaseImage} value - The value param.
    */
-  setImage(value, mode = 0) {
+  setImage(value) {
     const disconnectImage = () => {
-      this.__image.removeRef(this)
-      this.__image.loaded.disconnect(this.__imageUpdated)
-      this.__image.updated.disconnect(this.__imageUpdated)
+      this.__image.off('loaded', this.__imageUpdated)
+      this.__image.off('updated', this.__imageUpdated)
       this.__image = null
-      this.textureDisconnected.emit()
+      this.emit('textureDisconnected', {})
     }
     if (value) {
       if (this.__image != undefined && this.__image !== value) {
         disconnectImage()
       }
       this.__image = value
-      this.__image.addRef(this)
-      this.__image.updated.connect(this.__imageUpdated)
-      this.textureConnected.emit()
-      this.valueChanged.emit(mode)
+      this.__image.on('updated', this.__imageUpdated)
+      this.emit('textureConnected', {})
+      this.emit('valueChanged', { mode: 0 })
     } else {
       if (this.__image != undefined) {
         disconnectImage()
         this.__image = undefined
-        this.textureDisconnected.emit()
+        this.emit('textureDisconnected', {})
       }
     }
   }
 
   /**
-   * The setValue method.
-   * @param {any} value - The value param.
+   * Sets `Color` or the `BaseImage` texture value in parameter.
+   *
+   * @param {BaseImage|Color} value - The value param.
    */
   setValue(value) {
+    // Note: instead of supporting images or colors, we should replace the ColorParameter with an ImageParameter when assigning textures
+    // console.warn('@todo-review: Should we accept different type of values?')
     if (value instanceof BaseImage) {
       this.setImage(value)
     } else {
@@ -82,8 +99,9 @@ class MaterialColorParam extends ColorParameter {
     }
   }
   /**
-   * The readBinary method.
-   * @param {object} reader - The reader value.
+   * Extracts `Color` and `Image` values from a buffer, updating current parameter state.
+   *
+   * @param {BinReader} reader - The reader value.
    * @param {object} context - The context value.
    */
   readBinary(reader, context) {
@@ -98,18 +116,15 @@ class MaterialColorParam extends ColorParameter {
   /**
    * The clone method constructs a new material color parameter,
    * copies its values from this parameter and returns it.
-   * @param {number} flags - The flags value.
+   *
    * @return {MaterialColorParam} - Returns a new cloned material color parameter.
    */
-  clone(flags) {
-    const clonedParam = new MaterialColorParam(
-      this.__name,
-      this.__value.clone()
-    )
+  clone() {
+    const clonedParam = new MaterialColorParam(this.__name, this.__value.clone())
     return clonedParam
   }
 }
 
-sgFactory.registerClass('MaterialColorParam', MaterialColorParam)
+Registry.register('MaterialColorParam', MaterialColorParam)
 
 export { MaterialColorParam }

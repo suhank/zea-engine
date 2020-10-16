@@ -1,15 +1,3 @@
-export {
-  UInt8,
-  SInt8,
-  SInt16,
-  UInt16,
-  SInt32,
-  UInt32,
-  Float32,
-  hashStr,
-  JSON_stringify_fixedPrecision,
-} from './Common.js'
-
 export * from './AttrValue.js'
 export * from './Vec2.js'
 export * from './Vec3.js'
@@ -27,5 +15,3 @@ export * from './Box3.js'
 export * from './Frustum.js'
 export * from './PlaneType.js'
 export * from './SphereType.js'
-
-export * from './TypeRegistry.js'

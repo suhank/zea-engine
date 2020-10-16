@@ -1,0 +1,24 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Torus saves to JSON (serialization). 1`] = `
+Object {
+  "params": Object {
+    "Detail": Object {
+      "range": Array [
+        3,
+        200,
+      ],
+      "step": 1,
+      "value": 8,
+    },
+    "InnerRadius": Object {
+      "value": 3,
+    },
+    "OuterRadius": Object {
+      "value": 5,
+    },
+  },
+  "type": "Torus",
+  "vertexAttributes": Object {},
+}
+`;

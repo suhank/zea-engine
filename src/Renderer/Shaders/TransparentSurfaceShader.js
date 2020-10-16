@@ -1,10 +1,11 @@
-import { Color } from '../../Math'
-import { sgFactory } from '../../SceneTree'
+import { Color } from '../../Math/index'
+import { Registry } from '../../Registry'
 import { shaderLibrary } from '../ShaderLibrary.js'
 import { GLShader } from '../GLShader.js'
 import './GLSL/stack-gl/transpose.js'
 import './GLSL/stack-gl/gamma.js'
 import './GLSL/GGX_Specular.js'
+import './GLSL/drawItemTexture.js'
 import './GLSL/modelMatrix.js'
 import './GLSL/debugColors.js'
 
@@ -25,6 +26,7 @@ uniform mat4 projectionMatrix;
 
 <%include file="stack-gl/transpose.glsl"/>
 <%include file="stack-gl/inverse.glsl"/>
+<%include file="drawItemTexture.glsl"/>
 <%include file="modelMatrix.glsl"/>
 
 /* VS Outputs */
@@ -35,17 +37,15 @@ varying vec3 v_worldPos;
 /* VS Outputs */
 
 void main(void) {
+    int drawItemId = getDrawItemId();
 
-    vec4 geomItemData = getInstanceData();
+    vec4 geomItemData = getInstanceData(drawItemId);
 
     vec4 pos = vec4(positions, 1.);
-    mat4 modelMatrix = getModelMatrix();
+    mat4 modelMatrix = getModelMatrix(drawItemId);
     mat4 modelViewMatrix = viewMatrix * modelMatrix;
     vec4 viewPos    = modelViewMatrix * pos;
     gl_Position     = projectionMatrix * viewPos;
-
-    // mat4 mvp = projectionMatrix * viewMatrix * modelMatrix;
-    // gl_Position = mvp * vec4((lightmapCoords + geomItemData.xy), 0., 1.);
 
     v_worldPos      = (modelMatrix * pos).xyz;
 
@@ -85,7 +85,7 @@ uniform float planeAngle;
 uniform color BaseColor;
 uniform float Opacity;
 
-#ifdef ENABLE_SPECULAR
+#ifdef ENABLE_PBR
 <%include file="math/constants.glsl"/>
 <%include file="GGX_Specular.glsl"/>
 <%include file="PBRSurfaceRadiance.glsl"/>
@@ -125,7 +125,7 @@ void main(void) {
     material.baseColor      = BaseColor.rgb;
     float opacity           = Opacity;
 
-#ifdef ENABLE_SPECULAR
+#ifdef ENABLE_PBR
     material.roughness      = Roughness;
     material.metallic       = Metallic;
     material.reflectance    = Reflectance;
@@ -143,7 +143,7 @@ void main(void) {
     float opacity           = getLuminanceParamValue(Opacity, OpacityTex, OpacityTexType, texCoords);
 #endif
 
-#ifndef ENABLE_SPECULAR
+#ifndef ENABLE_PBR
     gl_FragColor = vec4(material.baseColor.rgb, opacity);
 #else
 
@@ -224,5 +224,5 @@ void main(void) {
   }
 }
 
-sgFactory.registerClass('TransparentSurfaceShader', TransparentSurfaceShader)
+Registry.register('TransparentSurfaceShader', TransparentSurfaceShader)
 export { TransparentSurfaceShader }

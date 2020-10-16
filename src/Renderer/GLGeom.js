@@ -1,39 +1,36 @@
-import { Signal } from '../Utilities'
+import { RefCounted } from '../SceneTree/index'
 import { generateShaderGeomBinding } from './GeomShaderBinding.js'
 
-/** Class representing a GL geom. */
-class GLGeom {
+/** Class representing a GL geom.
+ * @private
+ */
+class GLGeom extends RefCounted {
   /**
    * Create a GL geom.
    * @param {any} gl - The gl value.
    * @param {any} geom - The geom value.
    */
   constructor(gl, geom) {
+    super()
     this.__gl = gl
     this.__geom = geom
     this.__glattrs = {}
 
     this.__glattrbuffers = {}
     this.__shaderBindings = {}
-    this.destructing = new Signal()
-    this.updated = new Signal()
 
-    const updateBuffers = opts => {
+    const updateBuffers = (opts) => {
       this.updateBuffers(opts)
-      this.updated.emit()
+      this.emit('updated')
     }
-    this.__geom.geomDataChanged.connect(updateBuffers)
+    this.__geom.on('geomDataChanged', updateBuffers)
 
-    const regenBuffers = opts => {
+    const regenBuffers = () => {
       this.clearShaderBindings()
-      this.updateBuffers(opts)
-      this.updated.emit()
+      this.updateBuffers({ topologyChanged: true })
+      this.emit('updated')
     }
-    this.__geom.geomDataTopologyChanged.connect(regenBuffers)
-
-    this.__geom.destructing.connect(() => {
-      this.destroy()
-    })
+    this.__geom.on('geomDataTopologyChanged', regenBuffers)
   }
 
   /**
@@ -72,12 +69,7 @@ class GLGeom {
     let shaderBinding = this.__shaderBindings[renderstate.shaderkey]
     if (!shaderBinding) {
       const gl = this.__gl
-      shaderBinding = generateShaderGeomBinding(
-        gl,
-        renderstate.attrs,
-        this.__glattrbuffers,
-        this.__indexBuffer
-      )
+      shaderBinding = generateShaderGeomBinding(gl, renderstate.attrs, this.__glattrbuffers, this.__indexBuffer)
       this.__shaderBindings[renderstate.shaderkey] = shaderBinding
     }
     shaderBinding.bind(renderstate)
@@ -105,9 +97,7 @@ class GLGeom {
    * The draw method.
    */
   draw() {
-    throw new Error(
-      'Not implemented. Implement this method in a derived class.'
-    )
+    throw new Error('Not implemented. Implement this method in a derived class.')
   }
 
   /**
@@ -115,9 +105,7 @@ class GLGeom {
    * @param {any} instanceCount - The instanceCount param.
    */
   drawInstanced(instanceCount) {
-    throw new Error(
-      'Not implemented. Implement this method in a derived class.'
-    )
+    throw new Error('Not implemented. Implement this method in a derived class.')
   }
 
   /**
@@ -153,15 +141,16 @@ class GLGeom {
     // eslint-disable-next-line guard-for-in
     for (const attrName in this.__glattrbuffers) {
       const glbuffer = this.__glattrbuffers[attrName]
-      if (glbuffer.shared)
-        continue /* This buffer is shared between geoms. do not destroy */
+      if (glbuffer.shared) continue /* This buffer is shared between geoms. do not destroy */
       gl.deleteBuffer(glbuffer.buffer)
     }
     this.__glattrs = {}
 
     this.__shaderBindings = {}
     this.__destroyed = true
-    this.destructing.emit(this)
+
+    //  Note: PoTree listens to this event. If moved up into RefCounted, make sure it is still emitted.
+    this.emit('destructing', {})
   }
 }
 

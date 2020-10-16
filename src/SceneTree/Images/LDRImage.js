@@ -1,19 +1,35 @@
-import { sgFactory } from '../SGFactory.js'
-import { SystemDesc } from '../../BrowserDetection.js'
-import { NumberParameter } from '../Parameters'
+/* eslint-disable require-jsdoc */
+import { Registry } from '../../Registry'
+import { SystemDesc } from '../../SystemDesc.js'
+import { NumberParameter } from '../Parameters/index'
 import { FileImage } from './FileImage.js'
 
-const supportWebp = navigator.userAgent.indexOf('Chrome') !== -1 // || navigator.userAgent.indexOf("Samsung");
+const supportWebp = window.navigator && navigator.userAgent.includes('Chrome')
 
-/** Class representing a LDR (low dynamic range) image.
+/**
+ * Class representing a LDR (low dynamic range) image.
+ *
+ * ```
+ * const image = new LDRImage()
+ * image.getParameter('FilePath').setUrl("https://storage.googleapis.com/zea-playground-assets/zea-engine/texture.png")
+ * ```
+ *
+ * **Parameters**
+ * * **PreferredSize(`NumberParameter`):** _todo_
+ *
+ * **Events:**
+ * * **loaded:** Triggered when image data is loaded.
+ *
+ * **File Types:** jpg, jpeg, png
+ *
  * @extends FileImage
  */
 class LDRImage extends FileImage {
   /**
    * Create a LDR image.
    * @param {string} name - The name value.
-   * @param {any} filePath - The filePath value.
-   * @param {any} params - The params value.
+   * @param {string} filePath - The filePath value.
+   * @param {object} params - The params value.
    */
   constructor(name, filePath, params) {
     super(name, filePath, params)
@@ -23,8 +39,15 @@ class LDRImage extends FileImage {
   }
 
   /**
-   * The setCrossOrigin method.
-   * @param {any} crossOrigin - The crossOrigin value.
+   * Defines how to handle cross origin request.
+   *
+   * **Possible values:**
+   * * **anonymous** - CORS requests for this element will have the credentials flag set to 'same-origin'.
+   * * **use-credentials** - CORS requests for this element will have the credentials flag set to 'include'.
+   * * **""** - Setting the attribute name to an empty value, like crossorigin or crossorigin="", is the same as anonymous.
+   *
+   * @default anonymous
+   * @param {string} crossOrigin - The crossOrigin value.
    */
   setCrossOrigin(crossOrigin) {
     this.__crossOrigin = crossOrigin
@@ -32,7 +55,7 @@ class LDRImage extends FileImage {
 
   /**
    * The __loadData method.
-   * @param {any} fileDesc - The fileDesc value.
+   * @param {object} fileDesc - The fileDesc value.
    * @private
    */
   __loadData(fileDesc) {
@@ -47,33 +70,29 @@ class LDRImage extends FileImage {
       function chooseImage(params, filterAssets) {
         // Note: this is a filter to remove any corrupt data
         // generate by our broken server side processing system.
-        filterAssets = filterAssets.filter(asset => asset !== null)
+        filterAssets = filterAssets.filter((asset) => asset !== null)
 
         if (supportWebp) {
-          const resultFilter = filterAssets.filter(
-            asset => asset.format === 'webp'
-          )
+          const resultFilter = filterAssets.filter((asset) => asset.format === 'webp')
 
           if (resultFilter.length > 1) {
             filterAssets = resultFilter
           }
         } else {
-          filterAssets = filterAssets.filter(asset => asset.format !== 'webp')
+          filterAssets = filterAssets.filter((asset) => asset.format !== 'webp')
         }
 
         if (params.maxSize) {
-          filterAssets = filterAssets.filter(asset => asset.w <= params.maxSize)
+          filterAssets = filterAssets.filter((asset) => asset.w <= params.maxSize)
         }
         if (params.filter) {
-          const resultFilter = filterAssets.filter(
-            asset => asset.url.indexOf(params.filter) !== -1
-          )
+          const resultFilter = filterAssets.filter((asset) => asset.url.includes(params.filter))
           if (resultFilter.length > 1) {
             filterAssets = resultFilter
           }
         }
         if (params.prefSize) {
-          filterAssets = filterAssets.map(asset =>
+          filterAssets = filterAssets.map((asset) =>
             Object.assign(
               {
                 score: Math.abs(params.prefSize - asset.w),
@@ -84,9 +103,7 @@ class LDRImage extends FileImage {
 
           // return low score, close to desire
           // return _.sortBy(score, "score")[0].option.url;
-          filterAssets.sort((a, b) =>
-            a.score > b.score ? 1 : a.score < b.score ? -1 : 0
-          )
+          filterAssets.sort((a, b) => (a.score > b.score ? 1 : a.score < b.score ? -1 : 0))
         }
         if (filterAssets.length > 0) return filterAssets[0]
       }
@@ -123,9 +140,11 @@ class LDRImage extends FileImage {
   }
 
   /**
-   * The setImageURL method.
-   * @param {any} url - The url value.
-   * @param {any} format - The format value.
+   * Uses the specify url to load an Image element and adds it to the data library.
+   * Sets the state of the current object.
+   *
+   * @param {string} url - The url value.
+   * @param {string} format - The format value.
    */
   setImageURL(url, format = 'RGB') {
     if (!format) {
@@ -149,7 +168,7 @@ class LDRImage extends FileImage {
       this.height = imageElem.height
       this.__data = imageElem
       this.__loaded = true
-      this.loaded.emit()
+      this.emit('loaded', {})
     }
     const imageDataLibrary = FileImage.__imageDataLibrary()
     if (url in imageDataLibrary) {
@@ -171,6 +190,6 @@ class LDRImage extends FileImage {
 }
 
 FileImage.registerLoader('jpg|jpeg|png', LDRImage)
-sgFactory.registerClass('LDRImage', LDRImage)
+Registry.register('LDRImage', LDRImage)
 
 export { LDRImage }

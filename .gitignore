@@ -1,13 +1,14 @@
-/node_modules
+cypress/screenshots/
+node_modules/
 
-lib/
+libs/
 dist/
 projects/
 Tests/Assets/
 SteamServer/
 Resources/Cache/
 
-VisualiveUI/
-
 *.log
+.tmuxp.json
 package-lock.json
+.envrc*

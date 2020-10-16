@@ -1,16 +1,24 @@
-import { Signal } from '../Utilities'
 import { BaseItem } from './BaseItem.js'
 
-import { BooleanParameter } from './Parameters'
+import { BooleanParameter } from './Parameters/index'
 
-/** Class representing a base image in the scene tree.
+/**
+ * Represents a 2D image item, containing width and height.
+ *
+ * **Parameters**
+ * * **AlphaFromLuminance(`BooleanParameter`):** Sets alpha chanel to the luminance of the image and all color channels to `0`.
+ * * **Invert(`BooleanParameter`):** Horizontally flips the image(Basically inverting X pixels).
+ * * **FlipY(`BooleanParameter`):** Vertically flips the image, meaning that it would be upside down if enabled.
+ *
+ * **Events**
+ * * **updated:** Triggered when the value of any of the parameters listed above changes.
+ *
  * @extends BaseItem
  */
 class BaseImage extends BaseItem {
   /**
-   * Create a base image.
-   * @param {string} name - The name of the base image.
-   * @param {any} params - The parameters of the base image.
+   * Creates an instance of BaseImage.
+   * @param {string} name - name of the item
    */
   constructor(name) {
     super(name)
@@ -23,16 +31,19 @@ class BaseImage extends BaseItem {
     this.addParameter(new BooleanParameter('Invert', false))
     this.addParameter(new BooleanParameter('FlipY', false))
 
-    this.updated = this.parameterValueChanged
+    this.on('parameterValueChanged', (event) => {
+      this.emit('updated')
+    })
 
     // Note: Many parts of the code assume a 'loaded' signal.
     // We should probably deprecate and use only 'updated'.
     // Instead we should start using a loaded Promise.
-    this.loaded = new Signal(true)
+    this.loaded = false
   }
 
   /**
    * Returns true if loaded.
+   * @private
    * @return {boolean} - Returns a boolean.
    */
   isLoaded() {
@@ -40,23 +51,24 @@ class BaseImage extends BaseItem {
   }
 
   /**
-   * The getMapping method.
-   * @return {any} - The return value.
+   * Returns mapping object state of the item.
+   * @return {object|undefined} - The return value.
    */
   getMapping() {
     return this.__mapping
   }
 
   /**
-   * The setMapping method
-   * @param {any} mapping - The mapping value.
+   * Sets mapping structure object in the state of the item.
+   * @param {object} mapping - The mapping value.
    */
   setMapping(mapping) {
     this.__mapping = mapping
   }
 
   /**
-   * The isStream method.
+   * Base images are static content, so the value for this method is always going to be `false`
+   *
    * @return {boolean} - Returns a boolean.
    */
   isStream() {
@@ -65,6 +77,7 @@ class BaseImage extends BaseItem {
 
   /**
    * The isStreamAtlas method.
+   * @private
    * @return {boolean} - Returns a boolean.
    */
   isStreamAtlas() {
@@ -72,8 +85,9 @@ class BaseImage extends BaseItem {
   }
 
   /**
-   * The getParams method.
-   * @return {any} - The return value.
+   * Returns all parameters and class state values.
+   *
+   * @return {object} - The return value.
    */
   getParams() {
     return {

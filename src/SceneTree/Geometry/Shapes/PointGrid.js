@@ -1,129 +1,52 @@
 import { Vec2 } from '../../../Math/Vec2'
-import { Points } from '../Points.js'
+import { ProceduralPoints } from './ProceduralPoints'
+import { NumberParameter } from '../../Parameters/NumberParameter'
+import { Registry } from '../../../Registry'
 
-/** A class for generating a point grid.
- * @extends Points
+/**
+ * Represents an ordered grid of points along `X` and `Y` axes.
+ *
+ * ```
+ * const pointGrid = new PointGrid(2.2, 1.5, 12, 12)
+ * ```
+ *
+ * **Parameters**
+ * * **X(`NumberParameter`):** Length of the grid along the `X` axis.
+ * * **Y(`NumberParameter`):** Length of the grid along the `Y` axis.
+ * * **XDivisions(`NumberParameter`):** Number of divisions along `X` axis
+ * * **YDivisions(`NumberParameter`):** Number of divisions along `Y` axis
+ * @extends {ProceduralPoints}
  */
-class PointGrid extends Points {
+class PointGrid extends ProceduralPoints {
   /**
-   * Create a point grid.
-   * @param {number} x - The length of the point grid along the X axis.
-   * @param {number} y - The length of the point grid along the Y axis.
-   * @param {number} xDivisions - The number of divisions along the X axis.
-   * @param {number} yDivisions - The number of divisions along the Y axis.
-   * @param {boolean} addTextureCoords - The addTextureCoords value.
-
+   * Creates an instance of PointGrid.
+   *
+   * @param {number} [x=1.0] - The length of the point grid along the X axis.
+   * @param {number} [y=1.0] - The length of the point grid along the Y axis.
+   * @param {number} [xDivisions=1] - The number of divisions along the X axis.
+   * @param {number} [yDivisions=1] - The number of divisions along the Y axis.
+   * @param {boolean} [addTextureCoords=false] - The addTextureCoords value.
    */
-  constructor(
-    x = 1.0,
-    y = 1.0,
-    xDivisions = 1,
-    yDivisions = 1,
-    addTextureCoords = false
-  ) {
+  constructor(x = 1.0, y = 1.0, xDivisions = 1, yDivisions = 1, addTextureCoords = false) {
     super()
 
-    if (isNaN(x) || isNaN(y) || isNaN(xDivisions) || isNaN(yDivisions))
-      throw new Error('Invalid geom args')
+    if (isNaN(x) || isNaN(y) || isNaN(xDivisions) || isNaN(yDivisions)) throw new Error('Invalid geom args')
+    this.__x = this.addParameter(new NumberParameter('X', x))
+    this.__y = this.addParameter(new NumberParameter('Y', y))
+    this.__xDivisions = this.addParameter(new NumberParameter('XDivisions', xDivisions))
+    this.__yDivisions = this.addParameter(new NumberParameter('YDivisions', yDivisions))
 
-    this.__x = x
-    this.__y = y
-    this.__xDivisions = xDivisions
-    this.__yDivisions = yDivisions
     if (addTextureCoords) this.addVertexAttribute('texCoords', Vec2)
-    this.__rebuild()
+    
+    this.topologyParams.push('XDivisions')
+    this.topologyParams.push('YDivisions')
   }
 
   /**
-   * Getter for X.
-   * Is deprectated. Please use "getX".
-   * @return {number} - Returns the length.
-   */
-  get x() {
-    console.warn("getter is deprectated. Please use 'getX'")
-    return this.getX()
-  }
-
-  /**
-   * Setter for X.
-   * Is deprectated. Please use "setX".
-   * @param {number} val - The length along the X axis.
-   */
-  set x(val) {
-    console.warn("getter is deprectated. Please use 'setX'")
-    this.setX(val)
-  }
-
-  /**
-   * Getter for Y.
-   * Is deprectated. Please use "getY".
-   * @return {number} - Returns the length.
-   */
-  get y() {
-    console.warn("getter is deprectated. Please use 'getY'")
-    return this.getY()
-  }
-
-  /**
-   * Setter for Y.
-   * Is deprectated. Please use "setY".
-   * @param {number} val - The length along the Y axis.
-   */
-  set y(val) {
-    console.warn("getter is deprectated. Please use 'setY'")
-    this.setY(val)
-  }
-
-  /**
-   * Getter for the length of the point grid along the X axis.
-   * @return {number} - Returns the length.
-   */
-  getX() {
-    return this.__x
-  }
-
-  /**
-   * Setter for the length of the point grid along the X axis.
-   * @param {number} val - The length along the X axis.
-   */
-  setX(val) {
-    this.__x = val
-    this.__resize()
-  }
-
-  /**
-   * Getter for the length of the point grid along the Y axis.
-   * @return {number} - Returns the length.
-   */
-  getY() {
-    return this.__y
-  }
-
-  /**
-   * Setter for the length of the point grid along the Y axis.
-   * @param {number} val - The length along the Y axis.
-   */
-  setY(val) {
-    this.__y = val
-    this.__resize()
-  }
-
-  /**
-   * Setter for the size of the point grid.
-   * @param {number} x - The length along the X axis.
-   * @param {number} y - The length along the Y axis.
-   */
-  setSize(x, y) {
-    this.__x = x
-    this.__y = y
-    this.__resize()
-  }
-
-  /**
-   * The __rebuild method.
+   * The rebuild method.
    * @private
    */
-  __rebuild() {
+  rebuild() {
     this.setNumVertices(this.__xDivisions * this.__yDivisions)
 
     const texCoords = this.getVertexAttribute('texCoords')
@@ -136,37 +59,24 @@ class PointGrid extends Points {
         }
       }
     }
-
-    this.__resize()
+    this.resize()
   }
 
   /**
-   * The __resize method.
+   * The resize method.
    * @private
    */
-  __resize() {
+  resize() {
+    const positions = this.getVertexAttribute('positions')
     for (let i = 0; i < this.__yDivisions; i++) {
       const y = (i / (this.__yDivisions - 1) - 0.5) * this.__y
       for (let j = 0; j < this.__xDivisions; j++) {
         const x = (j / (this.__xDivisions - 1) - 0.5) * this.__x
-        this.getVertex(i * this.__xDivisions + j).set(x, y, 0.0)
+        positions.getValueRef(i * this.__xDivisions + j).set(x, y, 0.0)
       }
     }
-    this.setBoundingBoxDirty()
-  }
-
-  /**
-   * The toJSON method encodes this type as a json object for persistences.
-   * @return {object} - Returns the json object.
-   */
-  toJSON() {
-    const json = super.toJSON()
-    json['x'] = this.__x
-    json['y'] = this.__y
-    json['xDivisions'] = this.__xDivisions
-    json['yDivisions'] = this.__yDivisions
-    return json
   }
 }
 
+Registry.register('PointGrid', PointGrid)
 export { PointGrid }

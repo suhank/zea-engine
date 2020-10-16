@@ -1,8 +1,10 @@
-import { AttrValue } from '../Math'
+import { AttrValue } from '../Math/index'
 import { ScreenQuadShader } from './Shaders/ScreenQuadShader.js'
 import { generateShaderGeomBinding } from './GeomShaderBinding.js'
 
-/** Class representing a GL screen quad. */
+/** Class representing a GL screen quad.
+ * @private
+ */
 class GLScreenQuad {
   /**
    * Create a GL screen quad.
@@ -20,12 +22,7 @@ class GLScreenQuad {
     if (!gl.__quadVertexIdsBuffer) gl.setupInstancedQuad()
 
     const shaderComp = this.__glshader.compileForTarget('GLScreenQuad', preproc)
-    this.__quadBinding = generateShaderGeomBinding(
-      gl,
-      shaderComp.attrs,
-      gl.__quadattrbuffers,
-      gl.__quadIndexBuffer
-    )
+    this.__quadBinding = generateShaderGeomBinding(gl, shaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer)
 
     this.ready = true
   }
@@ -45,23 +42,13 @@ class GLScreenQuad {
     {
       const unif = unifs.pos
       if (unif) {
-        gl.uniform2fv(
-          unif.location,
-          pos ? (pos instanceof AttrValue ? pos.asArray() : pos) : this.__pos
-        )
+        gl.uniform2fv(unif.location, pos ? (pos instanceof AttrValue ? pos.asArray() : pos) : this.__pos)
       }
     }
     {
       const unif = unifs.size
       if (unif) {
-        gl.uniform2fv(
-          unif.location,
-          size
-            ? size instanceof AttrValue
-              ? size.asArray()
-              : size
-            : this.__size
-        )
+        gl.uniform2fv(unif.location, size ? (size instanceof AttrValue ? size.asArray() : size) : this.__size)
       }
     }
     // if ('flipY' in unifs)

@@ -1,4 +1,4 @@
-import { sgFactory } from '../../SceneTree'
+import { Registry } from '../../Registry'
 import { FlatSurfaceShader } from './FlatSurfaceShader.js'
 
 class ToolIconShader extends FlatSurfaceShader {
@@ -8,5 +8,5 @@ class ToolIconShader extends FlatSurfaceShader {
   }
 }
 
-sgFactory.registerClass('ToolIconShader', ToolIconShader)
+Registry.register('ToolIconShader', ToolIconShader)
 export { ToolIconShader }

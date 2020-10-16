@@ -3,6 +3,7 @@ import '../SceneTree/Geometry/Mesh.js'
 
 /** Class representing a GL mesh.
  * @extends GLGeom
+ * @private
  */
 class GLMesh extends GLGeom {
   /**
@@ -37,12 +38,9 @@ class GLMesh extends GLGeom {
     const geomBuffers = this.__geom.genBuffers()
     const indices = geomBuffers.indices
     this.__numTriIndices = geomBuffers.indices.length
-    if (indices instanceof Uint8Array)
-      this.__indexDataType = this.__gl.UNSIGNED_BYTE
-    if (indices instanceof Uint16Array)
-      this.__indexDataType = this.__gl.UNSIGNED_SHORT
-    if (indices instanceof Uint32Array)
-      this.__indexDataType = this.__gl.UNSIGNED_INT
+    if (indices instanceof Uint8Array) this.__indexDataType = this.__gl.UNSIGNED_BYTE
+    if (indices instanceof Uint16Array) this.__indexDataType = this.__gl.UNSIGNED_SHORT
+    if (indices instanceof Uint32Array) this.__indexDataType = this.__gl.UNSIGNED_INT
 
     this.__numTriangles = indices.length / 3
     this.__numRenderVerts = geomBuffers.numRenderVerts
@@ -69,10 +67,7 @@ class GLMesh extends GLGeom {
         normalized: attrData.normalized,
       }
 
-      if (attrName == 'textureCoords')
-        this.__glattrbuffers['texCoords'] = this.__glattrbuffers[
-          'textureCoords'
-        ]
+      if (attrName == 'textureCoords') this.__glattrbuffers['texCoords'] = this.__glattrbuffers['textureCoords']
     }
   }
 
@@ -97,7 +92,7 @@ class GLMesh extends GLGeom {
    * @return {any} - The return value.
    */
   getNumUnSplitVerts() {
-    return this.__geom.vertices.length
+    return this.__geom.getNumVertices()
   }
 
   /**
@@ -122,8 +117,7 @@ class GLMesh extends GLGeom {
 
     // Generate the wireframes VAO.
     // It can share buffers with the regular VAO, but provide a different index buffer.
-    if (this.__wireframesVao)
-      this.__ext.deleteVertexArrayOES(this.__wireframesVao)
+    if (this.__wireframesVao) this.__ext.deleteVertexArrayOES(this.__wireframesVao)
     this.__wireframesVao = this.__ext.createVertexArrayOES()
     this.__ext.bindVertexArrayOES(this.__wireframesVao)
 
@@ -164,13 +158,7 @@ class GLMesh extends GLGeom {
    * Draw an item to screen.
    */
   drawWireframe() {
-    if (this.__wireframesVao)
-      this.__gl.drawElements(
-        this.__gl.LINES,
-        this.__numWireIndices,
-        this.__gl.UNSIGNED_INT,
-        0
-      )
+    if (this.__wireframesVao) this.__gl.drawElements(this.__gl.LINES, this.__numWireIndices, this.__gl.UNSIGNED_INT, 0)
   }
 
   // ////////////////////////////////
@@ -183,20 +171,15 @@ class GLMesh extends GLGeom {
   generateHardEdgesVAO() {
     if (!this.__vao) return false
 
-    if (!this.__geom.edgeVerts) this.__geom.generateHardEdgesFlags()
-
     // generate the wireframes VAO.
     // It can share buffers with the regular VAO, but provide a different index buffer.
-    if (this.__hardEdgesVao)
-      this.__ext.deleteVertexArrayOES(this.__hardEdgesVao)
+    if (this.__hardEdgesVao) this.__ext.deleteVertexArrayOES(this.__hardEdgesVao)
     this.__hardEdgesVao = this.__ext.createVertexArrayOES()
     this.__ext.bindVertexArrayOES(this.__hardEdgesVao)
 
     const gl = this.__gl
     const hardEdgeIndexBuffer = gl.createBuffer()
-    const hardEdgeIndices = Uint32Array.from(
-      this.__geom.computeHardEdgesIndices()
-    )
+    const hardEdgeIndices = this.__geom.computeHardEdgesIndices()
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, hardEdgeIndexBuffer)
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, hardEdgeIndices, gl.STATIC_DRAW)
 
@@ -231,13 +214,7 @@ class GLMesh extends GLGeom {
    * Draw an item to screen.
    */
   drawHardEdges() {
-    if (this.__hardEdgesVao)
-      this.__gl.drawElements(
-        this.__gl.LINES,
-        this.__numEdgeIndices,
-        this.__gl.UNSIGNED_INT,
-        0
-      )
+    if (this.__hardEdgesVao) this.__gl.drawElements(this.__gl.LINES, this.__numEdgeIndices, this.__gl.UNSIGNED_INT, 0)
   }
 
   // ////////////////////////////////
@@ -257,12 +234,7 @@ class GLMesh extends GLGeom {
    * Draw an item to screen.
    */
   draw() {
-    this.__gl.drawElements(
-      this.__gl.TRIANGLES,
-      this.__numTriIndices,
-      this.__indexDataType,
-      0
-    )
+    this.__gl.drawElements(this.__gl.TRIANGLES, this.__numTriIndices, this.__indexDataType, 0)
   }
 
   /**
@@ -270,13 +242,7 @@ class GLMesh extends GLGeom {
    * @param {any} instanceCount - The instanceCount value.
    */
   drawInstanced(instanceCount) {
-    this.__gl.drawElementsInstanced(
-      this.__gl.TRIANGLES,
-      this.__numTriIndices,
-      this.__indexDataType,
-      0,
-      instanceCount
-    )
+    this.__gl.drawElementsInstanced(this.__gl.TRIANGLES, this.__numTriIndices, this.__indexDataType, 0, instanceCount)
   }
 
   /**
