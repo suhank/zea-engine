@@ -178,7 +178,14 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
       if (shaderClass.isOverlay()) return false
 
       const baseColorParam = material.getParameter('BaseColor')
-      if (baseColorParam && baseColorParam.getValue().a < 1.0) return false
+      if (baseColorParam && baseColorParam.getValue().a < 1.0) {
+        return false
+      }
+
+      const opacityParam = material.getParameter('Opacity')
+      if (opacityParam && opacityParam.getValue() < 1.0) {
+        return false
+      }
 
       return true
     }
@@ -191,12 +198,38 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
    * @return {boolean} - The return value.
    */
   addGeomItem(geomItem) {
-    const material = geomItem.getParameter('Material').getValue()
+    const materialParam = geomItem.getParameter('Material')
+
+    // In the case that a geometry material changes, we may need to
+    // select a different pass. e.g. if the new material is transparent.
+    const materialChanged = () => {
+      materialParam.off('valueChanged', materialChanged)
+      if (baseColorParam) {
+        baseColorParam.off('valueChanged', materialChanged)
+      }
+      if (opacityParam) {
+        opacityParam.off('valueChanged', materialChanged)
+      }
+      this.removeGeomItem(geomItem)
+      this.__renderer.assignTreeItemToGLPass(geomItem)
+    }
+    materialParam.on('valueChanged', materialChanged)
+
+    const material = materialParam.getValue()
+    const baseColorParam = material.getParameter('BaseColor')
+    if (baseColorParam) {
+      baseColorParam.on('valueChanged', materialChanged)
+    }
+    const opacityParam = material.getParameter('Opacity')
+    if (opacityParam) {
+      opacityParam.on('valueChanged', materialChanged)
+    }
+
     const shaderName = material.getShaderName()
     const shaders = this.constructShaders(shaderName)
-    let glshader = shaders.glshader
-    let glgeomdatashader = shaders.glgeomdatashader
-    let glselectedshader = shaders.glselectedshader
+    // let glshader = shaders.glshader
+    // let glgeomdatashader = shaders.glgeomdatashader
+    // let glselectedshader = shaders.glselectedshader
     // const glshader = this.__renderer.getOrCreateShader(shaderName)
     // if (glshader.constructor.getGeomDataShaderName())
     //   glgeomdatashader = this.__renderer.getOrCreateShader(

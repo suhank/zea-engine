@@ -44,7 +44,13 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
       if (shaderClass.isOverlay()) return false
 
       const baseColorParam = material.getParameter('BaseColor')
-      if (baseColorParam && baseColorParam.getValue().a < 0.999) return true
+      if (baseColorParam && baseColorParam.getValue().a < 1.0) {
+        return true
+      }
+      const opacityParam = material.getParameter('Opacity')
+      if (opacityParam && opacityParam.getValue() < 1.0) {
+        return true
+      }
     }
     return false
   }
@@ -222,9 +228,12 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
     // Then we can simply check if we have any multiply items here
     // before rendering all items.
 
-    renderstate.pass = 'MULTIPLY'
-    gl.blendFunc(gl.DST_COLOR, gl.ZERO) // For multiply, select this.
-    this._drawItems(renderstate)
+
+    // TODO: The shader should adapt to the transparently sub-pass mode, and aclaculate a multiply effect.
+    // Currently we don't have any shaders that do this, so disabling multiply for now.
+    // renderstate.pass = 'MULTIPLY'
+    // gl.blendFunc(gl.DST_COLOR, gl.ZERO) // For multiply, select this.
+    // this._drawItems(renderstate)
 
     renderstate.pass = 'ADD'
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA) // For add

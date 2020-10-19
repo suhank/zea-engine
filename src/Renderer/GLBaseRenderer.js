@@ -349,7 +349,7 @@ class GLBaseRenderer extends ParameterOwner {
   }
 
   /**
-   * Adds tree items to the scene.
+   * Adds tree items to the renderer, selecting the correct pass to delegate rendering too, and listens to future changes in the tree.
    *
    * @param {TreeItem} treeItem - The tree item to add.
    */
@@ -357,13 +357,34 @@ class GLBaseRenderer extends ParameterOwner {
     // Note: we can have BaseItems in the tree now.
     if (!(treeItem instanceof TreeItem)) return
 
+    this.assignTreeItemToGLPass(treeItem)
+
+    // Traverse the tree adding items until we hit the leaves (which are usually GeomItems.)
+    for (const childItem of treeItem.getChildren()) {
+      if (childItem) this.addTreeItem(childItem)
+    }
+
+    treeItem.on('childAdded', this.__childItemAdded)
+    treeItem.on('childRemoved', this.__childItemRemoved)
+
+    this.renderGeomDataFbos()
+  }
+
+  /**
+   * Searches through the passes and finds the appropriate pass to draw the given tree items.
+   *
+   * @param {TreeItem} treeItem - The tree item to assign.
+   */
+  assignTreeItemToGLPass(treeItem) {
+
+    let handled = false
     for (let i = this.__passesRegistrationOrder.length - 1; i >= 0; i--) {
       const pass = this.__passesRegistrationOrder[i]
       try {
         const rargs = {
           continueInSubTree: true,
         }
-        const handled = pass.itemAddedToScene(treeItem, rargs)
+        handled = pass.itemAddedToScene(treeItem, rargs)
         if (handled) {
           if (!rargs.continueInSubTree) return
           break
@@ -376,26 +397,18 @@ class GLBaseRenderer extends ParameterOwner {
       }
     }
 
-    for (const passCbs of this.__passCallbacks) {
-      const rargs = {
-        continueInSubTree: true,
-      }
-      const handled = passCbs.itemAddedFn(treeItem, rargs)
-      if (handled) {
-        if (!rargs.continueInSubTree) return
-        break
+    if (!handled) {
+      for (const passCbs of this.__passCallbacks) {
+        const rargs = {
+          continueInSubTree: true,
+        }
+        const handled = passCbs.itemAddedFn(treeItem, rargs)
+        if (handled) {
+          if (!rargs.continueInSubTree) return
+          break
+        }
       }
     }
-
-    // Traverse the tree adding items until we hit the leaves (which are usually GeomItems.)
-    for (const childItem of treeItem.getChildren()) {
-      if (childItem) this.addTreeItem(childItem)
-    }
-
-    treeItem.on('childAdded', this.__childItemAdded)
-    treeItem.on('childRemoved', this.__childItemRemoved)
-
-    this.renderGeomDataFbos()
   }
 
   /**
@@ -415,10 +428,17 @@ class GLBaseRenderer extends ParameterOwner {
       const rargs = {
         continueInSubTree: true,
       }
-      const handled = pass.itemRemovedFromScene(treeItem, rargs)
-      if (handled) {
-        if (!rargs.continueInSubTree) return
-        break
+      try {
+        const handled = pass.itemRemovedFromScene(treeItem, rargs)
+        if (handled) {
+          if (!rargs.continueInSubTree) return
+          break
+        }
+      } catch (error) {
+        if (!loggedErrors[pass.constructor.name]) {
+          loggedErrors[pass.constructor.name] = error.message
+          console.warn(error.message)
+        }
       }
     }
 
