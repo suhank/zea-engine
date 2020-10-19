@@ -235,7 +235,7 @@ class Camera extends TreeItem {
    * Getter for the target position.
    * @return {Vec3} - Returns the target position.
    */
-  getTargetPostion() {
+  getTargetPosition() {
     const focalDistance = this.__focalDistanceParam.getValue()
     const xfo = this.getParameter('GlobalXfo').getValue()
     const target = xfo.ori.getZaxis()
