@@ -3,12 +3,6 @@
 import { EventEmitter } from '../Utilities/EventEmitter'
 import { Registry } from '../Registry'
 
-// Explicit import of files to avoid importing all the parameter types.
-// Note: Soon these imports should be removed, once all code avoids calling
-// 'addParameter' without the parameter instance.
-
-let counter = 0
-
 /**
  * Class that allows other classes to be parameterized by `Parameter` type of objects.
  * Not only hosting parameters, but their events.
@@ -23,21 +17,10 @@ class ParameterOwner extends EventEmitter {
    */
   constructor() {
     super()
-    this.__id = ++counter
-
     this.__params = []
     this.__paramMapping = {}
     this.deprecatedParamMapping = {}
     this.__paramEventHandlers = {}
-  }
-
-  /**
-   * Returns the unique id of the object.
-   * @private
-   * @return {number} - The Id of the ParameterOwner object.
-   */
-  getId() {
-    return this.__id
   }
 
   // --- Params ---

@@ -1,3 +1,6 @@
+
+let counter = 0
+
 /**
  * Provides an interface for emitting events under given names, and registering listeners to those events.
  * This is a base class for most classes in the Scene Tree and Renderer, enabling observers to listen to changes throughout the system.
@@ -25,6 +28,16 @@ class EventEmitter {
    */
   constructor() {
     this.listeners = {}
+    this.__id = ++counter
+  }
+
+  /**
+   * Returns the unique id of the object.
+   * @private
+   * @return {number} - The Id of the ParameterOwner object.
+   */
+  getId() {
+    return this.__id
   }
 
   /**
