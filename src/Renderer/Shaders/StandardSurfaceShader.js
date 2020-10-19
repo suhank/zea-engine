@@ -130,6 +130,7 @@ uniform float Roughness;
 uniform float Metallic;
 uniform float Reflectance;
 uniform float EmissiveStrength;
+uniform float Opacity;
 
 #ifdef ENABLE_TEXTURES
 uniform sampler2D BaseColorTex;
@@ -231,20 +232,37 @@ void main(void) {
         //material.baseColor = vec3(1.0, 0.0, 0.0);
     }
 
-#ifdef ENABLE_PBR
-    vec3 irradiance = sampleEnvMap(normal, 1.0);
-    vec3 radiance = pbrSurfaceRadiance(material, irradiance, normal, viewVector);
-#else
-    vec3 irradiance = vec3(dot(normal, viewVector));
-    vec3 radiance = material.baseColor * irradiance;
-#endif
-
 #ifndef ENABLE_ES3
     vec4 fragColor;
 #endif
-    // fragColor = vec4(material.baseColor, 1.0);
-    // fragColor = vec4(material.baseColor * irradiance, 1.0);
-    fragColor = vec4(radiance + (emission * material.baseColor), 1.0);
+
+    float opacity = Opacity * BaseColor.a;
+    if (opacity < 1.0) {
+
+#ifdef ENABLE_PBR
+        vec4 specularReflectance = pbrSpecularReflectance(material, normal, viewVector);
+        vec3 radiance = specularReflectance.rgb, mix(opacity, 1.0, specularReflectance.a);
+#else
+        vec3 irradiance = vec3(dot(normal, viewVector));
+        vec3 radiance = material.baseColor * irradiance;
+#endif
+        fragColor = vec4(radiance + (emission * material.baseColor), opacity);
+    }
+    else {
+
+#ifdef ENABLE_PBR
+        vec3 irradiance = sampleEnvMap(normal, 1.0);
+        vec3 radiance = pbrSurfaceRadiance(material, irradiance, normal, viewVector);
+#else
+        vec3 irradiance = vec3(dot(normal, viewVector));
+        vec3 radiance = material.baseColor * irradiance;
+#endif
+
+        // fragColor = vec4(material.baseColor, 1.0);
+        // fragColor = vec4(material.baseColor * irradiance, 1.0);
+        fragColor = vec4(radiance + (emission * material.baseColor), 1.0);
+
+    }
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION
     fragColor.rgb = toGamma(fragColor.rgb * exposure);
@@ -278,6 +296,7 @@ void main(void) {
       defaultValue: 0.0,
       range: [0, 1],
     })
+    paramDescs.push({ name: 'Opacity', defaultValue: 1.0, range: [0, 1] })
 
     // paramDescs.push({ name: 'TexCoordScale', defaultValue: 1.0, texturable: false });
     return paramDescs
