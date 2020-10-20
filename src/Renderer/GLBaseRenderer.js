@@ -493,6 +493,7 @@ class GLBaseRenderer extends ParameterOwner {
    */
   __onResize() {
     if (!this.__xrViewportPresenting) {
+      if (this.__glcanvas.clientWidth == 0 || this.__glcanvas.clientHeight == 0) return
       // Note: devicePixelRatio has already been factored into the clientWidth and clientHeight,
       // meaning we do not need to multiply client values by devicePixelRatio to get real values.
       // On some devices, this duplicate multiplication (when the meta tag was not present), caused
