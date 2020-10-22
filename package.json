@@ -27,13 +27,13 @@
     "release": "standard-version",
     "start": "es-dev-server",
     "start:watch": "es-dev-server --app-index testing-e2e/index.html --open --watch",
-    "testing-server": "node testing-server/index.js",
     "test": "jest",
     "test:coverage": "jest --coverage",
     "test:debug": "node --inspect ./node_modules/jest/bin/jest.js --runInBand --watch",
     "test:watch": "jest --watch",
     "test:e2e": "percy exec cypress run --browser chrome --headless",
-    "test:e2e:watch": "percy exec cypress open"
+    "test:e2e:watch": "percy exec cypress open",
+    "to-cleanup": "rm -Rf dist/ node_modules/ yarn.lock"
   },
   "dependencies": {},
   "devDependencies": {
