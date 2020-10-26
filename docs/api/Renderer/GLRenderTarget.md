@@ -79,7 +79,7 @@ The clear method.
 <a name="GLRenderTarget+bindForReading"></a>
 
 ### bindForReading
-The bindForReading method.
+Binds the render target in preparation for 'readPixels' calls to pull data back to main memory.
 
 
 <a name="GLRenderTarget+unbindForReading"></a>

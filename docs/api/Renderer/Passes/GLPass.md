@@ -10,6 +10,8 @@ This class abstracts the rendering of a collection of geometries to screen.
     * [new GLPass()](#new-GLPass)
     * [init(renderer, passIndex)](#init)
     * [setPassIndex(passIndex)](#setPassIndex)
+    * [itemAddedToScene(treeItem, rargs) ⇒ <code>Boolean</code>](#itemAddedToScene)
+    * [itemRemovedFromScene(treeItem, rargs) ⇒ <code>Boolean</code>](#itemRemovedFromScene)
     * [startPresenting()](#startPresenting)
     * [stopPresenting()](#stopPresenting)
     * [draw(renderstate)](#draw)
@@ -44,6 +46,35 @@ The setPassIndex method.
 | Param | Type | Description |
 | --- | --- | --- |
 | passIndex | <code>any</code> | The passIndex value. |
+
+<a name="GLPass+itemAddedToScene"></a>
+
+### itemAddedToScene
+The itemAddedToScene method is called on each pass when a new item
+is added to the scene, and the renderer must decide how to render it.
+It allows Passes to select geometries to handle the drawing of.
+
+
+**Returns**: <code>Boolean</code> - - The return value.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| treeItem | <code>[TreeItem](api/SceneTree/TreeItem.md)</code> | The treeItem value. |
+| rargs | <code>object</code> | Extra return values are passed back in this object. The object contains a parameter 'continueInSubTree', which can be set to false, so the subtree of this node will not be traversed after this node is handled. |
+
+<a name="GLPass+itemRemovedFromScene"></a>
+
+### itemRemovedFromScene
+The itemRemovedFromScene method is called on each pass when aa item
+is removed to the scene, and the pass must handle cleaning up any resources.
+
+
+**Returns**: <code>Boolean</code> - - The return value.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| treeItem | <code>[TreeItem](api/SceneTree/TreeItem.md)</code> | The treeItem value. |
+| rargs | <code>object</code> | Extra return values are passed back in this object. |
 
 <a name="GLPass+startPresenting"></a>
 

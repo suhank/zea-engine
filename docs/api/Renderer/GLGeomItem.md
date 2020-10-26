@@ -12,7 +12,6 @@ This class abstracts the rendering of a collection of geometries to screen.
     * [getGLGeom() ⇒ <code>any</code>](#getGLGeom)
     * [isVisible() ⇒ <code>any</code>](#isVisible)
     * [getId() ⇒ <code>any</code>](#getId)
-    * [getFlags() ⇒ <code>any</code>](#getFlags)
     * [updateVisibility()](#updateVisibility)
     * [setCullState(culled)](#setCullState)
     * [bind(renderstate) ⇒ <code>any</code>](#bind)
@@ -24,13 +23,13 @@ This class abstracts the rendering of a collection of geometries to screen.
 Create a GL geom item.
 
 
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| gl | <code>any</code> |  | The gl value. |
-| geomItem | <code>any</code> |  | The geomItem value. |
-| glGeom | <code>any</code> |  | The glGeom value. |
-| id | <code>any</code> |  | The id value. |
-| flags | <code>number</code> | <code></code> | The flags value. |
+| Param | Type | Description |
+| --- | --- | --- |
+| gl | <code>any</code> | The gl value. |
+| geomItem | <code>any</code> | The geomItem value. |
+| glGeom | <code>any</code> | The glGeom value. |
+| id | <code>any</code> | The id value. |
+| flags | <code>number</code> | The flags value. |
 
 <a name="GLGeomItem+getGeomItem"></a>
 
@@ -57,13 +56,6 @@ The isVisible method.
 
 ### getId
 The getId method.
-
-
-**Returns**: <code>any</code> - - The return value.  
-<a name="GLGeomItem+getFlags"></a>
-
-### getFlags
-The getFlags method.
 
 
 **Returns**: <code>any</code> - - The return value.  
