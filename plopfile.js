@@ -21,6 +21,12 @@ module.exports = (plop) => {
         path: 'testing-e2e/{{dashCase name}}.html',
         templateFile: 'plop-templates/e2e-test-page.html',
       },
+      {
+        type: 'append',
+        path: 'testing-e2e/index.html',
+        pattern: '</li>',
+        template: '      <li><a href="{{dashCase name}}.html">{{dashCase name}}</a></li>',
+      },
     ],
   })
 }
