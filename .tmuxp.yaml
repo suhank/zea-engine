@@ -7,5 +7,5 @@ windows:
       - ${EDITOR} -S
   - panes:
       - shell_command:
-          - g fetch
-          - g s
+          - git fetch
+          - git status
