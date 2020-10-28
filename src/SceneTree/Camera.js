@@ -2,7 +2,7 @@
 import { Vec3, Box3, Xfo } from '../Math/index'
 import { TreeItem } from './TreeItem.js'
 import { BooleanParameter, NumberParameter } from './Parameters/index'
-import { MathFunctions } from '../Utilities/MathFunctions'
+import { MathFunctions } from '../Utilities/MathFunctions'
 import { Registry } from '../Registry'
 
 /**
@@ -235,7 +235,7 @@ class Camera extends TreeItem {
    * Getter for the target position.
    * @return {Vec3} - Returns the target position.
    */
-  getTargetPostion() {
+  getTargetPosition() {
     const focalDistance = this.__focalDistanceParam.getValue()
     const xfo = this.getParameter('GlobalXfo').getValue()
     const target = xfo.ori.getZaxis()
