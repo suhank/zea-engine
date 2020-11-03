@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
-import { Vec3, Color, Xfo } from '../Math/index'
+import { Vec3, Color, Xfo } from '../../Math/index'
+import { Registry } from '../../Registry'
 import {
   BooleanParameter,
   NumberParameter,
@@ -8,12 +9,12 @@ import {
   XfoParameter,
   ItemSetParameter,
   MultiChoiceParameter,
-} from './Parameters/index'
-import { MaterialParameter } from './Parameters/MaterialParameter.js'
-import { TreeItem } from './TreeItem'
-import { BaseGeomItem } from './BaseGeomItem'
-import { Registry } from '../Registry'
-import { GroupTransformXfoOperator, GroupMemberXfoOperator } from './Operators/GroupMemberXfoOperator.js'
+} from '../Parameters/index'
+import { MaterialParameter } from '../Parameters/MaterialParameter.js'
+import { TreeItem } from '../TreeItem'
+import { BaseGeomItem } from '../BaseGeomItem'
+import { GroupTransformXfoOperator, GroupMemberXfoOperator } from '../Operators/GroupMemberXfoOperator.js'
+import { BaseGroup } from './BaseGroup'
 
 const GROUP_XFO_MODES = {
   disabled: 0,
@@ -42,7 +43,7 @@ const GROUP_XFO_MODES = {
  *
  * @extends TreeItem
  */
-class Group extends TreeItem {
+class Group extends BaseGroup {
   /**
    * Creates an instance of a group.
    *
@@ -55,21 +56,8 @@ class Group extends TreeItem {
     this.groupXfoDirty = false
     this.calculatingGroupXfo = false
     this.dirty = false
-    this.searchRoot = null
     this._bindXfoDirty = false
-
-    // this.invGroupXfo = undefined
     this.memberXfoOps = []
-    // this.__eventHandlers = []
-
-    const pid = 0
-    this.__itemsParam = this.addParameter(new ItemSetParameter('Items', (item) => item instanceof TreeItem))
-    this.__itemsParam.on('itemAdded', (event) => {
-      this.__bindItem(event.item, event.index)
-    })
-    this.__itemsParam.on('itemRemoved', (event) => {
-      this.__unbindItem(event.item, event.index)
-    })
 
     this.__initialXfoModeParam = this.addParameter(
       new MultiChoiceParameter('InitialXfoMode', GROUP_XFO_MODES.average, ['manual', 'first', 'average', 'global'])
@@ -368,13 +356,8 @@ class Group extends TreeItem {
    * @private
    */
   __bindItem(item, index) {
+    super.__bindItem(item, index)
     if (!(item instanceof TreeItem)) return
-
-    item.on('pointerDown', this.onPointerDown)
-    item.on('pointerUp', this.onPointerUp)
-    item.on('pointerMove', this.onPointerMove)
-    item.on('pointerEnter', this.onPointerEnter)
-    item.on('pointerLeave', this.onPointerLeave)
 
     // ///////////////////////////////
     // Update the Material
@@ -427,18 +410,6 @@ class Group extends TreeItem {
       item.propagateVisibility(-1)
     }
 
-    // const updateGlobalXfo = () => {
-    //   const initialXfoMode = this.__initialXfoModeParam.getValue()
-    //   if (initialXfoMode == GROUP_XFO_MODES.first && index == 0) {
-    //     this.calcGroupXfo()
-    //   } else if (
-    //     initialXfoMode == GROUP_XFO_MODES.average ||
-    //     initialXfoMode == GROUP_XFO_MODES.globalOri
-    //   ) {
-    //     this.calcGroupXfo()
-    //   }
-    // }
-
     if (item instanceof TreeItem) {
       const memberGlobalXfoParam = item.getParameter('GlobalXfo')
       const memberXfoOp = new GroupMemberXfoOperator(this.getParameter('GroupTransform'), memberGlobalXfoParam)
@@ -447,22 +418,6 @@ class Group extends TreeItem {
       item.getParameter('BoundingBox').on('valueChanged', this._setBoundingBoxDirty)
       this._bindXfoDirty = true
     }
-
-    // this.memberXfoOps[index] = item.getParameter('GlobalXfo').getValue()
-    // eventHandlers.globalXfoChanged = (event) => {
-    //   // If the item's xfo changees, potentially through its own hierarchy
-    //   // then we need to re-bind here.
-    //   if (!this.propagatingXfoToItems) {
-    //     this.memberXfoOps[index] = item.getParameter('GlobalXfo').getValue()
-    //     this.groupXfoDirty = true
-    //     updateGlobalXfo()
-    //   }
-    // }
-    // item.on('globalXfoChanged', eventHandlers.globalXfoChanged)
-
-    item.on('boundingChanged', this._setBoundingBoxDirty)
-
-    // updateGlobalXfo()
   }
 
   /**
@@ -472,6 +427,7 @@ class Group extends TreeItem {
    * @private
    */
   __unbindItem(item, index) {
+    super.__unbindItem(item, index)
     if (!(item instanceof TreeItem)) return
 
     item.removeHighlight('branchselected' + this.getId(), true)
@@ -495,24 +451,13 @@ class Group extends TreeItem {
       }
     }, true)
 
-    item.off('pointerDown', this.onPointerDown)
-    item.off('pointerUp', this.onPointerUp)
-    item.off('pointerMove', this.onPointerMove)
-    item.off('pointerEnter', this.onPointerEnter)
-    item.off('pointerLeave', this.onPointerLeave)
-
     if (item instanceof TreeItem) {
       this.memberXfoOps[index].detach()
       this.memberXfoOps.splice(index, 1)
       this._setBoundingBoxDirty()
+      item.getParameter('BoundingBox').off('valueChanged', this._setBoundingBoxDirty)
       this._bindXfoDirty = true
     }
-
-    // const eventHandlers = this.__eventHandlers[index]
-    // item.off('globalXfoChanged', eventHandlers.globalXfoChanged)
-    item.off('boundingChanged', this._setBoundingBoxDirty)
-
-    // this.__eventHandlers.splice(index, 1)
   }
 
   /**
@@ -644,61 +589,13 @@ class Group extends TreeItem {
   // Persistence
 
   /**
-   * The toJSON method encodes this type as a json object for persistence.
-   *
-   * @param {object} context - The context value.
-   * @return {object} - Returns the json object.
+   * called once loading is done.
+   * @private
    */
-  toJSON(context) {
-    const j = super.toJSON(context)
-    const items = Array.from(this.__itemsParam.getValue())
-    const treeItems = []
-    items.forEach((p) => {
-      const path = p.getPath()
-      treeItems.push(context ? context.makeRelative(path) : path)
-    })
-    j.treeItems = treeItems
-    return j
-  }
-
-  /**
-   * The fromJSON method decodes a json object for this type.
-   *
-   * @param {object} j - The json object this item must decode.
-   * @param {object} context - The context value.
-   */
-  fromJSON(j, context) {
-    super.fromJSON(j, context)
-
-    if (!j.treeItems) {
-      console.warn('Invalid Parameter JSON')
-      return
-    }
-    if (!context) {
-      throw new Error('Unable to load JSON on a Group without a load context')
-    }
-    let count = j.treeItems.length
-
-    const addItem = (path) => {
-      context.resolvePath(
-        path,
-        (treeItem) => {
-          this.addItem(treeItem)
-          count--
-          if (count == 0) {
-            this.calculatingGroupXfo = true
-            this.calcGroupXfo()
-            this.calculatingGroupXfo = false
-          }
-        },
-        (reason) => {
-          console.warn("Group: '" + this.getName() + "'. Unable to load item:" + path)
-        }
-      )
-    }
-    for (const path of j.treeItems) {
-      addItem(path)
-    }
+  __loadDone() {
+    this.calculatingGroupXfo = true
+    this.calcGroupXfo()
+    this.calculatingGroupXfo = false
   }
 
   // ////////////////////////////////////////
@@ -714,15 +611,6 @@ class Group extends TreeItem {
     const cloned = new Group()
     cloned.copyFrom(this)
     return cloned
-  }
-
-  /**
-   * Copies current Group with all owned items.
-   *
-   * @param {Group} src - The group to copy from.
-   */
-  copyFrom(src, context) {
-    super.copyFrom(src, context)
   }
 }
 

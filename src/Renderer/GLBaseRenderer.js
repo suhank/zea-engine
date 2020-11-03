@@ -516,10 +516,7 @@ class GLBaseRenderer extends ParameterOwner {
    * @return {HTMLElement} - The return value.
    */
   getDiv() {
-    const { tagName } = this.__$canvas
-    if (tagName == 'DIV') return this.__$canvas
-
-    return this.__$canvas.parentElement
+    return this.__glcanvas.parentElement
   }
 
   /**
@@ -1112,6 +1109,21 @@ class GLBaseRenderer extends ParameterOwner {
     window.requestAnimationFrame(onAnimationFrame)
     this.__redrawRequested = true
     return true
+  }
+
+  /**
+   * Forces a redraw of the viewports
+   */
+  forceRender() {
+    if (!this.__redrawRequested) {
+      console.warn('@GlBaseRenderer#forceRender - Scene is not dirty')
+      return
+    }
+
+    this.__redrawRequested = false
+    for (const vp of this.__viewports) {
+      vp.draw()
+    }
   }
 
   /**
