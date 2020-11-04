@@ -1,29 +1,26 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Zea Engine</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>canvas-as-root - Zea Engine</title>
+
+    <link href="zea-logo.png" rel="shortcut icon" />
+
+    <link rel="stylesheet" href="styles/normalize.css" />
+    <link rel="stylesheet" href="styles/main.css" />
 
     <style>
-      body {
-        margin: 0;
-        height: 100vh;
-        width: 100vw;
-      }
-
-      #renderer {
-        height: 100%;
-        width: 100%;
-      }
-
       .main-wrapper {
         display: grid;
         grid-template-areas:
           'top top top'
           'left main right'
           'bottom bottom bottom';
-        grid-template-columns: 200px 1fr 200px;
+        grid-template-columns: 20% 1fr 20%;
         grid-template-rows: 50px 1fr 50px;
-        height: 100vh;
+        height: 100%;
       }
 
       .pane {
@@ -46,7 +43,7 @@
     <script src="../dist/index.umd.js"></script>
 
     <script type="module">
-      const { GLRenderer, Scene, Vec3 } = zeaEngine
+      const { GLRenderer, Scene, Vec3 } = window.zeaEngine
 
       const scene = new Scene()
       const $renderer = document.getElementById('renderer')

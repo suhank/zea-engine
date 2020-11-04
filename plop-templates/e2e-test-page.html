@@ -1,24 +1,27 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
     <title>{{name}} - Zea Engine</title>
 
-    <meta charset="UTF-8" />
-  </head>
-  <body>
-    <div id="app"></div>
+    <link href="zea-logo.png" rel="shortcut icon" />
+
+    <link rel="stylesheet" href="styles/normalize.css" />
+    <link rel="stylesheet" href="styles/main.css" />
 
     <script src="../dist/index.umd.js"></script>
 
     <script type="module">
-      const { GLRenderer, Scene, Vec3 } = zeaEngine
+      const { GLRenderer, Scene, Vec3 } = window.zeaEngine
 
-      const domElement = document.getElementById('app')
+      const canvas = document.getElementById('renderer')
 
       const scene = new Scene()
       scene.setupGrid(10.0, 10)
 
-      const renderer = new GLRenderer(domElement, { hideSplash: true, webglOptions: { antialias: false } })
+      const renderer = new GLRenderer(canvas, { hideSplash: true, webglOptions: { antialias: false } })
       renderer.setScene(scene)
 
       someEmitter.on('loaded', () => {
@@ -43,5 +46,8 @@
       window.addEventListener('message', handleMessage, false)
       // }}}
     </script>
+  </head>
+  <body>
+    <canvas id="renderer" />
   </body>
 </html>
