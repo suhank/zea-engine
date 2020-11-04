@@ -2,7 +2,7 @@
 /** Synchronously initialize the following scripts in order. 
  * @private
 */
-Module = {
+const Module = {
   ENVIRONMENT: 'WORKER'
 };
 
@@ -49,7 +49,7 @@ var initunpack = function(wasmBinaryFile) {
   // Note: the following is the URL of the unpack.wasm file in our ZeaEngine project on our
   // server. Ideally we could use a relative path from the ZeaEngine file, but
   // that isn't possible yet. (TODO: Ask Mauro about this)
-  credentials = "omit"
+  const credentials = "omit"
   // var wasmBinaryFile="unpack.wasm";
 
 var Module=typeof unpack!=="undefined"?unpack:{};var Ext=unpackBridge.Ext;var jsAPI={open:(function(){return Ext.current.open.apply(Ext.current,arguments)}),close:(function(){return Ext.current.close.apply(Ext.current,arguments)}),read:(function(){return Ext.current.read.apply(Ext.current,arguments)}),write:(function(){return Ext.current.write.apply(Ext.current,arguments)}),tell:(function(){return Ext.current.tell.apply(Ext.current,arguments)}),seek:(function(){return Ext.current.seek.apply(Ext.current,arguments)}),create:(function(){return Ext.current.create.apply(Ext.current,arguments)})};var moduleOverrides={};var key;for(key in Module){if(Module.hasOwnProperty(key)){moduleOverrides[key]=Module[key]}}Module["arguments"]=[];Module["thisProgram"]="./this.program";Module["quit"]=(function(status,toThrow){throw toThrow});Module["preRun"]=[];Module["postRun"]=[];var ENVIRONMENT_IS_WEB=false;var ENVIRONMENT_IS_WORKER=false;var ENVIRONMENT_IS_NODE=false;var ENVIRONMENT_IS_SHELL=false;if(Module["ENVIRONMENT"]){if(Module["ENVIRONMENT"]==="WEB"){ENVIRONMENT_IS_WEB=true}else if(Module["ENVIRONMENT"]==="WORKER"){ENVIRONMENT_IS_WORKER=true}else if(Module["ENVIRONMENT"]==="NODE"){ENVIRONMENT_IS_NODE=true}else if(Module["ENVIRONMENT"]==="SHELL"){ENVIRONMENT_IS_SHELL=true}else{throw new Error("Module['ENVIRONMENT'] value is not valid. must be one of: WEB|WORKER|NODE|SHELL.")}}else{ENVIRONMENT_IS_WEB=typeof window==="object";ENVIRONMENT_IS_WORKER=typeof importScripts==="function";ENVIRONMENT_IS_NODE=typeof process==="object"&&typeof require==="function"&&!ENVIRONMENT_IS_WEB&&!ENVIRONMENT_IS_WORKER;ENVIRONMENT_IS_SHELL=!ENVIRONMENT_IS_WEB&&!ENVIRONMENT_IS_NODE&&!ENVIRONMENT_IS_WORKER}
