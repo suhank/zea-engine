@@ -16,13 +16,13 @@
     <script type="module">
       const { GLRenderer, Scene, Vec3 } = window.zeaEngine
 
-      const canvas = document.getElementById('renderer')
+      const canvas = document.querySelector('#renderer')
 
       const scene = new Scene()
-      scene.setupGrid(10.0, 10)
-
       const renderer = new GLRenderer(canvas, { hideSplash: true, webglOptions: { antialias: false } })
       renderer.setScene(scene)
+
+      scene.setupGrid(10.0, 10)
 
       someEmitter.on('loaded', () => {
         window.postMessage('done-loading')
