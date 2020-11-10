@@ -58,6 +58,8 @@ class ProceduralMesh extends Mesh {
    */
   update() {
     if (this.dirtyTopology) {
+      // Clear the topology so that vertex normals can be recomputed.
+      this.vertexEdges = undefined
       this.rebuild()
       this.dirtyTopology = false
       this.dirtyVertices = false
@@ -74,6 +76,16 @@ class ProceduralMesh extends Mesh {
   getBoundingBox() {
     this.update()
     return super.getBoundingBox()
+  }
+
+  /**
+   * Returns the number of vertex attributes.
+   *
+   * @return {number} - The return value.
+   */
+  getNumVertices() {
+    this.update()
+    return super.getNumVertices()
   }
 
   // ////////////////////////////////////////
