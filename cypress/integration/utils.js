@@ -1,5 +1,9 @@
+const isOdd = (n) => n % 2
+
 const createTouchEvents = (touchPoints = []) => {
-  if (touchPoints.length % 2 !== 0) throw Error('Odd touch points array length, please use XY coordinates')
+  if (isOdd(touchPoints.length)) {
+    throw new Error('Odd touch points array length. Use XY coordinates.')
+  }
 
   let identifier = 0
   const touches = []
@@ -26,4 +30,5 @@ const createTouchEvents = (touchPoints = []) => {
 const cyFocusCanvas = (elSelector = 'canvas', x = 1, y = 1) => {
   cy.get(elSelector).click(x, y)
 }
+
 export { createTouchEvents, cyFocusCanvas }

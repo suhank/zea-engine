@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Load OBJ Asset</title>
+    <title>cone - Zea Engine</title>
+
     <meta charset="UTF-8" />
   </head>
   <body>
@@ -10,39 +11,39 @@
     <script src="../dist/index.umd.js"></script>
 
     <script type="module">
-      const { Vec3, EulerAngles, Xfo, ObjAsset, Scene, GLRenderer } = zeaEngine
+      const { GLRenderer, Scene, Vec3, Color, Cone, Material, GeomItem } = zeaEngine
 
       const domElement = document.getElementById('app')
 
       const scene = new Scene()
       scene.setupGrid(10.0, 10)
 
-      const objAsset = new ObjAsset('cow')
-      objAsset.getParameter('FilePath').setUrl('data/cow.obj')
-      scene.getRoot().addChild(objAsset)
-
-      const xfo = new Xfo()
-      xfo.tr.set(0, 0, 3.55)
-      xfo.ori.setFromEulerAngles(new EulerAngles(90 * (Math.PI / 180), 0, 0))
-      objAsset.getParameter('GlobalXfo').setValue(xfo)
-
       const renderer = new GLRenderer(domElement, { hideSplash: true, webglOptions: { antialias: false } })
       renderer.setScene(scene)
 
-      objAsset.on('loaded', () => {
-        renderer.frameAll()
-        window.postMessage(`done-Loading`)
-      })
+      const standardMaterial = new Material('surfaces', 'SimpleSurfaceShader')
+      standardMaterial.getParameter('BaseColor').setValue(new Color(89 / 255, 182 / 255, 92 / 255))
+
+      const cone = new Cone(1.5, 2.0, 6)
+      const geomItem = new GeomItem('Cone', cone, standardMaterial)
+      scene.getRoot().addChild(geomItem)
+
+      window.postMessage('done-loading')
 
       // {{{ Messages handler.
       const handleMessage = (event) => {
         const { data } = event
 
-        if (data === 'front') {
+        if (data === 'variant-01') {
+          cone.getParameter('Radius').setValue(2.5)
+          cone.getParameter('Height').setValue(5.5)
+
           renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, -2.7), new Vec3(0, 0, 0.4))
           renderer.frameAll()
           window.postMessage(`done-${data}`)
-        } else if (data === 'back') {
+        } else if (data === 'variant-02') {
+          cone.getParameter('Detail').setValue(25)
+          cone.getParameter('Height').setValue(2.5)
           renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-2, -2, 2.7), new Vec3(0, 0, 0.4))
           renderer.frameAll()
           window.postMessage(`done-${data}`)
