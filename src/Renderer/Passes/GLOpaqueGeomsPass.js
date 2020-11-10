@@ -4,6 +4,7 @@ import { GLRenderer } from '../GLRenderer.js'
 
 import { GLGeomItemSet } from '../GLGeomItemSet.js'
 import { MathFunctions } from '../../Utilities/MathFunctions'
+import { GeomItem, Material } from '../../SceneTree/index.js'
 
 /** Class representing GL shader materials.
  * @private
@@ -67,12 +68,35 @@ class GLMaterialGeomItemSets {
    * Create a GL material geom item set.
    * @param {any} glmaterial - The glmaterial value.
    */
-  constructor(glmaterial = undefined) {
+  constructor(pass, glmaterial = undefined) {
+    this.pass = pass
     this.glmaterial = glmaterial
     this.geomItemSets = []
     this.drawCount = 0
     this.visibleInGeomDataBuffer = glmaterial.getMaterial().visibleInGeomDataBuffer
     this.__drawCountChanged = this.__drawCountChanged.bind(this)
+
+    const material = glmaterial.getMaterial()
+
+    const materialChanged = () => {
+      if (!this.pass.checkMaterial(material)) {
+        for (const gldrawitemset of this.geomItemSets) {
+          for (const glgeomItem of gldrawitemset.glgeomItems) {
+            const geomItem = glgeomItem.geomItem
+            this.pass.removeGeomItem(geomItem)
+            this.pass.__renderer.assignTreeItemToGLPass(geomItem)
+          }
+        }
+      }
+    }
+    const baseColorParam = material.getParameter('BaseColor')
+    if (baseColorParam) {
+      baseColorParam.on('valueChanged', materialChanged)
+    }
+    const opacityParam = material.getParameter('Opacity')
+    if (opacityParam) {
+      opacityParam.on('valueChanged', materialChanged)
+    }
   }
 
   /**
@@ -167,11 +191,20 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
 
   /**
    * The filterGeomItem method.
-   * @param {any} geomItem - The geomItem value.
+   * @param {GeomItem} geomItem - The geomItem value.
    * @return {boolean} - The return value.
    */
   filterGeomItem(geomItem) {
     const material = geomItem.getParameter('Material').getValue()
+    return this.checkMaterial(material)
+  }
+
+  /**
+   * Checks the material to see if it is not transparent.
+   * @param {Material} material - The geomItem value.
+   * @return {boolean} - The return value.
+   */
+  checkMaterial(material) {
     const shaderClass = material.getShaderClass()
     if (shaderClass) {
       if (shaderClass.isTransparent()) return false
@@ -193,35 +226,37 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
   }
 
   /**
+   * Removes the GeomITem from this pass, and then asks the renderer to re-add it.
+   * @param {GeomItem} geomItem - The geomItem value.
+   */
+  removeAndReAddGeomItem(geomItem) {
+    this.removeGeomItem(geomItem)
+    this.__renderer.assignTreeItemToGLPass(geomItem)
+  }
+
+  /**
    * The addGeomItem method.
    * @param {any} geomItem - The geomItem value.
    * @return {boolean} - The return value.
    */
   addGeomItem(geomItem) {
     const materialParam = geomItem.getParameter('Material')
+    const material = materialParam.getValue()
 
+    // ////////////////////////////////////
+    // Tracking Material Transparency changes...
     // In the case that a geometry material changes, we may need to
     // select a different pass. e.g. if the new material is transparent.
+
     const materialChanged = () => {
       this.removeGeomItem(geomItem)
       this.__renderer.assignTreeItemToGLPass(geomItem)
     }
     materialParam.on('valueChanged', materialChanged)
-
-    const material = materialParam.getValue()
-    const baseColorParam = material.getParameter('BaseColor')
-    if (baseColorParam) {
-      baseColorParam.on('valueChanged', materialChanged)
-    }
-    const opacityParam = material.getParameter('Opacity')
-    if (opacityParam) {
-      opacityParam.on('valueChanged', materialChanged)
-    }
-    // Cache the material and callback as metadata so we can
-    // disconnect when this object is removed from this pass.
     geomItem.setMetadata('materialChanged', materialChanged)
-    geomItem.setMetadata('material', material)
 
+    // ////////////////////////////////////
+    // Shaders
     const shaderName = material.getShaderName()
     const shaders = this.constructShaders(shaderName)
     // let glshader = shaders.glshader
@@ -247,7 +282,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
 
     let glmaterialGeomItemSets = glshaderMaterials.findMaterialGeomItemSets(glmaterial)
     if (!glmaterialGeomItemSets) {
-      glmaterialGeomItemSets = new GLMaterialGeomItemSets(glmaterial)
+      glmaterialGeomItemSets = new GLMaterialGeomItemSets(this, glmaterial)
       glshaderMaterials.addMaterialGeomItemSets(glmaterialGeomItemSets)
     }
 
@@ -286,21 +321,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
     const materialChanged = geomItem.getMetadata('materialChanged')
     if (materialParam && materialChanged) {
       materialParam.off('valueChanged', materialChanged)
-
-      const material = geomItem.getMetadata('material')
-      if (material) {
-        const baseColorParam = material.getParameter('BaseColor')
-        if (baseColorParam) {
-          baseColorParam.off('valueChanged', materialChanged)
-        }
-
-        const opacityParam = material.getParameter('Opacity')
-        if (opacityParam) {
-          opacityParam.off('valueChanged', materialChanged)
-        }
-      }
       geomItem.deleteMetadata('materialChanged')
-      geomItem.deleteMetadata('material')
     }
 
     return true
