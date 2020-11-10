@@ -42,22 +42,68 @@
       const count = 160_000
       const dim = Math.round(Math.cbrt(count))
       console.log('Will render GeomItem count:', Math.pow(dim, 3))
+      renderer
+        .getViewport()
+        .getCamera()
+        .setPositionAndTarget(new Vec3(dim * 2, dim * 2, dim), new Vec3(dim * 0.5, dim * 0.5, dim * 0.5))
 
       document.querySelector('#start').addEventListener('click', () => {
         document.querySelector('#wrapper').classList.remove('hidden')
 
         const start = performance.now()
 
+        const onDone = () => {
+          console.timeEnd('Create scene')
+
+          console.time('Load GPU')
+          renderer.setScene(scene)
+          console.timeEnd('Load GPU')
+
+          const totalTime = performance.now() - start
+
+          const { usedJSHeapSize } = performance.memory
+
+          const MEMORY_LIMIT = 1_620_000_000
+          const TIME_LIMIT = 45_000
+
+          const isGoodMemory = usedJSHeapSize <= MEMORY_LIMIT
+          const isGoodTime = totalTime <= TIME_LIMIT
+
+          const memoryStatus = isGoodMemory ? 'Good' : `Bad: ${window.filesize(usedJSHeapSize)}`
+          const timeStatus = isGoodTime ? 'Good' : `Bad: ${Math.round(totalTime / 1000)} sec`
+
+          console.log('Used Memory:', window.filesize(usedJSHeapSize))
+
+          /*
+        // Reference numbers from Phils Laptop.
+        Create scene: 14765.61865234375 ms
+        Load GPU: 11439.541748046875 ms
+        Used Memory: 1.56 GB
+        */
+
+          document.querySelector('#memoryStatus').textContent = memoryStatus
+          document.querySelector('#timeStatus').textContent = timeStatus
+        }
+
         console.time('Create scene')
-        for (let i = 0; i < dim; i++) {
+        let t1 = performance.now()
+        let total = 0
+        const addRow = (i) => {
+          const t2 = performance.now()
+          document.querySelector('#progressStatus').textContent = `progress: ${Math.round(
+            (i / dim) * 100
+          )}%, ${Math.round(t2 - t1)}`
+          total += t2 - t1
+          t1 = t2
+
           const treeItemI = new TreeItem('TreeItem' + i)
 
           for (let j = 0; j < dim; j++) {
             const material = new Material('mat', 'SimpleSurfaceShader')
+            material.getParameter('BaseColor').setValue(new Color(i / dim, j / dim, 1))
             const treeItemJ = new TreeItem('TreeItem' + j)
 
             for (let k = 0; k < dim; k++) {
-              material.getParameter('BaseColor').setValue(new Color(i / dim, j / dim, k / dim))
               const geomItem = new GeomItem('Geom' + k, cuboid, material)
 
               const xfo = new Xfo()
@@ -72,28 +118,19 @@
 
           scene.getRoot().addChild(treeItemI)
         }
-        console.timeEnd('Create scene')
-
-        console.time('Load GPU')
-        renderer.setScene(scene)
-        renderer.frameAll()
-        console.timeEnd('Load GPU')
-
-        const totalTime = performance.now() - start
-
-        const { usedJSHeapSize } = performance.memory
-
-        const MEMORY_LIMIT = 1_620_000_000
-        const TIME_LIMIT = 45_000
-
-        const isGoodMemory = usedJSHeapSize <= MEMORY_LIMIT
-        const isGoodTime = totalTime <= TIME_LIMIT
-
-        const memoryStatus = isGoodMemory ? 'Good' : `Bad: ${window.filesize(usedJSHeapSize)}`
-        const timeStatus = isGoodTime ? 'Good' : `Bad: ${Math.round(totalTime / 1000)} sec`
-
-        document.querySelector('#memoryStatus').textContent = memoryStatus
-        document.querySelector('#timeStatus').textContent = timeStatus
+        const addRowAsync = (i) => {
+          return new Promise((resolve) => {
+            setTimeout(() => {
+              addRow(i)
+              resolve()
+            })
+          })
+        }
+        const promises = []
+        for (let i = 0; i < dim; i++) {
+          promises.push(addRowAsync(i))
+        }
+        Promise.all(promises).then(onDone)
       })
     </script>
   </head>
@@ -111,6 +148,10 @@
         <dt>Time:</dt>
         <dd>
           <p id="timeStatus"></p>
+        </dd>
+        <dt>Status:</dt>
+        <dd>
+          <p id="progressStatus"></p>
         </dd>
       </dl>
 
