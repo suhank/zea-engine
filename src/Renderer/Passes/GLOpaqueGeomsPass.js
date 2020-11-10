@@ -203,13 +203,6 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
     // In the case that a geometry material changes, we may need to
     // select a different pass. e.g. if the new material is transparent.
     const materialChanged = () => {
-      materialParam.off('valueChanged', materialChanged)
-      if (baseColorParam) {
-        baseColorParam.off('valueChanged', materialChanged)
-      }
-      if (opacityParam) {
-        opacityParam.off('valueChanged', materialChanged)
-      }
       this.removeGeomItem(geomItem)
       this.__renderer.assignTreeItemToGLPass(geomItem)
     }
@@ -224,6 +217,10 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
     if (opacityParam) {
       opacityParam.on('valueChanged', materialChanged)
     }
+    // Cache the material and callback as metadata so we can
+    // disconnect when this object is removed from this pass.
+    geomItem.setMetadata('materialChanged', materialChanged)
+    geomItem.setMetadata('material', material)
 
     const shaderName = material.getShaderName()
     const shaders = this.constructShaders(shaderName)
@@ -283,6 +280,27 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
       // for them to be destroyed.
       geomItemSet.removeGeomItem(glgeomItem)
       geomItem.deleteMetadata('geomItemSet')
+    }
+
+    const materialParam = geomItem.getParameter('Material')
+    const materialChanged = geomItem.getMetadata('materialChanged')
+    if (materialParam && materialChanged) {
+      materialParam.off('valueChanged', materialChanged)
+
+      const material = geomItem.getMetadata('material')
+      if (material) {
+        const baseColorParam = material.getParameter('BaseColor')
+        if (baseColorParam) {
+          baseColorParam.off('valueChanged', materialChanged)
+        }
+
+        const opacityParam = material.getParameter('Opacity')
+        if (opacityParam) {
+          opacityParam.off('valueChanged', materialChanged)
+        }
+      }
+      geomItem.deleteMetadata('materialChanged')
+      geomItem.deleteMetadata('material')
     }
 
     return true
