@@ -49,6 +49,9 @@ class Operator extends BaseItem {
    */
   addInput(input) {
     if (typeof input == 'string') input = new OperatorInput(input)
+    else if (!(input instanceof OperatorInput)) {
+      throw new Error(`addInput only accepts string or OperatorInput`)
+    }
     input.setOperator(this)
     this.__inputs.set(input.getName(), input)
     this.setDirty()
@@ -62,7 +65,7 @@ class Operator extends BaseItem {
   removeInput(input) {
     if (typeof input == 'string') input = this.getInput(input)
     if (!(input instanceof OperatorInput)) {
-      throw new Error('Invalid parameter for removeInput:', input)
+      throw new Error(`removeInput only accepts string or OperatorInput`)
     }
     if (input.getParam()) input.setParam(null)
     this.__inputs.delete(input.getName())
@@ -101,6 +104,9 @@ class Operator extends BaseItem {
    */
   addOutput(output) {
     if (typeof output == 'string') output = new OperatorOutput(output)
+    else if (!(output instanceof OperatorOutput)) {
+      throw new Error(`addOutput only accepts string or OperatorOutput`)
+    }
     output.setOperator(this)
     if (this.getOutput(output.getName())) throw new Error(`Operator output already exists ${output.getName()}`)
     this.__outputs.set(output.getName(), output)
@@ -115,7 +121,7 @@ class Operator extends BaseItem {
   removeOutput(output) {
     if (typeof output == 'string') output = this.getOutput(output)
     if (!(output instanceof OperatorOutput)) {
-      throw new Error('Invalid parameter for removeOutput:', output)
+      throw new Error(`removeOutput only accepts string or OperatorInput`)
     }
     if (output.getParam()) output.setParam(null)
     this.__outputs.delete(output.getName())

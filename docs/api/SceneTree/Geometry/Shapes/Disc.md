@@ -13,13 +13,6 @@ const disc = new Disc(2.0, 22)
 
 
 **Extends**: <code>[ProceduralMesh](api/SceneTree/Geometry/Shapes/ProceduralMesh.md)</code>  
-
-* [Disc ⇐ <code>ProceduralMesh</code>](#Disc)
-    * [new Disc([radius], [sides])](#new-Disc)
-    * [radius ⇒ <code>number</code>](#radius)
-    * [radius](#radius)
-    * [sides](#sides)
-
 <a name="new_Disc_new"></a>
 
 ### new Disc
@@ -30,35 +23,6 @@ Creates an instance of Disc.
 | --- | --- | --- | --- |
 | [radius] | <code>number</code> | <code>0.5</code> | The radius of the disc. |
 | [sides] | <code>number</code> | <code>32</code> | The number of sides. |
-
-<a name="Disc+radius"></a>
-
-### radius 
-Returns the value of the `radius` parameter.
-
-
-**Returns**: <code>number</code> - - Returns the radius.  
-<a name="Disc+radius"></a>
-
-### radius
-Sets the value of the `radius` parameter.
-
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| val | <code>number</code> | The radius value. |
-
-<a name="Disc+sides"></a>
-
-### sides
-Sets the value of the `sides` parameter.
-
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| val | <code>number</code> | The number of sides. |
 
 
 

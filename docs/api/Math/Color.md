@@ -248,7 +248,7 @@ E.g. "red"
 <a name="Color+toHex"></a>
 
 ### toHex
-Returns the hexadecimal value of this color.
+Returns the hexadecimal value of this color, including the leading "#" character.
 
 
 **Returns**: <code>string</code> - - Returns the hex value.  

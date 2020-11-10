@@ -176,9 +176,11 @@ class Parameter extends EventEmitter {
    */
   __findFirstOP_WRITE() {
     this.__firstOP_WRITE = this.__boundOps.length
-    for (this.__firstOP_WRITE--; this.__firstOP_WRITE > 0; this.__firstOP_WRITE--) {
-      // Find the first OP_WRITE binding. (Note: we could cache this)
-      if (this.__boundOps[this.__firstOP_WRITE].getMode() == OperatorOutputMode.OP_WRITE) break
+    if (this.__boundOps.length > 0) {
+      for (this.__firstOP_WRITE--; this.__firstOP_WRITE > 0; this.__firstOP_WRITE--) {
+        // Find the first OP_WRITE binding. (Note: we could cache this)
+        if (this.__boundOps[this.__firstOP_WRITE].getMode() == OperatorOutputMode.OP_WRITE) break
+      }
     }
   }
 

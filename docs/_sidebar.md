@@ -28,6 +28,7 @@
   * [Setting up multilingual Labels](tutorials/multilingual-labels.md)
   <!-- * [Loading custom points data](tutorials/custom-points.md) -->
   * [Launching a VR Session](tutorials/VR.md)
+  * [Customize the Camera Manipulation](tutorials/custom-camera-manipulator.md)
 
 - Technical Overview
 
@@ -100,6 +101,7 @@
   * [Camera](api/SceneTree/Camera)
   * [GeomItem](api/SceneTree/GeomItem)
   * [GeomItem.test](api/SceneTree/GeomItem.test)
+  * [GeomLibrary](api/SceneTree/GeomLibrary)
   * [GridTreeItem](api/SceneTree/GridTreeItem)
   * [GridTreeItem.test](api/SceneTree/GridTreeItem.test)
   * [Group](api/SceneTree/Group)

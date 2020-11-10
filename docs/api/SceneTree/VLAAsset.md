@@ -8,7 +8,7 @@ Which facilitates the migration of geometries from third party applications to t
 * **DataFilePath([`FilePathParameter`](api/SceneTree/Parameters/FilePathParameter.md)):** Used to specify the path to the file.
 
 **Events**
-* **loaded:** Triggered once everything is loaded.
+* **loaded:** Triggered once the tree is loaded. Note: the tree bounding box is valid once the tree is loaded.
 * **geomsLoaded:** Triggered once all geometries are loaded.
 
 

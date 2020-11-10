@@ -32,7 +32,7 @@
         GeomItem,
         TreeItem,
         Material,
-        Group,
+        CuttingPlane,
       } = zeaEngine
 
       const scene = new Scene()
@@ -44,8 +44,12 @@
       const tree1 = new TreeItem('tree1')
       scene.getRoot().addChild(tree1)
 
-      const group = new Group('group')
-      scene.getRoot().addChild(group)
+      const cuttingPlane = new CuttingPlane('CuttingPlane')
+      const cuttingPlaneXfo = new Xfo()
+      cuttingPlaneXfo.tr.set(6, 0, 0)
+      cuttingPlaneXfo.ori.setFromAxisAndAngle(new Vec3(1, 0, 0), -1)
+      cuttingPlane.getParameter('LocalXfo').setValue(cuttingPlaneXfo)
+      scene.getRoot().addChild(cuttingPlane)
 
       const standardMaterial = new Material('surfaces', 'SimpleSurfaceShader')
       standardMaterial.getParameter('BaseColor').setValue(new Color(89 / 255, 182 / 255, 92 / 255))
@@ -57,7 +61,7 @@
         geomItem.getParameter('LocalXfo').setValue(new Xfo(new Vec3(i * 3, 0, 0)))
         tree1.addChild(geomItem)
 
-        group.addItem(geomItem)
+        cuttingPlane.addItem(geomItem)
 
         i += 1
       }
@@ -68,12 +72,45 @@
       addMeshShape(new Cone(1, 2), 4)
       addMeshShape(new Cylinder(1, 2, 20, 2, true))
 
-      group.getParameter('CutAwayEnabled').setValue(true)
-      group.getParameter('CutPlaneNormal').setValue(new Vec3(0, 1, 0))
-      group.getParameter('CutPlaneDist').setValue(0)
+      cuttingPlane.getParameter('CutAwayEnabled').setValue(true)
+
+      // let angle = -1
+      // setInterval(() => {
+      //   angle += 0.1
+      //   cuttingPlaneXfo.tr.set(6, Math.cos(angle) * 2, 0)
+      //   cuttingPlaneXfo.ori.setFromAxisAndAngle(new Vec3(1, 0, 0), angle)
+      //   cuttingPlane.getParameter('LocalXfo').setValue(cuttingPlaneXfo)
+      // }, 50)
 
       renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(25, 25, 13), new Vec3(10, 0, 0))
       renderer.frameAll()
+
+      window.postMessage('done-loading')
+
+      // {{{ Messages handler.
+      const handleMessage = (event) => {
+        const { data } = event
+
+        if (data === 'variant-01') {
+          const angle = 2
+          const xfo = new Xfo()
+          xfo.tr.set(6, Math.cos(angle) * 2, 0)
+          xfo.ori.setFromAxisAndAngle(new Vec3(1, 0, 0), angle)
+          cuttingPlane.getParameter('LocalXfo').setValue(xfo)
+          window.postMessage(`done-${data}`)
+        } else if (data === 'variant-02') {
+          const angle = 3
+          const xfo = new Xfo()
+          xfo.tr.set(6, Math.cos(angle) * 2, 0)
+          xfo.ori.setFromAxisAndAngle(new Vec3(1, 0, 0), angle)
+          cuttingPlane.getParameter('LocalXfo').setValue(xfo)
+          renderer.frameAll()
+          window.postMessage(`done-${data}`)
+        }
+      }
+
+      window.addEventListener('message', handleMessage, false)
+      // }}}
     </script>
   </head>
   <body>

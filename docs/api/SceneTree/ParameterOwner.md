@@ -15,6 +15,7 @@ Not only hosting parameters, but their events.
     * [getParameterIndex(paramName) ⇒ <code>number</code>](#getParameterIndex)
     * [getParameterByIndex(index) ⇒ <code>Parameter</code>](#getParameterByIndex)
     * [hasParameter(paramName) ⇒ <code>boolean</code>](#hasParameter)
+    * [addParameterDeprecationMapping(key, paramName) ⇒ <code>boolean</code>](#addParameterDeprecationMapping)
     * [getParameter(paramName) ⇒ <code>Parameter</code>](#getParameter)
     * [addParameter(param) ⇒ <code>Parameter</code>](#addParameter)
     * [insertParameter(param, index) ⇒ <code>Parameter</code>](#insertParameter)
@@ -88,6 +89,20 @@ Validates if the specified parameter exists in the object.
 
 | Param | Type | Description |
 | --- | --- | --- |
+| paramName | <code>string</code> | The parameter name. |
+
+<a name="ParameterOwner+addParameterDeprecationMapping"></a>
+
+### addParameterDeprecationMapping
+Add a mapping from one name to a new parameter.
+This is used to handle migrating parameters to new names.
+
+
+**Returns**: <code>boolean</code> - - The return value.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| key | <code>string</code> | The parameter name. |
 | paramName | <code>string</code> | The parameter name. |
 
 <a name="ParameterOwner+getParameter"></a>

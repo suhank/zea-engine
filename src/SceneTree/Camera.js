@@ -2,7 +2,7 @@
 import { Vec3, Box3, Xfo } from '../Math/index'
 import { TreeItem } from './TreeItem.js'
 import { BooleanParameter, NumberParameter } from './Parameters/index'
-import { MathFunctions } from '../Utilities/MathFunctions'
+import { MathFunctions } from '../Utilities/MathFunctions'
 import { Registry } from '../Registry'
 
 /**

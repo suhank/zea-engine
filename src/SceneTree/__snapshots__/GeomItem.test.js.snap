@@ -122,6 +122,13 @@ Object {
               "r": 0.3490196168422699,
             },
           },
+          "EmissiveStrength": Object {
+            "range": Array [
+              0,
+              1,
+            ],
+            "value": 0,
+          },
           "Opacity": Object {
             "range": Array [
               0,

@@ -1,63 +1,120 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
     <title>Memory test - Zea Engine</title>
 
-    <meta charset="UTF-8" />
-  </head>
-  <body>
-    <div id="app"></div>
+    <link href="zea-logo.png" rel="shortcut icon" />
+
+    <style>
+      .hidden {
+        display: none;
+      }
+    </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/filesize@6.1.0/lib/filesize.min.js"></script>
 
     <script src="../dist/index.umd.js"></script>
 
     <script type="module">
-      const { Vec3, EulerAngles, Xfo, Color, Cuboid, Material, GeomItem, TreeItem, Scene, GLRenderer } = zeaEngine
+      const {
+        Vec3,
+        EulerAngles,
+        Xfo,
+        Color,
+        Cuboid,
+        Material,
+        GeomItem,
+        TreeItem,
+        Scene,
+        GLRenderer,
+      } = window.zeaEngine
 
-      const domElement = document.getElementById('app')
+      const canvas = document.getElementById('renderer')
+      const renderer = new GLRenderer(canvas, { hideSplash: true, webglOptions: { antialias: false } })
 
       const scene = new Scene()
 
-      const count = 160000
-      const dim = Math.round(Math.cbrt(count))
       const cuboid = new Cuboid(0.3, 0.4, 0.5)
 
-      console.time('Create scene')
+      const count = 160_000
+      const dim = Math.round(Math.cbrt(count))
+      console.log('Will render GeomItem count:', Math.pow(dim, 3))
 
-      for (let i = 0; i < dim; i++) {
-        const treeItemI = new TreeItem('TreeItem' + i)
+      document.querySelector('#start').addEventListener('click', () => {
+        document.querySelector('#wrapper').classList.remove('hidden')
 
-        for (let j = 0; j < dim; j++) {
-          const material = new Material('mat', 'SimpleSurfaceShader')
-          const treeItemJ = new TreeItem('TreeItem' + j)
+        const start = performance.now()
 
-          for (let k = 0; k < dim; k++) {
-            material.getParameter('BaseColor').setValue(new Color(i / dim, j / dim, k / dim))
-            const geomItem = new GeomItem('Geom' + k, cuboid, material)
+        console.time('Create scene')
+        for (let i = 0; i < dim; i++) {
+          const treeItemI = new TreeItem('TreeItem' + i)
 
-            const xfo = new Xfo()
-            xfo.tr.set(i, j, k)
-            geomItem.getParameter('GlobalXfo').setValue(xfo)
+          for (let j = 0; j < dim; j++) {
+            const material = new Material('mat', 'SimpleSurfaceShader')
+            const treeItemJ = new TreeItem('TreeItem' + j)
 
-            treeItemJ.addChild(geomItem)
+            for (let k = 0; k < dim; k++) {
+              material.getParameter('BaseColor').setValue(new Color(i / dim, j / dim, k / dim))
+              const geomItem = new GeomItem('Geom' + k, cuboid, material)
+
+              const xfo = new Xfo()
+              xfo.tr.set(i, j, k)
+              geomItem.getParameter('GlobalXfo').setValue(xfo)
+
+              treeItemJ.addChild(geomItem)
+            }
+
+            treeItemI.addChild(treeItemJ)
           }
 
-          treeItemI.addChild(treeItemJ)
+          scene.getRoot().addChild(treeItemI)
         }
+        console.timeEnd('Create scene')
 
-        scene.getRoot().addChild(treeItemI)
-      }
+        console.time('Load GPU')
+        renderer.setScene(scene)
+        renderer.frameAll()
+        console.timeEnd('Load GPU')
 
-      console.timeEnd('Create scene')
+        const totalTime = performance.now() - start
 
-      console.time('Load GPU')
+        const { usedJSHeapSize } = performance.memory
 
-      const renderer = new GLRenderer(domElement, { hideSplash: true, webglOptions: { antialias: false } })
-      renderer.setScene(scene)
-      renderer.frameAll()
+        const MEMORY_LIMIT = 1_620_000_000
+        const TIME_LIMIT = 45_000
 
-      console.timeEnd('Load GPU')
+        const isGoodMemory = usedJSHeapSize <= MEMORY_LIMIT
+        const isGoodTime = totalTime <= TIME_LIMIT
 
-      console.log(`Done memory test. GeomItem count: ${dim * dim * dim}.`)
+        const memoryStatus = isGoodMemory ? 'Good' : `Bad: ${window.filesize(usedJSHeapSize)}`
+        const timeStatus = isGoodTime ? 'Good' : `Bad: ${Math.round(totalTime / 1000)} sec`
+
+        document.querySelector('#memoryStatus').textContent = memoryStatus
+        document.querySelector('#timeStatus').textContent = timeStatus
+      })
     </script>
+  </head>
+  <body>
+    <h1>Zea Engine Memory Test</h1>
+
+    <p>Click the <button id="start">Start</button> button to begin.</p>
+
+    <div class="hidden" id="wrapper">
+      <dl>
+        <dt>Memory:</dt>
+        <dd>
+          <p id="memoryStatus"></p>
+        </dd>
+        <dt>Time:</dt>
+        <dd>
+          <p id="timeStatus"></p>
+        </dd>
+      </dl>
+
+      <canvas id="renderer" />
+    </div>
   </body>
 </html>
