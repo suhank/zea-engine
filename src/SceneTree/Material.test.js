@@ -23,6 +23,10 @@ describe('Material', () => {
             r: 0.3490196168422699,
           },
         },
+        EmissiveStrength: {
+          range: [0, 1],
+          value: 0,
+        },
         Opacity: {
           range: [0, 1],
           value: 1,
@@ -45,6 +49,10 @@ describe('Material', () => {
             g: 0.7137255072593689,
             r: 0.3490196168422699,
           },
+        },
+        EmissiveStrength: {
+          range: [0, 1],
+          value: 0,
         },
         Opacity: {
           range: [0, 1],

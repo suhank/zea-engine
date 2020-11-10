@@ -109,12 +109,15 @@ uniform mat4 cameraMatrix;
 
 uniform color BaseColor;
 uniform float Opacity;
+uniform float EmissiveStrength;
 
 #ifdef ENABLE_TEXTURES
 uniform sampler2D BaseColorTex;
 uniform int BaseColorTexType;
 uniform sampler2D OpacityTex;
 uniform int OpacityTexType;
+uniform sampler2D EmissiveStrengthTex;
+uniform int EmissiveStrengthTexType;
 #endif
 
 
@@ -148,10 +151,12 @@ void main(void) {
 
 #ifndef ENABLE_TEXTURES
     vec4 baseColor      = BaseColor;
+    float emission      = EmissiveStrength;
     float opacity       = baseColor.a * Opacity;
 #else
     vec4 baseColor      = getColorParamValue(BaseColor, BaseColorTex, BaseColorTexType, v_textureCoord);
     float opacity       = baseColor.a * getLuminanceParamValue(Opacity, OpacityTex, OpacityTexType, v_textureCoord);
+    float emission      = getLuminanceParamValue(EmissiveStrength, EmissiveStrengthTex, EmissiveStrengthTexType, v_textureCoord);
 #endif
 
     // Hacky simple irradiance. 
@@ -170,7 +175,7 @@ void main(void) {
 #ifndef ENABLE_ES3
     vec4 fragColor;
 #endif
-    fragColor = vec4(ndotv * baseColor.rgb, opacity);
+    fragColor = vec4((ndotv * baseColor.rgb) + (emission * baseColor.rgb), opacity);
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION
     fragColor.rgb = toGamma(fragColor.rgb);
@@ -192,6 +197,11 @@ void main(void) {
       defaultValue: new Color(1.0, 1.0, 0.5),
     })
     paramDescs.push({ name: 'Opacity', defaultValue: 1.0, range: [0, 1] })
+    paramDescs.push({
+      name: 'EmissiveStrength',
+      defaultValue: 0.0,
+      range: [0, 1],
+    })
     return paramDescs
   }
 
@@ -201,6 +211,11 @@ void main(void) {
 
   static getSelectedShaderName() {
     return 'StandardSurfaceSelectedGeomsShader'
+  }
+  
+  bind(renderstate, key) {
+    if (renderstate.pass == 'MULTIPLY') return false
+    return super.bind(renderstate, key)
   }
 }
 

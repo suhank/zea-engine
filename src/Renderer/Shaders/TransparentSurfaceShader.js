@@ -165,12 +165,12 @@ void main(void) {
         //material.baseColor = vec3(1.0, 0.0, 0.0);
     }
 
-    vec4 specularReflectance = pbrSpecularReflectance(material, normal, viewVector);
 
 #ifndef ENABLE_ES3
     vec4 fragColor;
 #endif
 
+    vec4 specularReflectance = pbrSpecularReflectance(material, normal, viewVector);
     fragColor = vec4(specularReflectance.rgb, mix(opacity, 1.0, specularReflectance.a));
 
 #endif

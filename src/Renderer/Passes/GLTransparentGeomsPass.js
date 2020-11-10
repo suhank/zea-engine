@@ -45,7 +45,13 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
       if (shaderClass.isOverlay()) return false
 
       const baseColorParam = material.getParameter('BaseColor')
-      if (baseColorParam && baseColorParam.getValue().a < 0.999) return true
+      if (baseColorParam && baseColorParam.getValue().a < 1.0) {
+        return true
+      }
+      const opacityParam = material.getParameter('Opacity')
+      if (opacityParam && opacityParam.getValue() < 1.0) {
+        return true
+      }
     }
     return false
   }
@@ -55,6 +61,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
    * @param {any} geomItem - The geomItem value.
    */
   addGeomItem(geomItem) {
+    const materialParam = geomItem.getParameter('Material')
     const material = geomItem.getParameter('Material').getValue()
     const shaderName = material.getShaderName()
     const shaders = this.constructShaders(shaderName)
@@ -64,6 +71,28 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
     const glmaterial = this.addMaterial(material)
     const glgeomitem = super.addGeomItem(geomItem)
 
+    // ////////////////////////////////////
+    // Tracking Material Transparency changes...
+    // In the case that a geometry material changes, we may need to
+    // select a different pass. e.g. if the new material is not transparent
+    // then the object moves to the OpaqueGeomsPass
+    const materialChanged = () => {
+      this.removeGeomItem(geomItem)
+      this.__renderer.assignTreeItemToGLPass(geomItem)
+    }
+    materialParam.on('valueChanged', materialChanged)
+
+    const baseColorParam = material.getParameter('BaseColor')
+    if (baseColorParam) {
+      baseColorParam.on('valueChanged', materialChanged)
+    }
+    const opacityParam = material.getParameter('Opacity')
+    if (opacityParam) {
+      opacityParam.on('valueChanged', materialChanged)
+    }
+
+    // ////////////////////////////////////
+    // Tracking visibility changes.
     const visibilityChanged = (event) => {
       if (event.visible) {
         this.visibleItems.push(item)
@@ -72,19 +101,24 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
         this.visibleItems.splice(index, 1)
       }
     }
-    const geomXfoChanged = () => {
+    geomItem.on('visibilityChanged', visibilityChanged)
+
+    // ////////////////////////////////////
+    // Tracking GeomMat changes.
+    const geomMatChanged = () => {
       this.resort = true
     }
-    geomItem.on('visibilityChanged', visibilityChanged)
-    geomItem.getParameter('GeomMat').on('valueChanged', geomXfoChanged)
+    geomItem.getParameter('GeomMat').on('valueChanged', geomMatChanged)
 
     const item = {
       geomItem,
       shaders,
       glmaterial,
       glgeomitem,
+      material,
+      materialChanged,
       visibilityChanged,
-      geomXfoChanged,
+      geomMatChanged,
     }
     let itemindex
     if (this.freeList.length > 0) itemindex = this.freeList.pop()
@@ -109,8 +143,26 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
     const itemindex = geomItem.getMetadata('itemIndex')
     const item = this.transparentItems[itemindex]
 
+    const materialParam = geomItem.getParameter('Material')
+    if (materialParam) {
+      materialParam.off('valueChanged', item.materialChanged)
+
+      // Note: if the material has changed in the PArameter, we need to
+      // to have a cache of the pervious material so we can disconnect from it.
+      const material = item.material
+      const baseColorParam = material.getParameter('BaseColor')
+      if (baseColorParam) {
+        baseColorParam.off('valueChanged', item.materialChanged)
+      }
+
+      const opacityParam = material.getParameter('Opacity')
+      if (opacityParam) {
+        opacityParam.off('valueChanged', item.materialChanged)
+      }
+    }
+
     geomItem.off('visibilityChanged', item.visibilityChanged)
-    geomItem.getParameter('GeomMat').off('valueChanged', item.geomXfoChanged)
+    geomItem.getParameter('GeomMat').off('valueChanged', item.geomMatChanged)
 
     this.transparentItems[itemindex] = null
     this.freeList.push(itemindex)
@@ -132,7 +184,12 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
     this.resort = false
   }
 
-  // eslint-disable-next-line require-jsdoc
+  /**
+   * Draw n individual item, binding the shader and material if necessary.
+   * @param {object} renderstate - current renderstad
+   * @param {object} transparentItem - current item to render
+   * @param {object} cache - cache tracking which material/shader is currently bound.
+   */
   _drawItem(renderstate, transparentItem, cache) {
     if (cache.currentglMaterial != transparentItem.glmaterial) {
       cache.currentglMaterial = transparentItem.glmaterial
@@ -235,7 +292,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
 
     // TODO: Optimise this system.
     // After depth sorting, we should split the items into 2 groups.
-    // Multipy items, and Add  items. (Many items will be in both)
+    // Multiply items, and Add  items. (Many items will be in both)
     // Then we can simply check if we have any multiply items here
     // before rendering all items.
 
@@ -253,6 +310,9 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
 
     renderstate.pass = 'ADD'
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA) // For add
+    // Only draw font faces. BEcause all faces are drawn, it can make a mess to see the back faces through the front faces.
+    gl.enable(gl.CULL_FACE)
+    gl.cullFace(gl.BACK)
     this._drawItems(renderstate)
 
     gl.disable(gl.BLEND)

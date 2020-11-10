@@ -26,7 +26,10 @@ class Mat3 extends AttrValue {
   constructor(m00 = 1, m01 = 0, m02 = 0, m10 = 0, m11 = 1, m12 = 0, m20 = 0, m21 = 0, m22 = 1) {
     super()
 
-    if (m00 instanceof Float32Array || m00 instanceof Uint32Array) {
+    if (m00 instanceof Vec3 && m01 instanceof Vec3 && m02 instanceof Vec3) {
+      this.__data = new Float32Array(9)
+      this.set(m00.x, m00.y, m00.z, m01.x, m01.y, m01.z, m02.x, m02.y, m02.z)
+    } else if (m00 instanceof Float32Array || m00 instanceof Uint32Array) {
       this.__data = m00
     } else if (m00 instanceof ArrayBuffer) {
       console.warn(`Deprecated, please use new Vec3(new Float32Array(buffer, byteOffset, 9))`)

@@ -25,20 +25,34 @@ class GeometryParameter extends Parameter {
 
   /**
    * The setValue method.
-   * @param {any} geom - The geom value.
+   * @param {any} value - The geom value.
    */
-  setValue(geom) {
+  setValue(value) {
     // 0 == normal set. 1 = changed via cleaner fn, 2 = change by loading/cloning code.
-    if (this.__value !== geom) {
+    if (this.__value !== value) {
       if (this.__value) {
         this.__value.off('boundingBoxChanged', this.__emitBoundingBoxDirtied)
       }
-      this.__value = geom
+      this.__value = value
       if (this.__value) {
         this.__value.on('boundingBoxChanged', this.__emitBoundingBoxDirtied)
       }
 
       this.emit('valueChanged', {})
+    }
+  }
+
+
+  /**
+   * The loadValue is used to change the value of a parameter, without triggering a
+   * valueChanges, or setting the USER_EDITED state.
+   *
+   * @param {any} value - The context value.
+   */
+  loadValue(value) {
+    this.__value = value
+    if (this.__value) {
+      this.__value.on('boundingBoxChanged', this.__emitBoundingBoxDirtied)
     }
   }
 
