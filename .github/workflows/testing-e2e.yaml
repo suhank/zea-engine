@@ -12,7 +12,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
         with:
-          node-version: '15.x'
+          node-version: '14.x'
       - run: yarn install --frozen-lockfile
       - run: yarn run start &
       - run: yarn run test:e2e
