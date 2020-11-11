@@ -9,11 +9,12 @@ import webWorkerLoader from 'rollup-plugin-web-worker-loader'
 import pkg from './package.json'
 
 const plugins = [
-  resolve({
-    preferBuiltins: true,
-  }),
   commonjs(),
   nodePolyfills(),
+  resolve({
+    browser: true,
+    preferBuiltins: false,
+  }),
   json(),
   webWorkerLoader(),
   svg(),

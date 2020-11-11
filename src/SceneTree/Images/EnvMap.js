@@ -1,8 +1,9 @@
+import util from 'util'
+
 /* eslint-disable new-cap */
 /* eslint-disable require-jsdoc */
 /* eslint-disable camelcase */
 import { Vec2, Vec3 } from '../../Math/index'
-import { decodeText } from '../../Utilities/index'
 import { Registry } from '../../Registry'
 import { VLHImage } from './VLHImage.js'
 
@@ -113,6 +114,7 @@ class EnvMap extends VLHImage {
     super(name, params)
 
     this.mapping = EnvMapMapping.OCTAHEDRAL
+    this.utf8decoder = new util.TextDecoder()
   }
 
   /**
@@ -126,11 +128,11 @@ class EnvMap extends VLHImage {
     const samples = entries.samples
 
     if (samples) {
-      if (window.TextDecoder) this.__sampleSets = JSON.parse(new TextDecoder('utf-8').decode(samples))
-      else this.__sampleSets = JSON.parse(decodeText(samples))
+      this.__sampleSets = JSON.parse(this.utf8decoder.decode(samples))
 
-      if (this.__sampleSets.luminanceThumbnail)
+      if (this.__sampleSets.luminanceThumbnail) {
         this.__thumbSize = Math.sqrt(this.__sampleSets.luminanceThumbnail.length)
+      }
     }
   }
 
