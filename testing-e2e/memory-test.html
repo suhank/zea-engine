@@ -8,17 +8,35 @@
 
     <link href="zea-logo.png" rel="shortcut icon" />
 
-    <style>
-      .hidden {
-        display: none;
-      }
-    </style>
+    <link rel="stylesheet" href="styles/tachyons.min.css" />
+    <link rel="stylesheet" href="styles/main.css" />
 
     <script src="https://cdn.jsdelivr.net/npm/filesize@6.1.0/lib/filesize.min.js"></script>
 
     <script src="../dist/index.umd.js"></script>
 
     <script type="module">
+      /*
+        Reference Stats:
+
+        Phil's laptop:
+          Stats:
+            Create scene: 14765.61865234375 ms
+            Load GPU: 11439.541748046875 ms
+            Used Memory: 1.56 GB
+
+        Mauro's MacBook Pro:
+          Stats:
+            Create scene: 10588.175048828125 ms
+            Load GPU: 7655.34765625 ms
+            Used Memory: 1.39 GB
+          Specs:
+            2.6 GHz 6-Core Intel Core i7
+            16 GB 2667 MHz DDR4
+            AMD Radeon Pro 5300M 4 GB
+            Intel UHD Graphics 630 1536 MB
+      */
+
       const {
         Vec3,
         EulerAngles,
@@ -42,6 +60,7 @@
       const count = 160_000
       const dim = Math.round(Math.cbrt(count))
       console.log('Will render GeomItem count:', Math.pow(dim, 3))
+
       renderer
         .getViewport()
         .getCamera()
@@ -74,25 +93,20 @@
 
           console.log('Used Memory:', window.filesize(usedJSHeapSize))
 
-          /*
-        // Reference numbers from Phils Laptop.
-        Create scene: 14765.61865234375 ms
-        Load GPU: 11439.541748046875 ms
-        Used Memory: 1.56 GB
-        */
-
           document.querySelector('#memoryStatus').textContent = memoryStatus
           document.querySelector('#timeStatus').textContent = timeStatus
         }
 
         console.time('Create scene')
+
         let t1 = performance.now()
         let total = 0
+
         const addRow = (i) => {
           const t2 = performance.now()
-          document.querySelector('#progressStatus').textContent = `progress: ${Math.round(
-            (i / dim) * 100
-          )}%, ${Math.round(t2 - t1)}`
+          const progress = `${Math.round((i / dim) * 100)}%, ${Math.round(t2 - t1)} ms`
+          document.querySelector('#progressStatus').textContent = progress
+
           total += t2 - t1
           t1 = t2
 
@@ -118,6 +132,7 @@
 
           scene.getRoot().addChild(treeItemI)
         }
+
         const addRowAsync = (i) => {
           return new Promise((resolve) => {
             setTimeout(() => {
@@ -126,20 +141,23 @@
             })
           })
         }
+
         const promises = []
+
         for (let i = 0; i < dim; i++) {
           promises.push(addRowAsync(i))
         }
+
         Promise.all(promises).then(onDone)
       })
     </script>
   </head>
-  <body>
+  <body class="flex flex-column">
     <h1>Zea Engine Memory Test</h1>
 
     <p>Click the <button id="start">Start</button> button to begin.</p>
 
-    <div class="hidden" id="wrapper">
+    <div class="flex flex-column flex-grow-1 hidden" id="wrapper">
       <dl>
         <dt>Memory:</dt>
         <dd>
@@ -149,13 +167,13 @@
         <dd>
           <p id="timeStatus"></p>
         </dd>
-        <dt>Status:</dt>
+        <dt>Progress:</dt>
         <dd>
           <p id="progressStatus"></p>
         </dd>
       </dl>
 
-      <canvas id="renderer" />
+      <canvas class="flex-grow-1" id="renderer" />
     </div>
   </body>
 </html>
