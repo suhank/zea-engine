@@ -555,7 +555,7 @@ class GLBaseRenderer extends ParameterOwner {
 
     if (rootIsDiv) {
       console.warn(
-        '@GLBaseRenderer#setupWebGL. Using a `div` as root element is deprecated. Use a `canvas` instead. See: https://zea.live/zea-engine/#/getting-started/get-started-with-engine?id=basic-setup'
+        '@GLBaseRenderer#setupWebGL. Using a `div` as root element is deprecated. Use a `canvas` instead. See: https://docs.zea.live/zea-engine/#/getting-started/get-started-with-engine?id=basic-setup'
       )
 
       this.__glcanvas = document.createElement('canvas')

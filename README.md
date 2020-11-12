@@ -18,7 +18,7 @@ Applications that leverage the web browser are already available on all modern d
 
 # Documentation
 
-Full documentation including tutorials and live examples can be found at the zea engine docs site: [https://zea.live/zea-engine/](https://zea.live/zea-engine/)
+Full documentation including tutorials and live examples can be found at the zea engine docs site: [https://docs.zea.live/zea-engine/](https://docs.zea.live/zea-engine/)
 
 # Licensing
 

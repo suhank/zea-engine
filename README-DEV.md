@@ -10,7 +10,7 @@ A high performance 3D rendering engine for the web.
 
 ## Docs
 
-[https://zea.live/zea-engine/](https://zea.live/zea-engine/)
+[https://docs.zea.live/zea-engine/](https://docs.zea.live/zea-engine/)
 
 ## Getting started
 
