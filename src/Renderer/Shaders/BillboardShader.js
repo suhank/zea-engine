@@ -154,7 +154,7 @@ void main(void) {
 
   // Use cross platform bit flags methods
   if(drawOnTop){
-    gl_Position.z = mix(gl_Position.z, -1.0, 0.5);
+    gl_Position.z = mix(gl_Position.z, -gl_Position.w, 0.5);
   }
 }
 `
