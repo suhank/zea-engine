@@ -19,7 +19,7 @@ class SceneSettings extends BaseItem {
    */
   constructor(name) {
     super(name)
-    this.addParameter(new ColorParameter('BackgroundColor', new Color('#808080')))
+    this.addParameter(new ColorParameter('BackgroundColor', new Color('#eeeeee')))
     this.addParameter(new ImageParameter('EnvMap'))
     this.addParameter(new BooleanParameter('Display EnvMap', false))
     this.addParameter(new NumberParameter('EnvMapLOD', 0))
