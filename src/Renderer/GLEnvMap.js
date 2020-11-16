@@ -38,6 +38,18 @@ class GLEnvMap extends GLProbe {
       gl.__quadIndexBuffer
     )
 
+    //
+    const headlightParam = this.__envMap.getParameter('HeadLightMode')
+    this.textureDesc[2] = headlightParam.getValue()
+    headlightParam.on('valueChanged', () => {
+      if (headlightParam.getValue()) {
+        this.textureDesc[2] |= 1 << 1
+      } else {
+        this.textureDesc[2] &= ~(1 << 1)
+      }
+      this.emit('updated')
+    })
+
     if (this.__envMap.isLoaded()) {
       this.convolveProbe(srcGLTex)
     } else {
