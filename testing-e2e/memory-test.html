@@ -11,8 +11,6 @@
     <link rel="stylesheet" href="styles/tachyons.min.css" />
     <link rel="stylesheet" href="styles/main.css" />
 
-    <script src="https://cdn.jsdelivr.net/npm/filesize@6.1.0/lib/filesize.min.js"></script>
-
     <script src="../dist/index.umd.js"></script>
 
     <script type="module">
@@ -66,71 +64,87 @@
         .getCamera()
         .setPositionAndTarget(new Vec3(dim * 2, dim * 2, dim), new Vec3(dim * 0.5, dim * 0.5, dim * 0.5))
 
-      document.querySelector('#start').addEventListener('click', () => {
+      const MEMORY_LIMIT = 1_720_000_000
+      const TIME_LIMIT = 45_000
+
+      document.querySelector('#memoryLimit').textContent = MEMORY_LIMIT
+
+      const addColumns = (row, treeItem) => {
+        for (let j = 0; j < dim; j += 1) {
+          const material = new Material('mat', 'SimpleSurfaceShader')
+          material.getParameter('BaseColor').setValue(new Color(row / dim, j / dim, 1))
+
+          const treeItemJ = new TreeItem('TreeItem' + j)
+          treeItem.addChild(treeItemJ)
+
+          for (let k = 0; k < dim; k += 1) {
+            const geomItem = new GeomItem('Geom' + k, cuboid, material)
+            treeItemJ.addChild(geomItem)
+
+            const xfo = new Xfo()
+            xfo.tr.set(row, j, k)
+            geomItem.getParameter('GlobalXfo').setValue(xfo)
+          }
+        }
+      }
+
+      const run = () => {
         document.querySelector('#wrapper').classList.remove('hidden')
 
-        const start = performance.now()
+        const startTime = performance.now()
 
-        const onDone = () => {
-          console.timeEnd('Create scene')
+        console.time('Create scene')
+        for (let i = 0; i < dim; i += 1) {
+          const treeItem = new TreeItem('TreeItem' + i)
+          scene.getRoot().addChild(treeItem)
 
-          console.time('Load GPU')
-          renderer.setScene(scene)
-          console.timeEnd('Load GPU')
-
-          const totalTime = performance.now() - start
-
-          const { usedJSHeapSize } = performance.memory
-
-          const MEMORY_LIMIT = 1_620_000_000
-          const TIME_LIMIT = 45_000
-
-          const isGoodMemory = usedJSHeapSize <= MEMORY_LIMIT
-          const isGoodTime = totalTime <= TIME_LIMIT
-
-          const memoryStatus = isGoodMemory ? 'Good' : `Bad: ${window.filesize(usedJSHeapSize)}`
-          const timeStatus = isGoodTime ? 'Good' : `Bad: ${Math.round(totalTime / 1000)} sec`
-
-          console.log('Used Memory:', window.filesize(usedJSHeapSize))
-
-          document.querySelector('#memoryStatus').textContent = memoryStatus
-          document.querySelector('#timeStatus').textContent = timeStatus
+          addColumns(i, treeItem)
         }
+        console.timeEnd('Create scene')
+
+        console.time('Load GPU')
+        renderer.setScene(scene)
+        renderer.frameAll()
+        console.timeEnd('Load GPU')
+
+        const totalTime = performance.now() - startTime
+
+        const { usedJSHeapSize } = performance.memory
+
+        const isGoodMemory = usedJSHeapSize <= MEMORY_LIMIT
+        const isGoodTime = totalTime <= TIME_LIMIT
+
+        const memoryStatus = isGoodMemory ? 'Good' : `Bad: ${usedJSHeapSize}`
+        const timeStatus = isGoodTime ? 'Good' : `Bad: ${Math.round(totalTime / 1000)} sec`
+
+        console.log('Used Memory:', usedJSHeapSize)
+
+        document.querySelector('#memoryStatus').textContent = memoryStatus
+        document.querySelector('#usedJSHeapSize').textContent = usedJSHeapSize
+        document.querySelector('#timeStatus').textContent = timeStatus
+      }
+
+      const runAsync = () => {
+        document.querySelector('#wrapper').classList.remove('hidden')
+
+        const startTime = performance.now()
 
         console.time('Create scene')
 
         let t1 = performance.now()
-        let total = 0
 
         const addRow = (i) => {
           const t2 = performance.now()
+
           const progress = `${Math.round((i / dim) * 100)}%, ${Math.round(t2 - t1)} ms`
           document.querySelector('#progressStatus').textContent = progress
 
-          total += t2 - t1
           t1 = t2
 
-          const treeItemI = new TreeItem('TreeItem' + i)
+          const treeItem = new TreeItem('TreeItem' + i)
+          scene.getRoot().addChild(treeItem)
 
-          for (let j = 0; j < dim; j++) {
-            const material = new Material('mat', 'SimpleSurfaceShader')
-            material.getParameter('BaseColor').setValue(new Color(i / dim, j / dim, 1))
-            const treeItemJ = new TreeItem('TreeItem' + j)
-
-            for (let k = 0; k < dim; k++) {
-              const geomItem = new GeomItem('Geom' + k, cuboid, material)
-
-              const xfo = new Xfo()
-              xfo.tr.set(i, j, k)
-              geomItem.getParameter('GlobalXfo').setValue(xfo)
-
-              treeItemJ.addChild(geomItem)
-            }
-
-            treeItemI.addChild(treeItemJ)
-          }
-
-          scene.getRoot().addChild(treeItemI)
+          addColumns(i, treeItem)
         }
 
         const addRowAsync = (i) => {
@@ -144,24 +158,54 @@
 
         const promises = []
 
-        for (let i = 0; i < dim; i++) {
+        for (let i = 0; i < dim; i += 1) {
           promises.push(addRowAsync(i))
         }
 
+        const onDone = () => {
+          console.timeEnd('Create scene')
+
+          console.time('Load GPU')
+          renderer.setScene(scene)
+          console.timeEnd('Load GPU')
+
+          const totalTime = performance.now() - startTime
+
+          const { usedJSHeapSize } = performance.memory
+
+          const isGoodMemory = usedJSHeapSize <= MEMORY_LIMIT
+          const isGoodTime = totalTime <= TIME_LIMIT
+
+          const memoryStatus = isGoodMemory ? 'Good' : `Bad: ${usedJSHeapSize}`
+          const timeStatus = isGoodTime ? 'Good' : `Bad: ${Math.round(totalTime / 1000)} sec`
+
+          console.log('Used Memory:', usedJSHeapSize)
+
+          document.querySelector('#memoryStatus').textContent = memoryStatus
+          document.querySelector('#usedJSHeapSize').textContent = usedJSHeapSize
+          document.querySelector('#timeStatus').textContent = timeStatus
+        }
+
         Promise.all(promises).then(onDone)
-      })
+      }
+
+      document.querySelector('#runAsync').addEventListener('click', runAsync)
+      document.querySelector('#run').addEventListener('click', run)
     </script>
   </head>
   <body class="flex flex-column">
     <h1>Zea Engine Memory Test</h1>
 
-    <p>Click the <button id="start">Start</button> button to begin.</p>
+    <h2>Memory Limit: <span id="memoryLimit"></span></h2>
+
+    <p>Click the <button id="run">Run</button> or the <button id="runAsync">Run Async</button> button to begin.</p>
 
     <div class="flex flex-column flex-grow-1 hidden" id="wrapper">
       <dl>
         <dt>Memory:</dt>
         <dd>
           <p id="memoryStatus"></p>
+          <p id="usedJSHeapSize"></p>
         </dd>
         <dt>Time:</dt>
         <dd>
