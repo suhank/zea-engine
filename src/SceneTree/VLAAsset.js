@@ -2,7 +2,7 @@ import { SystemDesc } from '../SystemDesc.js'
 import { FilePathParameter } from './Parameters/FilePathParameter'
 import { AssetItem } from './AssetItem.js'
 import { BinReader } from './BinReader.js'
-import { resourceLoader } from './ResourceLoader.js'
+import { resourceLoader } from './resourceLoader.js'
 import { Registry } from '../Registry'
 import { Version } from './Version.js'
 
@@ -29,8 +29,8 @@ class VLAAsset extends AssetItem {
     this.loaded = false
 
     // A signal that is emitted once all the geometries are loaded.
-    // Often the state machine will activate the first state
-    // when this signal emits.
+    // Often the state machine will activate the
+    // first state when this signal emits.
     this.geomsLoaded = false
     this.loaded = false
     this.__geomLibrary.on('loaded', () => {
@@ -38,7 +38,9 @@ class VLAAsset extends AssetItem {
     })
 
     this.__fileParam = this.addParameter(new FilePathParameter('FilePath'))
+
     this.addParameterDeprecationMapping('DataFilePath', 'FilePath') // Note: migrating from 'DataFilePath' to 'FilePath'
+
     this.__fileParam.on('valueChanged', () => {
       this.geomsLoaded = false
       this.loadDataFile(
@@ -109,7 +111,7 @@ class VLAAsset extends AssetItem {
       versions: {},
     }
 
-    resourceLoader.loadArchive(url).then((entries) => {
+    resourceLoader.loadFile('archive', url).then((entries) => {
       // Load the tree file. This file contains
       // the scene tree of the asset, and also
       // tells us how many geom files will need to be loaded.
@@ -152,7 +154,7 @@ class VLAAsset extends AssetItem {
 
     const loadGeomsfile = (geomFileUrl) => {
       return new Promise((resolve) => {
-        resourceLoader.loadArchive(geomFileUrl).then((entries) => {
+        resourceLoader.loadFile('archive', geomFileUrl).then((entries) => {
           const geomsData = entries[Object.keys(entries)[0]]
           this.__geomLibrary.readBinaryBuffer(fileId, geomsData.buffer, context)
           resolve()

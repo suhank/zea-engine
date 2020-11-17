@@ -2,16 +2,17 @@
   "name": "@zeainc/zea-engine",
   "fileName": "index",
   "libraryName": "ZeaEngine",
-  "version": "2.2.2",
+  "version": "2.2.2-resource-loader.5",
   "description": "Zea Engine",
   "browser": "dist/index.umd.js",
+  "plugins": "dist/plugins.umd.js",
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
   "author": "Zea Inc.",
   "license": "SEE LICENSE IN LICENSE.md",
   "files": [
     "dist/*.js",
-    "public-resources/",
+    "dist/public-resources/",
     "buildApiDocs.js"
   ],
   "scripts": {
