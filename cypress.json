@@ -1,4 +1,5 @@
 {
   "baseUrl": "http://localhost:8000/",
+  "nodeVersion": "system",
   "video": false
 }
