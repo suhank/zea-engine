@@ -114,7 +114,7 @@ class EnvMap extends VLHImage {
     super(name, params)
 
     this.mapping = EnvMapMapping.OCTAHEDRAL
-    this.utf8decoder = new util.TextDecoder()
+    this.utf8decoder = util.TextDecoder ? new util.TextDecoder() : new TextDecoder()
   }
 
   /**
