@@ -237,7 +237,7 @@ void main(void) {
 #endif
 
 #ifdef ENABLE_PBR
-    int envMapFlags = int(envMapPyramid_desc.z);
+    int envMapFlags = int(envMapPyramid_desc.w);
     bool headLightMode = testFlag(envMapFlags, ENVMAP_FLAG_HEADLIGHT);
 #endif
 

@@ -40,13 +40,18 @@ class GLEnvMap extends GLProbe {
 
     //
     const headlightParam = this.__envMap.getParameter('HeadLightMode')
-    this.textureDesc[2] = headlightParam.getValue()
-    headlightParam.on('valueChanged', () => {
+
+    const updateHeadlightModeFlag = () => {
+      const ENVMAP_FLAG_HEADLIGHT = 1 // 1<<0;
       if (headlightParam.getValue()) {
-        this.textureDesc[2] |= 1 << 1
+        this.textureDesc[3] |= ENVMAP_FLAG_HEADLIGHT
       } else {
-        this.textureDesc[2] &= ~(1 << 1)
+        this.textureDesc[3] &= ~ENVMAP_FLAG_HEADLIGHT
       }
+    }
+    updateHeadlightModeFlag()
+    headlightParam.on('valueChanged', () => {
+      updateHeadlightModeFlag()
       this.emit('updated')
     })
 
