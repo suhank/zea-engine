@@ -123,7 +123,7 @@ class EnvMap extends VLHImage {
     this.addParameter(new BooleanParameter('HeadLightMode'))
 
     this.mapping = EnvMapMapping.OCTAHEDRAL
-    this.utf8decoder = new util.TextDecoder()
+    this.utf8decoder = util.TextDecoder ? new util.TextDecoder() : new TextDecoder()
   }
 
   /**

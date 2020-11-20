@@ -246,22 +246,18 @@ void main(void) {
         vec3 radiance;
 #ifdef ENABLE_PBR
         if (envMapPyramid_desc.x > 0.0) {
-            vec3 irradiance;
-            if (headLightMode) {
-                irradiance = sampleEnvMap(viewNormal, 1.0);
-            } else {
-                irradiance = sampleEnvMap(normal, 1.0);
-            }
-            radiance = pbrSurfaceRadiance(material, irradiance, normal, viewVector);
+            // Note: not sure how to make specular reflections work in headlight mode.
+            vec4 specularReflectance = pbrSpecularReflectance(material, normal, viewVector);
+            fragColor = vec4(specularReflectance.rgb, mix(opacity, 1.0, specularReflectance.a));
         } else {
 #endif
             // Simple diffuse lighting.
             vec3 irradiance = vec3(dot(normal, viewVector));
             radiance = irradiance * material.baseColor;
+            fragColor = vec4(radiance + (emission * material.baseColor), opacity);
 #ifdef ENABLE_PBR
         }
 #endif
-        fragColor = vec4(radiance + (emission * material.baseColor), opacity);
     }
     else {
         vec3 radiance;

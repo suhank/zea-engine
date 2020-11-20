@@ -5,6 +5,7 @@ import { GLBaseViewport } from './GLBaseViewport.js'
 import { GLFbo } from './GLFbo.js'
 import { GLTexture2D } from './GLTexture2D.js'
 import { POINTER_TYPES } from '../Utilities/EnumUtils'
+import { BaseTool } from '../SceneTree/index'
 import { CameraManipulator } from '../SceneTree/index'
 
 /**
@@ -44,7 +45,7 @@ class GLViewport extends GLBaseViewport {
     // Each user has a separate camera, and so the default
     //  camera cannot be part of the scene.
     this.setCamera(new Camera('DefaultCamera'))
-    this.setManipulator(new CameraManipulator())
+    this.setManipulator(new CameraManipulator({ renderer }))
 
     this.resize(width, height)
   }
@@ -69,7 +70,10 @@ class GLViewport extends GLBaseViewport {
     if (this.__geomDataBufferFbo) {
       this.__geomDataBuffer.resize(this.__width, this.__height)
       this.__geomDataBufferFbo.resize()
+
+      this.renderGeomDataFbo()
     }
+
     this.emit('resized', { width, height })
   }
 
@@ -127,8 +131,13 @@ class GLViewport extends GLBaseViewport {
    * @param {any} manipulator - The manipulator value.
    */
   setManipulator(manipulator) {
-    this.manipulator = manipulator
-    // this.manipulator.activate
+    if (this.manipulator != manipulator) {
+      if (manipulator.deactivateTool) manipulator.deactivateTool()
+
+      this.manipulator = manipulator
+
+      if (manipulator.activateTool) manipulator.activateTool()
+    }
   }
 
   // eslint-disable-next-line require-jsdoc
@@ -477,10 +486,6 @@ class GLViewport extends GLBaseViewport {
    */
   __preparePointerEvent(event) {
     event.viewport = this
-    event.propagating = true
-    event.stopPropagation = () => {
-      event.propagating = false
-    }
 
     event.setCapture = (item) => {
       this.capturedItem = item
@@ -672,12 +677,33 @@ class GLViewport extends GLBaseViewport {
   }
 
   /**
-   * Causes an event to occur when the mouse pointer is moved out of an element.
+   * Causes an event to occur when the mouse pointer is moved into this viewport
+   * @param {MouseEvent|TouchEvent} event - The event that occurs.
+   */
+  onPointerEnter(event) {
+    this.__preparePointerEvent(event)
+    this.emit('pointerEnter', event)
+    if (!event.propagating) return
+
+    if (this.manipulator && this.manipulator.onPointerEnter) {
+      this.manipulator.onPointerEnter(event)
+      if (!event.propagating) return
+    }
+  }
+
+  /**
+   * Causes an event to occur when the mouse pointer is moved out of this viewport
    * @param {MouseEvent|TouchEvent} event - The event that occurs.
    */
   onPointerLeave(event) {
     this.__preparePointerEvent(event)
     this.emit('pointerLeave', event)
+    if (!event.propagating) return
+
+    if (this.manipulator && this.manipulator.onPointerLeave) {
+      this.manipulator.onPointerLeave(event)
+      if (!event.propagating) return
+    }
   }
 
   /**

@@ -1,7 +1,7 @@
 import { Color } from '../../Math/index'
 import { Registry } from '../../Registry'
 import { BaseImage } from '../BaseImage.js'
-import { resourceLoader } from '../ResourceLoader.js'
+import { resourceLoader } from '../resourceLoader.js'
 import { FilePathParameter } from '../Parameters/FilePathParameter'
 
 /**
@@ -122,7 +122,7 @@ class VLHImage extends BaseImage {
   __loadVLH(fileId, file) {
     this.type = 'FLOAT'
 
-    resourceLoader.loadArchive(file.url).then((entries) => {
+    resourceLoader.loadFile('archive', file.url).then((entries) => {
       if (!entries.ldr || !entries.cdm) {
         for (const name in entries) {
           if (name.endsWith('.jpg')) {
