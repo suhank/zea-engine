@@ -238,15 +238,14 @@ void main(void) {
 
     float opacity = Opacity * BaseColor.a;
     if (opacity < 1.0) {
-
 #ifdef ENABLE_PBR
         vec4 specularReflectance = pbrSpecularReflectance(material, normal, viewVector);
-        vec3 radiance = specularReflectance.rgb, mix(opacity, 1.0, specularReflectance.a);
+        fragColor = vec4(specularReflectance.rgb, mix(opacity, 1.0, specularReflectance.a));
 #else
         vec3 irradiance = vec3(dot(normal, viewVector));
         vec3 radiance = material.baseColor * irradiance;
-#endif
         fragColor = vec4(radiance + (emission * material.baseColor), opacity);
+#endif
     }
     else {
 
