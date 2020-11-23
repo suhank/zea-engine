@@ -9,9 +9,6 @@ shaderLibrary.setShaderModule(
 #define HalfPI (0.5 * PI)
 
 
-const int ENVMAP_FLAG_HEADLIGHT =  1; // 1<<0;
-
-const int GEOMITEM_FLAG_CUTAWAY =  1; // 1<<0;
 
 
 `
