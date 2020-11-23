@@ -11,7 +11,7 @@ function checkStatus(response) {
  */
 class TextLoaderPlugin {
   init(resourceLoader) {
-    this.resourceLoader
+    this.resourceLoader = resourceLoader
   }
 
   /**
