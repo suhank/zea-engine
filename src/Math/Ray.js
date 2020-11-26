@@ -28,7 +28,7 @@ class Ray {
   }
 
   /**
-   * Get the closest point.
+   * Get the closest point on the ray to the given point.
    *
    * @param {Vec3} point - The point in 3D space.
    * @return {Ray} - Returns a Ray.
@@ -41,6 +41,54 @@ class Ray {
     // if (c2 < Number.EPSILON) return this.start
     const fract = c1 / c2
     return this.start.add(this.dir.scale(fract))
+  }
+
+  /**
+   * Get the closest point on the ray to the given point.
+   *
+   * @param {Vec3} p0 - The point in 3D space.
+   * @param {Vec3} p1 - The point in 3D space.
+   * @return {number} - Returns a Ray.
+   */
+  closestPointOnLineSegment(p0, p1) {
+    // https://www.codefull.net/2015/06/intersection-of-a-ray-and-a-line-segment-in-3d/
+    const u = this.dir
+    const v = p1.subtract(p0)
+    v.normalizeInPlace()
+    const w = this.start.subtract(p0)
+    const a = u.dot(u) // always >= 0
+    const b = u.dot(v)
+    const c = v.dot(v) // always >= 0
+    const d = u.dot(w)
+    const e = v.dot(w)
+    if (a == 0.0 && c == 0.0) {
+      return this.start.distanceTo(p0)
+    }
+    if (a == 0.0) {
+      return ray.closestPoint(this.start)
+    }
+    if (c == 0.0) {
+      return this.closestPoint(p0)
+    }
+    const D = a * c - b * b // always >= 0
+
+    // compute the ray parameters of the two closest points
+    let this_t
+    let ray_t
+    if (D < 0.001) {
+      // the lines are almost parallel
+      this_t = 0.0
+      if (b > c) {
+        // use the largest denominator
+        ray_t = d / b
+      } else {
+        ray_t = e / c
+      }
+    } else {
+      this_t = (b * e - c * d) / D
+      ray_t = (a * e - b * d) / D
+    }
+    return [this_t, ray_t]
   }
 
   /**
@@ -123,6 +171,53 @@ class Ray {
       return -1 // no intersection
     }
     return sI
+  }
+
+  /**
+   * Determines if this Box3 intersects a ray.
+   *
+   * @param {Box3} box3 - The box to check for intersection against.
+   * @param {number} tolerance - The tolerance of the test.
+   * @return {boolean} - The return value.
+   */
+  intersectRayBox3(box3, tolerance = 0) {
+    // https://www.scratchapixel.com/lessons/3d-basic-rendering/minimal-ray-tracer-rendering-simple-shapes/ray-box-intersection
+
+    const invdir = new Vec3(1 / this.dir.x, 1 / this.dir.y, 1 / this.dir.z)
+    const sign = []
+    sign[0] = invdir.x < 0
+    sign[1] = invdir.y < 0
+    sign[2] = invdir.z < 0
+
+    const bounds = []
+    if (tolerance > 0) {
+      const diag = box3.diagonal()
+      diag.normalizeInPlace()
+      diag.scaleInPlace(tolerance)
+      bounds[0] = box3.p0.subtract(diag)
+      bounds[1] = box3.p1.add(diag)
+    } else {
+      bounds[0] = box3.p0
+      bounds[1] = box3.p1
+    }
+
+    let tMin = (bounds[sign[0]].x - this.start.x) * invdir.x
+    let tMax = (bounds[1 - sign[0]].x - this.start.x) * invdir.x
+    const tyMin = (bounds[sign[1]].y - this.start.y) * invdir.y
+    const tyMax = (bounds[1 - sign[1]].y - this.start.y) * invdir.y
+
+    if (tMin > tyMax || tyMin > tMax) return false
+    if (tyMin > tMin) tMin = tyMin
+    if (tyMax < tMax) tMax = tyMax
+
+    const tzMin = (bounds[sign[2]].z - this.start.z) * invdir.z
+    const tzMax = (bounds[1 - sign[2]].z - this.start.z) * invdir.z
+
+    if (tMin > tzMax || tzMin > tMax) return false
+    if (tzMin > tMin) tMin = tzMin
+    if (tzMax < tMax) tMax = tzMax
+
+    return true
   }
 
   /**
