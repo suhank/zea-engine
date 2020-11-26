@@ -4,6 +4,10 @@
 ![logo](_media/logo-zea.svg)
 
 # Zea Engine
+[![NPM Package][npm]][npm-url]
+[![Build Size][build-size]][build-size-url]
+[![NPM Downloads][npm-downloads]][npmtrends-url]
+
 
 > Solve tough visualization problems in design, manufacturing, and construction.
 
@@ -39,3 +43,10 @@ Reach
 <!-- background color -->
 
 ![color](#333333)
+
+[npm]: https://badge.fury.io/js/%40zeainc%2Fzea-engine.svg
+[npm-url]: https://www.npmjs.com/package/@zeainc/zea-engine
+[build-size]: https://badgen.net/bundlephobia/minzip/@zeainc/zea-engine
+[build-size-url]: https://bundlephobia.com/result?p=@zeainc/zea-engine
+[npm-downloads]: https://img.shields.io/npm/dw/@zeainc/zea-engine
+[npmtrends-url]: https://www.npmtrends.com/@zeainc/zea-engine
