@@ -134,6 +134,42 @@ class Lines extends BaseGeom {
   }
 
   // ////////////////////////////////////////
+  // Queries
+
+  /**
+   * Queries the scene tree for items such as the closest edge or point
+   *
+   * @param {string} queryType - The type of the query
+   * @param {object} data - metadata for the query
+   * @return {Promise} - Returns a promise that resolves to the result.
+   */
+  query(queryType, data) {
+    if (queryType == 'closestEdge') {
+      const { ray, tolerance } = data
+
+      const positions = this.getVertexAttribute('positions')
+      const segs = this.getNumSegments()
+      let prevIdx1 = -1
+      let chainStartIdx = -1
+      let p0
+      let p1
+      for (let i = 0; i < segs; i++) {
+        const idx0 = this.__indices[i * 2 + 0]
+        const idx1 = this.__indices[i * 2 + 1]
+        if (idx0 !== prevIdx1) {
+          chainStartIdx = idx0
+          p0 = positions.getValueRef(idx0)
+        } else {
+          p0 = p1
+        }
+
+        p1 = positions.getValueRef(idx1)
+        prevIdx1 = idx1
+      }
+    }
+  }
+
+  // ////////////////////////////////////////
   // Persistence
 
   /**

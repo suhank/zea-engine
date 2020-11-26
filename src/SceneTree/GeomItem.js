@@ -1,4 +1,4 @@
-import { Xfo } from '../Math/index'
+import { Ray, Xfo } from '../Math/index'
 import { XfoParameter, Mat4Parameter } from './Parameters/index'
 import { MaterialParameter } from './Parameters/MaterialParameter'
 import { GeometryParameter } from './Parameters/GeometryParameter'
@@ -194,8 +194,36 @@ class GeomItem extends BaseGeomItem {
     return this.__geomMatParam.getValue()
   }
 
+  // ////////////////////////////////////////
+  // Queries
+
+  /**
+   * Queries the scene tree for items such as the closest edge or point
+   *
+   * @param {string} queryType - The type of the query
+   * @param {object} data - metadata for the query
+   * @return {Promise} - Returns a promise that resolves to the result.
+   */
+  query(queryType, data) {
+    return new Promise((resolve, reject) => {
+      super.query(queryType, data).then((result) => {
+        const geom = this.__geomParam.getValue()
+        if (geom) {
+          const { ray } = data
+
+          const mat = this.getGeomMat4().inverse()
+          const geomRay = new Ray()
+          geomRay.start = mat.transformVec3(ray.start)
+          geomRay.dir = mat.rotateVec3(ray.dir)
+
+          geom.query(queryType, { ray: geomRay, ...data }).then((result) => resolve(result))
+        }
+      })
+    })
+  }
+
   // ///////////////////////////
-  // Debugging
+  // Persistence
 
   /**
    * The toJSON method encodes this type as a json object for persistence.

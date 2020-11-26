@@ -306,6 +306,20 @@ class BaseGeom extends ParameterOwner {
   }
 
   // ////////////////////////////////////////
+  // Queries
+
+  /**
+   * Queries the scene tree for items such as the closest edge or point
+   *
+   * @param {string} queryType - The type of the query
+   * @param {object} data - metadata for the query
+   * @return {Promise} - Returns a promise that resolves to the result.
+   */
+  query(queryType, data) {
+    return Promise.resolve()
+  }
+
+  // ////////////////////////////////////////
   // Persistence
   /**
    * Sets state of current Geometry(Including Vertices and Bounding Box) using a binary reader object.

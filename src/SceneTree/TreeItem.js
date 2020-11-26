@@ -895,12 +895,45 @@ class TreeItem extends BaseItem {
   /**
    * Causes an event to occur when the mouse wheel is rolled up or down over an element.
    *
-   * @param {WheelEvent } event - The wheel event that occurs.
+   * @param {WheelEvent} event - The wheel event that occurs.
    */
   onWheel(event) {
     if (event.propagating && this.__ownerItem) {
       this.__ownerItem.onWheel(event)
     }
+  }
+
+  // ////////////////////////////////////////
+  // Queries
+
+  /**
+   * Queries the scene tree for items such as the closest edge or point
+   *
+   * @param {string} queryType - The type of the query
+   * @param {object} data - metadata for the query
+   * @return {Promise} - Returns a promise that resolves to the result.
+   */
+  query(queryType, data) {
+    return new Promise((resolve, reject) => {
+      const { ray, tolerance } = data
+      const bbox = this.getParameter('BoundingBox').getValue()
+      if (!bbox.intersectsRay(ray, tolerance)) resolve()
+
+      const promises = []
+      this.__childItems.forEach((childItem) => {
+        promises.push(childItem.query(queryType, data))
+      })
+      Promise.all(promises).then((results) => {
+        let closestResult = { dist: Number.MAX_VALUE }
+        results.forEach((result) => {
+          if (result && result.dist < closestResult.dist) {
+            closestResult = result
+          }
+        })
+        if (closestResult.dist < Number.MAX_VALUE) resolve(closestResult)
+        else resolve()
+      })
+    })
   }
 
   // ////////////////////////////////////////
