@@ -221,6 +221,7 @@ class GeomItem extends BaseGeomItem {
             if (result) {
               resolve({
                 distance: result.distance,
+                geomItem: this,
                 point: geomMat.transformVec3(result.point),
               })
             } else {
