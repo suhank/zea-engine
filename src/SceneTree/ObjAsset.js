@@ -195,10 +195,13 @@ class ObjAsset extends AssetItem {
 
       let currGeom = undefined
       let currMtl = undefined
+      let numGeoms = 0
       const newGeom = (name) => {
-        let suffix = 0
-        while (name in geomDatas) {
-          suffix++
+        if (name in geomDatas) {
+          let suffix = 1
+          while (name + String(suffix) in geomDatas) {
+            suffix++
+          }
           name = name + String(suffix)
         }
         currGeom = {
@@ -215,6 +218,7 @@ class ObjAsset extends AssetItem {
           material: currMtl,
         }
         geomDatas[name] = currGeom
+        numGeoms++
       }
       newGeom(filename)
 
@@ -252,7 +256,9 @@ class ObjAsset extends AssetItem {
             newGeom(value + Object.keys(geomDatas).length)
             break
           case 'g':
-            if (splitGroupsIntoObjects) newGeom(elements.join('_'))
+            if (splitGroupsIntoObjects) {
+              newGeom(value ? elements.join('_') : 'Group' + numGeoms)
+            }
             break
           case 'v':
             vertices.push(elements.map((i) => parseFloat(i)))
@@ -326,6 +332,12 @@ class ObjAsset extends AssetItem {
     }
 
     const buildChildItem = (geomName, geomData) => {
+      for (let i = 0; i < geomData.faceCounts.length; i++) {
+        if (geomData.faceCounts[i] == undefined) {
+          geomData.faceCounts[i] = 0
+        }
+      }
+
       const numVertices = geomData.numVertices
       const mesh = new Mesh(geomName)
       mesh.setFaceCounts(geomData.faceCounts)
@@ -354,7 +366,7 @@ class ObjAsset extends AssetItem {
         const v_poly = geomData.vertexIndices[i]
         let faceId = 0
         for (let j = 0; j < v_poly.length - 3; ++j) {
-          faceId += geomData.faceCounts[j]
+          if (geomData.faceCounts[j]) faceId += geomData.faceCounts[j]
         }
         faceId += loadedFaces[v_poly.length - 3]
         loadedFaces[v_poly.length - 3]++
@@ -378,7 +390,6 @@ class ObjAsset extends AssetItem {
       }
 
       const geomItem = new GeomItem(geomName, mesh)
-      geomItem.selectable = true
 
       // Move the transform of the geom item to the center of the geom.
       // This is so that transparent objects can render correctly, and the
