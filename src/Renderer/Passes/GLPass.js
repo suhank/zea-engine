@@ -24,6 +24,15 @@ class GLPass extends ParameterOwner {
   }
 
   /**
+   * The getPassType method.
+   * @return {number} - The pass type value.
+   */
+  getPassType() {
+    console.warn(`Classes extending GLPass should now implement 'getPassType'.`)
+    return PassType.OPAQUE
+  }
+
+  /**
    * The __parameterValueChanged method.
    * @param {object} event - The event object.
    * @private

@@ -35,6 +35,14 @@ class GLAudioItemsPass extends GLPass {
   }
 
   /**
+   * The getPassType method.
+   * @return {number} - The pass type value.
+   */
+  getPassType() {
+    return PassType.OVERLAY
+  }
+
+  /**
    * The init method.
    * @param {any} renderer - The renderer value.
    * @param {any} passIndex - The passIndex value.

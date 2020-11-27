@@ -20,15 +20,6 @@ class GLBillboardsPass extends GLPass {
    */
   constructor() {
     super()
-  }
-
-  /**
-   * The init method.
-   * @param {any} renderer - The renderer value.
-   * @param {any} passIndex - The passIndex value.
-   */
-  init(renderer, passIndex) {
-    super.init(renderer, passIndex)
 
     this.__billboards = []
     this.__dirtyBillboards = new Set()
@@ -38,6 +29,23 @@ class GLBillboardsPass extends GLPass {
     this.__updateRequested = false
 
     this.__prevSortCameraPos = new Vec3()
+  }
+
+  /**
+   * The getPassType method.
+   * @return {number} - The pass type value.
+   */
+  getPassType() {
+    return PassType.TRANSPARENT
+  }
+
+  /**
+   * The init method.
+   * @param {any} renderer - The renderer value.
+   * @param {any} passIndex - The passIndex value.
+   */
+  init(renderer, passIndex) {
+    super.init(renderer, passIndex)
 
     this.__atlas = new GLImageAtlas(this.__renderer.gl, 'Billboards', 'RGBA', 'UNSIGNED_BYTE', [1, 1, 1, 0])
     const emitUpdated = (event) => this.emit('updated', event)
@@ -82,11 +90,6 @@ class GLBillboardsPass extends GLPass {
   // Bind to Render Tree
 
   /**
-   * The filterRenderTree method.
-   */
-  filterRenderTree() {}
-
-  /**
    * The addBillboard method.
    * @param {any} billboard - The billboard value.
    */
@@ -100,9 +103,9 @@ class GLBillboardsPass extends GLPass {
     let index
     if (this.__freeIndices.length > 0) index = this.__freeIndices.pop()
     else index = this.__billboards.length
+    billboard.setMetadata('GLBillboardsPass_Index', index)
 
     const imageIndex = this.__atlas.addSubImage(image)
-    billboard.setMetadata('GLBillboardsPass_Index', index)
 
     const visibilityChanged = () => {
       if (billboard.isVisible()) {
