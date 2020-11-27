@@ -142,7 +142,7 @@ void main(void) {
   }
 
   bind(renderstate, key) {
-    if (renderstate.pass != 'ADD') return false
+    if (renderstate.pass == 'MULTIPLY') return false
     return super.bind(renderstate, key)
   }
 }
