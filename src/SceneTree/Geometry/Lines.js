@@ -144,29 +144,59 @@ class Lines extends BaseGeom {
    * @return {Promise} - Returns a promise that resolves to the result.
    */
   query(queryType, data) {
-    if (queryType == 'closestEdge') {
-      const { ray, tolerance } = data
+    return new Promise((resolve, reject) => {
+      if (queryType == 'closestEdge') {
+        const { ray, tolerance } = data
 
-      const positions = this.getVertexAttribute('positions')
-      const segs = this.getNumSegments()
-      let prevIdx1 = -1
-      let chainStartIdx = -1
-      let p0
-      let p1
-      for (let i = 0; i < segs; i++) {
-        const idx0 = this.__indices[i * 2 + 0]
-        const idx1 = this.__indices[i * 2 + 1]
-        if (idx0 !== prevIdx1) {
-          chainStartIdx = idx0
-          p0 = positions.getValueRef(idx0)
-        } else {
-          p0 = p1
+        const positions = this.getVertexAttribute('positions')
+        const segs = this.getNumSegments()
+
+        let closest = Number.MAX_VALUE
+        let closestSegPoint = -1
+        let closestSegDist = -1
+        let prevIdx1 = -1
+        // let chainStartIdx = -1
+        let p0
+        let p1
+        for (let i = 0; i < segs; i++) {
+          const idx0 = this.__indices[i * 2 + 0]
+          const idx1 = this.__indices[i * 2 + 1]
+          if (idx0 !== prevIdx1) {
+            // chainStartIdx = idx0
+            p0 = positions.getValueRef(idx0)
+          } else {
+            p0 = p1
+          }
+
+          p1 = positions.getValueRef(idx1)
+
+          const rayAndLineParams = ray.closestPointOnLineSegment(p0, p1)
+          const rayParam = rayAndLineParams[0]
+          const lineParam = rayAndLineParams[1]
+          const point = p0.lerp(p1, lineParam)
+          const distBetweenRayAndSegment = ray.start.add(ray.dir.scale(rayParam)).distanceTo(point)
+          if (distBetweenRayAndSegment < tolerance) {
+            if (rayAndLineParams && distBetweenRayAndSegment < closest) {
+              closest = distBetweenRayAndSegment
+              closestSegPoint = point
+              closestSegDist = distBetweenRayAndSegment
+            }
+          }
+          prevIdx1 = idx1
         }
 
-        p1 = positions.getValueRef(idx1)
-        prevIdx1 = idx1
+        if (closest < Number.MAX_VALUE) {
+          resolve({
+            distance: closestSegDist,
+            point: closestSegPoint,
+          })
+        } else {
+          resolve()
+        }
+      } else {
+        resolve()
       }
-    }
+    })
   }
 
   // ////////////////////////////////////////

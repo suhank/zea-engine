@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>queries-closest-edge - Zea Engine</title>
+
+    <link href="zea-logo.png" rel="shortcut icon" />
+
+    <link rel="stylesheet" href="styles/tachyons.min.css" />
+    <link rel="stylesheet" href="styles/main.css" />
+
+    <script src="../dist/index.umd.js"></script>
+
+    <script type="module">
+      const {
+        GLRenderer,
+        Scene,
+        Vec3,
+        Xfo,
+        Color,
+        Lines,
+        Circle,
+        Sphere,
+        GLBoundingBoxPass,
+        TreeItem,
+        GeomItem,
+        Material,
+      } = window.zeaEngine
+
+      const canvas = document.querySelector('#renderer')
+
+      const scene = new Scene()
+      const renderer = new GLRenderer(canvas, { hideSplash: true, webglOptions: { antialias: false } })
+      const boundingBoxPass = new GLBoundingBoxPass()
+      renderer.addPass(boundingBoxPass)
+      renderer.setScene(scene)
+
+      scene.setupGrid(10.0, 10)
+      const root = new TreeItem('root')
+      scene.getRoot().addChild(root)
+
+      const line = new Lines()
+      line.setNumVertices(3)
+      line.setNumSegments(2)
+      line.setSegmentVertexIndices(0, 0, 1)
+      line.setSegmentVertexIndices(1, 1, 2)
+      const positions = line.getVertexAttribute('positions')
+      positions.getValueRef(0).set(-5, -1, 0.0)
+      positions.getValueRef(1).set(5, 1, 5.0)
+      positions.getValueRef(2).set(5, 5, 0.0)
+
+      const material = new Material('gridXAxisMaterial', 'LinesShader')
+      material.getParameter('BaseColor').setValue(new Color(1, 0, 1))
+
+      const lineGeomItem = new GeomItem('line', line, material)
+      lineGeomItem.getParameter('GlobalXfo').setValue(new Xfo(new Vec3(-1, 0, 0)))
+      root.addChild(lineGeomItem)
+
+      const circleGeomItem = new GeomItem('Circle', new Circle(3.0, 36), material)
+      circleGeomItem.getParameter('GlobalXfo').setValue(new Xfo(new Vec3(3, 3, 0)))
+      root.addChild(circleGeomItem)
+
+      boundingBoxPass.addTreeItem(root, true)
+
+      const material2 = new Material('gridXAxisMaterial', 'SimpleSurfaceShader')
+      material2.getParameter('BaseColor').setValue(new Color(1, 1, 0))
+      const sphereGeomItem = new GeomItem('Sphere', new Sphere(0.1), material2)
+      scene.getRoot().addChild(sphereGeomItem)
+
+      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(12, 12, 10.7), new Vec3(0, 0, 0.4))
+
+      window.postMessage('done-loading')
+
+      const globalXfoParam = sphereGeomItem.getParameter('GlobalXfo')
+      renderer.getViewport().on('pointerMove', (event) => {
+        // console.log('pointerMove', event.pointerRay.toString())
+
+        const data = { ray: event.pointerRay, tolerance: 0.5 }
+        root.query('closestEdge', data).then((results) => {
+          if (results) {
+            // console.log('closestEdge', results)
+            globalXfoParam.setValue(new Xfo(results.point))
+          }
+        })
+      })
+
+      // {{{ Messages handler.
+      const handleMessage = (event) => {
+        const { data } = event
+
+        if (data === 'variant-01') {
+          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, -2.7), new Vec3(0, 0, 0.4))
+          renderer.frameAll()
+          window.postMessage(`done-${data}`)
+        } else if (data === 'variant-02') {
+          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-2, -2, 2.7), new Vec3(0, 0, 0.4))
+          renderer.frameAll()
+          window.postMessage(`done-${data}`)
+        }
+      }
+
+      window.addEventListener('message', handleMessage, false)
+      // }}}
+    </script>
+  </head>
+  <body>
+    <canvas class="full-size" id="renderer" />
+  </body>
+</html>

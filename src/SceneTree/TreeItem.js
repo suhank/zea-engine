@@ -909,7 +909,10 @@ class TreeItem extends BaseItem {
   /**
    * Queries the scene tree for items such as the closest edge or point
    *
-   * @param {string} queryType - The type of the query
+   **queryType**
+   * **closestEdge:** Find the closest edge to the ray provided in the data object.
+   *
+   * @param {string} queryType - The type of the query.
    * @param {object} data - metadata for the query
    * @return {Promise} - Returns a promise that resolves to the result.
    */
@@ -917,21 +920,28 @@ class TreeItem extends BaseItem {
     return new Promise((resolve, reject) => {
       const { ray, tolerance } = data
       const bbox = this.getParameter('BoundingBox').getValue()
-      if (!bbox.intersectsRay(ray, tolerance)) resolve()
+      if (this.__childItems.length == 0 || !bbox.isValid() || !ray.intersectRayBox3(bbox, tolerance)) {
+        resolve()
+        return
+      }
 
       const promises = []
       this.__childItems.forEach((childItem) => {
         promises.push(childItem.query(queryType, data))
       })
       Promise.all(promises).then((results) => {
-        let closestResult = { dist: Number.MAX_VALUE }
+        let closestResult = { distance: Number.MAX_VALUE }
         results.forEach((result) => {
-          if (result && result.dist < closestResult.dist) {
+          if (result && result.distance < closestResult.distance) {
             closestResult = result
           }
         })
-        if (closestResult.dist < Number.MAX_VALUE) resolve(closestResult)
-        else resolve()
+        if (closestResult.distance < Number.MAX_VALUE) {
+          resolve(closestResult)
+        } else {
+          resolve()
+          return
+        }
       })
     })
   }

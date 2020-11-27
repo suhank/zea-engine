@@ -39,56 +39,52 @@ class Ray {
     if (c1 < Number.EPSILON) return this.start
     const c2 = this.dir.dot(this.dir)
     // if (c2 < Number.EPSILON) return this.start
-    const fract = c1 / c2
-    return this.start.add(this.dir.scale(fract))
+    return c1 / c2
   }
 
   /**
-   * Get the closest point on the ray to the given point.
+   * Get the closest point on the lines segment to to the ray.
    *
    * @param {Vec3} p0 - The point in 3D space.
    * @param {Vec3} p1 - The point in 3D space.
-   * @return {number} - Returns a Ray.
+   * @return {array|undefined} - Returns the parameters of the ray and the line segment in an array.
    */
   closestPointOnLineSegment(p0, p1) {
-    // https://www.codefull.net/2015/06/intersection-of-a-ray-and-a-line-segment-in-3d/
-    const u = this.dir
-    const v = p1.subtract(p0)
-    v.normalizeInPlace()
-    const w = this.start.subtract(p0)
-    const a = u.dot(u) // always >= 0
-    const b = u.dot(v)
-    const c = v.dot(v) // always >= 0
-    const d = u.dot(w)
-    const e = v.dot(w)
-    if (a == 0.0 && c == 0.0) {
-      return this.start.distanceTo(p0)
-    }
-    if (a == 0.0) {
-      return ray.closestPoint(this.start)
-    }
-    if (c == 0.0) {
-      return this.closestPoint(p0)
-    }
-    const D = a * c - b * b // always >= 0
+    // http://wiki.unity3d.com/index.php/3d_Math_functions?_ga=2.66433254.999789847.1606503529-1334352807.1606503529
+    // ClosestPointsOnTwoLines
+    //Two non-parallel lines which may or may not touch each other have a point on each line which are closest
+    //to each other. This function finds those two points. If the lines are not parallel, the function
+    //outputs true, otherwise false.
 
-    // compute the ray parameters of the two closest points
-    let this_t
-    let ray_t
-    if (D < 0.001) {
-      // the lines are almost parallel
-      this_t = 0.0
-      if (b > c) {
-        // use the largest denominator
-        ray_t = d / b
-      } else {
-        ray_t = e / c
+    const linePoint1 = this.start
+    const lineVec1 = this.dir
+
+    const linePoint2 = p0
+    const lineVec2 = p1.subtract(p0)
+    const lengthVec2 = lineVec2.normalizeInPlace()
+
+    const a = lineVec1.dot(lineVec1)
+    const b = lineVec1.dot(lineVec2)
+    const e = lineVec2.dot(lineVec2)
+
+    const d = a * e - b * b
+
+    // lines are not parallel
+    if (d != 0.0) {
+      const r = linePoint1.subtract(linePoint2)
+      const c = lineVec1.dot(r)
+      const f = lineVec2.dot(r)
+
+      const s = (b * f - c * e) / d
+      const t = (a * f - c * b) / d
+
+      if (t <= 0.0) {
+        return [this.closestPoint(p0), 0]
+      } else if (t > lengthVec2) {
+        return [this.closestPoint(p1), 1]
       }
-    } else {
-      this_t = (b * e - c * d) / D
-      ray_t = (a * e - b * d) / D
+      return [s, t / lengthVec2]
     }
-    return [this_t, ray_t]
   }
 
   /**
@@ -117,13 +113,13 @@ class Ray {
     const d = u.dot(w)
     const e = v.dot(w)
     if (a == 0.0 && c == 0.0) {
-      return this.start.distanceTo(ray.start)
+      return [0.0, 0.0]
     }
     if (a == 0.0) {
-      return ray.closestPoint(this.start)
+      return [0.0, ray.closestPoint(this.start)]
     }
     if (c == 0.0) {
-      return this.closestPoint(ray.start)
+      return [this.closestPoint(ray.start), 0.0]
     }
     const D = a * c - b * b // always >= 0
 
@@ -185,9 +181,9 @@ class Ray {
 
     const invdir = new Vec3(1 / this.dir.x, 1 / this.dir.y, 1 / this.dir.z)
     const sign = []
-    sign[0] = invdir.x < 0
-    sign[1] = invdir.y < 0
-    sign[2] = invdir.z < 0
+    sign[0] = invdir.x < 0 ? 1 : 0
+    sign[1] = invdir.y < 0 ? 1 : 0
+    sign[2] = invdir.z < 0 ? 1 : 0
 
     const bounds = []
     if (tolerance > 0) {

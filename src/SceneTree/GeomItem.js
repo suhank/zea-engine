@@ -211,12 +211,24 @@ class GeomItem extends BaseGeomItem {
         if (geom) {
           const { ray } = data
 
-          const mat = this.getGeomMat4().inverse()
+          const geomMat = this.getGeomMat4()
+          const mat = geomMat.inverse()
           const geomRay = new Ray()
           geomRay.start = mat.transformVec3(ray.start)
           geomRay.dir = mat.rotateVec3(ray.dir)
 
-          geom.query(queryType, { ray: geomRay, ...data }).then((result) => resolve(result))
+          geom.query(queryType, { ...data, ray: geomRay }).then((result) => {
+            if (result) {
+              resolve({
+                distance: result.distance,
+                point: geomMat.transformVec3(result.point),
+              })
+            } else {
+              resolve()
+            }
+          })
+        } else {
+          resolve()
         }
       })
     })
