@@ -130,6 +130,7 @@ class BaseGeom extends ParameterOwner {
     this.__numVertices = count
     // Resizes each of the vertex attributes to match the new count.
     this.__vertexAttributes.forEach((attr) => attr.resize(this.__numVertices))
+    this.setBoundingBoxDirty()
   }
 
   /**
@@ -210,8 +211,10 @@ class BaseGeom extends ParameterOwner {
    * The setBoundingBoxDirty method.
    */
   setBoundingBoxDirty() {
-    this.__boundingBoxDirty = true
-    this.emit('boundingBoxChanged', {})
+    if (!this.__boundingBoxDirty) {
+      this.__boundingBoxDirty = true
+      this.emit('boundingBoxChanged', {})
+    }
   }
 
   /**

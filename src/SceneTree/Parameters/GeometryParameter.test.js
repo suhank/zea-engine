@@ -38,6 +38,7 @@ describe('GeometryParameter', () => {
     const geometryParameter = new GeometryParameter('Foo')
 
     const cuboid = new Cuboid()
+    cuboid.getBoundingBox() // force a clean.
     geometryParameter.setValue(cuboid)
 
     let changed = false
