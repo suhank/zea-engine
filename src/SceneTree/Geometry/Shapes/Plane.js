@@ -1,5 +1,6 @@
-import { Vec2 } from '../../../Math/Vec2'
-import { Vec3 } from '../../../Math/Vec3'
+import { Vec2, Vec3, Ray } from '../../../Math/index'
+import { MathFunctions } from '../../../Utilities/MathFunctions'
+
 import { NumberParameter } from '../../Parameters/index'
 import { Registry } from '../../../Registry'
 import { ProceduralMesh } from './ProceduralMesh'
@@ -41,7 +42,6 @@ class Plane extends ProceduralMesh {
     if (addNormals) this.addVertexAttribute('normals', Vec3)
     if (addTextureCoords) this.addVertexAttribute('texCoords', Vec2)
 
-    
     this.topologyParams.push('DetailX')
     this.topologyParams.push('DetailY')
   }
@@ -115,6 +115,53 @@ class Plane extends ProceduralMesh {
         voff++
       }
     }
+  }
+
+  // ////////////////////////////////////////
+  // Queries
+
+  /**
+   * Queries the scene tree for items such as the closest edge or point
+   *
+   * @param {string} queryType - The type of the query
+   * @param {object} data - metadata for the query
+   * @return {Promise} - Returns a promise that resolves to the result.
+   */
+  query(queryType, data) {
+    return new Promise((resolve, reject) => {
+      // if (queryType == 'closestEdge')
+      {
+        const { ray, tolerance } = data
+
+        const plane = new Ray(new Vec3(0, 0, 0), new Vec3(0, 0, 1))
+
+        // Check distance to circle
+        const t = ray.intersectRayPlane(plane)
+        if (t > 0) {
+          const pointOnPlane = ray.start.add(ray.dir.scale(t))
+          const sizeX = this.__sizeXParam.getValue()
+          const sizeY = this.__sizeYParam.getValue()
+          const domain = { p0: { x: sizeX * -0.5, y: sizeY * -0.5 }, p1: { x: sizeX * 0.5, y: sizeY * 0.5 } }
+
+          const clampedPointOnPlane = new Vec3(
+            MathFunctions.clamp(pointOnPlane.x, domain.p0.x, domain.p1.x),
+            MathFunctions.clamp(pointOnPlane.y, domain.p0.y, domain.p1.y),
+            0
+          )
+          const distToPlane = clampedPointOnPlane.distanceTo(pointOnPlane)
+          if (distToPlane < tolerance) {
+            resolve({
+              shape: 'plane',
+              domain,
+              distance: distToPlane,
+              point: clampedPointOnPlane,
+            })
+            return
+          }
+        }
+      }
+      resolve()
+    })
   }
 }
 

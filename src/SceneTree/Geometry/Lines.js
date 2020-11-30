@@ -152,7 +152,8 @@ class Lines extends BaseGeom {
         const segs = this.getNumSegments()
 
         let closest = Number.MAX_VALUE
-        let closestSegPoint = -1
+        let closestSegId = -1
+        let closestSegPoint
         let closestSegDist = -1
         let prevIdx1 = -1
         // let chainStartIdx = -1
@@ -177,6 +178,7 @@ class Lines extends BaseGeom {
           const distBetweenRayAndSegment = ray.start.add(ray.dir.scale(rayParam)).distanceTo(point)
           if (distBetweenRayAndSegment < tolerance) {
             if (rayAndLineParams && distBetweenRayAndSegment < closest) {
+              closestSegId = i
               closest = distBetweenRayAndSegment
               closestSegPoint = point
               closestSegDist = distBetweenRayAndSegment
@@ -187,6 +189,8 @@ class Lines extends BaseGeom {
 
         if (closest < Number.MAX_VALUE) {
           resolve({
+            shape: 'lineSegments',
+            segmentId: closestSegId,
             distance: closestSegDist,
             point: closestSegPoint,
           })

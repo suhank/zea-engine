@@ -23,6 +23,7 @@
         Lines,
         Circle,
         Sphere,
+        Plane,
         GLBoundingBoxPass,
         TreeItem,
         GeomItem,
@@ -41,32 +42,43 @@
       const root = new TreeItem('root')
       scene.getRoot().addChild(root)
 
-      const line = new Lines()
-      line.setNumVertices(3)
-      line.setNumSegments(2)
-      line.setSegmentVertexIndices(0, 0, 1)
-      line.setSegmentVertexIndices(1, 1, 2)
-      const positions = line.getVertexAttribute('positions')
-      positions.getValueRef(0).set(-5, -1, 0.0)
-      positions.getValueRef(1).set(5, 1, 5.0)
-      positions.getValueRef(2).set(5, 5, 0.0)
+      const lineMaterial = new Material('lines', 'LinesShader')
+      lineMaterial.getParameter('BaseColor').setValue(new Color(1, 0, 1))
 
-      const material = new Material('gridXAxisMaterial', 'LinesShader')
-      material.getParameter('BaseColor').setValue(new Color(1, 0, 1))
+      const polyMaterial = new Material('polys', 'SimpleSurfaceShader')
+      polyMaterial.getParameter('BaseColor').setValue(new Color(1, 0, 1))
 
-      const lineGeomItem = new GeomItem('line', line, material)
-      lineGeomItem.getParameter('GlobalXfo').setValue(new Xfo(new Vec3(-1.5, 0.5, 0)))
-      root.addChild(lineGeomItem)
+      // const line = new Lines()
+      // line.setNumVertices(3)
+      // line.setNumSegments(2)
+      // line.setSegmentVertexIndices(0, 0, 1)
+      // line.setSegmentVertexIndices(1, 1, 2)
+      // const positions = line.getVertexAttribute('positions')
+      // positions.getValueRef(0).set(-5, -1, 0.0)
+      // positions.getValueRef(1).set(5, 1, 5.0)
+      // positions.getValueRef(2).set(5, 5, 0.0)
 
-      const circleGeomItem = new GeomItem('Circle', new Circle(3.0, 60), material)
+      // const lineGeomItem = new GeomItem('line', line, lineMaterial)
+      // lineGeomItem.getParameter('GlobalXfo').setValue(new Xfo(new Vec3(-1.5, 0.5, 0)))
+      // root.addChild(lineGeomItem)
+
+      const circleGeomItem = new GeomItem('Circle', new Circle(3.0, 12), lineMaterial)
       circleGeomItem.getParameter('GlobalXfo').setValue(new Xfo(new Vec3(3, 3, 3)))
       root.addChild(circleGeomItem)
 
-      boundingBoxPass.addTreeItem(root, true)
+      const circleGeomItem2 = new GeomItem('Circle', new Circle(3.5, 12), lineMaterial)
+      circleGeomItem2.getParameter('GlobalXfo').setValue(new Xfo(new Vec3(3, 3, 3)))
+      root.addChild(circleGeomItem2)
 
-      const material2 = new Material('gridXAxisMaterial', 'SimpleSurfaceShader')
-      material2.getParameter('BaseColor').setValue(new Color(1, 1, 0))
-      const sphereGeomItem = new GeomItem('Sphere', new Sphere(0.1), material2)
+      const planeGeomItem = new GeomItem('plane', new Plane(3.5, 5), polyMaterial)
+      planeGeomItem.getParameter('GlobalXfo').setValue(new Xfo(new Vec3(-3, -3, 1)))
+      root.addChild(planeGeomItem)
+
+      // boundingBoxPass.addTreeItem(root, true)
+
+      const ballMaterial = new Material('ball', 'FlatSurfaceShader')
+      ballMaterial.getParameter('BaseColor').setValue(new Color(0.4, 0.4, 0))
+      const sphereGeomItem = new GeomItem('Sphere', new Sphere(0.16), ballMaterial)
       scene.getRoot().addChild(sphereGeomItem)
 
       renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(12, 12, 10.7), new Vec3(0, 0, 0.4))
@@ -79,7 +91,8 @@
 
         const data = { ray: event.pointerRay, tolerance: 0.5 }
         root.query('closestEdge', data).then((results) => {
-          if (results) {
+          if (results && results.geomItem) {
+            sphereGeomItem.getParameter('Visible').setValue(true)
             // console.log('closestEdge', results)
             globalXfoParam.setValue(new Xfo(results.point))
             const geomItem = results.geomItem
@@ -90,6 +103,8 @@
                 console.log('Dist', dist)
               }
             }
+          } else {
+            sphereGeomItem.getParameter('Visible').setValue(false)
           }
         })
       })
