@@ -5,6 +5,34 @@ import { Vec3 } from './Vec3.js'
 import { Registry } from '../Registry'
 
 /**
+ * Solve a quadratic
+ *
+ * @param {number} a
+ * @param {number} b
+ * @param {number} c
+ * @return {undefined|array} - Returns an array containing the 2 solutions
+ */
+function solveQuadratic(a, b, c) {
+  let x0
+  let x1
+  const discr = b * b - 4 * a * c
+  if (discr < 0) return
+  else if (discr == 0) x0 = x1 = (-0.5 * b) / a
+  else {
+    const q = b > 0 ? -0.5 * (b + Math.sqrt(discr)) : -0.5 * (b - Math.sqrt(discr))
+    x0 = q / a
+    x1 = c / q
+  }
+  if (x0 > x1) {
+    const tmp = x0
+    x0 = x1
+    x1 = tmp
+  }
+
+  return [x0, x1]
+}
+
+/**
  * Class representing a ray that emits from an origin in a specified direction.
  */
 class Ray {
@@ -91,7 +119,7 @@ class Ray {
    * Get the closest point at a distance.
    *
    * @param {Vec3} dist - The distance value.
-   * @return {Ray} - Returns a Ray.
+   * @return {array|undefined} - Returns the parameters of the 2 rays  ray and the line segment in an array.
    */
   pointAtDist(dist) {
     return this.start.add(this.dir.scale(dist))
@@ -99,9 +127,11 @@ class Ray {
 
   /**
    * Returns the two ray params that represent the closest point between the two rays.
+   * result[0] is the parameter of this ray
+   * result[1] is the parameter of the passed ray
    *
    * @param {Ray} ray - The ray value.
-   * @return {Ray} - Returns a Ray.
+   * @return {array|undefined} - Returns the parameters of the 2 rays in an array.
    */
   intersectRayVector(ray) {
     const u = this.dir
@@ -167,6 +197,47 @@ class Ray {
       return -1 // no intersection
     }
     return sI
+  }
+
+  /**
+   * Returns one ray param representing the intersection
+   * of this ray against the plane defined by the given ray.
+   * result[0] is the intersection on the near side of the sphere relative to the ray.
+   * result[1] is the intersection on the far side of the sphere relative to the ray.
+   *
+   * @param {Vec3} center - The center of the sphere.
+   * @param {number} radius - The radius of the sphere.
+   * @return {array|undefined} - Returns the parameters of the 2 rays in an array.
+   */
+  intersectRaySphere(center, radius) {
+    // https://www.scratchapixel.com/lessons/3d-basic-rendering/minimal-ray-tracer-rendering-simple-shapes/ray-sphere-intersection
+    // solutions for t if the ray intersects
+
+    const radius2 = radius * radius
+
+    // analytic solution
+    const L = this.start.subtract(center)
+    const a = this.dir.dot(this.dir)
+    const b = 2 * this.dir.dot(L)
+    const c = L.dot(L) - radius2
+    const res = solveQuadratic(a, b, c)
+    if (!res) return
+    let t0 = res[0]
+    let t1 = res[1]
+    if (t0 > t1) {
+      const tmp = t0
+      t0 = t1
+      t1 = tmp
+    }
+
+    if (t0 < 0) {
+      t0 = t1 // if t0 is negative, let's use t1 instead
+      if (t0 < 0) return // both t0 and t1 are negative
+    }
+
+    // t = t0
+
+    return [t0, t1]
   }
 
   /**
