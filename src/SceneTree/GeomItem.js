@@ -209,13 +209,19 @@ class GeomItem extends BaseGeomItem {
       super.query(queryType, data).then((result) => {
         const geom = this.__geomParam.getValue()
         if (geom) {
-          const { ray } = data
+          const { ray, tolerance } = data
 
           const geomMat = this.getGeomMat4()
           const mat = geomMat.inverse()
           const geomRay = new Ray()
           geomRay.start = mat.transformVec3(ray.start)
           geomRay.dir = mat.rotateVec3(ray.dir)
+          const geomBox = geom.getBoundingBox()
+
+          if (!geomBox.isValid() || !geomRay.intersectRayBox3(geomBox, tolerance)) {
+            resolve()
+            return
+          }
 
           geom.query(queryType, { ...data, ray: geomRay }).then((result) => {
             if (result) {

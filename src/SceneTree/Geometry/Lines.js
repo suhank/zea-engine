@@ -189,6 +189,7 @@ class Lines extends BaseGeom {
 
         if (closest < Number.MAX_VALUE) {
           resolve({
+            type: 'edge',
             shape: 'lineSegments',
             segmentId: closestSegId,
             distance: closestSegDist,

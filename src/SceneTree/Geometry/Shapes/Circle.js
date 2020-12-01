@@ -70,7 +70,7 @@ class Circle extends ProceduralLines {
   // Queries
 
   /**
-   * Queries the scene tree for items such as the closest edge or point
+   * Queries the geometry such as the closest edge or point
    *
    * @param {string} queryType - The type of the query
    * @param {object} data - metadata for the query
@@ -78,7 +78,7 @@ class Circle extends ProceduralLines {
    */
   query(queryType, data) {
     return new Promise((resolve, reject) => {
-      if (queryType == 'closestEdge') {
+      if (queryType == 'closestEdge' || queryType == 'closestEdgeOrSurface') {
         const { ray, tolerance } = data
 
         let distToCircle = Number.MAX_VALUE
@@ -94,7 +94,8 @@ class Circle extends ProceduralLines {
         const t = ray.intersectRayPlane(plane)
         if (t > 0) {
           pointOnCircle = ray.start.add(ray.dir.scale(t))
-          distToCircle = Math.abs(radius - pointOnCircle.normalizeInPlace())
+          const distToCircleCenter = pointOnCircle.normalizeInPlace()
+          distToCircle = Math.abs(radius - distToCircleCenter)
           pointOnCircle.scaleInPlace(radius)
         }
 
@@ -108,6 +109,7 @@ class Circle extends ProceduralLines {
 
         if (distToCircle < distToAxis && distToCircle < tolerance) {
           resolve({
+            type: 'edge',
             shape: 'circle',
             radius,
             domain,
@@ -117,9 +119,10 @@ class Circle extends ProceduralLines {
           return
         } else if (distToAxis < distToCircle && distToAxis < tolerance) {
           resolve({
-            shape: 'circle',
+            type: 'edge',
+            shape: 'axis',
             radius,
-            domain,
+            domain: [-Number.MAX_VALUE, Number.MAX_VALUE],
             distance: distToAxis,
             point: pointOnAxis,
           })

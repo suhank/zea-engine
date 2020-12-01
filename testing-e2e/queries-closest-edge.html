@@ -74,25 +74,29 @@
       planeGeomItem.getParameter('GlobalXfo').setValue(new Xfo(new Vec3(-3, -3, 1)))
       root.addChild(planeGeomItem)
 
-      // boundingBoxPass.addTreeItem(root, true)
+      const sphereGeomItem = new GeomItem('sphere', new Sphere(2.5), polyMaterial)
+      sphereGeomItem.getParameter('GlobalXfo').setValue(new Xfo(new Vec3(3, -3, 1)))
+      root.addChild(sphereGeomItem)
+
+      boundingBoxPass.addTreeItem(root, true)
 
       const ballMaterial = new Material('ball', 'FlatSurfaceShader')
       ballMaterial.getParameter('BaseColor').setValue(new Color(0.4, 0.4, 0))
-      const sphereGeomItem = new GeomItem('Sphere', new Sphere(0.16), ballMaterial)
-      scene.getRoot().addChild(sphereGeomItem)
+      const markerGeomItem = new GeomItem('Sphere', new Sphere(0.16), ballMaterial)
+      scene.getRoot().addChild(markerGeomItem)
 
       renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(12, 12, 10.7), new Vec3(0, 0, 0.4))
 
       window.postMessage('done-loading')
 
-      const globalXfoParam = sphereGeomItem.getParameter('GlobalXfo')
+      const globalXfoParam = markerGeomItem.getParameter('GlobalXfo')
       renderer.getViewport().on('pointerMove', (event) => {
         // console.log('pointerMove', event.pointerRay.toString())
 
         const data = { ray: event.pointerRay, tolerance: 0.5 }
-        root.query('closestEdge', data).then((results) => {
+        root.query('closestEdgeOrSurface', data).then((results) => {
           if (results && results.geomItem) {
-            sphereGeomItem.getParameter('Visible').setValue(true)
+            markerGeomItem.getParameter('Visible').setValue(true)
             // console.log('closestEdge', results)
             globalXfoParam.setValue(new Xfo(results.point))
             const geomItem = results.geomItem
@@ -104,7 +108,7 @@
               }
             }
           } else {
-            sphereGeomItem.getParameter('Visible').setValue(false)
+            markerGeomItem.getParameter('Visible').setValue(false)
           }
         })
       })

@@ -169,6 +169,59 @@ class Sphere extends ProceduralMesh {
     positions.getValueRef(vertex).set(0.0, 0.0, -radius)
     vertex++
   }
+
+  // ////////////////////////////////////////
+  // Queries
+
+  /**
+   * Queries the geometry such as the closest edge or point
+   *
+   * @param {string} queryType - The type of the query
+   * @param {object} data - metadata for the query
+   * @return {Promise} - Returns a promise that resolves to the result.
+   */
+  query(queryType, data) {
+    return new Promise((resolve, reject) => {
+      if (queryType == 'closestSurface' || queryType == 'closestEdgeOrSurface') {
+        const { ray, tolerance } = data
+        const radius = this.__radiusParam.getValue()
+        const domain = { p0: { x: 0, y: -Math.PI }, p1: { x: 2.0 * Math.PI, y: Math.PI } }
+
+        const res = ray.intersectRaySphere(new Vec3(0, 0, 0), radius)
+        if (res) {
+          const point = ray.start.add(ray.dir.scale(res[0]))
+          resolve({
+            shape: 'sphere',
+            domain,
+            distance: 0,
+            point,
+          })
+          return
+        }
+
+        // Check distance to sphere
+        const t = ray.closestPoint(new Vec3(0, 0, 0))
+        if (t > 0) {
+          const point = ray.start.add(ray.dir.scale(t))
+          const distToSphereCenter = point.normalizeInPlace()
+
+          const distToSphereSurface = Math.abs(radius - distToSphereCenter)
+          point.scaleInPlace(radius)
+
+          if (distToSphereSurface < tolerance) {
+            resolve({
+              shape: 'sphere',
+              domain,
+              distance: distToSphereSurface,
+              point,
+            })
+            return
+          }
+        }
+      }
+      resolve()
+    })
+  }
 }
 
 Registry.register('Sphere', Sphere)

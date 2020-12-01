@@ -121,7 +121,7 @@ class Plane extends ProceduralMesh {
   // Queries
 
   /**
-   * Queries the scene tree for items such as the closest edge or point
+   * Queries the geometry such as the closest edge or point
    *
    * @param {string} queryType - The type of the query
    * @param {object} data - metadata for the query
@@ -129,8 +129,7 @@ class Plane extends ProceduralMesh {
    */
   query(queryType, data) {
     return new Promise((resolve, reject) => {
-      // if (queryType == 'closestEdge')
-      {
+      if (queryType == 'closestSurface' || queryType == 'closestEdgeOrSurface') {
         const { ray, tolerance } = data
 
         const plane = new Ray(new Vec3(0, 0, 0), new Vec3(0, 0, 1))
