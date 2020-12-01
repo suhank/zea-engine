@@ -42,7 +42,7 @@ class Box3 {
   /**
    * Getter for the lower (x, y, z) boundary of the box.
    *
-   * @return {Vec3} - Returns the minumum Vec3.
+   * @return {Vec3} - Returns the minimum Vec3.
    */
   get min() {
     return this.p0
@@ -51,7 +51,7 @@ class Box3 {
   /**
    * Getter for the upper (x, y, z) boundary of the box.
    *
-   * @return {Vec3} - Returns the minumum Vec3.
+   * @return {Vec3} - Returns the maximum Vec3.
    */
   get max() {
     return this.p1
@@ -73,10 +73,10 @@ class Box3 {
    */
   reset() {
     this.p0.x = Number.POSITIVE_INFINITY
-    this.p1.x = Number.NEGATIVE_INFINITY
     this.p0.y = Number.POSITIVE_INFINITY
-    this.p1.y = Number.NEGATIVE_INFINITY
     this.p0.z = Number.POSITIVE_INFINITY
+    this.p1.x = Number.NEGATIVE_INFINITY
+    this.p1.y = Number.NEGATIVE_INFINITY
     this.p1.z = Number.NEGATIVE_INFINITY
   }
 
