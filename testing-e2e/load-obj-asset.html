@@ -29,8 +29,8 @@
       const renderer = new GLRenderer(domElement, { hideSplash: true, webglOptions: { antialias: false } })
       renderer.setScene(scene)
 
+      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(12, 12, 10), new Vec3(0, 0, 1.5))
       objAsset.on('loaded', () => {
-        renderer.frameAll()
         window.postMessage(`done-Loading`)
       })
 
