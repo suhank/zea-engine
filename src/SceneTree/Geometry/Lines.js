@@ -145,7 +145,7 @@ class Lines extends BaseGeom {
    */
   query(queryType, data) {
     return new Promise((resolve, reject) => {
-      if (queryType == 'closestEdge') {
+      if (queryType == 'closestEdge' || queryType == 'closestEdgeOrSurface') {
         const { ray, tolerance } = data
 
         const positions = this.getVertexAttribute('positions')
