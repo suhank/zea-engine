@@ -19,6 +19,8 @@ class GLLines extends GLGeom {
     this.__numSegIndices = 0
     this.__numVertices = 0
     this.__buffersNeedUpload = true
+
+    this.isFatLine = this.__geom.lineThickness != undefined || this.__geom.hasVertexAttribute('lineThickness')
   }
 
   /**
@@ -28,6 +30,13 @@ class GLLines extends GLGeom {
   genBuffers(opts) {
     this.genBufferOpts = opts
     this.__buffersNeedUpload = true
+
+    // Note: For Fat lines to be draw, we need a special shader bound.
+    // Ideally we would wait till the shader is bound before
+    // deciding to upload fat buffers. However, lazy uploads caused
+    // a strange behavior where lines would not be displayed when first drawn.
+    // To avoid this issue, we force the upload immediately
+    if (this.isFatLine) this.genBuffersLazy(true)
   }
 
   /**
@@ -37,6 +46,7 @@ class GLLines extends GLGeom {
   updateBuffers(opts) {
     this.genBufferOpts = opts
     this.__buffersNeedUpload = true
+    if (this.isFatLine) this.genBuffersLazy(true)
   }
 
   /**
@@ -98,6 +108,7 @@ class GLLines extends GLGeom {
         if (lineThicknessAttr) dataArray[i * 4 + 3] = lineThicknessAttr.getFloat32Value(i)
         else dataArray[i * 4 + 3] = 1.0
       }
+
       if (numVertsChanged && this.fatBuffers.positionsTexture) {
         this.fatBuffers.positionsTexture.destroy()
         this.fatBuffers.positionsTexture = null
@@ -151,6 +162,7 @@ class GLLines extends GLGeom {
         }
       }
       this.__numSegIndices = indices.length
+      this.__numVertices = geomBuffers.numVertices
     } else {
       if (!this.__indexBuffer) {
         this.__indexBuffer = gl.createBuffer()
@@ -216,7 +228,6 @@ class GLLines extends GLGeom {
     const unifs = renderstate.unifs
     if (unifs.LineThickness && gl.floatTexturesSupported) {
       if (this.__buffersNeedUpload) this.genBuffersLazy(true)
-      // TODO: Provide a geomdata shader for thick lines.
 
       let shaderBinding = this.__shaderBindings[renderstate.shaderkey]
       if (!shaderBinding) {
@@ -238,10 +249,6 @@ class GLLines extends GLGeom {
         }
       }
 
-      // gl.uniform1f(
-      //   unifs.LineThickness.location,
-      //   (this.__geom.lineThickness ? this.__geom.lineThickness : 1.0) * renderstate.viewScale
-      // )
       return true
     } else {
       if (this.__buffersNeedUpload) this.genBuffersLazy(false)
