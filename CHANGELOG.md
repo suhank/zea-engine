@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.0.1] (2020-12-04)
+
+
+### Bug Fixes
+
+* Fixed property detection on GLLines ([dc2d474](https://github.com/ZeaInc/zea-engine/commit/dc2d474c76f1e77c69204ae8bd2a5aa8ba3af1d4))
+
 ## [3.0.0] (2020-12-03)
 
 ## [2.0.0] (2020-09-12)
