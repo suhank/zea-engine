@@ -2,6 +2,7 @@ import { Vec2, Vec3 } from '../Math/index.js'
 import { GLGeom } from './GLGeom.js'
 import { generateShaderGeomBinding } from './GeomShaderBinding.js'
 import { GLTexture2D } from './GLTexture2D.js'
+import { Lines } from '../SceneTree/Geometry/Lines'
 
 /** Class representing GL lines.
  * @extends GLGeom
@@ -20,7 +21,9 @@ class GLLines extends GLGeom {
     this.__numVertices = 0
     this.__buffersNeedUpload = true
 
-    this.isFatLine = this.__geom.lineThickness != undefined || this.__geom.hasVertexAttribute('lineThickness')
+    this.isFatLine =
+      this.__geom.lineThickness != undefined ||
+      (this.__geom instanceof Lines && this.__geom.hasVertexAttribute('lineThickness'))
   }
 
   /**
