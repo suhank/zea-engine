@@ -1,7 +1,7 @@
 import { GLTexture2D } from './GLTexture2D.js'
 import { UnpackLDRAlphaImageShader } from './Shaders/UnpackLDRAlphaImageShader.js'
 import { GLFbo } from './GLFbo.js'
-import { generateShaderGeomBinding } from './GeomShaderBinding.js'
+import { generateShaderGeomBinding } from './Drawing/GeomShaderBinding.js'
 
 /** Class representing a GL (low dynamic range) LDR alpha image.
  * @extends GLTexture2D

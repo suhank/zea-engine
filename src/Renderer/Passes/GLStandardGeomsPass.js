@@ -3,12 +3,7 @@ import { GLPass } from './GLPass'
 import { Vec4 } from '../../Math/index'
 
 import { GeomItem, Points, Lines, Mesh, PointsProxy, LinesProxy, MeshProxy } from '../../SceneTree/index'
-
-import { GLPoints } from '../GLPoints.js'
-import { GLLines } from '../GLLines.js'
-import { GLMesh } from '../GLMesh.js'
-import { GLMaterial } from '../GLMaterial.js'
-import { GLGeomItemChangeType, GLGeomItem } from '../GLGeomItem.js'
+import { GLPoints, GLLines, GLMesh, GLMaterial, GLGeomItemChangeType, GLGeomItem } from '../Drawing/index.js'
 import { GLTexture2D } from '../GLTexture2D.js'
 import { MathFunctions } from '../../Utilities/MathFunctions'
 

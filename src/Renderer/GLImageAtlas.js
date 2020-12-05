@@ -7,7 +7,7 @@ import { shaderLibrary } from './ShaderLibrary'
 import { GLShader } from './GLShader.js'
 import { GLTexture2D } from './GLTexture2D.js'
 import { GLRenderTarget } from './GLRenderTarget.js'
-import { generateShaderGeomBinding } from './GeomShaderBinding.js'
+import { generateShaderGeomBinding } from './Drawing/GeomShaderBinding.js'
 import { MathFunctions } from '../Utilities/MathFunctions'
 
 // eslint-disable-next-line require-jsdoc

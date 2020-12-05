@@ -1,7 +1,7 @@
 import { GLTexture2D } from './GLTexture2D.js'
 import { UnpackHDRShader } from './Shaders/UnpackHDRShader.js'
 import { GLFbo } from './GLFbo.js'
-import { generateShaderGeomBinding } from './GeomShaderBinding.js'
+import { generateShaderGeomBinding } from './Drawing/GeomShaderBinding.js'
 
 /** Class representing a GL high dynamic range (HDR) image.
  * @extends GLTexture2D

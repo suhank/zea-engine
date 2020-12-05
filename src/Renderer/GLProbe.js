@@ -4,7 +4,7 @@ import { GLImageAtlas } from './GLImageAtlas.js'
 import { ConvolverShader } from './Shaders/ConvolverShader.js'
 import { GLFbo } from './GLFbo.js'
 import { ImagePyramid } from './ImagePyramid.js'
-import { generateShaderGeomBinding } from './GeomShaderBinding.js'
+import { generateShaderGeomBinding } from './Drawing/GeomShaderBinding.js'
 
 /** Class representing a GL probe.
  * @extends GLImageAtlas

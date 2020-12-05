@@ -1,6 +1,6 @@
-import { EventEmitter } from '../Utilities/index'
+import { EventEmitter } from '../../Utilities/index'
 
-import '../SceneTree/GeomItem.js'
+import '../../SceneTree/GeomItem.js'
 
 const GLGeomItemChangeType = {
   GEOMITEM_CHANGED: 0,

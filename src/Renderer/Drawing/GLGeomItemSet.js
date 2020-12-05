@@ -1,6 +1,6 @@
-import '../SceneTree/GeomItem.js'
+import '../../SceneTree/GeomItem.js'
 
-import { EventEmitter } from '../Utilities/index'
+import { EventEmitter } from '../../Utilities/index'
 
 /** This class abstracts the rendering of a collection of geometries to screen.
  * @extends EventEmitter
