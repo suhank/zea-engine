@@ -38,6 +38,7 @@ export * from './BaseImage.js'
 export * from './MaterialLibrary.js'
 
 export * from './Scene.js'
+export * from './GridTreeItem.js'
 
 export * from './VLAAsset.js'
 export * from './ObjAsset.js'
