@@ -8,6 +8,7 @@ Class representing a GL render target.
 * [GLRenderTarget](#GLRenderTarget)
     * [new GLRenderTarget(gl, params)](#new-GLRenderTarget)
     * [configure(params)](#configure)
+    * [checkFramebuffer()](#checkFramebuffer)
     * [bindForWriting(renderstate, clear)](#bindForWriting)
     * [unbindForWriting(renderstate)](#unbindForWriting)
     * [clear(clearDepth)](#clear)
@@ -41,6 +42,12 @@ The configure method.
 | Param | Type | Description |
 | --- | --- | --- |
 | params | <code>any</code> | The params param. |
+
+<a name="GLRenderTarget+checkFramebuffer"></a>
+
+### checkFramebuffer
+The checkFramebuffer method.
+
 
 <a name="GLRenderTarget+bindForWriting"></a>
 

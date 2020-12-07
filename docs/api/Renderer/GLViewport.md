@@ -4,7 +4,7 @@
 Class representing a GL viewport.
 
 
-**Extends**: <code>[GLBaseViewport](api/Renderer/GLBaseViewport.md)</code>  
+**Extends**: <code>[GLBaseViewport](api/Renderer\GLBaseViewport.md)</code>  
 
 * [GLViewport ⇐ <code>GLBaseViewport</code>](#GLViewport)
     * [new GLViewport(renderer, name, width, height)](#new-GLViewport)
@@ -29,8 +29,8 @@ Class representing a GL viewport.
     * [onPointerDown(event) ⇒ <code>boolean</code>](#onPointerDown)
     * [onPointerUp(event)](#onPointerUp)
     * [onPointerMove(event)](#onPointerMove)
+    * [onPointerEnter(event)](#onPointerEnter)
     * [onPointerLeave(event)](#onPointerLeave)
-    * [onKeyPressed(event)](#onKeyPressed)
     * [onKeyDown(event)](#onKeyDown)
     * [onKeyUp(event)](#onKeyUp)
     * [onWheel(event)](#onWheel)
@@ -45,7 +45,7 @@ Create a GL viewport.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| renderer | <code>[GLRenderer](api/Renderer/GLRenderer.md)</code> | The renderer value. |
+| renderer | <code>[GLRenderer](api/Renderer\GLRenderer.md)</code> | The renderer value. |
 | name | <code>string</code> | The name value. |
 | width | <code>number</code> | The width of the viewport |
 | height | <code>number</code> | The height of the viewport |
@@ -68,7 +68,7 @@ Dynamically resizes viewport.
 Returns current camera object
 
 
-**Returns**: <code>[Camera](api/SceneTree/Camera.md)</code> - - The return value.  
+**Returns**: <code>[Camera](api/SceneTree\Camera.md)</code> - - The return value.  
 <a name="GLViewport+setCamera"></a>
 
 ### setCamera
@@ -78,7 +78,7 @@ Sets current camera object
 
 | Param | Type | Description |
 | --- | --- | --- |
-| camera | <code>[Camera](api/SceneTree/Camera.md)</code> | The camera value. |
+| camera | <code>[Camera](api/SceneTree\Camera.md)</code> | The camera value. |
 
 <a name="GLViewport+getManipulator"></a>
 
@@ -104,14 +104,14 @@ The setManipulator method.
 The getProjectionMatrix method.
 
 
-**Returns**: <code>[Mat4](api/Math/Mat4.md)</code> - - The return projection matrix for the viewport.  
+**Returns**: <code>[Mat4](api/Math\Mat4.md)</code> - - The return projection matrix for the viewport.  
 <a name="GLViewport+getViewMatrix"></a>
 
 ### getViewMatrix
 The getProjectionMatrix method.
 
 
-**Returns**: <code>[Mat4](api/Math/Mat4.md)</code> - - The return projection matrix for the viewport.  
+**Returns**: <code>[Mat4](api/Math\Mat4.md)</code> - - The return projection matrix for the viewport.  
 <a name="GLViewport+setActive"></a>
 
 ### setActive
@@ -140,11 +140,11 @@ The frameView method.
 Compute a ray into the scene based on a mouse coordinate.
 
 
-**Returns**: <code>[Ray](api/Math/Ray.md)</code> - - The return value.  
+**Returns**: <code>[Ray](api/Math\Ray.md)</code> - - The return value.  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| screenPos | <code>[Vec2](api/Math/Vec2.md)</code> | The screen position. |
+| screenPos | <code>[Vec2](api/Math\Vec2.md)</code> | The screen position. |
 
 <a name="GLViewport+createGeomDataFbo"></a>
 
@@ -163,7 +163,7 @@ The createGeomDataFbo method.
 The getGeomDataFbo method.
 
 
-**Returns**: <code>[GLFbo](api/Renderer/GLFbo.md)</code> - - The return value.  
+**Returns**: <code>[GLFbo](api/Renderer\GLFbo.md)</code> - - The return value.  
 <a name="GLViewport+renderGeomDataFbo"></a>
 
 ### renderGeomDataFbo
@@ -187,8 +187,8 @@ The getGeomDataAtPos method.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| screenPos | <code>[Vec2](api/Math/Vec2.md)</code> | The screen position. |
-| pointerRay | <code>[Ray](api/Math/Ray.md)</code> | The pointerRay value. |
+| screenPos | <code>[Vec2](api/Math\Vec2.md)</code> | The screen position. |
+| pointerRay | <code>[Ray](api/Math\Ray.md)</code> | The pointerRay value. |
 
 <a name="GLViewport+getGeomItemsInRect"></a>
 
@@ -201,8 +201,8 @@ Gathers all the geoms renders in a given rectangle of the viewport.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| tl | <code>[Vec2](api/Math/Vec2.md)</code> | The top left value of the rectangle. |
-| br | <code>[Vec2](api/Math/Vec2.md)</code> | The bottom right corner of the rectangle. |
+| tl | <code>[Vec2](api/Math\Vec2.md)</code> | The top left value of the rectangle. |
+| br | <code>[Vec2](api/Math\Vec2.md)</code> | The bottom right corner of the rectangle. |
 
 <a name="GLViewport+getCapture"></a>
 
@@ -210,7 +210,7 @@ Gathers all the geoms renders in a given rectangle of the viewport.
 The getCapture method.
 
 
-**Returns**: <code>[BaseItem](api/SceneTree/BaseItem.md)</code> - - The return value.  
+**Returns**: <code>[BaseItem](api/SceneTree\BaseItem.md)</code> - - The return value.  
 <a name="GLViewport+releaseCapture"></a>
 
 ### releaseCapture
@@ -251,10 +251,10 @@ Causes an event to occur when the pointer device is moving.
 | --- | --- | --- |
 | event | <code>MouseEvent</code> \| <code>TouchEvent</code> | The event that occurs. |
 
-<a name="GLViewport+onPointerLeave"></a>
+<a name="GLViewport+onPointerEnter"></a>
 
-### onPointerLeave
-Causes an event to occur when the mouse pointer is moved out of an element.
+### onPointerEnter
+Causes an event to occur when the mouse pointer is moved into this viewport
 
 
 
@@ -262,16 +262,16 @@ Causes an event to occur when the mouse pointer is moved out of an element.
 | --- | --- | --- |
 | event | <code>MouseEvent</code> \| <code>TouchEvent</code> | The event that occurs. |
 
-<a name="GLViewport+onKeyPressed"></a>
+<a name="GLViewport+onPointerLeave"></a>
 
-### onKeyPressed
-Causes an event to occurs when the user presses a key on the keyboard.
+### onPointerLeave
+Causes an event to occur when the mouse pointer is moved out of this viewport
 
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| event | <code>KeyboardEvent</code> | The event that occurs. |
+| event | <code>MouseEvent</code> \| <code>TouchEvent</code> | The event that occurs. |
 
 <a name="GLViewport+onKeyDown"></a>
 

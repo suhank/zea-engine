@@ -12,10 +12,11 @@ myParameterOwnerItem.addParameter(booleanParam)
 ```
 
 
-**Extends**: <code>[Parameter](api/SceneTree/Parameters/Parameter.md)</code>  
+**Extends**: <code>[Parameter](api/SceneTree\Parameters\Parameter.md)</code>  
 
 * [BooleanParameter ⇐ <code>Parameter</code>](#BooleanParameter)
     * [new BooleanParameter(name, value)](#new-BooleanParameter)
+    * [readBinary(reader, context)](#readBinary)
     * [clone()](#clone)
 
 <a name="new_BooleanParameter_new"></a>
@@ -29,6 +30,18 @@ Creates a new parameter with `Boolean` data type.
 | name | <code>string</code> | The name of the boolean parameter. |
 | value | <code>boolean</code> | The value of the parameter. |
 
+<a name="BooleanParameter+readBinary"></a>
+
+### readBinary
+Loads the boolean values from the binary buffer.
+
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| reader | <code>[BinReader](api/SceneTree\BinReader.md)</code> | The reader value. |
+| context | <code>object</code> | The context value. |
+
 <a name="BooleanParameter+clone"></a>
 
 ### clone
@@ -39,4 +52,4 @@ copies its values from this parameter and returns it.
 **Returns**: [<code>BooleanParameter</code>](#BooleanParameter) - - Returns a new cloned boolean parameter.  
 
 
-### [Class Tests](api/SceneTree/Parameters/BooleanParameter.test)
+### [Class Tests](api/SceneTree\Parameters/BooleanParameter.test)

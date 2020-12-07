@@ -52,7 +52,7 @@ Create an image atlas..
 | --- | --- | --- | --- |
 | gl | <code>any</code> |  | The gl value. |
 | name | <code>string</code> |  | The name value. |
-| format | <code>any</code> | <code>[RGBA](api/Math/RGBA.md)</code> | The format value. |
+| format | <code>any</code> | <code>[RGBA](api/Math\RGBA.md)</code> | The format value. |
 | type | <code>any</code> | <code>FLOAT</code> | The type value. |
 | clearColor | <code>any</code> |  | The clearColor value. |
 

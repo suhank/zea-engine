@@ -134,7 +134,7 @@ Sets data value in the specified index.
 Returns the `AttrValue` object placed in the specified index.
 
 
-**Returns**: <code>[AttrValue](api/Math/AttrValue.md)</code> - - The return value.  
+**Returns**: <code>[AttrValue](api/Math\AttrValue.md)</code> - - The return value.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -150,7 +150,7 @@ Sets `AttrValue` object in the specified index.
 | Param | Type | Description |
 | --- | --- | --- |
 | index | <code>number</code> | The index value. |
-| value | <code>[AttrValue](api/Math/AttrValue.md)</code> | The value param. |
+| value | <code>[AttrValue](api/Math\AttrValue.md)</code> | The value param. |
 
 <a name="Attribute+toJSON"></a>
 

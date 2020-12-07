@@ -4,7 +4,7 @@
 Class representing a sphere.
 
 
-**Extends**: <code>[AttrValue](api/Math/AttrValue.md)</code>  
+**Extends**: <code>[AttrValue](api/Math\AttrValue.md)</code>  
 
 * [SphereType ⇐ <code>AttrValue</code>](#SphereType)
     * [new SphereType(pos, radius)](#new-SphereType)
@@ -21,7 +21,7 @@ Create a sphere.
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| pos | <code>[Vec3](api/Math/Vec3.md)</code> |  | The position of the sphere. |
+| pos | <code>[Vec3](api/Math\Vec3.md)</code> |  | The position of the sphere. |
 | radius | <code>number</code> | <code>0</code> | The radius of the sphere. |
 
 <a name="SphereType+clone"></a>
@@ -30,7 +30,7 @@ Create a sphere.
 Clones this sphere and returns a new sphere.
 
 
-**Returns**: <code>[Sphere](api/SceneTree/Geometry/Shapes/Sphere.md)</code> - - Returns a new sphere.  
+**Returns**: <code>[Sphere](api/SceneTree\Geometry\Shapes\Sphere.md)</code> - - Returns a new sphere.  
 <a name="SphereType+intersectsBox"></a>
 
 ### intersectsBox
@@ -41,7 +41,7 @@ Checks if this sphere intersects a box.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| box | <code>[Box3](api/Math/Box3.md)</code> | The box value. |
+| box | <code>[Box3](api/Math\Box3.md)</code> | The box value. |
 
 <a name="SphereType+toJSON"></a>
 

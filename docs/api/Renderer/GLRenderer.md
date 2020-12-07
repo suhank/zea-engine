@@ -4,7 +4,7 @@
 Class representing a GL renderer.
 
 
-**Extends**: <code>[GLBaseRenderer](api/Renderer/GLBaseRenderer.md)</code>  
+**Extends**: <code>[GLBaseRenderer](api/Renderer\GLBaseRenderer.md)</code>  
 
 * [GLRenderer ⇐ <code>GLBaseRenderer</code>](#GLRenderer)
     * [new GLRenderer($canvas, options)](#new-GLRenderer)
@@ -28,6 +28,7 @@ Class representing a GL renderer.
     * [createOffscreenFbo(format)](#createOffscreenFbo)
     * [raycastWithRay() ⇒ <code>any</code>](#raycastWithRay)
     * [raycast() ⇒ <code>any</code>](#raycast)
+    * [raycastCluster() ⇒ <code>any</code>](#raycastCluster)
     * [drawBackground(renderstate)](#drawBackground)
     * [bindGLRenderer(renderstate)](#bindGLRenderer)
     * [drawScene(renderstate)](#drawScene)
@@ -212,6 +213,13 @@ The raycast method.
 
 ### raycast
 The raycast method.
+
+
+**Returns**: <code>any</code> - - The return value.  
+<a name="GLRenderer+raycastCluster"></a>
+
+### raycastCluster
+The raycastCluster method.
 
 
 **Returns**: <code>any</code> - - The return value.  

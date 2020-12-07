@@ -18,9 +18,9 @@ Class for delegating resource loading, enabling an abstraction of a cloud file s
     * ~~[.resolveFilename(value)](#ResourceLoader+resolveFilename) ⇒ <code>string</code>~~
     * ~~[.resolveURL(value)](#ResourceLoader+resolveURL) ⇒ <code>string</code>~~
     * [loadUrl(resourceId, url, callback, addLoadWork)](#loadUrl)
+    * [loadArchive(url) ⇒ <code>Promise</code>](#loadArchive)
     * [loadJSON(url) ⇒ <code>Promise</code>](#loadJSON)
     * [loadText(url) ⇒ <code>Promise</code>](#loadText)
-    * [loadArchive(url) ⇒ <code>Promise</code>](#loadArchive)
     * [loadCommonAssetResource(resourceId) ⇒ <code>VLAAsset</code>](#loadCommonAssetResource)
     * [addWork(resourceId, amount)](#addWork)
     * [addWorkDone(resourceId, amount)](#addWorkDone)
@@ -102,10 +102,23 @@ The loadUrl method.
 | callback | <code>function</code> |  | The callback value. |
 | addLoadWork | <code>boolean</code> | <code>true</code> | The addLoadWork value. |
 
+<a name="ResourceLoader+loadArchive"></a>
+
+### loadArchive
+Load an archive file, returning a promise that resolves to the JSON data value.
+Note: using the resource loader to centralize data loading enables progress to be tracked and displayed
+
+
+**Returns**: <code>Promise</code> - - The promise value.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| url | <code>string</code> | The url of the data to load. |
+
 <a name="ResourceLoader+loadJSON"></a>
 
 ### loadJSON
-Loads a JSON file, returning a promise that resolves to the JSON data value.
+Load a JSON file, returning a promise that resolves to the JSON data value.
 Note: using the resource loader to centralize data loading enables progress to be tracked and displayed
 
 
@@ -118,20 +131,7 @@ Note: using the resource loader to centralize data loading enables progress to b
 <a name="ResourceLoader+loadText"></a>
 
 ### loadText
-Loads a text file, returning a promise that resolves to the JSON data value.
-Note: using the resource loader to centralize data loading enables progress to be tracked and displayed
-
-
-**Returns**: <code>Promise</code> - - The promise value.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| url | <code>string</code> | The url of the data to load. |
-
-<a name="ResourceLoader+loadArchive"></a>
-
-### loadArchive
-Loads an archive file, returning a promise that resolves to the JSON data value.
+Load a text file, returning a promise that resolves to the JSON data value.
 Note: using the resource loader to centralize data loading enables progress to be tracked and displayed
 
 
@@ -144,10 +144,10 @@ Note: using the resource loader to centralize data loading enables progress to b
 <a name="ResourceLoader+loadCommonAssetResource"></a>
 
 ### loadCommonAssetResource
-Loads and return a file resource using the specified path.
+Load and return a file resource using the specified path.
 
 
-**Returns**: <code>[VLAAsset](api/SceneTree/VLAAsset.md)</code> - - The return value.  
+**Returns**: <code>[VLAAsset](api/SceneTree\VLAAsset.md)</code> - - The return value.  
 
 | Param | Type | Description |
 | --- | --- | --- |

@@ -36,9 +36,9 @@ Initializes the Xfo object.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| tr | <code>Float32Array</code> \| <code>[Vec3](api/Math/Vec3.md)</code> | The translation value. |
-| ori | <code>[Quat](api/Math/Quat.md)</code> | The orientation value. |
-| sc | <code>[Vec3](api/Math/Vec3.md)</code> | The scaling value. |
+| tr | <code>Float32Array</code> \| <code>[Vec3](api/Math\Vec3.md)</code> | The translation value. |
+| ori | <code>[Quat](api/Math\Quat.md)</code> | The orientation value. |
+| sc | <code>[Vec3](api/Math\Vec3.md)</code> | The scaling value. |
 
 <a name="Xfo+set"></a>
 
@@ -49,9 +49,9 @@ Sets the state of the Xfo object.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| tr | <code>[Vec3](api/Math/Vec3.md)</code> | The translation value. |
-| ori | <code>[Quat](api/Math/Quat.md)</code> | The orientation value. |
-| sc | <code>[Vec3](api/Math/Vec3.md)</code> | The scaling value. |
+| tr | <code>[Vec3](api/Math\Vec3.md)</code> | The translation value. |
+| ori | <code>[Quat](api/Math\Quat.md)</code> | The orientation value. |
+| sc | <code>[Vec3](api/Math\Vec3.md)</code> | The scaling value. |
 
 <a name="Xfo+setFromOther"></a>
 
@@ -81,7 +81,7 @@ Checks if this Vec3 is exactly the same as another Vec3.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| other | <code>[Vec3](api/Math/Vec3.md)</code> | The other Vec3 to compare with. |
+| other | <code>[Vec3](api/Math\Vec3.md)</code> | The other Vec3 to compare with. |
 
 <a name="Xfo+approxEqual"></a>
 
@@ -93,7 +93,7 @@ Returns true if this Vec2 is approximately the same as other.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| other | <code>[Vec3](api/Math/Vec3.md)</code> | The other Vec3 to compare with. |
+| other | <code>[Vec3](api/Math\Vec3.md)</code> | The other Vec3 to compare with. |
 | precision | <code>number</code> | The precision to which the values must match. |
 
 <a name="Xfo+setLookAt"></a>
@@ -105,9 +105,9 @@ The setLookAt method.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| pos | <code>[Vec3](api/Math/Vec3.md)</code> | The position value. |
-| target | <code>[Vec3](api/Math/Vec3.md)</code> | The target value. |
-| up | <code>[Vec3](api/Math/Vec3.md)</code> | The up value. |
+| pos | <code>[Vec3](api/Math\Vec3.md)</code> | The position value. |
+| target | <code>[Vec3](api/Math\Vec3.md)</code> | The target value. |
+| up | <code>[Vec3](api/Math\Vec3.md)</code> | The up value. |
 
 <a name="Xfo+multiply"></a>
 
@@ -134,11 +134,11 @@ Returns the inverse of the Xfo object, but returns. the result as a new Xfo.
 Transforms Xfo object using a `Vec3` object. First scaling it, then rotating and finally adding the result to current translation object.
 
 
-**Returns**: <code>[Vec3](api/Math/Vec3.md)</code> - - The return value.  
+**Returns**: <code>[Vec3](api/Math\Vec3.md)</code> - - The return value.  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| vec3 | <code>[Vec3](api/Math/Vec3.md)</code> | The vec3 value. |
+| vec3 | <code>[Vec3](api/Math\Vec3.md)</code> | The vec3 value. |
 
 <a name="Xfo+toMat4"></a>
 
@@ -146,7 +146,7 @@ Transforms Xfo object using a `Vec3` object. First scaling it, then rotating and
 Converts this Xfo to a Mat4 (a 4x4 matrix).
 
 
-**Returns**: <code>[Mat4](api/Math/Mat4.md)</code> - - Returns a new Mat4.  
+**Returns**: <code>[Mat4](api/Math\Mat4.md)</code> - - Returns a new Mat4.  
 <a name="Xfo+fromMat4"></a>
 
 ### fromMat4
@@ -156,7 +156,7 @@ Sets the state of the Xfo object using Mat4.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| mat4 | <code>[Mat4](api/Math/Mat4.md)</code> | The mat4 value. |
+| mat4 | <code>[Mat4](api/Math\Mat4.md)</code> | The mat4 value. |
 
 <a name="Xfo+setFromFloat32Array"></a>
 
@@ -205,7 +205,7 @@ Loads the state of the value from a binary reader.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| reader | <code>[BinReader](api/SceneTree/BinReader.md)</code> | The reader value. |
+| reader | <code>[BinReader](api/SceneTree\BinReader.md)</code> | The reader value. |
 
 <a name="Xfo+toString"></a>
 

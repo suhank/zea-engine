@@ -4,7 +4,7 @@
 Class representing the red, green, blue and alpha channel of a color.
 
 
-**Extends**: <code>[AttrValue](api/Math/AttrValue.md)</code>  
+**Extends**: <code>[AttrValue](api/Math\AttrValue.md)</code>  
 
 * [RGBA ⇐ <code>AttrValue</code>](#RGBA)
     * [new RGBA(r, g, b, a)](#new-RGBA)
@@ -298,7 +298,7 @@ Apply gamma correction to this RGBA color.
 Converts to linear color space and returns a new color.
 
 
-**Returns**: <code>[Color](api/Math/Color.md)</code> - - Returns a new RGBA.  
+**Returns**: <code>[Color](api/Math\Color.md)</code> - - Returns a new RGBA.  
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
