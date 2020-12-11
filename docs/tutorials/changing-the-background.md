@@ -10,23 +10,24 @@
     <meta charset="UTF-8"/>
   </head>
   <body>
-    <div id="app"></div>
+    <canvas id="renderer"></canvas>
+
+    <script crossorigin src="https://cdn.jsdelivr.net/npm/@zeainc/zea-engine@3.0.1"></script>
+    <script type=module>
+      import { Scene, GLRenderer, Color } from "window.zeaEngine"
+
+      const domElement = document.getElementById("renderer");
+      const scene = new Scene();
+      scene.setupGrid(10.0, 10);
+
+      const color = new Color("#7460e1");
+      scene.getSettings().getParameter("BackgroundColor").setValue(color);
+
+      const renderer = new GLRenderer(domElement);
+      renderer.setScene(scene);
+      renderer.resumeDrawing();
+    </script>
   </body>
-  <script type=module>
-import { Scene, GLRenderer, Color } from "https://unpkg.com/@zeainc/zea-engine@1.0.7/dist/index.esm.js"
-
-const domElement = document.getElementById("app");
-
-const scene = new Scene();
-scene.setupGrid(10.0, 10);
-
-const color = new Color('#887744')
-scene.getSettings().getParameter('BackgroundColor').setValue(color)
-
-const renderer = new GLRenderer(domElement);
-renderer.setScene(scene);
-renderer.resumeDrawing();
-  </script>
 </html>
 ```
 
@@ -35,8 +36,8 @@ Construct a new color value using a hex color code to specify the value of the c
 The SceneSettings object contains parameter called 'BackgroundColor' that can be set to change the background color.
 
 ```javascript
-const color = new Color('#887744')
-scene.getSettings().getParameter('BackgroundColor').setValue(color)
+const color = new Color("#7460e1");
+scene.getSettings().getParameter("BackgroundColor").setValue(color);
 ```
 
 <!-- Copy and Paste Me -->

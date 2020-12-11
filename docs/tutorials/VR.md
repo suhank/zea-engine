@@ -9,25 +9,23 @@ WebXR Enables developers to build web apps that can work on mobile devices like 
 
 
 ```javascript
-const vrButton = document.querySelector('#vrbutton');
-vrButton.addEventListener('mouseup', () =>{
-  vrButton.classList.add('invisible')
+const vrButton = document.querySelector("#vrbutton");
+vrButton.addEventListener("mouseup", () => {
+  vrButton.classList.add("invisible");
 
-  renderer.getXRViewport().then(xrViewport => {
-    xrViewport.startPresenting().then(() => {
-      const xfo = xrViewport.getXfo()
-      xfo.tr = headPos
-      xrViewport.setXfo(xfo)
-
-      xrViewport.presentingChanged.connect(() => {
-        vrButton.classList.remove('invisible')
-      })
+  renderer
+    .getXRViewport()
+    .then(xrViewport => {
+      xrViewport.startPresenting().then(() => {
+        xrViewport.presentingChanged.connect(() => {
+          vrButton.classList.remove("invisible");
+        });
+      });
     })
-  })
-  .catch(reason => {
-    console.warn('Unable to setup XR:' + reason)
-  })
-})
+    .catch(reason => {
+      console.warn("Unable to setup XR:" + reason);
+    });
+});
 ```
 
 <!-- Copy and Paste Me -->
