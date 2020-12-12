@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Zea Engine - Labels</title>
+    <meta charset="UTF-8" />
+    <style type="text/css">
+      html,
+      body {
+        overflow: hidden;
+        height: 100%;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+      }
+
+      @font-face {
+        font-family: 'Verisurf';
+        src: url('./data/Verisurf.ttf');
+      }
+
+      .my-label--formal {
+        background-color: white;
+        border: 0.5rem solid black;
+        border-radius: 1rem;
+        color: black;
+        font-family: Verisurf;
+        font-size: 3rem;
+        padding: 1rem;
+      }
+
+      .my-label--party {
+        background-color: yellow;
+        border: 1rem solid green;
+        border-radius: 1rem;
+        color: magenta;
+        font-family: Verisurf;
+        font-size: 3rem;
+        padding: 1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="viewport"></div>
+
+    <script src="https://www.unpkg.com/dom-to-image"></script>
+    <script type="module">
+      import {
+        Vec3,
+        Xfo,
+        AssetItem,
+        TreeItem,
+        Material,
+        BillboardItem,
+        Label,
+        Scene,
+        GLRenderer,
+      } from '../libs/zea-engine/dist/index.esm.js'
+
+      Label.setDomToImageDep(window.domtoimage)
+
+      const domElement = document.getElementById('viewport')
+
+      const scene = new Scene()
+      scene.setupGrid(20, 10)
+
+      const asset = new TreeItem('labels')
+
+      // https://www.verisurf.com/gdt-font/
+      // https://classic.verisurf.com/documents/gdt-font/Verisurf_Font.pdf
+
+      let index = 0
+      const addLabel = (pos, name, content) => {
+        const label = new Label(name)
+        label.getParameter('Content').setValue(content)
+
+        const billboard = new BillboardItem('billboard' + index, label)
+        const xfo = new Xfo(pos)
+        billboard.getParameter('LocalXfo').setValue(xfo)
+        billboard.getParameter('PixelsPerMeter').setValue(300)
+        billboard.getParameter('AlignedToCamera').setValue(true)
+        billboard.getParameter('Alpha').setValue(1)
+        asset.addChild(billboard)
+
+        index++
+      }
+
+      addLabel(
+        new Vec3(0, 0, 1),
+        'party-label',
+        `<div class="my-label--party">
+          <strong>RUNOUT</strong>
+          <p>ú ; Runout</p>
+          <p>ù \ Total Runout</p>
+          <img
+            src="https://i.picsum.photos/id/238/200/100.jpg?hmac=pEMYQgWdlnDn3U-C0L7-AYkhmVcQXUu-oGZDQn7mvco"
+            height="100px"
+            width="200px"
+            alt="power"
+          >
+        </div>`
+      )
+
+      addLabel(
+        new Vec3(0, 0, 3),
+        'formal-label',
+        `<div class="my-label--formal">
+          <strong>LOCATION</strong>
+          <p>ñ # Position</p>
+          <p>ó $ Concentricity</p>
+          <p>ò % Symmetry</p>
+        </div>`
+      )
+
+      scene.getRoot().addChild(asset)
+
+      const renderer = new GLRenderer(domElement)
+      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(5, 6, 3), new Vec3(0, 0, 2))
+      renderer.setScene(scene)
+      renderer.resumeDrawing()
+    </script>
+  </body>
+</html>
