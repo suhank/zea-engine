@@ -11,11 +11,11 @@ class SimpleUniformBinding {
   /**
    * Create simple uniform binding.
    * @param {any} gl - The gl value.
-   * @param {any} glmaterial - The glmaterial value.
+   * @param {any} glMaterial - The glMaterial value.
    * @param {any} param - The param value.
    * @param {any} unif - The unif value.
    */
-  constructor(gl, glmaterial, param, unif) {
+  constructor(gl, glMaterial, param, unif) {
     this.param = param
     this.unif = unif
 
@@ -38,7 +38,7 @@ class SimpleUniformBinding {
     this.dirty = true
     param.on('valueChanged', () => {
       this.dirty = true
-      glmaterial.emit('updated', {})
+      glMaterial.emit('updated', {})
     })
   }
 
@@ -72,11 +72,11 @@ class ComplexUniformBinding {
   /**
    * Create complex uniform binding.
    * @param {any} gl - The gl value.
-   * @param {any} glmaterial - The glmaterial value.
+   * @param {any} glMaterial - The glMaterial value.
    * @param {any} param - The param value.
    * @param {any} unif - The unif value.
    */
-  constructor(gl, glmaterial, param, unif) {
+  constructor(gl, glMaterial, param, unif) {
     this.param = param
     this.unif = unif
 
@@ -94,7 +94,7 @@ class ComplexUniformBinding {
     this.dirty = true
     param.on('valueChanged', () => {
       this.dirty = true
-      glmaterial.emit('updated', {})
+      glMaterial.emit('updated', {})
     })
   }
 
@@ -128,11 +128,11 @@ class MatrixUniformBinding {
   /**
    * Create material uniform binding.
    * @param {any} gl - The gl value.
-   * @param {any} glmaterial - The glmaterial value.
+   * @param {any} glMaterial - The glMaterial value.
    * @param {any} param - The param value.
    * @param {any} unif - The unif value.
    */
-  constructor(gl, glmaterial, param, unif) {
+  constructor(gl, glMaterial, param, unif) {
     this.param = param
     this.unif = unif
 
@@ -148,7 +148,7 @@ class MatrixUniformBinding {
     this.dirty = true
     param.on('valueChanged', () => {
       this.dirty = true
-      glmaterial.emit('updated', {})
+      glMaterial.emit('updated', {})
     })
   }
 
@@ -182,12 +182,12 @@ class ColorUniformBinding {
   /**
    * Create color uniform binding.
    * @param {any} gl - The gl value.
-   * @param {any} glmaterial - The glmaterial value.
+   * @param {any} glMaterial - The glMaterial value.
    * @param {any} param - The param value.
    * @param {any} unif - The unif value.
    * @param {any} unifs - The unifs value.
    */
-  constructor(gl, glmaterial, param, unif, unifs) {
+  constructor(gl, glMaterial, param, unif, unifs) {
     this.gl = gl
     this.param = param
     this.unif = unif
@@ -215,13 +215,13 @@ class ColorUniformBinding {
       }
       this.texBinding = gltexture.preBind(this.textureUnif, unifs)
       gltexture.on('updated', () => {
-        glmaterial.emit('updated', {})
+        glMaterial.emit('updated', {})
       })
       this.gltexture = gltexture
       this.gltexture.addRef(this)
       this.textureType = textureType
       this.bind = this.bindTexture
-      glmaterial.emit('updated', {})
+      glMaterial.emit('updated', {})
     }
 
     let boundImage
@@ -251,7 +251,7 @@ class ColorUniformBinding {
       }
       boundImage = null
       imageLoaded = null
-      glmaterial.emit('updated', {})
+      glMaterial.emit('updated', {})
     }
 
     this.update = () => {
@@ -270,7 +270,7 @@ class ColorUniformBinding {
           disconnectImage()
         }
       }
-      glmaterial.emit('updated')
+      glMaterial.emit('updated')
     }
 
     /**
@@ -324,11 +324,11 @@ class MaterialShaderBinding {
   /**
    * Create material shader binding.
    * @param {any} gl - The gl value.
-   * @param {any} glmaterial - The glmaterial value.
+   * @param {any} glMaterial - The glMaterial value.
    * @param {any} unifs - The unifs value.
    * @param {any} warnMissingUnifs - The warnMissingUnifs value.
    */
-  constructor(gl, glmaterial, unifs, warnMissingUnifs) {
+  constructor(gl, glMaterial, unifs, warnMissingUnifs) {
     this.uniformBindings = []
 
     const bindParam = (param) => {
@@ -339,7 +339,7 @@ class MaterialShaderBinding {
         // which can mean many params have no uniform in the shader, which is fine.
         if (warnMissingUnifs) {
           // Note: this silent error caused me a lot of searching. make it noisy.
-          const shaderName = glmaterial.getMaterial().getShaderName()
+          const shaderName = glMaterial.getMaterial().getShaderName()
           if (!logged[shaderName]) {
             logged[shaderName] = {}
           }
@@ -347,7 +347,7 @@ class MaterialShaderBinding {
             // TODO: Many of these warnings are because when we change shaders
             // we do not remove obsolete params, but we probably should.
             console.warn(
-              'Material:' + glmaterial.getMaterial().getName(),
+              'Material:' + glMaterial.getMaterial().getName(),
               'with Shader ',
               shaderName,
               'Param has no unif',
@@ -363,18 +363,18 @@ class MaterialShaderBinding {
         case UInt32:
         case SInt32:
         case Float32:
-          this.uniformBindings.push(new SimpleUniformBinding(gl, glmaterial, param, unif))
+          this.uniformBindings.push(new SimpleUniformBinding(gl, glMaterial, param, unif))
           break
         case Vec2:
         case Vec3:
         case Vec4:
-          this.uniformBindings.push(new ComplexUniformBinding(gl, glmaterial, param, unif))
+          this.uniformBindings.push(new ComplexUniformBinding(gl, glMaterial, param, unif))
           break
         case Color:
-          this.uniformBindings.push(new ColorUniformBinding(gl, glmaterial, param, unif, unifs))
+          this.uniformBindings.push(new ColorUniformBinding(gl, glMaterial, param, unif, unifs))
           break
         case Mat4:
-          this.uniformBindings.push(new MatrixUniformBinding(gl, glmaterial, param, unif))
+          this.uniformBindings.push(new MatrixUniformBinding(gl, glMaterial, param, unif))
           break
         default:
           console.warn('Param :' + name + ' has unhandled data type:' + unif.type)
@@ -382,7 +382,7 @@ class MaterialShaderBinding {
       }
       return
     }
-    const params = glmaterial.getMaterial().getParameters()
+    const params = glMaterial.getMaterial().getParameters()
     for (const param of params) {
       bindParam(param)
     }

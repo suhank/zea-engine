@@ -348,7 +348,7 @@ class GLShader extends BaseItem {
   bind(renderstate, key) {
     const gl = this.__gl
 
-    if (renderstate.glshader != this) {
+    if (renderstate.glShader != this) {
       const shaderCompilationResult = this.compileForTarget(key, renderstate.shaderopts)
       if (shaderCompilationResult === false) {
         console.warn(this.constructor.name + ' is not compiled for ' + key)
@@ -358,14 +358,14 @@ class GLShader extends BaseItem {
       const shaderProgramHdl = shaderCompilationResult.shaderProgramHdl
 
       gl.useProgram(shaderProgramHdl)
-      renderstate.glshader = this
+      renderstate.glShader = this
       renderstate.shaderkey = shaderCompilationResult.shaderkey
       renderstate.unifs = shaderCompilationResult.unifs
       renderstate.attrs = shaderCompilationResult.attrs
 
       renderstate.boundTextures = 0
       // Make sure we clear the binding cached.
-      renderstate.glgeom = undefined
+      renderstate.glGeom = undefined
 
       // Once the shader has been bound, we allow the renderer to bind any
       // of its global uniform values. (e.g. env map values etc...)

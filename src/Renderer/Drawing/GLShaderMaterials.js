@@ -6,49 +6,49 @@ import { EventEmitter } from '../../Utilities/index'
 class GLShaderMaterials extends EventEmitter {
   /**
    * Create a GL shader material.
-   * @param {any} glshader - The glshader value.
+   * @param {any} glShader - The glShader value.
    * @param {any} glgeomdatashader - The glgeomdatashader value.
    * @param {any} glselectedshader - The glselectedshader value.
    */
   constructor(shaders) {
     super()
-    this.glshader = shaders.glshader
+    this.glShader = shaders.glShader
     this.glgeomdatashader = shaders.glgeomdatashader
     this.glselectedshader = shaders.glselectedshader
-    this.glmaterialGeomItemSets = []
+    this.glMaterialGeomItemSets = []
   }
 
   /**
    * The findMaterialGeomItemSets method.
-   * @param {any} glmaterial - The glmaterial value.
+   * @param {any} glMaterial - The glMaterial value.
    * @return {any} - The return value.
    */
-  findMaterialGeomItemSets(glmaterial) {
-    for (const matGeomItemSet of this.glmaterialGeomItemSets) {
-      if (matGeomItemSet.glmaterial == glmaterial) return matGeomItemSet
+  findMaterialGeomItemSets(glMaterial) {
+    for (const matGeomItemSet of this.glMaterialGeomItemSets) {
+      if (matGeomItemSet.glMaterial == glMaterial) return matGeomItemSet
     }
   }
 
-  addGeomItem(glgeomItem, glGeom, glmaterial) {
-    let glmaterialGeomItemSets = this.findMaterialGeomItemSets(glmaterial)
-    if (!glmaterialGeomItemSets) {
-      glmaterialGeomItemSets = new GLMaterialGeomItemSets(this, glmaterial)
-      this.addMaterialGeomItemSets(glmaterialGeomItemSets)
+  addGLGeomItem(glGeomItem, glGeom, glMaterial) {
+    let glMaterialGeomItemSets = this.findMaterialGeomItemSets(glMaterial)
+    if (!glMaterialGeomItemSets) {
+      glMaterialGeomItemSets = new GLMaterialGeomItemSets(this, glMaterial)
+      this.addMaterialGeomItemSets(glMaterialGeomItemSets)
     }
 
-    glmaterialGeomItemSets.addGeomItem(glgeomItem, glGeom)
+    glMaterialGeomItemSets.addGLGeomItem(glGeomItem, glGeom)
   }
 
   /**
    * The addMaterialGeomItemSets method.
-   * @param {any} glmaterialGeomItemSets - The glmaterialGeomItemSets value.
+   * @param {any} glMaterialGeomItemSets - The glMaterialGeomItemSets value.
    */
-  addMaterialGeomItemSets(glmaterialGeomItemSets) {
-    this.glmaterialGeomItemSets.push(glmaterialGeomItemSets)
-    glmaterialGeomItemSets.on('destructing', () => {
-      const index = this.glmaterialGeomItemSets.indexOf(glmaterialGeomItemSets)
-      this.glmaterialGeomItemSets.splice(index, 1)
-      if (this.glmaterialGeomItemSets.length == 0) {
+  addMaterialGeomItemSets(glMaterialGeomItemSets) {
+    this.glMaterialGeomItemSets.push(glMaterialGeomItemSets)
+    glMaterialGeomItemSets.on('destructing', () => {
+      const index = this.glMaterialGeomItemSets.indexOf(glMaterialGeomItemSets)
+      this.glMaterialGeomItemSets.splice(index, 1)
+      if (this.glMaterialGeomItemSets.length == 0) {
         // TODO: clean up the shader... maybe.
         this.emit('destructing')
       }
@@ -57,11 +57,11 @@ class GLShaderMaterials extends EventEmitter {
 
   /**
    * The removeMaterialGeomItemSets method.
-   * @param {any} glmaterialGeomItemSets - The glmaterialGeomItemSets value.
+   * @param {any} glMaterialGeomItemSets - The glMaterialGeomItemSets value.
    */
-  removeMaterialGeomItemSets(glmaterialGeomItemSets) {
-    const index = this.glmaterialGeomItemSets.indexOf(glmaterialGeomItemSets)
-    this.glmaterialGeomItemSets.splice(index, 1)
+  removeMaterialGeomItemSets(glMaterialGeomItemSets) {
+    const index = this.glMaterialGeomItemSets.indexOf(glMaterialGeomItemSets)
+    this.glMaterialGeomItemSets.splice(index, 1)
   }
 
   /**
@@ -69,7 +69,7 @@ class GLShaderMaterials extends EventEmitter {
    * @return {any} - The return value.
    */
   getMaterialGeomItemSets() {
-    return this.glmaterialGeomItemSets
+    return this.glMaterialGeomItemSets
   }
 }
 

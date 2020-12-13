@@ -6,19 +6,19 @@ import { EventEmitter } from '../../Utilities/index'
 class GLMaterialGeomItemSets extends EventEmitter {
   /**
    * Create a GL material geom item set.
-   * @param {any} glmaterial - The glmaterial value.
+   * @param {any} glMaterial - The glMaterial value.
    */
-  constructor(pass, glmaterial = undefined) {
+  constructor(pass, glMaterial = undefined) {
     super()
     this.pass = pass
-    this.glmaterial = glmaterial
+    this.glMaterial = glMaterial
     this.geomItemSets = []
     this.drawCount = 0
-    this.visibleInGeomDataBuffer = glmaterial.getMaterial().visibleInGeomDataBuffer
+    this.visibleInGeomDataBuffer = glMaterial.getMaterial().visibleInGeomDataBuffer
     this.__drawCountChanged = this.__drawCountChanged.bind(this)
 
     this.__materialChanged = this.__materialChanged.bind(this)
-    const material = glmaterial.getMaterial()
+    const material = glMaterial.getMaterial()
     const baseColorParam = material.getParameter('BaseColor')
     if (baseColorParam) {
       baseColorParam.on('valueChanged', this.__materialChanged)
@@ -34,16 +34,16 @@ class GLMaterialGeomItemSets extends EventEmitter {
    * @return {any} - The return value.
    */
   getGLMaterial() {
-    return this.glmaterial
+    return this.glMaterial
   }
 
-  addGeomItem(glgeomItem, glGeom) {
+  addGLGeomItem(glGeomItem, glGeom) {
     let geomItemSet = this.findGeomItemSet(glGeom)
     if (!geomItemSet) {
       geomItemSet = new GLGeomItemSet(this.__gl, glGeom)
       this.addGeomItemSet(geomItemSet)
     }
-    geomItemSet.addGeomItem(glgeomItem)
+    geomItemSet.addGLGeomItem(glGeomItem)
   }
 
   /**
@@ -60,11 +60,11 @@ class GLMaterialGeomItemSets extends EventEmitter {
    * @private
    */
   __materialChanged() {
-    const material = this.glmaterial.getMaterial()
+    const material = this.glMaterial.getMaterial()
     if (!this.pass.checkMaterial(material)) {
-      for (const gldrawitemset of this.geomItemSets) {
-        for (const glgeomItem of gldrawitemset.glgeomItems) {
-          const geomItem = glgeomItem.geomItem
+      for (const glGeomItemSet of this.geomItemSets) {
+        for (const glGeomItem of glGeomItemSet.glGeomItems) {
+          const geomItem = glGeomItem.geomItem
           this.pass.removeGeomItem(geomItem)
           this.pass.__renderer.assignTreeItemToGLPass(geomItem)
         }
@@ -86,7 +86,7 @@ class GLMaterialGeomItemSets extends EventEmitter {
         this.geomItemSets.splice(index, 1)
         if (this.geomItemSets.length == 0) {
           // Remove the listeners.
-          const material = this.glmaterial.getMaterial()
+          const material = this.glMaterial.getMaterial()
           const baseColorParam = material.getParameter('BaseColor')
           if (baseColorParam) {
             baseColorParam.off('valueChanged', this.__materialChanged)

@@ -72,7 +72,7 @@ class GLGeomItem extends EventEmitter {
     this.geomItem.on('cutAwayChanged', this.cutAwayChanged)
     this.geomItem.on('highlightChanged', this.highlightChanged)
 
-    this.geomItem.setMetadata('glgeomItem', this)
+    this.geomItem.setMetadata('glGeomItem', this)
 
     // Note: GLGeom changes propagate up to the renderer directly through the GLGeom.
     // See: GLStandardGeomsPass.addGeom

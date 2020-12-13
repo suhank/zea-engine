@@ -46,7 +46,7 @@ class GLStandardGeomsPass extends GLPass {
   itemAddedToScene(treeItem, rargs) {
     if (treeItem instanceof GeomItem) {
       const geomItem = treeItem
-      if (!geomItem.getMetadata('glgeomItem')) {
+      if (!geomItem.getMetadata('glGeomItem')) {
         const checkGeom = (geomItem) => {
           if (this.filterGeomItem(geomItem)) {
             const geomParam = geomItem.getParameter('Geometry')
@@ -93,7 +93,7 @@ class GLStandardGeomsPass extends GLPass {
    * @return {Boolean} - The return value.
    */
   itemRemovedFromScene(treeItem, rargs) {
-    if (treeItem instanceof GeomItem && treeItem.getMetadata('glgeomItem') && geomItem.getMetadata('glpass') == this) {
+    if (treeItem instanceof GeomItem && treeItem.getMetadata('glGeomItem') && geomItem.getMetadata('glpass') == this) {
       return this.removeGeomItem(treeItem)
     }
     return false
@@ -120,7 +120,7 @@ class GLStandardGeomsPass extends GLPass {
   /**
    * The constructShaders method.
    * Given a material, generate the various shaders required to render objects
-   * using this material. There should always be at least a single glshader
+   * using this material. There should always be at least a single glShader
    * and optionally a glgeomdatashader for rendering the goem data buffer
    * and a glselectedshader for rendering selection hilghlights
    * @param {string} shaderName - The name of the base shader.
@@ -130,46 +130,46 @@ class GLStandardGeomsPass extends GLPass {
     let glgeomdatashader
     let glselectedshader
 
-    const glshader = this.__renderer.getOrCreateShader(shaderName)
-    if (glshader.constructor.getGeomDataShaderName()) {
-      glgeomdatashader = this.__renderer.getOrCreateShader(glshader.constructor.getGeomDataShaderName())
+    const glShader = this.__renderer.getOrCreateShader(shaderName)
+    if (glShader.constructor.getGeomDataShaderName()) {
+      glgeomdatashader = this.__renderer.getOrCreateShader(glShader.constructor.getGeomDataShaderName())
     }
-    if (glshader.constructor.getSelectedShaderName()) {
-      glselectedshader = this.__renderer.getOrCreateShader(glshader.constructor.getSelectedShaderName())
+    if (glShader.constructor.getSelectedShaderName()) {
+      glselectedshader = this.__renderer.getOrCreateShader(glShader.constructor.getSelectedShaderName())
     }
     return {
-      glshader,
+      glShader,
       glgeomdatashader,
       glselectedshader,
     }
   }
 
   /**
-   * The addMaterial method.
-   * @param {any} material - The material value.
-   * @return {any} - The return value.
+   * Given a material, generates a GLMaterial that manages the GPU state for the material.
+   * @param {Material} material - The material value.
+   * @return {GLMaterial} - The constructed GLMaterial.
    */
-  addMaterial(material) {
-    let glmaterial = material.getMetadata('glmaterial')
-    if (glmaterial) {
-      return glmaterial
+  constructGLMaterial(material) {
+    let glMaterial = material.getMetadata('glMaterial')
+    if (glMaterial) {
+      return glMaterial
     }
-    const glshader = this.__renderer.getOrCreateShader(material.getShaderName())
-    glmaterial = new GLMaterial(this.__gl, material, glshader)
-    glmaterial.on('updated', () => {
+    const glShader = this.__renderer.getOrCreateShader(material.getShaderName())
+    glMaterial = new GLMaterial(this.__gl, material, glShader)
+    glMaterial.on('updated', () => {
       this.__renderer.requestRedraw()
     })
-    material.setMetadata('glmaterial', glmaterial)
+    material.setMetadata('glMaterial', glMaterial)
 
-    return glmaterial
+    return glMaterial
   }
 
   /**
-   * The addGeom method.
-   * @param {any} geom - The geom value.
-   * @return {any} - The return value.
+   * Given a BaseGeom, constructs the GLGeom that manages the state of the geometry in the GPU.
+   * @param {BaseGeom} geom - The geom value.
+   * @return {GLGeom} - The return value.
    */
-  addGeom(geom) {
+  constructGLGeom(geom) {
     let glgeom = geom.getMetadata('glgeom')
     if (glgeom) {
       glgeom.addRef(this)
@@ -206,17 +206,11 @@ class GLStandardGeomsPass extends GLPass {
   }
 
   /**
-   * The addGeomItem method.
-   * @param {any} geomItem - The geomItem value.
-   * @return {any} - The return value.
+   * Given a GeomItem, constructs the GLGeomItem that manages the GPU state of the GeomItem.
+   * @param {GeomItem} geomItem - The geomItem value.
+   * @return {GLGeomItem} - The return value.
    */
-  addGeomItem(geomItem) {
-    // const material = geomItem.getParameter('Material').getValue()
-    // let glmaterialGeomItemSets = this.addMaterial(material);
-    // if (!glmaterialGeomItemSets)
-    //     return;
-    this.addGeom(geomItem.getParameter('Geometry').getValue())
-
+  constructGLGeomItem(geomItem) {
     let index
     // Use recycled indices if there are any available...
     if (this.__drawItemsIndexFreeList.length > 0) {
@@ -229,9 +223,9 @@ class GLStandardGeomsPass extends GLPass {
 
     const gl = this.__gl
     const supportInstancing = gl.floatTexturesSupported
-    const glgeomItem = new GLGeomItem(gl, geomItem, index, supportInstancing)
+    const glGeomItem = new GLGeomItem(gl, geomItem, index, supportInstancing)
 
-    glgeomItem.on('updated', (event) => {
+    glGeomItem.on('updated', (event) => {
       if (!event) {
         // On mobile devices without support for floating point textures
         // we just need to redraw.
@@ -255,13 +249,13 @@ class GLStandardGeomsPass extends GLPass {
       this.__renderer.drawItemChanged()
     })
 
-    this.__drawItems[index] = glgeomItem
+    this.__drawItems[index] = glGeomItem
 
     // Note: before the renderer is disabled, this is a  no-op.
     this.__renderer.requestRedraw()
 
     geomItem.setMetadata('glpass', this)
-    return glgeomItem
+    return glGeomItem
   }
 
   /**
@@ -278,22 +272,22 @@ class GLStandardGeomsPass extends GLPass {
     // GLGeom is ever destoryed when instance counts drop to zero.)
     // this.removeGeom(geomItem.getParameter('Geometry').getValue())
 
-    const glgeomItem = geomItem.getMetadata('glgeomItem')
+    const glGeomItem = geomItem.getMetadata('glGeomItem')
 
-    const index = glgeomItem.getId()
+    const index = glGeomItem.getId()
     this.__drawItems[index] = null
     this.__drawItemsIndexFreeList.push(index)
 
     // TODO: review signal disconnections
-    // glgeomItem.transformChanged.disconnectScope(this);
+    // glGeomItem.transformChanged.disconnectScope(this);
 
     // this.emit('renderTreeUpdated', {});
     this.__renderer.requestRedraw()
 
     geomItem.deleteMetadata('glpass')
-    geomItem.deleteMetadata('glgeomItem')
+    geomItem.deleteMetadata('glGeomItem')
 
-    return glgeomItem
+    return glGeomItem
   }
 
   // removeMaterial(material) {
@@ -303,8 +297,8 @@ class GLStandardGeomsPass extends GLPass {
   //         return;
   //     }
 
-  //     const glmaterialGeomItemSets = material.getMetadata('glmaterialGeomItemSets');
-  //     glshaderMaterials.removeMaterialGeomItemSets(glmaterialGeomItemSets);
+  //     const glMaterialGeomItemSets = material.getMetadata('glMaterialGeomItemSets');
+  //     glshaderMaterials.removeMaterialGeomItemSets(glMaterialGeomItemSets);
   // };
 
   /**
@@ -318,7 +312,7 @@ class GLStandardGeomsPass extends GLPass {
 
     // Note: the GLMAterial cleans up iself now...
     // if(materialGeomMapping.geomItemMappings.length == 0 && !this.__explicitShader){
-    //     this.removeMaterialGeomMapping(materialGeomMapping.glmaterial);
+    //     this.removeMaterialGeomMapping(materialGeomMapping.glMaterial);
     // }
   }
 
@@ -467,11 +461,11 @@ class GLStandardGeomsPass extends GLPass {
       const dataArray = new Float32Array(pixelsPerItem * 4 * uploadCount) // 4==RGBA pixels.
 
       for (let j = indexStart; j < indexEnd; j++) {
-        const glgeomItem = this.__drawItems[j]
+        const glGeomItem = this.__drawItems[j]
         // When an item is deleted, we allocate its index to the free list
         // and null this item in the array. skip over null items.
-        if (!glgeomItem) continue
-        this.__populateDrawItemDataArray(glgeomItem.getGeomItem(), j - indexStart, dataArray)
+        if (!glGeomItem) continue
+        this.__populateDrawItemDataArray(glGeomItem.getGeomItem(), j - indexStart, dataArray)
       }
 
       if (typeId == gl.FLOAT) {
@@ -513,11 +507,11 @@ class GLStandardGeomsPass extends GLPass {
   /**
    * The bindShader method.
    * @param {any} renderstate - The renderstate value.
-   * @param {any} glshader - The glshader value.
+   * @param {any} glShader - The glShader value.
    * @return {any} - The return value.
    */
-  bindShader(renderstate, glshader) {
-    if (!glshader.bind(renderstate)) return false
+  bindShader(renderstate, glShader) {
+    if (!glShader.bind(renderstate)) return false
     if (!this.bind(renderstate)) return false
     return true
   }
@@ -525,12 +519,12 @@ class GLStandardGeomsPass extends GLPass {
   /**
    * The bindMaterial method.
    * @param {any} renderstate - The renderstate value.
-   * @param {any} glmaterial - The glmaterial value.
+   * @param {any} glMaterial - The glMaterial value.
    * @param {any} warnMissingUnifs - The warnMissingUnifs value.
    * @return {any} - The return value.
    */
-  bindMaterial(renderstate, glmaterial, warnMissingUnifs) {
-    return glmaterial.bind(renderstate, warnMissingUnifs)
+  bindMaterial(renderstate, glMaterial, warnMissingUnifs) {
+    return glMaterial.bind(renderstate, warnMissingUnifs)
   }
 }
 

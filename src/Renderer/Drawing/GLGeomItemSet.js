@@ -15,8 +15,8 @@ class GLGeomItemSet extends EventEmitter {
   constructor(gl, glgeom) {
     super()
     this.gl = gl
-    this.glgeom = glgeom
-    this.glgeomItems = []
+    this.glGeom = glgeom
+    this.glGeomItems = []
     this.glgeomItems_freeIndices = []
     this.glgeomItemEventHandlers = []
     this.drawIdsArray = null
@@ -38,7 +38,7 @@ class GLGeomItemSet extends EventEmitter {
    * @return {any} - The return value.
    */
   getGLGeom() {
-    return this.glgeom
+    return this.glGeom
   }
 
   /**
@@ -50,22 +50,22 @@ class GLGeomItemSet extends EventEmitter {
   }
 
   /**
-   * The addGeomItem method.
-   * @param {any} glgeomItem - The glgeomItem value.
+   * The addGLGeomItem method.
+   * @param {any} glGeomItem - The glGeomItem value.
    */
-  addGeomItem(glgeomItem) {
+  addGLGeomItem(glGeomItem) {
     let index
     if (this.glgeomItems_freeIndices.length > 0) {
       index = this.glgeomItems_freeIndices.pop()
     } else {
-      index = this.glgeomItems.length
-      this.glgeomItems.push(null)
+      index = this.glGeomItems.length
+      this.glGeomItems.push(null)
     }
-    if (glgeomItem.visible) {
+    if (glGeomItem.visible) {
       this.visibleItems.push(index)
       this.emit('drawCountChanged', { count: 1 })
     }
-    if (glgeomItem.getGeomItem().isHighlighted()) {
+    if (glGeomItem.getGeomItem().isHighlighted()) {
       this.highlightedItems.push(index)
       this.highlightedIdsBufferDirty = true
     }
@@ -73,7 +73,7 @@ class GLGeomItemSet extends EventEmitter {
     const eventHandlers = {}
 
     eventHandlers.highlightChanged = () => {
-      if (glgeomItem.getGeomItem().isHighlighted()) {
+      if (glGeomItem.getGeomItem().isHighlighted()) {
         // Note: highlightChanged is fired when the color changes
         // or another hilight is added over the top. We avoid
         // adding the same index again here. (TODO: use Set?)
@@ -82,10 +82,10 @@ class GLGeomItemSet extends EventEmitter {
       } else {
         this.highlightedItems.splice(this.highlightedItems.indexOf(index), 1)
       }
-      // console.log("highlightChanged:", glgeomItem.getGeomItem().getName(), glgeomItem.getGeomItem().isHighlighted(), this.highlightedItems)
+      // console.log("highlightChanged:", glGeomItem.getGeomItem().getName(), glGeomItem.getGeomItem().isHighlighted(), this.highlightedItems)
       this.highlightedIdsBufferDirty = true
     }
-    glgeomItem.on('highlightChanged', eventHandlers.highlightChanged)
+    glGeomItem.on('highlightChanged', eventHandlers.highlightChanged)
     eventHandlers.visibilityChanged = (event) => {
       const visible = event.visible
       if (visible) {
@@ -97,42 +97,42 @@ class GLGeomItemSet extends EventEmitter {
       }
       this.drawIdsBufferDirty = true
     }
-    glgeomItem.on('visibilityChanged', eventHandlers.visibilityChanged)
+    glGeomItem.on('visibilityChanged', eventHandlers.visibilityChanged)
 
-    this.glgeomItems[index] = glgeomItem
+    this.glGeomItems[index] = glGeomItem
     this.glgeomItemEventHandlers[index] = eventHandlers
 
-    glgeomItem.geomItem.setMetadata('geomItemSet', this)
+    glGeomItem.geomItem.setMetadata('geomItemSet', this)
 
     this.drawIdsBufferDirty = true
   }
 
   /**
    * The removeGeomItem method.
-   * @param {any} glgeomItem - The glgeomItem value.
+   * @param {any} glGeomItem - The glGeomItem value.
    */
-  removeGeomItem(glgeomItem) {
-    const index = this.glgeomItems.indexOf(glgeomItem)
+  removeGeomItem(glGeomItem) {
+    const index = this.glGeomItems.indexOf(glGeomItem)
     const eventHandlers = this.glgeomItemEventHandlers[index]
-    glgeomItem.off('highlightChanged', eventHandlers.highlightChanged)
-    glgeomItem.off('visibilityChanged', eventHandlers.visibilityChanged)
+    glGeomItem.off('highlightChanged', eventHandlers.highlightChanged)
+    glGeomItem.off('visibilityChanged', eventHandlers.visibilityChanged)
 
-    this.glgeomItems[index] = null
+    this.glGeomItems[index] = null
     this.glgeomItemEventHandlers[index] = null
 
     this.glgeomItems_freeIndices.push(index)
 
-    if (glgeomItem.visible) {
+    if (glGeomItem.visible) {
       this.visibleItems.splice(this.visibleItems.indexOf(index), 1)
       this.emit('drawCountChanged', { count: -1 })
     }
-    const highlighted = glgeomItem.getGeomItem().isHighlighted()
+    const highlighted = glGeomItem.getGeomItem().isHighlighted()
     if (highlighted) {
       this.highlightedItems.splice(this.highlightedItems.indexOf(index), 1)
     }
     this.drawIdsBufferDirty = true
-    // console.log("removeGeomItem:", glgeomItem.getGeomItem().getName(), this.glgeomItems.length)
-    if (this.glgeomItems.length == this.glgeomItems_freeIndices.length) {
+    // console.log("removeGeomItem:", glGeomItem.getGeomItem().getName(), this.glGeomItems.length)
+    if (this.glGeomItems.length == this.glgeomItems_freeIndices.length) {
       this.destroy()
     }
   }
@@ -151,12 +151,12 @@ class GLGeomItemSet extends EventEmitter {
       this.drawIdsBufferDirty = false
       return
     }
-    if (this.drawIdsBuffer && this.glgeomItems.length != this.drawIdsArray.length) {
+    if (this.drawIdsBuffer && this.glGeomItems.length != this.drawIdsArray.length) {
       this.gl.deleteBuffer(this.drawIdsBuffer)
       this.drawIdsBuffer = null
     }
     if (!this.drawIdsBuffer) {
-      this.drawIdsArray = new Float32Array(this.glgeomItems.length)
+      this.drawIdsArray = new Float32Array(this.glGeomItems.length)
       this.drawIdsBuffer = gl.createBuffer()
       gl.bindBuffer(gl.ARRAY_BUFFER, this.drawIdsBuffer)
     }
@@ -165,7 +165,7 @@ class GLGeomItemSet extends EventEmitter {
     // Note: the draw count can be less than the number of instances
     // we re-use the same buffer and simply invoke fewer draw calls.
     this.visibleItems.forEach((index, tgtIndex) => {
-      this.drawIdsArray[tgtIndex] = this.glgeomItems[index].getId()
+      this.drawIdsArray[tgtIndex] = this.glGeomItems[index].getId()
     })
     gl.bindBuffer(gl.ARRAY_BUFFER, this.drawIdsBuffer)
     gl.bufferData(gl.ARRAY_BUFFER, this.drawIdsArray, gl.STATIC_DRAW)
@@ -185,7 +185,7 @@ class GLGeomItemSet extends EventEmitter {
       this.highlightedIdsBufferDirty = false
       return
     }
-    if (this.highlightedIdsBuffer && this.glgeomItems.length != this.highlightedIdsArray.length) {
+    if (this.highlightedIdsBuffer && this.glGeomItems.length != this.highlightedIdsArray.length) {
       this.gl.deleteBuffer(this.highlightedIdsBuffer)
       this.highlightedIdsBuffer = null
     }
@@ -202,7 +202,7 @@ class GLGeomItemSet extends EventEmitter {
     }
 
     this.highlightedItems.forEach((index, tgtIndex) => {
-      this.highlightedIdsArray[tgtIndex] = this.glgeomItems[index].getId()
+      this.highlightedIdsArray[tgtIndex] = this.glGeomItems[index].getId()
     })
 
     if (!this.highlightedIdsBuffer) {
@@ -261,9 +261,9 @@ class GLGeomItemSet extends EventEmitter {
     // Lazy unbinding. We can have situations where we have many materials
     // all bound to the same geom. e.g. lots of billboards
     // We can avoid the expensive re-binding of geoms with a simple check.
-    if (renderstate.glgeom != this.glgeom) {
-      this.glgeom.bind(renderstate)
-      renderstate.glgeom = this.glgeom
+    if (renderstate.glGeom != this.glGeom) {
+      this.glGeom.bind(renderstate)
+      renderstate.glGeom = this.glGeom
     }
 
     if (!gl.floatTexturesSupported || !gl.drawElementsInstanced || !renderstate.supportsInstancing) {
@@ -271,9 +271,9 @@ class GLGeomItemSet extends EventEmitter {
         gl.uniform1i(renderstate.unifs.instancedDraw.location, 0)
       }
       itemIndices.forEach((index) => {
-        this.glgeomItems[index].bind(renderstate)
+        this.glGeomItems[index].bind(renderstate)
         renderstate.bindViewports(unifs, () => {
-          this.glgeom.draw(renderstate)
+          this.glGeom.draw(renderstate)
         })
       })
     } else {
@@ -291,7 +291,7 @@ class GLGeomItemSet extends EventEmitter {
       gl.vertexAttribDivisor(location, 1) // This makes it instanced
 
       renderstate.bindViewports(unifs, () => {
-        this.glgeom.drawInstanced(itemIndices.length)
+        this.glGeom.drawInstanced(itemIndices.length)
       })
     }
   }
