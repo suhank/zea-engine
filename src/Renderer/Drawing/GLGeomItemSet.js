@@ -102,6 +102,8 @@ class GLGeomItemSet extends EventEmitter {
     this.glgeomItems[index] = glgeomItem
     this.glgeomItemEventHandlers[index] = eventHandlers
 
+    glgeomItem.geomItem.setMetadata('geomItemSet', this)
+
     this.drawIdsBufferDirty = true
   }
 

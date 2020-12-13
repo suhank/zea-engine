@@ -17,15 +17,13 @@ class GLGeomItem extends EventEmitter {
    * Create a GL geom item.
    * @param {any} gl - The gl value.
    * @param {any} geomItem - The geomItem value.
-   * @param {any} glGeom - The glGeom value.
    * @param {any} id - The id value.
    * @param {number} flags - The flags value.
    */
-  constructor(gl, geomItem, glGeom, id, supportInstancing = false) {
+  constructor(gl, geomItem, id, supportInstancing = false) {
     super()
     this.gl = gl
     this.geomItem = geomItem
-    this.glGeom = glGeom
     this.id = id
     this.supportInstancing = supportInstancing
     this.visible = this.geomItem.isVisible()
@@ -65,15 +63,20 @@ class GLGeomItem extends EventEmitter {
       this.emit('updated', { type: GLGeomItemChangeType.HIGHLIGHT_CHANGED })
       this.emit('highlightChanged')
     }
-    this.glGeomUpdated = () => {
-      this.emit('updated', { type: GLGeomItemChangeType.GEOM_CHANGED })
-    }
+    // this.glGeomUpdated = () => {
+    //   this.emit('updated', { type: GLGeomItemChangeType.GEOM_CHANGED })
+    // }
 
     this.geomItem.getParameter('GeomMat').on('valueChanged', this.geomMatrixChanged)
     this.geomItem.on('visibilityChanged', this.updateVisibility)
     this.geomItem.on('cutAwayChanged', this.cutAwayChanged)
     this.geomItem.on('highlightChanged', this.highlightChanged)
-    this.glGeom.on('updated', this.glGeomUpdated)
+
+    this.geomItem.setMetadata('glgeomItem', this)
+
+    // Note: GLGeom changes propagate up to the renderer directly through the GLGeom.
+    // See: GLStandardGeomsPass.addGeom
+    // this.glGeom.on('updated', this.glGeomUpdated)
 
     if (!this.supportInstancing) {
       const materialId = 0
@@ -92,14 +95,6 @@ class GLGeomItem extends EventEmitter {
    */
   getGeomItem() {
     return this.geomItem
-  }
-
-  /**
-   * The getGLGeom method.
-   * @return {any} - The return value.
-   */
-  getGLGeom() {
-    return this.glGeom
   }
 
   /**
@@ -190,7 +185,7 @@ class GLGeomItem extends EventEmitter {
     this.geomItem.off('visibilityChanged', this.updateVisibility)
     this.geomItem.off('cutAwayChanged', this.cutAwayChanged)
     this.geomItem.off('highlightChanged', this.highlightChanged)
-    this.glGeom.off('updated', this.glGeomUpdated)
+    // this.glGeom.off('updated', this.glGeomUpdated)
   }
 }
 

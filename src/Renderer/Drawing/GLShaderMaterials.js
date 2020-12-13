@@ -29,6 +29,16 @@ class GLShaderMaterials extends EventEmitter {
     }
   }
 
+  addGeomItem(glgeomItem, glGeom, glmaterial) {
+    let glmaterialGeomItemSets = this.findMaterialGeomItemSets(glmaterial)
+    if (!glmaterialGeomItemSets) {
+      glmaterialGeomItemSets = new GLMaterialGeomItemSets(this, glmaterial)
+      this.addMaterialGeomItemSets(glmaterialGeomItemSets)
+    }
+
+    glmaterialGeomItemSets.addGeomItem(glgeomItem, glGeom)
+  }
+
   /**
    * The addMaterialGeomItemSets method.
    * @param {any} glmaterialGeomItemSets - The glmaterialGeomItemSets value.

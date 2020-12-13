@@ -127,21 +127,21 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
       this.__glshadermaterials[shaderName] = glshaderMaterials
     }
 
-    let glmaterialGeomItemSets = glshaderMaterials.findMaterialGeomItemSets(glmaterial)
-    if (!glmaterialGeomItemSets) {
-      glmaterialGeomItemSets = new GLMaterialGeomItemSets(this, glmaterial)
-      glshaderMaterials.addMaterialGeomItemSets(glmaterialGeomItemSets)
-    }
+    // let glmaterialGeomItemSets = glshaderMaterials.findMaterialGeomItemSets(glmaterial)
+    // if (!glmaterialGeomItemSets) {
+    //   glmaterialGeomItemSets = new GLMaterialGeomItemSets(this, glmaterial)
+    //   glshaderMaterials.addMaterialGeomItemSets(glmaterialGeomItemSets)
+    // }
 
-    let geomItemSet = glmaterialGeomItemSets.findGeomItemSet(glgeomItem.glGeom)
-    if (!geomItemSet) {
-      geomItemSet = new GLGeomItemSet(this.__gl, glgeomItem.glGeom)
-      glmaterialGeomItemSets.addGeomItemSet(geomItemSet)
-    }
+    // let geomItemSet = glmaterialGeomItemSets.findGeomItemSet(glgeomItem.glGeom)
+    // if (!geomItemSet) {
+    //   geomItemSet = new GLGeomItemSet(this.__gl, glgeomItem.glGeom)
+    //   glmaterialGeomItemSets.addGeomItemSet(geomItemSet)
+    // }
 
-    geomItem.setMetadata('geomItemSet', geomItemSet)
+    // geomItem.setMetadata('geomItemSet', geomItemSet)
 
-    geomItemSet.addGeomItem(glgeomItem)
+    // geomItemSet.addGeomItem(glgeomItem)
 
     return true
   }

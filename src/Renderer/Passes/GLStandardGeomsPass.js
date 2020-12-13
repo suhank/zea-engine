@@ -215,9 +215,8 @@ class GLStandardGeomsPass extends GLPass {
     // let glmaterialGeomItemSets = this.addMaterial(material);
     // if (!glmaterialGeomItemSets)
     //     return;
-    const glgeom = this.addGeom(geomItem.getParameter('Geometry').getValue())
+    this.addGeom(geomItem.getParameter('Geometry').getValue())
 
-    const flags = 1
     let index
     // Use recycled indices if there are any available...
     if (this.__drawItemsIndexFreeList.length > 0) {
@@ -230,8 +229,7 @@ class GLStandardGeomsPass extends GLPass {
 
     const gl = this.__gl
     const supportInstancing = gl.floatTexturesSupported
-    const glgeomItem = new GLGeomItem(gl, geomItem, glgeom, index, supportInstancing)
-    geomItem.setMetadata('glgeomItem', glgeomItem)
+    const glgeomItem = new GLGeomItem(gl, geomItem, index, supportInstancing)
 
     glgeomItem.on('updated', (event) => {
       if (!event) {

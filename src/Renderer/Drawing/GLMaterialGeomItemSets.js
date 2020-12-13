@@ -37,6 +37,15 @@ class GLMaterialGeomItemSets extends EventEmitter {
     return this.glmaterial
   }
 
+  addGeomItem(glgeomItem, glGeom) {
+    let geomItemSet = this.findGeomItemSet(glGeom)
+    if (!geomItemSet) {
+      geomItemSet = new GLGeomItemSet(this.__gl, glGeom)
+      this.addGeomItemSet(geomItemSet)
+    }
+    geomItemSet.addGeomItem(glgeomItem)
+  }
+
   /**
    * The __drawCountChanged method.
    * @param {any} change - The change value.
