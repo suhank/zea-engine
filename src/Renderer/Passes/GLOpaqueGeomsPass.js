@@ -4,7 +4,8 @@ import { GLRenderer } from '../GLRenderer.js'
 
 import { MathFunctions } from '../../Utilities/MathFunctions'
 import { GeomItem, Material } from '../../SceneTree/index.js'
-import { GLShaderMaterials } from '../Drawing/index.js'
+import { GLShaderMaterials } from '../Drawing/GLShaderMaterials.js'
+import { GLShaderGeomSets } from '../Drawing/GLShaderGeomSets.js'
 
 /** Class representing a GL opaque geoms pass.
  * @extends GLStandardGeomsPass
@@ -21,7 +22,6 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
     // Structured like so for efficient render traversial.
     // {GLShaders}[GLMaterials][GLGeoms][GLGeomItems]
     this.__glshadermaterials = {}
-
     this.__glShaderGeomSets = {}
   }
 
@@ -32,6 +32,9 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
    */
   init(renderer, passIndex) {
     super.init(renderer, passIndex)
+
+    // const ext = this.__gl.getExtension('WEBGL_multi_draw')
+    // if (ext) this.__gl.multiDrawElementsInstanced = ext.multiDrawElementsInstancedWEBGL.bind(ext)
   }
 
   // ///////////////////////////////////
@@ -88,72 +91,72 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
    * @return {boolean} - The return value.
    */
   addGeomItem(geomItem) {
-    if (true) {
+    if (this.__gl.multiDrawElementsInstanced) {
       const materialParam = geomItem.getParameter('Material')
       const material = materialParam.getValue()
       const shaderName = material.getShaderName()
 
       let glShaderGeomSets = this.__glShaderGeomSets[shaderName]
-      if (!GLShaderGeomSets) {
+      if (!glShaderGeomSets) {
         const shaders = this.constructShaders(shaderName)
-        glShaderGeomSets = new GLShaderGeomSets(shaders)
+        glShaderGeomSets = new GLShaderGeomSets(this.__gl, shaders)
+        this.__glShaderGeomSets[shaderName] = glShaderGeomSets
       }
 
       const glGeomItem = this.constructGLGeomItem(geomItem)
       glShaderGeomSets.addGLGeomItem(glGeomItem)
-      return
+    } else {
+      const glGeom = this.constructGLGeom(geomItem.getParameter('Geometry').getValue())
+
+      const glGeomItem = this.constructGLGeomItem(geomItem)
+
+      const materialParam = geomItem.getParameter('Material')
+      const material = materialParam.getValue()
+
+      // ////////////////////////////////////
+      // Tracking Material Transparency changes...
+      // In the case that a geometry material changes, we may need to
+      // select a different pass. e.g. if the new material is transparent.
+
+      const materialChanged = () => {
+        this.removeGeomItem(geomItem)
+        this.__renderer.assignTreeItemToGLPass(geomItem)
+      }
+      materialParam.on('valueChanged', materialChanged)
+      geomItem.setMetadata('materialChanged', materialChanged)
+
+      // ////////////////////////////////////
+      // Shaders
+      const shaderName = material.getShaderName()
+      const glMaterial = this.constructGLMaterial(material)
+
+      let glshaderMaterials = this.__glshadermaterials[shaderName]
+      if (!glshaderMaterials) {
+        const shaders = this.constructShaders(shaderName)
+        glshaderMaterials = new GLShaderMaterials(this.__gl, this, shaders)
+        this.__glshadermaterials[shaderName] = glshaderMaterials
+      }
+
+      glshaderMaterials.addGLGeomItem(glGeomItem, glGeom, glMaterial)
+
+      // let glMaterialGeomItemSets = glshaderMaterials.findMaterialGeomItemSets(glMaterial)
+      // if (!glMaterialGeomItemSets) {
+      //   glMaterialGeomItemSets = new GLMaterialGeomItemSets(this, glMaterial)
+      //   glshaderMaterials.addMaterialGeomItemSets(glMaterialGeomItemSets)
+      // }
+
+      // let geomItemSet = glMaterialGeomItemSets.findGeomItemSet(glGeomItem.glGeom)
+      // if (!geomItemSet) {
+      //   geomItemSet = new GLGeomItemSet(this.__gl, glGeomItem.glGeom)
+      //   glMaterialGeomItemSets.addGeomItemSet(geomItemSet)
+      // }
+
+      // geomItem.setMetadata('geomItemSet', geomItemSet)
+
+      // geomItemSet.addGLGeomItem(glGeomItem)
+
+      return true
     }
-    const glgeom = this.constructGLGeom(geomItem.getParameter('Geometry').getValue())
-
-    const glGeomItem = this.constructGLGeomItem(geomItem)
-
-    const materialParam = geomItem.getParameter('Material')
-    const material = materialParam.getValue()
-
-    // ////////////////////////////////////
-    // Tracking Material Transparency changes...
-    // In the case that a geometry material changes, we may need to
-    // select a different pass. e.g. if the new material is transparent.
-
-    const materialChanged = () => {
-      this.removeGeomItem(geomItem)
-      this.__renderer.assignTreeItemToGLPass(geomItem)
-    }
-    materialParam.on('valueChanged', materialChanged)
-    geomItem.setMetadata('materialChanged', materialChanged)
-
-    // ////////////////////////////////////
-    // Shaders
-    const shaderName = material.getShaderName()
-    const shaders = this.constructShaders(shaderName)
-
-    const glMaterial = this.constructGLMaterial(material)
-
-    let glshaderMaterials = this.__glshadermaterials[shaderName]
-    if (!glshaderMaterials) {
-      glshaderMaterials = new GLShaderMaterials(shaders)
-      this.__glshadermaterials[shaderName] = glshaderMaterials
-    }
-
-    glshaderMaterials.addGLGeomItem(glGeomItem, glMaterial)
-
-    // let glMaterialGeomItemSets = glshaderMaterials.findMaterialGeomItemSets(glMaterial)
-    // if (!glMaterialGeomItemSets) {
-    //   glMaterialGeomItemSets = new GLMaterialGeomItemSets(this, glMaterial)
-    //   glshaderMaterials.addMaterialGeomItemSets(glMaterialGeomItemSets)
-    // }
-
-    // let geomItemSet = glMaterialGeomItemSets.findGeomItemSet(glGeomItem.glGeom)
-    // if (!geomItemSet) {
-    //   geomItemSet = new GLGeomItemSet(this.__gl, glGeomItem.glGeom)
-    //   glMaterialGeomItemSets.addGeomItemSet(geomItemSet)
-    // }
-
-    // geomItem.setMetadata('geomItemSet', geomItemSet)
-
-    // geomItemSet.addGLGeomItem(glGeomItem)
-
-    return true
   }
 
   /**
@@ -207,10 +210,16 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
   __traverseTreeAndDraw(renderstate) {
     renderstate.drawItemsTexture = this.__drawItemsTexture
 
-    // eslint-disable-next-line guard-for-in
-    for (const shaderName in this.__glshadermaterials) {
-      const glshaderMaterials = this.__glshadermaterials[shaderName]
-      glshaderMaterials.draw(renderstate)
+    if (this.__gl.multiDrawElementsInstanced) {
+      // eslint-disable-next-line guard-for-in
+      for (const shaderName in this.__glShaderGeomSets) {
+        this.__glShaderGeomSets[shaderName].draw(renderstate)
+      }
+    } else {
+      // eslint-disable-next-line guard-for-in
+      for (const shaderName in this.__glshadermaterials) {
+        this.__glshadermaterials[shaderName].draw(renderstate)
+      }
     }
 
     if (renderstate.glGeom) {

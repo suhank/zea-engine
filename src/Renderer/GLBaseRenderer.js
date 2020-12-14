@@ -379,21 +379,21 @@ class GLBaseRenderer extends ParameterOwner {
     let handled = false
     for (let i = this.__passesRegistrationOrder.length - 1; i >= 0; i--) {
       const pass = this.__passesRegistrationOrder[i]
-      try {
-        const rargs = {
-          continueInSubTree: true,
-        }
-        handled = pass.itemAddedToScene(treeItem, rargs)
-        if (handled) {
-          if (!rargs.continueInSubTree) return
-          break
-        }
-      } catch (error) {
-        if (!loggedErrors[pass.constructor.name]) {
-          loggedErrors[pass.constructor.name] = error.message
-          console.warn(error.message)
-        }
+      // try {
+      const rargs = {
+        continueInSubTree: true,
       }
+      handled = pass.itemAddedToScene(treeItem, rargs)
+      if (handled) {
+        if (!rargs.continueInSubTree) return
+        break
+      }
+      // } catch (error) {
+      //   if (!loggedErrors[pass.constructor.name]) {
+      //     loggedErrors[pass.constructor.name] = error.message
+      //     console.warn(error.message)
+      //   }
+      // }
     }
 
     if (!handled) {

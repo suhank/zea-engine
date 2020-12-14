@@ -1,5 +1,6 @@
 import { EventEmitter } from '../../Utilities/index'
 import { GLGeomItem } from './GLGeomItem'
+import { GLMaterialGeomItemSets } from './GLMaterialGeomItemSets'
 
 /** Class representing GL shader materials.
  * @private
@@ -7,12 +8,12 @@ import { GLGeomItem } from './GLGeomItem'
 class GLShaderMaterials extends EventEmitter {
   /**
    * Create a GL shader material.
-   * @param {any} glShader - The glShader value.
-   * @param {any} glgeomdatashader - The glgeomdatashader value.
-   * @param {any} glselectedshader - The glselectedshader value.
+   * @param {object} shaders - The shaders value.
    */
-  constructor(shaders) {
+  constructor(gl, pass, shaders) {
     super()
+    this.gl = gl
+    this.pass = pass
     this.glShader = shaders.glShader
     this.glgeomdatashader = shaders.glgeomdatashader
     this.glselectedshader = shaders.glselectedshader
@@ -39,7 +40,7 @@ class GLShaderMaterials extends EventEmitter {
   addGLGeomItem(glGeomItem, glGeom, glMaterial) {
     let glMaterialGeomItemSets = this.findMaterialGeomItemSets(glMaterial)
     if (!glMaterialGeomItemSets) {
-      glMaterialGeomItemSets = new GLMaterialGeomItemSets(this, glMaterial)
+      glMaterialGeomItemSets = new GLMaterialGeomItemSets(this.pass, glMaterial)
       this.addMaterialGeomItemSets(glMaterialGeomItemSets)
     }
 
@@ -129,6 +130,7 @@ class GLShaderMaterials extends EventEmitter {
     if (!this.glgeomdatashader || !this.glgeomdatashader.bind(renderstate)) return
     this.bindDrawItemsTexture(renderstate)
 
+    const gl = this.gl
     {
       const unif = renderstate.unifs.floatGeomBuffer
       if (unif) {

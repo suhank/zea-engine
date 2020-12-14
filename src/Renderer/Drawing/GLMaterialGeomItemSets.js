@@ -1,5 +1,6 @@
 /* eslint-disable guard-for-in */
 import { EventEmitter } from '../../Utilities/index'
+import { GLGeomItemSet } from './GLGeomItemSet'
 
 /** Class representing GL material geom item sets.
  * @private
@@ -12,6 +13,7 @@ class GLMaterialGeomItemSets extends EventEmitter {
   constructor(pass, glMaterial = undefined) {
     super()
     this.pass = pass
+    this.__gl = pass.__gl
     this.glMaterial = glMaterial
     this.glGeomItemSets = {}
     this.drawCount = 0
@@ -116,24 +118,21 @@ class GLMaterialGeomItemSets extends EventEmitter {
    */
   draw(renderstate) {
     if (this.drawCount == 0) return
+    const warnMissingUnifs = true
     this.glMaterial.bind(renderstate, warnMissingUnifs)
-    for (const glGeomItemSet of this.glGeomItemSets) {
+    for (const key in this.glGeomItemSets) {
+      const glGeomItemSet = this.glGeomItemSets[key]
       glGeomItemSet.draw(renderstate)
     }
   }
 
   /**
-   * The drawHighlightedGeoms method.
+   * The drawHighlighted method.
    * @param {any} renderstate - The renderstate value.
    */
-  drawHighlightedGeoms(renderstate) {
-    const gl = this.__gl
-    gl.disable(gl.CULL_FACE) // 2-sided rendering.
-
-    if (!this.glselectedshader || !this.glselectedshader.bind(renderstate) || !this.bindDrawItemsTexture(renderstate))
-      return
-
-    for (const glGeomItemSet of this.glGeomItemSets) {
+  drawHighlighted(renderstate) {
+    for (const key in this.glGeomItemSets) {
+      const glGeomItemSet = this.glGeomItemSets[key]
       glGeomItemSet.drawHighlighted(renderstate)
     }
   }
@@ -143,14 +142,9 @@ class GLMaterialGeomItemSets extends EventEmitter {
    * @param {any} renderstate - The renderstate value.
    */
   drawGeomData(renderstate) {
-    const gl = this.__gl
-    gl.disable(gl.CULL_FACE) // 2-sided rendering.
-
-    if (!this.glgeomdatashader || !this.glgeomdatashader.bind(renderstate) || !this.bindDrawItemsTexture(renderstate))
-      return
-
-    for (const glGeomItemSet of this.glGeomItemSets) {
-      glGeomItemSet.drawGeomData(renderstate)
+    for (const key in this.glGeomItemSets) {
+      const glGeomItemSet = this.glGeomItemSets[key]
+      glGeomItemSet.draw(renderstate)
     }
   }
 }

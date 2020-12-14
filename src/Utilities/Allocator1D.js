@@ -7,12 +7,12 @@ import { EventEmitter } from './EventEmitter'
 class Allocation1D {
   /**
    * Initializes the allocation
-   * @param {number} size - The size of the allocated block of memory.
    * @param {number} start - The start of the allocated block of memory.
+   * @param {number} size - The size of the allocated block of memory.
    */
-  constructor(size = 0, start = 0) {
-    this.size = size
+  constructor(start = 0, size = 0) {
     this.start = start
+    this.size = size
   }
 }
 

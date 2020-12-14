@@ -1,5 +1,7 @@
 /* eslint-disable guard-for-in */
 import { EventEmitter } from '../../Utilities/index'
+import { GeomItem, Points, Lines, Mesh, PointsProxy, LinesProxy, MeshProxy } from '../../SceneTree/index'
+import { GLMeshSet, GLGeomItem } from '../Drawing/index.js'
 
 /** Class representing GL shader materials.
  * @private
@@ -7,16 +9,17 @@ import { EventEmitter } from '../../Utilities/index'
 class GLShaderGeomSets extends EventEmitter {
   /**
    * Create a GL shader material.
-   * @param {any} glShader - The glShader value.
-   * @param {any} glgeomdatashader - The glgeomdatashader value.
-   * @param {any} glselectedshader - The glselectedshader value.
+   * @param {WebGL2RenderingContext} gl - The glShader value.
+   * @param {object} shaders - The shader value.
    */
-  constructor(shaders) {
+  constructor(gl, shaders) {
     super()
+    this.__gl = gl
+    this.shaderAttrSpec = {}
     this.glShader = shaders.glShader
     this.glgeomdatashader = shaders.glgeomdatashader
     this.glselectedshader = shaders.glselectedshader
-    this.glGeomSetGeomItemSets = {}
+    this.glGeomSets = {}
     // this.glMaterialLibrary = new GLMaterialLibrary()
   }
 
@@ -25,20 +28,20 @@ class GLShaderGeomSets extends EventEmitter {
    * @param {BaseGeom} geom - The geom value.
    * @return {GLGeom} - The return value.
    */
-  constructGLGeomSet(geom) {
-    let glGeomSet = geom.getMetadata('glGeomSet')
-    if (glGeomSet) {
-      glGeomSet.addRef(this)
-      return glGeomSet
-    }
-
-    const gl = this.__gl
+  getOrCreateGLGeomSet(geom) {
+    let glGeomSet
     if (geom instanceof Mesh || geom instanceof MeshProxy) {
-      glGeomSet = new GLMeshSet(gl)
+      if (this.glGeomSets['GLMesh']) return this.glGeomSets['GLMesh']
+      glGeomSet = new GLMeshSet(this.__gl, this.shaderAttrSpec)
+      this.glGeomSets['GLMesh'] = glGeomSet
     } else if (geom instanceof Lines || geom instanceof LinesProxy) {
-      glGeomSet = new GLLinesSet(gl)
+      if (this.glGeomSets['GLLines']) return this.glGeomSets['GLLines']
+      glGeomSet = new GLLinesSet(this.__gl, this.shaderAttrSpec)
+      this.glGeomSets['GLLines'] = glGeomSet
     } else if (geom instanceof Points || geom instanceof PointsProxy) {
-      glGeomSet = new GLPointsSet(gl)
+      if (this.glGeomSets['GLPoints']) return this.glGeomSets['GLPoints']
+      glGeomSet = new GLPointsSet(this.__gl, this.shaderAttrSpec)
+      this.glGeomSets['GLPoints'] = glGeomSet
     } else {
       throw new Error('Unsupported geom type:' + geom.constructor.name)
     }
@@ -47,7 +50,6 @@ class GLShaderGeomSets extends EventEmitter {
     glGeomSet.on('updated', () => {
       this.__renderer.requestRedraw()
     })
-    glGeomSet.addRef(this)
     return glGeomSet
   }
 
@@ -57,7 +59,11 @@ class GLShaderGeomSets extends EventEmitter {
    */
   addGLGeomItem(glGeomItem) {
     const geom = glGeomItem.geomItem.getParameter('Geometry').getValue()
-    const glGeomSet = this.constructGLGeom(geom)
+
+    let glGeomSet = geom.getMetadata('glGeomSet')
+    if (!glGeomSet) {
+      glGeomSet = this.getOrCreateGLGeomSet(geom)
+    }
 
     glGeomSet.addGLGeomItem(glGeomItem)
 
@@ -67,30 +73,6 @@ class GLShaderGeomSets extends EventEmitter {
     // new GLGeomSetGeomItemSets(glGeomSet)
     // glMaterialGeomItemSets.addGLGeomItem(glGeomItem, glGeom)
   }
-
-  // /**
-  //  * The addGLGeomSetGeomItemSets method.
-  //  * @param {any} glGeomSetGeomItemSets - The glGeomSetGeomItemSets value.
-  //  */
-  // addGLGeomSetGeomItemSets(glGeomSetGeomItemSets) {
-  //   this.glGeomSetGeomItemSets[glGeomSetGeomItemSets.elementType] = glGeomSetGeomItemSets
-  //   glGeomSetGeomItemSets.on('destructing', () => {
-  //     const index = this.glGeomSetGeomItemSets.indexOf(glGeomSetGeomItemSets)
-  //     this.glGeomSetGeomItemSets.splice(index, 1)
-  //     if (this.glGeomSetGeomItemSets.length == 0) {
-  //       // TODO: clean up the shader... maybe.
-  //       this.emit('destructing')
-  //     }
-  //   })
-  // }
-
-  // /**
-  //  * The removeGLGeomSetGeomItemSets method.
-  //  * @param {GLGLGeomSetGeomItemSets} glGeomSetGeomItemSets - The glGeomSetGeomItemSets value.
-  //  */
-  // removeGLGeomSetGeomItemSets(glGeomSetGeomItemSets) {
-  //   delete this.glGeomSetGeomItemSets[glGeomSetGeomItemSets.elementType]
-  // }
 
   /**
    * Draws all elements, binding the shader and continuing into the GLGLGeomSetGeomItemSets
@@ -115,8 +97,8 @@ class GLShaderGeomSets extends EventEmitter {
     if (!this.glShader.bind(renderstate)) return
     this.bindDrawItemsTexture(renderstate)
 
-    for (const elementType in this.glGeomSetGeomItemSets) {
-      this.glGeomSetGeomItemSets[elementType].draw(renderstate)
+    for (const elementType in this.glGeomSets) {
+      this.glGeomSets[elementType].draw(renderstate)
     }
     glShader.unbind(renderstate)
   }
@@ -129,8 +111,8 @@ class GLShaderGeomSets extends EventEmitter {
     if (!this.glselectedshader || !this.glselectedshader.bind(renderstate)) return
     this.bindDrawItemsTexture(renderstate)
 
-    for (const elementType in this.glGeomSetGeomItemSets) {
-      this.glGeomSetGeomItemSets[elementType].drawHighlighted(renderstate)
+    for (const elementType in this.glGeomSets) {
+      this.glGeomSets[elementType].drawHighlighted(renderstate)
     }
   }
 
@@ -155,8 +137,8 @@ class GLShaderGeomSets extends EventEmitter {
       }
     }
 
-    for (const elementType in this.glGeomSetGeomItemSets) {
-      this.glGeomSetGeomItemSets[elementType].drawGeomData(renderstate)
+    for (const elementType in this.glGeomSets) {
+      this.glGeomSets[elementType].drawGeomData(renderstate)
     }
   }
 }

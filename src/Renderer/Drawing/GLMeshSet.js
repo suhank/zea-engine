@@ -9,14 +9,15 @@ import { Allocator1D } from '../../Utilities/Allocator1D.js'
 class GLMeshSet extends GLGeomSet {
   /**
    * Create a GL mesh.
-   * @param {any} gl - The gl value.
-   * @param {any} shaderAttrSpec - The attributes required by the shader
+   * @param {WebGL2RenderingContext} gl - The gl value.
+   * @param {object} shaderAttrSpec - The attributes required by the shader
    */
   constructor(gl, shaderAttrSpec) {
     super(gl, shaderAttrSpec)
-    // this.genBuffers()
 
     this.indicesAllocator = new Allocator1D()
+    this.geomVertexIndicesCounts = []
+    this.geomVertexIndicesOffsets = []
 
     this.numIndices = 0
 
@@ -31,6 +32,18 @@ class GLMeshSet extends GLGeomSet {
       this.dirtyGeomIndices.push(id)
     })
   }
+  /**
+   * Adds a geom to the GLGeomSet.
+   *
+   * @param {BaseGeom} geom - The geom to be managed by this GLGeomSet.
+   * @return {number} - The index of the geom in the GLGeomSet
+   */
+  addGeom(geom) {
+    const index = super.addGeom(geom)
+    this.geomVertexIndicesCounts[index] = 0
+    this.geomVertexIndicesOffsets[index] = 0
+    return index
+  }
 
   // /////////////////////////////////////
   // Buffers
@@ -43,16 +56,10 @@ class GLMeshSet extends GLGeomSet {
 
     const geomBuffers = this.geomBuffersTmp[index]
     const numIndices = geomBuffers.indices.length
-    if (!this.geomBufferStats[index] || this.geomBufferStats[index].numIndices != numIndices) {
-      this.indicesAllocator.allocate(index, numIndices)
-
-      if (!this.geomBufferStats[index]) {
-        this.geomBufferStats[index] = {
-          numIndices,
-        }
-      } else {
-        this.geomBufferStats[index].numIndices = numIndices
-      }
+    if (this.geomVertexIndicesCounts[index] != numIndices) {
+      const allocation = this.indicesAllocator.allocate(index, numIndices)
+      this.geomVertexIndicesOffsets[index] = allocation.start
+      this.geomVertexIndicesCounts[index] = allocation.size
     }
   }
 
@@ -64,6 +71,7 @@ class GLMeshSet extends GLGeomSet {
 
     const length = this.indicesAllocator.reservedSpace
     if (this.numIndices != length) {
+      const gl = this.__gl
       if (this.indexBuffer) {
         gl.deleteBuffer(this.indexBuffer)
       }
@@ -72,7 +80,9 @@ class GLMeshSet extends GLGeomSet {
       gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer)
 
       const length = this.indicesAllocator.reservedSpace
-      gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, length, gl.STATIC_DRAW)
+      const elementSize = 2 //  Uint16Array for UNSIGNED_SHORT
+      const sizeInBytes = length * elementSize
+      gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, sizeInBytes, gl.STATIC_DRAW)
 
       this.numIndices = length
     }
@@ -95,13 +105,16 @@ class GLMeshSet extends GLGeomSet {
 
     const attributesAllocation = this.attributesAllocator.allocations[index]
     // The indices need to be offset so they they index the new attributes array.
-    const offsetIndices = new Uint32Array(allocation.size)
+    const offsetIndices = new Uint16Array(allocation.size)
     for (let i = 0; i < indices.length; i++) {
       offsetIndices[i] = geomBuffers.indices[i] + attributesAllocation.start
     }
 
+    const gl = this.__gl
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer)
-    gl.bufferSubData(gl.ELEMENT_ARRAY_BUFFER, allocation.start, offsetIndices, allocation.start, indices.length)
+    const elementSize = 2 //  Uint16Array
+    const dstByteOffsetInBytes = allocation.start * elementSize
+    gl.bufferSubData(gl.ELEMENT_ARRAY_BUFFER, dstByteOffsetInBytes, offsetIndices, allocation.start)
   }
 
   /**
@@ -126,7 +139,8 @@ class GLMeshSet extends GLGeomSet {
     // multiDrawElementsInstanced variant.
     // Assumes that the indices which have been previously uploaded to the
     // ELEMENT_ARRAY_BUFFER are to be treated as UNSIGNED_SHORT.
-    this.ext.multiDrawElementsInstancedWEBGL(
+    const gl = this.__gl
+    gl.multiDrawElementsInstanced(
       gl.TRIANGLES,
       this.geomVertexCounts,
       0,

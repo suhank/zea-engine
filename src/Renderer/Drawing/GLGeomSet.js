@@ -1,15 +1,19 @@
-import { generateShaderGeomBinding } from './GeomShaderBinding.js'
+import { EventEmitter } from '../../Utilities/index'
+import { Allocator1D } from '../../Utilities/Allocator1D.js'
+import { GLGeomItemSet } from './GLGeomItemSet.js'
 
 /** Class representing a GL geom.
  * @private
  */
-class GLGeomSet {
+class GLGeomSet extends EventEmitter {
   /**
-   * Create a GL geom.
-   * @param {any} gl - The gl value.
-   * @param {any} geom - The geom value.
+   * Create a GLGeomSet.
+   * @param {WebGL2RenderingContext} gl - The list of attributes to be uploaded
+   * @param {object} shaderAttrSpec - The list of attributes to be uploaded
    */
   constructor(gl, shaderAttrSpec) {
+    super()
+
     this.__gl = gl
     this.shaderAttrSpec = shaderAttrSpec
 
@@ -74,12 +78,14 @@ class GLGeomSet {
     geom.on('geomDataChanged', geomDataChanged)
     geom.on('geomDataTopologyChanged', geomDataTopologyChanged)
 
-    geom.addMetadata('glgeomset', this)
     this.geoms.push({
       geom,
       geomDataChanged,
       geomDataTopologyChanged,
     })
+    this.dirtyGeomIndices.push(index)
+    this.geomVertexCounts[index] = 0
+    this.geomVertexOffsets[index] = 0
     return index
   }
 
@@ -115,25 +121,24 @@ class GLGeomSet {
    * @param {number} index - The index of the geomm in the geomset to build the GeomITemSet for.
    */
   addGeomItemSet(index) {
-    glGeomItemSet = new GLGeomItemSet()
+    const glGeomItemSet = new GLGeomItemSet()
     this.glGeomItemSets[index] = glGeomItemSet
-    this.instanceCounts[index] = 0
+    this.instanceCountsDraw[index] = 0
+    this.instanceCountsHighlight[index] = 0
     const drawCountChanged = (event) => {
-      this.instanceCounts[index] += event.count
-      this.drawCount += change.count
+      this.instanceCountsDraw[index] += event.count
+      this.drawCount += event.count
       this.drawIdsBufferDirty = true
     }
     const highlightCountChanged = (event) => {
-      this.instanceCounts[index] += event.count
-      this.highlightedCount += change.count
+      this.instanceCountsHighlight[index] += event.count
+      this.highlightedCount += event.count
       this.highlightedIdsBufferDirty = true
     }
-
-    glGeomItemSet.on('drawCountChanged')
-    glGeomItemSet.on('highlightCountChanged')
-    glGeomItemSet.on('destructing', () => {
+    const destructing = () => {
       glGeomItemSet.off('drawCountChanged', drawCountChanged)
       glGeomItemSet.off('highlightCountChanged', highlightCountChanged)
+      glGeomItemSet.off('destructing', destructing)
 
       const index = this.glGeomItemSets.indexOf(glGeomItemSet)
       this.glGeomItemSets.splice(index, 1)
@@ -151,7 +156,12 @@ class GLGeomSet {
 
         this.emit('destructing')
       }
-    })
+    }
+
+    glGeomItemSet.on('drawCountChanged', drawCountChanged)
+    glGeomItemSet.on('highlightCountChanged', highlightCountChanged)
+    glGeomItemSet.on('destructing', destructing)
+    return glGeomItemSet
   }
 
   /**
@@ -161,11 +171,17 @@ class GLGeomSet {
   addGLGeomItem(glGeomItem) {
     const geom = glGeomItem.geomItem.getParameter('Geometry').getValue()
 
-    const index = this.addGeom(geom)
+    let index
+    if (geom.hasMetadata('glgeomset_index')) {
+      index = geom.setMetadata('glgeomset_index', index)
+    } else {
+      index = this.addGeom(geom)
+      geom.setMetadata('glgeomset_index', index)
+    }
     if (!this.glGeomItemSets[index]) {
       this.addGeomItemSet(index)
     }
-    this.glGeomItemSets[index].addGLGeomItem()
+    this.glGeomItemSets[index].addGLGeomItem(glGeomItem)
   }
 
   /**
@@ -191,12 +207,24 @@ class GLGeomSet {
     const geom = this.getGeom(index)
     const geomBuffers = geom.genBuffers()
 
-    if (this.geomVertexCounts[index] != geomBuffers.numVertices) {
-      const allocation = this.attributesAllocator.allocate(index, geomBuffers.numVertices)
+    if (this.geomVertexCounts[index] != geomBuffers.numRenderVerts) {
+      const allocation = this.attributesAllocator.allocate(index, geomBuffers.numRenderVerts)
 
-      this.geomBuffersTmp[index] = geomBuffers
       this.geomVertexOffsets[index] = allocation.start
       this.geomVertexCounts[index] = allocation.size
+      this.geomBuffersTmp[index] = geomBuffers
+    }
+
+    // eslint-disable-next-line guard-for-in
+    for (const attrName in geomBuffers.attrBuffers) {
+      if (!this.shaderAttrSpec[attrName]) {
+        const attrData = geomBuffers.attrBuffers[attrName]
+        this.shaderAttrSpec[attrName] = {
+          dataType: attrData.dataType,
+          normalized: attrData.normalized,
+          dimension: attrData.dimension,
+        }
+      }
     }
   }
 
@@ -206,9 +234,13 @@ class GLGeomSet {
   genBuffers() {
     const length = this.attributesAllocator.reservedSpace
     if (this.numVertexAttributes != length) {
+      const gl = this.__gl
+
       // eslint-disable-next-line guard-for-in
       for (const attrName in this.shaderAttrSpec) {
         const attrSpec = this.shaderAttrSpec[attrName]
+        const numValues = length * attrSpec.dimension
+        attrSpec.numValues = numValues // cache for debugging only
 
         if (this.glattrbuffers[attrName] && this.glattrbuffers[attrName].buffer) {
           gl.deleteBuffer(this.glattrbuffers[attrName].buffer)
@@ -216,13 +248,16 @@ class GLGeomSet {
 
         const attrBuffer = gl.createBuffer()
         gl.bindBuffer(gl.ARRAY_BUFFER, attrBuffer)
-        gl.bufferData(gl.ARRAY_BUFFER, length, gl.STATIC_DRAW)
+
+        const elementSize = 4 // assuming floats for now. (We also need to support RGB Byte values.)
+        const sizeInBytes = numValues * elementSize
+        gl.bufferData(gl.ARRAY_BUFFER, sizeInBytes, gl.STATIC_DRAW)
 
         this.glattrbuffers[attrName] = {
           buffer: attrBuffer,
           dataType: attrSpec.dataType,
           normalized: attrSpec.normalized,
-          length,
+          length: numValues,
         }
 
         if (attrName == 'textureCoords') this.glattrbuffers['texCoords'] = this.glattrbuffers['textureCoords']
@@ -239,17 +274,19 @@ class GLGeomSet {
   uploadBuffers(index) {
     const geomBuffers = this.geomBuffersTmp[index]
 
-    const count = this.geomVertexOffsets[index]
-    if (count != geomBuffers.numVertices) {
+    const count = this.geomVertexCounts[index]
+    if (count != geomBuffers.numRenderVerts) {
       throw new Error('Invalid allocation for this geom')
     }
+    const gl = this.__gl
 
     // eslint-disable-next-line guard-for-in
     for (const attrName in geomBuffers.attrBuffers) {
       const attrData = geomBuffers.attrBuffers[attrName]
 
       gl.bindBuffer(gl.ARRAY_BUFFER, this.glattrbuffers[attrName].buffer)
-      gl.bufferSubData(gl.ARRAY_BUFFER, this.geomVertexOffsets[index], attrData.values, 0, attrData.values.length)
+      const dstByteOffsetInBytes = this.geomVertexOffsets[index] * 4
+      gl.bufferSubData(gl.ARRAY_BUFFER, dstByteOffsetInBytes, attrData.values, 0)
     }
   }
 
@@ -287,7 +324,7 @@ class GLGeomSet {
    * drawing.
    */
   updateDrawIDsBuffer() {
-    const gl = this.gl
+    const gl = this.__gl
     if (this.drawIdsBuffer && this.drawCount != this.drawIdsArray.length) {
       this.gl.deleteBuffer(this.drawIdsBuffer)
       this.drawIdsBuffer = null
@@ -356,7 +393,7 @@ class GLGeomSet {
     if (this.dirtyGeomIndices.length > 0) {
       this.cleanGeomBuffers()
     }
-
+    const gl = this.__gl
     // Specify an instanced draw to the shader so it knows how
     // to retrieve the modelmatrix.
     gl.uniform1i(renderstate.unifs.instancedDraw.location, 1)
@@ -393,11 +430,11 @@ class GLGeomSet {
   /**
    * The draw method.
    */
-  draw() {
+  draw(renderstate) {
     if (this.drawIdsBufferDirty) {
       this.updateDrawIDsBuffer()
     }
-    this.bindDrawIds(renderstate, this.drawIdsBufferDirty)
+    this.bindDrawIds(renderstate, this.drawIdsBuffer)
     this.multiDrawInstanced(this.instanceCountsDraw)
   }
 
@@ -421,7 +458,7 @@ class GLGeomSet {
     if (this.drawIdsBufferDirty) {
       this.updateDrawIDsBuffer()
     }
-    this.bindDrawIds(renderstate, this.drawIdsBufferDirty)
+    this.bindDrawIds(renderstate, this.drawIdsBuffer)
     this.multiDrawInstanced(this.instanceCountsDraw)
   }
 
