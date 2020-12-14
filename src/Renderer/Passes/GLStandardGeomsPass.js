@@ -109,15 +109,6 @@ class GLStandardGeomsPass extends GLPass {
   }
 
   /**
-   * The addShader method.
-   * @param {any} material - The material value.
-   * @return {any} - The return value.
-   */
-  addShader(material) {
-    return this.__renderer.getOrCreateShader(material.getShaderName())
-  }
-
-  /**
    * The constructShaders method.
    * Given a material, generate the various shaders required to render objects
    * using this material. There should always be at least a single glShader
@@ -195,13 +186,12 @@ class GLStandardGeomsPass extends GLPass {
 
   /**
    * The removeGeom method.
-   * @param {any} geom - The geom value.
+   * @param {BaseGeom} geom - The geom value.
    */
   removeGeom(geom) {
-    let glgeom = geom.getMetadata('glgeom')
+    const glgeom = geom.getMetadata('glgeom')
     if (glgeom) {
       glgeom.removeRef(this) // Should result in a destroy
-      return glgeom
     }
   }
 
@@ -269,7 +259,7 @@ class GLStandardGeomsPass extends GLPass {
     // TODO: Finish of ref counting GLGeoms.
     // I'm not sure if we ever clean up the renderer properly
     // when geoms are removed. (Run Instancing test and see if
-    // GLGeom is ever destoryed when instance counts drop to zero.)
+    // GLGeom is ever destroyed when instance counts drop to zero.)
     // this.removeGeom(geomItem.getParameter('Geometry').getValue())
 
     const glGeomItem = geomItem.getMetadata('glGeomItem')
@@ -489,43 +479,43 @@ class GLStandardGeomsPass extends GLPass {
     this.uploadGeomItems()
   }
 
-  /**
-   * The bind method.
-   * @param {any} renderstate - The renderstate value.
-   * @return {any} - The return value.
-   */
-  bind(renderstate) {
-    const gl = this.__gl
-    const unifs = renderstate.unifs
-    if (this.__drawItemsTexture && unifs.instancesTexture) {
-      this.__drawItemsTexture.bindToUniform(renderstate, unifs.instancesTexture)
-      gl.uniform1i(unifs.instancesTextureSize.location, this.__drawItemsTexture.width)
-    }
-    return true
-  }
+  // /**
+  //  * The bind method.
+  //  * @param {any} renderstate - The renderstate value.
+  //  * @return {any} - The return value.
+  //  */
+  // bind(renderstate) {
+  //   const gl = this.__gl
+  //   const unifs = renderstate.unifs
+  //   if (this.__drawItemsTexture && unifs.instancesTexture) {
+  //     this.__drawItemsTexture.bindToUniform(renderstate, unifs.instancesTexture)
+  //     gl.uniform1i(unifs.instancesTextureSize.location, this.__drawItemsTexture.width)
+  //   }
+  //   return true
+  // }
 
-  /**
-   * The bindShader method.
-   * @param {any} renderstate - The renderstate value.
-   * @param {any} glShader - The glShader value.
-   * @return {any} - The return value.
-   */
-  bindShader(renderstate, glShader) {
-    if (!glShader.bind(renderstate)) return false
-    if (!this.bind(renderstate)) return false
-    return true
-  }
+  // /**
+  //  * The bindShader method.
+  //  * @param {any} renderstate - The renderstate value.
+  //  * @param {any} glShader - The glShader value.
+  //  * @return {any} - The return value.
+  //  */
+  // bindShader(renderstate, glShader) {
+  //   if (!glShader.bind(renderstate)) return false
+  //   if (!this.bind(renderstate)) return false
+  //   return true
+  // }
 
-  /**
-   * The bindMaterial method.
-   * @param {any} renderstate - The renderstate value.
-   * @param {any} glMaterial - The glMaterial value.
-   * @param {any} warnMissingUnifs - The warnMissingUnifs value.
-   * @return {any} - The return value.
-   */
-  bindMaterial(renderstate, glMaterial, warnMissingUnifs) {
-    return glMaterial.bind(renderstate, warnMissingUnifs)
-  }
+  // /**
+  //  * The bindMaterial method.
+  //  * @param {any} renderstate - The renderstate value.
+  //  * @param {any} glMaterial - The glMaterial value.
+  //  * @param {any} warnMissingUnifs - The warnMissingUnifs value.
+  //  * @return {any} - The return value.
+  //  */
+  // bindMaterial(renderstate, glMaterial, warnMissingUnifs) {
+  //   return glMaterial.bind(renderstate, warnMissingUnifs)
+  // }
 }
 
 export { GLStandardGeomsPass }

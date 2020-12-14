@@ -1171,6 +1171,7 @@ class GLBaseRenderer extends ParameterOwner {
    * @param {object} renderState - The renderState value.
    */
   bindGLBaseRenderer(renderState) {
+    renderState.gl = this.__gl
     renderState.shaderopts = this.__preproc
 
     const gl = this.__gl

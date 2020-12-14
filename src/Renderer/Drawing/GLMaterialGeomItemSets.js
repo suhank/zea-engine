@@ -12,7 +12,7 @@ class GLMaterialGeomItemSets extends EventEmitter {
     super()
     this.pass = pass
     this.glMaterial = glMaterial
-    this.geomItemSets = []
+    this.glGeomItemSets = []
     this.drawCount = 0
     this.visibleInGeomDataBuffer = glMaterial.getMaterial().visibleInGeomDataBuffer
     this.__drawCountChanged = this.__drawCountChanged.bind(this)
@@ -37,6 +37,12 @@ class GLMaterialGeomItemSets extends EventEmitter {
     return this.glMaterial
   }
 
+  /**
+   * The addGLGeomItem method.
+   * @param {GLGeomItem} glGeomItem - The glGeomItem value.
+   * @param {GLGeom} glGeom - The glGeomItem value.
+   * @private
+   */
   addGLGeomItem(glGeomItem, glGeom) {
     let geomItemSet = this.findGeomItemSet(glGeom)
     if (!geomItemSet) {
@@ -62,7 +68,7 @@ class GLMaterialGeomItemSets extends EventEmitter {
   __materialChanged() {
     const material = this.glMaterial.getMaterial()
     if (!this.pass.checkMaterial(material)) {
-      for (const glGeomItemSet of this.geomItemSets) {
+      for (const glGeomItemSet of this.glGeomItemSets) {
         for (const glGeomItem of glGeomItemSet.glGeomItems) {
           const geomItem = glGeomItem.geomItem
           this.pass.removeGeomItem(geomItem)
@@ -71,37 +77,34 @@ class GLMaterialGeomItemSets extends EventEmitter {
       }
     }
   }
+
   /**
    * The addGeomItemSet method.
    * @param {any} geomItemSet - The geomItemSet value.
    */
   addGeomItemSet(geomItemSet) {
-    if (!this.geomItemSets.includes(geomItemSet)) {
-      this.geomItemSets.push(geomItemSet)
-      geomItemSet.on('drawCountChanged', this.__drawCountChanged)
-      geomItemSet.on('destructing', () => {
-        geomItemSet.off('drawCountChanged', this.__drawCountChanged)
+    this.glGeomItemSets.push(geomItemSet)
+    geomItemSet.on('drawCountChanged', this.__drawCountChanged)
+    geomItemSet.on('destructing', () => {
+      geomItemSet.off('drawCountChanged', this.__drawCountChanged)
 
-        const index = this.geomItemSets.indexOf(geomItemSet)
-        this.geomItemSets.splice(index, 1)
-        if (this.geomItemSets.length == 0) {
-          // Remove the listeners.
-          const material = this.glMaterial.getMaterial()
-          const baseColorParam = material.getParameter('BaseColor')
-          if (baseColorParam) {
-            baseColorParam.off('valueChanged', this.__materialChanged)
-          }
-          const opacityParam = material.getParameter('Opacity')
-          if (opacityParam) {
-            opacityParam.off('valueChanged', this.__materialChanged)
-          }
-
-          this.emit('destructing')
+      const index = this.glGeomItemSets.indexOf(geomItemSet)
+      this.glGeomItemSets.splice(index, 1)
+      if (this.glGeomItemSets.length == 0) {
+        // Remove the listeners.
+        const material = this.glMaterial.getMaterial()
+        const baseColorParam = material.getParameter('BaseColor')
+        if (baseColorParam) {
+          baseColorParam.off('valueChanged', this.__materialChanged)
         }
-      })
-    } else {
-      console.warn('geomItemSet already added to GLMaterialGeomItemSets')
-    }
+        const opacityParam = material.getParameter('Opacity')
+        if (opacityParam) {
+          opacityParam.off('valueChanged', this.__materialChanged)
+        }
+
+        this.emit('destructing')
+      }
+    })
   }
 
   /**
@@ -109,29 +112,65 @@ class GLMaterialGeomItemSets extends EventEmitter {
    * @param {any} geomItemSet - The geomItemSet value.
    */
   removeGeomItemSet(geomItemSet) {
-    const index = this.geomItemSets.indexOf(geomItemSet)
-    this.geomItemSets.splice(index, 1)
+    const index = this.glGeomItemSets.indexOf(geomItemSet)
+    this.glGeomItemSets.splice(index, 1)
     geomItemSet.off('drawCountChanged', this.__drawCountChanged)
   }
 
   /**
-   * The removeGeomItemSet method.
-   * @param {any} glgeom - The glgeom value.
+   * Finds a GeomItemSet using a glGeom
+   * @param {any} glGeom - The glGeom value.
    * @return {any} - The return value.
    */
-  findGeomItemSet(glgeom) {
-    for (const geomItemSet of this.geomItemSets) {
-      if (geomItemSet.getGLGeom() == glgeom) return geomItemSet
+  findGeomItemSet(glGeom) {
+    for (const geomItemSet of this.glGeomItemSets) {
+      if (geomItemSet.getGLGeom() == glGeom) return geomItemSet
     }
     return null
   }
 
   /**
-   * The getGeomItemSets method.
-   * @return {any} - The return value.
+   * Draws all elements, binding the shader and continuing into the GLGeomItemSet
+   * @param {object} renderstate - The render state for the current draw traversal
    */
-  getGeomItemSets() {
-    return this.geomItemSets
+  draw(renderstate) {
+    if (this.drawCount == 0) return
+    this.glMaterial.bind(renderstate, warnMissingUnifs)
+    for (const glGeomItemSet of this.glGeomItemSets) {
+      glGeomItemSet.draw(renderstate)
+    }
+  }
+
+  /**
+   * The drawHighlightedGeoms method.
+   * @param {any} renderstate - The renderstate value.
+   */
+  drawHighlightedGeoms(renderstate) {
+    const gl = this.__gl
+    gl.disable(gl.CULL_FACE) // 2-sided rendering.
+
+    if (!this.glselectedshader || !this.glselectedshader.bind(renderstate) || !this.bindDrawItemsTexture(renderstate))
+      return
+
+    for (const glGeomItemSet of this.glGeomItemSets) {
+      glGeomItemSet.drawHighlighted(renderstate)
+    }
+  }
+
+  /**
+   * The drawHighlightedGeoms method.
+   * @param {any} renderstate - The renderstate value.
+   */
+  drawGeomData(renderstate) {
+    const gl = this.__gl
+    gl.disable(gl.CULL_FACE) // 2-sided rendering.
+
+    if (!this.glgeomdatashader || !this.glgeomdatashader.bind(renderstate) || !this.bindDrawItemsTexture(renderstate))
+      return
+
+    for (const glGeomItemSet of this.glGeomItemSets) {
+      glGeomItemSet.drawGeomData(renderstate)
+    }
   }
 }
 

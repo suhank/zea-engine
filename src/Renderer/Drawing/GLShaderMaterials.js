@@ -1,4 +1,5 @@
 import { EventEmitter } from '../../Utilities/index'
+import { GLGeomItem } from './GLGeomItem'
 
 /** Class representing GL shader materials.
  * @private
@@ -20,8 +21,8 @@ class GLShaderMaterials extends EventEmitter {
 
   /**
    * The findMaterialGeomItemSets method.
-   * @param {any} glMaterial - The glMaterial value.
-   * @return {any} - The return value.
+   * @param {GLMaterial} glMaterial - The glMaterial value.
+   * @return {boolean} - The return value.
    */
   findMaterialGeomItemSets(glMaterial) {
     for (const matGeomItemSet of this.glMaterialGeomItemSets) {
@@ -29,6 +30,12 @@ class GLShaderMaterials extends EventEmitter {
     }
   }
 
+  /**
+   * The addGLGeomItem method.
+   * @param {GLGeomItem} glGeomItem - The glGeomItem value.
+   * @param {GLGeom} glGeom - The glGeomItem value.
+   * @param {GLMaterial} glMaterial - The glMaterial value.
+   */
   addGLGeomItem(glGeomItem, glGeom, glMaterial) {
     let glMaterialGeomItemSets = this.findMaterialGeomItemSets(glMaterial)
     if (!glMaterialGeomItemSets) {
@@ -57,7 +64,7 @@ class GLShaderMaterials extends EventEmitter {
 
   /**
    * The removeMaterialGeomItemSets method.
-   * @param {any} glMaterialGeomItemSets - The glMaterialGeomItemSets value.
+   * @param {GLMaterialGeomItemSets} glMaterialGeomItemSets - The glMaterialGeomItemSets value.
    */
   removeMaterialGeomItemSets(glMaterialGeomItemSets) {
     const index = this.glMaterialGeomItemSets.indexOf(glMaterialGeomItemSets)
@@ -66,10 +73,78 @@ class GLShaderMaterials extends EventEmitter {
 
   /**
    * The getMaterialGeomItemSets method.
-   * @return {any} - The return value.
+   * @return {GLMaterialGeomItemSets} - The return value.
    */
   getMaterialGeomItemSets() {
     return this.glMaterialGeomItemSets
+  }
+
+  /**
+   * Draws all elements, binding the shader and continuing into the GLMaterialGeomItemSets
+   * @param {object} renderstate - The render state for the current draw traversal
+   */
+  bindDrawItemsTexture(renderstate) {
+    const gl = renderstate.gl
+    const unifs = renderstate.unifs
+    const drawItemsTexture = renderstate.drawItemsTexture
+    if (drawItemsTexture && unifs.instancesTexture) {
+      drawItemsTexture.bindToUniform(renderstate, unifs.instancesTexture)
+      gl.uniform1i(unifs.instancesTextureSize.location, drawItemsTexture.width)
+    }
+  }
+
+  /**
+   * Draws all elements, binding the shader and continuing into the GLMaterialGeomItemSets
+   * @param {object} renderstate - The render state for the current draw traversal
+   */
+  draw(renderstate) {
+    const glShader = this.glShader
+    if (!this.glShader.bind(renderstate)) return
+    this.bindDrawItemsTexture(renderstate)
+
+    for (const glMaterialGeomItemSet of this.glMaterialGeomItemSets) {
+      glMaterialGeomItemSet.draw(renderstate)
+    }
+    glShader.unbind(renderstate)
+  }
+
+  /**
+   * The drawHighlightedGeoms method.
+   * @param {any} renderstate - The renderstate value.
+   */
+  drawHighlightedGeoms(renderstate) {
+    if (!this.glselectedshader || !this.glselectedshader.bind(renderstate)) return
+    this.bindDrawItemsTexture(renderstate)
+
+    for (const glMaterialGeomItemSet of this.glMaterialGeomItemSets) {
+      glMaterialGeomItemSet.drawHighlighted(renderstate)
+    }
+  }
+
+  /**
+   * The drawGeomData method.
+   * @param {any} renderstate - The renderstate value.
+   */
+  drawGeomData(renderstate) {
+    if (!this.glgeomdatashader || !this.glgeomdatashader.bind(renderstate)) return
+    this.bindDrawItemsTexture(renderstate)
+
+    {
+      const unif = renderstate.unifs.floatGeomBuffer
+      if (unif) {
+        gl.uniform1i(unif.location, gl.floatGeomBuffer ? 1 : 0)
+      }
+    }
+    {
+      const unif = renderstate.unifs.passId
+      if (unif) {
+        gl.uniform1i(unif.location, this.__passIndex)
+      }
+    }
+
+    for (const glMaterialGeomItemSet of this.glMaterialGeomItemSets) {
+      glMaterialGeomItemSet.drawGeomData(renderstate)
+    }
   }
 }
 
