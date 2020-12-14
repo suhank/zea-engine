@@ -10,12 +10,13 @@ class GLGeomItemSet extends EventEmitter {
   /**
    * Create a GL geom item set.
    * @param {any} gl - The gl value.
-   * @param {any} glgeom - The glgeom value.
+   * @param {any} glGeom - The glGeom value.
    */
-  constructor(gl, glgeom) {
+  constructor(gl, glGeom) {
     super()
     this.gl = gl
-    this.glGeom = glgeom
+    this.glGeom = glGeom
+    this.id = glGeom ? glGeom.getGeom().getId() : this.getId()
     this.glGeomItems = []
     this.glgeomItems_freeIndices = []
     this.glgeomItemEventHandlers = []
@@ -156,21 +157,36 @@ class GLGeomItemSet extends EventEmitter {
       this.drawIdsBuffer = null
     }
     if (!this.drawIdsBuffer) {
-      this.drawIdsArray = new Float32Array(this.glGeomItems.length)
       this.drawIdsBuffer = gl.createBuffer()
       gl.bindBuffer(gl.ARRAY_BUFFER, this.drawIdsBuffer)
     }
 
-    // Collect all visible geom ids into the instanceIds array.
-    // Note: the draw count can be less than the number of instances
-    // we re-use the same buffer and simply invoke fewer draw calls.
-    this.visibleItems.forEach((index, tgtIndex) => {
-      this.drawIdsArray[tgtIndex] = this.glGeomItems[index].getId()
-    })
     gl.bindBuffer(gl.ARRAY_BUFFER, this.drawIdsBuffer)
-    gl.bufferData(gl.ARRAY_BUFFER, this.drawIdsArray, gl.STATIC_DRAW)
+    gl.bufferData(gl.ARRAY_BUFFER, this.getDrawIdsArray(), gl.STATIC_DRAW)
 
     this.drawIdsBufferDirty = false
+  }
+
+  /**
+   * The getDrawIdsArray method.
+   * @return {Float32Array} - The drawIds for each GeomItem packed into a Float32Array
+   */
+  getDrawIdsArray() {
+    if (this.drawIdsBufferDirty) {
+      if (!this.drawIdsArray || this.glGeomItems.length != this.drawIdsArray.length) {
+        this.drawIdsArray = new Float32Array(this.glGeomItems.length)
+      }
+
+      // Collect all visible geom ids into the instanceIds array.
+      // Note: the draw count can be less than the number of instances
+      // we re-use the same buffer and simply invoke fewer draw calls.
+      this.visibleItems.forEach((index, tgtIndex) => {
+        this.drawIdsArray[tgtIndex] = this.glGeomItems[index].getDrawItemId()
+      })
+
+      this.drawIdsBufferDirty = false
+    }
+    return this.drawIdsArray
   }
 
   // ////////////////////////////////////
@@ -185,33 +201,39 @@ class GLGeomItemSet extends EventEmitter {
       this.highlightedIdsBufferDirty = false
       return
     }
-    if (this.highlightedIdsBuffer && this.glGeomItems.length != this.highlightedIdsArray.length) {
+    if (this.highlightedIdsBuffer && this.glGeomItems.length > this.highlightedIdsArray.length) {
       this.gl.deleteBuffer(this.highlightedIdsBuffer)
       this.highlightedIdsBuffer = null
     }
-
-    // Collect all visible geom ids into the instanceIds array.
-    // Note: the draw count can be less than the number of instances
-    // we re-use the same buffer and simply invoke fewer draw calls.
-    if (!this.highlightedIdsArray || this.highlightedItems.length > this.highlightedIdsArray.length) {
-      this.highlightedIdsArray = new Float32Array(this.highlightedItems.length)
-      if (this.highlightedIdsBuffer) {
-        gl.deleteBuffer(this.highlightedIdsBuffer)
-        this.highlightedIdsBuffer = null
-      }
-    }
-
-    this.highlightedItems.forEach((index, tgtIndex) => {
-      this.highlightedIdsArray[tgtIndex] = this.glGeomItems[index].getId()
-    })
-
     if (!this.highlightedIdsBuffer) {
       this.highlightedIdsBuffer = gl.createBuffer()
     }
     gl.bindBuffer(gl.ARRAY_BUFFER, this.highlightedIdsBuffer)
-    gl.bufferData(gl.ARRAY_BUFFER, this.highlightedIdsArray, gl.STATIC_DRAW)
+    gl.bufferData(gl.ARRAY_BUFFER, this.getHighlightedIdsArray(), gl.STATIC_DRAW)
 
     this.highlightedIdsBufferDirty = false
+  }
+
+  /**
+   * The getHighlightedIdsArray method.
+   * @return {Float32Array} - The drawIds for each GeomItem packed into a Float32Array
+   */
+  getHighlightedIdsArray() {
+    if (this.highlightedIdsBufferDirty) {
+      if (!this.highlightedIdsArray || this.highlightedItems.length > this.highlightedIdsArray.length) {
+        this.highlightedIdsArray = new Float32Array(this.glGeomItems.length)
+      }
+
+      // Collect all visible geom ids into the instanceIds array.
+      // Note: the draw count can be less than the number of instances
+      // we re-use the same buffer and simply invoke fewer draw calls.
+      this.highlightedItems.forEach((index, tgtIndex) => {
+        this.highlightedIdsArray[tgtIndex] = this.glGeomItems[index].getDrawItemId()
+      })
+
+      this.highlightedIdsBufferDirty = false
+    }
+    return this.highlightedIdsArray
   }
 
   // ////////////////////////////////////

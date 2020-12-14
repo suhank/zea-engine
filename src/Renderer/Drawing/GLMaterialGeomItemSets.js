@@ -1,3 +1,4 @@
+/* eslint-disable guard-for-in */
 import { EventEmitter } from '../../Utilities/index'
 
 /** Class representing GL material geom item sets.
@@ -12,7 +13,7 @@ class GLMaterialGeomItemSets extends EventEmitter {
     super()
     this.pass = pass
     this.glMaterial = glMaterial
-    this.glGeomItemSets = []
+    this.glGeomItemSets = {}
     this.drawCount = 0
     this.visibleInGeomDataBuffer = glMaterial.getMaterial().visibleInGeomDataBuffer
     this.__drawCountChanged = this.__drawCountChanged.bind(this)
@@ -44,7 +45,8 @@ class GLMaterialGeomItemSets extends EventEmitter {
    * @private
    */
   addGLGeomItem(glGeomItem, glGeom) {
-    let geomItemSet = this.findGeomItemSet(glGeom)
+    const id = glGeom.getGeom().getId()
+    let geomItemSet = this.glGeomItemSets[id]
     if (!geomItemSet) {
       geomItemSet = new GLGeomItemSet(this.__gl, glGeom)
       this.addGeomItemSet(geomItemSet)
@@ -68,7 +70,8 @@ class GLMaterialGeomItemSets extends EventEmitter {
   __materialChanged() {
     const material = this.glMaterial.getMaterial()
     if (!this.pass.checkMaterial(material)) {
-      for (const glGeomItemSet of this.glGeomItemSets) {
+      for (const key in this.glGeomItemSets) {
+        const glGeomItemSet = this.glGeomItemSets[key]
         for (const glGeomItem of glGeomItemSet.glGeomItems) {
           const geomItem = glGeomItem.geomItem
           this.pass.removeGeomItem(geomItem)
@@ -80,17 +83,17 @@ class GLMaterialGeomItemSets extends EventEmitter {
 
   /**
    * The addGeomItemSet method.
-   * @param {any} geomItemSet - The geomItemSet value.
+   * @param {any} glGeomItemSet - The glGeomItemSet value.
    */
-  addGeomItemSet(geomItemSet) {
-    this.glGeomItemSets.push(geomItemSet)
-    geomItemSet.on('drawCountChanged', this.__drawCountChanged)
-    geomItemSet.on('destructing', () => {
-      geomItemSet.off('drawCountChanged', this.__drawCountChanged)
+  addGeomItemSet(glGeomItemSet) {
+    const id = glGeomItemSet.getGLGeom().getGeom().getId()
+    this.glGeomItemSets[id] = glGeomItemSet
+    glGeomItemSet.on('drawCountChanged', this.__drawCountChanged)
+    glGeomItemSet.on('destructing', () => {
+      glGeomItemSet.off('drawCountChanged', this.__drawCountChanged)
 
-      const index = this.glGeomItemSets.indexOf(geomItemSet)
-      this.glGeomItemSets.splice(index, 1)
-      if (this.glGeomItemSets.length == 0) {
+      delete this.glGeomItemSets[id]
+      if (Object.keys(this.glGeomItemSets).length == 0) {
         // Remove the listeners.
         const material = this.glMaterial.getMaterial()
         const baseColorParam = material.getParameter('BaseColor')
@@ -105,28 +108,6 @@ class GLMaterialGeomItemSets extends EventEmitter {
         this.emit('destructing')
       }
     })
-  }
-
-  /**
-   * The removeGeomItemSet method.
-   * @param {any} geomItemSet - The geomItemSet value.
-   */
-  removeGeomItemSet(geomItemSet) {
-    const index = this.glGeomItemSets.indexOf(geomItemSet)
-    this.glGeomItemSets.splice(index, 1)
-    geomItemSet.off('drawCountChanged', this.__drawCountChanged)
-  }
-
-  /**
-   * Finds a GeomItemSet using a glGeom
-   * @param {any} glGeom - The glGeom value.
-   * @return {any} - The return value.
-   */
-  findGeomItemSet(glGeom) {
-    for (const geomItemSet of this.glGeomItemSets) {
-      if (geomItemSet.getGLGeom() == glGeom) return geomItemSet
-    }
-    return null
   }
 
   /**

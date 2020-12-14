@@ -1,6 +1,7 @@
 import { EventEmitter } from '../../Utilities/index'
 
 import '../../SceneTree/GeomItem.js'
+import { GeomItem } from '../../SceneTree/GeomItem.js'
 
 const GLGeomItemChangeType = {
   GEOMITEM_CHANGED: 0,
@@ -15,16 +16,16 @@ const GLGeomItemChangeType = {
 class GLGeomItem extends EventEmitter {
   /**
    * Create a GL geom item.
-   * @param {any} gl - The gl value.
-   * @param {any} geomItem - The geomItem value.
-   * @param {any} id - The id value.
-   * @param {number} flags - The flags value.
+   * @param {WebGLContextAttributes} gl - The gl value.
+   * @param {GeomItem} geomItem - The geomItem value.
+   * @param {number} drawItemId - The drawItemId value.
+   * @param {boolean} supportInstancing - a boolean to disable instancing support on some mobile platforms
    */
-  constructor(gl, geomItem, id, supportInstancing = false) {
+  constructor(gl, geomItem, drawItemId, supportInstancing = false) {
     super()
     this.gl = gl
     this.geomItem = geomItem
-    this.id = id
+    this.drawItemId = drawItemId
     this.supportInstancing = supportInstancing
     this.visible = this.geomItem.isVisible()
     this.culled = false
@@ -109,8 +110,8 @@ class GLGeomItem extends EventEmitter {
    * The getId method.
    * @return {any} - The return value.
    */
-  getId() {
-    return this.id
+  getDrawItemId() {
+    return this.drawItemId
   }
 
   /**
@@ -171,7 +172,7 @@ class GLGeomItem extends EventEmitter {
 
     const unif = unifs.transformIndex
     if (unif) {
-      gl.uniform1i(unif.location, this.id)
+      gl.uniform1i(unif.location, this.drawItemId)
     }
     return true
   }
