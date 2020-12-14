@@ -21,6 +21,8 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
     // Structured like so for efficient render traversial.
     // {GLShaders}[GLMaterials][GLGeoms][GLGeomItems]
     this.__glshadermaterials = {}
+
+    this.__glShaderGeomSets = {}
   }
 
   /**
@@ -86,6 +88,21 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
    * @return {boolean} - The return value.
    */
   addGeomItem(geomItem) {
+    if (true) {
+      const materialParam = geomItem.getParameter('Material')
+      const material = materialParam.getValue()
+      const shaderName = material.getShaderName()
+
+      let glShaderGeomSets = this.__glShaderGeomSets[shaderName]
+      if (!GLShaderGeomSets) {
+        const shaders = this.constructShaders(shaderName)
+        glShaderGeomSets = new GLShaderGeomSets(shaders)
+      }
+
+      const glGeomItem = this.constructGLGeomItem(geomItem)
+      glShaderGeomSets.addGLGeomItem(glGeomItem)
+      return
+    }
     const glgeom = this.constructGLGeom(geomItem.getParameter('Geometry').getValue())
 
     const glGeomItem = this.constructGLGeomItem(geomItem)

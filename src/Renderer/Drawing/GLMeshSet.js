@@ -120,21 +120,22 @@ class GLMeshSet extends GLGeomSet {
 
   /**
    * Draw an item to screen.
+   * @param {Array} - instanceCounts the instance counts for this draw call.
    */
-  draw(counts, offsets, instanceCounts) {
+  multiDrawInstanced(instanceCounts) {
     // multiDrawElementsInstanced variant.
     // Assumes that the indices which have been previously uploaded to the
     // ELEMENT_ARRAY_BUFFER are to be treated as UNSIGNED_SHORT.
     this.ext.multiDrawElementsInstancedWEBGL(
       gl.TRIANGLES,
-      counts,
+      this.geomVertexCounts,
       0,
       gl.UNSIGNED_SHORT,
-      offsets,
+      this.geomVertexOffsets,
       0,
       instanceCounts,
       0,
-      counts.length
+      this.geomVertexCounts.length
     )
   }
 
