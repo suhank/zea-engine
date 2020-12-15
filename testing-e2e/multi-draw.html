@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>multi_draw - Zea Engine</title>
+
+    <link href="zea-logo.png" rel="shortcut icon" />
+
+    <link rel="stylesheet" href="styles/tachyons.min.css" />
+    <link rel="stylesheet" href="styles/main.css" />
+
+    <script src="../dist/index.umd.js"></script>
+
+    <script type="module">
+      const { GLRenderer, Scene, Vec3, Xfo, Color, Sphere, Cuboid, Material, GeomItem } = zeaEngine
+
+      const canvas = document.querySelector('#renderer')
+
+      const scene = new Scene()
+      const renderer = new GLRenderer(canvas, { hideSplash: true, webglOptions: { antialias: false } })
+      renderer.setScene(scene)
+
+      const standardMaterial = new Material('surfaces', 'SimpleSurfaceShader')
+      standardMaterial.getParameter('BaseColor').setValue(new Color(89 / 255, 182 / 255, 92 / 255))
+
+      const addShape = (name, shape, pos, material) => {
+        const geomItem = new GeomItem(name + 'Item', shape, material)
+        geomItem.getParameter('LocalXfo').setValue(new Xfo(pos))
+        scene.getRoot().addChild(geomItem)
+      }
+
+      const sphere = new Sphere(1.5, 8)
+      const cuboid = new Cuboid(1.5, 2.0, 1.0)
+
+      addShape('cuboid1', cuboid, new Vec3(2, 1, 1), standardMaterial)
+      addShape('sphere1', sphere, new Vec3(2, -1, 1), standardMaterial)
+      // addShape('sphere2', sphere, new Vec3(-2, -1, 1), standardMaterial)
+      // addShape('cuboid2', cuboid, new Vec3(-2, 1, 1), standardMaterial)
+
+      // scene.setupGrid(10.0, 10)
+      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(5, 5, 6.7), new Vec3(0, 0, 0.4))
+
+      window.postMessage('done-loading')
+
+      // {{{ Messages handler.
+      const handleMessage = (event) => {
+        const { data } = event
+
+        if (data === 'variant-01') {
+          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, -2.7), new Vec3(0, 0, 0.4))
+          renderer.frameAll()
+          renderer.once('redrawOccurred', () => {
+            window.postMessage(`done-${data}`)
+          })
+        } else if (data === 'variant-02') {
+          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-2, -2, 2.7), new Vec3(0, 0, 0.4))
+          renderer.frameAll()
+          renderer.once('redrawOccurred', () => {
+            window.postMessage(`done-${data}`)
+          })
+        }
+      }
+
+      window.addEventListener('message', handleMessage, false)
+      // }}}
+    </script>
+  </head>
+  <body>
+    <canvas class="full-size" id="renderer" />
+  </body>
+</html>

@@ -16,6 +16,7 @@ class SimpleSurfaceShader extends GLShader {
     this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader(
       'SimpleSurfaceShader.vertexShader',
       `
+#extension GL_ANGLE_multi_draw : require
 precision highp float;
 
 attribute vec3 positions;

@@ -33,8 +33,8 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
   init(renderer, passIndex) {
     super.init(renderer, passIndex)
 
-    // const ext = this.__gl.getExtension('WEBGL_multi_draw')
-    // if (ext) this.__gl.multiDrawElementsInstanced = ext.multiDrawElementsInstancedWEBGL.bind(ext)
+    const ext = this.__gl.getExtension('WEBGL_multi_draw')
+    if (ext) this.__gl.multiDrawElementsInstanced = ext.multiDrawElementsInstancedWEBGL.bind(ext)
   }
 
   // ///////////////////////////////////

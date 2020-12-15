@@ -1,6 +1,7 @@
-import { GLGeomSet } from './GLGeomSet.js'
+import { GLGeomSet, resizeIntArray } from './GLGeomSet.js'
 import '../../SceneTree/Geometry/Mesh.js'
 import { Allocator1D } from '../../Utilities/Allocator1D.js'
+import { generateShaderGeomBinding } from './GeomShaderBinding.js'
 
 /** Class representing a GL mesh.
  * @extends GLGeom
@@ -16,8 +17,8 @@ class GLMeshSet extends GLGeomSet {
     super(gl, shaderAttrSpec)
 
     this.indicesAllocator = new Allocator1D()
-    this.geomVertexIndicesCounts = []
-    this.geomVertexIndicesOffsets = []
+    this.indicesCounts = new Int32Array(0)
+    this.indicesOffsets = new Int32Array(0)
 
     this.numIndices = 0
 
@@ -40,8 +41,10 @@ class GLMeshSet extends GLGeomSet {
    */
   addGeom(geom) {
     const index = super.addGeom(geom)
-    this.geomVertexIndicesCounts[index] = 0
-    this.geomVertexIndicesOffsets[index] = 0
+    this.indicesCounts = resizeIntArray(this.indicesCounts, this.indicesCounts.length + 1)
+    this.indicesOffsets = resizeIntArray(this.indicesOffsets, this.indicesOffsets.length + 1)
+    this.indicesCounts[index] = 0
+    this.indicesOffsets[index] = 0
     return index
   }
 
@@ -56,10 +59,10 @@ class GLMeshSet extends GLGeomSet {
 
     const geomBuffers = this.geomBuffersTmp[index]
     const numIndices = geomBuffers.indices.length
-    if (this.geomVertexIndicesCounts[index] != numIndices) {
+    if (this.indicesCounts[index] != numIndices) {
       const allocation = this.indicesAllocator.allocate(index, numIndices)
-      this.geomVertexIndicesOffsets[index] = allocation.start
-      this.geomVertexIndicesCounts[index] = allocation.size
+      this.indicesOffsets[index] = allocation.start
+      this.indicesCounts[index] = allocation.size
     }
   }
 
@@ -105,16 +108,16 @@ class GLMeshSet extends GLGeomSet {
 
     const attributesAllocation = this.attributesAllocator.allocations[index]
     // The indices need to be offset so they they index the new attributes array.
-    const offsetIndices = new Uint16Array(allocation.size)
+    const offsettedIndices = new Uint16Array(allocation.size)
     for (let i = 0; i < indices.length; i++) {
-      offsetIndices[i] = geomBuffers.indices[i] + attributesAllocation.start
+      offsettedIndices[i] = geomBuffers.indices[i] + attributesAllocation.start
     }
 
     const gl = this.__gl
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexBuffer)
     const elementSize = 2 //  Uint16Array
     const dstByteOffsetInBytes = allocation.start * elementSize
-    gl.bufferSubData(gl.ELEMENT_ARRAY_BUFFER, dstByteOffsetInBytes, offsetIndices, allocation.start)
+    gl.bufferSubData(gl.ELEMENT_ARRAY_BUFFER, dstByteOffsetInBytes, offsettedIndices, 0)
   }
 
   /**
@@ -126,6 +129,24 @@ class GLMeshSet extends GLGeomSet {
     this.indexBuffer = null
 
     super.clearBuffers()
+  }
+
+  /**
+   * The bindGeomBuffers method.
+   * @param {object} renderstate - The renderstate value.
+   */
+  bindGeomBuffers(renderstate) {
+    if (this.dirtyGeomIndices.length > 0) {
+      this.cleanGeomBuffers()
+    }
+
+    let shaderBinding = this.shaderBindings[renderstate.shaderkey]
+    if (!shaderBinding) {
+      const gl = this.__gl
+      shaderBinding = generateShaderGeomBinding(gl, renderstate.attrs, this.glattrbuffers, this.indexBuffer)
+      this.shaderBindings[renderstate.shaderkey] = shaderBinding
+    }
+    shaderBinding.bind(renderstate)
   }
 
   // ////////////////////////////////
@@ -142,14 +163,14 @@ class GLMeshSet extends GLGeomSet {
     const gl = this.__gl
     gl.multiDrawElementsInstanced(
       gl.TRIANGLES,
-      this.geomVertexCounts,
+      this.indicesCounts,
       0,
       gl.UNSIGNED_SHORT,
-      this.geomVertexOffsets,
+      this.indicesOffsets,
       0,
       instanceCounts,
       0,
-      this.geomVertexCounts.length
+      instanceCounts.length
     )
   }
 

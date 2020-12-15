@@ -1,6 +1,13 @@
 import { EventEmitter } from '../../Utilities/index'
 import { Allocator1D } from '../../Utilities/Allocator1D.js'
 import { GLGeomItemSet } from './GLGeomItemSet.js'
+import { generateShaderGeomBinding } from './GeomShaderBinding.js'
+
+const resizeIntArray = (intArray, newSize) => {
+  const newArray = new Int32Array(newSize)
+  newArray.set(intArray)
+  return newArray
+}
 
 /** Class representing a GL geom.
  * @private
@@ -42,14 +49,14 @@ class GLGeomSet extends EventEmitter {
       this.geomVertexCounts[id] = allocation.size
     })
 
-    this.geomVertexCounts = []
-    this.geomVertexOffsets = []
+    this.geomVertexCounts = new Int32Array(0)
+    this.geomVertexOffsets = new Int32Array(0)
 
     this.glGeomItemSets = []
     this.drawCount = 0
     this.highlightedCount = 0
-    this.instanceCountsDraw = []
-    this.instanceCountsHighlight = []
+    this.instanceCountsDraw = new Int32Array(0)
+    this.instanceCountsHighlight = new Int32Array(0)
 
     this.drawIdsArray = null
     this.drawIdsBuffer = null
@@ -84,6 +91,10 @@ class GLGeomSet extends EventEmitter {
       geomDataTopologyChanged,
     })
     this.dirtyGeomIndices.push(index)
+
+    this.geomVertexCounts = resizeIntArray(this.geomVertexCounts, this.geomVertexCounts.length + 1)
+    this.geomVertexOffsets = resizeIntArray(this.geomVertexOffsets, this.geomVertexOffsets.length + 1)
+
     this.geomVertexCounts[index] = 0
     this.geomVertexOffsets[index] = 0
     return index
@@ -118,13 +129,13 @@ class GLGeomSet extends EventEmitter {
 
   /**
    * The addGeomItemSet method.
-   * @param {number} index - The index of the geomm in the geomset to build the GeomITemSet for.
+   * @param {number} index - The index for the new glGeomItemSet
    */
   addGeomItemSet(index) {
     const glGeomItemSet = new GLGeomItemSet()
     this.glGeomItemSets[index] = glGeomItemSet
-    this.instanceCountsDraw[index] = 0
-    this.instanceCountsHighlight[index] = 0
+    this.instanceCountsDraw = resizeIntArray(this.instanceCountsDraw, this.instanceCountsDraw.length + 1)
+    this.instanceCountsHighlight = resizeIntArray(this.instanceCountsHighlight, this.instanceCountsHighlight.length + 1)
     const drawCountChanged = (event) => {
       this.instanceCountsDraw[index] += event.count
       this.drawCount += event.count
@@ -161,7 +172,6 @@ class GLGeomSet extends EventEmitter {
     glGeomItemSet.on('drawCountChanged', drawCountChanged)
     glGeomItemSet.on('highlightCountChanged', highlightCountChanged)
     glGeomItemSet.on('destructing', destructing)
-    return glGeomItemSet
   }
 
   /**
@@ -173,7 +183,7 @@ class GLGeomSet extends EventEmitter {
 
     let index
     if (geom.hasMetadata('glgeomset_index')) {
-      index = geom.setMetadata('glgeomset_index', index)
+      index = geom.getMetadata('glgeomset_index')
     } else {
       index = this.addGeom(geom)
       geom.setMetadata('glgeomset_index', index)
@@ -385,15 +395,31 @@ class GLGeomSet extends EventEmitter {
   // Binding
 
   /**
-   * The bind method.
-   * @param {any} renderstate - The renderstate value.
-   * @return {any} - The return value.
+   * The bindGeomBuffers method.
+   * @param {object} renderstate - The renderstate value.
    */
-  bindDrawIds(renderstate, drawIdsBuffer) {
+  bindGeomBuffers(renderstate) {
     if (this.dirtyGeomIndices.length > 0) {
       this.cleanGeomBuffers()
     }
+
+    let shaderBinding = this.shaderBindings[renderstate.shaderkey]
+    if (!shaderBinding) {
+      const gl = this.__gl
+      shaderBinding = generateShaderGeomBinding(gl, renderstate.attrs, this.glattrbuffers)
+      this.shaderBindings[renderstate.shaderkey] = shaderBinding
+    }
+    shaderBinding.bind(renderstate)
+  }
+
+  /**
+   * The bindDrawIds method.
+   * @param {object} renderstate - The renderstate value.
+   * @param {WebGLBuffer} drawIdsBuffer - The renderstate value.
+   */
+  bindDrawIds(renderstate, drawIdsBuffer) {
     const gl = this.__gl
+
     // Specify an instanced draw to the shader so it knows how
     // to retrieve the modelmatrix.
     gl.uniform1i(renderstate.unifs.instancedDraw.location, 1)
@@ -404,8 +430,6 @@ class GLGeomSet extends EventEmitter {
     gl.bindBuffer(gl.ARRAY_BUFFER, drawIdsBuffer)
     gl.vertexAttribPointer(location, 1, gl.FLOAT, false, 1 * 4, 0)
     gl.vertexAttribDivisor(location, 1) // This makes it instanced
-
-    return true
   }
 
   /**
@@ -431,6 +455,7 @@ class GLGeomSet extends EventEmitter {
    * The draw method.
    */
   draw(renderstate) {
+    this.bindGeomBuffers(renderstate)
     if (this.drawIdsBufferDirty) {
       this.updateDrawIDsBuffer()
     }
@@ -443,6 +468,7 @@ class GLGeomSet extends EventEmitter {
    * @param {any} renderstate - The renderstate value.
    */
   drawHighlightedGeoms(renderstate) {
+    this.bindGeomBuffers(renderstate)
     if (this.highlightedIdsBufferDirty) {
       this.updateDrawIDsBuffer()
     }
@@ -455,6 +481,7 @@ class GLGeomSet extends EventEmitter {
    * @param {any} renderstate - The renderstate value.
    */
   drawGeomData(renderstate) {
+    this.bindGeomBuffers(renderstate)
     if (this.drawIdsBufferDirty) {
       this.updateDrawIDsBuffer()
     }
@@ -499,4 +526,4 @@ class GLGeomSet extends EventEmitter {
   }
 }
 
-export { GLGeomSet }
+export { GLGeomSet, resizeIntArray }
