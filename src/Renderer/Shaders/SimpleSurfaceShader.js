@@ -50,7 +50,11 @@ void main(void) {
     v_geomItemData  = getInstanceData(drawItemId);
 
     vec4 pos = vec4(positions, 1.);
-    mat4 modelMatrix = getModelMatrix(drawItemId);
+    mat4 modelMatrix = mat4(1.0);//getModelMatrix(drawItemId);
+    modelMatrix[3][0] = float(gl_DrawID) * 4.0;
+    modelMatrix[3][1] = float(gl_InstanceID) * 4.0;
+
+    
     mat4 modelViewMatrix = viewMatrix * modelMatrix;
     vec4 viewPos    = modelViewMatrix * pos;
     gl_Position     = projectionMatrix * viewPos;

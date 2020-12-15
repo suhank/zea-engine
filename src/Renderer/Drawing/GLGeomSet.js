@@ -127,6 +127,21 @@ class GLGeomSet extends EventEmitter {
     return this.geoms[index].geom
   }
 
+  // drawCountChanged(geomIndex, event) {
+  //   const prevCount = this.instanceCountsDraw.length
+  //   this.instanceCountsDraw = resizeIntArray(this.instanceCountsDraw, prevCount + event.count)
+  //   for (let i = 0; i < event.count; i++) {
+  //     this.instanceCountsDraw[prevCount + i] = 1
+  //   }
+  //   this.drawCount += event.count
+  //   this.drawIdsBufferDirty = true
+  // }
+  // highlightCountChanged(geomIndex, event) {
+  //   // this.instanceCountsHighlight[geomIndex] += event.count
+  //   // this.highlightedCount += event.count
+  //   // this.highlightedIdsBufferDirty = true
+  // }
+
   /**
    * The addGeomItemSet method.
    * @param {number} index - The index for the new glGeomItemSet
@@ -137,11 +152,13 @@ class GLGeomSet extends EventEmitter {
     this.instanceCountsDraw = resizeIntArray(this.instanceCountsDraw, this.instanceCountsDraw.length + 1)
     this.instanceCountsHighlight = resizeIntArray(this.instanceCountsHighlight, this.instanceCountsHighlight.length + 1)
     const drawCountChanged = (event) => {
+      // this.drawCountChanged(index, event)
       this.instanceCountsDraw[index] += event.count
       this.drawCount += event.count
       this.drawIdsBufferDirty = true
     }
     const highlightCountChanged = (event) => {
+      // this.highlightCountChanged(index, event)
       this.instanceCountsHighlight[index] += event.count
       this.highlightedCount += event.count
       this.highlightedIdsBufferDirty = true
@@ -268,6 +285,7 @@ class GLGeomSet extends EventEmitter {
           dataType: attrSpec.dataType,
           normalized: attrSpec.normalized,
           length: numValues,
+          dimension: attrSpec.dimension,
         }
 
         if (attrName == 'textureCoords') this.glattrbuffers['texCoords'] = this.glattrbuffers['textureCoords']
@@ -293,9 +311,11 @@ class GLGeomSet extends EventEmitter {
     // eslint-disable-next-line guard-for-in
     for (const attrName in geomBuffers.attrBuffers) {
       const attrData = geomBuffers.attrBuffers[attrName]
+      const glattrbuffer = this.glattrbuffers[attrName]
 
-      gl.bindBuffer(gl.ARRAY_BUFFER, this.glattrbuffers[attrName].buffer)
-      const dstByteOffsetInBytes = this.geomVertexOffsets[index] * 4
+      gl.bindBuffer(gl.ARRAY_BUFFER, glattrbuffer.buffer)
+      const elementSize = 4 // assuming floats for now. (We also need to support RGB Byte values.)
+      const dstByteOffsetInBytes = this.geomVertexOffsets[index] * elementSize * glattrbuffer.dimension
       gl.bufferSubData(gl.ARRAY_BUFFER, dstByteOffsetInBytes, attrData.values, 0)
     }
   }
@@ -449,7 +469,7 @@ class GLGeomSet extends EventEmitter {
   // Drawing
   // Draw an item to screen.
 
-  multiDrawInstanced(renderstate) {}
+  multiDrawInstanced(instanceCounts, drawCount) {}
 
   /**
    * The draw method.
@@ -460,7 +480,7 @@ class GLGeomSet extends EventEmitter {
       this.updateDrawIDsBuffer()
     }
     this.bindDrawIds(renderstate, this.drawIdsBuffer)
-    this.multiDrawInstanced(this.instanceCountsDraw)
+    this.multiDrawInstanced(this.instanceCountsDraw, this.drawCount)
   }
 
   /**
@@ -473,7 +493,7 @@ class GLGeomSet extends EventEmitter {
       this.updateDrawIDsBuffer()
     }
     this.bindDrawIds(renderstate, this.highlightedIdsBuffer)
-    this.multiDrawInstanced(this.instanceCountsHighlight)
+    this.multiDrawInstanced(this.instanceCountsHighlight, this.highlightedCount)
   }
 
   /**
@@ -486,7 +506,7 @@ class GLGeomSet extends EventEmitter {
       this.updateDrawIDsBuffer()
     }
     this.bindDrawIds(renderstate, this.drawIdsBuffer)
-    this.multiDrawInstanced(this.instanceCountsDraw)
+    this.multiDrawInstanced(this.instanceCountsDraw, this.drawCount)
   }
 
   /**

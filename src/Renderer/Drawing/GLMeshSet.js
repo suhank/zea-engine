@@ -20,6 +20,10 @@ class GLMeshSet extends GLGeomSet {
     this.indicesCounts = new Int32Array(0)
     this.indicesOffsets = new Int32Array(0)
 
+    this.indicesCountsDraw = new Int32Array(0)
+    this.indicesOffsetsDraw = new Int32Array(0)
+    this.drawGeomIds = []
+
     this.numIndices = 0
 
     this.indicesAllocator.on('resize', () => {
@@ -48,6 +52,22 @@ class GLMeshSet extends GLGeomSet {
     return index
   }
 
+  // drawCountChanged(geomIndex, event) {
+  //   const prevCount = this.indicesCounts.length
+
+  //   this.drawGeomIds
+  //   for (let i = 0; i < event.count; i++) {
+  //     this.drawGeomIds[prevCount + i] = this.indicesCounts[geomIndex]
+  //   }
+  //   // this.indicesCountsDraw = resizeIntArray(this.indicesCountsDraw, prevCount + event.count)
+  //   // this.indicesOffsetsDraw = resizeIntArray(this.indicesOffsetsDraw, prevCount + event.count)
+  //   // for (let i = 0; i < event.count; i++) {
+  //   //   this.indicesCountsDraw[prevCount + i] = this.indicesCounts[geomIndex]
+  //   //   this.indicesOffsetsDraw[prevCount + i] = this.indicesOffsets[geomIndex]
+  //   // }
+  // }
+  // highlightCountChanged(geomIndex, event) {}
+
   // /////////////////////////////////////
   // Buffers
   /**
@@ -61,7 +81,8 @@ class GLMeshSet extends GLGeomSet {
     const numIndices = geomBuffers.indices.length
     if (this.indicesCounts[index] != numIndices) {
       const allocation = this.indicesAllocator.allocate(index, numIndices)
-      this.indicesOffsets[index] = allocation.start
+      const elementSize = 2 //  Uint16Array for UNSIGNED_SHORT
+      this.indicesOffsets[index] = allocation.start * elementSize // offset is in bytes
       this.indicesCounts[index] = allocation.size
     }
   }
@@ -156,11 +177,12 @@ class GLMeshSet extends GLGeomSet {
    * Draw an item to screen.
    * @param {Array} - instanceCounts the instance counts for this draw call.
    */
-  multiDrawInstanced(instanceCounts) {
+  multiDrawInstanced(instanceCounts, drawCount) {
     // multiDrawElementsInstanced variant.
     // Assumes that the indices which have been previously uploaded to the
     // ELEMENT_ARRAY_BUFFER are to be treated as UNSIGNED_SHORT.
     const gl = this.__gl
+    // const numTriangles = this.numIndices / 3
     gl.multiDrawElementsInstanced(
       gl.TRIANGLES,
       this.indicesCounts,
@@ -173,6 +195,18 @@ class GLMeshSet extends GLGeomSet {
       instanceCounts.length
     )
   }
+
+  /**
+   * Draw an item to screen.
+   * @param {Array} - instanceCounts the instance counts for this draw call.
+  //  */
+  // multiDraw(counts, offsets) {
+  //   // multiDrawElementsInstanced variant.
+  //   // Assumes that the indices which have been previously uploaded to the
+  //   // ELEMENT_ARRAY_BUFFER are to be treated as UNSIGNED_SHORT.
+  //   const gl = this.__gl
+  //   gl.multiDrawElementsWEBGL(gl.TRIANGLES, counts, 0, gl.UNSIGNED_SHORT, offsets, 0, counts.length)
+  // }
 
   /**
    * The destroy is called by the system to cause explicit resources cleanup.

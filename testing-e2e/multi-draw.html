@@ -14,7 +14,7 @@
     <script src="../dist/index.umd.js"></script>
 
     <script type="module">
-      const { GLRenderer, Scene, Vec3, Xfo, Color, Sphere, Cuboid, Material, GeomItem } = zeaEngine
+      const { GLRenderer, Scene, Vec3, Xfo, Color, Mesh, Sphere, Cuboid, Cone, Material, GeomItem } = zeaEngine
 
       const canvas = document.querySelector('#renderer')
 
@@ -30,14 +30,32 @@
         geomItem.getParameter('LocalXfo').setValue(new Xfo(pos))
         scene.getRoot().addChild(geomItem)
       }
+      const makeTriangle = () => {
+        const mesh = new Mesh()
+        mesh.setNumVertices(3)
+        mesh.setFaceCounts([1])
+        mesh.setFaceVertexIndices(0, [0, 1, 2])
+        const positions = mesh.getVertexAttribute('positions')
+        positions.getValueRef(0).set(0.5, 0.0, 0.0)
+        positions.getValueRef(1).set(0.0, 0.5, 0.0)
+        positions.getValueRef(2).set(-0.5, 0.0, 0.0)
+        return mesh
+      }
 
-      const sphere = new Sphere(1.5, 8)
+      const sphere = new Sphere(0.5, 8)
       const cuboid = new Cuboid(1.5, 2.0, 1.0)
+      const cone = new Cone(1.5, 2.0, 32)
 
+      // addShape('tri1', makeTriangle(), new Vec3(-1, 1, 1), standardMaterial)
+      // addShape('tri2', makeTriangle(), new Vec3(1, 1, 1), standardMaterial)
+      addShape('sphere2', sphere, new Vec3(-2, -1, 1), standardMaterial)
+      addShape('cuboid2', cuboid, new Vec3(-2, 1, 1), standardMaterial)
+      addShape('sphere3', sphere, new Vec3(-2, -1, 1), standardMaterial)
+      addShape('sphere4', sphere, new Vec3(-2, -1, 1), standardMaterial)
+      addShape('cone1', cone, new Vec3(-2, -1, 1), standardMaterial)
+      addShape('cone2', cone, new Vec3(-2, -1, 1), standardMaterial)
+      addShape('sphere1', sphere, new Vec3(-2, -1, 1), standardMaterial)
       addShape('cuboid1', cuboid, new Vec3(2, 1, 1), standardMaterial)
-      addShape('sphere1', sphere, new Vec3(2, -1, 1), standardMaterial)
-      // addShape('sphere2', sphere, new Vec3(-2, -1, 1), standardMaterial)
-      // addShape('cuboid2', cuboid, new Vec3(-2, 1, 1), standardMaterial)
 
       // scene.setupGrid(10.0, 10)
       renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(5, 5, 6.7), new Vec3(0, 0, 0.4))
