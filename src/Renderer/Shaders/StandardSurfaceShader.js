@@ -125,6 +125,8 @@ uniform float exposure;
 
 uniform mat4 cameraMatrix;
 
+#ifndef ENABLE_MULTI_DRAW
+
 uniform color BaseColor;
 uniform float Roughness;
 uniform float Metallic;
@@ -149,13 +151,14 @@ uniform int ReflectanceTexType;
 uniform sampler2D NormalTex;
 uniform int NormalTexType;
 // uniform float NormalScale;
-#endif
+#endif // ENABLE_PBR
 
 uniform sampler2D EmissiveStrengthTex;
 uniform int EmissiveStrengthTexType;
 
 
-#endif
+#endif // ENABLE_TEXTURES
+#endif // ENABLE_MULTI_DRAW
 
 #ifdef ENABLE_ES3
 out vec4 fragColor;
@@ -188,9 +191,32 @@ void main(void) {
 
     MaterialParams material;
 
+#ifdef ENABLE_MULTI_DRAW
+    vec2 materialCoords = v_geomItemData.zw;
+    vec4 matValue0      = getMaterialValue(materialCoords, 0);
+    vec4 matValue1      = getMaterialValue(materialCoords, 1);
+    vec4 matValue2      = getMaterialValue(materialCoords, 2);
+
+    material.BaseColor = matValue0;
+    material.roughness     = matValue1.r;
+    material.metallic      = matValue1.g;
+    material.reflectance   = matValue1.b;
+
+    float opacity       = baseColor.a * matValue1.r;
+    float emission      = matValue1.a;
+
+    matData[4] = material.getParameter('Metallic').getValue()
+    matData[5] = material.getParameter('Roughness').getValue()
+    matData[6] = material.getParameter('Reflectance').getValue()
+    matData[7] = material.getParameter('EmissiveStrength').getValue()
+    float opacity = matValue2.r * BaseColor.a;
+
+#else // ENABLE_MULTI_DRAW
+
 #ifndef ENABLE_TEXTURES
     material.BaseColor     = BaseColor.rgb;
     float emission         = EmissiveStrength;
+    float opacity           = Opacity * BaseColor.a;
 
 #ifdef ENABLE_PBR
     material.roughness     = Roughness;
@@ -208,9 +234,9 @@ void main(void) {
     material.roughness     = getLuminanceParamValue(Roughness, RoughnessTex, RoughnessTexType, texCoord);
     material.metallic      = getLuminanceParamValue(Metallic, MetallicTex, MetallicTexType, texCoord);
     material.reflectance   = getLuminanceParamValue(Reflectance, ReflectanceTex, ReflectanceTexType, texCoord);
-#endif
+#endif // ENABLE_PBR
     float emission         = getLuminanceParamValue(EmissiveStrength, EmissiveStrengthTex, EmissiveStrengthTexType, texCoord);
-#endif
+#endif // ENABLE_TEXTURES
 
     vec3 viewNormal = normalize(v_viewNormal);
     //vec3 surfacePos = -v_viewPos;
@@ -221,8 +247,9 @@ void main(void) {
         vec3 textureNormal_tangentspace = normalize(texture2D(NormalTex, texCoord).rgb * 2.0 - 1.0);
         viewNormal = normalize(mix(viewNormal, textureNormal_tangentspace, 0.3));
     }
-#endif
-#endif
+#endif // ENABLE_PBR
+#endif // ENABLE_TEXTURES
+#endif // ENABLE_MULTI_DRAW
 
     vec3 viewVector = normalize(mat3(cameraMatrix) * normalize(v_viewPos));
     vec3 normal = normalize(mat3(cameraMatrix) * viewNormal);
@@ -241,7 +268,6 @@ void main(void) {
     bool headLightMode = testFlag(envMapFlags, ENVMAP_FLAG_HEADLIGHT);
 #endif
 
-    float opacity = Opacity * BaseColor.a;
     if (opacity < 1.0) {
         vec3 radiance;
 #ifdef ENABLE_PBR
@@ -318,6 +344,26 @@ void main(void) {
 
     // paramDescs.push({ name: 'TexCoordScale', defaultValue: 1.0, texturable: false });
     return paramDescs
+  }
+
+  /**
+   * The getPackedMaterialData method.
+   * @param {any} material - The material param.
+   * @return {any} - The return value.
+   */
+  static getPackedMaterialData(material) {
+    const matData = new Float32Array(12)
+    const baseColor = material.getParameter('BaseColor').getValue()
+    matData[0] = baseColor.r
+    matData[1] = baseColor.g
+    matData[2] = baseColor.b
+    matData[3] = baseColor.a
+    matData[4] = material.getParameter('Metallic').getValue()
+    matData[5] = material.getParameter('Roughness').getValue()
+    matData[6] = material.getParameter('Reflectance').getValue()
+    matData[7] = material.getParameter('EmissiveStrength').getValue()
+    matData[8] = material.getParameter('Opacity').getValue()
+    return matData
   }
 
   static getGeomDataShaderName() {

@@ -22,10 +22,10 @@
       const renderer = new GLRenderer(canvas, { hideSplash: true, webglOptions: { antialias: false } })
       renderer.setScene(scene)
 
-      const standardMaterial1 = new Material('surfaces', 'SimpleSurfaceShader')
+      const standardMaterial1 = new Material('surfaces', 'StandardSurfaceShader')
       standardMaterial1.getParameter('BaseColor').setValue(new Color(1, 1, 0))
 
-      const standardMaterial2 = new Material('surfaces', 'SimpleSurfaceShader')
+      const standardMaterial2 = new Material('surfaces', 'StandardSurfaceShader')
       standardMaterial2.getParameter('BaseColor').setValue(new Color(0, 1, 0))
 
       const addShape = (name, shape, pos, material) => {
