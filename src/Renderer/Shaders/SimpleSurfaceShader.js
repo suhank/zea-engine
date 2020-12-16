@@ -9,9 +9,15 @@ import './GLSL/drawItemTexture.js'
 import './GLSL/modelMatrix.js'
 import './GLSL/materialparams.js'
 
+/** A simple shader with no support for PBR or textures
+ * @ignore
+ */
 class SimpleSurfaceShader extends GLShader {
-  constructor(name) {
-    super(name)
+  /**
+   * Create a SimpleSurfaceShader
+   */
+  constructor(gl) {
+    super(gl)
 
     this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader(
       'SimpleSurfaceShader.vertexShader',
@@ -76,6 +82,7 @@ void main(void) {
     this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader(
       'SimpleSurfaceShader.fragmentShader',
       `
+#define ENABLE_MULTI_DRAW 1
 precision highp float;
 
 <%include file="math/constants.glsl"/>
@@ -113,6 +120,8 @@ varying vec3 v_worldPos;
 
 uniform mat4 cameraMatrix;
 
+#ifndef ENABLE_MULTI_DRAW
+
 uniform color BaseColor;
 uniform float Opacity;
 uniform float EmissiveStrength;
@@ -124,7 +133,9 @@ uniform sampler2D OpacityTex;
 uniform int OpacityTexType;
 uniform sampler2D EmissiveStrengthTex;
 uniform int EmissiveStrengthTexType;
-#endif
+#endif // ENABLE_TEXTURES
+
+#endif // ENABLE_MULTI_DRAW
 
 
 #ifdef ENABLE_ES3
@@ -154,6 +165,20 @@ void main(void) {
             return;
         }
     }
+    
+
+    //////////////////////////////////////////////
+    // Material
+
+#ifdef ENABLE_MULTI_DRAW
+
+    vec2 materialCoords = v_geomItemData.zw;
+    vec4 baseColor = getMaterialValue(materialCoords, 0);
+    vec4 matValue1 = getMaterialValue(materialCoords, 1);
+    float opacity       = baseColor.a * matValue1.r;
+    float emission      = matValue1.g;
+
+#else // ENABLE_MULTI_DRAW
 
 #ifndef ENABLE_TEXTURES
     vec4 baseColor      = BaseColor;
@@ -164,6 +189,8 @@ void main(void) {
     float opacity       = baseColor.a * getLuminanceParamValue(Opacity, OpacityTex, OpacityTexType, v_textureCoord);
     float emission      = getLuminanceParamValue(EmissiveStrength, EmissiveStrengthTex, EmissiveStrengthTexType, v_textureCoord);
 #endif
+
+#endif // ENABLE_MULTI_DRAW
 
     // Hacky simple irradiance. 
     vec3 viewVector = normalize(mat3(cameraMatrix) * normalize(v_viewPos));
@@ -209,6 +236,23 @@ void main(void) {
       range: [0, 1],
     })
     return paramDescs
+  }
+
+  /**
+   * The getPackedMaterialData method.
+   * @param {any} material - The material param.
+   * @return {any} - The return value.
+   */
+  static getPackedMaterialData(material) {
+    const matData = new Float32Array(8)
+    const baseColor = material.getParameter('BaseColor').getValue()
+    matData[0] = baseColor.r
+    matData[1] = baseColor.g
+    matData[2] = baseColor.b
+    matData[3] = baseColor.a
+    matData[4] = material.getParameter('Opacity').getValue()
+    matData[5] = material.getParameter('EmissiveStrength').getValue()
+    return matData
   }
 
   static getGeomDataShaderName() {

@@ -348,6 +348,13 @@ class GLStandardGeomsPass extends GLPass {
     const pix0 = Vec4.createFromBuffer(dataArray.buffer, (offset + 0) * 4)
     pix0.set(flags, materialId, 0, 0)
 
+    const material = geomItem.getParameter('Material').getValue()
+    const coords = material.getMetadata('glmaterialcoords')
+    if (coords) {
+      pix0.z = coords.x
+      pix0.w = coords.y
+    }
+
     // /////////////////////////
     // Geom Matrix
     const mat4 = geomItem.getGeomMat4()

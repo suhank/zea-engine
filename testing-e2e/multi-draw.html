@@ -22,8 +22,11 @@
       const renderer = new GLRenderer(canvas, { hideSplash: true, webglOptions: { antialias: false } })
       renderer.setScene(scene)
 
-      const standardMaterial = new Material('surfaces', 'SimpleSurfaceShader')
-      standardMaterial.getParameter('BaseColor').setValue(new Color(89 / 255, 182 / 255, 92 / 255))
+      const standardMaterial1 = new Material('surfaces', 'SimpleSurfaceShader')
+      standardMaterial1.getParameter('BaseColor').setValue(new Color(1, 1, 0))
+
+      const standardMaterial2 = new Material('surfaces', 'SimpleSurfaceShader')
+      standardMaterial2.getParameter('BaseColor').setValue(new Color(0, 1, 0))
 
       const addShape = (name, shape, pos, material) => {
         const geomItem = new GeomItem(name + 'Item', shape, material)
@@ -42,13 +45,13 @@
         return mesh
       }
 
-      const sphere = new Sphere(0.5, 8)
-      const cuboid = new Cuboid(1.5, 2.0, 1.0)
-      const cone = new Cone(1.5, 2.0, 32)
+      // const sphere = new Sphere(0.5, 8)
+      // const cuboid = new Cuboid(1.5, 2.0, 1.0)
+      // const cone = new Cone(1.5, 2.0, 32)
       // addShape('tri1', makeTriangle(), new Vec3(-1, 1, 1), standardMaterial)
       // addShape('tri2', makeTriangle(), new Vec3(1, 1, 1), standardMaterial)
-      // addShape('sphere2', sphere, new Vec3(-2, -1, 1), standardMaterial)
-      // addShape('cuboid2', cuboid, new Vec3(-2, 1, 1), standardMaterial)
+      // addShape('sphere2', sphere, new Vec3(-2, 1, 1), standardMaterial1)
+      // addShape('cuboid2', cuboid, new Vec3(2, 1, 1), standardMaterial2)
       // addShape('sphere3', sphere, new Vec3(-2, -1, 1), standardMaterial)
       // addShape('sphere4', sphere, new Vec3(-2, -1, 1), standardMaterial)
       // addShape('cone1', cone, new Vec3(-2, -1, 1), standardMaterial)
@@ -73,12 +76,22 @@
       //     }
       //   }
       // }
+
+      let count = 0
       for (let i = 0; i < 200; i++) {
         const cuboid = new Cuboid(1.5, 2.0, 1.0)
-        for (let ii = 0; ii < 10; ii++) {
-          addShape('cuboid' + i + '-' + ii, cuboid, new Vec3(i * 4.0, ii * 4.0, 0), standardMaterial)
+        let offset = 0
+        for (let ii = 0; ii < 3; ii++) {
+          const standardMaterial = new Material('surfaces', 'SimpleSurfaceShader')
+          standardMaterial.getParameter('BaseColor').setValue(Color.random())
+          for (let iii = 0; iii < 4; iii++) {
+            addShape('cuboid' + i + '-' + ii, cuboid, new Vec3(i * 4.0, offset * 4.0, 0), standardMaterial)
+            offset++
+          }
         }
+        count += offset
       }
+      console.log('count:', count)
 
       // scene.setupGrid(10.0, 10)
       renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-15, -15, 5), new Vec3(0, 0, 0.4))

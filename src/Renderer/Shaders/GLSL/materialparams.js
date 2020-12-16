@@ -4,6 +4,17 @@ shaderLibrary.setShaderModule(
   'materialparams.glsl',
   `
 
+#ifdef ENABLE_MULTI_DRAW
+  
+uniform sampler2D materialsTexture;
+uniform ivec2 materialsTextureSize;
+
+vec4 getMaterialValue(vec2 materialCoords, int valueIndex) {
+  return fetchTexel(materialsTexture, materialsTextureSize, ivec2(ftoi(materialCoords.x) + valueIndex, ftoi(materialCoords.y)));
+}
+
+#else // ENABLE_MULTI_DRAW
+
 ////////////////////////
 // Material Param Helpers.
 
@@ -35,5 +46,8 @@ float getLuminanceParamValue(float value, sampler2D tex, int texType, vec2 texCo
     else
         return luminanceFromRGB(texture2D(tex, texCoord).rgb);
 }
+
+
+#endif // ENABLE_MULTI_DRAW
 `
 )
