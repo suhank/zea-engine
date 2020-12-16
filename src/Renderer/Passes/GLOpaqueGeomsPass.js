@@ -32,9 +32,6 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
    */
   init(renderer, passIndex) {
     super.init(renderer, passIndex)
-
-    const ext = this.__gl.getExtension('WEBGL_multi_draw')
-    if (ext) this.__gl.multiDrawElementsInstanced = ext.multiDrawElementsInstancedWEBGL.bind(ext)
   }
 
   // ///////////////////////////////////
@@ -267,10 +264,17 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
 
     renderstate.drawItemsTexture = this.__drawItemsTexture
 
-    // eslint-disable-next-line guard-for-in
-    for (const shaderName in this.__glshadermaterials) {
-      const glshaderMaterials = this.__glshadermaterials[shaderName]
-      glshaderMaterials.drawHighlightedGeoms(renderstate)
+    if (this.__gl.multiDrawElementsInstanced) {
+      // eslint-disable-next-line guard-for-in
+      for (const shaderName in this.__glShaderGeomSets) {
+        this.__glShaderGeomSets[shaderName].drawHighlightedGeoms(renderstate)
+      }
+    } else {
+      // eslint-disable-next-line guard-for-in
+      for (const shaderName in this.__glshadermaterials) {
+        const glshaderMaterials = this.__glshadermaterials[shaderName]
+        glshaderMaterials.drawHighlightedGeoms(renderstate)
+      }
     }
 
     if (renderstate.glGeom) {
@@ -319,10 +323,17 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
     gl.depthFunc(gl.LESS)
     gl.depthMask(true)
 
-    // eslint-disable-next-line guard-for-in
-    for (const shaderName in this.__glshadermaterials) {
-      const glshaderMaterials = this.__glshadermaterials[shaderName]
-      glshaderMaterials.drawGeomData(renderstate)
+    if (this.__gl.multiDrawElementsInstanced) {
+      // eslint-disable-next-line guard-for-in
+      for (const shaderName in this.__glShaderGeomSets) {
+        this.__glShaderGeomSets[shaderName].drawGeomData(renderstate)
+      }
+    } else {
+      // eslint-disable-next-line guard-for-in
+      for (const shaderName in this.__glshadermaterials) {
+        const glshaderMaterials = this.__glshadermaterials[shaderName]
+        glshaderMaterials.drawGeomData(renderstate)
+      }
     }
 
     if (renderstate.glGeom) {

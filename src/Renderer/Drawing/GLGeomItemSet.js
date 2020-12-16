@@ -80,8 +80,10 @@ class GLGeomItemSet extends EventEmitter {
         // adding the same index again here. (TODO: use Set?)
         if (this.highlightedItems.includes(index)) return
         this.highlightedItems.push(index)
+        this.emit('highlightedCountChanged', { change: 1, count: this.highlightedItems.length })
       } else {
         this.highlightedItems.splice(this.highlightedItems.indexOf(index), 1)
+        this.emit('highlightedCountChanged', { change: -1, count: this.highlightedItems.length })
       }
       // console.log("highlightChanged:", glGeomItem.getGeomItem().getName(), glGeomItem.getGeomItem().isHighlighted(), this.highlightedItems)
       this.highlightedIdsBufferDirty = true
@@ -130,6 +132,7 @@ class GLGeomItemSet extends EventEmitter {
     const highlighted = glGeomItem.getGeomItem().isHighlighted()
     if (highlighted) {
       this.highlightedItems.splice(this.highlightedItems.indexOf(index), 1)
+      this.emit('highlightedCountChanged', { change: -1, count: this.highlightedItems.length })
     }
     this.drawIdsBufferDirty = true
     // console.log("removeGeomItem:", glGeomItem.getGeomItem().getName(), this.glGeomItems.length)

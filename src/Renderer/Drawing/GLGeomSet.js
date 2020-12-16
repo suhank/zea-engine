@@ -66,7 +66,7 @@ class GLGeomSet extends EventEmitter {
     this.drawIdsBufferDirty = true
 
     this.highlightedIdsArray = null
-    this.highlightedIdsBuffer = null
+    this.highlightedIdsTexture = null
     this.highlightedIdsBufferDirty = true
   }
 
@@ -145,14 +145,14 @@ class GLGeomSet extends EventEmitter {
       if (this.maxGeomItemSetDrawCount < event.count) this.maxGeomItemSetDrawCount = event.count
       this.drawIdsBufferDirty = true
     }
-    const highlightCountChanged = (event) => {
+    const highlightedCountChanged = (event) => {
       this.instanceCountsHighlight[index] += event.change
       this.highlightedCount += event.change
       this.highlightedIdsBufferDirty = true
     }
     const destructing = () => {
       glGeomItemSet.off('drawCountChanged', drawCountChanged)
-      glGeomItemSet.off('highlightCountChanged', highlightCountChanged)
+      glGeomItemSet.off('highlightedCountChanged', highlightedCountChanged)
       glGeomItemSet.off('destructing', destructing)
 
       const index = this.glGeomItemSets.indexOf(glGeomItemSet)
@@ -174,7 +174,7 @@ class GLGeomSet extends EventEmitter {
     }
 
     glGeomItemSet.on('drawCountChanged', drawCountChanged)
-    glGeomItemSet.on('highlightCountChanged', highlightCountChanged)
+    glGeomItemSet.on('highlightedCountChanged', highlightedCountChanged)
     glGeomItemSet.on('destructing', destructing)
   }
 
@@ -391,6 +391,47 @@ class GLGeomSet extends EventEmitter {
    * The updateHighlightedIDsBuffer method.
    */
   updateHighlightedIDsBuffer() {
+    const gl = this.__gl
+    if (!this.highlightedIdsTexture) {
+      this.highlightedIdsTexture = new GLTexture2D(gl, {
+        format: 'RED',
+        internalFormat: 'R32F',
+        type: 'FLOAT',
+        width: this.maxGeomItemSetDrawCount,
+        height: this.glGeomItemSets.length,
+        filter: 'NEAREST',
+        wrap: 'CLAMP_TO_EDGE',
+        mipMapped: false,
+      })
+      // this.highlightedIdsTexture.clear()
+    } else if (
+      this.highlightedIdsTexture.width < this.maxGeomItemSetDrawCount ||
+      this.highlightedIdsTexture.height < this.glGeomItemSets.length
+    ) {
+      this.highlightedIdsTexture.resize(size, size)
+      this.__dirtyItemIndices = Array((size * size) / pixelsPerItem)
+        .fill()
+        .map((v, i) => i)
+    }
+
+    const tex = this.highlightedIdsTexture
+    gl.bindTexture(gl.TEXTURE_2D, tex.glTex)
+    this.glGeomItemSets.forEach((glGeomItemSet, index) => {
+      const highlightedIdsArray = glGeomItemSet.getHighlightedIdsArray()
+      const level = 0
+      const xoffset = 0
+      const yoffset = index
+      const width = highlightedIdsArray.length
+      const height = 1
+      const format = tex.__format
+      const type = tex.__type
+      gl.texSubImage2D(gl.TEXTURE_2D, level, xoffset, yoffset, width, height, format, type, highlightedIdsArray)
+    })
+
+    // Note: after uploading new data to the GPU, the immediate draw fails to receive the new data
+    // we need to trigger another redraw.
+    this.emit('updated')
+
     this.highlightedIdsBufferDirty = false
   }
 
@@ -422,17 +463,6 @@ class GLGeomSet extends EventEmitter {
    */
   bindDrawIds(renderstate, drawIdsTexture) {
     const gl = this.__gl
-
-    // // Specify an instanced draw to the shader so it knows how
-    // // to retrieve the modelmatrix.
-    // gl.uniform1i(renderstate.unifs.instancedDraw.location, 1)
-
-    // // The instanced transform ids are bound as an instanced attribute.
-    // const location = renderstate.attrs.instancedIds.location
-    // gl.enableVertexAttribArray(location)
-    // gl.bindBuffer(gl.ARRAY_BUFFER, drawIdsBuffer)
-    // gl.vertexAttribPointer(location, 1, gl.FLOAT, false, 1 * 4, 0)
-    // gl.vertexAttribDivisor(location, 1) // This makes it instanced
 
     if (renderstate.unifs.instancedDraw) {
       gl.uniform1i(renderstate.unifs.instancedDraw.location, 1)
@@ -480,9 +510,9 @@ class GLGeomSet extends EventEmitter {
   drawHighlightedGeoms(renderstate) {
     this.bindGeomBuffers(renderstate)
     if (this.highlightedIdsBufferDirty) {
-      this.updateDrawIDsBuffer()
+      this.updateHighlightedIDsBuffer()
     }
-    this.bindDrawIds(renderstate, this.highlightedIdsBuffer)
+    this.bindDrawIds(renderstate, this.highlightedIdsTexture)
     this.multiDrawInstanced(this.instanceCountsHighlight, this.highlightedCount)
   }
 
@@ -495,7 +525,7 @@ class GLGeomSet extends EventEmitter {
     if (this.drawIdsBufferDirty) {
       this.updateDrawIDsBuffer()
     }
-    this.bindDrawIds(renderstate, this.drawIdsBuffer)
+    this.bindDrawIds(renderstate, this.drawIdsTexture)
     this.multiDrawInstanced(this.instanceCountsDraw, this.drawCount)
   }
 

@@ -22,10 +22,6 @@ class SimpleSurfaceShader extends GLShader {
     this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader(
       'SimpleSurfaceShader.vertexShader',
       `
-#define ENABLE_MULTI_DRAW 1
-#ifdef ENABLE_MULTI_DRAW
-#extension GL_ANGLE_multi_draw : enable
-#endif // ENABLE_MULTI_DRAW
 precision highp float;
 
 attribute vec3 positions;
@@ -82,7 +78,6 @@ void main(void) {
     this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader(
       'SimpleSurfaceShader.fragmentShader',
       `
-#define ENABLE_MULTI_DRAW 1
 precision highp float;
 
 <%include file="math/constants.glsl"/>
