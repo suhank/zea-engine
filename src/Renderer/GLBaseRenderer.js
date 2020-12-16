@@ -138,7 +138,7 @@ class GLBaseRenderer extends ParameterOwner {
     for (const key in this.__shaderDirectives) {
       directives.push(this.__shaderDirectives[key])
     }
-    this.__preproc.defines = directives.join('\n') + '\n'
+    this.__preproc.directives = directives
     this.__gl.shaderopts = this.__preproc
   }
 
@@ -594,6 +594,11 @@ class GLBaseRenderer extends ParameterOwner {
     }
     if (this.__gl.floatTexturesSupported) {
       this.addShaderPreprocessorDirective('ENABLE_FLOAT_TEXTURES')
+    }
+
+    const ext = this.__gl.getExtension('WEBGL_multi_draw')
+    if (ext) {
+      this.__gl.multiDrawElementsInstanced = ext.multiDrawElementsInstancedWEBGL.bind(ext)
     }
 
     this.__gl.screenQuad = new GLScreenQuad(this.__gl)

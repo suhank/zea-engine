@@ -83,7 +83,10 @@ class GLShader extends BaseItem {
       if (shaderopts.repl) {
         for (const key in shaderopts.repl) glsl = StringFunctions.replaceAll(glsl, key, shaderopts.repl[key])
       }
-      if (shaderopts.defines) glsl = shaderopts.defines + glsl
+      if (shaderopts.directives) {
+        const defines = shaderopts.directives.join('\n') + '\n'
+        glsl = defines + glsl
+      }
     }
 
     let prefix
@@ -314,13 +317,23 @@ class GLShader extends BaseItem {
   finalize() {}
 
   /**
+   * Checks to see if the engine is compiled for the target specified by the key
+   * @param {any} key - The key value.
+   * @return {boolean} - The return value.
+   */
+  isCompiledForTarget(key) {
+    const shaderkey = key ? key : this.getId()
+    return this.__shaderProgramHdls[shaderkey] != undefined
+  }
+
+  /**
    * The compileForTarget method.
    * @param {any} key - The key value.
    * @param {any} shaderopts - The shaderopts value.
    * @return {any} - The return value.
    */
   compileForTarget(key, shaderopts) {
-    const shaderkey = key ? this.__id + key : this.__id
+    const shaderkey = key ? key : this.getId()
     let shaderCompilationResult = this.__shaderProgramHdls[shaderkey]
     if (!shaderCompilationResult) {
       if (shaderCompilationResult !== false) {
@@ -383,6 +396,10 @@ class GLShader extends BaseItem {
    * @return {any} - The return value.
    */
   unbind(renderstate) {
+    delete renderstate.glShader
+    delete renderstate.shaderkey
+    delete renderstate.unifs
+    delete renderstate.attrs
     return true
   }
 
