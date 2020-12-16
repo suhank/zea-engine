@@ -64,7 +64,7 @@ class GLGeomItemSet extends EventEmitter {
     }
     if (glGeomItem.visible) {
       this.visibleItems.push(index)
-      this.emit('drawCountChanged', { count: 1 })
+      this.emit('drawCountChanged', { change: 1, count: this.visibleItems.length })
     }
     if (glGeomItem.getGeomItem().isHighlighted()) {
       this.highlightedItems.push(index)
@@ -91,10 +91,10 @@ class GLGeomItemSet extends EventEmitter {
       const visible = event.visible
       if (visible) {
         this.visibleItems.push(index)
-        this.emit('drawCountChanged', { count: 1 })
+        this.emit('drawCountChanged', { change: 1, count: this.visibleItems.length })
       } else {
         this.visibleItems.splice(this.visibleItems.indexOf(index), 1)
-        this.emit('drawCountChanged', { count: -1 })
+        this.emit('drawCountChanged', { change: -1, count: this.visibleItems.length })
       }
       this.drawIdsBufferDirty = true
     }
@@ -125,7 +125,7 @@ class GLGeomItemSet extends EventEmitter {
 
     if (glGeomItem.visible) {
       this.visibleItems.splice(this.visibleItems.indexOf(index), 1)
-      this.emit('drawCountChanged', { count: -1 })
+      this.emit('drawCountChanged', { change: -1, count: this.visibleItems.length })
     }
     const highlighted = glGeomItem.getGeomItem().isHighlighted()
     if (highlighted) {

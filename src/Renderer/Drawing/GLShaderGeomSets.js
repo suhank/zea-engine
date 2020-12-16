@@ -48,7 +48,7 @@ class GLShaderGeomSets extends EventEmitter {
 
     geom.setMetadata('glGeomSet', glGeomSet)
     glGeomSet.on('updated', () => {
-      this.__renderer.requestRedraw()
+      this.emit('updated')
     })
     return glGeomSet
   }

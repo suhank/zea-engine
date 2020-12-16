@@ -18,7 +18,7 @@ class GLMaterialGeomItemSets extends EventEmitter {
     this.glGeomItemSets = {}
     this.drawCount = 0
     this.visibleInGeomDataBuffer = glMaterial.getMaterial().visibleInGeomDataBuffer
-    this.__drawCountChanged = this.__drawCountChanged.bind(this)
+    this.drawCountChanged = this.drawCountChanged.bind(this)
 
     this.__materialChanged = this.__materialChanged.bind(this)
     const material = glMaterial.getMaterial()
@@ -57,12 +57,12 @@ class GLMaterialGeomItemSets extends EventEmitter {
   }
 
   /**
-   * The __drawCountChanged method.
+   * The drawCountChanged method.
    * @param {any} change - The change value.
    * @private
    */
-  __drawCountChanged(change) {
-    this.drawCount += change.count
+  drawCountChanged(event) {
+    this.drawCount += event.change
   }
 
   /**
@@ -90,9 +90,9 @@ class GLMaterialGeomItemSets extends EventEmitter {
   addGeomItemSet(glGeomItemSet) {
     const id = glGeomItemSet.getGLGeom().getGeom().getId()
     this.glGeomItemSets[id] = glGeomItemSet
-    glGeomItemSet.on('drawCountChanged', this.__drawCountChanged)
+    glGeomItemSet.on('drawCountChanged', this.drawCountChanged)
     glGeomItemSet.on('destructing', () => {
-      glGeomItemSet.off('drawCountChanged', this.__drawCountChanged)
+      glGeomItemSet.off('drawCountChanged', this.drawCountChanged)
 
       delete this.glGeomItemSets[id]
       if (Object.keys(this.glGeomItemSets).length == 0) {

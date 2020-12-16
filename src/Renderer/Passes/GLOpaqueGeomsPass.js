@@ -100,6 +100,9 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
       if (!glShaderGeomSets) {
         const shaders = this.constructShaders(shaderName)
         glShaderGeomSets = new GLShaderGeomSets(this.__gl, shaders)
+        glShaderGeomSets.on('updated', () => {
+          this.__renderer.requestRedraw()
+        })
         this.__glShaderGeomSets[shaderName] = glShaderGeomSets
       }
 

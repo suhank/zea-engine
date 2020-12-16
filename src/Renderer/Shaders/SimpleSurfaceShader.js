@@ -16,7 +16,10 @@ class SimpleSurfaceShader extends GLShader {
     this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader(
       'SimpleSurfaceShader.vertexShader',
       `
-#extension GL_ANGLE_multi_draw : require
+#define ENABLE_MULTI_DRAW 1
+#ifdef ENABLE_MULTI_DRAW
+#extension GL_ANGLE_multi_draw : enable
+#endif // ENABLE_MULTI_DRAW
 precision highp float;
 
 attribute vec3 positions;
@@ -49,13 +52,10 @@ void main(void) {
     v_drawItemId = float(drawItemId);
     v_geomItemData  = getInstanceData(drawItemId);
 
-    vec4 pos = vec4(positions, 1.);
-    mat4 modelMatrix = mat4(1.0);//getModelMatrix(drawItemId);
-    modelMatrix[3][0] = float(gl_DrawID) * 4.0;
-    modelMatrix[3][1] = float(gl_InstanceID) * 4.0;
-
-    
+    mat4 modelMatrix = getModelMatrix(drawItemId);
     mat4 modelViewMatrix = viewMatrix * modelMatrix;
+
+    vec4 pos = vec4(positions, 1.);
     vec4 viewPos    = modelViewMatrix * pos;
     gl_Position     = projectionMatrix * viewPos;
 

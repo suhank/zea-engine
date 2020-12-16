@@ -6,31 +6,47 @@ shaderLibrary.setShaderModule(
   'drawItemId.glsl',
   `
 
+uniform int transformIndex;
+
+#ifdef ENABLE_MULTI_DRAW
+
+uniform sampler2D drawIdsTexture;
+uniform int instancedDraw;
+
+int getDrawItemId() {
+  if(instancedDraw == 0){
+    return transformIndex;
+  }
+  else{
+    return int(texelFetch(drawIdsTexture, ivec2(gl_InstanceID, gl_DrawID), 0).r + 0.5);
+  }
+}
+
+
+#else
 #ifdef ENABLE_FLOAT_TEXTURES
 
 attribute float instancedIds;    // instanced attribute..
 uniform int instancedDraw;
-uniform int transformIndex;
 
 int getDrawItemId() {
-    if(instancedDraw == 0){
-       return transformIndex;
-    }
-    else{
-       return int(instancedIds);
-    }
+  if(instancedDraw == 0){
+    return transformIndex;
+  }
+  else{
+    return int(instancedIds);
+  }
 }
 
 
 #else
 
-uniform int transformIndex;
-
 int getDrawItemId() {
-    return transformIndex;
+  return transformIndex;
 }
 
-#endif
+#endif // ENABLE_FLOAT_TEXTURES
+#endif // ENABLE_MULTI_DRAW
 
 `
 )
