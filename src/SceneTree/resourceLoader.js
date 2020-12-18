@@ -127,14 +127,14 @@ class ResourceLoader extends EventEmitter {
   }
 
   /**
-   * The resolveURL method.
+   * The resolveURL method returns a URL for a given fileID. The adaptor that is assigned is responsible for resolving the URL within the file system.
    * @deprecated
-   * @param {string} value - The file value.
-   * @return {string} - The resolved URL if an adapter is installed, else the original value.
+   * @param {string} fileId - The fileId.
+   * @return {string} - The resolved URL if an adapter is installed, else the original fileId.
    */
-  resolveURL(value) {
-    if (this.__adapter) return this.__adapter.resolveURL(value)
-    return value
+  resolveURL(fileId) {
+    if (this.__adapter) return this.__adapter.resolveURL(fileId)
+    return fileId
   }
 
   /**
