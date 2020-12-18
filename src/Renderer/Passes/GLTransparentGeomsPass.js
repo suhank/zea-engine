@@ -239,7 +239,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
       const glShader = transparentItem.shaders.glShader
       if (cache.currentglShader != glShader) {
         // Some passes, like the depth pass, bind custom uniforms.
-        if (!this.bindShader(renderstate, glShader)) {
+        if (!glShader.bind(renderstate)) {
           continue
         }
         cache.currentglShader = glShader
@@ -342,7 +342,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
       const shaders = transparentItem.shaders
       if (cache.currentglShader != shaders.glselectedshader) {
         // Some passes, like the depth pass, bind custom uniforms.
-        if (!this.bindShader(renderstate, shaders.glselectedshader)) {
+        if (!shaders.glselectedshader.bind(renderstate)) {
           continue
         }
         cache.currentglShader = shaders.glselectedshader
@@ -406,7 +406,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
       }
       if (cache.currentglShader != shaders.glgeomdatashader) {
         // Some passes, like the depth pass, bind custom uniforms.
-        if (!this.bindShader(renderstate, shaders.glgeomdatashader)) {
+        if (!shaders.glgeomdatashader.bind(renderstate)) {
           continue
         }
         cache.currentglShader = shaders.glgeomdatashader

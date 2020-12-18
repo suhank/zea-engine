@@ -188,6 +188,16 @@ void main(void) {
         }
     }
 
+    vec3 viewNormal = normalize(v_viewNormal);
+    //vec3 surfacePos = -v_viewPos;
+    vec3 viewVector = normalize(mat3(cameraMatrix) * normalize(v_viewPos));
+    vec3 normal = normalize(mat3(cameraMatrix) * viewNormal);
+    if(dot(normal, viewVector) < 0.0){
+        normal = -normal;
+        // Note: this line can be used to debug inverted meshes.
+        //material.baseColor = vec3(1.0, 0.0, 0.0);
+    }
+
 
     MaterialParams material;
 
@@ -197,26 +207,19 @@ void main(void) {
     vec4 matValue1      = getMaterialValue(materialCoords, 1);
     vec4 matValue2      = getMaterialValue(materialCoords, 2);
 
-    material.BaseColor = matValue0;
+    material.baseColor     = matValue0.rgb;
     material.roughness     = matValue1.r;
     material.metallic      = matValue1.g;
     material.reflectance   = matValue1.b;
 
-    float opacity       = baseColor.a * matValue1.r;
+    float opacity       = matValue2.r * matValue0.a;
     float emission      = matValue1.a;
-
-    matData[4] = material.getParameter('Metallic').getValue()
-    matData[5] = material.getParameter('Roughness').getValue()
-    matData[6] = material.getParameter('Reflectance').getValue()
-    matData[7] = material.getParameter('EmissiveStrength').getValue()
-    float opacity = matValue2.r * BaseColor.a;
 
 #else // ENABLE_MULTI_DRAW
 
 #ifndef ENABLE_TEXTURES
-    material.BaseColor     = BaseColor.rgb;
+    material.baseColor     = BaseColor.rgb;
     float emission         = EmissiveStrength;
-    float opacity           = Opacity * BaseColor.a;
 
 #ifdef ENABLE_PBR
     material.roughness     = Roughness;
@@ -237,9 +240,7 @@ void main(void) {
 #endif // ENABLE_PBR
     float emission         = getLuminanceParamValue(EmissiveStrength, EmissiveStrengthTex, EmissiveStrengthTexType, texCoord);
 #endif // ENABLE_TEXTURES
-
-    vec3 viewNormal = normalize(v_viewNormal);
-    //vec3 surfacePos = -v_viewPos;
+    float opacity           = Opacity * BaseColor.a;
 
 #ifdef ENABLE_TEXTURES
 #ifdef ENABLE_PBR
@@ -250,14 +251,6 @@ void main(void) {
 #endif // ENABLE_PBR
 #endif // ENABLE_TEXTURES
 #endif // ENABLE_MULTI_DRAW
-
-    vec3 viewVector = normalize(mat3(cameraMatrix) * normalize(v_viewPos));
-    vec3 normal = normalize(mat3(cameraMatrix) * viewNormal);
-    if(dot(normal, viewVector) < 0.0){
-        normal = -normal;
-        // Note: this line can be used to debug inverted meshes.
-        //material.baseColor = vec3(1.0, 0.0, 0.0);
-    }
 
 #ifndef ENABLE_ES3
     vec4 fragColor;
