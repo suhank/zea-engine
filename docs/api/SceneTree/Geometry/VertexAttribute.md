@@ -8,10 +8,11 @@ const vertexAttribute = new VertexAttribute(this, Float32, 0)
 ```
 
 
-**Extends**: <code>[Attribute](api/SceneTree/Geometry/Attribute.md)</code>  
+**Extends**: <code>[Attribute](api/SceneTree\Geometry\Attribute.md)</code>  
 
 * [VertexAttribute ⇐ <code>Attribute</code>](#VertexAttribute)
     * [new VertexAttribute(geom, dataType, expectedSize, defaultScalarValue)](#new-VertexAttribute)
+    * [resize(size)](#resize)
     * [getFaceVertexValueRef(face, facevertex) ⇒ <code>AttrValue</code>](#getFaceVertexValueRef)
     * [setFaceVertexValue(face, facevertex, value)](#setFaceVertexValue)
     * [setFaceVertexValue_ByVertexIndex(face, vertex, value)](#setFaceVertexValue_ByVertexIndex)
@@ -32,10 +33,22 @@ Create vertex attributes
 
 | Param | Type | Description |
 | --- | --- | --- |
-| geom | <code>[Mesh](api/SceneTree/Geometry/Mesh.md)</code> | The geom value. |
+| geom | <code>[Mesh](api/SceneTree\Geometry\Mesh.md)</code> | The geom value. |
 | dataType | <code>AttrValue</code> \| <code>number</code> | The dataType value. |
 | expectedSize | <code>number</code> \| <code>TypedArray</code> | The expectedSize value. |
 | defaultScalarValue | <code>number</code> | The default scalar value. |
+
+<a name="VertexAttribute+resize"></a>
+
+### resize
+Resizes current data array to to a new size.
+In case the new size is bigger than current size, the new values are filled up with default ones.
+
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| size | <code>number</code> | The size value. |
 
 <a name="VertexAttribute+getFaceVertexValueRef"></a>
 
@@ -43,7 +56,7 @@ Create vertex attributes
 The getFaceVertexValueRef method.
 
 
-**Returns**: <code>[AttrValue](api/Math/AttrValue.md)</code> - - The return value.  
+**Returns**: <code>[AttrValue](api/Math\AttrValue.md)</code> - - The return value.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -61,7 +74,7 @@ The setFaceVertexValue method.
 | --- | --- | --- |
 | face | <code>number</code> | The face value. |
 | facevertex | <code>number</code> | The facevertex value. |
-| value | <code>[AttrValue](api/Math/AttrValue.md)</code> | The value value. |
+| value | <code>[AttrValue](api/Math\AttrValue.md)</code> | The value value. |
 
 <a name="VertexAttribute+setFaceVertexValue_ByVertexIndex"></a>
 
@@ -74,7 +87,7 @@ The setFaceVertexValue_ByVertexIndex method.
 | --- | --- | --- |
 | face | <code>number</code> | The face value. |
 | vertex | <code>number</code> | The vertex value. |
-| value | <code>[AttrValue](api/Math/AttrValue.md)</code> | The value value. |
+| value | <code>[AttrValue](api/Math\AttrValue.md)</code> | The value value. |
 
 <a name="VertexAttribute+setSplitVertexValue"></a>
 
@@ -87,7 +100,7 @@ The setSplitVertexValue method.
 | --- | --- | --- |
 | vertex | <code>number</code> | The vertex value. |
 | face | <code>number</code> | The face value. |
-| value | <code>[AttrValue](api/Math/AttrValue.md)</code> | The value value. |
+| value | <code>[AttrValue](api/Math\AttrValue.md)</code> | The value value. |
 
 <a name="VertexAttribute+setSplitVertexValues"></a>
 
@@ -100,7 +113,7 @@ The setSplitVertexValues method.
 | --- | --- | --- |
 | vertex | <code>number</code> | The vertex value. |
 | faceGroup | <code>array</code> | The faceGroup value. |
-| value | <code>[AttrValue](api/Math/AttrValue.md)</code> | The value value. |
+| value | <code>[AttrValue](api/Math\AttrValue.md)</code> | The value value. |
 
 <a name="VertexAttribute+getSplits"></a>
 
@@ -162,5 +175,5 @@ The loadSplitValues method.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| reader | <code>[BinReader](api/SceneTree/BinReader.md)</code> | The reader value. |
+| reader | <code>[BinReader](api/SceneTree\BinReader.md)</code> | The reader value. |
 

@@ -2,12 +2,12 @@
 
 
 ```javascript
-fetch("LabelPack.labels")
-  .then(response => response.json())
-  .then(data => {
-    labelManager.loadLibrary('LabelPack', data)
-    addLabel(new Vec3(0, 0, 0), new Vec3(0, 0.05, 0.08), new Color(1, 1, 0), "MyCustomLabel");
-  });
+fetch("https://cdn.glitch.com/be58caa6-3757-4c0c-a11c-b4eaa9f5d339%2FLabelPack.labels?v=1599494954724")
+        .then(response => response.json())
+        .then(data => {
+          labelManager.loadLibrary('LabelPack', data)
+          addLabel(new Vec3(0, 0, 0), new Vec3(0, 0.05, 0.08), new Color(1, 1, 0), "MyCustomLabel");
+        });
 ```
 
 

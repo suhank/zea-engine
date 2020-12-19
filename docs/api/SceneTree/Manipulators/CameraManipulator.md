@@ -22,8 +22,8 @@ The default manipulation mode, is the mode that is active with only the left mou
 To Assign a different default manipulation mode, retrieve the manipulator from the viewport
 and set the default mode.
 ```
-const customManipulator = renderer.getViewport().getManipulator()
-customManipulator.setDefaultManipulationMode(CameraManipulator.MANIPULATION_MODES.trackball);
+const cameraManipulator = renderer.getViewport().getManipulator()
+cameraManipulator.setDefaultManipulationMode(CameraManipulator.MANIPULATION_MODES.trackball);
 ```
 
 This class is the default manipulator, and can be replaced with custom manipulators.
@@ -35,9 +35,9 @@ renderer.getViewport().setManipulator(customManipulator);
 
 
 **Parameters**
-* **orbitRate([`NumberParameter`](api/SceneTree/Parameters/NumberParameter.md)):** The rate at which mouse or touch interactions are translated camera orientation changes.
-* **dollySpeed([`NumberParameter`](api/SceneTree/Parameters/NumberParameter.md)):** The rate at which the mouse button or touch interactions are translated camera dolly movement.
-* **mouseWheelDollySpeed([`NumberParameter`](api/SceneTree/Parameters/NumberParameter.md)):** The rate at which the mouse wheel interactions are translated camera dolly movement.
+* **orbitRate([`NumberParameter`](api/SceneTree\Parameters\NumberParameter.md)):** The rate at which mouse or touch interactions are translated camera orientation changes.
+* **dollySpeed([`NumberParameter`](api/SceneTree\Parameters\NumberParameter.md)):** The rate at which the mouse button or touch interactions are translated camera dolly movement.
+* **mouseWheelDollySpeed([`NumberParameter`](api/SceneTree\Parameters\NumberParameter.md)):** The rate at which the mouse wheel interactions are translated camera dolly movement.
 
   Note: this value defaults to different values for touch based interfaces to mouse based input.
   For mobile devices, the orbit rate defaults to -0.3, and for mouse based interaction, the value defaults to 1.
@@ -46,19 +46,22 @@ renderer.getViewport().setManipulator(customManipulator);
 
 To set different default values for mobile or desktop set a different value based on the SystemDesc.isMobileDevice flag.
 ```
-const customManipulator = renderer.getViewport().getManipulator()
-customManipulator.getParameter('orbitRate').setValue(SystemDesc.isMobileDevice ? 0.3 : 1)
+const cameraManipulator = renderer.getViewport().getManipulator()
+cameraManipulator.getParameter('orbitRate').setValue(SystemDesc.isMobileDevice ? 0.3 : 1)
 ```
 
 **Events**
-* **movementFinished:** Triggered when a camera movement is finished. E.g. when the user releases the mouse after a dolly, or after the focussing action has completed.
+* **movementFinished:** Emitted when a camera movement is finished. E.g. when the user releases the mouse after a dolly, or after the focussing action has completed.
+* **aimingFocus:** Emitted when a camera is being focussed on a target. E.g. when the user double clicks the mouse on a geometry in the view.
 
 
-**Extends**: <code>[ParameterOwner](api/SceneTree/ParameterOwner.md)</code>  
+**Extends**: <code>[BaseTool](api/SceneTree\Manipulators\BaseTool.md)</code>  
 
-* [CameraManipulator ⇐ <code>ParameterOwner</code>](#CameraManipulator)
-    * [new CameraManipulator(name)](#new-CameraManipulator)
+* [CameraManipulator ⇐ <code>BaseTool</code>](#CameraManipulator)
+    * [new CameraManipulator(appData)](#new-CameraManipulator)
     * _instance_
+        * [activateTool()](#activateTool)
+        * [deactivateTool()](#deactivateTool)
         * [setDefaultManipulationMode(manipulationMode)](#setDefaultManipulationMode)
         * [look(event, dragVec)](#look)
         * [turntable(event, dragVec)](#turntable)
@@ -73,6 +76,7 @@ customManipulator.getParameter('orbitRate').setValue(SystemDesc.isMobileDevice ?
         * [_onMouseMove(event)](#_onMouseMove)
         * [onPointerUp(event)](#onPointerUp)
         * [onWheel(event)](#onWheel)
+        * [onKeyUp(event)](#onKeyUp)
         * [_onTouchStart(event)](#_onTouchStart)
         * [onTouchEnd(event)](#onTouchEnd)
         * [onTouchCancel(event)](#onTouchCancel)
@@ -87,7 +91,19 @@ Create a camera, mouse and keyboard
 
 | Param | Type | Description |
 | --- | --- | --- |
-| name | <code>string</code> | The name value. |
+| appData | <code>object</code> | The object containing the scene and the renderer. |
+
+<a name="CameraManipulator+activateTool"></a>
+
+### activateTool
+Enables tools usage.
+
+
+<a name="CameraManipulator+deactivateTool"></a>
+
+### deactivateTool
+Disables tool usage.
+
 
 <a name="CameraManipulator+setDefaultManipulationMode"></a>
 
@@ -111,7 +127,7 @@ The look method.
 | Param | Type | Description |
 | --- | --- | --- |
 | event | <code>MouseEvent</code> | The event value. |
-| dragVec | <code>[Vec2](api/Math/Vec2.md)</code> | The drag vector value. |
+| dragVec | <code>[Vec2](api/Math\Vec2.md)</code> | The drag vector value. |
 
 <a name="CameraManipulator+turntable"></a>
 
@@ -123,7 +139,7 @@ Rotates viewport camera about the target.
 | Param | Type | Description |
 | --- | --- | --- |
 | event | <code>MouseEvent</code> | The event value. |
-| dragVec | <code>[Vec2](api/Math/Vec2.md)</code> | The drag vector value. |
+| dragVec | <code>[Vec2](api/Math\Vec2.md)</code> | The drag vector value. |
 
 <a name="CameraManipulator+tumble"></a>
 
@@ -135,7 +151,7 @@ Rotates viewport camera about the target.
 | Param | Type | Description |
 | --- | --- | --- |
 | event | <code>MouseEvent</code> | The event value. |
-| dragVec | <code>[Vec2](api/Math/Vec2.md)</code> | The drag vector value. |
+| dragVec | <code>[Vec2](api/Math\Vec2.md)</code> | The drag vector value. |
 
 <a name="CameraManipulator+trackball"></a>
 
@@ -147,7 +163,7 @@ Rotates viewport camera about the target.
 | Param | Type | Description |
 | --- | --- | --- |
 | event | <code>MouseEvent</code> | The event value. |
-| dragVec | <code>[Vec2](api/Math/Vec2.md)</code> | The drag vector value. |
+| dragVec | <code>[Vec2](api/Math\Vec2.md)</code> | The drag vector value. |
 
 <a name="CameraManipulator+pan"></a>
 
@@ -159,7 +175,7 @@ Rotates the camera around its own `X`,`Y` axes.
 | Param | Type | Description |
 | --- | --- | --- |
 | event | <code>MouseEvent</code> | The event value. |
-| dragVec | <code>[Vec2](api/Math/Vec2.md)</code> | The drag vector value. |
+| dragVec | <code>[Vec2](api/Math\Vec2.md)</code> | The drag vector value. |
 
 <a name="CameraManipulator+dolly"></a>
 
@@ -171,7 +187,7 @@ The dolly method.
 | Param | Type | Description |
 | --- | --- | --- |
 | event | <code>MouseEvent</code> | The event value. |
-| dragVec | <code>[Vec2](api/Math/Vec2.md)</code> | The drag vector value. |
+| dragVec | <code>[Vec2](api/Math\Vec2.md)</code> | The drag vector value. |
 
 <a name="CameraManipulator+panAndZoom"></a>
 
@@ -183,13 +199,13 @@ Rotates the camera around its own `X`,`Y` axes and applies a zoom.
 | Param | Type | Description |
 | --- | --- | --- |
 | event | <code>MouseEvent</code> | The event value. |
-| panDelta | <code>[Vec2](api/Math/Vec2.md)</code> | The pan delta value. |
+| panDelta | <code>[Vec2](api/Math\Vec2.md)</code> | The pan delta value. |
 | dragDist | <code>number</code> | The drag distance value. |
 
 <a name="CameraManipulator+onPointerDoublePress"></a>
 
 ### onPointerDoublePress
-Causes an event to occur when a user double presses a pointer over an element.
+Invoked when a user double presses a pointer over an element.
 
 
 
@@ -200,7 +216,7 @@ Causes an event to occur when a user double presses a pointer over an element.
 <a name="CameraManipulator+onPointerDown"></a>
 
 ### onPointerDown
-Causes an event to occur when the user starts to drag an element.
+Invoked when the user starts to drag an element.
 
 
 
@@ -211,7 +227,7 @@ Causes an event to occur when the user starts to drag an element.
 <a name="CameraManipulator+onPointerMove"></a>
 
 ### onPointerMove
-Causes an event to occur when an element is being dragged.
+Invoked when an element is being dragged.
 
 
 
@@ -233,7 +249,7 @@ The event that occurs when the user moves the pointer across a screen.
 <a name="CameraManipulator+onPointerUp"></a>
 
 ### onPointerUp
-Causes an event to occur when the user has finished dragging an element.
+Invoked when the user has finished dragging an element.
 
 
 
@@ -244,7 +260,7 @@ Causes an event to occur when the user has finished dragging an element.
 <a name="CameraManipulator+onWheel"></a>
 
 ### onWheel
-Causes an event to occur when the mouse wheel is rolled up or down over an element.
+Invoked when the mouse wheel is rolled up or down over an element.
 
 
 
@@ -252,10 +268,21 @@ Causes an event to occur when the mouse wheel is rolled up or down over an eleme
 | --- | --- | --- |
 | event | <code>WheelEvent</code> | The wheel event that occurs. |
 
+<a name="CameraManipulator+onKeyUp"></a>
+
+### onKeyUp
+Invoked when the user releases a key on the keyboard.
+
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| event | <code>KeyboardEvent</code> | The event that occurs. |
+
 <a name="CameraManipulator+_onTouchStart"></a>
 
 ### cameraManipulator
-Causes an event to occur when the user touches an element on a touch screen.
+Invoked when the user touches an element on a touch screen.
 
 
 
@@ -266,7 +293,7 @@ Causes an event to occur when the user touches an element on a touch screen.
 <a name="CameraManipulator+onTouchEnd"></a>
 
 ### onTouchEnd
-Causes an event to occur when the user removes his/her finger from an element.
+Invoked when the user removes his/her finger from the touch pad.
 
 
 
@@ -277,7 +304,7 @@ Causes an event to occur when the user removes his/her finger from an element.
 <a name="CameraManipulator+onTouchCancel"></a>
 
 ### onTouchCancel
-Causes an event to occur when the touch event gets interrupted.
+Invoked when the touch event gets interrupted.
 
 
 

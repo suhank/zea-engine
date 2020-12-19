@@ -4,7 +4,7 @@
 This class abstracts the rendering of a collection of geometries to screen.
 
 
-**Extends**: <code>[GLPass](api/Renderer/Passes/GLPass.md)</code>  
+**Extends**: <code>[GLPass](api/Renderer\Passes\GLPass.md)</code>  
 
 * [GLStandardGeomsPass ⇐ <code>GLPass</code>](#GLStandardGeomsPass)
     * [new GLStandardGeomsPass()](#new-GLStandardGeomsPass)
@@ -57,7 +57,7 @@ It allows Passes to select geometries to handle the drawing of.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| treeItem | <code>[TreeItem](api/SceneTree/TreeItem.md)</code> | The treeItem value. |
+| treeItem | <code>[TreeItem](api/SceneTree\TreeItem.md)</code> | The treeItem value. |
 | rargs | <code>object</code> | Extra return values are passed back in this object. The object contains a parameter 'continueInSubTree', which can be set to false, so the subtree of this node will not be traversed after this node is handled. |
 
 <a name="GLStandardGeomsPass+itemRemovedFromScene"></a>
@@ -71,7 +71,7 @@ is removed to the scene, and the pass must handle cleaning up any resources.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| treeItem | <code>[TreeItem](api/SceneTree/TreeItem.md)</code> | The treeItem value. |
+| treeItem | <code>[TreeItem](api/SceneTree\TreeItem.md)</code> | The treeItem value. |
 | rargs | <code>object</code> | Extra return values are passed back in this object. |
 
 <a name="GLStandardGeomsPass+filterGeomItem"></a>

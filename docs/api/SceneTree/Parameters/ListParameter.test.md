@@ -5,7 +5,6 @@
 Use this code to guide yourself on how to implement this class.
 ```javascript
 import { ListParameter } from './ListParameter'
-import { List } from '../../Math'
 
 describe('ListParameter', () => {
   it('has an initial value.', () => {

@@ -9,7 +9,7 @@ image.getParameter('FilePath').setUrl("https://storage.googleapis.com/zea-playgr
 ```
 
 **Parameters**
-* **PreferredSize([`NumberParameter`](api/SceneTree/Parameters/NumberParameter.md)):** _todo_
+* **PreferredSize([`NumberParameter`](api/SceneTree\Parameters\NumberParameter.md)):** _todo_
 
 **Events:**
 * **loaded:** Triggered when image data is loaded.
@@ -17,7 +17,7 @@ image.getParameter('FilePath').setUrl("https://storage.googleapis.com/zea-playgr
 **File Types:** jpg, jpeg, png
 
 
-**Extends**: <code>[FileImage](api/SceneTree/Images/FileImage.md)</code>  
+**Extends**: <code>[FileImage](api/SceneTree\Images\FileImage.md)</code>  
 
 * [LDRImage ⇐ <code>FileImage</code>](#LDRImage)
     * [new LDRImage(name, filePath, params)](#new-LDRImage)

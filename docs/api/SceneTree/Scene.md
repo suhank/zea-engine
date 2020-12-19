@@ -32,21 +32,21 @@ Create a scene.
 The getRoot method.
 
 
-**Returns**: <code>[BaseItem](api/SceneTree/BaseItem.md)</code> - - The return value.  
+**Returns**: <code>[BaseItem](api/SceneTree\BaseItem.md)</code> - - The return value.  
 <a name="Scene+getRoot"></a>
 
 ### getRoot
 Returns the scene's root item(`TreeItem`) that owns every item in the scene.
 
 
-**Returns**: <code>[TreeItem](api/SceneTree/TreeItem.md)</code> - - The return value.  
+**Returns**: <code>[TreeItem](api/SceneTree\TreeItem.md)</code> - - The return value.  
 <a name="Scene+getResourceLoader"></a>
 
 ### getResourceLoader
 Returns resourceLoader object set on class initialization.
 
 
-**Returns**: <code>[ResourceLoader](api/SceneTree/ResourceLoader.md)</code> - - The return value.  
+**Returns**: <code>ResourceLoader</code> - - The return value.  
 <a name="Scene+setEnvMap"></a>
 
 ### ~~scene.setEnvMap(envMap)~~
@@ -58,7 +58,7 @@ Sets Environment Map with the BaseImage you'd like to display in your scene back
 
 | Param | Type | Description |
 | --- | --- | --- |
-| envMap | <code>[EnvMap](api/SceneTree/Images/EnvMap.md)</code> | The envMap value. |
+| envMap | <code>[EnvMap](api/SceneTree\Images\EnvMap.md)</code> | The envMap value. |
 
 <a name="Scene+addAsset"></a>
 
@@ -71,7 +71,7 @@ Adds a child item to the scene root item.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| asset | <code>[AssetItem](api/SceneTree/AssetItem.md)</code> | The asset value. |
+| asset | <code>[AssetItem](api/SceneTree\AssetItem.md)</code> | The asset value. |
 
 <a name="Scene+setupGrid"></a>
 
@@ -83,13 +83,13 @@ The GridTreeItem display a grid of a given size and resolution. The Grid is orie
 and highlights the X and Y axes with Red and Green lines.
 
 
-**Returns**: <code>[GridTreeItem](api/SceneTree/GridTreeItem.md)</code> - - The return value.  
+**Returns**: <code>[GridTreeItem](api/SceneTree\GridTreeItem.md)</code> - - The return value.  
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
 | gridSize | <code>number</code> | <code>5</code> | The size of the grid. |
 | resolution | <code>number</code> | <code>50</code> | The resolution of the grid. |
-| gridColor | <code>[Color](api/Math/Color.md)</code> |  | The color of the grid. |
+| gridColor | <code>[Color](api/Math\Color.md)</code> |  | The color of the grid. |
 
 <a name="Scene+toJSON"></a>
 

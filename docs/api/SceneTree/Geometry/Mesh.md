@@ -15,13 +15,13 @@ const mesh = new Mesh()
 * **geomDataChanged:** Triggered when the vertices of the mesh have changed, but not necessarily the topology.
 
 
-**Extends**: <code>[BaseGeom](api/SceneTree/Geometry/BaseGeom.md)</code>  
+**Extends**: <code>[BaseGeom](api/SceneTree\Geometry\BaseGeom.md)</code>  
 
 * [Mesh ⇐ <code>BaseGeom</code>](#Mesh)
     * [new Mesh()](#new-Mesh)
+    * [clear()](#clear)
     * [getFaceCounts() ⇒ <code>array</code>](#getFaceCounts)
     * [getNumFaces() ⇒ <code>number</code>](#getNumFaces)
-    * [clear()](#clear)
     * [setFaceCounts(faceCounts)](#setFaceCounts)
     * [getFaceVertexCount(faceIndex) ⇒ <code>number</code>](#getFaceVertexCount)
     * [getFaceVertexOffset(faceIndex) ⇒ <code>number</code>](#getFaceVertexOffset)
@@ -54,6 +54,12 @@ const mesh = new Mesh()
 ### new Mesh
 Creates an instance of Mesh.
 
+<a name="Mesh+clear"></a>
+
+### clear
+The clear method.
+
+
 <a name="Mesh+getFaceCounts"></a>
 
 ### getFaceCounts
@@ -68,12 +74,6 @@ The getNumFaces method.
 
 
 **Returns**: <code>number</code> - - The return value.  
-<a name="Mesh+clear"></a>
-
-### clear
-The clear method.
-
-
 <a name="Mesh+setFaceCounts"></a>
 
 ### setFaceCounts
@@ -166,7 +166,7 @@ Returns a single vertex index for a given face and facevertex.
 Adds a `VertexAttribute` to the geometry.
 
 
-**Returns**: <code>[VertexAttribute](api/SceneTree/Geometry/VertexAttribute.md)</code> - - Returns a vertex attribute.  
+**Returns**: <code>[VertexAttribute](api/SceneTree\Geometry\VertexAttribute.md)</code> - - Returns a vertex attribute.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -180,7 +180,7 @@ Adds a `VertexAttribute` to the geometry.
 The addFaceAttribute method.
 
 
-**Returns**: <code>[Attribute](api/SceneTree/Geometry/Attribute.md)</code> - - Returns a face attribute.  
+**Returns**: <code>[Attribute](api/SceneTree\Geometry\Attribute.md)</code> - - Returns a face attribute.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -218,7 +218,7 @@ The getFaceAttribute method.
 The addEdgeAttribute method.
 
 
-**Returns**: <code>[Attribute](api/SceneTree/Geometry/Attribute.md)</code> - - Returns an edge attribute.  
+**Returns**: <code>[Attribute](api/SceneTree\Geometry\Attribute.md)</code> - - Returns an edge attribute.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -244,7 +244,7 @@ The hasEdgeAttribute method.
 The getEdgeAttribute method.
 
 
-**Returns**: <code>[Attribute](api/SceneTree/Geometry/Attribute.md)</code> - - The return value.  
+**Returns**: <code>[Attribute](api/SceneTree\Geometry\Attribute.md)</code> - - The return value.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -274,7 +274,7 @@ Calculates the angles at each edge between the adjoining faces
 Compute vertex normals.
 
 
-**Returns**: <code>[VertexAttribute](api/SceneTree/Geometry/VertexAttribute.md)</code> - - The return value.  
+**Returns**: <code>[VertexAttribute](api/SceneTree\Geometry\VertexAttribute.md)</code> - - The return value.  
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -341,7 +341,7 @@ Restores mesh properties from a binary reader.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| reader | <code>[BinReader](api/SceneTree/BinReader.md)</code> | The reader value. |
+| reader | <code>[BinReader](api/SceneTree\BinReader.md)</code> | The reader value. |
 | context | <code>object</code> | The context value. |
 
 <a name="Mesh+toJSON"></a>
@@ -370,4 +370,4 @@ The fromJSON method decodes a json object for this type.
 
 
 
-### [Class Tests](api/SceneTree/Geometry/Mesh.test)
+### [Class Tests](api/SceneTree\Geometry/Mesh.test)

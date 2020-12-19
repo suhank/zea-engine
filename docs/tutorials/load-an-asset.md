@@ -50,31 +50,33 @@ Now your HTML file should look like this.
     <meta charset="UTF-8"/>
   </head>
   <body>
-    <div id="app"></div>
-  </body>
-  <script type=module>
-import { 
-  Vec3,
-  EulerAngles,
-  Xfo,
-  ObjAsset,
-  Scene, 
-  GLRenderer
-} from "https://unpkg.com/@zeainc/zea-engine@1.0.7/dist/index.esm.js"
+    <canvas id="renderer"></canvas>
 
-const domElement = document.getElementById("app");
+    <script crossorigin src="https://cdn.jsdelivr.net/npm/@zeainc/zea-engine@3.0.1"></script>
+    <script type=module>
+      import { 
+        Vec3,
+        EulerAngles,
+        Xfo,
+        ObjAsset,
+        Scene, 
+        GLRenderer
+      } from "window.zeaEngine"
 
-const scene = new Scene();
-scene.setupGrid(10.0, 10);
+      const domElement = document.getElementById("renderer");
 
-const objAsset = new ObjAsset('cow')
-objAsset.getParameter('FilePath').setUrl('data/cow.obj')
-scene.getRoot().addChild(objAsset)
+      const scene = new Scene();
+      scene.setupGrid(10.0, 10);
 
-const renderer = new GLRenderer(domElement);
-renderer.setScene(scene);
-renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(10, 10, 5), new Vec3(0, 0, 3))
-  </script>
+      const objAsset = new ObjAsset('cow')
+      objAsset.getParameter('FilePath').setUrl('data/cow.obj')
+      scene.getRoot().addChild(objAsset)
+
+      const renderer = new GLRenderer(domElement);
+      renderer.setScene(scene);
+      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(10, 10, 5), new Vec3(0, 0, 3))
+    </script>
+    </body>
 </html>
 ```
 

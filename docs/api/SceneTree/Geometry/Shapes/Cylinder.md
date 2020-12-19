@@ -8,15 +8,15 @@ const cylinder = new Cylinder(1.5, 2.0, 6)
 ```
 
 **Parameters**
-* **Radius([`NumberParameter`](api/SceneTree/Parameters/NumberParameter.md)):** Specifies the radius of the cylinder.
-* **Height([`NumberParameter`](api/SceneTree/Parameters/NumberParameter.md)):** Specifies the height of the cone.
-* **Sides([`NumberParameter`](api/SceneTree/Parameters/NumberParameter.md)):** Specifies the number of subdivisions around the `Z` axis.
-* **Loops([`NumberParameter`](api/SceneTree/Parameters/NumberParameter.md)):** Specifies the number of subdivisions(stacks) on the `Z` axis.
-* **Caps([`BooleanParameter`](api/SceneTree/Parameters/BooleanParameter.md)):** Specifies whether the ends of the cylinder are capped or open.
-* **BaseZAtZero([`BooleanParameter`](api/SceneTree/Parameters/BooleanParameter.md)):** Property to start or not `Z` axis from position `0.
+* **Radius([`NumberParameter`](api/SceneTree\Parameters\NumberParameter.md)):** Specifies the radius of the cylinder.
+* **Height([`NumberParameter`](api/SceneTree\Parameters\NumberParameter.md)):** Specifies the height of the cone.
+* **Sides([`NumberParameter`](api/SceneTree\Parameters\NumberParameter.md)):** Specifies the number of subdivisions around the `Z` axis.
+* **Loops([`NumberParameter`](api/SceneTree\Parameters\NumberParameter.md)):** Specifies the number of subdivisions(stacks) on the `Z` axis.
+* **Caps([`BooleanParameter`](api/SceneTree\Parameters\BooleanParameter.md)):** Specifies whether the ends of the cylinder are capped or open.
+* **BaseZAtZero([`BooleanParameter`](api/SceneTree\Parameters\BooleanParameter.md)):** Property to start or not `Z` axis from position `0.
 
 
-**Extends**: <code>[ProceduralMesh](api/SceneTree/Geometry/Shapes/ProceduralMesh.md)</code>  
+**Extends**: <code>[ProceduralMesh](api/SceneTree\Geometry\Shapes\ProceduralMesh.md)</code>  
 <a name="new_Cylinder_new"></a>
 
 ### new Cylinder
@@ -34,4 +34,4 @@ Create a cylinder.
 
 
 
-### [Class Tests](api/SceneTree/Geometry/Shapes/Cylinder.test)
+### [Class Tests](api/SceneTree\Geometry\Shapes/Cylinder.test)

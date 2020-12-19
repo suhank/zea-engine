@@ -15,10 +15,11 @@ const lines = new Lines()
 * **geomDataChanged:** Triggered when the data value of the geometry is set(This includes reading binary)
 
 
-**Extends**: <code>[BaseGeom](api/SceneTree/Geometry/BaseGeom.md)</code>  
+**Extends**: <code>[BaseGeom](api/SceneTree\Geometry\BaseGeom.md)</code>  
 
 * [Lines ⇐ <code>BaseGeom</code>](#Lines)
     * [new Lines()](#new-Lines)
+    * [clear()](#clear)
     * [getIndices() ⇒ <code>Uint32Array</code>](#getIndices)
     * [getNumSegments() ⇒ <code>number</code>](#getNumSegments)
     * [setNumSegments(numOfSegments)](#setNumSegments)
@@ -33,6 +34,12 @@ const lines = new Lines()
 
 ### new Lines
 Create lines.
+
+<a name="Lines+clear"></a>
+
+### clear
+The clear method.
+
 
 <a name="Lines+getIndices"></a>
 
@@ -131,4 +138,4 @@ The fromJSON method decodes a json object for this type.
 
 
 
-### [Class Tests](api/SceneTree/Geometry/Lines.test)
+### [Class Tests](api/SceneTree\Geometry/Lines.test)

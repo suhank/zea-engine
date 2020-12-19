@@ -1,5 +1,15 @@
 # Changelog
 
+All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+### [3.0.1] (2020-12-04)
+
+
+### Bug Fixes
+
+* Fixed property detection on GLLines ([dc2d474](https://github.com/ZeaInc/zea-engine/commit/dc2d474c76f1e77c69204ae8bd2a5aa8ba3af1d4))
+
+## [3.0.0] (2020-12-03)
 
 ## [2.0.0] (2020-09-12)
 
@@ -10,7 +20,7 @@
 
 ### Features
 
-* Added 'Overlay' option to LinesShader so lines can be rendered overlaid on scene geoms.
+* Added 'Overlay' option to LinesShader so lines can be rendered overlaid on scene geometries.
 * Added support to make Points and Lines drawn as Overlay.
 * SystemDesc now correctly detects RTX based GPUs.
 
@@ -19,7 +29,7 @@
 
 * Docs search now have their own namespace.
 * Dynamic updates to lines topology now is reflected in the renderer.
-* GeomProxy was missing a method to reteive the bounding box, which caused regression when loading polygon meshes from zcad files.
+* GeomProxy was missing a method to retrieve the bounding box, which caused regression when loading polygon meshes from zcad files.
 * Updated Version class, deprecating old methods.
 * Wasm file resolving from script tag.
 
@@ -42,7 +52,7 @@
 ### Bug Fixes
 
 * Regressions in the code for procedural lines and material parameter.
-* Bug causing circle to throw excepetion when generating.
+* Bug causing circle to throw exception when generating.
 * Bug that prevented updating points geometry dynamically.
 * Issues related to loading label packs in the labelManager.
 * Regression in Group when using the 'manual' Initial Xfo mode.
@@ -72,7 +82,7 @@
 
 ### Bug Fixes
 
-* Cleaned up error meesages being provied when throwing exceptions.
+* Cleaned up error messages being provided when throwing exceptions.
 * Cleaned up dirty state vs clean state on Parameter.
 * Duplicated createFromBuffer method on Color class.
 * Wrong byteOffset on few classes.
@@ -81,7 +91,7 @@
 * Regression causing changes to materials to not trigger re-rendering.
 * Regression in Potree due to GLGeom was no longer emitting a 'destructing' event.
 * Geometry types are now registered with the SGFactory.
-* Math type construtors need to be able to take a Float32Array as an argument.
+* Math type constructors need to be able to take a Float32Array as an argument.
 * OperatorOutput now throws an error if trying to call 'getValue' before a param is connected.
 * Operators now become dirty when adding Inputs and Outputs.
 * Quat.setFrom2Vectors was incorrectly normalizing input vectors. Now assumes unit vectors are provided.

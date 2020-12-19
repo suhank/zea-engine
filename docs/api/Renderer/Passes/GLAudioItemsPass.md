@@ -4,7 +4,7 @@
 Class representing a GL audio items pass.
 
 
-**Extends**: <code>[GLPass](api/Renderer/Passes/GLPass.md)</code>  
+**Extends**: <code>[GLPass](api/Renderer\Passes\GLPass.md)</code>  
 
 * [GLAudioItemsPass ⇐ <code>GLPass</code>](#GLAudioItemsPass)
     * [new GLAudioItemsPass()](#new-GLAudioItemsPass)
@@ -43,7 +43,7 @@ It allows Passes to select geometries to handle the drawing of.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| treeItem | <code>[TreeItem](api/SceneTree/TreeItem.md)</code> | The treeItem value. |
+| treeItem | <code>[TreeItem](api/SceneTree\TreeItem.md)</code> | The treeItem value. |
 | rargs | <code>object</code> | Extra return values are passed back in this object. The object contains a parameter 'continueInSubTree', which can be set to false, so the subtree of this node will not be traversed after this node is handled. |
 
 <a name="GLAudioItemsPass+itemRemovedFromScene"></a>
@@ -57,7 +57,7 @@ is removed to the scene, and the pass must handle cleaning up any resources.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| treeItem | <code>[TreeItem](api/SceneTree/TreeItem.md)</code> | The treeItem value. |
+| treeItem | <code>[TreeItem](api/SceneTree\TreeItem.md)</code> | The treeItem value. |
 | rargs | <code>object</code> | Extra return values are passed back in this object. |
 
 <a name="GLAudioItemsPass+addAudioSource"></a>

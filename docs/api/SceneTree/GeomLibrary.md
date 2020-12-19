@@ -72,7 +72,7 @@ Returns the number of geometries the GeomLibrary has, or will have at the end of
 The getGeom method.
 
 
-**Returns**: <code>[BaseGeom](api/SceneTree/Geometry/BaseGeom.md)</code> - - The stored geometry  
+**Returns**: <code>[BaseGeom](api/SceneTree\Geometry\BaseGeom.md)</code> - - The stored geometry  
 
 | Param | Type | Description |
 | --- | --- | --- |

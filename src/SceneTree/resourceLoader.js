@@ -15,6 +15,41 @@ function checkStatus(response) {
 /**
  * Class for delegating resource loading, enabling an abstraction of a cloud file system to be implemented.
  *
+ * The resource loader can be used to load data, where it provides central tracking of loading progress and functionality to load various file types, including compressed archives.
+ * The plugins script must be loaded along with the engine
+ *
+ * ```html
+ *  <script crossorigin src="libs/zea-engine/dist/plugins.umd.js"></script>
+ * ```
+ *
+ * To load a 'text' file.
+ * ```javascript
+ *   resourceLoader.loadFile('text', url).then((txt) =>{
+ *      console.log(txt)
+ *   })
+ * ```
+ *
+ * To load a 'JSON' file.
+ * ```javascript
+ *   resourceLoader.loadFile('json', url).then((txt) =>{
+ *      console.log(json)
+ *   })
+ * ```
+ *
+ * To load a 'binary' file.
+ * ```javascript
+ *   resourceLoader.loadFile('binary', url).then((arrayBuffer) =>{
+ *      console.log(arrayBuffer.length)
+ *   })
+ * ```
+ *
+ * To load an 'archive' file that is a compressed archive containing multiple sub-files.
+ * ```javascript
+ *   resourceLoader.loadFile('archive', url).then((entries) =>{
+ *      console.log(entries)
+ *   })
+ * ```
+ *
  * **Events**
  * * **loaded:** emitted when a file has finished loading
  * * **progressIncremented:** emitted when a loading of processing task has been incremented
@@ -92,14 +127,14 @@ class ResourceLoader extends EventEmitter {
   }
 
   /**
-   * The resolveURL method.
+   * The resolveURL method returns a URL for a given fileID. The adaptor that is assigned is responsible for resolving the URL within the file system.
    * @deprecated
-   * @param {string} value - The file value.
-   * @return {string} - The resolved URL if an adapter is installed, else the original value.
+   * @param {string} fileId - The fileId.
+   * @return {string} - The resolved URL if an adapter is installed, else the original fileId.
    */
-  resolveURL(value) {
-    if (this.__adapter) return this.__adapter.resolveURL(value)
-    return value
+  resolveURL(fileId) {
+    if (this.__adapter) return this.__adapter.resolveURL(fileId)
+    return fileId
   }
 
   /**
