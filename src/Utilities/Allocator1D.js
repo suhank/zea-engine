@@ -68,7 +68,7 @@ class Allocator1D extends EventEmitter {
    * @return {Allocation1D} - The new allocation
    */
   allocate(id, size) {
-    if (this.allocationsMap[id]) {
+    if (this.allocationsMap[id] != undefined) {
       const index = this.allocationsMap[id]
       const allocation = this.allocations[index]
       // Resizing smaller
@@ -77,43 +77,42 @@ class Allocator1D extends EventEmitter {
       } else if (size < allocation.size) {
         // Split this block into 2. We use the first one for our item, and the second is put on the free list.
         const splitBlockSize = allocation.size - size
-        this.allocations.splice(index + 1, 0, new Allocation1D(allocation.start + size, splitBlockSize))
-        this.freeList.push(index + 1)
-        this.freeSpace += splitBlockSize
+        // this.allocations.splice(index + 1, 0, new Allocation1D(allocation.start + size, splitBlockSize))
+        this.addBlock(index + 1, new Allocation1D(allocation.start + size, splitBlockSize))
+        this.freeBlock(index + 1)
         allocation.size = size
 
         return allocation
       } else {
         // Try to consume any free blocks directly to our right.
-        let freeMemoryToTheRight = 0
-        let nextIndex = index + 1
-        while (this.freeList.includes(nextIndex)) {
-          freeMemoryToTheRight += this.allocations[this.freeList].size
-          nextIndex++
-          if (allocation.size + freeMemoryToTheRight >= size) {
-            break
-          }
-        }
-        if (allocation.size + freeMemoryToTheRight >= size) {
-          let consumed = 0
-          for (let i = index + 1; i < nextIndex; i++) {
-            if (i < nextIndex - 1 || allocation.size + freeMemoryToTheRight == size) {
-              // consume this free block
-              consumed += this.allocations[i].size
-              this.freeList.splice(this.freeList.indexOf(i), 1)
-              this.allocations.splice(i, 1)
-            } else {
-              // We want to shrink the last block
-              const prevAllocation = this.allocations[i]
-              prevAllocation.start += size - consumed
-              prevAllocation.size -= size - consumed
-            }
+        const nextIndex = index + 1
+        if (this.freeList.includes(nextIndex) && allocation.size + this.allocations[nextIndex].size >= size) {
+          const freeBlock = this.allocations[nextIndex]
+          if (allocation.size + freeBlock.size <= size) {
+            // consume this free block
+            allocation.size += freeBlock.size
+            this.freeSpace -= freeBlock.size
+            this.freeList.splice(this.freeList.indexOf(nextIndex), 1)
+            // this.allocations.splice(nextIndex, 1)
+            this.removeBlock(nextIndex)
+          } else {
+            // We want to shrink the next block by the mount we consumed
+            const consumed = size - allocation.size
+            allocation.size += consumed
+            this.freeSpace -= consumed
+            freeBlock.start += consumed
+            freeBlock.size -= consumed
           }
         } else {
-          // free up this slot an find a  new one
-          this.freeList.push(index)
+          // free up this slot an find a new one
+          // If the slot was at the end of the allocated memory, just decrement
+          // the allocated space making it immediately available for use.
+          if (allocation.start + allocation.size == this.allocatedSpace) {
+            this.allocatedSpace -= allocation.size
+          } else {
+            this.freeBlock(index)
+          }
           delete this.allocationsMap[id]
-          this.freeSpace += this.allocations[id].size
         }
       }
     }
@@ -139,9 +138,9 @@ class Allocator1D extends EventEmitter {
       if (freeItem.size > size) {
         // Split this block into 2. We use the first one for our item, and the second is put on the free list.
         const splitBlockSize = freeItem.size - size
-        this.allocations.splice(freeItemIndex + 1, 0, new Allocation1D(freeItem.start + size, splitBlockSize))
-        this.freeList.push(freeItemIndex + 1)
-        this.freeSpace += splitBlockSize
+        // this.allocations.splice(freeItemIndex + 1, 0, new Allocation1D(freeItem.start + size, splitBlockSize))
+        this.addBlock(freeItemIndex + 1, new Allocation1D(freeItem.start + size, splitBlockSize))
+        this.freeBlock(freeItemIndex + 1)
 
         // sort the free list from biggest to smallest
         this.freeList.sort((a, b) => this.allocations[a].size < this.allocations[b].size)
@@ -165,14 +164,88 @@ class Allocator1D extends EventEmitter {
   }
 
   /**
+   * Adds a new block
+   *
+   * @param {number} index - The index where the block should be inserted.
+   * @param {Allocation1D} allocation - The allocation to insert
+   */
+  addBlock(index, allocation) {
+    this.allocations.splice(index, 0, allocation)
+    for (const id in this.allocationsMap) {
+      if (this.allocationsMap[id] >= index) {
+        this.allocationsMap[id]++
+      }
+    }
+    for (let i = 0; i < this.freeList.length; i++) {
+      if (this.freeList[i] >= index) {
+        this.freeList[i]++
+      }
+    }
+  }
+
+  /**
+   * Remove a new block
+   *
+   * @param {number} index - The index where the block should be inserted.
+   * @param {Allocation1D} allocation - The allocation to insert
+   */
+  removeBlock(index) {
+    this.allocations.splice(index, 1)
+    for (const id in this.allocationsMap) {
+      if (this.allocationsMap[id] >= index) {
+        this.allocationsMap[id]--
+      }
+    }
+    for (let i = 0; i < this.freeList.length; i++) {
+      if (this.freeList[i] >= index) {
+        this.freeList[i]--
+      }
+    }
+  }
+
+  /**
+   * Frees a block by either growing neighboring blocks or adding a new free block
+   *
+   * @param {number} index - The index of the block to free.
+   */
+  freeBlock(index) {
+    const allocation = this.allocations[index]
+    this.freeSpace += allocation.size
+
+    // check for free blocks on either side of the allocated space
+    // and allow them to consume this block intead of adding a new smaller
+    // block.
+    const prevIndex = index - 1
+    if (this.freeList.includes(prevIndex)) {
+      const prevAllocation = this.allocations[prevIndex]
+      prevAllocation.size += allocation.size
+      // this.allocations.splice(index, 1)
+      this.removeBlock(index)
+      return
+    }
+
+    const nextIndex = index + 1
+    if (this.freeList.includes(nextIndex)) {
+      const nextAllocation = this.allocations[nextIndex]
+      nextAllocation.start -= allocation.size
+      nextAllocation.size += allocation.size
+      this.removeBlock(index)
+      return
+    }
+
+    this.freeList.push(index)
+  }
+
+  /**
    * Deallocate space for an existing item, making it free for other uses.
    *
    * @param {number} id - The unique numerical identifer for the block.
    */
   deallocate(id) {
-    if (this.allocations[id]) {
-      this.freeList.push(this.allocations[id])
-      delete this.allocations[id]
+    const index = this.allocationsMap[id]
+    if (this.allocations[index]) {
+      this.freeBlock(index)
+      delete this.allocationsMap[id]
     }
   }
 
