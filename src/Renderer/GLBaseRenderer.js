@@ -599,6 +599,7 @@ class GLBaseRenderer extends ParameterOwner {
     const ext = this.__gl.getExtension('WEBGL_multi_draw')
     if (ext) {
       this.__gl.multiDrawElementsInstanced = ext.multiDrawElementsInstancedWEBGL.bind(ext)
+      this.__gl.multiDrawArraysInstanced = ext.multiDrawArraysInstancedWEBGL.bind(ext)
     }
 
     this.__gl.screenQuad = new GLScreenQuad(this.__gl)

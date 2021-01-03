@@ -31,7 +31,7 @@ class GLMaterialLibrary extends EventEmitter {
 
     this.numItems++
 
-    const coords = this.materialPacker.addBlock({ w: 2, h: 1 })
+    const coords = this.materialPacker.addBlock({ w: 3, h: 1 })
     const materialId = this.materialDatas.length
     this.materialDatas.push({
       material,
@@ -123,6 +123,8 @@ class GLMaterialLibrary extends EventEmitter {
    */
   bind(renderstate) {
     if (this.needsUpload()) this.uploadMaterials()
+
+    if (!this.materialsTexture) return
 
     const gl = this.gl
     const unifs = renderstate.unifs

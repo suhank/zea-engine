@@ -35,9 +35,9 @@ class GLGeomSet extends EventEmitter {
     this.numVertexAttributes = 0
 
     // If the allocator ever resizes, then we need to re-upload everything.
-    this.attributesAllocator.on('resize', () => {
+    this.attributesAllocator.on('resized', () => {
       this.dirtyGeomIndices = []
-      for (let i = o; i < this.geoms.size; i++) this.dirtyGeomIndices.push(i)
+      for (let i = 0; i < this.geoms.length; i++) this.dirtyGeomIndices.push(i)
     })
     this.attributesAllocator.on('dataReallocated', (event) => {
       // during allocation, a defragment might occur, which means
@@ -63,11 +63,12 @@ class GLGeomSet extends EventEmitter {
     this.drawIdsArray = null
     this.drawIdsBuffer = null
     this.drawIdsTexture = null
-    this.drawIdsBufferDirty = true
+    this.dirtyDrawIndexIndices = []
+    this.drawIdsFirsts = []
 
     this.highlightedIdsArray = null
     this.highlightedIdsTexture = null
-    this.highlightedIdsBufferDirty = true
+    this.dirtyDrawHighlightIndices = []
   }
 
   /**
@@ -143,12 +144,12 @@ class GLGeomSet extends EventEmitter {
       this.instanceCountsDraw[index] += event.change
       this.drawCount += event.change
       if (this.maxGeomItemSetDrawCount < event.count) this.maxGeomItemSetDrawCount = event.count
-      this.drawIdsBufferDirty = true
+      this.dirtyDrawIndexIndices.push(index)
     }
     const highlightedCountChanged = (event) => {
       this.instanceCountsHighlight[index] += event.change
       this.highlightedCount += event.change
-      this.highlightedIdsBufferDirty = true
+      this.dirtyDrawHighlightIndices.push(index)
     }
     const destructing = () => {
       glGeomItemSet.off('drawCountChanged', drawCountChanged)
@@ -287,7 +288,11 @@ class GLGeomSet extends EventEmitter {
    * @param {number} index - The index of the geom to upload
    */
   uploadBuffers(index) {
-    const geomBuffers = this.geomBuffersTmp[index]
+    let geomBuffers = this.geomBuffersTmp[index]
+    if (!geomBuffers) {
+      const geom = this.getGeom(index)
+      geomBuffers = geom.genBuffers()
+    }
 
     const count = this.geomVertexCounts[index]
     if (count != geomBuffers.numRenderVerts) {
@@ -330,6 +335,13 @@ class GLGeomSet extends EventEmitter {
 
     this.dirtyGeomIndices = []
     this.geomBuffersTmp = []
+
+    // eslint-disable-next-line guard-for-in
+    for (const shaderkey in this.shaderBindings) {
+      const shaderBinding = this.shaderBindings[shaderkey]
+      shaderBinding.destroy()
+    }
+    this.shaderBindings = {}
   }
 
   // ////////////////////////////////////
@@ -358,16 +370,18 @@ class GLGeomSet extends EventEmitter {
       this.drawIdsTexture.width < this.maxGeomItemSetDrawCount ||
       this.drawIdsTexture.height < this.glGeomItemSets.length
     ) {
-      this.drawIdsTexture.resize(size, size)
-      this.__dirtyItemIndices = Array((size * size) / pixelsPerItem)
+      const width = this.maxGeomItemSetDrawCount
+      const height = this.glGeomItemSets.length
+      this.drawIdsTexture.resize(width, height)
+      this.dirtyDrawIndexIndices = Array(this.glGeomItemSets.length)
         .fill()
         .map((v, i) => i)
     }
 
     const tex = this.drawIdsTexture
     gl.bindTexture(gl.TEXTURE_2D, tex.glTex)
-    this.glGeomItemSets.forEach((glGeomItemSet, index) => {
-      const drawIdsArray = glGeomItemSet.getDrawIdsArray()
+    this.dirtyDrawIndexIndices.forEach((index) => {
+      const drawIdsArray = this.glGeomItemSets[index].getDrawIdsArray()
       const level = 0
       const xoffset = 0
       const yoffset = index
@@ -377,11 +391,11 @@ class GLGeomSet extends EventEmitter {
       const type = tex.__type
       gl.texSubImage2D(gl.TEXTURE_2D, level, xoffset, yoffset, width, height, format, type, drawIdsArray)
     })
+    this.dirtyDrawIndexIndices = []
 
     // Note: after uploading new data to the GPU, the immediate draw fails to receive the new data
     // we need to trigger another redraw.
     this.emit('updated')
-    this.drawIdsBufferDirty = false
   }
 
   // ////////////////////////////////////
@@ -408,16 +422,18 @@ class GLGeomSet extends EventEmitter {
       this.highlightedIdsTexture.width < this.maxGeomItemSetDrawCount ||
       this.highlightedIdsTexture.height < this.glGeomItemSets.length
     ) {
-      this.highlightedIdsTexture.resize(size, size)
-      this.__dirtyItemIndices = Array((size * size) / pixelsPerItem)
+      const width = this.maxGeomItemSetDrawCount
+      const height = this.glGeomItemSets.length
+      this.highlightedIdsTexture.resize(width, height)
+      this.dirtyDrawHighlightIndices = Array(this.glGeomItemSets.length)
         .fill()
         .map((v, i) => i)
     }
 
     const tex = this.highlightedIdsTexture
     gl.bindTexture(gl.TEXTURE_2D, tex.glTex)
-    this.glGeomItemSets.forEach((glGeomItemSet, index) => {
-      const highlightedIdsArray = glGeomItemSet.getHighlightedIdsArray()
+    this.dirtyDrawHighlightIndices.forEach((index) => {
+      const highlightedIdsArray = this.glGeomItemSets[index].getHighlightedIdsArray()
       const level = 0
       const xoffset = 0
       const yoffset = index
@@ -428,11 +444,11 @@ class GLGeomSet extends EventEmitter {
       gl.texSubImage2D(gl.TEXTURE_2D, level, xoffset, yoffset, width, height, format, type, highlightedIdsArray)
     })
 
+    this.dirtyDrawHighlightIndices = []
+
     // Note: after uploading new data to the GPU, the immediate draw fails to receive the new data
     // we need to trigger another redraw.
     this.emit('updated')
-
-    this.highlightedIdsBufferDirty = false
   }
 
   // /////////////////////////////////////
@@ -496,11 +512,14 @@ class GLGeomSet extends EventEmitter {
    */
   draw(renderstate) {
     this.bindGeomBuffers(renderstate)
-    if (this.drawIdsBufferDirty) {
+    if (this.dirtyDrawIndexIndices.length > 0) {
       this.updateDrawIDsBuffer()
     }
     this.bindDrawIds(renderstate, this.drawIdsTexture)
-    this.multiDrawInstanced(this.instanceCountsDraw, this.drawCount)
+
+    renderstate.bindViewports(renderstate.unifs, () => {
+      this.multiDrawInstanced(this.instanceCountsDraw, this.drawCount)
+    })
   }
 
   /**
@@ -508,8 +527,9 @@ class GLGeomSet extends EventEmitter {
    * @param {any} renderstate - The renderstate value.
    */
   drawHighlightedGeoms(renderstate) {
+    if (this.highlightedCount == 0) return
     this.bindGeomBuffers(renderstate)
-    if (this.highlightedIdsBufferDirty) {
+    if (this.dirtyDrawHighlightIndices.length > 0) {
       this.updateHighlightedIDsBuffer()
     }
     this.bindDrawIds(renderstate, this.highlightedIdsTexture)
@@ -522,7 +542,7 @@ class GLGeomSet extends EventEmitter {
    */
   drawGeomData(renderstate) {
     this.bindGeomBuffers(renderstate)
-    if (this.drawIdsBufferDirty) {
+    if (this.dirtyDrawIndexIndices.length > 0) {
       this.updateDrawIDsBuffer()
     }
     this.bindDrawIds(renderstate, this.drawIdsTexture)

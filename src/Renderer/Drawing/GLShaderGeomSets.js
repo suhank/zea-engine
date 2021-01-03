@@ -90,6 +90,7 @@ class GLShaderGeomSets extends EventEmitter {
 
     const gl = renderstate.gl
     const unifs = renderstate.unifs
+
     const drawItemsTexture = renderstate.drawItemsTexture
     if (drawItemsTexture && unifs.instancesTexture) {
       drawItemsTexture.bindToUniform(renderstate, unifs.instancesTexture)
@@ -133,18 +134,13 @@ class GLShaderGeomSets extends EventEmitter {
   drawGeomData(renderstate) {
     this.bindShader(this.glGeomDataShader, renderstate)
 
-    const gl = this.__gl
-    {
-      const unif = renderstate.unifs.floatGeomBuffer
-      if (unif) {
-        gl.uniform1i(unif.location, gl.floatGeomBuffer ? 1 : 0)
-      }
+    const gl = renderstate.gl
+    const unifs = renderstate.unifs
+    if (unifs.floatGeomBuffer) {
+      gl.uniform1i(unifs.floatGeomBuffer.location, 1)
     }
-    {
-      const unif = renderstate.unifs.passId
-      if (unif) {
-        gl.uniform1i(unif.location, this.__passIndex)
-      }
+    if (unifs.passId) {
+      gl.uniform1i(unifs.passId.location, renderstate.passIndex)
     }
 
     for (const elementType in this.glGeomSets) {

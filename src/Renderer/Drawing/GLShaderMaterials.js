@@ -140,7 +140,7 @@ class GLShaderMaterials extends EventEmitter {
     {
       const unif = renderstate.unifs.passId
       if (unif) {
-        gl.uniform1i(unif.location, this.__passIndex)
+        gl.uniform1i(unif.location, renderstate.passIndex)
       }
     }
 
