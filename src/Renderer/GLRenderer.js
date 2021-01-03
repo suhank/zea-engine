@@ -318,10 +318,10 @@ class GLRenderer extends GLBaseRenderer {
   resizeFbos(width, height) {
     super.resizeFbos()
     if (this.__fbo) {
-      this.__fbo.colorTexture.resize(width, height)
+      this.__fbo.resize(width, height)
     }
     if (this.__highlightedGeomsBufferFbo) {
-      this.__highlightedGeomsBuffer.resize(width, height)
+      this.__highlightedGeomsBufferFbo.resize(width, height)
     }
   }
 

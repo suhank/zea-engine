@@ -564,6 +564,11 @@ class GLTexture2D extends RefCounted {
         this.__gltex = gltex
         this.__updateGLTexParams()
       } else {
+        if (this.width > 0 && this.height > 0) {
+          // this destroys the texture. I am sure this is a memory leak here, but can't figure out what to do to fix it.
+          // this.__gl.deleteTexture(this.__gltex)
+          // this.__gltex = gl.createTexture()
+        }
         gl.bindTexture(gl.TEXTURE_2D, this.__gltex)
         gl.texImage2D(gl.TEXTURE_2D, 0, this.__internalFormat, width, height, 0, this.__format, this.__type, null)
       }

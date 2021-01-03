@@ -30,7 +30,9 @@ class GLFbo {
     this.resize = this.resize.bind(this)
 
     if (this.__colorTexture) {
-      this.__colorTexture.on('resized', this.resize)
+      this.__colorTexture.on('resized', (event) => {
+        this.resize(this.__colorTexture.width, this.__colorTexture.height, false)
+      })
     }
 
     this.setup()
@@ -241,8 +243,13 @@ class GLFbo {
    * @todo: Fbos should manage the textures assigned to them.
    * E.g. resizing and preserving data.
    */
-  resize() {
+  resize(width, height, resizeTexture) {
     const gl = this.__gl
+
+    if (resizeTexture) {
+      this.__colorTexture.resize(width, height, false, false)
+    }
+
     if (gl.name == 'webgl2') gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, this.__fbo)
     else gl.bindFramebuffer(gl.FRAMEBUFFER, this.__fbo)
 
