@@ -211,13 +211,6 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
 
     const glGeomItem = transparentItem.glGeomItem
     if (glGeomItem.bind(renderstate)) {
-      // Specify an non-instanced draw to the shader
-      if (renderstate.unifs.instancedDraw) {
-        const gl = this.__gl
-        gl.uniform1i(renderstate.unifs.instancedDraw.location, 0)
-        gl.disableVertexAttribArray(renderstate.attrs.instancedIds.location)
-      }
-
       renderstate.bindViewports(renderstate.unifs, () => {
         cache.currentGLGeom.draw(renderstate)
       })
@@ -242,6 +235,16 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
         if (!glShader.bind(renderstate)) {
           continue
         }
+
+        // Specify an non-instanced draw to the shader
+        const gl = this.__gl
+        if (renderstate.unifs.instancedDraw) {
+          gl.uniform1i(renderstate.unifs.instancedDraw.location, 0)
+        }
+        if (renderstate.attrs.instancedIds && renderstate.attrs.instancedIds.location != -1) {
+          gl.disableVertexAttribArray(renderstate.attrs.instancedIds.location)
+        }
+
         cache.currentglShader = glShader
       }
 
