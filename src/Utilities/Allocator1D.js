@@ -1,4 +1,5 @@
 import { EventEmitter } from './EventEmitter'
+import { MathFunctions } from './MathFunctions'
 
 /**
  * An Allocation1D represents an allocated block of memory.
@@ -53,6 +54,7 @@ class Allocator1D extends EventEmitter {
     this.freeList = []
     this.allocations = []
     this.allocationsMap = {} // A mapping of id to index within the allocations list
+    this.allocatedSpace = 0
     this.reservedSpace = 0
     this.freeSpace = 0
   }
@@ -148,10 +150,14 @@ class Allocator1D extends EventEmitter {
       }
       this.allocationsMap[id] = freeItemIndex
     } else {
-      const start = this.reservedSpace
+      const start = this.allocatedSpace
       const index = this.allocations.length
-      this.reservedSpace += size
-      this.emit('resized', { reservedSpace: this.reservedSpace })
+      this.allocatedSpace += size
+      const reserved = MathFunctions.nextPow2(this.allocatedSpace)
+      if (reserved != this.reservedSpace) {
+        this.reservedSpace = reserved
+        this.emit('resized', { reservedSpace: this.reservedSpace })
+      }
       this.allocations.push(new Allocation1D(start, size))
       this.allocationsMap[id] = index
     }
@@ -176,7 +182,7 @@ class Allocator1D extends EventEmitter {
    * @return {number} The fragmentation ratio. Between 0 and some value less than 1
    */
   getFragmentation() {
-    return this.freeSpace / this.reservedSpace
+    return this.freeSpace / this.allocatedSpace
   }
 
   /**

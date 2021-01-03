@@ -182,7 +182,7 @@ class GLMeshSet extends GLGeomSet {
    * The clearBuffers method.
    */
   clearBuffers() {
-    const gl = this.__gl
+    // const gl = this.__gl
     // if (this.indexBuffer) {
     //   gl.deleteBuffer(this.indexBuffer)
     //   this.indexBuffer = null

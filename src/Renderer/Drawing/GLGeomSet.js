@@ -1,3 +1,4 @@
+/* eslint-disable guard-for-in */
 import { EventEmitter } from '../../Utilities/index'
 import { Allocator1D } from '../../Utilities/Allocator1D.js'
 import { GLGeomItemSet } from './GLGeomItemSet.js'
@@ -29,15 +30,15 @@ class GLGeomSet extends EventEmitter {
     this.geomBuffersTmp = [] // for each geom, these are the buffer
     this.glattrbuffers = {}
     this.shaderBindings = {}
-
+    this.bufferNeedsRealloc = false
     this.attributesAllocator = new Allocator1D()
     this.dirtyGeomIndices = []
-    this.numVertexAttributes = 0
 
     // If the allocator ever resizes, then we need to re-upload everything.
     this.attributesAllocator.on('resized', () => {
       this.dirtyGeomIndices = []
       for (let i = 0; i < this.geoms.length; i++) this.dirtyGeomIndices.push(i)
+      this.bufferNeedsRealloc = true
     })
     this.attributesAllocator.on('dataReallocated', (event) => {
       // during allocation, a defragment might occur, which means
@@ -218,7 +219,7 @@ class GLGeomSet extends EventEmitter {
   // Buffers
 
   /**
-   * The genBuffers method.
+   * Allocates space for the geomBuffers for the specified geometry
    * @param {number} index - The index of the geom to upload
    * @param {object} opts - The opts value.
    */
@@ -231,7 +232,6 @@ class GLGeomSet extends EventEmitter {
 
       this.geomVertexOffsets[index] = allocation.start
       this.geomVertexCounts[index] = allocation.size
-      this.geomBuffersTmp[index] = geomBuffers
     }
 
     // eslint-disable-next-line guard-for-in
@@ -245,45 +245,42 @@ class GLGeomSet extends EventEmitter {
         }
       }
     }
+    this.geomBuffersTmp[index] = geomBuffers
   }
 
   /**
-   * The genBuffers method.
+   * Generates the GPU buffers required to store all the geometries
    */
   genBuffers() {
-    const length = this.attributesAllocator.reservedSpace
-    if (this.numVertexAttributes != length) {
-      const gl = this.__gl
+    const reservedSpace = this.attributesAllocator.reservedSpace
+    const gl = this.__gl
 
-      // eslint-disable-next-line guard-for-in
-      for (const attrName in this.shaderAttrSpec) {
-        const attrSpec = this.shaderAttrSpec[attrName]
-        const numValues = length * attrSpec.dimension
-        attrSpec.numValues = numValues // cache for debugging only
+    // eslint-disable-next-line guard-for-in
+    for (const attrName in this.shaderAttrSpec) {
+      const attrSpec = this.shaderAttrSpec[attrName]
+      const numValues = reservedSpace * attrSpec.dimension
+      attrSpec.numValues = numValues // cache for debugging only
 
-        if (this.glattrbuffers[attrName] && this.glattrbuffers[attrName].buffer) {
-          gl.deleteBuffer(this.glattrbuffers[attrName].buffer)
-        }
-
-        const attrBuffer = gl.createBuffer()
-        gl.bindBuffer(gl.ARRAY_BUFFER, attrBuffer)
-
-        const elementSize = 4 // assuming floats for now. (We also need to support RGB Byte values.)
-        const sizeInBytes = numValues * elementSize
-        gl.bufferData(gl.ARRAY_BUFFER, sizeInBytes, gl.STATIC_DRAW)
-
-        this.glattrbuffers[attrName] = {
-          buffer: attrBuffer,
-          dataType: attrSpec.dataType,
-          normalized: attrSpec.normalized,
-          length: numValues,
-          dimension: attrSpec.dimension,
-        }
-
-        if (attrName == 'textureCoords') this.glattrbuffers['texCoords'] = this.glattrbuffers['textureCoords']
+      if (this.glattrbuffers[attrName] && this.glattrbuffers[attrName].buffer) {
+        gl.deleteBuffer(this.glattrbuffers[attrName].buffer)
       }
 
-      this.numVertexAttributes = length
+      const attrBuffer = gl.createBuffer()
+      gl.bindBuffer(gl.ARRAY_BUFFER, attrBuffer)
+
+      const elementSize = 4 // assuming floats for now. (We also need to support RGB Byte values.)
+      const sizeInBytes = numValues * elementSize
+      gl.bufferData(gl.ARRAY_BUFFER, sizeInBytes, gl.STATIC_DRAW)
+
+      this.glattrbuffers[attrName] = {
+        buffer: attrBuffer,
+        dataType: attrSpec.dataType,
+        normalized: attrSpec.normalized,
+        length: numValues,
+        dimension: attrSpec.dimension,
+      }
+
+      if (attrName == 'textureCoords') this.glattrbuffers['texCoords'] = this.glattrbuffers['textureCoords']
     }
   }
 
@@ -331,7 +328,18 @@ class GLGeomSet extends EventEmitter {
       this.allocateBuffers(index)
     })
 
-    this.genBuffers()
+    if (this.bufferNeedsRealloc) {
+      // If the geom buffers are re-allocated, we need to regenerate
+      // all the shader bindings.
+      for (const shaderkey in this.shaderBindings) {
+        const shaderBinding = this.shaderBindings[shaderkey]
+        shaderBinding.destroy()
+      }
+      this.shaderBindings = {}
+
+      this.genBuffers()
+      this.bufferNeedsRealloc = false
+    }
 
     this.dirtyGeomIndices.forEach((index) => {
       this.uploadBuffers(index)
@@ -517,10 +525,10 @@ class GLGeomSet extends EventEmitter {
    * The draw method.
    */
   draw(renderstate) {
-    this.bindGeomBuffers(renderstate)
     if (this.dirtyDrawIndexIndices.length > 0) {
       this.updateDrawIDsBuffer()
     }
+    this.bindGeomBuffers(renderstate)
     this.bindDrawIds(renderstate, this.drawIdsTexture)
 
     renderstate.bindViewports(renderstate.unifs, () => {
@@ -536,12 +544,15 @@ class GLGeomSet extends EventEmitter {
    */
   drawHighlightedGeoms(renderstate) {
     if (this.highlightedCount == 0) return
-    this.bindGeomBuffers(renderstate)
     if (this.dirtyDrawHighlightIndices.length > 0) {
       this.updateHighlightedIDsBuffer()
     }
+    this.bindGeomBuffers(renderstate)
     this.bindDrawIds(renderstate, this.highlightedIdsTexture)
-    this.multiDrawInstanced(this.instanceCountsHighlight)
+    renderstate.bindViewports(renderstate.unifs, () => {
+      this.multiDrawInstanced(this.instanceCountsHighlight)
+    })
+    this.unbind(renderstate)
   }
 
   /**
@@ -549,12 +560,15 @@ class GLGeomSet extends EventEmitter {
    * @param {any} renderstate - The renderstate value.
    */
   drawGeomData(renderstate) {
-    this.bindGeomBuffers(renderstate)
     if (this.dirtyDrawIndexIndices.length > 0) {
       this.updateDrawIDsBuffer()
     }
+    this.bindGeomBuffers(renderstate)
     this.bindDrawIds(renderstate, this.drawIdsTexture)
-    this.multiDrawInstanced(this.instanceCountsDraw)
+    renderstate.bindViewports(renderstate.unifs, () => {
+      this.multiDrawInstanced(this.instanceCountsDraw)
+    })
+    this.unbind(renderstate)
   }
 
   /**

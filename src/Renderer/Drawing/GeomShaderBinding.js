@@ -1,3 +1,4 @@
+/* eslint-disable guard-for-in */
 import { Color, Vec2, Vec3, Vec4, RGBA } from '../../Math/index'
 import { UInt8, SInt8, UInt16, SInt16, UInt32, SInt32, Float32 } from '../../Utilities/MathFunctions'
 
