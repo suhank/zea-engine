@@ -216,7 +216,7 @@ class GLMeshSet extends GLGeomSet {
    * Draw an item to screen.
    * @param {Array} - instanceCounts the instance counts for this draw call.
    */
-  multiDrawInstanced(instanceCounts, drawCount) {
+  multiDrawInstanced(instanceCounts) {
     // multiDrawElementsInstanced variant.
     // Assumes that the indices which have been previously uploaded to the
     // ELEMENT_ARRAY_BUFFER are to be treated as UNSIGNED_SHORT.

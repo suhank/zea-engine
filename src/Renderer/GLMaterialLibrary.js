@@ -51,14 +51,6 @@ class GLMaterialLibrary extends EventEmitter {
   }
 
   /**
-   * The needsUpload method.
-   * @return {any} - The return value.
-   */
-  needsUpload() {
-    return this.dirtyIndices.length > 0
-  }
-
-  /**
    * The uploadMaterials method.
    */
   uploadMaterials() {
@@ -122,15 +114,16 @@ class GLMaterialLibrary extends EventEmitter {
    * @return {any} - The return value.
    */
   bind(renderstate) {
-    if (this.needsUpload()) this.uploadMaterials()
+    if (this.dirtyIndices.length > 0) this.uploadMaterials()
 
     if (!this.materialsTexture) return
 
     const gl = this.gl
     const unifs = renderstate.unifs
-    if (unifs.materialsTexture) this.materialsTexture.bindToUniform(renderstate, unifs.materialsTexture)
-    if (unifs.materialsTextureSize)
+    if (unifs.materialsTexture) {
+      this.materialsTexture.bindToUniform(renderstate, unifs.materialsTexture)
       gl.uniform2i(unifs.materialsTextureSize.location, this.materialsTexture.width, this.materialsTexture.height)
+    }
     return true
   }
 }

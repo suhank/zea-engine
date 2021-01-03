@@ -145,11 +145,15 @@ class GLGeomSet extends EventEmitter {
       this.drawCount += event.change
       if (this.maxGeomItemSetDrawCount < event.count) this.maxGeomItemSetDrawCount = event.count
       this.dirtyDrawIndexIndices.push(index)
+
+      this.emit('updated')
     }
     const highlightedCountChanged = (event) => {
       this.instanceCountsHighlight[index] += event.change
       this.highlightedCount += event.change
       this.dirtyDrawHighlightIndices.push(index)
+
+      this.emit('updated')
     }
     const destructing = () => {
       glGeomItemSet.off('drawCountChanged', drawCountChanged)
@@ -493,6 +497,8 @@ class GLGeomSet extends EventEmitter {
    * @param {any} renderstate - The renderstate value.
    */
   unbind(renderstate) {
+    renderstate.boundTextures-- // drawIdsTexture
+
     // Unbinding a geom is important as it puts back some important
     // GL state. (vertexAttribDivisor)
     const shaderBinding = this.shaderBindings[renderstate.shaderkey]
@@ -505,7 +511,7 @@ class GLGeomSet extends EventEmitter {
   // Drawing
   // Draw an item to screen.
 
-  multiDrawInstanced(instanceCounts, drawCount) {}
+  multiDrawInstanced(instanceCounts) {}
 
   /**
    * The draw method.
@@ -518,8 +524,10 @@ class GLGeomSet extends EventEmitter {
     this.bindDrawIds(renderstate, this.drawIdsTexture)
 
     renderstate.bindViewports(renderstate.unifs, () => {
-      this.multiDrawInstanced(this.instanceCountsDraw, this.drawCount)
+      this.multiDrawInstanced(this.instanceCountsDraw)
     })
+
+    this.unbind(renderstate)
   }
 
   /**
@@ -533,7 +541,7 @@ class GLGeomSet extends EventEmitter {
       this.updateHighlightedIDsBuffer()
     }
     this.bindDrawIds(renderstate, this.highlightedIdsTexture)
-    this.multiDrawInstanced(this.instanceCountsHighlight, this.highlightedCount)
+    this.multiDrawInstanced(this.instanceCountsHighlight)
   }
 
   /**
@@ -546,7 +554,7 @@ class GLGeomSet extends EventEmitter {
       this.updateDrawIDsBuffer()
     }
     this.bindDrawIds(renderstate, this.drawIdsTexture)
-    this.multiDrawInstanced(this.instanceCountsDraw, this.drawCount)
+    this.multiDrawInstanced(this.instanceCountsDraw)
   }
 
   /**
