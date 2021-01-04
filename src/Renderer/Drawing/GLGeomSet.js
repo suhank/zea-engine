@@ -447,47 +447,22 @@ class GLGeomSet extends EventEmitter {
 
       let consumed = 0
       let remaining = allocation.size
+      let rowStart = xoffset
       for (let i = 0; i < rows; i++) {
-        // const width = (xoffset + consumed + allocation.size) % drawIdsTextureSize
-
         let width
-        if (xoffset + remaining > drawIdsTextureSize) {
-          width = drawIdsTextureSize - (xoffset + remaining)
+        if (rowStart + remaining > drawIdsTextureSize) {
+          width = drawIdsTextureSize - rowStart
+          rowStart = 0
         } else {
           width = remaining
         }
         const x = (allocation.start + consumed) % drawIdsTextureSize
         const y = Math.floor((allocation.start + consumed) / drawIdsTextureSize)
-        const data = drawIdsArray.subarray(consumed, width)
+        const data = drawIdsArray.subarray(consumed, consumed + width)
         gl.texSubImage2D(gl.TEXTURE_2D, level, x, y, width, height, format, type, data)
         consumed += width
         remaining -= width
       }
-
-      // let remaining = allocation.size
-      // while (remaining) {
-      //   let width
-      //   if (xoffset + remaining > drawIdsTextureSize) {
-      //     width = drawIdsTextureSize - (xoffset + remaining)
-      //   } else {
-      //     width = remaining
-      //   }
-      //   const data = drawIdsArray.subarray(consumed, width)
-      //   gl.texSubImage2D(gl.TEXTURE_2D, level, xoffset, yoffset + row, width, height, format, type, data)
-      //   remaining -= width
-      // }
-
-      // if (allocation.start + allocation.size <= drawIdsTextureSize) {
-      //   const width = drawIdsArray.length
-      //   gl.texSubImage2D(gl.TEXTURE_2D, level, xoffset, yoffset, width, height, format, type, drawIdsArray)
-      // } else {
-      //   const width0 = drawIdsTextureSize - (allocation.start + allocation.size)
-      //   const part0 = drawIdsArray.subarray(0, width0)
-      //   gl.texSubImage2D(gl.TEXTURE_2D, level, xoffset, yoffset, width0, height, format, type, part0)
-      //   const width1 = drawIdsArray.length - width0
-      //   const part1 = drawIdsArray.subarray(width0)
-      //   gl.texSubImage2D(gl.TEXTURE_2D, level, 0, yoffset + 1, width1, height, format, type, part1)
-      // }
     })
     this.dirtyDrawIndexIndices = []
 
