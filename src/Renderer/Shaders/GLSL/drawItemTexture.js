@@ -10,15 +10,22 @@ uniform int transformIndex;
 
 #ifdef ENABLE_MULTI_DRAW
 
+uniform sampler2D drawIdsLayoutTexture;
+uniform int drawIdsLayoutTextureSize;
 uniform sampler2D drawIdsTexture;
+uniform int drawIdsTextureSize;
+
 uniform int instancedDraw;
 
 int getDrawItemId() {
   if(instancedDraw == 0){
     return transformIndex;
   }
-  else{
-    return int(texelFetch(drawIdsTexture, ivec2(gl_InstanceID, gl_DrawID), 0).r + 0.5);
+  else {
+    ivec2 drawIdLayoutCoords = ivec2(gl_DrawID % drawIdsLayoutTextureSize, gl_DrawID / drawIdsLayoutTextureSize);
+    int offset = int(texelFetch(drawIdsLayoutTexture, drawIdLayoutCoords, 0).r + 0.5) + gl_InstanceID;
+    ivec2 drawIdsArrayCoords = ivec2(offset % drawIdsTextureSize, offset / drawIdsTextureSize);
+    return int(texelFetch(drawIdsTexture, drawIdsArrayCoords, 0).r + 0.5);
   }
 }
 

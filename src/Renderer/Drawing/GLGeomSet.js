@@ -37,7 +37,9 @@ class GLGeomSet extends EventEmitter {
     // If the allocator ever resizes, then we need to re-upload everything.
     this.attributesAllocator.on('resized', () => {
       this.dirtyGeomIndices = []
-      for (let i = 0; i < this.geoms.length; i++) this.dirtyGeomIndices.push(i)
+      this.dirtyGeomIndices = Array(this.geoms.length)
+        .fill()
+        .map((v, i) => i)
       this.bufferNeedsRealloc = true
     })
     this.attributesAllocator.on('dataReallocated', (event) => {
@@ -61,13 +63,11 @@ class GLGeomSet extends EventEmitter {
     this.instanceCountsDraw = new Int32Array(0)
     this.instanceCountsHighlight = new Int32Array(0)
 
-    this.drawIdsArray = null
-    this.drawIdsBuffer = null
+    this.drawIdsAllocator = new Allocator1D()
     this.drawIdsTexture = null
     this.dirtyDrawIndexIndices = []
-    this.drawIdsFirsts = []
 
-    this.highlightedIdsArray = null
+    this.highlightedIdsAllocator = new Allocator1D()
     this.highlightedIdsTexture = null
     this.dirtyDrawHighlightIndices = []
   }
@@ -147,6 +147,8 @@ class GLGeomSet extends EventEmitter {
       if (this.maxGeomItemSetDrawCount < event.count) this.maxGeomItemSetDrawCount = event.count
       this.dirtyDrawIndexIndices.push(index)
 
+      this.drawIdsAllocator.allocate(index, event.count)
+
       this.emit('updated')
     }
     const highlightedCountChanged = (event) => {
@@ -154,12 +156,17 @@ class GLGeomSet extends EventEmitter {
       this.highlightedCount += event.change
       this.dirtyDrawHighlightIndices.push(index)
 
+      this.highlightedIdsAllocator.allocate(index, event.count)
+
       this.emit('updated')
     }
     const destructing = () => {
       glGeomItemSet.off('drawCountChanged', drawCountChanged)
       glGeomItemSet.off('highlightedCountChanged', highlightedCountChanged)
       glGeomItemSet.off('destructing', destructing)
+
+      this.drawIdsAllocator.deallocate(index)
+      this.highlightedIdsAllocator.deallocate(index)
 
       const index = this.glGeomItemSets.indexOf(glGeomItemSet)
       this.glGeomItemSets.splice(index, 1)
@@ -365,27 +372,62 @@ class GLGeomSet extends EventEmitter {
    * drawing.
    */
   updateDrawIDsBuffer() {
+    console.log('updateDrawIDsBuffer')
     const gl = this.__gl
+    const drawIdsLayoutTextureSize = Math.ceil(Math.sqrt(this.glGeomItemSets.length))
+
+    if (!this.drawIdsLayoutTexture) {
+      this.drawIdsLayoutTexture = new GLTexture2D(gl, {
+        format: 'RED',
+        internalFormat: 'R32F',
+        type: 'FLOAT',
+        width: drawIdsLayoutTextureSize,
+        height: drawIdsLayoutTextureSize,
+        filter: 'NEAREST',
+        wrap: 'CLAMP_TO_EDGE',
+        mipMapped: false,
+      })
+    } else if (this.drawIdsTexture.width != drawIdsLayoutTextureSize) {
+      this.drawIdsTexture.resize(drawIdsLayoutTextureSize, drawIdsLayoutTextureSize)
+      this.dirtyDrawIndexIndices = Array(this.glGeomItemSets.length)
+        .fill()
+        .map((v, i) => i)
+    }
+    {
+      const tex = this.drawIdsLayoutTexture
+      gl.bindTexture(gl.TEXTURE_2D, tex.glTex)
+      this.dirtyDrawIndexIndices.forEach((index) => {
+        const allocation = this.drawIdsAllocator.getAllocation(index)
+        const data = Float32Array.of(allocation.start)
+        const level = 0
+        const xoffset = index % drawIdsLayoutTextureSize
+        const yoffset = Math.floor(index / drawIdsLayoutTextureSize)
+        const height = 1
+        const format = tex.__format
+        const type = tex.__type
+        const width = data.length
+        gl.texSubImage2D(gl.TEXTURE_2D, level, xoffset, yoffset, width, height, format, type, data)
+      })
+    }
+
+    const drawIdsTextureSize = Math.ceil(Math.sqrt(this.drawIdsAllocator.reservedSpace))
+
     if (!this.drawIdsTexture) {
       this.drawIdsTexture = new GLTexture2D(gl, {
         format: 'RED',
         internalFormat: 'R32F',
         type: 'FLOAT',
-        width: this.maxGeomItemSetDrawCount,
-        height: this.glGeomItemSets.length,
+        width: drawIdsTextureSize,
+        height: drawIdsTextureSize,
         filter: 'NEAREST',
         wrap: 'CLAMP_TO_EDGE',
         mipMapped: false,
       })
-      // this.drawIdsTexture.clear()
-    } else if (
-      this.drawIdsTexture.width < this.maxGeomItemSetDrawCount ||
-      this.drawIdsTexture.height < this.glGeomItemSets.length
-    ) {
-      const width = this.maxGeomItemSetDrawCount
-      const height = this.glGeomItemSets.length
+    } else if (this.drawIdsTexture.width < drawIdsTextureSize || this.drawIdsTexture.height < drawIdsTextureSize) {
+      const width = drawIdsTextureSize
+      const height = drawIdsTextureSize
       this.drawIdsTexture.resize(width, height)
-      this.dirtyDrawIndexIndices = Array(this.glGeomItemSets.length)
+      this.dirtyDrawIndexIndices = Array(drawIdsTextureSize)
         .fill()
         .map((v, i) => i)
     }
@@ -393,15 +435,59 @@ class GLGeomSet extends EventEmitter {
     const tex = this.drawIdsTexture
     gl.bindTexture(gl.TEXTURE_2D, tex.glTex)
     this.dirtyDrawIndexIndices.forEach((index) => {
+      const allocation = this.drawIdsAllocator.getAllocation(index)
       const drawIdsArray = this.glGeomItemSets[index].getDrawIdsArray()
       const level = 0
-      const xoffset = 0
-      const yoffset = index
-      const width = drawIdsArray.length
+      const xoffset = allocation.start % drawIdsTextureSize
+      // const yoffset = Math.floor(allocation.start / drawIdsTextureSize)
       const height = 1
       const format = tex.__format
       const type = tex.__type
-      gl.texSubImage2D(gl.TEXTURE_2D, level, xoffset, yoffset, width, height, format, type, drawIdsArray)
+      const rows = Math.ceil((xoffset + allocation.size) / drawIdsTextureSize)
+
+      let consumed = 0
+      let remaining = allocation.size
+      for (let i = 0; i < rows; i++) {
+        // const width = (xoffset + consumed + allocation.size) % drawIdsTextureSize
+
+        let width
+        if (xoffset + remaining > drawIdsTextureSize) {
+          width = drawIdsTextureSize - (xoffset + remaining)
+        } else {
+          width = remaining
+        }
+        const x = (allocation.start + consumed) % drawIdsTextureSize
+        const y = Math.floor((allocation.start + consumed) / drawIdsTextureSize)
+        const data = drawIdsArray.subarray(consumed, width)
+        gl.texSubImage2D(gl.TEXTURE_2D, level, x, y, width, height, format, type, data)
+        consumed += width
+        remaining -= width
+      }
+
+      // let remaining = allocation.size
+      // while (remaining) {
+      //   let width
+      //   if (xoffset + remaining > drawIdsTextureSize) {
+      //     width = drawIdsTextureSize - (xoffset + remaining)
+      //   } else {
+      //     width = remaining
+      //   }
+      //   const data = drawIdsArray.subarray(consumed, width)
+      //   gl.texSubImage2D(gl.TEXTURE_2D, level, xoffset, yoffset + row, width, height, format, type, data)
+      //   remaining -= width
+      // }
+
+      // if (allocation.start + allocation.size <= drawIdsTextureSize) {
+      //   const width = drawIdsArray.length
+      //   gl.texSubImage2D(gl.TEXTURE_2D, level, xoffset, yoffset, width, height, format, type, drawIdsArray)
+      // } else {
+      //   const width0 = drawIdsTextureSize - (allocation.start + allocation.size)
+      //   const part0 = drawIdsArray.subarray(0, width0)
+      //   gl.texSubImage2D(gl.TEXTURE_2D, level, xoffset, yoffset, width0, height, format, type, part0)
+      //   const width1 = drawIdsArray.length - width0
+      //   const part1 = drawIdsArray.subarray(width0)
+      //   gl.texSubImage2D(gl.TEXTURE_2D, level, 0, yoffset + 1, width1, height, format, type, part1)
+      // }
     })
     this.dirtyDrawIndexIndices = []
 
@@ -487,16 +573,20 @@ class GLGeomSet extends EventEmitter {
   /**
    * The bindDrawIds method.
    * @param {object} renderstate - The renderstate value.
+   * @param {WebGLBuffer} drawIdsLayoutTexture - The renderstate value.
    * @param {WebGLBuffer} drawIdsTexture - The renderstate value.
    */
-  bindDrawIds(renderstate, drawIdsTexture) {
+  bindDrawIds(renderstate, drawIdsLayoutTexture, drawIdsTexture) {
     const gl = this.__gl
 
     if (renderstate.unifs.instancedDraw) {
       gl.uniform1i(renderstate.unifs.instancedDraw.location, 1)
     }
     if (renderstate.unifs.drawIdsTexture) {
+      drawIdsLayoutTexture.bindToUniform(renderstate, renderstate.unifs.drawIdsLayoutTexture)
+      gl.uniform1i(renderstate.unifs.drawIdsLayoutTextureSize.location, drawIdsLayoutTexture.width)
       drawIdsTexture.bindToUniform(renderstate, renderstate.unifs.drawIdsTexture)
+      gl.uniform1i(renderstate.unifs.drawIdsTextureSize.location, drawIdsTexture.width)
     }
   }
 
@@ -529,7 +619,7 @@ class GLGeomSet extends EventEmitter {
       this.updateDrawIDsBuffer()
     }
     this.bindGeomBuffers(renderstate)
-    this.bindDrawIds(renderstate, this.drawIdsTexture)
+    this.bindDrawIds(renderstate, this.drawIdsLayoutTexture, this.drawIdsTexture)
 
     renderstate.bindViewports(renderstate.unifs, () => {
       this.multiDrawInstanced(this.instanceCountsDraw)
@@ -564,7 +654,7 @@ class GLGeomSet extends EventEmitter {
       this.updateDrawIDsBuffer()
     }
     this.bindGeomBuffers(renderstate)
-    this.bindDrawIds(renderstate, this.drawIdsTexture)
+    this.bindDrawIds(renderstate, this.drawIdsLayoutTexture, this.drawIdsTexture)
     renderstate.bindViewports(renderstate.unifs, () => {
       this.multiDrawInstanced(this.instanceCountsDraw)
     })
