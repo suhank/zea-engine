@@ -60,6 +60,16 @@ class Allocator1D extends EventEmitter {
   }
 
   /**
+   * Returns the Allocates for the given Id.
+   *
+   * @param {number} id - The unique numerical identifer for the block.
+   * @return {Allocation1D} - The allocation
+   */
+  getAllocation(id) {
+    return this.allocations[this.allocationsMap[id]]
+  }
+
+  /**
    * Allocates space for a new or existing item. The id is a handle that the consuming code uses to
    * track allocations.
    *
