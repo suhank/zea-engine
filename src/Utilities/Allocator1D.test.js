@@ -1,7 +1,7 @@
 import { Allocator1D } from './Allocator1D'
 
 describe('Allocator1D', () => {
-  it('Simple allocation.', () => {
+  it('Simple allocation', () => {
     const allocator = new Allocator1D()
 
     allocator.allocate(0, 3)
@@ -10,7 +10,7 @@ describe('Allocator1D', () => {
     expect(allocator.reservedSpace).toEqual(8)
   })
 
-  it('Simple reallocation.', () => {
+  it('Simple reallocation', () => {
     const allocator = new Allocator1D()
 
     allocator.allocate(0, 3)
@@ -21,7 +21,21 @@ describe('Allocator1D', () => {
     expect(allocator.reservedSpace).toEqual(16)
   })
 
-  it('Grow allocation.', () => {
+  it('Simple grow buffer', () => {
+    const allocator = new Allocator1D()
+
+    allocator.allocate(0, 1)
+    allocator.allocate(1, 1)
+    allocator.allocate(1, 2) // simply grow the existing buffer
+
+    console.log(allocator.allocations)
+
+    expect(allocator.allocations.length).toEqual(2)
+    expect(allocator.freeSpace).toEqual(0)
+    expect(allocator.reservedSpace).toEqual(4)
+  })
+
+  it('Grow allocation', () => {
     const allocator = new Allocator1D()
 
     allocator.allocate(0, 3)
@@ -42,7 +56,7 @@ describe('Allocator1D', () => {
     expect(allocator.reservedSpace).toEqual(32)
   })
 
-  it('Grow reallocation.', () => {
+  it('Grow reallocation', () => {
     const allocator = new Allocator1D()
 
     allocator.allocate(0, 3)

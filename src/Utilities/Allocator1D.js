@@ -118,6 +118,7 @@ class Allocator1D extends EventEmitter {
           // If the slot was at the end of the allocated memory, just decrement
           // the allocated space making it immediately available for use.
           if (allocation.start + allocation.size == this.allocatedSpace) {
+            this.removeBlock(index)
             this.allocatedSpace -= allocation.size
           } else {
             this.freeBlock(index)
