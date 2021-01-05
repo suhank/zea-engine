@@ -393,7 +393,7 @@ class GLGeomSet extends EventEmitter {
         wrap: 'CLAMP_TO_EDGE',
         mipMapped: false,
       })
-    } else if (this.drawIdsTexture.width != drawIdsLayoutTextureSize) {
+    } else if (this.drawIdsLayoutTexture.width < drawIdsLayoutTextureSize) {
       this.drawIdsLayoutTexture.resize(drawIdsLayoutTextureSize, drawIdsLayoutTextureSize)
       texResized = true
     }
@@ -430,11 +430,10 @@ class GLGeomSet extends EventEmitter {
         const level = 0
         const xoffset = index % this.drawIdsLayoutTexture.width
         const yoffset = Math.floor(index / this.drawIdsLayoutTexture.width)
+        const width = 1
         const height = 1
         const format = tex.__format
         const type = tex.__type
-        const width = data.length
-        // console.log('drawIdsLayoutTexture:', xoffset + width, yoffset + height, this.drawIdsLayoutTexture.width)
         gl.texSubImage2D(gl.TEXTURE_2D, level, xoffset, yoffset, width, height, format, type, data)
       })
     }
@@ -466,7 +465,6 @@ class GLGeomSet extends EventEmitter {
           const x = (allocation.start + consumed) % this.drawIdsTexture.width
           const y = Math.floor((allocation.start + consumed) / this.drawIdsTexture.width)
           const data = drawIdsArray.subarray(consumed, consumed + width)
-          // console.log('drawIdsTexture:', x + width, y + height, this.drawIdsTexture.width)
           gl.texSubImage2D(gl.TEXTURE_2D, level, x, y, width, height, format, type, data)
           consumed += width
           remaining -= width
@@ -476,7 +474,6 @@ class GLGeomSet extends EventEmitter {
 
     this.dirtyDrawIndexIndices = new Set()
     gl.bindTexture(gl.TEXTURE_2D, null)
-    // gl.finish()
 
     // Note: after uploading new data to the GPU, the immediate draw fails to receive the new data
     // we need to trigger another redraw.
