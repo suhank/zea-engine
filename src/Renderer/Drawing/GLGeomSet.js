@@ -64,7 +64,7 @@ class GLGeomSet extends EventEmitter {
 
     this.drawIdsAllocator = new Allocator1D()
     this.drawIdsTexture = null
-    this.dirtyDrawIndexIndices = []
+    this.dirtyDrawIndexIndices = new Set()
 
     this.highlightedIdsAllocator = new Allocator1D()
     this.highlightedIdsTexture = null
@@ -144,7 +144,8 @@ class GLGeomSet extends EventEmitter {
       this.instanceCountsDraw[index] += event.change
       this.drawCount += event.change
       if (this.maxGeomItemSetDrawCount < event.count) this.maxGeomItemSetDrawCount = event.count
-      this.dirtyDrawIndexIndices.push(index)
+
+      this.dirtyDrawIndexIndices.add(index)
 
       this.drawIdsAllocator.allocate(index, event.count)
 
@@ -375,6 +376,8 @@ class GLGeomSet extends EventEmitter {
     const gl = this.__gl
     let texResized = false
 
+    // console.log('updateDrawIDsBuffer', this.dirtyDrawIndexIndices)
+
     // Note: non POT textures caused strange problems here
     // It appears like texSubImage2D may assume a POT texture in the background.
     // Calls to texSubImage2D would generate the error: GL_INVALID_VALUE: Offset overflows texture dimensions
@@ -398,7 +401,8 @@ class GLGeomSet extends EventEmitter {
       texResized = true
     }
 
-    const drawIdsTextureSize = Math.ceil(Math.sqrt(this.drawIdsAllocator.reservedSpace))
+    const drawIdsTextureSize = MathFunctions.nextPow2(Math.ceil(Math.sqrt(this.drawIdsAllocator.reservedSpace)))
+    // const drawIdsTextureSize = Math.ceil(Math.sqrt(this.drawIdsAllocator.reservedSpace))
 
     if (!this.drawIdsTexture) {
       this.drawIdsTexture = new GLTexture2D(gl, {
@@ -417,9 +421,7 @@ class GLGeomSet extends EventEmitter {
     }
 
     if (texResized) {
-      this.dirtyDrawIndexIndices = Array(this.glGeomItemSets.length)
-        .fill()
-        .map((v, i) => i)
+      this.dirtyDrawIndexIndices = new Set(Array.from({ length: this.glGeomItemSets.length }, (_, i) => i))
     }
 
     {
@@ -429,13 +431,13 @@ class GLGeomSet extends EventEmitter {
         const allocation = this.drawIdsAllocator.getAllocation(index)
         const data = Float32Array.of(allocation.start)
         const level = 0
-        const xoffset = index % drawIdsLayoutTextureSize
-        const yoffset = Math.floor(index / drawIdsLayoutTextureSize)
+        const xoffset = index % this.drawIdsLayoutTexture.width
+        const yoffset = Math.floor(index / this.drawIdsLayoutTexture.width)
         const height = 1
         const format = tex.__format
         const type = tex.__type
         const width = data.length
-        // console.log('drawIdsLayoutTexture:', xoffset + width, yoffset + height, drawIdsLayoutTextureSize)
+        // console.log('drawIdsLayoutTexture:', xoffset + width, yoffset + height, this.drawIdsLayoutTexture.width)
         gl.texSubImage2D(gl.TEXTURE_2D, level, xoffset, yoffset, width, height, format, type, data)
       })
     }
@@ -446,35 +448,36 @@ class GLGeomSet extends EventEmitter {
         const allocation = this.drawIdsAllocator.getAllocation(index)
         const drawIdsArray = this.glGeomItemSets[index].getDrawIdsArray()
         const level = 0
-        const xoffset = allocation.start % drawIdsTextureSize
-        // const yoffset = Math.floor(allocation.start / drawIdsTextureSize)
+        const xoffset = allocation.start % this.drawIdsTexture.width
+        // const yoffset = Math.floor(allocation.start / this.drawIdsTexture.width)
         const height = 1
         const format = tex.__format
         const type = tex.__type
-        const rows = Math.ceil((xoffset + allocation.size) / drawIdsTextureSize)
+        const rows = Math.ceil((xoffset + allocation.size) / this.drawIdsTexture.width)
 
         let consumed = 0
         let remaining = allocation.size
         let rowStart = xoffset
         for (let i = 0; i < rows; i++) {
           let width
-          if (rowStart + remaining > drawIdsTextureSize) {
-            width = drawIdsTextureSize - rowStart
+          if (rowStart + remaining > this.drawIdsTexture.width) {
+            width = this.drawIdsTexture.width - rowStart
             rowStart = 0
           } else {
             width = remaining
           }
-          const x = (allocation.start + consumed) % drawIdsTextureSize
-          const y = Math.floor((allocation.start + consumed) / drawIdsTextureSize)
+          const x = (allocation.start + consumed) % this.drawIdsTexture.width
+          const y = Math.floor((allocation.start + consumed) / this.drawIdsTexture.width)
           const data = drawIdsArray.subarray(consumed, consumed + width)
-          // console.log('drawIdsTexture:', x + width, y + height, drawIdsTextureSize)
+          // console.log('drawIdsTexture:', x + width, y + height, this.drawIdsTexture.width)
           gl.texSubImage2D(gl.TEXTURE_2D, level, x, y, width, height, format, type, data)
           consumed += width
           remaining -= width
         }
       })
     }
-    this.dirtyDrawIndexIndices = []
+
+    this.dirtyDrawIndexIndices = new Set()
     gl.bindTexture(gl.TEXTURE_2D, null)
     // gl.finish()
 
@@ -593,7 +596,7 @@ class GLGeomSet extends EventEmitter {
    * The draw method.
    */
   draw(renderstate) {
-    if (this.dirtyDrawIndexIndices.length > 0) {
+    if (this.dirtyDrawIndexIndices.size > 0) {
       this.updateDrawIDsBuffer()
     }
     this.bindGeomBuffers(renderstate)
@@ -612,7 +615,7 @@ class GLGeomSet extends EventEmitter {
    */
   drawHighlightedGeoms(renderstate) {
     if (this.highlightedCount == 0) return
-    if (this.dirtyDrawHighlightIndices.length > 0) {
+    if (this.dirtyDrawHighlightIndices.size > 0) {
       this.updateHighlightedIDsBuffer()
     }
     this.bindGeomBuffers(renderstate)
@@ -628,7 +631,7 @@ class GLGeomSet extends EventEmitter {
    * @param {any} renderstate - The renderstate value.
    */
   drawGeomData(renderstate) {
-    if (this.dirtyDrawIndexIndices.length > 0) {
+    if (this.dirtyDrawIndexIndices.size > 0) {
       this.updateDrawIDsBuffer()
     }
     this.bindGeomBuffers(renderstate)
