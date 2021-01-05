@@ -564,17 +564,8 @@ class GLGeomSet extends EventEmitter {
    * @param {WebGLBuffer} drawIdsTexture - The renderstate value.
    */
   bindDrawIds(renderstate, drawIdsLayoutTexture, drawIdsTexture) {
-    const gl = this.__gl
-
-    if (renderstate.unifs.instancedDraw) {
-      gl.uniform1i(renderstate.unifs.instancedDraw.location, 1)
-    }
-    if (renderstate.unifs.drawIdsTexture) {
-      drawIdsLayoutTexture.bindToUniform(renderstate, renderstate.unifs.drawIdsLayoutTexture)
-      gl.uniform1i(renderstate.unifs.drawIdsLayoutTextureSize.location, drawIdsLayoutTexture.width)
-      drawIdsTexture.bindToUniform(renderstate, renderstate.unifs.drawIdsTexture)
-      gl.uniform1i(renderstate.unifs.drawIdsTextureSize.location, drawIdsTexture.width)
-    }
+    drawIdsLayoutTexture.bindToUniform(renderstate, renderstate.unifs.drawIdsLayoutTexture)
+    drawIdsTexture.bindToUniform(renderstate, renderstate.unifs.drawIdsTexture)
   }
 
   /**
