@@ -477,9 +477,6 @@ class GLViewport extends GLBaseViewport {
    */
   releaseCapture() {
     this.capturedItem = null
-    // TODO: This should be a request, wbihch is fulfilled next time
-    // a frame is dranw.
-    this.renderGeomDataFbo()
   }
 
   /**
@@ -501,9 +498,6 @@ class GLViewport extends GLBaseViewport {
 
     event.releaseCapture = () => {
       this.capturedItem = null
-      // TODO: This should be a request, which is fulfilled next time
-      // a frame is drawn.
-      this.renderGeomDataFbo()
     }
   }
 
@@ -636,12 +630,14 @@ class GLViewport extends GLBaseViewport {
       event.pointerRay = event.touchRay[0]
     }
 
-    event.intersectionData = this.getGeomDataAtPos(event.pointerPos, event.pointerRay)
+    // Note: the Captured item might be a tool, which might not need to have
+    // the geom under the pointer. e.g. the CameraManipulator during a drag.
     if (this.capturedItem) {
       this.capturedItem.onPointerMove(event)
       return
     }
 
+    event.intersectionData = this.getGeomDataAtPos(event.pointerPos, event.pointerRay)
     if (event.intersectionData) {
       if (event.intersectionData.geomItem != this.pointerOverItem) {
         if (this.pointerOverItem) {
