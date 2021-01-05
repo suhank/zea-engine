@@ -76,10 +76,10 @@ class GLShaderGeomSets extends EventEmitter {
    * Binds one of its shaders for rendering, and also the other textures and values needed.
    * @param {object} glShader - The shader to bind
    * @param {object} renderstate - The render state for the current draw traversal
+   * @param {string} key - The key to use to cache the shader binding.
    * @private
    */
-  bindShader(glShader, renderstate) {
-    const key = 'multidraw'
+  bindShader(glShader, renderstate, key) {
     if (!glShader.isCompiledForTarget(key)) {
       renderstate.shaderopts.directives.push('#define ENABLE_MULTI_DRAW 1\n#extension GL_ANGLE_multi_draw : enable')
       glShader.compileForTarget(key, renderstate.shaderopts)
@@ -105,7 +105,7 @@ class GLShaderGeomSets extends EventEmitter {
    * @param {object} renderstate - The render state for the current draw traversal
    */
   draw(renderstate) {
-    this.bindShader(this.glShader, renderstate)
+    this.bindShader(this.glShader, renderstate, 'multidraw')
 
     for (const elementType in this.glGeomSets) {
       this.glGeomSets[elementType].draw(renderstate)
@@ -119,7 +119,7 @@ class GLShaderGeomSets extends EventEmitter {
    * @param {any} renderstate - The renderstate value.
    */
   drawHighlightedGeoms(renderstate) {
-    this.bindShader(this.glHighlightShader, renderstate)
+    this.bindShader(this.glHighlightShader, renderstate, 'multidraw-highlight')
 
     for (const elementType in this.glGeomSets) {
       this.glGeomSets[elementType].drawHighlightedGeoms(renderstate)
@@ -132,7 +132,7 @@ class GLShaderGeomSets extends EventEmitter {
    * @param {any} renderstate - The renderstate value.
    */
   drawGeomData(renderstate) {
-    this.bindShader(this.glGeomDataShader, renderstate)
+    this.bindShader(this.glGeomDataShader, renderstate, 'multidraw-geomdata')
 
     const gl = renderstate.gl
     const unifs = renderstate.unifs
