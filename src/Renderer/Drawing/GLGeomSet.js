@@ -31,14 +31,11 @@ class GLGeomSet extends EventEmitter {
     this.shaderBindings = {}
     this.bufferNeedsRealloc = false
     this.attributesAllocator = new Allocator1D()
-    this.dirtyGeomIndices = []
+    this.dirtyGeomIndices = new Set()
 
     // If the allocator ever resizes, then we need to re-upload everything.
     this.attributesAllocator.on('resized', () => {
-      this.dirtyGeomIndices = []
-      this.dirtyGeomIndices = Array(this.geoms.length)
-        .fill()
-        .map((v, i) => i)
+      this.dirtyGeomIndices = new Set(Array.from({ length: this.geoms.length }, (_, i) => i))
       this.bufferNeedsRealloc = true
     })
     this.attributesAllocator.on('dataReallocated', (event) => {
@@ -46,7 +43,7 @@ class GLGeomSet extends EventEmitter {
       // we need to re-upload some of our data.
       const id = event.id
       const allocation = event.allocation
-      this.dirtyGeomIndices.push(id)
+      this.dirtyGeomIndices.add(id)
 
       this.geomVertexOffsets[id] = allocation.start
       this.geomVertexCounts[id] = allocation.size
@@ -81,10 +78,10 @@ class GLGeomSet extends EventEmitter {
     const index = this.geoms.length
 
     const geomDataChanged = (event) => {
-      this.dirtyGeomIndices.push(index)
+      this.dirtyGeomIndices.add(index)
     }
     const geomDataTopologyChanged = (event) => {
-      this.dirtyGeomIndices.push(index)
+      this.dirtyGeomIndices.add(index)
     }
     geom.on('geomDataChanged', geomDataChanged)
     geom.on('geomDataTopologyChanged', geomDataTopologyChanged)
@@ -94,7 +91,7 @@ class GLGeomSet extends EventEmitter {
       geomDataChanged,
       geomDataTopologyChanged,
     })
-    this.dirtyGeomIndices.push(index)
+    this.dirtyGeomIndices.add(index)
 
     this.geomVertexCounts = resizeIntArray(this.geomVertexCounts, this.geomVertexCounts.length + 1)
     this.geomVertexOffsets = resizeIntArray(this.geomVertexOffsets, this.geomVertexOffsets.length + 1)
@@ -331,7 +328,7 @@ class GLGeomSet extends EventEmitter {
     // need to be uploaded because of re-allocation
     // Note: copy the source array as new dirty items may be added during
     // allocation.
-    const dirtyGeomIndices = [...this.dirtyGeomIndices]
+    const dirtyGeomIndices = new Set(this.dirtyGeomIndices)
     dirtyGeomIndices.forEach((index) => {
       this.allocateBuffers(index)
     })
@@ -353,7 +350,7 @@ class GLGeomSet extends EventEmitter {
       this.uploadBuffers(index)
     })
 
-    this.dirtyGeomIndices = []
+    this.dirtyGeomIndices = new Set()
     this.geomBuffersTmp = []
 
     // eslint-disable-next-line guard-for-in
@@ -547,7 +544,7 @@ class GLGeomSet extends EventEmitter {
    * @param {object} renderstate - The renderstate value.
    */
   bindGeomBuffers(renderstate) {
-    if (this.dirtyGeomIndices.length > 0) {
+    if (this.dirtyGeomIndices.size > 0) {
       this.cleanGeomBuffers()
     }
 

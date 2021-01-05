@@ -196,7 +196,7 @@ class GLMeshSet extends GLGeomSet {
    * @param {object} renderstate - The renderstate value.
    */
   bindGeomBuffers(renderstate) {
-    if (this.dirtyGeomIndices.length > 0) {
+    if (this.dirtyGeomIndices.size > 0) {
       this.cleanGeomBuffers()
     }
 
