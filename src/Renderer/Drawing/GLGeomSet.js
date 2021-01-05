@@ -1,6 +1,5 @@
 /* eslint-disable guard-for-in */
-import { EventEmitter } from '../../Utilities/index'
-import { Allocator1D } from '../../Utilities/Allocator1D.js'
+import { EventEmitter, MathFunctions, Allocator1D } from '../../Utilities/index'
 import { GLGeomItemSet } from './GLGeomItemSet.js'
 import { generateShaderGeomBinding } from './GeomShaderBinding.js'
 import { GLTexture2D } from '../GLTexture2D.js'
@@ -260,6 +259,7 @@ class GLGeomSet extends EventEmitter {
    */
   genBuffers() {
     const reservedSpace = this.attributesAllocator.reservedSpace
+    // console.log('GeomSet GPU buffers resized:', reservedSpace)
     const gl = this.__gl
 
     // eslint-disable-next-line guard-for-in
@@ -372,9 +372,15 @@ class GLGeomSet extends EventEmitter {
    * drawing.
    */
   updateDrawIDsBuffer() {
-    console.log('updateDrawIDsBuffer')
     const gl = this.__gl
-    const drawIdsLayoutTextureSize = Math.ceil(Math.sqrt(this.glGeomItemSets.length))
+    let texResized = false
+
+    // Note: non POT textures caused strange problems here
+    // It appears like texSubImage2D may assume a POT texture in the background.
+    // Calls to texSubImage2D would generate the error: GL_INVALID_VALUE: Offset overflows texture dimensions
+    // even if the coordinates appears to be correct.
+    const drawIdsLayoutTextureSize = MathFunctions.nextPow2(Math.ceil(Math.sqrt(this.glGeomItemSets.length)))
+    // const drawIdsLayoutTextureSize = Math.ceil(Math.sqrt(this.glGeomItemSets.length))
 
     if (!this.drawIdsLayoutTexture) {
       this.drawIdsLayoutTexture = new GLTexture2D(gl, {
@@ -388,26 +394,8 @@ class GLGeomSet extends EventEmitter {
         mipMapped: false,
       })
     } else if (this.drawIdsTexture.width != drawIdsLayoutTextureSize) {
-      this.drawIdsTexture.resize(drawIdsLayoutTextureSize, drawIdsLayoutTextureSize)
-      this.dirtyDrawIndexIndices = Array(this.glGeomItemSets.length)
-        .fill()
-        .map((v, i) => i)
-    }
-    {
-      const tex = this.drawIdsLayoutTexture
-      gl.bindTexture(gl.TEXTURE_2D, tex.glTex)
-      this.dirtyDrawIndexIndices.forEach((index) => {
-        const allocation = this.drawIdsAllocator.getAllocation(index)
-        const data = Float32Array.of(allocation.start)
-        const level = 0
-        const xoffset = index % drawIdsLayoutTextureSize
-        const yoffset = Math.floor(index / drawIdsLayoutTextureSize)
-        const height = 1
-        const format = tex.__format
-        const type = tex.__type
-        const width = data.length
-        gl.texSubImage2D(gl.TEXTURE_2D, level, xoffset, yoffset, width, height, format, type, data)
-      })
+      this.drawIdsLayoutTexture.resize(drawIdsLayoutTextureSize, drawIdsLayoutTextureSize)
+      texResized = true
     }
 
     const drawIdsTextureSize = Math.ceil(Math.sqrt(this.drawIdsAllocator.reservedSpace))
@@ -424,47 +412,71 @@ class GLGeomSet extends EventEmitter {
         mipMapped: false,
       })
     } else if (this.drawIdsTexture.width < drawIdsTextureSize || this.drawIdsTexture.height < drawIdsTextureSize) {
-      const width = drawIdsTextureSize
-      const height = drawIdsTextureSize
-      this.drawIdsTexture.resize(width, height)
-      this.dirtyDrawIndexIndices = Array(drawIdsTextureSize)
+      this.drawIdsTexture.resize(drawIdsTextureSize, drawIdsTextureSize)
+      texResized = true
+    }
+
+    if (texResized) {
+      this.dirtyDrawIndexIndices = Array(this.glGeomItemSets.length)
         .fill()
         .map((v, i) => i)
     }
 
-    const tex = this.drawIdsTexture
-    gl.bindTexture(gl.TEXTURE_2D, tex.glTex)
-    this.dirtyDrawIndexIndices.forEach((index) => {
-      const allocation = this.drawIdsAllocator.getAllocation(index)
-      const drawIdsArray = this.glGeomItemSets[index].getDrawIdsArray()
-      const level = 0
-      const xoffset = allocation.start % drawIdsTextureSize
-      // const yoffset = Math.floor(allocation.start / drawIdsTextureSize)
-      const height = 1
-      const format = tex.__format
-      const type = tex.__type
-      const rows = Math.ceil((xoffset + allocation.size) / drawIdsTextureSize)
+    {
+      const tex = this.drawIdsLayoutTexture
+      gl.bindTexture(gl.TEXTURE_2D, tex.glTex)
+      this.dirtyDrawIndexIndices.forEach((index) => {
+        const allocation = this.drawIdsAllocator.getAllocation(index)
+        const data = Float32Array.of(allocation.start)
+        const level = 0
+        const xoffset = index % drawIdsLayoutTextureSize
+        const yoffset = Math.floor(index / drawIdsLayoutTextureSize)
+        const height = 1
+        const format = tex.__format
+        const type = tex.__type
+        const width = data.length
+        // console.log('drawIdsLayoutTexture:', xoffset + width, yoffset + height, drawIdsLayoutTextureSize)
+        gl.texSubImage2D(gl.TEXTURE_2D, level, xoffset, yoffset, width, height, format, type, data)
+      })
+    }
+    {
+      const tex = this.drawIdsTexture
+      gl.bindTexture(gl.TEXTURE_2D, tex.glTex)
+      this.dirtyDrawIndexIndices.forEach((index) => {
+        const allocation = this.drawIdsAllocator.getAllocation(index)
+        const drawIdsArray = this.glGeomItemSets[index].getDrawIdsArray()
+        const level = 0
+        const xoffset = allocation.start % drawIdsTextureSize
+        // const yoffset = Math.floor(allocation.start / drawIdsTextureSize)
+        const height = 1
+        const format = tex.__format
+        const type = tex.__type
+        const rows = Math.ceil((xoffset + allocation.size) / drawIdsTextureSize)
 
-      let consumed = 0
-      let remaining = allocation.size
-      let rowStart = xoffset
-      for (let i = 0; i < rows; i++) {
-        let width
-        if (rowStart + remaining > drawIdsTextureSize) {
-          width = drawIdsTextureSize - rowStart
-          rowStart = 0
-        } else {
-          width = remaining
+        let consumed = 0
+        let remaining = allocation.size
+        let rowStart = xoffset
+        for (let i = 0; i < rows; i++) {
+          let width
+          if (rowStart + remaining > drawIdsTextureSize) {
+            width = drawIdsTextureSize - rowStart
+            rowStart = 0
+          } else {
+            width = remaining
+          }
+          const x = (allocation.start + consumed) % drawIdsTextureSize
+          const y = Math.floor((allocation.start + consumed) / drawIdsTextureSize)
+          const data = drawIdsArray.subarray(consumed, consumed + width)
+          // console.log('drawIdsTexture:', x + width, y + height, drawIdsTextureSize)
+          gl.texSubImage2D(gl.TEXTURE_2D, level, x, y, width, height, format, type, data)
+          consumed += width
+          remaining -= width
         }
-        const x = (allocation.start + consumed) % drawIdsTextureSize
-        const y = Math.floor((allocation.start + consumed) / drawIdsTextureSize)
-        const data = drawIdsArray.subarray(consumed, consumed + width)
-        gl.texSubImage2D(gl.TEXTURE_2D, level, x, y, width, height, format, type, data)
-        consumed += width
-        remaining -= width
-      }
-    })
+      })
+    }
     this.dirtyDrawIndexIndices = []
+    gl.bindTexture(gl.TEXTURE_2D, null)
+    // gl.finish()
 
     // Note: after uploading new data to the GPU, the immediate draw fails to receive the new data
     // we need to trigger another redraw.
