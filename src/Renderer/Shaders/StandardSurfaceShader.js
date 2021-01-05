@@ -23,6 +23,10 @@ class StandardSurfaceShader extends GLShader {
       `
 precision highp float;
 
+#ifdef ENABLE_MULTI_DRAW
+// #define DEBUG_GEOM_ID
+#endif
+
 attribute vec3 positions;
 attribute vec3 normals;
 #ifdef ENABLE_TEXTURES
@@ -47,6 +51,9 @@ varying vec3 v_viewNormal;
 varying vec2 v_textureCoord;
 #endif
 varying vec3 v_worldPos;
+#ifdef DEBUG_GEOM_ID
+varying float v_geomId;
+#endif
 /* VS Outputs */
 
 
@@ -54,6 +61,9 @@ void main(void) {
     int drawItemId = getDrawItemId();
     v_drawItemId = float(drawItemId);
     v_geomItemData = getInstanceData(drawItemId);
+    #ifdef DEBUG_GEOM_ID
+    v_geomId = float(gl_DrawID);
+    #endif // DEBUG_GEOM_ID
 
     vec4 pos = vec4(positions, 1.);
     mat4 modelMatrix = getModelMatrix(drawItemId);
@@ -78,6 +88,9 @@ void main(void) {
       'StandardSurfaceShader.fragmentShader',
       `
 precision highp float;
+#ifdef ENABLE_MULTI_DRAW
+// #define DEBUG_GEOM_ID
+#endif
 
 <%include file="math/constants.glsl"/>
 <%include file="drawItemTexture.glsl"/>
@@ -86,6 +99,10 @@ precision highp float;
 
 <%include file="stack-gl/gamma.glsl"/>
 <%include file="materialparams.glsl"/>
+
+#ifdef DEBUG_GEOM_ID
+<%include file="debugColors.glsl"/>
+#endif
 
 <%include file="GGX_Specular.glsl"/>
 <%include file="PBRSurfaceRadiance.glsl"/>
@@ -99,6 +116,9 @@ varying vec3 v_viewNormal;
 varying vec2 v_textureCoord;
 #endif
 varying vec3 v_worldPos;
+#ifdef DEBUG_GEOM_ID
+varying float v_geomId;
+#endif
 /* VS Outputs */
 
 
@@ -300,6 +320,13 @@ void main(void) {
         // fragColor = vec4(material.baseColor * irradiance, 1.0);
         fragColor = vec4(radiance + (emission * material.baseColor), 1.0);
     }
+
+#ifdef DEBUG_GEOM_ID
+    // ///////////////////////
+    // Debug Draw ID (this correlates to GeomID within a GLGeomSet)
+    fragColor.rgb = getDebugColor(v_geomId);
+    // ///////////////////////
+#endif
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION
     fragColor.rgb = toGamma(fragColor.rgb * exposure);

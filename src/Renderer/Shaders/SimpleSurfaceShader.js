@@ -24,6 +24,10 @@ class SimpleSurfaceShader extends GLShader {
       `
 precision highp float;
 
+#ifdef ENABLE_MULTI_DRAW
+// #define DEBUG_GEOM_ID
+#endif
+
 attribute vec3 positions;
 attribute vec3 normals;
 #ifdef ENABLE_TEXTURES
@@ -48,11 +52,17 @@ varying vec3 v_viewNormal;
 varying vec2 v_textureCoord;
 #endif
 varying vec3 v_worldPos;
+#ifdef DEBUG_GEOM_ID
+varying float v_geomId;
+#endif
 
 void main(void) {
     int drawItemId = getDrawItemId();
     v_drawItemId = float(drawItemId);
     v_geomItemData  = getInstanceData(drawItemId);
+    #ifdef DEBUG_GEOM_ID
+    v_geomId = float(gl_DrawID);
+    #endif // DEBUG_GEOM_ID
 
     mat4 modelMatrix = getModelMatrix(drawItemId);
     mat4 modelViewMatrix = viewMatrix * modelMatrix;
@@ -79,12 +89,19 @@ void main(void) {
       'SimpleSurfaceShader.fragmentShader',
       `
 precision highp float;
+#ifdef ENABLE_MULTI_DRAW
+// #define DEBUG_GEOM_ID
+#endif
 
 <%include file="math/constants.glsl"/>
 <%include file="drawItemTexture.glsl"/>
 <%include file="cutaways.glsl"/>
 <%include file="stack-gl/gamma.glsl"/>
 <%include file="materialparams.glsl"/>
+
+#ifdef DEBUG_GEOM_ID
+<%include file="debugColors.glsl"/>
+#endif
 
 uniform color cutColor;
 
@@ -112,6 +129,10 @@ varying vec3 v_viewNormal;
 varying vec2 v_textureCoord;
 #endif
 varying vec3 v_worldPos;
+#ifdef DEBUG_GEOM_ID
+varying float v_geomId;
+#endif
+/* VS Outputs */
 
 uniform mat4 cameraMatrix;
 
@@ -204,6 +225,13 @@ void main(void) {
     vec4 fragColor;
 #endif
     fragColor = vec4((ndotv * baseColor.rgb) + (emission * baseColor.rgb), opacity);
+
+#ifdef DEBUG_GEOM_ID
+    // ///////////////////////
+    // Debug Draw ID (this correlates to GeomID within a GLGeomSet)
+    fragColor.rgb = getDebugColor(v_geomId);
+    // ///////////////////////
+#endif
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION
     fragColor.rgb = toGamma(fragColor.rgb);

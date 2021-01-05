@@ -25,7 +25,7 @@ int getDrawItemId() {
 }
 
 
-#else
+#else // ENABLE_MULTI_DRAW
 
 uniform int transformIndex;
 
