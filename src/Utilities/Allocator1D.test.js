@@ -6,6 +6,7 @@ describe('Allocator1D', () => {
 
     allocator.allocate(0, 3)
     allocator.allocate(1, 5)
+    allocator.verifyConsistency()
 
     expect(allocator.reservedSpace).toEqual(8)
   })
@@ -16,6 +17,7 @@ describe('Allocator1D', () => {
     allocator.allocate(0, 3)
     allocator.allocate(1, 5)
     allocator.allocate(0, 5)
+    allocator.verifyConsistency()
 
     expect(allocator.freeSpace).toEqual(3)
     expect(allocator.reservedSpace).toEqual(16)
@@ -28,7 +30,7 @@ describe('Allocator1D', () => {
     allocator.allocate(1, 1)
     allocator.allocate(1, 2) // simply grow the existing buffer
 
-    console.log(allocator.allocations)
+    allocator.verifyConsistency()
 
     expect(allocator.allocations.length).toEqual(2)
     expect(allocator.freeSpace).toEqual(0)
@@ -51,6 +53,7 @@ describe('Allocator1D', () => {
     // (3 + 2 + 2 - 6 = 1)
     // Block 0 will totally consume block 1 and partially consume block 1.
     allocator.allocate(0, 6)
+    allocator.verifyConsistency()
 
     expect(allocator.freeSpace).toEqual(1)
     expect(allocator.reservedSpace).toEqual(32)
@@ -65,8 +68,28 @@ describe('Allocator1D', () => {
 
     allocator.allocate(0, 4) // move block to a new bigger slot
     allocator.allocate(1, 4) // move block 1 back into the slot left by block id 0 and then grow it into the bigger hole
+    allocator.verifyConsistency()
 
     expect(allocator.freeSpace).toEqual(1)
+    expect(allocator.reservedSpace).toEqual(16)
+  })
+
+  it('Free Block, grow backwards', () => {
+    const allocator = new Allocator1D()
+
+    allocator.allocate(0, 1)
+    allocator.allocate(1, 1)
+    allocator.allocate(2, 1)
+    allocator.allocate(3, 1)
+    allocator.allocate(4, 1)
+
+    allocator.allocate(3, 2) // leaves a free block of size 1 at index 3
+    allocator.allocate(4, 2) // frees block at index 4, growing block at index 3, but then consumes free block at index 3 because it now fits the size.
+    allocator.allocate(2, 2)
+    allocator.allocate(4, 3)
+    allocator.verifyConsistency()
+
+    expect(allocator.freeSpace).toEqual(0)
     expect(allocator.reservedSpace).toEqual(16)
   })
 })

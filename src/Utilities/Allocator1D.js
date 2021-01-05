@@ -117,13 +117,13 @@ class Allocator1D extends EventEmitter {
           // free up this slot an find a new one
           // If the slot was at the end of the allocated memory, just decrement
           // the allocated space making it immediately available for use.
+          delete this.allocationsMap[id]
           if (allocation.start + allocation.size == this.allocatedSpace) {
             this.removeBlock(index)
             this.allocatedSpace -= allocation.size
           } else {
             this.freeBlock(index)
           }
-          delete this.allocationsMap[id]
         }
       }
     }
@@ -145,7 +145,7 @@ class Allocator1D extends EventEmitter {
     if (freeItemIndex != -1) {
       const freeItem = this.allocations[freeItemIndex]
       this.freeSpace -= freeItem.size
-      this.freeList.splice(freeItemIndex, 1)
+      this.freeList.splice(this.freeList.indexOf(freeItemIndex), 1)
       if (freeItem.size > size) {
         // Split this block into 2. We use the first one for our item, and the second is put on the free list.
         const splitBlockSize = freeItem.size - size
@@ -203,12 +203,12 @@ class Allocator1D extends EventEmitter {
   removeBlock(index) {
     this.allocations.splice(index, 1)
     for (const id in this.allocationsMap) {
-      if (this.allocationsMap[id] >= index) {
+      if (this.allocationsMap[id] > index) {
         this.allocationsMap[id]--
       }
     }
     for (let i = 0; i < this.freeList.length; i++) {
-      if (this.freeList[i] >= index) {
+      if (this.freeList[i] > index) {
         this.freeList[i]--
       }
     }
@@ -275,6 +275,37 @@ class Allocator1D extends EventEmitter {
   defragment() {
     // move the freeblocks to the end of the memory so that
     // we can then reduce the memory used.
+  }
+
+  /**
+   * Checks that the allocations are consistent and not corrupt in any way.
+   */
+  verifyConsistency() {
+    // eslint-disable-next-line guard-for-in
+    for (let id in this.allocationsMap) {
+      const index = this.allocationsMap[id]
+      if (this.freeList.includes(index)) {
+        // eslint-disable-next-line no-throw-literal
+        throw 'block of used memory is also on the free list'
+      }
+    }
+    let size = 0
+    for (let i = 0; i < this.allocations.length; i++) {
+      const allocation = this.allocations[i]
+      if (allocation.start != size) {
+        // eslint-disable-next-line no-throw-literal
+        throw 'blocks of memory are not sequential'
+      }
+      size += allocation.size
+    }
+    if (size != this.allocatedSpace) {
+      // eslint-disable-next-line no-throw-literal
+      throw `allocated size: ${this.allocatedSpace}  does not match allocated blocks: ${size}`
+    }
+    if (this.reservedSpace < this.allocatedSpace) {
+      // eslint-disable-next-line no-throw-literal
+      throw `reserved space: ${this.reservedSpace} is less than allocated space: ${this.allocatedSpace}`
+    }
   }
 }
 
