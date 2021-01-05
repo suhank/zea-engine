@@ -485,44 +485,6 @@ class GLStandardGeomsPass extends GLPass {
     if (this.__dirtyItemIndices.length == 0) return
     this.uploadGeomItems()
   }
-
-  // /**
-  //  * The bind method.
-  //  * @param {any} renderstate - The renderstate value.
-  //  * @return {any} - The return value.
-  //  */
-  // bind(renderstate) {
-  //   const gl = this.__gl
-  //   const unifs = renderstate.unifs
-  //   if (this.__drawItemsTexture && unifs.instancesTexture) {
-  //     this.__drawItemsTexture.bindToUniform(renderstate, unifs.instancesTexture)
-  //     gl.uniform1i(unifs.instancesTextureSize.location, this.__drawItemsTexture.width)
-  //   }
-  //   return true
-  // }
-
-  // /**
-  //  * The bindShader method.
-  //  * @param {any} renderstate - The renderstate value.
-  //  * @param {any} glShader - The glShader value.
-  //  * @return {any} - The return value.
-  //  */
-  // bindShader(renderstate, glShader) {
-  //   if (!glShader.bind(renderstate)) return false
-  //   if (!this.bind(renderstate)) return false
-  //   return true
-  // }
-
-  // /**
-  //  * The bindMaterial method.
-  //  * @param {any} renderstate - The renderstate value.
-  //  * @param {any} glMaterial - The glMaterial value.
-  //  * @param {any} warnMissingUnifs - The warnMissingUnifs value.
-  //  * @return {any} - The return value.
-  //  */
-  // bindMaterial(renderstate, glMaterial, warnMissingUnifs) {
-  //   return glMaterial.bind(renderstate, warnMissingUnifs)
-  // }
 }
 
 export { GLStandardGeomsPass }
