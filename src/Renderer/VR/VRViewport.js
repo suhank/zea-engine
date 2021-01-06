@@ -4,6 +4,7 @@ import { TreeItem } from '../../SceneTree/index'
 import { GLBaseViewport } from '../GLBaseViewport.js'
 import { VRHead } from './VRHead.js'
 import { VRController } from './VRController.js'
+import { VRViewManipulator } from './VRViewManipulator.js'
 import { resourceLoader } from '../../SceneTree/resourceLoader.js'
 
 /** Class representing a VR viewport.
@@ -37,6 +38,7 @@ class VRViewport extends GLBaseViewport {
 
     this.__vrControllersMap = {}
     this.__vrControllers = []
+    this.__prevDownTime = []
 
     // ////////////////////////////////////////////
     // Xfos
@@ -49,6 +51,8 @@ class VRViewport extends GLBaseViewport {
     this.__leftProjectionMatrix = new Mat4()
     this.__rightViewMatrix = new Mat4()
     this.__rightProjectionMatrix = new Mat4()
+
+    this.setManipulator(new VRViewManipulator(this))
   }
 
   /**
@@ -255,49 +259,19 @@ class VRViewport extends GLBaseViewport {
             const onSelectStart = (ev) => {
               const controller = this.__vrControllersMap[ev.inputSource.handedness]
               if (controller) {
-                const downTime = Date.now()
-                console.log('controller:', ev.inputSource.handedness, ' down', downTime - controller.__prevDownTime)
-                if (downTime - controller.__prevDownTime < this.__doubleClickTimeMSParam.getValue()) {
-                  this.emit(
-                    'controllerDoubleClicked',
-                    {
-                      button: 1,
-                      controller,
-                      vleStopPropagation: false,
-                      vrviewport: this,
-                    },
-                    this
-                  )
-                } else {
-                  controller.__prevDownTime = downTime
-
-                  this.emit(
-                    'controllerButtonDown',
-                    {
-                      button: 1,
-                      controller,
-                      vleStopPropagation: false,
-                      vrviewport: this,
-                    },
-                    this
-                  )
-                }
+                this.onPointerDown({
+                  button: 1,
+                  controller,
+                })
               }
             }
             const onSelectEnd = (ev) => {
               const controller = this.__vrControllersMap[ev.inputSource.handedness]
               if (controller) {
-                console.log('controller:', ev.inputSource.handedness, ' up')
-                this.emit(
-                  'controllerButtonUp',
-                  {
-                    button: 1,
-                    controller,
-                    vleStopPropagation: false,
-                    vrviewport: this,
-                  },
-                  this
-                )
+                this.onPointerUp({
+                  button: 1,
+                  controller,
+                })
               }
             }
             session.on('selectstart', onSelectStart)
@@ -433,7 +407,7 @@ class VRViewport extends GLBaseViewport {
    * The updateControllers method.
    * @param {any} xrFrame - The xrFrame value.
    */
-  updateControllers(xrFrame) {
+  updateControllers(xrFrame, event) {
     const inputSources = this.__session.inputSources
     for (let i = 0; i < inputSources.length; i++) {
       const inputSource = inputSources[i]
@@ -446,7 +420,7 @@ class VRViewport extends GLBaseViewport {
       if (!this.__vrControllers[i]) {
         this.__createController(i, inputSource)
       }
-      this.__vrControllers[i].updatePose(this.__refSpace, xrFrame, inputSource)
+      this.__vrControllers[i].updatePose(this.__refSpace, xrFrame, inputSource, event)
     }
   }
 
@@ -519,7 +493,11 @@ class VRViewport extends GLBaseViewport {
 
     this.__vrhead.update(pose)
 
-    this.updateControllers(xrFrame)
+    // Prepare the pointerMove event.
+    const event = {}
+    this.preparePointerEvent(event)
+
+    this.updateControllers(xrFrame, event)
 
     renderstate.viewXfo = this.__vrhead.getTreeItem().getParameter('GlobalXfo').getValue()
     renderstate.viewScale = 1.0 / this.__stageScale
@@ -529,11 +507,11 @@ class VRViewport extends GLBaseViewport {
 
     this.__renderer.drawScene(renderstate)
 
-    if (this.capturedElement) {
-      const event = {
-        viewport: this,
-      }
+    if (this.capturedElement && event.propagating) {
       this.capturedElement.onPointerMove(event)
+    }
+    if (this.manipulator && event.propagating) {
+      this.manipulator.onPointerMove(event)
     }
 
     // ///////////////////////
@@ -549,30 +527,108 @@ class VRViewport extends GLBaseViewport {
   }
 
   /**
-   * The setCapture method.
-   * @param {any} target - The target value.
+   * Prepares pointer event by adding properties of the engine to it.
+   *
+   * @param {XREvent} event - The event that occurs in the canvas
    * @private
    */
-  setCapture(target) {
-    this.capturedElement = target
+  preparePointerEvent(event) {
+    event.viewport = this
+
+    event.propagating = true
+    event.stopPropagation = () => {
+      event.propagating = false
+    }
+
+    event.setCapture = (item) => {
+      this.capturedItem = item
+    }
+
+    event.getCapture = (item) => {
+      return this.capturedItem
+    }
+
+    event.releaseCapture = () => {
+      this.capturedItem = null
+      // TODO: This should be a request, which is fulfilled next time
+      // a frame is drawn.
+      this.renderGeomDataFbo()
+    }
   }
 
   /**
-   * The getCapture method.
-   * @return {any} - The return value.
+   * Handler of the `pointerdown` event fired when the pointer device is initially pressed.
+   *
+   * @param {MouseEvent|TouchEvent} event - The DOM event produced by a pointer
+   * @return {boolean} -
    */
-  getCapture() {
-    return this.capturedElement
+  onPointerDown(event) {
+    this.preparePointerEvent(event)
+
+    if (this.capturedItem) {
+      this.capturedItem.onPointerDown(event)
+      return
+    }
+
+    event.intersectionData = event.controller.getGeomItemAtTip()
+    if (event.intersectionData != undefined) {
+      event.intersectionData.geomItem.onPointerDown(event)
+
+      if (!event.propagating || this.capturedItem) return
+
+      this.emit('pointerDownOnGeom', event)
+    }
+
+    const downTime = Date.now()
+    if (downTime - this.__prevDownTime[event.controller.id] < this.__doubleClickTimeMSParam.getValue()) {
+      if (this.manipulator) {
+        this.manipulator.onPointerDoublePress(event)
+        if (!event.propagating) return
+      }
+
+      this.emit('pointerDoublePressed', event)
+    } else {
+      this.__prevDownTime[event.controller.id] = downTime
+      if (!event.propagating || this.capturedItem) return
+
+      this.emit('pointerDown', event)
+      if (!event.propagating) return
+
+      if (this.manipulator) {
+        this.manipulator.onPointerDown(event)
+
+        if (!event.propagating) return
+      }
+    }
   }
 
   /**
-   * The releaseCapture method.
+   * Causes an event to occur when a user releases a mouse button over a element.
+   *
+   * @param {MouseEvent|TouchEvent} event - The event that occurs.
    */
-  releaseCapture() {
-    this.capturedElement = null
-    // TODO: This should be a request, wbihch is fulfilled next time
-    // a frame is dranw.
-    this.renderGeomDataFbo()
+  onPointerUp(event) {
+    this.preparePointerEvent(event)
+
+    if (this.capturedItem) {
+      this.capturedItem.onPointerUp(event)
+      return
+    }
+
+    event.intersectionData = event.controller.getGeomItemAtTip()
+    if (event.intersectionData != undefined) {
+      event.intersectionData.geomItem.onPointerUp(event)
+      if (!event.propagating) return
+    }
+
+    this.emit('pointerUp', event)
+    if (!event.propagating) return
+
+    if (this.manipulator) {
+      this.manipulator.onPointerUp(event)
+
+      if (!event.propagating) return
+    }
   }
 }
 

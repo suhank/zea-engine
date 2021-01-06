@@ -6,14 +6,14 @@ import { TreeItem } from '../../SceneTree/index'
 class VRController {
   /**
    * Create a VR controller.
-   * @param {any} vrviewport - The Vr viewport.
+   * @param {any} xrvp - The Vr viewport.
    * @param {any} inputSource - The input source.
    * @param {any} id - The id value.
    */
-  constructor(vrviewport, inputSource, id) {
-    this.__vrviewport = vrviewport
+  constructor(xrvp, inputSource, id) {
+    this.xrvp = xrvp
     this.__inputSource = inputSource
-    this.__id = id
+    this.id = id
     this.__isDaydramController = SystemDesc.isMobileDevice
 
     this.__pressedButtons = []
@@ -47,11 +47,11 @@ class VRController {
       // tipXfo.ori.setFromAxisAndAngle(new Vec3(0, 1, 0), Math.PI)
       this.__tip.getParameter('LocalXfo').setValue(tipXfo)
       this.__treeItem.addChild(this.__tip, false)
-      vrviewport.getTreeItem().addChild(this.__treeItem)
+      xrvp.getTreeItem().addChild(this.__treeItem)
 
       this.__activeVolumeSize = 0.04
 
-      vrviewport.loadHMDResources().then((asset) => {
+      xrvp.loadHMDResources().then((asset) => {
         asset.on('loaded', () => {
           let srcControllerTree
           if (id == 0) srcControllerTree = asset.getChildByName('LeftController')
@@ -70,6 +70,8 @@ class VRController {
         })
       })
     }
+
+    this.tick = 0
   }
 
   /**
@@ -85,7 +87,7 @@ class VRController {
    * @return {any} - The return value.
    */
   getId() {
-    return this.__id
+    return this.id
   }
 
   /**
@@ -152,7 +154,7 @@ class VRController {
    * @param {any} xrFrame - The xrFrame value.
    * @param {any} inputSource - The inputSource value.
    */
-  updatePose(refSpace, xrFrame, inputSource) {
+  updatePose(refSpace, xrFrame, inputSource, event) {
     const inputPose = xrFrame.getPose(inputSource.gripSpace, refSpace)
 
     // We may not get a inputPose back in cases where the input source has lost
@@ -178,41 +180,28 @@ class VRController {
     this.__hitTested = false
 
     // /////////////////////////////////
-    // Simulate Mouse Events.
-    // const intersectionData = this.getGeomItemAtTip()
-    // if (intersectionData != undefined) {
-    //   if (intersectionData.geomItem != this.mouseOverItem) {
-    //     if (this.mouseOverItem) {
-    //       const event = {
-    //         viewport: this.__vrviewport,
-    //         geomItem: this.mouseOverItem,
-    //       }
-    //       this.mouseOverItem.onMouseLeave(event)
-    //     }
-    //     this.mouseOverItem = intersectionData.geomItem
-    //     const event = {
-    //       viewport: this.__vrviewport,
-    //       geomItem: intersectionData.geomItem,
-    //       intersectionData,
-    //     }
-    //     this.mouseOverItem.onMouseEnter(event)
-    //   }
+    // Simulate Pointer Enter/Leave Events.
+    // Check for pointer over every 3rd frame (at 90fps this should be fine.)
+    if (this.tick % 3 == 0 && !event.getCapture()) {
+      event.intersectionData = this.getGeomItemAtTip()
+      if (event.intersectionData != undefined) {
+        if (intersectionData.geomItem != this.pointerOverItem) {
+          if (this.pointerOverItem) {
+            this.pointerOverItem.onPointerLeave(event)
+          }
+          this.pointerOverItem = intersectionData.geomItem
+          event.geomItem = intersectionData.geomItem
+          this.pointerOverItem.onPointerEnter(event)
+        }
 
-    //   const event = {
-    //     viewport: this.__vrviewport,
-    //     geomItem: intersectionData.geomItem,
-    //     intersectionData,
-    //   }
-    //   intersectionData.geomItem.onMouseMove(event)
-    // } else if (this.mouseOverItem) {
-    //   const event = {
-    //     viewport: this.__vrviewport,
-    //     geomItem: this.mouseOverItem,
-    //     intersectionData,
-    //   }
-    //   this.mouseOverItem.onMouseLeave(event)
-    //   this.mouseOverItem = null
-    // }
+        if (event.propagating) intersectionData.geomItem.onPointerMove(event)
+      } else if (this.pointerOverItem) {
+        event.leftGeometry = this.pointerOverItem
+        this.pointerOverItem.onPointerLeave(event)
+        this.pointerOverItem = null
+      }
+    }
+    this.tick++
   }
 
   // ////////////////////////////////
@@ -225,7 +214,7 @@ class VRController {
     if (this.__hitTested) return this.__intersectionData
     this.__hitTested = true
 
-    const renderer = this.__vrviewport.getRenderer()
+    const renderer = this.xrvp.getRenderer()
     const xfo = this.__tip.getParameter('GlobalXfo').getValue()
     const vol = this.__activeVolumeSize
     this.__intersectionData = renderer.raycastWithXfo(xfo, vol, vol)
