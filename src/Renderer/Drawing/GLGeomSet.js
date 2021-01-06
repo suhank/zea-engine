@@ -298,6 +298,7 @@ class GLGeomSet extends EventEmitter {
     if (!geomBuffers) {
       const geom = this.getGeom(index)
       geomBuffers = geom.genBuffers()
+      this.geomBuffersTmp[index] = geomBuffers
     }
 
     const count = this.geomVertexCounts[index]
