@@ -166,6 +166,33 @@ class GLBaseViewport extends ParameterOwner {
 
   // ///////////////////////////
   // Events
+
+  /**
+   * The getManipulator method.
+   * @return {any} - The return value.
+   */
+  getManipulator() {
+    return this.manipulator
+  }
+
+  /**
+   * The setManipulator method.
+   * @param {any} manipulator - The manipulator value.
+   */
+  setManipulator(manipulator) {
+    if (this.manipulator != manipulator) {
+      if (this.manipulator && this.manipulator.deactivateTool) {
+        this.manipulator.deactivateTool()
+      }
+
+      this.manipulator = manipulator
+
+      if (manipulator.activateTool) {
+        manipulator.activateTool()
+      }
+    }
+  }
+
   /**
    * Handler of the `pointerdown` event fired when the pointer device is initially pressed.
    *
