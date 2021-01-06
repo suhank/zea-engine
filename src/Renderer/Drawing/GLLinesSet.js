@@ -5,7 +5,7 @@ import '../../SceneTree/Geometry/Mesh.js'
  * @extends GLGeom
  * @private
  */
-class GLMeshSet extends GLIndexedGeomSet {
+class GLLinesSet extends GLIndexedGeomSet {
   /**
    * Draw an item to screen.
    * @param {Array} - instanceCounts the instance counts for this draw call.
@@ -13,7 +13,7 @@ class GLMeshSet extends GLIndexedGeomSet {
   multiDrawInstanced(instanceCounts) {
     const gl = this.__gl
     gl.multiDrawElementsInstanced(
-      gl.TRIANGLES,
+      gl.LINES,
       this.indicesCounts,
       0,
       gl.UNSIGNED_INT,
@@ -26,4 +26,4 @@ class GLMeshSet extends GLIndexedGeomSet {
   }
 }
 
-export { GLMeshSet }
+export { GLLinesSet }

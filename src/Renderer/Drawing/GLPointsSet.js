@@ -1,23 +1,22 @@
-import { GLIndexedGeomSet } from './GLIndexedGeomSet.js'
+import { GLGeomSet } from './GLGeomSet.js'
 import '../../SceneTree/Geometry/Mesh.js'
 
 /** Class representing a GL mesh.
  * @extends GLGeom
  * @private
  */
-class GLMeshSet extends GLIndexedGeomSet {
+class GLPointsSet extends GLGeomSet {
   /**
    * Draw an item to screen.
    * @param {Array} - instanceCounts the instance counts for this draw call.
    */
   multiDrawInstanced(instanceCounts) {
     const gl = this.__gl
-    gl.multiDrawElementsInstanced(
-      gl.TRIANGLES,
-      this.indicesCounts,
+    gl.multiDrawArraysInstanced(
+      gl.POINTS,
+      this.geomVertexOffsets,
       0,
-      gl.UNSIGNED_INT,
-      this.indicesOffsets,
+      this.geomVertexCounts,
       0,
       instanceCounts,
       0,
@@ -26,4 +25,4 @@ class GLMeshSet extends GLIndexedGeomSet {
   }
 }
 
-export { GLMeshSet }
+export { GLPointsSet }

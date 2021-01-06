@@ -1,7 +1,7 @@
 /* eslint-disable guard-for-in */
 import { EventEmitter, MathFunctions, Allocator1D } from '../../Utilities/index'
 import { GLGeomItemSet } from './GLGeomItemSet.js'
-import { generateShaderGeomBinding } from './GeomShaderBinding.js'
+import { generateShaderGeomBinding, genDataTypeDesc } from './GeomShaderBinding.js'
 import { GLTexture2D } from '../GLTexture2D.js'
 
 const resizeIntArray = (intArray, newSize) => {
@@ -231,8 +231,9 @@ class GLGeomSet extends EventEmitter {
     const geom = this.getGeom(index)
     const geomBuffers = geom.genBuffers()
 
-    if (this.geomVertexCounts[index] != geomBuffers.numRenderVerts) {
-      const allocation = this.attributesAllocator.allocate(index, geomBuffers.numRenderVerts)
+    const numVerts = geomBuffers.numRenderVerts ? geomBuffers.numRenderVerts : geomBuffers.numVertices
+    if (this.geomVertexCounts[index] != numVerts) {
+      const allocation = this.attributesAllocator.allocate(index, numVerts)
 
       this.geomVertexOffsets[index] = allocation.start
       this.geomVertexCounts[index] = allocation.size
@@ -242,10 +243,13 @@ class GLGeomSet extends EventEmitter {
     for (const attrName in geomBuffers.attrBuffers) {
       if (!this.shaderAttrSpec[attrName]) {
         const attrData = geomBuffers.attrBuffers[attrName]
+        const geomAttrDesc = genDataTypeDesc(this.__gl, attrData.dataType)
+
         this.shaderAttrSpec[attrName] = {
           dataType: attrData.dataType,
           normalized: attrData.normalized,
-          dimension: attrData.dimension,
+          dimension: geomAttrDesc.dimension,
+          elementSize: geomAttrDesc.elementSize,
         }
       }
     }
@@ -273,8 +277,7 @@ class GLGeomSet extends EventEmitter {
       const attrBuffer = gl.createBuffer()
       gl.bindBuffer(gl.ARRAY_BUFFER, attrBuffer)
 
-      const elementSize = 4 // assuming floats for now. (We also need to support RGB Byte values.)
-      const sizeInBytes = numValues * elementSize
+      const sizeInBytes = numValues * attrSpec.elementSize
       gl.bufferData(gl.ARRAY_BUFFER, sizeInBytes, gl.STATIC_DRAW)
 
       this.glattrbuffers[attrName] = {
@@ -302,19 +305,21 @@ class GLGeomSet extends EventEmitter {
     }
 
     const count = this.geomVertexCounts[index]
-    if (count != geomBuffers.numRenderVerts) {
+    const numVerts = geomBuffers.numRenderVerts ? geomBuffers.numRenderVerts : geomBuffers.numVertices
+    if (count != numVerts) {
       throw new Error('Invalid allocation for this geom')
     }
     const gl = this.__gl
 
     // eslint-disable-next-line guard-for-in
     for (const attrName in geomBuffers.attrBuffers) {
+      const attrSpec = this.shaderAttrSpec[attrName]
       const attrData = geomBuffers.attrBuffers[attrName]
       const glattrbuffer = this.glattrbuffers[attrName]
 
       gl.bindBuffer(gl.ARRAY_BUFFER, glattrbuffer.buffer)
-      const elementSize = 4 // assuming floats for now. (We also need to support RGB Byte values.)
-      const dstByteOffsetInBytes = this.geomVertexOffsets[index] * elementSize * glattrbuffer.dimension
+      const elementSize = attrSpec.elementSize
+      const dstByteOffsetInBytes = this.geomVertexOffsets[index] * elementSize * attrSpec.dimension
       gl.bufferSubData(gl.ARRAY_BUFFER, dstByteOffsetInBytes, attrData.values, 0)
     }
   }

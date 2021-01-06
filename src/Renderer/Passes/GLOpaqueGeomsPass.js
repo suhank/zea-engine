@@ -89,8 +89,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
    */
   addGeomItem(geomItem) {
     if (this.__gl.multiDrawElementsInstanced) {
-      const geom = geomItem.getParameter('Geometry').getValue()
-      if (geom instanceof Mesh || geom instanceof MeshProxy) {
+      {
         const materialParam = geomItem.getParameter('Material')
         const material = materialParam.getValue()
         const shaderName = material.getShaderName()

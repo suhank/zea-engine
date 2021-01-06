@@ -1,7 +1,7 @@
 /* eslint-disable guard-for-in */
 import { EventEmitter } from '../../Utilities/index'
 import { GeomItem, Points, Lines, Mesh, PointsProxy, LinesProxy, MeshProxy } from '../../SceneTree/index'
-import { GLMeshSet, GLGeomItem } from '../Drawing/index.js'
+import { GLMeshSet, GLLinesSet, GLPointsSet } from '../Drawing/index.js'
 import { GLMaterialLibrary } from '../GLMaterialLibrary.js'
 
 /** Class representing GL shader materials.
@@ -119,6 +119,7 @@ class GLShaderGeomSets extends EventEmitter {
    * @param {any} renderstate - The renderstate value.
    */
   drawHighlightedGeoms(renderstate) {
+    if (!this.glHighlightShader) return
     this.bindShader(this.glHighlightShader, renderstate, 'multidraw-highlight')
 
     for (const elementType in this.glGeomSets) {
@@ -132,6 +133,7 @@ class GLShaderGeomSets extends EventEmitter {
    * @param {any} renderstate - The renderstate value.
    */
   drawGeomData(renderstate) {
+    if (!this.glGeomDataShader) return
     this.bindShader(this.glGeomDataShader, renderstate, 'multidraw-geomdata')
 
     const gl = renderstate.gl

@@ -85,10 +85,7 @@ class GLMaterialLibrary extends EventEmitter {
       const materialData = this.materialDatas[value]
       const material = materialData.material
 
-      let shaderClass = Registry.getBlueprint(material.getShaderName())
-      if (!shaderClass || !shaderClass.getPackedMaterialData) {
-        shaderClass = Registry.getBlueprint('GLDrawCADSurfaceShader')
-      }
+      const shaderClass = Registry.getBlueprint(material.getShaderName())
 
       const matData = shaderClass.getPackedMaterialData(material)
 

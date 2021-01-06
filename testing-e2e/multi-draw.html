@@ -14,7 +14,21 @@
     <script src="../dist/index.umd.js"></script>
 
     <script type="module">
-      const { GLRenderer, Scene, Vec3, Xfo, Color, Mesh, Sphere, Cuboid, Cone, Material, GeomItem } = zeaEngine
+      const {
+        GLRenderer,
+        Scene,
+        Vec3,
+        Xfo,
+        Color,
+        Mesh,
+        Sphere,
+        Cuboid,
+        Cone,
+        Circle,
+        PointGrid,
+        Material,
+        GeomItem,
+      } = zeaEngine
 
       const canvas = document.querySelector('#renderer')
 
@@ -22,11 +36,17 @@
       const renderer = new GLRenderer(canvas, { hideSplash: true, webglOptions: { antialias: false } })
       renderer.setScene(scene)
 
-      const standardMaterial1 = new Material('surfaces', 'StandardSurfaceShader')
-      standardMaterial1.getParameter('BaseColor').setValue(new Color(1, 1, 0))
+      const material1 = new Material('surfaces', 'StandardSurfaceShader')
+      material1.getParameter('BaseColor').setValue(new Color(1, 1, 0))
 
-      const standardMaterial2 = new Material('surfaces', 'StandardSurfaceShader')
-      standardMaterial2.getParameter('BaseColor').setValue(new Color(0, 1, 0))
+      const material2 = new Material('surfaces', 'StandardSurfaceShader')
+      material2.getParameter('BaseColor').setValue(new Color(0, 1, 0))
+
+      const material3 = new Material('surfaces', 'SimpleSurfaceShader')
+      material3.getParameter('BaseColor').setValue(new Color(1, 0, 1))
+
+      const material4 = new Material('surfaces', 'PointsShader')
+      material4.getParameter('BaseColor').setValue(new Color(1, 0, 1))
 
       const addShape = (name, shape, pos, material) => {
         const geomItem = new GeomItem(name + 'Item', shape, material)
@@ -50,23 +70,25 @@
       const sphere = new Sphere(0.5, 8)
       const cuboid = new Cuboid(1.5, 2.0, 1.0)
       const cone = new Cone(1.5, 2.0, 32)
-      // addShape('tri1', makeTriangle(), new Vec3(-1, 1, 1), standardMaterial)
-      // addShape('tri2', makeTriangle(), new Vec3(1, 1, 1), standardMaterial)
-      // addShape('sphere2', sphere, new Vec3(-2, 1, 1), standardMaterial1) //.addHighlight('foo', new Color(1, 0, 0, 0.1))
-      // addShape('cuboid2', cuboid, new Vec3(1, 1, 1), standardMaterial2)
-      // addShape('sphere3', sphere, new Vec3(-2, -1, 1), standardMaterial1)
-      // addShape('sphere4', sphere, new Vec3(-2, -3, 1), standardMaterial1)
-      // addShape('sphere5', sphere, new Vec3(-2, -5, 1), standardMaterial1)
-      // addShape('sphere6', sphere, new Vec3(-2, -7, 1), standardMaterial1)
-      // addShape('cone1', cone, new Vec3(4, -1, 1), standardMaterial2)
-      // addShape('cone2', cone, new Vec3(4, 1, 1), standardMaterial2)
-      // addShape('sphere1', sphere, new Vec3(-2, -1, 1), standardMaterial1)
-      // addShape('cuboid1', cuboid, new Vec3(2, 1, 1), standardMaterial1)
+      const circle = new Circle(1.5, 32)
+      const pointsGrid = new PointGrid(2, 3, 10, 8)
+      // addShape('tri1', makeTriangle(), new Vec3(-1, 1, 1), material)
+      // addShape('tri2', makeTriangle(), new Vec3(1, 1, 1), material)
+      addShape('sphere2', sphere, new Vec3(-2, 1, 1), material1) //.addHighlight('foo', new Color(1, 0, 0, 0.1))
+      addShape('cuboid2', cuboid, new Vec3(1, 1, 1), material2)
+      addShape('circle3', circle, new Vec3(-2, -1, 1), material3)
+      addShape('points4', pointsGrid, new Vec3(-2, -3, 1), material4)
+      // addShape('sphere5', sphere, new Vec3(-2, -5, 1), material1)
+      // addShape('sphere6', sphere, new Vec3(-2, -7, 1), material1)
+      // addShape('cone1', cone, new Vec3(4, -1, 1), material2)
+      // addShape('cone2', cone, new Vec3(4, 1, 1), material2)
+      // addShape('sphere1', sphere, new Vec3(-2, -1, 1), material1)
+      // addShape('cuboid1', cuboid, new Vec3(2, 1, 1), material1)
 
       // const buildSquare = (i) => {
       //   for (let ii = 0; ii < 25; ii++) {
-      //     const standardMaterial = new Material('surfaces', 'StandardSurfaceShader')
-      //     standardMaterial.getParameter('BaseColor').setValue(Color.random())
+      //     const material = new Material('surfaces', 'StandardSurfaceShader')
+      //     material.getParameter('BaseColor').setValue(Color.random())
       //     for (let iii = 0; iii < 25; iii++) {
       //       let shape
       //       switch (ii % 3) {
@@ -80,44 +102,50 @@
       //           shape = cuboid
       //           break
       //       }
-      //       addShape('shape' + i + '-' + ii + '-' + iii, shape, new Vec3(iii * 4.0, ii * 4.0, i * 4), standardMaterial)
+      //       addShape('shape' + i + '-' + ii + '-' + iii, shape, new Vec3(iii * 4.0, ii * 4.0, i * 4), material)
       //     }
       //   }
       //   if (i < 100) setTimeout(() => buildSquare(i + 1), 100)
       // }
       // buildSquare(0)
 
-      let count = 0
-      for (let i = 0; i < 10; i++) {
-        // const cuboid = new Cuboid(1.5, 2.0, 1.0)
-        for (let ii = 0; ii < 25; ii++) {
-          const standardMaterial = new Material('surfaces', 'StandardSurfaceShader')
-          standardMaterial.getParameter('BaseColor').setValue(Color.random())
-          for (let iii = 0; iii < 25; iii++) {
-            // addShape(
-            //   'cuboid' + i + '-' + ii + '-' + iii,
-            //   cuboid,
-            //   new Vec3(iii * 4.0, ii * 4.0, i * 4),
-            //   standardMaterial
-            // )
-            let shape
-            switch (ii % 2) {
-              case 0:
-                shape = cuboid
-                break
-              case 1:
-                shape = sphere
-                break
-              case 2:
-                shape = cone
-                break
-            }
-            addShape('shape' + i + '-' + ii + '-' + iii, shape, new Vec3(iii * 4.0, ii * 4.0, i * 4), standardMaterial)
-            count++
-          }
-        }
-      }
-      console.log('count:', count)
+      // let count = 0
+      // for (let i = 0; i < 10; i++) {
+      //   // const cuboid = new Cuboid(1.5, 2.0, 1.0)
+      //   for (let ii = 0; ii < 25; ii++) {
+      //     const material = new Material('surfaces', 'SimpleSurfaceShader')
+      //     material.getParameter('BaseColor').setValue(Color.random())
+      //     for (let iii = 0; iii < 25; iii++) {
+      //       // addShape(
+      //       //   'cuboid' + i + '-' + ii + '-' + iii,
+      //       //   cuboid,
+      //       //   new Vec3(iii * 4.0, ii * 4.0, i * 4),
+      //       //   material
+      //       // )
+      //       let shape
+      //       switch (ii % 5) {
+      //         case 0:
+      //           shape = cuboid
+      //           break
+      //         case 1:
+      //           shape = sphere
+      //           break
+      //         case 2:
+      //           shape = cone
+      //           break
+      //         case 3:
+      //           shape = circle
+      //           break
+      //         case 4:
+      //           shape = pointsGrid
+      //           break
+      //       }
+      //       addShape('shape' + i + '-' + ii + '-' + iii, shape, new Vec3(iii * 4.0, ii * 4.0, i * 4), material)
+      //       count++
+      //     }
+      //   }
+      // }
+      // console.log('count:', count)
 
       // scene.setupGrid(10.0, 10)
       renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-15, -15, 5), new Vec3(0, 0, 0.4))
