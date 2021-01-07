@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>web-xr-test-scene - Zea Engine</title>
+
+    <link href="zea-logo.png" rel="shortcut icon" />
+
+    <link rel="stylesheet" href="styles/tachyons.min.css" />
+    <link rel="stylesheet" href="styles/main.css" />
+
+    <script src="../dist/index.umd.js"></script>
+    <script src="../dist/plugins.umd.js"></script>
+    <style>
+      .label {
+        position: absolute;
+        left: 10px;
+        top: 10px;
+        margin: 0px;
+        font-family: 'arial';
+        user-select: none;
+      }
+
+      .button {
+        position: absolute;
+        left: 10px;
+        bottom: 10px;
+        margin: 10px;
+
+        font-family: 'arial';
+        background-color: #4caf50; /* Green */
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        user-select: none;
+      }
+      .button:hover {
+        background-color: #78b87a; /* Green */
+      }
+      .butto:focus {
+        background-color: #78b87a;
+      }
+    </style>
+
+    <script type="module">
+      const { GLRenderer, Scene, Vec3, Color, Sphere, Material, GeomItem } = window.zeaEngine
+
+      const canvas = document.querySelector('#renderer')
+
+      const scene = new Scene()
+      const renderer = new GLRenderer(canvas, { hideSplash: true, webglOptions: { antialias: false } })
+      renderer.setScene(scene)
+
+      scene.setupGrid(10.0, 10)
+
+      const standardMaterial = new Material('surfaces', 'SimpleSurfaceShader')
+      const defaultColor = new Color(89 / 255, 182 / 255, 92 / 255)
+      const pointerOverColor = new Color(0, 1, 1)
+      const pointerDownColor = new Color(1, 0, 0)
+      standardMaterial.getParameter('BaseColor').setValue(defaultColor)
+      const sphere = new Sphere(1.0, 36)
+      const geomItem = new GeomItem('Sphere', sphere, standardMaterial)
+      geomItem.on('pointerEnter', () => {
+        standardMaterial.getParameter('BaseColor').setValue(pointerOverColor)
+      })
+      geomItem.on('pointerLeave', () => {
+        standardMaterial.getParameter('BaseColor').setValue(defaultColor)
+      })
+      geomItem.on('pointerDown', (event) => {
+        event.setCapture(geomItem)
+        standardMaterial.getParameter('BaseColor').setValue(pointerDownColor)
+      })
+      geomItem.on('pointerUp', (event) => {
+        if (event.getCapture() == geomItem) event.releaseCapture()
+        const intersectionData = event.controller ? event.controller.getGeomItemAtTip() : event.intersectionData
+
+        if (!intersectionData || intersectionData.geomItem != geomItem) {
+          standardMaterial.getParameter('BaseColor').setValue(defaultColor)
+        } else {
+          standardMaterial.getParameter('BaseColor').setValue(pointerOverColor)
+        }
+      })
+      scene.getRoot().addChild(geomItem)
+
+      renderer.getXRViewport().then((xrvp) => {
+        var h = document.createElement('H1') // Create a <h1> element
+        h.classList.add('label')
+        var t = document.createTextNode('XR Device Detected') // Create a text node
+        h.appendChild(t)
+        document.body.insertBefore(h, canvas)
+
+        var b = document.createElement('div') // Create a <h1> element
+        b.classList.add('button')
+        var t = document.createTextNode('Launch VR') // Create a text node
+        b.appendChild(t)
+        document.body.insertBefore(b, canvas)
+
+        b.addEventListener('click', function (event) {
+          xrvp.togglePresenting()
+        })
+
+        document.addEventListener('keydown', (event) => {
+          if (event.key == ' ') {
+            xrvp.togglePresenting()
+          }
+        })
+      })
+    </script>
+  </head>
+  <body>
+    <canvas class="full-size" id="renderer" />
+  </body>
+</html>

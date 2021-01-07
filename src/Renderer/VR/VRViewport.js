@@ -34,11 +34,13 @@ class VRViewport extends GLBaseViewport {
     this.__stageTreeItem.setVisible(false)
     this.__renderer.addTreeItem(this.__stageTreeItem)
 
-    this.__vrhead = new VRHead(this.__renderer.gl, this.__stageTreeItem)
+    this.__vrhead = new VRHead(this, this.__stageTreeItem)
 
     this.controllersMap = {}
     this.controllers = []
-    this.__prevDownTime = []
+    this.prevControllerDownTime = []
+    this.spectatorMode = true
+    this.tick = 0
 
     // ////////////////////////////////////////////
     // Xfos
@@ -139,6 +141,15 @@ class VRViewport extends GLBaseViewport {
    * @private
    */
   __startSession() {
+    const gl = this.__renderer.gl
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null)
+
+    // Clear the framebuffer
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
+
+    // Set the viewport to the whole canvas
+    gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight)
+
     const onAnimationFrame = (t, frame) => {
       if (this.__session) {
         this.__session.requestAnimationFrame(onAnimationFrame)
@@ -225,27 +236,6 @@ class VRViewport extends GLBaseViewport {
           })
           .then((session) => {
             this.__renderer.__xrViewportPresenting = true
-
-            /* 
-            // Output canvas not working anymore
-            let mirrorCanvas
-            if (!SystemDesc.isMobileDevice) {
-              // Add an output canvas that will allow XR to also send a view
-              // back the monitor.
-              mirrorCanvas = document.createElement('canvas')
-              mirrorCanvas.style.position = 'relative'
-              mirrorCanvas.style.left = '0px'
-              mirrorCanvas.style.top = '0px'
-              mirrorCanvas.style.width = '100%'
-              mirrorCanvas.style.height = '100%'
-
-              this.__renderer.getGLCanvas().appendChild(mirrorCanvas)
-
-              session.addEventListener('end', (event) => {
-                this.__renderer.getGLCanvas().removeChild(mirrorCanvas)
-              })
-            }
-            */
 
             session.addEventListener('end', (event) => {
               this.__stageTreeItem.setVisible(false)
@@ -521,42 +511,15 @@ class VRViewport extends GLBaseViewport {
 
     // If spectator mode is active, draw a 3rd person view of the scene to
     // the WebGL context's default backbuffer.
-    const spectatorMode = false
-    if (spectatorMode && pose) {
-      // Bind the WebGL context's default framebuffer, so that the rendered
-      // content shows up in the canvas element.
-      gl.bindFramebuffer(gl.FRAMEBUFFER, null)
-
-      // Clear the framebuffer
-      gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
-
-      // Set the viewport to the whole canvas
-      gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight)
-
-      // // Set up a sensible projection matrix for the canvas
-      // mat4.perspective(
-      //   spectatorProjectionMatrix,
-      //   Math.PI * 0.4,
-      //   gl.drawingBufferWidth / gl.drawingBufferHeight,
-      //   session.renderState.depthNear,
-      //   session.renderState.depthFar
-      // )
-
-      // // Update the headset's pose to match the user's and make it visible
-      // // for this draw.
-      // if (headset) {
-      //   headset.visible = true
-      //   headset.matrix = pose.transform.matrix
-      // }
-
-      // // Draw the spectator view of the scene.
-      // scene.draw(spectatorProjectionMatrix, spectatorTransform)
-
-      // // Ensure the headset isn't visible in the VR view.
-      // if (headset) {
-      //   headset.visible = false
-      // }
+    if (this.spectatorMode && this.tick % 5 == 0) {
+      const viewport = this.__renderer.getActiveViewport()
+      // display the head in spectator mode.
+      this.__vrhead.setVisible(true)
+      viewport.draw()
+      this.__vrhead.setVisible(false)
     }
+
+    this.tick++
   }
 
   /**
@@ -610,7 +573,7 @@ class VRViewport extends GLBaseViewport {
     }
 
     const downTime = Date.now()
-    if (downTime - this.__prevDownTime[event.controller.id] < this.__doubleClickTimeMSParam.getValue()) {
+    if (downTime - this.prevControllerDownTime[event.controller.id] < this.__doubleClickTimeMSParam.getValue()) {
       if (this.manipulator) {
         this.manipulator.onPointerDoublePress(event)
         if (!event.propagating) return
@@ -618,7 +581,7 @@ class VRViewport extends GLBaseViewport {
 
       this.emit('pointerDoublePressed', event)
     } else {
-      this.__prevDownTime[event.controller.id] = downTime
+      this.prevControllerDownTime[event.controller.id] = downTime
       if (!event.propagating || this.capturedItem) return
 
       this.emit('pointerDown', event)
