@@ -691,7 +691,8 @@ class GLViewport extends GLBaseViewport {
   onKeyDown(event) {
     this.__preparePointerEvent(event)
     if (this.manipulator) {
-      if (this.manipulator.onKeyDown(event)) return
+      this.manipulator.onKeyDown(event)
+      if (!event.propagating) return
     }
     this.emit('keyDown', event)
   }
@@ -703,7 +704,8 @@ class GLViewport extends GLBaseViewport {
   onKeyUp(event) {
     this.__preparePointerEvent(event)
     if (this.manipulator) {
-      if (this.manipulator.onKeyUp(event)) return
+      this.manipulator.onKeyUp(event)
+      if (!event.propagating) return
     }
     this.emit('keyUp', event)
   }

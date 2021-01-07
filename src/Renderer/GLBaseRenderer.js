@@ -644,8 +644,10 @@ class GLBaseRenderer extends ParameterOwner {
 
     const prepareEvent = (event) => {
       event.propagating = true
+      const sp = event.stopPropagation
       event.stopPropagation = () => {
         event.propagating = false
+        if (sp) sp.call(event)
       }
     }
     const calcRendererCoords = (event) => {
