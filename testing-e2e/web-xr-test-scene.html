@@ -49,44 +49,86 @@
     </style>
 
     <script type="module">
-      const { GLRenderer, Scene, Vec3, Color, Sphere, Material, GeomItem } = window.zeaEngine
+      const {
+        GLRenderer,
+        Scene,
+        Vec3,
+        Xfo,
+        EulerAngles,
+        Color,
+        Sphere,
+        Material,
+        GeomItem,
+        ObjAsset,
+      } = window.zeaEngine
 
       const canvas = document.querySelector('#renderer')
 
       const scene = new Scene()
       const renderer = new GLRenderer(canvas, { hideSplash: true, webglOptions: { antialias: false } })
+      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(3, 3, 2), new Vec3(0, 0, 0.75))
       renderer.setScene(scene)
 
       scene.setupGrid(10.0, 10)
 
-      const standardMaterial = new Material('surfaces', 'SimpleSurfaceShader')
-      const defaultColor = new Color(89 / 255, 182 / 255, 92 / 255)
+      let defaultColor
       const pointerOverColor = new Color(0, 1, 1)
       const pointerDownColor = new Color(1, 0, 0)
-      standardMaterial.getParameter('BaseColor').setValue(defaultColor)
-      const sphere = new Sphere(1.0, 36)
-      const geomItem = new GeomItem('Sphere', sphere, standardMaterial)
-      geomItem.on('pointerEnter', () => {
-        standardMaterial.getParameter('BaseColor').setValue(pointerOverColor)
+
+      // const standardMaterial = new Material('surfaces', 'SimpleSurfaceShader')
+      // standardMaterial.getParameter('BaseColor').setValue(defaultColor)
+      // const sphere = new Sphere(1.0, 36)
+      // const geomItem = new GeomItem('Sphere', sphere, standardMaterial)
+      // scene.getRoot().addChild(geomItem)
+
+      const objAsset = new ObjAsset('cow')
+      objAsset.getParameter('FilePath').setUrl('data/cow.obj')
+      scene.getRoot().addChild(objAsset)
+
+      const xfo = new Xfo()
+      xfo.tr.set(0, 0, 3.55 * 0.3048)
+      xfo.ori.setFromEulerAngles(new EulerAngles(90 * (Math.PI / 180), 0, 0))
+      xfo.sc.set(0.3048, 0.3048, 0.3048)
+      objAsset.getParameter('GlobalXfo').setValue(xfo)
+      objAsset.on('loaded', () => {
+        window.postMessage(`done-Loading`)
       })
-      geomItem.on('pointerLeave', () => {
-        standardMaterial.getParameter('BaseColor').setValue(defaultColor)
+
+      let geomItem
+      objAsset.on('pointerEnter', (event) => {
+        geomItem = event.intersectionData.geomItem
+        if (geomItem) {
+          const material = geomItem.getParameter('Material').getValue()
+          defaultColor = material.getParameter('BaseColor').getValue()
+          material.getParameter('BaseColor').setValue(pointerOverColor)
+        }
       })
-      geomItem.on('pointerDown', (event) => {
-        event.setCapture(geomItem)
-        standardMaterial.getParameter('BaseColor').setValue(pointerDownColor)
+      objAsset.on('pointerLeave', (event) => {
+        if (event.leftGeometry == geomItem) {
+          const material = geomItem.getParameter('Material').getValue()
+          material.getParameter('BaseColor').setValue(defaultColor)
+        }
       })
-      geomItem.on('pointerUp', (event) => {
+      objAsset.on('pointerDown', (event) => {
+        if (event.intersectionData.geomItem) {
+          event.setCapture(geomItem)
+          const material = geomItem.getParameter('Material').getValue()
+          if (event.intersectionData.geomItem != geomItem) defaultColor = material.getParameter('BaseColor').getValue()
+          material.getParameter('BaseColor').setValue(pointerDownColor)
+          geomItem = event.intersectionData.geomItem
+        }
+      })
+      objAsset.on('pointerUp', (event) => {
         if (event.getCapture() == geomItem) event.releaseCapture()
         const intersectionData = event.controller ? event.controller.getGeomItemAtTip() : event.intersectionData
 
+        const material = geomItem.getParameter('Material').getValue()
         if (!intersectionData || intersectionData.geomItem != geomItem) {
-          standardMaterial.getParameter('BaseColor').setValue(defaultColor)
+          material.getParameter('BaseColor').setValue(defaultColor)
         } else {
-          standardMaterial.getParameter('BaseColor').setValue(pointerOverColor)
+          material.getParameter('BaseColor').setValue(pointerOverColor)
         }
       })
-      scene.getRoot().addChild(geomItem)
 
       renderer.getXRViewport().then((xrvp) => {
         var h = document.createElement('H1') // Create a <h1> element
