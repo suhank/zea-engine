@@ -409,10 +409,10 @@ class VRViewport extends GLBaseViewport {
       // Note: This is to avoid a bug/feature in WebXR where initially the
       // controllers have no handedness specified, then suddenly
       // get handedness. We need the handedness before we can setup the controller.
-      if (inputSource.handedness == '' || inputSource.handedness == 'none') return
-
+      if (inputSource.profiles.length == 0) return
       if (!this.controllers[i]) {
         console.warn('Missing controller')
+        continue
         // this.__createController(i, inputSource)
       }
       this.controllers[i].updatePose(this.__refSpace, xrFrame, inputSource, event)
@@ -433,6 +433,20 @@ class VRViewport extends GLBaseViewport {
       console.warn('No pose available during XR present')
       return
     }
+
+    this.__vrhead.update(pose)
+
+    // Prepare the pointerMove event.
+    const event = {}
+    this.preparePointerEvent(event)
+    this.updateControllers(xrFrame, event)
+    if (this.capturedElement && event.propagating) {
+      this.capturedElement.onPointerMove(event)
+    }
+    if (this.manipulator && event.propagating) {
+      this.manipulator.onPointerMove(event)
+    }
+
     const views = pose.views
 
     if (!this.__projectionMatriciesUpdated) {
@@ -486,14 +500,6 @@ class VRViewport extends GLBaseViewport {
       })
     }
 
-    this.__vrhead.update(pose)
-
-    // Prepare the pointerMove event.
-    const event = {}
-    this.preparePointerEvent(event)
-
-    this.updateControllers(xrFrame, event)
-
     renderstate.viewXfo = this.__vrhead.getTreeItem().getParameter('GlobalXfo').getValue()
     renderstate.viewScale = 1.0 / this.__stageScale
     renderstate.cameraMatrix = renderstate.viewXfo.toMat4()
@@ -501,13 +507,6 @@ class VRViewport extends GLBaseViewport {
     renderstate.vrPresenting = true // Some rendering is ajusted slightly in VR. e.g. Billboards
 
     this.__renderer.drawScene(renderstate)
-
-    if (this.capturedElement && event.propagating) {
-      this.capturedElement.onPointerMove(event)
-    }
-    if (this.manipulator && event.propagating) {
-      this.manipulator.onPointerMove(event)
-    }
 
     // ///////////////////////
     // Emit a signal for the shared session.
@@ -568,8 +567,8 @@ class VRViewport extends GLBaseViewport {
    */
   preparePointerEvent(event) {
     event.viewport = this
-
     event.propagating = true
+
     event.stopPropagation = () => {
       event.propagating = false
     }
@@ -584,9 +583,6 @@ class VRViewport extends GLBaseViewport {
 
     event.releaseCapture = () => {
       this.capturedItem = null
-      // TODO: This should be a request, which is fulfilled next time
-      // a frame is drawn.
-      this.renderGeomDataFbo()
     }
   }
 

@@ -56,10 +56,10 @@ class VRController {
         //     // to device inputs you'd create a new MotionController() instance
         //     // here to handle the animation, but this sample will skip that
         //     // and only display a static mesh for simplicity.
-
         //     scene.inputRenderer.setControllerMesh(new Gltf2Node({ url: assetPath }), inputSource.handedness)
         //   })
         xrvp.loadHMDResources().then((assetItem) => {
+          if (!assetItem) return
           let srcControllerTree
           if (inputSource.profiles[0] == 'htc-vive') {
             srcControllerTree = assetItem.getChildByName('Controller')
@@ -82,7 +82,6 @@ class VRController {
           }
           if (srcControllerTree) {
             const controllerTree = srcControllerTree.clone({ assetItem })
-
             controllerTree.getParameter('LocalXfo').setValue(
               new Xfo(
                 new Vec3(0, -0.035, -0.085),
@@ -206,10 +205,11 @@ class VRController {
 
     // /////////////////////////////////
     // Simulate Pointer Enter/Leave Events.
-    // Check for pointer over every 3rd frame (at 90fps this should be fine.)
-    if (this.tick % 3 == 0 && !event.getCapture()) {
-      event.intersectionData = this.getGeomItemAtTip()
-      if (event.intersectionData != undefined) {
+    // Check for pointer over every Nth frame (at 90fps this should be fine.)
+    if (this.tick % 5 == 0 && !event.getCapture()) {
+      const intersectionData = this.getGeomItemAtTip()
+      if (intersectionData != undefined) {
+        event.intersectionData = intersectionData
         if (intersectionData.geomItem != this.pointerOverItem) {
           if (this.pointerOverItem) {
             this.pointerOverItem.onPointerLeave(event)
@@ -219,7 +219,8 @@ class VRController {
           this.pointerOverItem.onPointerEnter(event)
         }
 
-        if (event.propagating) intersectionData.geomItem.onPointerMove(event)
+        // emit the pointer move event directly to the item.
+        intersectionData.geomItem.onPointerMove(event)
       } else if (this.pointerOverItem) {
         event.leftGeometry = this.pointerOverItem
         this.pointerOverItem.onPointerLeave(event)
