@@ -17,7 +17,7 @@ class VRHead {
 
     xrvp.loadHMDResources().then((assetItem) => {
       if (!assetItem) return
-      this.hmdGeomItem = assetItem.getChildByName('HMD')
+      this.hmdGeomItem = assetItem.getChildByName('HMD').clone({ assetItem })
       if (this.hmdGeomItem) {
         this.hmdGeomItem.getParameter('LocalXfo').setValue(
           new Xfo(
