@@ -6,6 +6,7 @@ import { VRHead } from './VRHead.js'
 import { VRController } from './VRController.js'
 import { VRViewManipulator } from './VRViewManipulator.js'
 import { resourceLoader } from '../../SceneTree/resourceLoader.js'
+import { POINTER_TYPES } from '../../Utilities/EnumUtils'
 
 /** Class representing a VR viewport.
  * @extends GLBaseViewport
@@ -531,6 +532,7 @@ class VRViewport extends GLBaseViewport {
   preparePointerEvent(event) {
     event.viewport = this
     event.propagating = true
+    event.pointerType = POINTER_TYPES.xr
 
     event.stopPropagation = () => {
       event.propagating = false
@@ -553,7 +555,6 @@ class VRViewport extends GLBaseViewport {
    * Handler of the `pointerdown` event fired when the pointer device is initially pressed.
    *
    * @param {MouseEvent|TouchEvent} event - The DOM event produced by a pointer
-   * @return {boolean} -
    */
   onPointerDown(event) {
     this.preparePointerEvent(event)

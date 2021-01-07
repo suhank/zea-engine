@@ -97,7 +97,6 @@ class VRViewManipulator extends BaseTool {
     this.__controllerTriggersHeld.push(event.controller)
     this.__initMoveStage()
     event.stopPropagation()
-    event.preventDefault()
   }
 
   /**
@@ -111,7 +110,6 @@ class VRViewManipulator extends BaseTool {
     this.__controllerTriggersHeld.splice(index, 1)
     this.__initMoveStage()
     event.stopPropagation()
-    event.preventDefault()
   }
 
   /**
@@ -142,8 +140,6 @@ class VRViewManipulator extends BaseTool {
       // Update the stage Xfo
       const stageXfo = this.stageXfo__GrabStart.multiply(deltaXfo)
       this.xrvp.setXfo(stageXfo)
-      event.stopPropagation()
-      event.preventDefault()
     } else if (this.__controllerTriggersHeld.length == 2) {
       const p0 = this.__controllerTriggersHeld[0].getControllerTipStageLocalXfo().tr
       const p1 = this.__controllerTriggersHeld[1].getControllerTipStageLocalXfo().tr
@@ -193,9 +189,6 @@ class VRViewManipulator extends BaseTool {
       // Update the stage Xfo
       const stageXfo = this.stageXfo__GrabStart.multiply(deltaXfo)
       this.xrvp.setXfo(stageXfo)
-
-      event.stopPropagation()
-      event.preventDefault()
     }
   }
 
