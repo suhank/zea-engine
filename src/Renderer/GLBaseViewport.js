@@ -20,6 +20,7 @@ class GLBaseViewport extends ParameterOwner {
     this.__fbo = undefined
     // Since there is not multi touch on `PointerEvent`, we need to store pointers pressed.
     this.__ongoingPointers = []
+    this.__backgroundColor = new Color(0.3, 0.3, 0.3, 1)
 
     const sceneSet = () => {
       const settings = renderer.getScene().settings
@@ -50,8 +51,11 @@ class GLBaseViewport extends ParameterOwner {
       processBGValue()
       bgColorParam.on('valueChanged', processBGValue)
     }
-
-    this.__renderer.on('sceneSet', sceneSet)
+    if (this.__renderer.getScene()) {
+      sceneSet(this.__renderer.getScene())
+    } else {
+      this.__renderer.on('sceneSet', sceneSet)
+    }
   }
 
   /**
