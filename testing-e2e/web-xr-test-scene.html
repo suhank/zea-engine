@@ -75,14 +75,9 @@
       const pointerOverColor = new Color(0, 1, 1)
       const pointerDownColor = new Color(1, 0, 0)
 
-      // const standardMaterial = new Material('surfaces', 'SimpleSurfaceShader')
-      // standardMaterial.getParameter('BaseColor').setValue(defaultColor)
-      // const sphere = new Sphere(1.0, 36)
-      // const geomItem = new GeomItem('Sphere', sphere, standardMaterial)
-      // scene.getRoot().addChild(geomItem)
-
       const objAsset = new ObjAsset('cow')
-      objAsset.getParameter('FilePath').setUrl('data/cow.obj')
+      objAsset.getParameter('FilePath').setValue('data/cow.obj')
+      objAsset.getParameter('splitGroupsIntoObjects').setValue(true)
       scene.getRoot().addChild(objAsset)
 
       const xfo = new Xfo()
