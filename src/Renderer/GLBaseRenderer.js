@@ -96,28 +96,16 @@ class GLBaseRenderer extends ParameterOwner {
               resolve(this.__xrViewport)
             })
           }
-          if (navigator.xr.supportsSessionMode) {
-            // Old
-            navigator.xr
-              .supportsSessionMode('immersive-vr')
-              .then(setupXRViewport)
-              .catch((reason) => {
-                console.warn('Unable to setup XR:' + reason)
-              })
-          } else {
-            // New
-            navigator.xr
-              .isSessionSupported('immersive-vr')
-              .then((isSupported) => {
-                if (isSupported) {
-                  setupXRViewport()
-                }
-              })
-              .catch((reason) => {
-                console.warn('Unable to setup XR:' + reason)
-              })
-          }
-
+          navigator.xr
+            .isSessionSupported('immersive-vr')
+            .then((isSupported) => {
+              if (isSupported) {
+                setupXRViewport()
+              }
+            })
+            .catch((reason) => {
+              console.warn('Unable to setup XR:' + reason)
+            })
           // TODO:
           // navigator.xr.on('devicechange', checkForXRSupport);
         }
@@ -253,7 +241,6 @@ class GLBaseRenderer extends ParameterOwner {
    * @return {GLViewport} - The return value.
    */
   getActiveViewport() {
-    if (this.__xrViewportPresenting) return this.__xrViewport
     return this.__activeViewport
   }
 

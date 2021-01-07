@@ -23,12 +23,7 @@ class VRViewManipulator extends BaseTool {
     this.vrControllerToolTipMat = new Material('Cross', 'FlatSurfaceShader')
     this.vrControllerToolTipMat.getParameter('BaseColor').setValue(new Color('#03E3AC'))
     this.vrControllerToolTipMat.visibleInGeomDataBuffer = false
-
-    this.xrvp.on('controllerAdded', (controller) => {
-      const geomItem = new GeomItem('HandleToolTip', this.vrControllerToolTip, this.vrControllerToolTipMat)
-      controller.getTipItem().removeAllChildren()
-      controller.getTipItem().addChild(geomItem, false)
-    })
+    this.addIconToController = this.addIconToController.bind(this)
   }
 
   // /////////////////////////////////////
@@ -51,7 +46,6 @@ class VRViewManipulator extends BaseTool {
    */
   activateTool() {
     super.activateTool()
-    console.log('activateTool.ViewTool')
 
     for (const controller of this.xrvp.getControllers()) {
       this.addIconToController({ controller })

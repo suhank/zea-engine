@@ -1,6 +1,6 @@
 import { SystemDesc } from '../../SystemDesc.js'
 import { Vec3, Mat4, Xfo } from '../../Math/index'
-import { TreeItem } from '../../SceneTree/index'
+import { TreeItem, VLAAsset } from '../../SceneTree/index'
 import { GLBaseViewport } from '../GLBaseViewport.js'
 import { VRHead } from './VRHead.js'
 import { VRController } from './VRController.js'
@@ -36,8 +36,8 @@ class VRViewport extends GLBaseViewport {
 
     this.__vrhead = new VRHead(this.__renderer.gl, this.__stageTreeItem)
 
-    this.__vrControllersMap = {}
-    this.__vrControllers = []
+    this.controllersMap = {}
+    this.controllers = []
     this.__prevDownTime = []
 
     // ////////////////////////////////////////////
@@ -112,7 +112,7 @@ class VRViewport extends GLBaseViewport {
    * @return {any} - The return value.
    */
   getControllers() {
-    return this.__vrControllers
+    return this.controllers
   }
 
   // //////////////////////////
@@ -143,15 +143,6 @@ class VRViewport extends GLBaseViewport {
       if (this.__session) {
         this.__session.requestAnimationFrame(onAnimationFrame)
         this.draw(frame)
-        // console.log(frame)
-        // let pose = frame.getViewerPose(this.__refSpace);
-        // if(pose) {
-        //     console.log(pose)
-        //     this.__session.end();
-        // }
-        // else {
-        //     this.__session.requestAnimationFrame(onAnimationFrame);
-        // }
       }
     }
     this.__session.requestAnimationFrame(onAnimationFrame)
@@ -162,6 +153,9 @@ class VRViewport extends GLBaseViewport {
    * @return {any} - The return value.
    */
   loadHMDResources() {
+    if (SystemDesc.isMobileDevice) {
+      return Promise.resolve()
+    }
     // If the HMD has changed, reset it.
     const hmd = localStorage.getItem('hmd')
     if (this.__hmd != hmd) {
@@ -172,44 +166,44 @@ class VRViewport extends GLBaseViewport {
 
     this.__hmd = hmd
     this.__hmdAssetPromise = new Promise((resolve, reject) => {
+      // let profileList = xrInputSource.profiles;
       // ////////////////////////////////////////////
       // Resources
-
-      // Note: when the VRViewport is setup
-      const sceneSet = (event) => {
-        const scene = event.scene
-
-        let assetPath
+      if (!SystemDesc.isMobileDevice) {
+        let hmdAssetId
         switch (hmd) {
           case 'Vive':
-            assetPath = 'ZeaEngine/Vive.vla'
+            hmdAssetId = 'ZeaEngine/Vive.vla'
             break
           case 'Oculus':
-            assetPath = 'ZeaEngine/Oculus.vla'
+            hmdAssetId = 'ZeaEngine/Oculus.vla'
             break
           default:
-            assetPath = 'ZeaEngine/Oculus.vla'
+            hmdAssetId = 'ZeaEngine/Vive.vla'
             break
         }
 
-        const hmdAssetId = resourceLoader.resolveFilePathToId(assetPath)
-        if (hmdAssetId && !SystemDesc.isMobileDevice) {
-          this.__vrAsset = resourceLoader.loadCommonAssetResource(hmdAssetId)
-          this.__vrAsset.on('loaded', () => {
-            const materialLibrary = this.__vrAsset.getMaterialLibrary()
-            const materialNames = materialLibrary.getMaterialNames()
-            for (const name of materialNames) {
-              const material = materialLibrary.getMaterial(name, false)
-              if (material) {
-                material.visibleInGeomDataBuffer = false
-                material.setShaderName('SimpleSurfaceShader')
-              }
+        if (!resourceLoader.getCommonResource(hmdAssetId)) {
+          // Cache the asset so if an avatar needs to display,
+          // it can use the same asset.
+          const asset = new VLAAsset(hmdAssetId)
+          asset.getParameter('FilePath').setValue(hmdAssetId)
+          resourceLoader.setCommonResource(hmdAssetId, asset)
+        }
+        this.__vrAsset = resourceLoader.getCommonResource(hmdAssetId)
+        this.__vrAsset.once('loaded', () => {
+          const materialLibrary = this.__vrAsset.getMaterialLibrary()
+          const materialNames = materialLibrary.getMaterialNames()
+          for (const name of materialNames) {
+            const material = materialLibrary.getMaterial(name, false)
+            if (material) {
+              material.visibleInGeomDataBuffer = false
+              material.setShaderName('SimpleSurfaceShader')
             }
-            resolve(this.__vrAsset)
-          })
-        } else reject()
-      }
-      this.__renderer.on('sceneSet', sceneSet)
+          }
+          resolve(this.__vrAsset)
+        })
+      } else reject(new Error('Mobile devices to not load HMD resources'))
     })
     return this.__hmdAssetPromise
   }
@@ -223,7 +217,7 @@ class VRViewport extends GLBaseViewport {
 
       const gl = this.__renderer.gl
 
-      const __startPresenting = () => {
+      const startPresenting = () => {
         navigator.xr
           .requestSession('immersive-vr', {
             requiredFeatures: ['local-floor'],
@@ -232,6 +226,8 @@ class VRViewport extends GLBaseViewport {
           .then((session) => {
             this.__renderer.__xrViewportPresenting = true
 
+            /* 
+            // Output canvas not working anymore
             let mirrorCanvas
             if (!SystemDesc.isMobileDevice) {
               // Add an output canvas that will allow XR to also send a view
@@ -243,21 +239,22 @@ class VRViewport extends GLBaseViewport {
               mirrorCanvas.style.width = '100%'
               mirrorCanvas.style.height = '100%'
 
-              this.__renderer.getDiv().replaceChild(mirrorCanvas, this.__renderer.getGLCanvas())
+              this.__renderer.getGLCanvas().appendChild(mirrorCanvas)
 
-              session.on('end', (event) => {
-                this.__renderer.getDiv().replaceChild(this.__renderer.getGLCanvas(), mirrorCanvas)
+              session.addEventListener('end', (event) => {
+                this.__renderer.getGLCanvas().removeChild(mirrorCanvas)
               })
             }
+            */
 
-            session.on('end', (event) => {
+            session.addEventListener('end', (event) => {
               this.__stageTreeItem.setVisible(false)
               this.__session = null
               this.emit('presentingChanged', { state: false })
             })
 
             const onSelectStart = (ev) => {
-              const controller = this.__vrControllersMap[ev.inputSource.handedness]
+              const controller = this.controllersMap[ev.inputSource.handedness]
               if (controller) {
                 this.onPointerDown({
                   button: 1,
@@ -266,7 +263,7 @@ class VRViewport extends GLBaseViewport {
               }
             }
             const onSelectEnd = (ev) => {
-              const controller = this.__vrControllersMap[ev.inputSource.handedness]
+              const controller = this.controllersMap[ev.inputSource.handedness]
               if (controller) {
                 this.onPointerUp({
                   button: 1,
@@ -274,68 +271,80 @@ class VRViewport extends GLBaseViewport {
                 })
               }
             }
-            session.on('selectstart', onSelectStart)
-            session.on('selectend', onSelectEnd)
+
+            /**
+             * The __createController method.
+             * @param {any} id - The id value.
+             * @param {any} inputSource - The inputSource value.
+             * @return {any} - The return value.
+             * @private
+             */
+            const createController = (inputSource) => {
+              console.log('creating controller:', inputSource.handedness, inputSource.profiles)
+              const id = this.controllers.length
+              const controller = new VRController(this, inputSource, id)
+              this.controllersMap[inputSource.handedness] = controller
+              this.controllers[id] = controller
+              this.emit('controllerAdded', { controller })
+              return controller
+            }
+            const onInputSourcesChange = (event) => {
+              // As input sources are connected if they are tracked-pointer devices
+              // look up which meshes should be associated with their profile and
+              // load as the controller model for that hand.
+              for (const inputSource of event.added) {
+                if (inputSource.profiles.length == 0) continue
+                createController(inputSource)
+              }
+            }
+            session.addEventListener('selectstart', onSelectStart)
+            session.addEventListener('selectend', onSelectEnd)
+            session.addEventListener('inputsourceschange', onInputSourcesChange)
 
             this.__session = session
 
             // ////////////////////////////
-            // Old code
-            // this.__session.baseLayer = new XRWebGLLayer(session, gl);
-
-            // New code
+            const glLayer = new XRWebGLLayer(session, gl)
             session.updateRenderState({
-              baseLayer: new XRWebGLLayer(session, gl, {
-                compositionDisabled: session.mode == 'inline',
-              }),
+              baseLayer: glLayer /* 
+              // Output canvas not working anymore
               outputContext: mirrorCanvas ? mirrorCanvas.getContext('xrpresent') : null,
+              ,*/,
             })
             // ////////////////////////////
 
-            // Get a stage frame of reference, which will align the user's physical
-            // floor with Y=0 and can provide boundaries that indicate where the
-            // user can safely walk. If the system can't natively provide stage
-            // coordinates (for example, with a 3DoF device) then it will return an
-            // emulated stage, where the view is translated up by a static height so
-            // that the scene still renders in approximately the right place.
+            // eslint-disable-next-line require-jsdoc
+            const onRefSpaceCreated = (refSpace) => {
+              this.__refSpace = refSpace
+              this.__stageTreeItem.setVisible(true)
+              this.emit('presentingChanged', { state: true })
 
-            // If a bounded reference space isn't supported, fall back to a
-            // stationary/floor-level reference space. This still provides a
-            // floor-relative space and will always be supported for
-            // immersive sessions. It will not, however, provide boundaries
-            // and generally expects the user to stand in one place.
-            // If the device doesn't have a way of determining the floor
-            // level (for example, with a 3DoF device) then it will return
-            // an emulated floor-level space, where the view is translated
-            // up by a static height so that the scene still renders in
-            // approximately the right place.
-            //   console.log('Falling back to floor-level reference space');
+              this.loadHMDResources().then(() => {
+                this.__startSession()
+                resolve()
+              })
+            }
+
+            // Attempt to get a 'bounded-floor' reference space, which will align
+            // the user's physical floor with Y=0 and provide boundaries that
+            // indicate where the user can safely walk.
             session
-              .requestReferenceSpace(SystemDesc.isMobileDevice ? 'local' : 'local-floor')
+              .requestReferenceSpace(SystemDesc.isMobileDevice ? 'local' : 'bounded-floor')
               .catch((e) => {
-                // if (!session.mode.startsWith('immersive')) {
-                // If we're in inline mode, our underlying platform may not support
-                // the stationary reference space, but an identity space is guaranteed.
-                console.log('Falling back to identity reference space')
-                return session.requestReferenceSpace('viewer').then((refSpace) => {
-                  // If we use an identity reference space we need to scoot the
-                  // origin down a bit to put the camera at approximately the
-                  // right level. (Here we're moving it 1.6 meters, which should
-                  // *very* roughly align us with the eye height of an "average"
-                  // adult human.)
-                  return refSpace.getOffsetReferenceSpace(new XRRigidTransform({ y: -1.6 }))
-                })
-                // } else {
-                //   throw e
-                // }
+                // If a bounded reference space isn't supported, fall back to a
+                // local-floor reference space. This still provides a floor-relative
+                // space and will always be supported for immersive sessions. It
+                // will not, however, provide boundaries and generally expects the
+                // user to stand in one place. If the device doesn't have a way of
+                // determining the floor level (for example, with a 3DoF device)
+                // then it will return an emulated local-floor space, where the view
+                // is translated up by a static height so that the scene still
+                // renders in approximately the right place.
+                console.log('Falling back to local-floor reference space')
+                session.requestReferenceSpace('local-floor').then(onRefSpaceCreated)
               })
               .then((refSpace) => {
-                this.__refSpace = refSpace
-                this.__stageTreeItem.setVisible(true)
-                this.emit('presentingChanged', { state: true })
-                this.__startSession()
-
-                resolve()
+                onRefSpaceCreated(refSpace)
               })
               .catch((e) => {
                 console.warn(e.message)
@@ -347,15 +356,16 @@ class VRViewport extends GLBaseViewport {
           })
       }
 
-      if (SystemDesc.isMobileDevice) {
-        __startPresenting()
-      } else {
-        // Note: we should not need to load the resources here
-        // They could be loaded only once the controllers are
-        // being created. However, I can't see the controllers if
-        // the loading is defered
-        this.loadHMDResources().then(__startPresenting)
-      }
+      startPresenting()
+      // if (SystemDesc.isMobileDevice) {
+      //   startPresenting()
+      // } else {
+      //   // Note: we should not need to load the resources here
+      //   // They could be loaded only once the controllers are
+      //   // being created. However, I can't see the controllers if
+      //   // the loading is defered
+      //   this.loadHMDResources().then(startPresenting)
+      // }
     })
   }
 
@@ -388,22 +398,6 @@ class VRViewport extends GLBaseViewport {
   // Controllers
 
   /**
-   * The __createController method.
-   * @param {any} id - The id value.
-   * @param {any} inputSource - The inputSource value.
-   * @return {any} - The return value.
-   * @private
-   */
-  __createController(id, inputSource) {
-    console.log('creating controller:', inputSource.handedness)
-    const controller = new VRController(this, inputSource, id)
-    this.__vrControllersMap[inputSource.handedness] = controller
-    this.__vrControllers[id] = controller
-    this.emit('controllerAdded', { controller })
-    return vrController
-  }
-
-  /**
    * The updateControllers method.
    * @param {any} xrFrame - The xrFrame value.
    */
@@ -417,10 +411,11 @@ class VRViewport extends GLBaseViewport {
       // get handedness. We need the handedness before we can setup the controller.
       if (inputSource.handedness == '' || inputSource.handedness == 'none') return
 
-      if (!this.__vrControllers[i]) {
-        this.__createController(i, inputSource)
+      if (!this.controllers[i]) {
+        console.warn('Missing controller')
+        // this.__createController(i, inputSource)
       }
-      this.__vrControllers[i].updatePose(this.__refSpace, xrFrame, inputSource, event)
+      this.controllers[i].updatePose(this.__refSpace, xrFrame, inputSource, event)
     }
   }
 
@@ -430,14 +425,14 @@ class VRViewport extends GLBaseViewport {
    */
   draw(xrFrame) {
     const session = xrFrame.session
-    // Assumed to be a XRWebGLLayer for now.
 
-    // Old
-    // const layer = session.baseLayer;
-    // New
     const layer = session.renderState.baseLayer
 
     const pose = xrFrame.getViewerPose(this.__refSpace)
+    if (!pose) {
+      console.warn('No pose available during XR present')
+      return
+    }
     const views = pose.views
 
     if (!this.__projectionMatriciesUpdated) {
@@ -465,7 +460,7 @@ class VRViewport extends GLBaseViewport {
     const gl = this.__renderer.gl
     gl.bindFramebuffer(gl.FRAMEBUFFER, layer.framebuffer)
 
-    if (this.__backgroundColor) gl.clearColor(...this.__backgroundColor.asArray())
+    gl.clearColor(...this.__backgroundColor.asArray())
     gl.colorMask(true, true, true, true)
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 
@@ -520,10 +515,49 @@ class VRViewport extends GLBaseViewport {
       interfaceType: 'VR',
       hmd: this.__hmd,
       viewXfo: renderstate.viewXfo,
-      controllers: this.__vrControllers,
+      controllers: this.controllers,
       vrviewport: this,
     }
     this.emit('viewChanged', data)
+
+    // If spectator mode is active, draw a 3rd person view of the scene to
+    // the WebGL context's default backbuffer.
+    const spectatorMode = false
+    if (spectatorMode && pose) {
+      // Bind the WebGL context's default framebuffer, so that the rendered
+      // content shows up in the canvas element.
+      gl.bindFramebuffer(gl.FRAMEBUFFER, null)
+
+      // Clear the framebuffer
+      gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
+
+      // Set the viewport to the whole canvas
+      gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight)
+
+      // // Set up a sensible projection matrix for the canvas
+      // mat4.perspective(
+      //   spectatorProjectionMatrix,
+      //   Math.PI * 0.4,
+      //   gl.drawingBufferWidth / gl.drawingBufferHeight,
+      //   session.renderState.depthNear,
+      //   session.renderState.depthFar
+      // )
+
+      // // Update the headset's pose to match the user's and make it visible
+      // // for this draw.
+      // if (headset) {
+      //   headset.visible = true
+      //   headset.matrix = pose.transform.matrix
+      // }
+
+      // // Draw the spectator view of the scene.
+      // scene.draw(spectatorProjectionMatrix, spectatorTransform)
+
+      // // Ensure the headset isn't visible in the VR view.
+      // if (headset) {
+      //   headset.visible = false
+      // }
+    }
   }
 
   /**
