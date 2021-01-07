@@ -132,7 +132,7 @@ class ResourceLoader extends EventEmitter {
   }
 
   /**
-   * Given a file ID, resolves the URL that we can use to fetch the file.
+   * Given a file ID, returns a URL. The adaptor that is assigned is responsible for resolving the URL within the file system.
    * @param {string} value - The file value.
    * @return {string} - The resolved URL if an adapter is installed, else the original value.
    */
