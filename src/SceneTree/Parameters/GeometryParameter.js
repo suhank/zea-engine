@@ -42,20 +42,6 @@ class GeometryParameter extends Parameter {
     }
   }
 
-
-  /**
-   * The loadValue is used to change the value of a parameter, without triggering a
-   * valueChanges, or setting the USER_EDITED state.
-   *
-   * @param {any} value - The context value.
-   */
-  loadValue(value) {
-    this.__value = value
-    if (this.__value) {
-      this.__value.on('boundingBoxChanged', this.__emitBoundingBoxDirtied)
-    }
-  }
-
   // ////////////////////////////////////////
   // Persistence
 
