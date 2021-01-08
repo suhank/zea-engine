@@ -30,6 +30,8 @@ uniform mat4 projectionMatrix;
 <%include file="modelMatrix.glsl"/>
 
 /* VS Outputs */
+varying float v_drawItemId;
+varying vec4 v_geomItemData;
 varying vec3 v_viewPos;
 #ifdef ENABLE_TEXTURES
 varying vec2 v_textureCoord;
@@ -38,6 +40,9 @@ varying vec2 v_textureCoord;
 
 void main(void) {
   int drawItemId = getDrawItemId();
+  v_drawItemId = float(drawItemId);
+  v_geomItemData  = getInstanceData(drawItemId);
+
     mat4 modelMatrix = getModelMatrix(drawItemId);
     mat4 modelViewMatrix = viewMatrix * modelMatrix;
 
@@ -56,8 +61,11 @@ void main(void) {
       `
 precision highp float;
 
+<%include file="GLSLUtils.glsl"/>
 <%include file="stack-gl/gamma.glsl"/>
 <%include file="materialparams.glsl"/>
+
+#ifndef ENABLE_MULTI_DRAW
 
 uniform color BaseColor;
 
@@ -66,7 +74,12 @@ uniform sampler2D BaseColorTex;
 uniform int BaseColorTexType;
 #endif
 
+
+#endif // ENABLE_MULTI_DRAW
+
 /* VS Outputs */
+varying float v_drawItemId;
+varying vec4 v_geomItemData;
 varying vec3 v_viewPos;
 #ifdef ENABLE_TEXTURES
 varying vec2 v_textureCoord;
@@ -78,11 +91,23 @@ varying vec2 v_textureCoord;
 #endif
 void main(void) {
 
+  //////////////////////////////////////////////
+  // Material
+
+#ifdef ENABLE_MULTI_DRAW
+
+  vec2 materialCoords = v_geomItemData.zw;
+  vec4 baseColor = getMaterialValue(materialCoords, 0);
+
+#else // ENABLE_MULTI_DRAW
+
 #ifndef ENABLE_TEXTURES
     vec4 baseColor = BaseColor;
 #else
     vec4 baseColor = getColorParamValue(BaseColor, BaseColorTex, BaseColorTexType, v_textureCoord);
-#endif
+#endif // ENABLE_TEXTURES
+
+#endif // ENABLE_MULTI_DRAW
 
 #ifndef ENABLE_ES3
     vec4 fragColor;
@@ -110,6 +135,21 @@ void main(void) {
       defaultValue: new Color(1.0, 1.0, 0.5),
     })
     return paramDescs
+  }
+
+  /**
+   * The getPackedMaterialData method.
+   * @param {any} material - The material param.
+   * @return {any} - The return value.
+   */
+  static getPackedMaterialData(material) {
+    const matData = new Float32Array(8)
+    const baseColor = material.getParameter('BaseColor').getValue()
+    matData[0] = baseColor.r
+    matData[1] = baseColor.g
+    matData[2] = baseColor.b
+    matData[3] = baseColor.a
+    return matData
   }
 
   static getGeomDataShaderName() {
