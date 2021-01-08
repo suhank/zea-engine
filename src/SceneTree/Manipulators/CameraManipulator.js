@@ -703,6 +703,26 @@ class CameraManipulator extends BaseTool {
   }
 
   /**
+   * Causes an event to occur when the mouse pointer is moved into this viewport
+   * @param {MouseEvent|TouchEvent} event - The event that occurs.
+   */
+  onPointerEnter(event) {}
+
+  /**
+   * Causes an event to occur when the mouse pointer is moved out of this viewport
+   * @param {MouseEvent|TouchEvent} event - The event that occurs.
+   */
+  onPointerLeave(event) {
+    // If the pointer leaves the viewport, then we will no longer receive key up events,
+    // so we must immediately disable movement here.
+    if (this.__keysPressed.length > 0) {
+      this.__keysPressed = []
+      this.__velocity.set(0, 0, 0)
+      this.__keyboardMovement = false
+    }
+  }
+
+  /**
    * Invoked when the mouse wheel is rolled up or down over an element.
    *
    * @param {WheelEvent} event - The wheel event that occurs.
@@ -821,6 +841,7 @@ class CameraManipulator extends BaseTool {
       default:
         return
     }
+    event.stopPropagation()
     this.__keysPressed.push(key)
     if (!this.__keyboardMovement) {
       this.__keyboardMovement = true
@@ -859,6 +880,7 @@ class CameraManipulator extends BaseTool {
       default:
         return
     }
+    event.stopPropagation()
     const keyIndex = this.__keysPressed.indexOf(key)
     this.__keysPressed.splice(keyIndex, 1)
     if (this.__keysPressed.length == 0) this.__keyboardMovement = false

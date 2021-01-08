@@ -118,32 +118,6 @@ class GLViewport extends GLBaseViewport {
     this.__updateProjectionMatrix()
   }
 
-  /**
-   * The getManipulator method.
-   * @return {any} - The return value.
-   */
-  getManipulator() {
-    return this.manipulator
-  }
-
-  /**
-   * The setManipulator method.
-   * @param {any} manipulator - The manipulator value.
-   */
-  setManipulator(manipulator) {
-    if (this.manipulator != manipulator) {
-      if (this.manipulator && this.manipulator.deactivateTool) {
-        this.manipulator.deactivateTool()
-      }
-
-      this.manipulator = manipulator
-
-      if (manipulator.activateTool) {
-        manipulator.activateTool()
-      }
-    }
-  }
-
   // eslint-disable-next-line require-jsdoc
   __updateProjectionMatrix() {
     const aspect = this.__width / this.__height
@@ -713,7 +687,8 @@ class GLViewport extends GLBaseViewport {
   onKeyDown(event) {
     this.__preparePointerEvent(event)
     if (this.manipulator) {
-      if (this.manipulator.onKeyDown(event)) return
+      this.manipulator.onKeyDown(event)
+      if (!event.propagating) return
     }
     this.emit('keyDown', event)
   }
@@ -725,7 +700,8 @@ class GLViewport extends GLBaseViewport {
   onKeyUp(event) {
     this.__preparePointerEvent(event)
     if (this.manipulator) {
-      if (this.manipulator.onKeyUp(event)) return
+      this.manipulator.onKeyUp(event)
+      if (!event.propagating) return
     }
     this.emit('keyUp', event)
   }
@@ -811,7 +787,7 @@ class GLViewport extends GLBaseViewport {
 
     gl.viewport(...this.region)
 
-    if (this.__backgroundColor) gl.clearColor(...this.__backgroundColor.asArray())
+    gl.clearColor(...this.__backgroundColor.asArray())
     gl.colorMask(true, true, true, true)
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 

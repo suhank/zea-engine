@@ -1,4 +1,4 @@
-import { Mat4, Xfo } from '../../Math/index'
+import { Vec3, Quat, Xfo, Mat4 } from '../../Math/index'
 import { TreeItem } from '../../SceneTree/index'
 
 /** Class representing a VR head.
@@ -7,16 +7,40 @@ import { TreeItem } from '../../SceneTree/index'
 class VRHead {
   /**
    * Create a VR head.
-   * @param {any} vrviewport - The VR viewport.
+   * @param {any} xrvp - The VR viewport.
    * @param {any} stageTreeItem - The stageTreeItem value.
    */
-  constructor(vrviewport, stageTreeItem) {
-    this.__vrviewport = vrviewport
+  constructor(xrvp, stageTreeItem) {
+    this.__xrvp = xrvp
     this.__treeItem = new TreeItem('VRHead')
     stageTreeItem.addChild(this.__treeItem)
 
+    xrvp.loadHMDResources().then((assetItem) => {
+      if (!assetItem) return
+      this.hmdGeomItem = assetItem.getChildByName('HMD').clone({ assetItem })
+      if (this.hmdGeomItem) {
+        this.hmdGeomItem.getParameter('LocalXfo').setValue(
+          new Xfo(
+            new Vec3(0, -0.035, -0.03),
+            new Quat({ setFromAxisAndAngle: [new Vec3(0, 1, 0), Math.PI] }),
+            new Vec3(0.001, 0.001, 0.001) // VRAsset units are in mm.
+          )
+        )
+        this.hmdGeomItem.getParameter('Visible').setValue(false)
+        this.__treeItem.addChild(this.hmdGeomItem, false)
+      }
+    })
+
     this.__mat4 = new Mat4()
     this.__localXfo = new Xfo()
+  }
+
+  /**
+   * The Set wether the HMB is visible in rendering or not. Used in spectator rendering.
+   * @param {boolean} state - The visibility value.
+   */
+  setVisible(state) {
+    this.hmdGeomItem.getParameter('Visible').setValue(state)
   }
 
   /**
