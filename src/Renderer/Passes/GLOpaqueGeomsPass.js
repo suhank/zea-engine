@@ -53,24 +53,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
    * @return {boolean} - The return value.
    */
   checkMaterial(material) {
-    const shaderClass = material.getShaderClass()
-    if (shaderClass) {
-      if (shaderClass.isTransparent()) return false
-      if (shaderClass.isOverlay()) return false
-
-      const baseColorParam = material.getParameter('BaseColor')
-      if (baseColorParam && baseColorParam.getValue().a < 1.0) {
-        return false
-      }
-
-      const opacityParam = material.getParameter('Opacity')
-      if (opacityParam && opacityParam.getValue() < 1.0) {
-        return false
-      }
-
-      return true
-    }
-    return false
+    return !material.isTransparent()
   }
 
   /**
@@ -89,9 +72,9 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
    */
   addGeomItem(geomItem) {
     if (this.__gl.multiDrawElementsInstanced) {
-      {
-        const materialParam = geomItem.getParameter('Material')
-        const material = materialParam.getValue()
+      const materialParam = geomItem.getParameter('Material')
+      const material = materialParam.getValue()
+      if (!material.isTextured()) {
         const shaderName = material.getShaderName()
 
         let glShaderGeomSets = this.__glShaderGeomSets[shaderName]

@@ -22,6 +22,7 @@ class GLMaterialGeomItemSets extends EventEmitter {
 
     this.__materialChanged = this.__materialChanged.bind(this)
     const material = glMaterial.getMaterial()
+    // TODO: use material.on('transparencyChanged', this.__materialChanged)
     const baseColorParam = material.getParameter('BaseColor')
     if (baseColorParam) {
       baseColorParam.on('valueChanged', this.__materialChanged)

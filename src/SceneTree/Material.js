@@ -51,6 +51,8 @@ class Material extends BaseItem {
   constructor(name, shaderName) {
     super(name)
     this.visibleInGeomDataBuffer = true
+    this.__isTransparent = false
+    this.__isTextured = false
 
     if (shaderName) this.setShaderName(shaderName)
   }
@@ -159,11 +161,74 @@ class Material extends BaseItem {
    * @return {boolean} - Returns true if the material is transparent.
    */
   isTransparent() {
-    const opacity = this.getParameter('Opacity')
-    if (opacity && (opacity.getValue() < 0.99 || opacity.getImage())) return true
-    const baseColor = this.getParameter('BaseColor')
-    if (baseColor && baseColor.getImage() && baseColor.getImage().format == 'RGBA') return true
-    return false
+    return this.__isTransparent
+  }
+
+  __checkTransparency(event) {
+    const { param } = event
+
+    let isTransparent = false
+    try {
+      const shaderClass = Registry.getBlueprint(this.__shaderName)
+      if (shaderClass.isTransparent()) {
+        isTransparent = true
+      }
+    } catch (e) {}
+
+    if (!isTransparent) {
+      const opacity = this.getParameter('Opacity')
+      if (param == opacity && (opacity.getValue() < 0.99 || (opacity.getImage && opacity.getImage()))) {
+        isTransparent = true
+      } else {
+        const baseColor = this.getParameter('BaseColor')
+        if (param == baseColor && baseColor.getImage && baseColor.getImage() && baseColor.getImage().format == 'RGBA') {
+          isTransparent = true
+        }
+      }
+    }
+
+    if (isTransparent != this.__isTransparent) {
+      this.__isTransparent = isTransparent
+      this.emit('transparencyChanged', { isTransparent, param })
+    }
+  }
+
+  /**
+   * Checks if the material has a texture applied. The renderer can use this to optimize rendering of non-textured objects
+   *
+   * @return {boolean} - Returns true if the material is textured.
+   */
+  isTextured() {
+    return this.__isTextured
+  }
+
+  __checkTextures(event) {
+    // console.log('__checkTextures')
+    const { param } = event
+
+    let isTextured = false
+    for (const param of this.__params) {
+      if (param.getImage && param.getImage()) {
+        isTextured = true
+        break
+      }
+    }
+    if (isTextured != this.__isTextured) {
+      this.__isTextured = isTextured
+      this.emit('texturedChanged', { isTextured, param })
+    }
+  }
+
+  /**
+   * This method can be overridden in derived classes
+   * to perform general updates (see GLPass or BaseItem).
+   * @param {object} event - The event object emitted by the parameter.
+   * @private
+   */
+  __parameterValueChanged(event) {
+    this.__checkTransparency(event)
+    this.__checkTextures(event)
+    super.__parameterValueChanged(event)
   }
 
   /**
