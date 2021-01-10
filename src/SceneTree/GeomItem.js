@@ -60,7 +60,7 @@ class GeomItem extends BaseGeomItem {
    * @param {BaseGeom} geometry - The geometry value.
    * @param {Material} material - The material value.
    */
-  constructor(name, geometry = undefined, material = undefined) {
+  constructor(name, geometry = undefined, material = undefined, xfo = undefined) {
     super(name)
 
     this.__geomParam = this.addParameter(new GeometryParameter('Geometry'))
@@ -81,6 +81,7 @@ class GeomItem extends BaseGeomItem {
 
     if (geometry) this.getParameter('Geometry').loadValue(geometry)
     if (material) this.getParameter('Material').loadValue(material)
+    if (xfo) this.getParameter('LocalXfo').setValue(xfo)
   }
 
   // ////////////////////////////////////////
