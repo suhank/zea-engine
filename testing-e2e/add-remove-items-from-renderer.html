@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>geomitem-material-opacity-changes - Zea Engine</title>
+
+    <link href="zea-logo.png" rel="shortcut icon" />
+
+    <link rel="stylesheet" href="styles/tachyons.min.css" />
+    <link rel="stylesheet" href="styles/main.css" />
+
+    <script src="../dist/index.umd.js"></script>
+
+    <script type="module">
+      const { GLRenderer, Scene, Vec3, Color, Xfo, Sphere, Material, GeomItem } = zeaEngine
+
+      const canvas = document.querySelector('#renderer')
+
+      const scene = new Scene()
+      const renderer = new GLRenderer(canvas, { hideSplash: true, webglOptions: { antialias: false } })
+      renderer.setScene(scene)
+
+      scene.setupGrid(10.0, 10)
+
+      const material = new Material('surfaces', 'SimpleSurfaceShader')
+      material.getParameter('BaseColor').setValue(new Color(1, 0, 1, 1))
+
+      const geomItem0 = new GeomItem('Sphere', new Sphere(1.5, 46), material, new Xfo(new Vec3(2, 0, 0)))
+      scene.getRoot().addChild(geomItem0)
+
+      const geomItem1 = new GeomItem('Sphere', new Sphere(1.5, 46), material, new Xfo(new Vec3(-2, 0, 0)))
+      scene.getRoot().addChild(geomItem1)
+
+      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(5, 5, 2.7), new Vec3(0, 0, 0.4))
+
+      window.postMessage('done-loading')
+
+      // {{{ Messages handler.
+      const handleMessage = (event) => {
+        const { data } = event
+
+        if (data === 'variant-01') {
+          scene.getRoot().removeChild(scene.getRoot().getChildIndex(geomItem0))
+        } else if (data === 'variant-02') {
+          scene.getRoot().removeChild(scene.getRoot().getChildIndex(geomItem1))
+        } else if (data === 'variant-03') {
+          scene.getRoot().addChild(geomItem0)
+          scene.getRoot().addChild(geomItem1)
+        }
+      }
+
+      window.addEventListener('message', handleMessage, false)
+      // }}}
+    </script>
+  </head>
+  <body>
+    <canvas class="full-size" id="renderer" />
+  </body>
+</html>
