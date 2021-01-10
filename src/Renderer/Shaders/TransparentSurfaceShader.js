@@ -217,11 +217,6 @@ void main(void) {
   static isTransparent() {
     return true
   }
-
-  bind(renderstate, key) {
-    if (renderstate.pass != 'ADD') return false
-    return super.bind(renderstate, key)
-  }
 }
 
 Registry.register('TransparentSurfaceShader', TransparentSurfaceShader)

@@ -86,7 +86,9 @@ class GLShaderGeomSets extends EventEmitter {
       renderstate.shaderopts.directives.pop()
     }
 
-    if (!glShader.bind(renderstate, key)) return
+    if (!glShader.bind(renderstate, key)) {
+      return false
+    }
 
     const gl = renderstate.gl
     const unifs = renderstate.unifs
@@ -98,6 +100,7 @@ class GLShaderGeomSets extends EventEmitter {
     }
 
     this.glMaterialLibrary.bind(renderstate)
+    return true
   }
 
   /**
@@ -105,7 +108,9 @@ class GLShaderGeomSets extends EventEmitter {
    * @param {object} renderstate - The render state for the current draw traversal
    */
   draw(renderstate) {
-    this.bindShader(this.glShader, renderstate, 'multidraw')
+    if (!this.bindShader(this.glShader, renderstate, 'multidraw')) {
+      return
+    }
 
     for (const elementType in this.glGeomSets) {
       this.glGeomSets[elementType].draw(renderstate)

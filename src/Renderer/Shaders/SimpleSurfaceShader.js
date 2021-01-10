@@ -93,8 +93,10 @@ precision highp float;
 // #define DEBUG_GEOM_ID
 #endif
 
+#ifdef ENABLE_MULTI_DRAW
 <%include file="math/constants.glsl"/>
 <%include file="drawItemTexture.glsl"/>
+#endif
 <%include file="cutaways.glsl"/>
 <%include file="stack-gl/gamma.glsl"/>
 <%include file="materialparams.glsl"/>

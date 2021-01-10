@@ -596,6 +596,7 @@ class GLGeomSet extends EventEmitter {
    * The draw method.
    */
   draw(renderstate) {
+    if (this.drawCount == 0) return
     if (this.dirtyDrawIndexIndices.size > 0) {
       this.updateDrawIDsBuffer()
     }
@@ -631,6 +632,7 @@ class GLGeomSet extends EventEmitter {
    * @param {any} renderstate - The renderstate value.
    */
   drawGeomData(renderstate) {
+    if (this.drawCount == 0) return
     if (this.dirtyDrawIndexIndices.size > 0) {
       this.updateDrawIDsBuffer()
     }

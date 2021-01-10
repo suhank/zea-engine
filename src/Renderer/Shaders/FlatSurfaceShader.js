@@ -87,7 +87,7 @@ varying vec2 v_textureCoord;
 
 
 #ifdef ENABLE_ES3
-    out vec4 fragColor;
+out vec4 fragColor;
 #endif
 void main(void) {
 
@@ -102,24 +102,25 @@ void main(void) {
 #else // ENABLE_MULTI_DRAW
 
 #ifndef ENABLE_TEXTURES
-    vec4 baseColor = BaseColor;
+  vec4 baseColor = BaseColor;
 #else
-    vec4 baseColor = getColorParamValue(BaseColor, BaseColorTex, BaseColorTexType, v_textureCoord);
+  vec4 baseColor = getColorParamValue(BaseColor, BaseColorTex, BaseColorTexType, v_textureCoord);
 #endif // ENABLE_TEXTURES
 
 #endif // ENABLE_MULTI_DRAW
+  //////////////////////////////////////////////
 
 #ifndef ENABLE_ES3
-    vec4 fragColor;
+  vec4 fragColor;
 #endif
-    fragColor = baseColor;
+  fragColor = baseColor;
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION
-    fragColor.rgb = toGamma(fragColor.rgb);
+  fragColor.rgb = toGamma(fragColor.rgb);
 #endif
 
 #ifndef ENABLE_ES3
-    gl_FragColor = fragColor;
+  gl_FragColor = fragColor;
 #endif
 }
 `

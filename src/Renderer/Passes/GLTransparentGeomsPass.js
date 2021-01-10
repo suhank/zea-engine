@@ -277,7 +277,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
 
     gl.enable(gl.BLEND)
     gl.blendEquation(gl.FUNC_ADD)
-    // Complex transparent surfaces require mutiple passes.
+    // Complex transparent surfaces require multiple passes.
     // First the multiply pass tints the background color, simulating
     // light passing through the surface, and then the add layer
     // adds new color to the backbuffer to simulate light bouncing off
