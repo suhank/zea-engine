@@ -171,7 +171,7 @@ class Allocator1D extends EventEmitter {
       this.allocations.push(new Allocation1D(start, size))
       this.allocationsMap[id] = index
     }
-    return this.allocations[id]
+    return this.allocations[this.allocationsMap[id]]
   }
 
   /**
@@ -254,10 +254,11 @@ class Allocator1D extends EventEmitter {
    */
   deallocate(id) {
     const index = this.allocationsMap[id]
-    if (this.allocations[index]) {
-      this.freeBlock(index)
-      delete this.allocationsMap[id]
+    if (index == undefined) {
+      throw new Error(`allocation ${id} does not exist.`)
     }
+    this.freeBlock(index)
+    delete this.allocationsMap[id]
   }
 
   /**
