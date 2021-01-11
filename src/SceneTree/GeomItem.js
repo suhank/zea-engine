@@ -243,6 +243,7 @@ class GeomItem extends BaseGeomItem {
       this.getParameter('Geometry').loadValue(geom)
     } else {
       this.geomIndex = geomIndex
+      this.assetItem = context.assetItem
       const onGeomLoaded = (event) => {
         const { range } = event
         if (geomIndex >= range[0] && geomIndex < range[1]) {
@@ -327,7 +328,7 @@ class GeomItem extends BaseGeomItem {
     super.copyFrom(src, context)
 
     if (!src.getParameter('Geometry').getValue() && src.geomIndex != -1) {
-      const geomLibrary = context.assetItem.getGeometryLibrary()
+      const geomLibrary = src.assetItem.getGeometryLibrary()
       const geomIndex = src.geomIndex
       const onGeomLoaded = (event) => {
         const { range } = event
