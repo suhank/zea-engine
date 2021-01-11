@@ -44,15 +44,8 @@ class VLAAsset extends AssetItem {
     this.__fileParam.on('valueChanged', () => {
       this.geomsLoaded = false
       this.loadDataFile(
-        () => {
-          if (!this.loaded) this.emit('loaded', {})
-        },
-        () => {
-          // if(!this.loaded){
-          //   this.emit('loaded', {});
-          // }
-          // this.emit('geomsLoaded', {})
-        }
+        () => {},
+        () => {}
       )
     })
   }
@@ -139,7 +132,8 @@ class VLAAsset extends AssetItem {
 
       numGeomsFiles = this.readBinary(treeReader, context)
 
-      onDone()
+      this.loaded = true
+      this.emit('loaded')
 
       if (numGeomsFiles == 0 && entries.geoms) {
         this.__geomLibrary.readBinaryBuffer(fileId, entries.geoms.buffer, context)

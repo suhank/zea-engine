@@ -155,6 +155,7 @@ class AssetItem extends TreeItem {
       loadUnits()
     }
 
+    this.loaded = true
     // console.log("numTreeItems:", context.numTreeItems, " numGeomItems:", context.numGeomItems)
   }
 
