@@ -25,6 +25,9 @@ class GLGeomSet extends EventEmitter {
     this.__gl = gl
     this.shaderAttrSpec = shaderAttrSpec
 
+    // Note: a geom can be in multiple GeomSets (Once in an opaque pass, and again in a transparent pass)
+    this.glgeomset_indexKey = 'glgeomset_index' + this.getId()
+    this.freeGeomIndices = []
     this.geoms = []
     this.geomBuffersTmp = [] // for each geom, these are the buffer
     this.glattrbuffers = {}
@@ -35,7 +38,10 @@ class GLGeomSet extends EventEmitter {
 
     // If the allocator ever resizes, then we need to re-upload everything.
     this.attributesAllocator.on('resized', () => {
-      this.dirtyGeomIndices = new Set(Array.from({ length: this.geoms.length }, (_, i) => i))
+      this.dirtyGeomIndices = new Set()
+      for (let i = 0; i < this.geoms.length; i++) {
+        if (this.geoms[i]) this.dirtyGeomIndices.add(i)
+      }
       this.bufferNeedsRealloc = true
     })
     this.attributesAllocator.on('dataReallocated', (event) => {
@@ -54,7 +60,6 @@ class GLGeomSet extends EventEmitter {
 
     this.glGeomItemSets = []
     this.drawCount = 0
-    this.maxGeomItemSetDrawCount = 0
     this.highlightedCount = 0
     this.instanceCountsDraw = new Int32Array(0)
     this.instanceCountsHighlight = new Int32Array(0)
@@ -75,75 +80,44 @@ class GLGeomSet extends EventEmitter {
    * @return {number} - The index of the geom in the GLGeomSet
    */
   addGeom(geom) {
-    const index = this.geoms.length
+    let index
+    if (this.freeGeomIndices.length) {
+      index = this.freeGeomIndices.pop()
+    } else {
+      index = this.geoms.length
 
-    const geomDataChanged = (event) => {
+      this.geomVertexCounts = resizeIntArray(this.geomVertexCounts, index + 1)
+      this.geomVertexOffsets = resizeIntArray(this.geomVertexOffsets, index + 1)
+      this.instanceCountsDraw = resizeIntArray(this.instanceCountsDraw, index + 1)
+      this.instanceCountsHighlight = resizeIntArray(this.instanceCountsHighlight, index + 1)
+    }
+
+    this.geomVertexCounts[index] = 0
+    this.geomVertexOffsets[index] = 0
+    this.instanceCountsDraw[index] = 0
+    this.instanceCountsHighlight[index] = 0
+
+    geom.setMetadata(this.glgeomset_indexKey, index)
+
+    const geomDataChanged = () => {
       this.dirtyGeomIndices.add(index)
     }
-    const geomDataTopologyChanged = (event) => {
+    const geomDataTopologyChanged = () => {
       this.dirtyGeomIndices.add(index)
     }
     geom.on('geomDataChanged', geomDataChanged)
     geom.on('geomDataTopologyChanged', geomDataTopologyChanged)
 
-    this.geoms.push({
-      geom,
-      geomDataChanged,
-      geomDataTopologyChanged,
-    })
+    this.geoms[index] = geom
     this.dirtyGeomIndices.add(index)
 
-    this.geomVertexCounts = resizeIntArray(this.geomVertexCounts, this.geomVertexCounts.length + 1)
-    this.geomVertexOffsets = resizeIntArray(this.geomVertexOffsets, this.geomVertexOffsets.length + 1)
-
-    this.geomVertexCounts[index] = 0
-    this.geomVertexOffsets[index] = 0
-    return index
-  }
-
-  /**
-   * Removes a geom from the GLGeomSet.
-   *
-   * @param {BaseGeom} geom - The geom to be removed from this GLGeomSet.
-   * @return {number} - The index of the geom in the GLGeomSet
-   */
-  removeGeom(geom) {
-    const item = this.geoms.find((item) => {
-      return item.geom == geom
-    })
-    geom.off('geomDataChanged', item.geomDataChanged)
-    geom.off('geomDataTopologyChanged', item.geomDataTopologyChanged)
-
-    geom.deleteMetadata('glgeomset', this)
-    this.geoms.splice(index, 1)
-    return index
-  }
-
-  /**
-   * Returns a Geom managed by this GLGeomSet.
-   * @param {number} index - The index of the geom to remove
-   * @return {BaseGeom} - The return value.
-   */
-  getGeom(index) {
-    return this.geoms[index].geom
-  }
-
-  /**
-   * The addGeomItemSet method.
-   * @param {number} index - The index for the new glGeomItemSet
-   */
-  addGeomItemSet(index) {
     const glGeomItemSet = new GLGeomItemSet()
     this.glGeomItemSets[index] = glGeomItemSet
-    this.instanceCountsDraw = resizeIntArray(this.instanceCountsDraw, this.instanceCountsDraw.length + 1)
-    this.instanceCountsHighlight = resizeIntArray(this.instanceCountsHighlight, this.instanceCountsHighlight.length + 1)
     const drawCountChanged = (event) => {
       this.instanceCountsDraw[index] += event.change
       this.drawCount += event.change
-      if (this.maxGeomItemSetDrawCount < event.count) this.maxGeomItemSetDrawCount = event.count
 
       this.dirtyDrawIndexIndices.add(index)
-
       this.drawIdsAllocator.allocate(index, event.count)
 
       this.emit('updated')
@@ -162,30 +136,58 @@ class GLGeomSet extends EventEmitter {
       glGeomItemSet.off('highlightedCountChanged', highlightedCountChanged)
       glGeomItemSet.off('destructing', destructing)
 
-      this.drawIdsAllocator.deallocate(index)
-      this.highlightedIdsAllocator.deallocate(index)
+      geom.off('geomDataChanged', geomDataChanged)
+      geom.off('geomDataTopologyChanged', geomDataTopologyChanged)
 
-      const index = this.glGeomItemSets.indexOf(glGeomItemSet)
-      this.glGeomItemSets.splice(index, 1)
-      if (this.glGeomItemSets.length == 0) {
-        // Remove the listeners.
-        // const material = this.glMaterial.getMaterial()
-        // const baseColorParam = material.getParameter('BaseColor')
-        // if (baseColorParam) {
-        //   baseColorParam.off('valueChanged', this.__materialChanged)
-        // }
-        // const opacityParam = material.getParameter('Opacity')
-        // if (opacityParam) {
-        //   opacityParam.off('valueChanged', this.__materialChanged)
-        // }
-
-        this.emit('destructing')
-      }
+      this.removeGeom(index)
     }
 
     glGeomItemSet.on('drawCountChanged', drawCountChanged)
     glGeomItemSet.on('highlightedCountChanged', highlightedCountChanged)
     glGeomItemSet.on('destructing', destructing)
+
+    return index
+  }
+
+  /**
+   * Removes a Geom managed by this GLGeomSet.
+   * @param {number} index - The index of the geom to remove
+   */
+  removeGeom(index) {
+    const geom = this.geoms[index]
+
+    this.attributesAllocator.deallocate(index)
+
+    // Note: geoms that were always invisible have no allocations yet.
+    if (this.drawIdsAllocator.getAllocation(index)) {
+      this.drawIdsAllocator.deallocate(index)
+    }
+    // Note: geoms that were never highlighted have no allocations yet.
+    if (this.highlightedIdsAllocator.getAllocation(index)) {
+      this.highlightedIdsAllocator.deallocate(index)
+    }
+    if (this.dirtyDrawIndexIndices.has(index)) {
+      this.dirtyDrawIndexIndices.delete(index)
+    }
+
+    this.geomVertexCounts[index] = 0
+    this.geomVertexOffsets[index] = 0
+    this.instanceCountsDraw[index] = 0
+    this.instanceCountsHighlight[index] = 0
+
+    geom.deleteMetadata(this.glgeomset_indexKey)
+    this.geoms[index] = null
+    this.glGeomItemSets[index] = null
+    this.freeGeomIndices.push(index)
+  }
+
+  /**
+   * Returns a Geom managed by this GLGeomSet.
+   * @param {number} index - The index of the geom to retrieve
+   * @return {BaseGeom} - The return value.
+   */
+  getGeom(index) {
+    return this.geoms[index]
   }
 
   /**
@@ -196,14 +198,10 @@ class GLGeomSet extends EventEmitter {
     const geom = glGeomItem.geomItem.getParameter('Geometry').getValue()
 
     let index
-    if (geom.hasMetadata('glgeomset_index')) {
-      index = geom.getMetadata('glgeomset_index')
+    if (geom.hasMetadata(this.glgeomset_indexKey)) {
+      index = geom.getMetadata(this.glgeomset_indexKey)
     } else {
       index = this.addGeom(geom)
-      geom.setMetadata('glgeomset_index', index)
-    }
-    if (!this.glGeomItemSets[index]) {
-      this.addGeomItemSet(index)
     }
     this.glGeomItemSets[index].addGLGeomItem(glGeomItem)
   }
@@ -316,6 +314,9 @@ class GLGeomSet extends EventEmitter {
       const attrSpec = this.shaderAttrSpec[attrName]
       const attrData = geomBuffers.attrBuffers[attrName]
       const glattrbuffer = this.glattrbuffers[attrName]
+      // Some geoms might not have all the attributes.
+      // and some geoms have more attributes than others.
+      if (!attrData || !glattrbuffer) continue
 
       gl.bindBuffer(gl.ARRAY_BUFFER, glattrbuffer.buffer)
       const elementSize = attrSpec.elementSize
@@ -379,14 +380,12 @@ class GLGeomSet extends EventEmitter {
     const gl = this.__gl
     let texResized = false
 
-    // console.log('updateDrawIDsBuffer', this.dirtyDrawIndexIndices)
-
     // Note: non POT textures caused strange problems here
     // It appears like texSubImage2D may assume a POT texture in the background.
     // Calls to texSubImage2D would generate the error: GL_INVALID_VALUE: Offset overflows texture dimensions
     // even if the coordinates appears to be correct.
-    const drawIdsLayoutTextureSize = MathFunctions.nextPow2(Math.ceil(Math.sqrt(this.glGeomItemSets.length)))
-    // const drawIdsLayoutTextureSize = Math.ceil(Math.sqrt(this.glGeomItemSets.length))
+    const drawIdsLayoutTextureSize = MathFunctions.nextPow2(Math.ceil(Math.sqrt(this.geoms.length)))
+    // const drawIdsLayoutTextureSize = Math.ceil(Math.sqrt(this.geoms.length))
 
     if (!this.drawIdsLayoutTexture) {
       this.drawIdsLayoutTexture = new GLTexture2D(gl, {
@@ -424,7 +423,14 @@ class GLGeomSet extends EventEmitter {
     }
 
     if (texResized) {
-      this.dirtyDrawIndexIndices = new Set(Array.from({ length: this.glGeomItemSets.length }, (_, i) => i))
+      this.dirtyDrawIndexIndices = new Set()
+      for (let i = 0; i < this.geoms.length; i++) {
+        // This can happen for an invisible object added to the GLGeomItemSet.
+        // Note: soon invisible items will be held by the renderer until visible.
+        if (this.geoms[i] && this.drawIdsAllocator.getAllocation(i)) {
+          this.dirtyDrawIndexIndices.add(i)
+        }
+      }
     }
 
     {
@@ -500,7 +506,7 @@ class GLGeomSet extends EventEmitter {
         internalFormat: 'R32F',
         type: 'FLOAT',
         width: this.maxGeomItemSetDrawCount,
-        height: this.glGeomItemSets.length,
+        height: this.geoms.length,
         filter: 'NEAREST',
         wrap: 'CLAMP_TO_EDGE',
         mipMapped: false,
@@ -508,12 +514,12 @@ class GLGeomSet extends EventEmitter {
       // this.highlightedIdsTexture.clear()
     } else if (
       this.highlightedIdsTexture.width < this.maxGeomItemSetDrawCount ||
-      this.highlightedIdsTexture.height < this.glGeomItemSets.length
+      this.highlightedIdsTexture.height < this.geoms.length
     ) {
       const width = this.maxGeomItemSetDrawCount
-      const height = this.glGeomItemSets.length
+      const height = this.geoms.length
       this.highlightedIdsTexture.resize(width, height)
-      this.dirtyDrawHighlightIndices = Array(this.glGeomItemSets.length)
+      this.dirtyDrawHighlightIndices = Array(this.geoms.length)
         .fill()
         .map((v, i) => i)
     }
@@ -670,7 +676,7 @@ class GLGeomSet extends EventEmitter {
    * Users should never need to call this method directly.
    */
   destroy() {
-    this.geoms.forEach((geom) => this.removeGeom(geom))
+    // this.geoms.forEach((geom) => this.removeGeom(geom))
 
     this.clearBuffers()
 

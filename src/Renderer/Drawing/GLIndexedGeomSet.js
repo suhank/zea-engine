@@ -40,11 +40,24 @@ class GLIndexedGeomSet extends GLGeomSet {
    */
   addGeom(geom) {
     const index = super.addGeom(geom)
-    this.indicesCounts = resizeIntArray(this.indicesCounts, this.indicesCounts.length + 1)
-    this.indicesOffsets = resizeIntArray(this.indicesOffsets, this.indicesOffsets.length + 1)
+    if (index == this.indicesCounts.length) {
+      this.indicesCounts = resizeIntArray(this.indicesCounts, this.indicesCounts.length + 1)
+      this.indicesOffsets = resizeIntArray(this.indicesOffsets, this.indicesOffsets.length + 1)
+    }
     this.indicesCounts[index] = 0
     this.indicesOffsets[index] = 0
     return index
+  }
+
+  /**
+   * Removes a Geom managed by this GLGeomSet.
+   * @param {number} index - The index of the geom to remove
+   */
+  removeGeom(index) {
+    super.removeGeom(index)
+    this.indicesAllocator.deallocate(index)
+    this.indicesCounts[index] = 0
+    this.indicesOffsets[index] = 0
   }
 
   // /////////////////////////////////////
@@ -106,7 +119,7 @@ class GLIndexedGeomSet extends GLGeomSet {
       throw new Error('Invalid allocation for this geom')
     }
 
-    const attributesAllocation = this.attributesAllocator.allocations[index]
+    const attributesAllocation = this.attributesAllocator.getAllocation(index)
     // The indices need to be offset so they they index the new attributes array.
     const offsettedIndices = new Uint32Array(allocation.size)
     for (let i = 0; i < indices.length; i++) {
