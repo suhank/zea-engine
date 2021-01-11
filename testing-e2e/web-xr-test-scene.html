@@ -125,18 +125,18 @@
         }
       })
 
-      renderer.getXRViewport().then((xrvp) => {
-        var h = document.createElement('H1') // Create a <h1> element
-        h.classList.add('label')
-        var t = document.createTextNode('XR Device Detected') // Create a text node
-        h.appendChild(t)
-        document.body.insertBefore(h, canvas)
+      var h = document.createElement('H1') // Create a <h1> element
+      h.classList.add('label')
+      h.textContent = 'XR Device Not Detected'
+      document.body.insertBefore(h, canvas)
 
-        var b = document.createElement('div') // Create a <h1> element
-        b.classList.add('button')
-        var t = document.createTextNode('Launch VR') // Create a text node
-        b.appendChild(t)
-        document.body.insertBefore(b, canvas)
+      var b = document.createElement('div') // Create a <h1> element
+      b.classList.add('button')
+      b.textContent = 'Launch VR'
+      document.body.insertBefore(b, canvas)
+
+      renderer.getXRViewport().then((xrvp) => {
+        h.textContent = 'XR Device Detected'
 
         b.addEventListener('click', function (event) {
           xrvp.togglePresenting()

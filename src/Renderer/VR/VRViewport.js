@@ -169,19 +169,20 @@ class VRViewport extends GLBaseViewport {
       return Promise.resolve()
     }
     // If the HMD has changed, reset it.
-    const hmd = localStorage.getItem('hmd')
+    let hmd = localStorage.getItem('ZeaEngine_XRDevice')
+    if (!hmd) {
+      hmd = 'Vive'
+      localStorage.setItem('ZeaEngine_XRDevice', hmd)
+    }
     if (this.__hmd != hmd) {
       this.__hmdAssetPromise = undefined
-    }
-
-    if (this.__hmdAssetPromise) return this.__hmdAssetPromise
+    } else if (this.__hmdAssetPromise) return this.__hmdAssetPromise
 
     this.__hmd = hmd
     this.__hmdAssetPromise = new Promise((resolve, reject) => {
-      // let profileList = xrInputSource.profiles;
       // ////////////////////////////////////////////
       // Resources
-      if (!SystemDesc.isMobileDevice) {
+      {
         let hmdAssetId
         switch (hmd) {
           case 'Vive':
@@ -194,7 +195,6 @@ class VRViewport extends GLBaseViewport {
             hmdAssetId = 'ZeaEngine/Vive.vla'
             break
         }
-
         if (!resourceLoader.getCommonResource(hmdAssetId)) {
           // Cache the asset so if an avatar needs to display,
           // it can use the same asset.
@@ -203,7 +203,7 @@ class VRViewport extends GLBaseViewport {
           resourceLoader.setCommonResource(hmdAssetId, asset)
         }
         this.__vrAsset = resourceLoader.getCommonResource(hmdAssetId)
-        this.__vrAsset.once('loaded', () => {
+        const bind = () => {
           const materialLibrary = this.__vrAsset.getMaterialLibrary()
           const materialNames = materialLibrary.getMaterialNames()
           for (const name of materialNames) {
@@ -214,8 +214,10 @@ class VRViewport extends GLBaseViewport {
             }
           }
           resolve(this.__vrAsset)
-        })
-      } else reject(new Error('Mobile devices to not load HMD resources'))
+        }
+        if (this.__vrAsset.isLoaded()) bind()
+        else this.__vrAsset.once('loaded', bind)
+      }
     })
     return this.__hmdAssetPromise
   }
@@ -244,7 +246,7 @@ class VRViewport extends GLBaseViewport {
 
             // Convert Y-Up to Z-Up.
             const stageXfo = new Xfo()
-            stageXfo.tr = cameraXfo.tr
+            stageXfo.tr = cameraXfo.tr.clone()
             stageXfo.tr.z -= 1.3 // assume sitting, and move the floor down a bit
             const dir = cameraXfo.ori.getZaxis()
             dir.z = 0
@@ -277,13 +279,6 @@ class VRViewport extends GLBaseViewport {
               }
             }
 
-            /**
-             * The __createController method.
-             * @param {any} id - The id value.
-             * @param {any} inputSource - The inputSource value.
-             * @return {any} - The return value.
-             * @private
-             */
             const createController = (inputSource) => {
               console.log('creating controller:', inputSource.handedness, inputSource.profiles)
               const id = this.controllers.length
