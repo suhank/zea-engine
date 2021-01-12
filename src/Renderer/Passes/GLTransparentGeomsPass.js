@@ -224,11 +224,23 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
 
         // Specify an non-instanced draw to the shader
         const gl = this.__gl
-        if (renderstate.unifs.instancedDraw) {
-          gl.uniform1i(renderstate.unifs.instancedDraw.location, 0)
+
+        const unifs = renderstate.unifs
+        if (unifs.instancedDraw) {
+          gl.uniform1i(unifs.instancedDraw.location, 0)
         }
-        if (renderstate.attrs.instancedIds && renderstate.attrs.instancedIds.location != -1) {
-          gl.disableVertexAttribArray(renderstate.attrs.instancedIds.location)
+        // Note: this disables the attribute location, which must be enabled again for
+        // the next geom, which might use a different attribute location.
+        // e.g.
+        // one shader might specify attributes ['positions', 'instancedIds]
+        // another  might specify attributes ['positions', 'texCoords' 'instancedIds]
+        // In this case, we should re-enabled location 2 and then disable 3.
+        // if (renderstate.attrs.instancedIds && renderstate.attrs.instancedIds.location != -1) {
+        //   gl.disableVertexAttribArray(renderstate.attrs.instancedIds.location)
+        // }
+        if (unifs.instancesTexture) {
+          this.__drawItemsTexture.bindToUniform(renderstate, unifs.instancesTexture)
+          gl.uniform1i(unifs.instancesTextureSize.location, this.__drawItemsTexture.width)
         }
 
         cache.currentglShader = glShader
@@ -237,7 +249,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
       this._drawItem(renderstate, transparentItem, cache)
     }
 
-    if (cache.currentGLGeom) cache.currentGLGeom.unbind(renderstate)
+    // if (cache.currentGLGeom) cache.currentGLGeom.unbind(renderstate)
   }
 
   /**
@@ -255,7 +267,6 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
     // Avoid sorting if the camera did not move more than the specified tolerance.
     if (this.resort || viewPos.distanceTo(this.prevSortCameraPos) > this.sortCameraMovementDistance) {
       this.sortItems(viewPos)
-
       this.prevSortCameraPos = viewPos
       if (renderstate.viewport) {
         // Adapt the sort tolerance to the focal distance.
@@ -267,13 +278,6 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
 
     gl.enable(gl.DEPTH_TEST)
     gl.depthFunc(gl.LESS)
-
-    // Disable depth testing.
-    // This means that if overlapping transparent geoms are rendered then faces in front will
-    // not occlude faces behind. This can occur for large faces on objects that are technically in front
-    // but have faces that are behind other faces of objects that are technically behind.
-    // e.g. 2 large transparent polygons that intersect or wrap around each other.
-    gl.depthMask(false)
 
     gl.enable(gl.BLEND)
     gl.blendEquation(gl.FUNC_ADD)
@@ -298,14 +302,13 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
     // this._drawItems(renderstate)
 
     // for the Add
-    gl.enable(gl.CULL_FACE)
-    gl.cullFace(gl.BACK)
-
     renderstate.pass = 'ADD'
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA) // For add
     // Only draw font faces. BEcause all faces are drawn, it can make a mess to see the back faces through the front faces.
+    // e.g. we might see the triangles on the other side of a sphere rendered over the top of triangles on the near side.
     gl.enable(gl.CULL_FACE)
     gl.cullFace(gl.BACK)
+
     this._drawItems(renderstate)
 
     gl.disable(gl.BLEND)

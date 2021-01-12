@@ -181,8 +181,12 @@ class Material extends BaseItem {
         isTransparent = true
       } else {
         const baseColor = this.getParameter('BaseColor')
-        if (param == baseColor && baseColor.getImage && baseColor.getImage() && baseColor.getImage().format == 'RGBA') {
-          isTransparent = true
+        if (param == baseColor) {
+          if (baseColor.getImage && baseColor.getImage() && baseColor.getImage().format == 'RGBA') {
+            isTransparent = true
+          } else if (baseColor.getValue().a < 1) {
+            isTransparent = true
+          }
         }
       }
     }
