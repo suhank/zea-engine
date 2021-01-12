@@ -138,19 +138,28 @@ class VRViewport extends GLBaseViewport {
   }
 
   /**
+   * Turns on and off the spectator mode.
+   * Note: specator mode renders the scene an extra time to our regular viewport.
+   * @param {boolean} state -  true for enabling spectator mode, else false
+   */
+  setSpectatorMode(state) {
+    if (!state) {
+      // when disabling spectator mode, clear the screen to the background color.
+      const gl = this.__renderer.gl
+      gl.bindFramebuffer(gl.FRAMEBUFFER, null)
+      gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight)
+      gl.clearColor(...this.__backgroundColor.asArray())
+      gl.colorMask(true, true, true, true)
+      gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
+    }
+    this.spectatorMode = state
+  }
+
+  /**
    * The __startSession method.
    * @private
    */
   __startSession() {
-    const gl = this.__renderer.gl
-    gl.bindFramebuffer(gl.FRAMEBUFFER, null)
-
-    // Clear the framebuffer
-    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
-
-    // Set the viewport to the whole canvas
-    gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight)
-
     const onAnimationFrame = (t, frame) => {
       if (this.__session) {
         this.__session.requestAnimationFrame(onAnimationFrame)
@@ -227,6 +236,11 @@ class VRViewport extends GLBaseViewport {
    */
   startPresenting() {
     return new Promise((resolve, reject) => {
+      if (!this.spectatorMode) {
+        // clear the main viewport if spectator mode is off.
+        this.setSpectatorMode(false)
+      }
+
       // https://github.com/immersive-web/webxr/blob/master/explainer.md
 
       const gl = this.__renderer.gl
@@ -357,15 +371,6 @@ class VRViewport extends GLBaseViewport {
       }
 
       startPresenting()
-      // if (SystemDesc.isMobileDevice) {
-      //   startPresenting()
-      // } else {
-      //   // Note: we should not need to load the resources here
-      //   // They could be loaded only once the controllers are
-      //   // being created. However, I can't see the controllers if
-      //   // the loading is defered
-      //   this.loadHMDResources().then(startPresenting)
-      // }
     })
   }
 
