@@ -76,7 +76,7 @@ class Disc extends ProceduralMesh {
     const texCoords = this.getVertexAttribute('texCoords')
     texCoords.getValueRef(0).set(0.5, 0.5)
     for (let i = 0; i < nbSides; i++) {
-      const phi = (i / nbSides) * 2.0 * Math.PI
+      const phi = (i / nbSides) * -2.0 * Math.PI
       texCoords.getValueRef(i + 1).set(Math.sin(phi) * 0.5 + 0.5, Math.cos(phi) * 0.5 + 0.5)
     }
 
@@ -92,7 +92,7 @@ class Disc extends ProceduralMesh {
     const radius = this.__radiusParam.getValue()
     const positions = this.getVertexAttribute('positions')
     for (let i = 0; i < nbSides; i++) {
-      const phi = (i / nbSides) * 2.0 * Math.PI
+      const phi = (i / nbSides) * -2.0 * Math.PI
       positions.getValueRef(i + 1).set(Math.sin(phi) * radius, Math.cos(phi) * radius, 0.0)
     }
   }
