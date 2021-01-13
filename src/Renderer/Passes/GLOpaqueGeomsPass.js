@@ -1,6 +1,7 @@
 import { PassType } from './GLPass.js'
 import { GLStandardGeomsPass } from './GLStandardGeomsPass.js'
 import { GLRenderer } from '../GLRenderer.js'
+import { Registry } from '../../Registry'
 
 import { MathFunctions } from '../../Utilities/MathFunctions'
 import { GeomItem, Material, Mesh, MeshProxy } from '../../SceneTree/index.js'
@@ -71,25 +72,28 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
    * @return {boolean} - The return value.
    */
   addGeomItem(geomItem) {
+    const materialParam = geomItem.getParameter('Material')
+    const material = materialParam.getValue()
+
     if (this.__gl.multiDrawElementsInstanced) {
-      const materialParam = geomItem.getParameter('Material')
-      const material = materialParam.getValue()
-      if (!material.isTextured()) {
-        const shaderName = material.getShaderName()
+      const shaderName = material.getShaderName()
+      const shader = Registry.getBlueprint(shaderName)
+      if (shader.supportsInstancing()) {
+        if (!material.isTextured()) {
+          let glShaderGeomSets = this.__glShaderGeomSets[shaderName]
+          if (!glShaderGeomSets) {
+            const shaders = this.constructShaders(shaderName)
+            glShaderGeomSets = new GLShaderGeomSets(this.__gl, shaders)
+            glShaderGeomSets.on('updated', () => {
+              this.__renderer.requestRedraw()
+            })
+            this.__glShaderGeomSets[shaderName] = glShaderGeomSets
+          }
 
-        let glShaderGeomSets = this.__glShaderGeomSets[shaderName]
-        if (!glShaderGeomSets) {
-          const shaders = this.constructShaders(shaderName)
-          glShaderGeomSets = new GLShaderGeomSets(this.__gl, shaders)
-          glShaderGeomSets.on('updated', () => {
-            this.__renderer.requestRedraw()
-          })
-          this.__glShaderGeomSets[shaderName] = glShaderGeomSets
+          const glGeomItem = this.constructGLGeomItem(geomItem)
+          glShaderGeomSets.addGLGeomItem(glGeomItem)
+          return true
         }
-
-        const glGeomItem = this.constructGLGeomItem(geomItem)
-        glShaderGeomSets.addGLGeomItem(glGeomItem)
-        return true
       }
     }
 
@@ -97,8 +101,8 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
 
     const glGeomItem = this.constructGLGeomItem(geomItem)
 
-    const materialParam = geomItem.getParameter('Material')
-    const material = materialParam.getValue()
+    // const materialParam = geomItem.getParameter('Material')
+    // const material = materialParam.getValue()
 
     // ////////////////////////////////////
     // Tracking Material Transparency changes...

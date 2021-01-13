@@ -408,7 +408,7 @@ class GLShader extends BaseItem {
 
   /**
    * The getParamDeclarations method.
-   * @return {any} - The return value.
+   * @return {array} - an array of param declarations that the shader expects the material tp provide.
    */
   static getParamDeclarations() {
     return []
@@ -416,13 +416,26 @@ class GLShader extends BaseItem {
 
   /**
    * The getGeomDataShaderName method.
+   * @return {string} - an array of param declarations that the shader expects the material tp provide.
    */
-  static getGeomDataShaderName() {}
+  static getGeomDataShaderName() {
+    return null
+  }
 
   /**
    * The getSelectedShaderName method.
    */
-  static getSelectedShaderName() {}
+  static getSelectedShaderName() {
+    return null
+  }
+
+  /**
+   * The supportsInstancing method.
+   * @return {boolean} - return false for shaders that cannot be rendered in instanced mode.
+   */
+  static supportsInstancing() {
+    return true
+  }
 
   // /////////////////////////////////
   // Destroy
@@ -433,6 +446,7 @@ class GLShader extends BaseItem {
    */
   destroy() {
     const gl = this.__gl
+    // eslint-disable-next-line guard-for-in
     for (const key in this.__shaderProgramHdls) {
       const shaderCompilationResult = this.__shaderProgramHdls[key]
       gl.deleteProgram(shaderCompilationResult.shaderProgramHdl)
