@@ -2,7 +2,7 @@
   "name": "@zeainc/zea-engine",
   "fileName": "index",
   "libraryName": "ZeaEngine",
-  "version": "3.1.1-multi-draw.5",
+  "version": "3.1.1-multi-draw.6",
   "description": "Zea Engine",
   "browser": "dist/index.umd.js",
   "plugins": "dist/plugins.umd.js",
