@@ -3,6 +3,7 @@
 /* eslint-disable guard-for-in */
 import { Env, EventEmitter } from '../Utilities/index'
 import { zeaDebug } from '../helpers/zeaDebug'
+import { TreeItem } from './TreeItem'
 
 function checkStatus(response) {
   if (!response.ok) {
@@ -70,6 +71,10 @@ class ResourceLoader extends EventEmitter {
 
     this.plugins = {}
 
+    this.systemUrls = {}
+    this.systemUrls['ZeaEngine/Vive.vla'] = this.baseUrl + 'public-resources/Vive.vla'
+    this.systemUrls['ZeaEngine/Oculus.vla'] = this.baseUrl + 'public-resources/Oculus.vla'
+
     // Common resources are used by systems such at the renderer and VR controllers.
     // Any asset that will probably be used my multiple different independent objects
     // should be loaded here. (For now, it is being used to load VR Controller assets.)
@@ -127,14 +132,14 @@ class ResourceLoader extends EventEmitter {
   }
 
   /**
-   * The resolveURL method returns a URL for a given fileID. The adaptor that is assigned is responsible for resolving the URL within the file system.
-   * @deprecated
-   * @param {string} fileId - The fileId.
-   * @return {string} - The resolved URL if an adapter is installed, else the original fileId.
+   * Given a file ID, returns a URL. The adaptor that is assigned is responsible for resolving the URL within the file system.
+   * @param {string} value - The file value.
+   * @return {string} - The resolved URL if an adapter is installed, else the original value.
    */
-  resolveURL(fileId) {
-    if (this.__adapter) return this.__adapter.resolveURL(fileId)
-    return fileId
+  resolveURL(value) {
+    if (this.__adapter) return this.__adapter.resolveURL(value)
+    if (this.systemUrls[value]) return this.systemUrls[value]
+    return value
   }
 
   /**
@@ -224,19 +229,33 @@ class ResourceLoader extends EventEmitter {
   }
 
   /**
-   * Load and return a file resource using the specified path.
+   * Returns a previously stored common resource. Typically this would be a VR asset.
    *
+   * @param {string} resourceId - The resourceId value.
+   * @return {TreeItem|null} - The common resource if it exists
+   */
+  getCommonResource(resourceId) {
+    return this.__commonResources[resourceId]
+  }
+
+  /**
+   * Saves a common resource for reuse by other tools. Typically this would be a VR asset.
+   *
+   * @param {string} resourceId - The resourceId value.
+   * @param {TreeItem} resource - The common resource to store
+   */
+  setCommonResource(resourceId, resource) {
+    this.__commonResources[resourceId] = resource
+  }
+
+  /**
+   * Load and return a file resource using the specified path.
+   * @deprecated
    * @param {string} resourceId - The resourceId value.
    * @return {VLAAsset} - The return value.
    */
   loadCommonAssetResource(resourceId) {
-    if (resourceId in this.__commonResources) {
-      return this.__commonResources[resourceId]
-    }
-    const asset = new VLAAsset()
-    asset.getParameter('DataFilePath').setValue(resourceId)
-    this.__commonResources[resourceId] = asset
-    return asset
+    return getCommonResource(resourceId)
   }
 
   // /////////////////////////////////////////////////
