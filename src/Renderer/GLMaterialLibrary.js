@@ -53,7 +53,7 @@ class GLMaterialLibrary extends EventEmitter {
   /**
    * The uploadMaterials method.
    */
-  uploadMaterials() {
+  uploadMaterials(renderstate) {
     const gl = this.gl
     const width = this.materialPacker.root.w
     const height = this.materialPacker.root.h
@@ -76,6 +76,9 @@ class GLMaterialLibrary extends EventEmitter {
         .fill()
         .map((v, i) => i)
     }
+
+    const unit = renderstate.boundTextures++
+    gl.activeTexture(gl.TEXTURE0 + unit)
 
     gl.bindTexture(gl.TEXTURE_2D, this.materialsTexture.glTex)
     const typeId = this.materialsTexture.getTypeID()
@@ -103,6 +106,7 @@ class GLMaterialLibrary extends EventEmitter {
     this.dirtyIndices.forEach(eachMaterial)
     this.dirtyIndices = []
     gl.bindTexture(gl.TEXTURE_2D, null)
+    renderstate.boundTextures--
   }
 
   /**
@@ -111,7 +115,7 @@ class GLMaterialLibrary extends EventEmitter {
    * @return {any} - The return value.
    */
   bind(renderstate) {
-    if (this.dirtyIndices.length > 0) this.uploadMaterials()
+    if (this.dirtyIndices.length > 0) this.uploadMaterials(renderstate)
 
     if (!this.materialsTexture) return
 

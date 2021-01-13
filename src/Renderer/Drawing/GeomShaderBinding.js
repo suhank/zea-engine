@@ -228,9 +228,10 @@ class VAOGeomShaderBinding {
       // console.log("Binding :" + attrName + " to attr:" + location + " count:" + geomAttrBuffer.count + " dimension:" + dimension  + " stride:" + stride  + " offset:" + offset + " normalized:" + normalized + " instanced:" + instanced);
     }
 
-    gl.bindVertexArray(null)
+    // gl.bindVertexArray(null)
 
     this.__indexBuffer = indexBuffer
+    if (this.__indexBuffer) this.__gl.bindBuffer(this.__gl.ELEMENT_ARRAY_BUFFER, this.__indexBuffer)
   }
 
   /**
@@ -259,6 +260,7 @@ class VAOGeomShaderBinding {
    */
   destroy() {
     this.__gl.deleteVertexArray(this.__vao)
+    if (this.__indexBuffer) this.__gl.deleteBuffer(this.__indexBuffe)
   }
 }
 

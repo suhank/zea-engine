@@ -323,6 +323,7 @@ class GLGeomSet extends EventEmitter {
       const dstByteOffsetInBytes = this.geomVertexOffsets[index] * elementSize * attrSpec.dimension
       gl.bufferSubData(gl.ARRAY_BUFFER, dstByteOffsetInBytes, attrData.values, 0)
     }
+    gl.bindBuffer(gl.ARRAY_BUFFER, null)
   }
 
   /**
@@ -376,7 +377,7 @@ class GLGeomSet extends EventEmitter {
    * The culling system will specify a subset of the total number of items for
    * drawing.
    */
-  updateDrawIDsBuffer() {
+  updateDrawIDsBuffer(renderstate) {
     const gl = this.__gl
     let texResized = false
 
@@ -433,6 +434,9 @@ class GLGeomSet extends EventEmitter {
       }
     }
 
+    const unit = renderstate.boundTextures++
+    gl.activeTexture(this.__gl.TEXTURE0 + unit)
+
     {
       const tex = this.drawIdsLayoutTexture
       gl.bindTexture(gl.TEXTURE_2D, tex.glTex)
@@ -486,10 +490,7 @@ class GLGeomSet extends EventEmitter {
 
     this.dirtyDrawIndexIndices = new Set()
     gl.bindTexture(gl.TEXTURE_2D, null)
-
-    // Note: after uploading new data to the GPU, the immediate draw fails to receive the new data
-    // we need to trigger another redraw.
-    this.emit('updated')
+    renderstate.boundTextures--
   }
 
   // ////////////////////////////////////
@@ -524,6 +525,9 @@ class GLGeomSet extends EventEmitter {
         .map((v, i) => i)
     }
 
+    const unit = renderstate.boundTextures++
+    gl.activeTexture(this.__gl.TEXTURE0 + unit)
+
     const tex = this.highlightedIdsTexture
     gl.bindTexture(gl.TEXTURE_2D, tex.glTex)
     this.dirtyDrawHighlightIndices.forEach((index) => {
@@ -540,9 +544,8 @@ class GLGeomSet extends EventEmitter {
 
     this.dirtyDrawHighlightIndices = []
 
-    // Note: after uploading new data to the GPU, the immediate draw fails to receive the new data
-    // we need to trigger another redraw.
-    this.emit('updated')
+    gl.bindTexture(gl.TEXTURE_2D, null)
+    renderstate.boundTextures--
   }
 
   // /////////////////////////////////////
@@ -604,7 +607,7 @@ class GLGeomSet extends EventEmitter {
   draw(renderstate) {
     if (this.drawCount == 0) return
     if (this.dirtyDrawIndexIndices.size > 0) {
-      this.updateDrawIDsBuffer()
+      this.updateDrawIDsBuffer(renderstate)
     }
     this.bindGeomBuffers(renderstate)
     this.bindDrawIds(renderstate, this.drawIdsLayoutTexture, this.drawIdsTexture)
@@ -640,7 +643,7 @@ class GLGeomSet extends EventEmitter {
   drawGeomData(renderstate) {
     if (this.drawCount == 0) return
     if (this.dirtyDrawIndexIndices.size > 0) {
-      this.updateDrawIDsBuffer()
+      this.updateDrawIDsBuffer(renderstate)
     }
     this.bindGeomBuffers(renderstate)
     this.bindDrawIds(renderstate, this.drawIdsLayoutTexture, this.drawIdsTexture)

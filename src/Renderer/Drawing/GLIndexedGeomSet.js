@@ -131,6 +131,7 @@ class GLIndexedGeomSet extends GLGeomSet {
     const elementSize = 4 //  Uint32Array
     const dstByteOffsetInBytes = allocation.start * elementSize
     gl.bufferSubData(gl.ELEMENT_ARRAY_BUFFER, dstByteOffsetInBytes, offsettedIndices, 0)
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null)
   }
 
   /**
@@ -155,13 +156,18 @@ class GLIndexedGeomSet extends GLGeomSet {
       this.cleanGeomBuffers()
     }
 
-    let shaderBinding = this.shaderBindings[renderstate.shaderkey]
+    const shaderBinding = this.shaderBindings[renderstate.shaderkey]
     if (!shaderBinding) {
       const gl = this.__gl
-      shaderBinding = generateShaderGeomBinding(gl, renderstate.attrs, this.glattrbuffers, this.indexBuffer)
-      this.shaderBindings[renderstate.shaderkey] = shaderBinding
+      this.shaderBindings[renderstate.shaderkey] = generateShaderGeomBinding(
+        gl,
+        renderstate.attrs,
+        this.glattrbuffers,
+        this.indexBuffer
+      )
+    } else {
+      shaderBinding.bind(renderstate)
     }
-    shaderBinding.bind(renderstate)
   }
 
   // ////////////////////////////////
