@@ -96,16 +96,28 @@ class GLBaseRenderer extends ParameterOwner {
               resolve(this.__xrViewport)
             })
           }
-          navigator.xr
-            .isSessionSupported('immersive-vr')
-            .then((isSupported) => {
-              if (isSupported) {
-                setupXRViewport()
-              }
-            })
-            .catch((reason) => {
-              console.warn('Unable to setup XR:' + reason)
-            })
+          if (navigator.xr.supportsSessionMode) {
+            // Old
+            navigator.xr
+              .supportsSessionMode('immersive-vr')
+              .then(setupXRViewport)
+              .catch((reason) => {
+                console.warn('Unable to setup XR:' + reason)
+              })
+          } else {
+            // New
+            navigator.xr
+              .isSessionSupported('immersive-vr')
+              .then((isSupported) => {
+                if (isSupported) {
+                  setupXRViewport()
+                }
+              })
+              .catch((reason) => {
+                console.warn('Unable to setup XR:' + reason)
+              })
+          }
+
           // TODO:
           // navigator.xr.on('devicechange', checkForXRSupport);
         }
@@ -241,6 +253,7 @@ class GLBaseRenderer extends ParameterOwner {
    * @return {GLViewport} - The return value.
    */
   getActiveViewport() {
+    if (this.__xrViewportPresenting) return this.__xrViewport
     return this.__activeViewport
   }
 
@@ -542,7 +555,7 @@ class GLBaseRenderer extends ParameterOwner {
 
     if (rootIsDiv) {
       console.warn(
-        '@GLBaseRenderer#setupWebGL. Using a `div` as root element is deprecated. Use a `canvas` instead. See: https://docs.zea.live/zea-engine/#/getting-started/get-started-with-engine?id=basic-setup'
+        '@GLBaseRenderer#setupWebGL. Using a `div` as root element is deprecated. Use a `canvas` instead. See: https://docs.zea.live/zea-engine/#/getting-started/get-started-with-engine?id=basic-setup',
       )
 
       this.__glcanvas = document.createElement('canvas')
@@ -631,10 +644,8 @@ class GLBaseRenderer extends ParameterOwner {
 
     const prepareEvent = (event) => {
       event.propagating = true
-      const sp = event.stopPropagation
       event.stopPropagation = () => {
         event.propagating = false
-        if (sp) sp.call(event)
       }
     }
     const calcRendererCoords = (event) => {
@@ -765,7 +776,7 @@ class GLBaseRenderer extends ParameterOwner {
         // This prevents the event propagation to `mousedown`
         event.preventDefault()
       },
-      false
+      false,
     )
 
     this.__glcanvas.addEventListener(
@@ -781,7 +792,7 @@ class GLBaseRenderer extends ParameterOwner {
         event.pointerType = POINTER_TYPES.touch
         this.getViewport().onPointerUp(event)
       },
-      false
+      false,
     )
 
     this.__glcanvas.addEventListener(
@@ -797,7 +808,7 @@ class GLBaseRenderer extends ParameterOwner {
         event.pointerType = POINTER_TYPES.touch
         this.getViewport().onPointerMove(event)
       },
-      false
+      false,
     )
     /** Touch Events End */
 

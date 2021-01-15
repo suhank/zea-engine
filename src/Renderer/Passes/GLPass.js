@@ -28,8 +28,8 @@ class GLPass extends ParameterOwner {
    * @param {object} event - The event object.
    * @private
    */
-  __parameterValueChanged(event) {
-    super.__parameterValueChanged(event)
+  parameterValueChanged(event) {
+    super.parameterValueChanged(event)
     if (this.__renderer) this.__renderer.requestRedraw()
   }
 

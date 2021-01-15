@@ -166,7 +166,7 @@ class GLTexture2D extends RefCounted {
     const maxSize = gl.getParameter(gl.MAX_TEXTURE_SIZE)
     if (width <= 0 || width > maxSize || height <= 0 || height > maxSize) {
       throw new Error(
-        'gl-texture2d: Invalid texture size. width:' + width + ' height:' + height + ' maxSize:' + maxSize
+        'gl-texture2d: Invalid texture size. width:' + width + ' height:' + height + ' maxSize:' + maxSize,
       )
     }
 
@@ -415,7 +415,7 @@ class GLTexture2D extends RefCounted {
               ' Data Length:' +
               data.length +
               ' Expected:' +
-              numPixels * numChannels
+              numPixels * numChannels,
           )
         }
         if (this.__type == gl.HALF_FLOAT && data instanceof Float32Array) {
@@ -444,7 +444,7 @@ class GLTexture2D extends RefCounted {
         0,
         this.__format,
         this.__type,
-        null
+        null,
       )
 
       // simply resize the buffer.
@@ -510,7 +510,7 @@ class GLTexture2D extends RefCounted {
         this.__format,
         this.__type,
         data,
-        0
+        0,
       )
     } else {
       gl.texImage2D(
@@ -522,7 +522,7 @@ class GLTexture2D extends RefCounted {
         0,
         this.__format,
         this.__type,
-        data
+        data,
       )
     }
   }
@@ -541,7 +541,7 @@ class GLTexture2D extends RefCounted {
       const maxSize = gl.getParameter(gl.MAX_TEXTURE_SIZE)
       if (width < 0 || width > maxSize || height < 0 || height > maxSize) {
         throw new Error(
-          'gl-texture2d: Invalid texture size. width:' + width + ' height:' + height + ' maxSize:' + maxSize
+          'gl-texture2d: Invalid texture size. width:' + width + ' height:' + height + ' maxSize:' + maxSize,
         )
       }
 

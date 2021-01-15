@@ -45,7 +45,7 @@ void main()
   v_worldDir = worldPos.xyz - projectionCenter;
 }
 
-`
+`,
     )
 
     this.finalize()
@@ -107,7 +107,7 @@ void main(void) {
   gl_FragColor = fragColor;
 #endif
 }
-`
+`,
     )
     this.finalize()
   }
@@ -159,7 +159,7 @@ void main(void) {
   gl_FragColor = fragColor;
 #endif
 }
-`
+`,
     )
     this.finalize()
   }

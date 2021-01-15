@@ -185,22 +185,22 @@ class GeomLibrary extends EventEmitter {
 
         // ////////////////////////////////////////////
         // Multi Threaded Parsing
-          this.__workers[this.__nextWorker].postMessage(
-            {
-              key,
-              toc,
-              geomIndexOffset,
-              geomsRange,
-              isMobileDevice: reader.isMobileDevice,
-              bufferSlice,
-              genBuffersOpts: this.__genBuffersOpts,
-              context: {
-                versions: context.versions,
-              },
+        this.__workers[this.__nextWorker].postMessage(
+          {
+            key,
+            toc,
+            geomIndexOffset,
+            geomsRange,
+            isMobileDevice: reader.isMobileDevice,
+            bufferSlice,
+            genBuffersOpts: this.__genBuffersOpts,
+            context: {
+              versions: context.versions,
             },
-            [bufferSlice]
-          )
-          this.__nextWorker = (this.__nextWorker + 1) % this.__workers.length
+          },
+          [bufferSlice],
+        )
+        this.__nextWorker = (this.__nextWorker + 1) % this.__workers.length
       }
     } else {
       // ////////////////////////////////////////////
@@ -222,7 +222,7 @@ class GeomLibrary extends EventEmitter {
         },
         (data, transferables) => {
           this.__recieveGeomDatas(data.key, data.geomDatas, data.geomIndexOffset, data.geomsRange)
-        }
+        },
       )
     }
     return numGeoms

@@ -210,7 +210,7 @@ class GIFImage extends FileImage {
             const msg = 'Unable to Load URL:' + statusText + ':' + fileDesc.url
             console.warn(msg)
             reject(msg)
-          }
+          },
         )
       })
 
@@ -222,7 +222,7 @@ class GIFImage extends FileImage {
       this.height = unpackedData.height
 
       this.getParameter('StreamAtlasDesc').setValue(
-        new Vec4(unpackedData.atlasSize[0], unpackedData.atlasSize[1], 0, 0)
+        new Vec4(unpackedData.atlasSize[0], unpackedData.atlasSize[1], 0, 0),
       )
       this.getParameter('StreamAtlasIndex').setRange(unpackedData.frameRange)
 

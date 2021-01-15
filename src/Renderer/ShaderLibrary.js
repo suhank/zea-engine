@@ -125,7 +125,7 @@ class ShaderLibrary {
                   ' \nShader module not found:' +
                   includeFile +
                   '\n in:' +
-                  this.getShaderModuleNames()
+                  this.getShaderModuleNames(),
               )
             }
 

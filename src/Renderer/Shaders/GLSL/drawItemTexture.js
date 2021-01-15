@@ -32,7 +32,7 @@ int getDrawItemId() {
 
 #endif
 
-`
+`,
 )
 
 shaderLibrary.setShaderModule(
@@ -63,5 +63,5 @@ vec4 getInstanceData(int id) {
 #endif
 
 
-`
+`,
 )

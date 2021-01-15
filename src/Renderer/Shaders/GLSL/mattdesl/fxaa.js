@@ -21,7 +21,7 @@ void texcoords(vec2 fragCoord, vec2 resolution,
     v_rgbM = vec2(fragCoord * inverseVP);
 }
 
-`
+`,
 )
 
 shaderLibrary.setShaderModule(
@@ -122,7 +122,7 @@ vec4 fxaa(sampler2D tex, vec2 fragCoord, vec2 resolution,
     return color;
 }
 
-`
+`,
 )
 
 shaderLibrary.setShaderModule(
@@ -145,5 +145,5 @@ vec4 apply(sampler2D tex, vec2 fragCoord, vec2 resolution) {
     return fxaa(tex, fragCoord, resolution, v_rgbNW, v_rgbNE, v_rgbSW, v_rgbSE, v_rgbM);
 }
 
-`
+`,
 )

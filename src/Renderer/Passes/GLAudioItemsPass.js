@@ -18,7 +18,7 @@ if (AudioContext) {
   // Web Audio API is not supported
   // Alert the user
   alert(
-    'Sorry, but the Web Audio API is not supported by your browser. Please, consider upgrading to the latest version or downloading Google Chrome or Mozilla Firefox'
+    'Sorry, but the Web Audio API is not supported by your browser. Please, consider upgrading to the latest version or downloading Google Chrome or Mozilla Firefox',
   )
 }
 

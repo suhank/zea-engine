@@ -54,12 +54,12 @@ describe('GeomItem', () => {
             ori: { w: 1, x: 0, y: 0, z: 0 },
             tr: { x: 7, y: 6, z: 0 },
           },
-          0.001
-        )
+          0.001,
+        ),
     ).toBe(true)
 
     expect(child.getParameter('GeomMat').getValue().asArray()).toEqual(
-      Float32Array.of(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 9, 10, 0, 1)
+      Float32Array.of(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 9, 10, 0, 1),
     )
   })
 

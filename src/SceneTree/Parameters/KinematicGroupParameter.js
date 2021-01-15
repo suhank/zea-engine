@@ -135,7 +135,7 @@ class KinematicGroupParameter extends ListParameter {
         },
         () => {
           console.warn('Unable to resolve Kinematic Group Member:' + pj.paramPath)
-        }
+        },
       )
     }
   }

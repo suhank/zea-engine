@@ -68,7 +68,7 @@ class AudioItem extends TreeItem {
           },
           (e) => {
             console.log('Error with decoding audio data' + e.err)
-          }
+          },
         )
       }
 

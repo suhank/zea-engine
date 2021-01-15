@@ -9,5 +9,5 @@ vec3 tonemapReinhard(vec3 color) {
   return color / (color + vec3(1.0));
 }
 
-`
+`,
 )

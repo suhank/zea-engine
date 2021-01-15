@@ -25,5 +25,5 @@ vec4 sampleStreamFrame(vec2 texCoord, int index, in sampler2D streamImage, in ve
     return texture2D(streamImage, calcFrameImageTexCoords(texCoord, index, streamDesc));
 }
 
-`
+`,
 )

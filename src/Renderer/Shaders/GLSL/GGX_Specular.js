@@ -90,5 +90,5 @@ vec3 GGX_Specular_PrefilteredEnv(vec3 normal, vec3 viewVector, float roughness, 
 
     return radiance;        
 }
-`
+`,
 )

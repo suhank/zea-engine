@@ -100,7 +100,7 @@ vec3 calcFatLinesViewPos(int vertexID, mat4 modelViewMatrix, inout vec3 viewNorm
   return viewPos;
 }
 
-`
+`,
 )
 
 /** Shader for drawing Fat lines
@@ -154,7 +154,7 @@ void main(void) {
     gl_Position.z = mix(gl_Position.z, -gl_Position.w, Overlay);
   }
 }
-`
+`,
     )
 
     this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader(
@@ -199,7 +199,7 @@ void main(void) {
   gl_FragColor = fragColor;
 #endif
 }
-`
+`,
     )
     this.finalize()
   }

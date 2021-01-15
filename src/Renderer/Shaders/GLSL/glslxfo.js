@@ -54,5 +54,5 @@ vec3 quat_rotateVec3(vec4 quat, vec3 rhs) {
 }
 
 
-`
+`,
 )

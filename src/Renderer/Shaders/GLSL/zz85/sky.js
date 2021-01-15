@@ -90,7 +90,7 @@ void main() {
     vBetaM = totalMie( turbidity ) * mieCoefficient;
 
 }
-`
+`,
 )
 
 shaderLibrary.setShaderModule(
@@ -206,5 +206,5 @@ vec3 atmosphere(
     vec3 retColor = pow( color, vec3( 1.0 / ( 1.2 + ( 1.2 * vSunfade ) ) ) );
 
     return retColor;
-}`
+}`,
 )

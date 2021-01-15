@@ -60,7 +60,7 @@ class Group extends BaseGroup {
     this.memberXfoOps = []
 
     this.__initialXfoModeParam = this.addParameter(
-      new MultiChoiceParameter('InitialXfoMode', GROUP_XFO_MODES.average, ['manual', 'first', 'average', 'global'])
+      new MultiChoiceParameter('InitialXfoMode', GROUP_XFO_MODES.average, ['manual', 'first', 'average', 'global']),
     )
     this.__initialXfoModeParam.on('valueChanged', () => {
       this.calcGroupXfo()
@@ -110,8 +110,8 @@ class Group extends BaseGroup {
    * @return {boolean} - The return value.
    * @private
    */
-  __updateVisibility() {
-    if (super.__updateVisibility()) {
+  updateVisibility() {
+    if (super.updateVisibility()) {
       const value = this.isVisible()
       Array.from(this.__itemsParam.getValue()).forEach((item) => {
         if (item instanceof TreeItem) item.propagateVisibility(value ? 1 : -1)
@@ -415,7 +415,7 @@ class Group extends BaseGroup {
       const memberXfoOp = new GroupMemberXfoOperator(this.getParameter('GroupTransform'), memberGlobalXfoParam)
       this.memberXfoOps.splice(index, 0, memberXfoOp)
 
-      item.getParameter('BoundingBox').on('valueChanged', this._setBoundingBoxDirty)
+      item.getParameter('BoundingBox').on('valueChanged', this.setBoundingBoxDirty)
       this._bindXfoDirty = true
     }
   }
@@ -454,8 +454,8 @@ class Group extends BaseGroup {
     if (item instanceof TreeItem) {
       this.memberXfoOps[index].detach()
       this.memberXfoOps.splice(index, 1)
-      this._setBoundingBoxDirty()
-      item.getParameter('BoundingBox').off('valueChanged', this._setBoundingBoxDirty)
+      this.setBoundingBoxDirty()
+      item.getParameter('BoundingBox').off('valueChanged', this.setBoundingBoxDirty)
       this._bindXfoDirty = true
     }
   }

@@ -1,0 +1,115 @@
+import { Registry } from '../../Registry'
+import { ColorParameter } from './ColorParameter.js'
+import { BaseImage } from '../BaseImage.js'
+import { Color } from '@Math/Color'
+import { BinReader } from '@SceneTree/BinReader'
+
+/**
+ * Represents a specific type of parameter, that stores `Color` and `BaseImage` texture values.
+ *
+ * i.e.:
+ * ```javascript
+ * const image = new LDRImage();
+ * image.getParameter('FilePath').setUrl("https://storage.googleapis.com/zea-playground-assets/zea-engine/texture.png")
+ *
+ * const matColorParam = new MaterialColorParam('MyMaterialColor', new Color(0, 254, 2))
+ * matColorParam.setImage(image)
+ * //'myParameterOwnerItem' is an instance of a 'ParameterOwner' class.
+ * // Remember that only 'ParameterOwner' and classes that extend from it can host 'Parameter' objects.
+ * myParameterOwnerItem.addParameter(matColorParam)
+ * ```
+ *
+ * **Events**
+ * * **valueChanged:** Triggered every time the Image value changes
+ * * **textureDisconnected:** Triggered when Image value is cleaned/removed.
+ * * **textureConnected:** Triggered when the Image value is set.
+ *
+ * @extends ColorParameter
+ */
+class MaterialColorParam extends ColorParameter {
+  protected image?: BaseImage
+  /**
+   * Create a material color parameter.
+   * @param {string} name - The name of the material color parameter.
+   * @param {Color} value - The value of the parameter.
+   */
+  constructor(name: string, value?: Color) {
+    super(name, value)
+  }
+
+  /**
+   * Returns `BaseImage` texture of the Material.
+   *
+   * @return {BaseImage|undefined} - The return value.
+   */
+  getImage(): BaseImage | undefined {
+    return this.image
+  }
+
+  /**
+   * The __imageUpdated method.
+   * @private
+   */
+  protected imageUpdated = (): void => {
+    this.emit('valueChanged', {})
+  }
+
+  /**
+   * Sets `BaseImage` texture value in parameter.
+   *
+   * @param {BaseImage} value - The value param.
+   */
+  setImage(value: BaseImage): void {
+    const disconnectImage = () => {
+      this.image?.off('loaded', this.imageUpdated)
+      this.image?.off('updated', this.imageUpdated)
+      this.image = undefined
+      this.emit('textureDisconnected', {})
+    }
+    if (value) {
+      if (this.image != undefined && this.image !== value) {
+        disconnectImage()
+      }
+      this.image = value
+      this.image.on('updated', this.imageUpdated)
+      this.emit('textureConnected', {})
+      this.emit('valueChanged', { mode: 0 })
+    } else {
+      if (this.image != undefined) {
+        disconnectImage()
+        this.image = undefined
+        this.emit('textureDisconnected', {})
+      }
+    }
+  }
+
+  /**
+   * Extracts `Color` and `Image` values from a buffer, updating current parameter state.
+   *
+   * @param {BinReader} reader - The reader value.
+   * @param {object} context - The context value.
+   */
+  readBinary(reader: BinReader, context: Record<string, any>): void {
+    super.readBinary(reader, context)
+
+    const textureName = reader.loadStr()
+    if (textureName != '') {
+      this.setImage(context.materialLibrary.getImage(textureName))
+    }
+  }
+
+  /**
+   * The clone method constructs a new material color parameter,
+   * copies its values from this parameter and returns it.
+   *
+   * @return {MaterialColorParam} - Returns a new cloned material color parameter.
+   */
+  clone(): MaterialColorParam {
+    const clonedParam = new MaterialColorParam(this.name, this.value?.clone())
+    return clonedParam
+  }
+}
+
+Registry.register('MaterialColorParam', MaterialColorParam)
+
+export { MaterialColorParam }

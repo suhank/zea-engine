@@ -41,8 +41,8 @@ class SelectionSet extends BaseGroup {
    * @return {boolean} - The return value.
    * @private
    */
-  __updateVisibility() {
-    if (super.__updateVisibility()) {
+  updateVisibility() {
+    if (super.updateVisibility()) {
       const value = this.isVisible()
       Array.from(this.__itemsParam.getValue()).forEach((item) => {
         if (item instanceof TreeItem) item.propagateVisibility(value ? 1 : -1)
@@ -101,8 +101,8 @@ class SelectionSet extends BaseGroup {
    * @param {number} index - The index value.
    * @private
    */
-  __bindItem(item, index) {
-    super.__bindItem(item, index)
+  bindItem(item, index) {
+    super.bindItem(item, index)
     if (!(item instanceof TreeItem)) return
 
     // ///////////////////////////////
@@ -120,7 +120,7 @@ class SelectionSet extends BaseGroup {
     }
 
     if (item instanceof TreeItem) {
-      item.getParameter('BoundingBox').on('valueChanged', this._setBoundingBoxDirty)
+      item.getParameter('BoundingBox').on('valueChanged', this.setBoundingBoxDirty)
     }
   }
 
@@ -130,8 +130,8 @@ class SelectionSet extends BaseGroup {
    * @param {number} index - The index value.
    * @private
    */
-  __unbindItem(item, index) {
-    super.__unbindItem(item, index)
+  unbindItem(item, index) {
+    super.unbindItem(item, index)
     if (!(item instanceof TreeItem)) return
 
     item.removeHighlight('branchselected' + this.getId(), true)
@@ -156,7 +156,7 @@ class SelectionSet extends BaseGroup {
     }, true)
 
     if (item instanceof TreeItem) {
-      item.getParameter('BoundingBox').off('valueChanged', this._setBoundingBoxDirty)
+      item.getParameter('BoundingBox').off('valueChanged', this.setBoundingBoxDirty)
     }
   }
 

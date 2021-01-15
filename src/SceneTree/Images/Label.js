@@ -162,8 +162,8 @@ class Label extends DataImage {
    * @param {object} event - The event object.
    * @private
    */
-  __parameterValueChanged(event) {
-    super.__parameterValueChanged(event)
+  parameterValueChanged(event) {
+    super.parameterValueChanged(event)
     if (!this.__requestedRerender) {
       this.__requestedRerender = true
       this.loadLabelData()
@@ -299,7 +299,7 @@ class Label extends DataImage {
         borderRadius,
         fillBackground,
         strokeBackgroundOutline,
-        borderWidth
+        borderWidth,
       )
     }
 

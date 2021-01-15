@@ -105,5 +105,5 @@ int uvToPixelIndex(vec2 uv, int textureSize){
     return int(uv.x * float(textureSize)) + (int(floor(uv.y * float(textureSize))) * textureSize);
 }
 
-`
+`,
 )

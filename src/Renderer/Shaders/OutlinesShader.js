@@ -20,7 +20,7 @@ void main()
     gl_Position = vec4(positions.xy*2.0, 0.0, 1.0);
 }
 
-`
+`,
     )
     this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader(
       'OutlinesShader.fragmentShader',
@@ -107,7 +107,7 @@ void main(void) {
     }
 }
 
-`
+`,
     )
   }
 }

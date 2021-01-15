@@ -351,7 +351,7 @@ class MaterialShaderBinding {
               'with Shader ',
               shaderName,
               'Param has no unif',
-              name
+              name,
             )
             logged[shaderName][name] = true
           }

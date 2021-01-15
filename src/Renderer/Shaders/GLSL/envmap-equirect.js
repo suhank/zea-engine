@@ -28,5 +28,5 @@ vec3 dirFromPolar(vec2 polar) {
     return dirFromLatLongUVs(u, v);
 }
 
-`
+`,
 )

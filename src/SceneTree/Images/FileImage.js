@@ -191,8 +191,8 @@ class FileImage extends BaseImage {
                 {
                   score: Math.abs(params.prefSize - asset.w),
                 },
-                asset
-              )
+                asset,
+              ),
             )
 
             // return low score, close to desire
@@ -222,7 +222,7 @@ class FileImage extends BaseImage {
               'x' +
               asset.h +
               ' url:' +
-              asset.url
+              asset.url,
           )
           url = asset.url
         }
@@ -330,7 +330,7 @@ class FileImage extends BaseImage {
           },
           (e) => {
             console.log('Autoplay was prevented.', e, e.message)
-          }
+          },
         )
         // const promise = videoElem.play();
         // if (promise !== undefined) {
@@ -344,7 +344,7 @@ class FileImage extends BaseImage {
         //     });
         // }
       },
-      false
+      false,
     )
     videoElem.src = file.url
     // videoElem.load();
@@ -552,7 +552,7 @@ class FileImage extends BaseImage {
             const msg = 'Unable to Load URL:' + statusText + ':' + fileDesc.url
             console.warn(msg)
             reject(msg)
-          }
+          },
         )
       })
 
@@ -564,7 +564,7 @@ class FileImage extends BaseImage {
       this.height = unpackedData.height
 
       this.getParameter('StreamAtlasDesc').setValue(
-        new Vec4(unpackedData.atlasSize[0], unpackedData.atlasSize[1], 0, 0)
+        new Vec4(unpackedData.atlasSize[0], unpackedData.atlasSize[1], 0, 0),
       )
       this.getParameter('StreamAtlasIndex').setRange(unpackedData.frameRange)
 

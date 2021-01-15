@@ -163,7 +163,7 @@ class GLRenderer extends GLBaseRenderer {
           gl,
           shaderComp.attrs,
           gl.__quadattrbuffers,
-          gl.__quadIndexBuffer
+          gl.__quadIndexBuffer,
         )
       }
       // console.warn('Unsupported EnvMap:' + env)
@@ -417,7 +417,7 @@ class GLRenderer extends GLBaseRenderer {
         area * -0.5,
         area * 0.5,
         0.0,
-        dist
+        dist,
       )
       this.rayCastDist = dist
       this.rayCastArea = area
@@ -512,7 +512,7 @@ class GLRenderer extends GLBaseRenderer {
         area * -0.5,
         area * 0.5,
         0.0,
-        dist
+        dist,
       )
       this.rayCastDist = dist
       this.rayCastArea = area

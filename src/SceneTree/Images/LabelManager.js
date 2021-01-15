@@ -132,7 +132,7 @@ class LabelManager extends EventEmitter {
           libraryName +
           "' not found in LabelManager. Found: [" +
           Object.keys(this.__labelLibraries) +
-          ']'
+          ']',
       )
     }
     const label = library[labelName]
@@ -144,7 +144,7 @@ class LabelManager extends EventEmitter {
           libraryName +
           "'. Found: [" +
           Object.keys(library) +
-          ']'
+          ']',
       )
     }
     const labelText = label[this.__language]

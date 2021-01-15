@@ -209,7 +209,7 @@ class GLFbo {
             0,
             gl.DEPTH_COMPONENT,
             gl.UNSIGNED_INT,
-            null
+            null,
           )
           gl.framebufferTexture2D(gl.DRAW_FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.TEXTURE_2D, this.__depthTexture, 0)
         } else {
@@ -222,7 +222,7 @@ class GLFbo {
             0,
             gl.DEPTH_COMPONENT,
             gl.UNSIGNED_INT,
-            null
+            null,
           )
           gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.TEXTURE_2D, this.__depthTexture, 0)
         }
@@ -264,7 +264,7 @@ class GLFbo {
           0,
           gl.DEPTH_COMPONENT,
           gl.UNSIGNED_INT,
-          null
+          null,
         )
       } else
         gl.texImage2D(
@@ -276,7 +276,7 @@ class GLFbo {
           0,
           gl.DEPTH_COMPONENT,
           gl.UNSIGNED_INT,
-          null
+          null,
         )
     }
     this.__checkFramebuffer()
@@ -302,12 +302,12 @@ class GLFbo {
         ', height:',
         this.height,
         ' Texture Type:',
-        this.__colorTexture.getType()
+        this.__colorTexture.getType(),
       )
       switch (check) {
         case gl.FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
           throw new Error(
-            'The attachment types are mismatched or not all framebuffer attachment points are framebuffer attachment complete.'
+            'The attachment types are mismatched or not all framebuffer attachment points are framebuffer attachment complete.',
           )
         case gl.FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:
           throw new Error('There is no attachment.')
@@ -315,7 +315,7 @@ class GLFbo {
           throw new Error('Height and width of the attachment are not the same.')
         case gl.FRAMEBUFFER_INCOMPLETE_DIMENSIONS:
           throw new Error(
-            'The format of the attachment is not supported or if depth and stencil attachments are not the same renderbuffer.'
+            'The format of the attachment is not supported or if depth and stencil attachments are not the same renderbuffer.',
           )
         case 36061: // gl.GL_FRAMEBUFFER_UNSUPPORTED:
           throw new Error('The framebuffer is unsupported')

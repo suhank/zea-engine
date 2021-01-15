@@ -137,7 +137,7 @@ class GLRenderTarget extends EventEmitter {
       switch (status) {
         case gl.FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
           throw new Error(
-            'The attachment types are mismatched or not all framebuffer attachment points are framebuffer attachment complete.'
+            'The attachment types are mismatched or not all framebuffer attachment points are framebuffer attachment complete.',
           )
         case gl.FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:
           throw new Error('There is no attachment.')
@@ -145,7 +145,7 @@ class GLRenderTarget extends EventEmitter {
           throw new Error('Height and width of the attachment are not the same.')
         case gl.FRAMEBUFFER_INCOMPLETE_DIMENSIONS:
           throw new Error(
-            'The format of the attachment is not supported or if depth and stencil attachments are not the same renderbuffer.'
+            'The format of the attachment is not supported or if depth and stencil attachments are not the same renderbuffer.',
           )
         case 36061: // gl.GL_FRAMEBUFFER_UNSUPPORTED:
           throw new Error('The framebuffer is unsupported')
@@ -295,7 +295,7 @@ class GLRenderTarget extends EventEmitter {
             0,
             Math.min(width, this.width),
             Math.min(height, this.height),
-            0
+            0,
           )
         }
 
@@ -330,7 +330,7 @@ class GLRenderTarget extends EventEmitter {
             0,
             Math.min(width, this.width),
             Math.min(height, this.height),
-            0
+            0,
           )
         }
 
@@ -375,7 +375,7 @@ class GLRenderTarget extends EventEmitter {
             gl.COLOR_ATTACHMENT0 + i,
             gl.TEXTURE_2D,
             this.textureTargets[i],
-            0
+            0,
           )
           bufferIds.push(gl.COLOR_ATTACHMENT0 + i)
         }

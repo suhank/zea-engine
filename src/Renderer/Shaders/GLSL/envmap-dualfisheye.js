@@ -19,5 +19,5 @@ vec2 dualfisheyeUVsFromDir(vec3 dir) {
 }
 
 
-`
+`,
 )

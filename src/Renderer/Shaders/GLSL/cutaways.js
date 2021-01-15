@@ -45,5 +45,5 @@ bool cutaway(vec3 worldPos, vec3 planeNormal, float planeDist) {
     }
     return  false;
 }
-`
+`,
 )

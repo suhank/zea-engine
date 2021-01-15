@@ -39,5 +39,5 @@ float getStandardOutputBasedExposure(float aperture,
     return MIDDLE_GREY / l_avg;
 }
 
-`
+`,
 )

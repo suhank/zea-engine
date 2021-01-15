@@ -36,7 +36,7 @@ void main(void) {
     gl_Position = projectionMatrix * viewPos;
 
 }
-`
+`,
     )
 
     this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader(
@@ -78,7 +78,7 @@ void main(void) {
     gl_FragColor = fragColor;
 #endif
 }
-`
+`,
     )
   }
 }

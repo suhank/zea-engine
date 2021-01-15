@@ -145,7 +145,7 @@ class GLShader extends BaseItem {
           ': \n\n' +
           errors.join('\n') +
           '\n' +
-          numberedLinesWithErrors.join('\n')
+          numberedLinesWithErrors.join('\n'),
       )
       return null
     }
@@ -180,7 +180,7 @@ class GLShader extends BaseItem {
         fragmentShaderGLSL,
         gl.FRAGMENT_SHADER,
         'fragmentShader',
-        fragshaderopts
+        fragshaderopts,
       )
       if (!fragmentShader) {
         return false

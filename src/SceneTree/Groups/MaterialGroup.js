@@ -113,8 +113,8 @@ class MaterialGroup extends BaseGroup {
    * @param {number} index - The index value.
    * @private
    */
-  __bindItem(item, index) {
-    super.__bindItem(item, index)
+  bindItem(item, index) {
+    super.bindItem(item, index)
 
     if (!(item instanceof TreeItem)) return
 
@@ -155,8 +155,8 @@ class MaterialGroup extends BaseGroup {
    * @param {number} index - The index value.
    * @private
    */
-  __unbindItem(item, index) {
-    super.__unbindItem(item, index)
+  unbindItem(item, index) {
+    super.unbindItem(item, index)
     if (!(item instanceof TreeItem)) return
 
     if (this.isSelected()) {

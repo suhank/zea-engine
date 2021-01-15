@@ -238,7 +238,7 @@ class GLLines extends GLGeom {
           gl,
           renderstate.attrs,
           this.fatBuffers.glattrbuffers,
-          gl.__quadIndexBuffer
+          gl.__quadIndexBuffer,
         )
         this.__shaderBindings[renderstate.shaderkey] = shaderBinding
       }

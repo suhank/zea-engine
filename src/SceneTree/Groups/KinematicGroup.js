@@ -39,7 +39,7 @@ class KinematicGroup extends BaseGroup {
     this.memberXfoOps = []
 
     this.__initialXfoModeParam = this.addParameter(
-      new MultiChoiceParameter('InitialXfoMode', GROUP_XFO_MODES.average, ['manual', 'first', 'average', 'global'])
+      new MultiChoiceParameter('InitialXfoMode', GROUP_XFO_MODES.average, ['manual', 'first', 'average', 'global']),
     )
     this.__initialXfoModeParam.on('valueChanged', () => {
       this.calcGroupXfo()
@@ -178,7 +178,7 @@ class KinematicGroup extends BaseGroup {
    * @param {number} index - The index value.
    * @private
    */
-  __bindItem(item, index) {
+  bindItem(item, index) {
     if (!(item instanceof TreeItem)) return
 
     // ///////////////////////////////
@@ -195,7 +195,7 @@ class KinematicGroup extends BaseGroup {
       const memberXfoOp = new GroupMemberXfoOperator(this.getParameter('GroupTransform'), memberGlobalXfoParam)
       this.memberXfoOps.splice(index, 0, memberXfoOp)
 
-      item.getParameter('BoundingBox').on('valueChanged', this._setBoundingBoxDirty)
+      item.getParameter('BoundingBox').on('valueChanged', this.setBoundingBoxDirty)
     }
   }
 
@@ -205,8 +205,8 @@ class KinematicGroup extends BaseGroup {
    * @param {number} index - The index value.
    * @private
    */
-  __unbindItem(item, index) {
-    super.__unbindItem(item, index)
+  unbindItem(item, index) {
+    super.unbindItem(item, index)
     if (!(item instanceof TreeItem)) return
 
     if (this.isSelected()) {
@@ -217,9 +217,9 @@ class KinematicGroup extends BaseGroup {
     {
       this.memberXfoOps[index].detach()
       this.memberXfoOps.splice(index, 1)
-      this._setBoundingBoxDirty()
+      this.setBoundingBoxDirty()
 
-      item.getParameter('BoundingBox').off('valueChanged', this._setBoundingBoxDirty)
+      item.getParameter('BoundingBox').off('valueChanged', this.setBoundingBoxDirty)
     }
   }
 
@@ -279,7 +279,7 @@ class KinematicGroup extends BaseGroup {
    * called once loading is done.
    * @private
    */
-  __loadDone() {
+  loadDone() {
     this.calculatingGroupXfo = true
     this.calcGroupXfo()
     this.calculatingGroupXfo = false

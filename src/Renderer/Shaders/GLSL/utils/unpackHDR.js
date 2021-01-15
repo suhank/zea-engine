@@ -30,5 +30,5 @@ vec3 decodeHDR(sampler2D ldrSampler, sampler2D cdmSampler, vec2 texCoord) {
     return decodeHDR(texture2D(ldrSampler, texCoord).rgb, cdm);
 }
 
-`
+`,
 )

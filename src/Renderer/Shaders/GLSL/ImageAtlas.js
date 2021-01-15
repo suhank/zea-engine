@@ -39,5 +39,5 @@ vec4 sampleSubImage(vec2 texCoord, int index, in sampler2D atlasLayout, in sampl
     return texture2D(atlasImage, atlasCoords);
 }
 
-`
+`,
 )

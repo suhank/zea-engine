@@ -96,5 +96,5 @@ vec3 pbrSurfaceRadiance(in MaterialParams materialParams, vec3 irradiance, vec3 
     // radiance = vec4( kd * diffuse + /*ks */ specular, 1);
     return radiance;
 }
-`
+`,
 )

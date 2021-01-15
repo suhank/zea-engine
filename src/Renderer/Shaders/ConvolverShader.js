@@ -21,7 +21,7 @@ void main()
   v_texCoord = position+0.5;
   gl_Position = vec4(position*2.0, 0.0, 1.0);
 }
-`
+`,
     )
     this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader(
       'ConvolverShader.fragmentShader',
@@ -155,7 +155,7 @@ void main(void) {
 #endif
 }
 
-`
+`,
     )
   }
 }

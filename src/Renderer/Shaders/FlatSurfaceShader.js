@@ -48,7 +48,7 @@ void main(void) {
     v_textureCoord = texCoords;
     v_textureCoord.y = 1.0 - v_textureCoord.y;// Flip y
 }
-`
+`,
     )
 
     this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader(
@@ -97,7 +97,7 @@ void main(void) {
     gl_FragColor = fragColor;
 #endif
 }
-`
+`,
     )
 
     this.finalize()

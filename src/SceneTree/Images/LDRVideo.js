@@ -114,7 +114,7 @@ class LDRVideo extends FileImage {
         }
         timerCallback()
       },
-      false
+      false,
     )
     videoElem.src = fileDesc.url
     // videoElem.load();

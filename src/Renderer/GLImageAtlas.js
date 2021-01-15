@@ -45,7 +45,7 @@ void main()
   v_texCoord -= borderVec2 / srctextureDim;
 }
 
-`
+`,
     )
     this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader(
       'AtlasLayoutShader.fragmentShader',
@@ -117,7 +117,7 @@ void main(void) {
 #endif
 }
 
-`
+`,
     )
   }
 }
@@ -308,7 +308,7 @@ class GLImageAtlas extends GLRenderTarget {
         gl,
         shaderComp.attrs,
         gl.__quadattrbuffers,
-        gl.__quadIndexBuffer
+        gl.__quadIndexBuffer,
       )
     }
 
@@ -340,7 +340,7 @@ class GLImageAtlas extends GLRenderTarget {
           layoutItem.pos.x / width,
           layoutItem.pos.y / height,
           layoutItem.size.x / width,
-          layoutItem.size.y / height
+          layoutItem.size.y / height,
         )
       }
       if (

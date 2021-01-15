@@ -47,7 +47,7 @@ void main()
   gl_Position = vec4(position, 0, 1);
 }
 
-`
+`,
     )
   }
 }
@@ -100,7 +100,7 @@ void main(void) {
   gl_FragColor = fragColor;
 #endif
 }
-`
+`,
     )
     this.finalize()
   }
@@ -164,7 +164,7 @@ void main(void) {
   gl_FragColor = fragColor;
 #endif
 }
-`
+`,
     )
     this.finalize()
   }
@@ -216,7 +216,7 @@ void main(void) {
   gl_FragColor = fragColor;
 #endif
 }
-`
+`,
     )
     this.finalize()
   }
@@ -281,7 +281,7 @@ void main(void) {
   gl_FragColor = fragColor;
 #endif
 }
-`
+`,
     )
     this.finalize()
   }
@@ -336,7 +336,7 @@ void main(void) {
   gl_FragColor = fragColor;
 #endif
 }
-`
+`,
     )
     this.finalize()
   }
@@ -391,7 +391,7 @@ void main(void) {
   gl_FragColor = fragColor;
 #endif
 }
-`
+`,
     )
     this.finalize()
   }

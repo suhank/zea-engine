@@ -42,7 +42,7 @@ void main()
     texcoords(fragCoord, textureSize, v_rgbNW, v_rgbNE, v_rgbSW, v_rgbSE, v_rgbM);
 }
 
-`
+`,
     )
     this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader(
       'PostProcessing.fragmentShader',
@@ -102,7 +102,7 @@ void main(void) {
 #ifndef ENABLE_ES3
     gl_FragColor = fragColor;
 #endif
-}`
+}`,
     )
     this.finalize()
   }

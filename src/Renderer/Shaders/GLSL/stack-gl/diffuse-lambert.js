@@ -11,5 +11,5 @@ float lambertDiffuse(
   return max(0.0, dot(lightDirection, surfaceNormal));
 }
 
-`
+`,
 )

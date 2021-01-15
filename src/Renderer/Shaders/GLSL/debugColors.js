@@ -45,5 +45,5 @@ vec3 getDebugColor(float id) {
 }
 
 
-`
+`,
 )

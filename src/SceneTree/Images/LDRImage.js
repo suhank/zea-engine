@@ -97,8 +97,8 @@ class LDRImage extends FileImage {
               {
                 score: Math.abs(params.prefSize - asset.w),
               },
-              asset
-            )
+              asset,
+            ),
           )
 
           // return low score, close to desire
@@ -128,7 +128,7 @@ class LDRImage extends FileImage {
             'x' +
             asset.h +
             ' url:' +
-            asset.url
+            asset.url,
         )
         url = asset.url
       }

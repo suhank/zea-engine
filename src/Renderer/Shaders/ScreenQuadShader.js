@@ -29,7 +29,7 @@ void main()
     if(size.y < 0.0)
         v_texCoord.y = 1.0 - v_texCoord.y;
 }
-`
+`,
     )
     this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader(
       'ScreenQuadShader.fragmentShader',
@@ -55,7 +55,7 @@ void main(void) {
     gl_FragColor = fragColor;
 #endif
 }
-`
+`,
     )
     this.finalize()
   }

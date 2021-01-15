@@ -286,7 +286,7 @@ class GLBillboardsPass extends GLPass {
           gl,
           shaderComp.attrs,
           gl.__quadattrbuffers,
-          gl.__quadIndexBuffer
+          gl.__quadIndexBuffer,
         )
       }
 

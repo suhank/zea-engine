@@ -25,5 +25,5 @@ vec4 sampleImagePyramid(vec2 uv, float lod, in sampler2D atlasLayout, in sampler
 }
 
 
-`
+`,
 )

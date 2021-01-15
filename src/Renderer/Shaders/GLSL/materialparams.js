@@ -35,5 +35,5 @@ float getLuminanceParamValue(float value, sampler2D tex, int texType, vec2 texCo
     else
         return luminanceFromRGB(texture2D(tex, texCoord).rgb);
 }
-`
+`,
 )

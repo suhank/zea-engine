@@ -18,5 +18,5 @@ vec2 getQuadVertexPositionFromID(){
         return vec2(0.5, 0.5);
     return vec2(0,0);
 }
-`
+`,
 )

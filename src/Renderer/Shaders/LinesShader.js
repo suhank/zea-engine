@@ -45,7 +45,7 @@ void main(void) {
   vec4 pos = vec4(positions, 1.);
   v_worldPos      = (modelMatrix * pos).xyz;
 }
-`
+`,
     )
 
     this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader(
@@ -116,7 +116,7 @@ void main(void) {
   gl_FragColor = fragColor;
 #endif
 }
-`
+`,
     )
     this.finalize()
   }

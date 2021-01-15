@@ -41,7 +41,7 @@ void main(void) {
     v_weight = 0.0;
   }
 }
-`
+`,
     )
 
     this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader(
@@ -59,7 +59,7 @@ void main(void) {
   gl_FragColor = normalColor;
   gl_FragColor.a = v_weight;
 }
-`
+`,
     )
   }
 }

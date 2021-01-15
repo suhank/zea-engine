@@ -29,7 +29,7 @@ void main(void) {
     gl_Position.z -= 0.001 / gl_Position.w;
     //gl_Position.z *= 0.999;
 }
-`
+`,
     )
 
     this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader(
@@ -49,7 +49,7 @@ void main(void) {
     fragColor = color;
 #endif  
 }
-`
+`,
     )
   }
 }

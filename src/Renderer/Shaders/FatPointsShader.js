@@ -61,7 +61,7 @@ void main(void) {
     gl_Position.z = mix(gl_Position.z, -gl_Position.w, Overlay);
   }
 }
-`
+`,
     )
 
     this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader(
@@ -107,7 +107,7 @@ void main(void) {
   gl_FragColor = fragColor;
 #endif
 }
-`
+`,
     )
   }
 
@@ -201,7 +201,7 @@ void main(void) {
   gl_FragColor = fragColor;
 #endif
 }
-`
+`,
     )
   }
 }
@@ -265,7 +265,7 @@ void main(void) {
   gl_FragColor = fragColor;
 #endif
 }
-`
+`,
     )
   }
 }

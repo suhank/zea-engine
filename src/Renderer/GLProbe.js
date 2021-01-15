@@ -110,14 +110,14 @@ class GLProbe extends GLImageAtlas {
               NUM_SAMPLES: numSamples,
             },
           },
-          gl.shaderopts
-        )
+          gl.shaderopts,
+        ),
       )
       this.__covolverShaderBinding = generateShaderGeomBinding(
         gl,
         covolverShaderComp.attrs,
         gl.__quadattrbuffers,
-        gl.__quadIndexBuffer
+        gl.__quadIndexBuffer,
       )
     }
 

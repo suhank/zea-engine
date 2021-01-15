@@ -12,7 +12,7 @@ const processTextureParams = function (gl, params) {
         ' height:' +
         params.height +
         ' maxSize:' +
-        maxSize
+        maxSize,
     )
   }
 

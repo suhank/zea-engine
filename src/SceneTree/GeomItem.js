@@ -1,4 +1,4 @@
-import { Xfo, Box3 } from '../Math/index'
+import { Xfo } from '../Math/index'
 import { XfoParameter, Mat4Parameter } from './Parameters/index'
 import { MaterialParameter } from './Parameters/MaterialParameter'
 import { GeometryParameter } from './Parameters/GeometryParameter'
@@ -64,9 +64,9 @@ class GeomItem extends BaseGeomItem {
     super(name)
 
     this.__geomParam = this.addParameter(new GeometryParameter('Geometry'))
-    this._setBoundingBoxDirty = this._setBoundingBoxDirty.bind(this)
-    this.__geomParam.on('valueChanged', this._setBoundingBoxDirty)
-    this.__geomParam.on('boundingBoxChanged', this._setBoundingBoxDirty)
+    this.setBoundingBoxDirty = this.setBoundingBoxDirty.bind(this)
+    this.__geomParam.on('valueChanged', this.setBoundingBoxDirty)
+    this.__geomParam.on('boundingBoxChanged', this.setBoundingBoxDirty)
     this.__materialParam = this.addParameter(new MaterialParameter('Material'))
     this.__paramMapping['material'] = this.getParameterIndex(this.__materialParam)
 
@@ -76,7 +76,7 @@ class GeomItem extends BaseGeomItem {
     this.calcGeomMatOperator = new CalcGeomMatOperator(
       this.__globalXfoParam,
       this.__geomOffsetXfoParam,
-      this.__geomMatParam
+      this.__geomMatParam,
     )
 
     if (geometry) this.getParameter('Geometry').loadValue(geometry)
@@ -160,10 +160,6 @@ class GeomItem extends BaseGeomItem {
     const geom = this.__geomParam.getValue()
     if (geom) {
       bbox.addBox3(geom.getBoundingBox(), this.getGeomMat4())
-    } else if (this.geomBBox) {
-      // before the geometries are loaded, we can use the
-      // loaded geomBBox that came in the scene tree.
-      bbox.addBox3(this.geomBBox, this.getGeomMat4())
     }
     return bbox
   }
@@ -259,7 +255,7 @@ class GeomItem extends BaseGeomItem {
     const geomOffsetXfoFlag = 1 << 2
     if (itemFlags & geomOffsetXfoFlag) {
       this.__geomOffsetXfoParam.setValue(
-        new Xfo(reader.loadFloat32Vec3(), reader.loadFloat32Quat(), reader.loadFloat32Vec3())
+        new Xfo(reader.loadFloat32Vec3(), reader.loadFloat32Quat(), reader.loadFloat32Vec3()),
       )
     }
 
@@ -284,11 +280,7 @@ class GeomItem extends BaseGeomItem {
 
     // Note: deprecated value. Not sure if we need to load this here.
     // I think not, but need to test first.
-    if (context.versions['zea-engine'].compare([3, 0, 0]) < 0) {
-      const lightmapCoordOffset = reader.loadFloat32Vec2()
-    } else {
-      this.geomBBox = new Box3(reader.loadFloat32Vec3(), reader.loadFloat32Vec3())
-    }
+    const lightmapCoordOffset = reader.loadFloat32Vec2()
   }
 
   /**

@@ -56,5 +56,5 @@ vec4 toGamma(vec4 v, float gamma) {
 }
 
 
-`
+`,
 )

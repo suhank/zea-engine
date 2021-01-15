@@ -10,5 +10,5 @@ vec3 tonemapFilmic(vec3 color) {
     return (x * (6.2 * x + 0.5)) / (x * (6.2 * x + 1.7) + 0.06);
 }
 
-`
+`,
 )

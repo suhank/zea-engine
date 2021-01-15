@@ -35,7 +35,7 @@ class GLEnvMap extends GLProbe {
       gl,
       envMapShaderComp.attrs,
       gl.__quadattrbuffers,
-      gl.__quadIndexBuffer
+      gl.__quadIndexBuffer,
     )
 
     //

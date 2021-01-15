@@ -11,7 +11,7 @@ class BinReader {
   /**
    * Create a bin reader.
    *
-   * @param {Buffer} data - The data buffer.
+   * @param {ArrayBufferLike} data - The data buffer.
    * @param {number} byteOffset - The byte offset value to start reading the buffer.
    * @param {boolean} isMobileDevice - The isMobileDevice value.
    */

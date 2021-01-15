@@ -25,5 +25,5 @@ vec3 tonemapUncharted2(vec3 color) {
     return curr * whiteScale;
 }
 
-`
+`,
 )

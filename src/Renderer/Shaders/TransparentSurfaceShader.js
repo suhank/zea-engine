@@ -53,7 +53,7 @@ void main(void) {
     v_viewPos       = -viewPos.xyz;
     v_viewNormal    = normalMatrix * normals;
 }
-`
+`,
     )
 
     this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader(
@@ -183,7 +183,7 @@ void main(void) {
     gl_FragColor = fragColor;
 #endif
 }
-`
+`,
     )
     this.finalize()
   }
