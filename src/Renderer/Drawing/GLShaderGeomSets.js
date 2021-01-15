@@ -25,6 +25,9 @@ class GLShaderGeomSets extends EventEmitter {
     this.glHighlightShader = shaders.glselectedshader
     this.glGeomSets = {}
     this.glMaterialLibrary = new GLMaterialLibrary(gl)
+    this.glMaterialLibrary.on('updated', () => {
+      this.emit('updated')
+    })
   }
 
   /**

@@ -228,12 +228,12 @@ void main(void) {
     vec4 matValue2      = getMaterialValue(materialCoords, 2);
 
     material.baseColor     = matValue0.rgb;
-    material.roughness     = matValue1.r;
-    material.metallic      = matValue1.g;
+    material.metallic      = matValue1.r;
+    material.roughness     = matValue1.g;
     material.reflectance   = matValue1.b;
-
-    float opacity       = matValue2.r * matValue0.a;
-    float emission      = matValue1.a;
+    
+    float emission         = matValue1.a;
+    float opacity          = matValue2.r * matValue0.a;
 
 #else // ENABLE_MULTI_DRAW
 
@@ -327,6 +327,7 @@ void main(void) {
     fragColor.rgb = getDebugColor(v_geomId);
     // ///////////////////////
 #endif
+
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION
     fragColor.rgb = toGamma(fragColor.rgb * exposure);
