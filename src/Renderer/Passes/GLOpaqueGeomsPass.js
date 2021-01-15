@@ -83,7 +83,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
           let glShaderGeomSets = this.__glShaderGeomSets[shaderName]
           if (!glShaderGeomSets) {
             const shaders = this.constructShaders(shaderName)
-            glShaderGeomSets = new GLShaderGeomSets(this.__gl, shaders)
+            glShaderGeomSets = new GLShaderGeomSets(this, this.__gl, shaders)
             glShaderGeomSets.on('updated', () => {
               this.__renderer.requestRedraw()
             })
@@ -163,7 +163,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
       // Note: for now leave the material and geom in place. Multiple
       // GeomItems can reference a given material/geom, so we simply wait
       // for them to be destroyed.
-      geomItemSet.removeGeomItem(glGeomItem)
+      geomItemSet.removeGLGeomItem(glGeomItem)
       geomItem.deleteMetadata('geomItemSet')
     }
 

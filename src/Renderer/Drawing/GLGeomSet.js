@@ -38,10 +38,6 @@ class GLGeomSet extends EventEmitter {
 
     // If the allocator ever resizes, then we need to re-upload everything.
     this.attributesAllocator.on('resized', () => {
-      this.dirtyGeomIndices = new Set()
-      for (let i = 0; i < this.geoms.length; i++) {
-        if (this.geoms[i]) this.dirtyGeomIndices.add(i)
-      }
       this.bufferNeedsRealloc = true
     })
     this.attributesAllocator.on('dataReallocated', (event) => {
@@ -302,6 +298,8 @@ class GLGeomSet extends EventEmitter {
    * @param {number} index - The index of the geom to upload
    */
   uploadBuffers(index) {
+    const gl = this.__gl
+
     let geomBuffers = this.geomBuffersTmp[index]
     if (!geomBuffers) {
       const geom = this.getGeom(index)
@@ -314,7 +312,6 @@ class GLGeomSet extends EventEmitter {
     if (count != numVerts) {
       throw new Error('Invalid allocation for this geom')
     }
-    const gl = this.__gl
 
     // eslint-disable-next-line guard-for-in
     for (const attrName in geomBuffers.attrBuffers) {
@@ -357,6 +354,10 @@ class GLGeomSet extends EventEmitter {
       }
       this.shaderBindings = {}
 
+      for (let i = 0; i < this.geoms.length; i++) {
+        if (this.geoms[i]) this.dirtyGeomIndices.add(i)
+      }
+
       this.genBuffers()
       this.bufferNeedsRealloc = false
     }
@@ -385,14 +386,16 @@ class GLGeomSet extends EventEmitter {
    */
   updateDrawIDsBuffer(renderstate) {
     const gl = this.__gl
+
     let texResized = false
+    const unit = renderstate.boundTextures++
+    gl.activeTexture(this.__gl.TEXTURE0 + unit)
 
     // Note: non POT textures caused strange problems here
     // It appears like texSubImage2D may assume a POT texture in the background.
     // Calls to texSubImage2D would generate the error: GL_INVALID_VALUE: Offset overflows texture dimensions
     // even if the coordinates appears to be correct.
     const drawIdsLayoutTextureSize = MathFunctions.nextPow2(Math.ceil(Math.sqrt(this.geoms.length)))
-    // const drawIdsLayoutTextureSize = Math.ceil(Math.sqrt(this.geoms.length))
 
     if (!this.drawIdsLayoutTexture) {
       this.drawIdsLayoutTexture = new GLTexture2D(gl, {
@@ -429,7 +432,6 @@ class GLGeomSet extends EventEmitter {
     }
 
     if (texResized) {
-      this.dirtyDrawIndexIndices = new Set()
       for (let i = 0; i < this.geoms.length; i++) {
         // This can happen for an invisible object added to the GLGeomItemSet.
         // Note: soon invisible items will be held by the renderer until visible.
@@ -438,9 +440,6 @@ class GLGeomSet extends EventEmitter {
         }
       }
     }
-
-    const unit = renderstate.boundTextures++
-    gl.activeTexture(this.__gl.TEXTURE0 + unit)
 
     {
       const tex = this.drawIdsLayoutTexture
@@ -511,6 +510,9 @@ class GLGeomSet extends EventEmitter {
     const gl = this.__gl
     let texResized = false
 
+    const unit = renderstate.boundTextures++
+    gl.activeTexture(this.__gl.TEXTURE0 + unit)
+
     // Note: non POT textures caused strange problems here
     // It appears like texSubImage2D may assume a POT texture in the background.
     // Calls to texSubImage2D would generate the error: GL_INVALID_VALUE: Offset overflows texture dimensions
@@ -558,9 +560,6 @@ class GLGeomSet extends EventEmitter {
     if (texResized) {
       this.dirtyDrawHighlightIndices = new Set(this.highlightIndices)
     }
-
-    const unit = renderstate.boundTextures++
-    gl.activeTexture(this.__gl.TEXTURE0 + unit)
 
     {
       const tex = this.highlightIdsLayoutTexture

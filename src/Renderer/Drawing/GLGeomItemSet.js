@@ -111,10 +111,10 @@ class GLGeomItemSet extends EventEmitter {
   }
 
   /**
-   * The removeGeomItem method.
+   * The removeGLGeomItem method.
    * @param {any} glGeomItem - The glGeomItem value.
    */
-  removeGeomItem(glGeomItem) {
+  removeGLGeomItem(glGeomItem) {
     const index = this.glGeomItems.indexOf(glGeomItem)
     const eventHandlers = this.glgeomItemEventHandlers[index]
     glGeomItem.off('highlightChanged', eventHandlers.highlightChanged)
@@ -135,7 +135,7 @@ class GLGeomItemSet extends EventEmitter {
       this.emit('highlightedCountChanged', { change: -1, count: this.highlightedItems.length })
     }
     this.drawIdsBufferDirty = true
-    // console.log("removeGeomItem:", glGeomItem.getGeomItem().getName(), this.glGeomItems.length)
+    // console.log("removeGLGeomItem:", glGeomItem.getGeomItem().getName(), this.glGeomItems.length)
     if (this.glGeomItems.length == this.glgeomItems_freeIndices.length) {
       this.destroy()
     }

@@ -114,6 +114,7 @@ class Material extends BaseItem {
     }
 
     this.__shaderName = shaderName
+    this.__checkTransparency({})
     this.emit('shaderNameChanged', { shaderName })
   }
 
@@ -165,7 +166,7 @@ class Material extends BaseItem {
   }
 
   __checkTransparency(event) {
-    const { param } = event
+    const { param } = event ? event : {}
 
     let isTransparent = false
     try {
@@ -177,11 +178,15 @@ class Material extends BaseItem {
 
     if (!isTransparent) {
       const opacity = this.getParameter('Opacity')
-      if (param == opacity && (opacity.getValue() < 0.99 || (opacity.getImage && opacity.getImage()))) {
+      if (
+        opacity &&
+        (!param || param == opacity) &&
+        (opacity.getValue() < 0.99 || (opacity.getImage && opacity.getImage()))
+      ) {
         isTransparent = true
       } else {
         const baseColor = this.getParameter('BaseColor')
-        if (param == baseColor) {
+        if (baseColor && (!param || param == baseColor)) {
           if (baseColor.getImage && baseColor.getImage() && baseColor.getImage().format == 'RGBA') {
             isTransparent = true
           } else if (baseColor.getValue().a < 1) {

@@ -23,7 +23,7 @@ class GLIndexedGeomSet extends GLGeomSet {
     this.indicesOffsets = new Int32Array(0)
 
     this.indicesAllocator.on('resize', () => {
-      this.dirtyGeomIndices = new Set(Array.from({ length: this.geoms.length }, (_, i) => i))
+      this.bufferNeedsRealloc = true
     })
     this.indicesAllocator.on('dataReallocated', (event) => {
       // during allocation, a defragment might occur, which means
