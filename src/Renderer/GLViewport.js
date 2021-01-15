@@ -525,6 +525,25 @@ class GLViewport extends GLBaseViewport {
       }
     }
 
+    // //////////////////////////////////////
+    // Double Tap
+    // First check for double tap handlers.
+    // If the manipulator or the viewport handle that
+    // then skip the 'pointerDown' event.
+    const downTime = Date.now()
+    if (downTime - this.__prevDownTime < this.__doubleClickTimeMSParam.getValue()) {
+      if (this.manipulator) {
+        this.manipulator.onPointerDoublePress(event)
+        if (!event.propagating) return
+      }
+      this.emit('pointerDoublePressed', event)
+      if (!event.propagating) return
+    } else {
+      this.__prevDownTime = downTime
+    }
+
+    // //////////////////////////////////////
+
     if (this.capturedItem) {
       this.capturedItem.onPointerDown(event)
       return
@@ -538,26 +557,13 @@ class GLViewport extends GLBaseViewport {
       this.emit('pointerDownOnGeom', event)
     }
 
-    const downTime = Date.now()
-    if (downTime - this.__prevDownTime < this.__doubleClickTimeMSParam.getValue()) {
-      if (this.manipulator) {
-        this.manipulator.onPointerDoublePress(event)
-        if (!event.propagating) return
-      }
+    this.emit('pointerDown', event)
+    if (!event.propagating) return
 
-      this.emit('pointerDoublePressed', event)
-    } else {
-      this.__prevDownTime = downTime
-      if (!event.propagating || this.capturedItem) return
+    if (this.manipulator) {
+      this.manipulator.onPointerDown(event)
 
-      this.emit('pointerDown', event)
       if (!event.propagating) return
-
-      if (this.manipulator) {
-        this.manipulator.onPointerDown(event)
-
-        if (!event.propagating) return
-      }
     }
 
     return false
