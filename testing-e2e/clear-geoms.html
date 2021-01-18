@@ -6,17 +6,18 @@
     <meta charset="UTF-8" />
   </head>
   <body>
-    <div id="app"></div>
+    <canvas class="full-size" id="webglcanvas" />
 
+    <link rel="stylesheet" href="styles/tachyons.min.css" />
+    <link rel="stylesheet" href="styles/main.css" />
     <script src="../dist/index.umd.js"></script>
 
     <script type="module">
       const { GLRenderer, Scene, Vec3, Color, Material, GeomItem, Lines } = zeaEngine
 
-      const domElement = document.getElementById('app')
+      const domElement = document.getElementById('webglcanvas')
 
       const scene = new Scene()
-      // scene.setupGrid(10.0, 10)
 
       const renderer = new GLRenderer(domElement, { hideSplash: true, webglOptions: { antialias: false } })
       renderer.setScene(scene)
