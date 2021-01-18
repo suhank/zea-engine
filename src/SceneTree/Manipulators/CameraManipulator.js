@@ -340,6 +340,7 @@ class CameraManipulator extends BaseTool {
    */
   initDrag(event) {
     const { pointerPos } = event
+    event.setCapture(this)
 
     this.__pointerDown = true
     this.__prevPointerPos = pointerPos
@@ -353,6 +354,7 @@ class CameraManipulator extends BaseTool {
    * @param {MouseEvent} event - The event value.
    */
   endDrag(event) {
+    if (event.getCapture() == this) event.releaseCapture()
     this.__dragging = 0
     this.__pointerDown = false
   }
@@ -524,10 +526,10 @@ class CameraManipulator extends BaseTool {
       event.aimDistance = event.intersectionData.dist
       this.emit('aimingFocus', event)
       camera.emit('aimingFocus', event)
-    }
 
-    event.stopPropagation()
-    event.preventDefault()
+      event.stopPropagation()
+      event.preventDefault()
+    }
   }
 
   /**
@@ -566,11 +568,13 @@ class CameraManipulator extends BaseTool {
    * @param {MouseEvent} event - The mouse event that occurs.
    */
   onPointerMove(event) {
-    if (event.pointerType === POINTER_TYPES.mouse) this._onMouseMove(event)
-    if (event.pointerType === POINTER_TYPES.touch) this._onTouchMove(event)
+    if (this.__dragging == 1) {
+      if (event.pointerType === POINTER_TYPES.mouse) this._onMouseMove(event)
+      if (event.pointerType === POINTER_TYPES.touch) this._onTouchMove(event)
 
-    event.stopPropagation()
-    event.preventDefault()
+      event.stopPropagation()
+      event.preventDefault()
+    }
   }
 
   /**
@@ -580,10 +584,6 @@ class CameraManipulator extends BaseTool {
    */
   _onMouseMove(event) {
     if (!this.__pointerDown) return
-
-    if (this.__dragging == 2) {
-      this.initDrag(event)
-    }
 
     const pointerPos = event.pointerPos
     // this.__calculatingDragAction = true
@@ -699,6 +699,26 @@ class CameraManipulator extends BaseTool {
 
         if (Object.keys(this.__ongoingTouches).length == 0) this.endDrag(event)
       }
+    }
+  }
+
+  /**
+   * Causes an event to occur when the mouse pointer is moved into this viewport
+   * @param {MouseEvent|TouchEvent} event - The event that occurs.
+   */
+  onPointerEnter(event) {}
+
+  /**
+   * Causes an event to occur when the mouse pointer is moved out of this viewport
+   * @param {MouseEvent|TouchEvent} event - The event that occurs.
+   */
+  onPointerLeave(event) {
+    // If the pointer leaves the viewport, then we will no longer receive key up events,
+    // so we must immediately disable movement here.
+    if (this.__keysPressed.length > 0) {
+      this.__keysPressed = []
+      this.__velocity.set(0, 0, 0)
+      this.__keyboardMovement = false
     }
   }
 
@@ -821,6 +841,7 @@ class CameraManipulator extends BaseTool {
       default:
         return
     }
+    event.stopPropagation()
     this.__keysPressed.push(key)
     if (!this.__keyboardMovement) {
       this.__keyboardMovement = true
@@ -859,6 +880,7 @@ class CameraManipulator extends BaseTool {
       default:
         return
     }
+    event.stopPropagation()
     const keyIndex = this.__keysPressed.indexOf(key)
     this.__keysPressed.splice(keyIndex, 1)
     if (this.__keysPressed.length == 0) this.__keyboardMovement = false

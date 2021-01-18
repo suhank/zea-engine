@@ -1,4 +1,4 @@
-import { Xfo } from '../Math/index'
+import { Xfo, Box3 } from '../Math/index'
 import { XfoParameter, Mat4Parameter } from './Parameters/index'
 import { MaterialParameter } from './Parameters/MaterialParameter'
 import { GeometryParameter } from './Parameters/GeometryParameter'
@@ -160,6 +160,10 @@ class GeomItem extends BaseGeomItem {
     const geom = this.__geomParam.getValue()
     if (geom) {
       bbox.addBox3(geom.getBoundingBox(), this.getGeomMat4())
+    } else if (this.geomBBox) {
+      // before the geometries are loaded, we can use the
+      // loaded geomBBox that came in the scene tree.
+      bbox.addBox3(this.geomBBox, this.getGeomMat4())
     }
     return bbox
   }
@@ -280,7 +284,11 @@ class GeomItem extends BaseGeomItem {
 
     // Note: deprecated value. Not sure if we need to load this here.
     // I think not, but need to test first.
-    const lightmapCoordOffset = reader.loadFloat32Vec2()
+    if (context.versions['zea-engine'].compare([3, 0, 0]) < 0) {
+      const lightmapCoordOffset = reader.loadFloat32Vec2()
+    } else {
+      this.geomBBox = new Box3(reader.loadFloat32Vec3(), reader.loadFloat32Vec3())
+    }
   }
 
   /**
