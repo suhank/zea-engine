@@ -1,7 +1,6 @@
 describe('bounding-boxes-cow', () => {
   it('Captures a snapshot', () => {
     cy.visit('testing-e2e/bounding-boxes-cow.html')
-    cy.get('canvas').percySnapshot('bounding-boxes-cow')
   })
 
   it('Captures snapshots of variants', () => {
