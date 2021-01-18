@@ -451,9 +451,6 @@ class GLViewport extends GLBaseViewport {
    */
   releaseCapture() {
     this.capturedItem = null
-    // TODO: This should be a request, wbihch is fulfilled next time
-    // a frame is dranw.
-    this.renderGeomDataFbo()
   }
 
   /**
@@ -475,9 +472,6 @@ class GLViewport extends GLBaseViewport {
 
     event.releaseCapture = () => {
       this.capturedItem = null
-      // TODO: This should be a request, which is fulfilled next time
-      // a frame is drawn.
-      this.renderGeomDataFbo()
     }
   }
 
@@ -505,6 +499,25 @@ class GLViewport extends GLBaseViewport {
       }
     }
 
+    // //////////////////////////////////////
+    // Double Tap
+    // First check for double tap handlers.
+    // If the manipulator or the viewport handle that
+    // then skip the 'pointerDown' event.
+    const downTime = Date.now()
+    if (downTime - this.__prevDownTime < this.__doubleClickTimeMSParam.getValue()) {
+      if (this.manipulator) {
+        this.manipulator.onPointerDoublePress(event)
+        if (!event.propagating) return
+      }
+      this.emit('pointerDoublePressed', event)
+      if (!event.propagating) return
+    } else {
+      this.__prevDownTime = downTime
+    }
+
+    // //////////////////////////////////////
+
     if (this.capturedItem) {
       this.capturedItem.onPointerDown(event)
       return
@@ -518,26 +531,13 @@ class GLViewport extends GLBaseViewport {
       this.emit('pointerDownOnGeom', event)
     }
 
-    const downTime = Date.now()
-    if (downTime - this.__prevDownTime < this.__doubleClickTimeMSParam.getValue()) {
-      if (this.manipulator) {
-        this.manipulator.onPointerDoublePress(event)
-        if (!event.propagating) return
-      }
+    this.emit('pointerDown', event)
+    if (!event.propagating) return
 
-      this.emit('pointerDoublePressed', event)
-    } else {
-      this.__prevDownTime = downTime
-      if (!event.propagating || this.capturedItem) return
+    if (this.manipulator) {
+      this.manipulator.onPointerDown(event)
 
-      this.emit('pointerDown', event)
       if (!event.propagating) return
-
-      if (this.manipulator) {
-        this.manipulator.onPointerDown(event)
-
-        if (!event.propagating) return
-      }
     }
 
     return false
@@ -610,12 +610,14 @@ class GLViewport extends GLBaseViewport {
       event.pointerRay = event.touchRay[0]
     }
 
-    event.intersectionData = this.getGeomDataAtPos(event.pointerPos, event.pointerRay)
+    // Note: the Captured item might be a tool, which might not need to have
+    // the geom under the pointer. e.g. the CameraManipulator during a drag.
     if (this.capturedItem) {
       this.capturedItem.onPointerMove(event)
       return
     }
 
+    event.intersectionData = this.getGeomDataAtPos(event.pointerPos, event.pointerRay)
     if (event.intersectionData) {
       if (event.intersectionData.geomItem != this.pointerOverItem) {
         if (this.pointerOverItem) {

@@ -340,6 +340,7 @@ class CameraManipulator extends BaseTool {
    */
   initDrag(event) {
     const { pointerPos } = event
+    event.setCapture(this)
 
     this.__pointerDown = true
     this.__prevPointerPos = pointerPos
@@ -353,6 +354,7 @@ class CameraManipulator extends BaseTool {
    * @param {MouseEvent} event - The event value.
    */
   endDrag(event) {
+    if (event.getCapture() == this) event.releaseCapture()
     this.__dragging = 0
     this.__pointerDown = false
   }
@@ -524,10 +526,10 @@ class CameraManipulator extends BaseTool {
       event.aimDistance = event.intersectionData.dist
       this.emit('aimingFocus', event)
       camera.emit('aimingFocus', event)
-    }
 
-    event.stopPropagation()
-    event.preventDefault()
+      event.stopPropagation()
+      event.preventDefault()
+    }
   }
 
   /**
@@ -566,11 +568,13 @@ class CameraManipulator extends BaseTool {
    * @param {MouseEvent} event - The mouse event that occurs.
    */
   onPointerMove(event) {
-    if (event.pointerType === POINTER_TYPES.mouse) this._onMouseMove(event)
-    if (event.pointerType === POINTER_TYPES.touch) this._onTouchMove(event)
+    if (this.__dragging == 1) {
+      if (event.pointerType === POINTER_TYPES.mouse) this._onMouseMove(event)
+      if (event.pointerType === POINTER_TYPES.touch) this._onTouchMove(event)
 
-    event.stopPropagation()
-    event.preventDefault()
+      event.stopPropagation()
+      event.preventDefault()
+    }
   }
 
   /**
@@ -580,10 +584,6 @@ class CameraManipulator extends BaseTool {
    */
   _onMouseMove(event) {
     if (!this.__pointerDown) return
-
-    if (this.__dragging == 2) {
-      this.initDrag(event)
-    }
 
     const pointerPos = event.pointerPos
     // this.__calculatingDragAction = true
