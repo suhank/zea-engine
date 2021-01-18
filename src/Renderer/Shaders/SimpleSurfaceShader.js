@@ -189,7 +189,7 @@ void main(void) {
 #ifdef ENABLE_MULTI_DRAW
 
     vec2 materialCoords = v_geomItemData.zw;
-    vec4 baseColor = getMaterialValue(materialCoords, 0);
+    vec4 baseColor = toLinear(getMaterialValue(materialCoords, 0));
     vec4 matValue1 = getMaterialValue(materialCoords, 1);
     float opacity       = baseColor.a * matValue1.r;
     float emission      = matValue1.g;
@@ -197,7 +197,7 @@ void main(void) {
 #else // ENABLE_MULTI_DRAW
 
 #ifndef ENABLE_TEXTURES
-    vec4 baseColor      = BaseColor;
+    vec4 baseColor      = toLinear(BaseColor);
     float emission      = EmissiveStrength;
     float opacity       = baseColor.a * Opacity;
 #else

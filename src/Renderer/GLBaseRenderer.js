@@ -602,27 +602,6 @@ class GLBaseRenderer extends ParameterOwner {
     // Note: the following returns UNSIGNED_BYTE even if the browser supports float.
     // const implType = this.__gl.getParameter(this.__gl.IMPLEMENTATION_COLOR_READ_TYPE);
     // this.__floatGeomBuffer = (implType == this.__gl.FLOAT);
-
-    // //////////////////////////////////
-    // Bind a default texture.
-    // Note: If shaders have sampler2D uniforms, but we don't bind textures, then
-    // they get assigned texture0. If we have no textures bound at all, then
-    // we get warnings saying.
-    // There is no texture bound to the unit 0
-    // Bind a default texture to unit 0 simply to avoid these warnings.
-    // this.__texture0 = new GLTexture2D(this.__gl, {
-    //     format: 'RGB',
-    //     type: 'UNSIGNED_BYTE',
-    //     width: 1,
-    //     height: 1,
-    //     filter: 'NEAREST',
-    //     mipMapped: false,
-    //     wrap: 'CLAMP_TO_EDGE',
-    //     data: new Uint8Array(3)
-    // });
-
-    // // gl.activeTexture(this.__gl.TEXTURE0);
-    // this.__gl.bindTexture(this.__gl.TEXTURE_2D, this.__texture0.getTexHdl());
   }
 
   /**

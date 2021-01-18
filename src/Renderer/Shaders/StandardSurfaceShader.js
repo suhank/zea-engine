@@ -227,7 +227,7 @@ void main(void) {
     vec4 matValue1      = getMaterialValue(materialCoords, 1);
     vec4 matValue2      = getMaterialValue(materialCoords, 2);
 
-    material.baseColor     = matValue0.rgb;
+    material.baseColor     = toLinear(matValue0.rgb);
     material.metallic      = matValue1.r;
     material.roughness     = matValue1.g;
     material.reflectance   = matValue1.b;
@@ -238,7 +238,7 @@ void main(void) {
 #else // ENABLE_MULTI_DRAW
 
 #ifndef ENABLE_TEXTURES
-    material.baseColor     = BaseColor.rgb;
+    material.baseColor     = toLinear(BaseColor.rgb);
     float emission         = EmissiveStrength;
 
 #ifdef ENABLE_PBR
