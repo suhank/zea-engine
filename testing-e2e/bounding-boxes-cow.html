@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>bounding-boxes-cow - Zea Engine</title>
+
+    <link href="zea-logo.png" rel="shortcut icon" />
+
+    <link rel="stylesheet" href="styles/tachyons.min.css" />
+    <link rel="stylesheet" href="styles/main.css" />
+
+    <script src="../dist/index.umd.js"></script>
+
+    <script type="module">
+      const { Vec3, EulerAngles, Xfo, ObjAsset, Scene, GLRenderer, GLBoundingBoxPass } = zeaEngine
+
+      const canvas = document.querySelector('#renderer')
+
+      const scene = new Scene()
+      scene.setupGrid(10.0, 10)
+
+      const renderer = new GLRenderer(canvas, { hideSplash: true, webglOptions: { antialias: false } })
+      const boundingBoxPass = new GLBoundingBoxPass()
+      renderer.addPass(boundingBoxPass)
+      renderer.setScene(scene)
+
+      const objAsset = new ObjAsset('cow')
+
+      // objAsset.getParameter('splitObjects').setValue(true)
+      objAsset.getParameter('splitGroupsIntoObjects').setValue(true)
+      objAsset.getParameter('FilePath').setUrl('data/cow.obj')
+      scene.getRoot().addChild(objAsset)
+
+      const xfo = new Xfo()
+      xfo.ori.setFromAxisAndAngle(new Vec3(0, 0, 1), 1)
+      // xfo.tr.set(0, 0, 3.55)
+      // xfo.ori.setFromEulerAngles(new EulerAngles(90 * (Math.PI / 180), 0, 0))
+      objAsset.getParameter('GlobalXfo').setValue(xfo)
+
+      // let angle = -1
+      // setInterval(() => {
+      //   angle += 0.1
+      //   const xfo = new Xfo()
+      //   xfo.tr.set(6, Math.cos(angle) * 2, 0)
+      //   xfo.ori.setFromAxisAndAngle(new Vec3(0, 0, 1), angle)
+      //   objAsset.getParameter('LocalXfo').setValue(xfo)
+      // }, 50)
+
+      boundingBoxPass.addTreeItem(objAsset, true)
+
+      objAsset.on('loaded', () => {
+        renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, 2.7), new Vec3(0, 0, 0.4))
+        renderer.frameAll()
+        window.postMessage(`done-loading`)
+      })
+
+      // {{{ Messages handler.
+      const handleMessage = (event) => {
+        const { data } = event
+
+        if (data === 'variant-01') {
+          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, -2.7), new Vec3(0, 0, 0.4))
+          renderer.frameAll()
+          window.postMessage(`done-${data}`)
+        } else if (data === 'variant-02') {
+          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-2, -2, 2.7), new Vec3(0, 0, 0.4))
+          renderer.frameAll()
+          window.postMessage(`done-${data}`)
+        }
+      }
+
+      window.addEventListener('message', handleMessage, false)
+      // }}}
+    </script>
+  </head>
+  <body>
+    <canvas class="full-size" id="renderer" />
+  </body>
+</html>
