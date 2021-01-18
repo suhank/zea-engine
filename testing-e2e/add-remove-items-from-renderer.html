@@ -43,11 +43,20 @@
 
         if (data === 'variant-01') {
           scene.getRoot().removeChild(scene.getRoot().getChildIndex(geomItem0))
+          renderer.once('redrawOccurred', () => {
+            window.postMessage(`done-${data}`)
+          })
         } else if (data === 'variant-02') {
           scene.getRoot().removeChild(scene.getRoot().getChildIndex(geomItem1))
+          renderer.once('redrawOccurred', () => {
+            window.postMessage(`done-${data}`)
+          })
         } else if (data === 'variant-03') {
           scene.getRoot().addChild(geomItem0)
           scene.getRoot().addChild(geomItem1)
+          renderer.once('redrawOccurred', () => {
+            window.postMessage(`done-${data}`)
+          })
         }
       }
 
