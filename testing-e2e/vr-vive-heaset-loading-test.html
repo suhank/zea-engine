@@ -53,19 +53,17 @@
         const { data } = event
 
         if (data === 'variant-01') {
-          scene.getRoot().removeChild(scene.getRoot().getChildIndex(asset))
-          // renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(0.5, 0.5, -0.5), new Vec3(0, 0, 0))
-          // renderer.frameAll()
-          // renderer.once('redrawOccurred', () => {
-          //   window.postMessage(`done-${data}`)
-          // })
+          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(0.5, 0.5, -0.5), new Vec3(0, 0, 0))
+          renderer.frameAll()
+          renderer.once('redrawOccurred', () => {
+            window.postMessage(`done-${data}`)
+          })
         } else if (data === 'variant-02') {
-          scene.getRoot().addChild(asset)
-          // renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-0.5, -0.5, 0.5), new Vec3(0, 0, 0))
-          // renderer.frameAll()
-          // renderer.once('redrawOccurred', () => {
-          //   window.postMessage(`done-${data}`)
-          // })
+          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-0.5, -0.5, 0.5), new Vec3(0, 0, 0))
+          renderer.frameAll()
+          renderer.once('redrawOccurred', () => {
+            window.postMessage(`done-${data}`)
+          })
         }
       }
 
