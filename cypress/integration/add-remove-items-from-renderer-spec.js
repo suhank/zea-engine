@@ -1,7 +1,6 @@
 describe('add-remove-items-from-renderer', () => {
   it('Captures a snapshot', () => {
     cy.visit('testing-e2e/add-remove-items-from-renderer.html')
-    cy.get('canvas').percySnapshot('add-remove-items-from-renderer')
   })
 
   it('Captures snapshots of variants', () => {
