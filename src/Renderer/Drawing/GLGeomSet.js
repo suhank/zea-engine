@@ -98,9 +98,11 @@ class GLGeomSet extends EventEmitter {
 
     const geomDataChanged = () => {
       this.dirtyGeomIndices.add(index)
+      this.emit('updated')
     }
     const geomDataTopologyChanged = () => {
       this.dirtyGeomIndices.add(index)
+      this.emit('updated')
     }
     geom.on('geomDataChanged', geomDataChanged)
     geom.on('geomDataTopologyChanged', geomDataTopologyChanged)
@@ -143,6 +145,7 @@ class GLGeomSet extends EventEmitter {
       geom.off('geomDataTopologyChanged', geomDataTopologyChanged)
 
       this.removeGeom(index)
+      this.emit('updated')
     }
 
     glGeomItemSet.on('drawCountChanged', drawCountChanged)
