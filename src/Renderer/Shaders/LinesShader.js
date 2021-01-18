@@ -177,10 +177,6 @@ void main(void) {
   static getSelectedShaderName() {
     return 'StandardSurfaceSelectedGeomsShader'
   }
-
-  static isTransparent() {
-    return true
-  }
 }
 
 Registry.register('LinesShader', LinesShader)
