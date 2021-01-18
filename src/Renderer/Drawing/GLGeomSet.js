@@ -553,10 +553,10 @@ class GLGeomSet extends EventEmitter {
         mipMapped: false,
       })
     } else if (
-      this.highlightedIdsTexture.width < highlightedIdsTextureSize ||
-      this.highlightedIdsTexture.height < highlightedIdsTextureSize
+      this.highlightedIdsTexture.width < highlightIdsTextureSize ||
+      this.highlightedIdsTexture.height < highlightIdsTextureSize
     ) {
-      this.highlightedIdsTexture.resize(highlightedIdsTextureSize, highlightedIdsTextureSize)
+      this.highlightedIdsTexture.resize(highlightIdsTextureSize, highlightIdsTextureSize)
       texResized = true
     }
 
