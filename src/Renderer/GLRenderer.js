@@ -320,8 +320,8 @@ class GLRenderer extends GLBaseRenderer {
     if (this.__fbo) {
       this.__fbo.resize(width, height)
     }
-    if (this.__highlightedGeomsBufferFbo) {
-      this.__highlightedGeomsBufferFbo.resize(width, height)
+    if (this.__highlightedGeomsBuffer) {
+      this.__highlightedGeomsBuffer.resize(width, height)
     }
   }
 
@@ -661,11 +661,6 @@ class GLRenderer extends GLBaseRenderer {
       this.__highlightedGeomsBufferFbo.bindForWriting(renderstate)
       this.__highlightedGeomsBufferFbo.clear()
 
-      // We need to explicitly clear the depth buffer,
-      // It seems that sometimes the function above does
-      // not do the trick.
-      // gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
       gl.disable(gl.BLEND)
       gl.enable(gl.DEPTH_TEST)
       gl.depthFunc(gl.LESS)
@@ -679,10 +674,10 @@ class GLRenderer extends GLBaseRenderer {
       // Now render the outlines to the entire screen.
       gl.viewport(...renderstate.region)
 
-      // Turn this on to debug the hilight data buffer.
+      // Turn this on to debug the highlight data buffer.
       // {
-      //   gl.screenQuad.bindShader(renderstate);
-      //   gl.screenQuad.draw(renderstate, this.__highlightedGeomsBuffer);
+      //   gl.screenQuad.bindShader(renderstate)
+      //   gl.screenQuad.draw(renderstate, this.__highlightedGeomsBuffer)
       // }
 
       this.__outlineShader.bind(renderstate)
