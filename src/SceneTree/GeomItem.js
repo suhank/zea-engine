@@ -60,7 +60,7 @@ class GeomItem extends BaseGeomItem {
    * @param {BaseGeom} geometry - The geometry value.
    * @param {Material} material - The material value.
    */
-  constructor(name, geometry = undefined, material = undefined) {
+  constructor(name, geometry = undefined, material = undefined, xfo = undefined) {
     super(name)
 
     this.__geomParam = this.addParameter(new GeometryParameter('Geometry'))
@@ -81,6 +81,7 @@ class GeomItem extends BaseGeomItem {
 
     if (geometry) this.getParameter('Geometry').loadValue(geometry)
     if (material) this.getParameter('Material').loadValue(material)
+    if (xfo) this.getParameter('LocalXfo').setValue(xfo)
   }
 
   // ////////////////////////////////////////
@@ -242,6 +243,7 @@ class GeomItem extends BaseGeomItem {
       this.getParameter('Geometry').loadValue(geom)
     } else {
       this.geomIndex = geomIndex
+      this.assetItem = context.assetItem
       const onGeomLoaded = (event) => {
         const { range } = event
         if (geomIndex >= range[0] && geomIndex < range[1]) {
@@ -326,7 +328,7 @@ class GeomItem extends BaseGeomItem {
     super.copyFrom(src, context)
 
     if (!src.getParameter('Geometry').getValue() && src.geomIndex != -1) {
-      const geomLibrary = context.assetItem.getGeometryLibrary()
+      const geomLibrary = src.assetItem.getGeometryLibrary()
       const geomIndex = src.geomIndex
       const onGeomLoaded = (event) => {
         const { range } = event

@@ -7,7 +7,7 @@ import { resourceLoader } from './resourceLoader.js'
 
 // The GeomLibrary parses geometry data using workers.
 // This can be difficult to debug, so you can disable this
-// by setting the following boolena to false, and uncommenting
+// by setting the following boolean to false, and uncommenting
 // the import of parseGeomsBinary
 const multiThreadParsing = true
 
@@ -30,6 +30,24 @@ class GeomLibrary extends EventEmitter {
 
     this.__workers = []
     this.__nextWorker = 0
+
+    this.numCores = window.navigator.hardwareConcurrency
+    if (!this.numCores) {
+      if (isMobile) this.numCores = 4
+      else this.numCores = 6
+    }
+    this.numCores-- // always leave one main thread code spare.
+
+    this.loadCount = 0
+    this.queue = []
+
+    this.on('streamFileParsed', (event) => {
+      this.loadCount--
+      if (this.loadCount < this.numCores && this.queue.length) {
+        const { geomFileID, geomsData } = this.queue.pop()
+        this.readBinaryBuffer(geomFileID, geomsData.buffer, this.loadContext)
+      }
+    })
 
     if (multiThreadParsing) {
       for (let i = 0; i < 3; i++) {
@@ -55,6 +73,63 @@ class GeomLibrary extends EventEmitter {
    */
   isLoaded() {
     return this.__loadedCount == this.__numGeoms
+  }
+
+  /**
+   * Loads a single geometry file for this GeomLibrary.
+   *
+   * @private
+   *
+   * @param {number} geomFileID - The index of the file to load
+   * @param {boolean} addWork - If true, the progress bar is incremented and decremented.
+   * @returns {Promise} the promise resoolves once the file is loaded, but not parsed.
+   */
+  loadGeomFile(geomFileID, addWork = false) {
+    if (addWork) resourceLoader.addWork('GeomLibrary', 1)
+    return new Promise((resolve) => {
+      const geomFileUrl = this.basePath + geomFileID + '.zgeoms'
+
+      resourceLoader.loadFile('archive', geomFileUrl).then((entries) => {
+        const geomsData = entries[Object.keys(entries)[0]]
+
+        if (this.loadCount < this.numCores) {
+          this.loadCount++
+          this.readBinaryBuffer(geomFileID, geomsData.buffer, this.loadContext)
+        } else {
+          this.queue.splice(0, 0, {
+            geomFileID,
+            geomsData,
+          })
+        }
+
+        const streamFileParsed = (event) => {
+          if (event.key == geomFileID) {
+            resourceLoader.addWorkDone('GeomLibrary', 1)
+            this.off('streamFileParsed', streamFileParsed)
+            resolve()
+          }
+        }
+        this.on('streamFileParsed', streamFileParsed)
+      })
+    })
+  }
+
+  /**
+   * Loads the geometry files for this GeomLibrary.
+   * @param {string} basePath - The base path of the file. (this is theURL of the zcad file without its extension.)
+   * @param {number} numGeomFiles - The number of geom files to load in the stream
+   * @param {object} context - The value param.
+   */
+  loadGeomFilesStream(basePath, numGeoms, numGeomFiles, context) {
+    resourceLoader.addWork('GeomLibrary', numGeomFiles)
+
+    this.__numGeoms = numGeoms
+    this.basePath = basePath
+    this.loadContext = context
+
+    for (let geomFileID = 0; geomFileID < numGeomFiles; geomFileID++) {
+      this.loadGeomFile(geomFileID, false)
+    }
   }
 
   /**
@@ -138,6 +213,9 @@ class GeomLibrary extends EventEmitter {
     const isMobile = SystemDesc.isMobileDevice
     const reader = new BinReader(buffer, 0, isMobile)
     const numGeoms = reader.loadUInt32()
+
+    // Geoms within a given file are offset into the array of geometries of the library.
+    // Note: One day, the geom lirbary should already know all the offsets for each file before loading.
     const geomIndexOffset = reader.loadUInt32()
     this.__streamInfos[key] = {
       total: numGeoms,
@@ -145,7 +223,7 @@ class GeomLibrary extends EventEmitter {
     }
 
     if (numGeoms == 0) {
-      this.emit('streamFileParsed', {})
+      this.emit('streamFileParsed', { key, geomCount: 0 })
       return numGeoms
     }
     if (this.__numGeoms == -1) {
@@ -158,50 +236,26 @@ class GeomLibrary extends EventEmitter {
     const toc = reader.loadUInt32Array(numGeoms)
 
     if (multiThreadParsing) {
-      let numCores = window.navigator.hardwareConcurrency
-      if (!numCores) {
-        if (isMobile) numCores = 2
-        else numCores = 4
-      }
-      const numGeomsPerWorkload = Math.max(1, Math.floor(numGeoms / numCores + 1))
-
-      // TODO: Use SharedArrayBuffer once available.
-      // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SharedArrayBuffer
-
-      let offset = 0
-      while (offset < numGeoms) {
-        const bufferSlice_start = toc[offset]
-        let bufferSlice_end
-        let geomsRange
-        if (offset + numGeomsPerWorkload >= numGeoms) {
-          geomsRange = [offset, numGeoms]
-          bufferSlice_end = buffer.byteLength
-        } else {
-          geomsRange = [offset, offset + numGeomsPerWorkload]
-          bufferSlice_end = toc[geomsRange[1]]
-        }
-        const bufferSlice = buffer.slice(bufferSlice_start, bufferSlice_end)
-        offset += numGeomsPerWorkload
-
-        // ////////////////////////////////////////////
-        // Multi Threaded Parsing
-          this.__workers[this.__nextWorker].postMessage(
-            {
-              key,
-              toc,
-              geomIndexOffset,
-              geomsRange,
-              isMobileDevice: reader.isMobileDevice,
-              bufferSlice,
-              genBuffersOpts: this.__genBuffersOpts,
-              context: {
-                versions: context.versions,
-              },
-            },
-            [bufferSlice]
-          )
-          this.__nextWorker = (this.__nextWorker + 1) % this.__workers.length
-      }
+      const bufferSlice = buffer.slice(toc[0], buffer.byteLength)
+      // ////////////////////////////////////////////
+      // Multi Threaded Parsing
+      this.__workers[this.__nextWorker].postMessage(
+        {
+          key,
+          toc,
+          geomIndexOffset,
+          geomsRange: [0, numGeoms],
+          isMobileDevice: reader.isMobileDevice,
+          bufferSlice,
+          genBuffersOpts: this.__genBuffersOpts,
+          context: {
+            versions: context.versions,
+          },
+        },
+        [bufferSlice]
+      )
+      this.__nextWorker = (this.__nextWorker + 1) % this.__workers.length
+      return numGeoms
     } else {
       // ////////////////////////////////////////////
       // Main Threaded Parsing
@@ -277,7 +331,7 @@ class GeomLibrary extends EventEmitter {
     streamInfo.done += loaded
     // console.log(key + " Loaded:" + streamInfo.done + " of :" + streamInfo.total);
     if (streamInfo.done == streamInfo.total) {
-      this.emit('streamFileParsed', { count: 1 })
+      this.emit('streamFileParsed', { key, geomCount: streamInfo.done })
     }
 
     // Once all the geoms from all the files are loaded and parsed

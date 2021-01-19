@@ -41,7 +41,6 @@ class Plane extends ProceduralMesh {
     if (addNormals) this.addVertexAttribute('normals', Vec3)
     if (addTextureCoords) this.addVertexAttribute('texCoords', Vec2)
 
-    
     this.topologyParams.push('DetailX')
     this.topologyParams.push('DetailY')
   }
@@ -59,10 +58,10 @@ class Plane extends ProceduralMesh {
     let quadId = 0
     for (let i = 0; i < detailY; i++) {
       for (let j = 0; j < detailX; j++) {
-        const v0 = (detailX + 1) * (i + 1) + j
-        const v1 = (detailX + 1) * (i + 1) + (j + 1)
-        const v2 = (detailX + 1) * i + (j + 1)
-        const v3 = (detailX + 1) * i + j
+        const v0 = (detailX + 1) * (i + 1) + (j + 1)
+        const v1 = (detailX + 1) * (i + 1) + j
+        const v2 = (detailX + 1) * i + j
+        const v3 = (detailX + 1) * i + (j + 1)
         this.setFaceVertexIndices(quadId, [v0, v1, v2, v3])
         quadId = quadId + 1
       }

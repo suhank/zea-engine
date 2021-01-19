@@ -1,8 +1,8 @@
-import { Vec2, Vec3 } from '../Math/index.js'
+import { Vec2, Vec3 } from '../../Math/index.js'
 import { GLGeom } from './GLGeom.js'
 import { generateShaderGeomBinding } from './GeomShaderBinding.js'
-import { GLTexture2D } from './GLTexture2D.js'
-import { Lines } from '../SceneTree/Geometry/Lines'
+import { GLTexture2D } from '../GLTexture2D.js'
+import { Lines } from '../../SceneTree/Geometry/Lines'
 
 /** Class representing GL lines.
  * @extends GLGeom
@@ -20,10 +20,6 @@ class GLLines extends GLGeom {
     this.__numSegIndices = 0
     this.__numVertices = 0
     this.__buffersNeedUpload = true
-
-    this.isFatLine =
-      this.__geom.lineThickness != undefined ||
-      (this.__geom instanceof Lines && this.__geom.hasVertexAttribute('lineThickness'))
   }
 
   /**
@@ -33,13 +29,6 @@ class GLLines extends GLGeom {
   genBuffers(opts) {
     this.genBufferOpts = opts
     this.__buffersNeedUpload = true
-
-    // Note: For Fat lines to be draw, we need a special shader bound.
-    // Ideally we would wait till the shader is bound before
-    // deciding to upload fat buffers. However, lazy uploads caused
-    // a strange behavior where lines would not be displayed when first drawn.
-    // To avoid this issue, we force the upload immediately
-    if (this.isFatLine) this.genBuffersLazy(true)
   }
 
   /**
@@ -49,7 +38,6 @@ class GLLines extends GLGeom {
   updateBuffers(opts) {
     this.genBufferOpts = opts
     this.__buffersNeedUpload = true
-    if (this.isFatLine) this.genBuffersLazy(true)
   }
 
   /**
@@ -80,8 +68,9 @@ class GLLines extends GLGeom {
    * @param {*} fatLines
    * @memberof GLLines
    */
-  genBuffersLazy(fatLines) {
+  genBuffersLazy(renderstate, fatLines) {
     const gl = this.__gl
+
     const geomBuffers = this.__geom.genBuffers()
     const indices = geomBuffers.indices
     const numVertsChanged = geomBuffers.numVertices != this.__numVertices
@@ -94,6 +83,9 @@ class GLLines extends GLGeom {
         this.fatBuffers = { glattrbuffers: {} }
         this.fatBuffers.glattrbuffers.vertexIDs = gl.__quadattrbuffers.vertexIDs
       }
+
+      const unit = renderstate.boundTextures++
+      gl.activeTexture(this.__gl.TEXTURE0 + unit)
 
       this.fatBuffers.drawCount = indices.length / 2
 
@@ -166,6 +158,9 @@ class GLLines extends GLGeom {
       }
       this.__numSegIndices = indices.length
       this.__numVertices = geomBuffers.numVertices
+
+      gl.bindTexture(gl.TEXTURE_2D, null)
+      renderstate.boundTextures--
     } else {
       if (!this.__indexBuffer) {
         this.__indexBuffer = gl.createBuffer()
@@ -230,7 +225,7 @@ class GLLines extends GLGeom {
     const gl = this.__gl
     const unifs = renderstate.unifs
     if (unifs.LineThickness && gl.floatTexturesSupported) {
-      if (this.__buffersNeedUpload) this.genBuffersLazy(true)
+      if (this.__buffersNeedUpload) this.genBuffersLazy(renderstate, true)
 
       let shaderBinding = this.__shaderBindings[renderstate.shaderkey]
       if (!shaderBinding) {
@@ -254,7 +249,7 @@ class GLLines extends GLGeom {
 
       return true
     } else {
-      if (this.__buffersNeedUpload) this.genBuffersLazy(false)
+      if (this.__buffersNeedUpload) this.genBuffersLazy(renderstate, false)
       return super.bind(renderstate)
     }
   }

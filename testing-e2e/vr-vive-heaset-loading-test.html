@@ -36,6 +36,10 @@
         const Controller = asset.getChildByName('Controller')
         Controller.getParameter('LocalXfo').setValue(new Xfo(new Vec3(-200, 0, 0)))
 
+        const Controller2 = Controller.clone()
+        Controller2.getParameter('LocalXfo').setValue(new Xfo(new Vec3(200, 0, 0)))
+        asset.addChild(Controller2, false)
+
         window.postMessage('done-loading')
       })
       scene.getRoot().addChild(asset)

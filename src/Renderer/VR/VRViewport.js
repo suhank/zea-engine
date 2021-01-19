@@ -138,19 +138,28 @@ class VRViewport extends GLBaseViewport {
   }
 
   /**
+   * Turns on and off the spectator mode.
+   * Note: specator mode renders the scene an extra time to our regular viewport.
+   * @param {boolean} state -  true for enabling spectator mode, else false
+   */
+  setSpectatorMode(state) {
+    if (!state) {
+      // when disabling spectator mode, clear the screen to the background color.
+      const gl = this.__renderer.gl
+      gl.bindFramebuffer(gl.FRAMEBUFFER, null)
+      gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight)
+      gl.clearColor(...this.__backgroundColor.asArray())
+      gl.colorMask(true, true, true, true)
+      gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
+    }
+    this.spectatorMode = state
+  }
+
+  /**
    * The __startSession method.
    * @private
    */
   __startSession() {
-    const gl = this.__renderer.gl
-    gl.bindFramebuffer(gl.FRAMEBUFFER, null)
-
-    // Clear the framebuffer
-    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
-
-    // Set the viewport to the whole canvas
-    gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight)
-
     const onAnimationFrame = (t, frame) => {
       if (this.__session) {
         this.__session.requestAnimationFrame(onAnimationFrame)
@@ -169,19 +178,20 @@ class VRViewport extends GLBaseViewport {
       return Promise.resolve()
     }
     // If the HMD has changed, reset it.
-    const hmd = localStorage.getItem('hmd')
+    let hmd = localStorage.getItem('ZeaEngine_XRDevice')
+    if (!hmd) {
+      hmd = 'Vive'
+      localStorage.setItem('ZeaEngine_XRDevice', hmd)
+    }
     if (this.__hmd != hmd) {
       this.__hmdAssetPromise = undefined
-    }
-
-    if (this.__hmdAssetPromise) return this.__hmdAssetPromise
+    } else if (this.__hmdAssetPromise) return this.__hmdAssetPromise
 
     this.__hmd = hmd
     this.__hmdAssetPromise = new Promise((resolve, reject) => {
-      // let profileList = xrInputSource.profiles;
       // ////////////////////////////////////////////
       // Resources
-      if (!SystemDesc.isMobileDevice) {
+      {
         let hmdAssetId
         switch (hmd) {
           case 'Vive':
@@ -194,7 +204,6 @@ class VRViewport extends GLBaseViewport {
             hmdAssetId = 'ZeaEngine/Vive.vla'
             break
         }
-
         if (!resourceLoader.getCommonResource(hmdAssetId)) {
           // Cache the asset so if an avatar needs to display,
           // it can use the same asset.
@@ -203,7 +212,7 @@ class VRViewport extends GLBaseViewport {
           resourceLoader.setCommonResource(hmdAssetId, asset)
         }
         this.__vrAsset = resourceLoader.getCommonResource(hmdAssetId)
-        this.__vrAsset.once('loaded', () => {
+        const bind = () => {
           const materialLibrary = this.__vrAsset.getMaterialLibrary()
           const materialNames = materialLibrary.getMaterialNames()
           for (const name of materialNames) {
@@ -214,8 +223,10 @@ class VRViewport extends GLBaseViewport {
             }
           }
           resolve(this.__vrAsset)
-        })
-      } else reject(new Error('Mobile devices to not load HMD resources'))
+        }
+        if (this.__vrAsset.isLoaded()) bind()
+        else this.__vrAsset.once('loaded', bind)
+      }
     })
     return this.__hmdAssetPromise
   }
@@ -225,6 +236,11 @@ class VRViewport extends GLBaseViewport {
    */
   startPresenting() {
     return new Promise((resolve, reject) => {
+      if (!this.spectatorMode) {
+        // clear the main viewport if spectator mode is off.
+        this.setSpectatorMode(false)
+      }
+
       // https://github.com/immersive-web/webxr/blob/master/explainer.md
 
       const gl = this.__renderer.gl
@@ -237,6 +253,20 @@ class VRViewport extends GLBaseViewport {
           })
           .then((session) => {
             this.__renderer.__xrViewportPresenting = true
+
+            const viewport = this.__renderer.getActiveViewport()
+            const camera = viewport.getCamera()
+            const cameraXfo = camera.getParameter('GlobalXfo').getValue()
+
+            // Convert Y-Up to Z-Up.
+            const stageXfo = new Xfo()
+            stageXfo.tr = cameraXfo.tr.clone()
+            stageXfo.tr.z -= 1.3 // assume sitting, and move the floor down a bit
+            const dir = cameraXfo.ori.getZaxis()
+            dir.z = 0
+            dir.normalizeInPlace()
+            stageXfo.ori.setFromDirectionAndUpvector(dir.negate(), new Vec3(0, 0, 1))
+            this.setXfo(stageXfo)
 
             session.addEventListener('end', (event) => {
               this.__stageTreeItem.setVisible(false)
@@ -263,13 +293,6 @@ class VRViewport extends GLBaseViewport {
               }
             }
 
-            /**
-             * The __createController method.
-             * @param {any} id - The id value.
-             * @param {any} inputSource - The inputSource value.
-             * @return {any} - The return value.
-             * @private
-             */
             const createController = (inputSource) => {
               console.log('creating controller:', inputSource.handedness, inputSource.profiles)
               const id = this.controllers.length
@@ -348,15 +371,6 @@ class VRViewport extends GLBaseViewport {
       }
 
       startPresenting()
-      // if (SystemDesc.isMobileDevice) {
-      //   startPresenting()
-      // } else {
-      //   // Note: we should not need to load the resources here
-      //   // They could be loaded only once the controllers are
-      //   // being created. However, I can't see the controllers if
-      //   // the loading is defered
-      //   this.loadHMDResources().then(startPresenting)
-      // }
     })
   }
 
@@ -512,7 +526,7 @@ class VRViewport extends GLBaseViewport {
 
     // If spectator mode is active, draw a 3rd person view of the scene to
     // the WebGL context's default backbuffer.
-    if (this.spectatorMode && this.tick % 5 == 0) {
+    if (this.spectatorMode && !SystemDesc.isMobileDevice && this.tick % 5 == 0) {
       const viewport = this.__renderer.getActiveViewport()
       // display the head in spectator mode.
       this.__vrhead.setVisible(true)

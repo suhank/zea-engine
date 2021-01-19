@@ -15,7 +15,17 @@ class VRHead {
     this.__treeItem = new TreeItem('VRHead')
     stageTreeItem.addChild(this.__treeItem)
 
-    xrvp.loadHMDResources().then((assetItem) => {
+    this.__mat4 = new Mat4()
+    this.__localXfo = new Xfo()
+  }
+
+  /**
+   * The Set wether the HMB is visible in rendering or not. Used in spectator rendering.
+   * @param {boolean} state - The visibility value.
+   */
+  setVisible(state) {
+    if (state && !this.hmdGeomItem) {
+      const assetItem = this.__xrvp.getAsset()
       if (!assetItem) return
       this.hmdGeomItem = assetItem.getChildByName('HMD').clone({ assetItem })
       if (this.hmdGeomItem) {
@@ -26,21 +36,12 @@ class VRHead {
             new Vec3(0.001, 0.001, 0.001) // VRAsset units are in mm.
           )
         )
-        this.hmdGeomItem.getParameter('Visible').setValue(false)
         this.__treeItem.addChild(this.hmdGeomItem, false)
       }
-    })
-
-    this.__mat4 = new Mat4()
-    this.__localXfo = new Xfo()
-  }
-
-  /**
-   * The Set wether the HMB is visible in rendering or not. Used in spectator rendering.
-   * @param {boolean} state - The visibility value.
-   */
-  setVisible(state) {
-    this.hmdGeomItem.getParameter('Visible').setValue(state)
+    }
+    if (this.hmdGeomItem) {
+      this.hmdGeomItem.getParameter('Visible').setValue(state)
+    }
   }
 
   /**

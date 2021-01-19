@@ -83,7 +83,10 @@ class GLShader extends BaseItem {
       if (shaderopts.repl) {
         for (const key in shaderopts.repl) glsl = StringFunctions.replaceAll(glsl, key, shaderopts.repl[key])
       }
-      if (shaderopts.defines) glsl = shaderopts.defines + glsl
+      if (shaderopts.directives) {
+        const defines = shaderopts.directives.join('\n') + '\n'
+        glsl = defines + glsl
+      }
     }
 
     let prefix
@@ -314,13 +317,23 @@ class GLShader extends BaseItem {
   finalize() {}
 
   /**
+   * Checks to see if the engine is compiled for the target specified by the key
+   * @param {any} key - The key value.
+   * @return {boolean} - The return value.
+   */
+  isCompiledForTarget(key) {
+    const shaderkey = key ? key : this.getId()
+    return this.__shaderProgramHdls[shaderkey] != undefined
+  }
+
+  /**
    * The compileForTarget method.
    * @param {any} key - The key value.
    * @param {any} shaderopts - The shaderopts value.
    * @return {any} - The return value.
    */
   compileForTarget(key, shaderopts) {
-    const shaderkey = key ? this.__id + key : this.__id
+    const shaderkey = key ? key : this.getId()
     let shaderCompilationResult = this.__shaderProgramHdls[shaderkey]
     if (!shaderCompilationResult) {
       if (shaderCompilationResult !== false) {
@@ -348,7 +361,7 @@ class GLShader extends BaseItem {
   bind(renderstate, key) {
     const gl = this.__gl
 
-    if (renderstate.glshader != this) {
+    if (renderstate.glShader != this) {
       const shaderCompilationResult = this.compileForTarget(key, renderstate.shaderopts)
       if (shaderCompilationResult === false) {
         console.warn(this.constructor.name + ' is not compiled for ' + key)
@@ -358,14 +371,14 @@ class GLShader extends BaseItem {
       const shaderProgramHdl = shaderCompilationResult.shaderProgramHdl
 
       gl.useProgram(shaderProgramHdl)
-      renderstate.glshader = this
+      renderstate.glShader = this
       renderstate.shaderkey = shaderCompilationResult.shaderkey
       renderstate.unifs = shaderCompilationResult.unifs
       renderstate.attrs = shaderCompilationResult.attrs
 
       renderstate.boundTextures = 0
       // Make sure we clear the binding cached.
-      renderstate.glgeom = undefined
+      renderstate.glGeom = undefined
 
       // Once the shader has been bound, we allow the renderer to bind any
       // of its global uniform values. (e.g. env map values etc...)
@@ -383,6 +396,10 @@ class GLShader extends BaseItem {
    * @return {any} - The return value.
    */
   unbind(renderstate) {
+    delete renderstate.glShader
+    delete renderstate.shaderkey
+    delete renderstate.unifs
+    delete renderstate.attrs
     return true
   }
 
@@ -391,7 +408,7 @@ class GLShader extends BaseItem {
 
   /**
    * The getParamDeclarations method.
-   * @return {any} - The return value.
+   * @return {array} - an array of param declarations that the shader expects the material tp provide.
    */
   static getParamDeclarations() {
     return []
@@ -399,13 +416,26 @@ class GLShader extends BaseItem {
 
   /**
    * The getGeomDataShaderName method.
+   * @return {string} - an array of param declarations that the shader expects the material tp provide.
    */
-  static getGeomDataShaderName() {}
+  static getGeomDataShaderName() {
+    return null
+  }
 
   /**
    * The getSelectedShaderName method.
    */
-  static getSelectedShaderName() {}
+  static getSelectedShaderName() {
+    return null
+  }
+
+  /**
+   * The supportsInstancing method.
+   * @return {boolean} - return false for shaders that cannot be rendered in instanced mode.
+   */
+  static supportsInstancing() {
+    return true
+  }
 
   // /////////////////////////////////
   // Destroy
@@ -416,6 +446,7 @@ class GLShader extends BaseItem {
    */
   destroy() {
     const gl = this.__gl
+    // eslint-disable-next-line guard-for-in
     for (const key in this.__shaderProgramHdls) {
       const shaderCompilationResult = this.__shaderProgramHdls[key]
       gl.deleteProgram(shaderCompilationResult.shaderProgramHdl)

@@ -1,5 +1,5 @@
 import { GLGeom } from './GLGeom.js'
-import '../SceneTree/Geometry/Mesh.js'
+import '../../SceneTree/Geometry/Mesh.js'
 
 /** Class representing a GL mesh.
  * @extends GLGeom

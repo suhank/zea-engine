@@ -44,15 +44,8 @@ class VLAAsset extends AssetItem {
     this.__fileParam.on('valueChanged', () => {
       this.geomsLoaded = false
       this.loadDataFile(
-        () => {
-          if (!this.loaded) this.emit('loaded', {})
-        },
-        () => {
-          // if(!this.loaded){
-          //   this.emit('loaded', {});
-          // }
-          // this.emit('geomsLoaded', {})
-        }
+        () => {},
+        () => {}
       )
     })
   }
@@ -113,7 +106,15 @@ class VLAAsset extends AssetItem {
 
     // preload in case we don't have embedded geoms.
     // completed by geomLibrary.on('loaded' ..
-    resourceLoader.addWork(fileId, 1)
+    resourceLoader.addWork('VLAAsset', 1)
+    // To ensure that the resource loader knows when
+    // parsing is done, we listen to the GeomLibrary streamFileLoaded
+    // signal. This is fired once the entire stream is parsed.
+    this.__geomLibrary.on('loaded', () => {
+      // A chunk of geoms are now parsed, so update the resource loader.
+      resourceLoader.addWorkDone('VLAAsset', 1)
+      onGeomsDone()
+    })
 
     resourceLoader.loadFile('archive', url).then((entries) => {
       // Load the tree file. This file contains
@@ -131,45 +132,15 @@ class VLAAsset extends AssetItem {
 
       numGeomsFiles = this.readBinary(treeReader, context)
 
-      onDone()
+      this.loaded = true
+      this.emit('loaded')
 
       if (numGeomsFiles == 0 && entries.geoms) {
         this.__geomLibrary.readBinaryBuffer(fileId, entries.geoms.buffer, context)
-        onGeomsDone()
       } else {
-        // Note: Lets just load all the goem files in parallel.
-        loadAllGeomFiles()
+        const basePath = folder + stem
+        this.__geomLibrary.loadGeomFilesStream(basePath, numGeomFiles, context)
       }
-    })
-
-    const loadAllGeomFiles = () => {
-      const promises = []
-      for (let geomFileID = 0; geomFileID < numGeomsFiles; geomFileID++) {
-        // console.log('LoadingGeom File:', geomFileID)
-        const geomFileUrl = folder + stem + geomFileID + '.vlageoms'
-        promises.push(loadGeomsfile(geomFileUrl, context))
-      }
-      Promise.all(promises).then(() => {
-        if (onGeomsDone) onGeomsDone()
-      })
-    }
-
-    const loadGeomsfile = (geomFileUrl) => {
-      return new Promise((resolve) => {
-        resourceLoader.loadFile('archive', geomFileUrl).then((entries) => {
-          const geomsData = entries[Object.keys(entries)[0]]
-          this.__geomLibrary.readBinaryBuffer(fileId, geomsData.buffer, context)
-          resolve()
-        })
-      })
-    }
-
-    // To ensure that the resource loader knows when
-    // parsing is done, we listen to the GeomLibrary streamFileLoaded
-    // signal. This is fired once the entire stream is parsed.
-    this.__geomLibrary.on('loaded', () => {
-      // A chunk of geoms are now parsed, so update the resource loader.
-      resourceLoader.addWorkDone(fileId, 1)
     })
   }
 

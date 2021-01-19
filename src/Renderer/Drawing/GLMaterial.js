@@ -1,4 +1,4 @@
-import { EventEmitter } from '../Utilities/index'
+import { EventEmitter } from '../../Utilities/index'
 import { MaterialShaderBinding } from './MaterialShaderBinding.js'
 
 /** Class representing a GL material.
@@ -10,13 +10,13 @@ class GLMaterial extends EventEmitter {
    * Create a GL material.
    * @param {any} gl - The gl value.
    * @param {any} material - The material value.
-   * @param {any} glshader - The glshader value.
+   * @param {any} glShader - The glShader value.
    */
-  constructor(gl, material, glshader) {
+  constructor(gl, material, glShader) {
     super()
     this.__gl = gl
     this.__material = material
-    this.__glshader = glshader
+    this.__glshader = glShader
 
     this.__shaderBindings = {}
 

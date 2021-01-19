@@ -113,6 +113,9 @@ class MathFunctions {
    * @return {number} -
    */
   static nextPow2(value) {
+    if (this.fract(Math.log2(value)) == 0) {
+      return value
+    }
     let exp = 0
 
     while (value > 0) {

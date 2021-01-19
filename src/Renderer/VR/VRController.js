@@ -49,6 +49,20 @@ class VRController {
       this.__activeVolumeSize = 0.04
 
       if (inputSource.targetRayMode == 'tracked-pointer') {
+        // Once we have an input profile, we can determine the XR Device in use.
+        switch (inputSource.profiles[0]) {
+          case 'htc-vive':
+            localStorage.setItem('ZeaEngine_XRDevice', 'Vive')
+            break
+          case 'oculus-touch':
+          case 'oculus-touch-v2':
+          case 'oculus-touch-v3':
+            localStorage.setItem('ZeaEngine_XRDevice', 'Oculus')
+            break
+          default:
+            break
+        }
+
         //   // Use the fetchProfile method from the motionControllers library
         //   // to find the appropriate glTF mesh path for this controller.
         //   fetchProfile(inputSource, DEFAULT_PROFILES_PATH).then(({ profile, assetPath }) => {

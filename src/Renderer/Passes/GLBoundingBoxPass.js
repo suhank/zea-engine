@@ -1,7 +1,7 @@
 import { Color, Vec3, Vec4 } from '../../Math/index'
 import { LinesCuboid, TreeItem } from '../../SceneTree/index'
 import { BoundingBoxShader } from '../Shaders/BoundingBoxShader.js'
-import { GLLines } from '../GLLines.js'
+import { GLLines } from '../Drawing/GLLines.js'
 import { GLPass, PassType } from './GLPass.js'
 import { GLTexture2D } from '../GLTexture2D.js'
 import { MathFunctions } from '../../Utilities/MathFunctions'

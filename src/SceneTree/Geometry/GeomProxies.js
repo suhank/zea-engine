@@ -70,6 +70,7 @@ class BaseProxy extends EventEmitter {
       delete this.__buffers.indices
     }
     if (this.__buffers.attrBuffers) {
+      // eslint-disable-next-line guard-for-in
       for (const attrName in this.__buffers.attrBuffers) {
         const attrData = this.__buffers.attrBuffers[attrName]
         freeData.attrBuffers[attrName] = this.__buffers.attrBuffers[attrName]
@@ -108,6 +109,15 @@ class BaseProxy extends EventEmitter {
    */
   setMetadata(key, metaData) {
     this.__metaData.set(key, metaData)
+  }
+
+  /**
+   * Removes metadata for a given key.
+   *
+   * @param {string} key - The key value.
+   */
+  deleteMetadata(key) {
+    this.__metaData.delete(key)
   }
 }
 

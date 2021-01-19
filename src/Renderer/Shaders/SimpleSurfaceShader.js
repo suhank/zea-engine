@@ -9,14 +9,24 @@ import './GLSL/drawItemTexture.js'
 import './GLSL/modelMatrix.js'
 import './GLSL/materialparams.js'
 
+/** A simple shader with no support for PBR or textures
+ * @ignore
+ */
 class SimpleSurfaceShader extends GLShader {
-  constructor(name) {
-    super(name)
+  /**
+   * Create a SimpleSurfaceShader
+   */
+  constructor(gl) {
+    super(gl)
 
     this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader(
       'SimpleSurfaceShader.vertexShader',
       `
 precision highp float;
+
+#ifdef ENABLE_MULTI_DRAW
+// #define DEBUG_GEOM_ID
+#endif
 
 attribute vec3 positions;
 attribute vec3 normals;
@@ -42,15 +52,22 @@ varying vec3 v_viewNormal;
 varying vec2 v_textureCoord;
 #endif
 varying vec3 v_worldPos;
+#ifdef DEBUG_GEOM_ID
+varying float v_geomId;
+#endif
 
 void main(void) {
     int drawItemId = getDrawItemId();
     v_drawItemId = float(drawItemId);
     v_geomItemData  = getInstanceData(drawItemId);
+    #ifdef DEBUG_GEOM_ID
+    v_geomId = float(gl_DrawID);
+    #endif // DEBUG_GEOM_ID
 
-    vec4 pos = vec4(positions, 1.);
     mat4 modelMatrix = getModelMatrix(drawItemId);
     mat4 modelViewMatrix = viewMatrix * modelMatrix;
+
+    vec4 pos = vec4(positions, 1.);
     vec4 viewPos    = modelViewMatrix * pos;
     gl_Position     = projectionMatrix * viewPos;
 
@@ -72,12 +89,19 @@ void main(void) {
       'SimpleSurfaceShader.fragmentShader',
       `
 precision highp float;
+#ifdef ENABLE_MULTI_DRAW
+// #define DEBUG_GEOM_ID
+#endif
 
 <%include file="math/constants.glsl"/>
 <%include file="drawItemTexture.glsl"/>
 <%include file="cutaways.glsl"/>
 <%include file="stack-gl/gamma.glsl"/>
 <%include file="materialparams.glsl"/>
+
+#ifdef DEBUG_GEOM_ID
+<%include file="debugColors.glsl"/>
+#endif
 
 uniform color cutColor;
 
@@ -105,8 +129,14 @@ varying vec3 v_viewNormal;
 varying vec2 v_textureCoord;
 #endif
 varying vec3 v_worldPos;
+#ifdef DEBUG_GEOM_ID
+varying float v_geomId;
+#endif
+/* VS Outputs */
 
 uniform mat4 cameraMatrix;
+
+#ifndef ENABLE_MULTI_DRAW
 
 uniform color BaseColor;
 uniform float Opacity;
@@ -119,7 +149,9 @@ uniform sampler2D OpacityTex;
 uniform int OpacityTexType;
 uniform sampler2D EmissiveStrengthTex;
 uniform int EmissiveStrengthTexType;
-#endif
+#endif // ENABLE_TEXTURES
+
+#endif // ENABLE_MULTI_DRAW
 
 
 #ifdef ENABLE_ES3
@@ -149,9 +181,23 @@ void main(void) {
             return;
         }
     }
+    
+
+    //////////////////////////////////////////////
+    // Material
+
+#ifdef ENABLE_MULTI_DRAW
+
+    vec2 materialCoords = v_geomItemData.zw;
+    vec4 baseColor = toLinear(getMaterialValue(materialCoords, 0));
+    vec4 matValue1 = getMaterialValue(materialCoords, 1);
+    float opacity       = baseColor.a * matValue1.r;
+    float emission      = matValue1.g;
+
+#else // ENABLE_MULTI_DRAW
 
 #ifndef ENABLE_TEXTURES
-    vec4 baseColor      = BaseColor;
+    vec4 baseColor      = toLinear(BaseColor);
     float emission      = EmissiveStrength;
     float opacity       = baseColor.a * Opacity;
 #else
@@ -159,6 +205,8 @@ void main(void) {
     float opacity       = baseColor.a * getLuminanceParamValue(Opacity, OpacityTex, OpacityTexType, v_textureCoord);
     float emission      = getLuminanceParamValue(EmissiveStrength, EmissiveStrengthTex, EmissiveStrengthTexType, v_textureCoord);
 #endif
+
+#endif // ENABLE_MULTI_DRAW
 
     // Hacky simple irradiance. 
     vec3 viewVector = normalize(mat3(cameraMatrix) * normalize(v_viewPos));
@@ -177,6 +225,13 @@ void main(void) {
     vec4 fragColor;
 #endif
     fragColor = vec4((ndotv * baseColor.rgb) + (emission * baseColor.rgb), opacity);
+
+#ifdef DEBUG_GEOM_ID
+    // ///////////////////////
+    // Debug Draw ID (this correlates to GeomID within a GLGeomSet)
+    fragColor.rgb = getDebugColor(v_geomId);
+    // ///////////////////////
+#endif
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION
     fragColor.rgb = toGamma(fragColor.rgb);
@@ -206,17 +261,29 @@ void main(void) {
     return paramDescs
   }
 
+  /**
+   * The getPackedMaterialData method.
+   * @param {any} material - The material param.
+   * @return {any} - The return value.
+   */
+  static getPackedMaterialData(material) {
+    const matData = new Float32Array(8)
+    const baseColor = material.getParameter('BaseColor').getValue()
+    matData[0] = baseColor.r
+    matData[1] = baseColor.g
+    matData[2] = baseColor.b
+    matData[3] = baseColor.a
+    matData[4] = material.getParameter('Opacity').getValue()
+    matData[5] = material.getParameter('EmissiveStrength').getValue()
+    return matData
+  }
+
   static getGeomDataShaderName() {
     return 'StandardSurfaceGeomDataShader'
   }
 
   static getSelectedShaderName() {
     return 'StandardSurfaceSelectedGeomsShader'
-  }
-
-  bind(renderstate, key) {
-    if (renderstate.pass == 'MULTIPLY') return false
-    return super.bind(renderstate, key)
   }
 }
 

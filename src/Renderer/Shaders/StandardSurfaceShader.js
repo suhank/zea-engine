@@ -23,6 +23,10 @@ class StandardSurfaceShader extends GLShader {
       `
 precision highp float;
 
+#ifdef ENABLE_MULTI_DRAW
+// #define DEBUG_GEOM_ID
+#endif
+
 attribute vec3 positions;
 attribute vec3 normals;
 #ifdef ENABLE_TEXTURES
@@ -47,6 +51,9 @@ varying vec3 v_viewNormal;
 varying vec2 v_textureCoord;
 #endif
 varying vec3 v_worldPos;
+#ifdef DEBUG_GEOM_ID
+varying float v_geomId;
+#endif
 /* VS Outputs */
 
 
@@ -54,6 +61,9 @@ void main(void) {
     int drawItemId = getDrawItemId();
     v_drawItemId = float(drawItemId);
     v_geomItemData = getInstanceData(drawItemId);
+    #ifdef DEBUG_GEOM_ID
+    v_geomId = float(gl_DrawID);
+    #endif // DEBUG_GEOM_ID
 
     vec4 pos = vec4(positions, 1.);
     mat4 modelMatrix = getModelMatrix(drawItemId);
@@ -78,6 +88,9 @@ void main(void) {
       'StandardSurfaceShader.fragmentShader',
       `
 precision highp float;
+#ifdef ENABLE_MULTI_DRAW
+// #define DEBUG_GEOM_ID
+#endif
 
 <%include file="math/constants.glsl"/>
 <%include file="drawItemTexture.glsl"/>
@@ -86,6 +99,10 @@ precision highp float;
 
 <%include file="stack-gl/gamma.glsl"/>
 <%include file="materialparams.glsl"/>
+
+#ifdef DEBUG_GEOM_ID
+<%include file="debugColors.glsl"/>
+#endif
 
 <%include file="GGX_Specular.glsl"/>
 <%include file="PBRSurfaceRadiance.glsl"/>
@@ -99,6 +116,9 @@ varying vec3 v_viewNormal;
 varying vec2 v_textureCoord;
 #endif
 varying vec3 v_worldPos;
+#ifdef DEBUG_GEOM_ID
+varying float v_geomId;
+#endif
 /* VS Outputs */
 
 
@@ -125,6 +145,8 @@ uniform float exposure;
 
 uniform mat4 cameraMatrix;
 
+#ifndef ENABLE_MULTI_DRAW
+
 uniform color BaseColor;
 uniform float Roughness;
 uniform float Metallic;
@@ -149,13 +171,14 @@ uniform int ReflectanceTexType;
 uniform sampler2D NormalTex;
 uniform int NormalTexType;
 // uniform float NormalScale;
-#endif
+#endif // ENABLE_PBR
 
 uniform sampler2D EmissiveStrengthTex;
 uniform int EmissiveStrengthTexType;
 
 
-#endif
+#endif // ENABLE_TEXTURES
+#endif // ENABLE_MULTI_DRAW
 
 #ifdef ENABLE_ES3
 out vec4 fragColor;
@@ -185,11 +208,37 @@ void main(void) {
         }
     }
 
+    vec3 viewNormal = normalize(v_viewNormal);
+    //vec3 surfacePos = -v_viewPos;
+    vec3 viewVector = normalize(mat3(cameraMatrix) * normalize(v_viewPos));
+    vec3 normal = normalize(mat3(cameraMatrix) * viewNormal);
+    if(dot(normal, viewVector) < 0.0){
+        normal = -normal;
+        // Note: this line can be used to debug inverted meshes.
+        //material.baseColor = vec3(1.0, 0.0, 0.0);
+    }
+
 
     MaterialParams material;
 
+#ifdef ENABLE_MULTI_DRAW
+    vec2 materialCoords = v_geomItemData.zw;
+    vec4 matValue0      = getMaterialValue(materialCoords, 0);
+    vec4 matValue1      = getMaterialValue(materialCoords, 1);
+    vec4 matValue2      = getMaterialValue(materialCoords, 2);
+
+    material.baseColor     = toLinear(matValue0.rgb);
+    material.metallic      = matValue1.r;
+    material.roughness     = matValue1.g;
+    material.reflectance   = matValue1.b;
+    
+    float emission         = matValue1.a;
+    float opacity          = matValue2.r * matValue0.a;
+
+#else // ENABLE_MULTI_DRAW
+
 #ifndef ENABLE_TEXTURES
-    material.BaseColor     = BaseColor.rgb;
+    material.baseColor     = toLinear(BaseColor.rgb);
     float emission         = EmissiveStrength;
 
 #ifdef ENABLE_PBR
@@ -208,12 +257,10 @@ void main(void) {
     material.roughness     = getLuminanceParamValue(Roughness, RoughnessTex, RoughnessTexType, texCoord);
     material.metallic      = getLuminanceParamValue(Metallic, MetallicTex, MetallicTexType, texCoord);
     material.reflectance   = getLuminanceParamValue(Reflectance, ReflectanceTex, ReflectanceTexType, texCoord);
-#endif
+#endif // ENABLE_PBR
     float emission         = getLuminanceParamValue(EmissiveStrength, EmissiveStrengthTex, EmissiveStrengthTexType, texCoord);
-#endif
-
-    vec3 viewNormal = normalize(v_viewNormal);
-    //vec3 surfacePos = -v_viewPos;
+#endif // ENABLE_TEXTURES
+    float opacity           = Opacity * BaseColor.a;
 
 #ifdef ENABLE_TEXTURES
 #ifdef ENABLE_PBR
@@ -221,16 +268,9 @@ void main(void) {
         vec3 textureNormal_tangentspace = normalize(texture2D(NormalTex, texCoord).rgb * 2.0 - 1.0);
         viewNormal = normalize(mix(viewNormal, textureNormal_tangentspace, 0.3));
     }
-#endif
-#endif
-
-    vec3 viewVector = normalize(mat3(cameraMatrix) * normalize(v_viewPos));
-    vec3 normal = normalize(mat3(cameraMatrix) * viewNormal);
-    if(dot(normal, viewVector) < 0.0){
-        normal = -normal;
-        // Note: this line can be used to debug inverted meshes.
-        //material.baseColor = vec3(1.0, 0.0, 0.0);
-    }
+#endif // ENABLE_PBR
+#endif // ENABLE_TEXTURES
+#endif // ENABLE_MULTI_DRAW
 
 #ifndef ENABLE_ES3
     vec4 fragColor;
@@ -241,7 +281,6 @@ void main(void) {
     bool headLightMode = testFlag(envMapFlags, ENVMAP_FLAG_HEADLIGHT);
 #endif
 
-    float opacity = Opacity * BaseColor.a;
     if (opacity < 1.0) {
         vec3 radiance;
 #ifdef ENABLE_PBR
@@ -282,6 +321,14 @@ void main(void) {
         fragColor = vec4(radiance + (emission * material.baseColor), 1.0);
     }
 
+#ifdef DEBUG_GEOM_ID
+    // ///////////////////////
+    // Debug Draw ID (this correlates to GeomID within a GLGeomSet)
+    fragColor.rgb = getDebugColor(v_geomId);
+    // ///////////////////////
+#endif
+
+
 #ifdef ENABLE_INLINE_GAMMACORRECTION
     fragColor.rgb = toGamma(fragColor.rgb * exposure);
 #endif
@@ -308,7 +355,7 @@ void main(void) {
     // It also has direct relation to IOR so we need to dial one or the other
     // For simplicity sake, we don't need to touch this value as metalic can dictate it
     // such that non metallic is mostly around (0.01-0.025) and metallic around (0.7-0.85)
-    paramDescs.push({ name: 'Reflectance', defaultValue: 0.1, range: [0, 1] })
+    paramDescs.push({ name: 'Reflectance', defaultValue: 0.01, range: [0, 1] })
     paramDescs.push({
       name: 'EmissiveStrength',
       defaultValue: 0.0,
@@ -318,6 +365,26 @@ void main(void) {
 
     // paramDescs.push({ name: 'TexCoordScale', defaultValue: 1.0, texturable: false });
     return paramDescs
+  }
+
+  /**
+   * The getPackedMaterialData method.
+   * @param {any} material - The material param.
+   * @return {any} - The return value.
+   */
+  static getPackedMaterialData(material) {
+    const matData = new Float32Array(12)
+    const baseColor = material.getParameter('BaseColor').getValue()
+    matData[0] = baseColor.r
+    matData[1] = baseColor.g
+    matData[2] = baseColor.b
+    matData[3] = baseColor.a
+    matData[4] = material.getParameter('Metallic').getValue()
+    matData[5] = material.getParameter('Roughness').getValue()
+    matData[6] = material.getParameter('Reflectance').getValue()
+    matData[7] = material.getParameter('EmissiveStrength').getValue()
+    matData[8] = material.getParameter('Opacity').getValue()
+    return matData
   }
 
   static getGeomDataShaderName() {

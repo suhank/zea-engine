@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>multi_draw - Zea Engine</title>
+
+    <link href="zea-logo.png" rel="shortcut icon" />
+
+    <link rel="stylesheet" href="styles/tachyons.min.css" />
+    <link rel="stylesheet" href="styles/main.css" />
+
+    <script src="../dist/index.umd.js"></script>
+
+    <script type="module">
+      const {
+        GLRenderer,
+        Scene,
+        Vec3,
+        Xfo,
+        Color,
+        Mesh,
+        Sphere,
+        Cuboid,
+        Cone,
+        Circle,
+        PointGrid,
+        Material,
+        GeomItem,
+      } = zeaEngine
+
+      const canvas = document.querySelector('#renderer')
+
+      const scene = new Scene()
+      const renderer = new GLRenderer(canvas, { hideSplash: true, webglOptions: { antialias: false } })
+      renderer.setScene(scene)
+
+      const material1 = new Material('surfaces', 'StandardSurfaceShader')
+      material1.getParameter('BaseColor').setValue(new Color(1, 1, 0))
+
+      const material2 = new Material('surfaces', 'StandardSurfaceShader')
+      material2.getParameter('BaseColor').setValue(new Color(0, 1, 0))
+
+      const material3 = new Material('surfaces', 'SimpleSurfaceShader')
+      material3.getParameter('BaseColor').setValue(new Color(1, 0, 1))
+
+      const material4 = new Material('surfaces', 'PointsShader')
+      material4.getParameter('BaseColor').setValue(new Color(1, 0, 1))
+
+      const addShape = (name, shape, pos, material) => {
+        const geomItem = new GeomItem(name + 'Item', shape, material)
+        geomItem.getParameter('LocalXfo').setValue(new Xfo(pos))
+        scene.getRoot().addChild(geomItem)
+
+        return geomItem
+      }
+      const makeTriangle = () => {
+        const mesh = new Mesh()
+        mesh.setNumVertices(3)
+        mesh.setFaceCounts([1])
+        mesh.setFaceVertexIndices(0, [0, 1, 2])
+        const positions = mesh.getVertexAttribute('positions')
+        positions.getValueRef(0).set(0.5, 0.0, 0.0)
+        positions.getValueRef(1).set(0.0, 0.5, 0.0)
+        positions.getValueRef(2).set(-0.5, 0.0, 0.0)
+        return mesh
+      }
+
+      const sphere = new Sphere(0.5, 8)
+      const cuboid = new Cuboid(1.5, 2.0, 1.0)
+      const cone = new Cone(1.5, 2.0, 32)
+      const circle = new Circle(1.5, 32)
+      const pointsGrid = new PointGrid(2, 3, 100, 80)
+      // addShape('tri1', makeTriangle(), new Vec3(-1, 1, 1), material)
+      // addShape('tri2', makeTriangle(), new Vec3(1, 1, 1), material)
+      addShape('sphere2', sphere, new Vec3(-2, 1, 1), material1).addHighlight('foo', new Color(1, 0, 0, 0.1))
+      addShape('cuboid2', cuboid, new Vec3(1, 1, 1), material2)
+      addShape('circle3', circle, new Vec3(-2, -1, 1), material3).addHighlight('foo', new Color(1, 0, 0, 0.1))
+      addShape('points4', pointsGrid, new Vec3(-2, -3, 1), material4)
+      addShape('sphere5', sphere, new Vec3(-2, -5, 1), material1)
+      addShape('sphere6', sphere, new Vec3(-2, -7, 1), material1)
+      // addShape('cone1', cone, new Vec3(4, -1, 1), material2)
+      // addShape('cone2', cone, new Vec3(4, 1, 1), material2)
+      // addShape('sphere1', sphere, new Vec3(-2, -1, 1), material1)
+      // addShape('cuboid1', cuboid, new Vec3(2, 1, 1), material1)
+
+      // const buildSquare = (i) => {
+      //   for (let ii = 0; ii < 25; ii++) {
+      //     const material = new Material('surfaces', 'StandardSurfaceShader')
+      //     material.getParameter('BaseColor').setValue(Color.random())
+      //     for (let iii = 0; iii < 25; iii++) {
+      //       let shape
+      //       switch (ii % 3) {
+      //         case 0:
+      //           shape = sphere
+      //           break
+      //         case 1:
+      //           shape = cone
+      //           break
+      //         case 2:
+      //           shape = cuboid
+      //           break
+      //       }
+      //       addShape('shape' + i + '-' + ii + '-' + iii, shape, new Vec3(iii * 4.0, ii * 4.0, i * 4), material)
+      //     }
+      //   }
+      //   if (i < 100) setTimeout(() => buildSquare(i + 1), 100)
+      // }
+      // buildSquare(0)
+
+      // let count = 0
+      // for (let i = 0; i < 10; i++) {
+      //   // const cuboid = new Cuboid(1.5, 2.0, 1.0)
+      //   for (let ii = 0; ii < 25; ii++) {
+      //     const material = new Material('surfaces', 'SimpleSurfaceShader')
+      //     material.getParameter('BaseColor').setValue(Color.random())
+      //     for (let iii = 0; iii < 25; iii++) {
+      //       // addShape(
+      //       //   'cuboid' + i + '-' + ii + '-' + iii,
+      //       //   cuboid,
+      //       //   new Vec3(iii * 4.0, ii * 4.0, i * 4),
+      //       //   material
+      //       // )
+      //       let shape
+      //       switch (ii % 5) {
+      //         case 0:
+      //           shape = cuboid
+      //           break
+      //         case 1:
+      //           shape = sphere
+      //           break
+      //         case 2:
+      //           shape = cone
+      //           break
+      //         case 3:
+      //           shape = circle
+      //           break
+      //         case 4:
+      //           shape = pointsGrid
+      //           break
+      //       }
+      //       addShape('shape' + i + '-' + ii + '-' + iii, shape, new Vec3(iii * 4.0, ii * 4.0, i * 4), material)
+      //       count++
+      //     }
+      //   }
+      // }
+      // console.log('count:', count)
+
+      // scene.setupGrid(10.0, 10)
+      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-15, -15, 5), new Vec3(0, 0, 0.4))
+
+      window.postMessage('done-loading')
+
+      // {{{ Messages handler.
+      const handleMessage = (event) => {
+        const { data } = event
+
+        if (data === 'variant-01') {
+          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, -2.7), new Vec3(0, 0, 0.4))
+          renderer.frameAll()
+          renderer.once('redrawOccurred', () => {
+            window.postMessage(`done-${data}`)
+          })
+        } else if (data === 'variant-02') {
+          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-2, -2, 2.7), new Vec3(0, 0, 0.4))
+          renderer.frameAll()
+          renderer.once('redrawOccurred', () => {
+            window.postMessage(`done-${data}`)
+          })
+        }
+      }
+
+      window.addEventListener('message', handleMessage, false)
+      // }}}
+    </script>
+  </head>
+  <body>
+    <canvas class="full-size" id="renderer" />
+  </body>
+</html>

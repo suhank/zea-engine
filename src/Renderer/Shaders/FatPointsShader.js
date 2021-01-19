@@ -139,6 +139,14 @@ void main(void) {
   static getSelectedShaderName() {
     return 'FatPointsSelectedShader'
   }
+
+  /**
+   * The supportsInstancing method.
+   * @return {boolean} - return false for shaders that cannot be rendered in instanced mode.
+   */
+  static supportsInstancing() {
+    return false
+  }
 }
 
 class FatPointsGeomDataShader extends FatPointsShader {

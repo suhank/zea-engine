@@ -31,10 +31,6 @@ class GLViewport extends GLBaseViewport {
     this.__bl = new Vec2(0, 0)
     this.__tr = new Vec2(1, 1)
 
-    this.__exposure = 0.0
-    this.__exposureRange = [-5, 10]
-    this.__tonemap = true
-    this.__gamma = 2.2
     this.__prevDownTime = 0
 
     this.__geomDataBuffer = undefined

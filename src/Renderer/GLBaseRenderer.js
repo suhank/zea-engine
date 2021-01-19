@@ -126,7 +126,7 @@ class GLBaseRenderer extends ParameterOwner {
     for (const key in this.__shaderDirectives) {
       directives.push(this.__shaderDirectives[key])
     }
-    this.__preproc.defines = directives.join('\n') + '\n'
+    this.__preproc.directives = directives
     this.__gl.shaderopts = this.__preproc
   }
 
@@ -366,20 +366,14 @@ class GLBaseRenderer extends ParameterOwner {
     let handled = false
     for (let i = this.__passesRegistrationOrder.length - 1; i >= 0; i--) {
       const pass = this.__passesRegistrationOrder[i]
-      try {
-        const rargs = {
-          continueInSubTree: true,
-        }
-        handled = pass.itemAddedToScene(treeItem, rargs)
-        if (handled) {
-          if (!rargs.continueInSubTree) return
-          break
-        }
-      } catch (error) {
-        if (!loggedErrors[pass.constructor.name]) {
-          loggedErrors[pass.constructor.name] = error.message
-          console.warn(error.message)
-        }
+
+      const rargs = {
+        continueInSubTree: true,
+      }
+      handled = pass.itemAddedToScene(treeItem, rargs)
+      if (handled) {
+        if (!rargs.continueInSubTree) return
+        break
       }
     }
 
@@ -414,17 +408,10 @@ class GLBaseRenderer extends ParameterOwner {
       const rargs = {
         continueInSubTree: true,
       }
-      try {
-        const handled = pass.itemRemovedFromScene(treeItem, rargs)
-        if (handled) {
-          if (!rargs.continueInSubTree) return
-          break
-        }
-      } catch (error) {
-        if (!loggedErrors[pass.constructor.name]) {
-          loggedErrors[pass.constructor.name] = error.message
-          console.warn(error.message)
-        }
+      const handled = pass.itemRemovedFromScene(treeItem, rargs)
+      if (handled) {
+        if (!rargs.continueInSubTree) return
+        break
       }
     }
 
@@ -583,6 +570,12 @@ class GLBaseRenderer extends ParameterOwner {
       this.addShaderPreprocessorDirective('ENABLE_FLOAT_TEXTURES')
     }
 
+    const ext = this.__gl.getExtension('WEBGL_multi_draw')
+    if (ext) {
+      this.__gl.multiDrawElementsInstanced = ext.multiDrawElementsInstancedWEBGL.bind(ext)
+      this.__gl.multiDrawArraysInstanced = ext.multiDrawArraysInstancedWEBGL.bind(ext)
+    }
+
     this.__gl.screenQuad = new GLScreenQuad(this.__gl)
     this.__screenQuad = this.__gl.screenQuad
 
@@ -596,27 +589,6 @@ class GLBaseRenderer extends ParameterOwner {
     // Note: the following returns UNSIGNED_BYTE even if the browser supports float.
     // const implType = this.__gl.getParameter(this.__gl.IMPLEMENTATION_COLOR_READ_TYPE);
     // this.__floatGeomBuffer = (implType == this.__gl.FLOAT);
-
-    // //////////////////////////////////
-    // Bind a default texture.
-    // Note: If shaders have sampler2D uniforms, but we don't bind textures, then
-    // they get assigned texture0. If we have no textures bound at all, then
-    // we get warnings saying.
-    // There is no texture bound to the unit 0
-    // Bind a default texture to unit 0 simply to avoid these warnings.
-    // this.__texture0 = new GLTexture2D(this.__gl, {
-    //     format: 'RGB',
-    //     type: 'UNSIGNED_BYTE',
-    //     width: 1,
-    //     height: 1,
-    //     filter: 'NEAREST',
-    //     mipMapped: false,
-    //     wrap: 'CLAMP_TO_EDGE',
-    //     data: new Uint8Array(3)
-    // });
-
-    // // gl.activeTexture(this.__gl.TEXTURE0);
-    // this.__gl.bindTexture(this.__gl.TEXTURE_2D, this.__texture0.getTexHdl());
   }
 
   /**
@@ -1160,6 +1132,7 @@ class GLBaseRenderer extends ParameterOwner {
    * @param {object} renderState - The renderState value.
    */
   bindGLBaseRenderer(renderState) {
+    renderState.gl = this.__gl
     renderState.shaderopts = this.__preproc
 
     const gl = this.__gl

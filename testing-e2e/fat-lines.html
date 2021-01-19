@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>fat-lines - Zea Engine</title>
+
+    <link href="zea-logo.png" rel="shortcut icon" />
+
+    <link rel="stylesheet" href="styles/tachyons.min.css" />
+    <link rel="stylesheet" href="styles/main.css" />
+
+    <script src="../dist/index.umd.js"></script>
+
+    <script type="module">
+      const { GLRenderer, Scene, Xfo, Vec3, Color, Material, Circle, GeomItem } = window.zeaEngine
+
+      const canvas = document.querySelector('#renderer')
+
+      const scene = new Scene()
+      const renderer = new GLRenderer(canvas, { hideSplash: true, webglOptions: { antialias: false } })
+      renderer.setScene(scene)
+
+      scene.setupGrid(10.0, 10)
+
+      const material1 = new Material('thinlines', 'LinesShader')
+      material1.getParameter('BaseColor').setValue(new Color(89 / 255, 182 / 255, 92 / 255))
+
+      const circle = new Circle(1.5, 8)
+      const geomItem1 = new GeomItem('circle1', circle, material1, new Xfo(new Vec3(-2, 0, 0)))
+      scene.getRoot().addChild(geomItem1)
+
+      const material2 = new Material('fatlines', 'FatLinesShader')
+      material2.getParameter('BaseColor').setValue(new Color(89 / 255, 182 / 255, 92 / 255))
+      material2.getParameter('LineThickness').setValue(0.1)
+      const geomItem2 = new GeomItem('circle2', circle, material2, new Xfo(new Vec3(2, 0, 0)))
+      scene.getRoot().addChild(geomItem2)
+
+      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, 2.7), new Vec3(0, 0, 0.4))
+      renderer.frameAll()
+
+      window.postMessage('done-loading')
+
+      // {{{ Messages handler.
+      const handleMessage = (event) => {
+        const { data } = event
+
+        if (data === 'variant-01') {
+          circle.getParameter('NumSegments').setValue(32)
+          renderer.once('redrawOccurred', () => {
+            window.postMessage(`done-${data}`)
+          })
+        } else if (data === 'variant-02') {
+          circle.getParameter('NumSegments').setValue(6)
+          renderer.once('redrawOccurred', () => {
+            window.postMessage(`done-${data}`)
+          })
+        }
+      }
+
+      window.addEventListener('message', handleMessage, false)
+      // }}}
+    </script>
+  </head>
+  <body>
+    <canvas class="full-size" id="renderer" />
+  </body>
+</html>

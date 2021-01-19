@@ -53,14 +53,20 @@ void main(void) {
       `
 precision highp float;
 
+<%include file="math/constants.glsl"/>
+<%include file="drawItemTexture.glsl"/>
+<%include file="cutaways.glsl"/>
+<%include file="stack-gl/gamma.glsl"/>
+<%include file="materialparams.glsl"/>
+
+
+#ifndef ENABLE_MULTI_DRAW
 
 uniform color BaseColor;
 uniform float Opacity;
 
+#endif // ENABLE_MULTI_DRAW
 
-<%include file="drawItemTexture.glsl"/>
-<%include file="math/constants.glsl"/>
-<%include file="cutaways.glsl"/>
 
 #ifdef ENABLE_FLOAT_TEXTURES
 vec4 getCutaway(int id) {
@@ -107,8 +113,26 @@ void main(void) {
   }
 
 
-  fragColor = BaseColor;
-  fragColor.a *= Opacity;
+  //////////////////////////////////////////////
+  // Material
+
+#ifdef ENABLE_MULTI_DRAW
+
+  vec2 materialCoords = v_geomItemData.zw;
+  vec4 baseColor = getMaterialValue(materialCoords, 0);
+  vec4 matValue1 = getMaterialValue(materialCoords, 1);
+  float opacity       = baseColor.a * matValue1.r;
+
+#else // ENABLE_MULTI_DRAW
+
+  vec4 baseColor = BaseColor;
+  float opacity = Opacity;
+
+#endif // ENABLE_MULTI_DRAW
+  //////////////////////////////////////////////
+  
+  fragColor = baseColor;
+  fragColor.a *= opacity;
 
 
     
@@ -129,21 +153,29 @@ void main(void) {
     return paramDescs
   }
 
+  /**
+   * The getPackedMaterialData method.
+   * @param {any} material - The material param.
+   * @return {any} - The return value.
+   */
+  static getPackedMaterialData(material) {
+    const matData = new Float32Array(8)
+    const baseColor = material.getParameter('BaseColor').getValue()
+    matData[0] = baseColor.r
+    matData[1] = baseColor.g
+    matData[2] = baseColor.b
+    matData[3] = baseColor.a
+    matData[4] = material.getParameter('Opacity').getValue()
+    matData[5] = material.getParameter('Overlay').getValue()
+    return matData
+  }
+
   static getGeomDataShaderName() {
     return 'StandardSurfaceGeomDataShader'
   }
 
   static getSelectedShaderName() {
     return 'StandardSurfaceSelectedGeomsShader'
-  }
-
-  static isTransparent() {
-    return true
-  }
-
-  bind(renderstate, key) {
-    if (renderstate.pass == 'MULTIPLY') return false
-    return super.bind(renderstate, key)
   }
 }
 

@@ -1,4 +1,3 @@
-import { SystemDesc } from '../SystemDesc.js'
 import { Vec3, Xfo, Mat4, Ray } from '../Math/index'
 import { Plane, EnvMap } from '../SceneTree/index'
 import { GLFbo } from './GLFbo.js'
@@ -15,10 +14,10 @@ import {
   SterioLatLongEnvMapShader,
   DualFishEyeToLatLongBackgroundShader,
 } from './Shaders/EnvMapShader.js'
-import { generateShaderGeomBinding } from './GeomShaderBinding.js'
+import { generateShaderGeomBinding } from './Drawing/GeomShaderBinding.js'
 
 import { OutlinesShader } from './Shaders/OutlinesShader.js'
-import { GLMesh } from './GLMesh.js'
+import { GLMesh } from './Drawing/GLMesh.js'
 import logo from './logo-zea.svg'
 
 const ALL_PASSES = PassType.OPAQUE | PassType.TRANSPARENT | PassType.OVERLAY
@@ -319,10 +318,10 @@ class GLRenderer extends GLBaseRenderer {
   resizeFbos(width, height) {
     super.resizeFbos()
     if (this.__fbo) {
-      this.__fbo.colorTexture.resize(width, height)
+      this.__fbo.resize(width, height)
     }
     if (this.__highlightedGeomsBufferFbo) {
-      this.__highlightedGeomsBuffer.resize(width, height)
+      this.__highlightedGeomsBufferFbo.resize(width, height)
     }
   }
 

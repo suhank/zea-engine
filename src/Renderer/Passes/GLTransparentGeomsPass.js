@@ -39,21 +39,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
    */
   filterGeomItem(geomItem) {
     const material = geomItem.getParameter('Material').getValue()
-    const shaderClass = material.getShaderClass()
-    if (shaderClass) {
-      if (shaderClass.isTransparent()) return true
-      if (shaderClass.isOverlay()) return false
-
-      const baseColorParam = material.getParameter('BaseColor')
-      if (baseColorParam && baseColorParam.getValue().a < 1.0) {
-        return true
-      }
-      const opacityParam = material.getParameter('Opacity')
-      if (opacityParam && opacityParam.getValue() < 1.0) {
-        return true
-      }
-    }
-    return false
+    return material.isTransparent()
   }
 
   /**
@@ -61,6 +47,10 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
    * @param {any} geomItem - The geomItem value.
    */
   addGeomItem(geomItem) {
+    const glGeom = this.constructGLGeom(geomItem.getParameter('Geometry').getValue())
+
+    const glGeomItem = this.constructGLGeomItem(geomItem)
+
     const materialParam = geomItem.getParameter('Material')
     const material = geomItem.getParameter('Material').getValue()
     const shaderName = material.getShaderName()
@@ -68,8 +58,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
 
     // @todo - make sure we remove materials and GeomItems from the base pass.
     // This code will leak memory for these classes as we are not cleaning them up.
-    const glmaterial = this.addMaterial(material)
-    const glgeomitem = super.addGeomItem(geomItem)
+    const glMaterial = this.constructGLMaterial(material)
 
     // ////////////////////////////////////
     // Tracking Material Transparency changes...
@@ -113,8 +102,9 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
     const item = {
       geomItem,
       shaders,
-      glmaterial,
-      glgeomitem,
+      glGeom,
+      glMaterial,
+      glGeomItem,
       material,
       materialChanged,
       visibilityChanged,
@@ -177,7 +167,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
    */
   sortItems(viewPos) {
     for (const transparentItem of this.visibleItems) {
-      const mat4 = transparentItem.glgeomitem.geomItem.getGeomMat4()
+      const mat4 = transparentItem.glGeomItem.geomItem.getGeomMat4()
       transparentItem.dist = mat4.translation.distanceTo(viewPos)
     }
     this.visibleItems.sort((a, b) => (a.dist > b.dist ? -1 : a.dist < b.dist ? 1 : 0))
@@ -191,31 +181,24 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
    * @param {object} cache - cache tracking which material/shader is currently bound.
    */
   _drawItem(renderstate, transparentItem, cache) {
-    if (cache.currentglMaterial != transparentItem.glmaterial) {
-      cache.currentglMaterial = transparentItem.glmaterial
-      if (!cache.currentglMaterial.bind(renderstate)) {
+    if (cache.currentGLMaterial != transparentItem.glMaterial) {
+      cache.currentGLMaterial = transparentItem.glMaterial
+      if (!cache.currentGLMaterial.bind(renderstate)) {
         return
       }
     }
 
-    const glgeomitem = transparentItem.glgeomitem
-    if (cache.currentglGeom != glgeomitem.glGeom) {
-      cache.currentglGeom = glgeomitem.glGeom
-      if (!cache.currentglGeom.bind(renderstate)) {
+    if (cache.currentGLGeom != transparentItem.glGeom) {
+      cache.currentGLGeom = transparentItem.glGeom
+      if (!cache.currentGLGeom.bind(renderstate)) {
         return
       }
     }
 
-    if (glgeomitem.bind(renderstate)) {
-      // Specify an non-instanced draw to the shader
-      if (renderstate.unifs.instancedDraw) {
-        const gl = this.__gl
-        gl.uniform1i(renderstate.unifs.instancedDraw.location, 0)
-        gl.disableVertexAttribArray(renderstate.attrs.instancedIds.location)
-      }
-
+    const glGeomItem = transparentItem.glGeomItem
+    if (glGeomItem.bind(renderstate)) {
       renderstate.bindViewports(renderstate.unifs, () => {
-        cache.currentglGeom.draw(renderstate)
+        cache.currentGLGeom.draw(renderstate)
       })
     }
   }
@@ -228,23 +211,45 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
   _drawItems(renderstate) {
     const cache = {
       currentglShader: null,
-      currentglMaterial: null,
-      currentglGeom: null,
+      currentGLMaterial: null,
+      currentGLGeom: null,
     }
     for (const transparentItem of this.visibleItems) {
-      const glshader = transparentItem.shaders.glshader
-      if (cache.currentglShader != glshader) {
+      const glShader = transparentItem.shaders.glShader
+      if (cache.currentglShader != glShader) {
         // Some passes, like the depth pass, bind custom uniforms.
-        if (!this.bindShader(renderstate, glshader)) {
+        if (!glShader.bind(renderstate)) {
           continue
         }
-        cache.currentglShader = glshader
+
+        // Specify an non-instanced draw to the shader
+        const gl = this.__gl
+
+        const unifs = renderstate.unifs
+        if (unifs.instancedDraw) {
+          gl.uniform1i(unifs.instancedDraw.location, 0)
+        }
+        // Note: this disables the attribute location, which must be enabled again for
+        // the next geom, which might use a different attribute location.
+        // e.g.
+        // one shader might specify attributes ['positions', 'instancedIds]
+        // another  might specify attributes ['positions', 'texCoords' 'instancedIds]
+        // In this case, we should re-enabled location 2 and then disable 3.
+        // if (renderstate.attrs.instancedIds && renderstate.attrs.instancedIds.location != -1) {
+        //   gl.disableVertexAttribArray(renderstate.attrs.instancedIds.location)
+        // }
+        if (unifs.instancesTexture) {
+          this.__drawItemsTexture.bindToUniform(renderstate, unifs.instancesTexture)
+          gl.uniform1i(unifs.instancesTextureSize.location, this.__drawItemsTexture.width)
+        }
+
+        cache.currentglShader = glShader
       }
 
       this._drawItem(renderstate, transparentItem, cache)
     }
 
-    if (cache.currentglGeom) cache.currentglGeom.unbind(renderstate)
+    // if (cache.currentGLGeom) cache.currentGLGeom.unbind(renderstate)
   }
 
   /**
@@ -262,7 +267,6 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
     // Avoid sorting if the camera did not move more than the specified tolerance.
     if (this.resort || viewPos.distanceTo(this.prevSortCameraPos) > this.sortCameraMovementDistance) {
       this.sortItems(viewPos)
-
       this.prevSortCameraPos = viewPos
       if (renderstate.viewport) {
         // Adapt the sort tolerance to the focal distance.
@@ -275,16 +279,9 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
     gl.enable(gl.DEPTH_TEST)
     gl.depthFunc(gl.LESS)
 
-    // Disable depth testing.
-    // This means that if overlapping transparent geoms are rendered then faces in front will
-    // not occlude faces behind. This can occur for large faces on objects that are technically in front
-    // but have faces that are behind other faces of objects that are technically behind.
-    // e.g. 2 large transparent polygons that intersect or wrap around each other.
-    gl.depthMask(false)
-
     gl.enable(gl.BLEND)
     gl.blendEquation(gl.FUNC_ADD)
-    // Complex transparent surfaces require mutiple passes.
+    // Complex transparent surfaces require multiple passes.
     // First the multiply pass tints the background color, simulating
     // light passing through the surface, and then the add layer
     // adds new color to the backbuffer to simulate light bouncing off
@@ -305,14 +302,13 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
     // this._drawItems(renderstate)
 
     // for the Add
-    gl.enable(gl.CULL_FACE)
-    gl.cullFace(gl.BACK)
-
     renderstate.pass = 'ADD'
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA) // For add
     // Only draw font faces. BEcause all faces are drawn, it can make a mess to see the back faces through the front faces.
+    // e.g. we might see the triangles on the other side of a sphere rendered over the top of triangles on the near side.
     gl.enable(gl.CULL_FACE)
     gl.cullFace(gl.BACK)
+
     this._drawItems(renderstate)
 
     gl.disable(gl.BLEND)
@@ -329,8 +325,8 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
 
     const cache = {
       currentglShader: null,
-      currentglMaterial: null,
-      currentglGeom: null,
+      currentGLMaterial: null,
+      currentGLGeom: null,
     }
     for (const transparentItem of this.visibleItems) {
       if (!transparentItem.geomItem.isHighlighted()) continue
@@ -338,7 +334,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
       const shaders = transparentItem.shaders
       if (cache.currentglShader != shaders.glselectedshader) {
         // Some passes, like the depth pass, bind custom uniforms.
-        if (!this.bindShader(renderstate, shaders.glselectedshader)) {
+        if (!shaders.glselectedshader.bind(renderstate)) {
           continue
         }
         cache.currentglShader = shaders.glselectedshader
@@ -347,7 +343,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
       this._drawItem(renderstate, transparentItem, cache)
     }
 
-    if (cache.currentglGeom) cache.currentglGeom.unbind(renderstate)
+    if (cache.currentGLGeom) cache.currentGLGeom.unbind(renderstate)
   }
 
   /**
@@ -367,10 +363,10 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
       dist = MathFunctions.decode16BitFloatFrom2xUInt8([geomData[2], geomData[3]])
     }
 
-    const glgeomItem = this.__drawItems[itemId]
-    if (glgeomItem) {
+    const glGeomItem = this.__drawItems[itemId]
+    if (glGeomItem) {
       return {
-        geomItem: glgeomItem.getGeomItem(),
+        geomItem: glGeomItem.getGeomItem(),
         dist,
       }
     }
@@ -392,8 +388,8 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
 
     const cache = {
       currentglShader: null,
-      currentglMaterial: null,
-      currentglGeom: null,
+      currentGLMaterial: null,
+      currentGLGeom: null,
     }
     for (const transparentItem of this.visibleItems) {
       const shaders = transparentItem.shaders
@@ -402,12 +398,12 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
       }
       if (cache.currentglShader != shaders.glgeomdatashader) {
         // Some passes, like the depth pass, bind custom uniforms.
-        if (!this.bindShader(renderstate, shaders.glgeomdatashader)) {
+        if (!shaders.glgeomdatashader.bind(renderstate)) {
           continue
         }
         cache.currentglShader = shaders.glgeomdatashader
       }
-      const material = transparentItem.glmaterial.getMaterial()
+      const material = transparentItem.glMaterial.getMaterial()
       if (!material.visibleInGeomDataBuffer) continue
       {
         const unif = renderstate.unifs.floatGeomBuffer
@@ -425,7 +421,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
       this._drawItem(renderstate, transparentItem, cache)
     }
 
-    if (cache.currentglGeom) cache.currentglGeom.unbind(renderstate)
+    if (cache.currentGLGeom) cache.currentGLGeom.unbind(renderstate)
   }
 }
 

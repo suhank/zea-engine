@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>textured-mesh - Zea Engine</title>
+
+    <link href="zea-logo.png" rel="shortcut icon" />
+
+    <link rel="stylesheet" href="styles/tachyons.min.css" />
+    <link rel="stylesheet" href="styles/main.css" />
+
+    <script src="../dist/index.umd.js"></script>
+
+    <script type="module">
+      const { GLRenderer, Scene, Vec3, Color, Xfo, Disc, Plane, Material, GeomItem, Label, LDRImage } = window.zeaEngine
+
+      const canvas = document.querySelector('#renderer')
+
+      const scene = new Scene()
+      const renderer = new GLRenderer(canvas, { hideSplash: true, webglOptions: { antialias: false } })
+      renderer.setScene(scene)
+      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-2, -2, 1.7), new Vec3(0, 0, 0.2))
+
+      scene.setupGrid(10.0, 10)
+
+      const disc = new Disc(0.5, 64)
+      const plane = new Plane(1, 1)
+
+      {
+        const material = new Material('Material', 'FlatSurfaceShader')
+
+        material.getParameter('BaseColor').setValue(new Color(0.6, 0, 1))
+        const image = new LDRImage('LDRImage')
+        image.setImageURL('data/avatar1.jpg')
+        material.getParameter('BaseColor').setImage(image)
+        const geomItem = new GeomItem('geomItem1', disc, material, new Xfo(new Vec3(-1, 0, 0.1)))
+        scene.getRoot().addChild(geomItem)
+      }
+      {
+        const material = new Material('Material', 'FlatSurfaceShader')
+
+        material.getParameter('BaseColor').setValue(new Color(0.6, 0, 1))
+        const image = new LDRImage('LDRImage')
+        image.setImageURL('data/zea-logo.png', 'RGBA')
+        material.getParameter('BaseColor').setImage(image)
+        const geomItem = new GeomItem('geomItem2', plane, material, new Xfo(new Vec3(0, 0, 0.1)))
+        scene.getRoot().addChild(geomItem)
+      }
+
+      {
+        const material = new Material('Material', 'FlatSurfaceShader')
+        const label = new Label('Name')
+        label.getParameter('FontColor').setValue(new Color(0.6, 0, 0))
+        label.getParameter('BackgroundColor').setValue(new Color(1, 1, 1))
+        label.getParameter('FontSize').setValue(42)
+        label.getParameter('BorderRadius').setValue(0)
+        label.getParameter('BorderWidth').setValue(0)
+        label.getParameter('Margin').setValue(12)
+        label.getParameter('StrokeBackgroundOutline').setValue(false)
+        label.getParameter('Text').setValue(`Hello World`)
+        label.on('labelRendered', (event) => {
+          window.postMessage('done-loading')
+        })
+
+        material.getParameter('BaseColor').setImage(label)
+        const geomItem = new GeomItem('geomItem3', plane, material, new Xfo(new Vec3(1, 0, 0.1)))
+
+        scene.getRoot().addChild(geomItem)
+      }
+
+      // {{{ Messages handler.
+      const handleMessage = (event) => {
+        const { data } = event
+
+        if (data === 'variant-01') {
+          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, -2.7), new Vec3(0, 0, 0.4))
+          renderer.frameAll()
+          renderer.once('redrawOccurred', () => {
+            window.postMessage(`done-${data}`)
+          })
+        } else if (data === 'variant-02') {
+          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-2, -2, 2.7), new Vec3(0, 0, 0.4))
+          renderer.frameAll()
+          renderer.once('redrawOccurred', () => {
+            window.postMessage(`done-${data}`)
+          })
+        }
+      }
+
+      window.addEventListener('message', handleMessage, false)
+      // }}}
+    </script>
+  </head>
+  <body>
+    <canvas class="full-size" id="renderer" />
+  </body>
+</html>

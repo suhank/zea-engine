@@ -1,6 +1,7 @@
-import { EventEmitter } from '../Utilities/index'
+import { EventEmitter } from '../../Utilities/index'
 
-import '../SceneTree/GeomItem.js'
+import '../../SceneTree/GeomItem.js'
+import { GeomItem } from '../../SceneTree/GeomItem.js'
 
 const GLGeomItemChangeType = {
   GEOMITEM_CHANGED: 0,
@@ -15,18 +16,16 @@ const GLGeomItemChangeType = {
 class GLGeomItem extends EventEmitter {
   /**
    * Create a GL geom item.
-   * @param {any} gl - The gl value.
-   * @param {any} geomItem - The geomItem value.
-   * @param {any} glGeom - The glGeom value.
-   * @param {any} id - The id value.
-   * @param {number} flags - The flags value.
+   * @param {WebGLContextAttributes} gl - The gl value.
+   * @param {GeomItem} geomItem - The geomItem value.
+   * @param {number} drawItemId - The drawItemId value.
+   * @param {boolean} supportInstancing - a boolean to disable instancing support on some mobile platforms
    */
-  constructor(gl, geomItem, glGeom, id, supportInstancing = false) {
+  constructor(gl, geomItem, drawItemId, supportInstancing = false) {
     super()
     this.gl = gl
     this.geomItem = geomItem
-    this.glGeom = glGeom
-    this.id = id
+    this.drawItemId = drawItemId
     this.supportInstancing = supportInstancing
     this.visible = this.geomItem.isVisible()
     this.culled = false
@@ -65,15 +64,20 @@ class GLGeomItem extends EventEmitter {
       this.emit('updated', { type: GLGeomItemChangeType.HIGHLIGHT_CHANGED })
       this.emit('highlightChanged')
     }
-    this.glGeomUpdated = () => {
-      this.emit('updated', { type: GLGeomItemChangeType.GEOM_CHANGED })
-    }
+    // this.glGeomUpdated = () => {
+    //   this.emit('updated', { type: GLGeomItemChangeType.GEOM_CHANGED })
+    // }
 
     this.geomItem.getParameter('GeomMat').on('valueChanged', this.geomMatrixChanged)
     this.geomItem.on('visibilityChanged', this.updateVisibility)
     this.geomItem.on('cutAwayChanged', this.cutAwayChanged)
     this.geomItem.on('highlightChanged', this.highlightChanged)
-    this.glGeom.on('updated', this.glGeomUpdated)
+
+    this.geomItem.setMetadata('glGeomItem', this)
+
+    // Note: GLGeom changes propagate up to the renderer directly through the GLGeom.
+    // See: GLStandardGeomsPass.addGeom
+    // this.glGeom.on('updated', this.glGeomUpdated)
 
     if (!this.supportInstancing) {
       const materialId = 0
@@ -95,14 +99,6 @@ class GLGeomItem extends EventEmitter {
   }
 
   /**
-   * The getGLGeom method.
-   * @return {any} - The return value.
-   */
-  getGLGeom() {
-    return this.glGeom
-  }
-
-  /**
    * The isVisible method.
    * @return {any} - The return value.
    */
@@ -114,8 +110,8 @@ class GLGeomItem extends EventEmitter {
    * The getId method.
    * @return {any} - The return value.
    */
-  getId() {
-    return this.id
+  getDrawItemId() {
+    return this.drawItemId
   }
 
   /**
@@ -176,7 +172,7 @@ class GLGeomItem extends EventEmitter {
 
     const unif = unifs.transformIndex
     if (unif) {
-      gl.uniform1i(unif.location, this.id)
+      gl.uniform1i(unif.location, this.drawItemId)
     }
     return true
   }
@@ -190,7 +186,7 @@ class GLGeomItem extends EventEmitter {
     this.geomItem.off('visibilityChanged', this.updateVisibility)
     this.geomItem.off('cutAwayChanged', this.cutAwayChanged)
     this.geomItem.off('highlightChanged', this.highlightChanged)
-    this.glGeom.off('updated', this.glGeomUpdated)
+    // this.glGeom.off('updated', this.glGeomUpdated)
   }
 }
 

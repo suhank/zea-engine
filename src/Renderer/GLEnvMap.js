@@ -1,7 +1,7 @@
 import { GLProbe } from './GLProbe.js'
 import { GLHDRImage } from './GLHDRImage.js'
 import { OctahedralEnvMapShader } from './Shaders/EnvMapShader.js'
-import { generateShaderGeomBinding } from './GeomShaderBinding.js'
+import { generateShaderGeomBinding } from './Drawing/GeomShaderBinding.js'
 
 /** Class representing a GL environment map.
  * @extends GLProbe
