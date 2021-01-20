@@ -127,12 +127,14 @@ class GLGeomSet extends EventEmitter {
 
       if (event.count == 0) {
         this.highlightIndices.delete(index)
+        if (this.highlightedIdsAllocator.getAllocation(index)) {
+          this.highlightedIdsAllocator.deallocate(index)
+        }
       } else {
         this.highlightIndices.add(index)
+        this.highlightedIdsAllocator.allocate(index, event.count)
+        this.dirtyDrawHighlightIndices.add(index)
       }
-
-      this.dirtyDrawHighlightIndices.add(index)
-      this.highlightedIdsAllocator.allocate(index, event.count)
 
       this.emit('updated')
     }
@@ -162,7 +164,10 @@ class GLGeomSet extends EventEmitter {
   removeGeom(index) {
     const geom = this.geoms[index]
 
-    this.attributesAllocator.deallocate(index)
+    // If the geom was never drawn, and we are already removing it, there may be no allocation.
+    if (this.attributesAllocator.getAllocation(index)) {
+      this.attributesAllocator.deallocate(index)
+    }
 
     // Note: geoms that were always invisible have no allocations yet.
     if (this.drawIdsAllocator.getAllocation(index)) {
@@ -521,7 +526,6 @@ class GLGeomSet extends EventEmitter {
     // Calls to texSubImage2D would generate the error: GL_INVALID_VALUE: Offset overflows texture dimensions
     // even if the coordinates appears to be correct.
     const highlightIdsLayoutTextureSize = MathFunctions.nextPow2(Math.ceil(Math.sqrt(this.geoms.length)))
-    // const highlightIdsLayoutTextureSize = Math.ceil(Math.sqrt(this.geoms.length))
 
     if (!this.highlightIdsLayoutTexture) {
       this.highlightIdsLayoutTexture = new GLTexture2D(gl, {
@@ -539,7 +543,9 @@ class GLGeomSet extends EventEmitter {
       texResized = true
     }
 
-    const highlightIdsTextureSize = MathFunctions.nextPow2(Math.ceil(Math.sqrt(this.drawIdsAllocator.reservedSpace)))
+    const highlightIdsTextureSize = MathFunctions.nextPow2(
+      Math.ceil(Math.sqrt(this.highlightedIdsAllocator.reservedSpace))
+    )
 
     if (!this.highlightedIdsTexture) {
       this.highlightedIdsTexture = new GLTexture2D(gl, {

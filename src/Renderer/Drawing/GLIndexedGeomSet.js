@@ -55,7 +55,11 @@ class GLIndexedGeomSet extends GLGeomSet {
    */
   removeGeom(index) {
     super.removeGeom(index)
-    this.indicesAllocator.deallocate(index)
+
+    // If the geom was never drawn, and we are already removing it, there may be no allocation.
+    if (this.drawIdsAllocator.getAllocation(index)) {
+      this.drawIdsAllocator.deallocate(index)
+    }
     this.indicesCounts[index] = 0
     this.indicesOffsets[index] = 0
   }
