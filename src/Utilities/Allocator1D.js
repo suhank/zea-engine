@@ -98,20 +98,22 @@ class Allocator1D extends EventEmitter {
         const nextIndex = index + 1
         if (this.freeList.includes(nextIndex) && allocation.size + this.allocations[nextIndex].size >= size) {
           const freeBlock = this.allocations[nextIndex]
-          if (allocation.size + freeBlock.size <= size) {
+          if (allocation.size + freeBlock.size == size) {
             // consume this free block
             allocation.size += freeBlock.size
             this.freeSpace -= freeBlock.size
             this.freeList.splice(this.freeList.indexOf(nextIndex), 1)
             // this.allocations.splice(nextIndex, 1)
             this.removeBlock(nextIndex)
+            return allocation
           } else {
-            // We want to shrink the next block by the mount we consumed
+            // We want to shrink the next block by the amount we consumed
             const consumed = size - allocation.size
             allocation.size += consumed
             this.freeSpace -= consumed
             freeBlock.start += consumed
             freeBlock.size -= consumed
+            return allocation
           }
         } else {
           // free up this slot an find a new one
@@ -129,18 +131,16 @@ class Allocator1D extends EventEmitter {
     }
 
     let freeItemIndex = -1
-    this.freeList.some((index) => {
-      const allocation = this.allocations[index]
+    for (let i = 0; i < this.freeList.length; i++) {
+      const freeIndex = this.freeList[i]
+      const allocation = this.allocations[freeIndex]
       if (allocation.size == size) {
-        freeItemIndex = index
-        return true
+        freeItemIndex = freeIndex
+        break
       } else if (allocation.size > size) {
-        freeItemIndex = index
-        return false // keep looking for a better match
-      } else {
-        return false
+        freeItemIndex = freeIndex
       }
-    })
+    }
 
     if (freeItemIndex != -1) {
       const freeItem = this.allocations[freeItemIndex]
@@ -230,7 +230,6 @@ class Allocator1D extends EventEmitter {
     if (this.freeList.includes(prevIndex)) {
       const prevAllocation = this.allocations[prevIndex]
       prevAllocation.size += allocation.size
-      // this.allocations.splice(index, 1)
       this.removeBlock(index)
       return
     }
@@ -282,6 +281,10 @@ class Allocator1D extends EventEmitter {
    * Checks that the allocations are consistent and not corrupt in any way.
    */
   verifyConsistency() {
+    if (Object.keys(this.allocationsMap).length + this.freeList.length != this.allocations.length) {
+      throw 'number of blocks does not match the number of allocations'
+    }
+
     // eslint-disable-next-line guard-for-in
     for (let id in this.allocationsMap) {
       const index = this.allocationsMap[id]

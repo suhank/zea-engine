@@ -92,4 +92,32 @@ describe('Allocator1D', () => {
     expect(allocator.freeSpace).toEqual(0)
     expect(allocator.reservedSpace).toEqual(16)
   })
+
+  it('Free Block, grow forwards partially consume next block', () => {
+    const allocator = new Allocator1D()
+
+    allocator.allocate(0, 1)
+    allocator.allocate(1, 2)
+    allocator.allocate(2, 1)
+    allocator.allocate(1, 3) // free up a block of size 2 at index 1
+    allocator.allocate(0, 2) // block 0 grows to partially consume the free block at index 1
+
+    allocator.verifyConsistency()
+
+    expect(allocator.freeSpace).toEqual(1)
+  })
+
+  it('Free Block, grow forwards totally consume next block', () => {
+    const allocator = new Allocator1D()
+
+    allocator.allocate(0, 1)
+    allocator.allocate(1, 2)
+    allocator.allocate(2, 1)
+    allocator.allocate(1, 3) // free up a block of size 2 at index 1
+    allocator.allocate(0, 3) // block 0 grows to totally consume the free block at index 1
+
+    allocator.verifyConsistency()
+
+    expect(allocator.freeSpace).toEqual(0)
+  })
 })
