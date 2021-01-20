@@ -130,6 +130,9 @@ class GLGeomSet extends EventEmitter {
         if (this.highlightedIdsAllocator.getAllocation(index)) {
           this.highlightedIdsAllocator.deallocate(index)
         }
+        if (this.dirtyDrawHighlightIndices.has(index)) {
+          this.dirtyDrawHighlightIndices.delete(index)
+        }
       } else {
         this.highlightIndices.add(index)
         this.highlightedIdsAllocator.allocate(index, event.count)
