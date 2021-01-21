@@ -52,6 +52,7 @@ class GLShaderGeomSets extends EventEmitter {
     } else {
       throw new Error('Unsupported geom type:' + geom.constructor.name)
     }
+    //  else      return
 
     geom.setMetadata('glGeomSet', glGeomSet)
     glGeomSet.on('updated', () => {
@@ -72,6 +73,7 @@ class GLShaderGeomSets extends EventEmitter {
     if (!glGeomSet) {
       glGeomSet = this.getOrCreateGLGeomSet(geom)
     }
+    if (!glGeomSet) return
 
     glGeomSet.addGLGeomItem(glGeomItem)
 
