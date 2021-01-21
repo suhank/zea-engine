@@ -116,14 +116,15 @@ class GeomLibrary extends EventEmitter {
 
   /**
    * Loads the geometry files for this GeomLibrary.
+   * @param {number} geomLibraryJSON - The json data describing the data needed to be loaded by the goem library
    * @param {string} basePath - The base path of the file. (this is theURL of the zcad file without its extension.)
-   * @param {number} numGeomFiles - The number of geom files to load in the stream
    * @param {object} context - The value param.
    */
-  loadGeomFilesStream(basePath, numGeoms, numGeomFiles, context) {
+  loadGeomFilesStream(geomLibraryJSON, basePath, context) {
+    const numGeomFiles = geomLibraryJSON.numGeomsPerFile.length
     resourceLoader.addWork('GeomLibrary', numGeomFiles)
 
-    this.__numGeoms = numGeoms
+    this.__numGeoms = geomLibraryJSON.numGeoms
     this.basePath = basePath
     this.loadContext = context
 
@@ -236,26 +237,70 @@ class GeomLibrary extends EventEmitter {
     const toc = reader.loadUInt32Array(numGeoms)
 
     if (multiThreadParsing) {
-      const bufferSlice = buffer.slice(toc[0], buffer.byteLength)
+      let numCores = window.navigator.hardwareConcurrency
+      if (!numCores) {
+        if (isMobile) numCores = 2
+        else numCores = 4
+      }
+      const numGeomsPerWorkload = Math.max(1, Math.floor(numGeoms / numCores + 1))
+
+      // TODO: Use SharedArrayBuffer once available.
+      // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SharedArrayBuffer
+
+      let offset = 0
+      while (offset < numGeoms) {
+        const bufferSlice_start = toc[offset]
+        let bufferSlice_end
+        let geomsRange
+        if (offset + numGeomsPerWorkload >= numGeoms) {
+          geomsRange = [offset, numGeoms]
+          bufferSlice_end = buffer.byteLength
+        } else {
+          geomsRange = [offset, offset + numGeomsPerWorkload]
+          bufferSlice_end = toc[geomsRange[1]]
+        }
+        const bufferSlice = buffer.slice(bufferSlice_start, bufferSlice_end)
+        offset += numGeomsPerWorkload
+
+        // ////////////////////////////////////////////
+        // Multi Threaded Parsing
+        this.__workers[this.__nextWorker].postMessage(
+          {
+            key,
+            toc,
+            geomIndexOffset,
+            geomsRange,
+            isMobileDevice: reader.isMobileDevice,
+            bufferSlice,
+            genBuffersOpts: this.__genBuffersOpts,
+            context: {
+              versions: context.versions,
+            },
+          },
+          [bufferSlice]
+        )
+        this.__nextWorker = (this.__nextWorker + 1) % this.__workers.length
+      }
+
       // ////////////////////////////////////////////
       // Multi Threaded Parsing
-      this.__workers[this.__nextWorker].postMessage(
-        {
-          key,
-          toc,
-          geomIndexOffset,
-          geomsRange: [0, numGeoms],
-          isMobileDevice: reader.isMobileDevice,
-          bufferSlice,
-          genBuffersOpts: this.__genBuffersOpts,
-          context: {
-            versions: context.versions,
-          },
-        },
-        [bufferSlice]
-      )
-      this.__nextWorker = (this.__nextWorker + 1) % this.__workers.length
-      return numGeoms
+      // const bufferSlice = buffer.slice(toc[0], buffer.byteLength)
+      // this.__workers[this.__nextWorker].postMessage(
+      //   {
+      //     key,
+      //     toc,
+      //     geomIndexOffset,
+      //     geomsRange: [0, numGeoms],
+      //     isMobileDevice: reader.isMobileDevice,
+      //     bufferSlice,
+      //     genBuffersOpts: this.__genBuffersOpts,
+      //     context: {
+      //       versions: context.versions,
+      //     },
+      //   },
+      //   [bufferSlice]
+      // )
+      // this.__nextWorker = (this.__nextWorker + 1) % this.__workers.length
     } else {
       // ////////////////////////////////////////////
       // Main Threaded Parsing
@@ -279,7 +324,6 @@ class GeomLibrary extends EventEmitter {
         }
       )
     }
-    return numGeoms
   }
 
   /**
