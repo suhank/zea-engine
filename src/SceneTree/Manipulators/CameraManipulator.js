@@ -86,6 +86,8 @@ class CameraManipulator extends BaseTool {
     this.__manipulationState = this.__defaultManipulationState
     this.__pointerDown = false
     this.__dragging = 0
+
+    this.enabledWASDWalkMode = false
     this.__keyboardMovement = false
     this.__keysPressed = []
     this.__velocity = new Vec3()
@@ -821,6 +823,7 @@ class CameraManipulator extends BaseTool {
    * @private
    */
   onKeyDown(event) {
+    if (!this.enabledWASDWalkMode) return
     const key = event.key.toLowerCase()
     // Note: onKeyPressed is called initially only once, and then we
     // get a series of calls. Here we ignore subsequent events.
