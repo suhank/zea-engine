@@ -115,30 +115,13 @@ class GLGeomSet extends EventEmitter {
     const drawCountChanged = (event) => {
       this.instanceCountsDraw[index] += event.change
       this.drawCount += event.change
-
       this.dirtyDrawIndexIndices.add(index)
-      this.drawIdsAllocator.allocate(index, event.count)
-
       this.emit('updated')
     }
     const highlightedCountChanged = (event) => {
       this.instanceCountsHighlight[index] += event.change
       this.highlightedCount += event.change
-
-      if (event.count == 0) {
-        this.highlightIndices.delete(index)
-        if (this.highlightedIdsAllocator.getAllocation(index)) {
-          this.highlightedIdsAllocator.deallocate(index)
-        }
-        if (this.dirtyDrawHighlightIndices.has(index)) {
-          this.dirtyDrawHighlightIndices.delete(index)
-        }
-      } else {
-        this.highlightIndices.add(index)
-        this.highlightedIdsAllocator.allocate(index, event.count)
-        this.dirtyDrawHighlightIndices.add(index)
-      }
-
+      this.dirtyDrawHighlightIndices.add(index)
       this.emit('updated')
     }
     const destructing = () => {
@@ -402,6 +385,17 @@ class GLGeomSet extends EventEmitter {
     const unit = renderstate.boundTextures++
     gl.activeTexture(this.__gl.TEXTURE0 + unit)
 
+    this.dirtyDrawIndexIndices.forEach((index) => {
+      const drawIdsArray = this.glGeomItemSets[index].getDrawIdsArray()
+      if (drawIdsArray.length == 0) {
+        if (this.drawIdsAllocator.getAllocation(index)) {
+          this.drawIdsAllocator.deallocate(index)
+        }
+      } else {
+        this.drawIdsAllocator.allocate(index, drawIdsArray.length)
+      }
+    })
+
     // Note: non POT textures caused strange problems here
     // It appears like texSubImage2D may assume a POT texture in the background.
     // Calls to texSubImage2D would generate the error: GL_INVALID_VALUE: Offset overflows texture dimensions
@@ -523,6 +517,19 @@ class GLGeomSet extends EventEmitter {
 
     const unit = renderstate.boundTextures++
     gl.activeTexture(this.__gl.TEXTURE0 + unit)
+
+    this.dirtyDrawHighlightIndices.forEach((index) => {
+      const highlightedIdsArray = this.glGeomItemSets[index].getHighlightedIdsArray()
+      if (highlightedIdsArray.length == 0) {
+        this.highlightIndices.delete(index)
+        if (this.highlightedIdsAllocator.getAllocation(index)) {
+          this.highlightedIdsAllocator.deallocate(index)
+        }
+      } else {
+        this.highlightIndices.add(index)
+        this.highlightedIdsAllocator.allocate(index, highlightedIdsArray.length)
+      }
+    })
 
     // Note: non POT textures caused strange problems here
     // It appears like texSubImage2D may assume a POT texture in the background.
