@@ -1,3 +1,4 @@
+/* eslint-disable guard-for-in */
 import { BaseItem } from '../SceneTree/BaseItem'
 import { StringFunctions } from '../Utilities/StringFunctions'
 
@@ -24,20 +25,8 @@ class GLShader extends BaseItem {
       throw new Error('gl context must be passed to shader constructor')
     }
     this.__gl = gl
-    this.__shaderStages = {
-      VERTEX_SHADER: {
-        glsl: '',
-        lines: 0,
-        uniforms: {},
-        attributes: {},
-      },
-      FRAGMENT_SHADER: {
-        glsl: '',
-        lines: 0,
-        uniforms: {},
-        attributes: {},
-      },
-    }
+    this.__shaderStagesGLSL = {}
+    this.__shaderStages = {}
 
     this.__shaderProgramHdls = {}
     this.__gltextures = {}
@@ -45,6 +34,41 @@ class GLShader extends BaseItem {
     this.__id = shaderInstanceId++
 
     this.invisibleToGeomBuffer = false
+  }
+
+  /**
+   * Sets the GLSL code for a given shader stage.
+   * @param {string} stageName - The name of the stage. currently only 'VERTEX_SHADER' or 'FRAGMENT_SHADER' are supported.
+   * @param {string} glsl - The GLSL code for the shader stage.
+   */
+  setShaderStage(stageName, glsl) {
+    this.__shaderStagesGLSL[stageName] = glsl
+    this.clearProgramsCache()
+  }
+
+  /**
+   * Gets the GLSL code for a given shader stage.
+   * @param {string} stageName - The name of the stage. currently only 'VERTEX_SHADER' or 'FRAGMENT_SHADER' are supported.
+   * @return {string} - The GLSL code for the shader stage.
+   */
+  getShaderStage(stageName) {
+    return this.__shaderStagesGLSL[stageName]
+  }
+
+  /**
+   * Clears all cached shader compilations for this shader.
+   */
+  clearProgramsCache() {
+    const gl = this.__gl
+    for (const shaderProgramkey in this.__shaderProgramHdls) {
+      const shaderCompilationResult = this.__shaderProgramHdls[shaderProgramkey]
+
+      for (const shaderKey in shaderCompilationResult.shaderHdls) {
+        gl.deleteShader(shaderCompilationResult.shaderHdls[shaderKey])
+      }
+
+      gl.deleteProgram(shaderCompilationResult.shaderProgramHdl)
+    }
   }
 
   /**
@@ -77,6 +101,7 @@ class GLShader extends BaseItem {
    */
   __compileShaderStage(glsl, stageID, name, shaderopts) {
     const gl = this.__gl
+
     // console.log("__compileShaderStage:" + this.name+"."+name + " glsl:\n" + glsl);
     if (!shaderopts) shaderopts = gl.shaderopts
     if (shaderopts) {
@@ -165,8 +190,14 @@ class GLShader extends BaseItem {
     const gl = this.__gl
     this.__shaderCompilationAttempted = true
     const shaderProgramHdl = gl.createProgram()
-    const vertexShaderGLSL = this.__shaderStages['VERTEX_SHADER'].glsl
     const shaderHdls = {}
+
+    if (!this.__shaderStages['VERTEX_SHADER']) {
+      // preprocess the GLSL, including all shader snippets
+      this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader(this.__shaderStagesGLSL['VERTEX_SHADER'])
+    }
+
+    const vertexShaderGLSL = this.__shaderStages['VERTEX_SHADER'].glsl
     if (vertexShaderGLSL != undefined) {
       const vertexShader = this.__compileShaderStage(vertexShaderGLSL, gl.VERTEX_SHADER, 'vertexShader', shaderopts)
       if (!vertexShader) {
@@ -175,6 +206,12 @@ class GLShader extends BaseItem {
       gl.attachShader(shaderProgramHdl, vertexShader)
       shaderHdls[gl.VERTEX_SHADER] = vertexShader
     }
+
+    if (!this.__shaderStages['FRAGMENT_SHADER']) {
+      // preprocess the GLSL, including all shader snippets
+      this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader(this.__shaderStagesGLSL['FRAGMENT_SHADER'])
+    }
+
     const fragmentShaderGLSL = this.__shaderStages['FRAGMENT_SHADER'].glsl
     if (fragmentShaderGLSL != undefined) {
       const fragshaderopts = Object.assign({}, gl.shaderopts, shaderopts)
@@ -214,6 +251,7 @@ class GLShader extends BaseItem {
     }
 
     const result = this.__extractAttributeAndUniformLocations(shaderProgramHdl, shaderopts)
+    result.shaderHdls = shaderHdls
     result.shaderProgramHdl = shaderProgramHdl
     return result
   }
