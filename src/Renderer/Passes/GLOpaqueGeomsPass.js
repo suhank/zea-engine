@@ -78,7 +78,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
     if (this.__gl.multiDrawElementsInstanced) {
       const shaderName = material.getShaderName()
       const shader = Registry.getBlueprint(shaderName)
-      if (shader.supportsInstancing()) {
+      if (shader.supportsInstancing() && shader.getPackedMaterialData) {
         if (!material.isTextured()) {
           let glShaderGeomSets = this.__glShaderGeomSets[shaderName]
           if (!glShaderGeomSets) {
@@ -251,17 +251,14 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
 
     renderstate.drawItemsTexture = this.__drawItemsTexture
 
-    if (this.__gl.multiDrawElementsInstanced) {
-      // eslint-disable-next-line guard-for-in
-      for (const shaderName in this.__glShaderGeomSets) {
-        this.__glShaderGeomSets[shaderName].drawHighlightedGeoms(renderstate)
-      }
-    } else {
-      // eslint-disable-next-line guard-for-in
-      for (const shaderName in this.__glshadermaterials) {
-        const glshaderMaterials = this.__glshadermaterials[shaderName]
-        glshaderMaterials.drawHighlightedGeoms(renderstate)
-      }
+    // eslint-disable-next-line guard-for-in
+    for (const shaderName in this.__glShaderGeomSets) {
+      this.__glShaderGeomSets[shaderName].drawHighlightedGeoms(renderstate)
+    }
+    // eslint-disable-next-line guard-for-in
+    for (const shaderName in this.__glshadermaterials) {
+      const glshaderMaterials = this.__glshadermaterials[shaderName]
+      glshaderMaterials.drawHighlightedGeoms(renderstate)
     }
 
     if (renderstate.glGeom) {
@@ -312,17 +309,14 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
     gl.depthFunc(gl.LESS)
     gl.depthMask(true)
 
-    if (this.__gl.multiDrawElementsInstanced) {
-      // eslint-disable-next-line guard-for-in
-      for (const shaderName in this.__glShaderGeomSets) {
-        this.__glShaderGeomSets[shaderName].drawGeomData(renderstate)
-      }
-    } else {
-      // eslint-disable-next-line guard-for-in
-      for (const shaderName in this.__glshadermaterials) {
-        const glshaderMaterials = this.__glshadermaterials[shaderName]
-        glshaderMaterials.drawGeomData(renderstate)
-      }
+    // eslint-disable-next-line guard-for-in
+    for (const shaderName in this.__glShaderGeomSets) {
+      this.__glShaderGeomSets[shaderName].drawGeomData(renderstate)
+    }
+    // eslint-disable-next-line guard-for-in
+    for (const shaderName in this.__glshadermaterials) {
+      const glshaderMaterials = this.__glshadermaterials[shaderName]
+      glshaderMaterials.drawGeomData(renderstate)
     }
 
     if (renderstate.glGeom) {

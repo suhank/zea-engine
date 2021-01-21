@@ -132,6 +132,7 @@ class GLMaterialGeomItemSets extends EventEmitter {
    * @param {any} renderstate - The renderstate value.
    */
   drawHighlighted(renderstate) {
+    this.glMaterial.bind(renderstate, false)
     for (const key in this.glGeomItemSets) {
       const glGeomItemSet = this.glGeomItemSets[key]
       glGeomItemSet.drawHighlighted(renderstate)
@@ -143,6 +144,7 @@ class GLMaterialGeomItemSets extends EventEmitter {
    * @param {any} renderstate - The renderstate value.
    */
   drawGeomData(renderstate) {
+    this.glMaterial.bind(renderstate, false)
     for (const key in this.glGeomItemSets) {
       const glGeomItemSet = this.glGeomItemSets[key]
       glGeomItemSet.draw(renderstate)
