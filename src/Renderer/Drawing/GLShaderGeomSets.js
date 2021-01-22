@@ -80,6 +80,7 @@ class GLShaderGeomSets extends EventEmitter {
     const material = glGeomItem.geomItem.getParameter('Material').getValue()
     this.glMaterialLibrary.addMaterial(material)
     const transparencyChanged = () => {
+      material.off('transparencyChanged', transparencyChanged)
       // Note: the pass will remove the glgeomitem from the
       //  GLGeomItemSet which is owned by the GLGeomSet.
       this.pass.removeGeomItem(geomItem)
