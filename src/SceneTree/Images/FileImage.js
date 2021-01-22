@@ -155,12 +155,13 @@ class FileImage extends BaseImage {
         imageElem.addEventListener('load', loaded)
       }
     } else {
-      resourceLoader.addWork(file.id, 1)
+      resourceLoader.incrementWorkload(1)
 
       const prefSizeParam = this.addParameter(new NumberParameter('PreferredSize', -1))
 
       let url = file.url
       if (file.assets && Object.keys(file.assets).length > 0) {
+        // eslint-disable-next-line require-jsdoc
         function chooseImage(params, filterAssets) {
           // Note: this is a filter to remove any corrupt data
           // generate by our broken server side processing system.
@@ -236,7 +237,7 @@ class FileImage extends BaseImage {
 
       imageElem.addEventListener('load', loaded)
       imageElem.addEventListener('load', () => {
-        resourceLoader.addWorkDone(file.id, 1)
+        resourceLoader.incrementWorkDone(1)
       })
       imageDataLibrary[file.id] = imageElem
     }
@@ -269,7 +270,7 @@ class FileImage extends BaseImage {
     const file = this.getParameter('FilePath').getFile()
     this.format = 'RGB'
     this.type = 'UNSIGNED_BYTE'
-    resourceLoader.addWork(file.id, 1)
+    resourceLoader.incrementWorkload(1)
 
     // Note: mute needs to be turned off by an action from the user.
     // Audio is disabled by default now in chrome.
@@ -306,7 +307,7 @@ class FileImage extends BaseImage {
         this.height = videoElem.videoWidth
         this.__data = videoElem
         this.__loaded = true
-        resourceLoader.addWorkDone(file.id, 1)
+        resourceLoader.incrementWorkDone(1)
         this.emit('loaded', {})
 
         videoElem.play().then(
@@ -434,7 +435,7 @@ class FileImage extends BaseImage {
       resourcePromise = imageDataLibrary[file.id]
     } else {
       resourcePromise = new Promise((resolve, reject) => {
-        resourceLoader.addWork(file.id, 1)
+        resourceLoader.incrementWorkload(1)
 
         if (file.assets && file.assets.atlas) {
           const imageElem = new Image()
@@ -449,7 +450,7 @@ class FileImage extends BaseImage {
               frameRange: [0, file.assets.atlas.frameDelays.length],
               imageData: imageElem,
             })
-            resourceLoader.addWorkDone(file.id, 1)
+            resourceLoader.incrementWorkDone(1)
           })
           return
         }
@@ -532,7 +533,7 @@ class FileImage extends BaseImage {
               // console.log(frame);
               renderFrame(frames[i], i)
             }
-            resourceLoader.addWorkDone(file.id, 1)
+            resourceLoader.incrementWorkDone(1)
 
             const imageData = atlasCtx.getImageData(0, 0, atlasCanvas.width, atlasCanvas.height)
 

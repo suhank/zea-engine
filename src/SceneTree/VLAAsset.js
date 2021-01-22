@@ -106,13 +106,13 @@ class VLAAsset extends AssetItem {
 
     // preload in case we don't have embedded geoms.
     // completed by geomLibrary.on('loaded' ..
-    resourceLoader.addWork('VLAAsset', 1)
+    resourceLoader.incrementWorkload(1)
     // To ensure that the resource loader knows when
     // parsing is done, we listen to the GeomLibrary streamFileLoaded
     // signal. This is fired once the entire stream is parsed.
     this.__geomLibrary.on('loaded', () => {
       // A chunk of geoms are now parsed, so update the resource loader.
-      resourceLoader.addWorkDone('VLAAsset', 1)
+      resourceLoader.incrementWorkDone(1)
       onGeomsDone()
     })
 

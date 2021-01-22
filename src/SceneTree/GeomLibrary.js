@@ -81,11 +81,11 @@ class GeomLibrary extends EventEmitter {
    * @private
    *
    * @param {number} geomFileID - The index of the file to load
-   * @param {boolean} addWork - If true, the progress bar is incremented and decremented.
+   * @param {boolean} incrementProgress - If true, the progress bar is incremented and decremented.
    * @returns {Promise} the promise resoolves once the file is loaded, but not parsed.
    */
-  loadGeomFile(geomFileID, addWork = false) {
-    if (addWork) resourceLoader.addWork('GeomLibrary', 1)
+  loadGeomFile(geomFileID, incrementProgress = false) {
+    if (incrementProgress) resourceLoader.incrementWorkload(1)
     return new Promise((resolve) => {
       const geomFileUrl = this.basePath + geomFileID + '.zgeoms'
 
@@ -104,7 +104,7 @@ class GeomLibrary extends EventEmitter {
 
         const streamFileParsed = (event) => {
           if (event.key == geomFileID) {
-            resourceLoader.addWorkDone('GeomLibrary', 1)
+            resourceLoader.incrementWorkDone(1)
             this.off('streamFileParsed', streamFileParsed)
             resolve()
           }
@@ -122,7 +122,7 @@ class GeomLibrary extends EventEmitter {
    */
   loadGeomFilesStream(geomLibraryJSON, basePath, context) {
     const numGeomFiles = geomLibraryJSON.numGeomsPerFile.length
-    resourceLoader.addWork('GeomLibrary', numGeomFiles)
+    resourceLoader.incrementWorkload(numGeomFiles)
 
     this.__numGeoms = geomLibraryJSON.numGeoms
     this.basePath = basePath

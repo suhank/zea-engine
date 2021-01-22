@@ -171,10 +171,10 @@ class ObjAsset extends AssetItem {
     const loadMtlFile = (mtlFile) => {
       return new Promise((resolve) => {
         loadTextfile(mtlFile.url, (fileData) => {
-          resourceLoader.addWorkDone(fileId, 1)
+          resourceLoader.incrementWorkDone(1)
           parseMtlData(fileData)
           async.decAsyncCount()
-          resourceLoader.addWorkDone(fileId, 1)
+          resourceLoader.incrementWorkDone(1)
           resolve()
         })
       })
@@ -242,7 +242,7 @@ class ObjAsset extends AssetItem {
             if (!this.getParameter('loadMtlFile').getValue()) continue
             // Load and parse the mat lib.
             async.incAsyncCount()
-            resourceLoader.addWork(stem, 2)
+            resourceLoader.incrementWorkload(2)
             const mtlFile = resourceLoader.resolveFilepath(fileFolder + value)
             if (mtlFile) {
               await loadMtlFile(mtlFile)
@@ -417,12 +417,11 @@ class ObjAsset extends AssetItem {
     }
 
     const loadObjData = () => {
-      const fileId = this.objfileParam.getValue()
-      resourceLoader.addWork(fileId, 2)
+      resourceLoader.incrementWorkload(2)
       loadTextfile(url, (fileData) => {
-        resourceLoader.addWorkDone(fileId, 1)
+        resourceLoader.incrementWorkDone(1)
         parseObjData(fileData)
-        resourceLoader.addWorkDone(fileId, 1)
+        resourceLoader.incrementWorkDone(1)
       })
     }
 

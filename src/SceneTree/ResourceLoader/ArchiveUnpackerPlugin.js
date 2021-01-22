@@ -95,7 +95,7 @@ class ArchiveUnpackerPlugin {
    * @return {Promise} - The promise value.
    */
   loadFile(url) {
-    this.resourceLoader.addWork(url, 2) // Add work in 2 chunks. Loading and unpacking.
+    this.resourceLoader.incrementWorkload(2) // Add work in 2 chunks. Loading and unpacking.
 
     const promise = new Promise(
       (resolve, reject) => {
@@ -103,7 +103,7 @@ class ArchiveUnpackerPlugin {
         this.__callbacks[url].push(resolve)
         fetch(url)
           .then((response) => {
-            this.resourceLoader.addWorkDone(url, 1)
+            this.resourceLoader.incrementWorkDone(1)
             if (checkStatus(response)) return response.arrayBuffer()
             else reject(new Error(`loadArchive: ${response.status} - ${response.statusText}`))
           })
@@ -134,7 +134,7 @@ class ArchiveUnpackerPlugin {
    */
   __onFinishedReceiveFileData(fileData) {
     const resourceId = fileData.resourceId
-    this.resourceLoader.addWorkDone(resourceId, 1) // unpacking done...
+    this.resourceLoader.incrementWorkDone(1) // unpacking done...
     const callbacks = this.__callbacks[resourceId]
     if (callbacks) {
       for (const callback of callbacks) {
