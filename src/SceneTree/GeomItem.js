@@ -74,6 +74,9 @@ class GeomItem extends BaseGeomItem {
     this.__geomOffsetXfoParam = this.addParameter(new XfoParameter('GeomOffsetXfo'))
     this.__geomMatParam = this.addParameter(new Mat4Parameter('GeomMat'))
 
+    this.geomIndex = -1
+    this.assetItem = null
+
     this.calcGeomMatOperator = new CalcGeomMatOperator(
       this.__globalXfoParam,
       this.__geomOffsetXfoParam,
@@ -239,12 +242,14 @@ class GeomItem extends BaseGeomItem {
     const itemFlags = reader.loadUInt8()
     const geomIndex = reader.loadUInt32()
     const geomLibrary = context.assetItem.getGeometryLibrary()
+
+    this.geomIndex = geomIndex
+    this.assetItem = context.assetItem
+
     const geom = geomLibrary.getGeom(geomIndex)
     if (geom) {
       this.getParameter('Geometry').loadValue(geom)
     } else {
-      this.geomIndex = geomIndex
-      this.assetItem = context.assetItem
       const onGeomLoaded = (event) => {
         const { range } = event
         if (geomIndex >= range[0] && geomIndex < range[1]) {

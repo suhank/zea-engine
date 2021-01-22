@@ -241,6 +241,36 @@ class AssetItem extends TreeItem {
 
     if (onDone) onDone()
   }
+
+  // ////////////////////////////////////////
+  // Clone and Destroy
+
+  /**
+   * The clone method constructs a new tree item, copies its values
+   * from this item and returns it.
+   *
+   * @param {object} context - The context value.
+   * @return {TreeItem} - Returns a new cloned tree item.
+   */
+  clone(context) {
+    const cloned = new AssetItem()
+    cloned.copyFrom(this, context)
+    return cloned
+  }
+
+  /**
+   * Copies current TreeItem with all its children.
+   *
+   * @param {TreeItem} src - The tree item to copy from.
+   * @param {object} context - The context value.
+   */
+  copyFrom(src, context) {
+    this.__geomLibrary = src.__geomLibrary
+    this.__materials = src.__materials
+    this.loaded = src.loaded
+
+    super.copyFrom(src, context)
+  }
 }
 
 Registry.register('AssetItem', AssetItem)
