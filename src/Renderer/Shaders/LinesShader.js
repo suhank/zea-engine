@@ -16,14 +16,20 @@ precision highp float;
 
 attribute vec3 positions;
 
-uniform mat4 viewMatrix;
-uniform mat4 projectionMatrix;
-uniform float Overlay;
 
 <%include file="stack-gl/transpose.glsl"/>
 <%include file="drawItemId.glsl"/>
 <%include file="drawItemTexture.glsl"/>
 <%include file="modelMatrix.glsl"/>
+
+uniform mat4 viewMatrix;
+uniform mat4 projectionMatrix;
+
+#ifdef ENABLE_MULTI_DRAW
+<%include file="materialparams.glsl"/>
+#else
+uniform float Overlay;
+#endif
 
 /* VS Outputs */
 varying float v_drawItemId;
@@ -39,8 +45,23 @@ void main(void) {
   mat4 modelViewProjectionMatrix = projectionMatrix * viewMatrix * modelMatrix;
   gl_Position = modelViewProjectionMatrix * vec4(positions, 1.0);
     
+
+  //////////////////////////////////////////////
+  // Overlay
+
+#ifdef ENABLE_MULTI_DRAW
+  vec2 materialCoords = v_geomItemData.zw;
+  vec4 materialValue1 = getMaterialValue(materialCoords, 1);
+  int maintainScreenSize = int(materialValue1.x + 0.5);
+  float overlay = materialValue1.y;
+#else
+  float overlay = Overlay;
+#endif
+
+gl_Position.z = mix(gl_Position.z, -gl_Position.w, overlay);
+
+  //////////////////////////////////////////////
   
-  gl_Position.z = mix(gl_Position.z, -gl_Position.w, Overlay);
   
   vec4 pos = vec4(positions, 1.);
   v_worldPos      = (modelMatrix * pos).xyz;
