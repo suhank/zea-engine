@@ -11,6 +11,23 @@ import { CameraManipulator } from '../SceneTree/index'
 /**
  * Class representing a GL viewport.
  *
+ * **Events**
+ * * **resized:** Emitted when the GLViewport resizes
+ * * **updated:** Emitted when the GLViewport needs updating. The Renderer will trigger a redraw when this occurs.
+ * * **viewChanged:** Emitted when the view changes. Usually caused by the camera moving.
+ * * **pointerDoublePressed:** Emitted when the user double clicks with the mouse, or double taps in the viewport.
+ * * **pointerDownOnGeom:** Emitted when the user clicks or touches a geometry using a pointer.
+ * * **pointerDown:** Emitted when the user presses a pointer
+ * * **pointerUp:** Emitted when the user releases a pointer
+ * * **pointerOverGeom:** Emitted when the pointer is moved over a geometry
+ * * **pointerLeaveGeom:** Emitted when the pointer is moved off a geometry
+ * * **pointerMove:** Emitted when the pointer is moved
+ * * **pointerEnter:** Emitted when the pointer is moved into thg viewport
+ * * **pointerLeave:** Emitted when the mouse leaves the viewport.
+ * * **keyDown:** Emitted when the user presses a key on the keyboard
+ * * **keyUp:** Emitted when the user releases a key on the keyboard
+ * * **touchCancel:** Emitted when the user cancels a touch interaction
+ *
  * @extends GLBaseViewport
  */
 class GLViewport extends GLBaseViewport {
@@ -35,6 +52,7 @@ class GLViewport extends GLBaseViewport {
 
     this.__geomDataBuffer = undefined
     this.__geomDataBufferFbo = undefined
+    this.debugGeomShader = false
 
     // this.renderGeomDataFbo = this.renderGeomDataFbo.bind(this);
 
@@ -796,10 +814,10 @@ class GLViewport extends GLBaseViewport {
     this.__renderer.drawScene(renderstate)
 
     // Turn this on to debug the geom data buffer.
-    // {
-    //   gl.screenQuad.bindShader(renderstate)
-    //   gl.screenQuad.draw(renderstate, this.__geomDataBuffer)
-    // }
+    if (this.debugGeomShader) {
+      gl.screenQuad.bindShader(renderstate)
+      gl.screenQuad.draw(renderstate, this.__geomDataBuffer)
+    }
   }
 }
 

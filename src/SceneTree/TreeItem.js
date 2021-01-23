@@ -22,9 +22,9 @@ branchSelectionOutlineColor.a = 0.1
  * * **BoundingBox(`BoundingBox`):** Provides the bounding box for the tree item and all of its children in the 3d scene.
  *
  * **Events**
- * * **globalXfoChanged:** _todo_
- * * **visibilityChanged:** _todo_
- * * **highlightChanged:** _todo_
+ * * **globalXfoChanged:** Emitted when the value of GlobalXfo parameter changes.
+ * * **visibilityChanged:** Emitted when the visibility on the tree item changes.
+ * * **highlightChanged:** Emitted when the highlight on the tree item changes.
  * * **childAdded:** Emitted when a item is added as a child.
  * * **childRemoved:** Emitted when an item is removed from the child nodes.
  * * **pointerDown:** Emitted when a pointerDown event happens in an item.
