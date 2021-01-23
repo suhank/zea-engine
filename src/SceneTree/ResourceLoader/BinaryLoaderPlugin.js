@@ -30,7 +30,7 @@ class BinaryLoaderPlugin {
         fetch(url).then((response) => {
           this.resourceLoader.incrementWorkDone(1)
           if (checkStatus(response)) resolve(response.arrayBuffer())
-          else reject(`loadBinary: ${response.status} - ${response.statusText}`)
+          else reject(`loadBinary: ${response.status} - ${response.statusText} : ${url}`)
         })
       },
       () => {}

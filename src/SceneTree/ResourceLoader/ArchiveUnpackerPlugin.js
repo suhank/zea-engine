@@ -68,7 +68,7 @@ class ArchiveUnpackerPlugin {
             this.__onFinishedReceiveFileData(event.data)
           } else if (event.data.type === 'ERROR') {
             const data = event.data
-            console.error(`Unable to load Resource: ${data.resourceId} With url: ${data.url}`)
+            console.error(`Unable to load Resource: ${data.resourceId}`)
           }
         }
       })
@@ -105,7 +105,7 @@ class ArchiveUnpackerPlugin {
           .then((response) => {
             this.resourceLoader.incrementWorkDone(1)
             if (checkStatus(response)) return response.arrayBuffer()
-            else reject(new Error(`loadArchive: ${response.status} - ${response.statusText}`))
+            else reject(new Error(`loadArchive: ${response.status} - ${response.statusText} : ${url}`))
           })
           .then((buffer) => {
             const resourceId = url

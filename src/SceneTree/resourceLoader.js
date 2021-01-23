@@ -221,9 +221,15 @@ class ResourceLoader extends EventEmitter {
 
     this.incrementWorkload()
 
-    promise.then(() => {
-      this.incrementWorkDone()
-    })
+    promise.then(
+      () => {
+        this.incrementWorkDone()
+      },
+      () => {
+        // Error
+        this.incrementWorkDone()
+      }
+    )
 
     return promise
   }

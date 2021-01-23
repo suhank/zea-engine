@@ -30,7 +30,7 @@ class JsonLoaderPlugin {
         fetch(url).then((response) => {
           this.resourceLoader.incrementWorkDone(1)
           if (checkStatus(response)) resolve(response.json())
-          else reject(`loadJSON: ${response.status} - ${response.statusText}`)
+          else reject(`loadJSON: ${response.status} - ${response.statusText} : ${url}`)
         })
       },
       () => {}
