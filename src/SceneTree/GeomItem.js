@@ -335,11 +335,12 @@ class GeomItem extends BaseGeomItem {
 
     if (!src.getParameter('Geometry').getValue() && src.geomIndex != -1) {
       const geomLibrary = src.assetItem.getGeometryLibrary()
-      const geomIndex = src.geomIndex
+      this.assetItem = src.assetItem
+      this.geomIndex = src.geomIndex
       const onGeomLoaded = (event) => {
         const { range } = event
-        if (geomIndex >= range[0] && geomIndex < range[1]) {
-          const geom = geomLibrary.getGeom(geomIndex)
+        if (this.geomIndex >= range[0] && this.geomIndex < range[1]) {
+          const geom = geomLibrary.getGeom(this.geomIndex)
           // Note: we need the 'valueChanged' event to be received by the
           // renderer to then load the geometry into the GPU.
           if (geom) this.getParameter('Geometry').setValue(geom)

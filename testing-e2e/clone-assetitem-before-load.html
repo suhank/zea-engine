@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>clone-assetitem-before-load - Zea Engine</title>
+
+    <link href="zea-logo.png" rel="shortcut icon" />
+
+    <link rel="stylesheet" href="styles/tachyons.min.css" />
+    <link rel="stylesheet" href="styles/main.css" />
+
+    <script src="../dist/index.umd.js"></script>
+    <script src="../dist/plugins.umd.js"></script>
+
+    <script type="module">
+      const { GLRenderer, Scene, Vec3, Xfo, VLAAsset } = window.zeaEngine
+
+      const canvas = document.querySelector('#renderer')
+
+      const scene = new Scene()
+      const renderer = new GLRenderer(canvas, { hideSplash: true, webglOptions: { antialias: false } })
+      renderer.setScene(scene)
+
+      scene.setupGrid(10.0, 10)
+
+      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, 0.5), new Vec3(0, 0, 0))
+
+      const asset = new VLAAsset()
+      asset.getParameter('LocalXfo').setValue(new Xfo(new Vec3(0.5, 0, 0)))
+      asset.getParameter('FilePath').setValue('/dist/public-resources/Vive.vla')
+      asset.on('loaded', () => {
+        const HMD = asset.getChildByName('HMD')
+        HMD.getParameter('LocalXfo').setValue(new Xfo(new Vec3(0, 0, 200)))
+
+        const Controller = asset.getChildByName('Controller')
+        Controller.getParameter('LocalXfo').setValue(new Xfo(new Vec3(-200, 0, 0)))
+
+        const Controller2 = Controller.clone()
+        Controller2.getParameter('LocalXfo').setValue(new Xfo(new Vec3(200, 0, 0)))
+        asset.addChild(Controller2, false)
+      })
+      scene.getRoot().addChild(asset)
+
+      const asset2 = asset.clone()
+      asset2.getParameter('LocalXfo').setValue(new Xfo(new Vec3(-0.5, 0, 0)))
+      scene.getRoot().addChild(asset2)
+
+      asset2.on('loaded', () => {
+        window.postMessage('done-loading')
+      })
+    </script>
+  </head>
+  <body>
+    <canvas class="full-size" id="renderer" />
+  </body>
+</html>

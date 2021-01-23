@@ -269,6 +269,21 @@ class AssetItem extends TreeItem {
     this.__materials = src.__materials
     this.loaded = src.loaded
 
+    if (!src.loaded) {
+      src.on('loaded', (event) => {
+        const srcLocalXfo = src.getParameter('LocalXfo').getValue()
+        const localXfo = this.getParameter('LocalXfo').getValue()
+        localXfo.sc = srcLocalXfo.sc.clone()
+        this.getParameter('LocalXfo').setValue(localXfo)
+
+        src.getChildren().forEach((srcChildItem) => {
+          if (srcChildItem) this.addChild(srcChildItem.clone(context), false, false)
+        })
+        this.loaded = true
+        this.emit('loaded', event)
+      })
+    }
+
     super.copyFrom(src, context)
   }
 }
