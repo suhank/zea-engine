@@ -155,8 +155,6 @@ void main(void) {
   fragColor = baseColor;
   fragColor.a *= opacity;
 
-
-    
 #ifndef ENABLE_ES3
   gl_FragColor = fragColor;
 #endif
@@ -169,8 +167,8 @@ void main(void) {
   static getParamDeclarations() {
     const paramDescs = super.getParamDeclarations()
     paramDescs.push({ name: 'BaseColor', defaultValue: new Color(1.0, 1.0, 0.5) })
-    paramDescs.push({ name: 'Opacity', defaultValue: 1.0 })
-    paramDescs.push({ name: 'Overlay', defaultValue: 0.0 })
+    paramDescs.push({ name: 'Opacity', defaultValue: 0.7 })
+    paramDescs.push({ name: 'Overlay', defaultValue: 0.0001 }) // Provide a slight overlay so lines draw over meshes.
     return paramDescs
   }
 
@@ -186,6 +184,8 @@ void main(void) {
     matData[1] = baseColor.g
     matData[2] = baseColor.b
     matData[3] = baseColor.a
+    // Note: By avoiding calling this value 'Opacity', the lines will not be considered 'Transparent'
+    // Lines do not need to be depth sorted....
     matData[4] = material.getParameter('Opacity').getValue()
     matData[5] = material.getParameter('Overlay').getValue()
     return matData
@@ -197,6 +197,26 @@ void main(void) {
 
   static getSelectedShaderName() {
     return 'StandardSurfaceSelectedGeomsShader'
+  }
+
+  bind(renderstate, key) {
+    const res = super.bind(renderstate, key)
+    const gl = this.__gl
+    gl.enable(gl.BLEND)
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
+    return res
+  }
+
+  /**
+   * The unbind method.
+   * @param {any} renderstate - The renderstate value.
+   * @return {any} - The return value.
+   */
+  unbind(renderstate) {
+    const res = super.unbind(renderstate)
+    const gl = this.__gl
+    gl.disable(gl.BLEND)
+    return res
   }
 }
 

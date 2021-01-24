@@ -1,5 +1,6 @@
 import { Vec3 } from '../../Math/Vec3'
 import { PassType } from './GLPass.js'
+import { Points, Lines, PointsProxy, LinesProxy } from '../../SceneTree/index'
 import { GLStandardGeomsPass } from './GLStandardGeomsPass.js'
 import { GLRenderer } from '../GLRenderer.js'
 import { MathFunctions } from '../../Utilities/MathFunctions'
@@ -38,6 +39,9 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
    * @return {boolean} - The return value.
    */
   filterGeomItem(geomItem) {
+    const geom = geomItem.getParameter('Geometry').getValue()
+    if (geom instanceof Lines || geom instanceof Points || geom instanceof PointsProxy || geom instanceof LinesProxy)
+      return false
     const material = geomItem.getParameter('Material').getValue()
     return material.isTransparent()
   }
@@ -218,6 +222,9 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
       const glShader = transparentItem.shaders.glShader
       if (cache.currentglShader != glShader) {
         // Some passes, like the depth pass, bind custom uniforms.
+        // Note: No 'unbind' here before binding the next shader.
+        // That is to support a simple hack. LinesShader enables blend
+        // each time it is bound, and then disables on unbind.
         if (!glShader.bind(renderstate)) {
           continue
         }
