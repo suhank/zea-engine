@@ -62,6 +62,10 @@ class GLRenderer extends GLBaseRenderer {
       this.addShaderPreprocessorDirective('ENABLE_TEXTURES')
     }
 
+    if (options.debugGeomIds) {
+      this.addShaderPreprocessorDirective('DEBUG_GEOM_ID')
+    }
+
     this.__outlineShader = new OutlinesShader(gl)
     this.quad = new GLMesh(gl, new Plane(1, 1))
 

@@ -5,7 +5,7 @@ shaderLibrary.setShaderModule(
   `
 
 vec3 getDebugColor(float id) {
-    int sel = int(round(mod(float(id), 14.0)));
+    int sel = int(round(mod(round(id), 16.0)));
     
     if(sel==0)
         return vec3(0.0, 1.0, 1.0);

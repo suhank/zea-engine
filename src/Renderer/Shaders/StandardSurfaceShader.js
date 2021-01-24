@@ -23,10 +23,6 @@ class StandardSurfaceShader extends GLShader {
       `
 precision highp float;
 
-#ifdef ENABLE_MULTI_DRAW
-// #define DEBUG_GEOM_ID
-#endif
-
 attribute vec3 positions;
 attribute vec3 normals;
 #ifdef ENABLE_TEXTURES
@@ -61,9 +57,11 @@ void main(void) {
     int drawItemId = getDrawItemId();
     v_drawItemId = float(drawItemId);
     v_geomItemData = getInstanceData(drawItemId);
+    #ifdef ENABLE_MULTI_DRAW
     #ifdef DEBUG_GEOM_ID
     v_geomId = float(gl_DrawID);
     #endif // DEBUG_GEOM_ID
+    #endif // ENABLE_MULTI_DRAW
 
     vec4 pos = vec4(positions, 1.);
     mat4 modelMatrix = getModelMatrix(drawItemId);
