@@ -12,6 +12,13 @@ function checkStatus(response) {
   return response
 }
 
+let numCores = window.navigator.hardwareConcurrency
+if (!numCores) {
+  if (isMobile) numCores = 4
+  else numCores = 6
+}
+numCores-- // always leave one main thread code spare.
+
 /**
  * Archive unpacker plugin.
  */
@@ -74,7 +81,7 @@ class ArchiveUnpackerPlugin {
       })
     }
 
-    this.__nextWorker = (this.__nextWorker + 1) % 3
+    this.__nextWorker = (this.__nextWorker + 1) % numCores
     if (this.__workers[this.__nextWorker] == undefined) this.__workers[this.__nextWorker] = __constructWorker()
     return this.__workers[this.__nextWorker]
   }
@@ -103,9 +110,12 @@ class ArchiveUnpackerPlugin {
         this.__callbacks[url].push(resolve)
         fetch(url)
           .then((response) => {
-            this.resourceLoader.incrementWorkDone(1)
+            this.resourceLoader.incrementWorkDone(1) // done loading
             if (checkStatus(response)) return response.arrayBuffer()
-            else reject(new Error(`loadArchive: ${response.status} - ${response.statusText} : ${url}`))
+            else {
+              this.resourceLoader.incrementWorkDone(1) // failed before parsing
+              reject(new Error(`loadArchive: ${response.status} - ${response.statusText} : ${url}`))
+            }
           })
           .then((buffer) => {
             const resourceId = url
