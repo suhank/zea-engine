@@ -1,5 +1,5 @@
 /* eslint-disable guard-for-in */
-import { TreeItem, ParameterOwner } from '../SceneTree/index'
+import { TreeItem, GeomItem, ParameterOwner } from '../SceneTree/index'
 import { SystemDesc } from '../SystemDesc'
 import { onResize } from '../external/onResize'
 import { create3DContext } from './GLContext'
@@ -344,7 +344,21 @@ class GLBaseRenderer extends ParameterOwner {
     // Note: we can have BaseItems in the tree now.
     if (!(treeItem instanceof TreeItem)) return
 
-    this.assignTreeItemToGLPass(treeItem)
+    if (treeItem instanceof GeomItem) {
+      const geomParam = treeItem.getParameter('Geometry')
+      if (geomParam.getValue() == undefined) {
+        // we will add this geomItem once it receives its geom.
+        const geomAssigned = () => {
+          this.assignTreeItemToGLPass(treeItem)
+          geomParam.off('valueChanged', geomAssigned)
+        }
+        geomParam.on('valueChanged', geomAssigned)
+      } else {
+        this.assignTreeItemToGLPass(treeItem)
+      }
+    } else {
+      this.assignTreeItemToGLPass(treeItem)
+    }
 
     // Traverse the tree adding items until we hit the leaves (which are usually GeomItems.)
     for (const childItem of treeItem.getChildren()) {
