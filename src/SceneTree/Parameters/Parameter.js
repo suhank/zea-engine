@@ -348,15 +348,11 @@ class Parameter extends EventEmitter {
    * Sets value of the parameter.
    *
    * @param {object|string|number|any} value - The value param.
-   * @param {number} mode - This is deprecated now.
    */
-  setValue(value, mode) {
+  setValue(value) {
     if (value == undefined) {
       // eslint-disable-next-line no-throw-literal
       throw 'undefined was passed into the set value for param:' + this.getName()
-    }
-    if (mode != undefined) {
-      console.warn("WARNING in Parameter.setValue: 'mode' is deprecated.")
     }
 
     if (this.__boundOps.length > 0) {
@@ -422,7 +418,7 @@ class Parameter extends EventEmitter {
     } else {
       this.__value.fromJSON(j.value, context)
     }
-    this.emit('valueChanged', { mode: 0 })
+    this.emit('valueChanged', {})
   }
 
   /**
