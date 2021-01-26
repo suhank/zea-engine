@@ -54,30 +54,31 @@ varying float v_geomId;
 
 
 void main(void) {
-    int drawItemId = getDrawItemId();
-    v_drawItemId = float(drawItemId);
-    v_geomItemData = getInstanceData(drawItemId);
-    #ifdef ENABLE_MULTI_DRAW
-    #ifdef DEBUG_GEOM_ID
-    v_geomId = float(gl_DrawID);
-    #endif // DEBUG_GEOM_ID
-    #endif // ENABLE_MULTI_DRAW
+  int drawItemId = getDrawItemId();
+  v_drawItemId = float(drawItemId);
+  v_geomItemData = getInstanceData(drawItemId);
 
-    vec4 pos = vec4(positions, 1.);
-    mat4 modelMatrix = getModelMatrix(drawItemId);
-    mat4 modelViewMatrix = viewMatrix * modelMatrix;
-    vec4 viewPos    = modelViewMatrix * pos;
-    gl_Position     = projectionMatrix * viewPos;
+  vec4 pos = vec4(positions, 1.);
+  mat4 modelMatrix = getModelMatrix(drawItemId);
+  mat4 modelViewMatrix = viewMatrix * modelMatrix;
+  vec4 viewPos    = modelViewMatrix * pos;
+  gl_Position     = projectionMatrix * viewPos;
 
-    mat3 normalMatrix = mat3(transpose(inverse(modelViewMatrix)));
-    v_viewPos       = -viewPos.xyz;
-    v_viewNormal    = normalMatrix * normals;
+  mat3 normalMatrix = mat3(transpose(inverse(modelViewMatrix)));
+  v_viewPos       = -viewPos.xyz;
+  v_viewNormal    = normalMatrix * normals;
 
 #ifdef ENABLE_TEXTURES
-    v_textureCoord  = texCoords;
+  v_textureCoord  = texCoords;
 #endif
 
-    v_worldPos      = (modelMatrix * pos).xyz;
+  v_worldPos      = (modelMatrix * pos).xyz;
+  
+  #ifdef ENABLE_MULTI_DRAW
+  #ifdef DEBUG_GEOM_ID
+  v_geomId = float(gl_DrawID);
+  #endif // DEBUG_GEOM_ID
+  #endif // ENABLE_MULTI_DRAW
 }
 `
     )
@@ -93,7 +94,6 @@ precision highp float;
 <%include file="math/constants.glsl"/>
 <%include file="drawItemTexture.glsl"/>
 <%include file="cutaways.glsl"/>
-
 
 <%include file="stack-gl/gamma.glsl"/>
 <%include file="materialparams.glsl"/>
