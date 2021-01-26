@@ -84,22 +84,7 @@ class AssetItem extends TreeItem {
       context.versions['zea-engine'] = new Version(reader.loadStr())
     }
     this.__engineDataVersion = context.versions['zea-engine']
-    console.log('Loading Engine File version:', context.versions['zea-engine'])
 
-    let layerRoot
-    const layers = {}
-    context.addGeomToLayer = (geomItem, layer) => {
-      if (!layers[layer]) {
-        if (!layerRoot) {
-          layerRoot = new TreeItem('Layers')
-          this.addChild(layerRoot, false)
-        }
-        const group = new SelectionSet(layer)
-        layerRoot.addChild(group, false)
-        layers[layer] = group
-      }
-      layers[layer].addItem(geomItem)
-    }
     const loadUnits = () => {
       this.__units = reader.loadStr()
       // Calculate a scale factor to convert
@@ -143,6 +128,53 @@ class AssetItem extends TreeItem {
       // the start.
       loadUnits()
     }
+
+    let layerRoot
+    const layers = {}
+    context.addGeomToLayer = (geomItem, layer) => {
+      if (!layers[layer]) {
+        if (!layerRoot) {
+          layerRoot = new TreeItem('Layers')
+          this.addChild(layerRoot, false)
+        }
+        const group = new SelectionSet(layer)
+        layerRoot.addChild(group, false)
+        layers[layer] = group
+      }
+      layers[layer].addItem(geomItem)
+    }
+
+    const plcbs = [] // Post load callbacks.
+    context.resolvePath = (path, onSucceed, onFail) => {
+      if (!path) throw new Error('Path not specified')
+
+      // Note: Why not return a Promise here?
+      // Promise evaluation is always async, so
+      // all promises will be resolved after the current call stack
+      // has terminated. In our case, we want all paths
+      // to be resolved before the end of the function, which
+      // we can handle easily with callback functions.
+      try {
+        const item = this.resolvePath(path)
+        onSucceed(item)
+      } catch (e) {
+        // Some paths resolve to items generated during load,
+        // so push a callback to re-try after the load is complete.
+        plcbs.push(() => {
+          try {
+            const param = this.resolvePath(path)
+            onSucceed(param)
+          } catch (e) {
+            if (onFail) {
+              onFail()
+            } else {
+              throw new Error(e.message)
+            }
+          }
+        })
+      }
+    }
+    context.addPLCB = (plcb) => plcbs.push(plcb)
 
     this.__materials.readBinary(reader, context)
 
@@ -270,14 +302,16 @@ class AssetItem extends TreeItem {
     this.loaded = src.loaded
 
     if (!src.loaded) {
-      src.on('loaded', (event) => {
+      src.once('loaded', (event) => {
         const srcLocalXfo = src.getParameter('LocalXfo').getValue()
         const localXfo = this.getParameter('LocalXfo').getValue()
         localXfo.sc = srcLocalXfo.sc.clone()
         this.getParameter('LocalXfo').setValue(localXfo)
 
         src.getChildren().forEach((srcChildItem) => {
-          if (srcChildItem) this.addChild(srcChildItem.clone(context), false, false)
+          if (srcChildItem && srcChildItem != AssetItem) {
+            this.addChild(srcChildItem.clone(context), false, false)
+          }
         })
         this.loaded = true
         this.emit('loaded', event)
