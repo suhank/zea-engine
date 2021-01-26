@@ -127,8 +127,8 @@ class ResourceLoader extends EventEmitter {
    */
   resolveFilename(value) {
     if (this.__adapter) return this.__adapter.resolveFilename(value)
-    const filename = value.split(value.lastIndexOf('/'))[1]
-    return filename
+    if (!value.includes('/')) return value
+    return value.split('/')[1]
   }
 
   /**
