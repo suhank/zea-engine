@@ -16,7 +16,6 @@ import { CameraManipulator } from '../SceneTree/index'
  * * **updated:** Emitted when the GLViewport needs updating. The Renderer will trigger a redraw when this occurs.
  * * **viewChanged:** Emitted when the view changes. Usually caused by the camera moving.
  * * **pointerDoublePressed:** Emitted when the user double clicks with the mouse, or double taps in the viewport.
- * * **pointerDownOnGeom:** Emitted when the user clicks or touches a geometry using a pointer.
  * * **pointerDown:** Emitted when the user presses a pointer
  * * **pointerUp:** Emitted when the user releases a pointer
  * * **pointerOverGeom:** Emitted when the pointer is moved over a geometry
@@ -491,7 +490,6 @@ class GLViewport extends GLBaseViewport {
    * Handler of the `pointerdown` event fired when the pointer device is initially pressed.
    *
    * @param {MouseEvent|TouchEvent} event - The DOM event produced by a pointer
-   * @return {boolean} -
    */
   onPointerDown(event) {
     this.__preparePointerEvent(event)
@@ -537,22 +535,17 @@ class GLViewport extends GLBaseViewport {
 
     if (event.intersectionData != undefined) {
       event.intersectionData.geomItem.onPointerDown(event)
-
       if (!event.propagating || this.capturedItem) return
-
-      this.emit('pointerDownOnGeom', event)
     }
 
     this.emit('pointerDown', event)
-    if (!event.propagating) return
+    if (!event.propagating || this.capturedItem) return
 
     if (this.manipulator) {
       this.manipulator.onPointerDown(event)
 
       if (!event.propagating) return
     }
-
-    return false
   }
 
   /**
