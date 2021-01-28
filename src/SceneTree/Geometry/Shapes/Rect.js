@@ -28,10 +28,7 @@ class Rect extends ProceduralLines {
     if (isNaN(x) || isNaN(y)) throw new Error('Invalid geom args')
 
     this.__x = this.addParameter(new NumberParameter('X', x))
-    this.__x.on('valueChanged', this.resize.bind(this))
     this.__y = this.addParameter(new NumberParameter('Y', y))
-    this.__y.on('valueChanged', this.resize.bind(this))
-    this.rebuild()
   }
 
   /**
@@ -45,7 +42,7 @@ class Rect extends ProceduralLines {
     this.setSegmentVertexIndices(1, 1, 2)
     this.setSegmentVertexIndices(2, 2, 3)
     this.setSegmentVertexIndices(3, 3, 0)
-    this.resize(false)
+    this.resize()
   }
 
   /**
