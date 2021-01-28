@@ -58,7 +58,7 @@ class GLBaseRenderer extends ParameterOwner {
     this.renderGeomDataFbos = this.renderGeomDataFbos.bind(this)
     this.requestRedraw = this.requestRedraw.bind(this)
 
-    this.setupWebGL($canvas, options.webglOptions ? options.webglOptions : {})
+    this.setupWebGL($canvas, options.webglOptions ? { ...options, ...options.webglOptions } : options)
     this.bindEventHandlers()
 
     // eslint-disable-next-line guard-for-in
@@ -570,9 +570,11 @@ class GLBaseRenderer extends ParameterOwner {
     })
 
     webglOptions.preserveDrawingBuffer = true
+    webglOptions.antialias = webglOptions.antialias != undefined ? webglOptions.antialias : true
+    webglOptions.depth = webglOptions.depth != undefined ? webglOptions.depth : true
     webglOptions.stencil = webglOptions.stencil ? webglOptions.stencil : false
     webglOptions.alpha = webglOptions.alpha ? webglOptions.alpha : false
-    webglOptions.xrCompatible = true
+    webglOptions.xrCompatible = webglOptions.xrCompatible != undefined ? webglOptions.xrCompatible : true
     this.__gl = create3DContext(this.__glcanvas, webglOptions)
     if (!this.__gl) alert('Unable to create WebGL context. WebGL not supported.')
     this.__gl.renderer = this

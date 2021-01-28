@@ -32,10 +32,7 @@ class GLRenderer extends GLBaseRenderer {
    * @param {any} options - The options value.
    */
   constructor($canvas, options = {}) {
-    super($canvas, options, {
-      antialias: true,
-      depth: true,
-    })
+    super($canvas, options)
 
     // ///////////////////////
     // Renderer Setup

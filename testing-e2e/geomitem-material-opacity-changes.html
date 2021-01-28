@@ -19,7 +19,7 @@
       const canvas = document.querySelector('#renderer')
 
       const scene = new Scene()
-      const renderer = new GLRenderer(canvas, { hideSplash: true, webglOptions: { antialias: false } })
+      const renderer = new GLRenderer(canvas, { hideSplash: true, antialias: false })
       renderer.setScene(scene)
 
       scene.setupGrid(10.0, 10)
