@@ -102,7 +102,7 @@ class ArchiveUnpackerPlugin {
    * @return {Promise} - The promise value.
    */
   loadFile(url) {
-    this.resourceLoader.incrementWorkload(2) // Add work in 2 chunks. Loading and unpacking.
+    this.resourceLoader.incrementWorkload(1) //  start loading.
 
     const promise = new Promise(
       (resolve, reject) => {
@@ -113,7 +113,6 @@ class ArchiveUnpackerPlugin {
             this.resourceLoader.incrementWorkDone(1) // done loading
             if (checkStatus(response)) return response.arrayBuffer()
             else {
-              this.resourceLoader.incrementWorkDone(1) // failed before parsing
               reject(new Error(`loadArchive: ${response.status} - ${response.statusText} : ${url}`))
             }
           })
@@ -144,7 +143,6 @@ class ArchiveUnpackerPlugin {
    */
   __onFinishedReceiveFileData(fileData) {
     const resourceId = fileData.resourceId
-    this.resourceLoader.incrementWorkDone(1) // unpacking done...
     const callbacks = this.__callbacks[resourceId]
     if (callbacks) {
       for (const callback of callbacks) {
@@ -152,7 +150,6 @@ class ArchiveUnpackerPlugin {
       }
       delete this.__callbacks[resourceId]
     }
-    this.resourceLoader.emit('loaded', { resourceId })
   }
 }
 

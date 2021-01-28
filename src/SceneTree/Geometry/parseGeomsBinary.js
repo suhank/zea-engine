@@ -83,7 +83,7 @@ const parseGeomsBinary = (data, callback) => {
   callback(
     {
       geomLibraryId: data.geomLibraryId,
-      key: data.key,
+      geomFileID: data.geomFileID,
       geomIndexOffset: data.geomIndexOffset,
       geomsRange: data.geomsRange,
       geomDatas,

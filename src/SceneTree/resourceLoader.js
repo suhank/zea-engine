@@ -215,15 +215,15 @@ class ResourceLoader extends EventEmitter {
 
     if (this.promiseCache[url]) return this.promiseCache[url]
 
-    const promise = plugin.loadFile(url)
-
-    this.promiseCache[url] = promise
-
     this.incrementWorkload()
+
+    const promise = plugin.loadFile(url)
+    this.promiseCache[url] = promise
 
     promise.then(
       () => {
         this.incrementWorkDone()
+        this.emit('loaded', { url })
       },
       () => {
         // Error

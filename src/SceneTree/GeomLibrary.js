@@ -115,6 +115,15 @@ class GeomLibrary extends EventEmitter {
       resourceLoader.loadFile('archive', geomFileUrl).then((entries) => {
         const geomsData = entries[Object.keys(entries)[0]]
 
+        const streamFileParsed = (event) => {
+          if (event.geomFileID == geomFileID) {
+            resourceLoader.incrementWorkDone(1)
+            this.off('streamFileParsed', streamFileParsed)
+            resolve()
+          }
+        }
+        this.on('streamFileParsed', streamFileParsed)
+
         if (this.loadCount < numCores) {
           this.loadCount++
           this.readBinaryBuffer(geomFileID, geomsData.buffer, this.loadContext)
@@ -124,15 +133,6 @@ class GeomLibrary extends EventEmitter {
             geomsData,
           })
         }
-
-        const streamFileParsed = (event) => {
-          if (event.key == geomFileID) {
-            resourceLoader.incrementWorkDone(1)
-            this.off('streamFileParsed', streamFileParsed)
-            resolve()
-          }
-        }
-        this.on('streamFileParsed', streamFileParsed)
       })
     })
   }
@@ -206,12 +206,12 @@ class GeomLibrary extends EventEmitter {
 
   /**
    * The readBinaryBuffer method.
-   * @param {any} key - The key value.
+   * @param {number} geomFileID - The key value.
    * @param {ArrayBuffer} buffer - The buffer value.
    * @param {object} context - The context value.
    * @return {any} - The return value.
    */
-  readBinaryBuffer(key, buffer, context) {
+  readBinaryBuffer(geomFileID, buffer, context) {
     const isMobile = SystemDesc.isMobileDevice
     const reader = new BinReader(buffer, 0, isMobile)
     const numGeoms = reader.loadUInt32()
@@ -219,13 +219,13 @@ class GeomLibrary extends EventEmitter {
     // Geoms within a given file are offset into the array of geometries of the library.
     // Note: One day, the geom lirbary should already know all the offsets for each file before loading.
     const geomIndexOffset = reader.loadUInt32()
-    this.__streamInfos[key] = {
+    this.__streamInfos[geomFileID] = {
       total: numGeoms,
       done: 0,
     }
 
     if (numGeoms == 0) {
-      this.emit('streamFileParsed', { key, geomCount: 0 })
+      this.emit('streamFileParsed', { geomFileID, geomCount: 0 })
       return numGeoms
     }
     if (this.__numGeoms == -1) {
@@ -268,7 +268,7 @@ class GeomLibrary extends EventEmitter {
         getWorker(this.getId(), this.__recieveGeomDatas).postMessage(
           {
             geomLibraryId: this.getId(),
-            key,
+            geomFileID,
             toc,
             geomIndexOffset,
             geomsRange,
@@ -311,7 +311,7 @@ class GeomLibrary extends EventEmitter {
       // const bufferSlice = buffer.slice(toc[3], toc[4])
       parseGeomsBinary(
         {
-          key,
+          geomFileID,
           toc,
           geomIndexOffset,
           geomsRange,
@@ -333,7 +333,7 @@ class GeomLibrary extends EventEmitter {
    * @private
    */
   __recieveGeomDatas(data) {
-    const { geomLibraryId, key, geomDatas, geomIndexOffset, geomsRange } = data
+    const { geomLibraryId, geomFileID, geomDatas, geomIndexOffset, geomsRange } = data
     if (geomLibraryId != this.getId()) throw new Erorr('Receiving workload for a different GeomLibrary')
     // We are storing a subset of the geoms from a binary file
     // which is a subset of the geoms in an asset.
@@ -371,11 +371,11 @@ class GeomLibrary extends EventEmitter {
 
     // Each file in the stream has its own counter for the number of
     // geoms, and once each stream file finishes parsing, we fire a signal.
-    const streamInfo = this.__streamInfos[key]
+    const streamInfo = this.__streamInfos[geomFileID]
     streamInfo.done += loaded
-    // console.log(key + " Loaded:" + streamInfo.done + " of :" + streamInfo.total);
+    // console.log('__recieveGeomDatas:', geomFileID + ' Loaded:' + streamInfo.done + ' of :' + streamInfo.total)
     if (streamInfo.done == streamInfo.total) {
-      this.emit('streamFileParsed', { key, geomCount: streamInfo.done })
+      this.emit('streamFileParsed', { geomFileID, geomCount: streamInfo.done })
     }
 
     // Once all the geoms from all the files are loaded and parsed
