@@ -551,7 +551,7 @@ class Mesh extends BaseGeom {
       for (const e of edges) {
         const f0 = this.edgeFaces[e * 2]
         const f1 = this.edgeFaces[e * 2 + 1]
-        if (f0 != -1 && f1 == -1 && this.edgeAngles[e] < hardAngle) {
+        if (f0 != -1 && f1 != -1 && this.edgeAngles[e] < hardAngle) {
           let f0groupIndex = -1
           let f1groupIndex = -1
           for (let groupIndex = 0; groupIndex < faceGroups.length; groupIndex++) {
