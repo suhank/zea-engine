@@ -700,12 +700,12 @@ class TreeItem extends BaseItem {
   }
 
   /**
-   * @deprecated
+   * Removes the provided item from this TreeItem if it is one of its children.
+   * An exception is thrown if the item is not a child of this tree item.
    *
    * @param {BaseItem} childItem - The child TreeItem to remove.
    */
   removeChildByHandle(childItem) {
-    console.warn(`Deprecated. use "this.removeChild(this.getChildIndex(child))"`)
     const index = this.__childItems.indexOf(childItem)
     if (index == -1) throw new Error('Error in removeChildByHandle. Child not found:' + childItem.getName())
     this.removeChild(index)
