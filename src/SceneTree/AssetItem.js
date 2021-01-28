@@ -187,6 +187,10 @@ class AssetItem extends TreeItem {
       loadUnits()
     }
 
+    // Invoke all the post-load callbacks to resolve any
+    // remaning references.
+    for (const cb of plcbs) cb()
+
     this.loaded = true
     // console.log("numTreeItems:", context.numTreeItems, " numGeomItems:", context.numGeomItems)
   }
