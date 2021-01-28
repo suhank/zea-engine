@@ -34,7 +34,7 @@
 
       const scene = new Scene()
       scene.setupGrid(10, 10)
-      const renderer = new GLRenderer(canvas, { hideSplash: true, antialias: false })
+      const renderer = new GLRenderer(canvas, { hideSplash: true, antialias: false, xrCompatible: false })
       renderer.setScene(scene)
 
       const material1 = new Material('surfaces', 'StandardSurfaceShader')
