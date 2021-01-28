@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>load-mesh-json - Zea Engine</title>
+
+    <link href="zea-logo.png" rel="shortcut icon" />
+
+    <link rel="stylesheet" href="styles/tachyons.min.css" />
+    <link rel="stylesheet" href="styles/main.css" />
+
+    <script src="../dist/index.umd.js"></script>
+    <script src="../dist/plugins.umd.js"></script>
+
+    <script type="module">
+      const { GLRenderer, Scene, Vec3, Mesh, Material, GeomItem } = window.zeaEngine
+
+      const canvas = document.querySelector('#renderer')
+
+      const scene = new Scene()
+      const renderer = new GLRenderer(canvas, { hideSplash: true, webglOptions: { antialias: false } })
+      renderer.setScene(scene)
+
+      scene.setupGrid(10.0, 10)
+
+      const mesh = new Mesh()
+      const geomItem = new GeomItem('geom', mesh, new Material('mat', 'StandardSurfaceShader'))
+      scene.getRoot().addChild(geomItem)
+
+      mesh.fromJSON({
+        faceCounts: [2],
+        faceVertexIndices: [0, 1, 2, 0, 2, 3],
+        numVertices: 4,
+        vertexAttributes: {
+          positions: {
+            dataType: 'Vec3',
+            defaultScalarValue: 0.0,
+            data: [0, 0, 0, 0, 1, 0, 1, 1, 0, 1, 0, 0],
+          },
+        },
+      })
+      mesh.computeVertexNormals()
+
+      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 1, 2.7), new Vec3(0, 0, 0.4))
+      renderer.frameAll()
+      window.postMessage('done-loading')
+
+      // {{{ Messages handler.
+      const handleMessage = (event) => {
+        const { data } = event
+
+        if (data === 'variant-01') {
+          mesh.fromJSON({
+            faceCounts: [4],
+            faceVertexIndices: [0, 1, 2, 0, 2, 3, 3, 2, 4, 2, 1, 4],
+            numVertices: 5,
+            vertexAttributes: {
+              positions: {
+                dataType: 'Vec3',
+                defaultScalarValue: 0.0,
+                data: [0, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 0.7, 0.7, 0],
+              },
+            },
+          })
+          mesh.computeVertexNormals()
+          renderer.frameAll()
+          renderer.once('redrawOccurred', () => {
+            window.postMessage(`done-${data}`)
+          })
+        } else if (data === 'variant-02') {
+          mesh.fromJSON({
+            faceCounts: [2],
+            faceVertexIndices: [0, 1, 2, 0, 2, 3],
+            numVertices: 4,
+            vertexAttributes: {
+              positions: {
+                dataType: 'Vec3',
+                defaultScalarValue: 0.0,
+                data: [0, 0, 0, 0, 1, 0, 1, 1, 0, 1, 0, 0],
+              },
+            },
+          })
+          mesh.computeVertexNormals()
+          renderer.frameAll()
+          renderer.once('redrawOccurred', () => {
+            window.postMessage(`done-${data}`)
+          })
+        }
+      }
+
+      window.addEventListener('message', handleMessage, false)
+      // }}}
+    </script>
+  </head>
+  <body>
+    <canvas class="full-size" id="renderer" />
+  </body>
+</html>
