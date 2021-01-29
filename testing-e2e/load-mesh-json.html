@@ -15,7 +15,7 @@
     <script src="../dist/plugins.umd.js"></script>
 
     <script type="module">
-      const { GLRenderer, Scene, Vec3, Mesh, Material, GeomItem } = window.zeaEngine
+      const { GLRenderer, Scene, Vec3, Mesh, Color, Material, GeomItem, Lines } = window.zeaEngine
 
       const canvas = document.querySelector('#renderer')
 
@@ -23,7 +23,7 @@
       const renderer = new GLRenderer(canvas, { hideSplash: true, antialias: false, xrCompatible: false })
       renderer.setScene(scene)
 
-      scene.setupGrid(10.0, 10)
+      // scene.setupGrid(10.0, 10)
 
       const mesh = new Mesh()
       const geomItem = new GeomItem('geom', mesh, new Material('mat', 'StandardSurfaceShader'))
@@ -42,6 +42,30 @@
         },
       })
       mesh.computeVertexNormals()
+
+      // Display all the Mesh edges in a lines geometry attached to the mesh.
+      const edges = new Lines()
+      edges.__vertexAttributes.set('positions', mesh.getVertexAttribute('positions'))
+      edges.setNumVertices(mesh.getNumVertices())
+      edges.__indices = new Uint32Array(mesh.edgeVerts)
+      const edgesMaterial = new Material('edgesMaterial', 'LinesShader')
+      edgesMaterial.getParameter('BaseColor').setValue(new Color(0.2, 0.2, 0.2))
+      edgesMaterial.getParameter('Opacity').setValue(0.3)
+      edgesMaterial.getParameter('Overlay').setValue(0.000001)
+      const edgesItem = new GeomItem('edges', edges, edgesMaterial)
+      geomItem.addChild(edgesItem)
+
+      // Display all the hard edges as darker lines.
+      const hardEdges = new Lines()
+      hardEdges.__vertexAttributes.set('positions', mesh.getVertexAttribute('positions'))
+      hardEdges.setNumVertices(mesh.getNumVertices())
+      hardEdges.__indices = mesh.computeHardEdgesIndices()
+      const hardEdgesMaterial = new Material('hardEdgesMaterial', 'LinesShader')
+      hardEdgesMaterial.getParameter('BaseColor').setValue(new Color(0.1, 0.1, 0.1))
+      hardEdgesMaterial.getParameter('Opacity').setValue(1)
+      hardEdgesMaterial.getParameter('Overlay').setValue(0.00001)
+      const hardEdgesItem = new GeomItem('hardEdges', hardEdges, hardEdgesMaterial)
+      geomItem.addChild(hardEdgesItem)
 
       renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 1, 2.7), new Vec3(0, 0, 0.4))
       renderer.frameAll()
@@ -65,6 +89,15 @@
             },
           })
           mesh.computeVertexNormals()
+
+          edges.__numVertices = mesh.getNumVertices()
+          edges.__indices = new Uint32Array(mesh.edgeVerts)
+          edges.emit('geomDataTopologyChanged')
+
+          hardEdges.__numVertices = mesh.getNumVertices()
+          hardEdges.__indices = mesh.computeHardEdgesIndices()
+          hardEdges.emit('geomDataTopologyChanged')
+
           renderer.frameAll()
           renderer.once('redrawOccurred', () => {
             window.postMessage(`done-${data}`)
@@ -83,6 +116,15 @@
             },
           })
           mesh.computeVertexNormals()
+
+          edges.__numVertices = mesh.getNumVertices()
+          edges.__indices = new Uint32Array(mesh.edgeVerts)
+          edges.emit('geomDataTopologyChanged')
+
+          hardEdges.__numVertices = mesh.getNumVertices()
+          hardEdges.__indices = mesh.computeHardEdgesIndices()
+          hardEdges.emit('geomDataTopologyChanged')
+
           renderer.frameAll()
           renderer.once('redrawOccurred', () => {
             window.postMessage(`done-${data}`)
