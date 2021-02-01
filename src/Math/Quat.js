@@ -691,15 +691,6 @@ class Quat extends AttrValue {
     }
   }
 
-  // multiply(quat) {
-  //     return new Quat(
-  //         this.x * quat.w + this.w * quat.x + this.y * quat.z - this.z * quat.y,
-  //         this.y * quat.w + this.w * quat.y + this.z * quat.x - this.x * quat.z,
-  //         this.z * quat.w + this.w * quat.z + this.x * quat.y - this.y * quat.x,
-  //         this.w * quat.w - this.x * quat.x - this.y * quat.y - this.z * quat.z
-  //     );
-  // }
-
   /**
    * Multiplies two Quats and returns the result as a new Quat.
    *
