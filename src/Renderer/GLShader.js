@@ -1,6 +1,7 @@
 /* eslint-disable guard-for-in */
 import { BaseItem } from '../SceneTree/BaseItem'
 import { StringFunctions } from '../Utilities/StringFunctions'
+import { shaderLibrary } from './ShaderLibrary'
 
 // Every instance of every shader should have a unique id.
 // This is so that we can uniquely identify the bound shader during
@@ -194,7 +195,10 @@ class GLShader extends BaseItem {
 
     if (!this.__shaderStages['VERTEX_SHADER']) {
       // preprocess the GLSL, including all shader snippets
-      this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader(this.__shaderStagesGLSL['VERTEX_SHADER'])
+      this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader(
+        'VERTEX_SHADER',
+        this.__shaderStagesGLSL['VERTEX_SHADER']
+      )
     }
 
     const vertexShaderGLSL = this.__shaderStages['VERTEX_SHADER'].glsl
@@ -209,7 +213,10 @@ class GLShader extends BaseItem {
 
     if (!this.__shaderStages['FRAGMENT_SHADER']) {
       // preprocess the GLSL, including all shader snippets
-      this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader(this.__shaderStagesGLSL['FRAGMENT_SHADER'])
+      this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader(
+        'FRAGMENT_SHADER',
+        this.__shaderStagesGLSL['FRAGMENT_SHADER']
+      )
     }
 
     const fragmentShaderGLSL = this.__shaderStages['FRAGMENT_SHADER'].glsl
