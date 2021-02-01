@@ -8,6 +8,7 @@ import { GLViewport } from './GLViewport'
 import { Registry } from '../Registry'
 import { VRViewport } from './VR/VRViewport'
 import { POINTER_TYPES } from '../Utilities/EnumUtils'
+import { PassType } from './Passes/GLPass'
 
 let activeGLRenderer = undefined
 let pointerIsDown = false
@@ -890,7 +891,8 @@ class GLBaseRenderer extends ParameterOwner {
    * @param {boolean} updateIndices - The updateIndices value.
    * @return {number} - The return value.
    */
-  addPass(pass, passtype = 0, updateIndices = true) {
+  addPass(pass, passtype = -1, updateIndices = true) {
+    if (passtype == -1) passtype = pass.getPassType()
     if (!this.__passes[passtype]) this.__passes[passtype] = []
 
     let index = 0

@@ -34,6 +34,14 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
   }
 
   /**
+   * Returns the pass type. OPAQUE passes are always rendered first, followed by TRANSPARENT passes, and finally OVERLAY.
+   * @return {number} - The pass type value.
+   */
+  getPassType() {
+    return PassType.TRANSPARENT
+  }
+
+  /**
    * The init method.
    * @param {any} geomItem - The geomItem value.
    * @return {boolean} - The return value.
