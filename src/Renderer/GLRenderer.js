@@ -666,6 +666,7 @@ class GLRenderer extends GLBaseRenderer {
       gl.enable(gl.DEPTH_TEST)
       gl.depthFunc(gl.LESS)
       gl.depthMask(true)
+      renderstate.glShader = null // clear any bound shaders.
 
       this.drawHighlightedGeoms(renderstate)
 

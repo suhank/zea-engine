@@ -51,7 +51,7 @@ class GLBaseRenderer extends ParameterOwner {
 
     this.__drawSuspensionLevel = 1
     this.__shaderDirectives = {}
-    this.__preproc = {}
+    this.directives = {}
 
     this.__xrViewportPresenting = false
 
@@ -127,16 +127,8 @@ class GLBaseRenderer extends ParameterOwner {
     for (const key in this.__shaderDirectives) {
       directives.push(this.__shaderDirectives[key])
     }
-    this.__preproc.directives = directives
-    this.__gl.shaderopts = this.__preproc
-  }
-
-  /**
-   * The getShaderPreproc method.
-   * @return {object} - The return value.
-   */
-  getShaderPreproc() {
-    return this.__preproc
+    this.directives = directives
+    this.__gl.shaderopts = { directives } // used by zea-cad.
   }
 
   /**
@@ -1151,7 +1143,7 @@ class GLBaseRenderer extends ParameterOwner {
    */
   bindGLBaseRenderer(renderState) {
     renderState.gl = this.__gl
-    renderState.shaderopts = this.__preproc
+    renderState.shaderopts = { directives: this.directives } // we will start deprecating this in favor os a simpler directives
 
     const gl = this.__gl
     if (!renderState.viewports || renderState.viewports.length == 1) {
@@ -1216,6 +1208,10 @@ class GLBaseRenderer extends ParameterOwner {
    */
   drawScene(renderState) {
     // Bind already called by GLRenderer.
+
+    renderState.directives = [...this.directives, '#define DRAW_COLOR']
+    renderState.shaderopts.directives = renderState.directives
+
     for (const key in this.__passes) {
       const passSet = this.__passes[key]
       for (const pass of passSet) {
@@ -1230,6 +1226,10 @@ class GLBaseRenderer extends ParameterOwner {
    */
   drawHighlightedGeoms(renderState) {
     this.bindGLBaseRenderer(renderState)
+
+    renderState.directives = [...this.directives, '#define DRAW_HIGHLIGHT']
+    renderState.shaderopts.directives = renderState.directives
+
     for (const key in this.__passes) {
       const passSet = this.__passes[key]
       for (const pass of passSet) {
@@ -1245,6 +1245,10 @@ class GLBaseRenderer extends ParameterOwner {
    */
   drawSceneGeomData(renderState, mask = 255) {
     this.bindGLBaseRenderer(renderState)
+
+    renderState.directives = [...this.directives, '#define DRAW_GEOMDATA']
+    renderState.shaderopts.directives = renderState.directives
+
     for (const key in this.__passes) {
       // Skip pass categories that do not match
       // the mask. E.g. we may not want to hit
