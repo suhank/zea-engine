@@ -40,9 +40,14 @@ class GLEnvMap extends GLProbe {
     if (this.__envMap.mapping == EnvMapMapping.CUBE) {
       this.__srcGLTex = new GLHDRCubeMap(gl, this.__envMap)
       this.__envMapShader = new DrawCubeMapShader(gl)
+
+      this.cubeFaceSize = this.__envMap.width / 3
     } else {
       this.__srcGLTex = new GLHDRImage(gl, this.__envMap)
       this.__envMapShader = new OctahedralEnvMapShader(gl)
+
+      const side = this.__envMap.width / 2
+      this.cubeFaceSize = Math.sqrt(side * side * 2)
     }
 
     const envMapShaderComp = this.__envMapShader.compileForTarget('GLEnvMap', this.__preproc)
@@ -70,7 +75,9 @@ class GLEnvMap extends GLProbe {
       this.emit('updated')
     })
 
-    // this.convolveProbe(this.__srcGLTex)
+    this.convolveProbe(this.__srcGLTex, this.cubeFaceSize)
+
+    this.emit('updated')
   }
 
   /**

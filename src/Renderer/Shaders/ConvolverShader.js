@@ -30,8 +30,7 @@ precision highp float;
 
 <%include file="math/constants.glsl"/>
 <%include file="GLSLUtils.glsl"/>
-<%include file="utils/imagePyramid.glsl"/>
-<%include file="pragmatic-pbr/envmap-octahedral.glsl"/>
+
 
 uniform float roughness;
 varying vec2 v_texCoord;
@@ -101,9 +100,30 @@ float compute_lod(in vec3 H, in float pdf, in int num_samples, in int ww, in int
   return max(0.0, 0.5*log2(float(ww*hh)/float(num_samples)) - 0.5*log2(pdf));
 }
 
-uniform sampler2D   envMapPyramid;
-uniform sampler2D   envMapPyramid_layout;
-uniform vec4        envMapPyramid_desc;
+
+
+#ifdef ENVMAP_OCTAHEDRAL
+
+uniform sampler2D   envMap;
+
+<%include file="pragmatic-pbr/envmap-octahedral.glsl"/>
+
+vec4 sampleEnvMap(vec3 dir) {
+  vec2 uv = dirToSphOctUv(dir);
+  vec4 texel = texture2D(envMap, uv);
+  return vec4(texel.rgb/texel.a, 1.0); // TODO: Check this line. Do we need it?
+}
+
+#else 
+
+uniform samplerCube envMap;
+
+vec4 sampleEnvMap(vec3 dir) {
+  fragColor = texture(envMap, normalize(v_worldDir));
+}
+
+#endif 
+
 
 #ifdef ENABLE_ES3
   out vec4 fragColor;
