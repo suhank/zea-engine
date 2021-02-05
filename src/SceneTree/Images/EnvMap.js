@@ -11,6 +11,7 @@ import { BooleanParameter } from '../Parameters/BooleanParameter.js'
 const EnvMapMapping = {
   LATLONG: 1,
   OCTAHEDRAL: 2,
+  CUBE: 3,
 }
 
 const step = (edge, x) => (x < edge ? 0.0 : 1.0)
@@ -122,7 +123,7 @@ class EnvMap extends VLHImage {
 
     this.addParameter(new BooleanParameter('HeadLightMode', false))
 
-    this.mapping = EnvMapMapping.OCTAHEDRAL
+    this.mapping = EnvMapMapping.CUBE
     this.utf8decoder = util.TextDecoder ? new util.TextDecoder() : new TextDecoder()
   }
 
@@ -210,4 +211,4 @@ class EnvMap extends VLHImage {
 
 Registry.register('EnvMap', EnvMap)
 
-export { EnvMap }
+export { EnvMap, EnvMapMapping }

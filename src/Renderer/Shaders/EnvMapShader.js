@@ -117,7 +117,6 @@ precision highp float;
 <%include file="math/constants.glsl"/>
 <%include file="GLSLUtils.glsl"/>
 <%include file="pragmatic-pbr/envmap-octahedral.glsl"/>
-<%include file="utils/imagePyramid.glsl"/>
 <%include file="stack-gl/gamma.glsl"/>
 
 uniform float focus;
@@ -127,10 +126,11 @@ uniform float focus;
 uniform float exposure;
 #endif
 
-// uniform ImageAtlas envMap;
-uniform sampler2D   envMapPyramid;
-uniform sampler2D   envMapPyramid_layout;
-uniform vec4        envMapPyramid_desc;
+uniform sampler2D   envMap;
+// uniform sampler2D   envMapPyramid;
+// uniform sampler2D   envMapPyramid_layout;
+// uniform vec4        envMapPyramid_desc;
+// <%include file="utils/imagePyramid.glsl"/>
 
 
 /* VS Outputs */
@@ -149,12 +149,65 @@ void main(void) {
   vec2 uv = dirToSphOctUv(normalize(v_worldDir));
   if(false){
     // Use these lines to debug the src GL image.
-    vec4 texel = texture2D(envMapPyramid, uv);
+    vec4 texel = texture2D(envMap, uv);
+    // vec4 texel = texture2D(envMapPyramid, uv);
     fragColor = vec4(texel.rgb/texel.a, 1.0);
   }
   else{
-    fragColor = vec4(sampleImagePyramid(uv, focus, envMapPyramid_layout, envMapPyramid, envMapPyramid_desc).rgb, 1.0);
+    fragColor = texture2D(envMap, uv);
+    // fragColor = vec4(sampleImagePyramid(uv, focus, envMapPyramid_layout, envMapPyramid, envMapPyramid_desc).rgb, 1.0);
   }
+
+#ifdef ENABLE_INLINE_GAMMACORRECTION
+  fragColor.rgb = toGamma(fragColor.rgb * exposure);
+#endif
+
+#ifndef ENABLE_ES3
+  gl_FragColor = fragColor;
+#endif
+}
+`
+    )
+    this.finalize()
+  }
+}
+
+class DrawCubeMapShader extends EnvMapShader {
+  constructor(gl) {
+    super(gl)
+    this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader(
+      'DrawCubeMapShader.fragmentShader',
+      `
+precision highp float;
+
+<%include file="math/constants.glsl"/>
+<%include file="GLSLUtils.glsl"/>
+<%include file="stack-gl/gamma.glsl"/>
+
+uniform float focus;
+
+#define ENABLE_INLINE_GAMMACORRECTION
+#ifdef ENABLE_INLINE_GAMMACORRECTION
+uniform float exposure;
+#endif
+
+uniform samplerCube envMap;
+
+/* VS Outputs */
+varying vec3 v_worldDir;
+varying vec2 v_texCoord;
+
+#ifdef ENABLE_ES3
+  out vec4 fragColor;
+#endif
+
+void main(void) {
+#ifndef ENABLE_ES3
+  vec4 fragColor;
+#endif
+
+
+  fragColor = texture(envMap, normalize(v_worldDir));
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION
   fragColor.rgb = toGamma(fragColor.rgb * exposure);
@@ -401,6 +454,7 @@ export {
   EnvMapShader,
   BackgroundImageShader,
   OctahedralEnvMapShader,
+  DrawCubeMapShader,
   LatLongEnvMapShader,
   SterioLatLongEnvMapShader,
   DualFishEyeEnvMapShader,

@@ -13,11 +13,11 @@ vec2 dirToSphOctUv(vec3 normal){
     normal = normalize(normal);
     vec3 aNorm = abs(normal);
     vec3 sNorm = sectorize(normal);
+    
+    vec2 dir = aNorm.xy;
+    float orient = atan(dir.x, max(dir.y,0.0000000000000001))/HalfPI;
 
-    vec2 dir = max(aNorm.xy, 1e-20);
-    float orient = atan(dir.x, dir.y)/HalfPI;
-
-    dir = max(vec2(aNorm.z, length(aNorm.xy)), 1e-20);
+    dir = vec2(aNorm.z, length(aNorm.xy));
     float pitch = atan(dir.y, dir.x)/HalfPI;
 
     vec2 uv = vec2(sNorm.x*orient, sNorm.y*(1.0-orient))*pitch;

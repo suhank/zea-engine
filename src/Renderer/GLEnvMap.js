@@ -1,6 +1,8 @@
+import { EnvMapMapping } from '../SceneTree/Images/EnvMap.js'
 import { GLProbe } from './GLProbe.js'
 import { GLHDRImage } from './GLHDRImage.js'
-import { OctahedralEnvMapShader } from './Shaders/EnvMapShader.js'
+import { GLHDRCubeMap } from './GLHDRCubeMap.js'
+import { DrawCubeMapShader, OctahedralEnvMapShader } from './Shaders/EnvMapShader.js'
 import { generateShaderGeomBinding } from './Drawing/GeomShaderBinding.js'
 
 /** Class representing a GL environment map.
@@ -18,19 +20,32 @@ class GLEnvMap extends GLProbe {
     super(renderer.gl, 'EnvMap')
     this.__renderer = renderer
     this.__envMap = envMap
+    this.__preproc = preproc
     this.__backgroundFocus = 0.0
 
-    const gl = renderer.gl
+    if (this.__envMap.isLoaded()) {
+      this.init()
+    } else {
+      this.__envMap.once('loaded', this.init.bind(this))
+    }
+  }
+
+  /**
+   * @private
+   */
+  init() {
+    const gl = this.__renderer.gl
     if (!gl.__quadVertexIdsBuffer) gl.setupInstancedQuad()
 
-    let srcGLTex = this.__envMap.getMetadata('gltexture')
-    if (!srcGLTex) {
-      srcGLTex = new GLHDRImage(gl, this.__envMap)
+    if (this.__envMap.mapping == EnvMapMapping.CUBE) {
+      this.__srcGLTex = new GLHDRCubeMap(gl, this.__envMap)
+      this.__envMapShader = new DrawCubeMapShader(gl)
+    } else {
+      this.__srcGLTex = new GLHDRImage(gl, this.__envMap)
+      this.__envMapShader = new OctahedralEnvMapShader(gl)
     }
-    this.__srcGLTex = srcGLTex // for debugging
 
-    this.__envMapShader = new OctahedralEnvMapShader(gl)
-    const envMapShaderComp = this.__envMapShader.compileForTarget('GLEnvMap', preproc)
+    const envMapShaderComp = this.__envMapShader.compileForTarget('GLEnvMap', this.__preproc)
     this.__envMapShaderBinding = generateShaderGeomBinding(
       gl,
       envMapShaderComp.attrs,
@@ -55,16 +70,7 @@ class GLEnvMap extends GLProbe {
       this.emit('updated')
     })
 
-    if (this.__envMap.isLoaded()) {
-      this.convolveProbe(srcGLTex)
-    } else {
-      const loaded = () => {
-        // console.log(this.__envMap.getName() + " loaded");
-        this.convolveProbe(srcGLTex)
-        this.emit('loaded', {})
-      }
-      this.__envMap.on('loaded', loaded)
-    }
+    // this.convolveProbe(this.__srcGLTex)
   }
 
   /**
@@ -128,9 +134,10 @@ class GLEnvMap extends GLProbe {
         // /////////////////
         this.__envMapShader.bind(renderstate, 'GLEnvMap')
         const unifs = renderstate.unifs
-        // this.__srcGLTex.bind(renderstate, renderstate.unifs.envMap.location);
+        this.__srcGLTex.bindToUniform(renderstate, renderstate.unifs.envMap)
+
         // this.__lodPyramid.bind(renderstate, renderstate.unifs.envMap.location);
-        this.bindProbeToUniform(renderstate, unifs.envMapPyramid)
+        // this.bindProbeToUniform(renderstate, unifs.envMapPyramid)
         // this.bindToUniform(renderstate, unifs.envMapPyramid);
 
         {

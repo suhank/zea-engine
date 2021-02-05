@@ -61,7 +61,18 @@
     </style>
 
     <script type="module">
-      const { GLRenderer, Scene, Vec3, Color, Xfo, Sphere, GeomItem, Material, EnvMap } = window.zeaEngine
+      const {
+        GLRenderer,
+        Scene,
+        Vec3,
+        Color,
+        Xfo,
+        Sphere,
+        GeomItem,
+        Material,
+        EnvMap,
+        EnvMapMapping,
+      } = window.zeaEngine
 
       const canvas = document.querySelector('#renderer')
 
@@ -70,7 +81,11 @@
       renderer.setScene(scene)
 
       const envMap = new EnvMap()
-      envMap.getParameter('FilePath').setValue('data/HDR_041_Path_Ref.vlenv')
+      // envMap.getParameter('FilePath').setValue('data/AutomnRoad.zenv')
+      // envMap.getParameter('FilePath').setValue('data/Bright-Roof-Multi.zenv')
+      envMap.getParameter('FilePath').setValue('data/HDR_041_Path_Ref.zenv')
+      // envMap.getParameter('FilePath').setValue('data/HDR_041_Path_Ref.vlenv')
+      // envMap.mapping = EnvMapMapping.OCTAHEDRAL
       // envMap.getParameter('FilePath').setValue('data/HDR_029_Sky_Cloudy_Ref.vlenv')
       scene.setEnvMap(envMap)
       scene.getSettings().getParameter('Display EnvMap').setValue(true)
@@ -81,6 +96,7 @@
         renderer.exposure = slider.value / 100
         console.log('renderer.exposure:', renderer.exposure)
       }
+      renderer.getViewport().getCamera().setLensFocalLength('20mm')
       renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 0, 0), new Vec3(0, 0, 0))
       envMap.on('loaded', () => {
         window.postMessage('done-loading')
