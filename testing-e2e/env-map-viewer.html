@@ -82,8 +82,12 @@
         console.log('renderer.exposure:', renderer.exposure)
       }
       renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 0, 0), new Vec3(0, 0, 0))
+
       envMap.on('loaded', () => {
-        window.postMessage('done-loading')
+        renderer.once('redrawOccurred', () => {
+          window.postMessage('done-loading')
+        })
+        renderer.requestRedraw()
       })
 
       // {{{ Messages handler.
@@ -91,17 +95,22 @@
         const { data } = event
 
         if (data === 'variant-01') {
-          renderer.once('redrawOccurred', () => {
-            window.postMessage(`done-${data}`)
-          })
+          renderer.suspendDrawing()
           renderer.exposure = 0.2
           slider.value = renderer.exposure * 100
-        } else if (data === 'variant-02') {
+
           renderer.once('redrawOccurred', () => {
             window.postMessage(`done-${data}`)
           })
+          renderer.resumeDrawing()
+        } else if (data === 'variant-02') {
+          renderer.suspendDrawing()
           renderer.exposure = 1.8
           slider.value = renderer.exposure * 100
+          renderer.once('redrawOccurred', () => {
+            window.postMessage(`done-${data}`)
+          })
+          renderer.resumeDrawing()
         }
       }
 

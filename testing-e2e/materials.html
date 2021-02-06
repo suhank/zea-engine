@@ -55,7 +55,10 @@
       renderer.frameAll()
 
       envMap.on('loaded', () => {
-        window.postMessage('done-loading')
+        renderer.once('redrawOccurred', () => {
+          window.postMessage('done-loading')
+        })
+        renderer.requestRedraw()
       })
 
       // {{{ Messages handler.
