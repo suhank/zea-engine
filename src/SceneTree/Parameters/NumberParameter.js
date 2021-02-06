@@ -114,9 +114,7 @@ class NumberParameter extends Parameter {
    * @return {NumberParameter} - Returns a new number parameter.
    */
   clone() {
-    const clonedParam = new NumberParameter(this.__name, this.__value)
-    clonedParam.__range = this.__range
-    clonedParam.__step = this.__step
+    const clonedParam = new NumberParameter(this.__name, this.__value, this.__range, this.__step)
     return clonedParam
   }
 }
