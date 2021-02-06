@@ -79,16 +79,20 @@ class GLShaderGeomSets extends EventEmitter {
 
     const material = glGeomItem.geomItem.getParameter('Material').getValue()
     this.glMaterialLibrary.addMaterial(material)
-    const transparencyChanged = (event) => {
+    const geomItemParamChanged = (event) => {
       if (geom instanceof Lines || geom instanceof Points || geom instanceof PointsProxy || geom instanceof LinesProxy)
         return
+      material.off('transparencyChanged', geomItemParamChanged)
+      geomItem.getParameter('Material').off('valueChanged', geomItemParamChanged)
+      geomItem.getParameter('Geometry').off('valueChanged', geomItemParamChanged)
       // Note: the pass will remove the glgeomitem from the
       //  GLGeomItemSet which is owned by the GLGeomSet.
       this.pass.removeGeomItem(geomItem)
       this.pass.__renderer.assignTreeItemToGLPass(geomItem)
     }
-    material.once('transparencyChanged', transparencyChanged)
-    geomItem.getParameter('Material').once('valueChanged', transparencyChanged)
+    material.on('transparencyChanged', geomItemParamChanged)
+    geomItem.getParameter('Material').on('valueChanged', geomItemParamChanged)
+    geomItem.getParameter('Geometry').on('valueChanged', geomItemParamChanged)
   }
 
   /**
