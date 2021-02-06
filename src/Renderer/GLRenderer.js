@@ -32,10 +32,7 @@ class GLRenderer extends GLBaseRenderer {
    * @param {any} options - The options value.
    */
   constructor($canvas, options = {}) {
-    super($canvas, options, {
-      antialias: true,
-      depth: true,
-    })
+    super($canvas, options)
 
     // ///////////////////////
     // Renderer Setup
@@ -60,6 +57,10 @@ class GLRenderer extends GLBaseRenderer {
     this.addShaderPreprocessorDirective('ENABLE_INLINE_GAMMACORRECTION')
     if (!options.disableTextures) {
       this.addShaderPreprocessorDirective('ENABLE_TEXTURES')
+    }
+
+    if (options.debugGeomIds) {
+      this.addShaderPreprocessorDirective('DEBUG_GEOM_ID')
     }
 
     this.__outlineShader = new OutlinesShader(gl)
@@ -665,6 +666,7 @@ class GLRenderer extends GLBaseRenderer {
       gl.enable(gl.DEPTH_TEST)
       gl.depthFunc(gl.LESS)
       gl.depthMask(true)
+      renderstate.glShader = null // clear any bound shaders.
 
       this.drawHighlightedGeoms(renderstate)
 

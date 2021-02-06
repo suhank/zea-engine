@@ -31,8 +31,8 @@ class Lines extends BaseGeom {
    * The clear method.
    */
   clear() {
+    super.clear()
     this.setNumSegments(0)
-    this.setNumVertices(0)
     this.emit('geomDataTopologyChanged')
   }
 

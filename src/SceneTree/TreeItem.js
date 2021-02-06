@@ -22,9 +22,9 @@ branchSelectionOutlineColor.a = 0.1
  * * **BoundingBox(`BoundingBox`):** Provides the bounding box for the tree item and all of its children in the 3d scene.
  *
  * **Events**
- * * **globalXfoChanged:** _todo_
- * * **visibilityChanged:** _todo_
- * * **highlightChanged:** _todo_
+ * * **globalXfoChanged:** Emitted when the value of GlobalXfo parameter changes.
+ * * **visibilityChanged:** Emitted when the visibility on the tree item changes.
+ * * **highlightChanged:** Emitted when the highlight on the tree item changes.
  * * **childAdded:** Emitted when a item is added as a child.
  * * **childRemoved:** Emitted when an item is removed from the child nodes.
  * * **pointerDown:** Emitted when a pointerDown event happens in an item.
@@ -700,12 +700,12 @@ class TreeItem extends BaseItem {
   }
 
   /**
-   * @deprecated
+   * Removes the provided item from this TreeItem if it is one of its children.
+   * An exception is thrown if the item is not a child of this tree item.
    *
    * @param {BaseItem} childItem - The child TreeItem to remove.
    */
   removeChildByHandle(childItem) {
-    console.warn(`Deprecated. use "this.removeChild(this.getChildIndex(child))"`)
     const index = this.__childItems.indexOf(childItem)
     if (index == -1) throw new Error('Error in removeChildByHandle. Child not found:' + childItem.getName())
     this.removeChild(index)
@@ -1067,23 +1067,8 @@ class TreeItem extends BaseItem {
       for (let i = 0; i < numChildren; i++) {
         try {
           reader.seek(toc[i]) // Reset the pointer to the start of the item data.
-          let childType = reader.loadStr()
+          const childType = reader.loadStr()
 
-          if (childType.startsWith('N') && childType.endsWith('E')) {
-            // ///////////////////////////////////////
-            // hack to work around a linux issue
-            // untill we have a fix.
-            const ppos = childType.indexOf('podium')
-            if (ppos != -1) {
-              if (parseInt(childType[ppos + 7])) childType = childType.substring(ppos + 8, childType.length - 1)
-              else childType = childType.substring(ppos + 7, childType.length - 1)
-            }
-            const lnpos = childType.indexOf('livenurbs')
-            if (lnpos != -1) {
-              childType = childType.substring(childType.indexOf('CAD'), childType.length - 1)
-            }
-          }
-          // const childName = reader.loadStr();
           const childItem = Registry.constructClass(childType)
           if (!childItem) {
             const childName = reader.loadStr()

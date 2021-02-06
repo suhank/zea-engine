@@ -31,14 +31,7 @@ class Mesh extends BaseGeom {
    */
   constructor() {
     super()
-    this.init()
-  }
 
-  /**
-   * The init method.
-   * @private
-   */
-  init() {
     this.__faceCounts = []
     this.__faceVertexIndices = new Uint32Array()
 
@@ -56,11 +49,22 @@ class Mesh extends BaseGeom {
   }
 
   /**
+   * The init method.
+   * @private
+   */
+  init() {}
+
+  /**
    * The clear method.
    */
   clear() {
-    this.init()
-    this.setNumVertices(0)
+    super.clear()
+
+    // clear edge and face normals.
+    this.edgeVerts = undefined
+    this.vertexEdges = undefined
+    this.numEdges = 0
+    this.edgeAngles = new Float32Array()
     this.emit('geomDataTopologyChanged')
   }
 
@@ -547,7 +551,7 @@ class Mesh extends BaseGeom {
       for (const e of edges) {
         const f0 = this.edgeFaces[e * 2]
         const f1 = this.edgeFaces[e * 2 + 1]
-        if (f0 != -1 && f1 == -1 && this.edgeAngles[e] < hardAngle) {
+        if (f0 != -1 && f1 != -1 && this.edgeAngles[e] < hardAngle) {
           let f0groupIndex = -1
           let f1groupIndex = -1
           for (let groupIndex = 0; groupIndex < faceGroups.length; groupIndex++) {
@@ -871,14 +875,6 @@ class Mesh extends BaseGeom {
       }
     }
     return trianglulatedIndices
-  }
-
-  /**
-   * The freeBuffers method.
-   */
-  freeBuffers() {
-    super.freeBuffers()
-    this.init()
   }
 
   // ////////////////////////////////////////

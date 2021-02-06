@@ -30,9 +30,10 @@ class MaterialFloatParam extends NumberParameter {
    * @param {string} name - The name of the material color parameter.
    * @param {number} value - The value of the parameter.
    * @param {array} range - An array with two numbers. If defined, the parameter value will be clamped.
+   * @param {number} step - The increment value that the parameter can be changed by.
    */
-  constructor(name, value, range) {
-    super(name, value, range)
+  constructor(name, value, range, step) {
+    super(name, value, range, step)
   }
 
   /**
@@ -112,7 +113,7 @@ class MaterialFloatParam extends NumberParameter {
    * @return {MaterialFloatParam} - Returns a new cloned material float parameter.
    */
   clone() {
-    const clonedParam = new MaterialFloatParam(this.__name, this.__value)
+    const clonedParam = new MaterialFloatParam(this.__name, this.__value, this.__range, this.__step)
     return clonedParam
   }
 }

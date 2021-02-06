@@ -8,7 +8,18 @@ import { VRViewManipulator } from './VRViewManipulator.js'
 import { resourceLoader } from '../../SceneTree/resourceLoader.js'
 import { POINTER_TYPES } from '../../Utilities/EnumUtils'
 
-/** Class representing a VR viewport.
+/** This Viewport class is used for rendering stereoscopic views to VR controllers using the WebXR api.
+ *  When the GLRenderer class detects a valid WebXF capable device is plugged in, this class is automatically
+ *  instantiated ready for XR sessions
+ *
+ * **Events**
+ * * **presentingChanged:** Emitted when presenting is started or stopped
+ * * **controllerAdded:** Emitted when a new XR controller is detected.
+ * * **viewChanged:** Emitted during presentation each time the frame is rendered.
+ * * **pointerDoublePressed:** Emitted when the user double clicks with an XR pointer.
+ * * **pointerDown:** Emitted when the user presses an XR pointer
+ * * **pointerUp:** Emitted when the user releases an XR pointer
+ *
  * @extends GLBaseViewport
  */
 class VRViewport extends GLBaseViewport {
@@ -572,41 +583,42 @@ class VRViewport extends GLBaseViewport {
    */
   onPointerDown(event) {
     this.preparePointerEvent(event)
+    event.intersectionData = event.controller.getGeomItemAtTip()
+
+    // //////////////////////////////////////
+    // Double Tap
+    // First check for double tap handlers.
+    // If the manipulator or the viewport handle that
+    // then skip the 'pointerDown' event.
+    const downTime = Date.now()
+    if (downTime - this.prevControllerDownTime[event.controller.id] < this.__doubleClickTimeMSParam.getValue()) {
+      this.emit('pointerDoublePressed', event)
+      if (!event.propagating) return
+
+      if (this.manipulator) {
+        this.manipulator.onPointerDoublePress(event)
+        if (!event.propagating) return
+      }
+    }
+    this.prevControllerDownTime[event.controller.id] = downTime
+
+    // //////////////////////////////////////
 
     if (this.capturedItem) {
       this.capturedItem.onPointerDown(event)
       return
     }
 
-    event.intersectionData = event.controller.getGeomItemAtTip()
     if (event.intersectionData != undefined) {
       event.intersectionData.geomItem.onPointerDown(event)
-
       if (!event.propagating || this.capturedItem) return
-
-      this.emit('pointerDownOnGeom', event)
     }
 
-    const downTime = Date.now()
-    if (downTime - this.prevControllerDownTime[event.controller.id] < this.__doubleClickTimeMSParam.getValue()) {
-      if (this.manipulator) {
-        this.manipulator.onPointerDoublePress(event)
-        if (!event.propagating) return
-      }
+    this.emit('pointerDown', event)
+    if (!event.propagating || this.capturedItem) return
 
-      this.emit('pointerDoublePressed', event)
-    } else {
-      this.prevControllerDownTime[event.controller.id] = downTime
-      if (!event.propagating || this.capturedItem) return
-
-      this.emit('pointerDown', event)
-      if (!event.propagating) return
-
-      if (this.manipulator) {
-        this.manipulator.onPointerDown(event)
-
-        if (!event.propagating) return
-      }
+    if (this.manipulator) {
+      this.manipulator.onPointerDown(event)
     }
   }
 

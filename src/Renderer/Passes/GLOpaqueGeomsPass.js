@@ -4,7 +4,7 @@ import { GLRenderer } from '../GLRenderer.js'
 import { Registry } from '../../Registry'
 
 import { MathFunctions } from '../../Utilities/MathFunctions'
-import { GeomItem, Material, Mesh, MeshProxy } from '../../SceneTree/index.js'
+import { Points, Lines, PointsProxy, LinesProxy } from '../../SceneTree/index'
 import { GLShaderMaterials } from '../Drawing/GLShaderMaterials.js'
 import { GLShaderGeomSets } from '../Drawing/GLShaderGeomSets.js'
 
@@ -35,6 +35,14 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
     super.init(renderer, passIndex)
   }
 
+  /**
+   * Returns the pass type. OPAQUE passes are always rendered first, followed by TRANSPARENT passes, and finally OVERLAY.
+   * @return {number} - The pass type value.
+   */
+  getPassType() {
+    return PassType.OPAQUE
+  }
+
   // ///////////////////////////////////
   // Bind to Render Tree
 
@@ -44,6 +52,9 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
    * @return {boolean} - The return value.
    */
   filterGeomItem(geomItem) {
+    const geom = geomItem.getParameter('Geometry').getValue()
+    if (geom instanceof Lines || geom instanceof Points || geom instanceof PointsProxy || geom instanceof LinesProxy)
+      return true
     const material = geomItem.getParameter('Material').getValue()
     return this.checkMaterial(material)
   }
@@ -78,7 +89,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
     if (this.__gl.multiDrawElementsInstanced) {
       const shaderName = material.getShaderName()
       const shader = Registry.getBlueprint(shaderName)
-      if (shader.supportsInstancing()) {
+      if (shader.supportsInstancing() && shader.getPackedMaterialData) {
         if (!material.isTextured()) {
           let glShaderGeomSets = this.__glShaderGeomSets[shaderName]
           if (!glShaderGeomSets) {
@@ -88,6 +99,20 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
               this.__renderer.requestRedraw()
             })
             this.__glShaderGeomSets[shaderName] = glShaderGeomSets
+
+            // The following is a sneaky hack to ensure the LinesShader
+            // is drawn last. This is because, although it is not considered
+            // 'transparent', it does enable blending, and so must be drawn over
+            // the meshes. Note: It it were to be moved into the transparent geoms
+            // pass, then we would need to sort all the lines in order, which
+            // would probably be slow. Then we would need to switch shaders all the time
+            // with other transparent geoms. This solution keeps it in the Opaque pass
+            // which keeps performance very good.
+            if (this.__glShaderGeomSets['LinesShader']) {
+              const tmp = this.__glShaderGeomSets['LinesShader']
+              delete this.__glShaderGeomSets['LinesShader']
+              this.__glShaderGeomSets['LinesShader'] = tmp
+            }
           }
 
           const glGeomItem = this.constructGLGeomItem(geomItem)
@@ -251,17 +276,14 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
 
     renderstate.drawItemsTexture = this.__drawItemsTexture
 
-    if (this.__gl.multiDrawElementsInstanced) {
-      // eslint-disable-next-line guard-for-in
-      for (const shaderName in this.__glShaderGeomSets) {
-        this.__glShaderGeomSets[shaderName].drawHighlightedGeoms(renderstate)
-      }
-    } else {
-      // eslint-disable-next-line guard-for-in
-      for (const shaderName in this.__glshadermaterials) {
-        const glshaderMaterials = this.__glshadermaterials[shaderName]
-        glshaderMaterials.drawHighlightedGeoms(renderstate)
-      }
+    // eslint-disable-next-line guard-for-in
+    for (const shaderName in this.__glShaderGeomSets) {
+      this.__glShaderGeomSets[shaderName].drawHighlightedGeoms(renderstate)
+    }
+    // eslint-disable-next-line guard-for-in
+    for (const shaderName in this.__glshadermaterials) {
+      const glshaderMaterials = this.__glshadermaterials[shaderName]
+      glshaderMaterials.drawHighlightedGeoms(renderstate)
     }
 
     if (renderstate.glGeom) {
@@ -312,17 +334,14 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
     gl.depthFunc(gl.LESS)
     gl.depthMask(true)
 
-    if (this.__gl.multiDrawElementsInstanced) {
-      // eslint-disable-next-line guard-for-in
-      for (const shaderName in this.__glShaderGeomSets) {
-        this.__glShaderGeomSets[shaderName].drawGeomData(renderstate)
-      }
-    } else {
-      // eslint-disable-next-line guard-for-in
-      for (const shaderName in this.__glshadermaterials) {
-        const glshaderMaterials = this.__glshadermaterials[shaderName]
-        glshaderMaterials.drawGeomData(renderstate)
-      }
+    // eslint-disable-next-line guard-for-in
+    for (const shaderName in this.__glShaderGeomSets) {
+      this.__glShaderGeomSets[shaderName].drawGeomData(renderstate)
+    }
+    // eslint-disable-next-line guard-for-in
+    for (const shaderName in this.__glshadermaterials) {
+      const glshaderMaterials = this.__glshadermaterials[shaderName]
+      glshaderMaterials.drawGeomData(renderstate)
     }
 
     if (renderstate.glGeom) {

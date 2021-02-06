@@ -55,6 +55,14 @@ class GLPass extends ParameterOwner {
   }
 
   /**
+   * Returns the pass type. OPAQUE passes are always rendered first, followed by TRANSPARENT passes, and finally OVERLAY.
+   * @return {number} - The pass type value.
+   */
+  getPassType() {
+    return PassType.OPAQUE
+  }
+
+  /**
    * The itemAddedToScene method is called on each pass when a new item
    * is added to the scene, and the renderer must decide how to render it.
    * It allows Passes to select geometries to handle the drawing of.

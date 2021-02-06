@@ -86,6 +86,8 @@ class CameraManipulator extends BaseTool {
     this.__manipulationState = this.__defaultManipulationState
     this.__pointerDown = false
     this.__dragging = 0
+
+    this.enabledWASDWalkMode = false
     this.__keyboardMovement = false
     this.__keysPressed = []
     this.__velocity = new Vec3()
@@ -134,6 +136,10 @@ class CameraManipulator extends BaseTool {
     if (typeof manipulationMode == 'string') {
       this.__defaultManipulationState = MANIPULATION_MODES[manipulationMode]
     } else this.__defaultManipulationState = manipulationMode
+
+    if (!Object.values(MANIPULATION_MODES).includes(this.__defaultManipulationState)) {
+      throw new Error('Invalid Camera Manipulation Mode. Must be one of ' + Object.keys(MANIPULATION_MODES))
+    }
   }
 
   /**
@@ -568,10 +574,11 @@ class CameraManipulator extends BaseTool {
    * @param {MouseEvent} event - The mouse event that occurs.
    */
   onPointerMove(event) {
-    if (this.__dragging == 1) {
+    if (this.__dragging != 0) {
       if (event.pointerType === POINTER_TYPES.mouse) this._onMouseMove(event)
       if (event.pointerType === POINTER_TYPES.touch) this._onTouchMove(event)
 
+      this.__dragging = 2
       event.stopPropagation()
       event.preventDefault()
     }
@@ -680,10 +687,10 @@ class CameraManipulator extends BaseTool {
    * @param {MouseEvent} event - The mouse event that occurs.
    */
   onPointerUp(event) {
-    event.stopPropagation()
-    event.preventDefault()
-
-    if (this.__dragging != 0) {
+    if (this.__dragging == 1) {
+      // No dragging ocurred. Release the capture and let the event propagate like normal.
+      this.endDrag(event)
+    } else if (this.__dragging == 2) {
       if (event.pointerType === POINTER_TYPES.mouse) {
         this.endDrag(event)
 
@@ -699,6 +706,9 @@ class CameraManipulator extends BaseTool {
 
         if (Object.keys(this.__ongoingTouches).length == 0) this.endDrag(event)
       }
+
+      event.stopPropagation()
+      event.preventDefault()
     }
   }
 
@@ -821,6 +831,7 @@ class CameraManipulator extends BaseTool {
    * @private
    */
   onKeyDown(event) {
+    if (!this.enabledWASDWalkMode) return
     const key = event.key.toLowerCase()
     // Note: onKeyPressed is called initially only once, and then we
     // get a series of calls. Here we ignore subsequent events.

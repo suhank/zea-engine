@@ -22,7 +22,7 @@ class GLIndexedGeomSet extends GLGeomSet {
     this.indicesCounts = new Int32Array(0)
     this.indicesOffsets = new Int32Array(0)
 
-    this.indicesAllocator.on('resize', () => {
+    this.indicesAllocator.on('resized', () => {
       this.bufferNeedsRealloc = true
     })
     this.indicesAllocator.on('dataReallocated', (event) => {

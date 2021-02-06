@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>vr-heaset-loading-test - Zea Engine</title>
+    <title>clone-assetitem-before-load - Zea Engine</title>
 
     <link href="zea-logo.png" rel="shortcut icon" />
 
@@ -25,11 +25,12 @@
 
       scene.setupGrid(10.0, 10)
 
-      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(0.5, 0.5, 0.5), new Vec3(0, 0, 0))
+      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, 0.5), new Vec3(0, 0, 0))
 
       const asset = new VLAAsset()
+      asset.getParameter('LocalXfo').setValue(new Xfo(new Vec3(0.5, 0, 0)))
       asset.getParameter('FilePath').setValue('/dist/public-resources/Vive.vla')
-      asset.getGeometryLibrary().on('loaded', () => {
+      asset.on('loaded', () => {
         const HMD = asset.getChildByName('HMD')
         HMD.getParameter('LocalXfo').setValue(new Xfo(new Vec3(0, 0, 200)))
 
@@ -39,36 +40,16 @@
         const Controller2 = Controller.clone()
         Controller2.getParameter('LocalXfo').setValue(new Xfo(new Vec3(200, 0, 0)))
         asset.addChild(Controller2, false)
-
-        window.postMessage('done-loading')
       })
       scene.getRoot().addChild(asset)
 
-      renderer.getViewport().on('mouseDownOnGeom', (event) => {
-        console.log(event.intersectionData.geomItem.getName())
+      const asset2 = asset.clone()
+      asset2.getParameter('LocalXfo').setValue(new Xfo(new Vec3(-0.5, 0, 0)))
+      scene.getRoot().addChild(asset2)
+
+      asset2.on('loaded', () => {
+        window.postMessage('done-loading')
       })
-
-      // {{{ Messages handler.
-      const handleMessage = (event) => {
-        const { data } = event
-
-        if (data === 'variant-01') {
-          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(0.5, 0.5, -0.5), new Vec3(0, 0, 0))
-          renderer.frameAll()
-          renderer.once('redrawOccurred', () => {
-            window.postMessage(`done-${data}`)
-          })
-        } else if (data === 'variant-02') {
-          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-0.5, -0.5, 0.5), new Vec3(0, 0, 0))
-          renderer.frameAll()
-          renderer.once('redrawOccurred', () => {
-            window.postMessage(`done-${data}`)
-          })
-        }
-      }
-
-      window.addEventListener('message', handleMessage, false)
-      // }}}
     </script>
   </head>
   <body>

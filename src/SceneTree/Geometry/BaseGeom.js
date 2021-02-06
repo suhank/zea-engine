@@ -17,6 +17,8 @@ function isTypedArray(obj) {
  *
  * **Events**
  * * **boundingBoxChanged:** Triggered when the bounding box changes.
+ * * **geomDataChanged:** Emitted when the geometry attributes have changed. The topology did not change. The Renderer will upload the new attributes to the GPU.
+ * * **geomDataTopologyChanged:** Emitted when the geometry attributes and topology have changed.  The Renderer will upload the new attributes and topology to the GPU.
  *
  * @extends ParameterOwner
  */
@@ -32,6 +34,13 @@ class BaseGeom extends ParameterOwner {
     this.__vertexAttributes = new Map()
     this.__metaData = new Map()
     this.addVertexAttribute('positions', Vec3, 0.0)
+  }
+
+  /**
+   * The clear method.
+   */
+  clear() {
+    this.setNumVertices(0)
   }
 
   /**
@@ -296,18 +305,6 @@ class BaseGeom extends ParameterOwner {
     }
   }
 
-  /**
-   * The freeBuffers method.
-   */
-  freeBuffers() {
-    // Before destroying all our data,
-    // make sure the bbox is up to date.
-    // if (this.__boundingBoxDirty)
-    //     this.updateBoundingBox();
-    // // TODO: push the data to a worker thread and terminate like in MeshProxy.
-    // this.__vertexAttributes = new Map();
-  }
-
   // ////////////////////////////////////////
   // Persistence
   /**
@@ -481,18 +478,22 @@ class BaseGeom extends ParameterOwner {
    * @param {object} context - The context value.
    */
   fromJSON(json, context) {
+    this.clear()
     super.fromJSON(json, context)
-    this.setNumVertices(json.numVertices)
-    for (const name in json.vertexAttributes) {
-      let attr = this.__vertexAttributes.get(name)
-      const attrJSON = json.vertexAttributes[name]
-      if (!attr) {
-        const dataType = Registry.getBlueprint(attrJSON.dataType)
-        attr = new VertexAttribute(this, dataType, 0, attrJSON.defaultScalarValue)
-        this.__vertexAttributes.set(name, attr)
+    if (json.numVertices) this.setNumVertices(json.numVertices)
+    if (json.vertexAttributes) {
+      for (const name in json.vertexAttributes) {
+        let attr = this.__vertexAttributes.get(name)
+        const attrJSON = json.vertexAttributes[name]
+        if (!attr) {
+          const dataType = Registry.getBlueprint(attrJSON.dataType)
+          attr = new VertexAttribute(this, dataType, 0, attrJSON.defaultScalarValue)
+          this.__vertexAttributes.set(name, attr)
+        }
+        attr.fromJSON(attrJSON)
       }
-      attr.fromJSON(attrJSON)
     }
+    this.emit('geomDataTopologyChanged')
   }
 
   /**

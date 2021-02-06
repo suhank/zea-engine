@@ -92,7 +92,7 @@ class GIFImage extends FileImage {
       this.__resourcePromise = imageDataLibrary[fileDesc.id]
     } else {
       this.__resourcePromise = new Promise((resolve, reject) => {
-        resourceLoader.addWork(fileDesc.id, 1)
+        resourceLoader.incrementWorkload(1)
 
         if (fileDesc.assets && fileDesc.assets.atlas) {
           const imageElem = new Image()
@@ -107,7 +107,7 @@ class GIFImage extends FileImage {
               frameRange: [0, fileDesc.assets.atlas.frameDelays.length],
               imageData: imageElem,
             })
-            resourceLoader.addWorkDone(fileDesc.id, 1)
+            resourceLoader.incrementWorkDone(1)
           })
           return
         }
@@ -190,7 +190,7 @@ class GIFImage extends FileImage {
               // console.log(frame);
               renderFrame(frames[i], i)
             }
-            resourceLoader.addWorkDone(fileDesc.id, 1)
+            resourceLoader.incrementWorkDone(1)
 
             const imageData = atlasCtx.getImageData(0, 0, atlasCanvas.width, atlasCanvas.height)
 

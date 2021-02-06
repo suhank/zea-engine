@@ -23,14 +23,14 @@ class BinaryLoaderPlugin {
   }
 
   loadFile(url) {
-    this.resourceLoader.addWork(url, 1)
+    this.resourceLoader.incrementWorkload(1)
 
     const promise = new Promise(
       (resolve, reject) => {
         fetch(url).then((response) => {
-          this.resourceLoader.addWorkDone(url, 1)
+          this.resourceLoader.incrementWorkDone(1)
           if (checkStatus(response)) resolve(response.arrayBuffer())
-          else reject(`loadBinary: ${response.status} - ${response.statusText}`)
+          else reject(`loadBinary: ${response.status} - ${response.statusText} : ${url}`)
         })
       },
       () => {}

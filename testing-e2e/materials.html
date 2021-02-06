@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>materials - Zea Engine</title>
+
+    <link href="zea-logo.png" rel="shortcut icon" />
+
+    <link rel="stylesheet" href="styles/tachyons.min.css" />
+    <link rel="stylesheet" href="styles/main.css" />
+
+    <script src="../dist/index.umd.js"></script>
+    <script src="../dist/plugins.umd.js"></script>
+
+    <script type="module">
+      const { GLRenderer, Scene, Vec3, Color, Xfo, Sphere, GeomItem, Material, EnvMap } = window.zeaEngine
+
+      const canvas = document.querySelector('#renderer')
+
+      const scene = new Scene()
+      const renderer = new GLRenderer(canvas, { hideSplash: true, antialias: false, xrCompatible: false })
+      renderer.setScene(scene)
+
+      scene.setupGrid(10.0, 10)
+
+      //////////////////////////////
+
+      const envMap = new EnvMap()
+      envMap.getParameter('FilePath').setValue('data/HDR_041_Path_Ref.vlenv')
+      scene.setEnvMap(envMap)
+      scene.getSettings().getParameter('Display EnvMap').setValue(true)
+
+      const addMeshShape = (name, shape, pos, mat) => {
+        const geomItem = new GeomItem(name, shape, mat, new Xfo(pos))
+        scene.getRoot().addChild(geomItem)
+      }
+      for (let i = 0; i < 10; i++) {
+        for (let j = 0; j < 10; j++) {
+          const material = new Material('surfaces', 'StandardSurfaceShader')
+          material.getParameter('BaseColor').setValue(new Color(0.6, 0.0, 0.0))
+          material.getParameter('Roughness').setValue(i / 9)
+          material.getParameter('Metallic').setValue(j < 5 ? 0.05 : 0.95)
+          material.getParameter('Reflectance').setValue(j < 5 ? 0.03 : 0.8)
+          addMeshShape(
+            'Sphere' + i + '-' + j,
+            new Sphere(1.4, 40),
+            new Vec3((i / 9 - 0.5) * 30, (j / 9 - 0.5) * 30, 1),
+            material
+          )
+        }
+      }
+
+      renderer.frameAll()
+
+      envMap.on('loaded', () => {
+        renderer.once('redrawOccurred', () => {
+          window.postMessage('done-loading')
+        })
+        renderer.requestRedraw()
+      })
+
+      // {{{ Messages handler.
+      const handleMessage = (event) => {
+        const { data } = event
+
+        if (data === 'variant-01') {
+          renderer.once('redrawOccurred', () => {
+            window.postMessage(`done-${data}`)
+          })
+          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, -2.7), new Vec3(0, 0, 0.4))
+          renderer.frameAll()
+        } else if (data === 'variant-02') {
+          renderer.once('redrawOccurred', () => {
+            window.postMessage(`done-${data}`)
+          })
+          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-2, -2, 2.7), new Vec3(0, 0, 0.4))
+          renderer.frameAll()
+        }
+      }
+
+      window.addEventListener('message', handleMessage, false)
+      // }}}
+    </script>
+  </head>
+  <body>
+    <canvas class="full-size" id="renderer" />
+  </body>
+</html>

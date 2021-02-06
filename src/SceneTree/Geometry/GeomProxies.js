@@ -56,31 +56,6 @@ class BaseProxy extends EventEmitter {
     return this.__buffers
   }
 
-  /**
-   * The freeBuffers method.
-   */
-  freeBuffers() {
-    // Note: Explicitly transfer data to a web worker and then
-    // terminate the worker. (hacky way to free TypedArray memory explicitly)
-    const freeData = { attrBuffers: {} }
-    const transferables = []
-    if (this.__buffers.indices) {
-      transferables.push(this.__buffers.indices.buffer)
-      freeData.indices = this.__buffers.indices
-      delete this.__buffers.indices
-    }
-    if (this.__buffers.attrBuffers) {
-      // eslint-disable-next-line guard-for-in
-      for (const attrName in this.__buffers.attrBuffers) {
-        const attrData = this.__buffers.attrBuffers[attrName]
-        freeData.attrBuffers[attrName] = this.__buffers.attrBuffers[attrName]
-        transferables.push(attrData.values.buffer)
-        delete this.__buffers.attrBuffers[attrName]
-      }
-      delete this.__buffers.attrBuffers
-    }
-  }
-
   // ////////////////////////////////////////
   // Metadata
 

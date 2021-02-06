@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>load-mesh-json - Zea Engine</title>
+
+    <link href="zea-logo.png" rel="shortcut icon" />
+
+    <link rel="stylesheet" href="styles/tachyons.min.css" />
+    <link rel="stylesheet" href="styles/main.css" />
+
+    <script src="../dist/index.umd.js"></script>
+    <script src="../dist/plugins.umd.js"></script>
+
+    <script type="module">
+      const { GLRenderer, Scene, Vec3, Mesh, Color, Material, GeomItem, Lines } = window.zeaEngine
+
+      const canvas = document.querySelector('#renderer')
+
+      const scene = new Scene()
+      const renderer = new GLRenderer(canvas, { hideSplash: true, antialias: false, xrCompatible: false })
+      renderer.setScene(scene)
+
+      // scene.setupGrid(10.0, 10)
+
+      const mesh = new Mesh()
+      const geomItem = new GeomItem('geom', mesh, new Material('mat', 'StandardSurfaceShader'))
+      scene.getRoot().addChild(geomItem)
+
+      mesh.fromJSON({
+        faceCounts: [2],
+        faceVertexIndices: [0, 1, 2, 0, 2, 3],
+        numVertices: 4,
+        vertexAttributes: {
+          positions: {
+            dataType: 'Vec3',
+            defaultScalarValue: 0.0,
+            data: [0, 0, 0, 0, 1, 0, 1, 1, 0, 1, 0, 0],
+          },
+        },
+      })
+      mesh.computeVertexNormals()
+
+      // Display all the Mesh edges in a lines geometry attached to the mesh.
+      const edges = new Lines()
+      edges.__vertexAttributes.set('positions', mesh.getVertexAttribute('positions'))
+      edges.setNumVertices(mesh.getNumVertices())
+      edges.__indices = new Uint32Array(mesh.edgeVerts)
+      const edgesMaterial = new Material('edgesMaterial', 'LinesShader')
+      edgesMaterial.getParameter('BaseColor').setValue(new Color(0.2, 0.2, 0.2))
+      edgesMaterial.getParameter('Opacity').setValue(0.3)
+      edgesMaterial.getParameter('Overlay').setValue(0.000001)
+      const edgesItem = new GeomItem('edges', edges, edgesMaterial)
+      geomItem.addChild(edgesItem)
+
+      // Display all the hard edges as darker lines.
+      const hardEdges = new Lines()
+      hardEdges.__vertexAttributes.set('positions', mesh.getVertexAttribute('positions'))
+      hardEdges.setNumVertices(mesh.getNumVertices())
+      hardEdges.__indices = mesh.computeHardEdgesIndices()
+      const hardEdgesMaterial = new Material('hardEdgesMaterial', 'LinesShader')
+      hardEdgesMaterial.getParameter('BaseColor').setValue(new Color(0.1, 0.1, 0.1))
+      hardEdgesMaterial.getParameter('Opacity').setValue(1)
+      hardEdgesMaterial.getParameter('Overlay').setValue(0.00001)
+      const hardEdgesItem = new GeomItem('hardEdges', hardEdges, hardEdgesMaterial)
+      geomItem.addChild(hardEdgesItem)
+
+      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 1, 2.7), new Vec3(0, 0, 0.4))
+      renderer.frameAll()
+      window.postMessage('done-loading')
+
+      // {{{ Messages handler.
+      const handleMessage = (event) => {
+        const { data } = event
+
+        if (data === 'variant-01') {
+          mesh.fromJSON({
+            faceCounts: [4],
+            faceVertexIndices: [0, 1, 2, 0, 2, 3, 3, 2, 4, 2, 1, 4],
+            numVertices: 5,
+            vertexAttributes: {
+              positions: {
+                dataType: 'Vec3',
+                defaultScalarValue: 0.0,
+                data: [0, 0, 0, 0, 1, 0, 0.7, 0.7, 0.2, 1, 0, 0, 0.7, 0.7, 0],
+              },
+            },
+          })
+          mesh.computeVertexNormals()
+
+          edges.__numVertices = mesh.getNumVertices()
+          edges.__indices = new Uint32Array(mesh.edgeVerts)
+          edges.emit('geomDataTopologyChanged')
+
+          hardEdges.__numVertices = mesh.getNumVertices()
+          hardEdges.__indices = mesh.computeHardEdgesIndices()
+          hardEdges.emit('geomDataTopologyChanged')
+
+          renderer.frameAll()
+          renderer.once('redrawOccurred', () => {
+            window.postMessage(`done-${data}`)
+          })
+        } else if (data === 'variant-02') {
+          mesh.fromJSON({
+            faceCounts: [2],
+            faceVertexIndices: [0, 1, 2, 0, 2, 3],
+            numVertices: 4,
+            vertexAttributes: {
+              positions: {
+                dataType: 'Vec3',
+                defaultScalarValue: 0.0,
+                data: [0, 0, 0, 0, 1, 0, 1, 1, 0, 1, 0, 0],
+              },
+            },
+          })
+          mesh.computeVertexNormals()
+
+          edges.__numVertices = mesh.getNumVertices()
+          edges.__indices = new Uint32Array(mesh.edgeVerts)
+          edges.emit('geomDataTopologyChanged')
+
+          hardEdges.__numVertices = mesh.getNumVertices()
+          hardEdges.__indices = mesh.computeHardEdgesIndices()
+          hardEdges.emit('geomDataTopologyChanged')
+
+          renderer.frameAll()
+          renderer.once('redrawOccurred', () => {
+            window.postMessage(`done-${data}`)
+          })
+        }
+      }
+
+      window.addEventListener('message', handleMessage, false)
+      // }}}
+    </script>
+  </head>
+  <body>
+    <canvas class="full-size" id="renderer" />
+  </body>
+</html>

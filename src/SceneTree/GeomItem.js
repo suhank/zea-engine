@@ -59,6 +59,7 @@ class GeomItem extends BaseGeomItem {
    * @param {string} name - The name of the geom item.
    * @param {BaseGeom} geometry - The geometry value.
    * @param {Material} material - The material value.
+   * @param {Xfo} xfo - The initial Xfo of the new GeomItem.
    */
   constructor(name, geometry = undefined, material = undefined, xfo = undefined) {
     super(name)
@@ -68,10 +69,13 @@ class GeomItem extends BaseGeomItem {
     this.__geomParam.on('valueChanged', this._setBoundingBoxDirty)
     this.__geomParam.on('boundingBoxChanged', this._setBoundingBoxDirty)
     this.__materialParam = this.addParameter(new MaterialParameter('Material'))
-    this.__paramMapping['material'] = this.getParameterIndex(this.__materialParam)
+    this.addParameterDeprecationMapping('material', 'Material')
 
     this.__geomOffsetXfoParam = this.addParameter(new XfoParameter('GeomOffsetXfo'))
     this.__geomMatParam = this.addParameter(new Mat4Parameter('GeomMat'))
+
+    this.geomIndex = -1
+    this.assetItem = null
 
     this.calcGeomMatOperator = new CalcGeomMatOperator(
       this.__globalXfoParam,
@@ -238,12 +242,14 @@ class GeomItem extends BaseGeomItem {
     const itemFlags = reader.loadUInt8()
     const geomIndex = reader.loadUInt32()
     const geomLibrary = context.assetItem.getGeometryLibrary()
+
+    this.geomIndex = geomIndex
+    this.assetItem = context.assetItem
+
     const geom = geomLibrary.getGeom(geomIndex)
     if (geom) {
       this.getParameter('Geometry').loadValue(geom)
     } else {
-      this.geomIndex = geomIndex
-      this.assetItem = context.assetItem
       const onGeomLoaded = (event) => {
         const { range } = event
         if (geomIndex >= range[0] && geomIndex < range[1]) {
@@ -329,11 +335,12 @@ class GeomItem extends BaseGeomItem {
 
     if (!src.getParameter('Geometry').getValue() && src.geomIndex != -1) {
       const geomLibrary = src.assetItem.getGeometryLibrary()
-      const geomIndex = src.geomIndex
+      this.assetItem = src.assetItem
+      this.geomIndex = src.geomIndex
       const onGeomLoaded = (event) => {
         const { range } = event
-        if (geomIndex >= range[0] && geomIndex < range[1]) {
-          const geom = geomLibrary.getGeom(geomIndex)
+        if (this.geomIndex >= range[0] && this.geomIndex < range[1]) {
+          const geom = geomLibrary.getGeom(this.geomIndex)
           // Note: we need the 'valueChanged' event to be received by the
           // renderer to then load the geometry into the GPU.
           if (geom) this.getParameter('Geometry').setValue(geom)

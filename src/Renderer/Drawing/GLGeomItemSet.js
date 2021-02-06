@@ -306,7 +306,9 @@ class GLGeomItemSet extends EventEmitter {
 
       // Specify an instanced draw to the shader so it knows how
       // to retrieve the modelmatrix.
-      gl.uniform1i(renderstate.unifs.instancedDraw.location, 1)
+      if (renderstate.unifs.instancedDraw) {
+        gl.uniform1i(renderstate.unifs.instancedDraw.location, 1)
+      }
 
       // The instanced transform ids are bound as an instanced attribute.
       const location = renderstate.attrs.instancedIds.location

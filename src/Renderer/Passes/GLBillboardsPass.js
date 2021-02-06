@@ -46,6 +46,14 @@ class GLBillboardsPass extends GLPass {
   }
 
   /**
+   * Returns the pass type. OPAQUE passes are always rendered first, followed by TRANSPARENT passes, and finally OVERLAY.
+   * @return {number} - The pass type value.
+   */
+  getPassType() {
+    return PassType.TRANSPARENT
+  }
+
+  /**
    * The itemAddedToScene method is called on each pass when a new item
    * is added to the scene, and the renderer must decide how to render it.
    * It allows Passes to select geometries to handle the drawing of.
@@ -221,9 +229,7 @@ class GLBillboardsPass extends GLPass {
   __requestUpdate() {
     if (!this.__updateRequested) {
       this.__updateRequested = true
-      setTimeout(() => {
-        this.__updateBillboards()
-      }, 100)
+      this.emit('updated')
     }
   }
 
@@ -234,13 +240,7 @@ class GLBillboardsPass extends GLPass {
   __reqUpdateIndexArray() {
     if (this.indexArrayUpdateNeeded) return
     this.indexArrayUpdateNeeded = true
-    this.updateIndexArrayId = setTimeout(() => {
-      // Another update or a draw might have occured
-      // since the request was made.
-      if (!this.indexArrayUpdateNeeded) return
-      this.__updateIndexArray()
-      this.emit('updated', {})
-    }, 1)
+    this.emit('updated')
   }
 
   // eslint-disable-next-line require-jsdoc
@@ -269,9 +269,10 @@ class GLBillboardsPass extends GLPass {
 
   /**
    * The __updateBillboards method.
+   * @param {any} renderstate - The renderstate value.
    * @private
    */
-  __updateBillboards() {
+  __updateBillboards(renderstate) {
     const doIt = () => {
       if (this.indexArrayUpdateNeeded) this.__updateIndexArray()
 
@@ -281,7 +282,7 @@ class GLBillboardsPass extends GLPass {
           gl.setupInstancedQuad()
         }
         this.__glshader = new BillboardShader(gl)
-        const shaderComp = this.__glshader.compileForTarget('GLBillboardsPass', this.__renderer.getShaderPreproc())
+        const shaderComp = this.__glshader.compileForTarget('GLBillboardsPass', renderstate.shaderopts)
         this.__shaderBinding = generateShaderGeomBinding(
           gl,
           shaderComp.attrs,
@@ -439,8 +440,9 @@ class GLBillboardsPass extends GLPass {
    * @param {any} renderstate - The renderstate value.
    */
   draw(renderstate) {
-    if (this.__drawCount == 0 || this.__updateRequested) {
-      return
+    if (this.__drawCount == 0) return
+    if (this.__updateRequested) {
+      this.__updateBillboards(renderstate)
     }
 
     if (this.__dirtyBillboards.size > 0) {

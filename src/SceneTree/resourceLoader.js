@@ -127,8 +127,8 @@ class ResourceLoader extends EventEmitter {
    */
   resolveFilename(value) {
     if (this.__adapter) return this.__adapter.resolveFilename(value)
-    const filename = value.split(value.lastIndexOf('/'))[1]
-    return filename
+    if (!value.includes('/')) return value
+    return value.split('/')[1]
   }
 
   /**
@@ -215,15 +215,21 @@ class ResourceLoader extends EventEmitter {
 
     if (this.promiseCache[url]) return this.promiseCache[url]
 
-    const promise = plugin.loadFile(url)
+    this.incrementWorkload()
 
+    const promise = plugin.loadFile(url)
     this.promiseCache[url] = promise
 
-    this.addWork(url, 1)
-
-    promise.then(() => {
-      this.addWorkDone(url, 1)
-    })
+    promise.then(
+      () => {
+        this.incrementWorkDone()
+        this.emit('loaded', { url })
+      },
+      () => {
+        // Error
+        this.incrementWorkDone()
+      }
+    )
 
     return promise
   }
@@ -264,31 +270,52 @@ class ResourceLoader extends EventEmitter {
   /**
    * Add work to the total work pile.. We never know how big the pile will get.
    *
+   * @deprecated
    * @param {string} resourceId - The resourceId value.
    * @param {number} amount - The amount value.
    */
   addWork(resourceId, amount) {
+    this.incrementWorkload(amount)
+  }
+
+  /**
+   * Add work to the 'done' pile. The done pile should eventually match the total pile.
+   * @deprecated
+   * @param {string} resourceId - The resourceId value.
+   * @param {number} amount - The amount value.
+   */
+  addWorkDone(resourceId, amount) {
+    this.incrementWorkDone(amount)
+  }
+
+  /**
+   * Increments the amount of work to be done causing a 'progressIncremented' event to be emitted
+   * As the workload is incremented, the progress might retract as a lower proportion of the work
+   * is then considered done. Only once this work is completed, and the 'incrementWorkDone', the
+   * progress will increment.
+   *
+   * @param {number} amount - The amount value.
+   */
+  incrementWorkload(amount = 1) {
     this.__totalWork += amount
     const percent = (this.__doneWork / this.__totalWork) * 100
     this.emit('progressIncremented', { percent })
   }
 
   /**
-   * Add work to the 'done' pile. The done pile should eventually match the total pile.
+   * Increments the amount of work done causing a 'progressIncremented' event to be emitted.
+   * If 5 items of work have been added using #incrementWorkload, and subsequently 3 items have
+   * been completed and #incrementWorkDone called. The progress will be at 3/5, or 60%
    *
-   * @param {string} resourceId - The resourceId value.
    * @param {number} amount - The amount value.
    */
-  addWorkDone(resourceId, amount) {
+  incrementWorkDone(amount = 1) {
     this.__doneWork += amount
 
     const percent = (this.__doneWork / this.__totalWork) * 100
     this.emit('progressIncremented', { percent })
     if (this.__doneWork > this.__totalWork) {
       throw new Error('Mismatch between work loaded and work done.')
-    }
-    if (this.__doneWork == this.__totalWork) {
-      this.emit('allResourcesLoaded', {})
     }
   }
 }

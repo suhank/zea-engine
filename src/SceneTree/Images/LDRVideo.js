@@ -59,7 +59,7 @@ class LDRVideo extends FileImage {
    * @private
    */
   __loadData(fileDesc) {
-    resourceLoader.addWork(fileDesc.id, 1)
+    resourceLoader.incrementWorkload(1)
 
     const videoElem = document.createElement('video')
     // TODO - confirm its necessary to add to DOM
@@ -94,7 +94,7 @@ class LDRVideo extends FileImage {
         this.height = videoElem.videoWidth
         this.__data = videoElem
         this.__loaded = true
-        resourceLoader.addWorkDone(fileDesc.id, 1)
+        resourceLoader.incrementWorkDone(1)
         this.emit('loaded', {})
 
         let prevFrame = 0

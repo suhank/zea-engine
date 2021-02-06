@@ -12,6 +12,13 @@ function checkStatus(response) {
   return response
 }
 
+let numCores = window.navigator.hardwareConcurrency
+if (!numCores) {
+  if (isMobile) numCores = 4
+  else numCores = 6
+}
+numCores-- // always leave one main thread code spare.
+
 /**
  * Archive unpacker plugin.
  */
@@ -68,13 +75,13 @@ class ArchiveUnpackerPlugin {
             this.__onFinishedReceiveFileData(event.data)
           } else if (event.data.type === 'ERROR') {
             const data = event.data
-            console.error(`Unable to load Resource: ${data.resourceId} With url: ${data.url}`)
+            console.error(`Unable to load Resource: ${data.resourceId}`)
           }
         }
       })
     }
 
-    this.__nextWorker = (this.__nextWorker + 1) % 3
+    this.__nextWorker = (this.__nextWorker + 1) % numCores
     if (this.__workers[this.__nextWorker] == undefined) this.__workers[this.__nextWorker] = __constructWorker()
     return this.__workers[this.__nextWorker]
   }
@@ -95,7 +102,7 @@ class ArchiveUnpackerPlugin {
    * @return {Promise} - The promise value.
    */
   loadFile(url) {
-    this.resourceLoader.addWork(url, 2) // Add work in 2 chunks. Loading and unpacking.
+    this.resourceLoader.incrementWorkload(1) //  start loading.
 
     const promise = new Promise(
       (resolve, reject) => {
@@ -103,9 +110,11 @@ class ArchiveUnpackerPlugin {
         this.__callbacks[url].push(resolve)
         fetch(url)
           .then((response) => {
-            this.resourceLoader.addWorkDone(url, 1)
+            this.resourceLoader.incrementWorkDone(1) // done loading
             if (checkStatus(response)) return response.arrayBuffer()
-            else reject(new Error(`loadArchive: ${response.status} - ${response.statusText}`))
+            else {
+              reject(new Error(`loadArchive: ${response.status} - ${response.statusText} : ${url}`))
+            }
           })
           .then((buffer) => {
             const resourceId = url
@@ -134,7 +143,6 @@ class ArchiveUnpackerPlugin {
    */
   __onFinishedReceiveFileData(fileData) {
     const resourceId = fileData.resourceId
-    this.resourceLoader.addWorkDone(resourceId, 1) // unpacking done...
     const callbacks = this.__callbacks[resourceId]
     if (callbacks) {
       for (const callback of callbacks) {
@@ -142,7 +150,6 @@ class ArchiveUnpackerPlugin {
       }
       delete this.__callbacks[resourceId]
     }
-    this.resourceLoader.emit('loaded', { resourceId })
   }
 }
 

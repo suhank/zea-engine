@@ -21,6 +21,15 @@ class ProceduralPoints extends Points {
   }
 
   /**
+   * The clear method.
+   */
+  clear() {
+    this.dirtyTopology = true
+    this.dirtyVertices = true
+    super.clear()
+  }
+
+  /**
    * If the topology of the geometry has changed. For example, there are more or less vertices,
    * then the rebuild method must be called to re-generated the topology
    */

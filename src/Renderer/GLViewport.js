@@ -11,6 +11,22 @@ import { CameraManipulator } from '../SceneTree/index'
 /**
  * Class representing a GL viewport.
  *
+ * **Events**
+ * * **resized:** Emitted when the GLViewport resizes
+ * * **updated:** Emitted when the GLViewport needs updating. The Renderer will trigger a redraw when this occurs.
+ * * **viewChanged:** Emitted when the view changes. Usually caused by the camera moving.
+ * * **pointerDoublePressed:** Emitted when the user double clicks with the mouse, or double taps in the viewport.
+ * * **pointerDown:** Emitted when the user presses a pointer
+ * * **pointerUp:** Emitted when the user releases a pointer
+ * * **pointerOverGeom:** Emitted when the pointer is moved over a geometry
+ * * **pointerLeaveGeom:** Emitted when the pointer is moved off a geometry
+ * * **pointerMove:** Emitted when the pointer is moved
+ * * **pointerEnter:** Emitted when the pointer is moved into thg viewport
+ * * **pointerLeave:** Emitted when the mouse leaves the viewport.
+ * * **keyDown:** Emitted when the user presses a key on the keyboard
+ * * **keyUp:** Emitted when the user releases a key on the keyboard
+ * * **touchCancel:** Emitted when the user cancels a touch interaction
+ *
  * @extends GLBaseViewport
  */
 class GLViewport extends GLBaseViewport {
@@ -35,6 +51,7 @@ class GLViewport extends GLBaseViewport {
 
     this.__geomDataBuffer = undefined
     this.__geomDataBufferFbo = undefined
+    this.debugGeomShader = false
 
     // this.renderGeomDataFbo = this.renderGeomDataFbo.bind(this);
 
@@ -473,7 +490,6 @@ class GLViewport extends GLBaseViewport {
    * Handler of the `pointerdown` event fired when the pointer device is initially pressed.
    *
    * @param {MouseEvent|TouchEvent} event - The DOM event produced by a pointer
-   * @return {boolean} -
    */
   onPointerDown(event) {
     this.__preparePointerEvent(event)
@@ -519,22 +535,17 @@ class GLViewport extends GLBaseViewport {
 
     if (event.intersectionData != undefined) {
       event.intersectionData.geomItem.onPointerDown(event)
-
       if (!event.propagating || this.capturedItem) return
-
-      this.emit('pointerDownOnGeom', event)
     }
 
     this.emit('pointerDown', event)
-    if (!event.propagating) return
+    if (!event.propagating || this.capturedItem) return
 
     if (this.manipulator) {
       this.manipulator.onPointerDown(event)
 
       if (!event.propagating) return
     }
-
-    return false
   }
 
   /**
@@ -560,7 +571,7 @@ class GLViewport extends GLBaseViewport {
 
     if (this.capturedItem) {
       this.capturedItem.onPointerUp(event)
-      return
+      if (!event.propagating) return
     }
 
     if (event.intersectionData != undefined) {
@@ -608,7 +619,7 @@ class GLViewport extends GLBaseViewport {
     // the geom under the pointer. e.g. the CameraManipulator during a drag.
     if (this.capturedItem) {
       this.capturedItem.onPointerMove(event)
-      return
+      if (!event.propagating) return
     }
 
     event.intersectionData = this.getGeomDataAtPos(event.pointerPos, event.pointerRay)
@@ -796,10 +807,10 @@ class GLViewport extends GLBaseViewport {
     this.__renderer.drawScene(renderstate)
 
     // Turn this on to debug the geom data buffer.
-    // {
-    //     gl.screenQuad.bindShader(renderstate);
-    //     gl.screenQuad.draw(renderstate, this.__geomDataBuffer);
-    // }
+    if (this.debugGeomShader) {
+      gl.screenQuad.bindShader(renderstate)
+      gl.screenQuad.draw(renderstate, this.__geomDataBuffer)
+    }
   }
 }
 

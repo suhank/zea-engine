@@ -47,35 +47,15 @@ class GLStandardGeomsPass extends GLPass {
     if (treeItem instanceof GeomItem) {
       const geomItem = treeItem
       if (!geomItem.getMetadata('glGeomItem')) {
-        const checkGeom = (geomItem) => {
+        if (geomItem.getParameter('Material').getValue() == undefined) {
+          console.warn('Scene item :' + geomItem.getPath() + ' has no material')
+          return false
+        } else {
           if (this.filterGeomItem(geomItem)) {
-            const geomParam = geomItem.getParameter('Geometry')
-            if (geomParam.getValue() == undefined) {
-              // we will add this geomItem once it receives its geom.
-              // TODO: what happens if the item is removed from the tree
-              // and then geom assigned? (maybe impossible with our tools)
-              // e.g. a big asset loaded, added to the tree, then removed again
-              // The geoms will get assigned after the tree is removed.
-              const geomAssigned = () => {
-                this.addGeomItem(geomItem)
-                geomParam.off('valueChanged', geomAssigned)
-              }
-              geomParam.on('valueChanged', geomAssigned)
-            } else {
-              this.addGeomItem(geomItem)
-            }
-            return true
+            this.addGeomItem(geomItem)
           } else {
             return false
           }
-        }
-
-        if (geomItem.getParameter('Material').getValue() == undefined) {
-          console.warn('Scene item :' + geomItem.getPath() + ' has no material')
-          // TODO: listen for when the material is assigned.(like geoms below)
-          return false
-        } else {
-          return checkGeom(geomItem)
         }
       } else {
         return false

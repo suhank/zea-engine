@@ -21,6 +21,15 @@ class ProceduralLines extends Lines {
   }
 
   /**
+   * The clear method.
+   */
+  clear() {
+    this.dirtyTopology = true
+    this.dirtyVertices = true
+    super.clear()
+  }
+
+  /**
    * The rebuild method.
    * @private
    */

@@ -1,5 +1,5 @@
 /* eslint-disable guard-for-in */
-import { TreeItem, ParameterOwner } from '../SceneTree/index'
+import { TreeItem, GeomItem, ParameterOwner } from '../SceneTree/index'
 import { SystemDesc } from '../SystemDesc'
 import { onResize } from '../external/onResize'
 import { create3DContext } from './GLContext'
@@ -8,6 +8,7 @@ import { GLViewport } from './GLViewport'
 import { Registry } from '../Registry'
 import { VRViewport } from './VR/VRViewport'
 import { POINTER_TYPES } from '../Utilities/EnumUtils'
+import { PassType } from './Passes/GLPass'
 
 let activeGLRenderer = undefined
 let pointerIsDown = false
@@ -48,9 +49,9 @@ class GLBaseRenderer extends ParameterOwner {
     this.__redrawRequested = false
     this.__isMobile = SystemDesc.isMobileDevice
 
-    this.__drawSuspensionLevel = 1
+    this.__drawSuspensionLevel = 0
     this.__shaderDirectives = {}
-    this.__preproc = {}
+    this.directives = {}
 
     this.__xrViewportPresenting = false
 
@@ -58,7 +59,7 @@ class GLBaseRenderer extends ParameterOwner {
     this.renderGeomDataFbos = this.renderGeomDataFbos.bind(this)
     this.requestRedraw = this.requestRedraw.bind(this)
 
-    this.setupWebGL($canvas, options.webglOptions ? options.webglOptions : {})
+    this.setupWebGL($canvas, options.webglOptions ? { ...options, ...options.webglOptions } : options)
     this.bindEventHandlers()
 
     // eslint-disable-next-line guard-for-in
@@ -126,16 +127,8 @@ class GLBaseRenderer extends ParameterOwner {
     for (const key in this.__shaderDirectives) {
       directives.push(this.__shaderDirectives[key])
     }
-    this.__preproc.directives = directives
-    this.__gl.shaderopts = this.__preproc
-  }
-
-  /**
-   * The getShaderPreproc method.
-   * @return {object} - The return value.
-   */
-  getShaderPreproc() {
-    return this.__preproc
+    this.directives = directives
+    this.__gl.shaderopts = { directives } // used by zea-cad.
   }
 
   /**
@@ -344,7 +337,21 @@ class GLBaseRenderer extends ParameterOwner {
     // Note: we can have BaseItems in the tree now.
     if (!(treeItem instanceof TreeItem)) return
 
-    this.assignTreeItemToGLPass(treeItem)
+    if (treeItem instanceof GeomItem) {
+      const geomParam = treeItem.getParameter('Geometry')
+      if (geomParam.getValue() == undefined) {
+        // we will add this geomItem once it receives its geom.
+        const geomAssigned = () => {
+          this.assignTreeItemToGLPass(treeItem)
+          geomParam.off('valueChanged', geomAssigned)
+        }
+        geomParam.on('valueChanged', geomAssigned)
+      } else {
+        this.assignTreeItemToGLPass(treeItem)
+      }
+    } else {
+      this.assignTreeItemToGLPass(treeItem)
+    }
 
     // Traverse the tree adding items until we hit the leaves (which are usually GeomItems.)
     for (const childItem of treeItem.getChildren()) {
@@ -556,9 +563,11 @@ class GLBaseRenderer extends ParameterOwner {
     })
 
     webglOptions.preserveDrawingBuffer = true
+    webglOptions.antialias = webglOptions.antialias != undefined ? webglOptions.antialias : true
+    webglOptions.depth = webglOptions.depth != undefined ? webglOptions.depth : true
     webglOptions.stencil = webglOptions.stencil ? webglOptions.stencil : false
     webglOptions.alpha = webglOptions.alpha ? webglOptions.alpha : false
-    webglOptions.xrCompatible = true
+    webglOptions.xrCompatible = webglOptions.xrCompatible != undefined ? webglOptions.xrCompatible : true
     this.__gl = create3DContext(this.__glcanvas, webglOptions)
     if (!this.__gl) alert('Unable to create WebGL context. WebGL not supported.')
     this.__gl.renderer = this
@@ -874,7 +883,8 @@ class GLBaseRenderer extends ParameterOwner {
    * @param {boolean} updateIndices - The updateIndices value.
    * @return {number} - The return value.
    */
-  addPass(pass, passtype = 0, updateIndices = true) {
+  addPass(pass, passtype = -1, updateIndices = true) {
+    if (passtype == -1) passtype = pass.getPassType()
     if (!this.__passes[passtype]) this.__passes[passtype] = []
 
     let index = 0
@@ -1099,7 +1109,14 @@ class GLBaseRenderer extends ParameterOwner {
    */
   requestRedraw() {
     // If a redraw has already been requested, then simply return and wait.
-    if (this.__redrawRequested || this.__continuousDrawing || this.__xrViewportPresenting) return false
+    if (
+      this.__redrawRequested ||
+      this.__continuousDrawing ||
+      this.__xrViewportPresenting ||
+      this.__drawSuspensionLevel > 0
+    ) {
+      return false
+    }
 
     const onAnimationFrame = () => {
       this.__redrawRequested = false
@@ -1133,7 +1150,7 @@ class GLBaseRenderer extends ParameterOwner {
    */
   bindGLBaseRenderer(renderState) {
     renderState.gl = this.__gl
-    renderState.shaderopts = this.__preproc
+    renderState.shaderopts = { directives: this.directives } // we will start deprecating this in favor os a simpler directives
 
     const gl = this.__gl
     if (!renderState.viewports || renderState.viewports.length == 1) {
@@ -1198,6 +1215,10 @@ class GLBaseRenderer extends ParameterOwner {
    */
   drawScene(renderState) {
     // Bind already called by GLRenderer.
+
+    renderState.directives = [...this.directives, '#define DRAW_COLOR']
+    renderState.shaderopts.directives = renderState.directives
+
     for (const key in this.__passes) {
       const passSet = this.__passes[key]
       for (const pass of passSet) {
@@ -1212,6 +1233,10 @@ class GLBaseRenderer extends ParameterOwner {
    */
   drawHighlightedGeoms(renderState) {
     this.bindGLBaseRenderer(renderState)
+
+    renderState.directives = [...this.directives, '#define DRAW_HIGHLIGHT']
+    renderState.shaderopts.directives = renderState.directives
+
     for (const key in this.__passes) {
       const passSet = this.__passes[key]
       for (const pass of passSet) {
@@ -1227,6 +1252,10 @@ class GLBaseRenderer extends ParameterOwner {
    */
   drawSceneGeomData(renderState, mask = 255) {
     this.bindGLBaseRenderer(renderState)
+
+    renderState.directives = [...this.directives, '#define DRAW_GEOMDATA']
+    renderState.shaderopts.directives = renderState.directives
+
     for (const key in this.__passes) {
       // Skip pass categories that do not match
       // the mask. E.g. we may not want to hit
