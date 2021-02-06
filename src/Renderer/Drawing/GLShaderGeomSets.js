@@ -82,13 +82,13 @@ class GLShaderGeomSets extends EventEmitter {
     const transparencyChanged = (event) => {
       if (geom instanceof Lines || geom instanceof Points || geom instanceof PointsProxy || geom instanceof LinesProxy)
         return
-      material.off('transparencyChanged', transparencyChanged)
       // Note: the pass will remove the glgeomitem from the
       //  GLGeomItemSet which is owned by the GLGeomSet.
       this.pass.removeGeomItem(geomItem)
       this.pass.__renderer.assignTreeItemToGLPass(geomItem)
     }
-    material.on('transparencyChanged', transparencyChanged)
+    material.once('transparencyChanged', transparencyChanged)
+    geomItem.getParameter('Material').once('valueChanged', transparencyChanged)
   }
 
   /**

@@ -98,7 +98,7 @@ class MaterialGroup extends BaseGroup {
               p.setValue(p.__backupMaterial)
             }
           }
-        }, false)
+        })
       })
       resolve()
     })
