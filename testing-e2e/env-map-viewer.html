@@ -91,17 +91,17 @@
         const { data } = event
 
         if (data === 'variant-01') {
+          renderer.once('redrawOccurred', () => {
+            window.postMessage(`done-${data}`)
+          })
           renderer.exposure = 0.2
           slider.value = renderer.exposure * 100
+        } else if (data === 'variant-02') {
           renderer.once('redrawOccurred', () => {
             window.postMessage(`done-${data}`)
           })
-        } else if (data === 'variant-02') {
           renderer.exposure = 1.8
           slider.value = renderer.exposure * 100
-          renderer.once('redrawOccurred', () => {
-            window.postMessage(`done-${data}`)
-          })
         }
       }
 
