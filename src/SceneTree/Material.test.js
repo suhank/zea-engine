@@ -8,6 +8,15 @@ describe('Material', () => {
     expect(material.hasParameter('BaseColor')).toBeTruthy()
   })
 
+  test('clone', () => {
+    const material = new Material('myMaterial', 'SimpleSurfaceShader')
+    material.getParameter('BaseColor').setValue(new Color(89 / 255, 182 / 255, 92 / 255))
+
+    const material2 = material.clone()
+
+    expect(material2.toJSON()).toEqual(material.toJSON())
+  })
+
   test('Saving to JSON (serialization).', () => {
     const material = new Material('myMaterial', 'SimpleSurfaceShader')
     material.getParameter('BaseColor').setValue(new Color(89 / 255, 182 / 255, 92 / 255))

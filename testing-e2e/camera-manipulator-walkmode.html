@@ -42,11 +42,13 @@
       geomItem4.getParameter('LocalXfo').setValue(new Xfo(new Vec3(15, -15, -0.1)))
       scene.getRoot().addChild(geomItem4, false)
 
-      renderer.getViewport().getManipulator().setDefaultManipulationMode(CameraManipulator.MANIPULATION_MODES.walk)
-      renderer.getViewport().getManipulator().getParameter('OrbitRate').setValue(0.5)
+      const cameraManipulator = renderer.getViewport().getManipulator()
+      cameraManipulator.setDefaultManipulationMode(CameraManipulator.MANIPULATION_MODES.look)
+      cameraManipulator.enabledWASDWalkMode = true
+      cameraManipulator.getParameter('OrbitRate').setValue(0.5)
 
       // someEmitter.on('loaded', () => {
-      //   window.postMessage('done-loading')
+      window.postMessage('done-loading')
       // })
 
       // {{{ Messages handler.

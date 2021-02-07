@@ -136,6 +136,10 @@ class CameraManipulator extends BaseTool {
     if (typeof manipulationMode == 'string') {
       this.__defaultManipulationState = MANIPULATION_MODES[manipulationMode]
     } else this.__defaultManipulationState = manipulationMode
+
+    if (!Object.values(MANIPULATION_MODES).includes(this.__defaultManipulationState)) {
+      throw new Error('Invalid Camera Manipulation Mode. Must be one of ' + Object.keys(MANIPULATION_MODES))
+    }
   }
 
   /**

@@ -49,7 +49,7 @@ class GLBaseRenderer extends ParameterOwner {
     this.__redrawRequested = false
     this.__isMobile = SystemDesc.isMobileDevice
 
-    this.__drawSuspensionLevel = 1
+    this.__drawSuspensionLevel = 0
     this.__shaderDirectives = {}
     this.directives = {}
 
@@ -1109,7 +1109,14 @@ class GLBaseRenderer extends ParameterOwner {
    */
   requestRedraw() {
     // If a redraw has already been requested, then simply return and wait.
-    if (this.__redrawRequested || this.__continuousDrawing || this.__xrViewportPresenting) return false
+    if (
+      this.__redrawRequested ||
+      this.__continuousDrawing ||
+      this.__xrViewportPresenting ||
+      this.__drawSuspensionLevel > 0
+    ) {
+      return false
+    }
 
     const onAnimationFrame = () => {
       this.__redrawRequested = false

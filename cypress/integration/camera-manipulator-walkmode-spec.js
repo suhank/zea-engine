@@ -1,4 +1,4 @@
-describe.skip('camera-manipulator-walkmode', () => {
+describe('camera-manipulator-walkmode', () => {
   it('Captures a snapshot', () => {
     cy.visit('testing-e2e/camera-manipulator-walkmode.html')
     cy.get('canvas').percySnapshot('camera-manipulator-walkmode')

@@ -55,7 +55,10 @@
       renderer.frameAll()
 
       envMap.on('loaded', () => {
-        window.postMessage('done-loading')
+        renderer.once('redrawOccurred', () => {
+          window.postMessage('done-loading')
+        })
+        renderer.requestRedraw()
       })
 
       // {{{ Messages handler.
@@ -63,17 +66,17 @@
         const { data } = event
 
         if (data === 'variant-01') {
+          renderer.once('redrawOccurred', () => {
+            window.postMessage(`done-${data}`)
+          })
           renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, -2.7), new Vec3(0, 0, 0.4))
           renderer.frameAll()
+        } else if (data === 'variant-02') {
           renderer.once('redrawOccurred', () => {
             window.postMessage(`done-${data}`)
           })
-        } else if (data === 'variant-02') {
           renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-2, -2, 2.7), new Vec3(0, 0, 0.4))
           renderer.frameAll()
-          renderer.once('redrawOccurred', () => {
-            window.postMessage(`done-${data}`)
-          })
         }
       }
 

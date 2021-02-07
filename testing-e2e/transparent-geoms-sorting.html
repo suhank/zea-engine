@@ -31,7 +31,7 @@
 
       const scene = new Scene()
       const domElement = document.getElementById('app')
-      const renderer = new GLRenderer(domElement, { hideSplash: true })
+      const renderer = new GLRenderer(domElement, { hideSplash: true, antialias: false, xrCompatible: false })
       renderer.setScene(scene)
 
       scene.setupGrid(60.0, 6)
