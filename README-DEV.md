@@ -114,10 +114,15 @@ yarn generate e2e-test
 
 You'll be prompted for the test's name.
 
-## Publishing a new build
+## Publishing a new release
 
-The npm scripts hook takes care of the heavy lifting, you only need to run:
-
+1. All unit and E2E tests must be passing.
+2. To generate the release notes and bump the version, run:
+```bash
+yarn run release
+```
+3. After generating the release notes, make sure to check for spelling issues and other inconsistencies.
+4. Publish to NPM by running run the following
 ```bash
 yarn publish
 ```
