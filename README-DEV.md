@@ -121,8 +121,9 @@ You'll be prompted for the test's name.
 ```bash
 yarn run release
 ```
-3. After generating the release notes, make sure to check for spelling issues and other inconsistencies.
-4. Publish to NPM by running run the following
+3. Check for spelling issues and other inconsistencies.
+4. To bump the package version, run:
 ```bash
-yarn publish
+yarn version
 ```
+5. Push your changes. The GitHub Action script takes care of publishing every time you push a new tag.
