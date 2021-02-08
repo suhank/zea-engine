@@ -124,6 +124,8 @@ class GLHDRCubeMap extends RefCounted {
       gl.uniform4fv(unifs.srcRegion.location, region)
       gl.drawQuad()
     }
+
+    gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, null)
     gl.deleteFramebuffer(fboId)
 
     this.ldrTex.destroy()

@@ -207,10 +207,10 @@ void main(void) {
 #endif
 
 
-  fragColor = texture(envMap, normalize(v_worldDir));
+  fragColor = textureLod(envMap, normalize(v_worldDir), exposure);
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION
-  fragColor.rgb = toGamma(fragColor.rgb * exposure);
+  fragColor.rgb = toGamma(fragColor.rgb);
 #endif
 
 #ifndef ENABLE_ES3

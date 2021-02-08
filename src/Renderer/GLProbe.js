@@ -2,6 +2,7 @@ import { EventEmitter } from '../Utilities/index'
 import { hammersley } from './hammersley.js'
 import { GLTexture2D } from './GLTexture2D.js'
 import { GLImageAtlas } from './GLImageAtlas.js'
+import { PreComputeBRDFShader } from './Shaders/PreComputeBRDFShader.js'
 import { ConvolverShader } from './Shaders/ConvolverShader.js'
 import { GLFbo } from './GLFbo.js'
 import { ImagePyramid } from './ImagePyramid.js'
@@ -30,164 +31,115 @@ class GLProbe extends EventEmitter {
   }
 
   /**
-   * The generateHammersleySamples method.
-   * @param {any} numSamples - The numSamples value.
-   * @return {any} - The return value.
-   */
-  generateHammersleySamples(numSamples) {
-    const gl = this.__gl
-    if (!gl['Hammersley' + numSamples]) {
-      const dataArray = new Float32Array(numSamples * 3)
-      for (let i = 0; i < numSamples; i++) {
-        const Xi = hammersley(i, numSamples)
-        const offset = i * 3
-        dataArray[offset + 0] = Xi[0]
-        dataArray[offset + 1] = Xi[1]
-      }
-      gl['Hammersley' + numSamples] = new GLTexture2D(gl, {
-        format: 'RGB',
-        type: 'FLOAT',
-        filter: 'NEAREST',
-        wrap: 'CLAMP_TO_EDGE',
-        width: numSamples,
-        height: 1,
-        data: dataArray,
-        mipMapped: false,
-      })
-    }
-    return gl['Hammersley' + numSamples]
-  }
-
-  /**
    * The convolveProbe method.
    * @param {any} srcGLTex - The srcGLTex value.
    */
-  convolveProbe(srcGLTex, faceSize) {
+  convolveProbe(srcGLTex) {
     const gl = this.__gl
 
-    // Compile and bind the convolver shader.
-    const numSamples = 1024
-    // const numSamples = 64;
+    this.brdfLUTTexture = gl.createTexture()
 
-    if (!this.__convolved) {
-      this.hammersleyTexture = this.generateHammersleySamples(numSamples)
+    // pre-allocate enough memory for the LUT texture.
+    gl.bindTexture(gl.TEXTURE_2D, this.brdfLUTTexture)
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RG16F, 512, 512, 0, gl.RG, gl.FLOAT, null)
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE)
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE)
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR)
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR)
 
-      this.gltex = gl.createTexture()
-      gl.bindTexture(gl.TEXTURE_CUBE_MAP, this.gltex)
+    const brdfShader = new PreComputeBRDFShader(gl)
+    const brdfShaderComp = brdfShader.compileForTarget('GLProbe', gl.shaderopts)
+    const brdfShaderBinding = generateShaderGeomBinding(
+      gl,
+      brdfShaderComp.attrs,
+      gl.__quadattrbuffers,
+      gl.__quadIndexBuffer
+    )
 
-      gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MAG_FILTER, gl.LINEAR)
-      gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MIN_FILTER, gl.GL_LINEAR_MIPMAP_LINEAR)
-      gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE)
-      gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE)
-      gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_R, gl.CLAMP_TO_EDGE)
+    const fboId = gl.createFramebuffer()
+    gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, fboId)
+    gl.framebufferTexture2D(gl.DRAW_FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.brdfLUTTexture, 0)
 
-      // Resize all the faces first.
-      for (let i = 0; i < 6; i++) {
-        gl.texImage2D(gl.TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, gl.RGBA32F, 128, 128, 0, gl.RGBA, gl.FLOAT, null)
-      }
-      gl.generateMipmap(gl.TEXTURE_CUBE_MAP)
-      // gl.enable(gl.TEXTURE_CUBE_MAP_SEAMLESS) // not supported in webgl
-
-      this.__convolverShader = new ConvolverShader(gl)
-      const covolverShaderComp = this.__convolverShader.compileForTarget(
-        'GLProbe',
-        Object.assign(
-          {
-            repl: {
-              NUM_SAMPLES: numSamples,
-            },
-          },
-          gl.shaderopts
-        )
-      )
-      this.__covolverShaderBinding = generateShaderGeomBinding(
-        gl,
-        covolverShaderComp.attrs,
-        gl.__quadattrbuffers,
-        gl.__quadIndexBuffer
-      )
-    }
-
-    // TODO: Refactor this code.
-    // We only need one target image for the probe. (not all these Fbos.)
-    // Instead we can simply move the viewport around the target image atlas.
     const renderstate = {}
-    this.__convolverShader.bind(renderstate, 'GLProbe')
-    this.__covolverShaderBinding.bind(renderstate)
+    brdfShader.bind(renderstate)
+    brdfShaderBinding.bind(renderstate)
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
+    gl.viewport(0, 0, 512, 512)
+    gl.drawQuad()
+
+    gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, null)
+    gl.deleteFramebuffer(fboId)
+
+    brdfShader.unbind(renderstate)
+    brdfShader.destroy()
+
+    // ////////////////////////////////////////////
+    //
+
+    this.glcubetex = gl.createTexture()
+    gl.bindTexture(gl.TEXTURE_CUBE_MAP, this.glcubetex)
+
+    gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MAG_FILTER, gl.LINEAR)
+    gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR)
+    gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE)
+    gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE)
+    gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_R, gl.CLAMP_TO_EDGE)
+
+    // Resize all the faces first.
+    for (let i = 0; i < 6; i++) {
+      gl.texImage2D(gl.TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, gl.RGBA32F, 128, 128, 0, gl.RGBA, gl.FLOAT, null)
+    }
+    gl.generateMipmap(gl.TEXTURE_CUBE_MAP)
+    // gl.enable(gl.TEXTURE_CUBE_MAP_SEAMLESS) // not supported in webgl
+
+    const convolverShader = new ConvolverShader(gl)
+    const covolverShaderComp = convolverShader.compileForTarget('GLProbe', gl.shaderopts)
+    const covolverShaderBinding = generateShaderGeomBinding(
+      gl,
+      covolverShaderComp.attrs,
+      gl.__quadattrbuffers,
+      gl.__quadIndexBuffer
+    )
+
+    convolverShader.bind(renderstate, 'GLProbe')
+    covolverShaderBinding.bind(renderstate)
     const unifs = renderstate.unifs
 
+    srcGLTex.bindToUniform(renderstate, unifs.envMap)
+
     const maxMipLevels = 5
-    for (const mip = 0; mip < maxMipLevels; ++mip) {
+    for (let mip = 0; mip < maxMipLevels; ++mip) {
       // resize framebuffer according to mip-level size.
       const mipWidth = 128 * Math.pow(0.5, mip)
       const mipHeight = 128 * Math.pow(0.5, mip)
-      gl.bindRenderbuffer(GL_RENDERBUFFER, captureRBO)
-      gl.renderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, mipWidth, mipHeight)
-      gl.viewport(0, 0, mipWidth, mipHeight)
+
+      // Attach one face of cube map
+      const fboId = gl.createFramebuffer()
+      gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, fboId)
+      gl.viewport(0, 0, mipWidth, mipHeight) // Match the viewport to the texture size
 
       const roughness = mip / (maxMipLevels - 1)
       gl.uniform1f(unifs.roughness.location, roughness)
       for (let i = 0; i < 6; ++i) {
-        gl.uniformMatrix4fv(unifs.view.location, false, captureViews[i])
+        gl.uniform1i(unifs.faceId.location, i)
         gl.framebufferTexture2D(
           gl.FRAMEBUFFER,
           gl.COLOR_ATTACHMENT0,
           gl.TEXTURE_CUBE_MAP_POSITIVE_X + i,
-          this.gltex,
+          this.glcubetex,
           mip
         )
 
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
-        renderCube()
+        gl.drawQuad()
       }
+
+      gl.deleteFramebuffer(fboId)
     }
-
-    // for (let i = 0; i < this.__fbos.length; i++) {
-    //   this.__fbos[i].bindAndClear()
-
-    //   // Note: we should not need to bind the texture every iteration.
-    //   this.__lodPyramid.bindToUniform(renderstate, unifs.envMapPyramid)
-    //   if ('hammersleyMap' in unifs) {
-    //     hammersleyTexture.bindToUniform(renderstate, unifs.hammersleyMap)
-    //   }
-
-    //   // Set the roughness.
-    //   if ('roughness' in unifs) {
-    //     const roughness = (i + 1) / this.__fbos.length
-    //     gl.uniform1f(unifs.roughness.location, roughness)
-    //   }
-
-    //   gl.drawQuad()
-    // }
-
-    // Attach one face of cube map
-    const fboId = gl.createFramebuffer()
-    gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, fboId)
-
-    for (let i = 0; i < 6; i++) {
-      let cubeFace = gl.TEXTURE_CUBE_MAP_POSITIVE_X + i
-      if (cubeFace == gl.TEXTURE_CUBE_MAP_POSITIVE_Y) cubeFace = gl.TEXTURE_CUBE_MAP_NEGATIVE_Y
-      else if (cubeFace == gl.TEXTURE_CUBE_MAP_NEGATIVE_Y) cubeFace = gl.TEXTURE_CUBE_MAP_POSITIVE_Y
-
-      gl.viewport(0, 0, faceSize, faceSize) // Match the viewport to the texture size
-      gl.framebufferTexture2D(gl.DRAW_FRAMEBUFFER, gl.COLOR_ATTACHMENT0, cubeFace, this.gltex, 0)
-      gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
-
-      // const region = [
-      //   ((i % 3) * faceSize) / ldr.width,
-      //   (Math.floor(i / 3) * faceSize) / ldr.height,
-      //   faceSize / ldr.width,
-      //   faceSize / ldr.height,
-      // ]
-      // gl.uniform4fv(unifs.srcRegion.location, region)
-      // gl.drawQuad()
-    }
-    gl.deleteFramebuffer(fboId)
+    gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, null)
 
     this.__convolved = true
-    this.__convolverShader.destroy()
-
-    // this.renderAtlas(false)
+    convolverShader.destroy()
   }
 
   /**
@@ -196,8 +148,15 @@ class GLProbe extends EventEmitter {
    * @param {any} unif - The unif value.
    */
   bindProbeToUniform(renderstate, unif) {
-    // this.__lodPyramid.getSubImage(3).bind(renderstate, unif);
-    // if (this.__convolved) super.bindToUniform(renderstate, unif)
+    const unit = renderstate.boundTextures++
+    const texId = this.__gl.TEXTURE0 + unit
+    const gl = this.__gl
+    gl.activeTexture(texId)
+    gl.bindTexture(gl.TEXTURE_CUBE_MAP, this.glcubetex)
+    gl.uniform1i(unif.location, unit)
+
+    if (renderstate.unifs.brdfLUTTexture) {
+    }
   }
 
   /**

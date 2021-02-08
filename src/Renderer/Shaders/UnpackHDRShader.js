@@ -1,9 +1,14 @@
+/* eslint-disable require-jsdoc */
 import { shaderLibrary } from '../ShaderLibrary.js'
 import { GLShader } from '../GLShader.js'
 
 import './GLSL/utils/quadVertexFromID.js'
 import './GLSL/utils/unpackHDR.js'
 
+/** Shader for unpacking HDR images using Boost HDR algorithm.
+ * @extends GLShader
+ * @private
+ */
 class UnpackHDRShader extends GLShader {
   constructor(gl) {
     super(gl)
