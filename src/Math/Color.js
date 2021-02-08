@@ -460,6 +460,18 @@ class Color extends AttrValue {
   }
 
   /**
+   * Updates the Color by adding the other.
+   *
+   * @param {Color} other - The other color to add.
+   */
+  addInPlace(other) {
+    this.r += other.r
+    this.g += other.g
+    this.b += other.b
+    this.a += other.a
+  }
+
+  /**
    * Returns a new color which is this color subtracted from other.
    *
    * @param {Color} other - The other color to subtract.

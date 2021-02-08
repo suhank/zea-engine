@@ -155,16 +155,19 @@ class GLShader extends BaseItem {
       }
       const numberedLinesWithErrors = []
       const lines = glsl.split('\n')
-      for (let i = 0; i < lines.length; i++) {
-        numberedLinesWithErrors.push((i + 1 + ':').padStart(' ', 3) + lines[i])
-        if (i + 1 in errorLines) {
-          const errors = errorLines[i + 1]
-          for (const error of errors) {
-            numberedLinesWithErrors.push(error)
-            numberedLinesWithErrors.push('-'.padStart('-', error.length))
-          }
+      for (const key in errorLines) {
+        const lineNumber = Number.parseInt(key) - 1
+        for (let i = Math.max(0, lineNumber - 4); i < lineNumber; i++)
+          numberedLinesWithErrors.push((lineNumber + 1 + ' ').padStart(' ', 3) + lines[i])
+        numberedLinesWithErrors.push((lineNumber + 1 + '>').padStart(' ', 3) + lines[lineNumber])
+        for (let i = lineNumber + 1; i < Math.min(lines.length - 1, lineNumber + 5); i++)
+          numberedLinesWithErrors.push((lineNumber + 1 + ' ').padStart(' ', 3) + lines[i])
+        const errors = errorLines[key]
+        for (const error of errors) {
+          numberedLinesWithErrors.push(error)
         }
       }
+
       // throw("An error occurred compiling the shader \n\n" + numberedLinesWithErrors.join('\n') + "\n\n=================\n" + this.constructor.name + "." + name + ": \n\n" + errors.join('\n'));
       throw new Error(
         'An error occurred compiling the shader \n=================\n' +
@@ -172,8 +175,6 @@ class GLShader extends BaseItem {
           '.' +
           name +
           ': \n\n' +
-          errors.join('\n') +
-          '\n' +
           numberedLinesWithErrors.join('\n')
       )
       return null

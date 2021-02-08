@@ -567,7 +567,7 @@ class GLBaseRenderer extends ParameterOwner {
     webglOptions.depth = webglOptions.depth != undefined ? webglOptions.depth : true
     webglOptions.stencil = webglOptions.stencil ? webglOptions.stencil : false
     webglOptions.alpha = webglOptions.alpha ? webglOptions.alpha : false
-    webglOptions.xrCompatible = webglOptions.xrCompatible != undefined ? webglOptions.xrCompatible : true
+    webglOptions.xrCompatible = webglOptions.xrCompatible != undefined ? webglOptions.xrCompatible : false
     this.__gl = create3DContext(this.__glcanvas, webglOptions)
     if (!this.__gl) alert('Unable to create WebGL context. WebGL not supported.')
     this.__gl.renderer = this

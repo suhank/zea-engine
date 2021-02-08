@@ -65,7 +65,7 @@
       const canvas = document.querySelector('#renderer')
 
       const scene = new Scene()
-      const renderer = new GLRenderer(canvas, { hideSplash: true, antialias: false, xrCompatible: true })
+      const renderer = new GLRenderer(canvas, { hideSplash: true, antialias: false })
       renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(3, 3, 2), new Vec3(0, 0, 0.75))
       renderer.setScene(scene)
 
@@ -91,11 +91,13 @@
 
       let geomItem
       objAsset.on('pointerEnter', (event) => {
-        geomItem = event.intersectionData.geomItem
-        if (geomItem) {
-          const material = geomItem.getParameter('Material').getValue()
-          defaultColor = material.getParameter('BaseColor').getValue()
-          material.getParameter('BaseColor').setValue(pointerOverColor)
+        if (event.intersectionData && event.intersectionData.geomItem) {
+          geomItem = event.intersectionData.geomItem
+          if (geomItem) {
+            const material = geomItem.getParameter('Material').getValue()
+            defaultColor = material.getParameter('BaseColor').getValue()
+            material.getParameter('BaseColor').setValue(pointerOverColor)
+          }
         }
       })
       objAsset.on('pointerLeave', (event) => {
@@ -105,7 +107,7 @@
         }
       })
       objAsset.on('pointerDown', (event) => {
-        if (event.intersectionData.geomItem) {
+        if (event.intersectionData && event.intersectionData.geomItem) {
           event.setCapture(geomItem)
           const material = geomItem.getParameter('Material').getValue()
           if (event.intersectionData.geomItem != geomItem) defaultColor = material.getParameter('BaseColor').getValue()
@@ -132,11 +134,27 @@
 
       var b = document.createElement('div') // Create a <h1> element
       b.classList.add('button')
-      b.textContent = 'Launch VR'
+      b.textContent = '------'
       document.body.insertBefore(b, canvas)
 
       renderer.getXRViewport().then((xrvp) => {
         h.textContent = 'XR Device Detected'
+
+        // Enable Spectator mode that causes the scene to be rendered again for the spectator view.
+        // this might be too expensive on big scenes.
+        xrvp.spectatorMode = true
+        b.textContent = 'Launch VR'
+
+        xrvp.on('presentingChanged', (event) => {
+          const { state } = event
+          if (state) {
+            h.textContent = 'Session In Progress'
+            b.textContent = 'Exit VR'
+          } else {
+            h.textContent = 'XR Device Detected'
+            b.textContent = 'Launch VR'
+          }
+        })
 
         b.addEventListener('click', function (event) {
           xrvp.togglePresenting()
