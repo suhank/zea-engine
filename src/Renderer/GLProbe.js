@@ -148,14 +148,28 @@ class GLProbe extends EventEmitter {
    * @param {any} unif - The unif value.
    */
   bindProbeToUniform(renderstate, unif) {
+    const gl = this.__gl
+
     const unit = renderstate.boundTextures++
     const texId = this.__gl.TEXTURE0 + unit
-    const gl = this.__gl
     gl.activeTexture(texId)
     gl.bindTexture(gl.TEXTURE_CUBE_MAP, this.glcubetex)
     gl.uniform1i(unif.location, unit)
 
-    if (renderstate.unifs.brdfLUTTexture) {
+    const { brdfLUTTexture, shCoefficients } = renderstate.unifs
+    if (brdfLUTTexture) {
+      const unit = renderstate.boundTextures++
+      gl.activeTexture(this.__gl.TEXTURE0 + unit)
+      gl.bindTexture(gl.TEXTURE_2D, this.brdfLUTTexture)
+      gl.uniform1i(brdfLUTTexture, unit)
+    }
+    if (shCoefficients) {
+      // TODO: setup a Uniform buffer object.
+      // Can send all unifs in one go.
+      gl.uniform3fv(shCoefficients, this.shCoefficients)
+      // for (let i = 0; i < 9; i++) {
+      //   gl.uniform3fv(shCoefficients, this.shCoefficients)
+      // }
     }
   }
 

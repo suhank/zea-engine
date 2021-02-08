@@ -53,6 +53,7 @@ shaderLibrary.setShaderModule(
   `
 
 const int ENVMAP_FLAG_HEADLIGHT =  1; // 1<<0;
+
   
 struct MaterialParams {
     vec3 baseColor;
@@ -60,6 +61,30 @@ struct MaterialParams {
     float roughness;
     float reflectance;
 };
+
+
+uniform vec3 shCoefficients[ 9 ];
+
+// get the irradiance (radiance convolved with cosine lobe) at the point 'normal' on the unit sphere
+// source: https://graphics.stanford.edu/papers/envmap/envmap.pdf
+vec3 shGetIrradianceAt( in vec3 normal, in vec3 shCoefficients[ 9 ] ) {
+	// normal is assumed to have unit length
+	float x = normal.x, y = normal.y, z = normal.z;
+	// band 0
+	vec3 result = shCoefficients[ 0 ] * 0.886227;
+	// band 1
+	result += shCoefficients[ 1 ] * 2.0 * 0.511664 * y;
+	result += shCoefficients[ 2 ] * 2.0 * 0.511664 * z;
+	result += shCoefficients[ 3 ] * 2.0 * 0.511664 * x;
+	// band 2
+	result += shCoefficients[ 4 ] * 2.0 * 0.429043 * x * y;
+	result += shCoefficients[ 5 ] * 2.0 * 0.429043 * y * z;
+	result += shCoefficients[ 6 ] * ( 0.743125 * z * z - 0.247708 );
+	result += shCoefficients[ 7 ] * 2.0 * 0.429043 * x * z;
+	result += shCoefficients[ 8 ] * 0.429043 * ( x * x - y * y );
+	return result;
+}
+
 
 vec3 fresnelSchlickRoughness(float cosTheta, vec3 F0, float roughness)
 {
@@ -103,7 +128,8 @@ vec3 pbrSurfaceRadiance(in MaterialParams materialParams, vec3 __irradiance, vec
     vec3 kD = 1.0 - kS;
     kD *= 1.0 - materialParams.metallic;	  
     
-    vec3 irradiance = texture(irradianceMap, N).rgb;
+    // vec3 irradiance = texture(irradianceMap, N).rgb;
+    vec3 irradiance = shGetIrradianceAt(shCoefficients, N);
     vec3 diffuse    = irradiance * materialParams.baseColor;
     
     const float MAX_REFLECTION_LOD = 4.0;

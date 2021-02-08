@@ -206,7 +206,6 @@ void main(void) {
   vec4 fragColor;
 #endif
 
-
   fragColor = textureLod(envMap, normalize(v_worldDir), exposure);
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION
