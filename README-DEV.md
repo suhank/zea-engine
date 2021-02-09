@@ -126,7 +126,14 @@ yarn run release
 ```bash
 yarn version
 ```
-5. Push your changes. The GitHub Action script takes care of publishing every time you push a new tag.
+
+5. Regenerate the API docs
+```bash
+yarn docs
+```
+
+6. Push your changes. The GitHub Action script takes care of publishing every time you push a new tag.
+
 
 ### Publishing a pre-release
 
@@ -142,3 +149,5 @@ Adds an identifier specified by <pre-identifier> to be used to prefix premajor, 
 ```bash
 yarn version --prerelease --preid <pre-identifier>
 ```
+
+
