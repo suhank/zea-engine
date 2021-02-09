@@ -127,3 +127,18 @@ yarn run release
 yarn version
 ```
 5. Push your changes. The GitHub Action script takes care of publishing every time you push a new tag.
+
+### Publishing a pre-release
+
+Pre-releases are potentially unstable releases meant for tests of new features before they are published to an production release.
+
+This command automatically calculates the next stable version and a release candidate version.
+
+```bash
+yarn version --prerelease --preid rc
+```
+
+Adds an identifier specified by <pre-identifier> to be used to prefix premajor, preminor, prepatch or prerelease version increments.
+```bash
+yarn version --prerelease --preid <pre-identifier>
+```
