@@ -8,7 +8,7 @@ import '../../SceneTree/Geometry/Mesh.js'
 class GLMesh extends GLGeom {
   /**
    * Create a GL mesh.
-   * @param {any} gl - The gl value.
+   * @param {WebGLRenderingContext} gl - The webgl rendering context.
    * @param {any} mesh - The mesh value.
    */
   constructor(gl, mesh) {
@@ -84,7 +84,7 @@ class GLMesh extends GLGeom {
 
   /**
    * The updateBuffers method.
-   * @param {any} opts - The opts value.
+   * @param {object} opts - The options object.
    */
   updateBuffers(opts) {
     const gl = this.__gl
@@ -150,7 +150,7 @@ class GLMesh extends GLGeom {
 
   /**
    * The bindWireframeVAO method.
-   * @param {any} renderstate - The renderstate value.
+   * @param {object} renderstate - The object tracking the current state of the renderer
    * @return {any} - The return value.
    */
   bindWireframeVAO(renderstate) {
@@ -206,7 +206,7 @@ class GLMesh extends GLGeom {
 
   /**
    * The bindHardEdgesVAO method.
-   * @param {any} renderstate - The renderstate value.
+   * @param {object} renderstate - The object tracking the current state of the renderer
    * @return {any} - The return value.
    */
   bindHardEdgesVAO(renderstate) {

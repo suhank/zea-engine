@@ -94,7 +94,7 @@ class GLEnvMap extends GLProbe {
 
   /**
    * The draw method.
-   * @param {any} renderstate - The renderstate value.
+   * @param {object} renderstate - The object tracking the current state of the renderer
    */
   draw(renderstate) {
     if (this.__envMap.isLoaded()) {
@@ -156,7 +156,7 @@ class GLEnvMap extends GLProbe {
    * The bindToUniform method.
    * An EnvMap can be bound as a regular texture, but we want the
    * original source data, not the atlas of convolved images.
-   * @param {any} renderstate - The renderstate value.
+   * @param {object} renderstate - The object tracking the current state of the renderer
    * @param {any} unif - The unif value.
    * @param {any} bindings - The bindings value.
    * @return {any} - The return value.

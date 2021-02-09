@@ -241,7 +241,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
 
   /**
    * The draw method.
-   * @param {any} renderstate - The renderstate value.
+   * @param {object} renderstate - The object tracking the current state of the renderer
    */
   draw(renderstate) {
     if (this.newItemsReadyForLoading()) this.finalize()
@@ -268,7 +268,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
 
   /**
    * The drawHighlightedGeoms method.
-   * @param {any} renderstate - The renderstate value.
+   * @param {object} renderstate - The object tracking the current state of the renderer
    */
   drawHighlightedGeoms(renderstate) {
     const gl = this.__gl
@@ -319,7 +319,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
 
   /**
    * The drawGeomData method.
-   * @param {any} renderstate - The renderstate value.
+   * @param {object} renderstate - The object tracking the current state of the renderer
    */
   drawGeomData(renderstate) {
     if (this.newItemsReadyForLoading()) this.finalize()

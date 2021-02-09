@@ -232,7 +232,7 @@ The drawBackground method.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| renderstate | <code>any</code> | The renderstate value. |
+| renderstate | <code>object</code> | The object tracking the current state of the renderer |
 
 <a name="GLRenderer+bindGLRenderer"></a>
 
@@ -243,7 +243,7 @@ The bindGLRenderer method.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| renderstate | <code>any</code> | The renderstate value. |
+| renderstate | <code>object</code> | The object tracking the current state of the renderer |
 
 <a name="GLRenderer+drawScene"></a>
 
@@ -254,5 +254,5 @@ The drawScene method.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| renderstate | <code>any</code> | The renderstate value. |
+| renderstate | <code>object</code> | The object tracking the current state of the renderer |
 

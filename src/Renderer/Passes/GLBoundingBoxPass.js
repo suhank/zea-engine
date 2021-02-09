@@ -373,7 +373,7 @@ class GLBoundingBoxPass extends GLPass {
 
   /**
    * The sort method.
-   * @param {any} renderstate - The renderstate value.
+   * @param {object} renderstate - The object tracking the current state of the renderer
    */
   draw(renderstate) {
     if (this.drawCount == 0) {

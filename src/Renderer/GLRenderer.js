@@ -582,7 +582,7 @@ class GLRenderer extends GLBaseRenderer {
 
   /**
    * The drawBackground method.
-   * @param {any} renderstate - The renderstate value.
+   * @param {object} renderstate - The object tracking the current state of the renderer
    */
   drawBackground(renderstate) {
     if (this.__glBackgroundMap) {
@@ -601,7 +601,7 @@ class GLRenderer extends GLBaseRenderer {
 
   /**
    * The bindGLRenderer method.
-   * @param {any} renderstate - The renderstate value.
+   * @param {object} renderstate - The object tracking the current state of the renderer
    */
   bindGLRenderer(renderstate) {
     super.bindGLBaseRenderer(renderstate)
@@ -646,7 +646,7 @@ class GLRenderer extends GLBaseRenderer {
 
   /**
    * The drawScene method.
-   * @param {any} renderstate - The renderstate value.
+   * @param {object} renderstate - The object tracking the current state of the renderer
    */
   drawScene(renderstate) {
     this.bindGLRenderer(renderstate)

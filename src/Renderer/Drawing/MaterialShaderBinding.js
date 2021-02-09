@@ -10,7 +10,7 @@ import { SInt32, UInt32, Float32 } from '../../Utilities/MathFunctions'
 class SimpleUniformBinding {
   /**
    * Create simple uniform binding.
-   * @param {any} gl - The gl value.
+   * @param {WebGLRenderingContext} gl - The webgl rendering context.
    * @param {any} glMaterial - The glMaterial value.
    * @param {any} param - The param value.
    * @param {any} unif - The unif value.
@@ -44,7 +44,7 @@ class SimpleUniformBinding {
 
   /**
    * The bind method.
-   * @param {any} renderstate - The renderstate value.
+   * @param {object} renderstate - The object tracking the current state of the renderer
    */
   bind(renderstate) {
     if (this.dirty) {
@@ -71,7 +71,7 @@ class SimpleUniformBinding {
 class ComplexUniformBinding {
   /**
    * Create complex uniform binding.
-   * @param {any} gl - The gl value.
+   * @param {WebGLRenderingContext} gl - The webgl rendering context.
    * @param {any} glMaterial - The glMaterial value.
    * @param {any} param - The param value.
    * @param {any} unif - The unif value.
@@ -100,7 +100,7 @@ class ComplexUniformBinding {
 
   /**
    * The bind method.
-   * @param {any} renderstate - The renderstate value.
+   * @param {object} renderstate - The object tracking the current state of the renderer
    */
   bind(renderstate) {
     if (this.dirty) {
@@ -127,7 +127,7 @@ class ComplexUniformBinding {
 class MatrixUniformBinding {
   /**
    * Create material uniform binding.
-   * @param {any} gl - The gl value.
+   * @param {WebGLRenderingContext} gl - The webgl rendering context.
    * @param {any} glMaterial - The glMaterial value.
    * @param {any} param - The param value.
    * @param {any} unif - The unif value.
@@ -154,7 +154,7 @@ class MatrixUniformBinding {
 
   /**
    * The bind method.
-   * @param {any} renderstate - The renderstate value.
+   * @param {object} renderstate - The object tracking the current state of the renderer
    */
   bind(renderstate) {
     if (this.dirty) {
@@ -181,7 +181,7 @@ class MatrixUniformBinding {
 class ColorUniformBinding {
   /**
    * Create color uniform binding.
-   * @param {any} gl - The gl value.
+   * @param {WebGLRenderingContext} gl - The webgl rendering context.
    * @param {any} glMaterial - The glMaterial value.
    * @param {any} param - The param value.
    * @param {any} unif - The unif value.
@@ -291,7 +291,7 @@ class ColorUniformBinding {
 
   /**
    * The bindValue method.
-   * @param {any} renderstate - The renderstate value.
+   * @param {object} renderstate - The object tracking the current state of the renderer
    */
   bindValue(renderstate) {
     if (this.dirty) {
@@ -304,7 +304,7 @@ class ColorUniformBinding {
 
   /**
    * The bindTexture method.
-   * @param {any} renderstate - The renderstate value.
+   * @param {object} renderstate - The object tracking the current state of the renderer
    */
   bindTexture(renderstate) {
     if (this.dirty) {
@@ -323,7 +323,7 @@ const logged = {}
 class MaterialShaderBinding {
   /**
    * Create material shader binding.
-   * @param {any} gl - The gl value.
+   * @param {WebGLRenderingContext} gl - The webgl rendering context.
    * @param {any} glMaterial - The glMaterial value.
    * @param {any} unifs - The unifs value.
    * @param {any} warnMissingUnifs - The warnMissingUnifs value.
@@ -390,7 +390,7 @@ class MaterialShaderBinding {
 
   /**
    * The bind method.
-   * @param {any} renderstate - The renderstate value.
+   * @param {object} renderstate - The object tracking the current state of the renderer
    * @return {any} - The return value.
    */
   bind(renderstate) {

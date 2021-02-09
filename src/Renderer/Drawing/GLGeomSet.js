@@ -678,7 +678,7 @@ class GLGeomSet extends EventEmitter {
 
   /**
    * The unbind method.
-   * @param {any} renderstate - The renderstate value.
+   * @param {object} renderstate - The object tracking the current state of the renderer
    */
   unbind(renderstate) {
     renderstate.boundTextures-- // drawIdsTexture
@@ -717,7 +717,7 @@ class GLGeomSet extends EventEmitter {
 
   /**
    * The drawHighlightedGeoms method.
-   * @param {any} renderstate - The renderstate value.
+   * @param {object} renderstate - The object tracking the current state of the renderer
    */
   drawHighlightedGeoms(renderstate) {
     if (this.highlightedCount == 0) return
@@ -734,7 +734,7 @@ class GLGeomSet extends EventEmitter {
 
   /**
    * The drawGeomData method.
-   * @param {any} renderstate - The renderstate value.
+   * @param {object} renderstate - The object tracking the current state of the renderer
    */
   drawGeomData(renderstate) {
     if (this.drawCount == 0) return

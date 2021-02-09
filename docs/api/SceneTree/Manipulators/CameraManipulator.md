@@ -75,6 +75,8 @@ cameraManipulator.getParameter('orbitRate').setValue(SystemDesc.isMobileDevice ?
         * [onPointerMove(event)](#onPointerMove)
         * [_onMouseMove(event)](#_onMouseMove)
         * [onPointerUp(event)](#onPointerUp)
+        * [onPointerEnter(event)](#onPointerEnter)
+        * [onPointerLeave(event)](#onPointerLeave)
         * [onWheel(event)](#onWheel)
         * [onKeyUp(event)](#onKeyUp)
         * [_onTouchStart(event)](#_onTouchStart)
@@ -256,6 +258,28 @@ Invoked when the user has finished dragging an element.
 | Param | Type | Description |
 | --- | --- | --- |
 | event | <code>MouseEvent</code> | The mouse event that occurs. |
+
+<a name="CameraManipulator+onPointerEnter"></a>
+
+### onPointerEnter
+Causes an event to occur when the mouse pointer is moved into this viewport
+
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| event | <code>MouseEvent</code> \| <code>TouchEvent</code> | The event that occurs. |
+
+<a name="CameraManipulator+onPointerLeave"></a>
+
+### onPointerLeave
+Causes an event to occur when the mouse pointer is moved out of this viewport
+
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| event | <code>MouseEvent</code> \| <code>TouchEvent</code> | The event that occurs. |
 
 <a name="CameraManipulator+onWheel"></a>
 

@@ -24,7 +24,7 @@ myParameterOwnerItem.addParameter(numberParam)
 **Extends**: <code>[NumberParameter](api/SceneTree\Parameters\NumberParameter.md)</code>  
 
 * [MaterialFloatParam ⇐ <code>NumberParameter</code>](#MaterialFloatParam)
-    * [new MaterialFloatParam(name, value, range)](#new-MaterialFloatParam)
+    * [new MaterialFloatParam(name, value, range, step)](#new-MaterialFloatParam)
     * [getImage() ⇒ <code>BaseImage</code>](#getImage)
     * [setImage(value)](#setImage)
     * [setValue(value)](#setValue)
@@ -42,6 +42,7 @@ Create a material float parameter.
 | name | <code>string</code> | The name of the material color parameter. |
 | value | <code>number</code> | The value of the parameter. |
 | range | <code>array</code> | An array with two numbers. If defined, the parameter value will be clamped. |
+| step | <code>number</code> | The increment value that the parameter can be changed by. |
 
 <a name="MaterialFloatParam+getImage"></a>
 

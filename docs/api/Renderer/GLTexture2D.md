@@ -211,7 +211,7 @@ The bind method.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| renderstate | <code>any</code> | The renderstate value. |
+| renderstate | <code>object</code> | The object tracking the current state of the renderer |
 | unif | <code>any</code> | The unif value. |
 
 <a name="GLTexture2D+preBind"></a>

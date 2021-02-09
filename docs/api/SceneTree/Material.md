@@ -17,6 +17,7 @@ Use this to apply materials to your assets or item parts.
     * [removeAllTextures()](#removeAllTextures)
     * [getParamTextures() ⇒ <code>object</code>](#getParamTextures)
     * [isTransparent() ⇒ <code>boolean</code>](#isTransparent)
+    * [isTextured() ⇒ <code>boolean</code>](#isTextured)
     * [getShaderClass() ⇒ <code>string</code> \| <code>undefined</code>](#getShaderClass)
     * [modifyParams(paramValues, shaderName)](#modifyParams)
     * [toJSON(context) ⇒ <code>object</code>](#toJSON)
@@ -76,6 +77,13 @@ Checks if the material is transparent by checking the `Opacity` parameter.
 
 
 **Returns**: <code>boolean</code> - - Returns true if the material is transparent.  
+<a name="Material+isTextured"></a>
+
+### isTextured
+Checks if the material has a texture applied. The renderer can use this to optimize rendering of non-textured objects
+
+
+**Returns**: <code>boolean</code> - - Returns true if the material is textured.  
 <a name="Material+getShaderClass"></a>
 
 ### getShaderClass

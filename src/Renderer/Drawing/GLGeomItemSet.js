@@ -9,7 +9,7 @@ import { EventEmitter } from '../../Utilities/index'
 class GLGeomItemSet extends EventEmitter {
   /**
    * Create a GL geom item set.
-   * @param {any} gl - The gl value.
+   * @param {WebGLRenderingContext} gl - The webgl rendering context.
    * @param {any} glGeom - The glGeom value.
    */
   constructor(gl, glGeom) {
@@ -244,7 +244,7 @@ class GLGeomItemSet extends EventEmitter {
 
   /**
    * The draw method.
-   * @param {any} renderstate - The renderstate value.
+   * @param {object} renderstate - The object tracking the current state of the renderer
    */
   draw(renderstate) {
     if (this.visibleItems.length == 0) {
@@ -259,7 +259,7 @@ class GLGeomItemSet extends EventEmitter {
 
   /**
    * The drawHighlighted method.
-   * @param {any} renderstate - The renderstate value.
+   * @param {object} renderstate - The object tracking the current state of the renderer
    */
   drawHighlighted(renderstate) {
     if (this.highlightedItems.length == 0) {
@@ -274,7 +274,7 @@ class GLGeomItemSet extends EventEmitter {
 
   /**
    * The __bindAndRender method.
-   * @param {any} renderstate - The renderstate value.
+   * @param {object} renderstate - The object tracking the current state of the renderer
    * @param {any} itemIndices - The itemIndices value.
    * @param {any} drawIdsBuffer - The drawIdsBuffer value.
    * @private

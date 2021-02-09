@@ -10,7 +10,7 @@ import { generateShaderGeomBinding } from './Drawing/GeomShaderBinding.js'
 class GLHDRImage extends GLTexture2D {
   /**
    * Create a GL HDR image.
-   * @param {any} gl - The gl value.
+   * @param {WebGLRenderingContext} gl - The webgl rendering context.
    * @param {any} hdrImage - The HDR image.
    */
   constructor(gl, hdrImage) {
@@ -122,7 +122,7 @@ class GLHDRImage extends GLTexture2D {
 
   /**
    * The bindToUniform method.
-   * @param {any} renderstate - The renderstate value.
+   * @param {object} renderstate - The object tracking the current state of the renderer
    * @param {any} unif - The unif value.
    * @param {any} bindings - The bindings value.
    * @return {any} - The return value.

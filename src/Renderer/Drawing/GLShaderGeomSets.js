@@ -141,7 +141,7 @@ class GLShaderGeomSets extends EventEmitter {
 
   /**
    * The drawHighlightedGeoms method.
-   * @param {any} renderstate - The renderstate value.
+   * @param {object} renderstate - The object tracking the current state of the renderer
    */
   drawHighlightedGeoms(renderstate) {
     if (!this.glHighlightShader) return
@@ -155,7 +155,7 @@ class GLShaderGeomSets extends EventEmitter {
 
   /**
    * The drawGeomData method.
-   * @param {any} renderstate - The renderstate value.
+   * @param {object} renderstate - The object tracking the current state of the renderer
    */
   drawGeomData(renderstate) {
     if (!this.glGeomDataShader) return

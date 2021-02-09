@@ -929,7 +929,7 @@ let shaderInstanceId = 0
 class GLShader extends BaseItem {
   /**
    * Create a GL shader.
-   * @param {any} gl - The gl value.
+   * @param {WebGLRenderingContext} gl - The webgl rendering context.
    */
 <span class="fstat-no" title="function not covered" >  co</span>nstructor(gl, name) {
 <span class="cstat-no" title="statement not covered" >    super(name)</span>
@@ -1254,7 +1254,7 @@ class GLShader extends BaseItem {
 &nbsp;
   /**
    * The bind method.
-   * @param {any} renderstate - The renderstate value.
+   * @param {object} renderstate - The object tracking the current state of the renderer
    * @param {any} key - The key value.
    * @return {any} - The return value.
    */
@@ -1292,7 +1292,7 @@ class GLShader extends BaseItem {
 &nbsp;
   /**
    * The unbind method.
-   * @param {any} renderstate - The renderstate value.
+   * @param {object} renderstate - The object tracking the current state of the renderer
    * @return {any} - The return value.
    */
 <span class="fstat-no" title="function not covered" >  un</span>bind(renderstate) {

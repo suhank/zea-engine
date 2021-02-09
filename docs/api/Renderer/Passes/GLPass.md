@@ -10,6 +10,7 @@ This class abstracts the rendering of a collection of geometries to screen.
     * [new GLPass()](#new-GLPass)
     * [init(renderer, passIndex)](#init)
     * [setPassIndex(passIndex)](#setPassIndex)
+    * [getPassType() ⇒ <code>number</code>](#getPassType)
     * [itemAddedToScene(treeItem, rargs) ⇒ <code>Boolean</code>](#itemAddedToScene)
     * [itemRemovedFromScene(treeItem, rargs) ⇒ <code>Boolean</code>](#itemRemovedFromScene)
     * [startPresenting()](#startPresenting)
@@ -47,6 +48,13 @@ The setPassIndex method.
 | --- | --- | --- |
 | passIndex | <code>any</code> | The passIndex value. |
 
+<a name="GLPass+getPassType"></a>
+
+### getPassType
+Returns the pass type. OPAQUE passes are always rendered first, followed by TRANSPARENT passes, and finally OVERLAY.
+
+
+**Returns**: <code>number</code> - - The pass type value.  
 <a name="GLPass+itemAddedToScene"></a>
 
 ### itemAddedToScene
@@ -97,7 +105,7 @@ The draw method.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| renderstate | <code>any</code> | The renderstate value. |
+| renderstate | <code>object</code> | The object tracking the current state of the renderer |
 
 <a name="GLPass+drawHighlightedGeoms"></a>
 
@@ -108,7 +116,7 @@ The drawHighlightedGeoms method.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| renderstate | <code>any</code> | The renderstate value. |
+| renderstate | <code>object</code> | The object tracking the current state of the renderer |
 
 <a name="GLPass+drawGeomData"></a>
 
@@ -119,7 +127,7 @@ The drawGeomData method.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| renderstate | <code>any</code> | The renderstate value. |
+| renderstate | <code>object</code> | The object tracking the current state of the renderer |
 
 <a name="GLPass+getGeomItemAndDist"></a>
 

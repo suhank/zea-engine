@@ -9,7 +9,7 @@ import './Shaders/GLSL/ImageStream.js'
 class GLImageStream extends RefCounted {
   /**
    * Create a GL image stream.
-   * @param {any} gl - The gl value.
+   * @param {WebGLRenderingContext} gl - The webgl rendering context.
    * @param {any} streamImage - The streamImage value.
    */
   constructor(gl, streamImage) {
@@ -60,7 +60,7 @@ class GLImageStream extends RefCounted {
 
   /**
    * The bindToUniform method.
-   * @param {any} renderstate - The renderstate value.
+   * @param {object} renderstate - The object tracking the current state of the renderer
    * @param {any} unif - The unif value.
    * @param {any} bindings - The bindings value.
    * @return {boolean} - The return value.

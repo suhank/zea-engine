@@ -4,8 +4,9 @@ import { UInt8, SInt8, UInt16, SInt16, UInt32, SInt32, Float32 } from '../../Uti
 
 /**
  * Returns a descriptor for the provided geom attribute.
- * @param {WebGLContext} gl - The wbegl context
- * @param {object} geomAttrBuffer - The geometry attribute value.
+ * @private
+ * @param {WebGLRenderingContext} gl - The webgl context
+ * @param {object} attrDataType - The geometry attribute value.
  *
  * @return {object}
  */
@@ -87,7 +88,7 @@ const genDataTypeDesc = (gl, attrDataType) => {
 class GeomShaderBinding {
   /**
    * Create a geom shader binding.
-   * @param {any} gl - The gl value.
+   * @param {WebGLRenderingContext} gl - The webgl rendering context.
    * @param {any} shaderAttrs - The shader attributes.
    * @param {any} geomAttrBuffers - The geomAttrBuffers value.
    * @param {any} indexBuffer - The index buffer.
@@ -181,7 +182,7 @@ class GeomShaderBinding {
 class VAOGeomShaderBinding {
   /**
    * Create VAO geom shader binding.
-   * @param {any} gl - The gl value.
+   * @param {WebGLRenderingContext} gl - The webgl rendering context.
    * @param {any} shaderAttrs - The shaderAttrs value.
    * @param {any} geomAttrBuffers - The geomAttrBuffers value.
    * @param {any} indexBuffer - The indexBuffer value.

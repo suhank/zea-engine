@@ -8,7 +8,7 @@ import { generateShaderGeomBinding } from './Drawing/GeomShaderBinding.js'
 class GLScreenQuad {
   /**
    * Create a GL screen quad.
-   * @param {any} gl - The gl value.
+   * @param {WebGLRenderingContext} gl - The webgl rendering context.
    * @param {any} preproc - The preproc value.
    */
   constructor(gl, preproc) {
@@ -29,7 +29,7 @@ class GLScreenQuad {
 
   /**
    * The bind method.
-   * @param {any} renderstate - The renderstate value.
+   * @param {object} renderstate - The object tracking the current state of the renderer
    * @param {any} texture - The texture pavalueram.
    * @param {any} pos - The pos value.
    * @param {any} size - The size value.
@@ -62,7 +62,7 @@ class GLScreenQuad {
 
   /**
    * The bindShader method.
-   * @param {any} renderstate - The renderstate value.
+   * @param {object} renderstate - The object tracking the current state of the renderer
    * @return {any} - The return value.
    */
   bindShader(renderstate) {
@@ -71,7 +71,7 @@ class GLScreenQuad {
 
   /**
    * The draw method.
-   * @param {any} renderstate - The renderstate value.
+   * @param {object} renderstate - The object tracking the current state of the renderer
    * @param {any} texture - The texture value.
    * @param {any} pos - The pos value.
    * @param {any} size - The size value.

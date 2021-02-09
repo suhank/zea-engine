@@ -16,6 +16,8 @@ Represents a TreeItem with rendering and material capabilities.
     * [readBinary(reader, context)](#readBinary)
     * [toJSON(context) ⇒ <code>object</code>](#toJSON)
     * [fromJSON(j, context, onDone)](#fromJSON)
+    * [clone(context) ⇒ <code>TreeItem</code>](#clone)
+    * [copyFrom(src, context)](#copyFrom)
 
 <a name="new_AssetItem_new"></a>
 
@@ -98,4 +100,29 @@ The fromJSON method decodes a json object for this type.
 | j | <code>object</code> | The json object this item must decode. |
 | context | <code>object</code> | The context value. |
 | onDone | <code>function</code> | Callback function executed when everything is done. |
+
+<a name="AssetItem+clone"></a>
+
+### clone
+The clone method constructs a new tree item, copies its values
+from this item and returns it.
+
+
+**Returns**: <code>[TreeItem](api/SceneTree\TreeItem.md)</code> - - Returns a new cloned tree item.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| context | <code>object</code> | The context value. |
+
+<a name="AssetItem+copyFrom"></a>
+
+### copyFrom
+Copies current TreeItem with all its children.
+
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| src | <code>[TreeItem](api/SceneTree\TreeItem.md)</code> | The tree item to copy from. |
+| context | <code>object</code> | The context value. |
 

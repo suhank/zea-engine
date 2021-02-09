@@ -7,8 +7,8 @@ import { generateShaderGeomBinding } from './GeomShaderBinding.js'
 class GLGeom extends RefCounted {
   /**
    * Create a GL geom.
-   * @param {any} gl - The gl value.
-   * @param {any} geom - The geom value.
+   * @param {WebGLRenderingContext} gl - The webgl rendering context.
+   * @param {BaseGeom} geom - A geometry object
    */
   constructor(gl, geom) {
     super()
@@ -33,8 +33,8 @@ class GLGeom extends RefCounted {
   }
 
   /**
-   * The getGeom method.
-   * @return {any} - The return value.
+   * Returns the owned Geometry object
+   * @return {BaseGeom} - The geometry object.
    */
   getGeom() {
     return this.__geom
@@ -50,7 +50,7 @@ class GLGeom extends RefCounted {
 
   /**
    * The updateBuffers method.
-   * @param {any} opts - The opts value.
+   * @param {object} opts - The options object.
    */
   updateBuffers(opts) {}
 
@@ -59,8 +59,8 @@ class GLGeom extends RefCounted {
 
   /**
    * The bind method.
-   * @param {any} renderstate - The renderstate value.
-   * @return {any} - The return value.
+   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @return {boolean} - returns false if the binding failed.
    */
   bind(renderstate) {
     if (this.__destroyed) throw new Error('Error binding a destroyed geom')
@@ -77,7 +77,7 @@ class GLGeom extends RefCounted {
 
   /**
    * The unbind method.
-   * @param {any} renderstate - The renderstate value.
+   * @param {object} renderstate - The object tracking the current state of the renderer
    */
   unbind(renderstate) {
     // Unbinding a geom is important as it puts back some important
@@ -109,7 +109,7 @@ class GLGeom extends RefCounted {
 
   /**
    * The bindAndDraw method.
-   * @param {any} renderstate - The renderstate value.
+   * @param {object} renderstate - The object tracking the current state of the renderer
    */
   bindAndDraw(renderstate) {
     this.bind(renderstate)

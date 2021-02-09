@@ -18,7 +18,7 @@ let shaderInstanceId = 0
 class GLShader extends BaseItem {
   /**
    * Create a GL shader.
-   * @param {any} gl - The gl value.
+   * @param {WebGLRenderingContext} gl - The webgl rendering context.
    */
   constructor(gl, name) {
     super(name)
@@ -400,7 +400,7 @@ class GLShader extends BaseItem {
 
   /**
    * The bind method.
-   * @param {any} renderstate - The renderstate value.
+   * @param {object} renderstate - The object tracking the current state of the renderer
    * @param {any} key - The key value.
    * @return {any} - The return value.
    */
@@ -438,7 +438,7 @@ class GLShader extends BaseItem {
 
   /**
    * The unbind method.
-   * @param {any} renderstate - The renderstate value.
+   * @param {object} renderstate - The object tracking the current state of the renderer
    * @return {any} - The return value.
    */
   unbind(renderstate) {

@@ -29,7 +29,7 @@ Create a GL render target.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| gl | <code>any</code> | The gl value. |
+| gl | <code>WebGLRenderingContext</code> | The webgl rendering context. |
 | params | <code>any</code> | The params value. |
 
 <a name="GLRenderTarget+configure"></a>
@@ -58,7 +58,7 @@ The bindForWriting method.
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| renderstate | <code>any</code> |  | The renderstate value. |
+| renderstate | <code>object</code> |  | The object tracking the current state of the renderer |
 | clear | <code>boolean</code> | <code>false</code> | The clear value. |
 
 <a name="GLRenderTarget+unbindForWriting"></a>
@@ -70,7 +70,7 @@ The unbindForWriting method.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| renderstate | <code>any</code> | The renderstate value. |
+| renderstate | <code>object</code> | The object tracking the current state of the renderer |
 
 <a name="GLRenderTarget+clear"></a>
 
@@ -105,7 +105,7 @@ The bindColorTexture method.
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| renderstate | <code>any</code> |  | The renderstate value. |
+| renderstate | <code>object</code> |  | The object tracking the current state of the renderer |
 | unif | <code>any</code> |  | The unif value. |
 | channelId | <code>number</code> | <code>0</code> | The channelId value. |
 
@@ -119,7 +119,7 @@ The bindDepthTexture method.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| renderstate | <code>any</code> | The renderstate value. |
+| renderstate | <code>object</code> | The object tracking the current state of the renderer |
 | unif | <code>any</code> | The unif value. |
 
 <a name="GLRenderTarget+unbind"></a>
