@@ -10,7 +10,8 @@ const GLGeomItemChangeType = {
   HIGHLIGHT_CHANGED: 3,
 }
 
-/** This class abstracts the rendering of a collection of geometries to screen.
+/** This class is responsible for managing a GeomItem within the renderer.
+ * @private
  * @extends EventEmitter
  */
 class GLGeomItem extends EventEmitter {
@@ -138,7 +139,7 @@ class GLGeomItem extends EventEmitter {
 
   /**
    * The bind method.
-   * @param {any} renderstate - The renderstate value.
+   * @param {object} renderstate - The object tracking the current state of the renderer
    * @return {any} - The return value.
    */
   bind(renderstate) {

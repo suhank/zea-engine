@@ -12,9 +12,9 @@ It has the capability to add and remove children.
 * **BoundingBox(`BoundingBox`):** Provides the bounding box for the tree item and all of its children in the 3d scene.
 
 **Events**
-* **globalXfoChanged:** _todo_
-* **visibilityChanged:** _todo_
-* **highlightChanged:** _todo_
+* **globalXfoChanged:** Emitted when the value of GlobalXfo parameter changes.
+* **visibilityChanged:** Emitted when the visibility on the tree item changes.
+* **highlightChanged:** Emitted when the highlight on the tree item changes.
 * **childAdded:** Emitted when a item is added as a child.
 * **childRemoved:** Emitted when an item is removed from the child nodes.
 * **pointerDown:** Emitted when a pointerDown event happens in an item.
@@ -54,7 +54,7 @@ It has the capability to add and remove children.
         * [getChildNames() ⇒ <code>array</code>](#getChildNames)
         * [removeChild(index)](#removeChild)
         * [removeChildByName(name) ⇒ <code>BaseItem</code>](#removeChildByName)
-        * ~~[.removeChildByHandle(childItem)](#TreeItem+removeChildByHandle)~~
+        * [removeChildByHandle(childItem)](#removeChildByHandle)
         * [removeAllChildren()](#removeAllChildren)
         * [getChildIndex(childItem) ⇒ <code>number</code>](#getChildIndex)
         * ~~[.indexOfChild(childItem)](#TreeItem+indexOfChild) ⇒ <code>number</code>~~
@@ -351,8 +351,9 @@ Removes a child BaseItem by specifying its name.
 
 <a name="TreeItem+removeChildByHandle"></a>
 
-### ~~treeItem.removeChildByHandle(childItem)~~
-***Deprecated***
+### removeChildByHandle
+Removes the provided item from this TreeItem if it is one of its children.
+An exception is thrown if the item is not a child of this tree item.
 
 
 

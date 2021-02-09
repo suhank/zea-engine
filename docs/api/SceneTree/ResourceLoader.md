@@ -3,6 +3,41 @@
 ### ResourceLoader
 Class for delegating resource loading, enabling an abstraction of a cloud file system to be implemented.
 
+The resource loader can be used to load data, where it provides central tracking of loading progress and functionality to load various file types, including compressed archives.
+The plugins script must be loaded along with the engine
+
+```html
+ <script crossorigin src="libs/zea-engine/dist/plugins.umd.js"></script>
+```
+
+To load a 'text' file.
+```javascript
+  resourceLoader.loadFile('text', url).then((txt) =>{
+     console.log(txt)
+  })
+```
+
+To load a 'JSON' file.
+```javascript
+  resourceLoader.loadFile('json', url).then((txt) =>{
+     console.log(json)
+  })
+```
+
+To load a 'binary' file.
+```javascript
+  resourceLoader.loadFile('binary', url).then((arrayBuffer) =>{
+     console.log(arrayBuffer.length)
+  })
+```
+
+To load an 'archive' file that is a compressed archive containing multiple sub-files.
+```javascript
+  resourceLoader.loadFile('archive', url).then((entries) =>{
+     console.log(entries)
+  })
+```
+
 **Events**
 * **loaded:** emitted when a file has finished loading
 * **progressIncremented:** emitted when a loading of processing task has been incremented
@@ -16,14 +51,18 @@ Class for delegating resource loading, enabling an abstraction of a cloud file s
     * [getAdapter() ⇒ <code>object</code>](#getAdapter)
     * [resolveFileId(value) ⇒ <code>string</code>](#resolveFileId)
     * ~~[.resolveFilename(value)](#ResourceLoader+resolveFilename) ⇒ <code>string</code>~~
-    * ~~[.resolveURL(value)](#ResourceLoader+resolveURL) ⇒ <code>string</code>~~
+    * [resolveURL(value) ⇒ <code>string</code>](#resolveURL)
     * [loadUrl(resourceId, url, callback, addLoadWork)](#loadUrl)
     * [loadArchive(url) ⇒ <code>Promise</code>](#loadArchive)
     * [loadJSON(url) ⇒ <code>Promise</code>](#loadJSON)
     * [loadText(url) ⇒ <code>Promise</code>](#loadText)
-    * [loadCommonAssetResource(resourceId) ⇒ <code>VLAAsset</code>](#loadCommonAssetResource)
-    * [addWork(resourceId, amount)](#addWork)
-    * [addWorkDone(resourceId, amount)](#addWorkDone)
+    * [getCommonResource(resourceId) ⇒ <code>TreeItem</code> \| <code>null</code>](#getCommonResource)
+    * [setCommonResource(resourceId, resource)](#setCommonResource)
+    * ~~[.loadCommonAssetResource(resourceId)](#ResourceLoader+loadCommonAssetResource) ⇒ <code>VLAAsset</code>~~
+    * ~~[.addWork(resourceId, amount)](#ResourceLoader+addWork)~~
+    * ~~[.addWorkDone(resourceId, amount)](#ResourceLoader+addWorkDone)~~
+    * [incrementWorkload(amount)](#incrementWorkload)
+    * [incrementWorkDone(amount)](#incrementWorkDone)
 
 <a name="new_ResourceLoader_new"></a>
 
@@ -76,10 +115,8 @@ The resolveFilename method.
 
 <a name="ResourceLoader+resolveURL"></a>
 
-### ~~resourceLoader.resolveURL(value) ⇒ <code>string</code>~~
-***Deprecated***
-
-The resolveURL method.
+### resolveURL
+Given a file ID, returns a URL. The adaptor that is assigned is responsible for resolving the URL within the file system.
 
 
 **Returns**: <code>string</code> - - The resolved URL if an adapter is installed, else the original value.  
@@ -141,9 +178,35 @@ Note: using the resource loader to centralize data loading enables progress to b
 | --- | --- | --- |
 | url | <code>string</code> | The url of the data to load. |
 
+<a name="ResourceLoader+getCommonResource"></a>
+
+### getCommonResource
+Returns a previously stored common resource. Typically this would be a VR asset.
+
+
+**Returns**: <code>TreeItem</code> \| <code>null</code> - - The common resource if it exists  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| resourceId | <code>string</code> | The resourceId value. |
+
+<a name="ResourceLoader+setCommonResource"></a>
+
+### setCommonResource
+Saves a common resource for reuse by other tools. Typically this would be a VR asset.
+
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| resourceId | <code>string</code> | The resourceId value. |
+| resource | <code>[TreeItem](api/SceneTree\TreeItem.md)</code> | The common resource to store |
+
 <a name="ResourceLoader+loadCommonAssetResource"></a>
 
-### loadCommonAssetResource
+### ~~resourceLoader.loadCommonAssetResource(resourceId) ⇒ <code>VLAAsset</code>~~
+***Deprecated***
+
 Load and return a file resource using the specified path.
 
 
@@ -155,7 +218,9 @@ Load and return a file resource using the specified path.
 
 <a name="ResourceLoader+addWork"></a>
 
-### addWork
+### ~~resourceLoader.addWork(resourceId, amount)~~
+***Deprecated***
+
 Add work to the total work pile.. We never know how big the pile will get.
 
 
@@ -167,7 +232,9 @@ Add work to the total work pile.. We never know how big the pile will get.
 
 <a name="ResourceLoader+addWorkDone"></a>
 
-### addWorkDone
+### ~~resourceLoader.addWorkDone(resourceId, amount)~~
+***Deprecated***
+
 Add work to the 'done' pile. The done pile should eventually match the total pile.
 
 
@@ -176,4 +243,31 @@ Add work to the 'done' pile. The done pile should eventually match the total pil
 | --- | --- | --- |
 | resourceId | <code>string</code> | The resourceId value. |
 | amount | <code>number</code> | The amount value. |
+
+<a name="ResourceLoader+incrementWorkload"></a>
+
+### incrementWorkload
+Increments the amount of work to be done causing a 'progressIncremented' event to be emitted
+As the workload is incremented, the progress might retract as a lower proportion of the work
+is then considered done. Only once this work is completed, and the 'incrementWorkDone', the
+progress will increment.
+
+
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| amount | <code>number</code> | <code>1</code> | The amount value. |
+
+<a name="ResourceLoader+incrementWorkDone"></a>
+
+### incrementWorkDone
+Increments the amount of work done causing a 'progressIncremented' event to be emitted.
+If 5 items of work have been added using #incrementWorkload, and subsequently 3 items have
+been completed and #incrementWorkDone called. The progress will be at 3/5, or 60%
+
+
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| amount | <code>number</code> | <code>1</code> | The amount value. |
 

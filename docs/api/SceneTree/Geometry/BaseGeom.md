@@ -5,6 +5,8 @@ Represents a base class for 3D geometry items.
 
 **Events**
 * **boundingBoxChanged:** Triggered when the bounding box changes.
+* **geomDataChanged:** Emitted when the geometry attributes have changed. The topology did not change. The Renderer will upload the new attributes to the GPU.
+* **geomDataTopologyChanged:** Emitted when the geometry attributes and topology have changed.  The Renderer will upload the new attributes and topology to the GPU.
 
 
 **Extends**: <code>[ParameterOwner](api/SceneTree\ParameterOwner.md)</code>  
@@ -13,6 +15,7 @@ Represents a base class for 3D geometry items.
     * [new BaseGeom()](#new-BaseGeom)
     * ~~[.vertices](#BaseGeom+vertices)~~
     * ~~[.boundingBox](#BaseGeom+boundingBox) ⇒ <code>Vec3</code>~~
+    * [clear()](#clear)
     * [setDebugName(name)](#setDebugName)
     * [addVertexAttribute(name, dataType, defaultScalarValue) ⇒ <code>Attribute</code>](#addVertexAttribute)
     * [hasVertexAttribute(name) ⇒ <code>boolean</code>](#hasVertexAttribute)
@@ -33,7 +36,6 @@ Represents a base class for 3D geometry items.
     * [setMetadata(key, metaData)](#setMetadata)
     * [deleteMetadata(key)](#deleteMetadata)
     * [genBuffers(opts) ⇒ <code>object</code>](#genBuffers)
-    * [freeBuffers()](#freeBuffers)
     * [loadBaseGeomBinary(reader)](#loadBaseGeomBinary)
     * [toJSON(context) ⇒ <code>object</code>](#toJSON)
     * [fromJSON(json, context)](#fromJSON)
@@ -61,6 +63,12 @@ Returns the bounding box for geometry.
 
 
 **Returns**: <code>[Vec3](api/Math\Vec3.md)</code> - - The return value.  
+<a name="BaseGeom+clear"></a>
+
+### clear
+The clear method.
+
+
 <a name="BaseGeom+setDebugName"></a>
 
 ### setDebugName
@@ -274,12 +282,6 @@ Returns vertex attributes buffers and its count.
 | Param | Type | Description |
 | --- | --- | --- |
 | opts | <code>object</code> | The opts value. |
-
-<a name="BaseGeom+freeBuffers"></a>
-
-### freeBuffers
-The freeBuffers method.
-
 
 <a name="BaseGeom+loadBaseGeomBinary"></a>
 

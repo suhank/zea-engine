@@ -176,6 +176,7 @@ class Allocator1D extends EventEmitter {
 
   /**
    * Adds a new block
+   * @private
    *
    * @param {number} index - The index where the block should be inserted.
    * @param {Allocation1D} allocation - The allocation to insert
@@ -196,6 +197,7 @@ class Allocator1D extends EventEmitter {
 
   /**
    * Remove a new block
+   * @private
    *
    * @param {number} index - The index where the block should be inserted.
    * @param {Allocation1D} allocation - The allocation to insert
@@ -216,6 +218,7 @@ class Allocator1D extends EventEmitter {
 
   /**
    * Frees a block by either growing neighboring blocks or adding a new free block
+   * @private
    *
    * @param {number} index - The index of the block to free.
    */
@@ -271,6 +274,7 @@ class Allocator1D extends EventEmitter {
 
   /**
    * Defragment the memory space reducing memory requirements.
+   * TODO: Implement this method.
    */
   defragment() {
     // move the freeblocks to the end of the memory so that

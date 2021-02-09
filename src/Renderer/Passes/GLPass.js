@@ -104,19 +104,19 @@ class GLPass extends ParameterOwner {
 
   /**
    * The draw method.
-   * @param {any} renderstate - The renderstate value.
+   * @param {object} renderstate - The object tracking the current state of the renderer
    */
   draw(renderstate) {}
 
   /**
    * The drawHighlightedGeoms method.
-   * @param {any} renderstate - The renderstate value.
+   * @param {object} renderstate - The object tracking the current state of the renderer
    */
   drawHighlightedGeoms(renderstate) {}
 
   /**
    * The drawGeomData method.
-   * @param {any} renderstate - The renderstate value.
+   * @param {object} renderstate - The object tracking the current state of the renderer
    */
   drawGeomData(renderstate) {}
 

@@ -8,9 +8,11 @@ Class representing a ray that emits from an origin in a specified direction.
 * [Ray](#Ray)
     * [new Ray(start, dir)](#new-Ray)
     * [closestPoint(point)](#closestPoint)
+    * [closestPointOnLineSegment(p0, p1) ⇒ <code>number</code>](#closestPointOnLineSegment)
     * [pointAtDist(dist)](#pointAtDist)
     * [intersectRayVector(ray)](#intersectRayVector)
     * [intersectRayPlane(plane) ⇒ <code>number</code>](#intersectRayPlane)
+    * [intersectRayBox3(box3, tolerance) ⇒ <code>boolean</code>](#intersectRayBox3)
     * [clone()](#clone)
     * [toJSON() ⇒ <code>object</code>](#toJSON)
     * [fromJSON(j)](#fromJSON)
@@ -30,7 +32,7 @@ Create a ray.
 <a name="Ray+closestPoint"></a>
 
 ### closestPoint
-Get the closest point.
+Get the closest point on the ray to the given point.
 
 
 **Returns**: [<code>Ray</code>](#Ray) - - Returns a Ray.  
@@ -38,6 +40,19 @@ Get the closest point.
 | Param | Type | Description |
 | --- | --- | --- |
 | point | <code>[Vec3](api/Math\Vec3.md)</code> | The point in 3D space. |
+
+<a name="Ray+closestPointOnLineSegment"></a>
+
+### closestPointOnLineSegment
+Get the closest point on the ray to the given point.
+
+
+**Returns**: <code>number</code> - - Returns a Ray.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| p0 | <code>[Vec3](api/Math\Vec3.md)</code> | The point in 3D space. |
+| p1 | <code>[Vec3](api/Math\Vec3.md)</code> | The point in 3D space. |
 
 <a name="Ray+pointAtDist"></a>
 
@@ -75,6 +90,19 @@ of this ray against the plane defined by the given ray.
 | Param | Type | Description |
 | --- | --- | --- |
 | plane | <code>[Vec3](api/Math\Vec3.md)</code> | The plane to intersect with. |
+
+<a name="Ray+intersectRayBox3"></a>
+
+### intersectRayBox3
+Determines if this Box3 intersects a ray.
+
+
+**Returns**: <code>boolean</code> - - The return value.  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| box3 | <code>[Box3](api/Math\Box3.md)</code> |  | The box to check for intersection against. |
+| tolerance | <code>number</code> | <code>0</code> | The tolerance of the test. |
 
 <a name="Ray+clone"></a>
 

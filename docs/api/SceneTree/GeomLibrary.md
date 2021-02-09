@@ -9,12 +9,13 @@ Class representing a geometry library.
     * [new GeomLibrary()](#new-GeomLibrary)
     * [clear()](#clear)
     * [isLoaded() ⇒ <code>Boolean</code>](#isLoaded)
+    * [loadGeomFilesStream(geomLibraryJSON, basePath, context)](#loadGeomFilesStream)
     * [setGenBufferOption(key, value)](#setGenBufferOption)
     * [setNumGeoms(expectedNumGeoms)](#setNumGeoms)
     * [getNumGeoms() ⇒ <code>number</code>](#getNumGeoms)
     * [getGeom(index) ⇒ <code>BaseGeom</code>](#getGeom)
     * [loadArchive(fileUrl)](#loadArchive)
-    * [readBinaryBuffer(key, buffer, context) ⇒ <code>any</code>](#readBinaryBuffer)
+    * [readBinaryBuffer(geomFileID, buffer, context) ⇒ <code>any</code>](#readBinaryBuffer)
     * [toJSON() ⇒ <code>object</code>](#toJSON)
     * [toString() ⇒ <code>any</code>](#toString)
 
@@ -36,6 +37,19 @@ The returns true if all the geometries have been loaded and the loaded event has
 
 
 **Returns**: <code>Boolean</code> - - True if all geometries are already loaded, else false.  
+<a name="GeomLibrary+loadGeomFilesStream"></a>
+
+### loadGeomFilesStream
+Loads the geometry files for this GeomLibrary.
+
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| geomLibraryJSON | <code>number</code> | The json data describing the data needed to be loaded by the goem library |
+| basePath | <code>string</code> | The base path of the file. (this is theURL of the zcad file without its extension.) |
+| context | <code>object</code> | The value param. |
+
 <a name="GeomLibrary+setGenBufferOption"></a>
 
 ### setGenBufferOption
@@ -99,7 +113,7 @@ The readBinaryBuffer method.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| key | <code>any</code> | The key value. |
+| geomFileID | <code>number</code> | The key value. |
 | buffer | <code>ArrayBuffer</code> | The buffer value. |
 | context | <code>object</code> | The context value. |
 

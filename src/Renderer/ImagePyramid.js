@@ -73,7 +73,7 @@ const Math_log2 = function (value) {
 class ImagePyramid extends GLImageAtlas {
   /**
    * Create an image pyramid.
-   * @param {any} gl - The gl value.
+   * @param {WebGLRenderingContext} gl - The webgl rendering context.
    * @param {string} name - The name value.
    * @param {any} srcGLTex - The srcGLTex value.
    * @param {boolean} destroySrcImage - The destroySrcImage value.

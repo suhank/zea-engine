@@ -1,7 +1,17 @@
 <a name="VRViewport"></a>
 
 ### VRViewport 
-Class representing a VR viewport.
+This Viewport class is used for rendering stereoscopic views to VR controllers using the WebXR api.
+ When the GLRenderer class detects a valid WebXF capable device is plugged in, this class is automatically
+ instantiated ready for XR sessions
+
+**Events**
+* **presentingChanged:** Emitted when presenting is started or stopped
+* **controllerAdded:** Emitted when a new XR controller is detected.
+* **viewChanged:** Emitted during presentation each time the frame is rendered.
+* **pointerDoublePressed:** Emitted when the user double clicks with an XR pointer.
+* **pointerDown:** Emitted when the user presses an XR pointer
+* **pointerUp:** Emitted when the user releases an XR pointer
 
 
 **Extends**: <code>[GLBaseViewport](api/Renderer\GLBaseViewport.md)</code>  
@@ -17,6 +27,7 @@ Class representing a VR viewport.
     * [getControllers() ⇒ <code>any</code>](#getControllers)
     * [canPresent() ⇒ <code>any</code>](#canPresent)
     * [isPresenting() ⇒ <code>boolean</code>](#isPresenting)
+    * [setSpectatorMode(state)](#setSpectatorMode)
     * [loadHMDResources() ⇒ <code>any</code>](#loadHMDResources)
     * [startPresenting()](#startPresenting)
     * [stopPresenting()](#stopPresenting)
@@ -24,8 +35,8 @@ Class representing a VR viewport.
     * [getHMDCanvasSize() ⇒ <code>any</code>](#getHMDCanvasSize)
     * [updateControllers(xrFrame)](#updateControllers)
     * [draw(xrFrame)](#draw)
-    * [getCapture() ⇒ <code>any</code>](#getCapture)
-    * [releaseCapture()](#releaseCapture)
+    * [onPointerDown(event)](#onPointerDown)
+    * [onPointerUp(event)](#onPointerUp)
 
 <a name="new_VRViewport_new"></a>
 
@@ -104,6 +115,18 @@ The isPresenting method.
 
 
 **Returns**: <code>boolean</code> - - The return value.  
+<a name="VRViewport+setSpectatorMode"></a>
+
+### setSpectatorMode
+Turns on and off the spectator mode.
+Note: specator mode renders the scene an extra time to our regular viewport.
+
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| state | <code>boolean</code> | true for enabling spectator mode, else false |
+
 <a name="VRViewport+loadHMDResources"></a>
 
 ### loadHMDResources
@@ -158,16 +181,25 @@ The draw method.
 | --- | --- | --- |
 | xrFrame | <code>any</code> | The xrFrame value. |
 
-<a name="VRViewport+getCapture"></a>
+<a name="VRViewport+onPointerDown"></a>
 
-### getCapture
-The getCapture method.
+### onPointerDown
+Handler of the `pointerdown` event fired when the pointer device is initially pressed.
 
 
-**Returns**: <code>any</code> - - The return value.  
-<a name="VRViewport+releaseCapture"></a>
 
-### releaseCapture
-The releaseCapture method.
+| Param | Type | Description |
+| --- | --- | --- |
+| event | <code>MouseEvent</code> \| <code>TouchEvent</code> | The DOM event produced by a pointer |
 
+<a name="VRViewport+onPointerUp"></a>
+
+### onPointerUp
+Causes an event to occur when a user releases a mouse button over a element.
+
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| event | <code>MouseEvent</code> \| <code>TouchEvent</code> | The event that occurs. |
 

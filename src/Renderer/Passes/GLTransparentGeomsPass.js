@@ -217,7 +217,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
 
   /**
    * The _drawItems method.
-   * @param {any} renderstate - The renderstate value.
+   * @param {object} renderstate - The object tracking the current state of the renderer
    * @private
    */
   _drawItems(renderstate) {
@@ -269,7 +269,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
 
   /**
    * The draw method.
-   * @param {any} renderstate - The renderstate value.
+   * @param {object} renderstate - The object tracking the current state of the renderer
    */
   draw(renderstate) {
     if (this.visibleItems.length == 0) return
@@ -332,7 +332,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
 
   /**
    * The drawHighlightedGeoms method.
-   * @param {any} renderstate - The renderstate value.
+   * @param {object} renderstate - The object tracking the current state of the renderer
    */
   drawHighlightedGeoms(renderstate) {
     const gl = this.__gl
@@ -389,7 +389,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
 
   /**
    * The drawGeomData method.
-   * @param {any} renderstate - The renderstate value.
+   * @param {object} renderstate - The object tracking the current state of the renderer
    */
   drawGeomData(renderstate) {
     if (this.newItemsReadyForLoading()) this.finalize()

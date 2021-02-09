@@ -32,6 +32,7 @@ Class representing a color as 4 floating point values.
         * [notEquals(other) ⇒ <code>boolean</code>](#notEquals)
         * [approxEqual(other, precision) ⇒ <code>boolean</code>](#approxEqual)
         * [add(other)](#add)
+        * [addInPlace(other)](#addInPlace)
         * [subtract(other)](#subtract)
         * [scale(scalar)](#scale)
         * [scaleInPlace(scalar)](#scaleInPlace)
@@ -296,6 +297,17 @@ Returns a new Color which is this Color added to other.
 
 
 **Returns**: [<code>Color</code>](#Color) - - Returns a new color.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| other | [<code>Color</code>](#Color) | The other color to add. |
+
+<a name="Color+addInPlace"></a>
+
+### addInPlace
+Updates the Color by adding the other.
+
+
 
 | Param | Type | Description |
 | --- | --- | --- |

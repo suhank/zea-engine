@@ -6,7 +6,7 @@ Class representing a VR controller.
 
 
 * [VRController](#VRController)
-    * [new VRController(vrviewport, inputSource, id)](#new-VRController)
+    * [new VRController(xrvp, inputSource, id)](#new-VRController)
     * [getHandedness() ⇒ <code>any</code>](#getHandedness)
     * [getId() ⇒ <code>any</code>](#getId)
     * [getTreeItem() ⇒ <code>any</code>](#getTreeItem)
@@ -27,7 +27,7 @@ Create a VR controller.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| vrviewport | <code>any</code> | The Vr viewport. |
+| xrvp | <code>any</code> | The Vr viewport. |
 | inputSource | <code>any</code> | The input source. |
 | id | <code>any</code> | The id value. |
 

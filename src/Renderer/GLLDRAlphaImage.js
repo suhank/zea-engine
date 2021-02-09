@@ -10,7 +10,7 @@ import { generateShaderGeomBinding } from './Drawing/GeomShaderBinding.js'
 class GLLDRAlphaImage extends GLTexture2D {
   /**
    * Create a GL LDR alpha image.
-   * @param {any} gl - The gl value.
+   * @param {WebGLRenderingContext} gl - The webgl rendering context.
    * @param {any} hdrImage - The hdrImage value.
    */
   constructor(gl, hdrImage) {

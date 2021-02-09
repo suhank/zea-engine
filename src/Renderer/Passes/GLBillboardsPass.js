@@ -269,7 +269,7 @@ class GLBillboardsPass extends GLPass {
 
   /**
    * The __updateBillboards method.
-   * @param {any} renderstate - The renderstate value.
+   * @param {object} renderstate - The object tracking the current state of the renderer
    * @private
    */
   __updateBillboards(renderstate) {
@@ -437,7 +437,7 @@ class GLBillboardsPass extends GLPass {
 
   /**
    * The sort method.
-   * @param {any} renderstate - The renderstate value.
+   * @param {object} renderstate - The object tracking the current state of the renderer
    */
   draw(renderstate) {
     if (this.__drawCount == 0) return

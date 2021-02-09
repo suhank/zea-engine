@@ -44,7 +44,6 @@ const mesh = new Mesh()
     * [genBuffers(opts) ⇒ <code>object</code>](#genBuffers)
     * [computeNumTriangles() ⇒ <code>number</code>](#computeNumTriangles)
     * [generateTriangulatedIndices(totalNumVertices, numUnSplitVertices, splitIndices) ⇒ <code>TypedArray</code>](#generateTriangulatedIndices)
-    * [freeBuffers()](#freeBuffers)
     * [readBinary(reader, context)](#readBinary)
     * [toJSON(context) ⇒ <code>object</code>](#toJSON)
     * [fromJSON(j, context)](#fromJSON)
@@ -78,7 +77,7 @@ The getNumFaces method.
 
 ### setFaceCounts
 Sets the number of faces on the mesh using an array specifying the counts per polygon size.
-The first item in the array specifies the number of triangles, the second, the number of quads, the 3rd, the number o f5 sided polygons etc..
+The first item in the array specifies the number of triangles, the second, the number of quads, the 3rd, the number of 5 sided polygons etc..
 e.g. to specify 2 triangles, and 7 quads, we would pass [2, 7]
 
 
@@ -326,12 +325,6 @@ only triangles. This is used during rendering and the resulting indices uploaded
 | numUnSplitVertices | <code>number</code> | The total number of unsplit vertices. |
 | splitIndices | <code>array</code> | The splitIndices value. |
 
-<a name="Mesh+freeBuffers"></a>
-
-### freeBuffers
-The freeBuffers method.
-
-
 <a name="Mesh+readBinary"></a>
 
 ### readBinary
@@ -360,6 +353,26 @@ The toJSON method encodes this type as a json object for persistence.
 
 ### fromJSON
 The fromJSON method decodes a json object for this type.
+
+e.g. to load data into the mesh class, provide a json structure similar to the following.
+Note: faceCounts is an array of count values, starting with the number of triangles, then the number of quads. See #setFaceCounts
+The faceVertexIndices array should also be sorted to contain all the triangles first, followed by the quads, and then the pentagons etc..
+```json
+// This code will define a mesh made up of 2 triangles and then a quad.
+const mesh = new Mesh()
+mesh.fromJSON({
+  faceCounts:[2, 1],
+  faceVertexIndices: [0, 1, 2, 0, 2, 3, 3, 2, 4, 5],
+  numVertices: 6,
+  vertexAttributes: {
+    positions: {
+      dataType: 'Vec3'
+      defaultScalarValue: 0.0,
+      data: [0,0,0, 0, 1, 0, 1, 1, 0, 1, 0, 0, 2, 1, 0, 2, 0, 0]
+    }
+  }
+}
+```
 
 
 

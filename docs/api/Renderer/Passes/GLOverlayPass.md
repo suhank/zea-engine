@@ -9,6 +9,7 @@ Class representing a GL overlay pass.
 * [GLOverlayPass ⇐ <code>GLOpaqueGeomsPass</code>](#GLOverlayPass)
     * [new GLOverlayPass(name)](#new-GLOverlayPass)
     * [init(renderer, passIndex)](#init)
+    * [getPassType() ⇒ <code>number</code>](#getPassType)
     * [filterGeomItem(geomItem) ⇒ <code>any</code>](#filterGeomItem)
     * [draw(renderstate)](#draw)
     * [drawGeomData(renderstate)](#drawGeomData)
@@ -35,6 +36,13 @@ The init method.
 | renderer | <code>any</code> | The renderer value. |
 | passIndex | <code>any</code> | The passIndex value. |
 
+<a name="GLOverlayPass+getPassType"></a>
+
+### getPassType
+Returns the pass type. OPAQUE passes are always rendered first, followed by TRANSPARENT passes, and finally OVERLAY.
+
+
+**Returns**: <code>number</code> - - The pass type value.  
 <a name="GLOverlayPass+filterGeomItem"></a>
 
 ### filterGeomItem
@@ -56,7 +64,7 @@ The draw method.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| renderstate | <code>any</code> | The renderstate value. |
+| renderstate | <code>object</code> | The object tracking the current state of the renderer |
 
 <a name="GLOverlayPass+drawGeomData"></a>
 
@@ -67,5 +75,5 @@ The drawGeomData method.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| renderstate | <code>any</code> | The renderstate value. |
+| renderstate | <code>object</code> | The object tracking the current state of the renderer |
 
