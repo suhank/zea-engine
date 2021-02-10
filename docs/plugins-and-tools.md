@@ -38,10 +38,10 @@ One huge benefit of web applications is being able to connect users together for
 
 > [Zea Collab](https://docs.zea.live/zea-collab/)
 
-## Zea Pointclouds
+## Zea Potree
 
-![Zea Point Clouds](_media/zea-pointclouds.jpg)
+![Zea Potree](_media/zea-pointclouds.jpg)
 
-Zea Pointclouds is a Proof of Concept plugin that integrates the powerful [Potree](https://github.com/potree/potree/). Zea Pointclouds enables loading and rendering of massive LiDAR and point cloud data directly in the browser. The Zea Pointclouds integration of Potree provides a few important improvements, including better performance and reduced battery consumption on mobile devices. When combined with the other powerful features of Zea Engine, like CAD and BIM data loading, Zea Pointclouds can be used for advanced uses cads such as metrology and build inspections.
+Zea Potree is a plugin for Zea Engine that integrates the powerful [Potree](https://github.com/potree/potree/). Zea Potree enables loading and rendering of massive LiDAR and point cloud data directly in the browser. The integration of Potree into Zea Engine provides a few important improvements, including better performance and reduced battery consumption on mobile devices. When combined with the other powerful features of Zea Engine, like CAD and BIM data loading, Zea Potree can be used for advanced uses cads such as metrology and build inspections.
 
-> [Zea Pointclouds](https://docs.zea.live/zea-pointclouds/)
+> [Zea Potree](https://docs.zea.live/zea-potree/)
