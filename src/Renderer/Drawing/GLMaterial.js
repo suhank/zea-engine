@@ -8,7 +8,7 @@ import { MaterialShaderBinding } from './MaterialShaderBinding.js'
 class GLMaterial extends EventEmitter {
   /**
    * Create a GL material.
-   * @param {any} gl - The gl value.
+   * @param {WebGLRenderingContext} gl - The webgl rendering context.
    * @param {any} material - The material value.
    * @param {any} glShader - The glShader value.
    */
@@ -41,7 +41,7 @@ class GLMaterial extends EventEmitter {
 
   /**
    * The bind method.
-   * @param {any} renderstate - The renderstate value.
+   * @param {object} renderstate - The object tracking the current state of the renderer
    * @param {any} warnMissingUnifs - The renderstate value.
    * @return {any} - The return value.
    */
@@ -61,7 +61,7 @@ class GLMaterial extends EventEmitter {
 
   /**
    * The unbind method.
-   * @param {any} renderstate - The renderstate value.
+   * @param {object} renderstate - The object tracking the current state of the renderer
    */
   unbind(renderstate) {
     // Enable texture units to be re-used by resetting the count back

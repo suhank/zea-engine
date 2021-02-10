@@ -11,7 +11,6 @@ Class representing a GL base renderer.
     * _instance_
         * [gl](#gl)
         * [addShaderPreprocessorDirective(name, value)](#addShaderPreprocessorDirective)
-        * [getShaderPreproc() ⇒ <code>object</code>](#getShaderPreproc)
         * [getWidth() ⇒ <code>number</code>](#getWidth)
         * [getHeight() ⇒ <code>number</code>](#getHeight)
         * [addViewport(name) ⇒ <code>GLViewport</code>](#addViewport)
@@ -91,13 +90,6 @@ The addShaderPreprocessorDirective method.
 | name | <code>string</code> | The name value. |
 | value | <code>string</code> | The value param. |
 
-<a name="GLBaseRenderer+getShaderPreproc"></a>
-
-### getShaderPreproc
-The getShaderPreproc method.
-
-
-**Returns**: <code>object</code> - - The return value.  
 <a name="GLBaseRenderer+getWidth"></a>
 
 ### getWidth
@@ -368,7 +360,7 @@ The addPass method.
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
 | pass | <code>any</code> |  | The pass value. |
-| passtype | <code>number</code> | <code>0</code> | The passtype value. |
+| passtype | <code>number</code> |  | The passtype value. |
 | updateIndices | <code>boolean</code> | <code>true</code> | The updateIndices value. |
 
 <a name="GLBaseRenderer+registerPass"></a>

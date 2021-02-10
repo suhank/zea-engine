@@ -27,7 +27,7 @@ Represents a reactive type of attribute that can be owned by a `ParameterOwner` 
     * [getValueFromOp(index) ⇒ <code>object</code> \| <code>string</code> \| <code>number</code> \| <code>any</code>](#getValueFromOp)
     * [_clean(index)](#_clean)
     * [getValue(mode) ⇒ <code>object</code> \| <code>string</code> \| <code>number</code> \| <code>any</code>](#getValue)
-    * [setValue(value, mode)](#setValue)
+    * [setValue(value)](#setValue)
     * [loadValue(value)](#loadValue)
     * [toJSON(context) ⇒ <code>object</code>](#toJSON)
     * [fromJSON(j, context)](#fromJSON)
@@ -231,7 +231,6 @@ Sets value of the parameter.
 | Param | Type | Description |
 | --- | --- | --- |
 | value | <code>object</code> \| <code>string</code> \| <code>number</code> \| <code>any</code> | The value param. |
-| mode | <code>number</code> | This is deprecated now. |
 
 <a name="Parameter+loadValue"></a>
 

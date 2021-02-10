@@ -114,10 +114,48 @@ yarn generate e2e-test
 
 You'll be prompted for the test's name.
 
-## Publishing a new build
+## Publishing a new release
 
-The npm scripts hook takes care of the heavy lifting, you only need to run:
+1. All unit and E2E tests must be passing.
+2. Regenerate the API docs
+```bash
+yarn docs
+```
 
+3. To generate the release notes and bump the version, run:
+```bash
+yarn run release
+```
+
+4. Check for spelling issues and other inconsistencies.
+
+5. To bump the package version, run:
+```bash
+yarn version
+```
+
+6. Push your changes.
+```bash
+git push --tags
+```
+
+7. Publish to NPM
 ```bash
 yarn publish
 ```
+### Publishing a pre-release
+
+Pre-releases are potentially unstable releases meant for tests of new features before they are published to an production release.
+
+This command automatically calculates the next stable version and a release candidate version.
+
+```bash
+yarn version --prerelease --preid rc
+```
+
+Adds an identifier specified by <pre-identifier> to be used to prefix premajor, preminor, prepatch or prerelease version increments.
+```bash
+yarn version --prerelease --preid <pre-identifier>
+```
+
+

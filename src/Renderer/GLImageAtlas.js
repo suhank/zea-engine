@@ -14,7 +14,7 @@ import { MathFunctions } from '../Utilities/MathFunctions'
 class AtlasLayoutShader extends GLShader {
   /**
    * Create an atlas layout shader.
-   * @param {any} gl - The gl value.
+   * @param {WebGLRenderingContext} gl - The webgl rendering context.
    */
   constructor(gl) {
     super(gl)
@@ -125,14 +125,18 @@ void main(void) {
 import './Shaders/GLSL/ImageAtlas.js'
 
 // eslint-disable-next-line require-jsdoc
+
+/**
+ * An Image Atlas lays out multiple smaller images within a larger image atlas, and tracks their positions.
+ * @private
+ */
 class GLImageAtlas extends GLRenderTarget {
   /**
    * Create an image atlas..
-   * @param {any} gl - The gl value.
+   * @param {WebGLRenderingContext} gl - The webgl rendering context.
    * @param {string} name - The name value.
-   * @param {any} format - The format value.
-   * @param {any} type - The type value.
-   * @param {any} clearColor - The clearColor value.
+   * @param {string} format - The format value.
+   * @param {string} type - The type value.
    */
   constructor(gl, name, format = 'RGBA', type = 'FLOAT') {
     super(gl)
@@ -234,7 +238,7 @@ class GLImageAtlas extends GLRenderTarget {
 
   /**
    * The numSubImages method.
-   * @return {any} - The return value.
+   * @return {number} - The return value.
    */
   numSubImages() {
     if (this.__layout) return this.__layout.length
@@ -437,7 +441,7 @@ class GLImageAtlas extends GLRenderTarget {
 
   /**
    * The bindToUniform method.
-   * @param {any} renderstate - The renderstate value.
+   * @param {object} renderstate - The object tracking the current state of the renderer
    * @param {any} unif - The unif value.
    * @return {any} - The return value.
    */

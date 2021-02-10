@@ -12,21 +12,17 @@ This class abstracts the rendering of a collection of geometries to screen.
     * [itemAddedToScene(treeItem, rargs) ⇒ <code>Boolean</code>](#itemAddedToScene)
     * [itemRemovedFromScene(treeItem, rargs) ⇒ <code>Boolean</code>](#itemRemovedFromScene)
     * [filterGeomItem(geomItem) ⇒ <code>any</code>](#filterGeomItem)
-    * [addShader(material) ⇒ <code>any</code>](#addShader)
     * [constructShaders(shaderName) ⇒ <code>object</code>](#constructShaders)
-    * [addMaterial(material) ⇒ <code>any</code>](#addMaterial)
-    * [addGeom(geom) ⇒ <code>any</code>](#addGeom)
+    * [constructGLMaterial(material) ⇒ <code>GLMaterial</code>](#constructGLMaterial)
+    * [constructGLGeom(geom) ⇒ <code>GLGeom</code>](#constructGLGeom)
     * [removeGeom(geom)](#removeGeom)
-    * [addGeomItem(geomItem) ⇒ <code>any</code>](#addGeomItem)
+    * [constructGLGeomItem(geomItem) ⇒ <code>GLGeomItem</code>](#constructGLGeomItem)
     * [removeGeomItem(geomItem) ⇒ <code>any</code>](#removeGeomItem)
     * [removeGLGeom(geomItemMapping, materialGeomMapping)](#removeGLGeom)
     * [getGeomItem(id) ⇒ <code>any</code>](#getGeomItem)
     * [newItemsReadyForLoading() ⇒ <code>any</code>](#newItemsReadyForLoading)
     * [uploadGeomItems()](#uploadGeomItems)
     * [finalize()](#finalize)
-    * [bind(renderstate) ⇒ <code>any</code>](#bind)
-    * [bindShader(renderstate, glshader) ⇒ <code>any</code>](#bindShader)
-    * [bindMaterial(renderstate, glmaterial, warnMissingUnifs) ⇒ <code>any</code>](#bindMaterial)
 
 <a name="new_GLStandardGeomsPass_new"></a>
 
@@ -86,24 +82,12 @@ The filterGeomItem method.
 | --- | --- | --- |
 | geomItem | <code>any</code> | The geomItem value. |
 
-<a name="GLStandardGeomsPass+addShader"></a>
-
-### addShader
-The addShader method.
-
-
-**Returns**: <code>any</code> - - The return value.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| material | <code>any</code> | The material value. |
-
 <a name="GLStandardGeomsPass+constructShaders"></a>
 
 ### constructShaders
 The constructShaders method.
 Given a material, generate the various shaders required to render objects
-using this material. There should always be at least a single glshader
+using this material. There should always be at least a single glShader
 and optionally a glgeomdatashader for rendering the goem data buffer
 and a glselectedshader for rendering selection hilghlights
 
@@ -114,29 +98,29 @@ and a glselectedshader for rendering selection hilghlights
 | --- | --- | --- |
 | shaderName | <code>string</code> | The name of the base shader. |
 
-<a name="GLStandardGeomsPass+addMaterial"></a>
+<a name="GLStandardGeomsPass+constructGLMaterial"></a>
 
-### addMaterial
-The addMaterial method.
-
-
-**Returns**: <code>any</code> - - The return value.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| material | <code>any</code> | The material value. |
-
-<a name="GLStandardGeomsPass+addGeom"></a>
-
-### addGeom
-The addGeom method.
+### constructGLMaterial
+Given a material, generates a GLMaterial that manages the GPU state for the material.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>[GLMaterial](api/Renderer\Drawing\GLMaterial.md)</code> - - The constructed GLMaterial.  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| geom | <code>any</code> | The geom value. |
+| material | <code>[Material](api/SceneTree\Material.md)</code> | The material value. |
+
+<a name="GLStandardGeomsPass+constructGLGeom"></a>
+
+### constructGLGeom
+Given a BaseGeom, constructs the GLGeom that manages the state of the geometry in the GPU.
+
+
+**Returns**: <code>[GLGeom](api/Renderer\Drawing\GLGeom.md)</code> - - The return value.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| geom | <code>[BaseGeom](api/SceneTree\Geometry\BaseGeom.md)</code> | The geom value. |
 
 <a name="GLStandardGeomsPass+removeGeom"></a>
 
@@ -147,19 +131,19 @@ The removeGeom method.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| geom | <code>any</code> | The geom value. |
+| geom | <code>[BaseGeom](api/SceneTree\Geometry\BaseGeom.md)</code> | The geom value. |
 
-<a name="GLStandardGeomsPass+addGeomItem"></a>
+<a name="GLStandardGeomsPass+constructGLGeomItem"></a>
 
-### addGeomItem
-The addGeomItem method.
+### constructGLGeomItem
+Given a GeomItem, constructs the GLGeomItem that manages the GPU state of the GeomItem.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>[GLGeomItem](api/Renderer\Drawing\GLGeomItem.md)</code> - - The return value.  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| geomItem | <code>any</code> | The geomItem value. |
+| geomItem | <code>[GeomItem](api/SceneTree\GeomItem.md)</code> | The geomItem value. |
 
 <a name="GLStandardGeomsPass+removeGeomItem"></a>
 
@@ -215,43 +199,4 @@ The uploadGeomItems method.
 ### finalize
 The finalize method.
 
-
-<a name="GLStandardGeomsPass+bind"></a>
-
-### bind
-The bind method.
-
-
-**Returns**: <code>any</code> - - The return value.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| renderstate | <code>any</code> | The renderstate value. |
-
-<a name="GLStandardGeomsPass+bindShader"></a>
-
-### bindShader
-The bindShader method.
-
-
-**Returns**: <code>any</code> - - The return value.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| renderstate | <code>any</code> | The renderstate value. |
-| glshader | <code>any</code> | The glshader value. |
-
-<a name="GLStandardGeomsPass+bindMaterial"></a>
-
-### bindMaterial
-The bindMaterial method.
-
-
-**Returns**: <code>any</code> - - The return value.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| renderstate | <code>any</code> | The renderstate value. |
-| glmaterial | <code>any</code> | The glmaterial value. |
-| warnMissingUnifs | <code>any</code> | The warnMissingUnifs value. |
 

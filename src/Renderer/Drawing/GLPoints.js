@@ -8,7 +8,7 @@ import { generateShaderGeomBinding } from './GeomShaderBinding.js'
 class GLPoints extends GLGeom {
   /**
    * Create a GL point.
-   * @param {any} gl - The gl value.
+   * @param {WebGLRenderingContext} gl - The webgl rendering context.
    * @param {any} points - The points value.
    */
   constructor(gl, points) {
@@ -46,7 +46,7 @@ class GLPoints extends GLGeom {
 
   /**
    * The updateBuffers method.
-   * @param {any} opts - The opts value.
+   * @param {object} opts - The options object.
    */
   updateBuffers(opts) {
     const gl = this.__gl
@@ -71,7 +71,7 @@ class GLPoints extends GLGeom {
 
   /**
    * The bind method.
-   * @param {any} renderstate - The renderstate value.
+   * @param {object} renderstate - The object tracking the current state of the renderer
    * @return {any} - The return value.
    */
   bind(renderstate) {
@@ -96,7 +96,7 @@ class GLPoints extends GLGeom {
 
   /**
    * The draw method.
-   * @param {any} renderstate - The renderstate value.
+   * @param {object} renderstate - The object tracking the current state of the renderer
    */
   draw(renderstate) {
     const gl = this.__gl

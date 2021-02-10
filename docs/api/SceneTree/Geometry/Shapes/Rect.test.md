@@ -45,13 +45,11 @@ describe('Rect', () => {
 
   it('restores from JSON (serialization).', () => {
     const rect = new Rect()
-    const expectedOutput = {
+    const json = {
       params: { X: { value: 3 }, Y: { value: 4 } },
       type: 'Rect',
-      numVertices: 4,
-      vertexAttributes: {},
     }
-    rect.fromJSON(expectedOutput)
+    rect.fromJSON(json)
 
     expect(rect.toJSON()).toEqual(new Rect(3, 4).toJSON())
   })

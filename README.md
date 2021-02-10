@@ -61,23 +61,26 @@ For static websites or quick implementation you can always use CDNs like JsDeliv
 </script>
 ```
 
-## *As a Module*
-But if you want to use it like a module, then install the package in your project using `npm` or `yarn`:
 
-```bash
-npm i @zeainc/zea-engine
-## Or
-yarn add @zeainc/zea-engine
-```
+# Script tags instead of esm imports
 
-### *Use it*
-```javascript
-import { Scene } from '@zeainc/zea-engine'
-// ...
-```
-</br>
+Currently the engine and its plugins can only be imported using UMD script tags.
+
+> Why don't we use esm imports to load the engine and its plugins?
+
+Yes we would like to do that eventually, but there are a few issues holding us back.
+
+1. Bundlers like webpack and rollup have a terrible time at understanding diamond shaped dependency trees. I will explain by example. Package B depends on package A and package C depends on both package A and B. If we import B and C, A should be imported. however, if in the package.json of B or C, the version dependency is even slightly different, even with valid version rules that should mean both B and C should be compatible with the same version of A, we find that the bundler will often try to load multiple different versions of A. e.g. A version 2.3.1, and A version 2.3.0. When A is our engine, this causes all sorts of obscure problems. For now, until we can guarantee that the bundler will load exactly one copy of our engine, we have to stick with script tags.
+
+2. Bundlers and WASM don't mix. We leverage WASM in our engine, and WASM requires a fetch of the WASM file which is included in our package. Currently the bundlers are unable to include the WASM file and so we have to fallback to fetching the WASM file from some predefined location, instead of the package location in your node_modules folder. Not ideal, but we hope this issue to be resolved soon as WASM imports are included in the spec.
+
+We hope that these issues are resolved over time. If you have any suggestions on alternative methods to what we have presented, please feel free to reach out and let us know your thoughts.
+
+# Licensing
 
 > For questions on licensing, please fill out the contact form on our website: [_zea.live_](https://www.zea.live/contact-us)
+
+# Links
 
 [npm]: https://badge.fury.io/js/%40zeainc%2Fzea-engine.svg
 [npm-url]: https://www.npmjs.com/package/@zeainc/zea-engine

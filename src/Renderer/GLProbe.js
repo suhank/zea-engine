@@ -14,7 +14,7 @@ import { generateShaderGeomBinding } from './Drawing/GeomShaderBinding.js'
 class GLProbe extends EventEmitter {
   /**
    * Create a GL probe.
-   * @param {any} gl - The gl value.
+   * @param {WebGLRenderingContext} gl - The webgl rendering context.
    * @param {string} name - The name value.
    */
   constructor(gl, name) {
@@ -144,7 +144,7 @@ class GLProbe extends EventEmitter {
 
   /**
    * The bindProbeToUniform method.
-   * @param {any} renderstate - The renderstate value.
+   * @param {object} renderstate - The object tracking the current state of the renderer
    * @param {any} unif - The unif value.
    */
   bindProbeToUniform(renderstate, unif) {

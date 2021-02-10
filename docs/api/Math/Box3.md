@@ -50,14 +50,14 @@ p1 is a Vec2 with [`Number.NEGATIVE_INFINITY`](https://developer.mozilla.org/en-
 Getter for the lower (x, y, z) boundary of the box.
 
 
-**Returns**: <code>[Vec3](api/Math\Vec3.md)</code> - - Returns the minumum Vec3.  
+**Returns**: <code>[Vec3](api/Math\Vec3.md)</code> - - Returns the minimum Vec3.  
 <a name="Box3+max"></a>
 
 ### max 
 Getter for the upper (x, y, z) boundary of the box.
 
 
-**Returns**: <code>[Vec3](api/Math\Vec3.md)</code> - - Returns the minumum Vec3.  
+**Returns**: <code>[Vec3](api/Math\Vec3.md)</code> - - Returns the maximum Vec3.  
 <a name="Box3+set"></a>
 
 ### set

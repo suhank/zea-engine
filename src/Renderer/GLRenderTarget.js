@@ -6,7 +6,7 @@ import { processTextureParams } from './processTextureParams.js'
 class GLRenderTarget extends EventEmitter {
   /**
    * Create a GL render target.
-   * @param {any} gl - The gl value.
+   * @param {WebGLRenderingContext} gl - The webgl rendering context.
    * @param {any} params - The params value.
    */
   constructor(gl, params) {
@@ -159,7 +159,7 @@ class GLRenderTarget extends EventEmitter {
 
   /**
    * The bindForWriting method.
-   * @param {any} renderstate - The renderstate value.
+   * @param {object} renderstate - The object tracking the current state of the renderer
    * @param {boolean} clear - The clear value.
    */
   bindForWriting(renderstate, clear = false) {
@@ -176,7 +176,7 @@ class GLRenderTarget extends EventEmitter {
 
   /**
    * The unbindForWriting method.
-   * @param {any} renderstate - The renderstate value.
+   * @param {object} renderstate - The object tracking the current state of the renderer
    */
   unbindForWriting(renderstate) {
     if (renderstate) renderstate.boundRendertarget = this.__prevBoundFbo
@@ -219,7 +219,7 @@ class GLRenderTarget extends EventEmitter {
 
   /**
    * The bindColorTexture method.
-   * @param {any} renderstate - The renderstate value.
+   * @param {object} renderstate - The object tracking the current state of the renderer
    * @param {any} unif - The unif value.
    * @param {number} channelId - The channelId value.
    * @return {boolean} - The return value.
@@ -235,7 +235,7 @@ class GLRenderTarget extends EventEmitter {
 
   /**
    * The bindDepthTexture method.
-   * @param {any} renderstate - The renderstate value.
+   * @param {object} renderstate - The object tracking the current state of the renderer
    * @param {any} unif - The unif value.
    * @return {boolean} - The return value.
    */

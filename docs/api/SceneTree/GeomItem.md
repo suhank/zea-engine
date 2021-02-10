@@ -13,7 +13,7 @@ Class representing a geometry item in a scene tree.
 **Extends**: <code>[BaseGeomItem](api/SceneTree\BaseGeomItem.md)</code>  
 
 * [GeomItem ⇐ <code>BaseGeomItem</code>](#GeomItem)
-    * [new GeomItem(name, geometry, material)](#new-GeomItem)
+    * [new GeomItem(name, geometry, material, xfo)](#new-GeomItem)
     * [getGeometry() ⇒ <code>BaseGeom</code>](#getGeometry)
     * [setGeometry(geom)](#setGeometry)
     * ~~[.getGeom()](#GeomItem+getGeom) ⇒ <code>BaseGeom</code>~~
@@ -41,6 +41,7 @@ Creates a geometry item.
 | name | <code>string</code> | The name of the geom item. |
 | geometry | <code>[BaseGeom](api/SceneTree\Geometry\BaseGeom.md)</code> | The geometry value. |
 | material | <code>[Material](api/SceneTree\Material.md)</code> | The material value. |
+| xfo | <code>[Xfo](api/Math\Xfo.md)</code> | The initial Xfo of the new GeomItem. |
 
 <a name="GeomItem+getGeometry"></a>
 

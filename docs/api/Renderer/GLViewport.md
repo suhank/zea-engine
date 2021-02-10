@@ -3,6 +3,22 @@
 ### GLViewport 
 Class representing a GL viewport.
 
+**Events**
+* **resized:** Emitted when the GLViewport resizes
+* **updated:** Emitted when the GLViewport needs updating. The Renderer will trigger a redraw when this occurs.
+* **viewChanged:** Emitted when the view changes. Usually caused by the camera moving.
+* **pointerDoublePressed:** Emitted when the user double clicks with the mouse, or double taps in the viewport.
+* **pointerDown:** Emitted when the user presses a pointer
+* **pointerUp:** Emitted when the user releases a pointer
+* **pointerOverGeom:** Emitted when the pointer is moved over a geometry
+* **pointerLeaveGeom:** Emitted when the pointer is moved off a geometry
+* **pointerMove:** Emitted when the pointer is moved
+* **pointerEnter:** Emitted when the pointer is moved into thg viewport
+* **pointerLeave:** Emitted when the mouse leaves the viewport.
+* **keyDown:** Emitted when the user presses a key on the keyboard
+* **keyUp:** Emitted when the user releases a key on the keyboard
+* **touchCancel:** Emitted when the user cancels a touch interaction
+
 
 **Extends**: <code>[GLBaseViewport](api/Renderer\GLBaseViewport.md)</code>  
 
@@ -11,8 +27,6 @@ Class representing a GL viewport.
     * [resize(width, height)](#resize)
     * [getCamera() ⇒ <code>Camera</code>](#getCamera)
     * [setCamera(camera)](#setCamera)
-    * [getManipulator() ⇒ <code>any</code>](#getManipulator)
-    * [setManipulator(manipulator)](#setManipulator)
     * [getProjectionMatrix() ⇒ <code>Mat4</code>](#getProjectionMatrix)
     * [getViewMatrix() ⇒ <code>Mat4</code>](#getViewMatrix)
     * [setActive(state)](#setActive)
@@ -26,7 +40,7 @@ Class representing a GL viewport.
     * [getGeomItemsInRect(tl, br) ⇒ <code>Set</code>](#getGeomItemsInRect)
     * [getCapture() ⇒ <code>BaseItem</code>](#getCapture)
     * [releaseCapture()](#releaseCapture)
-    * [onPointerDown(event) ⇒ <code>boolean</code>](#onPointerDown)
+    * [onPointerDown(event)](#onPointerDown)
     * [onPointerUp(event)](#onPointerUp)
     * [onPointerMove(event)](#onPointerMove)
     * [onPointerEnter(event)](#onPointerEnter)
@@ -79,24 +93,6 @@ Sets current camera object
 | Param | Type | Description |
 | --- | --- | --- |
 | camera | <code>[Camera](api/SceneTree\Camera.md)</code> | The camera value. |
-
-<a name="GLViewport+getManipulator"></a>
-
-### getManipulator
-The getManipulator method.
-
-
-**Returns**: <code>any</code> - - The return value.  
-<a name="GLViewport+setManipulator"></a>
-
-### setManipulator
-The setManipulator method.
-
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| manipulator | <code>any</code> | The manipulator value. |
 
 <a name="GLViewport+getProjectionMatrix"></a>
 
@@ -223,7 +219,6 @@ The releaseCapture method.
 Handler of the `pointerdown` event fired when the pointer device is initially pressed.
 
 
-**Returns**: <code>boolean</code> - -  
 
 | Param | Type | Description |
 | --- | --- | --- |

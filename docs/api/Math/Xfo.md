@@ -18,7 +18,8 @@ Class representing an Xfo transform, which is a transformation decomposed into 3
     * [inverse()](#inverse)
     * [transformVec3(vec3) ⇒ <code>Vec3</code>](#transformVec3)
     * [toMat4() ⇒ <code>Mat4</code>](#toMat4)
-    * [fromMat4(mat4)](#fromMat4)
+    * ~~[.fromMat4(mat4)](#Xfo+fromMat4)~~
+    * ~~[.setFromMat4(mat4)](#Xfo+setFromMat4)~~
     * [setFromFloat32Array(float32array)](#setFromFloat32Array)
     * [clone()](#clone)
     * [toJSON() ⇒ <code>object</code>](#toJSON)
@@ -149,7 +150,22 @@ Converts this Xfo to a Mat4 (a 4x4 matrix).
 **Returns**: <code>[Mat4](api/Math\Mat4.md)</code> - - Returns a new Mat4.  
 <a name="Xfo+fromMat4"></a>
 
-### fromMat4
+### ~~xfo.fromMat4(mat4)~~
+***Deprecated***
+
+Sets the state of the Xfo object using Mat4.
+
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| mat4 | <code>[Mat4](api/Math\Mat4.md)</code> | The mat4 value. |
+
+<a name="Xfo+setFromMat4"></a>
+
+### ~~xfo.setFromMat4(mat4)~~
+***Deprecated***
+
 Sets the state of the Xfo object using Mat4.
 
 

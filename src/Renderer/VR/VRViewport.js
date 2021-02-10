@@ -51,7 +51,7 @@ class VRViewport extends GLBaseViewport {
     this.controllersMap = {}
     this.controllers = []
     this.prevControllerDownTime = []
-    this.spectatorMode = true
+    this.spectatorMode = false
     this.tick = 0
 
     // ////////////////////////////////////////////
@@ -446,7 +446,8 @@ class VRViewport extends GLBaseViewport {
 
     const pose = xrFrame.getViewerPose(this.__refSpace)
     if (!pose) {
-      console.warn('No pose available during XR present')
+      // No pose available during XR present
+      // Note: before the Headset is put on the pose is missing, or after it is taken off
       return
     }
 

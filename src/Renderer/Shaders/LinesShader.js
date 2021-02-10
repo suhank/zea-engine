@@ -209,7 +209,7 @@ void main(void) {
 
   /**
    * The unbind method.
-   * @param {any} renderstate - The renderstate value.
+   * @param {object} renderstate - The object tracking the current state of the renderer
    * @return {any} - The return value.
    */
   unbind(renderstate) {

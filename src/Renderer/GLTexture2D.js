@@ -627,7 +627,7 @@ class GLTexture2D extends RefCounted {
 
   /**
    * The bind method.
-   * @param {any} renderstate - The renderstate value.
+   * @param {object} renderstate - The object tracking the current state of the renderer
    * @param {any} unif - The unif value.
    * @return {any} - The return value.
    * @deprecated
