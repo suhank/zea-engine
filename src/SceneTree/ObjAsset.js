@@ -66,26 +66,6 @@ class ObjAsset extends AssetItem {
         }
       )
     })
-    this.geomLibrary = new GeomLibrary()
-    this.materials = new MaterialLibrary()
-  }
-
-  /**
-   * Returns `GeomLibrary` object which hosts workers, buffers, streams and geometry objects.
-   *
-   * @return {GeomLibrary} - The return value.
-   */
-  getGeometryLibrary() {
-    return this.geomLibrary
-  }
-
-  /**
-   * Returns `MaterialLibrary` object wich hosts images and `Material` objects.
-   *
-   * @return {MaterialLibrary} - The return value.
-   */
-  getMaterialLibrary() {
-    return this.materials
   }
 
   /**
@@ -125,7 +105,7 @@ class ObjAsset extends AssetItem {
           case 'newmtl':
             material = new Material(value)
             material.setShaderName('StandardSurfaceShader')
-            this.materials.addMaterial(material)
+            this.__materials.addMaterial(material)
             break
           case 'Kd':
             material.getParameter('BaseColor').setValue(parseColor(elements))
@@ -403,13 +383,13 @@ class ObjAsset extends AssetItem {
       }
       geomItem.getParameter('LocalXfo').setValue(new Xfo(delta))
 
-      if (geomData.material != undefined && this.materials.hasMaterial(geomData.material)) {
-        geomItem.getParameter('Material').setValue(this.materials.getMaterial(geomData.material))
+      if (geomData.material != undefined && this.__materials.hasMaterial(geomData.material)) {
+        geomItem.getParameter('Material').setValue(this.__materials.getMaterial(geomData.material))
       } else {
         const defaultShader = this.getParameter('defaultShader').getValue()
         const material = new Material(geomName + 'mat')
         material.setShaderName(defaultShader != '' ? defaultShader : 'StandardSurfaceShader')
-        this.materials.addMaterial(material)
+        this.__materials.addMaterial(material)
         geomItem.getParameter('Material').setValue(material)
       }
 
