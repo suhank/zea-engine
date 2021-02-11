@@ -27,7 +27,8 @@ vec2 dirToSphOctUv(vec3 normal){
     }
     vec2 res = uv*0.5+0.5;
     // Flip-v
-    return vec2(res.x, 1.0 - res.y);
+    return res;
+    // return vec2(res.x, 1.0 - res.y);
 }
 
 

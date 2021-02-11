@@ -4,7 +4,6 @@ import { shaderLibrary } from '../ShaderLibrary.js'
 import { GLShader } from '../GLShader.js'
 import './GLSL/stack-gl/transpose.js'
 import './GLSL/stack-gl/gamma.js'
-import './GLSL/GGX_Specular.js'
 import './GLSL/drawItemTexture.js'
 import './GLSL/modelMatrix.js'
 import './GLSL/debugColors.js'
@@ -87,7 +86,6 @@ uniform float Opacity;
 
 #ifdef ENABLE_PBR
 <%include file="math/constants.glsl"/>
-<%include file="GGX_Specular.glsl"/>
 <%include file="PBRSurfaceRadiance.glsl"/>
 uniform float Roughness;
 uniform float Metallic;

@@ -80,7 +80,6 @@ class GLProbe extends EventEmitter {
     // ConvolveIrradianceShader Shader
 
     {
-      const size = 31
       const convolveIrradianceShader = new ConvolveIrradianceShader(gl)
       const convolveIrradianceShaderComp = convolveIrradianceShader.compileForTarget('GLProbe', renderstate.shaderopts)
       const convolveIrradianceShaderBinding = generateShaderGeomBinding(
@@ -98,6 +97,7 @@ class GLProbe extends EventEmitter {
 
       // ////////////////////////////////////////////
       // Irradiance Cube
+      const size = 31
       this.irradianceCubeTex = gl.createTexture()
       gl.bindTexture(gl.TEXTURE_CUBE_MAP, this.irradianceCubeTex)
 
@@ -113,7 +113,7 @@ class GLProbe extends EventEmitter {
       }
       gl.generateMipmap(gl.TEXTURE_CUBE_MAP)
 
-      // // Attach one face of cube map
+      // Attach one face of cube map
       const irradianceFboId = gl.createFramebuffer()
       gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, irradianceFboId)
 
@@ -203,39 +203,37 @@ class GLProbe extends EventEmitter {
   }
 
   /**
-   * The bindProbeToUniform method.
+   * The bind method.
    * @param {object} renderstate - The object tracking the current state of the renderer
    * @param {any} unif - The unif value.
    */
-  bindProbeToUniform(renderstate) {
+  bind(renderstate) {
     const gl = this.__gl
-
-    const { cubeMap, cubeMapPyramid, brdfLUTTexture, shCoeffs, envMap } = renderstate.unifs
-    if (cubeMap) {
+    const { irradianceMap, prefilterMap, brdfLUT, envMap } = renderstate.unifs
+    if (irradianceMap) {
       const unit = renderstate.boundTextures++
       const texId = this.__gl.TEXTURE0 + unit
       gl.activeTexture(texId)
-      // gl.bindTexture(gl.TEXTURE_CUBE_MAP, this.__srcGLTex.glTex) // If the source is a cube map
       gl.bindTexture(gl.TEXTURE_CUBE_MAP, this.irradianceCubeTex)
-      gl.uniform1i(cubeMap.location, unit)
+      gl.uniform1i(irradianceMap.location, unit)
     }
-    if (cubeMapPyramid) {
+    if (prefilterMap) {
       const unit = renderstate.boundTextures++
       const texId = this.__gl.TEXTURE0 + unit
       gl.activeTexture(texId)
       gl.bindTexture(gl.TEXTURE_CUBE_MAP, this.specularCubetex)
-      gl.uniform1i(cubeMapPyramid.location, unit)
+      gl.uniform1i(prefilterMap.location, unit)
     }
-    if (brdfLUTTexture) {
+    if (brdfLUT) {
       const unit = renderstate.boundTextures++
       gl.activeTexture(this.__gl.TEXTURE0 + unit)
       gl.bindTexture(gl.TEXTURE_2D, this.brdfLUTTexture)
-      gl.uniform1i(brdfLUTTexture, unit)
+      gl.uniform1i(brdfLUT.location, unit)
     }
-    if (shCoeffs) {
-      // TODO: setup a Uniform buffer object.
-      gl.uniform3fv(shCoeffs.location, this.__envMap.luminanceData.shCoeffs)
-    }
+    // if (shCoeffs) {
+    //   // TODO: setup a Uniform buffer object.
+    //   gl.uniform3fv(shCoeffs.location, this.__envMap.luminanceData.shCoeffs)
+    // }
 
     if (envMap) {
       this.__srcGLTex.bindToUniform(renderstate, envMap)

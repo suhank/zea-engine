@@ -140,7 +140,7 @@ class GLEnvMap extends GLProbe {
         // /////////////////
         this.__envMapShader.bind(renderstate, 'GLEnvMap')
         const unifs = renderstate.unifs
-        this.bindProbeToUniform(renderstate)
+        this.bind(renderstate)
 
         {
           const unif = unifs.focus
@@ -159,19 +159,6 @@ class GLEnvMap extends GLProbe {
         })
       }
     }
-  }
-
-  /**
-   * The bindToUniform method.
-   * An EnvMap can be bound as a regular texture, but we want the
-   * original source data, not the atlas of convolved images.
-   * @param {object} renderstate - The object tracking the current state of the renderer
-   * @param {any} unif - The unif value.
-   * @param {any} bindings - The bindings value.
-   * @return {any} - The return value.
-   */
-  bindToUniform(renderstate, unif, bindings) {
-    return this.__srcGLTex.bindToUniform(renderstate, unif, bindings)
   }
 
   /**

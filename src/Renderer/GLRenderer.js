@@ -606,18 +606,7 @@ class GLRenderer extends GLBaseRenderer {
       bindGLBaseRendererUnifs(unifs)
 
       if (this.__glEnvMap) {
-        const envMapPyramid = unifs.envMapPyramid
-        if (envMapPyramid && this.__glEnvMap.bindProbeToUniform) {
-          this.__glEnvMap.bindProbeToUniform(renderstate, envMapPyramid)
-        } else {
-          // Bind the env map src 2d image to the env map param
-          const { envMapTex, envMapTexType } = unifs
-          if (envMapTex) {
-            this.__glEnvMap.bindToUniform(renderstate, envMapTex, {
-              textureTypeUnif: envMapTexType,
-            })
-          }
-        }
+        this.__glEnvMap.bind(renderstate)
       }
       {
         const unif = unifs.exposure

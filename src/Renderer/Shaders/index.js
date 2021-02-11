@@ -1,7 +1,6 @@
 export * from './GLSL/index'
 
 export * from './BillboardShader.js'
-export * from './ConvolverShader.js'
 export * from './DepthMapShader.js'
 export * from './EnvMapShader.js'
 export * from './EnvProjectionShader.js'

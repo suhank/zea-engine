@@ -7,7 +7,6 @@ import './GLSL/constants.js'
 import './GLSL/stack-gl/transpose.js'
 import './GLSL/stack-gl/gamma.js'
 import './GLSL/materialparams.js'
-import './GLSL/GGX_Specular.js'
 import './GLSL/PBRSurface.js'
 import './GLSL/drawItemTexture.js'
 import './GLSL/modelMatrix.js'
@@ -102,7 +101,6 @@ precision highp float;
 <%include file="debugColors.glsl"/>
 #endif
 
-<%include file="GGX_Specular.glsl"/>
 <%include file="PBRSurfaceRadiance.glsl"/>
 
 /* VS Outputs */
@@ -275,14 +273,13 @@ void main(void) {
 #endif
 
 #ifdef ENABLE_PBR
-    int envMapFlags = int(envMapPyramid_desc.w);
     bool headLightMode = testFlag(envMapFlags, ENVMAP_FLAG_HEADLIGHT);
 #endif
 
     if (opacity < 1.0) {
         vec3 radiance;
 #ifdef ENABLE_PBR
-        if (envMapPyramid_desc.x > 0.0) {
+        if (textureSize(brdfLUT, 0).x > 0) {
             // Note: not sure how to make specular reflections work in headlight mode.
             vec4 specularReflectance = pbrSpecularReflectance(material, normal, viewVector);
             fragColor = vec4(specularReflectance.rgb, mix(opacity, 1.0, specularReflectance.a));
@@ -299,12 +296,12 @@ void main(void) {
     else {
         vec3 radiance;
 #ifdef ENABLE_PBR
-        if (envMapPyramid_desc.x > 0.0) {
+        if (textureSize(brdfLUT, 0).x > 0) {
             vec3 irradiance;
             if (headLightMode) {
-                irradiance = sampleEnvMap(viewNormal, 1.0);
+                irradiance = sampleIrradiance(viewNormal);
             } else {
-                irradiance = sampleEnvMap(normal, 1.0);
+                irradiance = sampleIrradiance(normal);
             }
             radiance = pbrSurfaceRadiance(material, irradiance, normal, viewVector);
         } else {

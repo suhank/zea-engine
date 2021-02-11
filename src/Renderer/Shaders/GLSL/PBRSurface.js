@@ -87,6 +87,14 @@ struct MaterialParams {
     float reflectance;
 };
 
+uniform int envMapFlags;
+uniform samplerCube irradianceMap;
+uniform samplerCube prefilterMap;
+uniform sampler2D brdfLUT;
+
+vec3 sampleIrradiance(vec3 dir) {
+  return texture(irradianceMap, dir).rgb;
+}
 
 uniform vec3 shCoefficients[ 9 ];
 
@@ -121,11 +129,13 @@ vec4 pbrSpecularReflectance(in MaterialParams materialParams, vec3 normal, in ve
 
     vec3 N = normal;
     vec3 V = viewVector;
+    vec3 R = reflect(-V, N);
+
     // Note: Is this correct? F0 is a scalar input, but F0 is a vec3.. 
     vec3 F0 = vec3(materialParams.reflectance);
     float NdotV = dot(N, V);
 
-    vec3 F = FresnelSchlickRoughness(max(NdotV, 0.0), F0, materialParams.roughness);
+    vec3 F = fresnelSchlickRoughness(max(NdotV, 0.0), F0, materialParams.roughness);
 
     vec3 kS = F;
     
@@ -135,26 +145,29 @@ vec4 pbrSpecularReflectance(in MaterialParams materialParams, vec3 normal, in ve
     vec3 specular = prefilteredColor * (F * envBRDF.x + envBRDF.y);
     
     float specularOpacity = (kS.x + kS.y + kS.z) / 3.0;
-    return vec4(specularReflectance, specularOpacity);
+    return vec4(specular, specularOpacity);
 }
 
 
-vec3 pbrSurfaceRadiance(in MaterialParams materialParams, vec3 __irradiance, vec3 normal, in vec3 viewVector) {
+vec3 pbrSurfaceRadiance(in MaterialParams materialParams, vec3 irradiance, vec3 normal, in vec3 viewVector) {
 
     vec3 N = normal;
     vec3 V = viewVector;
+    vec3 R = reflect(-V, N);
+
     // Note: Is this correct? F0 is a scalar input, but F0 is a vec3.. 
     vec3 F0 = vec3(materialParams.reflectance);
     float NdotV = dot(N, V);
 
-    vec3 F = FresnelSchlickRoughness(max(NdotV, 0.0), F0, materialParams.roughness);
+    vec3 F = fresnelSchlickRoughness(max(NdotV, 0.0), F0, materialParams.roughness);
 
     vec3 kS = F;
     vec3 kD = 1.0 - kS;
-    kD *= 1.0 - materialParams.metallic;	  
+    kD *= 1.0 - materialParams.metallic;
+    float ao = 1.0; 
     
     // vec3 irradiance = texture(irradianceMap, N).rgb;
-    vec3 irradiance = shGetIrradianceAt(shCoefficients, N);
+   // vec3 irradiance = shGetIrradianceAt(shCoefficients, N);
     vec3 diffuse    = irradiance * materialParams.baseColor;
     
     const float MAX_REFLECTION_LOD = 4.0;

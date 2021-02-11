@@ -72,12 +72,13 @@ varying vec2 v_texCoord;
 #define ENV_MAP_LATLONG 0
 #define ENV_MAP_OCT 1
 #define ENV_MAP_CUBE 2
-#define ENV_MAP_CUBE_PYRAMID 3
+#define ENV_MAP_prefilterMap 3
 #define ENV_MAP_STEREO_LATLONG 4
 #define ENV_MAP_DUALFISHEYE 5
 #define ENV_MAP_SH 6
+#define ENV_MAP_BRDF_LUT 7
 
-#define ENV_MAPTYPE ENV_MAP_CUBE
+#define ENV_MAPTYPE ENV_MAP_OCT
 
 #if (ENV_MAPTYPE == ENV_MAP_LATLONG)  
 
@@ -117,12 +118,12 @@ vec4 sampleEnvMap(vec3 dir) {
   // return textureLod(cubeMap, dir, exposure);
 }
 
-#elif (ENV_MAPTYPE == ENV_MAP_CUBE_PYRAMID)
+#elif (ENV_MAPTYPE == ENV_MAP_prefilterMap)
 
-uniform samplerCube cubeMapPyramid;
+uniform samplerCube prefilterMap;
 
 vec4 sampleEnvMap(vec3 dir) {
-  return textureLod(cubeMapPyramid, dir, exposure);
+  return textureLod(prefilterMap, dir, exposure);
 }
 
 #elif (ENV_MAPTYPE == ENV_MAP_STEREO_LATLONG)  
@@ -158,6 +159,13 @@ vec4 sampleEnvMap(vec3 dir) {
 	return vec4(sampleSHCoeffs(dir) * exposure, 1.0);
 }
 
+#elif (ENV_MAPTYPE == ENV_MAP_BRDF_LUT)
+
+uniform sampler2D brdfLUT;
+
+vec4 sampleEnvMap(vec3 dir) {
+  return texture2D(brdfLUT, v_texCoord);
+}
 #endif
 
 #ifdef ENABLE_ES3
