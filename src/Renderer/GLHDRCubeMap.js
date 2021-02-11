@@ -77,8 +77,8 @@ class GLHDRCubeMap extends RefCounted {
       this.cdmTex.bufferData(cdm)
     }
 
-    this.gltex = gl.createTexture()
-    gl.bindTexture(gl.TEXTURE_CUBE_MAP, this.gltex)
+    this.glTex = gl.createTexture()
+    gl.bindTexture(gl.TEXTURE_CUBE_MAP, this.glTex)
 
     gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MAG_FILTER, gl.LINEAR)
     gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MIN_FILTER, gl.LINEAR)
@@ -112,7 +112,7 @@ class GLHDRCubeMap extends RefCounted {
       else if (cubeFace == gl.TEXTURE_CUBE_MAP_NEGATIVE_Y) cubeFace = gl.TEXTURE_CUBE_MAP_POSITIVE_Y
 
       gl.viewport(0, 0, faceSizeX, faceSizeY) // Match the viewport to the texture size
-      gl.framebufferTexture2D(gl.DRAW_FRAMEBUFFER, gl.COLOR_ATTACHMENT0, cubeFace, this.gltex, 0)
+      gl.framebufferTexture2D(gl.DRAW_FRAMEBUFFER, gl.COLOR_ATTACHMENT0, cubeFace, this.glTex, 0)
       gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 
       const region = [
@@ -142,7 +142,7 @@ class GLHDRCubeMap extends RefCounted {
    * @return {any} - The return value.
    */
   bindToUniform(renderstate, unif, bindings) {
-    if (!this.gltex) {
+    if (!this.glTex) {
       return false
     }
 
@@ -150,7 +150,7 @@ class GLHDRCubeMap extends RefCounted {
     const texId = this.__gl.TEXTURE0 + unit
     const gl = this.__gl
     gl.activeTexture(texId)
-    gl.bindTexture(gl.TEXTURE_CUBE_MAP, this.gltex)
+    gl.bindTexture(gl.TEXTURE_CUBE_MAP, this.glTex)
     gl.uniform1i(unif.location, unit)
 
     return true

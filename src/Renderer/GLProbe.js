@@ -105,7 +105,7 @@ class GLProbe extends EventEmitter {
     covolverShaderBinding.bind(renderstate)
     const unifs = renderstate.unifs
 
-    srcGLTex.bindToUniform(renderstate, unifs.octMap)
+    srcGLTex.bindToUniform(renderstate, unifs.envMap)
 
     const maxMipLevels = 5
     for (let mip = 0; mip < maxMipLevels; ++mip) {

@@ -47,6 +47,7 @@ varying vec2 v_texCoord;
 <%include file="Hammersley.glsl"/>
 <%include file="GGX.glsl"/>
 
+#define ENVMAP_CUBE
 #ifdef ENVMAP_CUBE
 
 uniform samplerCube envMap;
@@ -57,13 +58,13 @@ vec4 sampleEnvMap(vec3 dir) {
 
 #else 
 
-uniform sampler2D   octMap;
+uniform sampler2D   envMap;
 
 <%include file="pragmatic-pbr/envmap-octahedral.glsl"/>
 
 vec4 sampleEnvMap(vec3 dir) {
   vec2 uv = dirToSphOctUv(dir);
-  vec4 texel = texture2D(octMap, uv);
+  vec4 texel = texture2D(envMap, uv);
   return vec4(texel.rgb/texel.a, 1.0); // TODO: Check this line. Do we need it?
 }
 

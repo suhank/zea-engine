@@ -53,12 +53,14 @@ class EnvMap extends VLHImage {
     if (samples) {
       this.luminanceData = JSON.parse(this.utf8decoder.decode(samples))
 
-      for (let i = 0; i < 9; i++) {
-        this.shCoeffs[i] = new Color(
-          this.luminanceData.shCoeffs[i * 3 + 0],
-          this.luminanceData.shCoeffs[i * 3 + 1],
-          this.luminanceData.shCoeffs[i * 3 + 2]
-        )
+      if (this.luminanceData.shCoeffs) {
+        for (let i = 0; i < 9; i++) {
+          this.shCoeffs[i] = new Color(
+            this.luminanceData.shCoeffs[i * 3 + 0],
+            this.luminanceData.shCoeffs[i * 3 + 1],
+            this.luminanceData.shCoeffs[i * 3 + 2]
+          )
+        }
       }
     }
   }

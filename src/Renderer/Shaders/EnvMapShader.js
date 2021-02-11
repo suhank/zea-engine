@@ -80,7 +80,7 @@ uniform sampler2D backgroundImage;
 
 vec4 sampleEnvMap(vec3 dir) {
   vec2 uv = latLongUVsFromDir(normalize(dir));
-  vec4 texel = texture2D(backgroundImage, uv);
+  vec4 texel = texture2D(backgroundImage, uv) * exposure;
   return vec4(texel.rgb/texel.a, 1.0);
 }
 
@@ -97,7 +97,7 @@ vec4 sampleEnvMap(vec3 dir) {
   if(eye == 1){
     uv.y += 0.5;
   }
-  vec4 texel = texture2D(backgroundImage, uv);
+  vec4 texel = texture2D(backgroundImage, uv) * exposure;
   fragColor = vec4(texel.rgb/texel.a, 1.0);
 }
 
@@ -110,22 +110,15 @@ uniform sampler2D backgroundImage;
 <%include file="pragmatic-pbr/envmap-octahedral.glsl"/>
 
 uniform sampler2D   envMap;
-// uniform sampler2D   envMapPyramid;
-// uniform sampler2D   envMapPyramid_layout;
-// uniform vec4        envMapPyramid_desc;
-// <%include file="utils/imagePyramid.glsl"/>
 
 vec4 sampleEnvMap(vec3 dir) {
   vec2 uv = dirToSphOctUv(normalize(dir));
   if(false){
-    // Use these lines to debug the src GL image.
     vec4 texel = texture2D(envMap, uv);
-    // vec4 texel = texture2D(envMapPyramid, uv);
     return vec4(texel.rgb/texel.a, 1.0);
   }
   else{
-    return texture2D(envMap, uv);
-    // return vec4(sampleImagePyramid(uv, focus, envMapPyramid_layout, envMapPyramid, envMapPyramid_desc).rgb, 1.0);
+    return texture2D(envMap, uv) * exposure;
   }
 }
 
@@ -135,7 +128,8 @@ vec4 sampleEnvMap(vec3 dir) {
 uniform samplerCube cubeMap;
 
 vec4 sampleEnvMap(vec3 dir) {
-  return textureLod(cubeMap, dir, exposure);
+  return textureLod(cubeMap, dir, 0.0) * exposure;
+  // return textureLod(cubeMap, dir, exposure);
 }
 
 // Dual Fish Eye Env Map
@@ -145,17 +139,25 @@ vec4 sampleEnvMap(vec3 dir) {
 
 vec4 sampleEnvMap(vec3 dir) {
   vec2 uv = dualfisheyeUVsFromDir(dir);
-  return texture2D(backgroundImage, uv);
+  return texture2D(backgroundImage, uv) * exposure;
 }
 
+// Cube Env Map Pyramid
+#elif (ENV_MAPTYPE == 5)
+
+uniform samplerCube cubeMapPyramid;
+
+vec4 sampleEnvMap(vec3 dir) {
+  return textureLod(cubeMapPyramid, dir, exposure);
+}
 
 // Spherical Harmonics
-#elif (ENV_MAPTYPE == 5)
+#elif (ENV_MAPTYPE == 6)
 
 <%include file="SHCoeffs.glsl"/>
 
 vec4 sampleEnvMap(vec3 dir) {
-	return vec4(sampleSHCoeffs(dir), 1.0);
+	return vec4(sampleSHCoeffs(dir) * exposure, 1.0);
 }
 
 #endif

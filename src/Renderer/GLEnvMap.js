@@ -140,12 +140,7 @@ class GLEnvMap extends GLProbe {
         // /////////////////
         this.__envMapShader.bind(renderstate, 'GLEnvMap')
         const unifs = renderstate.unifs
-        // this.__srcGLTex.bindToUniform(renderstate, unifs.envMap)
         this.bindProbeToUniform(renderstate)
-        // this.bindToUniform(renderstate, unifs.envMapPyramid);
-
-        // this.__lodPyramid.bind(renderstate, renderstate.unifs.envMap.location);
-        // this.bindToUniform(renderstate, unifs.envMapPyramid);
 
         {
           const unif = unifs.focus
@@ -187,15 +182,21 @@ class GLEnvMap extends GLProbe {
   bindProbeToUniform(renderstate) {
     const gl = this.__gl
 
-    const { cubeMap, brdfLUTTexture, shCoeffs } = renderstate.unifs
+    const { cubeMap, cubeMapPyramid, brdfLUTTexture, shCoeffs, envMap } = renderstate.unifs
     if (cubeMap) {
       const unit = renderstate.boundTextures++
       const texId = this.__gl.TEXTURE0 + unit
       gl.activeTexture(texId)
-      gl.bindTexture(gl.TEXTURE_CUBE_MAP, this.glcubetex)
+      gl.bindTexture(gl.TEXTURE_CUBE_MAP, this.__srcGLTex.glTex)
       gl.uniform1i(cubeMap.location, unit)
     }
-
+    if (cubeMapPyramid) {
+      const unit = renderstate.boundTextures++
+      const texId = this.__gl.TEXTURE0 + unit
+      gl.activeTexture(texId)
+      gl.bindTexture(gl.TEXTURE_CUBE_MAP, this.glcubetex)
+      gl.uniform1i(cubeMapPyramid.location, unit)
+    }
     if (brdfLUTTexture) {
       const unit = renderstate.boundTextures++
       gl.activeTexture(this.__gl.TEXTURE0 + unit)
@@ -205,6 +206,10 @@ class GLEnvMap extends GLProbe {
     if (shCoeffs) {
       // TODO: setup a Uniform buffer object.
       gl.uniform3fv(shCoeffs.location, this.__envMap.luminanceData.shCoeffs)
+    }
+
+    if (envMap) {
+      this.__srcGLTex.bindToUniform(renderstate, unifs.envMap)
     }
   }
 
