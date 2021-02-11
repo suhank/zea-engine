@@ -7,13 +7,7 @@ import { GLEnvMap } from './GLEnvMap.js'
 import { GLBaseRenderer } from './GLBaseRenderer.js'
 import { GLTexture2D } from './GLTexture2D.js'
 import { PassType } from './Passes/GLPass.js'
-import {
-  BackgroundImageShader,
-  OctahedralEnvMapShader,
-  LatLongEnvMapShader,
-  SterioLatLongEnvMapShader,
-  DualFishEyeToLatLongBackgroundShader,
-} from './Shaders/EnvMapShader.js'
+import { EnvMapShader } from './Shaders/EnvMapShader.js'
 import { generateShaderGeomBinding } from './Drawing/GeomShaderBinding.js'
 
 import { OutlinesShader } from './Shaders/OutlinesShader.js'
@@ -140,24 +134,20 @@ class GLRenderer extends GLBaseRenderer {
       this.__glBackgroundMap.on('updated', this.requestRedraw)
       if (!this.__backgroundMapShader) {
         if (!gl.__quadVertexIdsBuffer) gl.setupInstancedQuad()
-        switch (backgroundMap.getMapping()) {
-          case 'octahedral':
-            this.__backgroundMapShader = new OctahedralEnvMapShader(gl)
-            break
-          case 'latlong':
-            this.__backgroundMapShader = new LatLongEnvMapShader(gl)
-            break
-          case 'steriolatlong':
-            this.__backgroundMapShader = new SterioLatLongEnvMapShader(gl)
-            break
-          case 'dualfisheye':
-            this.__backgroundMapShader = new DualFishEyeToLatLongBackgroundShader(gl)
-            break
-          case 'uv':
-          default:
-            this.__backgroundMapShader = new BackgroundImageShader(gl)
-            break
-        }
+        this.__backgroundMapShader = new EnvMapShader(gl)
+        // switch (backgroundMap.getMapping()) {
+        //   case 'octahedral':
+        //     break
+        //   case 'latlong':
+        //     break
+        //   case 'steriolatlong':
+        //     break
+        //   case 'dualfisheye':
+        //     break
+        //   case 'uv':
+        //   default:
+        //     break
+        // }
         const shaderComp = this.__backgroundMapShader.compileForTarget()
         this.__backgroundMapShaderBinding = generateShaderGeomBinding(
           gl,

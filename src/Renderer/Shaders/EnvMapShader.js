@@ -12,8 +12,8 @@ import './GLSL/utils/quadVertexFromID.js'
 class EnvMapShader extends GLShader {
   constructor(gl) {
     super(gl)
-    this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader(
-      'EnvMapShader.vertexShader',
+    this.setShaderStage(
+      'VERTEX_SHADER',
       `
 precision highp float;
 
@@ -49,82 +49,65 @@ void main()
 
 `
     )
-  }
-}
 
-class BackgroundImageShader extends EnvMapShader {
-  constructor(gl) {
-    super(gl)
-    this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader(
-      'LatLongEnvMapShader.fragmentShader',
+    this.setShaderStage(
+      'FRAGMENT_SHADER',
       `
 precision highp float;
 
 <%include file="math/constants.glsl"/>
 <%include file="GLSLUtils.glsl"/>
-<%include file="pragmatic-pbr/envmap-equirect.glsl"/>
-
-#define ENABLE_INLINE_GAMMACORRECTION
-#ifdef ENABLE_INLINE_GAMMACORRECTION
-<%include file="stack-gl/gamma.glsl"/>
-uniform float exposure;
-#endif
-
-uniform sampler2D backgroundImage;
-
-
-/* VS Outputs */
-varying vec2 v_texCoord;
-
-#ifdef ENABLE_ES3
-  out vec4 fragColor;
-#endif
-
-void main(void) {
-#ifndef ENABLE_ES3
-  vec4 fragColor;
-#endif
-
-  vec4 texel = texture2D(backgroundImage, v_texCoord);
-  fragColor = vec4(texel.rgb/texel.a, 1.0);
-
-#ifdef ENABLE_INLINE_GAMMACORRECTION
-  //fragColor.rgb = toGamma(fragColor.rgb * exposure);
-
-  // Assuming a simple RGB image in gamma space for now.
-  fragColor.rgb = fragColor.rgb * exposure;
-#endif
-
-
-#ifndef ENABLE_ES3
-  gl_FragColor = fragColor;
-#endif
-}
-`
-    )
-    this.finalize()
-  }
-}
-
-class OctahedralEnvMapShader extends EnvMapShader {
-  constructor(gl) {
-    super(gl)
-    this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader(
-      'OctahedralEnvMapShader.fragmentShader',
-      `
-precision highp float;
-
-<%include file="math/constants.glsl"/>
-<%include file="GLSLUtils.glsl"/>
-<%include file="pragmatic-pbr/envmap-octahedral.glsl"/>
 <%include file="stack-gl/gamma.glsl"/>
 
 uniform float focus;
+uniform float exposure;
+
+/* VS Outputs */
+varying vec3 v_worldDir;
+varying vec2 v_texCoord;
+
 
 #define ENABLE_INLINE_GAMMACORRECTION
-#ifdef ENABLE_INLINE_GAMMACORRECTION
-uniform float exposure;
-#endif
+
+#define ENV_MAPTYPE 5
+
+// Lat Long Env Map
+#if (ENV_MAPTYPE == 0)  
+
+<%include file="pragmatic-pbr/envmap-equirect.glsl"/>
+
+uniform sampler2D backgroundImage;
+
+vec4 sampleEnvMap(vec3 dir) {
+  vec2 uv = latLongUVsFromDir(normalize(dir));
+  vec4 texel = texture2D(backgroundImage, uv);
+  return vec4(texel.rgb/texel.a, 1.0);
+}
+
+// Sterio Lat Long Env Map
+#elif (ENV_MAPTYPE == 1)  
+
+<%include file="pragmatic-pbr/envmap-equirect.glsl"/>
+uniform int eye;// L = 0, R = 1;
+uniform sampler2D backgroundImage;
+
+vec4 sampleEnvMap(vec3 dir) {
+  vec2 uv = latLongUVsFromDir(normalize(v_worldDir));
+  uv.y *= 0.5;
+  if(eye == 1){
+    uv.y += 0.5;
+  }
+  vec4 texel = texture2D(backgroundImage, uv);
+  fragColor = vec4(texel.rgb/texel.a, 1.0);
+}
+
+
+uniform sampler2D backgroundImage;
+
+// Octahedral Env Map
+#elif (ENV_MAPTYPE == 2)  
+
+<%include file="pragmatic-pbr/envmap-octahedral.glsl"/>
 
 uniform sampler2D   envMap;
 // uniform sampler2D   envMapPyramid;
@@ -132,70 +115,50 @@ uniform sampler2D   envMap;
 // uniform vec4        envMapPyramid_desc;
 // <%include file="utils/imagePyramid.glsl"/>
 
-
-/* VS Outputs */
-varying vec3 v_worldDir;
-varying vec2 v_texCoord;
-
-#ifdef ENABLE_ES3
-  out vec4 fragColor;
-#endif
-
-void main(void) {
-#ifndef ENABLE_ES3
-  vec4 fragColor;
-#endif
-
-  vec2 uv = dirToSphOctUv(normalize(v_worldDir));
+vec4 sampleEnvMap(vec3 dir) {
+  vec2 uv = dirToSphOctUv(normalize(dir));
   if(false){
     // Use these lines to debug the src GL image.
     vec4 texel = texture2D(envMap, uv);
     // vec4 texel = texture2D(envMapPyramid, uv);
-    fragColor = vec4(texel.rgb/texel.a, 1.0);
+    return vec4(texel.rgb/texel.a, 1.0);
   }
   else{
-    fragColor = texture2D(envMap, uv);
-    // fragColor = vec4(sampleImagePyramid(uv, focus, envMapPyramid_layout, envMapPyramid, envMapPyramid_desc).rgb, 1.0);
-  }
-
-#ifdef ENABLE_INLINE_GAMMACORRECTION
-  fragColor.rgb = toGamma(fragColor.rgb * exposure);
-#endif
-
-#ifndef ENABLE_ES3
-  gl_FragColor = fragColor;
-#endif
-}
-`
-    )
-    this.finalize()
+    return texture2D(envMap, uv);
+    // return vec4(sampleImagePyramid(uv, focus, envMapPyramid_layout, envMapPyramid, envMapPyramid_desc).rgb, 1.0);
   }
 }
 
-class DrawCubeMapShader extends EnvMapShader {
-  constructor(gl) {
-    super(gl)
-    this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader(
-      'DrawCubeMapShader.fragmentShader',
-      `
-precision highp float;
+// Cube Env Map
+#elif (ENV_MAPTYPE == 3)
 
-<%include file="math/constants.glsl"/>
-<%include file="GLSLUtils.glsl"/>
-<%include file="stack-gl/gamma.glsl"/>
+uniform samplerCube cubeMap;
 
-uniform float focus;
+vec4 sampleEnvMap(vec3 dir) {
+  return textureLod(cubeMap, dir, exposure);
+}
 
-#define ENABLE_INLINE_GAMMACORRECTION
-#ifdef ENABLE_INLINE_GAMMACORRECTION
-uniform float exposure;
+// Dual Fish Eye Env Map
+#elif (ENV_MAPTYPE == 4)
+
+<%include file="pragmatic-pbr/envmap-dualfisheye.glsl"/>
+
+vec4 sampleEnvMap(vec3 dir) {
+  vec2 uv = dualfisheyeUVsFromDir(dir);
+  return texture2D(backgroundImage, uv);
+}
+
+
+// Spherical Harmonics
+#elif (ENV_MAPTYPE == 5)
+
+<%include file="SHCoeffs.glsl"/>
+
+vec4 sampleEnvMap(vec3 dir) {
+	return vec4(sampleSHCoeffs(dir), 1.0);
+}
+
 #endif
-
-uniform samplerCube envMap;
-
-/* VS Outputs */
-varying vec3 v_worldDir;
-varying vec2 v_texCoord;
 
 #ifdef ENABLE_ES3
   out vec4 fragColor;
@@ -206,7 +169,7 @@ void main(void) {
   vec4 fragColor;
 #endif
 
-  fragColor = textureLod(envMap, normalize(v_worldDir), exposure);
+  fragColor = sampleEnvMap(normalize(v_worldDir));
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION
   fragColor.rgb = toGamma(fragColor.rgb);
@@ -218,244 +181,7 @@ void main(void) {
 }
 `
     )
-    this.finalize()
   }
 }
 
-class LatLongEnvMapShader extends EnvMapShader {
-  constructor(gl) {
-    super(gl)
-    this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader(
-      'LatLongEnvMapShader.fragmentShader',
-      `
-precision highp float;
-
-<%include file="math/constants.glsl"/>
-<%include file="GLSLUtils.glsl"/>
-<%include file="pragmatic-pbr/envmap-equirect.glsl"/>
-
-#define ENABLE_INLINE_GAMMACORRECTION
-#ifdef ENABLE_INLINE_GAMMACORRECTION
-<%include file="stack-gl/gamma.glsl"/>
-uniform float exposure;
-#endif
-
-uniform sampler2D backgroundImage;
-
-
-/* VS Outputs */
-varying vec3 v_worldDir;
-varying vec2 v_texCoord;
-
-#ifdef ENABLE_ES3
-  out vec4 fragColor;
-#endif
-
-void main(void) {
-#ifndef ENABLE_ES3
-  vec4 fragColor;
-#endif
-
-  vec2 uv = latLongUVsFromDir(normalize(v_worldDir));
-
-  vec4 texel = texture2D(backgroundImage, uv);
-  fragColor = vec4(texel.rgb/texel.a, 1.0);
-
-#ifdef ENABLE_INLINE_GAMMACORRECTION
-  fragColor.rgb = toGamma(fragColor.rgb * exposure);
-#endif
-#ifndef ENABLE_ES3
-  gl_FragColor = fragColor;
-#endif
-}
-`
-    )
-    this.finalize()
-  }
-  static getParamDeclarations() {
-    const paramDescs = super.getParamDeclarations()
-    return paramDescs
-  }
-}
-
-class SterioLatLongEnvMapShader extends EnvMapShader {
-  constructor(gl) {
-    super(gl)
-    this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader(
-      'SterioLatLongEnvMapShader.fragmentShader',
-      `
-precision highp float;
-
-<%include file="math/constants.glsl"/>
-<%include file="GLSLUtils.glsl"/>
-<%include file="pragmatic-pbr/envmap-equirect.glsl"/>
-
-#define ENABLE_INLINE_GAMMACORRECTION
-#ifdef ENABLE_INLINE_GAMMACORRECTION
-<%include file="stack-gl/gamma.glsl"/>
-uniform float exposure;
-#endif
-
-uniform int eye;// L = 0, R = 1;
-
-uniform sampler2D backgroundImage;
-
-/* VS Outputs */
-varying vec3 v_worldDir;
-varying vec2 v_texCoord;
-
-#ifdef ENABLE_ES3
-  out vec4 fragColor;
-#endif
-
-void main(void) {
-#ifndef ENABLE_ES3
-  vec4 fragColor;
-#endif
-
-  vec2 uv = latLongUVsFromDir(normalize(v_worldDir));
-  uv.y *= 0.5;
-  if(eye == 1){
-    uv.y += 0.5;
-  }
-
-  vec4 texel = texture2D(backgroundImage, uv);
-  fragColor = vec4(texel.rgb/texel.a, 1.0);
-
-#ifdef ENABLE_INLINE_GAMMACORRECTION
-  //fragColor.rgb = toGamma(fragColor.rgb * exposure);
-
-  // Assuming a simple RGB image in gamma space for now.
-  fragColor.rgb = fragColor.rgb * exposure;
-#endif
-
-#ifndef ENABLE_ES3
-  gl_FragColor = fragColor;
-#endif
-}
-`
-    )
-    this.finalize()
-  }
-}
-
-class DualFishEyeEnvMapShader extends EnvMapShader {
-  constructor(gl) {
-    super(gl)
-    this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader(
-      'DualFishEyeEnvMapShader.fragmentShader',
-      `
-precision highp float;
-
-<%include file="math/constants.glsl"/>
-<%include file="GLSLUtils.glsl"/>
-<%include file="pragmatic-pbr/envmap-dualfisheye.glsl"/>
-
-#define ENABLE_INLINE_GAMMACORRECTION
-#ifdef ENABLE_INLINE_GAMMACORRECTION
-<%include file="stack-gl/gamma.glsl"/>
-uniform float exposure;
-#endif
-
-uniform sampler2D backgroundImage;
-
-/* VS Outputs */
-varying vec3 v_worldDir;
-varying vec2 v_texCoord;
-
-#ifdef ENABLE_ES3
-  out vec4 fragColor;
-#endif
-
-void main(void) {
-#ifndef ENABLE_ES3
-  vec4 fragColor;
-#endif
-
-  vec2 uv = dualfisheyeUVsFromDir(normalize(v_worldDir));
-
-  vec4 texel = texture2D(backgroundImage, uv);
-  fragColor = vec4(texel.rgb/texel.a, 1.0);
-
-#ifdef ENABLE_INLINE_GAMMACORRECTION
-  //fragColor.rgb = toGamma(fragColor.rgb * exposure);
-
-  // Assuming a simple RGB image in gamma space for now.
-  fragColor.rgb = fragColor.rgb * exposure;
-#endif
-
-#ifndef ENABLE_ES3
-  gl_FragColor = fragColor;
-#endif
-}
-`
-    )
-    this.finalize()
-  }
-}
-
-class DualFishEyeToLatLongBackgroundShader extends EnvMapShader {
-  constructor(gl) {
-    super(gl)
-    this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader(
-      'DualFishEyeEnvMapShader.fragmentShader',
-      `
-precision highp float;
-
-<%include file="math/constants.glsl"/>
-<%include file="GLSLUtils.glsl"/>
-<%include file="pragmatic-pbr/envmap-equirect.glsl"/>
-<%include file="pragmatic-pbr/envmap-dualfisheye.glsl"/>
-
-#define ENABLE_INLINE_GAMMACORRECTION
-#ifdef ENABLE_INLINE_GAMMACORRECTION
-<%include file="stack-gl/gamma.glsl"/>
-uniform float exposure;
-#endif
-
-uniform sampler2D backgroundImage;
-
-/* VS Outputs */
-varying vec3 v_worldDir;
-varying vec2 v_texCoord;
-
-#ifdef ENABLE_ES3
-  out vec4 fragColor;
-#endif
-
-void main(void) {
-#ifndef ENABLE_ES3
-  vec4 fragColor;
-#endif
-
-  vec2 uv = dualfisheyeUVsFromDir(dirFromLatLongUVs(v_texCoord.x, v_texCoord.y));
-  vec4 texel = texture2D(backgroundImage, uv);
-  fragColor = vec4(texel.rgb/texel.a, 1.0);
-
-#ifdef ENABLE_INLINE_GAMMACORRECTION
-  //fragColor.rgb = toGamma(fragColor.rgb * exposure);
-
-  // Assuming a simple RGB image in gamma space for now.
-  // fragColor.rgb = fragColor.rgb * exposure;
-#endif
-
-#ifndef ENABLE_ES3
-  gl_FragColor = fragColor;
-#endif
-}
-`
-    )
-    this.finalize()
-  }
-}
-
-export {
-  EnvMapShader,
-  BackgroundImageShader,
-  OctahedralEnvMapShader,
-  DrawCubeMapShader,
-  LatLongEnvMapShader,
-  SterioLatLongEnvMapShader,
-  DualFishEyeEnvMapShader,
-  DualFishEyeToLatLongBackgroundShader,
-}
+export { EnvMapShader }

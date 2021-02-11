@@ -105,7 +105,7 @@ class GLProbe extends EventEmitter {
     covolverShaderBinding.bind(renderstate)
     const unifs = renderstate.unifs
 
-    srcGLTex.bindToUniform(renderstate, unifs.envMap)
+    srcGLTex.bindToUniform(renderstate, unifs.octMap)
 
     const maxMipLevels = 5
     for (let mip = 0; mip < maxMipLevels; ++mip) {
@@ -140,37 +140,6 @@ class GLProbe extends EventEmitter {
 
     this.__convolved = true
     convolverShader.destroy()
-  }
-
-  /**
-   * The bindProbeToUniform method.
-   * @param {object} renderstate - The object tracking the current state of the renderer
-   * @param {any} unif - The unif value.
-   */
-  bindProbeToUniform(renderstate, unif) {
-    const gl = this.__gl
-
-    const unit = renderstate.boundTextures++
-    const texId = this.__gl.TEXTURE0 + unit
-    gl.activeTexture(texId)
-    gl.bindTexture(gl.TEXTURE_CUBE_MAP, this.glcubetex)
-    gl.uniform1i(unif.location, unit)
-
-    const { brdfLUTTexture, shCoefficients } = renderstate.unifs
-    if (brdfLUTTexture) {
-      const unit = renderstate.boundTextures++
-      gl.activeTexture(this.__gl.TEXTURE0 + unit)
-      gl.bindTexture(gl.TEXTURE_2D, this.brdfLUTTexture)
-      gl.uniform1i(brdfLUTTexture, unit)
-    }
-    if (shCoefficients) {
-      // TODO: setup a Uniform buffer object.
-      // Can send all unifs in one go.
-      gl.uniform3fv(shCoefficients, this.shCoefficients)
-      // for (let i = 0; i < 9; i++) {
-      //   gl.uniform3fv(shCoefficients, this.shCoefficients)
-      // }
-    }
   }
 
   /**
