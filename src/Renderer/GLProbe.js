@@ -1,12 +1,9 @@
 import { EventEmitter } from '../Utilities/index'
-import { hammersley } from './hammersley.js'
-import { GLTexture2D } from './GLTexture2D.js'
-import { GLImageAtlas } from './GLImageAtlas.js'
 import { PreComputeBRDFShader } from './Shaders/PreComputeBRDFShader.js'
-import { ConvolverShader } from './Shaders/ConvolverShader.js'
-import { GLFbo } from './GLFbo.js'
-import { ImagePyramid } from './ImagePyramid.js'
+import { ConvolveIrradianceShader } from './Shaders/ConvolveIrradianceShader.js'
+import { ConvolveSpecularShader } from './Shaders/ConvolveSpecularShader.js'
 import { generateShaderGeomBinding } from './Drawing/GeomShaderBinding.js'
+import { EnvMapMapping } from '../SceneTree/Images/EnvMap.js'
 
 /** Class representing a GL probe.
  * @private
@@ -37,6 +34,8 @@ class GLProbe extends EventEmitter {
   convolveProbe(srcGLTex) {
     const gl = this.__gl
 
+    const renderstate = { shaderopts: { directives: ['#define ENABLE_ES3', '#define ENABLE_FLOAT_TEXTURES'] } }
+
     this.brdfLUTTexture = gl.createTexture()
 
     // pre-allocate enough memory for the LUT texture.
@@ -48,7 +47,7 @@ class GLProbe extends EventEmitter {
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR)
 
     const brdfShader = new PreComputeBRDFShader(gl)
-    const brdfShaderComp = brdfShader.compileForTarget('GLProbe', gl.shaderopts)
+    const brdfShaderComp = brdfShader.compileForTarget('GLProbe', renderstate.shaderopts)
     const brdfShaderBinding = generateShaderGeomBinding(
       gl,
       brdfShaderComp.attrs,
@@ -56,11 +55,10 @@ class GLProbe extends EventEmitter {
       gl.__quadIndexBuffer
     )
 
-    const fboId = gl.createFramebuffer()
-    gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, fboId)
+    const brdfFboId = gl.createFramebuffer()
+    gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, brdfFboId)
     gl.framebufferTexture2D(gl.DRAW_FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.brdfLUTTexture, 0)
 
-    const renderstate = {}
     brdfShader.bind(renderstate)
     brdfShaderBinding.bind(renderstate)
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
@@ -68,78 +66,180 @@ class GLProbe extends EventEmitter {
     gl.drawQuad()
 
     gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, null)
-    gl.deleteFramebuffer(fboId)
+    gl.deleteFramebuffer(brdfFboId)
 
     brdfShader.unbind(renderstate)
     brdfShader.destroy()
 
-    // ////////////////////////////////////////////
-    //
-
-    this.glcubetex = gl.createTexture()
-    gl.bindTexture(gl.TEXTURE_CUBE_MAP, this.glcubetex)
-
-    gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MAG_FILTER, gl.LINEAR)
-    gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR)
-    gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE)
-    gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE)
-    gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_R, gl.CLAMP_TO_EDGE)
-
-    // Resize all the faces first.
-    for (let i = 0; i < 6; i++) {
-      gl.texImage2D(gl.TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, gl.RGBA32F, 128, 128, 0, gl.RGBA, gl.FLOAT, null)
+    // Tell the convolve shader that the input is a cubmap, instead of octahedral.
+    if (srcGLTex.getTexture().mapping == EnvMapMapping.CUBE) {
+      renderstate.shaderopts.directives.push('#define ENVMAP_CUBE')
     }
-    gl.generateMipmap(gl.TEXTURE_CUBE_MAP)
-    // gl.enable(gl.TEXTURE_CUBE_MAP_SEAMLESS) // not supported in webgl
 
-    const convolverShader = new ConvolverShader(gl)
-    const covolverShaderComp = convolverShader.compileForTarget('GLProbe', gl.shaderopts)
-    const covolverShaderBinding = generateShaderGeomBinding(
-      gl,
-      covolverShaderComp.attrs,
-      gl.__quadattrbuffers,
-      gl.__quadIndexBuffer
-    )
+    // ////////////////////////////////////////////
+    // ConvolveIrradianceShader Shader
 
-    convolverShader.bind(renderstate, 'GLProbe')
-    covolverShaderBinding.bind(renderstate)
-    const unifs = renderstate.unifs
+    {
+      const size = 31
+      const convolveIrradianceShader = new ConvolveIrradianceShader(gl)
+      const convolveIrradianceShaderComp = convolveIrradianceShader.compileForTarget('GLProbe', renderstate.shaderopts)
+      const convolveIrradianceShaderBinding = generateShaderGeomBinding(
+        gl,
+        convolveIrradianceShaderComp.attrs,
+        gl.__quadattrbuffers,
+        gl.__quadIndexBuffer
+      )
 
-    srcGLTex.bindToUniform(renderstate, unifs.envMap)
+      convolveIrradianceShader.bind(renderstate, 'GLProbe')
+      convolveIrradianceShaderBinding.bind(renderstate)
+      const unifs = renderstate.unifs
 
-    const maxMipLevels = 5
-    for (let mip = 0; mip < maxMipLevels; ++mip) {
-      // resize framebuffer according to mip-level size.
-      const mipWidth = 128 * Math.pow(0.5, mip)
-      const mipHeight = 128 * Math.pow(0.5, mip)
+      srcGLTex.bindToUniform(renderstate, unifs.envMap)
 
-      // Attach one face of cube map
-      const fboId = gl.createFramebuffer()
-      gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, fboId)
-      gl.viewport(0, 0, mipWidth, mipHeight) // Match the viewport to the texture size
+      // ////////////////////////////////////////////
+      // Irradiance Cube
+      this.irradianceCubeTex = gl.createTexture()
+      gl.bindTexture(gl.TEXTURE_CUBE_MAP, this.irradianceCubeTex)
 
-      const roughness = mip / (maxMipLevels - 1)
-      gl.uniform1f(unifs.roughness.location, roughness)
+      gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MAG_FILTER, gl.LINEAR)
+      gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR)
+      gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE)
+      gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE)
+      gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_R, gl.CLAMP_TO_EDGE)
+
+      // Resize all the faces first.
+      for (let i = 0; i < 6; i++) {
+        gl.texImage2D(gl.TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, gl.RGBA32F, size, size, 0, gl.RGBA, gl.FLOAT, null)
+      }
+      gl.generateMipmap(gl.TEXTURE_CUBE_MAP)
+
+      // // Attach one face of cube map
+      const irradianceFboId = gl.createFramebuffer()
+      gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, irradianceFboId)
+
       for (let i = 0; i < 6; ++i) {
         gl.uniform1i(unifs.faceId.location, i)
         gl.framebufferTexture2D(
-          gl.FRAMEBUFFER,
+          gl.DRAW_FRAMEBUFFER,
           gl.COLOR_ATTACHMENT0,
           gl.TEXTURE_CUBE_MAP_POSITIVE_X + i,
-          this.glcubetex,
-          mip
+          this.irradianceCubeTex,
+          0
         )
-
+        gl.viewport(0, 0, size, size) // Match the viewport to the texture size
+        gl.clearColor(1, 0, 0, 1)
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
         gl.drawQuad()
       }
-
-      gl.deleteFramebuffer(fboId)
+      gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, null)
+      gl.deleteFramebuffer(irradianceFboId)
     }
-    gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, null)
+
+    // ////////////////////////////////////////////
+    // Specular Cube Pyramid
+    {
+      const convolverShader = new ConvolveSpecularShader(gl)
+      const covolverShaderComp = convolverShader.compileForTarget('GLProbe', renderstate.shaderopts)
+      const covolverShaderBinding = generateShaderGeomBinding(
+        gl,
+        covolverShaderComp.attrs,
+        gl.__quadattrbuffers,
+        gl.__quadIndexBuffer
+      )
+
+      convolverShader.bind(renderstate, 'GLProbe')
+      covolverShaderBinding.bind(renderstate)
+      const unifs = renderstate.unifs
+
+      srcGLTex.bindToUniform(renderstate, unifs.envMap)
+
+      this.specularCubetex = gl.createTexture()
+      gl.bindTexture(gl.TEXTURE_CUBE_MAP, this.specularCubetex)
+
+      gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MAG_FILTER, gl.LINEAR)
+      gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR)
+      gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE)
+      gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE)
+      gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_R, gl.CLAMP_TO_EDGE)
+
+      // Resize all the faces first.
+      for (let i = 0; i < 6; i++) {
+        gl.texImage2D(gl.TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, gl.RGBA32F, 128, 128, 0, gl.RGBA, gl.FLOAT, null)
+      }
+      gl.generateMipmap(gl.TEXTURE_CUBE_MAP)
+      // gl.enable(gl.TEXTURE_CUBE_MAP_SEAMLESS) // not supported in webgl
+
+      const maxMipLevels = 5
+      for (let mip = 0; mip < maxMipLevels; ++mip) {
+        // resize framebuffer according to mip-level size.
+        const mipWidth = 128 * Math.pow(0.5, mip)
+        const mipHeight = 128 * Math.pow(0.5, mip)
+
+        // Attach one face of cube map
+        const fboId = gl.createFramebuffer()
+        gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, fboId)
+        gl.viewport(0, 0, mipWidth, mipHeight) // Match the viewport to the texture size
+
+        const roughness = mip / (maxMipLevels - 1)
+        gl.uniform1f(unifs.roughness.location, roughness)
+        for (let i = 0; i < 6; ++i) {
+          gl.uniform1i(unifs.faceId.location, i)
+          gl.framebufferTexture2D(
+            gl.DRAW_FRAMEBUFFER,
+            gl.COLOR_ATTACHMENT0,
+            gl.TEXTURE_CUBE_MAP_POSITIVE_X + i,
+            this.specularCubetex,
+            mip
+          )
+          gl.drawQuad()
+        }
+        gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, null)
+        gl.deleteFramebuffer(fboId)
+      }
+      convolverShader.destroy()
+    }
 
     this.__convolved = true
-    convolverShader.destroy()
+  }
+
+  /**
+   * The bindProbeToUniform method.
+   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {any} unif - The unif value.
+   */
+  bindProbeToUniform(renderstate) {
+    const gl = this.__gl
+
+    const { cubeMap, cubeMapPyramid, brdfLUTTexture, shCoeffs, envMap } = renderstate.unifs
+    if (cubeMap) {
+      const unit = renderstate.boundTextures++
+      const texId = this.__gl.TEXTURE0 + unit
+      gl.activeTexture(texId)
+      // gl.bindTexture(gl.TEXTURE_CUBE_MAP, this.__srcGLTex.glTex) // If the source is a cube map
+      gl.bindTexture(gl.TEXTURE_CUBE_MAP, this.irradianceCubeTex)
+      gl.uniform1i(cubeMap.location, unit)
+    }
+    if (cubeMapPyramid) {
+      const unit = renderstate.boundTextures++
+      const texId = this.__gl.TEXTURE0 + unit
+      gl.activeTexture(texId)
+      gl.bindTexture(gl.TEXTURE_CUBE_MAP, this.specularCubetex)
+      gl.uniform1i(cubeMapPyramid.location, unit)
+    }
+    if (brdfLUTTexture) {
+      const unit = renderstate.boundTextures++
+      gl.activeTexture(this.__gl.TEXTURE0 + unit)
+      gl.bindTexture(gl.TEXTURE_2D, this.brdfLUTTexture)
+      gl.uniform1i(brdfLUTTexture, unit)
+    }
+    if (shCoeffs) {
+      // TODO: setup a Uniform buffer object.
+      gl.uniform3fv(shCoeffs.location, this.__envMap.luminanceData.shCoeffs)
+    }
+
+    if (envMap) {
+      this.__srcGLTex.bindToUniform(renderstate, envMap)
+    }
   }
 
   /**

@@ -25,12 +25,16 @@ vec2 dirToSphOctUv(vec3 normal){
     if(normal.z < 0.0){
         uv = sNorm.xy - abs(uv.ts)*sNorm.xy;
     }
-    return uv*0.5+0.5;
+    vec2 res = uv*0.5+0.5;
+    // Flip-v
+    return vec2(res.x, 1.0 - res.y);
 }
 
 
 vec3 sphOctUvToDir(vec2 uv){
     uv = uv*2.0-1.0;
+    // Flip-v
+    uv.y = -uv.y;
     vec2 suv = sectorize(uv);
     float sabsuv =  sum(abs(uv));
     float pitch = sabsuv*HalfPI;

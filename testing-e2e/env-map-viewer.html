@@ -85,11 +85,11 @@
       const envMap = new EnvMap()
       // envMap.getParameter('FilePath').setValue('data/AutomnRoad.zenv')
       // envMap.getParameter('FilePath').setValue('data/Bright-Roof-Multi.zenv')
-      envMap.getParameter('FilePath').setValue('data/HDR_041_Path_Ref-cube.zenv')
-      envMap.mapping = EnvMapMapping.CUBE
-      // envMap.getParameter('FilePath').setValue('data/HDR_041_Path_Ref-webp.zenv')
+      // envMap.getParameter('FilePath').setValue('data/HDR_041_Path_Ref-cube.zenv')
+      // envMap.mapping = EnvMapMapping.CUBE
+      envMap.getParameter('FilePath').setValue('data/HDR_041_Path_Ref-webp.zenv')
       // envMap.getParameter('FilePath').setValue('data/HDR_041_Path_Ref.vlenv')
-      // envMap.mapping = EnvMapMapping.OCTAHEDRAL
+      envMap.mapping = EnvMapMapping.OCTAHEDRAL
       // envMap.getParameter('FilePath').setValue('data/HDR_029_Sky_Cloudy_Ref.vlenv')
       scene.setEnvMap(envMap)
       scene.getSettings().getParameter('Display EnvMap').setValue(true)

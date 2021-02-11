@@ -175,45 +175,6 @@ class GLEnvMap extends GLProbe {
   }
 
   /**
-   * The bindProbeToUniform method.
-   * @param {object} renderstate - The object tracking the current state of the renderer
-   * @param {any} unif - The unif value.
-   */
-  bindProbeToUniform(renderstate) {
-    const gl = this.__gl
-
-    const { cubeMap, cubeMapPyramid, brdfLUTTexture, shCoeffs, envMap } = renderstate.unifs
-    if (cubeMap) {
-      const unit = renderstate.boundTextures++
-      const texId = this.__gl.TEXTURE0 + unit
-      gl.activeTexture(texId)
-      gl.bindTexture(gl.TEXTURE_CUBE_MAP, this.__srcGLTex.glTex)
-      gl.uniform1i(cubeMap.location, unit)
-    }
-    if (cubeMapPyramid) {
-      const unit = renderstate.boundTextures++
-      const texId = this.__gl.TEXTURE0 + unit
-      gl.activeTexture(texId)
-      gl.bindTexture(gl.TEXTURE_CUBE_MAP, this.glcubetex)
-      gl.uniform1i(cubeMapPyramid.location, unit)
-    }
-    if (brdfLUTTexture) {
-      const unit = renderstate.boundTextures++
-      gl.activeTexture(this.__gl.TEXTURE0 + unit)
-      gl.bindTexture(gl.TEXTURE_2D, this.brdfLUTTexture)
-      gl.uniform1i(brdfLUTTexture, unit)
-    }
-    if (shCoeffs) {
-      // TODO: setup a Uniform buffer object.
-      gl.uniform3fv(shCoeffs.location, this.__envMap.luminanceData.shCoeffs)
-    }
-
-    if (envMap) {
-      this.__srcGLTex.bindToUniform(renderstate, unifs.envMap)
-    }
-  }
-
-  /**
    * The destroy is called by the system to cause explicit resources cleanup.
    * Users should never need to call this method directly.
    */

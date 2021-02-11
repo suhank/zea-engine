@@ -30,6 +30,15 @@ class GLHDRImage extends GLTexture2D {
   }
 
   /**
+   * Returns the `BaseImage` of the GL Texture
+   *
+   * @return {BaseImage} - The return value.
+   */
+  getTexture() {
+    return this.__hdrImage
+  }
+
+  /**
    * The __unpackHDRImage method.
    * @param {any} hdrImageParams - The HDR image parameters.
    * @private

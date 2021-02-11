@@ -70,14 +70,14 @@ varying vec2 v_texCoord;
 #define ENABLE_INLINE_GAMMACORRECTION
 
 #define ENV_MAP_LATLONG 0
-#define ENV_MAP_STERIOLATLONG 1
-#define ENV_MAP_OCT 2
-#define ENV_MAP_CUBE 3
-#define ENV_MAP_DUALFISHEYE 4
-#define ENV_MAP_CUBEPYRAMID 5
+#define ENV_MAP_OCT 1
+#define ENV_MAP_CUBE 2
+#define ENV_MAP_CUBE_PYRAMID 3
+#define ENV_MAP_STEREO_LATLONG 4
+#define ENV_MAP_DUALFISHEYE 5
 #define ENV_MAP_SH 6
 
-#define ENV_MAPTYPE ENV_MAP_CUBEPYRAMID
+#define ENV_MAPTYPE ENV_MAP_CUBE
 
 #if (ENV_MAPTYPE == ENV_MAP_LATLONG)  
 
@@ -90,25 +90,6 @@ vec4 sampleEnvMap(vec3 dir) {
   vec4 texel = texture2D(backgroundImage, uv) * exposure;
   return vec4(texel.rgb/texel.a, 1.0);
 }
-
-#elif (ENV_MAPTYPE == ENV_MAP_STERIOLATLONG)  
-
-<%include file="pragmatic-pbr/envmap-equirect.glsl"/>
-uniform int eye;// L = 0, R = 1;
-uniform sampler2D backgroundImage;
-
-vec4 sampleEnvMap(vec3 dir) {
-  vec2 uv = latLongUVsFromDir(normalize(v_worldDir));
-  uv.y *= 0.5;
-  if(eye == 1){
-    uv.y += 0.5;
-  }
-  vec4 texel = texture2D(backgroundImage, uv) * exposure;
-  fragColor = vec4(texel.rgb/texel.a, 1.0);
-}
-
-
-uniform sampler2D backgroundImage;
 
 #elif (ENV_MAPTYPE == ENV_MAP_OCT)  
 
@@ -132,8 +113,32 @@ vec4 sampleEnvMap(vec3 dir) {
 uniform samplerCube cubeMap;
 
 vec4 sampleEnvMap(vec3 dir) {
-  return textureLod(cubeMap, dir, 0.0);// * exposure;
+  return texture(cubeMap, dir, 0.0);// * exposure;
   // return textureLod(cubeMap, dir, exposure);
+}
+
+#elif (ENV_MAPTYPE == ENV_MAP_CUBE_PYRAMID)
+
+uniform samplerCube cubeMapPyramid;
+
+vec4 sampleEnvMap(vec3 dir) {
+  return textureLod(cubeMapPyramid, dir, exposure);
+}
+
+#elif (ENV_MAPTYPE == ENV_MAP_STEREO_LATLONG)  
+
+<%include file="pragmatic-pbr/envmap-equirect.glsl"/>
+uniform int eye;// L = 0, R = 1;
+uniform sampler2D backgroundImage;
+
+vec4 sampleEnvMap(vec3 dir) {
+  vec2 uv = latLongUVsFromDir(normalize(v_worldDir));
+  uv.y *= 0.5;
+  if(eye == 1){
+    uv.y += 0.5;
+  }
+  vec4 texel = texture2D(backgroundImage, uv) * exposure;
+  fragColor = vec4(texel.rgb/texel.a, 1.0);
 }
 
 #elif (ENV_MAPTYPE == ENV_MAP_DUALFISHEYE)
@@ -143,14 +148,6 @@ vec4 sampleEnvMap(vec3 dir) {
 vec4 sampleEnvMap(vec3 dir) {
   vec2 uv = dualfisheyeUVsFromDir(dir);
   return texture2D(backgroundImage, uv) * exposure;
-}
-
-#elif (ENV_MAPTYPE == ENV_MAP_CUBEPYRAMID)
-
-uniform samplerCube cubeMapPyramid;
-
-vec4 sampleEnvMap(vec3 dir) {
-  return textureLod(cubeMapPyramid, dir, exposure);
 }
 
 #elif (ENV_MAPTYPE == ENV_MAP_SH)
