@@ -97,7 +97,7 @@ class GLProbe extends EventEmitter {
 
       // ////////////////////////////////////////////
       // Irradiance Cube
-      const size = 31
+      const size = 32
       this.irradianceCubeTex = gl.createTexture()
       gl.bindTexture(gl.TEXTURE_CUBE_MAP, this.irradianceCubeTex)
 
@@ -111,7 +111,6 @@ class GLProbe extends EventEmitter {
       for (let i = 0; i < 6; i++) {
         gl.texImage2D(gl.TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, gl.RGBA32F, size, size, 0, gl.RGBA, gl.FLOAT, null)
       }
-      gl.generateMipmap(gl.TEXTURE_CUBE_MAP)
 
       // Attach one face of cube map
       const irradianceFboId = gl.createFramebuffer()
@@ -133,6 +132,10 @@ class GLProbe extends EventEmitter {
       }
       gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, null)
       gl.deleteFramebuffer(irradianceFboId)
+
+      // Note: without the mipmaps, te cube sampling seems a big broken.
+      // No colors.
+      gl.generateMipmap(gl.TEXTURE_CUBE_MAP)
     }
 
     // ////////////////////////////////////////////

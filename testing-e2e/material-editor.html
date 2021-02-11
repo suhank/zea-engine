@@ -125,21 +125,16 @@
       material.getParameter('Reflectance').setValue(0.01)
       scene.getRoot().addChild(new GeomItem('sphere', new Sphere(0.4, 40), material))
 
-      const colorControl = document.getElementById('colorControl')
-      colorControl.addEventListener('input', (event) => {
+      document.getElementById('colorControl').addEventListener('input', (event) => {
         material.getParameter('BaseColor').setValue(new Color(event.target.value))
       })
-
-      const roughnessControl = document.getElementById('roughnessControl')
-      roughnessControl.addEventListener('input', (event) => {
+      document.getElementById('roughnessControl').addEventListener('input', (event) => {
         material.getParameter('Roughness').setValue(event.target.value / 100)
       })
-      const metallicControl = document.getElementById('metallicControl')
-      metallicControl.addEventListener('input', (event) => {
+      document.getElementById('metallicControl').addEventListener('input', (event) => {
         material.getParameter('Metallic').setValue(event.target.value / 100)
       })
-      const glossinessControl = document.getElementById('glossinessControl')
-      glossinessControl.addEventListener('input', (event) => {
+      document.getElementById('glossinessControl').addEventListener('input', (event) => {
         material.getParameter('Reflectance').setValue(event.target.value / 100)
       })
 

@@ -85,6 +85,7 @@ struct MaterialParams {
     float metallic;
     float roughness;
     float reflectance;
+    // vec3 specularTint;
 };
 
 uniform int envMapFlags;
