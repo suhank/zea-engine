@@ -7,7 +7,7 @@ shaderLibrary.setShaderModule(
   `
 
 
-<%include file="pragmatic-pbr/envmap-octahedral.glsl"/>
+<%include file="envmap-octahedral.glsl"/>
 <%include file="utils/imagePyramid.glsl"/>
 
 // uniform ImageAtlas envMap;

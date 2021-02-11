@@ -60,7 +60,7 @@ vec4 sampleEnvMap(vec3 dir) {
 
 uniform sampler2D   envMap;
 
-<%include file="pragmatic-pbr/envmap-octahedral.glsl"/>
+<%include file="envmap-octahedral.glsl"/>
 
 vec4 sampleEnvMap(vec3 dir) {
   vec2 uv = dirToSphOctUv(dir);

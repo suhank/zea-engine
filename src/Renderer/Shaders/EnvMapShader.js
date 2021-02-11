@@ -69,10 +69,17 @@ varying vec2 v_texCoord;
 
 #define ENABLE_INLINE_GAMMACORRECTION
 
-#define ENV_MAPTYPE 5
+#define ENV_MAP_LATLONG 0
+#define ENV_MAP_STERIOLATLONG 1
+#define ENV_MAP_OCT 2
+#define ENV_MAP_CUBE 3
+#define ENV_MAP_DUALFISHEYE 4
+#define ENV_MAP_CUBEPYRAMID 5
+#define ENV_MAP_SH 6
 
-// Lat Long Env Map
-#if (ENV_MAPTYPE == 0)  
+#define ENV_MAPTYPE ENV_MAP_CUBEPYRAMID
+
+#if (ENV_MAPTYPE == ENV_MAP_LATLONG)  
 
 <%include file="pragmatic-pbr/envmap-equirect.glsl"/>
 
@@ -84,8 +91,7 @@ vec4 sampleEnvMap(vec3 dir) {
   return vec4(texel.rgb/texel.a, 1.0);
 }
 
-// Sterio Lat Long Env Map
-#elif (ENV_MAPTYPE == 1)  
+#elif (ENV_MAPTYPE == ENV_MAP_STERIOLATLONG)  
 
 <%include file="pragmatic-pbr/envmap-equirect.glsl"/>
 uniform int eye;// L = 0, R = 1;
@@ -104,10 +110,9 @@ vec4 sampleEnvMap(vec3 dir) {
 
 uniform sampler2D backgroundImage;
 
-// Octahedral Env Map
-#elif (ENV_MAPTYPE == 2)  
+#elif (ENV_MAPTYPE == ENV_MAP_OCT)  
 
-<%include file="pragmatic-pbr/envmap-octahedral.glsl"/>
+<%include file="envmap-octahedral.glsl"/>
 
 uniform sampler2D   envMap;
 
@@ -122,18 +127,16 @@ vec4 sampleEnvMap(vec3 dir) {
   }
 }
 
-// Cube Env Map
-#elif (ENV_MAPTYPE == 3)
+#elif (ENV_MAPTYPE == ENV_MAP_CUBE)
 
 uniform samplerCube cubeMap;
 
 vec4 sampleEnvMap(vec3 dir) {
-  return textureLod(cubeMap, dir, 0.0) * exposure;
+  return textureLod(cubeMap, dir, 0.0);// * exposure;
   // return textureLod(cubeMap, dir, exposure);
 }
 
-// Dual Fish Eye Env Map
-#elif (ENV_MAPTYPE == 4)
+#elif (ENV_MAPTYPE == ENV_MAP_DUALFISHEYE)
 
 <%include file="pragmatic-pbr/envmap-dualfisheye.glsl"/>
 
@@ -142,8 +145,7 @@ vec4 sampleEnvMap(vec3 dir) {
   return texture2D(backgroundImage, uv) * exposure;
 }
 
-// Cube Env Map Pyramid
-#elif (ENV_MAPTYPE == 5)
+#elif (ENV_MAPTYPE == ENV_MAP_CUBEPYRAMID)
 
 uniform samplerCube cubeMapPyramid;
 
@@ -151,8 +153,7 @@ vec4 sampleEnvMap(vec3 dir) {
   return textureLod(cubeMapPyramid, dir, exposure);
 }
 
-// Spherical Harmonics
-#elif (ENV_MAPTYPE == 6)
+#elif (ENV_MAPTYPE == ENV_MAP_SH)
 
 <%include file="SHCoeffs.glsl"/>
 

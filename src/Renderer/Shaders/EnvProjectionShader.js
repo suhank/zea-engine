@@ -71,7 +71,7 @@ precision highp float;
 
 <%include file="math/constants.glsl"/>
 <%include file="GLSLUtils.glsl"/>
-<%include file="pragmatic-pbr/envmap-octahedral.glsl"/>
+<%include file="envmap-octahedral.glsl"/>
 <%include file="stack-gl/gamma.glsl"/>
 <%include file="materialparams.glsl"/>
 
