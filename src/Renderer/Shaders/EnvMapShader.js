@@ -72,6 +72,7 @@ varying vec2 v_texCoord;
 #define ENV_MAP_LATLONG 0
 #define ENV_MAP_OCT 1
 #define ENV_MAP_CUBE 2
+#define ENV_MAP_irradianceMap 8
 #define ENV_MAP_prefilterMap 3
 #define ENV_MAP_STEREO_LATLONG 4
 #define ENV_MAP_DUALFISHEYE 5
@@ -116,6 +117,14 @@ uniform samplerCube cubeMap;
 vec4 sampleEnvMap(vec3 dir) {
   return texture(cubeMap, dir, 0.0);// * exposure;
   // return textureLod(cubeMap, dir, exposure);
+}
+
+#elif (ENV_MAPTYPE == ENV_MAP_irradianceMap)
+
+uniform samplerCube irradianceMap;
+
+vec4 sampleEnvMap(vec3 dir) {
+  return textureLod(irradianceMap, dir, exposure);
 }
 
 #elif (ENV_MAPTYPE == ENV_MAP_prefilterMap)

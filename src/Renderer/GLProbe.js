@@ -97,7 +97,7 @@ class GLProbe extends EventEmitter {
 
       // ////////////////////////////////////////////
       // Irradiance Cube
-      const size = 32
+      const size = 64
       this.irradianceCubeTex = gl.createTexture()
       gl.bindTexture(gl.TEXTURE_CUBE_MAP, this.irradianceCubeTex)
 
@@ -166,8 +166,9 @@ class GLProbe extends EventEmitter {
       gl.texParameteri(gl.TEXTURE_CUBE_MAP, gl.TEXTURE_WRAP_R, gl.CLAMP_TO_EDGE)
 
       // Resize all the faces first.
+      const size = 256
       for (let i = 0; i < 6; i++) {
-        gl.texImage2D(gl.TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, gl.RGBA32F, 128, 128, 0, gl.RGBA, gl.FLOAT, null)
+        gl.texImage2D(gl.TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, gl.RGBA32F, size, size, 0, gl.RGBA, gl.FLOAT, null)
       }
       gl.generateMipmap(gl.TEXTURE_CUBE_MAP)
       // gl.enable(gl.TEXTURE_CUBE_MAP_SEAMLESS) // not supported in webgl
@@ -175,8 +176,8 @@ class GLProbe extends EventEmitter {
       const maxMipLevels = 5
       for (let mip = 0; mip < maxMipLevels; ++mip) {
         // resize framebuffer according to mip-level size.
-        const mipWidth = 128 * Math.pow(0.5, mip)
-        const mipHeight = 128 * Math.pow(0.5, mip)
+        const mipWidth = size * Math.pow(0.5, mip)
+        const mipHeight = size * Math.pow(0.5, mip)
 
         // Attach one face of cube map
         const fboId = gl.createFramebuffer()
