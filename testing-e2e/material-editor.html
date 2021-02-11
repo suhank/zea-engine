@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>env-map-viewer - Zea Engine</title>
+
+    <link href="zea-logo.png" rel="shortcut icon" />
+
+    <link rel="stylesheet" href="styles/tachyons.min.css" />
+    <link rel="stylesheet" href="styles/main.css" />
+
+    <script src="../dist/index.umd.js"></script>
+    <script src="../dist/plugins.umd.js"></script>
+    <style>
+      .slidecontainer {
+        position: 'relative';
+        /* bottom: 0; */
+        width: 100%; /* Width of the outside container */
+      }
+
+      /* The slider itself */
+      .slider {
+        position: absolute;
+        -webkit-appearance: none;
+        width: 100%;
+        height: 15px;
+        right: 0;
+        border-radius: 5px;
+        background: #d3d3d3;
+        outline: none;
+        opacity: 0.7;
+        -webkit-transition: 0.2s;
+        transition: opacity 0.2s;
+      }
+      #exposureControl {
+        bottom: 140px;
+      }
+      #colorControl {
+        position: absolute;
+        bottom: 110px;
+      }
+      #roughnessControl {
+        bottom: 80px;
+      }
+      #metallicControl {
+        bottom: 50px;
+      }
+      #glossinessControl {
+        bottom: 20px;
+      }
+
+      /* Mouse-over effects */
+      .slider:hover {
+        opacity: 1; /* Fully shown on mouse-over */
+      }
+
+      .slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+        background: #4caf50;
+        cursor: pointer;
+      }
+
+      .slider::-moz-range-thumb {
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+        background: #4caf50;
+        cursor: pointer;
+      }
+    </style>
+
+    <script type="module">
+      const {
+        GLRenderer,
+        Scene,
+        Vec3,
+        Color,
+        Xfo,
+        Sphere,
+        GeomItem,
+        Material,
+        EnvMap,
+        EnvMapMapping,
+      } = window.zeaEngine
+
+      const canvas = document.querySelector('#renderer')
+
+      const scene = new Scene()
+      const renderer = new GLRenderer(canvas, { hideSplash: true, antialias: false })
+      renderer.setScene(scene)
+
+      scene.setupGrid(10.0, 10)
+
+      const envMap = new EnvMap()
+      // envMap.getParameter('FilePath').setValue('data/AutomnRoad.zenv')
+      // envMap.getParameter('FilePath').setValue('data/Bright-Roof-Multi.zenv')
+      // envMap.getParameter('FilePath').setValue('data/HDR_041_Path_Ref-cube.zenv')
+      // envMap.mapping = EnvMapMapping.CUBE
+      envMap.getParameter('FilePath').setValue('data/HDR_041_Path_Ref-webp.zenv')
+      // envMap.getParameter('FilePath').setValue('data/HDR_041_Path_Ref.vlenv')
+      envMap.mapping = EnvMapMapping.OCTAHEDRAL
+      // envMap.getParameter('FilePath').setValue('data/HDR_029_Sky_Cloudy_Ref.vlenv')
+      scene.setEnvMap(envMap)
+      scene.getSettings().getParameter('Display EnvMap').setValue(true)
+
+      // Update the current slider value (each time you drag the slider handle)
+      var slider = document.getElementById('exposureControl')
+      slider.oninput = function () {
+        renderer.exposure = slider.value / 100
+        console.log('renderer.exposure:', renderer.exposure)
+      }
+      renderer.getViewport().getCamera().setLensFocalLength('20mm')
+      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 0, 0), new Vec3(0, 0, 0))
+
+      const material = new Material('surfaces', 'StandardSurfaceShader')
+      material.getParameter('BaseColor').setValue(new Color(0.6, 0.0, 0.0))
+      material.getParameter('Roughness').setValue(0.5)
+      material.getParameter('Metallic').setValue(0.05)
+      material.getParameter('Reflectance').setValue(0.01)
+      scene.getRoot().addChild(new GeomItem('sphere', new Sphere(0.4, 40), material))
+
+      const colorControl = document.getElementById('colorControl')
+      colorControl.addEventListener('input', (event) => {
+        material.getParameter('BaseColor').setValue(new Color(event.target.value))
+      })
+
+      const roughnessControl = document.getElementById('roughnessControl')
+      roughnessControl.addEventListener('input', (event) => {
+        material.getParameter('Roughness').setValue(event.target.value / 100)
+      })
+      const metallicControl = document.getElementById('metallicControl')
+      metallicControl.addEventListener('input', (event) => {
+        material.getParameter('Metallic').setValue(event.target.value / 100)
+      })
+      const glossinessControl = document.getElementById('glossinessControl')
+      glossinessControl.addEventListener('input', (event) => {
+        material.getParameter('Reflectance').setValue(event.target.value / 100)
+      })
+
+      envMap.on('loaded', () => {
+        renderer.once('redrawOccurred', () => {
+          window.postMessage('done-loading')
+        })
+        renderer.requestRedraw()
+      })
+
+      // {{{ Messages handler.
+      const handleMessage = (event) => {
+        const { data } = event
+
+        if (data === 'variant-01') {
+          renderer.suspendDrawing()
+          renderer.exposure = 0.2
+          slider.value = renderer.exposure * 100
+
+          renderer.once('redrawOccurred', () => {
+            window.postMessage(`done-${data}`)
+          })
+          renderer.resumeDrawing()
+        } else if (data === 'variant-02') {
+          renderer.suspendDrawing()
+          renderer.exposure = 1.8
+          slider.value = renderer.exposure * 100
+          renderer.once('redrawOccurred', () => {
+            window.postMessage(`done-${data}`)
+          })
+          renderer.resumeDrawing()
+        }
+      }
+
+      window.addEventListener('message', handleMessage, false)
+      // }}}
+    </script>
+  </head>
+  <body>
+    <canvas class="full-size" id="renderer"></canvas>
+    <div class="slidecontainer">
+      <input type="range" min="0" max="400" value="100" class="slider" id="exposureControl" />
+      <input type="color" id="colorControl" value="#ff0000" />
+      <input type="range" min="0" max="100" value="50" class="slider" id="roughnessControl" />
+
+      <input type="range" min="0" max="100" value="5" class="slider" id="metallicControl" />
+      <input type="range" min="0" max="100" value="1" class="slider" id="glossinessControl" />
+    </div>
+  </body>
+</html>
