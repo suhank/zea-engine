@@ -85,7 +85,10 @@
       //////////////////////////////
 
       const envMap = new EnvMap()
-      envMap.getParameter('FilePath').setValue('data/HDR_041_Path_Ref-webp.zenv')
+      // envMap.getParameter('FilePath').setValue('data/pisa-webp.zenv')
+      envMap.getParameter('FilePath').setValue('data/AutomnRoad-webp.zenv')
+      
+      // envMap.getParameter('FilePath').setValue('data/HDR_041_Path_Ref-webp.zenv')
       // envMap.getParameter('FilePath').setValue('data/HDR_041_Path_Ref.vlenv')
       envMap.mapping = EnvMapMapping.OCTAHEDRAL
       scene.setEnvMap(envMap)
@@ -96,20 +99,30 @@
         scene.getRoot().addChild(geomItem)
       }
       for (let i = 0; i < 10; i++) {
-        for (let j = 0; j < 10; j++) {
           const material = new Material('surfaces', 'StandardSurfaceShader')
           material.getParameter('BaseColor').setValue(new Color(0.6, 0.0, 0.0))
           material.getParameter('Roughness').setValue(i / 9)
-          // material.getParameter('Metallic').setValue(j < 5 ? 0.05 : 0.95)
-          material.getParameter('Metallic').setValue(j / 9)
-          material.getParameter('Reflectance').setValue(j < 5 ? 0.015 : 0.8)
+          material.getParameter('Metallic').setValue(0.05)
+          material.getParameter('Reflectance').setValue(0.015)
           addMeshShape(
-            'Sphere' + i + '-' + j,
+            'Dielectrics-Sphere' + i,
             new Sphere(1.4, 40),
-            new Vec3((i / 9 - 0.5) * 30, (j / 9 - 0.5) * 30, 1),
+            new Vec3((i / 9 - 0.5) * 30, -3, 1),
             material
           )
-        }
+      }
+        for (let i = 0; i < 10; i++) {
+          const material = new Material('surfaces', 'StandardSurfaceShader')
+          material.getParameter('BaseColor').setValue(new Color(0.6, 0.0, 0.0))
+          material.getParameter('Roughness').setValue(i / 9)
+          material.getParameter('Metallic').setValue(0.95)
+          material.getParameter('Reflectance').setValue(0.8)
+          addMeshShape(
+            'Metallic-Sphere' + i,
+            new Sphere(1.4, 40),
+            new Vec3((i / 9 - 0.5) * 30, 3, 1),
+            material
+          )
       }
 
       document.getElementById('exposureControl').addEventListener('input', (event) => {

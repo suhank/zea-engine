@@ -241,7 +241,7 @@ class ShaderLibrary {
           const name = parts[typeIndex + 1].slice(0, parts[typeIndex + 1].length - 1)
 
           if (name.includes('[')) {
-            console.log('uniform:', name, ':', typeName)
+            // Strip off the square brackets.
             result.uniforms[name.substring(0, name.indexOf('['))] = glslTypes[typeName]
           } else {
             result.uniforms[name] = glslTypes[typeName]

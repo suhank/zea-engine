@@ -107,12 +107,16 @@ vec3 pbrSurfaceRadiance(in MaterialParams materialParams, vec3 irradiance, vec3 
     vec3 N = normal;
     vec3 V = viewVector;
     vec3 R = reflect(-V, N);
+    float roughness=materialParams.roughness*materialParams.roughness;
+    vec3 diffuseColor = (1.0 - materialParams.metallic) * materialParams.baseColor;
 
-    // Note: Is this correct? F0 is a scalar input, but F0 is a vec3.. 
-    vec3 F0 = vec3(materialParams.reflectance);
+    // Note: The specular reflectance of metallic surfaces is chromatic
+    // https://google.github.io/filament/Filament.html#listing_fnormal
+    vec3 F0 = 0.16 * materialParams.reflectance * materialParams.reflectance * (1.0 - materialParams.metallic) + materialParams.baseColor * materialParams.metallic;
+
     float NdotV = dot(N, V);
 
-    vec3 F = fresnelSchlickRoughness(max(NdotV, 0.0), F0, materialParams.roughness);
+    vec3 F = fresnelSchlickRoughness(max(NdotV, 0.0), F0, roughness);
 
     vec3 kS = F;
     vec3 kD = 1.0 - kS;
@@ -121,11 +125,11 @@ vec3 pbrSurfaceRadiance(in MaterialParams materialParams, vec3 irradiance, vec3 
     
     // vec3 irradiance = texture(irradianceMap, N).rgb;
    // vec3 irradiance = shGetIrradianceAt(shCoefficients, N);
-    vec3 diffuse    = irradiance * materialParams.baseColor;
+    vec3 diffuse    = irradiance * diffuseColor;
     
     const float MAX_REFLECTION_LOD = 4.0;
-    vec3 prefilteredColor = textureLod(prefilterMap, R,  materialParams.roughness * MAX_REFLECTION_LOD).rgb;   
-    vec2 envBRDF  = texture(brdfLUT, vec2(max(NdotV, 0.0), materialParams.roughness)).rg;
+    vec3 prefilteredColor = textureLod(prefilterMap, R,  roughness * MAX_REFLECTION_LOD).rgb;   
+    vec2 envBRDF  = texture(brdfLUT, vec2(max(NdotV, 0.0), roughness)).rg;
     vec3 specular = prefilteredColor * (F * envBRDF.x + envBRDF.y);
     
     vec3 radiance = (kD * diffuse + specular) * ao;
