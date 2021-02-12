@@ -40,7 +40,7 @@ varying vec2 v_texCoord;
 
 <%include file="math/constants.glsl"/>
 <%include file="Hammersley.glsl"/>
-<%include file="GGX.glsl"/>
+<%include file="ImportanceSampleGGX.glsl"/>
 
 float GeometrySchlickGGX(float NdotV, float roughness)
 {
