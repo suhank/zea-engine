@@ -9,6 +9,10 @@ import './GLSL/drawItemTexture.js'
 import './GLSL/modelMatrix.js'
 
 class FatPointsShader extends GLShader {
+  /**
+   * Create a GL shader.
+   * @param {WebGLRenderingContext} gl - The webgl rendering context.
+   */
   constructor(gl) {
     super(gl)
     this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader(
@@ -150,6 +154,10 @@ void main(void) {
 }
 
 class FatPointsGeomDataShader extends FatPointsShader {
+  /**
+   * Create a GL shader.
+   * @param {WebGLRenderingContext} gl - The webgl rendering context.
+   */
   constructor(gl) {
     super(gl)
 
@@ -215,6 +223,10 @@ void main(void) {
 }
 
 class FatPointsSelectedShader extends FatPointsShader {
+  /**
+   * Create a GL shader.
+   * @param {WebGLRenderingContext} gl - The webgl rendering context.
+   */
   constructor(gl) {
     super(gl)
 

@@ -10,6 +10,10 @@ import './GLSL/envmap-dualfisheye.js'
 import './GLSL/utils/quadVertexFromID.js'
 
 class EnvMapShader extends GLShader {
+  /**
+   * Create a GL shader.
+   * @param {WebGLRenderingContext} gl - The webgl rendering context.
+   */
   constructor(gl) {
     super(gl)
     this.setShaderStage(

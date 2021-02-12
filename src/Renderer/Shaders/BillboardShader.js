@@ -6,6 +6,10 @@ import './GLSL/stack-gl/transpose.js'
 import './GLSL/materialparams.js'
 
 class BillboardShader extends GLShader {
+  /**
+   * Create a GL shader.
+   * @param {WebGLRenderingContext} gl - The webgl rendering context.
+   */
   constructor(gl) {
     super(gl)
     this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader(

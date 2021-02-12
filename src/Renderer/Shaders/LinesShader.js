@@ -7,6 +7,10 @@ import './GLSL/drawItemTexture.js'
 import './GLSL/modelMatrix.js'
 
 class LinesShader extends GLShader {
+  /**
+   * Create a GL shader.
+   * @param {WebGLRenderingContext} gl - The webgl rendering context.
+   */
   constructor(gl) {
     super(gl, 'LinesShader')
     this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader(

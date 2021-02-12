@@ -7,6 +7,10 @@ import './GLSL/stack-gl/inverse.js'
 import './GLSL/stack-gl/transpose.js'
 
 class PointsShader extends GLShader {
+  /**
+   * Create a GL shader.
+   * @param {WebGLRenderingContext} gl - The webgl rendering context.
+   */
   constructor(gl) {
     super(gl)
     this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader(

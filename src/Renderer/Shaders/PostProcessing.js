@@ -8,6 +8,10 @@ import './GLSL/utils/quadVertexFromID.js'
 import './GLSL/stack-gl/gamma.js'
 
 class PostProcessing extends GLShader {
+  /**
+   * Create a GL shader.
+   * @param {WebGLRenderingContext} gl - The webgl rendering context.
+   */
   constructor(gl) {
     super(gl)
     this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader(

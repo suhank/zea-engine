@@ -4,6 +4,10 @@ import { shaderLibrary } from '../ShaderLibrary'
 import './GLSL/utils/quadVertexFromID.js'
 
 class UnpackLDRAlphaImageShader extends GLShader {
+  /**
+   * Create a GL shader.
+   * @param {WebGLRenderingContext} gl - The webgl rendering context.
+   */
   constructor(gl) {
     super(gl)
     this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader(

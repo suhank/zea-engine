@@ -9,6 +9,10 @@ import './GLSL/modelMatrix.js'
 import './GLSL/debugColors.js'
 
 class TransparentSurfaceShader extends GLShader {
+  /**
+   * Create a GL shader.
+   * @param {WebGLRenderingContext} gl - The webgl rendering context.
+   */
   constructor(gl) {
     super(gl)
     this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader(
