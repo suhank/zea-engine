@@ -140,16 +140,13 @@ class GLEnvMap extends GLProbe {
         // /////////////////
         this.__envMapShader.bind(renderstate, 'GLEnvMap')
         const unifs = renderstate.unifs
-        this.bind(renderstate)
 
-        {
-          const unif = unifs.focus
-          if (unif) gl.uniform1f(unif.location, this.__backgroundFocus)
+        const { envMap, focus, exposure } = renderstate.unifs
+        if (envMap) {
+          this.__srcGLTex.bindToUniform(renderstate, envMap)
         }
-        {
-          const unif = unifs.exposure
-          if (unif) gl.uniform1f(unif.location, renderstate.exposure)
-        }
+        if (focus) gl.uniform1f(focus.location, this.__backgroundFocus)
+        if (exposure) gl.uniform1f(exposure.location, renderstate.exposure)
 
         this.__envMapShaderBinding.bind(renderstate)
         gl.depthMask(false)

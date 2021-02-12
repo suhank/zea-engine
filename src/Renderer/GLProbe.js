@@ -200,6 +200,7 @@ class GLProbe extends EventEmitter {
         gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, null)
         gl.deleteFramebuffer(fboId)
       }
+
       convolverShader.destroy()
     }
 
@@ -210,8 +211,11 @@ class GLProbe extends EventEmitter {
    * The bind method.
    * @param {object} renderstate - The object tracking the current state of the renderer
    * @param {any} unif - The unif value.
+   * @return {boolean} - Returns true if the Probe was successfully bound.
    */
   bind(renderstate) {
+    if (!this.__convolved) return false
+
     const gl = this.__gl
     const { irradianceMap, prefilterMap, brdfLUT, envMap } = renderstate.unifs
     if (irradianceMap) {
@@ -242,6 +246,8 @@ class GLProbe extends EventEmitter {
     if (envMap) {
       this.__srcGLTex.bindToUniform(renderstate, envMap)
     }
+
+    return true
   }
 
   /**

@@ -14,11 +14,19 @@ import './GLSL/debugColors.js'
 import './GLSL/ImagePyramid.js'
 import './GLSL/cutaways.js'
 
+/** A standard shader handling Opaque and transparent items and PBR rendering.
+ * @extends GLShader
+ * @private
+ */
 class StandardSurfaceShader extends GLShader {
+  /**
+   * Create a GL shader.
+   * @param {WebGLRenderingContext} gl - The webgl rendering context.
+   */
   constructor(gl) {
     super(gl)
-    this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader(
-      'StandardSurfaceShader.vertexShader',
+    this.setShaderStage(
+      'VERTEX_SHADER',
       `
 precision highp float;
 
@@ -279,10 +287,10 @@ void main(void) {
     if (opacity < 1.0) {
         vec3 radiance;
 #ifdef ENABLE_PBR
-        if (textureSize(brdfLUT, 0).x > 0) {
+        if (textureSize(brdfLUT, 0).x > 0 && false) {
             // Note: not sure how to make specular reflections work in headlight mode.
-            vec4 specularReflectance = pbrSpecularReflectance(material, normal, viewVector);
-            fragColor = vec4(specularReflectance.rgb, mix(opacity, 1.0, specularReflectance.a));
+            vec3 specularReflectance = pbrSpecularReflectance(material, normal, viewVector);
+            fragColor = vec4(specularReflectance, opacity);
         } else {
 #endif
             // Simple diffuse lighting.
@@ -338,6 +346,12 @@ void main(void) {
     this.finalize()
   }
 
+  /**
+   * Returns the parameters that this shader expects to be provided by the material.
+   * Note: the Material method setShaderName will retrieve these parameter declarations
+   * to initialize and configure the parameters for the Material instance.
+   * @return {array} - an array of param declarations that the shader expects the material tp provide.
+   */
   static getParamDeclarations() {
     const paramDescs = super.getParamDeclarations()
     paramDescs.push({
@@ -362,6 +376,29 @@ void main(void) {
     // paramDescs.push({ name: 'TexCoordScale', defaultValue: 1.0, texturable: false });
     return paramDescs
   }
+
+  /**
+   * The bind method.
+   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {any} key - The key value.
+   * @return {any} - The return value.
+   */
+  bind(renderstate, key) {
+    super.bind(renderstate, key)
+
+    if (renderstate.envMap) {
+      renderstate.envMap.bind(renderstate)
+    }
+    const gl = this.__gl
+    const { exposure, gamma } = renderstate.unifs
+    if (exposure) {
+      gl.uniform1f(exposure.location, renderstate.exposure)
+    }
+    return true
+  }
+
+  // /////////////////////////////
+  // Parameters
 
   /**
    * The getPackedMaterialData method.

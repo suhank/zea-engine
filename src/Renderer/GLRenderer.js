@@ -110,7 +110,7 @@ class GLRenderer extends GLBaseRenderer {
       if (!this.__glEnvMap) {
         if (env.type === 'FLOAT') {
           this.addShaderPreprocessorDirective('ENABLE_PBR')
-          this.__glEnvMap = new GLEnvMap(this, env, this.__preproc)
+          this.__glEnvMap = new GLEnvMap(this, env)
         } else if (env.isStreamAtlas()) {
           this.__glEnvMap = new GLImageStream(gl, env)
         } else {
@@ -118,7 +118,7 @@ class GLRenderer extends GLBaseRenderer {
         }
       }
     } else {
-      // Note: The difference bween an EnvMap and a BackgroundMap, is that
+      // Note: The difference between an EnvMap and a BackgroundMap, is that
       // An EnvMap must be HDR, and can be convolved for reflections.
       // A Background map can be simply an image.
       const backgroundMap = env
@@ -194,6 +194,7 @@ class GLRenderer extends GLBaseRenderer {
     envMapParam.on('valueChanged', () => {
       this.__bindEnvMap(envMapParam.getValue())
     })
+
     const displayEnvMapParam = scene.settings.getParameter('Display EnvMap')
     this.__displayEnvironment = displayEnvMapParam.getValue()
     displayEnvMapParam.on('valueChanged', () => {
@@ -599,28 +600,6 @@ class GLRenderer extends GLBaseRenderer {
     renderstate.envMap = this.__glEnvMap
     renderstate.exposure = this.__exposure
     renderstate.gamma = this.__gamma
-
-    const gl = this.__gl
-    const bindGLBaseRendererUnifs = renderstate.bindRendererUnifs
-    renderstate.bindRendererUnifs = (unifs) => {
-      bindGLBaseRendererUnifs(unifs)
-
-      if (this.__glEnvMap) {
-        this.__glEnvMap.bind(renderstate)
-      }
-      {
-        const unif = unifs.exposure
-        if (unif) {
-          gl.uniform1f(unif.location, this.__exposure)
-        }
-      }
-      {
-        const unif = unifs.gamma
-        if (unif) {
-          gl.uniform1f(unif.location, this.__gamma)
-        }
-      }
-    }
   }
 
   /**
