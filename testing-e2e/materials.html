@@ -86,44 +86,52 @@
 
       const envMap = new EnvMap()
       // envMap.getParameter('FilePath').setValue('data/pisa-webp.zenv')
-      envMap.getParameter('FilePath').setValue('data/AutomnRoad-webp.zenv')
-      
+      // envMap.getParameter('FilePath').setValue('data/AutomnRoad-webp.zenv')
+      // envMap.getParameter('FilePath').setValue('data/StudioG.zenv')
+      envMap.getParameter('FilePath').setValue('data/StudioD.zenv')
       // envMap.getParameter('FilePath').setValue('data/HDR_041_Path_Ref-webp.zenv')
       // envMap.getParameter('FilePath').setValue('data/HDR_041_Path_Ref.vlenv')
       envMap.mapping = EnvMapMapping.OCTAHEDRAL
       scene.setEnvMap(envMap)
-      scene.getSettings().getParameter('Display EnvMap').setValue(true)
+      scene.getSettings().getParameter('Display EnvMap').setValue(false)
 
       const addMeshShape = (name, shape, pos, mat) => {
         const geomItem = new GeomItem(name, shape, mat, new Xfo(pos))
         scene.getRoot().addChild(geomItem)
       }
-      for (let i = 0; i < 10; i++) {
-          const material = new Material('surfaces', 'StandardSurfaceShader')
-          material.getParameter('BaseColor').setValue(new Color(0.6, 0.0, 0.0))
-          material.getParameter('Roughness').setValue(i / 9)
-          material.getParameter('Metallic').setValue(0.05)
-          material.getParameter('Reflectance').setValue(0.015)
-          addMeshShape(
-            'Dielectrics-Sphere' + i,
-            new Sphere(1.4, 40),
-            new Vec3((i / 9 - 0.5) * 30, -3, 1),
-            material
-          )
-      }
+
+      let yoffset = -10;
+      const sphere = new Sphere(1.4, 80)
+      const addRow = (name, baseColor, metallic, reflectance, opacity=1.0) => {
         for (let i = 0; i < 10; i++) {
-          const material = new Material('surfaces', 'StandardSurfaceShader')
-          material.getParameter('BaseColor').setValue(new Color(0.6, 0.0, 0.0))
-          material.getParameter('Roughness').setValue(i / 9)
-          material.getParameter('Metallic').setValue(0.95)
-          material.getParameter('Reflectance').setValue(0.8)
-          addMeshShape(
-            'Metallic-Sphere' + i,
-            new Sphere(1.4, 40),
-            new Vec3((i / 9 - 0.5) * 30, 3, 1),
-            material
-          )
+            const material = new Material('surfaces', 'StandardSurfaceShader')
+            material.getParameter('BaseColor').setValue(baseColor.toLinear())
+            material.getParameter('Roughness').setValue(i / 9)
+            material.getParameter('Metallic').setValue(metallic)
+            material.getParameter('Reflectance').setValue(reflectance)
+            material.getParameter('Opacity').setValue(opacity)
+            addMeshShape(
+              name + i, sphere,
+              new Vec3((i / 9 - 0.5) * 30, yoffset, 1),
+              material
+            )
+          }
+          yoffset += 3.0
       }
+      // https://google.github.io/filament/Filament.html#materialsystem/parameterization/craftingphysicallybasedmaterials
+      // https://google.github.io/filament/images/material_chart.jpg
+      addRow('Dielectrics', new Color(0.8, 0.0, 0.0), 0.05, 0.015)
+      // addRow('Metallic', new Color(0.8, 0.0, 0.0), 0.95, 0.8)
+      // addRow('Plastics', new Color(0.8, 0.0, 0.0), 0.05, 0.08)
+      // addRow('Silver', new Color(0.97, 0.96, 0.91), 0.95, 0.85)
+      // addRow('Aluminum', new Color(0.91, 0.92, 0.92), 0.95, 0.85)
+      // addRow('Titanium', new Color(0.76, 0.73, 0.69), 0.95, 0.85)
+      // addRow('Iron', new Color(0.77, 0.78, 0.78), 0.95, 0.85)
+      // addRow('Platinum', new Color(0.83, 0.81, 0.78), 0.95, 0.85)
+      // addRow('Gold', new Color(1.00, 0.85, 0.57), 0.95, 0.85)
+      // addRow('Brass', new Color(0.98, 0.90, 0.59), 0.95, 0.85)
+      // addRow('Copper', new Color(0.97, 0.74, 0.62), 0.95, 0.85)
+      // addRow('Glass', new Color(0.8, 0.0, 0.0), 0.05, 0.015, 0.2)
 
       document.getElementById('exposureControl').addEventListener('input', (event) => {
         renderer.exposure = event.target.value / 100
