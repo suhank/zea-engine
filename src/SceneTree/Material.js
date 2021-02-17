@@ -213,7 +213,7 @@ class Material extends BaseItem {
 
   __checkTextures(event) {
     // console.log('__checkTextures')
-    const { param } = event
+    const { param } = event ? event : {}
 
     let isTextured = false
     for (const param of this.__params) {
@@ -373,6 +373,8 @@ class Material extends BaseItem {
     } else {
       super.readBinary(reader, context)
     }
+    this.__checkTransparency()
+    this.__checkTextures()
   }
 
   // ////////////////////////////////////////

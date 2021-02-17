@@ -1,6 +1,5 @@
 import { SystemDesc } from '../SystemDesc.js'
 import { BinReader } from './BinReader.js'
-import { loadBinfile } from './Utils.js'
 import { PointsProxy, LinesProxy, MeshProxy } from './Geometry/GeomProxies.js'
 import { EventEmitter } from '../Utilities/index'
 import { resourceLoader } from './resourceLoader.js'
@@ -13,6 +12,7 @@ const multiThreadParsing = true
 
 import GeomParserWorker from 'web-worker:./Geometry/GeomParserWorker.js'
 
+const isMobile = SystemDesc.isMobileDevice
 let numCores = window.navigator.hardwareConcurrency
 if (!numCores) {
   if (isMobile) numCores = 4
@@ -212,7 +212,6 @@ class GeomLibrary extends EventEmitter {
    * @return {any} - The return value.
    */
   readBinaryBuffer(geomFileID, buffer, context) {
-    const isMobile = SystemDesc.isMobileDevice
     const reader = new BinReader(buffer, 0, isMobile)
     const numGeoms = reader.loadUInt32()
 

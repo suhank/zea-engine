@@ -130,7 +130,7 @@ class GLShaderGeomSets extends EventEmitter {
    * @param {object} renderstate - The render state for the current draw traversal
    */
   draw(renderstate) {
-    this.bindShader(this.glShader, renderstate, 'multidraw')
+    this.bindShader(this.glShader, renderstate, 'multidraw-draw')
 
     for (const elementType in this.glGeomSets) {
       this.glGeomSets[elementType].draw(renderstate)
@@ -173,6 +173,8 @@ class GLShaderGeomSets extends EventEmitter {
     for (const elementType in this.glGeomSets) {
       this.glGeomSets[elementType].drawGeomData(renderstate)
     }
+
+    this.glGeomDataShader.unbind(renderstate)
   }
 }
 
