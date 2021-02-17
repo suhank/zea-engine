@@ -17,6 +17,7 @@ class GLProbe extends EventEmitter {
   constructor(gl, name) {
     super()
     this.__gl = gl
+    this.maxFragmentShaderTextureUnits = gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS)
 
     if (!gl.__quadVertexIdsBuffer) gl.setupInstancedQuad()
 
@@ -214,10 +215,25 @@ class GLProbe extends EventEmitter {
    * @return {boolean} - Returns true if the Probe was successfully bound.
    */
   bind(renderstate) {
-    if (!this.__convolved) return false
-
     const gl = this.__gl
     const { irradianceMap, prefilterMap, brdfLUT, envMap } = renderstate.unifs
+
+    if (!this.__convolved) {
+      // By default, all the texture units are bound to unit:0
+      // So if a shader contains cube maps, and they are left on unit 0
+      // and also the shader contains regular textures, and they are also left on unit 0
+      // then we get errors saying:
+      // GL_INVALID_OPERATION: Two textures of different types use the same sampler location.
+      // So bind to an unused texture unit...
+      if (irradianceMap) {
+        gl.uniform1i(irradianceMap.location, this.maxFragmentShaderTextureUnits - 1)
+      }
+      if (prefilterMap) {
+        gl.uniform1i(prefilterMap.location, this.maxFragmentShaderTextureUnits - 1)
+      }
+      return false
+    }
+
     if (irradianceMap) {
       const unit = renderstate.boundTextures++
       const texId = this.__gl.TEXTURE0 + unit

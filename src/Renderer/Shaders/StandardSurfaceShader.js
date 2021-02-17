@@ -109,8 +109,6 @@ precision highp float;
 <%include file="debugColors.glsl"/>
 #endif
 
-<%include file="PBRSurfaceRadiance.glsl"/>
-
 /* VS Outputs */
 varying float v_drawItemId;
 varying vec4 v_geomItemData;
@@ -180,9 +178,12 @@ uniform int NormalTexType;
 uniform sampler2D EmissiveStrengthTex;
 uniform int EmissiveStrengthTexType;
 
-
 #endif // ENABLE_TEXTURES
 #endif // ENABLE_MULTI_DRAW
+
+#ifdef ENABLE_PBR
+<%include file="PBRSurfaceRadiance.glsl"/>
+#endif // ENABLE_PBR
 
 #ifdef ENABLE_ES3
 out vec4 fragColor;
@@ -281,16 +282,17 @@ void main(void) {
 #endif
 
 #ifdef ENABLE_PBR
+    bool envMapConnected = true;
     bool headLightMode = testFlag(envMapFlags, ENVMAP_FLAG_HEADLIGHT);
 #endif
 
     if (opacity < 1.0) {
         vec3 radiance;
 #ifdef ENABLE_PBR
-        if (textureSize(brdfLUT, 0).x > 0) {
+        if (envMapConnected) {
             // Note: not sure how to make specular reflections work in headlight mode.
             vec4 specularReflectance = pbrSpecularReflectance(material, opacity, normal, viewVector);
-            fragColor = specularReflectance; //vec4(specularReflectance.rgb * opacity, opacity);
+            fragColor = specularReflectance;
         } else {
 #endif
             // Simple diffuse lighting.
@@ -301,16 +303,17 @@ void main(void) {
         }
 #endif
     }
-    else {
+    else 
+    {
         vec3 radiance;
 #ifdef ENABLE_PBR
-        if (textureSize(brdfLUT, 0).x > 0) {
+        if (envMapConnected) {
             vec3 irradiance;
+            vec3 irradianceSampleDir = normal;
             if (headLightMode) {
-                irradiance = sampleIrradiance(viewNormal);
-            } else {
-                irradiance = sampleIrradiance(normal);
+              irradianceSampleDir = viewNormal;
             }
+            irradiance = sampleIrradiance(irradianceSampleDir);
             radiance = pbrSurfaceRadiance(material, irradiance, normal, viewVector);
         } else {
 #endif
@@ -386,11 +389,12 @@ void main(void) {
   bind(renderstate, key) {
     super.bind(renderstate, key)
 
+    const gl = this.__gl
     if (renderstate.envMap) {
       renderstate.envMap.bind(renderstate)
     }
-    const gl = this.__gl
-    const { exposure, gamma } = renderstate.unifs
+
+    const { exposure } = renderstate.unifs
     if (exposure) {
       gl.uniform1f(exposure.location, renderstate.exposure)
     }
