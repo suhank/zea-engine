@@ -78,7 +78,7 @@ vec3 fresnelSchlickRoughness(float cosTheta, vec3 F0, float roughness)
 }
 
 
-vec4 pbrSpecularReflectance(in MaterialParams materialParams, vec3 normal, in vec3 viewVector) {
+vec4 pbrSpecularReflectance(in MaterialParams materialParams, float opacity, vec3 normal, in vec3 viewVector) {
 
     vec3 N = normal;
     vec3 V = viewVector;
@@ -101,7 +101,8 @@ vec4 pbrSpecularReflectance(in MaterialParams materialParams, vec3 normal, in ve
     vec2 envBRDF  = texture(brdfLUT, vec2(max(NdotV, 0.0), materialParams.roughness)).rg;  
     vec3 specular = prefilteredColor * (F * envBRDF.x + envBRDF.y);
     
-    return vec4(specular, length(specular));
+    // This must be wrong, but I am  not sure what would be better.
+    return vec4(specular * opacity, opacity);
 }
 
 

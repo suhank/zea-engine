@@ -289,8 +289,8 @@ void main(void) {
 #ifdef ENABLE_PBR
         if (textureSize(brdfLUT, 0).x > 0) {
             // Note: not sure how to make specular reflections work in headlight mode.
-            vec4 specularReflectance = pbrSpecularReflectance(material, normal, viewVector);
-            fragColor = vec4(specularReflectance.rgb, opacity * specularReflectance.a);
+            vec4 specularReflectance = pbrSpecularReflectance(material, opacity, normal, viewVector);
+            fragColor = specularReflectance; //vec4(specularReflectance.rgb * opacity, opacity);
         } else {
 #endif
             // Simple diffuse lighting.

@@ -86,9 +86,9 @@
 
       const envMap = new EnvMap()
       // envMap.getParameter('FilePath').setValue('data/pisa-webp.zenv')
-      // envMap.getParameter('FilePath').setValue('data/AutomnRoad-webp.zenv')
+      envMap.getParameter('FilePath').setValue('data/AutomnRoad-webp.zenv')
       // envMap.getParameter('FilePath').setValue('data/StudioG.zenv')
-      envMap.getParameter('FilePath').setValue('data/StudioD.zenv')
+      // envMap.getParameter('FilePath').setValue('data/StudioD.zenv')
       // envMap.getParameter('FilePath').setValue('data/HDR_041_Path_Ref-webp.zenv')
       // envMap.getParameter('FilePath').setValue('data/HDR_041_Path_Ref.vlenv')
       envMap.mapping = EnvMapMapping.OCTAHEDRAL
@@ -131,7 +131,7 @@
       // addRow('Gold', new Color(1.00, 0.85, 0.57), 0.95, 0.85)
       // addRow('Brass', new Color(0.98, 0.90, 0.59), 0.95, 0.85)
       // addRow('Copper', new Color(0.97, 0.74, 0.62), 0.95, 0.85)
-      addRow('Glass', new Color(0.8, 0.0, 0.0), 0.05, 0.015, 0.2)
+      addRow('Glass', new Color(0.95, 0.95, 0.95), 0.05, 0.15, 0.2)
 
       document.getElementById('exposureControl').addEventListener('input', (event) => {
         renderer.exposure = event.target.value / 100
