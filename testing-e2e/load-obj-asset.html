@@ -10,9 +10,10 @@
     <canvas class="full-size" id="app"></canvas>
 
     <script src="../dist/index.umd.js"></script>
+    <script src="../dist/plugins.umd.js"></script>
 
     <script type="module">
-      const { Vec3, EulerAngles, Xfo, ObjAsset, Scene, GLRenderer } = zeaEngine
+      const { Vec3, EulerAngles, Xfo, ObjAsset, Scene, GLRenderer, EnvMap } = zeaEngine
 
       const domElement = document.getElementById('app')
 
@@ -22,6 +23,11 @@
       const renderer = new GLRenderer(domElement, { hideSplash: true, antialias: false })
       renderer.setScene(scene)
       renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(12, 12, 10), new Vec3(0, 0, 1.5))
+
+      const envMap = new EnvMap()
+      envMap.getParameter('FilePath').setValue('data/pisa-webp.zenv')
+      scene.setEnvMap(envMap)
+      scene.getSettings().getParameter('Display EnvMap').setValue(true)
 
       const objAsset = new ObjAsset('cow')
       objAsset.getParameter('FilePath').setUrl('data/cow.obj')
@@ -40,7 +46,7 @@
         const { data } = event
 
         if (data === 'front') {
-          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, -2.7), new Vec3(0, 0, 0.4))
+          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(1, 1, 0.1), new Vec3(0, 0, 0.4))
           renderer.frameAll()
           renderer.once('redrawOccurred', () => {
             window.postMessage(`done-${data}`)
