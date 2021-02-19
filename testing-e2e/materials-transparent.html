@@ -101,66 +101,36 @@
         scene.getRoot().addChild(geomItem)
       }
 
-      const addLabel = (name, xfo) => {
-          const label = new Label(name)
-          label.getParameter('FontSize').setValue(48)
-          // label.getParameter('FontColor').setValue(color)
-          label.getParameter('BackgroundColor').setValue(new Color(0.6, 0.6, 0.6))
-
-          const billboard = new BillboardItem(name, label)
-          billboard.getParameter('LocalXfo').setValue(xfo)
-          billboard.getParameter('PixelsPerMeter').setValue(80)
-          billboard.getParameter('AlignedToCamera').setValue(false)
-          scene.getRoot().addChild(billboard)
-      }
-
-      let yoffset = -30;
       const sphere = new Sphere(1.4, 80)
+      let zoffset = 0;
       const addRow = (name, baseColor, metallic, reflectance, lerpOpacity=false) => {
-        {
-          const xfo = new Xfo(new Vec3(0.5 * 35, yoffset, 0))
-          xfo.ori.setFromEulerAngles(new EulerAngles(Math.PI * 0.5, 0, Math.PI * 0.5, 'ZYX'))
-          addLabel(name, xfo)
-        }
         for (let i = 0; i < 10; i++) {
-          const material = new Material('surfaces', 'StandardSurfaceShader')
-          material.getParameter('BaseColor').setValue(baseColor)
-          material.getParameter('Metallic').setValue(metallic)
-          material.getParameter('Reflectance').setValue(reflectance)
-          material.getParameter('Roughness').setValue(i / 9)
-          addMeshShape(
-            name + i, sphere,
-            new Vec3((i / 9 - 0.5) * 30, yoffset, 1.4),
-            material
-          )
-        }
-        {
-          const xfo = new Xfo(new Vec3(-0.5 * 35, yoffset, 0))
-          xfo.ori.setFromEulerAngles(new EulerAngles(Math.PI * 0.5, 0, Math.PI * -0.5, 'ZYX'))
-          addLabel(name, xfo)
+          for (let j = 0; j < 10; j++) {
+            const material = new Material('surfaces', 'StandardSurfaceShader')
+            material.getParameter('BaseColor').setValue(baseColor)
+            material.getParameter('Metallic').setValue(metallic)
+            material.getParameter('Reflectance').setValue(reflectance)
+            
+            material.getParameter('Roughness').setValue(j / 9)
+            material.getParameter('Opacity').setValue(i / 10)
+
+            addMeshShape(
+              name + i, sphere,
+              new Vec3((i / 9 - 0.5) * 30, (j / 9 - 0.5) * 30, 1.4 + zoffset),
+              material
+            )
+          }
         }
 
-        yoffset += 3.0
+        zoffset += 5
       }
 
       // https://google.github.io/filament/images/material_chart.jpg
-      addRow('Coal', new Color('#323232'), 0.02, 0.5)
-      addRow('Rubber', new Color('#353535'), 0.02, 0.5)
-      addRow('Mud', new Color('#553d31'), 0.02, 0.5)
-      addRow('Wood', new Color('#875c3c'), 0.02, 0.5)
-      addRow('Vegetation', new Color('#7B824E'), 0.02, 0.5)
-      addRow('Brick', new Color('#947D75'), 0.02, 0.5)
-      addRow('Sand', new Color('#B1A984'), 0.02, 0.5)
-      addRow('Concrete', new Color('#C0BFBB'), 0.02, 0.5)
-      
-      addRow('Silver', new Color('#faf9f5'), 0.98, 0.75)
-      addRow('Aluminum', new Color('#faf5f5'), 0.98, 0.75)
-      addRow('Platinum', new Color('#d6d1c8'), 0.98, 0.75)
-      addRow('Iron', new Color('#c0bdba'), 0.98, 0.75)
-      addRow('Titanium', new Color('#cec8c2'), 0.98, 0.75)
-      addRow('Copper', new Color('#FBD8B8'), 0.98, 0.75)
-      addRow('Gold', new Color('#FEDC9D'), 0.98, 0.75)
-      addRow('Brass', new Color('#F4E5AE'), 0.98, 0.75)
+
+      // Note: 
+      addRow('Glass1', new Color(0.8, 0, 0), 0.0, 0.6)
+      addRow('Glass2', new Color(0.8, 0, 0), 0.0, 0.9)
+      addRow('Glass3', new Color(0.8, 0, 0), 0.0, 1.2)
 
       renderer.exposure = 1.6
       document.getElementById('exposureControl').value = renderer.exposure * 100
@@ -169,7 +139,7 @@
       })
       
 
-      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(35, -35, 20), new Vec3(0, 0, -10))
+      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(35, -35, 15), new Vec3(0, 0, -5))
 
       envMap.on('loaded', () => {
         renderer.once('redrawOccurred', () => {
@@ -184,14 +154,14 @@
 
         if (data === 'variant-01') {
           renderer.suspendDrawing()
-          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-35, 35, 20), new Vec3(0, 0, -10))
+          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-35, 35, 15), new Vec3(0, 0, -5))
           renderer.once('redrawOccurred', () => {
             window.postMessage(`done-${data}`)
           })
           renderer.resumeDrawing()
         } else if (data === 'variant-02') {
           renderer.suspendDrawing()
-          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-35,-35, 20), new Vec3(0, 0, -10))
+          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-35,-35, 15), new Vec3(0, 0, -5))
           renderer.once('redrawOccurred', () => {
             window.postMessage(`done-${data}`)
           })

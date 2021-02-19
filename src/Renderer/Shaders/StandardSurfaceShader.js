@@ -237,14 +237,14 @@ void main(void) {
     material.roughness     = matValue1.g;
     material.reflectance   = matValue1.b;
     
-    float emission         = matValue1.a;
-    float opacity          = matValue2.r * matValue0.a;
+    material.emission         = matValue1.a;
+    material.opacity          = matValue2.r * matValue0.a;
 
 #else // ENABLE_MULTI_DRAW
 
 #ifndef ENABLE_TEXTURES
     material.baseColor     = toLinear(BaseColor.rgb);
-    float emission         = EmissiveStrength;
+    material.emission         = EmissiveStrength;
 
 #ifdef ENABLE_PBR
     material.roughness     = Roughness;
@@ -263,9 +263,9 @@ void main(void) {
     material.metallic      = getLuminanceParamValue(Metallic, MetallicTex, MetallicTexType, texCoord);
     material.reflectance   = getLuminanceParamValue(Reflectance, ReflectanceTex, ReflectanceTexType, texCoord);
 #endif // ENABLE_PBR
-    float emission         = getLuminanceParamValue(EmissiveStrength, EmissiveStrengthTex, EmissiveStrengthTexType, texCoord);
+    material.emission         = getLuminanceParamValue(EmissiveStrength, EmissiveStrengthTex, EmissiveStrengthTexType, texCoord);
 #endif // ENABLE_TEXTURES
-    float opacity           = Opacity * BaseColor.a;
+    material.opacity       = Opacity * BaseColor.a;
 
 #ifdef ENABLE_TEXTURES
 #ifdef ENABLE_PBR
@@ -283,49 +283,18 @@ void main(void) {
 
 #ifdef ENABLE_PBR
     bool envMapConnected = true;
-    bool headLightMode = testFlag(envMapFlags, ENVMAP_FLAG_HEADLIGHT);
 #endif
 
-    if (opacity < 1.0) {
-        vec3 radiance;
 #ifdef ENABLE_PBR
-        if (envMapConnected) {
-            // Note: not sure how to make specular reflections work in headlight mode.
-            vec4 specularReflectance = pbrSpecularReflectance(material, opacity, normal, viewVector);
-            fragColor = specularReflectance;
-        } else {
+    if (envMapConnected) {
+        fragColor = pbrSurfaceRadiance(material, normal, viewVector);
+    } else {
 #endif
-            // Simple diffuse lighting.
-            vec3 irradiance = vec3(dot(normal, viewVector));
-            radiance = irradiance * material.baseColor;
-            fragColor = vec4(radiance + (emission * material.baseColor), opacity);
+        vec3 irradiance = vec3(dot(normal, viewVector));
+        fragColor = vec4(material.baseColor * irradiance + (material.emission * material.baseColor), material.opacity);
 #ifdef ENABLE_PBR
-        }
-#endif
     }
-    else 
-    {
-        vec3 radiance;
-#ifdef ENABLE_PBR
-        if (envMapConnected) {
-            vec3 irradiance;
-            vec3 irradianceSampleDir = normal;
-            if (headLightMode) {
-              irradianceSampleDir = viewNormal;
-            }
-            irradiance = sampleIrradiance(irradianceSampleDir);
-            radiance = pbrSurfaceRadiance(material, irradiance, normal, viewVector);
-        } else {
 #endif
-            vec3 irradiance = vec3(dot(normal, viewVector));
-            radiance = material.baseColor * irradiance;
-#ifdef ENABLE_PBR
-        }
-#endif
-        // fragColor = vec4(material.baseColor, 1.0);
-        // fragColor = vec4(material.baseColor * irradiance, 1.0);
-        fragColor = vec4(radiance + (emission * material.baseColor), 1.0);
-    }
 
 #ifdef DEBUG_GEOM_ID
     // ///////////////////////
