@@ -181,9 +181,7 @@ uniform int EmissiveStrengthTexType;
 #endif // ENABLE_TEXTURES
 #endif // ENABLE_MULTI_DRAW
 
-#ifdef ENABLE_PBR
 <%include file="PBRSurfaceRadiance.glsl"/>
-#endif // ENABLE_PBR
 
 #ifdef ENABLE_ES3
 out vec4 fragColor;
@@ -281,20 +279,7 @@ void main(void) {
     vec4 fragColor;
 #endif
 
-#ifdef ENABLE_PBR
-    bool envMapConnected = true;
-#endif
-
-#ifdef ENABLE_PBR
-    if (envMapConnected) {
-        fragColor = pbrSurfaceRadiance(material, normal, viewVector);
-    } else {
-#endif
-        vec3 irradiance = vec3(dot(normal, viewVector));
-        fragColor = vec4(material.baseColor * irradiance + (material.emission * material.baseColor), material.opacity);
-#ifdef ENABLE_PBR
-    }
-#endif
+    fragColor = pbrSurfaceRadiance(material, normal, viewVector);
 
 #ifdef DEBUG_GEOM_ID
     // ///////////////////////

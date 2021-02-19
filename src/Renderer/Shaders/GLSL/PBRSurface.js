@@ -41,6 +41,15 @@ struct MaterialParams {
     float emission;
 };
 
+#ifndef ENABLE_PBR
+
+vec4 pbrSurfaceRadiance(in MaterialParams material, vec3 normal, in vec3 viewVector) {
+  vec3 irradiance = vec3(dot(normal, viewVector));
+  return vec4(material.baseColor * irradiance + (material.emission * material.baseColor), material.opacity);
+}
+
+#else
+
 uniform int envMapFlags;
 uniform samplerCube irradianceMap;
 uniform samplerCube prefilterMap;
@@ -130,5 +139,8 @@ vec4 pbrSurfaceRadiance(in MaterialParams material, vec3 normal, in vec3 viewVec
     // which can also be used to make an object completely disappear if also transparent.
     return mix(result, vec4(material.baseColor, opacity), material.emission);
 }
+
+
+#endif // ENABLE_PBR
 `
 )
