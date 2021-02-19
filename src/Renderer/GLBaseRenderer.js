@@ -786,7 +786,10 @@ class GLBaseRenderer extends ParameterOwner {
       if (activeGLRenderer != this || !isValidCanvas()) return
       if (activeGLRenderer) {
         prepareEvent(event)
-        this.onWheel(event)
+        const vp = activeGLRenderer.getActiveViewport()
+        if (vp) {
+          vp.onWheel(event)
+        }
       }
       return false
     }
@@ -837,15 +840,6 @@ class GLBaseRenderer extends ParameterOwner {
    */
   getScreenQuad() {
     return this.__screenQuad
-  }
-
-  /**
-   * Causes an event to occur when the mouse wheel is rolled up or down over an element.
-   *
-   * @param {WheelEvent} event - The event that occurs.
-   */
-  onWheel(event) {
-    this.__viewports[0].onWheel(event)
   }
 
   /**
