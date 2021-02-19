@@ -3,7 +3,6 @@ import { PreComputeBRDFShader } from './Shaders/PreComputeBRDFShader.js'
 import { ConvolveIrradianceShader } from './Shaders/ConvolveIrradianceShader.js'
 import { ConvolveSpecularShader } from './Shaders/ConvolveSpecularShader.js'
 import { generateShaderGeomBinding } from './Drawing/GeomShaderBinding.js'
-import { EnvMapMapping } from '../SceneTree/Images/EnvMap.js'
 
 /** Class representing a GL probe.
  * @private
@@ -71,11 +70,6 @@ class GLProbe extends EventEmitter {
 
     brdfShader.unbind(renderstate)
     brdfShader.destroy()
-
-    // Tell the convolve shader that the input is a cubmap, instead of octahedral.
-    if (srcGLTex.getTexture().mapping == EnvMapMapping.CUBE) {
-      renderstate.shaderopts.directives.push('#define ENVMAP_CUBE')
-    }
 
     // ////////////////////////////////////////////
     // ConvolveIrradianceShader Shader

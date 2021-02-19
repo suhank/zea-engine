@@ -8,12 +8,6 @@ import { Registry } from '../../Registry'
 import { VLHImage } from './VLHImage.js'
 import { BooleanParameter } from '../Parameters/BooleanParameter.js'
 
-const EnvMapMapping = {
-  LATLONG: 1,
-  OCTAHEDRAL: 2,
-  CUBE: 3,
-}
-
 /**
  * An EnvMap can load High Dynamic Range environment map images, necessary for high quality PBR lighting.
  * <br>
@@ -35,7 +29,6 @@ class EnvMap extends VLHImage {
 
     this.addParameter(new BooleanParameter('HeadLightMode', false))
 
-    this.mapping = EnvMapMapping.OCTAHEDRAL
     this.utf8decoder = util.TextDecoder ? new util.TextDecoder() : new TextDecoder()
     this.shCoeffs = []
   }
@@ -97,4 +90,4 @@ class EnvMap extends VLHImage {
 
 Registry.register('EnvMap', EnvMap)
 
-export { EnvMap, EnvMapMapping }
+export { EnvMap }

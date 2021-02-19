@@ -1,7 +1,5 @@
-import { EnvMapMapping } from '../SceneTree/Images/EnvMap.js'
 import { GLProbe } from './GLProbe.js'
 import { GLHDRImage } from './GLHDRImage.js'
-import { GLHDRCubeMap } from './GLHDRCubeMap.js'
 import { EnvMapShader } from './Shaders/EnvMapShader.js'
 import { generateShaderGeomBinding } from './Drawing/GeomShaderBinding.js'
 
@@ -37,16 +35,7 @@ class GLEnvMap extends GLProbe {
     const gl = this.__renderer.gl
     if (!gl.__quadVertexIdsBuffer) gl.setupInstancedQuad()
 
-    if (this.__envMap.mapping == EnvMapMapping.CUBE) {
-      this.__srcGLTex = new GLHDRCubeMap(gl, this.__envMap)
-
-      this.cubeFaceSize = this.__envMap.width / 3
-    } else {
-      this.__srcGLTex = new GLHDRImage(gl, this.__envMap)
-
-      const side = this.__envMap.width / 2
-      this.cubeFaceSize = Math.sqrt(side * side * 2)
-    }
+    this.__srcGLTex = new GLHDRImage(gl, this.__envMap)
     this.__envMapShader = new EnvMapShader(gl)
 
     const envMapShaderComp = this.__envMapShader.compileForTarget('GLEnvMap', this.__preproc)
