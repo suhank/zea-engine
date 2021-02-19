@@ -398,4 +398,5 @@ void main(void) {
 }
 
 Registry.register('StandardSurfaceShader', StandardSurfaceShader)
+Registry.register('TransparentSurfaceShader', StandardSurfaceShader)
 export { StandardSurfaceShader }
