@@ -75,6 +75,7 @@
         const { data } = event
 
         if (data === 'variant-01') {
+          renderer.suspendDrawing()
           const angle = 2
           const xfo = new Xfo()
           xfo.tr.set(6, Math.cos(angle) * 2, 0)
@@ -83,16 +84,18 @@
           renderer.once('redrawOccurred', () => {
             window.postMessage(`done-${data}`)
           })
+          renderer.resumeDrawing()
         } else if (data === 'variant-02') {
+          renderer.suspendDrawing()
           const angle = 3
           const xfo = new Xfo()
           xfo.tr.set(-6, Math.cos(angle) * 2, 0)
           xfo.ori.setFromAxisAndAngle(new Vec3(0, 0, 1), angle)
           kinematicGroup.getParameter('LocalXfo').setValue(xfo)
-          renderer.frameAll()
           renderer.once('redrawOccurred', () => {
             window.postMessage(`done-${data}`)
           })
+          renderer.resumeDrawing()
         }
       }
 
