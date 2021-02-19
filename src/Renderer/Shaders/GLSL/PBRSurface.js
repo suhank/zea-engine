@@ -37,7 +37,6 @@ struct MaterialParams {
     float metallic;
     float roughness;
     float reflectance;
-    // vec3 specularTint;
 };
 
 uniform int envMapFlags;
@@ -77,6 +76,9 @@ vec3 fresnelSchlickRoughness(float cosTheta, vec3 F0, float roughness)
     return F0 + (max(vec3(1.0 - roughness), F0) - F0) * pow(max(1.0 - cosTheta, 0.0), 5.0);
 }
 
+float luminance(vec3 color) {
+  return 0.2126 * color.r + 0.7152 * color.g + 0.0722 * color.b;
+}
 
 vec4 pbrSpecularReflectance(in MaterialParams materialParams, float opacity, vec3 normal, in vec3 viewVector) {
 
@@ -102,7 +104,7 @@ vec4 pbrSpecularReflectance(in MaterialParams materialParams, float opacity, vec
     vec3 specular = prefilteredColor * (F * envBRDF.x + envBRDF.y);
     
     // This must be wrong, but I am  not sure what would be better.
-    return vec4(specular * opacity, opacity);
+    return vec4((materialParams.baseColor * opacity) + specular, opacity + (luminance(specular) / opacity));
 }
 
 
