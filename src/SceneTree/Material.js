@@ -166,8 +166,6 @@ class Material extends BaseItem {
   }
 
   __checkTransparency(event) {
-    const { param } = event ? event : {}
-
     let isTransparent = false
     try {
       const shaderClass = Registry.getBlueprint(this.__shaderName)
@@ -178,15 +176,11 @@ class Material extends BaseItem {
 
     if (!isTransparent) {
       const opacity = this.getParameter('Opacity')
-      if (
-        opacity &&
-        (!param || param == opacity) &&
-        (opacity.getValue() < 0.99 || (opacity.getImage && opacity.getImage()))
-      ) {
+      if (opacity && (opacity.getValue() < 0.99 || (opacity.getImage && opacity.getImage()))) {
         isTransparent = true
       } else {
         const baseColor = this.getParameter('BaseColor')
-        if (baseColor && (!param || param == baseColor)) {
+        if (baseColor) {
           if (baseColor.getImage && baseColor.getImage() && baseColor.getImage().format == 'RGBA') {
             isTransparent = true
           } else if (baseColor.getValue().a < 1) {
@@ -198,7 +192,7 @@ class Material extends BaseItem {
 
     if (isTransparent != this.__isTransparent) {
       this.__isTransparent = isTransparent
-      this.emit('transparencyChanged', { isTransparent, param })
+      this.emit('transparencyChanged', { isTransparent })
     }
   }
 
