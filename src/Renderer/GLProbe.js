@@ -216,7 +216,7 @@ class GLProbe extends EventEmitter {
    */
   bind(renderstate) {
     const gl = this.__gl
-    const { irradianceMap, prefilterMap, brdfLUT, envMap } = renderstate.unifs
+    const { irradianceMap, prefilterMap, brdfLUT } = renderstate.unifs
 
     if (!this.__convolved) {
       // By default, all the texture units are bound to unit:0
@@ -234,6 +234,22 @@ class GLProbe extends EventEmitter {
       return false
     }
 
+    // Note: a cube map can never be bound to texture unit 0.
+    // This is because if any other samplers are left unbound
+    // (e.g. a diffuse sampler left unbound because no diffuse texture is assigned)
+    // then the texture unit binding defaults to 0.
+    // If the cube map is then bound to unit 0, then we get the error message:
+    // GL_INVALID_OPERATION: Two textures of different types use the same sampler location.
+    // Ths simple workaround here is to bind the BRDF Lut first, which is a TEXTURE_2D, and the cube maps
+    // to other units:(1 & 2).
+    // This error started occuring when we moved PBR binding to the shader instead of in the renderer.
+    // See: StandardSurfaceShader.bind
+    if (brdfLUT) {
+      const unit = renderstate.boundTextures++
+      gl.activeTexture(this.__gl.TEXTURE0 + unit)
+      gl.bindTexture(gl.TEXTURE_2D, this.brdfLUTTexture)
+      gl.uniform1i(brdfLUT.location, unit)
+    }
     if (irradianceMap) {
       const unit = renderstate.boundTextures++
       const texId = this.__gl.TEXTURE0 + unit
@@ -248,21 +264,6 @@ class GLProbe extends EventEmitter {
       gl.bindTexture(gl.TEXTURE_CUBE_MAP, this.specularCubetex)
       gl.uniform1i(prefilterMap.location, unit)
     }
-    if (brdfLUT) {
-      const unit = renderstate.boundTextures++
-      gl.activeTexture(this.__gl.TEXTURE0 + unit)
-      gl.bindTexture(gl.TEXTURE_2D, this.brdfLUTTexture)
-      gl.uniform1i(brdfLUT.location, unit)
-    }
-    // if (shCoeffs) {
-    //   // TODO: setup a Uniform buffer object.
-    //   gl.uniform3fv(shCoeffs.location, this.__envMap.luminanceData.shCoeffs)
-    // }
-
-    if (envMap) {
-      this.__srcGLTex.bindToUniform(renderstate, envMap)
-    }
-
     return true
   }
 

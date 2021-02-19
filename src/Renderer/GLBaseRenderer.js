@@ -14,7 +14,6 @@ let activeGLRenderer = undefined
 let pointerIsDown = false
 let pointerLeft = false
 const registeredPasses = {}
-const loggedErrors = {}
 
 /**
  * Class representing a GL base renderer.
