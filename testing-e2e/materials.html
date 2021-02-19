@@ -163,8 +163,9 @@
       addRow('Brass', new Color('#F4E5AE'), 0.98, 0.75)
 
       renderer.exposure = 1.6
-      document.getElementById('exposureControl').value = renderer.exposure * 100
-      document.getElementById('exposureControl').addEventListener('input', (event) => {
+      const slider = document.getElementById('exposureControl')
+      slider.value = renderer.exposure * 100
+      slider.addEventListener('input', (event) => {
         renderer.exposure = event.target.value / 100
       })
       

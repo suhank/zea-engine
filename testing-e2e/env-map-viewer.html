@@ -80,7 +80,7 @@
       const renderer = new GLRenderer(canvas, { hideSplash: true, antialias: false })
       renderer.setScene(scene)
 
-      scene.setupGrid(10.0, 10)
+      // scene.setupGrid(10.0, 10)
 
       const envMap = new EnvMap()
       // envMap.getParameter('FilePath').setValue('data/AutomnRoad.zenv')
@@ -102,18 +102,16 @@
       renderer.getViewport().getCamera().setLensFocalLength('20mm')
       renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 0, 0), new Vec3(0, 0, 0))
 
-      const material = new Material('surfaces', 'StandardSurfaceShader')
-      material.getParameter('BaseColor').setValue(new Color(0.6, 0.0, 0.0))
-      material.getParameter('Roughness').setValue(0.5)
-      material.getParameter('Metallic').setValue(0.05)
-      material.getParameter('Reflectance').setValue(0.02)
-      scene.getRoot().addChild(new GeomItem('sphere', new Sphere(0.4, 40), material))
-
       envMap.on('loaded', () => {
         renderer.once('redrawOccurred', () => {
           window.postMessage('done-loading')
         })
         renderer.requestRedraw()
+      })
+
+      const slider = document.getElementById('exposureControl')
+      slider.addEventListener('input', (event) => {
+        renderer.exposure = event.target.value / 100
       })
 
       // {{{ Messages handler.
