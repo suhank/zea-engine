@@ -54,8 +54,10 @@ void main(void) {
     gl_Position = projectionMatrix * viewPos;
 
     v_viewPos = viewPos.xyz;
+#ifdef ENABLE_TEXTURES
     v_textureCoord = texCoords;
     v_textureCoord.y = 1.0 - v_textureCoord.y;// Flip y
+#endif
 }
 `
     )
