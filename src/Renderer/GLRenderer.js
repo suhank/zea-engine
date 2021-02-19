@@ -49,9 +49,9 @@ class GLRenderer extends GLBaseRenderer {
     this.__debugTextures = [undefined]
 
     this.addShaderPreprocessorDirective('ENABLE_INLINE_GAMMACORRECTION')
-    // if (!options.disableTextures) {
-    //   this.addShaderPreprocessorDirective('ENABLE_TEXTURES')
-    // }
+    if (!options.disableTextures) {
+      this.addShaderPreprocessorDirective('ENABLE_TEXTURES')
+    }
 
     if (options.debugGeomIds) {
       this.addShaderPreprocessorDirective('DEBUG_GEOM_ID')
