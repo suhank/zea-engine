@@ -126,7 +126,9 @@ vec4 pbrSurfaceRadiance(in MaterialParams material, vec3 normal, in vec3 viewVec
     vec4 result = mix(transparent, vec4(radiance, 1.0), opacity);
 
     // Add emission on as the final component.
-    return vec4(result.rgb + (material.emission * material.baseColor), result.a);
+    // Note: emission allows a material to blend off its specular component, 
+    // which can also be used to make an object completely disappear if also transparent.
+    return mix(result, vec4(material.baseColor, opacity), material.emission);
 }
 `
 )
