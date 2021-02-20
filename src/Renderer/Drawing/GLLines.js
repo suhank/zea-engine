@@ -20,6 +20,7 @@ class GLLines extends GLGeom {
     this.__numSegIndices = 0
     this.__numVertices = 0
     this.__buffersNeedUpload = true
+    this.__fatBuffersNeedUpload = true
   }
 
   /**
@@ -29,6 +30,7 @@ class GLLines extends GLGeom {
   genBuffers(opts) {
     this.genBufferOpts = opts
     this.__buffersNeedUpload = true
+    this.__fatBuffersNeedUpload = true
   }
 
   /**
@@ -38,6 +40,7 @@ class GLLines extends GLGeom {
   updateBuffers(opts) {
     this.genBufferOpts = opts
     this.__buffersNeedUpload = true
+    this.__fatBuffersNeedUpload = true
   }
 
   /**
@@ -161,6 +164,8 @@ class GLLines extends GLGeom {
 
       gl.bindTexture(gl.TEXTURE_2D, null)
       renderstate.boundTextures--
+
+      this.__fatBuffersNeedUpload = false
     } else {
       if (!this.__indexBuffer) {
         this.__indexBuffer = gl.createBuffer()
@@ -207,13 +212,12 @@ class GLLines extends GLGeom {
       // Cache the size so we know later if it changed
       this.__numSegIndices = indices.length
       this.__numVertices = geomBuffers.numVertices
+      this.__buffersNeedUpload = false
     }
 
     if (indices instanceof Uint8Array) this.__indexDataType = this.__gl.UNSIGNED_BYTE
     if (indices instanceof Uint16Array) this.__indexDataType = this.__gl.UNSIGNED_SHORT
     if (indices instanceof Uint32Array) this.__indexDataType = this.__gl.UNSIGNED_INT
-
-    this.__buffersNeedUpload = false
   }
 
   /**
@@ -225,7 +229,7 @@ class GLLines extends GLGeom {
     const gl = this.__gl
     const unifs = renderstate.unifs
     if (unifs.LineThickness && gl.floatTexturesSupported) {
-      if (this.__buffersNeedUpload) this.genBuffersLazy(renderstate, true)
+      if (this.__fatBuffersNeedUpload) this.genBuffersLazy(renderstate, true)
 
       let shaderBinding = this.__shaderBindings[renderstate.shaderkey]
       if (!shaderBinding) {
