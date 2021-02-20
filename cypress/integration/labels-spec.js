@@ -22,6 +22,7 @@ describe('Labels and Billboards', () => {
       cy.get('canvas').percySnapshot(`Labels ${variant}`)
     })
   })
+
   it('Renders labels - Fixedsize', () => {
     cy.visit('testing-e2e/labels-fixedsize.html', {
       onBeforeLoad(win) {

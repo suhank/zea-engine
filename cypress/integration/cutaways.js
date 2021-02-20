@@ -1,9 +1,4 @@
 describe('cutaways', () => {
-  it('Captures a snapshot', () => {
-    cy.visit('testing-e2e/cutaways.html')
-    cy.get('canvas').percySnapshot('cutaways')
-  })
-
   it('Captures snapshots of variants', () => {
     cy.visit('testing-e2e/cutaways.html', {
       onBeforeLoad(win) {
@@ -12,6 +7,7 @@ describe('cutaways', () => {
     })
 
     cy.get('@postMessage').its('lastCall.args.0').should('equal', 'done-loading')
+    cy.get('canvas').percySnapshot('cutaways')
 
     cy.window().then((win) => {
       const variant = 'variant-01'

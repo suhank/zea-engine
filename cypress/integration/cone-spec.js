@@ -1,9 +1,4 @@
 describe('cone', () => {
-  it('Captures a snapshot', () => {
-    cy.visit('testing-e2e/cone.html')
-    cy.get('canvas').percySnapshot('cone')
-  })
-
   it('Captures snapshots of variants', () => {
     cy.visit('testing-e2e/cone.html', {
       onBeforeLoad(win) {
@@ -12,6 +7,7 @@ describe('cone', () => {
     })
 
     cy.get('@postMessage').its('lastCall.args.0').should('equal', 'done-loading')
+    cy.get('canvas').percySnapshot('cone')
 
     cy.window().then((win) => {
       const variant = 'variant-01'

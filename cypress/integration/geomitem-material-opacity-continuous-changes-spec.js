@@ -1,9 +1,4 @@
 describe('geomitem-material-opacity-continuous-changes', () => {
-  it('Captures a snapshot', () => {
-    cy.visit('testing-e2e/geomitem-material-opacity-continuous-changes.html')
-    cy.get('canvas').percySnapshot('geomitem-material-opacity-continuous-changes')
-  })
-
   it('Captures snapshots of variants', () => {
     cy.visit('testing-e2e/geomitem-material-opacity-continuous-changes.html', {
       onBeforeLoad(win) {
@@ -12,6 +7,7 @@ describe('geomitem-material-opacity-continuous-changes', () => {
     })
 
     cy.get('@postMessage').its('lastCall.args.0').should('equal', 'done-loading')
+    cy.get('canvas').percySnapshot('geomitem-material-opacity-continuous-changes')
 
     cy.window().then((win) => {
       const variant = 'variant-01'

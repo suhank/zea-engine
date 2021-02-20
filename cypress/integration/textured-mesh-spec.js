@@ -1,9 +1,4 @@
 describe('textured-mesh', () => {
-  it('Captures a snapshot', () => {
-    cy.visit('testing-e2e/textured-mesh.html')
-    cy.get('canvas').percySnapshot('textured-mesh')
-  })
-
   it('Captures snapshots of variants', () => {
     cy.visit('testing-e2e/textured-mesh.html', {
       onBeforeLoad(win) {
@@ -12,6 +7,7 @@ describe('textured-mesh', () => {
     })
 
     cy.get('@postMessage').its('lastCall.args.0').should('equal', 'done-loading')
+    cy.get('canvas').percySnapshot('textured-mesh')
 
     cy.window().then((win) => {
       const variant = 'variant-01'

@@ -1,9 +1,4 @@
 describe('multi_draw', () => {
-  it('Captures a snapshot', () => {
-    cy.visit('testing-e2e/multi-draw.html')
-    cy.get('canvas').percySnapshot('multi_draw')
-  })
-
   it('Captures snapshots of variants', () => {
     cy.visit('testing-e2e/multi-draw.html', {
       onBeforeLoad(win) {
@@ -12,6 +7,7 @@ describe('multi_draw', () => {
     })
 
     cy.get('@postMessage').its('lastCall.args.0').should('equal', 'done-loading')
+    cy.get('canvas').percySnapshot('multi_draw')
 
     cy.window().then((win) => {
       const variant = 'variant-01'

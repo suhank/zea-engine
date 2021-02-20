@@ -1,9 +1,4 @@
 describe('material-group', () => {
-  it('Captures a snapshot', () => {
-    cy.visit('testing-e2e/material-group.html')
-    cy.get('canvas').percySnapshot('material-group')
-  })
-
   it('Captures snapshots of variants', () => {
     cy.visit('testing-e2e/material-group.html', {
       onBeforeLoad(win) {
@@ -12,6 +7,7 @@ describe('material-group', () => {
     })
 
     cy.get('@postMessage').its('lastCall.args.0').should('equal', 'done-loading')
+    cy.get('canvas').percySnapshot('material-group')
 
     cy.window().then((win) => {
       const variant = 'variant-01'

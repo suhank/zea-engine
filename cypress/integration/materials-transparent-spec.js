@@ -1,9 +1,4 @@
 describe('materials-transparent', () => {
-  it('Captures a snapshot', () => {
-    cy.visit('testing-e2e/materials-transparent.html')
-    cy.get('canvas').percySnapshot('materials-transparent')
-  })
-
   it('Captures snapshots of variants', () => {
     cy.visit('testing-e2e/materials-transparent.html', {
       onBeforeLoad(win) {
@@ -12,6 +7,7 @@ describe('materials-transparent', () => {
     })
 
     cy.get('@postMessage').its('lastCall.args.0').should('equal', 'done-loading')
+    cy.get('canvas').percySnapshot('materials-transparent')
 
     cy.window().then((win) => {
       const variant = 'variant-01'

@@ -1,9 +1,4 @@
 describe('clear-geoms', () => {
-  it('Captures a snapshot', () => {
-    cy.visit('testing-e2e/clear-geoms.html')
-    cy.get('canvas').percySnapshot('clear-geoms')
-  })
-
   it('Captures snapshots of variants', () => {
     cy.visit('testing-e2e/clear-geoms.html', {
       onBeforeLoad(win) {
@@ -12,6 +7,7 @@ describe('clear-geoms', () => {
     })
 
     cy.get('@postMessage').its('lastCall.args.0').should('equal', 'done-loading')
+    cy.get('canvas').percySnapshot('clear-geoms')
 
     cy.window().then((win) => {
       const variant = 'variant-01'
