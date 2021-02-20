@@ -1,4 +1,5 @@
 import { EventEmitter } from '../Utilities/index'
+import { SystemDesc } from '../SystemDesc'
 import { PreComputeBRDFShader } from './Shaders/PreComputeBRDFShader.js'
 import { ConvolveIrradianceShader } from './Shaders/ConvolveIrradianceShader.js'
 import { ConvolveSpecularShader } from './Shaders/ConvolveSpecularShader.js'
@@ -35,6 +36,18 @@ class GLProbe extends EventEmitter {
     const gl = this.__gl
 
     const renderstate = { shaderopts: { directives: ['#define ENABLE_ES3', '#define ENABLE_FLOAT_TEXTURES'] } }
+
+    // Note: in testing we are running on the Google SwiftShader emulated GPU.
+    if (SystemDesc.deviceCategory == 'Low') {
+      renderstate.shaderopts.directives.push('#define SAMPLE_DELTA 0.1')
+      renderstate.shaderopts.directives.push('#define SAMPLE_COUNT 64u')
+    } else if (SystemDesc.deviceCategory == 'Medium') {
+      renderstate.shaderopts.directives.push('#define SAMPLE_DELTA 0.08')
+      renderstate.shaderopts.directives.push('#define SAMPLE_COUNT 256u')
+    } else {
+      renderstate.shaderopts.directives.push('#define SAMPLE_DELTA 0.025')
+      renderstate.shaderopts.directives.push('#define SAMPLE_COUNT 1024u')
+    }
 
     this.brdfLUTTexture = gl.createTexture()
 

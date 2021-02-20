@@ -56,11 +56,10 @@ void main(void) {
   vec3 tangent   = normalize(cross(up, N));
   vec3 bitangent = cross(N, tangent);
 
-  float sampleDelta = 0.025;
   float nrSamples = 0.0; 
-  for(float phi = 0.0; phi < 2.0 * PI; phi += sampleDelta)
+  for(float phi = 0.0; phi < 2.0 * PI; phi += SAMPLE_DELTA)
   {
-    for(float theta = 0.0; theta < 0.5 * PI; theta += sampleDelta)
+    for(float theta = 0.0; theta < 0.5 * PI; theta += SAMPLE_DELTA)
     {
       // spherical to cartesian (in tangent space)
       // from spherical coordinates to cartesian coordinates

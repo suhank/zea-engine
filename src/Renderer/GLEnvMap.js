@@ -63,7 +63,7 @@ class GLEnvMap extends GLProbe {
       this.emit('updated')
     })
 
-    this.convolveProbe(this.__srcGLTex, this.cubeFaceSize)
+    this.convolveProbe(this.__srcGLTex)
 
     this.emit('updated')
   }
