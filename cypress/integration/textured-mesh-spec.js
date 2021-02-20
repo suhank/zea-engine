@@ -1,5 +1,5 @@
 describe('textured-mesh', () => {
-  it('Captures snapshots of variants', () => {
+  it.skip('Captures snapshots of variants', () => {
     cy.visit('testing-e2e/textured-mesh.html', {
       onBeforeLoad(win) {
         cy.spy(win, 'postMessage').as('postMessage')

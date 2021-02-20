@@ -9,13 +9,13 @@ describe('pointer-events', () => {
     })
   })
 
-  it('Mouse Move - Camera Manipulator', () => {
+  it.skip('Mouse Move - Camera Manipulator', () => {
     cy.get('canvas').trigger('mousedown', 'left').trigger('mousemove', 'center').trigger('mouseup', 'center')
 
     cy.get('canvas').percySnapshot(`MouseMoveCameraManipulator`)
   })
 
-  it('Mouse Enter - Geometry', () => {
+  it.skip('Mouse Enter - Geometry', () => {
     cyFocusCanvas()
 
     cy.get('canvas').trigger('mousemove', 100, 230).trigger('mousemove', 250, 230)
@@ -23,7 +23,7 @@ describe('pointer-events', () => {
     cy.get('canvas').percySnapshot(`MouseEnterGeometry`)
   })
 
-  it('Mouse Leave - Geometry', () => {
+  it.skip('Mouse Leave - Geometry', () => {
     cyFocusCanvas()
 
     cy.get('canvas').trigger('mousemove', 250, 230).trigger('mousemove', 100, 230)
@@ -31,7 +31,7 @@ describe('pointer-events', () => {
     cy.get('canvas').percySnapshot(`MouseLeaveGeometry`)
   })
 
-  it('Wheel Zoom In - Camera Manipulator', () => {
+  it.skip('Wheel Zoom In - Camera Manipulator', () => {
     cyFocusCanvas()
 
     cy.get('canvas').trigger('wheel', {
@@ -44,7 +44,7 @@ describe('pointer-events', () => {
     cy.get('canvas').percySnapshot(`WheelZoomInCameraManipulator`)
   })
 
-  it('Wheel Zoom Out - Camera Manipulator', () => {
+  it.skip('Wheel Zoom Out - Camera Manipulator', () => {
     cyFocusCanvas()
 
     cy.get('canvas').trigger('wheel', {
@@ -57,13 +57,13 @@ describe('pointer-events', () => {
     cy.get('canvas').percySnapshot(`WheelZoomOutCameraManipulator`)
   })
 
-  it('Double Click - Geometry', () => {
+  it.skip('Double Click - Geometry', () => {
     cy.get('canvas').dblclick(800, 300)
 
     cy.get('canvas').percySnapshot(`DoubleClickGeometry`)
   })
 
-  it('Touch Move - Camera manipulator', () => {
+  it.skip('Touch Move - Camera manipulator', () => {
     const eTouchStart = createTouchEvents([600, 600])
     const eTouch = createTouchEvents([550, 600])
 
@@ -85,7 +85,7 @@ describe('pointer-events', () => {
     cy.get('canvas').percySnapshot(`DoubleTapGeometry`)
   })
 
-  it('Touch Zoom In - Camera manipulator', () => {
+  it.skip('Touch Zoom In - Camera manipulator', () => {
     const eTouchStart = createTouchEvents([600, 600, 650, 600])
     const eTouch = createTouchEvents([500, 600, 700, 600])
 
@@ -96,7 +96,7 @@ describe('pointer-events', () => {
       .percySnapshot(`TouchZoomInCameraManipulator`)
   })
 
-  it('Touch Zoom Out - Camera manipulator', () => {
+  it.skip('Touch Zoom Out - Camera manipulator', () => {
     const eTouchStart = createTouchEvents([500, 600, 700, 600])
     const eTouch = createTouchEvents([600, 600, 650, 600])
 

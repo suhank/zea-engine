@@ -1,5 +1,5 @@
 describe('load-mesh-json', () => {
-  it('Captures snapshots of variants', () => {
+  it.skip('Captures snapshots of variants', () => {
     cy.visit('testing-e2e/load-mesh-json.html', {
       onBeforeLoad(win) {
         cy.spy(win, 'postMessage').as('postMessage')

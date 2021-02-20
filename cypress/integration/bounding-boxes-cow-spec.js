@@ -1,5 +1,5 @@
 describe('bounding-boxes-cow', () => {
-  it('Captures snapshots of variants', () => {
+  it.skip('Captures snapshots of variants', () => {
     cy.visit('testing-e2e/bounding-boxes-cow.html', {
       onBeforeLoad(win) {
         cy.spy(win, 'postMessage').as('postMessage')
