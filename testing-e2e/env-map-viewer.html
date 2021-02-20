@@ -90,10 +90,7 @@
       renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 0, 0), new Vec3(0, 0, 0))
 
       envMap.on('loaded', () => {
-        renderer.once('redrawOccurred', () => {
-          window.postMessage('done-loading')
-        })
-        renderer.requestRedraw()
+        window.postMessage('done-loading')
       })
 
       const slider = document.getElementById('exposureControl')
