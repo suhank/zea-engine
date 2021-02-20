@@ -1,5 +1,5 @@
 describe('material-group', () => {
-  it.skip('Captures snapshots of variants', () => {
+  it('Captures snapshots of variants', () => {
     cy.visit('testing-e2e/material-group.html', {
       onBeforeLoad(win) {
         cy.spy(win, 'postMessage').as('postMessage')

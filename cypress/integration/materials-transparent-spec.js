@@ -1,5 +1,5 @@
 describe('materials-transparent', () => {
-  it.skip('Captures snapshots of variants', () => {
+  it('Captures snapshots of variants', () => {
     cy.visit('testing-e2e/materials-transparent.html', {
       onBeforeLoad(win) {
         cy.spy(win, 'postMessage').as('postMessage')

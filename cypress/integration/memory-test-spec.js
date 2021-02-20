@@ -1,5 +1,5 @@
 describe('Zea Engine performance', () => {
-  it.skip('Behaves properly under memory stress', () => {
+  it('Behaves properly under memory stress', () => {
     cy.visit('testing-e2e/memory-test.html')
 
     cy.get('#run').click()

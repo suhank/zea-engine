@@ -1,5 +1,5 @@
 describe('transparent-geoms-sorting', () => {
-  it.skip('Captures snapshots of variants', () => {
+  it('Captures snapshots of variants', () => {
     cy.visit('testing-e2e/transparent-geoms-sorting.html', {
       onBeforeLoad(win) {
         cy.spy(win, 'postMessage').as('postMessage')

@@ -1,5 +1,5 @@
 describe('geomitem-material-opacity-changes', () => {
-  it.skip('Captures snapshots of variants', () => {
+  it('Captures snapshots of variants', () => {
     cy.visit('testing-e2e/geomitem-material-opacity-changes.html', {
       onBeforeLoad(win) {
         cy.spy(win, 'postMessage').as('postMessage')
