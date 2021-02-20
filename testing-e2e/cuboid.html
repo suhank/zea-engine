@@ -37,17 +37,21 @@
         const { data } = event
 
         if (data === 'variant-01') {
+          renderer.suspendDrawing()
           renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, -2.7), new Vec3(0, 0, 0.4))
           renderer.frameAll()
           renderer.once('redrawOccurred', () => {
             window.postMessage(`done-${data}`)
           })
+          renderer.resumeDrawing()
         } else if (data === 'variant-02') {
+          renderer.suspendDrawing()
           renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-2, -2, 2.7), new Vec3(0, 0, 0.4))
           renderer.frameAll()
           renderer.once('redrawOccurred', () => {
             window.postMessage(`done-${data}`)
           })
+          renderer.resumeDrawing()
         }
       }
 

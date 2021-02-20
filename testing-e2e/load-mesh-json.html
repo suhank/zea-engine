@@ -76,6 +76,7 @@
         const { data } = event
 
         if (data === 'variant-01') {
+          renderer.suspendDrawing()
           mesh.fromJSON({
             faceCounts: [4],
             faceVertexIndices: [0, 1, 2, 0, 2, 3, 3, 2, 4, 2, 1, 4],
@@ -102,7 +103,9 @@
           renderer.once('redrawOccurred', () => {
             window.postMessage(`done-${data}`)
           })
+          renderer.resumeDrawing()
         } else if (data === 'variant-02') {
+          renderer.suspendDrawing()
           mesh.fromJSON({
             faceCounts: [2],
             faceVertexIndices: [0, 1, 2, 0, 2, 3],
@@ -129,6 +132,7 @@
           renderer.once('redrawOccurred', () => {
             window.postMessage(`done-${data}`)
           })
+          renderer.resumeDrawing()
         }
       }
 

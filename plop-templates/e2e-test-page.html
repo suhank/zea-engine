@@ -25,26 +25,28 @@
 
       scene.setupGrid(10.0, 10)
 
-      someEmitter.on('loaded', () => {
-        window.postMessage('done-loading')
-      })
+      window.postMessage('done-loading')
 
       // {{openCommentBlock}} Messages handler.
       const handleMessage = (event) => {
         const { data } = event
 
         if (data === 'variant-01') {
+          renderer.suspendDrawing()
           renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, -2.7), new Vec3(0, 0, 0.4))
           renderer.frameAll()
           renderer.once('redrawOccurred', () => {
             window.postMessage(`done-${data}`)
           })
+          renderer.resumeDrawing()
         } else if (data === 'variant-02') {
+          renderer.suspendDrawing()
           renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-2, -2, 2.7), new Vec3(0, 0, 0.4))
           renderer.frameAll()
           renderer.once('redrawOccurred', () => {
             window.postMessage(`done-${data}`)
           })
+          renderer.resumeDrawing()
         }
       }
 
