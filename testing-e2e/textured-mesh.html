@@ -73,12 +73,7 @@
       }
 
       Promise.all(promises).then(() => {
-        renderer.once('redrawOccurred', () => {
-          renderer.once('redrawOccurred', () => {
-            window.postMessage('done-loading')
-          })
-          renderer.requestRedraw()
-        })
+        window.postMessage('done-loading')
       })
 
       // {{{ Messages handler.
