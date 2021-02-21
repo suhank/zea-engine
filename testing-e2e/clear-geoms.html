@@ -45,14 +45,9 @@
         const { data } = event
 
         if (data === 'variant-01') {
-          renderer.suspendDrawing()
           lines.clear()
-          renderer.once('redrawOccurred', () => {
-            window.postMessage(`done-${data}`)
-          })
-          renderer.resumeDrawing()
+          window.postMessage(`done-${data}`)
         } else if (data === 'variant-02') {
-          renderer.suspendDrawing()
           lines.setNumVertices(4)
           lines.setNumSegments(3)
           lines.setSegmentVertexIndices(0, 0, 1)
@@ -67,10 +62,7 @@
           lines.emit('geomDataTopologyChanged', {
             indicesChanged: true,
           })
-          renderer.once('redrawOccurred', () => {
-            window.postMessage(`done-${data}`)
-          })
-          renderer.resumeDrawing()
+          window.postMessage(`done-${data}`)
         }
       }
 
