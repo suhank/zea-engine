@@ -13,7 +13,6 @@ class GLMesh extends GLGeom {
    */
   constructor(gl, mesh) {
     super(gl, mesh)
-    this.genBuffers()
   }
 
   /**
