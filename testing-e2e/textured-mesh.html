@@ -31,17 +31,17 @@
 
         const promises = []
 
-        {
-          const material = new Material('Material', 'FlatSurfaceShader')
+        // {
+        //   const material = new Material('Material', 'FlatSurfaceShader')
 
-          material.getParameter('BaseColor').setValue(new Color(0.6, 0, 1))
-          const image = new LDRImage('LDRImage')
-          image.setImageURL('data/avatar1.jpg')
-          promises.push(new Promise((resolve) => image.on('loaded', resolve)))
-          material.getParameter('BaseColor').setImage(image)
-          const geomItem = new GeomItem('geomItem1', disc, material, new Xfo(new Vec3(-1, 0, 0.1)))
-          scene.getRoot().addChild(geomItem)
-        }
+        //   material.getParameter('BaseColor').setValue(new Color(0.6, 0, 1))
+        //   const image = new LDRImage('LDRImage')
+        //   image.setImageURL('data/avatar1.jpg')
+        //   promises.push(new Promise((resolve) => image.on('loaded', resolve)))
+        //   material.getParameter('BaseColor').setImage(image)
+        //   const geomItem = new GeomItem('geomItem1', disc, material, new Xfo(new Vec3(-1, 0, 0.1)))
+        //   scene.getRoot().addChild(geomItem)
+        // }
         {
           const material = new Material('Material', 'FlatSurfaceShader')
 
@@ -54,24 +54,24 @@
           scene.getRoot().addChild(geomItem)
         }
 
-        {
-          const material = new Material('Material', 'FlatSurfaceShader')
-          const label = new Label('Name')
-          label.getParameter('FontColor').setValue(new Color(0.6, 0, 0))
-          label.getParameter('BackgroundColor').setValue(new Color(1, 1, 1))
-          label.getParameter('FontSize').setValue(42)
-          label.getParameter('BorderRadius').setValue(0)
-          label.getParameter('BorderWidth').setValue(0)
-          label.getParameter('Margin').setValue(12)
-          label.getParameter('StrokeBackgroundOutline').setValue(false)
-          label.getParameter('Text').setValue(`Hello World`)
-          promises.push(new Promise((resolve) => label.on('labelRendered', resolve)))
+        // {
+        //   const material = new Material('Material', 'FlatSurfaceShader')
+        //   const label = new Label('Name')
+        //   label.getParameter('FontColor').setValue(new Color(0.6, 0, 0))
+        //   label.getParameter('BackgroundColor').setValue(new Color(1, 1, 1))
+        //   label.getParameter('FontSize').setValue(42)
+        //   label.getParameter('BorderRadius').setValue(0)
+        //   label.getParameter('BorderWidth').setValue(0)
+        //   label.getParameter('Margin').setValue(12)
+        //   label.getParameter('StrokeBackgroundOutline').setValue(false)
+        //   label.getParameter('Text').setValue(`Hello World`)
+        //   promises.push(new Promise((resolve) => label.on('labelRendered', resolve)))
 
-          material.getParameter('BaseColor').setImage(label)
-          const geomItem = new GeomItem('geomItem3', plane, material, new Xfo(new Vec3(1, 0, 0.1)))
+        //   material.getParameter('BaseColor').setImage(label)
+        //   const geomItem = new GeomItem('geomItem3', plane, material, new Xfo(new Vec3(1, 0, 0.1)))
 
-          scene.getRoot().addChild(geomItem)
-        }
+        //   scene.getRoot().addChild(geomItem)
+        // }
 
         // await new Promise((resolve) => setTimeout(resolve, 15000))
         await Promise.all(promises)
