@@ -183,19 +183,11 @@
         const { data } = event
 
         if (data === 'variant-01') {
-          renderer.suspendDrawing()
           renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-35, 35, 20), new Vec3(0, 0, -10))
-          renderer.once('redrawOccurred', () => {
-            window.postMessage(`done-${data}`)
-          })
-          renderer.resumeDrawing()
+          window.postMessage(`done-${data}`)
         } else if (data === 'variant-02') {
-          renderer.suspendDrawing()
           renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-35,-35, 20), new Vec3(0, 0, -10))
-          renderer.once('redrawOccurred', () => {
-            window.postMessage(`done-${data}`)
-          })
-          renderer.resumeDrawing()
+          window.postMessage(`done-${data}`)
         }
       }
 

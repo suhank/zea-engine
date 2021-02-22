@@ -35,20 +35,12 @@
         const { data } = event
 
         if (data === 'variant-01') {
-          renderer.suspendDrawing()
           sphere.getParameter('Radius').setValue(2.5)
-          renderer.once('redrawOccurred', () => {
-            window.postMessage(`done-${data}`)
-          })
-          renderer.resumeDrawing()
+          window.postMessage(`done-${data}`)
         } else if (data === 'variant-02') {
-          renderer.suspendDrawing()
           sphere.getParameter('Loops').setValue(25)
           sphere.getParameter('Sides').setValue(15)
-          renderer.once('redrawOccurred', () => {
-            window.postMessage(`done-${data}`)
-          })
-          renderer.resumeDrawing()
+          window.postMessage(`done-${data}`)
         }
       }
 

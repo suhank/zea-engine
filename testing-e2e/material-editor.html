@@ -137,22 +137,14 @@
         const { data } = event
 
         if (data === 'variant-01') {
-          renderer.suspendDrawing()
           renderer.exposure = 0.2
           slider.value = renderer.exposure * 100
 
-          renderer.once('redrawOccurred', () => {
-            window.postMessage(`done-${data}`)
-          })
-          renderer.resumeDrawing()
+          window.postMessage(`done-${data}`)
         } else if (data === 'variant-02') {
-          renderer.suspendDrawing()
           renderer.exposure = 1.8
           slider.value = renderer.exposure * 100
-          renderer.once('redrawOccurred', () => {
-            window.postMessage(`done-${data}`)
-          })
-          renderer.resumeDrawing()
+          window.postMessage(`done-${data}`)
         }
       }
 

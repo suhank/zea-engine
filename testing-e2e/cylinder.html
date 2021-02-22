@@ -36,20 +36,12 @@
         const { data } = event
 
         if (data === 'variant-01') {
-          renderer.suspendDrawing()
           cylinder.getParameter('Radius').setValue(2.5)
           cylinder.getParameter('Height').setValue(1.5)
-          renderer.once('redrawOccurred', () => {
-            window.postMessage(`done-${data}`)
-          })
-          renderer.resumeDrawing()
+          window.postMessage(`done-${data}`)
         } else if (data === 'variant-02') {
-          renderer.suspendDrawing()
           cylinder.getParameter('Sides').setValue(15)
-          renderer.once('redrawOccurred', () => {
-            window.postMessage(`done-${data}`)
-          })
-          renderer.resumeDrawing()
+          window.postMessage(`done-${data}`)
         }
       }
 

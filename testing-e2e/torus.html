@@ -35,26 +35,14 @@
         const { data } = event
 
         if (data === 'variant-01') {
-          renderer.suspendDrawing()
           torus.getParameter('ArcAngle').setValue(Math.PI * 1.5)
-          renderer.once('redrawOccurred', () => {
-            window.postMessage(`done-${data}`)
-          })
-          renderer.resumeDrawing()
+          window.postMessage(`done-${data}`)
         } else if (data === 'variant-02') {
-          renderer.suspendDrawing()
           torus.getParameter('Detail').setValue(25)
-          renderer.once('redrawOccurred', () => {
-            window.postMessage(`done-${data}`)
-          })
-          renderer.resumeDrawing()
+          window.postMessage(`done-${data}`)
         } else if (data === 'variant-03') {
-          renderer.suspendDrawing()
           torus.getParameter('InnerRadius').setValue(0.5)
-          renderer.once('redrawOccurred', () => {
-            window.postMessage(`done-${data}`)
-          })
-          renderer.resumeDrawing()
+          window.postMessage(`done-${data}`)
         }
       }
 
