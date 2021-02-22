@@ -41,6 +41,7 @@
         const geomItem = new GeomItem('geomItem1', disc, material, new Xfo(new Vec3(-1, 0, 0.1)))
         scene.getRoot().addChild(geomItem)
       }
+      /*
       {
         const material = new Material('Material', 'FlatSurfaceShader')
 
@@ -71,6 +72,7 @@
 
         scene.getRoot().addChild(geomItem)
       }
+      */
 
       Promise.allSettled(promises).then((results) => {
         console.log(results)
