@@ -735,6 +735,9 @@ class GLBaseRenderer extends ParameterOwner {
       'touchstart',
       (event) => {
         event.stopPropagation()
+        // Touch events are passive and so cannot call prevent default
+        // replace with a stub here...
+        event.preventDefault = () => {}
 
         prepareEvent(event)
         for (let i = 0; i < event.touches.length; i++) {
@@ -743,16 +746,17 @@ class GLBaseRenderer extends ParameterOwner {
 
         event.pointerType = POINTER_TYPES.touch
         this.getViewport().onPointerDown(event)
-        // This prevents the event propagation to `mousedown`
-        event.preventDefault()
       },
-      false
+      { passive: true }
     )
 
     this.__glcanvas.addEventListener(
       'touchend',
       (event) => {
         event.stopPropagation()
+        // Touch events are passive and so cannot call prevent default
+        // replace with a stub here...
+        event.preventDefault = () => {}
 
         prepareEvent(event)
         for (let i = 0; i < event.changedTouches.length; i++) {
@@ -762,13 +766,16 @@ class GLBaseRenderer extends ParameterOwner {
         event.pointerType = POINTER_TYPES.touch
         this.getViewport().onPointerUp(event)
       },
-      false
+      { passive: true }
     )
 
     this.__glcanvas.addEventListener(
       'touchmove',
       (event) => {
         event.stopPropagation()
+        // Touch events are passive and so cannot call prevent default
+        // replace with a stub here...
+        event.preventDefault = () => {}
 
         prepareEvent(event)
         for (let i = 0; i < event.touches.length; i++) {
@@ -778,7 +785,7 @@ class GLBaseRenderer extends ParameterOwner {
         event.pointerType = POINTER_TYPES.touch
         this.getViewport().onPointerMove(event)
       },
-      false
+      { passive: true }
     )
     /** Touch Events End */
 
