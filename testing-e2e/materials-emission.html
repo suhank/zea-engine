@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>materials - Zea Engine</title>
+
+    <link href="zea-logo.png" rel="shortcut icon" />
+
+    <link rel="stylesheet" href="styles/tachyons.min.css" />
+    <link rel="stylesheet" href="styles/main.css" />
+    <style>
+      .slidecontainer {
+        position: 'relative';
+        /* bottom: 0; */
+        width: 100%; /* Width of the outside container */
+      }
+
+      /* The slider itself */
+      .slider {
+        position: absolute;
+        bottom: 20px;
+        right: 0;
+        -webkit-appearance: none;
+        width: 100%;
+        height: 15px;
+        border-radius: 5px;
+        background: #d3d3d3;
+        outline: none;
+        opacity: 0.7;
+        -webkit-transition: 0.2s;
+        transition: opacity 0.2s;
+      }
+
+      /* Mouse-over effects */
+      .slider:hover {
+        opacity: 1; /* Fully shown on mouse-over */
+      }
+
+      .slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+        background: #4caf50;
+        cursor: pointer;
+      }
+
+      .slider::-moz-range-thumb {
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+        background: #4caf50;
+        cursor: pointer;
+      }
+    </style>
+
+    <script src="../dist/index.umd.js"></script>
+    <script src="../dist/plugins.umd.js"></script>
+
+    <script type="module">
+      const {
+        GLRenderer,
+        Scene,
+        Vec3,
+        Color,
+        Xfo,
+        Sphere,
+        GeomItem,
+        Material,
+        EnvMap,
+        Label,
+        BillboardItem,
+        EulerAngles
+      } = window.zeaEngine
+
+      const canvas = document.querySelector('#renderer')
+
+      const scene = new Scene()
+      const renderer = new GLRenderer(canvas, { hideSplash: true, antialias: false })
+      renderer.setScene(scene)
+
+      scene.setupGrid(10.0, 10)
+
+      //////////////////////////////
+
+      const envMap = new EnvMap()
+      envMap.getParameter('FilePath').setValue('data/pisa-webp.zenv')
+      // envMap.getParameter('FilePath').setValue('data/AutomnRoad-webp.zenv')
+      // envMap.getParameter('FilePath').setValue('data/StudioG.zenv')
+      // envMap.getParameter('FilePath').setValue('data/StudioD.zenv')
+      // envMap.getParameter('FilePath').setValue('data/HDR_041_Path_Ref-webp.zenv')
+      scene.setEnvMap(envMap)
+      scene.getSettings().getParameter('Display EnvMap').setValue(true)
+
+      const addMeshShape = (name, shape, pos, mat) => {
+        const geomItem = new GeomItem(name, shape, mat, new Xfo(pos))
+        scene.getRoot().addChild(geomItem)
+      }
+
+      const sphere = new Sphere(1.4, 80)
+      let zoffset = 0;
+      const addRow = (name, baseColor, metallic, reflectance, lerpOpacity=false) => {
+        for (let i = 0; i < 10; i++) {
+          for (let j = 0; j < 10; j++) {
+            const material = new Material('surfaces', 'StandardSurfaceShader')
+            material.getParameter('BaseColor').setValue(baseColor)
+            material.getParameter('Metallic').setValue(metallic)
+            material.getParameter('Reflectance').setValue(reflectance)
+            
+            material.getParameter('Roughness').setValue(0.2)
+            material.getParameter('Opacity').setValue(i / 10)
+            material.getParameter('EmissiveStrength').setValue(j / 9)
+
+            addMeshShape(
+              name + i, sphere,
+              new Vec3((i / 9 - 0.5) * 30, (j / 9 - 0.5) * 30, 1.4 + zoffset),
+              material
+            )
+          }
+        }
+
+        zoffset += 5
+      }
+
+      // https://google.github.io/filament/images/material_chart.jpg
+
+      // Note: 
+      addRow('Glass', new Color(0.8, 0, 0), 0.0, 0.9)
+
+      renderer.exposure = 1.6
+      document.getElementById('exposureControl').value = renderer.exposure * 100
+      document.getElementById('exposureControl').addEventListener('input', (event) => {
+        renderer.exposure = event.target.value / 100
+      })
+      
+
+      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(35, -35, 25), new Vec3(0, 0, 0))
+
+      envMap.on('loaded', () => {
+        window.postMessage('done-loading')
+      })
+
+      // {{{ Messages handler.
+      const handleMessage = (event) => {
+        const { data } = event
+
+        if (data === 'variant-01') {
+          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-35, 35, 25), new Vec3(0, 0, 0))
+          window.postMessage(`done-${data}`)
+        } else if (data === 'variant-02') {
+          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-35,-35, 25), new Vec3(0, 0, 0))
+          window.postMessage(`done-${data}`)
+        }
+      }
+
+      window.addEventListener('message', handleMessage, false)
+      // }}}
+    </script>
+  </head>
+  <body>
+    <canvas class="full-size" id="renderer"></canvas></canvas>
+    <div class="slidecontainer">
+      <input type="range" min="0" max="400" value="100" class="slider" id="exposureControl" />
+    </div>
+  </body>
+</html>

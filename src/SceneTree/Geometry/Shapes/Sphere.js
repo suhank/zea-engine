@@ -96,8 +96,8 @@ class Sphere extends ProceduralMesh {
       this.setFaceVertexIndices(faceIndex, [v0, v1, v2])
 
       const uv0 = new Vec2(0.5, 0.0)
-      const uv1 = new Vec2(1.0 - (j + 1) / nbSides, 0.0)
-      const uv2 = new Vec2(1.0 - j / nbSides, 1.0 / (nbLoops + 1))
+      const uv1 = new Vec2((j + 1) / (nbSides - 1), 1 / (nbLoops + 1))
+      const uv2 = new Vec2(j / (nbSides - 1), 1 / (nbLoops + 1))
       texCoords.setFaceVertexValue(faceIndex, 0, uv0)
       texCoords.setFaceVertexValue(faceIndex, 1, uv1)
       texCoords.setFaceVertexValue(faceIndex, 2, uv2)
@@ -107,13 +107,13 @@ class Sphere extends ProceduralMesh {
     // Build the fan at the second pole.
     for (let j = 0; j < nbSides; j++) {
       const v0 = numVertices - 1
-      const v1 = nbSides * (nbLoops - 1) + j + 1
       const v2 = nbSides * (nbLoops - 1) + ((j + 1) % nbSides) + 1
+      const v1 = nbSides * (nbLoops - 1) + j + 1
       this.setFaceVertexIndices(faceIndex, [v0, v1, v2])
 
-      const uv0 = new Vec2(1.0 - j / nbSides, nbLoops / (nbLoops + 1))
-      const uv1 = new Vec2(1.0 - (j + 1) / nbSides, nbLoops / (nbLoops + 1))
-      const uv2 = new Vec2(0.5, 1.0)
+      const uv0 = new Vec2(0.5, 1.0)
+      const uv1 = new Vec2((j + 1) / (nbSides - 1), 1 - 1 / (nbLoops + 1))
+      const uv2 = new Vec2(j / (nbSides - 1), 1 - 1 / (nbLoops + 1))
       texCoords.setFaceVertexValue(faceIndex, 0, uv0)
       texCoords.setFaceVertexValue(faceIndex, 1, uv1)
       texCoords.setFaceVertexValue(faceIndex, 2, uv2)
@@ -129,10 +129,10 @@ class Sphere extends ProceduralMesh {
         const v3 = nbSides * (i + 1) + j + 1
         this.setFaceVertexIndices(faceIndex, [v0, v1, v2, v3])
 
-        texCoords.setFaceVertexValue(faceIndex, 0, new Vec2(i / nbLoops, j / nbLoops))
-        texCoords.setFaceVertexValue(faceIndex, 1, new Vec2(i / nbLoops, (j + 1) / nbLoops))
-        texCoords.setFaceVertexValue(faceIndex, 2, new Vec2((i + 1) / nbLoops, (j + 1) / nbLoops))
-        texCoords.setFaceVertexValue(faceIndex, 3, new Vec2((i + 1) / nbLoops, j / nbLoops))
+        texCoords.setFaceVertexValue(faceIndex, 0, new Vec2(j / nbSides, (i + 1) / nbLoops))
+        texCoords.setFaceVertexValue(faceIndex, 1, new Vec2((j + 1) / nbSides, (i + 1) / nbLoops))
+        texCoords.setFaceVertexValue(faceIndex, 2, new Vec2((j + 1) / nbSides, (i + 2) / nbLoops))
+        texCoords.setFaceVertexValue(faceIndex, 3, new Vec2(j / nbSides, (i + 2) / nbLoops))
         faceIndex++
       }
     }

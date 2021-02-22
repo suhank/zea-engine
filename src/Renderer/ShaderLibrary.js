@@ -239,8 +239,13 @@ class ShaderLibrary {
           if (!(typeName in glslTypes))
             throw new Error('Error while parsing :' + shaderName + ' \nType not recognized:' + parts[1])
           const name = parts[typeIndex + 1].slice(0, parts[typeIndex + 1].length - 1)
-          result.uniforms[name] = glslTypes[typeName]
-          // console.log('uniform:', name, ":", typeName);
+
+          if (name.includes('[')) {
+            // Strip off the square brackets.
+            result.uniforms[name.substring(0, name.indexOf('['))] = glslTypes[typeName]
+          } else {
+            result.uniforms[name] = glslTypes[typeName]
+          }
 
           if (result.uniforms[name] == 'struct') {
             console.log(parts)

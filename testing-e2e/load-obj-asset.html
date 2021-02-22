@@ -10,9 +10,10 @@
     <canvas class="full-size" id="app"></canvas>
 
     <script src="../dist/index.umd.js"></script>
+    <script src="../dist/plugins.umd.js"></script>
 
     <script type="module">
-      const { Vec3, EulerAngles, Xfo, ObjAsset, Scene, GLRenderer } = zeaEngine
+      const { Vec3, EulerAngles, Xfo, ObjAsset, Scene, GLRenderer, EnvMap } = zeaEngine
 
       const domElement = document.getElementById('app')
 
@@ -23,6 +24,14 @@
       renderer.setScene(scene)
       renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(12, 12, 10), new Vec3(0, 0, 1.5))
 
+      const promises = []
+
+      const envMap = new EnvMap()
+      envMap.getParameter('FilePath').setValue('data/pisa-webp.zenv')
+      promises.push(new Promise((resolve) => envMap.on('loaded', resolve)))
+      scene.setEnvMap(envMap)
+      scene.getSettings().getParameter('Display EnvMap').setValue(true)
+
       const objAsset = new ObjAsset('cow')
       objAsset.getParameter('FilePath').setUrl('data/cow.obj')
       scene.getRoot().addChild(objAsset)
@@ -31,8 +40,10 @@
       xfo.tr.set(0, 0, 3.55)
       xfo.ori.setFromEulerAngles(new EulerAngles(90 * (Math.PI / 180), 0, 0))
       objAsset.getParameter('GlobalXfo').setValue(xfo)
-      objAsset.on('loaded', () => {
-        window.postMessage(`done-Loading`)
+      promises.push(new Promise((resolve) => objAsset.on('loaded', resolve)))
+
+      Promise.all(promises).then(() => {
+        window.postMessage('done-loading')
       })
 
       // {{{ Messages handler.
@@ -40,17 +51,13 @@
         const { data } = event
 
         if (data === 'front') {
-          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, -2.7), new Vec3(0, 0, 0.4))
+          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(1, 1, 0.1), new Vec3(0, 0, 0.4))
           renderer.frameAll()
-          renderer.once('redrawOccurred', () => {
-            window.postMessage(`done-${data}`)
-          })
+          window.postMessage(`done-${data}`)
         } else if (data === 'back') {
           renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-2, -2, 2.7), new Vec3(0, 0, 0.4))
           renderer.frameAll()
-          renderer.once('redrawOccurred', () => {
-            window.postMessage(`done-${data}`)
-          })
+          window.postMessage(`done-${data}`)
         }
       }
 

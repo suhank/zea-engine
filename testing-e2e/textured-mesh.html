@@ -28,12 +28,15 @@
       const disc = new Disc(0.5, 64)
       const plane = new Plane(1, 1)
 
+      const promises = []
+
       {
         const material = new Material('Material', 'FlatSurfaceShader')
 
         material.getParameter('BaseColor').setValue(new Color(0.6, 0, 1))
         const image = new LDRImage('LDRImage')
         image.setImageURL('data/avatar1.jpg')
+        promises.push(new Promise((resolve) => image.on('loaded', resolve)))
         material.getParameter('BaseColor').setImage(image)
         const geomItem = new GeomItem('geomItem1', disc, material, new Xfo(new Vec3(-1, 0, 0.1)))
         scene.getRoot().addChild(geomItem)
@@ -44,6 +47,7 @@
         material.getParameter('BaseColor').setValue(new Color(0.6, 0, 1))
         const image = new LDRImage('LDRImage')
         image.setImageURL('data/zea-logo.png', 'RGBA')
+        promises.push(new Promise((resolve) => image.on('loaded', resolve)))
         material.getParameter('BaseColor').setImage(image)
         const geomItem = new GeomItem('geomItem2', plane, material, new Xfo(new Vec3(0, 0, 0.1)))
         scene.getRoot().addChild(geomItem)
@@ -60,9 +64,7 @@
         label.getParameter('Margin').setValue(12)
         label.getParameter('StrokeBackgroundOutline').setValue(false)
         label.getParameter('Text').setValue(`Hello World`)
-        label.on('labelRendered', (event) => {
-          window.postMessage('done-loading')
-        })
+        promises.push(new Promise((resolve) => label.on('labelRendered', resolve)))
 
         material.getParameter('BaseColor').setImage(label)
         const geomItem = new GeomItem('geomItem3', plane, material, new Xfo(new Vec3(1, 0, 0.1)))
@@ -70,30 +72,13 @@
         scene.getRoot().addChild(geomItem)
       }
 
-      // {{{ Messages handler.
-      const handleMessage = (event) => {
-        const { data } = event
-
-        if (data === 'variant-01') {
-          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, -2.7), new Vec3(0, 0, 0.4))
-          renderer.frameAll()
-          renderer.once('redrawOccurred', () => {
-            window.postMessage(`done-${data}`)
-          })
-        } else if (data === 'variant-02') {
-          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-2, -2, 2.7), new Vec3(0, 0, 0.4))
-          renderer.frameAll()
-          renderer.once('redrawOccurred', () => {
-            window.postMessage(`done-${data}`)
-          })
-        }
-      }
-
-      window.addEventListener('message', handleMessage, false)
-      // }}}
+      // await new Promise((resolve) => setTimeout(resolve, 15000))
+      Promise.all(promises).then(() => {
+        window.postMessage('done-loading')
+      })
     </script>
   </head>
   <body>
-    <canvas class="full-size" id="renderer" />
+    <canvas class="full-size" id="renderer"></canvas>
   </body>
 </html>

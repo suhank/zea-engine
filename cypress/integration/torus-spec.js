@@ -1,9 +1,4 @@
 describe('torus', () => {
-  it('Captures a snapshot', () => {
-    cy.visit('testing-e2e/torus.html')
-    cy.get('canvas').percySnapshot('torus')
-  })
-
   it('Captures snapshots of variants', () => {
     cy.visit('testing-e2e/torus.html', {
       onBeforeLoad(win) {
@@ -12,6 +7,7 @@ describe('torus', () => {
     })
 
     cy.get('@postMessage').its('lastCall.args.0').should('equal', 'done-loading')
+    cy.get('canvas').percySnapshot('torus')
 
     cy.window().then((win) => {
       const variant = 'variant-01'

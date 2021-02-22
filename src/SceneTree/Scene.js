@@ -58,19 +58,7 @@ class Scene {
    * @param {EnvMap} envMap - The envMap value.
    */
   setEnvMap(envMap) {
-    console.warn('Deprecated Function. Please access the Scene Settings object.')
     this.settings.getParameter('EnvMap').setValue(envMap)
-  }
-
-  /**
-   * Adds a child item to the scene root item.
-   *
-   * @deprecated
-   * @param {AssetItem} asset - The asset value.
-   */
-  addAsset(asset) {
-    console.warn('Deprecated Function. Please access the Scene Root object.')
-    this.root.addChild(asset, false)
   }
 
   /**

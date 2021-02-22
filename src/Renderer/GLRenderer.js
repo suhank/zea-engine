@@ -7,13 +7,7 @@ import { GLEnvMap } from './GLEnvMap.js'
 import { GLBaseRenderer } from './GLBaseRenderer.js'
 import { GLTexture2D } from './GLTexture2D.js'
 import { PassType } from './Passes/GLPass.js'
-import {
-  BackgroundImageShader,
-  OctahedralEnvMapShader,
-  LatLongEnvMapShader,
-  SterioLatLongEnvMapShader,
-  DualFishEyeToLatLongBackgroundShader,
-} from './Shaders/EnvMapShader.js'
+import { EnvMapShader } from './Shaders/EnvMapShader.js'
 import { generateShaderGeomBinding } from './Drawing/GeomShaderBinding.js'
 
 import { OutlinesShader } from './Shaders/OutlinesShader.js'
@@ -116,7 +110,7 @@ class GLRenderer extends GLBaseRenderer {
       if (!this.__glEnvMap) {
         if (env.type === 'FLOAT') {
           this.addShaderPreprocessorDirective('ENABLE_PBR')
-          this.__glEnvMap = new GLEnvMap(this, env, this.__preproc)
+          this.__glEnvMap = new GLEnvMap(this, env)
         } else if (env.isStreamAtlas()) {
           this.__glEnvMap = new GLImageStream(gl, env)
         } else {
@@ -124,7 +118,7 @@ class GLRenderer extends GLBaseRenderer {
         }
       }
     } else {
-      // Note: The difference bween an EnvMap and a BackgroundMap, is that
+      // Note: The difference between an EnvMap and a BackgroundMap, is that
       // An EnvMap must be HDR, and can be convolved for reflections.
       // A Background map can be simply an image.
       const backgroundMap = env
@@ -140,24 +134,20 @@ class GLRenderer extends GLBaseRenderer {
       this.__glBackgroundMap.on('updated', this.requestRedraw)
       if (!this.__backgroundMapShader) {
         if (!gl.__quadVertexIdsBuffer) gl.setupInstancedQuad()
-        switch (backgroundMap.getMapping()) {
-          case 'octahedral':
-            this.__backgroundMapShader = new OctahedralEnvMapShader(gl)
-            break
-          case 'latlong':
-            this.__backgroundMapShader = new LatLongEnvMapShader(gl)
-            break
-          case 'steriolatlong':
-            this.__backgroundMapShader = new SterioLatLongEnvMapShader(gl)
-            break
-          case 'dualfisheye':
-            this.__backgroundMapShader = new DualFishEyeToLatLongBackgroundShader(gl)
-            break
-          case 'uv':
-          default:
-            this.__backgroundMapShader = new BackgroundImageShader(gl)
-            break
-        }
+        this.__backgroundMapShader = new EnvMapShader(gl)
+        // switch (backgroundMap.getMapping()) {
+        //   case 'octahedral':
+        //     break
+        //   case 'latlong':
+        //     break
+        //   case 'steriolatlong':
+        //     break
+        //   case 'dualfisheye':
+        //     break
+        //   case 'uv':
+        //   default:
+        //     break
+        // }
         const shaderComp = this.__backgroundMapShader.compileForTarget()
         this.__backgroundMapShaderBinding = generateShaderGeomBinding(
           gl,
@@ -204,6 +194,7 @@ class GLRenderer extends GLBaseRenderer {
     envMapParam.on('valueChanged', () => {
       this.__bindEnvMap(envMapParam.getValue())
     })
+
     const displayEnvMapParam = scene.settings.getParameter('Display EnvMap')
     this.__displayEnvironment = displayEnvMapParam.getValue()
     displayEnvMapParam.on('valueChanged', () => {
@@ -609,39 +600,6 @@ class GLRenderer extends GLBaseRenderer {
     renderstate.envMap = this.__glEnvMap
     renderstate.exposure = this.__exposure
     renderstate.gamma = this.__gamma
-
-    const gl = this.__gl
-    const bindGLBaseRendererUnifs = renderstate.bindRendererUnifs
-    renderstate.bindRendererUnifs = (unifs) => {
-      bindGLBaseRendererUnifs(unifs)
-
-      if (this.__glEnvMap) {
-        const envMapPyramid = unifs.envMapPyramid
-        if (envMapPyramid && this.__glEnvMap.bindProbeToUniform) {
-          this.__glEnvMap.bindProbeToUniform(renderstate, envMapPyramid)
-        } else {
-          // Bind the env map src 2d image to the env map param
-          const { envMapTex, envMapTexType } = unifs
-          if (envMapTex) {
-            this.__glEnvMap.bindToUniform(renderstate, envMapTex, {
-              textureTypeUnif: envMapTexType,
-            })
-          }
-        }
-      }
-      {
-        const unif = unifs.exposure
-        if (unif) {
-          gl.uniform1f(unif.location, this.__exposure)
-        }
-      }
-      {
-        const unif = unifs.gamma
-        if (unif) {
-          gl.uniform1f(unif.location, this.__gamma)
-        }
-      }
-    }
   }
 
   /**

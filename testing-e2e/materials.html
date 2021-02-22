@@ -10,12 +10,71 @@
 
     <link rel="stylesheet" href="styles/tachyons.min.css" />
     <link rel="stylesheet" href="styles/main.css" />
+    <style>
+      .slidecontainer {
+        position: 'relative';
+        /* bottom: 0; */
+        width: 100%; /* Width of the outside container */
+      }
+
+      /* The slider itself */
+      .slider {
+        position: absolute;
+        bottom: 20px;
+        right: 0;
+        -webkit-appearance: none;
+        width: 100%;
+        height: 15px;
+        border-radius: 5px;
+        background: #d3d3d3;
+        outline: none;
+        opacity: 0.7;
+        -webkit-transition: 0.2s;
+        transition: opacity 0.2s;
+      }
+
+      /* Mouse-over effects */
+      .slider:hover {
+        opacity: 1; /* Fully shown on mouse-over */
+      }
+
+      .slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+        background: #4caf50;
+        cursor: pointer;
+      }
+
+      .slider::-moz-range-thumb {
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+        background: #4caf50;
+        cursor: pointer;
+      }
+    </style>
 
     <script src="../dist/index.umd.js"></script>
     <script src="../dist/plugins.umd.js"></script>
 
     <script type="module">
-      const { GLRenderer, Scene, Vec3, Color, Xfo, Sphere, GeomItem, Material, EnvMap } = window.zeaEngine
+      const {
+        GLRenderer,
+        Scene,
+        Vec3,
+        Color,
+        Xfo,
+        Sphere,
+        GeomItem,
+        Material,
+        EnvMap,
+        Label,
+        BillboardItem,
+        EulerAngles
+      } = window.zeaEngine
 
       const canvas = document.querySelector('#renderer')
 
@@ -28,7 +87,11 @@
       //////////////////////////////
 
       const envMap = new EnvMap()
-      envMap.getParameter('FilePath').setValue('data/HDR_041_Path_Ref.vlenv')
+      envMap.getParameter('FilePath').setValue('data/pisa-webp.zenv')
+      // envMap.getParameter('FilePath').setValue('data/AutomnRoad-webp.zenv')
+      // envMap.getParameter('FilePath').setValue('data/StudioG.zenv')
+      // envMap.getParameter('FilePath').setValue('data/StudioD.zenv')
+      // envMap.getParameter('FilePath').setValue('data/HDR_041_Path_Ref-webp.zenv')
       scene.setEnvMap(envMap)
       scene.getSettings().getParameter('Display EnvMap').setValue(true)
 
@@ -36,23 +99,77 @@
         const geomItem = new GeomItem(name, shape, mat, new Xfo(pos))
         scene.getRoot().addChild(geomItem)
       }
-      for (let i = 0; i < 10; i++) {
-        for (let j = 0; j < 10; j++) {
+
+      const addLabel = (name, xfo) => {
+          const label = new Label(name)
+          label.getParameter('FontSize').setValue(48)
+          // label.getParameter('FontColor').setValue(color)
+          label.getParameter('BackgroundColor').setValue(new Color(0.6, 0.6, 0.6))
+
+          const billboard = new BillboardItem(name, label)
+          billboard.getParameter('LocalXfo').setValue(xfo)
+          billboard.getParameter('PixelsPerMeter').setValue(80)
+          billboard.getParameter('AlignedToCamera').setValue(false)
+          scene.getRoot().addChild(billboard)
+      }
+
+      let yoffset = -30;
+      const sphere = new Sphere(1.4, 80)
+      const addRow = (name, baseColor, metallic, reflectance, lerpOpacity=false) => {
+        {
+          const xfo = new Xfo(new Vec3(0.5 * 35, yoffset, 0))
+          xfo.ori.setFromEulerAngles(new EulerAngles(Math.PI * 0.5, 0, Math.PI * 0.5, 'ZYX'))
+          addLabel(name, xfo)
+        }
+        for (let i = 0; i < 10; i++) {
           const material = new Material('surfaces', 'StandardSurfaceShader')
-          material.getParameter('BaseColor').setValue(new Color(0.6, 0.0, 0.0))
+          material.getParameter('BaseColor').setValue(baseColor)
+          material.getParameter('Metallic').setValue(metallic)
+          material.getParameter('Reflectance').setValue(reflectance)
           material.getParameter('Roughness').setValue(i / 9)
-          material.getParameter('Metallic').setValue(j < 5 ? 0.05 : 0.95)
-          material.getParameter('Reflectance').setValue(j < 5 ? 0.03 : 0.8)
           addMeshShape(
-            'Sphere' + i + '-' + j,
-            new Sphere(1.4, 40),
-            new Vec3((i / 9 - 0.5) * 30, (j / 9 - 0.5) * 30, 1),
+            name + i, sphere,
+            new Vec3((i / 9 - 0.5) * 30, yoffset, 1.4),
             material
           )
         }
+        {
+          const xfo = new Xfo(new Vec3(-0.5 * 35, yoffset, 0))
+          xfo.ori.setFromEulerAngles(new EulerAngles(Math.PI * 0.5, 0, Math.PI * -0.5, 'ZYX'))
+          addLabel(name, xfo)
+        }
+
+        yoffset += 3.0
       }
 
-      renderer.frameAll()
+      // https://google.github.io/filament/images/material_chart.jpg
+      addRow('Coal', new Color('#323232'), 0.02, 0.5)
+      addRow('Rubber', new Color('#353535'), 0.02, 0.5)
+      addRow('Mud', new Color('#553d31'), 0.02, 0.5)
+      addRow('Wood', new Color('#875c3c'), 0.02, 0.5)
+      addRow('Vegetation', new Color('#7B824E'), 0.02, 0.5)
+      addRow('Brick', new Color('#947D75'), 0.02, 0.5)
+      addRow('Sand', new Color('#B1A984'), 0.02, 0.5)
+      addRow('Concrete', new Color('#C0BFBB'), 0.02, 0.5)
+      
+      addRow('Silver', new Color('#faf9f5'), 0.98, 0.75)
+      addRow('Aluminum', new Color('#faf5f5'), 0.98, 0.75)
+      addRow('Platinum', new Color('#d6d1c8'), 0.98, 0.75)
+      addRow('Iron', new Color('#c0bdba'), 0.98, 0.75)
+      addRow('Titanium', new Color('#cec8c2'), 0.98, 0.75)
+      addRow('Copper', new Color('#FBD8B8'), 0.98, 0.75)
+      addRow('Gold', new Color('#FEDC9D'), 0.98, 0.75)
+      addRow('Brass', new Color('#F4E5AE'), 0.98, 0.75)
+
+      renderer.exposure = 1.6
+      const slider = document.getElementById('exposureControl')
+      slider.value = renderer.exposure * 100
+      slider.addEventListener('input', (event) => {
+        renderer.exposure = event.target.value / 100
+      })
+      
+
+      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(35, -35, 20), new Vec3(0, 0, -10))
 
       envMap.on('loaded', () => {
         renderer.once('redrawOccurred', () => {
@@ -66,21 +183,11 @@
         const { data } = event
 
         if (data === 'variant-01') {
-          renderer.suspendDrawing()
-          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, -2.7), new Vec3(0, 0, 0.4))
-          renderer.frameAll()
-          renderer.once('redrawOccurred', () => {
-            window.postMessage(`done-${data}`)
-          })
-          renderer.resumeDrawing()
+          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-35, 35, 20), new Vec3(0, 0, -10))
+          window.postMessage(`done-${data}`)
         } else if (data === 'variant-02') {
-          renderer.suspendDrawing()
-          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-2, -2, 2.7), new Vec3(0, 0, 0.4))
-          renderer.frameAll()
-          renderer.once('redrawOccurred', () => {
-            window.postMessage(`done-${data}`)
-          })
-          renderer.resumeDrawing()
+          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-35,-35, 20), new Vec3(0, 0, -10))
+          window.postMessage(`done-${data}`)
         }
       }
 
@@ -89,6 +196,9 @@
     </script>
   </head>
   <body>
-    <canvas class="full-size" id="renderer" />
+    <canvas class="full-size" id="renderer"></canvas></canvas>
+    <div class="slidecontainer">
+      <input type="range" min="0" max="400" value="100" class="slider" id="exposureControl" />
+    </div>
   </body>
 </html>

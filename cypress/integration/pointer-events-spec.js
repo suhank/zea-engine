@@ -74,7 +74,7 @@ describe('pointer-events', () => {
       .percySnapshot(`TouchMoveCameraManipulator`)
   })
 
-  it.skip('Double Tap - Geometry', () => {
+  it('Double Tap - Geometry', () => {
     const eTouch = createTouchEvents([800, 300])
     cy.get('canvas')
       .trigger('touchstart', eTouch)

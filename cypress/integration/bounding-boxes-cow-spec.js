@@ -1,8 +1,4 @@
 describe('bounding-boxes-cow', () => {
-  it('Captures a snapshot', () => {
-    cy.visit('testing-e2e/bounding-boxes-cow.html')
-  })
-
   it('Captures snapshots of variants', () => {
     cy.visit('testing-e2e/bounding-boxes-cow.html', {
       onBeforeLoad(win) {

@@ -1,9 +1,4 @@
 describe('fat-lines', () => {
-  it('Captures a snapshot', () => {
-    cy.visit('testing-e2e/fat-lines.html')
-    cy.get('canvas').percySnapshot('fat-lines')
-  })
-
   it('Captures snapshots of variants', () => {
     cy.visit('testing-e2e/fat-lines.html', {
       onBeforeLoad(win) {
@@ -12,6 +7,7 @@ describe('fat-lines', () => {
     })
 
     cy.get('@postMessage').its('lastCall.args.0').should('equal', 'done-loading')
+    cy.get('canvas').percySnapshot('fat-lines')
 
     cy.window().then((win) => {
       const variant = 'variant-01'

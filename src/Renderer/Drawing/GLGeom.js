@@ -17,19 +17,18 @@ class GLGeom extends RefCounted {
 
     this.__glattrbuffers = {}
     this.__shaderBindings = {}
+    this.buffersDirty = true
 
-    const updateBuffers = (opts) => {
-      this.updateBuffers(opts)
-      this.emit('updated')
+    const geomDataChanged = (opts) => {
+      this.dirtyBuffers(opts)
     }
-    this.__geom.on('geomDataChanged', updateBuffers)
+    this.__geom.on('geomDataChanged', geomDataChanged)
 
-    const regenBuffers = () => {
+    const geomDataTopologyChanged = (opts) => {
       this.clearBuffers()
-      this.genBuffers()
-      this.emit('updated')
+      this.dirtyBuffers(opts)
     }
-    this.__geom.on('geomDataTopologyChanged', regenBuffers)
+    this.__geom.on('geomDataTopologyChanged', geomDataTopologyChanged)
   }
 
   /**
@@ -44,15 +43,28 @@ class GLGeom extends RefCounted {
   // Buffers
 
   /**
-   * The genBuffers method.
+   * The dirtyBuffers method.
+   * @param {object} opts - options passed when geomDataChanged is emitted. (Currently ony used by the FreehandLines tool)
    */
-  genBuffers() {}
+  dirtyBuffers(opts) {
+    this.genBufferOpts = opts
+    this.buffersDirty = true
+    this.emit('updated')
+  }
+
+  /**
+   * The genBuffers method.
+   * @param {object} renderstate - The object tracking the current state of the renderer
+   */
+  genBuffers(renderstate) {}
 
   /**
    * The updateBuffers method.
-   * @param {object} opts - The options object.
+   * @param {object} renderstate - The object tracking the current state of the renderer
    */
-  updateBuffers(opts) {}
+  updateBuffers(renderstate) {
+    this.genBuffers(renderstate)
+  }
 
   // /////////////////////////////////////
   // Binding
@@ -64,6 +76,8 @@ class GLGeom extends RefCounted {
    */
   bind(renderstate) {
     if (this.__destroyed) throw new Error('Error binding a destroyed geom')
+
+    if (this.buffersDirty) this.updateBuffers()
 
     let shaderBinding = this.__shaderBindings[renderstate.shaderkey]
     if (!shaderBinding) {

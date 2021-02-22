@@ -69,25 +69,23 @@
       const renderer = new GLRenderer(canvas, { hideSplash: true, antialias: false })
       renderer.setScene(scene)
 
+      // scene.setupGrid(10.0, 10)
+
       const envMap = new EnvMap()
-      envMap.getParameter('FilePath').setValue('data/HDR_041_Path_Ref.vlenv')
-      // envMap.getParameter('FilePath').setValue('data/HDR_029_Sky_Cloudy_Ref.vlenv')
+      envMap.getParameter('FilePath').setValue('data/HDR_041_Path_Ref-webp.zenv')
       scene.setEnvMap(envMap)
       scene.getSettings().getParameter('Display EnvMap').setValue(true)
 
-      // Update the current slider value (each time you drag the slider handle)
-      var slider = document.getElementById('exposureControl')
-      slider.oninput = function () {
-        renderer.exposure = slider.value / 100
-        console.log('renderer.exposure:', renderer.exposure)
-      }
+      renderer.getViewport().getCamera().setLensFocalLength('20mm')
       renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 0, 0), new Vec3(0, 0, 0))
 
       envMap.on('loaded', () => {
-        renderer.once('redrawOccurred', () => {
-          window.postMessage('done-loading')
-        })
-        renderer.requestRedraw()
+        window.postMessage('done-loading')
+      })
+
+      const slider = document.getElementById('exposureControl')
+      slider.addEventListener('input', (event) => {
+        renderer.exposure = event.target.value / 100
       })
 
       // {{{ Messages handler.
@@ -95,22 +93,13 @@
         const { data } = event
 
         if (data === 'variant-01') {
-          renderer.suspendDrawing()
           renderer.exposure = 0.2
           slider.value = renderer.exposure * 100
-
-          renderer.once('redrawOccurred', () => {
-            window.postMessage(`done-${data}`)
-          })
-          renderer.resumeDrawing()
+          window.postMessage(`done-${data}`)
         } else if (data === 'variant-02') {
-          renderer.suspendDrawing()
           renderer.exposure = 1.8
           slider.value = renderer.exposure * 100
-          renderer.once('redrawOccurred', () => {
-            window.postMessage(`done-${data}`)
-          })
-          renderer.resumeDrawing()
+          window.postMessage(`done-${data}`)
         }
       }
 
@@ -121,7 +110,7 @@
   <body>
     <canvas class="full-size" id="renderer"></canvas>
     <div class="slidecontainer">
-      <input type="range" min="1" max="200" value="100" class="slider" id="exposureControl" />
+      <input type="range" min="0" max="400" value="100" class="slider" id="exposureControl" />
     </div>
   </body>
 </html>

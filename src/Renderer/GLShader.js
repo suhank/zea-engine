@@ -453,7 +453,11 @@ class GLShader extends BaseItem {
   // Parameters
 
   /**
-   * The getParamDeclarations method.
+
+  /**
+   * Returns the parameters that this shader expects to be provided by the material.
+   * Note: the Material method setShaderName will retrieve these parameter declarations
+   * to initialize and configure the parameters for the Material instance.
    * @return {array} - an array of param declarations that the shader expects the material tp provide.
    */
   static getParamDeclarations() {

@@ -791,7 +791,7 @@ class GLViewport extends GLBaseViewport {
 
     // Make sure the default fbo is bound
     // Note: Sometimes an Fbo is left bound
-    // from anohter op(like resizing, populating etc..)
+    // from another op(like resizing, populating etc..)
     // We need to unbind here to ensure rendering is to the
     // right target.
     gl.bindFramebuffer(gl.FRAMEBUFFER, null)

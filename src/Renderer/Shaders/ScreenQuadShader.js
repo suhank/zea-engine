@@ -4,6 +4,10 @@ import { GLShader } from '../GLShader.js'
 import './GLSL/utils/quadVertexFromID.js'
 
 class ScreenQuadShader extends GLShader {
+  /**
+   * Create a GL shader.
+   * @param {WebGLRenderingContext} gl - The webgl rendering context.
+   */
   constructor(gl) {
     super(gl)
     this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader(

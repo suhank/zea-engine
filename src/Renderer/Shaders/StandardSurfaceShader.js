@@ -7,7 +7,6 @@ import './GLSL/constants.js'
 import './GLSL/stack-gl/transpose.js'
 import './GLSL/stack-gl/gamma.js'
 import './GLSL/materialparams.js'
-import './GLSL/GGX_Specular.js'
 import './GLSL/PBRSurface.js'
 import './GLSL/drawItemTexture.js'
 import './GLSL/modelMatrix.js'
@@ -15,11 +14,19 @@ import './GLSL/debugColors.js'
 import './GLSL/ImagePyramid.js'
 import './GLSL/cutaways.js'
 
+/** A standard shader handling Opaque and transparent items and PBR rendering.
+ * @extends GLShader
+ * @private
+ */
 class StandardSurfaceShader extends GLShader {
+  /**
+   * Create a GL shader.
+   * @param {WebGLRenderingContext} gl - The webgl rendering context.
+   */
   constructor(gl) {
     super(gl)
-    this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader(
-      'StandardSurfaceShader.vertexShader',
+    this.setShaderStage(
+      'VERTEX_SHADER',
       `
 precision highp float;
 
@@ -102,9 +109,6 @@ precision highp float;
 <%include file="debugColors.glsl"/>
 #endif
 
-<%include file="GGX_Specular.glsl"/>
-<%include file="PBRSurfaceRadiance.glsl"/>
-
 /* VS Outputs */
 varying float v_drawItemId;
 varying vec4 v_geomItemData;
@@ -168,19 +172,39 @@ uniform int ReflectanceTexType;
 
 uniform sampler2D NormalTex;
 uniform int NormalTexType;
-// uniform float NormalScale;
 #endif // ENABLE_PBR
 
 uniform sampler2D EmissiveStrengthTex;
 uniform int EmissiveStrengthTexType;
 
-
 #endif // ENABLE_TEXTURES
 #endif // ENABLE_MULTI_DRAW
 
+<%include file="PBRSurfaceRadiance.glsl"/>
+
+mat3 cotangentFrame( in vec3 normal, in vec3 pos, in vec2 texCoord ) {
+  // https://stackoverflow.com/questions/5255806/how-to-calculate-tangent-and-binormal 
+  vec3 n = normal;
+  // derivations of the fragment position
+  vec3 pos_dx = dFdx( pos );
+  vec3 pos_dy = dFdy( pos );
+  // derivations of the texture coordinate
+  vec2 texC_dx = dFdx( texCoord );
+  vec2 texC_dy = dFdy( texCoord );
+  // tangent vector and binormal vector
+  vec3 t = -(texC_dy.y * pos_dx - texC_dx.y * pos_dy);
+  vec3 b = -(texC_dx.x * pos_dy - texC_dy.x * pos_dx);
+
+  t = t - n * dot( t, n ); // orthonormalization ot the tangent vectors
+  b = b - n * dot( b, n ); // orthonormalization of the binormal vectors to the normal vector 
+  b = b - t * dot( b, t ); // orthonormalization of the binormal vectors to the tangent vector
+  mat3 tbn = mat3( normalize(t), normalize(b), n );
+
+  return tbn;
+}
+
 #ifdef ENABLE_ES3
 out vec4 fragColor;
-
 #endif
 
 void main(void) {
@@ -230,14 +254,14 @@ void main(void) {
     material.roughness     = matValue1.g;
     material.reflectance   = matValue1.b;
     
-    float emission         = matValue1.a;
-    float opacity          = matValue2.r * matValue0.a;
+    material.emission         = matValue1.a;
+    material.opacity          = matValue2.r * matValue0.a;
 
 #else // ENABLE_MULTI_DRAW
 
 #ifndef ENABLE_TEXTURES
     material.baseColor     = toLinear(BaseColor.rgb);
-    float emission         = EmissiveStrength;
+    material.emission         = EmissiveStrength;
 
 #ifdef ENABLE_PBR
     material.roughness     = Roughness;
@@ -249,22 +273,24 @@ void main(void) {
     // Planar YZ projection for texturing, repeating every meter.
     // vec2 texCoord       = v_worldPos.xz * 0.2;
     vec2 texCoord          = vec2(v_textureCoord.x, 1.0 - v_textureCoord.y);
-    material.baseColor     = getColorParamValue(BaseColor, BaseColorTex, BaseColorTexType, texCoord).rgb;
+
+    vec4 baseColor         = getColorParamValue(BaseColor, BaseColorTex, BaseColorTexType, texCoord);
+    material.baseColor     = baseColor.rgb;
 
 #ifdef ENABLE_PBR
     material.roughness     = getLuminanceParamValue(Roughness, RoughnessTex, RoughnessTexType, texCoord);
     material.metallic      = getLuminanceParamValue(Metallic, MetallicTex, MetallicTexType, texCoord);
     material.reflectance   = getLuminanceParamValue(Reflectance, ReflectanceTex, ReflectanceTexType, texCoord);
 #endif // ENABLE_PBR
-    float emission         = getLuminanceParamValue(EmissiveStrength, EmissiveStrengthTex, EmissiveStrengthTexType, texCoord);
+    material.emission         = getLuminanceParamValue(EmissiveStrength, EmissiveStrengthTex, EmissiveStrengthTexType, texCoord);
 #endif // ENABLE_TEXTURES
-    float opacity           = Opacity * BaseColor.a;
+    material.opacity       = Opacity * baseColor.a;
 
 #ifdef ENABLE_TEXTURES
 #ifdef ENABLE_PBR
-    if(NormalTexType != 0){
-        vec3 textureNormal_tangentspace = normalize(texture2D(NormalTex, texCoord).rgb * 2.0 - 1.0);
-        viewNormal = normalize(mix(viewNormal, textureNormal_tangentspace, 0.3));
+    if(NormalTexType != 0) {
+        mat3 tbn = cotangentFrame(normal, viewVector, texCoord);
+        normal = normalize(tbn * (texture2D(NormalTex, texCoord).rgb * 2.0 - 1.0));
     }
 #endif // ENABLE_PBR
 #endif // ENABLE_TEXTURES
@@ -274,51 +300,9 @@ void main(void) {
     vec4 fragColor;
 #endif
 
-#ifdef ENABLE_PBR
-    int envMapFlags = int(envMapPyramid_desc.w);
-    bool headLightMode = testFlag(envMapFlags, ENVMAP_FLAG_HEADLIGHT);
-#endif
-
-    if (opacity < 1.0) {
-        vec3 radiance;
-#ifdef ENABLE_PBR
-        if (envMapPyramid_desc.x > 0.0) {
-            // Note: not sure how to make specular reflections work in headlight mode.
-            vec4 specularReflectance = pbrSpecularReflectance(material, normal, viewVector);
-            fragColor = vec4(specularReflectance.rgb, mix(opacity, 1.0, specularReflectance.a));
-        } else {
-#endif
-            // Simple diffuse lighting.
-            vec3 irradiance = vec3(dot(normal, viewVector));
-            radiance = irradiance * material.baseColor;
-            fragColor = vec4(radiance + (emission * material.baseColor), opacity);
-#ifdef ENABLE_PBR
-        }
-#endif
-    }
-    else {
-        vec3 radiance;
-#ifdef ENABLE_PBR
-        if (envMapPyramid_desc.x > 0.0) {
-            vec3 irradiance;
-            if (headLightMode) {
-                irradiance = sampleEnvMap(viewNormal, 1.0);
-            } else {
-                irradiance = sampleEnvMap(normal, 1.0);
-            }
-            radiance = pbrSurfaceRadiance(material, irradiance, normal, viewVector);
-        } else {
-#endif
-            vec3 irradiance = vec3(dot(normal, viewVector));
-            radiance = material.baseColor * irradiance;
-#ifdef ENABLE_PBR
-        }
-#endif
-        // fragColor = vec4(material.baseColor, 1.0);
-        // fragColor = vec4(material.baseColor * irradiance, 1.0);
-        fragColor = vec4(radiance + (emission * material.baseColor), 1.0);
-    }
-
+    fragColor = pbrSurfaceRadiance(material, normal, viewVector);
+    // fragColor = vec4(normal, 1.0);
+    
 #ifdef DEBUG_GEOM_ID
     // ///////////////////////
     // Debug Draw ID (this correlates to GeomID within a GLGeomSet)
@@ -341,19 +325,22 @@ void main(void) {
     this.finalize()
   }
 
+  /**
+   * Returns the parameters that this shader expects to be provided by the material.
+   * Note: the Material method setShaderName will retrieve these parameter declarations
+   * to initialize and configure the parameters for the Material instance.
+   * @return {array} - an array of param declarations that the shader expects the material tp provide.
+   */
   static getParamDeclarations() {
     const paramDescs = super.getParamDeclarations()
     paramDescs.push({
       name: 'BaseColor',
       defaultValue: new Color(1.0, 1.0, 0.5),
     })
-    paramDescs.push({ name: 'Metallic', defaultValue: 0.0, range: [0, 1] })
-    paramDescs.push({ name: 'Roughness', defaultValue: 0.85, range: [0, 1] })
-    // F0 = reflectance and is a physical property of materials
-    // It also has direct relation to IOR so we need to dial one or the other
-    // For simplicity sake, we don't need to touch this value as metalic can dictate it
-    // such that non metallic is mostly around (0.01-0.025) and metallic around (0.7-0.85)
-    paramDescs.push({ name: 'Reflectance', defaultValue: 0.01, range: [0, 1] })
+    paramDescs.push({ name: 'Normal', defaultValue: new Color(0.5, 0.5, 0.5) })
+    paramDescs.push({ name: 'Metallic', defaultValue: 0.05, range: [0, 1] })
+    paramDescs.push({ name: 'Roughness', defaultValue: 0.5, range: [0, 1] })
+    paramDescs.push({ name: 'Reflectance', defaultValue: 0.5, range: [0, 1] })
     paramDescs.push({
       name: 'EmissiveStrength',
       defaultValue: 0.0,
@@ -364,6 +351,30 @@ void main(void) {
     // paramDescs.push({ name: 'TexCoordScale', defaultValue: 1.0, texturable: false });
     return paramDescs
   }
+
+  /**
+   * The bind method.
+   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {any} key - The key value.
+   * @return {any} - The return value.
+   */
+  bind(renderstate, key) {
+    super.bind(renderstate, key)
+
+    const gl = this.__gl
+    if (renderstate.envMap) {
+      renderstate.envMap.bind(renderstate)
+    }
+
+    const { exposure } = renderstate.unifs
+    if (exposure) {
+      gl.uniform1f(exposure.location, renderstate.exposure)
+    }
+    return true
+  }
+
+  // /////////////////////////////
+  // Parameters
 
   /**
    * The getPackedMaterialData method.
@@ -395,4 +406,5 @@ void main(void) {
 }
 
 Registry.register('StandardSurfaceShader', StandardSurfaceShader)
+Registry.register('TransparentSurfaceShader', StandardSurfaceShader)
 export { StandardSurfaceShader }

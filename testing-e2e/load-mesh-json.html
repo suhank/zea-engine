@@ -26,9 +26,9 @@
       // scene.setupGrid(10.0, 10)
 
       const mesh = new Mesh()
+
       const geomItem = new GeomItem('geom', mesh, new Material('mat', 'StandardSurfaceShader'))
       scene.getRoot().addChild(geomItem)
-
       mesh.fromJSON({
         faceCounts: [2],
         faceVertexIndices: [0, 1, 2, 0, 2, 3],
@@ -99,9 +99,7 @@
           hardEdges.emit('geomDataTopologyChanged')
 
           renderer.frameAll()
-          renderer.once('redrawOccurred', () => {
-            window.postMessage(`done-${data}`)
-          })
+          window.postMessage(`done-${data}`)
         } else if (data === 'variant-02') {
           mesh.fromJSON({
             faceCounts: [2],
@@ -126,9 +124,7 @@
           hardEdges.emit('geomDataTopologyChanged')
 
           renderer.frameAll()
-          renderer.once('redrawOccurred', () => {
-            window.postMessage(`done-${data}`)
-          })
+          window.postMessage(`done-${data}`)
         }
       }
 
@@ -137,6 +133,6 @@
     </script>
   </head>
   <body>
-    <canvas class="full-size" id="renderer" />
+    <canvas class="full-size" id="renderer"></canvas>
   </body>
 </html>

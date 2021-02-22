@@ -1,9 +1,4 @@
 describe('env-map-viewer', () => {
-  it('Captures a snapshot', () => {
-    cy.visit('testing-e2e/env-map-viewer.html')
-    cy.get('canvas').percySnapshot('env-map-viewer')
-  })
-
   it('Captures snapshots of variants', () => {
     cy.visit('testing-e2e/env-map-viewer.html', {
       onBeforeLoad(win) {
@@ -12,6 +7,7 @@ describe('env-map-viewer', () => {
     })
 
     cy.get('@postMessage').its('lastCall.args.0').should('equal', 'done-loading')
+    cy.get('canvas').percySnapshot('env-map-viewer')
 
     cy.window().then((win) => {
       const variant = 'variant-01'

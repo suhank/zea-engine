@@ -11,6 +11,10 @@ import './GLSL/drawItemTexture.js'
 import './GLSL/modelMatrix.js'
 
 class EnvProjectionShader extends GLShader {
+  /**
+   * Create a GL shader.
+   * @param {WebGLRenderingContext} gl - The webgl rendering context.
+   */
   constructor(gl) {
     super(gl)
     this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader(
@@ -62,6 +66,10 @@ void main()
 }
 
 class OctahedralEnvProjectionShader extends EnvProjectionShader {
+  /**
+   * Create a GL shader.
+   * @param {WebGLRenderingContext} gl - The webgl rendering context.
+   */
   constructor(gl) {
     super(gl)
     this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader(
@@ -71,7 +79,7 @@ precision highp float;
 
 <%include file="math/constants.glsl"/>
 <%include file="GLSLUtils.glsl"/>
-<%include file="pragmatic-pbr/envmap-octahedral.glsl"/>
+<%include file="envmap-octahedral.glsl"/>
 <%include file="stack-gl/gamma.glsl"/>
 <%include file="materialparams.glsl"/>
 
@@ -116,6 +124,10 @@ void main(void) {
 Registry.register('OctahedralEnvProjectionShader', OctahedralEnvProjectionShader)
 
 class LatLongEnvProjectionShader extends EnvProjectionShader {
+  /**
+   * Create a GL shader.
+   * @param {WebGLRenderingContext} gl - The webgl rendering context.
+   */
   constructor(gl) {
     super(gl)
     this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader(

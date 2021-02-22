@@ -12,6 +12,10 @@ import { FatLinesShader } from './FatLinesShader.js'
  * @private
  */
 class FatLinesGeomDataShader extends FatLinesShader {
+  /**
+   * Create a GL shader.
+   * @param {WebGLRenderingContext} gl - The webgl rendering context.
+   */
   constructor(gl) {
     super(gl)
 

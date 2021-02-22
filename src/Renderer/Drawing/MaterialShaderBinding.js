@@ -188,11 +188,12 @@ class ColorUniformBinding {
    * @param {any} unifs - The unifs value.
    */
   constructor(gl, glMaterial, param, unif, unifs) {
+    const name = param.getName()
     this.gl = gl
     this.param = param
     this.unif = unif
-    this.textureUnif = unifs[unif.name + 'Tex']
-    this.textureTypeUnif = unifs[unif.name + 'TexType']
+    this.textureUnif = unifs[name + 'Tex']
+    this.textureTypeUnif = unifs[name + 'TexType']
 
     this.vals = [0, 0, 0, 0]
     this.bind = this.bindValue
@@ -255,28 +256,21 @@ class ColorUniformBinding {
     }
 
     this.update = () => {
-      // Sometimes the value of a color param is an image.
-      const value = param.getValue()
-      this.vals = value.asArray()
-
-      if (this.textureUnif) {
-        let image
-        if (param.getImage) {
-          image = param.getImage()
+      try {
+        // Sometimes the value of a color param is an image.
+        if (boundImage) {
+        } else if (this.unif) {
+          const value = param.getValue()
+          this.vals = value.asArray()
         }
-        if (image && image != boundImage) {
-          connectImage(image)
-        } else if (!image && boundImage) {
-          disconnectImage()
-        }
-      }
+      } catch (e) {}
       glMaterial.emit('updated')
     }
 
     /**
      * The update method.
      */
-    this.update()
+    if (param.getImage()) connectImage(param.getImage())
     param.on('textureConnected', () => {
       connectImage(param.getImage())
     })
@@ -298,7 +292,7 @@ class ColorUniformBinding {
       this.update()
       this.dirty = false
     }
-    this.uniform4fv(this.unif.location, this.vals)
+    if (this.unif) this.uniform4fv(this.unif.location, this.vals)
     if (this.textureTypeUnif) this.uniform1i(this.textureTypeUnif.location, 0)
   }
 
@@ -335,6 +329,12 @@ class MaterialShaderBinding {
       const name = param.getName()
       const unif = unifs[name]
       if (unif == undefined) {
+        const textureUnif = unifs[name + 'Tex']
+        if (textureUnif) {
+          this.uniformBindings.push(new ColorUniformBinding(gl, glMaterial, param, unif, unifs))
+          return
+        }
+
         // Note: we now bind the Material even for rendering geom datas,
         // which can mean many params have no uniform in the shader, which is fine.
         if (warnMissingUnifs) {

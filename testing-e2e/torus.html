@@ -36,19 +36,13 @@
 
         if (data === 'variant-01') {
           torus.getParameter('ArcAngle').setValue(Math.PI * 1.5)
-          renderer.once('redrawOccurred', () => {
-            window.postMessage(`done-${data}`)
-          })
+          window.postMessage(`done-${data}`)
         } else if (data === 'variant-02') {
           torus.getParameter('Detail').setValue(25)
-          renderer.once('redrawOccurred', () => {
-            window.postMessage(`done-${data}`)
-          })
+          window.postMessage(`done-${data}`)
         } else if (data === 'variant-03') {
           torus.getParameter('InnerRadius').setValue(0.5)
-          renderer.once('redrawOccurred', () => {
-            window.postMessage(`done-${data}`)
-          })
+          window.postMessage(`done-${data}`)
         }
       }
 

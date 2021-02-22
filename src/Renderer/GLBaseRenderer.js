@@ -14,7 +14,6 @@ let activeGLRenderer = undefined
 let pointerIsDown = false
 let pointerLeft = false
 const registeredPasses = {}
-const loggedErrors = {}
 
 /**
  * Class representing a GL base renderer.
@@ -579,11 +578,13 @@ class GLBaseRenderer extends ParameterOwner {
       this.addShaderPreprocessorDirective('ENABLE_FLOAT_TEXTURES')
     }
 
-    const ext = this.__gl.getExtension('WEBGL_multi_draw')
-    if (ext) {
-      this.__gl.multiDrawElementsInstanced = ext.multiDrawElementsInstancedWEBGL.bind(ext)
-      this.__gl.multiDrawArraysInstanced = ext.multiDrawArraysInstancedWEBGL.bind(ext)
-    }
+    // if (!options.disableMultiDraw) {
+    //   const ext = this.__gl.getExtension('WEBGL_multi_draw')
+    //   if (ext) {
+    //     this.__gl.multiDrawElementsInstanced = ext.multiDrawElementsInstancedWEBGL.bind(ext)
+    //     this.__gl.multiDrawArraysInstanced = ext.multiDrawArraysInstancedWEBGL.bind(ext)
+    //   }
+    // }
 
     this.__gl.screenQuad = new GLScreenQuad(this.__gl)
     this.__screenQuad = this.__gl.screenQuad

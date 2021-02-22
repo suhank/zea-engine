@@ -139,6 +139,8 @@ function getGPUDesc() {
     gpuVendor = 'Apple'
   } else if (renderer.match(/Adreno/i)) {
     gpuVendor = 'Adreno'
+  } else if (renderer.match(/Google Swiftshader/i)) {
+    gpuVendor = 'Google'
   } else {
     console.warn('Unable to determine GPU vendor:', renderer)
   }
@@ -255,6 +257,8 @@ const SystemDesc = (function () {
       } else if (gpuDesc.gpuVendor == 'Adreno') {
         deviceCategory = 'Low'
       } else if (gpuDesc.gpuVendor == 'Intel') {
+        deviceCategory = 'Low'
+      } else if (gpuDesc.gpuVendor == 'Google') {
         deviceCategory = 'Low'
       }
     } else {

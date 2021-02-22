@@ -1,10 +1,5 @@
 describe('{{name}}', () => {
-  it('Captures a snapshot', () => {
-    cy.visit('testing-e2e/{{dashCase name}}.html')
-    cy.get('canvas').percySnapshot('{{name}}')
-  })
-
-  it('Captures snapshots of variants', () => {
+  it('Capture snapshots', () => {
     cy.visit('testing-e2e/{{dashCase name}}.html', {
       onBeforeLoad(win) {
         cy.spy(win, 'postMessage').as('postMessage')
@@ -12,6 +7,7 @@ describe('{{name}}', () => {
     })
 
     cy.get('@postMessage').its('lastCall.args.0').should('equal', 'done-loading')
+    cy.get('canvas').percySnapshot('{{name}}')
 
     cy.window().then((win) => {
       const variant = 'variant-01'

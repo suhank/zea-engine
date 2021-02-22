@@ -1,9 +1,4 @@
 describe('kinematic-group', () => {
-  it('Captures a snapshot', () => {
-    cy.visit('testing-e2e/kinematic-group.html')
-    cy.get('canvas').percySnapshot('kinematic-group')
-  })
-
   it('Captures snapshots of variants', () => {
     cy.visit('testing-e2e/kinematic-group.html', {
       onBeforeLoad(win) {
@@ -12,6 +7,7 @@ describe('kinematic-group', () => {
     })
 
     cy.get('@postMessage').its('lastCall.args.0').should('equal', 'done-loading')
+    cy.get('canvas').percySnapshot('kinematic-group')
 
     cy.window().then((win) => {
       const variant = 'variant-01'

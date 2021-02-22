@@ -1,9 +1,4 @@
 describe('cylinder', () => {
-  it('Captures a snapshot', () => {
-    cy.visit('testing-e2e/cylinder.html')
-    cy.get('canvas').percySnapshot('cylinder')
-  })
-
   it('Captures snapshots of variants', () => {
     cy.visit('testing-e2e/cylinder.html', {
       onBeforeLoad(win) {
@@ -12,6 +7,7 @@ describe('cylinder', () => {
     })
 
     cy.get('@postMessage').its('lastCall.args.0').should('equal', 'done-loading')
+    cy.get('canvas').percySnapshot('cylinder')
 
     cy.window().then((win) => {
       const variant = 'variant-01'

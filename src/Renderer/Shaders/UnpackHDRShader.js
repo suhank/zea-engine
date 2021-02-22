@@ -1,10 +1,19 @@
+/* eslint-disable require-jsdoc */
 import { shaderLibrary } from '../ShaderLibrary.js'
 import { GLShader } from '../GLShader.js'
 
 import './GLSL/utils/quadVertexFromID.js'
 import './GLSL/utils/unpackHDR.js'
 
+/** Shader for unpacking HDR images using Boost HDR algorithm.
+ * @extends GLShader
+ * @private
+ */
 class UnpackHDRShader extends GLShader {
+  /**
+   * Create a GL shader.
+   * @param {WebGLRenderingContext} gl - The webgl rendering context.
+   */
   constructor(gl) {
     super(gl)
     this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader(
@@ -33,8 +42,7 @@ precision highp float;
 varying vec2 v_texCoord;
 uniform sampler2D ldrSampler;
 uniform sampler2D cdmSampler;
-uniform float exposure;
-uniform vec4 tint;
+uniform vec4 srcRegion; // pos, and size of the source region
 
 <%include file="utils/unpackHDR.glsl"/>
 
@@ -47,7 +55,9 @@ void main(void) {
     vec4 fragColor;
 #endif
 
-    fragColor = vec4(decodeHDR(ldrSampler, cdmSampler, v_texCoord) * tint.rgb * exposure, 1.0);
+    vec2 srcUv = srcRegion.xy + (v_texCoord * srcRegion.zw);
+
+    fragColor = vec4(decodeHDR(ldrSampler, cdmSampler, srcUv), 1.0);
 
 #ifndef ENABLE_ES3
     gl_FragColor = fragColor;

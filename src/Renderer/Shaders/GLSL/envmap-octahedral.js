@@ -2,7 +2,7 @@ import { shaderLibrary } from '../../ShaderLibrary.js'
 
 // https://gist.github.com/pyalot/cc7c3e5f144fb825d626
 shaderLibrary.setShaderModule(
-  'pragmatic-pbr/envmap-octahedral.glsl',
+  'envmap-octahedral.glsl',
   `
 
 #define sectorize(value) step(0.0, (value))*2.0-1.0
@@ -13,11 +13,11 @@ vec2 dirToSphOctUv(vec3 normal){
     normal = normalize(normal);
     vec3 aNorm = abs(normal);
     vec3 sNorm = sectorize(normal);
+    
+    vec2 dir = aNorm.xy;
+    float orient = atan(dir.x, max(dir.y,0.0000000000000001))/HalfPI;
 
-    vec2 dir = max(aNorm.xy, 1e-20);
-    float orient = atan(dir.x, dir.y)/HalfPI;
-
-    dir = max(vec2(aNorm.z, length(aNorm.xy)), 1e-20);
+    dir = vec2(aNorm.z, length(aNorm.xy));
     float pitch = atan(dir.y, dir.x)/HalfPI;
 
     vec2 uv = vec2(sNorm.x*orient, sNorm.y*(1.0-orient))*pitch;
@@ -25,12 +25,17 @@ vec2 dirToSphOctUv(vec3 normal){
     if(normal.z < 0.0){
         uv = sNorm.xy - abs(uv.ts)*sNorm.xy;
     }
-    return uv*0.5+0.5;
+    vec2 res = uv*0.5+0.5;
+    // Flip-v
+    // return res;
+    return vec2(res.x, 1.0 - res.y);
 }
 
 
 vec3 sphOctUvToDir(vec2 uv){
     uv = uv*2.0-1.0;
+    // Flip-v
+    uv.y = -uv.y;
     vec2 suv = sectorize(uv);
     float sabsuv =  sum(abs(uv));
     float pitch = sabsuv*HalfPI;

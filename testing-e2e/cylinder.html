@@ -38,14 +38,10 @@
         if (data === 'variant-01') {
           cylinder.getParameter('Radius').setValue(2.5)
           cylinder.getParameter('Height').setValue(1.5)
-          renderer.once('redrawOccurred', () => {
-            window.postMessage(`done-${data}`)
-          })
+          window.postMessage(`done-${data}`)
         } else if (data === 'variant-02') {
           cylinder.getParameter('Sides').setValue(15)
-          renderer.once('redrawOccurred', () => {
-            window.postMessage(`done-${data}`)
-          })
+          window.postMessage(`done-${data}`)
         }
       }
 

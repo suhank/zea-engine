@@ -1,8 +1,4 @@
 describe('add-remove-items-from-renderer', () => {
-  it('Captures a snapshot', () => {
-    cy.visit('testing-e2e/add-remove-items-from-renderer.html')
-  })
-
   it('Captures snapshots of variants', () => {
     cy.visit('testing-e2e/add-remove-items-from-renderer.html', {
       onBeforeLoad(win) {
@@ -11,6 +7,7 @@ describe('add-remove-items-from-renderer', () => {
     })
 
     cy.get('@postMessage').its('lastCall.args.0').should('equal', 'done-loading')
+    cy.get('canvas').percySnapshot(`add-remove-items-from-renderer`)
 
     cy.window().then((win) => {
       const variant = 'variant-01'

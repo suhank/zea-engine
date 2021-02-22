@@ -46,9 +46,7 @@
 
         if (data === 'variant-01') {
           lines.clear()
-          renderer.once('redrawOccurred', () => {
-            window.postMessage(`done-${data}`)
-          })
+          window.postMessage(`done-${data}`)
         } else if (data === 'variant-02') {
           lines.setNumVertices(4)
           lines.setNumSegments(3)
@@ -64,9 +62,7 @@
           lines.emit('geomDataTopologyChanged', {
             indicesChanged: true,
           })
-          renderer.once('redrawOccurred', () => {
-            window.postMessage(`done-${data}`)
-          })
+          window.postMessage(`done-${data}`)
         }
       }
 

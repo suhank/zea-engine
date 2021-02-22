@@ -23,7 +23,7 @@ class GLTexture2D extends RefCounted {
 
     this.width = 0
     this.height = 0
-    this.textureType = 1 // Default 2d 8 bit texture image texture.
+    this.textureType = 1 // Default 2d 24bit texture image texture. No alpha.
     this.textureDesc = [0, 0, 0, 0] // To be populated by derived classes.
     this.__loaded = false
     this.__bound = false
@@ -255,6 +255,11 @@ class GLTexture2D extends RefCounted {
     this.__magFilterParam = magFilter
     this.__wrapParam = wrap
 
+    // Detect an 8 bit image with an alpha channel.
+    if (this.textureType == 1 && this.__format == gl.RGBA) {
+      this.textureType = 2 // 32bit BPP image.
+    }
+
     this.__format = gl[format]
     this.__internalFormat = 'internalFormat' in params ? gl[params.internalFormat] : this.__format
     this.__type = gl[type]
@@ -296,6 +301,7 @@ class GLTexture2D extends RefCounted {
         }
       }
     }
+
     this.__minFilter = gl[minFilter]
     this.__magFilter = gl[magFilter]
     this.__wrap = gl[wrap]

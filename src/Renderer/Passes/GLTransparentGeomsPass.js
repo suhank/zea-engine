@@ -312,13 +312,14 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
     // of the background layer to let through.
     // gl.disable(gl.CULL_FACE)
 
-    // renderstate.pass = 'MULTIPLY'
     // gl.blendFunc(gl.DST_COLOR, gl.ZERO) // For multiply, select this.
     // this._drawItems(renderstate)
 
     // for the Add
     renderstate.pass = 'ADD'
-    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA) // For add
+    // https://google.github.io/filament/Filament.html#lighting/transparencyandtranslucencylighting/transparency
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
+
     // Only draw font faces. BEcause all faces are drawn, it can make a mess to see the back faces through the front faces.
     // e.g. we might see the triangles on the other side of a sphere rendered over the top of triangles on the near side.
     gl.enable(gl.CULL_FACE)

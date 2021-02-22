@@ -18,14 +18,16 @@ class GLPoints extends GLGeom {
 
   /**
    * The genBuffers method.
+   * @param {object} renderstate - The object tracking the current state of the renderer
    */
-  genBuffers() {
-    super.genBuffers()
+  genBuffers(renderstate) {
+    super.genBuffers(renderstate)
 
     const gl = this.__gl
 
     const geomBuffers = this.__geom.genBuffers()
 
+    // eslint-disable-next-line guard-for-in
     for (const attrName in geomBuffers.attrBuffers) {
       const attrData = geomBuffers.attrBuffers[attrName]
 
@@ -46,14 +48,15 @@ class GLPoints extends GLGeom {
 
   /**
    * The updateBuffers method.
-   * @param {object} opts - The options object.
+   * @param {object} renderstate - The object tracking the current state of the renderer
    */
-  updateBuffers(opts) {
+  updateBuffers(renderstate) {
     const gl = this.__gl
     const geomBuffers = this.__geom.genBuffers()
 
     // Update the vertex attribute buffers
     const numVertsChanged = geomBuffers.numVertices != this.__numVertices
+    // eslint-disable-next-line guard-for-in
     for (const attrName in geomBuffers.attrBuffers) {
       const attrData = geomBuffers.attrBuffers[attrName]
       const glattr = this.__glattrbuffers[attrName]

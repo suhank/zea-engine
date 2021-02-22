@@ -108,6 +108,10 @@ vec3 calcFatLinesViewPos(int vertexID, mat4 modelViewMatrix, inout vec3 viewNorm
  * @private
  */
 class FatLinesShader extends GLShader {
+  /**
+   * Create a GL shader.
+   * @param {WebGLRenderingContext} gl - The webgl rendering context.
+   */
   constructor(gl) {
     super(gl)
     this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader(
