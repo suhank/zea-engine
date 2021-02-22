@@ -1,5 +1,5 @@
 describe('pbr-material', () => {
-  it('Capture snapshots', () => {
+  it.skip('Capture snapshots', () => {
     cy.visit('testing-e2e/pbr-material.html', {
       onBeforeLoad(win) {
         cy.spy(win, 'postMessage').as('postMessage')

@@ -74,6 +74,7 @@
 
       const envMap = new EnvMap()
       envMap.getParameter('FilePath').setValue('data/pisa-webp.zenv')
+      promises.push(new Promise((resolve) => envMap.on('loaded', resolve)))
       scene.setEnvMap(envMap)
       scene.getSettings().getParameter('Display EnvMap').setValue(true)
 
@@ -92,9 +93,6 @@
           }
         }
         for (let key in materialParams) setupParam(material.getParameter(key), materialParams[key])
-        // setupParam(material.getParameter('Metallic'), materialParams.Metallic)
-        // material.getParameter('Metallic').setValue(0.1)
-        // material.getParameter('EmissiveStrength').setValue(1)
         scene.getRoot().addChild(new GeomItem('sphere', sphere, material, new Xfo(new Vec3(0, posX, 0.4))))
 
         posX += 1
@@ -145,7 +143,7 @@
       })
 
       renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(5, 0, 3), new Vec3(0, 0, 0))
-      Promise.allSettled(promises).then((results) => {
+      Promise.all(promises).then((results) => {
         window.postMessage('done-loading')
       })
 
