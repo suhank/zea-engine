@@ -16,68 +16,70 @@
     <script type="module">
       const { GLRenderer, Scene, Vec3, Color, Xfo, Disc, Plane, Material, GeomItem, Label, LDRImage } = window.zeaEngine
 
-      const canvas = document.querySelector('#renderer')
+      ;(async () => {
+        const canvas = document.querySelector('#renderer')
 
-      const scene = new Scene()
-      const renderer = new GLRenderer(canvas, { hideSplash: true, antialias: false })
-      renderer.setScene(scene)
-      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-2, -2, 1.7), new Vec3(0, 0, 0.2))
+        const scene = new Scene()
+        const renderer = new GLRenderer(canvas, { hideSplash: true, antialias: false })
+        renderer.setScene(scene)
+        renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-2, -2, 1.7), new Vec3(0, 0, 0.2))
 
-      scene.setupGrid(10.0, 10)
+        scene.setupGrid(10.0, 10)
 
-      const disc = new Disc(0.5, 64)
-      const plane = new Plane(1, 1)
+        const disc = new Disc(0.5, 64)
+        const plane = new Plane(1, 1)
 
-      const promises = []
+        const promises = []
 
-      {
-        const material = new Material('Material', 'FlatSurfaceShader')
+        {
+          const material = new Material('Material', 'FlatSurfaceShader')
 
-        material.getParameter('BaseColor').setValue(new Color(0.6, 0, 1))
-        const image = new LDRImage('LDRImage')
-        image.setImageURL('data/avatar1.jpg')
-        promises.push(new Promise((resolve) => image.on('loaded', resolve)))
-        material.getParameter('BaseColor').setImage(image)
-        const geomItem = new GeomItem('geomItem1', disc, material, new Xfo(new Vec3(-1, 0, 0.1)))
-        scene.getRoot().addChild(geomItem)
-      }
-      /*
-      {
-        const material = new Material('Material', 'FlatSurfaceShader')
+          material.getParameter('BaseColor').setValue(new Color(0.6, 0, 1))
+          const image = new LDRImage('LDRImage')
+          image.setImageURL('data/avatar1.jpg')
+          promises.push(new Promise((resolve) => image.on('loaded', resolve)))
+          material.getParameter('BaseColor').setImage(image)
+          const geomItem = new GeomItem('geomItem1', disc, material, new Xfo(new Vec3(-1, 0, 0.1)))
+          scene.getRoot().addChild(geomItem)
+        }
+        {
+          const material = new Material('Material', 'FlatSurfaceShader')
 
-        material.getParameter('BaseColor').setValue(new Color(0.6, 0, 1))
-        const image = new LDRImage('LDRImage')
-        image.setImageURL('data/zea-logo.png', 'RGBA')
-        promises.push(new Promise((resolve) => image.on('loaded', resolve)))
-        material.getParameter('BaseColor').setImage(image)
-        const geomItem = new GeomItem('geomItem2', plane, material, new Xfo(new Vec3(0, 0, 0.1)))
-        scene.getRoot().addChild(geomItem)
-      }
+          material.getParameter('BaseColor').setValue(new Color(0.6, 0, 1))
+          const image = new LDRImage('LDRImage')
+          image.setImageURL('data/zea-logo.png', 'RGBA')
+          promises.push(new Promise((resolve) => image.on('loaded', resolve)))
+          material.getParameter('BaseColor').setImage(image)
+          const geomItem = new GeomItem('geomItem2', plane, material, new Xfo(new Vec3(0, 0, 0.1)))
+          scene.getRoot().addChild(geomItem)
+        }
 
-      {
-        const material = new Material('Material', 'FlatSurfaceShader')
-        const label = new Label('Name')
-        label.getParameter('FontColor').setValue(new Color(0.6, 0, 0))
-        label.getParameter('BackgroundColor').setValue(new Color(1, 1, 1))
-        label.getParameter('FontSize').setValue(42)
-        label.getParameter('BorderRadius').setValue(0)
-        label.getParameter('BorderWidth').setValue(0)
-        label.getParameter('Margin').setValue(12)
-        label.getParameter('StrokeBackgroundOutline').setValue(false)
-        label.getParameter('Text').setValue(`Hello World`)
-        promises.push(new Promise((resolve) => label.on('labelRendered', resolve)))
+        {
+          const material = new Material('Material', 'FlatSurfaceShader')
+          const label = new Label('Name')
+          label.getParameter('FontColor').setValue(new Color(0.6, 0, 0))
+          label.getParameter('BackgroundColor').setValue(new Color(1, 1, 1))
+          label.getParameter('FontSize').setValue(42)
+          label.getParameter('BorderRadius').setValue(0)
+          label.getParameter('BorderWidth').setValue(0)
+          label.getParameter('Margin').setValue(12)
+          label.getParameter('StrokeBackgroundOutline').setValue(false)
+          label.getParameter('Text').setValue(`Hello World`)
+          promises.push(new Promise((resolve) => label.on('labelRendered', resolve)))
 
-        material.getParameter('BaseColor').setImage(label)
-        const geomItem = new GeomItem('geomItem3', plane, material, new Xfo(new Vec3(1, 0, 0.1)))
+          material.getParameter('BaseColor').setImage(label)
+          const geomItem = new GeomItem('geomItem3', plane, material, new Xfo(new Vec3(1, 0, 0.1)))
 
-        scene.getRoot().addChild(geomItem)
-      }
-      */
+          scene.getRoot().addChild(geomItem)
+        }
 
-      window.postMessage('done-loading')
-      // Promise.allSettled(promises).then((results) => {
-      //   console.log(results)
-      // })
+        // await new Promise((resolve) => setTimeout(resolve, 15000))
+        await Promise.all(promises)
+        // Promise.allSettled(promises).then((results) => {
+        //   console.log(results)
+        // })
+        window.postMessage('done-loading')
+      })()
     </script>
   </head>
   <body>
