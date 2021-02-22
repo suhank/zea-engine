@@ -114,6 +114,19 @@ yarn generate e2e-test
 
 You'll be prompted for the test's name.
 
+### Debugging E2E tests
+
+The testing framework launches chrome in headless mode, which uses an emulated software GPU called the Google Swiftshader. 
+ > https://github.com/google/swiftshader
+
+ While fast, the swiftshader is an order of magnitude slower than discrete GPUs. To run the e2e tests in non-headless mode, while also running the swiftshader, launch chrome with the following flags.
+
+ ```
+ "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" --disable-gpu
+ ```
+
+ > Note: the SwiftShader GPU is detected as a 'low-end' GPU and so runs all code at the same quality settings as mobile devices. 
+
 ## Publishing a new release
 
 1. All unit and E2E tests must be passing.
