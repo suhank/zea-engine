@@ -59,7 +59,6 @@ class MaterialColorParam extends ColorParameter {
    */
   setImage(value) {
     const disconnectImage = () => {
-      this.__image.off('loaded', this.__imageUpdated)
       this.__image.off('updated', this.__imageUpdated)
       this.__image = null
       this.emit('textureDisconnected', {})

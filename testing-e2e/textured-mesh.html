@@ -72,7 +72,8 @@
         scene.getRoot().addChild(geomItem)
       }
 
-      Promise.all(promises).then(() => {
+      Promise.allSettled(promises).then((results) => {
+        console.log(results)
         window.postMessage('done-loading')
       })
     </script>

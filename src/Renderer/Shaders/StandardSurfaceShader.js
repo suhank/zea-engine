@@ -172,7 +172,6 @@ uniform int ReflectanceTexType;
 
 uniform sampler2D NormalTex;
 uniform int NormalTexType;
-// uniform float NormalScale;
 #endif // ENABLE_PBR
 
 uniform sampler2D EmissiveStrengthTex;
@@ -183,9 +182,29 @@ uniform int EmissiveStrengthTexType;
 
 <%include file="PBRSurfaceRadiance.glsl"/>
 
+mat3 cotangentFrame( in vec3 normal, in vec3 pos, in vec2 texCoord ) {
+  // https://stackoverflow.com/questions/5255806/how-to-calculate-tangent-and-binormal 
+  vec3 n = normal;
+  // derivations of the fragment position
+  vec3 pos_dx = dFdx( pos );
+  vec3 pos_dy = dFdy( pos );
+  // derivations of the texture coordinate
+  vec2 texC_dx = dFdx( texCoord );
+  vec2 texC_dy = dFdy( texCoord );
+  // tangent vector and binormal vector
+  vec3 t = -(texC_dy.y * pos_dx - texC_dx.y * pos_dy);
+  vec3 b = -(texC_dx.x * pos_dy - texC_dy.x * pos_dx);
+
+  t = t - n * dot( t, n ); // orthonormalization ot the tangent vectors
+  b = b - n * dot( b, n ); // orthonormalization of the binormal vectors to the normal vector 
+  b = b - t * dot( b, t ); // orthonormalization of the binormal vectors to the tangent vector
+  mat3 tbn = mat3( normalize(t), normalize(b), n );
+
+  return tbn;
+}
+
 #ifdef ENABLE_ES3
 out vec4 fragColor;
-
 #endif
 
 void main(void) {
@@ -254,7 +273,9 @@ void main(void) {
     // Planar YZ projection for texturing, repeating every meter.
     // vec2 texCoord       = v_worldPos.xz * 0.2;
     vec2 texCoord          = vec2(v_textureCoord.x, 1.0 - v_textureCoord.y);
-    material.baseColor     = getColorParamValue(BaseColor, BaseColorTex, BaseColorTexType, texCoord).rgb;
+
+    vec4 baseColor         = getColorParamValue(BaseColor, BaseColorTex, BaseColorTexType, texCoord);
+    material.baseColor     = baseColor.rgb;
 
 #ifdef ENABLE_PBR
     material.roughness     = getLuminanceParamValue(Roughness, RoughnessTex, RoughnessTexType, texCoord);
@@ -263,13 +284,13 @@ void main(void) {
 #endif // ENABLE_PBR
     material.emission         = getLuminanceParamValue(EmissiveStrength, EmissiveStrengthTex, EmissiveStrengthTexType, texCoord);
 #endif // ENABLE_TEXTURES
-    material.opacity       = Opacity * BaseColor.a;
+    material.opacity       = Opacity * baseColor.a;
 
 #ifdef ENABLE_TEXTURES
 #ifdef ENABLE_PBR
-    if(NormalTexType != 0){
-        vec3 textureNormal_tangentspace = normalize(texture2D(NormalTex, texCoord).rgb * 2.0 - 1.0);
-        viewNormal = normalize(mix(viewNormal, textureNormal_tangentspace, 0.3));
+    if(NormalTexType != 0) {
+        mat3 tbn = cotangentFrame(normal, viewVector, texCoord);
+        normal = normalize(tbn * (texture2D(NormalTex, texCoord).rgb * 2.0 - 1.0));
     }
 #endif // ENABLE_PBR
 #endif // ENABLE_TEXTURES
@@ -280,7 +301,8 @@ void main(void) {
 #endif
 
     fragColor = pbrSurfaceRadiance(material, normal, viewVector);
-
+    // fragColor = vec4(normal, 1.0);
+    
 #ifdef DEBUG_GEOM_ID
     // ///////////////////////
     // Debug Draw ID (this correlates to GeomID within a GLGeomSet)
@@ -315,6 +337,7 @@ void main(void) {
       name: 'BaseColor',
       defaultValue: new Color(1.0, 1.0, 0.5),
     })
+    paramDescs.push({ name: 'Normal', defaultValue: new Color(0.5, 0.5, 0.5) })
     paramDescs.push({ name: 'Metallic', defaultValue: 0.05, range: [0, 1] })
     paramDescs.push({ name: 'Roughness', defaultValue: 0.5, range: [0, 1] })
     paramDescs.push({ name: 'Reflectance', defaultValue: 0.5, range: [0, 1] })
