@@ -70,7 +70,13 @@
       renderer.setScene(scene)
 
       // scene.setupGrid(10.0, 10)
-      const promises = []
+      let loadCount = 0
+      const ondone = () => {
+        loadCount--
+        if (loadCount == 0) {
+          window.postMessage('done-loading')
+        }
+      }
 
       const envMap = new EnvMap()
       envMap.getParameter('FilePath').setValue('data/pisa-webp.zenv')
@@ -85,7 +91,8 @@
           if (typeof value == 'string') {
             const texture = new LDRImage('LDRImage')
             texture.setImageURL(value)
-            promises.push(new Promise((resolve) => texture.on('loaded', resolve)))
+            loadCount++
+            texture.on('loaded', ondone)
             param.setImage(texture)
           } else {
             param.setValue(value)
@@ -145,9 +152,6 @@
       })
 
       renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(5, 0, 3), new Vec3(0, 0, 0))
-      Promise.allSettled(promises).then((results) => {
-        window.postMessage('done-loading')
-      })
 
       const slider = document.getElementById('exposureControl')
       renderer.exposure = 1.8

@@ -28,7 +28,13 @@
       const disc = new Disc(0.5, 64)
       const plane = new Plane(1, 1)
 
-      const promises = []
+      let loadCount = 0
+      const ondone = () => {
+        loadCount--
+        if (loadCount == 0) {
+          window.postMessage('done-loading')
+        }
+      }
 
       {
         const material = new Material('Material', 'FlatSurfaceShader')
@@ -36,19 +42,20 @@
         material.getParameter('BaseColor').setValue(new Color(0.6, 0, 1))
         const image = new LDRImage('LDRImage')
         image.setImageURL('data/avatar1.jpg')
-        promises.push(new Promise((resolve) => image.on('loaded', resolve)))
+        loadCount++
+        image.on('loaded', ondone)
         material.getParameter('BaseColor').setImage(image)
         const geomItem = new GeomItem('geomItem1', disc, material, new Xfo(new Vec3(-1, 0, 0.1)))
         scene.getRoot().addChild(geomItem)
       }
-      /*
       {
         const material = new Material('Material', 'FlatSurfaceShader')
 
         material.getParameter('BaseColor').setValue(new Color(0.6, 0, 1))
         const image = new LDRImage('LDRImage')
         image.setImageURL('data/zea-logo.png', 'RGBA')
-        promises.push(new Promise((resolve) => image.on('loaded', resolve)))
+        loadCount++
+        image.on('loaded', ondone)
         material.getParameter('BaseColor').setImage(image)
         const geomItem = new GeomItem('geomItem2', plane, material, new Xfo(new Vec3(0, 0, 0.1)))
         scene.getRoot().addChild(geomItem)
@@ -65,19 +72,14 @@
         label.getParameter('Margin').setValue(12)
         label.getParameter('StrokeBackgroundOutline').setValue(false)
         label.getParameter('Text').setValue(`Hello World`)
-        promises.push(new Promise((resolve) => label.on('labelRendered', resolve)))
+        loadCount++
+        label.on('labelRendered', ondone)
 
         material.getParameter('BaseColor').setImage(label)
         const geomItem = new GeomItem('geomItem3', plane, material, new Xfo(new Vec3(1, 0, 0.1)))
 
         scene.getRoot().addChild(geomItem)
       }
-      */
-
-      Promise.allSettled(promises).then((results) => {
-        console.log(results)
-        window.postMessage('done-loading')
-      })
     </script>
   </head>
   <body>
