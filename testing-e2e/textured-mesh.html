@@ -74,10 +74,10 @@
       }
       */
 
-      Promise.allSettled(promises).then((results) => {
-        console.log(results)
-        window.postMessage('done-loading')
-      })
+      window.postMessage('done-loading')
+      // Promise.allSettled(promises).then((results) => {
+      //   console.log(results)
+      // })
     </script>
   </head>
   <body>
