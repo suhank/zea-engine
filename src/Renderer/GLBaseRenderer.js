@@ -9,7 +9,9 @@ import { Registry } from '../Registry'
 import { VRViewport } from './VR/VRViewport'
 import { POINTER_TYPES } from '../Utilities/EnumUtils'
 import { PassType } from './Passes/GLPass'
-import { GLMaterialLibrary } from './GLMaterialLibrary.js'
+import { GLMaterialLibrary } from './Drawing/GLMaterialLibrary.js'
+import { GLGeomLibrary } from './Drawing/GLGeomLibrary.js'
+import { GLGeomItemLibrary } from './Drawing/GLGeomItemLibrary.js'
 
 let activeGLRenderer = undefined
 let pointerIsDown = false
@@ -64,7 +66,15 @@ class GLBaseRenderer extends ParameterOwner {
 
     this.glMaterialLibrary = new GLMaterialLibrary(this)
     this.glMaterialLibrary.on('updated', () => {
-      this.emit('updated')
+      this.requestRedraw()
+    })
+    this.glGeomLibrary = new GLGeomLibrary(this)
+    this.glGeomLibrary.on('updated', () => {
+      this.requestRedraw()
+    })
+    this.glGeomItemLibrary = new GLGeomItemLibrary(this)
+    this.glGeomItemLibrary.on('updated', () => {
+      this.requestRedraw()
     })
 
     // eslint-disable-next-line guard-for-in
@@ -377,9 +387,13 @@ class GLBaseRenderer extends ParameterOwner {
   assignTreeItemToGLPass(treeItem) {
     if (treeItem instanceof GeomItem) {
       const geomItem = treeItem
-      // const geom = geomItem.getParameter('Geometry').getValue()
       const material = geomItem.getParameter('Material').getValue()
       this.glMaterialLibrary.addMaterial(material)
+
+      const geom = geomItem.getParameter('Geometry').getValue()
+      this.glGeomLibrary.addGeom(geom)
+
+      this.glGeomItemLibrary.addGeomItem(geomItem)
     }
 
     let handled = false
@@ -1233,6 +1247,8 @@ class GLBaseRenderer extends ParameterOwner {
 
     renderState.directives = [...this.directives, '#define DRAW_COLOR']
     renderState.shaderopts.directives = renderState.directives
+
+    this.glGeomItemLibrary.update(renderState)
 
     for (const key in this.__passes) {
       const passSet = this.__passes[key]

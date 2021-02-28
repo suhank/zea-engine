@@ -1,7 +1,6 @@
-﻿import { Registry } from '../Registry.js'
-import { GLTexture2D } from './GLTexture2D.js'
-import { EventEmitter, MathFunctions, Allocator1D } from '../Utilities/index'
-import { GLMaterial } from './Drawing/index.js'
+﻿import { GLTexture2D } from '../GLTexture2D.js'
+import { EventEmitter, MathFunctions, Allocator1D } from '../../Utilities/index'
+import { GLMaterial } from './GLMaterial.js'
 
 /** Class representing a GL CAD material library.
  * @ignore
@@ -9,7 +8,7 @@ import { GLMaterial } from './Drawing/index.js'
 class GLMaterialLibrary extends EventEmitter {
   /**
    * Create a GL CAD material library.
-   * @param {WebGLRenderingContext | WebGL2RenderingContext} gl - The Canvas 3D Context.
+   * @param {GLBaseRenderer} renderer - The renderer object
    */
   constructor(renderer) {
     super()
@@ -34,14 +33,15 @@ class GLMaterialLibrary extends EventEmitter {
    * @param {Material} material - The material object.
    */
   addMaterial(material) {
-    if (this.materialIndices[material.getId()]) {
+    let index = this.materialIndices[material.getId()]
+    if (index != undefined) {
+      // Increment the ref count for the GLGeom
       return
     }
     if (material.getMetadata('glmaterialcoords')) {
       return
     }
 
-    let index
     if (this.freeIndices.length) {
       index = this.freeIndices.pop()
     } else {

@@ -115,7 +115,8 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
             }
           }
 
-          const glGeomItem = this.constructGLGeomItem(geomItem)
+          // const glGeomItem = this.constructGLGeomItem(geomItem)
+          const glGeomItem = this.renderer.glGeomItemLibrary.getGeomItem(geomItem)
           glShaderGeomSets.addGLGeomItem(glGeomItem)
           return true
         }
@@ -124,7 +125,8 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
 
     const glGeom = this.constructGLGeom(geomItem.getParameter('Geometry').getValue())
 
-    const glGeomItem = this.constructGLGeomItem(geomItem)
+    // const glGeomItem = this.constructGLGeomItem(geomItem)
+    const glGeomItem = this.renderer.glGeomItemLibrary.getGeomItem(geomItem)
 
     // const materialParam = geomItem.getParameter('Material')
     // const material = materialParam.getValue()
@@ -180,8 +182,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
    * @return {boolean} - The return value.
    */
   removeGeomItem(geomItem) {
-    const glGeomItem = super.removeGeomItem(geomItem)
-    if (!glGeomItem) return false
+    const glGeomItem = this.renderer.glGeomItemLibrary.getGLGeomItem(geomItem)
 
     const geomItemSet = geomItem.getMetadata('geomItemSet')
     if (geomItemSet) {
@@ -223,7 +224,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
    * @private
    */
   __traverseTreeAndDraw(renderstate) {
-    renderstate.drawItemsTexture = this.__drawItemsTexture
+    // renderstate.drawItemsTexture = this.__drawItemsTexture
 
     // eslint-disable-next-line guard-for-in
     for (const shaderName in this.__glShaderGeomSets) {
@@ -244,8 +245,8 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
    * @param {object} renderstate - The object tracking the current state of the renderer
    */
   draw(renderstate) {
-    if (this.newItemsReadyForLoading()) this.finalize()
-    renderstate.drawItemsTexture = this.__drawItemsTexture
+    // if (this.newItemsReadyForLoading()) this.finalize()
+    // renderstate.drawItemsTexture = this.__drawItemsTexture
 
     const gl = this.__gl
     gl.disable(gl.BLEND)
@@ -322,8 +323,8 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
    * @param {object} renderstate - The object tracking the current state of the renderer
    */
   drawGeomData(renderstate) {
-    if (this.newItemsReadyForLoading()) this.finalize()
-    renderstate.drawItemsTexture = this.__drawItemsTexture
+    // if (this.newItemsReadyForLoading()) this.finalize()
+    // renderstate.drawItemsTexture = this.__drawItemsTexture
 
     renderstate.passIndex = this.__passIndex
 

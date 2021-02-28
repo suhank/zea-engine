@@ -19,9 +19,9 @@ class GLStandardGeomsPass extends GLPass {
   constructor() {
     super()
 
-    this.__drawItems = [undefined]
-    this.__drawItemsIndexFreeList = []
-    this.__dirtyItemIndices = []
+    // this.__drawItems = [undefined]
+    // this.__drawItemsIndexFreeList = []
+    // this.__dirtyItemIndices = []
   }
 
   /**
@@ -46,19 +46,14 @@ class GLStandardGeomsPass extends GLPass {
   itemAddedToScene(treeItem, rargs) {
     if (treeItem instanceof GeomItem) {
       const geomItem = treeItem
-      if (!geomItem.getMetadata('glGeomItem')) {
-        if (geomItem.getParameter('Material').getValue() == undefined) {
-          console.warn('Scene item :' + geomItem.getPath() + ' has no material')
-          return false
-        } else {
+      {
+        {
           if (this.filterGeomItem(geomItem)) {
             this.addGeomItem(geomItem)
           } else {
             return false
           }
         }
-      } else {
-        return false
       }
     } else {
       return false
@@ -159,7 +154,6 @@ class GLStandardGeomsPass extends GLPass {
    * Given a GeomItem, constructs the GLGeomItem that manages the GPU state of the GeomItem.
    * @param {GeomItem} geomItem - The geomItem value.
    * @return {GLGeomItem} - The return value.
-   */
   constructGLGeomItem(geomItem) {
     let index
     // Use recycled indices if there are any available...
@@ -207,12 +201,12 @@ class GLStandardGeomsPass extends GLPass {
     geomItem.setMetadata('glpass', this)
     return glGeomItem
   }
+   */
 
   /**
    * The removeGeomItem method.
    * @param {any} geomItem - The geomItem value.
    * @return {any} - The return value.
-   */
   removeGeomItem(geomItem) {
     if (geomItem.getMetadata('glpass') != this) return
 
@@ -239,6 +233,7 @@ class GLStandardGeomsPass extends GLPass {
 
     return glGeomItem
   }
+   */
 
   // removeMaterial(material) {
   //     const glshaderMaterials = this.__glshadermaterials[material.hash];
@@ -267,7 +262,7 @@ class GLStandardGeomsPass extends GLPass {
   }
 
   // ////////////////////////////////////////////////////////
-  // / GeomItem IDs
+  // GeomItem IDs
 
   /**
    * The getGeomItem method.
@@ -291,7 +286,6 @@ class GLStandardGeomsPass extends GLPass {
    * @param {number} index - The index value.
    * @param {any} dataArray - The dataArray value.
    * @private
-   */
   __populateDrawItemDataArray(geomItem, index, dataArray) {
     const stride = pixelsPerItem * 4 // The number of floats per draw item.
     const offset = index * stride
@@ -343,18 +337,18 @@ class GLStandardGeomsPass extends GLPass {
       pix5.set(cutAwayVector.x, cutAwayVector.y, cutAwayVector.z, cutAwayDist)
     }
   }
+   */
 
   /**
    * The newItemsReadyForLoading method.
    * @return {any} - The return value.
    */
-  newItemsReadyForLoading() {
-    return this.__dirtyItemIndices.length > 0
-  }
+  // newItemsReadyForLoading() {
+  //   return this.__dirtyItemIndices.length > 0
+  // }
 
   /**
    * The uploadGeomItems method.
-   */
   uploadGeomItems() {
     const gl = this.__gl
     if (!gl.floatTexturesSupported) {
@@ -437,14 +431,15 @@ class GLStandardGeomsPass extends GLPass {
 
     this.__dirtyItemIndices = []
   }
+   */
 
   /**
    * The finalize method.
    */
-  finalize() {
-    if (this.__dirtyItemIndices.length == 0) return
-    this.uploadGeomItems()
-  }
+  // finalize() {
+  //   if (this.__dirtyItemIndices.length == 0) return
+  //   this.uploadGeomItems()
+  // }
 }
 
 export { GLStandardGeomsPass }

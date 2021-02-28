@@ -53,7 +53,7 @@ class GLOverlayPass extends GLOpaqueGeomsPass {
    * @param {object} renderstate - The object tracking the current state of the renderer
    */
   draw(renderstate) {
-    if (this.newItemsReadyForLoading()) this.finalize()
+    // if (this.newItemsReadyForLoading()) this.finalize()
 
     const gl = this.__gl
 

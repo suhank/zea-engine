@@ -61,7 +61,8 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
   addGeomItem(geomItem) {
     const glGeom = this.constructGLGeom(geomItem.getParameter('Geometry').getValue())
 
-    const glGeomItem = this.constructGLGeomItem(geomItem)
+    // const glGeomItem = this.constructGLGeomItem(geomItem)
+    const glGeomItem = this.renderer.glGeomItemLibrary.getGeomItem(geomItem)
 
     const material = geomItem.getParameter('Material').getValue()
     const shaderName = material.getShaderName()
@@ -133,7 +134,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
    * @param {any} geomItem - The geomItem value.
    */
   removeGeomItem(geomItem) {
-    if (!super.removeGeomItem(geomItem)) return
+    // if (!super.removeGeomItem(geomItem)) return
 
     const itemindex = geomItem.getMetadata('itemIndex')
     const item = this.transparentItems[itemindex]
@@ -228,9 +229,11 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
         // if (renderstate.attrs.instancedIds && renderstate.attrs.instancedIds.location != -1) {
         //   gl.disableVertexAttribArray(renderstate.attrs.instancedIds.location)
         // }
-        if (unifs.instancesTexture) {
-          this.__drawItemsTexture.bindToUniform(renderstate, unifs.instancesTexture)
-          gl.uniform1i(unifs.instancesTextureSize.location, this.__drawItemsTexture.width)
+
+        const drawItemsTexture = renderstate.drawItemsTexture
+        if (drawItemsTexture && unifs.instancesTexture) {
+          drawItemsTexture.bindToUniform(renderstate, unifs.instancesTexture)
+          gl.uniform1i(unifs.instancesTextureSize.location, drawItemsTexture.width)
         }
 
         cache.currentglShader = glShader
@@ -249,7 +252,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
   draw(renderstate) {
     if (this.visibleItems.length == 0) return
 
-    if (this.newItemsReadyForLoading()) this.finalize()
+    // if (this.newItemsReadyForLoading()) this.finalize()
 
     const gl = this.__gl
 
@@ -368,7 +371,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
    * @param {object} renderstate - The object tracking the current state of the renderer
    */
   drawGeomData(renderstate) {
-    if (this.newItemsReadyForLoading()) this.finalize()
+    // if (this.newItemsReadyForLoading()) this.finalize()
 
     const gl = this.__gl
     gl.disable(gl.BLEND)
