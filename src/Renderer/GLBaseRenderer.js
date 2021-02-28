@@ -578,13 +578,13 @@ class GLBaseRenderer extends ParameterOwner {
       this.addShaderPreprocessorDirective('ENABLE_FLOAT_TEXTURES')
     }
 
-    // if (!options.disableMultiDraw) {
-    //   const ext = this.__gl.getExtension('WEBGL_multi_draw')
-    //   if (ext) {
-    //     this.__gl.multiDrawElementsInstanced = ext.multiDrawElementsInstancedWEBGL.bind(ext)
-    //     this.__gl.multiDrawArraysInstanced = ext.multiDrawArraysInstancedWEBGL.bind(ext)
-    //   }
-    // }
+    if (!webglOptions.disableMultiDraw) {
+      const ext = this.__gl.getExtension('WEBGL_multi_draw')
+      if (ext) {
+        this.__gl.multiDrawElementsInstanced = ext.multiDrawElementsInstancedWEBGL.bind(ext)
+        this.__gl.multiDrawArraysInstanced = ext.multiDrawArraysInstancedWEBGL.bind(ext)
+      }
+    }
 
     this.__gl.screenQuad = new GLScreenQuad(this.__gl)
     this.__screenQuad = this.__gl.screenQuad
