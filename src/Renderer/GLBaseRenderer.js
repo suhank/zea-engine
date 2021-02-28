@@ -1248,8 +1248,6 @@ class GLBaseRenderer extends ParameterOwner {
     renderState.directives = [...this.directives, '#define DRAW_COLOR']
     renderState.shaderopts.directives = renderState.directives
 
-    this.glGeomItemLibrary.update(renderState)
-
     for (const key in this.__passes) {
       const passSet = this.__passes[key]
       for (const pass of passSet) {

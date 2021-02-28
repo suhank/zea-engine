@@ -116,7 +116,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
           }
 
           // const glGeomItem = this.constructGLGeomItem(geomItem)
-          const glGeomItem = this.renderer.glGeomItemLibrary.getGeomItem(geomItem)
+          const glGeomItem = this.renderer.glGeomItemLibrary.getGLGeomItem(geomItem)
           glShaderGeomSets.addGLGeomItem(glGeomItem)
           return true
         }
@@ -126,7 +126,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
     const glGeom = this.constructGLGeom(geomItem.getParameter('Geometry').getValue())
 
     // const glGeomItem = this.constructGLGeomItem(geomItem)
-    const glGeomItem = this.renderer.glGeomItemLibrary.getGeomItem(geomItem)
+    const glGeomItem = this.renderer.glGeomItemLibrary.getGLGeomItem(geomItem)
 
     // const materialParam = geomItem.getParameter('Material')
     // const material = materialParam.getValue()

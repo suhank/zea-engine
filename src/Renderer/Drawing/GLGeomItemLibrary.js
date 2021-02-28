@@ -295,12 +295,19 @@ class GLGeomItemLibrary extends EventEmitter {
   }
 
   /**
-   * The bind method.
+   * Updates the GPU state if any update is needed.
    * @param {object} renderstate - The object tracking the current state of the renderer
    */
-  update(renderstate) {
+  bind(renderstate) {
     if (this.dirtyItemIndices.length > 0) this.uploadGeomItems(renderstate)
-    renderstate.drawItemsTexture = this.glGeomItemsTexture
+    // renderstate.drawItemsTexture = this.glGeomItemsTexture
+
+    const gl = this.renderer.gl
+    const { instancesTexture, instancesTextureSize } = renderstate.unifs
+    if (instancesTexture) {
+      this.glGeomItemsTexture.bindToUniform(renderstate, instancesTexture)
+      gl.uniform1i(instancesTextureSize.location, this.glGeomItemsTexture.width)
+    }
   }
 
   /**

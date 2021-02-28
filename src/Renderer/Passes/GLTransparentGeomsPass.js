@@ -62,7 +62,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
     const glGeom = this.constructGLGeom(geomItem.getParameter('Geometry').getValue())
 
     // const glGeomItem = this.constructGLGeomItem(geomItem)
-    const glGeomItem = this.renderer.glGeomItemLibrary.getGeomItem(geomItem)
+    const glGeomItem = this.renderer.glGeomItemLibrary.getGLGeomItem(geomItem)
 
     const material = geomItem.getParameter('Material').getValue()
     const shaderName = material.getShaderName()
@@ -230,11 +230,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
         //   gl.disableVertexAttribArray(renderstate.attrs.instancedIds.location)
         // }
 
-        const drawItemsTexture = renderstate.drawItemsTexture
-        if (drawItemsTexture && unifs.instancesTexture) {
-          drawItemsTexture.bindToUniform(renderstate, unifs.instancesTexture)
-          gl.uniform1i(unifs.instancesTextureSize.location, drawItemsTexture.width)
-        }
+        this.renderer.glGeomItemLibrary.bind(renderstate)
 
         cache.currentglShader = glShader
       }

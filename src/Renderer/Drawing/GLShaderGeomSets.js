@@ -110,12 +110,7 @@ class GLShaderGeomSets extends EventEmitter {
     const gl = renderstate.gl
     const unifs = renderstate.unifs
 
-    const drawItemsTexture = renderstate.drawItemsTexture
-    if (drawItemsTexture && unifs.instancesTexture) {
-      drawItemsTexture.bindToUniform(renderstate, unifs.instancesTexture)
-      gl.uniform1i(unifs.instancesTextureSize.location, drawItemsTexture.width)
-    }
-
+    this.pass.renderer.glGeomItemLibrary.bind(renderstate)
     this.pass.renderer.glMaterialLibrary.bind(renderstate)
   }
 
