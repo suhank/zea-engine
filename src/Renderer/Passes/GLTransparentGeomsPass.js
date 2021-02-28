@@ -78,19 +78,13 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
     // select a different pass. e.g. if the new material is not transparent
     // then the object moves to the OpaqueGeomsPass
     const materialChanged = () => {
+      material.off('valueChanged', materialChanged)
+      material.off('transparencyChanged', materialChanged)
       this.removeGeomItem(geomItem)
       this.__renderer.assignTreeItemToGLPass(geomItem)
     }
-    materialParam.on('valueChanged', materialChanged)
-
-    const baseColorParam = material.getParameter('BaseColor')
-    if (baseColorParam) {
-      baseColorParam.on('valueChanged', materialChanged)
-    }
-    const opacityParam = material.getParameter('Opacity')
-    if (opacityParam) {
-      opacityParam.on('valueChanged', materialChanged)
-    }
+    material.on('valueChanged', materialChanged)
+    material.on('transparencyChanged', materialChanged)
 
     // ////////////////////////////////////
     // Tracking visibility changes.
@@ -144,24 +138,6 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
 
     const itemindex = geomItem.getMetadata('itemIndex')
     const item = this.transparentItems[itemindex]
-
-    const materialParam = geomItem.getParameter('Material')
-    if (materialParam) {
-      materialParam.off('valueChanged', item.materialChanged)
-
-      // Note: if the material has changed in the PArameter, we need to
-      // to have a cache of the pervious material so we can disconnect from it.
-      const material = item.material
-      const baseColorParam = material.getParameter('BaseColor')
-      if (baseColorParam) {
-        baseColorParam.off('valueChanged', item.materialChanged)
-      }
-
-      const opacityParam = material.getParameter('Opacity')
-      if (opacityParam) {
-        opacityParam.off('valueChanged', item.materialChanged)
-      }
-    }
 
     geomItem.off('visibilityChanged', item.visibilityChanged)
     geomItem.getParameter('GeomMat').off('valueChanged', item.geomMatChanged)

@@ -20,17 +20,19 @@ class GLMaterialGeomItemSets extends EventEmitter {
     this.visibleInGeomDataBuffer = glMaterial.getMaterial().visibleInGeomDataBuffer
     this.drawCountChanged = this.drawCountChanged.bind(this)
 
-    this.__materialChanged = this.__materialChanged.bind(this)
     const material = glMaterial.getMaterial()
-    // TODO: use material.on('transparencyChanged', this.__materialChanged)
-    const baseColorParam = material.getParameter('BaseColor')
-    if (baseColorParam) {
-      baseColorParam.on('valueChanged', this.__materialChanged)
+    const materialChanged = (event) => {
+      material.off('transparencyChanged', materialChanged)
+      for (const key in this.glGeomItemSets) {
+        const glGeomItemSet = this.glGeomItemSets[key]
+        for (const glGeomItem of glGeomItemSet.glGeomItems) {
+          const geomItem = glGeomItem.geomItem
+          this.pass.removeGeomItem(geomItem)
+          this.pass.__renderer.assignTreeItemToGLPass(geomItem)
+        }
+      }
     }
-    const opacityParam = material.getParameter('Opacity')
-    if (opacityParam) {
-      opacityParam.on('valueChanged', this.__materialChanged)
-    }
+    material.on('transparencyChanged', materialChanged)
   }
 
   /**
@@ -98,15 +100,15 @@ class GLMaterialGeomItemSets extends EventEmitter {
       delete this.glGeomItemSets[id]
       if (Object.keys(this.glGeomItemSets).length == 0) {
         // Remove the listeners.
-        const material = this.glMaterial.getMaterial()
-        const baseColorParam = material.getParameter('BaseColor')
-        if (baseColorParam) {
-          baseColorParam.off('valueChanged', this.__materialChanged)
-        }
-        const opacityParam = material.getParameter('Opacity')
-        if (opacityParam) {
-          opacityParam.off('valueChanged', this.__materialChanged)
-        }
+        // const material = this.glMaterial.getMaterial()
+        // const baseColorParam = material.getParameter('BaseColor')
+        // if (baseColorParam) {
+        //   baseColorParam.off('valueChanged', this.__materialChanged)
+        // }
+        // const opacityParam = material.getParameter('Opacity')
+        // if (opacityParam) {
+        //   opacityParam.off('valueChanged', this.__materialChanged)
+        // }
 
         this.emit('destructing')
       }
