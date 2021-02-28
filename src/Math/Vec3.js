@@ -175,13 +175,14 @@ class Vec3 extends AttrValue {
   /**
    * @deprecated
    * Checks if this Vec3 is exactly the same as another Vec3.
+   * Deprecated. Use #isEqual instead.
    *
    * @param {Vec3} other - The other Vec3 to compare with.
    * @return {boolean} - Returns `true` if are the same Vector, otherwise, `false`.
    */
   equal(other) {
     console.warn('Deprecated. Use #isEqual instead.')
-    return this.equals(other)
+    return this.isEqual(other)
   }
 
   /**
