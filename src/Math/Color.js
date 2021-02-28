@@ -420,6 +420,17 @@ class Color extends AttrValue {
    * @return {boolean} - Returns true or false.
    */
   equal(other) {
+    console.warn('Deprecated. Use #isEqual instead.')
+    return this.isEqual(other)
+  }
+
+  /**
+   * Checks if this Vec3 is exactly the same as another Vec3.
+   *
+   * @param {Vec3} other - The other Vec3 to compare with.
+   * @return {boolean} - Returns `true` if are the same Vector, otherwise, `false`.
+   */
+  isEqual(other) {
     return this.r == other.r && this.g == other.g && this.b == other.b && this.a == other.a
   }
 
