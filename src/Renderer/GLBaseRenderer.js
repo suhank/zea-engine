@@ -9,6 +9,7 @@ import { Registry } from '../Registry'
 import { VRViewport } from './VR/VRViewport'
 import { POINTER_TYPES } from '../Utilities/EnumUtils'
 import { PassType } from './Passes/GLPass'
+import { GLMaterialLibrary } from './GLMaterialLibrary.js'
 
 let activeGLRenderer = undefined
 let pointerIsDown = false
@@ -60,6 +61,11 @@ class GLBaseRenderer extends ParameterOwner {
 
     this.setupWebGL($canvas, options.webglOptions ? { ...options, ...options.webglOptions } : options)
     this.bindEventHandlers()
+
+    this.glMaterialLibrary = new GLMaterialLibrary(this)
+    this.glMaterialLibrary.on('updated', () => {
+      this.emit('updated')
+    })
 
     // eslint-disable-next-line guard-for-in
     for (const passType in registeredPasses) {
@@ -369,6 +375,13 @@ class GLBaseRenderer extends ParameterOwner {
    * @param {TreeItem} treeItem - The tree item to assign.
    */
   assignTreeItemToGLPass(treeItem) {
+    if (treeItem instanceof GeomItem) {
+      const geomItem = treeItem
+      // const geom = geomItem.getParameter('Geometry').getValue()
+      const material = geomItem.getParameter('Material').getValue()
+      this.glMaterialLibrary.addMaterial(material)
+    }
+
     let handled = false
     for (let i = this.__passesRegistrationOrder.length - 1; i >= 0; i--) {
       const pass = this.__passesRegistrationOrder[i]

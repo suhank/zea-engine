@@ -2,8 +2,6 @@
 import { EventEmitter } from '../../Utilities/index'
 import { GeomItem, Points, Lines, Mesh, PointsProxy, LinesProxy, MeshProxy } from '../../SceneTree/index'
 import { GLMeshSet, GLLinesSet, GLPointsSet } from '../Drawing/index.js'
-import { GLMaterialLibrary } from '../GLMaterialLibrary.js'
-import { GLPass } from '../Passes/GLPass'
 
 /** Class representing GL shader materials.
  * @private
@@ -24,10 +22,6 @@ class GLShaderGeomSets extends EventEmitter {
     this.glGeomDataShader = shaders.glgeomdatashader
     this.glHighlightShader = shaders.glselectedshader
     this.glGeomSets = {}
-    this.glMaterialLibrary = new GLMaterialLibrary(gl)
-    this.glMaterialLibrary.on('updated', () => {
-      this.emit('updated')
-    })
   }
 
   /**
@@ -78,7 +72,7 @@ class GLShaderGeomSets extends EventEmitter {
     glGeomSet.addGLGeomItem(glGeomItem)
 
     const material = glGeomItem.geomItem.getParameter('Material').getValue()
-    this.glMaterialLibrary.addMaterial(material)
+    // this.glMaterialLibrary.addMaterial(material)
     const geomItemParamChanged = (event) => {
       if (geom instanceof Lines || geom instanceof Points || geom instanceof PointsProxy || geom instanceof LinesProxy)
         return
@@ -122,7 +116,7 @@ class GLShaderGeomSets extends EventEmitter {
       gl.uniform1i(unifs.instancesTextureSize.location, drawItemsTexture.width)
     }
 
-    this.glMaterialLibrary.bind(renderstate)
+    this.pass.renderer.glMaterialLibrary.bind(renderstate)
   }
 
   /**

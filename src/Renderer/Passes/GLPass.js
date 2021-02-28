@@ -30,7 +30,7 @@ class GLPass extends ParameterOwner {
    */
   __parameterValueChanged(event) {
     super.__parameterValueChanged(event)
-    if (this.__renderer) this.__renderer.requestRedraw()
+    if (this.renderer) this.renderer.requestRedraw()
   }
 
   /**
@@ -42,7 +42,9 @@ class GLPass extends ParameterOwner {
     if (passIndex == undefined) throw new Error('Missing constructor argument.') // Type checking. Seomthing that TypeScript will do for us.
 
     this.__gl = renderer.gl
+    this.renderer = renderer
     this.__renderer = renderer
+    this.passIndex = passIndex
     this.__passIndex = passIndex
   }
 
@@ -51,7 +53,7 @@ class GLPass extends ParameterOwner {
    * @param {any} passIndex - The passIndex value.
    */
   setPassIndex(passIndex) {
-    this.__passIndex = passIndex
+    this.passIndex = passIndex
   }
 
   /**

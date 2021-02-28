@@ -144,7 +144,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
     // ////////////////////////////////////
     // Shaders
     const shaderName = material.getShaderName()
-    const glMaterial = this.constructGLMaterial(material)
+    const glMaterial = this.renderer.glMaterialLibrary.constructGLMaterial(material)
 
     let glshaderMaterials = this.__glshadermaterials[shaderName]
     if (!glshaderMaterials) {

@@ -116,26 +116,6 @@ class GLStandardGeomsPass extends GLPass {
   }
 
   /**
-   * Given a material, generates a GLMaterial that manages the GPU state for the material.
-   * @param {Material} material - The material value.
-   * @return {GLMaterial} - The constructed GLMaterial.
-   */
-  constructGLMaterial(material) {
-    let glMaterial = material.getMetadata('glMaterial')
-    if (glMaterial) {
-      return glMaterial
-    }
-    const glShader = this.__renderer.getOrCreateShader(material.getShaderName())
-    glMaterial = new GLMaterial(this.__gl, material, glShader)
-    glMaterial.on('updated', () => {
-      this.__renderer.requestRedraw()
-    })
-    material.setMetadata('glMaterial', glMaterial)
-
-    return glMaterial
-  }
-
-  /**
    * Given a BaseGeom, constructs the GLGeom that manages the state of the geometry in the GPU.
    * @param {BaseGeom} geom - The geom value.
    * @return {GLGeom} - The return value.

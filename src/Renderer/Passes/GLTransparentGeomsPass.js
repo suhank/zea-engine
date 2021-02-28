@@ -63,14 +63,13 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
 
     const glGeomItem = this.constructGLGeomItem(geomItem)
 
-    const materialParam = geomItem.getParameter('Material')
     const material = geomItem.getParameter('Material').getValue()
     const shaderName = material.getShaderName()
     const shaders = this.constructShaders(shaderName)
 
     // @todo - make sure we remove materials and GeomItems from the base pass.
     // This code will leak memory for these classes as we are not cleaning them up.
-    const glMaterial = this.constructGLMaterial(material)
+    const glMaterial = this.renderer.glMaterialLibrary.constructGLMaterial(material)
 
     // ////////////////////////////////////
     // Tracking Material Transparency changes...
