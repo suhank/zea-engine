@@ -33,7 +33,7 @@
       const canvas = document.querySelector('#renderer')
 
       const scene = new Scene()
-      scene.setupGrid(10, 10)
+      // scene.setupGrid(10, 10)
       const renderer = new GLRenderer(canvas, { hideSplash: true, antialias: false })
       renderer.setScene(scene)
 
@@ -82,8 +82,8 @@
       addShape('points4', pointsGrid, new Vec3(-2, -3, 1), material4)
       addShape('sphere5', sphere, new Vec3(-2, -5, 1), material1)
       addShape('sphere6', sphere, new Vec3(-2, -7, 1), material1)
-      // addShape('cone1', cone, new Vec3(4, -1, 1), material2)
-      // addShape('cone2', cone, new Vec3(4, 1, 1), material2)
+      addShape('cone1', cone, new Vec3(4, -1, 1), material2)
+      addShape('cone2', cone, new Vec3(4, 1, 1), material2)
       // addShape('sphere1', sphere, new Vec3(-2, -1, 1), material1)
       // addShape('cuboid1', cuboid, new Vec3(2, 1, 1), material1)
 
