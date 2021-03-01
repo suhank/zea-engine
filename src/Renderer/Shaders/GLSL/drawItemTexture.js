@@ -9,21 +9,15 @@ shaderLibrary.setShaderModule(
 
 #ifdef ENABLE_MULTI_DRAW
 
-uniform sampler2D drawIdsLayoutTexture;
 uniform sampler2D drawIdsTexture;
 
 uniform int instancedDraw;
 
 int getDrawItemId() {
-  ivec2 drawIdsLayoutTextureSize = textureSize(drawIdsLayoutTexture, 0);
-  ivec2 drawIdLayoutCoords = ivec2(gl_DrawID % drawIdsLayoutTextureSize.x, gl_DrawID / drawIdsLayoutTextureSize.x);
-  int offset = int(texelFetch(drawIdsLayoutTexture, drawIdLayoutCoords, 0).r + 0.5) + gl_InstanceID;
-  
   ivec2 drawIdsTextureSize = textureSize(drawIdsTexture, 0);
-  ivec2 drawIdsArrayCoords = ivec2(offset % drawIdsTextureSize.x, offset / drawIdsTextureSize.x);
+  ivec2 drawIdsArrayCoords = ivec2(gl_DrawID % drawIdsTextureSize.x, gl_DrawID / drawIdsTextureSize.x);
   return int(texelFetch(drawIdsTexture, drawIdsArrayCoords, 0).r + 0.5);
 }
-
 
 #else // ENABLE_MULTI_DRAW
 

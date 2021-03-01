@@ -118,6 +118,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
           // const glGeomItem = this.constructGLGeomItem(geomItem)
           const glGeomItem = this.renderer.glGeomItemLibrary.getGLGeomItem(geomItem)
           glShaderGeomSets.addGLGeomItem(glGeomItem)
+          this.emit('updated')
           return true
         }
       }
@@ -146,7 +147,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
     // ////////////////////////////////////
     // Shaders
     const shaderName = material.getShaderName()
-    const glMaterial = this.renderer.glMaterialLibrary.constructGLMaterial(material)
+    const glMaterial = this.renderer.glMaterialLibrary.getGLMaterial(material)
 
     let glshaderMaterials = this.__glshadermaterials[shaderName]
     if (!glshaderMaterials) {
@@ -156,22 +157,6 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
     }
 
     glshaderMaterials.addGLGeomItem(glGeomItem, glGeom, glMaterial)
-
-    // let glMaterialGeomItemSets = glshaderMaterials.findMaterialGeomItemSets(glMaterial)
-    // if (!glMaterialGeomItemSets) {
-    //   glMaterialGeomItemSets = new GLMaterialGeomItemSets(this, glMaterial)
-    //   glshaderMaterials.addMaterialGeomItemSets(glMaterialGeomItemSets)
-    // }
-
-    // let geomItemSet = glMaterialGeomItemSets.findGeomItemSet(glGeomItem.glGeom)
-    // if (!geomItemSet) {
-    //   geomItemSet = new GLGeomItemSet(this.__gl, glGeomItem.glGeom)
-    //   glMaterialGeomItemSets.addGeomItemSet(geomItemSet)
-    // }
-
-    // geomItem.setMetadata('geomItemSet', geomItemSet)
-
-    // geomItemSet.addGLGeomItem(glGeomItem)
 
     return true
   }
@@ -309,10 +294,10 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
       dist = MathFunctions.decode16BitFloatFrom2xUInt8([geomData[2], geomData[3]])
     }
 
-    const glGeomItem = this.__drawItems[itemId]
-    if (glGeomItem) {
+    const geomItem = this.renderer.glGeomItemLibrary.getGeomItem(itemId)
+    if (geomItem) {
       return {
-        geomItem: glGeomItem.getGeomItem(),
+        geomItem,
         dist,
       }
     }

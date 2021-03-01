@@ -64,13 +64,14 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
     // const glGeomItem = this.constructGLGeomItem(geomItem)
     const glGeomItem = this.renderer.glGeomItemLibrary.getGLGeomItem(geomItem)
 
-    const material = geomItem.getParameter('Material').getValue()
+    const materialParam = geomItem.getParameter('Material')
+    const material = materialParam.getValue()
     const shaderName = material.getShaderName()
     const shaders = this.constructShaders(shaderName)
 
     // @todo - make sure we remove materials and GeomItems from the base pass.
     // This code will leak memory for these classes as we are not cleaning them up.
-    const glMaterial = this.renderer.glMaterialLibrary.constructGLMaterial(material)
+    const glMaterial = this.renderer.glMaterialLibrary.getGLMaterial(material)
 
     // ////////////////////////////////////
     // Tracking Material Transparency changes...
@@ -80,11 +81,13 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
     const materialChanged = () => {
       material.off('valueChanged', materialChanged)
       material.off('transparencyChanged', materialChanged)
+      materialParam.off('valueChanged', materialChanged)
       this.removeGeomItem(geomItem)
       this.__renderer.assignTreeItemToGLPass(geomItem)
     }
     material.on('valueChanged', materialChanged)
     material.on('transparencyChanged', materialChanged)
+    materialParam.on('valueChanged', materialChanged)
 
     // ////////////////////////////////////
     // Tracking visibility changes.
@@ -147,6 +150,8 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
 
     const visibleindex = this.visibleItems.indexOf(item)
     if (visibleindex != -1) this.visibleItems.splice(visibleindex, 1)
+
+    this.emit('updated')
   }
 
   /**
@@ -353,10 +358,10 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
       dist = MathFunctions.decode16BitFloatFrom2xUInt8([geomData[2], geomData[3]])
     }
 
-    const glGeomItem = this.__drawItems[itemId]
-    if (glGeomItem) {
+    const geomItem = this.renderer.glGeomItemLibrary.getGeomItem(itemId)
+    if (geomItem) {
       return {
-        geomItem: glGeomItem.getGeomItem(),
+        geomItem,
         dist,
       }
     }

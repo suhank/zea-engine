@@ -20,13 +20,17 @@ class GLGeomItem extends EventEmitter {
    * @param {WebGLContextAttributes} gl - The gl value.
    * @param {GeomItem} geomItem - The geomItem value.
    * @param {number} drawItemId - The drawItemId value.
+   * @param {number} geomId - The geomId value.
+   * @param {number} materialId - The materialId value.
    * @param {boolean} supportInstancing - a boolean to disable instancing support on some mobile platforms
    */
-  constructor(gl, geomItem, drawItemId, supportInstancing = false) {
+  constructor(gl, geomItem, drawItemId, geomId, materialId, supportInstancing = false) {
     super()
     this.gl = gl
     this.geomItem = geomItem
     this.drawItemId = drawItemId
+    this.geomId = geomId
+    this.materialId = materialId
     this.supportInstancing = supportInstancing
     this.visible = this.geomItem.isVisible()
     this.culled = false

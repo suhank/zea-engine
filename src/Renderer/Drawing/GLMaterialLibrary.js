@@ -31,15 +31,13 @@ class GLMaterialLibrary extends EventEmitter {
   /**
    * The addMaterial method.
    * @param {Material} material - The material object.
+   * @return {number} - The index of GLMaterial
    */
   addMaterial(material) {
     let index = this.materialIndices[material.getId()]
     if (index != undefined) {
-      // Increment the ref count for the GLGeom
-      return
-    }
-    if (material.getMetadata('glmaterialcoords')) {
-      return
+      // TODO: Track ref counts. Increment the ref count for the GLGeom
+      return index
     }
 
     if (this.freeIndices.length) {
@@ -69,6 +67,8 @@ class GLMaterialLibrary extends EventEmitter {
     // material.on('transparencyChanged', transparencyChanged)
 
     this.dirtyIndices.add(index)
+
+    return index
   }
 
   /**
@@ -76,14 +76,14 @@ class GLMaterialLibrary extends EventEmitter {
    * @param {Material} material - The material value.
    * @return {GLMaterial} - The constructed GLMaterial.
    */
-  constructGLMaterial(material) {
-    let glMaterial = material.getMetadata('glMaterial')
-    if (glMaterial) {
-      return glMaterial
+  getGLMaterial(material) {
+    if (this.glMaterials[material.getId()]) {
+      return this.glMaterials[material.getId()]
     }
+
     const glShader = this.renderer.getOrCreateShader(material.getShaderName())
     const gl = this.renderer.gl
-    glMaterial = new GLMaterial(gl, material, glShader)
+    const glMaterial = new GLMaterial(gl, material, glShader)
     glMaterial.on('updated', () => {
       this.renderer.requestRedraw()
     })
@@ -181,6 +181,15 @@ class GLMaterialLibrary extends EventEmitter {
     this.dirtyIndices = new Set()
     gl.bindTexture(gl.TEXTURE_2D, null)
     renderstate.boundTextures--
+  }
+
+  /**
+   * Updates the GPU state if any update is needed.
+   * @param {object} renderstate - The object tracking the current state of the renderer
+   */
+  update(renderstate) {
+    if (this.dirtyItemIndices.length > 0) this.uploadGeomItems(renderstate)
+    renderstate.drawItemsTexture = this.glGeomItemsTexture
   }
 
   /**

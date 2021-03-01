@@ -1,5 +1,6 @@
 /* eslint-disable guard-for-in */
 import { EventEmitter, Allocator1D } from '../../Utilities/index'
+import { GLBaseRenderer } from '../GLBaseRenderer'
 import { generateShaderGeomBinding, genDataTypeDesc } from './GeomShaderBinding.js'
 
 const resizeIntArray = (intArray, newSize) => {
@@ -14,13 +15,15 @@ const resizeIntArray = (intArray, newSize) => {
 class GLGeomLibrary extends EventEmitter {
   /**
    * Create a GLGeomLibrary.
-   * @param {WebGL2RenderingContext} gl - The list of attributes to be uploaded
+   * @param {GLBaseRenderer} renderer - The renderer object
    */
-  constructor(gl) {
+  constructor(renderer) {
     super()
 
-    this.__gl = gl
+    this.renderer = renderer
+    this.__gl = renderer.gl
 
+    this.shaderAttrSpec = {}
     this.freeGeomIndices = []
     this.geoms = []
     this.geomsDict = {}
@@ -190,6 +193,15 @@ class GLGeomLibrary extends EventEmitter {
    */
   getGeom(index) {
     return this.geoms[index]
+  }
+
+  /**
+   * Returns a Geom managed by this GLGeomLibrary.
+   * @param {number} index - The index of the geom to retrieve
+   * @return {array} - The return value.
+   */
+  getGeomOffsetAndCount(index) {
+    return [this.indicesOffsets[index], this.indicesCounts[index]]
   }
 
   // /////////////////////////////////////
@@ -409,10 +421,10 @@ class GLGeomLibrary extends EventEmitter {
   // Binding
 
   /**
-   * The bindGeomBuffers method.
+   * The bind method.
    * @param {object} renderstate - The renderstate value.
    */
-  bindGeomBuffers(renderstate) {
+  bind(renderstate) {
     if (this.dirtyGeomIndices.size > 0) {
       this.cleanGeomBuffers()
     }
@@ -485,4 +497,4 @@ class GLGeomLibrary extends EventEmitter {
   }
 }
 
-export { GLGeomLibrary }
+export { GLGeomLibrary, resizeIntArray }

@@ -4,6 +4,8 @@ import { Vec4 } from '../../Math/index'
 import { GLGeomItemChangeType, GLGeomItem } from './GLGeomItem.js'
 import { MathFunctions } from '../../Utilities/MathFunctions'
 import { GLTexture2D } from '../GLTexture2D.js'
+// import { GLMaterialLibrary } from './GLMaterialLibrary.js'
+// import { GLGeomLibrary } from './GLGeomLibrary.js'
 
 const pixelsPerItem = 6 // The number of RGBA pixels per draw item.
 
@@ -19,6 +21,16 @@ class GLGeomItemLibrary extends EventEmitter {
     super()
 
     this.renderer = renderer
+
+    // this.glMaterialLibrary = new GLMaterialLibrary(renderer)
+    // this.glMaterialLibrary.on('updated', () => {
+    //   this.requestRedraw()
+    // })
+    // this.glGeomLibrary = new GLGeomLibrary(renderer)
+    // this.glGeomLibrary.on('updated', () => {
+    //   this.requestRedraw()
+    // })
+
     this.glGeomItems = [undefined]
     this.glGeomItemsMap = {}
     this.glGeomItemsIndexFreeList = []
@@ -28,7 +40,7 @@ class GLGeomItemLibrary extends EventEmitter {
   /**
    * The addGeomItem method.
    * @param {GeomItem} geomItem - The geomItem value.
-   * @return {GLGeomItem} - The GLGeomItem that wraps the provided GeomItem
+   * @return {number} - The index of GLGeomItem
    */
   addGeomItem(geomItem) {
     let index = this.glGeomItemsMap[geomItem.getId()]
@@ -37,11 +49,11 @@ class GLGeomItemLibrary extends EventEmitter {
       return this.glGeomItems[index]
     }
 
-    // const material = geomItem.getParameter('Material').getValue()
-    // this.glMaterialLibrary.addMaterial(material)
+    const material = geomItem.getParameter('Material').getValue()
+    const matIndex = this.renderer.glMaterialLibrary.addMaterial(material)
 
-    // const geom = geomItem.getParameter('Geometry').getValue()
-    // this.glGeomLibrary.addGeom(geom)
+    const geom = geomItem.getParameter('Geometry').getValue()
+    const geomIndex = this.renderer.glGeomLibrary.addGeom(geom)
 
     // Use recycled indices if there are any available...
     if (this.glGeomItemsIndexFreeList.length > 0) {
@@ -54,7 +66,7 @@ class GLGeomItemLibrary extends EventEmitter {
 
     const gl = this.renderer.gl
     const supportInstancing = gl.floatTexturesSupported
-    const glGeomItem = new GLGeomItem(gl, geomItem, index, supportInstancing)
+    const glGeomItem = new GLGeomItem(gl, geomItem, index, geomIndex, matIndex, supportInstancing)
 
     glGeomItem.on('updated', (event) => {
       if (!event) {
@@ -112,15 +124,15 @@ class GLGeomItemLibrary extends EventEmitter {
 
   /**
    * The getGeomItem method.
-   * @param {any} id - The id value.
+   * @param {number} index - The index value.
    * @return {GLGeomItem} - The GLGeomItem that wraps the provided GeomItem
    */
-  getGeomItem(id) {
-    if (id >= this.glGeomItems.length) {
-      console.warn('Invalid Draw Item id:' + id + ' NumItems:' + (this.glGeomItems.length - 1))
+  getGeomItem(index) {
+    if (index >= this.glGeomItems.length) {
+      console.warn('Invalid Draw Item id:' + index + ' NumItems:' + (this.glGeomItems.length - 1))
       return undefined
     }
-    return this.glGeomItems[id]
+    return this.glGeomItems[index].geomItem
   }
 
   /**
@@ -308,6 +320,9 @@ class GLGeomItemLibrary extends EventEmitter {
       this.glGeomItemsTexture.bindToUniform(renderstate, instancesTexture)
       gl.uniform1i(instancesTextureSize.location, this.glGeomItemsTexture.width)
     }
+
+    this.renderer.glGeomLibrary.bind(renderstate)
+    this.renderer.glMaterialLibrary.bind(renderstate)
   }
 
   /**

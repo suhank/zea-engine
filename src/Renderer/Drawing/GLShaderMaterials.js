@@ -90,7 +90,7 @@ class GLShaderMaterials extends EventEmitter {
     const glShader = this.glShader
     if (!this.glShader.bind(renderstate)) return
 
-    this.renderer.glGeomItemLibrary.bind(renderstate)
+    this.pass.renderer.glGeomItemLibrary.bind(renderstate)
 
     for (const glMaterialGeomItemSet of this.glMaterialGeomItemSets) {
       glMaterialGeomItemSet.draw(renderstate)
@@ -105,7 +105,7 @@ class GLShaderMaterials extends EventEmitter {
   drawHighlightedGeoms(renderstate) {
     if (!this.glselectedshader || !this.glselectedshader.bind(renderstate)) return
 
-    this.renderer.glGeomItemLibrary.bind(renderstate)
+    this.pass.renderer.glGeomItemLibrary.bind(renderstate)
 
     for (const glMaterialGeomItemSet of this.glMaterialGeomItemSets) {
       glMaterialGeomItemSet.drawHighlighted(renderstate)
@@ -119,7 +119,7 @@ class GLShaderMaterials extends EventEmitter {
   drawGeomData(renderstate) {
     if (!this.glgeomdatashader || !this.glgeomdatashader.bind(renderstate)) return
 
-    this.renderer.glGeomItemLibrary.bind(renderstate)
+    this.pass.renderer.glGeomItemLibrary.bind(renderstate)
 
     const gl = this.gl
     {

@@ -387,11 +387,11 @@ class GLBaseRenderer extends ParameterOwner {
   assignTreeItemToGLPass(treeItem) {
     if (treeItem instanceof GeomItem) {
       const geomItem = treeItem
-      const material = geomItem.getParameter('Material').getValue()
-      this.glMaterialLibrary.addMaterial(material)
+      // const material = geomItem.getParameter('Material').getValue()
+      // this.glMaterialLibrary.addMaterial(material)
 
-      const geom = geomItem.getParameter('Geometry').getValue()
-      this.glGeomLibrary.addGeom(geom)
+      // const geom = geomItem.getParameter('Geometry').getValue()
+      // this.glGeomLibrary.addGeom(geom)
 
       this.glGeomItemLibrary.addGeomItem(geomItem)
     }
@@ -608,6 +608,8 @@ class GLBaseRenderer extends ParameterOwner {
     if (!webglOptions.disableMultiDraw) {
       const ext = this.__gl.getExtension('WEBGL_multi_draw')
       if (ext) {
+        this.__gl.multiDrawArrays = ext.multiDrawArraysWEBGL.bind(ext)
+        this.__gl.multiDrawElements = ext.multiDrawElementsWEBGL.bind(ext)
         this.__gl.multiDrawElementsInstanced = ext.multiDrawElementsInstancedWEBGL.bind(ext)
         this.__gl.multiDrawArraysInstanced = ext.multiDrawArraysInstancedWEBGL.bind(ext)
       }
