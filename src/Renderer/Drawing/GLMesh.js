@@ -8,17 +8,18 @@ import '../../SceneTree/Geometry/Mesh.js'
 class GLMesh extends GLGeom {
   /**
    * Create a GL mesh.
-   * @param {WebGLRenderingContext} gl - The webgl rendering context.
-   * @param {any} mesh - The mesh value.
+   * @param {GLGeomLibrary} glGeomLibrary - The library that owns all the geometry data.
+   * @param {Mesh} mesh - The mesh geom value.
+   * @param {number} geomIndex - The index of the geom in the geom library.
    */
-  constructor(gl, mesh) {
-    super(gl, mesh)
+  constructor(glGeomLibrary, mesh, geomIndex) {
+    super(glGeomLibrary, mesh, geomIndex)
   }
 
   /**
    * The getNumTriangles method.
    * @return {any} - The return value.
-   */
+   * /
   getNumTriangles() {
     return this.__numTriangles
   }
@@ -28,7 +29,7 @@ class GLMesh extends GLGeom {
 
   /**
    * The genBuffers method.
-   */
+   * /
   genBuffers() {
     super.genBuffers()
 
@@ -84,7 +85,7 @@ class GLMesh extends GLGeom {
   /**
    * The updateBuffers method.
    * @param {object} opts - The options object.
-   */
+   * /
   updateBuffers(opts) {
     const gl = this.__gl
 
@@ -105,7 +106,7 @@ class GLMesh extends GLGeom {
 
   /**
    * The clearBuffers method.
-   */
+   * /
   clearBuffers() {
     const gl = this.__gl
     gl.deleteBuffer(this.__indexBuffer)
@@ -120,7 +121,7 @@ class GLMesh extends GLGeom {
   /**
    * The generateWireframesVAO method.
    * @return {any} - The return value.
-   */
+   * /
   generateWireframesVAO() {
     if (!this.__vao) return false
 
@@ -151,7 +152,7 @@ class GLMesh extends GLGeom {
    * The bindWireframeVAO method.
    * @param {object} renderstate - The object tracking the current state of the renderer
    * @return {any} - The return value.
-   */
+   * /
   bindWireframeVAO(renderstate) {
     if (this.__wireframesVao == undefined) return false
     this.__ext.bindVertexArrayOES(this.__wireframesVao)
@@ -160,14 +161,14 @@ class GLMesh extends GLGeom {
 
   /**
    * The unbindWireframeVAO method.
-   */
+   * /
   unbindWireframeVAO() {
     this.__ext.bindVertexArrayOES(null) // Note: is this necessary?
   }
 
   /**
    * Draw an item to screen.
-   */
+   * /
   drawWireframe() {
     if (this.__wireframesVao) this.__gl.drawElements(this.__gl.LINES, this.__numWireIndices, this.__gl.UNSIGNED_INT, 0)
   }
@@ -178,7 +179,7 @@ class GLMesh extends GLGeom {
   /**
    * The generateHardEdgesVAO method.
    * @return {any} - The return value.
-   */
+   * /
   generateHardEdgesVAO() {
     if (!this.__vao) return false
 
@@ -207,7 +208,7 @@ class GLMesh extends GLGeom {
    * The bindHardEdgesVAO method.
    * @param {object} renderstate - The object tracking the current state of the renderer
    * @return {any} - The return value.
-   */
+   * /
   bindHardEdgesVAO(renderstate) {
     if (this.__hardEdgesVao == undefined) return false
     this.__ext.bindVertexArrayOES(this.__hardEdgesVao)
@@ -216,14 +217,14 @@ class GLMesh extends GLGeom {
 
   /**
    * The unbindHardEdgesVAO method.
-   */
+   * /
   unbindHardEdgesVAO() {
     this.__ext.bindVertexArrayOES(null) // Note: is this necessary?
   }
 
   /**
    * Draw an item to screen.
-   */
+   * /
   drawHardEdges() {
     if (this.__hardEdgesVao) this.__gl.drawElements(this.__gl.LINES, this.__numEdgeIndices, this.__gl.UNSIGNED_INT, 0)
   }
@@ -233,7 +234,7 @@ class GLMesh extends GLGeom {
 
   /**
    * The drawPoints method.
-   */
+   * /
   drawPoints() {
     this.__gl.drawArrays(this.__gl.POINTS, 0, this.__geom.numVertices())
   }
@@ -245,7 +246,8 @@ class GLMesh extends GLGeom {
    * Draw an item to screen.
    */
   draw() {
-    this.__gl.drawElements(this.__gl.TRIANGLES, this.__numTriIndices, this.__indexDataType, 0)
+    const offsetAndCount = this.glGeomLibrary.getGeomOffsetAndCount(this.geomIndex)
+    this.__gl.drawElements(this.__gl.TRIANGLES, offsetAndCount[1], this.__gl.UNSIGNED_INT, offsetAndCount[0])
   }
 
   /**
@@ -253,7 +255,14 @@ class GLMesh extends GLGeom {
    * @param {any} instanceCount - The instanceCount value.
    */
   drawInstanced(instanceCount) {
-    this.__gl.drawElementsInstanced(this.__gl.TRIANGLES, this.__numTriIndices, this.__indexDataType, 0, instanceCount)
+    const offsetAndCount = this.glGeomLibrary.getGeomOffsetAndCount(this.geomIndex)
+    this.__gl.drawElementsInstanced(
+      this.__gl.TRIANGLES,
+      offsetAndCount[1],
+      this.__indexDataType,
+      offsetAndCount[0],
+      instanceCount
+    )
   }
 
   /**
@@ -262,9 +271,9 @@ class GLMesh extends GLGeom {
    */
   destroy() {
     super.destroy()
-    const gl = this.__gl
-    gl.deleteBuffer(this.__indexBuffer)
-    this.__indexBuffer = undefined
+    // const gl = this.__gl
+    // gl.deleteBuffer(this.__indexBuffer)
+    // this.__indexBuffer = undefined
     // if (this.__wireframesVao)
     //     gl.deleteVertexArray(this.__wireframesVao);
     // if (this.__hardEdgesVao)

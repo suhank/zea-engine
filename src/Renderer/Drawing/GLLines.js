@@ -11,15 +11,27 @@ import { Lines } from '../../SceneTree/Geometry/Lines'
 class GLLines extends GLGeom {
   /**
    * Create a GL line.
-   * @param {WebGLRenderingContext} gl - The webgl rendering context.
-   * @param {any} lines - The geom value.
+   * @param {GLGeomLibrary} glGeomLibrary - The library that owns all the geometry data.
+   * @param {Lines} lines - The lines geom value.
+   * @param {number} geomIndex - The index of the geom in the geom library.
    */
-  constructor(gl, lines) {
-    super(gl, lines)
+  constructor(glGeomLibrary, lines, geomIndex) {
+    super(glGeomLibrary, lines, geomIndex)
 
     this.__numSegIndices = 0
     this.__numVertices = 0
     this.__fatBuffersNeedUpload = true
+
+    const geomDataChanged = (opts) => {
+      this.dirtyBuffers(opts)
+    }
+    this.__geom.on('geomDataChanged', geomDataChanged)
+
+    const geomDataTopologyChanged = (opts) => {
+      this.clearBuffers()
+      this.dirtyBuffers(opts)
+    }
+    this.__geom.on('geomDataTopologyChanged', geomDataTopologyChanged)
   }
 
   /**
@@ -27,7 +39,8 @@ class GLLines extends GLGeom {
    * @param {object} opts - options passed when geomDataChanged is emitted. (Currently ony used by the FreehandLines tool)
    */
   dirtyBuffers(opts) {
-    super.dirtyBuffers(opts)
+    // super.dirtyBuffers(opts)
+    this.genBufferOpts = opts
     this.__fatBuffersNeedUpload = true
     this.emit('updated')
   }
@@ -37,8 +50,8 @@ class GLLines extends GLGeom {
    */
   clearBuffers() {
     const gl = this.__gl
-    gl.deleteBuffer(this.__indexBuffer)
-    this.__indexBuffer = null
+    // gl.deleteBuffer(this.__indexBuffer)
+    // this.__indexBuffer = null
 
     if (this.fatBuffers && this.fatBuffers.positionsTexture) {
       if (this.fatBuffers.positionsTexture) {
@@ -51,7 +64,7 @@ class GLLines extends GLGeom {
       }
     }
 
-    super.clearBuffers()
+    // super.clearBuffers()
   }
 
   /**
@@ -157,7 +170,7 @@ class GLLines extends GLGeom {
   /**
    * The genBuffers method.
    * @param {object} renderstate - The object tracking the current state of the renderer
-   */
+   * /
   genBuffers(renderstate) {
     const gl = this.__gl
 
@@ -217,6 +230,7 @@ class GLLines extends GLGeom {
     if (indices instanceof Uint16Array) this.__indexDataType = this.__gl.UNSIGNED_SHORT
     if (indices instanceof Uint32Array) this.__indexDataType = this.__gl.UNSIGNED_INT
   }
+  */
 
   /**
    * The bind method.
@@ -229,17 +243,18 @@ class GLLines extends GLGeom {
     if (unifs.LineThickness && gl.floatTexturesSupported) {
       if (this.__fatBuffersNeedUpload) this.genFatBuffers(renderstate, true)
 
-      let shaderBinding = this.__shaderBindings[renderstate.shaderkey]
-      if (!shaderBinding) {
-        shaderBinding = generateShaderGeomBinding(
-          gl,
-          renderstate.attrs,
-          this.fatBuffers.glattrbuffers,
-          gl.__quadIndexBuffer
-        )
-        this.__shaderBindings[renderstate.shaderkey] = shaderBinding
-      }
-      shaderBinding.bind(renderstate)
+      // let shaderBinding = this.__shaderBindings[renderstate.shaderkey]
+      // if (!shaderBinding) {
+      //   shaderBinding = generateShaderGeomBinding(
+      //     gl,
+      //     renderstate.attrs,
+      //     this.fatBuffers.glattrbuffers,
+      //     gl.__quadIndexBuffer
+      //   )
+      //   this.__shaderBindings[renderstate.shaderkey] = shaderBinding
+      // }
+
+      this.glGeomLibrary.bindWithExtras(renderstate, this.fatBuffers.glattrbuffers, gl.__quadIndexBuffer)
 
       const usePositionsTexture = true
       if (usePositionsTexture) {
@@ -279,7 +294,8 @@ class GLLines extends GLGeom {
 
       // Note: We don't have a solution for drawing fat lines to the geom data buffer.
     } else {
-      gl.drawElements(this.__gl.LINES, this.__numSegIndices, this.__indexDataType, 0)
+      const offsetAndCount = this.glGeomLibrary.getGeomOffsetAndCount(this.geomIndex)
+      gl.drawElements(gl.LINES, offsetAndCount[1], gl.UNSIGNED_INT, offsetAndCount[0])
     }
   }
 
@@ -288,7 +304,9 @@ class GLLines extends GLGeom {
    * @param {any} instanceCount - The instanceCount value.
    */
   drawInstanced(instanceCount) {
-    this.__gl.drawElementsInstanced(this.__gl.LINES, this.__numSegIndices, this.__indexDataType, 0, instanceCount)
+    const gl = this.__gl
+    const offsetAndCount = this.glGeomLibrary.getGeomOffsetAndCount(this.geomIndex)
+    gl.drawElementsInstanced(gl.LINES, offsetAndCount[1], gl.UNSIGNED_INT, offsetAndCount[0], instanceCount)
   }
 }
 
