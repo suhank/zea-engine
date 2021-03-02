@@ -43,8 +43,9 @@ class GLGeomItemLibrary extends EventEmitter {
 
     // Add the material here so that when we populate the GeomItem texture.
     // the material already has an Id.
+    let matIndex = -1
     if (material.getShaderClass().getPackedMaterialData) {
-      this.renderer.glMaterialLibrary.addMaterial(material)
+      matIndex = this.renderer.glMaterialLibrary.addMaterial(material)
     }
 
     const geom = geomItem.getParameter('Geometry').getValue()

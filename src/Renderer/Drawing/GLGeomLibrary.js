@@ -97,7 +97,7 @@ class GLGeomLibrary extends EventEmitter {
     }
     this.glGeomsDict[geom.getId()] = glgeom
     glgeom.on('updated', () => {
-      this.__renderer.requestRedraw()
+      this.renderer.requestRedraw()
     })
     glgeom.addRef(this)
     return glgeom
@@ -259,6 +259,8 @@ class GLGeomLibrary extends EventEmitter {
       this.indicesOffsets[index] = this.geomVertexOffsets[index]
       this.indicesCounts[index] = this.geomVertexCounts[index]
     }
+
+    this.geomBuffersTmp[index] = geomBuffers
   }
 
   /**
@@ -324,6 +326,8 @@ class GLGeomLibrary extends EventEmitter {
   uploadBuffers(index) {
     const gl = this.__gl
 
+    // Note: when we allocate the buffers, we may resize the buffer, which
+    // means we need to re-upload geoms that were not changed.
     let geomBuffers = this.geomBuffersTmp[index]
     if (!geomBuffers) {
       const geom = this.getGeom(index)
@@ -377,6 +381,8 @@ class GLGeomLibrary extends EventEmitter {
       gl.bufferSubData(gl.ELEMENT_ARRAY_BUFFER, dstByteOffsetInBytes, offsettedIndices, 0)
       gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null)
     }
+
+    this.emit('geomDataChanged', { index })
   }
 
   /**

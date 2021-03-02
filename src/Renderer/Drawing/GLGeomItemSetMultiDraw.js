@@ -28,10 +28,10 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
     this.highlightedIdsBuffer = null
     this.highlightedIdsBufferDirty = true
 
-    this.drawIndicesCounts = new Int32Array(0)
-    this.drawIndicesOffsets = new Int32Array(0)
-    this.highlightIndicesCounts = new Int32Array(0)
-    this.highlightIndicesOffsets = new Int32Array(0)
+    this.drawElementCounts = new Int32Array(0)
+    this.drawElementOffsets = new Int32Array(0)
+    this.highlightElementCounts = new Int32Array(0)
+    this.highlightElementOffsets = new Int32Array(0)
     this.dirtyDrawGeomIds = []
 
     this.visibleItems = []
@@ -66,24 +66,37 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
 
       // //////////////////////////////////////
       // Indices
-      this.drawIndicesCounts = resizeIntArray(this.drawIndicesCounts, index + 1)
-      this.drawIndicesOffsets = resizeIntArray(this.drawIndicesOffsets, index + 1)
+      this.drawElementOffsets = resizeIntArray(this.drawElementOffsets, index + 1)
+      this.drawElementCounts = resizeIntArray(this.drawElementCounts, index + 1)
     }
 
-    this.drawIndicesCounts[index] = 0
-    this.drawIndicesOffsets[index] = 0
+    this.drawElementOffsets[index] = 0
+    this.drawElementCounts[index] = 0
     this.dirtyDrawGeomIds.push(index)
+
+    const eventHandlers = {}
+    eventHandlers.geomDataChanged = (event) => {
+      if (event.index == glGeomItem.geomId) {
+        const offsetAndCount = this.renderer.glGeomLibrary.getGeomOffsetAndCount(glGeomItem.geomId)
+
+        this.drawElementOffsets[index] = offsetAndCount[0]
+        this.drawElementCounts[index] = offsetAndCount[1]
+        if (this.highlightedItems.includes(index)) {
+          this.highlightElementOffsets[index] = offsetAndCount[0]
+          this.highlightElementCounts[index] = offsetAndCount[1]
+        }
+      }
+    }
+    this.renderer.glGeomLibrary.on('geomDataChanged', eventHandlers.geomDataChanged)
 
     if (glGeomItem.visible) {
       this.visibleItems.push(index)
-      this.emit('drawCountChanged', { change: 1, count: this.visibleItems.length })
+      // this.emit('drawCountChanged', { change: 1, count: this.visibleItems.length })
     }
     if (glGeomItem.getGeomItem().isHighlighted()) {
       this.highlightedItems.push(index)
       this.highlightedIdsBufferDirty = true
     }
-
-    const eventHandlers = {}
 
     eventHandlers.highlightChanged = () => {
       if (glGeomItem.getGeomItem().isHighlighted()) {
@@ -92,10 +105,10 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
         // adding the same index again here. (TODO: use Set?)
         if (this.highlightedItems.includes(index)) return
         this.highlightedItems.push(index)
-        this.emit('highlightedCountChanged', { change: 1, count: this.highlightedItems.length })
+        // this.emit('highlightedCountChanged', { change: 1, count: this.highlightedItems.length })
       } else {
         this.highlightedItems.splice(this.highlightedItems.indexOf(index), 1)
-        this.emit('highlightedCountChanged', { change: -1, count: this.highlightedItems.length })
+        // this.emit('highlightedCountChanged', { change: -1, count: this.highlightedItems.length })
       }
       // console.log("highlightChanged:", glGeomItem.getGeomItem().getName(), glGeomItem.getGeomItem().isHighlighted(), this.highlightedItems)
       this.highlightedIdsBufferDirty = true
@@ -131,11 +144,12 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
     const eventHandlers = this.glgeomItemEventHandlers[index]
     glGeomItem.off('highlightChanged', eventHandlers.highlightChanged)
     glGeomItem.off('visibilityChanged', eventHandlers.visibilityChanged)
+    this.renderer.glGeomLibrary.off('geomDataChanged', eventHandlers.geomDataChanged)
 
     this.glGeomItems[index] = null
     this.glgeomItemEventHandlers[index] = null
-    this.drawIndicesCounts[index] = 0
-    this.drawIndicesOffsets[index] = 0
+    this.drawElementCounts[index] = 0
+    this.drawElementOffsets[index] = 0
 
     this.glgeomItems_freeIndices.push(index)
 
@@ -166,8 +180,8 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
     if (this.highlightedIdsBufferDirty) {
       if (!this.highlightedIdsArray || this.highlightedItems.length > this.highlightedIdsArray.length) {
         this.highlightedIdsArray = new Float32Array(this.highlightedItems.length)
-        this.highlightIndicesOffsets = new Uint32Array(this.highlightedItems.length)
-        this.highlightIndicesCounts = new Uint32Array(this.highlightedItems.length)
+        this.highlightElementOffsets = new Uint32Array(this.highlightedItems.length)
+        this.highlightElementCounts = new Uint32Array(this.highlightedItems.length)
       }
 
       // Collect all visible geom ids into the instanceIds array.
@@ -178,8 +192,8 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
         this.highlightedIdsArray[tgtIndex] = glGeomItem.drawItemId
 
         const offsetAndCount = this.renderer.glGeomLibrary.getGeomOffsetAndCount(glGeomItem.geomId)
-        this.highlightIndicesOffsets[index] = offsetAndCount[0]
-        this.highlightIndicesCounts[index] = offsetAndCount[1]
+        this.highlightElementOffsets[index] = offsetAndCount[0]
+        this.highlightElementCounts[index] = offsetAndCount[1]
       })
 
       this.highlightedIdsBufferDirty = false
@@ -231,8 +245,8 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
       this.dirtyDrawGeomIds.forEach((index) => {
         const glGeomItem = this.glGeomItems[index]
         const offsetAndCount = this.renderer.glGeomLibrary.getGeomOffsetAndCount(glGeomItem.geomId)
-        this.drawIndicesOffsets[index] = offsetAndCount[0]
-        this.drawIndicesCounts[index] = offsetAndCount[1]
+        this.drawElementOffsets[index] = offsetAndCount[0]
+        this.drawElementCounts[index] = offsetAndCount[1]
 
         this.drawIdsArray[index] = this.glGeomItems[index].drawItemId
       })
@@ -362,7 +376,7 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
     }
     this.drawIdsTexture.bindToUniform(renderstate, renderstate.unifs.drawIdsTexture)
 
-    this.__bindAndRender(renderstate, this.drawIndicesCounts, this.drawIndicesOffsets)
+    this.__bindAndRender(renderstate, this.drawElementCounts, this.drawElementOffsets)
   }
 
   /**
@@ -378,7 +392,7 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
     }
     this.highlightedIdsTexture.bindToUniform(renderstate, renderstate.unifs.drawIdsTexture)
 
-    this.__bindAndRender(renderstate, this.highlightIndicesCounts, this.highlightIndicesOffsets)
+    this.__bindAndRender(renderstate, this.highlightElementCounts, this.highlightElementOffsets)
   }
 
   /**
