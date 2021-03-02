@@ -115,40 +115,40 @@ class GLStandardGeomsPass extends GLPass {
    * @param {BaseGeom} geom - The geom value.
    * @return {GLGeom} - The return value.
    */
-  constructGLGeom(geom) {
-    let glgeom = geom.getMetadata('glgeom')
-    if (glgeom) {
-      glgeom.addRef(this)
-      return glgeom
-    }
-    const gl = this.__gl
-    if (geom instanceof Mesh || geom instanceof MeshProxy) {
-      glgeom = new GLMesh(gl, geom)
-    } else if (geom instanceof Lines || geom instanceof LinesProxy) {
-      glgeom = new GLLines(gl, geom)
-    } else if (geom instanceof Points || geom instanceof PointsProxy) {
-      glgeom = new GLPoints(gl, geom)
-    } else {
-      throw new Error('Unsupported geom type:' + geom.constructor.name)
-    }
-    geom.setMetadata('glgeom', glgeom)
-    glgeom.on('updated', () => {
-      this.__renderer.requestRedraw()
-    })
-    glgeom.addRef(this)
-    return glgeom
-  }
+  // constructGLGeom(geom) {
+  //   let glgeom = geom.getMetadata('glgeom')
+  //   if (glgeom) {
+  //     glgeom.addRef(this)
+  //     return glgeom
+  //   }
+  //   const gl = this.__gl
+  //   if (geom instanceof Mesh || geom instanceof MeshProxy) {
+  //     glgeom = new GLMesh(gl, geom)
+  //   } else if (geom instanceof Lines || geom instanceof LinesProxy) {
+  //     glgeom = new GLLines(gl, geom)
+  //   } else if (geom instanceof Points || geom instanceof PointsProxy) {
+  //     glgeom = new GLPoints(gl, geom)
+  //   } else {
+  //     throw new Error('Unsupported geom type:' + geom.constructor.name)
+  //   }
+  //   geom.setMetadata('glgeom', glgeom)
+  //   glgeom.on('updated', () => {
+  //     this.__renderer.requestRedraw()
+  //   })
+  //   glgeom.addRef(this)
+  //   return glgeom
+  // }
 
   /**
    * The removeGeom method.
    * @param {BaseGeom} geom - The geom value.
    */
-  removeGeom(geom) {
-    const glgeom = geom.getMetadata('glgeom')
-    if (glgeom) {
-      glgeom.removeRef(this) // Should result in a destroy
-    }
-  }
+  // removeGeom(geom) {
+  //   const glgeom = geom.getMetadata('glgeom')
+  //   if (glgeom) {
+  //     glgeom.removeRef(this) // Should result in a destroy
+  //   }
+  // }
 
   /**
    * Given a GeomItem, constructs the GLGeomItem that manages the GPU state of the GeomItem.
@@ -251,15 +251,15 @@ class GLStandardGeomsPass extends GLPass {
    * @param {any} geomItemMapping - The geomItemMapping value.
    * @param {any} materialGeomMapping - The materialGeomMapping value.
    */
-  removeGLGeom(geomItemMapping, materialGeomMapping) {
-    const index = materialGeomMapping.geomItemMappings.indexOf(geomItemMapping)
-    materialGeomMapping.geomItemMappings.splice(index, 1)
+  // removeGLGeom(geomItemMapping, materialGeomMapping) {
+  //   const index = materialGeomMapping.geomItemMappings.indexOf(geomItemMapping)
+  //   materialGeomMapping.geomItemMappings.splice(index, 1)
 
-    // Note: the GLMAterial cleans up iself now...
-    // if(materialGeomMapping.geomItemMappings.length == 0 && !this.__explicitShader){
-    //     this.removeMaterialGeomMapping(materialGeomMapping.glMaterial);
-    // }
-  }
+  //   // Note: the GLMAterial cleans up iself now...
+  //   // if(materialGeomMapping.geomItemMappings.length == 0 && !this.__explicitShader){
+  //   //     this.removeMaterialGeomMapping(materialGeomMapping.glMaterial);
+  //   // }
+  // }
 
   // ////////////////////////////////////////////////////////
   // GeomItem IDs
@@ -269,13 +269,13 @@ class GLStandardGeomsPass extends GLPass {
    * @param {any} id - The id value.
    * @return {any} - The return value.
    */
-  getGeomItem(id) {
-    if (id >= this.__drawItems.length) {
-      console.warn('Invalid Draw Item id:' + id + ' NumItems:' + (this.__drawItems.length - 1))
-      return undefined
-    }
-    return this.__drawItems[id]
-  }
+  // getGeomItem(id) {
+  //   if (id >= this.__drawItems.length) {
+  //     console.warn('Invalid Draw Item id:' + id + ' NumItems:' + (this.__drawItems.length - 1))
+  //     return undefined
+  //   }
+  //   return this.__drawItems[id]
+  // }
 
   // ////////////////////////////////////////////////
   // Data Uploading

@@ -59,7 +59,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
    * @param {any} geomItem - The geomItem value.
    */
   addGeomItem(geomItem) {
-    const glGeom = this.constructGLGeom(geomItem.getParameter('Geometry').getValue())
+    const glGeom = this.renderer.glGeomLibrary.constructGLGeom(geomItem.getParameter('Geometry').getValue())
 
     // const glGeomItem = this.constructGLGeomItem(geomItem)
     const glGeomItem = this.renderer.glGeomItemLibrary.getGLGeomItem(geomItem)

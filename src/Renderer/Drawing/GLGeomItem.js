@@ -72,7 +72,9 @@ class GLGeomItem extends EventEmitter {
     // this.glGeomUpdated = () => {
     //   this.emit('updated', { type: GLGeomItemChangeType.GEOM_CHANGED })
     // }
-
+    this.geomItem.getParameter('Material').on('valueChanged', () => {
+      this.emit('updated', { type: GLGeomItemChangeType.GEOMITEM_CHANGED })
+    })
     this.geomItem.getParameter('GeomMat').on('valueChanged', this.geomMatrixChanged)
     this.geomItem.on('visibilityChanged', this.updateVisibility)
     this.geomItem.on('cutAwayChanged', this.cutAwayChanged)

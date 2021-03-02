@@ -21,16 +21,6 @@ class GLGeomItemLibrary extends EventEmitter {
     super()
 
     this.renderer = renderer
-
-    // this.glMaterialLibrary = new GLMaterialLibrary(renderer)
-    // this.glMaterialLibrary.on('updated', () => {
-    //   this.requestRedraw()
-    // })
-    // this.glGeomLibrary = new GLGeomLibrary(renderer)
-    // this.glGeomLibrary.on('updated', () => {
-    //   this.requestRedraw()
-    // })
-
     this.glGeomItems = [undefined]
     this.glGeomItemsMap = {}
     this.glGeomItemsIndexFreeList = []
@@ -50,7 +40,12 @@ class GLGeomItemLibrary extends EventEmitter {
     }
 
     const material = geomItem.getParameter('Material').getValue()
-    const matIndex = this.renderer.glMaterialLibrary.addMaterial(material)
+
+    // Add the material here so that when we populate the GeomItem texture.
+    // the material already has an Id.
+    if (material.getShaderClass().getPackedMaterialData) {
+      this.renderer.glMaterialLibrary.addMaterial(material)
+    }
 
     const geom = geomItem.getParameter('Geometry').getValue()
     const geomIndex = this.renderer.glGeomLibrary.addGeom(geom)
@@ -176,10 +171,11 @@ class GLGeomItemLibrary extends EventEmitter {
     pix0.set(flags, materialId, 0, 0)
 
     const material = geomItem.getParameter('Material').getValue()
-    const coords = material.getMetadata('glmaterialcoords')
-    if (coords) {
-      pix0.z = coords.x
-      pix0.w = coords.y
+    // const coords = material.getMetadata('glmaterialcoords')
+    const allocation = this.renderer.glMaterialLibrary.getMaterialAllocation(material)
+    if (allocation) {
+      pix0.z = allocation.start
+      pix0.w = allocation.size
     }
 
     // /////////////////////////
@@ -320,9 +316,6 @@ class GLGeomItemLibrary extends EventEmitter {
       this.glGeomItemsTexture.bindToUniform(renderstate, instancesTexture)
       gl.uniform1i(instancesTextureSize.location, this.glGeomItemsTexture.width)
     }
-
-    this.renderer.glGeomLibrary.bind(renderstate)
-    this.renderer.glMaterialLibrary.bind(renderstate)
   }
 
   /**

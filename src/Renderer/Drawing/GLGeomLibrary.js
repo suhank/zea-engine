@@ -1,7 +1,8 @@
 /* eslint-disable guard-for-in */
 import { EventEmitter, Allocator1D } from '../../Utilities/index'
-import { GLBaseRenderer } from '../GLBaseRenderer'
 import { generateShaderGeomBinding, genDataTypeDesc } from './GeomShaderBinding.js'
+import { Points, Lines, Mesh, PointsProxy, LinesProxy, MeshProxy } from '../../SceneTree/index'
+import { GLPoints, GLLines, GLMesh } from '../Drawing/index.js'
 
 const resizeIntArray = (intArray, newSize) => {
   const newArray = new Int32Array(newSize)
@@ -27,6 +28,7 @@ class GLGeomLibrary extends EventEmitter {
     this.freeGeomIndices = []
     this.geoms = []
     this.geomsDict = {}
+    this.glGeomsDict = {}
     this.geomBuffersTmp = [] // for each geom, these are the buffer
     this.glattrbuffers = {}
     this.shaderBindings = {}
@@ -77,9 +79,10 @@ class GLGeomLibrary extends EventEmitter {
    * @return {GLGeom} - The return value.
    */
   constructGLGeom(geom) {
-    let glgeom = geom.getMetadata('glgeom')
-    if (glgeom) {
-      glgeom.addRef(this)
+    let glgeom = this.glGeomsDict[geom.getId()]
+    if (glgeom != undefined) {
+      // Increment the ref count for the GLGeom
+      // glgeom.addRef(this)
       return glgeom
     }
     const gl = this.__gl
@@ -92,7 +95,7 @@ class GLGeomLibrary extends EventEmitter {
     } else {
       throw new Error('Unsupported geom type:' + geom.constructor.name)
     }
-    geom.setMetadata('glgeom', glgeom)
+    this.glGeomsDict[geom.getId()] = glgeom
     glgeom.on('updated', () => {
       this.__renderer.requestRedraw()
     })
@@ -249,6 +252,12 @@ class GLGeomLibrary extends EventEmitter {
         this.indicesOffsets[index] = allocation.start * elementSize // offset is in bytes
         this.indicesCounts[index] = allocation.size
       }
+    } else {
+      // Note: for non-indexed data, like Points, we provide
+      // the vertex data as offset and count in the method
+      // getGeomOffsetAndCount.
+      this.indicesOffsets[index] = this.geomVertexOffsets[index]
+      this.indicesCounts[index] = this.geomVertexCounts[index]
     }
   }
 
@@ -423,6 +432,7 @@ class GLGeomLibrary extends EventEmitter {
   /**
    * The bind method.
    * @param {object} renderstate - The renderstate value.
+   * @return {boolean} - Returns true if binding was successful
    */
   bind(renderstate) {
     if (this.dirtyGeomIndices.size > 0) {
@@ -437,6 +447,7 @@ class GLGeomLibrary extends EventEmitter {
     } else {
       shaderBinding.bind(renderstate)
     }
+    return true
   }
 
   /**

@@ -94,6 +94,13 @@ class GLMaterialLibrary extends EventEmitter {
     return glMaterial
   }
 
+  getMaterialAllocation(material) {
+    const index = this.materialIndices[material.getId()]
+    if (index != undefined) {
+      return this.materialsAllocator.getAllocation(index)
+    }
+  }
+
   /**
    * The removeMaterial method.
    * @param {Material} material - The material object.
