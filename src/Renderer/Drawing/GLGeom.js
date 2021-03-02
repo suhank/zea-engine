@@ -1,6 +1,5 @@
 import { RefCounted } from '../../SceneTree/index'
 import { generateShaderGeomBinding } from './GeomShaderBinding.js'
-import { GLGeomLibrary } from './GLGeomLibrary.js'
 
 /** Class representing a GL geom.
  * @private
@@ -8,26 +7,14 @@ import { GLGeomLibrary } from './GLGeomLibrary.js'
 class GLGeom extends RefCounted {
   /**
    * Create a GL geom.
-   * @param {GLGeomLibrary} glGeomLibrary - The library that owns all the geometry data.
+   * @param {WebGLRenderingContext} gl - The webgl rendering context.
    * @param {BaseGeom} geom - A geometry object
-   * @param {number} geomIndex - The index of the geom in the geom library.
    */
-  constructor(glGeomLibrary, geom, geomIndex) {
+  constructor(gl, geom) {
     super()
+    this.__gl = gl
+    this.__geom = geom
 
-    if (glGeomLibrary instanceof GLGeomLibrary) {
-      this.glGeomLibrary = glGeomLibrary
-      this.__gl = glGeomLibrary.renderer.gl
-      this.__geom = geom
-      this.geomIndex = geomIndex
-    } else {
-      this.__gl = glGeomLibrary
-      this.glGeomLibrary = GLGeomLibrary.getInstance()
-      this.__geom = geom
-      this.geomIndex = this.glGeomLibrary.addGeom(geom)
-    }
-
-    /*
     this.__glattrbuffers = {}
     this.__shaderBindings = {}
     this.buffersDirty = true
@@ -42,7 +29,6 @@ class GLGeom extends RefCounted {
       this.dirtyBuffers(opts)
     }
     this.__geom.on('geomDataTopologyChanged', geomDataTopologyChanged)
-    */
   }
 
   /**
@@ -59,7 +45,7 @@ class GLGeom extends RefCounted {
   /**
    * The dirtyBuffers method.
    * @param {object} opts - options passed when geomDataChanged is emitted. (Currently ony used by the FreehandLines tool)
-   * /
+   */
   dirtyBuffers(opts) {
     this.genBufferOpts = opts
     this.buffersDirty = true
@@ -69,17 +55,16 @@ class GLGeom extends RefCounted {
   /**
    * The genBuffers method.
    * @param {object} renderstate - The object tracking the current state of the renderer
-   * /
+   */
   genBuffers(renderstate) {}
 
   /**
    * The updateBuffers method.
    * @param {object} renderstate - The object tracking the current state of the renderer
-   * /
+   */
   updateBuffers(renderstate) {
     this.genBuffers(renderstate)
   }
-  */
 
   // /////////////////////////////////////
   // Binding
@@ -87,23 +72,21 @@ class GLGeom extends RefCounted {
   /**
    * The bind method.
    * @param {object} renderstate - The object tracking the current state of the renderer
-   * @return {boolean} - Returns true if binding was successful
+   * @return {boolean} - returns false if the binding failed.
    */
   bind(renderstate) {
-    // if (this.__destroyed) throw new Error('Error binding a destroyed geom')
+    if (this.__destroyed) throw new Error('Error binding a destroyed geom')
 
-    // if (this.buffersDirty) this.updateBuffers()
+    if (this.buffersDirty) this.updateBuffers()
 
-    // let shaderBinding = this.__shaderBindings[renderstate.shaderkey]
-    // if (!shaderBinding) {
-    //   const gl = this.__gl
-    //   shaderBinding = generateShaderGeomBinding(gl, renderstate.attrs, this.__glattrbuffers, this.__indexBuffer)
-    //   this.__shaderBindings[renderstate.shaderkey] = shaderBinding
-    // }
-    // shaderBinding.bind(renderstate)
-    // return true
-
-    return this.glGeomLibrary.bind(renderstate)
+    let shaderBinding = this.__shaderBindings[renderstate.shaderkey]
+    if (!shaderBinding) {
+      const gl = this.__gl
+      shaderBinding = generateShaderGeomBinding(gl, renderstate.attrs, this.__glattrbuffers, this.__indexBuffer)
+      this.__shaderBindings[renderstate.shaderkey] = shaderBinding
+    }
+    shaderBinding.bind(renderstate)
+    return true
   }
 
   /**
@@ -113,10 +96,10 @@ class GLGeom extends RefCounted {
   unbind(renderstate) {
     // Unbinding a geom is important as it puts back some important
     // GL state. (vertexAttribDivisor)
-    // const shaderBinding = this.__shaderBindings[renderstate.shaderkey]
-    // if (shaderBinding) {
-    //   shaderBinding.unbind(renderstate)
-    // }
+    const shaderBinding = this.__shaderBindings[renderstate.shaderkey]
+    if (shaderBinding) {
+      shaderBinding.unbind(renderstate)
+    }
   }
 
   // /////////////////////////////////////
@@ -149,12 +132,13 @@ class GLGeom extends RefCounted {
 
   /**
    * The clearBuffers method.
+   */
   clearBuffers() {
     const gl = this.__gl
     // eslint-disable-next-line guard-for-in
     for (const attrName in this.__glattrbuffers) {
       const glbuffer = this.__glattrbuffers[attrName]
-      if (glbuffer.shared) continue /* This buffer is shared between geoms. do not destroy * /
+      if (glbuffer.shared) continue /* This buffer is shared between geoms. do not destroy */
       gl.deleteBuffer(glbuffer.buffer)
     }
     this.__glattrbuffers = {}
@@ -166,16 +150,15 @@ class GLGeom extends RefCounted {
     }
     this.__shaderBindings = {}
   }
-   */
 
   /**
    * The destroy is called by the system to cause explicit resources cleanup.
    * Users should never need to call this method directly.
    */
   destroy() {
-    // this.__geom.deleteMetadata('glgeom')
+    this.__geom.deleteMetadata('glgeom')
 
-    // this.clearBuffers()
+    this.clearBuffers()
 
     this.__destroyed = true
 

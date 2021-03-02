@@ -71,11 +71,6 @@ class GLGeomLibrary extends EventEmitter {
       const id = event.id
       this.dirtyGeomIndices.add(id)
     })
-
-    // cache the static instance variable.
-    // Note: this is mostly to maintain backwards compatibility
-    // so that classes like GLMesh can be constructed using the previous syntax.
-    inst = this
   }
 
   /**
@@ -90,13 +85,13 @@ class GLGeomLibrary extends EventEmitter {
       // glgeom.addRef(this)
       return glgeom
     }
-    const index = this.addGeom(geom)
+    const gl = this.__gl
     if (geom instanceof Mesh || geom instanceof MeshProxy) {
-      glgeom = new GLMesh(this, geom, index)
+      glgeom = new GLMesh(gl, geom)
     } else if (geom instanceof Lines || geom instanceof LinesProxy) {
-      glgeom = new GLLines(this, geom, index)
+      glgeom = new GLLines(gl, geom)
     } else if (geom instanceof Points || geom instanceof PointsProxy) {
-      glgeom = new GLPoints(this, geom, index)
+      glgeom = new GLPoints(gl, geom)
     } else {
       throw new Error('Unsupported geom type:' + geom.constructor.name)
     }
@@ -456,37 +451,6 @@ class GLGeomLibrary extends EventEmitter {
   }
 
   /**
-   * The bind method.
-   * @param {object} renderstate - The renderstate value.
-   * @param {object} attrs - The dictionary of extra attributes.
-   * @param {WebGLBuffer} indicesBuffer - The optional custom indices buffer object
-   * @return {boolean} - Returns true if binding was successful
-   */
-  bindWithExtras(renderstate, attrs, indicesBuffer) {
-    if (this.dirtyGeomIndices.size > 0) {
-      this.cleanGeomBuffers()
-    }
-
-    let shaderBinding = this.shaderBindings[renderstate.shaderkey]
-    if (!shaderBinding) {
-      const gl = this.__gl
-
-      const attrbuffers = Object.assign(this.glattrbuffers, attrs)
-
-      shaderBinding = generateShaderGeomBinding(
-        gl,
-        renderstate.attrs,
-        attrbuffers,
-        indicesBuffer ? indicesBuffer : this.indexBuffer
-      )
-      this.shaderBindings[renderstate.shaderkey] = shaderBinding
-    } else {
-      shaderBinding.bind(renderstate)
-    }
-    return true
-  }
-
-  /**
    * The unbind method.
    * @param {object} renderstate - The object tracking the current state of the renderer
    */
@@ -542,21 +506,6 @@ class GLGeomLibrary extends EventEmitter {
     //  Note: PoTree listens to this event. If moved up into RefCounted, make sure it is still emitted.
     this.emit('destructing', {})
   }
-
-  /**
-   * Returns the static instance.
-   * Note: this is mostly to maintain backwards compatibility
-   * so that classes like GLMesh can be constructed using the previous syntax.
-   * @return {GLGeomLibrary} - the static instance of the geom library.
-   */
-  static getInstance() {
-    if (!inst) {
-      inst = new GLGeomLibrary()
-    }
-    return inst
-  }
 }
-
-let inst
 
 export { GLGeomLibrary, resizeIntArray }

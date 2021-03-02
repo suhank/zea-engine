@@ -61,7 +61,7 @@ class GLGeomItemLibrary extends EventEmitter {
 
     const gl = this.renderer.gl
     const supportInstancing = gl.floatTexturesSupported
-    const glGeomItem = new GLGeomItem(gl, geomItem, index, geomIndex, supportInstancing)
+    const glGeomItem = new GLGeomItem(gl, geomItem, index, geomIndex, matIndex, supportInstancing)
 
     glGeomItem.on('updated', (event) => {
       if (!event) {
