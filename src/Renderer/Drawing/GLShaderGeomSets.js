@@ -163,6 +163,20 @@ class GLShaderGeomSets extends EventEmitter {
 
     this.glGeomDataShader.unbind(renderstate)
   }
+
+  /**
+   * Sorts the drawn items in order furthest to nearest when rendering transparent objects.
+   * @param {Vec3} viewPos - The position of the camera that we are sorting relative to.
+   */
+  sortItems(viewPos) {
+    // Note: sorting here will not sort geometries of different types.
+    // this is a flawed solution that only sorts geomemtries of the same
+    // time and same shader against each other. Given that this is the data 99% o
+    // of the time, this is an acceptable tradeoff
+    for (const elementType in this.glGeomItemSets) {
+      this.glGeomItemSets[elementType].sortItems(viewPos)
+    }
+  }
 }
 
 export { GLShaderGeomSets }

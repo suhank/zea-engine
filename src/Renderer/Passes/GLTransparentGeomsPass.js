@@ -4,6 +4,8 @@ import { Points, Lines, PointsProxy, LinesProxy } from '../../SceneTree/index'
 import { GLStandardGeomsPass } from './GLStandardGeomsPass.js'
 import { GLRenderer } from '../GLRenderer.js'
 import { MathFunctions } from '../../Utilities/MathFunctions'
+import { GLShaderGeomSets } from '../Drawing/GLShaderGeomSets.js'
+import { Registry } from '../../Registry'
 
 /** Class representing a GL transparent geoms pass.
  * @extends GLStandardGeomsPass
@@ -25,12 +27,14 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
   init(renderer, passIndex) {
     super.init(renderer, passIndex)
 
+    this.itemCount = 0
+    this.__glShaderGeomSets = {}
     this.transparentItems = []
     this.freeList = []
     this.visibleItems = []
     this.prevSortCameraPos = new Vec3(999, 999, 999)
     this.sortCameraMovementDistance = 0.25 // meters
-    this.resort = false
+    this.reSort = false
   }
 
   /**
@@ -59,14 +63,38 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
    * @param {any} geomItem - The geomItem value.
    */
   addGeomItem(geomItem) {
-    const glGeom = this.renderer.glGeomLibrary.constructGLGeom(geomItem.getParameter('Geometry').getValue())
-
-    // const glGeomItem = this.constructGLGeomItem(geomItem)
-    const glGeomItem = this.renderer.glGeomItemLibrary.getGLGeomItem(geomItem)
+    this.itemCount++
 
     const materialParam = geomItem.getParameter('Material')
     const material = materialParam.getValue()
     const shaderName = material.getShaderName()
+
+    if (this.__gl.multiDrawElementsInstanced) {
+      const shader = Registry.getBlueprint(shaderName)
+      if (!material.isTextured() && shader.supportsInstancing() && shader.getPackedMaterialData) {
+        let glShaderGeomSets = this.__glShaderGeomSets[shaderName]
+        if (!glShaderGeomSets) {
+          const shaders = this.constructShaders(shaderName)
+          glShaderGeomSets = new GLShaderGeomSets(this, this.__gl, shaders)
+          glShaderGeomSets.on('updated', () => {
+            this.__renderer.requestRedraw()
+          })
+          this.__glShaderGeomSets[shaderName] = glShaderGeomSets
+        }
+        const glGeomItem = this.renderer.glGeomItemLibrary.getGLGeomItem(geomItem)
+        glShaderGeomSets.addGLGeomItem(glGeomItem)
+        this.emit('updated')
+
+        // force a reSort.
+        this.reSort = true
+        return
+      }
+    }
+
+    const glGeom = this.renderer.glGeomLibrary.constructGLGeom(geomItem.getParameter('Geometry').getValue())
+
+    // const glGeomItem = this.constructGLGeomItem(geomItem)
+    const glGeomItem = this.renderer.glGeomItemLibrary.getGLGeomItem(geomItem)
     const shaders = this.constructShaders(shaderName)
 
     // @todo - make sure we remove materials and GeomItems from the base pass.
@@ -104,7 +132,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
     // ////////////////////////////////////
     // Tracking GeomMat changes.
     const geomMatChanged = () => {
-      this.resort = true
+      this.reSort = true
     }
     geomItem.getParameter('GeomMat').on('valueChanged', geomMatChanged)
 
@@ -128,8 +156,8 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
       this.visibleItems.push(item)
     }
 
-    // force a resort.
-    this.resort = true
+    // force a reSort.
+    this.reSort = true
   }
 
   /**
@@ -137,34 +165,50 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
    * @param {any} geomItem - The geomItem value.
    */
   removeGeomItem(geomItem) {
-    // if (!super.removeGeomItem(geomItem)) return
+    this.itemCount--
 
-    const itemindex = geomItem.getMetadata('itemIndex')
-    const item = this.transparentItems[itemindex]
+    const glGeomItem = this.renderer.glGeomItemLibrary.getGLGeomItem(geomItem)
 
-    geomItem.off('visibilityChanged', item.visibilityChanged)
-    geomItem.getParameter('GeomMat').off('valueChanged', item.geomMatChanged)
+    const geomItemSet = geomItem.getMetadata('geomItemSet')
+    if (geomItemSet) {
+      // Note: for now leave the material and geom in place. Multiple
+      // GeomItems can reference a given material/geom, so we simply wait
+      // for them to be destroyed.
+      geomItemSet.removeGLGeomItem(glGeomItem)
+      geomItem.deleteMetadata('geomItemSet')
+    } else {
+      const itemindex = geomItem.getMetadata('itemIndex')
+      const item = this.transparentItems[itemindex]
 
-    this.transparentItems[itemindex] = null
-    this.freeList.push(itemindex)
+      geomItem.off('visibilityChanged', item.visibilityChanged)
+      geomItem.getParameter('GeomMat').off('valueChanged', item.geomMatChanged)
 
-    const visibleindex = this.visibleItems.indexOf(item)
-    if (visibleindex != -1) this.visibleItems.splice(visibleindex, 1)
+      this.transparentItems[itemindex] = null
+      this.freeList.push(itemindex)
+
+      const visibleindex = this.visibleItems.indexOf(item)
+      if (visibleindex != -1) this.visibleItems.splice(visibleindex, 1)
+    }
 
     this.emit('updated')
   }
 
   /**
-   * The sortItems method.
-   * @param {any} viewPos - The viewPos value.
+   * Sorts the drawn items in order furthest to nearest when rendering transparent objects.
+   * @param {Vec3} viewPos - The position of the camera that we are sorting relative to.
    */
   sortItems(viewPos) {
+    // eslint-disable-next-line guard-for-in
+    for (const shaderName in this.__glShaderGeomSets) {
+      this.__glShaderGeomSets[shaderName].sortItems(viewPos)
+    }
+
     for (const transparentItem of this.visibleItems) {
       const mat4 = transparentItem.glGeomItem.geomItem.getGeomMat4()
       transparentItem.dist = mat4.translation.distanceTo(viewPos)
     }
     this.visibleItems.sort((a, b) => (a.dist > b.dist ? -1 : a.dist < b.dist ? 1 : 0))
-    this.resort = false
+    this.reSort = false
   }
 
   /**
@@ -202,6 +246,15 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
    * @private
    */
   _drawItems(renderstate) {
+    // Note: sorting here will not sort geometries of different types.
+    // this is a flawed solution that only sorts geomemtries of the same
+    // time and same shader against each other. Given that this is the data 99% o
+    // of the time, this is an acceptable tradeoff
+    // eslint-disable-next-line guard-for-in
+    for (const shaderName in this.__glShaderGeomSets) {
+      this.__glShaderGeomSets[shaderName].draw(renderstate)
+    }
+
     const cache = {
       currentglShader: null,
       currentGLMaterial: null,
@@ -251,7 +304,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
    * @param {object} renderstate - The object tracking the current state of the renderer
    */
   draw(renderstate) {
-    if (this.visibleItems.length == 0) return
+    if (this.itemCount == 0) return
 
     // if (this.newItemsReadyForLoading()) this.finalize()
 
@@ -259,14 +312,15 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
 
     const viewPos = renderstate.viewXfo.tr
     // Avoid sorting if the camera did not move more than the specified tolerance.
-    if (this.resort || viewPos.distanceTo(this.prevSortCameraPos) > this.sortCameraMovementDistance) {
+    if (this.reSort || viewPos.distanceTo(this.prevSortCameraPos) > this.sortCameraMovementDistance) {
       this.sortItems(viewPos)
+
       this.prevSortCameraPos = viewPos
       if (renderstate.viewport) {
         // Adapt the sort tolerance to the focal distance.
         // In a tiny scene, we want to sort more frequently.
         const camera = renderstate.viewport.getCamera()
-        this.sortCameraMovementDistance = camera.getFocalDistance() * 0.1
+        this.sortCameraMovementDistance = camera.getFocalDistance() * 0.3
       }
     }
 
@@ -317,6 +371,11 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
   drawHighlightedGeoms(renderstate) {
     const gl = this.__gl
     gl.disable(gl.CULL_FACE) // 2-sided rendering.
+
+    // eslint-disable-next-line guard-for-in
+    for (const shaderName in this.__glShaderGeomSets) {
+      this.__glShaderGeomSets[shaderName].drawHighlightedGeoms(renderstate)
+    }
 
     const cache = {
       currentglShader: null,
@@ -380,6 +439,11 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
     gl.enable(gl.DEPTH_TEST)
     gl.depthFunc(gl.LESS)
     gl.depthMask(true)
+
+    // eslint-disable-next-line guard-for-in
+    for (const shaderName in this.__glShaderGeomSets) {
+      this.__glShaderGeomSets[shaderName].drawGeomData(renderstate)
+    }
 
     const cache = {
       currentglShader: null,

@@ -89,38 +89,36 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
     if (this.__gl.multiDrawElementsInstanced) {
       const shaderName = material.getShaderName()
       const shader = Registry.getBlueprint(shaderName)
-      if (shader.supportsInstancing() && shader.getPackedMaterialData) {
-        if (!material.isTextured()) {
-          let glShaderGeomSets = this.__glShaderGeomSets[shaderName]
-          if (!glShaderGeomSets) {
-            const shaders = this.constructShaders(shaderName)
-            glShaderGeomSets = new GLShaderGeomSets(this, this.__gl, shaders)
-            glShaderGeomSets.on('updated', () => {
-              this.__renderer.requestRedraw()
-            })
-            this.__glShaderGeomSets[shaderName] = glShaderGeomSets
+      if (!material.isTextured() && shader.supportsInstancing() && shader.getPackedMaterialData) {
+        let glShaderGeomSets = this.__glShaderGeomSets[shaderName]
+        if (!glShaderGeomSets) {
+          const shaders = this.constructShaders(shaderName)
+          glShaderGeomSets = new GLShaderGeomSets(this, this.__gl, shaders)
+          glShaderGeomSets.on('updated', () => {
+            this.__renderer.requestRedraw()
+          })
+          this.__glShaderGeomSets[shaderName] = glShaderGeomSets
 
-            // The following is a sneaky hack to ensure the LinesShader
-            // is drawn last. This is because, although it is not considered
-            // 'transparent', it does enable blending, and so must be drawn over
-            // the meshes. Note: It it were to be moved into the transparent geoms
-            // pass, then we would need to sort all the lines in order, which
-            // would probably be slow. Then we would need to switch shaders all the time
-            // with other transparent geoms. This solution keeps it in the Opaque pass
-            // which keeps performance very good.
-            if (this.__glShaderGeomSets['LinesShader']) {
-              const tmp = this.__glShaderGeomSets['LinesShader']
-              delete this.__glShaderGeomSets['LinesShader']
-              this.__glShaderGeomSets['LinesShader'] = tmp
-            }
+          // The following is a sneaky hack to ensure the LinesShader
+          // is drawn last. This is because, although it is not considered
+          // 'transparent', it does enable blending, and so must be drawn over
+          // the meshes. Note: It it were to be moved into the transparent geoms
+          // pass, then we would need to sort all the lines in order, which
+          // would probably be slow. Then we would need to switch shaders all the time
+          // with other transparent geoms. This solution keeps it in the Opaque pass
+          // which keeps performance very good.
+          if (this.__glShaderGeomSets['LinesShader']) {
+            const tmp = this.__glShaderGeomSets['LinesShader']
+            delete this.__glShaderGeomSets['LinesShader']
+            this.__glShaderGeomSets['LinesShader'] = tmp
           }
-
-          // const glGeomItem = this.constructGLGeomItem(geomItem)
-          const glGeomItem = this.renderer.glGeomItemLibrary.getGLGeomItem(geomItem)
-          glShaderGeomSets.addGLGeomItem(glGeomItem)
-          this.emit('updated')
-          return true
         }
+
+        // const glGeomItem = this.constructGLGeomItem(geomItem)
+        const glGeomItem = this.renderer.glGeomItemLibrary.getGLGeomItem(geomItem)
+        glShaderGeomSets.addGLGeomItem(glGeomItem)
+        this.emit('updated')
+        return true
       }
     }
 
