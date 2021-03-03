@@ -21,3 +21,4 @@
 *.wasm binary
 *.zenv binary
 *.zmesh binary
+*.webp binary
