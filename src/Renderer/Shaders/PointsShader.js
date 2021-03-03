@@ -13,8 +13,8 @@ class PointsShader extends GLShader {
    */
   constructor(gl) {
     super(gl)
-    this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader(
-      'PointsShader.vertexShader',
+    this.setShaderStage(
+      'VERTEX_SHADER',
       `
 precision highp float;
 
@@ -71,8 +71,8 @@ void main(void) {
 `
     )
 
-    this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader(
-      'PointsShader.fragmentShader',
+    this.setShaderStage(
+      'FRAGMENT_SHADER',
       `
 precision highp float;
 

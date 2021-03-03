@@ -14,8 +14,8 @@ class PostProcessing extends GLShader {
    */
   constructor(gl) {
     super(gl)
-    this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader(
-      'PostProcessing.vertexShader',
+    this.setShaderStage(
+      'VERTEX_SHADER',
       `
 precision highp float;
 
@@ -48,8 +48,8 @@ void main()
 
 `
     )
-    this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader(
-      'PostProcessing.fragmentShader',
+    this.setShaderStage(
+      'FRAGMENT_SHADER',
       `
 precision highp float;
 

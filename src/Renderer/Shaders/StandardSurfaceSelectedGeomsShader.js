@@ -10,8 +10,8 @@ import './GLSL/modelMatrix.js'
 class StandardSurfaceSelectedGeomsShader extends GLShader {
   constructor(gl, floatGeomBuffer) {
     super(gl)
-    this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader(
-      'StandardSurfaceSelectedGeomsShader.vertexShader',
+    this.setShaderStage(
+      'VERTEX_SHADER',
       `
 precision highp float;
 
@@ -39,8 +39,8 @@ void main(void) {
 `
     )
 
-    this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader(
-      'StandardSurfaceSelectedGeomsShader.fragmentShader',
+    this.setShaderStage(
+      'FRAGMENT_SHADER',
       `
 precision highp float;
 

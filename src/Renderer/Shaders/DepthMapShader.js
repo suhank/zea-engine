@@ -8,8 +8,8 @@ class DepthMapShader extends GLShader {
    */
   constructor(gl) {
     super(gl)
-    this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader(
-      'DepthMapShader.vertexShader',
+    this.setShaderStage(
+      'VERTEX_SHADER',
       `
 precision highp float;
 
@@ -30,8 +30,8 @@ void main(void) {
 
 `
     )
-    this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader(
-      'DepthMapShader.fragmentShader',
+    this.setShaderStage(
+      'FRAGMENT_SHADER',
       `
 #extension GL_OES_standard_derivatives : enable
 precision highp float;

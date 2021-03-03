@@ -11,8 +11,8 @@ import './GLSL/glsl-bits.js'
 class StandardSurfaceGeomDataShader extends GLShader {
   constructor(gl, floatGeomBuffer) {
     super(gl)
-    this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader(
-      'StandardSurfaceGeomDataShader.vertexShader',
+    this.setShaderStage(
+      'VERTEX_SHADER',
       `
 precision highp float;
 
@@ -53,8 +53,8 @@ void main(void) {
 `
     )
 
-    this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader(
-      'StandardSurfaceGeomDataShader.fragmentShader',
+    this.setShaderStage(
+      'FRAGMENT_SHADER',
       `
 precision highp float;
 
