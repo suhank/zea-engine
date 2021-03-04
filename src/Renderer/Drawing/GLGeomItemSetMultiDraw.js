@@ -24,7 +24,6 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
     this.renderer = renderer
     this.gl = renderer.gl
     this.glGeomItems = []
-    this.glgeomItems_freeIndices = []
     this.glgeomItemEventHandlers = []
     this.dirtyDrawGeomIds = []
 
@@ -38,14 +37,14 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
     this.drawIdsArray = new Float32Array(0)
     this.drawIdsBufferDirty = true
     this.drawIdsTexture = null
-    this.dirtyDrawIndexIndices = new Set()
+    // this.dirtyDrawIndexIndices = new Set()
 
     this.highlightedItems = []
     this.highlightedIdsArray = null
     this.highlightedIdsTexture = null
     this.highlightedIdsBufferDirty = true
-    this.highlightIndices = new Set()
-    this.dirtyDrawHighlightIndices = new Set()
+    // this.highlightIndices = new Set()
+    // this.dirtyDrawHighlightIndices = new Set()
   }
 
   /**
@@ -65,7 +64,7 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
 
     const eventHandlers = {}
     eventHandlers.geomDataChanged = (event) => {
-      if (event.index == glGeomItem.geomId && glGeomItem.visible) {
+      if (event.index == glGeomItem.geomId && glGeomItem.geomItem.isVisible()) {
         const index = this.visibleItems.indexOf(glGeomItem)
         const offsetAndCount = this.renderer.glGeomLibrary.getGeomOffsetAndCount(glGeomItem.geomId)
 
@@ -80,7 +79,7 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
     }
     this.renderer.glGeomLibrary.on('geomDataChanged', eventHandlers.geomDataChanged)
 
-    if (glGeomItem.visible) {
+    if (glGeomItem.geomItem.isVisible()) {
       this.visibleItems.push(glGeomItem)
     }
     if (glGeomItem.geomItem.isHighlighted()) {
@@ -98,7 +97,7 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
       } else {
         this.highlightedItems.splice(this.highlightedItems.indexOf(glGeomItem), 1)
       }
-      // console.log("highlightChanged:", glGeomItem.getGeomItem().getName(), glGeomItem.getGeomItem().isHighlighted(), this.highlightedItems)
+      // console.log("highlightChanged:", glGeomItem.geomItem.getName(), glGeomItem.geomItem.isHighlighted(), this.highlightedItems)
       this.highlightedIdsBufferDirty = true
     }
     glGeomItem.geomItem.on('highlightChanged', eventHandlers.highlightChanged)
@@ -131,19 +130,21 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
     glGeomItem.geomItem.off('visibilityChanged', eventHandlers.visibilityChanged)
     this.renderer.glGeomLibrary.off('geomDataChanged', eventHandlers.geomDataChanged)
 
-    this.glGeomItems[index] = null
-    this.glgeomItemEventHandlers[index] = null
-    this.drawElementCounts[index] = 0
-    this.drawElementOffsets[index] = 0
+    this.glGeomItems.splice(index, 1)
+    this.glgeomItemEventHandlers.splice(index, 1)
 
-    this.glgeomItems_freeIndices.push(index)
-
-    if (glGeomItem.visible) {
-      this.visibleItems.splice(this.visibleItems.indexOf(glGeomItem), 1)
+    if (glGeomItem.geomItem.isVisible()) {
+      const visibleItemIndex = this.visibleItems.indexOf(glGeomItem)
+      // this.visibleItems.splice(visibleItemIndex, 1)
+      this.drawElementCounts[visibleItemIndex] = 0
+      this.drawElementOffsets[visibleItemIndex] = 0
       this.drawIdsBufferDirty = true
     }
-    if (glGeomItem.getGeomItem().isHighlighted()) {
-      this.highlightedItems.splice(this.highlightedItems.indexOf(glGeomItem), 1)
+    if (glGeomItem.geomItem.isHighlighted()) {
+      const highlightIndex = this.visibleItems.indexOf(glGeomItem)
+      // this.highlightedItems.splice(highlightedItemIndex, 1)
+      this.highlightElementOffsets[highlightIndex] = 0
+      this.highlightElementCounts[highlightIndex] = 0
       this.highlightedIdsBufferDirty = true
     }
   }
@@ -269,7 +270,7 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
       }
     }
 
-    this.dirtyDrawIndexIndices = new Set()
+    // this.dirtyDrawIndexIndices = new Set()
     gl.bindTexture(gl.TEXTURE_2D, null)
     renderstate.boundTextures--
 
