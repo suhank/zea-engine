@@ -1,5 +1,4 @@
 /* eslint-disable no-unused-vars */
-/* eslint-disable camelcase */
 import { StringFunctions } from '../Utilities/StringFunctions'
 import { Vec3 } from './Vec3.js'
 import { Mat4 } from './Mat4.js'
@@ -84,7 +83,7 @@ class Xfo {
   }
 
   /**
-   * Checks if this Vec3 is exactly the same as another Vec3.
+   * Checks if this Vec3 contains the same values as the other Vec3.
    *
    * @param {Vec3} other - The other Vec3 to compare with.
    * @return {boolean} - Returns `true` if are the same Vector, otherwise, `false`.
@@ -262,9 +261,9 @@ class Xfo {
   // Static Methods
 
   /**
-   * Creates a new Xfo.
+   * Factory function to creates a new Xfo.
    * @param {...object} ...args - The ...args param.
-   * @return {Xfo} - eturns a new Xfo.
+   * @return {Xfo} - returns a new Xfo.
    * @private
    */
   static create(...args) {

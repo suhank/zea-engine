@@ -7,9 +7,12 @@ import { EulerAngles } from './EulerAngles.js'
 import { Registry } from '../Registry'
 
 /**
- * Class representing a quaternion. Quaternions are used to represent rotations
- * without encountering gimble lock. Based on complex numbers that are not easy
- * to understand intuitively.
+ * Class representing a quaternion. Quaternions are used to represent 3 dimensional rotations.
+ *
+ * While Quaternions are difficult to understand they have important mathematical properties that make them very useful in 3d engines.
+ * They can be directly multiplied together in the same was as matrices.
+ * They can be interpolated from one value to another while maintaining constant angular velocity.
+ * They can be converted to other more easily understood representations such as EulerAngles or Matrices.
  *
  * @extends AttrValue
  */
@@ -17,7 +20,7 @@ class Quat extends AttrValue {
   /**
    * Creates a quaternion.
    *
-   * @param {number | ArrayBuffer | object} x - The angle of the x axis. Default is 0.
+   * @param {number | ArrayBuffer | object} x - The angle of the x axis. Default is 0. Or a Float32Array containing 4 values.
    * @param {number} y - The angle of the y axis. Default is 0.
    * @param {number} z - The angle of the z axis. Default is 0.
    * @param {number} w - The w value. Default is 1.
@@ -124,16 +127,6 @@ class Quat extends AttrValue {
   }
 
   /**
-   * Checks if this Quat is exactly the same as another Quat.
-   *
-   * @param {Quat} other - The other Quat to compare with.
-   * @return {boolean} - Returns `true` if are the same Vector, otherwise, `false`.
-   */
-  isEqual(other) {
-    return this.x == other.x && this.y == other.y && this.z == other.z && this.w == other.w
-  }
-
-  /**
    * Setter from scalar components.
    *
    * @param {number} x - The x axis rotation.
@@ -170,7 +163,7 @@ class Quat extends AttrValue {
   }
 
   /**
-   * Set this quat from a euler rotation.
+   * Set this Quat from a euler rotation.
    *
    * @param {EulerAngles} eulerAngles - The euler angles rotation.
    */
@@ -348,7 +341,7 @@ class Quat extends AttrValue {
   }
 
   /**
-   * Set this quat to a rotation defined by an axis and an angle (in radians).
+   * Set this Quat to a rotation defined by an axis and an angle (in radians).
    *
    * @param {Vec3} axis - The axis value.
    * @param {number} angle - The axis angle.
@@ -360,7 +353,7 @@ class Quat extends AttrValue {
   }
 
   /**
-   * Scales and calculates the cross product of the `Vec3` and sets the result in the Mat3
+   * Sets the state of the Quat to look in a particular direction along the z axis.
    *
    * @param {Vec3} dir - The direction value.
    * @param {Vec3} up - The up angle.
@@ -372,7 +365,7 @@ class Quat extends AttrValue {
   }
 
   /**
-   * Sets the state of the `Quat` from two `Vec3`.
+   * Sets the state of the `Quat` from two `Vec3`. The quaternion would then represent the rotation from v0 to v1 in 3d space.
    *
    * @param {Vec3} v0 - The v0 unit vector.
    * @param {Vec3} v1 - The v1 unit vector.
@@ -387,7 +380,7 @@ class Quat extends AttrValue {
   }
 
   /**
-   * Set the quat from a Mat3.
+   * Set the Quat from a Mat3.
    *
    * @param {Mat3} mat3 - The mat3 value.
    */
@@ -424,7 +417,7 @@ class Quat extends AttrValue {
   }
 
   /**
-   * Set the quat from a Mat4.
+   * Set the Quat from a Mat4.
    *
    * @param {Mat4} mat4 - The mat4 value.
    */
@@ -479,12 +472,25 @@ class Quat extends AttrValue {
   }
 
   /**
-   * Returns true if this Quat is exactly the same as other.
+   * @deprecated
+   * Returns true if this Quat contains the same values as the other.
+   * Deprecated. Use #isEqual instead.
    *
    * @param {Quat} other - The other Quat to compare with.
    * @return {boolean} - Returns true or false.
    */
   equal(other) {
+    console.warn('Deprecated. Use #isEqual instead.')
+    return this.isEqual(other)
+  }
+
+  /**
+   * Checks if this Quat contains the same values as the other Quat.
+   *
+   * @param {Quat} other - The other Quat to compare with.
+   * @return {boolean} - Returns `true` if are the same Vector, otherwise, `false`.
+   */
+  isEqual(other) {
     return this.x == other.x && this.y == other.y && this.z == other.z && this.w == other.w
   }
 
@@ -615,7 +621,7 @@ class Quat extends AttrValue {
   }
 
   /**
-   * Normalizes the Quat, modifying it and returning it normalized.
+   * Normalizes the Quat, modifying its values in place.
    */
   normalizeInPlace() {
     const x = this.__data[0]
@@ -631,7 +637,7 @@ class Quat extends AttrValue {
   }
 
   /**
-   * Calculates the dot product of two Quats.
+   * Calculates the dot product of this quat against another.
    *
    * @param {Quat} other - The other Quat to compare with.
    * @return {number} - Returns the dot product.
@@ -681,7 +687,7 @@ class Quat extends AttrValue {
 
   /**
    * Aligns this quaternion with another one ensuring that the delta between
-   * the Quat values is the shortest path over the hypersphere.
+   * the Quat values is the shortest path over the hyper-sphere.
    *
    *  @param {Quat} other - The other Quat to divide by.
    */
@@ -692,7 +698,7 @@ class Quat extends AttrValue {
   }
 
   /**
-   * Multiplies two Quats and returns the result as a new Quat.
+   * Multiplies two this quat by another returning the result as a new Quat.
    *
    * @param {Quat} other - The other Quat to multiply.
    * @return {Quat} - Returns a new Quat.
@@ -716,7 +722,7 @@ class Quat extends AttrValue {
   }
 
   /**
-   * Multiplies two Quats.
+   * Multiplies this quat by another, modifying its values in place.
    *
    * @param {Quat} other - The other Quat to multiply.
    */
@@ -739,7 +745,7 @@ class Quat extends AttrValue {
   }
 
   /**
-   * Rotates a vector by this quaterion.
+   * Rotates a vector by this quaternion.
    * Don't forget to normalize the quaternion unless
    * you want axial translation as well as rotation.
    *
@@ -753,7 +759,7 @@ class Quat extends AttrValue {
   }
 
   /**
-   * Rotates a quaternion by the given angle about the X axis.
+   * Sets this quaternion to a rotation by the given angle about the X axis.
    *
    * @param {number} rad - Angle (in radians) to rotate.
    */
@@ -774,7 +780,7 @@ class Quat extends AttrValue {
   }
 
   /**
-   * Rotates a quaternion by the given angle about the Y axis.
+   * Sets this quaternion to a rotation by the given angle about the Y axis.
    *
    * @param {number} rad - Angle (in radians) to rotate.
    */
@@ -795,7 +801,7 @@ class Quat extends AttrValue {
   }
 
   /**
-   * Rotates a quaternion by the given angle about the Z axis.
+   * Sets this quaternion to a rotation by the given angle about the Z axis.
    *
    * @param {number} rad - Angle (in radians) to rotate.
    */
@@ -855,9 +861,9 @@ class Quat extends AttrValue {
   }
 
   /**
-   * Returns the X axis of this quaternion.
+   * Calculates a Vec3 value aligned with the X axis of this quaternion.
    *
-   * @return {Vec3} - Returns the X axis as a Vec3.
+   * @return {Vec3} - The resulting Vec3 value
    */
   getXaxis() {
     const xy = this.x * this.y
@@ -871,9 +877,9 @@ class Quat extends AttrValue {
   }
 
   /**
-   * Returns the Y axis of this quaternion.
+   * Calculates a Vec3 value aligned with the Y axis of this quaternion.
    *
-   * @return {Vec3} - Returns the Y axis as a Vec3.
+   * @return {Vec3} - The resulting Vec3 value
    */
   getYaxis() {
     const xx = this.x * this.x
@@ -887,9 +893,9 @@ class Quat extends AttrValue {
   }
 
   /**
-   * Returns the Z axis of this quaternion.
+   * Calculates a Vec3 value aligned with the Z axis of this quaternion.
    *
-   * @return {Vec3} - Returns the Z axis as a Vec3.
+   * @return {Vec3} - The resulting Vec3 value
    */
   getZaxis() {
     const xx = this.x * this.x
@@ -962,9 +968,9 @@ class Quat extends AttrValue {
   }
 
   /**
-   * Performs a linear interpolation between two Quats.
+   * Performs a linear interpolation of this Quat towards another Quat, returning the result as a new Quat.
    *
-   * @param {Quat} other  - The other Quat to interpolate between.
+   * @param {Quat} other  - The other Quat to interpolate towards.
    * @param {number} t - Interpolation amount between the two inputs.
    * @return {Quat} - Returns a new Quat.
    */
@@ -980,14 +986,14 @@ class Quat extends AttrValue {
   }
 
   /**
-   * Performs a spherical linear interpolation between two Quats.
+   * Performs a spherical linear interpolation of this Quat towards another Quat, returning the result as a new Quat.
    *
-   * @param {Quat} other  - The other Quat to interpolate between.
+   * @param {Quat} other - The other Quat to interpolate towards.
    * @param {number} t - Interpolation amount between the two inputs.
    * @return {Quat} - Returns a new Quat.
    */
   slerp(other, t) {
-    /// https://www.lix.polytechnique.fr/~nielsen/WEBvisualcomputing/programs/slerp.cpp
+    // https://www.lix.polytechnique.fr/~nielsen/WEBvisualcomputing/programs/slerp.cpp
     // const dotProduct = this.x * other.x + this.y * other.y + this.z * other.z + this.w * other.w
     const dotProduct = this.dot(other)
 
@@ -1012,22 +1018,6 @@ class Quat extends AttrValue {
     result.normalizeInPlace()
     return result
   }
-
-  // /**
-  //  * Generates a random vector with the given scale.
-  //  * @param {number} scale -  Length of the resulting vector. If ommitted, a unit vector will be returned.
-  //  * @returns {vec4} - The return value.
-  //  */
-  // random(scale = 1.0) {
-  //     const r = glMatrix.RANDOM() * 2.0 * Math.PI;
-  //     const z = (glMatrix.RANDOM() * 2.0) - 1.0;
-  //     const zScale = Math.sqrt(1.0 - z * z) * scale;
-
-  //     out[0] = Math.cos(r) * zScale;
-  //     out[1] = Math.sin(r) * zScale;
-  //     out[2] = z * scale;
-  //     return out;
-  // }
 
   // ////////////////////////////////////////
   // Static Methods
@@ -1089,7 +1079,7 @@ class Quat extends AttrValue {
   // Persistence
 
   /**
-   * The toJSON method encodes this type as a json object for persistences.
+   * The toJSON method encodes this type as a json object for persistence.
    *
    * @return {object} - The json object.
    */

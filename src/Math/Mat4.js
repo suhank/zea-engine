@@ -408,7 +408,7 @@ class Mat4 extends AttrValue {
   }
 
   /**
-   * Getter for the translation of the matrix.
+   * Getter for the translation of the matrix. Assumes the translation values are 12, 13, & 14.
    *
    * @return {Vec3} - Returns the translation.
    */
@@ -417,7 +417,7 @@ class Mat4 extends AttrValue {
   }
 
   /**
-   * Setter for the translation of the matrix.
+   * Setter for the translation of the matrix. Assumes the translation values are 12, 13, & 14.
    *
    * @param {Vec3} vec3 - The translation.
    */
@@ -527,12 +527,11 @@ class Mat4 extends AttrValue {
   }
 
   /**
-   * Converts a Mat4 to a Mat3.
+   * Returns a Mat3 made up of the top left of the mat4 values.
    *
-   * @param {Mat4} mat4 - The Mat4 value to convert.
    * @return {Mat3} - Returns a new Mat3.
    */
-  toMat3(mat4) {
+  toMat3() {
     return new Mat3(
       this.__data[0],
       this.__data[1],
@@ -600,7 +599,7 @@ class Mat4 extends AttrValue {
   }
 
   /**
-   * Inverts a Mat4 not using SIMD and returns the result as a new instance.
+   * Inverts a Mat4 and returns the result as a new instance.
    *
    * @return {Mat4} - Returns a new Mat4.
    */
@@ -731,73 +730,7 @@ class Mat4 extends AttrValue {
   }
 
   /**
-   * Sets this matrix as the inverse of the given Mat4.
-   *
-   * @param {Mat4} mat4 - The mat4 value.
-   * @return {null} - In case the `determinant` can't be calculated, a `null` will be returned, otherwise, nothing is returned
-   */
-  setInverse(mat4) {
-    const a00 = mat4.__data[0]
-    const a01 = mat4.__data[1]
-    const a02 = mat4.__data[2]
-    const a03 = mat4.__data[3]
-    const a10 = mat4.__data[4]
-    const a11 = mat4.__data[5]
-    const a12 = mat4.__data[6]
-    const a13 = mat4.__data[7]
-    const a20 = mat4.__data[8]
-    const a21 = mat4.__data[9]
-    const a22 = mat4.__data[10]
-    const a23 = mat4.__data[11]
-    const a30 = mat4.__data[12]
-    const a31 = mat4.__data[13]
-    const a32 = mat4.__data[14]
-    const a33 = mat4.__data[15]
-
-    const b00 = a00 * a11 - a01 * a10
-    const b01 = a00 * a12 - a02 * a10
-    const b02 = a00 * a13 - a03 * a10
-    const b03 = a01 * a12 - a02 * a11
-    const b04 = a01 * a13 - a03 * a11
-    const b05 = a02 * a13 - a03 * a12
-    const b06 = a20 * a31 - a21 * a30
-    const b07 = a20 * a32 - a22 * a30
-    const b08 = a20 * a33 - a23 * a30
-    const b09 = a21 * a32 - a22 * a31
-    const b10 = a21 * a33 - a23 * a31
-    const b11 = a22 * a33 - a23 * a32
-
-    // Calculate the determinant
-    let det = b00 * b11 - b01 * b10 + b02 * b09 + b03 * b08 - b04 * b07 + b05 * b06
-
-    if (!det) {
-      throw new Error('Unable to invert Mat4')
-      return null
-    }
-    det = 1.0 / det
-
-    this.set(
-      (a11 * b11 - a12 * b10 + a13 * b09) * det,
-      (a02 * b10 - a01 * b11 - a03 * b09) * det,
-      (a31 * b05 - a32 * b04 + a33 * b03) * det,
-      (a22 * b04 - a21 * b05 - a23 * b03) * det,
-      (a12 * b08 - a10 * b11 - a13 * b07) * det,
-      (a00 * b11 - a02 * b08 + a03 * b07) * det,
-      (a32 * b02 - a30 * b05 - a33 * b01) * det,
-      (a20 * b05 - a22 * b02 + a23 * b01) * det,
-      (a10 * b10 - a11 * b08 + a13 * b06) * det,
-      (a01 * b08 - a00 * b10 - a03 * b06) * det,
-      (a30 * b04 - a31 * b02 + a33 * b00) * det,
-      (a21 * b02 - a20 * b04 - a23 * b00) * det,
-      (a11 * b07 - a10 * b09 - a12 * b06) * det,
-      (a00 * b09 - a01 * b07 + a02 * b06) * det,
-      (a31 * b01 - a30 * b03 - a32 * b00) * det,
-      (a20 * b03 - a21 * b01 + a22 * b00) * det
-    )
-  }
-
-  /**
-   * Multiplies two Mat4s not using SIMD and returns the result as a new instance.
+   * Multiplies two Mat4s and returns the result as a new instance.
    *
    * @param {Mat4} other - The other Mat4 to multiply with.
    * @return {Mat4} - Returns a new Mat4.
@@ -862,7 +795,7 @@ class Mat4 extends AttrValue {
   }
 
   /**
-   * Multiplies two Mat4s in place explicitly not using SIMD.
+   * Multiplies two Mat4s in place explicitly.
    *
    * @param {Mat4} other - The other Mat4 to multiply with.
    * @return {Mat4} - Returns a new Mat4.
@@ -927,12 +860,12 @@ class Mat4 extends AttrValue {
   }
 
   /**
-   * Post multiplies two Mat4s in place explicitly not using SIMD.
+   * Post multiplies two Mat4s in place explicitly.
    *
    * @param {Mat4} other - The other Mat4 to multiply with.
    * @return {Mat3} - Returns the result as a new Mat4.
    */
-  postmultiplyInPlace(other) {
+  postMultiplyInPlace(other) {
     const a = other.asArray()
     const a00 = a[0]
     const a01 = a[1]
@@ -992,7 +925,7 @@ class Mat4 extends AttrValue {
   }
 
   /**
-   * Translate a Mat4 by the given vector not using SIMD.
+   * Translate a Mat4 by the given vector.
    *
    * @param {Vec3} v3 - The given vector to translate along.
    * @return {Mat4} - The return value.
@@ -1252,7 +1185,7 @@ class Mat4 extends AttrValue {
   }
 
   /**
-   * Rotates a given `Vec3` and the result is returned as a new `Vec3`
+   * Rotates a given `Vec3` and the result is returned as a new `Vec3`, applying only the top left components of the matrix, so not applying any translation.
    * @param {Vec3} vec - The vec value.
    * @return {Vec3} - Return the result as a new Vec3.
    */
@@ -1267,13 +1200,13 @@ class Mat4 extends AttrValue {
   /**
    * Set the perspective from a Mat4.
    *
-   * @param {number} fovy - The fovy value.
+   * @param {number} fovY - The fovY value.
    * @param {number} aspect - The aspect value.
    * @param {number} near - The near value.
    * @param {number} far - The far value.
    */
-  setPerspectiveMatrix(fovy, aspect, near, far) {
-    const f = Math.tan(Math.PI * 0.5 - 0.5 * fovy)
+  setPerspectiveMatrix(fovY, aspect, near, far) {
+    const f = Math.tan(Math.PI * 0.5 - 0.5 * fovY)
     const rangeInv = 1.0 / (near - far)
     /* eslint-disable prettier/prettier*/
     this.set(f / aspect, 0, 0, 0, 0, f, 0, 0, 0, 0, (near + far) * rangeInv, -1, 0, 0, near * far * rangeInv * 2, 0)
@@ -1317,7 +1250,7 @@ class Mat4 extends AttrValue {
   }
 
   /**
-   * Scales Mat4 Matrix
+   * Set the Matrix to be a scale matrix.
    *
    * @param {number} x - The x value.
    * @param {number} y - The y value.
@@ -1334,7 +1267,7 @@ class Mat4 extends AttrValue {
   }
 
   /**
-   * Transforms a 3x4 matrix into a 4x4 matrix and set the result to the Math4 state.
+   * Loads a 3x4 matrix data into a the Mat4.
    *
    * @param {array} m3x4 - The m3x4 value.
    */

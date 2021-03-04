@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import { StringFunctions } from '../Utilities/StringFunctions'
 
 import { Vec2 } from './Vec2'
@@ -33,7 +32,7 @@ class Box2 {
   }
 
   /**
-   * Sets both Vect2 points
+   * Sets both corner points
    *
    * @param {Vec2} p0 - A point representing the corners of a 2D box.
    * @param {Vec2} p1 - A point representing the corners of a 2D box.
@@ -84,18 +83,18 @@ class Box2 {
   }
 
   /**
-   * Returns the size of a Box2.
+   * Returns the length of the diagonal of the box.
    *
-   * @return {Box2} - Returns a Box2.
+   * @return {number} - Returns the distance.
    */
   size() {
-    return this.p1.subtract(this.p0)
+    return this.p1.distanceTo(this.p0)
   }
 
   /**
-   * Returns the size of a Box2 - the same as size().
+   * Returns the diagonal vector of the B=box from p0 to p1.
    *
-   * @return {Box2} - Returns a Box2.
+   * @return {Vec3} - Returns a Vec3.
    */
   diagonal() {
     return this.p1.subtract(this.p0)

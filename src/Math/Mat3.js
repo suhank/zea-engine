@@ -312,6 +312,7 @@ class Mat3 extends AttrValue {
 
   /**
    * Scales and calculates the cross product of the `Vec3` and sets the result in the Mat3
+   * Note: the resulting matrix +Z axis is aligned with the provided direction value.
    *
    * @param {Vec3} dir - The dir value.
    * @param {Vec3} up - The up value.
@@ -377,7 +378,7 @@ class Mat3 extends AttrValue {
   }
 
   /**
-   * Inverts a Mat3.
+   * Inverts a Mat3 in place modifying its values.
    *
    * @return {boolean} - The return value.
    */
@@ -438,7 +439,7 @@ class Mat3 extends AttrValue {
   }
 
   /**
-   * Transposes (exchanges columns with rows) this matrix.
+   * Transposes (exchanges columns with rows) this matrix modifying its values.
    */
   transposeInPlace() {
     // If we are transposing ourselves we can skip a few steps but have to cache some values

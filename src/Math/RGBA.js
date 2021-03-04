@@ -3,14 +3,14 @@ import { AttrValue } from './AttrValue.js'
 import { Registry } from '../Registry'
 
 /**
- * Class representing the red, green, blue and alpha channel of a color.
+ * Class representing the red, green, blue and alpha channel of a color as 8bit values.
  *
  * @extends AttrValue
  */
 class RGBA extends AttrValue {
   /**
    * Create a RGBA.
-   * @param {number | string | Float32Array | ArrayBuffer} r - The red channel of a color.
+   * @param {number | string | Uint8Array} r - The red channel of a color.
    * @param {number} g - The green channel of a color.
    * @param {number} b - The blue channel of a color.
    * @param {number} a - The alpha (transparency) channel of a color.
@@ -20,10 +20,6 @@ class RGBA extends AttrValue {
 
     if (r instanceof Uint8Array) {
       this.__data = r
-    } else if (r instanceof ArrayBuffer) {
-      const buffer = r
-      const byteOffset = g
-      this.__data = new Uint8Array(buffer, byteOffset, 4)
     } else {
       this.__data = new Uint8Array(4)
       if (typeof r == 'string') {
@@ -142,13 +138,13 @@ class RGBA extends AttrValue {
   /**
    * Setter from a scalar array.
    *
-   * @param {array} vals - The vals param.
+   * @param {array} values - The array of values.
    */
-  setFromArray(vals) {
-    this.r = vals[0]
-    this.g = vals[1]
-    this.b = vals[2]
-    this.a = vals.length == 4 ? vals[3] : 1.0
+  setFromArray(values) {
+    this.r = values[0]
+    this.g = values[1]
+    this.b = values[2]
+    this.a = values.length == 4 ? values[3] : 1.0
   }
 
   /**
@@ -353,12 +349,25 @@ class RGBA extends AttrValue {
   }
 
   /**
-   * Returns true if this RGBA color is exactly the same as other.
+   * @deprecated
+   * Returns true if this RGBA color contains the same values as the other.
+   * Deprecated. Use #isEqual instead.
    *
    * @param {RGBA} other - The other RGBA to compare with.
    * @return {boolean} - Returns true or false.
    */
   equal(other) {
+    console.warn('Deprecated. Use #isEqual instead.')
+    return this.isEqual(other)
+  }
+
+  /**
+   * Checks if this Color  contains the same values as the other.
+   *
+   * @param {Color} other - The other Color to compare with.
+   * @return {boolean} - Returns `true` if the values are the same, otherwise, `false`.
+   */
+  isEqual(other) {
     return this.r == other.r && this.g == other.g && this.b == other.b && this.a == other.a
   }
 
@@ -588,7 +597,7 @@ class RGBA extends AttrValue {
   // Persistence
 
   /**
-   * The toJSON method encodes this type as a json object for persistences.
+   * The toJSON method encodes this type as a json object for persistence.
    *
    * @return {object} - The json object.
    */

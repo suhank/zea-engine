@@ -134,7 +134,8 @@ class Vec2 extends AttrValue {
   }
 
   /**
-   * Checks if this Vec2 is exactly the same as another Vec2.
+   * Checks if this Vec2 contains the same values as the other Vec2.
+   * Deprecated. Use #isEqual instead.
    *
    * @deprecated
    * @param {Vec2} other - The other Vec2 to compare with.
@@ -146,7 +147,7 @@ class Vec2 extends AttrValue {
   }
 
   /**
-   * Checks if this Vec2 is exactly the same as another Vec2.
+   * Checks if this Vec2 contains the same values as the other Vec2.
    *
    * @param {Vec2} other - The other Vec2 to compare with.
    * @return {boolean} - Returns `true` if are the same Vector, otherwise, `false`.
@@ -324,7 +325,7 @@ class Vec2 extends AttrValue {
 
   /**
    * Normalizes the Vec2 and returns it as a new Vec2.
-   * Multiplies coordenates value by the inverse of the vector length.
+   * Multiplies coordinates value by the inverse of the vector length.
    *
    * @return {Vec2} - Returns the Vec2 normalized.
    */
@@ -342,7 +343,7 @@ class Vec2 extends AttrValue {
   }
 
   /**
-   * Normalizes this Vec2 multiplying coordenate values by the inverse of the vector length.
+   * Normalizes this Vec2 multiplying coordinate values by the inverse of the vector length.
    */
   normalizeInPlace() {
     const x = this.__data[0]
@@ -405,12 +406,12 @@ class Vec2 extends AttrValue {
    * Rotates a Vec2 in a clockwise direction and returns a new rotated Vec2.
    *
    * @param {number} angle - The angle of rotation.
-   * @return {Vec2} - Returns the rotated vect  or.
+   * @return {Vec2} - Returns the rotated vector.
    */
   rotate(angle) {
-    const cosa = Math.cos(angle)
-    const sina = Math.sin(angle)
-    return new Vec2(this.x * cosa - this.y * sina, this.x * sina + this.y * cosa)
+    const cosA = Math.cos(angle)
+    const sinA = Math.sin(angle)
+    return new Vec2(this.x * cosA - this.y * sinA, this.x * sinA + this.y * cosA)
   }
 
   /**
@@ -429,7 +430,7 @@ class Vec2 extends AttrValue {
   /**
    * Generates a random vector with the given scale.
    *
-   * @param {number} scale - Length of the resulting vector. If ommitted, a unit vector will be returned.
+   * @param {number} scale - Length of the resulting vector. If omitted, a unit vector will be returned.
    * @return {Vec2} - The return value.
    */
   setRandomDir(scale = 1.0) {
@@ -440,7 +441,7 @@ class Vec2 extends AttrValue {
   }
 
   /**
-   * Randomizes the scale of this Vec2 coordenates.
+   * Randomizes the scale of this Vec2 coordinates.
    *
    * @param {number} scale - The scale value.
    * @return {Vec2} - The return value.
@@ -520,8 +521,7 @@ class Vec2 extends AttrValue {
   }
 
   /**
-   * Returns the number of Float32 elements used by this type. Used to calculate storage requi
-   * ents for large arrays of this type.
+   * Returns the number of Float32 elements used by this type. Used to calculate storage requirements for large arrays of this type.
    * @return {number} - The return value.
    * @private
    */
