@@ -41,7 +41,7 @@
       scene.setEnvMap(envMap)
       scene.getSettings().getParameter('Display EnvMap').setValue(false)
 
-      scene.setupGrid(60.0, 6)
+      // scene.setupGrid(60.0, 6)
       const tree1 = new TreeItem('tree1')
       scene.getRoot().addChild(tree1)
 
@@ -101,6 +101,10 @@
           })
           window.postMessage(`done-${data}`)
         } else if (data === 'variant-02') {
+          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-25, -25, 13), new Vec3(10, 0, 0))
+          renderer.frameAll()
+          window.postMessage(`done-${data}`)
+        } else if (data === 'variant-03') {
           items.forEach((geomItem, index) => {
             if (index % 2 == 0) {
               geomItem.addHighlight('Foo', new Color(0.8, 0, 0, 0.1))
@@ -110,6 +114,10 @@
               geomItem.getParameter('Material').setValue(material)
             }
           })
+          window.postMessage(`done-${data}`)
+        } else if (data === 'variant-04') {
+          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(25, 25, 13), new Vec3(10, 0, 0))
+          renderer.frameAll()
           window.postMessage(`done-${data}`)
         }
       }

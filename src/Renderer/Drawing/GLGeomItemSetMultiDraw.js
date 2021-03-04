@@ -37,22 +37,11 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
     this.drawIdsArray = new Float32Array(0)
     this.drawIdsBufferDirty = true
     this.drawIdsTexture = null
-    // this.dirtyDrawIndexIndices = new Set()
 
     this.highlightedItems = []
     this.highlightedIdsArray = null
     this.highlightedIdsTexture = null
     this.highlightedIdsBufferDirty = true
-    // this.highlightIndices = new Set()
-    // this.dirtyDrawHighlightIndices = new Set()
-  }
-
-  /**
-   * The getDrawCount method.
-   * @return {any} - The return value.
-   */
-  getDrawCount() {
-    return this.visibleItems.length
   }
 
   /**
@@ -135,16 +124,12 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
 
     if (glGeomItem.geomItem.isVisible()) {
       const visibleItemIndex = this.visibleItems.indexOf(glGeomItem)
-      // this.visibleItems.splice(visibleItemIndex, 1)
-      this.drawElementCounts[visibleItemIndex] = 0
-      this.drawElementOffsets[visibleItemIndex] = 0
+      this.visibleItems.splice(visibleItemIndex, 1)
       this.drawIdsBufferDirty = true
     }
     if (glGeomItem.geomItem.isHighlighted()) {
       const highlightIndex = this.visibleItems.indexOf(glGeomItem)
-      // this.highlightedItems.splice(highlightedItemIndex, 1)
-      this.highlightElementOffsets[highlightIndex] = 0
-      this.highlightElementCounts[highlightIndex] = 0
+      this.highlightedItems.splice(highlightIndex, 1)
       this.highlightedIdsBufferDirty = true
     }
   }
@@ -196,7 +181,6 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
     const unit = renderstate.boundTextures++
     gl.activeTexture(gl.TEXTURE0 + unit)
 
-    // const drawIdsArray = this.getDrawIdsArray()
     const drawIdsTextureSize = MathFunctions.nextPow2(Math.ceil(Math.sqrt(this.visibleItems.length)))
 
     if (!this.drawIdsTexture) {
@@ -212,13 +196,6 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
       })
     } else if (this.drawIdsTexture.width < drawIdsTextureSize || this.drawIdsTexture.height < drawIdsTextureSize) {
       this.drawIdsTexture.resize(drawIdsTextureSize, drawIdsTextureSize)
-      // for (let i = 0; i < this.geoms.length; i++) {
-      //   // This can happen for an invisible object added to the GLGeomItemSetMultiDraw.
-      //   // Note: soon invisible items will be held by the renderer until visible.
-      //   if (this.geoms[i] && this.drawIdsAllocator.getAllocation(i)) {
-      //     this.dirtyDrawIndexIndices.add(i)
-      //   }
-      // }
     }
     {
       if (!this.drawIdsArray || this.visibleItems.length > this.drawIdsArray.length) {
@@ -270,7 +247,6 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
       }
     }
 
-    // this.dirtyDrawIndexIndices = new Set()
     gl.bindTexture(gl.TEXTURE_2D, null)
     renderstate.boundTextures--
 
@@ -309,7 +285,6 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
       this.highlightedIdsTexture.height < highlightIdsTextureSize
     ) {
       this.highlightedIdsTexture.resize(highlightIdsTextureSize, highlightIdsTextureSize)
-      // this.dirtyDrawHighlightIndices = new Set(this.highlightIndices)
     }
     {
       const tex = this.highlightedIdsTexture
@@ -343,7 +318,6 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
       }
     }
 
-    // this.dirtyDrawHighlightIndices = new Set()
     gl.bindTexture(gl.TEXTURE_2D, null)
     renderstate.boundTextures--
   }
