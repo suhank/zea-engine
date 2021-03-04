@@ -33,6 +33,7 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
     this.highlightElementCounts = new Int32Array(0)
     this.highlightElementOffsets = new Int32Array(0)
 
+    this.reserved = 0
     this.visibleItems = []
     this.drawIdsArray = new Float32Array(0)
     this.drawIdsBufferDirty = true
@@ -60,83 +61,59 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
    * @param {any} glGeomItem - The glGeomItem value.
    */
   addGLGeomItem(glGeomItem) {
-    let index
-    if (this.glgeomItems_freeIndices.length > 0) {
-      index = this.glgeomItems_freeIndices.pop()
-    } else {
-      index = this.glGeomItems.length
-      this.glGeomItems.push(null)
-
-      // //////////////////////////////////////
-      // Indices
-      this.drawElementOffsets = resizeIntArray(this.drawElementOffsets, index + 1)
-      this.drawElementCounts = resizeIntArray(this.drawElementCounts, index + 1)
-      this.drawIdsArray = resizeFloat32Array(this.drawIdsArray, index + 1)
-    }
-    console.log('addGLGeomItem:', glGeomItem.drawItemId)
-
-    this.drawElementOffsets[index] = 0
-    this.drawElementCounts[index] = 0
-    this.dirtyDrawGeomIds.push(index)
-
-    if (this.drawIdsArray.includes(glGeomItem.drawItemId)) console.error('addGLGeomItem:', glGeomItem.drawItemId)
-    this.drawIdsArray[index] = glGeomItem.drawItemId
+    this.glGeomItems.push(glGeomItem)
 
     const eventHandlers = {}
     eventHandlers.geomDataChanged = (event) => {
-      if (event.index == glGeomItem.geomId) {
+      if (event.index == glGeomItem.geomId && glGeomItem.visible) {
+        const index = this.visibleItems.indexOf(glGeomItem)
         const offsetAndCount = this.renderer.glGeomLibrary.getGeomOffsetAndCount(glGeomItem.geomId)
 
         this.drawElementOffsets[index] = offsetAndCount[0]
         this.drawElementCounts[index] = offsetAndCount[1]
-        if (this.highlightedItems.includes(index)) {
-          this.highlightElementOffsets[index] = offsetAndCount[0]
-          this.highlightElementCounts[index] = offsetAndCount[1]
+        const highlightIndex = this.highlightedItems.indexOf(glGeomItem)
+        if (highlightIndex != -1) {
+          this.highlightElementOffsets[highlightIndex] = offsetAndCount[0]
+          this.highlightElementCounts[highlightIndex] = offsetAndCount[1]
         }
       }
     }
     this.renderer.glGeomLibrary.on('geomDataChanged', eventHandlers.geomDataChanged)
 
     if (glGeomItem.visible) {
-      this.visibleItems.push(index)
-      // this.emit('drawCountChanged', { change: 1, count: this.visibleItems.length })
+      this.visibleItems.push(glGeomItem)
     }
     if (glGeomItem.getGeomItem().isHighlighted()) {
-      this.highlightedItems.push(index)
+      this.highlightedItems.push(glGeomItem)
       this.highlightedIdsBufferDirty = true
     }
 
-    eventHandlers.highlightChanged = () => {
-      if (glGeomItem.getGeomItem().isHighlighted()) {
+    eventHandlers.highlightChanged = (event) => {
+      if (event && event.name) {
         // Note: highlightChanged is fired when the color changes
-        // or another hilight is added over the top. We avoid
+        // or another highlight is added over the top. We avoid
         // adding the same index again here. (TODO: use Set?)
-        if (this.highlightedItems.includes(index)) return
-        this.highlightedItems.push(index)
-        // this.emit('highlightedCountChanged', { change: 1, count: this.highlightedItems.length })
+        if (this.highlightedItems.includes(glGeomItem)) return
+        this.highlightedItems.push(glGeomItem)
       } else {
-        this.highlightedItems.splice(this.highlightedItems.indexOf(index), 1)
-        // this.emit('highlightedCountChanged', { change: -1, count: this.highlightedItems.length })
+        this.highlightedItems.splice(this.highlightedItems.indexOf(glGeomItem), 1)
       }
       // console.log("highlightChanged:", glGeomItem.getGeomItem().getName(), glGeomItem.getGeomItem().isHighlighted(), this.highlightedItems)
       this.highlightedIdsBufferDirty = true
     }
     glGeomItem.on('highlightChanged', eventHandlers.highlightChanged)
+
     eventHandlers.visibilityChanged = (event) => {
-      const visible = event.visible
-      if (visible) {
-        this.visibleItems.push(index)
-        // this.emit('drawCountChanged', { change: 1, count: this.visibleItems.length })
+      if (event.visible) {
+        this.visibleItems.push(glGeomItem)
       } else {
-        this.visibleItems.splice(this.visibleItems.indexOf(index), 1)
-        // this.emit('drawCountChanged', { change: -1, count: this.visibleItems.length })
+        this.visibleItems.splice(this.visibleItems.indexOf(glGeomItem), 1)
       }
       this.drawIdsBufferDirty = true
     }
     glGeomItem.on('visibilityChanged', eventHandlers.visibilityChanged)
 
-    this.glGeomItems[index] = glGeomItem
-    this.glgeomItemEventHandlers[index] = eventHandlers
+    this.glgeomItemEventHandlers.push(eventHandlers)
 
     glGeomItem.geomItem.setMetadata('geomItemSet', this)
 
@@ -148,7 +125,6 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
    * @param {any} glGeomItem - The glGeomItem value.
    */
   removeGLGeomItem(glGeomItem) {
-    console.log('removeGLGeomItem:', glGeomItem.drawItemId)
     const index = this.glGeomItems.indexOf(glGeomItem)
     const eventHandlers = this.glgeomItemEventHandlers[index]
     glGeomItem.off('highlightChanged', eventHandlers.highlightChanged)
@@ -163,19 +139,13 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
     this.glgeomItems_freeIndices.push(index)
 
     if (glGeomItem.visible) {
-      this.visibleItems.splice(this.visibleItems.indexOf(index), 1)
-      // this.emit('drawCountChanged', { change: -1, count: this.visibleItems.length })
+      this.visibleItems.splice(this.visibleItems.indexOf(glGeomItem), 1)
+      this.drawIdsBufferDirty = true
     }
-    const highlighted = glGeomItem.getGeomItem().isHighlighted()
-    if (highlighted) {
-      this.highlightedItems.splice(this.highlightedItems.indexOf(index), 1)
-      // this.emit('highlightedCountChanged', { change: -1, count: this.highlightedItems.length })
+    if (glGeomItem.getGeomItem().isHighlighted()) {
+      this.highlightedItems.splice(this.highlightedItems.indexOf(glGeomItem), 1)
+      this.highlightedIdsBufferDirty = true
     }
-    this.drawIdsBufferDirty = true
-    // console.log("removeGLGeomItem:", glGeomItem.getGeomItem().getName(), this.glGeomItems.length)
-    // if (this.glGeomItems.length == this.glgeomItems_freeIndices.length) {
-    //   this.destroy()
-    // }
   }
 
   // ////////////////////////////////////
@@ -196,14 +166,16 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
       // Collect all visible geom ids into the instanceIds array.
       // Note: the draw count can be less than the number of instances
       // we re-use the same buffer and simply invoke fewer draw calls.
-      this.highlightedItems.forEach((index, tgtIndex) => {
-        const glGeomItem = this.glGeomItems[index]
-        this.highlightedIdsArray[tgtIndex] = glGeomItem.drawItemId
-
+      this.highlightedItems.forEach((glGeomItem, index) => {
+        this.highlightedIdsArray[index] = glGeomItem.drawItemId
         const offsetAndCount = this.renderer.glGeomLibrary.getGeomOffsetAndCount(glGeomItem.geomId)
         this.highlightElementOffsets[index] = offsetAndCount[0]
         this.highlightElementCounts[index] = offsetAndCount[1]
       })
+      for (let i = this.highlightedItems.length; i < this.highlightElementCounts.length; i++) {
+        this.highlightElementOffsets[i] = 0
+        this.highlightElementCounts[i] = 0
+      }
 
       this.highlightedIdsBufferDirty = false
     }
@@ -249,18 +221,21 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
     }
     {
       if (!this.drawIdsArray || this.visibleItems.length > this.drawIdsArray.length) {
-        this.drawIdsArray = new Float32Array(this.glGeomItems.length)
+        this.drawIdsArray = new Float32Array(this.visibleItems.length)
+        this.drawElementOffsets = new Int32Array(this.visibleItems.length)
+        this.drawElementCounts = new Int32Array(this.visibleItems.length)
       }
-      this.dirtyDrawGeomIds.forEach((index) => {
-        const glGeomItem = this.glGeomItems[index]
-        if (glGeomItem) {
-          const offsetAndCount = this.renderer.glGeomLibrary.getGeomOffsetAndCount(glGeomItem.geomId)
-          this.drawElementOffsets[index] = offsetAndCount[0]
-          this.drawElementCounts[index] = offsetAndCount[1]
 
-          this.drawIdsArray[index] = this.glGeomItems[index].drawItemId
-        }
+      this.visibleItems.forEach((glGeomItem, index) => {
+        const offsetAndCount = this.renderer.glGeomLibrary.getGeomOffsetAndCount(glGeomItem.geomId)
+        this.drawElementOffsets[index] = offsetAndCount[0]
+        this.drawElementCounts[index] = offsetAndCount[1]
+        this.drawIdsArray[index] = glGeomItem.drawItemId
       })
+      for (let i = this.visibleItems.length; i < this.drawElementCounts.length; i++) {
+        this.drawElementOffsets[i] = 0
+        this.drawElementCounts[i] = 0
+      }
       this.dirtyDrawGeomIds = []
     }
     {
@@ -449,7 +424,7 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
   sortItems(viewPos) {
     const distances = []
     const indices = []
-    this.glGeomItems.forEach((glGeomItem, index) => {
+    this.visibleItems.forEach((glGeomItem, index) => {
       if (glGeomItem) {
         const mat4 = glGeomItem.geomItem.getGeomMat4()
         const dist = mat4.translation.distanceTo(viewPos)
@@ -459,19 +434,16 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
     })
     indices.sort((a, b) => distances[b] - distances[a])
 
-    const glGeomItems = []
-    const glgeomItemEventHandlers = []
+    const visibleItems = []
     const drawElementCounts = new Int32Array(this.drawElementCounts.length)
     const drawElementOffsets = new Int32Array(this.drawElementOffsets.length)
     indices.forEach((tgtIndex, srcIndex) => {
-      glGeomItems[srcIndex] = this.glGeomItems[tgtIndex]
-      glgeomItemEventHandlers[srcIndex] = this.glgeomItemEventHandlers[tgtIndex]
+      visibleItems[srcIndex] = this.visibleItems[tgtIndex]
       drawElementCounts[srcIndex] = this.drawElementCounts[tgtIndex]
       drawElementOffsets[srcIndex] = this.drawElementOffsets[tgtIndex]
-      this.drawIdsArray[srcIndex] = this.glGeomItems[tgtIndex].drawItemId
+      this.drawIdsArray[srcIndex] = this.visibleItems[tgtIndex].drawItemId
     })
-    this.glGeomItems = glGeomItems
-    this.glgeomItemEventHandlers = glgeomItemEventHandlers
+    this.visibleItems = visibleItems
     this.drawElementCounts = drawElementCounts
     this.drawElementOffsets = drawElementOffsets
     this.drawIdsBufferDirty = true
