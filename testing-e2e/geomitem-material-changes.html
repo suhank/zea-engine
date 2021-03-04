@@ -42,11 +42,11 @@
           const material = new Material('surfaces', 'SimpleSurfaceShader')
           material.getParameter('BaseColor').setValue(new Color(0, 0, 1))
           geomItem.getParameter('Material').setValue(material)
+          window.postMessage(`done-${data}`)
         } else if (data === 'variant-02') {
           const material = new Material('surfaces', 'StandardSurfaceShader')
           material.getParameter('BaseColor').setValue(new Color(1, 1, 0))
           geomItem.getParameter('Material').setValue(material)
-
           window.postMessage(`done-${data}`)
         }
       }
