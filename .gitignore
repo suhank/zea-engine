@@ -9,6 +9,7 @@ SteamServer/
 Resources/Cache/
 
 *.log
+*.zip
 .tmuxp.json
 package-lock.json
 .envrc*
