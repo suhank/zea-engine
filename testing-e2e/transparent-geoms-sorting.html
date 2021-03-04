@@ -88,6 +88,11 @@
 
         if (data === 'variant-01') {
           items.forEach((geomItem, index) => {
+            if (index % 3 == 0) {
+              geomItem.addHighlight('Foo', new Color(0.8, 0, 0, 0.1))
+            } else {
+              geomItem.removeHighlight('Foo')
+            }
             if (index != 3) {
               geomItem.getParameter('Material').setValue(transparentMaterial)
             } else {
@@ -98,8 +103,10 @@
         } else if (data === 'variant-02') {
           items.forEach((geomItem, index) => {
             if (index % 2 == 0) {
+              geomItem.addHighlight('Foo', new Color(0.8, 0, 0, 0.1))
               geomItem.getParameter('Material').setValue(transparentMaterial)
             } else {
+              geomItem.removeHighlight('Foo')
               geomItem.getParameter('Material').setValue(material)
             }
           })
