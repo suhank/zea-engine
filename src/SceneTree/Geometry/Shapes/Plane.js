@@ -67,26 +67,26 @@ class Plane extends ProceduralMesh {
       }
     }
 
-    let voff = 0
+    let vOff = 0
     const normals = this.getVertexAttribute('normals')
     if (normals) {
       for (let i = 0; i <= detailY; i++) {
         for (let j = 0; j <= detailX; j++) {
-          normals.getValueRef(voff).set(0, 0, 1)
-          voff++
+          normals.getValueRef(vOff).set(0, 0, 1)
+          vOff++
         }
       }
     }
 
-    voff = 0
+    vOff = 0
     const texCoords = this.getVertexAttribute('texCoords')
     if (texCoords) {
       for (let i = 0; i <= detailY; i++) {
         const y = i / detailY
         for (let j = 0; j <= detailX; j++) {
           const x = j / detailX
-          texCoords.getValueRef(voff).set(x, y)
-          voff++
+          texCoords.getValueRef(vOff).set(x, y)
+          vOff++
         }
       }
     }
@@ -105,13 +105,13 @@ class Plane extends ProceduralMesh {
     const detailX = this.__detailXParam.getValue()
     const detailY = this.__detailYParam.getValue()
     const positions = this.getVertexAttribute('positions')
-    let voff = 0
+    let vOff = 0
     for (let i = 0; i <= detailY; i++) {
       const y = (i / detailY - 0.5) * sizeY
       for (let j = 0; j <= detailX; j++) {
         const x = (j / detailX - 0.5) * sizeX
-        positions.getValueRef(voff).set(x, y, 0.0)
-        voff++
+        positions.getValueRef(vOff).set(x, y, 0.0)
+        vOff++
       }
     }
   }

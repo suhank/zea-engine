@@ -96,7 +96,7 @@ class CameraManipulator extends BaseTool {
 
     this.__orbitRateParam = this.addParameter(new NumberParameter('OrbitRate', SystemDesc.isMobileDevice ? 0.3 : 1))
     this.__dollySpeedParam = this.addParameter(new NumberParameter('DollySpeed', 0.02))
-    this.__mouseWheelDollySpeedParam = this.addParameter(new NumberParameter('MouseWheelDollySpeed', 0.0005))
+    this.__mouseWheelDollySpeedParam = this.addParameter(new NumberParameter('MouseWheelDollySpeed', 0.1))
     this.addParameter(new NumberParameter('WalkSpeed', 5)) // Value is in meters/second
     this.addParameter(new BooleanParameter('WalkModeCollisionDetection', false))
 
@@ -212,11 +212,11 @@ class CameraManipulator extends BaseTool {
     const orbitRate = this.__orbitRateParam.getValue()
 
     const globalXfo = camera.getParameter('GlobalXfo').getValue()
-    const xvec = globalXfo.ori.getXaxis()
-    const yvec = globalXfo.ori.getYaxis()
-    const zvec = globalXfo.ori.getZaxis()
-    const vec = xvec.scale(-dragVec.x).add(yvec.scale(dragVec.y))
-    const rotateAxis = vec.cross(zvec)
+    const xVec = globalXfo.ori.getXaxis()
+    const yVec = globalXfo.ori.getYaxis()
+    const zVec = globalXfo.ori.getZaxis()
+    const vec = xVec.scale(-dragVec.x).add(yVec.scale(dragVec.y))
+    const rotateAxis = vec.cross(zVec)
     rotateAxis.normalizeInPlace()
 
     const dragVecLength = dragVec.length()
@@ -246,11 +246,11 @@ class CameraManipulator extends BaseTool {
     const orbitRate = this.__orbitRateParam.getValue()
 
     const globalXfo = camera.getParameter('GlobalXfo').getValue()
-    const xvec = globalXfo.ori.getXaxis()
-    const yvec = globalXfo.ori.getYaxis()
-    const zvec = globalXfo.ori.getZaxis()
-    const vec = xvec.scale(-dragVec.x).add(yvec.scale(dragVec.y))
-    const rotateAxis = vec.cross(zvec)
+    const xVec = globalXfo.ori.getXaxis()
+    const yVec = globalXfo.ori.getYaxis()
+    const zVec = globalXfo.ori.getZaxis()
+    const vec = xVec.scale(-dragVec.x).add(yVec.scale(dragVec.y))
+    const rotateAxis = vec.cross(zVec)
     rotateAxis.normalizeInPlace()
 
     const dragVecLength = dragVec.length()
@@ -480,7 +480,7 @@ class CameraManipulator extends BaseTool {
     const count = Math.round(duration / 20) // each step is 20ms
     let i = 0
     const applyMovement = () => {
-      const initlalGlobalXfo = camera.getParameter('GlobalXfo').getValue()
+      const initialGlobalXfo = camera.getParameter('GlobalXfo').getValue()
       const initialTarget = camera.getTargetPosition()
 
       // With each iteration we get closer to our goal
@@ -489,10 +489,10 @@ class CameraManipulator extends BaseTool {
       const t = Math.pow(i / count, 2)
 
       // Sometimes we want to pull users to within some threshold of the specified position.
-      const dirToPosition = position.subtract(initlalGlobalXfo.tr)
+      const dirToPosition = position.subtract(initialGlobalXfo.tr)
       const currDistToPosition = dirToPosition.normalizeInPlace()
       const displacement = dirToPosition.scale(currDistToPosition - distance)
-      const pos = initlalGlobalXfo.tr.add(displacement.scale(t))
+      const pos = initialGlobalXfo.tr.add(displacement.scale(t))
 
       const targetPos = initialTarget.lerp(target, t)
 
@@ -745,17 +745,21 @@ class CameraManipulator extends BaseTool {
     const xfo = camera.getParameter('GlobalXfo').getValue()
     const movementVec = xfo.ori.getZaxis()
     if (this.__mouseWheelZoomIntervalId) clearInterval(this.__mouseWheelZoomIntervalId)
+
+    // To normalize mouse wheel speed across vendors and OSs, it is recommended to simply convert scroll value to -1 or 1
+    // See here: https://stackoverflow.com/questions/5527601/normalizing-mousewheel-speed-across-browsers
+    const direction = event.deltaY < 0 || event.wheelDelta > 0 || event.deltaY < 0 ? -1 : 1
     let count = 0
     const applyMovement = () => {
       const focalDistance = camera.getFocalDistance()
-      const zoomDist = event.deltaY * mouseWheelDollySpeed * focalDistance * modulator
+      const zoomDist = direction * mouseWheelDollySpeed * focalDistance * modulator
       xfo.tr.addInPlace(movementVec.scale(zoomDist))
 
       camera.setFocalDistance(camera.getFocalDistance() + zoomDist)
       camera.getParameter('GlobalXfo').setValue(xfo)
 
       count++
-      if (count < 10) {
+      if (count < 5) {
         this.__mouseWheelZoomIntervalId = setTimeout(applyMovement, 10)
       } else {
         this.__mouseWheelZoomIntervalId = undefined

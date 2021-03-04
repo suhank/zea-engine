@@ -13,6 +13,7 @@ import { StringParameter } from './StringParameter.js'
  * myParameterOwnerItem.addParameter(codeParam)
  * ```
  *
+ * @deprecated
  * @extends StringParameter
  */
 class CodeParameter extends StringParameter {

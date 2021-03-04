@@ -134,7 +134,6 @@ class SelectionSet extends BaseGroup {
     super.__unbindItem(item, index)
     if (!(item instanceof TreeItem)) return
 
-    item.removeHighlight('branchselected' + this.getId(), true)
     if (this.getParameter('Highlighted').getValue()) {
       item.removeHighlight('groupItemHighlight' + this.getId(), true)
     }

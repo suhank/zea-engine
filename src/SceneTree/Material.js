@@ -7,9 +7,9 @@ import { Parameter, NumberParameter, Vec2Parameter, Vec3Parameter, ColorParamete
 import { MathFunctions } from '../Utilities/MathFunctions'
 
 // Explicit export of parameters that are not included in the
-// moduled defined by the index file in the folder. (see Parameters/index.js)
+// module defined by the index file in the folder. (see Parameters/index.js)
 // These parameters depend on classes that ar ParameterOwners.
-// TOOD: Move to this folder.
+// TODO: Move to this folder.
 import { MaterialFloatParam } from './Parameters/MaterialFloatParam'
 import { MaterialColorParam } from './Parameters/MaterialColorParam'
 
@@ -235,7 +235,7 @@ class Material extends BaseItem {
   }
 
   /**
-   * Returns shader's class of current material, if set. Otherwise it returns `undefined`
+   * Returns shaders class of current material, if set. Otherwise it returns `undefined`
    *
    * @return {string|undefined} - The return value.
    */

@@ -6,7 +6,7 @@ import { Material } from './Material'
  * Base class that represents geometry items with layering, overlaying and cut away features.
  *
  * **Events**
- * * **cutAwayChanged:** Triggered everytime the cutaway variables change(if enabled or not, the vector and the distance).
+ * * **cutAwayChanged:** Triggered when the cutaway variables change(if enabled or not, the vector and the distance).
  * @extends TreeItem
  */
 class BaseGeomItem extends TreeItem {

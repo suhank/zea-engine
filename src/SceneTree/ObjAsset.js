@@ -9,8 +9,6 @@ import { Mesh } from './Geometry/Mesh.js'
 import { loadTextfile } from './Utils.js'
 import { Material } from './Material.js'
 import { resourceLoader } from './resourceLoader.js'
-import { GeomLibrary } from './GeomLibrary.js'
-import { MaterialLibrary } from './MaterialLibrary.js'
 import { BooleanParameter, NumberParameter, StringParameter } from './Parameters/index'
 import { FilePathParameter } from './Parameters/FilePathParameter'
 

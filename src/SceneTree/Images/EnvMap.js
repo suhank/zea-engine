@@ -2,7 +2,6 @@ import util from 'util'
 
 /* eslint-disable new-cap */
 /* eslint-disable require-jsdoc */
-/* eslint-disable camelcase */
 import { Color } from '../../Math/index'
 import { Registry } from '../../Registry'
 import { VLHImage } from './VLHImage.js'
