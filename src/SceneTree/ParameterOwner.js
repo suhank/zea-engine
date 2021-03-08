@@ -156,7 +156,7 @@ class ParameterOwner extends EventEmitter {
     const paramChangedHandler = (event) => {
       // Note: spread operators cause errors on iOS 11.
       const newEvent = { param }
-      for (let key in event) newEvent[key] = event[key]
+      for (const key in event) newEvent[key] = event[key]
       this.__parameterValueChanged(newEvent)
     }
 

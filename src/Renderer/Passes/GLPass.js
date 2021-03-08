@@ -35,8 +35,8 @@ class GLPass extends ParameterOwner {
 
   /**
    * The init method.
-   * @param {any} renderer - The renderer value.
-   * @param {any} passIndex - The passIndex value.
+   * @param {GLBaseRenderer} renderer - The renderer value.
+   * @param {number} passIndex - The index of the pass in the GLBAseRenderer
    */
   init(renderer, passIndex) {
     if (passIndex == undefined) throw new Error('Missing constructor argument.') // Type checking. Seomthing that TypeScript will do for us.
@@ -50,7 +50,7 @@ class GLPass extends ParameterOwner {
 
   /**
    * The setPassIndex method.
-   * @param {any} passIndex - The passIndex value.
+   * @param {number} passIndex - The index of the pass in the GLBAseRenderer
    */
   setPassIndex(passIndex) {
     this.passIndex = passIndex

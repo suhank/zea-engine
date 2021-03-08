@@ -141,7 +141,7 @@ class Cylinder extends ProceduralMesh {
     // setUVs
     const texCoords = this.getVertexAttribute('texCoords')
 
-    // Now set the attrbute values
+    // Now set the attribute values
     faceIndex = 0
     if (caps) {
       for (let i = 0; i < nbSides; i++) {
@@ -186,12 +186,12 @@ class Cylinder extends ProceduralMesh {
       numVertices += 2
     }
     let vertex = 0
-    let zoff = 0.5
-    if (baseZAtZero) zoff = 0.0
+    let zOff = 0.5
+    if (baseZAtZero) zOff = 0.0
 
     const positions = this.getVertexAttribute('positions')
     for (let i = 0; i < nbLoops; i++) {
-      const z = (i / (nbLoops - 1)) * height - height * zoff
+      const z = (i / (nbLoops - 1)) * height - height * zOff
       for (let j = 0; j < nbSides; j++) {
         const phi = (j / nbSides) * 2.0 * Math.PI
         positions.getValueRef(vertex).set(Math.sin(phi) * radius, Math.cos(phi) * radius, z)

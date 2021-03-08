@@ -1,7 +1,6 @@
 /* eslint-disable prefer-rest-params */
 /* eslint-disable guard-for-in */
 /* eslint-disable no-unused-vars */
-/* eslint-disable camelcase */
 import { Vec3 } from '../../Math/Vec3'
 import { BaseGeom } from './BaseGeom.js'
 import { Attribute } from './Attribute.js'
@@ -231,14 +230,14 @@ class Mesh extends BaseGeom {
   }
 
   /**
-   * Returns a single vertex index for a given face and facevertex.
+   * Returns a single vertex index for a given face and faceVertex.
    * @param {number} faceIndex - The faceIndex value.
-   * @param {number} facevertex - The face vertex is the index within the face. So the first vertex index is 0.
+   * @param {number} faceVertex - The face vertex is the index within the face. So the first vertex index is 0.
    * @return {number} - The vertex index
    */
-  getFaceVertexIndex(faceIndex, facevertex) {
+  getFaceVertexIndex(faceIndex, faceVertex) {
     const offset = this.getFaceVertexOffset(faceIndex)
-    return this.__faceVertexIndices[offset + facevertex]
+    return this.__faceVertexIndices[offset + faceVertex]
   }
 
   // ///////////////////////////
@@ -298,7 +297,7 @@ class Mesh extends BaseGeom {
 
   /**
    * The addEdgeAttribute method.
-   * @param {string} name - The name of the edge attribute t oadd.
+   * @param {string} name - The name of the edge attribute to add.
    * @param {AttrValue|number} dataType - The data type.
    * @param {number} count - The default scalar value.
    * @return {Attribute} - Returns an edge attribute.
@@ -448,12 +447,6 @@ class Mesh extends BaseGeom {
         // Note: we are getting many faces with no surface area.
         // This is simply an authoring issue.
         // console.warn("Invalid Mesh topology");
-        // if(debugMesh){
-        //     printf("Face positions are coincident face:%i", i);
-        //     for (let j = 0; j < faceVerts.length; j++)
-        //         printf("v:%i", this.__faceVertexIndices[ numFacesVertices + (i*faceVerts.length) + j ]);
-        //     printf("\n");
-        // }
       } else {
         faceNormals.setValue(faceIndex, faceNormal.normalize())
       }
@@ -475,9 +468,9 @@ class Mesh extends BaseGeom {
     for (let i = 0; i < this.edgeFaces.length; i += 2) {
       const v0 = this.edgeVerts[i]
       const v1 = this.edgeVerts[i + 1]
-      const e_vec = positions.getValueRef(v1).subtract(positions.getValueRef(v0))
-      e_vec.normalizeInPlace()
-      this.edgeVecs.push(e_vec)
+      const edgeVec = positions.getValueRef(v1).subtract(positions.getValueRef(v0))
+      edgeVec.normalizeInPlace()
+      this.edgeVecs.push(edgeVec)
 
       const p0 = this.edgeFaces[i]
       const p1 = this.edgeFaces[i + 1]
@@ -584,20 +577,20 @@ class Mesh extends BaseGeom {
       // Sort the groups to have the biggest group first.
       faceGroups.sort((a, b) => (a.length < b.length ? 1 : a.length > b.length ? -1 : 0))
 
-      let firstVirtex = true
+      let firstVertex = true
       for (const faceGroup of faceGroups) {
         const normal = new Vec3()
         for (const faceIndex of faceGroup) {
-          const face_edges = getConnectedEdgeVecs(faceIndex, i)
-          const weight = face_edges[0].angleTo(face_edges[1])
+          const faceEdges = getConnectedEdgeVecs(faceIndex, i)
+          const weight = faceEdges[0].angleTo(faceEdges[1])
           // if (i == 1)
           //     console.log("FaceNormal:" + faceIndex + ":" + getFaceNormal(faceIndex).toString());
           normal.addInPlace(getFaceNormal(faceIndex).scale(weight))
         }
         normal.normalizeInPlace()
-        if (firstVirtex) {
+        if (firstVertex) {
           setVertexNormal(i, normal)
-          firstVirtex = false
+          firstVertex = false
         } else {
           normalsAttr.setSplitVertexValues(i, faceGroup, normal)
         }
@@ -843,23 +836,23 @@ class Mesh extends BaseGeom {
    * only triangles. This is used during rendering and the resulting indices uploaded ot the GPU  by GLMesh class.
    *
    * @param {number} totalNumVertices - The total number of vertices.
-   * @param {number} numUnSplitVertices - The total number of unsplit vertices.
+   * @param {number} numUnSplitVertices - The total number of un-split vertices.
    * @param {array} splitIndices - The splitIndices value.
-   * @return {TypedArray} - Retures a typed array containing the triangulated indices.
+   * @return {TypedArray} - Returns a typed array containing the triangulated indices.
    */
   generateTriangulatedIndices(totalNumVertices, numUnSplitVertices, splitIndices) {
     const trisCount = this.computeNumTriangles()
 
-    let trianglulatedIndices
-    if (totalNumVertices < Math.pow(2, 8)) trianglulatedIndices = new Uint8Array(trisCount * 3)
-    else if (totalNumVertices < Math.pow(2, 16)) trianglulatedIndices = new Uint16Array(trisCount * 3)
-    else trianglulatedIndices = new Uint32Array(trisCount * 3)
+    let triangulatedIndices
+    if (totalNumVertices < Math.pow(2, 8)) triangulatedIndices = new Uint8Array(trisCount * 3)
+    else if (totalNumVertices < Math.pow(2, 16)) triangulatedIndices = new Uint16Array(trisCount * 3)
+    else triangulatedIndices = new Uint32Array(trisCount * 3)
 
     let triangleVertex = 0
     const addTriangleVertexIndex = function (vertex, faceIndex) {
       if (vertex in splitIndices && faceIndex in splitIndices[vertex])
         vertex = numUnSplitVertices + splitIndices[vertex][faceIndex]
-      trianglulatedIndices[triangleVertex] = vertex
+      triangulatedIndices[triangleVertex] = vertex
       triangleVertex++
     }
     const numFaces = this.getNumFaces()
@@ -867,14 +860,14 @@ class Mesh extends BaseGeom {
       const faceVerts = this.getFaceVertexIndices(faceIndex)
       for (let j = 0; j < faceVerts.length; j++) {
         if (j >= 3) {
-          // For each aditional triangle, we have to add 2 indices.
+          // For each additional triangle, we have to add 2 indices.
           addTriangleVertexIndex(faceVerts[0], faceIndex)
           addTriangleVertexIndex(faceVerts[j - 1], faceIndex)
         }
         addTriangleVertexIndex(faceVerts[j], faceIndex)
       }
     }
-    return trianglulatedIndices
+    return triangulatedIndices
   }
 
   // ////////////////////////////////////////

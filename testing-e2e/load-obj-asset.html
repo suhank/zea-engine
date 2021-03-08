@@ -33,7 +33,7 @@
       scene.getSettings().getParameter('Display EnvMap').setValue(true)
 
       const objAsset = new ObjAsset('cow')
-      objAsset.getParameter('FilePath').setUrl('data/cow.obj')
+      objAsset.load('data/cow.obj')
       scene.getRoot().addChild(objAsset)
 
       const xfo = new Xfo()

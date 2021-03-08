@@ -9,7 +9,8 @@ import { OperatorOutput } from './OperatorOutput.js'
 class CalcGlobalXfoOperator extends Operator {
   /**
    * Create a CalcGlobalXfoOperator operator.
-   * @param {string} name - The name value.
+   * @param {XfoParameter} globalXfoParam - The globalXfoParam of the TreeItem being bound
+   * @param {XfoParameter} localXfoParam - The localXfoParam of the TreeItem being bound
    */
   constructor(globalXfoParam, localXfoParam) {
     super('CalcGlobalXfoOperator')

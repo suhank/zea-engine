@@ -70,10 +70,11 @@ class OperatorOutput extends EventEmitter {
   /**
    * Sets the Parameter for this out put to write to.
    * @param {Parameter} param - The param value.
+   * @param {number} index - The index to bind at in the Parameter.
    */
   setParam(param, index = -1) {
     if (this._param) {
-      this._param.unbindOperator(this, index)
+      this._param.unbindOperator(this)
     }
     this._param = param
     if (this._param) {

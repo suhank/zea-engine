@@ -2,7 +2,7 @@ const getFileFolder = function (filePath) {
   return filePath.substring(0, filePath.lastIndexOf('/')) + '/'
 }
 
-const loadfile = function (url, responseType, onSucceed, onFail, onProgress) {
+const loadFile = function (url, responseType, onSucceed, onFail, onProgress) {
   try {
     const xhr = new XMLHttpRequest()
     xhr.responseType = responseType
@@ -30,7 +30,7 @@ const loadfile = function (url, responseType, onSucceed, onFail, onProgress) {
 }
 
 const loadTextfile = function (url, onSucceed, onFail = undefined, onProgress = undefined) {
-  loadfile(
+  loadFile(
     url,
     'text',
     (xhr) => {
@@ -49,7 +49,7 @@ const loadTextfile = function (url, onSucceed, onFail = undefined, onProgress = 
 }
 
 const loadJSONfile = function (url, onSucceed, onFail = undefined, onProgress = undefined) {
-  loadfile(
+  loadFile(
     url,
     'json',
     (xhr) => {
@@ -68,7 +68,7 @@ const loadJSONfile = function (url, onSucceed, onFail = undefined, onProgress = 
 }
 
 const loadXMLfile = function (url, onSucceed, onFail = undefined, onProgress = undefined) {
-  loadfile(
+  loadFile(
     url,
     'document',
     (xhr) => {
@@ -87,7 +87,7 @@ const loadXMLfile = function (url, onSucceed, onFail = undefined, onProgress = u
 }
 
 const loadBinfile = function (url, onSucceed, onFail = undefined, onProgress = undefined) {
-  loadfile(
+  loadFile(
     url,
     'arraybuffer',
     (xhr) => {

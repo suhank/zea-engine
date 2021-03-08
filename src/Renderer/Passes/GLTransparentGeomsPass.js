@@ -21,8 +21,8 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
 
   /**
    * The init method.
-   * @param {any} renderer - The renderer value.
-   * @param {any} passIndex - The passIndex value.
+   * @param {GLBaseRenderer} renderer - The renderer value.
+   * @param {number} passIndex - The index of the pass in the GLBAseRenderer
    */
   init(renderer, passIndex) {
     super.init(renderer, passIndex)
@@ -47,7 +47,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
 
   /**
    * The init method.
-   * @param {any} geomItem - The geomItem value.
+   * @param {GeomItem} geomItem - The geomItem value.
    * @return {boolean} - The return value.
    */
   filterGeomItem(geomItem) {
@@ -60,7 +60,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
 
   /**
    * The addGeomItem method.
-   * @param {any} geomItem - The geomItem value.
+   * @param {GeomItem} geomItem - The geomItem value.
    */
   addGeomItem(geomItem) {
     this.itemCount++
@@ -162,7 +162,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
 
   /**
    * The removeGeomItem method.
-   * @param {any} geomItem - The geomItem value.
+   * @param {GeomItem} geomItem - The geomItem value.
    */
   removeGeomItem(geomItem) {
     this.itemCount--

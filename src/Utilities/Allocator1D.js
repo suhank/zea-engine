@@ -286,15 +286,15 @@ class Allocator1D extends EventEmitter {
    */
   verifyConsistency() {
     if (Object.keys(this.allocationsMap).length + this.freeList.length != this.allocations.length) {
-      throw 'number of blocks does not match the number of allocations'
+      throw new Error('number of blocks does not match the number of allocations')
     }
 
     // eslint-disable-next-line guard-for-in
-    for (let id in this.allocationsMap) {
+    for (const id in this.allocationsMap) {
       const index = this.allocationsMap[id]
       if (this.freeList.includes(index)) {
         // eslint-disable-next-line no-throw-literal
-        throw 'block of used memory is also on the free list'
+        throw new Error('block of used memory is also on the free list')
       }
     }
     let size = 0

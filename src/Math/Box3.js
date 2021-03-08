@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import { StringFunctions } from '../Utilities/StringFunctions'
 import { MathFunctions } from '../Utilities/MathFunctions'
 import { Vec3 } from './Vec3.js'
@@ -58,7 +57,7 @@ class Box3 {
   }
 
   /**
-   * Sets both Vect3 points
+   * Sets both Vec3 points
    *
    * @param {Vec3} p0 - A point representing the corners of a 3D box.
    * @param {Vec3} p1 - A point representing the corners of a 3D box.
@@ -141,16 +140,16 @@ class Box3 {
   }
 
   /**
-   * Returns the size of the Box3.
+   * Returns the length of the diagonal of the box.
    *
-   * @return {Box3} - Returns a Box3.
+   * @return {number} - Returns the distance.
    */
   size() {
-    return this.p1.subtract(this.p0)
+    return this.p1.distanceTo(this.p0)
   }
 
   /**
-   * Returns the size of a Box3 - the same as size().
+   * Returns the diagonal vector of the B=box from p0 to p1.
    *
    * @return {Box3} - Returns a Box3.
    */
@@ -171,7 +170,7 @@ class Box3 {
   }
 
   /**
-   * Converts this Box3 to a Mat4 (a 4x4 matrix).
+   * Converts this Box3 to a Mat4 (a 4x4 matrix). The returned mat4 would transform a unit cube into the shape of the Bounding box.
    *
    * @return {Mat4} - Returns a new Mat4.
    */
@@ -192,10 +191,10 @@ class Box3 {
   }
 
   /**
-   * Determines if this Box3 intersects a plane.
+   * Determines if this Box3 intersects a given box value.
    *
    * @param {Box3} box - The box to check for intersection against.
-   * @return {boolean} - The return value.
+   * @return {boolean} - Returns true if the shapes intersect.
    */
   intersectsBox(box) {
     // Using 6 splitting planes to rule out intersections.
@@ -213,7 +212,7 @@ class Box3 {
    * Determines if this Box3 intersects a sphere.
    *
    * @param {Sphere} sphere - The sphere to check for intersection against.
-   * @return {boolean} - The return value.
+   * @return {boolean} - Returns true if the shapes intersect.
    */
   intersectsSphere(sphere) {
     // var closestPoint = new Vector3();
@@ -229,7 +228,7 @@ class Box3 {
    * Determines if this Box3 intersects a plane.
    *
    * @param {Plane} plane - The plane to check for intersection against.
-   * @return {boolean} - The return value.
+   * @return {boolean} - Returns true if the shapes intersect.
    */
   intersectsPlane(plane) {
     // We compute the minimum and maximum dot product values. If those values
@@ -288,7 +287,7 @@ class Box3 {
 
   /**
    * The sizeInBytes method.
-   * @return {any} - The return value.
+   * @return {number} - The return value.
    * @private
    */
   static sizeInBytes() {
@@ -330,17 +329,6 @@ class Box3 {
     }
     this.p0.fromJSON(p0)
     this.p1.fromJSON(p1)
-  }
-
-  /**
-   * The loadBin method.
-   * @param {any} data - The data value.
-   * @param {any} byteOffset - The byteOffset value.
-   * @private
-   */
-  loadBin(data, byteOffset) {
-    this.p0.loadBin(data, byteOffset)
-    this.p0.loadBin(data, byteOffset + 12)
   }
 
   /**

@@ -25,7 +25,7 @@ import { POINTER_TYPES } from '../../Utilities/EnumUtils'
 class VRViewport extends GLBaseViewport {
   /**
    * Create a VR viewport.
-   * @param {any} renderer - The renderer value.
+   * @param {GLBaseRenderer} renderer - The renderer value.
    */
   constructor(renderer) {
     super(renderer)

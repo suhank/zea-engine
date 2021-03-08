@@ -93,7 +93,7 @@ class Cone extends ProceduralMesh {
     // setUVs
     const texCoords = this.getVertexAttribute('texCoords')
 
-    // Now set the attrbute values
+    // Now set the attribute values
     let tri = 0
     for (let i = 0; i < nbSides; i++) {
       texCoords.setFaceVertexValue(tri, 0, new Vec2((i + 1) / nbSides, 0.0))
@@ -134,7 +134,6 @@ class Cone extends ProceduralMesh {
     if (this.__cap) {
       positions.getValueRef(basePoint).set(0.0, 0.0, 0.0)
     }
-    
     this.computeVertexNormals()
   }
 }

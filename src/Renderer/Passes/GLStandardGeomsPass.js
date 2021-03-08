@@ -26,8 +26,8 @@ class GLStandardGeomsPass extends GLPass {
 
   /**
    * The init method.
-   * @param {any} renderer - The renderer value.
-   * @param {any} passIndex - The passIndex value.
+   * @param {GLBaseRenderer} renderer - The renderer value.
+   * @param {number} passIndex - The index of the pass in the GLBAseRenderer
    */
   init(renderer, passIndex) {
     super.init(renderer, passIndex)
@@ -76,7 +76,7 @@ class GLStandardGeomsPass extends GLPass {
 
   /**
    * The filterGeomItem method.
-   * @param {any} geomItem - The geomItem value.
+   * @param {GeomItem} geomItem - The geomItem value.
    * @return {any} - The return value.
    */
   filterGeomItem(geomItem) {
@@ -205,7 +205,7 @@ class GLStandardGeomsPass extends GLPass {
 
   /**
    * The removeGeomItem method.
-   * @param {any} geomItem - The geomItem value.
+   * @param {GeomItem} geomItem - The geomItem value.
    * @return {any} - The return value.
   removeGeomItem(geomItem) {
     if (geomItem.getMetadata('glpass') != this) return
@@ -282,7 +282,7 @@ class GLStandardGeomsPass extends GLPass {
 
   /**
    * The __populateDrawItemDataArray method.
-   * @param {any} geomItem - The geomItem value.
+   * @param {GeomItem} geomItem - The geomItem value.
    * @param {number} index - The index value.
    * @param {any} dataArray - The dataArray value.
    * @private

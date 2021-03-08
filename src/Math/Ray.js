@@ -1,11 +1,11 @@
 /* eslint-disable new-cap */
-/* eslint-disable camelcase */
 import { StringFunctions } from '../Utilities/StringFunctions'
+import { MathFunctions } from '../Utilities/MathFunctions'
 import { Vec3 } from './Vec3.js'
 import { Registry } from '../Registry'
 
 /**
- * Class representing a ray that emits from an origin in a specified direction.
+ * Class representing a ray that starts from an origin in a specified direction.
  */
 class Ray {
   /**
@@ -31,29 +31,28 @@ class Ray {
    * Get the closest point on the ray to the given point.
    *
    * @param {Vec3} point - The point in 3D space.
-   * @return {Ray} - Returns a Ray.
+   * @return {Ray} - Returns the distance along the ray where the closest point occurs.
    */
   closestPoint(point) {
     const w = point.subtract(this.start)
     const c1 = w.dot(this.dir)
-    if (c1 < Number.EPSILON) return this.start
+    if (c1 < Number.EPSILON) return 0
     const c2 = this.dir.dot(this.dir)
-    // if (c2 < Number.EPSILON) return this.start
-    const fract = c1 / c2
-    return this.start.add(this.dir.scale(fract))
+    if (c2 < Number.EPSILON) return 0
+    return c1 / c2
   }
 
   /**
-   * Get the closest point on the ray to the given point.
+   * Get the closest point between the ray and the given line segment made of the 2 points.
    *
    * @param {Vec3} p0 - The point in 3D space.
    * @param {Vec3} p1 - The point in 3D space.
-   * @return {number} - Returns a Ray.
+   * @return {array} - Returns an array containing 2 scalar values indicating 0: the fraction of the line segment, 1: distance along the Ray
    */
   closestPointOnLineSegment(p0, p1) {
-    // https://www.codefull.net/2015/06/intersection-of-a-ray-and-a-line-segment-in-3d/
     const u = this.dir
     const v = p1.subtract(p0)
+    const v_len = v.length()
     v.normalizeInPlace()
     const w = this.start.subtract(p0)
     const a = u.dot(u) // always >= 0
@@ -61,34 +60,35 @@ class Ray {
     const c = v.dot(v) // always >= 0
     const d = u.dot(w)
     const e = v.dot(w)
+
     if (a == 0.0 && c == 0.0) {
-      return this.start.distanceTo(p0)
+      return [this.start.distanceTo(p0), 0.0]
     }
     if (a == 0.0) {
-      return ray.closestPoint(this.start)
+      return [0.0, 0.0]
     }
     if (c == 0.0) {
-      return this.closestPoint(p0)
+      return [this.closestPoint(p0), 0.0]
     }
     const D = a * c - b * b // always >= 0
 
     // compute the ray parameters of the two closest points
     let this_t
-    let ray_t
+    let seg_t
     if (D < 0.001) {
       // the lines are almost parallel
       this_t = 0.0
       if (b > c) {
         // use the largest denominator
-        ray_t = d / b
+        seg_t = d / b
       } else {
-        ray_t = e / c
+        seg_t = e / c
       }
     } else {
       this_t = (b * e - c * d) / D
-      ray_t = (a * e - b * d) / D
+      seg_t = (a * e - b * d) / D
     }
-    return [this_t, ray_t]
+    return [this_t, MathFunctions.clamp(seg_t / v_len, 0, 1)]
   }
 
   /**
@@ -105,7 +105,7 @@ class Ray {
    * Returns the two ray params that represent the closest point between the two rays.
    *
    * @param {Ray} ray - The ray value.
-   * @return {Ray} - Returns a Ray.
+   * @return {array} - Returns an array containing 2 scalar values indicating 0: the fraction of the line segment, 1: distance along the Ray
    */
   intersectRayVector(ray) {
     const u = this.dir
@@ -117,13 +117,13 @@ class Ray {
     const d = u.dot(w)
     const e = v.dot(w)
     if (a == 0.0 && c == 0.0) {
-      return this.start.distanceTo(ray.start)
+      return [0.0, this.start.distanceTo(ray.start)]
     }
     if (a == 0.0) {
-      return ray.closestPoint(this.start)
+      return [ray.closestPoint(this.start), 0.0]
     }
     if (c == 0.0) {
-      return this.closestPoint(ray.start)
+      return [1.0, this.closestPoint(ray.start)]
     }
     const D = a * c - b * b // always >= 0
 
@@ -183,11 +183,11 @@ class Ray {
   intersectRayBox3(box3, tolerance = 0) {
     // https://www.scratchapixel.com/lessons/3d-basic-rendering/minimal-ray-tracer-rendering-simple-shapes/ray-box-intersection
 
-    const invdir = new Vec3(1 / this.dir.x, 1 / this.dir.y, 1 / this.dir.z)
+    const invDir = new Vec3(1 / this.dir.x, 1 / this.dir.y, 1 / this.dir.z)
     const sign = []
-    sign[0] = invdir.x < 0
-    sign[1] = invdir.y < 0
-    sign[2] = invdir.z < 0
+    sign[0] = invDir.x < 0
+    sign[1] = invDir.y < 0
+    sign[2] = invDir.z < 0
 
     const bounds = []
     if (tolerance > 0) {
@@ -201,17 +201,17 @@ class Ray {
       bounds[1] = box3.p1
     }
 
-    let tMin = (bounds[sign[0]].x - this.start.x) * invdir.x
-    let tMax = (bounds[1 - sign[0]].x - this.start.x) * invdir.x
-    const tyMin = (bounds[sign[1]].y - this.start.y) * invdir.y
-    const tyMax = (bounds[1 - sign[1]].y - this.start.y) * invdir.y
+    let tMin = (bounds[sign[0]].x - this.start.x) * invDir.x
+    let tMax = (bounds[1 - sign[0]].x - this.start.x) * invDir.x
+    const tyMin = (bounds[sign[1]].y - this.start.y) * invDir.y
+    const tyMax = (bounds[1 - sign[1]].y - this.start.y) * invDir.y
 
     if (tMin > tyMax || tyMin > tMax) return false
     if (tyMin > tMin) tMin = tyMin
     if (tyMax < tMax) tMax = tyMax
 
-    const tzMin = (bounds[sign[2]].z - this.start.z) * invdir.z
-    const tzMax = (bounds[1 - sign[2]].z - this.start.z) * invdir.z
+    const tzMin = (bounds[sign[2]].z - this.start.z) * invDir.z
+    const tzMax = (bounds[1 - sign[2]].z - this.start.z) * invDir.z
 
     if (tMin > tzMax || tzMin > tMax) return false
     if (tzMin > tMin) tMin = tzMin
@@ -246,7 +246,7 @@ class Ray {
   // Persistence
 
   /**
-   * The toJSON method encodes this type as a json object for persistences.
+   * The toJSON method encodes this type as a json object for persistence.
    *
    * @return {object} - The json object.
    */

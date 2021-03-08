@@ -10,15 +10,13 @@ import { generateShaderGeomBinding } from './Drawing/GeomShaderBinding.js'
 class GLEnvMap extends GLProbe {
   /**
    * Create a GL env map.
-   * @param {any} renderer - The renderer value.
-   * @param {any} envMap - The environment map.
-   * @param {any} preproc - The preproc value.
+   * @param {GLBaseRenderer} renderer - The renderer value.
+   * @param {EnvMap} envMap - The environment map.
    */
-  constructor(renderer, envMap, preproc) {
+  constructor(renderer, envMap) {
     super(renderer.gl, 'EnvMap')
     this.__renderer = renderer
     this.__envMap = envMap
-    this.__preproc = preproc
     this.__backgroundFocus = 0.0
 
     if (this.__envMap.isLoaded()) {
@@ -38,7 +36,7 @@ class GLEnvMap extends GLProbe {
     this.__srcGLTex = new GLHDRImage(gl, this.__envMap)
     this.__envMapShader = new EnvMapShader(gl)
 
-    const envMapShaderComp = this.__envMapShader.compileForTarget('GLEnvMap', this.__preproc)
+    const envMapShaderComp = this.__envMapShader.compileForTarget('GLEnvMap')
     this.__envMapShaderBinding = generateShaderGeomBinding(
       gl,
       envMapShaderComp.attrs,
@@ -70,7 +68,7 @@ class GLEnvMap extends GLProbe {
 
   /**
    * The getEnvMap method.
-   * @return {any} - The return value.
+   * @return {EnvMap} - The return value.
    */
   getEnvMap() {
     return this.__envMap
@@ -78,7 +76,7 @@ class GLEnvMap extends GLProbe {
 
   /**
    * The getBackgroundFocus method.
-   * @return {any} - The return value.
+   * @return {number} - The return value.
    */
   getBackgroundFocus() {
     return this.__backgroundFocus
@@ -86,7 +84,7 @@ class GLEnvMap extends GLProbe {
 
   /**
    * The setBackgroundFocus method.
-   * @param {any} val - The val param.
+   * @param {number} val - The val param.
    */
   setBackgroundFocus(val) {
     this.__backgroundFocus = val

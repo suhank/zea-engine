@@ -7,9 +7,9 @@ import { Parameter, NumberParameter, Vec2Parameter, Vec3Parameter, ColorParamete
 import { MathFunctions } from '../Utilities/MathFunctions'
 
 // Explicit export of parameters that are not included in the
-// moduled defined by the index file in the folder. (see Parameters/index.js)
+// module defined by the index file in the folder. (see Parameters/index.js)
 // These parameters depend on classes that ar ParameterOwners.
-// TOOD: Move to this folder.
+// TODO: Move to this folder.
 import { MaterialFloatParam } from './Parameters/MaterialFloatParam'
 import { MaterialColorParam } from './Parameters/MaterialColorParam'
 
@@ -148,15 +148,6 @@ class Material extends BaseItem {
   }
 
   /**
-   * The __makeParameterTexturable method.
-   * @param {any} param - The param value.
-   * @private
-   */
-  __makeParameterTexturable(param) {
-    makeParameterTexturable(param)
-  }
-
-  /**
    * Checks if the material is transparent by checking the `Opacity` parameter.
    *
    * @return {boolean} - Returns true if the material is transparent.
@@ -235,7 +226,7 @@ class Material extends BaseItem {
   }
 
   /**
-   * Returns shader's class of current material, if set. Otherwise it returns `undefined`
+   * Returns shaders class of current material, if set. Otherwise it returns `undefined`
    *
    * @return {string|undefined} - The return value.
    */
@@ -353,9 +344,6 @@ class Material extends BaseItem {
         if (param) param.setValue(value)
         else param = this.addParameter(generateParameterInstance(paramName, value))
         if (textureName != '' && param.setImage) {
-          // if(!param.setImage)
-          //     this.__makeParameterTexturable(param);
-
           if (context.materialLibrary.hasImage(textureName)) {
             // console.log(paramName +":" + textureName + ":" + context.materialLibrary[textureName].resourcePath);
             param.setImage(context.materialLibrary.getImage(textureName))
@@ -394,12 +382,8 @@ class Material extends BaseItem {
    * @param {object} context - The context value.
    */
   copyFrom(src, context) {
-    super.copyFrom(src, context)
     this.setShaderName(src.getShaderName())
-    for (const srcParam of src.getParameters()) {
-      const param = src.getParameter(srcParam.getName())
-      if (!srcParam.getImage) this.__makeParameterTexturable(param)
-    }
+    super.copyFrom(src, context)
   }
 }
 Registry.register('Material', Material)

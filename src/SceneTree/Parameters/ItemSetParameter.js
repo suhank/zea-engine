@@ -107,7 +107,7 @@ class ItemSetParameter extends Parameter {
 
   /**
    * The clearItems method.
-   * @param {boolean} emit - The emit value.
+   * @param {boolean} emitValueChanged - The emit value.
    */
   clearItems(emitValueChanged = true) {
     this.__items.clear()

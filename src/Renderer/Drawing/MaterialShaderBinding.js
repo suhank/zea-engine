@@ -1,7 +1,6 @@
 import { Vec2, Vec3, Vec4, Color, Mat4 } from '../../Math/index'
 import { GLTexture2D } from '../GLTexture2D.js'
 import { GLHDRImage } from '../GLHDRImage.js'
-import { GLImageStream } from '../GLImageStream.js'
 import { SInt32, UInt32, Float32 } from '../../Utilities/MathFunctions'
 
 /** Class representing simple uniform binding.
@@ -13,7 +12,7 @@ class SimpleUniformBinding {
    * @param {WebGLRenderingContext} gl - The webgl rendering context.
    * @param {any} glMaterial - The glMaterial value.
    * @param {any} param - The param value.
-   * @param {any} unif - The unif value.
+   * @param {WebGLUniformLocation} unif - The WebGL uniform
    */
   constructor(gl, glMaterial, param, unif) {
     this.param = param
@@ -74,7 +73,7 @@ class ComplexUniformBinding {
    * @param {WebGLRenderingContext} gl - The webgl rendering context.
    * @param {any} glMaterial - The glMaterial value.
    * @param {any} param - The param value.
-   * @param {any} unif - The unif value.
+   * @param {WebGLUniformLocation} unif - The WebGL uniform
    */
   constructor(gl, glMaterial, param, unif) {
     this.param = param
@@ -130,7 +129,7 @@ class MatrixUniformBinding {
    * @param {WebGLRenderingContext} gl - The webgl rendering context.
    * @param {any} glMaterial - The glMaterial value.
    * @param {any} param - The param value.
-   * @param {any} unif - The unif value.
+   * @param {WebGLUniformLocation} unif - The WebGL uniform
    */
   constructor(gl, glMaterial, param, unif) {
     this.param = param
@@ -184,8 +183,8 @@ class ColorUniformBinding {
    * @param {WebGLRenderingContext} gl - The webgl rendering context.
    * @param {any} glMaterial - The glMaterial value.
    * @param {any} param - The param value.
-   * @param {any} unif - The unif value.
-   * @param {any} unifs - The unifs value.
+   * @param {WebGLUniformLocation} unif - The WebGL uniform
+   * @param {object} unifs - The dictionary of WebGL uniforms.
    */
   constructor(gl, glMaterial, param, unif, unifs) {
     const name = param.getName()
@@ -204,13 +203,7 @@ class ColorUniformBinding {
       if (!gltexture) {
         if (image.type === 'FLOAT') {
           gltexture = new GLHDRImage(this.gl, image)
-        } else if (image.isStreamAtlas()) {
-          gltexture = new GLImageStream(this.gl, image)
-        }
-        // else if (image.hasAlpha()){
-        //     gltexture = new GLLDRAlphaImage(this.gl, image);
-        // }
-        else {
+        } else {
           gltexture = new GLTexture2D(this.gl, image)
         }
       }
@@ -319,7 +312,7 @@ class MaterialShaderBinding {
    * Create material shader binding.
    * @param {WebGLRenderingContext} gl - The webgl rendering context.
    * @param {any} glMaterial - The glMaterial value.
-   * @param {any} unifs - The unifs value.
+   * @param {object} unifs - The dictionary of WebGL uniforms.
    * @param {any} warnMissingUnifs - The warnMissingUnifs value.
    */
   constructor(gl, glMaterial, unifs, warnMissingUnifs) {

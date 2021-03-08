@@ -65,5 +65,13 @@
         "typeindex": "cpp",
         "xlocbuf": "cpp",
         "xlocmes": "cpp"
-    }
+    },
+    "cSpell.words": [
+        "Wireframe",
+        "bbox",
+        "cloneable",
+        "deserializes",
+        "geoms",
+        "selectability"
+    ]
 }

@@ -1,5 +1,6 @@
 import { Color } from '../Math/index'
-import { ParameterOwner, BaseImage, NumberParameter } from '../SceneTree/index'
+import { ParameterOwner, BaseImage, NumberParameter, BaseTool } from '../SceneTree/index'
+import { GLBaseRenderer } from './GLBaseRenderer'
 import { GLHDRImage } from './GLHDRImage.js'
 import { GLTexture2D } from './GLTexture2D.js'
 
@@ -60,7 +61,7 @@ class GLBaseViewport extends ParameterOwner {
 
   /**
    * The getRenderer method.
-   * @return {any} - The return value.
+   * @return {GLBaseRenderer} - The return value.
    */
   getRenderer() {
     return this.__renderer
@@ -68,7 +69,7 @@ class GLBaseViewport extends ParameterOwner {
 
   /**
    * The getBl method.
-   * @return {any} - The return value.
+   * @return {number} - The return value.
    */
   getBl() {
     return this.__bl
@@ -76,7 +77,7 @@ class GLBaseViewport extends ParameterOwner {
 
   /**
    * The setBl method.
-   * @param {any} bl - The bl value.
+   * @param {number} bl - The bl value.
    */
   setBl(bl) {
     this.__bl = bl
@@ -85,7 +86,7 @@ class GLBaseViewport extends ParameterOwner {
 
   /**
    * The getTr method.
-   * @return {any} - The return value.
+   * @return {number} - The return value.
    */
   getTr() {
     return this.__tr
@@ -93,7 +94,7 @@ class GLBaseViewport extends ParameterOwner {
 
   /**
    * The setTr method.
-   * @param {any} tr - The tr value.
+   * @param {number} tr - The tr value.
    */
   setTr(tr) {
     this.__tr = tr
@@ -102,7 +103,7 @@ class GLBaseViewport extends ParameterOwner {
 
   /**
    * The getPosX method.
-   * @return {any} - The return value.
+   * @return {number} - The return value.
    */
   getPosX() {
     return this.__x
@@ -110,7 +111,7 @@ class GLBaseViewport extends ParameterOwner {
 
   /**
    * The getPosY method.
-   * @return {any} - The return value.
+   * @return {number} - The return value.
    */
   getPosY() {
     return this.__y
@@ -118,7 +119,7 @@ class GLBaseViewport extends ParameterOwner {
 
   /**
    * The getWidth method.
-   * @return {any} - The return value.
+   * @return {number} - The return value.
    */
   getWidth() {
     return this.__width
@@ -126,7 +127,7 @@ class GLBaseViewport extends ParameterOwner {
 
   /**
    * The getHeight method.
-   * @return {any} - The return value.
+   * @return {number} - The return value.
    */
   getHeight() {
     return this.__height
@@ -134,7 +135,7 @@ class GLBaseViewport extends ParameterOwner {
 
   /**
    * The getBackground method.
-   * @return {any} - The return value.
+   * @return {Color} - The return value.
    */
   getBackground() {
     console.warn('Deprecated Function. Please access the Scene Settings object.')
@@ -145,7 +146,7 @@ class GLBaseViewport extends ParameterOwner {
 
   /**
    * The setBackground method.
-   * @param {any} background - The background value.
+   * @param {Color} background - The background value.
    */
   setBackground(background) {
     console.warn('Deprecated Function. Please access the Scene Settings object.')
@@ -157,8 +158,8 @@ class GLBaseViewport extends ParameterOwner {
 
   /**
    * The resize method.
-   * @param {any} canvasWidth - The canvasWidth value.
-   * @param {any} canvasHeight - The canvasHeight value.
+   * @param {number} canvasWidth - The canvasWidth value.
+   * @param {number} canvasHeight - The canvasHeight value.
    */
   resize(canvasWidth, canvasHeight) {
     this.__canvasWidth = canvasWidth
@@ -173,26 +174,26 @@ class GLBaseViewport extends ParameterOwner {
 
   /**
    * The getManipulator method.
-   * @return {any} - The return value.
+   * @return {BaseTool} - The return value.
    */
   getManipulator() {
     return this.manipulator
   }
 
   /**
-   * The setManipulator method.
-   * @param {any} manipulator - The manipulator value.
+   * Sets the tool that will receive mouse, touch and keyboard events from the viewport.
+   * @param {BaseTool} tool - The manipulator value.
    */
-  setManipulator(manipulator) {
-    if (this.manipulator != manipulator) {
+  setManipulator(tool) {
+    if (this.manipulator != tool) {
       if (this.manipulator && this.manipulator.deactivateTool) {
         this.manipulator.deactivateTool()
       }
 
-      this.manipulator = manipulator
+      this.manipulator = tool
 
-      if (manipulator.activateTool) {
-        manipulator.activateTool()
+      if (this.manipulator.activateTool) {
+        this.manipulator.activateTool()
       }
     }
   }
@@ -244,32 +245,21 @@ class GLBaseViewport extends ParameterOwner {
 
   /**
    * Invoked when the mouse pointer is moved out of an element.
-   * @param {any} event - The event that occurs.
-   * @return {boolean} - The return value.
+   * @param {MouseEvent} event - The event that occurs.
    */
-  onMouseLeave(event) {
-    return false
-  }
+  onMouseLeave(event) {}
 
   /**
    * Invoked when the user is pressing a key on the keyboard.
-   * @param {any} key - The key the user is pressing.
-   * @param {any} event - The event that occurs.
-   * @return {boolean} - The return value.
+   * @param {KeyboardEvent} event - The event that occurs.
    */
-  onKeyDown(event) {
-    return false
-  }
+  onKeyDown(event) {}
 
   /**
    * Causes an event to occur  when the user releases a key on the keyboard.
-   * @param {any} key - The key the user releases
-   * @param {any} event - The event that occurs.
-   * @return {boolean} - The return value.
+   * @param {KeyboardEvent} event - The event that occurs.
    */
-  onKeyUp(event) {
-    return false
-  }
+  onKeyUp(event) {}
 
   /**
    *

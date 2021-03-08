@@ -261,7 +261,7 @@ class GLViewport extends GLBaseViewport {
   }
 
   /**
-   * Renders the scene geometry to the viewports geom data buffer
+   * Renders the scene geometry to the viewport's geom data buffer
    * in preparation for mouse picking.
    */
   renderGeomDataFbo() {
@@ -327,7 +327,7 @@ class GLViewport extends GLBaseViewport {
       // logGeomData();
       // console.log("getGeomDataAtPos:", screenPos.toString(), screenPos.x,this.__width)
 
-      // Allocate a 1 pixel block and read grom the GeomData buffer.
+      // Allocate a 1 pixel block and read from the GeomData buffer.
       let passId
       let geomData
       if (gl.floatGeomBuffer) {
@@ -719,7 +719,7 @@ class GLViewport extends GLBaseViewport {
 
   /**
    * Causes an event to occur when the mouse wheel is rolled up or down over an element.
-   * @param {MouoseWheelEvent} event - The event that occurs.
+   * @param {WheelEvent} event - The event that occurs.
    */
   onWheel(event) {
     this.__preparePointerEvent(event)

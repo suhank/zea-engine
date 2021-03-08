@@ -1,5 +1,5 @@
 import { TreeItem } from './TreeItem'
-import { Vec3, Xfo, Quat } from '../Math'
+import { Vec3, Xfo, Quat, Color } from '../Math'
 
 describe('TreeItem', () => {
   it('is visible by default.', () => {
@@ -211,6 +211,28 @@ describe('TreeItem', () => {
     child.setOwner(parent)
 
     expect(child.getOwner()).toBe(parent)
+  })
+
+  test('Highlights', () => {
+    const parent = new TreeItem('Parent')
+    const child = new TreeItem('Child')
+
+    child.setOwner(parent)
+
+    const mockFn = jest.fn()
+    child.on('highlightChanged', mockFn)
+    child.on('highlightChanged', () => {
+      console.warn('here')
+    })
+    child.addHighlight('customhighlight', new Color(1, 0, 0), true)
+    expect(mockFn).toHaveBeenCalledTimes(1)
+    parent.addHighlight('customhighlight', new Color(1, 0, 0), true)
+    expect(mockFn).toHaveBeenCalledTimes(1)
+
+    child.removeHighlight('customhighlight')
+    expect(mockFn).toHaveBeenCalledTimes(2)
+    parent.removeHighlight('customhighlight')
+    expect(mockFn).toHaveBeenCalledTimes(2)
   })
 
   test('Saving to JSON (serialization).', () => {

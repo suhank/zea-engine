@@ -28,8 +28,8 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
 
   /**
    * The init method.
-   * @param {any} renderer - The renderer value.
-   * @param {any} passIndex - The passIndex value.
+   * @param {GLBaseRenderer} renderer - The renderer value.
+   * @param {number} passIndex - The index of the pass in the GLBAseRenderer
    */
   init(renderer, passIndex) {
     super.init(renderer, passIndex)
@@ -79,7 +79,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
 
   /**
    * The addGeomItem method.
-   * @param {any} geomItem - The geomItem value.
+   * @param {GeomItem} geomItem - The geomItem value.
    * @return {boolean} - The return value.
    */
   addGeomItem(geomItem) {
@@ -156,7 +156,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
 
   /**
    * The removeGeomItem method.
-   * @param {any} geomItem - The geomItem value.
+   * @param {GeomItem} geomItem - The geomItem value.
    * @return {boolean} - The return value.
    */
   removeGeomItem(geomItem) {
