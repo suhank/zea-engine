@@ -46,12 +46,7 @@
       scene.getRoot().addChild(asset2)
 
       asset2.getGeometryLibrary().on('loaded', () => {
-        // Hack: To try and make sure the VR asset is on scree, we are waiting for a second redraw before we capture.
-        renderer.suspendDrawing()
-        renderer.once('redrawOccurred', () => {
-          window.postMessage('done-loading')
-        })
-        renderer.resumeDrawing()
+        window.postMessage('done-loading')
       })
     </script>
   </head>

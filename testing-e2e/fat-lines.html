@@ -48,14 +48,10 @@
 
         if (data === 'variant-01') {
           circle.getParameter('NumSegments').setValue(32)
-          renderer.once('redrawOccurred', () => {
-            window.postMessage(`done-${data}`)
-          })
+          window.postMessage(`done-${data}`)
         } else if (data === 'variant-02') {
           circle.getParameter('NumSegments').setValue(6)
-          renderer.once('redrawOccurred', () => {
-            window.postMessage(`done-${data}`)
-          })
+          window.postMessage(`done-${data}`)
         }
       }
 
