@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import { BaseGeom } from './BaseGeom.js'
 import { Registry } from '../../Registry'
 
@@ -44,12 +43,12 @@ class Points extends BaseGeom {
 
     if (numVerts < 256) {
       const bboxMat = this.__boundingBox.toMat4()
-      const posAttr_8bit = reader.loadUInt8Array(numVerts * 3)
+      const posAttr8bit = reader.loadUInt8Array(numVerts * 3)
       for (let i = 0; i < numVerts; i++) {
         const pos = new Vec3(
-          posAttr_8bit[i * 3 + 0] / 255.0,
-          posAttr_8bit[i * 3 + 1] / 255.0,
-          posAttr_8bit[i * 3 + 2] / 255.0
+          posAttr8bit[i * 3 + 0] / 255.0,
+          posAttr8bit[i * 3 + 1] / 255.0,
+          posAttr8bit[i * 3 + 2] / 255.0
         )
         positions.setValue(i, bboxMat.transformVec3(pos))
       }
@@ -65,15 +64,15 @@ class Points extends BaseGeom {
           bbox: new Box3(p0, p1),
         })
       }
-      const posAttr_8bit = reader.loadUInt8Array(numVerts * 3)
+      const posAttr8bit = reader.loadUInt8Array(numVerts * 3)
 
       for (let i = 0; i < numClusters; i++) {
         const bboxMat = clusters[i]['bbox'].toMat4()
         for (let j = clusters[i]['range'].x; j < clusters[i]['range'].y; j++) {
           const pos = new Vec3(
-            posAttr_8bit[j * 3 + 0] / 255.0,
-            posAttr_8bit[j * 3 + 1] / 255.0,
-            posAttr_8bit[j * 3 + 2] / 255.0
+            posAttr8bit[j * 3 + 0] / 255.0,
+            posAttr8bit[j * 3 + 1] / 255.0,
+            posAttr8bit[j * 3 + 2] / 255.0
           )
           positions.setValue(j, bboxMat.transformVec3(pos))
         }

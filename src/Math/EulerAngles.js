@@ -9,15 +9,15 @@ import { Registry } from '../Registry'
  */
 class EulerAngles extends AttrValue {
   /**
-   * Create a euler angle. Receives the xyz values in degrees and the order that the rotations are applied.
+   * Create a euler angle. Receives the xyz values in radians and the order that the rotations are applied.
    * <br>
    * Order parameter values: `XYZ: 0`, `YZX: 1`, `ZXY: 2`, `XZY: 3`, `ZYX: 4`, `YXZ: 5`
    * <br>
    * It could be either the `string` or the `number` value.
    *
-   * @param {number} x - The angle of the x axis in degrees. Default is 0.
-   * @param {number} y - The angle of the y axis in degrees. Default is 0.
-   * @param {number} z - The angle of the z axis in degrees. Default is 0.
+   * @param {number} x - The angle of the x axis in radians. Default is 0.
+   * @param {number} y - The angle of the y axis in radians. Default is 0.
+   * @param {number} z - The angle of the z axis in radians. Default is 0.
    * @param {number | string} order - The order in which the rotations are applied.
    */
   constructor(x = 0, y = 0, z = 0, order = 0) {
@@ -117,9 +117,9 @@ class EulerAngles extends AttrValue {
   /**
    * Sets the EulerAngles
    *
-   * @param {number} x - The x axis rotation.
-   * @param {number} y  - The y axis rotation.
-   * @param {number} z  - The z axis rotation.
+   * @param {number} x - The x axis rotation in radians.
+   * @param {number} y - The y axis rotation in radians.
+   * @param {number} z - The z axis rotation in radians.
    */
   set(x, y, z) {
     this.__data[0] = x

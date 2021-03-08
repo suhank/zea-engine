@@ -67,19 +67,19 @@ class LinesCuboid extends ProceduralLines {
     const baseZAtZero = this.__baseZAtZero.getValue()
 
     const positions = this.getVertexAttribute('positions')
-    let zoff = 0.5
-    if (baseZAtZero) zoff = 1.0
-    positions.getValueRef(0).set(0.5 * x, -0.5 * y, zoff * z)
-    positions.getValueRef(1).set(0.5 * x, 0.5 * y, zoff * z)
-    positions.getValueRef(2).set(-0.5 * x, 0.5 * y, zoff * z)
-    positions.getValueRef(3).set(-0.5 * x, -0.5 * y, zoff * z)
+    let zOff = 0.5
+    if (baseZAtZero) zOff = 1.0
+    positions.getValueRef(0).set(0.5 * x, -0.5 * y, zOff * z)
+    positions.getValueRef(1).set(0.5 * x, 0.5 * y, zOff * z)
+    positions.getValueRef(2).set(-0.5 * x, 0.5 * y, zOff * z)
+    positions.getValueRef(3).set(-0.5 * x, -0.5 * y, zOff * z)
 
-    zoff = -0.5
-    if (baseZAtZero) zoff = 0.0
-    positions.getValueRef(4).set(0.5 * x, -0.5 * y, zoff * z)
-    positions.getValueRef(5).set(0.5 * x, 0.5 * y, zoff * z)
-    positions.getValueRef(6).set(-0.5 * x, 0.5 * y, zoff * z)
-    positions.getValueRef(7).set(-0.5 * x, -0.5 * y, zoff * z)
+    zOff = -0.5
+    if (baseZAtZero) zOff = 0.0
+    positions.getValueRef(4).set(0.5 * x, -0.5 * y, zOff * z)
+    positions.getValueRef(5).set(0.5 * x, 0.5 * y, zOff * z)
+    positions.getValueRef(6).set(-0.5 * x, 0.5 * y, zOff * z)
+    positions.getValueRef(7).set(-0.5 * x, -0.5 * y, zOff * z)
   }
 }
 

@@ -64,7 +64,7 @@ class Disc extends ProceduralMesh {
     // ////////////////////////////
     // setNormals
     const normals = this.getVertexAttribute('normals')
-    // Now set the attrbute values
+    // Now set the attribute values
     const normal = new Vec3(0, 0, 1)
     normals.setValue(0, normal)
     for (let i = 0; i < nbSides; i++) {

@@ -8,7 +8,6 @@ import { Version } from './Version.js'
 
 /**
  * Class designed to load and handle `.vla` files.
- * Which facilitates the migration of geometries from third party applications to the Digistar planetarium dome projection.
  *
  * **Parameters**
  * * **DataFilePath(`FilePathParameter`):** Used to specify the path to the file.

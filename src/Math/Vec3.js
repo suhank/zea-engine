@@ -102,7 +102,7 @@ class Vec3 extends AttrValue {
   /**
    * Getter for `xy` swizzel.
    *
-   * @return {Vec2} - Returns the z component.
+   * @return {Vec2} - Returns the xy components as a Vec2.
    */
   get xy() {
     return new Vec2(this.__data[0], this.__data[1])
@@ -111,7 +111,7 @@ class Vec3 extends AttrValue {
   /**
    * Getter for `yz` swizzel.
    *
-   * @return {Vec2} - Returns the z component.
+   * @return {Vec2} - Returns the yz components as a Vec2.
    */
   get yz() {
     return new Vec2(this.__data[1], this.__data[2])
@@ -151,18 +151,18 @@ class Vec3 extends AttrValue {
   }
 
   /**
-   * Checks if the coordenates of this Vec3 are 0 0 0.
+   * Checks if the coordinates of this Vec3 are 0 0 0.
    *
-   * @return {boolean} - Returns `true` if the coordenates are(0, 0, 0), otherwise, `false`.
+   * @return {boolean} - Returns `true` if the coordinates are(0, 0, 0), otherwise, `false`.
    */
   isNull() {
     return Math.abs(this.x) < Number.EPSILON && Math.abs(this.y) < Number.EPSILON && Math.abs(this.z) < Number.EPSILON
   }
 
   /**
-   * Checks if the coordenates of this Vec3 are 1 1 1.
+   * Checks if the coordinates of this Vec3 are 1 1 1.
    *
-   * @return {boolean} - Returns `true` if the coordenates are(1, 1, 1), otherwise, `false`.
+   * @return {boolean} - Returns `true` if the coordinates are(1, 1, 1), otherwise, `false`.
    */
   is111() {
     return (
@@ -174,11 +174,11 @@ class Vec3 extends AttrValue {
 
   /**
    * @deprecated
-   * Checks if this Vec3 is exactly the same as another Vec3.
+   * Checks if this Vec3 contains the same values as the other Vec3.
    * Deprecated. Use #isEqual instead.
    *
    * @param {Vec3} other - The other Vec3 to compare with.
-   * @return {boolean} - Returns `true` if are the same Vector, otherwise, `false`.
+   * @return {boolean} - Returns `true` if the values are the same, otherwise, `false`.
    */
   equal(other) {
     console.warn('Deprecated. Use #isEqual instead.')
@@ -186,10 +186,10 @@ class Vec3 extends AttrValue {
   }
 
   /**
-   * Checks if this Vec3 is exactly the same as another Vec3.
+   * Checks if this Vec3 contains the same values as the other Vec3.
    *
    * @param {Vec3} other - The other Vec3 to compare with.
-   * @return {boolean} - Returns `true` if are the same Vector, otherwise, `false`.
+   * @return {boolean} - Returns `true` if the values are the same, otherwise, `false`.
    */
   isEqual(other) {
     return this.x == other.x && this.y == other.y && this.z == other.z
@@ -391,7 +391,7 @@ class Vec3 extends AttrValue {
 
   /**
    * Normalizes the Vec3 and returns it as a new Vec3.
-   * Multiplies coordenates value by the inverse of the vector length.
+   * Multiplies coordinates value by the inverse of the vector length.
    *
    * @return {Vec3} - Returns the Vec3 normalized.
    */
@@ -407,7 +407,7 @@ class Vec3 extends AttrValue {
   }
 
   /**
-   * Normalizes this Vec3 multiplying coordenate values by the inverse of the vector length.
+   * Normalizes this Vec3 multiplying coordinate values by the inverse of the vector length.
    *
    * @return {number} - The return value.
    */
@@ -426,31 +426,31 @@ class Vec3 extends AttrValue {
   }
 
   /**
-   * Creates and returns a new Vec3 with the new coordenates(calculated with this Vec3 coordenates and the specified length).
+   * Creates and returns a new Vec3 with the new coordinates(calculated with this Vec3 coordinates and the specified length).
    *
    * @param {number} length - The length value.
    * @return {Vec3} - The return value.
    */
   resize(length) {
-    const currlen = this.__data[0] * this.__data[0] + this.__data[1] * this.__data[1] + this.__data[2] * this.__data[2]
-    if (currlen < Number.EPSILON) {
+    const currLen = this.__data[0] * this.__data[0] + this.__data[1] * this.__data[1] + this.__data[2] * this.__data[2]
+    if (currLen < Number.EPSILON) {
       return
     }
-    const scl = length / Math.sqrt(currlen)
+    const scl = length / Math.sqrt(currLen)
     return new Vec3(this.__data[0] * scl, this.__data[1] * scl, this.__data[2] * scl)
   }
 
   /**
-   * Modifies current coordenates using the specified length.
+   * Modifies current coordinates using the specified length.
    *
    * @param {number} length - The length value.
    */
   resizeInPlace(length) {
-    const currlen = this.__data[0] * this.__data[0] + this.__data[1] * this.__data[1] + this.__data[2] * this.__data[2]
-    if (currlen < Number.EPSILON) {
+    const currLen = this.__data[0] * this.__data[0] + this.__data[1] * this.__data[1] + this.__data[2] * this.__data[2]
+    if (currLen < Number.EPSILON) {
       return
     }
-    const scl = length / Math.sqrt(currlen)
+    const scl = length / Math.sqrt(currLen)
     this.__data[0] *= scl
     this.__data[1] *= scl
     this.__data[2] *= scl
@@ -522,7 +522,7 @@ class Vec3 extends AttrValue {
   }
 
   /**
-   * Sets the vector a random vector on the surface of a sphere with the radius of the givenn scale value.
+   * Sets the vector a random vector on the surface of a sphere with the radius of the given scale value.
    *
    * @param {number} scale - The radius of the surface sphere.
    * @return {Vec3} - The random Vec3.
@@ -539,7 +539,7 @@ class Vec3 extends AttrValue {
   }
 
   /**
-   * Generates a randome vector anywhere in the sphere defined by the provided scale value.
+   * Generates a random vector anywhere in the sphere defined by the provided scale value.
    *
    * @param {number} scale - The radius of the bounding sphere.
    * @return {Vec3} - The random Vec3.

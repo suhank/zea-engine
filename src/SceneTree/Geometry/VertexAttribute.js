@@ -43,11 +43,11 @@ class VertexAttribute extends Attribute {
   /**
    * The getFaceVertexValueRef method.
    * @param {number} face - The face value.
-   * @param {number} facevertex - The face vertex value.
+   * @param {number} faceVertex - The face vertex value.
    * @return {AttrValue} - The return value.
    */
-  getFaceVertexValueRef(face, facevertex) {
-    const vertex = this.__geom.getFaceVertexIndex(face, facevertex)
+  getFaceVertexValueRef(face, faceVertex) {
+    const vertex = this.__geom.getFaceVertexIndex(face, faceVertex)
     if (vertex in this.__splits && face in this.__splits[vertex]) {
       return this.__splitValues[this.__splits[vertex][face]]
     }
@@ -57,11 +57,11 @@ class VertexAttribute extends Attribute {
   /**
    * The setFaceVertexValue method.
    * @param {number} face - The face value.
-   * @param {number} facevertex - The facevertex value.
+   * @param {number} faceVertex - The faceVertex value.
    * @param {AttrValue} value - The value value.
    */
-  setFaceVertexValue(face, facevertex, value) {
-    const vertex = this.__geom.getFaceVertexIndex(face, facevertex)
+  setFaceVertexValue(face, faceVertex, value) {
+    const vertex = this.__geom.getFaceVertexIndex(face, faceVertex)
     this.setFaceVertexValue_ByVertexIndex(face, vertex, value)
   }
 

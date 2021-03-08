@@ -139,7 +139,7 @@ class Vec4 extends AttrValue {
   }
 
   /**
-   * Getter for `xy` swizzel.
+   * Getter for `xyz` swizzel.
    *
    * @return {number} - Returns the z value.
    */
@@ -175,7 +175,7 @@ class Vec4 extends AttrValue {
   }
 
   /**
-   * Checks if this Vec4 is exactly the same as another Vec4.
+   * Checks if this Vec4 contains the same values as the other Vec4.
    *
    * @deprecated
    * @param {Vec4} other - The other Vec4 to compare with.
@@ -187,7 +187,7 @@ class Vec4 extends AttrValue {
   }
 
   /**
-   * Checks if this Vec4 is exactly the same as another Vec4.
+   * Checks if this Vec4 contains the same values as the other Vec4.
    *
    * @param {Vec4} other - The other Vec4 to compare with.
    * @return {boolean} - Returns true or false.
@@ -369,7 +369,7 @@ class Vec4 extends AttrValue {
 
   /**
    * Normalizes the Vec4 and returns it as a new Vec4.
-   * Multiplies coordenates value by the inverse of the vector length.
+   * Multiplies coordinates value by the inverse of the vector length.
    *
    * @return {Vec4} - Returns the Vec4 normalized.
    */
@@ -389,7 +389,7 @@ class Vec4 extends AttrValue {
   }
 
   /**
-   * Normalizes this Vec4 multiplying coordenate values by the inverse of the vector length.
+   * Normalizes this Vec4 multiplying coordinate values by the inverse of the vector length.
    */
   normalizeInPlace() {
     const x = this.__data[0]
@@ -469,7 +469,7 @@ class Vec4 extends AttrValue {
   /**
    * Generates a random vector with the given scale.
    *
-   * @param {number} scale - Length of the resulting vector. If ommitted, a unit vector will be returned.
+   * @param {number} scale - Length of the resulting vector. If omitted, a unit vector will be returned.
    * @return {Vec4} - The return value.
    */
   random(scale = 1.0) {
@@ -504,7 +504,7 @@ class Vec4 extends AttrValue {
   /**
    * Returns the type as an array. Often used to pass types to the GPU.
    *
-   * @return {aray} - Returns as an array.
+   * @return {array} - Returns as an array.
    */
   asArray() {
     return this.__data

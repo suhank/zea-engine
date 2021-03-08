@@ -150,7 +150,7 @@ class Label extends DataImage {
 
     if (library) libraryParam.setValue(library)
 
-    this.__requestedRerender = false
+    this.__requestedReRender = false
     this.__needsRender = false
     this.loadLabelData()
   }
@@ -164,8 +164,8 @@ class Label extends DataImage {
    */
   __parameterValueChanged(event) {
     super.__parameterValueChanged(event)
-    if (!this.__requestedRerender) {
-      this.__requestedRerender = true
+    if (!this.__requestedReRender) {
+      this.__requestedReRender = true
       this.loadLabelData()
     }
   }
@@ -175,7 +175,7 @@ class Label extends DataImage {
    */
   loadLabelData() {
     const onLoaded = () => {
-      this.__requestedRerender = false
+      this.__requestedReRender = false
       this.__needsRender = true
       if (!this.__loaded) {
         this.__loaded = true
@@ -193,7 +193,7 @@ class Label extends DataImage {
           return
         }
         if (!labelManager.isLibraryFound(library)) {
-          console.warn('Label Libary not found:', library)
+          console.warn('Label Library not found:', library)
           resolve()
           return
         }

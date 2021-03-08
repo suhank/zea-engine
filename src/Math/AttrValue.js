@@ -1,4 +1,3 @@
-// eslint-disable-next-line camelcase
 import { StringFunctions } from '../Utilities/StringFunctions'
 
 /**

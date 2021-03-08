@@ -33,7 +33,7 @@ class VLHImage extends BaseImage {
     this.__loaded = false
     this.__exposure = 1.0
     this.__ambientLightFactor = 0.0
-    this.__hdrtint = new Color(1, 1, 1, 1)
+    this.__hdrTint = new Color(1, 1, 1, 1)
     this.__stream = 'stream' in params ? params['stream'] : false
     this.type = 'FLOAT'
 
@@ -173,10 +173,10 @@ class VLHImage extends BaseImage {
   /**
    * The setHDRTint method.
    * @private
-   * @param {Color} hdrtint - The hdrtint value.
+   * @param {Color} hdrTint - The hdrTint value.
    */
-  setHDRTint(hdrtint) {
-    this.__hdrtint = hdrtint
+  setHDRTint(hdrTint) {
+    this.__hdrTint = hdrTint
   }
 
   /**
@@ -185,7 +185,7 @@ class VLHImage extends BaseImage {
    * @return {Color} - The return value.
    */
   getHDRTint() {
-    return this.__hdrtint
+    return this.__hdrTint
   }
 
   // ////////////////////////////////////////

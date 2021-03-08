@@ -1,131 +1,80 @@
 import { Ray } from './Ray'
+import { Vec3 } from './Vec3'
 
-describe.skip('Ray', () => {
-  describe('#on', () => {
-    it('needs a callback.', () => {
-      const eventEmitter = new EventEmitter()
+describe('Ray', () => {
+  it('has an initial value.', () => {
+    const ray = new Ray(new Vec3(0, 0, 0), new Vec3(1, 0, 0))
 
-      const fn = () => {
-        eventEmitter.on('fake')
-      }
-
-      expect(fn).to.throw()
-    })
-
-    it("doesn't allow duplication.", () => {
-      const eventEmitter = new EventEmitter()
-
-      const fake = sinon.fake()
-
-      const fn = () => {
-        eventEmitter.on('fake', fake)
-        eventEmitter.on('fake', fake)
-      }
-
-      expect(fn).to.throw()
-    })
-
-    it('calls the listener.', () => {
-      const eventEmitter = new EventEmitter()
-
-      const fake = sinon.fake()
-
-      const event = {
-        detail: 'foo',
-      }
-
-      eventEmitter.on('fake', fake)
-      eventEmitter.emit('fake', event)
-
-      expect(fake).to.have.been.calledWith(event)
-    })
-
-    it('calls the listener multiple times.', () => {
-      const eventEmitter = new EventEmitter()
-
-      const fake = sinon.fake()
-
-      const event = {
-        detail: 'foo',
-      }
-
-      eventEmitter.on('fake', fake)
-      eventEmitter.emit('fake', event)
-      eventEmitter.emit('fake', event)
-
-      expect(fake).to.have.been.calledWith(event)
-    })
+    expect(ray.dir.x).toEqual(1)
+    expect(ray.dir.y).toEqual(0)
+    expect(ray.dir.z).toEqual(0)
   })
 
-  describe('#once', () => {
-    it('calls the listener only once.', () => {
-      const eventEmitter = new EventEmitter()
-
-      const fake = sinon.fake()
-
-      const event = {
-        detail: 'foo',
-      }
-
-      eventEmitter.once('fake', fake)
-      eventEmitter.emit('fake', event)
-      eventEmitter.emit('fake', event)
-
-      expect(fake).to.have.been.calledOnceWith(event)
-    })
+  it('closestPoint-1', () => {
+    const ray = new Ray(new Vec3(-1, 0, 0), new Vec3(1, 0, 0))
+    const point = new Vec3(2, 2, 2)
+    expect(ray.closestPoint(point)).toEqual(3)
+  })
+  it('closestPoint-2', () => {
+    const ray = new Ray(new Vec3(-1, 0, 0), new Vec3(1, 0, 0))
+    const point = new Vec3(-1, 0, 0)
+    expect(ray.closestPoint(point)).toEqual(0)
   })
 
-  describe('#off', () => {
-    it('needs a callback', () => {
-      const eventEmitter = new EventEmitter()
+  it('closestPointOnLineSegment-1', () => {
+    const ray = new Ray(new Vec3(-1, 0, 0), new Vec3(1, 0, 0))
+    const p0 = new Vec3(2, 2, 0)
+    const p1 = new Vec3(2, -2, 0)
+    expect(ray.closestPointOnLineSegment(p0, p1)).toEqual([3, 0.5])
+  })
 
-      const fn = () => {
-        eventEmitter.off('fake')
-      }
+  it('closestPointOnLineSegment-2', () => {
+    const ray = new Ray(new Vec3(-1, 0, 0), new Vec3(1, 0, 0))
+    const p0 = new Vec3(0, 2, 0)
+    const p1 = new Vec3(0, 3, 0)
+    expect(ray.closestPointOnLineSegment(p0, p1)).toEqual([1, 0])
+  })
 
-      expect(fn).to.throw()
-    })
+  it('closestPointOnLineSegment-3', () => {
+    const ray = new Ray(new Vec3(-1, 0, 0), new Vec3(1, 0, 0))
+    const p0 = new Vec3(0, 3, 0)
+    const p1 = new Vec3(0, 2, 0)
+    expect(ray.closestPointOnLineSegment(p0, p1)).toEqual([1, 1])
+  })
 
-    it('stops calling the listener.', () => {
-      const eventEmitter = new EventEmitter()
+  it('closestPointOnLineSegment-4', () => {
+    const ray = new Ray(new Vec3(-1, 0, 0), new Vec3(1, 0, 0))
+    const p0 = new Vec3(-2, 2, 0)
+    const p1 = new Vec3(-2, 3, 0)
+    expect(ray.closestPointOnLineSegment(p0, p1)).toEqual([-1, 0])
+  })
 
-      const fake = sinon.fake()
+  it('closestPointOnLineSegment-5', () => {
+    const ray = new Ray(new Vec3(-1, 0, 0), new Vec3(1, 0, 0))
+    const p0 = new Vec3(-2, 3, 0)
+    const p1 = new Vec3(-2, 2, 0)
+    expect(ray.closestPointOnLineSegment(p0, p1)).toEqual([-1, 1])
+  })
 
-      const event = {
-        detail: 'foo',
-      }
+  it('closestPointOnLineSegment-6', () => {
+    const ray = new Ray(new Vec3(-1, 0, 0), new Vec3(1, 0, 0))
+    const p0 = new Vec3(-1, 3, 0)
+    const p1 = new Vec3(-1, 2, 0)
+    expect(ray.closestPointOnLineSegment(p0, p1)).toEqual([0, 1])
+  })
 
-      eventEmitter.on('fake', fake)
-      eventEmitter.emit('fake', event)
-      eventEmitter.off('fake', fake)
-      eventEmitter.emit('fake', event)
+  it('closestPointOnLineSegment-7', () => {
+    const ray = new Ray(new Vec3(-1, 0, 0), new Vec3(1, 0, 0))
+    const p0 = new Vec3(1, 0, 0)
+    const p1 = new Vec3(1, 0, 0)
+    expect(ray.closestPointOnLineSegment(p0, p1)).toEqual([2, 0])
+  })
 
-      expect(fake).to.have.been.calledOnceWith(event)
-    })
+  it('save to JSON (serialization).', () => {
+    const ray = new Ray(new Vec3(0, 0, 0), new Vec3(1, 0, 0))
 
-    it('fails when trying to unregister a listener that was not registered.', () => {
-      const eventEmitter = new EventEmitter()
+    const expOutput = '{"start":{"x":0,"y":0,"z":0},"dir":{"x":1,"y":0,"z":0}}'
 
-      const notRegistered = () => {}
-
-      const fn = () => {
-        eventEmitter.off('fake', notRegistered)
-      }
-
-      expect(fn).to.throw()
-    })
-
-    it('fails when trying to unregister a listener more than once.', () => {
-      const eventEmitter = new EventEmitter()
-
-      const cb = () => {}
-
-      const fn = () => {
-        eventEmitter.off('fake', cb)
-        eventEmitter.off('fake', cb)
-      }
-
-      expect(fn).to.throw()
-    })
+    expect(JSON.stringify(ray.toJSON())).toEqual(expOutput)
   })
 })

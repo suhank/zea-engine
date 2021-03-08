@@ -1,5 +1,4 @@
 /* eslint-disable new-cap */
-/* eslint-disable camelcase */
 import { StringFunctions } from '../Utilities/StringFunctions'
 import { Vec3 } from './Vec3.js'
 import { PlaneType } from './PlaneType.js'
@@ -76,7 +75,7 @@ class Frustum {
   // Persistence
 
   /**
-   * The toJSON method encodes this type as a json object for persistences.
+   * The toJSON method encodes this type as a json object for persistence.
    *
    * @return {object} - The json object.
    */

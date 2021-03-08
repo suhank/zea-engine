@@ -3,7 +3,6 @@ import { TreeItem } from './TreeItem.js'
 import { resourceLoader } from './resourceLoader.js'
 import { DriveAdapter } from './ResourceLoader/DriveAdapter.js'
 import { SceneSettings } from './SceneSettings.js'
-import { VLAAsset } from './VLAAsset.js'
 import { GridTreeItem } from './GridTreeItem'
 
 const defaultGridColor = new Color('#DCDCDC')
@@ -111,7 +110,7 @@ class Scene {
       // has terminated. In our case, we want all paths
       // to be resolved before the end of the function, which
       // we can handle easily with callback functions.
-      if (!path) throw new Error('Path not spcecified')
+      if (!path) throw new Error('Path not specified')
       const item = this.root.resolvePath(path)
       if (item) {
         cb(item)
@@ -135,7 +134,7 @@ class Scene {
     }
 
     // Invoke all the post-load callbacks to resolve any
-    // remaning references.
+    // remaining references.
     for (const cb of plcbs) cb()
   }
 }

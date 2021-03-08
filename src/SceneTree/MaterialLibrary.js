@@ -61,6 +61,7 @@ class MaterialLibrary extends EventEmitter {
    */
   getMaterialNames() {
     const names = []
+    // eslint-disable-next-line guard-for-in
     for (const name in this.__materials) {
       names.push(name)
     }
@@ -137,6 +138,7 @@ class MaterialLibrary extends EventEmitter {
    */
   getImageNames() {
     const names = []
+    // eslint-disable-next-line guard-for-in
     for (const name in this.__images) {
       names.push(name)
     }
@@ -175,7 +177,7 @@ class MaterialLibrary extends EventEmitter {
    */
   toJSON(context = {}) {
     return {
-      numMaterials: this.geoms.length(),
+      numMaterials: this.getNumMaterials(),
     }
   }
 
@@ -186,11 +188,13 @@ class MaterialLibrary extends EventEmitter {
    */
   fromJSON(j, context = {}) {
     context.lod = this.lod
+    // eslint-disable-next-line guard-for-in
     for (const name in j.textures) {
       const image = new FileImage(name)
       image.fromJSON(j.textures[name])
       this.__images[name] = texture
     }
+    // eslint-disable-next-line guard-for-in
     for (const name in j.materials) {
       const material = new Material(name)
       material.fromJSON(j.materials[name])

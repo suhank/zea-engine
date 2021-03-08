@@ -7,7 +7,7 @@ class GLRenderTarget extends EventEmitter {
   /**
    * Create a GL render target.
    * @param {WebGLRenderingContext} gl - The webgl rendering context.
-   * @param {any} params - The params value.
+   * @param {object} params - The params value.
    */
   constructor(gl, params) {
     super()
@@ -23,7 +23,7 @@ class GLRenderTarget extends EventEmitter {
 
   /**
    * The configure method.
-   * @param {any} params - The params param.
+   * @param {object} params - The params param.
    */
   configure(params) {
     const gl = this.__gl
@@ -220,7 +220,7 @@ class GLRenderTarget extends EventEmitter {
   /**
    * The bindColorTexture method.
    * @param {object} renderstate - The object tracking the current state of the renderer
-   * @param {any} unif - The unif value.
+   * @param {WebGLUniformLocation} unif - The WebGL uniform
    * @param {number} channelId - The channelId value.
    * @return {boolean} - The return value.
    */
@@ -236,7 +236,7 @@ class GLRenderTarget extends EventEmitter {
   /**
    * The bindDepthTexture method.
    * @param {object} renderstate - The object tracking the current state of the renderer
-   * @param {any} unif - The unif value.
+   * @param {WebGLUniformLocation} unif - The WebGL uniform
    * @return {boolean} - The return value.
    */
   bindDepthTexture(renderstate, unif) {
@@ -257,8 +257,8 @@ class GLRenderTarget extends EventEmitter {
 
   /**
    * The resize method.
-   * @param {any} width - The width value.
-   * @param {any} height - The height value.
+   * @param {number} width - The width value.
+   * @param {number} height - The height value.
    * @param {boolean} preserveData - The preserveData value.
    */
   resize(width, height, preserveData = false) {
@@ -395,7 +395,7 @@ class GLRenderTarget extends EventEmitter {
   /**
    * The bindToUniform method.
    * @param {any} renderstate - The renderstate param.
-   * @param {any} unif - The unif param.
+   * @param {WebGLUniformLocation} unif - The WebGL uniform
    * @param {any} bindings - The bindings param.
    * @return {any} - The return value.
    */

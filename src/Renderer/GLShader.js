@@ -93,11 +93,11 @@ class GLShader extends BaseItem {
 
   /**
    * The __compileShaderStage method.
-   * @param {any} glsl - The glsl value.
-   * @param {any} stageID - The stageID value.
+   * @param {string} glsl - The glsl value.
+   * @param {string} stageID - The stageID value.
    * @param {string} name - The name value.
-   * @param {any} shaderopts - The shaderopts value.
-   * @return {any} - The return value.
+   * @param {object} shaderopts - The shaderopts value.
+   * @return {WebGLShader} - The return value.
    * @private
    */
   __compileShaderStage(glsl, stageID, name, shaderopts) {
@@ -184,8 +184,8 @@ class GLShader extends BaseItem {
 
   /**
    * The __createProgram method.
-   * @param {any} shaderopts - The shaderopts value.
-   * @return {any} - The return value.
+   * @param {object} shaderopts - The shaderopts value.
+   * @return {WebGLProgram} - The program value.
    * @private
    */
   __createProgram(shaderopts) {
@@ -266,9 +266,9 @@ class GLShader extends BaseItem {
 
   /**
    * The __extractAttributeAndUniformLocations method.
-   * @param {any} shaderProgramHdl - The shaderProgramHdl value.
-   * @param {any} shaderopts - The shaderopts value.
-   * @return {any} - The return value.
+   * @param {WebGLProgram} shaderProgramHdl - The shaderProgramHdl value.
+   * @param {object} shaderopts - The shaderopts value.
+   * @return {object} - The dictionary of attributes and uniform values
    * @private
    */
   __extractAttributeAndUniformLocations(shaderProgramHdl, shaderopts) {
@@ -332,7 +332,7 @@ class GLShader extends BaseItem {
 
   /**
    * The getAttributes method.
-   * @return {any} - The return value.
+   * @return {object} - The dictionary of attributes that this shader expects to be bound.
    */
   getAttributes() {
     const attributes = {}
@@ -346,7 +346,7 @@ class GLShader extends BaseItem {
 
   /**
    * The getUniforms method.
-   * @return {any} - The return value.
+   * @return {object} - The dictionary of uniforms that this shader expects to be bound.
    */
   getUniforms() {
     const uniforms = {}
@@ -364,7 +364,7 @@ class GLShader extends BaseItem {
 
   /**
    * Checks to see if the engine is compiled for the target specified by the key
-   * @param {any} key - The key value.
+   * @param {string} key - The key value.
    * @return {boolean} - The return value.
    */
   isCompiledForTarget(key) {
@@ -374,9 +374,9 @@ class GLShader extends BaseItem {
 
   /**
    * The compileForTarget method.
-   * @param {any} key - The key value.
-   * @param {any} shaderopts - The shaderopts value.
-   * @return {any} - The return value.
+   * @param {string} key - The key value.
+   * @param {object} shaderopts - The shaderopts value.
+   * @return {object} - The result of the shader compilation.
    */
   compileForTarget(key, shaderopts) {
     const shaderkey = key ? key : this.getId()
@@ -401,8 +401,8 @@ class GLShader extends BaseItem {
   /**
    * The bind method.
    * @param {object} renderstate - The object tracking the current state of the renderer
-   * @param {any} key - The key value.
-   * @return {any} - The return value.
+   * @param {string} key - The key value.
+   * @return {boolean} - The return value.
    */
   bind(renderstate, key) {
     const gl = this.__gl

@@ -156,7 +156,7 @@ class GLImageAtlas extends GLRenderTarget {
 
   /**
    * The isLoaded method.
-   * @return {any} - The return value.
+   * @return {boolean} - The return value.
    */
   isLoaded() {
     return this.__async.count == 0
@@ -164,7 +164,7 @@ class GLImageAtlas extends GLRenderTarget {
 
   /**
    * The getMainImage method.
-   * @return {any} - The return value.
+   * @return {BaseImage} - The return value.
    */
   getMainImage() {
     return this.super
@@ -172,8 +172,8 @@ class GLImageAtlas extends GLRenderTarget {
 
   /**
    * The addSubImage method.
-   * @param {any} subImage - The subImage value.
-   * @return {any} - The return value.
+   * @param {BaseImage} subImage - The subImage value.
+   * @return {number} - The return value.
    */
   addSubImage(subImage) {
     if (subImage instanceof BaseImage) {
@@ -208,7 +208,7 @@ class GLImageAtlas extends GLRenderTarget {
 
   /**
    * The removeSubImage method.
-   * @param {any} subImage - The subImage value.
+   * @param {BaseImage} subImage - The subImage value.
    */
   removeSubImage(subImage) {
     let index
@@ -230,7 +230,7 @@ class GLImageAtlas extends GLRenderTarget {
   /**
    * The getSubImage method.
    * @param {number} index - The index value.
-   * @return {any} - The return value.
+   * @return {BaseImage} - The image value.
    */
   getSubImage(index) {
     return this.__subImages[index]
@@ -379,7 +379,7 @@ class GLImageAtlas extends GLRenderTarget {
   /**
    * The getLayoutData method.
    * @param {number} index - The index value.
-   * @return {any} - The return value.
+   * @return {object} - The return value.
    */
   getLayoutData(index) {
     return this.__layoutVec4s[index]
@@ -433,7 +433,7 @@ class GLImageAtlas extends GLRenderTarget {
 
   /**
    * The isReady method.
-   * @return {any} - The return value.
+   * @return {boolean} - The return value.
    */
   isReady() {
     return this.__atlasLayoutTexture != undefined
@@ -442,8 +442,8 @@ class GLImageAtlas extends GLRenderTarget {
   /**
    * The bindToUniform method.
    * @param {object} renderstate - The object tracking the current state of the renderer
-   * @param {any} unif - The unif value.
-   * @return {any} - The return value.
+   * @param {WebGLUniformLocation} unif - The WebGL uniform
+   * @return {boolean} - The return value.
    */
   bindToUniform(renderstate, unif) {
     super.bindToUniform(renderstate, unif)

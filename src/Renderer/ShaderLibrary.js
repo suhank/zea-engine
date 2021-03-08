@@ -15,7 +15,7 @@ class ShaderLibrary {
   /**
    * The hasShaderModule method.
    * @param {string} shaderName - The shader name.
-   * @return {any} - The return value.
+   * @return {boolean} - The return value.
    */
   hasShaderModule(shaderName) {
     return shaderName in this.__shaderModules
@@ -24,8 +24,8 @@ class ShaderLibrary {
   /**
    * The setShaderModule method.
    * @param {string} shaderName - The shader name.
-   * @param {any} shader - The shader value.
-   * @return {any} - The return value.
+   * @param {string} shader - The shader GLSL.
+   * @return {boolean} - The return value.
    */
   setShaderModule(shaderName, shader) {
     // console.log("setShaderModule:" + shaderName);
@@ -43,7 +43,7 @@ class ShaderLibrary {
 
   /**
    * The getShaderModuleNames method.
-   * @return {any} - The return value.
+   * @return {array} - The return value.
    */
   getShaderModuleNames() {
     const shaderNames = []

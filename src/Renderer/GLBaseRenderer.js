@@ -8,7 +8,7 @@ import { GLViewport } from './GLViewport'
 import { Registry } from '../Registry'
 import { VRViewport } from './VR/VRViewport'
 import { POINTER_TYPES } from '../Utilities/EnumUtils'
-import { PassType } from './Passes/GLPass'
+import { GLPass, PassType } from './Passes/GLPass'
 
 let activeGLRenderer = undefined
 let pointerIsDown = false
@@ -452,7 +452,7 @@ class GLBaseRenderer extends ParameterOwner {
 
   /**
    * The getGL method.
-   * @return {any} - The return value.
+   * @return {WebGLRenderingContext} - The return value.
    */
   getGL() {
     return this.__gl
@@ -880,25 +880,25 @@ class GLBaseRenderer extends ParameterOwner {
 
   /**
    * The addPass method.
-   * @param {any} pass - The pass value.
-   * @param {number} passtype - The passtype value.
+   * @param {GLPass} pass - The pass value.
+   * @param {number} passType - The passType value.
    * @param {boolean} updateIndices - The updateIndices value.
    * @return {number} - The return value.
    */
-  addPass(pass, passtype = -1, updateIndices = true) {
-    if (passtype == -1) passtype = pass.getPassType()
-    if (!this.__passes[passtype]) this.__passes[passtype] = []
+  addPass(pass, passType = -1, updateIndices = true) {
+    if (passType == -1) passType = pass.getPassType()
+    if (!this.__passes[passType]) this.__passes[passType] = []
 
     let index = 0
     for (const key in this.__passes) {
-      if (key == passtype) break
+      if (key == passType) break
       index += this.__passes[key].length
     }
-    index += this.__passes[passtype].length
+    index += this.__passes[passType].length
 
     pass.on('updated', this.requestRedraw)
     pass.init(this, index)
-    this.__passes[passtype].push(pass)
+    this.__passes[passType].push(pass)
 
     if (updateIndices) {
       // Now update all the  subsequent pass indices because the
@@ -934,7 +934,7 @@ class GLBaseRenderer extends ParameterOwner {
   /**
    * The getPass method.
    * @param {number} index - The index value.
-   * @return {any} - The return value.
+   * @return {GLPass} - The return value.
    */
   getPass(index) {
     let offset = 0
@@ -945,34 +945,12 @@ class GLBaseRenderer extends ParameterOwner {
     }
   }
 
-  /**
-   * The findPass method.
-   * @param {any} constructor - The constructor value.
-   * @return {any} - The return value.
-   */
-  findPass(constructor) {
-    for (const key in this.__passes) {
-      const passSet = this.__passes[key]
-      for (const pass of passSet) {
-        if (pass.constructor == constructor) return pass
-      }
-    }
-  }
-
-  /**
-   * The getGizmoPass method.
-   * @return {any} - The return value.
-   */
-  getGizmoPass() {
-    return this.__gizmoPass
-  }
-
   // ///////////////////////
   // VR Setup
 
   /**
    * The supportsVR method.
-   * @return {any} - The return value.
+   * @return {boolean} - The return value.
    */
   supportsVR() {
     console.warn('@GLBaseRenderer#supportVR - Deprecated Method. Please instead connect to the vrViewportSetup signal.')
@@ -1278,7 +1256,7 @@ class GLBaseRenderer extends ParameterOwner {
   /**
    * The registerPass method.
    * @param {function} cls - The cls value.
-   * @param {PassType} passType - The passtype value.
+   * @param {PassType} passType - The passType value.
    */
   static registerPass(cls, passType) {
     if (!registeredPasses[passType]) registeredPasses[passType] = []

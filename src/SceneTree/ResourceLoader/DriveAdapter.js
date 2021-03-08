@@ -188,10 +188,10 @@ class DriveAdapter {
       if (parts[0] == '.') parts.shift()
       else if (parts[0] == '..') {
         item = item.substring(3)
-        const baseparts = base.split('/')
-        baseparts.pop()
-        baseparts.pop()
-        base = baseparts.join('/') + '/'
+        const baseParts = base.split('/')
+        baseParts.pop()
+        baseParts.pop()
+        base = baseParts.join('/') + '/'
       }
       url = base + resourcePath
     }

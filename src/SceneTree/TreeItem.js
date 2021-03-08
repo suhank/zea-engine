@@ -307,13 +307,15 @@ class TreeItem extends BaseItem {
   // Highlights
 
   /**
-   * Adds a hightlight to the tree item.
+   * Adds a highlight to the tree item.
    *
    * @param {string} name - The name of the tree item.
    * @param {Color} color - The color of the highlight.
    * @param {boolean} propagateToChildren - A boolean indicating whether to propagate to children.
    */
   addHighlight(name, color, propagateToChildren = false) {
+    // If the highlight was already in the list,
+    // remove it and put it at the top.
     if (name in this.__highlightMapping) {
       if (this.__highlights[this.__highlights.length - 1] != name) {
         // The highlight was already in the list, but not at the top. Move it to the top.
@@ -342,7 +344,7 @@ class TreeItem extends BaseItem {
   }
 
   /**
-   * Removes a hightlight to the tree item.
+   * Removes a highlight to the tree item.
    *
    * @param {string} name - The name of the tree item.
    * @param {boolean} propagateToChildren - A boolean indicating whether to propagate to children.
@@ -376,7 +378,7 @@ class TreeItem extends BaseItem {
   }
 
   /**
-   * Returns the color of the current hilghlight.
+   * Returns the color of the current highlight.
    *
    * @return {Color} - The color value.
    */
@@ -385,9 +387,9 @@ class TreeItem extends BaseItem {
   }
 
   /**
-   * Returns `true` if this items has a hilghlight color assigned.
+   * Returns `true` if this items has a highlight color assigned.
    *
-   * @return {boolean} - `True` if this item is hilghlighted.
+   * @return {boolean} - `True` if this item is highlighted.
    */
   isHighlighted() {
     return this.__highlights.length > 0
@@ -613,12 +615,12 @@ class TreeItem extends BaseItem {
    * @param {boolean} maintainXfo - Boolean that determines if
    * the Global Xfo value is maintained. If true, when moving
    * items in the hierarchy from one parent to another, the local Xfo
-   * of the item will be modified to maintaine and the Global Xfo.
+   * of the item will be modified to maintain and the Global Xfo.
    * Note: this option defaults to false because we expect that is the
    * behavior users would expect when manipulating the tree in code.
    * To be safe and unambiguous, always try to specify this value.
    * @param {boolean} fixCollisions - Modify the name of the item to avoid
-   * name collisions with other chidrent of the same parent.
+   * name collisions with other children of the same parent.
    * If false, an exception wll be thrown instead if a name collision occurs.
    * @return {BaseItem} childItem - The child BaseItem that was added.
    */
@@ -769,7 +771,7 @@ class TreeItem extends BaseItem {
   }
 
   // ////////////////////////////////////////
-  // Path Traversial
+  // Path Traversal
   // Note: Path resolution starts at the root of the
   // tree the path was generated from (so index=1, because we don't resolve root).
   // Note: When a path is made relative to an item in its tree, the path
@@ -784,7 +786,7 @@ class TreeItem extends BaseItem {
    * @param {number} index - The index value.
    * @return {BaseItem|Parameter} - The return value.
    */
-  resolvePath(path, index = 0, displayError = false) {
+  resolvePath(path, index = 0) {
     if (typeof path == 'string') path = path.split('/')
 
     if (index == 0) {
@@ -1020,11 +1022,11 @@ class TreeItem extends BaseItem {
             if (childItem) {
               // Note: we add the child now before loading.
               // This is because certain items. (e.g. Groups)
-              // Calculate thier global Xfo, and use it to modify
-              // the transform of thier members.
+              // Calculate their global Xfo, and use it to modify
+              // the transform of their members.
               // Note: Groups bind to items in the scene which are
               // already added as children, and so have global Xfos.
-              // We prefer to add a child afer its loaded, because sometimes
+              // We prefer to add a child after its loaded, because sometimes
               // In the tree is asset items, who will only toggled as
               // unloaded once they are loaded(else they are considered inline assets.)
               childItem.fromJSON(childJson, context)
@@ -1064,14 +1066,14 @@ class TreeItem extends BaseItem {
 
     context.numTreeItems++
 
-    const itemflags = reader.loadUInt8()
+    const itemFlags = reader.loadUInt8()
 
     // const visibilityFlag = 1 << 1
-    // this.setVisible(itemflags&visibilityFlag);
+    // this.setVisible(itemFlags&visibilityFlag);
 
     // Note: to save space, some values are skipped if they are identity values
     const localXfoFlag = 1 << 2
-    if (itemflags & localXfoFlag) {
+    if (itemFlags & localXfoFlag) {
       const xfo = new Xfo()
       xfo.tr = reader.loadFloat32Vec3()
       xfo.ori = reader.loadFloat32Quat()
@@ -1081,7 +1083,7 @@ class TreeItem extends BaseItem {
     }
 
     const bboxFlag = 1 << 3
-    if (itemflags & bboxFlag) {
+    if (itemFlags & bboxFlag) {
       this.__boundingBoxParam.loadValue(new Box3(reader.loadFloat32Vec3(), reader.loadFloat32Vec3()))
     }
 

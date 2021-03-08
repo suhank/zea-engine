@@ -15,7 +15,7 @@ class TextLoaderPlugin {
   }
 
   /**
-   * The type of file this pluglin handles.
+   * The type of file this plugin handles.
    * @return {string} The type of file.
    */
   getType() {

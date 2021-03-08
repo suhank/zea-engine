@@ -61,7 +61,7 @@ class BaseProxy extends EventEmitter {
 
   /**
    * The getMetadata method.
-   * @param {any} key - The key value.
+   * @param {string} key - The key value.
    * @return {any} - The return value.
    */
   getMetadata(key) {
@@ -70,7 +70,7 @@ class BaseProxy extends EventEmitter {
 
   /**
    * The hasMetadata method.
-   * @param {any} key - The key value.
+   * @param {string} key - The key value.
    * @return {any} - The return value.
    */
   hasMetadata(key) {
@@ -79,8 +79,8 @@ class BaseProxy extends EventEmitter {
 
   /**
    * The setMetadata method.
-   * @param {any} key - The key value.
-   * @param {object} metaData - The metaData value.
+   * @param {string} key - The key value.
+   * @param {any} metaData - The metaData value.
    */
   setMetadata(key, metaData) {
     this.__metaData.set(key, metaData)

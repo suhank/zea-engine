@@ -141,82 +141,9 @@ class Color extends AttrValue {
   }
 
   /**
-   * Setter from a scalar array.
-   *
-   * @param {Float32Array} vals - The vals param.
-   */
-  setFromScalarArray(vals) {
-    this.r = vals[0]
-    this.g = vals[1]
-    this.b = vals[2]
-    this.a = vals.length == 4 ? vals[3] : 1.0
-  }
-
-  /**
-   * Getter from an RGB array.
-   *
-   * @return {array} - The return value.
-   */
-  getAsRGBArray() {
-    return [this.r * 255, this.g * 255, this.b * 255]
-  }
-
-  /**
-   * Getter from an RGB dict.
-   *
-   * @return {object} - The return value.
-   */
-  getAsRGBDict() {
-    return {
-      r: this.r * 255,
-      g: this.g * 255,
-      b: this.b * 255,
-    }
-  }
-
-  /**
-   * Setter from a RGB value.
-   *
-   * @param {number} r - The red channel.
-   * @param {number} g  - The green channel.
-   * @param {number} b  - The blue channel.
-   * @param {number} a  - The alpha channel.
-   */
-  setFromRGB(r, g, b, a) {
-    this.r = r / 255
-    this.g = g / 255
-    this.b = b / 255
-    this.a = a ? a / 255 : 1.0
-  }
-
-  /**
-   * Setter from an RGB array.
-   *
-   * @param {Float32Array} vals - The vals param.
-   */
-  setFromRGBArray(vals) {
-    this.r = vals[0] / 255
-    this.g = vals[1] / 255
-    this.b = vals[2] / 255
-    this.a = vals.length == 4 ? vals[3] / 255 : 1.0
-  }
-
-  /**
-   * Setter from an RGB dict.
-   *
-   * @param {Float32Array} vals - The vals param.
-   */
-  setFromRGBDict(vals) {
-    this.r = vals.r / 255
-    this.g = vals.g / 255
-    this.b = vals.b / 255
-    this.a = vals.a == 4 ? vals.a / 255 : 1.0
-  }
-
-  /**
-   * Setter from a hexadecimal value.
+   * Setter from a hexadecimal string value.
    * E.g. #ff0000
-   * @param {number} hex - The hex value.
+   * @param {string} hex - The hex string value.
    */
   setFromHex(hex) {
     function hexToRgb(hex) {
@@ -234,11 +161,11 @@ class Color extends AttrValue {
       console.warn('Invalid hex code:' + hex)
       return
     }
-    this.setFromRGB(rgb.r, rgb.g, rgb.b)
+    this.set(rgb.r / 255, rgb.g / 255, rgb.b / 255)
   }
 
   /**
-   * Setter from a CSS color name.
+   * Sets the Color values from a CSS color name.
    * E.g. "red"
    * @param {string} name - The CSS color name.
    */
@@ -405,16 +332,18 @@ class Color extends AttrValue {
    * @return {string} - Returns the hex value.
    */
   toHex() {
-    function componentToHex(c) {
+    const toHex = (c) => {
       const int = Math.round(c * 255)
       const hex = int.toString(16)
       return hex.length == 1 ? '0' + hex : hex
     }
-    return '#' + componentToHex(this.r) + componentToHex(this.g) + componentToHex(this.b)
+    return `#${toHex(this.r)}${toHex(this.g)}${toHex(this.b)}`
   }
 
   /**
-   * Returns true if this color is exactly the same as other.
+   * @deprecated
+   * Returns true if this color contains the same values as the other.
+   * Deprecated. Use #isEqual instead.
    *
    * @param {Color} other - The other color to compare with.
    * @return {boolean} - Returns true or false.
@@ -425,10 +354,10 @@ class Color extends AttrValue {
   }
 
   /**
-   * Checks if this Vec3 is exactly the same as another Vec3.
+   * Checks if this Color  contains the same values as the other.
    *
-   * @param {Vec3} other - The other Vec3 to compare with.
-   * @return {boolean} - Returns `true` if are the same Vector, otherwise, `false`.
+   * @param {Color} other - The other Color to compare with.
+   * @return {boolean} - Returns `true` if the values are the same, otherwise, `false`.
    */
   isEqual(other) {
     return this.r == other.r && this.g == other.g && this.b == other.b && this.a == other.a
@@ -471,7 +400,7 @@ class Color extends AttrValue {
   }
 
   /**
-   * Updates the Color by adding the other.
+   * Updates this Color by adding the values from the other color.
    *
    * @param {Color} other - The other color to add.
    */
@@ -534,7 +463,7 @@ class Color extends AttrValue {
   }
 
   /**
-   * Converts to gamma color space and returns a new color.
+   * returns a new color value value is mapped into a gamma curve
    *
    * @param {number} gamma - The gamma value.
    * @return {Color} - Returns a new color.
@@ -549,7 +478,7 @@ class Color extends AttrValue {
   }
 
   /**
-   * Calculates and returns the relative luminance of the linear RGB component.
+   * Calculates and returns the luminance of the linear RGB components.
    *
    * @return {number} - The return value.
    */
@@ -575,9 +504,9 @@ class Color extends AttrValue {
   /**
    * Creates a random color.
    *
-   * @param {number} gammaOffset - The gamma offset.
-   * @param {boolean} randomAlpha - Determines whether the alpha channel is random.
-   * @return {Color} - Returns a new random color.
+   * @param {number} gammaOffset - The gamma offset. Values between 0 and 1 increase the average brightness of the generated color. Values between 0 and -1 darken the generated color values.
+   * @param {boolean} randomAlpha - Determines whether the alpha channel is random. If not, the alpha values will be 1.0.
+   * @return {Color} - The new random color.
    */
   static random(gammaOffset = 0.0, randomAlpha = false) {
     if (gammaOffset > 0.0) {
@@ -617,16 +546,6 @@ class Color extends AttrValue {
    */
   asArray() {
     return this.__data
-  }
-
-  /**
-   * Returns the type as a 3 component array. Often used to pass types to the GPU.
-   *
-   * @return {array} - Returns as a 3 component array.
-   * @private
-   */
-  as3ComponentArray() {
-    return [this.__data[0], this.__data[1], this.__data[2]]
   }
 
   // ////////////////////////////////////////
@@ -715,25 +634,6 @@ class Color extends AttrValue {
     this.g = reader.loadFloat32()
     this.b = reader.loadFloat32()
     this.a = reader.loadFloat32()
-  }
-
-  /**
-   * Returns the CSS rgba string.
-   *
-   * @return {string} - The return value.
-   */
-  toCSSString() {
-    return (
-      'rgba(' +
-      Math.round(this.r * 255) +
-      ', ' +
-      Math.round(this.g * 255) +
-      ', ' +
-      Math.round(this.b * 255) +
-      ', ' +
-      this.a +
-      ')'
-    )
   }
 }
 

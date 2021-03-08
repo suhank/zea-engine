@@ -24,7 +24,7 @@ class BinReader {
   }
 
   /**
-   * Returns state of whether or not the `BinReader` object was instanciated from a mobile device.
+   * Returns state of whether or not the `BinReader` object was instantiated from a mobile device.
    *
    * @return {Boolean} - Returns true is a mobile device is detected.
    */
@@ -53,7 +53,7 @@ class BinReader {
   /**
    * Returns remaining length of the buffer to read.
    *
-   * @return {number} - The reemaining length of the buffer to read.
+   * @return {number} - The remaining length of the buffer to read.
    */
   get remainingByteLength() {
     return this.__dataView.byteLength - this.__byteOffset
@@ -205,7 +205,7 @@ class BinReader {
   }
 
   /**
-   * Reads buffer and return an unsinged Int8 array with the specified size,
+   * Reads buffer and return an unsigned Int8 array with the specified size,
    * starting from current byte offset.<br>
    * Byte offset is increased by the specified byte size.
    *
@@ -217,13 +217,13 @@ class BinReader {
     if (size == undefined) size = this.loadUInt32()
     const result = new Uint8Array(this.__data, this.__byteOffset, size)
     this.__byteOffset += size
-    const padd = this.__byteOffset % 4
-    // this.readPadd();
+    const pad = this.__byteOffset % 4
+    // this.readPad();
     return result
   }
 
   /**
-   * Reads buffer and return an unsinged Int16 array with the specified size,
+   * Reads buffer and return an unsigned Int16 array with the specified size,
    * starting from current byte offset.<br>
    * Byte offset is increased by the specified byte size x 2.
    *
@@ -234,7 +234,7 @@ class BinReader {
   loadUInt16Array(size = undefined, clone = false) {
     if (size == undefined) size = this.loadUInt32()
     if (size == 0) return new Uint16Array()
-    this.readPadd(2)
+    this.readPad(2)
     let result
     if (this.__isMobileDevice) {
       result = new Uint16Array(size)
@@ -246,12 +246,12 @@ class BinReader {
       result = new Uint16Array(this.__data, this.__byteOffset, size)
       this.__byteOffset += size * 2
     }
-    // this.readPadd();
+    // this.readPad();
     return result
   }
 
   /**
-   * Reads buffer and return an unsinged Int32 array with the specified size,
+   * Reads buffer and return an unsigned Int32 array with the specified size,
    * starting from current byte offset.<br>
    * Byte offset is increased by the specified byte size x 4.
    *
@@ -262,7 +262,7 @@ class BinReader {
   loadUInt32Array(size = undefined, clone = false) {
     if (size == undefined) size = this.loadUInt32()
     if (size == 0) return new Uint32Array()
-    this.readPadd(4)
+    this.readPad(4)
     let result
     if (this.__isMobileDevice) {
       result = new Uint32Array(size)
@@ -289,7 +289,7 @@ class BinReader {
   loadFloat32Array(size = undefined, clone = false) {
     if (size == undefined) size = this.loadUInt32()
     if (size == 0) return new Float32Array()
-    this.readPadd(4)
+    this.readPad(4)
     let result
     if (this.__isMobileDevice) {
       result = new Float32Array(size)
@@ -491,12 +491,12 @@ class BinReader {
   }
 
   /**
-   * The readPadd method.
+   * Given a stridee value, advance the pointer to the end of the current stride.
    * @param {number} stride - The stride param.
    */
-  readPadd(stride) {
-    const padd = this.__byteOffset % stride
-    if (padd != 0) this.__byteOffset += stride - padd
+  readPad(stride) {
+    const pad = this.__byteOffset % stride
+    if (pad != 0) this.__byteOffset += stride - pad
   }
 }
 

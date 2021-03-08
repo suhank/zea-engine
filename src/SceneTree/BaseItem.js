@@ -183,8 +183,6 @@ class BaseItem extends ParameterOwner {
 
   /**
    * The isSelected method.
-   * @deprecated
-   * @see `getSelected` method
    * @return {boolean} - The return value.
    */
   isSelected() {
@@ -300,7 +298,7 @@ class BaseItem extends ParameterOwner {
   /**
    * Clones this base item and returns a new base item.
    * <br>
-   * **Note:** Each class should implement clone to be clonable.
+   * **Note:** Each class should implement clone to be cloneable.
    * @param {object} context - The context value.
    */
   clone(context) {

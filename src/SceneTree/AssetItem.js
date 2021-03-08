@@ -153,7 +153,7 @@ class AssetItem extends TreeItem {
       layers[layer].addItem(geomItem)
     }
 
-    const plcbs = [] // Post load callbacks.
+    const postLoadCallbacks = [] // Post load callbacks.
     context.resolvePath = (path, onSucceed, onFail) => {
       if (!path) throw new Error('Path not specified')
 
@@ -169,7 +169,7 @@ class AssetItem extends TreeItem {
       } catch (e) {
         // Some paths resolve to items generated during load,
         // so push a callback to re-try after the load is complete.
-        plcbs.push(() => {
+        postLoadCallbacks.push(() => {
           try {
             const param = this.resolvePath(path)
             onSucceed(param)
@@ -183,7 +183,7 @@ class AssetItem extends TreeItem {
         })
       }
     }
-    context.addPLCB = (plcb) => plcbs.push(plcb)
+    context.addPLCB = (postLoadCallback) => postLoadCallbacks.push(postLoadCallback)
 
     this.__materials.readBinary(reader, context)
 
@@ -197,8 +197,8 @@ class AssetItem extends TreeItem {
     }
 
     // Invoke all the post-load callbacks to resolve any
-    // remaning references.
-    for (const cb of plcbs) cb()
+    // remaining references.
+    for (const cb of postLoadCallbacks) cb()
 
     this.loaded = true
     // console.log("numTreeItems:", context.numTreeItems, " numGeomItems:", context.numGeomItems)
@@ -247,22 +247,22 @@ class AssetItem extends TreeItem {
 
     context.assetItem = this
 
-    const plcbs = [] // Post load callbacks.
+    const postLoadCallbacks = [] // Post load callbacks.
     context.resolvePath = (path, cb) => {
       // Note: Why not return a Promise here?
       // Promise evaluation is always async, so
-      // all promisses will be resolved after the current call stack
+      // all promises will be resolved after the current call stack
       // has terminated. In our case, we want all paths
       // to be resolved before the end of the function, which
       // we can handle easily with callback functions.
-      if (!path) throw new Error('Path not spcecified')
+      if (!path) throw new Error('Path not specified')
       const item = this.resolvePath(path)
       if (item) {
         cb(item)
       } else {
         // Some paths resolve to items generated during load,
         // so push a callback to re-try after the load is complete.
-        plcbs.push(() => {
+        postLoadCallbacks.push(() => {
           const param = this.resolvePath(path)
           if (param) cb(param)
           else {
@@ -271,7 +271,7 @@ class AssetItem extends TreeItem {
         })
       }
     }
-    context.addPLCB = (plcb) => plcbs.push(plcb)
+    context.addPLCB = (postLoadCallback) => postLoadCallbacks.push(postLoadCallback)
 
     // Avoid loading the FilePath as we are already loading json data.
     // if (j.params && j.params.FilePath) {
@@ -281,8 +281,8 @@ class AssetItem extends TreeItem {
     super.fromJSON(j, context)
 
     // Invoke all the post-load callbacks to resolve any
-    // remaning references.
-    for (const cb of plcbs) cb()
+    // remaining references.
+    for (const cb of postLoadCallbacks) cb()
 
     if (onDone) onDone()
   }

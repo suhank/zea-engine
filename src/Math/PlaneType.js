@@ -1,5 +1,4 @@
 /* eslint-disable new-cap */
-/* eslint-disable camelcase */
 import { StringFunctions } from '../Utilities/StringFunctions'
 import { AttrValue } from './AttrValue.js'
 import { Registry } from '../Registry'
@@ -41,7 +40,7 @@ class PlaneType extends AttrValue {
   }
 
   /**
-   * Thet divideScalar method
+   * The divideScalar method
    *
    * @param {number} value - The value value.
    */
@@ -51,10 +50,10 @@ class PlaneType extends AttrValue {
   }
 
   /**
-   * Calculates the distance from a point to this place.
+   * Calculates the distance from a point to this plane.
    *
    * @param {Vec3} point - The point value.
-   * @return {number} - The rreturn value.
+   * @return {number} - The return value.
    */
   distanceToPoint(point) {
     return point.dot(this.normal) + this.w
@@ -95,7 +94,7 @@ class PlaneType extends AttrValue {
   // Persistence
 
   /**
-   * The toJSON method encodes this type as a json object for persistences.
+   * The toJSON method encodes this type as a json object for persistence.
    *
    * @return {object} - The json object.
    */
