@@ -1,3 +1,4 @@
+import { SystemDesc } from '../SystemDesc.js'
 import ArchiveUnpackerWorker from 'web-worker:./ArchiveUnpackerWorker.js'
 // For synchronous loading, uncomment these lines.
 // import {
@@ -14,7 +15,7 @@ function checkStatus(response) {
 
 let numCores = window.navigator.hardwareConcurrency
 if (!numCores) {
-  if (isMobile) numCores = 4
+  if (SystemDesc.isMobileDevice) numCores = 4
   else numCores = 6
 }
 numCores-- // always leave one main thread code spare.
