@@ -28,7 +28,7 @@
       renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(0.5, 0.5, 0.5), new Vec3(0, 0, 0))
 
       const asset = new VLAAsset()
-      asset.getParameter('FilePath').setValue('/dist/public-resources/Oculus.vla')
+      asset.load('/dist/public-resources/Oculus.vla')
       asset.getGeometryLibrary().on('loaded', () => {
         const HMD = asset.getChildByName('HMD')
         HMD.getParameter('LocalXfo').setValue(new Xfo(new Vec3(0, 0, 200)))

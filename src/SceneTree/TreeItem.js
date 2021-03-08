@@ -317,12 +317,24 @@ class TreeItem extends BaseItem {
     // If the highlight was already in the list,
     // remove it and put it at the top.
     if (name in this.__highlightMapping) {
-      const id = this.__highlights.indexOf(name)
-      this.__highlights.splice(id, 1)
+      if (this.__highlights[this.__highlights.length - 1] != name) {
+        // The highlight was already in the list, but not at the top. Move it to the top.
+        const id = this.__highlights.indexOf(name)
+        this.__highlights.splice(id, 1)
+        this.__highlights.push(name)
+        this.emit('highlightChanged', { name, color })
+      } else {
+        // This item is already highlighted with this highlight
+        if (!this.__highlightMapping[name].isEqual(color)) {
+          this.__highlightMapping[name] = color
+          this.emit('highlightChanged', { name, color })
+        }
+      }
+    } else {
+      this.__highlights.push(name)
+      this.__highlightMapping[name] = color
+      this.emit('highlightChanged', { name, color })
     }
-    this.__highlights.push(name)
-    this.__highlightMapping[name] = color
-    this.emit('highlightChanged', { name, color })
 
     if (propagateToChildren) {
       this.__childItems.forEach((childItem) => {
@@ -339,10 +351,24 @@ class TreeItem extends BaseItem {
    */
   removeHighlight(name, propagateToChildren = false) {
     if (name in this.__highlightMapping) {
-      const id = this.__highlights.indexOf(name)
-      this.__highlights.splice(id, 1)
-      delete this.__highlightMapping[name]
-      this.emit('highlightChanged', {})
+      if (this.__highlights[this.__highlights.length - 1] == name) {
+        this.__highlights.pop()
+        delete this.__highlightMapping[name]
+
+        if (this.__highlights.length > 0) {
+          const nextName = this.__highlights[this.__highlights.length - 1]
+          const nextColor = this.__highlightMapping[nextName]
+          this.emit('highlightChanged', { name: nextName, color: nextColor })
+        } else {
+          // The last highlight was removed, so emit an event saying we are no longer highlighted.
+          this.emit('highlightChanged', {})
+        }
+      } else {
+        // The removed highlight was not the current highlight, so no change needs to be shown.
+        const id = this.__highlights.indexOf(name)
+        this.__highlights.splice(id, 1)
+        delete this.__highlightMapping[name]
+      }
     }
     if (propagateToChildren) {
       this.__childItems.forEach((childItem) => {

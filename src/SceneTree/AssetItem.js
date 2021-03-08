@@ -24,6 +24,15 @@ class AssetItem extends TreeItem {
   }
 
   /**
+   * Loads all the geometries and metadata from the asset file.
+   * @param {string} url - The URL of the asset to load
+   * @return {Promise} - Returns a promise that resolves once the initial load is complete
+   */
+  load(url) {
+    return Promise.reject(`This method is not implemented for this Asset Item: ${url}`)
+  }
+
+  /**
    * Returns the loaded status of current item.
    *
    * @return {boolean} - Returns true if the asset has already loaded its data.

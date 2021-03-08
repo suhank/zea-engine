@@ -25,13 +25,10 @@ class VLAAsset extends AssetItem {
    */
   constructor(name) {
     super(name)
-    this.loaded = false
 
     // A signal that is emitted once all the geometries are loaded.
     // Often the state machine will activate the
     // first state when this signal emits.
-    this.geomsLoaded = false
-    this.loaded = false
     this.__geomLibrary.on('loaded', () => {
       this.emit('geomsLoaded', {})
     })
@@ -41,11 +38,9 @@ class VLAAsset extends AssetItem {
     this.addParameterDeprecationMapping('DataFilePath', 'FilePath') // Note: migrating from 'DataFilePath' to 'FilePath'
 
     this.__fileParam.on('valueChanged', () => {
-      this.geomsLoaded = false
-      this.loadDataFile(
-        () => {},
-        () => {}
-      )
+      const fileId = this.__fileParam.getValue()
+      const url = this.__fileParam.getUrl()
+      this.load(url)
     })
   }
 
@@ -84,62 +79,66 @@ class VLAAsset extends AssetItem {
   }
 
   /**
-   * Loads all the geometries and metadata from the `.vla` file.
-   *
-   * @private
-   * @param {function} onDone - The onDone value.
-   * @param {function} onGeomsDone - The onGeomsDone value.
+   * Loads all the geometries and metadata from the asset file.
+   * @param {string} url - The URL of the asset to load
+   * @return {Promise} - Returns a promise that resolves once the initial load is complete
    */
-  loadDataFile(onDone, onGeomsDone) {
-    const fileId = this.__fileParam.getValue()
-    const url = this.__fileParam.getUrl()
-    const folder = url.lastIndexOf('/') > -1 ? url.substring(0, url.lastIndexOf('/')) + '/' : ''
-    const filename = url.lastIndexOf('/') > -1 ? url.substring(url.lastIndexOf('/') + 1) : ''
-    const stem = filename.substring(0, filename.lastIndexOf('.'))
-    let numGeomsFiles = 0
+  load(url) {
+    return new Promise((resolve, reject) => {
+      const folder = url.lastIndexOf('/') > -1 ? url.substring(0, url.lastIndexOf('/')) + '/' : ''
+      const filename = url.lastIndexOf('/') > -1 ? url.substring(url.lastIndexOf('/') + 1) : ''
+      const stem = filename.substring(0, filename.lastIndexOf('.'))
+      let numGeomsFiles = 0
 
-    const context = {
-      assetItem: this,
-      versions: {},
-    }
-
-    // preload in case we don't have embedded geoms.
-    // completed by geomLibrary.on('loaded' ..
-    resourceLoader.incrementWorkload(1)
-    // To ensure that the resource loader knows when
-    // parsing is done, we listen to the GeomLibrary streamFileLoaded
-    // signal. This is fired once the entire stream is parsed.
-    this.__geomLibrary.on('loaded', () => {
-      // A chunk of geoms are now parsed, so update the resource loader.
-      resourceLoader.incrementWorkDone(1)
-      onGeomsDone()
-    })
-
-    resourceLoader.loadFile('archive', url).then((entries) => {
-      // Load the tree file. This file contains
-      // the scene tree of the asset, and also
-      // tells us how many geom files will need to be loaded.
-
-      let treeReader
-      if (entries.tree2) {
-        treeReader = new BinReader(entries.tree2.buffer, 0, SystemDesc.isMobileDevice)
-      } else {
-        const entry = entries.tree ? entries.tree : entries[Object.keys(entries)[0]]
-        treeReader = new BinReader(entry.buffer, 0, SystemDesc.isMobileDevice)
-        context.versions['zea-engine'] = new Version()
+      const context = {
+        assetItem: this,
+        versions: {},
       }
 
-      numGeomsFiles = this.readBinary(treeReader, context)
+      // preload in case we don't have embedded geoms.
+      // completed by geomLibrary.on('loaded' ..
+      resourceLoader.incrementWorkload(1)
+      // To ensure that the resource loader knows when
+      // parsing is done, we listen to the GeomLibrary streamFileLoaded
+      // signal. This is fired once the entire stream is parsed.
+      this.__geomLibrary.on('loaded', () => {
+        // A chunk of geoms are now parsed, so update the resource loader.
+        resourceLoader.incrementWorkDone(1)
+      })
 
-      this.loaded = true
-      this.emit('loaded')
+      resourceLoader.loadFile('archive', url).then(
+        (entries) => {
+          // Load the tree file. This file contains
+          // the scene tree of the asset, and also
+          // tells us how many geom files will need to be loaded.
 
-      if (numGeomsFiles == 0 && entries.geoms) {
-        this.__geomLibrary.readBinaryBuffer(fileId, entries.geoms.buffer, context)
-      } else {
-        const basePath = folder + stem
-        this.__geomLibrary.loadGeomFilesStream(basePath, numGeomFiles, context)
-      }
+          let treeReader
+          if (entries.tree2) {
+            treeReader = new BinReader(entries.tree2.buffer, 0, SystemDesc.isMobileDevice)
+          } else {
+            const entry = entries.tree ? entries.tree : entries[Object.keys(entries)[0]]
+            treeReader = new BinReader(entry.buffer, 0, SystemDesc.isMobileDevice)
+            context.versions['zea-engine'] = new Version()
+          }
+
+          numGeomsFiles = this.readBinary(treeReader, context)
+
+          this.loaded = true
+          this.emit('loaded')
+
+          if (numGeomsFiles == 0 && entries.geoms) {
+            this.__geomLibrary.readBinaryBuffer(filename, entries.geoms.buffer, context)
+          } else {
+            const basePath = folder + stem
+            this.__geomLibrary.loadGeomFilesStream(basePath, numGeomFiles, context)
+          }
+          resolve()
+        },
+        (error) => {
+          this.emit('error', error)
+          reject(error)
+        }
+      )
     })
   }
 
