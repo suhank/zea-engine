@@ -355,7 +355,7 @@ void main(void) {
   /**
    * The bind method.
    * @param {object} renderstate - The object tracking the current state of the renderer
-   * @param {any} key - The key value.
+   * @param {string} key - The key value.
    * @return {any} - The return value.
    */
   bind(renderstate, key) {

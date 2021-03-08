@@ -634,7 +634,7 @@ class GLTexture2D extends RefCounted {
   /**
    * The bind method.
    * @param {object} renderstate - The object tracking the current state of the renderer
-   * @param {any} unif - The unif value.
+   * @param {WebGLUniformLocation} unif - The WebGL uniform
    * @return {any} - The return value.
    * @deprecated
    */

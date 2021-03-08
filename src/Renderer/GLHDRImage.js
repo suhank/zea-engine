@@ -11,7 +11,7 @@ class GLHDRImage extends GLTexture2D {
   /**
    * Create a GL HDR image.
    * @param {WebGLRenderingContext} gl - The webgl rendering context.
-   * @param {any} hdrImage - The HDR image.
+   * @param {VLHImage} hdrImage - The HDR image.
    */
   constructor(gl, hdrImage) {
     super(gl)
@@ -40,7 +40,7 @@ class GLHDRImage extends GLTexture2D {
 
   /**
    * The __unpackHDRImage method.
-   * @param {any} hdrImageParams - The HDR image parameters.
+   * @param {object} hdrImageParams - The HDR image parameters.
    * @private
    */
   __unpackHDRImage(hdrImageParams) {
@@ -131,9 +131,9 @@ class GLHDRImage extends GLTexture2D {
   /**
    * The bindToUniform method.
    * @param {object} renderstate - The object tracking the current state of the renderer
-   * @param {any} unif - The unif value.
-   * @param {any} bindings - The bindings value.
-   * @return {any} - The return value.
+   * @param {WebGLUniformLocation} unif - The WebGL uniform
+   * @param {object} bindings - The bindings value.
+   * @return {boolean} - The return value.
    */
   bindToUniform(renderstate, unif, bindings) {
     return super.bindToUniform(renderstate, unif, bindings)

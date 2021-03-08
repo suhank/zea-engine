@@ -287,7 +287,7 @@ class Box3 {
 
   /**
    * The sizeInBytes method.
-   * @return {any} - The return value.
+   * @return {number} - The return value.
    * @private
    */
   static sizeInBytes() {
@@ -329,17 +329,6 @@ class Box3 {
     }
     this.p0.fromJSON(p0)
     this.p1.fromJSON(p1)
-  }
-
-  /**
-   * The loadBin method is used to parse binary data from file formats such as the zcad file type.
-   * @param {any} data - The data value.
-   * @param {any} byteOffset - The byteOffset value.
-   * @private
-   */
-  loadBin(data, byteOffset) {
-    this.p0.loadBin(data, byteOffset)
-    this.p0.loadBin(data, byteOffset + 12)
   }
 
   /**

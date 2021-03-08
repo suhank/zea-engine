@@ -148,15 +148,6 @@ class Material extends BaseItem {
   }
 
   /**
-   * The __makeParameterTexturable method.
-   * @param {any} param - The param value.
-   * @private
-   */
-  __makeParameterTexturable(param) {
-    makeParameterTexturable(param)
-  }
-
-  /**
    * Checks if the material is transparent by checking the `Opacity` parameter.
    *
    * @return {boolean} - Returns true if the material is transparent.
@@ -353,9 +344,6 @@ class Material extends BaseItem {
         if (param) param.setValue(value)
         else param = this.addParameter(generateParameterInstance(paramName, value))
         if (textureName != '' && param.setImage) {
-          // if(!param.setImage)
-          //     this.__makeParameterTexturable(param);
-
           if (context.materialLibrary.hasImage(textureName)) {
             // console.log(paramName +":" + textureName + ":" + context.materialLibrary[textureName].resourcePath);
             param.setImage(context.materialLibrary.getImage(textureName))
@@ -394,12 +382,8 @@ class Material extends BaseItem {
    * @param {object} context - The context value.
    */
   copyFrom(src, context) {
-    super.copyFrom(src, context)
     this.setShaderName(src.getShaderName())
-    for (const srcParam of src.getParameters()) {
-      const param = src.getParameter(srcParam.getName())
-      if (!srcParam.getImage) this.__makeParameterTexturable(param)
-    }
+    super.copyFrom(src, context)
   }
 }
 Registry.register('Material', Material)

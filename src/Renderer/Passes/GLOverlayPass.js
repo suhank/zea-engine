@@ -16,8 +16,8 @@ class GLOverlayPass extends GLOpaqueGeomsPass {
 
   /**
    * The init method.
-   * @param {any} renderer - The renderer value.
-   * @param {any} passIndex - The passIndex value.
+   * @param {GLBaseRenderer} renderer - The renderer value.
+   * @param {number} passIndex - The index of the pass in the GLBAseRenderer
    */
   init(renderer, passIndex) {
     super.init(renderer, passIndex)
@@ -36,7 +36,7 @@ class GLOverlayPass extends GLOpaqueGeomsPass {
 
   /**
    * The filterGeomItem method.
-   * @param {any} geomItem - The geomItem value.
+   * @param {GeomItem} geomItem - The geomItem value.
    * @return {any} - The return value.
    */
   filterGeomItem(geomItem) {

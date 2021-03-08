@@ -1,5 +1,5 @@
 import { Vec3, Xfo, Mat4, Ray } from '../Math/index'
-import { Plane, EnvMap } from '../SceneTree/index'
+import { Plane, EnvMap, BaseImage } from '../SceneTree/index'
 import { GLFbo } from './GLFbo.js'
 import { GLRenderTarget } from './GLRenderTarget.js'
 import { GLHDRImage } from './GLHDRImage.js'
@@ -13,6 +13,7 @@ import { generateShaderGeomBinding } from './Drawing/GeomShaderBinding.js'
 import { OutlinesShader } from './Shaders/OutlinesShader.js'
 import { GLMesh } from './Drawing/GLMesh.js'
 import logo from './logo-zea.svg'
+import { GLViewport } from './GLViewport'
 
 const ALL_PASSES = PassType.OPAQUE | PassType.TRANSPARENT | PassType.OVERLAY
 
@@ -22,8 +23,8 @@ const ALL_PASSES = PassType.OPAQUE | PassType.TRANSPARENT | PassType.OVERLAY
 class GLRenderer extends GLBaseRenderer {
   /**
    * Create a GL renderer.
-   * @param {any} $canvas - The $canvas value.
-   * @param {any} options - The options value.
+   * @param {canvas} $canvas - The $canvas value.
+   * @param {object} options - The dictionary of options.
    */
   constructor($canvas, options = {}) {
     super($canvas, options)
@@ -100,7 +101,7 @@ class GLRenderer extends GLBaseRenderer {
 
   /**
    * The __bindEnvMap method.
-   * @param {any} env - The env value.
+   * @param {EnvMap|BaseImage} env - The env value.
    * @private
    */
   __bindEnvMap(env) {
@@ -167,7 +168,7 @@ class GLRenderer extends GLBaseRenderer {
 
   /**
    * The getGLEnvMap method.
-   * @return {any} - The return value.
+   * @return {GLEnvMap|GLHDRImage|GLTexture2D} - The return value.
    */
   getGLEnvMap() {
     return this.__glEnvMap
@@ -175,7 +176,7 @@ class GLRenderer extends GLBaseRenderer {
 
   /**
    * The getEnvMapTex method.
-   * @return {any} - The return value.
+   * @return {EnvMap|BaseImage} - The return value.
    */
   getEnvMapTex() {
     console.warn('Deprecated Function')
@@ -184,7 +185,7 @@ class GLRenderer extends GLBaseRenderer {
 
   /**
    * The setScene method.
-   * @param {any} scene - The scene value.
+   * @param {Scene} scene - The scene value.
    */
   setScene(scene) {
     const envMapParam = scene.settings.getParameter('EnvMap')
@@ -208,7 +209,7 @@ class GLRenderer extends GLBaseRenderer {
   /**
    * The addViewport method.
    * @param {string} name - The name value.
-   * @return {any} - The return value.
+   * @return {GLViewport} - The return value.
    */
   addViewport(name) {
     const vp = super.addViewport(name)
@@ -304,8 +305,8 @@ class GLRenderer extends GLBaseRenderer {
 
   /**
    * The resizeFbos method.
-   * @param {any} width - The width value.
-   * @param {any} height - The height value.
+   * @param {number} width - The width value.
+   * @param {number} height - The height value.
    */
   resizeFbos(width, height) {
     super.resizeFbos()
@@ -338,7 +339,7 @@ class GLRenderer extends GLBaseRenderer {
 
   /**
    * The getFbo method.
-   * @return {any} - The return value.
+   * @return {GLFbo} - The return value.
    */
   getFbo() {
     return this.__fbo
@@ -346,7 +347,7 @@ class GLRenderer extends GLBaseRenderer {
 
   /**
    * The createOffscreenFbo method.
-   * @param {any} format - The format value.
+   * @param {string} format - The format value.
    */
   createOffscreenFbo(format = 'RGB') {
     const targetWidth = this.__glcanvas.width
@@ -368,8 +369,8 @@ class GLRenderer extends GLBaseRenderer {
   // Raycasting
 
   /**
-   * The raycast method.
-   * @return {any} - The return value.
+   * The raycastWithRay method.
+   * @return {object} - The return value.
    */
   raycastWithRay(ray, dist, area = 0.01, mask = ALL_PASSES) {
     const xfo = new Xfo()
@@ -384,7 +385,7 @@ class GLRenderer extends GLBaseRenderer {
 
   /**
    * The raycast method.
-   * @return {any} - The return value.
+   * @return {object} - The return value.
    */
   raycast(xfo, ray, dist, area = 0.01, mask = ALL_PASSES) {
     const gl = this.__gl

@@ -13,7 +13,7 @@ class SimpleUniformBinding {
    * @param {WebGLRenderingContext} gl - The webgl rendering context.
    * @param {any} glMaterial - The glMaterial value.
    * @param {any} param - The param value.
-   * @param {any} unif - The unif value.
+   * @param {WebGLUniformLocation} unif - The WebGL uniform
    */
   constructor(gl, glMaterial, param, unif) {
     this.param = param
@@ -74,7 +74,7 @@ class ComplexUniformBinding {
    * @param {WebGLRenderingContext} gl - The webgl rendering context.
    * @param {any} glMaterial - The glMaterial value.
    * @param {any} param - The param value.
-   * @param {any} unif - The unif value.
+   * @param {WebGLUniformLocation} unif - The WebGL uniform
    */
   constructor(gl, glMaterial, param, unif) {
     this.param = param
@@ -130,7 +130,7 @@ class MatrixUniformBinding {
    * @param {WebGLRenderingContext} gl - The webgl rendering context.
    * @param {any} glMaterial - The glMaterial value.
    * @param {any} param - The param value.
-   * @param {any} unif - The unif value.
+   * @param {WebGLUniformLocation} unif - The WebGL uniform
    */
   constructor(gl, glMaterial, param, unif) {
     this.param = param
@@ -184,8 +184,8 @@ class ColorUniformBinding {
    * @param {WebGLRenderingContext} gl - The webgl rendering context.
    * @param {any} glMaterial - The glMaterial value.
    * @param {any} param - The param value.
-   * @param {any} unif - The unif value.
-   * @param {any} unifs - The unifs value.
+   * @param {WebGLUniformLocation} unif - The WebGL uniform
+   * @param {object} unifs - The dictionary of WebGL uniforms.
    */
   constructor(gl, glMaterial, param, unif, unifs) {
     const name = param.getName()
@@ -319,7 +319,7 @@ class MaterialShaderBinding {
    * Create material shader binding.
    * @param {WebGLRenderingContext} gl - The webgl rendering context.
    * @param {any} glMaterial - The glMaterial value.
-   * @param {any} unifs - The unifs value.
+   * @param {object} unifs - The dictionary of WebGL uniforms.
    * @param {any} warnMissingUnifs - The warnMissingUnifs value.
    */
   constructor(gl, glMaterial, unifs, warnMissingUnifs) {

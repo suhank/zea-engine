@@ -1,6 +1,7 @@
 import { AttrValue } from '../Math/index'
 import { ScreenQuadShader } from './Shaders/ScreenQuadShader.js'
 import { generateShaderGeomBinding } from './Drawing/GeomShaderBinding.js'
+import { GLTexture2D } from './GLTexture2D'
 
 /** Class representing a GL screen quad.
  * @private
@@ -9,9 +10,8 @@ class GLScreenQuad {
   /**
    * Create a GL screen quad.
    * @param {WebGLRenderingContext} gl - The webgl rendering context.
-   * @param {any} preproc - The preproc value.
    */
-  constructor(gl, preproc) {
+  constructor(gl) {
     this.__gl = gl
 
     this.__pos = [0.0, 0.0]
@@ -21,7 +21,7 @@ class GLScreenQuad {
 
     if (!gl.__quadVertexIdsBuffer) gl.setupInstancedQuad()
 
-    const shaderComp = this.__glshader.compileForTarget('GLScreenQuad', preproc)
+    const shaderComp = this.__glshader.compileForTarget('GLScreenQuad')
     this.__quadBinding = generateShaderGeomBinding(gl, shaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer)
 
     this.ready = true
@@ -30,9 +30,9 @@ class GLScreenQuad {
   /**
    * The bind method.
    * @param {object} renderstate - The object tracking the current state of the renderer
-   * @param {any} texture - The texture pavalueram.
-   * @param {any} pos - The pos value.
-   * @param {any} size - The size value.
+   * @param {GLTexture2D} texture - The texture param.
+   * @param {Vec2} pos - The pos value.
+   * @param {Vec2} size - The size value.
    */
   bind(renderstate, texture, pos = undefined, size = undefined) {
     const unifs = renderstate.unifs
@@ -72,9 +72,9 @@ class GLScreenQuad {
   /**
    * The draw method.
    * @param {object} renderstate - The object tracking the current state of the renderer
-   * @param {any} texture - The texture value.
-   * @param {any} pos - The pos value.
-   * @param {any} size - The size value.
+   * @param {GLTexture2D} texture - The texture value.
+   * @param {Vec2} pos - The pos value.
+   * @param {Vec2} size - The size value.
    */
   draw(renderstate, texture, pos = undefined, size = undefined) {
     this.bind(renderstate, texture, pos, size)

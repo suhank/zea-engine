@@ -158,7 +158,7 @@ class GeomLibrary extends EventEmitter {
 
   /**
    * The setGenBufferOption method.
-   * @param {any} key - The key value.
+   * @param {string} key - The key value.
    * @param {any} value - The value param.
    */
   setGenBufferOption(key, value) {

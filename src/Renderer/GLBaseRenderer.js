@@ -8,7 +8,7 @@ import { GLViewport } from './GLViewport'
 import { Registry } from '../Registry'
 import { VRViewport } from './VR/VRViewport'
 import { POINTER_TYPES } from '../Utilities/EnumUtils'
-import { PassType } from './Passes/GLPass'
+import { GLPass, PassType } from './Passes/GLPass'
 
 let activeGLRenderer = undefined
 let pointerIsDown = false
@@ -452,7 +452,7 @@ class GLBaseRenderer extends ParameterOwner {
 
   /**
    * The getGL method.
-   * @return {any} - The return value.
+   * @return {WebGLRenderingContext} - The return value.
    */
   getGL() {
     return this.__gl
@@ -880,7 +880,7 @@ class GLBaseRenderer extends ParameterOwner {
 
   /**
    * The addPass method.
-   * @param {any} pass - The pass value.
+   * @param {GLPass} pass - The pass value.
    * @param {number} passType - The passType value.
    * @param {boolean} updateIndices - The updateIndices value.
    * @return {number} - The return value.
@@ -934,7 +934,7 @@ class GLBaseRenderer extends ParameterOwner {
   /**
    * The getPass method.
    * @param {number} index - The index value.
-   * @return {any} - The return value.
+   * @return {GLPass} - The return value.
    */
   getPass(index) {
     let offset = 0
@@ -945,34 +945,12 @@ class GLBaseRenderer extends ParameterOwner {
     }
   }
 
-  /**
-   * The findPass method.
-   * @param {any} constructor - The constructor value.
-   * @return {any} - The return value.
-   */
-  findPass(constructor) {
-    for (const key in this.__passes) {
-      const passSet = this.__passes[key]
-      for (const pass of passSet) {
-        if (pass.constructor == constructor) return pass
-      }
-    }
-  }
-
-  /**
-   * The getGizmoPass method.
-   * @return {any} - The return value.
-   */
-  getGizmoPass() {
-    return this.__gizmoPass
-  }
-
   // ///////////////////////
   // VR Setup
 
   /**
    * The supportsVR method.
-   * @return {any} - The return value.
+   * @return {boolean} - The return value.
    */
   supportsVR() {
     console.warn('@GLBaseRenderer#supportVR - Deprecated Method. Please instead connect to the vrViewportSetup signal.')
