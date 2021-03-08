@@ -1,4 +1,4 @@
-import { SystemDesc } from '../SystemDesc.js'
+import { SystemDesc } from '../../SystemDesc.js'
 import ArchiveUnpackerWorker from 'web-worker:./ArchiveUnpackerWorker.js'
 // For synchronous loading, uncomment these lines.
 // import {
