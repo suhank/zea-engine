@@ -1,7 +1,6 @@
 import { Vec2, Vec3, Vec4, Color, Mat4 } from '../../Math/index'
 import { GLTexture2D } from '../GLTexture2D.js'
 import { GLHDRImage } from '../GLHDRImage.js'
-import { GLImageStream } from '../GLImageStream.js'
 import { SInt32, UInt32, Float32 } from '../../Utilities/MathFunctions'
 
 /** Class representing simple uniform binding.
@@ -204,13 +203,7 @@ class ColorUniformBinding {
       if (!gltexture) {
         if (image.type === 'FLOAT') {
           gltexture = new GLHDRImage(this.gl, image)
-        } else if (image.isStreamAtlas()) {
-          gltexture = new GLImageStream(this.gl, image)
-        }
-        // else if (image.hasAlpha()){
-        //     gltexture = new GLLDRAlphaImage(this.gl, image);
-        // }
-        else {
+        } else {
           gltexture = new GLTexture2D(this.gl, image)
         }
       }
