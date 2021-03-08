@@ -355,7 +355,7 @@ class TreeItem extends BaseItem {
 
         if (this.__highlights.length > 0) {
           const nextName = this.__highlights[this.__highlights.length - 1]
-          const nextColor = this.__highlightMapping[nextColor]
+          const nextColor = this.__highlightMapping[nextName]
           this.emit('highlightChanged', { name: nextName, color: nextColor })
         } else {
           // The last highlight was removed, so emit an event saying we are no longer highlighted.
