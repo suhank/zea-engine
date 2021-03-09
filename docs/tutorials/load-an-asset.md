@@ -24,7 +24,9 @@ This tutorial builds on concepts covered in the following pages:
 
 ```javascript
 const objAsset = new ObjAsset('cow')
-objAsset.getParameter('FilePath').setUrl('data/cow.obj')
+objAsset.load('data/cow.obj').then(()=>{
+  console.log("Yay!")
+})
 scene.getRoot().addChild(objAsset)
 ```
 
