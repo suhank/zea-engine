@@ -14,7 +14,7 @@ Class representing an operator output.
     * [getMode() ⇒ <code>OperatorOutputMode</code>](#getMode)
     * [isConnected() ⇒ <code>boolean</code>](#isConnected)
     * [getParam() ⇒ <code>any</code>](#getParam)
-    * [setParam(param)](#setParam)
+    * [setParam(param, index)](#setParam)
     * [getParamBindIndex() ⇒ <code>number</code>](#getParamBindIndex)
     * [setParamBindIndex(index)](#setParamBindIndex)
     * [setDirty()](#setDirty)
@@ -94,6 +94,7 @@ Sets the Parameter for this out put to write to.
 | Param | Type | Description |
 | --- | --- | --- |
 | param | <code>[Parameter](api/SceneTree\Parameters\Parameter.md)</code> | The param value. |
+| index | <code>number</code> | The index to bind at in the Parameter. |
 
 <a name="OperatorOutput+getParamBindIndex"></a>
 

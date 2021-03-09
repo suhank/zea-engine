@@ -327,6 +327,7 @@ Note: works with either Mat3 or Mat4.
 
 ### setFromDirectionAndUpvector
 Scales and calculates the cross product of the `Vec3` and sets the result in the Mat3
+Note: the resulting matrix +Z axis is aligned with the provided direction value.
 
 
 
@@ -345,7 +346,7 @@ Inverts a Mat3 and returns the result as a new instance.
 <a name="Mat3+invertInPlace"></a>
 
 ### invertInPlace
-Inverts a Mat3.
+Inverts a Mat3 in place modifying its values.
 
 
 **Returns**: <code>boolean</code> - - The return value.  
@@ -360,7 +361,7 @@ and returns the result as a new instance.
 <a name="Mat3+transposeInPlace"></a>
 
 ### transposeInPlace
-Transposes (exchanges columns with rows) this matrix.
+Transposes (exchanges columns with rows) this matrix modifying its values.
 
 
 <a name="Mat3+transformVec3"></a>

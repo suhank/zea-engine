@@ -2,7 +2,6 @@
 
 ### VLAAsset 
 Class designed to load and handle `.vla` files.
-Which facilitates the migration of geometries from third party applications to the Digistar planetarium dome projection.
 
 **Parameters**
 * **DataFilePath([`FilePathParameter`](api/SceneTree\Parameters\FilePathParameter.md)):** Used to specify the path to the file.
@@ -17,6 +16,7 @@ Which facilitates the migration of geometries from third party applications to t
 * [VLAAsset ⇐ <code>AssetItem</code>](#VLAAsset)
     * [new VLAAsset(name)](#new-VLAAsset)
     * [readBinary(reader, context) ⇒ <code>number</code>](#readBinary)
+    * [load(url) ⇒ <code>Promise</code>](#load)
     * [fromJSON(j, context, onDone)](#fromJSON)
 
 <a name="new_VLAAsset_new"></a>
@@ -41,6 +41,18 @@ Sets state of current asset using a binary reader object.
 | --- | --- | --- |
 | reader | <code>[BinReader](api/SceneTree\BinReader.md)</code> | The reader value. |
 | context | <code>object</code> | The context value. |
+
+<a name="VLAAsset+load"></a>
+
+### load
+Loads all the geometries and metadata from the asset file.
+
+
+**Returns**: <code>Promise</code> - - Returns a promise that resolves once the initial load is complete  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| url | <code>string</code> | The URL of the asset to load |
 
 <a name="VLAAsset+fromJSON"></a>
 

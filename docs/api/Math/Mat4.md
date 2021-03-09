@@ -54,15 +54,14 @@ This matrix class is based on GLM, and is column major.
         * [setIdentity()](#setIdentity)
         * [setDataArray(float32Array)](#setDataArray)
         * [setFromMat4(mat4)](#setFromMat4)
-        * [toMat3(mat4) ⇒ <code>Mat3</code>](#toMat3)
+        * [toMat3() ⇒ <code>Mat3</code>](#toMat3)
         * [transposeInPlace()](#transposeInPlace)
         * [transpose()](#transpose)
         * [inverse()](#inverse)
         * [invertInPlace() ⇒ <code>boolean</code>](#invertInPlace)
-        * [setInverse(mat4) ⇒ <code>null</code>](#setInverse)
         * [multiply(other)](#multiply)
         * [multiplyInPlace(other)](#multiplyInPlace)
-        * [postmultiplyInPlace(other) ⇒ <code>Mat3</code>](#postmultiplyInPlace)
+        * [postMultiplyInPlace(other) ⇒ <code>Mat3</code>](#postMultiplyInPlace)
         * [translateInPlace(v3)](#translateInPlace)
         * [setLookAt(pos, target, up)](#setLookAt)
         * [setRotation(axis, rad)](#setRotation)
@@ -72,7 +71,7 @@ This matrix class is based on GLM, and is column major.
         * [transformVec4(vec) ⇒ <code>Vec4</code>](#transformVec4)
         * [transformVec3(vec) ⇒ <code>Vec3</code>](#transformVec3)
         * [rotateVec3(vec) ⇒ <code>Vec3</code>](#rotateVec3)
-        * [setPerspectiveMatrix(fovy, aspect, near, far)](#setPerspectiveMatrix)
+        * [setPerspectiveMatrix(fovY, aspect, near, far)](#setPerspectiveMatrix)
         * [setOrthographicMatrix(left, right, bottom, top, near, far)](#setOrthographicMatrix)
         * [setScale(x, y, z)](#setScale)
         * [setFromMat3x4Array(m3x4)](#setFromMat3x4Array)
@@ -453,14 +452,14 @@ Setter for the `z` axis.
 <a name="Mat4+translation"></a>
 
 ### translation 
-Getter for the translation of the matrix.
+Getter for the translation of the matrix. Assumes the translation values are 12, 13, & 14.
 
 
 **Returns**: <code>[Vec3](api/Math\Vec3.md)</code> - - Returns the translation.  
 <a name="Mat4+translation"></a>
 
 ### translation
-Setter for the translation of the matrix.
+Setter for the translation of the matrix. Assumes the translation values are 12, 13, & 14.
 
 
 
@@ -527,15 +526,10 @@ Note: works with either Mat3 or Mat4.
 <a name="Mat4+toMat3"></a>
 
 ### toMat3
-Converts a Mat4 to a Mat3.
+Returns a Mat3 made up of the top left of the mat4 values.
 
 
 **Returns**: <code>[Mat3](api/Math\Mat3.md)</code> - - Returns a new Mat3.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| mat4 | [<code>Mat4</code>](#Mat4) | The Mat4 value to convert. |
-
 <a name="Mat4+transposeInPlace"></a>
 
 ### transposeInPlace
@@ -553,7 +547,7 @@ and returns the result as a new instance.
 <a name="Mat4+inverse"></a>
 
 ### inverse
-Inverts a Mat4 not using SIMD and returns the result as a new instance.
+Inverts a Mat4 and returns the result as a new instance.
 
 
 **Returns**: [<code>Mat4</code>](#Mat4) - - Returns a new Mat4.  
@@ -564,22 +558,10 @@ Inverts a Mat4.
 
 
 **Returns**: <code>boolean</code> - - The return value.  
-<a name="Mat4+setInverse"></a>
-
-### setInverse
-Sets this matrix as the inverse of the given Mat4.
-
-
-**Returns**: <code>null</code> - - In case the `determinant` can't be calculated, a `null` will be returned, otherwise, nothing is returned  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| mat4 | [<code>Mat4</code>](#Mat4) | The mat4 value. |
-
 <a name="Mat4+multiply"></a>
 
 ### multiply
-Multiplies two Mat4s not using SIMD and returns the result as a new instance.
+Multiplies two Mat4s and returns the result as a new instance.
 
 
 **Returns**: [<code>Mat4</code>](#Mat4) - - Returns a new Mat4.  
@@ -591,7 +573,7 @@ Multiplies two Mat4s not using SIMD and returns the result as a new instance.
 <a name="Mat4+multiplyInPlace"></a>
 
 ### multiplyInPlace
-Multiplies two Mat4s in place explicitly not using SIMD.
+Multiplies two Mat4s in place explicitly.
 
 
 **Returns**: [<code>Mat4</code>](#Mat4) - - Returns a new Mat4.  
@@ -600,10 +582,10 @@ Multiplies two Mat4s in place explicitly not using SIMD.
 | --- | --- | --- |
 | other | [<code>Mat4</code>](#Mat4) | The other Mat4 to multiply with. |
 
-<a name="Mat4+postmultiplyInPlace"></a>
+<a name="Mat4+postMultiplyInPlace"></a>
 
-### postmultiplyInPlace
-Post multiplies two Mat4s in place explicitly not using SIMD.
+### postMultiplyInPlace
+Post multiplies two Mat4s in place explicitly.
 
 
 **Returns**: <code>[Mat3](api/Math\Mat3.md)</code> - - Returns the result as a new Mat4.  
@@ -615,7 +597,7 @@ Post multiplies two Mat4s in place explicitly not using SIMD.
 <a name="Mat4+translateInPlace"></a>
 
 ### translateInPlace
-Translate a Mat4 by the given vector not using SIMD.
+Translate a Mat4 by the given vector.
 
 
 **Returns**: [<code>Mat4</code>](#Mat4) - - The return value.  
@@ -729,7 +711,7 @@ Transforms the Vec3 with a Mat4.
 <a name="Mat4+rotateVec3"></a>
 
 ### rotateVec3
-Rotates a given `Vec3` and the result is returned as a new `Vec3`
+Rotates a given `Vec3` and the result is returned as a new `Vec3`, applying only the top left components of the matrix, so not applying any translation.
 
 
 **Returns**: <code>[Vec3](api/Math\Vec3.md)</code> - - Return the result as a new Vec3.  
@@ -747,7 +729,7 @@ Set the perspective from a Mat4.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| fovy | <code>number</code> | The fovy value. |
+| fovY | <code>number</code> | The fovY value. |
 | aspect | <code>number</code> | The aspect value. |
 | near | <code>number</code> | The near value. |
 | far | <code>number</code> | The far value. |
@@ -771,7 +753,7 @@ Calculates the orthographic matrix and sets the state of the Mat4 class
 <a name="Mat4+setScale"></a>
 
 ### setScale
-Scales Mat4 Matrix
+Set the Matrix to be a scale matrix.
 
 
 
@@ -784,7 +766,7 @@ Scales Mat4 Matrix
 <a name="Mat4+setFromMat3x4Array"></a>
 
 ### setFromMat3x4Array
-Transforms a 3x4 matrix into a 4x4 matrix and set the result to the Math4 state.
+Loads a 3x4 matrix data into a the Mat4.
 
 
 

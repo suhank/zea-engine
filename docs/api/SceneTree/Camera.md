@@ -107,7 +107,7 @@ The FOV is how much of the scene the camera can see at once.
 ### setLensFocalLength
 Setter for the camera lens focal length. Updates `fov` parameter value after a small math procedure.
 
-**Focal Lenth accepted values:** 10mm, 11mm, 12mm, 14mm, 15mm, 17mm, 18mm,
+**Focal Length accepted values:** 10mm, 11mm, 12mm, 14mm, 15mm, 17mm, 18mm,
 19mm, 20mm, 24mm, 28mm, 30mm, 35mm, 45mm, 50mm, 55mm, 60mm, 70mm, 75mm, 80mm,
 85mm, 90mm, 100mm, 105mm, 120mm, 125mm, 135mm, 150mm, 170mm, 180mm, 210mm, 300mm,
 400mm, 500mm, 600mm, 800mm
@@ -158,7 +158,7 @@ Sets `focalDistance` parameter value.
 <a name="Camera+setPositionAndTarget"></a>
 
 ### setPositionAndTarget
-Setter for the camera postion and target.
+Setter for the camera position and target.
 As described at the start of the class, this is a `TreeItem`,
 which means we can move it around using translation modifiers.
 You can do it this way or using the changing `TreeItem` parameters,

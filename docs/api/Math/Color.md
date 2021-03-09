@@ -19,16 +19,11 @@ Class representing a color as 4 floating point values.
         * [a](#a)
         * [set(r, g, b, a)](#set)
         * [setFromOther(other)](#setFromOther)
-        * [setFromScalarArray(vals)](#setFromScalarArray)
-        * [getAsRGBArray() ⇒ <code>array</code>](#getAsRGBArray)
-        * [getAsRGBDict() ⇒ <code>object</code>](#getAsRGBDict)
-        * [setFromRGB(r, g, b, a)](#setFromRGB)
-        * [setFromRGBArray(vals)](#setFromRGBArray)
-        * [setFromRGBDict(vals)](#setFromRGBDict)
         * [setFromHex(hex)](#setFromHex)
         * [setFromCSSColorName(name)](#setFromCSSColorName)
         * [toHex() ⇒ <code>string</code>](#toHex)
-        * [equal(other) ⇒ <code>boolean</code>](#equal)
+        * ~~[.equal(other)](#Color+equal) ⇒ <code>boolean</code>~~
+        * [isEqual(other) ⇒ <code>boolean</code>](#isEqual)
         * [notEquals(other) ⇒ <code>boolean</code>](#notEquals)
         * [approxEqual(other, precision) ⇒ <code>boolean</code>](#approxEqual)
         * [add(other)](#add)
@@ -46,7 +41,6 @@ Class representing a color as 4 floating point values.
         * [toJSON() ⇒ <code>object</code>](#toJSON)
         * [fromJSON(j)](#fromJSON)
         * [readBinary(reader)](#readBinary)
-        * [toCSSString() ⇒ <code>string</code>](#toCSSString)
     * _static_
         * [random(gammaOffset, randomAlpha)](#random)
         * [createFromBuffer(buffer, byteOffset)](#createFromBuffer)
@@ -161,83 +155,22 @@ Sets current color state with another `Color` object.
 | --- | --- | --- |
 | other | [<code>Color</code>](#Color) | The other color to set from. |
 
-<a name="Color+setFromScalarArray"></a>
-
-### setFromScalarArray
-Setter from a scalar array.
-
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| vals | <code>Float32Array</code> | The vals param. |
-
-<a name="Color+getAsRGBArray"></a>
-
-### getAsRGBArray
-Getter from an RGB array.
-
-
-**Returns**: <code>array</code> - - The return value.  
-<a name="Color+getAsRGBDict"></a>
-
-### getAsRGBDict
-Getter from an RGB dict.
-
-
-**Returns**: <code>object</code> - - The return value.  
-<a name="Color+setFromRGB"></a>
-
-### setFromRGB
-Setter from a RGB value.
-
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| r | <code>number</code> | The red channel. |
-| g | <code>number</code> | The green channel. |
-| b | <code>number</code> | The blue channel. |
-| a | <code>number</code> | The alpha channel. |
-
-<a name="Color+setFromRGBArray"></a>
-
-### setFromRGBArray
-Setter from an RGB array.
-
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| vals | <code>Float32Array</code> | The vals param. |
-
-<a name="Color+setFromRGBDict"></a>
-
-### setFromRGBDict
-Setter from an RGB dict.
-
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| vals | <code>Float32Array</code> | The vals param. |
-
 <a name="Color+setFromHex"></a>
 
 ### setFromHex
-Setter from a hexadecimal value.
+Setter from a hexadecimal string value.
 E.g. #ff0000
 
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| hex | <code>number</code> | The hex value. |
+| hex | <code>string</code> | The hex string value. |
 
 <a name="Color+setFromCSSColorName"></a>
 
 ### setFromCSSColorName
-Setter from a CSS color name.
+Sets the Color values from a CSS color name.
 E.g. "red"
 
 
@@ -255,8 +188,8 @@ Returns the hexadecimal value of this color, including the leading "#" character
 **Returns**: <code>string</code> - - Returns the hex value.  
 <a name="Color+equal"></a>
 
-### equal
-Returns true if this color is exactly the same as other.
+### ~~color.equal(other) ⇒ <code>boolean</code>~~
+***Deprecated***
 
 
 **Returns**: <code>boolean</code> - - Returns true or false.  
@@ -264,6 +197,18 @@ Returns true if this color is exactly the same as other.
 | Param | Type | Description |
 | --- | --- | --- |
 | other | [<code>Color</code>](#Color) | The other color to compare with. |
+
+<a name="Color+isEqual"></a>
+
+### isEqual
+Checks if this Color  contains the same values as the other.
+
+
+**Returns**: <code>boolean</code> - - Returns `true` if the values are the same, otherwise, `false`.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| other | [<code>Color</code>](#Color) | The other Color to compare with. |
 
 <a name="Color+notEquals"></a>
 
@@ -305,7 +250,7 @@ Returns a new Color which is this Color added to other.
 <a name="Color+addInPlace"></a>
 
 ### addInPlace
-Updates the Color by adding the other.
+Updates this Color by adding the values from the other color.
 
 
 
@@ -374,7 +319,7 @@ Converts to linear color space and returns a new color
 <a name="Color+toGamma"></a>
 
 ### toGamma
-Converts to gamma color space and returns a new color.
+returns a new color value value is mapped into a gamma curve
 
 
 **Returns**: [<code>Color</code>](#Color) - - Returns a new color.  
@@ -386,7 +331,7 @@ Converts to gamma color space and returns a new color.
 <a name="Color+luminance"></a>
 
 ### luminance
-Calculates and returns the relative luminance of the linear RGB component.
+Calculates and returns the luminance of the linear RGB components.
 
 
 **Returns**: <code>number</code> - - The return value.  
@@ -446,25 +391,18 @@ Loads the state of the value from a binary reader.
 | --- | --- | --- |
 | reader | <code>[BinReader](api/SceneTree\BinReader.md)</code> | The reader value. |
 
-<a name="Color+toCSSString"></a>
-
-### toCSSString
-Returns the CSS rgba string.
-
-
-**Returns**: <code>string</code> - - The return value.  
 <a name="Color.random"></a>
 
 ### random
 Creates a random color.
 
 
-**Returns**: [<code>Color</code>](#Color) - - Returns a new random color.  
+**Returns**: [<code>Color</code>](#Color) - - The new random color.  
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| gammaOffset | <code>number</code> | <code>0</code> | The gamma offset. |
-| randomAlpha | <code>boolean</code> | <code>false</code> | Determines whether the alpha channel is random. |
+| gammaOffset | <code>number</code> | <code>0</code> | The gamma offset. Values between 0 and 1 increase the average brightness of the generated color. Values between 0 and -1 darken the generated color values. |
+| randomAlpha | <code>boolean</code> | <code>false</code> | Determines whether the alpha channel is random. If not, the alpha values will be 1.0. |
 
 <a name="Color.createFromBuffer"></a>
 

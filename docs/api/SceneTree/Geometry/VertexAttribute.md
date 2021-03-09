@@ -13,8 +13,8 @@ const vertexAttribute = new VertexAttribute(this, Float32, 0)
 * [VertexAttribute ⇐ <code>Attribute</code>](#VertexAttribute)
     * [new VertexAttribute(geom, dataType, expectedSize, defaultScalarValue)](#new-VertexAttribute)
     * [resize(size)](#resize)
-    * [getFaceVertexValueRef(face, facevertex) ⇒ <code>AttrValue</code>](#getFaceVertexValueRef)
-    * [setFaceVertexValue(face, facevertex, value)](#setFaceVertexValue)
+    * [getFaceVertexValueRef(face, faceVertex) ⇒ <code>AttrValue</code>](#getFaceVertexValueRef)
+    * [setFaceVertexValue(face, faceVertex, value)](#setFaceVertexValue)
     * [setFaceVertexValue_ByVertexIndex(face, vertex, value)](#setFaceVertexValue_ByVertexIndex)
     * [setSplitVertexValue(vertex, face, value)](#setSplitVertexValue)
     * [setSplitVertexValues(vertex, faceGroup, value)](#setSplitVertexValues)
@@ -61,7 +61,7 @@ The getFaceVertexValueRef method.
 | Param | Type | Description |
 | --- | --- | --- |
 | face | <code>number</code> | The face value. |
-| facevertex | <code>number</code> | The face vertex value. |
+| faceVertex | <code>number</code> | The face vertex value. |
 
 <a name="VertexAttribute+setFaceVertexValue"></a>
 
@@ -73,7 +73,7 @@ The setFaceVertexValue method.
 | Param | Type | Description |
 | --- | --- | --- |
 | face | <code>number</code> | The face value. |
-| facevertex | <code>number</code> | The facevertex value. |
+| faceVertex | <code>number</code> | The faceVertex value. |
 | value | <code>[AttrValue](api/Math\AttrValue.md)</code> | The value value. |
 
 <a name="VertexAttribute+setFaceVertexValue_ByVertexIndex"></a>

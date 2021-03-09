@@ -75,7 +75,7 @@ Verifies that the Xfo object is an `identity`, checking that the translation, or
 <a name="Xfo+isEqual"></a>
 
 ### isEqual
-Checks if this Vec3 is exactly the same as another Vec3.
+Checks if this Vec3 contains the same values as the other Vec3.
 
 
 **Returns**: <code>boolean</code> - - Returns `true` if are the same Vector, otherwise, `false`.  

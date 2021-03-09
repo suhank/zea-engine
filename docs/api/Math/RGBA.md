@@ -1,7 +1,7 @@
 <a name="RGBA"></a>
 
 ### RGBA 
-Class representing the red, green, blue and alpha channel of a color.
+Class representing the red, green, blue and alpha channel of a color as 8bit values.
 
 
 **Extends**: <code>[AttrValue](api/Math\AttrValue.md)</code>  
@@ -19,11 +19,12 @@ Class representing the red, green, blue and alpha channel of a color.
         * [a](#a)
         * [set(r, g, b, a)](#set)
         * [setFromOther(other)](#setFromOther)
-        * [setFromArray(vals)](#setFromArray)
+        * [setFromArray(values)](#setFromArray)
         * [setFromHex(hex)](#setFromHex)
         * [setFromCSSColorName(name)](#setFromCSSColorName)
         * [toHex() ⇒ <code>string</code>](#toHex)
-        * [equal(other) ⇒ <code>boolean</code>](#equal)
+        * ~~[.equal(other)](#RGBA+equal) ⇒ <code>boolean</code>~~
+        * [isEqual(other) ⇒ <code>boolean</code>](#isEqual)
         * [notEquals(other) ⇒ <code>boolean</code>](#notEquals)
         * [approxEqual(other, precision) ⇒ <code>boolean</code>](#approxEqual)
         * [add(other)](#add)
@@ -53,7 +54,7 @@ Create a RGBA.
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| r | <code>number</code> \| <code>string</code> \| <code>Float32Array</code> \| <code>ArrayBuffer</code> | <code>0</code> | The red channel of a color. |
+| r | <code>number</code> \| <code>string</code> \| <code>Uint8Array</code> | <code>0</code> | The red channel of a color. |
 | g | <code>number</code> | <code>0</code> | The green channel of a color. |
 | b | <code>number</code> | <code>0</code> | The blue channel of a color. |
 | a | <code>number</code> | <code>255</code> | The alpha (transparency) channel of a color. |
@@ -164,7 +165,7 @@ Setter from a scalar array.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| vals | <code>array</code> | The vals param. |
+| values | <code>array</code> | The array of values. |
 
 <a name="RGBA+setFromHex"></a>
 
@@ -199,8 +200,8 @@ Returns the hexadecimal value of this RGBA color.
 **Returns**: <code>string</code> - - Returns the hex value.  
 <a name="RGBA+equal"></a>
 
-### equal
-Returns true if this RGBA color is exactly the same as other.
+### ~~rgbA.equal(other) ⇒ <code>boolean</code>~~
+***Deprecated***
 
 
 **Returns**: <code>boolean</code> - - Returns true or false.  
@@ -208,6 +209,18 @@ Returns true if this RGBA color is exactly the same as other.
 | Param | Type | Description |
 | --- | --- | --- |
 | other | [<code>RGBA</code>](#RGBA) | The other RGBA to compare with. |
+
+<a name="RGBA+isEqual"></a>
+
+### isEqual
+Checks if this Color  contains the same values as the other.
+
+
+**Returns**: <code>boolean</code> - - Returns `true` if the values are the same, otherwise, `false`.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| other | <code>[Color](api/Math\Color.md)</code> | The other Color to compare with. |
 
 <a name="RGBA+notEquals"></a>
 
@@ -360,7 +373,7 @@ Returns the type as a 3 component array. Often used to pass types to the GPU.
 <a name="RGBA+toJSON"></a>
 
 ### toJSON
-The toJSON method encodes this type as a json object for persistences.
+The toJSON method encodes this type as a json object for persistence.
 
 
 **Returns**: <code>object</code> - - The json object.  

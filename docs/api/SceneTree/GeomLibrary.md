@@ -46,7 +46,7 @@ Loads the geometry files for this GeomLibrary.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| geomLibraryJSON | <code>number</code> | The json data describing the data needed to be loaded by the goem library |
+| geomLibraryJSON | <code>number</code> | The json data describing the data needed to be loaded by the geom library |
 | basePath | <code>string</code> | The base path of the file. (this is theURL of the zcad file without its extension.) |
 | context | <code>object</code> | The value param. |
 
@@ -59,7 +59,7 @@ The setGenBufferOption method.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| key | <code>any</code> | The key value. |
+| key | <code>string</code> | The key value. |
 | value | <code>any</code> | The value param. |
 
 <a name="GeomLibrary+setNumGeoms"></a>
@@ -120,7 +120,7 @@ The readBinaryBuffer method.
 <a name="GeomLibrary+toJSON"></a>
 
 ### toJSON
-The toJSON method encodes this type as a json object for persistences.
+The toJSON method encodes this type as a json object for persistence.
 
 
 **Returns**: <code>object</code> - - Returns the json object.  

@@ -163,7 +163,7 @@ The getGeomDataFbo method.
 <a name="GLViewport+renderGeomDataFbo"></a>
 
 ### renderGeomDataFbo
-Renders the scene geometry to the viewports geom data buffer
+Renders the scene geometry to the viewport's geom data buffer
 in preparation for mouse picking.
 
 
@@ -299,7 +299,7 @@ Causes an event to occur when the mouse wheel is rolled up or down over an eleme
 
 | Param | Type | Description |
 | --- | --- | --- |
-| event | <code>MouoseWheelEvent</code> | The event that occurs. |
+| event | <code>WheelEvent</code> | The event that occurs. |
 
 <a name="GLViewport+onTouchCancel"></a>
 

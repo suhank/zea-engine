@@ -8,6 +8,7 @@ Represents a TreeItem with rendering and material capabilities.
 
 * [AssetItem ⇐ <code>TreeItem</code>](#AssetItem)
     * [new AssetItem(name)](#new-AssetItem)
+    * [load(url) ⇒ <code>Promise</code>](#load)
     * [isLoaded() ⇒ <code>boolean</code>](#isLoaded)
     * [getEngineDataVersion() ⇒ <code>array</code>](#getEngineDataVersion)
     * [getGeometryLibrary() ⇒ <code>GeomLibrary</code>](#getGeometryLibrary)
@@ -28,6 +29,18 @@ Create an asset item.
 | Param | Type | Description |
 | --- | --- | --- |
 | name | <code>string</code> | The name of the asset item. |
+
+<a name="AssetItem+load"></a>
+
+### load
+Loads all the geometries and metadata from the asset file.
+
+
+**Returns**: <code>Promise</code> - - Returns a promise that resolves once the initial load is complete  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| url | <code>string</code> | The URL of the asset to load |
 
 <a name="AssetItem+isLoaded"></a>
 

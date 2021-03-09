@@ -15,7 +15,7 @@ Represents a box in 3D space defined by two Vec3 values which define opposing co
     * [isValid() ⇒ <code>boolean</code>](#isValid)
     * [addPoint(point)](#addPoint)
     * [addBox3(box3, xfo)](#addBox3)
-    * [size()](#size)
+    * [size() ⇒ <code>number</code>](#size)
     * [diagonal()](#diagonal)
     * [center() ⇒ <code>Vec3</code>](#center)
     * [toMat4() ⇒ <code>Mat4</code>](#toMat4)
@@ -61,7 +61,7 @@ Getter for the upper (x, y, z) boundary of the box.
 <a name="Box3+set"></a>
 
 ### set
-Sets both Vect3 points
+Sets both Vec3 points
 
 
 
@@ -110,14 +110,14 @@ it proceeds to apply the transform for the Vec3.
 <a name="Box3+size"></a>
 
 ### size
-Returns the size of the Box3.
+Returns the length of the diagonal of the box.
 
 
-**Returns**: [<code>Box3</code>](#Box3) - - Returns a Box3.  
+**Returns**: <code>number</code> - - Returns the distance.  
 <a name="Box3+diagonal"></a>
 
 ### diagonal
-Returns the size of a Box3 - the same as size().
+Returns the diagonal vector of the B=box from p0 to p1.
 
 
 **Returns**: [<code>Box3</code>](#Box3) - - Returns a Box3.  
@@ -131,7 +131,7 @@ Returns the center point of a Box3.
 <a name="Box3+toMat4"></a>
 
 ### toMat4
-Converts this Box3 to a Mat4 (a 4x4 matrix).
+Converts this Box3 to a Mat4 (a 4x4 matrix). The returned mat4 would transform a unit cube into the shape of the Bounding box.
 
 
 **Returns**: <code>[Mat4](api/Math\Mat4.md)</code> - - Returns a new Mat4.  
@@ -145,10 +145,10 @@ Calculates and returns the bounding Sphere of the Box3
 <a name="Box3+intersectsBox"></a>
 
 ### intersectsBox
-Determines if this Box3 intersects a plane.
+Determines if this Box3 intersects a given box value.
 
 
-**Returns**: <code>boolean</code> - - The return value.  
+**Returns**: <code>boolean</code> - - Returns true if the shapes intersect.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -160,7 +160,7 @@ Determines if this Box3 intersects a plane.
 Determines if this Box3 intersects a sphere.
 
 
-**Returns**: <code>boolean</code> - - The return value.  
+**Returns**: <code>boolean</code> - - Returns true if the shapes intersect.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -172,7 +172,7 @@ Determines if this Box3 intersects a sphere.
 Determines if this Box3 intersects a plane.
 
 
-**Returns**: <code>boolean</code> - - The return value.  
+**Returns**: <code>boolean</code> - - Returns true if the shapes intersect.  
 
 | Param | Type | Description |
 | --- | --- | --- |

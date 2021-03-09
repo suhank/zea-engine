@@ -21,7 +21,7 @@ Base class for Items in the scene. It can be parameterized and can emit events.
         * [setOwner(ownerItem)](#setOwner)
         * [getSelectable() ⇒ <code>boolean</code>](#getSelectable)
         * [setSelectable(val) ⇒ <code>boolean</code>](#setSelectable)
-        * ~~[.isSelected()](#BaseItem+isSelected) ⇒ <code>boolean</code>~~
+        * [isSelected() ⇒ <code>boolean</code>](#isSelected)
         * [getSelected() ⇒ <code>boolean</code>](#getSelected)
         * [setSelected(sel)](#setSelected)
         * [getMetadata(key) ⇒ <code>object</code> \| <code>string</code> \| <code>any</code>](#getMetadata)
@@ -127,14 +127,11 @@ Modifies the selectability of this item.
 
 <a name="BaseItem+isSelected"></a>
 
-### ~~baseItem.isSelected() ⇒ <code>boolean</code>~~
-***Deprecated***
-
+### isSelected
 The isSelected method.
 
 
 **Returns**: <code>boolean</code> - - The return value.  
-**See**: `getSelected` method  
 <a name="BaseItem+getSelected"></a>
 
 ### getSelected
@@ -242,7 +239,7 @@ Sets state of current Item(Including parameters) using a binary reader object.
 ### clone
 Clones this base item and returns a new base item.
 <br>
-**Note:** Each class should implement clone to be clonable.
+**Note:** Each class should implement clone to be cloneable.
 
 
 

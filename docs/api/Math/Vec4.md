@@ -50,7 +50,7 @@ expose getters and setters for the component values.
         * [random(scale)](#random)
         * [clone()](#clone)
         * [toVec3() ⇒ <code>Vec3</code>](#toVec3)
-        * [asArray() ⇒ <code>aray</code>](#asArray)
+        * [asArray() ⇒ <code>array</code>](#asArray)
         * [toJSON() ⇒ <code>object</code>](#toJSON)
         * [fromJSON(j)](#fromJSON)
         * [readBinary(reader)](#readBinary)
@@ -183,7 +183,7 @@ Setter for `w` value.
 <a name="Vec4+xyz"></a>
 
 ### xyz 
-Getter for `xy` swizzel.
+Getter for `xyz` swizzel.
 
 
 **Returns**: <code>number</code> - - Returns the z value.  
@@ -217,7 +217,7 @@ Sets the state of a Vec4 Object from another Vec4.
 ### ~~vec4.equal(other) ⇒ <code>boolean</code>~~
 ***Deprecated***
 
-Checks if this Vec4 is exactly the same as another Vec4.
+Checks if this Vec4 contains the same values as the other Vec4.
 
 
 **Returns**: <code>boolean</code> - - Returns true or false.  
@@ -229,7 +229,7 @@ Checks if this Vec4 is exactly the same as another Vec4.
 <a name="Vec4+isEqual"></a>
 
 ### isEqual
-Checks if this Vec4 is exactly the same as another Vec4.
+Checks if this Vec4 contains the same values as the other Vec4.
 
 
 **Returns**: <code>boolean</code> - - Returns true or false.  
@@ -410,14 +410,14 @@ Calculates the squared length of this Vec4.
 
 ### normalize
 Normalizes the Vec4 and returns it as a new Vec4.
-Multiplies coordenates value by the inverse of the vector length.
+Multiplies coordinates value by the inverse of the vector length.
 
 
 **Returns**: [<code>Vec4</code>](#Vec4) - - Returns the Vec4 normalized.  
 <a name="Vec4+normalizeInPlace"></a>
 
 ### normalizeInPlace
-Normalizes this Vec4 multiplying coordenate values by the inverse of the vector length.
+Normalizes this Vec4 multiplying coordinate values by the inverse of the vector length.
 
 
 <a name="Vec4+dot"></a>
@@ -479,7 +479,7 @@ Generates a random vector with the given scale.
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| scale | <code>number</code> | <code>1</code> | Length of the resulting vector. If ommitted, a unit vector will be returned. |
+| scale | <code>number</code> | <code>1</code> | Length of the resulting vector. If omitted, a unit vector will be returned. |
 
 <a name="Vec4+clone"></a>
 
@@ -501,7 +501,7 @@ Converts this Vec4 into a Vec3.
 Returns the type as an array. Often used to pass types to the GPU.
 
 
-**Returns**: <code>aray</code> - - Returns as an array.  
+**Returns**: <code>array</code> - - Returns as an array.  
 <a name="Vec4+toJSON"></a>
 
 ### toJSON

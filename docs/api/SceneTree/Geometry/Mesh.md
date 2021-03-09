@@ -28,7 +28,7 @@ const mesh = new Mesh()
     * [setFaceVertexIndices(faceIndex, vertexIndices)](#setFaceVertexIndices)
     * [addFace(vertexIndices) ⇒ <code>number</code>](#addFace)
     * [getFaceVertexIndices(faceIndex) ⇒ <code>array</code>](#getFaceVertexIndices)
-    * [getFaceVertexIndex(faceIndex, facevertex) ⇒ <code>number</code>](#getFaceVertexIndex)
+    * [getFaceVertexIndex(faceIndex, faceVertex) ⇒ <code>number</code>](#getFaceVertexIndex)
     * [addVertexAttribute(name, dataType, defaultScalarValue) ⇒ <code>VertexAttribute</code>](#addVertexAttribute)
     * [addFaceAttribute(name, dataType, count) ⇒ <code>Attribute</code>](#addFaceAttribute)
     * [hasFaceAttribute(name) ⇒ <code>boolean</code>](#hasFaceAttribute)
@@ -149,7 +149,7 @@ Returns the vertex indices of the specified face.
 <a name="Mesh+getFaceVertexIndex"></a>
 
 ### getFaceVertexIndex
-Returns a single vertex index for a given face and facevertex.
+Returns a single vertex index for a given face and faceVertex.
 
 
 **Returns**: <code>number</code> - - The vertex index  
@@ -157,7 +157,7 @@ Returns a single vertex index for a given face and facevertex.
 | Param | Type | Description |
 | --- | --- | --- |
 | faceIndex | <code>number</code> | The faceIndex value. |
-| facevertex | <code>number</code> | The face vertex is the index within the face. So the first vertex index is 0. |
+| faceVertex | <code>number</code> | The face vertex is the index within the face. So the first vertex index is 0. |
 
 <a name="Mesh+addVertexAttribute"></a>
 
@@ -221,7 +221,7 @@ The addEdgeAttribute method.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| name | <code>string</code> | The name of the edge attribute t oadd. |
+| name | <code>string</code> | The name of the edge attribute to add. |
 | dataType | <code>AttrValue</code> \| <code>number</code> | The data type. |
 | count | <code>number</code> | The default scalar value. |
 
@@ -317,12 +317,12 @@ To prepare data for rendering, the indices for the polygons is used to compute a
 only triangles. This is used during rendering and the resulting indices uploaded ot the GPU  by GLMesh class.
 
 
-**Returns**: <code>TypedArray</code> - - Retures a typed array containing the triangulated indices.  
+**Returns**: <code>TypedArray</code> - - Returns a typed array containing the triangulated indices.  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | totalNumVertices | <code>number</code> | The total number of vertices. |
-| numUnSplitVertices | <code>number</code> | The total number of unsplit vertices. |
+| numUnSplitVertices | <code>number</code> | The total number of un-split vertices. |
 | splitIndices | <code>array</code> | The splitIndices value. |
 
 <a name="Mesh+readBinary"></a>

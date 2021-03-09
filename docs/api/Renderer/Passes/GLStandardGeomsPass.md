@@ -13,16 +13,6 @@ This class abstracts the rendering of a collection of geometries to screen.
     * [itemRemovedFromScene(treeItem, rargs) ⇒ <code>Boolean</code>](#itemRemovedFromScene)
     * [filterGeomItem(geomItem) ⇒ <code>any</code>](#filterGeomItem)
     * [constructShaders(shaderName) ⇒ <code>object</code>](#constructShaders)
-    * [constructGLMaterial(material) ⇒ <code>GLMaterial</code>](#constructGLMaterial)
-    * [constructGLGeom(geom) ⇒ <code>GLGeom</code>](#constructGLGeom)
-    * [removeGeom(geom)](#removeGeom)
-    * [constructGLGeomItem(geomItem) ⇒ <code>GLGeomItem</code>](#constructGLGeomItem)
-    * [removeGeomItem(geomItem) ⇒ <code>any</code>](#removeGeomItem)
-    * [removeGLGeom(geomItemMapping, materialGeomMapping)](#removeGLGeom)
-    * [getGeomItem(id) ⇒ <code>any</code>](#getGeomItem)
-    * [newItemsReadyForLoading() ⇒ <code>any</code>](#newItemsReadyForLoading)
-    * [uploadGeomItems()](#uploadGeomItems)
-    * [finalize()](#finalize)
 
 <a name="new_GLStandardGeomsPass_new"></a>
 
@@ -38,8 +28,8 @@ The init method.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| renderer | <code>any</code> | The renderer value. |
-| passIndex | <code>any</code> | The passIndex value. |
+| renderer | <code>[GLBaseRenderer](api/Renderer\GLBaseRenderer.md)</code> | The renderer value. |
+| passIndex | <code>number</code> | The index of the pass in the GLBAseRenderer |
 
 <a name="GLStandardGeomsPass+itemAddedToScene"></a>
 
@@ -80,7 +70,7 @@ The filterGeomItem method.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| geomItem | <code>any</code> | The geomItem value. |
+| geomItem | <code>[GeomItem](api/SceneTree\GeomItem.md)</code> | The geomItem value. |
 
 <a name="GLStandardGeomsPass+constructShaders"></a>
 
@@ -97,106 +87,4 @@ and a glselectedshader for rendering selection hilghlights
 | Param | Type | Description |
 | --- | --- | --- |
 | shaderName | <code>string</code> | The name of the base shader. |
-
-<a name="GLStandardGeomsPass+constructGLMaterial"></a>
-
-### constructGLMaterial
-Given a material, generates a GLMaterial that manages the GPU state for the material.
-
-
-**Returns**: <code>[GLMaterial](api/Renderer\Drawing\GLMaterial.md)</code> - - The constructed GLMaterial.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| material | <code>[Material](api/SceneTree\Material.md)</code> | The material value. |
-
-<a name="GLStandardGeomsPass+constructGLGeom"></a>
-
-### constructGLGeom
-Given a BaseGeom, constructs the GLGeom that manages the state of the geometry in the GPU.
-
-
-**Returns**: <code>[GLGeom](api/Renderer\Drawing\GLGeom.md)</code> - - The return value.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| geom | <code>[BaseGeom](api/SceneTree\Geometry\BaseGeom.md)</code> | The geom value. |
-
-<a name="GLStandardGeomsPass+removeGeom"></a>
-
-### removeGeom
-The removeGeom method.
-
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| geom | <code>[BaseGeom](api/SceneTree\Geometry\BaseGeom.md)</code> | The geom value. |
-
-<a name="GLStandardGeomsPass+constructGLGeomItem"></a>
-
-### constructGLGeomItem
-Given a GeomItem, constructs the GLGeomItem that manages the GPU state of the GeomItem.
-
-
-**Returns**: <code>[GLGeomItem](api/Renderer\Drawing\GLGeomItem.md)</code> - - The return value.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| geomItem | <code>[GeomItem](api/SceneTree\GeomItem.md)</code> | The geomItem value. |
-
-<a name="GLStandardGeomsPass+removeGeomItem"></a>
-
-### removeGeomItem
-The removeGeomItem method.
-
-
-**Returns**: <code>any</code> - - The return value.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| geomItem | <code>any</code> | The geomItem value. |
-
-<a name="GLStandardGeomsPass+removeGLGeom"></a>
-
-### removeGLGeom
-The removeGLGeom method.
-
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| geomItemMapping | <code>any</code> | The geomItemMapping value. |
-| materialGeomMapping | <code>any</code> | The materialGeomMapping value. |
-
-<a name="GLStandardGeomsPass+getGeomItem"></a>
-
-### getGeomItem
-The getGeomItem method.
-
-
-**Returns**: <code>any</code> - - The return value.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| id | <code>any</code> | The id value. |
-
-<a name="GLStandardGeomsPass+newItemsReadyForLoading"></a>
-
-### newItemsReadyForLoading
-The newItemsReadyForLoading method.
-
-
-**Returns**: <code>any</code> - - The return value.  
-<a name="GLStandardGeomsPass+uploadGeomItems"></a>
-
-### uploadGeomItems
-The uploadGeomItems method.
-
-
-<a name="GLStandardGeomsPass+finalize"></a>
-
-### finalize
-The finalize method.
-
 

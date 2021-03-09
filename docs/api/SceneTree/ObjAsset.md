@@ -21,8 +21,7 @@ Which define the geometry and other properties for objects.
 
 * [ObjAsset ⇐ <code>AssetItem</code>](#ObjAsset)
     * [new ObjAsset(name)](#new-ObjAsset)
-    * [getGeometryLibrary() ⇒ <code>GeomLibrary</code>](#getGeometryLibrary)
-    * [getMaterialLibrary() ⇒ <code>MaterialLibrary</code>](#getMaterialLibrary)
+    * [load(url) ⇒ <code>Promise</code>](#load)
 
 <a name="new_ObjAsset_new"></a>
 
@@ -34,17 +33,15 @@ Create an obj asset.
 | --- | --- | --- |
 | name | <code>string</code> | The name of the object asset. |
 
-<a name="ObjAsset+getGeometryLibrary"></a>
+<a name="ObjAsset+load"></a>
 
-### getGeometryLibrary
-Returns `GeomLibrary` object which hosts workers, buffers, streams and geometry objects.
-
-
-**Returns**: <code>[GeomLibrary](api/SceneTree\GeomLibrary.md)</code> - - The return value.  
-<a name="ObjAsset+getMaterialLibrary"></a>
-
-### getMaterialLibrary
-Returns `MaterialLibrary` object wich hosts images and `Material` objects.
+### load
+Loads all the geometries and metadata from the Obj file.
 
 
-**Returns**: <code>[MaterialLibrary](api/SceneTree\MaterialLibrary.md)</code> - - The return value.  
+**Returns**: <code>Promise</code> - - Returns a promise that resolves once the initial load is complete  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| url | <code>string</code> | The URL of the asset to load |
+

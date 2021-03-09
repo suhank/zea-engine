@@ -1,16 +1,16 @@
 <a name="Ray"></a>
 
 ### Ray
-Class representing a ray that emits from an origin in a specified direction.
+Class representing a ray that starts from an origin in a specified direction.
 
 
 
 * [Ray](#Ray)
     * [new Ray(start, dir)](#new-Ray)
     * [closestPoint(point)](#closestPoint)
-    * [closestPointOnLineSegment(p0, p1) ⇒ <code>number</code>](#closestPointOnLineSegment)
+    * [closestPointOnLineSegment(p0, p1) ⇒ <code>array</code>](#closestPointOnLineSegment)
     * [pointAtDist(dist)](#pointAtDist)
-    * [intersectRayVector(ray)](#intersectRayVector)
+    * [intersectRayVector(ray) ⇒ <code>array</code>](#intersectRayVector)
     * [intersectRayPlane(plane) ⇒ <code>number</code>](#intersectRayPlane)
     * [intersectRayBox3(box3, tolerance) ⇒ <code>boolean</code>](#intersectRayBox3)
     * [clone()](#clone)
@@ -35,7 +35,7 @@ Create a ray.
 Get the closest point on the ray to the given point.
 
 
-**Returns**: [<code>Ray</code>](#Ray) - - Returns a Ray.  
+**Returns**: [<code>Ray</code>](#Ray) - - Returns the distance along the ray where the closest point occurs.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -44,10 +44,10 @@ Get the closest point on the ray to the given point.
 <a name="Ray+closestPointOnLineSegment"></a>
 
 ### closestPointOnLineSegment
-Get the closest point on the ray to the given point.
+Get the closest point between the ray and the given line segment made of the 2 points.
 
 
-**Returns**: <code>number</code> - - Returns a Ray.  
+**Returns**: <code>array</code> - - Returns an array containing 2 scalar values indicating 0: the fraction of the line segment, 1: distance along the Ray  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -72,7 +72,7 @@ Get the closest point at a distance.
 Returns the two ray params that represent the closest point between the two rays.
 
 
-**Returns**: [<code>Ray</code>](#Ray) - - Returns a Ray.  
+**Returns**: <code>array</code> - - Returns an array containing 2 scalar values indicating 0: the fraction of the line segment, 1: distance along the Ray  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -114,7 +114,7 @@ Clones this Ray and returns a new Ray.
 <a name="Ray+toJSON"></a>
 
 ### toJSON
-The toJSON method encodes this type as a json object for persistences.
+The toJSON method encodes this type as a json object for persistence.
 
 
 **Returns**: <code>object</code> - - The json object.  

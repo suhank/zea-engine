@@ -11,8 +11,8 @@ Represents a box in 2D space. Needing two Vec2 vectors describing the corners
     * [reset()](#reset)
     * [isValid() ⇒ <code>boolean</code>](#isValid)
     * [addPoint(point)](#addPoint)
-    * [size()](#size)
-    * [diagonal()](#diagonal)
+    * [size() ⇒ <code>number</code>](#size)
+    * [diagonal() ⇒ <code>Vec3</code>](#diagonal)
     * [center() ⇒ <code>Vec2</code>](#center)
     * [toJSON() ⇒ <code>object</code>](#toJSON)
     * [toString() ⇒ <code>string</code>](#toString)
@@ -36,7 +36,7 @@ p1 is a Vec2 with [`Number.NEGATIVE_INFINITY`](https://developer.mozilla.org/en-
 <a name="Box2+set"></a>
 
 ### set
-Sets both Vect2 points
+Sets both corner points
 
 
 
@@ -74,17 +74,17 @@ Expands the Box2 to contain the new point.
 <a name="Box2+size"></a>
 
 ### size
-Returns the size of a Box2.
+Returns the length of the diagonal of the box.
 
 
-**Returns**: [<code>Box2</code>](#Box2) - - Returns a Box2.  
+**Returns**: <code>number</code> - - Returns the distance.  
 <a name="Box2+diagonal"></a>
 
 ### diagonal
-Returns the size of a Box2 - the same as size().
+Returns the diagonal vector of the B=box from p0 to p1.
 
 
-**Returns**: [<code>Box2</code>](#Box2) - - Returns a Box2.  
+**Returns**: <code>[Vec3](api/Math\Vec3.md)</code> - - Returns a Vec3.  
 <a name="Box2+center"></a>
 
 ### center

@@ -30,7 +30,7 @@ Create a GL render target.
 | Param | Type | Description |
 | --- | --- | --- |
 | gl | <code>WebGLRenderingContext</code> | The webgl rendering context. |
-| params | <code>any</code> | The params value. |
+| params | <code>object</code> | The params value. |
 
 <a name="GLRenderTarget+configure"></a>
 
@@ -41,7 +41,7 @@ The configure method.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| params | <code>any</code> | The params param. |
+| params | <code>object</code> | The params param. |
 
 <a name="GLRenderTarget+checkFramebuffer"></a>
 
@@ -106,7 +106,7 @@ The bindColorTexture method.
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
 | renderstate | <code>object</code> |  | The object tracking the current state of the renderer |
-| unif | <code>any</code> |  | The unif value. |
+| unif | <code>WebGLUniformLocation</code> |  | The WebGL uniform |
 | channelId | <code>number</code> | <code>0</code> | The channelId value. |
 
 <a name="GLRenderTarget+bindDepthTexture"></a>
@@ -120,7 +120,7 @@ The bindDepthTexture method.
 | Param | Type | Description |
 | --- | --- | --- |
 | renderstate | <code>object</code> | The object tracking the current state of the renderer |
-| unif | <code>any</code> | The unif value. |
+| unif | <code>WebGLUniformLocation</code> | The WebGL uniform |
 
 <a name="GLRenderTarget+unbind"></a>
 
@@ -137,8 +137,8 @@ The resize method.
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| width | <code>any</code> |  | The width value. |
-| height | <code>any</code> |  | The height value. |
+| width | <code>number</code> |  | The width value. |
+| height | <code>number</code> |  | The height value. |
 | preserveData | <code>boolean</code> | <code>false</code> | The preserveData value. |
 
 <a name="GLRenderTarget+bindToUniform"></a>
@@ -152,7 +152,7 @@ The bindToUniform method.
 | Param | Type | Description |
 | --- | --- | --- |
 | renderstate | <code>any</code> | The renderstate param. |
-| unif | <code>any</code> | The unif param. |
+| unif | <code>WebGLUniformLocation</code> | The WebGL uniform |
 | bindings | <code>any</code> | The bindings param. |
 
 <a name="GLRenderTarget+destroy"></a>

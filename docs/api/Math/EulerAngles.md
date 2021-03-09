@@ -20,7 +20,7 @@ around its various axis in a specified axis order.
 <a name="new_EulerAngles_new"></a>
 
 ### new EulerAngles
-Create a euler angle. Receives the xyz values in degrees and the order that the rotations are applied.
+Create a euler angle. Receives the xyz values in radians and the order that the rotations are applied.
 <br>
 Order parameter values: `XYZ: 0`, `YZX: 1`, `ZXY: 2`, `XZY: 3`, `ZYX: 4`, `YXZ: 5`
 <br>
@@ -29,9 +29,9 @@ It could be either the `string` or the `number` value.
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| x | <code>number</code> | <code>0</code> | The angle of the x axis in degrees. Default is 0. |
-| y | <code>number</code> | <code>0</code> | The angle of the y axis in degrees. Default is 0. |
-| z | <code>number</code> | <code>0</code> | The angle of the z axis in degrees. Default is 0. |
+| x | <code>number</code> | <code>0</code> | The angle of the x axis in radians. Default is 0. |
+| y | <code>number</code> | <code>0</code> | The angle of the y axis in radians. Default is 0. |
+| z | <code>number</code> | <code>0</code> | The angle of the z axis in radians. Default is 0. |
 | order | <code>number</code> \| <code>string</code> | <code>0</code> | The order in which the rotations are applied. |
 
 <a name="EulerAngles+x"></a>
@@ -97,9 +97,9 @@ Sets the EulerAngles
 
 | Param | Type | Description |
 | --- | --- | --- |
-| x | <code>number</code> | The x axis rotation. |
-| y | <code>number</code> | The y axis rotation. |
-| z | <code>number</code> | The z axis rotation. |
+| x | <code>number</code> | The x axis rotation in radians. |
+| y | <code>number</code> | The y axis rotation in radians. |
+| z | <code>number</code> | The z axis rotation in radians. |
 
 
 

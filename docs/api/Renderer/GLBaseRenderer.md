@@ -28,22 +28,19 @@ Class representing a GL base renderer.
         * [addTreeItem(treeItem)](#addTreeItem)
         * [assignTreeItemToGLPass(treeItem)](#assignTreeItemToGLPass)
         * [removeTreeItem(treeItem)](#removeTreeItem)
-        * [getGL() ⇒ <code>any</code>](#getGL)
+        * [getGL() ⇒ <code>WebGLRenderingContext</code>](#getGL)
         * [resizeFbos(width, height)](#resizeFbos)
         * [getDiv() ⇒ <code>HTMLElement</code>](#getDiv)
         * [setupWebGL($canvas, webglOptions)](#setupWebGL)
         * [bindEventHandlers()](#bindEventHandlers)
         * [getGLCanvas() ⇒ <code>HTMLCanvasElement</code>](#getGLCanvas)
         * [getScreenQuad() ⇒ <code>GLScreenQuad</code>](#getScreenQuad)
-        * [onWheel(event)](#onWheel)
         * [frameAll(viewportIndex)](#frameAll)
         * [getOrCreateShader(shaderName) ⇒ <code>GLShader</code>](#getOrCreateShader)
-        * [addPass(pass, passtype, updateIndices) ⇒ <code>number</code>](#addPass)
+        * [addPass(pass, passType, updateIndices) ⇒ <code>number</code>](#addPass)
         * [registerPass(itemAddedFn, itemRemovedFn)](#registerPass)
-        * [getPass(index) ⇒ <code>any</code>](#getPass)
-        * [findPass(constructor) ⇒ <code>any</code>](#findPass)
-        * [getGizmoPass() ⇒ <code>any</code>](#getGizmoPass)
-        * [supportsVR() ⇒ <code>any</code>](#supportsVR)
+        * [getPass(index) ⇒ <code>GLPass</code>](#getPass)
+        * [supportsVR() ⇒ <code>boolean</code>](#supportsVR)
         * [getVRViewport() ⇒ <code>VRViewport</code>](#getVRViewport)
         * [getXRViewport() ⇒ <code>Promise</code>](#getXRViewport)
         * [isXRViewportPresenting() ⇒ <code>boolean</code>](#isXRViewportPresenting)
@@ -263,7 +260,7 @@ Remove tree items from the scene.
 The getGL method.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>WebGLRenderingContext</code> - - The return value.  
 <a name="GLBaseRenderer+resizeFbos"></a>
 
 ### resizeFbos
@@ -315,17 +312,6 @@ The getScreenQuad method.
 
 
 **Returns**: <code>[GLScreenQuad](api/Renderer\GLScreenQuad.md)</code> - - The return value.  
-<a name="GLBaseRenderer+onWheel"></a>
-
-### onWheel
-Causes an event to occur when the mouse wheel is rolled up or down over an element.
-
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| event | <code>WheelEvent</code> | The event that occurs. |
-
 <a name="GLBaseRenderer+frameAll"></a>
 
 ### frameAll
@@ -359,8 +345,8 @@ The addPass method.
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| pass | <code>any</code> |  | The pass value. |
-| passtype | <code>number</code> |  | The passtype value. |
+| pass | <code>[GLPass](api/Renderer\Passes\GLPass.md)</code> |  | The pass value. |
+| passType | <code>number</code> |  | The passType value. |
 | updateIndices | <code>boolean</code> | <code>true</code> | The updateIndices value. |
 
 <a name="GLBaseRenderer+registerPass"></a>
@@ -381,38 +367,19 @@ The registerPass method.
 The getPass method.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>[GLPass](api/Renderer\Passes\GLPass.md)</code> - - The return value.  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | index | <code>number</code> | The index value. |
 
-<a name="GLBaseRenderer+findPass"></a>
-
-### findPass
-The findPass method.
-
-
-**Returns**: <code>any</code> - - The return value.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| constructor | <code>any</code> | The constructor value. |
-
-<a name="GLBaseRenderer+getGizmoPass"></a>
-
-### getGizmoPass
-The getGizmoPass method.
-
-
-**Returns**: <code>any</code> - - The return value.  
 <a name="GLBaseRenderer+supportsVR"></a>
 
 ### supportsVR
 The supportsVR method.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>boolean</code> - - The return value.  
 <a name="GLBaseRenderer+getVRViewport"></a>
 
 ### getVRViewport
@@ -533,5 +500,5 @@ The registerPass method.
 | Param | Type | Description |
 | --- | --- | --- |
 | cls | <code>function</code> | The cls value. |
-| passType | <code>PassType</code> | The passtype value. |
+| passType | <code>PassType</code> | The passType value. |
 

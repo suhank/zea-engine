@@ -1,6 +1,8 @@
 <a name="CodeParameter"></a>
 
-### CodeParameter 
+## ~~CodeParameter ⇐ <code>StringParameter</code>~~
+***Deprecated***
+
 Represents a specific type of parameter, that only stores `string` values.
 
 i.e.:
@@ -15,7 +17,7 @@ myParameterOwnerItem.addParameter(codeParam)
 
 **Extends**: <code>[StringParameter](api/SceneTree\Parameters\StringParameter.md)</code>  
 
-* [CodeParameter ⇐ <code>StringParameter</code>](#CodeParameter)
+* ~~[CodeParameter](#CodeParameter) ⇐ <code>StringParameter</code>~~
     * [new CodeParameter(name, value)](#new-CodeParameter)
     * [setLanguage(lang)](#setLanguage)
     * [getLanguage() ⇒ <code>string</code>](#getLanguage)
