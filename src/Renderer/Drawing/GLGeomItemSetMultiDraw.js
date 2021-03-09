@@ -106,6 +106,8 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
     glGeomItem.geomItem.setMetadata('geomItemSet', this)
 
     this.drawIdsBufferDirty = true
+
+    this.emit('updated')
   }
 
   /**
@@ -114,6 +116,7 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
    */
   removeGLGeomItem(glGeomItem) {
     const index = this.glGeomItems.indexOf(glGeomItem)
+
     const eventHandlers = this.glgeomItemEventHandlers[index]
     glGeomItem.geomItem.off('highlightChanged', eventHandlers.highlightChanged)
     glGeomItem.geomItem.off('visibilityChanged', eventHandlers.visibilityChanged)
@@ -132,6 +135,7 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
       this.highlightedItems.splice(highlightIndex, 1)
       this.highlightedIdsBufferDirty = true
     }
+    this.emit('updated')
   }
 
   // ////////////////////////////////////

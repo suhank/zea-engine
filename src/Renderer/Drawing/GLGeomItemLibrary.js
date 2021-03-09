@@ -22,6 +22,7 @@ class GLGeomItemLibrary extends EventEmitter {
 
     this.renderer = renderer
     this.glGeomItems = [undefined]
+    this.glGeomItemEventHandlers = [undefined]
     this.glGeomItemsMap = {}
     this.glGeomItemsIndexFreeList = []
     this.dirtyItemIndices = []
@@ -64,30 +65,18 @@ class GLGeomItemLibrary extends EventEmitter {
     const supportInstancing = gl.floatTexturesSupported
     const glGeomItem = new GLGeomItem(gl, geomItem, index, geomIndex, matIndex, supportInstancing)
 
-    glGeomItem.on('updated', (event) => {
-      if (!event) {
-        // On mobile devices without support for floating point textures
-        // we just need to redraw.
-        this.renderer.drawItemChanged()
-        return
-      }
-      switch (event.type) {
-        case GLGeomItemChangeType.GEOMITEM_CHANGED:
-          if (this.dirtyItemIndices.includes(index)) return
-          this.dirtyItemIndices.push(index)
-          break
-        case GLGeomItemChangeType.GEOM_CHANGED:
-        case GLGeomItemChangeType.VISIBILITY_CHANGED:
-          break
-        case GLGeomItemChangeType.HIGHLIGHT_CHANGED:
-          if (this.dirtyItemIndices.includes(index)) return
-          this.dirtyItemIndices.push(index)
-          break
-      }
+    const geomItemChanged = () => {
+      if (this.dirtyItemIndices.includes(index)) return
+      this.dirtyItemIndices.push(index)
       this.renderer.drawItemChanged()
-    })
+    }
+    geomItem.getParameter('Material').on('valueChanged', geomItemChanged)
+    geomItem.getParameter('GeomMat').on('valueChanged', geomItemChanged)
+    geomItem.on('cutAwayChanged', geomItemChanged)
+    geomItem.on('highlightChanged', geomItemChanged)
 
     this.glGeomItems[index] = glGeomItem
+    this.glGeomItemEventHandlers[index] = geomItemChanged
     this.glGeomItemsMap[geomItem.getId()] = index
 
     // Note: before the renderer is disabled, this is a  no-op.
@@ -102,17 +91,19 @@ class GLGeomItemLibrary extends EventEmitter {
    * @return {any} - The return value.
    */
   removeGeomItem(geomItem) {
-    const glGeomItem = geomItem.getMetadata('glGeomItem')
-
     const index = this.glGeomItemsMap[geomItem.getId()]
+    const glGeomItem = this.glGeomItems[index]
+
+    const geomItemChanged = this.glGeomItemEventHandlers[index]
+    geomItem.getParameter('Material').off('valueChanged', geomItemChanged)
+    geomItem.getParameter('GeomMat').off('valueChanged', geomItemChanged)
+    geomItem.off('cutAwayChanged', geomItemChanged)
+    geomItem.off('highlightChanged', geomItemChanged)
+
     this.glGeomItems[index] = null
     this.glGeomItemsIndexFreeList.push(index)
     delete this.glGeomItemsMap[geomItem.getId()]
 
-    // TODO: review signal disconnections
-    // glGeomItem.transformChanged.disconnectScope(this);
-
-    // this.emit('renderTreeUpdated', {});
     this.renderer.requestRedraw()
 
     return glGeomItem

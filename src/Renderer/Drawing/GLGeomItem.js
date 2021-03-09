@@ -32,61 +32,14 @@ class GLGeomItem extends EventEmitter {
     this.geomId = geomId
     this.materialId = materialId
     this.supportInstancing = supportInstancing
-    this.visible = this.geomItem.isVisible()
-    this.culled = false
-
-    this.cutDataChanged = false
-    this.cutData = [0, 0, 0, 0]
-
-    // if(glGeom.__numTriangles) {
-    //   numSceneMeshTriangles += glGeom.__numTriangles
-    //   console.log(this.geomItem.getName(), glGeom.__numTriangles, numSceneMeshTriangles)
-    // }
-
-    this.updateVisibility = this.updateVisibility.bind(this)
-    this.destroy = this.destroy.bind(this)
 
     if (!this.supportInstancing) {
-      this.geomMatrixDirty = true
-      this.geomMatrixChanged = () => {
-        this.geomMatrixDirty = true
-        this.emit('updated')
-      }
-    } else {
-      this.geomMatrixChanged = () => {
-        this.emit('updated', { type: GLGeomItemChangeType.GEOMITEM_CHANGED })
-      }
-    }
+      this.visible = this.geomItem.isVisible()
+      this.culled = false
 
-    this.cutAwayChanged = () => {
-      if (!this.supportInstancing) {
-        this.cutDataChanged = true
-      } else {
-        this.emit('updated', { type: GLGeomItemChangeType.GEOMITEM_CHANGED })
-      }
-    }
-    this.highlightChanged = () => {
-      this.emit('updated', { type: GLGeomItemChangeType.HIGHLIGHT_CHANGED })
-      this.emit('highlightChanged')
-    }
-    // this.glGeomUpdated = () => {
-    //   this.emit('updated', { type: GLGeomItemChangeType.GEOM_CHANGED })
-    // }
-    this.geomItem.getParameter('Material').on('valueChanged', () => {
-      this.emit('updated', { type: GLGeomItemChangeType.GEOMITEM_CHANGED })
-    })
-    this.geomItem.getParameter('GeomMat').on('valueChanged', this.geomMatrixChanged)
-    this.geomItem.on('visibilityChanged', this.updateVisibility)
-    this.geomItem.on('cutAwayChanged', this.cutAwayChanged)
-    this.geomItem.on('highlightChanged', this.highlightChanged)
+      this.cutDataChanged = false
+      this.cutData = [0, 0, 0, 0]
 
-    this.geomItem.setMetadata('glGeomItem', this)
-
-    // Note: GLGeom changes propagate up to the renderer directly through the GLGeom.
-    // See: GLStandardGeomsPass.addGeom
-    // this.glGeom.on('updated', this.glGeomUpdated)
-
-    if (!this.supportInstancing) {
       const materialId = 0
       let flags = 0
       if (this.geomItem.isCutawayEnabled()) {
@@ -94,6 +47,19 @@ class GLGeomItem extends EventEmitter {
         flags |= GEOMITEM_FLAG_CUTAWAY
       }
       this.geomData = [flags, materialId, 0, 0]
+
+      this.geomMatrixDirty = true
+      this.geomItem.getParameter('GeomMat').on('valueChanged', () => {
+        this.geomMatrixDirty = true
+        this.emit('updated')
+      })
+      this.geomItem.on('cutAwayChanged', () => {
+        this.cutDataChanged = true
+        this.emit('updated')
+      })
+      this.updateVisibility = this.updateVisibility.bind(this)
+      this.destroy = this.destroy.bind(this)
+      this.geomItem.on('visibilityChanged', this.updateVisibility)
     }
   }
 
@@ -135,15 +101,6 @@ class GLGeomItem extends EventEmitter {
   }
 
   /**
-   * The setCullState method.
-   * @param {any} culled - The culled value.
-   */
-  setCullState(culled) {
-    this.culled = culled
-    this.updateVisibility()
-  }
-
-  /**
    * The bind method.
    * @param {object} renderstate - The object tracking the current state of the renderer
    * @return {any} - The return value.
@@ -164,8 +121,8 @@ class GLGeomItem extends EventEmitter {
       if (drawItemDataunif) {
         gl.uniform4fv(drawItemDataunif.location, this.geomData)
       }
-      const cutawayDataunif = unifs.cutawayData
-      if (cutawayDataunif) {
+      const cutawayDataUnif = unifs.cutawayData
+      if (cutawayDataUnif) {
         if (this.cutDataChanged) {
           if (this.geomItem.isCutawayEnabled()) {
             const cutAwayVector = this.geomItem.getCutVector()
@@ -173,7 +130,7 @@ class GLGeomItem extends EventEmitter {
             this.cutData = [cutAwayVector.x, cutAwayVector.y, cutAwayVector.z, cutAwayDist]
           }
         }
-        gl.uniform4fv(cutawayDataunif.location, this.cutData)
+        gl.uniform4fv(cutawayDataUnif.location, this.cutData)
       }
     }
 
