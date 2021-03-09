@@ -8,7 +8,8 @@ import { GLGeomItemSet } from './GLGeomItemSet'
 class GLMaterialGeomItemSets extends EventEmitter {
   /**
    * Create a GL material geom item set.
-   * @param {any} glMaterial - The glMaterial value.
+   * @param {GLPass} pass - The pass that owns the GLMaterialGeomItemSets.
+   * @param {GLMaterial} glMaterial - The glMaterial value.
    */
   constructor(pass, glMaterial = undefined) {
     super()
@@ -61,11 +62,12 @@ class GLMaterialGeomItemSets extends EventEmitter {
 
   /**
    * The drawCountChanged method.
-   * @param {any} change - The change value.
+   * @param {Event} event - The change value.
    * @private
    */
   drawCountChanged(event) {
     this.drawCount += event.change
+    this.emit('updated')
   }
 
   /**
