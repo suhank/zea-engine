@@ -2,6 +2,40 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.3.0](https://github.com/ZeaInc/zea-engine/compare/v3.2.1...v3.3.0) (2021-03-09)
+
+
+### Features
+
+* The PBR Lighting pipeline was completely overhauled. The BRDF and HDR image convolution rewritten, and now the Materials match closely those of other PBR renderers such as Unity, Marmoset, and Filament.
+* emission now enables causing an object to become completely transparent by lerping off the specular effect. ([34ee061](https://github.com/ZeaInc/zea-engine/commit/34ee06108f87959f6aaed01162250c8b3b3841c9))
+* EnvMap convolution quality is now modulated by the detected performance of the GPU. ([8023088](https://github.com/ZeaInc/zea-engine/commit/80230887bdd9586f660c2e034bb079996b54907e))
+* Normal Mapping now works well with the new PBR lighting pipeline. ([a7b1f2e](https://github.com/ZeaInc/zea-engine/commit/a7b1f2eb70556dcbc0c5debfbfb0a5a72e70cdf0))
+* Transparent objects now use multi-draw ([d49148d](https://github.com/ZeaInc/zea-engine/commit/d49148df215876bb52ee45e847395b53954f5a1c))
+* GLShader now generates far nicer formatted error messages. No longer dumping out the entire GLSL code for the shader, instead just the culprit line and a few surrounding lines. ([5af69e3](https://github.com/ZeaInc/zea-engine/commit/5af69e3606e50c52ec53deab1ee2cf697d38000d))
+* added Color.addInPlace function. ([470c701](https://github.com/ZeaInc/zea-engine/commit/470c701e771bcfa7d494b2aa7c24e51ef0717741))
+* Assets now support a simpler interface for loading data. Simply: Asset.load(url).then(...) ([2caee89](https://github.com/ZeaInc/zea-engine/commit/2caee8975addd1a07d6143ecac62a0307ba4883c))
+
+
+
+### Bug Fixes
+
+* Adding a custom highlight multiple times in a tree now does not cause multiple highlightChanged events ([ea03bfa](https://github.com/ZeaInc/zea-engine/commit/ea03bfae181caeb81fa7b2b08b0fff83ab9bd237))
+* Addressed error message:  Two textures of different types use the same sampler location ([ea3d354](https://github.com/ZeaInc/zea-engine/commit/ea3d354f84e06d779714d1e0940ebd64107ab8a9))
+* Addressed error on Safari due to navigator.hardwareConcurrency being unavailable. ([ff846f4](https://github.com/ZeaInc/zea-engine/commit/ff846f4d0d4a0cd8ec3af4f39f831cc9f73a27f1))
+* Addressed regression in test where fat lines and thin lines are rendered from the same lines geometry. ([f401aba](https://github.com/ZeaInc/zea-engine/commit/f401abab05d206975482d6100715237953c352d4))
+* All GPU geometries are now lazily uploaded to the GPU during rendering. Fixes issue where sometimes mesh rendered without the correct geometry data after an update to the Mesh. ([824351f](https://github.com/ZeaInc/zea-engine/commit/824351f33962cf9b3d34297505b21e0ea55b4c71))
+* Cleaned up detection of transparency. Should be much faster now. ([ad6b1b0](https://github.com/ZeaInc/zea-engine/commit/ad6b1b03eaa091f0682c480fff6e3659cfe274dc))
+* Color.equal deprecated in favor of Color.isEqual. ([385c9e6](https://github.com/ZeaInc/zea-engine/commit/385c9e63c2ba8b5b8887104514c56972450ef7c5))
+* Fixed incorrect deprecation of equal method in Vec3. ([c729d2a](https://github.com/ZeaInc/zea-engine/commit/c729d2a92bb087c0e26e16d06974050856108658))
+* Fixed minor regression running the engine on Safari devices. ([d3c082b](https://github.com/ZeaInc/zea-engine/commit/d3c082b08239aef9e468b44958ee576b004ae0f0))
+* GeomData shader was left bound between multi-draw and regular drawing causing warning to be emitted as the 'multi-draw' vertex attribute bindings were still being used. ([30af594](https://github.com/ZeaInc/zea-engine/commit/30af5943b5eb34dc6ed8ff7cc3fce4568d3fccfd))
+* If a material became transparent due to baseColor alpha value change, and then the opacity was changed, it would incorrectly determined as opaque. ([53772c7](https://github.com/ZeaInc/zea-engine/commit/53772c7aa1bb43a70baa10539c2de14fe0bc1cb0))
+* Materials loaded from zcad files were not being detected as transparent, even if they had transparent parameters. ([f6c997d](https://github.com/ZeaInc/zea-engine/commit/f6c997d544ae797f3eea37c4c81410802fca1799))
+* Normalized mouse wheel movements across browsers. Firefox mouse wheel zooming now works as in Chrome. ([ea443b0](https://github.com/ZeaInc/zea-engine/commit/ea443b0c928b35e6c97ce038482a9020ea5932e6))
+* ObjeAsset did not need to create its own Material and Geometry libraries as the base class already does this. ([49fa075](https://github.com/ZeaInc/zea-engine/commit/49fa0750bd6d8b2d690123b966771d641ac65201))
+* Procedural Sphere was generating texture coordinates with artifacts. ([999ce15](https://github.com/ZeaInc/zea-engine/commit/999ce155a3e16e7a52f65ff8d2dfd413e61291f5))
+* Touch event listeners are now registered as passive listeners, which resolves a nagging warning message in Chrome. ([19e4aa6](https://github.com/ZeaInc/zea-engine/commit/19e4aa6afa815ba2f9cba376aafc54e54bb8e642))
 
 ## [3.2.0](https://github.com/ZeaInc/zea-engine/compare/v3.0.1...v3.2.0) (2021-02-08)
 
