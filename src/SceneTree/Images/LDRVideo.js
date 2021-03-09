@@ -54,87 +54,92 @@ class LDRVideo extends FileImage {
   }
 
   /**
-   * The __loadData method.
-   * @param {object} fileDesc - The fileDesc value.
-   * @private
+   * Uses the specify url to load an Image element and adds it to the data library.
+   * Sets the state of the current object.
+   *
+   * @param {string} url - The url value.
+   * @param {string} format - The format value.
+   * @return {Promise} Returns a promise that resolves once the image is loaded.
    */
-  __loadData(fileDesc) {
-    resourceLoader.incrementWorkload(1)
+  load(url, format = 'RGB') {
+    return new Promise((resolve, reject) => {
+      resourceLoader.incrementWorkload(1)
 
-    const videoElem = document.createElement('video')
-    // TODO - confirm its necessary to add to DOM
-    videoElem.style.display = 'none'
-    videoElem.preload = 'auto'
-    videoElem.crossOrigin = 'anonymous'
-    // videoElem.crossorigin = true;
+      const videoElem = document.createElement('video')
+      // TODO - confirm its necessary to add to DOM
+      videoElem.style.display = 'none'
+      videoElem.preload = 'auto'
+      videoElem.crossOrigin = 'anonymous'
+      // videoElem.crossorigin = true;
 
-    this.getAudioSource = () => {
-      return videoElem
-    }
+      this.getAudioSource = () => {
+        return videoElem
+      }
 
-    document.body.appendChild(videoElem)
-    videoElem.addEventListener(
-      'loadedmetadata',
-      () => {
-        // videoElem.play();
+      document.body.appendChild(videoElem)
+      videoElem.addEventListener(
+        'loadedmetadata',
+        () => {
+          // videoElem.play();
 
-        const muteParam = this.getParameter('Mute')
-        videoElem.muted = muteParam.getValue()
-        muteParam.on('valueChanged', () => {
+          const muteParam = this.getParameter('Mute')
           videoElem.muted = muteParam.getValue()
-        })
+          muteParam.on('valueChanged', () => {
+            videoElem.muted = muteParam.getValue()
+          })
 
-        const loopParam = this.getParameter('Loop')
-        videoElem.loop = loopParam.getValue()
-        loopParam.on('valueChanged', () => {
+          const loopParam = this.getParameter('Loop')
           videoElem.loop = loopParam.getValue()
-        })
+          loopParam.on('valueChanged', () => {
+            videoElem.loop = loopParam.getValue()
+          })
 
-        this.width = videoElem.videoHeight
-        this.height = videoElem.videoWidth
-        this.__data = videoElem
-        this.__loaded = true
-        resourceLoader.incrementWorkDone(1)
-        this.emit('loaded', {})
+          this.width = videoElem.videoHeight
+          this.height = videoElem.videoWidth
+          this.__data = videoElem
+          this.__loaded = true
+          resourceLoader.incrementWorkDone(1)
+          this.emit('loaded', {})
+          resolve()
 
-        let prevFrame = 0
-        const frameRate = 29.97
-        const timerCallback = () => {
-          if (videoElem.paused || videoElem.ended) {
-            return
+          let prevFrame = 0
+          const frameRate = 29.97
+          const timerCallback = () => {
+            if (videoElem.paused || videoElem.ended) {
+              return
+            }
+            // Check to see if the video has progressed to the next frame.
+            // If so, then we emit and update, which will cause a redraw.
+            const currentFrame = Math.floor(videoElem.currentTime * frameRate)
+            if (prevFrame != currentFrame) {
+              this.emit('updated', {})
+              prevFrame = currentFrame
+            }
+            setTimeout(timerCallback, 20) // Sample at 50fps.
           }
-          // Check to see if the video has progressed to the next frame.
-          // If so, then we emit and update, which will cause a redraw.
-          const currentFrame = Math.floor(videoElem.currentTime * frameRate)
-          if (prevFrame != currentFrame) {
-            this.emit('updated', {})
-            prevFrame = currentFrame
-          }
-          setTimeout(timerCallback, 20) // Sample at 50fps.
-        }
-        timerCallback()
-      },
-      false
-    )
-    videoElem.src = fileDesc.url
-    // videoElem.load();
-    const promise = videoElem.play()
-    if (promise !== undefined) {
-      promise
-        .then((_) => {
-          console.log('Autoplay started!')
-          // Autoplay started!
-        })
-        .catch(() => {
-          console.log('Autoplay was prevented.')
-          // Autoplay was prevented.
-          // Show a "Play" button so that user can start playback.
-        })
-    }
+          timerCallback()
+        },
+        false
+      )
+      videoElem.src = url
+      // videoElem.load();
+      const promise = videoElem.play()
+      if (promise !== undefined) {
+        promise
+          .then((_) => {
+            console.log('Autoplay started!')
+            // Autoplay started!
+          })
+          .catch(() => {
+            console.log('Autoplay was prevented.')
+            // Autoplay was prevented.
+            // Show a "Play" button so that user can start playback.
+          })
+      }
+    })
   }
 }
 
-FileImage.registerLoader('mp4|ogg', LDRVideo)
 Registry.register('LDRVideo', LDRVideo)
 
 export { LDRVideo }
