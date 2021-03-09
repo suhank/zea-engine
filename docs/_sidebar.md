@@ -5,7 +5,7 @@
   * [Transformations](transformations.md)
   * [Events](events.md)
   * [Geometry and Rendering](geometry-rendering.md)
-  * [Plugins and Tools](plugins-and-tools.md)
+  * [Templates and Plugins](plugins-and-tools.md)
 
 - Getting started
   * [Setting up your workspace](getting-started/development-setup.md)
