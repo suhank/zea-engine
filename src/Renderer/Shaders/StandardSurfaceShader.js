@@ -90,8 +90,8 @@ void main(void) {
 `
     )
 
-    this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader(
-      'StandardSurfaceShader.fragmentShader',
+    this.setShaderStage(
+      'FRAGMENT_SHADER',
       `
 precision highp float;
 #ifdef ENABLE_MULTI_DRAW

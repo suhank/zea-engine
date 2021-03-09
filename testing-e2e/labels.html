@@ -65,15 +65,11 @@
         if (data === 'front') {
           renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, 2.7), new Vec3(0, 0, 0.4))
           renderer.frameAll()
-          renderer.once('redrawOccurred', () => {
-            window.postMessage(`done-${data}`)
-          })
+          window.postMessage(`done-${data}`)
         } else if (data === 'back') {
           renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-2, -2, 2.7), new Vec3(0, 0, 0.4))
           renderer.frameAll()
-          renderer.once('redrawOccurred', () => {
-            window.postMessage(`done-${data}`)
-          })
+          window.postMessage(`done-${data}`)
         }
       }
 

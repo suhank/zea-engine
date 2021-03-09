@@ -41,23 +41,17 @@
         if (data === 'variant-01') {
           const material = geomItem.getParameter('Material').getValue()
           material.getParameter('BaseColor').setValue(new Color(1, 0, 1, 0.2))
-          renderer.once('redrawOccurred', () => {
-            window.postMessage(`done-${data}`)
-          })
+          window.postMessage(`done-${data}`)
         } else if (data === 'variant-02') {
           const material = new Material('surfaces', 'SimpleSurfaceShader')
           material.getParameter('BaseColor').setValue(new Color(1, 1, 0, 1))
           geomItem.getParameter('Material').setValue(material)
 
-          renderer.once('redrawOccurred', () => {
-            window.postMessage(`done-${data}`)
-          })
+          window.postMessage(`done-${data}`)
         } else if (data === 'variant-03') {
           const material = geomItem.getParameter('Material').getValue()
           material.getParameter('Opacity').setValue(0.3)
-          renderer.once('redrawOccurred', () => {
-            window.postMessage(`done-${data}`)
-          })
+          window.postMessage(`done-${data}`)
         }
       }
 

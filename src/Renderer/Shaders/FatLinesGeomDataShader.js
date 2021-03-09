@@ -19,8 +19,8 @@ class FatLinesGeomDataShader extends FatLinesShader {
   constructor(gl) {
     super(gl)
 
-    this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader(
-      'FatLinesGeomDataShader.vertexShader',
+    this.setShaderStage(
+      'VERTEX_SHADER',
       `
 precision highp float;
 
@@ -79,8 +79,8 @@ void main(void) {
 `
     )
 
-    this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader(
-      'FatLinesShader.fragmentShader',
+    this.setShaderStage(
+      'FRAGMENT_SHADER',
       `
 precision highp float;
 

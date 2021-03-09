@@ -19,8 +19,8 @@ class SimpleSurfaceShader extends GLShader {
   constructor(gl) {
     super(gl)
 
-    this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader(
-      'SimpleSurfaceShader.vertexShader',
+    this.setShaderStage(
+      'VERTEX_SHADER',
       `
 precision highp float;
 
@@ -84,8 +84,8 @@ void main(void) {
 `
     )
 
-    this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader(
-      'SimpleSurfaceShader.fragmentShader',
+    this.setShaderStage(
+      'FRAGMENT_SHADER',
       `
 precision highp float;
 #ifdef ENABLE_MULTI_DRAW

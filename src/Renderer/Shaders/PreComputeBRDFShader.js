@@ -13,8 +13,8 @@ class PreComputeBRDFShader extends GLShader {
    */
   constructor(gl) {
     super(gl)
-    this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader(
-      'PreComputeBRDFShader.vertexShader',
+    this.setShaderStage(
+      'VERTEX_SHADER',
       `
 precision highp float;
 
@@ -31,8 +31,8 @@ void main()
 }
 `
     )
-    this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader(
-      'PreComputeBRDFShader.fragmentShader',
+    this.setShaderStage(
+      'FRAGMENT_SHADER',
       `
 precision highp float;
 

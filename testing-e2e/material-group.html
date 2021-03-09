@@ -98,20 +98,14 @@
         // Once fixed, we should modify this test to show material changes.
         if (data === 'variant-01') {
           materialGroup1.getParameter('Material').setValue(null)
-          renderer.once('redrawOccurred', () => {
-            window.postMessage(`done-${data}`)
-          })
+          window.postMessage(`done-${data}`)
         } else if (data === 'variant-02') {
           materialGroup2.getParameter('Material').setValue(null)
-          renderer.once('redrawOccurred', () => {
-            window.postMessage(`done-${data}`)
-          })
+          window.postMessage(`done-${data}`)
         } else if (data === 'variant-03') {
           materialGroup1.getParameter('Material').setValue(material1)
           materialGroup2.getParameter('Material').setValue(material2)
-          renderer.once('redrawOccurred', () => {
-            window.postMessage(`done-${data}`)
-          })
+          window.postMessage(`done-${data}`)
         }
       }
 

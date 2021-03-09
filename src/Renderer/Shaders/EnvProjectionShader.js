@@ -17,8 +17,8 @@ class EnvProjectionShader extends GLShader {
    */
   constructor(gl) {
     super(gl)
-    this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader(
-      'EnvProjectionShader.vertexShader',
+    this.setShaderStage(
+      'VERTEX_SHADER',
       `
 precision highp float;
 
@@ -72,8 +72,8 @@ class OctahedralEnvProjectionShader extends EnvProjectionShader {
    */
   constructor(gl) {
     super(gl)
-    this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader(
-      'OctahedralEnvProjectionShader.fragmentShader',
+    this.setShaderStage(
+      'FRAGMENT_SHADER',
       `
 precision highp float;
 
@@ -130,8 +130,8 @@ class LatLongEnvProjectionShader extends EnvProjectionShader {
    */
   constructor(gl) {
     super(gl)
-    this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader(
-      'LatLongEnvProjectionShader.fragmentShader',
+    this.setShaderStage(
+      'FRAGMENT_SHADER',
       `
 precision highp float;
 

@@ -13,8 +13,8 @@ class LinesShader extends GLShader {
    */
   constructor(gl) {
     super(gl, 'LinesShader')
-    this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader(
-      'LinesShader.vertexShader',
+    this.setShaderStage(
+      'VERTEX_SHADER',
       `
 precision highp float;
 
@@ -73,8 +73,8 @@ gl_Position.z = mix(gl_Position.z, -gl_Position.w, overlay);
 `
     )
 
-    this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader(
-      'LinesShader.fragmentShader',
+    this.setShaderStage(
+      'FRAGMENT_SHADER',
       `
 precision highp float;
 

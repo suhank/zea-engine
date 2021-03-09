@@ -1,5 +1,8 @@
 import { shaderLibrary } from '../../ShaderLibrary.js'
 
+// Note: this is just for backwards compatibility for the ZeaCAD plugin to not throw exception at load time.
+shaderLibrary.setShaderModule('GGX_Specular.glsl', ` `)
+
 shaderLibrary.setShaderModule(
   'SHCoeffs.glsl',
   `
@@ -28,10 +31,8 @@ shaderLibrary.setShaderModule(
 shaderLibrary.setShaderModule(
   'PBRSurfaceRadiance.glsl',
   `
-
 const int ENVMAP_FLAG_HEADLIGHT =  1; // 1<<0;
 
-  
 struct MaterialParams {
   vec3 baseColor;
   float metallic;

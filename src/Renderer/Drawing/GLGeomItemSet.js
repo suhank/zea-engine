@@ -28,8 +28,6 @@ class GLGeomItemSet extends EventEmitter {
     this.highlightedIdsBuffer = null
     this.highlightedIdsBufferDirty = true
 
-    // this.inverted = false;
-
     this.visibleItems = []
     this.highlightedItems = []
   }

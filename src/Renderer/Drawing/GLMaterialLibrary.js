@@ -1,6 +1,6 @@
-﻿import { Registry } from '../Registry.js'
-import { GLTexture2D } from './GLTexture2D.js'
-import { EventEmitter, MathFunctions, Allocator1D } from '../Utilities/index'
+﻿import { GLTexture2D } from '../GLTexture2D.js'
+import { EventEmitter, MathFunctions, Allocator1D } from '../../Utilities/index'
+import { GLMaterial } from './GLMaterial.js'
 
 /** Class representing a GL CAD material library.
  * @ignore
@@ -8,12 +8,14 @@ import { EventEmitter, MathFunctions, Allocator1D } from '../Utilities/index'
 class GLMaterialLibrary extends EventEmitter {
   /**
    * Create a GL CAD material library.
-   * @param {WebGLRenderingContext | WebGL2RenderingContext} gl - The Canvas 3D Context.
+   * @param {GLBaseRenderer} renderer - The renderer object
    */
-  constructor(gl) {
+  constructor(renderer) {
     super()
-    this.gl = gl
+    this.renderer = renderer
     this.materials = []
+    this.materialIndices = {}
+    this.glMaterials = {}
     this.freeIndices = []
     this.dirtyIndices = new Set()
     this.materialsAllocator = new Allocator1D()
@@ -29,13 +31,15 @@ class GLMaterialLibrary extends EventEmitter {
   /**
    * The addMaterial method.
    * @param {Material} material - The material object.
+   * @return {number} - The index of GLMaterial
    */
   addMaterial(material) {
-    if (material.getMetadata('glmaterialcoords')) {
-      return
+    let index = this.materialIndices[material.getId()]
+    if (index != undefined) {
+      // TODO: Track ref counts. Increment the ref count for the GLGeom
+      return index
     }
 
-    let index
     if (this.freeIndices.length) {
       index = this.freeIndices.pop()
     } else {
@@ -43,6 +47,7 @@ class GLMaterialLibrary extends EventEmitter {
     }
 
     this.materials[index] = material
+    this.materialIndices[material.getId()] = index
 
     const matData = material.getShaderClass().getPackedMaterialData(material)
     const allocation = this.materialsAllocator.allocate(index, matData.length / 4)
@@ -54,14 +59,46 @@ class GLMaterialLibrary extends EventEmitter {
     }
     material.on('parameterValueChanged', parameterValueChanged)
 
-    const transparencyChanged = () => {
-      material.off('parameterValueChanged', parameterValueChanged)
-      material.off('transparencyChanged', transparencyChanged)
-      this.removeMaterial(material)
-    }
-    material.on('transparencyChanged', transparencyChanged)
+    // const transparencyChanged = () => {
+    //   material.off('parameterValueChanged', parameterValueChanged)
+    //   material.off('transparencyChanged', transparencyChanged)
+    //   this.removeMaterial(material)
+    // }
+    // material.on('transparencyChanged', transparencyChanged)
 
     this.dirtyIndices.add(index)
+
+    return index
+  }
+
+  /**
+   * Given a material, generates a GLMaterial that manages the GPU state for the material.
+   * @param {Material} material - The material value.
+   * @return {GLMaterial} - The constructed GLMaterial.
+   */
+  getGLMaterial(material) {
+    if (this.glMaterials[material.getId()]) {
+      return this.glMaterials[material.getId()]
+    }
+
+    const glShader = this.renderer.getOrCreateShader(material.getShaderName())
+    const gl = this.renderer.gl
+    const glMaterial = new GLMaterial(gl, material, glShader)
+    glMaterial.on('updated', () => {
+      this.renderer.requestRedraw()
+    })
+    material.setMetadata('glMaterial', glMaterial)
+
+    this.glMaterials[material.getId()] = glMaterial
+
+    return glMaterial
+  }
+
+  getMaterialAllocation(material) {
+    const index = this.materialIndices[material.getId()]
+    if (index != undefined) {
+      return this.materialsAllocator.getAllocation(index)
+    }
   }
 
   /**
@@ -77,6 +114,7 @@ class GLMaterialLibrary extends EventEmitter {
     this.freeIndices.push(index)
     this.materialsAllocator.deallocate(index)
     this.materials[index] = null
+    delete this.materialIndices[material.getId()]
 
     if (this.dirtyIndices.has(index)) {
       this.dirtyIndices.delete(index)
@@ -88,7 +126,7 @@ class GLMaterialLibrary extends EventEmitter {
    * @param {object} renderstate - The render state for the current draw traversal
    */
   uploadMaterials(renderstate) {
-    const gl = this.gl
+    const gl = this.renderer.gl
 
     const materialsTextureSize = MathFunctions.nextPow2(Math.ceil(Math.sqrt(this.materialsAllocator.reservedSpace)))
     const unit = renderstate.boundTextures++
@@ -150,6 +188,15 @@ class GLMaterialLibrary extends EventEmitter {
     this.dirtyIndices = new Set()
     gl.bindTexture(gl.TEXTURE_2D, null)
     renderstate.boundTextures--
+  }
+
+  /**
+   * Updates the GPU state if any update is needed.
+   * @param {object} renderstate - The object tracking the current state of the renderer
+   */
+  update(renderstate) {
+    if (this.dirtyItemIndices.length > 0) this.uploadGeomItems(renderstate)
+    renderstate.drawItemsTexture = this.glGeomItemsTexture
   }
 
   /**
