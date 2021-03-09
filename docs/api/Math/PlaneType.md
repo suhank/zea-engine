@@ -44,7 +44,7 @@ Setter from scalar components.
 <a name="PlaneType+divideScalar"></a>
 
 ### divideScalar
-Thet divideScalar method
+The divideScalar method
 
 
 
@@ -55,10 +55,10 @@ Thet divideScalar method
 <a name="PlaneType+distanceToPoint"></a>
 
 ### distanceToPoint
-Calculates the distance from a point to this place.
+Calculates the distance from a point to this plane.
 
 
-**Returns**: <code>number</code> - - The rreturn value.  
+**Returns**: <code>number</code> - - The return value.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -80,7 +80,7 @@ Clones this plane and returns a new plane.
 <a name="PlaneType+toJSON"></a>
 
 ### toJSON
-The toJSON method encodes this type as a json object for persistences.
+The toJSON method encodes this type as a json object for persistence.
 
 
 **Returns**: <code>object</code> - - The json object.  

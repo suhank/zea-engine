@@ -34,8 +34,8 @@ The init method.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| renderer | <code>any</code> | The renderer value. |
-| passIndex | <code>any</code> | The passIndex value. |
+| renderer | <code>[GLBaseRenderer](api/Renderer\GLBaseRenderer.md)</code> | The renderer value. |
+| passIndex | <code>number</code> | The index of the pass in the GLBAseRenderer |
 
 <a name="GLPass+setPassIndex"></a>
 
@@ -46,7 +46,7 @@ The setPassIndex method.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| passIndex | <code>any</code> | The passIndex value. |
+| passIndex | <code>number</code> | The index of the pass in the GLBAseRenderer |
 
 <a name="GLPass+getPassType"></a>
 

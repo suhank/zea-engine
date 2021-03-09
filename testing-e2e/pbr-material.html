@@ -61,7 +61,7 @@
     </style>
 
     <script type="module">
-      const { GLRenderer, Scene, EnvMap, Xfo, Vec3, Color, Sphere, Material, GeomItem, LDRImage } = window.zeaEngine
+      const { GLRenderer, Scene, EnvMap, Xfo, Vec3, Color, Sphere, Material, GeomItem, FileImage } = window.zeaEngine
 
       const canvas = document.querySelector('#renderer')
 
@@ -84,9 +84,8 @@
         const material = new Material('surfaces', 'StandardSurfaceShader')
         const setupParam = (param, value) => {
           if (typeof value == 'string') {
-            const texture = new LDRImage('LDRImage')
-            texture.setImageURL(value)
-            promises.push(new Promise((resolve) => texture.on('loaded', resolve)))
+            const texture = new FileImage('FileImage')
+            promises.push(texture.load(value))
             param.setImage(texture)
           } else {
             param.setValue(value)

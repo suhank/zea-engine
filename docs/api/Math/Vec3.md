@@ -143,14 +143,14 @@ Setter for `z` component.
 Getter for `xy` swizzel.
 
 
-**Returns**: <code>[Vec2](api/Math\Vec2.md)</code> - - Returns the z component.  
+**Returns**: <code>[Vec2](api/Math\Vec2.md)</code> - - Returns the xy components as a Vec2.  
 <a name="Vec3+yz"></a>
 
 ### yz 
 Getter for `yz` swizzel.
 
 
-**Returns**: <code>[Vec2](api/Math\Vec2.md)</code> - - Returns the z component.  
+**Returns**: <code>[Vec2](api/Math\Vec2.md)</code> - - Returns the yz components as a Vec2.  
 <a name="Vec3+set"></a>
 
 ### set
@@ -189,24 +189,24 @@ Sets the state of a Vec3 Object from another Vec3.
 <a name="Vec3+isNull"></a>
 
 ### isNull
-Checks if the coordenates of this Vec3 are 0 0 0.
+Checks if the coordinates of this Vec3 are 0 0 0.
 
 
-**Returns**: <code>boolean</code> - - Returns `true` if the coordenates are(0, 0, 0), otherwise, `false`.  
+**Returns**: <code>boolean</code> - - Returns `true` if the coordinates are(0, 0, 0), otherwise, `false`.  
 <a name="Vec3+is111"></a>
 
 ### is111
-Checks if the coordenates of this Vec3 are 1 1 1.
+Checks if the coordinates of this Vec3 are 1 1 1.
 
 
-**Returns**: <code>boolean</code> - - Returns `true` if the coordenates are(1, 1, 1), otherwise, `false`.  
+**Returns**: <code>boolean</code> - - Returns `true` if the coordinates are(1, 1, 1), otherwise, `false`.  
 <a name="Vec3+equal"></a>
 
 ### ~~vec3.equal(other) ⇒ <code>boolean</code>~~
 ***Deprecated***
 
 
-**Returns**: <code>boolean</code> - - Returns `true` if are the same Vector, otherwise, `false`.  
+**Returns**: <code>boolean</code> - - Returns `true` if the values are the same, otherwise, `false`.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -215,10 +215,10 @@ Checks if the coordenates of this Vec3 are 1 1 1.
 <a name="Vec3+isEqual"></a>
 
 ### isEqual
-Checks if this Vec3 is exactly the same as another Vec3.
+Checks if this Vec3 contains the same values as the other Vec3.
 
 
-**Returns**: <code>boolean</code> - - Returns `true` if are the same Vector, otherwise, `false`.  
+**Returns**: <code>boolean</code> - - Returns `true` if the values are the same, otherwise, `false`.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -420,21 +420,21 @@ Calculates the distance to another Vec3.
 
 ### normalize
 Normalizes the Vec3 and returns it as a new Vec3.
-Multiplies coordenates value by the inverse of the vector length.
+Multiplies coordinates value by the inverse of the vector length.
 
 
 **Returns**: [<code>Vec3</code>](#Vec3) - - Returns the Vec3 normalized.  
 <a name="Vec3+normalizeInPlace"></a>
 
 ### normalizeInPlace
-Normalizes this Vec3 multiplying coordenate values by the inverse of the vector length.
+Normalizes this Vec3 multiplying coordinate values by the inverse of the vector length.
 
 
 **Returns**: <code>number</code> - - The return value.  
 <a name="Vec3+resize"></a>
 
 ### resize
-Creates and returns a new Vec3 with the new coordenates(calculated with this Vec3 coordenates and the specified length).
+Creates and returns a new Vec3 with the new coordinates(calculated with this Vec3 coordinates and the specified length).
 
 
 **Returns**: [<code>Vec3</code>](#Vec3) - - The return value.  
@@ -446,7 +446,7 @@ Creates and returns a new Vec3 with the new coordenates(calculated with this Vec
 <a name="Vec3+resizeInPlace"></a>
 
 ### resizeInPlace
-Modifies current coordenates using the specified length.
+Modifies current coordinates using the specified length.
 
 
 
@@ -513,7 +513,7 @@ Returns a new Vec3 whose component values are the abs of this Vec3s component va
 <a name="Vec3+setRandomDir"></a>
 
 ### setRandomDir
-Sets the vector a random vector on the surface of a sphere with the radius of the givenn scale value.
+Sets the vector a random vector on the surface of a sphere with the radius of the given scale value.
 
 
 **Returns**: [<code>Vec3</code>](#Vec3) - - The random Vec3.  
@@ -525,7 +525,7 @@ Sets the vector a random vector on the surface of a sphere with the radius of th
 <a name="Vec3+setRandom"></a>
 
 ### setRandom
-Generates a randome vector anywhere in the sphere defined by the provided scale value.
+Generates a random vector anywhere in the sphere defined by the provided scale value.
 
 
 **Returns**: [<code>Vec3</code>](#Vec3) - - The random Vec3.  

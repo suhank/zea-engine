@@ -87,7 +87,7 @@ Checks if the material has a texture applied. The renderer can use this to optim
 <a name="Material+getShaderClass"></a>
 
 ### getShaderClass
-Returns shader's class of current material, if set. Otherwise it returns `undefined`
+Returns shaders class of current material, if set. Otherwise it returns `undefined`
 
 
 **Returns**: <code>string</code> \| <code>undefined</code> - - The return value.  

@@ -203,7 +203,7 @@ The transformVertices method.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| xfo | <code>[Xfo](api/Math\Xfo.md)</code> | The xfo tranform. |
+| xfo | <code>[Xfo](api/Math\Xfo.md)</code> | The xfo transform. |
 
 <a name="BaseGeom+getBoundingBox"></a>
 

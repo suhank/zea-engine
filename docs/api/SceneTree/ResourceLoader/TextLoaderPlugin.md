@@ -7,7 +7,7 @@ Text loader plugin.
 <a name="TextLoaderPlugin+getType"></a>
 
 ### getType
-The type of file this pluglin handles.
+The type of file this plugin handles.
 
 
 **Returns**: <code>string</code> - The type of file.  

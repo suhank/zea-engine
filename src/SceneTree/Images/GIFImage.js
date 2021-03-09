@@ -80,42 +80,46 @@ class GIFImage extends FileImage {
   }
 
   /**
-   * The __loadData method.
-   * @param {object} fileDesc - The fileDesc value.
-   * @private
+   * Uses the specify url to load an Image element and adds it to the data library.
+   * Sets the state of the current object.
+   *
+   * @param {string} url - The url value.
+   * @param {string} format - The format value.
+   * @return {Promise} Returns a promise that resolves once the image is loaded.
    */
-  __loadData(fileDesc) {
+  load(url, format = 'RGB') {
     // this.__streamAtlasDesc = new Vec4();
 
     const imageDataLibrary = FileImage.__imageDataLibrary()
-    if (fileDesc.id in imageDataLibrary) {
-      this.__resourcePromise = imageDataLibrary[fileDesc.id]
+    if (url in imageDataLibrary) {
+      this.__resourcePromise = imageDataLibrary[url]
+      return this.__resourcePromise
     } else {
       this.__resourcePromise = new Promise((resolve, reject) => {
         resourceLoader.incrementWorkload(1)
 
-        if (fileDesc.assets && fileDesc.assets.atlas) {
-          const imageElem = new Image()
-          imageElem.crossOrigin = 'anonymous'
-          imageElem.src = fileDesc.assets.atlas.url
-          imageElem.addEventListener('load', () => {
-            resolve({
-              width: fileDesc.assets.atlas.width,
-              height: fileDesc.assets.atlas.height,
-              atlasSize: fileDesc.assets.atlas.atlasSize,
-              frameDelays: fileDesc.assets.atlas.frameDelays,
-              frameRange: [0, fileDesc.assets.atlas.frameDelays.length],
-              imageData: imageElem,
-            })
-            resourceLoader.incrementWorkDone(1)
-          })
-          return
-        }
+        // if (fileDesc.assets && fileDesc.assets.atlas) {
+        //   const imageElem = new Image()
+        //   imageElem.crossOrigin = 'anonymous'
+        //   imageElem.src = fileDesc.assets.atlas.url
+        //   imageElem.addEventListener('load', () => {
+        //     resolve({
+        //       width: fileDesc.assets.atlas.width,
+        //       height: fileDesc.assets.atlas.height,
+        //       atlasSize: fileDesc.assets.atlas.atlasSize,
+        //       frameDelays: fileDesc.assets.atlas.frameDelays,
+        //       frameRange: [0, fileDesc.assets.atlas.frameDelays.length],
+        //       imageData: imageElem,
+        //     })
+        //     resourceLoader.incrementWorkDone(1)
+        //   })
+        //   return
+        // }
 
         loadBinfile(
-          fileDesc.url,
+          url,
           (data) => {
-            console.warn('Unpacking Gif client side:' + fileDesc.name)
+            console.warn('Unpacking Gif client side:' + url)
 
             const start = performance.now()
 
@@ -195,7 +199,7 @@ class GIFImage extends FileImage {
             const imageData = atlasCtx.getImageData(0, 0, atlasCanvas.width, atlasCanvas.height)
 
             const ms = performance.now() - start
-            console.log(`Decode GIF '${fileDesc.name}' time:` + ms)
+            console.log(`Decode GIF '${url}' time:` + ms)
 
             resolve({
               width: atlasCanvas.width,
@@ -207,14 +211,14 @@ class GIFImage extends FileImage {
             })
           },
           (statusText) => {
-            const msg = 'Unable to Load URL:' + statusText + ':' + fileDesc.url
+            const msg = 'Unable to Load URL:' + statusText + ':' + url
             console.warn(msg)
             reject(msg)
           }
         )
       })
 
-      imageDataLibrary[fileDesc.id] = this.__resourcePromise
+      imageDataLibrary[url] = this.__resourcePromise
     }
 
     this.__resourcePromise.then((unpackedData) => {
@@ -235,10 +239,10 @@ class GIFImage extends FileImage {
 
       this.emit('loaded', {})
     })
+    return this.__resourcePromise
   }
 }
 
-FileImage.registerLoader('gif', GIFImage)
 Registry.register('GIFImage', GIFImage)
 
 export { GIFImage }

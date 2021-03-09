@@ -18,16 +18,16 @@ Class representing a GL renderer.
     * [planeDist](#planeDist)
     * [cutPlaneNormal](#cutPlaneNormal)
     * [cutPlaneNormal](#cutPlaneNormal)
-    * [getGLEnvMap() ⇒ <code>any</code>](#getGLEnvMap)
-    * [getEnvMapTex() ⇒ <code>any</code>](#getEnvMapTex)
+    * [getGLEnvMap() ⇒ <code>GLEnvMap</code> \| <code>GLHDRImage</code> \| <code>GLTexture2D</code>](#getGLEnvMap)
+    * [getEnvMapTex() ⇒ <code>EnvMap</code> \| <code>BaseImage</code>](#getEnvMapTex)
     * [setScene(scene)](#setScene)
-    * [addViewport(name) ⇒ <code>any</code>](#addViewport)
+    * [addViewport(name) ⇒ <code>GLViewport</code>](#addViewport)
     * [resizeFbos(width, height)](#resizeFbos)
     * [createSelectedGeomsFbo()](#createSelectedGeomsFbo)
-    * [getFbo() ⇒ <code>any</code>](#getFbo)
+    * [getFbo() ⇒ <code>GLFbo</code>](#getFbo)
     * [createOffscreenFbo(format)](#createOffscreenFbo)
-    * [raycastWithRay() ⇒ <code>any</code>](#raycastWithRay)
-    * [raycast() ⇒ <code>any</code>](#raycast)
+    * [raycastWithRay() ⇒ <code>object</code>](#raycastWithRay)
+    * [raycast() ⇒ <code>object</code>](#raycast)
     * [raycastCluster() ⇒ <code>any</code>](#raycastCluster)
     * [drawBackground(renderstate)](#drawBackground)
     * [bindGLRenderer(renderstate)](#bindGLRenderer)
@@ -41,8 +41,8 @@ Create a GL renderer.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| $canvas | <code>any</code> | The $canvas value. |
-| options | <code>any</code> | The options value. |
+| $canvas | <code>canvas</code> | The $canvas value. |
+| options | <code>object</code> | The dictionary of options. |
 
 <a name="GLRenderer+exposure"></a>
 
@@ -135,14 +135,14 @@ Setter for cutPlaneNormal.
 The getGLEnvMap method.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>GLEnvMap</code> \| <code>GLHDRImage</code> \| <code>GLTexture2D</code> - - The return value.  
 <a name="GLRenderer+getEnvMapTex"></a>
 
 ### getEnvMapTex
 The getEnvMapTex method.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>EnvMap</code> \| <code>BaseImage</code> - - The return value.  
 <a name="GLRenderer+setScene"></a>
 
 ### setScene
@@ -152,7 +152,7 @@ The setScene method.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| scene | <code>any</code> | The scene value. |
+| scene | <code>[Scene](api/SceneTree\Scene.md)</code> | The scene value. |
 
 <a name="GLRenderer+addViewport"></a>
 
@@ -160,7 +160,7 @@ The setScene method.
 The addViewport method.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>[GLViewport](api/Renderer\GLViewport.md)</code> - - The return value.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -175,8 +175,8 @@ The resizeFbos method.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| width | <code>any</code> | The width value. |
-| height | <code>any</code> | The height value. |
+| width | <code>number</code> | The width value. |
+| height | <code>number</code> | The height value. |
 
 <a name="GLRenderer+createSelectedGeomsFbo"></a>
 
@@ -190,7 +190,7 @@ The createSelectedGeomsFbo method.
 The getFbo method.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>[GLFbo](api/Renderer\GLFbo.md)</code> - - The return value.  
 <a name="GLRenderer+createOffscreenFbo"></a>
 
 ### createOffscreenFbo
@@ -200,22 +200,22 @@ The createOffscreenFbo method.
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| format | <code>any</code> | <code>RGB</code> | The format value. |
+| format | <code>string</code> | <code>&quot;RGB&quot;</code> | The format value. |
 
 <a name="GLRenderer+raycastWithRay"></a>
 
 ### raycastWithRay
-The raycast method.
+The raycastWithRay method.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>object</code> - - The return value.  
 <a name="GLRenderer+raycast"></a>
 
 ### raycast
 The raycast method.
 
 
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>object</code> - - The return value.  
 <a name="GLRenderer+raycastCluster"></a>
 
 ### raycastCluster

@@ -191,7 +191,7 @@ Updates current TreeItem visible state and propagates its value to children elem
 <a name="TreeItem+addHighlight"></a>
 
 ### addHighlight
-Adds a hightlight to the tree item.
+Adds a highlight to the tree item.
 
 
 
@@ -204,7 +204,7 @@ Adds a hightlight to the tree item.
 <a name="TreeItem+removeHighlight"></a>
 
 ### removeHighlight
-Removes a hightlight to the tree item.
+Removes a highlight to the tree item.
 
 
 
@@ -216,17 +216,17 @@ Removes a hightlight to the tree item.
 <a name="TreeItem+getHighlight"></a>
 
 ### getHighlight
-Returns the color of the current hilghlight.
+Returns the color of the current highlight.
 
 
 **Returns**: <code>[Color](api/Math\Color.md)</code> - - The color value.  
 <a name="TreeItem+isHighlighted"></a>
 
 ### isHighlighted
-Returns `true` if this items has a hilghlight color assigned.
+Returns `true` if this items has a highlight color assigned.
 
 
-**Returns**: <code>boolean</code> - - `True` if this item is hilghlighted.  
+**Returns**: <code>boolean</code> - - `True` if this item is highlighted.  
 <a name="TreeItem+getChildren"></a>
 
 ### getChildren
@@ -292,8 +292,8 @@ Adds a child. It accepts all kind of `BaseItem`, not only `TreeItem`.
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
 | childItem | <code>[BaseItem](api/SceneTree\BaseItem.md)</code> |  | The child BaseItem to add. |
-| maintainXfo | <code>boolean</code> | <code>true</code> | Boolean that determines if the Global Xfo value is maintained. If true, when moving items in the hierarchy from one parent to another, the local Xfo of the item will be modified to maintaine and the Global Xfo. Note: this option defaults to false because we expect that is the behavior users would expect when manipulating the tree in code. To be safe and unambiguous, always try to specify this value. |
-| fixCollisions | <code>boolean</code> | <code>true</code> | Modify the name of the item to avoid name collisions with other chidrent of the same parent. If false, an exception wll be thrown instead if a name collision occurs. |
+| maintainXfo | <code>boolean</code> | <code>true</code> | Boolean that determines if the Global Xfo value is maintained. If true, when moving items in the hierarchy from one parent to another, the local Xfo of the item will be modified to maintain and the Global Xfo. Note: this option defaults to false because we expect that is the behavior users would expect when manipulating the tree in code. To be safe and unambiguous, always try to specify this value. |
+| fixCollisions | <code>boolean</code> | <code>true</code> | Modify the name of the item to avoid name collisions with other children of the same parent. If false, an exception wll be thrown instead if a name collision occurs. |
 
 <a name="TreeItem+getChild"></a>
 

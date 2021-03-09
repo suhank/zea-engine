@@ -44,7 +44,7 @@ Reads binary data in a specific encoding. Used in loading binary data such as zc
     * [loadRGBAUInt8Color() ⇒ <code>Color</code>](#loadRGBAUInt8Color)
     * [loadBox2() ⇒ <code>Box2</code>](#loadBox2)
     * [loadBox3() ⇒ <code>Box3</code>](#loadBox3)
-    * [readPadd(stride)](#readPadd)
+    * [readPad(stride)](#readPad)
 
 <a name="new_BinReader_new"></a>
 
@@ -61,7 +61,7 @@ Create a bin reader.
 <a name="BinReader+isMobileDevice"></a>
 
 ### isMobileDevice 
-Returns state of whether or not the `BinReader` object was instanciated from a mobile device.
+Returns state of whether or not the `BinReader` object was instantiated from a mobile device.
 
 
 **Returns**: <code>Boolean</code> - - Returns true is a mobile device is detected.  
@@ -85,7 +85,7 @@ Returns the length of the buffer.
 Returns remaining length of the buffer to read.
 
 
-**Returns**: <code>number</code> - - The reemaining length of the buffer to read.  
+**Returns**: <code>number</code> - - The remaining length of the buffer to read.  
 <a name="BinReader+pos"></a>
 
 ### pos
@@ -196,7 +196,7 @@ and adds four bytes to the offset.
 <a name="BinReader+loadUInt8Array"></a>
 
 ### loadUInt8Array
-Reads buffer and return an unsinged Int8 array with the specified size,
+Reads buffer and return an unsigned Int8 array with the specified size,
 starting from current byte offset.<br>
 Byte offset is increased by the specified byte size.
 
@@ -211,7 +211,7 @@ Byte offset is increased by the specified byte size.
 <a name="BinReader+loadUInt16Array"></a>
 
 ### loadUInt16Array
-Reads buffer and return an unsinged Int16 array with the specified size,
+Reads buffer and return an unsigned Int16 array with the specified size,
 starting from current byte offset.<br>
 Byte offset is increased by the specified byte size x 2.
 
@@ -226,7 +226,7 @@ Byte offset is increased by the specified byte size x 2.
 <a name="BinReader+loadUInt32Array"></a>
 
 ### loadUInt32Array
-Reads buffer and return an unsinged Int32 array with the specified size,
+Reads buffer and return an unsigned Int32 array with the specified size,
 starting from current byte offset.<br>
 Byte offset is increased by the specified byte size x 4.
 
@@ -369,10 +369,10 @@ Next four because it creates two Vec3.
 
 
 **Returns**: <code>[Box3](api/Math\Box3.md)</code> - - Returns a Box3.  
-<a name="BinReader+readPadd"></a>
+<a name="BinReader+readPad"></a>
 
-### readPadd
-The readPadd method.
+### readPad
+Given a stridee value, advance the pointer to the end of the current stride.
 
 
 

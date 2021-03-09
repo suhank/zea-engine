@@ -11,7 +11,6 @@ Class representing the environment where all the displayed assets live.
     * [getRoot() ⇒ <code>TreeItem</code>](#getRoot)
     * [getResourceLoader() ⇒ <code>ResourceLoader</code>](#getResourceLoader)
     * ~~[.setEnvMap(envMap)](#Scene+setEnvMap)~~
-    * ~~[.addAsset(asset)](#Scene+addAsset)~~
     * [setupGrid(gridSize, resolution, gridColor) ⇒ <code>GridTreeItem</code>](#setupGrid)
     * [toJSON(context) ⇒ <code>object</code>](#toJSON)
     * [fromJSON(json, context)](#fromJSON)
@@ -59,19 +58,6 @@ Sets Environment Map with the BaseImage you'd like to display in your scene back
 | Param | Type | Description |
 | --- | --- | --- |
 | envMap | <code>[EnvMap](api/SceneTree\Images\EnvMap.md)</code> | The envMap value. |
-
-<a name="Scene+addAsset"></a>
-
-### ~~scene.addAsset(asset)~~
-***Deprecated***
-
-Adds a child item to the scene root item.
-
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| asset | <code>[AssetItem](api/SceneTree\AssetItem.md)</code> | The asset value. |
 
 <a name="Scene+setupGrid"></a>
 

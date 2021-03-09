@@ -1,7 +1,7 @@
 <a name="SphereType"></a>
 
 ### SphereType 
-Class representing a sphere.
+Class representing a mathematical sphere, as opposed to the Sphere class derived from ProceduralMesh.
 
 
 **Extends**: <code>[AttrValue](api/Math\AttrValue.md)</code>  

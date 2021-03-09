@@ -1,9 +1,12 @@
 <a name="Quat"></a>
 
 ### Quat 
-Class representing a quaternion. Quaternions are used to represent rotations
-without encountering gimble lock. Based on complex numbers that are not easy
-to understand intuitively.
+Class representing a quaternion. Quaternions are used to represent 3 dimensional rotations.
+
+While Quaternions are difficult to understand they have important mathematical properties that make them very useful in 3d engines.
+They can be directly multiplied together in the same was as matrices.
+They can be interpolated from one value to another while maintaining constant angular velocity.
+They can be converted to other more easily understood representations such as EulerAngles or Matrices.
 
 
 **Extends**: <code>[AttrValue](api/Math\AttrValue.md)</code>  
@@ -19,7 +22,6 @@ to understand intuitively.
         * [z](#z)
         * [w ⇒ <code>number</code>](#w)
         * [w](#w)
-        * [isEqual(other) ⇒ <code>boolean</code>](#isEqual)
         * [set(x, y, z, w)](#set)
         * [setDataArray(float32Array)](#setDataArray)
         * [setFromOther(other)](#setFromOther)
@@ -32,7 +34,8 @@ to understand intuitively.
         * [setFromMat4(mat4)](#setFromMat4)
         * [isIdentity() ⇒ <code>boolean</code>](#isIdentity)
         * [getAngle() ⇒ <code>number</code>](#getAngle)
-        * [equal(other) ⇒ <code>boolean</code>](#equal)
+        * ~~[.equal(other)](#Quat+equal) ⇒ <code>boolean</code>~~
+        * [isEqual(other) ⇒ <code>boolean</code>](#isEqual)
         * [notEquals(other) ⇒ <code>boolean</code>](#notEquals)
         * [approxEqual(other, precision) ⇒ <code>boolean</code>](#approxEqual)
         * [add(other)](#add)
@@ -78,7 +81,7 @@ Creates a quaternion.
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| x | <code>number</code> \| <code>ArrayBuffer</code> \| <code>object</code> | <code>0</code> | The angle of the x axis. Default is 0. |
+| x | <code>number</code> \| <code>ArrayBuffer</code> \| <code>object</code> | <code>0</code> | The angle of the x axis. Default is 0. Or a Float32Array containing 4 values. |
 | y | <code>number</code> | <code>0</code> | The angle of the y axis. Default is 0. |
 | z | <code>number</code> | <code>0</code> | The angle of the z axis. Default is 0. |
 | w | <code>number</code> | <code>1</code> | The w value. Default is 1. |
@@ -155,18 +158,6 @@ Setter for `w`.
 | --- | --- | --- |
 | val | <code>number</code> | The val param. |
 
-<a name="Quat+isEqual"></a>
-
-### isEqual
-Checks if this Quat is exactly the same as another Quat.
-
-
-**Returns**: <code>boolean</code> - - Returns `true` if are the same Vector, otherwise, `false`.  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| other | [<code>Quat</code>](#Quat) | The other Quat to compare with. |
-
 <a name="Quat+set"></a>
 
 ### set
@@ -206,7 +197,7 @@ Setter from another vector.
 <a name="Quat+setFromEulerAngles"></a>
 
 ### setFromEulerAngles
-Set this quat from a euler rotation.
+Set this Quat from a euler rotation.
 
 
 
@@ -229,7 +220,7 @@ Converts Quat to an EulerAngles
 <a name="Quat+setFromAxisAndAngle"></a>
 
 ### setFromAxisAndAngle
-Set this quat to a rotation defined by an axis and an angle (in radians).
+Set this Quat to a rotation defined by an axis and an angle (in radians).
 
 
 
@@ -241,7 +232,7 @@ Set this quat to a rotation defined by an axis and an angle (in radians).
 <a name="Quat+setFromDirectionAndUpvector"></a>
 
 ### setFromDirectionAndUpvector
-Scales and calculates the cross product of the `Vec3` and sets the result in the Mat3
+Sets the state of the Quat to look in a particular direction along the z axis.
 
 
 
@@ -253,7 +244,7 @@ Scales and calculates the cross product of the `Vec3` and sets the result in the
 <a name="Quat+setFrom2Vectors"></a>
 
 ### setFrom2Vectors
-Sets the state of the `Quat` from two `Vec3`.
+Sets the state of the `Quat` from two `Vec3`. The quaternion would then represent the rotation from v0 to v1 in 3d space.
 
 
 
@@ -265,7 +256,7 @@ Sets the state of the `Quat` from two `Vec3`.
 <a name="Quat+setFromMat3"></a>
 
 ### setFromMat3
-Set the quat from a Mat3.
+Set the Quat from a Mat3.
 
 
 
@@ -276,7 +267,7 @@ Set the quat from a Mat3.
 <a name="Quat+setFromMat4"></a>
 
 ### setFromMat4
-Set the quat from a Mat4.
+Set the Quat from a Mat4.
 
 
 
@@ -300,11 +291,23 @@ Return the angle of the Quat.
 **Returns**: <code>number</code> - - The return value.  
 <a name="Quat+equal"></a>
 
-### equal
-Returns true if this Quat is exactly the same as other.
+### ~~quat.equal(other) ⇒ <code>boolean</code>~~
+***Deprecated***
 
 
 **Returns**: <code>boolean</code> - - Returns true or false.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| other | [<code>Quat</code>](#Quat) | The other Quat to compare with. |
+
+<a name="Quat+isEqual"></a>
+
+### isEqual
+Checks if this Quat contains the same values as the other Quat.
+
+
+**Returns**: <code>boolean</code> - - Returns `true` if are the same Vector, otherwise, `false`.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -417,13 +420,13 @@ Normalizes the Quat and returns it as a new Quat.
 <a name="Quat+normalizeInPlace"></a>
 
 ### normalizeInPlace
-Normalizes the Quat, modifying it and returning it normalized.
+Normalizes the Quat, modifying its values in place.
 
 
 <a name="Quat+dot"></a>
 
 ### dot
-Calculates the dot product of two Quats.
+Calculates the dot product of this quat against another.
 
 
 **Returns**: <code>number</code> - - Returns the dot product.  
@@ -464,7 +467,7 @@ Return the inverse of the `Quat`
 
 ### alignWith
 Aligns this quaternion with another one ensuring that the delta between
-the Quat values is the shortest path over the hypersphere.
+the Quat values is the shortest path over the hyper-sphere.
 
 
 
@@ -475,7 +478,7 @@ the Quat values is the shortest path over the hypersphere.
 <a name="Quat+multiply"></a>
 
 ### multiply
-Multiplies two Quats and returns the result as a new Quat.
+Multiplies two this quat by another returning the result as a new Quat.
 
 
 **Returns**: [<code>Quat</code>](#Quat) - - Returns a new Quat.  
@@ -487,7 +490,7 @@ Multiplies two Quats and returns the result as a new Quat.
 <a name="Quat+multiplyInPlace"></a>
 
 ### multiplyInPlace
-Multiplies two Quats.
+Multiplies this quat by another, modifying its values in place.
 
 
 
@@ -498,7 +501,7 @@ Multiplies two Quats.
 <a name="Quat+rotateVec3"></a>
 
 ### rotateVec3
-Rotates a vector by this quaterion.
+Rotates a vector by this quaternion.
 Don't forget to normalize the quaternion unless
 you want axial translation as well as rotation.
 
@@ -512,7 +515,7 @@ you want axial translation as well as rotation.
 <a name="Quat+rotateX"></a>
 
 ### rotateX
-Rotates a quaternion by the given angle about the X axis.
+Sets this quaternion to a rotation by the given angle about the X axis.
 
 
 
@@ -523,7 +526,7 @@ Rotates a quaternion by the given angle about the X axis.
 <a name="Quat+rotateY"></a>
 
 ### rotateY
-Rotates a quaternion by the given angle about the Y axis.
+Sets this quaternion to a rotation by the given angle about the Y axis.
 
 
 
@@ -534,7 +537,7 @@ Rotates a quaternion by the given angle about the Y axis.
 <a name="Quat+rotateZ"></a>
 
 ### rotateZ
-Rotates a quaternion by the given angle about the Z axis.
+Sets this quaternion to a rotation by the given angle about the Z axis.
 
 
 
@@ -552,24 +555,24 @@ Converts this Quat to a Mat3 (a 3x3 matrix).
 <a name="Quat+getXaxis"></a>
 
 ### getXaxis
-Returns the X axis of this quaternion.
+Calculates a Vec3 value aligned with the X axis of this quaternion.
 
 
-**Returns**: <code>[Vec3](api/Math\Vec3.md)</code> - - Returns the X axis as a Vec3.  
+**Returns**: <code>[Vec3](api/Math\Vec3.md)</code> - - The resulting Vec3 value  
 <a name="Quat+getYaxis"></a>
 
 ### getYaxis
-Returns the Y axis of this quaternion.
+Calculates a Vec3 value aligned with the Y axis of this quaternion.
 
 
-**Returns**: <code>[Vec3](api/Math\Vec3.md)</code> - - Returns the Y axis as a Vec3.  
+**Returns**: <code>[Vec3](api/Math\Vec3.md)</code> - - The resulting Vec3 value  
 <a name="Quat+getZaxis"></a>
 
 ### getZaxis
-Returns the Z axis of this quaternion.
+Calculates a Vec3 value aligned with the Z axis of this quaternion.
 
 
-**Returns**: <code>[Vec3](api/Math\Vec3.md)</code> - - Returns the Z axis as a Vec3.  
+**Returns**: <code>[Vec3](api/Math\Vec3.md)</code> - - The resulting Vec3 value  
 <a name="Quat+mirror"></a>
 
 ### mirror
@@ -592,27 +595,27 @@ Converts this Quat to a Mat4 (a 4x4 matrix).
 <a name="Quat+lerp"></a>
 
 ### lerp
-Performs a linear interpolation between two Quats.
+Performs a linear interpolation of this Quat towards another Quat, returning the result as a new Quat.
 
 
 **Returns**: [<code>Quat</code>](#Quat) - - Returns a new Quat.  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| other | [<code>Quat</code>](#Quat) | The other Quat to interpolate between. |
+| other | [<code>Quat</code>](#Quat) | The other Quat to interpolate towards. |
 | t | <code>number</code> | Interpolation amount between the two inputs. |
 
 <a name="Quat+slerp"></a>
 
 ### slerp
-Performs a spherical linear interpolation between two Quats.
+Performs a spherical linear interpolation of this Quat towards another Quat, returning the result as a new Quat.
 
 
 **Returns**: [<code>Quat</code>](#Quat) - - Returns a new Quat.  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| other | [<code>Quat</code>](#Quat) | The other Quat to interpolate between. |
+| other | [<code>Quat</code>](#Quat) | The other Quat to interpolate towards. |
 | t | <code>number</code> | Interpolation amount between the two inputs. |
 
 <a name="Quat+clone"></a>
@@ -625,7 +628,7 @@ Clones this Quat and returns a new Quat.
 <a name="Quat+toJSON"></a>
 
 ### toJSON
-The toJSON method encodes this type as a json object for persistences.
+The toJSON method encodes this type as a json object for persistence.
 
 
 **Returns**: <code>object</code> - - The json object.  

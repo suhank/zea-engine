@@ -1,6 +1,28 @@
-# Plugins and Tools
+# Templates and Plugins 
 
 The Zea Engine provides a core and basic functionality, and a collection of plugins that extend the functionally of the engine for more specific use cases.
+
+
+## Zea Svelte Template
+
+![zea-svelte-template](_media/zea-svelte-template.jpg)
+
+Need to get up and running quickly? Zea provides a template application built using the popular new [Svelte](https://svelte.dev/) framework. This Template comes with a library of Svelte components that you can use to customize the application to your own requirements.
+
+the Svelte template combines all of the stock libraries into a single well structured app. It shows how to setup UX, Collab, authentication, CAD rendering, selection etc...
+
+> [https://github.com/ZeaInc/zea-svelte-template](https://github.com/ZeaInc/zea-svelte-template)
+> [Svelte](https://svelte.dev/)
+
+
+## Zea Plugin Template
+
+![zea-plugin-template](_media/zea-plugin-template.png)
+
+If you are interested in building your own plugin, or just want to see some sample code on how to extend the engine, check out the plugin template. The goal of the plugin template is to provide a quick start on building your own plugins, using the best practices, such as unit testing, end-to-end testing, and semantic versioning. We use the plugin template when we start working on a new plugin to get up and running quickly.
+
+> [https://github.com/ZeaInc/zea-plugin-template](https://github.com/ZeaInc/zea-plugin-template)
+
 
 ## Zea UX
 
@@ -9,16 +31,6 @@ The Zea Engine provides a core and basic functionality, and a collection of plug
 The UX library provides a collection of plugins and tools for User Experience, such as Undo Redo, Onscreen widgets for moving objects around, and 3d controls to edit scene parameters.
 
 > [Zea UX](https://docs.zea.live/zea-ux/)
-
-## Zea User Interfaces Library
-
-![web-components-example](_media/web-components-example.png)
-
-Do you need to display a Tree View of your model structure, or provide a simple panel based layout? Zea provides a User interface library built using [Web Components](https://developer.mozilla.org/en-US/docs/Web/Web_Components) which means you can use the library of components with any existing web app framework, such as [ReactJS](https://reactjs.org/), [AngularJS](https://angularjs.org/) or [StancilJS](https://stenciljs.com/). We use Stencil JS for our own web applications.
-
-To complement the Zea Engine, the Zea Web Components library provides a collection of User interface elements that can be used to quickly assemble a rich User Experience.
-
-> [Zea Web Components Library](http://web-components-staging.zea.live)
 
 ## Zea CAD
 

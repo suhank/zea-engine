@@ -174,7 +174,8 @@ Replaces this Vec2 data with the Vec2 data passed as parameter.
 ### ~~vec2.equal(other) ⇒ <code>boolean</code>~~
 ***Deprecated***
 
-Checks if this Vec2 is exactly the same as another Vec2.
+Checks if this Vec2 contains the same values as the other Vec2.
+Deprecated. Use #isEqual instead.
 
 
 **Returns**: <code>boolean</code> - - Returns `true` if are the same Vector, otherwise, `false`.  
@@ -186,7 +187,7 @@ Checks if this Vec2 is exactly the same as another Vec2.
 <a name="Vec2+isEqual"></a>
 
 ### isEqual
-Checks if this Vec2 is exactly the same as another Vec2.
+Checks if this Vec2 contains the same values as the other Vec2.
 
 
 **Returns**: <code>boolean</code> - - Returns `true` if are the same Vector, otherwise, `false`.  
@@ -371,14 +372,14 @@ Calculates the distance to another vector.
 
 ### normalize
 Normalizes the Vec2 and returns it as a new Vec2.
-Multiplies coordenates value by the inverse of the vector length.
+Multiplies coordinates value by the inverse of the vector length.
 
 
 **Returns**: [<code>Vec2</code>](#Vec2) - - Returns the Vec2 normalized.  
 <a name="Vec2+normalizeInPlace"></a>
 
 ### normalizeInPlace
-Normalizes this Vec2 multiplying coordenate values by the inverse of the vector length.
+Normalizes this Vec2 multiplying coordinate values by the inverse of the vector length.
 
 
 <a name="Vec2+dot"></a>
@@ -435,7 +436,7 @@ Gets the angle between this Vec2 and other.
 Rotates a Vec2 in a clockwise direction and returns a new rotated Vec2.
 
 
-**Returns**: [<code>Vec2</code>](#Vec2) - - Returns the rotated vect  or.  
+**Returns**: [<code>Vec2</code>](#Vec2) - - Returns the rotated vector.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -464,12 +465,12 @@ Generates a random vector with the given scale.
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| scale | <code>number</code> | <code>1</code> | Length of the resulting vector. If ommitted, a unit vector will be returned. |
+| scale | <code>number</code> | <code>1</code> | Length of the resulting vector. If omitted, a unit vector will be returned. |
 
 <a name="Vec2+setRandom"></a>
 
 ### setRandom
-Randomizes the scale of this Vec2 coordenates.
+Randomizes the scale of this Vec2 coordinates.
 
 
 **Returns**: [<code>Vec2</code>](#Vec2) - - The return value.  

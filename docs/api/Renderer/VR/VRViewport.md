@@ -46,7 +46,7 @@ Create a VR viewport.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| renderer | <code>any</code> | The renderer value. |
+| renderer | <code>[GLBaseRenderer](api/Renderer\GLBaseRenderer.md)</code> | The renderer value. |
 
 <a name="VRViewport+getVRDisplay"></a>
 
