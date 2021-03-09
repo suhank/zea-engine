@@ -55,14 +55,21 @@ class GLShaderMaterials extends EventEmitter {
    */
   addMaterialGeomItemSets(glMaterialGeomItemSets) {
     this.glMaterialGeomItemSets.push(glMaterialGeomItemSets)
-    glMaterialGeomItemSets.on('destructing', () => {
+    const updated = () => {
+      this.emit('updated')
+    }
+    const destructing = () => {
+      glMaterialGeomItemSets.off('updated', updated)
+      glMaterialGeomItemSets.off('destructing', destructing)
       const index = this.glMaterialGeomItemSets.indexOf(glMaterialGeomItemSets)
       this.glMaterialGeomItemSets.splice(index, 1)
       if (this.glMaterialGeomItemSets.length == 0) {
         // TODO: clean up the shader... maybe.
         this.emit('destructing')
       }
-    })
+    }
+    glMaterialGeomItemSets.on('updated', updated)
+    glMaterialGeomItemSets.on('destructing', destructing)
   }
 
   /**

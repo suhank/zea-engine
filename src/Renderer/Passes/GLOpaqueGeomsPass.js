@@ -147,6 +147,10 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
       const shaders = this.constructShaders(shaderName)
       glshaderMaterials = new GLShaderMaterials(this.__gl, this, shaders)
       this.__glshadermaterials[shaderName] = glshaderMaterials
+
+      glshaderMaterials.on('updated', () => {
+        this.__renderer.requestRedraw()
+      })
     }
 
     glshaderMaterials.addGLGeomItem(glGeomItem, glGeom, glMaterial)
