@@ -1,7 +1,7 @@
 
 # PBR Rendering
 
-![pbr-materials](_media/pbr-materials.webp)
+![pbr-materials](_media/pbr-materials.jpg)
 
 
 
@@ -34,8 +34,8 @@ We make available a free tool to convert images from Lat-Long HDR to zenv and wo
 # Materials Parameters
 
 
-![pbr-material-library1](_media/pbr-material-library1.webp)
-![pbr-material-library2](_media/pbr-material-library2.webp)
+![pbr-material-library1](_media/pbr-material-library1.jpg)
+![pbr-material-library2](_media/pbr-material-library2.jpg)
 
 The Material parameters provided by Zea Engine are a subset of those found in Unity and line up with the material parameters provided by Filament. You can use the Filament material guide to help you understand the material parameters in Zea Engine.
 
