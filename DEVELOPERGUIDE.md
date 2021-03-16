@@ -2,17 +2,7 @@
 
 A high performance 3D rendering engine for the web.
 
-![Test and build](https://github.com/ZeaInc/zea-engine/workflows/Test%20and%20build/badge.svg)
-![Coverage: Statements](coverage/badge-statements.svg)
-[![npm](https://img.shields.io/npm/v/@zeainc/zea-engine?style=flat-square)](https://www.npmjs.com/package/@zeainc/zea-engine)
-[![Code style: Prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
-[![This project is using Percy.io for visual regression testing.](https://percy.io/static/images/percy-badge.svg)](https://percy.io/36dba56e/zea-engine)
-
-## Docs
-
-[https://docs.zea.live/zea-engine/](https://docs.zea.live/zea-engine/)
-
-## Getting started
+## Building the Engine 
 
 1. Install Git.
 2. Install Node.js from here: https://nodejs.org/en/download/ using the default options. It should be straight forward.

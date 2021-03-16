@@ -30,16 +30,6 @@ These docs allow developers to get started with the Zea Engine by downloading fr
 </br>
 </br>
 
-# Licensing
-The Zea Engine is distributed via NPM under a proprietary closed source license which gives developers the rights to evaluate Zea Engine and build non-commercial applications. By downloading the Zea Engine, your agree to be bound by the terms and conditions of this license available on the Zea Website: [_zea.live_](https://www.zea.live/en/licensing)
-</br>
-To evaluate the engine with your proprietary content, you will need to access our server-side libraries and a restricted non-commercial evaluation license.
-
-To build a commercial application, you need a commercial licensing agreement.
-</br>
-</br>
-</br>
-
 # Add it to your project
 The process to add Zea Engine to your projects is very straight forward. 
 
@@ -61,6 +51,10 @@ For static websites or quick implementation you can always use CDNs like JsDeliv
 </script>
 ```
 
+# Building
+
+For information on how to build the engine, run the unit tests, and publish release, please consult the [DEVELOPERGUIDE.md](https://github.com/ZeaInc/zea-engine/blob/master/DEVELOPERGUIDE.md).
+
 
 # Script tags instead of esm imports
 
@@ -77,8 +71,14 @@ Yes we would like to do that eventually, but there are a few issues holding us b
 We hope that these issues are resolved over time. If you have any suggestions on alternative methods to what we have presented, please feel free to reach out and let us know your thoughts.
 
 # Licensing
+The Zea Engine is distributed via NPM under the AGPLv3 or proprietary closed source license which gives developers the rights to evaluate Zea Engine and build non-commercial applications. By downloading the Zea Engine, your agree to be bound by the terms and conditions of this either the AGPLv3 license, or the commercial license available on the Zea Website: [_zea.live_](https://www.zea.live/en/licensing)
+</br>
+To evaluate the engine with your proprietary content, you will need to access our server-side libraries and a restricted non-commercial evaluation license.
 
-> For questions on licensing, please fill out the contact form on our website: [_zea.live_](https://www.zea.live/contact-us)
+To build a commercial application, you need a commercial licensing agreement.
+</br>
+</br>
+</br>
 
 # Links
 
