@@ -24,6 +24,11 @@ video.getParameter('FilePath').setUrl("https://storage.googleapis.com/zea-playgr
 
 
 **Extends**: <code>[FileImage](api/SceneTree\Images\FileImage.md)</code>  
+
+* [LDRVideo ⇐ <code>FileImage</code>](#LDRVideo)
+    * [new LDRVideo(name, filePath, params)](#new-LDRVideo)
+    * [load(url, format) ⇒ <code>Promise</code>](#load)
+
 <a name="new_LDRVideo_new"></a>
 
 ### new LDRVideo
@@ -35,4 +40,18 @@ Create a LDR video.
 | name | <code>string</code> | The name value. |
 | filePath | <code>string</code> | The filePath value. |
 | params | <code>object</code> | The params value. |
+
+<a name="LDRVideo+load"></a>
+
+### load
+Uses the specify url to load an Image element and adds it to the data library.
+Sets the state of the current object.
+
+
+**Returns**: <code>Promise</code> - Returns a promise that resolves once the image is loaded.  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| url | <code>string</code> |  | The url value. |
+| format | <code>string</code> | <code>&quot;RGB&quot;</code> | The format value. |
 
