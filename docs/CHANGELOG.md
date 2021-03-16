@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.3.2](https://github.com/ZeaInc/zea-engine/compare/v3.3.1...v3.3.0) (2021-03-16)
+
+### Bug Fixes
+
+* An exception was thrown in the Renderer if an empty geometry was added. Clearing a geometry would leave fragmented empty allocations in the GPU buffers. ([9f5c05d](https://github.com/ZeaInc/zea-engine/commit/9f5c05d012f88db3bf3e079a91932d6b9d82d12c))
+
 ## [3.3.0](https://github.com/ZeaInc/zea-engine/compare/v3.2.1...v3.3.0) (2021-03-09)
 
 

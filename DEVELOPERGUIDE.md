@@ -120,32 +120,24 @@ The testing framework launches chrome in headless mode, which uses an emulated s
 ## Publishing a new release
 
 1. All unit and E2E tests must be passing.
-2. Regenerate the API docs
-```bash
-yarn docs
-```
 
-3. To generate the release notes and bump the version, run:
+2. To generate the release notes and bump the version, run:
 ```bash
 yarn run release
 ```
 
+3. Regenerate the API docs
+```bash
+yarn docs
+```
+
 4. Check for spelling issues and other inconsistencies.
 
-5. To bump the package version, run:
+5. Push your changes and publish to NPM
 ```bash
-yarn version
+git push --follow-tags origin master && npm publish
 ```
 
-6. Push your changes.
-```bash
-git push --tags
-```
-
-7. Publish to NPM
-```bash
-yarn publish
-```
 ### Publishing a pre-release
 
 Pre-releases are potentially unstable releases meant for tests of new features before they are published to an production release.
