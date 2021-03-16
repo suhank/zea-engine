@@ -221,9 +221,6 @@ describe('TreeItem', () => {
 
     const mockFn = jest.fn()
     child.on('highlightChanged', mockFn)
-    child.on('highlightChanged', () => {
-      console.warn('here')
-    })
     child.addHighlight('customhighlight', new Color(1, 0, 0), true)
     expect(mockFn).toHaveBeenCalledTimes(1)
     parent.addHighlight('customhighlight', new Color(1, 0, 0), true)

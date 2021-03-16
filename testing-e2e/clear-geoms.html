@@ -18,6 +18,7 @@
       const domElement = document.getElementById('webglcanvas')
 
       const scene = new Scene()
+      // scene.setupGrid(10, 10)
 
       const renderer = new GLRenderer(domElement, { hideSplash: true, antialias: false })
       renderer.setScene(scene)
@@ -26,14 +27,6 @@
       standardMaterial.getParameter('BaseColor').setValue(new Color(89 / 255, 182 / 255, 92 / 255))
 
       const lines = new Lines()
-      lines.setNumVertices(3)
-      lines.setNumSegments(2)
-      lines.setSegmentVertexIndices(0, 0, 1)
-      lines.setSegmentVertexIndices(1, 1, 2)
-      const positions = lines.getVertexAttribute('positions')
-      positions.setValue(0, new Vec3(1, 0, 0.5))
-      positions.setValue(1, new Vec3(1, 1, 0.5))
-      positions.setValue(2, new Vec3(0, 1, 0.5))
       const geomItem = new GeomItem('Lines', lines, standardMaterial)
       scene.getRoot().addChild(geomItem)
 
@@ -45,9 +38,22 @@
         const { data } = event
 
         if (data === 'variant-01') {
-          lines.clear()
+          lines.setNumVertices(3)
+          lines.setNumSegments(2)
+          lines.setSegmentVertexIndices(0, 0, 1)
+          lines.setSegmentVertexIndices(1, 1, 2)
+          const positions = lines.getVertexAttribute('positions')
+          positions.setValue(0, new Vec3(1, 0, 0.5))
+          positions.setValue(1, new Vec3(1, 1, 0.5))
+          positions.setValue(2, new Vec3(0, 1, 0.5))
+          lines.emit('geomDataTopologyChanged', {
+            indicesChanged: true,
+          })
           window.postMessage(`done-${data}`)
         } else if (data === 'variant-02') {
+          lines.clear()
+          window.postMessage(`done-${data}`)
+        } else if (data === 'variant-03') {
           lines.setNumVertices(4)
           lines.setNumSegments(3)
           lines.setSegmentVertexIndices(0, 0, 1)
