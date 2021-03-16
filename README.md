@@ -18,17 +18,11 @@ No single solution can solve all problems out of the box. Therefore, the Zea Eng
 
 ## *Reach*
 Applications that leverage the web browser are already available on all modern devices. These web applications provide a friction-free and straightforward way to deliver content without requiring users to install a player. Zea Engine is designed for the web and enables new categories of high performance and versatile web applications.
-</br>
-</br>
-</br>
 
 # Documentation
 Full documentation with concepts, tutorials, live examples, API documentation and more; can be found at the zea engine docs site: [https://docs.zea.live/zea-engine/](https://docs.zea.live/zea-engine/)
 
 These docs allow developers to get started with the Zea Engine by downloading free and open-source demo content and using Zea's publicly distributed client-side libraries.
-</br>
-</br>
-</br>
 
 # Add it to your project
 The process to add Zea Engine to your projects is very straight forward. 
@@ -76,15 +70,4 @@ The Zea Engine is distributed via NPM under the AGPLv3 or proprietary closed sou
 To evaluate the engine with your proprietary content, you will need to access our server-side libraries and a restricted non-commercial evaluation license.
 
 To build a commercial application, you need a commercial licensing agreement.
-</br>
-</br>
-</br>
 
-# Links
-
-[npm]: https://badge.fury.io/js/%40zeainc%2Fzea-engine.svg
-[npm-url]: https://www.npmjs.com/package/@zeainc/zea-engine
-[build-size]: https://badgen.net/bundlephobia/minzip/@zeainc/zea-engine
-[build-size-url]: https://bundlephobia.com/result?p=@zeainc/zea-engine
-[npm-downloads]: https://img.shields.io/npm/dw/@zeainc/zea-engine
-[npmtrends-url]: https://www.npmtrends.com/@zeainc/zea-engine
