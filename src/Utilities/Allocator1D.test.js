@@ -23,6 +23,18 @@ describe('Allocator1D', () => {
     expect(allocator.reservedSpace).toEqual(16)
   })
 
+  it('Simple deallocation', () => {
+    const allocator = new Allocator1D()
+
+    allocator.allocate(0, 3)
+    allocator.allocate(1, 5)
+    allocator.deallocate(0)
+    allocator.verifyConsistency()
+
+    expect(allocator.freeSpace).toEqual(3)
+    expect(allocator.reservedSpace).toEqual(8)
+  })
+
   it('Simple grow buffer', () => {
     const allocator = new Allocator1D()
 

@@ -221,10 +221,16 @@ class GLGeomLibrary extends EventEmitter {
 
     const numVerts = geomBuffers.numRenderVerts ? geomBuffers.numRenderVerts : geomBuffers.numVertices
     if (this.geomVertexCounts[index] != numVerts) {
-      const allocation = this.attributesAllocator.allocate(index, numVerts)
+      if (numVerts == 0) {
+        this.attributesAllocator.deallocate(index)
+        this.geomVertexOffsets[index] = 0
+        this.geomVertexCounts[index] = 0
+      } else {
+        const allocation = this.attributesAllocator.allocate(index, numVerts)
 
-      this.geomVertexOffsets[index] = allocation.start
-      this.geomVertexCounts[index] = allocation.size
+        this.geomVertexOffsets[index] = allocation.start
+        this.geomVertexCounts[index] = allocation.size
+      }
     }
 
     // eslint-disable-next-line guard-for-in
@@ -247,10 +253,16 @@ class GLGeomLibrary extends EventEmitter {
     if (geomBuffers.indices) {
       const numIndices = geomBuffers.indices.length
       if (this.indicesCounts[index] != numIndices) {
-        const allocation = this.indicesAllocator.allocate(index, numIndices)
-        const elementSize = 4 //  Uint32Array for UNSIGNED_INT
-        this.indicesOffsets[index] = allocation.start * elementSize // offset is in bytes
-        this.indicesCounts[index] = allocation.size
+        if (numIndices == 0) {
+          this.indicesAllocator.deallocate(index)
+          this.indicesOffsets[index] = 0
+          this.indicesCounts[index] = 0
+        } else {
+          const allocation = this.indicesAllocator.allocate(index, numIndices)
+          const elementSize = 4 //  Uint32Array for UNSIGNED_INT
+          this.indicesOffsets[index] = allocation.start * elementSize // offset is in bytes
+          this.indicesCounts[index] = allocation.size
+        }
       }
     } else {
       // Note: for non-indexed data, like Points, we provide
@@ -340,6 +352,10 @@ class GLGeomLibrary extends EventEmitter {
     if (count != numVerts) {
       throw new Error('Invalid allocation for this geom')
     }
+    if (numVerts == 0) {
+      this.emit('geomDataChanged', { index })
+      return
+    }
 
     // eslint-disable-next-line guard-for-in
     for (const attrName in geomBuffers.attrBuffers) {
@@ -359,10 +375,13 @@ class GLGeomLibrary extends EventEmitter {
 
     // //////////////////////////////////////
     // Indices
-    if (geomBuffers.indices) {
+    // Note: we sometimes see geometries with zero vertices/indices which means
+    // no allocation has yet been made. We can safely skip these.
+    if (geomBuffers.indices && geomBuffers.indices.length > 0) {
       const indices = geomBuffers.indices
 
       const allocation = this.indicesAllocator.getAllocation(index)
+
       if (allocation.size != indices.length) {
         throw new Error('Invalid allocation for this geom')
       }
