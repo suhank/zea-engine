@@ -4,19 +4,247 @@
 
 Use this code to guide yourself on how to implement this class.
 ```javascript
-import { GridTreeItem } from './GridTreeItem'
-// Although we're not directly using LinesShader, we import it so it registers itself in the registry.
-// eslint-disable-next-line no-unused-vars
-import { LinesShader } from '../Renderer/Shaders/LinesShader'
-import { Color } from '../Math/Color'
+import { TreeItem } from './TreeItem'
+import { Vec3, Xfo, Quat, Color } from '../Math'
 
-describe.skip('GridTreeItem', () => {
-  it('Setup GridTreeItem', () => {
-    const grid = new GridTreeItem(5, 5, new Color('#99CCCC'))
-    const expectedOutput =
-      '{"params":{"Visible":{"value":true},"LocalXfo":{"value":{"tr":{"x":0,"y":0,"z":0},"ori":{"x":0,"y":0,"z":0,"w":1}}},"GlobalXfo":{"value":{"tr":{"x":0,"y":0,"z":0},"ori":{"x":0,"y":0,"z":0,"w":1}}},"BoundingBox":{"value":{"p0":{"x":null,"y":null,"z":null},"p1":{"x":null,"y":null,"z":null}}}},"name":"GridTree","type":"GridTreeItem","children":{"GridItem":{"params":{"Visible":{"value":true},"LocalXfo":{"value":{"tr":{"x":0,"y":0,"z":0},"ori":{"x":0,"y":0,"z":0,"w":1}}},"GlobalXfo":{"value":{"tr":{"x":0,"y":0,"z":0},"ori":{"x":0,"y":0,"z":0,"w":1}}},"BoundingBox":{"value":{"p0":{"x":null,"y":null,"z":null},"p1":{"x":null,"y":null,"z":null}}},"Geometry":{"value":{"params":{"x":{"value":5},"y":{"value":5},"xDivisions":{"value":5},"yDivisions":{"value":5},"skipCenterLines":{"value":true}},"type":"Grid","numVertices":24,"vertexAttributes":{"positions":{"data":[-2.5,-2.5,0,-2.5,2.5,0,-1.5,-2.5,0,-1.5,2.5,0,-0.5,-2.5,0,-0.5,2.5,0,0.5,-2.5,0,0.5,2.5,0,1.5,-2.5,0,1.5,2.5,0,2.5,-2.5,0,2.5,2.5,0,-2.5,-2.5,0,2.5,-2.5,0,-2.5,-1.5,0,2.5,-1.5,0,-2.5,-0.5,0,2.5,-0.5,0,-2.5,0.5,0,2.5,0.5,0,-2.5,1.5,0,2.5,1.5,0,-2.5,2.5,0,2.5,2.5,0],"dataType":"Vec3","defaultValue":0,"length":24}},"indices":[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]}},"Material":{"value":["gridMaterial"]},"GeomOffsetXfo":{"value":{"tr":{"x":0,"y":0,"z":0},"ori":{"x":0,"y":0,"z":0,"w":1}}},"GeomMat":{"value":{"0":1,"1":0,"2":0,"3":0,"4":0,"5":1,"6":0,"7":0,"8":0,"9":0,"10":1,"11":0,"12":0,"13":0,"14":0,"15":1}}},"name":"GridItem","type":"GeomItem"},"xAxisLine":{"params":{"Visible":{"value":true},"LocalXfo":{"value":{"tr":{"x":0,"y":0,"z":0},"ori":{"x":0,"y":0,"z":0,"w":1}}},"GlobalXfo":{"value":{"tr":{"x":0,"y":0,"z":0},"ori":{"x":0,"y":0,"z":0,"w":1}}},"BoundingBox":{"value":{"p0":{"x":null,"y":null,"z":null},"p1":{"x":null,"y":null,"z":null}}},"Geometry":{"value":{"type":"Lines","numVertices":2,"vertexAttributes":{"positions":{"data":[-2.5,0,0,2.5,0,0],"dataType":"Vec3","defaultValue":0,"length":2}},"indices":[0,1]}},"Material":{"value":["gridXAxisMaterial"]},"GeomOffsetXfo":{"value":{"tr":{"x":0,"y":0,"z":0},"ori":{"x":0,"y":0,"z":0,"w":1}}},"GeomMat":{"value":{"0":1,"1":0,"2":0,"3":0,"4":0,"5":1,"6":0,"7":0,"8":0,"9":0,"10":1,"11":0,"12":0,"13":0,"14":0,"15":1}}},"name":"xAxisLine","type":"GeomItem"},"yAxisLine":{"params":{"Visible":{"value":true},"LocalXfo":{"value":{"tr":{"x":0,"y":0,"z":0},"ori":{"x":0,"y":0,"z":0,"w":1}}},"GlobalXfo":{"value":{"tr":{"x":0,"y":0,"z":0},"ori":{"x":0,"y":0,"z":0,"w":1}}},"BoundingBox":{"value":{"p0":{"x":null,"y":null,"z":null},"p1":{"x":null,"y":null,"z":null}}},"Geometry":{"value":{"type":"Lines","numVertices":2,"vertexAttributes":{"positions":{"data":[-2.5,0,0,2.5,0,0],"dataType":"Vec3","defaultValue":0,"length":2}},"indices":[0,1]}},"Material":{"value":["gridZAxisMaterial"]},"GeomOffsetXfo":{"value":{"tr":{"x":0,"y":0,"z":0},"ori":{"x":0,"y":0,"z":0.7071067690849304,"w":0.7071067690849304}}},"GeomMat":{"value":{"0":1,"1":0,"2":0,"3":0,"4":0,"5":1,"6":0,"7":0,"8":0,"9":0,"10":1,"11":0,"12":0,"13":0,"14":0,"15":1}}},"name":"yAxisLine","type":"GeomItem"}}}'
+describe('TreeItem', () => {
+  it('is visible by default.', () => {
+    const treeItem = new TreeItem('Foo')
 
-    expect(JSON.stringify(grid.toJSON())).toEqual(expectedOutput)
+    expect(treeItem.isVisible()).toBe(true)
+  })
+
+  test('Changing visibility.', () => {
+    const treeItem = new TreeItem('Foo')
+
+    treeItem.setVisible(false)
+
+    expect(treeItem.isVisible()).toBe(false)
+  })
+
+  test('Changing tree visibility.', () => {
+    const parent = new TreeItem('Parent')
+    const child = new TreeItem('Child')
+
+    parent.addChild(child)
+
+    parent.setVisible(false)
+
+    expect(child.isVisible()).toBe(false)
+  })
+
+  it("doesn't have children by default.", () => {
+    const parent = new TreeItem('Parent')
+
+    expect(parent.getNumChildren()).toBe(0)
+  })
+
+  test('Getting child by index.', () => {
+    const parent = new TreeItem('Parent')
+    const child = new TreeItem('Child')
+
+    parent.addChild(child)
+
+    const index = parent.getChildIndex(child)
+
+    expect(parent.getChild(index)).toBe(child)
+  })
+
+  test('Hierarchical Transformations - Translation.', () => {
+    const parent = new TreeItem('Parent')
+    const child = new TreeItem('Child')
+    parent.addChild(child)
+
+    parent.getParameter('LocalXfo').setValue(new Xfo(new Vec3(5, 2, 0)))
+    child.getParameter('LocalXfo').setValue(new Xfo(new Vec3(2, 4, 0)))
+
+    expect(
+      child
+        .getParameter('GlobalXfo')
+        .getValue()
+        .approxEqual(
+          {
+            ori: { w: 1, x: 0, y: 0, z: 0 },
+            tr: { x: 7, y: 6, z: 0 },
+          },
+          0.001
+        )
+    ).toBe(true)
+  })
+
+  test('Hierarchical Transformations - Rotation.', () => {
+    const parent = new TreeItem('Parent')
+    const child = new TreeItem('Child')
+    parent.addChild(child)
+
+    child.getParameter('LocalXfo').setValue(new Xfo(new Vec3(2, 4, 0)))
+
+    const rotation = new Quat()
+    rotation.setFromAxisAndAngle(new Vec3(0, 0, 1), Math.PI * 0.5)
+
+    parent.getParameter('LocalXfo').setValue(new Xfo(new Vec3(0, 0, 0), rotation))
+
+    expect(
+      child
+        .getParameter('GlobalXfo')
+        .getValue()
+        .approxEqual({ tr: { x: -4, y: 2, z: 0 }, ori: { x: 0, y: 0, z: 0.70711, w: 0.70711 } }, 0.001)
+    ).toBe(true)
+  })
+
+  test('Getting child by name.', () => {
+    const parent = new TreeItem('Parent')
+    const child = new TreeItem('Child')
+
+    parent.addChild(child)
+
+    expect(parent.getChildByName('Child')).toBe(child)
+  })
+
+  test('Counting children.', () => {
+    const parent = new TreeItem('Parent')
+    const child = new TreeItem('Child')
+
+    parent.addChild(child)
+
+    expect(parent.getNumChildren()).toBe(1)
+  })
+
+  test('Getting children names.', () => {
+    const parent = new TreeItem('Parent')
+    const childA = new TreeItem('A')
+    const childB = new TreeItem('B')
+
+    parent.addChild(childA)
+    parent.addChild(childB)
+
+    expect(parent.getChildNames()).toEqual(['A', 'B'])
+  })
+
+  test('Getting child index.', () => {
+    const parent = new TreeItem('Parent')
+    const child = new TreeItem('Child')
+
+    parent.addChild(child)
+
+    expect(parent.getChildIndex(child)).toBe(0)
+  })
+
+  test('Resolving a shallow path.', () => {
+    const childName = 'Child'
+    const parent = new TreeItem('Parent')
+    const child = new TreeItem(childName)
+
+    parent.addChild(child)
+
+    const path = childName
+
+    expect(parent.resolvePath(path)).toBe(child)
+  })
+
+  test('Resolving a deep path.', () => {
+    const parent = new TreeItem('Parent')
+    const childA = new TreeItem('A')
+    const childAA = new TreeItem('AA')
+
+    childA.addChild(childAA)
+    parent.addChild(childA)
+
+    const path = 'A/AA'
+
+    expect(parent.resolvePath(path)).toBe(childAA)
+  })
+
+  test('Traversing invoking callback.', () => {
+    const parent = new TreeItem('Parent')
+    const child = new TreeItem('Child')
+
+    parent.addChild(child)
+
+    const mockFn = jest.fn()
+
+    parent.traverse(mockFn)
+
+    expect(mockFn).toHaveBeenCalledTimes(2)
+  })
+
+  test('Removing child by index.', () => {
+    const parent = new TreeItem('Parent')
+    const child = new TreeItem('Child')
+
+    parent.addChild(child)
+
+    const index = parent.getChildIndex(child)
+
+    expect(parent.getNumChildren()).toBe(1)
+
+    parent.removeChild(index)
+
+    expect(parent.getNumChildren()).toBe(0)
+  })
+
+  test('Removing child by name.', () => {
+    const parent = new TreeItem('Parent')
+    const childName = 'Child'
+    const child = new TreeItem(childName)
+
+    parent.addChild(child)
+
+    expect(parent.getNumChildren()).toBe(1)
+
+    parent.removeChildByName(childName)
+
+    expect(parent.getNumChildren()).toBe(0)
+  })
+
+  test('Removing all children.', () => {
+    const parent = new TreeItem('Parent')
+    const child = new TreeItem('Child')
+
+    parent.addChild(child)
+
+    expect(parent.getNumChildren()).toBe(1)
+
+    parent.removeAllChildren()
+
+    expect(parent.getNumChildren()).toBe(0)
+  })
+
+  test('Setting owner.', () => {
+    const parent = new TreeItem('Parent')
+    const child = new TreeItem('Child')
+
+    child.setOwner(parent)
+
+    expect(child.getOwner()).toBe(parent)
+  })
+
+  test('Highlights', () => {
+    const parent = new TreeItem('Parent')
+    const child = new TreeItem('Child')
+
+    child.setOwner(parent)
+
+    const mockFn = jest.fn()
+    child.on('highlightChanged', mockFn)
+    child.addHighlight('customhighlight', new Color(1, 0, 0), true)
+    expect(mockFn).toHaveBeenCalledTimes(1)
+    parent.addHighlight('customhighlight', new Color(1, 0, 0), true)
+    expect(mockFn).toHaveBeenCalledTimes(1)
+
+    child.removeHighlight('customhighlight')
+    expect(mockFn).toHaveBeenCalledTimes(2)
+    parent.removeHighlight('customhighlight')
+    expect(mockFn).toHaveBeenCalledTimes(2)
+  })
+
+  test('Saving to JSON (serialization).', () => {
+    const parent = new TreeItem('Parent')
+    const child = new TreeItem('Child')
+
+    const expOutput = '{"x":1,"y":2,"z":3}'
+
+    // console.log(parent.toJSON())
   })
 })
 

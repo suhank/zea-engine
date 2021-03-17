@@ -19,6 +19,3 @@ Creates an instance of GridTree.
 | [resolution] | <code>number</code> | <code>50</code> | 
 | [gridColor] | <code>string</code> | <code>&quot;new Color(&#x27;#DCDCDC&#x27;)&quot;</code> | 
 
-
-
-### [Class Tests](api/SceneTree/GridTreeItem.test)

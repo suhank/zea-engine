@@ -121,7 +121,6 @@
   * [GeomItem.test](api/SceneTree/GeomItem.test)
   * [GeomLibrary](api/SceneTree/GeomLibrary)
   * [GridTreeItem](api/SceneTree/GridTreeItem)
-  * [GridTreeItem.test](api/SceneTree/GridTreeItem.test)
   * [InstanceItem](api/SceneTree/InstanceItem)
   * [Material](api/SceneTree/Material)
   * [Material.test](api/SceneTree/Material.test)
