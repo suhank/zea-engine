@@ -10,8 +10,8 @@ Zea Engine is a web-based 3D rendering solution designed from the ground up for 
 A 3D JavaScript library for innovative manufacturers and industry 4.0 supporters who need to build web applications.
 
 ## *Power*
-Designed with the highest requirements in mind, giving developers a suite of tools to address the toughest challenges in modern professional graphics app development. 
-</br>Zea Engine pushes the limits of what a developer can achieve in the browser by focusing on power and performance.
+Designed with the highest requirements in mind, giving developers a suite of tools to address the toughest challenges in modern professional graphics app development.  
+Zea Engine pushes the limits of what a developer can achieve in the browser by focusing on power and performance.
 
 ## *Versatility*
 No single solution can solve all problems out of the box. Therefore, the Zea Engine uses a modular architecture that enables developers to integrate new functionalities. Zea keeps the essential features in the core while allowing powerful extensions to be built, either by Zea, to expand the engine's scope, or by third parties who wish to develop specific solutions.
@@ -65,8 +65,7 @@ Yes we would like to do that eventually, but there are a few issues holding us b
 We hope that these issues are resolved over time. If you have any suggestions on alternative methods to what we have presented, please feel free to reach out and let us know your thoughts.
 
 # Licensing
-The Zea Engine is distributed via NPM under the AGPLv3 or proprietary closed source license which gives developers the rights to evaluate Zea Engine and build non-commercial applications. By downloading the Zea Engine, your agree to be bound by the terms and conditions of this either the AGPLv3 license, or the commercial license available on the Zea Website: [_zea.live_](https://www.zea.live/en/licensing)
-</br>
+The Zea Engine is distributed via NPM under the AGPLv3 or proprietary closed source license which gives developers the rights to evaluate Zea Engine and build non-commercial applications. By downloading the Zea Engine, your agree to be bound by the terms and conditions of this either the AGPLv3 license, or the commercial license available on the Zea Website: [_zea.live_](https://www.zea.live/en/licensing)  
 To evaluate the engine with your proprietary content, you will need to access our server-side libraries and a restricted non-commercial evaluation license.
 
 To build a commercial application, you need a commercial licensing agreement.
