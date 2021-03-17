@@ -72,10 +72,9 @@ To evaluate the engine with your proprietary content, you will need to access ou
 To build a commercial application, you need a commercial licensing agreement.
 
 
-
--[npm]: https://badge.fury.io/js/%40zeainc%2Fzea-engine.svg
--[npm-url]: https://www.npmjs.com/package/@zeainc/zea-engine
--[build-size]: https://badgen.net/bundlephobia/minzip/@zeainc/zea-engine
--[build-size-url]: https://bundlephobia.com/result?p=@zeainc/zea-engine
--[npm-downloads]: https://img.shields.io/npm/dw/@zeainc/zea-engine
--[npmtrends-url]: https://www.npmtrends.com/@zeainc/zea-engine
+[npm]: https://badge.fury.io/js/%40zeainc%2Fzea-engine.svg
+[npm-url]: https://www.npmjs.com/package/@zeainc/zea-engine
+[build-size]: https://badgen.net/bundlephobia/minzip/@zeainc/zea-engine
+[build-size-url]: https://bundlephobia.com/result?p=@zeainc/zea-engine
+[npm-downloads]: https://img.shields.io/npm/dw/@zeainc/zea-engine
+[npmtrends-url]: https://www.npmtrends.com/@zeainc/zea-engine
