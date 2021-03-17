@@ -1,6 +1,5 @@
 export * from './Env.js'
 export * from './GrowingPacker.js'
-export * from './Async.js'
 export * from './EventEmitter.js'
 export * from './Allocator1D.js'
 export * from './StringFunctions'

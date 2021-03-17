@@ -1,6 +1,6 @@
 import { Vec2, Vec4, Color } from '../Math/index'
 
-import { Async, GrowingPacker } from '../Utilities/index'
+import { GrowingPacker } from '../Utilities/index'
 
 import { BaseImage } from '../SceneTree/index'
 import { shaderLibrary } from './ShaderLibrary'
@@ -146,12 +146,25 @@ class GLImageAtlas extends GLRenderTarget {
     this.clearColor = new Color(0, 0, 0, 0)
     this.__subImages = []
     this.__layoutNeedsRegeneration = false
-    this.__async = new Async()
+    this.__asyncCount = 0
     this.loaded = false
-    this.__async.on('ready', () => {
-      this.loaded = true
-      this.emit('loaded', {})
-    })
+  }
+
+  // eslint-disable-next-line require-jsdoc
+  incAsyncCount(count = 1) {
+    this.__asyncCount += count
+    this.ready = false
+  }
+
+  // eslint-disable-next-line require-jsdoc
+  decAsyncCount() {
+    if (this.__asyncCount > 0) {
+      this.__asyncCount--
+      if (this.__asyncCount == 0) {
+        this.loaded = true
+        this.emit('loaded', {})
+      }
+    }
   }
 
   /**
@@ -159,7 +172,7 @@ class GLImageAtlas extends GLRenderTarget {
    * @return {boolean} - The return value.
    */
   isLoaded() {
-    return this.__async.count == 0
+    return this.__asyncCount == 0
   }
 
   /**
@@ -179,9 +192,9 @@ class GLImageAtlas extends GLRenderTarget {
     if (subImage instanceof BaseImage) {
       const gltexture = new GLTexture2D(this.__gl, subImage)
       if (!subImage.isLoaded()) {
-        this.__async.incAsyncCount()
+        this.incAsyncCount()
         subImage.on('loaded', () => {
-          this.__async.decAsyncCount()
+          this.decAsyncCount()
         })
       }
       subImage.setMetadata('ImageAtlas_gltex', gltexture)
