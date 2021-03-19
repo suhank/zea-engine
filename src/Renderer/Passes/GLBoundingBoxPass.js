@@ -180,15 +180,6 @@ class GLBoundingBoxPass extends GLPass {
     }
     const treeitemData = this.boxes[index]
 
-    // Currently we are getting errors when trying to re-generate the Fbo
-    // after removing and then adding images back to the atlas.
-    // I don't have time to figure it out, so simply adding images
-    // to the atlas. (for the Zahner demo)
-    // Eventually we need to clean up the atlas, so debug this using the
-    // survey-point-calibration 190528_Dummy_Srvy_Data.vlexe test
-    const image = treeitemData.treeitem.getParameter('Image').getValue()
-    this.__atlas.removeSubImage(image)
-
     treeitem.off('visibilityChanged', treeitemData.visibilityChanged)
     treeitem.getParameter('GlobalXfo').off('valueChanged', treeitemData.xfoChanged)
     treeitem.getParameter('BoundingBox').off('valueChanged', treeitemData.xfoChanged)
@@ -407,10 +398,9 @@ class GLBoundingBoxPass extends GLPass {
     if (!gl.floatTexturesSupported || !gl.drawElementsInstanced) {
       const len = this.__indexArray.length
       for (let i = 0; i < len; i++) {
-        gl.uniformMatrix4fv(unifs.modelMatrix.location, false, this.__modelMatrixArray[i])
-        gl.uniform4fv(unifs.treeitemData.location, this.__treeitemDataArray[i])
-        gl.uniform4fv(unifs.tintColor.location, this.__tintColorArray[i])
-        gl.uniform4fv(unifs.layoutData.location, this.__atlas.getLayoutData(this.boxes[i].imageIndex))
+        // gl.uniformMatrix4fv(unifs.modelMatrix.location, false, this.__modelMatrixArray[i])
+        // gl.uniform4fv(unifs.treeitemData.location, this.__treeitemDataArray[i])
+        // gl.uniform4fv(unifs.tintColor.location, this.__tintColorArray[i])
 
         renderstate.bindViewports(unifs, () => {
           gl.drawQuad()

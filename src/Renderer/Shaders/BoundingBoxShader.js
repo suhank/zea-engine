@@ -112,16 +112,8 @@ void main(void) {
       `
 precision highp float;
 
-<%include file="stack-gl/gamma.glsl"/>
-<%include file="GLSLUtils.glsl"/>
-<%include file="materialparams.glsl"/>
-<%include file="utils/imageAtlas.glsl"/>
-
-uniform sampler2D atlasBillboards;
-
 /* VS Outputs */
 varying vec4 v_color;
-
 
 #ifdef ENABLE_ES3
   out vec4 fragColor;
@@ -133,7 +125,6 @@ void main(void) {
 
   fragColor = v_color;
 
-  
 #ifndef ENABLE_ES3
   gl_FragColor = fragColor;
 #endif
