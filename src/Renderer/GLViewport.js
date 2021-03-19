@@ -358,14 +358,12 @@ class GLViewport extends GLBaseViewport {
 
         if (!pointerRay) pointerRay = this.calcRayFromScreenPos(screenPos)
         const intersectionPos = pointerRay.start.add(pointerRay.dir.scale(geomItemAndDist.dist))
-        this.__intersectionData = {
+        this.__intersectionData = Object.assign({
           screenPos,
           pointerRay,
           intersectionPos,
-          geomItem: geomItemAndDist.geomItem,
-          dist: geomItemAndDist.dist,
           geomData,
-        }
+        }, geomItemAndDist)
       }
 
       return this.__intersectionData
