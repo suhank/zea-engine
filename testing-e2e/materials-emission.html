@@ -6,7 +6,7 @@
 
     <title>materials - Zea Engine</title>
 
-    <link href="zea-logo.png" rel="shortcut icon" />
+    <link href="data/zea-logo.png" rel="shortcut icon" />
 
     <link rel="stylesheet" href="styles/tachyons.min.css" />
     <link rel="stylesheet" href="styles/main.css" />
@@ -109,7 +109,7 @@
             material.getParameter('BaseColor').setValue(baseColor)
             material.getParameter('Metallic').setValue(metallic)
             material.getParameter('Reflectance').setValue(reflectance)
-            
+
             material.getParameter('Roughness').setValue(0.2)
             material.getParameter('Opacity').setValue(i / 10)
             material.getParameter('EmissiveStrength').setValue(j / 9)
@@ -127,7 +127,7 @@
 
       // https://google.github.io/filament/images/material_chart.jpg
 
-      // Note: 
+      // Note:
       addRow('Glass', new Color(0.8, 0, 0), 0.0, 0.9)
 
       renderer.exposure = 1.6
@@ -135,7 +135,7 @@
       document.getElementById('exposureControl').addEventListener('input', (event) => {
         renderer.exposure = event.target.value / 100
       })
-      
+
 
       renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(35, -35, 25), new Vec3(0, 0, 0))
 
