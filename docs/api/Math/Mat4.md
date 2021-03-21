@@ -5,7 +5,7 @@ A class representing a 4x4 matrix.
 This matrix class is based on GLM, and is column major.
 
 
-**Extends**: <code>[AttrValue](api/Math\AttrValue.md)</code>  
+**Extends**: <code>[AttrValue](api/Math/AttrValue.md)</code>  
 
 * [Mat4 ⇐ <code>AttrValue</code>](#Mat4)
     * [new Mat4(m00, m01, m02, m03, m10, m11, m12, m13, m20, m21, m22, m23, m30, m31, m32, m33)](#new-Mat4)
@@ -401,7 +401,7 @@ Setter for row 3, column 3.
 Getter for the `x` axis.
 
 
-**Returns**: <code>[Vec3](api/Math\Vec3.md)</code> - - Returns the `x` axis as a Vec3.  
+**Returns**: <code>[Vec3](api/Math/Vec3.md)</code> - - Returns the `x` axis as a Vec3.  
 <a name="Mat4+xAxis"></a>
 
 ### xAxis
@@ -411,7 +411,7 @@ Setter for the `x` axis.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| vec3 | <code>[Vec3](api/Math\Vec3.md)</code> | The vec3 value. |
+| vec3 | <code>[Vec3](api/Math/Vec3.md)</code> | The vec3 value. |
 
 <a name="Mat4+yAxis"></a>
 
@@ -419,7 +419,7 @@ Setter for the `x` axis.
 Getter for the `y` axis.
 
 
-**Returns**: <code>[Vec3](api/Math\Vec3.md)</code> - - Returns the `y` axis as a Vec3.  
+**Returns**: <code>[Vec3](api/Math/Vec3.md)</code> - - Returns the `y` axis as a Vec3.  
 <a name="Mat4+yAxis"></a>
 
 ### yAxis
@@ -429,7 +429,7 @@ Setter for the `y` axis.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| vec3 | <code>[Vec3](api/Math\Vec3.md)</code> | The vec3 value. |
+| vec3 | <code>[Vec3](api/Math/Vec3.md)</code> | The vec3 value. |
 
 <a name="Mat4+zAxis"></a>
 
@@ -437,7 +437,7 @@ Setter for the `y` axis.
 Getter for the `z` axis.
 
 
-**Returns**: <code>[Vec3](api/Math\Vec3.md)</code> - - Returns the `z` axis as a Vec3.  
+**Returns**: <code>[Vec3](api/Math/Vec3.md)</code> - - Returns the `z` axis as a Vec3.  
 <a name="Mat4+zAxis"></a>
 
 ### zAxis
@@ -447,7 +447,7 @@ Setter for the `z` axis.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| vec3 | <code>[Vec3](api/Math\Vec3.md)</code> | The vec3 value. |
+| vec3 | <code>[Vec3](api/Math/Vec3.md)</code> | The vec3 value. |
 
 <a name="Mat4+translation"></a>
 
@@ -455,7 +455,7 @@ Setter for the `z` axis.
 Getter for the translation of the matrix. Assumes the translation values are 12, 13, & 14.
 
 
-**Returns**: <code>[Vec3](api/Math\Vec3.md)</code> - - Returns the translation.  
+**Returns**: <code>[Vec3](api/Math/Vec3.md)</code> - - Returns the translation.  
 <a name="Mat4+translation"></a>
 
 ### translation
@@ -465,7 +465,7 @@ Setter for the translation of the matrix. Assumes the translation values are 12,
 
 | Param | Type | Description |
 | --- | --- | --- |
-| vec3 | <code>[Vec3](api/Math\Vec3.md)</code> | The translation. |
+| vec3 | <code>[Vec3](api/Math/Vec3.md)</code> | The translation. |
 
 <a name="Mat4+set"></a>
 
@@ -529,7 +529,7 @@ Note: works with either Mat3 or Mat4.
 Returns a Mat3 made up of the top left of the mat4 values.
 
 
-**Returns**: <code>[Mat3](api/Math\Mat3.md)</code> - - Returns a new Mat3.  
+**Returns**: <code>[Mat3](api/Math/Mat3.md)</code> - - Returns a new Mat3.  
 <a name="Mat4+transposeInPlace"></a>
 
 ### transposeInPlace
@@ -588,7 +588,7 @@ Multiplies two Mat4s in place explicitly.
 Post multiplies two Mat4s in place explicitly.
 
 
-**Returns**: <code>[Mat3](api/Math\Mat3.md)</code> - - Returns the result as a new Mat4.  
+**Returns**: <code>[Mat3](api/Math/Mat3.md)</code> - - Returns the result as a new Mat4.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -604,7 +604,7 @@ Translate a Mat4 by the given vector.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| v3 | <code>[Vec3](api/Math\Vec3.md)</code> | The given vector to translate along. |
+| v3 | <code>[Vec3](api/Math/Vec3.md)</code> | The given vector to translate along. |
 
 <a name="Mat4+setLookAt"></a>
 
@@ -615,9 +615,9 @@ Generates a look-at matrix with the given position, focal point, and up axis.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| pos | <code>[Vec3](api/Math\Vec3.md)</code> | Position of the viewer. |
-| target | <code>[Vec3](api/Math\Vec3.md)</code> | Point the viewer is looking at. |
-| up | <code>[Vec3](api/Math\Vec3.md)</code> | Vec3 pointing up. |
+| pos | <code>[Vec3](api/Math/Vec3.md)</code> | Position of the viewer. |
+| target | <code>[Vec3](api/Math/Vec3.md)</code> | Point the viewer is looking at. |
+| up | <code>[Vec3](api/Math/Vec3.md)</code> | Vec3 pointing up. |
 
 <a name="Mat4+setRotation"></a>
 
@@ -633,7 +633,7 @@ This is equivalent to (but much faster than):
 
 | Param | Type | Description |
 | --- | --- | --- |
-| axis | <code>[Vec3](api/Math\Vec3.md)</code> | The axis to rotate around. |
+| axis | <code>[Vec3](api/Math/Vec3.md)</code> | The axis to rotate around. |
 | rad | <code>number</code> | The angle to rotate the matrix by. |
 
 <a name="Mat4+setXRotation"></a>
@@ -690,11 +690,11 @@ This is equivalent to (but much faster than):
 Transforms the Vec4 with a Mat4.
 
 
-**Returns**: <code>[Vec4](api/Math\Vec4.md)</code> - - Return the result as a new Vec4.  
+**Returns**: <code>[Vec4](api/Math/Vec4.md)</code> - - Return the result as a new Vec4.  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| vec | <code>[Vec4](api/Math\Vec4.md)</code> | The vec value. |
+| vec | <code>[Vec4](api/Math/Vec4.md)</code> | The vec value. |
 
 <a name="Mat4+transformVec3"></a>
 
@@ -702,11 +702,11 @@ Transforms the Vec4 with a Mat4.
 Transforms the Vec3 with a Mat4.
 
 
-**Returns**: <code>[Vec3](api/Math\Vec3.md)</code> - - Return the result as a new Vec3.  
+**Returns**: <code>[Vec3](api/Math/Vec3.md)</code> - - Return the result as a new Vec3.  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| vec | <code>[Vec3](api/Math\Vec3.md)</code> | The vec value. |
+| vec | <code>[Vec3](api/Math/Vec3.md)</code> | The vec value. |
 
 <a name="Mat4+rotateVec3"></a>
 
@@ -714,11 +714,11 @@ Transforms the Vec3 with a Mat4.
 Rotates a given `Vec3` and the result is returned as a new `Vec3`, applying only the top left components of the matrix, so not applying any translation.
 
 
-**Returns**: <code>[Vec3](api/Math\Vec3.md)</code> - - Return the result as a new Vec3.  
+**Returns**: <code>[Vec3](api/Math/Vec3.md)</code> - - Return the result as a new Vec3.  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| vec | <code>[Vec3](api/Math\Vec3.md)</code> | The vec value. |
+| vec | <code>[Vec3](api/Math/Vec3.md)</code> | The vec value. |
 
 <a name="Mat4+setPerspectiveMatrix"></a>
 
@@ -808,7 +808,7 @@ Loads the state of the value from a binary reader.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| reader | <code>[BinReader](api/SceneTree\BinReader.md)</code> | The reader value. |
+| reader | <code>[BinReader](api/SceneTree/BinReader.md)</code> | The reader value. |
 
 <a name="Mat4.createFromBuffer"></a>
 

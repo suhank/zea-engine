@@ -265,6 +265,4 @@
   * [MathFunctions.test](api/Utilities/MathFunctions.test)
   * [StringFunctions](api/Utilities/StringFunctions)
   * [StringFunctions.test](api/Utilities/StringFunctions.test)
-* [external](api/external/README)
-  * [onResize](api/external/onResize)
 [//]: <> (API)

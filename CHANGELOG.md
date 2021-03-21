@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.4.0](https://github.com/ZeaInc/zea-engine/compare/v3.3.2...v3.4.0) (2021-03-21)
+
+
+### Features
+
+* GLPass classes can now pack and extract extra data in the GoemData shader and return data in pointer events. ([930f88a](https://github.com/ZeaInc/zea-engine/commit/930f88a59eabcb5e113d6f24e13c851fc26dc8da))
+
+
+### Bug Fixes
+
+* Async class is no longer used, and now removed from the engine. ([dd5892c](https://github.com/ZeaInc/zea-engine/commit/dd5892c4a44921a34374245af02b33f0f06fda8e))
+* Canvas resizing ([b923fb0](https://github.com/ZeaInc/zea-engine/commit/b923fb02644e4efea0ff799c84241917053bad54))
+
 ### [3.3.2](https://github.com/ZeaInc/zea-engine/compare/v3.3.1...v3.3.0) (2021-03-16)
 
 ### Bug Fixes

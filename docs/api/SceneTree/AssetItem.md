@@ -4,7 +4,7 @@
 Represents a TreeItem with rendering and material capabilities.
 
 
-**Extends**: <code>[TreeItem](api/SceneTree\TreeItem.md)</code>  
+**Extends**: <code>[TreeItem](api/SceneTree/TreeItem.md)</code>  
 
 * [AssetItem ⇐ <code>TreeItem</code>](#AssetItem)
     * [new AssetItem(name)](#new-AssetItem)
@@ -62,14 +62,14 @@ Returns the zea engine version as an array with major, minor, patch order.
 Returns asset `GeomLibrary` that is in charge of rendering geometry data using workers.
 
 
-**Returns**: <code>[GeomLibrary](api/SceneTree\GeomLibrary.md)</code> - - The return value.  
+**Returns**: <code>[GeomLibrary](api/SceneTree/GeomLibrary.md)</code> - - The return value.  
 <a name="AssetItem+getMaterialLibrary"></a>
 
 ### getMaterialLibrary
 Returns `MaterialLibrary` that is in charge of storing all materials of current Item.
 
 
-**Returns**: <code>[MaterialLibrary](api/SceneTree\MaterialLibrary.md)</code> - - The return value.  
+**Returns**: <code>[MaterialLibrary](api/SceneTree/MaterialLibrary.md)</code> - - The return value.  
 <a name="AssetItem+getUnitsConversion"></a>
 
 ### getUnitsConversion
@@ -121,7 +121,7 @@ The clone method constructs a new tree item, copies its values
 from this item and returns it.
 
 
-**Returns**: <code>[TreeItem](api/SceneTree\TreeItem.md)</code> - - Returns a new cloned tree item.  
+**Returns**: <code>[TreeItem](api/SceneTree/TreeItem.md)</code> - - Returns a new cloned tree item.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -136,6 +136,6 @@ Copies current TreeItem with all its children.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| src | <code>[TreeItem](api/SceneTree\TreeItem.md)</code> | The tree item to copy from. |
+| src | <code>[TreeItem](api/SceneTree/TreeItem.md)</code> | The tree item to copy from. |
 | context | <code>object</code> | The context value. |
 

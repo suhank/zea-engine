@@ -12,7 +12,7 @@ myParameterOwnerItem.addParameter(boundingBox)
 ```
 
 
-**Extends**: <code>[Parameter](api/SceneTree\Parameters\Parameter.md)</code>  
+**Extends**: <code>[Parameter](api/SceneTree/Parameters/Parameter.md)</code>  
 
 * [BoundingBoxParameter ⇐ <code>Parameter</code>](#BoundingBoxParameter)
     * [new BoundingBoxParameter(name, treeItem)](#new-BoundingBoxParameter)
@@ -28,7 +28,7 @@ Creates an instance of BoundingBoxParameter.
 | Param | Type | Description |
 | --- | --- | --- |
 | name | <code>string</code> | Name of the parameter |
-| treeItem | <code>[TreeItem](api/SceneTree\TreeItem.md)</code> | `TreeItem` that contains `Box3` representing the Bounding Box |
+| treeItem | <code>[TreeItem](api/SceneTree/TreeItem.md)</code> | `TreeItem` that contains `Box3` representing the Bounding Box |
 
 <a name="BoundingBoxParameter+setDirty"></a>
 
@@ -43,4 +43,4 @@ an evaluation is then executed to re-calculate the BoundingBox
 Returns bounding box value
 
 
-**Returns**: <code>[Box3](api/Math\Box3.md)</code> - - The return value.  
+**Returns**: <code>[Box3](api/Math/Box3.md)</code> - - The return value.  

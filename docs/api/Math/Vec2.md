@@ -7,7 +7,7 @@ Math types internally store values in [Float32Array](https://developer.mozilla.o
 expose getters and setters for the component values.
 
 
-**Extends**: <code>[AttrValue](api/Math\AttrValue.md)</code>  
+**Extends**: <code>[AttrValue](api/Math/AttrValue.md)</code>  
 
 * [Vec2 ⇐ <code>AttrValue</code>](#Vec2)
     * [new Vec2(x, y)](#new-Vec2)
@@ -520,7 +520,7 @@ Loads the state of the value from a binary reader.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| reader | <code>[BinReader](api/SceneTree\BinReader.md)</code> | The reader value. |
+| reader | <code>[BinReader](api/SceneTree/BinReader.md)</code> | The reader value. |
 
 <a name="Vec2.createFromBuffer"></a>
 

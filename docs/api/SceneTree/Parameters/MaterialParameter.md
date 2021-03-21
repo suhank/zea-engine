@@ -18,7 +18,7 @@ myParameterOwnerItem.addParameter(materialParam)
 * **valueChanged:** Triggered when parameter's value changes, except on cleaning processes.
 
 
-**Extends**: <code>[Parameter](api/SceneTree\Parameters\Parameter.md)</code>  
+**Extends**: <code>[Parameter](api/SceneTree/Parameters/Parameter.md)</code>  
 
 * [MaterialParameter ⇐ <code>Parameter</code>](#MaterialParameter)
     * [new MaterialParameter(name, value)](#new-MaterialParameter)
@@ -39,7 +39,7 @@ Create a material parameter.
 | Param | Type | Description |
 | --- | --- | --- |
 | name | <code>string</code> | The name of the material parameter. |
-| value | <code>[Material](api/SceneTree\Material.md)</code> | The value of the parameter. |
+| value | <code>[Material](api/SceneTree/Material.md)</code> | The value of the parameter. |
 
 <a name="MaterialParameter+setValue"></a>
 
@@ -50,7 +50,7 @@ Sets `Material` value of the parameter.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| material | <code>[Material](api/SceneTree\Material.md)</code> | The material param. |
+| material | <code>[Material](api/SceneTree/Material.md)</code> | The material param. |
 
 <a name="MaterialParameter+loadValue"></a>
 
@@ -117,4 +117,4 @@ Users should never need to call this method directly.
 
 
 
-### [Class Tests](api/SceneTree\Parameters/MaterialParameter.test)
+### [Class Tests](api/SceneTree/Parameters/MaterialParameter.test)

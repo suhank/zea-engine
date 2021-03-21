@@ -26,8 +26,8 @@ Create a ray.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| start | <code>[Vec3](api/Math\Vec3.md)</code> | The origin of the ray. |
-| dir | <code>[Vec3](api/Math\Vec3.md)</code> | The direction of the ray. |
+| start | <code>[Vec3](api/Math/Vec3.md)</code> | The origin of the ray. |
+| dir | <code>[Vec3](api/Math/Vec3.md)</code> | The direction of the ray. |
 
 <a name="Ray+closestPoint"></a>
 
@@ -39,7 +39,7 @@ Get the closest point on the ray to the given point.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| point | <code>[Vec3](api/Math\Vec3.md)</code> | The point in 3D space. |
+| point | <code>[Vec3](api/Math/Vec3.md)</code> | The point in 3D space. |
 
 <a name="Ray+closestPointOnLineSegment"></a>
 
@@ -51,8 +51,8 @@ Get the closest point between the ray and the given line segment made of the 2 p
 
 | Param | Type | Description |
 | --- | --- | --- |
-| p0 | <code>[Vec3](api/Math\Vec3.md)</code> | The point in 3D space. |
-| p1 | <code>[Vec3](api/Math\Vec3.md)</code> | The point in 3D space. |
+| p0 | <code>[Vec3](api/Math/Vec3.md)</code> | The point in 3D space. |
+| p1 | <code>[Vec3](api/Math/Vec3.md)</code> | The point in 3D space. |
 
 <a name="Ray+pointAtDist"></a>
 
@@ -64,7 +64,7 @@ Get the closest point at a distance.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| dist | <code>[Vec3](api/Math\Vec3.md)</code> | The distance value. |
+| dist | <code>[Vec3](api/Math/Vec3.md)</code> | The distance value. |
 
 <a name="Ray+intersectRayVector"></a>
 
@@ -89,7 +89,7 @@ of this ray against the plane defined by the given ray.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| plane | <code>[Vec3](api/Math\Vec3.md)</code> | The plane to intersect with. |
+| plane | <code>[Vec3](api/Math/Vec3.md)</code> | The plane to intersect with. |
 
 <a name="Ray+intersectRayBox3"></a>
 
@@ -101,7 +101,7 @@ Determines if this Box3 intersects a ray.
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| box3 | <code>[Box3](api/Math\Box3.md)</code> |  | The box to check for intersection against. |
+| box3 | <code>[Box3](api/Math/Box3.md)</code> |  | The box to check for intersection against. |
 | tolerance | <code>number</code> | <code>0</code> | The tolerance of the test. |
 
 <a name="Ray+clone"></a>

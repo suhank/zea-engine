@@ -41,7 +41,7 @@ Creates a GL Framebuffer Object
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
 | gl | <code>WebGLRenderingContext</code> \| <code>WebGL2RenderingContext</code> \| <code>undefined</code> |  | The Canvas 3D Context. |
-| colorTexture | <code>[GLTexture2D](api/Renderer\GLTexture2D.md)</code> |  | Represents 2D Texture in GL. |
+| colorTexture | <code>[GLTexture2D](api/Renderer/GLTexture2D.md)</code> |  | Represents 2D Texture in GL. |
 | createDepthTexture | <code>boolean</code> | <code>false</code> | The createDepthTexture value. |
 
 <a name="GLFbo+width"></a>
@@ -112,7 +112,7 @@ Returns the `width`(Index 0) and the `height`(Index 1) of the GL Texture.
 Returns the ColorTexture of the Fbo
 
 
-**Returns**: <code>[GLTexture2D](api/Renderer\GLTexture2D.md)</code> - - The return value.  
+**Returns**: <code>[GLTexture2D](api/Renderer/GLTexture2D.md)</code> - - The return value.  
 <a name="GLFbo+getDepthTextureGL"></a>
 
 ### getDepthTextureGL
@@ -129,7 +129,7 @@ Sets ColorTexture of the Fbo.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| colorTexture | <code>[GLTexture2D](api/Renderer\GLTexture2D.md)</code> | The colorTexture value. |
+| colorTexture | <code>[GLTexture2D](api/Renderer/GLTexture2D.md)</code> | The colorTexture value. |
 
 <a name="GLFbo+setup"></a>
 

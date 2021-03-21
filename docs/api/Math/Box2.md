@@ -30,8 +30,8 @@ p1 is a Vec2 with [`Number.NEGATIVE_INFINITY`](https://developer.mozilla.org/en-
 
 | Param | Type | Description |
 | --- | --- | --- |
-| p0 | <code>[Vec2](api/Math\Vec2.md)</code> | A point representing the corners of a 2D box. |
-| p1 | <code>[Vec2](api/Math\Vec2.md)</code> | A point representing the corners of a 2D box. |
+| p0 | <code>[Vec2](api/Math/Vec2.md)</code> | A point representing the corners of a 2D box. |
+| p1 | <code>[Vec2](api/Math/Vec2.md)</code> | A point representing the corners of a 2D box. |
 
 <a name="Box2+set"></a>
 
@@ -42,8 +42,8 @@ Sets both corner points
 
 | Param | Type | Description |
 | --- | --- | --- |
-| p0 | <code>[Vec2](api/Math\Vec2.md)</code> | A point representing the corners of a 2D box. |
-| p1 | <code>[Vec2](api/Math\Vec2.md)</code> | A point representing the corners of a 2D box. |
+| p0 | <code>[Vec2](api/Math/Vec2.md)</code> | A point representing the corners of a 2D box. |
+| p1 | <code>[Vec2](api/Math/Vec2.md)</code> | A point representing the corners of a 2D box. |
 
 <a name="Box2+reset"></a>
 
@@ -69,7 +69,7 @@ Expands the Box2 to contain the new point.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| point | <code>[Vec2](api/Math\Vec2.md)</code> | A point represents the corners of a 2D box. |
+| point | <code>[Vec2](api/Math/Vec2.md)</code> | A point represents the corners of a 2D box. |
 
 <a name="Box2+size"></a>
 
@@ -84,14 +84,14 @@ Returns the length of the diagonal of the box.
 Returns the diagonal vector of the B=box from p0 to p1.
 
 
-**Returns**: <code>[Vec3](api/Math\Vec3.md)</code> - - Returns a Vec3.  
+**Returns**: <code>[Vec3](api/Math/Vec3.md)</code> - - Returns a Vec3.  
 <a name="Box2+center"></a>
 
 ### center
 Returns the center point of a Box2.
 
 
-**Returns**: <code>[Vec2](api/Math\Vec2.md)</code> - - Returns a Vec2.  
+**Returns**: <code>[Vec2](api/Math/Vec2.md)</code> - - Returns a Vec2.  
 <a name="Box2+toJSON"></a>
 
 ### toJSON

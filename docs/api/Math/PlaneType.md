@@ -4,7 +4,7 @@
 Class representing a plane.
 
 
-**Extends**: <code>[AttrValue](api/Math\AttrValue.md)</code>  
+**Extends**: <code>[AttrValue](api/Math/AttrValue.md)</code>  
 
 * [PlaneType ⇐ <code>AttrValue</code>](#PlaneType)
     * [new PlaneType(normal, w)](#new-PlaneType)
@@ -24,7 +24,7 @@ Create a plane.
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| normal | <code>[Vec3](api/Math\Vec3.md)</code> |  | The normal of the plane. |
+| normal | <code>[Vec3](api/Math/Vec3.md)</code> |  | The normal of the plane. |
 | w | <code>number</code> | <code>0</code> | The w value. |
 
 <a name="PlaneType+set"></a>
@@ -62,7 +62,7 @@ Calculates the distance from a point to this plane.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| point | <code>[Vec3](api/Math\Vec3.md)</code> | The point value. |
+| point | <code>[Vec3](api/Math/Vec3.md)</code> | The point value. |
 
 <a name="PlaneType+normalizeInPlace"></a>
 
@@ -76,7 +76,7 @@ Normalize this plane in place modifying its values.
 Clones this plane and returns a new plane.
 
 
-**Returns**: <code>[Plane](api/SceneTree\Geometry\Shapes\Plane.md)</code> - - Returns a new plane.  
+**Returns**: <code>[Plane](api/SceneTree/Geometry/Shapes/Plane.md)</code> - - Returns a new plane.  
 <a name="PlaneType+toJSON"></a>
 
 ### toJSON
