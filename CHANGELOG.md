@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.5.0](https://github.com/ZeaInc/zea-engine/compare/v3.4.0...v3.5.0) (2021-03-22)
+
+
+### Features
+
+* The Renderer now request a high-peformance WebGL context by default. ([154d524](https://github.com/ZeaInc/zea-engine/commit/154d5245a43d16b51a2adf700161ce8cb70b298b))
+
+
+### Bug Fixes
+
+* Alpha in macOS ([3f2f383](https://github.com/ZeaInc/zea-engine/commit/3f2f3838fbe861d8c4ca36bae90d42893e076764))
+
 ## [3.4.0](https://github.com/ZeaInc/zea-engine/compare/v3.3.2...v3.4.0) (2021-03-21)
 
 
@@ -97,8 +109,6 @@ All notable changes to this project will be documented in this file. See [standa
 ### Bug Fixes
 
 * Fixed property detection on GLLines ([dc2d474](https://github.com/ZeaInc/zea-engine/commit/dc2d474c76f1e77c69204ae8bd2a5aa8ba3af1d4))
-
-## [3.0.0] (2020-12-03)
 
 ## [2.0.0] (2020-09-12)
 
