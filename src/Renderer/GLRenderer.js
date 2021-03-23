@@ -107,6 +107,12 @@ class GLRenderer extends GLBaseRenderer {
   __bindEnvMap(env) {
     const gl = this.__gl
     if (env instanceof EnvMap) {
+      // Note: Safari doesn't support rendering to floating
+      // point textures, so our PBR lighting pipeline doesn't work.
+      if (gl.name !== 'webgl2') {
+        return
+      }
+
       this.__glEnvMap = env.getMetadata('gltexture')
       if (!this.__glEnvMap) {
         if (env.type === 'FLOAT') {

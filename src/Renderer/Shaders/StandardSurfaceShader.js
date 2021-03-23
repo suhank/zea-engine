@@ -80,7 +80,7 @@ void main(void) {
 #endif
 
   v_worldPos      = (modelMatrix * pos).xyz;
-  
+
   #ifdef ENABLE_MULTI_DRAW
   #ifdef DEBUG_GEOM_ID
   v_geomId = float(gl_DrawID);
@@ -182,8 +182,9 @@ uniform int EmissiveStrengthTexType;
 
 <%include file="PBRSurfaceRadiance.glsl"/>
 
+#ifdef ENABLE_PBR
 mat3 cotangentFrame( in vec3 normal, in vec3 pos, in vec2 texCoord ) {
-  // https://stackoverflow.com/questions/5255806/how-to-calculate-tangent-and-binormal 
+  // https://stackoverflow.com/questions/5255806/how-to-calculate-tangent-and-binormal
   vec3 n = normal;
   // derivations of the fragment position
   vec3 pos_dx = dFdx( pos );
@@ -196,12 +197,13 @@ mat3 cotangentFrame( in vec3 normal, in vec3 pos, in vec2 texCoord ) {
   vec3 b = -(texC_dx.x * pos_dy - texC_dy.x * pos_dx);
 
   t = t - n * dot( t, n ); // orthonormalization ot the tangent vectors
-  b = b - n * dot( b, n ); // orthonormalization of the binormal vectors to the normal vector 
+  b = b - n * dot( b, n ); // orthonormalization of the binormal vectors to the normal vector
   b = b - t * dot( b, t ); // orthonormalization of the binormal vectors to the tangent vector
   mat3 tbn = mat3( normalize(t), normalize(b), n );
 
   return tbn;
 }
+#endif
 
 #ifdef ENABLE_ES3
 out vec4 fragColor;
@@ -253,7 +255,7 @@ void main(void) {
     material.metallic      = matValue1.r;
     material.roughness     = matValue1.g;
     material.reflectance   = matValue1.b;
-    
+
     material.emission         = matValue1.a;
     material.opacity          = matValue2.r * matValue0.a;
 
@@ -302,7 +304,7 @@ void main(void) {
 
     fragColor = pbrSurfaceRadiance(material, normal, viewVector);
     // fragColor = vec4(normal, 1.0);
-    
+
 #ifdef DEBUG_GEOM_ID
     // ///////////////////////
     // Debug Draw ID (this correlates to GeomID within a GLGeomSet)
