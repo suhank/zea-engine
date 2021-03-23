@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.5.1](https://github.com/ZeaInc/zea-engine/compare/v3.5.0...v3.5.1) (2021-03-23)
+
+
+### Bug Fixes
+
+* Correctly disable PBR on WebGL1. Only affects Safari browsers. ([c31af3d](https://github.com/ZeaInc/zea-engine/commit/c31af3d516fee805bbf98affb66bb771a2f51436))
+
 ## [3.5.0](https://github.com/ZeaInc/zea-engine/compare/v3.4.0...v3.5.0) (2021-03-22)
 
 
@@ -109,8 +116,6 @@ All notable changes to this project will be documented in this file. See [standa
 ### Bug Fixes
 
 * Fixed property detection on GLLines ([dc2d474](https://github.com/ZeaInc/zea-engine/commit/dc2d474c76f1e77c69204ae8bd2a5aa8ba3af1d4))
-
-## [3.0.0] (2020-12-03)
 
 ## [2.0.0] (2020-09-12)
 
