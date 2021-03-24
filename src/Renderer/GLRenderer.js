@@ -62,41 +62,6 @@ class GLRenderer extends GLBaseRenderer {
     this.quad = new GLMesh(gl, new Plane(1, 1))
 
     this.createSelectedGeomsFbo()
-
-    // ///////////////////////////////////////////////////
-    // setup the splash screen
-    if (!options.hideSplash) {
-      const setupSplashScreen = (holdTime) => {
-        const logoBlob = new Blob([logo], { type: 'image/svg+xml' })
-        const logoUrl = URL.createObjectURL(logoBlob)
-        const image = document.createElement('img')
-        image.addEventListener('load', () => {
-          URL.revokeObjectURL(logoUrl), { once: true }
-          image.style.opacity = 1
-          const tick = () => {
-            // Prevent people from removing the image node.
-            if (!image.parentElement != $canvas) $canvas.appendChild(image)
-            image.style.opacity = +image.style.opacity - 0.02
-            if (+image.style.opacity > 0) {
-              ;(window.requestAnimationFrame && requestAnimationFrame(tick)) || setTimeout(tick, 16)
-            } else {
-              $canvas.removeChild(image)
-            }
-          }
-          setTimeout(tick, holdTime)
-        })
-        image.style.width = $canvas.clientWidth * 0.3 + 'px'
-        image.style.position = 'absolute'
-        image.style.top = '50%'
-        image.style.left = '50%'
-        image.style.transform = 'translate(-50%, -50%)'
-        image.style['pointer-events'] = 'none'
-        image.src = logoUrl
-        $canvas.appendChild(image)
-      }
-
-      setupSplashScreen(1500)
-    }
   }
 
   /**
