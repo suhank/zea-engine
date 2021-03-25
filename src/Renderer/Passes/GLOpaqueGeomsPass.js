@@ -308,7 +308,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
     // if (this.newItemsReadyForLoading()) this.finalize()
     // renderstate.drawItemsTexture = this.__drawItemsTexture
 
-    renderstate.passIndex = this.__passIndex
+    renderstate.passIndex = this.passIndex
 
     const gl = this.__gl
     gl.disable(gl.BLEND)

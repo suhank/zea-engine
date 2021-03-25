@@ -17,7 +17,7 @@ class GLPass extends ParameterOwner {
   constructor() {
     super()
     this.enabled = true
-    this.__passIndex = 0
+    this.passIndex = 0
 
     const enabledParam = this.addParameter(new BooleanParameter('Enabled', true))
     enabledParam.on('valueChanged', () => (this.enabled = enabledParam.getValue()))
@@ -45,7 +45,6 @@ class GLPass extends ParameterOwner {
     this.renderer = renderer
     this.__renderer = renderer
     this.passIndex = passIndex
-    this.__passIndex = passIndex
   }
 
   /**

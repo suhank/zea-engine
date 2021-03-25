@@ -473,7 +473,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
       {
         const unif = renderstate.unifs.passId
         if (unif) {
-          gl.uniform1i(unif.location, this.__passIndex)
+          gl.uniform1i(unif.location, this.passIndex)
         }
       }
 
