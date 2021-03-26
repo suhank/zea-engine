@@ -743,31 +743,39 @@ class CameraManipulator extends BaseTool {
     const mouseWheelDollySpeed = this.__mouseWheelDollySpeedParam.getValue()
     const modulator = event.shiftKey ? 0.1 : 0.5
     const xfo = camera.getParameter('GlobalXfo').getValue()
-    const movementVec = xfo.ori.getZaxis()
-    if (this.__mouseWheelZoomIntervalId) clearInterval(this.__mouseWheelZoomIntervalId)
 
     // To normalize mouse wheel speed across vendors and OSs, it is recommended to simply convert scroll value to -1 or 1
     // See here: https://stackoverflow.com/questions/5527601/normalizing-mousewheel-speed-across-browsers
+    const steps = 6
     const direction = event.deltaY < 0 || event.wheelDelta > 0 || event.deltaY < 0 ? -1 : 1
-    let count = 0
     const applyMovement = () => {
       const focalDistance = camera.getFocalDistance()
-      const zoomDist = direction * mouseWheelDollySpeed * focalDistance * modulator
-      xfo.tr.addInPlace(movementVec.scale(zoomDist))
+      const zoomDist = focalDistance * this.__mouseWheelMovementDist
+      xfo.tr.addInPlace(xfo.ori.getZaxis().scale(zoomDist))
 
       camera.setFocalDistance(camera.getFocalDistance() + zoomDist)
       camera.getParameter('GlobalXfo').setValue(xfo)
 
-      count++
-      if (count < 5) {
-        this.__mouseWheelZoomIntervalId = setTimeout(applyMovement, 10)
+      this.__mouseWheelZoomCount++
+      if (this.__mouseWheelZoomCount < steps) {
+        this.__mouseWheelZoomId = setTimeout(applyMovement, 10)
       } else {
-        this.__mouseWheelZoomIntervalId = undefined
+        this.__mouseWheelZoomId = undefined
         this.emit('movementFinished', {})
         camera.emit('movementFinished', { event: 'onWheel' })
       }
     }
-    applyMovement()
+
+    if (this.__mouseWheelZoomId) {
+      // If a new wheel event arrives while the previous is still running, modify the distance
+      // and reset.
+      this.__mouseWheelMovementDist += (direction * mouseWheelDollySpeed * modulator * 0.5) / steps
+      this.__mouseWheelZoomCount = 0
+    } else {
+      this.__mouseWheelMovementDist = (direction * mouseWheelDollySpeed * modulator) / steps
+      this.__mouseWheelZoomCount = 0
+      applyMovement()
+    }
 
     event.preventDefault()
     event.stopPropagation()

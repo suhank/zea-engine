@@ -201,6 +201,12 @@
       }
       // }}}
 
+      renderer
+        .getViewport()
+        .getCamera()
+        .on('movementFinished', () => {
+          console.log('movementFinished')
+        })
       // Position the camera to a better perspective view.
       renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(0, 5, 3), new Vec3(0, 0, 0))
 
