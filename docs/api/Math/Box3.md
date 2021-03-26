@@ -41,8 +41,8 @@ p1 is a Vec2 with [`Number.NEGATIVE_INFINITY`](https://developer.mozilla.org/en-
 
 | Param | Type | Description |
 | --- | --- | --- |
-| p0 | <code>[Vec3](api/Math/Vec3.md)</code> | A point representing the corners of a 3D box. |
-| p1 | <code>[Vec3](api/Math/Vec3.md)</code> | A point representing the corners of a 3D box. |
+| p0 | <code>[Vec3](api/Math\Vec3.md)</code> | A point representing the corners of a 3D box. |
+| p1 | <code>[Vec3](api/Math\Vec3.md)</code> | A point representing the corners of a 3D box. |
 
 <a name="Box3+min"></a>
 
@@ -50,14 +50,14 @@ p1 is a Vec2 with [`Number.NEGATIVE_INFINITY`](https://developer.mozilla.org/en-
 Getter for the lower (x, y, z) boundary of the box.
 
 
-**Returns**: <code>[Vec3](api/Math/Vec3.md)</code> - - Returns the minimum Vec3.  
+**Returns**: <code>[Vec3](api/Math\Vec3.md)</code> - - Returns the minimum Vec3.  
 <a name="Box3+max"></a>
 
 ### max 
 Getter for the upper (x, y, z) boundary of the box.
 
 
-**Returns**: <code>[Vec3](api/Math/Vec3.md)</code> - - Returns the maximum Vec3.  
+**Returns**: <code>[Vec3](api/Math\Vec3.md)</code> - - Returns the maximum Vec3.  
 <a name="Box3+set"></a>
 
 ### set
@@ -67,8 +67,8 @@ Sets both Vec3 points
 
 | Param | Type | Description |
 | --- | --- | --- |
-| p0 | <code>[Vec3](api/Math/Vec3.md)</code> | A point representing the corners of a 3D box. |
-| p1 | <code>[Vec3](api/Math/Vec3.md)</code> | A point representing the corners of a 3D box. |
+| p0 | <code>[Vec3](api/Math\Vec3.md)</code> | A point representing the corners of a 3D box. |
+| p1 | <code>[Vec3](api/Math\Vec3.md)</code> | A point representing the corners of a 3D box. |
 
 <a name="Box3+reset"></a>
 
@@ -92,7 +92,7 @@ Expands the Box3 to contain the new point.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| point | <code>[Vec3](api/Math/Vec3.md)</code> | A point represents the corners of a 3D box. |
+| point | <code>[Vec3](api/Math\Vec3.md)</code> | A point represents the corners of a 3D box. |
 
 <a name="Box3+addBox3"></a>
 
@@ -105,7 +105,7 @@ it proceeds to apply the transform for the Vec3.
 | Param | Type | Description |
 | --- | --- | --- |
 | box3 | [<code>Box3</code>](#Box3) | A 3D box. |
-| xfo | <code>[Xfo](api/Math/Xfo.md)</code> | A 3D transform. |
+| xfo | <code>[Xfo](api/Math\Xfo.md)</code> | A 3D transform. |
 
 <a name="Box3+size"></a>
 
@@ -127,21 +127,21 @@ Returns the diagonal vector of the B=box from p0 to p1.
 Returns the center point of a Box3.
 
 
-**Returns**: <code>[Vec3](api/Math/Vec3.md)</code> - - Returns a Vec3.  
+**Returns**: <code>[Vec3](api/Math\Vec3.md)</code> - - Returns a Vec3.  
 <a name="Box3+toMat4"></a>
 
 ### toMat4
 Converts this Box3 to a Mat4 (a 4x4 matrix). The returned mat4 would transform a unit cube into the shape of the Bounding box.
 
 
-**Returns**: <code>[Mat4](api/Math/Mat4.md)</code> - - Returns a new Mat4.  
+**Returns**: <code>[Mat4](api/Math\Mat4.md)</code> - - Returns a new Mat4.  
 <a name="Box3+getBoundingSphere"></a>
 
 ### getBoundingSphere
 Calculates and returns the bounding Sphere of the Box3
 
 
-**Returns**: <code>[SphereType](api/Math/SphereType.md)</code> - - The return value.  
+**Returns**: <code>[SphereType](api/Math\SphereType.md)</code> - - The return value.  
 <a name="Box3+intersectsBox"></a>
 
 ### intersectsBox
@@ -164,7 +164,7 @@ Determines if this Box3 intersects a sphere.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| sphere | <code>[Sphere](api/SceneTree/Geometry/Shapes/Sphere.md)</code> | The sphere to check for intersection against. |
+| sphere | <code>[Sphere](api/SceneTree\Geometry\Shapes\Sphere.md)</code> | The sphere to check for intersection against. |
 
 <a name="Box3+intersectsPlane"></a>
 
@@ -176,7 +176,7 @@ Determines if this Box3 intersects a plane.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| plane | <code>[Plane](api/SceneTree/Geometry/Shapes/Plane.md)</code> | The plane to check for intersection against. |
+| plane | <code>[Plane](api/SceneTree\Geometry\Shapes\Plane.md)</code> | The plane to check for intersection against. |
 
 <a name="Box3+clone"></a>
 

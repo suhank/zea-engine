@@ -12,7 +12,7 @@ myParameterOwnerItem.addParameter(colorParam)
 ```
 
 
-**Extends**: <code>[Parameter](api/SceneTree/Parameters/Parameter.md)</code>  
+**Extends**: <code>[Parameter](api/SceneTree\Parameters\Parameter.md)</code>  
 
 * [ColorParameter ⇐ <code>Parameter</code>](#ColorParameter)
     * [new ColorParameter(name, value)](#new-ColorParameter)
@@ -28,7 +28,7 @@ Create a color parameter.
 | Param | Type | Description |
 | --- | --- | --- |
 | name | <code>string</code> | The name of the color parameter. |
-| value | <code>[Color](api/Math/Color.md)</code> | The value of the parameter. |
+| value | <code>[Color](api/Math\Color.md)</code> | The value of the parameter. |
 
 <a name="ColorParameter+readBinary"></a>
 
@@ -39,7 +39,7 @@ Extracts `Color` values from a buffer, updating current parameter state.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| reader | <code>[BinReader](api/SceneTree/BinReader.md)</code> | The reader value. |
+| reader | <code>[BinReader](api/SceneTree\BinReader.md)</code> | The reader value. |
 | context | <code>object</code> | The context value. |
 
 <a name="ColorParameter+clone"></a>
@@ -52,4 +52,4 @@ copies its values from this parameter and returns it.
 **Returns**: [<code>ColorParameter</code>](#ColorParameter) - - Returns a new cloned color parameter.  
 
 
-### [Class Tests](api/SceneTree/Parameters/ColorParameter.test)
+### [Class Tests](api/SceneTree\Parameters/ColorParameter.test)

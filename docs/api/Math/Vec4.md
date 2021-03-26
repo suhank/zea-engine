@@ -6,7 +6,7 @@ Math types internally store values in [Float32Array](https://developer.mozilla.o
 expose getters and setters for the component values.
 
 
-**Extends**: <code>[AttrValue](api/Math/AttrValue.md)</code>  
+**Extends**: <code>[AttrValue](api/Math\AttrValue.md)</code>  
 
 * [Vec4 ⇐ <code>AttrValue</code>](#Vec4)
     * [new Vec4(x, y, z, t)](#new-Vec4)
@@ -494,7 +494,7 @@ Clones this Vec4 and returns a new Vec4.
 Converts this Vec4 into a Vec3.
 
 
-**Returns**: <code>[Vec3](api/Math/Vec3.md)</code> - - Returns the value as a new Vec3.  
+**Returns**: <code>[Vec3](api/Math\Vec3.md)</code> - - Returns the value as a new Vec3.  
 <a name="Vec4+asArray"></a>
 
 ### asArray
@@ -529,7 +529,7 @@ Loads the state of the value from a binary reader.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| reader | <code>[BinReader](api/SceneTree/BinReader.md)</code> | The reader value. |
+| reader | <code>[BinReader](api/SceneTree\BinReader.md)</code> | The reader value. |
 
 <a name="Vec4.createFromBuffer"></a>
 

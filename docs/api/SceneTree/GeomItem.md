@@ -4,13 +4,13 @@
 Class representing a geometry item in a scene tree.
 
 **Parameters**
-* **Geometry([`GeometryParameter`](api/SceneTree/Parameters/GeometryParameter.md)):** The geometry to be rendered for this GeomItem
-* **Material([`MaterialParameter`](api/SceneTree/Parameters/MaterialParameter.md)):** The Material to use when rendering this GeomItem
-* **GeomOffsetXfo([`XfoParameter`](api/SceneTree/Parameters/XfoParameter.md)):** Provides an offset transformation that is applied only to the geometry and not inherited by child items.
-* **GeomMat([`Mat4Parameter`](api/SceneTree/Parameters/Mat4Parameter.md)):** Calculated from the GlobalXfo and the GeomOffsetXfo, this matrix is provided to the renderer for rendering.
+* **Geometry([`GeometryParameter`](api/SceneTree\Parameters\GeometryParameter.md)):** The geometry to be rendered for this GeomItem
+* **Material([`MaterialParameter`](api/SceneTree\Parameters\MaterialParameter.md)):** The Material to use when rendering this GeomItem
+* **GeomOffsetXfo([`XfoParameter`](api/SceneTree\Parameters\XfoParameter.md)):** Provides an offset transformation that is applied only to the geometry and not inherited by child items.
+* **GeomMat([`Mat4Parameter`](api/SceneTree\Parameters\Mat4Parameter.md)):** Calculated from the GlobalXfo and the GeomOffsetXfo, this matrix is provided to the renderer for rendering.
 
 
-**Extends**: <code>[BaseGeomItem](api/SceneTree/BaseGeomItem.md)</code>  
+**Extends**: <code>[BaseGeomItem](api/SceneTree\BaseGeomItem.md)</code>  
 
 * [GeomItem ⇐ <code>BaseGeomItem</code>](#GeomItem)
     * [new GeomItem(name, geometry, material, xfo)](#new-GeomItem)
@@ -39,9 +39,9 @@ Creates a geometry item.
 | Param | Type | Description |
 | --- | --- | --- |
 | name | <code>string</code> | The name of the geom item. |
-| geometry | <code>[BaseGeom](api/SceneTree/Geometry/BaseGeom.md)</code> | The geometry value. |
-| material | <code>[Material](api/SceneTree/Material.md)</code> | The material value. |
-| xfo | <code>[Xfo](api/Math/Xfo.md)</code> | The initial Xfo of the new GeomItem. |
+| geometry | <code>[BaseGeom](api/SceneTree\Geometry\BaseGeom.md)</code> | The geometry value. |
+| material | <code>[Material](api/SceneTree\Material.md)</code> | The material value. |
+| xfo | <code>[Xfo](api/Math\Xfo.md)</code> | The initial Xfo of the new GeomItem. |
 
 <a name="GeomItem+getGeometry"></a>
 
@@ -49,7 +49,7 @@ Creates a geometry item.
 Returns `Geometry` parameter value.
 
 
-**Returns**: <code>[BaseGeom](api/SceneTree/Geometry/BaseGeom.md)</code> - - The return value.  
+**Returns**: <code>[BaseGeom](api/SceneTree\Geometry\BaseGeom.md)</code> - - The return value.  
 <a name="GeomItem+setGeometry"></a>
 
 ### setGeometry
@@ -59,7 +59,7 @@ Sets geometry object to `Geometry` parameter.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| geom | <code>[BaseGeom](api/SceneTree/Geometry/BaseGeom.md)</code> | The geom value. |
+| geom | <code>[BaseGeom](api/SceneTree\Geometry\BaseGeom.md)</code> | The geom value. |
 
 <a name="GeomItem+getGeom"></a>
 
@@ -69,7 +69,7 @@ Sets geometry object to `Geometry` parameter.
 Getter for geometry (getGeom is deprecated. Please use getGeometry).
 
 
-**Returns**: <code>[BaseGeom](api/SceneTree/Geometry/BaseGeom.md)</code> - - The return value.  
+**Returns**: <code>[BaseGeom](api/SceneTree\Geometry\BaseGeom.md)</code> - - The return value.  
 <a name="GeomItem+setGeom"></a>
 
 ### ~~geomItem.setGeom(geom) ⇒ <code>number</code>~~
@@ -82,7 +82,7 @@ Setter for geometry. (setGeom is deprecated. Please use setGeometry).
 
 | Param | Type | Description |
 | --- | --- | --- |
-| geom | <code>[BaseGeom](api/SceneTree/Geometry/BaseGeom.md)</code> | The geom value. |
+| geom | <code>[BaseGeom](api/SceneTree\Geometry\BaseGeom.md)</code> | The geom value. |
 
 <a name="GeomItem+getMaterial"></a>
 
@@ -90,7 +90,7 @@ Setter for geometry. (setGeom is deprecated. Please use setGeometry).
 Returns the specified value of `Material`parameter.
 
 
-**Returns**: <code>[Material](api/SceneTree/Material.md)</code> - - The return value.  
+**Returns**: <code>[Material](api/SceneTree\Material.md)</code> - - The return value.  
 <a name="GeomItem+setMaterial"></a>
 
 ### setMaterial
@@ -100,7 +100,7 @@ Sets material object to `Material` parameter.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| material | <code>[Material](api/SceneTree/Material.md)</code> | The material value. |
+| material | <code>[Material](api/SceneTree\Material.md)</code> | The material value. |
 
 <a name="GeomItem+getGeomOffsetXfo"></a>
 
@@ -108,7 +108,7 @@ Sets material object to `Material` parameter.
 Returns the offset `Xfo` object specified in `GeomOffsetXfo` parameter.
 
 
-**Returns**: <code>[Xfo](api/Math/Xfo.md)</code> - - Returns the geom offset Xfo.  
+**Returns**: <code>[Xfo](api/Math\Xfo.md)</code> - - Returns the geom offset Xfo.  
 <a name="GeomItem+setGeomOffsetXfo"></a>
 
 ### setGeomOffsetXfo
@@ -118,7 +118,7 @@ Sets `Xfo` object to `GeomOffsetXfo` parameter.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| xfo | <code>[Xfo](api/Math/Xfo.md)</code> | The Xfo value. |
+| xfo | <code>[Xfo](api/Math\Xfo.md)</code> | The Xfo value. |
 
 <a name="GeomItem+getGeomMat4"></a>
 
@@ -126,7 +126,7 @@ Sets `Xfo` object to `GeomOffsetXfo` parameter.
 Returns `Mat4` object value of `GeomMat` parameter.
 
 
-**Returns**: <code>[Mat4](api/Math/Mat4.md)</code> - - Returns the geom Xfo.  
+**Returns**: <code>[Mat4](api/Math\Mat4.md)</code> - - Returns the geom Xfo.  
 <a name="GeomItem+toJSON"></a>
 
 ### toJSON

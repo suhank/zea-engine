@@ -4,7 +4,7 @@
 Class representing a GL renderer.
 
 
-**Extends**: <code>[GLBaseRenderer](api/Renderer/GLBaseRenderer.md)</code>  
+**Extends**: <code>[GLBaseRenderer](api/Renderer\GLBaseRenderer.md)</code>  
 
 * [GLRenderer ⇐ <code>GLBaseRenderer</code>](#GLRenderer)
     * [new GLRenderer($canvas, options)](#new-GLRenderer)
@@ -152,7 +152,7 @@ The setScene method.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| scene | <code>[Scene](api/SceneTree/Scene.md)</code> | The scene value. |
+| scene | <code>[Scene](api/SceneTree\Scene.md)</code> | The scene value. |
 
 <a name="GLRenderer+addViewport"></a>
 
@@ -160,7 +160,7 @@ The setScene method.
 The addViewport method.
 
 
-**Returns**: <code>[GLViewport](api/Renderer/GLViewport.md)</code> - - The return value.  
+**Returns**: <code>[GLViewport](api/Renderer\GLViewport.md)</code> - - The return value.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -190,7 +190,7 @@ The createSelectedGeomsFbo method.
 The getFbo method.
 
 
-**Returns**: <code>[GLFbo](api/Renderer/GLFbo.md)</code> - - The return value.  
+**Returns**: <code>[GLFbo](api/Renderer\GLFbo.md)</code> - - The return value.  
 <a name="GLRenderer+createOffscreenFbo"></a>
 
 ### createOffscreenFbo

@@ -200,7 +200,7 @@ Saves a common resource for reuse by other tools. Typically this would be a VR a
 | Param | Type | Description |
 | --- | --- | --- |
 | resourceId | <code>string</code> | The resourceId value. |
-| resource | <code>[TreeItem](api/SceneTree/TreeItem.md)</code> | The common resource to store |
+| resource | <code>[TreeItem](api/SceneTree\TreeItem.md)</code> | The common resource to store |
 
 <a name="ResourceLoader+loadCommonAssetResource"></a>
 
@@ -210,7 +210,7 @@ Saves a common resource for reuse by other tools. Typically this would be a VR a
 Load and return a file resource using the specified path.
 
 
-**Returns**: <code>[VLAAsset](api/SceneTree/VLAAsset.md)</code> - - The return value.  
+**Returns**: <code>[VLAAsset](api/SceneTree\VLAAsset.md)</code> - - The return value.  
 
 | Param | Type | Description |
 | --- | --- | --- |

@@ -4,7 +4,7 @@
 Class representing a color as 4 floating point values.
 
 
-**Extends**: <code>[AttrValue](api/Math/AttrValue.md)</code>  
+**Extends**: <code>[AttrValue](api/Math\AttrValue.md)</code>  
 
 * [Color ⇐ <code>AttrValue</code>](#Color)
     * [new Color(r, g, b, a)](#new-Color)
@@ -389,7 +389,7 @@ Loads the state of the value from a binary reader.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| reader | <code>[BinReader](api/SceneTree/BinReader.md)</code> | The reader value. |
+| reader | <code>[BinReader](api/SceneTree\BinReader.md)</code> | The reader value. |
 
 <a name="Color.random"></a>
 

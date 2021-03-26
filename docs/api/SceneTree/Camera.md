@@ -5,18 +5,18 @@ Represents a view of the scene vertex coordinates. Since it is a `TreeItem`,
 translation modifiers are supported, so you can move the camera around.
 
 **Parameters**
-* **isOrthographic([`BooleanParameter`](api/SceneTree/Parameters/BooleanParameter.md)):** Special type of view that represents 3D objects in two dimensions; `true` to enable.
-* **fov([`NumberParameter`](api/SceneTree/Parameters/NumberParameter.md)):** _todo_
-* **near([`NumberParameter`](api/SceneTree/Parameters/NumberParameter.md)):** _todo_
-* **far([`NumberParameter`](api/SceneTree/Parameters/NumberParameter.md)):** _todo_
-* **focalDistance([`NumberParameter`](api/SceneTree/Parameters/NumberParameter.md)):** _todo_
+* **isOrthographic([`BooleanParameter`](api/SceneTree\Parameters\BooleanParameter.md)):** Special type of view that represents 3D objects in two dimensions; `true` to enable.
+* **fov([`NumberParameter`](api/SceneTree\Parameters\NumberParameter.md)):** _todo_
+* **near([`NumberParameter`](api/SceneTree\Parameters\NumberParameter.md)):** _todo_
+* **far([`NumberParameter`](api/SceneTree\Parameters\NumberParameter.md)):** _todo_
+* **focalDistance([`NumberParameter`](api/SceneTree\Parameters\NumberParameter.md)):** _todo_
 
 **Events**
 * **projectionParamChanged:** _todo_
 * **movementFinished:** Triggered when framing all the objects.
 
 
-**Extends**: <code>[TreeItem](api/SceneTree/TreeItem.md)</code>  
+**Extends**: <code>[TreeItem](api/SceneTree\TreeItem.md)</code>  
 
 * [Camera ⇐ <code>TreeItem</code>](#Camera)
     * [new Camera(name)](#new-Camera)
@@ -168,8 +168,8 @@ although we recommend this one because it also changes focal distance.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| position | <code>[Vec3](api/Math/Vec3.md)</code> | The position of the camera. |
-| target | <code>[Vec3](api/Math/Vec3.md)</code> | The target of the camera. |
+| position | <code>[Vec3](api/Math\Vec3.md)</code> | The position of the camera. |
+| target | <code>[Vec3](api/Math\Vec3.md)</code> | The target of the camera. |
 
 <a name="Camera+getTargetPosition"></a>
 
@@ -177,7 +177,7 @@ although we recommend this one because it also changes focal distance.
 Getter for the target position.
 
 
-**Returns**: <code>[Vec3](api/Math/Vec3.md)</code> - - Returns the target position.  
+**Returns**: <code>[Vec3](api/Math\Vec3.md)</code> - - Returns the target position.  
 <a name="Camera+frameView"></a>
 
 ### frameView
@@ -188,7 +188,7 @@ and moves the camera to a point where we can see all of them, preserving paramet
 
 | Param | Type | Description |
 | --- | --- | --- |
-| viewport | <code>[GLBaseViewport](api/Renderer/GLBaseViewport.md)</code> | The viewport value. |
+| viewport | <code>[GLBaseViewport](api/Renderer\GLBaseViewport.md)</code> | The viewport value. |
 | treeItems | <code>array</code> | The treeItems value. |
 
 <a name="Camera+updateProjectionMatrix"></a>
@@ -200,6 +200,6 @@ Sets camera perspective from a Mat4 object.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| mat | <code>[Mat4](api/Math/Mat4.md)</code> | The mat value. |
+| mat | <code>[Mat4](api/Math\Mat4.md)</code> | The mat value. |
 | aspect | <code>number</code> | The aspect value. |
 

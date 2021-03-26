@@ -12,7 +12,7 @@ myParameterOwnerItem.addParameter(vec3Param)
 ```
 
 
-**Extends**: <code>[Parameter](api/SceneTree/Parameters/Parameter.md)</code>  
+**Extends**: <code>[Parameter](api/SceneTree\Parameters\Parameter.md)</code>  
 
 * [Vec3Parameter ⇐ <code>Parameter</code>](#Vec3Parameter)
     * [new Vec3Parameter(name, value, range)](#new-Vec3Parameter)
@@ -28,7 +28,7 @@ Create a Vec3 parameter.
 | Param | Type | Description |
 | --- | --- | --- |
 | name | <code>string</code> | The name of the Vec3 parameter. |
-| value | <code>[Vec3](api/Math/Vec3.md)</code> | The value of the parameter. |
+| value | <code>[Vec3](api/Math\Vec3.md)</code> | The value of the parameter. |
 | range | <code>array</code> | The range value is an array of two `Vec2` objects. |
 
 <a name="Vec3Parameter+readBinary"></a>
@@ -40,7 +40,7 @@ Extracts a number value from a buffer, updating current parameter state.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| reader | <code>[BinReader](api/SceneTree/BinReader.md)</code> | The reader value. |
+| reader | <code>[BinReader](api/SceneTree\BinReader.md)</code> | The reader value. |
 | context | <code>object</code> | The context value. |
 
 <a name="Vec3Parameter+clone"></a>
@@ -53,4 +53,4 @@ from this parameter and returns it.
 **Returns**: [<code>Vec3Parameter</code>](#Vec3Parameter) - - Returns a new Vec3 parameter.  
 
 
-### [Class Tests](api/SceneTree/Parameters/Vec3Parameter.test)
+### [Class Tests](api/SceneTree\Parameters/Vec3Parameter.test)

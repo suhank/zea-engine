@@ -135,7 +135,7 @@ yarn docs
 
 5. Push your changes and publish to NPM
 ```bash
-git push --follow-tags origin master && npm publish
+git push --tags origin master
 ```
 
 ### Publishing a pre-release

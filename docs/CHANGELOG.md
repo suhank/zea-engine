@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.5.2](https://github.com/ZeaInc/zea-engine/compare/v3.5.1...v3.5.2) (2021-03-26)
+
+
+### Bug Fixes
+
+* A redraw is now correctly triggered after a GeomItem visibility changes. ([1cfe32d](https://github.com/ZeaInc/zea-engine/commit/1cfe32d90c12e0abf843a18f8485bdb038b3267d))
+* Adding passes to the renderer would cause subsequent pass indexes to become broken. e.g. Adding a new pass would break the Overlay pass and then Handles would not work. ([e3f8354](https://github.com/ZeaInc/zea-engine/commit/e3f83546dc333b3871e4ef6fbc83810d52c033dd))
+* Addressed major performance issue in the GLGeomItemSetMultiDraw as it was registering too many listeners to the GLGeomLibrary. ([329fa6d](https://github.com/ZeaInc/zea-engine/commit/329fa6d991df72f0e70e2948b5c232a5f4729fd0))
+* GeomIds can now be correctly visualized again by passing { debugGeomIds: true } to the renderer constructor ([8fe65ef](https://github.com/ZeaInc/zea-engine/commit/8fe65ef9dc245e6f5b0f5980ecbd20a1aaa1543f))
+* MouseWheel zooming is more smooth now and merges multiple events into a single motion. ([5e862ca](https://github.com/ZeaInc/zea-engine/commit/5e862cad301b5ec7a4a2d0335cbb9df993a6cac0))
+* The ZEA Splash image is now removed. ([5b4f82f](https://github.com/ZeaInc/zea-engine/commit/5b4f82f68fd72a9db109295ec30e813095147f79))
+
+
 ### [3.5.1](https://github.com/ZeaInc/zea-engine/compare/v3.5.0...v3.5.1) (2021-03-23)
 
 

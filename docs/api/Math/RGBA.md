@@ -4,7 +4,7 @@
 Class representing the red, green, blue and alpha channel of a color as 8bit values.
 
 
-**Extends**: <code>[AttrValue](api/Math/AttrValue.md)</code>  
+**Extends**: <code>[AttrValue](api/Math\AttrValue.md)</code>  
 
 * [RGBA ⇐ <code>AttrValue</code>](#RGBA)
     * [new RGBA(r, g, b, a)](#new-RGBA)
@@ -220,7 +220,7 @@ Checks if this Color  contains the same values as the other.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| other | <code>[Color](api/Math/Color.md)</code> | The other Color to compare with. |
+| other | <code>[Color](api/Math\Color.md)</code> | The other Color to compare with. |
 
 <a name="RGBA+notEquals"></a>
 
@@ -311,7 +311,7 @@ Apply gamma correction to this RGBA color.
 Converts to linear color space and returns a new color.
 
 
-**Returns**: <code>[Color](api/Math/Color.md)</code> - - Returns a new RGBA.  
+**Returns**: <code>[Color](api/Math\Color.md)</code> - - Returns a new RGBA.  
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |

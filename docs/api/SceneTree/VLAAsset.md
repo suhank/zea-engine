@@ -4,14 +4,14 @@
 Class designed to load and handle `.vla` files.
 
 **Parameters**
-* **DataFilePath([`FilePathParameter`](api/SceneTree/Parameters/FilePathParameter.md)):** Used to specify the path to the file.
+* **DataFilePath([`FilePathParameter`](api/SceneTree\Parameters\FilePathParameter.md)):** Used to specify the path to the file.
 
 **Events**
 * **loaded:** Triggered once the tree is loaded. Note: the tree bounding box is valid once the tree is loaded.
 * **geomsLoaded:** Triggered once all geometries are loaded.
 
 
-**Extends**: <code>[AssetItem](api/SceneTree/AssetItem.md)</code>  
+**Extends**: <code>[AssetItem](api/SceneTree\AssetItem.md)</code>  
 
 * [VLAAsset ⇐ <code>AssetItem</code>](#VLAAsset)
     * [new VLAAsset(name)](#new-VLAAsset)
@@ -39,7 +39,7 @@ Sets state of current asset using a binary reader object.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| reader | <code>[BinReader](api/SceneTree/BinReader.md)</code> | The reader value. |
+| reader | <code>[BinReader](api/SceneTree\BinReader.md)</code> | The reader value. |
 | context | <code>object</code> | The context value. |
 
 <a name="VLAAsset+load"></a>

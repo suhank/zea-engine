@@ -93,7 +93,7 @@ Sets the name of the current parameter.
 Returns the owner item of the current parameter.
 
 
-**Returns**: <code>[ParameterOwner](api/SceneTree/ParameterOwner.md)</code> - - The return value.  
+**Returns**: <code>[ParameterOwner](api/SceneTree\ParameterOwner.md)</code> - - The return value.  
 <a name="Parameter+setOwner"></a>
 
 ### setOwner
@@ -103,7 +103,7 @@ Sets the owner item of the current parameter.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| ownerItem | <code>[ParameterOwner](api/SceneTree/ParameterOwner.md)</code> | The ownerItem value. |
+| ownerItem | <code>[ParameterOwner](api/SceneTree\ParameterOwner.md)</code> | The ownerItem value. |
 
 <a name="Parameter+getPath"></a>
 
@@ -130,7 +130,7 @@ Binds an OperatorOutput to this parameter.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| operatorOutput | <code>[OperatorOutput](api/SceneTree/Operators/OperatorOutput.md)</code> | The output that we are unbinding from the Parameter |
+| operatorOutput | <code>[OperatorOutput](api/SceneTree\Operators\OperatorOutput.md)</code> | The output that we are unbinding from the Parameter |
 | index | <code>number</code> | The index(optional) that the output is being bound at. |
 
 <a name="Parameter+unbindOperator"></a>
@@ -143,7 +143,7 @@ The unbindOperator method.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| operatorOutput | <code>[OperatorOutput](api/SceneTree/Operators/OperatorOutput.md)</code> | The output that we are unbinding from the Parameter |
+| operatorOutput | <code>[OperatorOutput](api/SceneTree\Operators\OperatorOutput.md)</code> | The output that we are unbinding from the Parameter |
 
 <a name="Parameter+setDirty"></a>
 
@@ -291,4 +291,4 @@ from this parameter and returns it.
 **Returns**: [<code>Parameter</code>](#Parameter) - - Returns a new cloned parameter.  
 
 
-### [Class Tests](api/SceneTree/Parameters/Parameter.test)
+### [Class Tests](api/SceneTree\Parameters/Parameter.test)

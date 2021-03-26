@@ -12,7 +12,7 @@ myParameterOwnerItem.addParameter(vec4Param)
 ```
 
 
-**Extends**: <code>[Parameter](api/SceneTree/Parameters/Parameter.md)</code>  
+**Extends**: <code>[Parameter](api/SceneTree\Parameters\Parameter.md)</code>  
 
 * [Vec4Parameter ⇐ <code>Parameter</code>](#Vec4Parameter)
     * [new Vec4Parameter(name, value)](#new-Vec4Parameter)
@@ -28,7 +28,7 @@ Create a Vec4 parameter.
 | Param | Type | Description |
 | --- | --- | --- |
 | name | <code>string</code> | The name of the Vec4 parameter. |
-| value | <code>[Vec4](api/Math/Vec4.md)</code> | The value of the parameter. |
+| value | <code>[Vec4](api/Math\Vec4.md)</code> | The value of the parameter. |
 
 <a name="Vec4Parameter+readBinary"></a>
 
@@ -39,7 +39,7 @@ Extracts a number value from a buffer, updating current parameter state.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| reader | <code>[BinReader](api/SceneTree/BinReader.md)</code> | The reader value. |
+| reader | <code>[BinReader](api/SceneTree\BinReader.md)</code> | The reader value. |
 | context | <code>object</code> | The context value. |
 
 <a name="Vec4Parameter+clone"></a>
@@ -52,4 +52,4 @@ from this parameter and returns it.
 **Returns**: [<code>Vec4Parameter</code>](#Vec4Parameter) - - Returns a new Vec4 parameter.  
 
 
-### [Class Tests](api/SceneTree/Parameters/Vec4Parameter.test)
+### [Class Tests](api/SceneTree\Parameters/Vec4Parameter.test)
