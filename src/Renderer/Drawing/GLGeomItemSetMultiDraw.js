@@ -24,6 +24,7 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
     this.renderer = renderer
     this.gl = renderer.gl
     this.glGeomItems = []
+    this.glGeomIdsMapping = {}
     this.glgeomItemEventHandlers = []
     this.dirtyDrawGeomIds = []
 
@@ -42,6 +43,25 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
     this.highlightedIdsArray = null
     this.highlightedIdsTexture = null
     this.highlightedIdsBufferDirty = true
+
+    this.renderer.glGeomLibrary.on('geomDataChanged', (event) => {
+      const index = this.glGeomIdsMapping[event.index]
+      if (index != undefined) {
+        const glGeomItem = this.glGeomItems[index]
+        if (glGeomItem.geomItem.isVisible()) {
+          const index = this.visibleItems.indexOf(glGeomItem)
+          const offsetAndCount = this.renderer.glGeomLibrary.getGeomOffsetAndCount(glGeomItem.geomId)
+
+          this.drawElementOffsets[index] = offsetAndCount[0]
+          this.drawElementCounts[index] = offsetAndCount[1]
+          const highlightIndex = this.highlightedItems.indexOf(glGeomItem)
+          if (highlightIndex != -1) {
+            this.highlightElementOffsets[highlightIndex] = offsetAndCount[0]
+            this.highlightElementCounts[highlightIndex] = offsetAndCount[1]
+          }
+        }
+      }
+    })
   }
 
   /**
@@ -49,24 +69,10 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
    * @param {any} glGeomItem - The glGeomItem value.
    */
   addGLGeomItem(glGeomItem) {
+    this.glGeomIdsMapping[glGeomItem.geomId] = this.glGeomItems.length
     this.glGeomItems.push(glGeomItem)
 
     const eventHandlers = {}
-    eventHandlers.geomDataChanged = (event) => {
-      if (event.index == glGeomItem.geomId && glGeomItem.geomItem.isVisible()) {
-        const index = this.visibleItems.indexOf(glGeomItem)
-        const offsetAndCount = this.renderer.glGeomLibrary.getGeomOffsetAndCount(glGeomItem.geomId)
-
-        this.drawElementOffsets[index] = offsetAndCount[0]
-        this.drawElementCounts[index] = offsetAndCount[1]
-        const highlightIndex = this.highlightedItems.indexOf(glGeomItem)
-        if (highlightIndex != -1) {
-          this.highlightElementOffsets[highlightIndex] = offsetAndCount[0]
-          this.highlightElementCounts[highlightIndex] = offsetAndCount[1]
-        }
-      }
-    }
-    this.renderer.glGeomLibrary.on('geomDataChanged', eventHandlers.geomDataChanged)
 
     if (glGeomItem.geomItem.isVisible()) {
       this.visibleItems.push(glGeomItem)
@@ -116,6 +122,7 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
    */
   removeGLGeomItem(glGeomItem) {
     const index = this.glGeomItems.indexOf(glGeomItem)
+    delete this.glGeomIdsMapping[glGeomItem.geomId]
 
     const eventHandlers = this.glgeomItemEventHandlers[index]
     glGeomItem.geomItem.off('highlightChanged', eventHandlers.highlightChanged)
