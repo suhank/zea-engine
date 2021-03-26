@@ -201,14 +201,13 @@
       }
       // }}}
 
-      renderer
-        .getViewport()
-        .getCamera()
-        .on('movementFinished', () => {
-          console.log('movementFinished')
-        })
       // Position the camera to a better perspective view.
       renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(0, 5, 3), new Vec3(0, 0, 0))
+
+      // To make mouse wheel testing move the camera a decent amount, we increase the
+      // mouse wheel movement by 10x. This is because the cypress will send only a single
+      // wheel event instead of a sequence.
+      renderer.getViewport().getManipulator().getParameter('MouseWheelDollySpeed').setValue(1)
 
       renderer
         .getViewport()
@@ -217,10 +216,11 @@
           if (!e.event) {
             return
           }
+          console.log('movementFinished')
 
-          renderer.once('redrawOccurred', () => {
-            window.postMessage('done-moving-camera')
-          })
+          // renderer.once('redrawOccurred', () => {
+          window.postMessage('done-moving-camera')
+          // })
         })
     </script>
   </head>
