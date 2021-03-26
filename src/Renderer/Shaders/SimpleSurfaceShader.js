@@ -49,19 +49,11 @@ varying vec3 v_viewNormal;
 varying vec2 v_textureCoord;
 #endif
 varying vec3 v_worldPos;
-#ifdef DEBUG_GEOM_ID
-varying float v_geomId;
-#endif
 
 void main(void) {
     int drawItemId = getDrawItemId();
     v_drawItemId = float(drawItemId);
     v_geomItemData  = getInstanceData(drawItemId);
-    #ifdef ENABLE_MULTI_DRAW
-    #ifdef DEBUG_GEOM_ID
-    v_geomId = float(gl_DrawID);
-    #endif // DEBUG_GEOM_ID
-    #endif // ENABLE_MULTI_DRAW
 
     mat4 modelMatrix = getModelMatrix(drawItemId);
     mat4 modelViewMatrix = viewMatrix * modelMatrix;
@@ -128,9 +120,6 @@ varying vec3 v_viewNormal;
 varying vec2 v_textureCoord;
 #endif
 varying vec3 v_worldPos;
-#ifdef DEBUG_GEOM_ID
-varying float v_geomId;
-#endif
 /* VS Outputs */
 
 uniform mat4 cameraMatrix;
@@ -228,7 +217,8 @@ void main(void) {
 #ifdef DEBUG_GEOM_ID
     // ///////////////////////
     // Debug Draw ID (this correlates to GeomID within a GLGeomSet)
-    fragColor.rgb = getDebugColor(v_geomId);
+    float geomId = v_geomItemData.w;
+    fragColor.rgb = getDebugColor(geomId);
     // ///////////////////////
 #endif
 
