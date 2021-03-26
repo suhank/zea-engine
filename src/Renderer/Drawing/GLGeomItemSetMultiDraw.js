@@ -129,7 +129,6 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
     const eventHandlers = this.glgeomItemEventHandlers[index]
     glGeomItem.geomItem.off('highlightChanged', eventHandlers.highlightChanged)
     glGeomItem.geomItem.off('visibilityChanged', eventHandlers.visibilityChanged)
-    this.renderer.glGeomLibrary.off('geomDataChanged', eventHandlers.geomDataChanged)
 
     this.glGeomItems.splice(index, 1)
     this.glgeomItemEventHandlers.splice(index, 1)
