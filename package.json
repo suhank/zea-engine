@@ -25,7 +25,7 @@
     "docs:serve": "docsify serve docs/",
     "generate": "plop",
     "release": "standard-version",
-    "start": "http-server --port 8000 --silent",
+    "start": "http-server --cors --port 8000 --silent",
     "start:watch": "es-dev-server --cors --app-index testing-e2e/index.html --open --watch",
     "test": "jest",
     "test:coverage": "jest --coverage",
