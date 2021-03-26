@@ -36,7 +36,7 @@ describe('pointer-events', () => {
 
     cy.get('canvas').trigger('wheel', {
       deltaX: -0,
-      deltaY: -200,
+      deltaY: -1,
       deltaZ: 0,
     })
 
@@ -47,13 +47,11 @@ describe('pointer-events', () => {
   it('Wheel Zoom Out - Camera Manipulator', () => {
     cyFocusCanvas()
 
-    for (let i = 0; i < 10; i++) {
-      cy.get('canvas').trigger('wheel', {
-        deltaX: -0,
-        deltaY: 1,
-        deltaZ: 0,
-      })
-    }
+    cy.get('canvas').trigger('wheel', {
+      deltaX: -0,
+      deltaY: 1,
+      deltaZ: 0,
+    })
 
     cy.get('@postMessage').its('lastCall.args.0').should('equal', `done-moving-camera`)
     cy.get('canvas').percySnapshot(`WheelZoomOutCameraManipulator`)

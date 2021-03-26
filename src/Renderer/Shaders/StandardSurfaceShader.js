@@ -54,9 +54,6 @@ varying vec3 v_viewNormal;
 varying vec2 v_textureCoord;
 #endif
 varying vec3 v_worldPos;
-#ifdef DEBUG_GEOM_ID
-varying float v_geomId;
-#endif
 /* VS Outputs */
 
 
@@ -80,12 +77,6 @@ void main(void) {
 #endif
 
   v_worldPos      = (modelMatrix * pos).xyz;
-
-  #ifdef ENABLE_MULTI_DRAW
-  #ifdef DEBUG_GEOM_ID
-  v_geomId = float(gl_DrawID);
-  #endif // DEBUG_GEOM_ID
-  #endif // ENABLE_MULTI_DRAW
 }
 `
     )
@@ -118,9 +109,6 @@ varying vec3 v_viewNormal;
 varying vec2 v_textureCoord;
 #endif
 varying vec3 v_worldPos;
-#ifdef DEBUG_GEOM_ID
-varying float v_geomId;
-#endif
 /* VS Outputs */
 
 
@@ -308,7 +296,8 @@ void main(void) {
 #ifdef DEBUG_GEOM_ID
     // ///////////////////////
     // Debug Draw ID (this correlates to GeomID within a GLGeomSet)
-    fragColor.rgb = getDebugColor(v_geomId);
+    float geomId = v_geomItemData.w;
+    fragColor.rgb = getDebugColor(geomId);
     // ///////////////////////
 #endif
 

@@ -146,7 +146,7 @@ class GLGeomItemLibrary extends EventEmitter {
    * @param {any} dataArray - The dataArray value.
    * @private
    */
-  populateDrawItemDataArray(geomItem, index, dataArray) {
+  populateDrawItemDataArray(geomItem, geomId, index, dataArray) {
     const stride = pixelsPerItem * 4 // The number of floats per draw item.
     const offset = index * stride
 
@@ -167,8 +167,11 @@ class GLGeomItemLibrary extends EventEmitter {
     const allocation = this.renderer.glMaterialLibrary.getMaterialAllocation(material)
     if (allocation) {
       pix0.z = allocation.start
-      pix0.w = allocation.size
     }
+
+    // Store the geomId for debugging purposes.
+    // see: DEBUG_GEOM_ID
+    pix0.w = geomId
 
     // /////////////////////////
     // Geom Matrix
@@ -278,7 +281,7 @@ class GLGeomItemLibrary extends EventEmitter {
         // When an item is deleted, we allocate its index to the free list
         // and null this item in the array. skip over null items.
         if (!glGeomItem) continue
-        this.populateDrawItemDataArray(glGeomItem.getGeomItem(), j - indexStart, dataArray)
+        this.populateDrawItemDataArray(glGeomItem.geomItem, glGeomItem.geomId, j - indexStart, dataArray)
       }
 
       if (typeId == gl.FLOAT) {
