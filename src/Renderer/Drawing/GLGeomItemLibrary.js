@@ -5,14 +5,8 @@ import { GLGeomItemChangeType, GLGeomItem } from './GLGeomItem.js'
 import { MathFunctions } from '../../Utilities/MathFunctions'
 import { GLTexture2D } from '../GLTexture2D.js'
 
-import { handleMessage } from './GLGeomItemLibraryCullingWorker.js'
-const postMessage = (library, message) => {
-  handleMessage(message, (message) => {
-    if (message.data.type == 'CullResults') {
-      library.applyCullResults(message.data)
-    }
-  })
-}
+// import { handleMessage } from './GLGeomItemLibraryCullingWorker.js'
+import GLGeomItemLibraryCullingWorker from 'web-worker:./GLGeomItemLibraryCullingWorker.js'
 
 const pixelsPerItem = 6 // The number of RGBA pixels per draw item.
 
@@ -34,12 +28,26 @@ class GLGeomItemLibrary extends EventEmitter {
     this.glGeomItemsIndexFreeList = []
     this.dirtyItemIndices = []
 
+    this.worker = new GLGeomItemLibraryCullingWorker()
+    // this.worker = {
+    //   postMessage: (message) => {
+    //     handleMessage(message, (message) => {
+    //       this.worker.onmessage({data: message })
+    //     })
+    //   },
+    // }
+    this.worker.onmessage = (message) => {
+      if (message.data.type == 'CullResults') {
+        this.applyCullResults(message.data)
+      }
+    }
+
     const viewportChanged = () => {
       const frustumHalfAngleY = renderer.getViewport().getCamera().getFov() * 0.5
       const aspectRatio = renderer.getWidth() / renderer.getHeight()
       const frustumHalfAngleX = frustumHalfAngleY * aspectRatio
       const viewportHeight = renderer.getHeight()
-      postMessage(this, {
+      this.worker.postMessage({
         type: 'ViewportChanged',
         frustumHalfAngleX,
         frustumHalfAngleY,
@@ -52,7 +60,7 @@ class GLGeomItemLibrary extends EventEmitter {
     renderer.on('viewChanged', (event) => {
       const pos = event.viewXfo.tr
       const ori = event.viewXfo.ori
-      postMessage(this, {
+      this.worker.postMessage({
         type: 'ViewChanged',
         cameraPos: pos.asArray(),
         cameraOri: ori.asArray(),
@@ -114,7 +122,7 @@ class GLGeomItemLibrary extends EventEmitter {
     const bbox = geomItem.getParameter('BoundingBox').getValue()
     const boundingRadius = bbox.size() * 0.5
     const pos = bbox.center()
-    handleMessage({
+    this.worker.postMessage({
       type: 'AddGeomItems',
       geomItems: [
         {

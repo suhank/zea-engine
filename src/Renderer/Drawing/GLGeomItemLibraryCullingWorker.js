@@ -74,7 +74,7 @@ const unCull = (index) => {
   }
 }
 
-const checkGeomItem = (geomItemData, index) => {
+const checkGeomItem = (geomItemData) => {
   const pos = geomItemData.pos
   const boundingRadius = geomItemData.boundingRadius
   const vec = vec3_subtract(pos, cameraPos)
@@ -84,8 +84,8 @@ const checkGeomItem = (geomItemData, index) => {
   const solidAngle = Math.atan(boundingRadius / dist)
   const heightInPixels = (solidAngle / frustumHalfAngleY) * viewportHeight
 
-  // console.log(index, 'solidAngle:', solidAngle, heightInPixels)
-  if (heightInPixels < 3) {
+  // console.log(geomItemData.id, 'heightInPixels:', heightInPixels)
+  if (heightInPixels < 30) {
     cull(geomItemData.id)
     return
   }
@@ -118,7 +118,7 @@ const onViewChanged = (data, postMessage) => {
 
 const onDone = (postMessage) => {
   if (newlyCulled.length > 0 || newlyUnCulled.length > 0) {
-    postMessage({ data: { type: 'CullResults', newlyCulled, newlyUnCulled } })
+    postMessage({ type: 'CullResults', newlyCulled, newlyUnCulled })
     newlyCulled = []
     newlyUnCulled = []
   }
