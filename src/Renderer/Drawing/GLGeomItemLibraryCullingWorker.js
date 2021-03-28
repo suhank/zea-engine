@@ -13,6 +13,12 @@ const vec3_subtract = (vec1, vec2) => {
 const vec3_dot = (vec1, vec2) => {
   return vec1[0] * vec2[0] + vec1[1] * vec2[1] + vec1[2] * vec2[2]
 }
+const vec3_length = (vec) => {
+  return Math.sqrt(vec[0] * vec[0] + vec[1] * vec[1] + vec[2] * vec[2])
+}
+const vec3_scale = (vec, scl) => {
+  return [vec[0] * len, vec[1] * len, vec[2] * len]
+}
 const vec3_angleTo = (vec1, vec2) => {
   const cosine = vec3_dot(vec1, vec2)
   if (cosine > 1.0) {
@@ -78,19 +84,30 @@ const checkGeomItem = (geomItemData) => {
   const pos = geomItemData.pos
   const boundingRadius = geomItemData.boundingRadius
   const vec = vec3_subtract(pos, cameraPos)
-  let viewVec = quat_rotateVec3(cameraInvOri, vec)
-  const dist = -vec[2]
-  viewVec = vec3_normalize(viewVec)
+  const dist = vec3_length(vec)
+  // unCull items close to the camera.
+  if (dist < boundingRadius) {
+    unCull(geomItemData.id)
+    return
+  }
+  const viewVec = quat_rotateVec3(cameraInvOri, vec)
+  // Cull items behind the camera.
+  if (viewVec[2] > 0) {
+    cull(geomItemData.id)
+    return
+  }
   const solidAngle = Math.atan(boundingRadius / dist)
   const heightInPixels = (solidAngle / frustumHalfAngleY) * viewportHeight
 
-  // console.log(geomItemData.id, 'heightInPixels:', heightInPixels)
-  if (heightInPixels < 30) {
+  // Cull very small items
+  // console.log(geomItemData.id, 'heightInPixels:', heightInPixels, dist)
+  if (heightInPixels < 10) {
     cull(geomItemData.id)
     return
   }
 
-  const viewAngle = [Math.abs(Math.asin(viewVec[0])), Math.abs(Math.asin(viewVec[1]))]
+  const viewVecNorm = vec3_normalize(viewVec)
+  const viewAngle = [Math.abs(Math.asin(viewVecNorm[0])), Math.abs(Math.asin(viewVecNorm[1]))]
   // console.log(viewAngle[0] / frustumHalfAngleX, viewAngle[1] / frustumHalfAngleY)
 
   // console.log(index, 'angle Tp Sphere:', angle, solidAngle, frustumHalfAngleY - (angle - solidAngle))
@@ -121,6 +138,8 @@ const onDone = (postMessage) => {
     postMessage({ type: 'CullResults', newlyCulled, newlyUnCulled })
     newlyCulled = []
     newlyUnCulled = []
+  } else {
+    postMessage({ type: 'Done' })
   }
 }
 

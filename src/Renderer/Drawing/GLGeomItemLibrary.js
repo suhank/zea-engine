@@ -36,10 +36,19 @@ class GLGeomItemLibrary extends EventEmitter {
     //     })
     //   },
     // }
+
+    let workerReady = true
+    this.worker.sendMessage = (message) => {
+      if (workerReady) {
+        workerReady = false
+        this.worker.postMessage(message)
+      }
+    }
     this.worker.onmessage = (message) => {
       if (message.data.type == 'CullResults') {
         this.applyCullResults(message.data)
       }
+      workerReady = true
     }
 
     const viewportChanged = () => {
@@ -60,7 +69,7 @@ class GLGeomItemLibrary extends EventEmitter {
     renderer.on('viewChanged', (event) => {
       const pos = event.viewXfo.tr
       const ori = event.viewXfo.ori
-      this.worker.postMessage({
+      this.worker.sendMessage({
         type: 'ViewChanged',
         cameraPos: pos.asArray(),
         cameraOri: ori.asArray(),
