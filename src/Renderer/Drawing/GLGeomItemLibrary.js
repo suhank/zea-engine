@@ -4,8 +4,15 @@ import { Vec4 } from '../../Math/index'
 import { GLGeomItemChangeType, GLGeomItem } from './GLGeomItem.js'
 import { MathFunctions } from '../../Utilities/MathFunctions'
 import { GLTexture2D } from '../GLTexture2D.js'
-// import { GLMaterialLibrary } from './GLMaterialLibrary.js'
-// import { GLGeomLibrary } from './GLGeomLibrary.js'
+
+import { handleMessage } from './GLGeomItemLibraryCullingWorker.js'
+const postMessage = (library, message) => {
+  handleMessage(message, (message) => {
+    if (message.data.type == 'CullResults') {
+      library.applyCullResults(message.data)
+    }
+  })
+}
 
 const pixelsPerItem = 6 // The number of RGBA pixels per draw item.
 
@@ -26,6 +33,31 @@ class GLGeomItemLibrary extends EventEmitter {
     this.glGeomItemsMap = {}
     this.glGeomItemsIndexFreeList = []
     this.dirtyItemIndices = []
+
+    const viewportChanged = () => {
+      const frustumHalfAngleY = renderer.getViewport().getCamera().getFov() * 0.5
+      const aspectRatio = renderer.getWidth() / renderer.getHeight()
+      const frustumHalfAngleX = frustumHalfAngleY * aspectRatio
+      const viewportHeight = renderer.getHeight()
+      postMessage(this, {
+        type: 'ViewportChanged',
+        frustumHalfAngleX,
+        frustumHalfAngleY,
+        viewportHeight,
+      })
+    }
+    renderer.on('resized', viewportChanged)
+    viewportChanged()
+
+    renderer.on('viewChanged', (event) => {
+      const pos = event.viewXfo.tr
+      const ori = event.viewXfo.ori
+      postMessage(this, {
+        type: 'ViewChanged',
+        cameraPos: pos.asArray(),
+        cameraOri: ori.asArray(),
+      })
+    })
   }
 
   /**
@@ -79,10 +111,33 @@ class GLGeomItemLibrary extends EventEmitter {
     this.glGeomItemEventHandlers[index] = geomItemChanged
     this.glGeomItemsMap[geomItem.getId()] = index
 
+    const bbox = geomItem.getParameter('BoundingBox').getValue()
+    const boundingRadius = bbox.size() * 0.5
+    const pos = bbox.center()
+    handleMessage({
+      type: 'AddGeomItems',
+      geomItems: [
+        {
+          id: index,
+          boundingRadius,
+          pos: pos.asArray(),
+        },
+      ],
+    })
+
     // Note: before the renderer is disabled, this is a  no-op.
     this.renderer.requestRedraw()
 
     return glGeomItem
+  }
+
+  applyCullResults(data) {
+    data.newlyCulled.forEach((index) => {
+      this.glGeomItems[index].setCulled(true)
+    })
+    data.newlyUnCulled.forEach((index) => {
+      this.glGeomItems[index].setCulled(false)
+    })
   }
 
   /**
@@ -142,6 +197,7 @@ class GLGeomItemLibrary extends EventEmitter {
   /**
    * The populateDrawItemDataArray method.
    * @param {any} geomItem - The geomItem value.
+   * @param {number} geomId - The index of the geom in the GeomLibrary.
    * @param {number} index - The index value.
    * @param {any} dataArray - The dataArray value.
    * @private

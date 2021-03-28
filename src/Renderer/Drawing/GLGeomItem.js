@@ -33,10 +33,14 @@ class GLGeomItem extends EventEmitter {
     this.materialId = materialId
     this.supportInstancing = supportInstancing
 
-    if (!this.supportInstancing) {
-      this.visible = this.geomItem.isVisible()
-      this.culled = false
+    this.geomVisible = this.geomItem.isVisible()
+    this.visible = this.geomVisible
+    this.culled = false
 
+    this.updateVisibility = this.updateVisibility.bind(this)
+    this.geomItem.on('visibilityChanged', this.updateVisibility)
+
+    if (!this.supportInstancing) {
       this.cutDataChanged = false
       this.cutData = [0, 0, 0, 0]
 
@@ -57,9 +61,6 @@ class GLGeomItem extends EventEmitter {
         this.cutDataChanged = true
         this.emit('updated')
       })
-      this.updateVisibility = this.updateVisibility.bind(this)
-      this.destroy = this.destroy.bind(this)
-      this.geomItem.on('visibilityChanged', this.updateVisibility)
     }
   }
 
@@ -76,7 +77,7 @@ class GLGeomItem extends EventEmitter {
    * @return {any} - The return value.
    */
   isVisible() {
-    return this.geomItem.isVisible()
+    return this.visible
   }
 
   /**
@@ -91,12 +92,21 @@ class GLGeomItem extends EventEmitter {
    * The updateVisibility method.
    */
   updateVisibility() {
-    const geomVisible = this.geomItem.isVisible()
-    const visible = geomVisible && !this.culled
+    this.geomVisible = this.geomItem.isVisible()
+    const visible = this.geomVisible && !this.culled
     if (this.visible != visible) {
       this.visible = visible
       this.emit('visibilityChanged', { visible })
       this.emit('updated', {})
+    }
+  }
+
+  setCulled(culled) {
+    this.culled = culled
+    const visible = this.geomVisible && !this.culled
+    if (this.visible != visible) {
+      this.visible = visible
+      this.emit('visibilityChanged', { visible })
     }
   }
 
@@ -146,9 +156,9 @@ class GLGeomItem extends EventEmitter {
    * Users should never need to call this method directly.
    */
   destroy() {
+    this.geomItem.off('visibilityChanged', this.updateVisibility)
     if (!this.supportInstancing) {
       this.geomItem.getParameter('GeomMat').off('valueChanged', this.geomMatrixChanged)
-      this.geomItem.off('visibilityChanged', this.updateVisibility)
       this.geomItem.off('cutAwayChanged', this.cutAwayChanged)
       this.geomItem.off('highlightChanged', this.highlightChanged)
     }

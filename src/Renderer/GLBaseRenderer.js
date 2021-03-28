@@ -61,6 +61,7 @@ class GLBaseRenderer extends ParameterOwner {
 
     this.setupWebGL($canvas, options.webglOptions ? { ...options, ...options.webglOptions } : options)
     this.bindEventHandlers()
+    this.addViewport('main')
 
     this.glMaterialLibrary = new GLMaterialLibrary(this)
     this.glMaterialLibrary.on('updated', () => {
@@ -82,8 +83,6 @@ class GLBaseRenderer extends ParameterOwner {
         this.addPass(new cls(), passType, false)
       }
     }
-
-    this.addViewport('main')
 
     // ////////////////////////////////////////////
     // WebXR
@@ -523,15 +522,15 @@ class GLBaseRenderer extends ParameterOwner {
     this.__glcanvas.width = newWidth
     this.__glcanvas.height = newHeight
 
-    this.resizeFbos(this.getWidth(), this.getHeight())
+    this.resizeFbos(newWidth, newHeight)
 
     for (const vp of this.__viewports) {
-      vp.resize(this.getWidth(), this.getHeight())
+      vp.resize(newWidth, newHeight)
     }
 
     this.emit('resized', {
-      width: this.getWidth(),
-      height: this.getHeight(),
+      width: newWidth,
+      height: newHeight,
     })
 
     this.requestRedraw()

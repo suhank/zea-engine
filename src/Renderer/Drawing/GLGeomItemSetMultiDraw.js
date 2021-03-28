@@ -107,7 +107,7 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
       this.drawIdsBufferDirty = true
       this.emit('updated')
     }
-    glGeomItem.geomItem.on('visibilityChanged', eventHandlers.visibilityChanged)
+    glGeomItem.on('visibilityChanged', eventHandlers.visibilityChanged)
 
     this.glgeomItemEventHandlers.push(eventHandlers)
 
