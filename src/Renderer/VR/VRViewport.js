@@ -33,7 +33,7 @@ class VRViewport extends GLBaseViewport {
 
     // ////////////////////////////////////////////
     // Viewport params
-    this.__projectionMatriciesUpdated = false
+    this.__projectionMatricesUpdated = false
 
     // These values are in meters.
     this.__far = 1024.0
@@ -67,14 +67,6 @@ class VRViewport extends GLBaseViewport {
     this.__rightProjectionMatrix = new Mat4()
 
     this.setManipulator(new VRViewManipulator(this))
-  }
-
-  /**
-   * The getVRDisplay method.
-   * @return {any} - The return value.
-   */
-  getVRDisplay() {
-    return this.__vrDisplay
   }
 
   /**
@@ -145,7 +137,7 @@ class VRViewport extends GLBaseViewport {
    * @return {boolean} - The return value.
    */
   isPresenting() {
-    return this.__session
+    return this.session
   }
 
   /**
@@ -172,12 +164,12 @@ class VRViewport extends GLBaseViewport {
    */
   __startSession() {
     const onAnimationFrame = (t, frame) => {
-      if (this.__session) {
-        this.__session.requestAnimationFrame(onAnimationFrame)
+      if (this.session) {
+        this.session.requestAnimationFrame(onAnimationFrame)
         this.draw(frame)
       }
     }
-    this.__session.requestAnimationFrame(onAnimationFrame)
+    this.session.requestAnimationFrame(onAnimationFrame)
   }
 
   /**
@@ -281,7 +273,7 @@ class VRViewport extends GLBaseViewport {
 
             session.addEventListener('end', (event) => {
               this.__stageTreeItem.setVisible(false)
-              this.__session = null
+              this.session = null
               this.emit('presentingChanged', { state: false })
             })
 
@@ -326,7 +318,7 @@ class VRViewport extends GLBaseViewport {
             session.addEventListener('selectend', onSelectEnd)
             session.addEventListener('inputsourceschange', onInputSourcesChange)
 
-            this.__session = session
+            this.session = session
 
             // ////////////////////////////
             const glLayer = new XRWebGLLayer(session, gl)
@@ -336,6 +328,11 @@ class VRViewport extends GLBaseViewport {
               outputContext: mirrorCanvas ? mirrorCanvas.getContext('xrpresent') : null,
               ,*/,
             })
+
+            this.__width = glLayer.framebufferWidth
+            this.__height = glLayer.framebufferHeight
+            this.__renderer.resizeFbos(this.__width, this.__height)
+            this.__region = [0, 0, this.__width, this.__height]
             // ////////////////////////////
 
             // eslint-disable-next-line require-jsdoc
@@ -373,7 +370,7 @@ class VRViewport extends GLBaseViewport {
               })
               .catch((e) => {
                 console.warn(e.message)
-                reject('Unable to start XR Session:' + e.message)
+                reject(new Error('Unable to start XR Session:' + e.message))
               })
           })
           .catch((e) => {
@@ -389,16 +386,16 @@ class VRViewport extends GLBaseViewport {
    * The stopPresenting method.
    */
   stopPresenting() {
-    if (!this.__session) return
+    if (!this.session) return
 
-    this.__session.end()
+    this.session.end()
   }
 
   /**
    * The togglePresenting method.
    */
   togglePresenting() {
-    if (this.__session) this.stopPresenting()
+    if (this.session) this.stopPresenting()
     else this.startPresenting()
   }
 
@@ -415,10 +412,11 @@ class VRViewport extends GLBaseViewport {
 
   /**
    * The updateControllers method.
-   * @param {any} xrFrame - The xrFrame value.
+   * @param {XRFrame} xrFrame - The xrFrame value.
+   * @param {object} event - The pose changed event object that will be emitted for observers such as collab.
    */
   updateControllers(xrFrame, event) {
-    const inputSources = this.__session.inputSources
+    const inputSources = this.session.inputSources
     for (let i = 0; i < inputSources.length; i++) {
       const inputSource = inputSources[i]
 
@@ -466,11 +464,10 @@ class VRViewport extends GLBaseViewport {
 
     const views = pose.views
 
-    if (!this.__projectionMatriciesUpdated) {
+    if (!this.__projectionMatricesUpdated) {
       this.__projectionMatrices = []
       this.__viewMatrices = []
       this.__cameraMatrices = []
-      this.__region = [0, 0, 0, 0]
       for (let i = 0; i < views.length; i++) {
         const view = views[i]
         const projMat = new Mat4()
@@ -478,14 +475,8 @@ class VRViewport extends GLBaseViewport {
         this.__projectionMatrices[i] = projMat
         this.__viewMatrices[i] = new Mat4()
         this.__cameraMatrices[i] = new Mat4()
-
-        const vp = layer.getViewport(view)
-        this.__region[2] = Math.max(this.__region[2], vp.x + vp.width)
-        this.__region[3] = Math.max(this.__region[3], vp.y + vp.height)
       }
-
-      this.__renderer.resizeFbos(this.__region[2], this.__region[3])
-      this.__projectionMatriciesUpdated = true
+      this.__projectionMatricesUpdated = true
     }
 
     const gl = this.__renderer.gl

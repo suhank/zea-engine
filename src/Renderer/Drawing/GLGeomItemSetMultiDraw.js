@@ -345,7 +345,6 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
    * @param {object} renderstate - The object tracking the current state of the renderer
    */
   draw(renderstate) {
-    console.log('visibleItems:', this.visibleItems.length)
     if (this.visibleItems.length == 0) {
       return
     }

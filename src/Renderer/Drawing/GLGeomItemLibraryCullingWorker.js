@@ -58,6 +58,7 @@ const quat_rotateVec3 = (quat, vec3) => {
 const geomItemsData = []
 const geomItemsMap = {}
 const frustumCulled = []
+let culledCount = 0
 let newlyCulled = []
 let newlyUnCulled = []
 
@@ -70,12 +71,14 @@ let viewportHeight
 const cull = (index) => {
   if (!frustumCulled[index]) {
     frustumCulled[index] = true
+    culledCount++
     newlyCulled.push(index)
   }
 }
 const unCull = (index) => {
   if (frustumCulled[index]) {
     frustumCulled[index] = false
+    culledCount--
     newlyUnCulled.push(index)
   }
 }
@@ -101,17 +104,18 @@ const checkGeomItem = (geomItemData) => {
 
   // Cull very small items
   // console.log(geomItemData.id, 'heightInPixels:', heightInPixels, dist)
+  // Not this height value represents the length of the diagonal of the bounding box of the item.
   if (heightInPixels < 10) {
     cull(geomItemData.id)
     return
   }
 
   const viewVecNorm = vec3_normalize(viewVec)
-  const viewAngle = [Math.abs(Math.asin(viewVecNorm[0])), Math.abs(Math.asin(viewVecNorm[1]))]
+  const viewAngle = [Math.abs(Math.asin(viewVecNorm[0])) - solidAngle, Math.abs(Math.asin(viewVecNorm[1])) - solidAngle]
   // console.log(viewAngle[0] / frustumHalfAngleX, viewAngle[1] / frustumHalfAngleY)
 
-  // console.log(index, 'angle Tp Sphere:', angle, solidAngle, frustumHalfAngleY - (angle - solidAngle))
-  if (viewAngle[0] - solidAngle > frustumHalfAngleX || viewAngle[1] - solidAngle > frustumHalfAngleY) {
+  // console.log(geomItemData.id, 'angle To Sphere:', frustumHalfAngleX - viewAngle[0], frustumHalfAngleY - viewAngle[1])
+  if (viewAngle[0] > frustumHalfAngleX || viewAngle[1] > frustumHalfAngleY) {
     cull(geomItemData.id)
     return
   }
@@ -123,6 +127,10 @@ const onViewPortChanged = (data, postMessage) => {
   frustumHalfAngleX = data.frustumHalfAngleX
   frustumHalfAngleY = data.frustumHalfAngleY
   viewportHeight = data.viewportHeight
+  if (cameraPos && cameraInvOri) {
+    geomItemsData.forEach(checkGeomItem)
+    onDone(postMessage)
+  }
 }
 
 const onViewChanged = (data, postMessage) => {
@@ -135,6 +143,7 @@ const onViewChanged = (data, postMessage) => {
 
 const onDone = (postMessage) => {
   if (newlyCulled.length > 0 || newlyUnCulled.length > 0) {
+    console.log('CullResults culled:', culledCount, 'visible:', geomItemsData.length - culledCount)
     postMessage({ type: 'CullResults', newlyCulled, newlyUnCulled })
     newlyCulled = []
     newlyUnCulled = []
@@ -157,6 +166,7 @@ const handleMessage = (data, postMessage) => {
       frustumCulled[geomItemsData.length] = false
       geomItemsData.push(data)
     })
+    // console.log('CullResults culled:', culledCount, 'visible:', geomItemsData.length - culledCount)
   }
 }
 

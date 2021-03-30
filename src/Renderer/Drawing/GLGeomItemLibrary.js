@@ -52,9 +52,9 @@ class GLGeomItemLibrary extends EventEmitter {
     }
 
     const viewportChanged = () => {
-      const frustumHalfAngleY = renderer.getViewport().getCamera().getFov() * 0.5
       const aspectRatio = renderer.getWidth() / renderer.getHeight()
-      const frustumHalfAngleX = frustumHalfAngleY * aspectRatio
+      const frustumHalfAngleY = renderer.getViewport().getCamera().getFov() * 0.5
+      const frustumHalfAngleX = Math.atan(Math.tan(frustumHalfAngleY) * aspectRatio)
       const viewportHeight = renderer.getHeight()
       this.worker.postMessage({
         type: 'ViewportChanged',
@@ -66,14 +66,42 @@ class GLGeomItemLibrary extends EventEmitter {
     renderer.on('resized', viewportChanged)
     viewportChanged()
 
-    renderer.on('viewChanged', (event) => {
-      const pos = event.viewXfo.tr
-      const ori = event.viewXfo.ori
-      this.worker.sendMessage({
-        type: 'ViewChanged',
-        cameraPos: pos.asArray(),
-        cameraOri: ori.asArray(),
+    renderer.once('xrViewportSetup', (xrvp) => {
+      xrvp.on('presentingChanged', (event) => {
+        if (event.state) {
+          // Note: We approximate the culling viewport to be
+          // a wider version of the 2 eye frustums merged together.
+          // Wider, so that items are considered visible before the are in view.
+          // Note each VR headset comes with its own FOV, and I can't seem to be
+          // able to get it from the WebXR API, so I am putting in some guesses
+          // based on this diagram: https://blog.mozvr.com/content/images/2016/02/human-visual-field.jpg
+          const degToRad = Math.PI / 180
+          const frustumHalfAngleY = 62 * degToRad
+          const frustumHalfAngleX = 50 * degToRad
+          const viewportHeight = xrvp.getHeight()
+          this.worker.postMessage({
+            type: 'ViewportChanged',
+            frustumHalfAngleX,
+            frustumHalfAngleY,
+            viewportHeight,
+          })
+        }
       })
+    })
+
+    let tick = 0
+    renderer.on('viewChanged', (event) => {
+      // Calculate culling every Nth frame.
+      if (tick % 2 == 0) {
+        const pos = event.viewXfo.tr
+        const ori = event.viewXfo.ori
+        this.worker.sendMessage({
+          type: 'ViewChanged',
+          cameraPos: pos.asArray(),
+          cameraOri: ori.asArray(),
+        })
+      }
+      tick++
     })
   }
 
@@ -148,6 +176,10 @@ class GLGeomItemLibrary extends EventEmitter {
     return glGeomItem
   }
 
+  /**
+   * Handles applyging the culling results recieved from the GLGeomItemLibraryCullingWorker
+   * @param {object} data - The object containing the newlyCulled and newlyUnCulled results.
+   */
   applyCullResults(data) {
     data.newlyCulled.forEach((index) => {
       this.glGeomItems[index].setCulled(true)
