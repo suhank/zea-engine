@@ -47,7 +47,7 @@ For static websites or quick implementation you can always use CDNs like JsDeliv
 
 # Building
 
-For information on how to build the engine, run the unit tests, and publish release, please consult the [DEVELOPERGUIDE.md](https://github.com/ZeaInc/zea-engine/blob/master/DEVELOPERGUIDE.md).
+For information on how to build the engine, run the unit tests, and publish release, please consult the [DEVELOPERGUIDE.md](https://github.com/ZeaInc/zea-engine/blob/main/DEVELOPERGUIDE.md).
 
 
 # Script tags instead of esm imports

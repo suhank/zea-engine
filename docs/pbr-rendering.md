@@ -1,12 +1,12 @@
 
-# PBR Rendering
+# PBR (Physically Based Rendering)
 
 ![pbr-materials](_media/pbr-materials.jpg)
 
 
 
 
-PBR Rendering is an advancement in lighting algorithms that provides a very realistic response to lighting that mimics the real responses of materials. Zea Engine comes proves Physically Based Rendering pipeline based on the GGX BRDF. 
+PBR is an advancement in lighting algorithms that provides a very realistic response to lighting that mimics the real responses of materials. Zea Engine comes with a Physically Based Rendering pipeline based on the GGX BRDF. 
 
 
 Zea Engine PBR renderer is designed to provide a basic, yet beautiful renderer that can make products look nice under simple Image based lighting. Zea is not trying to build a renderer to compete with high end game engines like Unity or Unreal. At this time, there is no plans to support analytical lights and shadows or reflections. 

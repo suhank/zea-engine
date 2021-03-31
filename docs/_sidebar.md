@@ -5,7 +5,7 @@
   * [Transformations](transformations.md)
   * [Events](events.md)
   * [Geometry and Rendering](geometry-rendering.md)
-  * [PBR Rendering](pbr-rendering.md)
+  * [PBR (Physically Based Rendering)](pbr-rendering.md)
   * [Templates and Plugins](plugins-and-tools.md)
 
 - Getting started
