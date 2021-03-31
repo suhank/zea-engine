@@ -28,6 +28,10 @@ class GLGeomItemLibrary extends EventEmitter {
     this.glGeomItemsIndexFreeList = []
     this.dirtyItemIndices = []
 
+    // this.worker = {
+    //   postMessage: (message) => {},
+    // }
+
     this.worker = new GLGeomItemLibraryCullingWorker()
     // this.worker = {
     //   postMessage: (message) => {
@@ -55,18 +59,17 @@ class GLGeomItemLibrary extends EventEmitter {
       const aspectRatio = renderer.getWidth() / renderer.getHeight()
       const frustumHalfAngleY = renderer.getViewport().getCamera().getFov() * 0.5
       const frustumHalfAngleX = Math.atan(Math.tan(frustumHalfAngleY) * aspectRatio)
-      const viewportHeight = renderer.getHeight()
       this.worker.postMessage({
         type: 'ViewportChanged',
         frustumHalfAngleX,
         frustumHalfAngleY,
-        viewportHeight,
       })
     }
     renderer.on('resized', viewportChanged)
     viewportChanged()
 
-    renderer.once('xrViewportSetup', (xrvp) => {
+    renderer.once('xrViewportSetup', (event) => {
+      const xrvp = event.xrViewport
       xrvp.on('presentingChanged', (event) => {
         if (event.state) {
           // Note: We approximate the culling viewport to be
@@ -78,12 +81,10 @@ class GLGeomItemLibrary extends EventEmitter {
           const degToRad = Math.PI / 180
           const frustumHalfAngleY = 62 * degToRad
           const frustumHalfAngleX = 50 * degToRad
-          const viewportHeight = xrvp.getHeight()
           this.worker.postMessage({
             type: 'ViewportChanged',
             frustumHalfAngleX,
             frustumHalfAngleY,
-            viewportHeight,
           })
         }
       })
@@ -92,7 +93,7 @@ class GLGeomItemLibrary extends EventEmitter {
     let tick = 0
     renderer.on('viewChanged', (event) => {
       // Calculate culling every Nth frame.
-      if (tick % 2 == 0) {
+      if (tick % 5 == 0) {
         const pos = event.viewXfo.tr
         const ori = event.viewXfo.ori
         this.worker.sendMessage({
@@ -103,6 +104,17 @@ class GLGeomItemLibrary extends EventEmitter {
       }
       tick++
     })
+
+    // If a movement finishes, we should update the culling results
+    // based on the last position. (we might have skipped it in the viewChanged handler above)
+    renderer
+      .getViewport()
+      .getCamera()
+      .on('movementFinished', (event) => {
+        this.worker.sendMessage({
+          type: 'DoCull',
+        })
+      })
   }
 
   /**
@@ -156,20 +168,6 @@ class GLGeomItemLibrary extends EventEmitter {
     this.glGeomItemEventHandlers[index] = geomItemChanged
     this.glGeomItemsMap[geomItem.getId()] = index
 
-    const bbox = geomItem.getParameter('BoundingBox').getValue()
-    const boundingRadius = bbox.size() * 0.5
-    const pos = bbox.center()
-    this.worker.postMessage({
-      type: 'AddGeomItems',
-      geomItems: [
-        {
-          id: index,
-          boundingRadius,
-          pos: pos.asArray(),
-        },
-      ],
-    })
-
     // Note: before the renderer is disabled, this is a  no-op.
     this.renderer.requestRedraw()
 
@@ -187,6 +185,7 @@ class GLGeomItemLibrary extends EventEmitter {
     data.newlyUnCulled.forEach((index) => {
       this.glGeomItems[index].setCulled(false)
     })
+    this.renderer.requestRedraw()
   }
 
   /**
@@ -251,9 +250,9 @@ class GLGeomItemLibrary extends EventEmitter {
    * @param {any} dataArray - The dataArray value.
    * @private
    */
-  populateDrawItemDataArray(geomItem, geomId, index, dataArray) {
+  populateDrawItemDataArray(index, geomItem, geomId, subIndex, dataArray) {
     const stride = pixelsPerItem * 4 // The number of floats per draw item.
-    const offset = index * stride
+    const offset = subIndex * stride
 
     // /////////////////////////
     // Geom Item Params
@@ -305,6 +304,21 @@ class GLGeomItemLibrary extends EventEmitter {
       // console.log(geomItem.getName(), geomItem.isCutawayEnabled(), flags, pix0.toString())
       pix5.set(cutAwayVector.x, cutAwayVector.y, cutAwayVector.z, cutAwayDist)
     }
+
+    // /////////////////////////
+    // Update the culling worker
+
+    const bbox = geomItem.getParameter('BoundingBox').getValue()
+    const boundingRadius = bbox.size() * 0.5
+    const pos = bbox.center()
+    this.worker.postMessage({
+      type: 'UpdateGeomItem',
+      geomItem: {
+        id: index,
+        boundingRadius,
+        pos: pos.asArray(),
+      },
+    })
   }
 
   /**
@@ -386,7 +400,7 @@ class GLGeomItemLibrary extends EventEmitter {
         // When an item is deleted, we allocate its index to the free list
         // and null this item in the array. skip over null items.
         if (!glGeomItem) continue
-        this.populateDrawItemDataArray(glGeomItem.geomItem, glGeomItem.geomId, j - indexStart, dataArray)
+        this.populateDrawItemDataArray(j, glGeomItem.geomItem, glGeomItem.geomId, j - indexStart, dataArray)
       }
 
       if (typeId == gl.FLOAT) {

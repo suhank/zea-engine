@@ -101,6 +101,10 @@ class GLGeomItem extends EventEmitter {
     }
   }
 
+  /**
+   * Sets the additional culled value which controls visiblity
+   * @param {boolean} culled - True if culled, else false.
+   */
   setCulled(culled) {
     this.culled = culled
     const visible = this.geomVisible && !this.culled

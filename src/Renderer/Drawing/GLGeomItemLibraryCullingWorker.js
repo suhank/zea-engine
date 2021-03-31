@@ -56,7 +56,6 @@ const quat_rotateVec3 = (quat, vec3) => {
 // ///////////////////////////////////////////////
 // View data.
 const geomItemsData = []
-const geomItemsMap = {}
 const frustumCulled = []
 let culledCount = 0
 let newlyCulled = []
@@ -66,7 +65,6 @@ let cameraPos
 let cameraInvOri
 let frustumHalfAngleX
 let frustumHalfAngleY
-let viewportHeight
 
 const cull = (index) => {
   if (!frustumCulled[index]) {
@@ -84,6 +82,7 @@ const unCull = (index) => {
 }
 
 const checkGeomItem = (geomItemData) => {
+  if (!geomItemData) return
   const pos = geomItemData.pos
   const boundingRadius = geomItemData.boundingRadius
   const vec = vec3_subtract(pos, cameraPos)
@@ -99,21 +98,19 @@ const checkGeomItem = (geomItemData) => {
     cull(geomItemData.id)
     return
   }
-  const solidAngle = Math.atan(boundingRadius / dist)
-  const heightInPixels = (solidAngle / frustumHalfAngleY) * viewportHeight
 
   // Cull very small items
-  // console.log(geomItemData.id, 'heightInPixels:', heightInPixels, dist)
-  // Not this height value represents the length of the diagonal of the bounding box of the item.
-  if (heightInPixels < 10) {
+  // Note: when in VR, the FoV becomes very wide and the pixel
+  // height varies. It seems more consistent to just use solidAngle,
+  // which is resolution invariant.
+  const solidAngle = Math.atan(boundingRadius / dist)
+  if (solidAngle < 0.004) {
     cull(geomItemData.id)
     return
   }
 
   const viewVecNorm = vec3_normalize(viewVec)
   const viewAngle = [Math.abs(Math.asin(viewVecNorm[0])) - solidAngle, Math.abs(Math.asin(viewVecNorm[1])) - solidAngle]
-  // console.log(viewAngle[0] / frustumHalfAngleX, viewAngle[1] / frustumHalfAngleY)
-
   // console.log(geomItemData.id, 'angle To Sphere:', frustumHalfAngleX - viewAngle[0], frustumHalfAngleY - viewAngle[1])
   if (viewAngle[0] > frustumHalfAngleX || viewAngle[1] > frustumHalfAngleY) {
     cull(geomItemData.id)
@@ -126,7 +123,6 @@ const checkGeomItem = (geomItemData) => {
 const onViewPortChanged = (data, postMessage) => {
   frustumHalfAngleX = data.frustumHalfAngleX
   frustumHalfAngleY = data.frustumHalfAngleY
-  viewportHeight = data.viewportHeight
   if (cameraPos && cameraInvOri) {
     geomItemsData.forEach(checkGeomItem)
     onDone(postMessage)
@@ -136,14 +132,17 @@ const onViewPortChanged = (data, postMessage) => {
 const onViewChanged = (data, postMessage) => {
   cameraPos = data.cameraPos
   cameraInvOri = quat_conjugate(data.cameraOri)
-  geomItemsData.forEach(checkGeomItem)
+  doCull(postMessage)
+}
 
+const doCull = (postMessage) => {
+  geomItemsData.forEach(checkGeomItem)
   onDone(postMessage)
 }
 
 const onDone = (postMessage) => {
   if (newlyCulled.length > 0 || newlyUnCulled.length > 0) {
-    console.log('CullResults culled:', culledCount, 'visible:', geomItemsData.length - culledCount)
+    console.log('CullResults culled:', culledCount, 'visible:', geomItemsData.length - 1 - culledCount)
     postMessage({ type: 'CullResults', newlyCulled, newlyUnCulled })
     newlyCulled = []
     newlyUnCulled = []
@@ -157,16 +156,12 @@ const handleMessage = (data, postMessage) => {
     onViewPortChanged(data, postMessage)
   } else if (data.type == 'ViewChanged') {
     onViewChanged(data, postMessage)
-  } else if (data.type == 'GeomItemMoved') {
-    checkGeomItem(numGeomItems[data.index], data.index)
+  } else if (data.type == 'DoCull') {
+    doCull(postMessage)
+  } else if (data.type == 'UpdateGeomItem') {
+    geomItemsData[data.geomItem.id] = data.geomItem
+    checkGeomItem(geomItemsData[data.geomItem.id], data.index)
     onDone(postMessage)
-  } else if (data.type == 'AddGeomItems') {
-    data.geomItems.forEach((data, index) => {
-      geomItemsMap[data.id] = geomItemsData.length
-      frustumCulled[geomItemsData.length] = false
-      geomItemsData.push(data)
-    })
-    // console.log('CullResults culled:', culledCount, 'visible:', geomItemsData.length - culledCount)
   }
 }
 
