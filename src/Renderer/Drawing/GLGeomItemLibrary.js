@@ -42,14 +42,9 @@ class GLGeomItemLibrary extends EventEmitter {
     // }
 
     let workerReady = true
-    this.worker.sendMessage = (message) => {
-      if (workerReady) {
-        workerReady = false
-        this.worker.postMessage(message)
-      }
-    }
     this.worker.onmessage = (message) => {
       if (message.data.type == 'CullResults') {
+        console.log('applyCullResults')
         this.applyCullResults(message.data)
       }
       workerReady = true
@@ -93,34 +88,39 @@ class GLGeomItemLibrary extends EventEmitter {
     let tick = 0
     renderer.on('viewChanged', (event) => {
       // Calculate culling every Nth frame.
-      if (tick % 5 == 0) {
-        const pos = event.viewXfo.tr
-        const ori = event.viewXfo.ori
-        this.worker.sendMessage({
-          type: 'ViewChanged',
-          cameraPos: pos.asArray(),
-          cameraOri: ori.asArray(),
-        })
+      if (workerReady) {
+        if (tick % 5 == 0) {
+          workerReady = false
+          const pos = event.viewXfo.tr
+          const ori = event.viewXfo.ori
+          this.worker.postMessage({
+            type: 'ViewChanged',
+            cameraPos: pos.asArray(),
+            cameraOri: ori.asArray(),
+          })
+        }
+        tick++
       }
-      tick++
     })
+
+    const forceViewChanged = () => {
+      const camera = renderer.getViewport().getCamera()
+      const viewXfo = camera.getParameter('GlobalXfo').getValue()
+      const pos = viewXfo.tr
+      const ori = viewXfo.ori
+      this.worker.postMessage({
+        type: 'ViewChanged',
+        cameraPos: pos.asArray(),
+        cameraOri: ori.asArray(),
+      })
+    }
 
     // If a movement finishes, we should update the culling results
     // based on the last position. (we might have skipped it in the viewChanged handler above)
-    renderer
-      .getViewport()
-      .getCamera()
-      .on('movementFinished', (event) => {
-        const camera = renderer.getViewport().getCamera()
-        const viewXfo = camera.getParameter('GlobalXfo').getValue()
-        const pos = viewXfo.tr
-        const ori = viewXfo.ori
-        this.worker.sendMessage({
-          type: 'ViewChanged',
-          cameraPos: pos.asArray(),
-          cameraOri: ori.asArray(),
-        })
-      })
+    renderer.getViewport().getCamera().on('movementFinished', forceViewChanged)
+
+    // Initialize the view values on the worker.
+    forceViewChanged()
   }
 
   /**
@@ -252,9 +252,10 @@ class GLGeomItemLibrary extends EventEmitter {
 
   /**
    * The populateDrawItemDataArray method.
+   * @param {number} index - The index of the item in the library.
    * @param {any} geomItem - The geomItem value.
    * @param {number} geomId - The index of the geom in the GeomLibrary.
-   * @param {number} index - The index value.
+   * @param {number} subIndex - The index of the item within the block being uploaded.
    * @param {any} dataArray - The dataArray value.
    * @private
    */

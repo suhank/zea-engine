@@ -61,8 +61,8 @@ let culledCount = 0
 let newlyCulled = []
 let newlyUnCulled = []
 
-let cameraPos
-let cameraInvOri
+let viewPos
+let viewInvOri
 let frustumHalfAngleX
 let frustumHalfAngleY
 
@@ -85,14 +85,14 @@ const checkGeomItem = (geomItemData) => {
   if (!geomItemData) return
   const pos = geomItemData.pos
   const boundingRadius = geomItemData.boundingRadius
-  const vec = vec3_subtract(pos, cameraPos)
+  const vec = vec3_subtract(pos, viewPos)
   const dist = vec3_length(vec)
   // unCull items close to the camera.
   if (dist < boundingRadius) {
     unCull(geomItemData.id)
     return
   }
-  const viewVec = quat_rotateVec3(cameraInvOri, vec)
+  const viewVec = quat_rotateVec3(viewInvOri, vec)
   // Cull items behind the camera.
   if (viewVec[2] > 0) {
     cull(geomItemData.id)
@@ -123,15 +123,15 @@ const checkGeomItem = (geomItemData) => {
 const onViewPortChanged = (data, postMessage) => {
   frustumHalfAngleX = data.frustumHalfAngleX
   frustumHalfAngleY = data.frustumHalfAngleY
-  if (cameraPos && cameraInvOri) {
+  if (viewPos && viewInvOri) {
     geomItemsData.forEach(checkGeomItem)
     onDone(postMessage)
   }
 }
 
 const onViewChanged = (data, postMessage) => {
-  cameraPos = data.cameraPos
-  cameraInvOri = quat_conjugate(data.cameraOri)
+  viewPos = data.viewPos
+  viewInvOri = quat_conjugate(data.cameraOri)
   geomItemsData.forEach(checkGeomItem)
   onDone(postMessage)
 }
