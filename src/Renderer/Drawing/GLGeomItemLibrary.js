@@ -111,8 +111,14 @@ class GLGeomItemLibrary extends EventEmitter {
       .getViewport()
       .getCamera()
       .on('movementFinished', (event) => {
+        const camera = renderer.getViewport().getCamera()
+        const viewXfo = camera.getParameter('GlobalXfo').getValue()
+        const pos = viewXfo.tr
+        const ori = viewXfo.ori
         this.worker.sendMessage({
-          type: 'DoCull',
+          type: 'ViewChanged',
+          cameraPos: pos.asArray(),
+          cameraOri: ori.asArray(),
         })
       })
   }
@@ -186,6 +192,8 @@ class GLGeomItemLibrary extends EventEmitter {
       this.glGeomItems[index].setCulled(false)
     })
     this.renderer.requestRedraw()
+    // Used mostly to make our uni testing robust.
+    this.renderer.emit('CullingUpdated')
   }
 
   /**

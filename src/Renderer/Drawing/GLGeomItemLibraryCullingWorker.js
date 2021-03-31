@@ -132,17 +132,13 @@ const onViewPortChanged = (data, postMessage) => {
 const onViewChanged = (data, postMessage) => {
   cameraPos = data.cameraPos
   cameraInvOri = quat_conjugate(data.cameraOri)
-  doCull(postMessage)
-}
-
-const doCull = (postMessage) => {
   geomItemsData.forEach(checkGeomItem)
   onDone(postMessage)
 }
 
 const onDone = (postMessage) => {
   if (newlyCulled.length > 0 || newlyUnCulled.length > 0) {
-    console.log('CullResults culled:', culledCount, 'visible:', geomItemsData.length - 1 - culledCount)
+    // console.log('CullResults culled:', culledCount, 'visible:', geomItemsData.length - 1 - culledCount)
     postMessage({ type: 'CullResults', newlyCulled, newlyUnCulled })
     newlyCulled = []
     newlyUnCulled = []
@@ -156,8 +152,6 @@ const handleMessage = (data, postMessage) => {
     onViewPortChanged(data, postMessage)
   } else if (data.type == 'ViewChanged') {
     onViewChanged(data, postMessage)
-  } else if (data.type == 'DoCull') {
-    doCull(postMessage)
   } else if (data.type == 'UpdateGeomItem') {
     geomItemsData[data.geomItem.id] = data.geomItem
     checkGeomItem(geomItemsData[data.geomItem.id], data.index)
