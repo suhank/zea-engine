@@ -51,7 +51,7 @@
 
       const postMessage = (msg) => {
         console.log(msg)
-        window.postMessage('done-loading')
+        window.postMessage(msg)
       }
       renderer.once('resized', () => {
         postMessage('done-loading')
