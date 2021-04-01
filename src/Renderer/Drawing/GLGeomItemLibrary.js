@@ -253,13 +253,18 @@ class GLGeomItemLibrary extends EventEmitter {
   /**
    * The populateDrawItemDataArray method.
    * @param {number} index - The index of the item in the library.
-   * @param {any} geomItem - The geomItem value.
-   * @param {number} geomId - The index of the geom in the GeomLibrary.
    * @param {number} subIndex - The index of the item within the block being uploaded.
-   * @param {any} dataArray - The dataArray value.
+   * @param {Float32Array} dataArray - The dataArray value.
+   * @param {array} geomItemsUpdateToCullingWorker - The dataArray value.
    * @private
    */
-  populateDrawItemDataArray(index, geomItem, geomId, subIndex, dataArray) {
+  populateDrawItemDataArray(index, subIndex, dataArray, geomItemsUpdateToCullingWorker) {
+    const glGeomItem = this.glGeomItems[index]
+    // When an item is deleted, we allocate its index to the free list
+    // and null this item in the array. skip over null items.
+    if (!glGeomItem) return
+    const { geomItem, geomId } = glGeomItem
+
     const stride = pixelsPerItem * 4 // The number of floats per draw item.
     const offset = subIndex * stride
 
@@ -316,17 +321,13 @@ class GLGeomItemLibrary extends EventEmitter {
 
     // /////////////////////////
     // Update the culling worker
-
     const bbox = geomItem.getParameter('BoundingBox').getValue()
     const boundingRadius = bbox.size() * 0.5
     const pos = bbox.center()
-    this.worker.postMessage({
-      type: 'UpdateGeomItem',
-      geomItem: {
-        id: index,
-        boundingRadius,
-        pos: pos.asArray(),
-      },
+    geomItemsUpdateToCullingWorker.push({
+      id: index,
+      boundingRadius,
+      pos: pos.asArray(),
     })
   }
 
@@ -381,6 +382,8 @@ class GLGeomItemLibrary extends EventEmitter {
     gl.bindTexture(gl.TEXTURE_2D, this.glGeomItemsTexture.glTex)
     const typeId = this.glGeomItemsTexture.getTypeID()
 
+    const geomItemsUpdateToCullingWorker = []
+
     for (let i = 0; i < this.dirtyItemIndices.length; i++) {
       const indexStart = this.dirtyItemIndices[i]
       const yoffset = Math.floor((indexStart * pixelsPerItem) / size)
@@ -405,11 +408,7 @@ class GLGeomItemLibrary extends EventEmitter {
       const dataArray = new Float32Array(pixelsPerItem * 4 * uploadCount) // 4==RGBA pixels.
 
       for (let j = indexStart; j < indexEnd; j++) {
-        const glGeomItem = this.glGeomItems[j]
-        // When an item is deleted, we allocate its index to the free list
-        // and null this item in the array. skip over null items.
-        if (!glGeomItem) continue
-        this.populateDrawItemDataArray(j, glGeomItem.geomItem, glGeomItem.geomId, j - indexStart, dataArray)
+        this.populateDrawItemDataArray(j, j - indexStart, dataArray, geomItemsUpdateToCullingWorker)
       }
 
       if (typeId == gl.FLOAT) {
@@ -421,6 +420,13 @@ class GLGeomItemLibrary extends EventEmitter {
 
       i += uploadCount - 1
     }
+
+    // /////////////////////////
+    // Update the culling worker
+    this.worker.postMessage({
+      type: 'UpdateGeomItems',
+      geomItems: geomItemsUpdateToCullingWorker,
+    })
 
     this.dirtyItemIndices = []
   }

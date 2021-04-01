@@ -82,7 +82,7 @@ const unCull = (index) => {
 }
 
 const checkGeomItem = (geomItemData) => {
-  if (!geomItemData) return
+  if (!geomItemData || !viewPos) return
   const pos = geomItemData.pos
   const boundingRadius = geomItemData.boundingRadius
   const vec = vec3_subtract(pos, viewPos)
@@ -152,9 +152,11 @@ const handleMessage = (data, postMessage) => {
     onViewPortChanged(data, postMessage)
   } else if (data.type == 'ViewChanged') {
     onViewChanged(data, postMessage)
-  } else if (data.type == 'UpdateGeomItem') {
-    geomItemsData[data.geomItem.id] = data.geomItem
-    checkGeomItem(geomItemsData[data.geomItem.id], data.index)
+  } else if (data.type == 'UpdateGeomItems') {
+    data.geomItems.forEach((geomItem) => {
+      geomItemsData[geomItem.id] = geomItem
+      checkGeomItem(geomItemsData[geomItem.id])
+    })
     onDone(postMessage)
   }
 }

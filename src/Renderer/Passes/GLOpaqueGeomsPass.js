@@ -275,32 +275,6 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
   }
 
   /**
-   * The getGeomItemAndDist method.
-   * @param {any} geomData - The geomData value.
-   * @return {any} - The return value.
-   */
-  getGeomItemAndDist(geomData) {
-    let itemId
-    let dist
-    const gl = this.__gl
-    if (gl.floatGeomBuffer) {
-      itemId = Math.round(geomData[1])
-      dist = geomData[3]
-    } else {
-      itemId = geomData[0] + ((geomData[1] & 63) << 8)
-      dist = MathFunctions.decode16BitFloatFrom2xUInt8([geomData[2], geomData[3]])
-    }
-
-    const geomItem = this.renderer.glGeomItemLibrary.getGeomItem(itemId)
-    if (geomItem) {
-      return {
-        geomItem,
-        dist,
-      }
-    }
-  }
-
-  /**
    * The drawGeomData method.
    * @param {object} renderstate - The object tracking the current state of the renderer
    */
