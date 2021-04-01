@@ -45,6 +45,7 @@ class GLPass extends ParameterOwner {
     this.renderer = renderer
     this.__renderer = renderer
     this.passIndex = passIndex
+    this.__passIndex = passIndex // for backwards compatibility
   }
 
   /**
@@ -53,6 +54,7 @@ class GLPass extends ParameterOwner {
    */
   setPassIndex(passIndex) {
     this.passIndex = passIndex
+    this.__passIndex = passIndex // for backwards compatibility
   }
 
   /**
