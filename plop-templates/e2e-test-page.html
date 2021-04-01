@@ -24,8 +24,12 @@
 
       scene.setupGrid(10.0, 10)
 
+      const postMessage = (msg) => {
+        console.log(msg)
+        window.postMessage(msg)
+      }
       renderer.once('resized', () => {
-        window.postMessage('done-loading')
+        postMessage('done-loading')
       })
 
       // {{openCommentBlock}} Messages handler.
@@ -33,21 +37,13 @@
         const { data } = event
 
         if (data === 'variant-01') {
-          renderer.suspendDrawing()
           renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, -2.7), new Vec3(0, 0, 0.4))
           renderer.frameAll()
-          renderer.once('redrawOccurred', () => {
-            window.postMessage(`done-${data}`)
-          })
-          renderer.resumeDrawing()
+          postMessage(`done-${data}`)
         } else if (data === 'variant-02') {
-          renderer.suspendDrawing()
           renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-2, -2, 2.7), new Vec3(0, 0, 0.4))
           renderer.frameAll()
-          renderer.once('redrawOccurred', () => {
-            window.postMessage(`done-${data}`)
-          })
-          renderer.resumeDrawing()
+          postMessage(`done-${data}`)
         }
       }
 

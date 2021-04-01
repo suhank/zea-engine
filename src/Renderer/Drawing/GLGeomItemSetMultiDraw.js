@@ -74,9 +74,24 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
 
     const eventHandlers = {}
 
-    if (glGeomItem.geomItem.isVisible()) {
+    // //////////////////////////////
+    // Visibility
+    if (glGeomItem.isVisible()) {
       this.visibleItems.push(glGeomItem)
     }
+    eventHandlers.visibilityChanged = (event) => {
+      if (event.visible) {
+        this.visibleItems.push(glGeomItem)
+      } else {
+        this.visibleItems.splice(this.visibleItems.indexOf(glGeomItem), 1)
+      }
+      this.drawIdsBufferDirty = true
+      this.emit('updated')
+    }
+    glGeomItem.on('visibilityChanged', eventHandlers.visibilityChanged)
+
+    // //////////////////////////////
+    // Highlighted
     if (glGeomItem.geomItem.isHighlighted()) {
       this.highlightedItems.push(glGeomItem)
       this.highlightedIdsBufferDirty = true
@@ -98,17 +113,6 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
     }
     glGeomItem.geomItem.on('highlightChanged', eventHandlers.highlightChanged)
 
-    eventHandlers.visibilityChanged = (event) => {
-      if (event.visible) {
-        this.visibleItems.push(glGeomItem)
-      } else {
-        this.visibleItems.splice(this.visibleItems.indexOf(glGeomItem), 1)
-      }
-      this.drawIdsBufferDirty = true
-      this.emit('updated')
-    }
-    glGeomItem.geomItem.on('visibilityChanged', eventHandlers.visibilityChanged)
-
     this.glgeomItemEventHandlers.push(eventHandlers)
 
     glGeomItem.geomItem.setMetadata('geomItemSet', this)
@@ -128,7 +132,7 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
 
     const eventHandlers = this.glgeomItemEventHandlers[index]
     glGeomItem.geomItem.off('highlightChanged', eventHandlers.highlightChanged)
-    glGeomItem.geomItem.off('visibilityChanged', eventHandlers.visibilityChanged)
+    glGeomItem.off('visibilityChanged', eventHandlers.visibilityChanged)
 
     this.glGeomItems.splice(index, 1)
     this.glgeomItemEventHandlers.splice(index, 1)

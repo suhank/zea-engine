@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>frustum-culling - Zea Engine</title>
+
+    <link href="data/zea-logo.png" rel="shortcut icon" />
+
+    <link rel="stylesheet" href="styles/tailwind.min.css" />
+
+    <script src="../dist/index.umd.js"></script>
+    <script src="../dist/plugins.umd.js"></script>
+
+    <script type="module">
+      const { GLRenderer, Scene, Vec3, Xfo, Color, Sphere, Material, GeomItem, GLBoundingBoxPass } = zeaEngine
+
+      const canvas = document.querySelector('#renderer')
+
+      const scene = new Scene()
+      const renderer = new GLRenderer(canvas, { hideSplash: true, webglOptions: { antialias: false } })
+      renderer.setScene(scene)
+
+      scene.setupGrid(10.0, 10)
+
+      const standardMaterial = new Material('surfaces', 'SimpleSurfaceShader')
+      const sphere = new Sphere(1.5, 20, 10)
+
+      let count = 200
+      for (let i = 0; i < count; i++) {
+        scene
+          .getRoot()
+          .addChild(
+            new GeomItem('SphereX' + i, sphere, standardMaterial, new Xfo(new Vec3((i - count * 0.5) * 3, 0, 0)))
+          )
+        scene
+          .getRoot()
+          .addChild(
+            new GeomItem('SphereY' + i, sphere, standardMaterial, new Xfo(new Vec3(0, (i - count * 0.5) * 3, 0)))
+          )
+        scene
+          .getRoot()
+          .addChild(
+            new GeomItem('SphereZ' + i, sphere, standardMaterial, new Xfo(new Vec3(0, 0, (i - count * 0.5) * 3)))
+          )
+      }
+
+      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(20, 20, 10), new Vec3(0, 0, 0))
+      // renderer.frameAll()
+
+      const postMessage = (msg) => {
+        console.log(msg)
+        window.postMessage(msg)
+      }
+      renderer.once('resized', () => {
+        postMessage('done-loading')
+      })
+
+      // {{{ Messages handler.
+      const handleMessage = (event) => {
+        const { data } = event
+
+        const camera = renderer.getViewport().getCamera()
+        if (data === 'variant-01') {
+          camera.setPositionAndTarget(new Vec3(-200, -20, 10), new Vec3(0, 0, 0))
+          renderer.once('CullingUpdated', () => {
+            postMessage(`done-${data}`)
+          })
+          camera.emit('movementFinished', {})
+        } else if (data === 'variant-02') {
+          camera.setPositionAndTarget(new Vec3(20, 20, 10), new Vec3(0, 0, 0))
+          renderer.once('CullingUpdated', () => {
+            postMessage(`done-${data}`)
+          })
+          camera.emit('movementFinished', {})
+        }
+      }
+
+      window.addEventListener('message', handleMessage, false)
+      // }}}
+    </script>
+  </head>
+  <body class="bg-blue-100">
+    <div class="h-screen">
+      <canvas class="absolute" id="renderer"></canvas>
+    </div>
+  </body>
+</html>

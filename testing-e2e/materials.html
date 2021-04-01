@@ -175,12 +175,19 @@
       const handleMessage = (event) => {
         const { data } = event
 
+        const camera = renderer.getViewport().getCamera()
         if (data === 'variant-01') {
           renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-35, 35, 20), new Vec3(0, 0, -10))
-          window.postMessage(`done-${data}`)
+          renderer.once('CullingUpdated', () => {
+            window.postMessage(`done-${data}`)
+          })
+          camera.emit('movementFinished', {})
         } else if (data === 'variant-02') {
           renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-35,-35, 20), new Vec3(0, 0, -10))
-          window.postMessage(`done-${data}`)
+          renderer.once('CullingUpdated', () => {
+            window.postMessage(`done-${data}`)
+          })
+          camera.emit('movementFinished', {})
         }
       }
 

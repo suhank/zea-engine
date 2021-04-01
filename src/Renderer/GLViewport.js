@@ -114,16 +114,17 @@ class GLViewport extends GLBaseViewport {
     globalXfoParam.on('valueChanged', () => {
       getCameraParams()
       this.invalidateGeomDataBuffer()
-      this.emit('updated', {})
+      this.emit('updated')
       this.emit('viewChanged', {
         interfaceType: 'CameraAndPointer',
         viewXfo: this.__cameraXfo,
         focalDistance: this.__camera.getFocalDistance(),
+        fieldOfView: this.__camera.getFov(),
       })
     })
     this.__camera.on('projectionParamChanged', () => {
       this.__updateProjectionMatrix()
-      this.emit('updated', {})
+      this.emit('updated')
     })
 
     this.__updateProjectionMatrix()
