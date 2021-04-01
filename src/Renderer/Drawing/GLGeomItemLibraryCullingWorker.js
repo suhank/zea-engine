@@ -87,13 +87,13 @@ const checkGeomItem = (geomItemData) => {
   const boundingRadius = geomItemData.boundingRadius
   const vec = vec3_subtract(pos, viewPos)
   const dist = vec3_length(vec)
-  // unCull items close to the camera.
+  // unCull items close to the view.
   if (dist < boundingRadius) {
     unCull(geomItemData.id)
     return
   }
   const viewVec = quat_rotateVec3(viewInvOri, vec)
-  // Cull items behind the camera.
+  // Cull items behind the view.
   if (viewVec[2] > 0) {
     cull(geomItemData.id)
     return
@@ -131,7 +131,7 @@ const onViewPortChanged = (data, postMessage) => {
 
 const onViewChanged = (data, postMessage) => {
   viewPos = data.viewPos
-  viewInvOri = quat_conjugate(data.cameraOri)
+  viewInvOri = quat_conjugate(data.viewOri)
   geomItemsData.forEach(checkGeomItem)
   onDone(postMessage)
 }

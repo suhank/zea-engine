@@ -44,7 +44,6 @@ class GLGeomItemLibrary extends EventEmitter {
     let workerReady = true
     this.worker.onmessage = (message) => {
       if (message.data.type == 'CullResults') {
-        console.log('applyCullResults')
         this.applyCullResults(message.data)
       }
       workerReady = true
@@ -95,8 +94,8 @@ class GLGeomItemLibrary extends EventEmitter {
           const ori = event.viewXfo.ori
           this.worker.postMessage({
             type: 'ViewChanged',
-            cameraPos: pos.asArray(),
-            cameraOri: ori.asArray(),
+            viewPos: pos.asArray(),
+            viewOri: ori.asArray(),
           })
         }
         tick++
@@ -110,8 +109,8 @@ class GLGeomItemLibrary extends EventEmitter {
       const ori = viewXfo.ori
       this.worker.postMessage({
         type: 'ViewChanged',
-        cameraPos: pos.asArray(),
-        cameraOri: ori.asArray(),
+        viewPos: pos.asArray(),
+        viewOri: ori.asArray(),
       })
     }
 

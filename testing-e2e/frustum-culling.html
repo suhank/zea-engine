@@ -49,8 +49,12 @@
       renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(20, 20, 10), new Vec3(0, 0, 0))
       // renderer.frameAll()
 
-      renderer.once('resized', () => {
+      const postMessage = (msg) => {
+        console.log(msg)
         window.postMessage('done-loading')
+      }
+      renderer.once('resized', () => {
+        postMessage('done-loading')
       })
 
       // {{{ Messages handler.
@@ -60,26 +64,15 @@
         const camera = renderer.getViewport().getCamera()
         if (data === 'variant-01') {
           camera.setPositionAndTarget(new Vec3(-200, -20, 10), new Vec3(0, 0, 0))
-          camera.once('movementFinished', () => {
-            renderer.once('CullingUpdated', () => {
-              renderer.once('redrawOccurred', () => {
-                window.postMessage(`done-${data}`)
-              })
-            })
+          renderer.once('CullingUpdated', () => {
+            postMessage(`done-${data}`)
           })
           camera.emit('movementFinished', {})
         } else if (data === 'variant-02') {
           camera.setPositionAndTarget(new Vec3(20, 20, 10), new Vec3(0, 0, 0))
-          renderer
-            .getViewport()
-            .getCamera()
-            .once('movementFinished', () => {
-              renderer.once('CullingUpdated', () => {
-                renderer.once('redrawOccurred', () => {
-                  window.postMessage(`done-${data}`)
-                })
-              })
-            })
+          renderer.once('CullingUpdated', () => {
+            postMessage(`done-${data}`)
+          })
           camera.emit('movementFinished', {})
         }
       }
