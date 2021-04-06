@@ -1,4 +1,4 @@
-import { Color } from '../Math/Color.js'
+import { Color, Vec3 } from '../Math/index.js'
 import { TreeItem } from './TreeItem'
 import { Material } from './Material'
 
@@ -18,8 +18,8 @@ class BaseGeomItem extends TreeItem {
     super(name)
     this.overlay = false
     this.__cutAway = false
-    this.__cutAwayVector = false
-    this.__cutAwayDist = false
+    this.__cutAwayVector = new Vec3(1, 0, 0)
+    this.__cutAwayDist = 0
     this.__layers = []
   }
 
