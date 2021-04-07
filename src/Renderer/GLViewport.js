@@ -52,7 +52,7 @@ class GLViewport extends GLBaseViewport {
     this.__geomDataBuffer = undefined
     this.__geomDataBufferFbo = undefined
     this.debugGeomShader = false
-    this.debugOcclusionBuffer = false
+    this.debugOcclusionBuffer = true
 
     // this.renderGeomDataFbo = this.renderGeomDataFbo.bind(this);
 

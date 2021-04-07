@@ -9,6 +9,7 @@ import { GLTexture2D } from '../GLTexture2D.js'
 import { GLRenderTarget } from '../GLRenderTarget.js'
 import { ReductionShader } from '../Shaders/ReductionShader.js'
 import { pixelsPerGLGeomItem } from '../GLSLConstants.js'
+import { BoundingBoxShader } from '../Shaders/BoundingBoxShader.js'
 
 // import { handleMessage } from './GLGeomItemLibraryCullingWorker.js'
 import GLGeomItemLibraryCullingWorker from 'web-worker:./GLGeomItemLibraryCullingWorker.js'
@@ -47,19 +48,19 @@ class GLGeomItemLibrary extends EventEmitter {
 
     let workerReady = true
     this.worker.onmessage = (message) => {
-      if (message.data.type == 'CullResults') {
-        this.applyCullResults(message.data)
+      if (message.data.type == 'FrustumCullResults') {
+        // this.applyCullResults(message.data)
+        this.calculateOcclusionCulling(message.data.inFrustumIndices)
       }
       if (message.data.type == 'OcclusionCullResults') {
-        this.applyCullResults(message.data, false)
+        // this.applyCullResults(message.data, false)
       } else {
         // No Frustum Culling results. Now we check for occlusion culling.
-        this.calculateOcclusionCulling()
-
+        // this.calculateOcclusionCulling()
         // Used mostly to make our unit testing robust.
         // Also to help display render stats.
         // TODO: Bundle render stats.
-        this.renderer.emit('CullingUpdated')
+        // this.renderer.emit('CullingUpdated')
       }
       workerReady = true
     }
@@ -187,6 +188,9 @@ class GLGeomItemLibrary extends EventEmitter {
 
       this.bbox = new GLMesh(gl, new Cuboid(1, 1, 1, false, false, false))
       this.reductionShader = new ReductionShader(gl)
+      this.boundingBoxShader = new BoundingBoxShader(gl)
+      this.boundingBoxShader.compileForTarget('GLGeomItemLibrary')
+      this.inFrustumIndicesCount = 0
     }
   }
 
@@ -260,9 +264,9 @@ class GLGeomItemLibrary extends EventEmitter {
     })
     this.renderer.requestRedraw()
 
-    if (triggerOcclusionCulling) {
-      this.calculateOcclusionCulling()
-    }
+    // if (triggerOcclusionCulling) {
+    //   this.calculateOcclusionCulling()
+    // }
 
     // Used mostly to make our unit testing robust.
     // Also to help display render stats.
@@ -271,9 +275,43 @@ class GLGeomItemLibrary extends EventEmitter {
   }
 
   /**
+   * The updateDrawIDsBuffer method.
+   * The culling system will specify a subset of the total number of items for
+   * drawing.
+   */
+  updateCulledDrawIDsBuffer(inFrustumIndices) {
+    const gl = this.renderer.gl
+    if (!gl.floatTexturesSupported) {
+      this.drawIdsBufferDirty = false
+      return
+    }
+    if (this.culledDrawIdsBuffer && this.inFrustumIndicesCount != inFrustumIndices.length) {
+      this.gl.deleteBuffer(this.culledDrawIdsBuffer)
+      this.culledDrawIdsBuffer = null
+    }
+    if (!this.culledDrawIdsBuffer) {
+      this.culledDrawIdsBuffer = gl.createBuffer()
+      gl.bindBuffer(gl.ARRAY_BUFFER, this.culledDrawIdsBuffer)
+    }
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.culledDrawIdsBuffer)
+    gl.bufferData(gl.ARRAY_BUFFER, inFrustumIndices, gl.STATIC_DRAW)
+
+    this.inFrustumIndicesCount = inFrustumIndices.length
+    this.drawIdsBufferDirty = false
+  }
+
+  /**
    * Handles calculating the GPU occlusion of the current frame by rendering a special GeomData buffer.
    */
-  calculateOcclusionCulling() {
+  calculateOcclusionCulling(inFrustumIndices) {
+    if (inFrustumIndices && inFrustumIndices.length > 0) {
+      this.updateCulledDrawIDsBuffer(inFrustumIndices)
+    }
+    if (this.inFrustumIndicesCount == 0) {
+      return
+    }
+
     const gl = this.renderer.gl
 
     gl.disable(gl.BLEND)
@@ -283,15 +321,14 @@ class GLGeomItemLibrary extends EventEmitter {
     gl.depthMask(true)
 
     const renderstate = {}
+    // renderstate.directives = [...this.renderer.directives, '#define DRAW_GEOMDATA']
+    // renderstate.shaderopts.directives = renderstate.directives
+    this.renderer.bindGLBaseRenderer(renderstate)
+
     this.occlusionDataBuffer.bindForWriting(renderstate, true)
     this.renderer.getViewport().initRenderState(renderstate)
     // this.renderer.drawSceneGeomData(renderstate)
     const drawSceneGeomData = (renderstate) => {
-      this.renderer.bindGLBaseRenderer(renderstate)
-
-      renderstate.directives = [...this.renderer.directives, '#define DRAW_GEOMDATA']
-      renderstate.shaderopts.directives = renderstate.directives
-
       const opaqueGeomsPass = this.renderer.getPass(0)
       opaqueGeomsPass.drawGeomData(renderstate)
       // for (const key in this.__passes) {
@@ -330,17 +367,37 @@ class GLGeomItemLibrary extends EventEmitter {
 
     reduce(renderstate)
 
-    // Now clear the color buffer, but not the depth buffer
-    // and draw the bounding boxes of occluded items.
-    // this.occlusionDataBuffer.bindForWriting(renderstate, false)
-    // this.occlusionDataBuffer.clear(false)
+    const drawCulledBBoxes = () => {
+      // Now clear the color buffer, but not the depth buffer
+      // and draw the bounding boxes of occluded items.
+      this.occlusionDataBuffer.bindForWriting(renderstate, false)
+      // this.occlusionDataBuffer.clear(false)
 
-    // // Read each Matrix and Bbox settings from the Texture.
-    // this.glGeomItemsTexture.bindToUniform(renderstate, instancesTexture)
+      this.boundingBoxShader.bind(renderstate, 'GLGeomItemLibrary')
+      this.bbox.bind(renderstate)
 
-    // // Now draw all the bounding boxes to make sure we catch anything.
-    // this.bbox.drawInstanced(this.geomItems.length)
-    // reduce()
+      // Read each Matrix and Bbox settings from the Texture.
+      const { instancesTexture, instancesTextureSize, instancedDraw } = renderstate.unifs
+      this.glGeomItemsTexture.bindToUniform(renderstate, instancesTexture)
+      gl.uniform1i(instancesTextureSize.location, this.glGeomItemsTexture.width)
+      gl.uniform1i(instancedDraw.location, 1)
+
+      // The instanced transform ids are bound as an instanced attribute.
+      const location = renderstate.attrs.instancedIds.location
+      gl.enableVertexAttribArray(location)
+      gl.bindBuffer(gl.ARRAY_BUFFER, this.culledDrawIdsBuffer)
+      gl.vertexAttribPointer(location, 1, gl.FLOAT, false, 1 * 4, 0)
+      gl.vertexAttribDivisor(location, 1) // This makes it instanced
+
+      // Now draw all the bounding boxes to make sure we catch anything.
+      renderstate.bindViewports(renderstate.unifs, () => {
+        this.bbox.drawInstanced(this.inFrustumIndicesCount)
+      })
+    }
+
+    drawCulledBBoxes()
+
+    reduce(renderstate)
 
     // //////////////////////////////////////////
     // Pull down the reduction values from the GPU for processing.
@@ -468,16 +525,16 @@ class GLGeomItemLibrary extends EventEmitter {
     // /////////////////////////
     // Geom Matrix
     const mat4 = geomItem.getGeomMat4()
-    const pix1 = Vec4.createFromBuffer(dataArray.buffer, (offset + 4) * 4)
-    const pix2 = Vec4.createFromBuffer(dataArray.buffer, (offset + 8) * 4)
-    const pix3 = Vec4.createFromBuffer(dataArray.buffer, (offset + 12) * 4)
+    const pix1 = Vec4.createFromBuffer(dataArray.buffer, (offset + 1 * 4) * 4)
+    const pix2 = Vec4.createFromBuffer(dataArray.buffer, (offset + 2 * 4) * 4)
+    const pix3 = Vec4.createFromBuffer(dataArray.buffer, (offset + 3 * 4) * 4)
     pix1.set(mat4.xAxis.x, mat4.yAxis.x, mat4.zAxis.x, mat4.translation.x)
     pix2.set(mat4.xAxis.y, mat4.yAxis.y, mat4.zAxis.y, mat4.translation.y)
     pix3.set(mat4.xAxis.z, mat4.yAxis.z, mat4.zAxis.z, mat4.translation.z)
 
     // /////////////////////////
     // Highlight
-    const pix4 = Vec4.createFromBuffer(dataArray.buffer, (offset + 16) * 4)
+    const pix4 = Vec4.createFromBuffer(dataArray.buffer, (offset + 4 * 4) * 4)
     if (geomItem.isHighlighted()) {
       const highlight = geomItem.getHighlight()
       pix4.set(highlight.r, highlight.g, highlight.b, highlight.a)
@@ -485,7 +542,7 @@ class GLGeomItemLibrary extends EventEmitter {
 
     // /////////////////////////
     // Cutaway
-    const pix5 = Vec4.createFromBuffer(dataArray.buffer, (offset + 20) * 4)
+    const pix5 = Vec4.createFromBuffer(dataArray.buffer, (offset + 5 * 4) * 4)
     if (geomItem.isCutawayEnabled()) {
       const cutAwayVector = geomItem.getCutVector()
       const cutAwayDist = geomItem.getCutDist()
@@ -496,10 +553,10 @@ class GLGeomItemLibrary extends EventEmitter {
     // /////////////////////////
     // Bounding Box
     const bbox = geomItem.getParameter('BoundingBox').getValue()
-    const pix6 = Vec4.createFromBuffer(dataArray.buffer, (offset + 16) * 4)
-    const pix7 = Vec4.createFromBuffer(dataArray.buffer, (offset + 20) * 4)
-    pix6.set(bbox.p0.x, bbox.p0.x, bbox.p0.x, 0.0)
-    pix7.set(bbox.p1.x, bbox.p1.x, bbox.p1.x, 0.0)
+    const pix6 = Vec4.createFromBuffer(dataArray.buffer, (offset + 6 * 4) * 4)
+    const pix7 = Vec4.createFromBuffer(dataArray.buffer, (offset + 7 * 4) * 4)
+    pix6.set(bbox.p0.x, bbox.p0.y, bbox.p0.z, 0.0)
+    pix7.set(bbox.p1.x, bbox.p1.y, bbox.p1.z, 0.0)
 
     // /////////////////////////
     // Update the culling worker
