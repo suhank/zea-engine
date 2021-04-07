@@ -52,6 +52,7 @@ class GLViewport extends GLBaseViewport {
     this.__geomDataBuffer = undefined
     this.__geomDataBufferFbo = undefined
     this.debugGeomShader = false
+    this.debugOcclusionBuffer = false
 
     // this.renderGeomDataFbo = this.renderGeomDataFbo.bind(this);
 
@@ -270,7 +271,7 @@ class GLViewport extends GLBaseViewport {
       this.__geomDataBufferFbo.bindAndClear()
 
       const renderstate = {}
-      this.__initRenderState(renderstate)
+      this.initRenderState(renderstate)
       this.__renderer.drawSceneGeomData(renderstate)
       this.__geomDataBufferInvalid = false
     }
@@ -762,11 +763,11 @@ class GLViewport extends GLBaseViewport {
   // Rendering
 
   /**
-   * The __initRenderState method.
+   * The initRenderState method.
    * @param {object} renderstate - The object tracking the current state of the renderer
    * @private
    */
-  __initRenderState(renderstate) {
+  initRenderState(renderstate) {
     // console.log(this.__viewMat.toString())
     renderstate.viewXfo = this.__cameraXfo
     renderstate.viewScale = 1.0
@@ -811,13 +812,19 @@ class GLViewport extends GLBaseViewport {
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 
     const renderstate = {}
-    this.__initRenderState(renderstate)
+    this.initRenderState(renderstate)
     this.__renderer.drawScene(renderstate)
 
     // Turn this on to debug the geom data buffer.
     if (this.debugGeomShader) {
       gl.screenQuad.bindShader(renderstate)
       gl.screenQuad.draw(renderstate, this.__geomDataBuffer)
+    }
+    if (this.debugOcclusionBuffer) {
+      gl.screenQuad.bindShader(renderstate)
+      this.__renderer.glGeomItemLibrary.occlusionDataBuffer.bindColorTexture(renderstate, renderstate.unifs.image)
+      // this.__renderer.glGeomItemLibrary.reductionDataBuffer.bindColorTexture(renderstate, renderstate.unifs.image)
+      gl.screenQuad.draw(renderstate)
     }
   }
 }

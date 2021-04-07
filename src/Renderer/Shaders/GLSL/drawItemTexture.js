@@ -1,6 +1,7 @@
 import { shaderLibrary } from '../../ShaderLibrary.js'
 
 import './glslutils.js'
+import { pixelsPerGLGeomItem } from '../../GLSLConstants.js'
 
 shaderLibrary.setShaderModule(
   'drawItemId.glsl',
@@ -61,7 +62,8 @@ shaderLibrary.setShaderModule(
 uniform sampler2D instancesTexture;
 uniform highp int instancesTextureSize;
 
-const int pixelsPerItem = 6;
+// Note: this value must always math that defined in 
+const int pixelsPerItem = ${pixelsPerGLGeomItem};
 
 vec4 getInstanceData(int id) {
     return fetchTexel(instancesTexture, instancesTextureSize, (id * pixelsPerItem) + 0);

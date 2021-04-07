@@ -56,7 +56,7 @@ const quat_rotateVec3 = (quat, vec3) => {
 // ///////////////////////////////////////////////
 // View data.
 const geomItemsData = []
-const frustumCulled = []
+const inFrustum = []
 let culledCount = 0
 let newlyCulled = []
 let newlyUnCulled = []
@@ -67,15 +67,15 @@ let frustumHalfAngleX
 let frustumHalfAngleY
 
 const cull = (index) => {
-  if (!frustumCulled[index]) {
-    frustumCulled[index] = true
+  if (inFrustum[index]) {
+    inFrustum[index] = false
     culledCount++
     newlyCulled.push(index)
   }
 }
 const unCull = (index) => {
-  if (frustumCulled[index]) {
-    frustumCulled[index] = false
+  if (!inFrustum[index]) {
+    inFrustum[index] = true
     culledCount--
     newlyUnCulled.push(index)
   }
@@ -147,6 +147,47 @@ const onDone = (postMessage) => {
   }
 }
 
+const occluded = []
+let occludedCount = 0
+const processOcclusionData = (data) => {
+  const visibleItems = data.visibleItems
+
+  let newlyCulled = []
+  let newlyUnCulled = []
+  // const visibleIndices = []
+  visibleItems.forEach((value, index) => {
+    if (index == 0) return
+    // if (value > 0) visibleIndices.push(index)
+
+    if (value == 0) {
+      if (!occluded[index]) {
+        occluded[index] = true
+        occludedCount++
+        if (inFrustum[index]) newlyCulled.push(index)
+      }
+    } else {
+      if (occluded[index]) {
+        occluded[index] = false
+        occludedCount--
+        newlyUnCulled.push(index)
+      }
+    }
+  })
+  // console.log(visibleIndices)
+  // console.log('Occlusion Cull Results culled:', occludedCount, 'visible:', geomItemsData.length - 1 - occludedCount)
+  if (newlyCulled.length > 0 || newlyUnCulled.length > 0) {
+    console.log(
+      'Occlusion Cull Results culled:',
+      occludedCount,
+      'newlyCulled:',
+      newlyCulled,
+      'newlyUnCulled:',
+      newlyUnCulled
+    )
+    postMessage({ type: 'OcclusionCullResults', newlyCulled, newlyUnCulled })
+  }
+}
+
 const handleMessage = (data, postMessage) => {
   if (data.type == 'ViewportChanged') {
     onViewPortChanged(data, postMessage)
@@ -158,6 +199,8 @@ const handleMessage = (data, postMessage) => {
       checkGeomItem(geomItemsData[geomItem.id])
     })
     onDone(postMessage)
+  } else if (data.type == 'OcclusionData') {
+    processOcclusionData(data, postMessage)
   }
 }
 

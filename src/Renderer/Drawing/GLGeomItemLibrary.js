@@ -1,14 +1,17 @@
 /* eslint-disable guard-for-in */
 import { EventEmitter } from '../../Utilities/index'
 import { Vec4 } from '../../Math/index'
-import { GLGeomItemChangeType, GLGeomItem } from './GLGeomItem.js'
+import { Cuboid } from '../../SceneTree/index'
+import { GLGeomItem } from './GLGeomItem.js'
+import { GLMesh } from './GLMesh.js'
 import { MathFunctions } from '../../Utilities/MathFunctions'
 import { GLTexture2D } from '../GLTexture2D.js'
+import { GLRenderTarget } from '../GLRenderTarget.js'
+import { ReductionShader } from '../Shaders/ReductionShader.js'
+import { pixelsPerGLGeomItem } from '../GLSLConstants.js'
 
 // import { handleMessage } from './GLGeomItemLibraryCullingWorker.js'
 import GLGeomItemLibraryCullingWorker from 'web-worker:./GLGeomItemLibraryCullingWorker.js'
-
-const pixelsPerItem = 6 // The number of RGBA pixels per draw item.
 
 /** Class for managing all the GeomItems discovered in the SceneTree.
  * @private
@@ -22,6 +25,7 @@ class GLGeomItemLibrary extends EventEmitter {
     super()
 
     this.renderer = renderer
+    // Note: Index 0 is left unused so we can easily recognize uninitialized indices.
     this.glGeomItems = [undefined]
     this.glGeomItemEventHandlers = [undefined]
     this.glGeomItemsMap = {}
@@ -45,6 +49,17 @@ class GLGeomItemLibrary extends EventEmitter {
     this.worker.onmessage = (message) => {
       if (message.data.type == 'CullResults') {
         this.applyCullResults(message.data)
+      }
+      if (message.data.type == 'OcclusionCullResults') {
+        this.applyCullResults(message.data, false)
+      } else {
+        // No Frustum Culling results. Now we check for occlusion culling.
+        this.calculateOcclusionCulling()
+
+        // Used mostly to make our unit testing robust.
+        // Also to help display render stats.
+        // TODO: Bundle render stats.
+        this.renderer.emit('CullingUpdated')
       }
       workerReady = true
     }
@@ -112,6 +127,7 @@ class GLGeomItemLibrary extends EventEmitter {
         viewPos: pos.asArray(),
         viewOri: ori.asArray(),
       })
+      tick = 0
     }
 
     // If a movement finishes, we should update the culling results
@@ -120,6 +136,58 @@ class GLGeomItemLibrary extends EventEmitter {
 
     // Initialize the view values on the worker.
     forceViewChanged()
+
+    // ////////////////////////////////////////
+    // Occlusion Culling
+    if (true) {
+      const gl = this.renderer.gl
+      this.floatOcclusionBuffer = gl.floatTexturesSupported
+      const occlusionDataBufferWidth = 8 // Math.ceil(renderer.getWidth() * 0.25)
+      const occlusionDataBufferHeight = 8 // Math.ceil(renderer.getHeight() * 0.25)
+      if (this.floatOcclusionBuffer) {
+        this.occlusionDataBuffer = new GLRenderTarget(gl, {
+          type: gl.FLOAT,
+          format: gl.RGBA,
+          minFilter: gl.NEAREST,
+          magFilter: gl.NEAREST,
+          width: occlusionDataBufferWidth,
+          height: occlusionDataBufferHeight,
+          depthType: gl.FLOAT,
+          depthFormat: gl.DEPTH_COMPONENT,
+          depthInternalFormat: gl.DEPTH_COMPONENT32F,
+        })
+      } else {
+        this.occlusionDataBuffer = new GLRenderTarget(gl, {
+          type: gl.UNSIGNED_BYTE,
+          format: gl.RGBA,
+          minFilter: gl.NEAREST,
+          magFilter: gl.NEAREST,
+          width: occlusionDataBufferWidth,
+          height: occlusionDataBufferHeight,
+          depthType: gl.UNSIGNED_SHORT,
+          depthFormat: gl.DEPTH_COMPONENT,
+          depthInternalFormat: gl.DEPTH_COMPONENT16,
+        })
+      }
+      this.renderer.on('resized', (event) => {
+        this.occlusionDataBuffer.resize(Math.ceil(event.width * 0.25), Math.ceil(event.height * 0.25))
+      })
+      this.reductionDataBuffer = new GLRenderTarget(gl, {
+        type: gl.UNSIGNED_BYTE,
+        internalFormat: gl.R8,
+        format: gl.name == 'webgl2' ? gl.RED : gl.RGBA,
+        minFilter: gl.NEAREST,
+        magFilter: gl.NEAREST,
+        width: 4,
+        height: 4,
+        depthType: gl.UNSIGNED_SHORT,
+        depthFormat: gl.DEPTH_COMPONENT,
+        depthInternalFormat: gl.DEPTH_COMPONENT16,
+      })
+
+      this.bbox = new GLMesh(gl, new Cuboid(1, 1, 1, false, false, false))
+      this.reductionShader = new ReductionShader(gl)
+    }
   }
 
   /**
@@ -180,10 +248,10 @@ class GLGeomItemLibrary extends EventEmitter {
   }
 
   /**
-   * Handles applyging the culling results recieved from the GLGeomItemLibraryCullingWorker
+   * Handles applying the culling results received from the GLGeomItemLibraryCullingWorker
    * @param {object} data - The object containing the newlyCulled and newlyUnCulled results.
    */
-  applyCullResults(data) {
+  applyCullResults(data, triggerOcclusionCulling = true) {
     data.newlyCulled.forEach((index) => {
       this.glGeomItems[index].setCulled(true)
     })
@@ -191,8 +259,115 @@ class GLGeomItemLibrary extends EventEmitter {
       this.glGeomItems[index].setCulled(false)
     })
     this.renderer.requestRedraw()
-    // Used mostly to make our uni testing robust.
+
+    if (triggerOcclusionCulling) {
+      this.calculateOcclusionCulling()
+    }
+
+    // Used mostly to make our unit testing robust.
+    // Also to help display render stats.
+    // TODO: Bundle render stats.
     this.renderer.emit('CullingUpdated')
+  }
+
+  /**
+   * Handles calculating the GPU occlusion of the current frame by rendering a special GeomData buffer.
+   */
+  calculateOcclusionCulling() {
+    const gl = this.renderer.gl
+
+    gl.disable(gl.BLEND)
+    gl.disable(gl.CULL_FACE)
+    gl.enable(gl.DEPTH_TEST)
+    gl.depthFunc(gl.LESS)
+    gl.depthMask(true)
+
+    const renderstate = {}
+    this.occlusionDataBuffer.bindForWriting(renderstate, true)
+    this.renderer.getViewport().initRenderState(renderstate)
+    // this.renderer.drawSceneGeomData(renderstate)
+    const drawSceneGeomData = (renderstate) => {
+      this.renderer.bindGLBaseRenderer(renderstate)
+
+      renderstate.directives = [...this.renderer.directives, '#define DRAW_GEOMDATA']
+      renderstate.shaderopts.directives = renderstate.directives
+
+      const opaqueGeomsPass = this.renderer.getPass(0)
+      opaqueGeomsPass.drawGeomData(renderstate)
+      // for (const key in this.__passes) {
+      //   // Skip pass categories that do not match
+      //   // the mask. E.g. we may not want to hit
+      //   // "Overlay" geoms such as labels,
+      //   // or we might be trying to move labels and don't
+      //   // want to grab normal geoms.
+      //   if ((Number.parseInt(key) & mask) == 0) continue
+      //   const passSet = this.__passes[key]
+      //   for (const pass of passSet) {
+      //     if (pass.enabled) pass.drawGeomData(renderstate)
+      //   }
+      // }
+    }
+    drawSceneGeomData(renderstate)
+
+    // Now perform a reduction to calculate the indices of visible items.
+    const reduce = (renderstate) => {
+      this.reductionDataBuffer.bindForWriting(renderstate, true)
+
+      this.reductionShader.bind(renderstate)
+
+      const { geomDataTexture, reductionTextureWidth, floatGeomBuffer } = renderstate.unifs
+      if (geomDataTexture) this.occlusionDataBuffer.bindToUniform(renderstate, geomDataTexture)
+      if (reductionTextureWidth) gl.uniform1i(reductionTextureWidth.location, this.reductionDataBuffer.width)
+      if (floatGeomBuffer) gl.uniform1i(floatGeomBuffer.location, 1)
+
+      // Draw one point for each pixel in the occlusion buffer.
+      // This point will color a single pixel in the reduction buffer.
+      const numReductionPoints = this.occlusionDataBuffer.width * this.occlusionDataBuffer.height
+      gl.drawArrays(gl.POINTS, 0, numReductionPoints)
+
+      this.reductionDataBuffer.unbindForWriting(renderstate)
+    }
+
+    reduce(renderstate)
+
+    // Now clear the color buffer, but not the depth buffer
+    // and draw the bounding boxes of occluded items.
+    // this.occlusionDataBuffer.bindForWriting(renderstate, false)
+    // this.occlusionDataBuffer.clear(false)
+
+    // // Read each Matrix and Bbox settings from the Texture.
+    // this.glGeomItemsTexture.bindToUniform(renderstate, instancesTexture)
+
+    // // Now draw all the bounding boxes to make sure we catch anything.
+    // this.bbox.drawInstanced(this.geomItems.length)
+    // reduce()
+
+    // //////////////////////////////////////////
+    // Pull down the reduction values from the GPU for processing.
+
+    this.reductionDataBuffer.bindForReading()
+
+    const numReductionValues = this.reductionDataBuffer.width * this.reductionDataBuffer.height
+    const visibleItems = new Uint8Array(numReductionValues)
+    gl.readPixels(
+      0,
+      0,
+      this.reductionDataBuffer.width * (gl.name == 'webgl2' ? 1 : 4),
+      this.reductionDataBuffer.height,
+      gl.name == 'webgl2' ? gl.RED : gl.RGBA,
+      gl.UNSIGNED_BYTE,
+      visibleItems
+    )
+    // console.log(visibleItems)
+    this.reductionDataBuffer.unbindForReading()
+
+    this.worker.postMessage(
+      {
+        type: 'OcclusionData',
+        visibleItems,
+      },
+      [visibleItems.buffer]
+    )
   }
 
   /**
@@ -254,17 +429,17 @@ class GLGeomItemLibrary extends EventEmitter {
    * @param {number} index - The index of the item in the library.
    * @param {number} subIndex - The index of the item within the block being uploaded.
    * @param {Float32Array} dataArray - The dataArray value.
-   * @param {array} geomItemsUpdateToCullingWorker - The dataArray value.
+   * @param {array} cullingWorkerData - The array of values that will be uploaded to the culling worker..
    * @private
    */
-  populateDrawItemDataArray(index, subIndex, dataArray, geomItemsUpdateToCullingWorker) {
+  populateDrawItemDataArray(index, subIndex, dataArray, cullingWorkerData) {
     const glGeomItem = this.glGeomItems[index]
     // When an item is deleted, we allocate its index to the free list
     // and null this item in the array. skip over null items.
     if (!glGeomItem) return
     const { geomItem, geomId } = glGeomItem
 
-    const stride = pixelsPerItem * 4 // The number of floats per draw item.
+    const stride = pixelsPerGLGeomItem * 4 // The number of floats per draw item.
     const offset = subIndex * stride
 
     // /////////////////////////
@@ -301,7 +476,7 @@ class GLGeomItemLibrary extends EventEmitter {
     pix3.set(mat4.xAxis.z, mat4.yAxis.z, mat4.zAxis.z, mat4.translation.z)
 
     // /////////////////////////
-    // Hilight
+    // Highlight
     const pix4 = Vec4.createFromBuffer(dataArray.buffer, (offset + 16) * 4)
     if (geomItem.isHighlighted()) {
       const highlight = geomItem.getHighlight()
@@ -319,11 +494,18 @@ class GLGeomItemLibrary extends EventEmitter {
     }
 
     // /////////////////////////
-    // Update the culling worker
+    // Bounding Box
     const bbox = geomItem.getParameter('BoundingBox').getValue()
+    const pix6 = Vec4.createFromBuffer(dataArray.buffer, (offset + 16) * 4)
+    const pix7 = Vec4.createFromBuffer(dataArray.buffer, (offset + 20) * 4)
+    pix6.set(bbox.p0.x, bbox.p0.x, bbox.p0.x, 0.0)
+    pix7.set(bbox.p1.x, bbox.p1.x, bbox.p1.x, 0.0)
+
+    // /////////////////////////
+    // Update the culling worker
     const boundingRadius = bbox.size() * 0.5
     const pos = bbox.center()
-    geomItemsUpdateToCullingWorker.push({
+    cullingWorkerData.push({
       id: index,
       boundingRadius,
       pos: pos.asArray(),
@@ -352,13 +534,13 @@ class GLGeomItemLibrary extends EventEmitter {
       return
     }
 
-    let size = Math.round(Math.sqrt(this.glGeomItems.length * pixelsPerItem) + 0.5)
+    let size = Math.round(Math.sqrt(this.glGeomItems.length * pixelsPerGLGeomItem) + 0.5)
     // Only support power 2 textures. Else we get strange corruption on some GPUs
     // in some scenes.
     size = MathFunctions.nextPow2(size)
-    // Size should be a multiple of pixelsPerItem, so each geom item is always contiguous
+    // Size should be a multiple of pixelsPerGLGeomItem, so each geom item is always contiguous
     // in memory. (makes updating a lot easier. See __updateItemInstanceData below)
-    if (size % pixelsPerItem != 0) size += pixelsPerItem - (size % pixelsPerItem)
+    if (size % pixelsPerGLGeomItem != 0) size += pixelsPerGLGeomItem - (size % pixelsPerGLGeomItem)
 
     if (!this.glGeomItemsTexture) {
       this.glGeomItemsTexture = new GLTexture2D(gl, {
@@ -373,7 +555,7 @@ class GLGeomItemLibrary extends EventEmitter {
       this.glGeomItemsTexture.clear()
     } else if (this.glGeomItemsTexture.width != size) {
       this.glGeomItemsTexture.resize(size, size)
-      this.dirtyItemIndices = Array((size * size) / pixelsPerItem)
+      this.dirtyItemIndices = Array((size * size) / pixelsPerGLGeomItem)
         .fill()
         .map((v, i) => i)
     }
@@ -385,11 +567,11 @@ class GLGeomItemLibrary extends EventEmitter {
 
     for (let i = 0; i < this.dirtyItemIndices.length; i++) {
       const indexStart = this.dirtyItemIndices[i]
-      const yoffset = Math.floor((indexStart * pixelsPerItem) / size)
+      const yoffset = Math.floor((indexStart * pixelsPerGLGeomItem) / size)
       let indexEnd = indexStart + 1
       for (let j = i + 1; j < this.dirtyItemIndices.length; j++) {
         const index = this.dirtyItemIndices[j]
-        if (Math.floor((index * pixelsPerItem) / size) != yoffset) {
+        if (Math.floor((index * pixelsPerGLGeomItem) / size) != yoffset) {
           break
         }
         if (index != indexEnd) {
@@ -401,10 +583,10 @@ class GLGeomItemLibrary extends EventEmitter {
       // TODO: for contiguous blcoks, we create larger arrays and populate
       // and upload them in one step.
       const uploadCount = indexEnd - indexStart
-      const xoffset = (indexStart * pixelsPerItem) % size
-      const width = pixelsPerItem * uploadCount
+      const xoffset = (indexStart * pixelsPerGLGeomItem) % size
+      const width = pixelsPerGLGeomItem * uploadCount
       const height = 1
-      const dataArray = new Float32Array(pixelsPerItem * 4 * uploadCount) // 4==RGBA pixels.
+      const dataArray = new Float32Array(pixelsPerGLGeomItem * 4 * uploadCount) // 4==RGBA pixels.
 
       for (let j = indexStart; j < indexEnd; j++) {
         this.populateDrawItemDataArray(j, j - indexStart, dataArray, geomItemsUpdateToCullingWorker)
