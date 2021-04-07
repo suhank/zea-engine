@@ -138,27 +138,16 @@ const onViewChanged = (data, postMessage) => {
 
 let inFrustumIndices
 const onDoneFrustumCull = (postMessage) => {
-  console.log('FrustumCullResults:', 'newlyCulled:', newlyCulled, 'newlyUnCulled:', newlyUnCulled, outOfFrustum)
+  // console.log('FrustumCullResults:', 'newlyCulled:', newlyCulled, 'newlyUnCulled:', newlyUnCulled, outOfFrustum)
 
   // if (geomItemsData.length > 0 && (newlyCulled.length > 0 || newlyUnCulled.length > 0 || !inFrustumIndices)) {
   if (geomItemsData.length > 0 && (newlyCulled.length > 0 || newlyUnCulled.length > 0)) {
     const countInFrustum = geomItemsData.length - 1 - culledCount
-    console.log(
-      'FrustumCullResults culled:',
-      culledCount,
-      'visible:',
-      countInFrustum,
-      'newlyCulled:',
-      newlyCulled,
-      'newlyUnCulled:',
-      newlyUnCulled,
-      outOfFrustum
-    )
 
     inFrustumIndices = new Float32Array(countInFrustum)
     let offset = 0
     outOfFrustum.forEach((value, index) => {
-      if (!value) {
+      if (index > 0 && !value) {
         inFrustumIndices[offset] = index
         offset++
       }
@@ -188,7 +177,7 @@ const occluded = []
 let occludedCount = 0
 const processOcclusionData = (data) => {
   const visibleItems = data.visibleItems
-  console.log(visibleItems)
+  // console.log(visibleItems)
 
   let newlyCulled = []
   let newlyUnCulled = []
@@ -214,17 +203,17 @@ const processOcclusionData = (data) => {
     }
     return index >= countInFrustum
   })
-  console.log(visibleIndices)
-  console.log('Occlusion Cull Results culled:', occludedCount, 'visible:', geomItemsData.length - 1 - occludedCount)
+  // console.log(visibleIndices)
+  // console.log('Occlusion Cull Results culled:', occludedCount, 'visible:', geomItemsData.length - 1 - occludedCount)
   if (newlyCulled.length > 0 || newlyUnCulled.length > 0) {
-    console.log(
-      'Occlusion Cull Results culled:',
-      occludedCount,
-      'newlyCulled:',
-      newlyCulled,
-      'newlyUnCulled:',
-      newlyUnCulled
-    )
+    // console.log(
+    //   'Occlusion Cull Results culled:',
+    //   occludedCount,
+    //   'newlyCulled:',
+    //   newlyCulled,
+    //   'newlyUnCulled:',
+    //   newlyUnCulled
+    // )
     postMessage({ type: 'OcclusionCullResults', newlyCulled, newlyUnCulled })
   }
 }
@@ -237,6 +226,7 @@ const handleMessage = (data, postMessage) => {
   } else if (data.type == 'UpdateGeomItems') {
     data.geomItems.forEach((geomItem) => {
       geomItemsData[geomItem.id] = geomItem
+      outOfFrustum[geomItem.id] = false
       checkGeomItem(geomItemsData[geomItem.id])
     })
     onDoneFrustumCull(postMessage)

@@ -23,6 +23,9 @@ uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
 uniform mat4 cameraMatrix;
 
+uniform sampler2D reductionDataTexture;
+
+
 <%include file="stack-gl/transpose.glsl"/>
 <%include file="stack-gl/inverse.glsl"/>
 <%include file="drawItemId.glsl"/>
@@ -35,6 +38,16 @@ varying vec4 v_color;
 void main(void) {
 
   int drawItemId = getDrawItemId();
+  
+  // Check if in the reduction texture, this item is already flagged as visible. 
+  // Note: we only draw bboxes for those that have been flagged as invisible, but might
+  // be just off screen, or onscreen, but were culled in the previous update.
+  int isVisible = int(fetchTexel(reductionDataTexture, textureSize(reductionDataTexture, 0), drawItemId).r);
+  if (isVisible > 0) {
+    return;
+  }
+
+
   vec4 geomItemData  = getInstanceData(drawItemId);
   // mat4 modelMatrix = getModelMatrix(drawItemId);
   vec4 bboxMin = fetchTexel(instancesTexture, instancesTextureSize, (drawItemId * pixelsPerItem) + 6);

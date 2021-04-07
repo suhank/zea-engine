@@ -53,7 +53,7 @@ class GLGeomItemLibrary extends EventEmitter {
         this.calculateOcclusionCulling(message.data.inFrustumIndices)
       }
       if (message.data.type == 'OcclusionCullResults') {
-        // this.applyCullResults(message.data, false)
+        this.applyCullResults(message.data, false)
       } else {
         // No Frustum Culling results. Now we check for occlusion culling.
         // this.calculateOcclusionCulling()
@@ -286,7 +286,7 @@ class GLGeomItemLibrary extends EventEmitter {
       return
     }
     if (this.culledDrawIdsBuffer && this.inFrustumIndicesCount != inFrustumIndices.length) {
-      this.gl.deleteBuffer(this.culledDrawIdsBuffer)
+      gl.deleteBuffer(this.culledDrawIdsBuffer)
       this.culledDrawIdsBuffer = null
     }
     if (!this.culledDrawIdsBuffer) {
@@ -377,10 +377,12 @@ class GLGeomItemLibrary extends EventEmitter {
       this.bbox.bind(renderstate)
 
       // Read each Matrix and Bbox settings from the Texture.
-      const { instancesTexture, instancesTextureSize, instancedDraw } = renderstate.unifs
+      const { instancesTexture, instancesTextureSize, instancedDraw, reductionDataTexture } = renderstate.unifs
       this.glGeomItemsTexture.bindToUniform(renderstate, instancesTexture)
       gl.uniform1i(instancesTextureSize.location, this.glGeomItemsTexture.width)
       gl.uniform1i(instancedDraw.location, 1)
+
+      this.reductionDataBuffer.bindColorTexture(renderstate, reductionDataTexture)
 
       // The instanced transform ids are bound as an instanced attribute.
       const location = renderstate.attrs.instancedIds.location
