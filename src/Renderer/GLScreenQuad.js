@@ -36,7 +36,9 @@ class GLScreenQuad {
    */
   bind(renderstate, texture, pos = undefined, size = undefined) {
     const unifs = renderstate.unifs
-    texture.bindToUniform(renderstate, renderstate.unifs.image)
+    if (texture) {
+      texture.bindToUniform(renderstate, renderstate.unifs.image)
+    }
 
     const gl = this.__gl
     {
