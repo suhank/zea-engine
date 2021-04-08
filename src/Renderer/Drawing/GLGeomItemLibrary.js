@@ -59,10 +59,7 @@ class GLGeomItemLibrary extends EventEmitter {
       this.worker.onmessage = (message) => {
         if (message.data.type == 'InFrustumIndices') {
           if (enableOcclusionCulling) {
-            if (message.data.inFrustumIndices && message.data.inFrustumIndices.length > 0) {
-              this.updateCulledDrawIDsBuffer(message.data.inFrustumIndices)
-            }
-            this.calculateOcclusionCulling()
+            this.calculateOcclusionCulling(message.data.inFrustumIndices)
           } else {
             this.applyCullResults(message.data)
           }
@@ -273,14 +270,19 @@ class GLGeomItemLibrary extends EventEmitter {
     const size = Math.max(4, MathFunctions.nextPow2(Math.round(Math.sqrt(this.glGeomItems.length) + 0.5)))
     if (this.reductionDataBuffer.width != size) {
       this.reductionDataBuffer.resize(size, size)
+      this.reductionDataArray = new Uint8Array(size * size)
     }
   }
 
   /**
    * Calculate a further refinement of the culling by using the GPU to see which items are actually visible.
+   * @param {Float32Array} inFrustumIndices - The array of indices of items we know are in the frustum.
    */
-  calculateOcclusionCulling() {
-    // console.log('calculateOcclusionCulling inFrustumIndicesCount:', this.inFrustumIndicesCount)
+  calculateOcclusionCulling(inFrustumIndices) {
+    const start = performance.now()
+    if (inFrustumIndices && inFrustumIndices.length > 0) {
+      this.updateCulledDrawIDsBuffer(inFrustumIndices)
+    }
     if (this.inFrustumIndicesCount == 0) {
       this.worker.postMessage({
         type: 'OcclusionData',
@@ -288,6 +290,7 @@ class GLGeomItemLibrary extends EventEmitter {
       })
       return
     }
+    // console.log('calculateOcclusionCulling inFrustumIndicesCount:', this.inFrustumIndicesCount)
     const gl = this.renderer.gl
 
     gl.disable(gl.BLEND)
@@ -324,7 +327,6 @@ class GLGeomItemLibrary extends EventEmitter {
 
     // Now perform a reduction to calculate the indices of visible items.
     const reduce = (renderstate, clear) => {
-      gl.flush()
       this.reductionDataBuffer.bindForWriting(renderstate, clear)
 
       this.reductionShader.bind(renderstate)
@@ -379,11 +381,9 @@ class GLGeomItemLibrary extends EventEmitter {
 
     // //////////////////////////////////////////
     // Pull down the reduction values from the GPU for processing.
+    const readPixelsStart = performance.now()
 
     this.reductionDataBuffer.bindForReading()
-
-    const numReductionValues = this.reductionDataBuffer.width * this.reductionDataBuffer.height
-    const visibleItems = new Uint8Array(numReductionValues)
     gl.readPixels(
       0,
       0,
@@ -391,7 +391,7 @@ class GLGeomItemLibrary extends EventEmitter {
       this.reductionDataBuffer.height,
       gl.name == 'webgl2' ? gl.RED : gl.RGBA,
       gl.UNSIGNED_BYTE,
-      visibleItems
+      this.reductionDataArray
     )
     // console.log(visibleItems)
     this.reductionDataBuffer.unbindForReading()
@@ -401,10 +401,15 @@ class GLGeomItemLibrary extends EventEmitter {
     this.worker.postMessage(
       {
         type: 'OcclusionData',
-        visibleItems,
-      },
-      [visibleItems.buffer]
+        visibleItems: this.reductionDataArray,
+      }
+      // [visibleItems.buffer]
     )
+
+    const end = performance.now()
+    const readPixels = end - readPixelsStart
+    const duration = end - start
+    console.log('calculateOcclusionCulling duration:', duration, 'readPixels: ', readPixels)
   }
 
   /**
