@@ -23,15 +23,17 @@
 
       scene.setupGrid(10.0, 10)
 
+      const color = new Color(89 / 255, 182 / 255, 92 / 255)
+
       const material1 = new Material('thinlines', 'LinesShader')
-      material1.getParameter('BaseColor').setValue(new Color(89 / 255, 182 / 255, 92 / 255))
+      material1.getParameter('BaseColor').setValue(color)
 
       const circle = new Circle(1.5, 8)
       const geomItem1 = new GeomItem('circle1', circle, material1, new Xfo(new Vec3(-2, 0, 0)))
       scene.getRoot().addChild(geomItem1)
 
       const material2 = new Material('fatlines', 'FatLinesShader')
-      material2.getParameter('BaseColor').setValue(new Color(89 / 255, 182 / 255, 92 / 255))
+      material2.getParameter('BaseColor').setValue(color)
       material2.getParameter('LineThickness').setValue(0.1)
       const geomItem2 = new GeomItem('circle2', circle, material2, new Xfo(new Vec3(2, 0, 0)))
       scene.getRoot().addChild(geomItem2)

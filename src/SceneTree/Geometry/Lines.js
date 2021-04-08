@@ -79,7 +79,7 @@ class Lines extends BaseGeom {
    */
   setSegmentVertexIndices(index, p0, p1) {
     if (index >= this.__indices.length / 2)
-      throw new Error('Invalid line index:' + index + '. Num Segments:' + this.__indices.length / 2)
+      throw new Error('Invalid line index: ' + index + '. Num Segments: ' + this.__indices.length / 2)
     this.__indices[index * 2 + 0] = p0
     this.__indices[index * 2 + 1] = p1
   }
