@@ -539,7 +539,7 @@ class CameraManipulator extends BaseTool {
   }
 
   /**
-   * Invoked when the user starts to drag an element.
+   * Event fired when either the mouse button is pressed, or a touch start event occurs.
    *
    * @param {PointerEvent} event - The mouse event that occurs.
    */
@@ -569,7 +569,7 @@ class CameraManipulator extends BaseTool {
   }
 
   /**
-   * Invoked when an element is being dragged.
+   * Event fired when either the mouse cursor is moved, or a touch point moves.
    *
    * @param {MouseEvent} event - The mouse event that occurs.
    */
@@ -682,7 +682,7 @@ class CameraManipulator extends BaseTool {
   }
 
   /**
-   * Invoked when the user has finished dragging an element.
+   * Event fired when either the mouse button is released, or a touch end event occurs.
    *
    * @param {MouseEvent} event - The mouse event that occurs.
    */

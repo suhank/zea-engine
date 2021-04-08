@@ -13,6 +13,7 @@ This class abstracts the rendering of a collection of geometries to screen.
     * [itemRemovedFromScene(treeItem, rargs) ⇒ <code>Boolean</code>](#itemRemovedFromScene)
     * [filterGeomItem(geomItem) ⇒ <code>any</code>](#filterGeomItem)
     * [constructShaders(shaderName) ⇒ <code>object</code>](#constructShaders)
+    * [getGeomItemAndDist(geomData) ⇒ <code>any</code>](#getGeomItemAndDist)
 
 <a name="new_GLStandardGeomsPass_new"></a>
 
@@ -87,4 +88,16 @@ and a glselectedshader for rendering selection hilghlights
 | Param | Type | Description |
 | --- | --- | --- |
 | shaderName | <code>string</code> | The name of the base shader. |
+
+<a name="GLStandardGeomsPass+getGeomItemAndDist"></a>
+
+### getGeomItemAndDist
+The getGeomItemAndDist method.
+
+
+**Returns**: <code>any</code> - - The return value.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| geomData | <code>any</code> | The geomData value. |
 

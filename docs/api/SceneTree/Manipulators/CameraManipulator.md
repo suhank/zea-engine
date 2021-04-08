@@ -218,7 +218,7 @@ Invoked when a user double presses a pointer over an element.
 <a name="CameraManipulator+onPointerDown"></a>
 
 ### onPointerDown
-Invoked when the user starts to drag an element.
+Event fired when either the mouse button is pressed, or a touch start event occurs.
 
 
 
@@ -229,7 +229,7 @@ Invoked when the user starts to drag an element.
 <a name="CameraManipulator+onPointerMove"></a>
 
 ### onPointerMove
-Invoked when an element is being dragged.
+Event fired when either the mouse cursor is moved, or a touch point moves.
 
 
 
@@ -251,7 +251,7 @@ The event that occurs when the user moves the pointer across a screen.
 <a name="CameraManipulator+onPointerUp"></a>
 
 ### onPointerUp
-Invoked when the user has finished dragging an element.
+Event fired when either the mouse button is released, or a touch end event occurs.
 
 
 
