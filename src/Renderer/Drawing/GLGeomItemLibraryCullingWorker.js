@@ -55,6 +55,7 @@ const quat_rotateVec3 = (quat, vec3) => {
 
 // ///////////////////////////////////////////////
 // Frustum Culling data.
+let enableOcclusionCulling = false
 const geomItemsData = []
 const outOfFrustum = []
 let frustumCulledCount = 0
@@ -141,41 +142,51 @@ const onViewChanged = (data, postMessage) => {
 let inFrustumIndices
 const onDoneFrustumCull = (postMessage) => {
   // if (geomItemsData.length > 0 && (newlyCulled.length > 0 || newlyUnCulled.length > 0 || !inFrustumIndices)) {
-  // if (geomItemsData.length > 0 && (newlyCulled.length > 0 || newlyUnCulled.length > 0)) {
-  // console.log('FrustumCullResults:', 'newlyCulled:', newlyCulled, 'newlyUnCulled:', newlyUnCulled, outOfFrustum)
-  const countInFrustum = geomItemsData.length - 1 - frustumCulledCount
+  if (newlyCulled.length > 0 || newlyUnCulled.length > 0) {
+    if (!enableOcclusionCulling) {
+      postMessage({ type: 'CullResults', newlyCulled, newlyUnCulled })
+    } else {
+      // console.log('FrustumCullResults:', 'newlyCulled:', newlyCulled, 'newlyUnCulled:', newlyUnCulled, outOfFrustum)
+      // const countInFrustum = geomItemsData.length - 1 - frustumCulledCount
 
-  if (countInFrustum > 300) {
-    console.log('countInFrustum:', countInFrustum)
-  }
+      // if (countInFrustum > 300) {
+      //   console.log('countInFrustum:', countInFrustum)
+      // }
 
-  // Create a float array that can be used as an instances
-  // attribute to pass into the drawing of the bounding boxes.
-  inFrustumIndices = new Float32Array(countInFrustum)
-  let offset = 0
-  outOfFrustum.forEach((value, index) => {
-    if (index > 0 && !value) {
-      inFrustumIndices[offset] = index
-      offset++
+      let offset = 0
+      outOfFrustum.forEach((value, index) => {
+        if (index > 0 && !value) offset++
+      })
+
+      // Create a float array that can be used as an instances
+      // attribute to pass into the drawing of the bounding boxes.
+      inFrustumIndices = new Float32Array(offset)
+      offset = 0
+      outOfFrustum.forEach((value, index) => {
+        if (index > 0 && !value) {
+          inFrustumIndices[offset] = index
+          offset++
+        }
+      })
+
+      postMessage({ type: 'InFrustumIndices', inFrustumIndices }, [inFrustumIndices.buffer])
     }
-  })
-
-  // postMessage({ type: 'FrustumCullResults', newlyCulled, newlyUnCulled, inFrustumIndices }, [inFrustumIndices.buffer])
-  postMessage({ type: 'FrustumCullResults', inFrustumIndices }, [inFrustumIndices.buffer])
-  newlyCulled = []
-  newlyUnCulled = []
-  // } else {
-  //   if (geomItemsData.length > 0 && (!inFrustumIndices || geomItemsData.length != inFrustumIndices.length)) {
-  //     inFrustumIndices = new Float32Array(geomItemsData.length - 1)
-  //     let offset = 0
-  //     geomItemsData.forEach((value, index) => {
-  //       inFrustumIndices[offset] = index
-  //       offset++
-  //     })
-  //     postMessage({ type: 'FrustumCullResults', inFrustumIndices }, [inFrustumIndices.buffer])
-  //   } else {
-  //     postMessage({ type: 'FrustumCullResults' })
-  //   }
+    newlyCulled = []
+    newlyUnCulled = []
+  } else {
+    //   if (geomItemsData.length > 0 && (!inFrustumIndices || geomItemsData.length != inFrustumIndices.length)) {
+    //     inFrustumIndices = new Float32Array(geomItemsData.length - 1)
+    //     let offset = 0
+    //     geomItemsData.forEach((value, index) => {
+    //       inFrustumIndices[offset] = index
+    //       offset++
+    //     })
+    //     postMessage({ type: 'InFrustumIndices', inFrustumIndices }, [inFrustumIndices.buffer])
+    // } else {
+    if (enableOcclusionCulling) {
+      postMessage({ type: 'InFrustumIndices' })
+    }
+  }
   //   // postMessage({ type: 'Done' })
   // }
 }
@@ -215,13 +226,15 @@ const processOcclusionData = (data) => {
   })
   // console.log('processOcclusionData inFrustum:', countInFrustum, 'visible:', visibleCount)
   // console.log('newlyCulled:', newlyCulled, 'newlyUnCulled:', newlyUnCulled)
-  postMessage({ type: 'OcclusionCullResults', newlyCulled, newlyUnCulled })
+  postMessage({ type: 'CullResults', newlyCulled, newlyUnCulled })
 }
 
 // ///////////////////////////////////////////////
 // Messaging
 const handleMessage = (data, postMessage) => {
-  if (data.type == 'ViewportChanged') {
+  if (data.type == 'Init') {
+    enableOcclusionCulling = data.enableOcclusionCulling
+  } else if (data.type == 'ViewportChanged') {
     onViewPortChanged(data, postMessage)
   } else if (data.type == 'ViewChanged') {
     onViewChanged(data, postMessage)

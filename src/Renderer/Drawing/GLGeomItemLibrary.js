@@ -40,7 +40,7 @@ class GLGeomItemLibrary extends EventEmitter {
 
     const enableFrustumCulling = !options.disableFrustumCulling
     if (enableFrustumCulling) {
-      const enableOcclusionCulling = !options.disableOcclusionCulling
+      const enableOcclusionCulling = true //!options.disableOcclusionCulling
 
       this.worker = new GLGeomItemLibraryCullingWorker()
       // this.worker = {
@@ -50,10 +50,14 @@ class GLGeomItemLibrary extends EventEmitter {
       //     })
       //   },
       // }
+      this.worker.postMessage({
+        type: 'Init',
+        enableOcclusionCulling,
+      })
 
       let workerReady = true
       this.worker.onmessage = (message) => {
-        if (message.data.type == 'FrustumCullResults') {
+        if (message.data.type == 'InFrustumIndices') {
           if (enableOcclusionCulling) {
             if (message.data.inFrustumIndices && message.data.inFrustumIndices.length > 0) {
               this.updateCulledDrawIDsBuffer(message.data.inFrustumIndices)
@@ -63,7 +67,7 @@ class GLGeomItemLibrary extends EventEmitter {
             this.applyCullResults(message.data)
           }
         }
-        if (message.data.type == 'OcclusionCullResults') {
+        if (message.data.type == 'CullResults') {
           this.applyCullResults(message.data)
           workerReady = true
         }
@@ -190,7 +194,7 @@ class GLGeomItemLibrary extends EventEmitter {
           })
         }
         this.renderer.on('resized', (event) => {
-          this.occlusionDataBuffer.resize(Math.ceil(event.width * 0.25), Math.ceil(event.height * 0.25))
+          this.occlusionDataBuffer.resize(Math.ceil(event.width * 0.5), Math.ceil(event.height * 0.5))
         })
         this.reductionDataBuffer = new GLRenderTarget(gl, {
           type: gl.UNSIGNED_BYTE,
@@ -233,7 +237,6 @@ class GLGeomItemLibrary extends EventEmitter {
       this.glGeomItems[index].setCulled(false)
     })
     this.renderer.requestRedraw()
-
     // Used mostly to make our unit testing robust.
     // Also to help display render stats.
     // TODO: Bundle render stats.
@@ -278,7 +281,13 @@ class GLGeomItemLibrary extends EventEmitter {
    */
   calculateOcclusionCulling() {
     // console.log('calculateOcclusionCulling inFrustumIndicesCount:', this.inFrustumIndicesCount)
-
+    if (this.inFrustumIndicesCount == 0) {
+      this.worker.postMessage({
+        type: 'OcclusionData',
+        visibleItems: [],
+      })
+      return
+    }
     const gl = this.renderer.gl
 
     gl.disable(gl.BLEND)
@@ -314,8 +323,9 @@ class GLGeomItemLibrary extends EventEmitter {
     drawSceneGeomData(renderstate)
 
     // Now perform a reduction to calculate the indices of visible items.
-    const reduce = (renderstate) => {
-      this.reductionDataBuffer.bindForWriting(renderstate, true)
+    const reduce = (renderstate, clear) => {
+      gl.flush()
+      this.reductionDataBuffer.bindForWriting(renderstate, clear)
 
       this.reductionShader.bind(renderstate)
 
@@ -332,7 +342,7 @@ class GLGeomItemLibrary extends EventEmitter {
       this.reductionDataBuffer.unbindForWriting(renderstate)
     }
 
-    reduce(renderstate)
+    reduce(renderstate, true)
 
     const drawCulledBBoxes = () => {
       // Now clear the color buffer, but not the depth buffer
@@ -365,7 +375,7 @@ class GLGeomItemLibrary extends EventEmitter {
     }
 
     drawCulledBBoxes()
-    reduce(renderstate)
+    reduce(renderstate, false)
 
     // //////////////////////////////////////////
     // Pull down the reduction values from the GPU for processing.

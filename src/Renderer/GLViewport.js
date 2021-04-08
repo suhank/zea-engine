@@ -51,8 +51,8 @@ class GLViewport extends GLBaseViewport {
 
     this.__geomDataBuffer = undefined
     this.__geomDataBufferFbo = undefined
-    this.debugGeomShader = false
-    this.debugOcclusionBuffer = false
+    this.debugGeomBuffer = false
+    this.debugOcclusionBuffer = true
 
     // this.renderGeomDataFbo = this.renderGeomDataFbo.bind(this);
 
@@ -816,7 +816,7 @@ class GLViewport extends GLBaseViewport {
     this.__renderer.drawScene(renderstate)
 
     // Turn this on to debug the geom data buffer.
-    if (this.debugGeomShader) {
+    if (this.debugGeomBuffer) {
       gl.screenQuad.bindShader(renderstate)
       gl.screenQuad.draw(renderstate, this.__geomDataBuffer)
     }
