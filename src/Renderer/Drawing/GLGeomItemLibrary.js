@@ -21,8 +21,9 @@ class GLGeomItemLibrary extends EventEmitter {
   /**
    * Create a GLGeomItemLibrary.
    * @param {GLBaseRenderer} renderer - The renderer object
+   * @param {object} options - The options object
    */
-  constructor(renderer) {
+  constructor(renderer, options = {}) {
     super()
 
     this.renderer = renderer
@@ -37,236 +38,201 @@ class GLGeomItemLibrary extends EventEmitter {
     //   postMessage: (message) => {},
     // }
 
-    this.worker = new GLGeomItemLibraryCullingWorker()
-    // this.worker = {
-    //   postMessage: (message) => {
-    //     handleMessage(message, (message) => {
-    //       this.worker.onmessage({data: message })
-    //     })
-    //   },
-    // }
+    const enableFrustumCulling = !options.disableFrustumCulling
+    if (enableFrustumCulling) {
+      const enableOcclusionCulling = !options.disableOcclusionCulling
 
-    let workerReady = true
-    this.worker.onmessage = (message) => {
-      if (message.data.type == 'FrustumCullResults') {
-        // this.applyCullResults(message.data)
-        this.calculateOcclusionCulling(message.data.inFrustumIndices)
-      }
-      if (message.data.type == 'OcclusionCullResults') {
-        this.applyCullResults(message.data, false)
-      } else {
-        // No Frustum Culling results. Now we check for occlusion culling.
-        // this.calculateOcclusionCulling()
-        // Used mostly to make our unit testing robust.
-        // Also to help display render stats.
-        // TODO: Bundle render stats.
-        // this.renderer.emit('CullingUpdated')
-      }
-      workerReady = true
-    }
+      this.worker = new GLGeomItemLibraryCullingWorker()
+      // this.worker = {
+      //   postMessage: (message) => {
+      //     handleMessage(message, (message) => {
+      //       this.worker.onmessage({data: message })
+      //     })
+      //   },
+      // }
 
-    const viewportChanged = () => {
-      const aspectRatio = renderer.getWidth() / renderer.getHeight()
-      const frustumHalfAngleY = renderer.getViewport().getCamera().getFov() * 0.5
-      const frustumHalfAngleX = Math.atan(Math.tan(frustumHalfAngleY) * aspectRatio)
-      this.worker.postMessage({
-        type: 'ViewportChanged',
-        frustumHalfAngleX,
-        frustumHalfAngleY,
-      })
-    }
-    renderer.on('resized', viewportChanged)
-    viewportChanged()
-
-    renderer.once('xrViewportSetup', (event) => {
-      const xrvp = event.xrViewport
-      xrvp.on('presentingChanged', (event) => {
-        if (event.state) {
-          // Note: We approximate the culling viewport to be
-          // a wider version of the 2 eye frustums merged together.
-          // Wider, so that items are considered visible before the are in view.
-          // Note each VR headset comes with its own FOV, and I can't seem to be
-          // able to get it from the WebXR API, so I am putting in some guesses
-          // based on this diagram: https://blog.mozvr.com/content/images/2016/02/human-visual-field.jpg
-          const degToRad = Math.PI / 180
-          const frustumHalfAngleY = 62 * degToRad
-          const frustumHalfAngleX = 50 * degToRad
-          this.worker.postMessage({
-            type: 'ViewportChanged',
-            frustumHalfAngleX,
-            frustumHalfAngleY,
-          })
+      let workerReady = true
+      this.worker.onmessage = (message) => {
+        if (message.data.type == 'FrustumCullResults') {
+          if (enableOcclusionCulling) {
+            if (message.data.inFrustumIndices && message.data.inFrustumIndices.length > 0) {
+              this.updateCulledDrawIDsBuffer(message.data.inFrustumIndices)
+            }
+            this.calculateOcclusionCulling()
+          } else {
+            this.applyCullResults(message.data)
+          }
         }
-      })
-    })
-
-    let tick = 0
-    renderer.on('viewChanged', (event) => {
-      // Calculate culling every Nth frame.
-      if (workerReady) {
-        if (tick % 5 == 0) {
-          workerReady = false
-          const pos = event.viewXfo.tr
-          const ori = event.viewXfo.ori
-          this.worker.postMessage({
-            type: 'ViewChanged',
-            viewPos: pos.asArray(),
-            viewOri: ori.asArray(),
-          })
+        if (message.data.type == 'OcclusionCullResults') {
+          this.applyCullResults(message.data)
+          workerReady = true
         }
-        tick++
       }
-    })
 
-    const forceViewChanged = () => {
-      const camera = renderer.getViewport().getCamera()
-      const viewXfo = camera.getParameter('GlobalXfo').getValue()
-      const pos = viewXfo.tr
-      const ori = viewXfo.ori
-      this.worker.postMessage({
-        type: 'ViewChanged',
-        viewPos: pos.asArray(),
-        viewOri: ori.asArray(),
-      })
-      tick = 0
-    }
-
-    // If a movement finishes, we should update the culling results
-    // based on the last position. (we might have skipped it in the viewChanged handler above)
-    renderer.getViewport().getCamera().on('movementFinished', forceViewChanged)
-
-    // Initialize the view values on the worker.
-    forceViewChanged()
-
-    // ////////////////////////////////////////
-    // Occlusion Culling
-    if (true) {
-      const gl = this.renderer.gl
-      this.floatOcclusionBuffer = gl.floatTexturesSupported
-      const occlusionDataBufferWidth = 8 // Math.ceil(renderer.getWidth() * 0.25)
-      const occlusionDataBufferHeight = 8 // Math.ceil(renderer.getHeight() * 0.25)
-      if (this.floatOcclusionBuffer) {
-        this.occlusionDataBuffer = new GLRenderTarget(gl, {
-          type: gl.FLOAT,
-          format: gl.RGBA,
-          minFilter: gl.NEAREST,
-          magFilter: gl.NEAREST,
-          width: occlusionDataBufferWidth,
-          height: occlusionDataBufferHeight,
-          depthType: gl.FLOAT,
-          depthFormat: gl.DEPTH_COMPONENT,
-          depthInternalFormat: gl.DEPTH_COMPONENT32F,
+      const viewportChanged = () => {
+        const aspectRatio = renderer.getWidth() / renderer.getHeight()
+        const frustumHalfAngleY = renderer.getViewport().getCamera().getFov() * 0.5
+        const frustumHalfAngleX = Math.atan(Math.tan(frustumHalfAngleY) * aspectRatio)
+        this.worker.postMessage({
+          type: 'ViewportChanged',
+          frustumHalfAngleX,
+          frustumHalfAngleY,
         })
-      } else {
-        this.occlusionDataBuffer = new GLRenderTarget(gl, {
+      }
+      renderer.on('resized', viewportChanged)
+      viewportChanged()
+
+      renderer.once('xrViewportSetup', (event) => {
+        const xrvp = event.xrViewport
+        xrvp.on('presentingChanged', (event) => {
+          if (event.state) {
+            // Note: We approximate the culling viewport to be
+            // a wider version of the 2 eye frustums merged together.
+            // Wider, so that items are considered visible before the are in view.
+            // Note each VR headset comes with its own FOV, and I can't seem to be
+            // able to get it from the WebXR API, so I am putting in some guesses
+            // based on this diagram: https://blog.mozvr.com/content/images/2016/02/human-visual-field.jpg
+            const degToRad = Math.PI / 180
+            const frustumHalfAngleY = 62 * degToRad
+            const frustumHalfAngleX = 50 * degToRad
+            this.worker.postMessage({
+              type: 'ViewportChanged',
+              frustumHalfAngleX,
+              frustumHalfAngleY,
+            })
+          }
+        })
+      })
+
+      let tick = 0
+      let timoutId
+      renderer.on('viewChanged', (event) => {
+        // Calculate culling every Nth frame.
+        if (workerReady) {
+          if (tick % 5 == 0) {
+            workerReady = false
+            const pos = event.viewXfo.tr
+            const ori = event.viewXfo.ori
+            this.worker.postMessage({
+              type: 'ViewChanged',
+              viewPos: pos.asArray(),
+              viewOri: ori.asArray(),
+            })
+
+            if (timoutId) {
+              clearTimeout(timoutId)
+              timoutId = 0
+            }
+          } else {
+            // The culling should be processed every Nth frame
+            // or every 100ms. Which ever comes first.
+            // at 60fps, every 5th frame is 83ms apart.
+            timoutId = setTimeout(forceViewChanged, 100)
+          }
+          tick++
+        }
+      })
+
+      const forceViewChanged = () => {
+        const camera = renderer.getViewport().getCamera()
+        const viewXfo = camera.getParameter('GlobalXfo').getValue()
+        const pos = viewXfo.tr
+        const ori = viewXfo.ori
+        this.worker.postMessage({
+          type: 'ViewChanged',
+          viewPos: pos.asArray(),
+          viewOri: ori.asArray(),
+        })
+        tick = 0
+        if (timoutId) {
+          clearTimeout(timoutId)
+          timoutId = 0
+        }
+      }
+
+      // If a movement finishes, we should update the culling results
+      // based on the last position. (we might have skipped it in the viewChanged handler above)
+      renderer.getViewport().getCamera().on('movementFinished', forceViewChanged)
+
+      // Initialize the view values on the worker.
+      forceViewChanged()
+
+      // ////////////////////////////////////////
+      // Occlusion Culling
+      if (enableOcclusionCulling) {
+        const gl = this.renderer.gl
+        this.floatOcclusionBuffer = gl.floatTexturesSupported
+        const occlusionDataBufferWidth = 4
+        const occlusionDataBufferHeight = 4
+        if (this.floatOcclusionBuffer) {
+          this.occlusionDataBuffer = new GLRenderTarget(gl, {
+            type: gl.FLOAT,
+            format: gl.RGBA,
+            minFilter: gl.NEAREST,
+            magFilter: gl.NEAREST,
+            width: occlusionDataBufferWidth,
+            height: occlusionDataBufferHeight,
+            depthType: gl.FLOAT,
+            depthFormat: gl.DEPTH_COMPONENT,
+            depthInternalFormat: gl.DEPTH_COMPONENT32F,
+          })
+        } else {
+          this.occlusionDataBuffer = new GLRenderTarget(gl, {
+            type: gl.UNSIGNED_BYTE,
+            format: gl.RGBA,
+            minFilter: gl.NEAREST,
+            magFilter: gl.NEAREST,
+            width: occlusionDataBufferWidth,
+            height: occlusionDataBufferHeight,
+            depthType: gl.UNSIGNED_SHORT,
+            depthFormat: gl.DEPTH_COMPONENT,
+            depthInternalFormat: gl.DEPTH_COMPONENT16,
+          })
+        }
+        this.renderer.on('resized', (event) => {
+          this.occlusionDataBuffer.resize(Math.ceil(event.width * 0.25), Math.ceil(event.height * 0.25))
+        })
+        this.reductionDataBuffer = new GLRenderTarget(gl, {
           type: gl.UNSIGNED_BYTE,
-          format: gl.RGBA,
+          internalFormat: gl.R8,
+          format: gl.name == 'webgl2' ? gl.RED : gl.RGBA,
           minFilter: gl.NEAREST,
           magFilter: gl.NEAREST,
-          width: occlusionDataBufferWidth,
-          height: occlusionDataBufferHeight,
+          width: 1,
+          height: 1,
           depthType: gl.UNSIGNED_SHORT,
           depthFormat: gl.DEPTH_COMPONENT,
           depthInternalFormat: gl.DEPTH_COMPONENT16,
         })
+
+        this.bbox = new GLMesh(gl, new Cuboid(1, 1, 1, false, false, false))
+        this.reductionShader = new ReductionShader(gl)
+        this.boundingBoxShader = new BoundingBoxShader(gl)
+        this.boundingBoxShader.compileForTarget('GLGeomItemLibrary')
+        this.inFrustumIndicesCount = 0
       }
-      this.renderer.on('resized', (event) => {
-        this.occlusionDataBuffer.resize(Math.ceil(event.width * 0.25), Math.ceil(event.height * 0.25))
-      })
-      this.reductionDataBuffer = new GLRenderTarget(gl, {
-        type: gl.UNSIGNED_BYTE,
-        internalFormat: gl.R8,
-        format: gl.name == 'webgl2' ? gl.RED : gl.RGBA,
-        minFilter: gl.NEAREST,
-        magFilter: gl.NEAREST,
-        width: 4,
-        height: 4,
-        depthType: gl.UNSIGNED_SHORT,
-        depthFormat: gl.DEPTH_COMPONENT,
-        depthInternalFormat: gl.DEPTH_COMPONENT16,
-      })
-
-      this.bbox = new GLMesh(gl, new Cuboid(1, 1, 1, false, false, false))
-      this.reductionShader = new ReductionShader(gl)
-      this.boundingBoxShader = new BoundingBoxShader(gl)
-      this.boundingBoxShader.compileForTarget('GLGeomItemLibrary')
-      this.inFrustumIndicesCount = 0
     }
-  }
-
-  /**
-   * The addGeomItem method.
-   * @param {GeomItem} geomItem - The geomItem value.
-   * @return {number} - The index of GLGeomItem
-   */
-  addGeomItem(geomItem) {
-    let index = this.glGeomItemsMap[geomItem.getId()]
-    if (index != undefined) {
-      // Increment the ref count for the GLGeom
-      return this.glGeomItems[index]
-    }
-
-    const material = geomItem.getParameter('Material').getValue()
-
-    // Add the material here so that when we populate the GeomItem texture.
-    // the material already has an Id.
-    let matIndex = -1
-    if (material.getShaderClass().getPackedMaterialData) {
-      matIndex = this.renderer.glMaterialLibrary.addMaterial(material)
-    }
-
-    const geom = geomItem.getParameter('Geometry').getValue()
-    const geomIndex = this.renderer.glGeomLibrary.addGeom(geom)
-
-    // Use recycled indices if there are any available...
-    if (this.glGeomItemsIndexFreeList.length > 0) {
-      index = this.glGeomItemsIndexFreeList.pop()
-    } else {
-      index = this.glGeomItems.length
-      this.glGeomItems.push(null)
-    }
-    this.dirtyItemIndices.push(index)
-
-    const gl = this.renderer.gl
-    const supportInstancing = gl.floatTexturesSupported
-    const glGeomItem = new GLGeomItem(gl, geomItem, index, geomIndex, matIndex, supportInstancing)
-
-    const geomItemChanged = () => {
-      if (this.dirtyItemIndices.includes(index)) return
-      this.dirtyItemIndices.push(index)
-      this.renderer.drawItemChanged()
-    }
-    geomItem.getParameter('Material').on('valueChanged', geomItemChanged)
-    geomItem.getParameter('GeomMat').on('valueChanged', geomItemChanged)
-    geomItem.on('cutAwayChanged', geomItemChanged)
-    geomItem.on('highlightChanged', geomItemChanged)
-
-    this.glGeomItems[index] = glGeomItem
-    this.glGeomItemEventHandlers[index] = geomItemChanged
-    this.glGeomItemsMap[geomItem.getId()] = index
-
-    // Note: before the renderer is disabled, this is a  no-op.
-    this.renderer.requestRedraw()
-
-    return glGeomItem
   }
 
   /**
    * Handles applying the culling results received from the GLGeomItemLibraryCullingWorker
    * @param {object} data - The object containing the newlyCulled and newlyUnCulled results.
    */
-  applyCullResults(data, triggerOcclusionCulling = true) {
+  applyCullResults(data) {
     data.newlyCulled.forEach((index) => {
+      if (!this.glGeomItems[index]) {
+        // oddly, the culling worker generates indices that are out of range
+        // on the first cull and after that behaves itself.
+        // until I can figure out why, just ignoring this issue.
+        console.warn(`Culling index our of range: ${index}`)
+        return
+      }
       this.glGeomItems[index].setCulled(true)
     })
     data.newlyUnCulled.forEach((index) => {
       this.glGeomItems[index].setCulled(false)
     })
     this.renderer.requestRedraw()
-
-    // if (triggerOcclusionCulling) {
-    //   this.calculateOcclusionCulling()
-    // }
 
     // Used mostly to make our unit testing robust.
     // Also to help display render stats.
@@ -275,9 +241,9 @@ class GLGeomItemLibrary extends EventEmitter {
   }
 
   /**
-   * The updateDrawIDsBuffer method.
-   * The culling system will specify a subset of the total number of items for
-   * drawing.
+   * Given the IDs of the items we know are in the frustum, setup an instanced attribute we can use
+   * to render bounding boxes for these items if they do not show up in the intial GPU buffer.
+   * @param {Float32Array} inFrustumIndices - The array of indices of items we know are in the frustum.
    */
   updateCulledDrawIDsBuffer(inFrustumIndices) {
     const gl = this.renderer.gl
@@ -299,18 +265,19 @@ class GLGeomItemLibrary extends EventEmitter {
 
     this.inFrustumIndicesCount = inFrustumIndices.length
     this.drawIdsBufferDirty = false
+
+    // Note: we get errors trying to read data back from images less than 4x4 pixels.
+    const size = Math.max(4, MathFunctions.nextPow2(Math.round(Math.sqrt(this.glGeomItems.length) + 0.5)))
+    if (this.reductionDataBuffer.width != size) {
+      this.reductionDataBuffer.resize(size, size)
+    }
   }
 
   /**
-   * Handles calculating the GPU occlusion of the current frame by rendering a special GeomData buffer.
+   * Calculate a further refinement of the culling by using the GPU to see which items are actually visible.
    */
-  calculateOcclusionCulling(inFrustumIndices) {
-    if (inFrustumIndices && inFrustumIndices.length > 0) {
-      this.updateCulledDrawIDsBuffer(inFrustumIndices)
-    }
-    if (this.inFrustumIndicesCount == 0) {
-      return
-    }
+  calculateOcclusionCulling() {
+    // console.log('calculateOcclusionCulling inFrustumIndicesCount:', this.inFrustumIndicesCount)
 
     const gl = this.renderer.gl
 
@@ -398,7 +365,6 @@ class GLGeomItemLibrary extends EventEmitter {
     }
 
     drawCulledBBoxes()
-
     reduce(renderstate)
 
     // //////////////////////////////////////////
@@ -420,6 +386,8 @@ class GLGeomItemLibrary extends EventEmitter {
     // console.log(visibleItems)
     this.reductionDataBuffer.unbindForReading()
 
+    // Now send the buffer to the worker, where it will determine what culling
+    // needs to be applied on top of the frustum culling.
     this.worker.postMessage(
       {
         type: 'OcclusionData',
@@ -427,6 +395,63 @@ class GLGeomItemLibrary extends EventEmitter {
       },
       [visibleItems.buffer]
     )
+  }
+
+  /**
+   * The addGeomItem method.
+   * @param {GeomItem} geomItem - The geomItem value.
+   * @return {number} - The index of GLGeomItem
+   */
+  addGeomItem(geomItem) {
+    let index = this.glGeomItemsMap[geomItem.getId()]
+    if (index != undefined) {
+      // Increment the ref count for the GLGeom
+      return this.glGeomItems[index]
+    }
+
+    const material = geomItem.getParameter('Material').getValue()
+
+    // Add the material here so that when we populate the GeomItem texture.
+    // the material already has an Id.
+    let matIndex = -1
+    if (material.getShaderClass().getPackedMaterialData) {
+      matIndex = this.renderer.glMaterialLibrary.addMaterial(material)
+    }
+
+    const geom = geomItem.getParameter('Geometry').getValue()
+    const geomIndex = this.renderer.glGeomLibrary.addGeom(geom)
+
+    // Use recycled indices if there are any available...
+    if (this.glGeomItemsIndexFreeList.length > 0) {
+      index = this.glGeomItemsIndexFreeList.pop()
+    } else {
+      index = this.glGeomItems.length
+      this.glGeomItems.push(null)
+    }
+    this.dirtyItemIndices.push(index)
+
+    const gl = this.renderer.gl
+    const supportInstancing = gl.floatTexturesSupported
+    const glGeomItem = new GLGeomItem(gl, geomItem, index, geomIndex, matIndex, supportInstancing)
+
+    const geomItemChanged = () => {
+      if (this.dirtyItemIndices.includes(index)) return
+      this.dirtyItemIndices.push(index)
+      this.renderer.drawItemChanged()
+    }
+    geomItem.getParameter('Material').on('valueChanged', geomItemChanged)
+    geomItem.getParameter('GeomMat').on('valueChanged', geomItemChanged)
+    geomItem.on('cutAwayChanged', geomItemChanged)
+    geomItem.on('highlightChanged', geomItemChanged)
+
+    this.glGeomItems[index] = glGeomItem
+    this.glGeomItemEventHandlers[index] = geomItemChanged
+    this.glGeomItemsMap[geomItem.getId()] = index
+
+    // Note: before the renderer is disabled, this is a  no-op.
+    this.renderer.requestRedraw()
+
+    return glGeomItem
   }
 
   /**

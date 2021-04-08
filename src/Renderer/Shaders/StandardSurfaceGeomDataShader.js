@@ -30,7 +30,6 @@ uniform mat4 projectionMatrix;
 varying float v_drawItemId;
 varying vec4 v_geomItemData;
 varying vec3 v_viewPos;
-varying float v_drawItemID;
 varying vec3 v_worldPos;
 
 void main(void) {
@@ -45,8 +44,6 @@ void main(void) {
   gl_Position = projectionMatrix * viewPos;
 
   v_viewPos = -viewPos.xyz;
-
-  v_drawItemID = float(getDrawItemId());
   
   v_worldPos      = (modelMatrix * pos).xyz;
 }
@@ -84,7 +81,6 @@ vec4 getCutaway(int id) {
 varying float v_drawItemId;
 varying vec4 v_geomItemData;
 varying vec3 v_viewPos;
-varying float v_drawItemID;
 varying vec3 v_worldPos;
 
 
@@ -114,15 +110,15 @@ void main(void) {
 
     if(floatGeomBuffer != 0) {
         fragColor.r = float(passId); 
-        fragColor.g = float(v_drawItemID);
+        fragColor.g = float(drawItemId);
         fragColor.b = 0.0;// TODO: store poly-id or something.
         fragColor.a = dist;
     }
     else {
         ///////////////////////////////////
         // UInt8 buffer
-        fragColor.r = (mod(v_drawItemID, 256.) + 0.5) / 255.;
-        fragColor.g = (floor(v_drawItemID / 256.) + (float(passId) * 64.) + 0.5) / 255.;
+        fragColor.r = (mod(v_drawItemId, 256.) + 0.5) / 255.;
+        fragColor.g = (floor(v_drawItemId / 256.) + (float(passId) * 64.) + 0.5) / 255.;
 
 
         // encode the dist as a 16 bit float
