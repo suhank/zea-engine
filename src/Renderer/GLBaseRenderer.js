@@ -849,6 +849,7 @@ class GLBaseRenderer extends ParameterOwner {
       if (activeGLRenderer != this || !isValidCanvas()) return
       if (activeGLRenderer) {
         prepareEvent(event)
+        calcRendererCoords(event)
         const vp = activeGLRenderer.getActiveViewport()
         if (vp) {
           vp.onWheel(event)

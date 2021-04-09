@@ -744,6 +744,15 @@ class CameraManipulator extends BaseTool {
     const modulator = event.shiftKey ? 0.1 : 0.5
     const xfo = camera.getParameter('GlobalXfo').getValue()
 
+    let dir
+    if (event.intersectionData != undefined) {
+      const vec = xfo.tr.subtract(event.intersectionData.intersectionPos)
+      dir = vec.normalize()
+      camera.setFocalDistance(vec.length())
+    } else {
+      dir = xfo.ori.getZaxis()
+    }
+
     // To normalize mouse wheel speed across vendors and OSs, it is recommended to simply convert scroll value to -1 or 1
     // See here: https://stackoverflow.com/questions/5527601/normalizing-mousewheel-speed-across-browsers
     const steps = 6
@@ -751,7 +760,7 @@ class CameraManipulator extends BaseTool {
     const applyMovement = () => {
       const focalDistance = camera.getFocalDistance()
       const zoomDist = focalDistance * this.__mouseWheelMovementDist
-      xfo.tr.addInPlace(xfo.ori.getZaxis().scale(zoomDist))
+      xfo.tr.addInPlace(dir.scale(zoomDist))
 
       camera.setFocalDistance(camera.getFocalDistance() + zoomDist)
       camera.getParameter('GlobalXfo').setValue(xfo)
