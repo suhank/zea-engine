@@ -725,6 +725,11 @@ class GLViewport extends GLBaseViewport {
    */
   onWheel(event) {
     this.__preparePointerEvent(event)
+
+    event.pointerPos = this.__getPointerPos(event.rendererX, event.rendererY)
+    event.pointerRay = this.calcRayFromScreenPos(event.pointerPos)
+    event.intersectionData = this.getGeomDataAtPos(event.pointerPos, event.pointerRay)
+
     if (event.intersectionData != undefined) {
       event.intersectionData.geomItem.onWheel(event)
       if (!event.propagating) return
