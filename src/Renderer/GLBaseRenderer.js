@@ -502,7 +502,11 @@ class GLBaseRenderer extends ParameterOwner {
     if (this.__xrViewportPresenting) {
       return
     }
-
+    // We cannot allow Our offscreen buffers to be resized to zero.
+    // Limit the min size to 16.
+    if (width < 16 || height < 16) {
+      return
+    }
     // Note: devicePixelRatio has already been factored into the clientWidth and clientHeight,
     // meaning we do not need to multiply client values by devicePixelRatio to get real values.
     // On some devices, this duplicate multiplication (when the meta tag was not present), caused

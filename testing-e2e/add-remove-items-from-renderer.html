@@ -44,9 +44,16 @@
 
         if (data === 'variant-01') {
           scene.getRoot().removeChild(scene.getRoot().getChildIndex(geomItem0))
+          // Modify the item that is not being removed.
+          // Note: this used to cause a crash because indices were confused in the multi-draw class.
+          geomItem1.getParameter('Geometry').getValue().getParameter('Loops').setValue(100)
           window.postMessage(`done-${data}`)
         } else if (data === 'variant-02') {
           scene.getRoot().removeChild(scene.getRoot().getChildIndex(geomItem1))
+          // Modify the class again, after it has been removed from the renderer.
+          // Note: Our GLGeomLibrary still updates the buffers. It doesn't know that
+          // no GeomItems track this geom. We need to add ref counting...
+          geomItem1.getParameter('Geometry').getValue().getParameter('Loops').setValue(12)
           window.postMessage(`done-${data}`)
         } else if (data === 'variant-03') {
           scene.getRoot().addChild(geomItem0)
