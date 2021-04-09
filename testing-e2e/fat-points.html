@@ -47,11 +47,9 @@
       geomItem.getParameter('GlobalXfo').setValue(xfo)
       scene.getRoot().addChild(geomItem)
 
-      // someEmitter.on('loaded', () => {
       renderer.once('resized', () => {
         window.postMessage('done-loading')
       })
-      // })
 
       // {{{ Messages handler.
       const handleMessage = (event) => {
