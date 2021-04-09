@@ -262,8 +262,6 @@ class GLBaseRenderer extends ParameterOwner {
   resumeDrawing() {
     this.__drawSuspensionLevel--
     if (this.__drawSuspensionLevel == 0) {
-      if (this.__loadingImg) this.__$canvas.removeChild(this.__loadingImg)
-
       this.renderGeomDataFbos()
       this.requestRedraw()
     }
@@ -575,8 +573,8 @@ class GLBaseRenderer extends ParameterOwner {
       this.__glcanvas.style.width = '100%'
       this.__glcanvas.style.height = '100%'
 
-      this.__$canvas = $canvas
-      this.__$canvas.appendChild(this.__glcanvas)
+      this.__div = $canvas
+      this.__div.appendChild(this.__glcanvas)
     } else {
       this.__glcanvas = $canvas
     }

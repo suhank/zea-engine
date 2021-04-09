@@ -61,7 +61,7 @@ class VLAAsset extends AssetItem {
       // Now we split the mesh out from the engine version.
       context.versions['zea-mesh'] = new Version(reader.loadStr())
     }
-    console.log('Loading Mesh File version:', context.versions['zea-mesh'])
+    // console.log('Loading Mesh File version:', context.versions['zea-mesh'])
 
     const numGeomsFiles = reader.loadUInt32()
 

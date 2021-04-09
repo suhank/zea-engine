@@ -28,6 +28,7 @@
       const plane = new Plane(1, 1)
 
       const promises = []
+      promises.push(new Promise((resolve) => renderer.once('resized', resolve)))
 
       {
         const material = new Material('Material', 'FlatSurfaceShader')
@@ -71,7 +72,6 @@
         scene.getRoot().addChild(geomItem)
       }
 
-      // await new Promise((resolve) => setTimeout(resolve, 15000))
       Promise.all(promises).then(() => {
         window.postMessage('done-loading')
       })
