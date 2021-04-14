@@ -96,6 +96,7 @@ class CameraManipulator extends BaseTool {
 
     this.__orbitRateParam = this.addParameter(new NumberParameter('OrbitRate', SystemDesc.isMobileDevice ? 0.3 : 1))
     this.__dollySpeedParam = this.addParameter(new NumberParameter('DollySpeed', 0.02))
+    this.addParameter(new BooleanParameter('OrbitAroundCursor', true))
     this.__mouseWheelDollySpeedParam = this.addParameter(new NumberParameter('MouseWheelDollySpeed', 0.1))
     this.addParameter(new NumberParameter('WalkSpeed', 5)) // Value is in meters/second
     this.addParameter(new BooleanParameter('WalkModeCollisionDetection', false))
@@ -178,11 +179,10 @@ class CameraManipulator extends BaseTool {
     const { viewport } = event
     const camera = viewport.getCamera()
 
-    const focalDistance = camera.getFocalDistance()
     const orbitRate = this.__orbitRateParam.getValue()
 
     const globalXfo = camera.getParameter('GlobalXfo').getValue()
-    const cameraTarget = camera.getTargetPosition()
+    const cameraTargetOffset = globalXfo.ori.inverse().rotateVec3(globalXfo.tr.subtract(this.__orbitTarget))
 
     // Orbit
     const orbit = new Quat()
@@ -194,7 +194,7 @@ class CameraManipulator extends BaseTool {
     pitch.rotateX((dragVec.y / viewport.getHeight()) * Math.PI * -orbitRate)
     globalXfo.ori.multiplyInPlace(pitch)
 
-    globalXfo.tr = cameraTarget.add(globalXfo.ori.getZaxis().scale(focalDistance))
+    globalXfo.tr = this.__orbitTarget.add(globalXfo.ori.rotateVec3(cameraTargetOffset))
 
     camera.getParameter('GlobalXfo').setValue(globalXfo)
   }
@@ -208,7 +208,6 @@ class CameraManipulator extends BaseTool {
   tumble(event, dragVec) {
     const { viewport } = event
     const camera = viewport.getCamera()
-    const focalDistance = camera.getFocalDistance()
     const orbitRate = this.__orbitRateParam.getValue()
 
     const globalXfo = camera.getParameter('GlobalXfo').getValue()
@@ -220,15 +219,14 @@ class CameraManipulator extends BaseTool {
     rotateAxis.normalizeInPlace()
 
     const dragVecLength = dragVec.length()
-
-    const cameraTarget = camera.getTargetPosition()
+    const cameraTargetOffset = globalXfo.ori.inverse().rotateVec3(globalXfo.tr.subtract(this.__orbitTarget))
 
     // Orbit
     const orbit = new Quat()
     orbit.setFromAxisAndAngle(rotateAxis, (dragVecLength / viewport.getWidth()) * Math.PI * -orbitRate)
     globalXfo.ori = orbit.multiply(globalXfo.ori)
 
-    globalXfo.tr = cameraTarget.add(globalXfo.ori.getZaxis().scale(focalDistance))
+    globalXfo.tr = this.__orbitTarget.add(globalXfo.ori.rotateVec3(cameraTargetOffset))
 
     camera.getParameter('GlobalXfo').setValue(globalXfo)
   }
@@ -242,7 +240,6 @@ class CameraManipulator extends BaseTool {
   trackball(event, dragVec) {
     const { viewport } = event
     const camera = viewport.getCamera()
-    const focalDistance = camera.getFocalDistance()
     const orbitRate = this.__orbitRateParam.getValue()
 
     const globalXfo = camera.getParameter('GlobalXfo').getValue()
@@ -255,14 +252,14 @@ class CameraManipulator extends BaseTool {
 
     const dragVecLength = dragVec.length()
 
-    const cameraTarget = camera.getTargetPosition()
+    const cameraTargetOffset = globalXfo.ori.inverse().rotateVec3(globalXfo.tr.subtract(this.__orbitTarget))
 
     // Orbit
     const orbit = new Quat()
     orbit.setFromAxisAndAngle(rotateAxis, (dragVecLength / viewport.getWidth()) * Math.PI * -orbitRate)
     globalXfo.ori = orbit.multiply(globalXfo.ori)
 
-    globalXfo.tr = cameraTarget.add(globalXfo.ori.getZaxis().scale(focalDistance))
+    globalXfo.tr = this.__orbitTarget.add(globalXfo.ori.rotateVec3(cameraTargetOffset))
 
     camera.getParameter('GlobalXfo').setValue(globalXfo)
   }
@@ -349,6 +346,19 @@ class CameraManipulator extends BaseTool {
     event.setCapture(this)
 
     this.__pointerDown = true
+
+    const { viewport } = event
+    const camera = viewport.getCamera()
+    const xfo = camera.getParameter('GlobalXfo').getValue()
+    const orbitAroundCursor = this.getParameter('OrbitAroundCursor').getValue()
+    if (event.intersectionData != undefined && orbitAroundCursor) {
+      this.__orbitTarget = event.intersectionData.intersectionPos
+      const vec = xfo.tr.subtract(event.intersectionData.intersectionPos)
+      camera.setFocalDistance(vec.length())
+    } else {
+      this.__orbitTarget = xfo.tr.add(xfo.ori.getZaxis().scale(-camera.getFocalDistance()))
+    }
+
     this.__prevPointerPos = pointerPos
     this.__dragging = 1
   }
