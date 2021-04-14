@@ -35,6 +35,7 @@ const int ENVMAP_FLAG_HEADLIGHT =  1; // 1<<0;
 
 struct MaterialParams {
   vec3 baseColor;
+  float ambientOcclusion;
   float metallic;
   float roughness;
   float reflectance;
@@ -46,7 +47,10 @@ struct MaterialParams {
 
 vec4 pbrSurfaceRadiance(in MaterialParams material, vec3 normal, in vec3 viewVector) {
   vec3 irradiance = vec3(dot(normal, viewVector));
-  return vec4(material.baseColor * irradiance + (material.emission * material.baseColor), material.opacity);
+  float ao = material.ambientOcclusion; 
+  return vec4(material.baseColor * ao * irradiance + (material.emission * material.baseColor), material.opacity);
+
+  // return vec4(material.baseColor * ao * irradiance , material.opacity);
 }
 
 #else
@@ -88,7 +92,7 @@ vec4 pbrSurfaceRadiance(in MaterialParams material, vec3 normal, in vec3 viewVec
     vec3 kS = F;
     vec3 kD = 1.0 - kS;
     kD *= 1.0 - material.metallic;
-    float ao = 1.0; 
+    float ao = material.ambientOcclusion; 
     
     vec3 irradiance;
     vec3 irradianceSampleDir = normal;
