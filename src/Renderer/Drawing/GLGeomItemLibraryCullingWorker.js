@@ -83,6 +83,13 @@ const unCull = (index) => {
 
 const checkGeomItem = (geomItemData) => {
   if (!geomItemData || !viewPos) return
+
+  // Some items, like Handles that
+  if (!geomItemData.cullable) {
+    unCull(geomItemData.id)
+    return
+  }
+
   const pos = geomItemData.pos
   const boundingRadius = geomItemData.boundingRadius
   const vec = vec3_subtract(pos, viewPos)
