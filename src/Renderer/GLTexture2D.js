@@ -117,14 +117,6 @@ class GLTexture2D extends RefCounted {
   }
 
   /**
-   * The getFilter method.
-   * @return {any} - The return value.
-   */
-  getFilter() {
-    return this.__filterParam
-  }
-
-  /**
    * Returns the value of the specified wrapping function for texture coordinate
    *
    * @return {GLenum | enum} - The return value.
@@ -174,7 +166,8 @@ class GLTexture2D extends RefCounted {
     const type = params.type
     let minFilter = 'minFilter' in params ? params.minFilter : 'filter' in params ? params.filter : 'LINEAR'
     let magFilter = 'magFilter' in params ? params.magFilter : 'filter' in params ? params.filter : 'LINEAR'
-    const wrap = 'wrap' in params ? params.wrap : 'CLAMP_TO_EDGE'
+    const wrapS = 'wrapS' in params ? params.wrapS : 'wrap' in params ? params.wrap : 'CLAMP_TO_EDGE'
+    const wrapT = 'wrapT' in params ? params.wrapT : 'wrap' in params ? params.wrap : 'CLAMP_TO_EDGE'
 
     // if(format == 'ALPHA')
     //     throw("ALPHA textures are now deprecated. Please use RED instead.")
@@ -242,7 +235,7 @@ class GLTexture2D extends RefCounted {
           throw new Error('OES_texture_half_float is not available')
         }
         if (format == 'RGB') {
-          throw new Error('OES_texture_half_float onlysupports RGBA textures')
+          throw new Error('OES_texture_half_float only supports RGBA textures')
         }
       }
     } else if (type == 'sRGB') {
@@ -253,7 +246,8 @@ class GLTexture2D extends RefCounted {
     this.__typeParam = type
     this.__minFilterParam = minFilter
     this.__magFilterParam = magFilter
-    this.__wrapParam = wrap
+    this.__wrapSParam = wrapS
+    this.__wrapTParam = wrapT
 
     // Detect an 8 bit image with an alpha channel.
     if (this.textureType == 1 && this.__format == gl.RGBA) {
@@ -304,7 +298,8 @@ class GLTexture2D extends RefCounted {
 
     this.__minFilter = gl[minFilter]
     this.__magFilter = gl[magFilter]
-    this.__wrap = gl[wrap]
+    this.__wrapS = gl[wrapS]
+    this.__wrapT = gl[wrapT]
     this.__flipY = 'flipY' in params ? params.flipY : false
     this.__mipMapped = 'mipMapped' in params ? params.mipMapped : false
     this.invert = 'invert' in params ? params.invert : false
@@ -344,8 +339,8 @@ class GLTexture2D extends RefCounted {
 
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, this.__minFilter)
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, this.__magFilter)
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, this.__wrap)
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, this.__wrap)
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, this.__wrapS)
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, this.__wrapT)
   }
 
   /**

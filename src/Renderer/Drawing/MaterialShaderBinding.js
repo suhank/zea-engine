@@ -13,10 +13,15 @@ class SimpleUniformBinding {
    * @param {any} glMaterial - The glMaterial value.
    * @param {any} param - The param value.
    * @param {WebGLUniformLocation} unif - The WebGL uniform
+   * @param {object} unifs - The dictionary of WebGL uniforms.
    */
-  constructor(gl, glMaterial, param, unif) {
+  constructor(gl, glMaterial, param, unif, unifs) {
+    const name = param.getName()
     this.param = param
     this.unif = unif
+    this.textureUnif = unifs[name + 'Tex']
+    this.textureTypeUnif = unifs[name + 'TexType']
+    this.uniform1i = gl.uniform1i.bind(gl)
 
     switch (unif.type) {
       case Boolean:
@@ -34,6 +39,82 @@ class SimpleUniformBinding {
         this.uniformXX = gl.uniform1f.bind(gl)
         break
     }
+
+    this.bind = this.bindValue
+
+    const genGLTex = (image) => {
+      let gltexture = image.getMetadata('gltexture')
+      const textureType = 1
+      if (!gltexture) {
+        if (image.type === 'FLOAT') {
+          gltexture = new GLHDRImage(gl, image)
+        } else {
+          gltexture = new GLTexture2D(gl, image)
+        }
+      }
+      this.texBinding = gltexture.preBind(this.textureUnif, unifs)
+      gltexture.on('updated', () => {
+        glMaterial.emit('updated', {})
+      })
+      this.gltexture = gltexture
+      this.gltexture.addRef(this)
+      this.textureType = textureType
+      this.bind = this.bindTexture
+      glMaterial.emit('updated', {})
+    }
+
+    let boundImage
+    let imageLoaded
+    const connectImage = (image) => {
+      if (!image.isLoaded()) {
+        imageLoaded = () => {
+          genGLTex(boundImage)
+        }
+        image.on('loaded', imageLoaded)
+      } else {
+        genGLTex(image)
+      }
+      boundImage = image
+    }
+
+    const disconnectImage = () => {
+      const gltexture = boundImage.getMetadata('gltexture')
+      gltexture.removeRef(this)
+      this.texBinding = null
+      this.gltexture = null
+      this.textureType = null
+      this.bind = this.bindValue
+
+      if (imageLoaded) {
+        boundImage.off('loaded', imageLoaded)
+      }
+      boundImage = null
+      imageLoaded = null
+      glMaterial.emit('updated', {})
+    }
+
+    this.update = () => {
+      try {
+        // Sometimes the value of a color param is an image.
+        if (boundImage) {
+        } else {
+          this.val = param.getValue()
+        }
+      } catch (e) {}
+      glMaterial.emit('updated')
+    }
+
+    /**
+     * The update method.
+     */
+    if (param.getImage()) connectImage(param.getImage())
+    param.on('textureConnected', () => {
+      connectImage(param.getImage())
+    })
+    param.on('textureDisconnected', () => {
+      disconnectImage()
+    })
+
     this.dirty = true
     param.on('valueChanged', () => {
       this.dirty = true
@@ -42,15 +123,28 @@ class SimpleUniformBinding {
   }
 
   /**
-   * The bind method.
+   * The bindValue method.
    * @param {object} renderstate - The object tracking the current state of the renderer
    */
-  bind(renderstate) {
+  bindValue(renderstate) {
     if (this.dirty) {
-      this.val = this.param.getValue()
+      this.update()
       this.dirty = false
     }
-    this.uniformXX(this.unif.location, this.val)
+    if (this.unif) this.uniformXX(this.unif.location, this.val)
+    if (this.textureTypeUnif) this.uniform1i(this.textureTypeUnif.location, 0)
+  }
+
+  /**
+   * The bindTexture method.
+   * @param {object} renderstate - The object tracking the current state of the renderer
+   */
+  bindTexture(renderstate) {
+    if (this.dirty) {
+      this.update()
+      this.dirty = false
+    }
+    this.gltexture.bindToUniform(renderstate, this.textureUnif, this.texBinding)
   }
 
   /**
@@ -188,7 +282,6 @@ class ColorUniformBinding {
    */
   constructor(gl, glMaterial, param, unif, unifs) {
     const name = param.getName()
-    this.gl = gl
     this.param = param
     this.unif = unif
     this.textureUnif = unifs[name + 'Tex']
@@ -202,9 +295,9 @@ class ColorUniformBinding {
       const textureType = 1
       if (!gltexture) {
         if (image.type === 'FLOAT') {
-          gltexture = new GLHDRImage(this.gl, image)
+          gltexture = new GLHDRImage(gl, image)
         } else {
-          gltexture = new GLTexture2D(this.gl, image)
+          gltexture = new GLTexture2D(gl, image)
         }
       }
       this.texBinding = gltexture.preBind(this.textureUnif, unifs)
@@ -267,6 +360,10 @@ class ColorUniformBinding {
     param.on('textureConnected', () => {
       connectImage(param.getImage())
     })
+    param.on('textureDisconnected', () => {
+      disconnectImage()
+    })
+
     this.dirty = true
     param.on('valueChanged', () => {
       this.dirty = true
@@ -356,7 +453,7 @@ class MaterialShaderBinding {
         case UInt32:
         case SInt32:
         case Float32:
-          this.uniformBindings.push(new SimpleUniformBinding(gl, glMaterial, param, unif))
+          this.uniformBindings.push(new SimpleUniformBinding(gl, glMaterial, param, unif, unifs))
           break
         case Vec2:
         case Vec3:
