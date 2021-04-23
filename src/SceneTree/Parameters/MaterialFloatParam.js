@@ -83,9 +83,6 @@ class MaterialFloatParam extends NumberParameter {
     if (value instanceof BaseImage) {
       this.setImage(value)
     } else {
-      if (this.__image != undefined) {
-        this.setImage(undefined)
-      }
       super.setValue(value)
     }
   }

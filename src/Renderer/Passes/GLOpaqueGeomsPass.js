@@ -86,10 +86,10 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
     const materialParam = geomItem.getParameter('Material')
     const material = materialParam.getValue()
 
-    if (this.__gl.multiDrawElementsInstanced) {
+    if (this.__gl.multiDrawElementsInstanced && !material.isTextured()) {
       const shaderName = material.getShaderName()
       const shader = Registry.getBlueprint(shaderName)
-      if (!material.isTextured() && shader.supportsInstancing() && shader.getPackedMaterialData) {
+      if (shader.supportsInstancing() && shader.getPackedMaterialData) {
         let glShaderGeomSets = this.__glShaderGeomSets[shaderName]
         if (!glShaderGeomSets) {
           const shaders = this.constructShaders(shaderName)
@@ -243,7 +243,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
     }
 
     gl.enable(gl.DEPTH_TEST)
-    gl.depthFunc(gl.LESS)
+    gl.depthFunc(gl.LEQUAL)
     gl.depthMask(true)
 
     this.__traverseTreeAndDraw(renderstate)
@@ -288,7 +288,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
     gl.disable(gl.BLEND)
     gl.disable(gl.CULL_FACE)
     gl.enable(gl.DEPTH_TEST)
-    gl.depthFunc(gl.LESS)
+    gl.depthFunc(gl.LEQUAL)
     gl.depthMask(true)
 
     // eslint-disable-next-line guard-for-in

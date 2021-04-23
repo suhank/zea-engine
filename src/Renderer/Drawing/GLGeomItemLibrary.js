@@ -300,7 +300,6 @@ class GLGeomItemLibrary extends EventEmitter {
 
     // /////////////////////////
     // Geom Item Params
-    const materialId = 0
     let flags = 0
     if (geomItem.isCutawayEnabled()) {
       const GEOMITEM_FLAG_CUTAWAY = 1 // 1<<0;
@@ -308,7 +307,7 @@ class GLGeomItemLibrary extends EventEmitter {
     }
 
     const pix0 = Vec4.createFromBuffer(dataArray.buffer, (offset + 0) * 4)
-    pix0.set(flags, materialId, 0, 0)
+    pix0.set(flags, 0, 0, 0)
 
     const material = geomItem.getParameter('Material').getValue()
     // const coords = material.getMetadata('glmaterialcoords')
@@ -354,10 +353,23 @@ class GLGeomItemLibrary extends EventEmitter {
     const bbox = geomItem.getParameter('BoundingBox').getValue()
     const boundingRadius = bbox.size() * 0.5
     const pos = bbox.center()
+
+    // Some items can't be culled, if they calculate the size in the GPU.
+    // Handles with a fixed size on screen, or points with a fixed size on
+    // screen simply cannot be culled, as they
+    let cullable = true
+    const fixedSizeParam = material.getParameter('MaintainScreenSize')
+    if (fixedSizeParam && fixedSizeParam.getValue()) {
+      cullable = false
+    }
+    if (material.hasParameter('PointSize')) {
+      cullable = false
+    }
     geomItemsUpdateToCullingWorker.push({
       id: index,
       boundingRadius,
       pos: pos.asArray(),
+      cullable,
     })
   }
 

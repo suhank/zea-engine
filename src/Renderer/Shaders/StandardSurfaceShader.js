@@ -138,6 +138,7 @@ uniform mat4 cameraMatrix;
 #ifndef ENABLE_MULTI_DRAW
 
 uniform color BaseColor;
+uniform float AmbientOcclusion;
 uniform float Roughness;
 uniform float Metallic;
 uniform float Reflectance;
@@ -147,6 +148,9 @@ uniform float Opacity;
 #ifdef ENABLE_TEXTURES
 uniform sampler2D BaseColorTex;
 uniform int BaseColorTexType;
+
+uniform sampler2D AmbientOcclusionTex;
+uniform int AmbientOcclusionTexType;
 
 #ifdef ENABLE_PBR
 uniform sampler2D RoughnessTex;
@@ -240,18 +244,19 @@ void main(void) {
     vec4 matValue2      = getMaterialValue(materialCoords, 2);
 
     material.baseColor     = toLinear(matValue0.rgb);
-    material.metallic      = matValue1.r;
-    material.roughness     = matValue1.g;
-    material.reflectance   = matValue1.b;
+    material.ambientOcclusion      = matValue1.r;
+    material.metallic      = matValue1.g;
+    material.roughness     = matValue1.b;
+    material.reflectance   = matValue1.a;
 
-    material.emission         = matValue1.a;
-    material.opacity          = matValue2.r * matValue0.a;
+    material.emission         = matValue2.r;
+    material.opacity          = matValue2.g * matValue0.a;
 
 #else // ENABLE_MULTI_DRAW
 
 #ifndef ENABLE_TEXTURES
     material.baseColor     = toLinear(BaseColor.rgb);
-    material.emission         = EmissiveStrength;
+    material.emission      = EmissiveStrength;
 
 #ifdef ENABLE_PBR
     material.roughness     = Roughness;
@@ -262,14 +267,25 @@ void main(void) {
 #else
     // Planar YZ projection for texturing, repeating every meter.
     // vec2 texCoord       = v_worldPos.xz * 0.2;
-    vec2 texCoord          = vec2(v_textureCoord.x, 1.0 - v_textureCoord.y);
+    vec2 texCoord          = v_textureCoord;
 
     vec4 baseColor         = getColorParamValue(BaseColor, BaseColorTex, BaseColorTexType, texCoord);
+    material.ambientOcclusion = getLuminanceParamValue(AmbientOcclusion, AmbientOcclusionTex, AmbientOcclusionTexType, texCoord);
     material.baseColor     = baseColor.rgb;
-
+    
 #ifdef ENABLE_PBR
-    material.roughness     = getLuminanceParamValue(Roughness, RoughnessTex, RoughnessTexType, texCoord);
+
     material.metallic      = getLuminanceParamValue(Metallic, MetallicTex, MetallicTexType, texCoord);
+    material.roughness     = getLuminanceParamValue(Roughness, RoughnessTex, RoughnessTexType, texCoord);
+
+    // TODO: Communicate that this tex contains the roughness as well.
+    if (MetallicTexType != 0) {
+      vec4 metallicRoughness = vec4(Metallic, Roughness, 0.0, 1.0);
+      metallicRoughness     = texture2D(MetallicTex, texCoord);
+      material.roughness     = metallicRoughness.g;
+      material.metallic     = metallicRoughness.b;
+    }
+
     material.reflectance   = getLuminanceParamValue(Reflectance, ReflectanceTex, ReflectanceTexType, texCoord);
 #endif // ENABLE_PBR
     material.emission         = getLuminanceParamValue(EmissiveStrength, EmissiveStrengthTex, EmissiveStrengthTexType, texCoord);
@@ -291,8 +307,13 @@ void main(void) {
 #endif
 
     fragColor = pbrSurfaceRadiance(material, normal, viewVector);
-    // fragColor = vec4(normal, 1.0);
-
+    // fragColor = vec4(texture2D(NormalTex, texCoord).rgb, 1.0);
+    // fragColor = metallicRoughness;
+    // fragColor = vec4(material.baseColor, 1.0);;
+    // fragColor = vec4(vec3(material.metallic), 1.0);;
+    // fragColor = vec4(vec3(material.roughness), 1.0);;
+    // fragColor = vec4(vec3(material.ambientOcclusion), 1.0);
+    
 #ifdef DEBUG_GEOM_ID
     // ///////////////////////
     // Debug Draw ID (this correlates to GeomID within a GLGeomSet)
@@ -328,18 +349,17 @@ void main(void) {
       name: 'BaseColor',
       defaultValue: new Color(1.0, 1.0, 0.5),
     })
-    paramDescs.push({ name: 'Normal', defaultValue: new Color(0.5, 0.5, 0.5) })
+    paramDescs.push({ name: 'AmbientOcclusion', defaultValue: 1, range: [0, 1] })
     paramDescs.push({ name: 'Metallic', defaultValue: 0.05, range: [0, 1] })
     paramDescs.push({ name: 'Roughness', defaultValue: 0.5, range: [0, 1] })
     paramDescs.push({ name: 'Reflectance', defaultValue: 0.5, range: [0, 1] })
+    paramDescs.push({ name: 'Normal', defaultValue: new Color(0.5, 0.5, 0.5) })
     paramDescs.push({
       name: 'EmissiveStrength',
       defaultValue: 0.0,
       range: [0, 1],
     })
     paramDescs.push({ name: 'Opacity', defaultValue: 1.0, range: [0, 1] })
-
-    // paramDescs.push({ name: 'TexCoordScale', defaultValue: 1.0, texturable: false });
     return paramDescs
   }
 
@@ -379,11 +399,14 @@ void main(void) {
     matData[1] = baseColor.g
     matData[2] = baseColor.b
     matData[3] = baseColor.a
-    matData[4] = material.getParameter('Metallic').getValue()
-    matData[5] = material.getParameter('Roughness').getValue()
-    matData[6] = material.getParameter('Reflectance').getValue()
-    matData[7] = material.getParameter('EmissiveStrength').getValue()
-    matData[8] = material.getParameter('Opacity').getValue()
+
+    matData[4] = material.getParameter('AmbientOcclusion').getValue()
+    matData[5] = material.getParameter('Metallic').getValue()
+    matData[6] = material.getParameter('Roughness').getValue()
+    matData[7] = material.getParameter('Reflectance').getValue()
+
+    matData[8] = material.getParameter('EmissiveStrength').getValue()
+    matData[9] = material.getParameter('Opacity').getValue()
     return matData
   }
 
