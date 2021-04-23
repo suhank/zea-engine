@@ -146,7 +146,7 @@ void main(void) {
   vec2 materialCoords = v_geomItemData.zw;
   vec4 baseColor = getMaterialValue(materialCoords, 0);
   vec4 matValue1 = getMaterialValue(materialCoords, 1);
-  float opacity       = baseColor.a * matValue1.r;
+  float opacity  = matValue1.r;
 
 #else // ENABLE_MULTI_DRAW
 
@@ -172,7 +172,7 @@ void main(void) {
     const paramDescs = super.getParamDeclarations()
     paramDescs.push({ name: 'BaseColor', defaultValue: new Color(1.0, 1.0, 0.5) })
     paramDescs.push({ name: 'Opacity', defaultValue: 0.7 })
-    paramDescs.push({ name: 'Overlay', defaultValue: 0.0001 }) // Provide a slight overlay so lines draw over meshes.
+    paramDescs.push({ name: 'Overlay', defaultValue: 0.00001 }) // Provide a slight overlay so lines draw over meshes.
     return paramDescs
   }
 
