@@ -582,6 +582,7 @@ class GLBaseRenderer extends ParameterOwner {
       this.__glcanvas = $canvas
     }
 
+    this.__glcanvas.style['touch-action'] = 'none'
     const canvasIsStatic = window.getComputedStyle(this.__glcanvas).position === 'static'
 
     if (canvasIsStatic) {
@@ -720,7 +721,6 @@ class GLBaseRenderer extends ParameterOwner {
         if (viewport) {
           event.pointerType = POINTER_TYPES.mouse
           viewport.onPointerLeave(event)
-          event.preventDefault()
         }
 
         activeGLRenderer = undefined
@@ -759,7 +759,6 @@ class GLBaseRenderer extends ParameterOwner {
           if (viewport) {
             event.pointerType = POINTER_TYPES.mouse
             viewport.onPointerEnter(event)
-            event.preventDefault()
           }
         }
 
@@ -776,7 +775,6 @@ class GLBaseRenderer extends ParameterOwner {
         if (viewport) {
           event.pointerType = POINTER_TYPES.mouse
           viewport.onPointerLeave(event)
-          event.preventDefault()
         }
         activeGLRenderer = undefined
       } else {
@@ -790,6 +788,7 @@ class GLBaseRenderer extends ParameterOwner {
       'touchstart',
       (event) => {
         event.stopPropagation()
+
         // Touch events are passive and so cannot call prevent default
         // replace with a stub here...
         event.preventDefault = () => {}
@@ -809,6 +808,7 @@ class GLBaseRenderer extends ParameterOwner {
       'touchend',
       (event) => {
         event.stopPropagation()
+
         // Touch events are passive and so cannot call prevent default
         // replace with a stub here...
         event.preventDefault = () => {}
@@ -828,6 +828,7 @@ class GLBaseRenderer extends ParameterOwner {
       'touchmove',
       (event) => {
         event.stopPropagation()
+
         // Touch events are passive and so cannot call prevent default
         // replace with a stub here...
         event.preventDefault = () => {}
