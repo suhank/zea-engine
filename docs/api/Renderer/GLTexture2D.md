@@ -18,7 +18,6 @@ Images have width and height, but no depth.
     * [getTypeID() ⇒ <code>GLenum</code> \| <code>enum</code>](#getTypeID)
     * [getFormat() ⇒ <code>GLenum</code> \| <code>enum</code>](#getFormat)
     * [getFormatID() ⇒ <code>GLenum</code> \| <code>enum</code>](#getFormatID)
-    * [getFilter() ⇒ <code>any</code>](#getFilter)
     * [getWrap() ⇒ <code>GLenum</code> \| <code>enum</code>](#getWrap)
     * [getMipMapped() ⇒ <code>GLenum</code> \| <code>enum</code>](#getMipMapped)
     * [configure(params, emit)](#configure)
@@ -100,13 +99,6 @@ Returns the value of the specified texel data. It must be the same as the `inter
 
 
 **Returns**: <code>GLenum</code> \| <code>enum</code> - - The return value.  
-<a name="GLTexture2D+getFilter"></a>
-
-### getFilter
-The getFilter method.
-
-
-**Returns**: <code>any</code> - - The return value.  
 <a name="GLTexture2D+getWrap"></a>
 
 ### getWrap
