@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html>
+<html class="h-full">
   <head>
     <title>cuboid - Zea Engine</title>
 
     <link rel="stylesheet" href="styles/tailwind.min.css" />
     <meta charset="UTF-8" />
   </head>
-  <body class="bg-blue-100">
-    <div class="h-screen">
+  <body class="bg-blue-100 h-full">
+    <div class="h-full">
       <canvas class="absolute" id="app"></canvas>
     </div>
 
@@ -27,9 +27,10 @@
       const standardMaterial = new Material('surfaces', 'SimpleSurfaceShader')
       standardMaterial.getParameter('BaseColor').setValue(new Color(200 / 255, 50 / 255, 50 / 255))
 
-      const cuboid = new Cuboid(1.5, 2.0, 0.1)
+      const cuboid = new Cuboid(1.5, 2.0, 1.1)
       const geomItem = new GeomItem('Cuboid', cuboid, standardMaterial)
       scene.getRoot().addChild(geomItem)
+      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(3, 3, 1.7), new Vec3(0, 0, 0.1))
 
       window.postMessage('done-loading')
 
@@ -42,6 +43,7 @@
           renderer.frameAll()
           window.postMessage(`done-${data}`)
         } else if (data === 'variant-02') {
+          cuboid.getParameter('Z').setValue(0.1)
           renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-2, -2, 2.7), new Vec3(0, 0, 0.4))
           renderer.frameAll()
           window.postMessage(`done-${data}`)

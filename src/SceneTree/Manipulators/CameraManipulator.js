@@ -470,8 +470,6 @@ class CameraManipulator extends BaseTool {
       }
     }
     applyMovement()
-
-    this.__manipulationState = 'focussing'
   }
 
   /**
@@ -514,13 +512,11 @@ class CameraManipulator extends BaseTool {
       } else {
         this.__focusIntervalId = undefined
 
-        this.emit('movementFinished', {})
-        camera.emit('movementFinished', { event: 'aimFocus' })
+        this.emit('movementFinished')
+        camera.emit('movementFinished')
       }
     }
     applyMovement()
-
-    this.__manipulationState = 'focussing'
   }
 
   /**
