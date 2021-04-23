@@ -1,14 +1,7 @@
 import '../../SceneTree/GeomItem.js'
 
 import { EventEmitter, MathFunctions } from '../../Utilities/index'
-import { resizeIntArray } from './GLGeomLibrary.js'
 import { GLTexture2D } from '../GLTexture2D.js'
-
-const resizeFloat32Array = (intArray, newSize) => {
-  const newArray = new Float32Array(newSize)
-  newArray.set(intArray)
-  return newArray
-}
 
 /** This class abstracts the rendering of a collection of geometries to screen.
  * @extends EventEmitter

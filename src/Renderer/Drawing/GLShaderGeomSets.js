@@ -21,11 +21,12 @@ class GLShaderGeomSets extends EventEmitter {
     this.gl = gl
     // this.shaderAttrSpec = {}
     this.glShader = shaders.glShader
-    this.glGeomDataShader = shaders.glgeomdatashader
-    this.glHighlightShader = shaders.glselectedshader
+    this.glGeomDataShader = shaders.glgeomdatashader ? shaders.glgeomdatashader : shaders.glShader
+    this.glHighlightShader = shaders.glselectedshader ? shaders.glselectedshader : shaders.glShader
     this.glGeomItemSets = {}
 
     this.glShaderKey = shaders.glShader.getId() + 'multidraw-draw'
+
     if (this.glGeomDataShader) this.glGeomDataShaderKey = this.glGeomDataShader.getId() + 'multidraw-geomdata'
     if (this.glHighlightShader) this.glHighlightShaderKey = this.glHighlightShader.getId() + 'multidraw-highlight'
   }
@@ -145,7 +146,6 @@ class GLShaderGeomSets extends EventEmitter {
    * @param {object} renderstate - The object tracking the current state of the renderer
    */
   drawGeomData(renderstate) {
-    if (!this.glGeomDataShader) return
     this.bindShader(this.glGeomDataShader, renderstate, this.glGeomDataShaderKey)
 
     const gl = renderstate.gl
