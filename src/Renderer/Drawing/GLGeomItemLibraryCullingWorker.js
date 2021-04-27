@@ -164,6 +164,9 @@ const handleMessage = (data, postMessage) => {
       geomItemsData[geomItem.id] = geomItem
       checkGeomItem(geomItemsData[geomItem.id])
     })
+    data.removedItemIndices.forEach((id) => {
+      geomItemsData[id] = null
+    })
     onDone(postMessage)
   }
 }

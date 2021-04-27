@@ -53,13 +53,21 @@
           geomItem1.getParameter('Geometry').getValue().getParameter('Loops').setValue(100)
           window.postMessage(`done-${data}`)
         } else if (data === 'variant-02') {
+          // Now look away, so that the scene gets frustum culled.
+          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(10, 10, 2.7), new Vec3(20, 20, 0.4))
+          window.postMessage(`done-${data}`)
+        } else if (data === 'variant-03') {
+          // Now look back, so that the scene gets frustum un-culled.
+          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(10, 10, 2.7), new Vec3(0, 0, 0.4))
+          window.postMessage(`done-${data}`)
+        } else if (data === 'variant-04') {
           scene.getRoot().removeChild(scene.getRoot().getChildIndex(geomItem1))
           // Modify the class again, after it has been removed from the renderer.
           // Note: Our GLGeomLibrary still updates the buffers. It doesn't know that
           // no GeomItems track this geom. We need to add ref counting...
           geomItem1.getParameter('Geometry').getValue().getParameter('Loops').setValue(12)
           window.postMessage(`done-${data}`)
-        } else if (data === 'variant-03') {
+        } else if (data === 'variant-05') {
           scene.getRoot().addChild(geomItem0)
           scene.getRoot().addChild(geomItem1)
           window.postMessage(`done-${data}`)
