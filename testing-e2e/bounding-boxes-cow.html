@@ -63,12 +63,17 @@
         const { data } = event
 
         if (data === 'variant-01') {
-          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, -2.7), new Vec3(0, 0, 0.4))
-          renderer.frameAll()
+          const angle = -1
+          const xfo = new Xfo()
+          xfo.ori.setFromAxisAndAngle(new Vec3(0, 0, 1), angle)
+          objAsset.getParameter('LocalXfo').setValue(xfo)
           window.postMessage(`done-${data}`)
         } else if (data === 'variant-02') {
-          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-2, -2, 2.7), new Vec3(0, 0, 0.4))
-          renderer.frameAll()
+          const angle = 2
+          const xfo = new Xfo()
+          xfo.tr.set(-1, Math.cos(angle) * 2, 0)
+          xfo.ori.setFromAxisAndAngle(new Vec3(0, 0, 1), angle)
+          objAsset.getParameter('LocalXfo').setValue(xfo)
           window.postMessage(`done-${data}`)
         }
       }
