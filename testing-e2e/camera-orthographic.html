@@ -46,14 +46,20 @@
 
         if (data === 'variant-01') {
           renderer.getViewport().getCamera().setIsOrthographic(1, 400)
-          renderer.once('movementFinished', () => {
-            postMessage(`done-${data}`)
-          })
+          renderer
+            .getViewport()
+            .getCamera()
+            .once('movementFinished', () => {
+              postMessage(`done-${data}`)
+            })
         } else if (data === 'variant-02') {
           renderer.getViewport().getCamera().setIsOrthographic(0, 400)
-          renderer.once('movementFinished', () => {
-            postMessage(`done-${data}`)
-          })
+          renderer
+            .getViewport()
+            .getCamera()
+            .once('movementFinished', () => {
+              postMessage(`done-${data}`)
+            })
         }
       }
 
