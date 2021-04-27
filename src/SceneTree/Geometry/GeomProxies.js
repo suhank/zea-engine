@@ -138,4 +138,4 @@ class MeshProxy extends BaseProxy {
   }
 }
 
-export { PointsProxy, LinesProxy, MeshProxy }
+export { BaseProxy, PointsProxy, LinesProxy, MeshProxy }
