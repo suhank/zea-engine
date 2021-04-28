@@ -13,6 +13,7 @@ import './GLSL/modelMatrix.js'
 import './GLSL/debugColors.js'
 import './GLSL/ImagePyramid.js'
 import './GLSL/cutaways.js'
+import './GLSL/computeViewNormal.js'
 
 /** A standard shader handling Opaque and transparent items and PBR rendering.
  * @extends GLShader
@@ -197,6 +198,9 @@ mat3 cotangentFrame( in vec3 normal, in vec3 pos, in vec2 texCoord ) {
 }
 #endif
 
+<%include file="computeViewNormal.glsl"/>
+
+
 #ifdef ENABLE_ES3
 out vec4 fragColor;
 #endif
@@ -224,16 +228,24 @@ void main(void) {
         }
     }
 
-    vec3 viewNormal = normalize(v_viewNormal);
-    //vec3 surfacePos = -v_viewPos;
-    vec3 viewVector = normalize(mat3(cameraMatrix) * normalize(v_viewPos));
+    //////////////////////////////////////////////
+    // Normals
+    vec3 viewNormal;
+    if (length(v_viewNormal) < 0.1) {
+      viewNormal = computeViewNormal(v_viewPos);
+    } else {
+      viewNormal = normalize(v_viewNormal);
+    }
     vec3 normal = normalize(mat3(cameraMatrix) * viewNormal);
+    vec3 viewVector = normalize(mat3(cameraMatrix) * normalize(v_viewPos));
     if(dot(normal, viewVector) < 0.0){
         normal = -normal;
         // Note: this line can be used to debug inverted meshes.
         //material.baseColor = vec3(1.0, 0.0, 0.0);
     }
 
+    //////////////////////////////////////////////
+    // Material
 
     MaterialParams material;
 
