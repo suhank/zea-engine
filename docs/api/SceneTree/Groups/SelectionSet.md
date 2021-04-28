@@ -2,12 +2,12 @@
 
 ### SelectionSet 
 **Parameters**
-* **Highlighted([`BooleanParameter`](api/SceneTree\Parameters\BooleanParameter.md)):** _todo_
-* **HighlightColor([`ColorParameter`](api/SceneTree\Parameters\ColorParameter.md)):** _todo_
-* **HighlightFill([`NumberParameter`](api/SceneTree\Parameters\NumberParameter.md)):** _todo_
+* **Highlighted([`BooleanParameter`](api/SceneTree/Parameters/BooleanParameter.md)):** _todo_
+* **HighlightColor([`ColorParameter`](api/SceneTree/Parameters/ColorParameter.md)):** _todo_
+* **HighlightFill([`NumberParameter`](api/SceneTree/Parameters/NumberParameter.md)):** _todo_
 
 
-**Extends**: <code>[BaseGroup](api/SceneTree\Groups\BaseGroup.md)</code>  
+**Extends**: <code>[BaseGroup](api/SceneTree/Groups/BaseGroup.md)</code>  
 
 * [SelectionSet ⇐ <code>BaseGroup</code>](#SelectionSet)
     * [new SelectionSet(name)](#new-SelectionSet)
@@ -50,4 +50,4 @@ copies its values and returns it.
 
 
 
-### [Class Tests](api/SceneTree\Groups/SelectionSet.test)
+### [Class Tests](api/SceneTree/Groups/SelectionSet.test)

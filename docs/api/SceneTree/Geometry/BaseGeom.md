@@ -9,7 +9,7 @@ Represents a base class for 3D geometry items.
 * **geomDataTopologyChanged:** Emitted when the geometry attributes and topology have changed.  The Renderer will upload the new attributes and topology to the GPU.
 
 
-**Extends**: <code>[ParameterOwner](api/SceneTree\ParameterOwner.md)</code>  
+**Extends**: <code>[ParameterOwner](api/SceneTree/ParameterOwner.md)</code>  
 
 * [BaseGeom ⇐ <code>ParameterOwner</code>](#BaseGeom)
     * [new BaseGeom()](#new-BaseGeom)
@@ -62,7 +62,7 @@ Returns 'positions' vertex attribute.
 Returns the bounding box for geometry.
 
 
-**Returns**: <code>[Vec3](api/Math\Vec3.md)</code> - - The return value.  
+**Returns**: <code>[Vec3](api/Math/Vec3.md)</code> - - The return value.  
 <a name="BaseGeom+clear"></a>
 
 ### clear
@@ -86,7 +86,7 @@ Establishes a name for the geometry.
 Adds a new vertex attribute to the geometry.
 
 
-**Returns**: <code>[Attribute](api/SceneTree\Geometry\Attribute.md)</code> - - Returns an attribute.  
+**Returns**: <code>[Attribute](api/SceneTree/Geometry/Attribute.md)</code> - - Returns an attribute.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -112,7 +112,7 @@ Checks if the the geometry has an attribute with the specified name.
 Returns vertex attribute with the specified name.
 
 
-**Returns**: <code>[Attribute](api/SceneTree\Geometry\Attribute.md)</code> - - The return value.  
+**Returns**: <code>[Attribute](api/SceneTree/Geometry/Attribute.md)</code> - - The return value.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -158,7 +158,7 @@ Sets the number of vertices the geometry has.
 Returns the position attribute value of the given vertex
 
 
-**Returns**: <code>[Vec3](api/Math\Vec3.md)</code> - - Returns a Vec3.  
+**Returns**: <code>[Vec3](api/Math/Vec3.md)</code> - - Returns a Vec3.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -172,12 +172,12 @@ Returns the position attribute value of the given vertex
 Sets the position attribute value of the given vertex
 
 
-**Returns**: <code>[Vec3](api/Math\Vec3.md)</code> - - Returns a Vec3.  
+**Returns**: <code>[Vec3](api/Math/Vec3.md)</code> - - Returns a Vec3.  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| index | <code>[index](api/index.md)</code> | The index value. |
-| value | <code>[Vec3](api/Math\Vec3.md)</code> | The value value. |
+| index | <code>[index](api/Math/index.md)</code> | The index value. |
+| value | <code>[Vec3](api/Math/Vec3.md)</code> | The value value. |
 
 <a name="BaseGeom+moveVertices"></a>
 
@@ -190,7 +190,7 @@ Applies an offset to each of the vertices in the geometry.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| delta | <code>[Vec3](api/Math\Vec3.md)</code> | The delta value. |
+| delta | <code>[Vec3](api/Math/Vec3.md)</code> | The delta value. |
 
 <a name="BaseGeom+transformVertices"></a>
 
@@ -203,7 +203,7 @@ The transformVertices method.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| xfo | <code>[Xfo](api/Math\Xfo.md)</code> | The xfo transform. |
+| xfo | <code>[Xfo](api/Math/Xfo.md)</code> | The xfo transform. |
 
 <a name="BaseGeom+getBoundingBox"></a>
 
@@ -211,7 +211,7 @@ The transformVertices method.
 Returns the bounding box for geometry.
 
 
-**Returns**: <code>[Vec3](api/Math\Vec3.md)</code> - - The return value.  
+**Returns**: <code>[Vec3](api/Math/Vec3.md)</code> - - The return value.  
 <a name="BaseGeom+setBoundingBoxDirty"></a>
 
 ### setBoundingBoxDirty
@@ -292,7 +292,7 @@ Sets state of current Geometry(Including Vertices and Bounding Box) using a bina
 
 | Param | Type | Description |
 | --- | --- | --- |
-| reader | <code>[BinReader](api/SceneTree\BinReader.md)</code> | The reader value. |
+| reader | <code>[BinReader](api/SceneTree/BinReader.md)</code> | The reader value. |
 
 <a name="BaseGeom+toJSON"></a>
 

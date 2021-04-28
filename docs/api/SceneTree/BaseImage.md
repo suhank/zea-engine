@@ -4,15 +4,15 @@
 Represents a 2D image item, containing width and height.
 
 **Parameters**
-* **AlphaFromLuminance([`BooleanParameter`](api/SceneTree\Parameters\BooleanParameter.md)):** Sets alpha chanel to the luminance of the image and all color channels to `0`.
-* **Invert([`BooleanParameter`](api/SceneTree\Parameters\BooleanParameter.md)):** Horizontally flips the image(Basically inverting X pixels).
-* **FlipY([`BooleanParameter`](api/SceneTree\Parameters\BooleanParameter.md)):** Vertically flips the image, meaning that it would be upside down if enabled.
+* **AlphaFromLuminance([`BooleanParameter`](api/SceneTree/Parameters/BooleanParameter.md)):** Sets alpha chanel to the luminance of the image and all color channels to `0`.
+* **Invert([`BooleanParameter`](api/SceneTree/Parameters/BooleanParameter.md)):** Horizontally flips the image(Basically inverting X pixels).
+* **FlipY([`BooleanParameter`](api/SceneTree/Parameters/BooleanParameter.md)):** Vertically flips the image, meaning that it would be upside down if enabled.
 
 **Events**
 * **updated:** Triggered when the value of any of the parameters listed above changes.
 
 
-**Extends**: <code>[BaseItem](api/SceneTree\BaseItem.md)</code>  
+**Extends**: <code>[BaseItem](api/SceneTree/BaseItem.md)</code>  
 
 * [BaseImage ⇐ <code>BaseItem</code>](#BaseImage)
     * [new BaseImage(name)](#new-BaseImage)

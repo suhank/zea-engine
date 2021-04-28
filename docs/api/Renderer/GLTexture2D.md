@@ -6,7 +6,7 @@ Represents a texture that contains 2-dimensional images.
 Images have width and height, but no depth.
 
 
-**Extends**: <code>[RefCounted](api/SceneTree\RefCounted.md)</code>  
+**Extends**: <code>[RefCounted](api/SceneTree/RefCounted.md)</code>  
 
 * [GLTexture2D ⇐ <code>RefCounted</code>](#GLTexture2D)
     * [new GLTexture2D(gl, params)](#new-GLTexture2D)
@@ -63,7 +63,7 @@ Returns the loaded status of the 2D Texture
 Returns the `BaseImage` of the GL Texture
 
 
-**Returns**: <code>[BaseImage](api/SceneTree\BaseImage.md)</code> - - The return value.  
+**Returns**: <code>[BaseImage](api/SceneTree/BaseImage.md)</code> - - The return value.  
 <a name="GLTexture2D+getInternalFormat"></a>
 
 ### getInternalFormat

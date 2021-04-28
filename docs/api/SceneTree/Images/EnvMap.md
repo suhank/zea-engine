@@ -5,11 +5,11 @@ An EnvMap can load High Dynamic Range environment map images, necessary for high
 <br>
 <br>
 **Parameters**
-* **HeadLightMode([`BooleanParameter`](api/SceneTree\Parameters\BooleanParameter.md)):** Enables Headlight mode so that the environment lighting is aligned with the camera.
+* **HeadLightMode([`BooleanParameter`](api/SceneTree/Parameters/BooleanParameter.md)):** Enables Headlight mode so that the environment lighting is aligned with the camera.
 With Headlight mode on, the top of the env map is aligned with the direction of the camera, so a the view is generally well lit.
 
 
-**Extends**: <code>[VLHImage](api/SceneTree\Images\VLHImage.md)</code>  
+**Extends**: <code>[VLHImage](api/SceneTree/Images/VLHImage.md)</code>  
 
 * [EnvMap ⇐ <code>VLHImage</code>](#EnvMap)
     * [new EnvMap(name, params)](#new-EnvMap)
@@ -36,5 +36,5 @@ Calculate the luminance of the Environment in the direction.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| dir | <code>[Vec3](api/Math\Vec3.md)</code> | The dir value. |
+| dir | <code>[Vec3](api/Math/Vec3.md)</code> | The dir value. |
 

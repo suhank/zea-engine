@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.7.0](https://github.com/ZeaInc/zea-engine/compare/v3.6.0...v3.7.0) (2021-04-28)
+
+
+### Features
+
+* GeomItem can now calculate precise bounding boxes for geometries after loading a zcad file. ([fafdfe7](https://github.com/ZeaInc/zea-engine/commit/fafdfe730fc0d2761675570d8ce9cb684e45da0c))
+
+
+### Bug Fixes
+
+* GeomLibrary now correctly cleans up the culling worker when items are removed from the renderer. ([a5f8181](https://github.com/ZeaInc/zea-engine/commit/a5f8181b06b3e1649108c580c6d3de651a96b6b5))
+* Mobile Safari touch ([575a430](https://github.com/ZeaInc/zea-engine/commit/575a43074a95d78bbae1ce53e9b972aabf41eb31))
+* Removing transparent items from the renderer no longer causes a crash. ([8cf4b15](https://github.com/ZeaInc/zea-engine/commit/8cf4b159e6e849685619c0a054a48966c0a07590))
+* Renderer now updates all instances of instanced geometries where topologies are changing. ([a7b5730](https://github.com/ZeaInc/zea-engine/commit/a7b573084507b96961990e18028fb78ae5bf7d71))
+
 ## [3.6.0](https://github.com/ZeaInc/zea-engine/compare/v3.5.2...v3.6.0) (2021-04-23)
 
 
@@ -20,10 +35,10 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### Bug Fixes
 
-* an exception thrown when all the items for a geom were removed from a GLGeomItemSet, if there were highlighted items before. ([201952d](https://github.com/ZeaInc/zea-engine/commit/201952dbef09f759167e1f7b81e7e8eb4e0b7a64))
+* An exception thrown when all the items for a geom were removed from a GLGeomItemSet, if there were highlighted items before. ([201952d](https://github.com/ZeaInc/zea-engine/commit/201952dbef09f759167e1f7b81e7e8eb4e0b7a64))
 * Assigning a regular value to a Material parameter no longer removes the assigned texture. ([e536595](https://github.com/ZeaInc/zea-engine/commit/e536595306fee0cb646da5add0acae8aacde26a1))
 * CameraManipulator would sometimes cause rolling when double tapping, leaving the user camera a bit crooked. ([a195b8f](https://github.com/ZeaInc/zea-engine/commit/a195b8f65fa06ac4073549b0f0535e5cf638d1b4))
-* canvas is now immediately resized to fit its parent container when the WebGL context is created, making renderer setup synchronous ([16f9fd7](https://github.com/ZeaInc/zea-engine/commit/16f9fd72d0f0801cb90cf5d3332ab15a1b59f07e))
+* Canvas is now immediately resized to fit its parent container when the WebGL context is created, making renderer setup synchronous ([16f9fd7](https://github.com/ZeaInc/zea-engine/commit/16f9fd72d0f0801cb90cf5d3332ab15a1b59f07e))
 * Cleaned up memory leak removing items from the renderer. ([d0e9438](https://github.com/ZeaInc/zea-engine/commit/d0e9438bc9cd4a0904ffa5065d0008acfc9606a5))
 * Cutting Plane values on the BaseGeomItem are now initialized to reasonable values. ([08c61e7](https://github.com/ZeaInc/zea-engine/commit/08c61e7222b6a8487e2bda756eb5f3c32f249f90))
 * done. ([a8b3c59](https://github.com/ZeaInc/zea-engine/commit/a8b3c5996654b2931f43ba623f745a83c0541d4c))

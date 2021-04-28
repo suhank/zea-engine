@@ -21,7 +21,7 @@ myParameterOwnerItem.addParameter(numberParam)
 * **textureConnected:** Triggered when the Image value is set.
 
 
-**Extends**: <code>[NumberParameter](api/SceneTree\Parameters\NumberParameter.md)</code>  
+**Extends**: <code>[NumberParameter](api/SceneTree/Parameters/NumberParameter.md)</code>  
 
 * [MaterialFloatParam ⇐ <code>NumberParameter</code>](#MaterialFloatParam)
     * [new MaterialFloatParam(name, value, range, step)](#new-MaterialFloatParam)
@@ -50,7 +50,7 @@ Create a material float parameter.
 Returns `BaseImage` texture of the Material.
 
 
-**Returns**: <code>[BaseImage](api/SceneTree\BaseImage.md)</code> - - The return value.  
+**Returns**: <code>[BaseImage](api/SceneTree/BaseImage.md)</code> - - The return value.  
 <a name="MaterialFloatParam+setImage"></a>
 
 ### setImage
@@ -60,7 +60,7 @@ Sets `BaseImage` texture value in parameter.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| value | <code>[BaseImage](api/SceneTree\BaseImage.md)</code> | The value value. |
+| value | <code>[BaseImage](api/SceneTree/BaseImage.md)</code> | The value value. |
 
 <a name="MaterialFloatParam+setValue"></a>
 
@@ -95,4 +95,4 @@ copies its values from this parameter and returns it.
 **Returns**: [<code>MaterialFloatParam</code>](#MaterialFloatParam) - - Returns a new cloned material float parameter.  
 
 
-### [Class Tests](api/SceneTree\Parameters/MaterialFloatParam.test)
+### [Class Tests](api/SceneTree/Parameters/MaterialFloatParam.test)

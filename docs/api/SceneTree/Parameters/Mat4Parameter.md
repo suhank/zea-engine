@@ -12,7 +12,7 @@ myParameterOwnerItem.addParameter(mat4Param)
 ```
 
 
-**Extends**: <code>[Parameter](api/SceneTree\Parameters\Parameter.md)</code>  
+**Extends**: <code>[Parameter](api/SceneTree/Parameters/Parameter.md)</code>  
 
 * [Mat4Parameter ⇐ <code>Parameter</code>](#Mat4Parameter)
     * [new Mat4Parameter(name, value)](#new-Mat4Parameter)
@@ -28,7 +28,7 @@ Create a Mat4 parameter.
 | Param | Type | Description |
 | --- | --- | --- |
 | name | <code>string</code> | The name of the Mat4 parameter. |
-| value | <code>[Mat4](api/Math\Mat4.md)</code> | The value of the parameter. |
+| value | <code>[Mat4](api/Math/Mat4.md)</code> | The value of the parameter. |
 
 <a name="Mat4Parameter+readBinary"></a>
 
@@ -39,7 +39,7 @@ Extracts a number value from a buffer, updating current parameter state.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| reader | <code>[BinReader](api/SceneTree\BinReader.md)</code> | The reader value. |
+| reader | <code>[BinReader](api/SceneTree/BinReader.md)</code> | The reader value. |
 | context | <code>object</code> | The context value. |
 
 <a name="Mat4Parameter+clone"></a>
@@ -52,4 +52,4 @@ copies its values from this parameter and returns it.
 **Returns**: [<code>Mat4Parameter</code>](#Mat4Parameter) - - Returns a new cloned Mat4 parameter.  
 
 
-### [Class Tests](api/SceneTree\Parameters/Mat4Parameter.test)
+### [Class Tests](api/SceneTree/Parameters/Mat4Parameter.test)

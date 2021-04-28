@@ -2,10 +2,10 @@
 
 ### MaterialGroup 
 **Parameters**
-* **Material([`MaterialParameter`](api/SceneTree\Parameters\MaterialParameter.md)):** _todo_
+* **Material([`MaterialParameter`](api/SceneTree/Parameters/MaterialParameter.md)):** _todo_
 
 
-**Extends**: <code>[BaseGroup](api/SceneTree\Groups\BaseGroup.md)</code>  
+**Extends**: <code>[BaseGroup](api/SceneTree/Groups/BaseGroup.md)</code>  
 
 * [MaterialGroup ⇐ <code>BaseGroup</code>](#MaterialGroup)
     * [new MaterialGroup(name)](#new-MaterialGroup)
@@ -48,4 +48,4 @@ copies its values and returns it.
 
 
 
-### [Class Tests](api/SceneTree\Groups/MaterialGroup.test)
+### [Class Tests](api/SceneTree/Groups/MaterialGroup.test)

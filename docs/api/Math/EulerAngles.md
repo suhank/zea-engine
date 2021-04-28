@@ -5,7 +5,7 @@ Class representing euler angles. Euler angles describe rotating an object
 around its various axis in a specified axis order.
 
 
-**Extends**: <code>[AttrValue](api/Math\AttrValue.md)</code>  
+**Extends**: <code>[AttrValue](api/Math/AttrValue.md)</code>  
 
 * [EulerAngles ⇐ <code>AttrValue</code>](#EulerAngles)
     * [new EulerAngles(x, y, z, order)](#new-EulerAngles)

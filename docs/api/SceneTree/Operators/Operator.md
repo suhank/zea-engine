@@ -4,7 +4,7 @@
 Class representing an operator.
 
 
-**Extends**: <code>[BaseItem](api/SceneTree\BaseItem.md)</code>  
+**Extends**: <code>[BaseItem](api/SceneTree/BaseItem.md)</code>  
 
 * [Operator ⇐ <code>BaseItem</code>](#Operator)
     * [new Operator(name)](#new-Operator)
@@ -46,7 +46,7 @@ The addInput method.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| input | <code>string</code> \| <code>[OperatorInput](api/SceneTree\Operators\OperatorInput.md)</code> | The name of the input, or the input object |
+| input | <code>string</code> \| <code>[OperatorInput](api/SceneTree/Operators/OperatorInput.md)</code> | The name of the input, or the input object |
 
 <a name="Operator+removeInput"></a>
 
@@ -57,7 +57,7 @@ The removeInput method.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| input | <code>string</code> \| <code>[OperatorInput](api/SceneTree\Operators\OperatorInput.md)</code> | The name of the input, or the input object |
+| input | <code>string</code> \| <code>[OperatorInput](api/SceneTree/Operators/OperatorInput.md)</code> | The name of the input, or the input object |
 
 <a name="Operator+getNumInputs"></a>
 
@@ -84,7 +84,7 @@ The getInputByIndex method.
 The getInput method.
 
 
-**Returns**: <code>[OperatorInput](api/SceneTree\Operators\OperatorInput.md)</code> - - The return value.  
+**Returns**: <code>[OperatorInput](api/SceneTree/Operators/OperatorInput.md)</code> - - The return value.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -100,7 +100,7 @@ The addOutput method.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| output | <code>string</code> \| <code>[OperatorOutput](api/SceneTree\Operators\OperatorOutput.md)</code> | The name of the output, or the output object |
+| output | <code>string</code> \| <code>[OperatorOutput](api/SceneTree/Operators/OperatorOutput.md)</code> | The name of the output, or the output object |
 
 <a name="Operator+removeOutput"></a>
 
@@ -111,7 +111,7 @@ The removeOutput method.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| output | <code>string</code> \| <code>[OperatorOutput](api/SceneTree\Operators\OperatorOutput.md)</code> | The name of the output, or the output object |
+| output | <code>string</code> \| <code>[OperatorOutput](api/SceneTree/Operators/OperatorOutput.md)</code> | The name of the output, or the output object |
 
 <a name="Operator+getNumOutputs"></a>
 
@@ -138,7 +138,7 @@ The getOutputByIndex method.
 The getOutput method.
 
 
-**Returns**: <code>[OperatorOutput](api/SceneTree\Operators\OperatorOutput.md)</code> - - The return value.  
+**Returns**: <code>[OperatorOutput](api/SceneTree/Operators/OperatorOutput.md)</code> - - The return value.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -214,4 +214,4 @@ The rebind method.
 
 
 
-### [Class Tests](api/SceneTree\Operators/Operator.test)
+### [Class Tests](api/SceneTree/Operators/Operator.test)

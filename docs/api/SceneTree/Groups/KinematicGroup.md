@@ -6,11 +6,11 @@ Objects can be added to a kinematic group and then the group can be transformed,
 of the members to be transformed as one.
 
 *Parameters**
-**InitialXfoMode([`MultiChoiceParameter`](api/SceneTree\Parameters\MultiChoiceParameter.md)):** _todo_
-**GroupTransform([`XfoParameter`](api/SceneTree\Parameters\XfoParameter.md)):** _todo_
+**InitialXfoMode([`MultiChoiceParameter`](api/SceneTree/Parameters/MultiChoiceParameter.md)):** _todo_
+**GroupTransform([`XfoParameter`](api/SceneTree/Parameters/XfoParameter.md)):** _todo_
 
 
-**Extends**: <code>[BaseGroup](api/SceneTree\Groups\BaseGroup.md)</code>  
+**Extends**: <code>[BaseGroup](api/SceneTree/Groups/BaseGroup.md)</code>  
 
 * [KinematicGroup ⇐ <code>BaseGroup</code>](#KinematicGroup)
     * [new KinematicGroup(name)](#new-KinematicGroup)
@@ -54,7 +54,7 @@ Adds an item to the group(See `Items` parameter).
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| item | <code>[BaseItem](api/SceneTree\BaseItem.md)</code> |  | The item value. |
+| item | <code>[BaseItem](api/SceneTree/BaseItem.md)</code> |  | The item value. |
 | emit | <code>boolean</code> | <code>true</code> | The emit value. |
 
 <a name="KinematicGroup+removeItem"></a>
@@ -66,7 +66,7 @@ Removes an item from the group(See `Items` parameter).
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| item | <code>[BaseItem](api/SceneTree\BaseItem.md)</code> |  | The item value. |
+| item | <code>[BaseItem](api/SceneTree/BaseItem.md)</code> |  | The item value. |
 | emit | <code>boolean</code> | <code>true</code> | The emit value. |
 
 <a name="KinematicGroup+setItems"></a>
@@ -119,4 +119,4 @@ Returns enum of available xfo modes.
 
 
 
-### [Class Tests](api/SceneTree\Groups/KinematicGroup.test)
+### [Class Tests](api/SceneTree/Groups/KinematicGroup.test)
