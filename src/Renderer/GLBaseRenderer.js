@@ -688,7 +688,20 @@ class GLBaseRenderer extends ParameterOwner {
     }
 
     /** Mouse Events Start */
+    const isMobileSafariMouseEvent = (event) => {
+      if (SystemDesc.isMobileDevice && SystemDesc.browserName == 'Safari') {
+        console.warn('Mobile Safari is triggering mouse event:', event.type)
+        return true
+      }
+
+      return false
+    }
+
     this.__glcanvas.addEventListener('mousedown', (event) => {
+      if (isMobileSafariMouseEvent(event)) {
+        return
+      }
+
       prepareEvent(event)
       calcRendererCoords(event)
       pointerIsDown = true
@@ -705,6 +718,10 @@ class GLBaseRenderer extends ParameterOwner {
     })
 
     document.addEventListener('mouseup', (event) => {
+      if (isMobileSafariMouseEvent(event)) {
+        return
+      }
+
       if (activeGLRenderer != this || !isValidCanvas()) return
 
       prepareEvent(event)
@@ -729,6 +746,10 @@ class GLBaseRenderer extends ParameterOwner {
     })
 
     document.addEventListener('mousemove', (event) => {
+      if (isMobileSafariMouseEvent(event)) {
+        return
+      }
+
       if (activeGLRenderer != this || !isValidCanvas()) return
 
       prepareEvent(event)
@@ -744,6 +765,10 @@ class GLBaseRenderer extends ParameterOwner {
     })
 
     this.__glcanvas.addEventListener('mouseenter', (event) => {
+      if (isMobileSafariMouseEvent(event)) {
+        return
+      }
+
       if (!pointerIsDown) {
         activeGLRenderer = this
         event.pointerType = POINTER_TYPES.mouse
@@ -766,6 +791,10 @@ class GLBaseRenderer extends ParameterOwner {
     })
 
     this.__glcanvas.addEventListener('mouseleave', (event) => {
+      if (isMobileSafariMouseEvent(event)) {
+        return
+      }
+
       if (activeGLRenderer != this || !isValidCanvas()) return
 
       prepareEvent(event)
@@ -780,6 +809,7 @@ class GLBaseRenderer extends ParameterOwner {
         pointerLeft = true
       }
     })
+
     /** Mouse Events End */
 
     /** Touch Events Start */

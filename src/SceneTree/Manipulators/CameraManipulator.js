@@ -704,13 +704,18 @@ class CameraManipulator extends BaseTool {
         event.viewport.getCamera().emit('movementFinished', {})
       } else if (event.pointerType === POINTER_TYPES.touch) {
         event.preventDefault()
-        const touches = event.changedTouches
+        const { changedTouches, touches } = event
 
-        for (let i = 0; i < touches.length; i++) {
-          this.__endTouch(touches[i])
+        for (let i = 0; i < changedTouches.length; i++) {
+          this.__endTouch(changedTouches[i])
         }
 
-        if (Object.keys(this.__ongoingTouches).length == 0) this.endDrag(event)
+        if (Object.keys(this.__ongoingTouches).length == 0) {
+          this.endDrag(event)
+        } else if (!touches.length) {
+          this.endDrag(event)
+          this.__ongoingTouches = {}
+        }
       }
 
       event.stopPropagation()
