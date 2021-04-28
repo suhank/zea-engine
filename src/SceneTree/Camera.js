@@ -222,7 +222,7 @@ class Camera extends TreeItem {
           this.__focusIntervalId = setTimeout(applyMovement, 20)
         } else {
           this.__focusIntervalId = undefined
-          this.emit('movementFinished', {})
+          this.emit('movementFinished')
         }
       }
       applyMovement()
@@ -244,6 +244,7 @@ class Camera extends TreeItem {
     const xfo = new Xfo()
     xfo.setLookAt(position, target, new Vec3(0.0, 0.0, 1.0))
     this.getParameter('GlobalXfo').setValue(xfo)
+    this.emit('movementFinished')
   }
 
   /**

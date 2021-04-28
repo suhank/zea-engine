@@ -30,6 +30,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
     this.itemCount = 0
     this.__glShaderGeomSets = {}
     this.transparentItems = []
+    this.transparentItemIndices = {}
     this.freeList = []
     this.visibleItems = []
     this.prevSortCameraPos = new Vec3(999, 999, 999)
@@ -162,7 +163,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
     if (this.freeList.length > 0) itemindex = this.freeList.pop()
     else itemindex = this.transparentItems.length
     this.transparentItems[itemindex] = item
-    geomItem.setMetadata('itemIndex', itemindex)
+    this.transparentItemIndices[geomItem.getId()] = itemindex
     if (geomItem.isVisible()) {
       this.visibleItems.push(item)
     }
@@ -189,10 +190,11 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
       geomItem.deleteMetadata('geomItemSet')
       glGeomItem.off('visibilityChanged', this.resortNeeded)
     } else {
-      const itemindex = geomItem.getMetadata('itemIndex')
+      const itemindex = this.transparentItemIndices[geomItem.getId()]
       const item = this.transparentItems[itemindex]
+      delete this.transparentItemIndices[geomItem.getId()]
 
-      geomItem.off('visibilityChanged', item.visibilityChanged)
+      glGeomItem.off('visibilityChanged', item.visibilityChanged)
       geomItem.getParameter('GeomMat').off('valueChanged', item.geomMatChanged)
 
       this.transparentItems[itemindex] = null
@@ -318,8 +320,6 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
   draw(renderstate) {
     if (this.itemCount == 0) return
 
-    // if (this.newItemsReadyForLoading()) this.finalize()
-
     const gl = this.__gl
 
     const viewPos = renderstate.viewXfo.tr
@@ -417,8 +417,6 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
    * @param {object} renderstate - The object tracking the current state of the renderer
    */
   drawGeomData(renderstate) {
-    // if (this.newItemsReadyForLoading()) this.finalize()
-
     const gl = this.__gl
     gl.disable(gl.BLEND)
     gl.disable(gl.CULL_FACE)

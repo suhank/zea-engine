@@ -27,6 +27,7 @@ class GLGeomItemLibrary extends EventEmitter {
     this.glGeomItemsMap = {}
     this.glGeomItemsIndexFreeList = []
     this.dirtyItemIndices = []
+    this.removedItemIndices = []
 
     // this.worker = {
     //   postMessage: (message) => {},
@@ -245,6 +246,8 @@ class GLGeomItemLibrary extends EventEmitter {
     this.glGeomItemsIndexFreeList.push(index)
     delete this.glGeomItemsMap[geomItem.getId()]
 
+    this.removedItemIndices.push(index)
+
     this.renderer.requestRedraw()
 
     return glGeomItem
@@ -350,6 +353,17 @@ class GLGeomItemLibrary extends EventEmitter {
 
     // /////////////////////////
     // Update the culling worker
+    geomItemsUpdateToCullingWorker.push(this.getCullingWorkerData(geomItem, material, index))
+  }
+
+  /**
+   * Gathers data to pass to the culling worker.
+   * @param {GeomItem} geomItem - The GeomItem to gether the data for.
+   * @param {Material} material - The material of GeomItem.
+   * @param {number} index - The index of the item to gether the data for.
+   * @return {object} - the JSON data that will be passed to the worker.
+   */
+  getCullingWorkerData(geomItem, material, index) {
     const bbox = geomItem.getParameter('BoundingBox').getValue()
     const boundingRadius = bbox.size() * 0.5
     const pos = bbox.center()
@@ -365,20 +379,12 @@ class GLGeomItemLibrary extends EventEmitter {
     if (material.hasParameter('PointSize')) {
       cullable = false
     }
-    geomItemsUpdateToCullingWorker.push({
+    return {
       id: index,
       boundingRadius,
       pos: pos.asArray(),
       cullable,
-    })
-  }
-
-  /**
-   * The newItemsReadyForLoading method.
-   * @return {any} - The return value.
-   */
-  newItemsReadyForLoading() {
-    return this.dirtyItemIndices.length > 0
+    }
   }
 
   /**
@@ -388,10 +394,30 @@ class GLGeomItemLibrary extends EventEmitter {
   uploadGeomItems(renderstate) {
     const gl = this.renderer.gl
     if (!gl.floatTexturesSupported) {
+      // this.emit('renderTreeUpdated', {});
+
+      const geomItemsUpdateToCullingWorker = []
+      this.dirtyItemIndices.forEach((index) => {
+        const glGeomItem = this.glGeomItems[index]
+        // When an item is deleted, we allocate its index to the free list
+        // and null this item in the array. skip over null items.
+        if (!glGeomItem) return
+        const { geomItem } = glGeomItem
+        const material = geomItem.getParameter('Material').getValue()
+        geomItemsUpdateToCullingWorker.push(this.getCullingWorkerData(geomItem, material, index))
+      })
+      // /////////////////////////
+      // Update the culling worker
+      this.worker.postMessage({
+        type: 'UpdateGeomItems',
+        geomItems: geomItemsUpdateToCullingWorker,
+        removedItemIndices: this.removedItemIndices,
+      })
+
       // During rendering, the GeomMat will be Pplled.
       // This will trigger the lazy evaluation of the operators in the scene.
+      this.removedItemIndices = []
       this.dirtyItemIndices = []
-      // this.emit('renderTreeUpdated', {});
       return
     }
 
@@ -468,8 +494,10 @@ class GLGeomItemLibrary extends EventEmitter {
     this.worker.postMessage({
       type: 'UpdateGeomItems',
       geomItems: geomItemsUpdateToCullingWorker,
+      removedItemIndices: this.removedItemIndices,
     })
 
+    this.removedItemIndices = []
     this.dirtyItemIndices = []
   }
 
@@ -478,8 +506,9 @@ class GLGeomItemLibrary extends EventEmitter {
    * @param {object} renderstate - The object tracking the current state of the renderer
    */
   bind(renderstate) {
-    if (this.dirtyItemIndices.length > 0) this.uploadGeomItems(renderstate)
-    // renderstate.drawItemsTexture = this.glGeomItemsTexture
+    if (this.dirtyItemIndices.length > 0 || this.removedItemIndices.length > 0) {
+      this.uploadGeomItems(renderstate)
+    }
 
     const gl = this.renderer.gl
     const { instancesTexture, instancesTextureSize } = renderstate.unifs

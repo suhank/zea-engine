@@ -227,9 +227,6 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
    * @param {object} renderstate - The object tracking the current state of the renderer
    */
   draw(renderstate) {
-    // if (this.newItemsReadyForLoading()) this.finalize()
-    // renderstate.drawItemsTexture = this.__drawItemsTexture
-
     const gl = this.__gl
     gl.disable(gl.BLEND)
 
@@ -279,9 +276,6 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
    * @param {object} renderstate - The object tracking the current state of the renderer
    */
   drawGeomData(renderstate) {
-    // if (this.newItemsReadyForLoading()) this.finalize()
-    // renderstate.drawItemsTexture = this.__drawItemsTexture
-
     renderstate.passIndex = this.passIndex
 
     const gl = this.__gl

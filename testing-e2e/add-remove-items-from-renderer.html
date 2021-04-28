@@ -13,7 +13,7 @@
     <script src="../dist/index.umd.js"></script>
 
     <script type="module">
-      const { GLRenderer, Scene, Vec3, Color, Xfo, Sphere, Material, GeomItem } = zeaEngine
+      const { GLRenderer, Scene, Vec3, Color, Xfo, Sphere, Material, GeomItem, LDRImage } = zeaEngine
 
       const canvas = document.querySelector('#renderer')
 
@@ -23,13 +23,22 @@
 
       scene.setupGrid(10.0, 10)
 
+      const promises = []
+
+      const texturedMaterial = new Material('Material', 'FlatSurfaceShader')
+      texturedMaterial.getParameter('BaseColor').setValue(new Color(0.6, 0, 1))
+      const image = new LDRImage('LDRImage')
+      image.setImageURL('data/zea-logo.png', 'RGBA')
+      texturedMaterial.getParameter('BaseColor').setImage(image)
+      promises.push(new Promise((resolve) => image.on('loaded', resolve)))
+
       const material = new Material('surfaces', 'SimpleSurfaceShader')
       material.getParameter('BaseColor').setValue(new Color(1, 0, 1, 1))
 
       const sphere0 = new Sphere(1.5, 46)
       const sphere1 = new Sphere(1.5, 46)
 
-      const geomItem0 = new GeomItem('Sphere', sphere0, material, new Xfo(new Vec3(4, 0, 0)))
+      const geomItem0 = new GeomItem('Sphere', sphere0, texturedMaterial, new Xfo(new Vec3(4, 0, 0)))
       scene.getRoot().addChild(geomItem0)
 
       const geomItem1 = new GeomItem('Sphere', sphere1, material, new Xfo(new Vec3(0, 0, 0)))
@@ -53,13 +62,21 @@
           geomItem1.getParameter('Geometry').getValue().getParameter('Loops').setValue(100)
           window.postMessage(`done-${data}`)
         } else if (data === 'variant-02') {
+          // Now look away, so that the scene gets frustum culled.
+          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(10, 10, 2.7), new Vec3(20, 20, 0.4))
+          window.postMessage(`done-${data}`)
+        } else if (data === 'variant-03') {
+          // Now look back, so that the scene gets frustum un-culled.
+          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(10, 10, 2.7), new Vec3(0, 0, 0.4))
+          window.postMessage(`done-${data}`)
+        } else if (data === 'variant-04') {
           scene.getRoot().removeChild(scene.getRoot().getChildIndex(geomItem1))
           // Modify the class again, after it has been removed from the renderer.
           // Note: Our GLGeomLibrary still updates the buffers. It doesn't know that
           // no GeomItems track this geom. We need to add ref counting...
           geomItem1.getParameter('Geometry').getValue().getParameter('Loops').setValue(12)
           window.postMessage(`done-${data}`)
-        } else if (data === 'variant-03') {
+        } else if (data === 'variant-05') {
           scene.getRoot().addChild(geomItem0)
           scene.getRoot().addChild(geomItem1)
           window.postMessage(`done-${data}`)
