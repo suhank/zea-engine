@@ -8,6 +8,7 @@ import './GLSL/stack-gl/gamma.js'
 import './GLSL/drawItemTexture.js'
 import './GLSL/modelMatrix.js'
 import './GLSL/materialparams.js'
+import './GLSL/computeViewNormal.js'
 
 /** A simple shader with no support for PBR or textures
  * @ignore
@@ -141,6 +142,8 @@ uniform int EmissiveStrengthTexType;
 
 #endif // ENABLE_MULTI_DRAW
 
+<%include file="computeViewNormal.glsl"/>
+  
 
 #ifdef ENABLE_ES3
     out vec4 fragColor;
@@ -169,7 +172,18 @@ void main(void) {
             return;
         }
     }
+
+    //////////////////////////////////////////////
+    // Normals
     
+    vec3 viewNormal;
+    if (length(v_viewNormal) < 0.1) {
+      viewNormal = computeViewNormal(v_viewPos);
+    } else {
+      viewNormal = normalize(v_viewNormal);
+    }
+    vec3 normal = normalize(mat3(cameraMatrix) * viewNormal);
+    vec3 viewVector = normalize(mat3(cameraMatrix) * normalize(v_viewPos));
 
     //////////////////////////////////////////////
     // Material
@@ -197,8 +211,6 @@ void main(void) {
 #endif // ENABLE_MULTI_DRAW
 
     // Hacky simple irradiance. 
-    vec3 viewVector = normalize(mat3(cameraMatrix) * normalize(v_viewPos));
-    vec3 normal = normalize(mat3(cameraMatrix) * v_viewNormal);
     float ndotv = dot(normal, viewVector);
     if(ndotv < 0.0){
         normal = -normal;
