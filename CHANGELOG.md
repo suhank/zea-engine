@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.8.0](https://github.com/ZeaInc/zea-engine/compare/v3.7.0...v3.8.0) (2021-04-29)
+
+
+### Features
+
+* add `zeaEngine.packageJson` ([620f7ac](https://github.com/ZeaInc/zea-engine/commit/620f7ac543d6234a454691f79c8a0e8ac9a1f37f))
+
 ## [3.7.0](https://github.com/ZeaInc/zea-engine/compare/v3.6.0...v3.7.0) (2021-04-28)
 
 
