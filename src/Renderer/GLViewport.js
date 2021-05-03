@@ -204,7 +204,7 @@ class GLViewport extends GLBaseViewport {
 
     let rayStart
     let rayDirection
-    if (this.__camera.getIsOrthographic()) {
+    if (this.__camera.isOrthographic()) {
       // Orthographic projections.
       rayStart = cameraMat.transformVec3(projInv.transformVec3(new Vec3(sx, -sy, -1.0)))
       rayDirection = new Vec3(0.0, 0.0, -1.0)
@@ -784,7 +784,7 @@ class GLViewport extends GLBaseViewport {
         viewMatrix: this.__viewMat,
         projectionMatrix: this.__projectionMatrix,
         viewportFrustumSize: this.__frustumDim,
-        isOrthographic: this.__camera.getIsOrthographic(),
+        isOrthographic: this.__camera.isOrthographic(),
         fovY: this.__camera.getFov(),
       },
     ]
