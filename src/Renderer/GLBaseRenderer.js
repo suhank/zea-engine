@@ -1001,20 +1001,6 @@ class GLBaseRenderer extends ParameterOwner {
   }
 
   /**
-   * The registerPass method.
-   * @param {function} itemAddedFn - The itemAddedFn value.
-   * @param {function} itemRemovedFn - The itemRemovedFn value.
-   */
-  registerPass(itemAddedFn, itemRemovedFn) {
-    console.warn('Deprecated, GLPass must now implement #itemAddedToScene and #itemRemovedFromScene instead')
-    // insert at the beginning so it is called first.
-    this.__passCallbacks.splice(0, 0, {
-      itemAddedFn,
-      itemRemovedFn,
-    })
-  }
-
-  /**
    * The getPass method.
    * @param {number} index - The index value.
    * @return {GLPass} - The return value.
