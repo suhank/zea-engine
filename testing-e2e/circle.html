@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html class="h-full">
+  <head>
+    <title>Zea Engine - Circle</title>
+    <link rel="stylesheet" href="styles/tailwind.min.css" />
+  </head>
+  <body class="bg-blue-100 h-full">
+    <div class="h-full">
+      <canvas class="absolute" id="app"></canvas>
+    </div>
+
+    <script src="../dist/index.umd.js"></script>
+
+    <script type="module">
+      const { GLRenderer, Scene, Vec3, Color, Circle, Material, GeomItem, GLBoundingBoxPass } = zeaEngine
+
+      const scene = new Scene()
+      const domElement = document.getElementById('app')
+      const renderer = new GLRenderer(domElement, { hideSplash: true, antialias: false })
+      renderer.setScene(scene)
+
+      const material = new Material('surfaces', 'LinesShader')
+      material.getParameter('BaseColor').setValue(new Color(89 / 255, 182 / 255, 92 / 255))
+
+      const sphere = new Circle(1.5, 30)
+      const geomItem = new GeomItem('Circle', sphere, material)
+      scene.getRoot().addChild(geomItem)
+
+      // const boundingBoxPass = new GLBoundingBoxPass()
+      // renderer.addPass(boundingBoxPass)
+      // boundingBoxPass.addTreeItem(geomItem, true)
+
+      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, 2.7), new Vec3(0, 0, 0.4))
+      renderer.frameAll()
+
+      window.postMessage('done-loading')
+
+      // {{{ Messages handler.
+      const handleMessage = (event) => {
+        const { data } = event
+
+        if (data === 'variant-01') {
+          sphere.getParameter('Radius').setValue(2.5)
+          window.postMessage(`done-${data}`)
+        } else if (data === 'variant-02') {
+          sphere.getParameter('Loops').setValue(25)
+          sphere.getParameter('Sides').setValue(15)
+          window.postMessage(`done-${data}`)
+        }
+      }
+
+      window.addEventListener('message', handleMessage, false)
+      // }}}
+    </script>
+  </body>
+</html>
