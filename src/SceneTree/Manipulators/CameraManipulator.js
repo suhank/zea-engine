@@ -60,19 +60,19 @@ const MANIPULATION_MODES = {
  * ```
  *
  * **Parameters**
- * * **orbitRate(`NumberParameter`):** The rate at which mouse or touch interactions are translated camera orientation changes.
- * * **dollySpeed(`NumberParameter`):** The rate at which the mouse button or touch interactions are translated camera dolly movement.
+ * * **OrbitRate(`NumberParameter`):** The rate at which mouse or touch interactions are translated camera orientation changes.
+ * * **DollySpeed(`NumberParameter`):** The rate at which the mouse button or touch interactions are translated camera dolly movement.
  * * **mouseWheelDollySpeed(`NumberParameter`):** The rate at which the mouse wheel interactions are translated camera dolly movement.
  *
  *   Note: this value defaults to different values for touch based interfaces to mouse based input.
- *   For mobile devices, the orbit rate defaults to -0.3, and for mouse based interaction, the value defaults to 1.
+ *   For mobile devices, the orbit rate defaults to 0.5, and for mouse based interaction, the value defaults to 1.
  *   A value of 1 means that the camera will rotate 180 degrees for a mouse interaction that spans from the left border of the viewport to the right border.
  *   Some applications might require lower, or higher default values
  *
  * To set different default values for mobile or desktop set a different value based on the SystemDesc.isMobileDevice flag.
  * ```
  * const cameraManipulator = renderer.getViewport().getManipulator()
- * cameraManipulator.getParameter('orbitRate').setValue(SystemDesc.isMobileDevice ? 0.3 : 1)
+ * cameraManipulator.getParameter('OrbitRate').setValue(SystemDesc.isMobileDevice ? 0.1 : 0.4)
  * ```
  *
  * **Events**
@@ -105,7 +105,7 @@ class CameraManipulator extends BaseTool {
     this.__prevVelocityIntegrationTime = -1
     this.__ongoingTouches = {}
 
-    this.__orbitRateParam = this.addParameter(new NumberParameter('OrbitRate', SystemDesc.isMobileDevice ? 0.3 : 1))
+    this.__orbitRateParam = this.addParameter(new NumberParameter('OrbitRate', SystemDesc.isMobileDevice ? 0.5 : 1))
     this.__dollySpeedParam = this.addParameter(new NumberParameter('DollySpeed', 0.02))
     this.addParameter(new BooleanParameter('OrbitAroundCursor', true))
     this.__mouseWheelDollySpeedParam = this.addParameter(new NumberParameter('MouseWheelDollySpeed', 0.1))
