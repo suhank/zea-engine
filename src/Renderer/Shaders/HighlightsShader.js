@@ -1,7 +1,7 @@
 import { GLShader } from '../GLShader.js'
 import { shaderLibrary } from '../ShaderLibrary.js'
 
-class OutlinesShader extends GLShader {
+class HighlightsShader extends GLShader {
   /**
    * Create a GL shader.
    * @param {WebGLRenderingContext} gl - The webgl rendering context.
@@ -116,4 +116,4 @@ void main(void) {
   }
 }
 
-export { OutlinesShader }
+export { HighlightsShader }

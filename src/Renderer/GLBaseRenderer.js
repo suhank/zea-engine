@@ -172,8 +172,6 @@ class GLBaseRenderer extends ParameterOwner {
   addViewport(name) {
     const vp = new GLViewport(this, name, this.getWidth(), this.getHeight())
 
-    vp.createGeomDataFbo(this.__floatGeomBuffer)
-
     const updated = () => {
       this.requestRedraw()
     }
