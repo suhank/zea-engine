@@ -150,8 +150,6 @@ As passes are registered with the renderer, they are grouped according to 3 type
 **Opaque**
 Opaque passes are always invoked first, and should render geometries that are not transparent in any way. Opaque passes have more flexibility in how they manage rendering, because blending is not applied. The GLOpaqueGeoms pass manages rendering standard Points, Lines and Mesh geometries and is the first pass to be invoked. It performs a rendering process that automatically draws instanced geometries, and is optimized to minimize Geometry, Material and Shader switches. 
 
-> Note: The GLCADPass is a standard pass that is implemented as a plugin to the Renderer. The GLCADPass renders parametric BREP surfaces using a set of shaders and a highly custom rendering pipeline.
-
 **Transparent**
 Transparent passes are invoked after the Opaque passes have completed, and typically involve rendering geometries blended over the top of existing geometries.
 
