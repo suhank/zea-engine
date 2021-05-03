@@ -1,8 +1,12 @@
 import { Color } from '../Math/index'
-import { ParameterOwner, BaseImage, NumberParameter, BaseTool } from '../SceneTree/index'
+import { Plane, ParameterOwner, BaseImage, NumberParameter, BaseTool } from '../SceneTree/index'
+import { GLRenderTarget } from './GLRenderTarget.js'
 import { GLBaseRenderer } from './GLBaseRenderer'
 import { GLHDRImage } from './GLHDRImage.js'
 import { GLTexture2D } from './GLTexture2D.js'
+import { GLFbo } from './GLFbo.js'
+import { HighlightsShader } from './Shaders/HighlightsShader.js'
+import { GLMesh } from './Drawing/GLMesh.js'
 
 /**
  * Class representing a GL base viewport.
@@ -23,12 +27,42 @@ class GLBaseViewport extends ParameterOwner {
     this.__ongoingPointers = []
     this.__backgroundColor = new Color(0.3, 0.3, 0.3, 1)
 
+    const gl = this.__renderer.gl
+
+    this.highlightsShader = new HighlightsShader(gl)
+    this.quad = new GLMesh(gl, new Plane(1, 1))
+
+    // //////////////////////////////////
+    // Setup Offscreen Render Targets
+    // this.highlightedGeomsRenderTarget = new GLRenderTarget(gl, {
+    //   type: gl.UNSIGNED_BYTE,
+    //   format: gl.RGBA,
+    //   filter: gl.NEAREST,
+    //   width: 4,
+    //   height: 4,
+    //   numColorChannels: 1,
+    //   depthInternalFormat: gl.DEPTH_COMPONENT24,
+    //   depthFormat: gl.DEPTH_COMPONENT,
+    //   depthType: gl.UNSIGNED_INT,
+    // })
+
+    this.highlightedGeomsBuffer = new GLTexture2D(gl, {
+      type: 'UNSIGNED_BYTE',
+      format: 'RGBA',
+      filter: 'NEAREST',
+      width: 4,
+      height: 4,
+    })
+    this.highlightedGeomsBufferFbo = new GLFbo(gl, this.highlightedGeomsBuffer, true)
+    this.highlightedGeomsBufferFbo.setClearColor([0, 0, 0, 0])
+
+    // //////////////////////////////////
+    // Setup Camera Manipulator
     const sceneSet = () => {
       const settings = renderer.getScene().settings
       const bgColorParam = settings.getParameter('BackgroundColor')
       const processBGValue = () => {
         const value = bgColorParam.getValue()
-        const gl = this.__renderer.gl
         if (value instanceof BaseImage) {
           if (value.type === 'FLOAT') {
             this.__backgroundTexture = value
@@ -65,56 +99,6 @@ class GLBaseViewport extends ParameterOwner {
    */
   getRenderer() {
     return this.__renderer
-  }
-
-  /**
-   * The getBl method.
-   * @return {number} - The return value.
-   */
-  getBl() {
-    return this.__bl
-  }
-
-  /**
-   * The setBl method.
-   * @param {number} bl - The bl value.
-   */
-  setBl(bl) {
-    this.__bl = bl
-    this.resize(this.__canvasWidth, this.__canvasHeight)
-  }
-
-  /**
-   * The getTr method.
-   * @return {number} - The return value.
-   */
-  getTr() {
-    return this.__tr
-  }
-
-  /**
-   * The setTr method.
-   * @param {number} tr - The tr value.
-   */
-  setTr(tr) {
-    this.__tr = tr
-    this.resize(this.__canvasWidth, this.__canvasHeight)
-  }
-
-  /**
-   * The getPosX method.
-   * @return {number} - The return value.
-   */
-  getPosX() {
-    return this.__x
-  }
-
-  /**
-   * The getPosY method.
-   * @return {number} - The return value.
-   */
-  getPosY() {
-    return this.__y
   }
 
   /**
@@ -166,7 +150,21 @@ class GLBaseViewport extends ParameterOwner {
     this.__canvasHeight = canvasHeight
     this.__width = canvasWidth
     this.__height = canvasHeight
+    this.resizeRenderTargets(canvasWidth, canvasHeight)
     this.emit('resized', { width: this.__width, height: this.__height })
+  }
+
+  /**
+   * Resize any offscreen render targets.
+   * > Note: Values ,ay not be the entire canvas with if multiple viewports exists.
+   * @param {number} width - The width used by this viewport.
+   * @param {number} height - The height  used by this viewport.
+   */
+  resizeRenderTargets(width, height) {
+    console.log('resizeRenderTargets:', width, height)
+    if (this.highlightedGeomsBuffer) {
+      this.highlightedGeomsBuffer.resize(width, height)
+    }
   }
 
   // ///////////////////////////

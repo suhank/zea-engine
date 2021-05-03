@@ -49,11 +49,37 @@ class GLViewport extends GLBaseViewport {
 
     this.__prevDownTime = 0
 
+    // //////////////////////////////////
+    // Setup GeomData Fbo
     this.__geomDataBuffer = undefined
     this.__geomDataBufferFbo = undefined
     this.debugGeomShader = false
 
     // this.renderGeomDataFbo = this.renderGeomDataFbo.bind(this);
+
+    const gl = this.__renderer.gl
+    if (renderer.__floatGeomBuffer) {
+      this.__geomDataBuffer = new GLTexture2D(gl, {
+        type: 'FLOAT',
+        format: 'RGBA',
+        filter: 'NEAREST',
+        width: width <= 1 ? 1 : width,
+        height: height <= 1 ? 1 : height,
+      })
+    } else {
+      this.__geomDataBuffer = new GLTexture2D(gl, {
+        type: 'UNSIGNED_BYTE',
+        format: 'RGBA',
+        filter: 'NEAREST',
+        width: width <= 1 ? 1 : width,
+        height: height <= 1 ? 1 : height,
+      })
+    }
+    this.__geomDataBufferFbo = new GLFbo(gl, this.__geomDataBuffer, true)
+    this.__geomDataBufferFbo.setClearColor([0, 0, 0, 0])
+
+    // //////////////////////////////////
+    // Setup Camera Manipulator
 
     // Each user has a separate camera, and so the default
     //  camera cannot be part of the scene.
@@ -64,28 +90,87 @@ class GLViewport extends GLBaseViewport {
   }
 
   /**
+   * The getBl method.
+   * @return {number} - The return value.
+   */
+  getBl() {
+    return this.__bl
+  }
+
+  /**
+   * The setBl method.
+   * @param {number} bl - The bl value.
+   */
+  setBl(bl) {
+    this.__bl = bl
+    this.resize(this.__canvasWidth, this.__canvasHeight)
+  }
+
+  /**
+   * The getTr method.
+   * @return {number} - The return value.
+   */
+  getTr() {
+    return this.__tr
+  }
+
+  /**
+   * The setTr method.
+   * @param {number} tr - The tr value.
+   */
+  setTr(tr) {
+    this.__tr = tr
+    this.resize(this.__canvasWidth, this.__canvasHeight)
+  }
+
+  /**
+   * The getPosX method.
+   * @return {number} - The return value.
+   */
+  getPosX() {
+    return this.__x
+  }
+
+  /**
+   * The getPosY method.
+   * @return {number} - The return value.
+   */
+  getPosY() {
+    return this.__y
+  }
+
+  /**
    * Dynamically resizes viewport.
    *
    * @param {number} width - The width value.
    * @param {number} height - The height value.
    */
   resize(width, height) {
-    this.__canvasWidth = width
-    this.__canvasHeight = height
     this.__x = width * this.__bl.x
     this.__y = width * this.__bl.y
     this.__width = width * this.__tr.x - width * this.__bl.x
     this.__height = height * this.__tr.y - height * this.__bl.y
     this.region = [this.__x, this.__y, this.__width, this.__height]
 
+    this.resizeRenderTargets(this.__width, this.__height)
     if (this.__camera) this.__updateProjectionMatrix()
+    this.emit('resized', { width, height })
+  }
 
+  /**
+   * Resize any offscreen render targets.
+   * > Note: Values ,ay not be the entire canvas with if multiple viewports exists.
+   * @param {number} width - The width used by this viewport.
+   * @param {number} height - The height  used by this viewport.
+   */
+  resizeRenderTargets(width, height) {
+    if (this.highlightedGeomsBuffer) {
+      this.highlightedGeomsBuffer.resize(width, height)
+    }
     if (this.__geomDataBufferFbo) {
       this.__geomDataBuffer.resize(this.__width, this.__height)
       this.renderGeomDataFbo()
     }
-
-    this.emit('resized', { width, height })
   }
 
   /**
@@ -223,43 +308,6 @@ class GLViewport extends GLBaseViewport {
 
   // //////////////////////////
   // GeomData
-
-  /**
-   * The createGeomDataFbo method.
-   * @param {boolean} floatGeomBuffer - true if the GPU supports rendering
-   * to floating point textures.
-   */
-  createGeomDataFbo(floatGeomBuffer) {
-    const gl = this.__renderer.gl
-    this.__floatGeomBuffer = floatGeomBuffer
-    if (this.__floatGeomBuffer) {
-      this.__geomDataBuffer = new GLTexture2D(gl, {
-        type: 'FLOAT',
-        format: 'RGBA',
-        filter: 'NEAREST',
-        width: this.__width <= 1 ? 1 : this.__width,
-        height: this.__height <= 1 ? 1 : this.__height,
-      })
-    } else {
-      this.__geomDataBuffer = new GLTexture2D(gl, {
-        type: 'UNSIGNED_BYTE',
-        format: 'RGBA',
-        filter: 'NEAREST',
-        width: this.__width <= 1 ? 1 : this.__width,
-        height: this.__height <= 1 ? 1 : this.__height,
-      })
-    }
-    this.__geomDataBufferFbo = new GLFbo(gl, this.__geomDataBuffer, true)
-    this.__geomDataBufferFbo.setClearColor([0, 0, 0, 0])
-  }
-
-  /**
-   * The getGeomDataFbo method.
-   * @return {GLFbo} - The return value.
-   */
-  getGeomDataFbo() {
-    return this.__geomDataBufferFbo
-  }
 
   /**
    * Renders the scene geometry to the viewport's geom data buffer
@@ -818,6 +866,82 @@ class GLViewport extends GLBaseViewport {
     const renderstate = {}
     this.__initRenderState(renderstate)
     this.__renderer.drawScene(renderstate)
+
+    if (this.highlightedGeomsBufferFbo) {
+      const gl = this.__renderer.gl
+
+      this.highlightedGeomsBufferFbo.bindForWriting(renderstate)
+      this.highlightedGeomsBufferFbo.clear()
+
+      gl.disable(gl.BLEND)
+      gl.enable(gl.DEPTH_TEST)
+      gl.depthFunc(gl.LESS)
+      gl.depthMask(true)
+      renderstate.glShader = null // clear any bound shaders.
+
+      this.__renderer.drawHighlightedGeoms(renderstate)
+
+      // Unbind and restore the bound fbo
+      this.highlightedGeomsBufferFbo.unbindForWriting(renderstate)
+
+      // Now render the outlines to the entire screen.
+      gl.viewport(...this.region)
+
+      // Turn this on to debug the highlight data buffer.
+      // {
+      //   gl.screenQuad.bindShader(renderstate)
+      //   this.highlightedGeomsBuffer.bindToUniform(renderstate, renderstate.unifs.image)
+      //   gl.screenQuad.draw(renderstate)
+      // }
+
+      this.highlightsShader.bind(renderstate)
+      gl.enable(gl.BLEND)
+      gl.blendEquation(gl.FUNC_ADD)
+      gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA) // For add
+
+      const unifs = renderstate.unifs
+      this.highlightedGeomsBuffer.bindToUniform(renderstate, unifs.highlightDataTexture)
+      gl.uniform2f(unifs.highlightDataTextureSize.location, renderstate.region[2], renderstate.region[3])
+      this.quad.bindAndDraw(renderstate)
+
+      gl.disable(gl.BLEND)
+    }
+
+    // /////////////////////////////////////
+    // // Post processing.
+    // if (this.__fbo) {
+    //     const gl = this.__gl;
+
+    //     // Bind the default framebuffer
+    //     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    //     gl.viewport(...this.region);
+    //     // gl.disable(gl.SCISSOR_TEST);
+
+    //     // this.__glshaderScreenPostProcess.bind(renderstate);
+
+    //     // const unifs = renderstate.unifs;
+    //     // if ('antialiase' in unifs)
+    //     //     gl.uniform1i(unifs.antialiase.location, this.__antialiase ? 1 : 0);
+    //     // if ('textureSize' in unifs)
+    //     //     gl.uniform2fv(unifs.textureSize.location, fbo.size);
+    //     // if ('gamma' in unifs)
+    //     //     gl.uniform1f(unifs.gamma.location, this.__gamma);
+    //     // if ('exposure' in unifs)
+    //     //     gl.uniform1f(unifs.exposure.location, this.__exposure);
+    //     // if ('tonemap' in unifs)
+    //     //     gl.uniform1i(unifs.tonemap.location, this.__tonemap ? 1 : 0);
+
+    //     gl.screenQuad.bindShader(renderstate);
+    //     gl.screenQuad.draw(renderstate, this.__fbo.colorTexture);
+
+    //     // Note: if the texture is left bound, and no textures are bound to slot 0 befor rendering
+    //     // more goem int he next frame then the fbo color tex is being read from and written to
+    //     // at the same time. (baaaad).
+    //     // Note: any textures bound at all avoids this issue, and it only comes up when we have no env
+    //     // map, background or textures params in the scene. When it does happen it can be a bitch to
+    //     // track down.
+    //     gl.bindTexture(gl.TEXTURE_2D, null);
+    // }
 
     // Turn this on to debug the geom data buffer.
     if (this.debugGeomShader) {
