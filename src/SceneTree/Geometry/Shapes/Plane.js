@@ -26,8 +26,8 @@ class Plane extends ProceduralMesh {
    * @param {number} [SizeY=1.0] - The length of the plane along the Y axis.
    * @param {number} [DetailX=1] - The number of divisions along the X axis.
    * @param {number} [DetailY=1] - The number of divisions along the Y axis.
-   * @param {boolean} [addNormals=true] - The addNormals value.
-   * @param {boolean} [addTextureCoords=true] - The addTextureCoords value.
+   * @param {boolean} [addNormals=true] - Compute vertex normals for the geometry
+   * @param {boolean} [addTextureCoords=true] - Compute texture coordinates for the geometry
    */
   constructor(SizeX = 1.0, SizeY = 1.0, DetailX = 1, DetailY = 1, addNormals = true, addTextureCoords = true) {
     super()
@@ -38,6 +38,7 @@ class Plane extends ProceduralMesh {
     this.__sizeYParam = this.addParameter(new NumberParameter('SizeY', SizeY))
     this.__detailXParam = this.addParameter(new NumberParameter('DetailX', DetailX))
     this.__detailYParam = this.addParameter(new NumberParameter('DetailY', DetailY))
+
     if (addNormals) this.addVertexAttribute('normals', Vec3)
     if (addTextureCoords) this.addVertexAttribute('texCoords', Vec2)
 
