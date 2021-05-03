@@ -49,6 +49,15 @@ const MANIPULATION_MODES = {
  * renderer.getViewport().setManipulator(customManipulator);
  * ```
  *
+ * The Camera manipulator can focus the view on a point in the view by various gestures.
+ * A single click or touch tap can cause the view to be focussed or a double click or tap.
+ * This behavior can be configured using the 2 values.
+ * e.g. to disable all foc gestures, set both booleans to false.
+ * ```
+ * const cameraManipulator = renderer.getViewport().getManipulator()
+ * cameraManipulator.aimFocusOnSingleTap = false
+ * cameraManipulator.aimFocusOnDoubleTap = false
+ * ```
  *
  * **Parameters**
  * * **orbitRate(`NumberParameter`):** The rate at which mouse or touch interactions are translated camera orientation changes.
@@ -87,6 +96,8 @@ class CameraManipulator extends BaseTool {
     this.__pointerDown = false
     this.__dragging = 0
 
+    this.aimFocusOnSingleTap = true
+    this.aimFocusOnDoubleTap = false
     this.enabledWASDWalkMode = false
     this.__keyboardMovement = false
     this.__keysPressed = []
@@ -205,7 +216,7 @@ class CameraManipulator extends BaseTool {
    * @param {MouseEvent} event - The event value.
    * @param {Vec2} dragVec - The drag vector value.
    */
-  tumble(event, dragVec) {
+  tumbler(event, dragVec) {
     const { viewport } = event
     const camera = viewport.getCamera()
     const orbitRate = this.__orbitRateParam.getValue()
@@ -301,36 +312,6 @@ class CameraManipulator extends BaseTool {
     const dollyDist = dragVec.x * this.__dollySpeedParam.getValue()
     const delta = new Xfo()
     delta.tr.set(0, 0, dollyDist)
-    const globalXfo = camera.getParameter('GlobalXfo').getValue()
-    camera.getParameter('GlobalXfo').setValue(globalXfo.multiply(delta))
-  }
-
-  /**
-   * Rotates the camera around its own `X`,`Y` axes and applies a zoom.
-   *
-   * @param {MouseEvent} event - The event value.
-   * @param {Vec2} panDelta - The pan delta value.
-   * @param {number} dragDist - The drag distance value.
-   */
-  panAndZoom(event, panDelta, dragDist) {
-    const { viewport } = event
-    const camera = viewport.getCamera()
-
-    const focalDistance = camera.getFocalDistance()
-    const fovY = camera.getFov()
-
-    const xAxis = new Vec3(1, 0, 0)
-    const yAxis = new Vec3(0, 1, 0)
-
-    const cameraPlaneHeight = 2.0 * focalDistance * Math.tan(0.5 * fovY)
-    const cameraPlaneWidth = cameraPlaneHeight * (viewport.getWidth() / viewport.getHeight())
-    const delta = new Xfo()
-    delta.tr = xAxis.scale(-(panDelta.x / viewport.getWidth()) * cameraPlaneWidth)
-    delta.tr.addInPlace(yAxis.scale((panDelta.y / viewport.getHeight()) * cameraPlaneHeight))
-
-    const zoomDist = dragDist * focalDistance
-    camera.setFocalDistance(focalDistance + zoomDist)
-    delta.tr.z += zoomDist
     const globalXfo = camera.getParameter('GlobalXfo').getValue()
     camera.getParameter('GlobalXfo').setValue(globalXfo.multiply(delta))
   }
@@ -526,19 +507,17 @@ class CameraManipulator extends BaseTool {
    * @memberof CameraManipulator
    */
   onPointerDoublePress(event) {
-    if (event.intersectionData) {
+    if (event.intersectionData && this.aimFocusOnDoubleTap) {
       const { viewport } = event
       const camera = viewport.getCamera()
       const cameraGlobalXfo = camera.getParameter('GlobalXfo').getValue()
       const aimTarget = cameraGlobalXfo.tr.add(event.pointerRay.dir.scale(event.intersectionData.dist))
       this.aimFocus(camera, aimTarget)
-
       // Note: Collab can use these events to guide users attention.
       event.aimTarget = aimTarget
       event.aimDistance = event.intersectionData.dist
       this.emit('aimingFocus', event)
       camera.emit('aimingFocus', event)
-
       event.stopPropagation()
       event.preventDefault()
     }
@@ -607,7 +586,7 @@ class CameraManipulator extends BaseTool {
         this.turntable(event, dragVec)
         break
       case MANIPULATION_MODES.tumbler:
-        this.tumble(event, dragVec)
+        this.tumbler(event, dragVec)
         break
       case MANIPULATION_MODES.trackball:
         this.trackball(event, dragVec)
@@ -636,7 +615,7 @@ class CameraManipulator extends BaseTool {
     // this.__calculatingDragAction = true
 
     const touches = event.touches
-    if (touches.length == 1 && this.__manipMode != 'panAndZoom') {
+    if (touches.length == 1) {
       const touch = touches[0]
       const touchPos = new Vec2(touch.clientX, touch.clientY)
       const touchData = this.__ongoingTouches[touch.identifier]
@@ -666,8 +645,10 @@ class CameraManipulator extends BaseTool {
       const touchData1 = this.__ongoingTouches[touch1.identifier]
 
       if (!touchData0 || !touchData1) return
+
       const touch0Pos = new Vec2(touch0.clientX, touch0.clientY)
       const touch1Pos = new Vec2(touch1.clientX, touch1.clientY)
+
       const startSeparation = touchData1.pos.subtract(touchData0.pos).length()
       const dragSeparation = touch1Pos.subtract(touch0Pos).length()
       const separationDist = startSeparation - dragSeparation
@@ -677,11 +658,50 @@ class CameraManipulator extends BaseTool {
       const dragVec = touch0Drag.add(touch1Drag)
       // TODO: scale panning here.
       dragVec.scaleInPlace(0.5)
-      this.panAndZoom(event, dragVec, separationDist * 0.002)
+
+      // apply the vectors to calculate a pan and zoom
+      const dragDist = separationDist * 0.002
+      const { viewport } = event
+      const camera = viewport.getCamera()
+
+      const focalDistance = camera.getFocalDistance()
+      const fovY = camera.getFov()
+
+      const xAxis = new Vec3(1, 0, 0)
+      const yAxis = new Vec3(0, 1, 0)
+
+      const cameraPlaneHeight = 2.0 * focalDistance * Math.tan(0.5 * fovY)
+      const cameraPlaneWidth = cameraPlaneHeight * (viewport.getWidth() / viewport.getHeight())
+      const delta = new Xfo()
+      delta.tr = xAxis.scale(-(dragVec.x / viewport.getWidth()) * cameraPlaneWidth)
+      delta.tr.addInPlace(yAxis.scale((dragVec.y / viewport.getHeight()) * cameraPlaneHeight))
+
+      const zoomDist = dragDist * focalDistance
+      camera.setFocalDistance(focalDistance + zoomDist)
+      delta.tr.z += zoomDist
+
+      // Apply the roll
+      switch (this.__defaultManipulationState) {
+        case MANIPULATION_MODES.tumbler:
+        case MANIPULATION_MODES.trackball:
+          const vecPrev = touchData1.pos.subtract(touchData0.pos)
+          const vecNow = touch1Pos.subtract(touch0Pos)
+          let deltaAngle = vecPrev.normalize().angleTo(vecNow.normalize())
+          if (vecPrev.cross(vecNow) < 0.0) {
+            deltaAngle = -deltaAngle
+          }
+
+          const roll = new Quat()
+          roll.rotateZ(deltaAngle)
+          delta.ori.multiplyInPlace(roll)
+          break
+      }
+
+      const globalXfo = camera.getParameter('GlobalXfo').getValue()
+      camera.getParameter('GlobalXfo').setValue(globalXfo.multiply(delta))
 
       touchData0.pos = touch0Pos
       touchData1.pos = touch1Pos
-      this.__manipMode = 'panAndZoom'
     }
 
     // this.__calculatingDragAction = false
@@ -696,6 +716,23 @@ class CameraManipulator extends BaseTool {
     if (this.__dragging == 1) {
       // No dragging ocurred. Release the capture and let the event propagate like normal.
       this.endDrag(event)
+
+      if (event.intersectionData && this.aimFocusOnSingleTap) {
+        const { viewport } = event
+        const camera = viewport.getCamera()
+        const cameraGlobalXfo = camera.getParameter('GlobalXfo').getValue()
+        const aimTarget = cameraGlobalXfo.tr.add(event.pointerRay.dir.scale(event.intersectionData.dist))
+        this.aimFocus(camera, aimTarget)
+
+        // Note: Collab can use these events to guide users attention.
+        event.aimTarget = aimTarget
+        event.aimDistance = event.intersectionData.dist
+        this.emit('aimingFocus', event)
+        camera.emit('aimingFocus', event)
+      }
+
+      event.stopPropagation()
+      event.preventDefault()
     } else if (this.__dragging == 2) {
       if (event.pointerType === POINTER_TYPES.mouse) {
         this.endDrag(event)
@@ -963,8 +1000,6 @@ class CameraManipulator extends BaseTool {
    * @param {TouchEvent} event - The touch event that occurs.
    */
   _onTouchStart(event) {
-    if (Object.keys(this.__ongoingTouches).length == 0) this.__manipMode = undefined
-
     const touches = event.changedTouches
     for (let i = 0; i < touches.length; i++) {
       this.__startTouch(touches[i])
