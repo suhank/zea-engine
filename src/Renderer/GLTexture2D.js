@@ -668,9 +668,8 @@ class GLTexture2D extends RefCounted {
     }
 
     const unit = renderstate.boundTextures++
-    const texId = this.__gl.TEXTURE0 + unit
     const gl = this.__gl
-    gl.activeTexture(texId)
+    gl.activeTexture(gl.TEXTURE0 + unit)
     gl.bindTexture(gl.TEXTURE_2D, this.__gltex)
     gl.uniform1i(unif.location, unit)
 
@@ -680,7 +679,7 @@ class GLTexture2D extends RefCounted {
       }
 
       if (bindings.textureDescUnif) {
-        this.__gl.uniform4fv(bindings.textureDescUnif.location, this.textureDesc)
+        gl.uniform4fv(bindings.textureDescUnif.location, this.textureDesc)
       }
     }
 
