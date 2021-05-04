@@ -407,7 +407,7 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
       }
 
       renderstate.bindViewports(unifs, () => {
-        this.multiDraw(counts, offsets)
+        this.multiDraw(renderstate, counts, offsets)
       })
     }
   }

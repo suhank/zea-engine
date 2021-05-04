@@ -39,11 +39,13 @@ uniform float Overlay;
 varying float v_drawItemId;
 varying vec4 v_geomItemData;
 varying vec3 v_worldPos;
+varying float v_vertexDist;
 
 void main(void) {
   int drawItemId = getDrawItemId();
   v_drawItemId = float(drawItemId);
   v_geomItemData  = getInstanceData(drawItemId);
+  v_vertexDist = float(gl_VertexID);
 
   mat4 modelMatrix = getModelMatrix(drawItemId);
   mat4 modelViewProjectionMatrix = projectionMatrix * viewMatrix * modelMatrix;
@@ -85,6 +87,8 @@ precision highp float;
 <%include file="materialparams.glsl"/>
 
 
+uniform int occludedLinesStyle;
+
 #ifndef ENABLE_MULTI_DRAW
 
 uniform color BaseColor;
@@ -112,6 +116,7 @@ vec4 getCutaway(int id) {
 varying float v_drawItemId;
 varying vec4 v_geomItemData;
 varying vec3 v_worldPos;
+varying float v_vertexDist;
 
 #ifdef ENABLE_ES3
   out vec4 fragColor;
@@ -135,6 +140,16 @@ void main(void) {
           discard;
           return;
       }
+  }
+
+  //////////////////////////////////////////////
+  // Dashes
+
+  if (occludedLinesStyle > 0) {
+    if (mod(v_vertexDist * 10.0, 2.0) < 1.5) {
+      discard;
+      return;
+    }
   }
 
 
