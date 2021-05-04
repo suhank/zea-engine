@@ -67,12 +67,12 @@ class ProceduralLines extends Lines {
    */
   update() {
     if (this.dirtyTopology) {
-      this.rebuild()
       this.dirtyTopology = false
       this.dirtyVertices = false
+      this.rebuild()
     } else if (this.dirtyVertices) {
-      this.resize()
       this.dirtyVertices = false
+      this.resize()
     }
   }
 
