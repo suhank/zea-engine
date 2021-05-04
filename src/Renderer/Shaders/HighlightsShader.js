@@ -37,53 +37,47 @@ uniform vec2 highlightDataTextureSize;
 varying vec2 v_texCoord;
 
 
-bool isFilledPixel(vec4 p) {
-    return p.r > 0.01 || p.g > 0.01 || p.b > 0.01;
+vec3 SobelFactor(vec3 ldc, vec3 ldl, vec3 ldr, vec3 ldu, vec3 ldd)
+{
+    return abs(ldl - ldc) +
+        abs(ldr - ldc) +
+        abs(ldu - ldc) +
+        abs(ldd - ldc);
 }
-void accumOutlinePixel(vec2 fragCoord, inout vec4 res) {
-    vec3 p = texture2D(highlightDataTexture, fragCoord/highlightDataTextureSize).rgb;
-    if(p.r > 0.01 || p.g > 0.01 || p.b > 0.01) {
-        res.r += p.r;
-        res.g += p.g;
-        res.b += p.b;
-        res.a += 1.0;
-    }
-}
-vec4 getOutlinePixelColor(vec2 fragCoord) {
-    vec4 M = texture2D(highlightDataTexture, fragCoord/highlightDataTextureSize);
+
+// https://github.com/ssell/UnitySobelOutline/blob/2e1f4a5b4e703ae2c96aaf08d5518ce58abbaab9/Assets/Resources/Shaders/SobelOutlineHLSL.shader#L18
+vec4 SobelSample(vec2 uv)
+{
+    float outlineThickness = 1.0;
+    vec3 offset = vec3((1.0 / highlightDataTextureSize.x), (1.0 / highlightDataTextureSize.y), 0.0) * outlineThickness;
+
+    vec4 pixelCenter = texture2D(highlightDataTexture, uv);
+    vec3 pixelLeft   = texture2D(highlightDataTexture, uv - offset.xz).rgb;
+    vec3 pixelRight  = texture2D(highlightDataTexture, uv + offset.xz).rgb;
+    vec3 pixelUp     = texture2D(highlightDataTexture, uv + offset.zy).rgb;
+    vec3 pixelDown   = texture2D(highlightDataTexture, uv - offset.zy).rgb;
+
+    vec3 sobelNormalVec = SobelFactor(pixelCenter.rgb, pixelLeft, pixelRight, pixelUp, pixelDown);
     
-    /// To display a fill instead of an outline.
-    // return M;
+    float sobelNormal = sobelNormalVec.x + sobelNormalVec.y + sobelNormalVec.z;
+    
+    float outlineDepthMultiplier = 10.0;
+    float outlineDepthBias = 1.5;
+    sobelNormal = pow(sobelNormal * outlineDepthMultiplier, outlineDepthBias);
 
-    if( isFilledPixel(M) ) {
-        // Note: the filled pixel has an alpha value
-        // that determines how much fill is applied
-        // The outline is a solid color. 
-        return M;
-    }
-    // Search surrounding pixels for selected geoms.
-    vec4 res;
-    accumOutlinePixel(fragCoord+vec2( 1, 1), res); // NW
-    accumOutlinePixel(fragCoord+vec2(-1, 1), res); // NE
-    accumOutlinePixel(fragCoord+vec2( 1,-1), res); // SW
-    accumOutlinePixel(fragCoord+vec2(-1,-1), res); // SE
-    accumOutlinePixel(fragCoord+vec2( 0, 2), res); // NN
-    accumOutlinePixel(fragCoord+vec2(-2, 0), res); // EE
-    accumOutlinePixel(fragCoord+vec2( 2, 0), res); // WW
-    accumOutlinePixel(fragCoord+vec2( 0,-2), res); // SS
-    accumOutlinePixel(fragCoord+vec2( 1, 2), res); // NNW
-    accumOutlinePixel(fragCoord+vec2(-1, 2), res); // NNE
-    accumOutlinePixel(fragCoord+vec2(-2, 1), res); // EEN
-    accumOutlinePixel(fragCoord+vec2(-2,-1), res); // EES
-    accumOutlinePixel(fragCoord+vec2( 2, 1), res); // WWN
-    accumOutlinePixel(fragCoord+vec2( 2,-1), res); // WWS
-    accumOutlinePixel(fragCoord+vec2( 1,-2), res); // SSW
-    accumOutlinePixel(fragCoord+vec2(-1,-2), res); // SSE
+    sobelNormal = clamp(sobelNormal, 0.0, 1.0);
 
-    if(isFilledPixel(res))
-        return vec4(res.rgb / res.a, 1.0);
-    else
-        return vec4(0.0, 0.0, 0.0, 0.0);
+    vec3 outlineColor = pixelCenter.rgb + pixelLeft + pixelRight + pixelUp + pixelDown;
+    
+    float pixelCenterWeight = length(pixelCenter.rgb) > 0.0 ? 1.0 : 0.0;
+    float pixelLeftWeight   = length(pixelLeft) > 0.0 ? 1.0 : 0.0;
+    float pixelRightWeight  = length(pixelRight) > 0.0 ? 1.0 : 0.0;
+    float pixelUpWeight     = length(pixelUp) > 0.0 ? 1.0 : 0.0;
+    float pixelDownWeight   = length(pixelDown) > 0.0 ? 1.0 : 0.0;
+    outlineColor /= pixelCenterWeight + pixelLeftWeight + pixelRightWeight + pixelUpWeight + pixelDownWeight;
+    
+
+    return mix(vec4(outlineColor, sobelNormal), pixelCenter, pixelCenter.a);
 }
 
 
@@ -92,13 +86,9 @@ out vec4 fragColor;
 #endif
 
 void main(void) {
+    
+    vec4 outlineColor = SobelSample(v_texCoord);
 
-    // fragColor = texture2D(highlightDataTexture, v_texCoord);;
-    //can also use gl_FragCoord.xy
-    mediump vec2 fragCoord = v_texCoord * highlightDataTextureSize; 
-    /////////////////
-    // Selection Outlines
-    vec4 outlineColor = getOutlinePixelColor(fragCoord);
     if(outlineColor.a > 0.0001){
 #ifndef ENABLE_ES3
         gl_FragColor = outlineColor;
