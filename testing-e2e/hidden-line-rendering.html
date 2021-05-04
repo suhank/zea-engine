@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>hidden-line-rendering - Zea Engine</title>
+
+    <link href="data/zea-logo.png" rel="shortcut icon" />
+
+    <link rel="stylesheet" href="styles/tailwind.min.css" />
+
+    <script src="../dist/index.umd.js"></script>
+    <script src="../dist/plugins.umd.js"></script>
+
+    <script type="module">
+      const { GLRenderer, Scene, Vec3, Xfo, Color, Cylinder, Material, GeomItem, Lines, Cuboid, Cone } = zeaEngine
+
+      const scene = new Scene()
+      const domElement = document.getElementById('renderer')
+      const renderer = new GLRenderer(domElement, { hideSplash: true, antialias: false })
+      renderer.setScene(scene)
+      // scene.setupGrid(10.0, 10)
+
+      const material = new Material('surfaces', 'FlatSurfaceShader')
+      material.getParameter('BaseColor').setValue(new Color(0.5, 0.5, 0.5))
+
+      const displayHardEdges = (geomItem, mesh) => {
+        // Display all the hard edges as darker lines.
+        const hardEdges = new Lines()
+        hardEdges.__vertexAttributes.set('positions', mesh.getVertexAttribute('positions'))
+        hardEdges.setNumVertices(mesh.getNumVertices())
+        hardEdges.__indices = mesh.computeHardEdgesIndices(0.5)
+        const hardEdgesMaterial = new Material('hardEdgesMaterial', 'LinesShader')
+        hardEdgesMaterial.getParameter('BaseColor').setValue(new Color(0.1, 0.1, 0.1))
+        hardEdgesMaterial.getParameter('Opacity').setValue(1)
+        hardEdgesMaterial.getParameter('Overlay').setValue(0.00001)
+        const hardEdgesItem = new GeomItem('hardEdges', hardEdges, hardEdgesMaterial)
+        geomItem.addChild(hardEdgesItem, false)
+      }
+
+      const cylinder = new Cylinder(1.5, 2.0, 6)
+      const geomItem1 = new GeomItem('Cylinder', cylinder, material, new Xfo(new Vec3(-2.2, 0, 1)))
+      displayHardEdges(geomItem1, cylinder)
+      scene.getRoot().addChild(geomItem1)
+
+      const cuboid = new Cuboid(1.5, 2.0, 3)
+      const geomItem2 = new GeomItem('Cuboid', cuboid, material, new Xfo(new Vec3(0.0, 0, 1)))
+      displayHardEdges(geomItem2, cuboid)
+      scene.getRoot().addChild(geomItem2)
+
+      const cone = new Cone(1.4, 2.0, 30)
+      const geomItem3 = new GeomItem('Cone', cone, material, new Xfo(new Vec3(2.2, 0, 0)))
+      displayHardEdges(geomItem3, cone)
+      scene.getRoot().addChild(geomItem3)
+
+      renderer.getViewport().outlineThickness = 1.5
+
+      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, 2.7), new Vec3(0, 0, 0.4))
+      renderer.frameAll()
+
+      const postMessage = (msg) => {
+        console.log(msg)
+        window.postMessage(msg)
+      }
+      postMessage('done-loading')
+
+      // {{{ Messages handler.
+      const handleMessage = (event) => {
+        const { data } = event
+
+        if (data === 'variant-01') {
+          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, -2.7), new Vec3(0, 0, 0.4))
+          renderer.frameAll()
+          postMessage(`done-${data}`)
+        } else if (data === 'variant-02') {
+          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-2, -2, 2.7), new Vec3(0, 0, 0.4))
+          renderer.frameAll()
+          postMessage(`done-${data}`)
+        }
+      }
+
+      window.addEventListener('message', handleMessage, false)
+      // }}}
+    </script>
+  </head>
+  <body class="bg-blue-100">
+    <div class="h-screen">
+      <canvas class="absolute" id="renderer"></canvas>
+    </div>
+  </body>
+</html>

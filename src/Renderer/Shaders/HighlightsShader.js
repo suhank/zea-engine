@@ -62,7 +62,7 @@ vec4 SobelSample(vec2 uv)
     float sobelNormal = sobelNormalVec.x + sobelNormalVec.y + sobelNormalVec.z;
     
     float outlineDepthMultiplier = 10.0;
-    float outlineDepthBias = 1.5;
+    float outlineDepthBias = 2.5;
     sobelNormal = pow(sobelNormal * outlineDepthMultiplier, outlineDepthBias);
 
     sobelNormal = clamp(sobelNormal, 0.0, 1.0);

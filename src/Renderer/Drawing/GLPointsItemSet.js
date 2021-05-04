@@ -21,7 +21,7 @@ class GLPointsItemSet extends GLGeomItemSetMultiDraw {
    * @param {Array} counts - the counts for each element drawn in by this draw call.
    * @param {Array} offsets - the offsets for each element drawn in by this draw call.
    */
-  multiDraw(counts, offsets) {
+  multiDraw(renderstate, counts, offsets) {
     const gl = this.gl
     gl.multiDrawArrays(gl.POINTS, offsets, 0, counts, 0, counts.length)
   }

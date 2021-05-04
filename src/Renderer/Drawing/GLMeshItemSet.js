@@ -21,7 +21,7 @@ class GLMeshItemSet extends GLGeomItemSetMultiDraw {
    * @param {Array} counts - the counts for each element drawn in by this draw call.
    * @param {Array} offsets - the offsets for each element drawn in by this draw call.
    */
-  multiDraw(counts, offsets) {
+  multiDraw(renderstate, counts, offsets) {
     const gl = this.gl
     gl.multiDrawElements(gl.TRIANGLES, counts, 0, gl.UNSIGNED_INT, offsets, 0, counts.length)
   }
