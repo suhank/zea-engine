@@ -6,6 +6,7 @@ import { GLHDRImage } from './GLHDRImage.js'
 import { GLTexture2D } from './GLTexture2D.js'
 import { GLFbo } from './GLFbo.js'
 import { HighlightsShader } from './Shaders/HighlightsShader.js'
+import { SilhouetteShader } from './Shaders/SilhouetteShader.js'
 import { GLMesh } from './Drawing/GLMesh.js'
 
 const FRAMEBUFFER = {
@@ -36,6 +37,12 @@ class GLBaseViewport extends ParameterOwner {
     const gl = this.__renderer.gl
 
     this.highlightsShader = new HighlightsShader(gl)
+    this.silhouetteShader = new SilhouetteShader(gl)
+    this.outlineThickness = 2.0
+    this.outlineColor = new Color(0.15, 0.15, 0.15, 1)
+    this.outlineDepthMultiplier = 1.0
+    this.outlineDepthBias = 1.5
+
     this.quad = new GLMesh(gl, new Plane(1, 1))
 
     // //////////////////////////////////
@@ -336,22 +343,13 @@ class GLBaseViewport extends ParameterOwner {
     gl.bindFramebuffer(gl.FRAMEBUFFER, null)
     gl.viewport(...this.region)
 
-    gl.disable(gl.DEPTH_TEST)
     // Turn this on to debug the geom data buffer.
     // if (this.debugGeomShader)
     // {
+    //   gl.disable(gl.DEPTH_TEST)
     //   gl.screenQuad.bindShader(renderstate)
     //   gl.screenQuad.draw(renderstate, this.__geomDataBuffer)
     // }
-    // Turn this on to debug the depth buffer.
-    {
-      gl.screenQuad.bindShader(renderstate)
-      const unit = renderstate.boundTextures++
-      gl.activeTexture(gl.TEXTURE0 + unit)
-      gl.bindTexture(gl.TEXTURE_2D, this.depthTexture)
-      gl.uniform1i(renderstate.unifs.image.location, unit)
-      gl.screenQuad.draw(renderstate)
-    }
   }
 
   /**
@@ -360,7 +358,7 @@ class GLBaseViewport extends ParameterOwner {
    * @private
    */
   drawSilhouettes(renderstate) {
-    // return
+    if (this.outlineThickness == 0.0) return
 
     const gl = this.__renderer.gl
 
@@ -381,10 +379,42 @@ class GLBaseViewport extends ParameterOwner {
       gl.NEAREST
     )
 
+    // ////////////////////////////////////
     // Rebind the MSAA RenderBuffer.
     gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, this.fb[FRAMEBUFFER.MSAA_RENDERBUFFER])
     gl.viewport(0, 0, this.__width, this.__height)
     renderstate.boundRendertarget = this.fb[FRAMEBUFFER.MSAA_RENDERBUFFER]
+
+    // ////////////////////////////////////
+    //
+    gl.enable(gl.BLEND)
+    gl.blendEquation(gl.FUNC_ADD)
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA) // For add
+    gl.disable(gl.DEPTH_TEST)
+    gl.depthMask(false)
+
+    this.silhouetteShader.bind(renderstate)
+
+    const unifs = renderstate.unifs
+
+    const unit = renderstate.boundTextures++
+    gl.activeTexture(gl.TEXTURE0 + unit)
+    gl.bindTexture(gl.TEXTURE_2D, this.depthTexture)
+    gl.uniform1i(unifs.depthTexture.location, unit)
+
+    gl.uniform2f(unifs.screenSize.location, this.__width, this.__height)
+    gl.uniform1f(unifs.outlineThickness.location, this.outlineThickness)
+    gl.uniform4f(unifs.outlineColor.location, ...this.outlineColor.asArray())
+    gl.uniform1f(unifs.outlineDepthMultiplier.location, this.outlineDepthMultiplier)
+    gl.uniform1f(unifs.outlineDepthBias.location, this.outlineDepthBias)
+
+    const camera = this.getCamera()
+    gl.uniform2f(unifs.depthRange.location, camera.getNear(), camera.getFar())
+
+    this.quad.bindAndDraw(renderstate)
+
+    gl.enable(gl.DEPTH_TEST)
+    gl.depthMask(true)
   }
 
   /**
@@ -414,23 +444,24 @@ class GLBaseViewport extends ParameterOwner {
       gl.viewport(...this.region)
 
       // Turn this on to debug the highlight data buffer.
-      // {
-      //   gl.screenQuad.bindShader(renderstate)
-      //   this.highlightedGeomsBuffer.bindToUniform(renderstate, renderstate.unifs.image)
-      //   gl.screenQuad.draw(renderstate)
-      // }
+      const debugHilightBuffer = false
+      if (debugHilightBuffer) {
+        gl.screenQuad.bindShader(renderstate)
+        this.highlightedGeomsBuffer.bindToUniform(renderstate, renderstate.unifs.image)
+        gl.screenQuad.draw(renderstate)
+      } else {
+        this.highlightsShader.bind(renderstate)
+        gl.enable(gl.BLEND)
+        gl.blendEquation(gl.FUNC_ADD)
+        gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA) // For add
 
-      this.highlightsShader.bind(renderstate)
-      gl.enable(gl.BLEND)
-      gl.blendEquation(gl.FUNC_ADD)
-      gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA) // For add
+        const unifs = renderstate.unifs
+        this.highlightedGeomsBuffer.bindToUniform(renderstate, unifs.highlightDataTexture)
+        gl.uniform2f(unifs.highlightDataTextureSize.location, renderstate.region[2], renderstate.region[3])
+        this.quad.bindAndDraw(renderstate)
 
-      const unifs = renderstate.unifs
-      this.highlightedGeomsBuffer.bindToUniform(renderstate, unifs.highlightDataTexture)
-      gl.uniform2f(unifs.highlightDataTextureSize.location, renderstate.region[2], renderstate.region[3])
-      this.quad.bindAndDraw(renderstate)
-
-      gl.disable(gl.BLEND)
+        gl.disable(gl.BLEND)
+      }
     }
   }
 

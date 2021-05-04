@@ -55,12 +55,8 @@ void main(void) {
 #ifndef ENABLE_ES3
     vec4 fragColor;
 #endif
-    // fragColor = texture2D(image, v_texCoord);
-    // fragColor = vec4(fragColor.rgb/fragColor.a, 1.0);
-    
-    vec3 depth = vec3(remap(texture(image, v_texCoord).r, 0.5627, 11245.83, 0.0, 1.0));
-
-    fragColor = vec4(depth, 1.0);
+    fragColor = texture2D(image, v_texCoord);
+    fragColor = vec4(fragColor.rgb/fragColor.a, 1.0);
 
 #ifndef ENABLE_ES3
     gl_FragColor = fragColor;

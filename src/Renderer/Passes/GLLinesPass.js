@@ -1,7 +1,7 @@
 import { PassType } from './GLPass.js'
 import { GLOpaqueGeomsPass } from './GLOpaqueGeomsPass.js'
 import { GLRenderer } from '../GLRenderer.js'
-import { Lines, LinesProxy } from '../../SceneTree/index'
+import { Lines, LinesProxy, Points, PointsProxy } from '../../SceneTree/index'
 
 /** Class representing a GL opaque geoms pass.
  * @extends GLOpaqueGeomsPass
@@ -22,7 +22,7 @@ class GLLinesPass extends GLOpaqueGeomsPass {
    */
   filterGeomItem(geomItem) {
     const geom = geomItem.getParameter('Geometry').getValue()
-    if (geom instanceof Lines || geom instanceof LinesProxy) {
+    if (geom instanceof Lines || geom instanceof LinesProxy || geom instanceof Points || geom instanceof PointsProxy) {
       return true
     }
   }
