@@ -166,7 +166,7 @@ class VRViewport extends GLBaseViewport {
     const onAnimationFrame = (t, frame) => {
       if (this.session) {
         this.session.requestAnimationFrame(onAnimationFrame)
-        this.draw(frame)
+        this.drawXRFrame(frame)
       }
     }
     this.session.requestAnimationFrame(onAnimationFrame)
@@ -434,10 +434,10 @@ class VRViewport extends GLBaseViewport {
   }
 
   /**
-   * The draw method.
-   * @param {any} xrFrame - The xrFrame value.
+   * The drawXRFrame method.
+   * @param {XRFrame} xrFrame - The xrFrame value.
    */
-  draw(xrFrame) {
+  drawXRFrame(xrFrame) {
     const session = xrFrame.session
 
     const layer = session.renderState.baseLayer
@@ -514,7 +514,7 @@ class VRViewport extends GLBaseViewport {
     renderstate.region = this.__region
     renderstate.vrPresenting = true // Some rendering is ajusted slightly in VR. e.g. Billboards
 
-    this.__renderer.drawScene(renderstate)
+    this.draw(renderstate)
 
     // ///////////////////////
     // Emit a signal for the shared session.

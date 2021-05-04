@@ -164,9 +164,8 @@ class GLViewport extends GLBaseViewport {
    * @param {number} height - The height  used by this viewport.
    */
   resizeRenderTargets(width, height) {
-    if (this.highlightedGeomsBuffer) {
-      this.highlightedGeomsBuffer.resize(width, height)
-    }
+    super.resizeRenderTargets(width, height)
+
     if (this.__geomDataBufferFbo) {
       this.__geomDataBuffer.resize(this.__width, this.__height)
       this.renderGeomDataFbo()
@@ -841,113 +840,9 @@ class GLViewport extends GLBaseViewport {
   /**
    * The draw method.
    */
-  draw() {
-    const gl = this.__renderer.gl
-
-    // Make sure the default fbo is bound
-    // Note: Sometimes an Fbo is left bound
-    // from another op(like resizing, populating etc..)
-    // We need to unbind here to ensure rendering is to the
-    // right target.
-    gl.bindFramebuffer(gl.FRAMEBUFFER, null)
-
-    gl.viewport(...this.region)
-
-    gl.clearColor(...this.__backgroundColor.asArray())
-    // Note: in Chrome's macOS the alpha channel causes strange
-    // compositing issues. Here where we disable the alpha channel
-    // in the color mask which addresses the issues on MacOS.
-    // To see the artifacts, pass 'true' as the 4th parameter, and
-    // open a simple testing scene containing a grid. Moving the
-    // camera causes a ghosting effect to be left behind.
-    gl.colorMask(true, true, true, false)
-    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
-
-    const renderstate = {}
+  draw(renderstate = {}) {
     this.__initRenderState(renderstate)
-    this.__renderer.drawScene(renderstate)
-
-    if (this.highlightedGeomsBufferFbo) {
-      const gl = this.__renderer.gl
-
-      this.highlightedGeomsBufferFbo.bindForWriting(renderstate)
-      this.highlightedGeomsBufferFbo.clear()
-
-      gl.disable(gl.BLEND)
-      gl.enable(gl.DEPTH_TEST)
-      gl.depthFunc(gl.LESS)
-      gl.depthMask(true)
-      renderstate.glShader = null // clear any bound shaders.
-
-      this.__renderer.drawHighlightedGeoms(renderstate)
-
-      // Unbind and restore the bound fbo
-      this.highlightedGeomsBufferFbo.unbindForWriting(renderstate)
-
-      // Now render the outlines to the entire screen.
-      gl.viewport(...this.region)
-
-      // Turn this on to debug the highlight data buffer.
-      // {
-      //   gl.screenQuad.bindShader(renderstate)
-      //   this.highlightedGeomsBuffer.bindToUniform(renderstate, renderstate.unifs.image)
-      //   gl.screenQuad.draw(renderstate)
-      // }
-
-      this.highlightsShader.bind(renderstate)
-      gl.enable(gl.BLEND)
-      gl.blendEquation(gl.FUNC_ADD)
-      gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA) // For add
-
-      const unifs = renderstate.unifs
-      this.highlightedGeomsBuffer.bindToUniform(renderstate, unifs.highlightDataTexture)
-      gl.uniform2f(unifs.highlightDataTextureSize.location, renderstate.region[2], renderstate.region[3])
-      this.quad.bindAndDraw(renderstate)
-
-      gl.disable(gl.BLEND)
-    }
-
-    // /////////////////////////////////////
-    // // Post processing.
-    // if (this.__fbo) {
-    //     const gl = this.__gl;
-
-    //     // Bind the default framebuffer
-    //     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-    //     gl.viewport(...this.region);
-    //     // gl.disable(gl.SCISSOR_TEST);
-
-    //     // this.__glshaderScreenPostProcess.bind(renderstate);
-
-    //     // const unifs = renderstate.unifs;
-    //     // if ('antialiase' in unifs)
-    //     //     gl.uniform1i(unifs.antialiase.location, this.__antialiase ? 1 : 0);
-    //     // if ('textureSize' in unifs)
-    //     //     gl.uniform2fv(unifs.textureSize.location, fbo.size);
-    //     // if ('gamma' in unifs)
-    //     //     gl.uniform1f(unifs.gamma.location, this.__gamma);
-    //     // if ('exposure' in unifs)
-    //     //     gl.uniform1f(unifs.exposure.location, this.__exposure);
-    //     // if ('tonemap' in unifs)
-    //     //     gl.uniform1i(unifs.tonemap.location, this.__tonemap ? 1 : 0);
-
-    //     gl.screenQuad.bindShader(renderstate);
-    //     gl.screenQuad.draw(renderstate, this.__fbo.colorTexture);
-
-    //     // Note: if the texture is left bound, and no textures are bound to slot 0 befor rendering
-    //     // more goem int he next frame then the fbo color tex is being read from and written to
-    //     // at the same time. (baaaad).
-    //     // Note: any textures bound at all avoids this issue, and it only comes up when we have no env
-    //     // map, background or textures params in the scene. When it does happen it can be a bitch to
-    //     // track down.
-    //     gl.bindTexture(gl.TEXTURE_2D, null);
-    // }
-
-    // Turn this on to debug the geom data buffer.
-    if (this.debugGeomShader) {
-      gl.screenQuad.bindShader(renderstate)
-      gl.screenQuad.draw(renderstate, this.__geomDataBuffer)
-    }
+    super.draw(renderstate)
   }
 }
 

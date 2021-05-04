@@ -52,9 +52,6 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
    * @return {boolean} - The return value.
    */
   filterGeomItem(geomItem) {
-    const geom = geomItem.getParameter('Geometry').getValue()
-    if (geom instanceof Lines || geom instanceof Points || geom instanceof PointsProxy || geom instanceof LinesProxy)
-      return true
     const material = geomItem.getParameter('Material').getValue()
     return this.checkMaterial(material)
   }
@@ -230,6 +227,8 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
     gl.depthMask(true)
 
     this.__traverseTreeAndDraw(renderstate)
+
+    renderstate.viewport.drawSilhouettes(renderstate)
   }
 
   /**
