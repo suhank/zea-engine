@@ -518,20 +518,21 @@ class GLBaseRenderer extends ParameterOwner {
     const newWidth = width * DPR
     const newHeight = height * DPR
 
-    this.__glcanvas.width = newWidth
-    this.__glcanvas.height = newHeight
+    if (newWidth != this.__glcanvas.width || newHeight != this.__glcanvas.height) {
+      this.__glcanvas.width = newWidth
+      this.__glcanvas.height = newHeight
 
-    this.resizeFbos(newWidth, newHeight)
+      this.resizeFbos(newWidth, newHeight)
 
-    for (const vp of this.__viewports) {
-      vp.resize(newWidth, newHeight)
+      for (const vp of this.__viewports) {
+        vp.resize(newWidth, newHeight)
+      }
+
+      this.emit('resized', {
+        width: newWidth,
+        height: newHeight,
+      })
     }
-
-    this.emit('resized', {
-      width: newWidth,
-      height: newHeight,
-    })
-
     this.requestRedraw()
   }
 
@@ -607,7 +608,7 @@ class GLBaseRenderer extends ParameterOwner {
     this.resizeObserver.observe(this.__glcanvas.parentElement)
 
     webglOptions.preserveDrawingBuffer = true
-    webglOptions.antialias = webglOptions.antialias != undefined ? webglOptions.antialias : true
+    webglOptions.antialias = false //webglOptions.antialias != undefined ? webglOptions.antialias : true
     webglOptions.depth = webglOptions.depth != undefined ? webglOptions.depth : true
     webglOptions.stencil = webglOptions.stencil ? webglOptions.stencil : false
     webglOptions.alpha = webglOptions.alpha ? webglOptions.alpha : false

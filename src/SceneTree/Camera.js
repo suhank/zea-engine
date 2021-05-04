@@ -322,12 +322,13 @@ class Camera extends TreeItem {
    */
   updateProjectionMatrix(mat, aspect) {
     const isOrthographic = this.__isOrthographicParam.getValue()
+    const fov = this.__fovParam.getValue()
+    const near = this.__nearParam.getValue()
+    const far = this.__farParam.getValue()
+    console.log(near, far)
     const orthoMat = new Mat4()
     if (isOrthographic > 0.0) {
       const focalDistance = this.__focalDistanceParam.getValue()
-      const fov = this.__fovParam.getValue()
-      const near = this.__nearParam.getValue()
-      const far = this.__farParam.getValue()
       const halfHeight = Math.sin(fov * 0.5) * focalDistance
       const bottom = -halfHeight
       const top = halfHeight
@@ -336,9 +337,6 @@ class Camera extends TreeItem {
       orthoMat.setOrthographicMatrix(left, right, bottom, top, near, far)
     }
     if (isOrthographic < 1.0) {
-      const fov = this.__fovParam.getValue()
-      const near = this.__nearParam.getValue()
-      const far = this.__farParam.getValue()
       mat.setPerspectiveMatrix(fov, aspect, near, far)
     }
 
