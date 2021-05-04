@@ -325,7 +325,7 @@ class Camera extends TreeItem {
     const fov = this.__fovParam.getValue()
     const near = this.__nearParam.getValue()
     const far = this.__farParam.getValue()
-    console.log(near, far)
+
     const orthoMat = new Mat4()
     if (isOrthographic > 0.0) {
       const focalDistance = this.__focalDistanceParam.getValue()
