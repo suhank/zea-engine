@@ -237,17 +237,17 @@ void main(void) {
     fragColor.r = float(passId); 
     fragColor.g = float(v_drawItemId);
     fragColor.b = 0.0;// TODO: store poly-id or something.
-    fragColor.a = 1.0;//viewDist;
+    fragColor.a = viewDist;
   } else {
-      ///////////////////////////////////
-      // UInt8 buffer
-      fragColor.r = mod(v_drawItemId, 256.) / 256.;
-      fragColor.g = (floor(v_drawItemId / 256.) + (float(passId) * 64.)) / 256.;
+    ///////////////////////////////////
+    // UInt8 buffer
+    fragColor.r = mod(v_drawItemId, 256.) / 256.;
+    fragColor.g = (floor(v_drawItemId / 256.) + (float(passId) * 64.)) / 256.;
 
-      // encode the dist as a 16 bit float
-      vec2 float16bits = encode16BitFloatInto2xUInt8(viewDist);
-      fragColor.b = float16bits.x;
-      fragColor.a = float16bits.y;
+    // encode the dist as a 16 bit float
+    vec2 float16bits = encode16BitFloatInto2xUInt8(viewDist);
+    fragColor.b = float16bits.x;
+    fragColor.a = float16bits.y;
   }
 
   //////////////////////////////////////////////
@@ -303,26 +303,6 @@ void main(void) {
 
     matData[8] = material.getParameter('OccludedStippleValue').getValue()
     return matData
-  }
-
-  bind(renderstate, key) {
-    const res = super.bind(renderstate, key)
-    const gl = this.__gl
-    gl.enable(gl.BLEND)
-    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
-    return res
-  }
-
-  /**
-   * The unbind method.
-   * @param {object} renderstate - The object tracking the current state of the renderer
-   * @return {any} - The return value.
-   */
-  unbind(renderstate) {
-    const res = super.unbind(renderstate)
-    const gl = this.__gl
-    gl.disable(gl.BLEND)
-    return res
   }
 }
 

@@ -33,22 +33,17 @@ class GLLinesPass extends GLOpaqueGeomsPass {
    */
   draw(renderstate) {
     const gl = this.__gl
-    gl.disable(gl.BLEND)
 
-    if (true)
-      // 2-sided rendering.
-      gl.disable(gl.CULL_FACE)
-    // 2-sided rendering.
-    else {
-      gl.enable(gl.CULL_FACE)
-      gl.cullFace(gl.BACK)
-    }
+    gl.enable(gl.BLEND)
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
 
     gl.enable(gl.DEPTH_TEST)
     gl.depthFunc(gl.LEQUAL)
     gl.depthMask(true)
 
     this.__traverseTreeAndDraw(renderstate)
+
+    gl.disable(gl.BLEND)
   }
 }
 
