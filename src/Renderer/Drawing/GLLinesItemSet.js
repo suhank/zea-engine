@@ -8,31 +8,43 @@ import '../../SceneTree/Geometry/Mesh.js'
 class GLLinesItemSet extends GLGeomItemSetMultiDraw {
   /**
    * Draw an item to screen.
-   * @param {Array} count - the element count for this draw call.
-   * @param {Array} offset - the element offset for this draw call.
+   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {number} count - the element count for this draw call.
+   * @param {number} offset - the element offset for this draw call.
    */
-  singleDraw(count, offset) {
+  singleDraw(renderstate, count, offset) {
     const gl = this.gl
+    const { occluded } = renderstate.unifs
+    if (occluded) {
+      gl.uniform1i(occluded.location, 0)
+    }
+
     gl.drawElements(gl.LINES, count, gl.UNSIGNED_INT, offset)
+
+    if (occluded) {
+      gl.uniform1i(occluded.location, 1)
+      gl.depthFunc(gl.GREATER)
+      gl.multiDrawElements(gl.LINES, counts, 0, gl.UNSIGNED_INT, offsets, 0, counts.length)
+    }
   }
 
   /**
    * Draw an item to screen.
-   * @param {Array} counts - the counts for each element drawn in by this draw call.
-   * @param {Array} offsets - the offsets for each element drawn in by this draw call.
+   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {Int32Array} counts - the counts for each element drawn in by this draw call.
+   * @param {Int32Array} offsets - the offsets for each element drawn in by this draw call.
    */
   multiDraw(renderstate, counts, offsets) {
     const gl = this.gl
-    const { occludedLinesStyle } = renderstate.unifs
-    if (occludedLinesStyle) {
-      gl.uniform1i(occludedLinesStyle.location, 0)
+    const { occluded } = renderstate.unifs
+    if (occluded) {
+      gl.uniform1i(occluded.location, 0)
     }
 
     gl.multiDrawElements(gl.LINES, counts, 0, gl.UNSIGNED_INT, offsets, 0, counts.length)
 
-    if (occludedLinesStyle) {
-      gl.uniform1i(occludedLinesStyle.location, 1)
-
+    if (occluded) {
+      gl.uniform1i(occluded.location, 1)
       gl.depthFunc(gl.GREATER)
       gl.multiDrawElements(gl.LINES, counts, 0, gl.UNSIGNED_INT, offsets, 0, counts.length)
     }

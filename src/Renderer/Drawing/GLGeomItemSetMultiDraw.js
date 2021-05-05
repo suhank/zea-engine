@@ -396,7 +396,7 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
       counts.forEach((index) => {
         this.glGeomItems[index].bind(renderstate)
         renderstate.bindViewports(unifs, () => {
-          this.singleDraw(counts[index], offsets[index])
+          this.singleDraw(renderstate, counts[index], offsets[index])
         })
       })
     } else {

@@ -315,7 +315,7 @@ class GLGeomItemSet extends EventEmitter {
       gl.vertexAttribDivisor(location, 1) // This makes it instanced
 
       renderstate.bindViewports(unifs, () => {
-        this.glGeom.drawInstanced(itemIndices.length)
+        this.glGeom.drawInstanced(renderstate, itemIndices.length)
       })
     }
   }
