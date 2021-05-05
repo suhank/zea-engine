@@ -420,7 +420,7 @@ class GLBoundingBoxPass extends GLPass {
       }
 
       renderstate.bindViewports(unifs, () => {
-        this.glgeom.drawInstanced(this.drawCount)
+        this.glgeom.drawInstanced(renderstate, this.drawCount)
       })
     }
 

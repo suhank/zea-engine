@@ -20,38 +20,45 @@
       const domElement = document.getElementById('renderer')
       const renderer = new GLRenderer(domElement, { hideSplash: true, antialias: false })
       renderer.setScene(scene)
-      // scene.setupGrid(10.0, 10)
+      scene.setupGrid(10.0, 10)
 
-      const material = new Material('surfaces', 'FlatSurfaceShader')
-      material.getParameter('BaseColor').setValue(new Color(0.5, 0.5, 0.5))
+      // const backgroundColor = new Color(0.5, 0.5, 0.5)
+      // renderer.getScene().settings.getParameter('BackgroundColor').setValue(backgroundColor)
 
-      const displayHardEdges = (geomItem, mesh) => {
+      const material = new Material('surfaces', 'SimpleSurfaceShader')
+      material.getParameter('BaseColor').setValue(new Color(0.75, 0.75, 0.75))
+
+      const hardEdgesMaterial = new Material('hardEdgesMaterial', 'LinesShader')
+      hardEdgesMaterial.getParameter('BaseColor').setValue(new Color(0.1, 0.1, 0.1))
+      hardEdgesMaterial.getParameter('Opacity').setValue(1)
+      hardEdgesMaterial.getParameter('Overlay').setValue(0.00001)
+
+      hardEdgesMaterial.getParameter('StippleScale').setValue(0.02)
+      hardEdgesMaterial.getParameter('StippleValue').setValue(0)
+      hardEdgesMaterial.getParameter('OccludedStippleValue').setValue(0.6)
+
+      const createHardEdgesGeom = (mesh) => {
         // Display all the hard edges as darker lines.
         const hardEdges = new Lines()
         hardEdges.__vertexAttributes.set('positions', mesh.getVertexAttribute('positions'))
         hardEdges.setNumVertices(mesh.getNumVertices())
         hardEdges.__indices = mesh.computeHardEdgesIndices(0.5)
-        const hardEdgesMaterial = new Material('hardEdgesMaterial', 'LinesShader')
-        hardEdgesMaterial.getParameter('BaseColor').setValue(new Color(0.1, 0.1, 0.1))
-        hardEdgesMaterial.getParameter('Opacity').setValue(1)
-        hardEdgesMaterial.getParameter('Overlay').setValue(0.00001)
-        const hardEdgesItem = new GeomItem('hardEdges', hardEdges, hardEdgesMaterial)
-        geomItem.addChild(hardEdgesItem, false)
+        return new GeomItem('hardEdges', hardEdges, hardEdgesMaterial)
       }
 
       const cylinder = new Cylinder(1.5, 2.0, 6)
       const geomItem1 = new GeomItem('Cylinder', cylinder, material, new Xfo(new Vec3(-2.2, 0, 1)))
-      displayHardEdges(geomItem1, cylinder)
+      geomItem1.addChild(createHardEdgesGeom(cylinder), false)
       scene.getRoot().addChild(geomItem1)
 
       const cuboid = new Cuboid(1.5, 2.0, 3)
       const geomItem2 = new GeomItem('Cuboid', cuboid, material, new Xfo(new Vec3(0.0, 0, 1)))
-      displayHardEdges(geomItem2, cuboid)
+      geomItem2.addChild(createHardEdgesGeom(cuboid), false)
       scene.getRoot().addChild(geomItem2)
 
       const cone = new Cone(1.4, 2.0, 30)
       const geomItem3 = new GeomItem('Cone', cone, material, new Xfo(new Vec3(2.2, 0, 0)))
-      displayHardEdges(geomItem3, cone)
+      geomItem3.addChild(createHardEdgesGeom(cone), false)
       scene.getRoot().addChild(geomItem3)
 
       renderer.getViewport().outlineThickness = 1.5
