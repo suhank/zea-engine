@@ -40,8 +40,8 @@ class GLBaseViewport extends ParameterOwner {
     this.silhouetteShader = new SilhouetteShader(gl)
     this.outlineThickness = 1.0
     this.outlineColor = new Color(0.15, 0.15, 0.15, 1)
-    this.outlineDepthMultiplier = 1.0
-    this.outlineDepthBias = 1.5
+    this.outlineDepthMultiplier = 1.5
+    this.outlineDepthBias = 20.0
 
     this.quad = new GLMesh(gl, new Plane(1, 1))
 

@@ -27,6 +27,8 @@ class GridTreeItem extends TreeItem {
     const gridMaterial = new Material('gridMaterial', 'LinesShader')
     gridMaterial.getParameter('BaseColor').setValue(gridColor)
     gridMaterial.getParameter('Overlay').setValue(0.0)
+    gridMaterial.getParameter('StippleValue').setValue(0)
+    gridMaterial.getParameter('OccludedStippleValue').setValue(1)
     gridMaterial.visibleInGeomDataBuffer = false
 
     const grid = new Grid(gridSize, gridSize, resolution, resolution, true)
@@ -42,12 +44,16 @@ class GridTreeItem extends TreeItem {
     const gridXAxisMaterial = new Material('gridXAxisMaterial', 'LinesShader')
     gridXAxisMaterial.getParameter('BaseColor').setValue(new Color(gridColor.luminance(), 0, 0))
     gridXAxisMaterial.getParameter('Overlay').setValue(0.0)
+    gridXAxisMaterial.getParameter('StippleValue').setValue(0)
+    gridXAxisMaterial.getParameter('OccludedStippleValue').setValue(1)
     gridXAxisMaterial.visibleInGeomDataBuffer = false
     this.addChild(new GeomItem('xAxisLine', axisLine, gridXAxisMaterial), false)
 
     const gridYAxisMaterial = new Material('gridYAxisMaterial', 'LinesShader')
     gridYAxisMaterial.getParameter('BaseColor').setValue(new Color(0, gridColor.luminance(), 0))
     gridYAxisMaterial.getParameter('Overlay').setValue(0.0)
+    gridYAxisMaterial.getParameter('StippleValue').setValue(0)
+    gridYAxisMaterial.getParameter('OccludedStippleValue').setValue(1)
     gridYAxisMaterial.visibleInGeomDataBuffer = false
     const zAxisLineItem = new GeomItem('yAxisLine', axisLine, gridYAxisMaterial)
 
