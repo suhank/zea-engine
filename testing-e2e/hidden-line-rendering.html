@@ -66,6 +66,19 @@
       renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, 2.7), new Vec3(0, 0, 0.4))
       renderer.frameAll()
 
+      let prevMaterial
+      let prevColor
+      renderer.getViewport().on('pointerOverGeom', (event) => {
+        const pointerOverItem = event.intersectionData.geomItem
+        prevMaterial = pointerOverItem.getParameter('Material').getValue()
+        const material = prevMaterial.clone()
+        material.getParameter('BaseColor').setValue(new Color(1, 1, 1))
+        pointerOverItem.getParameter('Material').setValue(material)
+      })
+      renderer.getViewport().on('pointerLeaveGeom', (event) => {
+        event.leftGeometry.getParameter('Material').setValue(prevMaterial)
+      })
+
       const postMessage = (msg) => {
         console.log(msg)
         window.postMessage(msg)

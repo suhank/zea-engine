@@ -303,6 +303,9 @@ class GLBaseViewport extends ParameterOwner {
 
     this.drawHighlights(renderstate)
 
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null)
+    gl.viewport(...this.region)
+
     // //////////////////////////////////
     // Post processing.
     // "blit" the scene into the color buffer
@@ -339,17 +342,6 @@ class GLBaseViewport extends ParameterOwner {
       gl.COLOR_BUFFER_BIT,
       gl.LINEAR
     )
-
-    gl.bindFramebuffer(gl.FRAMEBUFFER, null)
-    gl.viewport(...this.region)
-
-    // Turn this on to debug the geom data buffer.
-    // if (this.debugGeomShader)
-    // {
-    //   gl.disable(gl.DEPTH_TEST)
-    //   gl.screenQuad.bindShader(renderstate)
-    //   gl.screenQuad.draw(renderstate, this.__geomDataBuffer)
-    // }
   }
 
   /**
