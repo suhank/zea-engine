@@ -285,10 +285,22 @@ class GLLines extends GLGeom {
 
   /**
    * The drawInstanced method.
-   * @param {any} instanceCount - The instanceCount value.
+   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {number} instanceCount - The instanceCount value.
    */
-  drawInstanced(instanceCount) {
+  drawInstanced(renderstate, instanceCount) {
+    const gl = this.gl
+    const { occluded } = renderstate.unifs
+    if (occluded) {
+      gl.uniform1i(occluded.location, 0)
+    }
     this.__gl.drawElementsInstanced(this.__gl.LINES, this.__numSegIndices, this.__indexDataType, 0, instanceCount)
+
+    if (occluded) {
+      gl.uniform1i(occluded.location, 1)
+      gl.depthFunc(gl.GREATER)
+      this.__gl.drawElementsInstanced(this.__gl.LINES, this.__numSegIndices, this.__indexDataType, 0, instanceCount)
+    }
   }
 }
 

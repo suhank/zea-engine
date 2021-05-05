@@ -108,16 +108,18 @@ class GLGeom extends RefCounted {
 
   /**
    * The draw method.
+   * @param {object} renderstate - The object tracking the current state of the renderer
    */
-  draw() {
+  draw(renderstate) {
     throw new Error('Not implemented. Implement this method in a derived class.')
   }
 
   /**
    * The drawInstanced method.
-   * @param {any} instanceCount - The instanceCount param.
+   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {number} instanceCount - The instanceCount param.
    */
-  drawInstanced(instanceCount) {
+  drawInstanced(renderstate, instanceCount) {
     throw new Error('Not implemented. Implement this method in a derived class.')
   }
 
