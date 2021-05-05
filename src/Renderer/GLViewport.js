@@ -52,29 +52,20 @@ class GLViewport extends GLBaseViewport {
     // //////////////////////////////////
     // Setup GeomData Fbo
     this.__geomDataBuffer = undefined
+    this.__geomDataBufferSizeFactor = 12
     this.__geomDataBufferFbo = undefined
     this.debugGeomShader = false
 
     // this.renderGeomDataFbo = this.renderGeomDataFbo.bind(this);
 
     const gl = this.__renderer.gl
-    if (renderer.__floatGeomBuffer) {
-      this.__geomDataBuffer = new GLTexture2D(gl, {
-        type: 'FLOAT',
-        format: 'RGBA',
-        filter: 'NEAREST',
-        width: width <= 1 ? 1 : width,
-        height: height <= 1 ? 1 : height,
-      })
-    } else {
-      this.__geomDataBuffer = new GLTexture2D(gl, {
-        type: 'UNSIGNED_BYTE',
-        format: 'RGBA',
-        filter: 'NEAREST',
-        width: width <= 1 ? 1 : width,
-        height: height <= 1 ? 1 : height,
-      })
-    }
+    this.__geomDataBuffer = new GLTexture2D(gl, {
+      type: renderer.__floatGeomBuffer ? 'FLOAT' : 'UNSIGNED_BYTE',
+      format: 'RGBA',
+      filter: 'NEAREST',
+      width: width <= 1 ? 1 : Math.floor(width / this.__geomDataBufferSizeFactor),
+      height: height <= 1 ? 1 : Math.floor(height / this.__geomDataBufferSizeFactor),
+    })
     this.__geomDataBufferFbo = new GLFbo(gl, this.__geomDataBuffer, true)
     this.__geomDataBufferFbo.setClearColor([0, 0, 0, 0])
 
@@ -167,7 +158,10 @@ class GLViewport extends GLBaseViewport {
     super.resizeRenderTargets(width, height)
 
     if (this.__geomDataBufferFbo) {
-      this.__geomDataBuffer.resize(this.__width, this.__height)
+      this.__geomDataBuffer.resize(
+        Math.floor(this.__width / this.__geomDataBufferSizeFactor),
+        Math.floor(this.__height / this.__geomDataBufferSizeFactor)
+      )
       this.renderGeomDataFbo()
     }
   }
@@ -317,12 +311,14 @@ class GLViewport extends GLBaseViewport {
    */
   renderGeomDataFbo() {
     if (this.__geomDataBufferFbo) {
-      this.__geomDataBufferFbo.bindAndClear()
-
       const renderstate = {}
       this.__initRenderState(renderstate)
+
+      this.__geomDataBufferFbo.bindAndClear(renderstate)
+
       this.__renderer.drawSceneGeomData(renderstate)
       this.__geomDataBufferInvalid = false
+      this.__geomDataBufferFbo.unbind()
     }
   }
 
@@ -379,17 +375,24 @@ class GLViewport extends GLBaseViewport {
       // console.log("getGeomDataAtPos:", screenPos.toString(), screenPos.x,this.__width)
 
       // Allocate a 1 pixel block and read from the GeomData buffer.
+      const bufferWidth = this.__geomDataBufferFbo.width
+      const bufferHeight = this.__geomDataBufferFbo.height
+      const x = Math.floor(screenPos.x * (bufferWidth / this.__width))
+      const y = Math.floor(screenPos.y * (bufferHeight / this.__height))
+      // const x = Math.floor(screenPos.x / this.__geomDataBufferSizeFactor)
+      // const y = Math.floor(screenPos.y / this.__geomDataBufferSizeFactor)
       let passId
       let geomData
       if (gl.floatGeomBuffer) {
         geomData = new Float32Array(4)
-        gl.readPixels(screenPos.x, this.__height - screenPos.y, 1, 1, gl.RGBA, gl.FLOAT, geomData)
+        gl.readPixels(x, bufferHeight - y - 1, 1, 1, gl.RGBA, gl.FLOAT, geomData)
         if (geomData[3] == 0) return undefined
+
         // Mask the pass id to be only the first 6 bits of the integer.
         passId = Math.round(geomData[0]) & (64 - 1)
       } else {
         geomData = new Uint8Array(4)
-        gl.readPixels(screenPos.x, this.__height - screenPos.y, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, geomData)
+        gl.readPixels(x, bufferHeight - y - 1, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, geomData)
         gl.bindFramebuffer(gl.FRAMEBUFFER, null)
         if (geomData[0] == 0 && geomData[1] == 0) return undefined
         passId = Math.floor(geomData[1] / 64)
@@ -437,10 +440,19 @@ class GLViewport extends GLBaseViewport {
       const gl = this.__renderer.gl
       gl.finish()
       // Allocate a pixel block.
-      const rectBottom = Math.round(this.__height - br.y)
-      const rectLeft = Math.round(tl.x)
-      const rectWidth = Math.round(br.x - tl.x)
-      const rectHeight = Math.round(br.y - tl.y)
+      const bufferWidth = this.__geomDataBufferFbo.width
+      const bufferHeight = this.__geomDataBufferFbo.height
+      const widthFactor = bufferWidth / this.__width
+      const heightFactor = bufferHeight / this.__height
+      const tlX = Math.round(tl.x * widthFactor)
+      const tlY = Math.round(tl.y * heightFactor)
+      const brX = Math.round(br.x * widthFactor)
+      const brY = Math.round(br.y * heightFactor)
+
+      const rectBottom = Math.round(bufferHeight - brY)
+      const rectLeft = Math.round(tlX)
+      const rectWidth = Math.round(brX - tlX)
+      const rectHeight = Math.round(brY - tlY)
       const numPixels = rectWidth * rectHeight
 
       this.__geomDataBufferFbo.bindForReading()
@@ -846,6 +858,32 @@ class GLViewport extends GLBaseViewport {
   draw(renderstate = {}) {
     this.__initRenderState(renderstate)
     super.draw(renderstate)
+
+    // Turn this on to debug the geom data buffer.
+    if (this.debugGeomShader) {
+      this.renderGeomDataFbo()
+      const gl = this.__renderer.gl
+      // gl.disable(gl.DEPTH_TEST)
+      // gl.screenQuad.bindShader(renderstate)
+      // console.log('here')
+      // gl.screenQuad.draw(renderstate, this.__geomDataBuffer, new Vec2(0.5, 0.5), new Vec2(2, 2))
+
+      gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, null)
+      this.__geomDataBufferFbo.bindForReading(renderstate)
+      gl.clearBufferfv(gl.COLOR, 0, [0.0, 0.0, 0.0, 0.0])
+      gl.blitFramebuffer(
+        0,
+        0,
+        this.__geomDataBufferFbo.width,
+        this.__geomDataBufferFbo.height,
+        0,
+        0,
+        this.__width,
+        this.__height,
+        gl.COLOR_BUFFER_BIT,
+        gl.NEAREST
+      )
+    }
   }
 }
 
