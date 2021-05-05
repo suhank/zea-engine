@@ -133,19 +133,22 @@ class GLViewport extends GLBaseViewport {
   /**
    * Dynamically resizes viewport.
    *
-   * @param {number} width - The width value.
-   * @param {number} height - The height value.
+   * @param {number} canvasWidth - The canvasWidth value.
+   * @param {number} canvasHeight - The canvasHeight value.
    */
-  resize(width, height) {
-    this.__x = width * this.__bl.x
-    this.__y = width * this.__bl.y
-    this.__width = width * this.__tr.x - width * this.__bl.x
-    this.__height = height * this.__tr.y - height * this.__bl.y
+  resize(canvasWidth, canvasHeight) {
+    if (this.__canvasWidth == canvasWidth && this.__canvasHeight == canvasHeight) return
+    this.__canvasWidth = canvasWidth
+    this.__canvasHeight = canvasHeight
+    this.__x = canvasWidth * this.__bl.x
+    this.__y = canvasWidth * this.__bl.y
+    this.__width = canvasWidth * this.__tr.x - canvasWidth * this.__bl.x
+    this.__height = canvasHeight * this.__tr.y - canvasHeight * this.__bl.y
     this.region = [this.__x, this.__y, this.__width, this.__height]
 
     this.resizeRenderTargets(this.__width, this.__height)
     if (this.__camera) this.__updateProjectionMatrix()
-    this.emit('resized', { width, height })
+    this.emit('resized', { width: this.__width, height: this.__height })
   }
 
   /**
