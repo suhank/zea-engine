@@ -79,7 +79,11 @@ void main(void) {
   float overlay = Overlay;
 #endif
 
-gl_Position.z = mix(gl_Position.z, -gl_Position.w, overlay);
+#if defined(DRAW_GEOMDATA)
+  gl_Position.z = mix(gl_Position.z, -gl_Position.w, overlay);
+#else
+  gl_Position.z = mix(gl_Position.z, -gl_Position.w, overlay * 5.0);
+#endif
 
   //////////////////////////////////////////////
   
@@ -114,6 +118,31 @@ uniform float StippleValue;
 uniform float OccludedStippleValue;
 
 #endif // ENABLE_MULTI_DRAW
+
+#if defined(DRAW_GEOMDATA)
+
+uniform int floatGeomBuffer;
+uniform int passId;
+
+<%include file="GLSLBits.glsl"/>
+
+#elif defined(DRAW_HIGHLIGHT)
+
+#ifdef ENABLE_FLOAT_TEXTURES
+vec4 getHighlightColor(int id) {
+  return fetchTexel(instancesTexture, instancesTextureSize, (id * pixelsPerItem) + 4);
+}
+#else // ENABLE_FLOAT_TEXTURES
+
+uniform vec4 highlightColor;
+
+vec4 getHighlightColor() {
+    return highlightColor;
+}
+
+#endif // ENABLE_FLOAT_TEXTURES
+
+#endif // DRAW_HIGHLIGHT
 
 
 #ifdef ENABLE_FLOAT_TEXTURES
@@ -178,12 +207,6 @@ void main(void) {
   float OccludedStippleValue = matValue2.r;
 #endif // ENABLE_MULTI_DRAW
 
-  //////////////////////////////////////////////
-  
-  fragColor = BaseColor;
-  fragColor.a *= Opacity;
-
-  
   ///////////////////
   // Stippling
   float stippleValue = occluded == 0 ? StippleValue : OccludedStippleValue;
@@ -196,6 +219,45 @@ void main(void) {
       return;
     }
   }
+
+  //////////////////////////////////////////////
+  // Color
+#if defined(DRAW_COLOR)
+
+  fragColor = BaseColor;
+  fragColor.a *= Opacity;
+
+  //////////////////////////////////////////////
+  // GeomData
+#elif defined(DRAW_GEOMDATA)
+
+  float viewDist = length(v_viewPos);
+
+  if(floatGeomBuffer != 0) {
+    fragColor.r = float(passId); 
+    fragColor.g = float(v_drawItemId);
+    fragColor.b = 0.0;// TODO: store poly-id or something.
+    fragColor.a = 1.0;//viewDist;
+  } else {
+      ///////////////////////////////////
+      // UInt8 buffer
+      fragColor.r = mod(v_drawItemId, 256.) / 256.;
+      fragColor.g = (floor(v_drawItemId / 256.) + (float(passId) * 64.)) / 256.;
+
+      // encode the dist as a 16 bit float
+      vec2 float16bits = encode16BitFloatInto2xUInt8(viewDist);
+      fragColor.b = float16bits.x;
+      fragColor.a = float16bits.y;
+  }
+
+  //////////////////////////////////////////////
+  // Highlight
+#elif defined(DRAW_HIGHLIGHT)
+  
+  fragColor = getHighlightColor(drawItemId);
+
+#endif // DRAW_HIGHLIGHT
+
 
 #ifndef ENABLE_ES3
   gl_FragColor = fragColor;
@@ -241,14 +303,6 @@ void main(void) {
 
     matData[8] = material.getParameter('OccludedStippleValue').getValue()
     return matData
-  }
-
-  static getGeomDataShaderName() {
-    return 'StandardSurfaceGeomDataShader'
-  }
-
-  static getSelectedShaderName() {
-    return 'StandardSurfaceSelectedGeomsShader'
   }
 
   bind(renderstate, key) {
