@@ -193,15 +193,17 @@ class Camera extends TreeItem {
   }
 
   /**
-   * Returns `isOrthographic` parameter value.
-   * @return {boolean} - The return value.
+   * Returns true if the camera is providing an orthographic projection.
+   * @return {boolean} - true if orthographic else false
    */
-  getIsOrthographic() {
+  isOrthographic() {
     return this.__isOrthographicParam.getValue() == 1.0
   }
 
   /**
-   * Sets `isOrthographic` parameter value.
+   * Sets the camera to be orthographic. The value can be between 0, and 1.
+   * A value of 0 means fully perspective. A value of 1 means fully orthographic.
+   * Any value in between produces a linear interpolation of perspective and orthographic.
    *
    * @param {boolean} value - The value param.
    * @param {Number} duration - The duration in milliseconds to change the projection.
