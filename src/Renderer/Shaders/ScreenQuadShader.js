@@ -44,10 +44,6 @@ uniform sampler2D image;
 
 varying vec2 v_texCoord;
 
-float remap(float value, float low1, float high1, float low2, float high2) {
-    return low2 + (value - low1) * (high2 - low2) / (high1 - low1);
-}
-
 #ifdef ENABLE_ES3
     out vec4 fragColor;
 #endif
