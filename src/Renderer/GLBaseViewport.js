@@ -38,7 +38,7 @@ class GLBaseViewport extends ParameterOwner {
 
     this.highlightsShader = new HighlightsShader(gl)
     this.silhouetteShader = new SilhouetteShader(gl)
-    this.outlineThickness = 1.0
+    this.outlineThickness = 0
     this.outlineColor = new Color(0.15, 0.15, 0.15, 1)
     this.outlineDepthMultiplier = 1.5
     this.outlineDepthBias = 20.0
