@@ -17,16 +17,15 @@ const vec3_length = (vec) => {
   return Math.sqrt(vec[0] * vec[0] + vec[1] * vec[1] + vec[2] * vec[2])
 }
 const vec3_scale = (vec, scl) => {
-  return [vec[0] * len, vec[1] * len, vec[2] * len]
+  return [vec[0] * scl, vec[1] * scl, vec[2] * scl]
 }
-const vec3_angleTo = (vec1, vec2) => {
-  const cosine = vec3_dot(vec1, vec2)
-  if (cosine > 1.0) {
-    return 0
-  } else {
-    return Math.acos(cosine)
-  }
+const vec2_scale = (vec, scl) => {
+  return [vec[0] * scl, vec[1] * scl]
 }
+const vec2_length = (vec) => {
+  return Math.sqrt(vec[0] * vec[0] + vec[1] * vec[1])
+}
+
 const quat_conjugate = (quat) => {
   return [-quat[0], -quat[1], -quat[2], quat[3]]
 }
@@ -99,26 +98,46 @@ const checkGeomItem = (geomItemData) => {
     unCull(geomItemData.id)
     return
   }
-  const viewVec = quat_rotateVec3(viewInvOri, vec)
-  // Cull items behind the view.
-  if (viewVec[2] > 0) {
-    cull(geomItemData.id)
-    return
-  }
-
   // Cull very small items
   // Note: when in VR, the FoV becomes very wide and the pixel
-  // height varies. It seems more consistent to just use solidAngle,
+  // height varies. It seems more consistent to just use solidAngle
   // which is resolution invariant.
-  const solidAngle = Math.atan(boundingRadius / dist)
+  const solidAngle = Math.asin(boundingRadius / dist)
   if (solidAngle < 0.004) {
     cull(geomItemData.id)
     return
   }
 
-  const viewVecNorm = vec3_normalize(viewVec)
-  const viewAngle = [Math.abs(Math.asin(viewVecNorm[0])) - solidAngle, Math.abs(Math.asin(viewVecNorm[1])) - solidAngle]
-  // console.log(geomItemData.id, 'angle To Sphere:', frustumHalfAngleX - viewAngle[0], frustumHalfAngleY - viewAngle[1])
+  // Now we check if the item is within the view frustum.
+  // We need the solid angle of the item for each axis (X & Y)
+  // This is because at the corners of the screen, the object is slightly
+  // further away, so the solid angle calculated above gets smaller.
+  // This was causing items with big bounding spheres to be culled too early
+  // at the corner of the screen.
+  const viewVec = quat_rotateVec3(viewInvOri, vec)
+  const viewVecXZ = [viewVec[0], viewVec[2]]
+  const viewVecYZ = [viewVec[1], viewVec[2]]
+  const distX = vec2_length(viewVecXZ)
+  const distY = vec2_length(viewVecYZ)
+  const solidAngleXZ = Math.asin(boundingRadius / distX)
+  const solidAngleYZ = Math.asin(boundingRadius / distY)
+  const viewVecNormXZ = vec2_scale(viewVecXZ, 1 / distX)
+  const viewVecNormYZ = vec2_scale(viewVecYZ, 1 / distY)
+
+  let viewAngle
+  // If an item is behind the viewer
+  if (viewVec[2] > 0) {
+    viewAngle = [
+      Math.PI - Math.abs(Math.asin(viewVecNormXZ[0])) - solidAngleXZ,
+      Math.PI - Math.abs(Math.asin(viewVecNormYZ[0])) - solidAngleYZ,
+    ]
+  } else {
+    viewAngle = [
+      Math.abs(Math.asin(viewVecNormXZ[0])) - solidAngleXZ,
+      Math.abs(Math.asin(viewVecNormYZ[0])) - solidAngleYZ,
+    ]
+  }
+  // console.log(geomItemData.id, 'angle To Item:', frustumHalfAngleX, viewAngle[0], frustumHalfAngleY, viewAngle[1])
   if (viewAngle[0] > frustumHalfAngleX || viewAngle[1] > frustumHalfAngleY) {
     cull(geomItemData.id)
     return
