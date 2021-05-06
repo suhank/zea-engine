@@ -36,9 +36,7 @@
         console.log(msg)
         window.postMessage(msg)
       }
-      renderer.once('resized', () => {
-        postMessage('done-loading')
-      })
+      postMessage('done-loading')
 
       // {{{ Messages handler.
       const handleMessage = (event) => {
