@@ -88,6 +88,8 @@
       }
       postMessage('done-loading')
 
+      renderer.getViewport().getManipulator().setDefaultManipulationMode(CameraManipulator.MANIPULATION_MODES.tumbler)
+
       // {{{ Messages handler.
       const handleMessage = (event) => {
         const { data } = event
@@ -106,7 +108,7 @@
           renderer
             .getViewport()
             .getManipulator()
-            .setDefaultManipulationMode(CameraManipulator.MANIPULATION_MODES.trackball)
+            .setDefaultManipulationMode(CameraManipulator.MANIPULATION_MODES.turntable)
           postMessage(`done-${data}`)
         }
       }
