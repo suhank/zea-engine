@@ -46,6 +46,9 @@ class GLGeomItemLibrary extends EventEmitter {
     this.worker.onmessage = (message) => {
       if (message.data.type == 'CullResults') {
         this.applyCullResults(message.data)
+      } else if (message.data.type == 'Done') {
+        // Used mostly to make our uni testing robust.
+        this.renderer.emit('CullingUpdated')
       }
       workerReady = true
     }
