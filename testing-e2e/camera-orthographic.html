@@ -29,8 +29,8 @@
       const cuboid = new Cuboid(1.5, 2.0, 1.1)
       const geomItem = new GeomItem('Cuboid', cuboid, standardMaterial)
       scene.getRoot().addChild(geomItem)
-      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, 2.7), new Vec3(0, 0, 0.4))
-      renderer.frameAll()
+      const camera = renderer.getViewport().getCamera()
+      camera.setPositionAndTarget(new Vec3(2, 2, 2), new Vec3(0, 0, 0))
 
       const postMessage = (msg) => {
         console.log(msg)
@@ -45,21 +45,15 @@
         const { data } = event
 
         if (data === 'variant-01') {
-          renderer.getViewport().getCamera().setIsOrthographic(1, 400)
-          renderer
-            .getViewport()
-            .getCamera()
-            .once('movementFinished', () => {
-              postMessage(`done-${data}`)
-            })
+          camera.setIsOrthographic(1, 400)
+          camera.once('movementFinished', () => {
+            postMessage(`done-${data}`)
+          })
         } else if (data === 'variant-02') {
-          renderer.getViewport().getCamera().setIsOrthographic(0, 400)
-          renderer
-            .getViewport()
-            .getCamera()
-            .once('movementFinished', () => {
-              postMessage(`done-${data}`)
-            })
+          camera.setIsOrthographic(0, 400)
+          camera.once('movementFinished', () => {
+            postMessage(`done-${data}`)
+          })
         }
       }
 
