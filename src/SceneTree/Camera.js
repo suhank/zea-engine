@@ -193,15 +193,17 @@ class Camera extends TreeItem {
   }
 
   /**
-   * Returns `isOrthographic` parameter value.
-   * @return {boolean} - The return value.
+   * Returns true if the camera is providing an orthographic projection.
+   * @return {boolean} - true if orthographic else false
    */
-  getIsOrthographic() {
+  isOrthographic() {
     return this.__isOrthographicParam.getValue() == 1.0
   }
 
   /**
-   * Sets `isOrthographic` parameter value.
+   * Sets the camera to be orthographic. The value can be between 0, and 1.
+   * A value of 0 means fully perspective. A value of 1 means fully orthographic.
+   * Any value in between produces a linear interpolation of perspective and orthographic.
    *
    * @param {boolean} value - The value param.
    * @param {Number} duration - The duration in milliseconds to change the projection.
@@ -263,8 +265,8 @@ class Camera extends TreeItem {
   // ///////////////////////////
 
   /**
-   * Calculates a new bounding box for all the items passed in `treeItems` array
-   * and moves the camera to a point where we can see all of them, preserving parameters configurations.
+   * Calculates a new camera position that frames all the items passed in `treeItems` array, moving
+   * the camera to a point where we can see all of them.
    *
    * @param {GLBaseViewport} viewport - The viewport value.
    * @param {array} treeItems - The treeItems value.
@@ -291,20 +293,11 @@ class Camera extends TreeItem {
     const pan = newTarget.subtract(currTarget)
     globalXfo.tr.addInPlace(pan)
 
-    // Transform the bounding box into camera space.
-    const transformedBBox = new Box3()
-    transformedBBox.addBox3(boundingBox, globalXfo.inverse())
-    const camSpaceTarget = transformedBBox.center()
+    // Compute the distance the camera should be to fit the entire bounding sphere
+    const newFocalDistance = boundingBox.size() / Math.tan(fovY)
 
-    const fovX = fovY * (viewport.getWidth() / viewport.getHeight())
-
-    // p1 is the closest corner of the transformed bbox.
-    const p = transformedBBox.p1
-    const newFocalDistanceX = (Math.abs(p.x) / Math.tan(0.5 * fovX)) * 1.2
-    const newFocalDistanceY = (Math.abs(p.y) / Math.tan(0.5 * fovY)) * 1.2
-
-    const camSpaceBBoxDepth = (transformedBBox.p0.z - transformedBBox.p1.z) * -0.5
-    const newFocalDistance = Math.max(newFocalDistanceX, newFocalDistanceY) + camSpaceBBoxDepth
+    // TODO: If this doesn't work in all cases, we may need to implement this more thorough solution described here:
+    // https://stackoverflow.com/a/66113254/5546902
 
     const dollyDist = newFocalDistance - focalDistance
     globalXfo.tr.addInPlace(cameraViewVec.scale(dollyDist))

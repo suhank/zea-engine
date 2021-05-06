@@ -58,6 +58,10 @@
         window.postMessage('done-loading')
       })
 
+      renderer.getViewport().on('keyDown', (event) => {
+        if (event.key == 'f') renderer.frameAll()
+      })
+
       // {{{ Messages handler.
       const handleMessage = (event) => {
         const { data } = event

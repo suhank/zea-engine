@@ -917,7 +917,7 @@ class GLBaseRenderer extends ParameterOwner {
   }
 
   /**
-   * Returns canvas element where our scene lives.
+   * Returns canvas that was used to generate the gl context.
    *
    * @return {HTMLCanvasElement} - The return value.
    */
@@ -926,17 +926,9 @@ class GLBaseRenderer extends ParameterOwner {
   }
 
   /**
-   * The getScreenQuad method.
-   *
-   * @return {GLScreenQuad} - The return value.
-   */
-  getScreenQuad() {
-    return this.__screenQuad
-  }
-
-  /**
-   * The frameAll method.
-   * @param {number} viewportIndex - The viewportIndex value.
+   * Frames the specified viewport to the entire scene.
+   * > See also: ${Viewport#frameView}
+   * @param {number} viewportIndex - The viewportIndex value. If multiple viewports are configured, a viewport index will need to be provided.
    */
   frameAll(viewportIndex = 0) {
     this.__viewports[viewportIndex].frameView([this.__scene.getRoot()])
@@ -946,7 +938,7 @@ class GLBaseRenderer extends ParameterOwner {
   // Render Items Setup
 
   /**
-   * The getOrCreateShader method.
+   * A factory function used to construct new shader objects. If that specified shader has already been constructed, it returns the existing shader.
    * @param {string} shaderName - The shader name.
    * @return {GLShader} - The return value.
    */

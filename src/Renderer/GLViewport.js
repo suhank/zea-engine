@@ -253,14 +253,17 @@ class GLViewport extends GLBaseViewport {
   }
 
   /**
-   * The frameView method.
-   * @param {array} treeItems - The treeItems value.
+   * Calculates a new camera position that frames all the items passed in `treeItems` array, moving
+   * the camera to a point where we can see all of them.
+   * > See Camera.frameView
+   * @param {array} treeItems - The array of TreeItem.
    */
   frameView(treeItems) {
     if (this.__width > 0 && this.__height > 0) {
       this.__camera.frameView(this, treeItems)
     } else {
-      // Wait till the window is resized and try again.
+      // Sometimes thew renderer is not yet setup, so here we
+      // wait till the window is resized and try again.
       this.once('resized', () => this.frameView())
     }
   }
@@ -291,7 +294,7 @@ class GLViewport extends GLBaseViewport {
 
     let rayStart
     let rayDirection
-    if (this.__camera.getIsOrthographic()) {
+    if (this.__camera.isOrthographic()) {
       // Orthographic projections.
       rayStart = cameraMat.transformVec3(projInv.transformVec3(new Vec3(sx, -sy, -1.0)))
       rayDirection = new Vec3(0.0, 0.0, -1.0)
@@ -834,7 +837,7 @@ class GLViewport extends GLBaseViewport {
         viewMatrix: this.__viewMat,
         projectionMatrix: this.__projectionMatrix,
         viewportFrustumSize: this.__frustumDim,
-        isOrthographic: this.__camera.getIsOrthographic(),
+        isOrthographic: this.__camera.isOrthographic(),
         fovY: this.__camera.getFov(),
       },
     ]
