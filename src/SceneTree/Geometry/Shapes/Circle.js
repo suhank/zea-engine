@@ -12,7 +12,7 @@ import { ProceduralLines } from './ProceduralLines'
  * **Parameters**
  * * **Radius(`NumberParameter`):** Radius of the circle.
  * * **Angle(`NumberParameter`):** Number of segments used to build the circle.
- * * **NumSegments(`NumberParameter`):** Segments angle in radiants.
+ * * **Sides(`NumberParameter`):** Segments angle in radiants.
  *
  * @extends {ProceduralLines}
  */
@@ -31,9 +31,9 @@ class Circle extends ProceduralLines {
     this.__radius = this.addParameter(new NumberParameter('Radius', radius))
     this.__angle = this.addParameter(new NumberParameter('Angle', angle))
     this.__numSegments = this.addParameter(
-      new NumberParameter('NumSegments', numSegments >= 3 ? numSegments : 3, [3, 200], 1)
+      new NumberParameter('Sides', numSegments >= 3 ? numSegments : 3, [3, 200], 1)
     )
-    this.topologyParams.push('NumSegments')
+    this.topologyParams.push('Sides')
   }
 
   /**
