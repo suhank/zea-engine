@@ -30,8 +30,7 @@
       // renderer.addPass(boundingBoxPass)
       // boundingBoxPass.addTreeItem(geomItem, true)
 
-      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, 2.7), new Vec3(0, 0, 0.4))
-      renderer.frameAll()
+      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(5, 5, 2.7), new Vec3(0, 0, 0))
 
       window.postMessage('done-loading')
 
@@ -43,8 +42,8 @@
           sphere.getParameter('Radius').setValue(2.5)
           window.postMessage(`done-${data}`)
         } else if (data === 'variant-02') {
-          sphere.getParameter('Loops').setValue(25)
-          sphere.getParameter('Sides').setValue(15)
+          sphere.getParameter('Radius').setValue(1)
+          sphere.getParameter('Sides').setValue(8)
           window.postMessage(`done-${data}`)
         }
       }
