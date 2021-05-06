@@ -59,7 +59,6 @@ class Sphere extends ProceduralMesh {
 
     // ////////////////////////////
     // Set Vertex Positions
-    console.log('rebuild')
 
     const positions = this.getVertexAttribute('positions')
     const normals = this.getVertexAttribute('normals')
