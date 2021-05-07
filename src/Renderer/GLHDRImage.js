@@ -34,7 +34,7 @@ class GLHDRImage extends GLTexture2D {
    *
    * @return {BaseImage} - The return value.
    */
-  getTexture() {
+  getImage() {
     return this.__hdrImage
   }
 
