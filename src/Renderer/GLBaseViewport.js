@@ -56,13 +56,15 @@ class GLBaseViewport extends ParameterOwner {
       width: 4,
       height: 4,
     })
-    // this.offscreenDepthBuffer = new GLTexture2D(gl, {
-    //   type: 'UNSIGNED_BYTE',
-    //   format: 'RGBA',
-    //   filter: 'NEAREST',
-    //   width: 4,
-    //   height: 4,
-    // })
+    this.depthTexture = new GLTexture2D(gl, {
+      type: gl.UNSIGNED_SHORT,
+      format: gl.DEPTH_COMPONENT,
+      internalFormat: gl.name == 'webgl2' ? gl.DEPTH_COMPONENT16 : gl.DEPTH_COMPONENT,
+      filter: gl.NEAREST,
+      wrap: gl.CLAMP_TO_EDGE,
+      width: 4,
+      height: 4,
+    })
 
     // this.offscreenBufferFbo = new GLFbo(gl, this.offscreenBuffer, true)
     // this.offscreenBufferFbo.setClearColor(this.__backgroundColor.asArray())
@@ -195,14 +197,12 @@ class GLBaseViewport extends ParameterOwner {
         gl.deleteFramebuffer(this.fb[FRAMEBUFFER.MSAA_RENDERBUFFER])
         gl.deleteFramebuffer(this.fb[FRAMEBUFFER.COLORBUFFER])
         gl.deleteFramebuffer(this.fb[FRAMEBUFFER.DEPTHBUFFER])
-        gl.deleteRenderbuffer(this.colorRenderbuffer)
-        gl.deleteRenderbuffer(this.depthBuffer)
-
-        gl.deleteTexture(this.depthTexture)
+        if (this.colorRenderbuffer) gl.deleteRenderbuffer(this.colorRenderbuffer)
+        if (this.depthBuffer) gl.deleteRenderbuffer(this.depthBuffer)
       }
       // Create and bind the framebuffer
       this.offscreenBuffer.resize(width, height)
-      // this.offscreenDepthBuffer.resize(width, height)
+      this.depthTexture.resize(width, height)
 
       this.fb = []
 
@@ -233,26 +233,7 @@ class GLBaseViewport extends ParameterOwner {
         // Create the depth texture that will be bitted to.
         this.fb[FRAMEBUFFER.DEPTHBUFFER] = gl.createFramebuffer()
         gl.bindFramebuffer(gl.FRAMEBUFFER, this.fb[FRAMEBUFFER.DEPTHBUFFER])
-
-        this.depthTexture = gl.createTexture()
-        gl.bindTexture(gl.TEXTURE_2D, this.depthTexture)
-        // TODO: Copy params from the color image.
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST)
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST)
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE)
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE)
-        gl.texImage2D(
-          gl.TEXTURE_2D,
-          0,
-          gl.DEPTH_COMPONENT16,
-          width,
-          height,
-          0,
-          gl.DEPTH_COMPONENT,
-          gl.UNSIGNED_SHORT,
-          null
-        )
-        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.TEXTURE_2D, this.depthTexture, 0)
+        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.TEXTURE_2D, this.depthTexture.glTex, 0)
         gl.bindFramebuffer(gl.FRAMEBUFFER, null)
       } else {
         this.EXT_frag_depth = gl.getExtension('EXT_frag_depth')
@@ -260,15 +241,7 @@ class GLBaseViewport extends ParameterOwner {
         this.fb[FRAMEBUFFER.MSAA_RENDERBUFFER] = gl.createFramebuffer()
         gl.bindFramebuffer(gl.FRAMEBUFFER, this.fb[FRAMEBUFFER.MSAA_RENDERBUFFER])
         gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.offscreenBuffer.glTex, 0)
-
-        this.depthTexture = gl.createTexture()
-        gl.bindTexture(gl.TEXTURE_2D, this.depthTexture)
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE)
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE)
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST)
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST)
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.DEPTH_COMPONENT, width, height, 0, gl.DEPTH_COMPONENT, gl.UNSIGNED_INT, null)
-        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.TEXTURE_2D, this.depthTexture, 0)
+        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.TEXTURE_2D, this.depthTexture.glTex, 0)
       }
 
       const check = gl.checkFramebufferStatus(gl.name == 'webgl2' ? gl.DRAW_FRAMEBUFFER : gl.FRAMEBUFFER)
@@ -452,11 +425,12 @@ class GLBaseViewport extends ParameterOwner {
 
     const unit = renderstate.boundTextures++
     gl.activeTexture(gl.TEXTURE0 + unit)
-    gl.bindTexture(gl.TEXTURE_2D, this.depthTexture)
+    gl.bindTexture(gl.TEXTURE_2D, this.depthTexture.glTex)
     gl.uniform1i(unifs.depthTexture.location, unit)
+    // this.depthTexture.bindToUniform(renderstate, unifs.depthTexture)
 
     if (!gl.renderbufferStorageMultisample) {
-      this.offscreenBuffer.bindToUniform(renderstate, renderstate.unifs.colorTexture)
+      this.offscreenBuffer.bindToUniform(renderstate, unifs.colorTexture)
     }
 
     gl.uniform2f(unifs.screenSize.location, this.__width, this.__height)
