@@ -38,6 +38,7 @@ class GLBaseViewport extends ParameterOwner {
 
     this.highlightsShader = new HighlightsShader(gl)
     this.silhouetteShader = new SilhouetteShader(gl)
+    this.highlightOutlineThickness = 1.5
     this.outlineThickness = 0
     this.outlineColor = new Color(0.15, 0.15, 0.15, 1)
     this.outlineDepthMultiplier = 1.5
@@ -388,8 +389,6 @@ class GLBaseViewport extends ParameterOwner {
    * @private
    */
   drawSilhouettes(renderstate) {
-    if (this.outlineThickness == 0.0) return
-
     const gl = this.__renderer.gl
 
     if (gl.renderbufferStorageMultisample) {
@@ -516,7 +515,7 @@ class GLBaseViewport extends ParameterOwner {
         gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA) // For add
 
         const unifs = renderstate.unifs
-        gl.uniform1f(unifs.outlineThickness.location, this.outlineThickness)
+        gl.uniform1f(unifs.outlineThickness.location, this.highlightOutlineThickness)
         this.highlightedGeomsBuffer.bindToUniform(renderstate, unifs.highlightDataTexture)
         gl.uniform2f(unifs.highlightDataTextureSize.location, renderstate.region[2], renderstate.region[3])
         this.quad.bindAndDraw(renderstate)
