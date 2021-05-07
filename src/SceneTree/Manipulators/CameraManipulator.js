@@ -16,6 +16,21 @@ const MANIPULATION_MODES = {
   trackball: 6,
 }
 
+const setCameraFocalDistance = (camera, dist) => {
+  const isOrthographic = camera.getParameter('isOrthographic').getValue()
+  if (isOrthographic < 0.5) {
+    camera.setFocalDistance(dist)
+  } else {
+    // For orthographic cameras, we don't want to manipulate the
+    // focal distance, as that is used to calculate the size of the frustum.
+    // Instead we move the camera closer or further away from the target.
+    const delta = camera.getFocalDistance() - dist
+    const xfo = camera.getParameter('GlobalXfo').getValue()
+    xfo.tr.addInPlace(xfo.ori.getZaxis().scale(delta))
+    camera.getParameter('GlobalXfo').setValue(xfo)
+  }
+}
+
 /**
  * Class for defining and interaction model of the camera.
  *
@@ -52,11 +67,11 @@ const MANIPULATION_MODES = {
  * The Camera manipulator can focus the view on a point in the view by various gestures.
  * A single click or touch tap can cause the view to be focussed or a double click or tap.
  * This behavior can be configured using the 2 values.
- * e.g. to disable all foc gestures, set both booleans to false.
+ * e.g. to disable all focus gestures, set both values to zero.
  * ```
  * const cameraManipulator = renderer.getViewport().getManipulator()
- * cameraManipulator.aimFocusOnSingleTap = false
- * cameraManipulator.aimFocusOnDoubleTap = false
+ * cameraManipulator.aimFocusOnTouchTap = 0
+ * cameraManipulator.aimFocusOnMouseClick = 0
  * ```
  *
  * **Parameters**
@@ -96,8 +111,8 @@ class CameraManipulator extends BaseTool {
     this.__pointerDown = false
     this.__dragging = 0
 
-    this.aimFocusOnSingleTap = true
-    this.aimFocusOnDoubleTap = false
+    this.aimFocusOnTouchTap = 1
+    this.aimFocusOnMouseClick = 2
     this.enabledWASDWalkMode = false
     this.__keyboardMovement = false
     this.__keysPressed = []
@@ -334,8 +349,8 @@ class CameraManipulator extends BaseTool {
     const orbitAroundCursor = this.getParameter('OrbitAroundCursor').getValue()
     if (event.intersectionData != undefined && orbitAroundCursor) {
       this.__orbitTarget = event.intersectionData.intersectionPos
-      const vec = xfo.tr.subtract(event.intersectionData.intersectionPos)
-      camera.setFocalDistance(vec.length())
+      const vec = xfo.inverse().transformVec3(event.intersectionData.intersectionPos)
+      setCameraFocalDistance(camera, -vec.z)
     } else {
       this.__orbitTarget = xfo.tr.add(xfo.ori.getZaxis().scale(-camera.getFocalDistance()))
     }
@@ -507,19 +522,24 @@ class CameraManipulator extends BaseTool {
    * @memberof CameraManipulator
    */
   onPointerDoublePress(event) {
-    if (event.intersectionData && this.aimFocusOnDoubleTap) {
-      const { viewport } = event
-      const camera = viewport.getCamera()
-      const cameraGlobalXfo = camera.getParameter('GlobalXfo').getValue()
-      const aimTarget = cameraGlobalXfo.tr.add(event.pointerRay.dir.scale(event.intersectionData.dist))
-      this.aimFocus(camera, aimTarget)
-      // Note: Collab can use these events to guide users attention.
-      event.aimTarget = aimTarget
-      event.aimDistance = event.intersectionData.dist
-      this.emit('aimingFocus', event)
-      camera.emit('aimingFocus', event)
-      event.stopPropagation()
-      event.preventDefault()
+    if (event.intersectionData && this.aimFocusOnMouseClick) {
+      if (
+        (event.pointerType === POINTER_TYPES.mouse && this.aimFocusOnMouseClick == 2) ||
+        (event.pointerType === POINTER_TYPES.touch && this.aimFocusOnTouchTap == 2)
+      ) {
+        const { viewport } = event
+        const camera = viewport.getCamera()
+        const cameraGlobalXfo = camera.getParameter('GlobalXfo').getValue()
+        const aimTarget = cameraGlobalXfo.tr.add(event.pointerRay.dir.scale(event.intersectionData.dist))
+        this.aimFocus(camera, aimTarget)
+        // Note: Collab can use these events to guide users attention.
+        event.aimTarget = aimTarget
+        event.aimDistance = event.intersectionData.dist
+        this.emit('aimingFocus', event)
+        camera.emit('aimingFocus', event)
+        event.stopPropagation()
+        event.preventDefault()
+      }
     }
   }
 
@@ -717,22 +737,28 @@ class CameraManipulator extends BaseTool {
       // No dragging ocurred. Release the capture and let the event propagate like normal.
       this.endDrag(event)
 
-      if (event.intersectionData && this.aimFocusOnSingleTap) {
-        const { viewport } = event
-        const camera = viewport.getCamera()
-        const cameraGlobalXfo = camera.getParameter('GlobalXfo').getValue()
-        const aimTarget = cameraGlobalXfo.tr.add(event.pointerRay.dir.scale(event.intersectionData.dist))
-        this.aimFocus(camera, aimTarget)
+      if (event.intersectionData) {
+        if (
+          (event.pointerType === POINTER_TYPES.mouse && this.aimFocusOnMouseClick == 1) ||
+          (event.pointerType === POINTER_TYPES.touch && this.aimFocusOnTouchTap == 1)
+        ) {
+          const { viewport } = event
+          const camera = viewport.getCamera()
+          const cameraGlobalXfo = camera.getParameter('GlobalXfo').getValue()
+          const aimTarget = cameraGlobalXfo.tr.add(event.pointerRay.dir.scale(event.intersectionData.dist))
+          this.aimFocus(camera, aimTarget)
 
-        // Note: Collab can use these events to guide users attention.
-        event.aimTarget = aimTarget
-        event.aimDistance = event.intersectionData.dist
-        this.emit('aimingFocus', event)
-        camera.emit('aimingFocus', event)
+          // Note: Collab can use these events to guide users attention.
+          event.aimTarget = aimTarget
+          event.aimDistance = event.intersectionData.dist
+          this.emit('aimingFocus', event)
+          camera.emit('aimingFocus', event)
+
+          // Note: for a single click (no-drag) we don't want to stop the propagation of the event.
+          event.stopPropagation()
+          event.preventDefault()
+        }
       }
-
-      event.stopPropagation()
-      event.preventDefault()
     } else if (this.__dragging == 2) {
       if (event.pointerType === POINTER_TYPES.mouse) {
         this.endDrag(event)
@@ -796,7 +822,9 @@ class CameraManipulator extends BaseTool {
     if (event.intersectionData != undefined) {
       const vec = xfo.tr.subtract(event.intersectionData.intersectionPos)
       dir = vec.normalize()
-      camera.setFocalDistance(vec.length())
+
+      const viewVec = xfo.inverse().transformVec3(event.intersectionData.intersectionPos)
+      setCameraFocalDistance(camera, -viewVec.z)
     } else {
       dir = xfo.ori.getZaxis()
     }
