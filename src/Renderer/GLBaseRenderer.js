@@ -608,14 +608,15 @@ class GLBaseRenderer extends ParameterOwner {
     this.resizeObserver.observe(this.__glcanvas.parentElement)
 
     webglOptions.preserveDrawingBuffer = true
-    webglOptions.antialias = false //webglOptions.antialias != undefined ? webglOptions.antialias : true
-    webglOptions.depth = webglOptions.depth != undefined ? webglOptions.depth : true
-    webglOptions.stencil = webglOptions.stencil ? webglOptions.stencil : false
+    webglOptions.antialias =
+      !SystemDesc.gpuDesc.supportsWebGL2 || webglOptions.webglContextType == 'webgl' ? true : false
+    webglOptions.depth = true
+    webglOptions.stencil = false
     webglOptions.alpha = webglOptions.alpha ? webglOptions.alpha : false
     // Note: Due to a change in Chrome (version 88-89), providing true here caused a pause when creating
     // an WebGL context, if the XR device was unplugged. We also call 'makeXRCompatible' when setting
     // up the XRViewport, so we to get an XR Compatible context anyway.
-    webglOptions.xrCompatible = webglOptions.xrCompatible != undefined ? webglOptions.xrCompatible : false
+    webglOptions.xrCompatible = false
 
     // Most applications of our engine will prefer the high-performance context by default.
     webglOptions.powerPreference = webglOptions.powerPreference || 'high-performance'
