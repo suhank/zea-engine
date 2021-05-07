@@ -112,9 +112,10 @@ class GLPoints extends GLGeom {
 
   /**
    * The drawInstanced method.
-   * @param {any} instanceCount - The instanceCount value.
+   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {number} instanceCount - The instanceCount value.
    */
-  drawInstanced(instanceCount) {
+  drawInstanced(renderstate, instanceCount) {
     this.__gl.drawArraysInstanced(this.__gl.POINTS, 0, this.__numVertices, instanceCount)
   }
 }

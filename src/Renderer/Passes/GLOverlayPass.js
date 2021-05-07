@@ -15,15 +15,6 @@ class GLOverlayPass extends GLOpaqueGeomsPass {
   }
 
   /**
-   * The init method.
-   * @param {GLBaseRenderer} renderer - The renderer value.
-   * @param {number} passIndex - The index of the pass in the GLBAseRenderer
-   */
-  init(renderer, passIndex) {
-    super.init(renderer, passIndex)
-  }
-
-  /**
    * Returns the pass type. OPAQUE passes are always rendered first, followed by TRANSPARENT passes, and finally OVERLAY.
    * @return {number} - The pass type value.
    */

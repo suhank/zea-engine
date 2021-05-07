@@ -451,7 +451,7 @@ class GLGeomItemLibrary extends EventEmitter {
     }
 
     gl.bindTexture(gl.TEXTURE_2D, this.glGeomItemsTexture.glTex)
-    const typeId = this.glGeomItemsTexture.getTypeID()
+    const typeId = this.glGeomItemsTexture.getType()
 
     const geomItemsUpdateToCullingWorker = []
 

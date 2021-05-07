@@ -34,13 +34,14 @@
       const domElement = document.getElementById('app')
       const renderer = new GLRenderer(domElement, { hideSplash: true, antialias: false })
       renderer.setScene(scene)
+      renderer.getViewport().outlineThickness = 1.5
 
       scene.setupGrid(60.0, 6)
       const tree1 = new TreeItem('tree1')
       scene.getRoot().addChild(tree1)
 
       const selectionSet1 = new SelectionSet('selectionSet1')
-      selectionSet1.getParameter('HighlightColor').setValue(new Color('lemonchiffon'))
+      selectionSet1.getParameter('HighlightColor').setValue(new Color('#FF0000'))
       scene.getRoot().addChild(selectionSet1)
 
       const selectionSet2 = new SelectionSet('selectionSet2')

@@ -1,5 +1,6 @@
 import { BaseImage, RefCounted } from '../SceneTree/index'
 import { MathFunctions } from '../Utilities/MathFunctions'
+import { processTextureParams } from './processTextureParams.js'
 
 /**
  * Represents a texture that contains 2-dimensional images.
@@ -29,22 +30,22 @@ class GLTexture2D extends RefCounted {
     this.__bound = false
     if (params != undefined) {
       if (params instanceof BaseImage) {
-        this.__texture = params
-        this.__texture.setMetadata('gltexture', this)
+        this.__image = params
+        this.__image.setMetadata('gltexture', this)
         const imageUpdated = () => {
           // this.bufferData(data);
-          const params = this.__texture.getParams()
+          const params = this.__image.getParams()
           const width = params.width
           const height = params.height
           const data = params.data
           this.bufferData(data, width, height)
         }
-        this.__texture.on('updated', imageUpdated)
-        if (this.__texture.isLoaded()) {
-          this.configure(this.__texture.getParams())
+        this.__image.on('updated', imageUpdated)
+        if (this.__image.isLoaded()) {
+          this.configure(this.__image.getParams())
         } else {
-          this.__texture.on('loaded', () => {
-            this.configure(this.__texture.getParams())
+          this.__image.on('loaded', () => {
+            this.configure(this.__image.getParams())
           })
         }
       } else {
@@ -67,8 +68,8 @@ class GLTexture2D extends RefCounted {
    *
    * @return {BaseImage} - The return value.
    */
-  getTexture() {
-    return this.__texture
+  getImage() {
+    return this.__image
   }
 
   /**
@@ -86,15 +87,6 @@ class GLTexture2D extends RefCounted {
    * @return {GLenum | enum} - The return value.
    */
   getType() {
-    return this.__typeParam
-  }
-
-  /**
-   * Returns the value of the specified data type of the texel data.
-   *
-   * @return {GLenum | enum} - The return value.
-   */
-  getTypeID() {
     return this.__type
   }
 
@@ -104,15 +96,6 @@ class GLTexture2D extends RefCounted {
    * @return {GLenum | enum} - The return value.
    */
   getFormat() {
-    return this.__formatParam
-  }
-
-  /**
-   * Returns the value of the specified texel data. It must be the same as the `internalFormat`
-   *
-   * @return {GLenum | enum} - The return value.
-   */
-  getFormatID() {
     return this.__format
   }
 
@@ -143,169 +126,30 @@ class GLTexture2D extends RefCounted {
    * @param {boolean} emit - The emit value.
    */
   configure(params, emit = true) {
-    if (!('type' in params) || !('format' in params) || !('width' in params) || !('height' in params)) {
-      if (!params.type) throw new Error(`Invalid texture params. 'type' not provided`)
-      if (!params.format) throw new Error(`Invalid texture params. 'format' not provided`)
-      if (!params.width) throw new Error(`Invalid texture params. 'width' not provided`)
-      if (!params.height) throw new Error(`Invalid texture params. 'height' not provided`)
-    }
-
     const gl = this.__gl
-    const width = params.width
-    const height = params.height
-    const data = params.data
+    const p = processTextureParams(gl, params)
 
-    const maxSize = gl.getParameter(gl.MAX_TEXTURE_SIZE)
-    if (width <= 0 || width > maxSize || height <= 0 || height > maxSize) {
-      throw new Error(
-        'gl-texture2d: Invalid texture size. width:' + width + ' height:' + height + ' maxSize:' + maxSize
-      )
-    }
+    this.params = p
+    this.__format = p.format
+    this.__internalFormat = p.internalFormat
+    this.__type = p.type
 
-    const format = params.format
-    const type = params.type
-    let minFilter = 'minFilter' in params ? params.minFilter : 'filter' in params ? params.filter : 'LINEAR'
-    let magFilter = 'magFilter' in params ? params.magFilter : 'filter' in params ? params.filter : 'LINEAR'
-    const wrapS = 'wrapS' in params ? params.wrapS : 'wrap' in params ? params.wrap : 'CLAMP_TO_EDGE'
-    const wrapT = 'wrapT' in params ? params.wrapT : 'wrap' in params ? params.wrap : 'CLAMP_TO_EDGE'
-
-    // if(format == 'ALPHA')
-    //     throw("ALPHA textures are now deprecated. Please use RED instead.")
-
-    // https://www.khronos.org/registry/OpenGL-Refpages/es3.0/html/glTexImage2D.xhtml
-    if (type == 'FLOAT') {
-      this.textureType = 3 // Indicating an Float HDR image.
-
-      if (gl.name == 'webgl2') {
-        if (minFilter == 'LINEAR' && !gl.__ext_float_linear) {
-          console.warn('Floating point texture filtering not supported on this device')
-          minFilter = 'NEAREST'
-        }
-        if (magFilter == 'LINEAR' && !gl.__ext_float_linear) {
-          console.warn('Floating point texture filtering not supported on this device')
-          magFilter = 'NEAREST'
-        }
-      } else {
-        if (gl.__ext_float) {
-          if (minFilter == 'LINEAR' && !gl.__ext_float_linear) {
-            console.warn('Floating point texture filtering not supported on this device')
-            minFilter = 'NEAREST'
-          }
-          if (magFilter == 'LINEAR' && !gl.__ext_float_linear) {
-            console.warn('Floating point texture filtering not supported on this device')
-            magFilter = 'NEAREST'
-          }
-        } else {
-          if (gl.__ext_half_float) {
-            type = 'HALF_FLOAT'
-            if (minFilter == 'LINEAR' && !gl.__ext_texture_half_float_linear) {
-              console.warn('Half Float texture filtering not supported on this device')
-              minFilter = 'NEAREST'
-            }
-            if (magFilter == 'LINEAR' && !gl.__ext_texture_half_float_linear) {
-              console.warn('Half Float texture filtering not supported on this device')
-              magFilter = 'NEAREST'
-            }
-          } else {
-            throw new Error('OES_texture_half_float is not available')
-          }
-        }
-      }
-    } else if (type == 'HALF_FLOAT') {
-      if (gl.name == 'webgl2') {
-        // Half float linear filtering appears to be supported even without the extension.
-        // if (filter == 'LINEAR' && !gl.__ext_texture_half_float_linear) {
-        //     console.warn('Floating point texture filtering not supported on this device');
-        //     filter = 'NEAREST';
-        // }
-      } else {
-        if (!gl.supportUploadingHalfFloat && data != undefined) {
-          throw new Error('Safari does not support uploading HALF_FLOAT texture data.')
-        }
-        if (gl.__ext_half_float) {
-          if (minFilter == 'LINEAR' && !gl.__ext_texture_half_float_linear) {
-            console.warn('Half Float texture filtering not supported on this device')
-            minFilter = 'NEAREST'
-          }
-          if (magFilter == 'LINEAR' && !gl.__ext_texture_half_float_linear) {
-            console.warn('Half Float texture filtering not supported on this device')
-            magFilter = 'NEAREST'
-          }
-        } else {
-          throw new Error('OES_texture_half_float is not available')
-        }
-        if (format == 'RGB') {
-          throw new Error('OES_texture_half_float only supports RGBA textures')
-        }
-      }
-    } else if (type == 'sRGB') {
-      if (!gl.__ext_sRGB) throw new Error('EXT_sRGB is not available')
-    }
-
-    this.__formatParam = format
-    this.__typeParam = type
-    this.__minFilterParam = minFilter
-    this.__magFilterParam = magFilter
-    this.__wrapSParam = wrapS
-    this.__wrapTParam = wrapT
-
-    // Detect an 8 bit image with an alpha channel.
-    if (this.textureType == 1 && this.__format == gl.RGBA) {
-      this.textureType = 2 // 32bit BPP image.
-    }
-
-    this.__format = gl[format]
-    this.__internalFormat = 'internalFormat' in params ? gl[params.internalFormat] : this.__format
-    this.__type = gl[type]
-
-    if (gl.name == 'webgl2') {
-      if (!('internalFormat' in params)) {
-        if (this.__type == gl.FLOAT) {
-          if (this.__format == gl.RED) {
-            this.__internalFormat = gl.R32F
-          } else if (this.__format == gl.RG) {
-            this.__internalFormat = gl.RG32F
-          } else if (this.__format == gl.RGB) {
-            this.__internalFormat = gl.RGB32F
-          } else if (this.__format == gl.RGBA) {
-            this.__internalFormat = gl.RGBA32F
-          }
-        } else if (this.__type == gl.HALF_FLOAT) {
-          if (this.__format == gl.RED) {
-            this.__internalFormat = gl.R16F
-          } else if (this.__format == gl.RG) {
-            this.__internalFormat = gl.RG16F
-          } else if (this.__format == gl.RGB) {
-            this.__internalFormat = gl.RGB16F
-          } else if (this.__format == gl.RGBA) {
-            this.__internalFormat = gl.RGBA16F
-          }
-        } else if (this.__type == gl.UNSIGNED_BYTE) {
-          if (this.__format == gl.RED) {
-            this.__internalFormat = gl.R8
-          }
-          if (this.__format == gl.RG) {
-            this.__internalFormat = gl.RG8
-          }
-          if (this.__format == gl.RGB) {
-            this.__internalFormat = gl.RGB8
-          } else if (this.__format == gl.RGBA) {
-            this.__internalFormat = gl.RGBA8
-          }
-        }
-      }
-    }
-
-    this.__minFilter = gl[minFilter]
-    this.__magFilter = gl[magFilter]
-    this.__wrapS = gl[wrapS]
-    this.__wrapT = gl[wrapT]
+    this.__minFilter = p.minFilter
+    this.__magFilter = p.magFilter
+    this.__wrapS = p.wrapS
+    this.__wrapT = p.wrapT
     this.__flipY = 'flipY' in params ? params.flipY : false
     this.__mipMapped = 'mipMapped' in params ? params.mipMapped : false
     this.invert = 'invert' in params ? params.invert : false
     this.alphaFromLuminance = 'alphaFromLuminance' in params ? params.alphaFromLuminance : false
-    this.textureDesc[0] = width
-    this.textureDesc[1] = height
+
+    this.textureType = 1 // Default 2d 8 bit texture image texture.
+    this.textureDesc[0] = this.width
+    this.textureDesc[1] = this.height
+    // Detect an 8 bit image with an alpha channel.
+    if (this.textureType == 1 && this.__format == gl.RGBA) {
+      this.textureType = 2 // 32bit BPP image.
+    }
 
     if (this.__gltex) {
       gl.deleteTexture(this.__gltex)
@@ -313,6 +157,10 @@ class GLTexture2D extends RefCounted {
 
     this.__gltex = gl.createTexture()
     this.__updateGLTexParams()
+
+    const width = p.width
+    const height = p.height
+    const data = params.data
     if (data) {
       this.bufferData(data, width, height, false, false)
     } else {
@@ -668,9 +516,8 @@ class GLTexture2D extends RefCounted {
     }
 
     const unit = renderstate.boundTextures++
-    const texId = this.__gl.TEXTURE0 + unit
     const gl = this.__gl
-    gl.activeTexture(texId)
+    gl.activeTexture(gl.TEXTURE0 + unit)
     gl.bindTexture(gl.TEXTURE_2D, this.__gltex)
     gl.uniform1i(unif.location, unit)
 
@@ -680,7 +527,7 @@ class GLTexture2D extends RefCounted {
       }
 
       if (bindings.textureDescUnif) {
-        this.__gl.uniform4fv(bindings.textureDescUnif.location, this.textureDesc)
+        gl.uniform4fv(bindings.textureDescUnif.location, this.textureDesc)
       }
     }
 
@@ -693,8 +540,8 @@ class GLTexture2D extends RefCounted {
    */
   destroy() {
     super.destroy()
-    if (this.__texture) {
-      this.__texture.setMetadata('gltexture', undefined)
+    if (this.__image) {
+      this.__image.setMetadata('gltexture', undefined)
     }
     this.__gl.deleteTexture(this.__gltex)
     this.__gltex = undefined

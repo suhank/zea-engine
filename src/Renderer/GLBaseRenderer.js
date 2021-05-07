@@ -172,8 +172,6 @@ class GLBaseRenderer extends ParameterOwner {
   addViewport(name) {
     const vp = new GLViewport(this, name, this.getWidth(), this.getHeight())
 
-    vp.createGeomDataFbo(this.__floatGeomBuffer)
-
     const updated = () => {
       this.requestRedraw()
     }
@@ -520,20 +518,21 @@ class GLBaseRenderer extends ParameterOwner {
     const newWidth = width * DPR
     const newHeight = height * DPR
 
-    this.__glcanvas.width = newWidth
-    this.__glcanvas.height = newHeight
+    if (newWidth != this.__glcanvas.width || newHeight != this.__glcanvas.height) {
+      this.__glcanvas.width = newWidth
+      this.__glcanvas.height = newHeight
 
-    this.resizeFbos(newWidth, newHeight)
+      this.resizeFbos(newWidth, newHeight)
 
-    for (const vp of this.__viewports) {
-      vp.resize(newWidth, newHeight)
+      for (const vp of this.__viewports) {
+        vp.resize(newWidth, newHeight)
+      }
+
+      this.emit('resized', {
+        width: newWidth,
+        height: newHeight,
+      })
     }
-
-    this.emit('resized', {
-      width: newWidth,
-      height: newHeight,
-    })
-
     this.requestRedraw()
   }
 
@@ -609,14 +608,15 @@ class GLBaseRenderer extends ParameterOwner {
     this.resizeObserver.observe(this.__glcanvas.parentElement)
 
     webglOptions.preserveDrawingBuffer = true
-    webglOptions.antialias = webglOptions.antialias != undefined ? webglOptions.antialias : true
-    webglOptions.depth = webglOptions.depth != undefined ? webglOptions.depth : true
-    webglOptions.stencil = webglOptions.stencil ? webglOptions.stencil : false
+    webglOptions.antialias =
+      !SystemDesc.gpuDesc.supportsWebGL2 || webglOptions.webglContextType == 'webgl' ? true : false
+    webglOptions.depth = true
+    webglOptions.stencil = false
     webglOptions.alpha = webglOptions.alpha ? webglOptions.alpha : false
     // Note: Due to a change in Chrome (version 88-89), providing true here caused a pause when creating
     // an WebGL context, if the XR device was unplugged. We also call 'makeXRCompatible' when setting
     // up the XRViewport, so we to get an XR Compatible context anyway.
-    webglOptions.xrCompatible = webglOptions.xrCompatible != undefined ? webglOptions.xrCompatible : false
+    webglOptions.xrCompatible = false
 
     // Most applications of our engine will prefer the high-performance context by default.
     webglOptions.powerPreference = webglOptions.powerPreference || 'high-performance'
@@ -632,7 +632,7 @@ class GLBaseRenderer extends ParameterOwner {
       this.addShaderPreprocessorDirective('ENABLE_FLOAT_TEXTURES')
     }
 
-    if (!webglOptions.disableMultiDraw) {
+    if (!webglOptions.disableMultiDraw && this.__gl.name != 'webgl') {
       const ext = this.__gl.getExtension('WEBGL_multi_draw')
       if (ext) {
         this.__gl.multiDrawArrays = ext.multiDrawArraysWEBGL.bind(ext)
@@ -992,20 +992,6 @@ class GLBaseRenderer extends ParameterOwner {
     this.__passesRegistrationOrder.push(pass)
     this.requestRedraw()
     return index
-  }
-
-  /**
-   * The registerPass method.
-   * @param {function} itemAddedFn - The itemAddedFn value.
-   * @param {function} itemRemovedFn - The itemRemovedFn value.
-   */
-  registerPass(itemAddedFn, itemRemovedFn) {
-    console.warn('Deprecated, GLPass must now implement #itemAddedToScene and #itemRemovedFromScene instead')
-    // insert at the beginning so it is called first.
-    this.__passCallbacks.splice(0, 0, {
-      itemAddedFn,
-      itemRemovedFn,
-    })
   }
 
   /**

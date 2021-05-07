@@ -10,11 +10,6 @@ import { PassType } from './Passes/GLPass.js'
 import { EnvMapShader } from './Shaders/EnvMapShader.js'
 import { generateShaderGeomBinding } from './Drawing/GeomShaderBinding.js'
 
-import { OutlinesShader } from './Shaders/OutlinesShader.js'
-import { GLMesh } from './Drawing/GLMesh.js'
-import logo from './logo-zea.svg'
-import { GLViewport } from './GLViewport'
-
 const ALL_PASSES = PassType.OPAQUE | PassType.TRANSPARENT | PassType.OVERLAY
 
 /** Class representing a GL renderer.
@@ -57,11 +52,6 @@ class GLRenderer extends GLBaseRenderer {
     if (options.debugGeomIds) {
       this.addShaderPreprocessorDirective('DEBUG_GEOM_ID')
     }
-
-    this.__outlineShader = new OutlinesShader(gl)
-    this.quad = new GLMesh(gl, new Plane(1, 1))
-
-    this.createSelectedGeomsFbo()
   }
 
   /**
@@ -184,7 +174,6 @@ class GLRenderer extends GLBaseRenderer {
    */
   addViewport(name) {
     const vp = super.addViewport(name)
-    // vp.createOffscreenFbo();
     return vp
   }
 
@@ -239,38 +228,6 @@ class GLRenderer extends GLBaseRenderer {
     this.requestRedraw()
   }
 
-  /**
-   * Getter for planeDist.
-   */
-  get planeDist() {
-    return this._planeDist
-  }
-
-  /**
-   * Setter for planeDist.
-   * @param {number} val - The val value.
-   */
-  set planeDist(val) {
-    this._planeDist = val
-    this.requestRedraw()
-  }
-
-  /**
-   * Getter for cutPlaneNormal.
-   */
-  get cutPlaneNormal() {
-    return this.__cutPlaneNormal
-  }
-
-  /**
-   * Setter for cutPlaneNormal.
-   * @param {number} val - The val value.
-   */
-  set cutPlaneNormal(val) {
-    this.__cutPlaneNormal = val
-    this.requestRedraw()
-  }
-
   // //////////////////////////
   // Fbos
 
@@ -284,56 +241,9 @@ class GLRenderer extends GLBaseRenderer {
     if (this.__fbo) {
       this.__fbo.resize(width, height)
     }
-    if (this.__highlightedGeomsBuffer) {
-      this.__highlightedGeomsBuffer.resize(width, height)
+    if (this.highlightedGeomsBuffer) {
+      this.highlightedGeomsBuffer.resize(width, height)
     }
-  }
-
-  // //////////////////////////
-  // SelectedGeomsBuffer
-
-  /**
-   * The createSelectedGeomsFbo method.
-   */
-  createSelectedGeomsFbo() {
-    const gl = this.__gl
-    this.__highlightedGeomsBuffer = new GLTexture2D(gl, {
-      type: 'UNSIGNED_BYTE',
-      format: 'RGBA',
-      filter: 'NEAREST',
-      width: this.__glcanvas.width <= 1 ? 1 : this.__glcanvas.width,
-      height: this.__glcanvas.height <= 1 ? 1 : this.__glcanvas.height,
-    })
-    this.__highlightedGeomsBufferFbo = new GLFbo(gl, this.__highlightedGeomsBuffer, true)
-    this.__highlightedGeomsBufferFbo.setClearColor([0, 0, 0, 0])
-  }
-
-  /**
-   * The getFbo method.
-   * @return {GLFbo} - The return value.
-   */
-  getFbo() {
-    return this.__fbo
-  }
-
-  /**
-   * The createOffscreenFbo method.
-   * @param {string} format - The format value.
-   */
-  createOffscreenFbo(format = 'RGB') {
-    const targetWidth = this.__glcanvas.width
-    const targetHeight = this.__glcanvas.height
-
-    const gl = this.__gl
-    this.__fwBuffer = new GLTexture2D(gl, {
-      type: 'FLOAT',
-      format,
-      filter: 'NEAREST',
-      width: targetWidth,
-      height: targetHeight,
-    })
-    this.__fbo = new GLFbo(gl, this.__fwBuffer, true)
-    this.__fbo.setClearColor(this.__backgroundColor.asArray())
   }
 
   // //////////////////////////
@@ -585,81 +495,6 @@ class GLRenderer extends GLBaseRenderer {
 
     super.drawScene(renderstate)
     // console.log("Draw Calls:" + renderstate['drawCalls']);
-
-    if (this.__highlightedGeomsBufferFbo) {
-      const gl = this.__gl
-
-      this.__highlightedGeomsBufferFbo.bindForWriting(renderstate)
-      this.__highlightedGeomsBufferFbo.clear()
-
-      gl.disable(gl.BLEND)
-      gl.enable(gl.DEPTH_TEST)
-      gl.depthFunc(gl.LESS)
-      gl.depthMask(true)
-      renderstate.glShader = null // clear any bound shaders.
-
-      this.drawHighlightedGeoms(renderstate)
-
-      // Unbind and restore the bound fbo
-      this.__highlightedGeomsBufferFbo.unbindForWriting(renderstate)
-
-      // Now render the outlines to the entire screen.
-      gl.viewport(...renderstate.region)
-
-      // Turn this on to debug the highlight data buffer.
-      // {
-      //   gl.screenQuad.bindShader(renderstate)
-      //   gl.screenQuad.draw(renderstate, this.__highlightedGeomsBuffer)
-      // }
-
-      this.__outlineShader.bind(renderstate)
-      gl.enable(gl.BLEND)
-      gl.blendEquation(gl.FUNC_ADD)
-      gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA) // For add
-
-      const unifs = renderstate.unifs
-      this.__highlightedGeomsBuffer.bindToUniform(renderstate, unifs.highlightDataTexture)
-      gl.uniform2f(unifs.highlightDataTextureSize.location, renderstate.region[2], renderstate.region[3])
-      this.quad.bindAndDraw(renderstate)
-
-      gl.disable(gl.BLEND)
-    }
-
-    // /////////////////////////////////////
-    // // Post processing.
-    // if (this.__fbo) {
-    //     const gl = this.__gl;
-
-    //     // Bind the default framebuffer
-    //     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-    //     gl.viewport(...this.region);
-    //     // gl.disable(gl.SCISSOR_TEST);
-
-    //     // this.__glshaderScreenPostProcess.bind(renderstate);
-
-    //     // const unifs = renderstate.unifs;
-    //     // if ('antialiase' in unifs)
-    //     //     gl.uniform1i(unifs.antialiase.location, this.__antialiase ? 1 : 0);
-    //     // if ('textureSize' in unifs)
-    //     //     gl.uniform2fv(unifs.textureSize.location, fbo.size);
-    //     // if ('gamma' in unifs)
-    //     //     gl.uniform1f(unifs.gamma.location, this.__gamma);
-    //     // if ('exposure' in unifs)
-    //     //     gl.uniform1f(unifs.exposure.location, this.__exposure);
-    //     // if ('tonemap' in unifs)
-    //     //     gl.uniform1i(unifs.tonemap.location, this.__tonemap ? 1 : 0);
-
-    //     gl.screenQuad.bindShader(renderstate);
-    //     gl.screenQuad.draw(renderstate, this.__fbo.colorTexture);
-
-    //     // Note: if the texture is left bound, and no textures are bound to slot 0 befor rendering
-    //     // more goem int he next frame then the fbo color tex is being read from and written to
-    //     // at the same time. (baaaad).
-    //     // Note: any textures bound at all avoids this issue, and it only comes up when we have no env
-    //     // map, background or textures params in the scene. When it does happen it can be a bitch to
-    //     // track down.
-    //     gl.bindTexture(gl.TEXTURE_2D, null);
-    // }
 
     this.emit('redrawOccurred', {})
   }
