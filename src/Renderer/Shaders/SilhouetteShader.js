@@ -28,8 +28,12 @@ void main()
     this.setShaderStage(
       'FRAGMENT_SHADER',
       `
+#ifndef ENABLE_ES3
+#extension GL_EXT_frag_depth : enable
+#endif
 precision highp float;
 
+uniform sampler2D colorTexture;
 uniform sampler2D depthTexture;
 uniform vec2 screenSize;
 uniform vec2 depthRange;
@@ -49,6 +53,10 @@ float LinearEyeDepth(float z_b) {
     return z_e;
 }
 
+float LogEyeDepth(float z_b) {
+    return depthRange.x + ((depthRange.y - depthRange.x) * z_b);
+}
+
 // https://www.vertexfragment.com/ramblings/unity-postprocessing-sobel-outline/#depth-based-outline
 // https://github.com/ssell/UnitySobelOutline/blob/2e1f4a5b4e703ae2c96aaf08d5518ce58abbaab9/Assets/Resources/Shaders/SobelOutlineHLSL.shader
 
@@ -62,11 +70,11 @@ float SobelDepth(float ldc, float ldl, float ldr, float ldu, float ldd)
 
 float SobelSampleDepth(vec2 uv, vec3 offset)
 {
-    float pixelCenter = LinearEyeDepth(texture(depthTexture, uv).r);
-    float pixelLeft   = LinearEyeDepth(texture(depthTexture, uv - offset.xz).r);
-    float pixelRight  = LinearEyeDepth(texture(depthTexture, uv + offset.xz).r);
-    float pixelUp     = LinearEyeDepth(texture(depthTexture, uv + offset.zy).r);
-    float pixelDown   = LinearEyeDepth(texture(depthTexture, uv - offset.zy).r);
+    float pixelCenter = LinearEyeDepth(texture2D(depthTexture, uv).r);
+    float pixelLeft   = LinearEyeDepth(texture2D(depthTexture, uv - offset.xz).r);
+    float pixelRight  = LinearEyeDepth(texture2D(depthTexture, uv + offset.xz).r);
+    float pixelUp     = LinearEyeDepth(texture2D(depthTexture, uv + offset.zy).r);
+    float pixelDown   = LinearEyeDepth(texture2D(depthTexture, uv - offset.zy).r);
 
     return SobelDepth(pixelCenter, pixelLeft, pixelRight, pixelUp, pixelDown);
 }
@@ -82,9 +90,15 @@ void main(void) {
 
     vec3 offset = vec3((1.0 / screenSize.x), (1.0 / screenSize.y), 0.0) * outlineThickness;
     float sobelDepth = SobelSampleDepth(v_texCoord, offset);
-    sobelDepth = pow(clamp(sobelDepth, 0.0, 1.0) * outlineDepthMultiplier, outlineDepthBias);
+    sobelDepth = clamp(pow(sobelDepth * outlineDepthMultiplier, outlineDepthBias), 0.0, 1.0);
 
+#ifdef ENABLE_ES3
     fragColor = vec4(outlineColor.rgb, sobelDepth);
+#else
+    fragColor = vec4(mix(texture2D(colorTexture, v_texCoord).rgb, outlineColor.rgb, sobelDepth), 1.0);
+    gl_FragDepthEXT = texture2D(depthTexture, v_texCoord).r;
+#endif
+
 
 #ifndef ENABLE_ES3
     gl_FragColor = fragColor;

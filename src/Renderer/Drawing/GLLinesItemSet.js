@@ -25,6 +25,7 @@ class GLLinesItemSet extends GLGeomItemSetMultiDraw {
       gl.uniform1i(occluded.location, 1)
       gl.depthFunc(gl.GREATER)
       gl.multiDrawElements(gl.LINES, counts, 0, gl.UNSIGNED_INT, offsets, 0, counts.length)
+      gl.depthFunc(gl.LEQUAL)
     }
   }
 
@@ -47,6 +48,7 @@ class GLLinesItemSet extends GLGeomItemSetMultiDraw {
       gl.uniform1i(occluded.location, 1)
       gl.depthFunc(gl.GREATER)
       gl.multiDrawElements(gl.LINES, counts, 0, gl.UNSIGNED_INT, offsets, 0, counts.length)
+      gl.depthFunc(gl.LEQUAL)
     }
   }
 }

@@ -53,6 +53,7 @@ void main(void) {
   vec4 viewPos = modelViewMatrix * vec4(positions, 1.0);
   vec4 viewPosNext = modelViewMatrix * vec4(positionsNext, 1.0);
 
+#ifdef ENABLE_ES3
   float nextVertexDist = length(viewPosNext.xyz - viewPos.xyz);
   if (imod(gl_VertexID, 2) == 0) {
     v_nextVertexDist.x = nextVertexDist;
@@ -62,6 +63,7 @@ void main(void) {
     v_nextVertexDist.y = nextVertexDist;
   }
   v_nextVertexDist.z = float(gl_VertexID);
+#endif
 
   v_viewPos = viewPos.xyz;
   gl_Position = projectionMatrix * viewPos;
@@ -210,6 +212,7 @@ void main(void) {
   ///////////////////
   // Stippling
   float stippleValue = occluded == 0 ? StippleValue : OccludedStippleValue;
+#ifdef ENABLE_ES3 // No stippling < es3 
   if (stippleValue > 0.0) {
     // Note: a value of 0.0, means no stippling (solid). A value of 1.0 means invisible
     float dist = -v_viewPos.z * StippleScale;
@@ -219,6 +222,7 @@ void main(void) {
       return;
     }
   }
+#endif
 
   //////////////////////////////////////////////
   // Color
@@ -226,6 +230,11 @@ void main(void) {
 
   fragColor = BaseColor;
   fragColor.a *= Opacity;
+
+  
+#ifndef ENABLE_ES3
+  if (occluded == 1) fragColor.a *= 1.0 - stippleValue;
+#endif
 
   //////////////////////////////////////////////
   // GeomData
