@@ -67,15 +67,23 @@ vec4 SobelSample(vec2 uv)
 
     sobelNormal = clamp(sobelNormal, 0.0, 1.0);
 
-    vec3 outlineColor = pixelCenter.rgb + pixelLeft + pixelRight + pixelUp + pixelDown;
     
     float pixelCenterWeight = length(pixelCenter.rgb) > 0.0 ? 1.0 : 0.0;
     float pixelLeftWeight   = length(pixelLeft) > 0.0 ? 1.0 : 0.0;
     float pixelRightWeight  = length(pixelRight) > 0.0 ? 1.0 : 0.0;
     float pixelUpWeight     = length(pixelUp) > 0.0 ? 1.0 : 0.0;
     float pixelDownWeight   = length(pixelDown) > 0.0 ? 1.0 : 0.0;
-    outlineColor /= pixelCenterWeight + pixelLeftWeight + pixelRightWeight + pixelUpWeight + pixelDownWeight;
     
+    // Weight each neighbors contribution to the current pixel color.
+    pixelCenter.rgb = pixelCenter.rgb * pixelCenterWeight;
+    pixelLeft   *= pixelLeftWeight;
+    pixelRight  *= pixelRightWeight;
+    pixelUp     *= pixelUpWeight;
+    pixelDown   *= pixelDownWeight;
+
+    // Add all the weighted contributions, and then normalize.
+    vec3 outlineColor = pixelCenter.rgb + pixelLeft + pixelRight +  pixelUp + pixelDown;
+    outlineColor /= pixelCenterWeight + pixelLeftWeight + pixelRightWeight + pixelUpWeight + pixelDownWeight;
 
     return mix(vec4(outlineColor, sobelNormal), pixelCenter, pixelCenter.a);
 }
