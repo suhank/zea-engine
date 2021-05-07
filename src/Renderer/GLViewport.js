@@ -860,6 +860,9 @@ class GLViewport extends GLBaseViewport {
    */
   draw(renderstate = {}) {
     this.__initRenderState(renderstate)
+
+    this.outlineDepthBias = Math.max(0.5, this.__camera.getFocalDistance() * 0.3)
+
     super.draw(renderstate)
 
     // Turn this on to debug the geom data buffer.
