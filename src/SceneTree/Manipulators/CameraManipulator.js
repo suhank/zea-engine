@@ -16,6 +16,21 @@ const MANIPULATION_MODES = {
   trackball: 6,
 }
 
+const setCameraFocalDistance = (camera, dist) => {
+  const isOrthographic = camera.getParameter('isOrthographic').getValue()
+  if (isOrthographic < 0.5) {
+    camera.setFocalDistance(dist)
+  } else {
+    // For orthographic cameras, we don't want to manipulate the
+    // focal distance, as that is used to calculate the size of the frustum.
+    // Instead we move the camera closer or further away from the target.
+    const delta = camera.getFocalDistance() - dist
+    const xfo = camera.getParameter('GlobalXfo').getValue()
+    xfo.tr.addInPlace(xfo.ori.getZaxis().scale(delta))
+    camera.getParameter('GlobalXfo').setValue(xfo)
+  }
+}
+
 /**
  * Class for defining and interaction model of the camera.
  *
@@ -334,8 +349,8 @@ class CameraManipulator extends BaseTool {
     const orbitAroundCursor = this.getParameter('OrbitAroundCursor').getValue()
     if (event.intersectionData != undefined && orbitAroundCursor) {
       this.__orbitTarget = event.intersectionData.intersectionPos
-      const vec = xfo.tr.subtract(event.intersectionData.intersectionPos)
-      camera.setFocalDistance(vec.length())
+      const vec = xfo.inverse().transformVec3(event.intersectionData.intersectionPos)
+      setCameraFocalDistance(camera, -vec.z)
     } else {
       this.__orbitTarget = xfo.tr.add(xfo.ori.getZaxis().scale(-camera.getFocalDistance()))
     }
@@ -807,7 +822,9 @@ class CameraManipulator extends BaseTool {
     if (event.intersectionData != undefined) {
       const vec = xfo.tr.subtract(event.intersectionData.intersectionPos)
       dir = vec.normalize()
-      camera.setFocalDistance(vec.length())
+
+      const viewVec = xfo.inverse().transformVec3(event.intersectionData.intersectionPos)
+      setCameraFocalDistance(camera, -viewVec.z)
     } else {
       dir = xfo.ori.getZaxis()
     }
