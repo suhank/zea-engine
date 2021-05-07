@@ -631,7 +631,7 @@ class GLBaseRenderer extends ParameterOwner {
       this.addShaderPreprocessorDirective('ENABLE_FLOAT_TEXTURES')
     }
 
-    if (!webglOptions.disableMultiDraw) {
+    if (!webglOptions.disableMultiDraw && this.__gl.name != 'webgl') {
       const ext = this.__gl.getExtension('WEBGL_multi_draw')
       if (ext) {
         this.__gl.multiDrawArrays = ext.multiDrawArraysWEBGL.bind(ext)

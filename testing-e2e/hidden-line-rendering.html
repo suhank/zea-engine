@@ -16,9 +16,14 @@
     <script type="module">
       const { GLRenderer, Scene, Vec3, Xfo, Color, Cylinder, Material, GeomItem, Lines, Cuboid, Cone } = zeaEngine
 
+      const urlParams = new URLSearchParams(window.location.search)
       const scene = new Scene()
       const domElement = document.getElementById('renderer')
-      const renderer = new GLRenderer(domElement, { hideSplash: true, antialias: false })
+      const renderer = new GLRenderer(domElement, {
+        hideSplash: true,
+        antialias: false,
+        webglContextType: urlParams.has('webgl') ? urlParams.get('webgl') : undefined,
+      })
       renderer.setScene(scene)
       scene.setupGrid(10.0, 10)
 
@@ -74,9 +79,12 @@
         const material = prevMaterial.clone()
         material.getParameter('BaseColor').setValue(new Color(1, 1, 1))
         pointerOverItem.getParameter('Material').setValue(material)
+
+        // pointerOverItem.getParameter('Material').pushMaterial(material)
       })
       renderer.getViewport().on('pointerLeaveGeom', (event) => {
         event.leftGeometry.getParameter('Material').setValue(prevMaterial)
+        // event.leftGeometry.getParameter('Material').popMaterial()
       })
 
       const postMessage = (msg) => {

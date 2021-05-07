@@ -31,6 +31,7 @@ void main()
       `
 precision highp float;
 
+uniform float outlineThickness;
 uniform sampler2D highlightDataTexture;
 uniform vec2 highlightDataTextureSize;
 
@@ -48,7 +49,6 @@ vec3 SobelFactor(vec3 ldc, vec3 ldl, vec3 ldr, vec3 ldu, vec3 ldd)
 // https://github.com/ssell/UnitySobelOutline/blob/2e1f4a5b4e703ae2c96aaf08d5518ce58abbaab9/Assets/Resources/Shaders/SobelOutlineHLSL.shader#L18
 vec4 SobelSample(vec2 uv)
 {
-    float outlineThickness = 1.0;
     vec3 offset = vec3((1.0 / highlightDataTextureSize.x), (1.0 / highlightDataTextureSize.y), 0.0) * outlineThickness;
 
     vec4 pixelCenter = texture2D(highlightDataTexture, uv);
