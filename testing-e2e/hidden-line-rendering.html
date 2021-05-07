@@ -29,7 +29,7 @@
       // const backgroundColor = new Color(0.5, 0.5, 0.5)
       // renderer.getScene().settings.getParameter('BackgroundColor').setValue(backgroundColor)
 
-      const material = new Material('surfaces', 'SimpleSurfaceShader')
+      const material = new Material('surfaces', 'FlatSurfaceShader')
       material.getParameter('BaseColor').setValue(new Color(0.75, 0.75, 0.75))
 
       const hardEdgesMaterial = new Material('hardEdgesMaterial', 'LinesShader')
@@ -75,19 +75,22 @@
       let prevColor
       renderer.getViewport().on('pointerOverGeom', (event) => {
         const pointerOverItem = event.intersectionData.geomItem
-        prevMaterial = pointerOverItem.getParameter('Material').getValue()
-        const material = prevMaterial.clone()
-        material.getParameter('BaseColor').setValue(new Color(1, 1, 1))
-        pointerOverItem.getParameter('Material').setValue(material)
+        // prevMaterial = pointerOverItem.getParameter('Material').getValue()
+        // const material = prevMaterial.clone()
+        // material.getParameter('BaseColor').setValue(new Color(1, 1, 1))
+        // pointerOverItem.getParameter('Material').setValue(material)
 
-        pointerOverItem.addHighlight('pointerOver', pointerOverColor, true)
+        // pointerOverItem.addHighlight('pointerOver', pointerOverColor, true)
 
         // pointerOverItem.getParameter('Material').pushMaterial(material)
+
+        pointerOverItem.addHighlight('pointerOverGeom', new Color(0.8, 0.8, 0.8, 0.1), true)
       })
       renderer.getViewport().on('pointerLeaveGeom', (event) => {
-        event.leftGeometry.getParameter('Material').setValue(prevMaterial)
-        // event.leftGeometry.getParameter('Material').popMaterial()
-        event.leftGeometry.removeHighlight('pointerOver', true)
+        event.leftGeometry.removeHighlight('pointerOverGeom', true)
+        // event.leftGeometry.getParameter('Material').setValue(prevMaterial)
+        // // event.leftGeometry.getParameter('Material').popMaterial()
+        // event.leftGeometry.removeHighlight('pointerOver', true)
       })
 
       const postMessage = (msg) => {
