@@ -71,6 +71,7 @@
       renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, 2.7), new Vec3(0, 0, 0.4))
       renderer.frameAll()
 
+      const pointerOverColor = new Color(1, 1, 1, 0.2)
       let prevMaterial
       let prevColor
       renderer.getViewport().on('pointerOverGeom', (event) => {
@@ -80,11 +81,14 @@
         material.getParameter('BaseColor').setValue(new Color(1, 1, 1))
         pointerOverItem.getParameter('Material').setValue(material)
 
+        pointerOverItem.addHighlight('pointerOver', pointerOverColor, true)
+
         // pointerOverItem.getParameter('Material').pushMaterial(material)
       })
       renderer.getViewport().on('pointerLeaveGeom', (event) => {
         event.leftGeometry.getParameter('Material').setValue(prevMaterial)
         // event.leftGeometry.getParameter('Material').popMaterial()
+        event.leftGeometry.removeHighlight('pointerOver', true)
       })
 
       const postMessage = (msg) => {
