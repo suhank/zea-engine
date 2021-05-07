@@ -180,7 +180,7 @@ void main(void) {
 
 
       // encode the dist as a 16 bit float
-      vec2 float16bits = encode16BitFloatInto2xUInt8(dist);
+      vec2 float16bits = encode16BitFloatInto2xUInt8(viewDist);
       fragColor.b = float16bits.x;
       fragColor.a = float16bits.y;
   }
