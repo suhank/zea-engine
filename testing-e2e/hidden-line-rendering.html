@@ -21,7 +21,6 @@
       const domElement = document.getElementById('renderer')
       const renderer = new GLRenderer(domElement, {
         hideSplash: true,
-        antialias: false,
         webglContextType: urlParams.has('webgl') ? urlParams.get('webgl') : undefined,
       })
       renderer.setScene(scene)
