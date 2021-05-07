@@ -52,11 +52,11 @@ const MANIPULATION_MODES = {
  * The Camera manipulator can focus the view on a point in the view by various gestures.
  * A single click or touch tap can cause the view to be focussed or a double click or tap.
  * This behavior can be configured using the 2 values.
- * e.g. to disable all foc gestures, set both booleans to false.
+ * e.g. to disable all focus gestures, set both values to zero.
  * ```
  * const cameraManipulator = renderer.getViewport().getManipulator()
- * cameraManipulator.aimFocusOnSingleTap = false
- * cameraManipulator.aimFocusOnDoubleTap = false
+ * cameraManipulator.aimFocusOnTouchTap = 0
+ * cameraManipulator.aimFocusOnMouseClick = 0
  * ```
  *
  * **Parameters**
@@ -96,8 +96,8 @@ class CameraManipulator extends BaseTool {
     this.__pointerDown = false
     this.__dragging = 0
 
-    this.aimFocusOnSingleTap = true
-    this.aimFocusOnDoubleTap = false
+    this.aimFocusOnTouchTap = 1
+    this.aimFocusOnMouseClick = 2
     this.enabledWASDWalkMode = false
     this.__keyboardMovement = false
     this.__keysPressed = []
@@ -507,19 +507,24 @@ class CameraManipulator extends BaseTool {
    * @memberof CameraManipulator
    */
   onPointerDoublePress(event) {
-    if (event.intersectionData && this.aimFocusOnDoubleTap) {
-      const { viewport } = event
-      const camera = viewport.getCamera()
-      const cameraGlobalXfo = camera.getParameter('GlobalXfo').getValue()
-      const aimTarget = cameraGlobalXfo.tr.add(event.pointerRay.dir.scale(event.intersectionData.dist))
-      this.aimFocus(camera, aimTarget)
-      // Note: Collab can use these events to guide users attention.
-      event.aimTarget = aimTarget
-      event.aimDistance = event.intersectionData.dist
-      this.emit('aimingFocus', event)
-      camera.emit('aimingFocus', event)
-      event.stopPropagation()
-      event.preventDefault()
+    if (event.intersectionData && this.aimFocusOnMouseClick) {
+      if (
+        (event.pointerType === POINTER_TYPES.mouse && this.aimFocusOnMouseClick == 2) ||
+        (event.pointerType === POINTER_TYPES.touch && this.aimFocusOnTouchTap == 2)
+      ) {
+        const { viewport } = event
+        const camera = viewport.getCamera()
+        const cameraGlobalXfo = camera.getParameter('GlobalXfo').getValue()
+        const aimTarget = cameraGlobalXfo.tr.add(event.pointerRay.dir.scale(event.intersectionData.dist))
+        this.aimFocus(camera, aimTarget)
+        // Note: Collab can use these events to guide users attention.
+        event.aimTarget = aimTarget
+        event.aimDistance = event.intersectionData.dist
+        this.emit('aimingFocus', event)
+        camera.emit('aimingFocus', event)
+        event.stopPropagation()
+        event.preventDefault()
+      }
     }
   }
 
@@ -717,22 +722,28 @@ class CameraManipulator extends BaseTool {
       // No dragging ocurred. Release the capture and let the event propagate like normal.
       this.endDrag(event)
 
-      if (event.intersectionData && this.aimFocusOnSingleTap) {
-        const { viewport } = event
-        const camera = viewport.getCamera()
-        const cameraGlobalXfo = camera.getParameter('GlobalXfo').getValue()
-        const aimTarget = cameraGlobalXfo.tr.add(event.pointerRay.dir.scale(event.intersectionData.dist))
-        this.aimFocus(camera, aimTarget)
+      if (event.intersectionData) {
+        if (
+          (event.pointerType === POINTER_TYPES.mouse && this.aimFocusOnMouseClick == 1) ||
+          (event.pointerType === POINTER_TYPES.touch && this.aimFocusOnTouchTap == 1)
+        ) {
+          const { viewport } = event
+          const camera = viewport.getCamera()
+          const cameraGlobalXfo = camera.getParameter('GlobalXfo').getValue()
+          const aimTarget = cameraGlobalXfo.tr.add(event.pointerRay.dir.scale(event.intersectionData.dist))
+          this.aimFocus(camera, aimTarget)
 
-        // Note: Collab can use these events to guide users attention.
-        event.aimTarget = aimTarget
-        event.aimDistance = event.intersectionData.dist
-        this.emit('aimingFocus', event)
-        camera.emit('aimingFocus', event)
+          // Note: Collab can use these events to guide users attention.
+          event.aimTarget = aimTarget
+          event.aimDistance = event.intersectionData.dist
+          this.emit('aimingFocus', event)
+          camera.emit('aimingFocus', event)
+
+          // Note: for a single click (no-drag) we don't want to stop the propagation of the event.
+          event.stopPropagation()
+          event.preventDefault()
+        }
       }
-
-      event.stopPropagation()
-      event.preventDefault()
     } else if (this.__dragging == 2) {
       if (event.pointerType === POINTER_TYPES.mouse) {
         this.endDrag(event)
