@@ -35,6 +35,8 @@ class GLBaseRenderer extends ParameterOwner {
       return
     }
 
+    this.solidAngleLimit = 0.004
+
     this.__shaders = {}
     this.__passes = {}
     this.__passesRegistrationOrder = []

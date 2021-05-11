@@ -61,6 +61,7 @@ class GLGeomItemLibrary extends EventEmitter {
         type: 'ViewportChanged',
         frustumHalfAngleX,
         frustumHalfAngleY,
+        solidAngleLimit: renderer.solidAngleLimit,
       })
     }
     renderer.on('resized', viewportChanged)
@@ -100,6 +101,7 @@ class GLGeomItemLibrary extends EventEmitter {
             type: 'ViewChanged',
             viewPos: pos.asArray(),
             viewOri: ori.asArray(),
+            solidAngleLimit: renderer.solidAngleLimit,
           })
         }
         tick++
@@ -115,6 +117,7 @@ class GLGeomItemLibrary extends EventEmitter {
         type: 'ViewChanged',
         viewPos: pos.asArray(),
         viewOri: ori.asArray(),
+        solidAngleLimit: renderer.solidAngleLimit,
       })
     }
 
