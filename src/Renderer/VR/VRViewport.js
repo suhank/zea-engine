@@ -35,9 +35,6 @@ class VRViewport extends GLBaseViewport {
     // Viewport params
     this.__projectionMatricesUpdated = false
 
-    // These values are in meters.
-    this.__far = 1024.0
-    this.__near = 0.1
     // ////////////////////////////////////////////
     // Tree
 
@@ -331,8 +328,9 @@ class VRViewport extends GLBaseViewport {
 
             this.__width = glLayer.framebufferWidth
             this.__height = glLayer.framebufferHeight
-            this.__renderer.resizeFbos(this.__width, this.__height)
             this.__region = [0, 0, this.__width, this.__height]
+            this.resizeRenderTargets(this.__width, this.__height)
+
             // ////////////////////////////
 
             // eslint-disable-next-line require-jsdoc
@@ -488,9 +486,12 @@ class VRViewport extends GLBaseViewport {
 
     const renderstate = {
       boundRendertarget: layer.framebuffer,
+      depthRange: [session.renderState.depthNear, session.renderState.depthFar],
       region: this.__region,
+      viewport: this,
       vrviewport: this,
       viewports: [],
+      outlineDepthMultiplier: (0.1 / this.__stageScale) * this.renderer.outlineSensitivity,
     }
     // renderstate.boundRendertarget.vrfbo = true;
 
@@ -523,6 +524,7 @@ class VRViewport extends GLBaseViewport {
       hmd: this.__hmd,
       viewXfo: renderstate.viewXfo,
       controllers: this.controllers,
+      viewport: this,
       vrviewport: this,
     }
     this.emit('viewChanged', data)
