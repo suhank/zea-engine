@@ -5,8 +5,6 @@ import { GLBaseRenderer } from './GLBaseRenderer'
 import { GLHDRImage } from './GLHDRImage.js'
 import { GLTexture2D } from './GLTexture2D.js'
 import { GLFbo } from './GLFbo.js'
-import { HighlightsShader } from './Shaders/HighlightsShader.js'
-import { SilhouetteShader } from './Shaders/SilhouetteShader.js'
 import { GLMesh } from './Drawing/GLMesh.js'
 
 const FRAMEBUFFER = {
@@ -27,6 +25,7 @@ class GLBaseViewport extends ParameterOwner {
    */
   constructor(renderer) {
     super()
+    this.renderer = renderer
     this.__renderer = renderer
     this.__doubleClickTimeMSParam = this.addParameter(new NumberParameter('DoubleClickTimeMS', 200))
     this.__fbo = undefined
@@ -35,14 +34,6 @@ class GLBaseViewport extends ParameterOwner {
     this.__backgroundColor = new Color(0.3, 0.3, 0.3, 1)
 
     const gl = this.__renderer.gl
-
-    this.highlightsShader = new HighlightsShader(gl)
-    this.silhouetteShader = new SilhouetteShader(gl)
-    this.highlightOutlineThickness = 1.5
-    this.outlineThickness = 0
-    this.outlineColor = new Color(0.15, 0.15, 0.15, 1)
-    this.outlineDepthMultiplier = 1.5
-    this.outlineDepthBias = 0.7
 
     this.quad = new GLMesh(gl, new Plane(1, 1))
 
@@ -277,6 +268,8 @@ class GLBaseViewport extends ParameterOwner {
   draw(renderstate = {}) {
     const gl = this.__renderer.gl
 
+    const prevRendertarget = renderstate.boundRendertarget
+
     if (this.fb) {
       // this.offscreenBufferFbo.bindForWriting(renderstate)
       // this.offscreenBufferFbo.clear()
@@ -285,7 +278,6 @@ class GLBaseViewport extends ParameterOwner {
         gl.name == 'webgl2' ? gl.DRAW_FRAMEBUFFER : gl.FRAMEBUFFER,
         this.fb[FRAMEBUFFER.MSAA_RENDERBUFFER]
       )
-      gl.viewport(0, 0, this.__width, this.__height)
       renderstate.boundRendertarget = this.fb[FRAMEBUFFER.MSAA_RENDERBUFFER]
     } else {
       // Make sure the default fbo is bound
@@ -294,9 +286,8 @@ class GLBaseViewport extends ParameterOwner {
       // We need to unbind here to ensure rendering is to the
       // right target.
       gl.bindFramebuffer(gl.FRAMEBUFFER, null)
-      gl.viewport(...this.region)
     }
-
+    gl.viewport(0, 0, this.__width, this.__height)
     gl.clearColor(...this.__backgroundColor.asArray())
     // Note: in Chrome's macOS the alpha channel causes strange
     // compositing issues. Here where we disable the alpha channel
@@ -313,8 +304,10 @@ class GLBaseViewport extends ParameterOwner {
 
     this.drawHighlights(renderstate)
 
-    gl.bindFramebuffer(gl.FRAMEBUFFER, null)
-    gl.viewport(...this.region)
+    gl.bindFramebuffer(gl.FRAMEBUFFER, prevRendertarget)
+    renderstate.boundRendertarget = prevRendertarget
+
+    gl.viewport(0, 0, this.__width, this.__height)
 
     // //////////////////////////////////
     // Post processing.
@@ -322,7 +315,6 @@ class GLBaseViewport extends ParameterOwner {
       // "blit" the scene into the color buffer
       gl.bindFramebuffer(gl.READ_FRAMEBUFFER, this.fb[FRAMEBUFFER.MSAA_RENDERBUFFER])
       gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, this.fb[FRAMEBUFFER.COLORBUFFER])
-      // gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, null)
       gl.clearBufferfv(gl.COLOR, 0, [0.0, 0.0, 0.0, 0.0])
 
       gl.blitFramebuffer(
@@ -338,7 +330,7 @@ class GLBaseViewport extends ParameterOwner {
         gl.LINEAR
       )
 
-      gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, null)
+      gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, renderstate.boundRendertarget)
       gl.bindFramebuffer(gl.READ_FRAMEBUFFER, this.fb[FRAMEBUFFER.COLORBUFFER])
       gl.clearBufferfv(gl.COLOR, 0, [0.0, 0.0, 0.0, 0.0])
       gl.blitFramebuffer(
@@ -386,7 +378,7 @@ class GLBaseViewport extends ParameterOwner {
       renderstate.boundRendertarget = this.fb[FRAMEBUFFER.MSAA_RENDERBUFFER]
       gl.viewport(0, 0, this.__width, this.__height)
     } else {
-      // Rebind the MSAA RenderBuffer.
+      // Rebind the default RenderBuffer.
       gl.bindFramebuffer(gl.FRAMEBUFFER, null)
       renderstate.boundRendertarget = null
 
@@ -419,28 +411,23 @@ class GLBaseViewport extends ParameterOwner {
       gl.depthMask(false)
     }
 
-    this.silhouetteShader.bind(renderstate)
+    this.renderer.silhouetteShader.bind(renderstate)
 
     const unifs = renderstate.unifs
 
-    const unit = renderstate.boundTextures++
-    gl.activeTexture(gl.TEXTURE0 + unit)
-    gl.bindTexture(gl.TEXTURE_2D, this.depthTexture.glTex)
-    gl.uniform1i(unifs.depthTexture.location, unit)
-    // this.depthTexture.bindToUniform(renderstate, unifs.depthTexture)
+    this.depthTexture.bindToUniform(renderstate, unifs.depthTexture)
 
     if (!gl.renderbufferStorageMultisample) {
       this.offscreenBuffer.bindToUniform(renderstate, unifs.colorTexture)
     }
 
     gl.uniform2f(unifs.screenSize.location, this.__width, this.__height)
-    gl.uniform1f(unifs.outlineThickness.location, this.outlineThickness)
-    gl.uniform4f(unifs.outlineColor.location, ...this.outlineColor.asArray())
-    gl.uniform1f(unifs.outlineDepthMultiplier.location, this.outlineDepthMultiplier)
-    gl.uniform1f(unifs.outlineDepthBias.location, this.outlineDepthBias)
+    gl.uniform1f(unifs.outlineThickness.location, this.renderer.outlineThickness)
+    gl.uniform4f(unifs.outlineColor.location, ...this.renderer.outlineColor.asArray())
+    gl.uniform1f(unifs.outlineDepthMultiplier.location, renderstate.outlineDepthMultiplier)
+    gl.uniform1f(unifs.outlineDepthBias.location, this.renderer.outlineDepthBias)
 
-    const camera = this.getCamera()
-    gl.uniform2f(unifs.depthRange.location, camera.getNear(), camera.getFar())
+    gl.uniform2f(unifs.depthRange.location, renderstate.depthRange[0], renderstate.depthRange[1])
 
     this.quad.bindAndDraw(renderstate)
 
@@ -474,7 +461,7 @@ class GLBaseViewport extends ParameterOwner {
       this.highlightedGeomsBufferFbo.unbindForWriting(renderstate)
 
       // Now render the outlines to the entire screen.
-      gl.viewport(...this.region)
+      gl.viewport(0, 0, this.__width, this.__height)
 
       // Turn this on to debug the highlight data buffer.
       const debugHighlightBuffer = false
@@ -483,13 +470,13 @@ class GLBaseViewport extends ParameterOwner {
         this.highlightedGeomsBuffer.bindToUniform(renderstate, renderstate.unifs.image)
         gl.screenQuad.draw(renderstate)
       } else {
-        this.highlightsShader.bind(renderstate)
+        this.renderer.highlightsShader.bind(renderstate)
         gl.enable(gl.BLEND)
         gl.blendEquation(gl.FUNC_ADD)
         gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA) // For add
 
         const unifs = renderstate.unifs
-        gl.uniform1f(unifs.outlineThickness.location, this.highlightOutlineThickness)
+        gl.uniform1f(unifs.outlineThickness.location, this.renderer.highlightOutlineThickness)
         this.highlightedGeomsBuffer.bindToUniform(renderstate, unifs.highlightDataTexture)
         gl.uniform2f(unifs.highlightDataTextureSize.location, renderstate.region[2], renderstate.region[3])
         this.quad.bindAndDraw(renderstate)

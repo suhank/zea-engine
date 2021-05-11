@@ -185,6 +185,7 @@ class GLViewport extends GLBaseViewport {
    */
   setCamera(camera) {
     this.__camera = camera
+    this.depthRange = [this.__camera.getNear(), this.__camera.getFar()]
     const globalXfoParam = camera.getParameter('GlobalXfo')
     const getCameraParams = () => {
       this.__cameraXfo = globalXfoParam.getValue()
@@ -205,6 +206,7 @@ class GLViewport extends GLBaseViewport {
     })
     this.__camera.on('projectionParamChanged', () => {
       this.__updateProjectionMatrix()
+      this.depthRange = [this.__camera.getNear(), this.__camera.getFar()]
       this.emit('updated')
     })
 
@@ -842,6 +844,7 @@ class GLViewport extends GLBaseViewport {
     renderstate.viewScale = 1.0
     renderstate.region = this.region
     renderstate.cameraMatrix = this.__cameraMat
+    renderstate.depthRange = this.depthRange
     renderstate.viewport = this
     renderstate.viewports = [
       {
@@ -866,7 +869,7 @@ class GLViewport extends GLBaseViewport {
     // Roughly uniform. As we zoom out, the distance between 2 pixels
     // increases and so does the difference in depth. Scaling up the
     // depth multiplier keeps everything consistent.
-    this.outlineDepthMultiplier = 1 / this.__camera.getFocalDistance()
+    renderstate.outlineDepthMultiplier = (1 / this.__camera.getFocalDistance()) * this.renderer.outlineSensitivity
 
     super.draw(renderstate)
 

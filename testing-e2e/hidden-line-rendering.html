@@ -74,7 +74,8 @@
       geomItem3.addChild(createHardEdgesGeom(cone), false)
       scene.getRoot().addChild(geomItem3)
 
-      renderer.getViewport().outlineThickness = 1.5
+      renderer.outlineThickness = 1.5
+      renderer.outlineSensitivity = 0.5
 
       renderer
         .getViewport()
@@ -90,22 +91,18 @@
       let prevColor
       renderer.getViewport().on('pointerOverGeom', (event) => {
         const pointerOverItem = event.intersectionData.geomItem
-        // prevMaterial = pointerOverItem.getParameter('Material').getValue()
-        // const material = prevMaterial.clone()
-        // material.getParameter('BaseColor').setValue(new Color(1, 1, 1))
-        // pointerOverItem.getParameter('Material').setValue(material)
-
-        // pointerOverItem.addHighlight('pointerOver', pointerOverColor, true)
-
-        // pointerOverItem.getParameter('Material').pushMaterial(material)
-
-        pointerOverItem.addHighlight('pointerOverGeom', new Color(0.8, 0.8, 0.8, 0.1), true)
+        pointerOverItem.addHighlight('pointerOverGeom', new Color(1, 1, 1, 0.1), true)
       })
       renderer.getViewport().on('pointerLeaveGeom', (event) => {
         event.leftGeometry.removeHighlight('pointerOverGeom', true)
-        // event.leftGeometry.getParameter('Material').setValue(prevMaterial)
-        // // event.leftGeometry.getParameter('Material').popMaterial()
-        // event.leftGeometry.removeHighlight('pointerOver', true)
+      })
+      renderer.getXRViewport().then((xrvp) => {
+        console.log('XR Device Detected')
+        document.addEventListener('keydown', (event) => {
+          if (event.key.toLowerCase() == 'v' && event.shiftKey) {
+            xrvp.togglePresenting()
+          }
+        })
       })
 
       const postMessage = (msg) => {
