@@ -50,24 +50,39 @@
         return new GeomItem('hardEdges', hardEdges, hardEdgesMaterial)
       }
 
-      const cylinder = new Cylinder(1.5, 2.0, 6)
-      const geomItem1 = new GeomItem('Cylinder', cylinder, material, new Xfo(new Vec3(-2.2, 0, 1)))
+      // Note: this value was used to test the outline shader
+      // at various scene scales.
+      const sceneScale = 1.0
+
+      const cylinder = new Cylinder(1.5 * sceneScale, 2.0 * sceneScale, 6)
+      const geomItem1 = new GeomItem(
+        'Cylinder',
+        cylinder,
+        material,
+        new Xfo(new Vec3(-2.2 * sceneScale, 0, 1 * sceneScale))
+      )
       geomItem1.addChild(createHardEdgesGeom(cylinder), false)
       scene.getRoot().addChild(geomItem1)
 
-      const cuboid = new Cuboid(1.5, 2.0, 3)
-      const geomItem2 = new GeomItem('Cuboid', cuboid, material, new Xfo(new Vec3(0.0, 0, 1)))
+      const cuboid = new Cuboid(1.5 * sceneScale, 2.0 * sceneScale, 3 * sceneScale)
+      const geomItem2 = new GeomItem('Cuboid', cuboid, material, new Xfo(new Vec3(0.0, 0, 1 * sceneScale)))
       geomItem2.addChild(createHardEdgesGeom(cuboid), false)
       scene.getRoot().addChild(geomItem2)
 
-      const cone = new Cone(1.4, 2.0, 30)
-      const geomItem3 = new GeomItem('Cone', cone, material, new Xfo(new Vec3(2.2, 0, 0)))
+      const cone = new Cone(1.4 * sceneScale, 2.0 * sceneScale, 30)
+      const geomItem3 = new GeomItem('Cone', cone, material, new Xfo(new Vec3(2.2 * sceneScale, 0, 0)))
       geomItem3.addChild(createHardEdgesGeom(cone), false)
       scene.getRoot().addChild(geomItem3)
 
       renderer.getViewport().outlineThickness = 1.5
 
-      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, 2.7), new Vec3(0, 0, 0.4))
+      renderer
+        .getViewport()
+        .getCamera()
+        .setPositionAndTarget(
+          new Vec3(2 * sceneScale, 2 * sceneScale, 2.7 * sceneScale),
+          new Vec3(0, 0, 0.4 * sceneScale)
+        )
       renderer.frameAll()
 
       const pointerOverColor = new Color(1, 1, 1, 0.2)

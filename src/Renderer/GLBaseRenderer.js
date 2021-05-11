@@ -608,6 +608,10 @@ class GLBaseRenderer extends ParameterOwner {
     this.resizeObserver.observe(this.__glcanvas.parentElement)
 
     webglOptions.preserveDrawingBuffer = true
+    // In webgl 2, we now render to a multi-sampled offscreen buffer, that we then resolve and blit to
+    // the onscreen buffer. This means we no longer need the default render target to be antialiased.
+    // In webgl 1 however we render surfaces to the offscreen buffer, and then lines to the default buffer.
+    // The default buffer should then be antialiased.
     webglOptions.antialias =
       !SystemDesc.gpuDesc.supportsWebGL2 || webglOptions.webglContextType == 'webgl' ? true : false
     webglOptions.depth = true
