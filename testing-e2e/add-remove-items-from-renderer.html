@@ -13,7 +13,7 @@
     <script src="../dist/index.umd.js"></script>
 
     <script type="module">
-      const { GLRenderer, Scene, Vec3, Color, Xfo, Sphere, Material, GeomItem, LDRImage } = zeaEngine
+      const { GLRenderer, Scene, Vec3, Color, Xfo, Sphere, Material, GeomItem, LDRImage, TreeItem } = zeaEngine
 
       const canvas = document.querySelector('#renderer')
 
@@ -79,6 +79,25 @@
         } else if (data === 'variant-05') {
           scene.getRoot().addChild(geomItem0)
           scene.getRoot().addChild(geomItem1)
+          window.postMessage(`done-${data}`)
+        } else if (data === 'variant-06') {
+          // Now we remove and add items from the renderer by re-attaching them to a different
+          // part of the tree. Maybe in the future, this can be be made so that the item stays in
+          // the renderer if a simple re-attach. Not sure how that would happen.
+          const treeItem = new TreeItem('TreeItem')
+          scene.getRoot().addChild(treeItem)
+          treeItem.addChild(geomItem0)
+          treeItem.addChild(geomItem1)
+          treeItem.addChild(geomItem2)
+
+          const material = new Material('surfaces', 'SimpleSurfaceShader')
+          material.getParameter('BaseColor').setValue(new Color(1, 1, 0, 0.2))
+          geomItem1.getParameter('Material').setValue(material)
+
+          const material2 = new Material('surfaces', 'SimpleSurfaceShader')
+          material2.getParameter('BaseColor').setValue(new Color(1, 1, 0, 1))
+          geomItem2.getParameter('Material').setValue(material2)
+
           window.postMessage(`done-${data}`)
         }
       }

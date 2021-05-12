@@ -22,5 +22,19 @@ describe('geomitem-material-changes', () => {
       cy.get('@postMessage').its('lastCall.args.0').should('equal', `done-${variant}`)
       cy.get('canvas').percySnapshot(`geomitem-material-changes - ${variant}`)
     })
+
+    cy.window().then((win) => {
+      const variant = 'variant-03'
+      win.postMessage(variant)
+      cy.get('@postMessage').its('lastCall.args.0').should('equal', `done-${variant}`)
+      cy.get('canvas').percySnapshot(`geomitem-material-changes - ${variant}`)
+    })
+
+    cy.window().then((win) => {
+      const variant = 'variant-04'
+      win.postMessage(variant)
+      cy.get('@postMessage').its('lastCall.args.0').should('equal', `done-${variant}`)
+      cy.get('canvas').percySnapshot(`geomitem-material-changes - ${variant}`)
+    })
   })
 })
