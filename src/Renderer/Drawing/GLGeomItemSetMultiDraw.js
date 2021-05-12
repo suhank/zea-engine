@@ -78,7 +78,7 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
 
     // //////////////////////////////
     // Visibility
-    if (glGeomItem.isVisible()) {
+    if (glGeomItem.visible) {
       this.visibleItems.push(glGeomItem)
     }
     eventHandlers.visibilityChanged = (event) => {

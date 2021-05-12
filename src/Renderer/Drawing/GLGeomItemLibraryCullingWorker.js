@@ -182,12 +182,13 @@ const handleMessage = (data, postMessage) => {
   } else if (data.type == 'ViewChanged') {
     onViewChanged(data, postMessage)
   } else if (data.type == 'UpdateGeomItems') {
-    data.geomItems.forEach((geomItem) => {
-      geomItemsData[geomItem.id] = geomItem
-      checkGeomItem(geomItemsData[geomItem.id])
-    })
     data.removedItemIndices.forEach((id) => {
       geomItemsData[id] = null
+    })
+    data.geomItems.forEach((geomItem) => {
+      geomItemsData[geomItem.id] = geomItem
+      frustumCulled[geomItem.id] = false
+      checkGeomItem(geomItemsData[geomItem.id])
     })
     onDone(postMessage)
   }
