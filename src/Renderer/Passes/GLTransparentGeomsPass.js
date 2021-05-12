@@ -96,6 +96,8 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
         glGeomItem.on('visibilityChanged', this.resortNeeded)
         this.emit('updated')
 
+        glGeomItem.GLShaderGeomSets = glShaderGeomSets
+
         // force a reSort.
         this.reSort = true
         return
@@ -180,16 +182,14 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
     this.itemCount--
 
     const glGeomItem = this.renderer.glGeomItemLibrary.getGLGeomItem(geomItem)
-
-    const geomItemSet = geomItem.getMetadata('geomItemSet')
-    if (geomItemSet) {
-      // Note: for now leave the material and geom in place. Multiple
-      // GeomItems can reference a given material/geom, so we simply wait
-      // for them to be destroyed.
-      geomItemSet.removeGLGeomItem(glGeomItem)
-      geomItem.deleteMetadata('geomItemSet')
+    if (glGeomItem.GLShaderGeomSets) {
+      const glShaderGeomSets = glGeomItem.GLShaderGeomSets
+      glShaderGeomSets.removeGLGeomItem(glGeomItem)
       glGeomItem.off('visibilityChanged', this.resortNeeded)
-    } else {
+      glGeomItem.GLShaderGeomSets = null
+      return
+    }
+    {
       const itemindex = this.transparentItemIndices[geomItem.getId()]
       const item = this.transparentItems[itemindex]
       delete this.transparentItemIndices[geomItem.getId()]
