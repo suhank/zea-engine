@@ -99,8 +99,6 @@ class GLShaderGeomSets extends EventEmitter {
     glGeomItem.material = null
     glGeomItem.geomItemParamChanged = null
 
-    geomItem.getParameter('Material').off('valueChanged', this.testCallback)
-
     const glGeomItemSet = glGeomItem.GLGeomItemSet
     glGeomItemSet.removeGLGeomItem(glGeomItem)
     glGeomItem.GLGeomItemSet = null
