@@ -9,7 +9,7 @@
 [![NPM Downloads][npm-downloads]][npmtrends-url]
 
 
-> Solve tough visualization problems in design, manufacturing, and construction.
+> We make 3D technical communication fast, easy, and open.
 
 
 <ul style="display:inline-block">
@@ -18,7 +18,7 @@
 
 ![power](_media/icon-power.svg)
 
-Power
+Fast
 
 </li>
 
@@ -26,14 +26,14 @@ Power
 
 ![versatility](_media/icon-versatility.svg)
 
-Versatility
+Easy
 
 </li>
 <li style="display:inline-block; padding:20px;">
 
 ![reach](_media/icon-reach.svg)
 
-Reach
+Open
 
 </li>
 </ul>
