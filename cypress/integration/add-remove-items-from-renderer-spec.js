@@ -43,5 +43,12 @@ describe('add-remove-items-from-renderer', () => {
       cy.get('@postMessage').its('lastCall.args.0').should('equal', `done-${variant}`)
       cy.get('canvas').percySnapshot(`add-remove-items-from-renderer - ${variant}`)
     })
+
+    cy.window().then((win) => {
+      const variant = 'variant-06'
+      win.postMessage(variant)
+      cy.get('@postMessage').its('lastCall.args.0').should('equal', `done-${variant}`)
+      cy.get('canvas').percySnapshot(`add-remove-items-from-renderer - ${variant}`)
+    })
   })
 })

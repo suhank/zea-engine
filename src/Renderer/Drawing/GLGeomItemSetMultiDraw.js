@@ -117,7 +117,6 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
 
     this.glGeomItems[index] = glGeomItem
     this.glgeomItemEventHandlers[index] = eventHandlers
-    glGeomItem.geomItem.setMetadata('geomItemSet', this)
 
     this.drawIdsBufferDirty = true
 
