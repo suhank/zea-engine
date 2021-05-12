@@ -137,23 +137,6 @@ class GLRenderer extends GLBaseRenderer {
   }
 
   /**
-   * The getGLEnvMap method.
-   * @return {GLEnvMap|GLHDRImage|GLTexture2D} - The return value.
-   */
-  getGLEnvMap() {
-    return this.__glEnvMap
-  }
-
-  /**
-   * The getEnvMapTex method.
-   * @return {EnvMap|BaseImage} - The return value.
-   */
-  getEnvMapTex() {
-    console.warn('Deprecated Function')
-    return this.__glEnvMap
-  }
-
-  /**
    * The setScene method.
    * @param {Scene} scene - The scene value.
    */
@@ -241,8 +224,14 @@ class GLRenderer extends GLBaseRenderer {
   // Raycasting
 
   /**
-   * The raycastWithRay method.
-   * @return {object} - The return value.
+   * Ray casting is implemented by rendering a small image from the position of the ray, and capturing geometries detected in the resulting image.
+   * This method takes a Ray value, and uses that base the ray cast operation.
+   *
+   * @param {Ray} ray - The ray to use in the raycast.
+   * @param {number} dist - The maximum distance to cast the ray
+   * @param {number} area - The area to use for the ray
+   * @param {number} mask - The mask to filter our certain pass types. Can be PassType.OPAQUE | PassType.TRANSPARENT | PassType.OVERLAY
+   * @return {object} - The object containing the ray cast results.
    */
   raycastWithRay(ray, dist, area = 0.01, mask = ALL_PASSES) {
     const xfo = new Xfo()
@@ -250,14 +239,32 @@ class GLRenderer extends GLBaseRenderer {
     return this.raycast(xfo, ray, dist, area, mask)
   }
 
+  /**
+   * Ray casting is implemented by rendering a small image from the position of the ray, and capturing geometries detected in the resulting image.
+   * This method takes an Xfo value, and uses that base the ray cast operation.
+   *
+   * @param {Xfo} xfo - The xfo to use in the raycast.
+   * @param {number} dist - The maximum distance to cast the ray
+   * @param {number} area - The area to use for the ray
+   * @param {number} mask - The mask to filter our certain pass types. Can be PassType.OPAQUE | PassType.TRANSPARENT | PassType.OVERLAY
+   * @return {object} - The object containing the ray cast results.
+   */
   raycastWithXfo(xfo, dist, area = 0.01, mask = ALL_PASSES) {
     const ray = new Ray(xfo.tr, xfo.ori.getZaxis().negate())
     return this.raycast(xfo, ray, dist, area, mask)
   }
 
   /**
-   * The raycast method.
-   * @return {object} - The return value.
+   * Ray casting is implemented by rendering a small image from the position of the ray, and capturing geometries detected in the resulting image.
+   *
+   * @private
+   *
+   * @param {Xfo} xfo - The ray to use in the raycast.
+   * @param {Ray} ray - The ray to use in the raycast.
+   * @param {number} dist - The maximum distance to cast the ray
+   * @param {number} area - The area to use for the ray
+   * @param {number} mask - The mask to filter our certain pass types. Can be PassType.OPAQUE | PassType.TRANSPARENT | PassType.OVERLAY
+   * @return {object} - The object containing the ray cast results.
    */
   raycast(xfo, ray, dist, area = 0.01, mask = ALL_PASSES) {
     const gl = this.__gl
@@ -351,8 +358,15 @@ class GLRenderer extends GLBaseRenderer {
   }
 
   /**
-   * The raycastCluster method.
-   * @return {any} - The return value.
+   *
+   * @private
+   *
+   * @param {Xfo} xfo - The ray to use in the raycast.
+   * @param {Ray} ray - The ray to use in the raycast.
+   * @param {number} dist - The maximum distance to cast the ray
+   * @param {number} area - The area to use for the ray
+   * @param {number} mask - The mask to filter our certain pass types. Can be PassType.OPAQUE | PassType.TRANSPARENT | PassType.OVERLAY
+   * @return {object} - The object containing the ray cast results.
    */
   raycastCluster(xfo, ray, dist, area = 0.01, mask = ALL_PASSES) {
     const gl = this.__gl
