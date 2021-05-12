@@ -100,6 +100,8 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
         // const glGeomItem = this.constructGLGeomItem(geomItem)
         const glGeomItem = this.renderer.glGeomItemLibrary.getGLGeomItem(geomItem)
         glShaderGeomSets.addGLGeomItem(glGeomItem)
+
+        glGeomItem.GLShaderGeomSets = glShaderGeomSets
         this.emit('updated')
         return true
       }
@@ -118,7 +120,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
       this.__renderer.assignTreeItemToGLPass(geomItem)
     }
     materialParam.on('valueChanged', materialChanged)
-    geomItem.setMetadata('materialChanged', materialChanged)
+    glGeomItem.materialChanged = materialChanged
 
     // ////////////////////////////////////
     // Shaders
@@ -149,20 +151,18 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
   removeGeomItem(geomItem) {
     const glGeomItem = this.renderer.glGeomItemLibrary.getGLGeomItem(geomItem)
 
-    const geomItemSet = geomItem.getMetadata('geomItemSet')
-    if (geomItemSet) {
-      // Note: for now leave the material and geom in place. Multiple
-      // GeomItems can reference a given material/geom, so we simply wait
-      // for them to be destroyed.
-      geomItemSet.removeGLGeomItem(glGeomItem)
-      geomItem.deleteMetadata('geomItemSet')
+    if (glGeomItem.GLShaderGeomSets) {
+      const glShaderGeomSets = glGeomItem.GLShaderGeomSets
+      glShaderGeomSets.removeGLGeomItem(glGeomItem)
+      glGeomItem.GLShaderGeomSets = null
+      return true
     }
 
     const materialParam = geomItem.getParameter('Material')
-    const materialChanged = geomItem.getMetadata('materialChanged')
+    const materialChanged = glGeomItem.materialChanged
     if (materialParam && materialChanged) {
       materialParam.off('valueChanged', materialChanged)
-      geomItem.deleteMetadata('materialChanged')
+      glGeomItem.materialChanged = null
     }
 
     return true

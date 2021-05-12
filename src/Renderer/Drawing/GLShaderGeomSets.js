@@ -54,7 +54,6 @@ class GLShaderGeomSets extends EventEmitter {
       throw new Error('Unsupported geom type:' + geom.constructor.name)
     }
 
-    geom.setMetadata('glGeomItemSet', glGeomItemSet)
     glGeomItemSet.on('updated', () => {
       this.emit('updated')
     })
@@ -72,13 +71,6 @@ class GLShaderGeomSets extends EventEmitter {
     this.pass.renderer.glMaterialLibrary.addMaterial(material)
 
     const geomItemParamChanged = (event) => {
-      if (geom instanceof Lines || geom instanceof Points || geom instanceof PointsProxy || geom instanceof LinesProxy)
-        return
-      material.off('transparencyChanged', geomItemParamChanged)
-      geomItem.getParameter('Material').off('valueChanged', geomItemParamChanged)
-      geomItem.getParameter('Geometry').off('valueChanged', geomItemParamChanged)
-      // Note: the pass will remove the glgeomitem from the
-      //  GLGeomItemSet which is owned by the GLGeomSet.
       this.pass.removeGeomItem(geomItem)
       this.pass.__renderer.assignTreeItemToGLPass(geomItem)
     }
@@ -87,7 +79,31 @@ class GLShaderGeomSets extends EventEmitter {
     geomItem.getParameter('Geometry').on('valueChanged', geomItemParamChanged)
 
     const glGeomItemSet = this.getOrCreateGLGeomItemSet(geom)
+    glGeomItem.material = material
+    glGeomItem.GLGeomItemSet = glGeomItemSet
+    glGeomItem.geomItemParamChanged = geomItemParamChanged
     glGeomItemSet.addGLGeomItem(glGeomItem)
+  }
+
+  /**
+   *  Called by the GLPass to remove an item from this GLShaderGeomSets object.
+   * @param {GLGeomItem} glGeomItem - The glGeomItem value.
+   */
+  removeGLGeomItem(glGeomItem) {
+    const geomItem = glGeomItem.geomItem
+    const material = glGeomItem.material
+    const geomItemParamChanged = glGeomItem.geomItemParamChanged
+    material.off('transparencyChanged', geomItemParamChanged)
+    geomItem.getParameter('Material').off('valueChanged', geomItemParamChanged)
+    geomItem.getParameter('Geometry').off('valueChanged', geomItemParamChanged)
+    glGeomItem.material = null
+    glGeomItem.geomItemParamChanged = null
+
+    geomItem.getParameter('Material').off('valueChanged', this.testCallback)
+
+    const glGeomItemSet = glGeomItem.GLGeomItemSet
+    glGeomItemSet.removeGLGeomItem(glGeomItem)
+    glGeomItem.GLGeomItemSet = null
   }
 
   /**
