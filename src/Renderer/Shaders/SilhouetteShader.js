@@ -99,6 +99,13 @@ void main(void) {
     gl_FragDepthEXT = texture2D(depthTexture, v_texCoord).r;
 #endif
 
+    // float z = texture2D(depthTexture, v_texCoord).r;
+    // float near = depthRange.x * 2.0;    // the near plane
+    // float far = depthRange.y / 2.0;     // the far plane
+    // float c = (2.0 * near) / (far + near - z * (far - near));  // convert to linear values 
+    // fragColor = vec4(vec3(c), 1.0);
+
+    
 
 #ifndef ENABLE_ES3
     gl_FragColor = fragColor;

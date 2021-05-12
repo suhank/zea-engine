@@ -64,6 +64,7 @@ let viewPos
 let viewInvOri
 let frustumHalfAngleX
 let frustumHalfAngleY
+let solidAngleLimit = 0.004
 
 const cull = (index) => {
   if (!frustumCulled[index]) {
@@ -103,7 +104,7 @@ const checkGeomItem = (geomItemData) => {
   // height varies. It seems more consistent to just use solidAngle
   // which is resolution invariant.
   const solidAngle = Math.asin(boundingRadius / dist)
-  if (solidAngle < 0.004) {
+  if (solidAngleLimit > 0 && solidAngle < solidAngleLimit) {
     cull(geomItemData.id)
     return
   }
@@ -149,6 +150,7 @@ const checkGeomItem = (geomItemData) => {
 const onViewPortChanged = (data, postMessage) => {
   frustumHalfAngleX = data.frustumHalfAngleX
   frustumHalfAngleY = data.frustumHalfAngleY
+  solidAngleLimit = data.solidAngleLimit
   if (viewPos && viewInvOri) {
     geomItemsData.forEach(checkGeomItem)
     onDone(postMessage)
@@ -158,6 +160,7 @@ const onViewPortChanged = (data, postMessage) => {
 const onViewChanged = (data, postMessage) => {
   viewPos = data.viewPos
   viewInvOri = quat_conjugate(data.viewOri)
+  solidAngleLimit = data.solidAngleLimit
   geomItemsData.forEach(checkGeomItem)
   onDone(postMessage)
 }

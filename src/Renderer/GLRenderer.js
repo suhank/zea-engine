@@ -1,4 +1,4 @@
-import { Vec3, Xfo, Mat4, Ray } from '../Math/index'
+import { Vec3, Xfo, Mat4, Ray, Color } from '../Math/index'
 import { Plane, EnvMap, BaseImage } from '../SceneTree/index'
 import { GLFbo } from './GLFbo.js'
 import { GLRenderTarget } from './GLRenderTarget.js'
@@ -8,6 +8,8 @@ import { GLBaseRenderer } from './GLBaseRenderer.js'
 import { GLTexture2D } from './GLTexture2D.js'
 import { PassType } from './Passes/GLPass.js'
 import { EnvMapShader } from './Shaders/EnvMapShader.js'
+import { HighlightsShader } from './Shaders/HighlightsShader.js'
+import { SilhouetteShader } from './Shaders/SilhouetteShader.js'
 import { generateShaderGeomBinding } from './Drawing/GeomShaderBinding.js'
 
 const ALL_PASSES = PassType.OPAQUE | PassType.TRANSPARENT | PassType.OVERLAY
@@ -41,6 +43,13 @@ class GLRenderer extends GLBaseRenderer {
     this.rayCastArea = 0
 
     const gl = this.__gl
+    this.highlightsShader = new HighlightsShader(gl)
+    this.silhouetteShader = new SilhouetteShader(gl)
+    this.highlightOutlineThickness = 1.5
+    this.outlineThickness = 0
+    this.outlineColor = new Color(0.15, 0.15, 0.15, 1)
+    this.outlineSensitivity = 1
+    this.outlineDepthBias = 0.7
 
     this.__debugTextures = [undefined]
 
@@ -226,24 +235,6 @@ class GLRenderer extends GLBaseRenderer {
   set displayEnvironment(val) {
     this.__displayEnvironment = val
     this.requestRedraw()
-  }
-
-  // //////////////////////////
-  // Fbos
-
-  /**
-   * The resizeFbos method.
-   * @param {number} width - The width value.
-   * @param {number} height - The height value.
-   */
-  resizeFbos(width, height) {
-    super.resizeFbos()
-    if (this.__fbo) {
-      this.__fbo.resize(width, height)
-    }
-    if (this.highlightedGeomsBuffer) {
-      this.highlightedGeomsBuffer.resize(width, height)
-    }
   }
 
   // //////////////////////////
