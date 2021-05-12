@@ -392,17 +392,14 @@ class GLBillboardsPass extends GLPass {
 
     const width = pixelsPerItem
     const height = 1
-    // console.log("xoffset:" + xoffset + " yoffset:" + yoffset +" width:" + width + " dataArray:" + dataArray.length);
-    // gl.texSubImage2D(gl.TEXTURE_2D, 0, xoffset, yoffset, width, height, gl.RGBA, gl.FLOAT, dataArray);
-
     const type = this.drawItemsTexture.getType()
     const format = this.drawItemsTexture.getFormat()
 
-    if (type == 'FLOAT') {
-      gl.texSubImage2D(gl.TEXTURE_2D, 0, xoffset, yoffset, width, height, gl[format], gl[type], dataArray)
+    if (type == gl.FLOAT) {
+      gl.texSubImage2D(gl.TEXTURE_2D, 0, xoffset, yoffset, width, height, format, type, dataArray)
     } else {
       const unit16s = MathFunctions.convertFloat32ArrayToUInt16Array(dataArray)
-      gl.texSubImage2D(gl.TEXTURE_2D, 0, xoffset, yoffset, width, height, gl[format], gl[type], unit16s)
+      gl.texSubImage2D(gl.TEXTURE_2D, 0, xoffset, yoffset, width, height, format, type, unit16s)
     }
   }
 
