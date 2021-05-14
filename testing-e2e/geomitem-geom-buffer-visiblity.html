@@ -58,7 +58,7 @@
 
       for (let i = 0; i < 3; i++) {
         const geomItem = addMeshShape('Sphere' + i, sphere, new Vec3((i / 9) * 20, 0, 1.4), material)
-        if (i == 1) geomItem.invisibleToGeomBuffer = true
+        if (i == 1) geomItem.visibleInGeomDataBuffer = false
       }
       renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(10, 10, 7), new Vec3(2, 0, 1))
 
@@ -83,24 +83,6 @@
         window.postMessage(msg)
       }
       postMessage('done-loading')
-
-      // {{{ Messages handler.
-      const handleMessage = (event) => {
-        const { data } = event
-
-        if (data === 'variant-01') {
-          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, -2.7), new Vec3(0, 0, 0.4))
-          renderer.frameAll()
-          postMessage(`done-${data}`)
-        } else if (data === 'variant-02') {
-          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-2, -2, 2.7), new Vec3(0, 0, 0.4))
-          renderer.frameAll()
-          postMessage(`done-${data}`)
-        }
-      }
-
-      window.addEventListener('message', handleMessage, false)
-      // }}}
     </script>
   </head>
   <body class="bg-blue-100">
