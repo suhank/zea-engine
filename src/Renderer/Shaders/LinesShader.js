@@ -240,6 +240,11 @@ void main(void) {
   // GeomData
 #elif defined(DRAW_GEOMDATA)
 
+  if(testFlag(flags, GEOMITEM_INVISIBLE_IN_GEOMDATA)) {
+    discard;
+    return;
+  }
+  
   float viewDist = length(v_viewPos);
 
   if(floatGeomBuffer != 0) {
