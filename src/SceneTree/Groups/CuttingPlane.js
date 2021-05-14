@@ -42,13 +42,15 @@ class CuttingPlane extends BaseGroup {
     // Create the geometry to display the plane.
     const material = new Material('plane', 'FlatSurfaceShader')
     material.getParameter('BaseColor').setValue(new Color(1, 1, 1, 0.2))
-    material.visibleInGeomDataBuffer = false
-    this.addChild(new GeomItem(`PlaneGeom`, new Plane(1, 1), material))
+    const plane = new GeomItem(`PlaneGeom`, new Plane(1, 1), material)
+    plane.visibleInGeomDataBuffer = false
+    this.addChild(plane)
 
     const borderMaterial = new Material('border', 'LinesShader')
     borderMaterial.getParameter('BaseColor').setValue(new Color(1, 0, 0, 1))
-    borderMaterial.visibleInGeomDataBuffer = false
-    this.addChild(new GeomItem(`BorderGeom`, new Rect(1, 1), borderMaterial))
+    const border = new GeomItem(`BorderGeom`, new Rect(1, 1), borderMaterial)
+    border.visibleInGeomDataBuffer = false
+    this.addChild(border)
   }
 
   // ////////////////////////////////////////

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>geomitem-geom-buffer-visiblity - Zea Engine</title>
+
+    <link href="data/zea-logo.png" rel="shortcut icon" />
+
+    <link rel="stylesheet" href="styles/tailwind.min.css" />
+
+    <script src="../dist/index.umd.js"></script>
+    <script src="../dist/plugins.umd.js"></script>
+
+    <script type="module">
+      const {
+        GLRenderer,
+        Scene,
+        Vec3,
+        Xfo,
+        Color,
+        Sphere,
+        Plane,
+        Cuboid,
+        Cone,
+        Cylinder,
+        Torus,
+        GeomItem,
+        TreeItem,
+        Material,
+        SelectionSet,
+        EnvMap,
+      } = zeaEngine
+
+      const canvas = document.querySelector('#renderer')
+
+      const scene = new Scene()
+      const renderer = new GLRenderer(canvas, { hideSplash: true, webglOptions: { antialias: false } })
+      renderer.setScene(scene)
+
+      renderer.outlineThickness = 1.5
+      renderer.outlineSensitivity = 0.5
+
+      scene.setupGrid(10.0, 10)
+      scene.getSettings().getParameter('BackgroundColor').setValue(new Color(0.85, 0.85, 0.85, 1))
+
+      const items = []
+      const addMeshShape = (name, shape, pos, mat) => {
+        const geomItem = new GeomItem(name, shape, mat, new Xfo(pos))
+        scene.getRoot().addChild(geomItem)
+        items.push(geomItem)
+        return geomItem
+      }
+
+      const sphere = new Sphere(1.4, 80)
+      const material = new Material('surfaces', 'StandardSurfaceShader')
+
+      for (let i = 0; i < 3; i++) {
+        const geomItem = addMeshShape('Sphere' + i, sphere, new Vec3((i / 9) * 20, 0, 1.4), material)
+        if (i == 1) geomItem.invisibleToGeomBuffer = true
+      }
+      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(10, 10, 7), new Vec3(2, 0, 1))
+
+      let highlightedItem
+      // renderer.getViewport().on('pointerMove', (event) => {
+      //   console.log(event.clientX, event.clientY)
+      // })
+      renderer.getViewport().on('pointerOverGeom', (event) => {
+        const item = event.intersectionData.geomItem
+        if (item) {
+          highlightedItem = item
+          highlightedItem.addHighlight('pointerOverGeom', new Color(1, 1, 1, 0.1), true)
+        }
+      })
+      renderer.getViewport().on('pointerLeaveGeom', (event) => {
+        highlightedItem.removeHighlight('pointerOverGeom', true)
+        highlightedItem = null
+      })
+
+      const postMessage = (msg) => {
+        console.log(msg)
+        window.postMessage(msg)
+      }
+      postMessage('done-loading')
+
+      // {{{ Messages handler.
+      const handleMessage = (event) => {
+        const { data } = event
+
+        if (data === 'variant-01') {
+          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, -2.7), new Vec3(0, 0, 0.4))
+          renderer.frameAll()
+          postMessage(`done-${data}`)
+        } else if (data === 'variant-02') {
+          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-2, -2, 2.7), new Vec3(0, 0, 0.4))
+          renderer.frameAll()
+          postMessage(`done-${data}`)
+        }
+      }
+
+      window.addEventListener('message', handleMessage, false)
+      // }}}
+    </script>
+  </head>
+  <body class="bg-blue-100">
+    <div class="h-screen">
+      <canvas class="absolute" id="renderer"></canvas>
+    </div>
+  </body>
+</html>

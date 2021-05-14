@@ -227,6 +227,11 @@ void main(void) {
     fragColor = vec4((ndotv * baseColor.rgb) + (emission * baseColor.rgb), opacity);
 
 #ifdef DEBUG_GEOM_ID
+  if(testFlag(flags, GEOMITEM_INVISIBLE_IN_GEOMDATA)) {
+    discard;
+    return;
+  }
+
     // ///////////////////////
     // Debug Draw ID (this correlates to GeomID within a GLGeomSet)
     float geomId = v_geomItemData.w;

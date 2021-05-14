@@ -93,7 +93,8 @@ void main(void) {
   
 
   //////////////////////////////////////////////
-  // Material
+  // Color
+#if defined(DRAW_COLOR)
 
 #ifdef ENABLE_MULTI_DRAW
 
@@ -118,6 +119,17 @@ vec4 baseColor = getMaterialValue(materialCoords, 0);
 #ifdef ENABLE_INLINE_GAMMACORRECTION
     fragColor.rgb = toGamma(fragColor.rgb);
 #endif
+
+
+  //////////////////////////////////////////////
+  // GeomData
+#elif defined(DRAW_GEOMDATA)
+
+  // No selection of screenspace geoms.
+  discard;
+  return;
+
+#endif // DRAW_GEOMDATA
 
 #ifndef ENABLE_ES3
     gl_FragColor = fragColor;
@@ -155,16 +167,6 @@ vec4 baseColor = getMaterialValue(materialCoords, 0);
     matData[2] = baseColor.b
     matData[3] = baseColor.a
     return matData
-  }
-
-  static getGeomDataShaderName() {
-    // TODO: Provide a geom data shader for overlay items.
-    return null
-  }
-
-  static getSelectedShaderName() {
-    // TODO: Provide a geom data shader for overlay items.
-    return null
   }
 }
 

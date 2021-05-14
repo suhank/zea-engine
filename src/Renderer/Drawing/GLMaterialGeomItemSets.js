@@ -18,7 +18,6 @@ class GLMaterialGeomItemSets extends EventEmitter {
     this.glMaterial = glMaterial
     this.glGeomItemSets = {}
     this.drawCount = 0
-    this.visibleInGeomDataBuffer = glMaterial.getMaterial().visibleInGeomDataBuffer
     this.drawCountChanged = this.drawCountChanged.bind(this)
 
     const material = glMaterial.getMaterial()

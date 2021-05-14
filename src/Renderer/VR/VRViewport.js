@@ -1,6 +1,6 @@
 import { SystemDesc } from '../../SystemDesc.js'
 import { Vec3, Mat4, Xfo } from '../../Math/index'
-import { TreeItem, VLAAsset } from '../../SceneTree/index'
+import { GeomItem, TreeItem, VLAAsset } from '../../SceneTree/index'
 import { GLBaseViewport } from '../GLBaseViewport.js'
 import { VRHead } from './VRHead.js'
 import { VRController } from './VRController.js'
@@ -218,10 +218,12 @@ class VRViewport extends GLBaseViewport {
           for (const name of materialNames) {
             const material = materialLibrary.getMaterial(name, false)
             if (material) {
-              material.visibleInGeomDataBuffer = false
               material.setShaderName('SimpleSurfaceShader')
             }
           }
+          this.__vrAsset.traverse((item) => {
+            if (item instanceof GeomItem) item.visibleInGeomDataBuffer = false
+          })
           resolve(this.__vrAsset)
         }
         if (this.__vrAsset.isLoaded()) bind()

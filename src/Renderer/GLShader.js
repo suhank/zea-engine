@@ -33,8 +33,6 @@ class GLShader extends BaseItem {
     this.__gltextures = {}
 
     this.__id = shaderInstanceId++
-
-    this.invisibleToGeomBuffer = false
   }
 
   /**

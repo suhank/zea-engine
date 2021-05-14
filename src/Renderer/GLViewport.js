@@ -412,8 +412,7 @@ class GLViewport extends GLBaseViewport {
       const geomItemAndDist = pass.getGeomItemAndDist(geomData)
 
       if (geomItemAndDist) {
-        const materialParameter = geomItemAndDist.geomItem.getParameter('Material')
-        if (materialParameter && !materialParameter.getValue().visibleInGeomDataBuffer) return
+        if (!geomItemAndDist.geomItem.visibleInGeomDataBuffer) return
 
         if (!pointerRay) pointerRay = this.calcRayFromScreenPos(screenPos)
         const intersectionPos = pointerRay.start.add(pointerRay.dir.scale(geomItemAndDist.dist))
@@ -487,16 +486,14 @@ class GLViewport extends GLBaseViewport {
 
         const geomItemAndDist = this.__renderer.getPass(passId).getGeomItemAndDist(geomData)
         if (geomItemAndDist) {
-          const materialParameter = geomItemAndDist.geomItem.getParameter('Material')
-          if (materialParameter && !materialParameter.getValue().visibleInGeomDataBuffer) continue
+          if (!geomItemAndDist.geomItem.visibleInGeomDataBuffer) continue
 
           geomItems.add(geomItemAndDist.geomItem)
         }
       }
 
       return [...geomItems].filter((geomItem) => {
-        const materialParameter = geomItem.getParameter('Material')
-        if (materialParameter && !materialParameter.getValue().visibleInGeomDataBuffer) return false
+        if (!geomItem.visibleInGeomDataBuffer) return false
 
         return true
       })
