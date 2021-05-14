@@ -79,6 +79,7 @@ class GeomItem extends BaseGeomItem {
 
     this.geomIndex = -1
     this.assetItem = null
+    this.visibleInGeomDataBuffer = true
 
     this.calcGeomMatOperator = new CalcGeomMatOperator(
       this.__globalXfoParam,

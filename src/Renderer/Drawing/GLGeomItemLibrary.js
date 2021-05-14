@@ -1,7 +1,7 @@
 /* eslint-disable guard-for-in */
 import { EventEmitter } from '../../Utilities/index'
 import { Vec4 } from '../../Math/index'
-import { GLGeomItemChangeType, GLGeomItem } from './GLGeomItem.js'
+import { GLGeomItemChangeType, GLGeomItemFlags, GLGeomItem } from './GLGeomItem.js'
 import { MathFunctions } from '../../Utilities/MathFunctions'
 import { GLTexture2D } from '../GLTexture2D.js'
 
@@ -316,8 +316,10 @@ class GLGeomItemLibrary extends EventEmitter {
     // Geom Item Params
     let flags = 0
     if (geomItem.isCutawayEnabled()) {
-      const GEOMITEM_FLAG_CUTAWAY = 1 // 1<<0;
-      flags |= GEOMITEM_FLAG_CUTAWAY
+      flags |= GLGeomItemFlags.GEOMITEM_FLAG_CUTAWAY
+    }
+    if (geomItem.visibleInGeomDataBuffer == false) {
+      flags |= GLGeomItemFlags.GEOMITEM_INVISIBLE_IN_GEOMDATA
     }
 
     const pix0 = Vec4.createFromBuffer(dataArray.buffer, (offset + 0) * 4)

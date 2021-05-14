@@ -435,6 +435,8 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
       currentGLGeom: null,
     }
     for (const transparentItem of this.visibleItems) {
+      if (!transparentItem.glGeomItem.geomItem.visibleInGeomDataBuffer) continue
+
       const shaders = transparentItem.shaders
       if (!shaders.glgeomdatashader) {
         continue
@@ -446,8 +448,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
         }
         cache.currentglShader = shaders.glgeomdatashader
       }
-      const material = transparentItem.glMaterial.getMaterial()
-      if (!material.visibleInGeomDataBuffer) continue
+
       {
         const unif = renderstate.unifs.floatGeomBuffer
         if (unif) {
