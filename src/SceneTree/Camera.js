@@ -52,6 +52,15 @@ class Camera extends TreeItem {
     // center of the stage looking at something 1 meter off the ground.
     this.setPositionAndTarget(new Vec3(3, 3, 1.75), new Vec3(0, 0, 1))
     this.setLensFocalLength('28mm')
+
+    // Controls whether the camera automatically adjusts the near and far planes
+    // as the focal distance changes. Set to false to explicitly control the near
+    // and far planes.
+    this.adjustNearAndFarPlanesToFocalDist = true
+    // The factor by which the near plane is adjusted based on the focal distance.
+    this.nearDistFactor = 0.01
+    // The factor by which the far plane is adjusted based on the focal distance.
+    this.farDistFactor = 10000
   }
 
   // ////////////////////////////////////////////
@@ -188,8 +197,10 @@ class Camera extends TreeItem {
   setFocalDistance(dist) {
     if (dist < 0.0001) console.error('Never set focal distance to zero')
     this.__focalDistanceParam.setValue(dist)
-    this.__nearParam.setValue(dist * 0.1)
-    this.__farParam.setValue(dist * 1000.0)
+    if (this.adjustNearAndFarPlanesToFocalDist) {
+      this.__nearParam.setValue(dist * this.nearDistFactor)
+      this.__farParam.setValue(dist * this.farDistFactor)
+    }
   }
 
   /**
