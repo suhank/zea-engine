@@ -184,6 +184,11 @@ class GLGeomItemLibrary extends EventEmitter {
       index = this.glGeomItems.length
       this.glGeomItems.push(null)
     }
+    // If an item is removed and re-added immediately, we avoid removing the item from the culling worker.
+    if (this.removedItemIndices.includes(index)) {
+      this.removedItemIndices.splice(this.removedItemIndices.indexOf(index), 1)
+    }
+
     this.dirtyItemIndices.push(index)
 
     const gl = this.renderer.gl
@@ -385,6 +390,7 @@ class GLGeomItemLibrary extends EventEmitter {
     if (material.hasParameter('PointSize')) {
       cullable = false
     }
+
     return {
       id: index,
       boundingRadius,

@@ -189,7 +189,7 @@ class Camera extends TreeItem {
     if (dist < 0.0001) console.error('Never set focal distance to zero')
     this.__focalDistanceParam.setValue(dist)
     this.__nearParam.setValue(dist * 0.1)
-    this.__farParam.setValue(dist * 10.0)
+    this.__farParam.setValue(dist * 1000.0)
   }
 
   /**
