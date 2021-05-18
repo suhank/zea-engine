@@ -2,6 +2,39 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.9.0](https://github.com/ZeaInc/zea-engine/compare/v3.8.0...v3.9.0) (2021-05-18)
+
+### Features
+
+* Camera near and far dist modulation can be disabled and configured. ([27c1999](https://github.com/ZeaInc/zea-engine/commit/27c19993e10be2c3bf372f3d52a83ad050cb55d8))
+* CameraManipulator now supports two-fingered roll in tumbler or trackball manipulation modes. ([ca61cd1](https://github.com/ZeaInc/zea-engine/commit/ca61cd19bf178cfd835b05ee3bd4c7229ac38c77))
+* CameraManipulator aim focus feature now has independent settings for double/single mouse clicks and double/single touch taps. ([b650fe6](https://github.com/ZeaInc/zea-engine/commit/b650fe6353af966ef3d5a68fcbb4bc61dcb24e6d))
+* Cone and Sphere primitive constructors now provide options to not generate normals. ([5de65bc](https://github.com/ZeaInc/zea-engine/commit/5de65bc8167cd0b4e8fb5efe93c48f58a83e8e57))
+* GeomItems can now be filtered from selectability with a simple boolean value 'visibleInGeomDataBuffer'. ([1a62f78](https://github.com/ZeaInc/zea-engine/commit/1a62f786c543f87ff6ae71f6d80f2f89f6c14e3b))
+* Improved highlight rendering quality using Sobel Filter to detect borders. ([fabff57](https://github.com/ZeaInc/zea-engine/commit/fabff579a5c525b4e618a7624b74b8ae53a49529))
+* LinesShader now provides controls for line stippling.The Shader allows specifying a stipple pattern for un-occluded lines separately from occluded lines. Used to achieve HiddenLine rendering modes. ([79875b8](https://github.com/ZeaInc/zea-engine/commit/79875b81b94ac7de4bbb868991f10ec0951adf4f))
+* Renderer can now display a Silhouette around geometries, as part of the implementation of CAD style rendering modes. ([cf55227](https://github.com/ZeaInc/zea-engine/commit/cf552278e2a02d3cbc5451f6a922fc5c9e798977))
+* SimpleSurfaceShader and StandardSurfaceShader compute face normals dynamically if not provided as vertex normals. ([4280b2c](https://github.com/ZeaInc/zea-engine/commit/4280b2c7ed5197ba0f975a751c401dadf54d15e1))
+* Solid Angle Culling limit value can now be customized on the renderer. renderer.solidAngleLimit = 0.0 will disable culling based on the solid angle of an item. ([a1068b6](https://github.com/ZeaInc/zea-engine/commit/a1068b6a4bcb633f425e8002ac3d6d2742cf5fec))
+* The default Orbit rate has been increased to 0.5 on Mobile devices. ([bcddfc1](https://github.com/ZeaInc/zea-engine/commit/bcddfc10496503f9181f1ec2189ece67780f3d3a))
+
+
+### Bug Fixes
+
+* Addressed an exception thrown then items were re-attached to different parts of the tree, and then had opacity changes. The renderer was not being correctly cleaned when an item was simply moved in the tree, leaving dangling event listeners. ([074574d](https://github.com/ZeaInc/zea-engine/commit/074574da3f8117aa5f6a4d7986376c6524b4505a))
+* Camera view no longer pops as the start of manipulations of orthographic cameras. ([30bc147](https://github.com/ZeaInc/zea-engine/commit/30bc147063879ecca605d1223f90720baf4f772b))
+* Items being removed and re-added to the renderer now are correctly updated in the frustum culling system. ([7dc5c90](https://github.com/ZeaInc/zea-engine/commit/7dc5c90fe64fb66a5fc64ec6c06689d7716868d4))
+* Procedural geoms now correctly support lazily computing vertex normals and hard edge indices. Previously the geometries would not be updated automatically. ([aefc299](https://github.com/ZeaInc/zea-engine/commit/aefc29961c385dceaf108cf5d8e440556fc25e33))
+* Screen space items like selection rectangles no longer get culled by the frustum culling system. ([ef49f56](https://github.com/ZeaInc/zea-engine/commit/ef49f56c4eb33f57167f4ca6458fdcf097638e78))
+* The frustum culling system would incorrectly cull items at the sides of the screen if those items had very large bounding spheres. This was due to incorrect math calculating the solid angle of the items. ([b41fe82](https://github.com/ZeaInc/zea-engine/commit/b41fe82f760491de6bc8eabd8dc4c8d71cdc2cc9))
+* Tightened view framing algorithm so that the the camera is moved to more closely fit the provided items. ([533444c](https://github.com/ZeaInc/zea-engine/commit/533444cacbeddc7148bb90909be77dbf25f30ab3))
+
+## [3.8.0](https://github.com/ZeaInc/zea-engine/compare/v3.7.0...v3.8.0) (2021-04-29)
+
+### Features
+
+* Add `zeaEngine.packageJson` ([620f7ac](https://github.com/ZeaInc/zea-engine/commit/620f7ac543d6234a454691f79c8a0e8ac9a1f37f))
+
 ## [3.7.0](https://github.com/ZeaInc/zea-engine/compare/v3.6.0...v3.7.0) (2021-04-28)
 
 

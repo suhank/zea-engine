@@ -14,21 +14,10 @@ Class representing a GL renderer.
     * [gamma](#gamma)
     * [displayEnvironment](#displayEnvironment)
     * [displayEnvironment](#displayEnvironment)
-    * [planeDist](#planeDist)
-    * [planeDist](#planeDist)
-    * [cutPlaneNormal](#cutPlaneNormal)
-    * [cutPlaneNormal](#cutPlaneNormal)
-    * [getGLEnvMap() ⇒ <code>GLEnvMap</code> \| <code>GLHDRImage</code> \| <code>GLTexture2D</code>](#getGLEnvMap)
-    * [getEnvMapTex() ⇒ <code>EnvMap</code> \| <code>BaseImage</code>](#getEnvMapTex)
     * [setScene(scene)](#setScene)
     * [addViewport(name) ⇒ <code>GLViewport</code>](#addViewport)
-    * [resizeFbos(width, height)](#resizeFbos)
-    * [createSelectedGeomsFbo()](#createSelectedGeomsFbo)
-    * [getFbo() ⇒ <code>GLFbo</code>](#getFbo)
-    * [createOffscreenFbo(format)](#createOffscreenFbo)
-    * [raycastWithRay() ⇒ <code>object</code>](#raycastWithRay)
-    * [raycast() ⇒ <code>object</code>](#raycast)
-    * [raycastCluster() ⇒ <code>any</code>](#raycastCluster)
+    * [raycastWithRay(ray, dist, area, mask) ⇒ <code>object</code>](#raycastWithRay)
+    * [raycastWithXfo(xfo, dist, area, mask) ⇒ <code>object</code>](#raycastWithXfo)
     * [drawBackground(renderstate)](#drawBackground)
     * [bindGLRenderer(renderstate)](#bindGLRenderer)
     * [drawScene(renderstate)](#drawScene)
@@ -95,54 +84,6 @@ Setter for displayEnvironment.
 | --- | --- | --- |
 | val | <code>number</code> | The val value. |
 
-<a name="GLRenderer+planeDist"></a>
-
-### planeDist
-Getter for planeDist.
-
-
-<a name="GLRenderer+planeDist"></a>
-
-### planeDist
-Setter for planeDist.
-
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| val | <code>number</code> | The val value. |
-
-<a name="GLRenderer+cutPlaneNormal"></a>
-
-### cutPlaneNormal
-Getter for cutPlaneNormal.
-
-
-<a name="GLRenderer+cutPlaneNormal"></a>
-
-### cutPlaneNormal
-Setter for cutPlaneNormal.
-
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| val | <code>number</code> | The val value. |
-
-<a name="GLRenderer+getGLEnvMap"></a>
-
-### getGLEnvMap
-The getGLEnvMap method.
-
-
-**Returns**: <code>GLEnvMap</code> \| <code>GLHDRImage</code> \| <code>GLTexture2D</code> - - The return value.  
-<a name="GLRenderer+getEnvMapTex"></a>
-
-### getEnvMapTex
-The getEnvMapTex method.
-
-
-**Returns**: <code>EnvMap</code> \| <code>BaseImage</code> - - The return value.  
 <a name="GLRenderer+setScene"></a>
 
 ### setScene
@@ -166,63 +107,38 @@ The addViewport method.
 | --- | --- | --- |
 | name | <code>string</code> | The name value. |
 
-<a name="GLRenderer+resizeFbos"></a>
-
-### resizeFbos
-The resizeFbos method.
-
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| width | <code>number</code> | The width value. |
-| height | <code>number</code> | The height value. |
-
-<a name="GLRenderer+createSelectedGeomsFbo"></a>
-
-### createSelectedGeomsFbo
-The createSelectedGeomsFbo method.
-
-
-<a name="GLRenderer+getFbo"></a>
-
-### getFbo
-The getFbo method.
-
-
-**Returns**: <code>[GLFbo](api/Renderer/GLFbo.md)</code> - - The return value.  
-<a name="GLRenderer+createOffscreenFbo"></a>
-
-### createOffscreenFbo
-The createOffscreenFbo method.
-
-
-
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| format | <code>string</code> | <code>&quot;RGB&quot;</code> | The format value. |
-
 <a name="GLRenderer+raycastWithRay"></a>
 
 ### raycastWithRay
-The raycastWithRay method.
+Ray casting is implemented by rendering a small image from the position of the ray, and capturing geometries detected in the resulting image.
+This method takes a Ray value, and uses that base the ray cast operation.
 
 
-**Returns**: <code>object</code> - - The return value.  
-<a name="GLRenderer+raycast"></a>
+**Returns**: <code>object</code> - - The object containing the ray cast results.  
 
-### raycast
-The raycast method.
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| ray | <code>[Ray](api/Math/Ray.md)</code> |  | The ray to use in the raycast. |
+| dist | <code>number</code> |  | The maximum distance to cast the ray |
+| area | <code>number</code> | <code>0.01</code> | The area to use for the ray |
+| mask | <code>number</code> |  | The mask to filter our certain pass types. Can be PassType.OPAQUE | PassType.TRANSPARENT | PassType.OVERLAY |
+
+<a name="GLRenderer+raycastWithXfo"></a>
+
+### raycastWithXfo
+Ray casting is implemented by rendering a small image from the position of the ray, and capturing geometries detected in the resulting image.
+This method takes an Xfo value, and uses that base the ray cast operation.
 
 
-**Returns**: <code>object</code> - - The return value.  
-<a name="GLRenderer+raycastCluster"></a>
+**Returns**: <code>object</code> - - The object containing the ray cast results.  
 
-### raycastCluster
-The raycastCluster method.
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| xfo | <code>[Xfo](api/Math/Xfo.md)</code> |  | The xfo to use in the raycast. |
+| dist | <code>number</code> |  | The maximum distance to cast the ray |
+| area | <code>number</code> | <code>0.01</code> | The area to use for the ray |
+| mask | <code>number</code> |  | The mask to filter our certain pass types. Can be PassType.OPAQUE | PassType.TRANSPARENT | PassType.OVERLAY |
 
-
-**Returns**: <code>any</code> - - The return value.  
 <a name="GLRenderer+drawBackground"></a>
 
 ### drawBackground

@@ -40,7 +40,7 @@ is added to the scene, and the renderer must decide how to render it.
 It allows Passes to select geometries to handle the drawing of.
 
 
-**Returns**: <code>Boolean</code> - - The return value.  
+**Returns**: <code>Boolean</code> - - Returns true if the item is now added to the pass.  
 
 | Param | Type | Description |
 | --- | --- | --- |

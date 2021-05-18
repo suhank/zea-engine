@@ -33,7 +33,7 @@ This Viewport class is used for rendering stereoscopic views to VR controllers u
     * [togglePresenting()](#togglePresenting)
     * [getHMDCanvasSize() ⇒ <code>any</code>](#getHMDCanvasSize)
     * [updateControllers(xrFrame, event)](#updateControllers)
-    * [draw(xrFrame)](#draw)
+    * [drawXRFrame(xrFrame)](#drawXRFrame)
     * [onPointerDown(event)](#onPointerDown)
     * [onPointerUp(event)](#onPointerUp)
 
@@ -163,16 +163,16 @@ The updateControllers method.
 | xrFrame | <code>XRFrame</code> | The xrFrame value. |
 | event | <code>object</code> | The pose changed event object that will be emitted for observers such as collab. |
 
-<a name="VRViewport+draw"></a>
+<a name="VRViewport+drawXRFrame"></a>
 
-### draw
-The draw method.
+### drawXRFrame
+The drawXRFrame method.
 
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| xrFrame | <code>any</code> | The xrFrame value. |
+| xrFrame | <code>XRFrame</code> | The xrFrame value. |
 
 <a name="VRViewport+onPointerDown"></a>
 

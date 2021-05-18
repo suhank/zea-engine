@@ -12,12 +12,10 @@ Images have width and height, but no depth.
     * [new GLTexture2D(gl, params)](#new-GLTexture2D)
     * [glTex ⇒ <code>WebGLTexture</code>](#glTex)
     * [isLoaded() ⇒ <code>boolean</code>](#isLoaded)
-    * [getTexture() ⇒ <code>BaseImage</code>](#getTexture)
+    * [getImage() ⇒ <code>BaseImage</code>](#getImage)
     * [getInternalFormat() ⇒ <code>GLenum</code> \| <code>enum</code>](#getInternalFormat)
     * [getType() ⇒ <code>GLenum</code> \| <code>enum</code>](#getType)
-    * [getTypeID() ⇒ <code>GLenum</code> \| <code>enum</code>](#getTypeID)
     * [getFormat() ⇒ <code>GLenum</code> \| <code>enum</code>](#getFormat)
-    * [getFormatID() ⇒ <code>GLenum</code> \| <code>enum</code>](#getFormatID)
     * [getWrap() ⇒ <code>GLenum</code> \| <code>enum</code>](#getWrap)
     * [getMipMapped() ⇒ <code>GLenum</code> \| <code>enum</code>](#getMipMapped)
     * [configure(params, emit)](#configure)
@@ -57,9 +55,9 @@ Returns the loaded status of the 2D Texture
 
 
 **Returns**: <code>boolean</code> - - The return value.  
-<a name="GLTexture2D+getTexture"></a>
+<a name="GLTexture2D+getImage"></a>
 
-### getTexture
+### getImage
 Returns the `BaseImage` of the GL Texture
 
 
@@ -78,23 +76,9 @@ Returns the value of the specified data type of the texel data.
 
 
 **Returns**: <code>GLenum</code> \| <code>enum</code> - - The return value.  
-<a name="GLTexture2D+getTypeID"></a>
-
-### getTypeID
-Returns the value of the specified data type of the texel data.
-
-
-**Returns**: <code>GLenum</code> \| <code>enum</code> - - The return value.  
 <a name="GLTexture2D+getFormat"></a>
 
 ### getFormat
-Returns the value of the specified texel data. It must be the same as the `internalFormat`
-
-
-**Returns**: <code>GLenum</code> \| <code>enum</code> - - The return value.  
-<a name="GLTexture2D+getFormatID"></a>
-
-### getFormatID
 Returns the value of the specified texel data. It must be the same as the `internalFormat`
 
 
