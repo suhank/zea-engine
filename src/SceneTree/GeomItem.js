@@ -79,6 +79,10 @@ class GeomItem extends BaseGeomItem {
 
     this.geomIndex = -1
     this.assetItem = null
+
+    // Setting this value to false will mean that this item is not selectable
+    // and will not response to any pointer events. This is useful for geometry
+    // that might occlude pointer events intended for other geometry.
     this.visibleInGeomDataBuffer = true
 
     this.calcGeomMatOperator = new CalcGeomMatOperator(
