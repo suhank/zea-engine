@@ -69,12 +69,12 @@ class ProceduralMesh extends Mesh {
     if (this.dirtyTopology) {
       // Clear the topology so that vertex normals can be recomputed.
       this.vertexEdges = undefined
-      this.rebuild()
       this.dirtyTopology = false
       this.dirtyVertices = false
+      this.rebuild()
     } else if (this.dirtyVertices) {
-      this.resize()
       this.dirtyVertices = false
+      this.resize()
     }
   }
 
@@ -97,6 +97,25 @@ class ProceduralMesh extends Mesh {
     return super.getNumVertices()
   }
 
+  /**
+   * Compute vertex normals.
+   * @param {number} hardAngle - The hardAngle value in radians.
+   * @return {VertexAttribute} - The return value.
+   */
+  computeVertexNormals(hardAngle = 1.0 /* radians */) {
+    this.update()
+    return super.computeVertexNormals(hardAngle)
+  }
+
+  /**
+   * The computeHardEdgesIndices method.
+   * @param {number} hardAngle - The hardAngle value in radians.
+   * @return {array} - The return value.
+   */
+  computeHardEdgesIndices(hardAngle = 1.0) {
+    this.update()
+    return super.computeHardEdgesIndices(hardAngle)
+  }
   // ////////////////////////////////////////
   // Rendering
 

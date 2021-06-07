@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html class="h-full">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -13,7 +13,7 @@
     <script src="../dist/index.umd.js"></script>
 
     <script type="module">
-      const { GLRenderer, Scene, Vec3, Color, Xfo, Sphere, Material, GeomItem } = zeaEngine
+      const { GLRenderer, Scene, Vec3, Color, Xfo, Sphere, Material, GeomItem, LDRImage, TreeItem } = zeaEngine
 
       const canvas = document.querySelector('#renderer')
 
@@ -23,20 +23,33 @@
 
       scene.setupGrid(10.0, 10)
 
+      const promises = []
+
+      const texturedMaterial = new Material('Material', 'FlatSurfaceShader')
+      texturedMaterial.getParameter('BaseColor').setValue(new Color(0.6, 0, 1))
+      const image = new LDRImage('LDRImage')
+      image.setImageURL('data/zea-logo.png', 'RGBA')
+      texturedMaterial.getParameter('BaseColor').setImage(image)
+      promises.push(new Promise((resolve) => image.on('loaded', resolve)))
+
       const material = new Material('surfaces', 'SimpleSurfaceShader')
       material.getParameter('BaseColor').setValue(new Color(1, 0, 1, 1))
 
-      const geomItem0 = new GeomItem('Sphere', new Sphere(1.5, 46), material, new Xfo(new Vec3(2, 0, 0)))
+      const sphere0 = new Sphere(1.5, 46)
+      const sphere1 = new Sphere(1.5, 46)
+
+      const geomItem0 = new GeomItem('Sphere', sphere0, texturedMaterial, new Xfo(new Vec3(4, 0, 0)))
       scene.getRoot().addChild(geomItem0)
 
-      const geomItem1 = new GeomItem('Sphere', new Sphere(1.5, 46), material, new Xfo(new Vec3(-2, 0, 0)))
+      const geomItem1 = new GeomItem('Sphere', sphere1, material, new Xfo(new Vec3(0, 0, 0)))
       scene.getRoot().addChild(geomItem1)
 
-      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(5, 5, 2.7), new Vec3(0, 0, 0.4))
+      const geomItem2 = new GeomItem('Sphere', sphere1, material, new Xfo(new Vec3(-4, 0, 0)))
+      scene.getRoot().addChild(geomItem2)
 
-      renderer.once('resized', () => {
-        window.postMessage('done-loading')
-      })
+      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(10, 10, 2.7), new Vec3(0, 0, 0.4))
+
+      window.postMessage('done-loading')
 
       // {{{ Messages handler.
       const handleMessage = (event) => {
@@ -49,15 +62,42 @@
           geomItem1.getParameter('Geometry').getValue().getParameter('Loops').setValue(100)
           window.postMessage(`done-${data}`)
         } else if (data === 'variant-02') {
+          // Now look away, so that the scene gets frustum culled.
+          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(10, 10, 2.7), new Vec3(20, 20, 0.4))
+          window.postMessage(`done-${data}`)
+        } else if (data === 'variant-03') {
+          // Now look back, so that the scene gets frustum un-culled.
+          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(10, 10, 2.7), new Vec3(0, 0, 0.4))
+          window.postMessage(`done-${data}`)
+        } else if (data === 'variant-04') {
           scene.getRoot().removeChild(scene.getRoot().getChildIndex(geomItem1))
           // Modify the class again, after it has been removed from the renderer.
           // Note: Our GLGeomLibrary still updates the buffers. It doesn't know that
           // no GeomItems track this geom. We need to add ref counting...
           geomItem1.getParameter('Geometry').getValue().getParameter('Loops').setValue(12)
           window.postMessage(`done-${data}`)
-        } else if (data === 'variant-03') {
+        } else if (data === 'variant-05') {
           scene.getRoot().addChild(geomItem0)
           scene.getRoot().addChild(geomItem1)
+          window.postMessage(`done-${data}`)
+        } else if (data === 'variant-06') {
+          // Now we remove and add items from the renderer by re-attaching them to a different
+          // part of the tree. Maybe in the future, this can be be made so that the item stays in
+          // the renderer if a simple re-attach. Not sure how that would happen.
+          const treeItem = new TreeItem('TreeItem')
+          scene.getRoot().addChild(treeItem)
+          treeItem.addChild(geomItem0)
+          treeItem.addChild(geomItem1)
+          treeItem.addChild(geomItem2)
+
+          const material = new Material('surfaces', 'SimpleSurfaceShader')
+          material.getParameter('BaseColor').setValue(new Color(1, 1, 0, 0.2))
+          geomItem1.getParameter('Material').setValue(material)
+
+          const material2 = new Material('surfaces', 'SimpleSurfaceShader')
+          material2.getParameter('BaseColor').setValue(new Color(1, 1, 0, 1))
+          geomItem2.getParameter('Material').setValue(material2)
+
           window.postMessage(`done-${data}`)
         }
       }
@@ -66,8 +106,8 @@
       // }}}
     </script>
   </head>
-  <body class="bg-blue-100">
-    <div class="h-screen">
+  <body class="bg-blue-100 h-full">
+    <div class="h-full">
       <canvas class="absolute" id="renderer"></canvas>
     </div>
   </body>

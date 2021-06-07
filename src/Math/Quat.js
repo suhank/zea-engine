@@ -343,8 +343,8 @@ class Quat extends AttrValue {
   /**
    * Set this Quat to a rotation defined by an axis and an angle (in radians).
    *
-   * @param {Vec3} axis - The axis value.
-   * @param {number} angle - The axis angle.
+   * @param {Vec3} axis - The axis around which to rotate.
+   * @param {number} angle - The angle to rotate
    */
   setFromAxisAndAngle(axis, angle) {
     const halfAngle = angle / 2.0
@@ -354,9 +354,11 @@ class Quat extends AttrValue {
 
   /**
    * Sets the state of the Quat to look in a particular direction along the z axis.
+   * > The camera looks down the negative z axis, so to set a rotation value
+   * > for the camera, remember to negate the direction vector.
    *
    * @param {Vec3} dir - The direction value.
-   * @param {Vec3} up - The up angle.
+   * @param {Vec3} up - The up vector.
    */
   setFromDirectionAndUpvector(dir, up) {
     const mat3 = new Mat3()

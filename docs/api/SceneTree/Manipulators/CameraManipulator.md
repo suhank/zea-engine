@@ -33,21 +33,30 @@ const customManipulator = new CustomCameraManipulator()
 renderer.getViewport().setManipulator(customManipulator);
 ```
 
+The Camera manipulator can focus the view on a point in the view by various gestures.
+A single click or touch tap can cause the view to be focussed or a double click or tap.
+This behavior can be configured using the 2 values.
+e.g. to disable all focus gestures, set both values to zero.
+```
+const cameraManipulator = renderer.getViewport().getManipulator()
+cameraManipulator.aimFocusOnTouchTap = 0
+cameraManipulator.aimFocusOnMouseClick = 0
+```
 
 **Parameters**
-* **orbitRate([`NumberParameter`](api/SceneTree\Parameters\NumberParameter.md)):** The rate at which mouse or touch interactions are translated camera orientation changes.
-* **dollySpeed([`NumberParameter`](api/SceneTree\Parameters\NumberParameter.md)):** The rate at which the mouse button or touch interactions are translated camera dolly movement.
-* **mouseWheelDollySpeed([`NumberParameter`](api/SceneTree\Parameters\NumberParameter.md)):** The rate at which the mouse wheel interactions are translated camera dolly movement.
+* **OrbitRate([`NumberParameter`](api/SceneTree/Parameters/NumberParameter.md)):** The rate at which mouse or touch interactions are translated camera orientation changes.
+* **DollySpeed([`NumberParameter`](api/SceneTree/Parameters/NumberParameter.md)):** The rate at which the mouse button or touch interactions are translated camera dolly movement.
+* **mouseWheelDollySpeed([`NumberParameter`](api/SceneTree/Parameters/NumberParameter.md)):** The rate at which the mouse wheel interactions are translated camera dolly movement.
 
   Note: this value defaults to different values for touch based interfaces to mouse based input.
-  For mobile devices, the orbit rate defaults to -0.3, and for mouse based interaction, the value defaults to 1.
+  For mobile devices, the orbit rate defaults to 0.5, and for mouse based interaction, the value defaults to 1.
   A value of 1 means that the camera will rotate 180 degrees for a mouse interaction that spans from the left border of the viewport to the right border.
   Some applications might require lower, or higher default values
 
 To set different default values for mobile or desktop set a different value based on the SystemDesc.isMobileDevice flag.
 ```
 const cameraManipulator = renderer.getViewport().getManipulator()
-cameraManipulator.getParameter('orbitRate').setValue(SystemDesc.isMobileDevice ? 0.3 : 1)
+cameraManipulator.getParameter('OrbitRate').setValue(SystemDesc.isMobileDevice ? 0.1 : 0.4)
 ```
 
 **Events**
@@ -55,7 +64,7 @@ cameraManipulator.getParameter('orbitRate').setValue(SystemDesc.isMobileDevice ?
 * **aimingFocus:** Emitted when a camera is being focussed on a target. E.g. when the user double clicks the mouse on a geometry in the view.
 
 
-**Extends**: <code>[BaseTool](api/SceneTree\Manipulators\BaseTool.md)</code>  
+**Extends**: <code>[BaseTool](api/SceneTree/Manipulators/BaseTool.md)</code>  
 
 * [CameraManipulator ⇐ <code>BaseTool</code>](#CameraManipulator)
     * [new CameraManipulator(appData)](#new-CameraManipulator)
@@ -65,11 +74,10 @@ cameraManipulator.getParameter('orbitRate').setValue(SystemDesc.isMobileDevice ?
         * [setDefaultManipulationMode(manipulationMode)](#setDefaultManipulationMode)
         * [look(event, dragVec)](#look)
         * [turntable(event, dragVec)](#turntable)
-        * [tumble(event, dragVec)](#tumble)
+        * [tumbler(event, dragVec)](#tumbler)
         * [trackball(event, dragVec)](#trackball)
         * [pan(event, dragVec)](#pan)
         * [dolly(event, dragVec)](#dolly)
-        * [panAndZoom(event, panDelta, dragDist)](#panAndZoom)
         * [onPointerDoublePress(event)](#onPointerDoublePress)
         * [onPointerDown(event)](#onPointerDown)
         * [onPointerMove(event)](#onPointerMove)
@@ -129,7 +137,7 @@ The look method.
 | Param | Type | Description |
 | --- | --- | --- |
 | event | <code>MouseEvent</code> | The event value. |
-| dragVec | <code>[Vec2](api/Math\Vec2.md)</code> | The drag vector value. |
+| dragVec | <code>[Vec2](api/Math/Vec2.md)</code> | The drag vector value. |
 
 <a name="CameraManipulator+turntable"></a>
 
@@ -141,11 +149,11 @@ Rotates viewport camera about the target.
 | Param | Type | Description |
 | --- | --- | --- |
 | event | <code>MouseEvent</code> | The event value. |
-| dragVec | <code>[Vec2](api/Math\Vec2.md)</code> | The drag vector value. |
+| dragVec | <code>[Vec2](api/Math/Vec2.md)</code> | The drag vector value. |
 
-<a name="CameraManipulator+tumble"></a>
+<a name="CameraManipulator+tumbler"></a>
 
-### tumble
+### tumbler
 Rotates viewport camera about the target.
 
 
@@ -153,7 +161,7 @@ Rotates viewport camera about the target.
 | Param | Type | Description |
 | --- | --- | --- |
 | event | <code>MouseEvent</code> | The event value. |
-| dragVec | <code>[Vec2](api/Math\Vec2.md)</code> | The drag vector value. |
+| dragVec | <code>[Vec2](api/Math/Vec2.md)</code> | The drag vector value. |
 
 <a name="CameraManipulator+trackball"></a>
 
@@ -165,7 +173,7 @@ Rotates viewport camera about the target.
 | Param | Type | Description |
 | --- | --- | --- |
 | event | <code>MouseEvent</code> | The event value. |
-| dragVec | <code>[Vec2](api/Math\Vec2.md)</code> | The drag vector value. |
+| dragVec | <code>[Vec2](api/Math/Vec2.md)</code> | The drag vector value. |
 
 <a name="CameraManipulator+pan"></a>
 
@@ -177,7 +185,7 @@ Rotates the camera around its own `X`,`Y` axes.
 | Param | Type | Description |
 | --- | --- | --- |
 | event | <code>MouseEvent</code> | The event value. |
-| dragVec | <code>[Vec2](api/Math\Vec2.md)</code> | The drag vector value. |
+| dragVec | <code>[Vec2](api/Math/Vec2.md)</code> | The drag vector value. |
 
 <a name="CameraManipulator+dolly"></a>
 
@@ -189,20 +197,7 @@ The dolly method.
 | Param | Type | Description |
 | --- | --- | --- |
 | event | <code>MouseEvent</code> | The event value. |
-| dragVec | <code>[Vec2](api/Math\Vec2.md)</code> | The drag vector value. |
-
-<a name="CameraManipulator+panAndZoom"></a>
-
-### panAndZoom
-Rotates the camera around its own `X`,`Y` axes and applies a zoom.
-
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| event | <code>MouseEvent</code> | The event value. |
-| panDelta | <code>[Vec2](api/Math\Vec2.md)</code> | The pan delta value. |
-| dragDist | <code>number</code> | The drag distance value. |
+| dragVec | <code>[Vec2](api/Math/Vec2.md)</code> | The drag vector value. |
 
 <a name="CameraManipulator+onPointerDoublePress"></a>
 

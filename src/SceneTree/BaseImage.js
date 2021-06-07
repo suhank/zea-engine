@@ -26,10 +26,10 @@ class BaseImage extends BaseItem {
     this.height = 0
     this.format = 'RGB'
     this.type = 'UNSIGNED_BYTE'
-
-    this.addParameter(new BooleanParameter('AlphaFromLuminance', false))
-    this.addParameter(new BooleanParameter('Invert', false))
-    this.addParameter(new BooleanParameter('FlipY', false))
+    this.wrapS = 'CLAMP_TO_EDGE'
+    this.wrapT = 'CLAMP_TO_EDGE'
+    this.minFilter = 'LINEAR'
+    this.magFilter = 'LINEAR'
 
     this.on('parameterValueChanged', (event) => {
       this.emit('updated')
@@ -51,40 +51,6 @@ class BaseImage extends BaseItem {
   }
 
   /**
-   * Returns mapping object state of the item.
-   * @return {object|undefined} - The return value.
-   */
-  getMapping() {
-    return this.__mapping
-  }
-
-  /**
-   * Sets mapping structure object in the state of the item.
-   * @param {object} mapping - The mapping value.
-   */
-  setMapping(mapping) {
-    this.__mapping = mapping
-  }
-
-  /**
-   * Base images are static content, so the value for this method is always going to be `false`
-   *
-   * @return {boolean} - Returns a boolean.
-   */
-  isStream() {
-    return false
-  }
-
-  /**
-   * The isStreamAtlas method.
-   * @private
-   * @return {boolean} - Returns a boolean.
-   */
-  isStreamAtlas() {
-    return this.__streamAtlas
-  }
-
-  /**
    * Returns all parameters and class state values.
    *
    * @return {object} - The return value.
@@ -95,9 +61,10 @@ class BaseImage extends BaseItem {
       format: this.format,
       width: this.width,
       height: this.height,
-      flipY: this.getParameter('FlipY').getValue(),
-      invert: this.getParameter('Invert').getValue(),
-      alphaFromLuminance: this.getParameter('AlphaFromLuminance').getValue(),
+      wrapS: this.wrapS,
+      wrapT: this.wrapT,
+      minFilter: this.minFilter,
+      magFilter: this.magFilter,
     }
   }
 }

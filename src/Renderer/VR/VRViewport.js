@@ -1,6 +1,6 @@
 import { SystemDesc } from '../../SystemDesc.js'
 import { Vec3, Mat4, Xfo } from '../../Math/index'
-import { TreeItem, VLAAsset } from '../../SceneTree/index'
+import { GeomItem, TreeItem, VLAAsset } from '../../SceneTree/index'
 import { GLBaseViewport } from '../GLBaseViewport.js'
 import { VRHead } from './VRHead.js'
 import { VRController } from './VRController.js'
@@ -35,9 +35,6 @@ class VRViewport extends GLBaseViewport {
     // Viewport params
     this.__projectionMatricesUpdated = false
 
-    // These values are in meters.
-    this.__far = 1024.0
-    this.__near = 0.1
     // ////////////////////////////////////////////
     // Tree
 
@@ -166,7 +163,7 @@ class VRViewport extends GLBaseViewport {
     const onAnimationFrame = (t, frame) => {
       if (this.session) {
         this.session.requestAnimationFrame(onAnimationFrame)
-        this.draw(frame)
+        this.drawXRFrame(frame)
       }
     }
     this.session.requestAnimationFrame(onAnimationFrame)
@@ -221,10 +218,12 @@ class VRViewport extends GLBaseViewport {
           for (const name of materialNames) {
             const material = materialLibrary.getMaterial(name, false)
             if (material) {
-              material.visibleInGeomDataBuffer = false
               material.setShaderName('SimpleSurfaceShader')
             }
           }
+          this.__vrAsset.traverse((item) => {
+            if (item instanceof GeomItem) item.visibleInGeomDataBuffer = false
+          })
           resolve(this.__vrAsset)
         }
         if (this.__vrAsset.isLoaded()) bind()
@@ -331,8 +330,9 @@ class VRViewport extends GLBaseViewport {
 
             this.__width = glLayer.framebufferWidth
             this.__height = glLayer.framebufferHeight
-            this.__renderer.resizeFbos(this.__width, this.__height)
             this.__region = [0, 0, this.__width, this.__height]
+            this.resizeRenderTargets(this.__width, this.__height)
+
             // ////////////////////////////
 
             // eslint-disable-next-line require-jsdoc
@@ -434,10 +434,10 @@ class VRViewport extends GLBaseViewport {
   }
 
   /**
-   * The draw method.
-   * @param {any} xrFrame - The xrFrame value.
+   * The drawXRFrame method.
+   * @param {XRFrame} xrFrame - The xrFrame value.
    */
-  draw(xrFrame) {
+  drawXRFrame(xrFrame) {
     const session = xrFrame.session
 
     const layer = session.renderState.baseLayer
@@ -488,9 +488,12 @@ class VRViewport extends GLBaseViewport {
 
     const renderstate = {
       boundRendertarget: layer.framebuffer,
+      depthRange: [session.renderState.depthNear, session.renderState.depthFar],
       region: this.__region,
+      viewport: this,
       vrviewport: this,
       viewports: [],
+      outlineDepthMultiplier: (0.1 / this.__stageScale) * this.renderer.outlineSensitivity,
     }
     // renderstate.boundRendertarget.vrfbo = true;
 
@@ -514,7 +517,7 @@ class VRViewport extends GLBaseViewport {
     renderstate.region = this.__region
     renderstate.vrPresenting = true // Some rendering is ajusted slightly in VR. e.g. Billboards
 
-    this.__renderer.drawScene(renderstate)
+    this.draw(renderstate)
 
     // ///////////////////////
     // Emit a signal for the shared session.
@@ -523,6 +526,7 @@ class VRViewport extends GLBaseViewport {
       hmd: this.__hmd,
       viewXfo: renderstate.viewXfo,
       controllers: this.controllers,
+      viewport: this,
       vrviewport: this,
     }
     this.emit('viewChanged', data)

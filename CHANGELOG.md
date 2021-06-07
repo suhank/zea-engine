@@ -2,6 +2,96 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.9.1](https://github.com/ZeaInc/zea-engine/compare/v3.9.0...v3.9.1) (2021-05-19)
+
+
+### Bug Fixes
+
+* Disabled drawing silhouettes on iOS as it relied on an extension unsupported on iOS. ([100c0f2](https://github.com/ZeaInc/zea-engine/commit/100c0f236c80e87c311d48e11c16a0d24e220bf5))
+
+## [3.9.0](https://github.com/ZeaInc/zea-engine/compare/v3.8.0...v3.9.0) (2021-05-18)
+
+### Features
+
+* Camera near and far dist modulation can be disabled and configured. ([27c1999](https://github.com/ZeaInc/zea-engine/commit/27c19993e10be2c3bf372f3d52a83ad050cb55d8))
+* CameraManipulator now supports two-fingered roll in tumbler or trackball manipulation modes. ([ca61cd1](https://github.com/ZeaInc/zea-engine/commit/ca61cd19bf178cfd835b05ee3bd4c7229ac38c77))
+* CameraManipulator aim focus feature now has independent settings for double/single mouse clicks and double/single touch taps. ([b650fe6](https://github.com/ZeaInc/zea-engine/commit/b650fe6353af966ef3d5a68fcbb4bc61dcb24e6d))
+* Cone and Sphere primitive constructors now provide options to not generate normals. ([5de65bc](https://github.com/ZeaInc/zea-engine/commit/5de65bc8167cd0b4e8fb5efe93c48f58a83e8e57))
+* GeomItems can now be filtered from selectability with a simple boolean value 'visibleInGeomDataBuffer'. ([1a62f78](https://github.com/ZeaInc/zea-engine/commit/1a62f786c543f87ff6ae71f6d80f2f89f6c14e3b))
+* Improved highlight rendering quality using Sobel Filter to detect borders. ([fabff57](https://github.com/ZeaInc/zea-engine/commit/fabff579a5c525b4e618a7624b74b8ae53a49529))
+* LinesShader now provides controls for line stippling.The Shader allows specifying a stipple pattern for un-occluded lines separately from occluded lines. Used to achieve HiddenLine rendering modes. ([79875b8](https://github.com/ZeaInc/zea-engine/commit/79875b81b94ac7de4bbb868991f10ec0951adf4f))
+* Renderer can now display a Silhouette around geometries, as part of the implementation of CAD style rendering modes. ([cf55227](https://github.com/ZeaInc/zea-engine/commit/cf552278e2a02d3cbc5451f6a922fc5c9e798977))
+* SimpleSurfaceShader and StandardSurfaceShader compute face normals dynamically if not provided as vertex normals. ([4280b2c](https://github.com/ZeaInc/zea-engine/commit/4280b2c7ed5197ba0f975a751c401dadf54d15e1))
+* Solid Angle Culling limit value can now be customized on the renderer. renderer.solidAngleLimit = 0.0 will disable culling based on the solid angle of an item. ([a1068b6](https://github.com/ZeaInc/zea-engine/commit/a1068b6a4bcb633f425e8002ac3d6d2742cf5fec))
+* The default Orbit rate has been increased to 0.5 on Mobile devices. ([bcddfc1](https://github.com/ZeaInc/zea-engine/commit/bcddfc10496503f9181f1ec2189ece67780f3d3a))
+
+
+### Bug Fixes
+
+* Addressed an exception thrown then items were re-attached to different parts of the tree, and then had opacity changes. The renderer was not being correctly cleaned when an item was simply moved in the tree, leaving dangling event listeners. ([074574d](https://github.com/ZeaInc/zea-engine/commit/074574da3f8117aa5f6a4d7986376c6524b4505a))
+* Camera view no longer pops as the start of manipulations of orthographic cameras. ([30bc147](https://github.com/ZeaInc/zea-engine/commit/30bc147063879ecca605d1223f90720baf4f772b))
+* Items being removed and re-added to the renderer now are correctly updated in the frustum culling system. ([7dc5c90](https://github.com/ZeaInc/zea-engine/commit/7dc5c90fe64fb66a5fc64ec6c06689d7716868d4))
+* Procedural geoms now correctly support lazily computing vertex normals and hard edge indices. Previously the geometries would not be updated automatically. ([aefc299](https://github.com/ZeaInc/zea-engine/commit/aefc29961c385dceaf108cf5d8e440556fc25e33))
+* Screen space items like selection rectangles no longer get culled by the frustum culling system. ([ef49f56](https://github.com/ZeaInc/zea-engine/commit/ef49f56c4eb33f57167f4ca6458fdcf097638e78))
+* The frustum culling system would incorrectly cull items at the sides of the screen if those items had very large bounding spheres. This was due to incorrect math calculating the solid angle of the items. ([b41fe82](https://github.com/ZeaInc/zea-engine/commit/b41fe82f760491de6bc8eabd8dc4c8d71cdc2cc9))
+* Tightened view framing algorithm so that the the camera is moved to more closely fit the provided items. ([533444c](https://github.com/ZeaInc/zea-engine/commit/533444cacbeddc7148bb90909be77dbf25f30ab3))
+
+## [3.8.0](https://github.com/ZeaInc/zea-engine/compare/v3.7.0...v3.8.0) (2021-04-29)
+
+### Features
+
+* Add `zeaEngine.packageJson` ([620f7ac](https://github.com/ZeaInc/zea-engine/commit/620f7ac543d6234a454691f79c8a0e8ac9a1f37f))
+
+## [3.7.0](https://github.com/ZeaInc/zea-engine/compare/v3.6.0...v3.7.0) (2021-04-28)
+
+
+### Features
+
+* GeomItem can now calculate precise bounding boxes for geometries after loading a zcad file. ([fafdfe7](https://github.com/ZeaInc/zea-engine/commit/fafdfe730fc0d2761675570d8ce9cb684e45da0c))
+
+
+### Bug Fixes
+
+* GeomLibrary now correctly cleans up the culling worker when items are removed from the renderer. ([a5f8181](https://github.com/ZeaInc/zea-engine/commit/a5f8181b06b3e1649108c580c6d3de651a96b6b5))
+* Mobile Safari touch ([575a430](https://github.com/ZeaInc/zea-engine/commit/575a43074a95d78bbae1ce53e9b972aabf41eb31))
+* Removing transparent items from the renderer no longer causes a crash. ([8cf4b15](https://github.com/ZeaInc/zea-engine/commit/8cf4b159e6e849685619c0a054a48966c0a07590))
+* Renderer now updates all instances of instanced geometries where topologies are changing. ([a7b5730](https://github.com/ZeaInc/zea-engine/commit/a7b573084507b96961990e18028fb78ae5bf7d71))
+
+## [3.6.0](https://github.com/ZeaInc/zea-engine/compare/v3.5.2...v3.6.0) (2021-04-23)
+
+
+### Features
+
+* BaseImage now provides wrapping and filter params to the renderer. ([834949b](https://github.com/ZeaInc/zea-engine/commit/834949bd8e36e2b7cf35ee4b23f00a25313696b4))
+* BillboardItem now provides a 'Pivot' parameter to control the center pivot of the billboard. ([6212ad2](https://github.com/ZeaInc/zea-engine/commit/6212ad2c2b941f6418d31e6a413f4ff87488b516))
+* Camera now supports perspective and orthographic projections, and is able to interpolate between. ([1709f86](https://github.com/ZeaInc/zea-engine/commit/1709f861c8355b0a3dc841a3fb468b97a38dbc1a))
+* CameraManipulator now orbits the user around the point under the cursor. ([c8dd77e](https://github.com/ZeaInc/zea-engine/commit/c8dd77e122a293005b3b3aab13ab780e8cceec56))
+* GLRenderer now applies the touch-action: none rule to the canvas to prevent scrolling when interacting on the canvas on mobile devices. ([322b327](https://github.com/ZeaInc/zea-engine/commit/322b3278761cb38734f430a101abac89a4136f0d))
+* Mouse wheel zooming now moves towards the point below the mouse, if the mouse pointer is over a geometry. ([4839f6e](https://github.com/ZeaInc/zea-engine/commit/4839f6e03d9e1993cfe71db8978e98c6a6b3a2ce))
+* PointsShader now supports drawing GeomData and highlights. ([73455d0](https://github.com/ZeaInc/zea-engine/commit/73455d0cccf2cd20875e8afb774cc11ca45261a2))
+* Renderer now calculates Frustum culling to reduce the number of drawn objects. ([859c83b](https://github.com/ZeaInc/zea-engine/commit/859c83ba2ea8c601b2e5fa8d5a309f482d91d652))
+* StandardSurfaceShader now supports AmbientOcclusion textures. ([f8a7283](https://github.com/ZeaInc/zea-engine/commit/f8a728362d3c267530fe689c339ffd6e45fc1896))
+
+
+### Bug Fixes
+
+* An exception thrown when all the items for a geom were removed from a GLGeomItemSet, if there were highlighted items before. ([201952d](https://github.com/ZeaInc/zea-engine/commit/201952dbef09f759167e1f7b81e7e8eb4e0b7a64))
+* Assigning a regular value to a Material parameter no longer removes the assigned texture. ([e536595](https://github.com/ZeaInc/zea-engine/commit/e536595306fee0cb646da5add0acae8aacde26a1))
+* CameraManipulator would sometimes cause rolling when double tapping, leaving the user camera a bit crooked. ([a195b8f](https://github.com/ZeaInc/zea-engine/commit/a195b8f65fa06ac4073549b0f0535e5cf638d1b4))
+* Canvas is now immediately resized to fit its parent container when the WebGL context is created, making renderer setup synchronous ([16f9fd7](https://github.com/ZeaInc/zea-engine/commit/16f9fd72d0f0801cb90cf5d3332ab15a1b59f07e))
+* Cleaned up memory leak removing items from the renderer. ([d0e9438](https://github.com/ZeaInc/zea-engine/commit/d0e9438bc9cd4a0904ffa5065d0008acfc9606a5))
+* Cutting Plane values on the BaseGeomItem are now initialized to reasonable values. ([08c61e7](https://github.com/ZeaInc/zea-engine/commit/08c61e7222b6a8487e2bda756eb5f3c32f249f90))
+* done. ([a8b3c59](https://github.com/ZeaInc/zea-engine/commit/a8b3c5996654b2931f43ba623f745a83c0541d4c))
+* In some cases lines would render over surfaces and appear to show through in some cases. ([9db725c](https://github.com/ZeaInc/zea-engine/commit/9db725c8875da096046aab3e97593ff30c72b692))
+* indices in the renderer became broken after removing a geometry from the renderer. ([638037c](https://github.com/ZeaInc/zea-engine/commit/638037c9292125d84957190ffa7f8707b8bdd388))
+* Items are no longer culled if their size, or matrix is calculated in the GPU. Addresses culling single points geometries and Xfo handles. ([fbd2b4f](https://github.com/ZeaInc/zea-engine/commit/fbd2b4f2db534cfed2945a5ccd15944b1914e36b))
+* LinesShader opacity in multi-draw now matches opacity in regular drawing. ([29dcbf8](https://github.com/ZeaInc/zea-engine/commit/29dcbf8d8cd2a222ac242e0d6642e446e2d5c776))
+* Removed a redundant caching mechanism in the resource loader that prevented re-loading data at the same URL. ([0f8f3e2](https://github.com/ZeaInc/zea-engine/commit/0f8f3e26814de84baa43ea34ee5d9b13d3e4cb1a))
+* SimpleUniformBinding now correctly binds textures to uniform values, so all PBR parameters can now be textured. ([1fc68ae](https://github.com/ZeaInc/zea-engine/commit/1fc68ae312858cd106053be0ce914caaa4abcbf2))
+* The Canvas size can now be resized to zero width or height without the renderer throwing exceptions. ([67b7a8c](https://github.com/ZeaInc/zea-engine/commit/67b7a8ce8584bb88b38275c4a9fbfb1815fe98cc))
+* The Engine became incompatible with its plugins due to a variable rename. This fix puts back the old name to address this compatibility issue. ([4e7c444](https://github.com/ZeaInc/zea-engine/commit/4e7c444aac31af8edd6e26efc2d572b2da939bc6))
+* Visibility changes on transparent items now trigger re-sorting of items. ([9726a28](https://github.com/ZeaInc/zea-engine/commit/9726a289dda60545fc046fbac55b123987d049a3))
+
 ### [3.5.2](https://github.com/ZeaInc/zea-engine/compare/v3.5.1...v3.5.2) (2021-03-26)
 
 

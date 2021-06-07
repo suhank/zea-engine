@@ -134,6 +134,10 @@ void main(void) {
           return;
       }
   }
+  if(testFlag(flags, GEOMITEM_INVISIBLE_IN_GEOMDATA)) {
+    discard;
+    return;
+  }
 
     float dist = length(v_viewPos);
 

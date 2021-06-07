@@ -198,19 +198,26 @@ class VAOGeomShaderBinding {
       const shaderAttrDesc = shaderAttrs[attrName]
       const location = shaderAttrDesc.location
       if (location == -1) continue
-      const geomAttrBuffer = geomAttrBuffers[attrName]
+      let geomAttrBuffer = geomAttrBuffers[attrName]
       if (!geomAttrBuffer) {
-        // console.warn("geomAttrBuffer missing:" + attrName + " location:" + location);
-        gl.disableVertexAttribArray(location)
-        continue
+        if (attrName.endsWith('Next')) {
+          geomAttrBuffer = geomAttrBuffers[attrName.substring(0, attrName.length - 4)]
+          shaderAttrDesc.offset = 1
+        }
+
+        if (!geomAttrBuffer) {
+          // console.warn("geomAttrBuffer missing:" + attrName + " location:" + location);
+          gl.disableVertexAttribArray(location)
+          continue
+        }
       }
 
       const geomAttrDesc = genDataTypeDesc(gl, geomAttrBuffer.dataType)
 
       const stride = geomAttrDesc.dimension * geomAttrDesc.elementSize
       const offset =
-        geomAttrBuffer.offset != undefined
-          ? geomAttrBuffer.offset * geomAttrDesc.dimension * geomAttrDesc.elementSize
+        shaderAttrDesc.offset != undefined
+          ? shaderAttrDesc.offset * geomAttrDesc.dimension * geomAttrDesc.elementSize
           : 0
       const normalized = geomAttrBuffer.normalized == true
       const instanced = shaderAttrDesc.instanced

@@ -14,7 +14,7 @@ This Viewport class is used for rendering stereoscopic views to VR controllers u
 * **pointerUp:** Emitted when the user releases an XR pointer
 
 
-**Extends**: <code>[GLBaseViewport](api/Renderer\GLBaseViewport.md)</code>  
+**Extends**: <code>[GLBaseViewport](api/Renderer/GLBaseViewport.md)</code>  
 
 * [VRViewport ⇐ <code>GLBaseViewport</code>](#VRViewport)
     * [new VRViewport(renderer)](#new-VRViewport)
@@ -33,7 +33,7 @@ This Viewport class is used for rendering stereoscopic views to VR controllers u
     * [togglePresenting()](#togglePresenting)
     * [getHMDCanvasSize() ⇒ <code>any</code>](#getHMDCanvasSize)
     * [updateControllers(xrFrame, event)](#updateControllers)
-    * [draw(xrFrame)](#draw)
+    * [drawXRFrame(xrFrame)](#drawXRFrame)
     * [onPointerDown(event)](#onPointerDown)
     * [onPointerUp(event)](#onPointerUp)
 
@@ -45,7 +45,7 @@ Create a VR viewport.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| renderer | <code>[GLBaseRenderer](api/Renderer\GLBaseRenderer.md)</code> | The renderer value. |
+| renderer | <code>[GLBaseRenderer](api/Renderer/GLBaseRenderer.md)</code> | The renderer value. |
 
 <a name="VRViewport+getAsset"></a>
 
@@ -74,7 +74,7 @@ The getVRHead method.
 The getXfo method.
 
 
-**Returns**: <code>[Xfo](api/Math\Xfo.md)</code> - - The return value.  
+**Returns**: <code>[Xfo](api/Math/Xfo.md)</code> - - The return value.  
 <a name="VRViewport+setXfo"></a>
 
 ### setXfo
@@ -84,7 +84,7 @@ The setXfo method.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| xfo | <code>[Xfo](api/Math\Xfo.md)</code> | The xfo value. |
+| xfo | <code>[Xfo](api/Math/Xfo.md)</code> | The xfo value. |
 
 <a name="VRViewport+getControllers"></a>
 
@@ -163,16 +163,16 @@ The updateControllers method.
 | xrFrame | <code>XRFrame</code> | The xrFrame value. |
 | event | <code>object</code> | The pose changed event object that will be emitted for observers such as collab. |
 
-<a name="VRViewport+draw"></a>
+<a name="VRViewport+drawXRFrame"></a>
 
-### draw
-The draw method.
+### drawXRFrame
+The drawXRFrame method.
 
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| xrFrame | <code>any</code> | The xrFrame value. |
+| xrFrame | <code>XRFrame</code> | The xrFrame value. |
 
 <a name="VRViewport+onPointerDown"></a>
 

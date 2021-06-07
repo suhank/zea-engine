@@ -4,11 +4,10 @@
 Class representing a GL overlay pass.
 
 
-**Extends**: <code>[GLOpaqueGeomsPass](api/Renderer\Passes\GLOpaqueGeomsPass.md)</code>  
+**Extends**: <code>[GLOpaqueGeomsPass](api/Renderer/Passes/GLOpaqueGeomsPass.md)</code>  
 
 * [GLOverlayPass ⇐ <code>GLOpaqueGeomsPass</code>](#GLOverlayPass)
     * [new GLOverlayPass(name)](#new-GLOverlayPass)
-    * [init(renderer, passIndex)](#init)
     * [getPassType() ⇒ <code>number</code>](#getPassType)
     * [filterGeomItem(geomItem) ⇒ <code>any</code>](#filterGeomItem)
     * [draw(renderstate)](#draw)
@@ -23,18 +22,6 @@ Create a GL overlay pass.
 | Param | Type | Description |
 | --- | --- | --- |
 | name | <code>string</code> | The name value. |
-
-<a name="GLOverlayPass+init"></a>
-
-### init
-The init method.
-
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| renderer | <code>[GLBaseRenderer](api/Renderer\GLBaseRenderer.md)</code> | The renderer value. |
-| passIndex | <code>number</code> | The index of the pass in the GLBAseRenderer |
 
 <a name="GLOverlayPass+getPassType"></a>
 
@@ -53,7 +40,7 @@ The filterGeomItem method.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| geomItem | <code>[GeomItem](api/SceneTree\GeomItem.md)</code> | The geomItem value. |
+| geomItem | <code>[GeomItem](api/SceneTree/GeomItem.md)</code> | The geomItem value. |
 
 <a name="GLOverlayPass+draw"></a>
 

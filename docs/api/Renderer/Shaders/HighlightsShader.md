@@ -1,10 +1,10 @@
-<a name="OutlinesShader"></a>
+<a name="HighlightsShader"></a>
 
-### OutlinesShader
+### HighlightsShader
 
-<a name="new_OutlinesShader_new"></a>
+<a name="new_HighlightsShader_new"></a>
 
-### new OutlinesShader
+### new HighlightsShader
 Create a GL shader.
 
 

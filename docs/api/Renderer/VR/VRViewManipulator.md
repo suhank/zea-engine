@@ -4,7 +4,7 @@
 Class representing a view tool
 
 
-**Extends**: <code>[BaseTool](api/SceneTree\Manipulators\BaseTool.md)</code>  
+**Extends**: <code>[BaseTool](api/SceneTree/Manipulators/BaseTool.md)</code>  
 
 * [VRViewManipulator ⇐ <code>BaseTool</code>](#VRViewManipulator)
     * [activateTool()](#activateTool)

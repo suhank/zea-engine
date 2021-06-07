@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html class="h-full">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -21,6 +21,9 @@
       const scene = new Scene()
       const renderer = new GLRenderer(canvas, { hideSplash: true, webglOptions: { antialias: false } })
       renderer.setScene(scene)
+      renderer.solidAngleLimit = 0.001
+      renderer.outlineThickness = 1.5
+      renderer.outlineSensitivity = 0.02
 
       scene.setupGrid(10.0, 10)
 
@@ -46,16 +49,30 @@
           )
       }
 
+      document.addEventListener('keydown', (event) => {
+        if (event.key.toLowerCase() == 'f') {
+          renderer.frameAll()
+          event.stopPropagation()
+        }
+      })
+
       renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(20, 20, 10), new Vec3(0, 0, 0))
+      renderer.getXRViewport().then((xrvp) => {
+        console.log('XR Device Detected')
+        document.addEventListener('keydown', (event) => {
+          if (event.key.toLowerCase() == 'v' && event.shiftKey) {
+            xrvp.togglePresenting()
+            event.stopPropagation()
+          }
+        })
+      })
       // renderer.frameAll()
 
       const postMessage = (msg) => {
         console.log(msg)
         window.postMessage(msg)
       }
-      renderer.once('resized', () => {
-        postMessage('done-loading')
-      })
+      postMessage('done-loading')
 
       // {{{ Messages handler.
       const handleMessage = (event) => {
@@ -81,8 +98,8 @@
       // }}}
     </script>
   </head>
-  <body class="bg-blue-100">
-    <div class="h-screen">
+  <body class="bg-blue-100 h-full">
+    <div class="h-full">
       <canvas class="absolute" id="renderer"></canvas>
     </div>
   </body>

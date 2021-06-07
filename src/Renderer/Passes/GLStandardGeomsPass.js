@@ -37,7 +37,7 @@ class GLStandardGeomsPass extends GLPass {
    * @param {object} rargs - Extra return values are passed back in this object.
    * The object contains a parameter 'continueInSubTree', which can be set to false,
    * so the subtree of this node will not be traversed after this node is handled.
-   * @return {Boolean} - The return value.
+   * @return {Boolean} - Returns true if the item is now added to the pass.
    */
   itemAddedToScene(treeItem, rargs) {
     if (treeItem instanceof GeomItem) {
@@ -48,6 +48,7 @@ class GLStandardGeomsPass extends GLPass {
             this.addGeomItem(geomItem)
 
             geomItem.setMetadata('glpass', this)
+            return true
           } else {
             return false
           }

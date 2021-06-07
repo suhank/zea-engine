@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html class="h-full">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -54,11 +54,12 @@
         renderer.frameAll()
       })
 
-      Promise.all([
-        new Promise((resolve) => renderer.once('resized', resolve)),
-        new Promise((resolve) => objAsset.once('loaded', resolve)),
-      ]).then(() => {
+      Promise.all([new Promise((resolve) => objAsset.once('loaded', resolve))]).then(() => {
         window.postMessage('done-loading')
+      })
+
+      renderer.getViewport().on('keyDown', (event) => {
+        if (event.key == 'f') renderer.frameAll()
       })
 
       // {{{ Messages handler.
@@ -66,12 +67,17 @@
         const { data } = event
 
         if (data === 'variant-01') {
-          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, -2.7), new Vec3(0, 0, 0.4))
-          renderer.frameAll()
+          const angle = -1
+          const xfo = new Xfo()
+          xfo.ori.setFromAxisAndAngle(new Vec3(0, 0, 1), angle)
+          objAsset.getParameter('LocalXfo').setValue(xfo)
           window.postMessage(`done-${data}`)
         } else if (data === 'variant-02') {
-          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-2, -2, 2.7), new Vec3(0, 0, 0.4))
-          renderer.frameAll()
+          const angle = 2
+          const xfo = new Xfo()
+          xfo.tr.set(-1, Math.cos(angle) * 2, 0)
+          xfo.ori.setFromAxisAndAngle(new Vec3(0, 0, 1), angle)
+          objAsset.getParameter('LocalXfo').setValue(xfo)
           window.postMessage(`done-${data}`)
         }
       }
@@ -80,8 +86,8 @@
       // }}}
     </script>
   </head>
-  <body class="bg-blue-100">
-    <div class="h-screen">
+  <body class="bg-blue-100 h-full">
+    <div class="h-full">
       <canvas class="absolute" id="renderer"></canvas>
     </div>
   </body>

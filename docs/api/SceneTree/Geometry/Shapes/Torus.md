@@ -8,7 +8,7 @@ const torus = new Torus(0.4, 1.3)
 ```
 
 
-**Extends**: <code>[ProceduralMesh](api/SceneTree\Geometry\Shapes\ProceduralMesh.md)</code>  
+**Extends**: <code>[ProceduralMesh](api/SceneTree/Geometry/Shapes/ProceduralMesh.md)</code>  
 <a name="new_Torus_new"></a>
 
 ### new Torus
@@ -24,4 +24,4 @@ Creates an instance of Torus.
 
 
 
-### [Class Tests](api/SceneTree\Geometry\Shapes/Torus.test)
+### [Class Tests](api/SceneTree/Geometry/Shapes/Torus.test)

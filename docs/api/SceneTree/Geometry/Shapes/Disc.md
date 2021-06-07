@@ -8,11 +8,11 @@ const disc = new Disc(2.0, 22)
 ```
 
 **Parameters**
-* **Radius([`NumberParameter`](api/SceneTree\Parameters\NumberParameter.md)):** Specifies the radius of the disc.
-* **Sides([`NumberParameter`](api/SceneTree\Parameters\NumberParameter.md)):** Specifies the resolution, or the disc subdivisions around `Z` axis.
+* **Radius([`NumberParameter`](api/SceneTree/Parameters/NumberParameter.md)):** Specifies the radius of the disc.
+* **Sides([`NumberParameter`](api/SceneTree/Parameters/NumberParameter.md)):** Specifies the resolution, or the disc subdivisions around `Z` axis.
 
 
-**Extends**: <code>[ProceduralMesh](api/SceneTree\Geometry\Shapes\ProceduralMesh.md)</code>  
+**Extends**: <code>[ProceduralMesh](api/SceneTree/Geometry/Shapes/ProceduralMesh.md)</code>  
 <a name="new_Disc_new"></a>
 
 ### new Disc
@@ -26,4 +26,4 @@ Creates an instance of Disc.
 
 
 
-### [Class Tests](api/SceneTree\Geometry\Shapes/Disc.test)
+### [Class Tests](api/SceneTree/Geometry/Shapes/Disc.test)

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html class="h-full">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -41,19 +41,17 @@
       renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, 2.7), new Vec3(0, 0, 0.4))
       renderer.frameAll()
 
-      renderer.once('resized', () => {
-        window.postMessage('done-loading')
-      })
+      window.postMessage('done-loading')
 
       // {{{ Messages handler.
       const handleMessage = (event) => {
         const { data } = event
 
         if (data === 'variant-01') {
-          circle.getParameter('NumSegments').setValue(32)
+          circle.getParameter('Sides').setValue(32)
           window.postMessage(`done-${data}`)
         } else if (data === 'variant-02') {
-          circle.getParameter('NumSegments').setValue(6)
+          circle.getParameter('Sides').setValue(6)
           window.postMessage(`done-${data}`)
         }
       }
@@ -62,8 +60,8 @@
       // }}}
     </script>
   </head>
-  <body class="bg-blue-100">
-    <div class="h-screen">
+  <body class="bg-blue-100 h-full">
+    <div class="h-full">
       <canvas class="absolute" id="renderer"></canvas>
     </div>
   </body>

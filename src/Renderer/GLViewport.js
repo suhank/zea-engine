@@ -49,11 +49,28 @@ class GLViewport extends GLBaseViewport {
 
     this.__prevDownTime = 0
 
+    // //////////////////////////////////
+    // Setup GeomData Fbo
     this.__geomDataBuffer = undefined
+    this.__geomDataBufferSizeFactor = 12
     this.__geomDataBufferFbo = undefined
     this.debugGeomShader = false
 
     // this.renderGeomDataFbo = this.renderGeomDataFbo.bind(this);
+
+    const gl = this.__renderer.gl
+    this.__geomDataBuffer = new GLTexture2D(gl, {
+      type: renderer.__floatGeomBuffer ? 'FLOAT' : 'UNSIGNED_BYTE',
+      format: 'RGBA',
+      filter: 'NEAREST',
+      width: width <= 1 ? 1 : Math.floor(width / this.__geomDataBufferSizeFactor),
+      height: height <= 1 ? 1 : Math.floor(height / this.__geomDataBufferSizeFactor),
+    })
+    this.__geomDataBufferFbo = new GLFbo(gl, this.__geomDataBuffer, true)
+    this.__geomDataBufferFbo.setClearColor([0, 0, 0, 0])
+
+    // //////////////////////////////////
+    // Setup Camera Manipulator
 
     // Each user has a separate camera, and so the default
     //  camera cannot be part of the scene.
@@ -64,28 +81,92 @@ class GLViewport extends GLBaseViewport {
   }
 
   /**
+   * The getBl method.
+   * @return {number} - The return value.
+   */
+  getBl() {
+    return this.__bl
+  }
+
+  /**
+   * The setBl method.
+   * @param {number} bl - The bl value.
+   */
+  setBl(bl) {
+    this.__bl = bl
+    this.resize(this.__canvasWidth, this.__canvasHeight)
+  }
+
+  /**
+   * The getTr method.
+   * @return {number} - The return value.
+   */
+  getTr() {
+    return this.__tr
+  }
+
+  /**
+   * The setTr method.
+   * @param {number} tr - The tr value.
+   */
+  setTr(tr) {
+    this.__tr = tr
+    this.resize(this.__canvasWidth, this.__canvasHeight)
+  }
+
+  /**
+   * The getPosX method.
+   * @return {number} - The return value.
+   */
+  getPosX() {
+    return this.__x
+  }
+
+  /**
+   * The getPosY method.
+   * @return {number} - The return value.
+   */
+  getPosY() {
+    return this.__y
+  }
+
+  /**
    * Dynamically resizes viewport.
    *
-   * @param {number} width - The width value.
-   * @param {number} height - The height value.
+   * @param {number} canvasWidth - The canvasWidth value.
+   * @param {number} canvasHeight - The canvasHeight value.
    */
-  resize(width, height) {
-    this.__canvasWidth = width
-    this.__canvasHeight = height
-    this.__x = width * this.__bl.x
-    this.__y = width * this.__bl.y
-    this.__width = width * this.__tr.x - width * this.__bl.x
-    this.__height = height * this.__tr.y - height * this.__bl.y
+  resize(canvasWidth, canvasHeight) {
+    if (this.__canvasWidth == canvasWidth && this.__canvasHeight == canvasHeight) return
+    this.__canvasWidth = canvasWidth
+    this.__canvasHeight = canvasHeight
+    this.__x = canvasWidth * this.__bl.x
+    this.__y = canvasWidth * this.__bl.y
+    this.__width = canvasWidth * this.__tr.x - canvasWidth * this.__bl.x
+    this.__height = canvasHeight * this.__tr.y - canvasHeight * this.__bl.y
     this.region = [this.__x, this.__y, this.__width, this.__height]
 
+    this.resizeRenderTargets(this.__width, this.__height)
     if (this.__camera) this.__updateProjectionMatrix()
+    this.emit('resized', { width: this.__width, height: this.__height })
+  }
+
+  /**
+   * Resize any offscreen render targets.
+   * > Note: Values ,ay not be the entire canvas with if multiple viewports exists.
+   * @param {number} width - The width used by this viewport.
+   * @param {number} height - The height  used by this viewport.
+   */
+  resizeRenderTargets(width, height) {
+    super.resizeRenderTargets(width, height)
 
     if (this.__geomDataBufferFbo) {
-      this.__geomDataBuffer.resize(this.__width, this.__height)
+      this.__geomDataBuffer.resize(
+        Math.floor(this.__width / this.__geomDataBufferSizeFactor),
+        Math.floor(this.__height / this.__geomDataBufferSizeFactor)
+      )
       this.renderGeomDataFbo()
     }
-
-    this.emit('resized', { width, height })
   }
 
   /**
@@ -104,6 +185,7 @@ class GLViewport extends GLBaseViewport {
    */
   setCamera(camera) {
     this.__camera = camera
+    this.depthRange = [this.__camera.getNear(), this.__camera.getFar()]
     const globalXfoParam = camera.getParameter('GlobalXfo')
     const getCameraParams = () => {
       this.__cameraXfo = globalXfoParam.getValue()
@@ -124,6 +206,7 @@ class GLViewport extends GLBaseViewport {
     })
     this.__camera.on('projectionParamChanged', () => {
       this.__updateProjectionMatrix()
+      this.depthRange = [this.__camera.getNear(), this.__camera.getFar()]
       this.emit('updated')
     })
 
@@ -166,14 +249,17 @@ class GLViewport extends GLBaseViewport {
   }
 
   /**
-   * The frameView method.
-   * @param {array} treeItems - The treeItems value.
+   * Calculates a new camera position that frames all the items passed in `treeItems` array, moving
+   * the camera to a point where we can see all of them.
+   * > See Camera.frameView
+   * @param {array} treeItems - The array of TreeItem.
    */
   frameView(treeItems) {
     if (this.__width > 0 && this.__height > 0) {
       this.__camera.frameView(this, treeItems)
     } else {
-      // Wait till the window is resized and try again.
+      // Sometimes thew renderer is not yet setup, so here we
+      // wait till the window is resized and try again.
       this.once('resized', () => this.frameView())
     }
   }
@@ -204,7 +290,7 @@ class GLViewport extends GLBaseViewport {
 
     let rayStart
     let rayDirection
-    if (this.__camera.getIsOrthographic()) {
+    if (this.__camera.isOrthographic()) {
       // Orthographic projections.
       rayStart = cameraMat.transformVec3(projInv.transformVec3(new Vec3(sx, -sy, -1.0)))
       rayDirection = new Vec3(0.0, 0.0, -1.0)
@@ -225,54 +311,19 @@ class GLViewport extends GLBaseViewport {
   // GeomData
 
   /**
-   * The createGeomDataFbo method.
-   * @param {boolean} floatGeomBuffer - true if the GPU supports rendering
-   * to floating point textures.
-   */
-  createGeomDataFbo(floatGeomBuffer) {
-    const gl = this.__renderer.gl
-    this.__floatGeomBuffer = floatGeomBuffer
-    if (this.__floatGeomBuffer) {
-      this.__geomDataBuffer = new GLTexture2D(gl, {
-        type: 'FLOAT',
-        format: 'RGBA',
-        filter: 'NEAREST',
-        width: this.__width <= 1 ? 1 : this.__width,
-        height: this.__height <= 1 ? 1 : this.__height,
-      })
-    } else {
-      this.__geomDataBuffer = new GLTexture2D(gl, {
-        type: 'UNSIGNED_BYTE',
-        format: 'RGBA',
-        filter: 'NEAREST',
-        width: this.__width <= 1 ? 1 : this.__width,
-        height: this.__height <= 1 ? 1 : this.__height,
-      })
-    }
-    this.__geomDataBufferFbo = new GLFbo(gl, this.__geomDataBuffer, true)
-    this.__geomDataBufferFbo.setClearColor([0, 0, 0, 0])
-  }
-
-  /**
-   * The getGeomDataFbo method.
-   * @return {GLFbo} - The return value.
-   */
-  getGeomDataFbo() {
-    return this.__geomDataBufferFbo
-  }
-
-  /**
    * Renders the scene geometry to the viewport's geom data buffer
    * in preparation for mouse picking.
    */
   renderGeomDataFbo() {
     if (this.__geomDataBufferFbo) {
-      this.__geomDataBufferFbo.bindAndClear()
-
       const renderstate = {}
       this.__initRenderState(renderstate)
+
+      this.__geomDataBufferFbo.bindAndClear(renderstate)
+
       this.__renderer.drawSceneGeomData(renderstate)
       this.__geomDataBufferInvalid = false
+      this.__geomDataBufferFbo.unbind()
     }
   }
 
@@ -329,17 +380,24 @@ class GLViewport extends GLBaseViewport {
       // console.log("getGeomDataAtPos:", screenPos.toString(), screenPos.x,this.__width)
 
       // Allocate a 1 pixel block and read from the GeomData buffer.
+      const bufferWidth = this.__geomDataBufferFbo.width
+      const bufferHeight = this.__geomDataBufferFbo.height
+      const x = Math.floor(screenPos.x * (bufferWidth / this.__width))
+      const y = Math.floor(screenPos.y * (bufferHeight / this.__height))
+      // const x = Math.floor(screenPos.x / this.__geomDataBufferSizeFactor)
+      // const y = Math.floor(screenPos.y / this.__geomDataBufferSizeFactor)
       let passId
       let geomData
       if (gl.floatGeomBuffer) {
         geomData = new Float32Array(4)
-        gl.readPixels(screenPos.x, this.__height - screenPos.y, 1, 1, gl.RGBA, gl.FLOAT, geomData)
+        gl.readPixels(x, bufferHeight - y - 1, 1, 1, gl.RGBA, gl.FLOAT, geomData)
         if (geomData[3] == 0) return undefined
+
         // Mask the pass id to be only the first 6 bits of the integer.
         passId = Math.round(geomData[0]) & (64 - 1)
       } else {
         geomData = new Uint8Array(4)
-        gl.readPixels(screenPos.x, this.__height - screenPos.y, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, geomData)
+        gl.readPixels(x, bufferHeight - y - 1, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, geomData)
         gl.bindFramebuffer(gl.FRAMEBUFFER, null)
         if (geomData[0] == 0 && geomData[1] == 0) return undefined
         passId = Math.floor(geomData[1] / 64)
@@ -354,8 +412,7 @@ class GLViewport extends GLBaseViewport {
       const geomItemAndDist = pass.getGeomItemAndDist(geomData)
 
       if (geomItemAndDist) {
-        const materialParameter = geomItemAndDist.geomItem.getParameter('Material')
-        if (materialParameter && !materialParameter.getValue().visibleInGeomDataBuffer) return
+        if (!geomItemAndDist.geomItem.visibleInGeomDataBuffer) return
 
         if (!pointerRay) pointerRay = this.calcRayFromScreenPos(screenPos)
         const intersectionPos = pointerRay.start.add(pointerRay.dir.scale(geomItemAndDist.dist))
@@ -387,10 +444,19 @@ class GLViewport extends GLBaseViewport {
       const gl = this.__renderer.gl
       gl.finish()
       // Allocate a pixel block.
-      const rectBottom = Math.round(this.__height - br.y)
-      const rectLeft = Math.round(tl.x)
-      const rectWidth = Math.round(br.x - tl.x)
-      const rectHeight = Math.round(br.y - tl.y)
+      const bufferWidth = this.__geomDataBufferFbo.width
+      const bufferHeight = this.__geomDataBufferFbo.height
+      const widthFactor = bufferWidth / this.__width
+      const heightFactor = bufferHeight / this.__height
+      const tlX = Math.round(tl.x * widthFactor)
+      const tlY = Math.round(tl.y * heightFactor)
+      const brX = Math.round(br.x * widthFactor)
+      const brY = Math.round(br.y * heightFactor)
+
+      const rectBottom = Math.round(bufferHeight - brY)
+      const rectLeft = Math.round(tlX)
+      const rectWidth = Math.round(brX - tlX)
+      const rectHeight = Math.round(brY - tlY)
       const numPixels = rectWidth * rectHeight
 
       this.__geomDataBufferFbo.bindForReading()
@@ -420,16 +486,14 @@ class GLViewport extends GLBaseViewport {
 
         const geomItemAndDist = this.__renderer.getPass(passId).getGeomItemAndDist(geomData)
         if (geomItemAndDist) {
-          const materialParameter = geomItemAndDist.geomItem.getParameter('Material')
-          if (materialParameter && !materialParameter.getValue().visibleInGeomDataBuffer) continue
+          if (!geomItemAndDist.geomItem.visibleInGeomDataBuffer) continue
 
           geomItems.add(geomItemAndDist.geomItem)
         }
       }
 
       return [...geomItems].filter((geomItem) => {
-        const materialParameter = geomItem.getParameter('Material')
-        if (materialParameter && !materialParameter.getValue().visibleInGeomDataBuffer) return false
+        if (!geomItem.visibleInGeomDataBuffer) return false
 
         return true
       })
@@ -777,6 +841,7 @@ class GLViewport extends GLBaseViewport {
     renderstate.viewScale = 1.0
     renderstate.region = this.region
     renderstate.cameraMatrix = this.__cameraMat
+    renderstate.depthRange = this.depthRange
     renderstate.viewport = this
     renderstate.viewports = [
       {
@@ -784,7 +849,7 @@ class GLViewport extends GLBaseViewport {
         viewMatrix: this.__viewMat,
         projectionMatrix: this.__projectionMatrix,
         viewportFrustumSize: this.__frustumDim,
-        isOrthographic: this.__camera.getIsOrthographic(),
+        isOrthographic: this.__camera.isOrthographic(),
         fovY: this.__camera.getFov(),
       },
     ]
@@ -793,36 +858,42 @@ class GLViewport extends GLBaseViewport {
   /**
    * The draw method.
    */
-  draw() {
-    const gl = this.__renderer.gl
-
-    // Make sure the default fbo is bound
-    // Note: Sometimes an Fbo is left bound
-    // from another op(like resizing, populating etc..)
-    // We need to unbind here to ensure rendering is to the
-    // right target.
-    gl.bindFramebuffer(gl.FRAMEBUFFER, null)
-
-    gl.viewport(...this.region)
-
-    gl.clearColor(...this.__backgroundColor.asArray())
-    // Note: in Chrome's macOS the alpha channel causes strange
-    // compositing issues. Here where we disable the alpha channel
-    // in the color mask which addresses the issues on MacOS.
-    // To see the artifacts, pass 'true' as the 4th parameter, and
-    // open a simple testing scene containing a grid. Moving the
-    // camera causes a ghosting effect to be left behind.
-    gl.colorMask(true, true, true, false)
-    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
-
-    const renderstate = {}
+  draw(renderstate = {}) {
     this.__initRenderState(renderstate)
-    this.__renderer.drawScene(renderstate)
+
+    // As we zoom in and out, this adapts the outline shader
+    // so that the surface gradient between 2 neighboring pixels is
+    // Roughly uniform. As we zoom out, the distance between 2 pixels
+    // increases and so does the difference in depth. Scaling up the
+    // depth multiplier keeps everything consistent.
+    renderstate.outlineDepthMultiplier = (1 / this.__camera.getFocalDistance()) * this.renderer.outlineSensitivity
+
+    super.draw(renderstate)
 
     // Turn this on to debug the geom data buffer.
     if (this.debugGeomShader) {
-      gl.screenQuad.bindShader(renderstate)
-      gl.screenQuad.draw(renderstate, this.__geomDataBuffer)
+      this.renderGeomDataFbo()
+      const gl = this.__renderer.gl
+      // gl.disable(gl.DEPTH_TEST)
+      // gl.screenQuad.bindShader(renderstate)
+      // console.log('here')
+      // gl.screenQuad.draw(renderstate, this.__geomDataBuffer, new Vec2(0.5, 0.5), new Vec2(2, 2))
+
+      gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, null)
+      this.__geomDataBufferFbo.bindForReading(renderstate)
+      gl.clearBufferfv(gl.COLOR, 0, [0.0, 0.0, 0.0, 0.0])
+      gl.blitFramebuffer(
+        0,
+        0,
+        this.__geomDataBufferFbo.width,
+        this.__geomDataBufferFbo.height,
+        0,
+        0,
+        this.__width,
+        this.__height,
+        gl.COLOR_BUFFER_BIT,
+        gl.NEAREST
+      )
     }
   }
 }

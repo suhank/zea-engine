@@ -15,7 +15,7 @@
 Class representing a file image.
 
 
-**Extends**: <code>[BaseImage](api/SceneTree\BaseImage.md)</code>  
+**Extends**: <code>[BaseImage](api/SceneTree/BaseImage.md)</code>  
 
 * [FileImage ⇐ <code>BaseImage</code>](#FileImage)
     * [new FileImage(name, filePath, params)](#new-FileImage)

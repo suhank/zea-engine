@@ -12,7 +12,7 @@ myParameterOwnerItem.addParameter(quatParam)
 ```
 
 
-**Extends**: <code>[Parameter](api/SceneTree\Parameters\Parameter.md)</code>  
+**Extends**: <code>[Parameter](api/SceneTree/Parameters/Parameter.md)</code>  
 
 * [QuatParameter ⇐ <code>Parameter</code>](#QuatParameter)
     * [new QuatParameter(name, value)](#new-QuatParameter)
@@ -28,7 +28,7 @@ Create a Quat parameter.
 | Param | Type | Description |
 | --- | --- | --- |
 | name | <code>string</code> | The name of the Quat parameter. |
-| value | <code>[Quat](api/Math\Quat.md)</code> | The value of the parameter. |
+| value | <code>[Quat](api/Math/Quat.md)</code> | The value of the parameter. |
 
 <a name="QuatParameter+readBinary"></a>
 
@@ -39,7 +39,7 @@ Extracts a number value from a buffer, updating current parameter state.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| reader | <code>[BinReader](api/SceneTree\BinReader.md)</code> | The reader value. |
+| reader | <code>[BinReader](api/SceneTree/BinReader.md)</code> | The reader value. |
 | context | <code>object</code> | The context value. |
 
 <a name="QuatParameter+clone"></a>
@@ -52,4 +52,4 @@ from this parameter and returns it.
 **Returns**: [<code>QuatParameter</code>](#QuatParameter) - - Returns a new Quat parameter.  
 
 
-### [Class Tests](api/SceneTree\Parameters/QuatParameter.test)
+### [Class Tests](api/SceneTree/Parameters/QuatParameter.test)

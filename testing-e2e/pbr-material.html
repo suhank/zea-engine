@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html class="h-full">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -63,7 +63,6 @@
 
       // scene.setupGrid(10.0, 10)
       const promises = []
-      promises.push(new Promise((resolve) => renderer.once('resized', resolve)))
 
       const envMap = new EnvMap()
       envMap.getParameter('FilePath').setValue('data/pisa-webp.zenv')
@@ -154,8 +153,8 @@
       })
     </script>
   </head>
-  <body class="bg-blue-100">
-    <div class="h-screen">
+  <body class="bg-blue-100 h-full">
+    <div class="h-full">
       <canvas class="absolute" id="renderer"></canvas>
     </div>
     <input type="range" min="0" max="400" value="100" class="slider" id="exposureControl" />

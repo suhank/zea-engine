@@ -215,7 +215,7 @@ Writes a `Vec2` in the buffer using signed Int32 values(In `x,y` order).
 
 | Param | Type | Description |
 | --- | --- | --- |
-| value | <code>[Vec2](api/Math\Vec2.md)</code> | The Vec2 to write. |
+| value | <code>[Vec2](api/Math/Vec2.md)</code> | The Vec2 to write. |
 
 <a name="BinWriter+writeUInt32Vec2"></a>
 
@@ -226,7 +226,7 @@ Writes a `Vec2` in the buffer using unsigned Int32 values(In `x,y` order).
 
 | Param | Type | Description |
 | --- | --- | --- |
-| value | <code>[Vec2](api/Math\Vec2.md)</code> | The Vec2 to write. |
+| value | <code>[Vec2](api/Math/Vec2.md)</code> | The Vec2 to write. |
 
 <a name="BinWriter+writeFloat16Vec2"></a>
 
@@ -237,7 +237,7 @@ Writes a `Vec2` in the buffer using Float16 values(In `x,y` order).
 
 | Param | Type | Description |
 | --- | --- | --- |
-| value | <code>[Vec2](api/Math\Vec2.md)</code> | The Vec2 to write. |
+| value | <code>[Vec2](api/Math/Vec2.md)</code> | The Vec2 to write. |
 
 <a name="BinWriter+writeFloat32Vec2"></a>
 
@@ -248,7 +248,7 @@ Writes a `Vec2` in the buffer using Float32 values(In `x,y` order).
 
 | Param | Type | Description |
 | --- | --- | --- |
-| value | <code>[Vec2](api/Math\Vec2.md)</code> | The Vec2 to write. |
+| value | <code>[Vec2](api/Math/Vec2.md)</code> | The Vec2 to write. |
 
 <a name="BinWriter+writeFloat16Vec3"></a>
 
@@ -259,7 +259,7 @@ Writes a `Vec3` in the buffer using Float16 values(In `x,y,z` order).
 
 | Param | Type | Description |
 | --- | --- | --- |
-| value | <code>[Vec3](api/Math\Vec3.md)</code> | The Vec3 to write. |
+| value | <code>[Vec3](api/Math/Vec3.md)</code> | The Vec3 to write. |
 
 <a name="BinWriter+writeFloat32Vec3"></a>
 
@@ -270,7 +270,7 @@ Writes a `Vec3` in the buffer using Float32 values(In `x,y,z` order).
 
 | Param | Type | Description |
 | --- | --- | --- |
-| value | <code>[Vec3](api/Math\Vec3.md)</code> | The Vec3 to write. |
+| value | <code>[Vec3](api/Math/Vec3.md)</code> | The Vec3 to write. |
 
 <a name="BinWriter+writeFloat16Quat"></a>
 
@@ -281,7 +281,7 @@ Writes a `Quat` in the buffer using Float16 values(In `x,y,z,w` order).
 
 | Param | Type | Description |
 | --- | --- | --- |
-| value | <code>[Quat](api/Math\Quat.md)</code> | The Quat to write. |
+| value | <code>[Quat](api/Math/Quat.md)</code> | The Quat to write. |
 
 <a name="BinWriter+writeFloat32Quat"></a>
 
@@ -292,7 +292,7 @@ Writes a `Quat` in the buffer using Float32 values(In `x,y,z,w` order).
 
 | Param | Type | Description |
 | --- | --- | --- |
-| value | <code>[Quat](api/Math\Quat.md)</code> | The Quat to write. |
+| value | <code>[Quat](api/Math/Quat.md)</code> | The Quat to write. |
 
 <a name="BinWriter+writeRGBFloat32Color"></a>
 
@@ -303,7 +303,7 @@ Writes a RGB `Color` in the buffer using Float32 values(In `r,g,b` order).
 
 | Param | Type | Description |
 | --- | --- | --- |
-| value | <code>[Color](api/Math\Color.md)</code> | The Color to write. |
+| value | <code>[Color](api/Math/Color.md)</code> | The Color to write. |
 
 <a name="BinWriter+writeRGBAFloat32Color"></a>
 
@@ -314,7 +314,7 @@ Writes a RGBA `Color` in the buffer using Float32 values(In `r,g,b,a` order).
 
 | Param | Type | Description |
 | --- | --- | --- |
-| value | <code>[Color](api/Math\Color.md)</code> | The Color to write. |
+| value | <code>[Color](api/Math/Color.md)</code> | The Color to write. |
 
 <a name="BinWriter+writeRGBUInt8Color"></a>
 
@@ -325,7 +325,7 @@ Writes a RGB `Color` in the buffer using unsigned Int8 values(In `r,g,b` order).
 
 | Param | Type | Description |
 | --- | --- | --- |
-| value | <code>[Color](api/Math\Color.md)</code> | The Color to write. |
+| value | <code>[Color](api/Math/Color.md)</code> | The Color to write. |
 
 <a name="BinWriter+writeRGBAUInt8Color"></a>
 
@@ -336,7 +336,7 @@ Writes a RGBA `Color` in the buffer using unsigned Int8 values(In `r,g,b,a` orde
 
 | Param | Type | Description |
 | --- | --- | --- |
-| value | <code>[Color](api/Math\Color.md)</code> | The Color to write. |
+| value | <code>[Color](api/Math/Color.md)</code> | The Color to write. |
 
 <a name="BinWriter+writeBox2"></a>
 
@@ -347,7 +347,7 @@ Writes a `Box2` in the buffer using Floar32 values(In `p0,p1` order).
 
 | Param | Type | Description |
 | --- | --- | --- |
-| value | <code>[Box2](api/Math\Box2.md)</code> | The Box2 to write. |
+| value | <code>[Box2](api/Math/Box2.md)</code> | The Box2 to write. |
 
 <a name="BinWriter+writeBox3"></a>
 
@@ -358,7 +358,7 @@ Writes a `Box3` in the buffer using Floar32 values(In `p0,p1` order).
 
 | Param | Type | Description |
 | --- | --- | --- |
-| value | <code>[Box3](api/Math\Box3.md)</code> | The Box3 to write. |
+| value | <code>[Box3](api/Math/Box3.md)</code> | The Box3 to write. |
 
 <a name="BinWriter+writePadd"></a>
 

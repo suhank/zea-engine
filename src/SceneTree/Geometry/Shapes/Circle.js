@@ -12,7 +12,7 @@ import { ProceduralLines } from './ProceduralLines'
  * **Parameters**
  * * **Radius(`NumberParameter`):** Radius of the circle.
  * * **Angle(`NumberParameter`):** Number of segments used to build the circle.
- * * **NumSegments(`NumberParameter`):** Segments angle in radiants.
+ * * **Sides(`NumberParameter`):** Segments angle in radiants.
  *
  * @extends {ProceduralLines}
  */
@@ -20,20 +20,18 @@ class Circle extends ProceduralLines {
   /**
    * Creates an instance of Circle.
    * @param {number} radius - The radius of the circle.
-   * @param {number} numSegments - The number of segments.
+   * @param {number} sides - The number of segments.
    * @param {number} angle - Arc segments angle(radians)
    */
-  constructor(radius = 1.0, numSegments = 32, angle = Math.PI * 2) {
+  constructor(radius = 1.0, sides = 32, angle = Math.PI * 2) {
     super()
 
-    if (isNaN(radius) || isNaN(numSegments)) throw new Error('Invalid geom args')
+    if (isNaN(radius) || isNaN(sides)) throw new Error('Invalid geom args')
 
     this.__radius = this.addParameter(new NumberParameter('Radius', radius))
     this.__angle = this.addParameter(new NumberParameter('Angle', angle))
-    this.__numSegments = this.addParameter(
-      new NumberParameter('NumSegments', numSegments >= 3 ? numSegments : 3, [3, 200], 1)
-    )
-    this.topologyParams.push('NumSegments')
+    this.__sides = this.addParameter(new NumberParameter('Sides', sides >= 3 ? sides : 3, [3, 200], 1))
+    this.topologyParams.push('Sides')
   }
 
   /**
@@ -41,7 +39,7 @@ class Circle extends ProceduralLines {
    * @private
    */
   rebuild() {
-    const segs = this.__numSegments.getValue()
+    const segs = this.__sides.getValue()
     this.setNumVertices(segs)
     const arc = this.__angle.getValue() < Math.PI * 2
     if (arc) this.setNumSegments(segs - 1)
@@ -56,7 +54,7 @@ class Circle extends ProceduralLines {
    */
   resize() {
     const radius = this.__radius.getValue()
-    const segs = this.__numSegments.getValue()
+    const segs = this.__sides.getValue()
     const step = this.__angle.getValue() / segs
     const positions = this.getVertexAttribute('positions')
     for (let i = 0; i < segs; i++) {

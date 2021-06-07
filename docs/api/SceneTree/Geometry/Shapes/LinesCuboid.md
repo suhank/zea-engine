@@ -4,13 +4,13 @@
 A class for generating a lines cuboid shape(Without faces).
 
 **Parameters**
-* **X([`NumberParameter`](api/SceneTree\Parameters\NumberParameter.md)):** Length of the line cuboid along the `X` axis
-* **Y([`NumberParameter`](api/SceneTree\Parameters\NumberParameter.md)):** Length of the line cuboid along the `Y` axis
-* **Z([`NumberParameter`](api/SceneTree\Parameters\NumberParameter.md)):** Length of the line cuboid along the `Z` axis
-* **BaseZAtZero([`NumberParameter`](api/SceneTree\Parameters\NumberParameter.md)):** Property to start or not `Z` axis from position `0.
+* **X([`NumberParameter`](api/SceneTree/Parameters/NumberParameter.md)):** Length of the line cuboid along the `X` axis
+* **Y([`NumberParameter`](api/SceneTree/Parameters/NumberParameter.md)):** Length of the line cuboid along the `Y` axis
+* **Z([`NumberParameter`](api/SceneTree/Parameters/NumberParameter.md)):** Length of the line cuboid along the `Z` axis
+* **BaseZAtZero([`NumberParameter`](api/SceneTree/Parameters/NumberParameter.md)):** Property to start or not `Z` axis from position `0.
 
 
-**Extends**: <code>[ProceduralLines](api/SceneTree\Geometry\Shapes\ProceduralLines.md)</code>  
+**Extends**: <code>[ProceduralLines](api/SceneTree/Geometry/Shapes/ProceduralLines.md)</code>  
 <a name="new_LinesCuboid_new"></a>
 
 ### new LinesCuboid
@@ -26,4 +26,4 @@ Create a lines cuboid.
 
 
 
-### [Class Tests](api/SceneTree\Geometry\Shapes/LinesCuboid.test)
+### [Class Tests](api/SceneTree/Geometry/Shapes/LinesCuboid.test)

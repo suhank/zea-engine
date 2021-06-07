@@ -24,13 +24,17 @@ class GridTreeItem extends TreeItem {
   constructor(gridSize = 5, resolution = 50, gridColor = new Color('#DCDCDC')) {
     super('GridTree')
 
+    this.setSelectable(false)
+
     const gridMaterial = new Material('gridMaterial', 'LinesShader')
     gridMaterial.getParameter('BaseColor').setValue(gridColor)
     gridMaterial.getParameter('Overlay').setValue(0.0)
-    gridMaterial.visibleInGeomDataBuffer = false
+    gridMaterial.getParameter('StippleValue').setValue(0)
+    gridMaterial.getParameter('OccludedStippleValue').setValue(1)
 
     const grid = new Grid(gridSize, gridSize, resolution, resolution, true)
-    this.addChild(new GeomItem('GridItem', grid, gridMaterial), false)
+    const gridItem = new GeomItem('GridItem', grid, gridMaterial)
+    this.addChild(gridItem, false)
     const axisLine = new Lines()
     axisLine.setNumVertices(2)
     axisLine.setNumSegments(1)
@@ -42,13 +46,16 @@ class GridTreeItem extends TreeItem {
     const gridXAxisMaterial = new Material('gridXAxisMaterial', 'LinesShader')
     gridXAxisMaterial.getParameter('BaseColor').setValue(new Color(gridColor.luminance(), 0, 0))
     gridXAxisMaterial.getParameter('Overlay').setValue(0.0)
-    gridXAxisMaterial.visibleInGeomDataBuffer = false
-    this.addChild(new GeomItem('xAxisLine', axisLine, gridXAxisMaterial), false)
+    gridXAxisMaterial.getParameter('StippleValue').setValue(0)
+    gridXAxisMaterial.getParameter('OccludedStippleValue').setValue(1)
+    const gridXAxis = new GeomItem('xAxisLine', axisLine, gridXAxisMaterial)
+    this.addChild(gridXAxis, false)
 
     const gridYAxisMaterial = new Material('gridYAxisMaterial', 'LinesShader')
     gridYAxisMaterial.getParameter('BaseColor').setValue(new Color(0, gridColor.luminance(), 0))
     gridYAxisMaterial.getParameter('Overlay').setValue(0.0)
-    gridYAxisMaterial.visibleInGeomDataBuffer = false
+    gridYAxisMaterial.getParameter('StippleValue').setValue(0)
+    gridYAxisMaterial.getParameter('OccludedStippleValue').setValue(1)
     const zAxisLineItem = new GeomItem('yAxisLine', axisLine, gridYAxisMaterial)
 
     const geomOffset = new Xfo()

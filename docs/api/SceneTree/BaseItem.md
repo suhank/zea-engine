@@ -8,7 +8,7 @@ Base class for Items in the scene. It can be parameterized and can emit events.
 * **selectedChanged:** Emitted `selected` status changes, mostly in `setSelected` method.
 
 
-**Extends**: <code>[ParameterOwner](api/SceneTree\ParameterOwner.md)</code>  
+**Extends**: <code>[ParameterOwner](api/SceneTree/ParameterOwner.md)</code>  
 
 * [BaseItem ⇐ <code>ParameterOwner</code>](#BaseItem)
     * [new BaseItem(name)](#new-BaseItem)
@@ -231,7 +231,7 @@ Sets state of current Item(Including parameters) using a binary reader object.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| reader | <code>[BinReader](api/SceneTree\BinReader.md)</code> | The reader value. |
+| reader | <code>[BinReader](api/SceneTree/BinReader.md)</code> | The reader value. |
 | context | <code>object</code> | The context value. |
 
 <a name="BaseItem+clone"></a>

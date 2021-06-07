@@ -15,14 +15,6 @@ class GLMesh extends GLGeom {
     super(gl, mesh)
   }
 
-  /**
-   * The getNumTriangles method.
-   * @return {any} - The return value.
-   */
-  getNumTriangles() {
-    return this.__numTriangles
-  }
-
   // /////////////////////////////////////
   // Buffers
 
@@ -243,16 +235,18 @@ class GLMesh extends GLGeom {
 
   /**
    * Draw an item to screen.
+   * @param {object} renderstate - The object tracking the current state of the renderer
    */
-  draw() {
+  draw(renderstate) {
     this.__gl.drawElements(this.__gl.TRIANGLES, this.__numTriIndices, this.__indexDataType, 0)
   }
 
   /**
    * The drawInstanced method.
-   * @param {any} instanceCount - The instanceCount value.
+   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {number} instanceCount - The instanceCount value.
    */
-  drawInstanced(instanceCount) {
+  drawInstanced(renderstate, instanceCount) {
     this.__gl.drawElementsInstanced(this.__gl.TRIANGLES, this.__numTriIndices, this.__indexDataType, 0, instanceCount)
   }
 

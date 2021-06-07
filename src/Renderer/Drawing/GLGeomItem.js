@@ -10,6 +10,11 @@ const GLGeomItemChangeType = {
   HIGHLIGHT_CHANGED: 3,
 }
 
+const GLGeomItemFlags = {
+  GEOMITEM_FLAG_CUTAWAY: 1, // 1<<0;
+  GEOMITEM_INVISIBLE_IN_GEOMDATA: 2, // 1<<0;
+}
+
 /** This class is responsible for managing a GeomItem within the renderer.
  * @private
  * @extends EventEmitter
@@ -47,9 +52,12 @@ class GLGeomItem extends EventEmitter {
       const materialId = 0
       let flags = 0
       if (this.geomItem.isCutawayEnabled()) {
-        const GEOMITEM_FLAG_CUTAWAY = 1 // 1<<0;
-        flags |= GEOMITEM_FLAG_CUTAWAY
+        flags |= GLGeomItemFlags.GEOMITEM_FLAG_CUTAWAY
       }
+      if (geomItem.visibleInGeomDataBuffer == false) {
+        flags |= GLGeomItemFlags.GEOMITEM_INVISIBLE_IN_GEOMDATA
+      }
+
       this.geomData = [flags, materialId, 0, 0]
 
       this.geomMatrixDirty = true
@@ -148,7 +156,7 @@ class GLGeomItem extends EventEmitter {
       }
     }
 
-    const unif = unifs.transformIndex
+    const unif = unifs.drawItemId
     if (unif) {
       gl.uniform1i(unif.location, this.drawItemId)
     }
@@ -170,4 +178,4 @@ class GLGeomItem extends EventEmitter {
   }
 }
 
-export { GLGeomItemChangeType, GLGeomItem }
+export { GLGeomItemChangeType, GLGeomItemFlags, GLGeomItem }

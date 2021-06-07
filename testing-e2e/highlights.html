@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html class="h-full">
   <head>
     <title>Zea Engine</title>
     <link rel="stylesheet" href="styles/tailwind.min.css" />
   </head>
-  <body class="bg-blue-100">
-    <div class="h-screen">
+  <body class="bg-blue-100 h-full">
+    <div class="h-full">
       <canvas class="absolute" id="app"></canvas>
     </div>
 
@@ -34,13 +34,14 @@
       const domElement = document.getElementById('app')
       const renderer = new GLRenderer(domElement, { hideSplash: true, antialias: false })
       renderer.setScene(scene)
+      renderer.getViewport().outlineThickness = 1.5
 
       scene.setupGrid(60.0, 6)
       const tree1 = new TreeItem('tree1')
       scene.getRoot().addChild(tree1)
 
       const selectionSet1 = new SelectionSet('selectionSet1')
-      selectionSet1.getParameter('HighlightColor').setValue(new Color('lemonchiffon'))
+      selectionSet1.getParameter('HighlightColor').setValue(new Color('#FF0000'))
       scene.getRoot().addChild(selectionSet1)
 
       const selectionSet2 = new SelectionSet('selectionSet2')
@@ -77,9 +78,7 @@
       renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(25, 25, 13), new Vec3(10, 0, 0))
       renderer.frameAll()
 
-      renderer.once('resized', () => {
-        window.postMessage('done-loading')
-      })
+      window.postMessage('done-loading')
 
       // {{{ Messages handler.
       const handleMessage = (event) => {
