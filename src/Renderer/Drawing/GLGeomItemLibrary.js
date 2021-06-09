@@ -84,7 +84,10 @@ class GLGeomItemLibrary extends EventEmitter {
             type: 'ViewportChanged',
             frustumHalfAngleX,
             frustumHalfAngleY,
+            solidAngleLimit: renderer.solidAngleLimit,
           })
+        } else {
+          viewportChanged()
         }
       })
     })
