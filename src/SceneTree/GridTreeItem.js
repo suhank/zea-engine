@@ -24,6 +24,7 @@ class GridTreeItem extends TreeItem {
   constructor(gridSize = 5, resolution = 50, gridColor = new Color('#DCDCDC')) {
     super('GridTree')
 
+    this.disableBoundingBox = true
     this.setSelectable(false)
 
     const gridMaterial = new Material('gridMaterial', 'LinesShader')
