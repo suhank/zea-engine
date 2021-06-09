@@ -286,7 +286,7 @@ void main(void) {
     const paramDescs = super.getParamDeclarations()
     paramDescs.push({ name: 'BaseColor', defaultValue: new Color(1.0, 1.0, 0.5) })
     paramDescs.push({ name: 'Opacity', defaultValue: 0.7 })
-    paramDescs.push({ name: 'Overlay', defaultValue: 0.00001 }) // Provide a slight overlay so lines draw over meshes.
+    paramDescs.push({ name: 'Overlay', defaultValue: 0.000001 }) // Provide a slight overlay so lines draw over meshes.
     paramDescs.push({ name: 'StippleScale', defaultValue: 0.01 })
 
     // Note: a value of 0.0, means no stippling (solid). A value of 1.0 means invisible.
