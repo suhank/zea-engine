@@ -843,6 +843,7 @@ class GLViewport extends GLBaseViewport {
     renderstate.cameraMatrix = this.__cameraMat
     renderstate.depthRange = this.depthRange
     renderstate.viewport = this
+    renderstate.boundRendertarget = null
     renderstate.viewports = [
       {
         region: this.region,

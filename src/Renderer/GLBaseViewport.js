@@ -196,7 +196,7 @@ class GLBaseViewport extends ParameterOwner {
       this.depthTexture.resize(width, height)
 
       this.fb = []
-
+      /*
       if (gl.renderbufferStorageMultisample) {
         this.fb[FRAMEBUFFER.MSAA_RENDERBUFFER] = gl.createFramebuffer()
         gl.bindFramebuffer(gl.FRAMEBUFFER, this.fb[FRAMEBUFFER.MSAA_RENDERBUFFER])
@@ -226,7 +226,9 @@ class GLBaseViewport extends ParameterOwner {
         gl.bindFramebuffer(gl.FRAMEBUFFER, this.fb[FRAMEBUFFER.DEPTHBUFFER])
         gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.TEXTURE_2D, this.depthTexture.glTex, 0)
         gl.bindFramebuffer(gl.FRAMEBUFFER, null)
-      } else {
+      } else 
+      */
+      {
         this.EXT_frag_depth = gl.getExtension('EXT_frag_depth')
 
         this.fb[FRAMEBUFFER.MSAA_RENDERBUFFER] = gl.createFramebuffer()
@@ -269,7 +271,7 @@ class GLBaseViewport extends ParameterOwner {
   draw(renderstate = {}) {
     const gl = this.__renderer.gl
 
-    const prevRendertarget = renderstate.boundRendertarget
+    this.defaultRendertarget = renderstate.boundRendertarget
 
     if (this.fb) {
       // this.offscreenBufferFbo.bindForWriting(renderstate)
@@ -305,48 +307,8 @@ class GLBaseViewport extends ParameterOwner {
 
     this.drawHighlights(renderstate)
 
-    gl.bindFramebuffer(gl.FRAMEBUFFER, prevRendertarget)
-    renderstate.boundRendertarget = prevRendertarget
-
-    gl.viewport(0, 0, this.__width, this.__height)
-
-    // //////////////////////////////////
-    // Post processing.
-    if (gl.renderbufferStorageMultisample) {
-      // "blit" the scene into the color buffer
-      gl.bindFramebuffer(gl.READ_FRAMEBUFFER, this.fb[FRAMEBUFFER.MSAA_RENDERBUFFER])
-      gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, this.fb[FRAMEBUFFER.COLORBUFFER])
-      gl.clearBufferfv(gl.COLOR, 0, [0.0, 0.0, 0.0, 0.0])
-
-      gl.blitFramebuffer(
-        0,
-        0,
-        this.__width,
-        this.__height,
-        0,
-        0,
-        this.__width,
-        this.__height,
-        gl.COLOR_BUFFER_BIT,
-        gl.LINEAR
-      )
-
-      gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, renderstate.boundRendertarget)
-      gl.bindFramebuffer(gl.READ_FRAMEBUFFER, this.fb[FRAMEBUFFER.COLORBUFFER])
-      gl.clearBufferfv(gl.COLOR, 0, [0.0, 0.0, 0.0, 0.0])
-      gl.blitFramebuffer(
-        0,
-        0,
-        this.__width,
-        this.__height,
-        0,
-        0,
-        this.__width,
-        this.__height,
-        gl.COLOR_BUFFER_BIT,
-        gl.LINEAR
-      )
-    }
+    gl.bindFramebuffer(gl.FRAMEBUFFER, this.defaultRendertarget)
+    renderstate.boundRendertarget = this.defaultRendertarget
   }
 
   /**
@@ -360,70 +322,28 @@ class GLBaseViewport extends ParameterOwner {
     }
     const gl = this.__renderer.gl
 
-    if (gl.renderbufferStorageMultisample) {
-      gl.bindFramebuffer(gl.READ_FRAMEBUFFER, this.fb[FRAMEBUFFER.MSAA_RENDERBUFFER])
-      gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, this.fb[FRAMEBUFFER.DEPTHBUFFER])
-      gl.clearBufferfv(gl.COLOR, 0, [1, 1, 1, 1])
+    // Rebind the default RenderBuffer.
+    gl.bindFramebuffer(gl.FRAMEBUFFER, this.defaultRendertarget)
+    renderstate.boundRendertarget = this.defaultRendertarget
 
-      gl.blitFramebuffer(
-        0,
-        0,
-        this.__width,
-        this.__height,
-        0,
-        0,
-        this.__width,
-        this.__height,
-        gl.DEPTH_BUFFER_BIT,
-        gl.NEAREST
-      )
-      // Rebind the MSAA RenderBuffer.
-      gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, this.fb[FRAMEBUFFER.MSAA_RENDERBUFFER])
-      renderstate.boundRendertarget = this.fb[FRAMEBUFFER.MSAA_RENDERBUFFER]
-      gl.viewport(0, 0, this.__width, this.__height)
-    } else {
-      // Rebind the default RenderBuffer.
-      gl.bindFramebuffer(gl.FRAMEBUFFER, null)
-      renderstate.boundRendertarget = null
+    gl.clearColor(...this.__backgroundColor.asArray())
+    // Note: in Chrome's macOS the alpha channel causes strange
+    // compositing issues. Here where we disable the alpha channel
+    // in the color mask which addresses the issues on MacOS.
+    // To see the artifacts, pass 'true' as the 4th parameter, and
+    // open a simple testing scene containing a grid. Moving the
+    // camera causes a ghosting effect to be left behind.
+    gl.colorMask(true, true, true, false)
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 
-      gl.clearColor(...this.__backgroundColor.asArray())
-      // Note: in Chrome's macOS the alpha channel causes strange
-      // compositing issues. Here where we disable the alpha channel
-      // in the color mask which addresses the issues on MacOS.
-      // To see the artifacts, pass 'true' as the 4th parameter, and
-      // open a simple testing scene containing a grid. Moving the
-      // camera causes a ghosting effect to be left behind.
-      gl.colorMask(true, true, true, false)
-      gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
-
-      gl.viewport(0, 0, this.__width, this.__height)
-
-      // gl.disable(gl.DEPTH_TEST)
-      // gl.depthMask(false)
-      // gl.screenQuad.bindShader(renderstate)
-      // this.offscreenBuffer.bindToUniform(renderstate, renderstate.unifs.image)
-      // gl.screenQuad.draw(renderstate)
-    }
-
-    // ////////////////////////////////////
-    //
-    if (gl.renderbufferStorageMultisample) {
-      gl.enable(gl.BLEND)
-      gl.blendEquation(gl.FUNC_ADD)
-      gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA) // For add
-      gl.disable(gl.DEPTH_TEST)
-      gl.depthMask(false)
-    }
+    gl.viewport(0, 0, this.__width, this.__height)
 
     this.renderer.silhouetteShader.bind(renderstate)
 
     const unifs = renderstate.unifs
 
     this.depthTexture.bindToUniform(renderstate, unifs.depthTexture)
-
-    if (!gl.renderbufferStorageMultisample) {
-      this.offscreenBuffer.bindToUniform(renderstate, unifs.colorTexture)
-    }
+    this.offscreenBuffer.bindToUniform(renderstate, unifs.colorTexture)
 
     gl.uniform2f(unifs.screenSize.location, this.__width, this.__height)
     gl.uniform1f(unifs.outlineThickness.location, this.renderer.outlineThickness)
@@ -434,11 +354,6 @@ class GLBaseViewport extends ParameterOwner {
     gl.uniform2f(unifs.depthRange.location, renderstate.depthRange[0], renderstate.depthRange[1])
 
     this.quad.bindAndDraw(renderstate)
-
-    if (gl.renderbufferStorageMultisample) {
-      gl.enable(gl.DEPTH_TEST)
-      gl.depthMask(true)
-    }
   }
 
   /**

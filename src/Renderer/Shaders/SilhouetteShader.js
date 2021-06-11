@@ -92,10 +92,10 @@ void main(void) {
     float sobelDepth = SobelSampleDepth(v_texCoord, offset);
     sobelDepth = clamp(pow(sobelDepth * outlineDepthMultiplier, outlineDepthBias), 0.0, 1.0);
 
-#ifdef ENABLE_ES3
-    fragColor = vec4(outlineColor.rgb, sobelDepth);
-#else
     fragColor = vec4(mix(texture2D(colorTexture, v_texCoord).rgb, outlineColor.rgb, sobelDepth), 1.0);
+#ifdef ENABLE_ES3
+    gl_FragDepth = texture2D(depthTexture, v_texCoord).r;
+#else
     gl_FragDepthEXT = texture2D(depthTexture, v_texCoord).r;
 #endif
 
