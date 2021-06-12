@@ -1,7 +1,11 @@
 import { PassType } from './GLPass.js'
 import { GLOpaqueGeomsPass } from './GLOpaqueGeomsPass.js'
 import { GLRenderer } from '../GLRenderer.js'
+import { GLTexture2D } from '../GLTexture2D.js'
 import { Lines, LinesProxy, Points, PointsProxy } from '../../SceneTree/index'
+import { FattenLinesShader } from '../Shaders/FattenLinesShader.js'
+import { Plane } from '../../SceneTree/index'
+import { GLMesh } from '../Drawing/GLMesh.js'
 
 /** Class representing a GL opaque geoms pass.
  * @extends GLOpaqueGeomsPass
@@ -23,16 +27,16 @@ class GLLinesPass extends GLOpaqueGeomsPass {
   init(renderer, passIndex) {
     super.init(renderer, passIndex)
 
-    this.__geomDataBuffer = new GLTexture2D(this.__gl, {
+    const gl = this.__gl
+    this.linesGeomDataBuffer = new GLTexture2D(gl, {
       type: renderer.__floatGeomBuffer ? 'FLOAT' : 'UNSIGNED_BYTE',
       format: 'RGBA',
       filter: 'NEAREST',
       width: 1,
       height: 2,
     })
-    this.__geomDataBufferFbo = new GLFbo(gl, this.__geomDataBuffer, true)
-    this.__geomDataBufferFbo.setClearColor([0, 0, 0, 0])
     this.fattenLinesShader = new FattenLinesShader(gl)
+    this.quad = new GLMesh(gl, new Plane(1, 1))
   }
   /**
    * The filterGeomItem method.
@@ -43,6 +47,42 @@ class GLLinesPass extends GLOpaqueGeomsPass {
     const geom = geomItem.getParameter('Geometry').getValue()
     if (geom instanceof Lines || geom instanceof LinesProxy || geom instanceof Points || geom instanceof PointsProxy) {
       return true
+    }
+  }
+
+  /**
+   * The __checkFramebuffer method.
+   * @private
+   */
+  __checkFramebuffer(renderstate) {
+    const gl = this.__gl
+
+    let check
+    if (gl.name == 'webgl2') check = gl.checkFramebufferStatus(gl.DRAW_FRAMEBUFFER)
+    else check = gl.checkFramebufferStatus(gl.FRAMEBUFFER)
+    if (check !== gl.FRAMEBUFFER_COMPLETE) {
+      gl.bindTexture(gl.TEXTURE_2D, null)
+      if (gl.name == 'webgl2') gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, null)
+      else gl.bindFramebuffer(gl.FRAMEBUFFER, null)
+      console.warn('Error creating Fbo width:', renderstate.width, ', height:', renderstate.height)
+      switch (check) {
+        case gl.FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
+          throw new Error(
+            'The attachment types are mismatched or not all framebuffer attachment points are framebuffer attachment complete.'
+          )
+        case gl.FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:
+          throw new Error('There is no attachment.')
+        case gl.FRAMEBUFFER_INCOMPLETE_DIMENSIONS:
+          throw new Error('Height and width of the attachment are not the same.')
+        case gl.FRAMEBUFFER_INCOMPLETE_DIMENSIONS:
+          throw new Error(
+            'The format of the attachment is not supported or if depth and stencil attachments are not the same renderbuffer.'
+          )
+        case 36061: // gl.GL_FRAMEBUFFER_UNSUPPORTED:
+          throw new Error('The framebuffer is unsupported')
+        default:
+          throw new Error('Incomplete Frambuffer')
+      }
     }
   }
 
@@ -69,40 +109,55 @@ class GLLinesPass extends GLOpaqueGeomsPass {
    * @param {object} renderstate - The object tracking the current state of the renderer
    */
   drawGeomData(renderstate) {
-    if (this.__geomDataBufferFbo) {
-      const { region } = renderstate
-      if (this.__geomDataBuffer.width != region[2] || this.__geomDataBuffer.height != region[3]) {
-        this.__geomDataBuffer.resize(region[2], region[3])
+    const gl = this.__gl
+    if (this.linesGeomDataBuffer) {
+      const geomDataFbo = renderstate.geomDataFbo
+      const width = geomDataFbo.width
+      const height = geomDataFbo.height
+
+      if (this.linesGeomDataBuffer.width != width || this.linesGeomDataBuffer.height != height) {
+        if (this.fbo) {
+          gl.deleteFramebuffer(this.fbo)
+          this.fbo = null
+        }
+
+        this.linesGeomDataBuffer.resize(width, height)
 
         this.fbo = gl.createFramebuffer()
-        gl.bindFramebuffer(gl.FRAMEBUFFER, this.fbo)
-        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.TEXTURE_2D, this.depthTexture.glTex, 0)
-        gl.bindFramebuffer(gl.FRAMEBUFFER, null)
+
+        const colorTex = this.linesGeomDataBuffer.glTex
+        const depthBuffer = geomDataFbo.__depthTexture // Share the existing depth buffer.
+        if (gl.name == 'webgl2') {
+          gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, this.fbo)
+          gl.framebufferTexture2D(gl.DRAW_FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, colorTex, 0)
+          gl.framebufferTexture2D(gl.DRAW_FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.TEXTURE_2D, depthBuffer, 0)
+        } else {
+          gl.bindFramebuffer(gl.FRAMEBUFFER, this.fbo)
+          gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, colorTex, 0)
+          gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.TEXTURE_2D, depthBuffer, 0)
+        }
+        this.__checkFramebuffer(renderstate)
+      } else {
+        if (gl.name == 'webgl2') gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, this.fbo)
+        else gl.bindFramebuffer(gl.FRAMEBUFFER, this.fbo)
       }
-      this.__geomDataBufferFbo.bindForWriting(renderstate)
+
+      gl.colorMask(true, true, true, true)
+      gl.clearColor(0, 0, 0, 0)
+      gl.clear(gl.COLOR_BUFFER_BIT)
     }
     super.drawGeomData(renderstate)
 
-    if (this.__geomDataBufferFbo) {
-      this.__geomDataBufferFbo.unbindForWriting(renderstate)
+    if (this.linesGeomDataBuffer) {
+      renderstate.geomDataFbo.bindForWriting(renderstate)
 
       this.fattenLinesShader.bind(renderstate)
 
-      const unifs = renderstate.unifs
+      const { colorTexture, screenSize } = renderstate.unifs
+      this.linesGeomDataBuffer.bindToUniform(renderstate, colorTexture)
 
-      this.depthTexture.bindToUniform(renderstate, unifs.depthTexture)
-
-      if (!gl.renderbufferStorageMultisample) {
-        this.offscreenBuffer.bindToUniform(renderstate, unifs.colorTexture)
-      }
-
-      gl.uniform2f(unifs.screenSize.location, this.__width, this.__height)
-      gl.uniform1f(unifs.outlineThickness.location, this.renderer.outlineThickness)
-      gl.uniform4f(unifs.outlineColor.location, ...this.renderer.outlineColor.asArray())
-      gl.uniform1f(unifs.outlineDepthMultiplier.location, renderstate.outlineDepthMultiplier)
-      gl.uniform1f(unifs.outlineDepthBias.location, this.renderer.outlineDepthBias)
-
-      gl.uniform2f(unifs.depthRange.location, renderstate.depthRange[0], renderstate.depthRange[1])
+      const geomDataFbo = renderstate.geomDataFbo
+      gl.uniform2f(screenSize.location, geomDataFbo.width, geomDataFbo.height)
 
       this.quad.bindAndDraw(renderstate)
     }

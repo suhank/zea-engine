@@ -273,7 +273,7 @@ class GLFbo {
           gl.UNSIGNED_INT,
           null
         )
-      } else
+      } else {
         gl.texImage2D(
           gl.TEXTURE_2D,
           0,
@@ -285,6 +285,7 @@ class GLFbo {
           gl.UNSIGNED_INT,
           null
         )
+      }
     }
     this.__checkFramebuffer()
   }

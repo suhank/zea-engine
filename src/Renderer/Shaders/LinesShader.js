@@ -82,7 +82,7 @@ void main(void) {
 #endif
 
 #if defined(DRAW_GEOMDATA)
-  gl_Position.z = mix(gl_Position.z, -gl_Position.w, mix(overlay, 1.0, 0.05));
+  gl_Position.z = mix(gl_Position.z, -gl_Position.w, mix(overlay, 1.0, 0.0001));
 #else
   gl_Position.z = mix(gl_Position.z, -gl_Position.w, overlay);
 #endif
