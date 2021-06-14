@@ -1,3 +1,4 @@
+import { SystemDesc } from '../SystemDesc.js'
 import { Color } from '../Math/index'
 import { Plane, ParameterOwner, BaseImage, NumberParameter, BaseTool } from '../SceneTree/index'
 import { GLRenderTarget } from './GLRenderTarget.js'
@@ -39,26 +40,26 @@ class GLBaseViewport extends ParameterOwner {
 
     // //////////////////////////////////
     // Setup Offscreen Render Targets
-
-    this.offscreenBuffer = new GLTexture2D(gl, {
-      type: 'UNSIGNED_BYTE',
-      format: 'RGBA',
-      filter: 'LINEAR',
-      width: 4,
-      height: 4,
-    })
-    this.depthTexture = new GLTexture2D(gl, {
-      type: gl.UNSIGNED_SHORT,
-      format: gl.DEPTH_COMPONENT,
-      internalFormat: gl.name == 'webgl2' ? gl.DEPTH_COMPONENT16 : gl.DEPTH_COMPONENT,
-      filter: gl.NEAREST,
-      wrap: gl.CLAMP_TO_EDGE,
-      width: 4,
-      height: 4,
-    })
-
-    // this.offscreenBufferFbo = new GLFbo(gl, this.offscreenBuffer, true)
-    // this.offscreenBufferFbo.setClearColor(this.__backgroundColor.asArray())
+    if (!SystemDesc.isIOSDevice) {
+      this.offscreenBuffer = new GLTexture2D(gl, {
+        type: 'UNSIGNED_BYTE',
+        format: 'RGBA',
+        filter: 'LINEAR',
+        width: 4,
+        height: 4,
+      })
+      this.depthTexture = new GLTexture2D(gl, {
+        type: gl.UNSIGNED_SHORT,
+        format: gl.DEPTH_COMPONENT,
+        internalFormat: gl.name == 'webgl2' ? gl.DEPTH_COMPONENT16 : gl.DEPTH_COMPONENT,
+        filter: gl.NEAREST,
+        wrap: gl.CLAMP_TO_EDGE,
+        width: 4,
+        height: 4,
+      })
+      // this.offscreenBufferFbo = new GLFbo(gl, this.offscreenBuffer, true)
+      // this.offscreenBufferFbo.setClearColor(this.__backgroundColor.asArray())
+    }
 
     this.highlightedGeomsBuffer = new GLTexture2D(gl, {
       type: 'UNSIGNED_BYTE',
@@ -180,8 +181,7 @@ class GLBaseViewport extends ParameterOwner {
    * @param {number} height - The height  used by this viewport.
    */
   resizeRenderTargets(width, height) {
-    // if (this.offscreenBuffer)
-    {
+    if (this.offscreenBuffer) {
       const gl = this.__renderer.gl
 
       if (this.fb) {
@@ -264,6 +264,7 @@ class GLBaseViewport extends ParameterOwner {
 
   /**
    * The draw method.
+   * @param {object} renderstate - The object tracking the current state of the renderer
    */
   draw(renderstate = {}) {
     const gl = this.__renderer.gl
@@ -354,6 +355,9 @@ class GLBaseViewport extends ParameterOwner {
    * @private
    */
   drawSilhouettes(renderstate) {
+    if (SystemDesc.isIOSDevice) {
+      return
+    }
     const gl = this.__renderer.gl
 
     if (gl.renderbufferStorageMultisample) {

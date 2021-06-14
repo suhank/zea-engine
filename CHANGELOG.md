@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.9.1](https://github.com/ZeaInc/zea-engine/compare/v3.9.0...v3.9.1) (2021-05-19)
+
+
+### Bug Fixes
+
+* Disabled drawing silhouettes on iOS as it relied on an extension unsupported on iOS. ([100c0f2](https://github.com/ZeaInc/zea-engine/commit/100c0f236c80e87c311d48e11c16a0d24e220bf5))
+
 ## [3.9.0](https://github.com/ZeaInc/zea-engine/compare/v3.8.0...v3.9.0) (2021-05-18)
 
 ### Features

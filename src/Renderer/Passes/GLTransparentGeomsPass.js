@@ -78,9 +78,9 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
     const material = materialParam.getValue()
     const shaderName = material.getShaderName()
 
-    if (this.__gl.multiDrawElementsInstanced) {
+    if (!material.isTextured()) {
       const shader = Registry.getBlueprint(shaderName)
-      if (!material.isTextured() && shader.supportsInstancing() && shader.getPackedMaterialData) {
+      if (shader.supportsInstancing() && shader.getPackedMaterialData) {
         let glShaderGeomSets = this.__glShaderGeomSets[shaderName]
         if (!glShaderGeomSets) {
           const shaders = this.constructShaders(shaderName)
@@ -328,7 +328,12 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
       this.sortItems(viewPos)
 
       this.prevSortCameraPos = viewPos
-      if (renderstate.viewport) {
+      if (renderstate.vrviewport) {
+        // Adapt the sort tolerance to the focal distance.
+        // In a tiny scene, we want to sort more frequently.
+        this.sortCameraMovementDistance = renderstate.viewScale * 0.2
+      }
+      else if (renderstate.viewport) {
         // Adapt the sort tolerance to the focal distance.
         // In a tiny scene, we want to sort more frequently.
         const camera = renderstate.viewport.getCamera()

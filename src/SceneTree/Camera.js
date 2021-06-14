@@ -1,9 +1,13 @@
 /* eslint-disable no-unused-vars */
-import { Vec3, Box3, Xfo, Mat4 } from '../Math/index'
+import { Vec3, Box3, Xfo, Mat4, Vec2, Color } from '../Math/index'
+import { Lines } from '../SceneTree/Geometry/Lines'
+import { Material } from './Material.js'
+import { GeomItem } from './GeomItem.js'
 import { TreeItem } from './TreeItem.js'
 import { NumberParameter } from './Parameters/index'
 import { MathFunctions, SInt16 } from '../Utilities/MathFunctions'
 import { Registry } from '../Registry'
+import { Points } from './Geometry'
 
 /**
  * The Camera class is used to provide a point of view of the scene. The viewport is assigned
@@ -79,6 +83,7 @@ class Camera extends TreeItem {
     this.nearDistFactor = 0.01
     // The factor by which the far plane is adjusted based on the focal distance.
     this.farDistFactor = 10000
+    this.frameOnBoundingSphere = false
   }
 
   // ////////////////////////////////////////////
@@ -122,7 +127,8 @@ class Camera extends TreeItem {
 
   /**
    * Getter for the camera field of view (FOV).
-   * The FOV is how much of the scene the camera can see at once.
+   * The FOV defines the vertical angle of the view frustum
+   * The horizontal angle is calculated from the FOV and the Viewport aspect ratio.
    *
    * @return {number} - Returns the FOV value.
    */
@@ -132,18 +138,43 @@ class Camera extends TreeItem {
 
   /**
    * Setter for the camera field of view (FOV).
-   * The FOV is how much of the scene the camera can see at once.
+   * The FOV defines the vertical angle of the view frustum
+   * The horizontal angle is calculated from the FOV and the Viewport aspect ratio.
+   * > Note: The Fov can also be set by calling #setLensFocalLength
    *
-   * @param {number} value - The FOV value.
+   * @param {number} value - The new FOV value.
    */
   setFov(value) {
     this.__fovParam.setValue(value)
   }
 
   /**
-   * Setter for the camera lens focal length. Updates `fov` parameter value after a small math procedure.
+   * Getter for the camera frustum height value.
+   * The frustum hight value is used to compute the orthographic projection of the scene.
    *
-   * **Focal Length accepted values:** 10mm, 11mm, 12mm, 14mm, 15mm, 17mm, 18mm,
+   * @return {number} - Returns the Frustum Height value.
+   */
+  getFrustumHeight() {
+    return this.viewHeight
+  }
+
+  /**
+   * Setter for the camera frustum height in orthographic mode.
+   * > Note: in perspective mode, the frustum height is calculated based on the FOV value and focal distance.
+   *
+   * @param {number} value - The new Frustum Height value.
+   */
+  setFrustumHeight(value) {
+    this.viewHeight = value
+    this.emit('projectionParamChanged', event)
+  }
+
+  /**
+   * Setter for the camera lens focal length. This method calculates a new vertical Field of View value
+   * from the provided camera lense focal length.
+   * > Note: conversion from Lense Focal length to Fov is based on the table found here: https://www.nikonians.org/reviews/fov-tables
+   *
+   * **Focal Length accepted values as string values:** 10mm, 11mm, 12mm, 14mm, 15mm, 17mm, 18mm,
    * 19mm, 20mm, 24mm, 28mm, 30mm, 35mm, 45mm, 50mm, 55mm, 60mm, 70mm, 75mm, 80mm,
    * 85mm, 90mm, 100mm, 105mm, 120mm, 125mm, 135mm, 150mm, 170mm, 180mm, 210mm, 300mm,
    * 400mm, 500mm, 600mm, 800mm
@@ -239,6 +270,11 @@ class Camera extends TreeItem {
    */
   setIsOrthographic(value, duration = 0) {
     if (this.__orthoIntervalId) clearInterval(this.__orthoIntervalId)
+    if (value > 0.5) {
+      const fov = this.__fovParam.getValue()
+      const focalDistance = this.__focalDistanceParam.getValue()
+      this.viewHeight = Math.sin(fov * 0.5) * focalDistance * 2
+    }
     if (duration == 0) {
       this.__isOrthographicParam.setValue(value)
     } else {
@@ -301,35 +337,172 @@ class Camera extends TreeItem {
    * @param {array} treeItems - The treeItems value.
    */
   frameView(viewport, treeItems) {
-    const boundingBox = new Box3()
-    for (const treeItem of treeItems) {
-      boundingBox.addBox3(treeItem.getParameter('BoundingBox').getValue())
-    }
-
-    if (!boundingBox.isValid()) {
-      console.warn('Bounding box not valid.')
-      return
-    }
     const focalDistance = this.__focalDistanceParam.getValue()
     const fovY = this.__fovParam.getValue()
 
     const globalXfo = this.getParameter('GlobalXfo').getValue().clone()
-    const cameraViewVec = globalXfo.ori.getZaxis()
-    const targetOffset = cameraViewVec.scale(-focalDistance)
-    const currTarget = globalXfo.tr.add(targetOffset)
-    const newTarget = boundingBox.center()
+    const aspectRatio = viewport.getWidth() / viewport.getHeight()
+    const fovX = Math.atan(Math.tan(fovY * 0.5) * aspectRatio) * 2.0
 
-    const pan = newTarget.subtract(currTarget)
-    globalXfo.tr.addInPlace(pan)
+    let newFocalDistance = focalDistance
 
-    // Compute the distance the camera should be to fit the entire bounding sphere
-    const newFocalDistance = boundingBox.size() / Math.tan(fovY)
+    if (this.frameOnBoundingSphere) {
+      const box3 = new Box3()
+      for (const treeItem of treeItems) {
+        box3.addBox3(treeItem.getParameter('BoundingBox').getValue())
+      }
 
-    // TODO: If this doesn't work in all cases, we may need to implement this more thorough solution described here:
-    // https://stackoverflow.com/a/66113254/5546902
+      if (!box3.isValid()) {
+        console.warn('Bounding box not valid.')
+        return
+      }
+      const cameraViewVec = globalXfo.ori.getZaxis()
+      const targetOffset = cameraViewVec.scale(-focalDistance)
+      const currTarget = globalXfo.tr.add(targetOffset)
+      const newTarget = box3.center()
 
-    const dollyDist = newFocalDistance - focalDistance
-    globalXfo.tr.addInPlace(cameraViewVec.scale(dollyDist))
+      const pan = newTarget.subtract(currTarget)
+      globalXfo.tr.addInPlace(pan)
+
+      // Compute the distance the camera should be to fit the entire bounding sphere
+      newFocalDistance = box3.size() / Math.tan(fovY)
+
+      // const dollyDist = newFocalDistance - focalDistance
+      // globalXfo.tr.addInPlace(cameraViewVec.scale(dollyDist))
+    } else {
+      // Based on the solution described here:
+      // https://stackoverflow.com/a/66113254/5546902
+
+      const boundaryPoints = []
+      if (false) {
+        const box3 = new Box3()
+        for (const treeItem of treeItems) {
+          box3.addBox3(treeItem.getParameter('BoundingBox').getValue())
+        }
+
+        if (!box3.isValid()) {
+          console.warn('Bounding box not valid.')
+          return
+        }
+        boundaryPoints.push(box3.p0)
+        boundaryPoints.push(new Vec3(box3.p0.x, box3.p0.y, box3.p1.z))
+        boundaryPoints.push(new Vec3(box3.p0.x, box3.p1.y, box3.p0.z))
+        boundaryPoints.push(new Vec3(box3.p1.x, box3.p0.y, box3.p0.z))
+        boundaryPoints.push(new Vec3(box3.p0.x, box3.p1.y, box3.p1.z))
+        boundaryPoints.push(new Vec3(box3.p1.x, box3.p0.y, box3.p1.z))
+        boundaryPoints.push(new Vec3(box3.p1.x, box3.p1.y, box3.p0.z))
+        boundaryPoints.push(box3.p1)
+      } else {
+        treeItems.forEach((treeItem) => {
+          treeItem.traverse((childItem) => {
+            if (!(childItem instanceof TreeItem)) return false
+            if (childItem.disableBoundingBox) return false
+            if (childItem instanceof GeomItem) {
+              const geom = childItem.getParameter('Geometry').getValue()
+              if (geom) {
+                const mat4 = childItem.getGeomMat4()
+                const box3 = geom.getBoundingBox()
+                boundaryPoints.push(mat4.transformVec3(box3.p0))
+                boundaryPoints.push(mat4.transformVec3(new Vec3(box3.p0.x, box3.p0.y, box3.p1.z)))
+                boundaryPoints.push(mat4.transformVec3(new Vec3(box3.p0.x, box3.p1.y, box3.p0.z)))
+                boundaryPoints.push(mat4.transformVec3(new Vec3(box3.p1.x, box3.p0.y, box3.p0.z)))
+                boundaryPoints.push(mat4.transformVec3(new Vec3(box3.p0.x, box3.p1.y, box3.p1.z)))
+                boundaryPoints.push(mat4.transformVec3(new Vec3(box3.p1.x, box3.p0.y, box3.p1.z)))
+                boundaryPoints.push(mat4.transformVec3(new Vec3(box3.p1.x, box3.p1.y, box3.p0.z)))
+                boundaryPoints.push(mat4.transformVec3(box3.p1))
+              }
+            } else if (childItem.getNumChildren() == 0) {
+              const box3 = childItem.getParameter('BoundingBox').getValue()
+              if (!box3.isValid()) return
+              boundaryPoints.push(box3.p0)
+              boundaryPoints.push(new Vec3(box3.p0.x, box3.p0.y, box3.p1.z))
+              boundaryPoints.push(new Vec3(box3.p0.x, box3.p1.y, box3.p0.z))
+              boundaryPoints.push(new Vec3(box3.p1.x, box3.p0.y, box3.p0.z))
+              boundaryPoints.push(new Vec3(box3.p0.x, box3.p1.y, box3.p1.z))
+              boundaryPoints.push(new Vec3(box3.p1.x, box3.p0.y, box3.p1.z))
+              boundaryPoints.push(new Vec3(box3.p1.x, box3.p1.y, box3.p0.z))
+              boundaryPoints.push(box3.p1)
+              return false
+            }
+          })
+        })
+      }
+      if (boundaryPoints.length == 0) return
+
+      const angleX = this.isOrthographic() ? 0 : fovX / 2
+      const angleY = this.isOrthographic() ? 0 : fovY / 2
+      const frustumPlaneNormals = {}
+      frustumPlaneNormals.XPos = new Vec3(Math.cos(angleX), 0, Math.sin(angleX))
+      frustumPlaneNormals.XNeg = new Vec3(-Math.cos(angleX), 0, Math.sin(angleX))
+      frustumPlaneNormals.YPos = new Vec3(0, Math.cos(angleY), Math.sin(angleY))
+      frustumPlaneNormals.YNeg = new Vec3(0, -Math.cos(angleY), Math.sin(angleY))
+      frustumPlaneNormals.ZPos = new Vec3(0, 0, 1)
+      frustumPlaneNormals.ZNeg = new Vec3(0, 0, -1)
+      const frustumPlaneNormalsWs = {}
+      const frustumPlaneOffsets = {}
+      // eslint-disable-next-line guard-for-in
+      for (const key in frustumPlaneNormals) {
+        frustumPlaneNormalsWs[key] = globalXfo.ori.rotateVec3(frustumPlaneNormals[key])
+        frustumPlaneOffsets[key] = Number.NEGATIVE_INFINITY
+      }
+      const centroid = new Vec3()
+      boundaryPoints.forEach((point) => {
+        const delta = point.subtract(globalXfo.tr)
+        // eslint-disable-next-line guard-for-in
+        for (const key in frustumPlaneNormals) {
+          const planeOffset = delta.dot(frustumPlaneNormalsWs[key])
+          if (planeOffset > frustumPlaneOffsets[key]) frustumPlaneOffsets[key] = planeOffset
+        }
+        centroid.addInPlace(point)
+      })
+      centroid.scaleInPlace(1 / boundaryPoints.length)
+
+      if (this.isOrthographic()) {
+        const pan = new Vec3(
+          (-frustumPlaneOffsets.XNeg + frustumPlaneOffsets.XPos) * 0.5,
+          (-frustumPlaneOffsets.YNeg + frustumPlaneOffsets.YPos) * 0.5,
+          (-frustumPlaneOffsets.ZNeg + frustumPlaneOffsets.ZPos) * 0.5
+        )
+        const zrange = frustumPlaneOffsets.ZNeg + frustumPlaneOffsets.ZPos
+        pan.z += zrange * 2
+        globalXfo.tr.addInPlace(globalXfo.ori.rotateVec3(pan))
+        newFocalDistance = zrange * 2
+
+        const viewWidth = frustumPlaneOffsets.XPos + frustumPlaneOffsets.XNeg
+        const viewHeight = frustumPlaneOffsets.YPos + frustumPlaneOffsets.YNeg
+        this.viewHeight = Math.max(viewHeight, viewWidth / aspectRatio)
+        const frameBorder = 0.1
+        this.viewHeight += this.viewHeight * frameBorder
+      } else {
+        const angleX = fovX / 2
+        const angleY = fovY / 2
+        // Now we solve the problem in 2D. For each camera plane (XZ and YZ), we calculate the lines in 2d that
+        // represent the frustum planes for the top and bottom, adjusted so they touch the boundary points. We
+        // then find the intersection of these 2 2d lines to calculate the adjustment in that axis for the camera.
+        // We need to dolly back to fix the plane which needs the most adjustment.
+        // Calculate a 2d point on the line for each plane, and a direction.
+        const xP0 = new Vec2(Math.cos(angleX) * frustumPlaneOffsets.XPos, Math.sin(angleX) * frustumPlaneOffsets.XPos)
+        const xP1 = xP0.add(new Vec2(Math.sin(angleX), -Math.cos(angleX)))
+        const xP2 = new Vec2(-Math.cos(angleX) * frustumPlaneOffsets.XNeg, Math.sin(angleX) * frustumPlaneOffsets.XNeg)
+        const xP3 = xP2.add(new Vec2(-Math.sin(angleX), -Math.cos(angleX)))
+        const xP = Vec2.intersectionOfLines(xP0, xP1, xP2, xP3)
+
+        const yP0 = new Vec2(Math.cos(angleY) * frustumPlaneOffsets.YPos, Math.sin(angleY) * frustumPlaneOffsets.YPos)
+        const yP1 = yP0.add(new Vec2(Math.sin(angleY), -Math.cos(angleY)))
+        const yP2 = new Vec2(-Math.cos(angleY) * frustumPlaneOffsets.YNeg, Math.sin(angleY) * frustumPlaneOffsets.YNeg)
+        const yP3 = yP2.add(new Vec2(-Math.sin(angleY), -Math.cos(angleY)))
+        const yP = Vec2.intersectionOfLines(yP0, yP1, yP2, yP3)
+
+        const dolly = Math.max(xP.y, yP.y)
+        const pan = new Vec3(xP.x, yP.x, dolly)
+        globalXfo.tr.addInPlace(globalXfo.ori.rotateVec3(pan))
+
+        newFocalDistance = centroid.distanceTo(globalXfo.tr)
+
+        const frameBorder = 0.1
+        globalXfo.tr.addInPlace(globalXfo.ori.rotateVec3(new Vec3(0, 0, newFocalDistance * frameBorder)))
+      }
+    }
 
     this.setFocalDistance(newFocalDistance)
     this.getParameter('GlobalXfo').setValue(globalXfo)
@@ -350,8 +523,7 @@ class Camera extends TreeItem {
 
     const orthoMat = new Mat4()
     if (isOrthographic > 0.0) {
-      const focalDistance = this.__focalDistanceParam.getValue()
-      const halfHeight = Math.sin(fov * 0.5) * focalDistance
+      const halfHeight = this.viewHeight * 0.5
       const bottom = -halfHeight
       const top = halfHeight
       const left = halfHeight * -aspect
