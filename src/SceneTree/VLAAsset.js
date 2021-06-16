@@ -1,6 +1,6 @@
 import { SystemDesc } from '../SystemDesc.js'
 import { FilePathParameter } from './Parameters/FilePathParameter'
-import { AssetItem } from './AssetItem.js'
+import { AssetItem, AssetLoadContext } from './AssetItem.js'
 import { BinReader } from './BinReader.js'
 import { resourceLoader } from './resourceLoader.js'
 import { Registry } from '../Registry'
@@ -81,19 +81,19 @@ class VLAAsset extends AssetItem {
   /**
    * Loads all the geometries and metadata from the asset file.
    * @param {string} url - The URL of the asset to load
+   * @param {AssetLoadContext} context - The load context object that provides additional data such as the units of the scene we are loading into.
    * @return {Promise} - Returns a promise that resolves once the initial load is complete
    */
-  load(url) {
+  load(url, context = new AssetLoadContext()) {
     return new Promise((resolve, reject) => {
       const folder = url.lastIndexOf('/') > -1 ? url.substring(0, url.lastIndexOf('/')) + '/' : ''
       const filename = url.lastIndexOf('/') > -1 ? url.substring(url.lastIndexOf('/') + 1) : ''
       const stem = filename.substring(0, filename.lastIndexOf('.'))
       let numGeomsFiles = 0
 
-      const context = {
-        assetItem: this,
-        versions: {},
-      }
+      context.assetItem = this
+      context.url = url
+      context.folder = folder
 
       // preload in case we don't have embedded geoms.
       // completed by geomLibrary.on('loaded' ..
@@ -146,7 +146,7 @@ class VLAAsset extends AssetItem {
    * The fromJSON method decodes a json object for this type.
    *
    * @param {object} j - The json object this item must decode.
-   * @param {object} context - The context value.
+   * @param {AssetLoadContext} context - The load context object that provides additional data such as the units of the scene we are loading into.
    * @param {function} onDone - The onDone value.
    */
   fromJSON(j, context, onDone) {
