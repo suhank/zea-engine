@@ -10,7 +10,8 @@ All notable changes to this project will be documented in this file. See [standa
 * Lines picking is now easier and more stable using a new line picking filter ([1471dc8](https://github.com/ZeaInc/zea-engine/commit/1471dc83e0928caa35c07931116fe03a32e3079e))
 * proxy geometries loaded from zcad files now expose methods to determine the number of triangles and line segments. ([1437c72](https://github.com/ZeaInc/zea-engine/commit/1437c725eaa110cd9fc9cd66e4ca400db7b026a1))
 * when loading assets, a new context class enables specifying the system units, paths to external resources, and other information. ([1b8aa4d](https://github.com/ZeaInc/zea-engine/commit/1b8aa4d599ea1d71e90ffc6770c98d723e931550))
-
+* Implemented Vec2.intersectionOfLines and tests.
+* TreeItem now supports a toggle to disable the bounding box calculation for its self and subtree.
 
 ### Bug Fixes
 
@@ -21,6 +22,8 @@ All notable changes to this project will be documented in this file. See [standa
 * Lines are now easier to select by making the click zone more consistently fatter. ([09892b5](https://github.com/ZeaInc/zea-engine/commit/09892b5f6e14d18c24bddae7f2e6fe757a08d91d))
 * Selection highlight in the engine conflicted with selection highlight in the UX library. Removing the engine implementation. ([b42f9d9](https://github.com/ZeaInc/zea-engine/commit/b42f9d9fb25c5d6558d74cd8e95719a2eb7a7c2f))
 * To address a performance disparity on platforms where multi-draw is not supported, we now run an almost identical code path that emulates multi-draw. ([ef1222e](https://github.com/ZeaInc/zea-engine/commit/ef1222e3183e409179cad993c870a7adc3a4c3e3))
+* CameraManipulator now modifies the Frustum hight value instead of moving the camera when dollying an orthographic camera.([3ac71e8](https://github.com/ZeaInc/zea-engine/pull/429/commits/3ac71e8deecec6d06ce2ad5dcfc1f564f179ef5f))
+* Camera now frames more precisely on the scene geometry bounding boxes.
 
 ### [3.9.1](https://github.com/ZeaInc/zea-engine/compare/v3.9.0...v3.9.1) (2021-05-19)
 
