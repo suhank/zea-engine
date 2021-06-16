@@ -5,7 +5,7 @@ A class representing a 3x3 matrix.
 This matrix class is based on GLM, and is column major.
 
 
-**Extends**: <code>[AttrValue](api/Math/AttrValue.md)</code>  
+**Extends**: <code>[AttrValue](api/Math\AttrValue.md)</code>  
 
 * [Mat3 ⇐ <code>AttrValue</code>](#Mat3)
     * [new Mat3(m00, m01, m02, m10, m11, m12, m20, m21, m22)](#new-Mat3)
@@ -237,7 +237,7 @@ Setter for row 2, column 2.
 Getter for the `x` axis.
 
 
-**Returns**: <code>[Vec3](api/Math/Vec3.md)</code> - - Returns the `x` axis as a Vec3.  
+**Returns**: <code>[Vec3](api/Math\Vec3.md)</code> - - Returns the `x` axis as a Vec3.  
 <a name="Mat3+xAxis"></a>
 
 ### xAxis
@@ -247,7 +247,7 @@ Setter for the `x` axis.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| vec3 | <code>[Vec3](api/Math/Vec3.md)</code> | The vec3 value. |
+| vec3 | <code>[Vec3](api/Math\Vec3.md)</code> | The vec3 value. |
 
 <a name="Mat3+yAxis"></a>
 
@@ -265,7 +265,7 @@ Setter for the `y` axis.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| vec3 | <code>[Vec3](api/Math/Vec3.md)</code> | The vec3 value. |
+| vec3 | <code>[Vec3](api/Math\Vec3.md)</code> | The vec3 value. |
 
 <a name="Mat3+zAxis"></a>
 
@@ -283,7 +283,7 @@ Setter for the `z` axis.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| vec3 | <code>[Vec3](api/Math/Vec3.md)</code> | The vec3 value. |
+| vec3 | <code>[Vec3](api/Math\Vec3.md)</code> | The vec3 value. |
 
 <a name="Mat3+set"></a>
 
@@ -333,8 +333,8 @@ Note: the resulting matrix +Z axis is aligned with the provided direction value.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| dir | <code>[Vec3](api/Math/Vec3.md)</code> | The dir value. |
-| up | <code>[Vec3](api/Math/Vec3.md)</code> | The up value. |
+| dir | <code>[Vec3](api/Math\Vec3.md)</code> | The dir value. |
+| up | <code>[Vec3](api/Math\Vec3.md)</code> | The up value. |
 
 <a name="Mat3+inverse"></a>
 
@@ -370,11 +370,11 @@ Transposes (exchanges columns with rows) this matrix modifying its values.
 Transforms the Vec3 with a Mat3.
 
 
-**Returns**: <code>[Vec3](api/Math/Vec3.md)</code> - - Return the result as a new Vec3.  
+**Returns**: <code>[Vec3](api/Math\Vec3.md)</code> - - Return the result as a new Vec3.  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| vec3 | <code>[Vec3](api/Math/Vec3.md)</code> | The vec3 value. |
+| vec3 | <code>[Vec3](api/Math\Vec3.md)</code> | The vec3 value. |
 
 <a name="Mat3+clone"></a>
 
@@ -392,7 +392,7 @@ Loads the state of the value from a binary reader.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| reader | <code>[BinReader](api/SceneTree/BinReader.md)</code> | The reader value. |
+| reader | <code>[BinReader](api/SceneTree\BinReader.md)</code> | The reader value. |
 
 <a name="Mat3+toJSON"></a>
 

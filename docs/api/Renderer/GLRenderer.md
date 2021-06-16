@@ -4,7 +4,7 @@
 Class representing a GL renderer.
 
 
-**Extends**: <code>[GLBaseRenderer](api/Renderer/GLBaseRenderer.md)</code>  
+**Extends**: <code>[GLBaseRenderer](api/Renderer\GLBaseRenderer.md)</code>  
 
 * [GLRenderer ⇐ <code>GLBaseRenderer</code>](#GLRenderer)
     * [new GLRenderer($canvas, options)](#new-GLRenderer)
@@ -93,7 +93,7 @@ The setScene method.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| scene | <code>[Scene](api/SceneTree/Scene.md)</code> | The scene value. |
+| scene | <code>[Scene](api/SceneTree\Scene.md)</code> | The scene value. |
 
 <a name="GLRenderer+addViewport"></a>
 
@@ -101,7 +101,7 @@ The setScene method.
 The addViewport method.
 
 
-**Returns**: <code>[GLViewport](api/Renderer/GLViewport.md)</code> - - The return value.  
+**Returns**: <code>[GLViewport](api/Renderer\GLViewport.md)</code> - - The return value.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -118,7 +118,7 @@ This method takes a Ray value, and uses that base the ray cast operation.
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| ray | <code>[Ray](api/Math/Ray.md)</code> |  | The ray to use in the raycast. |
+| ray | <code>[Ray](api/Math\Ray.md)</code> |  | The ray to use in the raycast. |
 | dist | <code>number</code> |  | The maximum distance to cast the ray |
 | area | <code>number</code> | <code>0.01</code> | The area to use for the ray |
 | mask | <code>number</code> |  | The mask to filter our certain pass types. Can be PassType.OPAQUE | PassType.TRANSPARENT | PassType.OVERLAY |
@@ -134,7 +134,7 @@ This method takes an Xfo value, and uses that base the ray cast operation.
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| xfo | <code>[Xfo](api/Math/Xfo.md)</code> |  | The xfo to use in the raycast. |
+| xfo | <code>[Xfo](api/Math\Xfo.md)</code> |  | The xfo to use in the raycast. |
 | dist | <code>number</code> |  | The maximum distance to cast the ray |
 | area | <code>number</code> | <code>0.01</code> | The area to use for the ray |
 | mask | <code>number</code> |  | The mask to filter our certain pass types. Can be PassType.OPAQUE | PassType.TRANSPARENT | PassType.OVERLAY |

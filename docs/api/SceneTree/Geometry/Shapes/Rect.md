@@ -8,11 +8,11 @@ const rect = new Rect(1.5, 2.0)
 ```
 
 **Parameters**
-* **X([`NumberParameter`](api/SceneTree/Parameters/NumberParameter.md)):** Length of the rectangle along the `X` axis.
-* **Y([`NumberParameter`](api/SceneTree/Parameters/NumberParameter.md)):** Length of the rectangle along the `Y` axis.
+* **X([`NumberParameter`](api/SceneTree\Parameters\NumberParameter.md)):** Length of the rectangle along the `X` axis.
+* **Y([`NumberParameter`](api/SceneTree\Parameters\NumberParameter.md)):** Length of the rectangle along the `Y` axis.
 
 
-**Extends**: <code>[ProceduralLines](api/SceneTree/Geometry/Shapes/ProceduralLines.md)</code>  
+**Extends**: <code>[ProceduralLines](api/SceneTree\Geometry\Shapes\ProceduralLines.md)</code>  
 <a name="new_Rect_new"></a>
 
 ### new Rect
@@ -26,4 +26,4 @@ Create a rect.
 
 
 
-### [Class Tests](api/SceneTree/Geometry/Shapes/Rect.test)
+### [Class Tests](api/SceneTree\Geometry\Shapes/Rect.test)

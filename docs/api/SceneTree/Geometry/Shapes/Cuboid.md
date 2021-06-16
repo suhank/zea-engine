@@ -4,13 +4,13 @@
 A class for generating a cuboid geometry.
 
 **Parameters**
-* **x([`NumberParameter`](api/SceneTree/Parameters/NumberParameter.md)):** Length of the line cuboid along the `X` axis
-* **y([`NumberParameter`](api/SceneTree/Parameters/NumberParameter.md)):** Length of the line cuboid along the `Y` axis
-* **z([`NumberParameter`](api/SceneTree/Parameters/NumberParameter.md)):** Length of the line cuboid along the `Z` axis
-* **BaseZAtZero([`NumberParameter`](api/SceneTree/Parameters/NumberParameter.md)):** Property to start or not `Z` axis from position `0.
+* **x([`NumberParameter`](api/SceneTree\Parameters\NumberParameter.md)):** Length of the line cuboid along the `X` axis
+* **y([`NumberParameter`](api/SceneTree\Parameters\NumberParameter.md)):** Length of the line cuboid along the `Y` axis
+* **z([`NumberParameter`](api/SceneTree\Parameters\NumberParameter.md)):** Length of the line cuboid along the `Z` axis
+* **BaseZAtZero([`NumberParameter`](api/SceneTree\Parameters\NumberParameter.md)):** Property to start or not `Z` axis from position `0.
 
 
-**Extends**: <code>[ProceduralMesh](api/SceneTree/Geometry/Shapes/ProceduralMesh.md)</code>  
+**Extends**: <code>[ProceduralMesh](api/SceneTree\Geometry\Shapes\ProceduralMesh.md)</code>  
 
 * [Cuboid ⇐ <code>ProceduralMesh</code>](#Cuboid)
     * [new Cuboid(x, y, z, baseZAtZero)](#new-Cuboid)
@@ -57,4 +57,4 @@ Setter for the base size of the cuboid.
 
 
 
-### [Class Tests](api/SceneTree/Geometry/Shapes/Cuboid.test)
+### [Class Tests](api/SceneTree\Geometry\Shapes/Cuboid.test)

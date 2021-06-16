@@ -95,6 +95,7 @@
     * [EnvMapShader](api/Renderer/Shaders/EnvMapShader)
     * [EnvProjectionShader](api/Renderer/Shaders/EnvProjectionShader)
     * [FatPointsShader](api/Renderer/Shaders/FatPointsShader)
+    * [FattenLinesShader](api/Renderer/Shaders/FattenLinesShader)
     * [FlatSurfaceShader](api/Renderer/Shaders/FlatSurfaceShader)
     * [HighlightsShader](api/Renderer/Shaders/HighlightsShader)
     * [LinesShader](api/Renderer/Shaders/LinesShader)
