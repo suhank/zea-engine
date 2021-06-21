@@ -36,7 +36,7 @@ class VRViewManipulator extends BaseTool {
   addIconToController(event) {
     const { controller } = event
     const geomItem = new GeomItem('HandleToolTip', this.vrControllerToolTip, this.vrControllerToolTipMat)
-    geomItem.visibleInGeomDataBuffer = false
+    geomItem.setSelectable(false)
     controller.getTipItem().removeAllChildren()
     controller.getTipItem().addChild(geomItem, false)
   }
