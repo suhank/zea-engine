@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { Vec2 } from '../../../Math/Vec2'
-import { Vec3 } from '../../../Math/Vec3-temp'
+import { Vec3 } from '../../../Math/Vec3'
 import { BooleanParameter, NumberParameter } from '../../Parameters/index'
 import { Registry } from '../../../Registry'
 import { ProceduralMesh } from './ProceduralMesh'

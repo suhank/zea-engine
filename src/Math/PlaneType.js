@@ -2,7 +2,7 @@
 import { StringFunctions } from '../Utilities/StringFunctions'
 import { AttrValue } from './AttrValue.js'
 import { Registry } from '../Registry'
-import { Vec3 } from './Vec3-temp.js'
+import { Vec3 } from './Vec3'
 
 /**
  * Class representing a plane.

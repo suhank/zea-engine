@@ -1,7 +1,7 @@
 /* eslint-disable prefer-rest-params */
 /* eslint-disable guard-for-in */
 /* eslint-disable no-unused-vars */
-import { Vec3 } from '../../Math/Vec3-temp'
+import { Vec3 } from '../../Math/Vec3'
 import { BaseGeom } from './BaseGeom.js'
 import { Attribute } from './Attribute.js'
 

@@ -1,6 +1,6 @@
 export * from './AttrValue.js'
 export * from './Vec2'
-export * from './Vec3-temp.js'
+export * from './Vec3'
 export * from './Vec4.js'
 export * from './RGBA.js'
 export * from './Color.js'

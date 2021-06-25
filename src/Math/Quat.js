@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { AttrValue } from './AttrValue.js'
-import { Vec3 } from './Vec3-temp.js'
+import { Vec3 } from './Vec3'
 import { Mat3 } from './Mat3.js'
 import { Mat4 } from './Mat4.js'
 import { EulerAngles } from './EulerAngles.js'

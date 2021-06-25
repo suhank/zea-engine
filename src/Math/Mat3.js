@@ -1,6 +1,6 @@
 /* eslint-disable new-cap */
 import { AttrValue } from './AttrValue.js'
-import { Vec3 } from './Vec3-temp.js'
+import { Vec3 } from './Vec3'
 import { Registry } from '../Registry'
 
 /**
