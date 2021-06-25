@@ -1,4 +1,4 @@
-import { Vec2 } from '../../Math/Vec2'
+import { Vec2 } from '../../Math/Vec2-renamed'
 import { Vec2Parameter } from './Vec2Parameter'
 import { BinReader } from '../../SceneTree/BinReader'
 

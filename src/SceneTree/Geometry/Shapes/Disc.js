@@ -1,4 +1,4 @@
-import { Vec2 } from '../../../Math/Vec2'
+import { Vec2 } from '../../../Math/Vec2-renamed'
 import { Vec3 } from '../../../Math/Vec3'
 import { NumberParameter } from '../../Parameters/index'
 import { Registry } from '../../../Registry'

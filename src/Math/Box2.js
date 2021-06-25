@@ -1,6 +1,6 @@
 import { StringFunctions } from '../Utilities/StringFunctions'
 
-import { Vec2 } from './Vec2'
+import { Vec2 } from './Vec2-renamed'
 import { Registry } from '../Registry'
 
 /**

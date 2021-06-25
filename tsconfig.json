@@ -11,7 +11,7 @@
     },
       "include": [
       //"./src/**/*"
-      "./src/math/*",
+      "./src/math/ts-test/*",
       "@types/**/*.d.ts",
     ],  
     "exclude": [
