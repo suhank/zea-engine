@@ -40,12 +40,15 @@
     "semver": "^7.3.2"
   },
   "devDependencies": {
-    "@babel/preset-env": "^7.11.5",
+    "@babel/core": "^7.14.6",
+    "@babel/preset-env": "^7.14.7",
     "@percy/cypress": "^2.3.1",
     "@rollup/plugin-commonjs": "^15.1.0",
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^9.0.0",
+    "@types/jest": "^26.0.23",
     "@zeainc/jsdocs2md": "^0.0.7",
+    "babel-jest": "^27.0.5",
     "cypress": "^5.1.0",
     "docsify-cli": "^4.4.1",
     "es-dev-server": "^1.57.8",
@@ -56,7 +59,7 @@
     "http-server": "^0.12.3",
     "husky": "^4.3.0",
     "ink-docstrap": "^1.3.2",
-    "jest": "^26.1.0",
+    "jest": "27.0.3",
     "jest-coverage-badges": "^1.1.2",
     "npm-run-all": "^4.1.5",
     "plop": "^2.7.4",
@@ -66,7 +69,9 @@
     "rollup-plugin-svg": "^2.0.0",
     "rollup-plugin-terser": "^7.0.2",
     "rollup-plugin-web-worker-loader": "^1.3.0",
-    "standard-version": "^9.0.0"
+    "standard-version": "^9.0.0",
+    "ts-jest": "^27.0.3",
+    "typescript": "^4.3.4"
   },
   "husky": {
     "hooks": {
