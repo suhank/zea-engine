@@ -1,4 +1,4 @@
-import { RGBA } from './RGBA-temp'
+import { RGBA } from './RGBA'
 
 describe('RGBA', () => {
   it('creates RGBA from buffer', () => {

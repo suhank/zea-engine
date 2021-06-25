@@ -1,35 +1,39 @@
 /* eslint-disable require-jsdoc */
-import { AttrValue } from './AttrValue.js'
+//import { AttrValue } from './AttrValue.js'
 import { Registry } from '../Registry'
 
 /**
  * Class representing the red, green, blue and alpha channel of a color as 8bit values.
  *
- * @extends AttrValue
+ * @extends AttrValue //TODO: must remove references
  */
-class RGBA extends AttrValue {
+class RGBA  { //extends AttrValue
   /**
    * Create a RGBA.
-   * @param {number | string | Uint8Array} r - The red channel of a color.
+   * @param {number | string | Float32Array | ArrayBuffer} r - The red channel of a color.
    * @param {number} g - The green channel of a color.
    * @param {number} b - The blue channel of a color.
    * @param {number} a - The alpha (transparency) channel of a color.
    */
-  constructor(r = 0, g = 0, b = 0, a = 255) {
-    super()
+  __data;
+  constructor(r: number | string | Float32Array | ArrayBuffer = 0, g = 0, b = 0, a = 255) {
 
     if (r instanceof Uint8Array) {
       this.__data = r
+    } else if (r instanceof ArrayBuffer) {
+      const buffer = r
+      const byteOffset = g
+      this.__data = new Uint8Array(buffer, byteOffset, 4)
     } else {
       this.__data = new Uint8Array(4)
       if (typeof r == 'string') {
-        if (r.startsWith('#')) {
+        if ((r as any).startsWith('#')) {
           this.setFromHex(r)
         } else {
           this.setFromCSSColorName(r)
         }
       } else {
-        this.__data[0] = r
+        this.__data[0] = r as number
         this.__data[1] = g
         this.__data[2] = b
         this.__data[3] = a
@@ -40,9 +44,9 @@ class RGBA extends AttrValue {
   /**
    * Getter for red channel.
    *
-   * @return {RGBA} - Returns the red channel.
+   * @return {number} - Returns the red channel.
    */
-  get r() {
+  get r(): number {
     return this.__data[0]
   }
 
@@ -51,16 +55,16 @@ class RGBA extends AttrValue {
    *
    * @param {number} val - The val param.
    */
-  set r(val) {
+  set r(val: number) {
     this.__data[0] = val
   }
 
   /**
    * Getter for green channel.
    *
-   * @return {RGBA} - Returns the green channel.
+   * @return {number} - Returns the green channel.
    */
-  get g() {
+  get g(): number {
     return this.__data[1]
   }
 
@@ -69,16 +73,16 @@ class RGBA extends AttrValue {
    *
    * @param {number} val - The val param.
    */
-  set g(val) {
+  set g(val: number) {
     this.__data[1] = val
   }
 
   /**
    * Getter for blue channel.
    *
-   * @return {RGBA} - Returns the blue channel.
+   * @return {number} - Returns the blue channel.
    */
-  get b() {
+  get b(): number {
     return this.__data[2]
   }
 
@@ -87,16 +91,16 @@ class RGBA extends AttrValue {
    *
    * @param {number} val - The val param.
    */
-  set b(val) {
+  set b(val: number) {
     this.__data[2] = val
   }
 
   /**
    * Getter for alpha channel.
    *
-   * @return {RGBA} - Returns the alpha channel.
+   * @return {number} - Returns the alpha channel.
    */
-  get a() {
+  get a(): number {
     return this.__data[3]
   }
   /**
@@ -104,7 +108,7 @@ class RGBA extends AttrValue {
    *
    * @param {number} val - The val param.
    */
-  set a(val) {
+  set a(val: number) {
     this.__data[3] = val
   }
 
@@ -116,7 +120,7 @@ class RGBA extends AttrValue {
    * @param {number} b  - The blue channel.
    * @param {number} a  - The alpha channel.
    */
-  set(r, g, b, a = 255) {
+  set(r: number, g: number, b: number, a = 255): void {
     this.r = r
     this.g = g
     this.b = b
@@ -128,7 +132,7 @@ class RGBA extends AttrValue {
    *
    * @param {RGBA} other - The other RGBA to set from.
    */
-  setFromOther(other) {
+  setFromOther(other: RGBA): void {
     this.r = other.r
     this.g = other.g
     this.b = other.b
@@ -140,7 +144,7 @@ class RGBA extends AttrValue {
    *
    * @param {array} values - The array of values.
    */
-  setFromArray(values) {
+  setFromArray(values: number[]): void  {
     this.r = values[0]
     this.g = values[1]
     this.b = values[2]
@@ -151,10 +155,10 @@ class RGBA extends AttrValue {
    * Setter from a hexadecimal value.
    * E.g. #ff0000
    *
-   * @param {number} hex - The hex value.
+   * @param {string} hex - The hex value.
    */
-  setFromHex(hex) {
-    function hexToRgb(hex) {
+  setFromHex(hex: string): void {
+    function hexToRgb(hex: string) {
       const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
       return result
         ? {
@@ -178,9 +182,9 @@ class RGBA extends AttrValue {
    *
    * @param {string} name - The CSS color name.
    */
-  setFromCSSColorName(name) {
-    const colourNameToHex = (colour) => {
-      const colors = {
+  setFromCSSColorName(name: string): void {
+    const colourNameToHex = (colour: string): string | undefined => {
+      const colors: Record<string, string> = {
         aliceblue: '#f0f8ff',
         antiquewhite: '#faebd7',
         aqua: '#00ffff',
@@ -324,14 +328,13 @@ class RGBA extends AttrValue {
         yellowgreen: '#9acd32',
       }
 
-      if (typeof colors[colour.toLowerCase()] != 'undefined') return colors[colour.toLowerCase()]
-
-      return false
+      return colors[colour.toLowerCase()]
     }
     if (name.startsWith('#')) {
       this.setFromHex(name)
     } else {
-      this.setFromHex(colourNameToHex(name))
+      const hexColor = colourNameToHex(name)
+      if (hexColor) this.setFromHex(hexColor)
     }
   }
 
@@ -340,8 +343,8 @@ class RGBA extends AttrValue {
    *
    * @return {string} - Returns the hex value.
    */
-  toHex() {
-    function componentToHex(int) {
+  toHex(): string {
+    function componentToHex(int: number) {
       const hex = int.toString(16)
       return hex.length == 1 ? '0' + hex : hex
     }
@@ -349,25 +352,12 @@ class RGBA extends AttrValue {
   }
 
   /**
-   * @deprecated
-   * Returns true if this RGBA color contains the same values as the other.
-   * Deprecated. Use #isEqual instead.
+   * Returns true if this RGBA color is exactly the same as other.
    *
    * @param {RGBA} other - The other RGBA to compare with.
    * @return {boolean} - Returns true or false.
    */
-  equal(other) {
-    console.warn('Deprecated. Use #isEqual instead.')
-    return this.isEqual(other)
-  }
-
-  /**
-   * Checks if this Color  contains the same values as the other.
-   *
-   * @param {Color} other - The other Color to compare with.
-   * @return {boolean} - Returns `true` if the values are the same, otherwise, `false`.
-   */
-  isEqual(other) {
+  equal(other: RGBA): boolean {
     return this.r == other.r && this.g == other.g && this.b == other.b && this.a == other.a
   }
 
@@ -377,7 +367,7 @@ class RGBA extends AttrValue {
    * @param {RGBA} other -  The other RGBA to compare with.
    * @return {boolean} - Returns true or false.
    */
-  notEquals(other) {
+  notEquals(other: RGBA): boolean {
     return this.r != other.r && this.g != other.g && this.b != other.b && this.a != other.a
   }
 
@@ -388,7 +378,7 @@ class RGBA extends AttrValue {
    * @param {number} precision - The precision to which the values must match.
    * @return {boolean} - Returns true or false.
    */
-  approxEqual(other, precision = Number.EPSILON) {
+  approxEqual(other: RGBA, precision: number = Number.EPSILON): boolean {
     return (
       Math.abs(this.r - other.r) < precision &&
       Math.abs(this.g - other.g) < precision &&
@@ -403,7 +393,7 @@ class RGBA extends AttrValue {
    * @param {RGBA} other - The other RGBA to add.
    * @return {RGBA} - Returns a new RGBA.
    */
-  add(other) {
+  add(other: RGBA): RGBA {
     return new RGBA(this.r + other.r, this.g + other.g, this.b + other.b, this.a + other.a)
   }
 
@@ -413,7 +403,7 @@ class RGBA extends AttrValue {
    * @param {RGBA} other - The other RGBA to subtract.
    * @return {RGBA} - Returns a new RGBA.
    */
-  subtract(other) {
+  subtract(other: RGBA): RGBA {
     return new RGBA(this.r - other.r, this.g - other.g, this.b - other.b, this.a - other.a)
   }
 
@@ -423,7 +413,7 @@ class RGBA extends AttrValue {
    * @param {number} scalar - The scalar value.
    * @return {RGBA} - Returns a new RGBA.
    */
-  scale(scalar) {
+  scale(scalar: number): RGBA {
     return new RGBA(this.r * scalar, this.g * scalar, this.b * scalar, this.a * scalar)
   }
 
@@ -432,7 +422,7 @@ class RGBA extends AttrValue {
    *
    * @param {number} scalar - The scalar value.
    */
-  scaleInPlace(scalar) {
+  scaleInPlace(scalar: number): void {
     this.r *= scalar
     this.g *= scalar
     this.b *= scalar
@@ -444,16 +434,16 @@ class RGBA extends AttrValue {
    *
    * @param {number} gamma - The gamma value.
    */
-  applyGamma(gamma) {
+  applyGamma(gamma: number): void {
     this.set(Math.pow(this.r, gamma), Math.pow(this.g, gamma), Math.pow(this.b, gamma), this.a)
   }
 
   /**
    * Converts to linear color space and returns a new color.
    * @param {number} gamma - The gamma value.
-   * @return {Color} - Returns a new RGBA.
+   * @return {RGBA} - Returns a new RGBA.
    */
-  toLinear(gamma = 2.2) {
+  toLinear(gamma = 2.2): RGBA {
     return new RGBA(Math.pow(this.r, gamma), Math.pow(this.g, gamma), Math.pow(this.b, gamma), this.a)
   }
 
@@ -463,7 +453,7 @@ class RGBA extends AttrValue {
    * @param {number} gamma - The gamma value.
    * @return {RGBA} - Returns a new RGBA.
    */
-  toGamma(gamma = 2.2) {
+  toGamma(gamma = 2.2): RGBA {
     return new RGBA(Math.pow(this.r, 1.0 / gamma), Math.pow(this.g, 1.0 / gamma), Math.pow(this.b, 1.0 / gamma), this.a)
   }
 
@@ -472,7 +462,7 @@ class RGBA extends AttrValue {
    *
    * @return {number} - The return value.
    */
-  luminance() {
+  luminance(): number {
     return 0.2126 * this.r + 0.7152 * this.g + 0.0722 * this.b
   }
 
@@ -483,7 +473,7 @@ class RGBA extends AttrValue {
    * @param {number} t - Interpolation amount between the two inputs.
    * @return {RGBA} - Returns a new RGBA.
    */
-  lerp(other, t) {
+  lerp(other: RGBA, t: number): RGBA {
     const ar = this.r
     const ag = this.g
     const ab = this.b
@@ -498,20 +488,20 @@ class RGBA extends AttrValue {
    * @param {boolean} randomAlpha - Determines whether the alpha channel is random.
    * @return {RGBA} - Returns a new random RGBA.
    */
-  static random(gammaOffset = 0.0, randomAlpha = false) {
+  static random(gammaOffset = 0.0, randomAlpha = false): RGBA {
     if (gammaOffset > 0.0) {
       return new RGBA(
         gammaOffset + Math.random() * (1.0 - gammaOffset),
         gammaOffset + Math.random() * (1.0 - gammaOffset),
         gammaOffset + Math.random() * (1.0 - gammaOffset),
-        randomAlpha ? gammaOffset + Math.random() * (1.0 - gammaOffset) : 1.0
+        randomAlpha ? gammaOffset + Math.random() * (1.0 - gammaOffset) : 1.0,
       )
     } else if (gammaOffset < 0.0) {
       return new RGBA(
         Math.random() * (1.0 + gammaOffset),
         Math.random() * (1.0 + gammaOffset),
         Math.random() * (1.0 + gammaOffset),
-        randomAlpha ? Math.random() * (1.0 + gammaOffset) : 1.0
+        randomAlpha ? Math.random() * (1.0 + gammaOffset) : 1.0,
       )
     } else {
       return new RGBA(Math.random(), Math.random(), Math.random(), randomAlpha ? Math.random() : 1.0)
@@ -523,7 +513,7 @@ class RGBA extends AttrValue {
    *
    * @return {RGBA} - Returns a new RGBA.
    */
-  clone() {
+  clone(): RGBA {
     return new RGBA(this.__data[0], this.__data[1], this.__data[2], this.__data[3])
   }
 
@@ -541,7 +531,7 @@ class RGBA extends AttrValue {
    *
    * @return {array} - Returns as a 3 component array.
    */
-  as3ComponentArray() {
+  as3ComponentArray(): number[] {
     return [this.__data[0], this.__data[1], this.__data[2]]
   }
 
@@ -550,11 +540,11 @@ class RGBA extends AttrValue {
 
   /**
    * Creates a new RGBA color.
-   * @param {...object} ...args - The ...args param.
+   * @param {...args: any[]} ...args - The ...args param.
    * @return {RGBA} - Returns a new RGBA.
    * @private
    */
-  static create(...args) {
+  static create(...args: any[]): RGBA {
     return new RGBA(...args)
   }
 
@@ -567,7 +557,7 @@ class RGBA extends AttrValue {
    * @deprecated
    * @private
    */
-  static createFromFloat32Buffer(buffer, offset = 0) {
+  static createFromFloat32Buffer(buffer: ArrayBuffer, offset = 0): RGBA {
     console.warn('Deprecated, use #createFromBuffer instead')
     return this.createFromBuffer(buffer, offset * 4)
   }
@@ -580,7 +570,7 @@ class RGBA extends AttrValue {
    * @param {number} byteOffset - The offset value.
    * @return {RGBA} - Returns a new RGBA.
    */
-  static createFromBuffer(buffer, byteOffset) {
+  static createFromBuffer(buffer: ArrayBuffer, byteOffset: number): RGBA {
     return new RGBA(new Uint8Array(buffer, byteOffset, 4)) // 4 bytes per 32bit float
   }
 
@@ -589,7 +579,7 @@ class RGBA extends AttrValue {
    * @return {number} - The return value.
    * @private
    */
-  static numElements() {
+  static numElements(): number {
     return 4
   }
 
@@ -599,9 +589,9 @@ class RGBA extends AttrValue {
   /**
    * The toJSON method encodes this type as a json object for persistence.
    *
-   * @return {object} - The json object.
+   * @return {Record<string, number>} - The json object.
    */
-  toJSON() {
+  toJSON(): Record<string, number> {
     return {
       r: this.r,
       g: this.g,
@@ -613,9 +603,9 @@ class RGBA extends AttrValue {
   /**
    * The fromJSON method decodes a json object for this type.
    *
-   * @param {object} j - The json object.
+   * @param {Record<string, number>} j - The json object.
    */
-  fromJSON(j) {
+  fromJSON(j: Record<string, number>): void {
     this.r = j.r
     this.g = j.g
     this.b = j.b
@@ -627,7 +617,7 @@ class RGBA extends AttrValue {
    *
    * @return {string} - The return value.
    */
-  toCSSString() {
+  toCSSString(): string {
     return (
       'rgba(' +
       Math.round(this.r * 255) +
