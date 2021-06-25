@@ -1,6 +1,7 @@
-import { AttrValue } from './AttrValue.js'
+//import { AttrValue } from './AttrValue.js'
 import { Registry } from '../Registry'
-
+import { BinReader } from '../SceneTree/BinReader'
+//import { BinReader } from '@SceneTree/BinReader'
 /**
  * Representing a Vec2(two-dimensional floating point vector). A Vec2 is for representing 2 dimensional values, such as screen coordinates or pixel coordinates within an image.
  *
@@ -9,7 +10,7 @@ import { Registry } from '../Registry'
  *
  * @extends AttrValue
  */
-class Vec2 extends AttrValue {
+class Vec2 { // TODO: ok to drop AttrValue inheritenc? extends AttrValue
   /**
    * Creates a Vec2.
    *
@@ -61,8 +62,9 @@ class Vec2 extends AttrValue {
    * @param {Number|Float32Array|Uint32Array|json} x - The x value. Default is 0.
    * @param {Number} y - The y value. Default is 0.
    */
-  constructor(x = 0, y = 0) {
-    super()
+  __data;//: TypedArray | Record<string, any>;
+
+  constructor(x: any  = 0, y = 0) { //x: number | Float32Array | Uint32Array | Record<string, any> = 0
 
     if (x instanceof Float32Array || x instanceof Uint32Array || x instanceof Int32Array) {
       this.__data = x
@@ -85,7 +87,7 @@ class Vec2 extends AttrValue {
    * Getter for `x` component.
    * @return {number} - Returns the x component.
    */
-  get x() {
+  get x(): number {
     return this.__data[0]
   }
 
@@ -93,7 +95,7 @@ class Vec2 extends AttrValue {
    * Setter for `x` component.
    * @param {number} val - The val param.
    */
-  set x(val) {
+  set x(val: number) {
     this.__data[0] = val
   }
 
@@ -101,7 +103,7 @@ class Vec2 extends AttrValue {
    * Getter for `y` component.
    * @return {number} - Returns the y component.
    */
-  get y() {
+  get y(): number {
     return this.__data[1]
   }
 
@@ -109,7 +111,7 @@ class Vec2 extends AttrValue {
    * Setter for `y` component.
    * @param {number} val - The val param.
    */
-  set y(val) {
+  set y(val: number) {
     this.__data[1] = val
   }
 
@@ -118,7 +120,7 @@ class Vec2 extends AttrValue {
    * @param {number} x - The x component.
    * @param {number} y  - The y component.
    */
-  set(x, y) {
+  set(x: number, y: number): void {
     this.__data[0] = x
     this.__data[1] = y
   }
@@ -128,7 +130,7 @@ class Vec2 extends AttrValue {
    *
    * @param {Vec2} other - The other Vec2 to set from.
    */
-  setFromOther(other) {
+  setFromOther(other: Vec2): void {
     this.x = other.x
     this.y = other.y
   }
@@ -141,7 +143,7 @@ class Vec2 extends AttrValue {
    * @param {Vec2} other - The other Vec2 to compare with.
    * @return {boolean} - Returns `true` if are the same Vector, otherwise, `false`.
    */
-  equal(other) {
+  equal(other: Vec2): boolean {
     console.warn('Deprecated. Use #isEqual instead.')
     return this.isEqual(other)
   }
@@ -152,7 +154,7 @@ class Vec2 extends AttrValue {
    * @param {Vec2} other - The other Vec2 to compare with.
    * @return {boolean} - Returns `true` if are the same Vector, otherwise, `false`.
    */
-  isEqual(other) {
+  isEqual(other: Vec2): boolean {
     return this.x == other.x && this.y == other.y
   }
 
@@ -163,7 +165,7 @@ class Vec2 extends AttrValue {
    * @param {Vec2} other - The other Vec2 to compare with.
    * @return {boolean} - Returns `true` if the Vec2s are different, otherwise, `false`.
    */
-  notEquals(other) {
+  notEquals(other: Vec2): boolean {
     console.warn('Deprecated. Use #notEqual instead.')
     return this.notEqual(other)
   }
@@ -174,7 +176,7 @@ class Vec2 extends AttrValue {
    * @param {Vec2} other - The other Vec2 to compare with.
    * @return {boolean} - Returns `true` if the Vec2s are different, otherwise, `false`.
    */
-  notEqual(other) {
+  notEqual(other: Vec2): boolean {
     return this.x != other.x && this.y != other.y
   }
 
@@ -185,7 +187,7 @@ class Vec2 extends AttrValue {
    * @param {number} precision - The precision to which the values must match.
    * @return {boolean} - Returns true or false.
    */
-  approxEqual(other, precision = Number.EPSILON) {
+  approxEqual(other: Vec2, precision: number = Number.EPSILON): boolean {
     return Math.abs(this.x - other.x) < precision && Math.abs(this.y - other.y) < precision
   }
 
@@ -195,7 +197,7 @@ class Vec2 extends AttrValue {
    * @param {Vec2} other - The other Vec2 to add.
    * @return {Vec2} - Returns a new Vec2.
    */
-  add(other) {
+  add(other: Vec2): Vec2 {
     return new Vec2(this.x + other.x, this.y + other.y)
   }
 
@@ -204,7 +206,7 @@ class Vec2 extends AttrValue {
    *
    * @param {Vec2} other - The other Vec2 to add.
    */
-  addInPlace(other) {
+  addInPlace(other: Vec2): void {
     this.x += other.x
     this.y += other.y
   }
@@ -215,7 +217,7 @@ class Vec2 extends AttrValue {
    * @param {Vec2} other - The other Vec2 to subtract.
    * @return {Vec2} - Returns a new Vec2.
    */
-  subtract(other) {
+  subtract(other: Vec2): Vec2 {
     return new Vec2(this.x - other.x, this.y - other.y)
   }
 
@@ -225,7 +227,7 @@ class Vec2 extends AttrValue {
    * @param {Vec2} other - The other Vec2 to subtract.
    * @return {Vec2} - Returns a new Vec2.
    */
-  subtractInPlace(other) {
+  subtractInPlace(other: Vec2): Vec2 {
     this.x -= other.x
     this.y -= other.y
     return this
@@ -237,7 +239,7 @@ class Vec2 extends AttrValue {
    * @param {number} scalar - The scalar value.
    * @return {Vec2} - Returns a new Vec2.
    */
-  scale(scalar) {
+  scale(scalar: number): Vec2 {
     return new Vec2(this.x * scalar, this.y * scalar)
   }
 
@@ -246,7 +248,7 @@ class Vec2 extends AttrValue {
    *
    * @param {number} scalar - The scalar value.
    */
-  scaleInPlace(scalar) {
+  scaleInPlace(scalar: number): void {
     this.x *= scalar
     this.y *= scalar
   }
@@ -256,7 +258,7 @@ class Vec2 extends AttrValue {
    *
    * @return {Vec2} - Returns a new Vec2.
    */
-  invert() {
+  invert(): Vec2 {
     return new Vec2(1.0 / this.x, 1.0 / this.y)
   }
 
@@ -265,7 +267,7 @@ class Vec2 extends AttrValue {
    *
    * @return {Vec2} - The return value.
    */
-  invertInPlace() {
+  invertInPlace(): Vec2 {
     this.x = 1.0 / this.x
     this.y = 1.0 / this.y
     return this
@@ -277,7 +279,7 @@ class Vec2 extends AttrValue {
    * @param {Vec2} other - The other Vec2 to multiply with.
    * @return {Vec2} - Returns a new Vec2.
    */
-  multiply(other) {
+  multiply(other: Vec2): Vec2 {
     return new Vec2(this.x * other.x, this.y * other.y)
   }
 
@@ -286,7 +288,7 @@ class Vec2 extends AttrValue {
    *
    * @param {Vec2} other - The other Vec2 to multiply with.
    */
-  multiplyInPlace(other) {
+  multiplyInPlace(other: Vec2): void {
     this.x *= other.x
     this.y *= other.y
   }
@@ -296,7 +298,7 @@ class Vec2 extends AttrValue {
    *
    * @return {number} - Returns the length squared.
    */
-  lengthSquared() {
+  lengthSquared(): number {
     const x = this.__data[0]
     const y = this.__data[1]
     return x * x + y * y
@@ -307,7 +309,7 @@ class Vec2 extends AttrValue {
    *
    * @return {number} - Returns the length.
    */
-  length() {
+  length(): number {
     return Math.sqrt(this.lengthSquared())
   }
 
@@ -317,7 +319,7 @@ class Vec2 extends AttrValue {
    * @param {Vec2} other - The other value.
    * @return {number} - Returns the distance between vectors.
    */
-  distanceTo(other) {
+  distanceTo(other: Vec2): number {
     const x = this.__data[0] - other.x
     const y = this.__data[1] - other.y
     return Math.sqrt(x * x + y * y)
@@ -329,7 +331,7 @@ class Vec2 extends AttrValue {
    *
    * @return {Vec2} - Returns the Vec2 normalized.
    */
-  normalize() {
+  normalize(): Vec2 {
     const x = this.__data[0]
     const y = this.__data[1]
     let len = x * x + y * y
@@ -345,7 +347,7 @@ class Vec2 extends AttrValue {
   /**
    * Normalizes this Vec2 multiplying coordinate values by the inverse of the vector length.
    */
-  normalizeInPlace() {
+  normalizeInPlace(): void {
     const x = this.__data[0]
     const y = this.__data[1]
     let len = x * x + y * y
@@ -362,7 +364,7 @@ class Vec2 extends AttrValue {
    * @param {Vec2} other - The other Vec2 to compare with.
    * @return {number} - Returns the dot product.
    */
-  dot(other) {
+  dot(other: Vec2): number {
     return this.x * other.x + this.y * other.y
   }
 
@@ -372,7 +374,7 @@ class Vec2 extends AttrValue {
    * @param {Vec2} other - The other Vec2 to compare with.
    * @return {number} - Returns the cross product.
    */
-  cross(other) {
+  cross(other: Vec2): number {
     // just calculate the z-component
     return this.x * other.y - this.y * other.x
   }
@@ -383,7 +385,7 @@ class Vec2 extends AttrValue {
    * @param {Vec2} other - The other Vec2 to compare with.
    * @return {number} - Returns the angle in radians.
    */
-  angleTo(other) {
+  angleTo(other: Vec2): number {
     const cosine = this.normalize().dot(other.normalize())
     if (cosine > 1.0) return 0.0
     else if (cosine < -1.0) return Math.PI
@@ -396,7 +398,7 @@ class Vec2 extends AttrValue {
    * @param {Vec2} other - The other Vec2 to compare with.
    * @return {number} - Returns the angle in radians.
    */
-  signedAngleTo(other) {
+  signedAngleTo(other: Vec2): number {
     const angle = this.angleTo(other)
     if (this.cross(other) < 0.0) return -angle
     else return angle
@@ -408,7 +410,7 @@ class Vec2 extends AttrValue {
    * @param {number} angle - The angle of rotation.
    * @return {Vec2} - Returns the rotated vector.
    */
-  rotate(angle) {
+  rotate(angle: number): Vec2 {
     const cosA = Math.cos(angle)
     const sinA = Math.sin(angle)
     return new Vec2(this.x * cosA - this.y * sinA, this.x * sinA + this.y * cosA)
@@ -421,7 +423,7 @@ class Vec2 extends AttrValue {
    * @param {number} t - Interpolation amount between the two inputs.
    * @return {Vec2} - Returns a new Vec2.
    */
-  lerp(other, t) {
+  lerp(other: Vec2, t: number): Vec2 {
     const ax = this.x
     const ay = this.y
     return new Vec2(ax + t * (other.x - ax), ay + t * (other.y - ay))
@@ -433,10 +435,10 @@ class Vec2 extends AttrValue {
    * @param {number} scale - Length of the resulting vector. If omitted, a unit vector will be returned.
    * @return {Vec2} - The return value.
    */
-  setRandomDir(scale = 1.0) {
+  setRandomDir(scale = 1.0): Vec2 {
     const r = Math.random() * 2.0 * Math.PI
-    this.__data[0] = Math.cos(r) * zScale
-    this.__data[1] = Math.sin(r) * zScale
+    this.__data[0] = Math.cos(r) * scale
+    this.__data[1] = Math.sin(r) * scale
     return this
   }
 
@@ -446,7 +448,7 @@ class Vec2 extends AttrValue {
    * @param {number} scale - The scale value.
    * @return {Vec2} - The return value.
    */
-  setRandom(scale = 1.0) {
+  setRandom(scale = 1.0): Vec2 {
     this.__data[0] = Math.random() * scale
     this.__data[1] = Math.random() * scale
     return this
@@ -457,7 +459,7 @@ class Vec2 extends AttrValue {
    *
    * @return {Vec2} - Returns a new Vec2.
    */
-  clone() {
+  clone(): Vec2 {
     return new Vec2(this.__data[0], this.__data[1])
   }
 
@@ -481,9 +483,10 @@ class Vec2 extends AttrValue {
    * @return {Vec2} - Returns a new Vec2.
    * @private
    */
-  static create(...args) {
-    return new Vec2(...args)
-  }
+
+  // static create(...args: any[]): Vec2 {
+  //   return new Vec2(...args)
+  // }
 
   /**
    * Creates a new Vec2 to wrap existing memory in a buffer.
@@ -493,7 +496,7 @@ class Vec2 extends AttrValue {
    * @deprecated
    * @private
    */
-  static createFromFloat32Buffer(buffer, offset = 0) {
+  static createFromFloat32Buffer(buffer: ArrayBuffer, offset = 0): Vec2 {
     console.warn('Deprecated, use #createFromBuffer instead')
     return this.createFromBuffer(buffer, offset * 4)
   }
@@ -506,7 +509,7 @@ class Vec2 extends AttrValue {
    * @param {number} byteOffset - The offset value.
    * @return {Vec2} - Returns a new Vec2.
    */
-  static createFromBuffer(buffer, byteOffset) {
+  static createFromBuffer(buffer: ArrayBuffer, byteOffset: number): Vec2 {
     return new Vec2(new Float32Array(buffer, byteOffset, 2)) // 4 bytes per 32bit float
   }
 
@@ -516,7 +519,7 @@ class Vec2 extends AttrValue {
    * @return {Vec2} - Returns a new Vec2.
    * @private
    */
-  static createFromFloat32Array(array) {
+  static createFromFloat32Array(array: Float32Array): Vec2 {
     return new Vec2(array)
   }
 
@@ -525,7 +528,7 @@ class Vec2 extends AttrValue {
    * @return {number} - The return value.
    * @private
    */
-  static numElements() {
+  static numElements(): number {
     return 2
   }
 
@@ -535,9 +538,9 @@ class Vec2 extends AttrValue {
   /**
    * Encodes Vec2 Class as a JSON object for persistence.
    *
-   * @return {object} - The json object.
+   * @return {Record<string, number>} - The json object.
    */
-  toJSON() {
+  toJSON(): Record<string, number> {
     return {
       x: this.x,
       y: this.y,
@@ -549,7 +552,7 @@ class Vec2 extends AttrValue {
    *
    * @param {object} j - The json object.
    */
-  fromJSON(j) {
+  fromJSON(j: Record<string, number>): void {
     this.x = j.x
     this.y = j.y
   }
@@ -559,7 +562,7 @@ class Vec2 extends AttrValue {
    *
    * @param {BinReader} reader - The reader value.
    */
-  readBinary(reader) {
+  readBinary(reader: BinReader): void {
     this.x = reader.loadFloat32()
     this.y = reader.loadFloat32()
   }
