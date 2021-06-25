@@ -1,4 +1,4 @@
-import { Mat3 } from './Mat3'
+import { Mat3 } from './Mat3-temp'
 
 describe('Mat3', () => {
   it('creates Mat3 from buffer', () => {
