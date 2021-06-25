@@ -1,6 +1,6 @@
 import { StringFunctions } from '../Utilities/StringFunctions'
 import { MathFunctions } from '../Utilities/MathFunctions'
-import { Vec3 } from './Vec3.js'
+import { Vec3 } from './Vec3-temp.js'
 import { Mat4 } from './Mat4.js'
 import { SphereType } from './SphereType.js'
 import { Registry } from '../Registry'

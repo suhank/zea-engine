@@ -1,4 +1,4 @@
-import { Vec3 } from '../../Math/Vec3'
+import { Vec3 } from '../../Math/Vec3-temp'
 import { PassType } from './GLPass.js'
 import { Points, Lines, PointsProxy, LinesProxy } from '../../SceneTree/index'
 import { GLStandardGeomsPass } from './GLStandardGeomsPass.js'

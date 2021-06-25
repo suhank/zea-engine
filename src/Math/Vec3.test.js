@@ -1,4 +1,4 @@
-import { Vec3 } from './Vec3'
+import { Vec3 } from './Vec3-temp'
 
 describe('Vec3', () => {
   it('has an initial value.', () => {

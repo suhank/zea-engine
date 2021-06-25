@@ -1,5 +1,5 @@
 import { Ray } from './Ray'
-import { Vec3 } from './Vec3'
+import { Vec3 } from './Vec3-temp'
 
 describe('Ray', () => {
   it('has an initial value.', () => {

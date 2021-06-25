@@ -1,7 +1,7 @@
 /* eslint-disable new-cap */
 import { AttrValue } from './AttrValue.js'
 import { Registry } from '../Registry'
-import { Vec3 } from './Vec3.js'
+import { Vec3 } from './Vec3-temp.js'
 /**
  * Represents a four-dimensional coordinate.
  * Math types internally store values in {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array|Float32Array} and

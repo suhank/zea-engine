@@ -1,5 +1,5 @@
 import { Registry } from './Registry'
-import { Vec3 } from './Math/Vec3'
+import { Vec3 } from './Math/Vec3-temp'
 
 describe('Registry', () => {
   beforeEach(() => Registry.flush())

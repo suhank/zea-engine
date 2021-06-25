@@ -1,5 +1,5 @@
 import { StringFunctions } from './StringFunctions'
-import { Vec3 } from '../Math/Vec3'
+import { Vec3 } from '../Math/Vec3-temp'
 
 describe('StringFunctions', () => {
   it('replaces all matches', () => {
