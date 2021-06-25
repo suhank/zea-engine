@@ -1,4 +1,4 @@
-import { Vec4 } from '../../Math/Vec4'
+import { Vec4 } from '../../Math/Vec4
 import { Operator } from './Operator'
 import { OperatorOutput } from './OperatorOutput'
 import { OperatorInput } from './OperatorInput'

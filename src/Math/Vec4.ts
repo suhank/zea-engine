@@ -1,7 +1,8 @@
 /* eslint-disable new-cap */
-import { AttrValue } from './AttrValue.js'
+//import { AttrValue } from './AttrValue.js'
 import { Registry } from '../Registry'
 import { Vec3 } from './Vec3'
+import { BinReader } from '../SceneTree/BinReader'
 /**
  * Represents a four-dimensional coordinate.
  * Math types internally store values in {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array|Float32Array} and
@@ -9,7 +10,7 @@ import { Vec3 } from './Vec3'
  *
  * @extends AttrValue
  */
-class Vec4 extends AttrValue {
+class Vec4 { // extends AttrValue
   /**
    /**
    * Creates a Vec4.
@@ -20,14 +21,15 @@ class Vec4 extends AttrValue {
    * {@link https://developer.mozilla.org/es/docs/Web/JavaScript/Referencia/Objetos_globales/ArrayBuffer|ArrayBuffer}.
    * <br>
    * You can also pass one JSON object parameter.
-   * 
+   *
    * @param {Number|Float32Array|json} x - The x value. Default is 0.
    * @param {number} y - The y value. Default is 0.
    * @param {number} z - The y value. Default is 0.
    * @param {number} t - The t value. Default is 0.
    */
-  constructor(x = 0, y = 0, z = 0, t = 0) {
-    super()
+
+   __data;
+  constructor(x: number | Float32Array | ArrayBuffer = 0, y = 0, z = 0, t = 0) {
 
     if (x instanceof Float32Array || x instanceof Uint32Array) {
       this.__data = x
@@ -53,7 +55,7 @@ class Vec4 extends AttrValue {
    *
    * @return {number} - Returns the x value.
    */
-  get x() {
+  get x(): number {
     return this.__data[0]
   }
 
@@ -62,7 +64,7 @@ class Vec4 extends AttrValue {
    *
    * @param {number} val - The val param.
    */
-  set x(val) {
+  set x(val: number) {
     this.__data[0] = val
   }
 
@@ -71,7 +73,7 @@ class Vec4 extends AttrValue {
    *
    * @return {number} - Returns the y value.
    */
-  get y() {
+  get y(): number {
     return this.__data[1]
   }
 
@@ -80,7 +82,7 @@ class Vec4 extends AttrValue {
    *
    * @param {number} val - The val param.
    */
-  set y(val) {
+  set y(val: number) {
     this.__data[1] = val
   }
 
@@ -89,7 +91,7 @@ class Vec4 extends AttrValue {
    *
    * @param {number} val - The val param.
    */
-  get z() {
+  get z(): number {
     return this.__data[2]
   }
 
@@ -98,7 +100,7 @@ class Vec4 extends AttrValue {
    *
    * @param {number} val - The val param.
    */
-  set z(val) {
+  set z(val: number) {
     this.__data[2] = val
   }
 
@@ -107,7 +109,7 @@ class Vec4 extends AttrValue {
    *
    * @param {number} val - The val param.
    */
-  get t() {
+  get t(): number {
     return this.__data[3]
   }
 
@@ -116,7 +118,7 @@ class Vec4 extends AttrValue {
    *
    * @param {number} val - The val param.
    */
-  set t(val) {
+  set t(val: number) {
     this.__data[3] = val
   }
 
@@ -125,7 +127,7 @@ class Vec4 extends AttrValue {
    *
    * @param {number} val - The val param.
    */
-  get w() {
+  get w(): number {
     return this.__data[3]
   }
 
@@ -134,7 +136,7 @@ class Vec4 extends AttrValue {
    *
    * @param {number} val - The val param.
    */
-  set w(val) {
+  set w(val: number) {
     this.__data[3] = val
   }
 
@@ -143,7 +145,7 @@ class Vec4 extends AttrValue {
    *
    * @return {number} - Returns the z value.
    */
-  get xyz() {
+  get xyz(): Vec3 {
     return new Vec3(this.__data[0], this.__data[1], this.__data[2])
   }
 
@@ -155,7 +157,7 @@ class Vec4 extends AttrValue {
    * @param {number} z  - The y value.
    * @param {number} t  - The t value.
    */
-  set(x, y, z, t) {
+  set(x: number, y: number, z: number, t: number): void {
     this.x = x
     this.y = y
     this.z = z
@@ -167,7 +169,7 @@ class Vec4 extends AttrValue {
    *
    * @param {Vec4} other - The other Vec4 to set from.
    */
-  setFromOther(other) {
+  setFromOther(other: Vec4): void {
     this.x = other.x
     this.y = other.y
     this.z = other.z
@@ -181,7 +183,7 @@ class Vec4 extends AttrValue {
    * @param {Vec4} other - The other Vec4 to compare with.
    * @return {boolean} - Returns true or false.
    */
-  equal(other) {
+  equal(other: Vec4): boolean {
     console.warn('Deprecated. Use #isEqual instead.')
     return this.isEqual(other)
   }
@@ -192,7 +194,7 @@ class Vec4 extends AttrValue {
    * @param {Vec4} other - The other Vec4 to compare with.
    * @return {boolean} - Returns true or false.
    */
-  isEqual(other) {
+  isEqual(other: Vec4): boolean {
     return this.x == other.x && this.y == other.y && this.z == other.z && this.t == other.t
   }
 
@@ -203,7 +205,7 @@ class Vec4 extends AttrValue {
    * @param {Vec4} other - The other Vec4 to compare with.
    * @return {boolean} - Returns true or false.
    */
-  notEquals(other) {
+  notEquals(other: Vec4): boolean {
     console.warn('Deprecated. Use #notEqual instead.')
     return this.notEqual(other)
   }
@@ -214,7 +216,7 @@ class Vec4 extends AttrValue {
    * @param {Vec4} other - The other Vec4 to compare with.
    * @return {boolean} - Returns true or false.
    */
-  notEqual(other) {
+  notEqual(other: Vec4): boolean {
     return this.x != other.x && this.y != other.y && this.z != other.z && this.t != other.t
   }
 
@@ -225,7 +227,7 @@ class Vec4 extends AttrValue {
    * @param {number} precision - The precision to which the values must match.
    * @return {boolean} - The return value.
    */
-  approxEqual(other, precision = Number.EPSILON) {
+  approxEqual(other: Vec4, precision: number = Number.EPSILON): boolean {
     return (
       Math.abs(this.x - other.x) < precision &&
       Math.abs(this.y - other.y) < precision &&
@@ -240,7 +242,7 @@ class Vec4 extends AttrValue {
    * @param {Vec4} other - The other Vec4 to add.
    * @return {Vec4} - Returns a new Vec4.
    */
-  add(other) {
+  add(other: Vec4): Vec4 {
     return new Vec4(this.x + other.x, this.y + other.y, this.z + other.z, this.t + other.t)
   }
 
@@ -249,7 +251,7 @@ class Vec4 extends AttrValue {
    *
    * @param {Vec4} other - The other Vec4 to add.
    */
-  addInPlace(other) {
+  addInPlace(other: Vec4): void {
     this.x += other.x
     this.y += other.y
     this.z += other.z
@@ -262,7 +264,7 @@ class Vec4 extends AttrValue {
    * @param {Vec4} other - The other Vec4 to subtract.
    * @return {Vec4} - Returns a new Vec4.
    */
-  subtract(other) {
+  subtract(other: Vec4): Vec4 {
     return new Vec4(this.x - other.x, this.y - other.y, this.z - other.z, this.t - other.t)
   }
 
@@ -271,7 +273,7 @@ class Vec4 extends AttrValue {
    *
    * @param {Vec4} other - The other Vec4 to subtract.
    */
-  subtractInPlace(other) {
+  subtractInPlace(other: Vec4): void {
     this.x -= other.x
     this.y -= other.y
     this.z -= other.z
@@ -284,7 +286,7 @@ class Vec4 extends AttrValue {
    * @param {Vec4} other - The other Vec4 to multiply with.
    * @return {Vec4} - Returns a new Vec4.
    */
-  multiply(other) {
+  multiply(other: Vec4): Vec4 {
     return new Vec4(this.x * other.x, this.y * other.y, this.z * other.z, this.t * other.t)
   }
 
@@ -293,7 +295,7 @@ class Vec4 extends AttrValue {
    *
    * @param {Vec4} other - The other Vec4 to multiply with.
    */
-  multiplyInPlace(other) {
+  multiplyInPlace(other: Vec4): void {
     this.x *= other.x
     this.y *= other.y
     this.z *= other.z
@@ -306,7 +308,7 @@ class Vec4 extends AttrValue {
    * @param {Vec4} other - The other Vec4 to divide by.
    * @return {Vec4} - Returns a new Vec4.
    */
-  divide(other) {
+  divide(other: Vec4): Vec4 {
     return new Vec4(this.x / other.x, this.y / other.y, this.z / other.z, this.t / other.t)
   }
 
@@ -315,7 +317,7 @@ class Vec4 extends AttrValue {
    *
    * @param {Vec4} other - The other Vec4 to divide by.
    */
-  divideInPlace(other) {
+  divideInPlace(other: Vec4): void {
     this.x /= other.x
     this.y /= other.y
     this.z /= other.z
@@ -328,7 +330,7 @@ class Vec4 extends AttrValue {
    * @param {number} scalar - The scalar value.
    * @return {Vec4} - The return value.
    */
-  scale(scalar) {
+  scale(scalar: number): Vec4 {
     return new Vec4(this.x * scalar, this.y * scalar, this.z * scalar, this.t * scalar)
   }
 
@@ -337,7 +339,7 @@ class Vec4 extends AttrValue {
    *
    * @param {number} scalar - The scalar value.
    */
-  scaleInPlace(scalar) {
+  scaleInPlace(scalar: number): void {
     this.set(this.x * scalar, this.y * scalar, this.z * scalar, this.t * scalar)
   }
 
@@ -346,7 +348,7 @@ class Vec4 extends AttrValue {
    *
    * @return {number} - Returns the length.
    */
-  length() {
+  length(): number {
     const x = this.__data[0]
     const y = this.__data[1]
     const z = this.__data[2]
@@ -359,7 +361,7 @@ class Vec4 extends AttrValue {
    *
    * @return {number} - Returns the length.
    */
-  lengthSquared() {
+  lengthSquared(): number {
     const x = this.__data[0]
     const y = this.__data[1]
     const z = this.__data[2]
@@ -373,7 +375,7 @@ class Vec4 extends AttrValue {
    *
    * @return {Vec4} - Returns the Vec4 normalized.
    */
-  normalize() {
+  normalize(): Vec4 {
     const x = this.__data[0]
     const y = this.__data[1]
     const z = this.__data[2]
@@ -391,7 +393,7 @@ class Vec4 extends AttrValue {
   /**
    * Normalizes this Vec4 multiplying coordinate values by the inverse of the vector length.
    */
-  normalizeInPlace() {
+  normalizeInPlace(): void {
     const x = this.__data[0]
     const y = this.__data[1]
     const z = this.__data[2]
@@ -410,8 +412,8 @@ class Vec4 extends AttrValue {
    * @param {Vec4} other - The other Vec4 to compare with.
    * @return {number} - Returns the dot product.
    */
-  dot(other) {
-    return this.x * other.x + this.y * other.y + this.z * other.z + this.t * b.t
+  dot(other: Vec4): number {
+    return this.x * other.x + this.y * other.y + this.z * other.z + this.t * other.t // TODO: other.t used to be b.t?
   }
 
   /**
@@ -420,7 +422,7 @@ class Vec4 extends AttrValue {
    * @param {Vec4} other - The other Vec4 to calculate with.
    * @return {Vec4} - Returns the cross product as a new Vec4.
    */
-  cross(other) {
+  cross(other: Vec4): Vec4 {
     const ax = this.x
     const ay = this.y
     const az = this.z
@@ -439,7 +441,7 @@ class Vec4 extends AttrValue {
    * @param {Vec4} other - The other Vec4 to compare with.
    * @return {number} - Returns the angle in radians.
    */
-  angleTo(other) {
+  angleTo(other: Vec4): number {
     const tempA = this.normalize()
     const tempB = other.normalize()
     const cosine = tempA.dot(tempB)
@@ -458,11 +460,11 @@ class Vec4 extends AttrValue {
    * @param {number} t - Interpolation amount between the two inputs.
    * @return {Vec4} - Returns a new Vec4.
    */
-  lerp(other, t) {
+  lerp(other: Vec4, t: number): Vec4 {
     const ax = this.x
     const ay = this.y
     const az = this.z
-    at = this.t
+    const at = this.t
     return new Vec4(ax + t * (other.x - ax), ay + t * (other.y - ay), az + t * (other.z - az), at + t * (other.t - at))
   }
 
@@ -472,23 +474,23 @@ class Vec4 extends AttrValue {
    * @param {number} scale - Length of the resulting vector. If omitted, a unit vector will be returned.
    * @return {Vec4} - The return value.
    */
-  random(scale = 1.0) {
-    const r = glMatrix.RANDOM() * 2.0 * Math.PI
-    const z = glMatrix.RANDOM() * 2.0 - 1.0
-    const zScale = Math.sqrt(1.0 - z * z) * scale
+  // random(scale = 1.0) {
+  //   const r = glMatrix.RANDOM() * 2.0 * Math.PI
+  //   const z = glMatrix.RANDOM() * 2.0 - 1.0
+  //   const zScale = Math.sqrt(1.0 - z * z) * scale
 
-    out[0] = Math.cos(r) * zScale
-    out[1] = Math.sin(r) * zScale
-    out[2] = z * scale
-    return out
-  }
+  //   out[0] = Math.cos(r) * zScale
+  //   out[1] = Math.sin(r) * zScale
+  //   out[2] = z * scale
+  //   return out
+  // }
 
   /**
    * Clones this Vec4 and returns a new Vec4.
    *
    * @return {Vec4} - Returns a new Vec4.
    */
-  clone() {
+  clone(): Vec4 {
     return new Vec4(this.__data[0], this.__data[1], this.__data[2], this.__data[3])
   }
 
@@ -497,7 +499,7 @@ class Vec4 extends AttrValue {
    *
    * @return {Vec3} - Returns the value as a new Vec3.
    */
-  toVec3() {
+  toVec3(): Vec3 {
     return new Vec3(this.__data[0], this.__data[1], this.__data[2])
   }
 
@@ -515,11 +517,12 @@ class Vec4 extends AttrValue {
 
   /**
    * Creates a new Vec3.
-   * @param {...object} ...args - The ...args param.
+   * @param {...args: any[]} ...args - The ...args param.
    * @return {Vec3} - Returns a new Vec3.
    * @private
    */
-  static create(...args) {
+
+  static create(...args: any[]): Vec3 {
     return new Vec3(...args)
   }
 
@@ -531,7 +534,7 @@ class Vec4 extends AttrValue {
    * @deprecated
    * @private
    */
-  static createFromFloat32Buffer(buffer, offset = 0) {
+  static createFromFloat32Buffer(buffer: ArrayBuffer, offset = 0): Vec4 {
     console.warn('Deprecated, use #createFromBuffer instead')
     return new Vec4(new Float32Array(buffer, offset * 4, 4)) // 4 bytes per 32bit float
   }
@@ -544,7 +547,7 @@ class Vec4 extends AttrValue {
    * @param {number} byteOffset - The offset value.
    * @return {Vec4} - Returns a new Vec4.
    */
-  static createFromBuffer(buffer, byteOffset) {
+  static createFromBuffer(buffer: ArrayBuffer, byteOffset: number): Vec4 {
     return new Vec4(new Float32Array(buffer, byteOffset, 4)) // 4 bytes per 32bit float
   }
 
@@ -553,7 +556,7 @@ class Vec4 extends AttrValue {
    * @return {number} - The return value.
    * @private
    */
-  static numElements() {
+  static numElements(): number {
     return 4
   }
 
@@ -564,7 +567,7 @@ class Vec4 extends AttrValue {
    * The toJSON method encodes this type as a json object for persistence.
    * @return {object} - The json object.
    */
-  toJSON() {
+  toJSON(): Record<string, number> {
     return {
       x: this.x,
       y: this.y,
@@ -578,7 +581,7 @@ class Vec4 extends AttrValue {
    *
    * @param {object} j - The json object.
    */
-  fromJSON(j) {
+  fromJSON(j: Record<string, number>): void {
     this.x = j.x
     this.y = j.y
     this.z = j.z
@@ -590,12 +593,27 @@ class Vec4 extends AttrValue {
    *
    * @param {BinReader} reader - The reader value.
    */
-  readBinary(reader) {
+  readBinary(reader: BinReader): void {
     this.x = reader.loadFloat32()
     this.y = reader.loadFloat32()
     this.z = reader.loadFloat32()
     this.t = reader.loadFloat32()
   }
+
+    /**
+   * Verifies if the values stored in this Math type are valid numeric values.
+   * Returns `false` If at least one of the values is either {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Referencia/Objetos_globales/Infinity|Infinity} or
+   * {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Referencia/Objetos_globales/NaN|NaN}.
+   *
+   * @return {boolean} - Returns the result as a boolean.
+   */
+     isValid() {
+      for (const v of this.__data) {
+        if (v == Infinity || isNaN(v)) return false
+      }
+  
+      return true
+    }
 }
 
 Registry.register('Vec4', Vec4)
