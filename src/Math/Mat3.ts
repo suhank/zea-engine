@@ -1,7 +1,8 @@
 /* eslint-disable new-cap */
-import { AttrValue } from './AttrValue.js'
+//import { AttrValue } from './AttrValue.js'
 import { Vec3 } from './Vec3'
 import { Registry } from '../Registry'
+import { BinReader } from '../SceneTree/BinReader'
 
 /**
  * A class representing a 3x3 matrix.
@@ -9,7 +10,7 @@ import { Registry } from '../Registry'
  *
  * @extends AttrValue
  */
-class Mat3 extends AttrValue {
+class Mat3  { //extends AttrValue
   /**
    * Initializes the Mat3 class with given data.
    *
@@ -23,8 +24,19 @@ class Mat3 extends AttrValue {
    * @param {number} m21 - Row 2, column 1.
    * @param {number} m22 - Row 2, column 2.
    */
-  constructor(m00 = 1, m01 = 0, m02 = 0, m10 = 0, m11 = 1, m12 = 0, m20 = 0, m21 = 0, m22 = 1) {
-    super()
+  __data;
+  constructor(
+    m00: number | any = 1,
+    m01: number | any = 0,
+    m02: number | any = 0,
+    m10 = 0,
+    m11 = 1,
+    m12 = 0,
+    m20 = 0,
+    m21 = 0,
+    m22 = 1,
+  ) {
+  
 
     if (m00 instanceof Vec3 && m01 instanceof Vec3 && m02 instanceof Vec3) {
       this.__data = new Float32Array(9)
@@ -49,7 +61,7 @@ class Mat3 extends AttrValue {
    * Getter for row 0, column 0.
    * @return {number} - Returns the m00 value.
    */
-  get m00() {
+  get m00(): number {
     return this.__data[0]
   }
 
@@ -58,7 +70,7 @@ class Mat3 extends AttrValue {
    *
    * @param {number} val - The val param.
    */
-  set m00(val) {
+  set m00(val: number) {
     this.__data[0] = val
   }
 
@@ -67,7 +79,7 @@ class Mat3 extends AttrValue {
    *
    * @return {number} - Returns the m01 value.
    */
-  get m01() {
+  get m01(): number {
     return this.__data[1]
   }
 
@@ -76,7 +88,7 @@ class Mat3 extends AttrValue {
    *
    * @param {number} val - The val param.
    */
-  set m01(val) {
+  set m01(val: number) {
     this.__data[1] = val
   }
 
@@ -85,7 +97,7 @@ class Mat3 extends AttrValue {
    *
    * @return {number} - Returns the m02 value.
    */
-  get m02() {
+  get m02(): number {
     return this.__data[2]
   }
 
@@ -94,7 +106,7 @@ class Mat3 extends AttrValue {
    *
    * @param {number} val - The val param.
    */
-  set m02(val) {
+  set m02(val: number) {
     this.__data[2] = val
   }
 
@@ -103,7 +115,7 @@ class Mat3 extends AttrValue {
    *
    * @return {number} - Returns the m10 value.
    */
-  get m10() {
+  get m10(): number {
     return this.__data[3]
   }
 
@@ -112,7 +124,7 @@ class Mat3 extends AttrValue {
    *
    * @param {number} val - The val param.
    */
-  set m10(val) {
+  set m10(val: number) {
     this.__data[3] = val
   }
 
@@ -121,7 +133,7 @@ class Mat3 extends AttrValue {
    *
    * @return {number} - Returns the m11 value.
    */
-  get m11() {
+  get m11(): number {
     return this.__data[4]
   }
 
@@ -130,7 +142,7 @@ class Mat3 extends AttrValue {
    *
    * @param {number} val - The val param.
    */
-  set m11(val) {
+  set m11(val: number) {
     this.__data[4] = val
   }
 
@@ -139,7 +151,7 @@ class Mat3 extends AttrValue {
    *
    * @return {number} - Returns the m12 value.
    */
-  get m12() {
+  get m12(): number {
     return this.__data[5]
   }
 
@@ -148,7 +160,7 @@ class Mat3 extends AttrValue {
    *
    * @param {number} val - The val param.
    */
-  set m12(val) {
+  set m12(val: number) {
     this.__data[5] = val
   }
 
@@ -157,7 +169,7 @@ class Mat3 extends AttrValue {
    *
    * @return {number} - Returns the m20 value.
    */
-  get m20() {
+  get m20(): number {
     return this.__data[6]
   }
 
@@ -166,7 +178,7 @@ class Mat3 extends AttrValue {
    *
    * @param {number} val - The val param.
    */
-  set m20(val) {
+  set m20(val: number) {
     this.__data[6] = val
   }
 
@@ -175,7 +187,7 @@ class Mat3 extends AttrValue {
    *
    * @return {number} - Returns the m21 value.
    */
-  get m21() {
+  get m21(): number {
     return this.__data[7]
   }
 
@@ -184,7 +196,7 @@ class Mat3 extends AttrValue {
    *
    * @param {number} val - The val param.
    */
-  set m21(val) {
+  set m21(val: number) {
     this.__data[7] = val
   }
 
@@ -193,7 +205,7 @@ class Mat3 extends AttrValue {
    *
    * @return {number} - Returns the m22 value.
    */
-  get m22() {
+  get m22(): number {
     return this.__data[8]
   }
 
@@ -356,7 +368,7 @@ class Mat3 extends AttrValue {
     const b11 = -a22 * a10 + a12 * a20
     const b21 = a21 * a10 - a11 * a20
     // Calculate the determinant
-    const det = a00 * b01 + a01 * b11 + a02 * b21
+    let det = a00 * b01 + a01 * b11 + a02 * b21
 
     if (!det) {
       console.warn('Unable to invert Mat3')
@@ -382,7 +394,7 @@ class Mat3 extends AttrValue {
    *
    * @return {boolean} - The return value.
    */
-  invertInPlace() {
+  invertInPlace(): boolean {
     const a00 = this.__data[0]
     const a01 = this.__data[1]
     const a02 = this.__data[2]
@@ -396,7 +408,7 @@ class Mat3 extends AttrValue {
     const b11 = -a22 * a10 + a12 * a20
     const b21 = a21 * a10 - a11 * a20
     // Calculate the determinant
-    const det = a00 * b01 + a01 * b11 + a02 * b21
+    let det = a00 * b01 + a01 * b11 + a02 * b21
 
     if (!det) {
       console.warn('Unable to invert Mat3')
@@ -413,7 +425,7 @@ class Mat3 extends AttrValue {
       (-a12 * a00 + a02 * a10) * det,
       b21 * det,
       (-a21 * a00 + a01 * a20) * det,
-      (a11 * a00 - a01 * a10) * det
+      (a11 * a00 - a01 * a10) * det,
     )
     return true
   }
@@ -424,8 +436,8 @@ class Mat3 extends AttrValue {
    *
    * @return {Mat3} - Return a new transposed Mat3.
    */
-  transpose() {
-    return Mat3(
+  transpose(): Mat3 {
+    return new Mat3(
       this.__data[0],
       this.__data[3],
       this.__data[6],
@@ -434,14 +446,14 @@ class Mat3 extends AttrValue {
       this.__data[7],
       this.__data[2],
       this.__data[5],
-      this.__data[8]
+      this.__data[8],
     )
   }
 
   /**
    * Transposes (exchanges columns with rows) this matrix modifying its values.
    */
-  transposeInPlace() {
+  transposeInPlace(): void {
     // If we are transposing ourselves we can skip a few steps but have to cache some values
     const a01 = this.__data[1]
     const a02 = this.__data[2]
@@ -461,11 +473,11 @@ class Mat3 extends AttrValue {
    * @param {Vec3} vec3 - The vec3 value.
    * @return {Vec3} - Return the result as a new Vec3.
    */
-  transformVec3(vec3) {
+  transformVec3(vec3: Vec3): Vec3 {
     return new Vec3(
       this.__data[0] * vec3.x + this.__data[1] * vec3.y + this.__data[2] * vec3.z,
       this.__data[3] * vec3.x + this.__data[4] * vec3.y + this.__data[5] * vec3.z,
-      this.__data[6] * vec3.x + this.__data[7] * vec3.y + this.__data[8] * vec3.z
+      this.__data[6] * vec3.x + this.__data[7] * vec3.y + this.__data[8] * vec3.z,
     )
   }
 
@@ -474,7 +486,7 @@ class Mat3 extends AttrValue {
    *
    * @return {Mat3} - Returns a new Mat3.
    */
-  clone() {
+  clone(): Mat3 {
     return new Mat3(
       this.__data[0],
       this.__data[1],
@@ -485,7 +497,6 @@ class Mat3 extends AttrValue {
       this.__data[6],
       this.__data[7],
       this.__data[8],
-      this.__data[9]
     )
   }
 
@@ -494,11 +505,12 @@ class Mat3 extends AttrValue {
 
   /**
    * Create a new Mat3.
-   * @param {...object} ...args - The ...args param.
+   * @param {...args: any[]} ...args - The ...args param.
    * @return {Mat3} - Returns a new Mat3.
    * @private
    */
-  static create(...args) {
+
+  static create(...args: any[]): Mat3 {
     return new Mat3(...args)
   }
 
@@ -511,7 +523,7 @@ class Mat3 extends AttrValue {
    * @deprecated
    * @private
    */
-  static createFromFloat32Buffer(buffer, offset = 0) {
+  static createFromFloat32Buffer(buffer: ArrayBuffer, offset = 0): Mat3 {
     console.warn('Deprecated, use #createFromBuffer instead')
     return this.createFromBuffer(buffer, offset * 4)
   }
@@ -524,7 +536,7 @@ class Mat3 extends AttrValue {
    * @param {number} byteOffset - The offset value.
    * @return {Mat3} - Returns a new Mat3.
    */
-  static createFromBuffer(buffer, byteOffset) {
+  static createFromBuffer(buffer: ArrayBuffer, byteOffset: number): Mat3 {
     return new Mat3(new Float32Array(buffer, byteOffset, 9)) // 4 bytes per 32bit float
   }
 
@@ -536,7 +548,7 @@ class Mat3 extends AttrValue {
    *
    * @param {BinReader} reader - The reader value.
    */
-  readBinary(reader) {
+  readBinary(reader: BinReader): void {
     this.__data = reader.loadFloat32Array(9)
   }
 
@@ -545,8 +557,8 @@ class Mat3 extends AttrValue {
    *
    * @return {object} - The json object.
    */
-  toJSON() {
-    return this.__data
+  toJSON(): number[] {
+    return Array.from(this.__data)
   }
 
   /**
@@ -554,7 +566,7 @@ class Mat3 extends AttrValue {
    *
    * @param {object} json - The json param.
    */
-  fromJSON(json) {
+  fromJSON(json: number[]): void {
     this.__data = new Float32Array(json)
   }
 
@@ -566,7 +578,7 @@ class Mat3 extends AttrValue {
    *
    * @return {string} - The return value.
    */
-  toString() {
+  toString(): string {
     return this.toJSON().toString()
   }
 }
