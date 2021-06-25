@@ -1,6 +1,6 @@
 import { AttrValue } from './AttrValue.js'
 import { Registry } from '../Registry'
-import { Vec2 } from './Vec2-renamed.js'
+import { Vec2 } from './Vec2'
 
 /**
  * Represents a three dimensional coordinate, such as 3D scene values, or mesh vertex positions.

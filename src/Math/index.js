@@ -1,5 +1,5 @@
 export * from './AttrValue.js'
-export * from './Vec2-renamed.js'
+export * from './Vec2'
 export * from './Vec3.js'
 export * from './Vec4.js'
 export * from './RGBA.js'

@@ -1,4 +1,4 @@
-import { Vec2 } from './Vec2-renamed'
+import { Vec2 } from './Vec2'
 
 describe('Vec2', () => {
   it('has an initial value.', () => {

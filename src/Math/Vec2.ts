@@ -10,7 +10,7 @@ import { BinReader } from '../SceneTree/BinReader'
  *
  * @extends AttrValue
  */
-class Vec2 { // TODO: ok to drop AttrValue inheritenc? extends AttrValue
+class Vec2 { // TODO: ok to drop AttrValue inheritenc? 
   /**
    * Creates a Vec2.
    *
@@ -602,6 +602,14 @@ class Vec2 { // TODO: ok to drop AttrValue inheritenc? extends AttrValue
     const py = (u1 * u2y - u3y * u4) / d
 
     return new Vec2(px, py)
+  }
+
+  isValid() {
+    for (const v of this.__data) {
+      if (v == Infinity || isNaN(v)) return false
+    }
+
+    return true
   }
 }
 
