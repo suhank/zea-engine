@@ -2,7 +2,7 @@
 import { AttrValue } from './AttrValue.js'
 import { Vec3 } from './Vec3'
 import { Mat3 } from './Mat3'
-import { Mat4 } from './Mat4.js'
+import { Mat4 } from './Mat4-temp.js'
 import { EulerAngles } from './EulerAngles.js'
 import { Registry } from '../Registry'
 
