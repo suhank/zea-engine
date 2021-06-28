@@ -128,13 +128,15 @@ yarn run release
 This will generate a tag in the repo. This tag will be the basis of the next release.
 
 3. Regenerate the API docs
+
+Clean up te CHANGELOG.md, check for spelling issues and other inconsistencies.
+
 ```bash
 yarn docs
 ```
+Commit changes.
 
-4. Check for spelling issues and other inconsistencies. Commit changes using the 'release' conventional commit prefix.
-
-5. Push the main branch and the tags in one action like this. This will cause a publish to NPM
+4. Push the main branch and the tags in one action like this. This will cause a publish to NPM
 ```bash
 git push --follow-tags origin main
 ```
