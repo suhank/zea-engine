@@ -132,11 +132,11 @@ This will generate a tag in the repo. This tag will be the basis of the next rel
 yarn docs
 ```
 
-4. Check for spelling issues and other inconsistencies.
+4. Check for spelling issues and other inconsistencies. Commit changes using the 'release' conventional commit prefix.
 
 5. Push the main branch and the tags in one action like this. This will cause a publish to NPM
 ```bash
-git push --atomic origin main <tag>
+git push --follow-tags origin main
 ```
 
 6. Check that the release process completes in GitHub.
