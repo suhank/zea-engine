@@ -1,4 +1,4 @@
-import { Xfo } from '../../Math/Xfo'
+import { Xfo } from '../../Math/Xfo-temp'
 import { XfoParameter } from './XfoParameter'
 import { BinReader } from '../../SceneTree/BinReader'
 

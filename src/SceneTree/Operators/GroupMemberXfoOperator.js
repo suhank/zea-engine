@@ -1,4 +1,4 @@
-import { Xfo } from '../../Math/Xfo'
+import { Xfo } from '../../Math/Xfo-temp'
 import { Operator } from './Operator'
 import { OperatorOutput } from './OperatorOutput'
 import { OperatorOutputMode } from '../Parameters/Parameter'
