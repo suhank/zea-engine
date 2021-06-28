@@ -8,13 +8,16 @@ import { Registry } from '../Registry'
  * Class representing a ray that starts from an origin in a specified direction.
  */
 class Ray {
+  dir: Vec3
+  start: Vec3
+
   /**
    * Create a ray.
    *
    * @param {Vec3} start - The origin of the ray.
    * @param {Vec3} dir - The direction of the ray.
    */
-  constructor(start = undefined, dir = undefined) {
+  constructor(start?: Vec3, dir?: Vec3) {
     if (start instanceof Vec3) {
       this.start = start
     } else {
@@ -31,16 +34,17 @@ class Ray {
    * Get the closest point on the ray to the given point.
    *
    * @param {Vec3} point - The point in 3D space.
-   * @return {Ray} - Returns the distance along the ray where the closest point occurs.
+   * @return {Number} - returns a number
    */
-  closestPoint(point) {
-    const w = point.subtract(this.start)
-    const c1 = w.dot(this.dir)
-    if (c1 < Number.EPSILON) return 0
-    const c2 = this.dir.dot(this.dir)
-    if (c2 < Number.EPSILON) return 0
-    return c1 / c2
-  }
+
+  closestPoint(point: Vec3): number{ 
+   const w = point.subtract(this.start)
+   const c1 = w.dot(this.dir)
+   if (c1 < Number.EPSILON) return 0
+   const c2 = this.dir.dot(this.dir)
+   if (c2 < Number.EPSILON) return 0
+   return c1 / c2
+ }
 
   /**
    * Get the closest point between the ray and the given line segment made of the 2 points.
@@ -94,10 +98,10 @@ class Ray {
   /**
    * Get the closest point at a distance.
    *
-   * @param {Vec3} dist - The distance value.
-   * @return {Ray} - Returns a Ray.
+   * @param {number} dist - The distance value.
+   * @return {Vec3} - Returns a Vec3.
    */
-  pointAtDist(dist) {
+  pointAtDist(dist: number): Vec3 {
     return this.start.add(this.dir.scale(dist))
   }
 
@@ -105,9 +109,9 @@ class Ray {
    * Returns the two ray params that represent the closest point between the two rays.
    *
    * @param {Ray} ray - The ray value.
-   * @return {array} - Returns an array containing 2 scalar values indicating 0: the fraction of the line segment, 1: distance along the Ray
+   * @return {Ray} - Returns a Ray.
    */
-  intersectRayVector(ray) {
+  intersectRayVector(ray: Ray): number | Vec3 | number[] {
     const u = this.dir
     const v = ray.dir
     const w = this.start.subtract(ray.start)
@@ -117,13 +121,13 @@ class Ray {
     const d = u.dot(w)
     const e = v.dot(w)
     if (a == 0.0 && c == 0.0) {
-      return [0.0, this.start.distanceTo(ray.start)]
+      return this.start.distanceTo(ray.start)
     }
     if (a == 0.0) {
-      return [ray.closestPoint(this.start), 0.0]
+      return ray.closestPoint(this.start)
     }
     if (c == 0.0) {
-      return [1.0, this.closestPoint(ray.start)]
+      return this.closestPoint(ray.start)
     }
     const D = a * c - b * b // always >= 0
 
@@ -150,15 +154,14 @@ class Ray {
    * Returns one ray param representing the intersection
    * of this ray against the plane defined by the given ray.
    *
-   * @param {Vec3} plane - The plane to intersect with.
+   * @param {Ray} plane - The plane to intersect with.
    * @return {number} - The return value.
    */
-  intersectRayPlane(plane) {
+  intersectRayPlane(plane: Ray): number {
     const w = this.start.subtract(plane.start)
     const D = plane.dir.dot(this.dir)
     const N = -plane.dir.dot(w)
-
-    if (Math.abs(D) < Number.PRECISION) {
+    if (Math.abs(D) < (Number as any).PRECISION) {
       // segment is parallel to plane
       if (N == 0.0) return -1.0
       // segment lies in plane
@@ -167,7 +170,7 @@ class Ray {
     // they are not parallel
     // compute intersect param
     const sI = N / D
-    if (sI < -Number.PRECISION) {
+    if (sI < -(Number as any).PRECISION) {
       return -1 // no intersection
     }
     return sI
@@ -225,7 +228,7 @@ class Ray {
    *
    * @return {Ray} - Returns a new Ray.
    */
-  clone() {
+  clone(): Ray {
     return new Ray(this.start.clone(), this.dir.clone())
   }
 
@@ -234,11 +237,12 @@ class Ray {
 
   /**
    * Creates a new Ray.
-   * @param {...object} ...args - The ...args param.
+   * @param {...args: any[]} ...args - The ...args param.
    * @return {Ray} - Returns a new Ray.
    * @private
    */
-  static create(...args) {
+
+  static create(...args: any[]): Ray {
     return new Ray(...args)
   }
 
@@ -248,21 +252,21 @@ class Ray {
   /**
    * The toJSON method encodes this type as a json object for persistence.
    *
-   * @return {object} - The json object.
+   * @return {Record<string, Record<string, number>>} - The json object.
    */
-  toJSON() {
+  toJSON(): Record<string, Record<string, number>> {
     return {
-      start: this.start,
-      dir: this.dir,
+      start: this.start.toJSON(),
+      dir: this.dir.toJSON(),
     }
   }
 
   /**
    * The fromJSON method decodes a json object for this type.
    *
-   * @param {object} j - The json object.
+   * @param {Record<string, Record<string, number>>} j - The json object.
    */
-  fromJSON(j) {
+  fromJSON(j: Record<string, Record<string, number>>): void {
     this.start.fromJSON(j.start)
     this.dir.fromJSON(j.dir)
   }
@@ -272,7 +276,7 @@ class Ray {
    *
    * @return {string} - The return value.
    */
-  toString() {
+  toString(): string {
     return StringFunctions.stringifyJSONWithFixedPrecision(this.toJSON())
   }
 }

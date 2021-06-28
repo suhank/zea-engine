@@ -1,4 +1,4 @@
-import { Ray } from './Ray-temp'
+import { Ray } from './Ray'
 import { Vec3 } from './Vec3'
 
 describe('Ray', () => {
