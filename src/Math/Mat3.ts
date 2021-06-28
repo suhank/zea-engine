@@ -578,6 +578,15 @@ class Mat3  {
   toString(): string {
     return this.toJSON().toString()
   }
+  /**
+   * Returns current Math type data as array. Often used to pass types to the GPU.
+   *
+   * @return {array} - Returns the result as an array.
+   */
+  asArray() {
+    return this.__data
+  }
+  
 }
 
 Registry.register('Mat3', Mat3)
