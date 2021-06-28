@@ -30,6 +30,7 @@ attribute float vertexIDs;
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
 
+<%include file="GLSLUtils.glsl"/>
 <%include file="stack-gl/transpose.glsl"/>
 <%include file="drawItemId.glsl"/>
 <%include file="drawItemTexture.glsl"/>
