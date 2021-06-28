@@ -10,12 +10,15 @@ import { Vec3 } from './Vec3'
  * @extends AttrValue
  */
 class SphereType extends AttrValue {
+  pos: Vec3
+  radius: number
+
   /**
    * Create a sphere.
    * @param {Vec3} pos - The position of the sphere.
    * @param {number} radius - The radius of the sphere.
    */
-  constructor(pos, radius = 0) {
+  constructor(pos = new Vec3(), radius = 0) {
     super()
     if (pos instanceof Vec3) {
       this.pos = pos
@@ -30,8 +33,8 @@ class SphereType extends AttrValue {
    *
    * @return {Sphere} - Returns a new sphere.
    */
-  clone() {
-    return new Sphere(this.pos.clone(), this.radius)
+  clone(): SphereType {
+    return new SphereType(this.pos.clone(), this.radius)
   }
 
   /**
@@ -52,7 +55,7 @@ class SphereType extends AttrValue {
    *
    * @return {object} - The json object.
    */
-  toJSON() {
+  toJSON(): Record<string, number | Record<string, number>> {
     return {
       pos: this.pos.toJSON(),
       radius: this.radius,
@@ -64,7 +67,7 @@ class SphereType extends AttrValue {
    *
    * @return {string} - The return value.
    */
-  toString() {
+  toString(): string {
     return StringFunctions.stringifyJSONWithFixedPrecision(this.toJSON())
   }
 
@@ -74,12 +77,13 @@ class SphereType extends AttrValue {
   /**
    * Creates a new sphere.
    *
-   * @param {...object} ...args - The ...args param.
+   * @param {...args: any[]} ...args - The ...args param.
    * @return {Sphere} - Returns a new sphere.
    * @private
    */
-  static create(...args) {
-    return new Sphere(...args)
+
+  static create(...args: any[]): SphereType {
+    return new SphereType(...args)
   }
 }
 
