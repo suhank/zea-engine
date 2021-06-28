@@ -1,4 +1,4 @@
-import { SphereType } from './SphereType'
+import { SphereType } from './SphereType-temp'
 
 describe.skip('SphereType', () => {
   describe('#on', () => {
