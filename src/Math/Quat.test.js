@@ -1,4 +1,4 @@
-import { Quat } from './Quat'
+import { Quat } from './Quat-temp'
 
 describe('Quat', () => {
   it('creates Quat from buffer', () => {

@@ -2,7 +2,7 @@
 import { StringFunctions } from '../Utilities/StringFunctions'
 import { Vec3 } from './Vec3'
 import { Mat4 } from './Mat4'
-import { Quat } from './Quat.js'
+import { Quat } from './Quat-temp.js'
 import { Registry } from '../Registry'
 
 const sc_helper = new Vec3(1, 1, 1)

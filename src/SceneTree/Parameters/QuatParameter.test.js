@@ -1,4 +1,4 @@
-import { Quat } from '../../Math/Quat'
+import { Quat } from '../../Math/Quat-temp'
 import { QuatParameter } from './QuatParameter'
 import { BinReader } from '../../SceneTree/BinReader'
 
