@@ -32,9 +32,13 @@ uniform mat4 projectionMatrix;
 
 <%include file="GLSLUtils.glsl"/>
 <%include file="stack-gl/transpose.glsl"/>
-<%include file="drawItemId.glsl"/>
 <%include file="drawItemTexture.glsl"/>
 <%include file="modelMatrix.glsl"/>
+
+uniform int drawItemId;
+int getDrawItemId() {
+    return drawItemId;
+}
 
 uniform sampler2D positionsTexture;
 uniform int positionsTextureSize;
@@ -85,6 +89,7 @@ void main(void) {
       `
 precision highp float;
 
+<%include file="GLSLUtils.glsl"/>
 <%include file="drawItemTexture.glsl"/>
 <%include file="cutaways.glsl"/>
 <%include file="GLSLBits.glsl"/>
