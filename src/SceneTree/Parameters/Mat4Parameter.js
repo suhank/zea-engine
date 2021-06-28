@@ -1,5 +1,5 @@
 import { Registry } from '../../Registry'
-import { Mat4 } from '../../Math/index'
+import { Mat4 } from '../../Math/Mat4'
 import { Parameter } from './Parameter.js'
 
 /**

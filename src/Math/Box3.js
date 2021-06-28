@@ -1,7 +1,7 @@
 import { StringFunctions } from '../Utilities/StringFunctions'
 import { MathFunctions } from '../Utilities/MathFunctions'
 import { Vec3 } from './Vec3'
-import { Mat4 } from './Mat4-temp.js'
+import { Mat4 } from './Mat4'
 import { SphereType } from './SphereType.js'
 import { Registry } from '../Registry'
 
