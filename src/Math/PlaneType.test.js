@@ -1,4 +1,4 @@
-import { PlaneType } from './PlaneType'
+import { PlaneType } from './PlaneType-temp'
 
 describe.skip('PlaneType', () => {
   describe('#on', () => {
