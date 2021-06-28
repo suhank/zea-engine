@@ -1,4 +1,4 @@
-import { Xfo } from './Xfo-temp'
+import { Xfo } from './Xfo'
 import { Vec3, Quat, Mat4 } from './index'
 import { BinReader } from '../SceneTree/BinReader'
 
