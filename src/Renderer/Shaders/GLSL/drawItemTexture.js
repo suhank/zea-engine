@@ -32,6 +32,7 @@ int getDrawItemId() {
   ivec2 drawIdsArrayCoords = ivec2(gl_DrawID % drawIdsTextureSize.x, gl_DrawID / drawIdsTextureSize.x);
   return int(texelFetch(drawIdsTexture, drawIdsArrayCoords, 0).r + 0.5);
 }
+
 #endif // EMULATE_MULTI_DRAW
 
 #else // ENABLE_MULTI_DRAW
@@ -51,7 +52,6 @@ int getDrawItemId() {
     return int(instancedIds);
   }
 }
-
 
 #else
 
