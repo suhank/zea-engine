@@ -40,6 +40,7 @@ attribute vec2 texCoords;
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
 
+<%include file="GLSLUtils.glsl"/>
 <%include file="stack-gl/transpose.glsl"/>
 <%include file="stack-gl/inverse.glsl"/>
 <%include file="drawItemId.glsl"/>

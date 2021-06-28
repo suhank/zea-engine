@@ -12,15 +12,16 @@ shaderLibrary.setShaderModule(
 uniform sampler2D drawIdsTexture;
 
 #ifdef EMULATE_MULTI_DRAW
+uniform ivec2 drawIdsTextureSize;
 
 uniform int drawId;
 int getDrawItemId() {
-  ivec2 drawIdsTextureSize = textureSize(drawIdsTexture, 0);
-  ivec2 drawIdsArrayCoords = ivec2(drawId % drawIdsTextureSize.x, drawId / drawIdsTextureSize.x);
-  return int(texelFetch(drawIdsTexture, drawIdsArrayCoords, 0).r + 0.5);
+  ivec2 drawIdsArrayCoords = ivec2(imod(drawId, drawIdsTextureSize.x), drawId / drawIdsTextureSize.x);
+  return int(fetchTexel(drawIdsTexture, drawIdsTextureSize, drawIdsArrayCoords).a + 0.5);
 }
 
 #else // EMULATE_MULTI_DRAW
+
 int getDrawItemId() {
   ivec2 drawIdsTextureSize = textureSize(drawIdsTexture, 0);
   ivec2 drawIdsArrayCoords = ivec2(gl_DrawID % drawIdsTextureSize.x, gl_DrawID / drawIdsTextureSize.x);
@@ -62,8 +63,6 @@ int getDrawItemId() {
 shaderLibrary.setShaderModule(
   'drawItemTexture.glsl',
   `
-<%include file="GLSLUtils.glsl"/>
-  
 
 #ifdef ENABLE_FLOAT_TEXTURES
 
