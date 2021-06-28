@@ -1,5 +1,4 @@
 /* eslint-disable new-cap */
-//import { AttrValue } from './AttrValue.js'
 import { Registry } from '../Registry'
 import { Vec3 } from './Vec3'
 import { BinReader } from '../SceneTree/BinReader'
@@ -8,9 +7,8 @@ import { BinReader } from '../SceneTree/BinReader'
  * Math types internally store values in {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array|Float32Array} and
  * expose getters and setters for the component values.
  *
- * @extends AttrValue
  */
-class Vec4 { // extends AttrValue
+class Vec4 {
   /**
    /**
    * Creates a Vec4.

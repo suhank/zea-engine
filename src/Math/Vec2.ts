@@ -1,16 +1,13 @@
-//import { AttrValue } from './AttrValue.js'
 import { Registry } from '../Registry'
 import { BinReader } from '../SceneTree/BinReader'
-//import { BinReader } from '@SceneTree/BinReader'
 /**
  * Representing a Vec2(two-dimensional floating point vector). A Vec2 is for representing 2 dimensional values, such as screen coordinates or pixel coordinates within an image.
  *
  * Math types internally store values in {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array|Float32Array} and
  * expose getters and setters for the component values.
  *
- * @extends AttrValue
  */
-class Vec2 { // TODO: ok to drop AttrValue inheritenc? 
+class Vec2 {
   /**
    * Creates a Vec2.
    *
@@ -62,7 +59,7 @@ class Vec2 { // TODO: ok to drop AttrValue inheritenc?
    * @param {Number|Float32Array|Uint32Array|json} x - The x value. Default is 0.
    * @param {Number} y - The y value. Default is 0.
    */
-  __data;//: TypedArray | Record<string, any>;
+  __data;
 
   constructor(x: any  = 0, y = 0) { //x: number | Float32Array | Uint32Array | Record<string, any> = 0
 

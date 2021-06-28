@@ -1,5 +1,4 @@
 /* eslint-disable new-cap */
-//import { AttrValue } from './AttrValue.js'
 import { Vec3 } from './Vec3'
 import { Registry } from '../Registry'
 import { BinReader } from '../SceneTree/BinReader'
@@ -8,9 +7,8 @@ import { BinReader } from '../SceneTree/BinReader'
  * A class representing a 3x3 matrix.
  * This matrix class is based on GLM, and is column major.
  *
- * @extends AttrValue
  */
-class Mat3  { // extends AttrValue
+class Mat3  {
   /**
    * Initializes the Mat3 class with given data.
    *

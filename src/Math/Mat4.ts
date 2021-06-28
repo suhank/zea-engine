@@ -1,4 +1,3 @@
-//import { AttrValue } from './AttrValue.js'
 import { Vec3 } from './Vec3'
 import { Mat3 } from './Mat3'
 import { Registry } from '../Registry'
@@ -1434,7 +1433,7 @@ class Mat4 {
   toJSON(): Float32Array {
     return Float32Array.from(this.__data)
   }
-  
+
  /**
  * The fromJSON method decodes a json object for this type.
  *

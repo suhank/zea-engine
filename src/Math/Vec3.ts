@@ -1,4 +1,3 @@
-import { AttrValue } from './AttrValue.js'
 import { Registry } from '../Registry'
 import { Vec2 } from './Vec2'
 import { BinReader } from '../SceneTree/BinReader'
@@ -8,10 +7,8 @@ import { BinReader } from '../SceneTree/BinReader'
  *
  * Math types internally store values in {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array|Float32Array} and
  * expose getters and setters for the component values.
- *
- * @extends AttrValue
  */
-class Vec3  { //extends AttrValue
+class Vec3 {
   /**
    * Creates a Vec3.
    *

@@ -1,13 +1,11 @@
 /* eslint-disable require-jsdoc */
-//import { AttrValue } from './AttrValue.js'
 import { Registry } from '../Registry'
 
 /**
  * Class representing the red, green, blue and alpha channel of a color as 8bit values.
  *
- * @extends AttrValue //TODO: must remove references
  */
-class RGBA  { //extends AttrValue
+class RGBA  {
   /**
    * Create a RGBA.
    * @param {number | string | Float32Array | ArrayBuffer} r - The red channel of a color.
