@@ -10,16 +10,20 @@ describe('hit-testing', () => {
     cy.get('canvas').percySnapshot('hit-testing')
 
     cy.window().then((win) => {
+      cy.get('canvas')
+        .trigger('mousedown', 400, 250)
+        .trigger('mousemove', 410, 250)
+        .trigger('mousemove', 420, 250)
+        .trigger('mousemove', 430, 250)
+        .trigger('mousemove', 440, 250)
+        .trigger('mousemove', 450, 250)
+        .trigger('mouseup', 450, 250)
       const variant = 'variant-01'
-      win.postMessage(variant)
-      cy.get('@postMessage').its('lastCall.args.0').should('equal', `done-${variant}`)
       cy.get('canvas').percySnapshot(`hit-testing - ${variant}`)
     })
 
     cy.window().then((win) => {
-      const variant = 'variant-02'
-      win.postMessage(variant)
-      cy.get('@postMessage').its('lastCall.args.0').should('equal', `done-${variant}`)
+      cy.get('canvas').trigger('mousedown', 400, 250).trigger('mousemove', 400, 200).trigger('mouseup', 400, 200)
       cy.get('canvas').percySnapshot(`hit-testing - ${variant}`)
     })
   })

@@ -56,20 +56,21 @@
 
       const objAsset = new ObjAsset('cow')
       objAsset.getParameter('splitGroupsIntoObjects').setValue(true)
-      objAsset.load('data/cow.obj')
+      objAsset.load('data/cow.obj').then(() => {
+        postMessage('done-loading')
+      })
       scene.getRoot().addChild(objAsset)
 
       const xfo = new Xfo()
       xfo.tr.set(0, 0, 3.55)
       xfo.ori.setFromAxisAndAngle(new Vec3(1, 0, 0), Math.PI * 0.5)
       objAsset.getParameter('GlobalXfo').setValue(xfo)
-      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(12, 12, 10), new Vec3(0, 0, 1.5))
+      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(8, 8, 6), new Vec3(2, 0, 3))
 
       const postMessage = (msg) => {
         console.log(msg)
         window.postMessage(msg)
       }
-      postMessage('done-loading')
 
       const sphere = new Sphere(0.1)
       const material = new Material('foo', 'SimpleSurfaceShader')
@@ -130,7 +131,6 @@
           }
         }
         onPointerUp(event) {
-          // this.stroke.setSelectable(true)
           this.stroke.traverse((item) => {
             item.setSelectable(true)
           })
@@ -149,24 +149,6 @@
         }
       })
       // renderer.getViewport().debugGeomShader = true
-
-      // {{{ Messages handler.
-      const handleMessage = (event) => {
-        const { data } = event
-
-        if (data === 'variant-01') {
-          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, -2.7), new Vec3(0, 0, 0.4))
-          renderer.frameAll()
-          postMessage(`done-${data}`)
-        } else if (data === 'variant-02') {
-          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-2, -2, 2.7), new Vec3(0, 0, 0.4))
-          renderer.frameAll()
-          postMessage(`done-${data}`)
-        }
-      }
-
-      window.addEventListener('message', handleMessage, false)
-      // }}}
     </script>
   </head>
   <body class="bg-blue-100 h-full">
