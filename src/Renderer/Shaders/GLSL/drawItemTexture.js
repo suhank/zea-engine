@@ -17,7 +17,12 @@ uniform ivec2 drawIdsTextureSize;
 uniform int drawId;
 int getDrawItemId() {
   ivec2 drawIdsArrayCoords = ivec2(imod(drawId, drawIdsTextureSize.x), drawId / drawIdsTextureSize.x);
+  
+#ifdef ENABLE_ES3 // Firefox (webgl2)
+  return int(fetchTexel(drawIdsTexture, drawIdsTextureSize, drawIdsArrayCoords).r + 0.5);
+#else // Safari  (webgl1)
   return int(fetchTexel(drawIdsTexture, drawIdsTextureSize, drawIdsArrayCoords).a + 0.5);
+#endif
 }
 
 #else // EMULATE_MULTI_DRAW
