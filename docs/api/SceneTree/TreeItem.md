@@ -6,9 +6,9 @@ It has the capability to add and remove children.
 <br>
 <br>
 **Parameters**
-* **Visible([`BooleanParameter`](api/SceneTree/Parameters/BooleanParameter.md)):** Shows/Hides the item.
-* **LocalXfo([`XfoParameter`](api/SceneTree/Parameters/XfoParameter.md)):** Specifies the offset of this tree item from its parent.
-* **GlobalXfo([`XfoParameter`](api/SceneTree/Parameters/XfoParameter.md)):** Provides the computed world Xfo of this tree item.
+* **Visible([`BooleanParameter`](api/SceneTree\Parameters\BooleanParameter.md)):** Shows/Hides the item.
+* **LocalXfo([`XfoParameter`](api/SceneTree\Parameters\XfoParameter.md)):** Specifies the offset of this tree item from its parent.
+* **GlobalXfo([`XfoParameter`](api/SceneTree\Parameters\XfoParameter.md)):** Provides the computed world Xfo of this tree item.
 * **BoundingBox(`BoundingBox`):** Provides the bounding box for the tree item and all of its children in the 3d scene.
 
 **Events**
@@ -23,59 +23,53 @@ It has the capability to add and remove children.
 * **pointerEnter:** Emitted when a pointerEnter event happens in an item.
 
 
-**Extends**: <code>[BaseItem](api/SceneTree/BaseItem.md)</code>  
+**Extends**: <code>[BaseItem](api/SceneTree\BaseItem.md)</code>  
 
 * [TreeItem ⇐ <code>BaseItem</code>](#TreeItem)
     * [new TreeItem(name)](#new-TreeItem)
-    * _instance_
-        * [setOwner(parentItem)](#setOwner)
-        * [getParentItem() \| <code>undefined</code>](#getParentItem)
-        * [setParentItem(parentItem)](#setParentItem)
-        * ~~[.getLocalXfo()](#TreeItem+getLocalXfo) ⇒ <code>Xfo</code>~~
-        * ~~[.setLocalXfo(xfo)](#TreeItem+setLocalXfo)~~
-        * ~~[.getGlobalXfo()](#TreeItem+getGlobalXfo) ⇒ <code>Xfo</code>~~
-        * ~~[.setGlobalXfo(xfo)](#TreeItem+setGlobalXfo)~~
-        * ~~[.getVisible()](#TreeItem+getVisible) ⇒ <code>boolean</code>~~
-        * [isVisible() ⇒ <code>boolean</code>](#isVisible)
-        * [setVisible(val)](#setVisible)
-        * [propagateVisibility(val)](#propagateVisibility)
-        * [addHighlight(name, color, propagateToChildren)](#addHighlight)
-        * [removeHighlight(name, propagateToChildren)](#removeHighlight)
-        * [getHighlight() ⇒ <code>Color</code>](#getHighlight)
-        * [isHighlighted() ⇒ <code>boolean</code>](#isHighlighted)
-        * [getChildren() ⇒ <code>array</code>](#getChildren)
-        * ~~[.numChildren()](#TreeItem+numChildren) ⇒ <code>number</code>~~
-        * [getNumChildren() ⇒ <code>number</code>](#getNumChildren)
-        * [generateUniqueName(name) ⇒ <code>string</code>](#generateUniqueName)
-        * [insertChild(childItem, index, maintainXfo, fixCollisions) ⇒ <code>number</code>](#insertChild)
-        * [addChild(childItem, maintainXfo, fixCollisions) ⇒ <code>BaseItem</code>](#addChild)
-        * [getChild(index) ⇒ <code>BaseItem</code> \| <code>undefined</code>](#getChild)
-        * [getChildByName(name) ⇒ <code>BaseItem</code> \| <code>null</code>](#getChildByName)
-        * [getChildNames() ⇒ <code>array</code>](#getChildNames)
-        * [removeChild(index)](#removeChild)
-        * [removeChildByName(name) ⇒ <code>BaseItem</code>](#removeChildByName)
-        * [removeChildByHandle(childItem)](#removeChildByHandle)
-        * [removeAllChildren()](#removeAllChildren)
-        * [getChildIndex(childItem) ⇒ <code>number</code>](#getChildIndex)
-        * ~~[.indexOfChild(childItem)](#TreeItem+indexOfChild) ⇒ <code>number</code>~~
-        * [resolvePath(path, index) ⇒ <code>BaseItem</code> \| <code>Parameter</code>](#resolvePath)
-        * [traverse(callback, includeThis)](#traverse)
-        * [onPointerDown(event)](#onPointerDown)
-        * [onPointerUp(event)](#onPointerUp)
-        * [onPointerMove(event)](#onPointerMove)
-        * [onPointerEnter(event)](#onPointerEnter)
-        * [onPointerLeave(event)](#onPointerLeave)
-        * [onWheel(event)](#onWheel)
-        * [toJSON(context) ⇒ <code>object</code>](#toJSON)
-        * [fromJSON(j, context)](#fromJSON)
-        * [readBinary(reader, context)](#readBinary)
-        * [clone(context)](#clone)
-        * [copyFrom(src, context)](#copyFrom)
-    * _static_
-        * [getSelectionOutlineColor() ⇒ <code>Color</code>](#getSelectionOutlineColor)
-        * [setSelectionOutlineColor(color)](#setSelectionOutlineColor)
-        * [getBranchSelectionOutlineColor() ⇒ <code>Color</code>](#getBranchSelectionOutlineColor)
-        * [setBranchSelectionOutlineColor(color)](#setBranchSelectionOutlineColor)
+    * [setOwner(parentItem)](#setOwner)
+    * [getParentItem() \| <code>undefined</code>](#getParentItem)
+    * [setParentItem(parentItem)](#setParentItem)
+    * ~~[.getLocalXfo()](#TreeItem+getLocalXfo) ⇒ <code>Xfo</code>~~
+    * ~~[.setLocalXfo(xfo)](#TreeItem+setLocalXfo)~~
+    * ~~[.getGlobalXfo()](#TreeItem+getGlobalXfo) ⇒ <code>Xfo</code>~~
+    * ~~[.setGlobalXfo(xfo)](#TreeItem+setGlobalXfo)~~
+    * ~~[.getVisible()](#TreeItem+getVisible) ⇒ <code>boolean</code>~~
+    * [isVisible() ⇒ <code>boolean</code>](#isVisible)
+    * [setVisible(val)](#setVisible)
+    * [propagateVisibility(val)](#propagateVisibility)
+    * [addHighlight(name, color, propagateToChildren)](#addHighlight)
+    * [removeHighlight(name, propagateToChildren)](#removeHighlight)
+    * [getHighlight() ⇒ <code>Color</code>](#getHighlight)
+    * [isHighlighted() ⇒ <code>boolean</code>](#isHighlighted)
+    * [getChildren() ⇒ <code>array</code>](#getChildren)
+    * ~~[.numChildren()](#TreeItem+numChildren) ⇒ <code>number</code>~~
+    * [getNumChildren() ⇒ <code>number</code>](#getNumChildren)
+    * [generateUniqueName(name) ⇒ <code>string</code>](#generateUniqueName)
+    * [insertChild(childItem, index, maintainXfo, fixCollisions) ⇒ <code>number</code>](#insertChild)
+    * [addChild(childItem, maintainXfo, fixCollisions) ⇒ <code>BaseItem</code>](#addChild)
+    * [getChild(index) ⇒ <code>BaseItem</code> \| <code>undefined</code>](#getChild)
+    * [getChildByName(name) ⇒ <code>BaseItem</code> \| <code>null</code>](#getChildByName)
+    * [getChildNames() ⇒ <code>array</code>](#getChildNames)
+    * [removeChild(index)](#removeChild)
+    * [removeChildByName(name) ⇒ <code>BaseItem</code>](#removeChildByName)
+    * [removeChildByHandle(childItem)](#removeChildByHandle)
+    * [removeAllChildren()](#removeAllChildren)
+    * [getChildIndex(childItem) ⇒ <code>number</code>](#getChildIndex)
+    * ~~[.indexOfChild(childItem)](#TreeItem+indexOfChild) ⇒ <code>number</code>~~
+    * [resolvePath(path, index) ⇒ <code>BaseItem</code> \| <code>Parameter</code>](#resolvePath)
+    * [traverse(callback, includeThis)](#traverse)
+    * [onPointerDown(event)](#onPointerDown)
+    * [onPointerUp(event)](#onPointerUp)
+    * [onPointerMove(event)](#onPointerMove)
+    * [onPointerEnter(event)](#onPointerEnter)
+    * [onPointerLeave(event)](#onPointerLeave)
+    * [onWheel(event)](#onWheel)
+    * [toJSON(context) ⇒ <code>object</code>](#toJSON)
+    * [fromJSON(j, context)](#fromJSON)
+    * [readBinary(reader, context)](#readBinary)
+    * [clone(context)](#clone)
+    * [copyFrom(src, context)](#copyFrom)
 
 <a name="new_TreeItem_new"></a>
 
@@ -122,7 +116,7 @@ Sets the parent of current TreeItem.
 ***Deprecated***
 
 
-**Returns**: <code>[Xfo](api/Math/Xfo.md)</code> - - Returns the local Xfo.  
+**Returns**: <code>[Xfo](api/Math\Xfo.md)</code> - - Returns the local Xfo.  
 <a name="TreeItem+setLocalXfo"></a>
 
 ### ~~treeItem.setLocalXfo(xfo)~~
@@ -132,7 +126,7 @@ Sets the parent of current TreeItem.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| xfo | <code>[Xfo](api/Math/Xfo.md)</code> | The local xfo transform. |
+| xfo | <code>[Xfo](api/Math\Xfo.md)</code> | The local xfo transform. |
 
 <a name="TreeItem+getGlobalXfo"></a>
 
@@ -140,7 +134,7 @@ Sets the parent of current TreeItem.
 ***Deprecated***
 
 
-**Returns**: <code>[Xfo](api/Math/Xfo.md)</code> - - Returns the global Xfo.  
+**Returns**: <code>[Xfo](api/Math\Xfo.md)</code> - - Returns the global Xfo.  
 <a name="TreeItem+setGlobalXfo"></a>
 
 ### ~~treeItem.setGlobalXfo(xfo)~~
@@ -150,7 +144,7 @@ Sets the parent of current TreeItem.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| xfo | <code>[Xfo](api/Math/Xfo.md)</code> | The global xfo transform. |
+| xfo | <code>[Xfo](api/Math\Xfo.md)</code> | The global xfo transform. |
 
 <a name="TreeItem+getVisible"></a>
 
@@ -198,7 +192,7 @@ Adds a highlight to the tree item.
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
 | name | <code>string</code> |  | The name of the tree item. |
-| color | <code>[Color](api/Math/Color.md)</code> |  | The color of the highlight. |
+| color | <code>[Color](api/Math\Color.md)</code> |  | The color of the highlight. |
 | propagateToChildren | <code>boolean</code> | <code>false</code> | A boolean indicating whether to propagate to children. |
 
 <a name="TreeItem+removeHighlight"></a>
@@ -219,7 +213,7 @@ Removes a highlight to the tree item.
 Returns the color of the current highlight.
 
 
-**Returns**: <code>[Color](api/Math/Color.md)</code> - - The color value.  
+**Returns**: <code>[Color](api/Math\Color.md)</code> - - The color value.  
 <a name="TreeItem+isHighlighted"></a>
 
 ### isHighlighted
@@ -276,7 +270,7 @@ Inserts a child. It accepts all kind of `BaseItem`, not only `TreeItem`.
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| childItem | <code>[BaseItem](api/SceneTree/BaseItem.md)</code> |  | The child BaseItem to insert. |
+| childItem | <code>[BaseItem](api/SceneTree\BaseItem.md)</code> |  | The child BaseItem to insert. |
 | index | <code>number</code> |  | The index to add the child item. |
 | maintainXfo | <code>boolean</code> | <code>false</code> | Boolean that determines if the Xfo value is maintained. |
 | fixCollisions | <code>boolean</code> | <code>true</code> | Modify the name of the item to avoid name collisions. If false, an exception wll be thrown instead if a name collision occurs. |
@@ -287,11 +281,11 @@ Inserts a child. It accepts all kind of `BaseItem`, not only `TreeItem`.
 Adds a child. It accepts all kind of `BaseItem`, not only `TreeItem`.
 
 
-**Returns**: <code>[BaseItem](api/SceneTree/BaseItem.md)</code> - childItem - The child BaseItem that was added.  
+**Returns**: <code>[BaseItem](api/SceneTree\BaseItem.md)</code> - childItem - The child BaseItem that was added.  
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| childItem | <code>[BaseItem](api/SceneTree/BaseItem.md)</code> |  | The child BaseItem to add. |
+| childItem | <code>[BaseItem](api/SceneTree\BaseItem.md)</code> |  | The child BaseItem to add. |
 | maintainXfo | <code>boolean</code> | <code>true</code> | Boolean that determines if the Global Xfo value is maintained. If true, when moving items in the hierarchy from one parent to another, the local Xfo of the item will be modified to maintain and the Global Xfo. Note: this option defaults to false because we expect that is the behavior users would expect when manipulating the tree in code. To be safe and unambiguous, always try to specify this value. |
 | fixCollisions | <code>boolean</code> | <code>true</code> | Modify the name of the item to avoid name collisions with other children of the same parent. If false, an exception wll be thrown instead if a name collision occurs. |
 
@@ -343,7 +337,7 @@ Removes a child BaseItem by specifying its index.
 Removes a child BaseItem by specifying its name.
 
 
-**Returns**: <code>[BaseItem](api/SceneTree/BaseItem.md)</code> - - Return the child TreeItem.  
+**Returns**: <code>[BaseItem](api/SceneTree\BaseItem.md)</code> - - Return the child TreeItem.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -359,7 +353,7 @@ An exception is thrown if the item is not a child of this tree item.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| childItem | <code>[BaseItem](api/SceneTree/BaseItem.md)</code> | The child TreeItem to remove. |
+| childItem | <code>[BaseItem](api/SceneTree\BaseItem.md)</code> | The child TreeItem to remove. |
 
 <a name="TreeItem+removeAllChildren"></a>
 
@@ -377,7 +371,7 @@ Returns index position of the specified item.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| childItem | <code>[BaseItem](api/SceneTree/BaseItem.md)</code> | The child TreeItem value. |
+| childItem | <code>[BaseItem](api/SceneTree\BaseItem.md)</code> | The child TreeItem value. |
 
 <a name="TreeItem+indexOfChild"></a>
 
@@ -520,7 +514,7 @@ Sets state of current Item(Including parameters & children) using a binary reade
 
 | Param | Type | Description |
 | --- | --- | --- |
-| reader | <code>[BinReader](api/SceneTree/BinReader.md)</code> | The reader value. |
+| reader | <code>[BinReader](api/SceneTree\BinReader.md)</code> | The reader value. |
 | context | <code>object</code> | The context value. |
 
 <a name="TreeItem+clone"></a>
@@ -547,42 +541,6 @@ Copies current TreeItem with all its children.
 | --- | --- | --- |
 | src | [<code>TreeItem</code>](#TreeItem) | The tree item to copy from. |
 | context | <code>object</code> | The context value. |
-
-<a name="TreeItem.getSelectionOutlineColor"></a>
-
-### getSelectionOutlineColor
-Returns the selection outline color.
-
-
-**Returns**: <code>[Color](api/Math/Color.md)</code> - - Returns a color.  
-<a name="TreeItem.setSelectionOutlineColor"></a>
-
-### setSelectionOutlineColor
-Sets the selection outline color.
-
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| color | <code>[Color](api/Math/Color.md)</code> | The color value. |
-
-<a name="TreeItem.getBranchSelectionOutlineColor"></a>
-
-### getBranchSelectionOutlineColor
-Returns the branch selection outline color.
-
-
-**Returns**: <code>[Color](api/Math/Color.md)</code> - - Returns a color.  
-<a name="TreeItem.setBranchSelectionOutlineColor"></a>
-
-### setBranchSelectionOutlineColor
-Sets the branch selection outline color.
-
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| color | <code>[Color](api/Math/Color.md)</code> | The color value. |
 
 
 

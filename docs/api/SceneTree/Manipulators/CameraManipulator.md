@@ -44,9 +44,9 @@ cameraManipulator.aimFocusOnMouseClick = 0
 ```
 
 **Parameters**
-* **OrbitRate([`NumberParameter`](api/SceneTree/Parameters/NumberParameter.md)):** The rate at which mouse or touch interactions are translated camera orientation changes.
-* **DollySpeed([`NumberParameter`](api/SceneTree/Parameters/NumberParameter.md)):** The rate at which the mouse button or touch interactions are translated camera dolly movement.
-* **mouseWheelDollySpeed([`NumberParameter`](api/SceneTree/Parameters/NumberParameter.md)):** The rate at which the mouse wheel interactions are translated camera dolly movement.
+* **OrbitRate([`NumberParameter`](api/SceneTree\Parameters\NumberParameter.md)):** The rate at which mouse or touch interactions are translated camera orientation changes.
+* **DollySpeed([`NumberParameter`](api/SceneTree\Parameters\NumberParameter.md)):** The rate at which the mouse button or touch interactions are translated camera dolly movement.
+* **mouseWheelDollySpeed([`NumberParameter`](api/SceneTree\Parameters\NumberParameter.md)):** The rate at which the mouse wheel interactions are translated camera dolly movement.
 
   Note: this value defaults to different values for touch based interfaces to mouse based input.
   For mobile devices, the orbit rate defaults to 0.5, and for mouse based interaction, the value defaults to 1.
@@ -64,7 +64,7 @@ cameraManipulator.getParameter('OrbitRate').setValue(SystemDesc.isMobileDevice ?
 * **aimingFocus:** Emitted when a camera is being focussed on a target. E.g. when the user double clicks the mouse on a geometry in the view.
 
 
-**Extends**: <code>[BaseTool](api/SceneTree/Manipulators/BaseTool.md)</code>  
+**Extends**: <code>[BaseTool](api/SceneTree\Manipulators\BaseTool.md)</code>  
 
 * [CameraManipulator ⇐ <code>BaseTool</code>](#CameraManipulator)
     * [new CameraManipulator(appData)](#new-CameraManipulator)
@@ -137,7 +137,7 @@ The look method.
 | Param | Type | Description |
 | --- | --- | --- |
 | event | <code>MouseEvent</code> | The event value. |
-| dragVec | <code>[Vec2](api/Math/Vec2.md)</code> | The drag vector value. |
+| dragVec | <code>[Vec2](api/Math\Vec2.md)</code> | The drag vector value. |
 
 <a name="CameraManipulator+turntable"></a>
 
@@ -149,7 +149,7 @@ Rotates viewport camera about the target.
 | Param | Type | Description |
 | --- | --- | --- |
 | event | <code>MouseEvent</code> | The event value. |
-| dragVec | <code>[Vec2](api/Math/Vec2.md)</code> | The drag vector value. |
+| dragVec | <code>[Vec2](api/Math\Vec2.md)</code> | The drag vector value. |
 
 <a name="CameraManipulator+tumbler"></a>
 
@@ -161,7 +161,7 @@ Rotates viewport camera about the target.
 | Param | Type | Description |
 | --- | --- | --- |
 | event | <code>MouseEvent</code> | The event value. |
-| dragVec | <code>[Vec2](api/Math/Vec2.md)</code> | The drag vector value. |
+| dragVec | <code>[Vec2](api/Math\Vec2.md)</code> | The drag vector value. |
 
 <a name="CameraManipulator+trackball"></a>
 
@@ -173,7 +173,7 @@ Rotates viewport camera about the target.
 | Param | Type | Description |
 | --- | --- | --- |
 | event | <code>MouseEvent</code> | The event value. |
-| dragVec | <code>[Vec2](api/Math/Vec2.md)</code> | The drag vector value. |
+| dragVec | <code>[Vec2](api/Math\Vec2.md)</code> | The drag vector value. |
 
 <a name="CameraManipulator+pan"></a>
 
@@ -185,7 +185,7 @@ Rotates the camera around its own `X`,`Y` axes.
 | Param | Type | Description |
 | --- | --- | --- |
 | event | <code>MouseEvent</code> | The event value. |
-| dragVec | <code>[Vec2](api/Math/Vec2.md)</code> | The drag vector value. |
+| dragVec | <code>[Vec2](api/Math\Vec2.md)</code> | The drag vector value. |
 
 <a name="CameraManipulator+dolly"></a>
 
@@ -197,7 +197,7 @@ The dolly method.
 | Param | Type | Description |
 | --- | --- | --- |
 | event | <code>MouseEvent</code> | The event value. |
-| dragVec | <code>[Vec2](api/Math/Vec2.md)</code> | The drag vector value. |
+| dragVec | <code>[Vec2](api/Math\Vec2.md)</code> | The drag vector value. |
 
 <a name="CameraManipulator+onPointerDoublePress"></a>
 

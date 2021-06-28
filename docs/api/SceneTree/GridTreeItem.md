@@ -6,7 +6,7 @@ and highlights the X and Y axes with Red and Green lines. Grids are useful in di
 The Grid geometry does not return a bounding box and so does not effect the bounding of the scene.
 
 
-**Extends**: <code>[TreeItem](api/SceneTree/TreeItem.md)</code>  
+**Extends**: <code>[TreeItem](api/SceneTree\TreeItem.md)</code>  
 <a name="new_GridTreeItem_new"></a>
 
 ### new GridTreeItem

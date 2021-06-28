@@ -275,84 +275,84 @@ First reading the size of the array then reading each string.
 Creates and returns a `Vec2` object with the next two signed Int32 values in the buffer.
 
 
-**Returns**: <code>[Vec2](api/Math/Vec2.md)</code> - - Returns a Vec2.  
+**Returns**: <code>[Vec2](api/Math\Vec2.md)</code> - - Returns a Vec2.  
 <a name="BinReader+loadUInt32Vec2"></a>
 
 ### loadUInt32Vec2
 Creates and returns a `Vec2` object with the next two unsigned Int32 values in the buffer.
 
 
-**Returns**: <code>[Vec2](api/Math/Vec2.md)</code> - - Returns a Vec2.  
+**Returns**: <code>[Vec2](api/Math\Vec2.md)</code> - - Returns a Vec2.  
 <a name="BinReader+loadFloat16Vec2"></a>
 
 ### loadFloat16Vec2
 Creates and returns a `Vec2` object with the next two Float16 values in the buffer.
 
 
-**Returns**: <code>[Vec2](api/Math/Vec2.md)</code> - - Returns a Vec2.  
+**Returns**: <code>[Vec2](api/Math\Vec2.md)</code> - - Returns a Vec2.  
 <a name="BinReader+loadFloat32Vec2"></a>
 
 ### loadFloat32Vec2
 Creates and returns a `Vec2` object with the next two Float32 values in the buffer.
 
 
-**Returns**: <code>[Vec2](api/Math/Vec2.md)</code> - - Returns a Vec2.  
+**Returns**: <code>[Vec2](api/Math\Vec2.md)</code> - - Returns a Vec2.  
 <a name="BinReader+loadFloat16Vec3"></a>
 
 ### loadFloat16Vec3
 Creates and returns a `Vec3` object with the next three Float16 values in the buffer.
 
 
-**Returns**: <code>[Vec3](api/Math/Vec3.md)</code> - - Returns a Vec3.  
+**Returns**: <code>[Vec3](api/Math\Vec3.md)</code> - - Returns a Vec3.  
 <a name="BinReader+loadFloat32Vec3"></a>
 
 ### loadFloat32Vec3
 Creates and returns a `Vec3` object with the next three Float32 values in the buffer.
 
 
-**Returns**: <code>[Vec3](api/Math/Vec3.md)</code> - - Returns a Vec3.  
+**Returns**: <code>[Vec3](api/Math\Vec3.md)</code> - - Returns a Vec3.  
 <a name="BinReader+loadFloat16Quat"></a>
 
 ### loadFloat16Quat
 Creates and returns a `Quat` object with the next four Float16 values in the buffer.
 
 
-**Returns**: <code>[Quat](api/Math/Quat.md)</code> - - Returns a Quat.  
+**Returns**: <code>[Quat](api/Math\Quat.md)</code> - - Returns a Quat.  
 <a name="BinReader+loadFloat32Quat"></a>
 
 ### loadFloat32Quat
 Creates and returns a `Quat` object with the next four Float32 values in the buffer.
 
 
-**Returns**: <code>[Quat](api/Math/Quat.md)</code> - - Returns a Quat.  
+**Returns**: <code>[Quat](api/Math\Quat.md)</code> - - Returns a Quat.  
 <a name="BinReader+loadRGBFloat32Color"></a>
 
 ### loadRGBFloat32Color
 Creates and returns a `Color` object with the next three Float32 values in the buffer.
 
 
-**Returns**: <code>[Color](api/Math/Color.md)</code> - - Returns a Color.  
+**Returns**: <code>[Color](api/Math\Color.md)</code> - - Returns a Color.  
 <a name="BinReader+loadRGBAFloat32Color"></a>
 
 ### loadRGBAFloat32Color
 Creates and returns a RGBA `Color` object with the next four Float32 values in the buffer.
 
 
-**Returns**: <code>[Color](api/Math/Color.md)</code> - - Returns a Color.  
+**Returns**: <code>[Color](api/Math\Color.md)</code> - - Returns a Color.  
 <a name="BinReader+loadRGBUInt8Color"></a>
 
 ### loadRGBUInt8Color
 Creates and returns a `Color` object with the next three unsigned Int8 values in the buffer.
 
 
-**Returns**: <code>[Color](api/Math/Color.md)</code> - - Returns a Color.  
+**Returns**: <code>[Color](api/Math\Color.md)</code> - - Returns a Color.  
 <a name="BinReader+loadRGBAUInt8Color"></a>
 
 ### loadRGBAUInt8Color
 Creates and returns a RGBA `Color` object with the next four unsigned Int8 values in the buffer.
 
 
-**Returns**: <code>[Color](api/Math/Color.md)</code> - - Returns a Color.  
+**Returns**: <code>[Color](api/Math\Color.md)</code> - - Returns a Color.  
 <a name="BinReader+loadBox2"></a>
 
 ### loadBox2
@@ -360,7 +360,7 @@ Creates and returns a `Box2` object with the next four Float32 values in the buf
 Next four because it creates two Vec2.
 
 
-**Returns**: <code>[Box2](api/Math/Box2.md)</code> - - Returns a Box2.  
+**Returns**: <code>[Box2](api/Math\Box2.md)</code> - - Returns a Box2.  
 <a name="BinReader+loadBox3"></a>
 
 ### loadBox3
@@ -368,7 +368,7 @@ Creates and returns a `Box2` object with the next six Float32 values in the buff
 Next four because it creates two Vec3.
 
 
-**Returns**: <code>[Box3](api/Math/Box3.md)</code> - - Returns a Box3.  
+**Returns**: <code>[Box3](api/Math\Box3.md)</code> - - Returns a Box3.  
 <a name="BinReader+readPad"></a>
 
 ### readPad

@@ -52,7 +52,7 @@ class GLViewport extends GLBaseViewport {
     // //////////////////////////////////
     // Setup GeomData Fbo
     this.__geomDataBuffer = undefined
-    this.__geomDataBufferSizeFactor = 12
+    this.__geomDataBufferSizeFactor = 4
     this.__geomDataBufferFbo = undefined
     this.debugGeomShader = false
 
@@ -318,6 +318,9 @@ class GLViewport extends GLBaseViewport {
     if (this.__geomDataBufferFbo) {
       const renderstate = {}
       this.__initRenderState(renderstate)
+
+      // Note: GLLinesPass binds a new Fbo, but shares this ones depth buffer.
+      renderstate.geomDataFbo = this.__geomDataBufferFbo
 
       this.__geomDataBufferFbo.bindAndClear(renderstate)
 

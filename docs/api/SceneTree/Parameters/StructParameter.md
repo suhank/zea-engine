@@ -15,7 +15,7 @@ myParameterOwnerItem.addParameter(structParam)
 * **valueChanged:** Triggered whenever parameter's value changes.
 
 
-**Extends**: <code>[Parameter](api/SceneTree/Parameters/Parameter.md)</code>  
+**Extends**: <code>[Parameter](api/SceneTree\Parameters\Parameter.md)</code>  
 
 * [StructParameter ⇐ <code>Parameter</code>](#StructParameter)
     * [new StructParameter(name)](#new-StructParameter)
@@ -41,7 +41,7 @@ Create a struct parameter.
 Looks for a member parameter with the specified name and returns it.
 
 
-**Returns**: <code>[Parameter](api/SceneTree/Parameters/Parameter.md)</code> - - The return value.  
+**Returns**: <code>[Parameter](api/SceneTree\Parameters\Parameter.md)</code> - - The return value.  
 
 | Param | Type | Description |
 | --- | --- | --- |

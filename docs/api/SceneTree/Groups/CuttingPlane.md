@@ -8,12 +8,12 @@ All parameters set to the group are also set to the children; in other words, it
 to apply common things to multiple items.
 
 **Parameters**
-* **CutAwayEnabled([`BooleanParameter`](api/SceneTree/Parameters/BooleanParameter.md)):** _todo_
-* **CutPlaneNormal([`Vec3Parameter`](api/SceneTree/Parameters/Vec3Parameter.md)):** _todo_
-* **CutPlaneDist([`NumberParameter`](api/SceneTree/Parameters/NumberParameter.md)):** _todo_
+* **CutAwayEnabled([`BooleanParameter`](api/SceneTree\Parameters\BooleanParameter.md)):** _todo_
+* **CutPlaneNormal([`Vec3Parameter`](api/SceneTree\Parameters\Vec3Parameter.md)):** _todo_
+* **CutPlaneDist([`NumberParameter`](api/SceneTree\Parameters\NumberParameter.md)):** _todo_
 
 
-**Extends**: <code>[BaseGroup](api/SceneTree/Groups/BaseGroup.md)</code>  
+**Extends**: <code>[BaseGroup](api/SceneTree\Groups\BaseGroup.md)</code>  
 
 * [CuttingPlane ⇐ <code>BaseGroup</code>](#CuttingPlane)
     * [new CuttingPlane(name)](#new-CuttingPlane)

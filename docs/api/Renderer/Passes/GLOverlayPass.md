@@ -4,7 +4,7 @@
 Class representing a GL overlay pass.
 
 
-**Extends**: <code>[GLOpaqueGeomsPass](api/Renderer/Passes/GLOpaqueGeomsPass.md)</code>  
+**Extends**: <code>[GLOpaqueGeomsPass](api/Renderer\Passes\GLOpaqueGeomsPass.md)</code>  
 
 * [GLOverlayPass ⇐ <code>GLOpaqueGeomsPass</code>](#GLOverlayPass)
     * [new GLOverlayPass(name)](#new-GLOverlayPass)
@@ -40,7 +40,7 @@ The filterGeomItem method.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| geomItem | <code>[GeomItem](api/SceneTree/GeomItem.md)</code> | The geomItem value. |
+| geomItem | <code>[GeomItem](api/SceneTree\GeomItem.md)</code> | The geomItem value. |
 
 <a name="GLOverlayPass+draw"></a>
 
