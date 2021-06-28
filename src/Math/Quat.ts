@@ -2,7 +2,7 @@
 import { Vec3 } from './Vec3'
 import { Mat3 } from './Mat3'
 import { Mat4 } from './Mat4'
-import { EulerAngles } from './EulerAngles-temp'
+import { EulerAngles } from './EulerAngles'
 import { Registry } from '../Registry'
 import { BinReader } from '../SceneTree/BinReader'
 /**

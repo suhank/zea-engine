@@ -5,9 +5,10 @@ import { Registry } from '../Registry'
  * Class representing euler angles. Euler angles describe rotating an object
  * around its various axis in a specified axis order.
  *
- * @extends AttrValue
  */
-class EulerAngles extends AttrValue {
+class EulerAngles {
+  order: number
+  __data;
   /**
    * Create a euler angle. Receives the xyz values in radians and the order that the rotations are applied.
    * <br>
@@ -15,15 +16,13 @@ class EulerAngles extends AttrValue {
    * <br>
    * It could be either the `string` or the `number` value.
    *
-   * @param {number} x - The angle of the x axis in radians. Default is 0.
-   * @param {number} y - The angle of the y axis in radians. Default is 0.
-   * @param {number} z - The angle of the z axis in radians. Default is 0.
+   * @param {number | ArrayBuffer} x - The angle of the x axis in degrees. Default is 0.
+   * @param {number} y - The angle of the y axis in degrees. Default is 0.
+   * @param {number} z - The angle of the z axis in degrees. Default is 0.
    * @param {number | string} order - The order in which the rotations are applied.
    */
-  constructor(x = 0, y = 0, z = 0, order = 0) {
-    super()
-
-    if (!isNaN(order)) this.order = order
+  constructor(x: number | ArrayBuffer = 0, y = 0, z = 0, order: number | string = 0) {
+    if (typeof order === 'number' && !isNaN(order)) this.order = order
     else {
       switch (order) {
         case 'XYZ':
@@ -65,7 +64,7 @@ class EulerAngles extends AttrValue {
    *
    * @return {number} - Returns the x axis rotation.
    */
-  get x() {
+  get x(): number {
     return this.__data[0]
   }
 
@@ -74,7 +73,7 @@ class EulerAngles extends AttrValue {
    *
    * @param {number} val - The val param.
    */
-  set x(val) {
+  set x(val: number) {
     this.__data[0] = val
   }
 
@@ -83,7 +82,7 @@ class EulerAngles extends AttrValue {
    *
    * @return {number} - Returns the y axis rotation.
    */
-  get y() {
+  get y(): number {
     return this.__data[1]
   }
 
@@ -92,7 +91,7 @@ class EulerAngles extends AttrValue {
    *
    * @param {number} val - The val param.
    */
-  set y(val) {
+  set y(val: number) {
     this.__data[1] = val
   }
 
@@ -101,7 +100,7 @@ class EulerAngles extends AttrValue {
    *
    * @return {number} - Returns the z axis rotation.
    */
-  get z() {
+  get z(): number {
     return this.__data[2]
   }
 
@@ -110,7 +109,7 @@ class EulerAngles extends AttrValue {
    *
    * @param {number} val - The val param.
    */
-  set z(val) {
+  set z(val: number) {
     this.__data[2] = val
   }
 
@@ -121,10 +120,26 @@ class EulerAngles extends AttrValue {
    * @param {number} y - The y axis rotation in radians.
    * @param {number} z - The z axis rotation in radians.
    */
-  set(x, y, z) {
+  set(x: number, y: number, z: number): void {
     this.__data[0] = x
     this.__data[1] = y
     this.__data[2] = z
+  }
+
+  toJSON(): Record<string, number> {
+    return {
+      x: this.__data[0],
+      y: this.__data[1],
+      z: this.__data[2],
+      order: this.order,
+    }
+  }
+
+  fromJSON(json: Record<string, number>): void {
+    this.__data[0] = json.x
+    this.__data[1] = json.y
+    this.__data[2] = json.z
+    this.order = json.order
   }
 }
 

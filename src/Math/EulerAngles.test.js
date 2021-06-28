@@ -1,4 +1,4 @@
-import { EulerAngles } from './EulerAngles-temp'
+import { EulerAngles } from './EulerAngles'
 
 describe.skip('EulerAngles', () => {
   describe('#on', () => {
