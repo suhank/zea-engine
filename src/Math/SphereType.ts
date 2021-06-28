@@ -1,15 +1,13 @@
 /* eslint-disable new-cap */
 import { StringFunctions } from '../Utilities/StringFunctions'
-import { AttrValue } from './AttrValue.js'
 import { Registry } from '../Registry'
 import { Vec3 } from './Vec3'
 
 /**
  * Class representing a mathematical sphere, as opposed to the Sphere class derived from ProceduralMesh.
  *
- * @extends AttrValue
  */
-class SphereType extends AttrValue {
+class SphereType {
   pos: Vec3
   radius: number
 
@@ -19,7 +17,6 @@ class SphereType extends AttrValue {
    * @param {number} radius - The radius of the sphere.
    */
   constructor(pos = new Vec3(), radius = 0) {
-    super()
     if (pos instanceof Vec3) {
       this.pos = pos
     } else {
