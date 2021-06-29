@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // Note: `globalThis` is not supported in some Safari versions.
 // See: https://caniuse.com/mdn-javascript_builtins_globalthis
 
@@ -12,7 +13,7 @@ const isNodeJs = () => typeof module === 'object' && typeof module.exports === '
 
 const getBaseUrl = () => {
   if (isBrowser() && !isJsDom()) {
-    const currentScriptSrc = document.currentScript.src
+    const currentScriptSrc = (document.currentScript as any).src
     return currentScriptSrc.substring(0, currentScriptSrc.lastIndexOf(DIST_DIR_NAME)) + DIST_DIR_NAME
   } else {
     // TODO
