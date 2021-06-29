@@ -1,5 +1,5 @@
 import { StringParameter } from './StringParameter'
-import { BaseItem } from '../BaseItem'
+import { BaseItem } from '../BaseItem-temp'
 import { BinReader } from '../../SceneTree/BinReader'
 
 describe('StringParameter', () => {

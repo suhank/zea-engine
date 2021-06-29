@@ -1,4 +1,4 @@
-import { BaseItem } from './BaseItem'
+import { BaseItem } from './BaseItem-temp'
 import { TreeItem } from './TreeItem'
 
 describe('BaseItem', () => {

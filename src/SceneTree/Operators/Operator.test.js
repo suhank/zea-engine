@@ -1,7 +1,7 @@
 /* eslint-disable require-jsdoc */
 import { Operator } from './Operator'
 import { NumberParameter } from '../Parameters/NumberParameter'
-import { BaseItem } from '../BaseItem'
+import { BaseItem } from '../BaseItem-temp'
 import { OperatorInput } from './OperatorInput'
 import { OperatorOutput } from './OperatorOutput'
 import { OperatorOutputMode } from '../Parameters/Parameter-temp'
