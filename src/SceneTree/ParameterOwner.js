@@ -1,6 +1,6 @@
 /* eslint-disable guard-for-in */
 /* eslint-disable valid-jsdoc */
-import { EventEmitter } from '../Utilities/EventEmitter'
+import { EventEmitter } from '../Utilities/EventEmitter-temp'
 import { Registry } from '../Registry'
 
 /**

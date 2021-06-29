@@ -1,6 +1,6 @@
 // Taken from here: https://github.com/jakesgordon/bin-packing/blob/master/js/packer.growing.js
 
-import { EventEmitter } from './EventEmitter'
+import { EventEmitter } from './EventEmitter-temp'
 
 /******************************************************************************
 
