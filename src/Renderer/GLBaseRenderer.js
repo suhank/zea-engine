@@ -629,14 +629,12 @@ class GLBaseRenderer extends ParameterOwner {
     }
 
     {
-      const ext = this.__gl.getExtension('WEBGL_multi_draw')
+      const ext = this.__gl.name == 'webgl2' ? this.__gl.getExtension('WEBGL_multi_draw') : null
       if (ext && !webglOptions.disableMultiDraw) {
         this.__gl.multiDrawArrays = ext.multiDrawArraysWEBGL.bind(ext)
         this.__gl.multiDrawElements = ext.multiDrawElementsWEBGL.bind(ext)
         this.__gl.multiDrawElementsInstanced = ext.multiDrawElementsInstancedWEBGL.bind(ext)
         this.__gl.multiDrawArraysInstanced = ext.multiDrawArraysInstancedWEBGL.bind(ext)
-      } else {
-        this.addShaderPreprocessorDirective('EMULATE_MULTI_DRAW')
       }
     }
 
