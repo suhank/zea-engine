@@ -1,4 +1,4 @@
-import { StringFunctions } from '../Utilities/StringFunctions'
+import { StringFunctions } from '../Utilities/StringFunctions-temp'
 
 /**
  * Base class for Math types that can be stored in vertex attributes.

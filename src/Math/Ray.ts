@@ -1,5 +1,5 @@
 /* eslint-disable new-cap */
-import { StringFunctions } from '../Utilities/StringFunctions'
+import { StringFunctions } from '../Utilities/StringFunctions-temp'
 import { MathFunctions } from '../Utilities/MathFunctions'
 import { Vec3 } from './Vec3'
 import { Registry } from '../Registry'

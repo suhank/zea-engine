@@ -1,6 +1,6 @@
 /* eslint-disable new-cap */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { StringFunctions } from '../Utilities/StringFunctions'
+import { StringFunctions } from '../Utilities/StringFunctions-temp'
 import { Vec3 } from './Vec3'
 import { PlaneType } from './PlaneType'
 import { Registry } from '../Registry'

@@ -1,6 +1,6 @@
 /* eslint-disable guard-for-in */
 import { BaseItem } from '../SceneTree/BaseItem'
-import { StringFunctions } from '../Utilities/StringFunctions'
+import { StringFunctions } from '../Utilities/StringFunctions-temp'
 import { shaderLibrary } from './ShaderLibrary'
 
 // Every instance of every shader should have a unique id.
