@@ -1,6 +1,6 @@
 import { Material } from './Material'
 import '../Renderer/Shaders/SimpleSurfaceShader'
-import { Color } from '../Math/Color-temp'
+import { Color } from '../Math/Color'
 
 describe('Material', () => {
   it('Calling set shaders name', () => {

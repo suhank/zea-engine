@@ -1,4 +1,4 @@
-import { Color } from './Color-temp'
+import { Color } from './Color'
 
 describe('Color', () => {
   it('creates Color from buffer', () => {

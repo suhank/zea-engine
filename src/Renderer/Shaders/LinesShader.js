@@ -1,4 +1,4 @@
-import { Color } from '../../Math/Color-temp'
+import { Color } from '../../Math/Color'
 import { Registry } from '../../Registry'
 import { shaderLibrary } from '../ShaderLibrary.js'
 import { GLShader } from '../GLShader.js'
