@@ -1,4 +1,4 @@
-import { Color } from '../Math/Color.js'
+import { Color } from '../Math/Color-temp.js'
 import { EventEmitter } from '../Utilities/index'
 import { processTextureParams } from './processTextureParams.js'
 
