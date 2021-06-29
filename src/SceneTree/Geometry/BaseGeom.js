@@ -1,7 +1,7 @@
 /* eslint-disable require-jsdoc */
 /* eslint-disable guard-for-in */
 import { Vec2, Vec3, Box2, Box3 } from '../../Math/index'
-import { ParameterOwner } from '../ParameterOwner.js'
+import { ParameterOwner } from '../ParameterOwner-temp.js'
 import { Attribute } from './Attribute.js'
 import { Registry } from '../../Registry'
 import { VertexAttribute } from './VertexAttribute'

@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { ParameterOwner } from './ParameterOwner.js'
+import { ParameterOwner } from './ParameterOwner-temp.js'
 import { BinReader } from './BinReader.js'
 import { Registry } from '../Registry'
 

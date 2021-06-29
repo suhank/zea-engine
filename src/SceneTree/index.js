@@ -1,5 +1,5 @@
 export * from './RefCounted.js'
-export * from './ParameterOwner.js'
+export * from './ParameterOwner-temp.js'
 export * from './BaseItem.js'
 export * from './Utils.js'
 export * from './resourceLoader.js'
