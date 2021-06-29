@@ -6,6 +6,8 @@ import { MathFunctions } from './MathFunctions-temp'
  *
  */
 class Allocation1D {
+  start: number;
+  size: number;
   /**
    * Initializes the allocation
    * @param {number} start - The start of the allocated block of memory.
@@ -45,7 +47,13 @@ class Allocation1D {
  * ```
  *
  */
-class Allocator1D extends EventEmitter {
+class Allocator1D extends EventEmitter { // TODO: types for freeList, allocations, allocationsMap
+  freeList: any[];
+  allocations: any[]; 
+  allocationsMap: Record<number, number>; // A mapping of id to index within the allocations list
+  allocatedSpace: number;
+  reservedSpace: number; 
+  freeSpace: number;
   /**
    * Initializes the allocator ready to start work
    */
@@ -65,7 +73,7 @@ class Allocator1D extends EventEmitter {
    * @param {number} id - The unique numerical identifer for the block.
    * @return {Allocation1D} - The allocation
    */
-  getAllocation(id) {
+  getAllocation(id: number):  Allocation1D {
     return this.allocations[this.allocationsMap[id]]
   }
 
@@ -77,7 +85,7 @@ class Allocator1D extends EventEmitter {
    * @param {number} size - The name of the event.
    * @return {Allocation1D} - The new allocation
    */
-  allocate(id, size) {
+  allocate(id: number, size: number): Allocation1D {
     if (this.allocationsMap[id] != undefined) {
       const index = this.allocationsMap[id]
       const allocation = this.allocations[index]
@@ -154,7 +162,7 @@ class Allocator1D extends EventEmitter {
         this.freeBlock(freeItemIndex + 1)
 
         // sort the free list from biggest to smallest
-        this.freeList.sort((a, b) => this.allocations[a].size < this.allocations[b].size)
+        this.freeList.sort((a, b) => this.allocations[b].size - this.allocations[a].size) // TODO: order is untested. 
 
         this.allocations[freeItemIndex].size = size
       }
@@ -181,7 +189,7 @@ class Allocator1D extends EventEmitter {
    * @param {number} index - The index where the block should be inserted.
    * @param {Allocation1D} allocation - The allocation to insert
    */
-  addBlock(index, allocation) {
+  addBlock(index: number, allocation: Allocation1D) {
     this.allocations.splice(index, 0, allocation)
     for (const id in this.allocationsMap) {
       if (this.allocationsMap[id] >= index) {
@@ -199,10 +207,9 @@ class Allocator1D extends EventEmitter {
    * Remove a new block
    * @private
    *
-   * @param {number} index - The index where the block should be inserted.
-   * @param {Allocation1D} allocation - The allocation to insert
+   * @param {number} index - The index where the block should be removed
    */
-  removeBlock(index) {
+  removeBlock(index: number){
     this.allocations.splice(index, 1)
     for (const id in this.allocationsMap) {
       if (this.allocationsMap[id] > index) {
@@ -222,7 +229,7 @@ class Allocator1D extends EventEmitter {
    *
    * @param {number} index - The index of the block to free.
    */
-  freeBlock(index) {
+  freeBlock(index: number) {
     const allocation = this.allocations[index]
     this.freeSpace += allocation.size
 
@@ -254,7 +261,7 @@ class Allocator1D extends EventEmitter {
    *
    * @param {number} id - The unique numerical identifer for the block.
    */
-  deallocate(id) {
+  deallocate(id: number) {
     const index = this.allocationsMap[id]
     if (index == undefined) {
       throw new Error(`allocation ${id} does not exist.`)
@@ -268,7 +275,7 @@ class Allocator1D extends EventEmitter {
    *
    * @return {number} The fragmentation ratio. Between 0 and some value less than 1
    */
-  getFragmentation() {
+  getFragmentation(): number {
     return this.freeSpace / this.allocatedSpace
   }
 
