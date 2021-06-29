@@ -1,5 +1,5 @@
 import { Parameter } from './Parameter'
-import { Box3 } from '../../Math/Box3'
+import { Box3 } from '../../Math/Box3-temp'
 
 /**
  * Represents a specific type of parameter, that only stores `Box3` values.

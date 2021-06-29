@@ -4,7 +4,7 @@ import { StringFunctions } from '../Utilities/StringFunctions'
 import { Vec3 } from './Vec3'
 import { PlaneType } from './PlaneType'
 import { Registry } from '../Registry'
-import { Box3 } from './Box3'
+import { Box3 } from './Box3-temp'
 import { Mat4 } from './Mat4'
 
 /**
