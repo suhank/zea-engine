@@ -11,7 +11,7 @@ myParameterOwnerItem.addParameter(numberParam)
 ```
 
 
-**Extends**: <code>[Parameter](api/SceneTree/Parameters/Parameter.md)</code>  
+**Extends**: <code>[Parameter](api/SceneTree\Parameters\Parameter.md)</code>  
 
 * [NumberParameter ⇐ <code>Parameter</code>](#NumberParameter)
     * [new NumberParameter(name, value, range, step)](#new-NumberParameter)
@@ -106,7 +106,7 @@ Extracts a number value from a buffer, updating current parameter state.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| reader | <code>[BinReader](api/SceneTree/BinReader.md)</code> | The reader value. |
+| reader | <code>[BinReader](api/SceneTree\BinReader.md)</code> | The reader value. |
 | context | <code>object</code> | The context value. |
 
 <a name="NumberParameter+clone"></a>
@@ -119,4 +119,4 @@ from this parameter and returns it.
 **Returns**: [<code>NumberParameter</code>](#NumberParameter) - - Returns a new number parameter.  
 
 
-### [Class Tests](api/SceneTree/Parameters/NumberParameter.test)
+### [Class Tests](api/SceneTree\Parameters/NumberParameter.test)

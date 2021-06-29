@@ -4,7 +4,7 @@
 Class representing a GL base renderer.
 
 
-**Extends**: <code>[ParameterOwner](api/SceneTree/ParameterOwner.md)</code>  
+**Extends**: <code>[ParameterOwner](api/SceneTree\ParameterOwner.md)</code>  
 
 * [GLBaseRenderer ⇐ <code>ParameterOwner</code>](#GLBaseRenderer)
     * [new GLBaseRenderer($canvas, options)](#new-GLBaseRenderer)
@@ -105,7 +105,7 @@ Returns HTMLCanvasElement's Height
 Adds a new viewport(viewing region) to the scene.
 
 
-**Returns**: <code>[GLViewport](api/Renderer/GLViewport.md)</code> - - The return value.  
+**Returns**: <code>[GLViewport](api/Renderer\GLViewport.md)</code> - - The return value.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -117,7 +117,7 @@ Adds a new viewport(viewing region) to the scene.
 Returns a viewport element by specifying its index in the list of viewports.
 
 
-**Returns**: <code>[GLViewport](api/Renderer/GLViewport.md)</code> - - The return value.  
+**Returns**: <code>[GLViewport](api/Renderer\GLViewport.md)</code> - - The return value.  
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -129,7 +129,7 @@ Returns a viewport element by specifying its index in the list of viewports.
 Returns a viewport element under the specified XY coordinates.
 
 
-**Returns**: <code>[GLViewport](api/Renderer/GLViewport.md)</code> - - The return value.  
+**Returns**: <code>[GLViewport](api/Renderer\GLViewport.md)</code> - - The return value.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -145,7 +145,7 @@ Sets as `active` the specified viewport.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| vp | <code>[GLViewport](api/Renderer/GLViewport.md)</code> | The viewport. |
+| vp | <code>[GLViewport](api/Renderer\GLViewport.md)</code> | The viewport. |
 
 <a name="GLBaseRenderer+activateViewportAtPos"></a>
 
@@ -165,7 +165,7 @@ Sets as àctive` the viewport under the specified XY coordinates.
 Returns current active viewport.
 
 
-**Returns**: <code>[GLViewport](api/Renderer/GLViewport.md)</code> - - The return value.  
+**Returns**: <code>[GLViewport](api/Renderer\GLViewport.md)</code> - - The return value.  
 <a name="GLBaseRenderer+suspendDrawing"></a>
 
 ### suspendDrawing
@@ -192,12 +192,12 @@ The renderGeomDataFbos method. Frame buffer (FBO).
 Sets up and displays the scene grid of a given size and resolution.
 
 
-**Returns**: <code>[GridTreeItem](api/SceneTree/GridTreeItem.md)</code> - - The return value.  
+**Returns**: <code>[GridTreeItem](api/SceneTree\GridTreeItem.md)</code> - - The return value.  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | gridSize | <code>number</code> | The size of the grid. |
-| gridColor | <code>[Color](api/Math/Color.md)</code> | The color of the grid. |
+| gridColor | <code>[Color](api/Math\Color.md)</code> | The color of the grid. |
 | resolution | <code>number</code> | The resolution of the grid. |
 | lineThickness | <code>number</code> | The thickness of the grid lines. |
 
@@ -207,7 +207,7 @@ Sets up and displays the scene grid of a given size and resolution.
 Returns current scene(Environment where all assets live) object.
 
 
-**Returns**: <code>[Scene](api/SceneTree/Scene.md)</code> - - The return value.  
+**Returns**: <code>[Scene](api/SceneTree\Scene.md)</code> - - The return value.  
 <a name="GLBaseRenderer+setScene"></a>
 
 ### setScene
@@ -217,7 +217,7 @@ Sets scene to the renderer.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| scene | <code>[Scene](api/SceneTree/Scene.md)</code> | The scene value. |
+| scene | <code>[Scene](api/SceneTree\Scene.md)</code> | The scene value. |
 
 <a name="GLBaseRenderer+addTreeItem"></a>
 
@@ -228,7 +228,7 @@ Adds tree items to the renderer, selecting the correct pass to delegate renderin
 
 | Param | Type | Description |
 | --- | --- | --- |
-| treeItem | <code>[TreeItem](api/SceneTree/TreeItem.md)</code> | The tree item to add. |
+| treeItem | <code>[TreeItem](api/SceneTree\TreeItem.md)</code> | The tree item to add. |
 
 <a name="GLBaseRenderer+assignTreeItemToGLPass"></a>
 
@@ -239,7 +239,7 @@ Searches through the passes and finds the appropriate pass to draw the given tre
 
 | Param | Type | Description |
 | --- | --- | --- |
-| treeItem | <code>[TreeItem](api/SceneTree/TreeItem.md)</code> | The tree item to assign. |
+| treeItem | <code>[TreeItem](api/SceneTree\TreeItem.md)</code> | The tree item to assign. |
 
 <a name="GLBaseRenderer+removeTreeItem"></a>
 
@@ -250,7 +250,7 @@ Remove tree items from the scene.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| treeItem | <code>[TreeItem](api/SceneTree/TreeItem.md)</code> | The tree item to remove. |
+| treeItem | <code>[TreeItem](api/SceneTree\TreeItem.md)</code> | The tree item to remove. |
 
 <a name="GLBaseRenderer+getGL"></a>
 
@@ -309,7 +309,7 @@ Frames the specified viewport to the entire scene.
 A factory function used to construct new shader objects. If that specified shader has already been constructed, it returns the existing shader.
 
 
-**Returns**: <code>[GLShader](api/Renderer/GLShader.md)</code> - - The return value.  
+**Returns**: <code>[GLShader](api/Renderer\GLShader.md)</code> - - The return value.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -325,7 +325,7 @@ The addPass method.
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| pass | <code>[GLPass](api/Renderer/Passes/GLPass.md)</code> |  | The pass value. |
+| pass | <code>[GLPass](api/Renderer\Passes\GLPass.md)</code> |  | The pass value. |
 | passType | <code>number</code> |  | The passType value. |
 | updateIndices | <code>boolean</code> | <code>true</code> | The updateIndices value. |
 
@@ -335,7 +335,7 @@ The addPass method.
 The getPass method.
 
 
-**Returns**: <code>[GLPass](api/Renderer/Passes/GLPass.md)</code> - - The return value.  
+**Returns**: <code>[GLPass](api/Renderer\Passes\GLPass.md)</code> - - The return value.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -354,7 +354,7 @@ The supportsVR method.
 The getVRViewport method.
 
 
-**Returns**: <code>[VRViewport](api/Renderer/VR/VRViewport.md)</code> - - The return value.  
+**Returns**: <code>[VRViewport](api/Renderer\VR\VRViewport.md)</code> - - The return value.  
 <a name="GLBaseRenderer+getXRViewport"></a>
 
 ### getXRViewport

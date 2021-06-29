@@ -10,10 +10,10 @@ const cross = new Cross(1.5)
 ```
 
 **Parameters**
-* **Size([`NumberParameter`](api/SceneTree/Parameters/NumberParameter.md)):** Specifies the size of the cross.
+* **Size([`NumberParameter`](api/SceneTree\Parameters\NumberParameter.md)):** Specifies the size of the cross.
 
 
-**Extends**: <code>[ProceduralLines](api/SceneTree/Geometry/Shapes/ProceduralLines.md)</code>  
+**Extends**: <code>[ProceduralLines](api/SceneTree\Geometry\Shapes\ProceduralLines.md)</code>  
 <a name="new_Cross_new"></a>
 
 ### new Cross
@@ -26,4 +26,4 @@ Create a cross.
 
 
 
-### [Class Tests](api/SceneTree/Geometry/Shapes/Cross.test)
+### [Class Tests](api/SceneTree\Geometry\Shapes/Cross.test)

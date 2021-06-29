@@ -2,6 +2,41 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.10.2](https://github.com/ZeaInc/zea-engine/compare/v3.10.1...v3.10.2) (2021-06-28)
+
+
+### Bug Fixes
+
+* Fix mixing multi-draw and non-multi-draw. ([49002b8](https://github.com/ZeaInc/zea-engine/commit/49002b851e28c46a40eec8972a15876601438fdd))
+* Fixed FatPointsShader multi-draw code path. ([9c3debf](https://github.com/ZeaInc/zea-engine/commit/9c3debf25d28db052d4cb1417b8c6abf358d3a21))
+* Fixed regression in PointsShader in multi-draw. ([3bb38e7](https://github.com/ZeaInc/zea-engine/commit/3bb38e78a4849a26deee59437e2d493a960a67c1))
+* Fixed regression in FatLinesShader in multi-draw. ([a796d3a](https://github.com/ZeaInc/zea-engine/commit/a796d3a04ece5bf8c96320d9f53224e262e82f01))
+* Fixed multi-draw code path for Firefox. ([ca88db3](https://github.com/ZeaInc/zea-engine/commit/ca88db3efa15d9561f616520ab64d7eaad6aee44))
+* Fixed multi-draw code path for iOS. ([54ab89a](https://github.com/ZeaInc/zea-engine/commit/54ab89aa0be7391548c150d1ad456edc2077ec49))
+
+## [3.10.0](https://github.com/ZeaInc/zea-engine/compare/v3.9.1...v3.10.0) (2021-06-16)
+
+
+### Features
+
+* Lines picking is now easier and more stable using a new line picking filter ([1471dc8](https://github.com/ZeaInc/zea-engine/commit/1471dc83e0928caa35c07931116fe03a32e3079e))
+* proxy geometries loaded from zcad files now expose methods to determine the number of triangles and line segments. ([1437c72](https://github.com/ZeaInc/zea-engine/commit/1437c725eaa110cd9fc9cd66e4ca400db7b026a1))
+* when loading assets, a new context class enables specifying the system units, paths to external resources, and other information. ([1b8aa4d](https://github.com/ZeaInc/zea-engine/commit/1b8aa4d599ea1d71e90ffc6770c98d723e931550))
+* Implemented Vec2.intersectionOfLines and tests.
+* TreeItem now supports a toggle to disable the bounding box calculation for its self and subtree.
+
+### Bug Fixes
+
+* Addressed exception rendering transparent geoms in VR. ([1a2f0bf](https://github.com/ZeaInc/zea-engine/commit/1a2f0bf7a4d54f9b0e5bfc7117823fc6019e92d1))
+* Animated geometries are now correctly un-culled when they come back into the frustum. ([#431](https://github.com/ZeaInc/zea-engine/issues/431)) ([1b5806f](https://github.com/ZeaInc/zea-engine/commit/1b5806f7e04df8618caf65bec46b0518c52c05e9))
+* calling setSelectable(false) on a GeomItem now configures its visibility in the GeomData buffer. ([1d7fbc4](https://github.com/ZeaInc/zea-engine/commit/1d7fbc4f73cee5736e8ebc1f7e060a18df4c20f1))
+* culling frustum is now correctly reset to the regular viewport when exiting a VR session. ([47f4270](https://github.com/ZeaInc/zea-engine/commit/47f42703a39896e1596ce482fbdb336fe757a9bd))
+* Lines are now easier to select by making the click zone more consistently fatter. ([09892b5](https://github.com/ZeaInc/zea-engine/commit/09892b5f6e14d18c24bddae7f2e6fe757a08d91d))
+* Selection highlight in the engine conflicted with selection highlight in the UX library. Removing the engine implementation. ([b42f9d9](https://github.com/ZeaInc/zea-engine/commit/b42f9d9fb25c5d6558d74cd8e95719a2eb7a7c2f))
+* To address a performance disparity on platforms where multi-draw is not supported, we now run an almost identical code path that emulates multi-draw. ([ef1222e](https://github.com/ZeaInc/zea-engine/commit/ef1222e3183e409179cad993c870a7adc3a4c3e3))
+* CameraManipulator now modifies the Frustum hight value instead of moving the camera when dollying an orthographic camera.([3ac71e8](https://github.com/ZeaInc/zea-engine/pull/429/commits/3ac71e8deecec6d06ce2ad5dcfc1f564f179ef5f))
+* Camera now frames more precisely on the scene geometry bounding boxes.
+
 ### [3.9.1](https://github.com/ZeaInc/zea-engine/compare/v3.9.0...v3.9.1) (2021-05-19)
 
 

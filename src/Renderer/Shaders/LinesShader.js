@@ -21,7 +21,7 @@ precision highp float;
 attribute vec3 positions;
 attribute vec3 positionsNext;
 
-
+<%include file="GLSLUtils.glsl"/>
 <%include file="stack-gl/transpose.glsl"/>
 <%include file="drawItemId.glsl"/>
 <%include file="drawItemTexture.glsl"/>
@@ -82,9 +82,9 @@ void main(void) {
 #endif
 
 #if defined(DRAW_GEOMDATA)
-  gl_Position.z = mix(gl_Position.z, -gl_Position.w, overlay);
+  gl_Position.z = mix(gl_Position.z, -gl_Position.w, mix(overlay, 1.0, 0.0001));
 #else
-  gl_Position.z = mix(gl_Position.z, -gl_Position.w, overlay * 5.0);
+  gl_Position.z = mix(gl_Position.z, -gl_Position.w, overlay);
 #endif
 
   //////////////////////////////////////////////
@@ -101,6 +101,7 @@ void main(void) {
       `
 precision highp float;
 
+<%include file="GLSLUtils.glsl"/>
 <%include file="math/constants.glsl"/>
 <%include file="drawItemTexture.glsl"/>
 <%include file="cutaways.glsl"/>

@@ -25,7 +25,7 @@ propagation of the event to other classes.
 * **activatedChanged:** Triggered when a tool is activated or deactivated.
 
 
-**Extends**: <code>[ParameterOwner](api/SceneTree/ParameterOwner.md)</code>  
+**Extends**: <code>[ParameterOwner](api/SceneTree\ParameterOwner.md)</code>  
 
 * [BaseTool ⇐ <code>ParameterOwner</code>](#BaseTool)
     * [new BaseTool()](#new-BaseTool)

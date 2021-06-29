@@ -15,7 +15,7 @@ myParameterOwnerItem.addParameter(codeParam)
 ```
 
 
-**Extends**: <code>[StringParameter](api/SceneTree/Parameters/StringParameter.md)</code>  
+**Extends**: <code>[StringParameter](api/SceneTree\Parameters\StringParameter.md)</code>  
 
 * ~~[CodeParameter](#CodeParameter) ⇐ <code>StringParameter</code>~~
     * [new CodeParameter(name, value)](#new-CodeParameter)
@@ -63,4 +63,4 @@ copies its values from this parameter and returns it.
 **Returns**: [<code>CodeParameter</code>](#CodeParameter) - - Returns a new cloned code parameter.  
 
 
-### [Class Tests](api/SceneTree/Parameters/CodeParameter.test)
+### [Class Tests](api/SceneTree\Parameters/CodeParameter.test)

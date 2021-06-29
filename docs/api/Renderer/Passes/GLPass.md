@@ -4,7 +4,7 @@
 This class abstracts the rendering of a collection of geometries to screen.
 
 
-**Extends**: <code>[ParameterOwner](api/SceneTree/ParameterOwner.md)</code>  
+**Extends**: <code>[ParameterOwner](api/SceneTree\ParameterOwner.md)</code>  
 
 * [GLPass ⇐ <code>ParameterOwner</code>](#GLPass)
     * [new GLPass()](#new-GLPass)
@@ -34,7 +34,7 @@ The init method.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| renderer | <code>[GLBaseRenderer](api/Renderer/GLBaseRenderer.md)</code> | The renderer value. |
+| renderer | <code>[GLBaseRenderer](api/Renderer\GLBaseRenderer.md)</code> | The renderer value. |
 | passIndex | <code>number</code> | The index of the pass in the GLBAseRenderer |
 
 <a name="GLPass+setPassIndex"></a>
@@ -67,7 +67,7 @@ It allows Passes to select geometries to handle the drawing of.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| treeItem | <code>[TreeItem](api/SceneTree/TreeItem.md)</code> | The treeItem value. |
+| treeItem | <code>[TreeItem](api/SceneTree\TreeItem.md)</code> | The treeItem value. |
 | rargs | <code>object</code> | Extra return values are passed back in this object. The object contains a parameter 'continueInSubTree', which can be set to false, so the subtree of this node will not be traversed after this node is handled. |
 
 <a name="GLPass+itemRemovedFromScene"></a>
@@ -81,7 +81,7 @@ is removed to the scene, and the pass must handle cleaning up any resources.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| treeItem | <code>[TreeItem](api/SceneTree/TreeItem.md)</code> | The treeItem value. |
+| treeItem | <code>[TreeItem](api/SceneTree\TreeItem.md)</code> | The treeItem value. |
 | rargs | <code>object</code> | Extra return values are passed back in this object. |
 
 <a name="GLPass+startPresenting"></a>

@@ -4,6 +4,137 @@ import { SelectionSet } from './Groups/SelectionSet.js'
 import { GeomLibrary } from './GeomLibrary.js'
 import { MaterialLibrary } from './MaterialLibrary.js'
 import { Registry } from '../Registry'
+import { EventEmitter } from '../Utilities/EventEmitter.js'
+
+/**
+ * Provides a context for loading assets. This context can provide the units of the loading scene.
+ * E.g. you can specify the scene units as 'millimeters' in the context object.
+ * To load external references, you can also provide a dictionary that maps filenames to URLs that are used
+ * to resolve the URL of an external reference that a given asset is expecting to find.
+ */
+class AssetLoadContext extends EventEmitter {
+  /**
+   * Create a AssetLoadContext
+   * @param {AssetLoadContext} context The source context to base this context on.
+   */
+  constructor(context) {
+    super()
+    this.units = context ? context.units : 'meters'
+    this.assets = context ? context.assets : {}
+    this.resources = context ? context.resources : {}
+    this.versions = {}
+    this.url = ''
+    this.folder = ''
+    this.sdk = ''
+    this.assetItem = null
+    this.numTreeItems = 0
+    this.numGeomItems = 0
+
+    this.postLoadCallbacks = [] // Post load callbacks.
+    this.asyncCount = 0
+  }
+
+  /**
+   * During loading, asynchronous processes may be launched, and subsequently completed.
+   * These method helps the Asset track how many asynchronous loading operations may be
+   * occurring with the tree during load.
+   * As each external reference starts to load, it increments this counter, letting the owning
+   * Asset know to wait till the children are loaded before emitting its own 'loaded' event.
+   */
+  incrementAsync() {
+    this.asyncCount++
+  }
+
+  /**
+   * As each external reference completes loading, it decrements this counter allowing the owning
+   * asset to know that the subtrees are loaded.
+   */
+  decrementAsync() {
+    this.asyncCount--
+
+    // Wait for all nested XRefs to load before considering this asset loaded.
+    if (this.asyncCount == 0) {
+      this.emit('done')
+    }
+  }
+  /**
+   * Resolves a path within the loading asset. This is used to connect
+   * items within the tree to other items. e.g. a Group can find its members.
+   * or an instance can find its source tree.
+   * @param {array} path the path within the tree relative to the loading asset
+   * @param {function} onSucceed called with the successful result of the path resolution.
+   * @param {function} onFail called when the path resolution fails.
+   */
+  resolvePath(path, onSucceed, onFail) {
+    if (!path) throw new Error('Path not specified')
+
+    // Note: Why not return a Promise here?
+    // Promise evaluation is always async, so
+    // all promises will be resolved after the current call stack
+    // has terminated. In our case, we want all paths
+    // to be resolved before the end of the function, which
+    // we can handle easily with callback functions.
+    try {
+      const item = this.assetItem.resolvePath(path)
+      onSucceed(item)
+    } catch (e) {
+      // Some paths resolve to items generated during load,
+      // so push a callback to re-try after the load is complete.
+      this.postLoadCallbacks.push(() => {
+        try {
+          const param = this.assetItem.resolvePath(path)
+          onSucceed(param)
+        } catch (e) {
+          if (onFail) {
+            onFail()
+          } else {
+            throw new Error(e.message)
+          }
+        }
+      })
+    }
+  }
+
+  /**
+   * Adds a function to be called back once the main load call stack exists.
+   * This is used to connect parts of the tree together after loading.
+   * e.g. an instance will
+   * @param {function} postLoadCallback
+   */
+  addPLCB(postLoadCallback) {
+    this.postLoadCallbacks.push(postLoadCallback)
+  }
+}
+
+/**
+ * Given a units string, load returns a factor relative to meters
+ * e.g. for Millimeters, returns 0.001, for Meters, returns 1.0
+ * Given 2 different units, the factors are combined together to calculate the conversion between the 2 units.
+ * @param {string} units the name of the units value for the load context.
+ * Supports: ['millimeters', 'centimeters', 'decimeters', 'meters', 'kilometers', 'inches', 'feet', 'miles']
+ * @return {number} Returns the factor relative to meters.
+ */
+const getUnitsFactor = (units) => {
+  switch (units.toLowerCase()) {
+    case 'millimeters':
+      return 0.001
+    case 'centimeters':
+      return 0.01
+    case 'decimeters':
+      return 0.1
+    case 'meters':
+      return 1.0
+    case 'kilometers':
+      return 1000.0
+    case 'inches':
+      return 0.0254
+    case 'feet':
+      return 0.3048
+    case 'miles':
+      return 1609.34
+  }
+  return 1.0
+}
 
 /**
  * Represents a TreeItem with rendering and material capabilities.
@@ -82,11 +213,13 @@ class AssetItem extends TreeItem {
   /**
    * The readBinary method.
    * @param {object} reader - The reader value.
-   * @param {object} context - The context value.
+   * @param {AssetLoadContext} context - The context value.
    */
-  readBinary(reader, context = {}) {
+  readBinary(reader, context) {
     context.assetItem = this
     context.numTreeItems = 0
+
+    if (!context.units) context.units = 'meters'
     context.numGeomItems = 0
 
     if (!context.versions['zea-engine']) {
@@ -98,36 +231,18 @@ class AssetItem extends TreeItem {
       this.__units = reader.loadStr()
       // Calculate a scale factor to convert
       // the asset units to meters(the scene units)
-      let scaleFactor = 1.0
-      switch (this.__units) {
-        case 'Millimeters':
-          scaleFactor = 0.001
-          break
-        case 'Centimeters':
-          scaleFactor = 0.01
-          break
-        case 'Meters':
-          scaleFactor = 1.0
-          break
-        case 'Kilometers':
-          scaleFactor = 1000.0
-          break
-        case 'Inches':
-          scaleFactor = 0.0254
-          break
-        case 'Feet':
-          scaleFactor = 0.3048
-          break
-        case 'Miles':
-          scaleFactor = 1609.34
-          break
-      }
-      this.__unitsScale = scaleFactor
+      const unitsFactor = getUnitsFactor(this.__units)
+      const contextUnitsFactor = getUnitsFactor(context.units)
+      this.__unitsScale = unitsFactor / contextUnitsFactor
+
+      // The context propagates the new units to children assets.
+      // This means that a child asset applies a unitsScale relative to this asset.
+      context.units = this.__units
 
       // Apply units change to existing Xfo (avoid changing tr).
       const localXfoParam = this.getParameter('LocalXfo')
       const xfo = localXfoParam.getValue()
-      xfo.sc.scaleInPlace(scaleFactor)
+      xfo.sc.scaleInPlace(this.__unitsScale)
       localXfoParam.setValue(xfo)
     }
 
@@ -337,4 +452,4 @@ class AssetItem extends TreeItem {
 
 Registry.register('AssetItem', AssetItem)
 
-export { AssetItem }
+export { AssetItem, AssetLoadContext }

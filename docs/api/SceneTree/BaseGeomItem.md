@@ -7,7 +7,7 @@ Base class that represents geometry items with layering, overlaying and cut away
 * **cutAwayChanged:** Triggered when the cutaway variables change(if enabled or not, the vector and the distance).
 
 
-**Extends**: <code>[TreeItem](api/SceneTree/TreeItem.md)</code>  
+**Extends**: <code>[TreeItem](api/SceneTree\TreeItem.md)</code>  
 
 * [BaseGeomItem ⇐ <code>TreeItem</code>](#BaseGeomItem)
     * [new BaseGeomItem(name)](#new-BaseGeomItem)
@@ -111,7 +111,7 @@ Sets cutaway vector value.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| cutAwayVector | <code>[Vec3](api/Math/Vec3.md)</code> | The cutAwayVector value. |
+| cutAwayVector | <code>[Vec3](api/Math\Vec3.md)</code> | The cutAwayVector value. |
 
 <a name="BaseGeomItem+getCutDist"></a>
 
@@ -140,6 +140,6 @@ Sets state of current Item(Including layers & material) using a binary reader ob
 
 | Param | Type | Description |
 | --- | --- | --- |
-| reader | <code>[BinReader](api/SceneTree/BinReader.md)</code> | The reader value. |
+| reader | <code>[BinReader](api/SceneTree\BinReader.md)</code> | The reader value. |
 | context | <code>object</code> | The context value. |
 
