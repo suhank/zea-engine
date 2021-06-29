@@ -74,9 +74,15 @@ class VRController {
         //   })
         xrvp.loadHMDResources().then((assetItem) => {
           if (!assetItem) return
+          const localXfo = new Xfo(
+            new Vec3(0, 0.0, 0.0),
+            new Quat({ setFromAxisAndAngle: [new Vec3(0, 1, 0), Math.PI] }),
+            new Vec3(0.001, 0.001, 0.001) // VRAsset units are in mm.
+          )
           let srcControllerTree
           if (inputSource.profiles[0] == 'htc-vive') {
             srcControllerTree = assetItem.getChildByName('Controller')
+            localXfo.tr.set(0, -0.035, -0.085)
           } else {
             switch (inputSource.handedness) {
               case 'left':
@@ -96,13 +102,7 @@ class VRController {
           }
           if (srcControllerTree) {
             const controllerTree = srcControllerTree.clone({ assetItem })
-            controllerTree.getParameter('LocalXfo').setValue(
-              new Xfo(
-                new Vec3(0, 0.0, 0.0),
-                new Quat({ setFromAxisAndAngle: [new Vec3(0, 1, 0), Math.PI] }),
-                new Vec3(0.001, 0.001, 0.001) // VRAsset units are in mm.
-              )
-            )
+            controllerTree.getParameter('LocalXfo').setValue(localXfo)
             this.__treeItem.addChild(controllerTree, false)
           }
         })
