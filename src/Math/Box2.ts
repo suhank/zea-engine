@@ -1,5 +1,4 @@
 import { StringFunctions } from '../Utilities/StringFunctions'
-
 import { Vec2 } from './Vec2'
 import { Registry } from '../Registry'
 
@@ -7,6 +6,9 @@ import { Registry } from '../Registry'
  * Represents a box in 2D space. Needing two Vec2 vectors describing the corners
  */
 class Box2 {
+  p0: Vec2
+  p1: Vec2
+
   /**
    * Creates a Box2 object using Vec2s.
    * In case the parameters are not passed by, their values are pre-defined:
@@ -32,12 +34,12 @@ class Box2 {
   }
 
   /**
-   * Sets both corner points
+   * Sets both Vec2 points
    *
    * @param {Vec2} p0 - A point representing the corners of a 2D box.
    * @param {Vec2} p1 - A point representing the corners of a 2D box.
    */
-  set(p0, p1) {
+  set(p0: Vec2, p1: Vec2): void {
     this.p0 = p0
     this.p1 = p1
   }
@@ -48,7 +50,7 @@ class Box2 {
    * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/POSITIVE_INFINITY|`Number.POSITIVE_INFINITY`}
    * and {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/NEGATIVE_INFINITY|`Number.NEGATIVE_INFINITY`}
    */
-  reset() {
+  reset(): void {
     this.p0.x = Number.POSITIVE_INFINITY
     this.p1.x = Number.NEGATIVE_INFINITY
     this.p0.y = Number.POSITIVE_INFINITY
@@ -60,7 +62,7 @@ class Box2 {
    *
    * @return {boolean} - The return value.
    */
-  isValid() {
+  isValid(): boolean {
     return (
       this.p0.x != Number.POSITIVE_INFINITY &&
       this.p1.x != Number.NEGATIVE_INFINITY &&
@@ -74,14 +76,14 @@ class Box2 {
    *
    * @param {Vec2} point - A point represents the corners of a 2D box.
    */
-  addPoint(point) {
+  addPoint(point: Vec2): void {
     if (this.p0.x == Number.POSITIVE_INFINITY || point.x < this.p0.x) this.p0.x = point.x
     if (this.p0.y == Number.POSITIVE_INFINITY || point.y < this.p0.y) this.p0.y = point.y
 
     if (this.p1.y == Number.NEGATIVE_INFINITY || point.x > this.p1.x) this.p1.x = point.x
     if (this.p1.y == Number.NEGATIVE_INFINITY || point.y > this.p1.y) this.p1.y = point.y
   }
-
+  
   /**
    * Returns the length of the diagonal of the box.
    *
@@ -92,11 +94,11 @@ class Box2 {
   }
 
   /**
-   * Returns the diagonal vector of the B=box from p0 to p1.
+   * Returns the size of a Box2 - the same as size().
    *
-   * @return {Vec3} - Returns a Vec3.
+   * @return {Vec2} - Returns a Vec2.
    */
-  diagonal() {
+  diagonal(): Vec2 {
     return this.p1.subtract(this.p0)
   }
 
@@ -105,7 +107,7 @@ class Box2 {
    *
    * @return {Vec2} - Returns a Vec2.
    */
-  center() {
+  center(): Vec2 {
     const result = this.p1.subtract(this.p0)
     result.scaleInPlace(0.5)
     result.addInPlace(this.p0)
@@ -121,7 +123,8 @@ class Box2 {
    * @return {Box2} - Returns a new Box2.
    * @private
    */
-  static create(...args) {
+
+  static create(...args: []): Box2 {
     return new Box2(...args)
   }
 
@@ -131,9 +134,9 @@ class Box2 {
   /**
    * Encodes `Box2` Class as a JSON object for persistence.
    *
-   * @return {object} - The json object.
+   * @return {Record<string, Record<string, number>>} - The json object.
    */
-  toJSON() {
+  toJSON(): Record<string, Record<string, number>> {
     return {
       p0: this.p0.toJSON(),
       p1: this.p1.toJSON(),
@@ -145,7 +148,7 @@ class Box2 {
    *
    * @return {string} - The return value.
    */
-  toString() {
+  toString(): string {
     // eslint-disable-next-line new-cap
     return StringFunctions.stringifyJSONWithFixedPrecision(this.toJSON())
   }
