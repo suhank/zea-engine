@@ -3,7 +3,7 @@ import { PassType } from './GLPass.js'
 import { Points, Lines, PointsProxy, LinesProxy } from '../../SceneTree/index'
 import { GLStandardGeomsPass } from './GLStandardGeomsPass.js'
 import { GLRenderer } from '../GLRenderer.js'
-import { MathFunctions } from '../../Utilities/MathFunctions-temp'
+import { MathFunctions } from '../../Utilities/MathFunctions'
 import { GLShaderGeomSets } from '../Drawing/GLShaderGeomSets.js'
 import { Registry } from '../../Registry'
 

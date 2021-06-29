@@ -1,4 +1,4 @@
-import { UInt8, SInt8, UInt16, SInt16, UInt32, SInt32, Float32 } from './Utilities/MathFunctions-temp'
+import { UInt8, SInt8, UInt16, SInt16, UInt32, SInt32, Float32 } from './Utilities/MathFunctions'
 
 let _registeredBlueprints = {}
 let _blueprintNames = {}

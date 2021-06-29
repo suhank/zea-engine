@@ -5,7 +5,7 @@ import { Vec4 } from '../../Math/index'
 import { GeomItem, Points, Lines, Mesh, PointsProxy, LinesProxy, MeshProxy } from '../../SceneTree/index'
 import { GLPoints, GLLines, GLMesh, GLMaterial, GLGeomItemChangeType, GLGeomItem } from '../Drawing/index.js'
 import { GLTexture2D } from '../GLTexture2D.js'
-import { MathFunctions } from '../../Utilities/MathFunctions-temp'
+import { MathFunctions } from '../../Utilities/MathFunctions'
 
 const pixelsPerItem = 6 // The number of RGBA pixels per draw item.
 

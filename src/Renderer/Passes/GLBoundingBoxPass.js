@@ -4,7 +4,7 @@ import { BoundingBoxShader } from '../Shaders/BoundingBoxShader.js'
 import { GLLines } from '../Drawing/GLLines.js'
 import { GLPass, PassType } from './GLPass.js'
 import { GLTexture2D } from '../GLTexture2D.js'
-import { MathFunctions } from '../../Utilities/MathFunctions-temp'
+import { MathFunctions } from '../../Utilities/MathFunctions'
 
 const pixelsPerItem = 6 // The number of pixels per draw item.
 

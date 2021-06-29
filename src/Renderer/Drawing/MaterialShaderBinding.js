@@ -1,7 +1,7 @@
 import { Vec2, Vec3, Vec4, Color, Mat4 } from '../../Math/index'
 import { GLTexture2D } from '../GLTexture2D.js'
 import { GLHDRImage } from '../GLHDRImage.js'
-import { SInt32, UInt32, Float32 } from '../../Utilities/MathFunctions-temp'
+import { SInt32, UInt32, Float32 } from '../../Utilities/MathFunctions'
 
 /** Class representing simple uniform binding.
  * @private

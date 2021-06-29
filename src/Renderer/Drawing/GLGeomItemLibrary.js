@@ -2,7 +2,7 @@
 import { EventEmitter } from '../../Utilities/index'
 import { Vec4 } from '../../Math/index'
 import { GLGeomItemChangeType, GLGeomItemFlags, GLGeomItem } from './GLGeomItem.js'
-import { MathFunctions } from '../../Utilities/MathFunctions-temp'
+import { MathFunctions } from '../../Utilities/MathFunctions'
 import { GLTexture2D } from '../GLTexture2D.js'
 
 // import { handleMessage } from './GLGeomItemLibraryCullingWorker.js'

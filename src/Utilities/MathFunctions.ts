@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 const UInt8 = 0
 const SInt8 = 1
 const UInt16 = 2
@@ -17,7 +19,7 @@ class MathFunctions {
    * @param {number} rad - Radians value
    * @return {number} - Degrees equivalent
    */
-  static radToDeg(rad) {
+  static radToDeg(rad: number): number {
     return rad / (Math.PI / 180)
   }
 
@@ -28,7 +30,7 @@ class MathFunctions {
    * @param {number} deg - Degrees value
    * @return {number} -  Radians equivalent
    */
-  static degToRad(deg) {
+  static degToRad(deg: number): number {
     return deg * (Math.PI / 180)
   }
 
@@ -39,7 +41,7 @@ class MathFunctions {
    * @param {number|any} number - Number to test
    * @return {boolean} - `true` when is a valid number
    */
-  static isNumeric(number) {
+  static isNumeric(number: any): boolean {
     return !isNaN(parseFloat(number)) && isFinite(number)
   }
 
@@ -51,7 +53,7 @@ class MathFunctions {
    * @param {number} max - Highest value random int can be.
    * @return {number} - Random number inside range.
    */
-  static randomInt(min, max) {
+  static randomInt(min: number, max: number): number {
     min = Math.ceil(min)
     max = Math.floor(max)
     return Math.floor(Math.random() * (max - min)) + min
@@ -66,7 +68,7 @@ class MathFunctions {
    * @param {number} t -
    * @return {number} -
    */
-  static lerp(v0, v1, t) {
+  static lerp(v0: number, v1: number, t: number): number {
     return v0 + t * (v1 - v0)
   }
 
@@ -79,7 +81,7 @@ class MathFunctions {
    * @param {number} max
    * @return {number}
    */
-  static clamp(value, min, max) {
+  static clamp(value: number, min: number, max: number): number {
     return Math.min(Math.max(value, min), max)
   }
 
@@ -90,7 +92,7 @@ class MathFunctions {
    * @param {number} value -
    * @return {number} -
    */
-  static nearestPow2(value) {
+  static nearestPow2(value: number): number {
     return Math.pow(2, Math.round(Math.log(value) / Math.log(2)))
   }
 
@@ -101,7 +103,7 @@ class MathFunctions {
    * @param {number} value -
    * @return {number} -
    */
-  static nearestPow10(value) {
+  static nearestPow10(value: number): number {
     return Math.pow(10, Math.round(Math.log10(value) / Math.log10(10)))
   }
 
@@ -112,7 +114,7 @@ class MathFunctions {
    * @param {number} value -
    * @return {number} -
    */
-  static nextPow2(value) {
+   static nextPow2(value: number): number {
     if (this.fract(Math.log2(value)) == 0) {
       return value
     }
@@ -133,7 +135,7 @@ class MathFunctions {
    * @param {number} value -
    * @return {number} -
    */
-  static fract(value) {
+  static fract(value: number): number {
     if (value == 0) return 0
     if (value < 0) {
       if (value > -1.0) return -value
@@ -154,7 +156,7 @@ class MathFunctions {
    * @param {number} end2 -
    * @return {number} -
    */
-  static remap(value, start1, end1, start2, end2) {
+  static remap(value: number, start1: number, end1: number, start2: number, end2: number): number {
     return start2 + (end2 - start2) * ((value - start1) / (end1 - start1))
   }
 
@@ -167,7 +169,7 @@ class MathFunctions {
    * @param {number} x -
    * @return {number} -
    */
-  static smoothStep(edge0, edge1, x) {
+  static smoothStep(edge0: number, edge1: number, x: number): number {
     const t = this.clamp((x - edge0) / (edge1 - edge0), 0.0, 1.0)
     return t * t * (3.0 - 2.0 * t)
   }
@@ -181,7 +183,7 @@ class MathFunctions {
    * @param {number} x -
    * @return {number} -
    */
-  static linStep(edge0, edge1, x) {
+  static linStep(edge0: number, edge1: number, x: number): number {
     return this.clamp((x - edge0) / (edge1 - edge0), 0.0, 1.0)
   }
 
@@ -192,7 +194,7 @@ class MathFunctions {
    * @param {Uint8Array} c - Array with the two UInt8
    * @return {number} - Decoded Float16
    */
-  static decode16BitFloatFrom2xUInt8(c) {
+  static decode16BitFloatFrom2xUInt8(c: Uint8Array): number {
     const ix = c[0] // 1st byte: 1 bit signed num, 4 bits exponent, 3 bits mantissa (MSB)
     const iy = c[1] // 2nd byte: 8 bit mantissa (LSB)
 
@@ -216,7 +218,7 @@ class MathFunctions {
    * @param {number} v - Float16 number
    * @return {Uint8Array} - Encoded Unsigned Int8 array
    */
-  static encode16BitFloatInto2xUInt8(v) {
+  static encode16BitFloatInto2xUInt8(v: number): Uint8Array {
     const c = new Uint8Array(2)
     // const c = [0, 0];
     const signum = v >= 0 ? 128 : 0
@@ -258,12 +260,12 @@ class MathFunctions {
    * @param {number} v - Float16 number to encode
    * @return {number} - Encoded number
    */
-  static encode16BitFloat(v) {
+  static encode16BitFloat(v: number): number {
     const float32Array = new Float32Array(1)
     float32Array[0] = v
     const int32View = new Int32Array(float32Array.buffer)
 
-    const toUInt16 = (x) => {
+    const toUInt16 = (x: number) => {
       let bits = (x >> 16) & 0x8000 /* Get the sign */
       let m = (x >> 12) & 0x07ff /* Keep one extra bit for rounding */
       const e = (x >> 23) & 0xff /* Using int is faster here */
@@ -311,7 +313,7 @@ class MathFunctions {
    * @param {number} h - Encoded integer
    * @return {number} - Decoded 16 bit float.
    */
-  static decode16BitFloat(h) {
+  static decode16BitFloat(h: number): number {
     const s = (h & 0x8000) >> 15
     const e = (h & 0x7c00) >> 10
     const f = h & 0x03ff
@@ -332,10 +334,10 @@ class MathFunctions {
    * @param {Float32Array} float32Array -
    * @return {Uint16Array} - Unsigned Int16 array representative of the Float32Array
    */
-  static convertFloat32ArrayToUInt16Array(float32Array) {
+  static convertFloat32ArrayToUInt16Array(float32Array: Float32Array): Uint16Array {
     const unit16s = new Uint16Array(float32Array.length)
     const int32View = new Int32Array(float32Array.buffer)
-    const toUInt16 = (x) => {
+    const toUInt16 = (x: number) => {
       let bits = (x >> 16) & 0x8000 /* Get the sign */
       let m = (x >> 12) & 0x07ff /* Keep one extra bit for rounding */
       const e = (x >> 23) & 0xff /* Using int is faster here */

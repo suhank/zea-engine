@@ -8,7 +8,7 @@ import { GIF } from '../../external/gifuct-js.js'
 import { resourceLoader } from '../resourceLoader.js'
 
 import { NumberParameter, Vec4Parameter } from '../Parameters/index'
-import { MathFunctions } from '../../Utilities/MathFunctions-temp'
+import { MathFunctions } from '../../Utilities/MathFunctions'
 
 /**
  * Class representing a GIF image.
