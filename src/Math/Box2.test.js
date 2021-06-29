@@ -1,4 +1,4 @@
-import { Box2 } from './Box2'
+import { Box2 } from './Box2-temp'
 
 describe.skip('Box2', () => {
   describe('#on', () => {
