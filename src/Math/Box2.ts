@@ -20,7 +20,7 @@ class Box2 {
    * @param {Vec2} p0 - A point representing the corners of a 2D box.
    * @param {Vec2} p1 - A point representing the corners of a 2D box.
    */
-  constructor(p0 = undefined, p1 = undefined) {
+   constructor(p0?: Vec2, p1?: Vec2) {
     if (p0 instanceof Vec2) {
       this.p0 = p0
     } else {
@@ -89,7 +89,7 @@ class Box2 {
    *
    * @return {number} - Returns the distance.
    */
-  size() {
+  size(): number {
     return this.p1.distanceTo(this.p0)
   }
 
