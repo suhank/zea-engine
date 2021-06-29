@@ -1,5 +1,5 @@
 import { EventEmitter } from './EventEmitter'
-import { MathFunctions } from './MathFunctions'
+import { MathFunctions } from './MathFunctions-temp'
 
 /**
  * An Allocation1D represents an allocated block of memory.

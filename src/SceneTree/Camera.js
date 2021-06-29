@@ -5,7 +5,7 @@ import { Material } from './Material.js'
 import { GeomItem } from './GeomItem.js'
 import { TreeItem } from './TreeItem.js'
 import { NumberParameter } from './Parameters/index'
-import { MathFunctions, SInt16 } from '../Utilities/MathFunctions'
+import { MathFunctions, SInt16 } from '../Utilities/MathFunctions-temp'
 import { Registry } from '../Registry'
 import { Points } from './Geometry'
 

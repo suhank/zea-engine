@@ -1,5 +1,5 @@
 import { BaseImage, RefCounted } from '../SceneTree/index'
-import { MathFunctions } from '../Utilities/MathFunctions'
+import { MathFunctions } from '../Utilities/MathFunctions-temp'
 import { processTextureParams } from './processTextureParams.js'
 
 /**

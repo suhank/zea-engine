@@ -1,7 +1,7 @@
 /* eslint-disable camelcase */
 /* eslint-disable guard-for-in */
 import { Attribute } from './Attribute.js'
-import { Float32 } from '../../Utilities/MathFunctions'
+import { Float32 } from '../../Utilities/MathFunctions-temp'
 
 /**
  * Class representing vertex attributes.
