@@ -1,4 +1,4 @@
-import { EventEmitter } from './EventEmitter'
+import { EventEmitter } from './EventEmitter-temp'
 
 describe('EventEmitter', () => {
   it('fails when trying to register a callback but no callback was passed.', () => {
