@@ -1,4 +1,4 @@
-import { Frustum } from './Frustum-temp'
+import { Frustum } from './Frustum'
 
 describe.skip('Frustum', () => {
   describe('#on', () => {

@@ -1,8 +1,11 @@
 /* eslint-disable new-cap */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { StringFunctions } from '../Utilities/StringFunctions'
 import { Vec3 } from './Vec3'
 import { PlaneType } from './PlaneType'
 import { Registry } from '../Registry'
+import { Box3 } from './Box3'
+import { Mat4 } from './Mat4'
 
 /**
  * Class representing a Frustum. Frustums are used to determine what
@@ -10,6 +13,13 @@ import { Registry } from '../Registry'
  * @private
  * */
 class Frustum {
+  p0: PlaneType
+  p1: PlaneType
+  p2: PlaneType
+  p3: PlaneType
+  p4: PlaneType
+  p5: PlaneType
+  planes: PlaneType[]
   /**
    * Create a Frustum
    * @param {PlaneType} p0 - the p0 value.
@@ -19,7 +29,7 @@ class Frustum {
    * @param {PlaneType} p4 - the p4 value.
    * @param {PlaneType} p5 - the p5 value.
    */
-  constructor(p0, p1, p2, p3, p4, p5) {
+  constructor(p0: PlaneType, p1: PlaneType, p2: PlaneType, p3: PlaneType, p4: PlaneType, p5: PlaneType) {
     this.planes = [
       p0 || new PlaneType(),
       p1 || new PlaneType(),
@@ -35,7 +45,7 @@ class Frustum {
    * Typically the matrix is a model view projection matrix.
    * @param {Mat4} mat4 - The matrix to use.
    */
-  setFromMatrix(mat4) {
+  setFromMatrix(mat4: Mat4): void  {
     const m = mat4
     const planes = this.planes
     planes[0].set(m.m03 - m.m00, m.m13 - m.m10, m.m23 - m.m20, m.m33 - m.m30)
@@ -45,7 +55,7 @@ class Frustum {
     planes[4].set(m.m03 - m.m02, m.m13 - m.m12, m.m23 - m.m22, m.m33 - m.m32)
     planes[5].set(m.m03 + m.m02, m.m13 + m.m12, m.m23 + m.m22, m.m33 + m.m32)
 
-    planes.forEach((plane) => plane.normalizeInPlace())
+    planes.forEach((plane: PlaneType) => plane.normalizeInPlace())
   }
 
   /**
@@ -53,7 +63,7 @@ class Frustum {
    * @param {Box3} box3 - The box to test.
    * @return {boolean} - True if the frustum intersects the box.
    */
-  intersectsBox(box3) {
+  intersectsBox(box3: Box3): boolean {
     const p = new Vec3()
     const planes = this.planes
     const { min, max } = box3
@@ -79,7 +89,7 @@ class Frustum {
    *
    * @return {object} - The json object.
    */
-  toJSON() {
+  toJSON(): Record<string, unknown> {
     return {
       p0: this.p0.toJSON(),
       p1: this.p1.toJSON(),
@@ -95,7 +105,7 @@ class Frustum {
    *
    * @param {object} j - The json object.
    */
-  fromJSON(j) {
+  fromJSON(j: Record<string, any>): void {
     this.p0.fromJSON(j.p0)
     this.p1.fromJSON(j.p1)
     this.p2.fromJSON(j.p2)
@@ -109,7 +119,7 @@ class Frustum {
    *
    * @return {string} - The return value.
    */
-  toString() {
+  toString(): string {
     return StringFunctions.stringifyJSONWithFixedPrecision(this.toJSON())
   }
 }
