@@ -1,4 +1,4 @@
-import { Allocator1D } from './Allocator1D'
+import { Allocator1D } from './Allocator1D-temp'
 
 describe('Allocator1D', () => {
   it('Simple allocation', () => {
