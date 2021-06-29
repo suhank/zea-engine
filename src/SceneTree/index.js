@@ -1,6 +1,6 @@
 export * from './RefCounted'
 export * from './ParameterOwner-temp'
-export * from './BaseItem'
+export * from './BaseItem-temp'
 export * from './Utils'
 export * from './resourceLoader'
 

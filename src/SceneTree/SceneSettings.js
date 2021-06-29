@@ -1,5 +1,5 @@
 import { Color } from '../Math/index'
-import { BaseItem } from './BaseItem.js'
+import { BaseItem } from './BaseItem-temp.js'
 import { BooleanParameter, NumberParameter, ColorParameter, ImageParameter } from './Parameters/index'
 
 /**

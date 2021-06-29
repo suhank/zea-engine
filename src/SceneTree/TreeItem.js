@@ -1,7 +1,7 @@
 import { Xfo, Box3 } from '../Math/index'
 import { Registry } from '../Registry'
 import { BooleanParameter, XfoParameter } from './Parameters/index'
-import { BaseItem } from './BaseItem.js'
+import { BaseItem } from './BaseItem-temp.js'
 import { CalcGlobalXfoOperator } from './Operators/CalcGlobalXfoOperator.js'
 import { BoundingBoxParameter } from './Parameters/BoundingBoxParameter.js'
 

@@ -1,7 +1,7 @@
 /* eslint-disable require-jsdoc */
 /* eslint-disable guard-for-in */
 import { Vec2, Vec3, Color } from '../Math/index'
-import { BaseItem } from './BaseItem.js'
+import { BaseItem } from './BaseItem-temp.js'
 import { Registry } from '../Registry'
 import { Parameter, NumberParameter, Vec2Parameter, Vec3Parameter, ColorParameter } from './Parameters/index'
 import { MathFunctions } from '../Utilities/MathFunctions'

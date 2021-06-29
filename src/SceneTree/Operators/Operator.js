@@ -1,5 +1,5 @@
 import { Registry } from '../../Registry'
-import { BaseItem } from '../BaseItem.js'
+import { BaseItem } from '../BaseItem-temp.js'
 import { OperatorInput } from './OperatorInput'
 import { OperatorOutput } from './OperatorOutput'
 
