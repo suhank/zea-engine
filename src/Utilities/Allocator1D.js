@@ -1,4 +1,4 @@
-import { EventEmitter } from './EventEmitter-temp'
+import { EventEmitter } from './EventEmitter'
 import { MathFunctions } from './MathFunctions'
 
 /**

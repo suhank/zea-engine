@@ -4,7 +4,7 @@ import { SelectionSet } from './Groups/SelectionSet.js'
 import { GeomLibrary } from './GeomLibrary.js'
 import { MaterialLibrary } from './MaterialLibrary.js'
 import { Registry } from '../Registry'
-import { EventEmitter } from '../Utilities/EventEmitter-temp.js'
+import { EventEmitter } from '../Utilities/EventEmitter'
 
 /**
  * Provides a context for loading assets. This context can provide the units of the loading scene.

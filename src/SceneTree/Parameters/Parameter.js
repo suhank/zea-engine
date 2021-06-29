@@ -1,4 +1,4 @@
-import { EventEmitter } from '../../Utilities/EventEmitter-temp.js'
+import { EventEmitter } from '../../Utilities/EventEmitter'
 import { Registry } from '../../Registry'
 
 const OperatorOutputMode = {

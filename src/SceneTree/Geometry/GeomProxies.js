@@ -1,5 +1,5 @@
 import { Box3 } from '../../Math/index'
-import { EventEmitter } from '../../Utilities/EventEmitter-temp.js'
+import { EventEmitter } from '../../Utilities/EventEmitter'
 import { Registry } from '../../Registry'
 
 /** ProxyGeometries are pupulated from data unpacked using a webworker while loading zcad files.

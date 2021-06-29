@@ -1,4 +1,4 @@
-import { EventEmitter } from '../../Utilities/EventEmitter-temp'
+import { EventEmitter } from '../../Utilities/EventEmitter'
 
 /** Class representing an operator input.
  * @extends EventEmitter

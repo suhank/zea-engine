@@ -1,5 +1,5 @@
 import { OperatorOutputMode } from '../Parameters/Parameter'
-import { EventEmitter } from '../../Utilities/EventEmitter-temp'
+import { EventEmitter } from '../../Utilities/EventEmitter'
 
 /** Class representing an operator output.
  * @extends EventEmitter
