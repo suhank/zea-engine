@@ -1,4 +1,4 @@
-export * from './Parameter'
+export * from './Parameter-temp'
 export * from './MultiChoiceParameter'
 export * from './BooleanParameter'
 export * from './NumberParameter'

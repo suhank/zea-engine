@@ -1,4 +1,4 @@
-import { Parameter } from './Parameter.js'
+import { Parameter } from './Parameter-temp.js'
 
 /** Class representing an item set parameter.
  * @extends Parameter

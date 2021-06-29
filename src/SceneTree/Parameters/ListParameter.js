@@ -1,5 +1,5 @@
 import { Registry } from '../../Registry'
-import { Parameter } from './Parameter.js'
+import { Parameter } from './Parameter-temp.js'
 
 /**
  * A Parameter for storing list(array) values.

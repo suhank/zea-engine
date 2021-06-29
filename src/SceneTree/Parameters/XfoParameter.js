@@ -1,6 +1,6 @@
 import { Registry } from '../../Registry'
 import { Xfo } from '../../Math/index'
-import { Parameter } from './Parameter.js'
+import { Parameter } from './Parameter-temp.js'
 
 /**
  * Represents a specific type of parameter, that only stores `Xfo` transform values.

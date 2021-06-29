@@ -1,4 +1,4 @@
-import { OperatorOutputMode } from '../Parameters/Parameter'
+import { OperatorOutputMode } from '../Parameters/Parameter-temp'
 import { EventEmitter } from '../../Utilities/EventEmitter'
 
 /** Class representing an operator output.

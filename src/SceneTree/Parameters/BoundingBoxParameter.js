@@ -1,4 +1,4 @@
-import { Parameter } from './Parameter'
+import { Parameter } from './Parameter-temp'
 import { Box3 } from '../../Math/Box3'
 
 /**

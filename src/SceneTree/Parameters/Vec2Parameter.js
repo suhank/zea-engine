@@ -1,6 +1,6 @@
 import { Registry } from '../../Registry'
 import { Vec2 } from '../../Math/index'
-import { Parameter } from './Parameter.js'
+import { Parameter } from './Parameter-temp.js'
 
 /**
  * Represents a specific type of parameter, that only stores Vec2(two-dimensional coordinate) values.

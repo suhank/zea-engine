@@ -1,7 +1,7 @@
 import { Xfo } from '../../Math/Xfo'
 import { Operator } from './Operator'
 import { OperatorOutput } from './OperatorOutput'
-import { OperatorOutputMode } from '../Parameters/Parameter'
+import { OperatorOutputMode } from '../Parameters/Parameter-temp'
 import { OperatorInput } from './OperatorInput'
 
 /** An operator that calculates the delta transform of the group since items were bound to it.

@@ -1,6 +1,6 @@
 import { Registry } from '../../Registry'
 import { Mat3 } from '../../Math/index'
-import { Parameter } from './Parameter.js'
+import { Parameter } from './Parameter-temp.js'
 
 /**
  * Represents a specific type of parameter, that only stores Mat3(3x3 matrix) values.

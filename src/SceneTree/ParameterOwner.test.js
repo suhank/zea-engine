@@ -1,4 +1,4 @@
-import { Parameter } from './Parameters/Parameter'
+import { Parameter } from './Parameters/Parameter-temp'
 import { ParameterOwner } from './ParameterOwner-temp'
 
 describe('ParameterOwner', () => {
