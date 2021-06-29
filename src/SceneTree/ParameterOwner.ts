@@ -11,7 +11,7 @@ import { Parameter } from './Parameters'
  *
  * @extends {EventEmitter}
  */
-class ParameterOwner extends EventEmitter { // TODO make generic
+class ParameterOwner extends EventEmitter {
   protected paramEventHandlers: Record<string, any>
   protected paramMapping: Record<string, number>
   params;

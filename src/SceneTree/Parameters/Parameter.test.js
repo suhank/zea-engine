@@ -1,4 +1,4 @@
-import { Parameter } from './Parameter'
+import { Parameter } from './Parameter-temp'
 import { BaseItem } from '../BaseItem'
 
 describe('Parameter', () => {
