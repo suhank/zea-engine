@@ -4,12 +4,16 @@ import { Vec3 } from './Vec3'
 import { Mat4 } from './Mat4'
 import { SphereType } from './SphereType'
 import { Registry } from '../Registry'
+import { Xfo } from '../Math/index'
 
 /**
  * Class representing a box in 3D space.
  * Represents a box in 3D space defined by two Vec3 values which define opposing corners of the box.
  */
 class Box3 {
+  p0: Vec3
+  p1: Vec3
+
   /**
    * Creates a Box3 object using Vec3s.
    * In case the parameters are not passed by, their values are pre-defined:
@@ -21,7 +25,7 @@ class Box3 {
    * @param {Vec3} p0 - A point representing the corners of a 3D box.
    * @param {Vec3} p1 - A point representing the corners of a 3D box.
    */
-  constructor(p0 = undefined, p1 = undefined) {
+  constructor(p0?: Vec3, p1?: Vec3) {
     if (p0 instanceof Float32Array) {
       this.setFromFloat32Array(p0)
       return
@@ -43,7 +47,7 @@ class Box3 {
    *
    * @return {Vec3} - Returns the minimum Vec3.
    */
-  get min() {
+  get min(): Vec3 {
     return this.p0
   }
 
@@ -52,7 +56,7 @@ class Box3 {
    *
    * @return {Vec3} - Returns the maximum Vec3.
    */
-  get max() {
+  get max(): Vec3 {
     return this.p1
   }
 
@@ -62,7 +66,7 @@ class Box3 {
    * @param {Vec3} p0 - A point representing the corners of a 3D box.
    * @param {Vec3} p1 - A point representing the corners of a 3D box.
    */
-  set(p0, p1) {
+  set(p0: Vec3, p1: Vec3): void {
     this.p0 = p0
     this.p1 = p1
   }
@@ -70,7 +74,7 @@ class Box3 {
   /**
    * Resets the box3 back to an uninitialized state.
    */
-  reset() {
+  reset(): void {
     this.p0.x = Number.POSITIVE_INFINITY
     this.p0.y = Number.POSITIVE_INFINITY
     this.p0.z = Number.POSITIVE_INFINITY
@@ -84,7 +88,7 @@ class Box3 {
    *
    * @return {boolean} - The return value.
    */
-  isValid() {
+  isValid(): boolean {
     return (
       this.p0.x != Number.POSITIVE_INFINITY &&
       this.p1.x != Number.NEGATIVE_INFINITY &&
@@ -100,7 +104,7 @@ class Box3 {
    *
    * @param {Vec3} point - A point represents the corners of a 3D box.
    */
-  addPoint(point) {
+  addPoint(point: Vec3): void {
     if (point.x != Number.POSITIVE_INFINITY && point.x != Number.NEGATIVE_INFINITY) {
       if (point.x < this.p0.x) this.p0.x = point.x
       if (point.x > this.p1.x) this.p1.x = point.x
@@ -122,7 +126,7 @@ class Box3 {
    * @param {Box3} box3 - A 3D box.
    * @param {Xfo} xfo - A 3D transform.
    */
-  addBox3(box3, xfo = undefined) {
+  addBox3(box3: Box3, xfo?: Xfo): void {
     if (xfo) {
       // Transform each corner of the Box3 into the new coordinate system.
       this.addPoint(xfo.transformVec3(box3.p0))
@@ -162,7 +166,7 @@ class Box3 {
    *
    * @return {Vec3} - Returns a Vec3.
    */
-  center() {
+  center(): Vec3 {
     const result = this.p1.subtract(this.p0)
     result.scaleInPlace(0.5)
     result.addInPlace(this.p0)
@@ -174,7 +178,7 @@ class Box3 {
    *
    * @return {Mat4} - Returns a new Mat4.
    */
-  toMat4() {
+  toMat4(): Mat4 {
     const scx = this.p1.x - this.p0.x
     const scy = this.p1.y - this.p0.y
     const scz = this.p1.z - this.p0.z
@@ -186,7 +190,7 @@ class Box3 {
    *
    * @return {SphereType} - The return value.
    */
-  getBoundingSphere() {
+  getBoundingSphere(): SphereType {
     return new SphereType(this.center(), this.diagonal().length() * 0.5)
   }
 
@@ -196,7 +200,7 @@ class Box3 {
    * @param {Box3} box - The box to check for intersection against.
    * @return {boolean} - Returns true if the shapes intersect.
    */
-  intersectsBox(box) {
+  intersectsBox(box: Box3): boolean {
     // Using 6 splitting planes to rule out intersections.
     return box.max.x < this.min.x ||
       box.min.x > this.max.x ||
@@ -215,22 +219,22 @@ class Box3 {
    * @return {boolean} - Returns true if the shapes intersect.
    */
   intersectsSphere(sphere) {
-    // var closestPoint = new Vector3();
+    let closestPoint = new Vec3();
 
     // Find the point on the AABB closest to the sphere center.
     // this.clampPoint( sphere.center, closestPoint );
 
     // If that point is inside the sphere, the AABB and sphere intersect.
-    return closestPoint.distanceToSquared(sphere.center) <= sphere.radius * sphere.radius
+    return closestPoint.distanceTo(sphere.center) <= sphere.radius * sphere.radius
   }
 
   /**
    * Determines if this Box3 intersects a plane.
    *
    * @param {Plane} plane - The plane to check for intersection against.
-   * @return {boolean} - Returns true if the shapes intersect.
+   * @return {boolean} - The return value.
    */
-  intersectsPlane(plane) {
+  intersectsPlane(plane: any): boolean {
     // We compute the minimum and maximum dot product values. If those values
     // are on the same side (back or front) of the plane, then there is no intersection.
 
@@ -268,7 +272,7 @@ class Box3 {
    * Clones this Box3 and returns a new Box3.
    * @return {Box3} - Returns a new Box3.
    */
-  clone() {
+  clone(): Box3 {
     return new Box3(this.p0.clone(), this.p1.clone())
   }
 
@@ -277,11 +281,12 @@ class Box3 {
 
   /**
    * Creates a new Box3.
-   * @param {...object} ...args - The ...args param.
+   * @param {...args: []} ...args - The ...args param.
    * @return {Box3} - Returns a new Box3.
    * @private
    */
-  static create(...args) {
+
+  static create(...args: []): Box3 {
     return new Box3(...args)
   }
 
@@ -290,7 +295,7 @@ class Box3 {
    * @return {number} - The return value.
    * @private
    */
-  static sizeInBytes() {
+  static sizeInBytes(): number {
     return 24
   }
 
@@ -300,9 +305,9 @@ class Box3 {
   /**
    * Encodes `Box3` Class as a JSON object for persistence.
    *
-   * @return {object} - The json object.
+   * @return {Record<string, Record<string, number>>} - The json object.
    */
-  toJSON() {
+  toJSON(): Record<string, Record<string, number>> {
     return {
       p0: this.p0.toJSON(),
       p1: this.p1.toJSON(),
@@ -312,9 +317,9 @@ class Box3 {
   /**
    * Decodes a JSON object to set the state of this class.
    *
-   * @param {object} j - The json object.
+   * @param {Record<string, Record<string, number>>} j - The json object.
    */
-  fromJSON(j) {
+  fromJSON(j: Record<string, Record<string, number>>): void {
     // We need to verify that p0 and p1 axes are numeric, so in case they are not, we restore them to their default values.
     // This, because 'Infinity' and '-Infinity' are stringified as 'null'.
     const p0 = {
@@ -336,7 +341,7 @@ class Box3 {
    * @param {Float32Array} float32array - The float32array value.
    * @private
    */
-  setFromFloat32Array(float32array) {
+  setFromFloat32Array(float32array: Float32Array): void {
     this.p0 = new Vec3(float32array.buffer, float32array.byteOffset)
     this.p1 = new Vec3(float32array.buffer, float32array.byteOffset + 12)
   }
@@ -346,7 +351,7 @@ class Box3 {
    *
    * @return {string} - The return value.
    */
-  toString() {
+  toString(): string {
     // eslint-disable-next-line new-cap
     return StringFunctions.stringifyJSONWithFixedPrecision(this.toJSON())
   }
