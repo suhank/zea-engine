@@ -1,7 +1,7 @@
 /* eslint-disable new-cap */
 import { StringFunctions } from '../Utilities/StringFunctions'
 import { Vec3 } from './Vec3'
-import { PlaneType } from './PlaneType-temp.js'
+import { PlaneType } from './PlaneType'
 import { Registry } from '../Registry'
 
 /**

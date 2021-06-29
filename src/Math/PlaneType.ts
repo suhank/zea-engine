@@ -1,23 +1,23 @@
 /* eslint-disable new-cap */
 import { StringFunctions } from '../Utilities/StringFunctions'
-import { AttrValue } from './AttrValue.js'
 import { Registry } from '../Registry'
 import { Vec3 } from './Vec3'
+//import { Plane } from '../SceneTree/Geometry/Shapes/Plane'
 
 /**
  * Class representing a plane.
- *
- * @extends AttrValue
  */
-class PlaneType extends AttrValue {
+class PlaneType{
+  normal: Vec3
+  w: number
+
   /**
    * Create a plane.
    *
    * @param {Vec3} normal - The normal of the plane.
    * @param {number} w - The w value.
    */
-  constructor(normal, w = 0) {
-    super()
+  constructor(normal?: Vec3, w = 0) {
     if (normal instanceof Vec3) {
       this.normal = normal
     } else {
@@ -34,7 +34,7 @@ class PlaneType extends AttrValue {
    * @param {number} z - The z value.
    * @param {number} w - The w value.
    */
-  set(x, y, z, w) {
+  set(x: number, y: number, z: number, w: number): void {
     this.normal.set(x, y, z)
     this.w = w
   }
@@ -44,7 +44,7 @@ class PlaneType extends AttrValue {
    *
    * @param {number} value - The value value.
    */
-  divideScalar(value) {
+  divideScalar(value: number): void {
     this.normal.scaleInPlace(1 / value)
     this.w /= value
   }
@@ -55,14 +55,14 @@ class PlaneType extends AttrValue {
    * @param {Vec3} point - The point value.
    * @return {number} - The return value.
    */
-  distanceToPoint(point) {
+  distanceToPoint(point: Vec3): number {
     return point.dot(this.normal) + this.w
   }
 
   /**
    * Normalize this plane in place modifying its values.
    */
-  normalizeInPlace() {
+  normalizeInPlace(): void {
     const inverseNormalLength = 1.0 / this.normal.length()
     this.normal.scaleInPlace(inverseNormalLength)
     this.w *= inverseNormalLength
@@ -71,10 +71,10 @@ class PlaneType extends AttrValue {
   /**
    * Clones this plane and returns a new plane.
    *
-   * @return {Plane} - Returns a new plane.
+   * @return {PlaneType} - Returns a new plane.
    */
-  clone() {
-    return new Plane(this.normal.clone(), this.w)
+  clone(): PlaneType {
+    return new PlaneType(this.normal.clone(), this.w)
   }
 
   // ////////////////////////////////////////
@@ -86,8 +86,9 @@ class PlaneType extends AttrValue {
    * @return {Plane} - Returns a new plane.
    * @private
    */
-  static create(...args) {
-    return new Plane(...args)
+
+  static create(...args: any[]): PlaneType {
+    return new  PlaneType(...args)
   }
 
   // ///////////////////////////
@@ -98,11 +99,16 @@ class PlaneType extends AttrValue {
    *
    * @return {object} - The json object.
    */
-  toJSON() {
+  toJSON(): Record<string, unknown> {
     return {
       normal: this.normal.toJSON(),
       w: this.w,
     }
+  }
+
+  fromJSON(json: Record<string, any>): void {
+    this.normal = Vec3.createFromJSON(json.normal)
+    this.w = json.w
   }
 
   /**
@@ -110,7 +116,7 @@ class PlaneType extends AttrValue {
    *
    * @return {string} - The return value.
    */
-  toString() {
+  toString(): string {
     return StringFunctions.stringifyJSONWithFixedPrecision(this.toJSON())
   }
 }
