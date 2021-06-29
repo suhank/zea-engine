@@ -1,4 +1,4 @@
-import { StringFunctions } from '../Utilities/StringFunctions-temp'
+import { StringFunctions } from '../Utilities/StringFunctions'
 import { glslTypes } from './GLSLConstants.js'
 
 /** Class representing a shader library.

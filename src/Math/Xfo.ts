@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { StringFunctions } from '../Utilities/StringFunctions-temp'
+import { StringFunctions } from '../Utilities/StringFunctions'
 import { Vec3 } from './Vec3'
 import { Mat4 } from './Mat4'
 import { Quat } from './Quat'

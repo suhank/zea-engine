@@ -1,4 +1,4 @@
-import { StringFunctions } from '../Utilities/StringFunctions-temp'
+import { StringFunctions } from '../Utilities/StringFunctions'
 import { Vec2 } from './Vec2'
 import { Registry } from '../Registry'
 
