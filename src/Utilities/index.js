@@ -1,5 +1,5 @@
 export * from './Env'
-export * from './GrowingPacker-temp'
+export * from './GrowingPacker'
 export * from './EventEmitter'
 export * from './Allocator1D'
 export * from './StringFunctions'

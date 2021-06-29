@@ -7,7 +7,7 @@ import { EventEmitter } from './EventEmitter'
 This is a binary tree based bin packing algorithm that is more complex than
 the simple Packer (packer.js). Instead of starting off with a fixed width and
 height, it starts with the width and height of the first block passed and then
-grows as necessary to accomodate each subsequent block. As it grows it attempts
+grows as necessary to accommodate each subsequent block. As it grows it attempts
 to maintain a roughly square ratio by making 'smart' choices about whether to
 grow right or down.
 
@@ -20,7 +20,7 @@ will not be an issue.
 A potential way to solve this limitation would be to allow growth in BOTH
 directions at once, but this requires maintaining a more complex tree
 with 3 children (down, right and center) and that complexity can be avoided
-by simply chosing a sensible starting block.
+by simply choosing a sensible starting block.
 
 Best results occur when the input blocks are sorted by height, or even better
 when sorted by max(width,height).
@@ -62,6 +62,7 @@ Example:
 ******************************************************************************/
 
 class GrowingPacker extends EventEmitter {
+  root: Record<string, any>
   constructor(w = 0, h = 0) {
     super()
     this.root = {
@@ -72,7 +73,7 @@ class GrowingPacker extends EventEmitter {
     }
   }
 
-  fit(blocks) {
+  fit(blocks: Array<Record<string, any>>): void {
     const len = blocks.length
     if (len == 0) return
     let resized = false
@@ -87,19 +88,19 @@ class GrowingPacker extends EventEmitter {
     if (resized) {
       this.emit('resized', { width: this.root.w, height: this.root.h })
     }
-    const eachBlock = (block) => {
+    const eachBlock = (block: Record<string, any>) => {
       block.fit = this.__addBlock(block)
     }
     blocks.forEach(eachBlock)
   }
 
-  __addBlock(block) {
+  __addBlock(block: Record<string, any>): Record<string, any> | null | undefined {
     const node = this.findNode(this.root, block.w, block.h)
     if (node) return this.splitNode(node, block.w, block.h)
     else return this.growNode(block.w, block.h)
   }
 
-  addBlock(block) {
+  addBlock(block: Record<string, any>): Record<string, any> | null | undefined {
     let resized = false
     if (this.root.w < block.w) {
       this.root.w = block.w
@@ -117,13 +118,13 @@ class GrowingPacker extends EventEmitter {
     else return this.growNode(block.w, block.h)
   }
 
-  findNode(root, w, h) {
+  findNode(root: Record<string, any>, w: number, h: number): Record<string, any> | null {
     if (root.used) return this.findNode(root.right, w, h) || this.findNode(root.down, w, h)
     else if (w <= root.w && h <= root.h) return root
     else return null
   }
 
-  splitNode(node, w, h) {
+  splitNode(node: Record<string, any>, w: number, h: number): Record<string, any> {
     node.used = true
     node.down = {
       x: node.x,
@@ -140,7 +141,7 @@ class GrowingPacker extends EventEmitter {
     return node
   }
 
-  growNode(w, h) {
+  growNode(w: number, h: number): Record<string, any> | null | undefined {
     const canGrowDown = w <= this.root.w
     const canGrowRight = h <= this.root.h
 
@@ -154,7 +155,7 @@ class GrowingPacker extends EventEmitter {
     else return null // need to ensure sensible root starting size to avoid this happening
   }
 
-  growRight(w, h) {
+  growRight(w: number, h: number): Record<string, any> | null | undefined {
     this.root = {
       used: true,
       x: 0,
@@ -176,7 +177,7 @@ class GrowingPacker extends EventEmitter {
     return res
   }
 
-  growDown(w, h) {
+  growDown(w: number, h: number): Record<string, any> | null | undefined {
     this.root = {
       used: true,
       x: 0,
