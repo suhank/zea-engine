@@ -6,12 +6,8 @@ import { Registry } from '../../Registry'
 import { OperatorOutput } from '../Operators/OperatorOutput'
 import { ICloneable } from '../../Utilities/ICloneable'
 import { ISerializable } from '../../Utilities/ISerializable'
-//import { OperatorOutputMode } from './OperatorOutputMode'
-
-const OperatorOutputMode = {
-  OP_WRITE: 0,
-  OP_READ_WRITE: 1,
-}
+import { OperatorOutputMode } from './OperatorOutputMode'
+// import { BinReader } from '../BinReader'
 
 /**
  * Represents a reactive type of attribute that can be owned by a `ParameterOwner` class.
@@ -358,7 +354,7 @@ abstract class Parameter<T> extends EventEmitter  implements ICloneable, ISerial
       throw 'undefined was passed into the set value for param:' + this.getName()
     }
     //if (mode != undefined) {
-      //console.warn("WARNING in Parameter.setValue: 'mode' is deprecated.")
+    //  console.warn("WARNING in Parameter.setValue: 'mode' is deprecated.")
     //}
 
     if (this.boundOps.length > 0) {
@@ -398,9 +394,16 @@ abstract class Parameter<T> extends EventEmitter  implements ICloneable, ISerial
 
   abstract clone(): any
 
-  readBinary(reader, context) {
-    console.warn(`TODO: Parameter: ${this.constructor.name} with name: ${this.name} does not implement readBinary`)
-  }
+  // /**
+  //  * The readBinary method.
+  //  *
+  //  * @param {object} reader - The reader value.
+  //  * @param {object} context - The context value.
+  //  */
+  // readBinary(reader, context) {
+  //   console.warn(`TODO: Parameter: ${this.constructor.name} with name: ${this.name} does not implement readBinary`)
+  // }
+
     /**
    * The toJSON method serializes this instance as a JSON.
    * It can be used for persistence, data transfer, etc.
@@ -436,12 +439,7 @@ abstract class Parameter<T> extends EventEmitter  implements ICloneable, ISerial
   //   this.emit('valueChanged', {})
   // }
 
-  // /**
-  //  * The readBinary method.
-  //  *
-  //  * @param {object} reader - The reader value.
-  //  * @param {object} context - The context value.
-  //  */
+
 }
 
 
