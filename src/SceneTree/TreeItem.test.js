@@ -1,4 +1,4 @@
-import { TreeItem } from './TreeItem'
+import { TreeItem } from './TreeItem-temp'
 import { Vec3, Xfo, Quat, Color } from '../Math'
 
 describe('TreeItem', () => {

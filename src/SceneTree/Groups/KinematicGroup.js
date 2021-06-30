@@ -3,7 +3,7 @@ import { Xfo } from '../../Math/index'
 import { Registry } from '../../Registry'
 import { XfoParameter, MultiChoiceParameter } from '../Parameters/index'
 import { BaseGroup } from './BaseGroup'
-import { TreeItem } from '../TreeItem'
+import { TreeItem } from '../TreeItem-temp'
 import { GroupTransformXfoOperator, GroupMemberXfoOperator } from '../Operators/GroupMemberXfoOperator.js'
 
 const GROUP_XFO_MODES = {

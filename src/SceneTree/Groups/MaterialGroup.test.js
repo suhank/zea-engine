@@ -1,5 +1,5 @@
 import { MaterialGroup } from './MaterialGroup'
-import { TreeItem } from '../TreeItem'
+import { TreeItem } from '../TreeItem-temp'
 import { Material } from '../Material'
 import { GeomItem } from '../GeomItem'
 

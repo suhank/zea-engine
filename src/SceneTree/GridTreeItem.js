@@ -1,5 +1,5 @@
 import { Color, Xfo, Vec3 } from '../Math/index'
-import { TreeItem } from './TreeItem'
+import { TreeItem } from './TreeItem-temp'
 import { Material } from './Material'
 import { GeomItem } from './GeomItem'
 import { Grid } from './Geometry/Shapes/Grid'

@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { Registry } from '../../Registry'
 import { ItemSetParameter } from '../Parameters/index'
-import { TreeItem } from '../TreeItem'
+import { TreeItem } from '../TreeItem-temp'
 
 /**
  * BaseGroup are a special type of `TreeItem` that allows you to gather/classify/organize/modify

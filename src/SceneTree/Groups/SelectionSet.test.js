@@ -1,5 +1,5 @@
 import { SelectionSet } from './SelectionSet'
-import { TreeItem } from '../TreeItem'
+import { TreeItem } from '../TreeItem-temp'
 import { Color } from '../../Math'
 
 describe('SelectionSet', () => {

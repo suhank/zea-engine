@@ -3,7 +3,7 @@
 /* eslint-disable guard-for-in */
 import { Env, EventEmitter } from '../Utilities/index'
 import { zeaDebug } from '../helpers/zeaDebug'
-import { TreeItem } from './TreeItem'
+import { TreeItem } from './TreeItem-temp'
 
 function checkStatus(response) {
   if (!response.ok) {

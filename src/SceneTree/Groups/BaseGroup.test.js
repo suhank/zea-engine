@@ -1,5 +1,5 @@
 import { BaseGroup } from './BaseGroup'
-import { TreeItem } from '../TreeItem'
+import { TreeItem } from '../TreeItem-temp'
 import { Material } from '../Material'
 import { GeomItem } from '../GeomItem'
 import { Vec3, Xfo } from '../../Math'

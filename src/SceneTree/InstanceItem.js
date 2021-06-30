@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable valid-jsdoc */
 import { Xfo } from '../Math/index'
-import { TreeItem } from './TreeItem.js'
+import { TreeItem } from './TreeItem-temp.js'
 import { Registry } from '../Registry'
 
 /**

@@ -11,7 +11,7 @@ import {
   MultiChoiceParameter,
 } from '../Parameters/index'
 import { MaterialParameter } from '../Parameters/MaterialParameter-temp.js'
-import { TreeItem } from '../TreeItem'
+import { TreeItem } from '../TreeItem-temp'
 import { BaseGeomItem } from '../BaseGeomItem'
 import { GroupTransformXfoOperator, GroupMemberXfoOperator } from '../Operators/GroupMemberXfoOperator.js'
 import { BaseGroup } from './BaseGroup'

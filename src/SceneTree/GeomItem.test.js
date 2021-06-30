@@ -1,4 +1,4 @@
-import { TreeItem } from './TreeItem'
+import { TreeItem } from './TreeItem-temp'
 import { GeomItem } from './GeomItem'
 import { Vec3, Xfo, Color, Mat4, Quat } from '../Math'
 import { Material } from './Material'

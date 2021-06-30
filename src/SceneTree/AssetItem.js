@@ -1,5 +1,5 @@
 import { Version } from './Version.js'
-import { TreeItem } from './TreeItem.js'
+import { TreeItem } from './TreeItem-temp.js'
 import { SelectionSet } from './Groups/SelectionSet.js'
 import { GeomLibrary } from './GeomLibrary.js'
 import { MaterialLibrary } from './MaterialLibrary.js'

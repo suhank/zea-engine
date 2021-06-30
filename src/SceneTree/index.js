@@ -20,7 +20,7 @@ export * from './Parameters/FilePathParameter-temp'
 export * from './Geometry/index'
 export * from './Images/index'
 
-export * from './TreeItem'
+export * from './TreeItem-temp'
 export * from './InstanceItem'
 // export * from './AudioItem'
 export * from './BaseGeomItem'

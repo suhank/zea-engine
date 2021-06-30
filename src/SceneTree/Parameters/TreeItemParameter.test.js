@@ -1,4 +1,4 @@
-import { TreeItem } from '../TreeItem'
+import { TreeItem } from '../TreeItem-temp'
 import { TreeItemParameter } from './TreeItemParameter-temp'
 
 describe('TreeItemParameter', () => {

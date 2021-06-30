@@ -2,7 +2,7 @@
 import { Registry } from '../../Registry'
 import { BaseGroup } from './BaseGroup'
 import { MaterialParameter } from '../Parameters/MaterialParameter-temp.js'
-import { TreeItem } from '../TreeItem'
+import { TreeItem } from '../TreeItem-temp'
 
 /**
  *

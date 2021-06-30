@@ -1,6 +1,6 @@
 import { Color, Vec2 } from '../Math/index'
 import { BooleanParameter, NumberParameter, ColorParameter, ImageParameter, Vec2Parameter } from './Parameters/index'
-import { TreeItem } from './TreeItem.js'
+import { TreeItem } from './TreeItem-temp.js'
 import { Registry } from '../Registry'
 
 /**

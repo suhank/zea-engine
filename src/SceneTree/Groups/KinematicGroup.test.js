@@ -1,5 +1,5 @@
 import { KinematicGroup } from './KinematicGroup'
-import { TreeItem } from '../TreeItem'
+import { TreeItem } from '../TreeItem-temp'
 import { Vec3, Xfo } from '../../Math'
 
 describe('KinematicGroup', () => {
