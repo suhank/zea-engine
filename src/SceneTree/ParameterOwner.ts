@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable guard-for-in */
+/* eslint-disable valid-jsdoc */
 import { EventEmitter } from '../Utilities/EventEmitter'
 import { Registry } from '../Registry'
 import { BinReader } from './BinReader'
@@ -14,8 +16,7 @@ import { Parameter } from './Parameters'
 class ParameterOwner extends EventEmitter {
   protected paramEventHandlers: Record<string, any>
   protected paramMapping: Record<string, number>
-  params;
-  //protected params: Parameter<any>[] // TODO parameters
+  protected params: Parameter<any>[]
   deprecatedParamMapping: Record<string, any>
 
   /**

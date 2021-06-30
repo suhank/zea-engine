@@ -1,5 +1,12 @@
+
+import { ParameterOwner } from '../ParameterOwner'
+import { BaseItem } from '../BaseItem'
 import { EventEmitter } from '../../Utilities/EventEmitter'
 import { Registry } from '../../Registry'
+import { OperatorOutput } from '../Operators/OperatorOutput'
+import { ICloneable } from '../../Utilities/ICloneable'
+import { ISerializable } from '../../Utilities/ISerializable'
+//import { OperatorOutputMode } from './OperatorOutputMode'
 
 const OperatorOutputMode = {
   OP_WRITE: 0,
@@ -13,7 +20,16 @@ const OperatorOutputMode = {
  * * **nameChanged:** Triggered when the name of the parameter changes.
  * * **valueChanged:** Triggered when the value of the parameter changes.
  */
-class Parameter extends EventEmitter {
+abstract class Parameter<T> extends EventEmitter  implements ICloneable, ISerializable{
+  private boundOps: OperatorOutput[]
+  private cleaning: boolean
+  private dirtyOpIndex: number
+  private firstOP_WRITE: number
+  protected name: string
+  protected value?: T
+  protected dataType?: string
+  protected ownerItem: ParameterOwner
+
   /**
    * When initializing a new parameter, the passed in value could be anything.
    * If it is a new type of value, just ensure you register it in the `Registry`.
@@ -33,33 +49,18 @@ class Parameter extends EventEmitter {
    * ```
    *
    * @param {string} name - The name of the parameter.
-   * @param {object|string|number|any} value - The value of the parameter.
+   * @param {T} value - The value of the parameter.
    * @param {string} dataType - The data type of the parameter.
    */
-  constructor(name, value, dataType) {
+  constructor(name: string, value?: T, dataType?: string) {
     super()
 
-    this.__name = name
-    this.__value = value
-    this.__dataType = dataType ? dataType : undefined
-    this.__boundOps = []
-    this.__dirtyOpIndex = 0
-    this.__cleaning = false
-
-    this.getName = this.getName.bind(this)
-    this.setName = this.setName.bind(this)
-    this.getValue = this.getValue.bind(this)
-    this.setValue = this.setValue.bind(this)
-  }
-
-  /**
-   * Copies and returns the exact clone of current parameter
-   *
-   * @return {Parameter} - Clone of current parameter
-   */
-  clone() {
-    const clonedParameter = new Parameter(this.__name, this.__value, this.__dataType)
-    return clonedParameter
+    this.name = name
+    this.value = value
+    this.dataType = dataType
+    this.boundOps = []
+    this.dirtyOpIndex = 0
+    this.cleaning = false
   }
 
   /**
@@ -67,8 +68,8 @@ class Parameter extends EventEmitter {
    *
    * @return {string} - Returns the name.
    */
-  getName() {
-    return this.__name
+  getName = (): string => {
+    return this.name
   }
 
   /**
@@ -77,14 +78,14 @@ class Parameter extends EventEmitter {
    * @param {string} name - The base parameter name.
    * @return {Parameter} - The instance itself.
    */
-  setName(name) {
-    if (name === this.__name) {
-      return this
+  setName = (name: string): void => {
+    if (name === this.name) {
+      return
     }
 
-    const prevName = this.__name
-    this.__name = name
-    this.emit('nameChanged', { newName: this.__name, prevName })
+    const prevName = this.name
+    this.name = name
+    this.emit('nameChanged', { newName: this.name, prevName })
   }
 
   /**
@@ -92,7 +93,7 @@ class Parameter extends EventEmitter {
    *
    * @return {ParameterOwner} - The return value.
    */
-  getOwner() {
+  getOwner(): ParameterOwner {
     return this.ownerItem
   }
 
@@ -101,7 +102,7 @@ class Parameter extends EventEmitter {
    *
    * @param {ParameterOwner} ownerItem - The ownerItem value.
    */
-  setOwner(ownerItem) {
+  setOwner(ownerItem: ParameterOwner): void {
     this.ownerItem = ownerItem
   }
 
@@ -109,13 +110,13 @@ class Parameter extends EventEmitter {
    * Returns the parameter's path as an array of strings.
    * Includes owner's path in case it is owned by a `ParameterOwner`.
    *
-   * @return {array} - The return value.
+   * @return {string[]} - The return value.
    */
-  getPath() {
-    if (this.ownerItem && this.ownerItem.getName) {
-      return [...this.ownerItem.getPath(), this.__name]
+  getPath(): string[] {
+    if (this.ownerItem && this.ownerItem instanceof BaseItem) {
+      return [...this.ownerItem.getPath(), this.name]
     } else {
-      return [this.__name]
+      return [this.name]
     }
   }
 
@@ -124,8 +125,8 @@ class Parameter extends EventEmitter {
    *
    * @return {string} - The return value.
    */
-  getDataType() {
-    return this.__dataType
+  getDataType(): string | undefined {
+    return this.dataType
   }
 
   // ////////////////////////////////////////////////
@@ -138,12 +139,12 @@ class Parameter extends EventEmitter {
    * @param {number} index - The index(optional) that the output is being bound at.
    * @return {number} - The index of the bound output.
    */
-  bindOperatorOutput(operatorOutput, index = -1) {
-    if (index == -1) index = this.__boundOps.length
-    this.__boundOps.splice(index, 0, operatorOutput)
+  bindOperatorOutput(operatorOutput: OperatorOutput, index = -1): number {
+    if (index == -1) index = this.boundOps.length
+    this.boundOps.splice(index, 0, operatorOutput)
     // Update the remaining binding indices
-    for (let i = index; i < this.__boundOps.length; i++) {
-      this.__boundOps[i].setParamBindIndex(i)
+    for (let i = index; i < this.boundOps.length; i++) {
+      this.boundOps[i].setParamBindIndex(i)
     }
     // If we weren't already dirty, make sure to emit a 'valueChanged' anyway.
     this.__findFirstOP_WRITE()
@@ -157,12 +158,12 @@ class Parameter extends EventEmitter {
    * @param {OperatorOutput} operatorOutput - The output that we are unbinding from the Parameter
    * @return {boolean} - The return value.
    */
-  unbindOperator(operatorOutput) {
+  unbindOperator(operatorOutput: OperatorOutput): number {
     const index = operatorOutput.getParamBindIndex()
-    this.__boundOps.splice(index, 1)
+    this.boundOps.splice(index, 1)
     // Update the remaining binding indices
-    for (let i = index; i < this.__boundOps.length; i++) {
-      this.__boundOps[i].setParamBindIndex(i)
+    for (let i = index; i < this.boundOps.length; i++) {
+      this.boundOps[i].setParamBindIndex(i)
     }
     this.__findFirstOP_WRITE()
     this.setDirty(Math.max(0, index - 1))
@@ -174,12 +175,12 @@ class Parameter extends EventEmitter {
    * All operators before this op can be ignored during dirty propagation.
    * @private
    */
-  __findFirstOP_WRITE() {
-    this.__firstOP_WRITE = this.__boundOps.length
-    if (this.__boundOps.length > 0) {
-      for (this.__firstOP_WRITE--; this.__firstOP_WRITE > 0; this.__firstOP_WRITE--) {
+  __findFirstOP_WRITE(): void {
+    this.firstOP_WRITE = this.boundOps.length
+    if (this.boundOps.length > 0) {
+      for (this.firstOP_WRITE--; this.firstOP_WRITE > 0; this.firstOP_WRITE--) {
         // Find the first OP_WRITE binding. (Note: we could cache this)
-        if (this.__boundOps[this.__firstOP_WRITE].getMode() == OperatorOutputMode.OP_WRITE) break
+        if (this.boundOps[this.firstOP_WRITE].getMode() == OperatorOutputMode.OP_WRITE) break
       }
     }
   }
@@ -190,20 +191,20 @@ class Parameter extends EventEmitter {
    * @param {number} index - Index of the operator
    * @return {boolean} - `true` if the Parameter was made dirty, else `false` if it was already dirty.
    */
-  setDirty(index) {
+  setDirty(index: number): boolean {
     // Determine the first operator in the stack that must evaluate to clean the parameter.
-    if (index < this.__dirtyOpIndex) {
+    if (index < this.dirtyOpIndex) {
       // If we must dirty all operators in the stack from the last OP_WRITE to the end.
       // Note: If a setDirty call comes from an op that precedes an OP_WRITE operator, we
       // can safely discard it, as its output will have no effect on the value of this parameter.
-      let newDirtyIndex = this.__firstOP_WRITE
+      let newDirtyIndex = this.firstOP_WRITE
       if (newDirtyIndex <= index) {
-        this.__dirtyOpIndex = newDirtyIndex
-        for (newDirtyIndex++; newDirtyIndex < this.__boundOps.length; newDirtyIndex++) {
+        this.dirtyOpIndex = newDirtyIndex
+        for (newDirtyIndex++; newDirtyIndex < this.boundOps.length; newDirtyIndex++) {
           // Dirty all the other bound ops from the OP_WRITE to the top of the stack.
           if (newDirtyIndex != index) {
             // This will cause the other outputs of the operator to become dirty.
-            this.__boundOps[newDirtyIndex].getOperator().setDirty()
+            this.boundOps[newDirtyIndex].getOperator().setDirty()
           }
         }
         this.emit('valueChanged', { mode: 0 })
@@ -220,8 +221,8 @@ class Parameter extends EventEmitter {
    *
    * @return {boolean} - Returns a boolean.
    */
-  isDirty() {
-    return this.__dirtyOpIndex < this.__boundOps.length
+  isDirty(): boolean {
+    return this.dirtyOpIndex < this.boundOps.length
   }
 
   /**
@@ -230,18 +231,18 @@ class Parameter extends EventEmitter {
    *
    * @return {number} - The index of the dirty binding in the binding stack.
    */
-  getDirtyBindingIndex() {
-    return this.__dirtyOpIndex
+  getDirtyBindingIndex(): number {
+    return this.dirtyOpIndex
   }
 
   /**
    * The setCleanFromOp method.
-   * @param {any} value - The computed value to be stored in the Parameter.
+   * @param {T} value - The computed value to be stored in the Parameter.
    * @param {number} index - The index of the bound OperatorOutput.
    */
-  setCleanFromOp(value, index) {
-    if (index != this.__dirtyOpIndex) {
-      if (index < this.__dirtyOpIndex) {
+  setCleanFromOp(value: T, index: number): void {
+    if (index != this.dirtyOpIndex) {
+      if (index < this.dirtyOpIndex) {
         // This can happen when an operator in the following case.
 
         // ParamA [OpC, OpB, OpA]
@@ -260,40 +261,40 @@ class Parameter extends EventEmitter {
         //   } with name: ${op.getName()} is being cleaned immediately, instead of lazily.`
         // )
         console.log(`Parameter is cleaned when it was already clean to that point in the stack:`, this.getPath())
-      } else if (this.__boundOps[index].getMode() != OperatorOutputMode.OP_WRITE) {
+      } else if (this.boundOps[index].getMode() != OperatorOutputMode.OP_WRITE) {
         // A parameter can become dirty (so __dirtyOpIndex == 0), and then another operator bound on top.
         // if the next op is a WRITE op, then we can fast forward the dirty index.
         const thisClassName = Registry.getBlueprintName(this)
-        const op = this.__boundOps[index].getOperator()
+        const op = this.boundOps[index].getOperator()
         const opClassName = Registry.getBlueprintName(op)
         throw new Error(
-          `Parameter: ${thisClassName} with name: ${this.getName()} is not cleaning all outputs during evaluation of op: ${opClassName} with name: ${op.getName()}`
+          `Parameter: ${thisClassName} with name: ${this.getName()} is not cleaning all outputs during evaluation of op: ${opClassName} with name: ${op.getName()}`,
         )
       }
     } else {
       // console.log(`cleaned:`, this.getPath())
     }
 
-    this.__value = value
+    this.value = value
 
     // As each operator writes its value, the dirty value is incremented
-    this.__dirtyOpIndex = index + 1
+    this.dirtyOpIndex = index + 1
   }
 
   /**
    * During operator evaluation, operators can use this method to retrieve the existing
    * value of one of their outputs.
    * @param {number} index - The index of the bound OperatorOutput to evaluate up to.
-   * @return {object|string|number|any} - The return value.
+   * @return {T | undefined} - The return value.
    */
-  getValueFromOp(index) {
+  getValueFromOp(index: number): T | undefined {
     // Note: during evaluation of an Operator that writes to multiple outputs,
     // it can write to an output with an IO setting, which means it retrieves
     // the previous value while calculating the next.
-    if (this.__dirtyOpIndex < index) {
+    if (this.dirtyOpIndex < index) {
       this._clean(index)
     }
-    return this.__value
+    return this.value
   }
 
   /**
@@ -301,31 +302,31 @@ class Parameter extends EventEmitter {
    *
    * @param {number} index - The index of the bound OperatorOutput to evaluate up to.
    */
-  _clean(index) {
-    if (this.__cleaning) {
+  _clean(index: number): void {
+    if (this.cleaning) {
       throw new Error(`Cycle detected when cleaning: ${this.getPath()}. Operators need to be rebound to fix errors`)
     }
-    this.__cleaning = true
+    this.cleaning = true
 
-    while (this.__dirtyOpIndex < index) {
-      const tmp = this.__dirtyOpIndex
-      const operatorOutput = this.__boundOps[this.__dirtyOpIndex]
+    while (this.dirtyOpIndex < index) {
+      const tmp = this.dirtyOpIndex
+      const operatorOutput = this.boundOps[this.dirtyOpIndex]
       // The op can get the current value and modify it in place
       // and set the output to clean.
       operatorOutput.getOperator().evaluate()
 
-      if (tmp == this.__dirtyOpIndex) {
+      if (tmp == this.dirtyOpIndex) {
         // During initial configuration of an operator, cleaning outputs might be disabled.
-        const op = this.__boundOps[this.__dirtyOpIndex].getOperator()
+        const op = this.boundOps[this.dirtyOpIndex].getOperator()
         const opClassName = Registry.getBlueprintName(op)
         console.warn(
-          `Operator: ${opClassName} with name: ${op.getName()} is not cleaning its outputs during evaluation`
+          `Operator: ${opClassName} with name: ${op.getName()} is not cleaning its outputs during evaluation`,
         )
-        this.__dirtyOpIndex++
+        this.dirtyOpIndex++
       }
     }
 
-    this.__cleaning = false
+    this.cleaning = false
   }
 
   /**
@@ -334,40 +335,45 @@ class Parameter extends EventEmitter {
    * @param {number} mode - The mode value.
    * @return {object|string|number|any} - The return value.
    */
-  getValue(mode) {
+  getValue = (mode?: number): T | undefined => {
     if (mode != undefined) {
       console.warn("WARNING in Parameter.setValue: 'mode' is deprecated.")
     }
-    if (this.__dirtyOpIndex < this.__boundOps.length) {
-      this._clean(this.__boundOps.length)
+    if (this.dirtyOpIndex < this.boundOps.length) {
+      this._clean(this.boundOps.length)
     }
-    return this.__value
+
+    return this.value
   }
 
   /**
    * Sets value of the parameter.
    *
-   * @param {object|string|number|any} value - The value param.
+   * @param {T} value - The value param.
+   * @param {number} mode - This is deprecated now.
    */
-  setValue(value) {
+  setValue = (value: T, mode?: number): void => {
     if (value == undefined) {
       // eslint-disable-next-line no-throw-literal
       throw 'undefined was passed into the set value for param:' + this.getName()
     }
+    //if (mode != undefined) {
+      //console.warn("WARNING in Parameter.setValue: 'mode' is deprecated.")
+    //}
 
-    if (this.__boundOps.length > 0) {
-      for (let i = this.__boundOps.length - 1; i >= 0; i--) {
-        const operatorOutput = this.__boundOps[i]
+    if (this.boundOps.length > 0) {
+      for (let i = this.boundOps.length - 1; i >= 0; i--) {
+        const operatorOutput = this.boundOps[i]
         value = operatorOutput.backPropagateValue(value)
         if (operatorOutput.getMode() == 0 /* OP_WRITE */) return
       }
     }
 
-    if (!value.fromJSON) {
+    if (typeof value !== 'object') {
       // Note: equality tests on anything but simple values is going to be super expensive.
-      if (this.__value == value) return
+      if (this.value == value) return
     }
-    this.__value = value
+    this.value = value
 
     // Note: only users call 'setValue'. Operators call 'setCleanFromOp'
     this.emit('valueChanged', {})
@@ -380,72 +386,63 @@ class Parameter extends EventEmitter {
    * The loadValue is used to change the value of a parameter, without triggering a
    * valueChanges, or setting the USER_EDITED state.
    *
-   * @param {any} value - The context value.
+   * @param {T} value - The context value.
    */
-  loadValue(value) {
-    this.__value = value
+  loadValue(value: T): void {
+    this.value = value
   }
 
-  /**
+  abstract toJSON(context?: Record<string, any>): Record<string, any>
+
+  abstract fromJSON(j: Record<string, any>, context?: Record<string, any>): void
+
+  abstract clone(): any
+
+  readBinary(reader, context) {
+    console.warn(`TODO: Parameter: ${this.constructor.name} with name: ${this.name} does not implement readBinary`)
+  }
+    /**
    * The toJSON method serializes this instance as a JSON.
    * It can be used for persistence, data transfer, etc.
    *
    * @param {object} context - The context value.
    * @return {object} - Returns the json object.
    */
-  toJSON(context) {
-    if (this.__value.toJSON) return { value: this.__value.toJSON(context) }
-    else return { value: this.__value }
-  }
+  // toJSON(context) {
+  //   if (this.__value.toJSON) return { value: this.__value.toJSON(context) }
+  //   else return { value: this.__value }
+  // }
 
-  /**
-   * The fromJSON method takes a JSON and deserializes into an instance of this type.
-   *
-   * @param {object} j - The json object this item must decode.
-   * @param {object} context - The context value.
-   */
-  fromJSON(j, context) {
-    if (j.value == undefined) {
-      console.warn('Invalid Parameter JSON')
-      return
-    }
+  // /**
+  //  * The fromJSON method takes a JSON and deserializes into an instance of this type.
+  //  *
+  //  * @param {object} j - The json object this item must decode.
+  //  * @param {object} context - The context value.
+  //  */
+  // fromJSON(j, context) {
+  //   if (j.value == undefined) {
+  //     console.warn('Invalid Parameter JSON')
+  //     return
+  //   }
 
-    if (j.value.type && this.__value == undefined) {
-      this.__value = Registry.constructClass(j.value.type)
-    }
-    if (this.__value == undefined || !this.__value.fromJSON) {
-      this.__value = j.value
-    } else {
-      this.__value.fromJSON(j.value, context)
-    }
-    this.emit('valueChanged', {})
-  }
+  //   if (j.value.type && this.__value == undefined) {
+  //     this.__value = Registry.constructClass(j.value.type)
+  //   }
+  //   if (this.__value == undefined || !this.__value.fromJSON) {
+  //     this.__value = j.value
+  //   } else {
+  //     this.__value.fromJSON(j.value, context)
+  //   }
+  //   this.emit('valueChanged', {})
+  // }
 
-  /**
-   * The readBinary method.
-   *
-   * @param {object} reader - The reader value.
-   * @param {object} context - The context value.
-   */
-  readBinary(reader, context) {
-    console.warn(`TODO: Parameter: ${this.constructor.name} with name: ${this.__name} does not implement readBinary`)
-  }
-
-  // ////////////////////////////////////////
-  // Clone
-
-  /**
-   * The clone method constructs a new parameter, copies its values
-   * from this parameter and returns it.
-   *
-   * @return {Parameter} - Returns a new cloned parameter.
-   */
-  clone() {
-    const clonedValue = this.__value
-    if (clonedValue.clone) clonedValue = clonedValue.clone()
-    const clonedParam = new Parameter(this.__name, clonedValue, this.__dataType)
-    return clonedParam
-  }
+  // /**
+  //  * The readBinary method.
+  //  *
+  //  * @param {object} reader - The reader value.
+  //  * @param {object} context - The context value.
+  //  */
 }
 
-export { OperatorOutputMode, Parameter }
+
+export { Parameter }

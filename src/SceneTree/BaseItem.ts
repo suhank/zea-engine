@@ -1,8 +1,11 @@
-/* eslint-disable no-unused-vars */
-import { ParameterOwner } from './ParameterOwner-temp.js'
-import { BinReader } from './BinReader.js'
-import { Registry } from '../Registry'
 
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { ParameterOwner } from './ParameterOwner-temp.js'
+import { BinReader } from './BinReader'
+import { Registry } from '../Registry'
+import { Parameter } from './Parameters'
 let numBaseItems = 0
 
 /**
@@ -15,14 +18,21 @@ let numBaseItems = 0
  * @extends {ParameterOwner}
  */
 class BaseItem extends ParameterOwner {
+  protected __metaData: Record<string, any>
+  protected __name: string
+  protected __ownerItem?: BaseItem
+  protected __path: string[]
+  protected __selectable: boolean
+  protected __selected: boolean
+
   /**
    * Create a base item by defining its name.
    *
-   * @param {string} name - The name of the base item.
+   * @param {string} [name=''] - The name of the base item.
    */
-  constructor(name) {
+  constructor(name = '') {
     super()
-    this.__name = name ? name : ''
+    this.__name = name
     this.__path = [this.__name]
     this.__ownerItem = undefined // TODO: will create a circular ref. Figure out and use weak refs
 
@@ -46,7 +56,7 @@ class BaseItem extends ParameterOwner {
    *
    * @return {number} - Returns the total number of base items created.
    */
-  static getNumBaseItems() {
+  static getNumBaseItems(): number {
     return numBaseItems
   }
 
@@ -58,7 +68,7 @@ class BaseItem extends ParameterOwner {
    *
    * @return {string} - Returns the base item name.
    */
-  getName() {
+  getName(): string {
     return this.__name
   }
 
@@ -68,11 +78,11 @@ class BaseItem extends ParameterOwner {
    * @emits `nameChanged` with `newName` and `oldName` data.
    * @param {string} name - The base item name.
    */
-  setName(name) {
+  setName(name: string): void {
     if (this.__name != name) {
       const oldName = this.__name
       this.__name = name
-      this.__updatePath()
+      this.updatePath()
       this.emit('nameChanged', { newName: name, oldName })
     }
   }
@@ -82,7 +92,7 @@ class BaseItem extends ParameterOwner {
    * recomputes and caches the path of this item.
    * @private
    */
-  __updatePath() {
+  protected updatePath(): void {
     if (this.__ownerItem == undefined) this.__path = [this.__name]
     else {
       this.__path = [...this.__ownerItem.getPath(), this.__name]
@@ -92,9 +102,9 @@ class BaseItem extends ParameterOwner {
   /**
    * Returns the current path of the item in the tree as an array of names.
    *
-   * @return {array} - Returns an array.
+   * @return {string[]} - Returns an array.
    */
-  getPath() {
+  getPath(): string[] {
     return this.__path
   }
 
@@ -107,9 +117,9 @@ class BaseItem extends ParameterOwner {
    *
    * @param {array} path - The path value.
    * @param {number} index - The index value.
-   * @return {BaseItem|Parameter} - The return value.
+   * @return {BaseItem|Parameter|null} - The return value.
    */
-  resolvePath(path, index = 0) {
+  resolvePath(path: string[], index = 0): BaseItem | Parameter<any> | null {
     if (index == 0) {
       if (path[0] == '.' || path[0] == this.__name) index++
     }
@@ -135,9 +145,9 @@ class BaseItem extends ParameterOwner {
    * The getOwner method returns the current owner of the item.
    * The item is a child of the current owner.
    *
-   * @return {object} - Returns the current owner.
+   * @return {BaseItem} - Returns the current owner.
    */
-  getOwner() {
+  getOwner(): BaseItem | undefined {
     // return this.__private.get('ownerItem');
     return this.__ownerItem
   }
@@ -145,13 +155,13 @@ class BaseItem extends ParameterOwner {
   /**
    * The setOwner method assigns a new owner to the item.
    *
-   * @param {object} ownerItem - The new owner item.
+   * @param {BaseItem} ownerItem - The new owner item.
    */
-  setOwner(ownerItem) {
+  setOwner(ownerItem: BaseItem): void {
     // this.__private.set(ownerItem, ownerItem);
     if (this.__ownerItem !== ownerItem) {
       this.__ownerItem = ownerItem
-      this.__updatePath()
+      this.updatePath()
     }
   }
 
@@ -163,7 +173,7 @@ class BaseItem extends ParameterOwner {
    *
    * @return {boolean} - Returns a boolean indicating if the item is selectable.
    */
-  getSelectable() {
+  getSelectable(): boolean {
     return this.__selectable
   }
 
@@ -173,7 +183,7 @@ class BaseItem extends ParameterOwner {
    * @param {boolean} val - A boolean indicating the selectability of the item.
    * @return {boolean} - Returns true if value changed.
    */
-  setSelectable(val) {
+  setSelectable(val: boolean): boolean {
     if (this.__selectable != val) {
       this.__selectable = val
       return true
@@ -183,9 +193,11 @@ class BaseItem extends ParameterOwner {
 
   /**
    * The isSelected method.
+   * @deprecated
+   * @see `getSelected` method
    * @return {boolean} - The return value.
    */
-  isSelected() {
+  isSelected(): boolean {
     return this.__selected
   }
 
@@ -194,7 +206,7 @@ class BaseItem extends ParameterOwner {
    *
    * @return {boolean} - The current selection state.
    */
-  getSelected() {
+  getSelected(): boolean {
     return this.__selected
   }
 
@@ -204,7 +216,7 @@ class BaseItem extends ParameterOwner {
    * @emits `selectedChanged` with selected state
    * @param {boolean} sel - Boolean indicating the new selection state.
    */
-  setSelected(sel) {
+  setSelected(sel: boolean): void {
     this.__selected = sel
     this.emit('selectedChanged', { selected: this.__selected })
   }
@@ -216,9 +228,9 @@ class BaseItem extends ParameterOwner {
    * Gets Item's meta-data value by passing the `key` string.
    *
    * @param {string} key - The key value under which to check for metadata.
-   * @return {object|string|any} - Returns the metadata associated with the given key.
+   * @return {Record<string, any>} - Returns the metadata associated with the given key.
    */
-  getMetadata(key) {
+  getMetadata(key: string): Record<string, any> {
     return this.__metaData[key]
   }
 
@@ -228,7 +240,7 @@ class BaseItem extends ParameterOwner {
    * @param {string} key - The key value under which to check for metadata.
    * @return {boolean} - Returns `true` if metadata exists under the given key, otherwise returns `false`.
    */
-  hasMetadata(key) {
+  hasMetadata(key: string): boolean {
     return key in this.__metaData
   }
 
@@ -238,7 +250,7 @@ class BaseItem extends ParameterOwner {
    * @param {string} key - The key value under which the metadata is is going to be saved.
    * @param {object} metaData - The metaData value.
    */
-  setMetadata(key, metaData) {
+  setMetadata(key: string, metaData: any): void {
     this.__metaData[key] = metaData
   }
 
@@ -247,7 +259,7 @@ class BaseItem extends ParameterOwner {
    *
    * @param {string} key - The key value.
    */
-  deleteMetadata(key) {
+  deleteMetadata(key: string): void {
     delete this.__metaData[key]
   }
 
@@ -257,13 +269,14 @@ class BaseItem extends ParameterOwner {
   /**
    * Encodes the current object as a json object.
    *
-   * @param {object} context - The context value.
-   * @return {object} - Returns the json object.
+   * @param {Record<string, any>} context - The context value.
+   * @return {Record<string, any>} - Returns the json object.
    */
-  toJSON(context) {
+  toJSON(context?: Record<string, any>): Record<string, any> {
     const j = super.toJSON(context)
-    j.name = this.__name
-    j.type = Registry.getBlueprintName(this)
+    ;(j as any).name = this.__name
+    ;(j as any).type = Registry.getBlueprintName(this)
+
     return j
   }
 
@@ -273,7 +286,7 @@ class BaseItem extends ParameterOwner {
    * @param {object} j - The json object this item must decode.
    * @param {object} context - The context value.
    */
-  fromJSON(j, context) {
+  fromJSON(j: Record<string, any>, context?: Record<string, any>): void {
     if (j.name) this.__name = j.name
     super.fromJSON(j, context)
   }
@@ -284,8 +297,8 @@ class BaseItem extends ParameterOwner {
    * @param {BinReader} reader - The reader value.
    * @param {object} context - The context value.
    */
-  readBinary(reader, context) {
-    const type = reader.loadStr()
+  readBinary(reader: BinReader, context?: Record<string, any>): void {
+    // const type = reader.loadStr()
     this.setName(reader.loadStr())
 
     // Note: parameters follow name...
@@ -298,10 +311,10 @@ class BaseItem extends ParameterOwner {
   /**
    * Clones this base item and returns a new base item.
    * <br>
-   * **Note:** Each class should implement clone to be cloneable.
-   * @param {object} context - The context value.
+   * **Note:** Each class should implement clone to be clonable.
+   * @param {Record<string, any>} context - The context value.
    */
-  clone(context) {
+  clone(context?: Record<string, any>): void {
     throw new Error(this.constructor.name + ' does not implement its clone method')
   }
 
@@ -315,9 +328,9 @@ class BaseItem extends ParameterOwner {
    * data from the source object.
    *
    * @param {BaseItem} src - The BaseItem to copy from.
-   * @param {object} context - The context value.
+   * @param {Record<string, any>} [context] - The context value
    */
-  copyFrom(src, context) {
+  copyFrom(src: BaseItem, context?: Record<string, any>): void {
     super.copyFrom(src, context)
     this.setName(src.getName())
   }
