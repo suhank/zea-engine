@@ -1,6 +1,6 @@
 /* eslint-disable constructor-super */
 import { BooleanParameter, NumberParameter } from './Parameters/index'
-import { FilePathParameter } from './Parameters/FilePathParameter'
+import { FilePathParameter } from './Parameters/FilePathParameter-temp'
 import { TreeItem } from './TreeItem.js'
 
 /**

@@ -3,7 +3,7 @@ import { BaseImage } from '../BaseImage.js'
 
 import { resourceLoader } from '../resourceLoader.js'
 
-import { FilePathParameter } from '../Parameters/FilePathParameter'
+import { FilePathParameter } from '../Parameters/FilePathParameter-temp'
 
 const imageDataLibrary = {}
 

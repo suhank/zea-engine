@@ -1,7 +1,7 @@
-import { MaterialParameter } from './MaterialParameter'
+import { MaterialParameter } from './MaterialParameter-temp'
 import { Material } from '../Material'
-import { BinReader } from '../BinReader'
-import { ColorParameter } from './ColorParameter'
+// import { BinReader } from '../BinReader'
+import { ColorParameter } from './ColorParameter-temp'
 import { Color } from '../../Math'
 
 describe('MaterialParameter', () => {

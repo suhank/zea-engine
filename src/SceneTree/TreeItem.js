@@ -3,7 +3,7 @@ import { Registry } from '../Registry'
 import { BooleanParameter, XfoParameter } from './Parameters/index'
 import { BaseItem } from './BaseItem-temp.js'
 import { CalcGlobalXfoOperator } from './Operators/CalcGlobalXfoOperator.js'
-import { BoundingBoxParameter } from './Parameters/BoundingBoxParameter.js'
+import { BoundingBoxParameter } from './Parameters/BoundingBoxParameter-temp.js'
 
 /**
  * Class representing an Item in the scene tree with hierarchy capabilities (has children).

@@ -1,5 +1,5 @@
 import { Quat } from '../../Math/Quat'
-import { QuatParameter } from './QuatParameter'
+import { QuatParameter } from './QuatParameter-temp'
 import { BinReader } from '../../SceneTree/BinReader'
 
 describe('QuatParameter', () => {

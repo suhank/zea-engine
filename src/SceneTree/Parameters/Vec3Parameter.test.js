@@ -1,5 +1,5 @@
 import { Vec3 } from '../../Math/Vec3'
-import { Vec3Parameter } from './Vec3Parameter'
+import { Vec3Parameter } from './Vec3Parameter-temp'
 import { BinReader } from '../../SceneTree/BinReader'
 
 describe('Vec3Parameter', () => {

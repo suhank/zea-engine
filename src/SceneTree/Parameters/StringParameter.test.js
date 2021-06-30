@@ -1,4 +1,4 @@
-import { StringParameter } from './StringParameter'
+import { StringParameter } from './StringParameter-temp'
 import { BaseItem } from '../BaseItem-temp'
 import { BinReader } from '../../SceneTree/BinReader'
 

@@ -1,4 +1,4 @@
-import { GeometryParameter } from './GeometryParameter'
+import { GeometryParameter } from './GeometryParameter-temp'
 import { Cylinder } from '../Geometry/Shapes/Cylinder'
 import { Cuboid } from '../Geometry/Shapes/Cuboid'
 import { GeomItem } from '../../SceneTree/GeomItem'

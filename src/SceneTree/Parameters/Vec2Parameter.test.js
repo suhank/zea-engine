@@ -1,5 +1,5 @@
 import { Vec2 } from '../../Math/Vec2'
-import { Vec2Parameter } from './Vec2Parameter'
+import { Vec2Parameter } from './Vec2Parameter-temp'
 import { BinReader } from '../../SceneTree/BinReader'
 
 describe('Vec2Parameter', () => {

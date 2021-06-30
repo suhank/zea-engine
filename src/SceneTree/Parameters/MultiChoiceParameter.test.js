@@ -1,4 +1,4 @@
-import { MultiChoiceParameter } from './MultiChoiceParameter'
+import { MultiChoiceParameter } from './MultiChoiceParameter-temp'
 import { BinReader } from '../BinReader'
 
 describe('MultiChoiceParameter', () => {

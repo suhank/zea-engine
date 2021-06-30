@@ -1,5 +1,5 @@
 import { Vec2, Vec3 } from '../../../Math/index'
-import { NumberParameter } from '../../Parameters/NumberParameter'
+import { NumberParameter } from '../../Parameters/NumberParameter-temp'
 import { Registry } from '../../../Registry'
 import { ProceduralMesh } from './ProceduralMesh'
 

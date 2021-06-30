@@ -10,7 +10,7 @@ import {
   ItemSetParameter,
   MultiChoiceParameter,
 } from '../Parameters/index'
-import { MaterialParameter } from '../Parameters/MaterialParameter.js'
+import { MaterialParameter } from '../Parameters/MaterialParameter-temp.js'
 import { TreeItem } from '../TreeItem'
 import { BaseGeomItem } from '../BaseGeomItem'
 import { GroupTransformXfoOperator, GroupMemberXfoOperator } from '../Operators/GroupMemberXfoOperator.js'

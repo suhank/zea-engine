@@ -1,5 +1,5 @@
 import { TreeItem } from '../TreeItem'
-import { TreeItemParameter } from './TreeItemParameter'
+import { TreeItemParameter } from './TreeItemParameter-temp'
 
 describe('TreeItemParameter', () => {
   it('has an initial value.', () => {

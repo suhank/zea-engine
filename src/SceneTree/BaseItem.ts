@@ -5,7 +5,8 @@
 import { ParameterOwner } from './ParameterOwner'
 import { BinReader } from './BinReader'
 import { Registry } from '../Registry'
-import { Parameter } from './Parameters'
+// TODO:(ss) use this: import { Parameter } from './Parameters'
+import { Parameter } from './Parameters/Parameter'
 let numBaseItems = 0
 
 /**

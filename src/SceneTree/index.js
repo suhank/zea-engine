@@ -11,12 +11,12 @@ export * from './BinWriter'
 export * from './Parameters/index'
 // Explicit export of parameters that are not included in the
 // moduled defined by the index file in the folder. (see Parameters/index)
-export * from './Parameters/FilePathParameter'
-export * from './Parameters/MaterialParameter'
-export * from './Parameters/MaterialFloatParam'
-export * from './Parameters/MaterialColorParam'
+export * from './Parameters/FilePathParameter-temp'
+export * from './Parameters/MaterialParameter-temp'
+export * from './Parameters/MaterialFloatParam-temp'
+export * from './Parameters/MaterialColorParam-temp'
 // export * from './Parameters/GeometryParameter'
-export * from './Parameters/FilePathParameter'
+export * from './Parameters/FilePathParameter-temp'
 export * from './Geometry/index'
 export * from './Images/index'
 

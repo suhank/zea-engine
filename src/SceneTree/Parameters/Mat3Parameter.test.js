@@ -1,4 +1,4 @@
-import { Mat3Parameter } from './Mat3Parameter'
+import { Mat3Parameter } from './Mat3Parameter-temp'
 import { Mat3 } from '../../Math'
 import { BinReader } from '../../SceneTree/BinReader'
 

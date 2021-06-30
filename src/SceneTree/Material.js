@@ -10,8 +10,8 @@ import { MathFunctions } from '../Utilities/MathFunctions'
 // module defined by the index file in the folder. (see Parameters/index.js)
 // These parameters depend on classes that ar ParameterOwners.
 // TODO: Move to this folder.
-import { MaterialFloatParam } from './Parameters/MaterialFloatParam'
-import { MaterialColorParam } from './Parameters/MaterialColorParam'
+import { MaterialFloatParam } from './Parameters/MaterialFloatParam-temp'
+import { MaterialColorParam } from './Parameters/MaterialColorParam-temp'
 
 const generateParameterInstance = (paramName, defaultValue, range, texturable) => {
   if (typeof defaultValue == 'boolean' || defaultValue === false || defaultValue === true) {
