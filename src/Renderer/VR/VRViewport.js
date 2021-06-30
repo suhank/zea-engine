@@ -39,7 +39,6 @@ class VRViewport extends GLBaseViewport {
     // Tree
 
     this.__stageTreeItem = new TreeItem('VRStage')
-    this.__stageTreeItem.setSelectable(false)
     this.__stageTreeItem.setVisible(false)
     this.__renderer.addTreeItem(this.__stageTreeItem)
 
@@ -222,7 +221,9 @@ class VRViewport extends GLBaseViewport {
             }
           }
           this.__vrAsset.traverse((item) => {
-            if (item instanceof GeomItem) item.visibleInGeomDataBuffer = false
+            this.stroke.traverse((item) => {
+              item.setSelectable(false)
+            })
           })
           resolve(this.__vrAsset)
         }
