@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ParameterOwner } from './ParameterOwner-temp.js'
+import { ParameterOwner } from './ParameterOwner'
 import { BinReader } from './BinReader'
 import { Registry } from '../Registry'
 import { Parameter } from './Parameters'

@@ -1,6 +1,6 @@
 export * from './Parameter-temp'
 export * from './MultiChoiceParameter'
-export * from './BooleanParameter'
+export * from './BooleanParameter-temp'
 export * from './NumberParameter'
 export * from './Vec2Parameter'
 export * from './Vec3Parameter'
