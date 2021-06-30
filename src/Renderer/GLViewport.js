@@ -415,7 +415,7 @@ class GLViewport extends GLBaseViewport {
       const geomItemAndDist = pass.getGeomItemAndDist(geomData)
 
       if (geomItemAndDist) {
-        if (!geomItemAndDist.geomItem.visibleInGeomDataBuffer) return
+        if (!geomItemAndDist.geomItem.getSelectable()) return
 
         if (!pointerRay) pointerRay = this.calcRayFromScreenPos(screenPos)
         const intersectionPos = pointerRay.start.add(pointerRay.dir.scale(geomItemAndDist.dist))
@@ -489,14 +489,14 @@ class GLViewport extends GLBaseViewport {
 
         const geomItemAndDist = this.__renderer.getPass(passId).getGeomItemAndDist(geomData)
         if (geomItemAndDist) {
-          if (!geomItemAndDist.geomItem.visibleInGeomDataBuffer) continue
+          if (!geomItemAndDist.geomItem.getSelectable()) continue
 
           geomItems.add(geomItemAndDist.geomItem)
         }
       }
 
       return [...geomItems].filter((geomItem) => {
-        if (!geomItem.visibleInGeomDataBuffer) return false
+        if (!geomItem.getSelectable()) return false
 
         return true
       })
