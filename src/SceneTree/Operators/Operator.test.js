@@ -1,6 +1,6 @@
 /* eslint-disable require-jsdoc */
 import { Operator } from './Operator'
-import { NumberParameter } from '../Parameters/NumberParameter'
+import { NumberParameter } from '../Parameters/NumberParameter-temp'
 import { BaseItem } from '../BaseItem-temp'
 import { OperatorInput } from './OperatorInput'
 import { OperatorOutput } from './OperatorOutput'

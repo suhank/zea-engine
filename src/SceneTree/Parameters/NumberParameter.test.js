@@ -1,4 +1,4 @@
-import { NumberParameter } from './NumberParameter'
+import { NumberParameter } from './NumberParameter-temp'
 import { BinReader } from '../../SceneTree/BinReader'
 
 describe('NumberParameter', () => {

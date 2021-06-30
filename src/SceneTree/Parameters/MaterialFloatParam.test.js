@@ -1,4 +1,4 @@
-import { MaterialFloatParam } from './MaterialFloatParam'
+import { MaterialFloatParam } from './MaterialFloatParam-temp'
 import { BaseImage } from '../BaseImage'
 import { BinReader } from '../BinReader'
 

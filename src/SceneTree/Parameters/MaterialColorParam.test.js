@@ -1,7 +1,7 @@
-import { MaterialColorParam } from './MaterialColorParam'
+import { MaterialColorParam } from './MaterialColorParam-temp'
 import { Color } from '../../Math/Color'
 import { BaseImage } from '../BaseImage'
-import { BinReader } from '../BinReader'
+// import { BinReader } from '../BinReader'
 
 describe('MaterialColorParam', () => {
   it('has an initial value.', () => {

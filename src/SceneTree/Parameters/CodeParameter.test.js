@@ -1,4 +1,4 @@
-import { CodeParameter } from './CodeParameter'
+import { CodeParameter } from './CodeParameter-temp'
 
 describe('CodeParameter', () => {
   it('has an initial value.', () => {
