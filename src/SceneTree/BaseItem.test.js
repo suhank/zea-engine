@@ -1,5 +1,5 @@
 import { BaseItem } from './BaseItem-temp'
-import { TreeItem } from './TreeItem'
+import { TreeItem } from './TreeItem-temp'
 
 describe('BaseItem', () => {
   it("doesn't have base items by default.", () => {
