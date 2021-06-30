@@ -1,4 +1,4 @@
-import { BooleanParameter } from './BooleanParameter'
+import { BooleanParameter } from './BooleanParameter-temp'
 
 describe('BooleanParameter', () => {
   it('has an initial value.', () => {
