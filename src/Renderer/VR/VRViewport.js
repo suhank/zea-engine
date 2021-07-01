@@ -268,7 +268,7 @@ class VRViewport extends GLBaseViewport {
             const dir = cameraXfo.ori.getZaxis()
             dir.z = 0
             dir.normalizeInPlace()
-            stageXfo.ori.setFromDirectionAndUpvector(dir.negate(), new Vec3(0, 0, 1))
+            stageXfo.ori.setFromDirectionAndUpvector(dir, new Vec3(0, 0, 1))
             this.setXfo(stageXfo)
 
             session.addEventListener('end', (event) => {
@@ -451,9 +451,10 @@ class VRViewport extends GLBaseViewport {
     }
 
     this.__vrhead.update(pose)
+    const viewXfo = this.__vrhead.getTreeItem().getParameter('GlobalXfo').getValue()
 
     // Prepare the pointerMove event.
-    const event = {}
+    const event = { controllers: this.controllers, viewXfo }
     this.preparePointerEvent(event)
     this.updateControllers(xrFrame, event)
     if (this.capturedElement && event.propagating) {
@@ -511,7 +512,7 @@ class VRViewport extends GLBaseViewport {
       })
     }
 
-    renderstate.viewXfo = this.__vrhead.getTreeItem().getParameter('GlobalXfo').getValue()
+    renderstate.viewXfo = viewXfo
     renderstate.viewScale = 1.0 / this.__stageScale
     renderstate.cameraMatrix = renderstate.viewXfo.toMat4()
     renderstate.region = this.__region
