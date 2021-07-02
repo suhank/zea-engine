@@ -1,9 +1,9 @@
 /* eslint-disable require-jsdoc */
-import { Operator } from './Operator'
+import { Operator } from './Operator-temp'
 import { NumberParameter } from '../Parameters/NumberParameter-temp'
 import { BaseItem } from '../BaseItem-temp'
-import { OperatorInput } from './OperatorInput'
-import { OperatorOutput } from './OperatorOutput'
+import { OperatorInput } from './OperatorInput-temp'
+import { OperatorOutput } from './OperatorOutput-rename'
 import { OperatorOutputMode } from '../Parameters/Parameter-temp'
 import { Registry } from '../../Registry'
 

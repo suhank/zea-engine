@@ -1,25 +1,33 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Parameter } from '../Parameters'
+import { Operator } from './Operator'
 import { EventEmitter } from '../../Utilities/EventEmitter'
 
 /** Class representing an operator input.
  * @extends EventEmitter
  */
 class OperatorInput extends EventEmitter {
+  __name: string
+  _op: Operator
+  _param?: Parameter
+  detached: boolean
+
   /**
    * Create an operator input.
    * @param {string} name - The name value.
    */
-  constructor(name) {
+  constructor(name: string) {
     super()
     this.__name = name
-    this._param = undefined
-    this._paramValueChanged = this._paramValueChanged.bind(this)
+    this.paramValueChanged = this.paramValueChanged.bind(this)
   }
 
   /**
    * The getName method.
-   * @return {any} - The return value.
+   * @return {string} - The return value.
    */
-  getName() {
+  getName(): string {
     return this.__name
   }
 
@@ -27,7 +35,7 @@ class OperatorInput extends EventEmitter {
    * Sets operator that owns this input. Called by the operator when adding inputs
    * @param {Operator} op - The operator object.
    */
-  setOperator(op) {
+  setOperator(op: Operator): void {
     this._op = op
   }
 
@@ -35,7 +43,7 @@ class OperatorInput extends EventEmitter {
    * Returns operator that owns this input.
    * @return {Operator} - The operator object.
    */
-  getOperator() {
+  getOperator(): Operator {
     return this._op
   }
 
@@ -43,15 +51,15 @@ class OperatorInput extends EventEmitter {
    * Returns true if this input is connected to a parameter.
    * @return {boolean} - The return value.
    */
-  isConnected() {
+  isConnected(): boolean {
     return this._param != undefined
   }
 
   /**
    * The getParam method.
-   * @return {any} - The return value.
+   * @return {Parameter} - The return value.
    */
-  getParam() {
+  getParam(): Parameter | undefined {
     return this._param
   }
 
@@ -60,38 +68,38 @@ class OperatorInput extends EventEmitter {
    * The handler function for when the input paramter changes.
    * @param {object} event - The event object.
    */
-  _paramValueChanged(event) {
-    if (this._op) this._op.setDirty(this.__name)
+  protected paramValueChanged = (event: Record<string, any>): void => {
+    if (this._op) this._op.setDirty()
   }
 
   /**
    * Assigns the Paramter to be used to provide the input value.
    * @param {Parameter} param - The param value.
    */
-  setParam(param) {
+  setParam(param?: Parameter): void {
     if (this._param) {
-      this._param.off('valueChanged', this._paramValueChanged)
+      this._param.off('valueChanged', this.paramValueChanged)
     }
     this._param = param
     if (this._param) {
-      this._param.on('valueChanged', this._paramValueChanged)
+      this._param.on('valueChanged', this.paramValueChanged)
     }
     this.emit('paramSet', { param: this._param })
   }
 
   /**
    * The getValue method.
-   * @return {any} - The return value.
+   * @return {unknown} - The return value.
    */
-  getValue() {
+  getValue(): unknown {
     if (this._param) return this._param.getValue()
   }
 
   /**
    * The setValue method.
-   * @param {any} value - The value param.
+   * @param {unknown} value - The value param.
    */
-  setValue(value) {
+  setValue(value: unknown): void {
     if (this._param) {
       this._param.setValue(value)
     }
@@ -103,10 +111,10 @@ class OperatorInput extends EventEmitter {
   /**
    * The toJSON method encodes this type as a json object for persistence.
    *
-   * @param {object} context - The context value.
-   * @return {object} - Returns the json object.
+   * @param {Record<string, any>} context - The context value.
+   * @return {{ name: string; paramPath: any }} - Returns the json object.
    */
-  toJSON(context) {
+  toJSON(context?: Record<string, any>): { name: string; paramPath: any } {
     const paramPath = this._param ? this._param.getPath() : ''
     return {
       name: this.__name,
@@ -116,20 +124,20 @@ class OperatorInput extends EventEmitter {
 
   /**
    * The fromJSON method decodes a json object for this type.
-   * @param {object} j - The json object this item must decode.
-   * @param {object} context - The context value.
+   * @param {Record<string, any>} j - The json object this item must decode.
+   * @param {Record<string, any>} context - The context value.
    */
-  fromJSON(j, context) {
+  fromJSON(j: Record<string, any>, context?: Record<string, any>): void {
     if (j.paramPath) {
       // Note: the tree should have fully loaded by the time we are loading operators
       // even new items and groups should have been created. Operators and state machines
       // are loaded last.
-      context.resolvePath(
+      context?.resolvePath(
         j.paramPath,
-        (param) => {
+        (param: any) => {
           this.setParam(param)
         },
-        (reason) => {
+        (reason: any) => {
           console.warn("OperatorInput: '" + this.getName() + "'. Unable to connect to:" + j.paramPath)
         }
       )
@@ -140,23 +148,23 @@ class OperatorInput extends EventEmitter {
    * The detach method is called when an operator is being removed from the scene tree.
    * It removes all connections to parameters in the scene.
    */
-  detach() {
+  detach(): void {
     // This function is called when we want to suspend an operator
     // from functioning because it is deleted and on the undo stack.
     // Once operators have persistent connections,
     // we will simply uninstall the output from the parameter.
     if (this._param) {
-      this._param.off('valueChanged', this._paramValueChanged)
+      this._param.off('valueChanged', this.paramValueChanged)
     }
   }
 
   /**
    * The reattach method can be called when re-instating an operator in the scene.
    */
-  reattach() {
+  reattach(): void {
     this.detached = false
     if (this._param) {
-      this._param.on('valueChanged', this._paramValueChanged)
+      this._param.on('valueChanged', this.paramValueChanged)
     }
   }
 }

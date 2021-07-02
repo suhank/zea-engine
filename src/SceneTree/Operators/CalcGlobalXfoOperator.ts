@@ -1,6 +1,8 @@
-import { Operator } from './Operator-temp.js'
-import { OperatorInput } from './OperatorInput-temp.js'
-import { OperatorOutput } from './OperatorOutput-rename.js'
+import { Xfo } from '../../Math/Xfo'
+import { XfoParameter } from '../Parameters'
+import { Operator } from './Operator'
+import { OperatorInput } from './OperatorInput'
+import { OperatorOutput } from './OperatorOutput'
 
 /** The operator the calculates the global Xfo of a TreeItem based on its parents GlobalXfo and its own LocalXfo
  * @extends Operator
@@ -9,10 +11,11 @@ import { OperatorOutput } from './OperatorOutput-rename.js'
 class CalcGlobalXfoOperator extends Operator {
   /**
    * Create a CalcGlobalXfoOperator operator.
-   * @param {XfoParameter} globalXfoParam - The globalXfoParam of the TreeItem being bound
-   * @param {XfoParameter} localXfoParam - The localXfoParam of the TreeItem being bound
+   *
+   * @param {XfoParameter} groupGlobalXfoParam - The GlobalXfo param found on the Group.
+   * @param {XfoParameter} cuttingPlaneParam - The parameter on the Group which defines the displacement to apply to the members.
    */
-  constructor(globalXfoParam, localXfoParam) {
+  constructor(globalXfoParam: XfoParameter, localXfoParam: XfoParameter) {
     super('CalcGlobalXfoOperator')
     this.addInput(new OperatorInput('ParentGlobal'))
     this.addInput(new OperatorInput('LocalXfo')).setParam(localXfoParam)
@@ -24,14 +27,14 @@ class CalcGlobalXfoOperator extends Operator {
    * method so it can propagate the value backwards to its inputs.
    * @param {Xfo} value - the new value being set on the output GlobalXfo
    */
-  backPropagateValue(value) {
+  backPropagateValue(value: Xfo): void {
     const localXfoParam = this.getInput('LocalXfo').getParam()
     const parentGlobalInput = this.getInput('ParentGlobal')
     if (parentGlobalInput.isConnected()) {
-      const parentGlobalXfo = parentGlobalInput.getValue()
-      localXfoParam.setValue(parentGlobalXfo.inverse().multiply(value))
+      const parentGlobalXfo = parentGlobalInput.getValue() as Xfo
+      localXfoParam?.setValue(parentGlobalXfo.inverse().multiply(value))
     } else {
-      localXfoParam.setValue(value)
+      localXfoParam?.setValue(value)
     }
   }
 
@@ -39,15 +42,15 @@ class CalcGlobalXfoOperator extends Operator {
    * The evaluate method calculates a new global Xfo based on the parents Global Xfo,
    * and the local Xfo value.
    */
-  evaluate() {
-    const localXfo = this.getInput('LocalXfo').getValue()
+  evaluate(): void {
+    const localXfo = this.getInput('LocalXfo').getValue() as Xfo
     const parentGlobalInput = this.getInput('ParentGlobal')
     const globalXfoOutput = this.getOutput('GlobalXfo')
     if (parentGlobalInput.isConnected()) {
-      const parentGlobalXfo = parentGlobalInput.getValue()
-      globalXfoOutput.setClean(parentGlobalXfo.multiply(localXfo), this)
+      const parentGlobalXfo = parentGlobalInput.getValue() as Xfo
+      globalXfoOutput.setClean(parentGlobalXfo.multiply(localXfo))
     } else {
-      globalXfoOutput.setClean(localXfo, this)
+      globalXfoOutput.setClean(localXfo)
     }
   }
 }

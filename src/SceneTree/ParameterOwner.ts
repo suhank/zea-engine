@@ -5,7 +5,7 @@
 import { EventEmitter } from '../Utilities/EventEmitter'
 import { Registry } from '../Registry'
 import { BinReader } from './BinReader'
-import { Parameter } from './Parameters'
+import { Parameter } from './Parameters/Parameter'
 
 /**
  * Class that allows other classes to be parameterized by `Parameter` type of objects.
@@ -262,7 +262,7 @@ class ParameterOwner extends EventEmitter {
               },
               (reason: any): void => {
                 console.warn('Unable to resolve shared parameter:' + pj.paramPath)
-              },
+              }
             )
           } else {
             param.fromJSON(pj, context)

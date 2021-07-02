@@ -1,7 +1,7 @@
-import { Operator } from './Operator-temp.js'
-import { OperatorInput } from './OperatorInput-temp.js'
-import { OperatorOutput } from './OperatorOutput-rename.js'
-
+import { Operator } from './Operator'
+import { OperatorInput } from './OperatorInput'
+import { OperatorOutput } from './OperatorOutput'
+import { Parameter } from '../Parameters'
 import { Registry } from '../../Registry'
 
 /** Class representing a router operator.
@@ -9,11 +9,13 @@ import { Registry } from '../../Registry'
  * @private
  */
 class RouterOperator extends Operator {
+  __input: OperatorInput
+
   /**
    * Create a router operator.
    * @param {string} name - The name value.
    */
-  constructor(name) {
+  constructor(name?: string) {
     super(name)
     this.__input = this.addInput(new OperatorInput('Input'))
   }
@@ -23,7 +25,7 @@ class RouterOperator extends Operator {
    * @param {Parameter} param - The parameter to router values to.
    * @return {OperatorOutput} - The added output.
    */
-  addRoute(param) {
+  addRoute(param: Parameter): OperatorOutput {
     const output = this.addOutput(new OperatorOutput('Output' + this.__outputs.size))
     if (param) {
       output.setParam(param)
@@ -34,7 +36,7 @@ class RouterOperator extends Operator {
   /**
    * The evaluate method.
    */
-  evaluate() {
+  evaluate(): void {
     if (this.__input.isConnected()) {
       const inputValue = this.__input.getValue()
       let i = this.__outputs.size
