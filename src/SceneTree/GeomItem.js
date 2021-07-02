@@ -6,7 +6,7 @@ import { Registry } from '../Registry'
 import { BaseGeomItem } from './BaseGeomItem.js'
 import { Operator } from './Operators/Operator.js'
 import { OperatorInput } from './Operators/OperatorInput.js'
-import { OperatorOutput } from './Operators/OperatorOutput.js'
+import { OperatorOutput } from './Operators/OperatorOutput-rename.js'
 import { BaseProxy } from './Geometry/GeomProxies.js'
 
 let calculatePreciseBoundingBoxes = false

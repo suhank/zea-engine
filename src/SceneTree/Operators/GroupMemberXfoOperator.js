@@ -1,6 +1,6 @@
 import { Xfo } from '../../Math/Xfo'
 import { Operator } from './Operator'
-import { OperatorOutput } from './OperatorOutput'
+import { OperatorOutput } from './OperatorOutput-rename'
 import { OperatorOutputMode } from '../Parameters/Parameter-temp'
 import { OperatorInput } from './OperatorInput'
 

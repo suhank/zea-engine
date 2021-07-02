@@ -1,6 +1,6 @@
 import { Vec4 } from '../../Math/Vec4'
 import { Operator } from './Operator'
-import { OperatorOutput } from './OperatorOutput'
+import { OperatorOutput } from './OperatorOutput-rename'
 import { OperatorInput } from './OperatorInput'
 
 /** An operator that calculates the delta transform of the group since items were bound to it.

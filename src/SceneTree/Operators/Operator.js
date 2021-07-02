@@ -1,7 +1,7 @@
 import { Registry } from '../../Registry'
 import { BaseItem } from '../BaseItem-temp.js'
 import { OperatorInput } from './OperatorInput'
-import { OperatorOutput } from './OperatorOutput'
+import { OperatorOutput } from './OperatorOutput-rename'
 
 /**
  * Class representing an operator.

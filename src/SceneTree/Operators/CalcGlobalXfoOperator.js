@@ -1,6 +1,6 @@
 import { Operator } from './Operator.js'
 import { OperatorInput } from './OperatorInput.js'
-import { OperatorOutput } from './OperatorOutput.js'
+import { OperatorOutput } from './OperatorOutput-rename.js'
 
 /** The operator the calculates the global Xfo of a TreeItem based on its parents GlobalXfo and its own LocalXfo
  * @extends Operator
