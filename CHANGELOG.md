@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.10.6](https://github.com/ZeaInc/zea-engine/compare/v3.10.5...v3.10.6) (2021-07-02)
+
+
+### Bug Fixes
+
+* addressed regression drawing large scenes on iOS devices using the new multi-draw-emulation code path. ([e54ff55](https://github.com/ZeaInc/zea-engine/commit/e54ff557b3a962bbff7fd7830424764ff7389c84))
+* Line picking fattening now works on Safari. ([dc2c65f](https://github.com/ZeaInc/zea-engine/commit/dc2c65fd3da7c548f62b1635734c9da630dda3e1))
+
 ### [3.10.5](https://github.com/ZeaInc/zea-engine/compare/v3.10.3...v3.10.5) (2021-07-01)
 
 ### Bug Fixes
