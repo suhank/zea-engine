@@ -103,7 +103,7 @@ class GLLinesPass extends GLOpaqueGeomsPass {
     if (renderstate.geomDataFbo) {
       if (!this.linesGeomDataBuffer) {
         this.linesGeomDataBuffer = new GLTexture2D(gl, {
-          type: 'FLOAT',
+          type: gl.floatGeomBuffer ? 'FLOAT' : 'UNSIGNED_BYTE',
           format: 'RGBA',
           filter: 'NEAREST',
           width: 1,

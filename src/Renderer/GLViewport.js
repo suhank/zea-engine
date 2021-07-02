@@ -56,11 +56,9 @@ class GLViewport extends GLBaseViewport {
     this.__geomDataBufferFbo = undefined
     this.debugGeomShader = false
 
-    // this.renderGeomDataFbo = this.renderGeomDataFbo.bind(this);
-
     const gl = this.__renderer.gl
     this.__geomDataBuffer = new GLTexture2D(gl, {
-      type: renderer.__floatGeomBuffer ? 'FLOAT' : 'UNSIGNED_BYTE',
+      type: gl.floatGeomBuffer ? 'FLOAT' : 'UNSIGNED_BYTE',
       format: 'RGBA',
       filter: 'NEAREST',
       width: width <= 1 ? 1 : Math.floor(width / this.__geomDataBufferSizeFactor),
