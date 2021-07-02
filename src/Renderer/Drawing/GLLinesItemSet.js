@@ -32,10 +32,11 @@ class GLLinesItemSet extends GLGeomItemSetMultiDraw {
   /**
    * Draw an item to screen.
    * @param {object} renderstate - The object tracking the current state of the renderer
-   * @param {Int32Array} counts - the counts for each element drawn in by this draw call.
-   * @param {Int32Array} offsets - the offsets for each element drawn in by this draw call.
+   * @param {Int32Array} drawIds - the draw id for each element drawn in by this draw call.
+   * @param {Int32Array} counts - the geom element count for each element drawn in by this draw call.
+   * @param {Int32Array} offsets - the geom element offset for each element drawn in by this draw call.
    */
-  multiDraw(renderstate, counts, offsets) {
+  multiDraw(renderstate, drawIds, counts, offsets) {
     const gl = this.gl
     if (gl.multiDrawArrays) {
       const { occluded } = renderstate.unifs
@@ -58,7 +59,7 @@ class GLLinesItemSet extends GLGeomItemSetMultiDraw {
       }
 
       for (let i = 0; i < counts.length; i++) {
-        gl.uniform1i(drawId.location, i)
+        gl.uniform1i(drawId.location, drawIds[i])
         gl.drawElements(gl.LINES, counts[i], gl.UNSIGNED_INT, offsets[i])
       }
 
@@ -66,7 +67,7 @@ class GLLinesItemSet extends GLGeomItemSetMultiDraw {
         gl.uniform1i(occluded.location, 1)
         gl.depthFunc(gl.GREATER)
         for (let i = 0; i < counts.length; i++) {
-          gl.uniform1i(drawId.location, i)
+          gl.uniform1i(drawId.location, drawIds[i])
           gl.drawElements(gl.LINES, counts[i], gl.UNSIGNED_INT, offsets[i])
         }
         gl.depthFunc(gl.LEQUAL)
