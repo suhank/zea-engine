@@ -1,7 +1,8 @@
 import { Registry } from '../../Registry'
-import { NumberParameter } from './NumberParameter-temp.js'
-import { BaseImage } from '../BaseImage.js'
-
+import { NumberParameter } from './NumberParameter'
+import { BaseImage } from '../BaseImage'
+import { IBinaryReader } from '../../Utilities/IBinaryReader'
+import { BinReader } from '../../SceneTree/BinReader'
 /**
  * Represents a specific type of parameter, that stores `number` and `BaseImage` texture values.
  *
@@ -24,16 +25,16 @@ import { BaseImage } from '../BaseImage.js'
  *
  * @extends NumberParameter
  */
-class MaterialFloatParam extends NumberParameter {
+class MaterialFloatParam extends NumberParameter implements IBinaryReader {
+  protected image?: BaseImage
   /**
    * Create a material float parameter.
    * @param {string} name - The name of the material color parameter.
-   * @param {number} value - The value of the parameter.
-   * @param {array} range - An array with two numbers. If defined, the parameter value will be clamped.
-   * @param {number} step - The increment value that the parameter can be changed by.
+   * @param {number} [value] - The value of the parameter.
+   * @param {number[]} [range] - An array with two numbers. If defined, the parameter value will be clamped.
    */
-  constructor(name, value, range, step) {
-    super(name, value, range, step)
+  constructor(name: string, value?: number, range?: number[]) {
+    super(name, value, range)
   }
 
   /**
@@ -41,8 +42,8 @@ class MaterialFloatParam extends NumberParameter {
    *
    * @return {BaseImage} - The return value.
    */
-  getImage() {
-    return this.__image
+  getImage(): BaseImage | undefined {
+    return this.image
   }
 
   /**
@@ -50,25 +51,25 @@ class MaterialFloatParam extends NumberParameter {
    *
    * @param {BaseImage} value - The value value.
    */
-  setImage(value) {
+  setImage(value: BaseImage): void {
     const disconnectImage = () => {
       // image.off('loaded', imageUpdated);
       // image.off('updated', imageUpdated);
       this.emit('textureDisconnected', {})
     }
     if (value) {
-      if (this.__image != undefined && this.__image !== value) {
+      if (this.image != undefined && this.image !== value) {
         disconnectImage()
       }
-      this.__image = value
+      this.image = value
       // image.on('loaded', imageUpdated);
       // image.on('updated', imageUpdated);
       this.emit('textureConnected', {})
       this.emit('valueChanged', { mode: 0 })
     } else {
-      if (this.__image != undefined) {
+      if (this.image != undefined) {
         disconnectImage()
-        this.__image = undefined
+        this.image = undefined
         this.emit('textureDisconnected', {})
       }
     }
@@ -90,10 +91,10 @@ class MaterialFloatParam extends NumberParameter {
   /**
    * Extracts `number` and `Image` values from a buffer, updating current parameter state.
    *
-   * @param {object} reader - The reader value.
-   * @param {object} context - The context value.
+   * @param {BinReader} reader - The reader value.
+   * @param { Record<string, any>} context - The context value.
    */
-  readBinary(reader, context) {
+  readBinary(reader: BinReader, context: Record<string, any>): void {
     super.readBinary(reader, context)
 
     const textureName = reader.loadStr()
@@ -109,8 +110,8 @@ class MaterialFloatParam extends NumberParameter {
    *
    * @return {MaterialFloatParam} - Returns a new cloned material float parameter.
    */
-  clone() {
-    const clonedParam = new MaterialFloatParam(this.__name, this.__value, this.__range, this.__step)
+  clone(): MaterialFloatParam {
+    const clonedParam = new MaterialFloatParam(this.name, this.value)
     return clonedParam
   }
 }

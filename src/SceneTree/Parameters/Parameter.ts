@@ -349,7 +349,7 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
    * @param {T} value - The value param.
    * @param {number} mode - This is deprecated now.
    */
-  setValue = (value: T, mode?: number): void => {
+  setValue(value: T, mode?: number): void {
     if (value == undefined) {
       // eslint-disable-next-line no-throw-literal
       throw 'undefined was passed into the set value for param:' + this.getName()

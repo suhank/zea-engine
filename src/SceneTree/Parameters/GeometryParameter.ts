@@ -1,41 +1,43 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { Registry } from '../../Registry'
-import { Parameter } from './Parameter-temp.js'
+import { Parameter } from './Parameter'
+import { BaseGeom } from '../../SceneTree/Geometry/BaseGeom'
 
 /** Class representing a geometry parameter.
  * @extends Parameter
  * @private
  */
-class GeometryParameter extends Parameter {
+class GeometryParameter extends Parameter<BaseGeom> {
   /**
    * Create a geometry parameter.
    * @param {string} name - The name of the color parameter.
-   * @param {any} value - The value of the parameter.
+   * @param {BaseGeom} value - The value of the parameter.
    */
-  constructor(name, value) {
-    super(name, undefined, 'Geometry')
+  constructor(name: string, value?: BaseGeom) {
+    super(name, value, 'Geometry')
 
-    this.__emitBoundingBoxDirtied = this.__emitBoundingBoxDirtied.bind(this)
+    this.emitBoundingBoxDirtied = this.emitBoundingBoxDirtied.bind(this)
     this.setValue(value)
   }
 
-  // eslint-disable-next-line require-jsdoc
-  __emitBoundingBoxDirtied(event) {
+  protected emitBoundingBoxDirtied(event: Record<string, unknown>): void {
     this.emit('boundingBoxChanged', event)
   }
 
   /**
    * The setValue method.
-   * @param {any} value - The geom value.
+   * @param {BaseGeom} value - The geom value.
    */
-  setValue(value) {
+  setValue(value: BaseGeom): void {
     // 0 == normal set. 1 = changed via cleaner fn, 2 = change by loading/cloning code.
-    if (this.__value !== value) {
-      if (this.__value) {
-        this.__value.off('boundingBoxChanged', this.__emitBoundingBoxDirtied)
+    if (this.value !== value) {
+      if (this.value) {
+        this.value.off('boundingBoxChanged', this.emitBoundingBoxDirtied)
       }
-      this.__value = value
-      if (this.__value) {
-        this.__value.on('boundingBoxChanged', this.__emitBoundingBoxDirtied)
+      this.value = value
+      if (this.value) {
+        this.value.on('boundingBoxChanged', this.emitBoundingBoxDirtied)
       }
 
       this.emit('valueChanged', {})
@@ -49,35 +51,41 @@ class GeometryParameter extends Parameter {
    * The loadValue is used to change the value of a parameter, without triggering a
    * valueChanges, or setting the USER_EDITED state.
    *
-   * @param {any} value - The context value.
+   * @param {BaseGeom} value - The context value.
    */
-  loadValue(value) {
-    if (this.__value) {
-      this.__value.off('boundingBoxChanged', this.__emitBoundingBoxDirtied)
+  loadValue(value: BaseGeom): void {
+    if (this.value) {
+      this.value.off('boundingBoxChanged', this.emitBoundingBoxDirtied)
     }
-    this.__value = value
-    if (this.__value) {
-      this.__value.on('boundingBoxChanged', this.__emitBoundingBoxDirtied)
+
+    this.value = value
+    if (this.value) {
+      this.value.on('boundingBoxChanged', this.emitBoundingBoxDirtied)
     }
   }
 
   /**
    * The toJSON method encodes this type as a json object for persistence.
-   * @param {object} context - The context value.
-   * @return {object} - Returns the json object.
+   * @param {Record<string, any>} context - The context value.
+   * @return {Record<string, unknown>} - Returns the json object.
    */
-  toJSON(context) {
-    return super.toJSON(context)
+  toJSON(context?: Record<string, any>): Record<string, unknown> {
+    return {
+      name: this.name,
+      value: this.value?.toJSON(context),
+    }
   }
 
   /**
    * The fromJSON method decodes a json object for this type.
-   * @param {object} j - The json object this item must decode.
-   * @param {object} context - The context value.
-   * @return {object} - Returns the json object.
+   * @param {Record<string, unknown>} j - The json object this item must decode.
+   * @param {Record<string, unknown>} context - The context value.
    */
-  fromJSON(j, context) {
-    return super.fromJSON(j, context)
+  fromJSON(j: any, context?: any): void {
+    if (j.name) this.name = j.name as string
+    const geometry = Registry.constructClass(j.value.type) as any
+    geometry.fromJSON(j.value, context)
+    this.value = geometry
   }
 
   // ////////////////////////////////////////
@@ -89,7 +97,7 @@ class GeometryParameter extends Parameter {
    * @return {GeometryParameter} - Returns a new geometry parameter.
    */
   clone() {
-    const clonedParam = new GeometryParameter(this.__name, this.__value)
+    const clonedParam = new GeometryParameter(this.name, this.value)
     return clonedParam
   }
 
@@ -102,8 +110,8 @@ class GeometryParameter extends Parameter {
     // which need to be explicitly cleaned up.
     // e.g. freeing GPU Memory.
 
-    if (this.__value) {
-      this.__value.off('boundingBoxChanged', this.__emitBoundingBoxDirtied)
+    if (this.value) {
+      this.value.off('boundingBoxChanged', this.emitBoundingBoxDirtied)
     }
   }
 }

@@ -1,5 +1,5 @@
 import { Registry } from '../../Registry'
-import { NumberParameter } from './NumberParameter-temp.js'
+import { NumberParameter } from './NumberParameter'
 
 /**
  * Represents a specific type of parameter, that stores multiple choice(array) values.
@@ -19,13 +19,15 @@ import { NumberParameter } from './NumberParameter-temp.js'
  * @extends NumberParameter
  */
 class MultiChoiceParameter extends NumberParameter {
+  choices: any[]
+
   /**
    * Create a multi choice parameter.
    * @param {string} name - The name of the multi choice parameter.
    * @param {number} index - The index value.
    * @param {array} choices - The choices value.
    */
-  constructor(name, index, choices) {
+  constructor(name: string, index: number, choices: any[]) {
     super(name, index, [0, choices.length], 1)
     this.choices = choices
   }
@@ -35,7 +37,7 @@ class MultiChoiceParameter extends NumberParameter {
    *
    * @return {array} - The return value.
    */
-  getChoices() {
+  getChoices(): Array<any> {
     return this.choices
   }
 
@@ -44,7 +46,7 @@ class MultiChoiceParameter extends NumberParameter {
    *
    * @param {string|number} value - The value param.
    */
-  setValue(value) {
+  setValue(value: any) {
     if (typeof value === 'string') {
       super.setValue(this.choices.indexOf(value))
     } else {

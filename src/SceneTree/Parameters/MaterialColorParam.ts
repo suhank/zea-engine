@@ -1,6 +1,8 @@
 import { Registry } from '../../Registry'
-import { ColorParameter } from './ColorParameter-temp.js'
-import { BaseImage } from '../BaseImage.js'
+import { ColorParameter } from './ColorParameter'
+import { BaseImage } from '../BaseImage'
+import { Color } from '../../Math/Color'
+import { BinReader } from '../../SceneTree/BinReader'
 
 /**
  * Represents a specific type of parameter, that stores `Color` and `BaseImage` texture values.
@@ -25,30 +27,31 @@ import { BaseImage } from '../BaseImage.js'
  * @extends ColorParameter
  */
 class MaterialColorParam extends ColorParameter {
+  protected image?: BaseImage
   /**
    * Create a material color parameter.
    * @param {string} name - The name of the material color parameter.
    * @param {Color} value - The value of the parameter.
    */
-  constructor(name, value) {
+  constructor(name: string, value?: Color) {
     super(name, value)
-    this.__imageUpdated = this.__imageUpdated.bind(this)
+    this.imageUpdated = this.imageUpdated.bind(this)
   }
 
   /**
    * Returns `BaseImage` texture of the Material.
    *
-   * @return {BaseImage} - The return value.
+   * @return {BaseImage|undefined} - The return value.
    */
-  getImage() {
-    return this.__image
+  getImage(): BaseImage | undefined {
+    return this.image
   }
 
   /**
    * The __imageUpdated method.
    * @private
    */
-  __imageUpdated() {
+  protected imageUpdated = (): void => {
     this.emit('valueChanged', {})
   }
 
@@ -57,25 +60,26 @@ class MaterialColorParam extends ColorParameter {
    *
    * @param {BaseImage} value - The value param.
    */
-  setImage(value) {
+  setImage(value: BaseImage): void {
     const disconnectImage = () => {
-      this.__image.off('updated', this.__imageUpdated)
-      this.__image = null
+      this.image?.off('loaded', this.imageUpdated)
+      this.image?.off('updated', this.imageUpdated)
+      this.image = undefined
       this.emit('textureDisconnected', {})
     }
     if (value) {
-      if (this.__image != undefined && this.__image !== value) {
+      if (this.image != undefined && this.image !== value) {
         disconnectImage()
       }
-      this.__image = value
-      this.__image.on('updated', this.__imageUpdated)
+      this.image = value
+      this.image.on('updated', this.imageUpdated)
       this.emit('textureConnected', {})
-      this.emit('valueChanged')
+      this.emit('valueChanged', { mode: 0 })
     } else {
-      if (this.__image != undefined) {
+      if (this.image != undefined) {
         disconnectImage()
-        this.__image = undefined
-        this.emit('textureDisconnected')
+        this.image = undefined
+        this.emit('textureDisconnected', {})
       }
     }
   }
@@ -100,7 +104,7 @@ class MaterialColorParam extends ColorParameter {
    * @param {BinReader} reader - The reader value.
    * @param {object} context - The context value.
    */
-  readBinary(reader, context) {
+  readBinary(reader: BinReader, context: Record<string, any>): void {
     super.readBinary(reader, context)
 
     const textureName = reader.loadStr()
@@ -115,8 +119,8 @@ class MaterialColorParam extends ColorParameter {
    *
    * @return {MaterialColorParam} - Returns a new cloned material color parameter.
    */
-  clone() {
-    const clonedParam = new MaterialColorParam(this.__name, this.__value.clone())
+  clone(): MaterialColorParam {
+    const clonedParam = new MaterialColorParam(this.name, this.value?.clone())
     return clonedParam
   }
 }
