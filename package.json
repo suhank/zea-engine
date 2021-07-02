@@ -72,11 +72,5 @@
     "standard-version": "^9.0.0",
     "ts-jest": "^27.0.3",
     "typescript": "^4.3.4"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm test",
-      "pre-push": "npm test"
-    }
   }
 }
