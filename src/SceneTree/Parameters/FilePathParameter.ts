@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Registry } from '../../Registry'
-import { Parameter } from './Parameter-temp.js'
-import { resourceLoader } from '../resourceLoader.js'
+import { Parameter } from './Parameter'
+import { resourceLoader } from '../resourceLoader'
 
 /**
  * Represents a specific type of parameter, that only stores file data values.
@@ -11,14 +13,14 @@ import { resourceLoader } from '../resourceLoader.js'
  *
  * @extends Parameter
  */
-class FilePathParameter extends Parameter {
+class FilePathParameter extends Parameter<string> {
   /**
    * Create a file path parameter.
    *
    * @param {string} name - The name of the file path parameter.
    * @param {string} exts - The exts value.
    */
-  constructor(name) {
+  constructor(name: string) {
     super(name, '', 'FilePath')
   }
 
@@ -27,9 +29,9 @@ class FilePathParameter extends Parameter {
    *
    * @return {string} - The return value.
    */
-  getFilepath() {
-    if (this.__value) {
-      return resourceLoader.getFilepath(this.__value)
+  getFilepath(): string {
+    if (this.value) {
+      return (resourceLoader as any).getFilepath(this.value)
     }
 
     return ''
@@ -40,7 +42,7 @@ class FilePathParameter extends Parameter {
    *
    * @param {string} filePath - The filePath value.
    */
-  setFilepath(filePath) {
+  setFilepath(filePath: string): void {
     this.setValue(resourceLoader.resolveFileId(filePath))
   }
 
@@ -49,8 +51,10 @@ class FilePathParameter extends Parameter {
    *
    * @return {string} - The return value.
    */
-  getFilename() {
-    return resourceLoader.resolveFilename(this.__value)
+  getFilename(): string {
+    if (!this.value) throw 'No file value'
+
+    return resourceLoader.resolveFilename(this.value)
   }
 
   /**
@@ -58,7 +62,7 @@ class FilePathParameter extends Parameter {
    *
    * @return {string} - The return value.
    */
-  getExt() {
+  getExt(): string | undefined {
     const filename = this.getFilename()
     const suffixSt = filename.lastIndexOf('.')
     if (suffixSt != -1) return filename.substring(suffixSt).toLowerCase()
@@ -69,7 +73,7 @@ class FilePathParameter extends Parameter {
    *
    * @return {string} - The return value.
    */
-  getStem() {
+  getStem(): string | undefined {
     const filename = this.getFilename()
     if (filename) {
       const parts = filename.split('.')
@@ -81,19 +85,19 @@ class FilePathParameter extends Parameter {
   /**
    * Returns file object, which contains the url, resourceId and the name.
    *
-   * @return {object} - The return value.
+   * @return {Record<string, string | undefined>} - The return value.
    */
-  getFileDesc() {
+  getFileDesc(): Record<string, string | undefined> {
     return this.getFile()
   }
 
   /**
    * Returns file object, which contains the url, resourceId and the name.
    *
-   * @return {object} - The return value.
+   * @return {Record<string, string | undefined>} - The return value.
    */
-  getFile() {
-    return { id: this.__value, url: this.getUrl(), name: this.getFilename() }
+  getFile(): Record<string, string | undefined> {
+    return { id: this.value, url: this.getUrl(), name: this.getFilename() }
   }
 
   /**
@@ -102,7 +106,7 @@ class FilePathParameter extends Parameter {
    * @param {string} url - the url value of the
    * @param {string} name - (optional) the name of the file that the Url points to.
    */
-  setUrl(url, name) {
+  setUrl(url: string, name: string): void {
     this.setValue(resourceLoader.resolveFileId(url))
   }
 
@@ -111,8 +115,9 @@ class FilePathParameter extends Parameter {
    *
    * @return {string} - The return value.
    */
-  getUrl() {
-    return resourceLoader.resolveURL(this.__value)
+  getUrl(): string {
+    if (!this.value) throw 'No file value'
+    return resourceLoader.resolveURL(this.value)
   }
 
   /**
@@ -120,18 +125,18 @@ class FilePathParameter extends Parameter {
    *
    * @param {string} value - The value param.
    */
-  setValue(value) {
+  setValue(value): void {
     if (!value) {
       throw new Error('Invalid value for setValue.')
     }
 
     // Important here because file changes cause reloads.
     // Note: equality tests only work on simple types.
-    if (value == this.__value) {
+    if (value == this.value) {
       return
     }
 
-    this.__value = value
+    this.value = value
 
     this.emit('valueChanged', {})
   }
@@ -141,22 +146,22 @@ class FilePathParameter extends Parameter {
   /**
    * The toJSON method encodes this type as a json object for persistence.
    *
-   * @param {object} context - The context value.
-   * @return {object} - Returns the json object.
+   * @param {Record<string, any>} [context] - The context value.
+   * @return {Record<string, unknown>} - Returns the json object.
    */
-  toJSON(context) {
-    return { value: this.__value }
+  toJSON(context?: Record<string, any>): Record<string, unknown> {
+    return { value: this.value }
   }
 
   /**
    * The fromJSON method decodes a json object for this type.
    *
-   * @param {object} j - The json object this item must decode.
-   * @param {object} context - The context value.
+   * @param {Record<string, unknown>} j - The json object this item must decode.
+   * @param {Record<string, any>} [context] - The context value.
    */
-  fromJSON(j, context) {
+  fromJSON(j: Record<string, unknown>, context?: Record<string, any>): void {
     if (j.value) {
-      this.__value = j.value
+      this.value = j.value as string
     }
   }
 
@@ -169,9 +174,10 @@ class FilePathParameter extends Parameter {
    *
    * @return {FilePathParameter} - Returns a new cloned file path parameter.
    */
-  clone() {
-    const clone = new FilePathParameter(this.__name)
-    clone.setValue(this.getValue())
+  clone(): FilePathParameter {
+    const clone = new FilePathParameter(this.name)
+    if (this.value) clone.setValue(this.value)
+
     return clone
   }
 }

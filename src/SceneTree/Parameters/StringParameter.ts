@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Registry } from '../../Registry'
-import { Parameter } from './Parameter-temp.js'
-
+import { Parameter } from './Parameter'
+import { BinReader } from '../BinReader'
+import { IBinaryReader } from '../../Utilities/IBinaryReader'
 /**
  * Represents a specific type of parameter, that only stores Mat4(4x4 matrix) values.
  *
@@ -14,13 +16,15 @@ import { Parameter } from './Parameter-temp.js'
  *
  * @extends Parameter
  */
-class StringParameter extends Parameter {
+class StringParameter extends Parameter<string> implements IBinaryReader {
+  multiLine: boolean
+
   /**
    * Create a string parameter.
    * @param {string} name - The name of the material color parameter.
    * @param {string} value - The value of the parameter.
    */
-  constructor(name, value = '') {
+  constructor(name: string, value = '') {
     super(name, value, 'String')
     this.multiLine = false
   }
@@ -30,7 +34,7 @@ class StringParameter extends Parameter {
    *
    * @param {boolean} multiLine - The multiLine value.
    */
-  setMultiLine(multiLine) {
+  setMultiLine(multiLine: boolean): void {
     this.multiLine = multiLine
   }
 
@@ -39,7 +43,7 @@ class StringParameter extends Parameter {
    *
    * @return {boolean} - The return value.
    */
-  getMultiLine() {
+  getMultiLine(): boolean {
     return this.multiLine
   }
 
@@ -49,8 +53,30 @@ class StringParameter extends Parameter {
    * @param {BinReader} reader - The reader value.
    * @param {object} context - The context value.
    */
-  readBinary(reader, context) {
-    this.__value = reader.loadStr()
+  readBinary(reader: BinReader, context?: Record<string, unknown>): void {
+    this.value = reader.loadStr()
+  }
+
+  /**
+   * The toJSON method serializes this instance as a JSON.
+   * It can be used for persistence, data transfer, etc.
+   *
+   * @param {Record<string, unknown>} context - The context value.
+   * @return {Record<string, boolean | undefined>} - Returns the json object.
+   */
+  toJSON(context?: Record<string, unknown>): Record<string, string | undefined> {
+    return { value: this.value }
+  }
+
+  /**
+   * The fromJSON method takes a JSON and deserializes into an instance of this type.
+   *
+   * @param {Record<string, boolean | undefined>} j - The json object this item must decode.
+   * @param {Record<string, unknown>} context - The context value.
+   */
+  fromJSON(j: Record<string, string | undefined>, context?: Record<string, unknown>): void {
+    this.value = j.value
+    this.emit('valueChanged', { mode: 0 })
   }
 
   /**
@@ -59,9 +85,8 @@ class StringParameter extends Parameter {
    *
    * @return {StringParameter} - Returns a new string parameter.
    */
-  clone() {
-    const clonedParam = new StringParameter(this.__name, this.__value)
-    return clonedParam
+  clone(): StringParameter {
+    return new StringParameter(this.name, this.value)
   }
 }
 

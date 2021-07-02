@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Registry } from '../../Registry'
-import { Parameter } from './Parameter-temp.js'
+import { Parameter } from './Parameter'
 
 /**
  * A Parameter for storing list(array) values.
@@ -19,25 +21,24 @@ import { Parameter } from './Parameter-temp.js'
  *
  * @extends Parameter
  */
-class ListParameter extends Parameter {
+class ListParameter extends Parameter<any[]> {
   /**
    * Create a list parameter.
    * @param {string} name - The name of the list parameter.
-   * @param {string|Parameter} dataType - The dataType value.
+   * @param {string} dataType - The dataType value.
    */
-  constructor(name, dataType) {
-    super(name, [])
-    this.__dataType = dataType
+  constructor(name: string, dataType: string) {
+    super(name, [], dataType)
   }
 
   /**
-   * The __filter method.
+   * The filter method.
    * @param {string|Parameter} item - The item value.
    * @return {boolean} - The return value.
    *
    * @private
    */
-  __filter(item) {
+  protected filter(item: unknown): boolean {
     return true
   }
 
@@ -46,45 +47,46 @@ class ListParameter extends Parameter {
    *
    * @return {number} - The return value.
    */
-  getCount() {
-    return this.__value.length
+  getCount(): number {
+    return this.value?.length || 0
   }
 
   /**
    * Returns value from the array in the specified index.
    *
    * @param {number} index - The index value.
-   * @return {Parameter|string} - The return value.
+   * @return {unknown} - The return value.
    */
-  getElement(index) {
-    return this.__value[index]
+  getElement(index: number): unknown {
+    if (!this.value) return
+    return this.value[index]
   }
 
   /**
    * Sets a value in the specified array's index.
    *
    * @param {number} index - The index value.
-   * @param {string|Parameter} value - The value value.
+   * @param {unknown} value - The value value.
    */
-  setElement(index, value) {
-    this.__value[index] = value
+  setElement(index: number, value: unknown): void {
+    if (!this.value) this.value = []
+
+    this.value[index] = value
     this.emit('valueChanged', {})
   }
 
   /**
    * Adds a new element at the end of the array pile.
    *
-   * @param {string|Parameter} elem - The elem value.
-   * @return {string|Parameter} - The return value.
+   * @param {unknown} elem - The elem value.
+   * @return {unknown} - The return value.
    */
-  addElement(elem) {
-    if (elem == undefined) elem = new this.__dataType()
-    else {
-      if (!this.__filter(elem)) return
-    }
+  addElement(elem: unknown): unknown {
+    if ((!elem && elem != 0) || !this.filter(elem)) return
+    if (!this.value) this.value = []
 
-    this.__value.push(elem)
-    this.emit('elementAdded', { elem, index: this.__value.length - 1 })
+    this.value.push(elem)
+    this.emit('elementAdded', { elem, index: this.value.length - 1 })
     this.emit('valueChanged', {})
     return elem
   }
@@ -94,9 +96,10 @@ class ListParameter extends Parameter {
    *
    * @param {number} index - The index value.
    */
-  removeElement(index) {
-    const elem = this.__value[index]
-    this.__value.splice(index, 1)
+  removeElement(index: number): void {
+    if (!this.value) this.value = []
+    const elem = this.value[index]
+    this.value.splice(index, 1)
     this.emit('elementRemoved', { elem, index })
     this.emit('valueChanged', {})
   }
@@ -105,12 +108,11 @@ class ListParameter extends Parameter {
    * Inserts a new element in the specified index.
    *
    * @param {number} index - The index value.
-   * @param {string|Parameter} elem - The elem value.
+   * @param {unknown} elem - The elem value.
    */
-  insertElement(index, elem) {
-    if (!this.__filter(elem)) return
-    this.__value.splice(index, 0, elem)
-    // this.setValue(this.__value);
+  insertElement(index: number, elem: unknown): void {
+    if (!this.value || !this.filter(elem)) return
+    this.value.splice(index, 0, elem)
     this.emit('elementAdded', { elem, index })
     this.emit('valueChanged', {})
   }
@@ -121,44 +123,48 @@ class ListParameter extends Parameter {
   /**
    * The toJSON method encodes this type as a json object for persistence.
    *
-   * @param {object} context - The context value.
-   * @return {object} - Returns the json object.
+   * @param {Record<string, any>} context - The context value.
+   * @return {Record<string, any>} - Returns the json object.
    */
-  toJSON(context) {
+
+  toJSON(context: Record<string, any>): Record<string, any> {
     const items = []
-    for (const p of this.__value) {
-      if (typeof this.__dataType === 'string') items.push(p)
-      else items.push(p.toJSON(context))
+    if (this.value) {
+      for (const p of this.value) {
+        if (typeof this.dataType === 'string') items.push(p)
+        else items.push(p.toJSON(context))
+      }
     }
     return {
-      items,
+      value: items,
     }
   }
 
   /**
    * The fromJSON method decodes a json object for this type.
    *
-   * @param {object} j - The json object this item must decode.
-   * @param {object} context - The context value.
+   * @param {Record<string, any>} j - The json object this item must decode.
+   * @param {Record<string, any>} context - The context value.
    */
-  fromJSON(j, context) {
+  fromJSON(j: Record<string, any>, context?: Record<string, any>): void {
     if (j.items == undefined) {
       console.warn('Invalid Parameter JSON')
       return
     }
 
-    this.__value = []
+    this.value = []
     for (let i = 0; i < j.items.length; i++) {
       let elem
-      if (typeof this.__dataType === 'string') {
+      if (typeof this.dataType === 'string') {
         elem = j.items[i]
       } else {
-        console.log(this.__dataType)
-        elem = new this.__dataType()
+        if (!this.dataType) throw 'No DataType'
+        elem = Registry.constructClass(this.dataType) as any
         elem.fromJSON(j.items[i], context)
       }
-      this.__value.push(elem)
-      this.emit('elementAdded', { elem, index: this.__value.length - 1 })
+
+      this.value.push(elem)
+      this.emit('elementAdded', { elem, index: this.value.length - 1 })
     }
     this.emit('valueChanged', { mode: 0 })
   }
@@ -172,9 +178,12 @@ class ListParameter extends Parameter {
    *
    * @return {ListParameter} - Returns a new list parameter.
    */
-  clone() {
-    const clonedValue = this.__value.slice(0)
-    const clonedParam = new ListParameter(this.__name, this.__dataType)
+
+  clone(): ListParameter {
+    const clonedValue = this.value ? this.value.slice(0) : []
+    if (!this.dataType) throw 'This parameter does not have a DataType'
+    const clonedParam = new ListParameter(this.name, this.dataType)
+
     clonedParam.setValue(clonedValue)
     return clonedParam
   }
@@ -183,9 +192,10 @@ class ListParameter extends Parameter {
    * The destroy is called by the system to cause explicit resources cleanup.
    * Users should never need to call this method directly.
    */
-  destroy() {
-    for (let i = 0; i < this.__value.length; i++) {
-      if (this.__value[i] instanceof Parameter) this.__value[i].destroy()
+  destroy(): void {
+    if (!this.value) return
+    for (let i = 0; i < this.value.length; i++) {
+      if (this.value[i] instanceof Parameter) this.value[i].destroy()
       this.removeElement(i)
     }
   }

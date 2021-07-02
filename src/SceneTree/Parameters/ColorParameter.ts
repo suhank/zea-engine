@@ -1,7 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Registry } from '../../Registry'
 import { Color } from '../../Math/index'
-import { Parameter } from './Parameter-temp.js'
-
+import { Parameter } from './Parameter'
+import { BinReader } from '../BinReader'
+import { IBinaryReader } from '../../Utilities/IBinaryReader'
 /**
  * Represents a specific type of parameter, that only stores `Color` values.
  *
@@ -15,13 +18,13 @@ import { Parameter } from './Parameter-temp.js'
  *
  * @extends Parameter
  */
-class ColorParameter extends Parameter {
+class ColorParameter extends Parameter<Color> implements IBinaryReader {
   /**
    * Create a color parameter.
    * @param {string} name - The name of the color parameter.
    * @param {Color} value - The value of the parameter.
    */
-  constructor(name, value) {
+  constructor(name: string, value?: Color) {
     super(name, value ? value : new Color(), 'Color')
   }
 
@@ -31,13 +34,24 @@ class ColorParameter extends Parameter {
    * @param {BinReader} reader - The reader value.
    * @param {object} context - The context value.
    */
-  readBinary(reader, context) {
+  readBinary(reader: BinReader, context?: Record<string, unknown>): void {
     const value = reader.loadRGBAFloat32Color()
     // If the value is in linear space, then we should convert it to gamma space.
     // Note: !! this should always be done in preprocessing...
     value.applyGamma(2.2)
 
-    this.__value = value
+    this.value = value
+  }
+
+  toJSON(context?: Record<string, unknown>): Record<string, any> {
+    return {
+      value: this.value?.toJSON(),
+    }
+  }
+
+  fromJSON(j: Record<string, any>, context?: Record<string, unknown>): void {
+    if (j.value.type) this.value = Registry.constructClass('Color') as Color
+    this.value?.fromJSON(j.value)
   }
 
   /**
@@ -46,8 +60,8 @@ class ColorParameter extends Parameter {
    *
    * @return {ColorParameter} - Returns a new cloned color parameter.
    */
-  clone() {
-    const clonedParam = new ColorParameter(this.__name, this.__value.clone())
+  clone(): ColorParameter {
+    const clonedParam = new ColorParameter(this.name, this.value?.clone())
     return clonedParam
   }
 }

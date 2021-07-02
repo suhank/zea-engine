@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Registry } from '../../Registry'
-import { Parameter } from './Parameter-temp.js'
-
+import { Parameter } from './Parameter'
+import { BaseImage } from '../../SceneTree/BaseImage'
 /**
  * Represents a specific type of parameter, that only stores `BaseImage` values.
  *
@@ -16,14 +18,14 @@ import { Parameter } from './Parameter-temp.js'
  *
  * @extends Parameter
  */
-class ImageParameter extends Parameter {
+class ImageParameter extends Parameter<BaseImage> {
   /**
    * Create an image parameter.
    *
    * @param {string} name - The name of the image parameter.
    * @param {BaseImage} value - The value of the parameter.
    */
-  constructor(name, value) {
+  constructor(name: string, value?: BaseImage) {
     super(name, value, 'BaseImage')
   }
 
@@ -33,27 +35,33 @@ class ImageParameter extends Parameter {
   /**
    * The toJSON method encodes this type as a json object for persistence.
    *
-   * @param {object} context - The context value.
-   * @return {object} - Returns the json object.
+   * @param {Record<string, any>} context - The context value.
+   * @return {Record<string, unknown>} - Returns the json object.
    */
-  toJSON(context) {
-    const j = super.toJSON(context)
-    if (this.__value) {
-      j.imageType = Registry.getBlueprintName(this.__value)
+  toJSON(context?: Record<string, any>): Record<string, unknown> {
+    const j: Record<string, unknown> = {
+      name: this.name,
     }
+
+    if (this.value) {
+      j.imageType = Registry.getBlueprintName(this.value)
+      j.value = this.value.toJSON()
+    }
+
     return j
   }
 
   /**
    * The fromJSON method decodes a json object for this type.
    *
-   * @param {object} j - The json object this item must decode.
-   * @param {object} context - The context value.
+   * @param {Record<string, unknown>} j - The json object this item must decode.
+   * @param {Record<string, any>} context - The context value.
    * @return {object} - Returns the json object.
    */
-  fromJSON(j, context) {
+  fromJSON(j: Record<string, unknown>, context: Record<string, any>): void {
     if (j.imageType) {
-      this.__value = Registry.constructClass(j.imageType)
+      this.value = Registry.constructClass(j.imageType as string) as any
+      if (j.value) this.value?.fromJSON(j.value as any, context)
     }
     return super.fromJSON(j, context)
   }
@@ -67,8 +75,8 @@ class ImageParameter extends Parameter {
    *
    * @return {ImageParameter} - Returns a new cloned image parameter.
    */
-  clone() {
-    const clonedParam = new ImageParameter(this.__name, this.__value)
+  clone(): ImageParameter {
+    const clonedParam = new ImageParameter(this.name, this.value)
     return clonedParam
   }
 }

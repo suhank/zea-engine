@@ -1,5 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { BinReader } from '../../SceneTree/BinReader'
 import { Registry } from '../../Registry'
-import { Parameter } from './Parameter-temp.js'
+import { Parameter } from './Parameter'
+import { IBinaryReader } from '../../Utilities/IBinaryReader'
 
 /**
  * Represents a specific type of parameter, that only stores numeric values.
@@ -13,39 +16,39 @@ import { Parameter } from './Parameter-temp.js'
  *
  * @extends Parameter
  */
-class NumberParameter extends Parameter {
+class NumberParameter extends Parameter<number> implements IBinaryReader {
+  protected range?: number[]
+  protected step?: number
+
   /**
    * Create a number parameter.
    * @param {string} name - The name of the number parameter.
    * @param {number} value - The value of the parameter.
-   * @param {array} range - An array with two numbers. If defined, the parameter value will be clamped.
+   * @param {number[]} range - An array with two numbers. If defined, the parameter value will be clamped.
    * @param {number} step - The step value. If defined, the parameter value will be rounded to the nearest integer.
    */
-  constructor(name, value = 0, range = undefined, step = undefined) {
+  constructor(name: string, value = 0, range?: number[], step?: number) {
     super(name, value, 'Number')
-    // The value might not have a range.
-    if (range && !Array.isArray(range)) console.error('Range value must be an array of 2 numbers.')
-    this.__range = range
-    this.__step = step
+    this.range = range
+    this.step = step
   }
 
   /**
    * Returns the range to which the parameter is restrained.
    *
-   * @return {array} - The return value.
+   * @return {number[]} - The return value.
    */
-  getRange() {
-    return this.__range
+  getRange(): number[] | undefined {
+    return this.range
   }
 
   /**
    * Sets the range to which the parameter is restrained.
    *
-   * @param {array} range - The range value.
+   * @param {number[]} range - The range value.
    */
-  setRange(range) {
-    // Should be an array [0, 20]
-    this.__range = range
+  setRange(range: number[]): void {
+    this.range = range
   }
 
   /**
@@ -53,8 +56,8 @@ class NumberParameter extends Parameter {
    *
    * @return {number} - The return value.
    */
-  getStep() {
-    return this.__step
+  getStep(): number | undefined {
+    return this.step
   }
 
   /**
@@ -62,8 +65,8 @@ class NumberParameter extends Parameter {
    *
    * @param {number} step - The step value.
    */
-  setStep(step) {
-    this.__step = step
+  setStep(step: number): void {
+    this.step = step
   }
 
   // ////////////////////////////////////////
@@ -75,33 +78,34 @@ class NumberParameter extends Parameter {
    * @param {object} context - The context value.
    * @return {object} - Returns the json object.
    */
-  toJSON(context) {
-    const j = super.toJSON(context)
-    if (this.__range) j.range = this.__range
-    if (this.__step) j.step = this.__step
+  toJSON(context?: Record<string, unknown>): Record<string, unknown> {
+    const j: Record<string, unknown> = { value: this.value }
+    if (this.range) j.range = this.range
+    if (this.step) j.step = this.step
+
     return j
   }
 
   /**
    * The fromJSON method decodes a json object for this type.
    *
-   * @param {object} j - The json object this item must decode.
-   * @param {object} context - The context value.
+   * @param {Record<string, unknown>} j - The json object this item must decode.
+   * @param {Record<string, unknown>} context - The context value.
    */
-  fromJSON(j, context) {
-    super.fromJSON(j, context)
-    if (j.range) this.__range = j.range
-    if (j.step) this.__step = j.step
+  fromJSON(j: Record<string, unknown>, context?: Record<string, unknown>): void {
+    this.value = j.value as number
+    if (j.range) this.range = j.range as number[]
+    if (j.step) this.step = j.step as number
   }
 
   /**
    * Extracts a number value from a buffer, updating current parameter state.
    *
    * @param {BinReader} reader - The reader value.
-   * @param {object} context - The context value.
+   * @param {Record<string, unknown>} context - The context value.
    */
-  readBinary(reader, context) {
-    this.__value = reader.loadFloat32()
+  readBinary(reader: BinReader, context?: Record<string, unknown>): void {
+    this.value = reader.loadFloat32()
   }
 
   // ////////////////////////////////////////
@@ -113,9 +117,8 @@ class NumberParameter extends Parameter {
    *
    * @return {NumberParameter} - Returns a new number parameter.
    */
-  clone() {
-    const clonedParam = new NumberParameter(this.__name, this.__value, this.__range, this.__step)
-    return clonedParam
+  clone(): NumberParameter {
+    return new NumberParameter(this.name, this.value, this.range, this.step)
   }
 }
 

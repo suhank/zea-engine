@@ -1,6 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Registry } from '../../Registry'
 import { Vec3 } from '../../Math/index'
-import { Parameter } from './Parameter-temp.js'
+import { Parameter } from './Parameter'
+import { IBinaryReader } from '../../Utilities/IBinaryReader'
+import { BinReader } from '../../SceneTree/BinReader'
 
 /**
  * Represents a specific type of parameter, that only stores Vec3(three-dimensional coordinate) values.
@@ -14,14 +18,14 @@ import { Parameter } from './Parameter-temp.js'
  * ```
  * @extends Parameter
  */
-class Vec3Parameter extends Parameter {
+class Vec3Parameter extends Parameter<Vec3> implements IBinaryReader {
   /**
    * Create a Vec3 parameter.
    * @param {string} name - The name of the Vec3 parameter.
    * @param {Vec3} value - The value of the parameter.
    * @param {array} range - The range value is an array of two `Vec2` objects.
    */
-  constructor(name, value, range = undefined) {
+  constructor(name: string, value?: Vec3) {
     super(name, value ? value : new Vec3(), 'Vec3')
   }
 
@@ -32,10 +36,25 @@ class Vec3Parameter extends Parameter {
    * Extracts a number value from a buffer, updating current parameter state.
    *
    * @param {BinReader} reader - The reader value.
-   * @param {object} context - The context value.
+   * @param {Record<string, unknown>} context - The context value.
    */
-  readBinary(reader, context) {
-    this.__value.readBinary(reader)
+  readBinary(reader: BinReader, context?: Record<string, unknown>): void {
+    this.value?.readBinary(reader)
+  }
+
+  toJSON(context?: Record<string, unknown>): Record<string, unknown> {
+    return {
+      name: this.name,
+      value: this.value?.toJSON(),
+    }
+  }
+
+  fromJSON(j: Record<string, unknown>, context?: Record<string, unknown>): void {
+    const vec3 = new Vec3()
+    vec3.fromJSON(j.value as any)
+    this.value = vec3
+
+    if (j.name) this.name = j.name as string
   }
 
   // ////////////////////////////////////////
@@ -47,8 +66,8 @@ class Vec3Parameter extends Parameter {
    *
    * @return {Vec3Parameter} - Returns a new Vec3 parameter.
    */
-  clone() {
-    const clonedParam = new Vec3Parameter(this.__name, this.__value.clone())
+  clone(): Vec3Parameter {
+    const clonedParam = new Vec3Parameter(this.name, this.value?.clone())
     return clonedParam
   }
 }

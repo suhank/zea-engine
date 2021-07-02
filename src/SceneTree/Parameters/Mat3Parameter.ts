@@ -1,7 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Registry } from '../../Registry'
 import { Mat3 } from '../../Math/index'
-import { Parameter } from './Parameter-temp.js'
-
+import { Parameter } from './Parameter'
+import { IBinaryReader } from '../../Utilities/IBinaryReader'
+import { BinReader } from '../../SceneTree/BinReader'
 /**
  * Represents a specific type of parameter, that only stores Mat3(3x3 matrix) values.
  *
@@ -15,13 +18,13 @@ import { Parameter } from './Parameter-temp.js'
  *
  * @extends Parameter
  */
-class Mat3Parameter extends Parameter {
+class Mat3Parameter extends Parameter<Mat3> implements IBinaryReader {
   /**
    * Create a Mat3 parameter.
    * @param {string} name - The name of the Mat3 parameter.
    * @param {Vec3} value - The value of the parameter.
    */
-  constructor(name, value) {
+  constructor(name: string, value?: Mat3) {
     super(name, value ? value : new Mat3(), 'Mat3')
   }
 
@@ -29,10 +32,22 @@ class Mat3Parameter extends Parameter {
    * Extracts a number value from a buffer, updating current parameter state.
    *
    * @param {BinReader} reader - The reader value.
-   * @param {object} context - The context value.
+   * @param {Record<string, unknown>} context - The context value.
    */
-  readBinary(reader, context) {
-    this.__value.readBinary(reader)
+  readBinary(reader: BinReader, context?: Record<string, unknown>): void {
+    this.value?.readBinary(reader)
+  }
+
+  toJSON(context?: Record<string, unknown>): Record<string, unknown> {
+    return {
+      value: this.value?.toJSON(),
+    }
+  }
+
+  fromJSON(j: Record<string, unknown>, context?: Record<string, unknown>): void {
+    const mat3 = new Mat3()
+    mat3.fromJSON(j.value as any)
+    this.value = mat3
   }
 
   /**
@@ -41,8 +56,8 @@ class Mat3Parameter extends Parameter {
    *
    * @return {Mat3Parameter} - Returns a new cloned Mat3 parameter.
    */
-  clone() {
-    const clonedParam = new Mat3Parameter(this.__name, this.__value.clone())
+  clone(): Mat3Parameter {
+    const clonedParam = new Mat3Parameter(this.name, this.value?.clone())
     return clonedParam
   }
 }

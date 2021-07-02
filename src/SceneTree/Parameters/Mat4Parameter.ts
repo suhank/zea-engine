@@ -1,6 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Registry } from '../../Registry'
 import { Mat4 } from '../../Math/Mat4'
-import { Parameter } from './Parameter-temp.js'
+import { Parameter } from './Parameter'
+import { IBinaryReader } from '../../Utilities/IBinaryReader'
+import { BinReader } from '../../SceneTree/BinReader'
 
 /**
  * Represents a specific type of parameter, that only stores Mat4(4x4 matrix) values.
@@ -15,14 +19,14 @@ import { Parameter } from './Parameter-temp.js'
  *
  * @extends Parameter
  */
-class Mat4Parameter extends Parameter {
+class Mat4Parameter extends Parameter<Mat4> implements IBinaryReader {
   /**
    * Create a Mat4 parameter.
    *
    * @param {string} name - The name of the Mat4 parameter.
    * @param {Mat4} value - The value of the parameter.
    */
-  constructor(name, value) {
+  constructor(name: string, value?: Mat4) {
     super(name, value ? value : new Mat4(), 'Mat4')
   }
 
@@ -30,10 +34,22 @@ class Mat4Parameter extends Parameter {
    * Extracts a number value from a buffer, updating current parameter state.
    *
    * @param {BinReader} reader - The reader value.
-   * @param {object} context - The context value.
+   * @param {Record<string, unknown>} context - The context value.
    */
-  readBinary(reader, context) {
-    this.__value.readBinary(reader)
+  readBinary(reader: BinReader, context?: Record<string, unknown>): void {
+    this.value?.readBinary(reader)
+  }
+
+  toJSON(context?: Record<string, unknown>): Record<string, unknown> {
+    return {
+      value: this.value?.toJSON(),
+    }
+  }
+
+  fromJSON(j: Record<string, unknown>, context?: Record<string, unknown>): void {
+    const mat4 = new Mat4()
+    mat4.fromJSON(j.value as any)
+    this.value = mat4
   }
 
   /**
@@ -42,8 +58,8 @@ class Mat4Parameter extends Parameter {
    *
    * @return {Mat4Parameter} - Returns a new cloned Mat4 parameter.
    */
-  clone() {
-    const clonedParam = new Mat4Parameter(this.__name, this.__value.clone())
+  clone(): Mat4Parameter {
+    const clonedParam = new Mat4Parameter(this.name, this.value?.clone())
     return clonedParam
   }
 }

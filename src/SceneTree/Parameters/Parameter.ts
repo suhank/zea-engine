@@ -2,7 +2,7 @@ import { ParameterOwner } from '../ParameterOwner'
 import { BaseItem } from '../BaseItem'
 import { EventEmitter } from '../../Utilities/EventEmitter'
 import { Registry } from '../../Registry'
-import { OperatorOutput } from '../Operators/OperatorOutput-rename'
+import { OperatorOutput } from '../Operators/OperatorOutput'
 import { ICloneable } from '../../Utilities/ICloneable'
 import { ISerializable } from '../../Utilities/ISerializable'
 import { OperatorOutputMode } from './OperatorOutputMode'
@@ -404,41 +404,6 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
   readBinary(reader, context) {
     console.warn(`TODO: Parameter: ${this.constructor.name} with name: ${this.name} does not implement readBinary`)
   }
-
-  /**
-   * The toJSON method serializes this instance as a JSON.
-   * It can be used for persistence, data transfer, etc.
-   *
-   * @param {object} context - The context value.
-   * @return {object} - Returns the json object.
-   */
-  // toJSON(context) {
-  //   if (this.__value.toJSON) return { value: this.__value.toJSON(context) }
-  //   else return { value: this.__value }
-  // }
-
-  // /**
-  //  * The fromJSON method takes a JSON and deserializes into an instance of this type.
-  //  *
-  //  * @param {object} j - The json object this item must decode.
-  //  * @param {object} context - The context value.
-  //  */
-  // fromJSON(j, context) {
-  //   if (j.value == undefined) {
-  //     console.warn('Invalid Parameter JSON')
-  //     return
-  //   }
-
-  //   if (j.value.type && this.__value == undefined) {
-  //     this.__value = Registry.constructClass(j.value.type)
-  //   }
-  //   if (this.__value == undefined || !this.__value.fromJSON) {
-  //     this.__value = j.value
-  //   } else {
-  //     this.__value.fromJSON(j.value, context)
-  //   }
-  //   this.emit('valueChanged', {})
-  // }
 }
 
 export { Parameter }

@@ -1,6 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { Registry } from '../../Registry'
 import { Quat } from '../../Math/index'
-import { Parameter } from './Parameter-temp.js'
+import { Parameter } from './Parameter'
+import { IBinaryReader } from '../../Utilities/IBinaryReader'
+import { BinReader } from '../../SceneTree/BinReader'
 
 /**
  * Represents a specific type of parameter, that only stores Vec3(four-dimensional coordinate) values.
@@ -15,13 +20,13 @@ import { Parameter } from './Parameter-temp.js'
  *
  * @extends Parameter
  */
-class QuatParameter extends Parameter {
+class QuatParameter extends Parameter<Quat> implements IBinaryReader {
   /**
    * Create a Quat parameter.
    * @param {string} name - The name of the Quat parameter.
    * @param {Quat} value - The value of the parameter.
    */
-  constructor(name, value) {
+  constructor(name: string, value?: Quat) {
     super(name, value ? value : new Quat(), 'Quat')
   }
 
@@ -32,10 +37,22 @@ class QuatParameter extends Parameter {
    * Extracts a number value from a buffer, updating current parameter state.
    *
    * @param {BinReader} reader - The reader value.
-   * @param {object} context - The context value.
+   * @param {Record<string, unknown>} context - The context value.
    */
-  readBinary(reader, context) {
-    this.__value.readBinary(reader)
+  readBinary(reader: BinReader, context?: Record<string, unknown>): void {
+    this.value?.readBinary(reader)
+  }
+
+  toJSON(context?: Record<string, unknown>): Record<string, unknown> {
+    return {
+      value: this.value?.toJSON(),
+    }
+  }
+
+  fromJSON(j: Record<string, unknown>, context?: Record<string, unknown>): void {
+    const quat = new Quat()
+    quat.fromJSON(j.value as any)
+    this.value = quat
   }
 
   // ////////////////////////////////////////
@@ -48,7 +65,7 @@ class QuatParameter extends Parameter {
    * @return {QuatParameter} - Returns a new Quat parameter.
    */
   clone() {
-    const clonedParam = new QuatParameter(this.__name, this.__value.clone())
+    const clonedParam = new QuatParameter(this.name, this.value?.clone())
     return clonedParam
   }
 }
