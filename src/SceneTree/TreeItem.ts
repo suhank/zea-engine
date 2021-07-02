@@ -4,7 +4,7 @@ import { Xfo, Box3, Color } from '../Math/index'
 import { Registry } from '../Registry'
 import { BooleanParameter, Parameter, XfoParameter } from './Parameters/index'
 import { BaseItem } from './BaseItem'
-import { CalcGlobalXfoOperator } from './Operators/CalcGlobalXfoOperator.js'
+import { CalcGlobalXfoOperator } from './Operators/CalcGlobalXfoOperator-temp.js'
 import { BoundingBoxParameter } from './Parameters/BoundingBoxParameter'
 import { BinReader } from './BinReader'
 

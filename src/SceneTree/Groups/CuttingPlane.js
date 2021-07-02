@@ -9,7 +9,7 @@ import { TreeItem } from '../TreeItem-temp'
 import { Plane } from '../Geometry/Shapes/Plane'
 import { Rect } from '../Geometry/Shapes/Rect'
 import { BaseGeomItem } from '../BaseGeomItem'
-import { CuttingPlaneOperator } from '../Operators/CuttingPlaneOperator.js'
+import { CuttingPlaneOperator } from '../Operators/CuttingPlaneOperator-temp.js'
 
 /**
  * Groups are a special type of `BaseGroup` that allows you to gather/classify/organize/modify

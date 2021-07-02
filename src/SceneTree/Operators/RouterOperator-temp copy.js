@@ -1,5 +1,5 @@
-import { Operator } from './Operator.js'
-import { OperatorInput } from './OperatorInput.js'
+import { Operator } from './Operator-temp.js'
+import { OperatorInput } from './OperatorInput-temp.js'
 import { OperatorOutput } from './OperatorOutput-rename.js'
 
 import { Registry } from '../../Registry'

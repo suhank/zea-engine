@@ -4,7 +4,7 @@ import { Registry } from '../../Registry'
 import { XfoParameter, MultiChoiceParameter } from '../Parameters/index'
 import { BaseGroup } from './BaseGroup'
 import { TreeItem } from '../TreeItem-temp'
-import { GroupTransformXfoOperator, GroupMemberXfoOperator } from '../Operators/GroupMemberXfoOperator.js'
+import { GroupTransformXfoOperator, GroupMemberXfoOperator } from '../Operators/GroupMemberXfoOperator-temp.js'
 
 const GROUP_XFO_MODES = {
   disabled: 0,

@@ -13,7 +13,7 @@ import {
 import { MaterialParameter } from '../Parameters/MaterialParameter-temp.js'
 import { TreeItem } from '../TreeItem-temp'
 import { BaseGeomItem } from '../BaseGeomItem'
-import { GroupTransformXfoOperator, GroupMemberXfoOperator } from '../Operators/GroupMemberXfoOperator.js'
+import { GroupTransformXfoOperator, GroupMemberXfoOperator } from '../Operators/GroupMemberXfoOperator-temp.js'
 import { BaseGroup } from './BaseGroup'
 
 const GROUP_XFO_MODES = {
