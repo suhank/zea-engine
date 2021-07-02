@@ -1,6 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Registry } from '../../Registry'
 import { Xfo } from '../../Math/index'
-import { Parameter } from './Parameter-temp.js'
+import { Parameter } from './Parameter'
+import { BinReader } from '../BinReader'
+import { IBinaryReader } from '../../Utilities/IBinaryReader'
 
 /**
  * Represents a specific type of parameter, that only stores `Xfo` transform values.
@@ -14,13 +18,13 @@ import { Parameter } from './Parameter-temp.js'
  *
  * @extends Parameter
  */
-class XfoParameter extends Parameter {
+class XfoParameter extends Parameter<Xfo> implements IBinaryReader {
   /**
    * Create a Xfo parameter.
    * @param {string} name - The name of the Xfo parameter.
    * @param {Xfo} value - The value of the parameter.
    */
-  constructor(name, value) {
+  constructor(name: string, value?: Xfo) {
     super(name, value ? value : new Xfo(), 'Xfo')
   }
 
@@ -31,10 +35,25 @@ class XfoParameter extends Parameter {
    * Extracts a number value from a buffer, updating current parameter state.
    *
    * @param {BinReader} reader - The reader value.
-   * @param {object} context - The context value.
+   * @param {Record<string, unknown>} context - The context value.
    */
-  readBinary(reader, context) {
-    this.__value.readBinary(reader)
+  readBinary(reader: BinReader, context?: Record<string, unknown>): void {
+    this.value?.readBinary(reader)
+  }
+
+  toJSON(context?: Record<string, unknown>): Record<string, unknown> {
+    return {
+      name: this.name,
+      value: this.value?.toJSON(),
+    }
+  }
+
+  fromJSON(j: Record<string, unknown>, context?: Record<string, unknown>): void {
+    const xfo = new Xfo()
+    xfo.fromJSON(j.value as any)
+    this.value = xfo
+
+    if (j.name) this.name = j.name as string
   }
 
   // ////////////////////////////////////////
@@ -46,8 +65,8 @@ class XfoParameter extends Parameter {
    *
    * @return {XfoParameter} - Returns a new Xfo parameter.
    */
-  clone() {
-    const clonedParam = new XfoParameter(this.__name, this.__value.clone())
+  clone(): XfoParameter {
+    const clonedParam = new XfoParameter(this.name, this.value?.clone())
     return clonedParam
   }
 }

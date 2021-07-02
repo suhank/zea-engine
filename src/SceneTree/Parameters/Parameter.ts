@@ -1,4 +1,3 @@
-
 import { ParameterOwner } from '../ParameterOwner'
 import { BaseItem } from '../BaseItem'
 import { EventEmitter } from '../../Utilities/EventEmitter'
@@ -16,11 +15,13 @@ import { OperatorOutputMode } from './OperatorOutputMode'
  * * **nameChanged:** Triggered when the name of the parameter changes.
  * * **valueChanged:** Triggered when the value of the parameter changes.
  */
-abstract class Parameter<T> extends EventEmitter  implements ICloneable, ISerializable{
-  private boundOps: OperatorOutput[]
-  private cleaning: boolean
-  private dirtyOpIndex: number
-  private firstOP_WRITE: number
+abstract class Parameter<T> extends EventEmitter implements ICloneable, ISerializable {
+  // TODO:(refactor) boundOps, cleaning, dirtyOpIndex, firstOP_WRITE, were private.
+  protected dirty: boolean
+  protected boundOps: OperatorOutput[]
+  protected cleaning: boolean
+  protected dirtyOpIndex: number
+  protected firstOP_WRITE: number
   protected name: string
   protected value?: T
   protected dataType?: string
@@ -264,7 +265,7 @@ abstract class Parameter<T> extends EventEmitter  implements ICloneable, ISerial
         const op = this.boundOps[index].getOperator()
         const opClassName = Registry.getBlueprintName(op)
         throw new Error(
-          `Parameter: ${thisClassName} with name: ${this.getName()} is not cleaning all outputs during evaluation of op: ${opClassName} with name: ${op.getName()}`,
+          `Parameter: ${thisClassName} with name: ${this.getName()} is not cleaning all outputs during evaluation of op: ${opClassName} with name: ${op.getName()}`
         )
       }
     } else {
@@ -316,7 +317,7 @@ abstract class Parameter<T> extends EventEmitter  implements ICloneable, ISerial
         const op = this.boundOps[this.dirtyOpIndex].getOperator()
         const opClassName = Registry.getBlueprintName(op)
         console.warn(
-          `Operator: ${opClassName} with name: ${op.getName()} is not cleaning its outputs during evaluation`,
+          `Operator: ${opClassName} with name: ${op.getName()} is not cleaning its outputs during evaluation`
         )
         this.dirtyOpIndex++
       }
@@ -329,9 +330,9 @@ abstract class Parameter<T> extends EventEmitter  implements ICloneable, ISerial
    * Returns parameter's value.
    *
    * @param {number} mode - The mode value.
-   * @return {object|string|number|any} - The return value.
+   * @return {T} - The return value.
    */
-  getValue = (mode?: number): T | undefined => {
+  getValue(mode?: number): T {
     if (mode != undefined) {
       console.warn("WARNING in Parameter.setValue: 'mode' is deprecated.")
     }
@@ -400,11 +401,11 @@ abstract class Parameter<T> extends EventEmitter  implements ICloneable, ISerial
   //  * @param {object} reader - The reader value.
   //  * @param {object} context - The context value.
   //  */
-  // readBinary(reader, context) {
-  //   console.warn(`TODO: Parameter: ${this.constructor.name} with name: ${this.name} does not implement readBinary`)
-  // }
+  readBinary(reader, context) {
+    console.warn(`TODO: Parameter: ${this.constructor.name} with name: ${this.name} does not implement readBinary`)
+  }
 
-    /**
+  /**
    * The toJSON method serializes this instance as a JSON.
    * It can be used for persistence, data transfer, etc.
    *
@@ -438,9 +439,6 @@ abstract class Parameter<T> extends EventEmitter  implements ICloneable, ISerial
   //   }
   //   this.emit('valueChanged', {})
   // }
-
-
 }
-
 
 export { Parameter }

@@ -2,7 +2,7 @@
 import { Parameter } from './Parameter'
 import { Box3 } from '../../Math/Box3'
 import { BinReader } from '../BinReader'
-import { TreeItem } from '../TreeItem-temp'
+import { TreeItem } from '../TreeItem'
 import { Registry } from '../../Registry'
 import { IBinaryReader } from '../../Utilities/IBinaryReader'
 
@@ -19,10 +19,8 @@ import { IBinaryReader } from '../../Utilities/IBinaryReader'
  * @extends Parameter
  */
 class BoundingBoxParameter extends Parameter<Box3> implements IBinaryReader {
-  protected dirty: boolean
+  // protected dirty: boolean, value, name
   protected treeItem: TreeItem
-  value;
-  name;
   /**
    * Creates an instance of BoundingBoxParameter.
    * @param {string} name - Name of the parameter
@@ -44,10 +42,13 @@ class BoundingBoxParameter extends Parameter<Box3> implements IBinaryReader {
    *
    * @memberof BoundingBoxParameter
    */
-  setDirty(): void {
-    super.setDirty(0)
-    this.dirty = true
-    this.emit('valueChanged')
+   setDirty(index: number): boolean {
+    const result = super.setDirty(index) // TODO: is appropriate to rename this? 
+    if(result){
+      this.dirty = true
+    }
+    console.warn("check this if this method needs to be overloaded");
+    return result
   }
 
   /**
