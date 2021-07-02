@@ -40,7 +40,7 @@ class GLBaseViewport extends ParameterOwner {
 
     // //////////////////////////////////
     // Setup Offscreen Render Targets
-    if (!SystemDesc.isIOSDevice) {
+    if (SystemDesc.browserName != 'Safari') {
       this.offscreenBuffer = new GLTexture2D(gl, {
         type: 'UNSIGNED_BYTE',
         format: 'RGBA',
@@ -181,7 +181,7 @@ class GLBaseViewport extends ParameterOwner {
    * @param {number} height - The height  used by this viewport.
    */
   resizeRenderTargets(width, height) {
-    if (!SystemDesc.isIOSDevice) {
+    if (SystemDesc.browserName != 'Safari') {
       const gl = this.__renderer.gl
 
       if (this.fb) {
@@ -357,7 +357,8 @@ class GLBaseViewport extends ParameterOwner {
   drawSilhouettes(renderstate) {
     // We cannot render silhouettes in iOS because EXT_frag_depth is not supported
     // and without it, we cannot draw lines over the top of geometries.
-    if (SystemDesc.isIOSDevice) return
+    if (SystemDesc.browserName == 'Safari') return
+
     const gl = this.__renderer.gl
 
     if (gl.renderbufferStorageMultisample) {
