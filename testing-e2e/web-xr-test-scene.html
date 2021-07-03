@@ -131,10 +131,6 @@
 
       renderer.getXRViewport().then((xrvp) => {
         h.textContent = 'XR Device Detected'
-
-        // Enable Spectator mode that causes the scene to be rendered again for the spectator view.
-        // this might be too expensive on big scenes.
-        xrvp.spectatorMode = true
         b.textContent = 'Launch VR'
 
         xrvp.on('presentingChanged', (event) => {
