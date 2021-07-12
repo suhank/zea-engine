@@ -50,7 +50,6 @@ class Material extends BaseItem {
    */
   constructor(name, shaderName) {
     super(name)
-    this.visibleInGeomDataBuffer = true
     this.__isTransparent = false
     this.__isTextured = false
 

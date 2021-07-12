@@ -26,7 +26,9 @@ Create a cone.
 | radius | <code>number</code> | <code>0.5</code> | The radius of the base of the cone. |
 | height | <code>number</code> | <code>1</code> | The height of the cone. |
 | detail | <code>number</code> | <code>32</code> | The detail of the cone. |
-| cap | <code>boolean</code> | <code>true</code> | A boolean indicating whether the base of the cone is capped or open. |
+| [cap] | <code>boolean</code> | <code>true</code> | A boolean indicating whether the base of the cone is capped or open. |
+| [addNormals] | <code>boolean</code> | <code>true</code> | Compute vertex normals for the geometry |
+| [addTextureCoords] | <code>boolean</code> | <code>true</code> | Compute texture coordinates for the geometry |
 
 
 

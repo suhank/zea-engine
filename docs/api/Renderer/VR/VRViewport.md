@@ -18,7 +18,6 @@ This Viewport class is used for rendering stereoscopic views to VR controllers u
 
 * [VRViewport ⇐ <code>GLBaseViewport</code>](#VRViewport)
     * [new VRViewport(renderer)](#new-VRViewport)
-    * [getVRDisplay() ⇒ <code>any</code>](#getVRDisplay)
     * [getAsset() ⇒ <code>any</code>](#getAsset)
     * [getTreeItem() ⇒ <code>any</code>](#getTreeItem)
     * [getVRHead() ⇒ <code>any</code>](#getVRHead)
@@ -33,8 +32,8 @@ This Viewport class is used for rendering stereoscopic views to VR controllers u
     * [stopPresenting()](#stopPresenting)
     * [togglePresenting()](#togglePresenting)
     * [getHMDCanvasSize() ⇒ <code>any</code>](#getHMDCanvasSize)
-    * [updateControllers(xrFrame)](#updateControllers)
-    * [draw(xrFrame)](#draw)
+    * [updateControllers(xrFrame, event)](#updateControllers)
+    * [drawXRFrame(xrFrame)](#drawXRFrame)
     * [onPointerDown(event)](#onPointerDown)
     * [onPointerUp(event)](#onPointerUp)
 
@@ -48,13 +47,6 @@ Create a VR viewport.
 | --- | --- | --- |
 | renderer | <code>[GLBaseRenderer](api/Renderer\GLBaseRenderer.md)</code> | The renderer value. |
 
-<a name="VRViewport+getVRDisplay"></a>
-
-### getVRDisplay
-The getVRDisplay method.
-
-
-**Returns**: <code>any</code> - - The return value.  
 <a name="VRViewport+getAsset"></a>
 
 ### getAsset
@@ -168,18 +160,19 @@ The updateControllers method.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| xrFrame | <code>any</code> | The xrFrame value. |
+| xrFrame | <code>XRFrame</code> | The xrFrame value. |
+| event | <code>object</code> | The pose changed event object that will be emitted for observers such as collab. |
 
-<a name="VRViewport+draw"></a>
+<a name="VRViewport+drawXRFrame"></a>
 
-### draw
-The draw method.
+### drawXRFrame
+The drawXRFrame method.
 
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| xrFrame | <code>any</code> | The xrFrame value. |
+| xrFrame | <code>XRFrame</code> | The xrFrame value. |
 
 <a name="VRViewport+onPointerDown"></a>
 

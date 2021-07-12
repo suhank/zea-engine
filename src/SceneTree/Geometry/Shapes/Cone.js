@@ -26,9 +26,11 @@ class Cone extends ProceduralMesh {
    * @param {number} radius - The radius of the base of the cone.
    * @param {number} height - The height of the cone.
    * @param {number} detail - The detail of the cone.
-   * @param {boolean} cap -  A boolean indicating whether the base of the cone is capped or open.
+   * @param {boolean} [cap=true] -  A boolean indicating whether the base of the cone is capped or open.
+   * @param {boolean} [addNormals=true] - Compute vertex normals for the geometry
+   * @param {boolean} [addTextureCoords=true] - Compute texture coordinates for the geometry
    */
-  constructor(radius = 0.5, height = 1.0, detail = 32, cap = true) {
+  constructor(radius = 0.5, height = 1.0, detail = 32, cap = true, addNormals = true, addTextureCoords = true) {
     super()
 
     if (isNaN(radius) || isNaN(height) || isNaN(detail)) throw new Error('Invalid geom args')
@@ -38,8 +40,8 @@ class Cone extends ProceduralMesh {
     this.__detailParam = this.addParameter(new NumberParameter('Detail', detail >= 3 ? detail : 3, [3, 200], 1))
     this.__capParam = this.addParameter(new BooleanParameter('Cap', cap))
 
-    this.addVertexAttribute('texCoords', Vec2)
-    this.addVertexAttribute('normals', Vec3)
+    if (addNormals) this.addVertexAttribute('normals', Vec3)
+    if (addTextureCoords) this.addVertexAttribute('texCoords', Vec2)
 
     this.topologyParams.push('Detail')
     this.topologyParams.push('Cap')
@@ -92,20 +94,21 @@ class Cone extends ProceduralMesh {
     // ////////////////////////////
     // setUVs
     const texCoords = this.getVertexAttribute('texCoords')
-
-    // Now set the attribute values
-    let tri = 0
-    for (let i = 0; i < nbSides; i++) {
-      texCoords.setFaceVertexValue(tri, 0, new Vec2((i + 1) / nbSides, 0.0))
-      texCoords.setFaceVertexValue(tri, 1, new Vec2(i / nbSides, 0.0))
-      texCoords.setFaceVertexValue(tri, 2, new Vec2((i + 0.5) / nbSides, 1.0))
-    }
-    if (cap) {
+    if (texCoords) {
+      // Now set the attribute values
+      let tri = 0
       for (let i = 0; i < nbSides; i++) {
-        texCoords.setFaceVertexValue(tri, 0, new Vec2(i / nbSides, 0.0))
-        texCoords.setFaceVertexValue(tri, 1, new Vec2((i + 1) / nbSides, 0.0))
+        texCoords.setFaceVertexValue(tri, 0, new Vec2((i + 1) / nbSides, 0.0))
+        texCoords.setFaceVertexValue(tri, 1, new Vec2(i / nbSides, 0.0))
         texCoords.setFaceVertexValue(tri, 2, new Vec2((i + 0.5) / nbSides, 1.0))
-        tri++
+      }
+      if (cap) {
+        for (let i = 0; i < nbSides; i++) {
+          texCoords.setFaceVertexValue(tri, 0, new Vec2(i / nbSides, 0.0))
+          texCoords.setFaceVertexValue(tri, 1, new Vec2((i + 1) / nbSides, 0.0))
+          texCoords.setFaceVertexValue(tri, 2, new Vec2((i + 0.5) / nbSides, 1.0))
+          tri++
+        }
       }
     }
 
@@ -134,7 +137,10 @@ class Cone extends ProceduralMesh {
     if (this.__cap) {
       positions.getValueRef(basePoint).set(0.0, 0.0, 0.0)
     }
-    this.computeVertexNormals()
+    const normals = this.getVertexAttribute('normals')
+    if (normals) {
+      this.computeVertexNormals()
+    }
   }
 }
 

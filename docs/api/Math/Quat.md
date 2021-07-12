@@ -226,20 +226,22 @@ Set this Quat to a rotation defined by an axis and an angle (in radians).
 
 | Param | Type | Description |
 | --- | --- | --- |
-| axis | <code>[Vec3](api/Math\Vec3.md)</code> | The axis value. |
-| angle | <code>number</code> | The axis angle. |
+| axis | <code>[Vec3](api/Math\Vec3.md)</code> | The axis around which to rotate. |
+| angle | <code>number</code> | The angle to rotate |
 
 <a name="Quat+setFromDirectionAndUpvector"></a>
 
 ### setFromDirectionAndUpvector
 Sets the state of the Quat to look in a particular direction along the z axis.
+> The camera looks down the negative z axis, so to set a rotation value
+> for the camera, remember to negate the direction vector.
 
 
 
 | Param | Type | Description |
 | --- | --- | --- |
 | dir | <code>[Vec3](api/Math\Vec3.md)</code> | The direction value. |
-| up | <code>[Vec3](api/Math\Vec3.md)</code> | The up angle. |
+| up | <code>[Vec3](api/Math\Vec3.md)</code> | The up vector. |
 
 <a name="Quat+setFrom2Vectors"></a>
 

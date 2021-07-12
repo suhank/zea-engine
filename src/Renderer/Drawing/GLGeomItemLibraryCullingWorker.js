@@ -17,16 +17,15 @@ const vec3_length = (vec) => {
   return Math.sqrt(vec[0] * vec[0] + vec[1] * vec[1] + vec[2] * vec[2])
 }
 const vec3_scale = (vec, scl) => {
-  return [vec[0] * len, vec[1] * len, vec[2] * len]
+  return [vec[0] * scl, vec[1] * scl, vec[2] * scl]
 }
-const vec3_angleTo = (vec1, vec2) => {
-  const cosine = vec3_dot(vec1, vec2)
-  if (cosine > 1.0) {
-    return 0
-  } else {
-    return Math.acos(cosine)
-  }
+const vec2_scale = (vec, scl) => {
+  return [vec[0] * scl, vec[1] * scl]
 }
+const vec2_length = (vec) => {
+  return Math.sqrt(vec[0] * vec[0] + vec[1] * vec[1])
+}
+
 const quat_conjugate = (quat) => {
   return [-quat[0], -quat[1], -quat[2], quat[3]]
 }
@@ -62,10 +61,14 @@ let frustumCulledCount = 0
 let newlyCulled = []
 let newlyUnCulled = []
 
-let viewPos
-let viewInvOri
-let frustumHalfAngleX
-let frustumHalfAngleY
+let cameraPos
+let cameraInvOri
+let isOrthographic = false
+let frustumHeight = 0
+let frustumWidth = 0
+let frustumHalfAngleX = 0
+let frustumHalfAngleY = 0
+let solidAngleLimit = 0.004
 
 const cull = (index) => {
   if (!outOfFrustum[index]) {
@@ -83,65 +86,125 @@ const unCull = (index) => {
 }
 
 const checkGeomItem = (geomItemData) => {
-  if (!geomItemData || !viewPos) return
-  const pos = geomItemData.pos
-  const boundingRadius = geomItemData.boundingRadius
-  const vec = vec3_subtract(pos, viewPos)
-  const dist = vec3_length(vec)
-  // unCull items close to the view.
-  if (dist < boundingRadius) {
+  if (!geomItemData || !cameraPos) return
+
+  // Some items, like Handles that
+  if (!geomItemData.cullable) {
     unCull(geomItemData.id)
     return
   }
-  const viewVec = quat_rotateVec3(viewInvOri, vec)
-  // Cull items behind the view.
-  if (viewVec[2] > 0) {
-    cull(geomItemData.id)
-    return
-  }
+  const boundingRadius = geomItemData.boundingRadius
 
-  // Cull very small items
-  // Note: when in VR, the FoV becomes very wide and the pixel
-  // height varies. It seems more consistent to just use solidAngle,
-  // which is resolution invariant.
-  const solidAngle = Math.atan(boundingRadius / dist)
-  if (solidAngle < 0.004) {
-    cull(geomItemData.id)
-    return
-  }
+  if (isOrthographic) {
+    // Cull very small items
+    // Note: when in VR, the FoV becomes very wide and the pixel
+    // height varies. It seems more consistent to just use solidAngle
+    // which is resolution invariant.
+    if (solidAngleLimit > 0 && boundingRadius < solidAngleLimit) {
+      cull(geomItemData.id)
+      return
+    }
 
-  const viewVecNorm = vec3_normalize(viewVec)
-  const viewAngle = [Math.abs(Math.asin(viewVecNorm[0])) - solidAngle, Math.abs(Math.asin(viewVecNorm[1])) - solidAngle]
-  // console.log(geomItemData.id, 'angle To Sphere:', frustumHalfAngleX - viewAngle[0], frustumHalfAngleY - viewAngle[1])
-  if (viewAngle[0] > frustumHalfAngleX || viewAngle[1] > frustumHalfAngleY) {
-    cull(geomItemData.id)
-    return
+    // Now we check if the item is within the view frustum.
+    // We need the solid angle of the item for each axis (X & Y)
+    // This is because at the corners of the screen, the object is slightly
+    // further away, so the solid angle calculated above gets smaller.
+    // This was causing items with big bounding spheres to be culled too early
+    // at the corner of the screen.
+    const vec = vec3_subtract(geomItemData.pos, cameraPos)
+    const viewPos = quat_rotateVec3(cameraInvOri, vec)
+    if (
+      Math.abs(viewPos[0]) - boundingRadius > frustumWidth * 0.5 ||
+      Math.abs(viewPos[1]) - boundingRadius > frustumHeight * 0.5
+    ) {
+      cull(geomItemData.id)
+      return
+    }
+  } else {
+    const vec = vec3_subtract(geomItemData.pos, cameraPos)
+    const dist = vec3_length(vec)
+    // unCull items close to the view.
+    if (dist < boundingRadius) {
+      unCull(geomItemData.id)
+      return
+    }
+    // Cull very small items
+    // Note: when in VR, the FoV becomes very wide and the pixel
+    // height varies. It seems more consistent to just use solidAngle
+    // which is resolution invariant.
+    const solidAngle = Math.asin(boundingRadius / dist)
+    if (solidAngleLimit > 0 && solidAngle < solidAngleLimit) {
+      cull(geomItemData.id)
+      return
+    }
+
+    // Now we check if the item is within the view frustum.
+    // We need the solid angle of the item for each axis (X & Y)
+    // This is because at the corners of the screen, the object is slightly
+    // further away, so the solid angle calculated above gets smaller.
+    // This was causing items with big bounding spheres to be culled too early
+    // at the corner of the screen.
+    const viewPos = quat_rotateVec3(cameraInvOri, vec)
+    const viewVecXZ = [viewPos[0], viewPos[2]]
+    const viewVecYZ = [viewPos[1], viewPos[2]]
+    const distX = vec2_length(viewVecXZ)
+    const distY = vec2_length(viewVecYZ)
+    const solidAngleXZ = Math.asin(boundingRadius / distX)
+    const solidAngleYZ = Math.asin(boundingRadius / distY)
+    const viewVecNormXZ = vec2_scale(viewVecXZ, 1 / distX)
+    const viewVecNormYZ = vec2_scale(viewVecYZ, 1 / distY)
+
+    let viewAngle
+    // If an item is behind the viewer
+    if (viewPos[2] > 0) {
+      viewAngle = [
+        Math.PI - Math.abs(Math.asin(viewVecNormXZ[0])) - solidAngleXZ,
+        Math.PI - Math.abs(Math.asin(viewVecNormYZ[0])) - solidAngleYZ,
+      ]
+    } else {
+      viewAngle = [
+        Math.abs(Math.asin(viewVecNormXZ[0])) - solidAngleXZ,
+        Math.abs(Math.asin(viewVecNormYZ[0])) - solidAngleYZ,
+      ]
+    }
+    // console.log(geomItemData.id, 'angle To Item:', frustumHalfAngleX, viewAngle[0], frustumHalfAngleY, viewAngle[1])
+    if (viewAngle[0] > frustumHalfAngleX || viewAngle[1] > frustumHalfAngleY) {
+      cull(geomItemData.id)
+      return
+    }
   }
 
   unCull(geomItemData.id)
 }
 
 const onViewPortChanged = (data, postMessage) => {
-  frustumHalfAngleX = data.frustumHalfAngleX
-  frustumHalfAngleY = data.frustumHalfAngleY
-  if (viewPos && viewInvOri && geomItemsData.length > 0) {
+  if (data.isOrthographic) {
+    isOrthographic = true
+    frustumHeight = data.frustumHeight
+    frustumWidth = data.frustumWidth
+  } else {
+    isOrthographic = false
+    frustumHalfAngleX = data.frustumHalfAngleX
+    frustumHalfAngleY = data.frustumHalfAngleY
+  }
+
+  solidAngleLimit = data.solidAngleLimit
+  if (cameraPos && cameraInvOri) {
     geomItemsData.forEach(checkGeomItem)
     onDoneFrustumCull(postMessage)
   }
 }
 
 const onViewChanged = (data, postMessage) => {
-  viewPos = data.viewPos
-  viewInvOri = quat_conjugate(data.viewOri)
-  if (geomItemsData.length > 0) {
-    geomItemsData.forEach(checkGeomItem)
-    onDoneFrustumCull(postMessage)
-  }
+  cameraPos = data.cameraPos
+  cameraInvOri = quat_conjugate(data.cameraOri)
+  solidAngleLimit = data.solidAngleLimit
+  geomItemsData.forEach(checkGeomItem)
+  onDone(postMessage)
 }
 
-let inFrustumIndices
-const onDoneFrustumCull = (postMessage) => {
-  // if (geomItemsData.length > 0 && (newlyCulled.length > 0 || newlyUnCulled.length > 0 || !inFrustumIndices)) {
+const onDone = (postMessage) => {
+  // console.log('onDone newlyCulled:', newlyCulled.length, 'newlyUnCulled:', newlyUnCulled.length)
   if (newlyCulled.length > 0 || newlyUnCulled.length > 0) {
     if (!enableOcclusionCulling) {
       postMessage({ type: 'CullResults', newlyCulled, newlyUnCulled })
@@ -239,7 +302,12 @@ const handleMessage = (data, postMessage) => {
   } else if (data.type == 'ViewChanged') {
     onViewChanged(data, postMessage)
   } else if (data.type == 'UpdateGeomItems') {
+    data.removedItemIndices.forEach((id) => {
+      geomItemsData[id] = null
+    })
     data.geomItems.forEach((geomItem) => {
+      // New geoms default to being un-culled
+      if (!geomItemsData[geomItem.id]) frustumCulled[geomItem.id] = false
       geomItemsData[geomItem.id] = geomItem
       outOfFrustum[geomItem.id] = false
       checkGeomItem(geomItemsData[geomItem.id])

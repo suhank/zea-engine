@@ -44,7 +44,6 @@ uniform sampler2D image;
 
 varying vec2 v_texCoord;
 
-
 #ifdef ENABLE_ES3
     out vec4 fragColor;
 #endif

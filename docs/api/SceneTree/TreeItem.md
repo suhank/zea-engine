@@ -27,55 +27,49 @@ It has the capability to add and remove children.
 
 * [TreeItem ⇐ <code>BaseItem</code>](#TreeItem)
     * [new TreeItem(name)](#new-TreeItem)
-    * _instance_
-        * [setOwner(parentItem)](#setOwner)
-        * [getParentItem() \| <code>undefined</code>](#getParentItem)
-        * [setParentItem(parentItem)](#setParentItem)
-        * ~~[.getLocalXfo()](#TreeItem+getLocalXfo) ⇒ <code>Xfo</code>~~
-        * ~~[.setLocalXfo(xfo)](#TreeItem+setLocalXfo)~~
-        * ~~[.getGlobalXfo()](#TreeItem+getGlobalXfo) ⇒ <code>Xfo</code>~~
-        * ~~[.setGlobalXfo(xfo)](#TreeItem+setGlobalXfo)~~
-        * ~~[.getVisible()](#TreeItem+getVisible) ⇒ <code>boolean</code>~~
-        * [isVisible() ⇒ <code>boolean</code>](#isVisible)
-        * [setVisible(val)](#setVisible)
-        * [propagateVisibility(val)](#propagateVisibility)
-        * [addHighlight(name, color, propagateToChildren)](#addHighlight)
-        * [removeHighlight(name, propagateToChildren)](#removeHighlight)
-        * [getHighlight() ⇒ <code>Color</code>](#getHighlight)
-        * [isHighlighted() ⇒ <code>boolean</code>](#isHighlighted)
-        * [getChildren() ⇒ <code>array</code>](#getChildren)
-        * ~~[.numChildren()](#TreeItem+numChildren) ⇒ <code>number</code>~~
-        * [getNumChildren() ⇒ <code>number</code>](#getNumChildren)
-        * [generateUniqueName(name) ⇒ <code>string</code>](#generateUniqueName)
-        * [insertChild(childItem, index, maintainXfo, fixCollisions) ⇒ <code>number</code>](#insertChild)
-        * [addChild(childItem, maintainXfo, fixCollisions) ⇒ <code>BaseItem</code>](#addChild)
-        * [getChild(index) ⇒ <code>BaseItem</code> \| <code>undefined</code>](#getChild)
-        * [getChildByName(name) ⇒ <code>BaseItem</code> \| <code>null</code>](#getChildByName)
-        * [getChildNames() ⇒ <code>array</code>](#getChildNames)
-        * [removeChild(index)](#removeChild)
-        * [removeChildByName(name) ⇒ <code>BaseItem</code>](#removeChildByName)
-        * [removeChildByHandle(childItem)](#removeChildByHandle)
-        * [removeAllChildren()](#removeAllChildren)
-        * [getChildIndex(childItem) ⇒ <code>number</code>](#getChildIndex)
-        * ~~[.indexOfChild(childItem)](#TreeItem+indexOfChild) ⇒ <code>number</code>~~
-        * [resolvePath(path, index) ⇒ <code>BaseItem</code> \| <code>Parameter</code>](#resolvePath)
-        * [traverse(callback, includeThis)](#traverse)
-        * [onPointerDown(event)](#onPointerDown)
-        * [onPointerUp(event)](#onPointerUp)
-        * [onPointerMove(event)](#onPointerMove)
-        * [onPointerEnter(event)](#onPointerEnter)
-        * [onPointerLeave(event)](#onPointerLeave)
-        * [onWheel(event)](#onWheel)
-        * [toJSON(context) ⇒ <code>object</code>](#toJSON)
-        * [fromJSON(j, context)](#fromJSON)
-        * [readBinary(reader, context)](#readBinary)
-        * [clone(context)](#clone)
-        * [copyFrom(src, context)](#copyFrom)
-    * _static_
-        * [getSelectionOutlineColor() ⇒ <code>Color</code>](#getSelectionOutlineColor)
-        * [setSelectionOutlineColor(color)](#setSelectionOutlineColor)
-        * [getBranchSelectionOutlineColor() ⇒ <code>Color</code>](#getBranchSelectionOutlineColor)
-        * [setBranchSelectionOutlineColor(color)](#setBranchSelectionOutlineColor)
+    * [setOwner(parentItem)](#setOwner)
+    * [getParentItem() \| <code>undefined</code>](#getParentItem)
+    * [setParentItem(parentItem)](#setParentItem)
+    * ~~[.getLocalXfo()](#TreeItem+getLocalXfo) ⇒ <code>Xfo</code>~~
+    * ~~[.setLocalXfo(xfo)](#TreeItem+setLocalXfo)~~
+    * ~~[.getGlobalXfo()](#TreeItem+getGlobalXfo) ⇒ <code>Xfo</code>~~
+    * ~~[.setGlobalXfo(xfo)](#TreeItem+setGlobalXfo)~~
+    * ~~[.getVisible()](#TreeItem+getVisible) ⇒ <code>boolean</code>~~
+    * [isVisible() ⇒ <code>boolean</code>](#isVisible)
+    * [setVisible(val)](#setVisible)
+    * [propagateVisibility(val)](#propagateVisibility)
+    * [addHighlight(name, color, propagateToChildren)](#addHighlight)
+    * [removeHighlight(name, propagateToChildren)](#removeHighlight)
+    * [getHighlight() ⇒ <code>Color</code>](#getHighlight)
+    * [isHighlighted() ⇒ <code>boolean</code>](#isHighlighted)
+    * [getChildren() ⇒ <code>array</code>](#getChildren)
+    * ~~[.numChildren()](#TreeItem+numChildren) ⇒ <code>number</code>~~
+    * [getNumChildren() ⇒ <code>number</code>](#getNumChildren)
+    * [generateUniqueName(name) ⇒ <code>string</code>](#generateUniqueName)
+    * [insertChild(childItem, index, maintainXfo, fixCollisions) ⇒ <code>number</code>](#insertChild)
+    * [addChild(childItem, maintainXfo, fixCollisions) ⇒ <code>BaseItem</code>](#addChild)
+    * [getChild(index) ⇒ <code>BaseItem</code> \| <code>undefined</code>](#getChild)
+    * [getChildByName(name) ⇒ <code>BaseItem</code> \| <code>null</code>](#getChildByName)
+    * [getChildNames() ⇒ <code>array</code>](#getChildNames)
+    * [removeChild(index)](#removeChild)
+    * [removeChildByName(name) ⇒ <code>BaseItem</code>](#removeChildByName)
+    * [removeChildByHandle(childItem)](#removeChildByHandle)
+    * [removeAllChildren()](#removeAllChildren)
+    * [getChildIndex(childItem) ⇒ <code>number</code>](#getChildIndex)
+    * ~~[.indexOfChild(childItem)](#TreeItem+indexOfChild) ⇒ <code>number</code>~~
+    * [resolvePath(path, index) ⇒ <code>BaseItem</code> \| <code>Parameter</code>](#resolvePath)
+    * [traverse(callback, includeThis)](#traverse)
+    * [onPointerDown(event)](#onPointerDown)
+    * [onPointerUp(event)](#onPointerUp)
+    * [onPointerMove(event)](#onPointerMove)
+    * [onPointerEnter(event)](#onPointerEnter)
+    * [onPointerLeave(event)](#onPointerLeave)
+    * [onWheel(event)](#onWheel)
+    * [toJSON(context) ⇒ <code>object</code>](#toJSON)
+    * [fromJSON(j, context)](#fromJSON)
+    * [readBinary(reader, context)](#readBinary)
+    * [clone(context)](#clone)
+    * [copyFrom(src, context)](#copyFrom)
 
 <a name="new_TreeItem_new"></a>
 
@@ -547,42 +541,6 @@ Copies current TreeItem with all its children.
 | --- | --- | --- |
 | src | [<code>TreeItem</code>](#TreeItem) | The tree item to copy from. |
 | context | <code>object</code> | The context value. |
-
-<a name="TreeItem.getSelectionOutlineColor"></a>
-
-### getSelectionOutlineColor
-Returns the selection outline color.
-
-
-**Returns**: <code>[Color](api/Math\Color.md)</code> - - Returns a color.  
-<a name="TreeItem.setSelectionOutlineColor"></a>
-
-### setSelectionOutlineColor
-Sets the selection outline color.
-
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| color | <code>[Color](api/Math\Color.md)</code> | The color value. |
-
-<a name="TreeItem.getBranchSelectionOutlineColor"></a>
-
-### getBranchSelectionOutlineColor
-Returns the branch selection outline color.
-
-
-**Returns**: <code>[Color](api/Math\Color.md)</code> - - Returns a color.  
-<a name="TreeItem.setBranchSelectionOutlineColor"></a>
-
-### setBranchSelectionOutlineColor
-Sets the branch selection outline color.
-
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| color | <code>[Color](api/Math\Color.md)</code> | The color value. |
 
 
 

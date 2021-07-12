@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html class="h-full">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -13,7 +13,7 @@
     <script src="../dist/index.umd.js"></script>
 
     <script type="module">
-      const { GLRenderer, Scene, Vec3, Color, Sphere, Material, GeomItem } = zeaEngine
+      const { GLRenderer, Scene, Vec3, Xfo, Color, Sphere, Cross, Material, GeomItem } = zeaEngine
 
       const canvas = document.querySelector('#renderer')
 
@@ -26,16 +26,22 @@
       const material = new Material('surfaces', 'SimpleSurfaceShader')
       material.getParameter('BaseColor').setValue(new Color(1, 0, 1))
 
-      const geomItem = new GeomItem('Sphere', new Sphere(1.5, 46), material)
+      const geomItem = new GeomItem('Sphere', new Sphere(1.5, 46), material, new Xfo(new Vec3(-2, 0, 1)))
       scene.getRoot().addChild(geomItem)
 
-      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(5, 5, 2.7), new Vec3(0, 0, 0.4))
+      const linesMaterial = new Material('linesMaterial', 'LinesShader')
+      linesMaterial.getParameter('BaseColor').setValue(new Color(0.2, 0.2, 0))
+      const crossItem = new GeomItem('Cross', new Cross(1.18), linesMaterial, new Xfo(new Vec3(2, 0, 0.5)))
+      scene.getRoot().addChild(crossItem)
 
-      renderer.once('resized', () => {
-        window.postMessage('done-loading')
-      })
+      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(5, 5, 2.7), new Vec3(0, 0, 0.0))
+
+      window.postMessage('done-loading')
 
       // {{{ Messages handler.
+      // the main point of this test is to move items between opaque and transparent passes multiple
+      // times. Each sphere should be put into an opaque pass and removed more than once. The same
+      // for the transparent pass.
       const handleMessage = (event) => {
         const { data } = event
 
@@ -43,11 +49,41 @@
           const material = new Material('surfaces', 'SimpleSurfaceShader')
           material.getParameter('BaseColor').setValue(new Color(0, 0, 1))
           geomItem.getParameter('Material').setValue(material)
+
+          const linesMaterial = new Material('linesMaterial2', 'LinesShader')
+          linesMaterial.getParameter('BaseColor').setValue(new Color(0, 1, 1))
+          crossItem.getParameter('Material').setValue(linesMaterial)
+
           window.postMessage(`done-${data}`)
         } else if (data === 'variant-02') {
           const material = new Material('surfaces', 'StandardSurfaceShader')
           material.getParameter('BaseColor').setValue(new Color(1, 1, 0))
           geomItem.getParameter('Material').setValue(material)
+
+          const linesMaterial = new Material('linesMaterial3', 'LinesShader')
+          linesMaterial.getParameter('BaseColor').setValue(new Color(0, 1, 1, 0.2))
+          crossItem.getParameter('Material').setValue(linesMaterial)
+
+          window.postMessage(`done-${data}`)
+        } else if (data === 'variant-03') {
+          const material = new Material('surfaces', 'SimpleSurfaceShader')
+          material.getParameter('BaseColor').setValue(new Color(0, 0, 1))
+          geomItem.getParameter('Material').setValue(material)
+
+          const linesMaterial = new Material('linesMaterial2', 'LinesShader')
+          linesMaterial.getParameter('BaseColor').setValue(new Color(0, 1, 1))
+          crossItem.getParameter('Material').setValue(linesMaterial)
+
+          window.postMessage(`done-${data}`)
+        } else if (data === 'variant-04') {
+          const material = new Material('surfaces', 'StandardSurfaceShader')
+          material.getParameter('BaseColor').setValue(new Color(1, 1, 0))
+          geomItem.getParameter('Material').setValue(material)
+
+          const linesMaterial = new Material('linesMaterial3', 'LinesShader')
+          linesMaterial.getParameter('BaseColor').setValue(new Color(0, 1, 1, 0.2))
+          crossItem.getParameter('Material').setValue(linesMaterial)
+
           window.postMessage(`done-${data}`)
         }
       }
@@ -56,8 +92,8 @@
       // }}}
     </script>
   </head>
-  <body class="bg-blue-100">
-    <div class="h-screen">
+  <body class="bg-blue-100 h-full">
+    <div class="h-full">
       <canvas class="absolute" id="renderer"></canvas>
     </div>
   </body>

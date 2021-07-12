@@ -70,12 +70,12 @@ class MaterialColorParam extends ColorParameter {
       this.__image = value
       this.__image.on('updated', this.__imageUpdated)
       this.emit('textureConnected', {})
-      this.emit('valueChanged', { mode: 0 })
+      this.emit('valueChanged')
     } else {
       if (this.__image != undefined) {
         disconnectImage()
         this.__image = undefined
-        this.emit('textureDisconnected', {})
+        this.emit('textureDisconnected')
       }
     }
   }
@@ -91,9 +91,6 @@ class MaterialColorParam extends ColorParameter {
     if (value instanceof BaseImage) {
       this.setImage(value)
     } else {
-      if (this.__image != undefined) {
-        this.setImage(undefined)
-      }
       super.setValue(value)
     }
   }

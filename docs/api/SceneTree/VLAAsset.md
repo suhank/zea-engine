@@ -16,7 +16,7 @@ Class designed to load and handle `.vla` files.
 * [VLAAsset ⇐ <code>AssetItem</code>](#VLAAsset)
     * [new VLAAsset(name)](#new-VLAAsset)
     * [readBinary(reader, context) ⇒ <code>number</code>](#readBinary)
-    * [load(url) ⇒ <code>Promise</code>](#load)
+    * [load(url, context) ⇒ <code>Promise</code>](#load)
     * [fromJSON(j, context, onDone)](#fromJSON)
 
 <a name="new_VLAAsset_new"></a>
@@ -53,6 +53,7 @@ Loads all the geometries and metadata from the asset file.
 | Param | Type | Description |
 | --- | --- | --- |
 | url | <code>string</code> | The URL of the asset to load |
+| context | <code>AssetLoadContext</code> | The load context object that provides additional data such as the units of the scene we are loading into. |
 
 <a name="VLAAsset+fromJSON"></a>
 
@@ -64,6 +65,6 @@ The fromJSON method decodes a json object for this type.
 | Param | Type | Description |
 | --- | --- | --- |
 | j | <code>object</code> | The json object this item must decode. |
-| context | <code>object</code> | The context value. |
+| context | <code>AssetLoadContext</code> | The load context object that provides additional data such as the units of the scene we are loading into. |
 | onDone | <code>function</code> | The onDone value. |
 

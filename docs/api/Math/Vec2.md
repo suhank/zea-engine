@@ -53,6 +53,7 @@ expose getters and setters for the component values.
         * [readBinary(reader)](#readBinary)
     * _static_
         * [createFromBuffer(buffer, byteOffset)](#createFromBuffer)
+        * [intersectionOfLines(p0, d0, p1, d1) ⇒ <code>array</code>](#intersectionOfLines)
 
 <a name="new_Vec2_new"></a>
 
@@ -534,6 +535,21 @@ Creates an instance of a `Vec2` using an ArrayBuffer.
 | --- | --- | --- |
 | buffer | <code>ArrayBuffer</code> | The buffer value. |
 | byteOffset | <code>number</code> | The offset value. |
+
+<a name="Vec2.intersectionOfLines"></a>
+
+### intersectionOfLines
+Calculate the intersection point of 2 2d lines, returning the parameters values for each line.
+
+
+**Returns**: <code>array</code> - - Returns an array containing 2 parameter values for the 2 lines.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| p0 | [<code>Vec2</code>](#Vec2) | The point of the first line |
+| d0 | [<code>Vec2</code>](#Vec2) | The direction of the first line |
+| p1 | [<code>Vec2</code>](#Vec2) | The point of the second line |
+| d1 | [<code>Vec2</code>](#Vec2) | The direction of the second line |
 
 
 

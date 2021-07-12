@@ -1,14 +1,7 @@
 import '../../SceneTree/GeomItem.js'
 
 import { EventEmitter, MathFunctions } from '../../Utilities/index'
-import { resizeIntArray } from './GLGeomLibrary.js'
 import { GLTexture2D } from '../GLTexture2D.js'
-
-const resizeFloat32Array = (intArray, newSize) => {
-  const newArray = new Float32Array(newSize)
-  newArray.set(intArray)
-  return newArray
-}
 
 /** This class abstracts the rendering of a collection of geometries to screen.
  * @extends EventEmitter
@@ -26,6 +19,7 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
     this.glGeomItems = []
     this.glGeomIdsMapping = {}
     this.glgeomItemEventHandlers = []
+    this.freeIndices = []
     this.dirtyDrawGeomIds = []
 
     this.drawElementCounts = new Int32Array(0)
@@ -45,21 +39,23 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
     this.highlightedIdsBufferDirty = true
 
     this.renderer.glGeomLibrary.on('geomDataChanged', (event) => {
-      const index = this.glGeomIdsMapping[event.index]
-      if (index != undefined) {
-        const glGeomItem = this.glGeomItems[index]
-        if (glGeomItem.geomItem.isVisible()) {
-          const index = this.visibleItems.indexOf(glGeomItem)
-          const offsetAndCount = this.renderer.glGeomLibrary.getGeomOffsetAndCount(glGeomItem.geomId)
+      const geomItemIndices = this.glGeomIdsMapping[event.index]
+      if (geomItemIndices != undefined) {
+        geomItemIndices.forEach((index) => {
+          const glGeomItem = this.glGeomItems[index]
+          if (glGeomItem.isVisible()) {
+            const index = this.visibleItems.indexOf(glGeomItem)
+            const offsetAndCount = this.renderer.glGeomLibrary.getGeomOffsetAndCount(glGeomItem.geomId)
 
-          this.drawElementOffsets[index] = offsetAndCount[0]
-          this.drawElementCounts[index] = offsetAndCount[1]
-          const highlightIndex = this.highlightedItems.indexOf(glGeomItem)
-          if (highlightIndex != -1) {
-            this.highlightElementOffsets[highlightIndex] = offsetAndCount[0]
-            this.highlightElementCounts[highlightIndex] = offsetAndCount[1]
+            this.drawElementOffsets[index] = offsetAndCount[0]
+            this.drawElementCounts[index] = offsetAndCount[1]
+            const highlightIndex = this.highlightedItems.indexOf(glGeomItem)
+            if (highlightIndex != -1) {
+              this.highlightElementOffsets[highlightIndex] = offsetAndCount[0]
+              this.highlightElementCounts[highlightIndex] = offsetAndCount[1]
+            }
           }
-        }
+        })
       }
     })
   }
@@ -69,14 +65,20 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
    * @param {any} glGeomItem - The glGeomItem value.
    */
   addGLGeomItem(glGeomItem) {
-    this.glGeomIdsMapping[glGeomItem.geomId] = this.glGeomItems.length
-    this.glGeomItems.push(glGeomItem)
+    const index = this.freeIndices.length > 0 ? this.freeIndices.pop() : this.glGeomItems.length
+
+    // Keep track of which geomitems use which geoms, so we can update the offset and count array if they change.
+    if (!this.glGeomIdsMapping[glGeomItem.geomId]) {
+      this.glGeomIdsMapping[glGeomItem.geomId] = [index]
+    } else {
+      this.glGeomIdsMapping[glGeomItem.geomId].push(index)
+    }
 
     const eventHandlers = {}
 
     // //////////////////////////////
     // Visibility
-    if (glGeomItem.isVisible()) {
+    if (glGeomItem.visible) {
       this.visibleItems.push(glGeomItem)
     }
     eventHandlers.visibilityChanged = (event) => {
@@ -113,9 +115,8 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
     }
     glGeomItem.geomItem.on('highlightChanged', eventHandlers.highlightChanged)
 
-    this.glgeomItemEventHandlers.push(eventHandlers)
-
-    glGeomItem.geomItem.setMetadata('geomItemSet', this)
+    this.glGeomItems[index] = glGeomItem
+    this.glgeomItemEventHandlers[index] = eventHandlers
 
     this.drawIdsBufferDirty = true
 
@@ -128,16 +129,20 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
    */
   removeGLGeomItem(glGeomItem) {
     const index = this.glGeomItems.indexOf(glGeomItem)
-    delete this.glGeomIdsMapping[glGeomItem.geomId]
+    const geomItemIndices = this.glGeomIdsMapping[glGeomItem.geomId]
+    geomItemIndices.splice(geomItemIndices.indexOf(index), 1)
 
     const eventHandlers = this.glgeomItemEventHandlers[index]
     glGeomItem.geomItem.off('highlightChanged', eventHandlers.highlightChanged)
     glGeomItem.off('visibilityChanged', eventHandlers.visibilityChanged)
 
-    this.glGeomItems.splice(index, 1)
-    this.glgeomItemEventHandlers.splice(index, 1)
+    this.glGeomItems[index] = null
+    this.glgeomItemEventHandlers[index] = null
+    this.drawElementOffsets[index] = 0
+    this.drawElementCounts[index] = 0
+    this.freeIndices.push(index)
 
-    if (glGeomItem.geomItem.isVisible()) {
+    if (glGeomItem.isVisible()) {
       const visibleItemIndex = this.visibleItems.indexOf(glGeomItem)
       this.visibleItems.splice(visibleItemIndex, 1)
       this.drawIdsBufferDirty = true
@@ -153,37 +158,6 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
   // ////////////////////////////////////
   // Draw Ids
 
-  /**
-   * The getHighlightedIdsArray method.
-   * @return {Float32Array} - The drawIds for each GeomItem packed into a Float32Array
-   */
-  getHighlightedIdsArray() {
-    if (this.highlightedIdsBufferDirty) {
-      if (!this.highlightedIdsArray || this.highlightedItems.length > this.highlightedIdsArray.length) {
-        this.highlightedIdsArray = new Float32Array(this.highlightedItems.length)
-        this.highlightElementOffsets = new Uint32Array(this.highlightedItems.length)
-        this.highlightElementCounts = new Uint32Array(this.highlightedItems.length)
-      }
-
-      // Collect all visible geom ids into the instanceIds array.
-      // Note: the draw count can be less than the number of instances
-      // we re-use the same buffer and simply invoke fewer draw calls.
-      this.highlightedItems.forEach((glGeomItem, index) => {
-        this.highlightedIdsArray[index] = glGeomItem.drawItemId
-        const offsetAndCount = this.renderer.glGeomLibrary.getGeomOffsetAndCount(glGeomItem.geomId)
-        this.highlightElementOffsets[index] = offsetAndCount[0]
-        this.highlightElementCounts[index] = offsetAndCount[1]
-      })
-      for (let i = this.highlightedItems.length; i < this.highlightElementCounts.length; i++) {
-        this.highlightElementOffsets[i] = 0
-        this.highlightElementCounts[i] = 0
-      }
-
-      this.highlightedIdsBufferDirty = false
-    }
-    return this.highlightedIdsArray
-  }
-
   // ////////////////////////////////////
   // Instance Ids
 
@@ -192,27 +166,6 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
    * @param {object} renderstate - The object used to track state changes during rendering.
    */
   updateDrawIDsBuffer(renderstate) {
-    const gl = this.renderer.gl
-
-    const unit = renderstate.boundTextures++
-    gl.activeTexture(gl.TEXTURE0 + unit)
-
-    const drawIdsTextureSize = MathFunctions.nextPow2(Math.ceil(Math.sqrt(this.visibleItems.length)))
-
-    if (!this.drawIdsTexture) {
-      this.drawIdsTexture = new GLTexture2D(gl, {
-        format: 'RED',
-        internalFormat: 'R32F',
-        type: 'FLOAT',
-        width: drawIdsTextureSize,
-        height: drawIdsTextureSize,
-        filter: 'NEAREST',
-        wrap: 'CLAMP_TO_EDGE',
-        mipMapped: false,
-      })
-    } else if (this.drawIdsTexture.width < drawIdsTextureSize || this.drawIdsTexture.height < drawIdsTextureSize) {
-      this.drawIdsTexture.resize(drawIdsTextureSize, drawIdsTextureSize)
-    }
     {
       if (!this.drawIdsArray || this.visibleItems.length > this.drawIdsArray.length) {
         this.drawIdsArray = new Float32Array(this.visibleItems.length)
@@ -231,6 +184,29 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
         this.drawElementCounts[i] = 0
       }
       this.dirtyDrawGeomIds = []
+    }
+
+    const gl = this.renderer.gl
+    if (!gl.multiDrawElements) {
+      return
+    }
+
+    const unit = renderstate.boundTextures++
+    gl.activeTexture(gl.TEXTURE0 + unit)
+
+    const drawIdsTextureSize = MathFunctions.nextPow2(Math.ceil(Math.sqrt(this.visibleItems.length))) * 2
+    if (!this.drawIdsTexture) {
+      this.drawIdsTexture = new GLTexture2D(gl, {
+        format: gl.name == 'webgl2' ? 'RED' : 'ALPHA',
+        type: 'FLOAT',
+        width: drawIdsTextureSize,
+        height: drawIdsTextureSize,
+        filter: 'NEAREST',
+        wrap: 'CLAMP_TO_EDGE',
+        mipMapped: false,
+      })
+    } else if (this.drawIdsTexture.width < drawIdsTextureSize || this.drawIdsTexture.height < drawIdsTextureSize) {
+      this.drawIdsTexture.resize(drawIdsTextureSize, drawIdsTextureSize)
     }
     {
       const tex = this.drawIdsTexture
@@ -277,18 +253,42 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
    * @param {object} renderstate - The object used to track state changes during rendering.
    */
   updateHighlightedIDsBuffer(renderstate) {
+    if (this.highlightedIdsBufferDirty) {
+      if (!this.highlightedIdsArray || this.highlightedItems.length > this.highlightedIdsArray.length) {
+        this.highlightedIdsArray = new Float32Array(this.highlightedItems.length)
+        this.highlightElementOffsets = new Uint32Array(this.highlightedItems.length)
+        this.highlightElementCounts = new Uint32Array(this.highlightedItems.length)
+      }
+
+      // Collect all visible geom ids into the instanceIds array.
+      // Note: the draw count can be less than the number of instances
+      // we re-use the same buffer and simply invoke fewer draw calls.
+      this.highlightedItems.forEach((glGeomItem, index) => {
+        this.highlightedIdsArray[index] = glGeomItem.drawItemId
+        const offsetAndCount = this.renderer.glGeomLibrary.getGeomOffsetAndCount(glGeomItem.geomId)
+        this.highlightElementOffsets[index] = offsetAndCount[0]
+        this.highlightElementCounts[index] = offsetAndCount[1]
+      })
+      for (let i = this.highlightedItems.length; i < this.highlightElementCounts.length; i++) {
+        this.highlightElementOffsets[i] = 0
+        this.highlightElementCounts[i] = 0
+      }
+
+      this.highlightedIdsBufferDirty = false
+    }
+
     const gl = this.renderer.gl
+    if (!gl.multiDrawElements) {
+      return
+    }
 
     const unit = renderstate.boundTextures++
     gl.activeTexture(gl.TEXTURE0 + unit)
-    const highlightedIdsArray = this.getHighlightedIdsArray()
-
     const highlightIdsTextureSize = MathFunctions.nextPow2(Math.ceil(Math.sqrt(this.highlightedItems.length)))
 
     if (!this.highlightedIdsTexture) {
       this.highlightedIdsTexture = new GLTexture2D(gl, {
-        format: 'RED',
-        internalFormat: 'R32F',
+        format: gl.name == 'webgl2' ? 'RED' : 'ALPHA',
         type: 'FLOAT',
         width: highlightIdsTextureSize,
         height: highlightIdsTextureSize,
@@ -312,10 +312,10 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
       const height = 1
       const format = tex.__format
       const type = tex.__type
-      const rows = Math.ceil((xoffset + highlightedIdsArray.length) / texWidth)
+      const rows = Math.ceil((xoffset + this.highlightedIdsArray.length) / texWidth)
 
       let consumed = 0
-      let remaining = highlightedIdsArray.length
+      let remaining = this.highlightedIdsArray.length
       let rowStart = xoffset
       for (let i = 0; i < rows; i++) {
         let width
@@ -327,7 +327,7 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
         }
         const x = consumed % texWidth
         const y = Math.floor(consumed / texWidth)
-        const data = highlightedIdsArray.subarray(consumed, consumed + width)
+        const data = this.highlightedIdsArray.subarray(consumed, consumed + width)
         gl.texSubImage2D(gl.TEXTURE_2D, level, x, y, width, height, format, type, data)
         consumed += width
         remaining -= width
@@ -351,9 +351,12 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
     if (this.drawIdsBufferDirty) {
       this.updateDrawIDsBuffer(renderstate)
     }
-    this.drawIdsTexture.bindToUniform(renderstate, renderstate.unifs.drawIdsTexture)
+    if (this.drawIdsTexture) {
+      const { drawIdsTexture } = renderstate.unifs
+      this.drawIdsTexture.bindToUniform(renderstate, drawIdsTexture)
+    }
 
-    this.__bindAndRender(renderstate, this.drawElementCounts, this.drawElementOffsets)
+    this.__bindAndRender(renderstate, this.drawIdsArray, this.drawElementCounts, this.drawElementOffsets)
   }
 
   /**
@@ -367,9 +370,17 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
     if (this.highlightedIdsBufferDirty) {
       this.updateHighlightedIDsBuffer(renderstate)
     }
-    this.highlightedIdsTexture.bindToUniform(renderstate, renderstate.unifs.drawIdsTexture)
+    if (this.highlightedIdsTexture) {
+      const { drawIdsTexture } = renderstate.unifs
+      this.highlightedIdsTexture.bindToUniform(renderstate, drawIdsTexture)
+    }
 
-    this.__bindAndRender(renderstate, this.highlightElementCounts, this.highlightElementOffsets)
+    this.__bindAndRender(
+      renderstate,
+      this.highlightedIdsArray,
+      this.highlightElementCounts,
+      this.highlightElementOffsets
+    )
   }
 
   /**
@@ -379,33 +390,19 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
    * @param {Array} offsets - the offsets for each element drawn in by this draw call.
    * @private
    */
-  __bindAndRender(renderstate, counts, offsets) {
+  __bindAndRender(renderstate, drawIdsArray, counts, offsets) {
     const gl = this.gl
     const unifs = renderstate.unifs
 
-    if (!gl.floatTexturesSupported || !gl.drawElementsInstanced || !renderstate.supportsInstancing) {
-      if (renderstate.unifs.instancedDraw) {
-        gl.uniform1i(renderstate.unifs.instancedDraw.location, 0)
-      }
-      counts.forEach((index) => {
-        this.glGeomItems[index].bind(renderstate)
-        renderstate.bindViewports(unifs, () => {
-          this.singleDraw(counts[index], offsets[index])
-        })
-      })
-    } else {
-      // console.log("draw:"+ this.drawIdsArray);
-
-      // Specify an instanced draw to the shader so it knows how
-      // to retrieve the modelmatrix.
-      if (unifs.instancedDraw) {
-        gl.uniform1i(renderstate.unifs.instancedDraw.location, 1)
-      }
-
-      renderstate.bindViewports(unifs, () => {
-        this.multiDraw(counts, offsets)
-      })
+    // Specify an instanced draw to the shader so it knows how
+    // to retrieve the modelmatrix.
+    if (unifs.instancedDraw) {
+      gl.uniform1i(renderstate.unifs.instancedDraw.location, 1)
     }
+
+    renderstate.bindViewports(unifs, () => {
+      this.multiDraw(renderstate, drawIdsArray, counts, offsets)
+    })
   }
 
   /**

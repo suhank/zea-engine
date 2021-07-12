@@ -25,6 +25,8 @@ Creates an instance of Sphere.
 | [radius] | <code>number</code> | <code>1.0</code> | The radius of the sphere. |
 | [sides] | <code>number</code> | <code>12</code> | The number of sides. |
 | [loops] | <code>number</code> | <code>12</code> | The number of loops. |
+| [addNormals] | <code>boolean</code> | <code>true</code> | Compute vertex normals for the geometry |
+| [addTextureCoords] | <code>boolean</code> | <code>true</code> | Compute texture coordinates for the geometry |
 
 
 

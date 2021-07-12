@@ -12,18 +12,18 @@ describe('Circle', () => {
 
     expect(circle.getParameter('Radius').getValue()).toBe(1.0)
     expect(circle.getParameter('Angle').getValue()).toBe(Math.PI * 2)
-    expect(circle.getParameter('NumSegments').getValue()).toBe(32)
+    expect(circle.getParameter('Sides').getValue()).toBe(32)
   })
 
   it('updates parameters', () => {
     const circle = new Circle()
     circle.getParameter('Radius').setValue(2)
     circle.getParameter('Angle').setValue(Math.PI)
-    circle.getParameter('NumSegments').setValue(64)
+    circle.getParameter('Sides').setValue(64)
 
     expect(circle.getParameter('Radius').getValue()).toBe(2)
     expect(circle.getParameter('Angle').getValue()).toBe(Math.PI)
-    expect(circle.getParameter('NumSegments').getValue()).toBe(64)
+    expect(circle.getParameter('Sides').getValue()).toBe(64)
   })
 
   it('saves to JSON (serialization).', () => {
@@ -38,7 +38,7 @@ describe('Circle', () => {
     const expectedOutput = {
       params: {
         Angle: { value: 6.283185307179586 },
-        NumSegments: {
+        Sides: {
           range: [3, 200],
           step: 1,
           value: 6,

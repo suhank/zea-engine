@@ -13,6 +13,7 @@ import './GLSL/modelMatrix.js'
 import './GLSL/debugColors.js'
 import './GLSL/ImagePyramid.js'
 import './GLSL/cutaways.js'
+import './GLSL/computeViewNormal.js'
 
 /** A standard shader handling Opaque and transparent items and PBR rendering.
  * @extends GLShader
@@ -39,6 +40,7 @@ attribute vec2 texCoords;
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
 
+<%include file="GLSLUtils.glsl"/>
 <%include file="stack-gl/transpose.glsl"/>
 <%include file="stack-gl/inverse.glsl"/>
 <%include file="drawItemId.glsl"/>
@@ -89,6 +91,7 @@ precision highp float;
 // #define DEBUG_GEOM_ID
 #endif
 
+<%include file="GLSLUtils.glsl"/>
 <%include file="math/constants.glsl"/>
 <%include file="drawItemTexture.glsl"/>
 <%include file="cutaways.glsl"/>
@@ -134,10 +137,12 @@ uniform float exposure;
 #endif
 
 uniform mat4 cameraMatrix;
+uniform int isOrthographic;
 
 #ifndef ENABLE_MULTI_DRAW
 
 uniform color BaseColor;
+uniform float AmbientOcclusion;
 uniform float Roughness;
 uniform float Metallic;
 uniform float Reflectance;
@@ -147,6 +152,9 @@ uniform float Opacity;
 #ifdef ENABLE_TEXTURES
 uniform sampler2D BaseColorTex;
 uniform int BaseColorTexType;
+
+uniform sampler2D AmbientOcclusionTex;
+uniform int AmbientOcclusionTexType;
 
 #ifdef ENABLE_PBR
 uniform sampler2D RoughnessTex;
@@ -193,6 +201,9 @@ mat3 cotangentFrame( in vec3 normal, in vec3 pos, in vec2 texCoord ) {
 }
 #endif
 
+<%include file="computeViewNormal.glsl"/>
+
+
 #ifdef ENABLE_ES3
 out vec4 fragColor;
 #endif
@@ -220,16 +231,30 @@ void main(void) {
         }
     }
 
-    vec3 viewNormal = normalize(v_viewNormal);
-    //vec3 surfacePos = -v_viewPos;
-    vec3 viewVector = normalize(mat3(cameraMatrix) * normalize(v_viewPos));
+    //////////////////////////////////////////////
+    // Normals
+    vec3 viewNormal;
+    if (length(v_viewNormal) < 0.1) {
+      viewNormal = computeViewNormal(v_viewPos);
+    } else {
+      viewNormal = normalize(v_viewNormal);
+    }
     vec3 normal = normalize(mat3(cameraMatrix) * viewNormal);
+    
+    vec3 viewVector;
+    if (isOrthographic == 0)
+      viewVector = normalize(mat3(cameraMatrix) * normalize(v_viewPos));
+    else 
+      viewVector = vec3(-cameraMatrix[2][0], -cameraMatrix[2][1], -cameraMatrix[2][2]);
+      
     if(dot(normal, viewVector) < 0.0){
         normal = -normal;
         // Note: this line can be used to debug inverted meshes.
         //material.baseColor = vec3(1.0, 0.0, 0.0);
     }
 
+    //////////////////////////////////////////////
+    // Material
 
     MaterialParams material;
 
@@ -240,18 +265,19 @@ void main(void) {
     vec4 matValue2      = getMaterialValue(materialCoords, 2);
 
     material.baseColor     = toLinear(matValue0.rgb);
-    material.metallic      = matValue1.r;
-    material.roughness     = matValue1.g;
-    material.reflectance   = matValue1.b;
+    material.ambientOcclusion      = matValue1.r;
+    material.metallic      = matValue1.g;
+    material.roughness     = matValue1.b;
+    material.reflectance   = matValue1.a;
 
-    material.emission         = matValue1.a;
-    material.opacity          = matValue2.r * matValue0.a;
+    material.emission         = matValue2.r;
+    material.opacity          = matValue2.g * matValue0.a;
 
 #else // ENABLE_MULTI_DRAW
 
 #ifndef ENABLE_TEXTURES
     material.baseColor     = toLinear(BaseColor.rgb);
-    material.emission         = EmissiveStrength;
+    material.emission      = EmissiveStrength;
 
 #ifdef ENABLE_PBR
     material.roughness     = Roughness;
@@ -262,14 +288,25 @@ void main(void) {
 #else
     // Planar YZ projection for texturing, repeating every meter.
     // vec2 texCoord       = v_worldPos.xz * 0.2;
-    vec2 texCoord          = vec2(v_textureCoord.x, 1.0 - v_textureCoord.y);
+    vec2 texCoord          = v_textureCoord;
 
     vec4 baseColor         = getColorParamValue(BaseColor, BaseColorTex, BaseColorTexType, texCoord);
+    material.ambientOcclusion = getLuminanceParamValue(AmbientOcclusion, AmbientOcclusionTex, AmbientOcclusionTexType, texCoord);
     material.baseColor     = baseColor.rgb;
-
+    
 #ifdef ENABLE_PBR
-    material.roughness     = getLuminanceParamValue(Roughness, RoughnessTex, RoughnessTexType, texCoord);
+
     material.metallic      = getLuminanceParamValue(Metallic, MetallicTex, MetallicTexType, texCoord);
+    material.roughness     = getLuminanceParamValue(Roughness, RoughnessTex, RoughnessTexType, texCoord);
+
+    // TODO: Communicate that this tex contains the roughness as well.
+    if (MetallicTexType != 0) {
+      vec4 metallicRoughness = vec4(Metallic, Roughness, 0.0, 1.0);
+      metallicRoughness     = texture2D(MetallicTex, texCoord);
+      material.roughness     = metallicRoughness.g;
+      material.metallic     = metallicRoughness.b;
+    }
+
     material.reflectance   = getLuminanceParamValue(Reflectance, ReflectanceTex, ReflectanceTexType, texCoord);
 #endif // ENABLE_PBR
     material.emission         = getLuminanceParamValue(EmissiveStrength, EmissiveStrengthTex, EmissiveStrengthTexType, texCoord);
@@ -291,8 +328,13 @@ void main(void) {
 #endif
 
     fragColor = pbrSurfaceRadiance(material, normal, viewVector);
-    // fragColor = vec4(normal, 1.0);
-
+    // fragColor = vec4(texture2D(NormalTex, texCoord).rgb, 1.0);
+    // fragColor = metallicRoughness;
+    // fragColor = vec4(material.baseColor, 1.0);;
+    // fragColor = vec4(vec3(material.metallic), 1.0);;
+    // fragColor = vec4(vec3(material.roughness), 1.0);;
+    // fragColor = vec4(vec3(material.ambientOcclusion), 1.0);
+    
 #ifdef DEBUG_GEOM_ID
     // ///////////////////////
     // Debug Draw ID (this correlates to GeomID within a GLGeomSet)
@@ -328,18 +370,17 @@ void main(void) {
       name: 'BaseColor',
       defaultValue: new Color(1.0, 1.0, 0.5),
     })
-    paramDescs.push({ name: 'Normal', defaultValue: new Color(0.5, 0.5, 0.5) })
+    paramDescs.push({ name: 'AmbientOcclusion', defaultValue: 1, range: [0, 1] })
     paramDescs.push({ name: 'Metallic', defaultValue: 0.05, range: [0, 1] })
     paramDescs.push({ name: 'Roughness', defaultValue: 0.5, range: [0, 1] })
     paramDescs.push({ name: 'Reflectance', defaultValue: 0.5, range: [0, 1] })
+    paramDescs.push({ name: 'Normal', defaultValue: new Color(0.5, 0.5, 0.5) })
     paramDescs.push({
       name: 'EmissiveStrength',
       defaultValue: 0.0,
       range: [0, 1],
     })
     paramDescs.push({ name: 'Opacity', defaultValue: 1.0, range: [0, 1] })
-
-    // paramDescs.push({ name: 'TexCoordScale', defaultValue: 1.0, texturable: false });
     return paramDescs
   }
 
@@ -379,11 +420,14 @@ void main(void) {
     matData[1] = baseColor.g
     matData[2] = baseColor.b
     matData[3] = baseColor.a
-    matData[4] = material.getParameter('Metallic').getValue()
-    matData[5] = material.getParameter('Roughness').getValue()
-    matData[6] = material.getParameter('Reflectance').getValue()
-    matData[7] = material.getParameter('EmissiveStrength').getValue()
-    matData[8] = material.getParameter('Opacity').getValue()
+
+    matData[4] = material.getParameter('AmbientOcclusion').getValue()
+    matData[5] = material.getParameter('Metallic').getValue()
+    matData[6] = material.getParameter('Roughness').getValue()
+    matData[7] = material.getParameter('Reflectance').getValue()
+
+    matData[8] = material.getParameter('EmissiveStrength').getValue()
+    matData[9] = material.getParameter('Opacity').getValue()
     return matData
   }
 

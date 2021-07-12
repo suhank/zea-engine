@@ -29,16 +29,13 @@ Class representing a GL base renderer.
         * [assignTreeItemToGLPass(treeItem)](#assignTreeItemToGLPass)
         * [removeTreeItem(treeItem)](#removeTreeItem)
         * [getGL() ⇒ <code>WebGLRenderingContext</code>](#getGL)
-        * [resizeFbos(width, height)](#resizeFbos)
         * [getDiv() ⇒ <code>HTMLElement</code>](#getDiv)
         * [setupWebGL($canvas, webglOptions)](#setupWebGL)
         * [bindEventHandlers()](#bindEventHandlers)
         * [getGLCanvas() ⇒ <code>HTMLCanvasElement</code>](#getGLCanvas)
-        * [getScreenQuad() ⇒ <code>GLScreenQuad</code>](#getScreenQuad)
         * [frameAll(viewportIndex)](#frameAll)
         * [getOrCreateShader(shaderName) ⇒ <code>GLShader</code>](#getOrCreateShader)
         * [addPass(pass, passType, updateIndices) ⇒ <code>number</code>](#addPass)
-        * [registerPass(itemAddedFn, itemRemovedFn)](#registerPass)
         * [getPass(index) ⇒ <code>GLPass</code>](#getPass)
         * [supportsVR() ⇒ <code>boolean</code>](#supportsVR)
         * [getVRViewport() ⇒ <code>VRViewport</code>](#getVRViewport)
@@ -262,18 +259,6 @@ The getGL method.
 
 
 **Returns**: <code>WebGLRenderingContext</code> - - The return value.  
-<a name="GLBaseRenderer+resizeFbos"></a>
-
-### resizeFbos
-The resizeFbos method. Frame buffer (FBO).
-
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| width | <code>number</code> | The width of the frame buffer. |
-| height | <code>number</code> | The height of the frame buffer. |
-
 <a name="GLBaseRenderer+getDiv"></a>
 
 ### getDiv
@@ -302,32 +287,26 @@ Binds IO event handlers to the canvas
 <a name="GLBaseRenderer+getGLCanvas"></a>
 
 ### getGLCanvas
-Returns canvas element where our scene lives.
+Returns canvas that was used to generate the gl context.
 
 
 **Returns**: <code>HTMLCanvasElement</code> - - The return value.  
-<a name="GLBaseRenderer+getScreenQuad"></a>
-
-### getScreenQuad
-The getScreenQuad method.
-
-
-**Returns**: <code>[GLScreenQuad](api/Renderer\GLScreenQuad.md)</code> - - The return value.  
 <a name="GLBaseRenderer+frameAll"></a>
 
 ### frameAll
-The frameAll method.
+Frames the specified viewport to the entire scene.
+> See also: ${Viewport#frameView}
 
 
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| viewportIndex | <code>number</code> | <code>0</code> | The viewportIndex value. |
+| viewportIndex | <code>number</code> | <code>0</code> | The viewportIndex value. If multiple viewports are configured, a viewport index will need to be provided. |
 
 <a name="GLBaseRenderer+getOrCreateShader"></a>
 
 ### getOrCreateShader
-The getOrCreateShader method.
+A factory function used to construct new shader objects. If that specified shader has already been constructed, it returns the existing shader.
 
 
 **Returns**: <code>[GLShader](api/Renderer\GLShader.md)</code> - - The return value.  
@@ -349,18 +328,6 @@ The addPass method.
 | pass | <code>[GLPass](api/Renderer\Passes\GLPass.md)</code> |  | The pass value. |
 | passType | <code>number</code> |  | The passType value. |
 | updateIndices | <code>boolean</code> | <code>true</code> | The updateIndices value. |
-
-<a name="GLBaseRenderer+registerPass"></a>
-
-### registerPass
-The registerPass method.
-
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| itemAddedFn | <code>function</code> | The itemAddedFn value. |
-| itemRemovedFn | <code>function</code> | The itemRemovedFn value. |
 
 <a name="GLBaseRenderer+getPass"></a>
 

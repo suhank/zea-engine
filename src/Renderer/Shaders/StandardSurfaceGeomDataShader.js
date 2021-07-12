@@ -11,6 +11,7 @@ import './GLSL/glsl-bits.js'
 class StandardSurfaceGeomDataShader extends GLShader {
   constructor(gl, floatGeomBuffer) {
     super(gl)
+
     this.setShaderStage(
       'VERTEX_SHADER',
       `
@@ -21,6 +22,7 @@ attribute vec3 positions;
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
 
+<%include file="GLSLUtils.glsl"/>
 <%include file="stack-gl/transpose.glsl"/>
 <%include file="drawItemId.glsl"/>
 <%include file="drawItemTexture.glsl"/>
@@ -44,7 +46,6 @@ void main(void) {
   gl_Position = projectionMatrix * viewPos;
 
   v_viewPos = -viewPos.xyz;
-  
   v_worldPos      = (modelMatrix * pos).xyz;
 }
 `
@@ -55,6 +56,7 @@ void main(void) {
       `
 precision highp float;
 
+<%include file="GLSLUtils.glsl"/>
 <%include file="drawItemTexture.glsl"/>
 <%include file="math/constants.glsl"/>
 <%include file="cutaways.glsl"/>
@@ -105,20 +107,25 @@ void main(void) {
           return;
       }
   }
+  if(testFlag(flags, GEOMITEM_INVISIBLE_IN_GEOMDATA)) {
+    discard;
+    return;
+  }
+  
 
     float dist = length(v_viewPos);
 
     if(floatGeomBuffer != 0) {
-        fragColor.r = float(passId); 
-        fragColor.g = float(drawItemId);
+        fragColor.r = float(passId);
+        fragColor.g = float(drawItemId) - 0.1;
         fragColor.b = 0.0;// TODO: store poly-id or something.
         fragColor.a = dist;
     }
     else {
         ///////////////////////////////////
         // UInt8 buffer
-        fragColor.r = (mod(v_drawItemId, 256.) + 0.5) / 255.;
-        fragColor.g = (floor(v_drawItemId / 256.) + (float(passId) * 64.) + 0.5) / 255.;
+        fragColor.r = mod(v_drawItemId, 256.) / 256.;
+        fragColor.g = (floor(v_drawItemId / 256.) + (float(passId) * 64.)) / 256.;
 
 
         // encode the dist as a 16 bit float

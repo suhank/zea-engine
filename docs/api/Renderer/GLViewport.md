@@ -24,7 +24,14 @@ Class representing a GL viewport.
 
 * [GLViewport ⇐ <code>GLBaseViewport</code>](#GLViewport)
     * [new GLViewport(renderer, name, width, height)](#new-GLViewport)
-    * [resize(width, height)](#resize)
+    * [getBl() ⇒ <code>number</code>](#getBl)
+    * [setBl(bl)](#setBl)
+    * [getTr() ⇒ <code>number</code>](#getTr)
+    * [setTr(tr)](#setTr)
+    * [getPosX() ⇒ <code>number</code>](#getPosX)
+    * [getPosY() ⇒ <code>number</code>](#getPosY)
+    * [resize(canvasWidth, canvasHeight)](#resize)
+    * [resizeRenderTargets(width, height)](#resizeRenderTargets)
     * [getCamera() ⇒ <code>Camera</code>](#getCamera)
     * [setCamera(camera)](#setCamera)
     * [getProjectionMatrix() ⇒ <code>Mat4</code>](#getProjectionMatrix)
@@ -32,8 +39,6 @@ Class representing a GL viewport.
     * [setActive(state)](#setActive)
     * [frameView(treeItems)](#frameView)
     * [calcRayFromScreenPos(screenPos) ⇒ <code>Ray</code>](#calcRayFromScreenPos)
-    * [createGeomDataFbo(floatGeomBuffer)](#createGeomDataFbo)
-    * [getGeomDataFbo() ⇒ <code>GLFbo</code>](#getGeomDataFbo)
     * [renderGeomDataFbo()](#renderGeomDataFbo)
     * [invalidateGeomDataBuffer()](#invalidateGeomDataBuffer)
     * [getGeomDataAtPos(screenPos, pointerRay) ⇒ <code>object</code>](#getGeomDataAtPos)
@@ -64,6 +69,56 @@ Create a GL viewport.
 | width | <code>number</code> | The width of the viewport |
 | height | <code>number</code> | The height of the viewport |
 
+<a name="GLViewport+getBl"></a>
+
+### getBl
+The getBl method.
+
+
+**Returns**: <code>number</code> - - The return value.  
+<a name="GLViewport+setBl"></a>
+
+### setBl
+The setBl method.
+
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| bl | <code>number</code> | The bl value. |
+
+<a name="GLViewport+getTr"></a>
+
+### getTr
+The getTr method.
+
+
+**Returns**: <code>number</code> - - The return value.  
+<a name="GLViewport+setTr"></a>
+
+### setTr
+The setTr method.
+
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| tr | <code>number</code> | The tr value. |
+
+<a name="GLViewport+getPosX"></a>
+
+### getPosX
+The getPosX method.
+
+
+**Returns**: <code>number</code> - - The return value.  
+<a name="GLViewport+getPosY"></a>
+
+### getPosY
+The getPosY method.
+
+
+**Returns**: <code>number</code> - - The return value.  
 <a name="GLViewport+resize"></a>
 
 ### resize
@@ -73,8 +128,21 @@ Dynamically resizes viewport.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| width | <code>number</code> | The width value. |
-| height | <code>number</code> | The height value. |
+| canvasWidth | <code>number</code> | The canvasWidth value. |
+| canvasHeight | <code>number</code> | The canvasHeight value. |
+
+<a name="GLViewport+resizeRenderTargets"></a>
+
+### resizeRenderTargets
+Resize any offscreen render targets.
+> Note: Values ,ay not be the entire canvas with if multiple viewports exists.
+
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| width | <code>number</code> | The width used by this viewport. |
+| height | <code>number</code> | The height  used by this viewport. |
 
 <a name="GLViewport+getCamera"></a>
 
@@ -122,13 +190,15 @@ The setActive method.
 <a name="GLViewport+frameView"></a>
 
 ### frameView
-The frameView method.
+Calculates a new camera position that frames all the items passed in `treeItems` array, moving
+the camera to a point where we can see all of them.
+> See Camera.frameView
 
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| treeItems | <code>array</code> | The treeItems value. |
+| treeItems | <code>array</code> | The array of TreeItem. |
 
 <a name="GLViewport+calcRayFromScreenPos"></a>
 
@@ -142,24 +212,6 @@ Compute a ray into the scene based on a mouse coordinate.
 | --- | --- | --- |
 | screenPos | <code>[Vec2](api/Math\Vec2.md)</code> | The screen position. |
 
-<a name="GLViewport+createGeomDataFbo"></a>
-
-### createGeomDataFbo
-The createGeomDataFbo method.
-
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| floatGeomBuffer | <code>boolean</code> | true if the GPU supports rendering to floating point textures. |
-
-<a name="GLViewport+getGeomDataFbo"></a>
-
-### getGeomDataFbo
-The getGeomDataFbo method.
-
-
-**Returns**: <code>[GLFbo](api/Renderer\GLFbo.md)</code> - - The return value.  
 <a name="GLViewport+renderGeomDataFbo"></a>
 
 ### renderGeomDataFbo

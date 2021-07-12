@@ -109,6 +109,7 @@ class FileImage extends BaseImage {
         this.getDOMElement = () => {
           return imageElem
         }
+        this.url = url
         this.width = imageElem.width
         this.height = imageElem.height
         this.__data = imageElem

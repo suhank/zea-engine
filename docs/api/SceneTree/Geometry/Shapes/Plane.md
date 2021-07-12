@@ -27,8 +27,8 @@ Create a plane.
 | [SizeY] | <code>number</code> | <code>1.0</code> | The length of the plane along the Y axis. |
 | [DetailX] | <code>number</code> | <code>1</code> | The number of divisions along the X axis. |
 | [DetailY] | <code>number</code> | <code>1</code> | The number of divisions along the Y axis. |
-| [addNormals] | <code>boolean</code> | <code>true</code> | The addNormals value. |
-| [addTextureCoords] | <code>boolean</code> | <code>true</code> | The addTextureCoords value. |
+| [addNormals] | <code>boolean</code> | <code>true</code> | Compute vertex normals for the geometry |
+| [addTextureCoords] | <code>boolean</code> | <code>true</code> | Compute texture coordinates for the geometry |
 
 
 

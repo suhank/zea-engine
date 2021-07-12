@@ -1,6 +1,6 @@
 import { SystemDesc } from '../../SystemDesc.js'
 import { Vec3, Mat4, Xfo } from '../../Math/index'
-import { TreeItem, VLAAsset } from '../../SceneTree/index'
+import { GeomItem, TreeItem, VLAAsset } from '../../SceneTree/index'
 import { GLBaseViewport } from '../GLBaseViewport.js'
 import { VRHead } from './VRHead.js'
 import { VRController } from './VRController.js'
@@ -35,14 +35,10 @@ class VRViewport extends GLBaseViewport {
     // Viewport params
     this.__projectionMatricesUpdated = false
 
-    // These values are in meters.
-    this.__far = 1024.0
-    this.__near = 0.1
     // ////////////////////////////////////////////
     // Tree
 
     this.__stageTreeItem = new TreeItem('VRStage')
-    this.__stageTreeItem.setSelectable(false)
     this.__stageTreeItem.setVisible(false)
     this.__renderer.addTreeItem(this.__stageTreeItem)
 
@@ -166,7 +162,7 @@ class VRViewport extends GLBaseViewport {
     const onAnimationFrame = (t, frame) => {
       if (this.session) {
         this.session.requestAnimationFrame(onAnimationFrame)
-        this.draw(frame)
+        this.drawXRFrame(frame)
       }
     }
     this.session.requestAnimationFrame(onAnimationFrame)
@@ -221,10 +217,14 @@ class VRViewport extends GLBaseViewport {
           for (const name of materialNames) {
             const material = materialLibrary.getMaterial(name, false)
             if (material) {
-              material.visibleInGeomDataBuffer = false
               material.setShaderName('SimpleSurfaceShader')
             }
           }
+          this.__vrAsset.traverse((item) => {
+            this.stroke.traverse((item) => {
+              item.setSelectable(false)
+            })
+          })
           resolve(this.__vrAsset)
         }
         if (this.__vrAsset.isLoaded()) bind()
@@ -268,7 +268,7 @@ class VRViewport extends GLBaseViewport {
             const dir = cameraXfo.ori.getZaxis()
             dir.z = 0
             dir.normalizeInPlace()
-            stageXfo.ori.setFromDirectionAndUpvector(dir.negate(), new Vec3(0, 0, 1))
+            stageXfo.ori.setFromDirectionAndUpvector(dir, new Vec3(0, 0, 1))
             this.setXfo(stageXfo)
 
             session.addEventListener('end', (event) => {
@@ -331,8 +331,9 @@ class VRViewport extends GLBaseViewport {
 
             this.__width = glLayer.framebufferWidth
             this.__height = glLayer.framebufferHeight
-            this.__renderer.resizeFbos(this.__width, this.__height)
             this.__region = [0, 0, this.__width, this.__height]
+            this.resizeRenderTargets(this.__width, this.__height)
+
             // ////////////////////////////
 
             // eslint-disable-next-line require-jsdoc
@@ -434,10 +435,10 @@ class VRViewport extends GLBaseViewport {
   }
 
   /**
-   * The draw method.
-   * @param {any} xrFrame - The xrFrame value.
+   * The drawXRFrame method.
+   * @param {XRFrame} xrFrame - The xrFrame value.
    */
-  draw(xrFrame) {
+  drawXRFrame(xrFrame) {
     const session = xrFrame.session
 
     const layer = session.renderState.baseLayer
@@ -450,9 +451,10 @@ class VRViewport extends GLBaseViewport {
     }
 
     this.__vrhead.update(pose)
+    const viewXfo = this.__vrhead.getTreeItem().getParameter('GlobalXfo').getValue()
 
     // Prepare the pointerMove event.
-    const event = {}
+    const event = { controllers: this.controllers, viewXfo }
     this.preparePointerEvent(event)
     this.updateControllers(xrFrame, event)
     if (this.capturedElement && event.propagating) {
@@ -488,7 +490,9 @@ class VRViewport extends GLBaseViewport {
 
     const renderstate = {
       boundRendertarget: layer.framebuffer,
+      depthRange: [session.renderState.depthNear, session.renderState.depthFar],
       region: this.__region,
+      viewport: this,
       vrviewport: this,
       viewports: [],
     }
@@ -505,16 +509,17 @@ class VRViewport extends GLBaseViewport {
         viewMatrix: this.__viewMatrices[i],
         projectionMatrix: this.__projectionMatrices[i],
         region: [vp.x, vp.y, vp.width, vp.height],
+        isOrthographic: false,
       })
     }
 
-    renderstate.viewXfo = this.__vrhead.getTreeItem().getParameter('GlobalXfo').getValue()
+    renderstate.viewXfo = viewXfo
     renderstate.viewScale = 1.0 / this.__stageScale
     renderstate.cameraMatrix = renderstate.viewXfo.toMat4()
     renderstate.region = this.__region
     renderstate.vrPresenting = true // Some rendering is ajusted slightly in VR. e.g. Billboards
 
-    this.__renderer.drawScene(renderstate)
+    this.draw(renderstate)
 
     // ///////////////////////
     // Emit a signal for the shared session.
@@ -523,6 +528,7 @@ class VRViewport extends GLBaseViewport {
       hmd: this.__hmd,
       viewXfo: renderstate.viewXfo,
       controllers: this.controllers,
+      viewport: this,
       vrviewport: this,
     }
     this.emit('viewChanged', data)

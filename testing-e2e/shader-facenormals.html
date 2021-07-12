@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html class="h-full">
+  <head>
+    <title>Zea Engine - shader-facenormals</title>
+    <link rel="stylesheet" href="styles/tailwind.min.css" />
+  </head>
+  <body class="bg-blue-100 h-full">
+    <div class="h-full">
+      <canvas class="absolute" id="app"></canvas>
+    </div>
+
+    <script src="../dist/index.umd.js"></script>
+    <script src="../dist/plugins.umd.js"></script>
+
+    <script type="module">
+      const {
+        GLRenderer,
+        Scene,
+        Xfo,
+        Vec3,
+        Color,
+        Sphere,
+        Cone,
+        Material,
+        GeomItem,
+        GLBoundingBoxPass,
+        EnvMap,
+      } = zeaEngine
+
+      const scene = new Scene()
+      const domElement = document.getElementById('app')
+      const renderer = new GLRenderer(domElement, { hideSplash: true, antialias: false })
+      renderer.setScene(scene)
+
+      const promises = []
+
+      const envMap = new EnvMap()
+      envMap.getParameter('FilePath').setValue('data/pisa-webp.zenv')
+      promises.push(new Promise((resolve) => envMap.on('loaded', resolve)))
+      scene.setEnvMap(envMap)
+      scene.getSettings().getParameter('Display EnvMap').setValue(true)
+
+      const simpleMaterial = new Material('surfaces', 'SimpleSurfaceShader')
+      const standardMaterial = new Material('surfaces', 'StandardSurfaceShader')
+
+      const sphere = new Sphere(1.5, 8, 5, false, false)
+      const cone = new Cone(1.5, 3, 8, false, false)
+
+      const geomItem0 = new GeomItem('Sphere0', sphere, simpleMaterial, new Xfo(new Vec3(-4.5, 0, 0)))
+      scene.getRoot().addChild(geomItem0)
+
+      const geomItem1 = new GeomItem('Sphere1', sphere, standardMaterial, new Xfo(new Vec3(-1.5, 0, 0)))
+      scene.getRoot().addChild(geomItem1)
+
+      const geomItem2 = new GeomItem('Cone0', cone, simpleMaterial, new Xfo(new Vec3(1.5, 0, 0)))
+      scene.getRoot().addChild(geomItem2)
+
+      const geomItem3 = new GeomItem('Cone1', cone, standardMaterial, new Xfo(new Vec3(4.5, 0, 0)))
+      scene.getRoot().addChild(geomItem3)
+
+      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, 2.7), new Vec3(0, 0, 0.4))
+      renderer.frameAll()
+
+      Promise.all(promises).then((results) => {
+        window.postMessage('done-loading')
+      })
+
+      // {{{ Messages handler.
+      const handleMessage = (event) => {
+        const { data } = event
+
+        if (data === 'variant-01') {
+          sphere.getParameter('Radius').setValue(2.5)
+          window.postMessage(`done-${data}`)
+        } else if (data === 'variant-02') {
+          sphere.getParameter('Loops').setValue(25)
+          sphere.getParameter('Sides').setValue(15)
+          window.postMessage(`done-${data}`)
+        }
+      }
+
+      window.addEventListener('message', handleMessage, false)
+      // }}}
+    </script>
+  </body>
+</html>

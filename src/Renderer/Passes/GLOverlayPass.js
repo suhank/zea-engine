@@ -15,15 +15,6 @@ class GLOverlayPass extends GLOpaqueGeomsPass {
   }
 
   /**
-   * The init method.
-   * @param {GLBaseRenderer} renderer - The renderer value.
-   * @param {number} passIndex - The index of the pass in the GLBAseRenderer
-   */
-  init(renderer, passIndex) {
-    super.init(renderer, passIndex)
-  }
-
-  /**
    * Returns the pass type. OPAQUE passes are always rendered first, followed by TRANSPARENT passes, and finally OVERLAY.
    * @return {number} - The pass type value.
    */
@@ -53,8 +44,6 @@ class GLOverlayPass extends GLOpaqueGeomsPass {
    * @param {object} renderstate - The object tracking the current state of the renderer
    */
   draw(renderstate) {
-    // if (this.newItemsReadyForLoading()) this.finalize()
-
     const gl = this.__gl
 
     // Clear the depth buffer so handls are always drawn over the top.

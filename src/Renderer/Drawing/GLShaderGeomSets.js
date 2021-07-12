@@ -21,11 +21,12 @@ class GLShaderGeomSets extends EventEmitter {
     this.gl = gl
     // this.shaderAttrSpec = {}
     this.glShader = shaders.glShader
-    this.glGeomDataShader = shaders.glgeomdatashader
-    this.glHighlightShader = shaders.glselectedshader
+    this.glGeomDataShader = shaders.glgeomdatashader ? shaders.glgeomdatashader : shaders.glShader
+    this.glHighlightShader = shaders.glselectedshader ? shaders.glselectedshader : shaders.glShader
     this.glGeomItemSets = {}
 
     this.glShaderKey = shaders.glShader.getId() + 'multidraw-draw'
+
     if (this.glGeomDataShader) this.glGeomDataShaderKey = this.glGeomDataShader.getId() + 'multidraw-geomdata'
     if (this.glHighlightShader) this.glHighlightShaderKey = this.glHighlightShader.getId() + 'multidraw-highlight'
   }
@@ -53,7 +54,6 @@ class GLShaderGeomSets extends EventEmitter {
       throw new Error('Unsupported geom type:' + geom.constructor.name)
     }
 
-    geom.setMetadata('glGeomItemSet', glGeomItemSet)
     glGeomItemSet.on('updated', () => {
       this.emit('updated')
     })
@@ -71,13 +71,6 @@ class GLShaderGeomSets extends EventEmitter {
     this.pass.renderer.glMaterialLibrary.addMaterial(material)
 
     const geomItemParamChanged = (event) => {
-      if (geom instanceof Lines || geom instanceof Points || geom instanceof PointsProxy || geom instanceof LinesProxy)
-        return
-      material.off('transparencyChanged', geomItemParamChanged)
-      geomItem.getParameter('Material').off('valueChanged', geomItemParamChanged)
-      geomItem.getParameter('Geometry').off('valueChanged', geomItemParamChanged)
-      // Note: the pass will remove the glgeomitem from the
-      //  GLGeomItemSet which is owned by the GLGeomSet.
       this.pass.removeGeomItem(geomItem)
       this.pass.__renderer.assignTreeItemToGLPass(geomItem)
     }
@@ -86,7 +79,29 @@ class GLShaderGeomSets extends EventEmitter {
     geomItem.getParameter('Geometry').on('valueChanged', geomItemParamChanged)
 
     const glGeomItemSet = this.getOrCreateGLGeomItemSet(geom)
+    glGeomItem.material = material
+    glGeomItem.GLGeomItemSet = glGeomItemSet
+    glGeomItem.geomItemParamChanged = geomItemParamChanged
     glGeomItemSet.addGLGeomItem(glGeomItem)
+  }
+
+  /**
+   *  Called by the GLPass to remove an item from this GLShaderGeomSets object.
+   * @param {GLGeomItem} glGeomItem - The glGeomItem value.
+   */
+  removeGLGeomItem(glGeomItem) {
+    const geomItem = glGeomItem.geomItem
+    const material = glGeomItem.material
+    const geomItemParamChanged = glGeomItem.geomItemParamChanged
+    material.off('transparencyChanged', geomItemParamChanged)
+    geomItem.getParameter('Material').off('valueChanged', geomItemParamChanged)
+    geomItem.getParameter('Geometry').off('valueChanged', geomItemParamChanged)
+    glGeomItem.material = null
+    glGeomItem.geomItemParamChanged = null
+
+    const glGeomItemSet = glGeomItem.GLGeomItemSet
+    glGeomItemSet.removeGLGeomItem(glGeomItem)
+    glGeomItem.GLGeomItemSet = null
   }
 
   /**
@@ -98,7 +113,11 @@ class GLShaderGeomSets extends EventEmitter {
    */
   bindShader(glShader, renderstate, key) {
     if (!glShader.isCompiledForTarget(key)) {
-      renderstate.shaderopts.directives.push('#define ENABLE_MULTI_DRAW 1\n#extension GL_ANGLE_multi_draw : enable')
+      if (this.gl.multiDrawElements) {
+        renderstate.shaderopts.directives.push('#define ENABLE_MULTI_DRAW\n#extension GL_ANGLE_multi_draw : enable')
+      } else {
+        renderstate.shaderopts.directives.push('#define ENABLE_MULTI_DRAW')
+      }
       glShader.compileForTarget(key, renderstate.shaderopts)
       renderstate.shaderopts.directives.pop()
     }
@@ -145,7 +164,6 @@ class GLShaderGeomSets extends EventEmitter {
    * @param {object} renderstate - The object tracking the current state of the renderer
    */
   drawGeomData(renderstate) {
-    if (!this.glGeomDataShader) return
     this.bindShader(this.glGeomDataShader, renderstate, this.glGeomDataShaderKey)
 
     const gl = renderstate.gl

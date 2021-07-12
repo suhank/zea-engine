@@ -8,6 +8,7 @@ import './GLSL/stack-gl/gamma.js'
 import './GLSL/drawItemTexture.js'
 import './GLSL/modelMatrix.js'
 import './GLSL/materialparams.js'
+import './GLSL/computeViewNormal.js'
 
 /** A simple shader with no support for PBR or textures
  * @ignore
@@ -34,6 +35,7 @@ attribute vec2 texCoords;
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
 
+<%include file="GLSLUtils.glsl"/>
 <%include file="stack-gl/transpose.glsl"/>
 <%include file="stack-gl/inverse.glsl"/>
 <%include file="drawItemId.glsl"/>
@@ -84,6 +86,7 @@ precision highp float;
 // #define DEBUG_GEOM_ID
 #endif
 
+<%include file="GLSLUtils.glsl"/>
 <%include file="math/constants.glsl"/>
 <%include file="drawItemTexture.glsl"/>
 <%include file="cutaways.glsl"/>
@@ -123,6 +126,7 @@ varying vec3 v_worldPos;
 /* VS Outputs */
 
 uniform mat4 cameraMatrix;
+uniform int isOrthographic;
 
 #ifndef ENABLE_MULTI_DRAW
 
@@ -141,6 +145,8 @@ uniform int EmissiveStrengthTexType;
 
 #endif // ENABLE_MULTI_DRAW
 
+<%include file="computeViewNormal.glsl"/>
+  
 
 #ifdef ENABLE_ES3
     out vec4 fragColor;
@@ -169,8 +175,24 @@ void main(void) {
             return;
         }
     }
-    
 
+    //////////////////////////////////////////////
+    // Normals
+    
+    vec3 viewNormal;
+    if (length(v_viewNormal) < 0.1) {
+      viewNormal = computeViewNormal(v_viewPos);
+    } else {
+      viewNormal = normalize(v_viewNormal);
+    }
+    vec3 normal = normalize(mat3(cameraMatrix) * viewNormal);
+    
+    vec3 viewVector;
+    if (isOrthographic == 0)
+      viewVector = normalize(mat3(cameraMatrix) * normalize(v_viewPos));
+    else 
+      viewVector = vec3(-cameraMatrix[2][0], -cameraMatrix[2][1], -cameraMatrix[2][2]);
+    
     //////////////////////////////////////////////
     // Material
 
@@ -197,8 +219,6 @@ void main(void) {
 #endif // ENABLE_MULTI_DRAW
 
     // Hacky simple irradiance. 
-    vec3 viewVector = normalize(mat3(cameraMatrix) * normalize(v_viewPos));
-    vec3 normal = normalize(mat3(cameraMatrix) * v_viewNormal);
     float ndotv = dot(normal, viewVector);
     if(ndotv < 0.0){
         normal = -normal;
@@ -215,6 +235,11 @@ void main(void) {
     fragColor = vec4((ndotv * baseColor.rgb) + (emission * baseColor.rgb), opacity);
 
 #ifdef DEBUG_GEOM_ID
+  if(testFlag(flags, GEOMITEM_INVISIBLE_IN_GEOMDATA)) {
+    discard;
+    return;
+  }
+
     // ///////////////////////
     // Debug Draw ID (this correlates to GeomID within a GLGeomSet)
     float geomId = v_geomItemData.w;

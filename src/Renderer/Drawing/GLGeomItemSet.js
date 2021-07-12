@@ -103,8 +103,6 @@ class GLGeomItemSet extends EventEmitter {
     this.glGeomItems[index] = glGeomItem
     this.glgeomItemEventHandlers[index] = eventHandlers
 
-    glGeomItem.geomItem.setMetadata('geomItemSet', this)
-
     this.drawIdsBufferDirty = true
   }
 
@@ -315,7 +313,7 @@ class GLGeomItemSet extends EventEmitter {
       gl.vertexAttribDivisor(location, 1) // This makes it instanced
 
       renderstate.bindViewports(unifs, () => {
-        this.glGeom.drawInstanced(itemIndices.length)
+        this.glGeom.drawInstanced(renderstate, itemIndices.length)
       })
     }
   }
@@ -331,7 +329,7 @@ class GLGeomItemSet extends EventEmitter {
     }
 
     if (this.highlightedIdsBuffer) {
-      gl.deleteBuffer(this.highlightedIdsBuffer)
+      this.gl.deleteBuffer(this.highlightedIdsBuffer)
       this.highlightedIdsBuffer = null
     }
 

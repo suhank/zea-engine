@@ -50,7 +50,7 @@ class ArchiveUnpackerPlugin {
    */
   __getWorker() {
     const __constructWorker = () => {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
         const worker = new ArchiveUnpackerWorker()
         // const worker = new Worker(this.__resourceLoaderFile.url);
 
@@ -76,7 +76,7 @@ class ArchiveUnpackerPlugin {
             this.__onFinishedReceiveFileData(event.data)
           } else if (event.data.type === 'ERROR') {
             const data = event.data
-            console.error(`Unable to load Resource: ${data.resourceId}`)
+            reject(new Error(`Unable to load Resource: ${data.resourceId}`))
           }
         }
       })

@@ -20,17 +20,20 @@ const processTextureParams = function (gl, params) {
     width: params.width,
     height: params.height,
   }
+  const getGLConst = (nameOrValue) => {
+    return isNaN(nameOrValue) ? gl[nameOrValue] : nameOrValue
+  }
   const processParam = (name, defaultValue) => {
-    if (name in params) result[name] = isNaN(params[name]) ? gl[params[name]] : params[name]
-    else if (defaultValue) result[name] = defaultValue
+    if (name in params) result[name] = getGLConst(params[name])
+    else if (defaultValue) result[name] = getGLConst(defaultValue)
   }
   processParam('format')
   processParam('internalFormat', result.format)
   processParam('type', gl.UNSIGNED_BYTE)
-  processParam('minFilter', gl.LINEAR)
-  processParam('magFilter', gl.LINEAR)
-  processParam('wrapS', gl.CLAMP_TO_EDGE)
-  processParam('wrapT', gl.CLAMP_TO_EDGE)
+  processParam('minFilter', params.filter ? params.filter : gl.LINEAR)
+  processParam('magFilter', params.filter ? params.filter : gl.LINEAR)
+  processParam('wrapS', params.wrap ? params.wrap : gl.CLAMP_TO_EDGE)
+  processParam('wrapT', params.wrap ? params.wrap : gl.CLAMP_TO_EDGE)
   processParam('flipY', false)
   processParam('mipMapped', false)
 

@@ -35,6 +35,8 @@ class GLBaseRenderer extends ParameterOwner {
       return
     }
 
+    this.solidAngleLimit = 0.004
+
     this.__shaders = {}
     this.__passes = {}
     this.__passesRegistrationOrder = []
@@ -174,8 +176,6 @@ class GLBaseRenderer extends ParameterOwner {
   addViewport(name) {
     const vp = new GLViewport(this, name, this.getWidth(), this.getHeight())
 
-    vp.createGeomDataFbo(this.__floatGeomBuffer)
-
     const updated = () => {
       this.requestRedraw()
     }
@@ -264,8 +264,6 @@ class GLBaseRenderer extends ParameterOwner {
   resumeDrawing() {
     this.__drawSuspensionLevel--
     if (this.__drawSuspensionLevel == 0) {
-      if (this.__loadingImg) this.__$canvas.removeChild(this.__loadingImg)
-
       this.renderGeomDataFbos()
       this.requestRedraw()
     }
@@ -357,9 +355,8 @@ class GLBaseRenderer extends ParameterOwner {
         // we will add this geomItem once it receives its geom.
         const geomAssigned = () => {
           this.assignTreeItemToGLPass(treeItem)
-          geomParam.off('valueChanged', geomAssigned)
         }
-        geomParam.on('valueChanged', geomAssigned)
+        geomParam.once('valueChanged', geomAssigned)
       } else {
         this.assignTreeItemToGLPass(treeItem)
       }
@@ -386,12 +383,6 @@ class GLBaseRenderer extends ParameterOwner {
   assignTreeItemToGLPass(treeItem) {
     if (treeItem instanceof GeomItem) {
       const geomItem = treeItem
-      // const material = geomItem.getParameter('Material').getValue()
-      // this.glMaterialLibrary.addMaterial(material)
-
-      // const geom = geomItem.getParameter('Geometry').getValue()
-      // this.glGeomLibrary.addGeom(geom)
-
       this.glGeomItemLibrary.addGeomItem(geomItem)
     }
 
@@ -463,6 +454,12 @@ class GLBaseRenderer extends ParameterOwner {
     for (const childItem of treeItem.getChildren()) {
       if (childItem) this.removeTreeItem(childItem)
     }
+
+    if (treeItem instanceof GeomItem) {
+      const geomItem = treeItem
+      this.glGeomItemLibrary.removeGeomItem(geomItem)
+    }
+
     this.renderGeomDataFbos()
   }
 
@@ -485,14 +482,6 @@ class GLBaseRenderer extends ParameterOwner {
   }
 
   /**
-   * The resizeFbos method. Frame buffer (FBO).
-   *
-   * @param {number} width - The width of the frame buffer.
-   * @param {number} height - The height of the frame buffer.
-   */
-  resizeFbos(width, height) {}
-
-  /**
    * Handle the canvas's parent resizing.
    *
    * @param {number} width - The new width of the canvas.
@@ -500,11 +489,15 @@ class GLBaseRenderer extends ParameterOwner {
    *
    * @private
    */
-  __handleResize(width, height) {
+  handleResize(width, height) {
     if (this.__xrViewportPresenting) {
       return
     }
-
+    // We cannot allow Our offscreen buffers to be resized to zero.
+    // Limit the min size to 16.
+    if (width < 16 || height < 16) {
+      return
+    }
     // Note: devicePixelRatio has already been factored into the clientWidth and clientHeight,
     // meaning we do not need to multiply client values by devicePixelRatio to get real values.
     // On some devices, this duplicate multiplication (when the meta tag was not present), caused
@@ -521,20 +514,19 @@ class GLBaseRenderer extends ParameterOwner {
     const newWidth = width * DPR
     const newHeight = height * DPR
 
-    this.__glcanvas.width = newWidth
-    this.__glcanvas.height = newHeight
+    if (newWidth != this.__glcanvas.width || newHeight != this.__glcanvas.height) {
+      this.__glcanvas.width = newWidth
+      this.__glcanvas.height = newHeight
 
-    this.resizeFbos(newWidth, newHeight)
+      for (const vp of this.__viewports) {
+        vp.resize(newWidth, newHeight)
+      }
 
-    for (const vp of this.__viewports) {
-      vp.resize(newWidth, newHeight)
+      this.emit('resized', {
+        width: newWidth,
+        height: newHeight,
+      })
     }
-
-    this.emit('resized', {
-      width: newWidth,
-      height: newHeight,
-    })
-
     this.requestRedraw()
   }
 
@@ -577,12 +569,13 @@ class GLBaseRenderer extends ParameterOwner {
       this.__glcanvas.style.width = '100%'
       this.__glcanvas.style.height = '100%'
 
-      this.__$canvas = $canvas
-      this.__$canvas.appendChild(this.__glcanvas)
+      this.__div = $canvas
+      this.__div.appendChild(this.__glcanvas)
     } else {
       this.__glcanvas = $canvas
     }
 
+    this.__glcanvas.style['touch-action'] = 'none'
     const canvasIsStatic = window.getComputedStyle(this.__glcanvas).position === 'static'
 
     if (canvasIsStatic) {
@@ -601,21 +594,26 @@ class GLBaseRenderer extends ParameterOwner {
           return
         }
 
-        this.__handleResize(entry.contentRect.width, entry.contentRect.height)
+        this.handleResize(entry.contentRect.width, entry.contentRect.height)
       }
     })
 
+    this.handleResize(this.__glcanvas.parentElement.clientWidth, this.__glcanvas.parentElement.clientHeight)
     this.resizeObserver.observe(this.__glcanvas.parentElement)
 
     webglOptions.preserveDrawingBuffer = true
-    webglOptions.antialias = webglOptions.antialias != undefined ? webglOptions.antialias : true
-    webglOptions.depth = webglOptions.depth != undefined ? webglOptions.depth : true
-    webglOptions.stencil = webglOptions.stencil ? webglOptions.stencil : false
+    // In webgl 2, we now render to a multi-sampled offscreen buffer, that we then resolve and blit to
+    // the onscreen buffer. This means we no longer need the default render target to be antialiased.
+    // In webgl 1 however we render surfaces to the offscreen buffer, and then lines to the default buffer.
+    // The default buffer should then be antialiased.
+    webglOptions.antialias = SystemDesc.isIOSDevice ? true : false
+    webglOptions.depth = true
+    webglOptions.stencil = false
     webglOptions.alpha = webglOptions.alpha ? webglOptions.alpha : false
     // Note: Due to a change in Chrome (version 88-89), providing true here caused a pause when creating
     // an WebGL context, if the XR device was unplugged. We also call 'makeXRCompatible' when setting
     // up the XRViewport, so we to get an XR Compatible context anyway.
-    webglOptions.xrCompatible = webglOptions.xrCompatible != undefined ? webglOptions.xrCompatible : false
+    webglOptions.xrCompatible = false
 
     // Most applications of our engine will prefer the high-performance context by default.
     webglOptions.powerPreference = webglOptions.powerPreference || 'high-performance'
@@ -631,13 +629,15 @@ class GLBaseRenderer extends ParameterOwner {
       this.addShaderPreprocessorDirective('ENABLE_FLOAT_TEXTURES')
     }
 
-    if (!webglOptions.disableMultiDraw) {
-      const ext = this.__gl.getExtension('WEBGL_multi_draw')
-      if (ext) {
+    {
+      const ext = this.__gl.name == 'webgl2' ? this.__gl.getExtension('WEBGL_multi_draw') : null
+      if (ext && !webglOptions.disableMultiDraw) {
         this.__gl.multiDrawArrays = ext.multiDrawArraysWEBGL.bind(ext)
         this.__gl.multiDrawElements = ext.multiDrawElementsWEBGL.bind(ext)
         this.__gl.multiDrawElementsInstanced = ext.multiDrawElementsInstancedWEBGL.bind(ext)
         this.__gl.multiDrawArraysInstanced = ext.multiDrawArraysInstancedWEBGL.bind(ext)
+      } else {
+        this.addShaderPreprocessorDirective('EMULATE_MULTI_DRAW')
       }
     }
 
@@ -687,7 +687,20 @@ class GLBaseRenderer extends ParameterOwner {
     }
 
     /** Mouse Events Start */
+    const isMobileSafariMouseEvent = (event) => {
+      if (SystemDesc.isMobileDevice && SystemDesc.browserName == 'Safari') {
+        console.warn('Mobile Safari is triggering mouse event:', event.type)
+        return true
+      }
+
+      return false
+    }
+
     this.__glcanvas.addEventListener('mousedown', (event) => {
+      if (isMobileSafariMouseEvent(event)) {
+        return
+      }
+
       prepareEvent(event)
       calcRendererCoords(event)
       pointerIsDown = true
@@ -704,6 +717,10 @@ class GLBaseRenderer extends ParameterOwner {
     })
 
     document.addEventListener('mouseup', (event) => {
+      if (isMobileSafariMouseEvent(event)) {
+        return
+      }
+
       if (activeGLRenderer != this || !isValidCanvas()) return
 
       prepareEvent(event)
@@ -719,7 +736,6 @@ class GLBaseRenderer extends ParameterOwner {
         if (viewport) {
           event.pointerType = POINTER_TYPES.mouse
           viewport.onPointerLeave(event)
-          event.preventDefault()
         }
 
         activeGLRenderer = undefined
@@ -729,6 +745,10 @@ class GLBaseRenderer extends ParameterOwner {
     })
 
     document.addEventListener('mousemove', (event) => {
+      if (isMobileSafariMouseEvent(event)) {
+        return
+      }
+
       if (activeGLRenderer != this || !isValidCanvas()) return
 
       prepareEvent(event)
@@ -744,6 +764,10 @@ class GLBaseRenderer extends ParameterOwner {
     })
 
     this.__glcanvas.addEventListener('mouseenter', (event) => {
+      if (isMobileSafariMouseEvent(event)) {
+        return
+      }
+
       if (!pointerIsDown) {
         activeGLRenderer = this
         event.pointerType = POINTER_TYPES.mouse
@@ -758,7 +782,6 @@ class GLBaseRenderer extends ParameterOwner {
           if (viewport) {
             event.pointerType = POINTER_TYPES.mouse
             viewport.onPointerEnter(event)
-            event.preventDefault()
           }
         }
 
@@ -767,6 +790,10 @@ class GLBaseRenderer extends ParameterOwner {
     })
 
     this.__glcanvas.addEventListener('mouseleave', (event) => {
+      if (isMobileSafariMouseEvent(event)) {
+        return
+      }
+
       if (activeGLRenderer != this || !isValidCanvas()) return
 
       prepareEvent(event)
@@ -775,13 +802,13 @@ class GLBaseRenderer extends ParameterOwner {
         if (viewport) {
           event.pointerType = POINTER_TYPES.mouse
           viewport.onPointerLeave(event)
-          event.preventDefault()
         }
         activeGLRenderer = undefined
       } else {
         pointerLeft = true
       }
     })
+
     /** Mouse Events End */
 
     /** Touch Events Start */
@@ -789,6 +816,7 @@ class GLBaseRenderer extends ParameterOwner {
       'touchstart',
       (event) => {
         event.stopPropagation()
+
         // Touch events are passive and so cannot call prevent default
         // replace with a stub here...
         event.preventDefault = () => {}
@@ -808,6 +836,7 @@ class GLBaseRenderer extends ParameterOwner {
       'touchend',
       (event) => {
         event.stopPropagation()
+
         // Touch events are passive and so cannot call prevent default
         // replace with a stub here...
         event.preventDefault = () => {}
@@ -827,6 +856,7 @@ class GLBaseRenderer extends ParameterOwner {
       'touchmove',
       (event) => {
         event.stopPropagation()
+
         // Touch events are passive and so cannot call prevent default
         // replace with a stub here...
         event.preventDefault = () => {}
@@ -847,6 +877,7 @@ class GLBaseRenderer extends ParameterOwner {
       if (activeGLRenderer != this || !isValidCanvas()) return
       if (activeGLRenderer) {
         prepareEvent(event)
+        calcRendererCoords(event)
         const vp = activeGLRenderer.getActiveViewport()
         if (vp) {
           vp.onWheel(event)
@@ -886,7 +917,7 @@ class GLBaseRenderer extends ParameterOwner {
   }
 
   /**
-   * Returns canvas element where our scene lives.
+   * Returns canvas that was used to generate the gl context.
    *
    * @return {HTMLCanvasElement} - The return value.
    */
@@ -895,17 +926,9 @@ class GLBaseRenderer extends ParameterOwner {
   }
 
   /**
-   * The getScreenQuad method.
-   *
-   * @return {GLScreenQuad} - The return value.
-   */
-  getScreenQuad() {
-    return this.__screenQuad
-  }
-
-  /**
-   * The frameAll method.
-   * @param {number} viewportIndex - The viewportIndex value.
+   * Frames the specified viewport to the entire scene.
+   * > See also: ${Viewport#frameView}
+   * @param {number} viewportIndex - The viewportIndex value. If multiple viewports are configured, a viewport index will need to be provided.
    */
   frameAll(viewportIndex = 0) {
     this.__viewports[viewportIndex].frameView([this.__scene.getRoot()])
@@ -915,7 +938,7 @@ class GLBaseRenderer extends ParameterOwner {
   // Render Items Setup
 
   /**
-   * The getOrCreateShader method.
+   * A factory function used to construct new shader objects. If that specified shader has already been constructed, it returns the existing shader.
    * @param {string} shaderName - The shader name.
    * @return {GLShader} - The return value.
    */
@@ -968,20 +991,6 @@ class GLBaseRenderer extends ParameterOwner {
     this.__passesRegistrationOrder.push(pass)
     this.requestRedraw()
     return index
-  }
-
-  /**
-   * The registerPass method.
-   * @param {function} itemAddedFn - The itemAddedFn value.
-   * @param {function} itemRemovedFn - The itemRemovedFn value.
-   */
-  registerPass(itemAddedFn, itemRemovedFn) {
-    console.warn('Deprecated, GLPass must now implement #itemAddedToScene and #itemRemovedFromScene instead')
-    // insert at the beginning so it is called first.
-    this.__passCallbacks.splice(0, 0, {
-      itemAddedFn,
-      itemRemovedFn,
-    })
   }
 
   /**
@@ -1053,7 +1062,6 @@ class GLBaseRenderer extends ParameterOwner {
         }
         this.emit('viewChanged', event)
 
-        this.resizeFbos(this.getWidth(), this.getHeight())
         this.requestRedraw()
       }
     })
@@ -1188,7 +1196,7 @@ class GLBaseRenderer extends ParameterOwner {
     const gl = this.__gl
     if (!renderState.viewports || renderState.viewports.length == 1) {
       renderState.bindRendererUnifs = (unifs) => {
-        const { cameraMatrix, viewMatrix, projectionMatrix, eye } = unifs
+        const { cameraMatrix, viewMatrix, projectionMatrix, eye, isOrthographic } = unifs
         if (cameraMatrix) {
           gl.uniformMatrix4fv(cameraMatrix.location, false, renderState.cameraMatrix.asArray())
         }
@@ -1205,6 +1213,10 @@ class GLBaseRenderer extends ParameterOwner {
         if (eye) {
           // Left or right eye, when rendering sterio VR.
           gl.uniform1i(eye.location, index)
+        }
+        if (isOrthographic) {
+          // Left or right eye, when rendering sterio VR.
+          gl.uniform1i(isOrthographic.location, vp.isOrthographic)
         }
       }
       renderState.bindViewports = (unifs, cb) => cb()
@@ -1223,7 +1235,7 @@ class GLBaseRenderer extends ParameterOwner {
         renderState.viewports.forEach((vp, index) => {
           gl.viewport(...vp.region)
 
-          const { viewMatrix, projectionMatrix, eye } = unifs
+          const { viewMatrix, projectionMatrix, eye, isOrthographic } = unifs
           if (viewMatrix) {
             gl.uniformMatrix4fv(viewMatrix.location, false, vp.viewMatrix.asArray())
           }
@@ -1235,6 +1247,10 @@ class GLBaseRenderer extends ParameterOwner {
           if (eye) {
             // Left or right eye, when rendering sterio VR.
             gl.uniform1i(eye.location, index)
+          }
+          if (isOrthographic) {
+            // Left or right eye, when rendering sterio VR.
+            gl.uniform1i(isOrthographic.location, vp.isOrthographic)
           }
           cb()
         })

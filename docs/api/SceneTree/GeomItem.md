@@ -14,21 +14,24 @@ Class representing a geometry item in a scene tree.
 
 * [GeomItem ⇐ <code>BaseGeomItem</code>](#GeomItem)
     * [new GeomItem(name, geometry, material, xfo)](#new-GeomItem)
-    * [getGeometry() ⇒ <code>BaseGeom</code>](#getGeometry)
-    * [setGeometry(geom)](#setGeometry)
-    * ~~[.getGeom()](#GeomItem+getGeom) ⇒ <code>BaseGeom</code>~~
-    * ~~[.setGeom(geom)](#GeomItem+setGeom) ⇒ <code>number</code>~~
-    * [getMaterial() ⇒ <code>Material</code>](#getMaterial)
-    * [setMaterial(material)](#setMaterial)
-    * [getGeomOffsetXfo() ⇒ <code>Xfo</code>](#getGeomOffsetXfo)
-    * [setGeomOffsetXfo(xfo)](#setGeomOffsetXfo)
-    * [getGeomMat4() ⇒ <code>Mat4</code>](#getGeomMat4)
-    * [toJSON(context) ⇒ <code>object</code>](#toJSON)
-    * [fromJSON(json, context)](#fromJSON)
-    * [readBinary(reader, context)](#readBinary)
-    * [toString() ⇒ <code>string</code>](#toString)
-    * [clone(context)](#clone)
-    * [copyFrom(src, context)](#copyFrom)
+    * _instance_
+        * [getGeometry() ⇒ <code>BaseGeom</code>](#getGeometry)
+        * [setGeometry(geom)](#setGeometry)
+        * ~~[.getGeom()](#GeomItem+getGeom) ⇒ <code>BaseGeom</code>~~
+        * ~~[.setGeom(geom)](#GeomItem+setGeom) ⇒ <code>number</code>~~
+        * [getMaterial() ⇒ <code>Material</code>](#getMaterial)
+        * [setMaterial(material)](#setMaterial)
+        * [getGeomOffsetXfo() ⇒ <code>Xfo</code>](#getGeomOffsetXfo)
+        * [setGeomOffsetXfo(xfo)](#setGeomOffsetXfo)
+        * [getGeomMat4() ⇒ <code>Mat4</code>](#getGeomMat4)
+        * [toJSON(context) ⇒ <code>object</code>](#toJSON)
+        * [fromJSON(json, context)](#fromJSON)
+        * [readBinary(reader, context)](#readBinary)
+        * [toString() ⇒ <code>string</code>](#toString)
+        * [clone(context)](#clone)
+        * [copyFrom(src, context)](#copyFrom)
+    * _static_
+        * [setCalculatePreciseBoundingBoxes(value)](#setCalculatePreciseBoundingBoxes)
 
 <a name="new_GeomItem_new"></a>
 
@@ -194,6 +197,21 @@ Copies current GeomItem with all its children.
 | --- | --- | --- |
 | src | [<code>GeomItem</code>](#GeomItem) | The geom item to copy from. |
 | context | <code>number</code> | The context value. |
+
+<a name="GeomItem.setCalculatePreciseBoundingBoxes"></a>
+
+### setCalculatePreciseBoundingBoxes
+Sets the global boolean that controls if GeomItems calculate precise bounding boxes
+or use the approximate bounding boxes that are much faster to generate.
+Note: computing the precise bounding box is much slower and can make loading
+big scenes take a bit longer. This setting is only relevant to geometries loaded
+from zcad files.
+
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| value | <code>boolean</code> | true for precise bounding boxes, else false for faster approximate bounding boxes. |
 
 
 

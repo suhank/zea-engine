@@ -1,4 +1,4 @@
-import { Xfo, Box3 } from '../Math/index'
+import { Xfo, Box3, Vec3 } from '../Math/index'
 import { XfoParameter, Mat4Parameter } from './Parameters/index'
 import { MaterialParameter } from './Parameters/MaterialParameter'
 import { GeometryParameter } from './Parameters/GeometryParameter'
@@ -7,6 +7,9 @@ import { BaseGeomItem } from './BaseGeomItem.js'
 import { Operator } from './Operators/Operator.js'
 import { OperatorInput } from './Operators/OperatorInput.js'
 import { OperatorOutput } from './Operators/OperatorOutput.js'
+import { BaseProxy } from './Geometry/GeomProxies.js'
+
+let calculatePreciseBoundingBoxes = false
 
 /** The operator the calculates the global Xfo of a TreeItem based on its parents GlobalXfo and its own LocalXfo
  * @extends Operator
@@ -161,10 +164,25 @@ class GeomItem extends BaseGeomItem {
    * @private
    */
   _cleanBoundingBox(bbox) {
+    if (this.disableBoundingBox) return bbox
     bbox = super._cleanBoundingBox(bbox)
     const geom = this.__geomParam.getValue()
     if (geom) {
-      bbox.addBox3(geom.getBoundingBox(), this.getGeomMat4())
+      if (geom instanceof BaseProxy && calculatePreciseBoundingBoxes) {
+        // Note: compting the precise bounding box is much slower and
+        // can make loading big scenes take a bit longer.
+        const positions = geom.__buffers.attrBuffers['positions'].values
+        const getVertex = (index) => {
+          const start = index * 3
+          return new Vec3(positions.subarray(start, start + 3))
+        }
+        const mat4 = this.getGeomMat4()
+        for (let i = 0; i < geom.getNumVertices(); i++) {
+          bbox.addPoint(mat4.transformVec3(getVertex(i)))
+        }
+      } else {
+        bbox.addBox3(geom.getBoundingBox(), this.getGeomMat4())
+      }
     } else if (this.geomBBox) {
       // before the geometries are loaded, we can use the
       // loaded geomBBox that came in the scene tree.
@@ -355,6 +373,18 @@ class GeomItem extends BaseGeomItem {
     // Note: this might not be necessary. It should
     // always be dirty after cloning.
     this.__geomMatParam.setDirty(this.__cleanGeomMat)
+  }
+
+  /**
+   * Sets the global boolean that controls if GeomItems calculate precise bounding boxes
+   * or use the approximate bounding boxes that are much faster to generate.
+   * Note: computing the precise bounding box is much slower and can make loading
+   * big scenes take a bit longer. This setting is only relevant to geometries loaded
+   * from zcad files.
+   * @param {boolean} value - true for precise bounding boxes, else false for faster approximate bounding boxes.
+   */
+  static setCalculatePreciseBoundingBoxes(value) {
+    calculatePreciseBoundingBoxes = value
   }
 }
 
