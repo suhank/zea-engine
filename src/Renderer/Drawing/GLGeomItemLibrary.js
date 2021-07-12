@@ -659,25 +659,26 @@ class GLGeomItemLibrary extends EventEmitter {
       pix5.set(cutAwayVector.x, cutAwayVector.y, cutAwayVector.z, cutAwayDist)
     }
 
-    // /////////////////////////
-    // Update the culling worker
-    geomItemsUpdateToCullingWorker.push(this.getCullingWorkerData(geomItem, material, index))
-  }
-
-  /**
-   * Gathers data to pass to the culling worker.
-   * @param {GeomItem} geomItem - The GeomItem to gether the data for.
-   * @param {Material} material - The material of GeomItem.
-   * @param {number} index - The index of the item to gether the data for.
-   * @return {object} - the JSON data that will be passed to the worker.
-   */
-  getCullingWorkerData(geomItem, material, index) {
     const bbox = geomItem.getParameter('BoundingBox').getValue()
     const pix6 = Vec4.createFromBuffer(dataArray.buffer, (offset + 6 * 4) * 4)
     const pix7 = Vec4.createFromBuffer(dataArray.buffer, (offset + 7 * 4) * 4)
     pix6.set(bbox.p0.x, bbox.p0.y, bbox.p0.z, 0.0)
     pix7.set(bbox.p1.x, bbox.p1.y, bbox.p1.z, 0.0)
 
+    // /////////////////////////
+    // Update the culling worker
+    geomItemsUpdateToCullingWorker.push(this.getCullingWorkerData(geomItem, material, bbox, index))
+  }
+
+  /**
+   * Gathers data to pass to the culling worker.
+   * @param {GeomItem} geomItem - The GeomItem to gether the data for.
+   * @param {Material} material - The material of GeomItem.
+   * @param {Box3} bbox - The bounding box of GeomItem.
+   * @param {number} index - The index of the item to gether the data for.
+   * @return {object} - the JSON data that will be passed to the worker.
+   */
+  getCullingWorkerData(geomItem, material, bbox, index) {
     // /////////////////////////
     // Update the culling worker
     const boundingRadius = bbox.size() * 0.5
@@ -723,7 +724,8 @@ class GLGeomItemLibrary extends EventEmitter {
         if (!glGeomItem) return
         const { geomItem } = glGeomItem
         const material = geomItem.getParameter('Material').getValue()
-        geomItemsUpdateToCullingWorker.push(this.getCullingWorkerData(geomItem, material, index))
+        const bbox = geomItem.getParameter('BoundingBox').getValue()
+        geomItemsUpdateToCullingWorker.push(this.getCullingWorkerData(geomItem, material, bbox, index))
       })
       // /////////////////////////
       // Update the culling worker
