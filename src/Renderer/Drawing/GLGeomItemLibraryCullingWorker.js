@@ -234,7 +234,7 @@ const onDoneFrustumCull = (postMessage) => {
         newlyCulled,
         newlyUnCulled,
         visible: countInFrustum,
-        total: geomItemsData.length,
+        total: geomItemsData.length - 1,
       })
     } else {
       // console.log('FrustumCullResults:', 'newlyCulled:', newlyCulled, 'newlyUnCulled:', newlyUnCulled, outOfFrustum)
@@ -266,21 +266,17 @@ const onDoneFrustumCull = (postMessage) => {
 // ///////////////////////////////////////////////
 // Occlusion Culling data.
 const occluded = []
-// let visibleCount = 0
 const processOcclusionData = (data) => {
   const visibleItems = data.visibleItems
 
   const newlyCulled = []
   const newlyUnCulled = []
-  const countInFrustum = geomItemsData.length - 1 - frustumCulledCount
-  // console.log('processOcclusionData', countInFrustum)
   let visibleCount = 0
   visibleItems.some((value, index) => {
     if (index == 0) return false
     if (index >= geomItemsData.length) return true
 
     if (!outOfFrustum[index]) {
-      // console.log(value, index)
       if (value == 0) {
         if (!occluded[index]) {
           occluded[index] = true
@@ -290,15 +286,19 @@ const processOcclusionData = (data) => {
         visibleCount++
         if (occluded[index]) {
           occluded[index] = false
-          // visibleCount++
           newlyUnCulled.push(index)
         }
       }
     }
   })
-  // console.log('processOcclusionData inFrustum:', countInFrustum, 'visible:', visibleCount)
-  // console.log('newlyCulled:', newlyCulled, 'newlyUnCulled:', newlyUnCulled)
-  postMessage({ type: 'CullResults', newlyCulled, newlyUnCulled, visible: visibleCount, total: geomItemsData.length })
+
+  postMessage({
+    type: 'CullResults',
+    newlyCulled,
+    newlyUnCulled,
+    visible: visibleCount,
+    total: geomItemsData.length - 1,
+  })
 }
 
 // ///////////////////////////////////////////////

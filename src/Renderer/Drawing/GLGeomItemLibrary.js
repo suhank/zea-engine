@@ -13,6 +13,7 @@ import { BoundingBoxShader } from '../Shaders/BoundingBoxShader.js'
 
 // import { handleMessage } from './GLGeomItemLibraryCullingWorker.js'
 import GLGeomItemLibraryCullingWorker from 'web-worker:./GLGeomItemLibraryCullingWorker.js'
+import { readPixelsAsync } from './readPixelsAsync.js'
 
 /** Class for managing all the GeomItems discovered in the SceneTree.
  * @private
@@ -39,7 +40,7 @@ class GLGeomItemLibrary extends EventEmitter {
     //   postMessage: (message) => {},
     // }
 
-    const enableOcclusionCulling = true // !options.enableOcclusionCulling
+    const enableOcclusionCulling = true //options.enableOcclusionCulling
 
     this.worker = new GLGeomItemLibraryCullingWorker()
     // this.worker = {
@@ -61,10 +62,13 @@ class GLGeomItemLibrary extends EventEmitter {
           this.calculateOcclusionCulling(message.data.inFrustumIndices)
         } else {
           this.applyCullResults(message.data)
+          workerReady = true
+          tick = 0
         }
       } else if (message.data.type == 'CullResults') {
         this.applyCullResults(message.data)
         workerReady = true
+        tick = 0
       }
     }
 
@@ -269,7 +273,7 @@ class GLGeomItemLibrary extends EventEmitter {
     // Used mostly to make our unit testing robust.
     // Also to help display render stats.
     // TODO: Bundle render stats.
-    console.log(`visible: ${data.visible} / total: ${data.total}`)
+    // console.log(`visible: ${data.visible} / total: ${data.total}`)
     this.renderer.emit('CullingUpdated', {
       visible: data.visible,
       total: data.total,
@@ -315,7 +319,6 @@ class GLGeomItemLibrary extends EventEmitter {
    * @param {Float32Array} inFrustumIndices - The array of indices of items we know are in the frustum.
    */
   calculateOcclusionCulling(inFrustumIndices) {
-    // const start = performance.now()
     if (inFrustumIndices && inFrustumIndices.length > 0) {
       this.updateCulledDrawIDsBuffer(inFrustumIndices)
     }
@@ -326,7 +329,6 @@ class GLGeomItemLibrary extends EventEmitter {
       })
       return
     }
-    // console.log('calculateOcclusionCulling inFrustumIndicesCount:', this.inFrustumIndicesCount)
     const gl = this.renderer.gl
 
     gl.disable(gl.BLEND)
@@ -419,32 +421,22 @@ class GLGeomItemLibrary extends EventEmitter {
 
     // //////////////////////////////////////////
     // Pull down the reduction values from the GPU for processing.
-    // const readPixelsStart = performance.now()
 
+    const w = this.reductionDataBuffer.width * (gl.name == 'webgl2' ? 1 : 4)
+    const h = this.reductionDataBuffer.height
+    const format = gl.name == 'webgl2' ? gl.RED : gl.RGBA
+    const type = gl.UNSIGNED_BYTE
     this.reductionDataBuffer.bindForReading()
-    gl.readPixels(
-      0,
-      0,
-      this.reductionDataBuffer.width * (gl.name == 'webgl2' ? 1 : 4),
-      this.reductionDataBuffer.height,
-      gl.name == 'webgl2' ? gl.RED : gl.RGBA,
-      gl.UNSIGNED_BYTE,
-      this.reductionDataArray
-    )
-    this.reductionDataBuffer.unbindForReading()
-
-    // console.log(this.reductionDataArray)
-    // Now send the buffer to the worker, where it will determine what culling
-    // needs to be applied on top of the frustum culling.
-    this.worker.postMessage({
-      type: 'OcclusionData',
-      visibleItems: this.reductionDataArray,
+    readPixelsAsync(gl, 0, 0, w, h, format, type, this.reductionDataArray).then(() => {
+      this.reductionDataBuffer.unbindForReading()
+      // console.log(this.reductionDataArray)
+      // Now send the buffer to the worker, where it will determine what culling
+      // needs to be applied on top of the frustum culling.
+      this.worker.postMessage({
+        type: 'OcclusionData',
+        visibleItems: this.reductionDataArray,
+      })
     })
-
-    // const end = performance.now()
-    // const readPixels = end - readPixelsStart
-    // const duration = end - start
-    // console.log('calculateOcclusionCulling duration:', duration, 'readPixels: ', readPixels)
   }
 
   /**
