@@ -26,6 +26,7 @@ uniform mat4 cameraMatrix;
 uniform sampler2D reductionDataTexture;
 
 
+<%include file="GLSLUtils.glsl"/>
 <%include file="stack-gl/transpose.glsl"/>
 <%include file="stack-gl/inverse.glsl"/>
 <%include file="drawItemId.glsl"/>
@@ -48,12 +49,12 @@ void main(void) {
   }
 
 
-  vec4 geomItemData  = getInstanceData(drawItemId);
+  // vec4 geomItemData  = getInstanceData(drawItemId);
   // mat4 modelMatrix = getModelMatrix(drawItemId);
   vec4 bboxMin = fetchTexel(instancesTexture, instancesTextureSize, (drawItemId * pixelsPerItem) + 6);
   vec4 bboxMax =  fetchTexel(instancesTexture, instancesTextureSize, (drawItemId * pixelsPerItem) + 7);
 
-  v_color = vec4(0.0, 0.0, 0.0, 0.5);
+  v_color = vec4(1.0, 1.0, 0.0, 1.0);
   v_color.g = float(drawItemId);
 
   vec4 pos = positions;
@@ -67,8 +68,8 @@ void main(void) {
   // pos.x += float(drawItemId) * 2.0;
   // pos.z += geomItemData.w; // geomId
   
-  mat4 modelViewProjectionMatrix = projectionMatrix * viewMatrix;
-  gl_Position = modelViewProjectionMatrix * pos;
+  mat4 viewProjectionMatrix = projectionMatrix * viewMatrix;
+  gl_Position = viewProjectionMatrix * pos;
 }
 `
     )

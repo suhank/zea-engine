@@ -54,8 +54,8 @@ class GLViewport extends GLBaseViewport {
     this.__geomDataBuffer = undefined
     this.__geomDataBufferSizeFactor = 4
     this.__geomDataBufferFbo = undefined
-    this.debugGeomBuffer = false
-    this.debugOcclusionBuffer = true
+    this.debugGeomBuffer = true
+    this.debugOcclusionBuffer = false
 
     const gl = this.__renderer.gl
     this.__geomDataBuffer = new GLTexture2D(gl, {
@@ -869,12 +869,7 @@ class GLViewport extends GLBaseViewport {
     // Turn this on to debug the geom data buffer.
     if (this.debugGeomShader) {
       this.renderGeomDataFbo()
-      const gl = this.__renderer.gl
-      // gl.disable(gl.DEPTH_TEST)
-      // gl.screenQuad.bindShader(renderstate)
-      // console.log('here')
-      // gl.screenQuad.draw(renderstate, this.__geomDataBuffer, new Vec2(0.5, 0.5), new Vec2(2, 2))
-
+      const gl = this.__renderer.GLBaseViewport
       gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, null)
       this.__geomDataBufferFbo.bindForReading(renderstate)
       gl.clearBufferfv(gl.COLOR, 0, [0.0, 0.0, 0.0, 0.0])
@@ -892,10 +887,23 @@ class GLViewport extends GLBaseViewport {
       )
     }
     if (this.debugOcclusionBuffer) {
-      gl.screenQuad.bindShader(renderstate)
-      this.__renderer.glGeomItemLibrary.occlusionDataBuffer.bindColorTexture(renderstate, renderstate.unifs.image)
-      // this.__renderer.glGeomItemLibrary.reductionDataBuffer.bindColorTexture(renderstate, renderstate.unifs.image)
-      gl.screenQuad.draw(renderstate)
+      const gl = this.__renderer.gl
+      const occlusionDataBuffer = this.__renderer.glGeomItemLibrary.occlusionDataBuffer
+      gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, null)
+      occlusionDataBuffer.bindForReading(renderstate)
+      gl.clearBufferfv(gl.COLOR, 0, [0.0, 0.0, 0.0, 0.0])
+      gl.blitFramebuffer(
+        0,
+        0,
+        occlusionDataBuffer.width,
+        occlusionDataBuffer.height,
+        0,
+        0,
+        this.__width,
+        this.__height,
+        gl.COLOR_BUFFER_BIT,
+        gl.NEAREST
+      )
     }
   }
 }
