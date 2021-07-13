@@ -40,7 +40,7 @@ class GLBaseViewport extends ParameterOwner {
 
     // //////////////////////////////////
     // Setup Offscreen Render Targets
-    if (!SystemDesc.isIOSDevice) {
+    if (SystemDesc.browserName != 'Safari') {
       this.offscreenBuffer = new GLTexture2D(gl, {
         type: 'UNSIGNED_BYTE',
         format: 'RGBA',
@@ -181,7 +181,7 @@ class GLBaseViewport extends ParameterOwner {
    * @param {number} height - The height  used by this viewport.
    */
   resizeRenderTargets(width, height) {
-    if (this.offscreenBuffer) {
+    if (SystemDesc.browserName != 'Safari') {
       const gl = this.__renderer.gl
 
       if (this.fb) {
@@ -312,7 +312,7 @@ class GLBaseViewport extends ParameterOwner {
 
     // //////////////////////////////////
     // Post processing.
-    if (gl.renderbufferStorageMultisample) {
+    if (this.fb && gl.renderbufferStorageMultisample) {
       // "blit" the scene into the color buffer
       gl.bindFramebuffer(gl.READ_FRAMEBUFFER, this.fb[FRAMEBUFFER.MSAA_RENDERBUFFER])
       gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, this.fb[FRAMEBUFFER.COLORBUFFER])
@@ -355,9 +355,10 @@ class GLBaseViewport extends ParameterOwner {
    * @private
    */
   drawSilhouettes(renderstate) {
-    if (SystemDesc.isIOSDevice) {
-      return
-    }
+    // We cannot render silhouettes in iOS because EXT_frag_depth is not supported
+    // and without it, we cannot draw lines over the top of geometries.
+    if (SystemDesc.browserName == 'Safari') return
+
     const gl = this.__renderer.gl
 
     if (gl.renderbufferStorageMultisample) {
@@ -365,6 +366,8 @@ class GLBaseViewport extends ParameterOwner {
       gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, this.fb[FRAMEBUFFER.DEPTHBUFFER])
       gl.clearBufferfv(gl.COLOR, 0, [1, 1, 1, 1])
 
+      // Note: in Google SwiftShader this line generates the following error later on the code path.
+      // GetShaderiv: <- error from previous GL command
       gl.blitFramebuffer(
         0,
         0,
@@ -397,12 +400,6 @@ class GLBaseViewport extends ParameterOwner {
       gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 
       gl.viewport(0, 0, this.__width, this.__height)
-
-      // gl.disable(gl.DEPTH_TEST)
-      // gl.depthMask(false)
-      // gl.screenQuad.bindShader(renderstate)
-      // this.offscreenBuffer.bindToUniform(renderstate, renderstate.unifs.image)
-      // gl.screenQuad.draw(renderstate)
     }
 
     // ////////////////////////////////////
@@ -428,7 +425,7 @@ class GLBaseViewport extends ParameterOwner {
     gl.uniform2f(unifs.screenSize.location, this.__width, this.__height)
     gl.uniform1f(unifs.outlineThickness.location, this.renderer.outlineThickness)
     gl.uniform4f(unifs.outlineColor.location, ...this.renderer.outlineColor.asArray())
-    gl.uniform1f(unifs.outlineDepthMultiplier.location, renderstate.outlineDepthMultiplier)
+    gl.uniform1f(unifs.outlineSensitivity.location, this.renderer.outlineSensitivity)
     gl.uniform1f(unifs.outlineDepthBias.location, this.renderer.outlineDepthBias)
 
     gl.uniform2f(unifs.depthRange.location, renderstate.depthRange[0], renderstate.depthRange[1])

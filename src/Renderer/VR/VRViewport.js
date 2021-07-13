@@ -221,7 +221,9 @@ class VRViewport extends GLBaseViewport {
             }
           }
           this.__vrAsset.traverse((item) => {
-            item.setSelectable(false)
+            this.stroke.traverse((item) => {
+              item.setSelectable(false)
+            })
           })
           resolve(this.__vrAsset)
         }
@@ -493,7 +495,6 @@ class VRViewport extends GLBaseViewport {
       viewport: this,
       vrviewport: this,
       viewports: [],
-      outlineDepthMultiplier: (0.1 / this.__stageScale) * this.renderer.outlineSensitivity,
     }
     // renderstate.boundRendertarget.vrfbo = true;
 
@@ -508,6 +509,7 @@ class VRViewport extends GLBaseViewport {
         viewMatrix: this.__viewMatrices[i],
         projectionMatrix: this.__projectionMatrices[i],
         region: [vp.x, vp.y, vp.width, vp.height],
+        isOrthographic: false,
       })
     }
 
