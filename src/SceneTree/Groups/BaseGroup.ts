@@ -169,7 +169,7 @@ class BaseGroup extends TreeItem {
     if (!paramItems) return
     const items = Array.from(paramItems)
     for (let i = items.length - 1; i >= 0; i--) {
-      this.unbindItem(items[i], i)
+      this.unbindItem(<TreeItem>items[i], i)
     }
     this.__itemsParam.clearItems(emit)
   }
