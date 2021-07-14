@@ -1,5 +1,5 @@
-import { ListParameter } from './ListParameter-temp.js'
-import { TreeItemParameter } from './TreeItemParameter-temp.js'
+import { ListParameter } from './ListParameter'
+import { TreeItemParameter } from './TreeItemParameter'
 
 /** This class is deprecated. Use Groups instead.
  * Class representing a kinematic group parameter.

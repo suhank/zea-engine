@@ -1,7 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-empty-function */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-unused-vars */
-import { Registry } from '../../Registry'
 import { ItemSetParameter } from '../Parameters/index'
 import { TreeItem } from '../TreeItem'
+import { BaseItem } from '../../SceneTree/BaseItem'
 
 /**
  * BaseGroup are a special type of `TreeItem` that allows you to gather/classify/organize/modify
@@ -16,20 +19,26 @@ import { TreeItem } from '../TreeItem'
  * @extends TreeItem
  */
 class BaseGroup extends TreeItem {
+  protected __itemsParam: ItemSetParameter
+  searchRoot: TreeItem
+
   /**
    * Creates an instance of a group.
    *
    * @param {string} name - The name of the group.
    */
-  constructor(name) {
+  constructor(name: string) {
     super(name)
-    this.searchRoot = null
-    this.__itemsParam = this.addParameter(new ItemSetParameter('Items', (item) => item instanceof TreeItem))
-    this.__itemsParam.on('itemAdded', (event) => {
-      this.__bindItem(event.item, event.index)
+
+    this.__itemsParam = this.addParameter(
+      new ItemSetParameter('Items', (item: any) => item instanceof TreeItem)
+    ) as ItemSetParameter
+
+    this.__itemsParam.on('itemAdded', (event: any) => {
+      this.bindItem(event.item, event.index)
     })
-    this.__itemsParam.on('itemRemoved', (event) => {
-      this.__unbindItem(event.item, event.index)
+    this.__itemsParam.on('itemRemoved', (event: any) => {
+      this.unbindItem(event.item, event.index)
     })
   }
 
@@ -40,16 +49,16 @@ class BaseGroup extends TreeItem {
    *  sets the root item to be used as the search root.
    * @param {TreeItem} treeItem
    */
-  setSearchRoot(treeItem) {
+  setSearchRoot(treeItem: TreeItem): void {
     this.searchRoot = treeItem
   }
 
   /**
    * The setOwner method assigns a new owner to the item. The owner of a group becomes its search root unless another search root is already set.
    *
-   * @param {object} ownerItem - The new owner item.
+   * @param {TreeItem} ownerItem - The new owner item.
    */
-  setOwner(ownerItem) {
+  setOwner(ownerItem: TreeItem): void {
     if (!this.searchRoot || this.searchRoot == this.getOwner()) this.searchRoot = ownerItem
     super.setOwner(ownerItem)
   }
@@ -62,7 +71,7 @@ class BaseGroup extends TreeItem {
    * @param {array} paths - The paths value.
    * @private
    */
-  setPaths(paths) {
+  setPaths(paths: string[]): void {
     this.clearItems(false)
 
     const searchRoot = this.getOwner()
@@ -70,8 +79,8 @@ class BaseGroup extends TreeItem {
       console.warn('BaseGroup does not have an owner and so cannot resolve paths:', this.getName())
       return
     }
-    const items = []
-    paths.forEach((path) => {
+    const items: any = []
+    paths.forEach((path: any) => {
       const treeItem = this.searchRoot.resolvePath(path)
       if (treeItem) items.push(treeItem)
       else {
@@ -86,17 +95,17 @@ class BaseGroup extends TreeItem {
    *
    * @param {array} paths - The paths value.
    */
-  resolveItems(paths) {
+  resolveItems(paths: string[]): void {
     this.setPaths(paths)
   }
 
   /**
    * The __bindItem method.
-   * @param {BaseItem} item - The item value.
+   * @param {TreeItem} item - The item value.
    * @param {number} index - The index value.
    * @private
    */
-  __bindItem(item, index) {
+  protected bindItem(item: TreeItem, index: number): void {
     if (!(item instanceof TreeItem)) return
     item.on('pointerDown', this.onPointerDown)
     item.on('pointerUp', this.onPointerUp)
@@ -111,7 +120,7 @@ class BaseGroup extends TreeItem {
    * @param {number} index - The index value.
    * @private
    */
-  __unbindItem(item, index) {
+  protected unbindItem(item: TreeItem, index: number): void {
     if (!(item instanceof TreeItem)) return
     item.off('pointerDown', this.onPointerDown)
     item.off('pointerUp', this.onPointerUp)
@@ -123,10 +132,10 @@ class BaseGroup extends TreeItem {
   /**
    * Adds an item to the group(See `Items` parameter).
    *
-   * @param {BaseItem} item - The item value.
+   * @param {TreeItem} item - The item value.
    * @param {boolean} emit - The emit value.
    */
-  addItem(item, emit = true) {
+  addItem(item: TreeItem, emit = true): void {
     if (!item) {
       console.warn('Error adding item to group. Item is null')
       return
@@ -137,11 +146,15 @@ class BaseGroup extends TreeItem {
   /**
    * Removes an item from the group(See `Items` parameter).
    *
-   * @param {BaseItem} item - The item value.
+   * @param {TreeItem} item - The item value.
    * @param {boolean} emit - The emit value.
    */
-  removeItem(item, emit = true) {
-    this.__itemsParam.removeItem(item, emit)
+  removeItem(item: TreeItem, emit = true): void {
+    const paramItems = this.__itemsParam.getValue()
+    if (!paramItems) return
+
+    const itemIndex = Array.from(paramItems).indexOf(item)
+    if (itemIndex) this.__itemsParam.removeItem(itemIndex, emit)
   }
 
   /**
@@ -149,12 +162,14 @@ class BaseGroup extends TreeItem {
    *
    * @param {boolean} emit - `true` triggers `valueChanged` event.
    */
-  clearItems(emit = true) {
+  clearItems(emit = true): void {
     // Note: Unbind reversed so that indices
     // do not get changed during the unbind.
-    const items = Array.from(this.__itemsParam.getValue())
+    const paramItems = this.__itemsParam.getValue()
+    if (!paramItems) return
+    const items = Array.from(paramItems)
     for (let i = items.length - 1; i >= 0; i--) {
-      this.__unbindItem(items[i], i)
+      this.unbindItem(items[i], i)
     }
     this.__itemsParam.clearItems(emit)
   }
@@ -162,18 +177,18 @@ class BaseGroup extends TreeItem {
   /**
    * Returns the list of `BaseItem` objects owned by the group.
    *
-   * @return {array} - The return value.
+   * @return {Set<BaseItem>|undefined} - The return value.
    */
-  getItems() {
+  getItems(): Set<BaseItem> | undefined {
     return this.__itemsParam.getValue()
   }
 
   /**
    * Sets an entire new array of items to the BaseGroup replacing any previous items.
    *
-   * @param {array} items - List of `BaseItem` you want to add to the group
+   * @param {Set<BaseItem>} items - List of `BaseItem` you want to add to the group
    */
-  setItems(items) {
+  setItems(items: Set<BaseItem>): void {
     this.clearItems(false)
     this.__itemsParam.setItems(items)
   }
@@ -186,9 +201,9 @@ class BaseGroup extends TreeItem {
    * Note: these methods are useful for debugging mouse event propagation to groups
    *
    * @private
-   * @param {MouseEvent} event - The mouse event that occurs.
+   * @param {MouseEvent|TouchEvent} event - The mouse event that occurs.
    */
-  onPointerDown(event) {
+  onPointerDown(event: MouseEvent | TouchEvent): void {
     super.onPointerDown(event)
   }
 
@@ -197,9 +212,9 @@ class BaseGroup extends TreeItem {
    * Note: these methods are useful for debugging mouse event propagation to groups
    *
    * @private
-   * @param {MouseEvent} event - The mouse event that occurs.
+   * @param {MouseEvent|TouchEvent} event - The mouse event that occurs.
    */
-  onPointerUp(event) {
+  onPointerUp(event: MouseEvent | TouchEvent): void {
     super.onPointerUp(event)
   }
 
@@ -207,9 +222,9 @@ class BaseGroup extends TreeItem {
    * Occur when the mouse pointer is moving  while over an element.
    * Note: these methods are useful for debugging mouse event propagation to groups
    * @private
-   * @param {MouseEvent} event - The mouse event that occurs.
+   * @param {MouseEvent|TouchEvent} event - The mouse event that occurs.
    */
-  onPointerMove(event) {
+  onPointerMove(event: MouseEvent | TouchEvent): void {
     super.onPointerMove(event)
   }
 
@@ -219,28 +234,32 @@ class BaseGroup extends TreeItem {
   /**
    * The toJSON method encodes this type as a json object for persistence.
    *
-   * @param {object} context - The context value.
-   * @return {object} - Returns the json object.
+   * @param {Record<string, any>} context - The context value.
+   * @return {Record<string, any>} - Returns the json object.
    */
-  toJSON(context) {
+  toJSON(context: Record<string, any>): Record<string, any> {
     const j = super.toJSON(context)
-    const items = Array.from(this.__itemsParam.getValue())
-    const treeItems = []
-    items.forEach((p) => {
-      const path = p.getPath()
-      treeItems.push(context ? context.makeRelative(path) : path)
-    })
-    j.treeItems = treeItems
+    const paramItems = this.__itemsParam.getValue()
+    if (paramItems) {
+      const items = Array.from(paramItems)
+      const treeItems: any = []
+      items.forEach((p) => {
+        const path = p.getPath()
+        treeItems.push(context ? context.makeRelative(path) : path)
+      })
+      ;(j as any).treeItems = treeItems
+    }
+
     return j
   }
 
   /**
    * The fromJSON method decodes a json object for this type.
    *
-   * @param {object} j - The json object this item must decode.
-   * @param {object} context - The context value.
+   * @param {Record<string, any>} j - The json object this item must decode.
+   * @param {Record<string, any>} context - The context value.
    */
-  fromJSON(j, context) {
+  fromJSON(j: Record<string, any>, context: Record<string, any>): void {
     super.fromJSON(j, context)
     if (!j.treeItems) {
       console.warn('Invalid Parameter JSON')
@@ -250,18 +269,17 @@ class BaseGroup extends TreeItem {
       throw new Error('Unable to load JSON on a BaseGroup without a load context')
     }
     let count = j.treeItems.length
-
-    const addItem = (path) => {
+    const addItem = (path: any) => {
       context.resolvePath(
         path,
-        (treeItem) => {
+        (treeItem: any) => {
           this.addItem(treeItem)
           count--
           if (count == 0) {
-            this.__loadDone()
+            this.loadDone()
           }
         },
-        (reason) => {
+        (reason: any) => {
           console.warn("BaseGroup: '" + this.getName() + "'. Unable to load item:" + path)
         }
       )
@@ -275,8 +293,7 @@ class BaseGroup extends TreeItem {
    * called once loading is done.
    * @private
    */
-  __loadDone() {}
-
+  protected loadDone(): void {}
   // ////////////////////////////////////////
   // Clone and Destroy
 
@@ -284,9 +301,9 @@ class BaseGroup extends TreeItem {
    * Copies current BaseGroup with all owned items.
    *
    * @param {BaseGroup} src - The group to copy from.
-   * @param {object} context - The group to copy from.
+   * @param {Record<string, any>} context - The group to copy from.
    */
-  copyFrom(src, context) {
+  copyFrom(src: BaseGroup, context?: Record<string, any>): void {
     super.copyFrom(src, context)
   }
 }

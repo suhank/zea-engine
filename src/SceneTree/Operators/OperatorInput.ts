@@ -10,7 +10,7 @@ import { EventEmitter } from '../../Utilities/EventEmitter'
 class OperatorInput extends EventEmitter {
   __name: string
   _op: Operator
-  _param?: Parameter
+  _param?: Parameter<unknown>
   detached: boolean
 
   /**
@@ -59,7 +59,7 @@ class OperatorInput extends EventEmitter {
    * The getParam method.
    * @return {Parameter} - The return value.
    */
-  getParam(): Parameter | undefined {
+  getParam(): Parameter<unknown> | undefined {
     return this._param
   }
 
@@ -76,7 +76,7 @@ class OperatorInput extends EventEmitter {
    * Assigns the Paramter to be used to provide the input value.
    * @param {Parameter} param - The param value.
    */
-  setParam(param?: Parameter): void {
+  setParam(param?: Parameter<unknown>): void {
     if (this._param) {
       this._param.off('valueChanged', this.paramValueChanged)
     }

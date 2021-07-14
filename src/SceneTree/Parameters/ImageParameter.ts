@@ -58,12 +58,11 @@ class ImageParameter extends Parameter<BaseImage> {
    * @param {Record<string, any>} context - The context value.
    * @return {object} - Returns the json object.
    */
-  fromJSON(j: Record<string, unknown>, context: Record<string, any>): void {
+   fromJSON(j: Record<string, unknown>, context: Record<string, any>): void {
     if (j.imageType) {
       this.value = Registry.constructClass(j.imageType as string) as any
       if (j.value) this.value?.fromJSON(j.value as any, context)
     }
-    return super.fromJSON(j, context)
   }
 
   // ////////////////////////////////////////
