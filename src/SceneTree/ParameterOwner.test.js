@@ -1,5 +1,5 @@
-import { Parameter } from './Parameters/Parameter-temp'
-import { ParameterOwner } from './ParameterOwner-temp'
+import { Parameter } from './Parameters/Parameter'
+import { ParameterOwner } from './ParameterOwner'
 
 describe('ParameterOwner', () => {
   it('has empty params count', () => {

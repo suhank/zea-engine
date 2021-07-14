@@ -1,5 +1,5 @@
 import { Color } from '../Math/index'
-import { TreeItem } from './TreeItem-temp.js'
+import { TreeItem } from './TreeItem'
 import { resourceLoader } from './resourceLoader.js'
 import { DriveAdapter } from './ResourceLoader/DriveAdapter.js'
 import { SceneSettings } from './SceneSettings.js'

@@ -1,5 +1,5 @@
 import { Color, Vec3 } from '../Math/index.js'
-import { TreeItem } from './TreeItem-temp'
+import { TreeItem } from './TreeItem'
 import { Material } from './Material'
 
 /**

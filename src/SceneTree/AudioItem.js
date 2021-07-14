@@ -1,7 +1,7 @@
 /* eslint-disable constructor-super */
 import { BooleanParameter, NumberParameter } from './Parameters/index'
-import { FilePathParameter } from './Parameters/FilePathParameter-temp'
-import { TreeItem } from './TreeItem-temp.js'
+import { FilePathParameter } from './Parameters/FilePathParameter'
+import { TreeItem } from './TreeItem'
 
 /**
  * A special type of `TreeItem` that let you handle audio files.

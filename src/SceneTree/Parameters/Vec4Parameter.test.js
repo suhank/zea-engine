@@ -1,5 +1,5 @@
 import { Vec4 } from '../../Math/Vec4'
-import { Vec4Parameter } from './Vec4Parameter-temp'
+import { Vec4Parameter } from './Vec4Parameter'
 import { BinReader } from '../../SceneTree/BinReader'
 
 describe('Vec4Parameter', () => {
@@ -26,6 +26,7 @@ describe('Vec4Parameter', () => {
 
   it('saves to JSON (serialization).', () => {
     const vec4Parameter = new Vec4Parameter()
+
     vec4Parameter.setValue(new Vec4(1, 2, 3, 4))
 
     const expOutput = '{"value":{"x":1,"y":2,"z":3,"t":4}}'

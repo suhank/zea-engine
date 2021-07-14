@@ -2,7 +2,7 @@ import { Color } from '../../Math/index'
 import { Registry } from '../../Registry'
 import { BaseImage } from '../BaseImage.js'
 import { resourceLoader } from '../resourceLoader.js'
-import { FilePathParameter } from '../Parameters/FilePathParameter-temp'
+import { FilePathParameter } from '../Parameters/FilePathParameter'
 
 /**
  * Class representing a VLH image.

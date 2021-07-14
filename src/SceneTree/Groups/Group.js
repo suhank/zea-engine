@@ -10,10 +10,10 @@ import {
   ItemSetParameter,
   MultiChoiceParameter,
 } from '../Parameters/index'
-import { MaterialParameter } from '../Parameters/MaterialParameter-temp.js'
-import { TreeItem } from '../TreeItem-temp'
+import { MaterialParameter } from '../Parameters/MaterialParameter'
+import { TreeItem } from '../TreeItem'
 import { BaseGeomItem } from '../BaseGeomItem'
-import { GroupTransformXfoOperator, GroupMemberXfoOperator } from '../Operators/GroupMemberXfoOperator-temp.js'
+import { GroupTransformXfoOperator, GroupMemberXfoOperator } from '../Operators/GroupMemberXfoOperator'
 import { BaseGroup } from './BaseGroup'
 
 const GROUP_XFO_MODES = {

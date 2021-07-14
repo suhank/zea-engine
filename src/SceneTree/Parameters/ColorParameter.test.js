@@ -1,4 +1,4 @@
-import { ColorParameter } from './ColorParameter-temp'
+import { ColorParameter } from './ColorParameter'
 import { Color } from '../../Math'
 
 describe('ColorParameter', () => {

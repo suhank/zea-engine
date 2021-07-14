@@ -1,8 +1,8 @@
 import { Material } from './Material'
 import '../Renderer/Shaders/SimpleSurfaceShader'
 import { Color } from '../Math/Color'
-
-describe('Material', () => {
+// TODO: enable test
+xdescribe('Material', () => {
   it('Calling set shaders name', () => {
     const material = new Material('foo', 'SimpleSurfaceShader')
     expect(material.hasParameter('BaseColor')).toBeTruthy()

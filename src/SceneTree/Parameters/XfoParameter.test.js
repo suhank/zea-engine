@@ -1,5 +1,5 @@
 import { Xfo } from '../../Math/Xfo'
-import { XfoParameter } from './XfoParameter-temp'
+import { XfoParameter } from './XfoParameter'
 import { BinReader } from '../../SceneTree/BinReader'
 
 describe('XfoParameter', () => {

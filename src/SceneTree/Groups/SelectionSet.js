@@ -3,7 +3,7 @@ import { Color } from '../../Math/index'
 import { Registry } from '../../Registry'
 import { BooleanParameter, NumberParameter, ColorParameter } from '../Parameters/index'
 import { BaseGroup } from './BaseGroup'
-import { TreeItem } from '../TreeItem-temp'
+import { TreeItem } from '../TreeItem'
 import { BaseGeomItem } from '../BaseGeomItem'
 
 /**

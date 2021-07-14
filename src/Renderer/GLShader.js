@@ -1,5 +1,5 @@
 /* eslint-disable guard-for-in */
-import { BaseItem } from '../SceneTree/BaseItem-temp'
+import { BaseItem } from '../SceneTree/BaseItem'
 import { StringFunctions } from '../Utilities/StringFunctions'
 import { shaderLibrary } from './ShaderLibrary'
 

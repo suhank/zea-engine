@@ -1,5 +1,5 @@
 import { ProceduralLines } from './ProceduralLines'
-import { NumberParameter } from '../../Parameters/NumberParameter-temp.js'
+import { NumberParameter } from '../../Parameters/NumberParameter'
 import { Registry } from '../../../Registry'
 
 /**

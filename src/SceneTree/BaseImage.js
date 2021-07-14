@@ -1,4 +1,4 @@
-import { BaseItem } from './BaseItem-temp.js'
+import { BaseItem } from './BaseItem'
 
 import { BooleanParameter } from './Parameters/index'
 

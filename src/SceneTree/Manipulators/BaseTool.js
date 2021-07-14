@@ -1,4 +1,4 @@
-import { ParameterOwner } from '../ParameterOwner-temp.js'
+import { ParameterOwner } from '../ParameterOwner'
 
 /**
  * The BaseTool provides an interface you can implement to define your own mouse, keyboard, and touch event handlers.

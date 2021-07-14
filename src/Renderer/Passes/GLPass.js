@@ -1,4 +1,4 @@
-import { ParameterOwner } from '../../SceneTree/ParameterOwner-temp.js'
+import { ParameterOwner } from '../../SceneTree/ParameterOwner'
 import { BooleanParameter } from '../../SceneTree/Parameters/index'
 
 const PassType = {

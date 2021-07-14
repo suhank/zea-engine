@@ -1,7 +1,7 @@
 /* eslint-disable require-jsdoc */
 /* eslint-disable guard-for-in */
 import { Vec2, Vec3, Color } from '../Math/index'
-import { BaseItem } from './BaseItem-temp.js'
+import { BaseItem } from './BaseItem'
 import { Registry } from '../Registry'
 import { Parameter, NumberParameter, Vec2Parameter, Vec3Parameter, ColorParameter } from './Parameters/index'
 import { MathFunctions } from '../Utilities/MathFunctions'
@@ -10,8 +10,8 @@ import { MathFunctions } from '../Utilities/MathFunctions'
 // module defined by the index file in the folder. (see Parameters/index.js)
 // These parameters depend on classes that ar ParameterOwners.
 // TODO: Move to this folder.
-import { MaterialFloatParam } from './Parameters/MaterialFloatParam-temp'
-import { MaterialColorParam } from './Parameters/MaterialColorParam-temp'
+import { MaterialFloatParam } from './Parameters/MaterialFloatParam'
+import { MaterialColorParam } from './Parameters/MaterialColorParam'
 
 const generateParameterInstance = (paramName, defaultValue, range, texturable) => {
   if (typeof defaultValue == 'boolean' || defaultValue === false || defaultValue === true) {

@@ -1,4 +1,4 @@
-import { FilePathParameter } from './FilePathParameter-temp'
+import { FilePathParameter } from './FilePathParameter'
 
 describe('FilePathParameter', () => {
   it('Has an initial value.', () => {

@@ -9,7 +9,7 @@ import { loadTextfile } from './Utils.js'
 import { Material } from './Material.js'
 import { resourceLoader } from './resourceLoader.js'
 import { BooleanParameter, NumberParameter, StringParameter } from './Parameters/index'
-import { FilePathParameter } from './Parameters/FilePathParameter-temp'
+import { FilePathParameter } from './Parameters/FilePathParameter'
 
 // AssetItem.registerDataLoader('.obj', ObjDataLoader);
 

@@ -2,7 +2,7 @@ import { Vec2 } from '../../../Math/Vec2'
 import { Vec3 } from '../../../Math/Vec3'
 import { ProceduralMesh } from './ProceduralMesh'
 import { Registry } from '../../../Registry'
-import { NumberParameter } from '../../Parameters/NumberParameter-temp'
+import { NumberParameter } from '../../Parameters/NumberParameter'
 
 /**
  * A class for generating a torus geometry.

@@ -1,8 +1,8 @@
 /* eslint-disable no-unused-vars */
 import { Registry } from '../../Registry'
 import { BaseGroup } from './BaseGroup'
-import { MaterialParameter } from '../Parameters/MaterialParameter-temp.js'
-import { TreeItem } from '../TreeItem-temp'
+import { MaterialParameter } from '../Parameters/MaterialParameter'
+import { TreeItem } from '../TreeItem'
 
 /**
  *

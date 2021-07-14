@@ -1,5 +1,5 @@
-import { TreeItem } from '../TreeItem-temp'
-import { TreeItemParameter } from './TreeItemParameter-temp'
+import { TreeItem } from '../TreeItem'
+import { TreeItemParameter } from './TreeItemParameter'
 
 describe('TreeItemParameter', () => {
   it('has an initial value.', () => {
@@ -23,7 +23,8 @@ describe('TreeItemParameter', () => {
     expect(treeItemParameter.getValue()).toEqual(value)
   })
 
-  /*it('saves to JSON (serialization).', () => {
+  /*
+  it('saves to JSON (serialization).', () => {
     const treeItemParameter = new TreeItemParameter()
 
     const scene = new Scene()

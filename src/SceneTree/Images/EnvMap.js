@@ -5,7 +5,7 @@ import util from 'util'
 import { Color } from '../../Math/index'
 import { Registry } from '../../Registry'
 import { VLHImage } from './VLHImage.js'
-import { BooleanParameter } from '../Parameters/BooleanParameter-temp.js'
+import { BooleanParameter } from '../Parameters/BooleanParameter'
 
 /**
  * An EnvMap can load High Dynamic Range environment map images, necessary for high quality PBR lighting.

@@ -1,4 +1,4 @@
-import { ListParameter } from './ListParameter-temp'
+import { ListParameter } from './ListParameter'
 
 describe('ListParameter', () => {
   it('has an initial value.', () => {

@@ -66,19 +66,10 @@ class Vec2Parameter extends Parameter<Vec2> implements IBinaryReader {
   readBinary(reader: BinReader, context?: Record<string, unknown>): void {
     this.value?.readBinary(reader)
   }
-
   toJSON(context?: Record<string, unknown>): Record<string, unknown> {
-    const range = []
-    if (this.range) {
-      for (const rangeVec of this.range) {
-        range.push(rangeVec.toJSON())
-      }
-    }
-
     return {
       name: this.name,
       value: this.value?.toJSON(),
-      range,
     }
   }
 
@@ -88,17 +79,8 @@ class Vec2Parameter extends Parameter<Vec2> implements IBinaryReader {
     this.value = vec2
 
     if (j.name) this.name = j.name as string
-
-    if (j.range) {
-      for (const rangeVec of j.range as any[]) {
-        if (!this.range) this.range = []
-
-        const rangeVec2 = new Vec2()
-        rangeVec2.fromJSON(rangeVec)
-        this.range.push(rangeVec2)
-      }
-    }
   }
+
 
   /**
    * The clone method constructs a new Vec2 parameter, copies its values

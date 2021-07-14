@@ -1,4 +1,4 @@
-import { MaterialColorParam } from './MaterialColorParam-temp'
+import { MaterialColorParam } from './MaterialColorParam'
 import { Color } from '../../Math/Color'
 import { BaseImage } from '../BaseImage'
 // import { BinReader } from '../BinReader'

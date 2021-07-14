@@ -1,12 +1,12 @@
 import { Xfo, Box3, Vec3 } from '../Math/index'
 import { XfoParameter, Mat4Parameter } from './Parameters/index'
-import { MaterialParameter } from './Parameters/MaterialParameter-temp'
-import { GeometryParameter } from './Parameters/GeometryParameter-temp'
+import { MaterialParameter } from './Parameters/MaterialParameter'
+import { GeometryParameter } from './Parameters/GeometryParameter'
 import { Registry } from '../Registry'
 import { BaseGeomItem } from './BaseGeomItem.js'
-import { Operator } from './Operators/Operator-temp.js'
-import { OperatorInput } from './Operators/OperatorInput-temp.js'
-import { OperatorOutput } from './Operators/OperatorOutput-rename.js'
+import { Operator } from './Operators/Operator'
+import { OperatorInput } from './Operators/OperatorInput'
+import { OperatorOutput } from './Operators/OperatorOutput'
 import { BaseProxy } from './Geometry/GeomProxies.js'
 
 let calculatePreciseBoundingBoxes = false
