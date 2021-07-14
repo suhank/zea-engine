@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Registry } from '../../Registry'
-import { Parameter } from './Parameter-temp.js'
+import { Parameter } from './Parameter'
 
 /**
  * Represents a specific type of parameter, that stores multiple parameters in object format.
@@ -17,14 +19,16 @@ import { Parameter } from './Parameter-temp.js'
  *
  * @extends Parameter
  */
-class StructParameter extends Parameter {
+class StructParameter extends Parameter<Record<string, unknown>> {
+  protected members: Parameter<unknown>[]
+
   /**
    * Create a struct parameter.
    * @param {string} name - The name of the struct parameter.
    */
-  constructor(name) {
+  constructor(name: string) {
     super(name, {}, 'Struct')
-    this.__members = []
+    this.members = []
   }
 
   /**
@@ -33,12 +37,14 @@ class StructParameter extends Parameter {
    * @return {Parameter} - The return value.
    * @private
    */
-  _addMember(parameter) {
-    this.__value[parameter.getName()] = parameter.getValue()
+  protected addMember(parameter: Parameter<any>) {
+    if (this.value) this.value[parameter.getName()] = parameter.getValue()
+
     parameter.on('valueChanged', () => {
-      this.__value[parameter.getName()] = parameter.getValue()
+      if (this.value) this.value[parameter.getName()] = parameter.getValue()
     })
-    this.__members.push(parameter)
+
+    this.members.push(parameter)
     this.emit('valueChanged', {})
     return parameter
   }
@@ -50,8 +56,8 @@ class StructParameter extends Parameter {
    * @param {string} name - The parameter name.
    * @return {Parameter} - The return value.
    */
-  getParameter(name) {
-    for (const p of this.__members) {
+  getParameter(name: string) {
+    for (const p of this.members) {
       if (p.getName() == name) return p
     }
   }
@@ -62,7 +68,7 @@ class StructParameter extends Parameter {
    * @param {string} name - The parameter name.
    * @return {Parameter} - The return value.
    */
-  getMember(name) {
+  getMember(name: string) {
     return this.getParameter(name)
   }
 
@@ -71,10 +77,10 @@ class StructParameter extends Parameter {
    *
    * @return {array} - The return value.
    */
-  getMemberNames() {
+  getMemberNames(): Array<any> {
     const names = []
-    for (let i = 0; i < this.__members.length; i++) {
-      const member = this.__members[i]
+    for (let i = 0; i < this.members.length; i++) {
+      const member = this.members[i]
       if (member != null) names[i] = member.getName()
     }
     return names
@@ -86,24 +92,26 @@ class StructParameter extends Parameter {
   /**
    * The toJSON method encodes this type as a json object for persistence.
    *
-   * @param {object} context - The context value.
-   * @return {object} - Returns the json object.
+   * @param {Record<string, any>} [context] - The context value.
+   * @return {Record<string, any>} - Returns the json object.
    */
-  toJSON(context) {
+  toJSON(context?: Record<string, any>): Record<string, any> {
+    const j: Record<string, any> = {}
     const members = []
-    for (const p of this.__members) members.push(p.toJSON(context))
-    return {
-      members,
-    }
+    for (const p of this.members) members.push(p.toJSON(context))
+
+    j.members = members
+    j.name = this.name
+    return j
   }
 
   /**
    * The fromJSON method decodes a json object for this type.
    *
-   * @param {object} j - The json object this item must decode.
-   * @param {object} context - The context value.
+   * @param {Record<string, any>} j - The json object this item must decode.
+   * @param {Record<string, any>} [context] - The context value.
    */
-  fromJSON(j, context) {
+  fromJSON(j: Record<string, any>, context: Record<string, any>): void {
     if (j.members == undefined) {
       console.warn('Invalid Parameter JSON')
       return
@@ -111,9 +119,17 @@ class StructParameter extends Parameter {
 
     for (let i = 0; i < j.members.length; i++) {
       if (j.members[i]) {
-        this.__members[i].fromJSON(j.members[i], context)
+        this.members[i].fromJSON(j.members[i], context)
       }
     }
+
+    this.name = j.name
+  }
+
+  clone(): StructParameter {
+    const clonedParam = new StructParameter(this.name)
+
+    return clonedParam
   }
 
   // ////////////////////////////////////////
@@ -123,9 +139,12 @@ class StructParameter extends Parameter {
    * The destroy is called by the system to cause explicit resources cleanup.
    * Users should never need to call this method directly.
    */
-  destroy() {
-    super.destroy()
-    for (const p of this.__members) p.destroy()
+  destroy(): void {
+    for (const p of this.members) {
+      // TODO: not sure about this. I added a do-nothing destroy method in Parameter<T> to be overwritten
+      // since only some subclasses use destroy.
+      p.destroy()
+    }
   }
 }
 

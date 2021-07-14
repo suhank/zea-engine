@@ -395,14 +395,24 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
 
   abstract clone(): any
 
-  // /**
-  //  * The readBinary method.
-  //  *
-  //  * @param {object} reader - The reader value.
-  //  * @param {object} context - The context value.
-  //  */
+  /**
+   * The readBinary method.
+   *
+   * @param {object} reader - The reader value.
+   * @param {object} context - The context value.
+   */
   readBinary(reader, context) {
     console.warn(`TODO: Parameter: ${this.constructor.name} with name: ${this.name} does not implement readBinary`)
+  }
+
+  /**
+   * The readBinary method.
+   *
+   * @param {object} reader - The reader value.
+   * @param {object} context - The context value.
+   */
+  destroy() {
+    console.warn("nothing destroyed. This method was not overwritten in subclass")
   }
 }
 

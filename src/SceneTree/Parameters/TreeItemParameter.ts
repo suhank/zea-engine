@@ -1,6 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable require-jsdoc */
+import { TreeItem } from '../../SceneTree/TreeItem'
 import { Registry } from '../../Registry'
-import { Parameter } from './Parameter-temp.js'
+import { Parameter } from './Parameter'
 
 /**
  * Represents a specific type of parameter, that only stores `TreeItem` values.
@@ -20,19 +23,22 @@ import { Parameter } from './Parameter-temp.js'
  *
  * @extends Parameter
  */
-class TreeItemParameter extends Parameter {
+class TreeItemParameter extends Parameter<TreeItem> {
+  protected filterFn?: (...args: any[]) => unknown
+  protected owner: TreeItem
+
   /**
    * Create a tree item parameter.
    * @param {string} name - The name of the tree item parameter.
    * @param {function} filterFn - The filterFn value.
    */
-  constructor(name, filterFn = undefined) {
+  constructor(name: string, filterFn?: (...args: []) => unknown) {
     super(name, undefined, 'TreeItem')
-    this.__filterFn = filterFn
-    this.__emitTreeItemGlobalXfoChanged = this.__emitTreeItemGlobalXfoChanged.bind(this)
+    this.filterFn = filterFn
+    this.emittreeItemGlobalXfoChanged = this.emittreeItemGlobalXfoChanged.bind(this)
   }
 
-  __emitTreeItemGlobalXfoChanged(event) {
+  protected emittreeItemGlobalXfoChanged(event: Record<string, unknown>): void {
     this.emit('treeItemGlobalXfoChanged', event)
   }
 
@@ -42,7 +48,7 @@ class TreeItemParameter extends Parameter {
    * @param {TreeItem} owner - The owner value.
    */
   setOwner(owner) {
-    this.__owner = owner
+    this.owner = owner
   }
 
   /**
@@ -51,15 +57,15 @@ class TreeItemParameter extends Parameter {
    * @return {TreeItem} - The return value.
    */
   getOwner() {
-    return this.__owner
+    return this.owner
   }
 
   /**
    * The setFilterFn method.
-   * @param {function} flterFn - The flterFn value.
+   * @param {(...args: []) => unknown} filterFn - The filterFn value.
    */
-  setFilterFn() {
-    this.__filterFn = filterFn
+  setFilterFn(filterFn: (...args: []) => unknown) {
+    this.filterFn = filterFn
   }
 
   /**
@@ -67,7 +73,7 @@ class TreeItemParameter extends Parameter {
    * @return {function} - The return value.
    */
   getFilterFn() {
-    return this.__filterFn
+    return this.filterFn
   }
 
   /**
@@ -76,16 +82,16 @@ class TreeItemParameter extends Parameter {
    * @param {TreeItem} treeItem - The treeItem value
    * @return {boolean} - The return value.
    */
-  setValue(treeItem) {
+  setValue(treeItem: TreeItem) {
     // 0 == normal set. 1 = changed via cleaner fn, 2=change by loading/cloning code.
-    if (this.__filterFn && !this.__filterFn(treeItem)) return false
-    if (this.__value !== treeItem) {
-      if (this.__value) {
-        this.__value.off('globalXfoChanged', this.__emitTreeItemGlobalXfoChanged)
+    if (this.filterFn && !this.filterFn(treeItem)) return false
+    if (this.value !== treeItem) {
+      if (this.value) {
+        this.value.off('globalXfoChanged', this.emittreeItemGlobalXfoChanged)
       }
-      this.__value = treeItem
-      if (this.__value) {
-        this.__value.on('globalXfoChanged', this.__emitTreeItemGlobalXfoChanged)
+      this.value = treeItem
+      if (this.value) {
+        this.value.on('globalXfoChanged', this.emittreeItemGlobalXfoChanged)
       }
 
       this.emit('valueChanged', {})
@@ -98,33 +104,33 @@ class TreeItemParameter extends Parameter {
   /**
    * The toJSON method encodes this type as a json object for persistence.
    *
-   * @param {object} context - The context value.
-   * @return {object} - Returns the json object.
+   * @param {Record<string, any>} context - The context value.
+   * @return {Record<string, unknown>} - Returns the json object.
    */
-  toJSON(context) {
+  toJSON(context: Record<string, any>): Record<string, unknown> {
     return {
-      value: context.makeRelative(this.__value.getPath()),
+      value: context.makeRelative(this.value?.getPath()),
     }
   }
 
   /**
    * The fromJSON method decodes a json object for this type.
    *
-   * @param {object} j - The json object this item must decode.
-   * @param {object} context - The context value.
+   * @param {Record<string, unknown>} j - The json object this item must decode.
+   * @param {Record<string, any>} context - The context value.
    */
-  fromJSON(j, context) {
+  fromJSON(j: Record<string, unknown>, context: Record<string, any>) {
     if (j.value == undefined) {
       console.warn('Invalid Parameter JSON')
       return
     }
     context.resolvePath(
       j.value,
-      (treeItem) => {
+      (treeItem: TreeItem) => {
         this.setValue(treeItem)
       },
       () => {
-        console.warn('Unable to resolve tree item parameter value:' + pj.paramPath)
+        console.warn('Unable to resolve tree item parameter value:' + j.paramPath)
       }
     )
   }
@@ -139,7 +145,8 @@ class TreeItemParameter extends Parameter {
    * @return {TreeItemParameter} - Returns a new tree item parameter.
    */
   clone() {
-    const clonedParam = new TreeItemParameter(this.__name, this.__filterFn)
+    const clonedParam = new TreeItemParameter(this.name, this.filterFn)
+    if (this.value) clonedParam.setValue(this.value.clone())
     return clonedParam
   }
 
@@ -148,8 +155,8 @@ class TreeItemParameter extends Parameter {
    * Users should never need to call this method directly.
    */
   destroy() {
-    if (this.__value) {
-      this.__value.off('globalXfoChanged', this.__emitTreeItemGlobalXfoChanged)
+    if (this.value) {
+      this.value.off('globalXfoChanged', this.emittreeItemGlobalXfoChanged)
     }
   }
 }

@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Registry } from '../../Registry'
-import { Parameter } from './Parameter-temp.js'
-import { Material } from '../Material.js'
+import { Parameter } from './Parameter'
+import { Material } from '../Material'
 
 /**
  * Represents a specific type of parameter, that only stores `Material` values.
@@ -21,21 +22,20 @@ import { Material } from '../Material.js'
  *
  * @extends Parameter
  */
-class MaterialParameter extends Parameter {
+class MaterialParameter extends Parameter<Material> {
   /**
    * Create a material parameter.
    * @param {string} name - The name of the material parameter.
    * @param {Material} value - The value of the parameter.
    */
-  constructor(name, value) {
-    super(name, undefined, 'Material')
+  constructor(name: string, value?: Material) {
+    super(name, value, 'Material')
 
-    this.__valueParameterValueChanged = this.__valueParameterValueChanged.bind(this)
+    this.valueParameterValueChanged = this.valueParameterValueChanged.bind(this)
     this.setValue(value)
   }
 
-  // eslint-disable-next-line require-jsdoc
-  __valueParameterValueChanged(event) {
+  protected valueParameterValueChanged = (event: Record<string, unknown>): void => {
     this.emit('valueParameterValueChanged', event)
   }
 
@@ -44,32 +44,19 @@ class MaterialParameter extends Parameter {
    *
    * @param {Material} material - The material param.
    */
-  setValue(material) {
+  setValue(material: Material): void {
     // 0 == normal set. 1 = changed via cleaner fn, 2 = change by loading/cloning code.
-    if (this.__value !== material) {
-      if (this.__value) {
-        this.__value.off('parameterValueChanged', this.__valueParameterValueChanged)
+    if (this.value !== material) {
+      if (this.value) {
+        this.value.off('parameterValueChanged', this.valueParameterValueChanged)
       }
-      this.__value = material
-      if (this.__value) {
-        this.__value.on('parameterValueChanged', this.__valueParameterValueChanged)
+      this.value = material
+      if (this.value) {
+        this.value.on('parameterValueChanged', this.valueParameterValueChanged)
       }
 
       // During the cleaning process, we don't want notifications.
       this.emit('valueChanged', {})
-    }
-  }
-
-  /**
-   * The loadValue is used to change the value of a parameter, without triggering a
-   * valueChanges, or setting the USER_EDITED state.
-   *
-   * @param {any} value - The context value.
-   */
-  loadValue(value) {
-    this.__value = value
-    if (this.__value) {
-      this.__value.on('parameterValueChanged', this.__valueParameterValueChanged)
     }
   }
 
@@ -80,29 +67,31 @@ class MaterialParameter extends Parameter {
    * The loadValue is used to change the value of a parameter, without triggering a
    * valueChanges, or setting the USER_EDITED state.
    *
-   * @param {any} value - The context value.
+   * @param {Material} value - The context value.
    */
-  loadValue(value) {
-    if (this.__value) {
-      this.__value.off('parameterValueChanged', this.__valueParameterValueChanged)
+  loadValue(value: Material): void {
+    if (this.value) {
+      this.value.off('parameterValueChanged', this.valueParameterValueChanged)
     }
-    this.__value = value
-    if (this.__value) {
-      this.__value.on('parameterValueChanged', this.__valueParameterValueChanged)
+    this.value = value
+    if (this.value) {
+      this.value.on('parameterValueChanged', this.valueParameterValueChanged)
     }
   }
 
   /**
    * The toJSON method encodes this type as a json object for persistence.
    *
-   * @param {object} context - The context value.
-   * @return {object} - Returns the json object.
+   * @param {Record<string, any>} context - The context value.
+   * @return {Record<string, unknown>} - Returns the json object.
    */
-  toJSON(context) {
-    let j
-    if (this.__value) {
+  toJSON(context?: Record<string, any>): Record<string, unknown> {
+    let j: Record<string, unknown> = {}
+    j.name = this.name
+
+    if (this.value) {
       j = {
-        value: !context || !context.onlyPath ? this.__value.toJSON(context) : this.__value.getPath(),
+        value: !context || !context.onlyPath ? this.value.toJSON(context) : this.value.getPath(),
       }
     }
 
@@ -112,10 +101,10 @@ class MaterialParameter extends Parameter {
   /**
    * The fromJSON method decodes a json object for this type.
    *
-   * @param {object} j - The json object this item must decode.
-   * @param {object} context - The context value.
+   * @param {Record<string, any>} j - The json object this item must decode.
+   * @param {Record<string, any>} context - The context value.
    */
-  fromJSON(j, context) {
+  fromJSON(j: Record<string, unknown>, context: Record<string, any>): void {
     if (j.value == undefined) {
       console.warn('Invalid Parameter JSON')
       return
@@ -124,15 +113,16 @@ class MaterialParameter extends Parameter {
     if (j.value instanceof Array || j.value instanceof String) {
       if (context && context.assetItem) {
         const materialLibrary = context.assetItem.getMaterialLibrary()
-        const material = materialLibrary.getMaterial(j.value instanceof array ? j.value[1] : j.value)
+        const material = materialLibrary.getMaterial(j.value instanceof Array ? j.value[1] : j.value)
         if (material) {
           this.loadValue(material)
         }
       }
     } else {
-      const material = new Material()
-      material.fromJSON(j.value, context)
-      this.loadValue(material)
+      console.warn('Commented out code. JavaScript code did not have the required args')
+      // const material = new Material() // TODO: what are the correct arguments in this case?
+      // if (j.value) material.fromJSON(j.value, context)
+      // this.loadValue(material)
     }
   }
 
@@ -145,8 +135,8 @@ class MaterialParameter extends Parameter {
    *
    * @return {MaterialParameter} - Returns a new material parameter.
    */
-  clone() {
-    const clonedParam = new MaterialParameter(this.__name, this.__value)
+  clone(): MaterialParameter {
+    const clonedParam = new MaterialParameter(this.name, this.value)
     return clonedParam
   }
 
@@ -154,13 +144,13 @@ class MaterialParameter extends Parameter {
    * The destroy is called by the system to cause explicit resources cleanup.
    * Users should never need to call this method directly.
    */
-  destroy() {
+  destroy(): void {
     // Note: Some parameters hold refs to geoms/materials,
     // which need to be explicitly cleaned up.
     // E.g. freeing GPU Memory.
 
-    if (this.__value) {
-      this.__value.off('parameterValueChanged', this.__valueParameterValueChanged)
+    if (this.value) {
+      this.value.off('parameterValueChanged', this.valueParameterValueChanged)
     }
   }
 }

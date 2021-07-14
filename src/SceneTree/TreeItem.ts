@@ -2,9 +2,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Xfo, Box3, Color } from '../Math/index'
 import { Registry } from '../Registry'
-import { BooleanParameter, Parameter, XfoParameter } from './Parameters/index'
+// import { BooleanParameter, Parameter, XfoParameter } from './Parameters/index'
+import { BooleanParameter } from './Parameters/BooleanParameter'
+import { Parameter } from './Parameters/Parameter'
+import { XfoParameter } from './Parameters/XfoParameter'
 import { BaseItem } from './BaseItem'
-import { CalcGlobalXfoOperator } from './Operators/CalcGlobalXfoOperator-temp.js'
+import { CalcGlobalXfoOperator } from './Operators/CalcGlobalXfoOperator'
 import { BoundingBoxParameter } from './Parameters/BoundingBoxParameter'
 import { BinReader } from './BinReader'
 

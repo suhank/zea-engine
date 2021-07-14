@@ -43,7 +43,8 @@ describe('MaterialColorParam', () => {
     expect(materialParameter.getValue()).toEqual(new Color(1.0, 0.0, 0.0))
   })
 
-  /*it('loads from binary (serialization).', () => {
+  /* 
+    it('loads from binary (serialization).', () => {
     const materialParameter = new MaterialColorParam('Foo')
 
     const data = Float32Array.of(15)
