@@ -14,6 +14,7 @@ class VRController {
     this.xrvp = xrvp
     this.__inputSource = inputSource
     this.id = id
+    this.buttonPressed = false
 
     // /////////////////////////////////
     // Xfo
