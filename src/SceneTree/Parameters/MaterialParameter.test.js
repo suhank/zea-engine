@@ -4,8 +4,7 @@ import { Material } from '../Material'
 import { ColorParameter } from './ColorParameter'
 import { Color } from '../../Math'
 
-// TODO: enable test -- only 'replaces a value' fails
-xdescribe('MaterialParameter', () => {
+describe('MaterialParameter', () => {
   it('has an initial value.', () => {
     const materialParameter = new MaterialParameter()
 
@@ -26,15 +25,14 @@ xdescribe('MaterialParameter', () => {
     expect(materialParameter.getValue()).toEqual(material)
   })
 
+  // TODO: material arguments are wrong... is this ok?
   it('replaces a value.', () => {
-    const materialParameter = new MaterialParameter('Foo', new Material('itemMaterial1'))
+    const materialParameter = new MaterialParameter('Foo')
 
-    const material2 = new Material('itemMaterial2')
-    materialParameter.setValue(material2) // TODO: broken test
+    const material2 = new Material('itemMaterial') // TODO: blueprint error.
+    materialParameter.setValue(material2)
 
-    // expect(materialParameter.getValue()).toEqual(material2)
-
-    // expect(1).toEqual(1)
+    expect(materialParameter.getValue()).toEqual(material2)
   })
 
   it('propagate events.', () => {
