@@ -1,7 +1,7 @@
 import { CodeParameter } from './CodeParameter'
 
 // TODO: enable test
-xdescribe('CodeParameter', () => {
+describe('CodeParameter', () => {
   it('has an initial value.', () => {
     const codeParameter = new CodeParameter()
 
@@ -38,7 +38,7 @@ xdescribe('CodeParameter', () => {
     `
 
     codeParameter.setValue(snippet)
-    expect(codeParameter.toJSON()).toEqual({ value: snippet })
+    expect(codeParameter.toJSON()).toEqual({ lang: 'js', value: snippet })
   })
 
   it('loads from JSON (serialization).', () => {
