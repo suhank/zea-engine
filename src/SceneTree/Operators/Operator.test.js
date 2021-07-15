@@ -47,7 +47,7 @@ class ScaleFloatOperator extends Operator {
 }
 
 Registry.register('ScaleFloatOperator', ScaleFloatOperator)
-// TODO: enable test
+// TODO: enable test -- TypeError: Cannot read property 'OP_WRITE' of undefined
 xdescribe('Operator', () => {
   test('AddFloatsOperator', () => {
     const addOperator = new AddFloatsOperator()

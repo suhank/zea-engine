@@ -3,7 +3,7 @@ import { TreeItem } from '../TreeItem'
 import { Material } from '../Material'
 import { GeomItem } from '../GeomItem'
 
-// TODO: enable test
+// TODO: enable test. Error: cannot read bind of undefined.
 xdescribe('MaterialGroup', () => {
   test('Changing GeomItem Material by the tree.', () => {
     const group = new MaterialGroup('Foo')
