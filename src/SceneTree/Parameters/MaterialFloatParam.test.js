@@ -1,8 +1,7 @@
 import { MaterialFloatParam } from './MaterialFloatParam'
 import { BaseImage } from '../BaseImage'
 
-// TODO: enable test
-xdescribe('MaterialFloatParam', () => {
+describe('MaterialFloatParam', () => {
   it('has an initial value.', () => {
     const materialParameter = new MaterialFloatParam()
 

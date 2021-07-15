@@ -1,7 +1,7 @@
 import { BaseItem } from './BaseItem'
 import { TreeItem } from './TreeItem'
-// TODO: enable test
-xdescribe('BaseItem', () => {
+
+describe('BaseItem', () => {
   it("doesn't have base items by default.", () => {
     expect(BaseItem.getNumBaseItems()).toBe(0)
   })

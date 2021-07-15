@@ -1,7 +1,7 @@
 import { NumberParameter } from './NumberParameter'
 import { BinReader } from '../../SceneTree/BinReader'
-// TODO: enable test
-xdescribe('NumberParameter', () => {
+
+describe('NumberParameter', () => {
   it('has an initial value.', () => {
     const numberParameter = new NumberParameter()
 

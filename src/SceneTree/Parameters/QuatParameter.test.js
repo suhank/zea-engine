@@ -1,8 +1,8 @@
 import { Quat } from '../../Math/Quat'
 import { QuatParameter } from './QuatParameter'
 import { BinReader } from '../../SceneTree/BinReader'
-// TODO: enable test
-xdescribe('QuatParameter', () => {
+
+describe('QuatParameter', () => {
   it('has an initial value.', () => {
     const quatParameter = new QuatParameter()
     const quat = new Quat()

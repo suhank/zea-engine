@@ -1,7 +1,7 @@
 import { MultiChoiceParameter } from './MultiChoiceParameter'
 import { BinReader } from '../BinReader'
-// TODO: enable test
-xdescribe('MultiChoiceParameter', () => {
+
+describe('MultiChoiceParameter', () => {
   it('checks value type.', () => {
     const multiChoiceParameter = new MultiChoiceParameter('Foo', 0, [])
 

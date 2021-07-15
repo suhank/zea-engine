@@ -1,7 +1,7 @@
 import { TreeItem } from './TreeItem'
 import { Vec3, Xfo, Quat, Color } from '../Math'
-// TODO: enable test
-xdescribe('TreeItem', () => {
+
+describe('TreeItem', () => {
   it('is visible by default.', () => {
     const treeItem = new TreeItem('Foo')
 

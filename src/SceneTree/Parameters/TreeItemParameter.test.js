@@ -3,23 +3,22 @@ import { TreeItemParameter } from './TreeItemParameter'
 
 describe('TreeItemParameter', () => {
   it('has an initial value.', () => {
-    const treeItemParameter = new TreeItemParameter()
+    const treeItemParameter = new TreeItemParameter('')
 
     expect(treeItemParameter.getValue()).toBeUndefined()
   })
 
   it('checks value type.', () => {
-    const treeItemParameter = new TreeItemParameter()
+    const treeItemParameter = new TreeItemParameter('')
 
     expect(treeItemParameter.getDataType()).toEqual('TreeItem')
   })
 
   it('sets value.', () => {
-    const treeItemParameter = new TreeItemParameter()
+    const treeItemParameter = new TreeItemParameter('')
     const value = new TreeItem('fooItem')
-    value.setVisible(false)
+    //value.setVisible(false)
     treeItemParameter.setValue(value)
-
     expect(treeItemParameter.getValue()).toEqual(value)
   })
 

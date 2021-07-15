@@ -1,8 +1,8 @@
 import { StringParameter } from './StringParameter'
 import { BaseItem } from '../BaseItem'
 import { BinReader } from '../../SceneTree/BinReader'
-// TODO: enable test
-xdescribe('StringParameter', () => {
+
+describe('StringParameter', () => {
   it('has name', () => {
     const NAME = 'TestParameter'
     const parameter = new StringParameter(NAME)

@@ -1,8 +1,8 @@
 import { Parameter } from './Parameter'
 import { BaseItem } from '../BaseItem'
 
-// TODO: enable test
-xdescribe('Parameter', () => {
+// NOTE: Parameter.ts has abstract methods for JSON methods only.
+describe('Parameter', () => {
   it('has name', () => {
     const NAME = 'TestParameter'
     const parameter = new Parameter(NAME)
@@ -48,25 +48,25 @@ xdescribe('Parameter', () => {
     expect(parameter.getPath()).toEqual(['param1'])
   })
 
-  test('Saving to JSON (serialization).', () => {
-    const parameter = new Parameter('name', 'value')
+  // test('Saving to JSON (serialization).', () => {
+  //   const parameter = new Parameter('name', 'value')
 
-    const expOutput = '{"value":"value"}'
+  //   const expOutput = '{"value":"value"}'
 
-    expect(JSON.stringify(parameter.toJSON())).toEqual(expOutput)
-  })
+  //   expect(JSON.stringify(parameter.toJSON())).toEqual(expOutput)
+  // })
 
-  test('Loading from JSON (deserialization).', () => {
-    const edited = 'Edited'
-    const json = { value: edited }
+  // test('Loading from JSON (deserialization).', () => {
+  //   const edited = 'Edited'
+  //   const json = { value: edited }
 
-    const parameter = new Parameter('name', 'value')
-    parameter.fromJSON(json)
+  //   const parameter = new Parameter('name', 'value')
+  //   parameter.fromJSON(json)
 
-    // TODO: test that the USER_EDITED flag was set.
+  //   // TODO: test that the USER_EDITED flag was set.
 
-    expect(parameter.getValue()).toEqual(edited)
-  })
+  //   expect(parameter.getValue()).toEqual(edited)
+  // })
 
   it('Has path to parameter when owned', () => {
     const item = new BaseItem('item1')
@@ -83,25 +83,25 @@ xdescribe('Parameter', () => {
     expect(parameter.getDataType()).toEqual('String')
   })
 
-  it('save to JSON(serialization).', () => {
-    const parameter = new Parameter('TestParameter', 'test', 'String')
-    const expOutput = '{"value":"test"}'
+  // it('save to JSON(serialization).', () => {
+  //   const parameter = new Parameter('TestParameter', 'test', 'String')
+  //   const expOutput = '{"value":"test"}'
 
-    expect(JSON.stringify(parameter.toJSON())).toEqual(expOutput)
-  })
+  //   expect(JSON.stringify(parameter.toJSON())).toEqual(expOutput)
+  // })
 
-  it('load from JSON(serialization).', () => {
-    const parameter = new Parameter('TestParameter', '', 'String')
-    const input = { value: 'test' }
-    parameter.fromJSON(input)
+  // it('load from JSON(serialization).', () => {
+  //   const parameter = new Parameter('TestParameter', '', 'String')
+  //   const input = { value: 'test' }
+  //   parameter.fromJSON(input)
 
-    expect(parameter.getValue()).toEqual(input.value)
-  })
+  //   expect(parameter.getValue()).toEqual(input.value)
+  // })
 
-  it('clones parameter object', () => {
-    const parameter = new Parameter('TestParameter', '', 'String')
-    const parameter2 = parameter.clone()
+  // it('clones parameter object', () => {
+  //   const parameter = new Parameter('TestParameter', '', 'String')
+  //   const parameter2 = parameter.clone()
 
-    expect(parameter.toJSON()).toEqual(parameter2.toJSON())
-  })
+  //   expect(parameter.toJSON()).toEqual(parameter2.toJSON())
+  // })
 })
