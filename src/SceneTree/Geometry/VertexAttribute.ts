@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 /* eslint-disable guard-for-in */
-import { Attribute } from './Attribute.js'
+import { Attribute } from './Attribute'
 import { Float32 } from '../../Utilities/MathFunctions'
 
 /**

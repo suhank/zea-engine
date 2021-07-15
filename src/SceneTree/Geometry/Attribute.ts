@@ -1,27 +1,32 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable require-jsdoc */
 import { Float32, UInt32, SInt32, MathFunctions } from '../../Utilities/MathFunctions'
 import { Registry } from '../../Registry'
-
-function isTypedArray(obj) {
-  return !!obj && obj.byteLength !== undefined
-}
+import { AttrValue } from '../../Math/AttrValue'
 
 /**
  * Class representing an attribute.
  */
 class Attribute {
+  protected __data: TypedArray
+  protected __dataType: AttrValue | number
+  protected __defaultElementValue: number
+  protected __dimension: number
+  normalized: boolean
+
   /**
    * Create an attribute.
    * @param {AttrValue|number} dataType - The dataType value.
    * @param {number|TypedArray} expectedSize - The expectedSize value.
    * @param {number} defaultValue - The defaultValue value.
    */
-  constructor(dataType, expectedSize, defaultValue = undefined) {
+  constructor(dataType: AttrValue | number, expectedSize: number | TypedArray, defaultValue = Number.MAX_VALUE) {
     this.__dataType = dataType
     this.normalized = false
-    if (dataType.numElements != undefined) {
-      this.__dimension = this.__dataType.numElements()
-    } else {
+
+    if (typeof dataType != 'number') this.__dimension = this.__dataType.numElements() // TODO:
+    else {
       switch (dataType) {
         case Float32:
         case UInt32:
@@ -32,10 +37,10 @@ class Attribute {
           throw new Error('Invalid data type for attribute:' + dataType)
       }
     }
-    this.__defaultElementValue = defaultValue != undefined ? defaultValue : Number.MAX_VALUE
-    if (isTypedArray(expectedSize)) {
-      this.__data = expectedSize
-    } else {
+    this.__defaultElementValue = defaultValue
+
+    if (typeof expectedSize != 'number') this.__data = expectedSize
+    else {
       this.__data = new Float32Array(expectedSize * this.__dimension)
       this.initRange(0)
     }
@@ -47,7 +52,7 @@ class Attribute {
    *
    * @param {number} size - The size value.
    */
-  resize(size) {
+  resize(size: number): void {
     const prevLength = this.__data.length
     const newLength = size * this.__dimension
 
@@ -68,7 +73,7 @@ class Attribute {
    *
    * @param {number} start - The start value.
    */
-  initRange(start) {
+  initRange(start: number): void {
     // Initialize the values to invalid values.
     for (let i = start; i < this.__data.length; i++) {
       this.__data[i] = this.__defaultElementValue
@@ -80,7 +85,7 @@ class Attribute {
    *
    * @return {number} - The return value.
    */
-  getCount() {
+  getCount(): number {
     return this.__data.length / this.__dimension
   }
 
@@ -89,7 +94,7 @@ class Attribute {
    *
    * @return {number} - The return value.
    */
-  get length() {
+  get length(): number {
     return this.__data.length / this.__dimension
   }
 
@@ -98,7 +103,7 @@ class Attribute {
    *
    * @return {AttrValue|number} - The return value.
    */
-  get dataType() {
+  get dataType(): AttrValue | number {
     return this.__dataType
   }
 
@@ -107,7 +112,7 @@ class Attribute {
    *
    * @return {TypedArray} - The return value.
    */
-  get data() {
+  get data(): TypedArray {
     return this.__data
   }
 
@@ -116,7 +121,7 @@ class Attribute {
    *
    * @param {TypedArray} data - The data value.
    */
-  set data(data) {
+  set data(data: TypedArray) {
     this.__data = data
   }
 
@@ -125,7 +130,7 @@ class Attribute {
    *
    * @return {number} - The return value.
    */
-  get numElements() {
+  get numElements(): number {
     return this.__dimension
   }
 
@@ -135,7 +140,7 @@ class Attribute {
    * @param {number} index - The index value.
    * @return {number} - The return value.
    */
-  getFloat32Value(index) {
+  getFloat32Value(index: number): number {
     return this.__data[index]
   }
 
@@ -145,7 +150,7 @@ class Attribute {
    * @param {number} index - The index value.
    * @param {number} value - The value param.
    */
-  setFloat32Value(index, value) {
+  setFloat32Value(index: number, value: number): void {
     this.__data[index] = value
   }
 
@@ -155,7 +160,7 @@ class Attribute {
    * @param {number} index - The index value.
    * @return {AttrValue} - The return value.
    */
-  getValueRef(index) {
+  getValueRef(index: number): AttrValue {
     const numElems = this.__dimension
     if (index >= this.__data.length / numElems)
       throw new Error('Invalid vertex index:' + index + '. Num Vertices:' + this.__data.length / 3)
@@ -168,7 +173,7 @@ class Attribute {
    * @param {number} index - The index value.
    * @param {AttrValue} value - The value param.
    */
-  setValue(index, value) {
+  setValue(index: number, value: AttrValue): void {
     const numElems = this.__dimension
     if (index >= this.__data.length / numElems)
       throw new Error('Invalid vertex index:' + index + '. Num Vertices:' + this.__data.length / 3)
@@ -181,7 +186,7 @@ class Attribute {
    * @param {object} context - The context value.
    * @return {object} - Returns the json object.
    */
-  toJSON(context) {
+  toJSON(context?: Record<string, any>): Record<string, any> {
     return {
       data: Array.from(this.__data),
       dataType: Registry.getBlueprintName(this.__dataType),
@@ -195,8 +200,8 @@ class Attribute {
    *
    * @param {object} j - The json object this item must decode.
    */
-  fromJSON(j) {
-    const data = j.data.map((dataElement) =>
+  fromJSON(j: Record<string, any>): void {
+    const data = j.data.map((dataElement: any) =>
       MathFunctions.isNumeric(dataElement) ? dataElement : Number.POSITIVE_INFINITY
     )
     this.__data = Float32Array.from(data)
@@ -207,7 +212,7 @@ class Attribute {
    *
    * @return {string} - The return value.
    */
-  toString() {
+  toString(): string {
     return JSON.stringify(this.toJSON(), null, 2)
   }
 }
