@@ -206,7 +206,7 @@ class GLGeomItemLibrary extends EventEmitter {
       if (enableOcclusionCulling) {
         const gl = this.renderer.gl
         this.floatOcclusionBuffer = gl.floatTexturesSupported
-        const occlusionDataBufferSizeFactor = 0.5
+        const occlusionDataBufferSizeFactor = 1
         const occlusionDataBufferWidth = Math.ceil(this.renderer.getWidth() * occlusionDataBufferSizeFactor)
         const occlusionDataBufferHeight = Math.ceil(this.renderer.getHeight() * occlusionDataBufferSizeFactor)
         if (this.floatOcclusionBuffer) {
