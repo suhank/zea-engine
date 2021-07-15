@@ -17,6 +17,7 @@ export * from './ListParameter'
 export * from './StructParameter'
 export * from './TreeItemParameter'
 export * from './ItemSetParameter'
+export * from './OperatorOutputMode'
 // export * from './KinematicGroupParameter.js';
 
 // Note: can't be imported, because ParameterOwner imports these Parameters

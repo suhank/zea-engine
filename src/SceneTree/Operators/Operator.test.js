@@ -4,7 +4,7 @@ import { NumberParameter } from '../Parameters/NumberParameter'
 import { BaseItem } from '../BaseItem'
 import { OperatorInput } from './OperatorInput'
 import { OperatorOutput } from './OperatorOutput'
-import { OperatorOutputMode } from '../Parameters/Parameter'
+import { OperatorOutputMode } from '../Parameters/OperatorOutputMode'
 import { Registry } from '../../Registry'
 
 class AddFloatsOperator extends Operator {
@@ -48,7 +48,7 @@ class ScaleFloatOperator extends Operator {
 
 Registry.register('ScaleFloatOperator', ScaleFloatOperator)
 // TODO: enable test -- TypeError: Cannot read property 'OP_WRITE' of undefined
-xdescribe('Operator', () => {
+describe('Operator', () => {
   test('AddFloatsOperator', () => {
     const addOperator = new AddFloatsOperator()
 
