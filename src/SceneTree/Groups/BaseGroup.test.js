@@ -8,14 +8,14 @@ describe('BaseGroup', () => {
     expect(baseGroup.isVisible()).toBe(true)
   })
 
-  // TODO: cannot read size of undefined
-  xtest('Adding members.', () => {
+  test('Adding members.', () => {
     const group = new BaseGroup('Foo')
     const treeItem = new TreeItem('TreeItem')
-
+    const treeItem2 = new TreeItem('TreeItem')
     group.addItem(treeItem)
+    group.addItem(treeItem2)
 
-    expect(group.getParameter('Items').getValue().size).toBe(1)
+    expect(group.getParameter('Items').getNumItems()).toBe(2)
   })
 
   test('Adding members using paths.', () => {
