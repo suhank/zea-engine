@@ -52,9 +52,9 @@ void main(void) {
   // vec4 geomItemData  = getInstanceData(drawItemId);
   // mat4 modelMatrix = getModelMatrix(drawItemId);
   vec4 bboxMin = fetchTexel(instancesTexture, instancesTextureSize, (drawItemId * pixelsPerItem) + 6);
-  vec4 bboxMax =  fetchTexel(instancesTexture, instancesTextureSize, (drawItemId * pixelsPerItem) + 7);
+  vec4 bboxMax = fetchTexel(instancesTexture, instancesTextureSize, (drawItemId * pixelsPerItem) + 7);
 
-  v_color = vec4(1.0, 1.0, 0.0, 1.0);
+  v_color = vec4(float(drawItemId) / 5.0, 1.0, float(drawItemId) / 5.0, 1.0);
   v_color.g = float(drawItemId);
 
   vec4 pos = positions;
@@ -90,7 +90,16 @@ void main(void) {
   vec4 fragColor;
 #endif
 
+  int drawItemId = int(v_color.g);
+  
+  // Calculate a simple stochatic transparency to ensure that bounding boxes don't completely occlude each other. 
+  // see e2e-test: occlusion-culling2
+  int x = drawItemId + int(gl_FragCoord.x * 1000.0);
+  int y = drawItemId + int(gl_FragCoord.y * 1000.0);
+  if (x % 3 != 0 || y % 3 != 0) discard;
+
   fragColor = v_color;
+  fragColor.a = 0.0;
 
 #ifndef ENABLE_ES3
   gl_FragColor = fragColor;

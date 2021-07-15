@@ -19,7 +19,11 @@
       const canvas = document.querySelector('#renderer')
 
       const scene = new Scene()
-      const renderer = new GLRenderer(canvas, { hideSplash: true, enableOcclusionCulling: true })
+      const renderer = new GLRenderer(canvas, {
+        hideSplash: true,
+        enableOcclusionCulling: true,
+        debugOcclusionBuffer: false,
+      })
       renderer.setScene(scene)
 
       scene.setupGrid(10.0, 10)
