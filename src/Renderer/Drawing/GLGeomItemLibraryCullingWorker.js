@@ -226,7 +226,8 @@ const generateInFrustumIndices = () => {
 
 const onDoneFrustumCull = (postMessage) => {
   // console.log('onDoneFrustumCull newlyCulled:', newlyCulled.length, 'newlyUnCulled:', newlyUnCulled.length)
-  if (newlyCulled.length > 0 || newlyUnCulled.length > 0) {
+  // if (newlyCulled.length > 0 || newlyUnCulled.length > 0)
+  {
     if (!enableOcclusionCulling) {
       const countInFrustum = geomItemsData.length - 1 - frustumCulledCount
       postMessage({
@@ -243,23 +244,17 @@ const onDoneFrustumCull = (postMessage) => {
       // if (countInFrustum > 300) {
       //   console.log('countInFrustum:', countInFrustum)
       // }
-      const inFrustumIndices = generateInFrustumIndices()
-      postMessage({ type: 'InFrustumIndices', inFrustumIndices }, [inFrustumIndices.buffer])
-      inFrustumDrawIdsBufferPopulated = true
-    }
-    newlyCulled = []
-    newlyUnCulled = []
-  } else {
-    if (enableOcclusionCulling) {
-      if (inFrustumDrawIdsBufferPopulated) {
-        // Note: the inFrustumDrawIdsBuffer is already up to date we can skip this.
-        postMessage({ type: 'InFrustumIndices' })
-      } else {
+      if (newlyCulled.length > 0 || newlyUnCulled.length > 0 || !inFrustumDrawIdsBufferPopulated) {
         const inFrustumIndices = generateInFrustumIndices()
         postMessage({ type: 'InFrustumIndices', inFrustumIndices }, [inFrustumIndices.buffer])
         inFrustumDrawIdsBufferPopulated = true
+      } else {
+        // Note: the inFrustumDrawIdsBuffer is already up to date we can skip this.
+        postMessage({ type: 'InFrustumIndices' })
       }
     }
+    newlyCulled = []
+    newlyUnCulled = []
   }
 }
 

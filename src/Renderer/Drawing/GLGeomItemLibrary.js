@@ -1,6 +1,6 @@
 /* eslint-disable guard-for-in */
 import { EventEmitter } from '../../Utilities/index'
-import { Vec4 } from '../../Math/index'
+import { Mat4, Vec4 } from '../../Math/index'
 import { Cuboid } from '../../SceneTree/index'
 import { GLMesh } from './GLMesh.js'
 import { GLGeomItemFlags, GLGeomItem } from './GLGeomItem.js'
@@ -40,7 +40,7 @@ class GLGeomItemLibrary extends EventEmitter {
     //   postMessage: (message) => {},
     // }
 
-    const enableOcclusionCulling = true //options.enableOcclusionCulling
+    const enableOcclusionCulling = true //  options.enableOcclusionCulling
 
     this.worker = new GLGeomItemLibraryCullingWorker()
     // this.worker = {
@@ -107,9 +107,15 @@ class GLGeomItemLibrary extends EventEmitter {
     })
     viewportChanged()
 
+    this.xrViewport = null
+    this.xrPresenting = false
+    this.xrFovY = 0.0
+    this.xrProjectionMatrix = new Mat4()
     renderer.once('xrViewportSetup', (event) => {
       const xrvp = event.xrViewport
+      this.xrViewport = event.xrViewport
       xrvp.on('presentingChanged', (event) => {
+        this.xrPresenting = event.state
         if (event.state) {
           // Note: We approximate the culling viewport to be
           // a wider version of the 2 eye frustums merged together.
@@ -120,6 +126,13 @@ class GLGeomItemLibrary extends EventEmitter {
           const degToRad = Math.PI / 180
           const frustumHalfAngleY = 62 * degToRad
           const frustumHalfAngleX = 50 * degToRad
+
+          this.xrFovY = frustumHalfAngleY * 2.0
+          const aspect = 62 / 50
+          const near = xrvp.depthRange[0]
+          const far = xrvp.depthRange[1]
+          this.xrProjectionMatrix.setPerspectiveMatrix(this.xrFovY, aspect, near, far)
+
           this.worker.postMessage({
             type: 'ViewportChanged',
             frustumHalfAngleX,
@@ -138,7 +151,7 @@ class GLGeomItemLibrary extends EventEmitter {
     renderer.on('viewChanged', (event) => {
       // Calculate culling every Nth frame.
       if (workerReady) {
-        if (tick % 5 == 0) {
+        if (tick % 10 == 0) {
           workerReady = false
           const pos = event.viewXfo.tr
           const ori = event.viewXfo.ori
@@ -227,6 +240,22 @@ class GLGeomItemLibrary extends EventEmitter {
             Math.ceil(event.width * occlusionDataBufferSizeFactor),
             Math.ceil(event.height * occlusionDataBufferSizeFactor)
           )
+        })
+        renderer.once('xrViewportSetup', (event) => {
+          const xrvp = event.xrViewport
+          xrvp.on('presentingChanged', (event) => {
+            if (event.state) {
+              this.occlusionDataBuffer.resize(
+                Math.ceil(xrvp.getWidth() * occlusionDataBufferSizeFactor),
+                Math.ceil(xrvp.getWidth() * occlusionDataBufferSizeFactor)
+              )
+            } else {
+              this.occlusionDataBuffer.resize(
+                Math.ceil(this.renderer.getWidth() * occlusionDataBufferSizeFactor),
+                Math.ceil(this.renderer.getWidth() * occlusionDataBufferSizeFactor)
+              )
+            }
+          })
         })
         this.reductionDataBuffer = new GLRenderTarget(gl, {
           type: gl.UNSIGNED_BYTE,
@@ -331,19 +360,40 @@ class GLGeomItemLibrary extends EventEmitter {
     }
     const gl = this.renderer.gl
 
+    const renderstate = { shaderopts: {} }
+    renderstate.directives = [...this.renderer.directives, '#define DRAW_GEOMDATA']
+    renderstate.shaderopts.directives = renderstate.directives
+    this.renderer.bindGLBaseRenderer(renderstate)
+    if (this.xrPresenting) {
+      if (!this.xrViewport.viewXfo) {
+        return
+      }
+      renderstate.viewXfo = this.xrViewport.viewXfo
+      renderstate.viewScale = 1.0
+      renderstate.region = this.xrViewport.__region
+      renderstate.cameraMatrix = this.xrViewport.viewXfo.toMat4()
+      renderstate.depthRange = this.xrViewport.depthRange
+      renderstate.viewport = this.xrViewport
+      renderstate.viewports = [
+        {
+          region: this.region,
+          viewMatrix: renderstate.cameraMatrix.inverse(),
+          projectionMatrix: this.xrProjectionMatrix,
+          isOrthographic: false,
+          fovY: this.xrFovY,
+        },
+      ]
+    } else {
+      this.renderer.getViewport().initRenderState(renderstate)
+    }
+
     gl.disable(gl.BLEND)
     gl.disable(gl.CULL_FACE)
     gl.enable(gl.DEPTH_TEST)
     gl.depthFunc(gl.LESS)
     gl.depthMask(true)
 
-    const renderstate = { shaderopts: {} }
-    renderstate.directives = [...this.renderer.directives, '#define DRAW_GEOMDATA']
-    renderstate.shaderopts.directives = renderstate.directives
-    this.renderer.bindGLBaseRenderer(renderstate)
-
     this.occlusionDataBuffer.bindForWriting(renderstate, true)
-    this.renderer.getViewport().initRenderState(renderstate)
     // this.renderer.drawSceneGeomData(renderstate)
     const drawSceneGeomData = (renderstate) => {
       const opaqueGeomsPass = this.renderer.getPass(0)
