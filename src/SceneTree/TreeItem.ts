@@ -108,54 +108,7 @@ class TreeItem extends BaseItem {
       this.__visibleCounter += this.__visibleParam.getValue() ? 1 : -1
       this.updateVisibility()
     })
-    // Note: one day we will remove the concept of 'selection' from the engine
-    // and keep it only in UX. to Select an item, we will add it to the selection
-    // in the selection manager. Then the selection group will apply a highlight.
-    this.on('selectedChanged', () => {
-      if (this.__selected) {
-        this.addHighlight('selected', selectionOutlineColor, true)
-      } else {
-        this.removeHighlight('selected', true)
-      }
-    })
   }
-
-  /**
-   * Returns the selection outline color.
-   *
-   * @return {Color} - Returns a color.
-   */
-  static getSelectionOutlineColor(): Color {
-    return selectionOutlineColor
-  }
-
-  /**
-   * Sets the selection outline color.
-   *
-   * @param {Color} color - The color value.
-   */
-  static setSelectionOutlineColor(color: Color): void {
-    selectionOutlineColor = color
-  }
-
-  /**
-   * Returns the branch selection outline color.
-   *
-   * @return {Color} - Returns a color.
-   */
-  static getBranchSelectionOutlineColor(): Color {
-    return branchSelectionOutlineColor
-  }
-
-  /**
-   * Sets the branch selection outline color.
-   *
-   * @param {Color} color - The color value.
-   */
-  static setBranchSelectionOutlineColor(color: Color): void {
-    branchSelectionOutlineColor = color
-  }
-  // Parent Item
 
   /**
    * Sets the owner (another TreeItem) of the current TreeItem.
@@ -750,7 +703,6 @@ class TreeItem extends BaseItem {
   }
 
   /**
-   * @deprecated TODO: is this deprecated?
    * Removes the provided item from this TreeItem if it is one of its children.
    * An exception is thrown if the item is not a child of this tree item.
    *
@@ -1093,7 +1045,9 @@ class TreeItem extends BaseItem {
     super.readBinary(reader, context)
 
     context.numTreeItems++
+
     const itemFlags = reader.loadUInt8()
+
     // const visibilityFlag = 1 << 1
     // this.setVisible(itemFlags&visibilityFlag);
 
@@ -1122,23 +1076,6 @@ class TreeItem extends BaseItem {
           reader.seek(toc[i]) // Reset the pointer to the start of the item data.
           let childType = reader.loadStr()
 
-          //TODO: is this hack necessary?
-          if (childType.startsWith('N') && childType.endsWith('E')) {
-            // ///////////////////////////////////////
-            // hack to work around a linux issue
-            // untill we have a fix.
-            const ppos = childType.indexOf('podium')
-            if (ppos != -1) {
-              if (parseInt(childType[ppos + 7])) childType = childType.substring(ppos + 8, childType.length - 1)
-              else childType = childType.substring(ppos + 7, childType.length - 1)
-            }
-            const lnpos = childType.indexOf('livenurbs')
-            if (lnpos != -1) {
-              childType = childType.substring(childType.indexOf('CAD'), childType.length - 1)
-            }
-          }
-          // const childName = reader.loadStr();
-          // ---- end of hack
           const childItem = Registry.constructClass(childType)
           if (!childItem) {
             const childName = reader.loadStr()

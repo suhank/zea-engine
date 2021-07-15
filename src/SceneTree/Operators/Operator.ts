@@ -97,10 +97,12 @@ class Operator extends BaseItem {
    * @return {OperatorInput} - The return value.
    */
   getInput(name: string): OperatorInput {
-    const input = this.__inputs.get(name)
-    if (!input) throw `Couldn't find an Input with the name of '${name}'`
+    //const input = this.__inputs.get(name)
+    //if (!input) throw `Couldn't find an Input with the name of '${name}'`
 
-    return input
+    //return input
+
+    return this.__inputs.get(name)
   }
 
   /**
@@ -156,10 +158,12 @@ class Operator extends BaseItem {
    * @return {OperatorOutput} - The return value.
    */
   getOutput(name: string): OperatorOutput {
-    const output = this.__outputs.get(name)
-    if (!output) throw `Couldn't find an Input with the name of '${name}'`
+    // TODO: guard breaks treeItem, but should it be here? (from first ts-migration)
+    //const output = this.__outputs.get(name)
+    //if (!output) throw `Couldn't find an Output with the name of '${name}'`
+    //return output
 
-    return output
+    return this.__outputs.get(name)
   }
 
   /**

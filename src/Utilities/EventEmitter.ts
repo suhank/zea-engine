@@ -127,7 +127,7 @@ class EventEmitter {
       throw new Error(`Listener "${listener.name}" is not connected to "${eventName}" event`)
     } else {
       for (const id of ids) {
-        listeners.splice(id, 1)
+        listeners[id] = undefined // listeners.splice(id, 1)
       }
     }
   }
@@ -174,7 +174,8 @@ class EventEmitter {
     }
 
     if (!listeners[id]) throw new Error('Invalid ID')
-    listeners.splice(id, 1)
+    listeners[id] = undefined
+    //listeners.splice(id, 1)
   }
 
   /**
