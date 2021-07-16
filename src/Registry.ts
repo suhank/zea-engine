@@ -1,8 +1,8 @@
 import { UInt8, SInt8, UInt16, SInt16, UInt32, SInt32, Float32 } from './Utilities/MathFunctions'
 
-let _registeredBlueprints = {}
-let _blueprintNames = {}
-let _blueprints = []
+let _registeredBlueprints: Record<string, any> = {}
+let _blueprintNames: Record<string, any> = {}
+let _blueprints: Array<unknown> = []
 
 /**
  * Registry is a static factory that handles registration/reconstruction of
@@ -32,7 +32,7 @@ const Registry = {
    * @param {string} blueprintName - Name of the registered blueprint(Class, type, etc)
    * @param {function|number|any} blueprint - Blueprint representation(Class function, type)
    */
-  register: (blueprintName, blueprint) => {
+  register: (blueprintName: string, blueprint: any): void => {
     if (_registeredBlueprints[blueprintName]) throw new Error(`There's a class registered with '${blueprintName}' name`)
     _registeredBlueprints[blueprintName] = { blueprint, callbacks: [] }
 
@@ -48,7 +48,7 @@ const Registry = {
    * @param {string} blueprintName - Name of the registered blueprint(Class, type, etc)
    * @return {function|number|any} - Blueprint representation(Class function, type)
    */
-  getBlueprint: (blueprintName) => {
+  getBlueprint: (blueprintName: string): unknown | number | any => {
     if (_registeredBlueprints[blueprintName]) return _registeredBlueprints[blueprintName].blueprint
 
     throw new Error(`${blueprintName} blueprint is not registered`)
@@ -60,7 +60,7 @@ const Registry = {
    * @param {function|number|any|undefined} blueprintInstance - Blueprint representation(Class function, type)
    * @return {string} - Name of the registered blueprint(Class, type, etc)
    */
-  getBlueprintName: (blueprintInstance) => {
+  getBlueprintName: (blueprintInstance: any): string => {
     let blueprint = blueprintInstance
     let blueprintName = blueprintInstance
 
@@ -82,13 +82,13 @@ const Registry = {
    * you can pass them(As many as needed).
    *
    * @param {string} blueprintName - Name of the registered blueprint(Class, type, etc)
-   * @return {object|null} - Instantiated object of the specified class
+   * @param {unknown[]} args - Any data needed to instantiate the class
+   * @return { Record<string, unknown> | unknown } - Instantiated object of the specified class
    */
-  constructClass: (blueprintName, ...args) => {
+  constructClass: (blueprintName: string, ...args: unknown[]): Record<string, unknown> | unknown => {
     const blueprintData = _registeredBlueprints[blueprintName]
     if (!blueprintData) throw new Error(`${blueprintName} blueprint is not registered`)
 
-    // eslint-disable-next-line new-cap
     return new blueprintData.blueprint(...args)
   },
   /**
@@ -96,7 +96,7 @@ const Registry = {
    *
    * @private
    */
-  flush: () => {
+  flush: (): void => {
     _registeredBlueprints = {}
     _blueprintNames = {}
     _blueprints = []

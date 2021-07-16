@@ -3,47 +3,64 @@
 /* eslint-disable require-jsdoc */
 import { Float32, UInt32, SInt32, MathFunctions } from '../../Utilities/MathFunctions'
 import { Registry } from '../../Registry'
-import { AttrValue } from '../../Math/AttrValue'
+// import { AttrValue } from '../../Math/AttrValue'
+
+// Attribute<Vec3, Float32Array>()
+// new Attribute<Vec3, Float32Array>('Vec3')
+// const glslTypes = {
+//   bool: Boolean,
+//   int: SInt32,
+//   uint: UInt32,
+//   float: Float32,
+//   ivec2: Vec2,
+//   ivec3: Vec3,
+//   ivec4: Vec4,
+//   vec2: Vec2,
+//   vec3: Vec3,
+//   vec4: Vec4,
+//   color: Color,
+//   mat3: Mat3,
+//   mat4: Mat4,
+//   sampler2D: BaseImage,
+//   samplerCube: BaseImage,
+// }
+
+// const glslTypes = {
+//   Vec3 : 3,
+
+// }
+
+interface AttrValue {
+  setElementValue(index: number, elemValue: number)
+  getElementValue(index: number): number
+}
+
+function createTypedArray<U extends TypedArray>(c: new (size: number) => U, size: number): U {
+  return new c(size)
+}
 
 /**
  * Class representing an attribute.
  */
 class Attribute {
-  protected __data: TypedArray
-  protected __dataType: AttrValue | number
+  protected __data: Float32Array
+  protected __dataTypeName: string
+  protected __stride: number
   protected __defaultElementValue: number
-  protected __dimension: number
   normalized: boolean
 
   /**
    * Create an attribute.
-   * @param {AttrValue|number} dataType - The dataType value.
-   * @param {number|TypedArray} expectedSize - The expectedSize value.
+   * @param {number} stride - The dataType value.
+   * @param {number} initialSize - The initialSize value.
    * @param {number} defaultValue - The defaultValue value.
    */
-  constructor(dataType: AttrValue | number, expectedSize: number | TypedArray, defaultValue = Number.MAX_VALUE) {
-    this.__dataType = dataType
+  constructor(stride: number, initialSize: number, defaultValue = Number.MAX_VALUE) {
     this.normalized = false
-
-    if (typeof dataType != 'number') this.__dimension = this.__dataType.numElements() // TODO:
-    else {
-      switch (dataType) {
-        case Float32:
-        case UInt32:
-        case SInt32:
-          this.__dimension = 1
-          break
-        default:
-          throw new Error('Invalid data type for attribute:' + dataType)
-      }
-    }
+    this.__stride = stride
     this.__defaultElementValue = defaultValue
-
-    if (typeof expectedSize != 'number') this.__data = expectedSize
-    else {
-      this.__data = new Float32Array(expectedSize * this.__dimension)
-      this.initRange(0)
-    }
+    this.__data = new Float32Array(initialSize * stride)
+    this.initRange(0)
   }
 
   /**
@@ -54,7 +71,7 @@ class Attribute {
    */
   resize(size: number): void {
     const prevLength = this.__data.length
-    const newLength = size * this.__dimension
+    const newLength = size * this.__stride
 
     if (newLength > prevLength) {
       const data = new Float32Array(newLength)
@@ -86,7 +103,7 @@ class Attribute {
    * @return {number} - The return value.
    */
   getCount(): number {
-    return this.__data.length / this.__dimension
+    return this.__data.length / this.__stride
   }
 
   /**
@@ -95,17 +112,17 @@ class Attribute {
    * @return {number} - The return value.
    */
   get length(): number {
-    return this.__data.length / this.__dimension
+    return this.__data.length / this.__stride
   }
 
   /**
    * Returns the type of attribute value.
    *
-   * @return {AttrValue|number} - The return value.
-   */
-  get dataType(): AttrValue | number {
-    return this.__dataType
+   * @return {T} - The return value.
+  get dataType(): T {
+    return this.sampleValue.constructor
   }
+   */
 
   /**
    * Returns current data array.
@@ -117,21 +134,12 @@ class Attribute {
   }
 
   /**
-   * Sets data value.
-   *
-   * @param {TypedArray} data - The data value.
-   */
-  set data(data: TypedArray) {
-    this.__data = data
-  }
-
-  /**
-   * Returns the number of elements stored in each `AttrValue`.
+   * Returns the number of elements stored in each `T`.
    *
    * @return {number} - The return value.
    */
   get numElements(): number {
-    return this.__dimension
+    return this.__stride
   }
 
   /**
@@ -155,29 +163,42 @@ class Attribute {
   }
 
   /**
-   * Returns the `AttrValue` object placed in the specified index.
+   * Returns the `T` object placed in the specified index.
+   * @deprecated
    *
    * @param {number} index - The index value.
-   * @return {AttrValue} - The return value.
    */
-  getValueRef(index: number): AttrValue {
-    const numElems = this.__dimension
-    if (index >= this.__data.length / numElems)
-      throw new Error('Invalid vertex index:' + index + '. Num Vertices:' + this.__data.length / 3)
-    return this.__dataType.createFromBuffer(this.__data.buffer, index * numElems * 4)
+  getValueRef<T extends AttrValue>(c: { new (arr: ArrayBuffer, byteOffset: number): T }, index: number) : void {
+    throw new Error(" getValueRef is deprecated. Please use 'getValue' instead.")
   }
 
   /**
-   * Sets `AttrValue` object in the specified index.
+   * Returns the `T` object placed in the specified index.
    *
    * @param {number} index - The index value.
-   * @param {AttrValue} value - The value param.
+   * @return {T} - The return value.
    */
-  setValue(index: number, value: AttrValue): void {
-    const numElems = this.__dimension
-    if (index >= this.__data.length / numElems)
+  getValue<T extends AttrValue>(c: { new (): T }, index: number): T {
+    if (index >= this.__data.length / this.__stride)
       throw new Error('Invalid vertex index:' + index + '. Num Vertices:' + this.__data.length / 3)
-    this.__dataType.createFromBuffer(this.__data.buffer, index * numElems * 4).setFromOther(value)
+    const value = new c()
+    const offset = index * this.__stride
+    for (let i = 0; i < this.__stride; i++) value.setElementValue(i, this.__data[offset + i])
+    return value
+  }
+
+  /**
+   * Sets `T` object in the specified index.
+   *
+   * @param {number} index - The index value.
+   * @param {T} value - The value param.
+   */
+  setValue<T extends AttrValue>(index: number, value: T): void {
+    if (index >= this.__data.length / this.__stride)
+      throw new Error('Invalid vertex index:' + index + '. Num Vertices:' + this.__data.length / 3)
+
+    const offset = index * this.__stride
+    for (let i = 0; i < this.__stride; i++) this.__data[offset + i] = value.getElementValue(i)
   }
 
   /**
@@ -189,9 +210,9 @@ class Attribute {
   toJSON(context?: Record<string, any>): Record<string, any> {
     return {
       data: Array.from(this.__data),
-      dataType: Registry.getBlueprintName(this.__dataType),
+      dataType: this.__dataTypeName,
       defaultValue: this.__defaultElementValue,
-      length: this.__data.length / this.__dimension,
+      length: this.__data.length / this.__stride,
     }
   }
 
