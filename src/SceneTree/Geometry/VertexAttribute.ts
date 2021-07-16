@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Attribute } from './Attribute'
+import { Attribute, AttrValue } from './Attribute'
 import { Float32 } from '../../Utilities/MathFunctions'
-import { AttrValue } from '../../Math/AttrValue'
+// import { AttrValue } from '../../Math/AttrValue'
 import { BinReader } from '../../SceneTree/BinReader'
 
 /**

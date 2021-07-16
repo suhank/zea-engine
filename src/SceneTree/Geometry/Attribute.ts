@@ -5,32 +5,7 @@ import { Float32, UInt32, SInt32, MathFunctions } from '../../Utilities/MathFunc
 import { Registry } from '../../Registry'
 // import { AttrValue } from '../../Math/AttrValue'
 
-// Attribute<Vec3, Float32Array>()
-// new Attribute<Vec3, Float32Array>('Vec3')
-// const glslTypes = {
-//   bool: Boolean,
-//   int: SInt32,
-//   uint: UInt32,
-//   float: Float32,
-//   ivec2: Vec2,
-//   ivec3: Vec3,
-//   ivec4: Vec4,
-//   vec2: Vec2,
-//   vec3: Vec3,
-//   vec4: Vec4,
-//   color: Color,
-//   mat3: Mat3,
-//   mat4: Mat4,
-//   sampler2D: BaseImage,
-//   samplerCube: BaseImage,
-// }
-
-// const glslTypes = {
-//   Vec3 : 3,
-
-// }
-
-interface AttrValue {
+export interface AttrValue {
   setElementValue(index: number, elemValue: number)
   getElementValue(index: number): number
 }
@@ -168,7 +143,7 @@ class Attribute {
    *
    * @param {number} index - The index value.
    */
-  getValueRef<T extends AttrValue>(c: { new (arr: ArrayBuffer, byteOffset: number): T }, index: number) : void {
+  getValueRef<T extends AttrValue>(c: { new (arr: ArrayBuffer, byteOffset: number): T }, index: number): void {
     throw new Error(" getValueRef is deprecated. Please use 'getValue' instead.")
   }
 
