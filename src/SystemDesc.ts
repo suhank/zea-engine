@@ -31,8 +31,7 @@ function getBrowserDesc() {
   let nameOffset
   let verOffset
   let ix
-
-  if (navigator.brave) {
+  if ((navigator as any).brave) {
     browserName = 'Brave'
     verOffset = nAgt.indexOf('Chrome')
     fullVersion = nAgt.substring(verOffset + 7, nAgt.indexOf(' ', verOffset + 7))
@@ -279,9 +278,8 @@ const SystemDesc = (function () {
     deviceCategory,
   }
 })()
-
-if (!window.ZeaSystemDesc) {
-  window.ZeaSystemDesc = SystemDesc
+if (!(window as any).ZeaSystemDesc) {
+  ;(window as any).ZeaSystemDesc = SystemDesc
 }
 
 export { SystemDesc }
