@@ -20,5 +20,6 @@
 *.vlenv binary
 *.wasm binary
 *.zenv binary
+*.zcad binary
 *.zmesh binary
 *.webp binary

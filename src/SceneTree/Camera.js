@@ -31,7 +31,7 @@ import { Points } from './Geometry'
  * ```javascript
  *   camera.adjustNearAndFarPlanesToFocalDist = true
  *   camera.nearDistFactor = 0.01
- *   camera.farDistFactor = 10000
+ *   camera.farDistFactor = 5
  * ```
  *
  * **Parameters**
@@ -80,9 +80,9 @@ class Camera extends TreeItem {
     // and far planes.
     this.adjustNearAndFarPlanesToFocalDist = true
     // The factor by which the near plane is adjusted based on the focal distance.
-    this.nearDistFactor = 0.01
+    this.nearDistFactor = 0.2
     // The factor by which the far plane is adjusted based on the focal distance.
-    this.farDistFactor = 10000
+    this.farDistFactor = 5
     this.frameOnBoundingSphere = false
   }
 
@@ -247,8 +247,14 @@ class Camera extends TreeItem {
     if (dist < 0.0001) console.error('Never set focal distance to zero')
     this.__focalDistanceParam.setValue(dist)
     if (this.adjustNearAndFarPlanesToFocalDist) {
-      this.__nearParam.setValue(dist * this.nearDistFactor)
-      this.__farParam.setValue(dist * this.farDistFactor)
+      const near = dist * this.nearDistFactor
+      if (near < this.__nearParam.getValue()) {
+        this.__nearParam.setValue(near)
+      }
+      const far = dist * this.farDistFactor
+      if (far > this.__farParam.getValue()) {
+        this.__farParam.setValue(far)
+      }
     }
   }
 
@@ -400,29 +406,37 @@ class Camera extends TreeItem {
             if (childItem instanceof GeomItem) {
               const geom = childItem.getParameter('Geometry').getValue()
               if (geom) {
-                const mat4 = childItem.getGeomMat4()
                 const box3 = geom.getBoundingBox()
-                boundaryPoints.push(mat4.transformVec3(box3.p0))
-                boundaryPoints.push(mat4.transformVec3(new Vec3(box3.p0.x, box3.p0.y, box3.p1.z)))
-                boundaryPoints.push(mat4.transformVec3(new Vec3(box3.p0.x, box3.p1.y, box3.p0.z)))
-                boundaryPoints.push(mat4.transformVec3(new Vec3(box3.p1.x, box3.p0.y, box3.p0.z)))
-                boundaryPoints.push(mat4.transformVec3(new Vec3(box3.p0.x, box3.p1.y, box3.p1.z)))
-                boundaryPoints.push(mat4.transformVec3(new Vec3(box3.p1.x, box3.p0.y, box3.p1.z)))
-                boundaryPoints.push(mat4.transformVec3(new Vec3(box3.p1.x, box3.p1.y, box3.p0.z)))
-                boundaryPoints.push(mat4.transformVec3(box3.p1))
+                if (box3.isValid()) {
+                  const mat4 = childItem.getGeomMat4()
+                  boundaryPoints.push(mat4.transformVec3(box3.p0))
+                  boundaryPoints.push(mat4.transformVec3(new Vec3(box3.p0.x, box3.p0.y, box3.p1.z)))
+                  boundaryPoints.push(mat4.transformVec3(new Vec3(box3.p0.x, box3.p1.y, box3.p0.z)))
+                  boundaryPoints.push(mat4.transformVec3(new Vec3(box3.p1.x, box3.p0.y, box3.p0.z)))
+                  boundaryPoints.push(mat4.transformVec3(new Vec3(box3.p0.x, box3.p1.y, box3.p1.z)))
+                  boundaryPoints.push(mat4.transformVec3(new Vec3(box3.p1.x, box3.p0.y, box3.p1.z)))
+                  boundaryPoints.push(mat4.transformVec3(new Vec3(box3.p1.x, box3.p1.y, box3.p0.z)))
+                  boundaryPoints.push(mat4.transformVec3(box3.p1))
+                  return false
+                }
               }
-            } else if (childItem.getNumChildren() == 0) {
+            }
+            if (childItem.getNumChildren() == 0) {
               const box3 = childItem.getParameter('BoundingBox').getValue()
-              if (!box3.isValid()) return
-              boundaryPoints.push(box3.p0)
-              boundaryPoints.push(new Vec3(box3.p0.x, box3.p0.y, box3.p1.z))
-              boundaryPoints.push(new Vec3(box3.p0.x, box3.p1.y, box3.p0.z))
-              boundaryPoints.push(new Vec3(box3.p1.x, box3.p0.y, box3.p0.z))
-              boundaryPoints.push(new Vec3(box3.p0.x, box3.p1.y, box3.p1.z))
-              boundaryPoints.push(new Vec3(box3.p1.x, box3.p0.y, box3.p1.z))
-              boundaryPoints.push(new Vec3(box3.p1.x, box3.p1.y, box3.p0.z))
-              boundaryPoints.push(box3.p1)
-              return false
+              if (box3.isValid()) {
+                // Note: passing box3.p0 into boundaryPoints caused corruption later on.
+                // I could not figure out how/why, but by constructing a new vector here,
+                // we avoid the problem.
+                boundaryPoints.push(new Vec3(box3.p0.x, box3.p0.y, box3.p0.z))
+                boundaryPoints.push(new Vec3(box3.p0.x, box3.p0.y, box3.p1.z))
+                boundaryPoints.push(new Vec3(box3.p0.x, box3.p1.y, box3.p0.z))
+                boundaryPoints.push(new Vec3(box3.p1.x, box3.p0.y, box3.p0.z))
+                boundaryPoints.push(new Vec3(box3.p0.x, box3.p1.y, box3.p1.z))
+                boundaryPoints.push(new Vec3(box3.p1.x, box3.p0.y, box3.p1.z))
+                boundaryPoints.push(new Vec3(box3.p1.x, box3.p1.y, box3.p0.z))
+                boundaryPoints.push(new Vec3(box3.p1.x, box3.p1.y, box3.p1.z))
+                return false
+              }
             }
           })
         })
@@ -446,25 +460,41 @@ class Camera extends TreeItem {
         frustumPlaneOffsets[key] = Number.NEGATIVE_INFINITY
       }
       const centroid = new Vec3()
-      boundaryPoints.forEach((point) => {
+      boundaryPoints.forEach((point, index) => {
+        // Previously we had corrupt values coming through there. That is fixed,
+        // but just in case, we filter them out again here.
+        if (!Number.isFinite(point.x) || !Number.isFinite(point.y) || !Number.isFinite(point.z)) {
+          return
+        }
         const delta = point.subtract(globalXfo.tr)
         // eslint-disable-next-line guard-for-in
         for (const key in frustumPlaneNormals) {
           const planeOffset = delta.dot(frustumPlaneNormalsWs[key])
-          if (planeOffset > frustumPlaneOffsets[key]) frustumPlaneOffsets[key] = planeOffset
+          if (planeOffset > frustumPlaneOffsets[key] && planeOffset != Number.POSITIVE_INFINITY) {
+            frustumPlaneOffsets[key] = planeOffset
+          }
         }
         centroid.addInPlace(point)
       })
+
+      // eslint-disable-next-line guard-for-in
+      // Check for invalid planes.
+      for (const key in frustumPlaneOffsets) {
+        if (frustumPlaneOffsets[key] == Number.POSITIVE_INFINITY) return
+      }
       centroid.scaleInPlace(1 / boundaryPoints.length)
 
+      let dolly = 0
       if (this.isOrthographic()) {
         const pan = new Vec3(
           (-frustumPlaneOffsets.XNeg + frustumPlaneOffsets.XPos) * 0.5,
           (-frustumPlaneOffsets.YNeg + frustumPlaneOffsets.YPos) * 0.5,
           (-frustumPlaneOffsets.ZNeg + frustumPlaneOffsets.ZPos) * 0.5
         )
+        // Move the camera back by 2x the depth range of the scene.
         const zrange = frustumPlaneOffsets.ZNeg + frustumPlaneOffsets.ZPos
-        pan.z += zrange * 2
+        dolly = zrange * 2
+        pan.z = dolly
         globalXfo.tr.addInPlace(globalXfo.ori.rotateVec3(pan))
         newFocalDistance = zrange * 2
 
@@ -493,14 +523,26 @@ class Camera extends TreeItem {
         const yP3 = yP2.add(new Vec2(-Math.sin(angleY), -Math.cos(angleY)))
         const yP = Vec2.intersectionOfLines(yP0, yP1, yP2, yP3)
 
-        const dolly = Math.max(xP.y, yP.y)
+        dolly = Math.max(xP.y, yP.y)
         const pan = new Vec3(xP.x, yP.x, dolly)
         globalXfo.tr.addInPlace(globalXfo.ori.rotateVec3(pan))
 
         newFocalDistance = centroid.distanceTo(globalXfo.tr)
 
         const frameBorder = 0.1
-        globalXfo.tr.addInPlace(globalXfo.ori.rotateVec3(new Vec3(0, 0, newFocalDistance * frameBorder)))
+        const frameBorderAdjustment = newFocalDistance * frameBorder
+        globalXfo.tr.addInPlace(globalXfo.ori.rotateVec3(new Vec3(0, 0, frameBorderAdjustment)))
+
+        dolly += frameBorderAdjustment
+      }
+
+      if (this.adjustNearAndFarPlanesToFocalDist) {
+        frustumPlaneOffsets.ZPos -= dolly
+        frustumPlaneOffsets.ZNeg += dolly
+        const near = frustumPlaneOffsets.ZNeg * this.nearDistFactor
+        const far = -frustumPlaneOffsets.ZPos * this.farDistFactor
+        this.__nearParam.setValue(near)
+        this.__farParam.setValue(far)
       }
     }
 

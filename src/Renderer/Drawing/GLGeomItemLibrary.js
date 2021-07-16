@@ -1,7 +1,7 @@
 /* eslint-disable guard-for-in */
 import { EventEmitter } from '../../Utilities/index'
 import { Vec4 } from '../../Math/index'
-import { GLGeomItemChangeType, GLGeomItemFlags, GLGeomItem } from './GLGeomItem.js'
+import { GLGeomItemFlags, GLGeomItem } from './GLGeomItem.js'
 import { MathFunctions } from '../../Utilities/MathFunctions'
 import { GLTexture2D } from '../GLTexture2D.js'
 
@@ -54,17 +54,38 @@ class GLGeomItemLibrary extends EventEmitter {
     }
 
     const viewportChanged = () => {
-      const aspectRatio = renderer.getWidth() / renderer.getHeight()
-      const frustumHalfAngleY = renderer.getViewport().getCamera().getFov() * 0.5
-      const frustumHalfAngleX = Math.atan(Math.tan(frustumHalfAngleY) * aspectRatio)
-      this.worker.postMessage({
-        type: 'ViewportChanged',
-        frustumHalfAngleX,
-        frustumHalfAngleY,
-        solidAngleLimit: renderer.solidAngleLimit,
-      })
+      const viewport = renderer.getViewport()
+      const camera = renderer.getViewport().getCamera()
+      const aspectRatio = viewport.getWidth() / viewport.getHeight()
+      if (camera.isOrthographic()) {
+        const frustumHeight = camera.getFrustumHeight()
+        const frustumWidth = frustumHeight * aspectRatio
+        this.worker.postMessage({
+          type: 'ViewportChanged',
+          frustumHeight,
+          frustumWidth,
+          isOrthographic: true,
+          solidAngleLimit: renderer.solidAngleLimit,
+        })
+      } else {
+        const frustumHalfAngleY = camera.getFov() * 0.5
+        const frustumHalfAngleX = Math.atan(Math.tan(frustumHalfAngleY) * aspectRatio)
+        this.worker.postMessage({
+          type: 'ViewportChanged',
+          frustumHalfAngleX,
+          frustumHalfAngleY,
+          isOrthographic: false,
+          solidAngleLimit: renderer.solidAngleLimit,
+        })
+      }
     }
     renderer.on('resized', viewportChanged)
+    const camera = renderer.getViewport().getCamera()
+    camera.on('projectionParamChanged', (event) => {
+      if (camera.isOrthographic()) {
+        viewportChanged()
+      }
+    })
     viewportChanged()
 
     renderer.once('xrViewportSetup', (event) => {
@@ -84,6 +105,7 @@ class GLGeomItemLibrary extends EventEmitter {
             type: 'ViewportChanged',
             frustumHalfAngleX,
             frustumHalfAngleY,
+            isOrthographic: false,
             solidAngleLimit: renderer.solidAngleLimit,
           })
         } else {
@@ -102,8 +124,8 @@ class GLGeomItemLibrary extends EventEmitter {
           const ori = event.viewXfo.ori
           this.worker.postMessage({
             type: 'ViewChanged',
-            viewPos: pos.asArray(),
-            viewOri: ori.asArray(),
+            cameraPos: pos.asArray(),
+            cameraOri: ori.asArray(),
             solidAngleLimit: renderer.solidAngleLimit,
           })
         }
@@ -118,8 +140,8 @@ class GLGeomItemLibrary extends EventEmitter {
       const ori = viewXfo.ori
       this.worker.postMessage({
         type: 'ViewChanged',
-        viewPos: pos.asArray(),
-        viewOri: ori.asArray(),
+        cameraPos: pos.asArray(),
+        cameraOri: ori.asArray(),
         solidAngleLimit: renderer.solidAngleLimit,
       })
     }
@@ -206,6 +228,7 @@ class GLGeomItemLibrary extends EventEmitter {
     geomItem.getParameter('GeomMat').on('valueChanged', geomItemChanged)
     geomItem.on('cutAwayChanged', geomItemChanged)
     geomItem.on('highlightChanged', geomItemChanged)
+    geomItem.on('selectabilityChanged', geomItemChanged)
 
     this.glGeomItems[index] = glGeomItem
     this.glGeomItemEventHandlers[index] = {
@@ -321,7 +344,7 @@ class GLGeomItemLibrary extends EventEmitter {
     if (geomItem.isCutawayEnabled()) {
       flags |= GLGeomItemFlags.GEOMITEM_FLAG_CUTAWAY
     }
-    if (geomItem.visibleInGeomDataBuffer == false) {
+    if (geomItem.getSelectable() == false) {
       flags |= GLGeomItemFlags.GEOMITEM_INVISIBLE_IN_GEOMDATA
     }
 

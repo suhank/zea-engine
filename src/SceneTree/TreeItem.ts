@@ -130,8 +130,6 @@ class TreeItem extends BaseItem {
 
     // this._setGlobalXfoDirty()
     if (this.__ownerItem) {
-      this.setSelectable(this.__ownerItem.getSelectable()) // TODO: removed 2nd argument 'true'
-
       // The effect of the invisible owner is added.
       if (!(<TreeItem>this.__ownerItem).isVisible()) this.__visibleCounter--
 
