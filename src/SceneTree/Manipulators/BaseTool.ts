@@ -27,6 +27,7 @@ import { ParameterOwner } from '../ParameterOwner'
  * @extends ParameterOwner
  */
 class BaseTool extends ParameterOwner {
+  protected __activated: boolean
   /**
    * Creates an instance of BaseTool.
    */
@@ -60,7 +61,7 @@ class BaseTool extends ParameterOwner {
    *
    * @param {MouseEvent} event - The event param.
    */
-  onPointerDown(event) {
+  onPointerDown(event: MouseEvent) {
     // console.warn('Implement me')
   }
 
@@ -69,7 +70,7 @@ class BaseTool extends ParameterOwner {
    *
    * @param {MouseEvent} event - The event param.
    */
-  onPointerMove(event) {
+  onPointerMove(event: MouseEvent) {
     // console.warn('Implement me')
   }
 
@@ -78,7 +79,7 @@ class BaseTool extends ParameterOwner {
    *
    * @param {MouseEvent} event - The event param.
    */
-  onPointerUp(event) {
+  onPointerUp(event: MouseEvent) {
     // console.warn('Implement me')
   }
 
@@ -87,7 +88,7 @@ class BaseTool extends ParameterOwner {
    *
    * @param {MouseEvent} event - The event param.
    */
-  onPointerDoublePress(event) {
+  onPointerDoublePress(event: MouseEvent) {
     // console.warn('Implement me')
   }
 
@@ -96,7 +97,7 @@ class BaseTool extends ParameterOwner {
    *
    * @param {MouseEvent} event - The event param.
    */
-  onPointerEnter(event) {
+  onPointerEnter(event: MouseEvent) {
     // console.warn('Implement me')
   }
 
@@ -105,7 +106,7 @@ class BaseTool extends ParameterOwner {
    *
    * @param {MouseEvent} event - The event param.
    */
-  onPointerLeave(event) {
+  onPointerLeave(event: MouseEvent) {
     // console.warn('Implement me')
   }
 
@@ -114,7 +115,7 @@ class BaseTool extends ParameterOwner {
    *
    * @param {MouseEvent} event - The event param.
    */
-  onWheel(event) {
+  onWheel(event: MouseEvent) {
     // console.warn('Implement me')
   }
 
@@ -126,7 +127,7 @@ class BaseTool extends ParameterOwner {
    *
    * @param {KeyboardEvent} event - The event param.
    */
-  onKeyDown(event) {
+  onKeyDown(event: KeyboardEvent) {
     // console.warn('Implement me')
   }
 
@@ -135,7 +136,7 @@ class BaseTool extends ParameterOwner {
    *
    * @param {KeyboardEvent} event - The event param.
    */
-  onKeyUp(event) {
+  onKeyUp(event: KeyboardEvent) {
     // console.warn('Implement me')
   }
 
@@ -147,7 +148,7 @@ class BaseTool extends ParameterOwner {
    *
    * @param {TouchEvent} event - The event param.
    */
-  onTouchStart(event) {
+  onTouchStart(event: TouchEvent) {
     // console.warn('Implement me')
   }
 
@@ -156,7 +157,7 @@ class BaseTool extends ParameterOwner {
    *
    * @param {TouchEvent} event - The event param.
    */
-  onTouchMove(event) {
+  onTouchMove(event: TouchEvent) {
     // console.warn('Implement me')
   }
 
@@ -165,7 +166,7 @@ class BaseTool extends ParameterOwner {
    *
    * @param {TouchEvent} event - The event param.
    */
-  onTouchEnd(event) {
+  onTouchEnd(event: TouchEvent) {
     // console.warn('Implement me')
   }
 
@@ -174,7 +175,7 @@ class BaseTool extends ParameterOwner {
    *
    * @param {TouchEvent} event - The event param.
    */
-  onTouchCancel(event) {
+  onTouchCancel(event: TouchEvent) {
     // console.warn('Implement me')
   }
 
@@ -183,7 +184,7 @@ class BaseTool extends ParameterOwner {
    *
    * @param {TouchEvent} event - The event param.
    */
-  onDoubleTap(event) {
+  onDoubleTap(event: TouchEvent) {
     // console.warn('Implement me')
   }
 
@@ -195,7 +196,7 @@ class BaseTool extends ParameterOwner {
    *
    * @param {object} event - The event param.
    */
-  onVRControllerButtonDown(event) {
+  onVRControllerButtonDown(event: object) {
     // console.warn('Implement me')
   }
 
@@ -204,7 +205,7 @@ class BaseTool extends ParameterOwner {
    *
    * @param {object} event - The event param.
    */
-  onVRControllerButtonUp(event) {
+  onVRControllerButtonUp(event: object) {
     // console.warn('Implement me')
   }
 
@@ -213,7 +214,7 @@ class BaseTool extends ParameterOwner {
    *
    * @param {object} event - The event param.
    */
-  onVRControllerDoubleClicked(event) {
+  onVRControllerDoubleClicked(event: object) {
     // console.warn('Implement me')
   }
 
@@ -222,7 +223,7 @@ class BaseTool extends ParameterOwner {
    *
    * @param {object} event - The event param.
    */
-  onVRPoseChanged(event) {
+  onVRPoseChanged(event: object) {
     // console.warn('Implement me')
   }
 }
