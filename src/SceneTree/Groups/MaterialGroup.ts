@@ -4,6 +4,8 @@ import { BaseGroup } from './BaseGroup'
 import { MaterialParameter } from '../Parameters/MaterialParameter'
 import { TreeItem } from '../TreeItem'
 
+import { Parameter } from '../Parameters/Parameter'
+import { Material } from '../../SceneTree/Material'
 /**
  *
  * **Parameters**
@@ -12,6 +14,8 @@ import { TreeItem } from '../TreeItem'
  * @extends BaseGroup
  */
 class MaterialGroup extends BaseGroup {
+  __materialParam: Parameter<Material> // or MaterialParameter?
+  name: string
   /**
    * Creates an instance of a group.
    *
@@ -19,7 +23,7 @@ class MaterialGroup extends BaseGroup {
    */
   constructor(name) {
     super(name)
-
+    this.name = name
     this.__materialParam = this.addParameter(new MaterialParameter('Material'))
     this.__materialParam.on('valueChanged', () => {
       this.__updateMaterial()
@@ -36,7 +40,7 @@ class MaterialGroup extends BaseGroup {
     // Make this function async so that we don't pull on the
     // graph immediately when we receive a notification.
     // Note: propagating using an operator would be much better.
-    new Promise((resolve) => {
+    const highlight = new Promise((resolve) => {
       let highlighted = false
       let color
       if (this.isSelected()) {
@@ -52,7 +56,7 @@ class MaterialGroup extends BaseGroup {
           else item.removeHighlight(key, true)
         }
       })
-      resolve()
+      resolve(highlight)
     })
   }
 
@@ -77,14 +81,14 @@ class MaterialGroup extends BaseGroup {
     // Make this function async so that we don't pull on the
     // graph immediately when we receive a notification.
     // Note: propagating using an operator would be much better.
-    new Promise((resolve) => {
+    const update = new Promise((resolve) => {
       const material = this.getParameter('Material').getValue()
 
       // TODO: Bind an operator
       Array.from(this.__itemsParam.getValue()).forEach((item) => {
-        item.traverse((treeItem) => {
+        ;(<TreeItem>item).traverse((treeItem) => {
           if (treeItem instanceof TreeItem && treeItem.hasParameter('Material')) {
-            const p = treeItem.getParameter('Material')
+            const p: Parameter<Material> = treeItem.getParameter('Material')
             if (material) {
               const m = p.getValue()
 
@@ -100,7 +104,7 @@ class MaterialGroup extends BaseGroup {
           }
         })
       })
-      resolve()
+      resolve(update)
     })
   }
 
@@ -114,7 +118,7 @@ class MaterialGroup extends BaseGroup {
    * @private
    */
   __bindItem(item, index) {
-    super.__bindItem(item, index)
+    super.bindItem(item, index)
 
     if (!(item instanceof TreeItem)) return
 
@@ -156,7 +160,7 @@ class MaterialGroup extends BaseGroup {
    * @private
    */
   __unbindItem(item, index) {
-    super.__unbindItem(item, index)
+    super.unbindItem(item, index)
     if (!(item instanceof TreeItem)) return
 
     if (this.isSelected()) {
@@ -176,7 +180,7 @@ class MaterialGroup extends BaseGroup {
    * @return {MaterialGroup} - Returns a new cloned group.
    */
   clone(context) {
-    const cloned = new MaterialGroup()
+    const cloned = new MaterialGroup(this.name + 'clone')
     cloned.copyFrom(this, context)
     return cloned
   }

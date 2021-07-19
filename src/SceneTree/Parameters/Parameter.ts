@@ -7,7 +7,7 @@ import { ICloneable } from '../../Utilities/ICloneable'
 import { ISerializable } from '../../Utilities/ISerializable'
 import { OperatorOutputMode } from './OperatorOutputMode'
 // import { BinReader } from '../BinReader'
-
+import {Material} from '../../SceneTree/Material'
 /**
  * Represents a reactive type of attribute that can be owned by a `ParameterOwner` class.
  *
@@ -16,6 +16,7 @@ import { OperatorOutputMode } from './OperatorOutputMode'
  * * **valueChanged:** Triggered when the value of the parameter changes.
  */
 abstract class Parameter<T> extends EventEmitter implements ICloneable, ISerializable {
+  __backupMaterial: Material // TODO:(check/refactor) this is used in MaterialGroup.ts and Group.js
   // TODO:(refactor) boundOps, cleaning, dirtyOpIndex, firstOP_WRITE, were private.
   protected dirty: boolean
   protected boundOps: OperatorOutput[]
