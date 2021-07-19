@@ -1,4 +1,3 @@
-import { AttrValue } from './AttrValue.js'
 import { Registry } from '../Registry'
 
 /**
@@ -8,7 +7,7 @@ import { Registry } from '../Registry'
  */
 class EulerAngles {
   order: number
-  __data;
+  __data
   /**
    * Create a euler angle. Receives the xyz values in radians and the order that the rotations are applied.
    * <br>
@@ -143,6 +142,6 @@ class EulerAngles {
   }
 }
 
-Registry.register('EulerAngles', EulerAngles)
+// Registry.register('EulerAngles', EulerAngles)
 
 export { EulerAngles }

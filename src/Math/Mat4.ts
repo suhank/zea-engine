@@ -30,7 +30,7 @@ class Mat4 {
    * @param {number} m32 - Row 3, column 2.
    * @param {number} m33 - Row 3, column 3.
    */
-  __data;
+  __data
   constructor(
     m00: number | Float32Array | ArrayBuffer = 1,
     m01 = 0,
@@ -47,7 +47,7 @@ class Mat4 {
     m30 = 0,
     m31 = 0,
     m32 = 0,
-    m33 = 1,
+    m33 = 1
   ) {
     if (m00 instanceof Float32Array) {
       this.__data = m00
@@ -463,7 +463,7 @@ class Mat4 {
     m30 = 0,
     m31 = 0,
     m32 = 0,
-    m33 = 1,
+    m33 = 1
   ): void {
     this.__data[0] = m00
     this.__data[1] = m01
@@ -540,7 +540,7 @@ class Mat4 {
       this.__data[6],
       this.__data[8],
       this.__data[9],
-      this.__data[10],
+      this.__data[10]
     )
   }
 
@@ -593,7 +593,7 @@ class Mat4 {
       this.__data[3],
       this.__data[7],
       this.__data[11],
-      this.__data[15],
+      this.__data[15]
     )
   }
 
@@ -658,7 +658,7 @@ class Mat4 {
       (a11 * b07 - a10 * b09 - a12 * b06) * det,
       (a00 * b09 - a01 * b07 + a02 * b06) * det,
       (a31 * b01 - a30 * b03 - a32 * b00) * det,
-      (a20 * b03 - a21 * b01 + a22 * b00) * det,
+      (a20 * b03 - a21 * b01 + a22 * b00) * det
     )
   }
 
@@ -788,7 +788,7 @@ class Mat4 {
       (a11 * b07 - a10 * b09 - a12 * b06) * det,
       (a00 * b09 - a01 * b07 + a02 * b06) * det,
       (a31 * b01 - a30 * b03 - a32 * b00) * det,
-      (a20 * b03 - a21 * b01 + a22 * b00) * det,
+      (a20 * b03 - a21 * b01 + a22 * b00) * det
     )
   }
   /**
@@ -1045,7 +1045,7 @@ class Mat4 {
       pos.x,
       pos.y,
       pos.z,
-      1,
+      1
     )
     /* eslint-enable prettier/prettier*/
   }
@@ -1224,7 +1224,7 @@ class Mat4 {
       a[0] * x + a[4] * y + a[8] * z + a[12] * w,
       a[1] * x + a[5] * y + a[9] * z + a[13] * w,
       a[2] * x + a[6] * y + a[10] * z + a[14] * w,
-      a[3] * x + a[7] * y + a[11] * z + a[15] * w,
+      a[3] * x + a[7] * y + a[11] * z + a[15] * w
     )
   }
 
@@ -1242,7 +1242,7 @@ class Mat4 {
     return new Vec3(
       a[0] * x + a[4] * y + a[8] * z + a[12],
       a[1] * x + a[5] * y + a[9] * z + a[13],
-      a[2] * x + a[6] * y + a[10] * z + a[14],
+      a[2] * x + a[6] * y + a[10] * z + a[14]
     )
   }
 
@@ -1306,7 +1306,7 @@ class Mat4 {
       (left + right) * lr,
       (top + bottom) * bt,
       (far + near) * nf,
-      1,
+      1
     )
     /* eslint-enable prettier/prettier*/
   }
@@ -1351,7 +1351,7 @@ class Mat4 {
       m3x4[9],
       m3x4[10],
       m3x4[11],
-      1,
+      1
     )
     /* eslint-enable prettier/prettier*/
   }
@@ -1404,7 +1404,7 @@ class Mat4 {
       this.__data[12],
       this.__data[13],
       this.__data[14],
-      this.__data[15],
+      this.__data[15]
     )
   }
 
@@ -1434,11 +1434,11 @@ class Mat4 {
     return Float32Array.from(this.__data)
   }
 
- /**
- * The fromJSON method decodes a json object for this type.
- *
- * @param {object} json - The json param.
- */
+  /**
+   * The fromJSON method decodes a json object for this type.
+   *
+   * @param {object} json - The json param.
+   */
   fromJSON(json: number[]): void {
     this.__data = new Float32Array(json)
   }
@@ -1462,6 +1462,6 @@ class Mat4 {
   }
 }
 
-Registry.register('Mat4', Mat4)
+// Registry.register('Mat4', Mat4)
 
 export { Mat4 }

@@ -5,7 +5,7 @@ import { Registry } from '../Registry'
  * Class representing the red, green, blue and alpha channel of a color as 8bit values.
  *
  */
-class RGBA  {
+class RGBA {
   /**
    * Create a RGBA.
    * @param {number | string | Float32Array | ArrayBuffer} r - The red channel of a color.
@@ -13,9 +13,8 @@ class RGBA  {
    * @param {number} b - The blue channel of a color.
    * @param {number} a - The alpha (transparency) channel of a color.
    */
-  __data;
+  __data
   constructor(r: number | string | Float32Array | ArrayBuffer = 0, g = 0, b = 0, a = 255) {
-
     if (r instanceof Uint8Array) {
       this.__data = r
     } else if (r instanceof ArrayBuffer) {
@@ -142,7 +141,7 @@ class RGBA  {
    *
    * @param {array} values - The array of values.
    */
-  setFromArray(values: number[]): void  {
+  setFromArray(values: number[]): void {
     this.r = values[0]
     this.g = values[1]
     this.b = values[2]
@@ -492,14 +491,14 @@ class RGBA  {
         gammaOffset + Math.random() * (1.0 - gammaOffset),
         gammaOffset + Math.random() * (1.0 - gammaOffset),
         gammaOffset + Math.random() * (1.0 - gammaOffset),
-        randomAlpha ? gammaOffset + Math.random() * (1.0 - gammaOffset) : 1.0,
+        randomAlpha ? gammaOffset + Math.random() * (1.0 - gammaOffset) : 1.0
       )
     } else if (gammaOffset < 0.0) {
       return new RGBA(
         Math.random() * (1.0 + gammaOffset),
         Math.random() * (1.0 + gammaOffset),
         Math.random() * (1.0 + gammaOffset),
-        randomAlpha ? Math.random() * (1.0 + gammaOffset) : 1.0,
+        randomAlpha ? Math.random() * (1.0 + gammaOffset) : 1.0
       )
     } else {
       return new RGBA(Math.random(), Math.random(), Math.random(), randomAlpha ? Math.random() : 1.0)
@@ -630,6 +629,6 @@ class RGBA  {
   }
 }
 
-Registry.register('RGBA', RGBA)
+// Registry.register('RGBA', RGBA)
 
 export { RGBA }

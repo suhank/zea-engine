@@ -87,7 +87,7 @@ class PlaneType {
    */
 
   static create(...args: any[]): PlaneType {
-    return new  PlaneType(...args)
+    return new PlaneType(...args)
   }
 
   // ///////////////////////////
@@ -120,6 +120,6 @@ class PlaneType {
   }
 }
 
-Registry.register('PlaneType', PlaneType)
+// Registry.register('PlaneType', PlaneType)
 
 export { PlaneType }

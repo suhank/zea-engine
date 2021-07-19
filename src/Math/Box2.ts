@@ -20,7 +20,7 @@ class Box2 {
    * @param {Vec2} p0 - A point representing the corners of a 2D box.
    * @param {Vec2} p1 - A point representing the corners of a 2D box.
    */
-   constructor(p0?: Vec2, p1?: Vec2) {
+  constructor(p0?: Vec2, p1?: Vec2) {
     if (p0 instanceof Vec2) {
       this.p0 = p0
     } else {
@@ -83,7 +83,7 @@ class Box2 {
     if (this.p1.y == Number.NEGATIVE_INFINITY || point.x > this.p1.x) this.p1.x = point.x
     if (this.p1.y == Number.NEGATIVE_INFINITY || point.y > this.p1.y) this.p1.y = point.y
   }
-  
+
   /**
    * Returns the length of the diagonal of the box.
    *
@@ -154,6 +154,6 @@ class Box2 {
   }
 }
 
-Registry.register('Box2', Box2)
+// Registry.register('Box2', Box2)
 
 export { Box2 }

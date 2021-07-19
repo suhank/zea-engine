@@ -59,9 +59,10 @@ class Vec2 {
    * @param {Number|Float32Array|Uint32Array|json} x - The x value. Default is 0.
    * @param {Number} y - The y value. Default is 0.
    */
-  __data;
+  __data
 
-  constructor(x: any  = 0, y = 0) { //x: number | Float32Array | Uint32Array | Record<string, any> = 0
+  constructor(x: any = 0, y = 0) {
+    //x: number | Float32Array | Uint32Array | Record<string, any> = 0
 
     if (x instanceof Float32Array || x instanceof Uint32Array || x instanceof Int32Array) {
       this.__data = x
@@ -610,6 +611,6 @@ class Vec2 {
   }
 }
 
-Registry.register('Vec2', Vec2)
+// Registry.register('Vec2', Vec2)
 
 export { Vec2 }
