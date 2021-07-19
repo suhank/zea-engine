@@ -1,8 +1,8 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { Attribute, AttrValue } from './Attribute'
+/* eslint-disable @typescript-eslint/no-unused-vars * /
+/* eslint-disable @typescript-eslint/no-explicit-any * /
+import { Attribute } from './Attribute'
 import { Float32 } from '../../Utilities/MathFunctions'
-// import { AttrValue } from '../../Math/AttrValue'
+// import { any } from '../../Math/any'
 import { BinReader } from '../../SceneTree/BinReader'
 
 /**
@@ -13,7 +13,7 @@ import { BinReader } from '../../SceneTree/BinReader'
  * ```
  *
  * @extends Attribute
- */
+ * /
 class VertexAttribute extends Attribute {
   __geom: any
   __numFloat32Elements: any
@@ -22,10 +22,10 @@ class VertexAttribute extends Attribute {
   /**
    * Create vertex attributes
    * @param {Mesh} geom - The geom value.
-   * @param {AttrValue|number} dataType - The dataType value.
+   * @param {any|number} dataType - The dataType value.
    * @param {number|TypedArray} expectedSize - The expectedSize value.
    * @param {number} defaultScalarValue - The default scalar value.
-   */
+   * /
   constructor(geom: any, dataType: any, expectedSize: any, defaultScalarValue: any) {
     super(dataType, expectedSize, defaultScalarValue)
     this.__geom = geom // TODO: WeakRef??
@@ -39,7 +39,7 @@ class VertexAttribute extends Attribute {
    * In case the new size is bigger than current size, the new values are filled up with default ones.
    *
    * @param {number} size - The size value.
-   */
+   * /
   resize(size: number): void {
     super.resize(size)
     this.__splits = {}
@@ -50,9 +50,9 @@ class VertexAttribute extends Attribute {
    * The getFaceVertexValueRef method.
    * @param {number} face - The face value.
    * @param {number} facevertex - The face vertex value.
-   * @return {AttrValue} - The return value.
-   */
-  getFaceVertexValueRef(face: number, facevertex: number): AttrValue {
+   * @return {any} - The return value.
+   * /
+  getFaceVertexValueRef(face: number, facevertex: number): any {
     const vertex = this.__geom.getFaceVertexIndex(face, facevertex)
     if (vertex in this.__splits && face in this.__splits[vertex]) {
       return this.__splitValues[this.__splits[vertex][face]]
@@ -64,9 +64,9 @@ class VertexAttribute extends Attribute {
    * The setFaceVertexValue method.
    * @param {number} face - The face value.
    * @param {number} facevertex - The facevertex value.
-   * @param {AttrValue} value - The value value.
-   */
-  setFaceVertexValue(face: number, facevertex: number, value: AttrValue): void {
+   * @param {any} value - The value value.
+   * /
+  setFaceVertexValue(face: number, facevertex: number, value: any): void {
     const vertex = this.__geom.getFaceVertexIndex(face, facevertex)
     this.setFaceVertexValue_ByVertexIndex(face, vertex, value)
   }
@@ -75,9 +75,9 @@ class VertexAttribute extends Attribute {
    * The setFaceVertexValue_ByVertexIndex method.
    * @param {number} face - The face value.
    * @param {number} vertex - The vertex value.
-   * @param {AttrValue} value - The value value.
-   */
-  setFaceVertexValue_ByVertexIndex(face: number, vertex: number, value: AttrValue): void {
+   * @param {any} value - The value value.
+   * /
+  setFaceVertexValue_ByVertexIndex(face: number, vertex: number, value: any): void {
     const valueRef = this.getValue(vertex)
     if (!valueRef.isValid()) {
       // the value is uninitialized. Initialize it.
@@ -120,9 +120,9 @@ class VertexAttribute extends Attribute {
    * The setSplitVertexValue method.
    * @param {number} vertex - The vertex value.
    * @param {number} face - The face value.
-   * @param {AttrValue} value - The value value.
-   */
-  setSplitVertexValue(vertex: number, face: number, value: AttrValue): void {
+   * @param {any} value - The value value.
+   * /
+  setSplitVertexValue(vertex: number, face: number, value: any): void {
     if (!(vertex in this.__splits)) this.__splits[vertex] = {}
     if (face in this.__splits[vertex]) {
       const currValue = this.__splitValues[this.__splits[vertex][face]]
@@ -137,9 +137,9 @@ class VertexAttribute extends Attribute {
    * The setSplitVertexValues method.
    * @param {number} vertex - The vertex value.
    * @param {array} faceGroup - The faceGroup value.
-   * @param {AttrValue} value - The value value.
-   */
-  setSplitVertexValues(vertex: number, faceGroup: number[], value: AttrValue): void {
+   * @param {any} value - The value value.
+   * /
+  setSplitVertexValues(vertex: number, faceGroup: number[], value: any): void {
     if (!(vertex in this.__splits)) this.__splits[vertex] = {}
     const splitIndex = this.__splitValues.length
     this.__splitValues.push(value)
@@ -157,7 +157,7 @@ class VertexAttribute extends Attribute {
   /**
    * The getSplits method.
    * @return {array} - The return value.
-   */
+   * /
   getSplits(): Array<any> {
     return this.__splits
   }
@@ -165,7 +165,7 @@ class VertexAttribute extends Attribute {
   /**
    * The getSplitCount method.
    * @return {number} - The return value.
-   */
+   * /
   getSplitCount(): number {
     let splitCount = 0
     for (const vertex in this.__splits) splitCount += Object.keys(this.__splits[vertex]).length
@@ -177,7 +177,7 @@ class VertexAttribute extends Attribute {
    * @param {array} splitIndices - The splitIndices value.
    * @param {number} splitCount - The splitCount value.
    * @return {Float32Array} - The return value.
-   */
+   * /
   generateSplitValues(
     splitIndices: any,
     splitCount: number
@@ -227,7 +227,7 @@ class VertexAttribute extends Attribute {
    *
    * @param {Record<string, any>} context - The context value.
    * @return {Record<string, any>} - Returns the json object.
-   */
+   * /
   toJSON(context: Record<string, any>): Record<string, any> {
     const json = super.toJSON(context)
     ;(json as any).splits = this.__splits
@@ -240,7 +240,7 @@ class VertexAttribute extends Attribute {
    *
    * @param {Record<string, any>} json - The json object this item must decode.
    * @param {Record<string, any>} context - The context value.
-   */
+   * /
 
   fromJSON(json: Record<string, any>, context?: Record<string, any>): void {
     super.fromJSON(json)
@@ -258,7 +258,7 @@ class VertexAttribute extends Attribute {
   /**
    * The loadSplitValues method.
    * @param {BinReader} reader - The reader value.
-   */
+   * /
   loadSplitValues(reader: BinReader): void {
     const splitIndices = reader.loadUInt32Array()
     if (splitIndices.length == 0) return
@@ -289,3 +289,4 @@ class VertexAttribute extends Attribute {
 }
 
 export { VertexAttribute }
+*/

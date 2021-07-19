@@ -1,75 +1,56 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable require-jsdoc */
+import { BaseClass } from '../../Utilities/BaseClass'
 import { Float32, UInt32, SInt32, MathFunctions } from '../../Utilities/MathFunctions'
-import { Registry } from '../../Registry'
-// import { AttrValue } from '../../Math/AttrValue'
+import { Mesh } from './Mesh'
 
-export interface AttrValue {
-  setElementValue(index: number, elemValue: number)
-  getElementValue(index: number): number
+function approxEqual(a: Float32Array, b: Float32Array) {
+  return a.some((value, index) => Math.abs(b[index] - value) > 0.001)
+}
+function isValid(a: Float32Array, defaultElementValue: number) {
+  return !a.some((value) => value == defaultElementValue)
 }
 
-function createTypedArray<U extends TypedArray>(c: new (size: number) => U, size: number): U {
-  return new c(size)
-}
+class Attribute extends BaseClass {
+  protected normalized: boolean
+  protected data: Float32Array
+  protected dataTypeName: string
+  protected stride: number
+  protected defaultElementValue: number
 
-/**
- * Class representing an attribute.
- */
-class Attribute {
-  protected __data: Float32Array
-  protected __dataTypeName: string
-  protected __stride: number
-  protected __defaultElementValue: number
-  normalized: boolean
+  protected mesh: Mesh
+  protected splitValues: Array<Float32Array>
+  protected splits: Record<number, Record<number, number>>
 
-  /**
-   * Create an attribute.
-   * @param {number} stride - The dataType value.
-   * @param {number} initialSize - The initialSize value.
-   * @param {number} defaultValue - The defaultValue value.
-   */
-  constructor(stride: number, initialSize: number, defaultValue = Number.MAX_VALUE) {
-    this.normalized = false
-    this.__stride = stride
-    this.__defaultElementValue = defaultValue
-    this.__data = new Float32Array(initialSize * stride)
+  constructor(dataTypeName: string, stride: number, defaultElementValue: number = 0) {
+    super()
+    this.data = new Float32Array(0)
+    this.dataTypeName = dataTypeName
+    this.stride = stride
+    this.defaultElementValue = defaultElementValue
     this.initRange(0)
+
+    this.splits = {}
+    this.splitValues = []
   }
 
   /**
-   * Resizes current data array to to a new size.
-   * In case the new size is bigger than current size, the new values are filled up with default ones.
+   * Returns the backing array for this attribute
    *
-   * @param {number} size - The size value.
+   * @return {string} - The return value.
    */
-  resize(size: number): void {
-    const prevLength = this.__data.length
-    const newLength = size * this.__stride
-
-    if (newLength > prevLength) {
-      const data = new Float32Array(newLength)
-      data.set(this.__data)
-      this.__data = data
-      this.initRange(prevLength)
-    } else if (newLength < prevLength) {
-      this.__data = this.__data.slice(0, newLength)
-    } else {
-      // No change in size. (this can happen when an attribute was already loaded with data.)
-    }
+  asArray() {
+    return this.data
   }
 
   /**
-   * Fills up data values with default ones starting from the specified index.
+   * Returns the name of the math type this attribute stores.
    *
-   * @param {number} start - The start value.
+   * @return {string} - The return value.
    */
-  initRange(start: number): void {
-    // Initialize the values to invalid values.
-    for (let i = start; i < this.__data.length; i++) {
-      this.__data[i] = this.__defaultElementValue
-    }
+  getDataTypeName() {
+    return this.dataTypeName
   }
 
   /**
@@ -78,34 +59,53 @@ class Attribute {
    * @return {number} - The return value.
    */
   getCount(): number {
-    return this.__data.length / this.__stride
+    return this.data.length / this.stride
   }
 
   /**
-   * Returns the count of attribute values in the data.
+   * Sets the count of attribute values in the data.
    *
-   * @return {number} - The return value.
+   * @param {number} size - The size value.
    */
-  get length(): number {
-    return this.__data.length / this.__stride
+  setCount(count: number): void {
+    const prevLength = this.data.length
+    const newLength = count * this.stride
+
+    if (newLength > prevLength) {
+      const data = new Float32Array(newLength)
+      data.set(this.data, 0)
+      this.data = data
+      this.initRange(prevLength)
+    } else if (newLength < prevLength) {
+      this.data = this.data.slice(0, newLength)
+    } else {
+      // No change in size. (this can happen when an attribute was already loaded with data.)
+    }
+
+    this.splits = {}
+    this.splitValues = []
   }
 
   /**
-   * Returns the type of attribute value.
-   *
-   * @return {T} - The return value.
-  get dataType(): T {
-    return this.sampleValue.constructor
-  }
+   * Resizes current data array to to a new size.
+   * In case the new size is bigger than current size, the new values are filled up with default ones.
+   * @deprecated
+   * @param {number} size - The size value.
    */
+  resize(size: number): void {
+    this.setCount(size)
+  }
 
   /**
-   * Returns current data array.
+   * Fills up data values with default ones starting from the specified index.
    *
-   * @return {TypedArray} - The return value.
+   * @param {number} start - The start value.
    */
-  get data(): TypedArray {
-    return this.__data
+  private initRange(start: number): void {
+    // Initialize the values to invalid values.
+    for (let i = start; i < this.data.length; i++) {
+      this.data[i] = this.defaultElementValue
+    }
   }
 
   /**
@@ -114,7 +114,7 @@ class Attribute {
    * @return {number} - The return value.
    */
   get numElements(): number {
-    return this.__stride
+    return this.stride
   }
 
   /**
@@ -124,7 +124,7 @@ class Attribute {
    * @return {number} - The return value.
    */
   getFloat32Value(index: number): number {
-    return this.__data[index]
+    return this.data[index]
   }
 
   /**
@@ -134,47 +134,172 @@ class Attribute {
    * @param {number} value - The value param.
    */
   setFloat32Value(index: number, value: number): void {
-    this.__data[index] = value
+    this.data[index] = value
+  }
+
+  // //////////////////////////////////////////////////
+  // Face Vertex Values
+
+  /**
+   * The getSplits method.
+   * @return {array} - The return value.
+   */
+  getSplits(): Record<number, Record<number, number>> {
+    return this.splits
   }
 
   /**
-   * Returns the `T` object placed in the specified index.
-   * @deprecated
-   *
-   * @param {number} index - The index value.
+   * The getFaceVertexValueRef method.
+   * @param {number} face - The face value.
+   * @param {number} faceVertex - The face vertex value.
+   * @return {Float32Array} - The return value.
    */
-  getValueRef<T extends AttrValue>(c: { new (arr: ArrayBuffer, byteOffset: number): T }, index: number): void {
-    throw new Error(" getValueRef is deprecated. Please use 'getValue' instead.")
+  getFaceVertexValueRef(face: number, faceVertex: number): any {
+    const vertex = this.mesh.getFaceVertexIndex(face, faceVertex)
+    if (vertex in this.splits && face in this.splits[vertex]) {
+      return this.splitValues[this.splits[vertex][face]]
+    }
+    return this.data.subarray(vertex * this.numElements, (vertex + 1) * this.numElements)
   }
 
   /**
-   * Returns the `T` object placed in the specified index.
-   *
-   * @param {number} index - The index value.
-   * @return {T} - The return value.
+   * The setFaceVertexValue method.
+   * @param {number} face - The face value.
+   * @param {number} faceVertex - The faceVertex value.
+   * @param {Float32Array} value - The value value.
    */
-  getValue<T extends AttrValue>(c: { new (): T }, index: number): T {
-    if (index >= this.__data.length / this.__stride)
-      throw new Error('Invalid vertex index:' + index + '. Num Vertices:' + this.__data.length / 3)
-    const value = new c()
-    const offset = index * this.__stride
-    for (let i = 0; i < this.__stride; i++) value.setElementValue(i, this.__data[offset + i])
-    return value
+  setFaceVertexValue(face: number, faceVertex: number, value: Float32Array): void {
+    const vertex = this.mesh.getFaceVertexIndex(face, faceVertex)
+    this.setFaceVertexValue_ByVertexIndex(face, vertex, value)
   }
 
   /**
-   * Sets `T` object in the specified index.
-   *
-   * @param {number} index - The index value.
-   * @param {T} value - The value param.
+   * The setFaceVertexValue_ByVertexIndex method.
+   * @param {number} face - The face value.
+   * @param {number} vertex - The vertex value.
+   * @param {any} value - The value value.
    */
-  setValue<T extends AttrValue>(index: number, value: T): void {
-    if (index >= this.__data.length / this.__stride)
-      throw new Error('Invalid vertex index:' + index + '. Num Vertices:' + this.__data.length / 3)
+  setFaceVertexValue_ByVertexIndex(face: number, vertex: number, value: Float32Array): void {
+    const currValue = this.data.subarray(vertex * this.numElements, (vertex + 1) * this.numElements)
+    if (!isValid(currValue, this.defaultElementValue)) {
+      // the value is uninitialized. Initialize it.
+      currValue.set(value)
+    } else if (approxEqual(currValue, value)) {
+      // Reusing vertex value. Do nothing
+    } else {
+      // The new value is different from the existing value
 
-    const offset = index * this.__stride
-    for (let i = 0; i < this.__stride; i++) this.__data[offset + i] = value.getElementValue(i)
+      if (vertex in this.splits) {
+        // Now check if any existing splits for this vertex match the value being set.
+        // i.e. for faces around a vertex, there will often be a seam along 2 edges
+        // where the values differ. On each side of the seam, all faces can use the same
+        // value. We should see then only one split value for the vertex.
+        const vertexSplitIds = this.splits[vertex]
+        for (const fid in vertexSplitIds) {
+          const splitId = vertexSplitIds[fid]
+          if (approxEqual(this.splitValues[splitId], value)) {
+            // re-use this split value
+            vertexSplitIds[face] = splitId
+            return
+          }
+        }
+
+        // If a split already exists for this face, re-use it.
+        if (face in this.splits[vertex]) {
+          this.splitValues[this.splits[vertex][face]] = value
+          return
+        }
+      } else {
+        this.splits[vertex] = {}
+      }
+      this.splits[vertex][face] = this.splitValues.length
+      this.splitValues.push(value)
+    }
   }
+
+  /**
+   * The setSplitVertexValue method.
+   * @param {number} vertex - The vertex value.
+   * @param {number} face - The face value.
+   * @param {any} value - The value value.
+   */
+  setSplitVertexValue(vertex: number, face: number, value: Float32Array): void {
+    if (!(vertex in this.splits)) this.splits[vertex] = {}
+    if (face in this.splits[vertex]) {
+      const currValue = this.splitValues[this.splits[vertex][face]]
+      if (approxEqual(currValue, value)) return
+      console.warn('Face Vertex Already Split with different value')
+    }
+    this.splits[vertex][face] = this.splitValues.length
+    this.splitValues.push(value)
+  }
+
+  /**
+   * The setSplitVertexValues method.
+   * @param {number} vertex - The vertex value.
+   * @param {array} faceGroup - The faceGroup value.
+   * @param {any} value - The value value.
+   */
+  setSplitVertexValues(vertex: number, faceGroup: number[], value: any): void {
+    if (!(vertex in this.splits)) this.splits[vertex] = {}
+    const splitIndex = this.splitValues.length
+    this.splitValues.push(value)
+    for (const face of faceGroup) {
+      // if (face in this.splits[vertex]) {
+      //     let currValue = this.splitValues[this.splits[vertex][face]];
+      //     if (currValue.approxEqual(value))
+      //         return;
+      //     console.warn("Face Vertex Already Split with different value");
+      // }
+      this.splits[vertex][face] = splitIndex
+    }
+  }
+
+  /**
+   * The generateSplitValues method.
+   * @param {Record<number, Record<number, number>>} splitIndices - The splitIndices value.
+   * @param {number} splitCount - The splitCount value.
+   * @return {Float32Array} - The return value.
+   */
+  generateSplitValues(
+    splitIndices: Record<number, Record<number, number>>,
+    splitCount: number
+  ): Float32Array | Int32Array | Int16Array | Int8Array | Uint8Array | Uint16Array | Uint32Array {
+    if (splitCount == 0) return this.data
+
+    const numUnSplitValues = this.getCount()
+    const data = new Float32Array(this.getCount() + splitCount * this.numElements)
+    data.set(this.data)
+
+    // Now duplicate the split values to generate an attributes array
+    // using the shared splits across all attributes.
+    // eslint-disable-next-line guard-for-in
+    for (const vertex in splitIndices) {
+      const faces = splitIndices[vertex]
+      // eslint-disable-next-line guard-for-in
+      for (const face in faces) {
+        const tgt = numUnSplitValues + faces[face]
+        if (vertex in this.splits && face in this.splits[vertex]) {
+          // this attribute has a split value in its array.
+          // we must use that value...
+          const src = this.splits[vertex][face]
+          this.splitValues[src].forEach((value, index) => {
+            data[tgt * this.numElements + index] = value
+          })
+        } else {
+          // Copy each scalar value to the new place in the array.
+          const src = parseInt(vertex)
+          for (let e = 0; e < this.numElements; e++) {
+            data[tgt * this.numElements + e] = this.data[src * this.numElements + e]
+          }
+        }
+      }
+    }
+    return data
+  }
+
+  // ////////////////////////////////////////
+  // Persistence
 
   /**
    * The toJSON method encodes this type as a json object for persistence.
@@ -184,10 +309,10 @@ class Attribute {
    */
   toJSON(context?: Record<string, any>): Record<string, any> {
     return {
-      data: Array.from(this.__data),
-      dataType: this.__dataTypeName,
-      defaultValue: this.__defaultElementValue,
-      length: this.__data.length / this.__stride,
+      data: this.data,
+      dataType: this.dataTypeName,
+      defaultValue: this.defaultElementValue,
+      length: this.data.length / this.stride,
     }
   }
 
@@ -200,7 +325,7 @@ class Attribute {
     const data = j.data.map((dataElement: any) =>
       MathFunctions.isNumeric(dataElement) ? dataElement : Number.POSITIVE_INFINITY
     )
-    this.__data = Float32Array.from(data)
+    this.data = Float32Array.from(data)
   }
 
   /**
@@ -210,6 +335,24 @@ class Attribute {
    */
   toString(): string {
     return JSON.stringify(this.toJSON(), null, 2)
+  }
+
+  // ////////////////////////////////////////
+  // Memory
+
+  /**
+   * Returns vertex attributes buffers and its count.
+   *
+   * @param {object} opts - The opts value.
+   * @return {Record<string, any>} - The return value.
+   */
+  genBuffer(): Record<string, any> {
+    return {
+      values: this.data,
+      count: this.getCount(),
+      dataType: this.dataTypeName,
+      normalized: this.normalized,
+    }
   }
 }
 
