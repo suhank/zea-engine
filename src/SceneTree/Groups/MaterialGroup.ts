@@ -7,9 +7,8 @@ import { TreeItem } from '../TreeItem'
 import { Parameter } from '../Parameters/Parameter'
 import { Material } from '../../SceneTree/Material'
 import { Color } from '../../Math/Color'
-import { CodeParameter } from '../Parameters'
 import { BaseItem } from '../BaseItem'
-import { ParameterOwner } from '../ParameterOwner'
+
 /**
  *
  * **Parameters**
@@ -18,8 +17,8 @@ import { ParameterOwner } from '../ParameterOwner'
  * @extends BaseGroup
  */
 class MaterialGroup extends BaseGroup {
-  __materialParam: Parameter<Material> // or MaterialParameter?
-  name: string
+  protected __materialParam: Parameter<Material> // or MaterialParameter?
+  protected name: string
   /**
    * Creates an instance of a group.
    *
@@ -47,20 +46,17 @@ class MaterialGroup extends BaseGroup {
     // Note: propagating using an operator would be much better.
     const highlight = new Promise((resolve) => {
       let highlighted = false
-      let color: Color | undefined = this.getHighlight()
+      let color: Color
       if (this.isSelected()) {
+        color = this.getHighlight()
         highlighted = true
-        if (color) {
-          color.a = 0.2
-        } else {
-          console.warn('color is undefined')
-        }
+        color.a = 0.2
       }
 
       const key = 'kinematicGroupItemHighlight' + this.getId()
       Array.from(this.__itemsParam.getValue()).forEach((item) => {
         if (item instanceof TreeItem) {
-          if (highlighted && color) item.addHighlight(key, color, true)
+          if (highlighted) item.addHighlight(key, color, true)
           else item.removeHighlight(key, true)
         }
       })
@@ -90,36 +86,23 @@ class MaterialGroup extends BaseGroup {
     // graph immediately when we receive a notification.
     // Note: propagating using an operator would be much better.
     const update = new Promise((resolve) => {
-      //const material = this.getParameter('Material').getValue()
-      let material: Material
-      const paramMaterial = this.getParameter('Material')
-      if (paramMaterial) {
-        material = paramMaterial.getValue()
-      } else {
-        console.warn('cannot set Material, paramMaterial is null')
-      }
+      const material = this.getParameter('Material').getValue()
 
       // TODO: Bind an operator
       Array.from(this.__itemsParam.getValue()).forEach((item) => {
         ;(<TreeItem>item).traverse((treeItem) => {
           if (treeItem instanceof TreeItem && treeItem.hasParameter('Material')) {
-            const p: Parameter<Material> | null = treeItem.getParameter('Material')
-            // TODO:(refactor?) since getParameter can return null, we need to do this check.
-            if (p) {
-              if (material) {
-                const m = p.getValue()
-
-                // TODO: How do we filter material assignments? this is a nasty hack.
-                // but else we end up assigning surface materials to our edges.
-                if (m != material && (!m || m.getShaderName() != 'LinesShader')) {
-                  p.__backupMaterial = m
-                  p.setValue(material)
-                }
-              } else if (p.__backupMaterial) {
-                p.setValue(p.__backupMaterial)
+            const p: Parameter<Material> = treeItem.getParameter('Material')
+            if (material) {
+              const m = p.getValue()
+              // TODO: How do we filter material assignments? this is a nasty hack.
+              // but else we end up assigning surface materials to our edges.
+              if (m != material && (!m || m.getShaderName() != 'LinesShader')) {
+                p.__backupMaterial = m
+                p.setValue(material)
               }
-            } else {
-              console.warn('p: Parameter<Material> is null')
+            } else if (p.__backupMaterial) {
+              p.setValue(p.__backupMaterial)
             }
           }
         })
@@ -144,33 +127,22 @@ class MaterialGroup extends BaseGroup {
 
     // ///////////////////////////////
     // Update the highlight
-    const hightlight = this.getHighlight()
     if (this.isSelected()) {
       const color = this.getHighlight()
-      if (color) {
-        color.a = 0.2
-      } else {
-        console.warn('color is undefined')
-      }
+      color.a = 0.2
       const key = 'materialGroupItemHighlight' + this.getId()
-      if (color) item.addHighlight(key, color, true)
+      item.addHighlight(key, color, true)
     }
 
     // ///////////////////////////////
     // Update the Material
-    let material: Material
-    const paramMaterial = this.getParameter('Material')
-    if (!paramMaterial) {
-      console.error('paramMaterial is null')
-      return
-    }
-    material = paramMaterial.getValue()
+    const material = this.getParameter('Material').getValue()
     if (material) {
       // TODO: Bind an operator instead
       item.traverse((treeItem) => {
         if (treeItem instanceof TreeItem && treeItem.hasParameter('Material')) {
           const p = treeItem.getParameter('Material')
-          if (material && p) {
+          if (material) {
             const m = p.getValue()
             // TODO: How do we filter material assignments? this is a nasty hack.
             // but else we end up assigning surface materials to our edges.
