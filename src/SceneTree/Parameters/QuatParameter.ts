@@ -26,7 +26,7 @@ class QuatParameter extends Parameter<Quat> implements IBinaryReader {
    * @param {string} name - The name of the Quat parameter.
    * @param {Quat} value - The value of the parameter.
    */
-  constructor(name: string, value?: Quat) {
+  constructor(name: string = '', value?: Quat) {
     super(name, value ? value : new Quat(), 'Quat')
   }
 

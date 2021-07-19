@@ -5,7 +5,7 @@ import { BinReader } from '../SceneTree/BinReader'
  * Class representing a color as 4 floating point values.
  */
 class Color {
-  __data;
+  __data
   /**
    * Creates a `Color` object with an RGBA structure.
    *
@@ -384,10 +384,10 @@ class Color {
         yellow: '#ffff00',
         yellowgreen: '#9acd32',
       }
-        return colors[colour.toLowerCase()]
-    //  if (typeof colors[colour.toLowerCase()] != 'undefined') return colors[colour.toLowerCase()]
+      return colors[colour.toLowerCase()]
+      //  if (typeof colors[colour.toLowerCase()] != 'undefined') return colors[colour.toLowerCase()]
 
-     // return false
+      // return false
     }
     if (name.startsWith('#')) {
       this.setFromHex(name)
@@ -440,7 +440,7 @@ class Color {
    * @param {Color} other - The other color to compare with.
    * @return {boolean} - Returns true or false.
    */
-  notEquals(other: Color): boolean  {
+  notEquals(other: Color): boolean {
     return this.r != other.r && this.g != other.g && this.b != other.b && this.a != other.a
   }
 
@@ -544,7 +544,7 @@ class Color {
       Math.pow(this.r, 1.0 / gamma),
       Math.pow(this.g, 1.0 / gamma),
       Math.pow(this.b, 1.0 / gamma),
-      this.a,
+      this.a
     )
   }
 
@@ -585,7 +585,7 @@ class Color {
         gammaOffset + Math.random() * (1.0 - gammaOffset),
         gammaOffset + Math.random() * (1.0 - gammaOffset),
         gammaOffset + Math.random() * (1.0 - gammaOffset),
-        randomAlpha ? gammaOffset + Math.random() * (1.0 - gammaOffset) : 1.0,
+        randomAlpha ? gammaOffset + Math.random() * (1.0 - gammaOffset) : 1.0
       )
     }
 
@@ -594,7 +594,7 @@ class Color {
         Math.random() * (1.0 + gammaOffset),
         Math.random() * (1.0 + gammaOffset),
         Math.random() * (1.0 + gammaOffset),
-        randomAlpha ? Math.random() * (1.0 + gammaOffset) : 1.0,
+        randomAlpha ? Math.random() * (1.0 + gammaOffset) : 1.0
       )
     }
 
@@ -619,7 +619,7 @@ class Color {
     return this.__data
   }
 
-    /**
+  /**
    * Returns the type as a 3 component array. Often used to pass types to the GPU.
    *
    * @return {array} - Returns as a 3 component array.
@@ -738,6 +738,6 @@ class Color {
   }
 }
 
-Registry.register('Color', Color)
+// Registry.register('Color', Color)
 
 export { Color }

@@ -50,7 +50,7 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
    * @param {T} value - The value of the parameter.
    * @param {string} dataType - The data type of the parameter.
    */
-  constructor(name: string, value?: T, dataType?: string) {
+  constructor(name: string = '', value?: T, dataType?: string) {
     super()
 
     this.name = name
@@ -262,9 +262,9 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
       } else if (this.boundOps[index].getMode() != OperatorOutputMode.OP_WRITE) {
         // A parameter can become dirty (so __dirtyOpIndex == 0), and then another operator bound on top.
         // if the next op is a WRITE op, then we can fast forward the dirty index.
-        const thisClassName = Registry.getBlueprintName(this)
+        const thisClassName = this.getClassName()
         const op = this.boundOps[index].getOperator()
-        const opClassName = Registry.getBlueprintName(op)
+        const opClassName = op.getClassName()
         throw new Error(
           `Parameter: ${thisClassName} with name: ${this.getName()} is not cleaning all outputs during evaluation of op: ${opClassName} with name: ${op.getName()}`
         )
@@ -316,7 +316,7 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
       if (tmp == this.dirtyOpIndex) {
         // During initial configuration of an operator, cleaning outputs might be disabled.
         const op = this.boundOps[this.dirtyOpIndex].getOperator()
-        const opClassName = Registry.getBlueprintName(op)
+        const opClassName = op.getClassName()
         console.warn(
           `Operator: ${opClassName} with name: ${op.getName()} is not cleaning its outputs during evaluation`
         )
@@ -413,7 +413,7 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
    * @param {object} context - The context value.
    */
   destroy() {
-    console.warn("nothing destroyed. This method was not overwritten in subclass")
+    console.warn('nothing destroyed. This method was not overwritten in subclass')
   }
 }
 

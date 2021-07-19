@@ -146,7 +146,7 @@ class Xfo {
     const result = new Xfo(
       this.tr.add(this.ori.rotateVec3(this_sc.multiply(xfo.tr))),
       this.ori.multiply(xfo.ori),
-      this_sc.multiply(xfo.sc),
+      this_sc.multiply(xfo.sc)
     )
     return result
   }
@@ -212,13 +212,13 @@ class Xfo {
   fromMat4(mat4) {
     this.setFromMat4(mat4)
   }
-  
+
   /**
    * Sets the state of the Xfo object using Mat4.
    * @deprecated
    * @param {Mat4} mat4 - The mat4 value.
    */
-   setFromMat4(mat4) {
+  setFromMat4(mat4) {
     this.tr = mat4.translation
     this.ori.setFromMat4(mat4)
   }
@@ -328,6 +328,6 @@ class Xfo {
   }
 }
 
-Registry.register('Xfo', Xfo)
+// Registry.register('Xfo', Xfo)
 
 export { Xfo }

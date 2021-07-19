@@ -24,7 +24,7 @@ class Mat3Parameter extends Parameter<Mat3> implements IBinaryReader {
    * @param {string} name - The name of the Mat3 parameter.
    * @param {Vec3} value - The value of the parameter.
    */
-  constructor(name: string, value?: Mat3) {
+  constructor(name: string = '', value?: Mat3) {
     super(name, value ? value : new Mat3(), 'Mat3')
   }
 

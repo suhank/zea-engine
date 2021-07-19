@@ -45,7 +45,7 @@ class Frustum {
    * Typically the matrix is a model view projection matrix.
    * @param {Mat4} mat4 - The matrix to use.
    */
-  setFromMatrix(mat4: Mat4): void  {
+  setFromMatrix(mat4: Mat4): void {
     const m = mat4
     const planes = this.planes
     planes[0].set(m.m03 - m.m00, m.m13 - m.m10, m.m23 - m.m20, m.m33 - m.m30)
@@ -124,6 +124,6 @@ class Frustum {
   }
 }
 
-Registry.register('Frustum', Frustum)
+// Registry.register('Frustum', Frustum)
 
 export { Frustum }

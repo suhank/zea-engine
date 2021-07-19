@@ -1,21 +1,36 @@
-import { UInt8, SInt8, UInt16, SInt16, UInt32, SInt32, Float32 } from './Utilities/MathFunctions'
+// import { UInt8, SInt8, UInt16, SInt16, UInt32, SInt32, Float32 } from './Utilities/MathFunctions'
+import { BaseClass } from './Utilities/BaseClass'
 
-let _registeredBlueprints: Record<string, any> = {}
-let _blueprintNames: Record<string, any> = {}
-let _blueprints: Array<unknown> = []
+let registeredClasses: Record<string, number> = {}
+let classNames: Record<number, string> = {}
+let classDefinitions: Array<typeof BaseClass> = []
+
+// TODO: move me to 'Math' folder.
+export class TypeDefinition {
+  size: number
+  numElements: number
+  constructor(size: number, numElements: number = 0) {
+    this.size = size
+    this.numElements = numElements
+  }
+}
+
+let registeredMathTypes: Record<string, number> = {}
+let mathTypeNames: Record<number, string> = {}
+let mathTypeDefinitions: Array<TypeDefinition> = []
 
 /**
  * Registry is a static factory that handles registration/reconstruction of
- * persisted type of data, this includes classes and types.
+ * classes bases on BaseClass. Registered classes can then be constructed by the Registry by name.
  *
- * Note: blueprintName is required because on minification process
+ * Note: className is required because on minification process
  * the name of classes change and we can't simply use '....constructor.name'.
- * So, we need a way of relating minified blueprint names to the one stored for persistency.
+ * So, we need a way of relating minified class names to the one stored for persistency.
  * <br>
  * i.e.
  * ```javascript
  * // Import registry class
- * class Foo() {}
+ * class Foo() extends BaseClass {}
  *
  * Registry.register('Foo', Foo)
  * // In case 'Foo' class gets its name changed to 'c' on minification,
@@ -25,90 +40,134 @@ let _blueprints: Array<unknown> = []
  * @static
  * @class Registry
  */
-const Registry = {
+class Registry {
   /**
-   * Registers a new blueprint in the factory.
+   * Registers a new class to the factory.
    *
-   * @param {string} blueprintName - Name of the registered blueprint(Class, type, etc)
-   * @param {function|number|any} blueprint - Blueprint representation(Class function, type)
+   * @param {string} className - Name of the registered class
+   * @param {BaseClass} classDef - Class representation(Class function, type)
    */
-  register: (blueprintName: string, blueprint: any): void => {
-    if (_registeredBlueprints[blueprintName]) throw new Error(`There's a class registered with '${blueprintName}' name`)
-    _registeredBlueprints[blueprintName] = { blueprint, callbacks: [] }
+  static register(className: string, classDef: typeof BaseClass): void {
+    if (registeredClasses[className]) throw new Error(`There's a class registered with '${className}' name`)
 
-    // Note: To provide backwards compatibility, same blueprint can be stored under multiple names.
-    // Thats the reason behind using indexes instead of the blueprint.
-    const blueprintIndex = _blueprints.length
-    _blueprints.push(blueprint)
-    _blueprintNames[blueprintIndex] = blueprintName
-  },
+    // Note: To provide backwards compatibility, same classDef can be stored under multiple names.
+    // Thats the reason behind using indexes instead of the classDef.
+    const index = classDefinitions.length
+    classDefinitions.push(classDef)
+    classNames[index] = className
+    registeredClasses[className] = index
+  }
+
   /**
-   * Returns blueprint function/type by specifying its name.
+   * Returns class definition using the name it was registered with.
    *
-   * @param {string} blueprintName - Name of the registered blueprint(Class, type, etc)
-   * @return {function|number|any} - Blueprint representation(Class function, type)
+   * @param {string} className - Name of the registered class
+   * @return {BaseClass} - Class representation(Class function, type)
    */
-  getBlueprint: (blueprintName: string): unknown | number | any => {
-    if (_registeredBlueprints[blueprintName]) return _registeredBlueprints[blueprintName].blueprint
+  static getClassDefinition(className: string): typeof BaseClass {
+    if (!registeredClasses[className]) throw new Error(`${className} class is not registered`)
+    return classDefinitions[registeredClasses[className]]
+  }
 
-    throw new Error(`${blueprintName} blueprint is not registered`)
-  },
   /**
-   * Returns class name using passing an instantiated object.
-   * If it is not registered, the name in constructor is returned.
-   *
-   * @param {function|number|any|undefined} blueprintInstance - Blueprint representation(Class function, type)
-   * @return {string} - Name of the registered blueprint(Class, type, etc)
+   * Returns class name registered for the instantiated object.
+   * @deprecated
+   * @param {typeof BaseClass} classDefinition - Class type definition.
+   * @return {string} - Name of the registered class
    */
-  getBlueprintName: (blueprintInstance: any): string => {
-    let blueprint = blueprintInstance
-    let blueprintName = blueprintInstance
+  static getClassName(classDefinition: BaseClass): string {
+    throw new Error(`getClassName is deprecated`)
+    // const classId = classDefinitions.indexOf(classDefinition)
+    // if (classId >= 0 && classNames[classId]) return classNames[classId]
 
-    if (typeof blueprintInstance === 'object') {
-      blueprint = blueprintInstance.constructor
-      blueprintName = blueprint.name
-    }
+    // throw new Error(`class is not registered`)
+  }
 
-    const blueprintId = _blueprints.indexOf(blueprint)
-    if (blueprintId >= 0 && _blueprintNames[blueprintId]) return _blueprintNames[blueprintId]
-
-    throw new Error(`${blueprintName} blueprint is not registered`)
-  },
   /**
-   * Accepting the class name and `N` number of arguments, instantiates a new object of the specified class.
-   * If the class is not registered, then `null` is returned.
-   * <br>
-   * **Note:** Although the class arguments are not literally specified in the parameters,
-   * you can pass them(As many as needed).
+   * The factory function that construct the class registered under the given name.
    *
-   * @param {string} blueprintName - Name of the registered blueprint(Class, type, etc)
-   * @param {unknown[]} args - Any data needed to instantiate the class
+   * @param {string} className - Name of the registered class
    * @return { Record<string, unknown> | unknown } - Instantiated object of the specified class
    */
-  constructClass: (blueprintName: string, ...args: unknown[]): Record<string, unknown> | unknown => {
-    const blueprintData = _registeredBlueprints[blueprintName]
-    if (!blueprintData) throw new Error(`${blueprintName} blueprint is not registered`)
+  static constructClass(className: string): BaseClass {
+    const classDefinition = classDefinitions[registeredClasses[className]]
+    if (!classDefinition) throw new Error(`${className} class is not registered`)
 
-    return new blueprintData.blueprint(...args)
-  },
+    return new classDefinition()
+  }
+
+  /**
+   * Returns class name registered for the instantiated object.
+   *@deprecated
+   * @param {typeof BaseClass} classDefinition - Class representation(Class function, type)
+   * @return {string} - Name of the registered class
+   */
+  static getBlueprintName(classDefinition: typeof BaseClass): string {
+    throw new Error(`getBlueprintName is deprecated`)
+    // return this.getClassName(classDefinition)
+  }
+
+  /**
+   * Returns class definition using the class name it was registered with.
+   *
+   * @param {string} className - Name of the registered class
+   * @return {BaseClass} - Class definition(Class function, type)
+   */
+  static getBlueprint(className: string): typeof BaseClass {
+    return this.getClassDefinition(className)
+  }
+
+  /**
+   * Registers a new class to the factory.
+   *
+   * @param {string} typeName - Name of the registered class
+   * @param {TypeDefinition} typeDef - Type definition structure
+   */
+  static registerMathType(typeName: string, typeDef: TypeDefinition): void {
+    if (registeredMathTypes[typeName])
+      throw new Error(`There's a math type definition registered with '${typeName}' name`)
+
+    // Note: To provide backwards compatibility, same typeDef can be stored under multiple names.
+    // Thats the reason behind using indexes instead of the typeDef.
+    const index = mathTypeDefinitions.length
+    mathTypeDefinitions.push(typeDef)
+    mathTypeNames[index] = typeName
+    registeredMathTypes[typeName] = index
+  }
+
+  /**
+   * Returns class definition using the type name it was registered with.
+   *
+   * @param {string} typeName - Name of the registered math type
+   * @return {TypeDefinition} - Class describing a math type
+   */
+  static getMathTypeDefinition(typeName: string): TypeDefinition {
+    if (!registeredMathTypes[typeName]) throw new Error(`${typeName} Math type is not registered`)
+    return mathTypeDefinitions[registeredMathTypes[typeName]]
+  }
+
   /**
    * For testing purpose only, never call this outside of the test scope.
    *
    * @private
    */
-  flush: (): void => {
-    _registeredBlueprints = {}
-    _blueprintNames = {}
-    _blueprints = []
-  },
+  static flush(): void {
+    registeredClasses = {}
+    classNames = {}
+    classDefinitions = []
+
+    registeredMathTypes = {}
+    mathTypeNames = {}
+    mathTypeDefinitions = []
+  }
 }
 
-Registry.register('UInt8', UInt8)
-Registry.register('SInt8', SInt8)
-Registry.register('UInt16', UInt16)
-Registry.register('SInt16', SInt16)
-Registry.register('UInt32', UInt32)
-Registry.register('SInt32', SInt32)
-Registry.register('Float32', Float32)
+Registry.registerMathType('UInt8', new TypeDefinition(1))
+Registry.registerMathType('SInt8', new TypeDefinition(1))
+Registry.registerMathType('UInt16', new TypeDefinition(2))
+Registry.registerMathType('SInt16', new TypeDefinition(2))
+Registry.registerMathType('UInt32', new TypeDefinition(4))
+Registry.registerMathType('SInt32', new TypeDefinition(4))
+Registry.registerMathType('Float32', new TypeDefinition(4))
 
 export { Registry }

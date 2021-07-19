@@ -25,7 +25,7 @@ class Vec3Parameter extends Parameter<Vec3> implements IBinaryReader {
    * @param {Vec3} value - The value of the parameter.
    * @param {array} range - The range value is an array of two `Vec2` objects.
    */
-  constructor(name: string, value?: Vec3) {
+  constructor(name: string = '', value?: Vec3) {
     super(name, value ? value : new Vec3(), 'Vec3')
   }
 

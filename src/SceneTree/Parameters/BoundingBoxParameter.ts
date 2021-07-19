@@ -26,7 +26,7 @@ class BoundingBoxParameter extends Parameter<Box3> implements IBinaryReader {
    * @param {string} name - Name of the parameter
    * @param {TreeItem} treeItem - `TreeItem` that contains `Box3` representing the Bounding Box
    */
-  constructor(name: string, treeItem: TreeItem) {
+  constructor(name: string = '', treeItem: TreeItem) {
     super(name, new Box3(), 'Box3')
     this.treeItem = treeItem
     this.dirty = true
@@ -42,12 +42,12 @@ class BoundingBoxParameter extends Parameter<Box3> implements IBinaryReader {
    *
    * @memberof BoundingBoxParameter
    */
-   setDirty(index: number): boolean {
-    const result = super.setDirty(index) // TODO: is appropriate to rename this? 
-    if(result){
+  setDirty(index: number): boolean {
+    const result = super.setDirty(index) // TODO: is appropriate to rename this?
+    if (result) {
       this.dirty = true
     }
-    console.warn("check this if this method needs to be overloaded");
+    console.warn('check this if this method needs to be overloaded')
     return result
   }
 

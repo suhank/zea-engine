@@ -58,7 +58,7 @@ const parseGeomsBinary = (data, callback) => {
       // not be transferred back to the main thread. Convert to
       // the type name here and send back as a string.
       const attrData = geomBuffers.attrBuffers[attrName]
-      const typeName = Registry.getBlueprintName(attrData.dataType)
+      const typeName = attrData.dataType.getClassName()
       attrData.dataType = typeName
 
       transferables.push(attrData.values.buffer)

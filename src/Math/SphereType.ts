@@ -84,6 +84,6 @@ class SphereType {
   }
 }
 
-Registry.register('SphereType', SphereType)
+// Registry.register('SphereType', SphereType)
 
 export { SphereType }

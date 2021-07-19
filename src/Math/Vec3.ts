@@ -1,4 +1,4 @@
-import { Registry } from '../Registry'
+import { Registry, TypeDefinition } from '../Registry'
 import { Vec2 } from './Vec2'
 import { BinReader } from '../SceneTree/BinReader'
 
@@ -616,27 +616,26 @@ class Vec3 {
    * @param {ArrayBuffer} buffer - The buffer value.
    * @param {number} byteOffset - The offset value.
    * @return {Vec3} - Returns a new Vec3.
-   */
+   
   static createFromBuffer(buffer: ArrayBuffer, byteOffset: number): Vec3 {
     return new Vec3(new Float32Array(buffer, byteOffset, 3)) // 4 bytes per 32bit float
-  }
+  }*/
 
   /**
    * The createFromFloat32Array method.
    * @param {Float32Array} array - A Float32Array value
    * @return {Vec3} - Returns a new Vec3.
    * @private
-   */
   static createFromFloat32Array(array: Float32Array): Vec3 {
     return new Vec3(array)
-  }
+  }*/
 
   /**
    * Returns the number of Float32 elements used by this type. Used to calculate storage requirements for large arrays of this type.
    * @return {number} - The return value.
    * @private
    */
-  static numElements(): number {
+  numElements(): number {
     return 3
   }
 
@@ -685,9 +684,8 @@ class Vec3 {
 
     return true
   }
-
 }
 
-Registry.register('Vec3', Vec3)
+Registry.registerMathType('Vec3', new TypeDefinition(12, 4))
 
 export { Vec3 }

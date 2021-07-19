@@ -26,9 +26,8 @@ class Vec4 {
    * @param {number} t - The t value. Default is 0.
    */
 
-   __data;
+  __data
   constructor(x: number | Float32Array | ArrayBuffer = 0, y = 0, z = 0, t = 0) {
-
     if (x instanceof Float32Array || x instanceof Uint32Array) {
       this.__data = x
     } else if (x instanceof ArrayBuffer) {
@@ -598,22 +597,22 @@ class Vec4 {
     this.t = reader.loadFloat32()
   }
 
-    /**
+  /**
    * Verifies if the values stored in this Math type are valid numeric values.
    * Returns `false` If at least one of the values is either {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Referencia/Objetos_globales/Infinity|Infinity} or
    * {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Referencia/Objetos_globales/NaN|NaN}.
    *
    * @return {boolean} - Returns the result as a boolean.
    */
-     isValid() {
-      for (const v of this.__data) {
-        if (v == Infinity || isNaN(v)) return false
-      }
-  
-      return true
+  isValid() {
+    for (const v of this.__data) {
+      if (v == Infinity || isNaN(v)) return false
     }
+
+    return true
+  }
 }
 
-Registry.register('Vec4', Vec4)
+// Registry.register('Vec4', Vec4)
 
 export { Vec4 }

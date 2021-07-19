@@ -1,4 +1,4 @@
-import { AttrValue } from '../Math/index'
+import { Vec2 } from '../Math/index'
 import { ScreenQuadShader } from './Shaders/ScreenQuadShader.js'
 import { generateShaderGeomBinding } from './Drawing/GeomShaderBinding.js'
 import { GLTexture2D } from './GLTexture2D'
@@ -44,13 +44,13 @@ class GLScreenQuad {
     {
       const unif = unifs.pos
       if (unif) {
-        gl.uniform2fv(unif.location, pos ? (pos instanceof AttrValue ? pos.asArray() : pos) : this.__pos)
+        gl.uniform2fv(unif.location, pos ? (pos instanceof Vec2 ? pos.asArray() : pos) : this.__pos)
       }
     }
     {
       const unif = unifs.size
       if (unif) {
-        gl.uniform2fv(unif.location, size ? (size instanceof AttrValue ? size.asArray() : size) : this.__size)
+        gl.uniform2fv(unif.location, size ? (size instanceof Vec2 ? size.asArray() : size) : this.__size)
       }
     }
     // if ('flipY' in unifs)

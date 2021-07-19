@@ -8,7 +8,7 @@ import { BinReader } from '../SceneTree/BinReader'
  * This matrix class is based on GLM, and is column major.
  *
  */
-class Mat3  {
+class Mat3 {
   /**
    * Initializes the Mat3 class with given data.
    *
@@ -22,7 +22,7 @@ class Mat3  {
    * @param {number} m21 - Row 2, column 1.
    * @param {number} m22 - Row 2, column 2.
    */
-  __data;
+  __data
   constructor(
     m00: number | any = 1,
     m01: number | any = 0,
@@ -32,10 +32,8 @@ class Mat3  {
     m12 = 0,
     m20 = 0,
     m21 = 0,
-    m22 = 1,
+    m22 = 1
   ) {
-
-
     if (m00 instanceof Vec3 && m01 instanceof Vec3 && m02 instanceof Vec3) {
       this.__data = new Float32Array(9)
       this.set(m00.x, m00.y, m00.z, m01.x, m01.y, m01.z, m02.x, m02.y, m02.z)
@@ -423,7 +421,7 @@ class Mat3  {
       (-a12 * a00 + a02 * a10) * det,
       b21 * det,
       (-a21 * a00 + a01 * a20) * det,
-      (a11 * a00 - a01 * a10) * det,
+      (a11 * a00 - a01 * a10) * det
     )
     return true
   }
@@ -444,7 +442,7 @@ class Mat3  {
       this.__data[7],
       this.__data[2],
       this.__data[5],
-      this.__data[8],
+      this.__data[8]
     )
   }
 
@@ -475,7 +473,7 @@ class Mat3  {
     return new Vec3(
       this.__data[0] * vec3.x + this.__data[1] * vec3.y + this.__data[2] * vec3.z,
       this.__data[3] * vec3.x + this.__data[4] * vec3.y + this.__data[5] * vec3.z,
-      this.__data[6] * vec3.x + this.__data[7] * vec3.y + this.__data[8] * vec3.z,
+      this.__data[6] * vec3.x + this.__data[7] * vec3.y + this.__data[8] * vec3.z
     )
   }
 
@@ -494,7 +492,7 @@ class Mat3  {
       this.__data[5],
       this.__data[6],
       this.__data[7],
-      this.__data[8],
+      this.__data[8]
     )
   }
 
@@ -586,9 +584,8 @@ class Mat3  {
   asArray() {
     return this.__data
   }
-  
 }
 
-Registry.register('Mat3', Mat3)
+// Registry.register('Mat3', Mat3)
 
 export { Mat3 }

@@ -25,9 +25,8 @@ class Quat {
    * @param {number} w - The w value. Default is 1.
    */
 
-  __data;
+  __data
   constructor(x: number | ArrayBuffer = 0, y = 0, z = 0, w = 1) {
-
     if (x instanceof Float32Array) {
       this.__data = x
     } else if (x instanceof ArrayBuffer) {
@@ -43,7 +42,7 @@ class Quat {
         this.__data[2] = 0
         this.__data[3] = 1
         this.fromJSON(x)
-      //  for (const key in x) {
+        //  for (const key in x) {
         //  if (Array.isArray(x[key])) this[key].call(this, ...x[key])
         //  else this[key].call(this, x[key])
         //}
@@ -484,7 +483,7 @@ class Quat {
    * @param {Quat} other - The other Quat to compare with.
    * @return {boolean} - Returns true or false.
    */
-  equal(other: Quat) : boolean {
+  equal(other: Quat): boolean {
     console.warn('Deprecated. Use #isEqual instead.')
     return this.isEqual(other)
   }
@@ -722,7 +721,7 @@ class Quat {
       ax * bw + aw * bx + ay * bz - az * by,
       ay * bw + aw * by + az * bx - ax * bz,
       az * bw + aw * bz + ax * by - ay * bx,
-      aw * bw - ax * bx - ay * by - az * bz,
+      aw * bw - ax * bx - ay * by - az * bz
     )
   }
 
@@ -745,7 +744,7 @@ class Quat {
       ax * bw + aw * bx + ay * bz - az * by,
       ay * bw + aw * by + az * bx - ax * bz,
       az * bw + aw * bz + ax * by - ay * bx,
-      aw * bw - ax * bx - ay * by - az * bz,
+      aw * bw - ax * bx - ay * by - az * bz
     )
   }
 
@@ -987,7 +986,7 @@ class Quat {
       this.x + t * (other.x - this.x),
       this.y + t * (other.y - this.y),
       this.z + t * (other.z - this.z),
-      this.w + t * (other.w - this.w),
+      this.w + t * (other.w - this.w)
     )
     result.normalizeInPlace()
     return result
@@ -1021,7 +1020,7 @@ class Quat {
       coeff1 * this.x + coeff2 * other.x,
       coeff1 * this.y + coeff2 * other.y,
       coeff1 * this.z + coeff2 * other.z,
-      coeff1 * this.w + coeff2 * other.w,
+      coeff1 * this.w + coeff2 * other.w
     )
     result.normalizeInPlace()
     return result
@@ -1127,6 +1126,6 @@ class Quat {
   }
 }
 
-Registry.register('Quat', Quat)
+// Registry.register('Quat', Quat)
 
 export { Quat }

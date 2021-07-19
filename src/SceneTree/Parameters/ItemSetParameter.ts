@@ -8,14 +8,14 @@ import { BaseItem } from '../../SceneTree/BaseItem'
  * @private
  */
 class ItemSetParameter extends Parameter<Set<BaseItem>> {
-  protected filterFn: (...args: any) => unknown
+  protected filterFn: (...args: any) => boolean
   protected items: Set<BaseItem>
   /**
    * Create an item set parameter.
    * @param {string} name - The name of the item set parameter.
-   * @param {(...args: any[]) => unknown} filterFn - The filterFn value.
+   * @param {(...args: any[]) => boolean} filterFn - The filterFn value.
    */
-  constructor(name: string, filterFn: (...args: any[]) => unknown) {
+  constructor(name: string = '', filterFn: (...args: any[]) => boolean) {
     super(name, new Set(), 'BaseItem')
     // this.items = new Set() TODO:(refactor) necessary?
     this.filterFn = filterFn // Note: the filter Fn indicates that users will edit the set.
@@ -23,17 +23,17 @@ class ItemSetParameter extends Parameter<Set<BaseItem>> {
 
   /**
    * The setFilterFn method.
-   * @param {(...args: any) => unknown} filterFn - The filterFn value.
+   * @param {(...args: any) => boolean} filterFn - The filterFn value.
    */
-  setFilterFn(filterFn: (...args: any) => unknown): void {
+  setFilterFn(filterFn: (...args: any) => boolean): void {
     this.filterFn = filterFn
   }
 
   /**
    * The getFilterFn method.
-   * @return {(...args: any) => unknown} - The return value.
+   * @return {(...args: any) => boolean} - The return value.
    */
-  getFilterFn(): (...args: any) => unknown {
+  getFilterFn(): (...args: any) => boolean {
     return this.filterFn
   }
 

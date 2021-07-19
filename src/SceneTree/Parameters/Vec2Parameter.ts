@@ -31,7 +31,7 @@ class Vec2Parameter extends Parameter<Vec2> implements IBinaryReader {
    * @param {Vec2} value - The value of the parameter.
    * @param {array} range - The range value is an array of two `Vec2` objects.
    */
-  constructor(name: string, value?: Vec2, range?: Vec2[]) {
+  constructor(name: string = '', value?: Vec2, range?: Vec2[]) {
     super(name, value ? value : new Vec2(), 'Vec2')
     this.range = range
   }
@@ -80,7 +80,6 @@ class Vec2Parameter extends Parameter<Vec2> implements IBinaryReader {
 
     if (j.name) this.name = j.name as string
   }
-
 
   /**
    * The clone method constructs a new Vec2 parameter, copies its values

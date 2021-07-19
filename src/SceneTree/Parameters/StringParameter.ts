@@ -24,7 +24,7 @@ class StringParameter extends Parameter<string> implements IBinaryReader {
    * @param {string} name - The name of the material color parameter.
    * @param {string} value - The value of the parameter.
    */
-  constructor(name: string, value = '') {
+  constructor(name: string = '', value: string = '') {
     super(name, value, 'String')
     this.multiLine = false
   }

@@ -219,7 +219,7 @@ class Box3 {
    * @return {boolean} - Returns true if the shapes intersect.
    */
   intersectsSphere(sphere) {
-    let closestPoint = new Vec3();
+    let closestPoint = new Vec3()
 
     // Find the point on the AABB closest to the sphere center.
     // this.clampPoint( sphere.center, closestPoint );
@@ -357,6 +357,6 @@ class Box3 {
   }
 }
 
-Registry.register('Box3', Box3)
+// Registry.register('Box3', Box3)
 
 export { Box3 }

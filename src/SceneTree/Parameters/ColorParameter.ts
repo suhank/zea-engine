@@ -24,7 +24,7 @@ class ColorParameter extends Parameter<Color> implements IBinaryReader {
    * @param {string} name - The name of the color parameter.
    * @param {Color} value - The value of the parameter.
    */
-  constructor(name: string, value?: Color) {
+  constructor(name: string = '', value?: Color) {
     super(name, value ? value : new Color(), 'Color')
   }
 

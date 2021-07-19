@@ -20,7 +20,7 @@ class FilePathParameter extends Parameter<string> {
    * @param {string} name - The name of the file path parameter.
    * @param {string} exts - The exts value.
    */
-  constructor(name: string) {
+  constructor(name: string = '') {
     super(name, '', 'FilePath')
   }
 

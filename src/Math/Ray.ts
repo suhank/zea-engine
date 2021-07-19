@@ -37,14 +37,14 @@ class Ray {
    * @return {Number} - returns a number
    */
 
-  closestPoint(point: Vec3): number{ 
-   const w = point.subtract(this.start)
-   const c1 = w.dot(this.dir)
-   if (c1 < Number.EPSILON) return 0
-   const c2 = this.dir.dot(this.dir)
-   if (c2 < Number.EPSILON) return 0
-   return c1 / c2
- }
+  closestPoint(point: Vec3): number {
+    const w = point.subtract(this.start)
+    const c1 = w.dot(this.dir)
+    if (c1 < Number.EPSILON) return 0
+    const c2 = this.dir.dot(this.dir)
+    if (c2 < Number.EPSILON) return 0
+    return c1 / c2
+  }
 
   /**
    * Get the closest point between the ray and the given line segment made of the 2 points.
@@ -281,6 +281,6 @@ class Ray {
   }
 }
 
-Registry.register('Ray', Ray)
+// Registry.register('Ray', Ray)
 
 export { Ray }

@@ -28,7 +28,7 @@ class CodeParameter extends StringParameter {
    * @param {string} name - The name of the code parameter.
    * @param {string} value - The value of the parameter.
    */
-  constructor(name: string, value = '') {
+  constructor(name: string = '', value = '') {
     super(name, value)
     this.lang = DEFAULT_LANG
   }

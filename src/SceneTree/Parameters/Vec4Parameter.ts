@@ -25,7 +25,7 @@ class Vec4Parameter extends Parameter<Vec4> implements IBinaryReader {
    * @param {string} name - The name of the Vec4 parameter.
    * @param {Vec4} value - The value of the parameter.
    */
-  constructor(name: string, value?: Vec4) {
+  constructor(name: string = '', value?: Vec4) {
     super(name, value ? value : new Vec4(), 'Vec4')
   }
 
