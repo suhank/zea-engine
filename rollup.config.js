@@ -5,8 +5,9 @@ import nodePolyfills from 'rollup-plugin-node-polyfills'
 import svg from 'rollup-plugin-svg'
 import { terser } from 'rollup-plugin-terser'
 import webWorkerLoader from 'rollup-plugin-web-worker-loader'
-
 import pkg from './package.json'
+
+import typescript from '@rollup/plugin-typescript'
 
 const plugins = [
   commonjs(),
@@ -18,6 +19,9 @@ const plugins = [
   json(),
   webWorkerLoader(),
   svg(),
+  typescript({
+    include: 'src/**/*.{js,ts}',
+  }),
 ]
 
 const isProduction = !process.env.ROLLUP_WATCH
