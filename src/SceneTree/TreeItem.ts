@@ -1101,7 +1101,7 @@ class TreeItem extends BaseItem {
    * @param {object} context - The context value.
    * @return {TreeItem} - Returns a new cloned tree item.
    */
-  clone(): TreeItem {
+  clone(context): TreeItem {
     const cloned = new TreeItem('')
     cloned.copyFrom(this)
     return cloned
