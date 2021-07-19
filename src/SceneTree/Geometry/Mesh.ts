@@ -5,8 +5,8 @@ import { Vec3 } from '../../Math/Vec3'
 import { BaseGeom } from './BaseGeom.js'
 import { Attribute } from './Attribute.js'
 
-import { VertexAttribute } from './VertexAttribute.js'
 import { Registry } from '../../Registry'
+import { Vec3Attribute } from './Vec3Attribute'
 
 /**
  * The Mesh class provides a flexible and fast polygon mesh representation. It supports polygons of arbitrary complexity,
@@ -25,6 +25,21 @@ import { Registry } from '../../Registry'
  * @extends BaseGeom
  */
 class Mesh extends BaseGeom {
+  protected __faceCounts: Array<number>
+  protected __faceVertexIndices: Uint32Array
+  protected __logTopologyWarnings: boolean
+
+  protected __edgeAttributes: Map<string, Attribute>
+  protected __faceAttributes: Map<string, Attribute>
+
+  protected numEdges: number
+  protected edgeVerts: Array<number>
+  protected edgeAngles: Float32Array
+  protected edgeVecs: Array<Vec3>
+  protected edgeFaces: Array<number>
+  protected faceEdges: Array<Array<number>>
+  protected vertexEdges: Array<Set<number>>
+
   /**
    * Creates an instance of Mesh.
    */
@@ -33,17 +48,15 @@ class Mesh extends BaseGeom {
 
     this.__faceCounts = []
     this.__faceVertexIndices = new Uint32Array()
-
-    this.__faceAttributes = new Map()
-    this.__edgeAttributes = new Map()
-
     this.__logTopologyWarnings = false
 
-    this.edgeVerts = undefined
-    this.vertexEdges = undefined
-    this.numEdges = 0
-    this.edgeAngles = new Float32Array()
+    this.__edgeAttributes = new Map()
+    this.__faceAttributes = new Map()
 
+    this.numEdges = 0
+    this.edgeVerts = []
+    this.vertexEdges = []
+    this.edgeAngles = new Float32Array()
     this.edgeVecs = []
   }
 
@@ -120,10 +133,6 @@ class Mesh extends BaseGeom {
       this.__faceVertexIndices = faceVertexIndices
     }
     this.__faceCounts = faceCounts
-
-    this.__faceAttributes.forEach((attr) => {
-      attr.resize(numFaces)
-    })
   }
 
   /**
@@ -241,35 +250,15 @@ class Mesh extends BaseGeom {
   }
 
   // ///////////////////////////
-  // Vertex Attributes
-
-  /**
-   * Adds a `VertexAttribute` to the geometry.
-   *
-   * @param {string} name - The name of the vertex attribute to add.
-   * @param {AttrValue|number} dataType - The dataType value.
-   * @param {number} defaultScalarValue - The default scalar value.
-   * @return {VertexAttribute} - Returns a vertex attribute.
-   */
-  addVertexAttribute(name, dataType, defaultScalarValue = undefined) {
-    const positions = this.getVertexAttribute('positions')
-    const attr = new VertexAttribute(this, dataType, positions != undefined ? positions.length : 0, defaultScalarValue)
-    this.__vertexAttributes.set(name, attr)
-    return attr
-  }
-
-  // ///////////////////////////
   // Face Attributes
 
   /**
    * The addFaceAttribute method.
    * @param {string} name - The name of the face attribute to add.
-   * @param {AttrValue|number} dataType - The data type.
-   * @param {number|TypedArray} count - The count value.
-   * @return {Attribute} - Returns a face attribute.
+   * @param {Attribute} attr - The attr value
    */
-  addFaceAttribute(name, dataType, count = undefined) {
-    const attr = new Attribute(dataType, count != undefined ? count : this.getNumFaces())
+  addFaceAttribute(name, attr: Attribute) {
+    attr.setCount(this.getNumFaces())
     this.__faceAttributes.set(name, attr)
     return attr
   }
@@ -286,7 +275,7 @@ class Mesh extends BaseGeom {
   /**
    * The getFaceAttribute method.
    * @param {string} name - The name of the face attribute.
-   * @return {boolean} - The return value.
+   * @return {Attribute} - The return value.
    */
   getFaceAttribute(name) {
     return this.__faceAttributes.get(name)
@@ -298,14 +287,11 @@ class Mesh extends BaseGeom {
   /**
    * The addEdgeAttribute method.
    * @param {string} name - The name of the edge attribute to add.
-   * @param {AttrValue|number} dataType - The data type.
-   * @param {number} count - The default scalar value.
-   * @return {Attribute} - Returns an edge attribute.
+   * @param {Attribute} attr - The attr value
    */
-  addEdgeAttribute(name, dataType, count = undefined) {
-    const attr = new Attribute(dataType, count != undefined ? count : this.getNumEdges())
+  addEdgeAttribute(name: string, attr: Attribute) {
+    attr.setCount(this.numEdges)
     this.__edgeAttributes.set(name, attr)
-    return attr
   }
 
   /**
@@ -340,7 +326,7 @@ class Mesh extends BaseGeom {
     this.faceEdges = [] // the edges bordering each face.
     this.numEdges = 0
 
-    const positions = this.getVertexAttribute('positions')
+    const positions = this.positions
     const getEdgeIndex = (v0, v1) => {
       let tmp0 = v0
       let tmp1 = v1
@@ -427,8 +413,9 @@ class Mesh extends BaseGeom {
    * Computes a normal value per face by averaging the triangle normals of the face.
    */
   computeFaceNormals() {
-    const positions = this.getVertexAttribute('positions')
-    const faceNormals = this.addFaceAttribute('normals', Vec3)
+    const positions = this.positions
+    const faceNormals = new Vec3Attribute()
+    this.addFaceAttribute('normals', faceNormals)
     const numFaces = this.getNumFaces()
     for (let faceIndex = 0; faceIndex < numFaces; faceIndex++) {
       const faceVerts = this.getFaceVertexIndices(faceIndex)
@@ -457,12 +444,12 @@ class Mesh extends BaseGeom {
    * Calculates the angles at each edge between the adjoining faces
    */
   calculateEdgeAngles() {
-    if (this.vertexEdges == undefined) this.genTopologyInfo()
+    if (this.vertexEdges.length == 0) this.genTopologyInfo()
 
     this.computeFaceNormals()
 
-    const positions = this.getVertexAttribute('positions')
-    const faceNormals = this.getFaceAttribute('normals')
+    const positions = this.positions
+    const faceNormals = this.getFaceAttribute('normals') as Vec3Attribute
     this.edgeVecs = []
     this.edgeAngles = new Float32Array(this.numEdges)
     for (let i = 0; i < this.edgeFaces.length; i += 2) {
@@ -489,25 +476,23 @@ class Mesh extends BaseGeom {
   /**
    * Compute vertex normals.
    * @param {number} hardAngle - The hardAngle value in radians.
-   * @return {VertexAttribute} - The return value.
+   * @return {Vec3Attribute} - The return value.
    */
   computeVertexNormals(hardAngle = 1.0 /* radians */) {
     this.calculateEdgeAngles()
 
-    const faceNormals = this.getFaceAttribute('normals')
-    const normalsAttr = this.addVertexAttribute('normals', Vec3)
+    const faceNormals = this.getFaceAttribute('normals') as Vec3Attribute
+    const normalsAttr = new Vec3Attribute()
+    this.addVertexAttribute('normals', normalsAttr)
 
     // these methods are faster versions than using the methods
     // provided on the attributes. We cache values and use hard coded constants.
-    const faceNormalsBuffer = faceNormals.data.buffer
+    // const faceNormalsBuffer = faceNormals.data.buffer
     const getFaceNormal = (index) => {
-      return Vec3.createFromBuffer(faceNormalsBuffer, index * 3 * 4) // 3 components at 4 bytes each.
+      return faceNormals.getValueRef(index)
     }
-    const vertexNormalsArray = normalsAttr.data
     const setVertexNormal = (index, value) => {
-      vertexNormalsArray[index * 3 + 0] = value.x
-      vertexNormalsArray[index * 3 + 1] = value.y
-      vertexNormalsArray[index * 3 + 2] = value.z
+      normalsAttr.setValue(index, value)
     }
     const getConnectedEdgeVecs = (faceIndex, vertexIndex) => {
       let e0
@@ -606,7 +591,7 @@ class Mesh extends BaseGeom {
    * @return {array} - The return value.
    */
   computeHardEdgesIndices(hardAngle = 1.0) {
-    if (!this.edgeVerts) this.calculateEdgeAngles()
+    if (this.edgeVerts.length == 0) this.calculateEdgeAngles()
 
     const hardEdges = []
     const addEdge = (index) => {
@@ -619,16 +604,6 @@ class Mesh extends BaseGeom {
       }
     }
     return Uint32Array.from(hardEdges)
-  }
-
-  /**
-   * The getWireframeIndices method.
-   * @return {any} - The return value.
-   * @private
-   */
-  getWireframeIndices() {
-    console.warn('@todo-review - This returns nothing')
-    return indices
   }
 
   // ////////////////////////////////////////
@@ -663,8 +638,8 @@ class Mesh extends BaseGeom {
       }
     }
 
-    const positions = this.getVertexAttribute('positions')
-    const numUnSplitVertices = positions.length
+    const positions = this.positions
+    const numUnSplitVertices = positions.getCount()
     const totalNumVertices = numUnSplitVertices + splitCount
 
     let indices
@@ -678,7 +653,7 @@ class Mesh extends BaseGeom {
     const attrBuffers = {}
     for (const [attrName, attr] of this.__vertexAttributes) {
       let values
-      if (splitCount == 0) values = attr.data
+      if (splitCount == 0) values = attr.asArray()
       else values = attr.generateSplitValues(splitIndices, splitCount)
 
       const dimension = attr.numElements
@@ -694,7 +669,7 @@ class Mesh extends BaseGeom {
         count: count,
         dimension: dimension,
         normalized: attrName == 'normals',
-        dataType: attr.dataType,
+        dataType: attr.getDataTypeName(),
       }
     }
 
@@ -705,6 +680,7 @@ class Mesh extends BaseGeom {
       attrBuffers,
     }
 
+    /* Disabled during TS migration.
     if (opts && opts.includeVertexNeighbors) {
       if (this.vertexEdges == undefined) this.genTopologyInfo()
 
@@ -813,6 +789,7 @@ class Mesh extends BaseGeom {
 
       result.vertexNeighbors = vertexNeighbors
     }
+    */
 
     return result
   }

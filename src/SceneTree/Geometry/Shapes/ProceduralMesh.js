@@ -100,7 +100,7 @@ class ProceduralMesh extends Mesh {
   /**
    * Compute vertex normals.
    * @param {number} hardAngle - The hardAngle value in radians.
-   * @return {VertexAttribute} - The return value.
+   * @return {Vec3Attribute} - The return value.
    */
   computeVertexNormals(hardAngle = 1.0 /* radians */) {
     this.update()
