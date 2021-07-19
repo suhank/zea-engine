@@ -23,7 +23,7 @@ class BooleanParameter extends Parameter<boolean> implements IBinaryReader {
    * @param {string} name - The name of the boolean parameter.
    * @param {boolean} value - The value of the parameter.
    */
-  constructor(name: string, value?: boolean) {
+  constructor(name: string = '', value?: boolean) {
     super(name, value, 'Boolean')
   }
 

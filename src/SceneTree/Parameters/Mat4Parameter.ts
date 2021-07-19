@@ -26,7 +26,7 @@ class Mat4Parameter extends Parameter<Mat4> implements IBinaryReader {
    * @param {string} name - The name of the Mat4 parameter.
    * @param {Mat4} value - The value of the parameter.
    */
-  constructor(name: string, value?: Mat4) {
+  constructor(name: string = '', value?: Mat4) {
     super(name, value ? value : new Mat4(), 'Mat4')
   }
 

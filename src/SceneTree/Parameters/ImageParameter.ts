@@ -25,7 +25,7 @@ class ImageParameter extends Parameter<BaseImage> {
    * @param {string} name - The name of the image parameter.
    * @param {BaseImage} value - The value of the parameter.
    */
-  constructor(name: string, value?: BaseImage) {
+  constructor(name: string = '', value?: BaseImage) {
     super(name, value, 'BaseImage')
   }
 
@@ -44,7 +44,7 @@ class ImageParameter extends Parameter<BaseImage> {
     }
 
     if (this.value) {
-      j.imageType = Registry.getBlueprintName(this.value)
+      j.imageType = this.value.getClassName()
       j.value = this.value.toJSON()
     }
 
@@ -58,7 +58,7 @@ class ImageParameter extends Parameter<BaseImage> {
    * @param {Record<string, any>} context - The context value.
    * @return {object} - Returns the json object.
    */
-   fromJSON(j: Record<string, unknown>, context: Record<string, any>): void {
+  fromJSON(j: Record<string, unknown>, context: Record<string, any>): void {
     if (j.imageType) {
       this.value = Registry.constructClass(j.imageType as string) as any
       if (j.value) this.value?.fromJSON(j.value as any, context)

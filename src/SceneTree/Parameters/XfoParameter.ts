@@ -24,7 +24,7 @@ class XfoParameter extends Parameter<Xfo> implements IBinaryReader {
    * @param {string} name - The name of the Xfo parameter.
    * @param {Xfo} value - The value of the parameter.
    */
-  constructor(name: string, value?: Xfo) {
+  constructor(name: string = '', value?: Xfo) {
     super(name, value ? value : new Xfo(), 'Xfo')
   }
 

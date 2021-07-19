@@ -33,7 +33,7 @@ class MaterialFloatParam extends NumberParameter implements IBinaryReader {
    * @param {number} [value] - The value of the parameter.
    * @param {number[]} [range] - An array with two numbers. If defined, the parameter value will be clamped.
    */
-  constructor(name: string, value?: number, range?: number[]) {
+  constructor(name: string = '', value?: number, range?: number[]) {
     super(name, value, range)
   }
 

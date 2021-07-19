@@ -27,7 +27,7 @@ class ListParameter extends Parameter<any[]> {
    * @param {string} name - The name of the list parameter.
    * @param {string} dataType - The dataType value.
    */
-  constructor(name: string, dataType: string) {
+  constructor(name: string = '', dataType: string) {
     super(name, [], dataType)
   }
 

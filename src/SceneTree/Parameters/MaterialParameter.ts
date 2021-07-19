@@ -28,7 +28,7 @@ class MaterialParameter extends Parameter<Material> {
    * @param {string} name - The name of the material parameter.
    * @param {Material} value - The value of the parameter.
    */
-  constructor(name: string, value?: Material) {
+  constructor(name: string = '', value?: Material) {
     super(name, value, 'Material')
 
     this.valueParameterValueChanged = this.valueParameterValueChanged.bind(this)

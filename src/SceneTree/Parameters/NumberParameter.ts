@@ -27,7 +27,7 @@ class NumberParameter extends Parameter<number> implements IBinaryReader {
    * @param {number[]} range - An array with two numbers. If defined, the parameter value will be clamped.
    * @param {number} step - The step value. If defined, the parameter value will be rounded to the nearest integer.
    */
-  constructor(name: string, value = 0, range?: number[], step?: number) {
+  constructor(name: string = '', value = 0, range?: number[], step?: number) {
     super(name, value, 'Number')
     this.range = range
     this.step = step

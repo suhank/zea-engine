@@ -32,7 +32,7 @@ class TreeItemParameter extends Parameter<TreeItem> {
    * @param {string} name - The name of the tree item parameter.
    * @param {function} filterFn - The filterFn value.
    */
-  constructor(name: string, filterFn?: (...args: []) => unknown) {
+  constructor(name: string = '', filterFn?: (...args: []) => unknown) {
     super(name, undefined, 'TreeItem')
     this.filterFn = filterFn
     this.emittreeItemGlobalXfoChanged = this.emittreeItemGlobalXfoChanged.bind(this)
