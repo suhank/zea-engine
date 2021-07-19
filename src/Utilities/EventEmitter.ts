@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-let counter = 0
+import { BaseClass } from './BaseClass'
 
 /**
  * Provides an interface for emitting events under given names, and registering listeners to those events.
@@ -20,8 +20,7 @@ let counter = 0
  *
  *
  */
-class EventEmitter {
-  __id: number
+class EventEmitter extends BaseClass {
   listeners: Record<string, Array<(...args: any) => unknown | unknown>>
 
   /**
@@ -30,17 +29,8 @@ class EventEmitter {
    * <br>
    */
   constructor() {
+    super()
     this.listeners = {}
-    this.__id = ++counter
-  }
-
-  /**
-   * Returns the unique id of the object.
-   * @private
-   * @return {number} - The Id of the ParameterOwner object.
-   */
-  getId(): number {
-    return this.__id
   }
 
   /**

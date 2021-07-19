@@ -1,10 +1,7 @@
 import { Registry, TypeDefinition } from './Registry'
 import { BaseItem } from './SceneTree/BaseItem'
 
-// eslint-disable-next-line require-jsdoc
 class Foo extends BaseItem {}
-
-// eslint-disable-next-line require-jsdoc
 class Bar extends Foo {}
 
 describe('Registry', () => {

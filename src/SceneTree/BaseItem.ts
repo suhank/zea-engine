@@ -1,4 +1,3 @@
-
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -59,6 +58,10 @@ class BaseItem extends ParameterOwner {
    */
   static getNumBaseItems(): number {
     return numBaseItems
+  }
+
+  getClassName(): string {
+    return 'BaseItem'
   }
 
   // ////////////////////////////////////////
@@ -277,7 +280,7 @@ class BaseItem extends ParameterOwner {
   toJSON(context?: Record<string, any>): Record<string, any> {
     const j = super.toJSON(context)
     ;(j as any).name = this.__name
-    ;(j as any).type = Registry.getBlueprintName(this)
+    ;(j as any).type = this.getClassName()
 
     return j
   }

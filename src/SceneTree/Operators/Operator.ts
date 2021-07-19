@@ -202,7 +202,7 @@ class Operator extends BaseItem {
    */
   toJSON(context?: Record<string, any>): Record<string, any> {
     const j = super.toJSON(context)
-    ;(j as any).type = Registry.getBlueprintName(this)
+    ;(j as any).type = this.getClassName()
     const inputs: any = []
     this.__inputs.forEach((input: any) => {
       inputs.push(input.toJSON(context))
