@@ -33,7 +33,7 @@ class ColorAttribute extends Attribute {
   }
 
   /**
-   * Returns the Color from the specified index.
+   * Returns a copy of the Color value at the specified index.
    *
    * @param {number} index - The index value.
    * @return Color - The return value.

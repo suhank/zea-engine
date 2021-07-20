@@ -33,7 +33,7 @@ class Vec4Attribute extends Attribute {
   }
 
   /**
-   * Returns the Vec4 from the specified index.
+   * Returns a copy of the Vec4 value at the specified index.
    *
    * @param {number} index - The index value.
    * @return Vec4 - The value at the specified index.
