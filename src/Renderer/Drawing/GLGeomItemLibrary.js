@@ -16,9 +16,10 @@ const pixelsPerItem = 6 // The number of RGBA pixels per draw item.
 class GLGeomItemLibrary extends EventEmitter {
   /**
    * Create a GLGeomItemLibrary.
-   * @param {GLBaseRenderer} renderer - The renderer object
+   * @param {GLBaseRenderer} renderer - The renderer instance
+   * @param {object} options - The options object passed to the GLRenderer constructor.
    */
-  constructor(renderer) {
+  constructor(renderer, options) {
     super()
 
     this.renderer = renderer
@@ -28,7 +29,18 @@ class GLGeomItemLibrary extends EventEmitter {
     this.glGeomItemsIndexFreeList = []
     this.dirtyItemIndices = []
     this.removedItemIndices = []
+    this.enableFrustumCulling = options.enableFrustumCulling
 
+    if (this.enableFrustumCulling) {
+      this.setupCullingWorker(renderer)
+    }
+  }
+
+  /**
+   * Sets up the Culling Worker to start calculating frustum culling.
+   * @param {GLBaseRenderer} renderer - The renderer instance
+   */
+  setupCullingWorker(renderer) {
     // this.worker = {
     //   postMessage: (message) => {},
     // }
@@ -449,13 +461,16 @@ class GLGeomItemLibrary extends EventEmitter {
         const material = geomItem.getParameter('Material').getValue()
         geomItemsUpdateToCullingWorker.push(this.getCullingWorkerData(geomItem, material, index))
       })
-      // /////////////////////////
-      // Update the culling worker
-      this.worker.postMessage({
-        type: 'UpdateGeomItems',
-        geomItems: geomItemsUpdateToCullingWorker,
-        removedItemIndices: this.removedItemIndices,
-      })
+
+      if (this.enableFrustumCulling) {
+        // /////////////////////////
+        // Update the culling worker
+        this.worker.postMessage({
+          type: 'UpdateGeomItems',
+          geomItems: geomItemsUpdateToCullingWorker,
+          removedItemIndices: this.removedItemIndices,
+        })
+      }
 
       // During rendering, the GeomMat will be Pplled.
       // This will trigger the lazy evaluation of the operators in the scene.
@@ -532,13 +547,15 @@ class GLGeomItemLibrary extends EventEmitter {
       i += uploadCount - 1
     }
 
-    // /////////////////////////
-    // Update the culling worker
-    this.worker.postMessage({
-      type: 'UpdateGeomItems',
-      geomItems: geomItemsUpdateToCullingWorker,
-      removedItemIndices: this.removedItemIndices,
-    })
+    if (this.enableFrustumCulling) {
+      // /////////////////////////
+      // Update the culling worker
+      this.worker.postMessage({
+        type: 'UpdateGeomItems',
+        geomItems: geomItemsUpdateToCullingWorker,
+        removedItemIndices: this.removedItemIndices,
+      })
+    }
 
     this.removedItemIndices = []
     this.dirtyItemIndices = []
