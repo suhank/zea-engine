@@ -302,7 +302,7 @@ class BaseItem extends ParameterOwner {
    * @param {BinReader} reader - The reader value.
    * @param {Record<string, unknown>} context - The context value.
    */
-  readBinary(reader: BinReader, context?: Record<string, any>): void {
+  readBinary(reader: BinReader, context: Record<string, any>): void {
     // const type = reader.loadStr()
     this.setName(reader.loadStr())
 

@@ -25,6 +25,10 @@ class Attribute extends BaseClass {
 
   constructor(dataTypeName: string, stride: number, defaultElementValue: number = 0) {
     super()
+
+    this.normalized = true // TODO: check if these (normalized, mesh) initializations are correct/ok
+    this.mesh = new Mesh()
+
     this.data = new Float32Array(0)
     this.dataTypeName = dataTypeName
     this.stride = stride

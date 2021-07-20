@@ -604,7 +604,7 @@ class Mesh extends BaseGeom {
    * @param {number} hardAngle - The hardAngle value in radians.
    * @return {array} - The return value.
    */
-  computeHardEdgesIndices(hardAngle = 1.0): TypedArray {
+  computeHardEdgesIndices(hardAngle = 1.0): any {
     if (this.edgeVerts.length == 0) this.calculateEdgeAngles()
 
     const hardEdges: number[] = []
@@ -836,7 +836,7 @@ class Mesh extends BaseGeom {
    * @param {array} splitIndices - The splitIndices value.
    * @return {TypedArray} - Returns a typed array containing the triangulated indices.
    */
-  generateTriangulatedIndices(totalNumVertices: number, numUnSplitVertices: number, splitIndices: any): TypedArray {
+  generateTriangulatedIndices(totalNumVertices: number, numUnSplitVertices: number, splitIndices: any): any {
     const trisCount = this.computeNumTriangles()
 
     let triangulatedIndices

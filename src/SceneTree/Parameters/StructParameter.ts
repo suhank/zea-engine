@@ -148,6 +148,6 @@ class StructParameter extends Parameter<Record<string, unknown>> {
   }
 }
 
-Registry.register('StructParameter', StructParameter)
+// Registry.register('StructParameter', StructParameter)
 
 export { StructParameter }
