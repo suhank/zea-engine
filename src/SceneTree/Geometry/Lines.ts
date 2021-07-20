@@ -1,6 +1,8 @@
-import { BaseGeom } from './BaseGeom.js'
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { BaseGeom } from './BaseGeom'
 import { Registry } from '../../Registry'
-
+import { BinReader } from '../../SceneTree/BinReader'
 /**
  *
  * Class representing lines primitive drawing type, connecting vertices using the specified indices.
@@ -19,6 +21,8 @@ import { Registry } from '../../Registry'
  * @extends BaseGeom
  */
 class Lines extends BaseGeom {
+  protected __indices: Float32Array | Int32Array | Int16Array | Int8Array | Uint8Array | Uint16Array | Uint32Array
+
   /**
    * Create lines.
    */
@@ -30,18 +34,19 @@ class Lines extends BaseGeom {
   /**
    * The clear method.
    */
-  clear() {
-    super.clear()
+  clear(): void {
     this.setNumSegments(0)
+    this.setNumVertices(0)
+
     this.emit('geomDataTopologyChanged')
   }
 
   /**
    * Returns the specified indices(Vertex connectors)
    *
-   * @return {Uint32Array} - The indices index array.
+   * @return {Float32Array | Int32Array | Int16Array | Int8Array | Uint8Array | Uint16Array | Uint32Array} - The indices index array.
    */
-  getIndices() {
+  getIndices(): Float32Array | Int32Array | Int16Array | Int8Array | Uint8Array | Uint16Array | Uint32Array {
     return this.__indices
   }
 
@@ -50,7 +55,7 @@ class Lines extends BaseGeom {
    *
    * @return {number} - Returns the number of segments.
    */
-  getNumSegments() {
+  getNumSegments(): number {
     return this.__indices.length / 2
   }
 
@@ -60,7 +65,7 @@ class Lines extends BaseGeom {
    *
    * @param {number} numOfSegments - The count value.
    */
-  setNumSegments(numOfSegments) {
+  setNumSegments(numOfSegments: number): void {
     if (numOfSegments > this.getNumSegments()) {
       const indices = new Uint32Array(numOfSegments * 2)
       indices.set(this.__indices)
@@ -77,9 +82,9 @@ class Lines extends BaseGeom {
    * @param {number} p0 - The p0 value.
    * @param {number} p1 - The p1 value.
    */
-  setSegmentVertexIndices(index, p0, p1) {
+  setSegmentVertexIndices(index: number, p0: number, p1: number): void {
     if (index >= this.__indices.length / 2)
-      throw new Error('Invalid line index: ' + index + '. Num Segments: ' + this.__indices.length / 2)
+      throw new Error('Invalid line index:' + index + '. Num Segments:' + this.__indices.length / 2)
     this.__indices[index * 2 + 0] = p0
     this.__indices[index * 2 + 1] = p1
   }
@@ -91,7 +96,7 @@ class Lines extends BaseGeom {
    * @param {number} p0 - The p0 value.
    * @param {number} p1 - The p1 value.
    */
-  setSegment(index, p0, p1) {
+  setSegment(index: number, p0: number, p1: number): void {
     console.warn(`deprecated use #setSegmentVertexIndices`)
     this.setSegmentVertexIndices(index, p0, p1)
   }
@@ -104,7 +109,7 @@ class Lines extends BaseGeom {
    * @return {number} - The return value.
    * @private
    */
-  getSegmentVertexIndex(line, lineVertex) {
+  protected getSegmentVertexIndex(line: number, lineVertex: number): number | undefined {
     const numSegments = this.getNumSegments()
     if (line < numSegments) return this.__indices[line * 2 + lineVertex]
   }
@@ -115,9 +120,9 @@ class Lines extends BaseGeom {
   /**
    * Returns vertex attributes buffers and its count.
    *
-   * @return {object} - The return value.
+   * @return {Record<string, any>} - The return value.
    */
-  genBuffers() {
+  genBuffers(): Record<string, any> {
     const buffers = super.genBuffers()
 
     let indices
@@ -128,7 +133,7 @@ class Lines extends BaseGeom {
     } else {
       indices = this.__indices
     }
-    buffers.indices = indices
+    ;(buffers as any).indices = indices
     return buffers
   }
 
@@ -138,10 +143,10 @@ class Lines extends BaseGeom {
   /**
    * Sets state of current geometry(Including line segments) using a binary reader object.
    *
-   * @param {object} reader - The reader value.
-   * @param {object} context - The context value.
+   * @param {BinReader} reader - The reader value.
+   * @param {Record<string, any>} context - The context value.
    */
-  readBinary(reader, context) {
+  readBinary(reader: BinReader, context?: Record<string, any>): void {
     super.loadBaseGeomBinary(reader)
 
     this.setNumSegments(reader.loadUInt32())
@@ -156,23 +161,22 @@ class Lines extends BaseGeom {
   /**
    * The toJSON method encodes this type as a json object for persistence.
    *
-   * @param {object} context - The context value.
-   * @return {object} - Returns the json object.
+   * @param {Record<string, any>} context - The context value.
+   * @return {Record<string, any>} - Returns the json object.
    */
-  toJSON(context) {
+  toJSON(context?: Record<string, any>): Record<string, any> {
     const j = super.toJSON(context)
-    if (!context || !context.skipTopology) j.indices = Array.from(this.__indices)
-
+    if (!context || !context.skipTopology) (j as any).indices = Array.from(this.__indices)
     return j
   }
 
   /**
    * The fromJSON method decodes a json object for this type.
    *
-   * @param {object} j - The json object this item must decode.
-   * @param {object} context - The context value.
+   * @param {Record<string, any>} j - The json object this item must decode.
+   * @param {Record<string, any>} context - The context value.
    */
-  fromJSON(j, context) {
+  fromJSON(j: Record<string, any>, context: Record<string, any>): void {
     super.fromJSON(j, context)
     if (j.indices) this.__indices = Uint32Array.from(j.indices)
   }
