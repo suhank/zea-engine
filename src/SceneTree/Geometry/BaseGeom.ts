@@ -37,6 +37,7 @@ class BaseGeom extends ParameterOwner {
    */
   constructor() {
     super()
+    this.__name = ''
     this.__numVertices = 0
     this.__boundingBox = new Box3()
     this.__boundingBoxDirty = true
@@ -90,7 +91,7 @@ class BaseGeom extends ParameterOwner {
    * @param {string} name - The name of the vertex attribute.
    * @return {Attribute} - The return value.
    */
-  getVertexAttribute(name: string): Attribute {
+  getVertexAttribute(name: string): Attribute | undefined {
     return this.__vertexAttributes.get(name)
   }
 
@@ -419,8 +420,11 @@ class BaseGeom extends ParameterOwner {
         // attr = new VertexAttribute(this, dataType, 0, attrJSON.defaultScalarValue)
         // if (attr) this.__vertexAttributes.set(name, attr)
       }
-
-      attr.fromJSON(attrJSON)
+      if (attr) {
+        attr.fromJSON(attrJSON)
+      } else {
+        console.warn('attr undefined, cannot execute fromJSON()')
+      }
     }
     this.emit('geomDataTopologyChanged')
   }

@@ -2,8 +2,8 @@
 /* eslint-disable guard-for-in */
 /* eslint-disable no-unused-vars */
 import { Vec3 } from '../../Math/Vec3'
-import { BaseGeom } from './BaseGeom.js'
-import { Attribute } from './Attribute.js'
+import { BaseGeom } from './BaseGeom'
+import { Attribute } from './Attribute'
 
 import { Registry } from '../../Registry'
 import { Vec3Attribute } from './Vec3Attribute'
@@ -47,6 +47,9 @@ class Mesh extends BaseGeom {
   constructor() {
     super()
 
+    this.edgeFaces = []
+    this.faceEdges = [[]]
+
     this.__faceCounts = []
     this.__faceVertexIndices = new Uint32Array()
     this.__logTopologyWarnings = false
@@ -72,10 +75,11 @@ class Mesh extends BaseGeom {
    */
   clear() {
     super.clear()
-
+    //this.init()
+    //this.setNumVertices(0)
     // clear edge and face normals.
-    this.edgeVerts = undefined
-    this.vertexEdges = undefined
+    this.edgeVerts = []
+    this.vertexEdges = []
     this.numEdges = 0
     this.edgeAngles = new Float32Array()
     this.emit('geomDataTopologyChanged')
@@ -85,7 +89,7 @@ class Mesh extends BaseGeom {
    * The getFaceCounts method.
    * @return {array} - The return value.
    */
-  getFaceCounts() {
+  getFaceCounts(): Array<any> {
     return this.__faceCounts
   }
 
@@ -93,8 +97,8 @@ class Mesh extends BaseGeom {
    * The getNumFaces method.
    * @return {number} - The return value.
    */
-  getNumFaces() {
-    return this.__faceCounts.length == 0 ? 0 : this.__faceCounts.reduce((numFaces, fc) => (numFaces += fc))
+  getNumFaces(): number {
+    return this.__faceCounts.length == 0 ? 0 : this.__faceCounts.reduce((numFaces: any, fc: any) => (numFaces += fc))
   }
 
   /**
@@ -103,7 +107,7 @@ class Mesh extends BaseGeom {
    * e.g. to specify 2 triangles, and 7 quads, we would pass [2, 7]
    * @param {array} faceCounts - The faceCounts value.
    */
-  setFaceCounts(faceCounts) {
+  setFaceCounts(faceCounts: any): void {
     let numFaces = 0
     let numFacesVertices = 0
     let numVertsPerFace = 3
@@ -124,7 +128,7 @@ class Mesh extends BaseGeom {
       let startTgt = 0
       numFacesVertices = 0
       numVertsPerFace = 3
-      faceCounts.forEach((fc, index) => {
+      faceCounts.forEach((fc: any, index: any) => {
         const endSrc = startSrc + Math.min(fc, this.__faceCounts[index]) * numVertsPerFace
         faceVertexIndices.set(this.__faceVertexIndices.slice(startSrc, endSrc), startTgt)
         startSrc += this.__faceCounts[index] * numVertsPerFace
@@ -141,10 +145,10 @@ class Mesh extends BaseGeom {
    * @param {number} faceIndex - The faceIndex value.
    * @return {number} - The return value.
    */
-  getFaceVertexCount(faceIndex) {
+  getFaceVertexCount(faceIndex: number): number {
     let idx = 0
     let count = 0
-    this.__faceCounts.some((fc, index) => {
+    this.__faceCounts.some((fc: number, index: number) => {
       idx += fc
       if (idx > faceIndex) {
         count = index + 3
@@ -159,10 +163,10 @@ class Mesh extends BaseGeom {
    * @param {number} faceIndex - The faceIndex value.
    * @return {number} - The return value.
    */
-  getFaceVertexOffset(faceIndex) {
+  getFaceVertexOffset(faceIndex: number): number {
     let idx = 0
     let offset = 0
-    this.__faceCounts.some((fc, index) => {
+    this.__faceCounts.some((fc: number, index: number) => {
       if (idx + fc > faceIndex) {
         offset += (faceIndex - idx) * (index + 3)
         return true
@@ -178,7 +182,7 @@ class Mesh extends BaseGeom {
    * @param {number} faceIndex - The faceIndex value.
    * @param {array} vertexIndices - The array of vertex indices for this face value.
    */
-  setFaceVertexIndices(faceIndex, vertexIndices) {
+  setFaceVertexIndices(faceIndex: number, vertexIndices: Array<any>): void {
     if (arguments.length != 2) {
       console.warn(`deprecated interface. Please pass vertexIndices as an array`)
       vertexIndices = Array.prototype.slice.call(arguments, 1)
@@ -198,7 +202,7 @@ class Mesh extends BaseGeom {
    * @param {array} vertexIndices - The vertex indices of the face.
    * @return {number} - The index of the face in the mesh.
    */
-  addFace(vertexIndices) {
+  addFace(vertexIndices: number[]): number {
     const faceCounts = [...this.__faceCounts]
     if (faceCounts.length <= vertexIndices.length - 3) {
       for (let i = faceCounts.length; i < vertexIndices.length - 3; i++) faceCounts[i] = 0
@@ -211,7 +215,7 @@ class Mesh extends BaseGeom {
     // Calculate the offset in the faceVertexIndices of this new face.
     let faceIndex = 0
     let offset = 0
-    this.__faceCounts.some((fc, index) => {
+    this.__faceCounts.some((fc: any, index: any) => {
       if (index + 3 == vertexIndices.length) {
         faceIndex += fc - 1
         offset += (fc - 1) * (index + 3)
@@ -229,7 +233,7 @@ class Mesh extends BaseGeom {
    * @param {number} faceIndex - The index of the specified face
    * @return {array} - An array of indices into the vertex attributes
    */
-  getFaceVertexIndices(faceIndex) {
+  getFaceVertexIndices(faceIndex: number): number[] {
     const vertexIndices = []
     const offset = this.getFaceVertexOffset(faceIndex)
     const count = this.getFaceVertexCount(faceIndex)
@@ -245,7 +249,7 @@ class Mesh extends BaseGeom {
    * @param {number} faceVertex - The face vertex is the index within the face. So the first vertex index is 0.
    * @return {number} - The vertex index
    */
-  getFaceVertexIndex(faceIndex, faceVertex) {
+  getFaceVertexIndex(faceIndex: number, faceVertex: number) {
     const offset = this.getFaceVertexOffset(faceIndex)
     return this.__faceVertexIndices[offset + faceVertex]
   }
@@ -258,7 +262,7 @@ class Mesh extends BaseGeom {
    * @param {string} name - The name of the face attribute to add.
    * @param {Attribute} attr - The attr value
    */
-  addFaceAttribute(name, attr: Attribute) {
+  addFaceAttribute(name: string, attr: Attribute) {
     attr.setCount(this.getNumFaces())
     this.__faceAttributes.set(name, attr)
     return attr
@@ -269,7 +273,7 @@ class Mesh extends BaseGeom {
    * @param {string} name - The name of the face attribute.
    * @return {boolean} - The return value.
    */
-  hasFaceAttribute(name) {
+  hasFaceAttribute(name: string) {
     return this.__faceAttributes.has(name)
   }
 
@@ -278,7 +282,7 @@ class Mesh extends BaseGeom {
    * @param {string} name - The name of the face attribute.
    * @return {Attribute} - The return value.
    */
-  getFaceAttribute(name) {
+  getFaceAttribute(name: string): any {
     return this.__faceAttributes.get(name)
   }
 
@@ -300,7 +304,7 @@ class Mesh extends BaseGeom {
    * @param {string} name - The name of the edge attribute.
    * @return {boolean} - The return value.
    */
-  hasEdgeAttribute(name) {
+  hasEdgeAttribute(name: string): boolean {
     return this.__edgeAttributes.has(name)
   }
 
@@ -309,7 +313,7 @@ class Mesh extends BaseGeom {
    * @param {string} name - The name of the edge attribute.
    * @return {Attribute} - The return value.
    */
-  getEdgeAttribute(name) {
+  getEdgeAttribute(name: string): Attribute | undefined {
     return this.__edgeAttributes.get(name)
   }
 
@@ -318,8 +322,12 @@ class Mesh extends BaseGeom {
   /**
    * The genTopologyInfo method.
    */
-  genTopologyInfo() {
-    const connectedVertices = {} // acceleration structure.
+  genTopologyInfo(): void {
+    interface edgeData {
+      edgeIndex: number
+      edgeVec: Vec3
+    }
+    let connectedVertices: Record<string, edgeData> = {} // acceleration structure.
     this.vertexEdges = [] // 2d array of vertex to edges.
     // this.vertexFaces = []; // 2d array of vertex to faces.
     this.edgeFaces = [] // flat array of 2 face indices per edge
@@ -328,7 +336,7 @@ class Mesh extends BaseGeom {
     this.numEdges = 0
 
     const positions = this.positions
-    const getEdgeIndex = (v0, v1) => {
+    const getEdgeIndex = (v0: any, v1: any) => {
       let tmp0 = v0
       let tmp1 = v1
       if (tmp1 < tmp0) {
@@ -336,7 +344,7 @@ class Mesh extends BaseGeom {
         tmp0 = tmp1
         tmp1 = tmp
       }
-      const key = tmp0 + '>' + tmp1
+      const key: any = tmp0 + '>' + tmp1
       if (key in connectedVertices) {
         // console.log(key + ':' + connectedVertices[key] + " face:" + ( v0 < v1 ? 0 : 1) );
         return connectedVertices[key]
@@ -362,8 +370,7 @@ class Mesh extends BaseGeom {
       this.numEdges++
       return edgeData
     }
-
-    const addEdge = (v0, v1, faceIndex) => {
+    const addEdge = (v0: any, v1: any, faceIndex: any) => {
       // console.log('addEdge:' + v0 + " :" + v1 + " faceIndex:" + faceIndex );
       const edgeData = getEdgeIndex(v0, v1)
       const edgeIndex = edgeData.edgeIndex
@@ -413,7 +420,7 @@ class Mesh extends BaseGeom {
   /**
    * Computes a normal value per face by averaging the triangle normals of the face.
    */
-  computeFaceNormals() {
+  computeFaceNormals(): void {
     const positions = this.positions
     const faceNormals = new Vec3Attribute()
     this.addFaceAttribute('normals', faceNormals)
@@ -444,7 +451,7 @@ class Mesh extends BaseGeom {
   /**
    * Calculates the angles at each edge between the adjoining faces
    */
-  calculateEdgeAngles() {
+  calculateEdgeAngles(): void {
     if (this.vertexEdges.length == 0) this.genTopologyInfo()
 
     this.computeFaceNormals()
@@ -489,13 +496,13 @@ class Mesh extends BaseGeom {
     // these methods are faster versions than using the methods
     // provided on the attributes. We cache values and use hard coded constants.
     // const faceNormalsBuffer = faceNormals.data.buffer
-    const getFaceNormal = (index) => {
+    const getFaceNormal = (index: number) => {
       return faceNormals.getValueRef(index)
     }
-    const setVertexNormal = (index, value) => {
+    const setVertexNormal = (index: number, value: Vec3) => {
       normalsAttr.setValue(index, value)
     }
-    const getConnectedEdgeVecs = (faceIndex, vertexIndex) => {
+    const getConnectedEdgeVecs = (faceIndex: any, vertexIndex: any) => {
       let e0
       let e1
       const faceEdges = this.faceEdges[faceIndex]
@@ -518,8 +525,8 @@ class Mesh extends BaseGeom {
       const edges = this.vertexEdges[i]
 
       // Groups of faces having a smooth normal at the current vertex.
-      const faceGroups = []
-      const addFaceToGroup = (face) => {
+      const faceGroups: any = []
+      const addFaceToGroup = (face: any) => {
         let inGroup = false
         for (const faceGroup of faceGroups) {
           inGroup = faceGroup.includes(face)
@@ -531,6 +538,7 @@ class Mesh extends BaseGeom {
         const f0 = this.edgeFaces[e * 2]
         const f1 = this.edgeFaces[e * 2 + 1]
         if (f0 != -1 && f1 != -1 && this.edgeAngles[e] < hardAngle) {
+          // if (f0 != -1 && f1 == -1 && this.edgeAngles[e] < hardAngle) {
           let f0groupIndex = -1
           let f1groupIndex = -1
           for (let groupIndex = 0; groupIndex < faceGroups.length; groupIndex++) {
@@ -561,17 +569,22 @@ class Mesh extends BaseGeom {
       }
 
       // Sort the groups to have the biggest group first.
-      faceGroups.sort((a, b) => (a.length < b.length ? 1 : a.length > b.length ? -1 : 0))
+      faceGroups.sort((a: any, b: any) => (a.length < b.length ? 1 : a.length > b.length ? -1 : 0))
 
       let firstVertex = true
       for (const faceGroup of faceGroups) {
         const normal = new Vec3()
         for (const faceIndex of faceGroup) {
           const faceEdges = getConnectedEdgeVecs(faceIndex, i)
-          const weight = faceEdges[0].angleTo(faceEdges[1])
+          let weight
+          if (faceEdges[0] && faceEdges[1]) {
+            weight = faceEdges[0].angleTo(faceEdges[1])
+            normal.addInPlace(getFaceNormal(faceIndex).scale(weight))
+          } else {
+            console.warn('variable weight is undefined because faceEdges[0] or faceEdges[1] is undefined')
+          }
           // if (i == 1)
           //     console.log("FaceNormal:" + faceIndex + ":" + getFaceNormal(faceIndex).toString());
-          normal.addInPlace(getFaceNormal(faceIndex).scale(weight))
         }
         normal.normalizeInPlace()
         if (firstVertex) {
@@ -591,11 +604,11 @@ class Mesh extends BaseGeom {
    * @param {number} hardAngle - The hardAngle value in radians.
    * @return {array} - The return value.
    */
-  computeHardEdgesIndices(hardAngle = 1.0) {
+  computeHardEdgesIndices(hardAngle = 1.0): TypedArray {
     if (this.edgeVerts.length == 0) this.calculateEdgeAngles()
 
-    const hardEdges = []
-    const addEdge = (index) => {
+    const hardEdges: number[] = []
+    const addEdge = (index: number) => {
       hardEdges.push(this.edgeVerts[index])
       hardEdges.push(this.edgeVerts[index + 1])
     }
@@ -612,17 +625,17 @@ class Mesh extends BaseGeom {
 
   /**
    * The genBuffers method.
-   * @param {object} opts - The opts value.
-   * @return {object} - The return value.
+   * @param {Record<string, any>} opts - The opts value.
+   * @return {Record<string, any>} - The return value.
    */
-  genBuffers(opts) {
+  genBuffers(opts: Record<string, any>): Record<string, any> {
     // Compute the normals on demand.
     // if (!('normals' in this.__vertexAttributes)) {
     //     // this.__geom.computeVertexNormals();
     //     this.addVertexAttribute("normals", Vec3, 0.0);
     // }
 
-    const splitIndices = {}
+    const splitIndices: Record<any, Record<any, any>> = {}
     let splitCount = 0
     for (const [, attr] of this.__vertexAttributes) {
       const attrSplits = attr.getSplits()
@@ -651,7 +664,15 @@ class Mesh extends BaseGeom {
     // let maxIndex;
     // if (debugAttrValues)
     //     maxIndex = Math.max(...indices);
-    const attrBuffers = {}
+
+    interface attrBuffer {
+      values: any
+      count: number
+      dimension: any
+      normalized: boolean
+      dataType: string
+    }
+    const attrBuffers: Record<string, attrBuffer> = {}
     for (const [attrName, attr] of this.__vertexAttributes) {
       let values
       if (splitCount == 0) values = attr.asArray()
@@ -693,8 +714,7 @@ class Mesh extends BaseGeom {
       // The array will be structured as a start+offset for each vertex, followed
       // by a 2d array of neighbor indices.
       const vertexNeighbors = new Uint32Array(this.vertexEdges.length * 2 + count)
-
-      const sortFanEdges = (fanEdges) => {
+      const sortFanEdges = (fanEdges: any) => {
         for (let i = 0; i < fanEdges.length; i++) {
           const feA = fanEdges[i]
           for (let j = 0; j < i; j++) {
@@ -716,8 +736,7 @@ class Mesh extends BaseGeom {
           }
         }
       }
-
-      const checkFanEdges = (fanEdges) => {
+      const checkFanEdges = (fanEdges: any) => {
         // now check that the faces all build a fan. Maybe starting and ending with -1
         if (fanEdges[0][0] == -1 || fanEdges[fanEdges.length - 1][1] == -1) {
           if (fanEdges[0][0] != -1 || fanEdges[fanEdges.length - 1][1] != -1) {
@@ -787,8 +806,7 @@ class Mesh extends BaseGeom {
           offset++
         }
       }
-
-      result.vertexNeighbors = vertexNeighbors
+      ;(result as any).vertexNeighbors = vertexNeighbors
     }
     */
 
@@ -799,7 +817,7 @@ class Mesh extends BaseGeom {
    * Compute the number of triangles. For higher degree polygons, they are divided into multiple triangles for rendering.
    * @return {number} - Returns the number of triangles.
    */
-  computeNumTriangles() {
+  computeNumTriangles(): number {
     let numVertsPerFace = 3
     let trisCount = 0
     for (const fc of this.__faceCounts) {
@@ -818,7 +836,7 @@ class Mesh extends BaseGeom {
    * @param {array} splitIndices - The splitIndices value.
    * @return {TypedArray} - Returns a typed array containing the triangulated indices.
    */
-  generateTriangulatedIndices(totalNumVertices, numUnSplitVertices, splitIndices) {
+  generateTriangulatedIndices(totalNumVertices: number, numUnSplitVertices: number, splitIndices: any): TypedArray {
     const trisCount = this.computeNumTriangles()
 
     let triangulatedIndices
@@ -827,7 +845,7 @@ class Mesh extends BaseGeom {
     else triangulatedIndices = new Uint32Array(trisCount * 3)
 
     let triangleVertex = 0
-    const addTriangleVertexIndex = function (vertex, faceIndex) {
+    const addTriangleVertexIndex = function (vertex: any, faceIndex: any) {
       if (vertex in splitIndices && faceIndex in splitIndices[vertex])
         vertex = numUnSplitVertices + splitIndices[vertex][faceIndex]
       triangulatedIndices[triangleVertex] = vertex
@@ -855,9 +873,9 @@ class Mesh extends BaseGeom {
    * Restores mesh properties from a binary reader.
    *
    * @param {BinReader} reader - The reader value.
-   * @param {Record<string, unknown>} context - The context value.
+   * @param {object} context - The context value.
    */
-  readBinary(reader: BinReader, context: Record<string, unknown>) {
+  readBinary(reader: BinReader, context?: Record<string, any>): void {
     super.loadBaseGeomBinary(reader)
     this.setFaceCounts(reader.loadUInt32Array())
     const numFaces = this.getNumFaces()
@@ -870,7 +888,9 @@ class Mesh extends BaseGeom {
     if (bytes == 1) faceVertexIndexDeltas = reader.loadUInt8Array()
     else if (bytes == 2) faceVertexIndexDeltas = reader.loadUInt16Array()
     else if (bytes == 4) faceVertexIndexDeltas = reader.loadUInt32Array()
-
+    else {
+      throw Error('faceVertexIndexDeltas undefined')
+    }
     // ///////////////////////////////////////////////////
     // Note: The Mesh compression system needs a thorough review.
     // The C++ classes are not storing face indices in a sorted manner.
@@ -880,7 +900,7 @@ class Mesh extends BaseGeom {
 
     let numFaceVerts = 3
     let offset = 0
-    const faceOffsetsByCount = this.__faceCounts.map((fc, index) => {
+    const faceOffsetsByCount = this.__faceCounts.map((fc: any, index: any) => {
       const result = offset
       offset += fc * numFaceVerts
       numFaceVerts++
@@ -922,14 +942,14 @@ class Mesh extends BaseGeom {
   /**
    * The toJSON method encodes this type as a json object for persistence.
    *
-   * @param {object} context - The context value.
-   * @return {object} - Returns the json object.
+   * @param {Record<string, any>} context - The context value.
+   * @return {Record<string, any>} - Returns the json object.
    */
-  toJSON(context) {
+  toJSON(context: Record<string, any>): Record<string, unknown> {
     const j = super.toJSON(context)
     if (!context || !context.skipTopology) {
-      j.faceCounts = Array.from(this.__faceCounts)
-      j.faceVertexIndices = Array.from(this.__faceVertexIndices)
+      ;(j as any).faceCounts = Array.from(this.__faceCounts)
+      ;(j as any).faceVertexIndices = Array.from(this.__faceVertexIndices)
     }
 
     return j
@@ -961,7 +981,7 @@ class Mesh extends BaseGeom {
    * @param {object} j - The json object this item must decode.
    * @param {object} context - The context value.
    */
-  fromJSON(j, context) {
+  fromJSON(j: Record<string, any>, context: Record<string, any>): void {
     super.fromJSON(j, context)
     if (j.faceCounts) this.__faceCounts = j.faceCounts
     if (j.faceVertexIndices) this.__faceVertexIndices = Uint32Array.from(j.faceVertexIndices)
