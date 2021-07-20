@@ -18,7 +18,12 @@ class GeometryParameter extends Parameter<BaseGeom> {
     super(name, value, 'Geometry')
 
     this.emitBoundingBoxDirtied = this.emitBoundingBoxDirtied.bind(this)
-    this.setValue(value)
+    if(value){
+      this.setValue(value)
+    }else {
+      console.warn("no value set in the constructor")
+    }
+    
   }
 
   protected emitBoundingBoxDirtied(event: Record<string, unknown>): void {
@@ -81,7 +86,7 @@ class GeometryParameter extends Parameter<BaseGeom> {
    * @param {Record<string, unknown>} j - The json object this item must decode.
    * @param {Record<string, unknown>} context - The context value.
    */
-  fromJSON(j: any, context?: any): void {
+  fromJSON(j: any, context?: Record<string, unknown>): void {
     if (j.name) this.name = j.name as string
     const geometry = Registry.constructClass(j.value.type) as any
     geometry.fromJSON(j.value, context)

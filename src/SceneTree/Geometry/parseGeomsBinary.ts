@@ -7,11 +7,11 @@ import { Version } from '../Version.js'
 import { Registry } from '../../Registry'
 
 // key, toc, geomIndexOffset, geomsRange, isMobileDevice, bufferSlice, genBuffersOpts, context
-const parseGeomsBinary = (data, callback) => {
+const parseGeomsBinary = (data: any, callback: any) => {
   // eslint-disable-next-line guard-for-in
   for (const key in data.context.versions) {
     const v = data.context.versions[key]
-    const version = new Version()
+    const version = new Version('')
     version.major = v.major
     version.minor = v.minor
     version.patch = v.patch

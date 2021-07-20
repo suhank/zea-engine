@@ -55,6 +55,6 @@ class MultiChoiceParameter extends NumberParameter {
   }
 }
 
-Registry.register('MultiChoiceParameter', MultiChoiceParameter)
+// Registry.register('MultiChoiceParameter', MultiChoiceParameter)
 
 export { MultiChoiceParameter }

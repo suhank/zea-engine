@@ -34,7 +34,7 @@ class BooleanParameter extends Parameter<boolean> implements IBinaryReader {
    * Loads the boolean values from the binary buffer.
    *
    * @param {BinReader} reader - The reader value.
-   * @param {object} context - The context value.
+   * @param {Record<string, unknown>} context - The context value.
    */
   readBinary(reader: BinReader, context?: Record<string, unknown>): void {
     this.value = reader.loadUInt8() != 0

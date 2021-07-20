@@ -7,6 +7,7 @@ import { Attribute } from './Attribute.js'
 
 import { Registry } from '../../Registry'
 import { Vec3Attribute } from './Vec3Attribute'
+import { BinReader } from '../BinReader'
 
 /**
  * The Mesh class provides a flexible and fast polygon mesh representation. It supports polygons of arbitrary complexity,
@@ -854,9 +855,9 @@ class Mesh extends BaseGeom {
    * Restores mesh properties from a binary reader.
    *
    * @param {BinReader} reader - The reader value.
-   * @param {object} context - The context value.
+   * @param {Record<string, unknown>} context - The context value.
    */
-  readBinary(reader, context) {
+  readBinary(reader: BinReader, context: Record<string, unknown>) {
     super.loadBaseGeomBinary(reader)
     this.setFaceCounts(reader.loadUInt32Array())
     const numFaces = this.getNumFaces()

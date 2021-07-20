@@ -282,7 +282,7 @@ class ParameterOwner extends EventEmitter {
    * @param {BinReader} reader - The reader value.
    * @param {Record<string, any>} context - The context value.
    */
-  readBinary(reader: BinReader, context?: Record<string, any>): void {
+  readBinary(reader: BinReader, context: Record<string, any>): void {
     // TODO: make this work
     if (context?.versions['zea-engine'].compare([0, 0, 3]) >= 0) {
       const numProps = reader.loadUInt32()
@@ -291,7 +291,7 @@ class ParameterOwner extends EventEmitter {
         const propName = reader.loadStr()
         let param = this.getParameter(propName)
         if (!param) {
-          param = Registry.constructClass(propType, propName) as Parameter<any>
+          param = Registry.constructClass(propType) as Parameter<any> // TODO: is proptype correct to use here over propName?
           if (!param) {
             console.error('Unable to construct prop:' + propName + ' of type:' + propType)
             continue

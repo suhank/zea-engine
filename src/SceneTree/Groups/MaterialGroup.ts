@@ -179,16 +179,16 @@ class MaterialGroup extends BaseGroup {
    * The clone method constructs a new group,
    * copies its values and returns it.
    *
-   * @param {object} context - The context value.
+   * @param {Record<string, unknown>} context - The context value.
    * @return {MaterialGroup} - Returns a new cloned group.
    */
-  clone(context: object) {
+  clone(context: Record<string, unknown>) {
     const cloned = new MaterialGroup(this.name + 'clone')
     cloned.copyFrom(this, context)
     return cloned
   }
 }
 
-Registry.register('MaterialGroup', MaterialGroup) // TODO: MaterialGroup current doesn't extend baseclass
+// Registry.register('MaterialGroup', MaterialGroup) // TODO: MaterialGroup current doesn't extend baseclass
 
 export { MaterialGroup }

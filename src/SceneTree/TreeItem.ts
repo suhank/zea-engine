@@ -66,7 +66,7 @@ class TreeItem extends BaseItem {
    */
   constructor(name: string) {
     super(name)
-
+    
     // Controls if this TreeItem or its children contribute to the bounding boxes
     // in the scene. If set to false, Camera framing will ignore this item,
     this.__disableBoundingBox = false
@@ -579,7 +579,7 @@ class TreeItem extends BaseItem {
       if (maintainXfo) childItem.getParameter('LocalXfo')?.setValue(newLocalXfo)
       this.setBoundingBoxDirty()
 
-      this.__highlights.forEach((name) => {
+      this.__highlights.forEach((name: string) => {
         const color = this.__highlightMapping[name]
         childItem.addHighlight(name, color, true)
       })
@@ -1102,10 +1102,10 @@ class TreeItem extends BaseItem {
    * The clone method constructs a new tree item, copies its values
    * from this item and returns it.
    *
-   * @param {object} context - The context value.
+   * @param {Record<string, unknown>} context - The context value.
    * @return {TreeItem} - Returns a new cloned tree item.
    */
-  clone(context): TreeItem {
+  clone(context?: Record<string, unknown>): TreeItem {
     const cloned = new TreeItem('')
     cloned.copyFrom(this)
     return cloned
@@ -1131,6 +1131,6 @@ class TreeItem extends BaseItem {
   }
 }
 
-Registry.register('TreeItem', TreeItem)
+// Registry.register('TreeItem', TreeItem) TODO: ok?
 
 export { TreeItem }

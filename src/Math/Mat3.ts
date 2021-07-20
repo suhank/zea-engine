@@ -306,7 +306,7 @@ class Mat3 {
    *
    * @param {Mat3} mat - The mat value.
    */
-  setFromMat(mat) {
+  setFromMat(mat: Mat3) {
     this.__data[0] = mat.m00
     this.__data[1] = mat.m01
     this.__data[2] = mat.m02
@@ -325,7 +325,7 @@ class Mat3 {
    * @param {Vec3} dir - The dir value.
    * @param {Vec3} up - The up value.
    */
-  setFromDirectionAndUpvector(dir, up) {
+  setFromDirectionAndUpvector(dir: Vec3, up: Vec3) {
     const zAxis = dir
     const zLen = zAxis.length()
     if (zLen < Number.EPSILON) {

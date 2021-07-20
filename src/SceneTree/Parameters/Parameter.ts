@@ -6,7 +6,7 @@ import { OperatorOutput } from '../Operators/OperatorOutput'
 import { ICloneable } from '../../Utilities/ICloneable'
 import { ISerializable } from '../../Utilities/ISerializable'
 import { OperatorOutputMode } from './OperatorOutputMode'
-// import { BinReader } from '../BinReader'
+import { BinReader } from '../BinReader'
 import {Material} from '../../SceneTree/Material'
 /**
  * Represents a reactive type of attribute that can be owned by a `ParameterOwner` class.
@@ -16,7 +16,7 @@ import {Material} from '../../SceneTree/Material'
  * * **valueChanged:** Triggered when the value of the parameter changes.
  */
 abstract class Parameter<T> extends EventEmitter implements ICloneable, ISerializable {
-  __backupMaterial: Material // TODO:(check/refactor) this is used in MaterialGroup.ts and Group.js
+  __backupMaterial: any // TODO:(check/refactor) this is used in MaterialGroup.ts and Group.js
   // TODO:(refactor) boundOps, cleaning, dirtyOpIndex, firstOP_WRITE, were private.
   protected dirty: boolean
   protected boundOps: OperatorOutput[]
@@ -52,6 +52,11 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
    */
   constructor(name: string = '', value?: T, dataType?: string) {
     super()
+
+    this.__backupMaterial = 0 // TODO: any type. __backmaterial is used elsewhere.
+    this.dirty = false
+    this.firstOP_WRITE = 0
+    this.ownerItem = new ParameterOwner() // TODO: should this be initialized by the constructor?
 
     this.name = name
     this.value = value
@@ -331,9 +336,9 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
    * Returns parameter's value.
    *
    * @param {number} mode - The mode value.
-   * @return {T} - The return value.
+   * @return {T | undefined} - The return value.
    */
-  getValue(mode?: number): T {
+  getValue(mode?: number): T  | undefined{
     if (mode != undefined) {
       console.warn("WARNING in Parameter.setValue: 'mode' is deprecated.")
     }
@@ -399,10 +404,10 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
   /**
    * The readBinary method.
    *
-   * @param {object} reader - The reader value.
-   * @param {object} context - The context value.
+   * @param {BinReader} reader - The reader value.
+   * @param {Record<string, unknown>} context - The context value.
    */
-  readBinary(reader: object, context: object) {
+  readBinary(reader: BinReader, context: Record<string, unknown>) {
     console.warn(`TODO: Parameter: ${this.constructor.name} with name: ${this.name} does not implement readBinary`)
   }
 
@@ -410,7 +415,7 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
    * The readBinary method.
    *
    * @param {object} reader - The reader value.
-   * @param {object} context - The context value.
+   * @param {Record<string, unknown>} context - The context value.
    */
   destroy() {
     console.warn('nothing destroyed. This method was not overwritten in subclass')

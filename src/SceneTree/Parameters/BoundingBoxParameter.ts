@@ -57,7 +57,7 @@ class BoundingBoxParameter extends Parameter<Box3> implements IBinaryReader {
    * @return {Box3 | undefined} - The return value.
    */
   getValue(): Box3 | undefined {
-    if (this.dirty) {
+    if (this.dirty && this.value) { // null check
       this.value = this.treeItem._cleanBoundingBox(this.value)
     }
     return this.value
@@ -70,13 +70,17 @@ class BoundingBoxParameter extends Parameter<Box3> implements IBinaryReader {
   }
 
   fromJSON(j: Record<string, any>, context?: Record<string, unknown>): void {
-    if (j.value.type) this.value = Registry.constructClass('Box3') as Box3
+    // if (j.value.type) this.value = Registry.constructClass('Box3') as Box3 // TODO: this is now broken
     this.value?.fromJSON(j.value)
   }
 
-  readBinary(reader: BinReader, context?: Record<string, unknown>): void {
+  readBinary(reader: BinReader, context?: Record<string, unknown>) {
+    // TODO: remove this method and replace with below
     throw new Error('Method not implemented.')
   }
+  // readBinary(reader: BinReader, context?: Record<string, unknown>): void {
+  //   throw new Error('Method not implemented.')
+  // }
 
   clone(): BoundingBoxParameter {
     const bBox3Clone = new BoundingBoxParameter(this.name, this.treeItem)

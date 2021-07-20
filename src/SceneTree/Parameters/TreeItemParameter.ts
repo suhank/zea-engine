@@ -34,6 +34,7 @@ class TreeItemParameter extends Parameter<TreeItem> {
    */
   constructor(name: string = '', filterFn?: (...args: []) => unknown) {
     super(name, undefined, 'TreeItem')
+    this.owner = new TreeItem('') // TODO:(review) should this be initialize by arguments or is this ok?
     this.filterFn = filterFn
     this.emittreeItemGlobalXfoChanged = this.emittreeItemGlobalXfoChanged.bind(this)
   }
@@ -47,7 +48,7 @@ class TreeItemParameter extends Parameter<TreeItem> {
    *
    * @param {TreeItem} owner - The owner value.
    */
-  setOwner(owner) {
+  setOwner(owner: TreeItem) {
     this.owner = owner
   }
 
@@ -144,9 +145,9 @@ class TreeItemParameter extends Parameter<TreeItem> {
    *
    * @return {TreeItemParameter} - Returns a new tree item parameter.
    */
-  clone() {
+  clone(context?: Record<string, unknown>) {
     const clonedParam = new TreeItemParameter(this.name, this.filterFn)
-    if (this.value) clonedParam.setValue(this.value.clone())
+    if (this.value) clonedParam.setValue(this.value.clone(context))
     return clonedParam
   }
 

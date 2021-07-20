@@ -32,7 +32,7 @@ class ColorParameter extends Parameter<Color> implements IBinaryReader {
    * Extracts `Color` values from a buffer, updating current parameter state.
    *
    * @param {BinReader} reader - The reader value.
-   * @param {object} context - The context value.
+   * @param {Record<string, unknown>} context - The context value.
    */
   readBinary(reader: BinReader, context?: Record<string, unknown>): void {
     const value = reader.loadRGBAFloat32Color()
@@ -50,7 +50,7 @@ class ColorParameter extends Parameter<Color> implements IBinaryReader {
   }
 
   fromJSON(j: Record<string, any>, context?: Record<string, unknown>): void {
-    if (j.value.type) this.value = Registry.constructClass('Color') as Color
+    // if (j.value.type) this.value = Registry.constructClass('Color') as Color // TODO: commented out Registry.constructClass
     this.value?.fromJSON(j.value)
   }
 

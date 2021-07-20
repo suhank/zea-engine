@@ -1,5 +1,8 @@
 import { BaseGeom } from './BaseGeom.js'
 import { Registry } from '../../Registry'
+import { BinReader } from '../BinReader'
+import { Vec3 } from '../../Math/Vec3'
+import { Box3 } from '../../Math/Box3'
 
 /**
  * Class representing a point primitive drawing type, every vertex specified is a point.
@@ -34,7 +37,7 @@ class Points extends BaseGeom {
    *
    * @param {BinReader} reader - The reader value.
    */
-  loadBin(reader) {
+  loadBin(reader: BinReader) {
     this.name = reader.loadStr()
     const numVerts = reader.loadUInt32()
     this.__boundingBox.set(reader.loadFloat32Vec3(), reader.loadFloat32Vec3())
@@ -87,9 +90,9 @@ class Points extends BaseGeom {
    * Sets state of current geometry(Including line segments) using a binary reader object.
    *
    * @param {BinReader} reader - The reader value.
-   * @param {object} context - The context value.
+   * @param {Record<string, unknown>} context - The context value.
    */
-  readBinary(reader, context) {
+  readBinary(reader: BinReader, context: Record<string, unknown>) {
     super.loadBaseGeomBinary(reader)
 
     // this.computeVertexNormals();

@@ -89,7 +89,7 @@ class MaterialColorParam extends ColorParameter {
    *
    * @param {BaseImage|Color} value - The value param.
    */
-  setValue(value) {
+  setValue(value: BaseImage|Color) {
     // Note: instead of supporting images or colors, we should replace the ColorParameter with an ImageParameter when assigning textures
     // console.warn('@todo-review: Should we accept different type of values?')
     if (value instanceof BaseImage) {
@@ -102,7 +102,7 @@ class MaterialColorParam extends ColorParameter {
    * Extracts `Color` and `Image` values from a buffer, updating current parameter state.
    *
    * @param {BinReader} reader - The reader value.
-   * @param {object} context - The context value.
+   * @param {Record<string, unknown>} context - The context value.
    */
   readBinary(reader: BinReader, context: Record<string, any>): void {
     super.readBinary(reader, context)
@@ -125,6 +125,6 @@ class MaterialColorParam extends ColorParameter {
   }
 }
 
-Registry.register('MaterialColorParam', MaterialColorParam)
+// Registry.register('MaterialColorParam', MaterialColorParam)
 
 export { MaterialColorParam }

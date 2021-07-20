@@ -201,6 +201,6 @@ class ListParameter extends Parameter<any[]> {
   }
 }
 
-Registry.register('ListParameter', ListParameter)
+// Registry.register('ListParameter', ListParameter)
 
 export { ListParameter }

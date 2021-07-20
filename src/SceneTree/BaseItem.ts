@@ -300,7 +300,7 @@ class BaseItem extends ParameterOwner {
    * Sets state of current Item(Including parameters) using a binary reader object.
    *
    * @param {BinReader} reader - The reader value.
-   * @param {object} context - The context value.
+   * @param {Record<string, unknown>} context - The context value.
    */
   readBinary(reader: BinReader, context?: Record<string, any>): void {
     // const type = reader.loadStr()
