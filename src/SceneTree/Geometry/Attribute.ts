@@ -149,12 +149,12 @@ class Attribute extends BaseClass {
   }
 
   /**
-   * The getFaceVertexValueRef method.
-   * @param {number} face - The face value.
-   * @param {number} faceVertex - The face vertex value.
+   * Gets the value of a corner vertex of a face.
+   * @param {number} face - The face index.
+   * @param {number} faceVertex - The index of vertex within the face. [0... num face vertices]
    * @return {Float32Array} - The return value.
    */
-  getFaceVertexValueRef(face: number, faceVertex: number): any {
+  getFaceVertexValueRef_array(face: number, faceVertex: number): any {
     const vertex = this.mesh.getFaceVertexIndex(face, faceVertex)
     if (vertex in this.splits && face in this.splits[vertex]) {
       return this.splitValues[this.splits[vertex][face]]
@@ -163,19 +163,19 @@ class Attribute extends BaseClass {
   }
 
   /**
-   * The setFaceVertexValue method.
-   * @param {number} face - The face value.
-   * @param {number} faceVertex - The faceVertex value.
+   * Sets the value of a corner vertex of a face.
+   * @param {number} face - The face index.
+   * @param {number} faceVertex - The index of vertex within the face. [0... num face vertices]
    * @param {Float32Array} value - The value value.
    */
-  setFaceVertexValue(face: number, faceVertex: number, value: Float32Array): void {
+  setFaceVertexValue_array(face: number, faceVertex: number, value: Float32Array): void {
     const vertex = this.mesh.getFaceVertexIndex(face, faceVertex)
     this.setFaceVertexValue_ByVertexIndex(face, vertex, value)
   }
 
   /**
    * The setFaceVertexValue_ByVertexIndex method.
-   * @param {number} face - The face value.
+   * @param {number} face - The face index.
    * @param {number} vertex - The vertex value.
    * @param {any} value - The value value.
    */
@@ -220,10 +220,10 @@ class Attribute extends BaseClass {
   /**
    * The setSplitVertexValue method.
    * @param {number} vertex - The vertex value.
-   * @param {number} face - The face value.
+   * @param {number} face - The face index.
    * @param {any} value - The value value.
    */
-  setSplitVertexValue(vertex: number, face: number, value: Float32Array): void {
+  setSplitVertexValue_array(vertex: number, face: number, value: Float32Array): void {
     if (!(vertex in this.splits)) this.splits[vertex] = {}
     if (face in this.splits[vertex]) {
       const currValue = this.splitValues[this.splits[vertex][face]]

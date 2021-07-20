@@ -47,7 +47,7 @@ class VertexAttribute extends Attribute {
   }
 
   /**
-   * The getFaceVertexValueRef method.
+   * Gets the value of a corner vertex of a face.
    * @param {number} face - The face value.
    * @param {number} facevertex - The face vertex value.
    * @return {any} - The return value.
@@ -61,7 +61,7 @@ class VertexAttribute extends Attribute {
   }
 
   /**
-   * The setFaceVertexValue method.
+   * Sets the value of a corner vertex of a face.
    * @param {number} face - The face value.
    * @param {number} facevertex - The facevertex value.
    * @param {any} value - The value value.

@@ -14,10 +14,14 @@ class ColorAttribute extends Attribute {
   }
 
   /**
-   * Returns the `T` object placed in the specified index.
-   * @deprecated
+   * Returns the Color value at the specified index.
+   *
+   * > Note: 'Ref' means that the value contains a reference to the data in the attribute.
+   * > The components of the value can be changed causing the attributes data is changed.
+   * > No need to call 'setValue'.
    *
    * @param {number} index - The index value.
+   * @returns Color - The value at the specified index.
    */
   getValueRef(index: number): Color {
     if (index >= this.data.length / this.stride)
@@ -44,7 +48,7 @@ class ColorAttribute extends Attribute {
   }
 
   /**
-   * Sets Color in the specified index.
+   * Sets Color at the specified index.
    *
    * @param {number} index - The index value.
    * @param {Color} value - The value param.
@@ -55,6 +59,40 @@ class ColorAttribute extends Attribute {
 
     const offset = index * this.stride
     this.data.set(value.asArray(), offset)
+  }
+
+  /**
+   * Gets the value of a corner vertex of a face.
+   * > Note: 'Ref' means that the value contains a reference to the data in the attribute.
+   * > The components of the value can be changed causing the attributes data is changed.
+   * > No need to call 'setFaceVertexValue'.
+   * @param {number} face - The face index.
+   * @param {number} faceVertex - The index of vertex within the face. [0... num face vertices]
+   * @return {Color} - The return value.
+   */
+  getFaceVertexValueRef(face: number, faceVertex: number): any {
+    const array = this.getFaceVertexValueRef_array(face, faceVertex)
+    return new Color(array)
+  }
+
+  /**
+   * Sets the value of a corner vertex of a face.
+   * @param {number} face - The face index.
+   * @param {number} faceVertex - The index of vertex within the face. [0... num face vertices]
+   * @param {Color} value - The value value.
+   */
+  setFaceVertexValue(face: number, faceVertex: number, value: Color): void {
+    this.setFaceVertexValue_array(face, faceVertex, value.asArray())
+  }
+
+  /**
+   * The setSplitVertexValue method.
+   * @param {number} vertex - The vertex value.
+   * @param {number} face - The face index.
+   * @param {any} value - The value value.
+   */
+  setSplitVertexValue(vertex: number, face: number, value: Color): void {
+    this.setSplitVertexValue_array(vertex, face, value.asArray())
   }
 }
 

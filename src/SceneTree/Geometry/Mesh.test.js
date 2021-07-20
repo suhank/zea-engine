@@ -1,5 +1,5 @@
 import { Mesh } from './Mesh'
-import { Vec2, Vec3, Box3 } from '../../Math'
+import { Vec3 } from '../../Math'
 
 describe('Mesh', () => {
   test('Check for default positions attribute.', () => {

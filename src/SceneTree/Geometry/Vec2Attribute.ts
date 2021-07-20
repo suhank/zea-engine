@@ -14,10 +14,14 @@ class Vec2Attribute extends Attribute {
   }
 
   /**
-   * Returns the `T` object placed in the specified index.
-   * @deprecated
+   * Returns the Vec2 value at the specified index.
+   *
+   * > Note: 'Ref' means that the value contains a reference to the data in the attribute.
+   * > The components of the value can be changed causing the attributes data is changed.
+   * > No need to call 'setValue'.
    *
    * @param {number} index - The index value.
+   * @returns Vec2 - The value at the specified index.
    */
   getValueRef(index: number): Vec2 {
     if (index >= this.data.length / this.stride)
@@ -44,7 +48,7 @@ class Vec2Attribute extends Attribute {
   }
 
   /**
-   * Sets Vec2 in the specified index.
+   * Sets Vec2 at the specified index.
    *
    * @param {number} index - The index value.
    * @param {Vec2} value - The value param.
@@ -55,6 +59,40 @@ class Vec2Attribute extends Attribute {
 
     const offset = index * this.stride
     this.data.set(value.asArray(), offset)
+  }
+
+  /**
+   * Gets the value of a corner vertex of a face.
+   * > Note: 'Ref' means that the value contains a reference to the data in the attribute.
+   * > The components of the value can be changed causing the attributes data is changed.
+   * > No need to call 'setFaceVertexValue'.
+   * @param {number} face - The face index.
+   * @param {number} faceVertex - The index of vertex within the face. [0... num face vertices]
+   * @return {Vec2} - The return value.
+   */
+  getFaceVertexValueRef(face: number, faceVertex: number): any {
+    const array = this.getFaceVertexValueRef_array(face, faceVertex)
+    return new Vec2(array)
+  }
+
+  /**
+   * Sets the value of a corner vertex of a face.
+   * @param {number} face - The face index.
+   * @param {number} faceVertex - The index of vertex within the face. [0... num face vertices]
+   * @param {Vec2} value - The value value.
+   */
+  setFaceVertexValue(face: number, faceVertex: number, value: Vec2): void {
+    this.setFaceVertexValue_array(face, faceVertex, value.asArray())
+  }
+
+  /**
+   * The setSplitVertexValue method.
+   * @param {number} vertex - The vertex value.
+   * @param {number} face - The face index.
+   * @param {any} value - The value value.
+   */
+  setSplitVertexValue(vertex: number, face: number, value: Vec2): void {
+    this.setSplitVertexValue_array(vertex, face, value.asArray())
   }
 }
 
