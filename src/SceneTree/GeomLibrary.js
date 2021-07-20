@@ -1,8 +1,8 @@
-import { SystemDesc } from '../SystemDesc.js'
-import { BinReader } from './BinReader.js'
-import { PointsProxy, LinesProxy, MeshProxy } from './Geometry/GeomProxies.js'
+import { SystemDesc } from '../SystemDesc'
+import { BinReader } from './BinReader'
+import { PointsProxy, LinesProxy, MeshProxy } from './Geometry/GeomProxies'
 import { EventEmitter } from '../Utilities/index'
-import { resourceLoader } from './resourceLoader.js'
+import { resourceLoader } from './resourceLoader'
 
 // The GeomLibrary parses geometry data using workers.
 // This can be difficult to debug, so you can disable this
@@ -10,7 +10,7 @@ import { resourceLoader } from './resourceLoader.js'
 // the import of parseGeomsBinary
 const multiThreadParsing = true
 
-import GeomParserWorker from 'web-worker:./Geometry/GeomParserWorker.js'
+import GeomParserWorker from 'web-worker:./Geometry/GeomParserWorker'
 
 const isMobile = SystemDesc.isMobileDevice
 let numCores = window.navigator.hardwareConcurrency

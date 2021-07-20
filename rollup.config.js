@@ -11,6 +11,7 @@ import typescript from '@rollup/plugin-typescript'
 
 const plugins = [
   commonjs(),
+  // commonjs({ extensions: ['.js', '.ts'] }), // note: this is not recommended
   nodePolyfills(),
   resolve({
     browser: true,
@@ -20,6 +21,7 @@ const plugins = [
   webWorkerLoader(),
   svg(),
   typescript({
+    tsconfig: 'tsconfig.json',
     include: 'src/**/*.{js,ts}',
   }),
 ]
