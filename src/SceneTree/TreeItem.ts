@@ -357,8 +357,12 @@ class TreeItem extends BaseItem {
    *
    * @return {Color} - The color value.
    */
-  getHighlight(): Color | undefined {
-    if (this.__highlights.length > 0) return this.__highlightMapping[this.__highlights[this.__highlights.length - 1]]
+  getHighlight(): Color {
+    const check = this.__highlights.length > 0
+    if (!check) {
+      throw Error('highlight length > 0')
+    }
+    return this.__highlightMapping[this.__highlights[this.__highlights.length - 1]]
   }
 
   /**

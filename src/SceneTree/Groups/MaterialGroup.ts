@@ -6,6 +6,9 @@ import { TreeItem } from '../TreeItem'
 
 import { Parameter } from '../Parameters/Parameter'
 import { Material } from '../../SceneTree/Material'
+import { Color } from '../../Math/Color'
+import { BaseItem } from '../BaseItem'
+
 /**
  *
  * **Parameters**
@@ -14,14 +17,15 @@ import { Material } from '../../SceneTree/Material'
  * @extends BaseGroup
  */
 class MaterialGroup extends BaseGroup {
-  __materialParam: Parameter<Material> // or MaterialParameter?
-  name: string
+  protected __materialParam: Parameter<Material> // or MaterialParameter?
+  protected name: string
   /**
    * Creates an instance of a group.
    *
    * @param {string} name - The name of the group.
    */
-  constructor(name) {
+
+  constructor(name: string) {
     super(name)
     this.name = name
     this.__materialParam = this.addParameter(new MaterialParameter('Material'))
@@ -42,10 +46,10 @@ class MaterialGroup extends BaseGroup {
     // Note: propagating using an operator would be much better.
     const highlight = new Promise((resolve) => {
       let highlighted = false
-      let color
+      let color: Color
       if (this.isSelected()) {
-        highlighted = true
         color = this.getHighlight()
+        highlighted = true
         color.a = 0.2
       }
 
@@ -65,7 +69,7 @@ class MaterialGroup extends BaseGroup {
    *
    * @param {boolean} sel - Boolean indicating the new selection state.
    */
-  setSelected(sel) {
+  setSelected(sel: boolean) {
     super.setSelected(sel)
     this.__updateHighlight()
   }
@@ -91,7 +95,6 @@ class MaterialGroup extends BaseGroup {
             const p: Parameter<Material> = treeItem.getParameter('Material')
             if (material) {
               const m = p.getValue()
-
               // TODO: How do we filter material assignments? this is a nasty hack.
               // but else we end up assigning surface materials to our edges.
               if (m != material && (!m || m.getShaderName() != 'LinesShader')) {
@@ -117,8 +120,8 @@ class MaterialGroup extends BaseGroup {
    * @param {number} index - The index value.
    * @private
    */
-  __bindItem(item, index) {
-    super.bindItem(item, index)
+  __bindItem(item: BaseItem, index: number) {
+    super.bindItem(<TreeItem>item, index)
 
     if (!(item instanceof TreeItem)) return
 
@@ -159,8 +162,8 @@ class MaterialGroup extends BaseGroup {
    * @param {number} index - The index value.
    * @private
    */
-  __unbindItem(item, index) {
-    super.unbindItem(item, index)
+  __unbindItem(item: BaseItem, index: number) {
+    super.unbindItem(<TreeItem>item, index)
     if (!(item instanceof TreeItem)) return
 
     if (this.isSelected()) {
@@ -179,13 +182,13 @@ class MaterialGroup extends BaseGroup {
    * @param {object} context - The context value.
    * @return {MaterialGroup} - Returns a new cloned group.
    */
-  clone(context) {
+  clone(context: object) {
     const cloned = new MaterialGroup(this.name + 'clone')
     cloned.copyFrom(this, context)
     return cloned
   }
 }
 
-Registry.register('MaterialGroup', MaterialGroup)
+Registry.register('MaterialGroup', MaterialGroup) // TODO: MaterialGroup current doesn't extend baseclass
 
 export { MaterialGroup }

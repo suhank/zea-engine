@@ -1,2 +1,2 @@
-export * from './BaseTool.js'
-export * from './CameraManipulator.js'
+export * from './BaseTool'
+export * from './CameraManipulator'

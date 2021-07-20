@@ -111,11 +111,11 @@ class ParameterOwner extends EventEmitter {
    * @param {string} paramName - The parameter name.
    * @return {Parameter} - Parameter object value
    */
-  getParameter(paramName: string): Parameter<any> | null {
+  getParameter(paramName: string): Parameter<any> {
     let index = this.paramMapping[paramName]
     if (index == undefined) {
       const newParamName = this.deprecatedParamMapping[paramName]
-      if (!newParamName) return null
+      if (!newParamName) throw Error('newParamName is null')
       else {
         console.warn(`Parameter name ${paramName} is now deprecated. Please use ${newParamName} instead.`)
         index = this.paramMapping[newParamName]

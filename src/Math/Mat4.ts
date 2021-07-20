@@ -1,7 +1,7 @@
 import { Vec3 } from './Vec3'
 import { Mat3 } from './Mat3'
 import { Registry } from '../Registry'
-import { Vec4 } from '../Math/index'
+import { Vec4 } from './Vec4'
 import { BinReader } from '../SceneTree/BinReader'
 
 /**

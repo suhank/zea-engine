@@ -23,10 +23,9 @@ class Vec3 {
    * @param {number} y - The y value. Default is 0.
    * @param {number} z - The z value. Default is 0.
    */
-  
-   __data;
+
+  __data
   constructor(x: number | Float32Array | Uint32Array | ArrayBuffer = 0, y = 0, z = 0) {
-    
     if (x instanceof Float32Array || x instanceof Uint32Array) {
       this.__data = x
     } else if (x instanceof ArrayBuffer) {
@@ -616,19 +615,20 @@ class Vec3 {
    * @param {ArrayBuffer} buffer - The buffer value.
    * @param {number} byteOffset - The offset value.
    * @return {Vec3} - Returns a new Vec3.
-   
+   */
   static createFromBuffer(buffer: ArrayBuffer, byteOffset: number): Vec3 {
     return new Vec3(new Float32Array(buffer, byteOffset, 3)) // 4 bytes per 32bit float
-  }*/
+  }
 
   /**
    * The createFromFloat32Array method.
    * @param {Float32Array} array - A Float32Array value
    * @return {Vec3} - Returns a new Vec3.
    * @private
+   */
   static createFromFloat32Array(array: Float32Array): Vec3 {
     return new Vec3(array)
-  }*/
+  }
 
   /**
    * Returns the number of Float32 elements used by this type. Used to calculate storage requirements for large arrays of this type.
