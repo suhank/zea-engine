@@ -63,12 +63,10 @@ class GLGeomItemLibrary extends EventEmitter {
         } else {
           this.applyCullResults(message.data)
           workerReady = true
-          tick = 0
         }
       } else if (message.data.type == 'CullResults') {
         this.applyCullResults(message.data)
         workerReady = true
-        tick = 0
       }
     }
 
@@ -147,7 +145,6 @@ class GLGeomItemLibrary extends EventEmitter {
     })
 
     let tick = 0
-    let timoutId
     renderer.on('viewChanged', (event) => {
       // Calculate culling every Nth frame.
       if (workerReady) {
@@ -161,15 +158,6 @@ class GLGeomItemLibrary extends EventEmitter {
             cameraOri: ori.asArray(),
             solidAngleLimit: renderer.solidAngleLimit,
           })
-          if (timoutId) {
-            clearTimeout(timoutId)
-            timoutId = 0
-          }
-        } else {
-          // The culling should be processed every Nth frame
-          // or every 100ms. Which ever comes first.
-          // at 60fps, every 5th frame is 83ms apart.
-          timoutId = setTimeout(forceViewChanged, 100)
         }
         tick++
       }
@@ -186,11 +174,7 @@ class GLGeomItemLibrary extends EventEmitter {
         cameraOri: ori.asArray(),
         solidAngleLimit: renderer.solidAngleLimit,
       })
-      tick = 0
-      if (timoutId) {
-        clearTimeout(timoutId)
-        timoutId = 0
-      }
+      tick = 1
     }
 
     // If a movement finishes, we should update the culling results
