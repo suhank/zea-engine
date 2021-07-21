@@ -57,8 +57,8 @@ class Cylinder extends ProceduralMesh {
     this.__capsParam = this.addParameter(new BooleanParameter('Caps', caps)) as BooleanParameter
     this.__baseZAtZeroParam = this.addParameter(new BooleanParameter('BaseZAtZero', baseZAtZero)) as BooleanParameter
 
-    this.addVertexAttribute('texCoords', Vec2)
-    this.addVertexAttribute('normals', Vec3)
+    this.addVertexAttribute('texCoords', new Vec2Attribute())
+    this.addVertexAttribute('normals',new Vec3Attribute()) // TODO: review args/params. 
 
     this.topologyParams.push('Sides')
     this.topologyParams.push('Loops')

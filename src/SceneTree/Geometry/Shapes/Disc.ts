@@ -40,8 +40,8 @@ class Disc extends ProceduralMesh {
       new NumberParameter('Sides', sides >= 3 ? sides : 3, [3, 200], 1)
     ) as NumberParameter
 
-    this.addVertexAttribute('texCoords', Vec2)
-    this.addVertexAttribute('normals', Vec3)
+    this.addVertexAttribute('texCoords', new Vec2Attribute())
+    this.addVertexAttribute('normals', new Vec3Attribute())
 
     this.topologyParams.push('Sides')
   }

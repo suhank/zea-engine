@@ -51,8 +51,8 @@ class Cuboid extends ProceduralMesh {
     this.setFaceVertexIndices(4, [0, 3, 7, 4])
     this.setFaceVertexIndices(5, [2, 1, 5, 6])
     this.setNumVertices(8)
-    this.addVertexAttribute('texCoords', Vec2)
-    this.addVertexAttribute('normals', Vec3)
+    this.addVertexAttribute('texCoords', new Vec2Attribute())
+    this.addVertexAttribute('normals', new Vec3Attribute())
   }
 
   /**

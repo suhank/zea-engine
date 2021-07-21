@@ -49,8 +49,8 @@ class Cone extends ProceduralMesh {
     ) as NumberParameter
     this.__capParam = this.addParameter(new BooleanParameter('Cap', cap)) as BooleanParameter
 
-    this.addVertexAttribute('texCoords', Vec2)
-    this.addVertexAttribute('normals', Vec3)
+    this.addVertexAttribute('texCoords', new Vec2Attribute())
+    this.addVertexAttribute('normals', new Vec3Attribute())
 
     this.topologyParams.push('Detail')
     this.topologyParams.push('Cap')

@@ -45,8 +45,8 @@ class Sphere extends ProceduralMesh {
       new NumberParameter('Loops', loops >= 3 ? loops : 3, [3, 200], 1)
     ) as NumberParameter
 
-    this.addVertexAttribute('texCoords', Vec2)
-    this.addVertexAttribute('normals', Vec3)
+    this.addVertexAttribute('texCoords', new Vec2Attribute())
+    this.addVertexAttribute('normals', new Vec3Attribute())
 
     this.topologyParams.push('Sides')
     this.topologyParams.push('Loops')

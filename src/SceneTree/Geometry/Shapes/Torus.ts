@@ -41,8 +41,8 @@ class Torus extends ProceduralMesh {
     ) as NumberParameter
     this.__arcAngleParam = this.addParameter(new NumberParameter('ArcAngle', arcAngle)) as NumberParameter
 
-    this.addVertexAttribute('texCoords', Vec2)
-    this.addVertexAttribute('normals', Vec3)
+    this.addVertexAttribute('texCoords', new Vec2Attribute())
+    this.addVertexAttribute('normals', new Vec3Attribute())
 
     this.topologyParams.push('Detail')
     this.topologyParams.push('ArcAngle')

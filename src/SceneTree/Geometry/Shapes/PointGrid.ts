@@ -2,6 +2,8 @@ import { Vec2 } from '../../../Math/Vec2'
 import { ProceduralPoints } from './ProceduralPoints'
 import { NumberParameter } from '../../Parameters/NumberParameter'
 import { Registry } from '../../../Registry'
+import { Vec2Attribute } from '../Vec2Attribute'
+import { Vec3Attribute } from '../Vec3Attribute'
 
 /**
  * Represents an ordered grid of points along `X` and `Y` axes.
@@ -35,14 +37,14 @@ class PointGrid extends ProceduralPoints {
    */
   constructor(x = 1.0, y = 1.0, xDivisions = 1, yDivisions = 1, addTextureCoords = false) {
     super()
-
+    this.topologyParams = []
     if (isNaN(x) || isNaN(y) || isNaN(xDivisions) || isNaN(yDivisions)) throw new Error('Invalid geom args')
     this.__x = this.addParameter(new NumberParameter('X', x)) as NumberParameter
     this.__y = this.addParameter(new NumberParameter('Y', y)) as NumberParameter
     this.__xDivisions = this.addParameter(new NumberParameter('XDivisions', xDivisions)) as NumberParameter
     this.__yDivisions = this.addParameter(new NumberParameter('YDivisions', yDivisions)) as NumberParameter
 
-    if (addTextureCoords) this.addVertexAttribute('texCoords', Vec2)
+    if (addTextureCoords) this.addVertexAttribute('texCoords', new Vec2Attribute())
 
     this.topologyParams.push('XDivisions')
     this.topologyParams.push('YDivisions')
@@ -57,7 +59,7 @@ class PointGrid extends ProceduralPoints {
     const yDivisions = this.__yDivisions.getValue() || 1
     this.setNumVertices(xDivisions * yDivisions)
 
-    const texCoords = this.getVertexAttribute('texCoords')
+    const texCoords = <Vec2Attribute>this.getVertexAttribute('texCoords')
     if (texCoords) {
       for (let i = 0; i < yDivisions; i++) {
         const y = i / (yDivisions - 1)
@@ -80,7 +82,7 @@ class PointGrid extends ProceduralPoints {
     const x = this.__x.getValue() || 1.0
     const y = this.__y.getValue() || 1.0
 
-    const positions = this.getVertexAttribute('positions')
+    const positions = <Vec3Attribute>this.getVertexAttribute('positions')
     if (!positions) return
     for (let i = 0; i < yDivisions; i++) {
       const newY = (i / (yDivisions - 1) - 0.5) * y
