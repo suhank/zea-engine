@@ -1,6 +1,7 @@
 import { NumberParameter } from '../../Parameters/NumberParameter'
 import { Registry } from '../../../Registry'
 import { ProceduralLines } from './ProceduralLines'
+import { BooleanParameter } from '../../../SceneTree/Parameters'
 
 /**
  * A class for generating a lines cuboid shape(Without faces).
@@ -14,6 +15,11 @@ import { ProceduralLines } from './ProceduralLines'
  * @extends {ProceduralLines}
  */
 class LinesCuboid extends ProceduralLines {
+  __baseZAtZero: BooleanParameter
+  __x: NumberParameter
+  __y: NumberParameter
+  __z: NumberParameter
+
   /**
    * Create a lines cuboid.
    * @param {number} x - The length of the line cuboid along the X axis.
@@ -24,18 +30,18 @@ class LinesCuboid extends ProceduralLines {
   constructor(x = 1.0, y = 1.0, z = 1.0, baseZAtZero = false) {
     super()
 
-    this.__x = this.addParameter(new NumberParameter('X', x))
-    this.__y = this.addParameter(new NumberParameter('Y', y))
-    this.__z = this.addParameter(new NumberParameter('Z', z))
+    this.__x = this.addParameter(new NumberParameter('X', x)) as NumberParameter
+    this.__y = this.addParameter(new NumberParameter('Y', y)) as NumberParameter
+    this.__z = this.addParameter(new NumberParameter('Z', z)) as NumberParameter
 
-    this.__baseZAtZero = this.addParameter(new NumberParameter('BaseZAtZero', baseZAtZero))
+    this.__baseZAtZero = this.addParameter(new BooleanParameter('BaseZAtZero', baseZAtZero)) as BooleanParameter
   }
 
   /**
    * The rebuild method.
    * @private
    */
-  rebuild() {
+  rebuild(): void {
     this.setNumVertices(8)
     this.setNumSegments(12)
     this.setSegmentVertexIndices(0, 0, 1)
@@ -60,26 +66,28 @@ class LinesCuboid extends ProceduralLines {
    *
    * @private
    */
-  resize() {
-    const x = this.__x.getValue()
-    const y = this.__y.getValue()
-    const z = this.__z.getValue()
+  resize(): void {
+    const x = this.__x.getValue() || 1.0
+    const y = this.__y.getValue() || 1.0
+    const z = this.__z.getValue() || 1.0
     const baseZAtZero = this.__baseZAtZero.getValue()
 
     const positions = this.getVertexAttribute('positions')
-    let zOff = 0.5
-    if (baseZAtZero) zOff = 1.0
-    positions.getValueRef(0).set(0.5 * x, -0.5 * y, zOff * z)
-    positions.getValueRef(1).set(0.5 * x, 0.5 * y, zOff * z)
-    positions.getValueRef(2).set(-0.5 * x, 0.5 * y, zOff * z)
-    positions.getValueRef(3).set(-0.5 * x, -0.5 * y, zOff * z)
+    if (positions) {
+      let zoff = 0.5
+      if (baseZAtZero) zoff = 1.0
+      positions.getValueRef(0).set(0.5 * x, -0.5 * y, zoff * z)
+      positions.getValueRef(1).set(0.5 * x, 0.5 * y, zoff * z)
+      positions.getValueRef(2).set(-0.5 * x, 0.5 * y, zoff * z)
+      positions.getValueRef(3).set(-0.5 * x, -0.5 * y, zoff * z)
 
-    zOff = -0.5
-    if (baseZAtZero) zOff = 0.0
-    positions.getValueRef(4).set(0.5 * x, -0.5 * y, zOff * z)
-    positions.getValueRef(5).set(0.5 * x, 0.5 * y, zOff * z)
-    positions.getValueRef(6).set(-0.5 * x, 0.5 * y, zOff * z)
-    positions.getValueRef(7).set(-0.5 * x, -0.5 * y, zOff * z)
+      zoff = -0.5
+      if (baseZAtZero) zoff = 0.0
+      positions.getValueRef(4).set(0.5 * x, -0.5 * y, zoff * z)
+      positions.getValueRef(5).set(0.5 * x, 0.5 * y, zoff * z)
+      positions.getValueRef(6).set(-0.5 * x, 0.5 * y, zoff * z)
+      positions.getValueRef(7).set(-0.5 * x, -0.5 * y, zoff * z)
+    }
   }
 }
 

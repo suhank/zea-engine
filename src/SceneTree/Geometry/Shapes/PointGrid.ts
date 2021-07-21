@@ -18,6 +18,12 @@ import { Registry } from '../../../Registry'
  * @extends {ProceduralPoints}
  */
 class PointGrid extends ProceduralPoints {
+  protected __x: NumberParameter
+  protected __xDivisions: NumberParameter
+  protected __y: NumberParameter
+  protected __yDivisions: NumberParameter
+  topologyParams: string[]
+
   /**
    * Creates an instance of PointGrid.
    *
@@ -31,10 +37,10 @@ class PointGrid extends ProceduralPoints {
     super()
 
     if (isNaN(x) || isNaN(y) || isNaN(xDivisions) || isNaN(yDivisions)) throw new Error('Invalid geom args')
-    this.__x = this.addParameter(new NumberParameter('X', x))
-    this.__y = this.addParameter(new NumberParameter('Y', y))
-    this.__xDivisions = this.addParameter(new NumberParameter('XDivisions', xDivisions))
-    this.__yDivisions = this.addParameter(new NumberParameter('YDivisions', yDivisions))
+    this.__x = this.addParameter(new NumberParameter('X', x)) as NumberParameter
+    this.__y = this.addParameter(new NumberParameter('Y', y)) as NumberParameter
+    this.__xDivisions = this.addParameter(new NumberParameter('XDivisions', xDivisions)) as NumberParameter
+    this.__yDivisions = this.addParameter(new NumberParameter('YDivisions', yDivisions)) as NumberParameter
 
     if (addTextureCoords) this.addVertexAttribute('texCoords', Vec2)
 
@@ -46,18 +52,18 @@ class PointGrid extends ProceduralPoints {
    * The rebuild method.
    * @private
    */
-  rebuild() {
-    const xCount = this.__xDivisions.getValue()
-    const yCount = this.__yDivisions.getValue()
-    this.setNumVertices(xCount * yCount)
+  rebuild(): void {
+    const xDivisions = this.__xDivisions.getValue() || 1
+    const yDivisions = this.__yDivisions.getValue() || 1
+    this.setNumVertices(xDivisions * yDivisions)
 
     const texCoords = this.getVertexAttribute('texCoords')
     if (texCoords) {
-      for (let i = 0; i < yCount; i++) {
-        const y = i / (yCount - 1)
-        for (let j = 0; j < xCount; j++) {
-          const x = j / (xCount - 1)
-          texCoords.getValueRef(i * xCount + j).set(x, y)
+      for (let i = 0; i < yDivisions; i++) {
+        const y = i / (yDivisions - 1)
+        for (let j = 0; j < xDivisions; j++) {
+          const x = j / (xDivisions - 1)
+          texCoords.getValueRef(i * xDivisions + j).set(x, y)
         }
       }
     }
@@ -68,17 +74,19 @@ class PointGrid extends ProceduralPoints {
    * The resize method.
    * @private
    */
-  resize() {
-    const xSize = this.__x.getValue()
-    const ySize = this.__y.getValue()
-    const xCount = this.__xDivisions.getValue()
-    const yCount = this.__yDivisions.getValue()
+  resize(): void {
+    const xDivisions = this.__xDivisions.getValue() || 1
+    const yDivisions = this.__yDivisions.getValue() || 1
+    const x = this.__x.getValue() || 1.0
+    const y = this.__y.getValue() || 1.0
+
     const positions = this.getVertexAttribute('positions')
-    for (let i = 0; i < yCount; i++) {
-      const y = (i / (yCount - 1) - 0.5) * ySize
-      for (let j = 0; j < xCount; j++) {
-        const x = (j / (xCount - 1) - 0.5) * xSize
-        positions.getValueRef(i * xCount + j).set(x, y, 0.0)
+    if (!positions) return
+    for (let i = 0; i < yDivisions; i++) {
+      const newY = (i / (yDivisions - 1) - 0.5) * y
+      for (let j = 0; j < xDivisions; j++) {
+        const newX = (j / (xDivisions - 1) - 0.5) * x
+        positions.getValueRef(i * xDivisions + j).set(newX, newY, 0.0)
       }
     }
   }
