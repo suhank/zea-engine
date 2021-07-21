@@ -37,7 +37,7 @@ const sourcemap = true
 export default [
   // Browser-friendly UMD build.
   {
-    input: 'src/index.js',
+    input: 'src/index.ts',
     output: {
       name: 'zeaEngine',
       file: pkg.browser,
