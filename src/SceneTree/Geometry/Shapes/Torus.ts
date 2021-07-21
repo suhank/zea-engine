@@ -14,6 +14,11 @@ import { NumberParameter } from '../../Parameters/NumberParameter'
  * @extends ProceduralMesh
  */
 class Torus extends ProceduralMesh {
+  protected __arcAngleParam: NumberParameter
+  protected __detailParam: NumberParameter
+  protected __innerRadiusParam: NumberParameter
+  protected __outerRadiusParam: NumberParameter
+
   /**
    * Creates an instance of Torus.
    *
@@ -27,10 +32,12 @@ class Torus extends ProceduralMesh {
 
     if (isNaN(innerRadius) || isNaN(outerRadius) || isNaN(detail)) throw new Error('Invalid geom args')
 
-    this.__innerRadiusParam = this.addParameter(new NumberParameter('InnerRadius', innerRadius))
-    this.__outerRadiusParam = this.addParameter(new NumberParameter('OuterRadius', outerRadius))
-    this.__detailParam = this.addParameter(new NumberParameter('Detail', detail >= 3 ? detail : 3, [3, 200], 1))
-    this.__arcAngleParam = this.addParameter(new NumberParameter('ArcAngle', arcAngle))
+    this.__innerRadiusParam = this.addParameter(new NumberParameter('InnerRadius', innerRadius)) as NumberParameter
+    this.__outerRadiusParam = this.addParameter(new NumberParameter('OuterRadius', outerRadius)) as NumberParameter
+    this.__detailParam = this.addParameter(
+      new NumberParameter('Detail', detail >= 3 ? detail : 3, [3, 200], 1),
+    ) as NumberParameter
+    this.__arcAngleParam = this.addParameter(new NumberParameter('ArcAngle', arcAngle)) as NumberParameter
 
     this.addVertexAttribute('texCoords', Vec2)
     this.addVertexAttribute('normals', Vec3)
@@ -43,10 +50,10 @@ class Torus extends ProceduralMesh {
    * The rebuild method.
    * @private
    */
-  rebuild() {
-    const arcAngle = this.__arcAngleParam.getValue()
+  rebuild(): void {
+    const arcAngle = this.__arcAngleParam.getValue() || Math.PI * 2.0
     const open = arcAngle < 2.0 * Math.PI
-    const detail = this.__detailParam.getValue()
+    const detail = this.__detailParam.getValue() || 32
     const nbSlices = detail
     const nbLoops = detail * 2 + (open ? 1 : 0)
     const numVertices = nbSlices * nbLoops
@@ -57,22 +64,24 @@ class Torus extends ProceduralMesh {
     // ////////////////////////////
     // Build the topology and texCoords
     const texCoords = this.getVertexAttribute('texCoords')
-    let faceIndex = 0
-    for (let i = 0; i < (open ? nbLoops - 1 : nbLoops); i++) {
-      for (let j = 0; j < nbSlices; j++) {
-        const ip = (i + 1) % nbLoops
-        const jp = (j + 1) % nbSlices
-        const v0 = nbSlices * i + j
-        const v1 = nbSlices * i + jp
-        const v2 = nbSlices * ip + jp
-        const v3 = nbSlices * ip + j
-        this.setFaceVertexIndices(faceIndex, [v0, v1, v2, v3])
+    if (texCoords) {
+      let faceIndex = 0
+      for (let i = 0; i < (open ? nbLoops - 1 : nbLoops); i++) {
+        for (let j = 0; j < nbSlices; j++) {
+          const ip = (i + 1) % nbLoops
+          const jp = (j + 1) % nbSlices
+          const v0 = nbSlices * i + j
+          const v1 = nbSlices * i + jp
+          const v2 = nbSlices * ip + jp
+          const v3 = nbSlices * ip + j
+          this.setFaceVertexIndices(faceIndex, [v0, v1, v2, v3])
 
-        texCoords.setFaceVertexValue(faceIndex, 0, new Vec2(i / nbLoops, j / nbLoops))
-        texCoords.setFaceVertexValue(faceIndex, 1, new Vec2(i / nbLoops, (j + 1) / nbLoops))
-        texCoords.setFaceVertexValue(faceIndex, 2, new Vec2((i + 1) / nbLoops, (j + 1) / nbLoops))
-        texCoords.setFaceVertexValue(faceIndex, 3, new Vec2((i + 1) / nbLoops, j / nbLoops))
-        faceIndex++
+          texCoords.setFaceVertexValue(faceIndex, 0, new Vec2(i / nbLoops, j / nbLoops))
+          texCoords.setFaceVertexValue(faceIndex, 1, new Vec2(i / nbLoops, (j + 1) / nbLoops))
+          texCoords.setFaceVertexValue(faceIndex, 2, new Vec2((i + 1) / nbLoops, (j + 1) / nbLoops))
+          texCoords.setFaceVertexValue(faceIndex, 3, new Vec2((i + 1) / nbLoops, j / nbLoops))
+          faceIndex++
+        }
       }
     }
 
@@ -83,17 +92,19 @@ class Torus extends ProceduralMesh {
    * The resize method.
    * @private
    */
-  resize() {
-    const innerRadius = this.__innerRadiusParam.getValue()
-    const outerRadius = this.__outerRadiusParam.getValue()
-    const arcAngle = this.__arcAngleParam.getValue()
-    const detail = this.__detailParam.getValue()
+  resize(): void {
+    const innerRadius = this.__innerRadiusParam.getValue() || 0.5
+    const outerRadius = this.__outerRadiusParam.getValue() || 3
+    const arcAngle = this.__arcAngleParam.getValue() || Math.PI * 2
+    const detail = this.__detailParam.getValue() || 32
     const open = arcAngle < 2.0 * Math.PI
     const nbSlices = detail
     const nbLoops = detail * 2 + (open ? 1 : 0)
 
     const positions = this.getVertexAttribute('positions')
     const normals = this.getVertexAttribute('normals')
+    if (!positions || !normals) return
+
     let vertex = 0
     for (let i = 0; i < nbLoops; i++) {
       // const theta = (i / nbLoops) * arcAngle
