@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Box3 } from '../../../Math/Box3'
 import { Mesh } from '../Mesh'
 
 /**
@@ -5,7 +7,11 @@ import { Mesh } from '../Mesh'
  *
  * @extends {Mesh}
  */
-class ProceduralMesh extends Mesh {
+abstract class ProceduralMesh extends Mesh {
+  dirtyTopology: boolean
+  dirtyVertices: boolean
+  topologyParams: string[]
+
   /**
    * Creates an instance of ProceduralMesh.
    */
@@ -20,34 +26,16 @@ class ProceduralMesh extends Mesh {
     this.topologyParams = []
   }
 
-  /**
-   * The clear method.
-   */
-  clear() {
-    this.dirtyTopology = true
-    this.dirtyVertices = true
-    super.clear()
-  }
-
-  /**
-   * The rebuild method.
-   * @private
-   */
-  rebuild() {}
-
-  /**
-   * The resize method.
-   * @private
-   */
-  resize() {}
+  abstract rebuild(): void
+  abstract resize(): void
 
   /**
    * This method can be overridden in derived classes
    * to perform general updates (see GLPass or BaseItem).
-   * @param {object} event - The event object emitted by the parameter.
+   * @param {Record<string, any>} event - The event object emitted by the parameter.
    * @private
    */
-  __parameterValueChanged(event) {
+  protected parameterValueChanged(event: Record<string, any>): void {
     this.setBoundingBoxDirty()
     if (this.topologyParams.includes(event.param.getName())) {
       this.dirtyTopology = true
@@ -58,31 +46,33 @@ class ProceduralMesh extends Mesh {
       // Let the renderer know that the geometry has changed and must be re-uploaded to the GPU.
       this.emit('geomDataChanged')
     }
-    super.__parameterValueChanged(event)
+    super.parameterValueChanged(event)
   }
 
   /**
    * If the Procedural geometry is out of date, for example if a parameter has been changed,
    * this method explicitly forces the geometry to be recomputed.
    */
-  update() {
+  update(): void {
     if (this.dirtyTopology) {
       // Clear the topology so that vertex normals can be recomputed.
-      this.vertexEdges = undefined
+      this.vertexEdges = []
+      this.rebuild()
       this.dirtyTopology = false
       this.dirtyVertices = false
       this.rebuild()
     } else if (this.dirtyVertices) {
       this.dirtyVertices = false
       this.resize()
+      this.dirtyVertices = false
     }
   }
 
   /**
    * Returns the bounding box for geometry.
-   * @return {Vec3} - The return value.
+   * @return {Box3} - The return value.
    */
-  getBoundingBox() {
+  getBoundingBox(): Box3 {
     this.update()
     return super.getBoundingBox()
   }
@@ -92,7 +82,7 @@ class ProceduralMesh extends Mesh {
    *
    * @return {number} - The return value.
    */
-  getNumVertices() {
+  getNumVertices(): number {
     this.update()
     return super.getNumVertices()
   }
@@ -121,10 +111,10 @@ class ProceduralMesh extends Mesh {
 
   /**
    * The genBuffers method.
-   * @param {object} opts - The opts value.
-   * @return {object} - The return value.
+   * @param {Record<string, any>} opts - The opts value.
+   * @return {Record<string, any>} - The return value.
    */
-  genBuffers(opts) {
+  genBuffers(opts: Record<string, any>): Record<string, any> {
     this.update()
     return super.genBuffers(opts)
   }
@@ -135,10 +125,10 @@ class ProceduralMesh extends Mesh {
   /**
    * The toJSON method encodes this type as a json object for persistence.
    *
-   * @param {object} context - The context value.
-   * @return {object} - Returns the json object.
+   * @param {Record<string, any>} context - The context value.
+   * @return {Record<string, any>} - Returns the json object.
    */
-  toJSON(context) {
+  toJSON(context?: Record<string, any>): Record<string, unknown> {
     if (!context) context = {}
     context.skipTopology = true
     context.skipAttributes = ['positions', 'normals', 'texCoords']
