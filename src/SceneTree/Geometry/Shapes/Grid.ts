@@ -19,6 +19,13 @@ import { ProceduralLines } from './ProceduralLines'
  * @extends {ProceduralLines}
  */
 class Grid extends ProceduralLines {
+  protected __skipCenterLinesParam: BooleanParameter
+  protected __xDivisionsParam: NumberParameter
+  protected __xParam: NumberParameter
+  protected __yDivisionsParam: NumberParameter
+  protected __yParam: NumberParameter
+  topologyParams: string[]
+
   /**
    * Create a grid.
    * @param {number} x - The length of the grid along the `X` axis.
@@ -32,11 +39,13 @@ class Grid extends ProceduralLines {
 
     if (isNaN(x) || isNaN(y) || isNaN(xDivisions) || isNaN(yDivisions)) throw new Error('Invalid geom args')
 
-    this.__xParam = this.addParameter(new NumberParameter('X', x))
-    this.__yParam = this.addParameter(new NumberParameter('Y', y))
-    this.__xDivisionsParam = this.addParameter(new NumberParameter('XDivisions', xDivisions))
-    this.__yDivisionsParam = this.addParameter(new NumberParameter('YDivisions', yDivisions))
-    this.__skipCenterLinesParam = this.addParameter(new BooleanParameter('SkipCenterLines', skipCenterLines))
+    this.__xParam = this.addParameter(new NumberParameter('X', x)) as NumberParameter
+    this.__yParam = this.addParameter(new NumberParameter('Y', y)) as NumberParameter
+    this.__xDivisionsParam = this.addParameter(new NumberParameter('XDivisions', xDivisions)) as NumberParameter
+    this.__yDivisionsParam = this.addParameter(new NumberParameter('YDivisions', yDivisions)) as NumberParameter
+    this.__skipCenterLinesParam = this.addParameter(
+      new BooleanParameter('SkipCenterLines', skipCenterLines),
+    ) as BooleanParameter
 
     this.topologyParams.push('XDivisions')
     this.topologyParams.push('YDivisions')
@@ -47,9 +56,9 @@ class Grid extends ProceduralLines {
    * The rebuild method.
    * @private
    */
-  rebuild() {
-    const xDivisions = this.__xDivisionsParam.getValue()
-    const yDivisions = this.__yDivisionsParam.getValue()
+  rebuild(): void {
+    const xDivisions = this.__xDivisionsParam.getValue() || 10
+    const yDivisions = this.__yDivisionsParam.getValue() || 10
 
     const skipCenterLines = this.__skipCenterLinesParam.getValue() && xDivisions % 2 == 0 && yDivisions % 2 == 0
     this.setNumVertices((xDivisions + yDivisions + 2 - (skipCenterLines ? 1 : 0)) * 2)
@@ -76,12 +85,12 @@ class Grid extends ProceduralLines {
    * The resize method.
    * @private
    */
-  resize() {
+  resize(): void {
     const positions = this.getVertexAttribute('positions')
-    const xDivisions = this.__xDivisionsParam.getValue()
-    const yDivisions = this.__yDivisionsParam.getValue()
-    const xSize = this.__xParam.getValue()
-    const ySize = this.__yParam.getValue()
+    const xDivisions = this.__xDivisionsParam.getValue() || 10
+    const yDivisions = this.__yDivisionsParam.getValue() || 10
+    const xSize = this.__xParam.getValue() || 1.0
+    const ySize = this.__yParam.getValue() || 1.0
 
     const skipCenterLines = this.__skipCenterLinesParam.getValue() && xDivisions % 2 == 0 && yDivisions % 2 == 0
     let idx = 0
@@ -90,8 +99,11 @@ class Grid extends ProceduralLines {
       const v0 = idx * 2
       const v1 = idx * 2 + 1
       const x = (i / xDivisions - 0.5) * xSize
-      positions.getValueRef(v0).set(x, -0.5 * ySize, 0.0)
-      positions.getValueRef(v1).set(x, 0.5 * ySize, 0.0)
+      if (positions) {
+        positions.getValueRef(v0).set(x, -0.5 * ySize, 0.0)
+        positions.getValueRef(v1).set(x, 0.5 * ySize, 0.0)
+      }
+
       idx++
     }
     for (let i = 0; i <= yDivisions; i++) {
@@ -99,8 +111,10 @@ class Grid extends ProceduralLines {
       const v0 = idx * 2
       const v1 = idx * 2 + 1
       const y = (i / yDivisions - 0.5) * ySize
-      positions.getValueRef(v0).set(-0.5 * xSize, y, 0.0)
-      positions.getValueRef(v1).set(0.5 * xSize, y, 0.0)
+      if (positions) {
+        positions.getValueRef(v0).set(-0.5 * xSize, y, 0.0)
+        positions.getValueRef(v1).set(0.5 * xSize, y, 0.0)
+      }
       idx++
     }
   }
