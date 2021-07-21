@@ -3,7 +3,7 @@ import { glslTypes } from './GLSLConstants.js'
 let GlslTypes = <GLSLTypes>glslTypes
 
 interface GLSLTypes {
-  [key: string]: any
+  [key: string]: any // TODO: make a new type from glsl types
 }
 interface Result {
   glsl: string
