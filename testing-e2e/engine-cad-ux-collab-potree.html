@@ -64,6 +64,7 @@
         EnvMap,
         InstanceItem,
         CameraManipulator,
+        GLBoundingBoxPass,
       } = window.zeaEngine
 
       const canvas = document.querySelector('#renderer')
@@ -82,6 +83,9 @@
 
       scene.setupGrid(1.0, 10, new Color(0.2, 0.2, 0.2))
 
+      const boundingBoxPass = new GLBoundingBoxPass()
+      renderer.addPass(boundingBoxPass)
+
       /** UX START */
       const { SelectionManager, UndoRedoManager, ToolManager, SelectionTool, CreateFreehandLineTool } = window.zeaUx
 
@@ -90,6 +94,21 @@
       const cameraManipulator = renderer.getViewport().getManipulator()
       cameraManipulator.setDefaultManipulationMode(CameraManipulator.MANIPULATION_MODES.tumbler)
       appData.cameraManipulator = cameraManipulator
+
+      /** HIGHLIGHT START */
+      let highlightedItem
+      renderer.getViewport().on('pointerOverGeom', (event) => {
+        const item = event.intersectionData.geomItem
+        if (item) {
+          highlightedItem = item
+          highlightedItem.addHighlight('pointerOverGeom', new Color(0, 0.7, 0, 0.3), true)
+        }
+      })
+      renderer.getViewport().on('pointerLeaveGeom', (event) => {
+        highlightedItem.removeHighlight('pointerOverGeom', true)
+        highlightedItem = null
+      })
+      /** HIGHLIGHT START */
 
       /** UNDO START */
       const undoRedoManager = UndoRedoManager.getInstance()
@@ -206,6 +225,7 @@
         } else if (filename.endsWith('gltf') || filename.endsWith('glb')) {
           res = loadGLTFAsset(url, filename)
         }
+        boundingBoxPass.addTreeItem(res, true)
         return res
       }
       let assetUrl = 'data/Dead_eye_bearing.zcad'
