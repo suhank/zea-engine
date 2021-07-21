@@ -5,9 +5,23 @@ import nodePolyfills from 'rollup-plugin-node-polyfills'
 import svg from 'rollup-plugin-svg'
 import { terser } from 'rollup-plugin-terser'
 import webWorkerLoader from 'rollup-plugin-web-worker-loader'
-import pkg from './package.json'
+
+import glslify from 'rollup-plugin-glslify'
 
 import typescript from '@rollup/plugin-typescript'
+import pkg from './package.json'
+
+const glslOptions = {
+  // Default
+  include: ['**/*.vs', '**/*.fs', '**/*.vert', '**/*.frag', '**/*.glsl'],
+
+  // Undefined by default
+  exclude: 'node_modules/**',
+
+  // Compress shader by default using logic from rollup-plugin-glsl -- need to update parser to use this option -- it removes newlines
+  compress: false,
+}
+
 
 const plugins = [
   commonjs(),
@@ -24,6 +38,7 @@ const plugins = [
     tsconfig: 'tsconfig.json',
     include: 'src/**/*.{js,ts}',
   }),
+  glslify(glslOptions),
 ]
 
 const isProduction = !process.env.ROLLUP_WATCH
