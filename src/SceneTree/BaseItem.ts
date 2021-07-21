@@ -18,6 +18,7 @@ let numBaseItems = 0
  * @extends {ParameterOwner}
  */
 class BaseItem extends ParameterOwner {
+
   protected __metaData: Record<string, any>
   protected __name: string
   protected __ownerItem?: BaseItem
@@ -161,10 +162,13 @@ class BaseItem extends ParameterOwner {
    *
    * @param {BaseItem} ownerItem - The new owner item.
    */
-  setOwner(ownerItem: BaseItem): void {
+  setOwner(ownerItem: BaseItem | undefined): void {
     // this.__private.set(ownerItem, ownerItem);
     if (this.__ownerItem !== ownerItem) {
       this.__ownerItem = ownerItem
+      this.updatePath()
+    } else if(!ownerItem){
+      this.__ownerItem = undefined
       this.updatePath()
     }
   }

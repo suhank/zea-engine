@@ -43,7 +43,9 @@ class Points extends BaseGeom {
     this.__boundingBox.set(reader.loadFloat32Vec3(), reader.loadFloat32Vec3())
     this.setNumVertices(numVerts)
     const positions = this.getVertexAttribute('positions')
-
+    if(!positions){
+      throw Error("positions is undefined")
+    }
     if (numVerts < 256) {
       const bboxMat = this.__boundingBox.toMat4()
       const posAttr8bit = reader.loadUInt8Array(numVerts * 3)
@@ -53,6 +55,7 @@ class Points extends BaseGeom {
           posAttr8bit[i * 3 + 1] / 255.0,
           posAttr8bit[i * 3 + 2] / 255.0
         )
+        
         positions.setValue(i, bboxMat.transformVec3(pos))
       }
     } else {

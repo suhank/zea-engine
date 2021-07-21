@@ -564,8 +564,8 @@ class Vec3 {
    *
    * @return {array} - Returns as an array.
    */
-  asArray() {
-    return this.__data
+  asArray(): Float32Array {
+    return <Float32Array>this.__data // TODO: return type + cast is a temp fix
   }
 
   // ////////////////////////////////////////
