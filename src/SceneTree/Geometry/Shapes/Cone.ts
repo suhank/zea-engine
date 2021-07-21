@@ -4,6 +4,8 @@ import { Vec3 } from '../../../Math/Vec3'
 import { BooleanParameter, NumberParameter } from '../../../SceneTree/Parameters/index'
 import { Registry } from '../../../Registry'
 import { ProceduralMesh } from './ProceduralMesh'
+import { Vec3Attribute } from '../Vec3Attribute'
+import { Vec2Attribute } from '../Vec2Attribute'
 
 /**
  * Represents a cone geometry.
@@ -21,7 +23,7 @@ import { ProceduralMesh } from './ProceduralMesh'
  * @extends {ProceduralMesh}
  */
 class Cone extends ProceduralMesh {
-  protected __cap: boolean
+  protected __cap!: boolean
   protected __capParam: BooleanParameter
   protected __detailParam: NumberParameter
   protected __heightParam: NumberParameter
@@ -37,13 +39,13 @@ class Cone extends ProceduralMesh {
    */
   constructor(radius = 0.5, height = 1.0, detail = 32, cap = true) {
     super()
-
+    this.topologyParams = []
     if (isNaN(radius) || isNaN(height) || isNaN(detail)) throw new Error('Invalid geom args')
 
     this.__radiusParam = this.addParameter(new NumberParameter('Radius', radius)) as NumberParameter
     this.__heightParam = this.addParameter(new NumberParameter('Height', height)) as NumberParameter
     this.__detailParam = this.addParameter(
-      new NumberParameter('Detail', detail >= 3 ? detail : 3, [3, 200], 1),
+      new NumberParameter('Detail', detail >= 3 ? detail : 3, [3, 200], 1)
     ) as NumberParameter
     this.__capParam = this.addParameter(new BooleanParameter('Cap', cap)) as BooleanParameter
 
@@ -73,7 +75,7 @@ class Cone extends ProceduralMesh {
 
     // ////////////////////////////
     // Set Vertex Positions
-    const positions = this.getVertexAttribute('positions')
+    const positions = <Vec3Attribute>this.getVertexAttribute('positions')
 
     if (positions) {
       positions.getValueRef(tipPoint).set(0.0, 0.0, height)
@@ -102,7 +104,7 @@ class Cone extends ProceduralMesh {
 
     // ////////////////////////////
     // setUVs
-    const texCoords = this.getVertexAttribute('texCoords')
+    const texCoords = <Vec2Attribute>this.getVertexAttribute('texCoords')
     if (texCoords) {
       // Now set the attrbute values
       let tri = 0
@@ -138,7 +140,7 @@ class Cone extends ProceduralMesh {
     const tipPoint = nbSides
     const basePoint = nbSides + 1
 
-    const positions = this.getVertexAttribute('positions')
+    const positions = <Vec3Attribute>this.getVertexAttribute('positions')
     if (positions) {
       positions.getValueRef(tipPoint).set(0.0, 0.0, height)
       for (let i = 0; i < nbSides; i++) {

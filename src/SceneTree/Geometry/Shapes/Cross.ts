@@ -1,6 +1,7 @@
 import { ProceduralLines } from './ProceduralLines'
 import { Registry } from '../../../Registry'
 import { NumberParameter } from '../../../SceneTree/Parameters/NumberParameter'
+import { Vec3Attribute } from '../Vec3Attribute'
 
 /**
  * A class for generating a cross shape, drawing a line on the `X,Y,Z` axes.
@@ -50,7 +51,7 @@ class Cross extends ProceduralLines {
    */
   resize(): void {
     const size = this.__sizeParam.getValue() || 1.0
-    const positions = this.getVertexAttribute('positions')
+    const positions = <Vec3Attribute>this.getVertexAttribute('positions')
     if (!positions) return
     positions.getValueRef(0).set(-0.5 * size, 0, 0)
     positions.getValueRef(1).set(0.5 * size, 0, 0)

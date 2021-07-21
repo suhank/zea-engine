@@ -3,6 +3,8 @@ import { Vec3 } from '../../../Math/Vec3'
 import { NumberParameter } from '../../Parameters/index'
 import { Registry } from '../../../Registry'
 import { ProceduralMesh } from './ProceduralMesh'
+import { Vec3Attribute } from '../Vec3Attribute'
+import { Vec2Attribute } from '../Vec2Attribute'
 
 /**
  * A class for generating a plane geometry.
@@ -37,7 +39,7 @@ class Plane extends ProceduralMesh {
    */
   constructor(SizeX = 1.0, SizeY = 1.0, DetailX = 1, DetailY = 1, addNormals = true, addTextureCoords = true) {
     super()
-
+    this.topologyParams = []
     if (isNaN(SizeX) || isNaN(SizeY) || isNaN(DetailX) || isNaN(DetailY)) throw new Error('Invalid geom args')
 
     this.__sizeXParam = this.addParameter(new NumberParameter('SizeX', SizeX)) as NumberParameter
@@ -74,7 +76,7 @@ class Plane extends ProceduralMesh {
     }
 
     let voff = 0
-    const normals = this.getVertexAttribute('normals')
+    const normals = <Vec3Attribute>this.getVertexAttribute('normals')
     if (normals) {
       for (let i = 0; i <= detailY; i++) {
         for (let j = 0; j <= detailX; j++) {
@@ -85,7 +87,7 @@ class Plane extends ProceduralMesh {
     }
 
     voff = 0
-    const texCoords = this.getVertexAttribute('texCoords')
+    const texCoords = <Vec2Attribute>this.getVertexAttribute('texCoords')
     if (texCoords) {
       for (let i = 0; i <= detailY; i++) {
         const y = i / detailY
@@ -110,7 +112,7 @@ class Plane extends ProceduralMesh {
     const sizeY = this.__sizeYParam.getValue() || 1.0
     const detailX = this.__detailXParam.getValue() || 1
     const detailY = this.__detailYParam.getValue() || 1
-    const positions = this.getVertexAttribute('positions')
+    const positions = <Vec3Attribute>this.getVertexAttribute('positions')
     if (!positions) return
 
     let voff = 0

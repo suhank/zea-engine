@@ -82,7 +82,7 @@ class Vec4Attribute extends Attribute {
    * @param {Vec4} value - The value value.
    */
   setFaceVertexValue(face: number, faceVertex: number, value: Vec4): void {
-    this.setFaceVertexValue_array(face, faceVertex, value.asArray())
+    this.setFaceVertexValue_array(face, faceVertex, <Float32Array>value.asArray())
   }
 
   /**
@@ -92,7 +92,7 @@ class Vec4Attribute extends Attribute {
    * @param {any} value - The value value.
    */
   setSplitVertexValue(vertex: number, face: number, value: Vec4): void {
-    this.setSplitVertexValue_array(vertex, face, value.asArray())
+    this.setSplitVertexValue_array(vertex, face, <Float32Array>value.asArray())
   }
 }
 

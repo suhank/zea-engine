@@ -2,6 +2,7 @@ import { NumberParameter } from '../../Parameters/NumberParameter'
 import { Registry } from '../../../Registry'
 import { ProceduralLines } from './ProceduralLines'
 import { BooleanParameter } from '../../../SceneTree/Parameters'
+import { Vec3Attribute } from '../Vec3Attribute'
 
 /**
  * A class for generating a lines cuboid shape(Without faces).
@@ -72,7 +73,7 @@ class LinesCuboid extends ProceduralLines {
     const z = this.__z.getValue() || 1.0
     const baseZAtZero = this.__baseZAtZero.getValue()
 
-    const positions = this.getVertexAttribute('positions')
+    const positions = <Vec3Attribute>this.getVertexAttribute('positions')
     if (positions) {
       let zoff = 0.5
       if (baseZAtZero) zoff = 1.0

@@ -3,6 +3,8 @@ import { Vec3 } from '../../../Math/Vec3'
 import { ProceduralMesh } from './ProceduralMesh'
 import { Registry } from '../../../Registry'
 import { NumberParameter } from '../../Parameters/NumberParameter'
+import { Vec3Attribute } from '../Vec3Attribute'
+import { Vec2Attribute } from '../Vec2Attribute'
 
 /**
  * A class for generating a torus geometry.
@@ -63,7 +65,7 @@ class Torus extends ProceduralMesh {
 
     // ////////////////////////////
     // Build the topology and texCoords
-    const texCoords = this.getVertexAttribute('texCoords')
+    const texCoords = <Vec2Attribute>this.getVertexAttribute('texCoords')
     if (texCoords) {
       let faceIndex = 0
       for (let i = 0; i < (open ? nbLoops - 1 : nbLoops); i++) {
@@ -101,8 +103,8 @@ class Torus extends ProceduralMesh {
     const nbSlices = detail
     const nbLoops = detail * 2 + (open ? 1 : 0)
 
-    const positions = this.getVertexAttribute('positions')
-    const normals = this.getVertexAttribute('normals')
+    const positions = <Vec3Attribute>this.getVertexAttribute('positions')
+    const normals = <Vec3Attribute>this.getVertexAttribute('normals')
     if (!positions || !normals) return
 
     let vertex = 0

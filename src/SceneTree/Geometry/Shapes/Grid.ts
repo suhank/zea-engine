@@ -1,6 +1,7 @@
 import { BooleanParameter, NumberParameter } from '../../Parameters/index'
 import { Registry } from '../../../Registry'
 import { ProceduralLines } from './ProceduralLines'
+import { Vec3Attribute } from '../Vec3Attribute'
 
 /**
  * Represents a network of lines that cross each other to form a series of squares or rectangles.
@@ -36,7 +37,7 @@ class Grid extends ProceduralLines {
    */
   constructor(x = 1.0, y = 1.0, xDivisions = 10, yDivisions = 10, skipCenterLines = false) {
     super()
-
+    this.topologyParams = []
     if (isNaN(x) || isNaN(y) || isNaN(xDivisions) || isNaN(yDivisions)) throw new Error('Invalid geom args')
 
     this.__xParam = this.addParameter(new NumberParameter('X', x)) as NumberParameter
@@ -44,7 +45,7 @@ class Grid extends ProceduralLines {
     this.__xDivisionsParam = this.addParameter(new NumberParameter('XDivisions', xDivisions)) as NumberParameter
     this.__yDivisionsParam = this.addParameter(new NumberParameter('YDivisions', yDivisions)) as NumberParameter
     this.__skipCenterLinesParam = this.addParameter(
-      new BooleanParameter('SkipCenterLines', skipCenterLines),
+      new BooleanParameter('SkipCenterLines', skipCenterLines)
     ) as BooleanParameter
 
     this.topologyParams.push('XDivisions')
@@ -86,7 +87,7 @@ class Grid extends ProceduralLines {
    * @private
    */
   resize(): void {
-    const positions = this.getVertexAttribute('positions')
+    const positions = <Vec3Attribute>this.getVertexAttribute('positions')
     const xDivisions = this.__xDivisionsParam.getValue() || 10
     const yDivisions = this.__yDivisionsParam.getValue() || 10
     const xSize = this.__xParam.getValue() || 1.0

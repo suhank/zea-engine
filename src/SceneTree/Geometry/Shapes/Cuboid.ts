@@ -4,6 +4,8 @@ import { NumberParameter } from '../../../SceneTree/Parameters/NumberParameter'
 import { Vec3 } from '../../../Math/Vec3'
 import { ProceduralMesh } from './ProceduralMesh'
 import { Registry } from '../../../Registry'
+import { Vec3Attribute } from '../Vec3Attribute'
+import { Vec2Attribute } from '../Vec2Attribute'
 
 /**
  * A class for generating a cuboid geometry.
@@ -82,10 +84,10 @@ class Cuboid extends ProceduralMesh {
    * @private
    */
   rebuild(): void {
-    const normals = this.getVertexAttribute('normals')
+    const normals: Vec3Attribute =  <Vec3Attribute>this.getVertexAttribute('normals')
     if (normals) {
       for (let i = 0; i < 6; i++) {
-        let normal
+        let normal:  Vec3
         switch (i) {
           case 0:
             normal = new Vec3(0, 0, 1)
@@ -102,7 +104,8 @@ class Cuboid extends ProceduralMesh {
           case 4:
             normal = new Vec3(0, -1, 0)
             break
-          case 5:
+          //case 5:
+          default:
             normal = new Vec3(0, 1, 0)
             break
         }
@@ -112,7 +115,7 @@ class Cuboid extends ProceduralMesh {
         normals.setFaceVertexValue(i, 3, normal)
       }
     }
-    const texCoords = this.getVertexAttribute('texCoords')
+    const texCoords = <Vec2Attribute>this.getVertexAttribute('texCoords')
     if (texCoords) {
       for (let i = 0; i < 6; i++) {
         texCoords.setFaceVertexValue(i, 0, new Vec2(0, 0))
@@ -134,7 +137,7 @@ class Cuboid extends ProceduralMesh {
     const z = this.__zParam.getValue() || 1.0
     const baseZAtZero = this.__baseZAtZeroParam.getValue()
     let zoff = 0.5
-    const positions = this.getVertexAttribute('positions')
+    const positions =  <Vec3Attribute>this.getVertexAttribute('positions')
     if (baseZAtZero) zoff = 1.0
     if (!positions) return
     positions.getValueRef(0).set(0.5 * x, -0.5 * y, zoff * z)

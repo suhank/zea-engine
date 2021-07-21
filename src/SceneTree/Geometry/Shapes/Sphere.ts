@@ -2,6 +2,8 @@ import { Vec2, Vec3 } from '../../../Math/index'
 import { NumberParameter } from '../../Parameters/NumberParameter'
 import { Registry } from '../../../Registry'
 import { ProceduralMesh } from './ProceduralMesh'
+import { Vec3Attribute } from '../Vec3Attribute'
+import { Vec2Attribute } from '../Vec2Attribute'
 
 /**
  * A class for generating a sphere geometry.
@@ -37,10 +39,10 @@ class Sphere extends ProceduralMesh {
 
     this.__radiusParam = this.addParameter(new NumberParameter('Radius', radius)) as NumberParameter
     this.__sidesParam = this.addParameter(
-      new NumberParameter('Sides', sides >= 3 ? sides : 3, [3, 200], 1),
+      new NumberParameter('Sides', sides >= 3 ? sides : 3, [3, 200], 1)
     ) as NumberParameter
     this.__loopsParam = this.addParameter(
-      new NumberParameter('Loops', loops >= 3 ? loops : 3, [3, 200], 1),
+      new NumberParameter('Loops', loops >= 3 ? loops : 3, [3, 200], 1)
     ) as NumberParameter
 
     this.addVertexAttribute('texCoords', Vec2)
@@ -68,8 +70,8 @@ class Sphere extends ProceduralMesh {
     // ////////////////////////////
     // Set Vertex Positions
 
-    const positions = this.getVertexAttribute('positions')
-    const normals = this.getVertexAttribute('normals')
+    const positions = <Vec3Attribute>this.getVertexAttribute('positions')
+    const normals = <Vec3Attribute>this.getVertexAttribute('normals')
     const normal = new Vec3(0.0, 0.0, 1.0)
     let vertex = 0
     if (!positions || !normals) return
@@ -97,7 +99,7 @@ class Sphere extends ProceduralMesh {
 
     // ////////////////////////////
     // Build the topology
-    const texCoords = this.getVertexAttribute('texCoords')
+    const texCoords = <Vec2Attribute>this.getVertexAttribute('texCoords')
     if (texCoords) {
       // build the fan at the first pole.
       let faceIndex = 0
@@ -107,14 +109,14 @@ class Sphere extends ProceduralMesh {
         const v2 = j + 1
         this.setFaceVertexIndices(faceIndex, [v0, v1, v2])
 
-      if (texCoords) {
-        const uv0 = new Vec2(0.5, 0.0)
-        const uv1 = new Vec2(1.0 - (j + 1) / nbSides, 0.0)
-        const uv2 = new Vec2(1.0 - j / nbSides, 1.0 / (nbLoops + 1))
-        texCoords.setFaceVertexValue(faceIndex, 0, uv0)
-        texCoords.setFaceVertexValue(faceIndex, 1, uv1)
-        texCoords.setFaceVertexValue(faceIndex, 2, uv2)
-      }
+        if (texCoords) {
+          const uv0 = new Vec2(0.5, 0.0)
+          const uv1 = new Vec2(1.0 - (j + 1) / nbSides, 0.0)
+          const uv2 = new Vec2(1.0 - j / nbSides, 1.0 / (nbLoops + 1))
+          texCoords.setFaceVertexValue(faceIndex, 0, uv0)
+          texCoords.setFaceVertexValue(faceIndex, 1, uv1)
+          texCoords.setFaceVertexValue(faceIndex, 2, uv2)
+        }
 
         faceIndex++
       }
@@ -132,7 +134,6 @@ class Sphere extends ProceduralMesh {
         texCoords.setFaceVertexValue(faceIndex, 0, uv0)
         texCoords.setFaceVertexValue(faceIndex, 1, uv1)
         texCoords.setFaceVertexValue(faceIndex, 2, uv2)
-      }
 
         faceIndex++
       }
@@ -163,11 +164,14 @@ class Sphere extends ProceduralMesh {
     const radius = this.__radiusParam.getValue()
     const nbSides = this.__sidesParam.getValue()
     const nbLoops = this.__loopsParam.getValue()
-
+    if (!radius || !nbSides || !nbLoops) {
+      console.warn('resize() failed')
+      return
+    }
     // ////////////////////////////
     // Set Vertex Positions
-    const positions = this.getVertexAttribute('positions')
-    const normals = this.getVertexAttribute('normals')
+    const positions = <Vec3Attribute>this.getVertexAttribute('positions')
+    const normals = <Vec3Attribute>this.getVertexAttribute('normals')
     let vertex = 0
     const normal = new Vec3(0.0, 0.0, 1.0)
     positions.getValueRef(vertex).set(0.0, 0.0, radius)

@@ -3,6 +3,8 @@ import { Vec3 } from '../../../Math/Vec3'
 import { BooleanParameter, NumberParameter } from '../../Parameters/index'
 import { Registry } from '../../../Registry'
 import { ProceduralMesh } from './ProceduralMesh'
+import { Vec3Attribute } from '../Vec3Attribute'
+import { Vec2Attribute } from '../Vec2Attribute'
 
 /**
  * A class for generating a cylinder geometry. It is very much like a cuboid but with `N` number of sides.
@@ -41,16 +43,16 @@ class Cylinder extends ProceduralMesh {
    */
   constructor(radius = 0.5, height = 1.0, sides = 32, loops = 2, caps = true, baseZAtZero = false) {
     super()
-
+    this.topologyParams = []
     if (isNaN(radius) || isNaN(height) || isNaN(sides) || isNaN(loops)) throw new Error('Invalid geom args')
 
     this.__radiusParam = this.addParameter(new NumberParameter('Radius', radius)) as NumberParameter
     this.__heightParam = this.addParameter(new NumberParameter('Height', height)) as NumberParameter
     this.__sidesParam = this.addParameter(
-      new NumberParameter('Sides', sides >= 3 ? sides : 3, [3, 200], 1),
+      new NumberParameter('Sides', sides >= 3 ? sides : 3, [3, 200], 1)
     ) as NumberParameter
     this.__loopsParam = this.addParameter(
-      new NumberParameter('Loops', loops >= 2 ? loops : 2, [1, 200], 1),
+      new NumberParameter('Loops', loops >= 2 ? loops : 2, [1, 200], 1)
     ) as NumberParameter
     this.__capsParam = this.addParameter(new BooleanParameter('Caps', caps)) as BooleanParameter
     this.__baseZAtZeroParam = this.addParameter(new BooleanParameter('BaseZAtZero', baseZAtZero)) as BooleanParameter
@@ -114,7 +116,7 @@ class Cylinder extends ProceduralMesh {
 
     // ////////////////////////////
     // setNormals
-    const normals = this.getVertexAttribute('normals')
+    const normals = <Vec3Attribute>this.getVertexAttribute('normals')
     if (normals) {
       // Now set the attribute values
       faceIndex = 0
@@ -152,7 +154,7 @@ class Cylinder extends ProceduralMesh {
 
     // ////////////////////////////
     // setUVs
-    const texCoords = this.getVertexAttribute('texCoords')
+    const texCoords = <Vec2Attribute>this.getVertexAttribute('texCoords')
     if (texCoords) {
       // Now set the attrbute values
       faceIndex = 0
@@ -203,7 +205,7 @@ class Cylinder extends ProceduralMesh {
     let zoff = 0.5
     if (baseZAtZero) zoff = 0.0
 
-    const positions = this.getVertexAttribute('positions')
+    const positions =  <Vec3Attribute>this.getVertexAttribute('positions')
     if (positions) {
       for (let i = 0; i < nbLoops; i++) {
         const z = (i / (nbLoops - 1)) * height - height * zoff
