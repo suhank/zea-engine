@@ -1,8 +1,9 @@
 import { Vec2 } from '../../../Math/Vec2'
+import { BooleanParameter } from '../../../SceneTree/Parameters/BooleanParameter'
+import { NumberParameter } from '../../../SceneTree/Parameters/NumberParameter'
 import { Vec3 } from '../../../Math/Vec3'
-import { BooleanParameter, NumberParameter } from '../../Parameters/index'
-import { Registry } from '../../../Registry'
 import { ProceduralMesh } from './ProceduralMesh'
+import { Registry } from '../../../Registry'
 
 /**
  * A class for generating a cuboid geometry.
@@ -16,6 +17,11 @@ import { ProceduralMesh } from './ProceduralMesh'
  * @extends {ProceduralMesh}
  */
 class Cuboid extends ProceduralMesh {
+  protected __baseZAtZeroParam: BooleanParameter
+  protected __xParam: NumberParameter
+  protected __yParam: NumberParameter
+  protected __zParam: NumberParameter
+
   /**
    * Create a cuboid.
    * @param {number} x - The length of the cuboid along the X axis.
@@ -23,15 +29,15 @@ class Cuboid extends ProceduralMesh {
    * @param {number} z - The length of the cuboid along the Z axis.
    * @param {boolean} baseZAtZero - The baseZAtZero value.
    */
-  constructor(x = 1.0, y = 1.0, z = 1.0, baseZAtZero = false, texCoords = true, normals = true) {
+  constructor(x = 1.0, y = 1.0, z = 1.0, baseZAtZero = false) {
     super()
 
     if (isNaN(x) || isNaN(y) || isNaN(z)) throw new Error('Invalid geom args')
 
-    this.__xParam = this.addParameter(new NumberParameter('X', x))
-    this.__yParam = this.addParameter(new NumberParameter('Y', y))
-    this.__zParam = this.addParameter(new NumberParameter('Z', z))
-    this.__baseZAtZeroParam = this.addParameter(new BooleanParameter('BaseZAtZero', baseZAtZero))
+    this.__xParam = this.addParameter(new NumberParameter('X', x)) as NumberParameter
+    this.__yParam = this.addParameter(new NumberParameter('Y', y)) as NumberParameter
+    this.__zParam = this.addParameter(new NumberParameter('Z', z)) as NumberParameter
+    this.__baseZAtZeroParam = this.addParameter(new BooleanParameter('BaseZAtZero', baseZAtZero)) as BooleanParameter
 
     this.setFaceCounts([0, 6])
     this.setFaceVertexIndices(0, [0, 1, 2, 3])
@@ -43,8 +49,8 @@ class Cuboid extends ProceduralMesh {
     this.setFaceVertexIndices(4, [0, 3, 7, 4])
     this.setFaceVertexIndices(5, [2, 1, 5, 6])
     this.setNumVertices(8)
-    if (texCoords) this.addVertexAttribute('texCoords', Vec2)
-    if (normals) this.addVertexAttribute('normals', Vec3)
+    this.addVertexAttribute('texCoords', Vec2)
+    this.addVertexAttribute('normals', Vec3)
   }
 
   /**
@@ -54,7 +60,7 @@ class Cuboid extends ProceduralMesh {
    * @param {number} y - The length of the edges along the Y axis.
    * @param {number} z - The length of the edges along the Z axis.
    */
-  setSize(x, y, z) {
+  setSize(x: number, y: number, z: number): void {
     this.__xParam.setValue(x)
     this.__yParam.setValue(y)
     this.__zParam.setValue(z)
@@ -66,7 +72,7 @@ class Cuboid extends ProceduralMesh {
    * @param {number} x - The length of the edges along the X axis.
    * @param {number} y - The length of the edges along the Y axis.
    */
-  setBaseSize(x, y) {
+  setBaseSize(x: number, y: number): void {
     this.__xParam.setValue(x)
     this.__yParam.setValue(y)
   }
@@ -75,7 +81,7 @@ class Cuboid extends ProceduralMesh {
    * The rebuild method.
    * @private
    */
-  rebuild() {
+  rebuild(): void {
     const normals = this.getVertexAttribute('normals')
     if (normals) {
       for (let i = 0; i < 6; i++) {
@@ -122,14 +128,15 @@ class Cuboid extends ProceduralMesh {
    * The resize method.
    * @private
    */
-  resize() {
-    const x = this.__xParam.getValue()
-    const y = this.__yParam.getValue()
-    const z = this.__zParam.getValue()
+  resize(): void {
+    const x = this.__xParam.getValue() || 1.0
+    const y = this.__yParam.getValue() || 1.0
+    const z = this.__zParam.getValue() || 1.0
     const baseZAtZero = this.__baseZAtZeroParam.getValue()
     let zoff = 0.5
     const positions = this.getVertexAttribute('positions')
     if (baseZAtZero) zoff = 1.0
+    if (!positions) return
     positions.getValueRef(0).set(0.5 * x, -0.5 * y, zoff * z)
     positions.getValueRef(1).set(0.5 * x, 0.5 * y, zoff * z)
     positions.getValueRef(2).set(-0.5 * x, 0.5 * y, zoff * z)

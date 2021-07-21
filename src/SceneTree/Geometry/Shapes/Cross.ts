@@ -1,6 +1,6 @@
 import { ProceduralLines } from './ProceduralLines'
-import { NumberParameter } from '../../Parameters/NumberParameter'
 import { Registry } from '../../../Registry'
+import { NumberParameter } from '../../../SceneTree/Parameters/NumberParameter'
 
 /**
  * A class for generating a cross shape, drawing a line on the `X,Y,Z` axes.
@@ -17,6 +17,8 @@ import { Registry } from '../../../Registry'
  * @extends {ProceduralLines}
  */
 class Cross extends ProceduralLines {
+  protected __sizeParam: NumberParameter
+
   /**
    * Create a cross.
    * @param {number} size - The size of the cross.
@@ -26,14 +28,14 @@ class Cross extends ProceduralLines {
 
     if (isNaN(size)) throw new Error('Invalid geom args')
 
-    this.__sizeParam = this.addParameter(new NumberParameter('Size', size))
+    this.__sizeParam = this.addParameter(new NumberParameter('Size', size)) as NumberParameter
   }
 
   /**
    * The rebuild method.
    * @private
    */
-  rebuild() {
+  rebuild(): void {
     this.setNumVertices(6)
     this.setNumSegments(3)
     this.setSegmentVertexIndices(0, 0, 1)
@@ -46,9 +48,10 @@ class Cross extends ProceduralLines {
    * The resize method.
    * @private
    */
-  resize() {
-    const size = this.__sizeParam.getValue()
+  resize(): void {
+    const size = this.__sizeParam.getValue() || 1.0
     const positions = this.getVertexAttribute('positions')
+    if (!positions) return
     positions.getValueRef(0).set(-0.5 * size, 0, 0)
     positions.getValueRef(1).set(0.5 * size, 0, 0)
     positions.getValueRef(2).set(0, 0.5 * size, 0)
