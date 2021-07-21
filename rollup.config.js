@@ -22,7 +22,6 @@ const glslOptions = {
   compress: false,
 }
 
-
 const plugins = [
   commonjs(),
   // commonjs({ extensions: ['.js', '.ts'] }), // note: this is not recommended

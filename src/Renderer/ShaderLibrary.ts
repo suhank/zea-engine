@@ -1,5 +1,17 @@
 import { glslTypes } from './GLSLConstants.js'
 
+let GlslTypes = <GLSLTypes>glslTypes
+
+interface GLSLTypes {
+  [key: string]: any
+}
+interface Result {
+  glsl: string
+  numLines: number
+  uniforms: Record<any, any>
+  attributes: Record<any, any>
+}
+
 /*
   regex variables
 */
@@ -9,6 +21,7 @@ const WHITESPACE_RE = /\s+/
  * @private
  */
 class ShaderLibrary {
+  __shaderModules: Record<string, string>
   /**
    * Create a shader library.
    */
@@ -21,7 +34,7 @@ class ShaderLibrary {
    * @param {string} shaderName - The shader name.
    * @param {string} shader - The unparsed shader GLSL.
    */
-  setShaderModule(shaderName, shader) {
+  setShaderModule(shaderName: string, shader: string) {
     if (!(shaderName in this.__shaderModules)) {
       this.__shaderModules[shaderName] = shader
       return
@@ -35,7 +48,7 @@ class ShaderLibrary {
    * @param {string} shaderName - The shader name.
    * @return {any} - The return value.
    */
-  getShaderModule(shaderName) {
+  getShaderModule(shaderName: string) {
     return this.__shaderModules[shaderName]
   }
 
@@ -56,15 +69,15 @@ class ShaderLibrary {
    * @param {bool} instanced - instanced
    * @param {object} result - result object to store parsed data
    */
-  parseAttr(parts, instanced, result) {
+  parseAttr(parts: string[], instanced: boolean, result: Result, line: string) {
     // see if type is valid
-    if (!(parts[1] in glslTypes)) {
-      throw new Error('Error while parsing :' + shaderName + ' \nType not recognized:' + parts[1])
+    if (!(parts[1] in GlslTypes)) {
+      throw new Error('Error while parsing \nType not recognized:' + parts[1])
     }
 
     const name = parts[2].slice(0, parts[2].length - 1)
     result.attributes[name] = {
-      type: glslTypes[parts[1]],
+      type: GlslTypes[parts[1]],
       instanced: instanced,
     }
 
@@ -83,10 +96,10 @@ class ShaderLibrary {
    * @param {array} includes - keep track of what was included
    * @param {number} lineNumber - keep track of what line we're on
    */
-  handleImport(result, shaderName, includeFile, includes, lineNumber) {
+  handleImport(result: Result, shaderName: string, includeFile: string, includes: string[], lineNumber: number) {
     if (includeFile in this.__shaderModules) {
       const includedGLSL = this.__shaderModules[includeFile] // get glsl snippet code to add
-      if (!includedGLSL) throw error('snippet not loaded or does not exists!')
+      if (!includedGLSL) throw Error('snippet not loaded or does not exists!')
 
       // recursively includes glsl snippets
       const reursiveResult = this.parseShaderHelper(shaderName, includedGLSL, includes, lineNumber)
@@ -118,7 +131,7 @@ class ShaderLibrary {
    * @param {string} glsl - The glsl param.
    * @return {object} - returns the 'result' object
    */
-  parseShader(shaderName, glsl) {
+  parseShader(shaderName: string, glsl: string) {
     return this.parseShaderHelper(shaderName, glsl, [], 0)
   }
 
@@ -130,16 +143,16 @@ class ShaderLibrary {
    * @param {int} lineNumber - keep track of what line we're on
    * @return {object} - The return value.
    */
-  parseShaderHelper(shaderName, glsl, includes, lineNumber) {
+  parseShaderHelper(shaderName: string, glsl: string, includes: string[], lineNumber: number) {
     // console.log('parseShader:' + shaderName)
-    const addLine = (result, line) => {
+    const addLine = (result: Result, line: string) => {
       result.glsl = result.glsl + line + '\n'
       result.numLines++
     }
 
     includes.push(shaderName)
     // result that is returned
-    const result = {
+    const result: Result = {
       glsl: '',
       numLines: 0,
       uniforms: {},
@@ -162,7 +175,7 @@ class ShaderLibrary {
         case '<%include':
         case 'import': {
           // get the contents between quotes and then if there are '/' get the filename
-          const includeFile = trimmedLine.split(/'|"|`/)[1].split('/').pop()
+          const includeFile: string = <string>trimmedLine.split(/'|"|`/)[1].split('/').pop() // can be undefined
           if (!includes.includes(includeFile)) {
             this.handleImport(result, shaderName, includeFile, includes, lineNumber)
           }
@@ -170,12 +183,12 @@ class ShaderLibrary {
           break
         }
         case 'attribute': {
-          this.parseAttr(parts, false, result)
+          this.parseAttr(parts, false, result, line)
           addLine(result, line)
           break
         }
         case 'instancedattribute': {
-          this.parseAttr(parts, true, result)
+          this.parseAttr(parts, true, result, line)
           parts[0] = 'attribute'
           line = parts.join(' ')
           addLine(result, line)
@@ -188,15 +201,15 @@ class ShaderLibrary {
           if (parts.length == 4) typeIndex = 2
           const typeName = parts[typeIndex]
 
-          if (!(typeName in glslTypes))
+          if (!(typeName in GlslTypes))
             throw new Error('Error while parsing :' + shaderName + ' \nType not recognized:' + parts[1])
           const name = parts[typeIndex + 1].slice(0, parts[typeIndex + 1].length - 1)
 
           if (name.includes('[')) {
             // Strip off the square brackets.
-            result.uniforms[name.substring(0, name.indexOf('['))] = glslTypes[typeName]
+            result.uniforms[name.substring(0, name.indexOf('['))] = GlslTypes[typeName]
           } else {
-            result.uniforms[name] = glslTypes[typeName]
+            result.uniforms[name] = GlslTypes[typeName]
           }
 
           if (result.uniforms[name] == 'struct') {
@@ -231,10 +244,10 @@ class ShaderLibrary {
             const memberparts = member.trim().split(WHITESPACE_RE)
             structDesc.push({
               name: memberparts[1],
-              type: glslTypes[memberparts[0]],
+              type: GlslTypes[memberparts[0]],
             })
           }
-          glslTypes[parts[1]] = structDesc
+          GlslTypes[parts[1]] = structDesc
           addLine(result, line)
           break
         }
