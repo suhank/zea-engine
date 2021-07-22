@@ -3,7 +3,15 @@
 import { Vec2, Vec3, Color } from '../Math/index'
 import { BaseItem } from './BaseItem'
 import { Registry } from '../Registry'
-import { Parameter, NumberParameter, Vec2Parameter, Vec3Parameter, ColorParameter } from './Parameters/index'
+import {
+  Parameter,
+  NumberParameter,
+  Vec2Parameter,
+  Vec3Parameter,
+  ColorParameter,
+  BooleanParameter,
+  StringParameter,
+} from './Parameters/index'
 import { MathFunctions } from '../Utilities/MathFunctions'
 
 // Explicit export of parameters that are not included in the
@@ -12,12 +20,16 @@ import { MathFunctions } from '../Utilities/MathFunctions'
 // TODO: Move to this folder.
 import { MaterialFloatParam } from './Parameters/MaterialFloatParam'
 import { MaterialColorParam } from './Parameters/MaterialColorParam'
+import { BinReader } from './BinReader'
+import { GLShader } from '../Renderer/GLShader'
 
-const generateParameterInstance = (paramName, defaultValue, range, texturable) => {
+const generateParameterInstance = (paramName: string, defaultValue: any, range: any, texturable: any) => {
   if (typeof defaultValue == 'boolean' || defaultValue === false || defaultValue === true) {
-    return new Parameter(paramName, defaultValue, 'Boolean')
+    //return new Parameter(paramName, defaultValue, 'Boolean')
+    return new BooleanParameter(paramName, defaultValue) // TODO: check if equivalent
   } else if (typeof defaultValue == 'string') {
-    return new Parameter(paramName, defaultValue, 'String')
+    // return new Parameter(paramName, defaultValue, 'String')
+    return new StringParameter(paramName, defaultValue) // TODO: check if equivalent
   } else if (MathFunctions.isNumeric(defaultValue)) {
     if (texturable) return new MaterialFloatParam(paramName, defaultValue, range)
     else return new NumberParameter(paramName, defaultValue, range)
@@ -29,7 +41,8 @@ const generateParameterInstance = (paramName, defaultValue, range, texturable) =
     if (texturable) return new MaterialColorParam(paramName, defaultValue)
     else return new ColorParameter(paramName, defaultValue)
   } else {
-    return new Parameter(paramName, defaultValue)
+    // return new Parameter(paramName, defaultValue)
+    throw Error('no parameter instance created')
   }
 }
 
@@ -43,12 +56,17 @@ const generateParameterInstance = (paramName, defaultValue, range, texturable) =
  * @extends BaseItem
  */
 class Material extends BaseItem {
+  protected __isTransparent: boolean
+  protected __isTextured: boolean
+
+  protected __shaderName: string
+  protected __params: any
   /**
    * Create a material
    * @param {string} name - The name of the material.
    * @param {string} shaderName - Shader's class name.
    */
-  constructor(name, shaderName) {
+  constructor(name: string, shaderName: string) {
     super(name)
     this.__isTransparent = false
     this.__isTextured = false
@@ -60,7 +78,7 @@ class Material extends BaseItem {
    * Getter for the shader name.
    * @return {string} - Returns the shader name.
    */
-  getShaderName() {
+  getShaderName(): string {
     return this.__shaderName
   }
 
@@ -71,13 +89,13 @@ class Material extends BaseItem {
    *
    * @param {string} shaderName - The shader name.
    */
-  setShaderName(shaderName) {
+  setShaderName(shaderName: string) {
     if (this.__shaderName == shaderName) return
 
     const shaderClass = Registry.getBlueprint(shaderName)
     if (!shaderClass) throw new Error('Error setting Shader. Shader not found:' + shaderName)
 
-    const paramDescs = shaderClass.getParamDeclarations()
+    const paramDescs = shaderClass.getParamDeclarations() // TODO
     const paramMap = {}
     for (const desc of paramDescs) {
       // Note: some shaders specify default images. Like the speckle texture
@@ -151,7 +169,7 @@ class Material extends BaseItem {
    *
    * @return {boolean} - Returns true if the material is transparent.
    */
-  isTransparent() {
+  isTransparent(): boolean {
     return this.__isTransparent
   }
 
@@ -239,7 +257,7 @@ class Material extends BaseItem {
    * @param {object} paramValues - The paramValues.
    * @param {string} shaderName - The shader name.
    */
-  modifyParams(paramValues, shaderName) {
+  modifyParams(paramValues: Record<any, any>, shaderName: string) {
     if (shaderName) this.setShaderName(shaderName)
     for (const paramName in paramValues) {
       const param = this.getParameter(paramName)
@@ -262,10 +280,10 @@ class Material extends BaseItem {
   /**
    * The toJSON method encodes the current object as a json object.
    *
-   * @param {object} context - The context value.
-   * @return {object} - Returns the json object.
+   * @param {Record<any, any>} context - The context value.
+   * @return {any} - Returns the json object.
    */
-  toJSON(context) {
+  toJSON(context: Record<any, any>) {
     const j = super.toJSON(context)
     j.shader = this.__shaderName
 
@@ -275,10 +293,10 @@ class Material extends BaseItem {
   /**
    * The fromJSON method decodes a json object for this type.
    *
-   * @param {object} j - The json object this item must decode.
-   * @param {object} context - The context value.
+   * @param {Record<any, any>} j - The json object this item must decode.
+   * @param {Record<any, any>} context - The context value.
    */
-  fromJSON(j, context = {}) {
+  fromJSON(j: Record<any, any>, context: Record<any, any> = {}) {
     if (!j.shader) {
       console.warn('Invalid Material JSON')
       return
@@ -302,9 +320,9 @@ class Material extends BaseItem {
    * Sets state of current Item(Including Shaders and Materials) using a binary reader object.
    *
    * @param {BinReader} reader - The reader value.
-   * @param {object} context - The context value.
+   * @param {Record<any, any>} context - The context value.
    */
-  readBinary(reader, context) {
+  readBinary(reader: BinReader, context: Record<any, any>) {
     let shaderName = reader.loadStr()
 
     if (shaderName == 'StandardMaterial') {
@@ -319,7 +337,7 @@ class Material extends BaseItem {
     if (context.versions['zea-engine'].compare([0, 0, 3]) < 0) {
       this.setName(reader.loadStr())
 
-      function capitalizeFirstLetter(string) {
+      const capitalizeFirstLetter = function (string: string) {
         return string.charAt(0).toUpperCase() + string.slice(1)
       }
 
@@ -365,11 +383,11 @@ class Material extends BaseItem {
    * The clone method constructs a new material, copies its values
    * from this material and returns it.
    *
-   * @param {object} context - The context value.
+   * @param {Record<any, any>} context - The context value.
    * @return {Material} - Returns a new cloned material.
    */
-  clone(context) {
-    const cloned = new Material()
+  clone(context: Record<any, any>) {
+    const cloned = new Material('clone', '') // TODO: what should the arguemnts be here?
     cloned.copyFrom(this, context)
     return cloned
   }
@@ -380,11 +398,11 @@ class Material extends BaseItem {
    * @param {Material} src - The material to copy from.
    * @param {object} context - The context value.
    */
-  copyFrom(src, context) {
+  copyFrom(src: Material, context: Record<any, any>) {
     this.setShaderName(src.getShaderName())
     super.copyFrom(src, context)
   }
 }
-Registry.register('Material', Material)
+// Registry.register('Material', Material)
 
 export { Material }
