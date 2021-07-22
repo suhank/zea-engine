@@ -4,15 +4,18 @@ import { GLRenderer } from '../GLRenderer.js'
 import { Registry } from '../../Registry'
 
 import { MathFunctions } from '../../Utilities/MathFunctions'
-import { Points, Lines, PointsProxy, LinesProxy } from '../../SceneTree/index'
+import { Points, Lines, PointsProxy, LinesProxy, GeomItem, Material, TreeItem } from '../../SceneTree/index'
 import { GLShaderMaterials } from '../Drawing/GLShaderMaterials.js'
 import { GLShaderGeomSets } from '../Drawing/GLShaderGeomSets.js'
+import { GLBaseRenderer } from '../GLBaseRenderer.js'
 
 /** Class representing a GL opaque geoms pass.
  * @extends GLStandardGeomsPass
  * @private
  */
 class GLOpaqueGeomsPass extends GLStandardGeomsPass {
+  protected __glshadermaterials: Record<any, any>
+  protected __glShaderGeomSets: Record<any, any>
   /**
    * Create a GL opaque geoms pass.
    */
@@ -31,7 +34,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
    * @param {GLBaseRenderer} renderer - The renderer value.
    * @param {number} passIndex - The index of the pass in the GLBAseRenderer
    */
-  init(renderer, passIndex) {
+  init(renderer: GLBaseRenderer, passIndex: number) {
     super.init(renderer, passIndex)
   }
 
@@ -51,7 +54,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
    * @param {GeomItem} geomItem - The geomItem value.
    * @return {boolean} - The return value.
    */
-  filterGeomItem(geomItem) {
+  filterGeomItem(geomItem: GeomItem) {
     const material = geomItem.getParameter('Material').getValue()
     return this.checkMaterial(material)
   }
@@ -61,7 +64,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
    * @param {Material} material - The geomItem value.
    * @return {boolean} - The return value.
    */
-  checkMaterial(material) {
+  checkMaterial(material: Material) {
     return !material.isTransparent()
   }
 
@@ -69,7 +72,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
    * Removes the GeomITem from this pass, and then asks the renderer to re-add it.
    * @param {GeomItem} geomItem - The geomItem value.
    */
-  removeAndReAddGeomItem(geomItem) {
+  removeAndReAddGeomItem(geomItem: GeomItem) {
     this.removeGeomItem(geomItem)
     this.__renderer.assignTreeItemToGLPass(geomItem)
   }
@@ -79,7 +82,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
    * @param {GeomItem} geomItem - The geomItem value.
    * @return {boolean} - The return value.
    */
-  addGeomItem(geomItem) {
+  addGeomItem(geomItem: GeomItem) {
     const materialParam = geomItem.getParameter('Material')
     const material = materialParam.getValue()
 
@@ -148,7 +151,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
    * @param {GeomItem} geomItem - The geomItem value.
    * @return {boolean} - The return value.
    */
-  removeGeomItem(geomItem) {
+  removeGeomItem(geomItem: GeomItem) {
     const glGeomItem = this.renderer.glGeomItemLibrary.getGLGeomItem(geomItem)
 
     if (glGeomItem.GLShaderGeomSets) {
@@ -179,7 +182,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
    * The removeMaterial method.
    * @param {any} material - The material value.
    */
-  removeMaterial(material) {
+  removeMaterial(material: Material) {
     const glshaderMaterials = this.__glshadermaterials[material.hash]
     if (!glshaderMaterials || glshaderMaterials != material.getMetadata('glshaderMaterials')) {
       console.warn('Material not found in pass')
@@ -195,7 +198,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
    * @param {object} renderstate - The renderstate value.
    * @private
    */
-  __traverseTreeAndDraw(renderstate) {
+  __traverseTreeAndDraw(renderstate: Record<any, any>) {
     // renderstate.drawItemsTexture = this.__drawItemsTexture
 
     // eslint-disable-next-line guard-for-in
@@ -216,7 +219,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
    * The draw method.
    * @param {object} renderstate - The object tracking the current state of the renderer
    */
-  draw(renderstate) {
+  draw(renderstate: Record<any, any>) {
     const gl = this.__gl
     gl.disable(gl.BLEND)
 
@@ -242,7 +245,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
    * The drawHighlightedGeoms method.
    * @param {object} renderstate - The object tracking the current state of the renderer
    */
-  drawHighlightedGeoms(renderstate) {
+  drawHighlightedGeoms(renderstate: Record<any, any>) {
     const gl = this.__gl
     gl.disable(gl.CULL_FACE) // 2-sided rendering.
 
@@ -267,7 +270,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
    * The drawGeomData method.
    * @param {object} renderstate - The object tracking the current state of the renderer
    */
-  drawGeomData(renderstate) {
+  drawGeomData(renderstate: Record<any, any>) {
     renderstate.passIndex = this.passIndex
 
     const gl = this.__gl
