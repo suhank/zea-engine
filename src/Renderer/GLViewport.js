@@ -52,7 +52,7 @@ class GLViewport extends GLBaseViewport {
     // //////////////////////////////////
     // Setup GeomData Fbo
     this.__geomDataBuffer = undefined
-    this.__geomDataBufferSizeFactor = 4
+    this.__geomDataBufferSizeFactor = 1
     this.__geomDataBufferFbo = undefined
     this.debugGeomShader = false
 
