@@ -23,7 +23,7 @@ import { MaterialColorParam } from './Parameters/MaterialColorParam'
 import { BinReader } from './BinReader'
 import { GLShader } from '../Renderer/GLShader'
 
-const generateParameterInstance = (paramName: string, defaultValue: any, range: any, texturable: any) => {
+const generateParameterInstance = (paramName: string, defaultValue: any, range?: any, texturable?: any) => {
   if (typeof defaultValue == 'boolean' || defaultValue === false || defaultValue === true) {
     //return new Parameter(paramName, defaultValue, 'Boolean')
     return new BooleanParameter(paramName, defaultValue) // TODO: check if equivalent
@@ -95,7 +95,7 @@ class Material extends BaseItem {
     const shaderClass = Registry.getBlueprint(shaderName)
     if (!shaderClass) throw new Error('Error setting Shader. Shader not found:' + shaderName)
 
-    const paramDescs = shaderClass.getParamDeclarations() // TODO
+    const paramDescs: any[] = [] //shaderClass.getParamDeclarations() // TODO
     const paramMap: Record<any, any> = {}
     for (const desc of paramDescs) {
       // Note: some shaders specify default images. Like the speckle texture
@@ -177,7 +177,7 @@ class Material extends BaseItem {
     let isTransparent = false
     try {
       const shaderClass = Registry.getBlueprint(this.__shaderName)
-      console.warn("Shaders are no longer registered, no transparency check possible")
+      console.warn('Shaders are no longer registered, no transparency check possible')
       // if (shaderClass.isTransparent()) { // TODO: shaders are no longer registered
       //   isTransparent = true
       // }
@@ -359,9 +359,14 @@ class Material extends BaseItem {
         const textureName = reader.loadStr()
 
         // console.log(paramName +":" + value);
-        let param = <Parameter<any>>this.getParameter(paramName)
-        if (param) param.setValue(value)
-        else param = this.addParameter(generateParameterInstance(paramName, value))
+        let param = <MaterialColorParam | MaterialFloatParam>this.getParameter(paramName)
+        if (param) {
+          param.setValue(<Color>value)
+        } else {
+          param = <MaterialColorParam | MaterialFloatParam>(
+            this.addParameter(generateParameterInstance(paramName, value))
+          )
+        }
         if (textureName != '' && param.setImage) {
           if (context.materialLibrary.hasImage(textureName)) {
             // console.log(paramName +":" + textureName + ":" + context.materialLibrary[textureName].resourcePath);

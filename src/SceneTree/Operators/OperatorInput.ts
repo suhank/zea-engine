@@ -10,7 +10,7 @@ import { EventEmitter } from '../../Utilities/EventEmitter'
 class OperatorInput extends EventEmitter {
   __name: string
   _op: Operator
-  _param?: Parameter<unknown>
+  _param?: Parameter<any>
   detached: boolean
 
   /**
