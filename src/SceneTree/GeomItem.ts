@@ -1,5 +1,5 @@
-import { Xfo, Box3, Vec3 } from '../Math/index'
-import { XfoParameter, Mat4Parameter } from './Parameters/index'
+import { Xfo, Box3, Vec3, Mat4 } from '../Math/index'
+import { XfoParameter, Mat4Parameter, Parameter } from './Parameters/index'
 import { MaterialParameter } from './Parameters/MaterialParameter'
 import { GeometryParameter } from './Parameters/GeometryParameter'
 import { Registry } from '../Registry'
@@ -8,6 +8,9 @@ import { Operator } from './Operators/Operator'
 import { OperatorInput } from './Operators/OperatorInput'
 import { OperatorOutput } from './Operators/OperatorOutput'
 import { BaseProxy } from './Geometry/GeomProxies.js'
+import { BaseGeom } from './Geometry'
+import { Material } from './Material'
+import { BinReader } from './BinReader'
 
 let calculatePreciseBoundingBoxes = false
 
@@ -24,7 +27,7 @@ class CalcGeomMatOperator extends Operator {
    * @param {*} geomMatParam
    * @memberof CalcGeomMatOperator
    */
-  constructor(globalXfoParam, geomOffsetXfoParam, geomMatParam) {
+  constructor(globalXfoParam: XfoParameter, geomOffsetXfoParam: XfoParameter, geomMatParam: any) {
     super('CalcGeomMatOperator')
     this.addInput(new OperatorInput('GlobalXfo')).setParam(globalXfoParam)
     this.addInput(new OperatorInput('GeomOffsetXfo')).setParam(geomOffsetXfoParam)
@@ -35,8 +38,8 @@ class CalcGeomMatOperator extends Operator {
    * The evaluate method.
    */
   evaluate() {
-    const globalXfo = this.getInput('GlobalXfo').getValue()
-    const geomOffsetXfo = this.getInput('GeomOffsetXfo').getValue()
+    const globalXfo = <Xfo>this.getInput('GlobalXfo').getValue()
+    const geomOffsetXfo = <Xfo>this.getInput('GeomOffsetXfo').getValue()
     const geomMatOutput = this.getOutput('GeomMat')
 
     const globalMat4 = globalXfo.toMat4()
@@ -57,6 +60,19 @@ class CalcGeomMatOperator extends Operator {
  * @extends BaseGeomItem
  */
 class GeomItem extends BaseGeomItem {
+  protected geomBBox: any
+  protected __cleanGeomMat: any
+  protected _setBoundingBoxDirty: any
+  protected disableBoundingBox: boolean
+  protected geomIndex: number
+  protected assetItem: any
+  protected calcGeomMatOperator: any
+
+  protected __geomOffsetXfoParam: any
+  protected __geomParam: Parameter<BaseGeom>
+  protected __materialParam: Parameter<Material>
+  protected __geomMatParam: Parameter<Mat4>
+
   /**
    * Creates a geometry item.
    * @param {string} name - The name of the geom item.
@@ -64,7 +80,7 @@ class GeomItem extends BaseGeomItem {
    * @param {Material} material - The material value.
    * @param {Xfo} xfo - The initial Xfo of the new GeomItem.
    */
-  constructor(name, geometry = undefined, material = undefined, xfo = undefined) {
+  constructor(name?: string, geometry?: BaseGeom, material?: Material, xfo?: Xfo) {
     super(name)
 
     this.__geomParam = this.addParameter(new GeometryParameter('Geometry'))
@@ -99,7 +115,7 @@ class GeomItem extends BaseGeomItem {
    *
    * @return {BaseGeom} - The return value.
    */
-  getGeometry() {
+  getGeometry(): BaseGeom {
     console.warn(`deprecated. please use 'getParameter('Geometry').getValue`)
     return this.__geomParam.getValue()
   }
@@ -109,7 +125,7 @@ class GeomItem extends BaseGeomItem {
    *
    * @param {BaseGeom} geom - The geom value.
    */
-  setGeometry(geom) {
+  setGeometry(geom: BaseGeom) {
     console.warn(`deprecated. please use 'getParameter('Geometry').setValue`)
     this.__geomParam.setValue(geom)
   }
@@ -132,7 +148,7 @@ class GeomItem extends BaseGeomItem {
    * @param {BaseGeom} geom - The geom value.
    * @return {number} - The return value.
    */
-  setGeom(geom) {
+  setGeom(geom: BaseGeom) {
     console.warn("setGeom is deprecated. Please use 'getParameter('Geometry').setValue'")
     return this.__geomParam.setValue(geom)
   }
@@ -142,7 +158,7 @@ class GeomItem extends BaseGeomItem {
    *
    * @return {Material} - The return value.
    */
-  getMaterial() {
+  getMaterial(): Material {
     console.warn(`deprecated. please use 'getParameter('Material').getValue`)
     return this.__materialParam.getValue()
   }
@@ -152,7 +168,7 @@ class GeomItem extends BaseGeomItem {
    *
    * @param {Material} material - The material value.
    */
-  setMaterial(material) {
+  setMaterial(material: Material) {
     console.warn(`deprecated. please use 'getParameter('Material').setValue`)
     this.__materialParam.setValue(material)
   }
@@ -163,7 +179,7 @@ class GeomItem extends BaseGeomItem {
    * @return {Box3} - The return value.
    * @private
    */
-  _cleanBoundingBox(bbox) {
+  _cleanBoundingBox(bbox: Box3) {
     if (this.disableBoundingBox) return bbox
     bbox = super._cleanBoundingBox(bbox)
     const geom = this.__geomParam.getValue()
@@ -172,7 +188,7 @@ class GeomItem extends BaseGeomItem {
         // Note: compting the precise bounding box is much slower and
         // can make loading big scenes take a bit longer.
         const positions = geom.__buffers.attrBuffers['positions'].values
-        const getVertex = (index) => {
+        const getVertex = (index: number) => {
           const start = index * 3
           return new Vec3(positions.subarray(start, start + 3))
         }
@@ -181,12 +197,12 @@ class GeomItem extends BaseGeomItem {
           bbox.addPoint(mat4.transformVec3(getVertex(i)))
         }
       } else {
-        bbox.addBox3(geom.getBoundingBox(), this.getGeomMat4())
+        bbox.addBox3(geom.getBoundingBox(), this.getGeomXfo())
       }
     } else if (this.geomBBox) {
       // before the geometries are loaded, we can use the
       // loaded geomBBox that came in the scene tree.
-      bbox.addBox3(this.geomBBox, this.getGeomMat4())
+      bbox.addBox3(this.geomBBox, this.getGeomXfo())
     }
     return bbox
   }
@@ -208,7 +224,7 @@ class GeomItem extends BaseGeomItem {
    *
    * @param {Xfo} xfo - The Xfo value.
    */
-  setGeomOffsetXfo(xfo) {
+  setGeomOffsetXfo(xfo: Xfo) {
     this.__geomOffsetXfoParam.setValue(xfo)
   }
 
@@ -217,10 +233,20 @@ class GeomItem extends BaseGeomItem {
    *
    * @return {Mat4} - Returns the geom Xfo.
    */
-  getGeomMat4() {
+  getGeomMat4(): Mat4 {
     return this.__geomMatParam.getValue()
   }
 
+  /**
+   * Returns `Xfo` object value of `GeomMat` parameter.
+   *
+   * @return {Xfo} - Returns the geom Xfo.
+   */
+  getGeomXfo(): Xfo {
+    let temp: Xfo = new Xfo()
+    temp.setFromMat4(this.__geomMatParam.getValue())
+    return temp
+  }
   // ///////////////////////////
   // Debugging
 
@@ -230,7 +256,7 @@ class GeomItem extends BaseGeomItem {
    * @param {object} context - The context value.
    * @return {object} - Returns the json object.
    */
-  toJSON(context) {
+  toJSON(context: Record<any, any>) {
     const json = super.toJSON(context)
     return json
   }
@@ -241,7 +267,7 @@ class GeomItem extends BaseGeomItem {
    * @param {object} json - The json object this item must decode.
    * @param {object} context - The context value.
    */
-  fromJSON(json, context) {
+  fromJSON(json: Record<any, any>, context: Record<any, any>) {
     super.fromJSON(json, context)
     context.numGeomItems++
   }
@@ -249,10 +275,10 @@ class GeomItem extends BaseGeomItem {
   /**
    * Loads state of the Item from a binary object.
    *
-   * @param {object} reader - The reader value.
+   * @param {BinReader} reader - The reader value.
    * @param {object} context - The context value.
    */
-  readBinary(reader, context) {
+  readBinary(reader: BinReader, context: Record<any, any>) {
     super.readBinary(reader, context)
 
     context.numGeomItems++
@@ -268,7 +294,7 @@ class GeomItem extends BaseGeomItem {
     if (geom) {
       this.getParameter('Geometry').loadValue(geom)
     } else {
-      const onGeomLoaded = (event) => {
+      const onGeomLoaded = (event: Record<any, any>) => {
         const { range } = event
         if (geomIndex >= range[0] && geomIndex < range[1]) {
           const geom = geomLibrary.getGeom(geomIndex)
@@ -298,7 +324,7 @@ class GeomItem extends BaseGeomItem {
         const materialName = reader.loadStr()
         let material = materialLibrary.getMaterial(materialName)
         if (!material) {
-          console.warn("Geom :'" + this.name + "' Material not found:" + materialName)
+          console.warn("Geom :'" + this.__name + "' Material not found:" + materialName)
           material = materialLibrary.getMaterial('Default')
         }
         this.getParameter('Material').loadValue(material)
@@ -319,11 +345,11 @@ class GeomItem extends BaseGeomItem {
 
   /**
    * Returns string representation of current object's state.
-   *
+   * @param {Record<any, any>} context
    * @return {string} - The return value.
    */
-  toString() {
-    return JSON.stringify(this.toJSON(), null, 2)
+  toString(context: Record<any, any>) {
+    return JSON.stringify(this.toJSON(context), null, 2)
   }
 
   // ////////////////////////////////////////
@@ -336,7 +362,7 @@ class GeomItem extends BaseGeomItem {
    * @param {number} context - The context value.
    * @return {GeomItem} - Returns a new cloned geom item.
    */
-  clone(context) {
+  clone(context: Record<any, any>) {
     const cloned = new GeomItem()
     cloned.copyFrom(this, context)
     return cloned
@@ -346,16 +372,16 @@ class GeomItem extends BaseGeomItem {
    * Copies current GeomItem with all its children.
    *
    * @param {GeomItem} src - The geom item to copy from.
-   * @param {number} context - The context value.
+   * @param {Record<any, any>} context - The context value.
    */
-  copyFrom(src, context) {
+  copyFrom(src: GeomItem, context: Record<any, any>) {
     super.copyFrom(src, context)
 
     if (!src.getParameter('Geometry').getValue() && src.geomIndex != -1) {
       const geomLibrary = src.assetItem.getGeometryLibrary()
       this.assetItem = src.assetItem
       this.geomIndex = src.geomIndex
-      const onGeomLoaded = (event) => {
+      const onGeomLoaded = (event: Record<any, any>) => {
         const { range } = event
         if (this.geomIndex >= range[0] && this.geomIndex < range[1]) {
           const geom = geomLibrary.getGeom(this.geomIndex)
@@ -383,7 +409,7 @@ class GeomItem extends BaseGeomItem {
    * from zcad files.
    * @param {boolean} value - true for precise bounding boxes, else false for faster approximate bounding boxes.
    */
-  static setCalculatePreciseBoundingBoxes(value) {
+  static setCalculatePreciseBoundingBoxes(value: boolean) {
     calculatePreciseBoundingBoxes = value
   }
 }
