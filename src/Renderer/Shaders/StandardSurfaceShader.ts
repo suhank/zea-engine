@@ -16,8 +16,8 @@ class StandardSurfaceShader extends GLShader {
    * Create a GL shader.
    * @param {WebGLRenderingContext} gl - The webgl rendering context.
    */
-  constructor(gl) {
-    super(gl)
+  constructor(gl: WebGLRenderingContext) {
+    super(gl, 'StandardSuraceShader')
     this.setShaderStage('VERTEX_SHADER', vert)
 
     this.setShaderStage('FRAGMENT_SHADER', frag)
@@ -55,7 +55,7 @@ class StandardSurfaceShader extends GLShader {
    * @param {string} key - The key value.
    * @return {any} - The return value.
    */
-  bind(renderstate, key) {
+  bind(renderstate: Record<any, any>, key: string) {
     super.bind(renderstate, key)
 
     const gl = this.__gl
@@ -78,7 +78,7 @@ class StandardSurfaceShader extends GLShader {
    * @param {any} material - The material param.
    * @return {any} - The return value.
    */
-  static getPackedMaterialData(material) {
+  static getPackedMaterialData(material: any) {
     const matData = new Float32Array(12)
     const baseColor = material.getParameter('BaseColor').getValue()
     matData[0] = baseColor.r
@@ -105,6 +105,6 @@ class StandardSurfaceShader extends GLShader {
   }
 }
 
-Registry.register('StandardSurfaceShader', StandardSurfaceShader)
-Registry.register('TransparentSurfaceShader', StandardSurfaceShader)
+// Registry.register('StandardSurfaceShader', StandardSurfaceShader)
+// Registry.register('TransparentSurfaceShader', StandardSurfaceShader)
 export { StandardSurfaceShader }

@@ -12,8 +12,8 @@ class ScreenSpaceShader extends GLShader {
    * Create a GL shader.
    * @param {WebGLRenderingContext} gl - The webgl rendering context.
    */
-  constructor(gl) {
-    super(gl)
+  constructor(gl: WebGLRenderingContext) {
+    super(gl, 'ScreenSpaceShader')
 
     this.setShaderStage('VERTEX_SHADER', vert)
     this.setShaderStage('FRAGMENT_SHADER', frag)
@@ -37,7 +37,7 @@ class ScreenSpaceShader extends GLShader {
    * @param {any} material - The material param.
    * @return {any} - The return value.
    */
-  static getPackedMaterialData(material) {
+  static getPackedMaterialData(material: any) {
     const matData = new Float32Array(8)
     const baseColor = material.getParameter('BaseColor').getValue()
     matData[0] = baseColor.r
@@ -48,5 +48,5 @@ class ScreenSpaceShader extends GLShader {
   }
 }
 
-Registry.register('ScreenSpaceShader', ScreenSpaceShader)
+// Registry.register('ScreenSpaceShader', ScreenSpaceShader)
 export { ScreenSpaceShader }

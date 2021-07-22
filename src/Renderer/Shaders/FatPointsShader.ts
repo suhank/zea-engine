@@ -13,14 +13,14 @@ class FatPointsShader extends GLShader {
    * Create a GL shader.
    * @param {WebGLRenderingContext} gl - The webgl rendering context.
    */
-  constructor(gl) {
-    super(gl)
+  constructor(gl: WebGLRenderingContext) {
+    super(gl, 'FatPointsShader')
     this.setShaderStage('VERTEX_SHADER', vert)
     this.setShaderStage('FRAGMENT_SHADER', frag)
   }
 
-  bind(renderstate) {
-    if (super.bind(renderstate)) {
+  bind(renderstate: Record<any, any>) {
+    if (super.bind(renderstate, 'FatPointsShader')) {
       renderstate.supportsInstancing = false
       return true
     }
@@ -62,7 +62,7 @@ class FatPointsGeomDataShader extends FatPointsShader {
    * Create a GL shader.
    * @param {WebGLRenderingContext} gl - The webgl rendering context.
    */
-  constructor(gl) {
+  constructor(gl: WebGLRenderingContext) {
     super(gl)
 
     this.setShaderStage('FRAGMENT_SHADER', GeomDataFrag)
@@ -74,16 +74,16 @@ class FatPointsSelectedShader extends FatPointsShader {
    * Create a GL shader.
    * @param {WebGLRenderingContext} gl - The webgl rendering context.
    */
-  constructor(gl) {
+  constructor(gl: WebGLRenderingContext) {
     super(gl)
 
     this.setShaderStage('FRAGMENT_SHADER', SelectedFrag)
   }
 }
 
-Registry.register('FatPointsShader', FatPointsShader)
-Registry.register('FatPointsGeomDataShader', FatPointsGeomDataShader)
-Registry.register('FatPointsSelectedShader', FatPointsSelectedShader)
+// Registry.register('FatPointsShader', FatPointsShader)
+// Registry.register('FatPointsGeomDataShader', FatPointsGeomDataShader)
+// Registry.register('FatPointsSelectedShader', FatPointsSelectedShader)
 
 // Note: due to a bug in webpack, if these classes are not exported,
 // then we get a mangling of the code _only_in_release_mode_.

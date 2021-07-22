@@ -12,8 +12,8 @@ class FlatSurfaceShader extends GLShader {
    * Create a GL shader.
    * @param {WebGLRenderingContext} gl - The webgl rendering context.
    */
-  constructor(gl) {
-    super(gl)
+  constructor(gl: WebGLRenderingContext) {
+    super(gl,'FlatSurfaceShader')
 
     this.setShaderStage('VERTEX_SHADER', vert)
 
@@ -34,7 +34,7 @@ class FlatSurfaceShader extends GLShader {
    * @param {any} material - The material param.
    * @return {any} - The return value.
    */
-  static getPackedMaterialData(material) {
+  static getPackedMaterialData(material: any) {
     const matData = new Float32Array(8)
     const baseColor = material.getParameter('BaseColor').getValue()
     matData[0] = baseColor.r
@@ -53,5 +53,5 @@ class FlatSurfaceShader extends GLShader {
   }
 }
 
-Registry.register('FlatSurfaceShader', FlatSurfaceShader)
+// Registry.register('FlatSurfaceShader', FlatSurfaceShader)
 export { FlatSurfaceShader }

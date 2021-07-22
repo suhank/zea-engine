@@ -15,15 +15,15 @@ class FatLinesShader extends GLShader {
    * Create a GL shader.
    * @param {WebGLRenderingContext} gl - The webgl rendering context.
    */
-  constructor(gl) {
-    super(gl)
+  constructor(gl: WebGLRenderingContext) {
+    super(gl, 'FatLinesShader')
     this.setShaderStage('VERTEX_SHADER', vert)
 
     this.setShaderStage('FRAGMENT_SHADER', frag)
   }
 
-  bind(renderstate) {
-    if (super.bind(renderstate)) {
+  bind(renderstate: Record<any, any>) {
+    if (super.bind(renderstate, 'FatLinesShader')) {
       renderstate.supportsInstancing = false
       return true
     }
@@ -59,5 +59,5 @@ class FatLinesShader extends GLShader {
   }
 }
 
-Registry.register('FatLinesShader', FatLinesShader)
+// Registry.register('FatLinesShader', FatLinesShader)
 export { FatLinesShader }

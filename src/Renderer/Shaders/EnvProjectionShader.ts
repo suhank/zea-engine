@@ -13,13 +13,13 @@ class EnvProjectionShader extends GLShader {
    * Create a GL shader.
    * @param {WebGLRenderingContext} gl - The webgl rendering context.
    */
-  constructor(gl) {
-    super(gl)
+  constructor(gl: WebGLRenderingContext) {
+    super(gl, 'EnvProjectionShader')
     this.setShaderStage('VERTEX_SHADER', vert)
   }
 
   static getParamDeclarations() {
-    const paramDescs = super.getParamDeclarations()
+    let paramDescs: any[] = super.getParamDeclarations()
     paramDescs.push({
       name: 'projectionCenter',
       defaultValue: new Vec3(0.0, 0.0, 1.7),
@@ -33,24 +33,24 @@ class OctahedralEnvProjectionShader extends EnvProjectionShader {
    * Create a GL shader.
    * @param {WebGLRenderingContext} gl - The webgl rendering context.
    */
-  constructor(gl) {
+  constructor(gl: WebGLRenderingContext) {
     super(gl)
     this.setShaderStage('FRAGMENT_SHADER', OctahedralEnvProjectionFrag)
   }
 }
 
-Registry.register('OctahedralEnvProjectionShader', OctahedralEnvProjectionShader)
+// Registry.register('OctahedralEnvProjectionShader', OctahedralEnvProjectionShader)
 
 class LatLongEnvProjectionShader extends EnvProjectionShader {
   /**
    * Create a GL shader.
    * @param {WebGLRenderingContext} gl - The webgl rendering context.
    */
-  constructor(gl) {
+  constructor(gl: WebGLRenderingContext) {
     super(gl)
     this.setShaderStage('FRAGMENT_SHADER', LatLongEnvProjectionFrag)
   }
 }
 
-Registry.register('LatLongEnvProjectionShader', LatLongEnvProjectionShader)
+// Registry.register('LatLongEnvProjectionShader', LatLongEnvProjectionShader)
 export { EnvProjectionShader, OctahedralEnvProjectionShader, LatLongEnvProjectionShader }

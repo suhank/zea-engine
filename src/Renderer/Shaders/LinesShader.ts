@@ -11,7 +11,7 @@ class LinesShader extends GLShader {
    * Create a GL shader.
    * @param {WebGLRenderingContext} gl - The webgl rendering context.
    */
-  constructor(gl) {
+  constructor(gl: WebGLRenderingContext) {
     super(gl, 'LinesShader')
     this.setShaderStage('VERTEX_SHADER', vert)
     this.setShaderStage('FRAGMENT_SHADER', frag)
@@ -37,7 +37,7 @@ class LinesShader extends GLShader {
    * @param {any} material - The material param.
    * @return {any} - The return value.
    */
-  static getPackedMaterialData(material) {
+  static getPackedMaterialData(material: any) {
     const matData = new Float32Array(12)
     const baseColor = material.getParameter('BaseColor').getValue()
     matData[0] = baseColor.r
@@ -56,5 +56,5 @@ class LinesShader extends GLShader {
   }
 }
 
-Registry.register('LinesShader', LinesShader)
+// Registry.register('LinesShader', LinesShader)
 export { LinesShader }

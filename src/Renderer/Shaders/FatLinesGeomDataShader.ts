@@ -17,13 +17,13 @@ class FatLinesGeomDataShader extends FatLinesShader {
    * Create a GL shader.
    * @param {WebGLRenderingContext} gl - The webgl rendering context.
    */
-  constructor(gl) {
+  constructor(gl: WebGLRenderingContext) {
     super(gl)
     this.setShaderStage('VERTEX_SHADER', vert)
     this.setShaderStage('FRAGMENT_SHADER', frag)
   }
 
-  bind(renderstate) {
+  bind(renderstate: Record<any, any>) {
     if (super.bind(renderstate)) {
       renderstate.supportsInstancing = false
       return true
@@ -44,5 +44,5 @@ class FatLinesGeomDataShader extends FatLinesShader {
   }
 }
 
-Registry.register('FatLinesGeomDataShader', FatLinesGeomDataShader)
+// Registry.register('FatLinesGeomDataShader', FatLinesGeomDataShader)
 export { FatLinesGeomDataShader }
