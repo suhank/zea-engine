@@ -74,7 +74,7 @@
       renderer.outlineThickness = 1
       renderer.outlineColor = new Color(0.2, 0.2, 0.2, 1)
       scene.getSettings().getParameter('BackgroundColor').setValue(new Color(0.85, 0.85, 0.85, 1))
-      // renderer.getViewport().debugGeomShader = urlParams.has('debugGeomShader')
+      renderer.getViewport().debugGeomShader = urlParams.has('debugGeomShader')
 
       const envMap = new EnvMap()
       envMap.load('data/StudioG.zenv')
@@ -171,10 +171,29 @@
 
       disableSelectedTools()
 
+      /** TOOL MANAGER END */
       renderer.getViewport().on('keyDown', (event) => {
         if (event.key == 'f') renderer.frameAll()
+        else if (event.key == 'd') {
+          renderer.getViewport().debugGeomShader = !renderer.getViewport().debugGeomShader
+          renderer.requestRedraw()
+        }
       })
-      /** TOOL MANAGER END */
+      let highlightedItem
+      // renderer.getViewport().on('pointerMove', (event) => {
+      //   console.log(event.clientX, event.clientY)
+      // })
+      renderer.getViewport().on('pointerOverGeom', (event) => {
+        const item = event.intersectionData.geomItem
+        if (item) {
+          highlightedItem = item
+          highlightedItem.addHighlight('pointerOverGeom', new Color(1, 1, 1, 0.1), true)
+        }
+      })
+      renderer.getViewport().on('pointerLeaveGeom', (event) => {
+        highlightedItem.removeHighlight('pointerOverGeom', true)
+        highlightedItem = null
+      })
 
       /** LOAD ASSETS START */
       const { CADAsset, CADBody } = window.zeaCad
@@ -208,7 +227,7 @@
         }
         return res
       }
-      let assetUrl = 'data/Dead_eye_bearing.zcad'
+      let assetUrl = 'data/GDAB-4721-X-A.zcad'
       if (urlParams.has('zcad')) {
         assetUrl = urlParams.get('zcad')
       } else if (urlParams.has('gltf')) {
