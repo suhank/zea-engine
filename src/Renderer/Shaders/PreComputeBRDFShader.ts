@@ -14,8 +14,8 @@ class PreComputeBRDFShader extends GLShader {
    * Create a GL renderer.
    * @param {WebGLRenderingContext} gl - The options value.
    */
-  constructor(gl) {
-    super(gl)
+  constructor(gl: WebGLRenderingContext) {
+    super(gl,'PreComputeBRDFShader')
     this.setShaderStage('VERTEX_SHADER', vert)
     this.setShaderStage('FRAGMENT_SHADER', frag)
   }
