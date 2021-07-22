@@ -13,21 +13,18 @@ function isValid(a: Float32Array, defaultElementValue: number) {
 }
 
 class Attribute extends BaseClass {
-  protected normalized: boolean
+  protected normalized!: boolean
   protected data: Float32Array
   protected dataTypeName: string
   protected stride: number
   protected defaultElementValue: number
 
-  protected mesh: Mesh
+  protected mesh!: Mesh
   protected splitValues: Array<Float32Array>
   protected splits: Record<number, Record<number, number>>
 
   constructor(dataTypeName: string, stride: number, defaultElementValue: number = 0) {
     super()
-
-    this.normalized = true // TODO: check if these (normalized, mesh) initializations are correct/ok
-    this.mesh = new Mesh()
 
     this.data = new Float32Array(0)
     this.dataTypeName = dataTypeName
