@@ -28,7 +28,7 @@ describe('Vec2Parameter', () => {
     const value = new Vec2(1, 2)
     vec2Parameter.setValue(value)
 
-    const expOutput = '{"value":{"x":1,"y":2}}'
+    const expOutput = '{"name":"","value":{"x":1,"y":2}}'
 
     expect(JSON.stringify(vec2Parameter.toJSON())).toEqual(expOutput)
   })

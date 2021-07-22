@@ -29,7 +29,7 @@ describe('Vec4Parameter', () => {
 
     vec4Parameter.setValue(new Vec4(1, 2, 3, 4))
 
-    const expOutput = '{"value":{"x":1,"y":2,"z":3,"t":4}}'
+    const expOutput = '{"name":"","value":{"x":1,"y":2,"z":3,"t":4}}'
 
     expect(JSON.stringify(vec4Parameter.toJSON())).toEqual(expOutput)
   })
