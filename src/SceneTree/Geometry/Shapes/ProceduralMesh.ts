@@ -73,7 +73,7 @@ abstract class ProceduralMesh extends Mesh {
    * @return {Box3} - The return value.
    */
   getBoundingBox(): Box3 {
-    this.update()
+    // this.update()
     return super.getBoundingBox()
   }
 
@@ -83,7 +83,7 @@ abstract class ProceduralMesh extends Mesh {
    * @return {number} - The return value.
    */
   getNumVertices(): number {
-    this.update()
+    // this.update()
     return super.getNumVertices()
   }
 
@@ -93,7 +93,7 @@ abstract class ProceduralMesh extends Mesh {
    * @return {Vec3Attribute} - The return value.
    */
   computeVertexNormals(hardAngle = 1.0 /* radians */) {
-    this.update()
+    // this.update() // computeVertexNormals triggered from update
     return super.computeVertexNormals(hardAngle)
   }
 
@@ -103,7 +103,7 @@ abstract class ProceduralMesh extends Mesh {
    * @return {array} - The return value.
    */
   computeHardEdgesIndices(hardAngle = 1.0) {
-    this.update()
+    // this.update()
     return super.computeHardEdgesIndices(hardAngle)
   }
   // ////////////////////////////////////////
@@ -115,7 +115,7 @@ abstract class ProceduralMesh extends Mesh {
    * @return {Record<string, any>} - The return value.
    */
   genBuffers(opts: Record<string, any>): Record<string, any> {
-    this.update()
+    // this.update()
     return super.genBuffers(opts)
   }
 

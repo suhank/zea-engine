@@ -1,9 +1,9 @@
-import { BaseGeom } from './BaseGeom.js'
+import { BaseGeom } from './BaseGeom'
 import { Registry } from '../../Registry'
 import { BinReader } from '../BinReader'
 import { Vec3 } from '../../Math/Vec3'
 import { Box3 } from '../../Math/Box3'
-import { Vec3Attribute } from './Vec3Attribute.js'
+import { Vec3Attribute } from './Vec3Attribute'
 
 /**
  * Class representing a point primitive drawing type, every vertex specified is a point.
@@ -43,9 +43,9 @@ class Points extends BaseGeom {
     const numVerts = reader.loadUInt32()
     this.__boundingBox.set(reader.loadFloat32Vec3(), reader.loadFloat32Vec3())
     this.setNumVertices(numVerts)
-    const positions =  <Vec3Attribute>this.getVertexAttribute('positions')
-    if(!positions){
-      throw Error("positions is undefined")
+    const positions = <Vec3Attribute>this.getVertexAttribute('positions')
+    if (!positions) {
+      throw Error('positions is undefined')
     }
     if (numVerts < 256) {
       const bboxMat = this.__boundingBox.toMat4()
@@ -56,7 +56,7 @@ class Points extends BaseGeom {
           posAttr8bit[i * 3 + 1] / 255.0,
           posAttr8bit[i * 3 + 2] / 255.0
         )
-        
+
         positions.setValue(i, bboxMat.transformVec3(pos))
       }
     } else {
