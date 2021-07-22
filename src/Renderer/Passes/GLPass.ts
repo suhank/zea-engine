@@ -1,5 +1,7 @@
 import { ParameterOwner } from '../../SceneTree/ParameterOwner'
 import { BooleanParameter } from '../../SceneTree/Parameters/index'
+import { TreeItem } from '../../SceneTree/TreeItem'
+import { GLBaseRenderer } from '../GLBaseRenderer'
 
 const PassType = {
   OPAQUE: 1 << 0,
@@ -11,6 +13,13 @@ const PassType = {
  * @extends ParameterOwner
  */
 class GLPass extends ParameterOwner {
+  protected renderer: GLBaseRenderer
+  protected enabled: boolean
+  protected passIndex: number
+
+  protected __gl: WebGLRenderingContext
+  protected __renderer: GLBaseRenderer
+  protected __passIndex: number
   /**
    * Create a GL pass.
    */
@@ -28,8 +37,8 @@ class GLPass extends ParameterOwner {
    * @param {object} event - The event object.
    * @private
    */
-  __parameterValueChanged(event) {
-    super.__parameterValueChanged(event)
+  __parameterValueChanged(event: Record<any, any>) {
+    super.parameterValueChanged(event)
     if (this.renderer) this.renderer.requestRedraw()
   }
 
@@ -38,7 +47,7 @@ class GLPass extends ParameterOwner {
    * @param {GLBaseRenderer} renderer - The renderer value.
    * @param {number} passIndex - The index of the pass in the GLBAseRenderer
    */
-  init(renderer, passIndex) {
+  init(renderer: GLBaseRenderer, passIndex: number) {
     if (passIndex == undefined) throw new Error('Missing constructor argument.') // Type checking. Seomthing that TypeScript will do for us.
 
     this.__gl = renderer.gl
@@ -52,7 +61,7 @@ class GLPass extends ParameterOwner {
    * The setPassIndex method.
    * @param {number} passIndex - The index of the pass in the GLBAseRenderer
    */
-  setPassIndex(passIndex) {
+  setPassIndex(passIndex: number) {
     this.passIndex = passIndex
     this.__passIndex = passIndex // for backwards compatibility
   }
@@ -61,7 +70,7 @@ class GLPass extends ParameterOwner {
    * Returns the pass type. OPAQUE passes are always rendered first, followed by TRANSPARENT passes, and finally OVERLAY.
    * @return {number} - The pass type value.
    */
-  getPassType() {
+  getPassType(): number {
     return PassType.OPAQUE
   }
 
@@ -75,7 +84,7 @@ class GLPass extends ParameterOwner {
    * so the subtree of this node will not be traversed after this node is handled.
    * @return {Boolean} - The return value.
    */
-  itemAddedToScene(treeItem, rargs) {
+  itemAddedToScene(treeItem: TreeItem, rargs: Record<any, any>) {
     throw Error(`${this.constructor.name} must implement itemAddedToScene and itemRemovedFromScene`)
     return false
   }
@@ -87,7 +96,7 @@ class GLPass extends ParameterOwner {
    * @param {object} rargs - Extra return values are passed back in this object.
    * @return {Boolean} - The return value.
    */
-  itemRemovedFromScene(treeItem, rargs) {
+  itemRemovedFromScene(treeItem: TreeItem, rargs: Record<any, any>) {
     throw Error(`${this.constructor.name} must implement itemAddedToScene and itemRemovedFromScene`)
     return false
   }
@@ -109,25 +118,25 @@ class GLPass extends ParameterOwner {
    * The draw method.
    * @param {object} renderstate - The object tracking the current state of the renderer
    */
-  draw(renderstate) {}
+  draw(renderstate: Record<any, any>) {}
 
   /**
    * The drawHighlightedGeoms method.
    * @param {object} renderstate - The object tracking the current state of the renderer
    */
-  drawHighlightedGeoms(renderstate) {}
+  drawHighlightedGeoms(renderstate: Record<any, any>) {}
 
   /**
    * The drawGeomData method.
    * @param {object} renderstate - The object tracking the current state of the renderer
    */
-  drawGeomData(renderstate) {}
+  drawGeomData(renderstate: Record<any, any>) {}
 
   /**
    * The getGeomItemAndDist method.
    * @param {any} geomData - The geomData value.
    */
-  getGeomItemAndDist(geomData) {}
+  getGeomItemAndDist(geomData: any) {}
 }
 
 export { GLPass, PassType }
