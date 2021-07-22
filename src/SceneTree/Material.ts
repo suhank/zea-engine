@@ -60,7 +60,7 @@ class Material extends BaseItem {
   protected __isTextured: boolean
 
   protected __shaderName: string
-  protected __params: any
+  protected __params: any[]
   /**
    * Create a material
    * @param {string} name - The name of the material.
@@ -96,7 +96,7 @@ class Material extends BaseItem {
     if (!shaderClass) throw new Error('Error setting Shader. Shader not found:' + shaderName)
 
     const paramDescs = shaderClass.getParamDeclarations() // TODO
-    const paramMap = {}
+    const paramMap: Record<any, any> = {}
     for (const desc of paramDescs) {
       // Note: some shaders specify default images. Like the speckle texture
       // on the car paint shader.
@@ -157,7 +157,7 @@ class Material extends BaseItem {
    * @return {object} - The return value.
    */
   getParamTextures() {
-    const textures = {}
+    const textures: Record<any, any> = {}
     for (const param of this.__params) {
       if (param.getImage && param.getImage()) textures[param.getName()] = param.getImage()
     }
@@ -173,26 +173,28 @@ class Material extends BaseItem {
     return this.__isTransparent
   }
 
-  __checkTransparency(event) {
+  __checkTransparency(event?: Record<any, any>) {
     let isTransparent = false
     try {
       const shaderClass = Registry.getBlueprint(this.__shaderName)
-      if (shaderClass.isTransparent()) {
-        isTransparent = true
-      }
+      console.warn("Shaders are no longer registered, no transparency check possible")
+      // if (shaderClass.isTransparent()) { // TODO: shaders are no longer registered
+      //   isTransparent = true
+      // }
     } catch (e) {}
 
     if (!isTransparent) {
-      const opacity = this.getParameter('Opacity')
+      const opacity = <MaterialColorParam | MaterialFloatParam>this.getParameter('Opacity')
       if (opacity && (opacity.getValue() < 0.99 || (opacity.getImage && opacity.getImage()))) {
         isTransparent = true
       } else {
-        const baseColor = this.getParameter('BaseColor')
+        const baseColor = <MaterialColorParam | MaterialFloatParam>this.getParameter('BaseColor')
         if (baseColor) {
           if (baseColor.getImage && baseColor.getImage() && baseColor.getImage().format == 'RGBA') {
             isTransparent = true
-          } else if (baseColor.getValue().a < 1) {
-            isTransparent = true
+          } else if (baseColor.getValue()) {
+            const color_val = <Color>baseColor.getValue()
+            if (color_val.a < 1 && typeof baseColor.getValue() != 'number') isTransparent = true
           }
         }
       }
@@ -213,9 +215,9 @@ class Material extends BaseItem {
     return this.__isTextured
   }
 
-  __checkTextures(event) {
+  __checkTextures(event?: Record<any, any>) {
     // console.log('__checkTextures')
-    const { param } = event ? event : {}
+    const param = event ? event : {}
 
     let isTextured = false
     for (const param of this.__params) {
@@ -233,13 +235,13 @@ class Material extends BaseItem {
   /**
    * This method can be overridden in derived classes
    * to perform general updates (see GLPass or BaseItem).
-   * @param {object} event - The event object emitted by the parameter.
+   * @param {Record<any, any>} event - The event object emitted by the parameter.
    * @private
    */
-  __parameterValueChanged(event) {
+  __parameterValueChanged(event: Record<any, any>) {
     this.__checkTransparency(event)
     this.__checkTextures(event)
-    super.__parameterValueChanged(event)
+    super.parameterValueChanged(event)
   }
 
   /**
@@ -254,7 +256,7 @@ class Material extends BaseItem {
   /**
    * Let you modify or set the shader and all the parameters of current material.
    *
-   * @param {object} paramValues - The paramValues.
+   * @param {Record<any, any>} paramValues - The paramValues.
    * @param {string} shaderName - The shader name.
    */
   modifyParams(paramValues: Record<any, any>, shaderName: string) {
@@ -357,7 +359,7 @@ class Material extends BaseItem {
         const textureName = reader.loadStr()
 
         // console.log(paramName +":" + value);
-        let param = this.getParameter(paramName)
+        let param = <Parameter<any>>this.getParameter(paramName)
         if (param) param.setValue(value)
         else param = this.addParameter(generateParameterInstance(paramName, value))
         if (textureName != '' && param.setImage) {

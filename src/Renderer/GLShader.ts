@@ -4,6 +4,12 @@ import { BaseItem } from '../SceneTree/BaseItem'
 import { StringFunctions } from '../Utilities/StringFunctions'
 import { shaderLibrary } from './ShaderLibrary'
 
+interface Result {
+  attrs: Record<any, any>
+  unifs: Record<any, any>
+  shaderHdls: any
+  shaderProgramHdl: any
+}
 // Every instance of every shader should have a unique id.
 // This is so that we can uniquely identify the bound shader during
 // rendering. Materials and geometries cache bindings to shaders.
@@ -17,15 +23,24 @@ let shaderInstanceId = 0
  * @private
  */
 class GLShader extends BaseItem {
+  protected __gl: Record<any, any> //: WebGLRenderingContext // temporary solution since WebGLRenderingContext is augmented with more entries.
+  protected __shaderStagesGLSL: Record<any, any>
+  protected __shaderStages: Record<any, any>
+  protected __shaderProgramHdls: Record<any, any>
+  protected __gltextures: Record<any, any>
+  //protected __id: number
+
+  protected __shaderCompilationAttempted!: boolean
   /**
    * Create a GL shader.
    * @param {WebGLRenderingContext} gl - The webgl rendering context.
    */
-  constructor(gl, name) {
+  constructor(gl: WebGLRenderingContext, name: string) {
     super(name)
     if (!gl) {
       throw new Error('gl context must be passed to shader constructor')
     }
+
     this.__gl = gl
     this.__shaderStagesGLSL = {}
     this.__shaderStages = {}
@@ -41,7 +56,7 @@ class GLShader extends BaseItem {
    * @param {string} stageName - The name of the stage. currently only 'VERTEX_SHADER' or 'FRAGMENT_SHADER' are supported.
    * @param {string} glsl - The GLSL code for the shader stage.
    */
-  setShaderStage(stageName, glsl) {
+  setShaderStage(stageName: string, glsl: string) {
     this.__shaderStagesGLSL[stageName] = glsl
     this.clearProgramsCache()
   }
@@ -51,7 +66,7 @@ class GLShader extends BaseItem {
    * @param {string} stageName - The name of the stage. currently only 'VERTEX_SHADER' or 'FRAGMENT_SHADER' are supported.
    * @return {string} - The GLSL code for the shader stage.
    */
-  getShaderStage(stageName) {
+  getShaderStage(stageName: string) {
     return this.__shaderStagesGLSL[stageName]
   }
 
@@ -99,11 +114,11 @@ class GLShader extends BaseItem {
    * @return {WebGLShader} - The return value.
    * @private
    */
-  __compileShaderStage(glsl, stageID, name, shaderopts) {
+  __compileShaderStage(glsl: string, stageID: number, name: string, shaderopts: Record<any, any>) {
     const gl = this.__gl
 
     // console.log("__compileShaderStage:" + this.name+"."+name + " glsl:\n" + glsl);
-    if (!shaderopts) shaderopts = gl.shaderopts
+    if (!shaderopts) shaderopts = gl.shaderopts // TODO: shaderopts doesn't exist on gl
     if (shaderopts) {
       if (shaderopts.repl) {
         for (const key in shaderopts.repl) glsl = StringFunctions.replaceAll(glsl, key, shaderopts.repl[key])
@@ -126,6 +141,7 @@ class GLShader extends BaseItem {
     }
 
     const shaderHdl = gl.createShader(stageID)
+    if (!shaderHdl) throw Error('shaderHdl not defined')
     gl.shaderSource(shaderHdl, glsl)
 
     // Compile the shader program.
@@ -134,9 +150,9 @@ class GLShader extends BaseItem {
     // See if it compiled successfully
     if (!gl.getShaderParameter(shaderHdl, gl.COMPILE_STATUS)) {
       console.log('Errors in :' + this.constructor.name)
-      const errors = gl.getShaderInfoLog(shaderHdl).split('\n')
-      const errorLines = {}
-      for (let i in errors) {
+      const errors: Record<any, any> = (<string>gl.getShaderInfoLog(shaderHdl)).split('\n')
+      const errorLines: Record<any, any> = {}
+      for (let i = 0; i < errors.length; i++) {
         if (errors[i].startsWith("'")) {
           errors[i - 1] = errors[i - 1] + errors[i]
           delete errors[i]
@@ -157,10 +173,10 @@ class GLShader extends BaseItem {
       for (const key in errorLines) {
         const lineNumber = Number.parseInt(key) - 1
         for (let i = Math.max(0, lineNumber - 4); i < lineNumber; i++)
-          numberedLinesWithErrors.push((lineNumber + 1 + ' ').padStart(' ', 3) + lines[i])
-        numberedLinesWithErrors.push((lineNumber + 1 + '>').padStart(' ', 3) + lines[lineNumber])
+          numberedLinesWithErrors.push((lineNumber + 1 + ' ').padStart(3) + lines[i])
+        numberedLinesWithErrors.push((lineNumber + 1 + '>').padStart(3) + lines[lineNumber])
         for (let i = lineNumber + 1; i < Math.min(lines.length - 1, lineNumber + 5); i++)
-          numberedLinesWithErrors.push((lineNumber + 1 + ' ').padStart(' ', 3) + lines[i])
+          numberedLinesWithErrors.push((lineNumber + 1 + ' ').padStart(3) + lines[i])
         const errors = errorLines[key]
         for (const error of errors) {
           numberedLinesWithErrors.push(error)
@@ -187,11 +203,12 @@ class GLShader extends BaseItem {
    * @return {WebGLProgram} - The program value.
    * @private
    */
-  __createProgram(shaderopts) {
+  __createProgram(shaderopts: Record<any, any>) {
     const gl = this.__gl
     this.__shaderCompilationAttempted = true
     const shaderProgramHdl = gl.createProgram()
-    const shaderHdls = {}
+    if (!shaderProgramHdl) throw Error('shaderProgramHdl not defined')
+    const shaderHdls: Record<any, any> = {}
 
     if (!this.__shaderStages['VERTEX_SHADER']) {
       // preprocess the GLSL, including all shader snippets
@@ -206,6 +223,9 @@ class GLShader extends BaseItem {
       const vertexShader = this.__compileShaderStage(vertexShaderGLSL, gl.VERTEX_SHADER, 'vertexShader', shaderopts)
       if (!vertexShader) {
         return false
+      }
+      if (shaderProgramHdl) {
+        return
       }
       gl.attachShader(shaderProgramHdl, vertexShader)
       shaderHdls[gl.VERTEX_SHADER] = vertexShader
@@ -239,7 +259,7 @@ class GLShader extends BaseItem {
 
     if (!gl.getProgramParameter(shaderProgramHdl, gl.LINK_STATUS)) {
       const info = gl.getProgramInfoLog(shaderProgramHdl)
-
+      if (!info) throw Error('info not defined')
       if (info.includes('D3D shader compilation failed')) {
         // Usefull for debugging very nasty compiler errors generated only in the ANGL layer.
         const debugExt = gl.getExtension('WEBGL_debug_shaders')
@@ -270,10 +290,10 @@ class GLShader extends BaseItem {
    * @return {object} - The dictionary of attributes and uniform values
    * @private
    */
-  __extractAttributeAndUniformLocations(shaderProgramHdl, shaderopts) {
+  __extractAttributeAndUniformLocations(shaderProgramHdl: WebGLProgram, shaderopts: Record<any, any>) {
     const gl = this.__gl
-    const attrs = this.getAttributes()
-    const result = {
+    const attrs: Record<any, any> = this.getAttributes()
+    const result: Record<any, any> = {
       attrs: {},
       unifs: {},
     }
@@ -283,7 +303,7 @@ class GLShader extends BaseItem {
         console.warn('Shader attribute not found:' + attrName)
         continue
       }
-      const attrDesc = attrs[attrName]
+      const attrDesc: Record<any, any> = attrs[attrName]
       result.attrs[attrName] = {
         name: attrName,
         location: location,
@@ -291,7 +311,7 @@ class GLShader extends BaseItem {
         instanced: attrDesc.instanced,
       }
     }
-    const unifs = this.getUniforms()
+    const unifs: Record<any, any> = this.getUniforms()
     for (let uniformName in unifs) {
       const unifType = unifs[uniformName]
       if (unifType instanceof Array) {
@@ -334,7 +354,7 @@ class GLShader extends BaseItem {
    * @return {object} - The dictionary of attributes that this shader expects to be bound.
    */
   getAttributes() {
-    const attributes = {}
+    const attributes: Record<any, any> = {}
     for (const stageName in this.__shaderStages) {
       const shaderStageBlock = this.__shaderStages[stageName]
       for (const attrName in shaderStageBlock['attributes'])
@@ -348,7 +368,7 @@ class GLShader extends BaseItem {
    * @return {object} - The dictionary of uniforms that this shader expects to be bound.
    */
   getUniforms() {
-    const uniforms = {}
+    const uniforms: Record<any, any> = {}
     for (const stageName in this.__shaderStages) {
       const shaderStageBlock = this.__shaderStages[stageName]
       for (const unifName in shaderStageBlock['uniforms']) uniforms[unifName] = shaderStageBlock['uniforms'][unifName]
@@ -366,7 +386,7 @@ class GLShader extends BaseItem {
    * @param {string} key - The key value.
    * @return {boolean} - The return value.
    */
-  isCompiledForTarget(key) {
+  isCompiledForTarget(key: string) {
     const shaderkey = key ? key : this.getId()
     return this.__shaderProgramHdls[shaderkey] != undefined
   }
@@ -377,7 +397,7 @@ class GLShader extends BaseItem {
    * @param {object} shaderopts - The shaderopts value.
    * @return {object} - The result of the shader compilation.
    */
-  compileForTarget(key, shaderopts) {
+  compileForTarget(key?: string, shaderopts?: Record<any, any>) {
     const shaderkey = key ? key : this.getId()
     let shaderCompilationResult = this.__shaderProgramHdls[shaderkey]
     if (!shaderCompilationResult) {
@@ -403,7 +423,7 @@ class GLShader extends BaseItem {
    * @param {string} key - The key value.
    * @return {boolean} - The return value.
    */
-  bind(renderstate, key) {
+  bind(renderstate: Record<any, any>, key: string) {
     const gl = this.__gl
 
     if (renderstate.glShader != this) {
@@ -440,7 +460,7 @@ class GLShader extends BaseItem {
    * @param {object} renderstate - The object tracking the current state of the renderer
    * @return {any} - The return value.
    */
-  unbind(renderstate) {
+  unbind(renderstate: Record<any, any>) {
     delete renderstate.glShader
     delete renderstate.shaderkey
     delete renderstate.unifs
@@ -459,7 +479,7 @@ class GLShader extends BaseItem {
    * to initialize and configure the parameters for the Material instance.
    * @return {array} - an array of param declarations that the shader expects the material tp provide.
    */
-  static getParamDeclarations() {
+  static getParamDeclarations(): any[] {
     return []
   }
 
@@ -467,15 +487,15 @@ class GLShader extends BaseItem {
    * The getGeomDataShaderName method.
    * @return {string} - an array of param declarations that the shader expects the material tp provide.
    */
-  static getGeomDataShaderName() {
-    return null
+  static getGeomDataShaderName(): any {
+    return ''
   }
 
   /**
    * The getSelectedShaderName method.
    */
   static getSelectedShaderName() {
-    return null
+    return ''
   }
 
   /**

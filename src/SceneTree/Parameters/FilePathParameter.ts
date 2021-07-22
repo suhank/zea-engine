@@ -125,7 +125,7 @@ class FilePathParameter extends Parameter<string> {
    *
    * @param {string} value - The value param.
    */
-  setValue(value): void {
+  setValue(value: string): void {
     if (!value) {
       throw new Error('Invalid value for setValue.')
     }
