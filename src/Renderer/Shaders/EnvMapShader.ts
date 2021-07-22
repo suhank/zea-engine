@@ -1,5 +1,5 @@
 /* eslint-disable require-jsdoc */
-import { GLShader } from '../GLShader.js'
+import { GLShader } from '../GLShader'
 
 import './GLSL/index'
 import frag from './EnvMap.frag'
@@ -10,7 +10,7 @@ class EnvMapShader extends GLShader {
    * @param {WebGLRenderingContext} gl - The webgl rendering context.
    */
   constructor(gl: WebGLRenderingContext) {
-    super(gl,'EnvMapShader')
+    super(gl, 'EnvMapShader')
     this.setShaderStage('VERTEX_SHADER', vert)
     this.setShaderStage('FRAGMENT_SHADER', frag)
   }

@@ -1,4 +1,4 @@
-import { shaderLibrary } from '../../ShaderLibrary.js'
+import { shaderLibrary } from '../../ShaderLibrary'
 
 import computeViewNormal from './computeViewNormal.glsl'
 import calcFatLinesViewPos from './calcFatLinesViewPos.glsl'

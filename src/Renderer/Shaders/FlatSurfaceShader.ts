@@ -1,7 +1,7 @@
 /* eslint-disable require-jsdoc */
 import { Color } from '../../Math/Color'
 import { Registry } from '../../Registry'
-import { GLShader } from '../GLShader.js'
+import { GLShader } from '../GLShader'
 
 import './GLSL/index'
 import vert from './FlatSurface.vert'
@@ -13,7 +13,7 @@ class FlatSurfaceShader extends GLShader {
    * @param {WebGLRenderingContext} gl - The webgl rendering context.
    */
   constructor(gl: WebGLRenderingContext) {
-    super(gl,'FlatSurfaceShader')
+    super(gl, 'FlatSurfaceShader')
 
     this.setShaderStage('VERTEX_SHADER', vert)
 

@@ -1,5 +1,5 @@
 /* eslint-disable require-jsdoc */
-import { GLShader } from '../GLShader.js'
+import { GLShader } from '../GLShader'
 
 import './GLSL/index'
 import vert from './ConvolveSpecular.vert'
@@ -15,7 +15,7 @@ class ConvolveSpecularShader extends GLShader {
    * @param {WebGLRenderingContext} gl - The options value.
    */
   constructor(gl: WebGLRenderingContext) {
-    super(gl,'ConvolveSpecularShader')
+    super(gl, 'ConvolveSpecularShader')
     this.setShaderStage('VERTEX_SHADER', vert)
     this.setShaderStage('FRAGMENT_SHADER', frag)
   }

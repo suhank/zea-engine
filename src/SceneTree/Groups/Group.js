@@ -1,3 +1,4 @@
+/* eslint-disable require-jsdoc */
 /* eslint-disable no-unused-vars */
 import { Vec3, Color, Xfo } from '../../Math/index'
 import { Registry } from '../../Registry'

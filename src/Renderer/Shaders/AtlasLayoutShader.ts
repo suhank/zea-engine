@@ -1,5 +1,5 @@
 /* eslint-disable require-jsdoc */
-import { GLShader } from '../GLShader.js'
+import { GLShader } from '../GLShader'
 
 import './GLSL/index'
 import vert from './AtlasLayout.vert'
@@ -11,7 +11,7 @@ class AtlasLayoutShader extends GLShader {
    * @param {WebGLRenderingContext} gl - The webgl rendering context.
    */
   constructor(gl: WebGLRenderingContext) {
-    super(gl,'AtlasLayoutShader')
+    super(gl, 'AtlasLayoutShader')
     this.setShaderStage('VERTEX_SHADER', vert)
     this.setShaderStage('FRAGMENT_SHADER', frag)
   }

@@ -1,6 +1,6 @@
 import { Color } from '../../Math/index'
 import { Registry } from '../../Registry'
-import { GLShader } from '../GLShader.js'
+import { GLShader } from '../GLShader'
 
 import './GLSL/index'
 import frag from './FatLines.frag'

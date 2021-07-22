@@ -43,6 +43,7 @@ class Vec3Parameter extends Parameter<Vec3> implements IBinaryReader {
   }
 
   toJSON(context?: Record<string, unknown>): Record<string, unknown> {
+
     return {
       name: this.name,
       value: this.value?.toJSON(),

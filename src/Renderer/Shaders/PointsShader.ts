@@ -1,7 +1,7 @@
 /* eslint-disable require-jsdoc */
 import { Color } from '../../Math/index'
 import { Registry } from '../../Registry'
-import { GLShader } from '../GLShader.js'
+import { GLShader } from '../GLShader'
 
 import './GLSL/index'
 import frag from './Points.frag'
@@ -12,7 +12,7 @@ class PointsShader extends GLShader {
    * @param {WebGLRenderingContext} gl - The webgl rendering context.
    */
   constructor(gl: WebGLRenderingContext) {
-    super(gl,'PointsShader')
+    super(gl, 'PointsShader')
     this.setShaderStage('VERTEX_SHADER', vert)
 
     this.setShaderStage('FRAGMENT_SHADER', frag)

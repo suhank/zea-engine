@@ -1,5 +1,5 @@
 /* eslint-disable require-jsdoc */
-import { GLShader } from '../GLShader.js'
+import { GLShader } from '../GLShader'
 
 import './GLSL/index'
 import frag from './BoundingBox.frag'

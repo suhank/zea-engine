@@ -1,5 +1,5 @@
 /* eslint-disable require-jsdoc */
-import { GLShader } from '../GLShader.js'
+import { GLShader } from '../GLShader'
 
 import './GLSL/index'
 import frag from './ConvolveIrradiance.frag'
@@ -15,7 +15,7 @@ class ConvolveIrradianceShader extends GLShader {
    * @param {WebGLRenderingContext} gl - The options value.
    */
   constructor(gl: WebGLRenderingContext) {
-    super(gl,'ConvolveIrradianceShader')
+    super(gl, 'ConvolveIrradianceShader')
     this.setShaderStage('VERTEX_SHADER', vert)
     this.setShaderStage('FRAGMENT_SHADER', frag)
   }
