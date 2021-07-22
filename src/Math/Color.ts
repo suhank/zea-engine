@@ -430,7 +430,7 @@ class Color {
    * @param {Color} other - The other Color to compare with.
    * @return {boolean} - Returns `true` if the values are the same, otherwise, `false`.
    */
-  isEqual(other) {
+  isEqual(other: Color) {
     return this.r == other.r && this.g == other.g && this.b == other.b && this.a == other.a
   }
 
@@ -475,7 +475,7 @@ class Color {
    *
    * @param {Color} other - The other color to add.
    */
-  addInPlace(other) {
+  addInPlace(other: Color) {
     this.r += other.r
     this.g += other.g
     this.b += other.b

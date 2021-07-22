@@ -574,7 +574,7 @@ class Vec2 {
    * @param {Vec2} d1 - The direction of the second line
    * @return {array} - Returns an array containing 2 parameter values for the 2 lines.
    */
-  static intersectionOfLines(p1, p2, p3, p4) {
+  static intersectionOfLines(p1: Vec2, p2: Vec2, p3: Vec2, p4: Vec2) {
     // https://dirask.com/posts/JavaScript-how-to-calculate-intersection-point-of-two-lines-for-given-4-points-VjvnAj
     // down part of intersection point formula
     const d1 = (p1.x - p2.x) * (p3.y - p4.y) // (x1 - x2) * (y3 - y4)

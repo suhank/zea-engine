@@ -147,7 +147,7 @@ class Quat {
    * @param {Float32Array | Uint8Array | Uint32Array | Int32Array} float32Array - The float32Array value.
    */
   setDataArray(float32Array: Float32Array | Uint8Array | Uint32Array | Int32Array): void {
-    this.__data = float32Array
+    this.__data = <Float32Array>float32Array // TODO: added cast
   }
 
   /**

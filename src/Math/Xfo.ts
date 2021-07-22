@@ -11,9 +11,9 @@ const sc_helper = new Vec3(1, 1, 1)
  * Class representing an Xfo transform, which is a transformation decomposed into 3 component values. Translation, Orientation, and Scaling.
  */
 class Xfo {
-  ori: Quat
-  sc: Vec3
-  tr: Vec3
+  ori!: Quat
+  sc!: Vec3
+  tr!: Vec3
 
   /**
    * Initializes the Xfo object.
@@ -209,7 +209,7 @@ class Xfo {
    * @deprecated
    * @param {Mat4} mat4 - The mat4 value.
    */
-  fromMat4(mat4) {
+  fromMat4(mat4: Mat4) {
     this.setFromMat4(mat4)
   }
 
@@ -218,7 +218,7 @@ class Xfo {
    * @deprecated
    * @param {Mat4} mat4 - The mat4 value.
    */
-  setFromMat4(mat4) {
+  setFromMat4(mat4: Mat4) {
     this.tr = mat4.translation
     this.ori.setFromMat4(mat4)
   }

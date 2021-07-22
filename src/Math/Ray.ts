@@ -3,6 +3,7 @@ import { StringFunctions } from '../Utilities/StringFunctions'
 import { MathFunctions } from '../Utilities/MathFunctions'
 import { Vec3 } from './Vec3'
 import { Registry } from '../Registry'
+import { Box3 } from './Box3'
 
 /**
  * Class representing a ray that starts from an origin in a specified direction.
@@ -53,7 +54,7 @@ class Ray {
    * @param {Vec3} p1 - The point in 3D space.
    * @return {array} - Returns an array containing 2 scalar values indicating 0: the fraction of the line segment, 1: distance along the Ray
    */
-  closestPointOnLineSegment(p0, p1) {
+  closestPointOnLineSegment(p0: Vec3, p1: Vec3) {
     const u = this.dir
     const v = p1.subtract(p0)
     const v_len = v.length()
@@ -183,14 +184,14 @@ class Ray {
    * @param {number} tolerance - The tolerance of the test.
    * @return {boolean} - The return value.
    */
-  intersectRayBox3(box3, tolerance = 0) {
+  intersectRayBox3(box3: Box3, tolerance = 0) {
     // https://www.scratchapixel.com/lessons/3d-basic-rendering/minimal-ray-tracer-rendering-simple-shapes/ray-box-intersection
 
     const invDir = new Vec3(1 / this.dir.x, 1 / this.dir.y, 1 / this.dir.z)
     const sign = []
-    sign[0] = invDir.x < 0
-    sign[1] = invDir.y < 0
-    sign[2] = invDir.z < 0
+    sign[0] = invDir.x < 0 ? 1 : 0
+    sign[1] = invDir.y < 0 ? 1 : 0
+    sign[2] = invDir.z < 0 ? 1 : 0
 
     const bounds = []
     if (tolerance > 0) {

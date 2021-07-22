@@ -5,6 +5,7 @@ import { Mat4 } from './Mat4'
 import { SphereType } from './SphereType'
 import { Registry } from '../Registry'
 import { Xfo } from '../Math/index'
+import { Sphere } from '../SceneTree/Geometry/Shapes/Sphere'
 
 /**
  * Class representing a box in 3D space.
@@ -218,14 +219,14 @@ class Box3 {
    * @param {Sphere} sphere - The sphere to check for intersection against.
    * @return {boolean} - Returns true if the shapes intersect.
    */
-  intersectsSphere(sphere) {
+  intersectsSphere(sphere: SphereType) {
     let closestPoint = new Vec3()
 
     // Find the point on the AABB closest to the sphere center.
     // this.clampPoint( sphere.center, closestPoint );
 
     // If that point is inside the sphere, the AABB and sphere intersect.
-    return closestPoint.distanceTo(sphere.center) <= sphere.radius * sphere.radius
+    return closestPoint.distanceTo(sphere.pos) <= sphere.radius * sphere.radius
   }
 
   /**
