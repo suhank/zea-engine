@@ -20,7 +20,6 @@
     <script src="https://www.gstatic.com/draco/v1/decoders/draco_decoder_gltf.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@zeainc/gltf-loader/dist/index.umd.js"></script>
 
-    <link rel="stylesheet" href="styles/tailwind.min.css" />
     <style>
       body {
         height: 100vh;
@@ -229,7 +228,7 @@
         }
         return res
       }
-      let assetUrl = 'data/GDAB-4721-X-A.zcad'
+      let assetUrl = 'data/Dead_eye_bearing.zcad'
       if (urlParams.has('zcad')) {
         assetUrl = urlParams.get('zcad')
       } else if (urlParams.has('gltf')) {
