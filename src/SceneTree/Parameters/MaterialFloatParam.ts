@@ -80,7 +80,7 @@ class MaterialFloatParam extends NumberParameter implements IBinaryReader {
    *
    * @param {number} value - The value param.
    */
-  setValue(value) {
+  setValue(value: any) {
     if (value instanceof BaseImage) {
       this.setImage(value)
     } else {

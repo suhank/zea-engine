@@ -1,6 +1,7 @@
 import { Color, Vec3 } from '../Math/index.js'
 import { TreeItem } from './TreeItem'
 import { Material } from './Material'
+import { BinReader } from './BinReader.js'
 
 /**
  * Base class that represents geometry items with layering, overlaying and cut away features.
@@ -10,11 +11,16 @@ import { Material } from './Material'
  * @extends TreeItem
  */
 class BaseGeomItem extends TreeItem {
+  protected overlay: boolean
+  protected __cutAway: boolean
+  protected __cutAwayVector: Vec3
+  protected __cutAwayDist: number
+  protected __layers: string[]
   /**
    * Create a base geometry item.
    * @param {string} name - The name of the base geom item.
    */
-  constructor(name) {
+  constructor(name: string) {
     super(name)
     this.overlay = false
     this.__cutAway = false
@@ -29,7 +35,7 @@ class BaseGeomItem extends TreeItem {
    * @todo Need to find the layer and add this item to it.
    * @param {boolean} val - `true` to enable it.
    */
-  setOverlay(val) {
+  setOverlay(val: boolean) {
     // TODO: need to find the layer and add this item to it.
     this.overlay = val
   }
@@ -39,7 +45,7 @@ class BaseGeomItem extends TreeItem {
    *
    * @return {boolean} - The return value.
    */
-  isOverlay() {
+  isOverlay(): boolean {
     return this.overlay
   }
 
@@ -49,7 +55,7 @@ class BaseGeomItem extends TreeItem {
    * @todo Need to find the layer and add this item to it.
    * @param {string} name - The name of the layer.
    */
-  addLayer(name) {
+  addLayer(name: string) {
     // TODO: need to find the layer and add this item to it.
     this.__layers.push(name)
   }
@@ -57,9 +63,9 @@ class BaseGeomItem extends TreeItem {
   /**
    * Returns all layers in current item.
    *
-   * @return {array} - The return value.
+   * @return {string[]} - The return value.
    */
-  getLayers() {
+  getLayers(): string[] {
     return this.__layers
   }
 
@@ -71,7 +77,7 @@ class BaseGeomItem extends TreeItem {
    *
    * @return {boolean} - Returns `true` if enabled.
    */
-  isCutawayEnabled() {
+  isCutawayEnabled(): boolean {
     return this.__cutAway
   }
 
@@ -80,7 +86,7 @@ class BaseGeomItem extends TreeItem {
    *
    * @param {boolean} state - `true` to enable it, otherwise `false`.
    */
-  setCutawayEnabled(state) {
+  setCutawayEnabled(state: boolean) {
     this.__cutAway = state
     this.emit('cutAwayChanged', {})
   }
@@ -99,7 +105,7 @@ class BaseGeomItem extends TreeItem {
    *
    * @param {Vec3} cutAwayVector - The cutAwayVector value.
    */
-  setCutVector(cutAwayVector) {
+  setCutVector(cutAwayVector: Vec3) {
     this.__cutAwayVector = cutAwayVector
     this.emit('cutAwayChanged', {})
   }
@@ -118,7 +124,7 @@ class BaseGeomItem extends TreeItem {
    *
    * @param {number} cutAwayDist - The cutAwayDist value.
    */
-  setCutDist(cutAwayDist) {
+  setCutDist(cutAwayDist: number) {
     this.__cutAwayDist = cutAwayDist
     this.emit('cutAwayChanged', {})
   }
@@ -132,7 +138,7 @@ class BaseGeomItem extends TreeItem {
    * @param {BinReader} reader - The reader value.
    * @param {object} context - The context value.
    */
-  readBinary(reader, context) {
+  readBinary(reader: BinReader, context: Record<any, any>) {
     super.readBinary(reader, context)
 
     if (context.versions['zea-engine'].compare([0, 0, 4]) >= 0) {

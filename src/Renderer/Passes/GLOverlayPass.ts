@@ -1,6 +1,7 @@
 import { PassType } from './GLPass.js'
 import { GLOpaqueGeomsPass } from './GLOpaqueGeomsPass.js'
 import { GLRenderer } from '../GLRenderer.js'
+import { GeomItem } from '../../SceneTree/GeomItem.js'
 
 /** Class representing a GL overlay pass.
  * @extends GLOpaqueGeomsPass
@@ -30,7 +31,7 @@ class GLOverlayPass extends GLOpaqueGeomsPass {
    * @param {GeomItem} geomItem - The geomItem value.
    * @return {any} - The return value.
    */
-  filterGeomItem(geomItem) {
+  filterGeomItem(geomItem: GeomItem) {
     if (geomItem.isOverlay()) return true
     const shaderClass = geomItem.getParameter('Material').getValue().getShaderClass()
     if (shaderClass) {
@@ -43,7 +44,7 @@ class GLOverlayPass extends GLOpaqueGeomsPass {
    * The draw method.
    * @param {object} renderstate - The object tracking the current state of the renderer
    */
-  draw(renderstate) {
+  draw(renderstate: Record<any, any>) {
     const gl = this.__gl
 
     // Clear the depth buffer so handls are always drawn over the top.
@@ -73,7 +74,7 @@ class GLOverlayPass extends GLOpaqueGeomsPass {
    * The drawGeomData method.
    * @param {object} renderstate - The object tracking the current state of the renderer
    */
-  drawGeomData(renderstate) {
+  drawGeomData(renderstate: Record<any, any>) {
     const gl = this.__gl
 
     // Clear the depth buffer so handls are always drawn over the top.
