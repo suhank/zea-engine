@@ -158,7 +158,7 @@ class GLGeomItemLibrary extends EventEmitter {
     renderer.on('viewChanged', (event) => {
       // Calculate culling every Nth frame.
       if (workerReady) {
-        if (tick % 10 == 0) {
+        if (tick % 5 == 0) {
           workerReady = false
           const pos = event.viewXfo.tr
           const ori = event.viewXfo.ori
