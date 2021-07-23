@@ -2,7 +2,7 @@ import { MaterialColorParam, MaterialFloatParam, NumberParameter } from '..'
 import { Color } from '../../Math/Color'
 import { Material } from '../Material'
 
-class FlatSurfaceMaterial extends Material {
+export class FlatSurfaceMaterial extends Material {
   constructor() {
     super('FlatSurfaceShader', 'FlatSurfaceShader') // TODO: check
     this.__shaderName = 'FlatSurfaceShader'

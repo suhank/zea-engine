@@ -6,6 +6,8 @@ import { GLShader } from '../GLShader'
 import './GLSL/index'
 import vert from './StandardSurface.vert'
 import frag from './StandardSurface.frag'
+import { ColorParameter } from '../../SceneTree/Parameters/ColorParameter'
+import { Material } from '../../SceneTree/Material'
 
 /** A standard shader handling Opaque and transparent items and PBR rendering.
  * @extends GLShader
@@ -19,34 +21,7 @@ class StandardSurfaceShader extends GLShader {
   constructor(gl: WebGLRenderingContext) {
     super(gl, 'StandardSuraceShader')
     this.setShaderStage('VERTEX_SHADER', vert)
-
     this.setShaderStage('FRAGMENT_SHADER', frag)
-  }
-
-  /**
-   * Returns the parameters that this shader expects to be provided by the material.
-   * Note: the Material method setShaderName will retrieve these parameter declarations
-   * to initialize and configure the parameters for the Material instance.
-   * @return {array} - an array of param declarations that the shader expects the material tp provide.
-   */
-  static getParamDeclarations() {
-    const paramDescs = super.getParamDeclarations()
-    paramDescs.push({
-      name: 'BaseColor',
-      defaultValue: new Color(1.0, 1.0, 0.5),
-    })
-    paramDescs.push({ name: 'AmbientOcclusion', defaultValue: 1, range: [0, 1] })
-    paramDescs.push({ name: 'Metallic', defaultValue: 0.05, range: [0, 1] })
-    paramDescs.push({ name: 'Roughness', defaultValue: 0.5, range: [0, 1] })
-    paramDescs.push({ name: 'Reflectance', defaultValue: 0.5, range: [0, 1] })
-    paramDescs.push({ name: 'Normal', defaultValue: new Color(0.5, 0.5, 0.5) })
-    paramDescs.push({
-      name: 'EmissiveStrength',
-      defaultValue: 0.0,
-      range: [0, 1],
-    })
-    paramDescs.push({ name: 'Opacity', defaultValue: 1.0, range: [0, 1] })
-    return paramDescs
   }
 
   /**
@@ -69,42 +44,12 @@ class StandardSurfaceShader extends GLShader {
     }
     return true
   }
-
-  // /////////////////////////////
-  // Parameters
-
-  /**
-   * The getPackedMaterialData method.
-   * @param {any} material - The material param.
-   * @return {any} - The return value.
-   */
-  static getPackedMaterialData(material: any) {
-    const matData = new Float32Array(12)
-    const baseColor = material.getParameter('BaseColor').getValue()
-    matData[0] = baseColor.r
-    matData[1] = baseColor.g
-    matData[2] = baseColor.b
-    matData[3] = baseColor.a
-
-    matData[4] = material.getParameter('AmbientOcclusion').getValue()
-    matData[5] = material.getParameter('Metallic').getValue()
-    matData[6] = material.getParameter('Roughness').getValue()
-    matData[7] = material.getParameter('Reflectance').getValue()
-
-    matData[8] = material.getParameter('EmissiveStrength').getValue()
-    matData[9] = material.getParameter('Opacity').getValue()
-    return matData
-  }
-
-  static getGeomDataShaderName() {
-    return 'StandardSurfaceGeomDataShader'
-  }
-
-  static getSelectedShaderName() {
-    return 'StandardSurfaceSelectedGeomsShader'
-  }
 }
 
 // Registry.register('StandardSurfaceShader', StandardSurfaceShader)
 // Registry.register('TransparentSurfaceShader', StandardSurfaceShader)
+
 export { StandardSurfaceShader }
+
+// const material = new Material()
+// shaderLibrary.regieterMaterialTemplate('StandardSurfaceShader', material) // this is no longer needed?

@@ -22,6 +22,8 @@ import { MaterialFloatParam } from './Parameters/MaterialFloatParam'
 import { MaterialColorParam } from './Parameters/MaterialColorParam'
 import { BinReader } from './BinReader'
 import { GLShader } from '../Renderer/GLShader'
+import { FlatSurfaceShader, shaderLibrary, SimpleSurfaceShader } from '../Renderer'
+import { StandardSurfaceMaterial } from './Materials/StandardSurfaceMaterial'
 
 const generateParameterInstance = (paramName: string, defaultValue: any, range?: any, texturable?: any) => {
   if (typeof defaultValue == 'boolean' || defaultValue === false || defaultValue === true) {
@@ -55,6 +57,7 @@ const generateParameterInstance = (paramName: string, defaultValue: any, range?:
  *
  * @extends BaseItem
  */
+// TODO: make abstract after subclasses checked
 class Material extends BaseItem {
   protected __isTransparent: boolean
   protected __isTextured: boolean
@@ -89,50 +92,10 @@ class Material extends BaseItem {
    *
    * @param {string} shaderName - The shader name.
    */
+  // TODO: make this abstract when Material class is abstract.
   setShaderName(shaderName: string) {
-    if (this.__shaderName == shaderName) return
-
-    const shaderClass = Registry.getBlueprint(shaderName)
-    if (!shaderClass) throw new Error('Error setting Shader. Shader not found:' + shaderName)
-
-    const paramDescs: any[] = [] //shaderClass.getParamDeclarations() // TODO
-    const paramMap: Record<any, any> = {}
-    for (const desc of paramDescs) {
-      // Note: some shaders specify default images. Like the speckle texture
-      // on the car paint shader.
-      // let image;
-      // let defaultValue = desc.defaultValue;
-      // if (desc.defaultValue instanceof BaseImage) {
-      //     image = desc.defaultValue;
-      //     defaultValue = new Color();
-      // }
-      let param = this.getParameter(desc.name)
-      // if(param && param.getType() != desc.defaultValue)
-      // removeParameter
-      if (!param)
-        param = this.addParameter(
-          generateParameterInstance(desc.name, desc.defaultValue, desc.range, desc.texturable != false)
-        )
-      // if(desc.texturable != false) {// By default, parameters are texturable. texturable must be set to false to disable texturing.
-      //     if(!param.getImage)
-      //         this.__makeParameterTexturable(param);
-      //     // if(image)
-      //     //     param.setImage(image)
-      // }
-
-      paramMap[desc.name] = true
-    }
-
-    // Remove redundant Params.
-    for (const param of this.__params) {
-      if (!paramMap[param.getName()]) {
-        this.removeParameter(param.getName())
-      }
-    }
-
     this.__shaderName = shaderName
-    this.__checkTransparency({})
-    this.emit('shaderNameChanged', { shaderName })
+    console.warn('implement setShaderName in the subclass materials')
   }
 
   /**

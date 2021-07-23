@@ -2,7 +2,7 @@ import { MaterialColorParam, MaterialFloatParam, NumberParameter } from '..'
 import { Color } from '../../Math/Color'
 import { Material } from '../Material'
 
-class StandardSurfaceMaterial extends Material {
+export class StandardSurfaceMaterial extends Material {
   constructor() {
     super('StandardSurfaceShader', 'StandardSurfaceShader') // TODO: check corectness
     this.__shaderName = 'StandardSurfaceShader'
@@ -98,4 +98,32 @@ class StandardSurfaceMaterial extends Material {
     // matData[10] = this.Normal.getValue()
     return matData
   }
+
+  // TODO:
+  setShaderName(shaderName: string) {
+    this.__shaderName = shaderName
+    this.__checkTransparency({})
+    this.emit('shaderNameChanged', {shaderName: this.__shaderName})
+  }
 }
+
+/*
+      if (this.__shaderName == shaderName) return
+      const template = [] // get set of parameters? shaderLibrary.getMaterialTemplate(shaderName) 
+      if (!template) {
+        throw Error("template is undefined.")
+      }
+      const paramNams = template.getParameterName()
+      for (const name of paramNams) {
+        let param = this.getParameter(name)
+        if (!param)
+          param = this.addParameter(template.getParameter(name).clone())
+        )
+        paramMap[desc.name] = true
+      }
+      for (const param of this.__params) {
+        if (!paramNams.includes(param.getName())) {
+          this.removeParameter(param.getName())
+        }
+      }
+  */

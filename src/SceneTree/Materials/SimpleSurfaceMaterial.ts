@@ -2,7 +2,7 @@ import { MaterialColorParam, MaterialFloatParam, NumberParameter } from '..'
 import { Color } from '../../Math/Color'
 import { Material } from '../Material'
 
-class SimpleSurfaceMaterial extends Material {
+export class SimpleSurfaceMaterial extends Material {
   constructor() {
     super('SimpleSurfaceShader', 'SimpleSurfaceShader') // TODO: check
     this.__shaderName = 'SimpleSurfaceShader'
@@ -59,3 +59,5 @@ class SimpleSurfaceMaterial extends Material {
     return matData
   }
 }
+
+
