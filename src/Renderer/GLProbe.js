@@ -223,7 +223,7 @@ class GLProbe extends EventEmitter {
    */
   bind(renderstate) {
     const gl = this.__gl
-    const { irradianceMap, prefilterMap, brdfLUT } = renderstate.unifs
+    const { irradianceMap, prefilterMap, brdfLUT, envMapFlags } = renderstate.unifs
 
     if (!this.__convolved) {
       // By default, all the texture units are bound to unit:0
@@ -237,6 +237,9 @@ class GLProbe extends EventEmitter {
       }
       if (prefilterMap) {
         gl.uniform1i(prefilterMap.location, this.maxFragmentShaderTextureUnits - 1)
+      }
+      if (envMapFlags) {
+        gl.uniform1i(envMapFlags.location, -1)
       }
       return false
     }
@@ -270,6 +273,9 @@ class GLProbe extends EventEmitter {
       gl.activeTexture(texId)
       gl.bindTexture(gl.TEXTURE_CUBE_MAP, this.specularCubetex)
       gl.uniform1i(prefilterMap.location, unit)
+    }
+    if (envMapFlags) {
+      gl.uniform1i(envMapFlags.location, 0)
     }
     return true
   }

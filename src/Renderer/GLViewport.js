@@ -52,7 +52,7 @@ class GLViewport extends GLBaseViewport {
     // //////////////////////////////////
     // Setup GeomData Fbo
     this.__geomDataBuffer = undefined
-    this.__geomDataBufferSizeFactor = 4
+    this.__geomDataBufferSizeFactor = 1
     this.__geomDataBufferFbo = undefined
     this.debugGeomBuffer = true
     this.debugOcclusionBuffer = false
@@ -291,7 +291,9 @@ class GLViewport extends GLBaseViewport {
     let rayDirection
     if (this.__camera.isOrthographic()) {
       // Orthographic projections.
-      rayStart = cameraMat.transformVec3(projInv.transformVec3(new Vec3(sx, -sy, -1.0)))
+      const cameraSpaceOffset = projInv.transformVec3(new Vec3(sx, -sy, -1.0))
+      cameraSpaceOffset.z = 0
+      rayStart = cameraMat.transformVec3(cameraSpaceOffset)
       rayDirection = new Vec3(0.0, 0.0, -1.0)
     } else {
       rayStart = cameraMat.translation

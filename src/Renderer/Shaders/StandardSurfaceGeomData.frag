@@ -9,6 +9,7 @@ import 'GLSLBits.glsl'
 
 uniform int floatGeomBuffer;
 uniform int passId;
+uniform int isOrthographic;
 
 #ifdef ENABLE_FLOAT_TEXTURES
 vec4 getCutaway(int id) {
@@ -57,8 +58,12 @@ void main(void) {
     return;
   }
   
-
-    float dist = length(v_viewPos);
+    float dist;
+    if (isOrthographic > 0) {
+      dist = v_viewPos.z;
+    } else {
+      dist = length(v_viewPos);
+    }
 
     if(floatGeomBuffer != 0) {
         fragColor.r = float(passId);

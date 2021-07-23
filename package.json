@@ -2,7 +2,7 @@
   "name": "@zeainc/zea-engine",
   "fileName": "index",
   "libraryName": "ZeaEngine",
-  "version": "3.10.6",
+  "version": "3.10.7-orthographic-framing.2",
   "description": "Zea Engine",
   "browser": "dist/index.umd.js",
   "plugins": "dist/plugins.umd.js",
@@ -37,6 +37,7 @@
   },
   "dependencies": {
     "debug": "^4.1.1",
+    "rollup-plugin-base64": "^1.0.1",
     "semver": "^7.3.5"
   },
   "devDependencies": {

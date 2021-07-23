@@ -20,7 +20,6 @@
     <script src="https://www.gstatic.com/draco/v1/decoders/draco_decoder_gltf.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@zeainc/gltf-loader/dist/index.umd.js"></script>
 
-    <link rel="stylesheet" href="styles/tailwind.min.css" />
     <style>
       body {
         height: 100vh;
@@ -75,7 +74,7 @@
       renderer.outlineThickness = 0.5
       renderer.outlineColor = new Color(0.2, 0.2, 0.2, 1)
       scene.getSettings().getParameter('BackgroundColor').setValue(new Color(0.85, 0.85, 0.85, 1))
-      // renderer.getViewport().debugGeomShader = urlParams.has('debugGeomShader')
+      renderer.getViewport().debugGeomShader = urlParams.has('debugGeomShader')
 
       const envMap = new EnvMap()
       envMap.load('data/StudioG.zenv')
@@ -115,6 +114,13 @@
         if (event.intersectionData) {
           const geomItem = event.intersectionData.geomItem
           console.log('', geomItem.getPath())
+        }
+      })
+      renderer.getViewport().on('keyDown', (event) => {
+        if (event.key == 'f') renderer.frameAll()
+        else if (event.key == 'd') {
+          renderer.getViewport().debugGeomShader = !renderer.getViewport().debugGeomShader
+          renderer.requestRedraw()
         }
       })
       /** HIGHLIGHT START */

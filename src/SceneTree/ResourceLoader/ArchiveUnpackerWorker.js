@@ -1,3 +1,4 @@
+// <!-- prettier-ignore-start -->
 /* eslint-disable require-jsdoc */
 /** Synchronously initialize the following scripts in order. 
  * @private
@@ -5,6 +6,10 @@
 const Module = {
   ENVIRONMENT: 'WORKER'
 };
+
+import unpackBase64Str from "./unpack.wasm";
+
+const wasmUrl = "data:application/octet-stream;base64,"+unpackBase64Str 
 
 const WorkerScope = {}
 
@@ -133,7 +138,7 @@ function returnData(event, data) {
  */
 onmessage = function(event) {
   if(event.data.type == 'init') {
-    unpack = initunpack(event.data.wasmUrl);
+    unpack = initunpack(wasmUrl);
     unpack.onRuntimeInitialized = () => postMessage({ type: 'WASM_LOADED' });
   }
   else if(event.data.type == 'fetch') {
@@ -164,3 +169,4 @@ onmessage = function(event) {
  * When the WASM runtime has been initialized on the unpack.js module, send a message indicating
  * that the library is ready.
  */
+// <!-- prettier-ignore-end -->

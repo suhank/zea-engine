@@ -291,6 +291,7 @@ class ColorUniformBinding {
     this.bind = this.bindValue
 
     const genGLTex = (image) => {
+      boundImage = image
       let gltexture = image.getMetadata('gltexture')
       const textureType = 1
       if (!gltexture) {
@@ -316,26 +317,20 @@ class ColorUniformBinding {
     const connectImage = (image) => {
       if (!image.isLoaded()) {
         imageLoaded = () => {
-          genGLTex(boundImage)
+          genGLTex(image)
         }
-        image.on('loaded', imageLoaded)
+        image.once('loaded', imageLoaded)
       } else {
         genGLTex(image)
       }
-      boundImage = image
     }
 
     const disconnectImage = () => {
-      const gltexture = boundImage.getMetadata('gltexture')
-      gltexture.removeRef(this)
-      this.texBinding = null
+      this.gltexture.removeRef(this)
       this.gltexture = null
+      this.texBinding = null
       this.textureType = null
       this.bind = this.bindValue
-
-      if (imageLoaded) {
-        boundImage.off('loaded', imageLoaded)
-      }
       boundImage = null
       imageLoaded = null
       glMaterial.emit('updated', {})
@@ -346,8 +341,7 @@ class ColorUniformBinding {
         // Sometimes the value of a color param is an image.
         if (boundImage) {
         } else if (this.unif) {
-          const value = param.getValue()
-          this.vals = value.asArray()
+          this.vals = param.getValue().asArray()
         }
       } catch (e) {}
       glMaterial.emit('updated')
@@ -378,6 +372,7 @@ class ColorUniformBinding {
    * @param {object} renderstate - The object tracking the current state of the renderer
    */
   bindValue(renderstate) {
+    if (!this.unif) return // Note: Normals parms have no unif and can only be bound to a texture.
     if (this.dirty) {
       this.update()
       this.dirty = false

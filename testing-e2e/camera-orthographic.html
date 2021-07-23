@@ -9,33 +9,147 @@
     <link href="data/zea-logo.png" rel="shortcut icon" />
 
     <link rel="stylesheet" href="styles/tailwind.min.css" />
+    <style>
+      html,
+      body,
+      #renderer {
+        height: 100%;
+        width: 100%;
+        padding: 0;
+        margin: 0;
+      }
+
+      .camera-buttons {
+        top: 10px;
+        display: block;
+        position: relative;
+      }
+
+      .camera-button {
+        top: 10px;
+        font-family: 'arial';
+        background-color: #f9ce03; /* Green */
+        border: none;
+        color: black;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        user-select: none;
+      }
+      .button:hover {
+        background-color: #78b87a; /* Green */
+      }
+      .button:focus {
+        background-color: #78b87a;
+      }
+    </style>
 
     <script src="../dist/index.umd.js"></script>
     <script src="../dist/plugins.umd.js"></script>
 
     <script type="module">
-      const { GLRenderer, Scene, Vec3, Cuboid, GeomItem, Material, ObjAsset } = window.zeaEngine
+      const {
+        Scene,
+        GLRenderer,
+        Vec3,
+        Mat3,
+        Xfo,
+        Quat,
+        ObjAsset,
+        TreeItem,
+        MathFunctions,
+        Cuboid,
+        GeomItem,
+        Material,
+      } = window.zeaEngine
 
-      const canvas = document.querySelector('#renderer')
+      const domElement = document.getElementById('renderer')
 
+      const sceneScale = 1.0
       const scene = new Scene()
-      const renderer = new GLRenderer(canvas, { hideSplash: true, webglOptions: { antialias: false } })
+      scene.setupGrid(20 * sceneScale, 10)
+
+      const renderer = new GLRenderer(domElement)
       renderer.setScene(scene)
 
-      scene.setupGrid(10.0, 10)
+      const treeItem = new TreeItem('TreeItem')
+      const material = new Material('mat', 'SimpleSurfaceShader')
+      treeItem.addChild(new GeomItem('Geom', new Cuboid(10.0, 0.1, 10), material, new Xfo(new Vec3(0, -1.0, 5.0))))
+      treeItem.addChild(new GeomItem('Geom', new Cuboid(4.5, 2, 0.1), material, new Xfo(new Vec3(2.75, 0.0, 10.0))))
+      treeItem.addChild(new GeomItem('Geom', new Cuboid(4.5, 2, 0.1), material, new Xfo(new Vec3(-2.75, 0.0, 10.0))))
+      treeItem.addChild(new GeomItem('Geom', new Cuboid(0.1, 2, 5.0), material, new Xfo(new Vec3(5.0, 0.0, 7.5))))
+      treeItem.addChild(new GeomItem('Geom', new Cuboid(0.1, 2, 5.0), material, new Xfo(new Vec3(-5.0, 0.0, 7.5))))
 
-      const standardMaterial = new Material('surfaces', 'SimpleSurfaceShader')
+      const xfo = new Xfo()
+      xfo.sc.set(sceneScale, sceneScale, sceneScale)
+      treeItem.getParameter('GlobalXfo').setValue(xfo)
+      scene.getRoot().addChild(treeItem)
 
-      const objAsset = new ObjAsset('cow')
-      objAsset.load('data/cow.obj').then(() => {
+      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, 2.7), new Vec3(0, 0, 0.4))
+      renderer.frameAll()
+
+      // const objAsset = new ObjAsset('cow')
+      // scene.getRoot().addChild(objAsset)
+      // const xfo = new Xfo()
+      // xfo.ori.setFromAxisAndAngle(new Vec3(1, 0, 0), Math.PI * 0.5)
+      // xfo.tr.set(0, 0, 3.55)
+      // objAsset.getParameter('GlobalXfo').setValue(xfo)
+      // objAsset.load('data/cow.obj').then(() => {
+      //   renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, 2.7), new Vec3(0, 0, 0.4))
+      //   renderer.frameAll()
+      // })
+
+      const setCameraXfo = (camera, dir, up, duration = 400) => {
+        const startTarget = camera.getTargetPosition()
+        const startDist = camera.getFocalDistance()
+
+        const startXfo = camera.getParameter('GlobalXfo').getValue()
+
+        // Calculate the target orientation of the camera.
+        const sw = dir.cross(up).normalize()
+        const upNormalized = sw.cross(dir).normalize()
+        const mat3 = new Mat3(sw, upNormalized, dir.negate())
+        const endOri = new Quat()
+        endOri.setFromMat3(mat3)
+        endOri.alignWith(startXfo.ori)
+
+        const xfo = new Xfo()
+        xfo.ori = endOri
+        camera.getParameter('GlobalXfo').setValue(xfo)
         renderer.frameAll()
-        window.postMessage('done-loading')
-      })
-      scene.getRoot().addChild(objAsset)
+      }
 
-      const camera = renderer.getViewport().getCamera()
-      camera.setPositionAndTarget(new Vec3(2, 2, 2.7), new Vec3(0, 0, 0.4))
-      camera.setIsOrthographic(1, 0)
+      document.getElementById('camera-button-top').addEventListener('click', function (event) {
+        const camera = renderer.getViewport().getCamera()
+        camera.setIsOrthographic(1)
+        setCameraXfo(camera, new Vec3(0, 0, -1), new Vec3(0, 1, 0))
+      })
+      document.getElementById('camera-button-bottom').addEventListener('click', function (event) {
+        const camera = renderer.getViewport().getCamera()
+        camera.setIsOrthographic(1)
+        setCameraXfo(camera, new Vec3(0, 0, 1), new Vec3(0, -1, 0))
+      })
+      document.getElementById('camera-button-left').addEventListener('click', function (event) {
+        const camera = renderer.getViewport().getCamera()
+        camera.setIsOrthographic(1)
+        setCameraXfo(camera, new Vec3(-1, 0, 0), new Vec3(0, 0, 1))
+      })
+      document.getElementById('camera-button-right').addEventListener('click', function (event) {
+        const camera = renderer.getViewport().getCamera()
+        camera.setIsOrthographic(1)
+        setCameraXfo(camera, new Vec3(1, 0, 0), new Vec3(0, 0, 1))
+      })
+
+      document.getElementById('camera-button-persp').addEventListener('click', function (event) {
+        const camera = renderer.getViewport().getCamera()
+        camera.setIsOrthographic(0, 0)
+        camera.setPositionAndTarget(new Vec3(2, 2, 2.7), new Vec3(0, 0, 0.4))
+        renderer.frameAll()
+
+        // setCameraXfo(camera, new Vec3(0, 0.707, -0.707), new Vec3(0, 0, 1))
+      })
 
       const postMessage = (msg) => {
         console.log(msg)
@@ -43,9 +157,14 @@
       }
     </script>
   </head>
-  <body class="bg-blue-100">
-    <div class="h-screen">
-      <canvas class="absolute" id="renderer"></canvas>
+  <body>
+    <canvas id="renderer"></canvas>
+    <div class="camera-buttons">
+      <div class="camera-button" id="camera-button-top">Top</div>
+      <div class="camera-button" id="camera-button-bottom">Bottom</div>
+      <div class="camera-button" id="camera-button-left">Left</div>
+      <div class="camera-button" id="camera-button-right">Right</div>
+      <div class="camera-button" id="camera-button-persp">Persp</div>
     </div>
   </body>
 </html>

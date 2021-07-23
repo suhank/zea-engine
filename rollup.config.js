@@ -5,6 +5,7 @@ import nodePolyfills from 'rollup-plugin-node-polyfills'
 import svg from 'rollup-plugin-svg'
 import { terser } from 'rollup-plugin-terser'
 import webWorkerLoader from 'rollup-plugin-web-worker-loader'
+import { base64 } from 'rollup-plugin-base64'
 import glslify from 'rollup-plugin-glslify'
 
 import pkg from './package.json'
@@ -21,6 +22,7 @@ const glslOptions = {
 }
 
 const plugins = [
+  base64({ include: '**/*.wasm' }),
   commonjs(),
   nodePolyfills(),
   resolve({
