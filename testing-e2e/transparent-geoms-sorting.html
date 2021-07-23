@@ -38,7 +38,9 @@
       renderer.setScene(scene)
 
       const envMap = new EnvMap()
-      envMap.getParameter('FilePath').setValue('data/pisa-webp.zenv')
+      envMap.load('data/pisa-webp.zenv').then(() => {
+        window.postMessage('done-loading')
+      })
       scene.setEnvMap(envMap)
       scene.getSettings().getParameter('Display EnvMap').setValue(false)
 
@@ -80,8 +82,6 @@
 
       renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(25, 25, 13), new Vec3(10, 0, 0))
       renderer.frameAll()
-
-      window.postMessage('done-loading')
 
       // {{{ Messages handler.
       const handleMessage = (event) => {
