@@ -99,7 +99,8 @@ const checkGeomItem = (geomItemData) => {
     // Note: when in VR, the FoV becomes very wide and the pixel
     // height varies. It seems more consistent to just use solidAngle
     // which is resolution invariant.
-    if (solidAngleLimit > 0 && boundingRadius < solidAngleLimit) {
+    const vheight = boundingRadius / frustumHeight
+    if (solidAngleLimit > 0 && vheight < solidAngleLimit) {
       cull(geomItemData.id)
       return
     }

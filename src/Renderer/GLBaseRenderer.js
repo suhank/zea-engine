@@ -73,7 +73,7 @@ class GLBaseRenderer extends ParameterOwner {
     this.glGeomLibrary.on('updated', () => {
       this.requestRedraw()
     })
-    this.glGeomItemLibrary = new GLGeomItemLibrary(this)
+    this.glGeomItemLibrary = new GLGeomItemLibrary(this, options)
     this.glGeomItemLibrary.on('updated', () => {
       this.requestRedraw()
     })

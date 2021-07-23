@@ -494,7 +494,7 @@ class Camera extends TreeItem {
         // Move the camera back by 2x the depth range of the scene.
         const zrange = frustumPlaneOffsets.ZNeg + frustumPlaneOffsets.ZPos
         dolly = zrange * 2
-        pan.z = dolly
+        pan.z = -frustumPlaneOffsets.ZNeg + dolly
         globalXfo.tr.addInPlace(globalXfo.ori.rotateVec3(pan))
         newFocalDistance = zrange * 2
 
