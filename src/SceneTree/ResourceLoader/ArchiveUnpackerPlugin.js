@@ -32,7 +32,6 @@ class ArchiveUnpackerPlugin {
 
   init(resourceLoader) {
     this.resourceLoader = resourceLoader
-    this.wasmUrl = this.resourceLoader.baseUrl + 'public-resources/unpack.wasm'
   }
 
   /**
@@ -56,7 +55,6 @@ class ArchiveUnpackerPlugin {
 
         worker.postMessage({
           type: 'init',
-          wasmUrl: this.wasmUrl,
         })
         worker.onmessage = (event) => {
           if (event.data.type === 'WASM_LOADED') {
