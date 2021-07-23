@@ -981,7 +981,7 @@ class Mesh extends BaseGeom {
    * @param {object} j - The json object this item must decode.
    * @param {object} context - The context value.
    */
-  fromJSON(j: Record<string, any>, context: Record<string, any>): void {
+  fromJSON(j: Record<string, any>, context?: Record<string, any>): void {
     super.fromJSON(j, context)
     if (j.faceCounts) this.__faceCounts = j.faceCounts
     if (j.faceVertexIndices) this.__faceVertexIndices = Uint32Array.from(j.faceVertexIndices)

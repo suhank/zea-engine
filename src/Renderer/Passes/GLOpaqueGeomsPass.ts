@@ -89,7 +89,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
     if (!material.isTextured()) {
       const shaderName = material.getShaderName()
       const shader = Registry.getBlueprint(shaderName)
-      if (shader.supportsInstancing() && shader.getPackedMaterialData) {
+      if (material.supportsInstancing() && material.getPackedMaterialData) {
         let glShaderGeomSets = this.__glShaderGeomSets[shaderName]
         if (!glShaderGeomSets) {
           const shaders = this.constructShaders(shaderName)

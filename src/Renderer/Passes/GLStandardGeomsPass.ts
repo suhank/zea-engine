@@ -2,10 +2,21 @@ import { GLPass } from './GLPass'
 
 import { Vec4 } from '../../Math/index'
 
-import { GeomItem, Points, Lines, Mesh, PointsProxy, LinesProxy, MeshProxy } from '../../SceneTree/index'
+import {
+  GeomItem,
+  Points,
+  Lines,
+  Mesh,
+  PointsProxy,
+  LinesProxy,
+  MeshProxy,
+  TreeItem,
+  BaseGeomItem,
+} from '../../SceneTree/index'
 import { GLPoints, GLLines, GLMesh, GLMaterial, GLGeomItemChangeType, GLGeomItem } from '../Drawing/index.js'
 import { GLTexture2D } from '../GLTexture2D.js'
 import { MathFunctions } from '../../Utilities/MathFunctions'
+import { GLBaseRenderer } from '../GLBaseRenderer'
 
 const pixelsPerItem = 6 // The number of RGBA pixels per draw item.
 
@@ -25,7 +36,7 @@ class GLStandardGeomsPass extends GLPass {
    * @param {GLBaseRenderer} renderer - The renderer value.
    * @param {number} passIndex - The index of the pass in the GLBAseRenderer
    */
-  init(renderer, passIndex) {
+  init(renderer: GLBaseRenderer, passIndex: number) {
     super.init(renderer, passIndex)
   }
 
@@ -39,7 +50,7 @@ class GLStandardGeomsPass extends GLPass {
    * so the subtree of this node will not be traversed after this node is handled.
    * @return {Boolean} - Returns true if the item is now added to the pass.
    */
-  itemAddedToScene(treeItem, rargs) {
+  itemAddedToScene(treeItem: TreeItem, rargs: Record<any, any>) {
     if (treeItem instanceof GeomItem) {
       const geomItem = treeItem
       {
@@ -66,7 +77,7 @@ class GLStandardGeomsPass extends GLPass {
    * @param {object} rargs - Extra return values are passed back in this object.
    * @return {Boolean} - The return value.
    */
-  itemRemovedFromScene(treeItem, rargs) {
+  itemRemovedFromScene(treeItem: TreeItem, rargs: Record<any, any>) {
     if (treeItem instanceof GeomItem && treeItem.getMetadata('glpass') == this) {
       return this.removeGeomItem(treeItem)
     }
@@ -78,7 +89,7 @@ class GLStandardGeomsPass extends GLPass {
    * @param {GeomItem} geomItem - The geomItem value.
    * @return {any} - The return value.
    */
-  filterGeomItem(geomItem) {
+  filterGeomItem(geomItem: GeomItem) {
     return true
   }
 
@@ -91,7 +102,7 @@ class GLStandardGeomsPass extends GLPass {
    * @param {string} shaderName - The name of the base shader.
    * @return {object} - The object containing the shader instances.
    */
-  constructShaders(shaderName) {
+  constructShaders(shaderName: string) {
     let glgeomdatashader
     let glselectedshader
 
@@ -114,16 +125,16 @@ class GLStandardGeomsPass extends GLPass {
    * @param {any} geomData - The geomData value.
    * @return {any} - The return value.
    */
-  getGeomItemAndDist(geomData) {
+  getGeomItemAndDist(geomData: Uint8Array) {
     let itemId
     let dist
-    const gl = this.__gl
+    const gl = <Record<any, any>>this.__gl // TODO: refactor to avoid casts?
     if (gl.floatGeomBuffer) {
       itemId = Math.round(geomData[1])
       dist = geomData[3]
     } else {
       itemId = geomData[0] + ((geomData[1] & 63) << 8)
-      dist = MathFunctions.decode16BitFloatFrom2xUInt8([geomData[2], geomData[3]])
+      dist = MathFunctions.decode16BitFloatFrom2xUInt8(Uint8Array.from([geomData[2], geomData[3]]))
     }
 
     const geomItem = this.renderer.glGeomItemLibrary.getGeomItem(itemId)

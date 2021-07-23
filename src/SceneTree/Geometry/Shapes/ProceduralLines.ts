@@ -125,7 +125,7 @@ abstract class ProceduralLines extends Lines {
    * @param {Record<string, any>} j - The json object this item must decode.
    * @param {Record<string, any>} context - The context value.
    */
-  fromJSON(j: Record<string, any>, context: Record<string, any>): void {
+  fromJSON(j: Record<string, any>, context?: Record<string, any>): void {
     super.fromJSON(j, context)
   }
 }
