@@ -80,11 +80,6 @@ class GeomItem extends BaseGeomItem {
     this.geomIndex = -1
     this.assetItem = null
 
-    // Setting this value to false will mean that this item is not selectable
-    // and will not response to any pointer events. This is useful for geometry
-    // that might occlude pointer events intended for other geometry.
-    this.visibleInGeomDataBuffer = true
-
     this.calcGeomMatOperator = new CalcGeomMatOperator(
       this.__globalXfoParam,
       this.__geomOffsetXfoParam,
@@ -94,18 +89,6 @@ class GeomItem extends BaseGeomItem {
     if (geometry) this.getParameter('Geometry').loadValue(geometry)
     if (material) this.getParameter('Material').loadValue(material)
     if (xfo) this.getParameter('LocalXfo').setValue(xfo)
-  }
-
-  /**
-   * Modifies the selectability of this item.
-   *
-   * @param {boolean} val - A boolean indicating the selectability of the item.
-   * @return {boolean} - Returns true if value changed.
-   */
-  setSelectable(val) {
-    const res = super.setSelectable(val)
-    this.visibleInGeomDataBuffer = !res
-    return res
   }
 
   // ////////////////////////////////////////
@@ -183,27 +166,39 @@ class GeomItem extends BaseGeomItem {
   _cleanBoundingBox(bbox) {
     if (this.disableBoundingBox) return bbox
     bbox = super._cleanBoundingBox(bbox)
-    const geom = this.__geomParam.getValue()
-    if (geom) {
-      if (geom instanceof BaseProxy && calculatePreciseBoundingBoxes) {
-        // Note: compting the precise bounding box is much slower and
-        // can make loading big scenes take a bit longer.
-        const positions = geom.__buffers.attrBuffers['positions'].values
-        const getVertex = (index) => {
-          const start = index * 3
-          return new Vec3(positions.subarray(start, start + 3))
+    if (this.geomBBox) {
+      // Note: this bbox is the global bounding box of the geomItem
+      // transformed into the space of the geometry. We reapply
+      // the geom matrix to get back the points in global space.
+      const mat4 = this.getGeomMat4()
+      bbox.addPoint(mat4.transformVec3(this.geomBBox.p0))
+      bbox.addPoint(mat4.transformVec3(this.geomBBox.p1))
+    } else {
+      const geom = this.__geomParam.getValue()
+      if (geom) {
+        if (calculatePreciseBoundingBoxes) {
+          // Note: compting the precise bounding box is much slower and
+          // can make loading big scenes take a bit longer.
+          const mat4 = this.getGeomMat4()
+          if (geom instanceof BaseProxy) {
+            const positions = geom.__buffers.attrBuffers['positions'].values
+            const getVertex = (index) => {
+              const start = index * 3
+              return new Vec3(positions.subarray(start, start + 3))
+            }
+            for (let i = 0; i < geom.getNumVertices(); i++) {
+              bbox.addPoint(mat4.transformVec3(getVertex(i)))
+            }
+          } else {
+            const positions = geom.getVertexAttribute('positions')
+            for (let i = 0; i < geom.getNumVertices(); i++) {
+              bbox.addPoint(mat4.transformVec3(positions.getValueRef(i)))
+            }
+          }
+        } else {
+          bbox.addBox3(geom.getBoundingBox(), this.getGeomMat4())
         }
-        const mat4 = this.getGeomMat4()
-        for (let i = 0; i < geom.getNumVertices(); i++) {
-          bbox.addPoint(mat4.transformVec3(getVertex(i)))
-        }
-      } else {
-        bbox.addBox3(geom.getBoundingBox(), this.getGeomMat4())
       }
-    } else if (this.geomBBox) {
-      // before the geometries are loaded, we can use the
-      // loaded geomBBox that came in the scene tree.
-      bbox.addBox3(this.geomBBox, this.getGeomMat4())
     }
     return bbox
   }
@@ -372,6 +367,7 @@ class GeomItem extends BaseGeomItem {
       const geomLibrary = src.assetItem.getGeometryLibrary()
       this.assetItem = src.assetItem
       this.geomIndex = src.geomIndex
+      this.geomBBox = src.geomBBox
       const onGeomLoaded = (event) => {
         const { range } = event
         if (this.geomIndex >= range[0] && this.geomIndex < range[1]) {
