@@ -26,6 +26,31 @@ import { BinReader } from '../../SceneTree/BinReader'
  *
  * @extends ColorParameter
  */
+
+
+// TODO: should MaterialColorParam have these parameters below? I'm assuming no. 
+// class MaterialColorParam extends Parameter {
+//   constructor() {
+//     super()
+//     this.__shaderName = 'StandardSurfaceShader'
+//     this.addParameter('BaseColor', new MaterialColorParam(1.0, 1, 0.5))
+//     this.addParameter('AmbientOcclusion', new MaterialFloatParam(1, [0, 1]))
+//     this.addParameter('Metallic', new MaterialFloatParam(0.5, [0, 1]))
+//     this.addParameter('Reflectance', new NumberParameter(0.5, [0, 1]))
+//     this.addParameter('Normal', new MaterialColorParam(1.0, 1, 0.5))
+//     this.addParameter('EmissiveStrength', new NumberParameter(0.5, [0, 1]))
+//     this.addParameter('Opacity', new MaterialFloatParam(0.5, [0, 1]))
+//   }
+
+//   get value() : Color {
+//     return this.__value
+//   }
+//   set value() : Color {
+//     return this.__value
+//   }
+
+// }
+  
 class MaterialColorParam extends ColorParameter {
   protected image?: BaseImage
   /**
