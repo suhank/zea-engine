@@ -62,7 +62,7 @@ class Registry {
    * Returns class definition using the name it was registered with.
    *
    * @param {string} className - Name of the registered class
-   * @return {BaseClass} - Class representation(Class function, type)
+   * @return {typeof BaseClass} - Class representation(Class function, type)
    */
   static getClassDefinition(className: string): typeof BaseClass {
     if (!registeredClasses[className]) throw new Error(`${className} class is not registered`)
