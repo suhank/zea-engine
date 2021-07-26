@@ -29,13 +29,12 @@ class GLRenderTarget extends EventEmitter {
    * @param {WebGLRenderingContext} gl - The webgl rendering context.
    * @param {object} params - The params value.
    */
-  constructor(gl: WebGLRenderingContext, params: Record<any, any>) {
+  constructor(gl: WebGLRenderingContext, params?: Record<any, any>) {
     super()
     this.__gl = gl
     this.textureTargets = []
     this.depthTexture = null
     this.textureDesc = [0, 0, 0, 0]
-
 
     if (params) {
       this.configure(params)
@@ -272,8 +271,8 @@ class GLRenderTarget extends EventEmitter {
   /**
    * The unbind method.
    */
-  unbind() {
-    this.unbindForWriting()
+  unbind(renderstate?: Record<any,any> ) {
+    this.unbindForWriting(renderstate)
   }
 
   /**
@@ -420,7 +419,7 @@ class GLRenderTarget extends EventEmitter {
    * @param {any} bindings - The bindings param.
    * @return {any} - The return value.
    */
-  bindToUniform(renderstate: Record<any, any>, unif: Record<any, any>, bindings: any) {
+  bindToUniform(renderstate: Record<any, any>, unif: Record<any, any>, bindings?: any) {
     // if (!this.__loaded) {
     //   return false
     // }
