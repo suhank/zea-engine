@@ -1,12 +1,13 @@
 /* eslint-disable guard-for-in */
-import { Vec2, Vec3, Ray, Mat4 } from '../Math/index'
-import { Camera } from '../SceneTree/index'
+import { Vec2, Vec3, Ray, Mat4, Xfo } from '../Math/index'
+import { Camera, GeomItem, TreeItem } from '../SceneTree/index'
 import { GLBaseViewport } from './GLBaseViewport.js'
 import { GLFbo } from './GLFbo.js'
 import { GLTexture2D } from './GLTexture2D.js'
 import { POINTER_TYPES } from '../Utilities/EnumUtils'
 import { BaseTool } from '../SceneTree/index'
 import { CameraManipulator } from '../SceneTree/index'
+import { GLRenderer } from './GLRenderer'
 
 /**
  * Class representing a GL viewport.
@@ -30,6 +31,37 @@ import { CameraManipulator } from '../SceneTree/index'
  * @extends GLBaseViewport
  */
 class GLViewport extends GLBaseViewport {
+  protected activeViewport: any
+
+  protected __name: string
+  protected __projectionMatrix: Mat4
+  protected __frustumDim: Vec2
+  protected __camera: Camera
+
+  protected __bl: Vec2
+  protected __tr: Vec2
+  protected __prevDownTime: number
+  protected __geomDataBuffer: any
+  protected __geomDataBufferSizeFactor: number
+  protected __geomDataBufferFbo: any
+  protected debugGeomShader: boolean
+
+  protected __x: number
+  protected __y: number
+  protected region: any
+
+  protected depthRange: number[]
+  protected __cameraXfo: Xfo
+  protected __cameraMat: Mat4
+  protected __viewMat: Mat4
+
+  protected __geomDataBufferInvalid: boolean
+  protected __screenPos: Vec2
+  protected __intersectionData: any
+
+  protected capturedItem: any
+  protected pointerOverItem: any
+
   /**
    * Create a GL viewport.
    * @param {GLRenderer} renderer - The renderer value.
@@ -37,7 +69,7 @@ class GLViewport extends GLBaseViewport {
    * @param {number} width - The width of the viewport
    * @param {number} height - The height of the viewport
    */
-  constructor(renderer, name, width, height) {
+  constructor(renderer: GLRenderer, name: string, width: number, height: number) {
     super(renderer)
     this.__name = name
     this.__projectionMatrix = new Mat4()
@@ -90,8 +122,9 @@ class GLViewport extends GLBaseViewport {
    * The setBl method.
    * @param {number} bl - The bl value.
    */
-  setBl(bl) {
-    this.__bl = bl
+  setBl(bl: number) {
+    this.__bl.x = bl
+    this.__bl.y = bl // TODO: check. Before this method was 1 line, implying __bl is a number type not a vec2
     this.resize(this.__canvasWidth, this.__canvasHeight)
   }
 
@@ -107,8 +140,9 @@ class GLViewport extends GLBaseViewport {
    * The setTr method.
    * @param {number} tr - The tr value.
    */
-  setTr(tr) {
-    this.__tr = tr
+  setTr(tr: number) {
+    this.__tr.x = tr
+    this.__tr.y = tr // TODO: check. Before this method was 1 line, implying __bl is a number type not a vec2
     this.resize(this.__canvasWidth, this.__canvasHeight)
   }
 
@@ -134,7 +168,7 @@ class GLViewport extends GLBaseViewport {
    * @param {number} canvasWidth - The canvasWidth value.
    * @param {number} canvasHeight - The canvasHeight value.
    */
-  resize(canvasWidth, canvasHeight) {
+  resize(canvasWidth: number, canvasHeight: number) {
     if (this.__canvasWidth == canvasWidth && this.__canvasHeight == canvasHeight) return
     this.__canvasWidth = canvasWidth
     this.__canvasHeight = canvasHeight
@@ -155,7 +189,7 @@ class GLViewport extends GLBaseViewport {
    * @param {number} width - The width used by this viewport.
    * @param {number} height - The height  used by this viewport.
    */
-  resizeRenderTargets(width, height) {
+  resizeRenderTargets(width: number, height: number) {
     super.resizeRenderTargets(width, height)
 
     if (this.__geomDataBufferFbo) {
@@ -181,7 +215,7 @@ class GLViewport extends GLBaseViewport {
    *
    * @param {Camera} camera - The camera value.
    */
-  setCamera(camera) {
+  setCamera(camera: Camera) {
     this.__camera = camera
     this.depthRange = [this.__camera.getNear(), this.__camera.getFar()]
     const globalXfoParam = camera.getParameter('GlobalXfo')
@@ -241,9 +275,10 @@ class GLViewport extends GLBaseViewport {
    * The setActive method.
    * @param {boolean} state - The state value.
    */
-  setActive(state) {
-    if (state) activeViewport = this
-    else activeViewport = undefined
+  setActive(state: boolean) {
+    if (state) this.activeViewport = this
+    // TODO: check -- before this was 'activeViewport = this), not this.activiewport
+    else this.activeViewport = undefined
   }
 
   /**
@@ -252,7 +287,7 @@ class GLViewport extends GLBaseViewport {
    * > See Camera.frameView
    * @param {array} treeItems - The array of TreeItem.
    */
-  frameView(treeItems) {
+  frameView(treeItems?: TreeItem[]) {
     if (this.__width > 0 && this.__height > 0) {
       this.__camera.frameView(this, treeItems)
     } else {
@@ -267,7 +302,7 @@ class GLViewport extends GLBaseViewport {
    * @param {Vec2} screenPos - The screen position.
    * @return {Ray} - The return value.
    */
-  calcRayFromScreenPos(screenPos) {
+  calcRayFromScreenPos(screenPos: Vec2) {
     // Convert the raster coordinates to screen space ([0,{w|h}] -> [-1,1]
     // - Note: The raster vertical is inverted wrt OGL screenspace Y
 
@@ -314,7 +349,7 @@ class GLViewport extends GLBaseViewport {
    */
   renderGeomDataFbo() {
     if (this.__geomDataBufferFbo) {
-      const renderstate = {}
+      const renderstate: Record<any, any> = {}
       this.__initRenderState(renderstate)
 
       // Note: GLLinesPass binds a new Fbo, but shares this ones depth buffer.
@@ -341,7 +376,7 @@ class GLViewport extends GLBaseViewport {
    * @param {Ray} pointerRay - The pointerRay value.
    * @return {object} - The return value.
    */
-  getGeomDataAtPos(screenPos, pointerRay) {
+  getGeomDataAtPos(screenPos: Vec2, pointerRay: Ray) {
     if (this.__geomDataBufferFbo) {
       if (this.__geomDataBufferInvalid) {
         this.renderGeomDataFbo()
@@ -439,7 +474,7 @@ class GLViewport extends GLBaseViewport {
    * @param {Vec2} br - The bottom right corner of the rectangle.
    * @return {Set} - The return value.
    */
-  getGeomItemsInRect(tl, br) {
+  getGeomItemsInRect(tl: Vec2, br: Vec2) {
     // TODO: Use a Math.Rect instead
     if (this.__geomDataBufferFbo) {
       const gl = this.__renderer.gl
@@ -493,7 +528,7 @@ class GLViewport extends GLBaseViewport {
         }
       }
 
-      return [...geomItems].filter((geomItem) => {
+      return [...geomItems].filter((geomItem: GeomItem) => {
         if (!geomItem.getSelectable()) return false
 
         return true
@@ -512,7 +547,7 @@ class GLViewport extends GLBaseViewport {
    * @return {Vec2} - Returns a new Vec2.
    * @private
    */
-  __getPointerPos(rendererX, rendererY) {
+  __getPointerPos(rendererX: number, rendererY: number) {
     return new Vec2(rendererX - this.getPosX(), rendererY - this.getPosY())
   }
 
@@ -537,14 +572,14 @@ class GLViewport extends GLBaseViewport {
    * @param {MouseEvent|TouchEvent} event - The event that occurs in the canvas
    * @private
    */
-  __preparePointerEvent(event) {
+  __preparePointerEvent(event: Record<any, any>) {
     event.viewport = this
 
-    event.setCapture = (item) => {
+    event.setCapture = (item: any) => {
       this.capturedItem = item
     }
 
-    event.getCapture = (item) => {
+    event.getCapture = (item: any) => {
       return this.capturedItem
     }
 
@@ -558,7 +593,7 @@ class GLViewport extends GLBaseViewport {
    *
    * @param {MouseEvent|TouchEvent} event - The DOM event produced by a pointer
    */
-  onPointerDown(event) {
+  onPointerDown(event: Record<any, any>) {
     this.__preparePointerEvent(event)
 
     if (event.pointerType === POINTER_TYPES.mouse) {
@@ -620,7 +655,7 @@ class GLViewport extends GLBaseViewport {
    *
    * @param {MouseEvent|TouchEvent} event - The event that occurs.
    */
-  onPointerUp(event) {
+  onPointerUp(event: Record<any, any>) {
     this.__preparePointerEvent(event)
 
     if (event.pointerType === POINTER_TYPES.mouse) {
@@ -661,7 +696,7 @@ class GLViewport extends GLBaseViewport {
    *
    * @param {MouseEvent|TouchEvent} event - The event that occurs.
    */
-  onPointerMove(event) {
+  onPointerMove(event: Record<any, any>) {
     this.__preparePointerEvent(event)
 
     if (event.pointerType === POINTER_TYPES.mouse) {
@@ -732,7 +767,7 @@ class GLViewport extends GLBaseViewport {
    * Causes an event to occur when the mouse pointer is moved into this viewport
    * @param {MouseEvent|TouchEvent} event - The event that occurs.
    */
-  onPointerEnter(event) {
+  onPointerEnter(event: Record<any, any>) {
     this.__preparePointerEvent(event)
     this.emit('pointerEnter', event)
     if (!event.propagating) return
@@ -747,7 +782,7 @@ class GLViewport extends GLBaseViewport {
    * Causes an event to occur when the mouse pointer is moved out of this viewport
    * @param {MouseEvent|TouchEvent} event - The event that occurs.
    */
-  onPointerLeave(event) {
+  onPointerLeave(event: Record<any, any>) {
     this.__preparePointerEvent(event)
     this.emit('pointerLeave', event)
     if (!event.propagating) return
@@ -762,7 +797,7 @@ class GLViewport extends GLBaseViewport {
    * Causes an event to occur when the user is pressing a key on the keyboard.
    * @param {KeyboardEvent} event - The event that occurs.
    */
-  onKeyDown(event) {
+  onKeyDown(event: Record<any, any>) {
     this.__preparePointerEvent(event)
     if (this.manipulator) {
       this.manipulator.onKeyDown(event)
@@ -775,7 +810,7 @@ class GLViewport extends GLBaseViewport {
    * Causes an event to occur  when the user releases a key on the keyboard.
    * @param {KeyboardEvent} event - The event that occurs.
    */
-  onKeyUp(event) {
+  onKeyUp(event: Record<any, any>) {
     this.__preparePointerEvent(event)
     if (this.manipulator) {
       this.manipulator.onKeyUp(event)
@@ -788,7 +823,7 @@ class GLViewport extends GLBaseViewport {
    * Causes an event to occur when the mouse wheel is rolled up or down over an element.
    * @param {WheelEvent} event - The event that occurs.
    */
-  onWheel(event) {
+  onWheel(event: Record<any, any>) {
     this.__preparePointerEvent(event)
 
     event.pointerPos = this.__getPointerPos(event.rendererX, event.rendererY)
@@ -813,7 +848,7 @@ class GLViewport extends GLBaseViewport {
    * Causes an event to occur when the touch event gets interrupted.
    * @param {TouchEvent} event - The event that occurs.
    */
-  onTouchCancel(event) {
+  onTouchCancel(event: Record<any, any>) {
     this.__preparePointerEvent(event)
 
     if (this.capturedItem) {
@@ -836,7 +871,7 @@ class GLViewport extends GLBaseViewport {
    * @param {object} renderstate - The object tracking the current state of the renderer
    * @private
    */
-  __initRenderState(renderstate) {
+  __initRenderState(renderstate: Record<any, any>) {
     // console.log(this.__viewMat.toString())
     renderstate.viewXfo = this.__cameraXfo
     renderstate.viewScale = 1.0
