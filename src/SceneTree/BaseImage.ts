@@ -16,11 +16,20 @@ import { BooleanParameter } from './Parameters/index'
  * @extends BaseItem
  */
 class BaseImage extends BaseItem {
+  protected width: number
+  protected height: number
+  protected format: string
+  protected type: string
+  protected wrapS: string
+  protected wrapT: string
+  protected minFilter: string
+  protected magFilter: string
+  protected loaded: boolean
   /**
    * Creates an instance of BaseImage.
    * @param {string} name - name of the item
    */
-  constructor(name) {
+  constructor(name: string) {
     super(name)
     this.width = 0
     this.height = 0
@@ -31,7 +40,7 @@ class BaseImage extends BaseItem {
     this.minFilter = 'LINEAR'
     this.magFilter = 'LINEAR'
 
-    this.on('parameterValueChanged', (event) => {
+    this.on('parameterValueChanged', (event: Record<any, any>) => {
       this.emit('updated')
     })
 
