@@ -2,7 +2,7 @@
 import { EventEmitter, Allocator1D } from '../../Utilities/index'
 import { generateShaderGeomBinding, genDataTypeDesc } from './GeomShaderBinding.js'
 import { Points, Lines, Mesh, PointsProxy, LinesProxy, MeshProxy } from '../../SceneTree/index'
-import { GLPoints, GLLines, GLMesh } from '../Drawing/index.js'
+import { GLPoints, GLLines, GLMesh } from './index.js'
 
 const resizeIntArray = (intArray, newSize) => {
   const newArray = new Int32Array(newSize)
