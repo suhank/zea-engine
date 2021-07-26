@@ -1363,7 +1363,7 @@ class GLBaseRenderer extends ParameterOwner {
    * @param {function} cls - The cls value.
    * @param {PassType} passType - The passType value.
    */
-  static registerPass(cls: any, passType: PassType) {
+  static registerPass(cls: any, passType: any) {
     if (!registeredPasses[passType]) registeredPasses[passType] = []
     registeredPasses[passType].push(cls)
   }

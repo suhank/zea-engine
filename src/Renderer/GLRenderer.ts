@@ -1,5 +1,5 @@
 import { Vec3, Xfo, Mat4, Ray, Color } from '../Math/index'
-import { Plane, EnvMap, BaseImage } from '../SceneTree/index'
+import { Plane, EnvMap, BaseImage, Scene } from '../SceneTree/index'
 import { GLFbo } from './GLFbo.js'
 import { GLRenderTarget } from './GLRenderTarget.js'
 import { GLHDRImage } from './GLHDRImage.js'
@@ -18,12 +18,38 @@ const ALL_PASSES = PassType.OPAQUE | PassType.TRANSPARENT | PassType.OVERLAY
  * @extends GLBaseRenderer
  */
 class GLRenderer extends GLBaseRenderer {
+  protected __gl: Record<any, any> // can't use WebGLRenderingContext, ds may be augmented.
+  protected __exposure: number
+  protected __tonemap: boolean
+  protected __gamma: number
+  protected __glEnvMap: any
+  protected __glBackgroundMap: any
+  protected __displayEnvironment: boolean
+  protected __debugMode: number
+  protected _planeDist: number
+  protected __cutPlaneNormal: Vec3
+  protected rayCastDist: number
+  protected rayCastArea: number
+  protected highlightsShader: HighlightsShader
+  protected silhouetteShader: SilhouetteShader
+  protected highlightOutlineThickness: number
+  protected outlineThickness: number
+  protected outlineColor: Color
+  protected outlineSensitivity: number
+  protected outlineDepthBias: number
+  protected __debugTextures: any[]
+
+  protected __rayCastRenderTarget: any
+  protected __backgroundMapShader: any
+  protected __backgroundMapShaderBinding: any
+  protected __rayCastRenderTargetProjMatrix: any
   /**
    * Create a GL renderer.
-   * @param {canvas} $canvas - The $canvas value.
-   * @param {object} options - The dictionary of options.
+   * @param {HTMLCanvasElement} $canvas - The $canvas value.
+   * @param {Record<any, any>} options - The dictionary of options.
    */
-  constructor($canvas, options = {}) {
+  constructor($canvas: any, options: Record<any, any> = {}) {
+    // use HTMLCanvasElement?
     super($canvas, options)
 
     // ///////////////////////
@@ -42,7 +68,7 @@ class GLRenderer extends GLBaseRenderer {
     this.rayCastDist = 0
     this.rayCastArea = 0
 
-    const gl = this.__gl
+    const gl = <WebGLRenderingContext>this.__gl
     this.highlightsShader = new HighlightsShader(gl)
     this.silhouetteShader = new SilhouetteShader(gl)
     this.highlightOutlineThickness = 1.5
@@ -68,23 +94,25 @@ class GLRenderer extends GLBaseRenderer {
    * @param {EnvMap|BaseImage} env - The env value.
    * @private
    */
-  __bindEnvMap(env) {
-    const gl = this.__gl
+  __bindEnvMap(env: EnvMap | BaseImage) {
+    const gl = <WebGLRenderingContext>this.__gl
     if (env instanceof EnvMap) {
       // Note: Safari doesn't support rendering to floating
       // point textures, so our PBR lighting pipeline doesn't work.
-      if (gl.name !== 'webgl2') {
+      if (this.__gl.name !== 'webgl2') {
         return
       }
 
+      
       this.__glEnvMap = env.getMetadata('gltexture')
       if (!this.__glEnvMap) {
         if (env.type === 'FLOAT') {
           this.addShaderPreprocessorDirective('ENABLE_PBR')
           this.__glEnvMap = new GLEnvMap(this, env)
-        } else if (env.isStreamAtlas()) {
-          this.__glEnvMap = new GLImageStream(gl, env)
-        } else {
+        }
+        // } else if (env.isStreamAtlas()) { // TODO: are these two lines still needed?
+        //   this.__glEnvMap = new GLImageStream(gl, env) 
+        else {
           this.__glEnvMap = new GLTexture2D(gl, env)
         }
       }
@@ -104,7 +132,7 @@ class GLRenderer extends GLBaseRenderer {
       this.__glBackgroundMap.on('loaded', this.requestRedraw)
       this.__glBackgroundMap.on('updated', this.requestRedraw)
       if (!this.__backgroundMapShader) {
-        if (!gl.__quadVertexIdsBuffer) gl.setupInstancedQuad()
+        if (!this.__gl.__quadVertexIdsBuffer) this.__gl.setupInstancedQuad()
         this.__backgroundMapShader = new EnvMapShader(gl)
         // switch (backgroundMap.getMapping()) {
         //   case 'octahedral':
@@ -123,8 +151,8 @@ class GLRenderer extends GLBaseRenderer {
         this.__backgroundMapShaderBinding = generateShaderGeomBinding(
           gl,
           shaderComp.attrs,
-          gl.__quadattrbuffers,
-          gl.__quadIndexBuffer
+          this.__gl.__quadattrbuffers,
+          this.__gl.__quadIndexBuffer
         )
       }
       // console.warn('Unsupported EnvMap:' + env)
@@ -140,7 +168,7 @@ class GLRenderer extends GLBaseRenderer {
    * The setScene method.
    * @param {Scene} scene - The scene value.
    */
-  setScene(scene) {
+  setScene(scene: Scene) {
     const envMapParam = scene.settings.getParameter('EnvMap')
     if (envMapParam.getValue() != undefined) {
       this.__bindEnvMap(envMapParam.getValue())
@@ -164,7 +192,7 @@ class GLRenderer extends GLBaseRenderer {
    * @param {string} name - The name value.
    * @return {GLViewport} - The return value.
    */
-  addViewport(name) {
+  addViewport(name: string) {
     const vp = super.addViewport(name)
     return vp
   }
@@ -233,9 +261,9 @@ class GLRenderer extends GLBaseRenderer {
    * @param {number} mask - The mask to filter our certain pass types. Can be PassType.OPAQUE | PassType.TRANSPARENT | PassType.OVERLAY
    * @return {object} - The object containing the ray cast results.
    */
-  raycastWithRay(ray, dist, area = 0.01, mask = ALL_PASSES) {
+  raycastWithRay(ray: Ray, dist: number, area = 0.01, mask = ALL_PASSES) {
     const xfo = new Xfo()
-    xfo.setLookAt(ray.start, ray.start.add(ray.dir))
+    xfo.setLookAt(ray.start, ray.start.add(ray.dir), new Vec3(0, 0, 1))
     return this.raycast(xfo, ray, dist, area, mask)
   }
 
@@ -249,7 +277,7 @@ class GLRenderer extends GLBaseRenderer {
    * @param {number} mask - The mask to filter our certain pass types. Can be PassType.OPAQUE | PassType.TRANSPARENT | PassType.OVERLAY
    * @return {object} - The object containing the ray cast results.
    */
-  raycastWithXfo(xfo, dist, area = 0.01, mask = ALL_PASSES) {
+  raycastWithXfo(xfo: Xfo, dist: number, area = 0.01, mask = ALL_PASSES) {
     const ray = new Ray(xfo.tr, xfo.ori.getZaxis().negate())
     return this.raycast(xfo, ray, dist, area, mask)
   }
@@ -266,8 +294,8 @@ class GLRenderer extends GLBaseRenderer {
    * @param {number} mask - The mask to filter our certain pass types. Can be PassType.OPAQUE | PassType.TRANSPARENT | PassType.OVERLAY
    * @return {object} - The object containing the ray cast results.
    */
-  raycast(xfo, ray, dist, area = 0.01, mask = ALL_PASSES) {
-    const gl = this.__gl
+  raycast(xfo: Xfo, ray: Ray, dist: number, area = 0.01, mask = ALL_PASSES) {
+    const gl = <WebGLRenderingContext>this.__gl
 
     if (!this.__rayCastRenderTarget) {
       this.__rayCastRenderTarget = new GLRenderTarget(gl, {
@@ -329,7 +357,7 @@ class GLRenderer extends GLBaseRenderer {
     // Starting with the center pixel (4),
     // then left and right (3, 5)
     // Then top bottom (1, 7)
-    const checkPixel = (id) => geomDatas[id * 4 + 3] != 0
+    const checkPixel = (id: number) => geomDatas[id * 4 + 3] != 0
     const dataPixels = [4, 3, 5, 1, 7]
     let geomData
     for (const pixelID of dataPixels) {
@@ -368,8 +396,8 @@ class GLRenderer extends GLBaseRenderer {
    * @param {number} mask - The mask to filter our certain pass types. Can be PassType.OPAQUE | PassType.TRANSPARENT | PassType.OVERLAY
    * @return {object} - The object containing the ray cast results.
    */
-  raycastCluster(xfo, ray, dist, area = 0.01, mask = ALL_PASSES) {
-    const gl = this.__gl
+  raycastCluster(xfo: Xfo, ray: Ray, dist: number, area = 0.01, mask = ALL_PASSES) {
+    const gl = <WebGLRenderingContext>this.__gl
 
     if (!this.__rayCastRenderTarget) {
       this.__rayCastRenderTarget = new GLRenderTarget(gl, {
@@ -431,7 +459,7 @@ class GLRenderer extends GLBaseRenderer {
     // Note: we return every intersection, because even multiple intersections
     // on the same geometry will be at different distances.
     // This method is often used to get an average distance.
-    const checkPixel = (id) => geomDatas[id * 4 + 3] != 0
+    const checkPixel = (id: number) => geomDatas[id * 4 + 3] != 0
     const result = []
     for (let i = 0; i < 9; i++) {
       if (checkPixel(i)) {
@@ -462,7 +490,7 @@ class GLRenderer extends GLBaseRenderer {
    * The drawBackground method.
    * @param {object} renderstate - The object tracking the current state of the renderer
    */
-  drawBackground(renderstate) {
+  drawBackground(renderstate: Record<any, any>) {
     if (this.__glBackgroundMap) {
       if (!this.__glBackgroundMap.isLoaded()) return
       const gl = this.__gl
@@ -479,9 +507,9 @@ class GLRenderer extends GLBaseRenderer {
 
   /**
    * The bindGLRenderer method.
-   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {Record<any, any>} renderstate - The object tracking the current state of the renderer
    */
-  bindGLRenderer(renderstate) {
+  bindGLRenderer(renderstate: Record<any, any>) {
     super.bindGLBaseRenderer(renderstate)
 
     renderstate.envMap = this.__glEnvMap
@@ -493,7 +521,7 @@ class GLRenderer extends GLBaseRenderer {
    * The drawScene method.
    * @param {object} renderstate - The object tracking the current state of the renderer
    */
-  drawScene(renderstate) {
+  drawScene(renderstate: Record<any, any>) {
     this.bindGLRenderer(renderstate)
 
     if (this.__displayEnvironment) this.drawBackground(renderstate)
