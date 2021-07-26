@@ -15,6 +15,19 @@ import { AtlasLayoutShader } from './Shaders/AtlasLayoutShader'
  * @private
  */
 class GLImageAtlas extends GLRenderTarget {
+  protected __gl: WebGLRenderingContext
+  protected __name: string
+  protected __formatParam: string
+  protected __typeParam: string
+  protected clearColor: Color
+  protected __subImages: any[]
+  protected __layoutNeedsRegeneration: boolean
+  protected __asyncCount: number
+  protected loaded: boolean
+  protected ready: boolean
+  protected __layout: any
+  protected __atlasLayoutTexture: any
+  protected __layoutVec4s: any
   /**
    * Create an image atlas..
    * @param {WebGLRenderingContext} gl - The webgl rendering context.
@@ -22,7 +35,7 @@ class GLImageAtlas extends GLRenderTarget {
    * @param {string} format - The format value.
    * @param {string} type - The type value.
    */
-  constructor(gl, name, format = 'RGBA', type = 'FLOAT') {
+  constructor(gl: WebGLRenderingContext, name: string, format = 'RGBA', type = 'FLOAT') {
     super(gl)
     this.__name = name
     this.__formatParam = format
@@ -64,7 +77,7 @@ class GLImageAtlas extends GLRenderTarget {
    * @return {BaseImage} - The return value.
    */
   getMainImage() {
-    return this.super
+    return this.super // TODO
   }
 
   /**
@@ -72,7 +85,7 @@ class GLImageAtlas extends GLRenderTarget {
    * @param {BaseImage} subImage - The subImage value.
    * @return {number} - The return value.
    */
-  addSubImage(subImage) {
+  addSubImage(subImage: BaseImage) {
     if (subImage instanceof BaseImage) {
       const gltexture = new GLTexture2D(this.__gl, subImage)
       if (!subImage.isLoaded()) {
@@ -95,7 +108,7 @@ class GLImageAtlas extends GLRenderTarget {
       subImage.on('updated', updated)
       this.__subImages.push(gltexture)
     } else {
-      subImage.addRef(this) // subImage is a GLTexture2D
+      subImage.addRef(this) // subImage is a GLTexture2D // TODO: add this method?
       this.__subImages.push(subImage)
     }
 
@@ -107,7 +120,7 @@ class GLImageAtlas extends GLRenderTarget {
    * The removeSubImage method.
    * @param {BaseImage} subImage - The subImage value.
    */
-  removeSubImage(subImage) {
+  removeSubImage(subImage: BaseImage) {
     let index
     if (subImage instanceof BaseImage) {
       const gltext = subImage.getMetadata('ImageAtlas_gltex')
@@ -129,7 +142,7 @@ class GLImageAtlas extends GLRenderTarget {
    * @param {number} index - The index value.
    * @return {BaseImage} - The image value.
    */
-  getSubImage(index) {
+  getSubImage(index: number) {
     return this.__subImages[index]
   }
 
@@ -154,7 +167,7 @@ class GLImageAtlas extends GLRenderTarget {
 
     // We must lay out the sub images in order of size.
     // else the paker might have trouble.
-    const blocks = []
+    const blocks: any[] = []
     this.__subImages.forEach((subImage, index) => {
       blocks.push({
         w: subImage.width + border * 2,
@@ -196,14 +209,14 @@ class GLImageAtlas extends GLRenderTarget {
       filter: 'LINEAR',
     })
 
-    const gl = this.__gl
+    const gl = <Record<any, any>>this.__gl
     // this.__fbo = new GLFbo(gl, this)
     // this.__fbo.setClearColor(this.__clearColor)
 
     if (!gl.__quadVertexIdsBuffer) gl.setupInstancedQuad()
 
     if (!gl.__atlasLayoutShader) {
-      gl.__atlasLayoutShader = new AtlasLayoutShader(gl)
+      gl.__atlasLayoutShader = new AtlasLayoutShader(this.__gl)
       const shaderComp = gl.__atlasLayoutShader.compileForTarget('GLImageAtlas')
       gl.__atlasLayoutShaderBinding = generateShaderGeomBinding(
         gl,
@@ -224,7 +237,7 @@ class GLImageAtlas extends GLRenderTarget {
 
     if (!gl.floatTexturesSupported) {
       this.__layoutVec4s = []
-      this.__layout.forEach((layoutItem, index) => {
+      this.__layout.forEach((layoutItem: any, index: number) => {
         this.__layoutVec4s[index] = [
           layoutItem.pos.x / width,
           layoutItem.pos.y / height,
@@ -250,7 +263,7 @@ class GLImageAtlas extends GLRenderTarget {
         this.__atlasLayoutTexture.height != size
       ) {
         if (this.__atlasLayoutTexture) this.__atlasLayoutTexture.destroy()
-        this.__atlasLayoutTexture = new GLTexture2D(gl, {
+        this.__atlasLayoutTexture = new GLTexture2D(<WebGLRenderingContext>gl, {
           format: 'RGBA',
           type: 'FLOAT',
           filter: 'NEAREST',
@@ -278,7 +291,7 @@ class GLImageAtlas extends GLRenderTarget {
    * @param {number} index - The index value.
    * @return {object} - The return value.
    */
-  getLayoutData(index) {
+  getLayoutData(index: number) {
     return this.__layoutVec4s[index]
   }
 
@@ -294,8 +307,8 @@ class GLImageAtlas extends GLRenderTarget {
     if (this.__layoutNeedsRegeneration) {
       this.generateAtlasLayout()
     }
-    const gl = this.__gl
-    const renderstate = {}
+    const gl = <Record<any, any>>this.__gl
+    const renderstate: Record<any, any> = {}
     this.bindForWriting(renderstate, true)
 
     gl.__atlasLayoutShader.bind(renderstate, 'GLImageAtlas')
@@ -338,14 +351,14 @@ class GLImageAtlas extends GLRenderTarget {
 
   /**
    * The bindToUniform method.
-   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    * @param {WebGLUniformLocation} unif - The WebGL uniform
    * @return {boolean} - The return value.
    */
-  bindToUniform(renderstate, unif) {
+  bindToUniform(renderstate: Record<any, any>, unif: Record<any, any>) {
     super.bindToUniform(renderstate, unif)
 
-    const unifs = renderstate.unifs
+    const unifs: Record<any, any> = renderstate.unifs
 
     if (this.__atlasLayoutTexture) {
       const atlasLayoutUnif = unifs[unif.name + '_layout']
