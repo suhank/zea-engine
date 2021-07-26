@@ -1,7 +1,9 @@
+import { Vec3 } from '../Math/Vec3'
+
 //based on http://holger.dammertz.org/stuff/notes_HammersleyOnHemisphere.html
 const bits = new Uint32Array(1)
 
-function radicalInverse_VdC(i) {
+function radicalInverse_VdC(i: number) {
   bits[0] = i
   bits[0] = ((bits[0] << 16) | (bits[0] >> 16)) >>> 0
   bits[0] = ((bits[0] & 0x55555555) << 1) | (((bits[0] & 0xaaaaaaaa) >>> 1) >>> 0)
@@ -11,25 +13,25 @@ function radicalInverse_VdC(i) {
   return bits[0] * 2.3283064365386963e-10 // / 0x100000000 or / 4294967296
 }
 
-function hammersley(i, n) {
+function hammersley(i: number, n: number) {
   return [i / n, radicalInverse_VdC(i)]
 }
 
-function hemisphereSample_uniform(u, v, vec3) {
+function hemisphereSample_uniform(u: number, v: number, vec3: Vec3) {
   let phi = v * 2.0 * Math.PI
   let cosTheta = 1.0 - u
   let sinTheta = Math.sqrt(1.0 - cosTheta * cosTheta)
   vec3.set(Math.cos(phi) * sinTheta, Math.sin(phi) * sinTheta, cosTheta)
 }
 
-function hemisphereSample_cos(u, v, vec3) {
+function hemisphereSample_cos(u: number, v: number, vec3: Vec3) {
   let phi = v * 2.0 * Math.PI
   let cosTheta = Math.sqrt(1.0 - u)
   let sinTheta = Math.sqrt(1.0 - cosTheta * cosTheta)
   vec3.set(Math.cos(phi) * sinTheta, Math.sin(phi) * sinTheta, cosTheta)
 }
 
-function sphereSample_uniform(u, v, vec3) {
+function sphereSample_uniform(u: number, v: number, vec3: Vec3) {
   let phi = v * 2.0 * Math.PI
   let cosTheta = 1.0 - u * 2.0
   let sinTheta = Math.sqrt(1.0 - cosTheta * cosTheta)

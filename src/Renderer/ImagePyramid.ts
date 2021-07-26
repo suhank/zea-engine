@@ -4,7 +4,7 @@ import { GLImageAtlas } from './GLImageAtlas.js'
 
 // import './Shaders/GLSL/ImagePyramid.js'
 
-const Math_log2 = function (value) {
+const Math_log2 = function (value: number) {
   // IE11 doesn't support Math.log2.
   return Math.log2(value)
   // return Math.log( value ) / Math.log( 2 ) - 2;
@@ -15,6 +15,10 @@ const Math_log2 = function (value) {
  * @private
  */
 class ImagePyramid extends GLImageAtlas {
+  protected size: number
+  protected __srcGLTex: any
+  protected __fbos: any[]
+
   /**
    * Create an image pyramid.
    * @param {WebGLRenderingContext} gl - The webgl rendering context.
@@ -23,7 +27,7 @@ class ImagePyramid extends GLImageAtlas {
    * @param {boolean} destroySrcImage - The destroySrcImage value.
    * @param {number} minTileSize - The minTileSize value.
    */
-  constructor(gl, name, srcGLTex, destroySrcImage = true, minTileSize = 16) {
+  constructor(gl: WebGLRenderingContext, name: string, srcGLTex: any, destroySrcImage = true, minTileSize = 16) {
     super(gl, name)
 
     this.__srcGLTex = srcGLTex
@@ -51,7 +55,7 @@ class ImagePyramid extends GLImageAtlas {
    * The generateAtlasLayout method.
    * @param {any} minTileSize - The minTileSize value.
    */
-  generateAtlasLayout(minTileSize) {
+  generateAtlasLayout(minTileSize: any) {
     const gl = this.__gl
 
     this.size = this.__srcGLTex.height
@@ -64,7 +68,7 @@ class ImagePyramid extends GLImageAtlas {
       if (size < minTileSize) break
       // Create a target texture for this level of the pyramid.
       // and then render to it using the base level as a source image.
-      const level = new GLTexture2D(gl, {
+      const level = new GLTexture2D(<WebGLRenderingContext>gl, {
         format: this.__srcGLTex.getFormat(),
         type: this.__srcGLTex.getType(),
         width: size * aspectRatio,
@@ -73,7 +77,7 @@ class ImagePyramid extends GLImageAtlas {
         wrap: 'CLAMP_TO_EDGE',
       })
       this.addSubImage(level)
-      this.__fbos.push(new GLFbo(gl, level))
+      this.__fbos.push(new GLFbo(<WebGLRenderingContext>gl, level))
     }
 
     super.generateAtlasLayout()
