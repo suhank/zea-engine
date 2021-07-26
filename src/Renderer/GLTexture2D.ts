@@ -10,13 +10,41 @@ import { processTextureParams } from './processTextureParams.js'
  * @extends RefCounted
  */
 class GLTexture2D extends RefCounted {
+  protected __gl: Record<any, any>
+  protected ready: boolean
+  protected width: number
+  protected height: number
+  protected textureType: number // Default 2d 24bit texture image texture. No alpha.
+  protected textureDesc: number[] // To be populated by derived classes.
+  protected __loaded: boolean
+  protected __bound: boolean
+
+  protected __image: any
+  protected __internalFormat: any
+  protected __type: any
+  protected __format: any
+  protected __wrapParam: any
+
+  protected params: Record<any, any>
+  protected __minFilter: any
+  protected __magFilter: any
+  protected __wrapS: any
+  protected __wrapT: any
+  protected __flipY: boolean
+  protected __mipMapped: boolean
+  protected invert: boolean
+  protected alphaFromLuminance: boolean
+
+  protected __gltex: any
+  protected __typeParam: any
+  protected __formatParam: any
   /**
    * Create a GL texture 2D.
    *
    * @param {WebGLRenderingContext | WebGL2RenderingContext | undefined} gl - The gl value.
-   * @param {BaseImage | object} params - The params value.
+   * @param {BaseImage | Record<any,any>} params - The params value.
    */
-  constructor(gl, params) {
+  constructor(gl: WebGLRenderingContext | WebGL2RenderingContext | undefined, params: BaseImage | Record<any, any>) {
     super()
     this.__gl = gl
 
@@ -121,13 +149,13 @@ class GLTexture2D extends RefCounted {
    * Builds the GLTexture2D using the specified parameters object.
    * Parameters must have the `BaseImage` properties structure.
    *
-   * @param {object} params - The params value.
+   * @param {Record<any,any>} params - The params value.
    *
    * @param {boolean} emit - The emit value.
    */
-  configure(params, emit = true) {
+  configure(params: Record<any, any>, emit = true) {
     const gl = this.__gl
-    const p = processTextureParams(gl, params)
+    const p: Record<any, any> = processTextureParams(gl, params) // TODO: check method
 
     this.params = p
     this.__format = p.format
@@ -194,13 +222,15 @@ class GLTexture2D extends RefCounted {
   /**
    * Initializes and creates the buffer of the object's data store.
    *
-   * @param {Image | ImageData | HTMLCanvasElement | HTMLImageElement | HTMLVideoElement | object} data - The data value.
+   * @param {Image | ImageData | HTMLCanvasElement | HTMLImageElement | HTMLVideoElement | Record<any, any>} data - The data value.
    * @param {number} width - The width value.
    * @param {number} height - The height value.
    * @param {boolean} bind - The bind value.
    * @param {boolean} emit - The emit value.
    */
-  bufferData(data, width = -1, height = -1, bind = true, emit = true) {
+
+  // TODO: type Image doesn't exist.
+  bufferData(data: any, width = -1, height = -1, bind = true, emit = true) {
     const gl = this.__gl
     if (bind) {
       gl.bindTexture(gl.TEXTURE_2D, this.__gltex)
@@ -336,10 +366,10 @@ class GLTexture2D extends RefCounted {
     let data
     switch (this.__type) {
       case gl.UNSIGNED_BYTE:
-        data = new UInt8Array(numPixels * numChannels)
+        data = new Uint8Array(numPixels * numChannels)
         break
       case gl.HALF_FLOAT:
-        data = new UInt16Array(numPixels * numChannels)
+        data = new Uint16Array(numPixels * numChannels)
         break
       case gl.FLOAT:
         data = new Float32Array(numPixels * numChannels)
@@ -383,7 +413,7 @@ class GLTexture2D extends RefCounted {
    * @param {boolean} preserveData - The preserveData value.
    * @param {boolean} emit - The emit value.
    */
-  resize(width, height, preserveData = false, emit = true) {
+  resize(width: number, height: number, preserveData = false, emit = true) {
     const gl = this.__gl
     const sizeChanged = this.width != width || this.height != height
     if (sizeChanged) {
@@ -441,7 +471,7 @@ class GLTexture2D extends RefCounted {
    * @param {number} offsetY - The offsetY value
    * @param {boolean} bind - The bind value
    */
-  populate(dataArray, width, height, offsetX = 0, offsetY = 0, bind = true) {
+  populate(dataArray: Uint16Array, width: number, height: number, offsetX = 0, offsetY = 0, bind = true) {
     const gl = this.__gl
     if (bind) gl.bindTexture(gl.TEXTURE_2D, this.__gltex)
     gl.texSubImage2D(gl.TEXTURE_2D, 0, offsetX, offsetY, width, height, this.__format, this.__type, dataArray)
@@ -476,23 +506,23 @@ class GLTexture2D extends RefCounted {
 
   /**
    * The bind method.
-   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {Record<any, any>} renderstate - The object tracking the current state of the renderer
    * @param {WebGLUniformLocation} unif - The WebGL uniform
    * @return {any} - The return value.
    * @deprecated
    */
-  bind(renderstate, unif) {
+  bind(renderstate: Record<any, any>, unif: WebGLUniformLocation) {
     console.warn("'bind' is deprecated. Please use 'bindToUniform'")
     return this.bindToUniform(renderstate, unif)
   }
 
   /**
    * The preBind method.
-   * @param {object} unif - The unif value.
-   * @param {object} unifs - The unifs value.
-   * @return {object} - The return value.
+   * @param {Record<any, any>} unif - The unif value.
+   * @param {Record<any, any>} unifs - The unifs value.
+   * @return {Record<any, any>} - The return value.
    */
-  preBind(unif, unifs) {
+  preBind(unif: Record<any, any>, unifs: Record<any, any>) {
     return {
       textureTypeUnif: unifs[unif.name + 'Type'],
       textureDescUnif: unifs[unif.name + 'Desc'],
@@ -502,12 +532,12 @@ class GLTexture2D extends RefCounted {
   /**
    * Binds Texture to the Uniform attribute.
    *
-   * @param {object} renderstate - The renderstate value.
-   * @param {object} unif - The unif value.
-   * @param {object} bindings - The bindings value.
+   * @param {Record<any, any>} renderstate - The renderstate value.
+   * @param {Record<any, any>} unif - The unif value.
+   * @param {Record<any, any>} bindings - The bindings value.
    * @return {boolean} - The return value.
    */
-  bindToUniform(renderstate, unif, bindings) {
+  bindToUniform(renderstate: Record<any, any>, unif: Record<any, any>, bindings?: Record<any, any>) {
     if (!this.__loaded) {
       return false
     }
