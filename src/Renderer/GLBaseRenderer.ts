@@ -1,5 +1,5 @@
 /* eslint-disable guard-for-in */
-import { TreeItem, GeomItem, ParameterOwner } from '../SceneTree/index'
+import { TreeItem, GeomItem, ParameterOwner, Scene } from '../SceneTree/index'
 import { SystemDesc } from '../SystemDesc'
 import { create3DContext } from './GLContext'
 import { GLScreenQuad } from './GLScreenQuad'
@@ -10,8 +10,10 @@ import { POINTER_TYPES } from '../Utilities/EnumUtils'
 import { GLMaterialLibrary } from './Drawing/GLMaterialLibrary.js'
 import { GLGeomLibrary } from './Drawing/GLGeomLibrary.js'
 import { GLGeomItemLibrary } from './Drawing/GLGeomItemLibrary.js'
+import { GLPass, PassType } from './Passes/GLPass'
+import { Color } from '../Math/Color'
 
-let activeGLRenderer = undefined
+let activeGLRenderer: Record<any, any>
 let pointerIsDown = false
 let pointerLeft = false
 const registeredPasses = {}
@@ -22,12 +24,48 @@ const registeredPasses = {}
  * @extends ParameterOwner
  */
 class GLBaseRenderer extends ParameterOwner {
+  // protected navigator: Record<any, any>
+  protected directives: any
+  protected solidAngleLimit: number
+  protected __div: any
+
+  protected __gl: Record<any, any>
+  protected __glcanvas: Record<any, any>
+  protected __scene: any
+  protected __gizmoContext: any
+
+  protected __shaderDirectives: Record<any, any>
+  protected __renderGeomDataFbosRequested: boolean
+  protected __shaders: Record<any, any>
+  protected __passes: Record<any, any>
+  protected __passesRegistrationOrder: any[]
+  protected __passCallbacks: any[]
+
+  protected __viewports: any[]
+  protected __activeViewport: any
+  protected __continuousDrawing: boolean
+  protected __redrawRequested: boolean
+  protected __isMobile: boolean
+  protected __drawSuspensionLevel = 0
+  protected __xrViewportPresenting: boolean
+  protected __floatGeomBuffer: any
+
+  protected __supportXR: boolean
+  protected __xrViewport: any
+  protected __xrViewportPromise: any
+
+  protected glMaterialLibrary: GLMaterialLibrary
+  protected glGeomItemLibrary: GLGeomItemLibrary
+  protected glGeomLibrary: GLGeomItemLibrary
+
+  protected __screenQuad: any
+  protected resizeObserver: any
   /**
    * Create a GL base renderer.
    * @param {HTMLElement|HTMLCanvasElement} $canvas - The canvas element.
-   * @param {object} options - The options value.
+   * @param {Record<any, any>} options - The options value.
    */
-  constructor($canvas, options = {}) {
+  constructor($canvas: HTMLElement | HTMLCanvasElement, options: Record<any, any> = {}) {
     super()
 
     if (!SystemDesc.gpuDesc) {
@@ -113,12 +151,12 @@ class GLBaseRenderer extends ParameterOwner {
           }
           navigator.xr
             .isSessionSupported('immersive-vr')
-            .then((isSupported) => {
+            .then((isSupported: boolean) => {
               if (isSupported) {
                 setupXRViewport()
               }
             })
-            .catch((reason) => {
+            .catch((reason: any) => {
               console.warn('Unable to setup XR:' + reason)
             })
           // TODO:
@@ -133,7 +171,7 @@ class GLBaseRenderer extends ParameterOwner {
    * @param {string} name - The name value.
    * @param {string} value - The value param.
    */
-  addShaderPreprocessorDirective(name, value) {
+  addShaderPreprocessorDirective(name: string, value?: string) {
     if (value) this.__shaderDirectives[name] = '#define ' + name + ' = ' + value
     else this.__shaderDirectives[name] = '#define ' + name
     const directives = []
@@ -150,7 +188,7 @@ class GLBaseRenderer extends ParameterOwner {
    *
    * @return {number} - The return value.
    */
-  getWidth() {
+  getWidth(): number {
     return this.__glcanvas.width
   }
 
@@ -158,7 +196,7 @@ class GLBaseRenderer extends ParameterOwner {
    * Returns HTMLCanvasElement's Height
    * @return {number} - The return value.
    */
-  getHeight() {
+  getHeight(): number {
     return this.__glcanvas.height
   }
 
@@ -171,13 +209,13 @@ class GLBaseRenderer extends ParameterOwner {
    * @param {string} name - The name of the viewport.
    * @return {GLViewport} - The return value.
    */
-  addViewport(name) {
+  addViewport(name: string) {
     const vp = new GLViewport(this, name, this.getWidth(), this.getHeight())
 
     const updated = () => {
       this.requestRedraw()
     }
-    const viewChanged = (data) => {
+    const viewChanged = (data: any) => {
       if (!this.__xrViewportPresenting) {
         this.emit('viewChanged', data)
       }
@@ -206,7 +244,7 @@ class GLBaseRenderer extends ParameterOwner {
    * @param {number} offsetY - The viewport offset in the Y axis.
    * @return {GLViewport} - The return value.
    */
-  getViewportAtPos(offsetX, offsetY) {
+  getViewportAtPos(offsetX: number, offsetY: number) {
     for (const vp of this.__viewports) {
       const x = vp.getPosX()
       const y = vp.getPosY()
@@ -222,7 +260,7 @@ class GLBaseRenderer extends ParameterOwner {
    *
    * @param {GLViewport} vp - The viewport.
    */
-  activateViewport(vp) {
+  activateViewport(vp: GLViewport) {
     if (this.__activeViewport == vp) return
 
     this.__activeViewport = vp
@@ -234,7 +272,7 @@ class GLBaseRenderer extends ParameterOwner {
    * @param {number} offsetX - The viewport offset in the X axis.
    * @param {number} offsetY - The viewport offset in the Y axis.
    */
-  activateViewportAtPos(offsetX, offsetY) {
+  activateViewportAtPos(offsetX: number, offsetY: number) {
     if (this.__xrViewportPresenting) return
     const vp = this.getViewportAtPos(offsetX, offsetY)
     if (vp && vp != this.__activeViewport) this.activateViewport(vp)
@@ -294,7 +332,7 @@ class GLBaseRenderer extends ParameterOwner {
    * @return {GridTreeItem} - The return value.
    * @deprecated
    */
-  setupGrid(gridSize, gridColor, resolution, lineThickness) {
+  setupGrid(gridSize: number, gridColor: Color, resolution: number, lineThickness: number) {
     console.warn('@GLBaseRenderer#setupGrid - Deprecated Method. Please use scene.setupGrid')
     return this.__scene.setupGrid(gridSize, resolution, gridColor)
   }
@@ -313,7 +351,7 @@ class GLBaseRenderer extends ParameterOwner {
    *
    * @param {Scene} scene - The scene value.
    */
-  setScene(scene) {
+  setScene(scene: Scene) {
     this.__scene = scene
     this.addTreeItem(this.__scene.getRoot())
 
@@ -323,18 +361,18 @@ class GLBaseRenderer extends ParameterOwner {
   }
 
   /**
-   * @param {*} event -
+   * @param {Record<any,any>} event -
    * @private
    */
-  __childItemAdded(event) {
+  __childItemAdded(event: Record<any, any>) {
     this.addTreeItem(event.childItem)
   }
 
   /**
-   * @param {*} event -
+   * @param {Record<any, any>} event -
    * @private
    */
-  __childItemRemoved(event) {
+  __childItemRemoved(event: Record<any, any>) {
     this.removeTreeItem(event.childItem)
   }
 
@@ -343,7 +381,7 @@ class GLBaseRenderer extends ParameterOwner {
    *
    * @param {TreeItem} treeItem - The tree item to add.
    */
-  addTreeItem(treeItem) {
+  addTreeItem(treeItem: TreeItem) {
     // Note: we can have BaseItems in the tree now.
     if (!(treeItem instanceof TreeItem)) return
 
@@ -364,7 +402,7 @@ class GLBaseRenderer extends ParameterOwner {
 
     // Traverse the tree adding items until we hit the leaves (which are usually GeomItems.)
     for (const childItem of treeItem.getChildren()) {
-      if (childItem) this.addTreeItem(childItem)
+      if (childItem) this.addTreeItem(<TreeItem>childItem)
     }
 
     treeItem.on('childAdded', this.__childItemAdded)
@@ -378,7 +416,7 @@ class GLBaseRenderer extends ParameterOwner {
    *
    * @param {TreeItem} treeItem - The tree item to assign.
    */
-  assignTreeItemToGLPass(treeItem) {
+  assignTreeItemToGLPass(treeItem: TreeItem) {
     if (treeItem instanceof GeomItem) {
       const geomItem = treeItem
       this.glGeomItemLibrary.addGeomItem(geomItem)
@@ -417,7 +455,7 @@ class GLBaseRenderer extends ParameterOwner {
    *
    * @param {TreeItem} treeItem - The tree item to remove.
    */
-  removeTreeItem(treeItem) {
+  removeTreeItem(treeItem: TreeItem) {
     // Note: we can have BaseItems in the tree now.
     if (!(treeItem instanceof TreeItem)) return
 
@@ -450,7 +488,7 @@ class GLBaseRenderer extends ParameterOwner {
 
     // Traverse the tree adding items till we hit the leaves (which are usually GeomItems).
     for (const childItem of treeItem.getChildren()) {
-      if (childItem) this.removeTreeItem(childItem)
+      if (childItem) this.removeTreeItem(<TreeItem>childItem)
     }
 
     if (treeItem instanceof GeomItem) {
@@ -487,7 +525,7 @@ class GLBaseRenderer extends ParameterOwner {
    *
    * @private
    */
-  handleResize(width, height) {
+  handleResize(width: number, height: number) {
     if (this.__xrViewportPresenting) {
       return
     }
@@ -541,9 +579,9 @@ class GLBaseRenderer extends ParameterOwner {
    * Setups the WebGL configuration for the renderer, specifying the canvas element where our
    *
    * @param {HTMLCanvasElement|HTMLElement} $canvas - The $canvas element.
-   * @param {object} webglOptions - The webglOptions value.
+   * @param { Record<any, any>} webglOptions - The webglOptions value.
    */
-  setupWebGL($canvas, webglOptions) {
+  setupWebGL($canvas: HTMLCanvasElement | HTMLElement, webglOptions: Record<any, any>) {
     const { tagName } = $canvas
 
     if (!['DIV', 'CANVAS'].includes(tagName)) {
@@ -574,7 +612,7 @@ class GLBaseRenderer extends ParameterOwner {
     }
 
     this.__glcanvas.style['touch-action'] = 'none'
-    const canvasIsStatic = window.getComputedStyle(this.__glcanvas).position === 'static'
+    const canvasIsStatic = window.getComputedStyle(<Element>this.__glcanvas).position === 'static' // TODO: is casting this to Element ok?
 
     if (canvasIsStatic) {
       console.warn(
@@ -639,7 +677,7 @@ class GLBaseRenderer extends ParameterOwner {
       }
     }
 
-    this.__gl.screenQuad = new GLScreenQuad(this.__gl)
+    this.__gl.screenQuad = new GLScreenQuad(<WebGLRenderingContext>this.__gl)
     this.__screenQuad = this.__gl.screenQuad
 
     // Note: Mobile devices don't provide much support for reading data back from float textures,
@@ -662,7 +700,7 @@ class GLBaseRenderer extends ParameterOwner {
     // Setup event handlers
     const isValidCanvas = () => this.getWidth() > 0 && this.getHeight()
 
-    const prepareEvent = (event) => {
+    const prepareEvent = (event: Record<any, any>) => {
       event.propagating = true
       const sp = event.stopPropagation
       event.stopPropagation = () => {
@@ -670,7 +708,7 @@ class GLBaseRenderer extends ParameterOwner {
         if (sp) sp.call(event)
       }
     }
-    const calcRendererCoords = (event) => {
+    const calcRendererCoords = (event: Record<any, any>) => {
       const rect = this.__glcanvas.getBoundingClientRect()
       // Disabling devicePixelRatio for now. See: __onResize
       const DPR = 1.0 // window.devicePixelRatio
@@ -685,7 +723,7 @@ class GLBaseRenderer extends ParameterOwner {
     }
 
     /** Mouse Events Start */
-    const isMobileSafariMouseEvent = (event) => {
+    const isMobileSafariMouseEvent = (event: Record<any, any>) => {
       if (SystemDesc.isMobileDevice && SystemDesc.browserName == 'Safari') {
         console.warn('Mobile Safari is triggering mouse event:', event.type)
         return true
@@ -694,7 +732,7 @@ class GLBaseRenderer extends ParameterOwner {
       return false
     }
 
-    this.__glcanvas.addEventListener('mousedown', (event) => {
+    this.__glcanvas.addEventListener('mousedown', (event: Record<any, any>) => {
       if (isMobileSafariMouseEvent(event)) {
         return
       }
@@ -714,7 +752,7 @@ class GLBaseRenderer extends ParameterOwner {
       return false
     })
 
-    document.addEventListener('mouseup', (event) => {
+    document.addEventListener('mouseup', (event: Record<any, any>) => {
       if (isMobileSafariMouseEvent(event)) {
         return
       }
@@ -742,7 +780,7 @@ class GLBaseRenderer extends ParameterOwner {
       return false
     })
 
-    document.addEventListener('mousemove', (event) => {
+    document.addEventListener('mousemove', (event: Record<any, any>) => {
       if (isMobileSafariMouseEvent(event)) {
         return
       }
@@ -761,7 +799,7 @@ class GLBaseRenderer extends ParameterOwner {
       return false
     })
 
-    this.__glcanvas.addEventListener('mouseenter', (event) => {
+    this.__glcanvas.addEventListener('mouseenter', (event: Record<any, any>) => {
       if (isMobileSafariMouseEvent(event)) {
         return
       }
@@ -787,7 +825,7 @@ class GLBaseRenderer extends ParameterOwner {
       }
     })
 
-    this.__glcanvas.addEventListener('mouseleave', (event) => {
+    this.__glcanvas.addEventListener('mouseleave', (event: Record<any, any>) => {
       if (isMobileSafariMouseEvent(event)) {
         return
       }
@@ -812,7 +850,7 @@ class GLBaseRenderer extends ParameterOwner {
     /** Touch Events Start */
     this.__glcanvas.addEventListener(
       'touchstart',
-      (event) => {
+      (event: Record<any, any>) => {
         event.stopPropagation()
 
         // Touch events are passive and so cannot call prevent default
@@ -832,7 +870,7 @@ class GLBaseRenderer extends ParameterOwner {
 
     this.__glcanvas.addEventListener(
       'touchend',
-      (event) => {
+      (event: Record<any, any>) => {
         event.stopPropagation()
 
         // Touch events are passive and so cannot call prevent default
@@ -852,7 +890,7 @@ class GLBaseRenderer extends ParameterOwner {
 
     this.__glcanvas.addEventListener(
       'touchmove',
-      (event) => {
+      (event: Record<any, any>) => {
         event.stopPropagation()
 
         // Touch events are passive and so cannot call prevent default
@@ -871,7 +909,7 @@ class GLBaseRenderer extends ParameterOwner {
     )
     /** Touch Events End */
 
-    const onWheel = (event) => {
+    const onWheel = (event: Record<any, any>) => {
       if (activeGLRenderer != this || !isValidCanvas()) return
       if (activeGLRenderer) {
         prepareEvent(event)
@@ -888,7 +926,7 @@ class GLBaseRenderer extends ParameterOwner {
       window.addEventListener('wheel', onWheel, { passive: false })
     else {
       /** IE/Opera. */
-      window.onmousewheel = document.onmousewheel = onWheel
+      window.onmousewheel = document.onwheel = onWheel
     }
 
     window.oncontextmenu = function () {
@@ -940,10 +978,10 @@ class GLBaseRenderer extends ParameterOwner {
    * @param {string} shaderName - The shader name.
    * @return {GLShader} - The return value.
    */
-  getOrCreateShader(shaderName) {
+  getOrCreateShader(shaderName: string) {
     let glShader = this.__shaders[shaderName]
     if (!glShader) {
-      glShader = Registry.constructClass(shaderName, this.__gl)
+      glShader = Registry.constructClass(shaderName) // , this.__gl
       if (!glShader)
         console.error('@GLBaseRenderer#getOrCreateShader - Shader not registered with the Registry:', shaderName)
       this.__shaders[shaderName] = glShader
@@ -959,13 +997,13 @@ class GLBaseRenderer extends ParameterOwner {
    * @param {boolean} updateIndices - The updateIndices value.
    * @return {number} - The return value.
    */
-  addPass(pass, passType = -1, updateIndices = true) {
+  addPass(pass: GLPass, passType = -1, updateIndices = true) {
     if (passType == -1) passType = pass.getPassType()
     if (!this.__passes[passType]) this.__passes[passType] = []
 
     let index = 0
     for (const key in this.__passes) {
-      if (key == passType) break
+      if (key == passType.toString()) break
       index += this.__passes[key].length
     }
     index += this.__passes[passType].length
@@ -980,7 +1018,7 @@ class GLBaseRenderer extends ParameterOwner {
       let offset = 0
       for (const key in this.__passes) {
         const passSet = this.__passes[key]
-        passSet.forEach((pass, index) => {
+        passSet.forEach((pass: GLPass, index: number) => {
           pass.setPassIndex(offset + index)
         })
         offset += passSet.length
@@ -996,7 +1034,7 @@ class GLBaseRenderer extends ParameterOwner {
    * @param {number} index - The index value.
    * @return {GLPass} - The return value.
    */
-  getPass(index) {
+  getPass(index: number) {
     let offset = 0
     for (const key in this.__passes) {
       const passSet = this.__passes[key]
@@ -1026,7 +1064,7 @@ class GLBaseRenderer extends ParameterOwner {
     // Always get the last display. Additional displays are added at the end.(e.g. [Polyfill, HMD])
     const xrvp = new VRViewport(this)
 
-    const emitViewChanged = (event) => {
+    const emitViewChanged = (event: Record<any, any>) => {
       this.emit('viewChanged', event)
     }
 
@@ -1185,15 +1223,15 @@ class GLBaseRenderer extends ParameterOwner {
 
   /**
    * The bindGLBaseRenderer method.
-   * @param {object} renderState - The renderState value.
+   * @param {Record<any, any>} renderState - The renderState value.
    */
-  bindGLBaseRenderer(renderState) {
+  bindGLBaseRenderer(renderState: Record<any, any>) {
     renderState.gl = this.__gl
     renderState.shaderopts = { directives: this.directives } // we will start deprecating this in favor os a simpler directives
 
     const gl = this.__gl
     if (!renderState.viewports || renderState.viewports.length == 1) {
-      renderState.bindRendererUnifs = (unifs) => {
+      renderState.bindRendererUnifs = (unifs: any) => {
         const { cameraMatrix, viewMatrix, projectionMatrix, eye, isOrthographic } = unifs
         if (cameraMatrix) {
           gl.uniformMatrix4fv(cameraMatrix.location, false, renderState.cameraMatrix.asArray())
@@ -1217,9 +1255,9 @@ class GLBaseRenderer extends ParameterOwner {
           gl.uniform1i(isOrthographic.location, vp.isOrthographic)
         }
       }
-      renderState.bindViewports = (unifs, cb) => cb()
+      renderState.bindViewports = (unifs: Record<any, any>, cb: any) => cb()
     } else {
-      renderState.bindRendererUnifs = (unifs) => {
+      renderState.bindRendererUnifs = (unifs: Record<any, any>) => {
         // Note: the camera matrix should be the head position instead
         // of the eye position. The inverse(viewMatrix) can be used
         // when we want the eye pos.
@@ -1229,8 +1267,8 @@ class GLBaseRenderer extends ParameterOwner {
         }
       }
 
-      renderState.bindViewports = (unifs, cb) => {
-        renderState.viewports.forEach((vp, index) => {
+      renderState.bindViewports = (unifs: Record<any, any>, cb: any) => {
+        renderState.viewports.forEach((vp: any, index: number) => {
           gl.viewport(...vp.region)
 
           const { viewMatrix, projectionMatrix, eye, isOrthographic } = unifs
@@ -1258,9 +1296,9 @@ class GLBaseRenderer extends ParameterOwner {
 
   /**
    * The drawScene method.
-   * @param {object} renderState - The renderState value.
+   * @param {Record<any,any>} renderState - The renderState value.
    */
-  drawScene(renderState) {
+  drawScene(renderState: Record<any, any>) {
     // Bind already called by GLRenderer.
 
     renderState.directives = [...this.directives, '#define DRAW_COLOR']
@@ -1276,9 +1314,9 @@ class GLBaseRenderer extends ParameterOwner {
 
   /**
    * The drawHighlightedGeoms method.
-   * @param {object} renderState - The renderState value.
+   * @param {Record<any, any>} renderState - The renderState value.
    */
-  drawHighlightedGeoms(renderState) {
+  drawHighlightedGeoms(renderState: Record<any, any>) {
     this.bindGLBaseRenderer(renderState)
 
     renderState.directives = [...this.directives, '#define DRAW_HIGHLIGHT']
@@ -1297,7 +1335,7 @@ class GLBaseRenderer extends ParameterOwner {
    * @param {object} renderState - The renderState value.
    * @param {number} [mask=255] - The mask value
    */
-  drawSceneGeomData(renderState, mask = 255) {
+  drawSceneGeomData(renderState: Record<any, any>, mask = 255) {
     this.bindGLBaseRenderer(renderState)
 
     renderState.directives = [...this.directives, '#define DRAW_GEOMDATA']
@@ -1325,7 +1363,7 @@ class GLBaseRenderer extends ParameterOwner {
    * @param {function} cls - The cls value.
    * @param {PassType} passType - The passType value.
    */
-  static registerPass(cls, passType) {
+  static registerPass(cls: any, passType: PassType) {
     if (!registeredPasses[passType]) registeredPasses[passType] = []
     registeredPasses[passType].push(cls)
   }
