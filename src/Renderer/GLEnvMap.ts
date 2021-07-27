@@ -2,19 +2,28 @@ import { GLProbe } from './GLProbe'
 import { GLHDRImage } from './GLHDRImage'
 import { EnvMapShader } from './Shaders/EnvMapShader'
 import { generateShaderGeomBinding } from './Drawing/GeomShaderBinding'
+import { EnvMap } from '../SceneTree/Images/EnvMap'
+import { GLBaseRenderer } from './GLBaseRenderer'
 
 /** Class representing a GL environment map.
  * @extends GLProbe
  * @private
  */
 class GLEnvMap extends GLProbe {
+  protected __renderer: Record<any, any>
+  protected __envMap: any
+  protected __backgroundFocus: number
+  protected __srcGLTex: any
+  protected __envMapShader: any
+  protected __envMapShaderBinding: any
+  protected __lodPyramid: any
   /**
    * Create a GL env map.
    * @param {GLBaseRenderer} renderer - The renderer value.
    * @param {EnvMap} envMap - The environment map.
    */
-  constructor(renderer, envMap) {
-    super(renderer.gl, 'EnvMap')
+  constructor(renderer: GLBaseRenderer, envMap: EnvMap) {
+    super(<WebGLRenderingContext>renderer.gl, 'EnvMap')
     this.__renderer = renderer
     this.__envMap = envMap
     this.__backgroundFocus = 0.0
@@ -86,23 +95,23 @@ class GLEnvMap extends GLProbe {
    * The setBackgroundFocus method.
    * @param {number} val - The val param.
    */
-  setBackgroundFocus(val) {
+  setBackgroundFocus(val: any) {
     this.__backgroundFocus = val
     this.__renderer.requestRedraw()
   }
 
   /**
    * The draw method.
-   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    */
-  draw(renderstate) {
+  draw(renderstate: Record<any, any>) {
     if (this.__envMap.isLoaded()) {
-      const gl = this.__gl
+      const gl = <Record<any,any>>this.__gl
       const debug = false
       if (debug) {
         const screenQuad = gl.screenQuad
         screenQuad.bindShader(renderstate)
-        const debugId = 2
+        const debugId = 2*1
         switch (debugId) {
           case 0:
             screenQuad.draw(renderstate, this.__srcGLTex.__srcLDRTex)
