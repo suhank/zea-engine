@@ -52,7 +52,7 @@ class GLHDRImage extends GLTexture2D {
    * @private
    */
   __unpackHDRImage(hdrImageParams: Record<any,any>) {
-    const gl = this.__gl
+    const gl = <Record<any, any>>this.__gl
 
     const ldr = hdrImageParams.data.ldr
     const cdm = hdrImageParams.data.cdm
@@ -68,10 +68,10 @@ class GLHDRImage extends GLTexture2D {
         filter: 'LINEAR',
         wrap: 'CLAMP_TO_EDGE',
       })
-      this.__fbo = new GLFbo(gl, this)
+      this.__fbo = new GLFbo(this.__gl, this)
       this.__fbo.setClearColor([0, 0, 0, 0])
 
-      this.__srcLDRTex = new GLTexture2D(gl, {
+      this.__srcLDRTex = new GLTexture2D(this.__gl, {
         format: 'RGB',
         type: 'UNSIGNED_BYTE',
         width: ldr.width,
@@ -81,7 +81,7 @@ class GLHDRImage extends GLTexture2D {
         wrap: 'CLAMP_TO_EDGE',
         data: ldr,
       })
-      this.__srcCDMTex = new GLTexture2D(gl, {
+      this.__srcCDMTex = new GLTexture2D(this.__gl, {
         format: gl.name == 'webgl2' ? 'RED' : 'ALPHA',
         type: 'UNSIGNED_BYTE',
         width: ldr.width /* 8*/,
@@ -92,7 +92,7 @@ class GLHDRImage extends GLTexture2D {
         data: cdm,
       })
 
-      this.__unpackHDRShader = new UnpackHDRShader(gl)
+      this.__unpackHDRShader = new UnpackHDRShader(this.__gl)
       const shaderComp = this.__unpackHDRShader.compileForTarget('GLHDRImage')
       this.__shaderBinding = generateShaderGeomBinding(gl, shaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer)
     } else {
@@ -161,8 +161,8 @@ class GLHDRImage extends GLTexture2D {
     if (this.__unpackHDRShader) this.__unpackHDRShader.destroy()
     if (this.__shaderBinding) this.__shaderBinding.destroy()
 
-    this.__hdrImage.loaded.disconnectScope(this)
-    this.__hdrImage.updated.disconnectScope(this)
+    // this.__hdrImage.loaded.disconnectScope(this) // TODO: these functions don't exist
+    // this.__hdrImage.updated.disconnectScope(this)
   }
 }
 
