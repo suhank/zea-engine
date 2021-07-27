@@ -1,10 +1,11 @@
 /* eslint-disable no-unused-vars */
 import { Color } from '../../Math/index'
 import { Registry } from '../../Registry'
-import { BooleanParameter, NumberParameter, ColorParameter } from '../Parameters/index'
+import { BooleanParameter, NumberParameter, ColorParameter, Parameter } from '../Parameters/index'
 import { BaseGroup } from './BaseGroup'
 import { TreeItem } from '../TreeItem'
 import { BaseGeomItem } from '../BaseGeomItem'
+import { BaseItem } from '../BaseItem'
 
 /**
  *
@@ -16,12 +17,14 @@ import { BaseGeomItem } from '../BaseGeomItem'
  * @extends BaseGroup
  */
 class SelectionSet extends BaseGroup {
+  protected __highlightedParam: Parameter<any>
+
   /**
    * Creates an instance of a group.
    *
    * @param {string} name - The name of the group.
    */
-  constructor(name) {
+  constructor(name: string) {
     super(name)
 
     this.__highlightedParam = this.addParameter(new BooleanParameter('Highlighted', false))
@@ -42,7 +45,7 @@ class SelectionSet extends BaseGroup {
    * @private
    */
   __updateVisibility() {
-    if (super.__updateVisibility()) {
+    if (super.updateVisibility()) {
       const value = this.isVisible()
       Array.from(this.__itemsParam.getValue()).forEach((item) => {
         if (item instanceof TreeItem) item.propagateVisibility(value ? 1 : -1)
@@ -62,9 +65,9 @@ class SelectionSet extends BaseGroup {
     // Make this function async so that we don't pull on the
     // graph immediately when we receive a notification.
     // Note: propagating using an operator would be much better.
-    new Promise((resolve) => {
+    const update = new Promise((resolve) => {
       let highlighted = false
-      let color
+      let color: Color
       if (this.getParameter('Highlighted').getValue() || this.isSelected()) {
         highlighted = true
         color = this.getParameter('HighlightColor').getValue()
@@ -78,7 +81,7 @@ class SelectionSet extends BaseGroup {
           else item.removeHighlight(key, true)
         }
       })
-      resolve()
+      resolve(update)
     })
   }
 
@@ -87,7 +90,7 @@ class SelectionSet extends BaseGroup {
    *
    * @param {boolean} sel - Boolean indicating the new selection state.
    */
-  setSelected(sel) {
+  setSelected(sel: boolean) {
     super.setSelected(sel)
     this.__updateHighlight()
   }
@@ -101,8 +104,8 @@ class SelectionSet extends BaseGroup {
    * @param {number} index - The index value.
    * @private
    */
-  __bindItem(item, index) {
-    super.__bindItem(item, index)
+  __bindItem(item: BaseItem, index: number) {
+    super.bindItem(<TreeItem>item, index)
     if (!(item instanceof TreeItem)) return
 
     // ///////////////////////////////
@@ -120,7 +123,7 @@ class SelectionSet extends BaseGroup {
     }
 
     if (item instanceof TreeItem) {
-      item.getParameter('BoundingBox').on('valueChanged', this._setBoundingBoxDirty)
+      item.getParameter('BoundingBox').on('valueChanged', this.setBoundingBoxDirty)
     }
   }
 
@@ -130,8 +133,8 @@ class SelectionSet extends BaseGroup {
    * @param {number} index - The index value.
    * @private
    */
-  __unbindItem(item, index) {
-    super.__unbindItem(item, index)
+  __unbindItem(item: BaseItem, index: number) {
+    super.unbindItem(<TreeItem>item, index)
     if (!(item instanceof TreeItem)) return
 
     if (this.getParameter('Highlighted').getValue()) {
@@ -155,7 +158,7 @@ class SelectionSet extends BaseGroup {
     }, true)
 
     if (item instanceof TreeItem) {
-      item.getParameter('BoundingBox').off('valueChanged', this._setBoundingBoxDirty)
+      item.getParameter('BoundingBox').off('valueChanged', this.setBoundingBoxDirty)
     }
   }
 
@@ -166,16 +169,16 @@ class SelectionSet extends BaseGroup {
    * The clone method constructs a new group,
    * copies its values and returns it.
    *
-   * @param {object} context - The context value.
+   * @param {Record<any,any>} context - The context value.
    * @return {SelectionSet} - Returns a new cloned group.
    */
-  clone(context) {
-    const cloned = new SelectionSet()
+  clone(context: Record<any, any>) {
+    const cloned = new SelectionSet(this.__name + ' clone')
     cloned.copyFrom(this, context)
     return cloned
   }
 }
 
-Registry.register('SelectionSet', SelectionSet)
+Registry.register('SelectionSet', SelectionSet) // TODO
 
 export { SelectionSet }
