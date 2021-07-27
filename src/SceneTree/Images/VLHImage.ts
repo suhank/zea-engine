@@ -1,8 +1,9 @@
 import { Color } from '../../Math/index'
 import { Registry } from '../../Registry'
-import { BaseImage } from '../BaseImage.js'
-import { resourceLoader } from '../resourceLoader.js'
+import { BaseImage } from '../BaseImage'
+import { resourceLoader } from '../resourceLoader'
 import { FilePathParameter } from '../Parameters/FilePathParameter'
+import { BinReader } from '../BinReader'
 
 /**
  * Class representing a VLH image.
@@ -17,18 +18,25 @@ import { FilePathParameter } from '../Parameters/FilePathParameter'
  * @extends BaseImage
  */
 class VLHImage extends BaseImage {
+  protected __loaded: boolean
+  protected __exposure: number
+  protected __ambientLightFactor: number
+  protected __hdrTint: Color
+  protected __stream: boolean
+  protected __domElement: any
+  protected __data: Record<any, any>
   /**
    * Create a VLH image.
    * @param {string} name - The name value.
-   * @param {object} params - The params value.
+   * @param {Record<any,any>} params - The params value.
    */
-  constructor(name, params = {}) {
+  constructor(name: string, params: Record<any, any> = {}) {
     let filepath
     if (name != undefined && name.includes('.')) {
       filepath = name
       name = name.substring(name.lastIndexOf('/') + 1, name.lastIndexOf('.'))
     }
-    super(name, params)
+    super(name) // TODO: used to be: super(name, params)
 
     this.__loaded = false
     this.__exposure = 1.0
@@ -69,10 +77,10 @@ class VLHImage extends BaseImage {
 
   /**
    * The __decodeData method.
-   * @param {object} entries - The entries value.
+   * @param {Record<any, any>} entries - The entries value.
    * @private
    */
-  __decodeData(entries) {
+  __decodeData(entries: Record<any, any>) {
     const ldr = entries.ldr
     const cdm = entries.cdm
 
@@ -103,7 +111,7 @@ class VLHImage extends BaseImage {
    * @param {string} url - The URL of the vlh file to load
    * @return {Promise} - Returns a promise that resolves once the initial load is complete
    */
-  load(url) {
+  load(url: string) {
     return new Promise((resolve, reject) => {
       const filename = url.lastIndexOf('/') > -1 ? url.substring(url.lastIndexOf('/') + 1) : ''
       const stem = filename.substring(0, filename.lastIndexOf('.'))
@@ -185,28 +193,28 @@ class VLHImage extends BaseImage {
   /**
    * The toJSON method encodes this type as a json object for persistence.
    *
-   * @param {object} context - The context value.
+   * @param {Record<any, any>} context - The context value.
    */
-  toJSON(context) {}
+  toJSON(context: Record<any, any>) {}
 
   /**
    * The fromJSON method decodes a json object for this type.
    *
-   * @param {object} json - The json object this item must decode.
-   * @param {object} context - The context value.
+   * @param {Record<any, any>} json - The json object this item must decode.
+   * @param {Record<any, any>} context - The context value.
    */
-  fromJSON(json, context) {}
+  fromJSON(json: Record<any, any>, context: Record<any, any>) {}
 
   /**
    * Sets state of current Image using a binary reader object, and adds it to the resource loader.
    *
    * @param {BinReader} reader - The reader value.
-   * @param {object} context - The context value.
+   * @param {Record<any, any>} context - The context value.
    */
-  readBinary(reader, context) {
+  readBinary(reader: BinReader, context: Record<any, any>) {
     // super.readBinary(reader, context);
     this.setName(reader.loadStr())
-    const resourcePath = reader.loadStr()
+    const resourcePath: string = reader.loadStr()
     if (typeof resourcePath === 'string' && resourcePath != '') {
       if (context.lod >= 0) {
         const suffixSt = resourcePath.lastIndexOf('.')
