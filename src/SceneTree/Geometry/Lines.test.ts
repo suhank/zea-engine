@@ -1,5 +1,6 @@
 import { Lines } from './Lines'
 import { Vec3 } from '../../Math'
+import { Vec3Attribute } from './Vec3Attribute'
 
 describe('Lines', () => {
   test('Check for default positions attribute.', () => {
@@ -12,7 +13,7 @@ describe('Lines', () => {
     const numVertices = 3
     lines.setNumVertices(numVertices)
 
-    const positions = lines.getVertexAttribute('positions')
+    const positions = <Vec3Attribute>lines.getVertexAttribute('positions')
     positions.getValueRef(0).set(1, 2, 3)
     positions.getValueRef(1).set(-1, -2, -3)
     positions.getValueRef(2).set(2, 1, -3)
@@ -24,7 +25,7 @@ describe('Lines', () => {
     expect(lines.getSegmentVertexIndex(1, 0)).toBe(1)
     expect(lines.getSegmentVertexIndex(1, 1)).toBe(2)
 
-    expect(lines.getVertexAttribute('positions').length).toBe(numVertices)
+    expect(lines.getVertexAttribute('positions').getCount()).toBe(numVertices)
   })
 
   test('Check resizing bigger the line segment indices.', () => {
@@ -41,7 +42,11 @@ describe('Lines', () => {
 
     expect(lines.getSegmentVertexIndex(1, 0)).toBe(1)
     expect(lines.getSegmentVertexIndex(1, 1)).toBe(2)
-    expect(lines.getIndices(1, 1)).toEqual(new Uint32Array([0, 1, 1, 2, 2, 0]))
+
+    // TODO:  originally: expect(lines.getIndices(1,1).toEqual(new Uint32Array([0, 1, 1, 2, 2, 0]))
+    let indices = lines.getIndices()
+    let expected = new Uint32Array([0, 1, 1, 2, 2, 0])
+    expect(indices.toString()).toEqual(expected.toString())
   })
 
   test('Check resizing smaller the line segment indices.', () => {
@@ -58,7 +63,7 @@ describe('Lines', () => {
 
     expect(lines.getSegmentVertexIndex(1, 0)).toBe(1)
     expect(lines.getSegmentVertexIndex(1, 1)).toBe(2)
-    expect(lines.getIndices(1, 1)).toEqual(new Uint32Array([0, 1, 1, 2]))
+    expect(lines.getIndices().toString()).toEqual(new Uint32Array([0, 1, 1, 2]).toString())
   })
 
   test('Check generated buffers', () => {
@@ -66,7 +71,7 @@ describe('Lines', () => {
     const numVertices = 3
     lines.setNumVertices(numVertices)
 
-    const positions = lines.getVertexAttribute('positions')
+    const positions = <Vec3Attribute>lines.getVertexAttribute('positions')
     positions.getValueRef(0).set(1, 2, 3)
     positions.getValueRef(1).set(-1, -2, -3)
     positions.getValueRef(2).set(2, 1, -3)
@@ -96,7 +101,7 @@ describe('Lines', () => {
     const lines = new Lines()
     const numVertices = 3
     lines.setNumVertices(numVertices)
-    const positions = lines.getVertexAttribute('positions')
+    const positions = <Vec3Attribute>lines.getVertexAttribute('positions')
     positions.getValueRef(0).set(1, 2, 3)
     positions.getValueRef(1).set(-1, -2, -3)
     positions.getValueRef(2).set(2, 1, -3)
@@ -120,7 +125,7 @@ describe('Lines', () => {
     }
     lines.fromJSON(input)
 
-    expect(lines.getVertexAttribute('positions').length).toBe(3)
+    expect(lines.getVertexAttribute('positions').getCount()).toBe(3)
     expect(lines.getNumSegments()).toBe(2)
   })
 })

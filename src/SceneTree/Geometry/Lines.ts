@@ -109,7 +109,7 @@ class Lines extends BaseGeom {
    * @return {number} - The return value.
    * @private
    */
-  protected getSegmentVertexIndex(line: number, lineVertex: number): number | undefined {
+  getSegmentVertexIndex(line: number, lineVertex: number): number | undefined {
     const numSegments = this.getNumSegments()
     if (line < numSegments) return this.__indices[line * 2 + lineVertex]
   }
@@ -176,7 +176,7 @@ class Lines extends BaseGeom {
    * @param {Record<string, any>} j - The json object this item must decode.
    * @param {Record<string, any>} context - The context value.
    */
-  fromJSON(j: Record<string, any>, context: Record<string, any>): void {
+  fromJSON(j: Record<string, any>, context?: Record<string, any>): void {
     super.fromJSON(j, context)
     if (j.indices) this.__indices = Uint32Array.from(j.indices)
   }
