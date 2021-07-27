@@ -161,8 +161,8 @@ class GLHDRImage extends GLTexture2D {
     if (this.__unpackHDRShader) this.__unpackHDRShader.destroy()
     if (this.__shaderBinding) this.__shaderBinding.destroy()
 
-    // this.__hdrImage.loaded.disconnectScope(this) // TODO: these functions don't exist
-    // this.__hdrImage.updated.disconnectScope(this)
+    this.__hdrImage.loaded.disconnectScope(this) // TODO: these functions don't exist
+    this.__hdrImage.updated.disconnectScope(this)
   }
 }
 
