@@ -1,5 +1,8 @@
+import { Xfo } from '../../Math/Xfo'
+import { TreeItem } from '../TreeItem'
 import { ListParameter } from './ListParameter'
 import { TreeItemParameter } from './TreeItemParameter'
+import { XfoParameter } from './XfoParameter'
 
 /** This class is deprecated. Use Groups instead.
  * Class representing a kinematic group parameter.
@@ -7,13 +10,20 @@ import { TreeItemParameter } from './TreeItemParameter'
  * @private
  */
 class KinematicGroupParameter extends ListParameter {
+  protected __globalXfoParams: KinematicGroupParameter[] // XfoParameter[]
+  protected __initialXfos: Xfo[]
+  protected __deltaXfos: Xfo[]
+  protected __value: any
+  protected __cleanerFn: any
+  protected __name: any
+  protected __dataType: any
   /**
    * Create a kinematic group parameter.
    * @param {string} name - The name of the kinematic group parameter.
    */
-  constructor(name) {
+  constructor(name: string) {
     console.error('This class is deprecated. Use Groups instead.')
-    super(name, TreeItemParameter)
+    super(name, typeof TreeItemParameter)
     this.__globalXfoParams = []
     this.__initialXfos = []
     this.__deltaXfos = []
@@ -37,7 +47,7 @@ class KinematicGroupParameter extends ListParameter {
    * @return {any} - The return value.
    * @private
    */
-  __filter(item) {
+  __filter(item: any) {
     // console.log(item.getPath())
     return !this.__value.includes(item)
   }
@@ -60,9 +70,9 @@ class KinematicGroupParameter extends ListParameter {
 
   /**
    * The getXfo method.
-   * @param {any} xfo - The xfo value.
+   * @param {Xfo} xfo - The xfo value.
    */
-  setXfo(xfo) {
+  setXfo(xfo: Xfo) {
     if (this.__value.length > 0) {
       this.__value[0].getParameter('GlobalXfo').setValue(xfo)
       for (let i = 1; i < this.__value.length; i++) {
@@ -76,7 +86,7 @@ class KinematicGroupParameter extends ListParameter {
    * @param {any} cleanerFn - The cleanerFn value.
    * @return {any} - The return value.
    */
-  setDirty(cleanerFn) {
+  setDirty(cleanerFn: any): any {
     this.__cleanerFn = cleanerFn
     for (const p of this.__globalXfoParams) {
       p.setDirty(cleanerFn)
@@ -88,9 +98,10 @@ class KinematicGroupParameter extends ListParameter {
    * The removeCleanerFn method.
    * @param {any} cleanerFn - The cleanerFn value.
    */
-  removeCleanerFn(cleanerFn) {
+  removeCleanerFn(cleanerFn: any) {
     for (const p of this.__globalXfoParams) {
-      p.removeCleanerFn(cleanerFn)
+      p.removeCleanerFn(cleanerFn) // TODO
+      // console.warn("removeCleanerFn does not exist on ")
     }
     this.__cleanerFn = undefined
   }
@@ -100,10 +111,10 @@ class KinematicGroupParameter extends ListParameter {
 
   /**
    * The toJSON method encodes this type as a json object for persistence.
-   * @param {object} context - The context value.
-   * @return {object} - Returns the json object.
+   * @param {Record<any,any>} context - The context value.
+   * @return {Record<any,any>} - Returns the json object.
    */
-  toJSON(context) {
+  toJSON(context: Record<any, any>) {
     // return super.toJSON(context);
     const treeItems = []
     for (const p of this.__value) treeItems.push(context.makeRelative(p.getPath()))
@@ -114,10 +125,10 @@ class KinematicGroupParameter extends ListParameter {
 
   /**
    * The fromJSON method decodes a json object for this type.
-   * @param {object} j - The json object this item must decode.
-   * @param {object} context - The context value.
+   * @param {Record<any,any>} j - The json object this item must decode.
+   * @param {Record<any,any>} context - The context value.
    */
-  fromJSON(j, context) {
+  fromJSON(j: Record<any, any>, context: Record<any, any>) {
     if (j.treeItems == undefined) {
       console.warn('Invalid Parameter JSON')
       return
@@ -126,7 +137,7 @@ class KinematicGroupParameter extends ListParameter {
     for (let i = 0; i < j.treeItems.length; i++) {
       context.resolvePath(
         j.treeItems[i],
-        (treeItem) => {
+        (treeItem: TreeItem) => {
           this.__value.push(treeItem)
           this.emit('elementAdded', {
             elem: treeItem,
@@ -134,7 +145,7 @@ class KinematicGroupParameter extends ListParameter {
           })
         },
         () => {
-          console.warn('Unable to resolve Kinematic Group Member:' + pj.paramPath)
+          console.warn('Unable to resolve Kinematic Group Member:' + j.paramPath)
         }
       )
     }
@@ -149,7 +160,8 @@ class KinematicGroupParameter extends ListParameter {
    * @return {FilePathParameter} - Returns a new cloned kinematic group parameter.
    */
   clone() {
-    const clonedParam = new KinematicGroupParameter(this.__name, clonedValue, this.__dataType)
+    // const clonedParam = new KinematicGroupParameter(this.__name, clonedValue, this.__dataType)
+    const clonedParam = new KinematicGroupParameter(this.__name) // TODO: check for correctness/intention
     return clonedParam
   }
 
