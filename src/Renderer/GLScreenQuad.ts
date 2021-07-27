@@ -1,6 +1,6 @@
 import { Vec2 } from '../Math/index'
-import { ScreenQuadShader } from './Shaders/ScreenQuadShader.js'
-import { generateShaderGeomBinding } from './Drawing/GeomShaderBinding.js'
+import { ScreenQuadShader } from './Shaders/ScreenQuadShader'
+import { generateShaderGeomBinding } from './Drawing/GeomShaderBinding'
 import { GLTexture2D } from './GLTexture2D'
 
 /** Class representing a GL screen quad.

@@ -1,8 +1,8 @@
 /* eslint-disable guard-for-in */
 import { EventEmitter, Allocator1D } from '../../Utilities/index'
-import { generateShaderGeomBinding, genDataTypeDesc } from './GeomShaderBinding.js'
+import { generateShaderGeomBinding, genDataTypeDesc } from './GeomShaderBinding'
 import { Points, Lines, Mesh, PointsProxy, LinesProxy, MeshProxy, BaseGeom } from '../../SceneTree/index'
-import { GLPoints, GLLines, GLMesh } from './index.js'
+import { GLPoints, GLLines, GLMesh } from './index'
 import { GLBaseRenderer } from '../GLBaseRenderer'
 
 const resizeIntArray = (intArray: Int32Array, newSize: number) => {

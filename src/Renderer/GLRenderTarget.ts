@@ -1,6 +1,6 @@
-import { Color } from '../Math/Color.js'
+import { Color } from '../Math/Color'
 import { EventEmitter } from '../Utilities/index'
-import { processTextureParams } from './processTextureParams.js'
+import { processTextureParams } from './processTextureParams'
 
 /** Class representing a GL render target. */
 class GLRenderTarget extends EventEmitter {

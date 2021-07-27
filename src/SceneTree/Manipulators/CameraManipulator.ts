@@ -1,10 +1,10 @@
 /* eslint-disable require-jsdoc */
 import { Vec2, Vec3, Quat, Xfo, Ray } from '../../Math/index'
-import { BaseTool } from './BaseTool.js'
+import { BaseTool } from './BaseTool'
 import { NumberParameter, BooleanParameter } from '../Parameters/index'
-import { SystemDesc } from '../../SystemDesc.js'
+import { SystemDesc } from '../../SystemDesc'
 import { POINTER_TYPES } from '../../Utilities/EnumUtils'
-import { PassType } from '../../Renderer/Passes/GLPass.js'
+import { PassType } from '../../Renderer/Passes/GLPass'
 
 const MANIPULATION_MODES = {
   pan: 0,

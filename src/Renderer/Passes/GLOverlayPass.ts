@@ -1,7 +1,7 @@
-import { PassType } from './GLPass.js'
-import { GLOpaqueGeomsPass } from './GLOpaqueGeomsPass.js'
-import { GLRenderer } from '../GLRenderer.js'
-import { GeomItem } from '../../SceneTree/GeomItem.js'
+import { PassType } from './GLPass'
+import { GLOpaqueGeomsPass } from './GLOpaqueGeomsPass'
+import { GLRenderer } from '../GLRenderer'
+import { GeomItem } from '../../SceneTree/GeomItem'
 
 /** Class representing a GL overlay pass.
  * @extends GLOpaqueGeomsPass

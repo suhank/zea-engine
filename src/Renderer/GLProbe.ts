@@ -1,9 +1,9 @@
 import { EventEmitter } from '../Utilities/index'
 import { SystemDesc } from '../SystemDesc'
-import { PreComputeBRDFShader } from './Shaders/PreComputeBRDFShader.js'
-import { ConvolveIrradianceShader } from './Shaders/ConvolveIrradianceShader.js'
-import { ConvolveSpecularShader } from './Shaders/ConvolveSpecularShader.js'
-import { generateShaderGeomBinding } from './Drawing/GeomShaderBinding.js'
+import { PreComputeBRDFShader } from './Shaders/PreComputeBRDFShader'
+import { ConvolveIrradianceShader } from './Shaders/ConvolveIrradianceShader'
+import { ConvolveSpecularShader } from './Shaders/ConvolveSpecularShader'
+import { generateShaderGeomBinding } from './Drawing/GeomShaderBinding'
 
 /** Class representing a GL probe.
  * @private

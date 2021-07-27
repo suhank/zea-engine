@@ -1,9 +1,9 @@
 /* eslint-disable guard-for-in */
 import { Vec2, Vec3, Ray, Mat4, Xfo } from '../Math/index'
 import { Camera, GeomItem, TreeItem } from '../SceneTree/index'
-import { GLBaseViewport } from './GLBaseViewport.js'
-import { GLFbo } from './GLFbo.js'
-import { GLTexture2D } from './GLTexture2D.js'
+import { GLBaseViewport } from './GLBaseViewport'
+import { GLFbo } from './GLFbo'
+import { GLTexture2D } from './GLTexture2D'
 import { POINTER_TYPES } from '../Utilities/EnumUtils'
 import { BaseTool } from '../SceneTree/index'
 import { CameraManipulator } from '../SceneTree/index'

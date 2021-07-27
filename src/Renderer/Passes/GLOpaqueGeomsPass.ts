@@ -1,13 +1,13 @@
-import { PassType } from './GLPass.js'
-import { GLStandardGeomsPass } from './GLStandardGeomsPass.js'
-import { GLRenderer } from '../GLRenderer.js'
+import { PassType } from './GLPass'
+import { GLStandardGeomsPass } from './GLStandardGeomsPass'
+import { GLRenderer } from '../GLRenderer'
 import { Registry } from '../../Registry'
 
 import { MathFunctions } from '../../Utilities/MathFunctions'
 import { Points, Lines, PointsProxy, LinesProxy, GeomItem, Material, TreeItem } from '../../SceneTree/index'
-import { GLShaderMaterials } from '../Drawing/GLShaderMaterials.js'
-import { GLShaderGeomSets } from '../Drawing/GLShaderGeomSets.js'
-import { GLBaseRenderer } from '../GLBaseRenderer.js'
+import { GLShaderMaterials } from '../Drawing/GLShaderMaterials'
+import { GLShaderGeomSets } from '../Drawing/GLShaderGeomSets'
+import { GLBaseRenderer } from '../GLBaseRenderer'
 
 /** Class representing a GL opaque geoms pass.
  * @extends GLStandardGeomsPass

@@ -1,7 +1,7 @@
-import { Color, Vec3 } from '../Math/index.js'
+import { Color, Vec3 } from '../Math/index'
 import { TreeItem } from './TreeItem'
 import { Material } from './Material'
-import { BinReader } from './BinReader.js'
+import { BinReader } from './BinReader'
 
 /**
  * Base class that represents geometry items with layering, overlaying and cut away features.

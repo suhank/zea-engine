@@ -1,9 +1,9 @@
 /* eslint-disable guard-for-in */
-import { Points } from './Points.js'
-import { Lines } from './Lines.js'
-import { Mesh } from './Mesh.js'
-import { BinReader } from '../BinReader.js'
-import { Version } from '../Version.js'
+import { Points } from './Points'
+import { Lines } from './Lines'
+import { Mesh } from './Mesh'
+import { BinReader } from '../BinReader'
+import { Version } from '../Version'
 import { Registry } from '../../Registry'
 
 // key, toc, geomIndexOffset, geomsRange, isMobileDevice, bufferSlice, genBuffersOpts, context

@@ -1,9 +1,9 @@
-import { GLTexture2D } from './GLTexture2D.js'
-import { GLFbo } from './GLFbo.js'
-import { GLImageAtlas } from './GLImageAtlas.js'
-import { BaseImage } from '../SceneTree/BaseImage.js'
+import { GLTexture2D } from './GLTexture2D'
+import { GLFbo } from './GLFbo'
+import { GLImageAtlas } from './GLImageAtlas'
+import { BaseImage } from '../SceneTree/BaseImage'
 
-// import './Shaders/GLSL/ImagePyramid.js'
+// import './Shaders/GLSL/ImagePyramid'
 
 const Math_log2 = function (value: number) {
   // IE11 doesn't support Math.log2.

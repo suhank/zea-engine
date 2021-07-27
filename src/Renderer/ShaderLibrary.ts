@@ -1,4 +1,4 @@
-import { glslTypes } from './GLSLConstants.js'
+import { glslTypes } from './GLSLConstants'
 
 let GlslTypes = <GLSLTypes>glslTypes
 

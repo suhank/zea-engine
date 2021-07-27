@@ -1,8 +1,8 @@
-import { GLTexture2D } from './GLTexture2D.js'
-import { UnpackHDRShader } from './Shaders/UnpackHDRShader.js'
-import { GLFbo } from './GLFbo.js'
-import { generateShaderGeomBinding } from './Drawing/GeomShaderBinding.js'
-import { VLHImage } from '../SceneTree/Images/VLHImage.js'
+import { GLTexture2D } from './GLTexture2D'
+import { UnpackHDRShader } from './Shaders/UnpackHDRShader'
+import { GLFbo } from './GLFbo'
+import { generateShaderGeomBinding } from './Drawing/GeomShaderBinding'
+import { VLHImage } from '../SceneTree/Images/VLHImage'
 
 /** Class representing a GL high dynamic range (HDR) image.
  * @extends GLTexture2D

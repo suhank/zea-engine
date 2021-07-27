@@ -13,8 +13,8 @@ import {
   TreeItem,
   BaseGeomItem,
 } from '../../SceneTree/index'
-import { GLPoints, GLLines, GLMesh, GLMaterial, GLGeomItemChangeType, GLGeomItem } from '../Drawing/index.js'
-import { GLTexture2D } from '../GLTexture2D.js'
+import { GLPoints, GLLines, GLMesh, GLMaterial, GLGeomItemChangeType, GLGeomItem } from '../Drawing/index'
+import { GLTexture2D } from '../GLTexture2D'
 import { MathFunctions } from '../../Utilities/MathFunctions'
 import { GLBaseRenderer } from '../GLBaseRenderer'
 

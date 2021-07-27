@@ -4,9 +4,9 @@ import { GrowingPacker } from '../Utilities/index'
 
 import { BaseImage } from '../SceneTree/index'
 
-import { GLTexture2D } from './GLTexture2D.js'
-import { GLRenderTarget } from './GLRenderTarget.js'
-import { generateShaderGeomBinding } from './Drawing/GeomShaderBinding.js'
+import { GLTexture2D } from './GLTexture2D'
+import { GLRenderTarget } from './GLRenderTarget'
+import { generateShaderGeomBinding } from './Drawing/GeomShaderBinding'
 import { MathFunctions } from '../Utilities/MathFunctions'
 import { AtlasLayoutShader } from './Shaders/AtlasLayoutShader'
 

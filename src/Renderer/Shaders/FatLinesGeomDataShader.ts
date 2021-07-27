@@ -7,7 +7,7 @@ import './GLSL/index'
 import vert from './FatLinesGeomData.vert'
 import frag from './FatLinesGeomData.frag'
 
-import { FatLinesShader } from './FatLinesShader.js'
+import { FatLinesShader } from './FatLinesShader'
 /** Shader for drawing Fat lines
  * @extends GLShader
  * @private
