@@ -35,7 +35,7 @@ class GLGeomItemLibrary extends EventEmitter {
     this.glGeomItemsIndexFreeList = []
     this.dirtyItemIndices = []
     this.removedItemIndices = []
-    this.enableFrustumCulling = options.enableFrustumCulling
+    this.enableFrustumCulling = options.enableFrustumCulling || options.enableOcclusionCulling
 
     // Note: while it would be possible to get Occlusion Culling working in WebGL1,
     // we would need to jump through a lot of hoops.
@@ -343,7 +343,6 @@ class GLGeomItemLibrary extends EventEmitter {
       this.reductionDataBuffer.resize(size, size)
       this.reductionDataArray = new Uint8Array(size * size)
     }
-
   }
 
   /**

@@ -891,21 +891,23 @@ class GLViewport extends GLBaseViewport {
     if (this.debugOcclusionBuffer) {
       const gl = this.__renderer.gl
       const occlusionDataBuffer = this.__renderer.glGeomItemLibrary.occlusionDataBuffer
-      gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, null)
-      occlusionDataBuffer.bindForReading(renderstate)
-      gl.clearBufferfv(gl.COLOR, 0, [0.0, 0.0, 0.0, 0.0])
-      gl.blitFramebuffer(
-        0,
-        0,
-        occlusionDataBuffer.width,
-        occlusionDataBuffer.height,
-        0,
-        0,
-        this.__width,
-        this.__height,
-        gl.COLOR_BUFFER_BIT,
-        gl.NEAREST
-      )
+      if (occlusionDataBuffer) {
+        gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, null)
+        occlusionDataBuffer.bindForReading(renderstate)
+        gl.clearBufferfv(gl.COLOR, 0, [0.0, 0.0, 0.0, 0.0])
+        gl.blitFramebuffer(
+          0,
+          0,
+          occlusionDataBuffer.width,
+          occlusionDataBuffer.height,
+          0,
+          0,
+          this.__width,
+          this.__height,
+          gl.COLOR_BUFFER_BIT,
+          gl.NEAREST
+        )
+      }
     }
   }
 }
