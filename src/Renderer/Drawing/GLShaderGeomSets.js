@@ -1,9 +1,9 @@
 /* eslint-disable guard-for-in */
 import { EventEmitter } from '../../Utilities/index'
 import { GeomItem, Points, Lines, Mesh, PointsProxy, LinesProxy, MeshProxy } from '../../SceneTree/index'
-import { GLLinesItemSet } from '../Drawing/GLLinesItemSet.js'
-import { GLPointsItemSet } from '../Drawing/GLPointsItemSet.js'
-import { GLMeshItemSet } from '../Drawing/GLMeshItemSet.js'
+import { GLLinesItemSet } from '../Drawing/GLLinesItemSet'
+import { GLPointsItemSet } from '../Drawing/GLPointsItemSet'
+import { GLMeshItemSet } from '../Drawing/GLMeshItemSet'
 
 /** Class representing GL shader materials.
  * @private

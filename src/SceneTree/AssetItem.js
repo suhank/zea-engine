@@ -1,8 +1,8 @@
-import { Version } from './Version.js'
+import { Version } from './Version'
 import { TreeItem } from './TreeItem'
-import { SelectionSet } from './Groups/SelectionSet.js'
-import { GeomLibrary } from './GeomLibrary.js'
-import { MaterialLibrary } from './MaterialLibrary.js'
+import { SelectionSet } from './Groups/SelectionSet'
+import { GeomLibrary } from './GeomLibrary'
+import { MaterialLibrary } from './MaterialLibrary'
 import { Registry } from '../Registry'
 import { EventEmitter } from '../Utilities/EventEmitter'
 

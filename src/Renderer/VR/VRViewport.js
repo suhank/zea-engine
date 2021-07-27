@@ -1,11 +1,11 @@
-import { SystemDesc } from '../../SystemDesc.js'
+import { SystemDesc } from '../../SystemDesc'
 import { Vec3, Mat4, Xfo } from '../../Math/index'
 import { GeomItem, TreeItem, VLAAsset } from '../../SceneTree/index'
-import { GLBaseViewport } from '../GLBaseViewport.js'
-import { VRHead } from './VRHead.js'
-import { VRController } from './VRController.js'
-import { VRViewManipulator } from './VRViewManipulator.js'
-import { resourceLoader } from '../../SceneTree/resourceLoader.js'
+import { GLBaseViewport } from '../GLBaseViewport'
+import { VRHead } from './VRHead'
+import { VRController } from './VRController'
+import { VRViewManipulator } from './VRViewManipulator'
+import { resourceLoader } from '../../SceneTree/resourceLoader'
 import { POINTER_TYPES } from '../../Utilities/EnumUtils'
 
 /** This Viewport class is used for rendering stereoscopic views to VR controllers using the WebXR api.

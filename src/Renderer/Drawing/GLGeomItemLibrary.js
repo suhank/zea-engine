@@ -1,12 +1,12 @@
 /* eslint-disable guard-for-in */
 import { EventEmitter } from '../../Utilities/index'
 import { Vec4 } from '../../Math/index'
-import { GLGeomItemFlags, GLGeomItem } from './GLGeomItem.js'
+import { GLGeomItemFlags, GLGeomItem } from './GLGeomItem'
 import { MathFunctions } from '../../Utilities/MathFunctions'
-import { GLTexture2D } from '../GLTexture2D.js'
+import { GLTexture2D } from '../GLTexture2D'
 
-// import { handleMessage } from './GLGeomItemLibraryCullingWorker.js'
-import GLGeomItemLibraryCullingWorker from 'web-worker:./GLGeomItemLibraryCullingWorker.js'
+// import { handleMessage } from './GLGeomItemLibraryCullingWorker'
+import GLGeomItemLibraryCullingWorker from 'web-worker:./GLGeomItemLibraryCullingWorker'
 
 const pixelsPerItem = 6 // The number of RGBA pixels per draw item.
 

@@ -1,4 +1,4 @@
-import { SystemDesc } from '../SystemDesc.js'
+import { SystemDesc } from '../SystemDesc'
 import { Float32 } from '../Utilities/MathFunctions'
 
 const create3DContext = function (canvas, opt_attribs) {

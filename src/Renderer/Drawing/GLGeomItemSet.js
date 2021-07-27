@@ -1,4 +1,4 @@
-import '../../SceneTree/GeomItem.js'
+import '../../SceneTree/GeomItem'
 
 import { EventEmitter } from '../../Utilities/index'
 

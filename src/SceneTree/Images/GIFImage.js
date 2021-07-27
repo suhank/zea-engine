@@ -1,11 +1,11 @@
 /* eslint-disable prefer-promise-reject-errors */
 import { Vec4 } from '../../Math/index'
-import { loadBinfile } from '../Utils.js'
+import { loadBinfile } from '../Utils'
 import { Registry } from '../../Registry'
-import { FileImage } from './FileImage.js'
+import { FileImage } from './FileImage'
 
-import { GIF } from '../../external/gifuct-js.js'
-import { resourceLoader } from '../resourceLoader.js'
+import { GIF } from '../../external/gifuct-js'
+import { resourceLoader } from '../resourceLoader'
 
 import { NumberParameter, Vec4Parameter } from '../Parameters/index'
 import { MathFunctions } from '../../Utilities/MathFunctions'

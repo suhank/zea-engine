@@ -1,9 +1,9 @@
-import { SystemDesc } from '../../SystemDesc.js'
-import ArchiveUnpackerWorker from 'web-worker:./ArchiveUnpackerWorker.js'
+import { SystemDesc } from '../../SystemDesc'
+import ArchiveUnpackerWorker from 'web-worker:./ArchiveUnpackerWorker'
 // For synchronous loading, uncomment these lines.
 // import {
 //     ResourceLoaderWorker_onmessage
-// } from './ArchiveUnpackerWorker.js';
+// } from './ArchiveUnpackerWorker';
 
 function checkStatus(response) {
   if (!response.ok) {

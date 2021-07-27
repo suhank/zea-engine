@@ -1,5 +1,5 @@
 import { RefCounted } from '../../SceneTree/index'
-import { generateShaderGeomBinding } from './GeomShaderBinding.js'
+import { generateShaderGeomBinding } from './GeomShaderBinding'
 
 /** Class representing a GL geom.
  * @private

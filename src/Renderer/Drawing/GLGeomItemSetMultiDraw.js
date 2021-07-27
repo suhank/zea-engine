@@ -1,7 +1,7 @@
-import '../../SceneTree/GeomItem.js'
+import '../../SceneTree/GeomItem'
 
 import { EventEmitter, MathFunctions } from '../../Utilities/index'
-import { GLTexture2D } from '../GLTexture2D.js'
+import { GLTexture2D } from '../GLTexture2D'
 
 /** This class abstracts the rendering of a collection of geometries to screen.
  * @extends EventEmitter

@@ -1,5 +1,5 @@
 import { EventEmitter } from '../../Utilities/index'
-import { loadTextfile, loadBinfile } from '../Utils.js'
+import { loadTextfile, loadBinfile } from '../Utils'
 
 // eslint-disable-next-line require-jsdoc
 function getLanguage() {

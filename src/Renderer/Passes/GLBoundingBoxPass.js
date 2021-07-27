@@ -1,9 +1,9 @@
 import { Color, Vec3, Vec4 } from '../../Math/index'
 import { LinesCuboid, TreeItem } from '../../SceneTree/index'
-import { BoundingBoxShader } from '../Shaders/BoundingBoxShader.js'
-import { GLLines } from '../Drawing/GLLines.js'
-import { GLPass, PassType } from './GLPass.js'
-import { GLTexture2D } from '../GLTexture2D.js'
+import { BoundingBoxShader } from '../Shaders/BoundingBoxShader'
+import { GLLines } from '../Drawing/GLLines'
+import { GLPass, PassType } from './GLPass'
+import { GLTexture2D } from '../GLTexture2D'
 import { MathFunctions } from '../../Utilities/MathFunctions'
 
 const pixelsPerItem = 6 // The number of pixels per draw item.

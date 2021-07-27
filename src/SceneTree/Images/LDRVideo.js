@@ -1,9 +1,9 @@
 import { Registry } from '../../Registry'
-import { resourceLoader } from '../resourceLoader.js'
+import { resourceLoader } from '../resourceLoader'
 
 import { BooleanParameter, NumberParameter } from '../Parameters/index'
 
-import { FileImage } from './FileImage.js'
+import { FileImage } from './FileImage'
 
 /**
  * Class representing a LDR (low dynamic range) video.

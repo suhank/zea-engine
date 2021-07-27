@@ -1,11 +1,11 @@
-import { PassType } from './GLPass.js'
-import { GLOpaqueGeomsPass } from './GLOpaqueGeomsPass.js'
-import { GLRenderer } from '../GLRenderer.js'
-import { GLTexture2D } from '../GLTexture2D.js'
+import { PassType } from './GLPass'
+import { GLOpaqueGeomsPass } from './GLOpaqueGeomsPass'
+import { GLRenderer } from '../GLRenderer'
+import { GLTexture2D } from '../GLTexture2D'
 import { Lines, LinesProxy, Points, PointsProxy } from '../../SceneTree/index'
-import { FattenLinesShader } from '../Shaders/FattenLinesShader.js'
+import { FattenLinesShader } from '../Shaders/FattenLinesShader'
 import { Plane } from '../../SceneTree/index'
-import { GLMesh } from '../Drawing/GLMesh.js'
+import { GLMesh } from '../Drawing/GLMesh'
 
 /** Class representing a GL opaque geoms pass.
  * @extends GLOpaqueGeomsPass

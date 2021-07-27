@@ -1,8 +1,8 @@
 /* eslint-disable no-unused-vars */
 import { Vec3, Box3, Xfo, Mat4, Vec2, Color } from '../Math/index'
 import { Lines } from '../SceneTree/Geometry/Lines'
-import { Material } from './Material.js'
-import { GeomItem } from './GeomItem.js'
+import { Material } from './Material'
+import { GeomItem } from './GeomItem'
 import { TreeItem } from './TreeItem'
 import { NumberParameter } from './Parameters/index'
 import { MathFunctions, SInt16 } from '../Utilities/MathFunctions'

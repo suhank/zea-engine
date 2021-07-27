@@ -1,7 +1,7 @@
 import { Registry } from '../../Registry'
-import { BaseImage } from '../BaseImage.js'
+import { BaseImage } from '../BaseImage'
 
-import { resourceLoader } from '../resourceLoader.js'
+import { resourceLoader } from '../resourceLoader'
 
 import { FilePathParameter } from '../Parameters/FilePathParameter'
 

@@ -4,7 +4,7 @@ import util from 'util'
 /* eslint-disable require-jsdoc */
 import { Color } from '../../Math/index'
 import { Registry } from '../../Registry'
-import { VLHImage } from './VLHImage.js'
+import { VLHImage } from './VLHImage'
 import { BooleanParameter } from '../Parameters/BooleanParameter'
 
 /**

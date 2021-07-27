@@ -1,7 +1,7 @@
-import { SystemDesc } from '../SystemDesc.js'
+import { SystemDesc } from '../SystemDesc'
 import { EventEmitter } from '../Utilities/index'
 import { Registry } from '../Registry'
-import { Material } from './Material.js'
+import { Material } from './Material'
 import { FileImage } from './Images/index'
 
 /** Class representing a material library in a scene tree.

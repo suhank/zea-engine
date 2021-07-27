@@ -1,10 +1,10 @@
 import { Vec3 } from '../../Math/Vec3'
-import { PassType } from './GLPass.js'
+import { PassType } from './GLPass'
 import { Points, Lines, PointsProxy, LinesProxy } from '../../SceneTree/index'
-import { GLStandardGeomsPass } from './GLStandardGeomsPass.js'
-import { GLRenderer } from '../GLRenderer.js'
+import { GLStandardGeomsPass } from './GLStandardGeomsPass'
+import { GLRenderer } from '../GLRenderer'
 import { MathFunctions } from '../../Utilities/MathFunctions'
-import { GLShaderGeomSets } from '../Drawing/GLShaderGeomSets.js'
+import { GLShaderGeomSets } from '../Drawing/GLShaderGeomSets'
 import { Registry } from '../../Registry'
 
 /** Class representing a GL transparent geoms pass.

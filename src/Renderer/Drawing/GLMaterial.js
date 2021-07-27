@@ -1,5 +1,5 @@
 import { EventEmitter } from '../../Utilities/index'
-import { MaterialShaderBinding } from './MaterialShaderBinding.js'
+import { MaterialShaderBinding } from './MaterialShaderBinding'
 
 /** Class representing a GL material.
  * @extends EventEmitter

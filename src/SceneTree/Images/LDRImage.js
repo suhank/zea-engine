@@ -1,6 +1,6 @@
 /* eslint-disable require-jsdoc */
 import { Registry } from '../../Registry'
-import { FileImage } from './FileImage.js'
+import { FileImage } from './FileImage'
 
 /**
  * Class representing a LDR (low dynamic range) image.

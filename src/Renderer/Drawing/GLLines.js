@@ -1,7 +1,7 @@
-import { Vec2, Vec3 } from '../../Math/index.js'
-import { GLGeom } from './GLGeom.js'
-import { generateShaderGeomBinding } from './GeomShaderBinding.js'
-import { GLTexture2D } from '../GLTexture2D.js'
+import { Vec2, Vec3 } from '../../Math/index'
+import { GLGeom } from './GLGeom'
+import { generateShaderGeomBinding } from './GeomShaderBinding'
+import { GLTexture2D } from '../GLTexture2D'
 import { Lines } from '../../SceneTree/Geometry/Lines'
 
 /** Class representing GL lines.

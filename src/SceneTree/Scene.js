@@ -1,8 +1,8 @@
 import { Color } from '../Math/index'
 import { TreeItem } from './TreeItem'
-import { resourceLoader } from './resourceLoader.js'
-import { DriveAdapter } from './ResourceLoader/DriveAdapter.js'
-import { SceneSettings } from './SceneSettings.js'
+import { resourceLoader } from './resourceLoader'
+import { DriveAdapter } from './ResourceLoader/DriveAdapter'
+import { SceneSettings } from './SceneSettings'
 import { GridTreeItem } from './GridTreeItem'
 
 const defaultGridColor = new Color('#DCDCDC')

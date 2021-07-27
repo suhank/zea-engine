@@ -1,5 +1,5 @@
-import { GLPass, PassType } from './GLPass.js'
-import { GLRenderer } from '../GLRenderer.js'
+import { GLPass, PassType } from './GLPass'
+import { GLRenderer } from '../GLRenderer'
 
 import { AudioItem, GeomItem } from '../../SceneTree/index'
 

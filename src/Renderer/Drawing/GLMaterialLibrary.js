@@ -1,6 +1,6 @@
-﻿import { GLTexture2D } from '../GLTexture2D.js'
+﻿import { GLTexture2D } from '../GLTexture2D'
 import { EventEmitter, MathFunctions, Allocator1D } from '../../Utilities/index'
-import { GLMaterial } from './GLMaterial.js'
+import { GLMaterial } from './GLMaterial'
 
 /** Class representing a GL CAD material library.
  * @ignore

@@ -1,5 +1,5 @@
-import { GLGeomItemSetMultiDraw } from './GLGeomItemSetMultiDraw.js'
-import '../../SceneTree/Geometry/Mesh.js'
+import { GLGeomItemSetMultiDraw } from './GLGeomItemSetMultiDraw'
+import '../../SceneTree/Geometry/Mesh'
 
 /** Class representing a GL mesh.
  * @extends GLGeom

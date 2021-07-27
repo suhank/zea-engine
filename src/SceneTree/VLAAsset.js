@@ -1,10 +1,10 @@
-import { SystemDesc } from '../SystemDesc.js'
+import { SystemDesc } from '../SystemDesc'
 import { FilePathParameter } from './Parameters/FilePathParameter'
-import { AssetItem, AssetLoadContext } from './AssetItem.js'
-import { BinReader } from './BinReader.js'
-import { resourceLoader } from './resourceLoader.js'
+import { AssetItem, AssetLoadContext } from './AssetItem'
+import { BinReader } from './BinReader'
+import { resourceLoader } from './resourceLoader'
 import { Registry } from '../Registry'
-import { Version } from './Version.js'
+import { Version } from './Version'
 
 /**
  * Class designed to load and handle `.vla` files.

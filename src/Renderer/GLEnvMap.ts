@@ -1,7 +1,7 @@
-import { GLProbe } from './GLProbe.js'
-import { GLHDRImage } from './GLHDRImage.js'
-import { EnvMapShader } from './Shaders/EnvMapShader.js'
-import { generateShaderGeomBinding } from './Drawing/GeomShaderBinding.js'
+import { GLProbe } from './GLProbe'
+import { GLHDRImage } from './GLHDRImage'
+import { EnvMapShader } from './Shaders/EnvMapShader'
+import { generateShaderGeomBinding } from './Drawing/GeomShaderBinding'
 
 /** Class representing a GL environment map.
  * @extends GLProbe

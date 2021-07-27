@@ -1,5 +1,5 @@
-import { GLGeom } from './GLGeom.js'
-import { generateShaderGeomBinding } from './GeomShaderBinding.js'
+import { GLGeom } from './GLGeom'
+import { generateShaderGeomBinding } from './GeomShaderBinding'
 
 /** Class representing GL points.
  * @extends GLGeom
