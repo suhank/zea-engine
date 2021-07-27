@@ -9,17 +9,30 @@ import { generateShaderGeomBinding } from './Drawing/GeomShaderBinding.js'
  * @private
  */
 class GLProbe extends EventEmitter {
+  protected __gl: WebGLRenderingContext | WebGL2RenderingContext
+  // protected gl: Record<any,any>// to allow easier refactoring later
+
+  protected maxFragmentShaderTextureUnits: any
+  protected textureType: number
+  protected textureDesc: number[]
+  protected __convolved: boolean
+  protected __fbos: any[]
+  protected brdfLUTTexture: any
+  protected irradianceCubeTex: any
+  protected specularCubetex: any
   /**
    * Create a GL probe.
    * @param {WebGLRenderingContext} gl - The webgl rendering context.
    * @param {string} name - The name value.
    */
-  constructor(gl, name) {
+  constructor(gl: WebGLRenderingContext | WebGL2RenderingContext, name: string) {
     super()
     this.__gl = gl
-    this.maxFragmentShaderTextureUnits = gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS)
+    const gl_casted: Record<any, any> = gl
 
-    if (!gl.__quadVertexIdsBuffer) gl.setupInstancedQuad()
+    this.maxFragmentShaderTextureUnits = gl.getParameter(this.__gl.MAX_TEXTURE_IMAGE_UNITS)
+
+    if (!gl_casted.__quadVertexIdsBuffer) gl_casted.setupInstancedQuad()
 
     this.textureType = 1 // Default 2d 8 bit texture image texture.
     this.textureDesc = [0, 0, 0, 0] // To be populated by derived classes.
@@ -32,10 +45,12 @@ class GLProbe extends EventEmitter {
    * The convolveProbe method.
    * @param {any} srcGLTex - The srcGLTex value.
    */
-  convolveProbe(srcGLTex) {
-    const gl = this.__gl
+  convolveProbe(srcGLTex: any) {
+    const gl = <Record<any, any>>this.__gl
 
-    const renderstate = { shaderopts: { directives: ['#define ENABLE_ES3', '#define ENABLE_FLOAT_TEXTURES'] } }
+    const renderstate: Record<any, any> = {
+      shaderopts: { directives: ['#define ENABLE_ES3', '#define ENABLE_FLOAT_TEXTURES'] },
+    }
 
     // Note: in testing we are running on the Google SwiftShader emulated GPU.
     if (SystemDesc.deviceCategory == 'Low') {
@@ -59,7 +74,7 @@ class GLProbe extends EventEmitter {
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR)
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR)
 
-    const brdfShader = new PreComputeBRDFShader(gl)
+    const brdfShader = new PreComputeBRDFShader(this.__gl)
     const brdfShaderComp = brdfShader.compileForTarget('GLProbe', renderstate.shaderopts)
     const brdfShaderBinding = generateShaderGeomBinding(
       gl,
@@ -88,7 +103,7 @@ class GLProbe extends EventEmitter {
     // ConvolveIrradianceShader Shader
 
     {
-      const convolveIrradianceShader = new ConvolveIrradianceShader(gl)
+      const convolveIrradianceShader = new ConvolveIrradianceShader(this.__gl)
       const convolveIrradianceShaderComp = convolveIrradianceShader.compileForTarget('GLProbe', renderstate.shaderopts)
       const convolveIrradianceShaderBinding = generateShaderGeomBinding(
         gl,
@@ -149,7 +164,7 @@ class GLProbe extends EventEmitter {
     // ////////////////////////////////////////////
     // Specular Cube Pyramid
     {
-      const convolverShader = new ConvolveSpecularShader(gl)
+      const convolverShader = new ConvolveSpecularShader(this.__gl)
       const covolverShaderComp = convolverShader.compileForTarget('GLProbe', renderstate.shaderopts)
       const covolverShaderBinding = generateShaderGeomBinding(
         gl,
@@ -221,7 +236,7 @@ class GLProbe extends EventEmitter {
    * @param {WebGLUniformLocation} unif - The WebGL uniform
    * @return {boolean} - Returns true if the Probe was successfully bound.
    */
-  bind(renderstate) {
+  bind(renderstate: Record<any,any>) {
     const gl = this.__gl
     const { irradianceMap, prefilterMap, brdfLUT } = renderstate.unifs
 
