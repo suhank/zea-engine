@@ -256,7 +256,7 @@ class GeomItem extends BaseGeomItem {
    * @param {object} context - The context value.
    * @return {object} - Returns the json object.
    */
-  toJSON(context: Record<any, any>) {
+  toJSON(context?: Record<any, any>) {
     const json = super.toJSON(context)
     return json
   }
@@ -362,7 +362,7 @@ class GeomItem extends BaseGeomItem {
    * @param {number} context - The context value.
    * @return {GeomItem} - Returns a new cloned geom item.
    */
-  clone(context: Record<any, any>) {
+  clone(context?: Record<any, any>) {
     const cloned = new GeomItem()
     cloned.copyFrom(this, context)
     return cloned
@@ -374,7 +374,7 @@ class GeomItem extends BaseGeomItem {
    * @param {GeomItem} src - The geom item to copy from.
    * @param {Record<any, any>} context - The context value.
    */
-  copyFrom(src: GeomItem, context: Record<any, any>) {
+  copyFrom(src: GeomItem, context?: Record<any, any>) {
     super.copyFrom(src, context)
 
     if (!src.getParameter('Geometry').getValue() && src.geomIndex != -1) {

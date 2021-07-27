@@ -406,7 +406,7 @@ class BaseGeom extends ParameterOwner {
    * @param {object} json - The json object this item must decode.
    * @param {object} context - The context value.
    */
-  fromJSON(json: Record<string, any>, context: Record<string, any>): void {
+  fromJSON(json: Record<string, any>, context?: Record<string, any>): void {
     super.fromJSON(json, context)
     this.setNumVertices(json.numVertices)
     for (const name in json.vertexAttributes) {

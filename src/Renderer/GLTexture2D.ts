@@ -1,6 +1,6 @@
 import { BaseImage, RefCounted } from '../SceneTree/index'
 import { MathFunctions } from '../Utilities/MathFunctions'
-import { processTextureParams } from './processTextureParams.js'
+import { processTextureParams } from './processTextureParams'
 
 /**
  * Represents a texture that contains 2-dimensional images.
@@ -12,8 +12,8 @@ import { processTextureParams } from './processTextureParams.js'
 class GLTexture2D extends RefCounted {
   protected __gl: Record<any, any>
   protected ready: boolean
-  protected width: number
-  protected height: number
+  width: number
+  height: number
   protected textureType: number // Default 2d 24bit texture image texture. No alpha.
   protected textureDesc: number[] // To be populated by derived classes.
   protected __loaded: boolean
