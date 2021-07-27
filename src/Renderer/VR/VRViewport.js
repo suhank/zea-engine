@@ -255,19 +255,21 @@ class VRViewport extends GLBaseViewport {
           .then((session) => {
             this.__renderer.__xrViewportPresenting = true
 
-            const viewport = this.__renderer.getActiveViewport()
-            const camera = viewport.getCamera()
-            const cameraXfo = camera.getParameter('GlobalXfo').getValue()
+            const viewport = this.__renderer.getViewport()
+            if (viewport) {
+              const camera = viewport.getCamera()
+              const cameraXfo = camera.getParameter('GlobalXfo').getValue()
 
-            // Convert Y-Up to Z-Up.
-            const stageXfo = new Xfo()
-            stageXfo.tr = cameraXfo.tr.clone()
-            stageXfo.tr.z -= 1.3 // assume sitting, and move the floor down a bit
-            const dir = cameraXfo.ori.getZaxis()
-            dir.z = 0
-            dir.normalizeInPlace()
-            stageXfo.ori.setFromDirectionAndUpvector(dir, new Vec3(0, 0, 1))
-            this.setXfo(stageXfo)
+              // Convert Y-Up to Z-Up.
+              const stageXfo = new Xfo()
+              stageXfo.tr = cameraXfo.tr.clone()
+              stageXfo.tr.z -= 1.3 // assume sitting, and move the floor down a bit
+              const dir = cameraXfo.ori.getZaxis()
+              dir.z = 0
+              dir.normalizeInPlace()
+              stageXfo.ori.setFromDirectionAndUpvector(dir, new Vec3(0, 0, 1))
+              this.setXfo(stageXfo)
+            }
 
             session.addEventListener('end', (event) => {
               this.__stageTreeItem.setVisible(false)
@@ -513,7 +515,7 @@ class VRViewport extends GLBaseViewport {
     renderstate.viewScale = 1.0 / this.__stageScale
     renderstate.cameraMatrix = renderstate.viewXfo.toMat4()
     renderstate.region = this.__region
-    renderstate.vrPresenting = true // Some rendering is ajusted slightly in VR. e.g. Billboards
+    renderstate.vrPresenting = true // Some rendering is adjusted slightly in VR. e.g. Billboards
 
     this.draw(renderstate)
 
@@ -530,13 +532,15 @@ class VRViewport extends GLBaseViewport {
     this.emit('viewChanged', data)
 
     // If spectator mode is active, draw a 3rd person view of the scene to
-    // the WebGL context's default backbuffer.
+    // the WebGL context's default back buffer.
     if (this.spectatorMode && !SystemDesc.isMobileDevice && this.tick % 5 == 0) {
-      const viewport = this.__renderer.getActiveViewport()
-      // display the head in spectator mode.
-      this.__vrhead.setVisible(true)
-      viewport.draw()
-      this.__vrhead.setVisible(false)
+      const viewport = this.__renderer.getViewport()
+      if (viewport) {
+        // display the head in spectator mode.
+        this.__vrhead.setVisible(true)
+        viewport.draw()
+        this.__vrhead.setVisible(false)
+      }
     }
 
     this.tick++

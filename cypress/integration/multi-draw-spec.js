@@ -9,6 +9,7 @@ describe('multi_draw', () => {
     cy.get('@postMessage').its('lastCall.args.0').should('equal', 'done-loading')
     cy.get('canvas').percySnapshot('multi_draw')
 
+    /* Eliminating redundant tests while our limit is 5k images per month
     cy.window().then((win) => {
       const variant = 'variant-01'
       win.postMessage(variant)
@@ -22,6 +23,7 @@ describe('multi_draw', () => {
       cy.get('@postMessage').its('lastCall.args.0').should('equal', `done-${variant}`)
       cy.get('canvas').percySnapshot(`multi_draw - ${variant}`)
     })
+    */
   })
 })
 describe('multi_draw-webgl1', () => {
@@ -35,6 +37,7 @@ describe('multi_draw-webgl1', () => {
     cy.get('@postMessage').its('lastCall.args.0').should('equal', 'done-loading')
     cy.get('canvas').percySnapshot('multi_draw')
 
+    /* Eliminating redundant tests while our limit is 5k images per month
     cy.window().then((win) => {
       const variant = 'variant-01'
       win.postMessage(variant)
@@ -48,6 +51,7 @@ describe('multi_draw-webgl1', () => {
       cy.get('@postMessage').its('lastCall.args.0').should('equal', `done-${variant}`)
       cy.get('canvas').percySnapshot(`multi_draw - ${variant}`)
     })
+    */
   })
 })
 
@@ -62,6 +66,7 @@ describe('multi_draw-disable-multidraw', () => {
     cy.get('@postMessage').its('lastCall.args.0').should('equal', 'done-loading')
     cy.get('canvas').percySnapshot('multi_draw')
 
+    /* Eliminating redundant tests while our limit is 5k images per month
     cy.window().then((win) => {
       const variant = 'variant-01'
       win.postMessage(variant)
@@ -75,5 +80,6 @@ describe('multi_draw-disable-multidraw', () => {
       cy.get('@postMessage').its('lastCall.args.0').should('equal', `done-${variant}`)
       cy.get('canvas').percySnapshot(`multi_draw - ${variant}`)
     })
+    */
   })
 })
