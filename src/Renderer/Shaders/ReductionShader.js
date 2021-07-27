@@ -53,15 +53,12 @@ void main()
   if (geomItemId > 0) {
     vec2 position = pointPositionFromGeomItemId(geomItemId);
     gl_Position = vec4(position, 0.0, 1.0);
-    // gl_Position = vec4(vec2(-1.0, -1.0) + (texelCoord * 2.0), 0.0, 1.0);
     gl_PointSize = 1.0;
   } else {
     // Move it off screen
     gl_Position = vec4(-2.0, -2.0, 0.0, 1.0);
     gl_PointSize = 0.0;
   }
-  // gl_Position = vec4(vec2(-1.0, -1.0) + (vec2(texelCoord) / vec2(textureSize(geomDataTexture, 0)) * 2.0), 0.0, 1.0);
-  // gl_PointSize = 1.0;
 }
 
 `

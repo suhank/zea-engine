@@ -36,7 +36,15 @@ class GLGeomItemLibrary extends EventEmitter {
     this.dirtyItemIndices = []
     this.removedItemIndices = []
     this.enableFrustumCulling = options.enableFrustumCulling
-    this.enableOcclusionCulling = options.enableOcclusionCulling
+
+    // Note: while it would be possible to get Occlusion Culling working in WebGL1,
+    // we would need to jump through a lot of hoops.
+    // - setup a vertex attribute to emulate gl_VertexID (in the Reduction shader)
+    // - implement bit masking so we can extract the geomItemId from the Uint8 geom data buffer.
+    // - clean up all the code to not use the building % , << & operators
+    // - pass uniform values for the texture sizes.
+    const gl = this.renderer.gl
+    this.enableOcclusionCulling = options.enableOcclusionCulling && gl.name == 'webgl2'
 
     if (this.enableFrustumCulling) {
       this.setupCullingWorker(renderer)
@@ -335,6 +343,7 @@ class GLGeomItemLibrary extends EventEmitter {
       this.reductionDataBuffer.resize(size, size)
       this.reductionDataArray = new Uint8Array(size * size)
     }
+
   }
 
   /**
