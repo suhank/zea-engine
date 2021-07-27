@@ -9,7 +9,7 @@ import { Registry } from '../../Registry'
  */
 class BaseProxy extends EventEmitter {
   protected name: string
-  protected __buffers: any
+  __buffers: any
   protected boundingBox: Box3
   protected __metaData: any
 

@@ -14,7 +14,7 @@ xdescribe('MaterialGroup', () => {
 
     group.addItem(parent)
 
-    const material = new Material('MyMaterial')
+    const material = new Material('MyMaterial', 'StandardSurfaceShader')
     group.getParameter('Material').setValue(material)
 
     expect(geomItem.getParameter('Material').getValue()).toBe(material)
