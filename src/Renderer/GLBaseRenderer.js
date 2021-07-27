@@ -604,7 +604,9 @@ class GLBaseRenderer extends ParameterOwner {
     // the onscreen buffer. This means we no longer need the default render target to be antialiased.
     // In webgl 1 however we render surfaces to the offscreen buffer, and then lines to the default buffer.
     // The default buffer should then be antialiased.
-    webglOptions.antialias = SystemDesc.isIOSDevice ? true : false
+    // Note: On low end devices, such as Oculus, blitting the multi-sampled depth buffer is throwing errors,
+    // and so we are simply disabling silhouettes on all low end devices now.
+    webglOptions.antialias = SystemDesc.isIOSDevice || SystemDesc.deviceCategory == 'Low' ? true : false
     webglOptions.depth = true
     webglOptions.stencil = false
     webglOptions.alpha = webglOptions.alpha ? webglOptions.alpha : false

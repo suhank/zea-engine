@@ -40,7 +40,9 @@ class GLBaseViewport extends ParameterOwner {
 
     // //////////////////////////////////
     // Setup Offscreen Render Targets
-    if (SystemDesc.browserName != 'Safari') {
+    // Note: On low end devices, such as Oculus, blitting the multi-sampled depth buffer is throwing errors,
+    // and so we are simply disabling silhouettes on all low end devices now.
+    if (SystemDesc.browserName != 'Safari' && SystemDesc.deviceCategory != 'Low') {
       this.offscreenBuffer = new GLTexture2D(gl, {
         type: 'UNSIGNED_BYTE',
         format: 'RGBA',
@@ -181,7 +183,9 @@ class GLBaseViewport extends ParameterOwner {
    * @param {number} height - The height  used by this viewport.
    */
   resizeRenderTargets(width, height) {
-    if (SystemDesc.browserName != 'Safari') {
+    // Note: On low end devices, such as Oculus, blitting the multi-sampled depth buffer is throwing errors,
+    // and so we are simply disabling silhouettes on all low end devices now.
+    if (SystemDesc.browserName != 'Safari' && SystemDesc.deviceCategory != 'Low') {
       const gl = this.__renderer.gl
 
       if (this.fb) {
@@ -286,7 +290,7 @@ class GLBaseViewport extends ParameterOwner {
       // from another op(like resizing, populating etc..)
       // We need to unbind here to ensure rendering is to the
       // right target.
-      gl.bindFramebuffer(gl.FRAMEBUFFER, null)
+      if (!renderstate.boundRendertarget) gl.bindFramebuffer(gl.FRAMEBUFFER, null)
     }
     gl.viewport(0, 0, this.__width, this.__height)
     gl.clearColor(...this.__backgroundColor.asArray())
@@ -357,7 +361,9 @@ class GLBaseViewport extends ParameterOwner {
   drawSilhouettes(renderstate) {
     // We cannot render silhouettes in iOS because EXT_frag_depth is not supported
     // and without it, we cannot draw lines over the top of geometries.
-    if (SystemDesc.browserName == 'Safari') return
+    // Note: On low end devices, such as Oculus, blitting the multi-sampled depth buffer is throwing errors,
+    // and so we are simply disabling silhouettes on all low end devices now.
+    if (SystemDesc.browserName == 'Safari' || SystemDesc.deviceCategory == 'Low') return
 
     const gl = this.__renderer.gl
 
