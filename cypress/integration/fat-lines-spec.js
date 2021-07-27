@@ -9,6 +9,7 @@ describe('fat-lines', () => {
     cy.get('@postMessage').its('lastCall.args.0').should('equal', 'done-loading')
     cy.get('canvas').percySnapshot('fat-lines')
 
+    /* Eliminating redundant tests while our limit is 5k images per month
     cy.window().then((win) => {
       const variant = 'variant-01'
       win.postMessage(variant)
@@ -22,5 +23,6 @@ describe('fat-lines', () => {
       cy.get('@postMessage').its('lastCall.args.0').should('equal', `done-${variant}`)
       cy.get('canvas').percySnapshot(`fat-lines - ${variant}`)
     })
+    */
   })
 })
