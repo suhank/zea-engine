@@ -8,6 +8,33 @@
     <div class="h-full">
       <canvas class="absolute" id="app"></canvas>
     </div>
+    <div class="fixed flex justify-center p-1 w-full top-0">
+      <button
+        class="bg-yellow-300 rounded px-2 px-2 py-1 border border-yellow-400 shadow mr-1 hover:bg-yellow-200 cursor-default"
+        id="variant-01"
+      >
+        variant-01
+      </button>
+
+      <button
+        class="bg-yellow-300 rounded px-2 px-2 py-1 border border-yellow-400 shadow mr-1 hover:bg-yellow-200 cursor-default"
+        id="variant-02"
+      >
+        variant-02
+      </button>
+      <button
+        class="bg-yellow-300 rounded px-2 px-2 py-1 border border-yellow-400 shadow mr-1 hover:bg-yellow-200 cursor-default"
+        id="variant-03"
+      >
+        variant-03
+      </button>
+      <button
+        class="bg-yellow-300 rounded px-2 px-2 py-1 border border-yellow-400 shadow mr-1 hover:bg-yellow-200 cursor-default"
+        id="variant-04"
+      >
+        variant-04
+      </button>
+    </div>
 
     <script src="../dist/index.umd.js"></script>
     <script src="../dist/plugins.umd.js"></script>
@@ -39,7 +66,7 @@
 
       const envMap = new EnvMap()
       envMap.load('data/pisa-webp.zenv').then(() => {
-        window.postMessage('done-loading')
+        postMessage('done-loading')
       })
       scene.setEnvMap(envMap)
       scene.getSettings().getParameter('Display EnvMap').setValue(false)
@@ -83,47 +110,47 @@
       renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(25, 25, 13), new Vec3(10, 0, 0))
       renderer.frameAll()
 
-      // {{{ Messages handler.
-      const handleMessage = (event) => {
-        const { data } = event
-
-        if (data === 'variant-01') {
-          items.forEach((geomItem, index) => {
-            if (index % 3 == 0) {
-              geomItem.addHighlight('Foo', new Color(0.8, 0, 0, 0.1))
-            } else {
-              geomItem.removeHighlight('Foo')
-            }
-            if (index != 3) {
-              geomItem.getParameter('Material').setValue(transparentMaterial)
-            } else {
-              geomItem.getParameter('Material').setValue(material)
-            }
-          })
-          window.postMessage(`done-${data}`)
-        } else if (data === 'variant-02') {
-          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-25, -25, 13), new Vec3(10, 0, 0))
-          renderer.frameAll()
-          window.postMessage(`done-${data}`)
-        } else if (data === 'variant-03') {
-          items.forEach((geomItem, index) => {
-            if (index % 2 == 0) {
-              geomItem.addHighlight('Foo', new Color(0.8, 0, 0, 0.1))
-              geomItem.getParameter('Material').setValue(transparentMaterial)
-            } else {
-              geomItem.removeHighlight('Foo')
-              geomItem.getParameter('Material').setValue(material)
-            }
-          })
-          window.postMessage(`done-${data}`)
-        } else if (data === 'variant-04') {
-          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(25, 25, 13), new Vec3(10, 0, 0))
-          renderer.frameAll()
-          window.postMessage(`done-${data}`)
-        }
+      const postMessage = (msg) => {
+        console.log(msg)
+        window.postMessage(msg)
       }
-
-      window.addEventListener('message', handleMessage, false)
+      document.querySelector('#variant-01').addEventListener('click', () => {
+        items.forEach((geomItem, index) => {
+          if (index % 3 == 0) {
+            geomItem.addHighlight('Foo', new Color(0.8, 0, 0, 0.1))
+          } else {
+            geomItem.removeHighlight('Foo')
+          }
+          if (index != 3) {
+            geomItem.getParameter('Material').setValue(transparentMaterial)
+          } else {
+            geomItem.getParameter('Material').setValue(material)
+          }
+        })
+        postMessage(`done-variant-01`)
+      })
+      document.querySelector('#variant-02').addEventListener('click', () => {
+        renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-25, -25, 13), new Vec3(10, 0, 0))
+        renderer.frameAll()
+        postMessage(`done-variant-02`)
+      })
+      document.querySelector('#variant-03').addEventListener('click', () => {
+        items.forEach((geomItem, index) => {
+          if (index % 2 == 0) {
+            geomItem.addHighlight('Foo', new Color(0.8, 0, 0, 0.1))
+            geomItem.getParameter('Material').setValue(transparentMaterial)
+          } else {
+            geomItem.removeHighlight('Foo')
+            geomItem.getParameter('Material').setValue(material)
+          }
+        })
+        postMessage(`done-variant-03`)
+      })
+      document.querySelector('#variant-04').addEventListener('click', () => {
+        renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(25, 25, 13), new Vec3(10, 0, 0))
+        renderer.frameAll()
+        postMessage(`done-variant-04`)
+      })
     </script>
   </body>
 </html>
