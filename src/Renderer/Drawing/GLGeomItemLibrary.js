@@ -444,10 +444,17 @@ class GLGeomItemLibrary extends EventEmitter {
       this.bbox.bind(renderstate)
 
       // Read each Matrix and Bbox settings from the Texture.
-      const { instancesTexture, instancesTextureSize, instancedDraw, reductionDataTexture } = renderstate.unifs
+      const {
+        instancesTexture,
+        instancesTextureSize,
+        instancedDraw,
+        reductionDataTexture,
+        occlusionCulling,
+      } = renderstate.unifs
       this.glGeomItemsTexture.bindToUniform(renderstate, instancesTexture)
       gl.uniform1i(instancesTextureSize.location, this.glGeomItemsTexture.width)
       gl.uniform1i(instancedDraw.location, 1)
+      gl.uniform1i(occlusionCulling.location, 1)
 
       this.reductionDataBuffer.bindColorTexture(renderstate, reductionDataTexture)
 

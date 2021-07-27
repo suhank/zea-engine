@@ -871,7 +871,7 @@ class GLViewport extends GLBaseViewport {
     // Turn this on to debug the geom data buffer.
     if (this.debugGeomShader) {
       this.renderGeomDataFbo()
-      const gl = this.__renderer.GLBaseViewport
+      const gl = this.__renderer.gl
       gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, null)
       this.__geomDataBufferFbo.bindForReading(renderstate)
       gl.clearBufferfv(gl.COLOR, 0, [0.0, 0.0, 0.0, 0.0])

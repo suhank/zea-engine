@@ -1213,11 +1213,11 @@ class GLBaseRenderer extends ParameterOwner {
         }
 
         if (eye) {
-          // Left or right eye, when rendering sterio VR.
+          // Left or right eye, when rendering stereo VR.
           gl.uniform1i(eye.location, index)
         }
         if (isOrthographic) {
-          // Left or right eye, when rendering sterio VR.
+          // Left or right eye, when rendering stereo VR.
           gl.uniform1i(isOrthographic.location, vp.isOrthographic)
         }
       }
