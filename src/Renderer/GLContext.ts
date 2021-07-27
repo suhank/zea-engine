@@ -1,8 +1,8 @@
 import { SystemDesc } from '../SystemDesc'
 import { Float32 } from '../Utilities/MathFunctions'
 
-const create3DContext = function (canvas, opt_attribs) {
-  let context = null
+const create3DContext = function (canvas: any, opt_attribs: Record<any,any>) {
+  let context: any = null
   if (opt_attribs.webglContextType != undefined) {
     try {
       context = canvas.getContext(opt_attribs.webglContextType, opt_attribs)
@@ -26,7 +26,7 @@ const create3DContext = function (canvas, opt_attribs) {
 
   // context.setupInstancedQuad = setupInstancedQuad;
   // context.bindInstancedQuad = bindInstancedQuad;
-  context.sizeInBytes = function (type) {
+  context.sizeInBytes = function (type: any) {
     switch (type) {
       case this.BYTE:
       case this.UNSIGNED_BYTE:
