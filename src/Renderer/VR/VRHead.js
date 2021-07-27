@@ -27,7 +27,9 @@ class VRHead {
     if (state && !this.hmdGeomItem) {
       const assetItem = this.__xrvp.getAsset()
       if (!assetItem) return
-      this.hmdGeomItem = assetItem.getChildByName('HMD').clone({ assetItem })
+      const hmdGeomItem = assetItem.getChildByName('HMD')
+      if (!hmdGeomItem) return
+      this.hmdGeomItem = hmdGeomItem.clone({ assetItem })
       if (this.hmdGeomItem) {
         this.hmdGeomItem.getParameter('LocalXfo').setValue(
           new Xfo(
