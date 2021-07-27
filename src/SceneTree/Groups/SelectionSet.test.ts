@@ -18,7 +18,7 @@ xdescribe('SelectionSet', () => {
 
     expect(treeItem.isVisible()).toBe(true)
 
-    group.setVisible(false)
+    group.setVisible(0) // TODO
 
     expect(treeItem.isVisible()).toBe(false)
   })
@@ -31,7 +31,7 @@ xdescribe('SelectionSet', () => {
     parent.addChild(child)
 
     group.addItem(parent)
-    group.setVisible(false)
+    group.setVisible(0)
 
     expect(child.isVisible()).toBe(false)
   })
