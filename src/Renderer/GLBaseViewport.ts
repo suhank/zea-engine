@@ -1,12 +1,13 @@
-import { SystemDesc } from '../SystemDesc.js'
+import { SystemDesc } from '../SystemDesc'
 import { Color } from '../Math/index'
-import { Plane, ParameterOwner, BaseImage, NumberParameter, BaseTool } from '../SceneTree/index'
-import { GLRenderTarget } from './GLRenderTarget.js'
+import { Plane, ParameterOwner, BaseImage, NumberParameter, BaseTool, Scene } from '../SceneTree/index'
+import { GLRenderTarget } from './GLRenderTarget'
 import { GLBaseRenderer } from './GLBaseRenderer'
-import { GLHDRImage } from './GLHDRImage.js'
-import { GLTexture2D } from './GLTexture2D.js'
-import { GLFbo } from './GLFbo.js'
-import { GLMesh } from './Drawing/GLMesh.js'
+import { GLHDRImage } from './GLHDRImage'
+import { GLTexture2D } from './GLTexture2D'
+import { GLFbo } from './GLFbo'
+import { GLMesh } from './Drawing/GLMesh'
+import { GLRenderer } from './GLRenderer'
 
 const FRAMEBUFFER = {
   MSAA_RENDERBUFFER: 0,
@@ -20,11 +21,35 @@ const FRAMEBUFFER = {
  * @private
  */
 class GLBaseViewport extends ParameterOwner {
+  protected __gl: WebGLRenderingContext
+  protected renderer: Record<any, any>
+  protected __renderer: Record<any, any>
+  protected __doubleClickTimeMSParam = this.addParameter(new NumberParameter('DoubleClickTimeMS', 200))
+  protected __fbo: any
+  protected __ongoingPointers: any[]
+  protected __backgroundColor: Color
+  protected quad: GLMesh
+  protected offscreenBuffer: any
+  protected depthTexture: any
+  protected highlightedGeomsBuffer: any
+  protected highlightedGeomsBufferFbo: any
+  protected __backgroundTexture: any
+  protected __backgroundGLTexture: GLHDRImage | GLTexture2D
+  protected offscreenBufferFbo: any
+  protected __width: number
+  protected __height: number
+  protected __canvasWidth: number
+  protected __canvasHeight: number
+  protected fb: any
+  protected colorRenderbuffer: any
+  protected depthBuffer: any
+  protected EXT_frag_depth: any
+  protected manipulator: any
   /**
    * Create a GL base viewport.
    * @param {GLRenderer} renderer - The renderer value.
    */
-  constructor(renderer) {
+  constructor(renderer: GLRenderer) {
     super()
     this.renderer = renderer
     this.__renderer = renderer
@@ -34,21 +59,21 @@ class GLBaseViewport extends ParameterOwner {
     this.__ongoingPointers = []
     this.__backgroundColor = new Color(0.3, 0.3, 0.3, 1)
 
-    const gl = this.__renderer.gl
+    const gl = <Record<any, any>>this.__renderer.gl
 
-    this.quad = new GLMesh(gl, new Plane(1, 1))
+    this.quad = new GLMesh(this.__gl, new Plane(1, 1))
 
     // //////////////////////////////////
     // Setup Offscreen Render Targets
     if (SystemDesc.browserName != 'Safari') {
-      this.offscreenBuffer = new GLTexture2D(gl, {
+      this.offscreenBuffer = new GLTexture2D(this.__gl, {
         type: 'UNSIGNED_BYTE',
         format: 'RGBA',
         filter: 'LINEAR',
         width: 4,
         height: 4,
       })
-      this.depthTexture = new GLTexture2D(gl, {
+      this.depthTexture = new GLTexture2D(this.__gl, {
         type: gl.UNSIGNED_SHORT,
         format: gl.DEPTH_COMPONENT,
         internalFormat: gl.name == 'webgl2' ? gl.DEPTH_COMPONENT16 : gl.DEPTH_COMPONENT,
@@ -61,19 +86,19 @@ class GLBaseViewport extends ParameterOwner {
       // this.offscreenBufferFbo.setClearColor(this.__backgroundColor.asArray())
     }
 
-    this.highlightedGeomsBuffer = new GLTexture2D(gl, {
+    this.highlightedGeomsBuffer = new GLTexture2D(this.__gl, {
       type: 'UNSIGNED_BYTE',
       format: 'RGBA',
       filter: 'NEAREST',
       width: 4,
       height: 4,
     })
-    this.highlightedGeomsBufferFbo = new GLFbo(gl, this.highlightedGeomsBuffer, true)
+    this.highlightedGeomsBufferFbo = new GLFbo(this.__gl, this.highlightedGeomsBuffer, true)
     this.highlightedGeomsBufferFbo.setClearColor([0, 0, 0, 0])
 
     // //////////////////////////////////
     // Setup Camera Manipulator
-    const sceneSet = () => {
+    const sceneSet = (scene?: Scene) => {
       const settings = renderer.getScene().settings
       const bgColorParam = settings.getParameter('BackgroundColor')
       const processBGValue = () => {
@@ -81,10 +106,10 @@ class GLBaseViewport extends ParameterOwner {
         if (value instanceof BaseImage) {
           if (value.type === 'FLOAT') {
             this.__backgroundTexture = value
-            this.__backgroundGLTexture = new GLHDRImage(gl, value)
+            this.__backgroundGLTexture = new GLHDRImage(this.__gl, value) // TODO: 
           } else {
             this.__backgroundTexture = value
-            this.__backgroundGLTexture = new GLTexture2D(gl, value)
+            this.__backgroundGLTexture = new GLTexture2D(this.__gl, value)
           }
         } else if (value instanceof Color) {
           if (this.__backgroundGLTexture) {
@@ -151,7 +176,7 @@ class GLBaseViewport extends ParameterOwner {
    * The setBackground method.
    * @param {Color} background - The background value.
    */
-  setBackground(background) {
+  setBackground(background: Color) {
     console.warn('Deprecated Function. Please access the Scene Settings object.')
     const settings = this.__renderer.getScene().settings
     const bgColorParam = settings.getParameter('BackgroundColor')
@@ -164,7 +189,7 @@ class GLBaseViewport extends ParameterOwner {
    * @param {number} canvasWidth - The canvasWidth value.
    * @param {number} canvasHeight - The canvasHeight value.
    */
-  resize(canvasWidth, canvasHeight) {
+  resize(canvasWidth: number, canvasHeight: number) {
     if (this.__canvasWidth == canvasWidth && this.__canvasHeight == canvasHeight) return
     this.__canvasWidth = canvasWidth
     this.__canvasHeight = canvasHeight
@@ -180,7 +205,7 @@ class GLBaseViewport extends ParameterOwner {
    * @param {number} width - The width used by this viewport.
    * @param {number} height - The height  used by this viewport.
    */
-  resizeRenderTargets(width, height) {
+  resizeRenderTargets(width: number, height: number) {
     if (SystemDesc.browserName != 'Safari') {
       const gl = this.__renderer.gl
 
@@ -266,7 +291,7 @@ class GLBaseViewport extends ParameterOwner {
    * The draw method.
    * @param {object} renderstate - The object tracking the current state of the renderer
    */
-  draw(renderstate = {}) {
+  draw(renderstate: Record<any, any> = {}) {
     const gl = this.__renderer.gl
 
     const prevRendertarget = renderstate.boundRendertarget
@@ -351,10 +376,10 @@ class GLBaseViewport extends ParameterOwner {
 
   /**
    * Draws the Silhouettes around geometries.
-   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    * @private
    */
-  drawSilhouettes(renderstate) {
+  drawSilhouettes(renderstate: Record<any, any>) {
     // We cannot render silhouettes in iOS because EXT_frag_depth is not supported
     // and without it, we cannot draw lines over the top of geometries.
     if (SystemDesc.browserName == 'Safari') return
@@ -443,7 +468,7 @@ class GLBaseViewport extends ParameterOwner {
    * @param {object} renderstate - The object tracking the current state of the renderer
    * @private
    */
-  drawHighlights(renderstate) {
+  drawHighlights(renderstate: Record<any, any>) {
     if (this.highlightedGeomsBufferFbo) {
       const gl = this.__renderer.gl
 
@@ -502,7 +527,7 @@ class GLBaseViewport extends ParameterOwner {
    * Sets the tool that will receive mouse, touch and keyboard events from the viewport.
    * @param {BaseTool} tool - The manipulator value.
    */
-  setManipulator(tool) {
+  setManipulator(tool: BaseTool) {
     if (this.manipulator != tool) {
       if (this.manipulator && this.manipulator.deactivateTool) {
         this.manipulator.deactivateTool()
@@ -521,7 +546,7 @@ class GLBaseViewport extends ParameterOwner {
    *
    * @param {MouseEvent|TouchEvent} event - The DOM event produced by a pointer
    */
-  onPointerDown(event) {
+  onPointerDown(event: Record<any,any>) {
     console.warn('@GLBaseViewport#onPointerDown - Implement me!')
   }
 
@@ -530,7 +555,7 @@ class GLBaseViewport extends ParameterOwner {
    *
    * @param {MouseEvent|TouchEvent} event - The DOM event produced by a pointer
    */
-  onPointerUp(event) {
+  onPointerUp(event: Record<any,any>) {
     console.warn('@GLBaseViewport#onPointerUp - Implement me!')
   }
 
@@ -539,7 +564,7 @@ class GLBaseViewport extends ParameterOwner {
    *
    * @param {MouseEvent|TouchEvent} event - The DOM event produced by a pointer
    */
-  onPointerMove(event) {
+  onPointerMove(event: Record<any,any>) {
     console.warn('@GLBaseViewport#onPointerMove - Implement me!')
   }
 
@@ -548,7 +573,7 @@ class GLBaseViewport extends ParameterOwner {
    *
    * @param {MouseEvent|TouchEvent} event - The DOM event produced by a pointer
    */
-  onPointerEnter(event) {
+  onPointerEnter(event: Record<any,any>) {
     console.warn('@GLBaseViewport#onPointerEnter - Implement me!')
   }
 
@@ -557,7 +582,7 @@ class GLBaseViewport extends ParameterOwner {
    *
    * @param {MouseEvent|TouchEvent} event - The DOM event produced by a pointer
    */
-  onPointerLeave(event) {
+  onPointerLeave(event: Record<any,any>) {
     console.warn('@GLBaseViewport#onPointerLeave - Implement me!')
   }
 
@@ -565,26 +590,26 @@ class GLBaseViewport extends ParameterOwner {
    * Invoked when the mouse pointer is moved out of an element.
    * @param {MouseEvent} event - The event that occurs.
    */
-  onMouseLeave(event) {}
+  onMouseLeave(event: Record<any,any>) {}
 
   /**
    * Invoked when the user is pressing a key on the keyboard.
    * @param {KeyboardEvent} event - The event that occurs.
    */
-  onKeyDown(event) {}
+  onKeyDown(event: Record<any,any>) {}
 
   /**
    * Causes an event to occur  when the user releases a key on the keyboard.
    * @param {KeyboardEvent} event - The event that occurs.
    */
-  onKeyUp(event) {}
+  onKeyUp(event: Record<any,any>) {}
 
   /**
    *
    * @param {id} pointerId
    * @return {number} - index result of the find.
    */
-  _getOngoingPointerIndexById(pointerId) {
+  _getOngoingPointerIndexById(pointerId: number) {
     return this.__ongoingPointers.findIndex((pointer) => pointer.pointerId === pointerId)
   }
 }
