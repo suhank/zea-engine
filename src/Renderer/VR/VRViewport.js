@@ -221,9 +221,7 @@ class VRViewport extends GLBaseViewport {
             }
           }
           this.__vrAsset.traverse((item) => {
-            this.stroke.traverse((item) => {
-              item.setSelectable(false)
-            })
+            item.setSelectable(false)
           })
           resolve(this.__vrAsset)
         }
