@@ -628,7 +628,7 @@ class Mesh extends BaseGeom {
    * @param {Record<string, any>} opts - The opts value.
    * @return {Record<string, any>} - The return value.
    */
-  genBuffers(opts: Record<string, any>): Record<string, any> {
+  genBuffers(opts?: Record<string, any>): Record<string, any> {
     // Compute the normals on demand.
     // if (!('normals' in this.__vertexAttributes)) {
     //     // this.__geom.computeVertexNormals();
@@ -945,7 +945,7 @@ class Mesh extends BaseGeom {
    * @param {Record<string, any>} context - The context value.
    * @return {Record<string, any>} - Returns the json object.
    */
-  toJSON(context: Record<string, any>): Record<string, unknown> {
+  toJSON(context?: Record<string, any>): Record<string, unknown> {
     const j = super.toJSON(context)
     if (!context || !context.skipTopology) {
       ;(j as any).faceCounts = Array.from(this.__faceCounts)
