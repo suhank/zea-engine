@@ -77,7 +77,7 @@ class GLImageAtlas extends GLRenderTarget {
    * @return {BaseImage} - The return value.
    */
   getMainImage() {
-    return this.super // TODO
+    return this.frameBuffer // TODO: is this correct?
   }
 
   /**
@@ -87,7 +87,7 @@ class GLImageAtlas extends GLRenderTarget {
    */
   addSubImage(subImage: BaseImage) {
     if (subImage instanceof BaseImage) {
-      const gltexture = new GLTexture2D(this.__gl, subImage)
+      const gltexture: GLTexture2D = new GLTexture2D(this.__gl, subImage)
       if (!subImage.isLoaded()) {
         this.incAsyncCount()
         subImage.on('loaded', () => {
@@ -108,7 +108,7 @@ class GLImageAtlas extends GLRenderTarget {
       subImage.on('updated', updated)
       this.__subImages.push(gltexture)
     } else {
-      subImage.addRef(this) // subImage is a GLTexture2D // TODO: add this method?
+      ;(<GLTexture2D>subImage).addRef(this) // subImage is a GLTexture2D
       this.__subImages.push(subImage)
     }
 
@@ -158,7 +158,7 @@ class GLImageAtlas extends GLRenderTarget {
   /**
    * The generateAtlasLayout method.
    */
-  generateAtlasLayout() {
+  generateAtlasLayout(minTileSize?: any) {
     if (this.__subImages.length == 0) {
       this.__layoutNeedsRegeneration = false
       return

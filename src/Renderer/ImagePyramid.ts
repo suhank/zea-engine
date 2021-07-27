@@ -1,6 +1,7 @@
 import { GLTexture2D } from './GLTexture2D.js'
 import { GLFbo } from './GLFbo.js'
 import { GLImageAtlas } from './GLImageAtlas.js'
+import { BaseImage } from '../SceneTree/BaseImage.js'
 
 // import './Shaders/GLSL/ImagePyramid.js'
 
@@ -76,7 +77,7 @@ class ImagePyramid extends GLImageAtlas {
         filter: 'LINEAR',
         wrap: 'CLAMP_TO_EDGE',
       })
-      this.addSubImage(level)
+      this.addSubImage(level.glTex)
       this.__fbos.push(new GLFbo(<WebGLRenderingContext>gl, level))
     }
 
@@ -88,7 +89,7 @@ class ImagePyramid extends GLImageAtlas {
    * @param {boolean} cleanup - The cleanup value.
    */
   renderAtlas(cleanup = true) {
-    const gl = this.__gl
+    const gl = <Record<any, any>>this.__gl
     const renderstate = {}
     gl.screenQuad.bindShader(renderstate)
 
