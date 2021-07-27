@@ -44,7 +44,7 @@ class GLTexture2D extends RefCounted {
    * @param {WebGLRenderingContext | WebGL2RenderingContext | undefined} gl - The gl value.
    * @param {BaseImage | Record<any,any>} params - The params value.
    */
-  constructor(gl: WebGLRenderingContext | WebGL2RenderingContext | undefined, params: BaseImage | Record<any, any>) {
+  constructor(gl: WebGLRenderingContext | WebGL2RenderingContext | undefined, params?: BaseImage | Record<any, any>) {
     super()
     this.__gl = gl
 

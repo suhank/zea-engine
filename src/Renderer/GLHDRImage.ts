@@ -2,18 +2,26 @@ import { GLTexture2D } from './GLTexture2D.js'
 import { UnpackHDRShader } from './Shaders/UnpackHDRShader.js'
 import { GLFbo } from './GLFbo.js'
 import { generateShaderGeomBinding } from './Drawing/GeomShaderBinding.js'
+import { VLHImage } from '../SceneTree/Images/VLHImage.js'
 
 /** Class representing a GL high dynamic range (HDR) image.
  * @extends GLTexture2D
  * @private
  */
 class GLHDRImage extends GLTexture2D {
+  protected __gl: WebGLRenderingContext
+  protected __hdrImage: VLHImage
+  protected __fbo: any
+  protected __srcLDRTex: any
+  protected __unpackHDRShader: any
+  protected __shaderBinding: any
+  protected __srcCDMTex: any
   /**
    * Create a GL HDR image.
    * @param {WebGLRenderingContext} gl - The webgl rendering context.
    * @param {VLHImage} hdrImage - The HDR image.
    */
-  constructor(gl, hdrImage) {
+  constructor(gl: WebGLRenderingContext, hdrImage: VLHImage) {
     super(gl)
 
     this.__hdrImage = hdrImage
@@ -40,10 +48,10 @@ class GLHDRImage extends GLTexture2D {
 
   /**
    * The __unpackHDRImage method.
-   * @param {object} hdrImageParams - The HDR image parameters.
+   * @param {Record<any,any>} hdrImageParams - The HDR image parameters.
    * @private
    */
-  __unpackHDRImage(hdrImageParams) {
+  __unpackHDRImage(hdrImageParams: Record<any,any>) {
     const gl = this.__gl
 
     const ldr = hdrImageParams.data.ldr
@@ -94,7 +102,7 @@ class GLHDRImage extends GLTexture2D {
 
     this.__fbo.bindAndClear()
 
-    const renderstate = {}
+    const renderstate:Record<any,any> = {}
     this.__unpackHDRShader.bind(renderstate, 'GLHDRImage')
     this.__shaderBinding.bind(renderstate)
 
@@ -130,12 +138,12 @@ class GLHDRImage extends GLTexture2D {
 
   /**
    * The bindToUniform method.
-   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    * @param {WebGLUniformLocation} unif - The WebGL uniform
-   * @param {object} bindings - The bindings value.
+   * @param {Record<any,any>} bindings - The bindings value.
    * @return {boolean} - The return value.
    */
-  bindToUniform(renderstate, unif, bindings) {
+  bindToUniform(renderstate: Record<any,any>, unif: WebGLUniformLocation, bindings: Record<any,any>) {
     return super.bindToUniform(renderstate, unif, bindings)
   }
 
