@@ -16,10 +16,10 @@ import { BooleanParameter } from './Parameters/index'
  * @extends BaseItem
  */
 class BaseImage extends BaseItem {
-  protected width: number
-  protected height: number
+  width: number
+  height: number
   format: string
-  protected type: string
+  type: string
   protected wrapS: string
   protected wrapT: string
   protected minFilter: string
