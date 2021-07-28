@@ -7,12 +7,26 @@ import { EventEmitter } from '../../Utilities/index'
  * @private
  */
 class GLGeomItemSet extends EventEmitter {
+  protected gl: WebGLRenderingContext
+  protected glGeom: any
+  protected id: number
+  protected glGeomItems: any[]
+  protected glgeomItems_freeIndices: any[]
+  protected glgeomItemEventHandlers: any[]
+  protected drawIdsArray: any
+  protected drawIdsBuffer: any
+  protected drawIdsBufferDirty: boolean
+  protected highlightedIdsArray: any
+  protected highlightedIdsBuffer: any
+  protected highlightedIdsBufferDirty: boolean
+  protected visibleItems: any[]
+  protected highlightedItems: any[]
   /**
    * Create a GL geom item set.
    * @param {WebGLRenderingContext} gl - The webgl rendering context.
    * @param {any} glGeom - The glGeom value.
    */
-  constructor(gl, glGeom) {
+  constructor(gl: WebGLRenderingContext, glGeom: any) {
     super()
     this.gl = gl
     this.glGeom = glGeom
@@ -52,8 +66,8 @@ class GLGeomItemSet extends EventEmitter {
    * The addGLGeomItem method.
    * @param {any} glGeomItem - The glGeomItem value.
    */
-  addGLGeomItem(glGeomItem) {
-    let index
+  addGLGeomItem(glGeomItem: any) {
+    let index: number
     if (this.glgeomItems_freeIndices.length > 0) {
       index = this.glgeomItems_freeIndices.pop()
     } else {
@@ -69,9 +83,9 @@ class GLGeomItemSet extends EventEmitter {
       this.highlightedIdsBufferDirty = true
     }
 
-    const eventHandlers = {}
+    const eventHandlers: Record<any, any> = {}
 
-    eventHandlers.highlightChanged = (event) => {
+    eventHandlers.highlightChanged = (event: Record<any, any>) => {
       if (glGeomItem.geomItem.isHighlighted()) {
         // Note: highlightChanged is fired when the color changes
         // or another highlight is added over the top. We avoid
@@ -87,7 +101,7 @@ class GLGeomItemSet extends EventEmitter {
       this.highlightedIdsBufferDirty = true
     }
     glGeomItem.geomItem.on('highlightChanged', eventHandlers.highlightChanged)
-    eventHandlers.visibilityChanged = (event) => {
+    eventHandlers.visibilityChanged = (event: Record<any, any>) => {
       const visible = event.visible
       if (visible) {
         this.visibleItems.push(index)
@@ -112,7 +126,7 @@ class GLGeomItemSet extends EventEmitter {
    * The removeGLGeomItem method.
    * @param {any} glGeomItem - The glGeomItem value.
    */
-  removeGLGeomItem(glGeomItem) {
+  removeGLGeomItem(glGeomItem: any) {
     const index = this.glGeomItems.indexOf(glGeomItem)
     const eventHandlers = this.glgeomItemEventHandlers[index]
     glGeomItem.geomItem.off('highlightChanged', eventHandlers.highlightChanged)
@@ -148,7 +162,7 @@ class GLGeomItemSet extends EventEmitter {
    * drawing.
    */
   updateDrawIDsBuffer() {
-    const gl = this.gl
+    const gl = <Record<any, any>>this.gl
     if (!gl.floatTexturesSupported) {
       this.drawIdsBufferDirty = false
       return
@@ -197,7 +211,7 @@ class GLGeomItemSet extends EventEmitter {
    * The updateHighlightedIDsBuffer method.
    */
   updateHighlightedIDsBuffer() {
-    const gl = this.gl
+    const gl = <Record<any, any>>this.gl
     if (!gl.floatTexturesSupported) {
       this.highlightedIdsBufferDirty = false
       return
@@ -242,9 +256,9 @@ class GLGeomItemSet extends EventEmitter {
 
   /**
    * The draw method.
-   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    */
-  draw(renderstate) {
+  draw(renderstate: Record<any, any>) {
     if (this.visibleItems.length == 0) {
       return
     }
@@ -257,9 +271,9 @@ class GLGeomItemSet extends EventEmitter {
 
   /**
    * The drawHighlighted method.
-   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    */
-  drawHighlighted(renderstate) {
+  drawHighlighted(renderstate: Record<any, any>) {
     if (this.highlightedItems.length == 0) {
       return
     }
@@ -272,13 +286,13 @@ class GLGeomItemSet extends EventEmitter {
 
   /**
    * The __bindAndRender method.
-   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    * @param {any} itemIndices - The itemIndices value.
    * @param {any} drawIdsBuffer - The drawIdsBuffer value.
    * @private
    */
-  __bindAndRender(renderstate, itemIndices, drawIdsBuffer) {
-    const gl = this.gl
+  __bindAndRender(renderstate: Record<any, any>, itemIndices: any, drawIdsBuffer: any) {
+    const gl = <Record<any, any>>this.gl
     const unifs = renderstate.unifs
 
     // Lazy unbinding. We can have situations where we have many materials
@@ -293,7 +307,7 @@ class GLGeomItemSet extends EventEmitter {
       if (renderstate.unifs.instancedDraw) {
         gl.uniform1i(renderstate.unifs.instancedDraw.location, 0)
       }
-      itemIndices.forEach((index) => {
+      itemIndices.forEach((index: number) => {
         this.glGeomItems[index].bind(renderstate)
         renderstate.bindViewports(unifs, () => {
           this.glGeom.draw(renderstate)
