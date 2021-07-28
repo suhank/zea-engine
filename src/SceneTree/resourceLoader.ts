@@ -5,7 +5,7 @@ import { Env, EventEmitter } from '../Utilities/index'
 import { zeaDebug } from '../helpers/zeaDebug'
 import { TreeItem } from './TreeItem'
 
-function checkStatus(response) {
+function checkStatus(response: any) {
   if (!response.ok) {
     return false
   }
@@ -57,6 +57,13 @@ function checkStatus(response) {
  * * **allResourcesLoaded:** emitted when all outstanding resources are loaded. This event can be used to signal the completion of load.
  */
 class ResourceLoader extends EventEmitter {
+  protected __adapter: any
+  protected __totalWork: number
+  protected __doneWork: number
+  protected baseUrl: string
+  protected plugins: Record<any, any>
+  protected systemUrls: Record<any, any>
+  protected __commonResources: Record<any,any>
   /**
    * Create a resource loader.
    */
@@ -82,9 +89,9 @@ class ResourceLoader extends EventEmitter {
 
   /**
    * The setAdapter method.
-   * @param {object} adapter - The adapter object.
+   * @param {Record<any,any>} adapter - The adapter object.
    */
-  setAdapter(adapter) {
+  setAdapter(adapter: Record<any,any>) {
     this.__adapter = adapter
   }
 
@@ -98,7 +105,7 @@ class ResourceLoader extends EventEmitter {
 
   // /////////////////////////////////////////////////
   // Register plugins.
-  registerPlugin(plugin) {
+  registerPlugin(plugin: any) {
     zeaDebug('Resource loader plugin registered: %s', plugin.getType())
 
     plugin.init(this)
@@ -113,7 +120,7 @@ class ResourceLoader extends EventEmitter {
    * @param {string} value - The file value.
    * @return {string} - The resolved fileId if an adapter is installed, else the original value.
    */
-  resolveFileId(value) {
+  resolveFileId(value: string): string {
     if (this.__adapter) return this.__adapter.resolveFileId(value)
     return value
   }
@@ -124,7 +131,7 @@ class ResourceLoader extends EventEmitter {
    * @param {string} value - The file value.
    * @return {string} - The resolved URL if an adapter is installed, else the original value.
    */
-  resolveFilename(value) {
+  resolveFilename(value: string): string {
     if (this.__adapter) return this.__adapter.resolveFilename(value)
     if (!value.includes('/')) return value
     return value.split('/')[1]
@@ -135,7 +142,7 @@ class ResourceLoader extends EventEmitter {
    * @param {string} value - The file value.
    * @return {string} - The resolved URL if an adapter is installed, else the original value.
    */
-  resolveURL(value) {
+  resolveURL(value: string): string {
     if (this.__adapter) return this.__adapter.resolveURL(value)
     if (this.systemUrls[value]) return this.systemUrls[value]
     return value
@@ -151,7 +158,7 @@ class ResourceLoader extends EventEmitter {
    * @deprecated
    * @private
    */
-  loadURL(resourceId, url, callback, addLoadWork = true) {
+  loadURL(resourceId: string, url: string, callback: any, addLoadWork = true) {
     console.warn('Deprecated. Use "#loadUrl".')
     return this.loadUrl(resourceId, url, callback, addLoadWork)
   }
@@ -163,9 +170,9 @@ class ResourceLoader extends EventEmitter {
    * @param {function} callback - The callback value.
    * @param {boolean} addLoadWork - The addLoadWork value.
    */
-  loadUrl(resourceId, url, callback, addLoadWork = true) {
+  loadUrl(resourceId: string, url: string, callback: any, addLoadWork = true) {
     console.warn(`deprecated use #loadArchive`)
-    this.loadArchive(url).then((entries) => {
+    this.loadArchive(url).then((entries: any) => {
       callback(entries)
     })
   }
@@ -176,7 +183,7 @@ class ResourceLoader extends EventEmitter {
    * @param {string} url - The url of the data to load.
    * @return {Promise} - The promise value.
    */
-  loadArchive(url) {
+  loadArchive(url: string) {
     console.warn(`Deprecated. Use "#loadFile('archive', url)".`)
     return this.loadFile('archive', url)
   }
@@ -187,7 +194,7 @@ class ResourceLoader extends EventEmitter {
    * @param {string} url - The url of the data to load.
    * @return {Promise} - The promise value.
    */
-  loadJSON(url) {
+  loadJSON(url: string) {
     console.warn(`Deprecated. Use "#loadFile('json', url)".`)
     return this.loadFile('json', url)
   }
@@ -198,12 +205,12 @@ class ResourceLoader extends EventEmitter {
    * @param {string} url - The url of the data to load.
    * @return {Promise} - The promise value.
    */
-  loadText(url) {
+  loadText(url: string) {
     console.warn(`Deprecated. Use "#loadFile('text', url)".`)
     return this.loadFile('text', url)
   }
 
-  loadFile(type, url) {
+  loadFile(type: any, url: string) {
     const plugin = this.plugins[type]
 
     if (!plugin) {
@@ -236,7 +243,7 @@ class ResourceLoader extends EventEmitter {
    * @param {string} resourceId - The resourceId value.
    * @return {TreeItem|null} - The common resource if it exists
    */
-  getCommonResource(resourceId) {
+  getCommonResource(resourceId: string): TreeItem|null {
     return this.__commonResources[resourceId]
   }
 
@@ -246,7 +253,7 @@ class ResourceLoader extends EventEmitter {
    * @param {string} resourceId - The resourceId value.
    * @param {TreeItem} resource - The common resource to store
    */
-  setCommonResource(resourceId, resource) {
+  setCommonResource(resourceId: string, resource: TreeItem) {
     this.__commonResources[resourceId] = resource
   }
 
@@ -256,8 +263,8 @@ class ResourceLoader extends EventEmitter {
    * @param {string} resourceId - The resourceId value.
    * @return {VLAAsset} - The return value.
    */
-  loadCommonAssetResource(resourceId) {
-    return getCommonResource(resourceId)
+  loadCommonAssetResource(resourceId: string) {
+    return this.getCommonResource(resourceId)
   }
 
   // /////////////////////////////////////////////////
@@ -270,7 +277,7 @@ class ResourceLoader extends EventEmitter {
    * @param {string} resourceId - The resourceId value.
    * @param {number} amount - The amount value.
    */
-  addWork(resourceId, amount) {
+  addWork(resourceId: string, amount: number) {
     this.incrementWorkload(amount)
   }
 
@@ -280,7 +287,7 @@ class ResourceLoader extends EventEmitter {
    * @param {string} resourceId - The resourceId value.
    * @param {number} amount - The amount value.
    */
-  addWorkDone(resourceId, amount) {
+  addWorkDone(resourceId: string, amount: number) {
     this.incrementWorkDone(amount)
   }
 
