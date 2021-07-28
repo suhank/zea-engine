@@ -1,4 +1,4 @@
-function checkStatus(response) {
+function checkStatus(response: any) {
   if (!response.ok) {
     return false
   }
@@ -10,7 +10,8 @@ function checkStatus(response) {
  * Text loader plugin.
  */
 class TextLoaderPlugin {
-  init(resourceLoader) {
+  resourceLoader: any
+  init(resourceLoader: any) {
     this.resourceLoader = resourceLoader
   }
 
@@ -22,7 +23,7 @@ class TextLoaderPlugin {
     return 'text'
   }
 
-  loadFile(url) {
+  loadFile(url: string) {
     this.resourceLoader.incrementWorkload(1)
 
     const promise = new Promise(
@@ -33,7 +34,6 @@ class TextLoaderPlugin {
           else reject(`loadText: ${response.status} - ${response.statusText} : ${url}`)
         })
       },
-      () => {}
     )
 
     return promise
