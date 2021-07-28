@@ -12,11 +12,12 @@ import { GLGeomLibrary } from './Drawing/GLGeomLibrary'
 import { GLGeomItemLibrary } from './Drawing/GLGeomItemLibrary'
 import { GLPass, PassType } from './Passes/GLPass'
 import { Color } from '../Math/Color'
+import { GLRenderer } from './GLRenderer'
 
 let activeGLRenderer: Record<any, any>
 let pointerIsDown = false
 let pointerLeft = false
-const registeredPasses = {}
+const registeredPasses: Record<any, any> = {}
 
 /**
  * Class representing a GL base renderer.
@@ -56,7 +57,7 @@ class GLBaseRenderer extends ParameterOwner {
 
   protected glMaterialLibrary: GLMaterialLibrary
   protected glGeomItemLibrary: GLGeomItemLibrary
-  protected glGeomLibrary: GLGeomItemLibrary
+  protected glGeomLibrary: GLGeomLibrary
 
   protected __screenQuad: any
   protected resizeObserver: any
@@ -120,7 +121,7 @@ class GLBaseRenderer extends ParameterOwner {
     for (const passType in registeredPasses) {
       for (const cls of registeredPasses[passType]) {
         // eslint-disable-next-line new-cap
-        this.addPass(new cls(), passType, false)
+        this.addPass(new cls(), parseInt(passType), false) // TODO: is parseInt ok? 
       }
     }
 
