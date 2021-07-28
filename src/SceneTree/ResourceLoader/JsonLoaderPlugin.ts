@@ -1,4 +1,6 @@
-function checkStatus(response) {
+import { resolve } from 'path/posix'
+
+function checkStatus(response: any) {
   if (!response.ok) {
     return false
   }
@@ -10,7 +12,8 @@ function checkStatus(response) {
  * JSON loader plugin.
  */
 class JsonLoaderPlugin {
-  init(resourceLoader) {
+  resourceLoader: any
+  init(resourceLoader: any) {
     this.resourceLoader = resourceLoader
   }
 
@@ -22,7 +25,7 @@ class JsonLoaderPlugin {
     return 'json'
   }
 
-  loadFile(url) {
+  loadFile(url: string) {
     this.resourceLoader.incrementWorkload(1)
 
     const promise = new Promise(
@@ -32,8 +35,8 @@ class JsonLoaderPlugin {
           if (checkStatus(response)) resolve(response.json())
           else reject(`loadJSON: ${response.status} - ${response.statusText} : ${url}`)
         })
-      },
-      () => {}
+      }
+      // () => {}
     )
 
     return promise
