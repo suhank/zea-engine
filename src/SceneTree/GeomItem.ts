@@ -67,7 +67,7 @@ class GeomItem extends BaseGeomItem {
   protected geomIndex: number
   protected assetItem: any
   protected calcGeomMatOperator: any
-
+  cullable
   protected __geomOffsetXfoParam: any
   protected __geomParam: Parameter<BaseGeom>
   protected __materialParam: Parameter<Material>
@@ -82,7 +82,7 @@ class GeomItem extends BaseGeomItem {
    */
   constructor(name?: string, geometry?: BaseGeom, material?: Material, xfo?: Xfo) {
     super(name)
-
+    this.cullable = true
     this.__geomParam = this.addParameter(new GeometryParameter('Geometry'))
     this._setBoundingBoxDirty = this._setBoundingBoxDirty.bind(this)
     this.__geomParam.on('valueChanged', this._setBoundingBoxDirty)

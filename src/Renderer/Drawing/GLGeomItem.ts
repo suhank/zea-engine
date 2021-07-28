@@ -20,6 +20,24 @@ const GLGeomItemFlags = {
  * @extends EventEmitter
  */
 class GLGeomItem extends EventEmitter {
+  protected gl: WebGLContextAttributes
+  protected geomItem: GeomItem
+  protected drawItemId: number
+  geomId: number
+  materialId: number
+  protected supportInstancing: boolean
+  protected geomVisible: boolean
+  protected visible: boolean
+  protected culled: boolean
+  protected cutDataChanged: boolean
+  protected cutData: number[]
+  protected geomData: any
+  protected geomMatrixDirty: boolean
+  protected modelMatrixArray: any
+
+  protected geomMatrixChanged: any
+  protected cutAwayChanged: any
+  protected highlightChanged: any
   /**
    * Create a GL geom item.
    * @param {WebGLContextAttributes} gl - The gl value.
@@ -29,7 +47,14 @@ class GLGeomItem extends EventEmitter {
    * @param {number} materialId - The materialId value.
    * @param {boolean} supportInstancing - a boolean to disable instancing support on some mobile platforms
    */
-  constructor(gl, geomItem, drawItemId, geomId, materialId, supportInstancing = false) {
+  constructor(
+    gl: WebGLContextAttributes,
+    geomItem: GeomItem,
+    drawItemId: number,
+    geomId: number,
+    materialId: number,
+    supportInstancing = false
+  ) {
     super()
     this.gl = gl
     this.geomItem = geomItem
@@ -113,7 +138,7 @@ class GLGeomItem extends EventEmitter {
    * Sets the additional culled value which controls visiblity
    * @param {boolean} culled - True if culled, else false.
    */
-  setCulled(culled) {
+  setCulled(culled: boolean) {
     this.culled = culled
     const visible = this.geomVisible && !this.culled
     if (this.visible != visible) {
@@ -124,11 +149,11 @@ class GLGeomItem extends EventEmitter {
 
   /**
    * The bind method.
-   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    * @return {any} - The return value.
    */
-  bind(renderstate) {
-    const gl = this.gl
+  bind(renderstate: Record<any, any>) {
+    const gl = <Record<any, any>>this.gl
     const unifs = renderstate.unifs
 
     if (!this.supportInstancing) {

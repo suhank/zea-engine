@@ -27,7 +27,7 @@ const registeredPasses: Record<any, any> = {}
 class GLBaseRenderer extends ParameterOwner {
   // protected navigator: Record<any, any>
   protected directives: any
-  protected solidAngleLimit: number
+  solidAngleLimit: number
   protected __div: any
 
   protected __gl: Record<any, any>
@@ -55,9 +55,9 @@ class GLBaseRenderer extends ParameterOwner {
   protected __xrViewport: any
   protected __xrViewportPromise: any
 
-  protected glMaterialLibrary: GLMaterialLibrary
-  protected glGeomItemLibrary: GLGeomItemLibrary
-  protected glGeomLibrary: GLGeomLibrary
+  glMaterialLibrary: GLMaterialLibrary
+  glGeomItemLibrary: GLGeomItemLibrary
+  glGeomLibrary: GLGeomLibrary
 
   protected __screenQuad: any
   protected resizeObserver: any
@@ -121,7 +121,7 @@ class GLBaseRenderer extends ParameterOwner {
     for (const passType in registeredPasses) {
       for (const cls of registeredPasses[passType]) {
         // eslint-disable-next-line new-cap
-        this.addPass(new cls(), parseInt(passType), false) // TODO: is parseInt ok? 
+        this.addPass(new cls(), parseInt(passType), false) // TODO: is parseInt ok?
       }
     }
 

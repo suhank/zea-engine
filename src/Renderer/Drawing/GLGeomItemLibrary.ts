@@ -7,6 +7,9 @@ import { GLTexture2D } from '../GLTexture2D'
 
 // import { handleMessage } from './GLGeomItemLibraryCullingWorker'
 import GLGeomItemLibraryCullingWorker from 'web-worker:./GLGeomItemLibraryCullingWorker'
+import { GeomItem } from '../../SceneTree/GeomItem'
+import { GLBaseRenderer } from '../GLBaseRenderer'
+import { Material } from '../../SceneTree/Material'
 
 const pixelsPerItem = 6 // The number of RGBA pixels per draw item.
 
@@ -14,11 +17,20 @@ const pixelsPerItem = 6 // The number of RGBA pixels per draw item.
  * @private
  */
 class GLGeomItemLibrary extends EventEmitter {
+  protected renderer: any
+  protected glGeomItems: any[]
+  protected glGeomItemEventHandlers: any[]
+  protected glGeomItemsMap: Record<any, any>
+  protected glGeomItemsIndexFreeList: any[]
+  protected dirtyItemIndices: any[]
+  protected removedItemIndices: any[]
+  protected worker: any
+  protected glGeomItemsTexture: any
   /**
    * Create a GLGeomItemLibrary.
    * @param {GLBaseRenderer} renderer - The renderer object
    */
-  constructor(renderer) {
+  constructor(renderer: GLBaseRenderer) {
     super()
 
     this.renderer = renderer
@@ -43,7 +55,7 @@ class GLGeomItemLibrary extends EventEmitter {
     // }
 
     let workerReady = true
-    this.worker.onmessage = (message) => {
+    this.worker.onmessage = (message: Record<any, any>) => {
       if (message.data.type == 'CullResults') {
         this.applyCullResults(message.data)
       } else if (message.data.type == 'Done') {
@@ -81,16 +93,16 @@ class GLGeomItemLibrary extends EventEmitter {
     }
     renderer.on('resized', viewportChanged)
     const camera = renderer.getViewport().getCamera()
-    camera.on('projectionParamChanged', (event) => {
+    camera.on('projectionParamChanged', (event: Record<any, any>) => {
       if (camera.isOrthographic()) {
         viewportChanged()
       }
     })
     viewportChanged()
 
-    renderer.once('xrViewportSetup', (event) => {
+    renderer.once('xrViewportSetup', (event: Record<any, any>) => {
       const xrvp = event.xrViewport
-      xrvp.on('presentingChanged', (event) => {
+      xrvp.on('presentingChanged', (event: Record<any, any>) => {
         if (event.state) {
           // Note: We approximate the culling viewport to be
           // a wider version of the 2 eye frustums merged together.
@@ -159,7 +171,7 @@ class GLGeomItemLibrary extends EventEmitter {
    * @param {GeomItem} geomItem - The geomItem value.
    * @return {number} - The index of GLGeomItem
    */
-  addGeomItem(geomItem) {
+  addGeomItem(geomItem: GeomItem) {
     let index = this.glGeomItemsMap[geomItem.getId()]
     if (index != undefined) {
       // Increment the ref count for the GLGeom
@@ -177,7 +189,7 @@ class GLGeomItemLibrary extends EventEmitter {
     if (material.getShaderClass().getPackedMaterialData) {
       matIndex = this.renderer.glMaterialLibrary.addMaterial(material)
     }
-    const materialChanged = (event) => {
+    const materialChanged = (event: Record<any, any>) => {
       // TODO: Ref count the materials in the material library.
       // this.renderer.glMaterialLibrary.removeMaterial(material)
       material = materialParam.getValue()
@@ -192,7 +204,7 @@ class GLGeomItemLibrary extends EventEmitter {
     let geom = geomParm.getValue()
     const geomIndex = this.renderer.glGeomLibrary.addGeom(geom)
 
-    const geomChanged = (event) => {
+    const geomChanged = (event: Record<any, any>) => {
       this.renderer.glGeomLibrary.removeGeom(geom)
       geom = geomParm.getValue()
       glGeomItem.geomId = this.renderer.glGeomLibrary.addGeom(geom)
@@ -246,13 +258,13 @@ class GLGeomItemLibrary extends EventEmitter {
 
   /**
    * Handles applyging the culling results recieved from the GLGeomItemLibraryCullingWorker
-   * @param {object} data - The object containing the newlyCulled and newlyUnCulled results.
+   * @param {Record<any,any>} data - The object containing the newlyCulled and newlyUnCulled results.
    */
-  applyCullResults(data) {
-    data.newlyCulled.forEach((index) => {
+  applyCullResults(data: Record<any, any>) {
+    data.newlyCulled.forEach((index: number) => {
       this.glGeomItems[index].setCulled(true)
     })
-    data.newlyUnCulled.forEach((index) => {
+    data.newlyUnCulled.forEach((index: number) => {
       this.glGeomItems[index].setCulled(false)
     })
     this.renderer.requestRedraw()
@@ -265,7 +277,7 @@ class GLGeomItemLibrary extends EventEmitter {
    * @param {any} geomItem - The geomItem value.
    * @return {any} - The return value.
    */
-  removeGeomItem(geomItem) {
+  removeGeomItem(geomItem: any) {
     const index = this.glGeomItemsMap[geomItem.getId()]
     const glGeomItem = this.glGeomItems[index]
 
@@ -295,7 +307,7 @@ class GLGeomItemLibrary extends EventEmitter {
    * @param {number} index - The index value.
    * @return {GLGeomItem} - The GLGeomItem that wraps the provided GeomItem
    */
-  getGeomItem(index) {
+  getGeomItem(index: number) {
     if (index >= this.glGeomItems.length) {
       console.warn('Invalid Draw Item id:' + index + ' NumItems:' + (this.glGeomItems.length - 1))
       return undefined
@@ -308,7 +320,7 @@ class GLGeomItemLibrary extends EventEmitter {
    * @param {GeomItem} geomItem - The geomItem value.
    * @return {GLGeomItem} - The GLGeomItem that wraps the provided GeomItem
    */
-  getGLGeomItem(geomItem) {
+  getGLGeomItem(geomItem: GeomItem) {
     const index = this.glGeomItemsMap[geomItem.getId()]
     if (index != undefined) {
       // Increment the ref count for the GLGeom
@@ -328,7 +340,12 @@ class GLGeomItemLibrary extends EventEmitter {
    * @param {array} geomItemsUpdateToCullingWorker - The dataArray value.
    * @private
    */
-  populateDrawItemDataArray(index, subIndex, dataArray, geomItemsUpdateToCullingWorker) {
+  populateDrawItemDataArray(
+    index: number,
+    subIndex: number,
+    dataArray: Float32Array,
+    geomItemsUpdateToCullingWorker: any
+  ) {
     const glGeomItem = this.glGeomItems[index]
     // When an item is deleted, we allocate its index to the free list
     // and null this item in the array. skip over null items.
@@ -402,7 +419,7 @@ class GLGeomItemLibrary extends EventEmitter {
    * @param {number} index - The index of the item to gether the data for.
    * @return {object} - the JSON data that will be passed to the worker.
    */
-  getCullingWorkerData(geomItem, material, index) {
+  getCullingWorkerData(geomItem: GeomItem, material: Material, index: number): Record<any, any> {
     const bbox = geomItem.getParameter('BoundingBox').getValue()
     const boundingRadius = bbox.size() * 0.5
     const pos = bbox.center()
@@ -432,14 +449,14 @@ class GLGeomItemLibrary extends EventEmitter {
 
   /**
    * The uploadGeomItems method.
-   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    */
-  uploadGeomItems(renderstate) {
+  uploadGeomItems(renderstate: Record<any, any>) {
     const gl = this.renderer.gl
     if (!gl.floatTexturesSupported) {
       // this.emit('renderTreeUpdated', {});
 
-      const geomItemsUpdateToCullingWorker = []
+      const geomItemsUpdateToCullingWorker: any[] = []
       this.dirtyItemIndices.forEach((index) => {
         const glGeomItem = this.glGeomItems[index]
         // When an item is deleted, we allocate its index to the free list
@@ -486,14 +503,14 @@ class GLGeomItemLibrary extends EventEmitter {
     } else if (this.glGeomItemsTexture.width != size) {
       this.glGeomItemsTexture.resize(size, size)
       this.dirtyItemIndices = Array((size * size) / pixelsPerItem)
-        .fill()
+        .fill(0) // TODO: check, is 0 ok as an argument here?
         .map((v, i) => i)
     }
 
     gl.bindTexture(gl.TEXTURE_2D, this.glGeomItemsTexture.glTex)
     const typeId = this.glGeomItemsTexture.getType()
 
-    const geomItemsUpdateToCullingWorker = []
+    const geomItemsUpdateToCullingWorker: any[] = []
 
     for (let i = 0; i < this.dirtyItemIndices.length; i++) {
       const indexStart = this.dirtyItemIndices[i]
@@ -546,9 +563,9 @@ class GLGeomItemLibrary extends EventEmitter {
 
   /**
    * Updates the GPU state if any update is needed.
-   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    */
-  bind(renderstate) {
+  bind(renderstate: Record<any, any>) {
     if (this.dirtyItemIndices.length > 0 || this.removedItemIndices.length > 0) {
       this.uploadGeomItems(renderstate)
     }
