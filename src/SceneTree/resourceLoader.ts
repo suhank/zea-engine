@@ -63,7 +63,7 @@ class ResourceLoader extends EventEmitter {
   protected baseUrl: string
   protected plugins: Record<any, any>
   protected systemUrls: Record<any, any>
-  protected __commonResources: Record<any,any>
+  protected __commonResources: Record<any, any>
   /**
    * Create a resource loader.
    */
@@ -91,7 +91,7 @@ class ResourceLoader extends EventEmitter {
    * The setAdapter method.
    * @param {Record<any,any>} adapter - The adapter object.
    */
-  setAdapter(adapter: Record<any,any>) {
+  setAdapter(adapter: Record<any, any>) {
     this.__adapter = adapter
   }
 
@@ -148,6 +148,9 @@ class ResourceLoader extends EventEmitter {
     return value
   }
 
+  resourceAvailable(resource: string): any {
+    console.warn('ResourceAvailable not implemented on resourceLoader')
+  }
   /**
    * The loadURL method.
    * @param {string} resourceId - The resourceId value.
@@ -243,7 +246,7 @@ class ResourceLoader extends EventEmitter {
    * @param {string} resourceId - The resourceId value.
    * @return {TreeItem|null} - The common resource if it exists
    */
-  getCommonResource(resourceId: string): TreeItem|null {
+  getCommonResource(resourceId: string): TreeItem | null {
     return this.__commonResources[resourceId]
   }
 
