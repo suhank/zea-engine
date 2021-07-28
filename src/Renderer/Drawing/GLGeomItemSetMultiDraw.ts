@@ -1,6 +1,8 @@
+import { Vec3 } from '../../Math/Vec3'
 import '../../SceneTree/GeomItem'
 
 import { EventEmitter, MathFunctions } from '../../Utilities/index'
+import { GLBaseRenderer } from '../GLBaseRenderer'
 import { GLTexture2D } from '../GLTexture2D'
 
 /** This class abstracts the rendering of a collection of geometries to screen.
@@ -8,24 +10,45 @@ import { GLTexture2D } from '../GLTexture2D'
  * @private
  */
 class GLGeomItemSetMultiDraw extends EventEmitter {
+  protected renderer: GLBaseRenderer
+  protected gl: WebGLRenderingContext
+  protected glGeomItems: any[]
+  protected glGeomIdsMapping: Record<any, any>
+  protected glgeomItemEventHandlers: any[]
+  protected freeIndices: any[]
+  protected dirtyDrawGeomIds: any[]
+  protected drawElementCounts: Uint32Array
+  protected drawElementOffsets: Uint32Array
+  protected highlightElementCounts: Uint32Array
+  protected highlightElementOffsets: Uint32Array
+  protected reserved: number
+  protected visibleItems: any[]
+  protected drawIdsArray: Float32Array
+  protected drawIdsBufferDirty: boolean
+  protected drawIdsTexture: any
+  protected highlightedItems: any[]
+  protected highlightedIdsArray: any
+  protected highlightedIdsTexture: any
+  protected highlightedIdsBufferDirty: boolean
+
   /**
    * Create a GL geom item set.
    * @param {GLBaseRenderer} renderer - The renderer object.
    */
-  constructor(renderer) {
+  constructor(renderer: GLBaseRenderer) {
     super()
     this.renderer = renderer
-    this.gl = renderer.gl
+    this.gl = <WebGLRenderingContext>renderer.gl
     this.glGeomItems = []
     this.glGeomIdsMapping = {}
     this.glgeomItemEventHandlers = []
     this.freeIndices = []
     this.dirtyDrawGeomIds = []
 
-    this.drawElementCounts = new Int32Array(0)
-    this.drawElementOffsets = new Int32Array(0)
-    this.highlightElementCounts = new Int32Array(0)
-    this.highlightElementOffsets = new Int32Array(0)
+    this.drawElementCounts = new Uint32Array(0)
+    this.drawElementOffsets = new Uint32Array(0)
+    this.highlightElementCounts = new Uint32Array(0)
+    this.highlightElementOffsets = new Uint32Array(0)
 
     this.reserved = 0
     this.visibleItems = []
@@ -41,7 +64,7 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
     this.renderer.glGeomLibrary.on('geomDataChanged', (event) => {
       const geomItemIndices = this.glGeomIdsMapping[event.index]
       if (geomItemIndices != undefined) {
-        geomItemIndices.forEach((index) => {
+        geomItemIndices.forEach((index: number) => {
           const glGeomItem = this.glGeomItems[index]
           if (glGeomItem.isVisible()) {
             const index = this.visibleItems.indexOf(glGeomItem)
@@ -64,7 +87,7 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
    * The addGLGeomItem method.
    * @param {any} glGeomItem - The glGeomItem value.
    */
-  addGLGeomItem(glGeomItem) {
+  addGLGeomItem(glGeomItem: any) {
     const index = this.freeIndices.length > 0 ? this.freeIndices.pop() : this.glGeomItems.length
 
     // Keep track of which geomitems use which geoms, so we can update the offset and count array if they change.
@@ -74,14 +97,14 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
       this.glGeomIdsMapping[glGeomItem.geomId].push(index)
     }
 
-    const eventHandlers = {}
+    const eventHandlers: Record<any, any> = {}
 
     // //////////////////////////////
     // Visibility
     if (glGeomItem.visible) {
       this.visibleItems.push(glGeomItem)
     }
-    eventHandlers.visibilityChanged = (event) => {
+    eventHandlers.visibilityChanged = (event: Record<any, any>) => {
       if (event.visible) {
         this.visibleItems.push(glGeomItem)
       } else {
@@ -99,7 +122,7 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
       this.highlightedIdsBufferDirty = true
     }
 
-    eventHandlers.highlightChanged = (event) => {
+    eventHandlers.highlightChanged = (event: Record<any, any>) => {
       if (event && event.name) {
         // Note: highlightChanged is fired when the color changes
         // or another highlight is added over the top. We avoid
@@ -127,7 +150,7 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
    * The removeGLGeomItem method.
    * @param {any} glGeomItem - The glGeomItem value.
    */
-  removeGLGeomItem(glGeomItem) {
+  removeGLGeomItem(glGeomItem: any) {
     const index = this.glGeomItems.indexOf(glGeomItem)
     const geomItemIndices = this.glGeomIdsMapping[glGeomItem.geomId]
     geomItemIndices.splice(geomItemIndices.indexOf(index), 1)
@@ -163,14 +186,14 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
 
   /**
    * The updateDrawIDsBuffer method.
-   * @param {object} renderstate - The object used to track state changes during rendering.
+   * @param {Record<any,any>} renderstate - The object used to track state changes during rendering.
    */
-  updateDrawIDsBuffer(renderstate) {
+  updateDrawIDsBuffer(renderstate: Record<any, any>) {
     {
       if (!this.drawIdsArray || this.visibleItems.length > this.drawIdsArray.length) {
         this.drawIdsArray = new Float32Array(this.visibleItems.length)
-        this.drawElementOffsets = new Int32Array(this.visibleItems.length)
-        this.drawElementCounts = new Int32Array(this.visibleItems.length)
+        this.drawElementOffsets = new Uint32Array(this.visibleItems.length)
+        this.drawElementCounts = new Uint32Array(this.visibleItems.length)
       }
 
       this.visibleItems.forEach((glGeomItem, index) => {
@@ -186,7 +209,7 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
       this.dirtyDrawGeomIds = []
     }
 
-    const gl = this.renderer.gl
+    const gl = <Record<any, any>>this.renderer.gl
     if (!gl.multiDrawElements) {
       return
     }
@@ -196,7 +219,7 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
 
     const drawIdsTextureSize = MathFunctions.nextPow2(Math.ceil(Math.sqrt(this.visibleItems.length))) * 2
     if (!this.drawIdsTexture) {
-      this.drawIdsTexture = new GLTexture2D(gl, {
+      this.drawIdsTexture = new GLTexture2D(this.gl, {
         format: gl.name == 'webgl2' ? 'RED' : 'ALPHA',
         type: 'FLOAT',
         width: drawIdsTextureSize,
@@ -252,7 +275,7 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
    * The updateHighlightedIDsBuffer method.
    * @param {object} renderstate - The object used to track state changes during rendering.
    */
-  updateHighlightedIDsBuffer(renderstate) {
+  updateHighlightedIDsBuffer(renderstate: Record<any, any>) {
     if (this.highlightedIdsBufferDirty) {
       if (!this.highlightedIdsArray || this.highlightedItems.length > this.highlightedIdsArray.length) {
         this.highlightedIdsArray = new Float32Array(this.highlightedItems.length)
@@ -287,7 +310,7 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
     const highlightIdsTextureSize = MathFunctions.nextPow2(Math.ceil(Math.sqrt(this.highlightedItems.length)))
 
     if (!this.highlightedIdsTexture) {
-      this.highlightedIdsTexture = new GLTexture2D(gl, {
+      this.highlightedIdsTexture = new GLTexture2D(this.gl, {
         format: gl.name == 'webgl2' ? 'RED' : 'ALPHA',
         type: 'FLOAT',
         width: highlightIdsTextureSize,
@@ -342,9 +365,9 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
 
   /**
    * The draw method.
-   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    */
-  draw(renderstate) {
+  draw(renderstate: Record<any, any>) {
     if (this.visibleItems.length == 0) {
       return
     }
@@ -361,9 +384,9 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
 
   /**
    * The drawHighlighted method.
-   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    */
-  drawHighlighted(renderstate) {
+  drawHighlighted(renderstate: Record<any, any>) {
     if (this.highlightedItems.length == 0) {
       return
     }
@@ -385,12 +408,17 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
 
   /**
    * The __bindAndRender method.
-   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    * @param {Array} counts - the counts for each element drawn in by this draw call.
    * @param {Array} offsets - the offsets for each element drawn in by this draw call.
    * @private
    */
-  __bindAndRender(renderstate, drawIdsArray, counts, offsets) {
+  __bindAndRender(
+    renderstate: Record<any, any>,
+    drawIdsArray: Float32Array,
+    counts: Uint32Array,
+    offsets: Uint32Array
+  ) {
     const gl = this.gl
     const unifs = renderstate.unifs
 
@@ -409,9 +437,9 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
    * Sorts the drawn items in order furthest to nearest when rendering transparent objects.
    * @param {Vec3} viewPos - The position of the camera that we are sorting relative to.
    */
-  sortItems(viewPos) {
-    const distances = []
-    const indices = []
+  sortItems(viewPos: Vec3) {
+    const distances: any[] = []
+    const indices: any[] = []
     this.visibleItems.forEach((glGeomItem, index) => {
       if (glGeomItem) {
         const mat4 = glGeomItem.geomItem.getGeomMat4()
@@ -422,9 +450,9 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
     })
     indices.sort((a, b) => distances[b] - distances[a])
 
-    const visibleItems = []
-    const drawElementCounts = new Int32Array(this.drawElementCounts.length)
-    const drawElementOffsets = new Int32Array(this.drawElementOffsets.length)
+    const visibleItems: any[] = []
+    const drawElementCounts = new Uint32Array(this.drawElementCounts.length)
+    const drawElementOffsets = new Uint32Array(this.drawElementOffsets.length)
     indices.forEach((tgtIndex, srcIndex) => {
       visibleItems[srcIndex] = this.visibleItems[tgtIndex]
       drawElementCounts[srcIndex] = this.drawElementCounts[tgtIndex]
