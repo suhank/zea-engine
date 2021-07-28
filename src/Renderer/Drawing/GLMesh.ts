@@ -6,12 +6,24 @@ import '../../SceneTree/Geometry/Mesh'
  * @private
  */
 class GLMesh extends GLGeom {
+  protected __numTriIndices: any
+  protected __indexDataType: any
+  protected __numVertices: any
+  protected __numTriangles: any
+  protected __numRenderVerts: any
+  protected __vao: any
+  protected __geom: Record<any, any>
+  protected __wireframesVao: any
+  protected __ext: any
+  protected __numWireIndices: any
+  protected __hardEdgesVao: any
+  protected __numEdgeIndices: any
   /**
    * Create a GL mesh.
    * @param {WebGLRenderingContext} gl - The webgl rendering context.
    * @param {any} mesh - The mesh value.
    */
-  constructor(gl, mesh) {
+  constructor(gl: WebGLRenderingContext, mesh: any) {
     super(gl, mesh)
   }
 
@@ -75,9 +87,9 @@ class GLMesh extends GLGeom {
 
   /**
    * The updateBuffers method.
-   * @param {object} opts - The options object.
+   * @param {Record<any,any>} opts - The options object.
    */
-  updateBuffers(opts) {
+  updateBuffers(opts: Record<any, any>) {
     const gl = this.__gl
 
     if (this.__numVertices != this.__geom.getNumVertices()) {
@@ -144,7 +156,7 @@ class GLMesh extends GLGeom {
    * @param {object} renderstate - The object tracking the current state of the renderer
    * @return {any} - The return value.
    */
-  bindWireframeVAO(renderstate) {
+  bindWireframeVAO(renderstate?: Record<any, any>) {
     if (this.__wireframesVao == undefined) return false
     this.__ext.bindVertexArrayOES(this.__wireframesVao)
     return true
@@ -197,10 +209,10 @@ class GLMesh extends GLGeom {
 
   /**
    * The bindHardEdgesVAO method.
-   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    * @return {any} - The return value.
    */
-  bindHardEdgesVAO(renderstate) {
+  bindHardEdgesVAO(renderstate: Record<any,any>) {
     if (this.__hardEdgesVao == undefined) return false
     this.__ext.bindVertexArrayOES(this.__hardEdgesVao)
     return true
@@ -235,19 +247,20 @@ class GLMesh extends GLGeom {
 
   /**
    * Draw an item to screen.
-   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    */
-  draw(renderstate) {
+  draw(renderstate: Record<any,any>) {
     this.__gl.drawElements(this.__gl.TRIANGLES, this.__numTriIndices, this.__indexDataType, 0)
   }
 
   /**
    * The drawInstanced method.
-   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    * @param {number} instanceCount - The instanceCount value.
    */
-  drawInstanced(renderstate, instanceCount) {
-    this.__gl.drawElementsInstanced(this.__gl.TRIANGLES, this.__numTriIndices, this.__indexDataType, 0, instanceCount)
+  drawInstanced(renderstate: Record<any,any>, instanceCount: number) {
+    const gl = <Record<any,any>>this.__gl
+    gl.drawElementsInstanced(this.__gl.TRIANGLES, this.__numTriIndices, this.__indexDataType, 0, instanceCount)
   }
 
   /**
