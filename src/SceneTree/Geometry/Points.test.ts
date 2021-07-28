@@ -1,5 +1,7 @@
 import { Points } from './Points'
 import { Vec2, Vec3, Box3 } from '../../Math'
+import { Vec3Attribute } from './Vec3Attribute'
+import { Vec2Attribute } from './Vec2Attribute'
 
 describe('Points', () => {
   test('Check for default positions attribute.', () => {
@@ -11,23 +13,23 @@ describe('Points', () => {
     const points = new Points()
     const numVertices = 10
     points.setNumVertices(numVertices)
-    expect(points.getVertexAttribute('positions').length).toBe(numVertices)
+    expect(points.getVertexAttribute('positions').getCount()).toBe(numVertices)
   })
 
   test('Check if new attribute has the same length as the number of vertices.', () => {
     const points = new Points()
     const numVertices = 10
     points.setNumVertices(numVertices)
-    points.addVertexAttribute('foo', Vec2, 1.0)
-    expect(points.getVertexAttribute('foo').length).toBe(numVertices)
-    expect(points.getVertexAttribute('foo').getValueRef(0).toJSON()).toStrictEqual({ x: 1, y: 1 })
+    points.addVertexAttribute('foo', new Vec2Attribute())
+    expect(points.getVertexAttribute('foo').getCount()).toBe(numVertices)
+    expect((<Vec3Attribute>points.getVertexAttribute('foo')).getValueRef(0).toJSON()).toStrictEqual({ x: 1, y: 1 })
   })
 
   test('Check for calculation of bounding box.', () => {
     const points = new Points()
     const numVertices = 3
     points.setNumVertices(numVertices)
-    const positions = points.getVertexAttribute('positions')
+    const positions = <Vec3Attribute>points.getVertexAttribute('positions')
     positions.getValueRef(0).set(1, 2, 3)
     positions.getValueRef(1).set(-1, -2, -3)
     positions.getValueRef(2).set(2, 1, -3)
@@ -44,7 +46,7 @@ describe('Points', () => {
     const points = new Points()
 
     points.setNumVertices(3)
-    const positions = points.getVertexAttribute('positions')
+    const positions = <Vec3Attribute>points.getVertexAttribute('positions')
     positions.getValueRef(0).set(1, 2, 3)
     positions.getValueRef(1).set(-1, -2, -3)
     positions.getValueRef(2).set(2, 1, -3)
@@ -57,7 +59,7 @@ describe('Points', () => {
     const points = new Points()
 
     points.setNumVertices(3)
-    const positions = points.getVertexAttribute('positions')
+    const positions = <Vec3Attribute>points.getVertexAttribute('positions')
     positions.getValueRef(0).set(1, 2, 3)
     positions.getValueRef(1).set(-1, -2, -3)
     positions.getValueRef(2).set(2, 1, -3)
@@ -70,8 +72,9 @@ describe('Points', () => {
     const points = new Points()
     const numVertices = 3
     points.setNumVertices(numVertices)
-    const positions = points.getVertexAttribute('positions')
+    const positions = <Vec3Attribute>points.getVertexAttribute('positions')
     positions.getValueRef(0).set(1, 2, 3)
+    console.log()
     positions.getValueRef(1).set(-1, -2, -3)
     positions.getValueRef(2).set(2, 1, -3)
 
@@ -92,7 +95,7 @@ describe('Points', () => {
     const points = new Points()
     const numVertices = 3
     points.setNumVertices(numVertices)
-    const positions = points.getVertexAttribute('positions')
+    const positions = <Vec3Attribute>points.getVertexAttribute('positions')
     positions.getValueRef(0).set(1, 2, 3)
     positions.getValueRef(1).set(-1, -2, -3)
     positions.getValueRef(2).set(2, 1, -3)
@@ -111,6 +114,6 @@ describe('Points', () => {
     }
     points.fromJSON(input)
 
-    expect(points.getVertexAttribute('positions').length).toBe(3)
+    expect(points.getVertexAttribute('positions').getCount()).toBe(3)
   })
 })
