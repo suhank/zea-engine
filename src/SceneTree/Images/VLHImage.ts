@@ -48,12 +48,12 @@ class VLHImage extends BaseImage {
     const fileParam = this.addParameter(new FilePathParameter('FilePath'))
     fileParam.on('valueChanged', () => {
       this.loaded = false
-      const url = fileParam.getUrl()
+      const url = (<FilePathParameter>fileParam).getUrl()
       this.load(url)
     })
 
     if (filepath) {
-      this.getParameter('FilePath').setFilepath(filepath)
+      ;(<FilePathParameter>this.getParameter('FilePath')).setFilepath(filepath)
     }
   }
 
@@ -120,7 +120,7 @@ class VLHImage extends BaseImage {
       }
       this.type = 'FLOAT'
 
-      resourceLoader.loadFile('archive', url).then((entries) => {
+      resourceLoader.loadFile('archive', url).then((entries: Record<any, any>) => {
         if (!entries.ldr || !entries.cdm) {
           for (const name in entries) {
             if (name.endsWith('.jpg')) {
@@ -174,7 +174,7 @@ class VLHImage extends BaseImage {
    * @private
    * @param {Color} hdrTint - The hdrTint value.
    */
-  setHDRTint(hdrTint) {
+  setHDRTint(hdrTint: Color) {
     this.__hdrTint = hdrTint
   }
 
@@ -195,7 +195,7 @@ class VLHImage extends BaseImage {
    *
    * @param {Record<any, any>} context - The context value.
    */
-  toJSON(context: Record<any, any>) {}
+  toJSON(context?: Record<any, any>): any {}
 
   /**
    * The fromJSON method decodes a json object for this type.
@@ -214,7 +214,7 @@ class VLHImage extends BaseImage {
   readBinary(reader: BinReader, context: Record<any, any>) {
     // super.readBinary(reader, context);
     this.setName(reader.loadStr())
-    const resourcePath: string = reader.loadStr()
+    let resourcePath: string = reader.loadStr()
     if (typeof resourcePath === 'string' && resourcePath != '') {
       if (context.lod >= 0) {
         const suffixSt = resourcePath.lastIndexOf('.')
