@@ -2,16 +2,21 @@ import { PassType } from './GLPass'
 import { GLOpaqueGeomsPass } from './GLOpaqueGeomsPass'
 import { GLRenderer } from '../GLRenderer'
 import { GLTexture2D } from '../GLTexture2D'
-import { Lines, LinesProxy, Points, PointsProxy } from '../../SceneTree/index'
+import { GeomItem, Lines, LinesProxy, Points, PointsProxy } from '../../SceneTree/index'
 import { FattenLinesShader } from '../Shaders/FattenLinesShader'
 import { Plane } from '../../SceneTree/index'
 import { GLMesh } from '../Drawing/GLMesh'
+import { GLBaseRenderer } from '../GLBaseRenderer'
 
 /** Class representing a GL opaque geoms pass.
  * @extends GLOpaqueGeomsPass
  * @private
  */
 class GLLinesPass extends GLOpaqueGeomsPass {
+  protected linesGeomDataBuffer: GLTexture2D
+  protected fattenLinesShader: FattenLinesShader
+  protected quad: GLMesh
+  protected fbo: any
   /**
    * Create a GL opaque geoms pass.
    */
@@ -24,7 +29,7 @@ class GLLinesPass extends GLOpaqueGeomsPass {
    * @param {GLBaseRenderer} renderer - The renderer value.
    * @param {number} passIndex - The index of the pass in the GLBAseRenderer
    */
-  init(renderer, passIndex) {
+  init(renderer: GLBaseRenderer, passIndex: number) {
     super.init(renderer, passIndex)
   }
   /**
@@ -32,7 +37,7 @@ class GLLinesPass extends GLOpaqueGeomsPass {
    * @param {GeomItem} geomItem - The geomItem value.
    * @return {boolean} - The return value.
    */
-  filterGeomItem(geomItem) {
+  filterGeomItem(geomItem: GeomItem): boolean {
     const geom = geomItem.getParameter('Geometry').getValue()
     if (geom instanceof Lines || geom instanceof LinesProxy || geom instanceof Points || geom instanceof PointsProxy) {
       return true
@@ -43,8 +48,8 @@ class GLLinesPass extends GLOpaqueGeomsPass {
    * The __checkFramebuffer method.
    * @private
    */
-  __checkFramebuffer(renderstate) {
-    const gl = this.__gl
+  __checkFramebuffer(renderstate: Record<any, any>) {
+    const gl = <Record<any, any>>this.__gl
 
     let check
     if (gl.name == 'webgl2') check = gl.checkFramebufferStatus(gl.DRAW_FRAMEBUFFER)
@@ -77,9 +82,9 @@ class GLLinesPass extends GLOpaqueGeomsPass {
 
   /**
    * The draw method.
-   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    */
-  draw(renderstate) {
+  draw(renderstate: Record<any, any>) {
     const gl = this.__gl
 
     gl.enable(gl.BLEND)
@@ -95,22 +100,22 @@ class GLLinesPass extends GLOpaqueGeomsPass {
   }
   /**
    * The drawGeomData method.
-   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    */
-  drawGeomData(renderstate) {
-    const gl = this.__gl
+  drawGeomData(renderstate: Record<any, any>) {
+    const gl = <Record<any, any>>this.__gl
     //  Note: lines in VR are not fattened...
     if (renderstate.geomDataFbo) {
       if (!this.linesGeomDataBuffer) {
-        this.linesGeomDataBuffer = new GLTexture2D(gl, {
+        this.linesGeomDataBuffer = new GLTexture2D(this.__gl, {
           type: gl.floatGeomBuffer ? 'FLOAT' : 'UNSIGNED_BYTE',
           format: 'RGBA',
           filter: 'NEAREST',
           width: 1,
           height: 2,
         })
-        this.fattenLinesShader = new FattenLinesShader(gl)
-        this.quad = new GLMesh(gl, new Plane(1, 1))
+        this.fattenLinesShader = new FattenLinesShader(this.__gl)
+        this.quad = new GLMesh(this.__gl, new Plane(1, 1))
       }
 
       const geomDataFbo = renderstate.geomDataFbo
