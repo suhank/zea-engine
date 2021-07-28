@@ -1,16 +1,23 @@
-import { RefCounted } from '../../SceneTree/index'
+import { BaseGeom, RefCounted } from '../../SceneTree/index'
 import { generateShaderGeomBinding } from './GeomShaderBinding'
 
 /** Class representing a GL geom.
  * @private
  */
 class GLGeom extends RefCounted {
+  protected __gl: WebGLRenderingContext
+  protected __geom: any
+  protected __glattrbuffers: Record<any, any>
+  protected __shaderBindings: Record<any, any>
+  protected buffersDirty: boolean
+  protected genBufferOpts: any
+  protected __indexBuffer: any
   /**
    * Create a GL geom.
    * @param {WebGLRenderingContext} gl - The webgl rendering context.
    * @param {BaseGeom} geom - A geometry object
    */
-  constructor(gl, geom) {
+  constructor(gl: WebGLRenderingContext, geom: BaseGeom) {
     super()
     this.__gl = gl
     this.__geom = geom
@@ -19,12 +26,12 @@ class GLGeom extends RefCounted {
     this.__shaderBindings = {}
     this.buffersDirty = true
 
-    const geomDataChanged = (opts) => {
+    const geomDataChanged = (opts: Record<any, any>) => {
       this.dirtyBuffers(opts)
     }
     this.__geom.on('geomDataChanged', geomDataChanged)
 
-    const geomDataTopologyChanged = (opts) => {
+    const geomDataTopologyChanged = (opts: Record<any, any>) => {
       this.clearBuffers()
       this.dirtyBuffers(opts)
     }
@@ -44,9 +51,9 @@ class GLGeom extends RefCounted {
 
   /**
    * The dirtyBuffers method.
-   * @param {object} opts - options passed when geomDataChanged is emitted. (Currently ony used by the FreehandLines tool)
+   * @param {Record<any,any>} opts - options passed when geomDataChanged is emitted. (Currently ony used by the FreehandLines tool)
    */
-  dirtyBuffers(opts) {
+  dirtyBuffers(opts: Record<any, any>) {
     this.genBufferOpts = opts
     this.buffersDirty = true
     this.emit('updated')
@@ -54,15 +61,15 @@ class GLGeom extends RefCounted {
 
   /**
    * The genBuffers method.
-   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    */
-  genBuffers(renderstate) {}
+  genBuffers(renderstate?: Record<any, any>) {}
 
   /**
    * The updateBuffers method.
-   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    */
-  updateBuffers(renderstate) {
+  updateBuffers(renderstate?: Record<any, any>) {
     this.genBuffers(renderstate)
   }
 
@@ -71,10 +78,10 @@ class GLGeom extends RefCounted {
 
   /**
    * The bind method.
-   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    * @return {boolean} - returns false if the binding failed.
    */
-  bind(renderstate) {
+  bind(renderstate: Record<any, any>) {
     if (this.__destroyed) throw new Error('Error binding a destroyed geom')
 
     if (this.buffersDirty) this.updateBuffers()
@@ -91,9 +98,9 @@ class GLGeom extends RefCounted {
 
   /**
    * The unbind method.
-   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    */
-  unbind(renderstate) {
+  unbind(renderstate: Record<any, any>) {
     // Unbinding a geom is important as it puts back some important
     // GL state. (vertexAttribDivisor)
     const shaderBinding = this.__shaderBindings[renderstate.shaderkey]
@@ -108,9 +115,9 @@ class GLGeom extends RefCounted {
 
   /**
    * The draw method.
-   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    */
-  draw(renderstate) {
+  draw(renderstate: Record<any, any>) {
     throw new Error('Not implemented. Implement this method in a derived class.')
   }
 
@@ -119,15 +126,15 @@ class GLGeom extends RefCounted {
    * @param {object} renderstate - The object tracking the current state of the renderer
    * @param {number} instanceCount - The instanceCount param.
    */
-  drawInstanced(renderstate, instanceCount) {
+  drawInstanced(renderstate: Record<any, any>, instanceCount: number) {
     throw new Error('Not implemented. Implement this method in a derived class.')
   }
 
   /**
    * The bindAndDraw method.
-   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    */
-  bindAndDraw(renderstate) {
+  bindAndDraw(renderstate: Record<any, any>) {
     this.bind(renderstate)
     this.draw(renderstate)
   }
