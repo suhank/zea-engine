@@ -1,4 +1,4 @@
-import { Vec2, Vec3, Vec4, Color, Mat4 } from '../../Math/index'
+import { Vec2, Vec3, Vec4, Color, Mat4, Mat3 } from '../../Math/index'
 import { GLTexture2D } from '../GLTexture2D'
 import { GLHDRImage } from '../GLHDRImage'
 import { SInt32, UInt32, Float32 } from '../../Utilities/MathFunctions'
@@ -7,6 +7,20 @@ import { SInt32, UInt32, Float32 } from '../../Utilities/MathFunctions'
  * @private
  */
 class SimpleUniformBinding {
+  protected param: any
+  protected unif: Record<any, any>
+  protected textureUnif: any
+  protected textureTypeUnif: any
+  protected uniform1i: any
+  protected uniformXX: any
+  protected bind: any
+  protected texBinding: any
+  protected gltexture: any
+  protected textureType: any
+
+  protected update: any
+  protected dirty: any
+  protected val: any
   /**
    * Create simple uniform binding.
    * @param {WebGLRenderingContext} gl - The webgl rendering context.
@@ -15,7 +29,13 @@ class SimpleUniformBinding {
    * @param {WebGLUniformLocation} unif - The WebGL uniform
    * @param {object} unifs - The dictionary of WebGL uniforms.
    */
-  constructor(gl, glMaterial, param, unif, unifs) {
+  constructor(
+    gl: WebGLRenderingContext,
+    glMaterial: any,
+    param: any,
+    unif: WebGLUniformLocation,
+    unifs: Record<any, any>
+  ) {
     const name = param.getName()
     this.param = param
     this.unif = unif
@@ -23,13 +43,13 @@ class SimpleUniformBinding {
     this.textureTypeUnif = unifs[name + 'TexType']
     this.uniform1i = gl.uniform1i.bind(gl)
 
-    switch (unif.type) {
+    switch (this.unif.type) {
       case Boolean:
         // gl.uniform1ui(unif.location, value);// WebGL 2
         this.uniformXX = gl.uniform1i.bind(gl)
         break
       case UInt32:
-        if (gl.name == 'webgl2') this.uniformXX = gl.uniform1ui.bind(gl)
+        if ((<Record<any, any>>gl).name == 'webgl2') this.uniformXX = (<Record<any, any>>gl).uniform1ui.bind(gl)
         else this.uniformXX = gl.uniform1i.bind(gl)
         break
       case SInt32:
@@ -42,7 +62,7 @@ class SimpleUniformBinding {
 
     this.bind = this.bindValue
 
-    const genGLTex = (image) => {
+    const genGLTex = (image: any) => {
       let gltexture = image.getMetadata('gltexture')
       const textureType = 1
       if (!gltexture) {
@@ -63,9 +83,9 @@ class SimpleUniformBinding {
       glMaterial.emit('updated', {})
     }
 
-    let boundImage
-    let imageLoaded
-    const connectImage = (image) => {
+    let boundImage: any
+    let imageLoaded: any
+    const connectImage = (image: any) => {
       if (!image.isLoaded()) {
         imageLoaded = () => {
           genGLTex(boundImage)
@@ -124,9 +144,9 @@ class SimpleUniformBinding {
 
   /**
    * The bindValue method.
-   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    */
-  bindValue(renderstate) {
+  bindValue(renderstate: Record<any, any>) {
     if (this.dirty) {
       this.update()
       this.dirty = false
@@ -137,9 +157,9 @@ class SimpleUniformBinding {
 
   /**
    * The bindTexture method.
-   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    */
-  bindTexture(renderstate) {
+  bindTexture(renderstate: Record<any, any>) {
     if (this.dirty) {
       this.update()
       this.dirty = false
@@ -162,6 +182,11 @@ class SimpleUniformBinding {
  * @private
  */
 class ComplexUniformBinding {
+  protected param: any
+  protected unif: any
+  protected dirty: any
+  protected uniformXX: any
+  protected vals: any
   /**
    * Create complex uniform binding.
    * @param {WebGLRenderingContext} gl - The webgl rendering context.
@@ -169,11 +194,11 @@ class ComplexUniformBinding {
    * @param {any} param - The param value.
    * @param {WebGLUniformLocation} unif - The WebGL uniform
    */
-  constructor(gl, glMaterial, param, unif) {
+  constructor(gl: WebGLRenderingContext, glMaterial: any, param: any, unif: WebGLUniformLocation) {
     this.param = param
     this.unif = unif
 
-    switch (unif.type) {
+    switch (this.unif.type) {
       case Vec2:
         this.uniformXX = gl.uniform2fv.bind(gl)
         break
@@ -193,9 +218,9 @@ class ComplexUniformBinding {
 
   /**
    * The bind method.
-   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    */
-  bind(renderstate) {
+  bind(renderstate: Record<any, any>) {
     if (this.dirty) {
       this.vals = this.param.getValue().asArray()
       this.dirty = false
@@ -218,6 +243,12 @@ class ComplexUniformBinding {
  * @private
  */
 class MatrixUniformBinding {
+  protected param: any
+  protected unif: any
+  protected uniformMatrixXXX: any
+  protected dirty: any
+  protected vals: any
+  protected val: any
   /**
    * Create material uniform binding.
    * @param {WebGLRenderingContext} gl - The webgl rendering context.
@@ -225,11 +256,11 @@ class MatrixUniformBinding {
    * @param {any} param - The param value.
    * @param {WebGLUniformLocation} unif - The WebGL uniform
    */
-  constructor(gl, glMaterial, param, unif) {
+  constructor(gl: WebGLRenderingContext, glMaterial: any, param: any, unif: WebGLUniformLocation) {
     this.param = param
     this.unif = unif
 
-    switch (unif.type) {
+    switch (this.unif.type) {
       case Mat3:
         this.uniformMatrixXXX = gl.uniformMatrix3fv.bind(gl)
         break
@@ -247,9 +278,9 @@ class MatrixUniformBinding {
 
   /**
    * The bind method.
-   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    */
-  bind(renderstate) {
+  bind(renderstate: Record<any, any>) {
     if (this.dirty) {
       this.vals = this.param.getValue().asArray()
       this.dirty = false
@@ -272,15 +303,34 @@ class MatrixUniformBinding {
  * @private
  */
 class ColorUniformBinding {
+  protected param: any
+  protected unif: any
+  protected textureUnif: any
+  protected textureTypeUnif: any
+  protected vals: number[]
+  protected bind: any
+  protected gltexture: any
+  protected textureType: any
+  protected texBinding: any
+  protected update: any
+  protected dirty
+  protected uniform1i: any
+  protected uniform4fv: any
   /**
    * Create color uniform binding.
    * @param {WebGLRenderingContext} gl - The webgl rendering context.
    * @param {any} glMaterial - The glMaterial value.
    * @param {any} param - The param value.
    * @param {WebGLUniformLocation} unif - The WebGL uniform
-   * @param {object} unifs - The dictionary of WebGL uniforms.
+   * @param {Record<any,any>} unifs - The dictionary of WebGL uniforms.
    */
-  constructor(gl, glMaterial, param, unif, unifs) {
+  constructor(
+    gl: WebGLRenderingContext,
+    glMaterial: any,
+    param: any,
+    unif: WebGLUniformLocation,
+    unifs: Record<any, any>
+  ) {
     const name = param.getName()
     this.param = param
     this.unif = unif
@@ -290,7 +340,7 @@ class ColorUniformBinding {
     this.vals = [0, 0, 0, 0]
     this.bind = this.bindValue
 
-    const genGLTex = (image) => {
+    const genGLTex = (image: any) => {
       let gltexture = image.getMetadata('gltexture')
       const textureType = 1
       if (!gltexture) {
@@ -311,9 +361,9 @@ class ColorUniformBinding {
       glMaterial.emit('updated', {})
     }
 
-    let boundImage
-    let imageLoaded
-    const connectImage = (image) => {
+    let boundImage: any
+    let imageLoaded: any
+    const connectImage = (image: any) => {
       if (!image.isLoaded()) {
         imageLoaded = () => {
           genGLTex(boundImage)
@@ -375,9 +425,9 @@ class ColorUniformBinding {
 
   /**
    * The bindValue method.
-   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    */
-  bindValue(renderstate) {
+  bindValue(renderstate: Record<any, any>) {
     if (this.dirty) {
       this.update()
       this.dirty = false
@@ -388,9 +438,9 @@ class ColorUniformBinding {
 
   /**
    * The bindTexture method.
-   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    */
-  bindTexture(renderstate) {
+  bindTexture(renderstate: Record<any, any>) {
     if (this.dirty) {
       this.update()
       this.dirty = false
@@ -405,6 +455,7 @@ const logged = {}
  * @private
  */
 class MaterialShaderBinding {
+  protected uniformBindings: any
   /**
    * Create material shader binding.
    * @param {WebGLRenderingContext} gl - The webgl rendering context.
@@ -412,10 +463,10 @@ class MaterialShaderBinding {
    * @param {object} unifs - The dictionary of WebGL uniforms.
    * @param {any} warnMissingUnifs - The warnMissingUnifs value.
    */
-  constructor(gl, glMaterial, unifs, warnMissingUnifs) {
+  constructor(gl: WebGLRenderingContext, glMaterial: any, unifs: Record<any, any>, warnMissingUnifs: any) {
     this.uniformBindings = []
 
-    const bindParam = (param) => {
+    const bindParam = (param: any) => {
       const name = param.getName()
       const unif = unifs[name]
       if (unif == undefined) {
@@ -480,10 +531,10 @@ class MaterialShaderBinding {
 
   /**
    * The bind method.
-   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    * @return {any} - The return value.
    */
-  bind(renderstate) {
+  bind(renderstate: Record<any, any>) {
     for (const uniformBinding of this.uniformBindings) {
       uniformBinding.bind(renderstate)
     }
@@ -493,7 +544,7 @@ class MaterialShaderBinding {
   /**
    * The unbind method.
    */
-  unbind() {
+  unbind(renderstate: Record<any, any>) {
     for (const uniformBinding of this.uniformBindings) {
       uniformBinding.unbind(renderstate)
     }
@@ -503,7 +554,7 @@ class MaterialShaderBinding {
    * The destroy is called by the system to cause explicit resources cleanup.
    * Users should never need to call this method directly.
    */
-  destroy() {
+  destroy(renderstate: Record<any, any>) {
     for (const uniformBinding of this.uniformBindings) {
       uniformBinding.destroy(renderstate)
     }
