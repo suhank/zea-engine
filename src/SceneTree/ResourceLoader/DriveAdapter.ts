@@ -6,7 +6,7 @@ import { StringFunctions } from '../../Utilities/StringFunctions'
  * @param {any} item - The item value.
  * @return {boolean} - The return value.
  */
-export function isObject(item) {
+export function isObject(item: any): boolean {
   return item && typeof item === 'object' && !Array.isArray(item)
 }
 
@@ -17,7 +17,7 @@ export function isObject(item) {
  * @param {...object} ...sources - The ...sources value.
  * @return {any} - The return value.
  */
-export function mergeDeep(target, ...sources) {
+export function mergeDeep(target: any, ...sources: any[]): any {
   if (!sources.length) return target
   const source = sources.shift()
 
@@ -47,10 +47,14 @@ export function mergeDeep(target, ...sources) {
  * @private
  */
 class DriveAdapter {
+  protected __resources: Record<any, any>
+  protected __resourcesTreeEntities: Record<any, any>
+  protected __resourcesTree: Record<any, any>
+  protected __resourceRegisterCallbacks: Record<any, any>
   /**
    * Create a resource loader.
    */
-  constructor(resources) {
+  constructor(resources: any) {
     this.__resources = {}
     this.__resourcesTreeEntities = {}
     this.__resourcesTree = {
@@ -103,7 +107,7 @@ class DriveAdapter {
    * @param {string} filter - The filter value.
    * @param {function} fn - The fn value.
    */
-  registerResourceCallback(filter, fn) {
+  registerResourceCallback(filter: string, fn: any) {
     this.__resourceRegisterCallbacks[filter] = fn
     // eslint-disable-next-line guard-for-in
     for (const key in this.__resources) {
@@ -114,11 +118,11 @@ class DriveAdapter {
 
   /**
    * The __applyCallbacks method.
-   * @param {object} resourcesDict - The resourcesDict value.
+   * @param {Record<any,any>} resourcesDict - The resourcesDict value.
    * @private
    */
-  __applyCallbacks(resourcesDict) {
-    const applyCallbacks = (resource) => {
+  __applyCallbacks(resourcesDict: Record<any, any>) {
+    const applyCallbacks = (resource: any) => {
       for (const filter in this.__resourceRegisterCallbacks) {
         if (resource.name.includes(filter)) this.__resourceRegisterCallbacks[filter](resource)
       }
@@ -131,11 +135,11 @@ class DriveAdapter {
 
   /**
    * The __buildTree method.
-   * @param {object} resources - The resources param.
+   * @param {Record<any,any>} resources - The resources param.
    * @private
    */
-  __buildTree(resources) {
-    const buildEntity = (resourceId) => {
+  __buildTree(resources: Record<any, any>) {
+    const buildEntity = (resourceId: number) => {
       if (this.__resourcesTreeEntities[resourceId]) return
 
       const resource = resources[resourceId]
@@ -156,15 +160,15 @@ class DriveAdapter {
 
     // eslint-disable-next-line guard-for-in
     for (const key in resources) {
-      buildEntity(key)
+      buildEntity(parseInt(key))
     }
   }
 
   /**
    * The setResources method.
-   * @param {object} resources - The resources value.
+   * @param {Record<any,any>} resources - The resources value.
    */
-  setResources(resources) {
+  setResources(resources: Record<any, any>) {
     this.__resources = Object.assign(this.__resources, resources)
     this.__buildTree(resources)
     this.__applyCallbacks(resources)
@@ -175,7 +179,7 @@ class DriveAdapter {
    * @param {string} resourcePath - The resourcePath value.
    * @param {string} url - The url value.
    */
-  addResourceURL(resourcePath, url) {
+  addResourceURL(resourcePath: string, url: string) {
     const parts = resourcePath.split('/')
     const filename = parts.pop()
     if (!url) {
@@ -184,10 +188,10 @@ class DriveAdapter {
       if (rootURL.endsWith('.html') || rootURL.endsWith('.html')) {
         rootURL = rootURL.substring(0, rootURL.lastIndexOf('/')) + '/'
       }
-      const base = rootURL
+      let base = rootURL
       if (parts[0] == '.') parts.shift()
       else if (parts[0] == '..') {
-        item = item.substring(3)
+        // item = item.substring(3)
         const baseParts = base.split('/')
         baseParts.pop()
         baseParts.pop()
@@ -227,9 +231,9 @@ class DriveAdapter {
 
   /**
    * The updateFile method.
-   * @param {object} file - The file value.
+   * @param {Record<any,any>} file - The file value.
    */
-  updateFile(file) {
+  updateFile(file: Record<any, any>) {
     const newFile = !(file.id in this.__resources)
     this.__resources[file.id] = file
     if (newFile) {
@@ -241,13 +245,16 @@ class DriveAdapter {
     this.emit('fileUpdated', { fileId: file.id })
   }
 
+  emit(fileStatus: string, record: Record<any, any>) {
+    console.warn('emit() method for DriveAdapter not implemented')
+  }
   /**
    * Returns complete file path.
    *
    * @param {string} resourceId - The resourceId value.
    * @return {string} - The return value.
    */
-  getFilepath(resourceId) {
+  getFilepath(resourceId: string) {
     let curr = this.__resources[resourceId]
     const path = [curr.name]
     while (curr.parent) {
@@ -263,7 +270,7 @@ class DriveAdapter {
    * @param {string} resourceId - The resourceId value.
    * @return {boolean} - The return value.
    */
-  resourceAvailable(resourceId) {
+  resourceAvailable(resourceId: string): boolean {
     if (resourceId.indexOf('.') > 0) {
       console.warn('Deprecation warning for resourceAvailable. Value should be a file id, not a path.')
       return this.resolveFilepath(resourceId) != undefined
@@ -271,21 +278,24 @@ class DriveAdapter {
     return resourceId in this.__resources
   }
 
+  resolveFilepath(resourceId: string) {
+    console.warn('resolveFilePath() not implemented in DriveAdapter.ts')
+  }
   /**
    * The getFile method.
    * @param {string} resourceId - The resourceId value.
-   * @return {object} - The return value.
+   * @return {Record<any,any>} - The return value.
    */
-  getFile(resourceId) {
+  getFile(resourceId: string): Record<any, any> {
     return this.__resources[resourceId]
   }
 
   /**
    * The resolveFilepath method.
    * @param {string} filePath - The filePath value.
-   * @return {object} - The return value.
+   * @return {Record<any,any>} - The return value.
    */
-  resolveFileId(value) {
+  resolveFileId(value: string): Record<any, any> {
     const parts = value.split('/')
     if (parts[0] == '.' || parts[0] == '') parts.shift()
     let curr = this.__resourcesTree
@@ -305,7 +315,7 @@ class DriveAdapter {
    * @param {string} value - The file value.
    * @return {string} - The resolved URL if an adapter is installed, else the original value.
    */
-  resolveFilename(value) {
+  resolveFilename(value: string): string {
     return this.__resources[value].name
   }
 
@@ -315,7 +325,7 @@ class DriveAdapter {
    * @param {string} value - The file value.
    * @return {string} - The resolved URL if an adapter is installed, else the original value.
    */
-  resolveURL(value) {
+  resolveURL(value: string): string {
     return this.__resources[value].url
   }
 
@@ -323,18 +333,18 @@ class DriveAdapter {
    * The traverse method.
    * @param {function} callback - The callback value.
    */
-  traverse(callback) {
-    const __c = (fsItem) => {
+  traverse(callback: any) {
+    const __c = (fsItem: any) => {
       // eslint-disable-next-line guard-for-in
       for (const childItemName in fsItem.children) {
         __t(fsItem.children[childItemName])
       }
     }
-    const __t = (fsItem) => {
+    const __t = (fsItem: any) => {
       if (callback(fsItem) == false) return false
       if (fsItem.children) __c(fsItem)
     }
-    __c(this.__resourcesTree, 0)
+    __c(this.__resourcesTree)
   }
 }
 
