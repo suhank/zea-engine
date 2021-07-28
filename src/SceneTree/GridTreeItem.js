@@ -19,7 +19,7 @@ class GridTreeItem extends TreeItem {
    *
    * @param {number} [gridSize=5]
    * @param {number} [resolution=50]
-   * @param {string} [gridColor=new Color('#DCDCDC')]
+   * @param {Color} [gridColor=new Color('#DCDCDC')]
    */
   constructor(gridSize = 5, resolution = 50, gridColor = new Color('#DCDCDC')) {
     super('GridTree')

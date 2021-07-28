@@ -4,6 +4,7 @@ import { resourceLoader } from './resourceLoader'
 import { DriveAdapter } from './ResourceLoader/DriveAdapter'
 import { SceneSettings } from './SceneSettings'
 import { GridTreeItem } from './GridTreeItem'
+import { EnvMap } from './Images/EnvMap'
 
 const defaultGridColor = new Color('#DCDCDC')
 
@@ -11,11 +12,14 @@ const defaultGridColor = new Color('#DCDCDC')
  * Class representing the environment where all the displayed assets live.
  */
 class Scene {
+  protected settings: SceneSettings
+  protected root: TreeItem
+
   /**
    * Create a scene.
-   * @param {object} resources - The resources value.
+   * @param {Record<any,any>} resources - The resources value.
    */
-  constructor(resources) {
+  constructor(resources: Record<any, any>) {
     if (resources) {
       resourceLoader.setAdapter(new DriveAdapter(resources))
     }
@@ -56,7 +60,7 @@ class Scene {
    * @deprecated
    * @param {EnvMap} envMap - The envMap value.
    */
-  setEnvMap(envMap) {
+  setEnvMap(envMap: EnvMap) {
     this.settings.getParameter('EnvMap').setValue(envMap)
   }
 
@@ -87,8 +91,8 @@ class Scene {
    * @param {object} context - The context value.
    * @return {object} - Returns the json object.
    */
-  toJSON(context = {}) {
-    context.makeRelative = (path) => path
+  toJSON(context: Record<any, any> = {}) {
+    context.makeRelative = (path: string) => path
     const json = {
       root: this.root.toJSON(context),
     }
@@ -98,12 +102,12 @@ class Scene {
   /**
    * The fromJSON method decodes a json object for this type.
    *
-   * @param {object} json - The json object this item must decode.
-   * @param {object} context - The context value.
+   * @param {Record<any,any>} json - The json object this item must decode.
+   * @param {Record<any,any>} context - The context value.
    */
-  fromJSON(json, context = {}) {
-    const plcbs = [] // Post load callbacks.
-    context.resolvePath = (path, cb) => {
+  fromJSON(json: Record<any, any>, context: Record<any, any> = {}) {
+    const plcbs: any[] = [] // Post load callbacks.
+    context.resolvePath = (path: string, cb: any) => {
       // Note: Why not return a Promise here?
       // Promise evaluation is always async, so
       // all promisses will be resolved after the current call stack
@@ -118,7 +122,7 @@ class Scene {
         // Some paths resolve to items generated during load,
         // so push a callback to re-try after the load is complete.
         plcbs.push(() => {
-          const param = this.resolvePath(path)
+          const param: any = this.resolvePath(path)
           if (param) cb(param)
           else {
             console.warn('Path unable to be resolved:' + path)
@@ -126,7 +130,7 @@ class Scene {
         })
       }
     }
-    context.addPLCB = (plcb) => plcbs.push(plcb)
+    context.addPLCB = (plcb: any) => plcbs.push(plcb)
     context.settings = this.settings
 
     if (json.root) {
@@ -136,6 +140,10 @@ class Scene {
     // Invoke all the post-load callbacks to resolve any
     // remaining references.
     for (const cb of plcbs) cb()
+  }
+
+  resolvePath(path: string): any {
+    console.warn('resolvePath is not implemented')
   }
 }
 
