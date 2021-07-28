@@ -1,4 +1,4 @@
-function checkStatus(response) {
+function checkStatus(response: any) {
   if (!response.ok) {
     return false
   }
@@ -10,7 +10,8 @@ function checkStatus(response) {
  * Binary loader plugin.
  */
 class BinaryLoaderPlugin {
-  init(resourceLoader) {
+  protected resourceLoader: any
+  init(resourceLoader: any) {
     this.resourceLoader = resourceLoader
   }
 
@@ -22,7 +23,7 @@ class BinaryLoaderPlugin {
     return 'binary'
   }
 
-  loadFile(url) {
+  loadFile(url: string) {
     this.resourceLoader.incrementWorkload(1)
 
     const promise = new Promise(
@@ -32,8 +33,8 @@ class BinaryLoaderPlugin {
           if (checkStatus(response)) resolve(response.arrayBuffer())
           else reject(`loadBinary: ${response.status} - ${response.statusText} : ${url}`)
         })
-      },
-      () => {}
+      }
+      // () => {}
     )
 
     return promise
