@@ -1,5 +1,5 @@
  
-
+import 'constants.glsl'
 
 vec2 latLongUVsFromDir(vec3 dir) {
   // Math function taken from...

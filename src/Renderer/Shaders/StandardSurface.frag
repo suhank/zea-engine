@@ -3,15 +3,11 @@ precision highp float;
 // #define DEBUG_GEOM_ID
 #endif
 
-import 'GLSLUtils.glsl'
-import 'constants.glsl'
 
 
-import 'drawItemTexture.glsl' // should import utils
+import 'drawItemTexture.glsl' 
 import 'cutaways.glsl'
-
-import 'gamma.glsl'
-import 'materialparams.glsl' // should import utils
+import 'materialparams.glsl'
 
 #ifdef DEBUG_GEOM_ID
 import 'debugColors.glsl'

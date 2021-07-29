@@ -1,4 +1,6 @@
 
+import 'GLSLUtils.glsl'
+import 'gamma.glsl'
 
 #ifdef ENABLE_MULTI_DRAW
   

@@ -165,6 +165,8 @@ class ShaderLibrary {
           const includeFile = trimmedLine.split(/'|"|`/)[1].split('/').pop()
           if (!includes.includes(includeFile)) {
             this.handleImport(result, shaderName, includeFile, includes, lineNumber)
+          } else {
+            console.log(shaderName + ' already imported: ' + includeFile)
           }
 
           break

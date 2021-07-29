@@ -1,3 +1,4 @@
+import 'GLSLUtils.glsl'
 
 #ifdef ENABLE_FLOAT_TEXTURES
 
