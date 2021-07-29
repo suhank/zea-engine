@@ -30,7 +30,7 @@ void main(void) {
     vec4 color = BaseColor * NdotV;
     fragColor = vec4(color.rgb, BaseColor.a);
   }
-  else{
+  else {
     fragColor = vec4(v_texCoord.x, 0.0, 0.0, 1.0);
   }
 

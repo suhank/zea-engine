@@ -34,7 +34,7 @@ int getDrawItemId() {
   if(instancedDraw == 0) {
     return drawItemId;
   }
-  else{
+  else {
     return int(instancedIds);
   }
 }

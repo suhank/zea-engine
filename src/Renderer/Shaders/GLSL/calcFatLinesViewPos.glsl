@@ -21,7 +21,7 @@ vec3 calcFatLinesViewPos(int vertexID, mat4 modelViewMatrix, inout vec3 viewNorm
     pos = data_0.xyz;
     viewPos = pos_0.xyz;
   }
-  else{
+  else {
     pos = data_1.xyz;
     viewPos = pos_1.xyz;
   }
@@ -49,13 +49,13 @@ vec3 calcFatLinesViewPos(int vertexID, mat4 modelViewMatrix, inout vec3 viewNorm
         viewPos += vec3(startBiTangent * lineThickness_0);
         texCoord.x = 1.0;
       }
-      else{
+      else {
         viewPos -= vec3(startBiTangent * lineThickness_0);
         texCoord.x = 0.0;
       }
       texCoord.y = 0.0;
     }
-    else{
+    else {
       vec3 segmentEndDir = segmentDir;
       if(seqentialIndex_1 != 0) {
         //if index_1 == numPoints-1, get the first index in the line as next
@@ -75,7 +75,7 @@ vec3 calcFatLinesViewPos(int vertexID, mat4 modelViewMatrix, inout vec3 viewNorm
         viewPos += vec3(endBiTangent * lineThickness_1);
         texCoord.x = 1.0;
       }
-      else{
+      else {
         viewPos -= vec3(endBiTangent * lineThickness_1);
         texCoord.x = 0.0;
       }

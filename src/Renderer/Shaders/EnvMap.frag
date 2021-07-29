@@ -51,7 +51,7 @@ vec4 sampleEnvMap(vec3 dir) {
     vec4 texel = texture2D(envMap, uv);
     return vec4(texel.rgb/texel.a, 1.0);
   }
-  else{
+  else {
     return texture2D(envMap, uv) * exposure;
   }
 }

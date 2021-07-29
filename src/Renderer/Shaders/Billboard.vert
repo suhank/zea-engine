@@ -141,7 +141,7 @@ void main(void) {
       gl_Position = modelViewProjectionMatrix * vec4(pos.x * width * sc, (pos.y + 0.5) * height * sc, 0.0, 1.0);
     }
   }
-  else{
+  else {
     modelViewProjectionMatrix = projectionMatrix * viewMatrix * modelMatrix;
     gl_Position = modelViewProjectionMatrix * vec4(pos.x * width, (pos.y + 0.5) * height, 0.0, 1.0);
   }

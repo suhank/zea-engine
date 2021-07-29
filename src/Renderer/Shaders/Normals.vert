@@ -25,7 +25,7 @@ void main(void) {
     gl_Position = modelViewProjectionMatrix * vec4(positions, 1.0);
     v_weight = 1.0;
   }
-  else{
+  else {
     gl_Position = modelViewProjectionMatrix * vec4(positions+(normals*normalLength), 1.0);
     v_weight = 0.0;
   }

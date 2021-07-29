@@ -56,7 +56,7 @@ vec2 encode16BitFloatInto2xUInt8(float v) {
   float rest;
   if(exponent == 0) {
     rest = v / limit / 2.;      // "subnormalize" implicite preceding 0. 
-  }else{
+  }else {
     rest = (v - limit)/limit;   // normalize accordingly to implicite preceding 1.
   }
 
