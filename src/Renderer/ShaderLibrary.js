@@ -166,7 +166,7 @@ class ShaderLibrary {
           if (!includes.includes(includeFile)) {
             this.handleImport(result, shaderName, includeFile, includes, lineNumber)
           } else {
-            console.log(shaderName + ' already imported: ' + includeFile)
+            // console.log(shaderName + ' already imported: ' + includeFile)
           }
 
           break
