@@ -3,6 +3,7 @@ precision highp float;
 
 import 'GLSLUtils.glsl'
 import 'gamma.glsl'
+import 'constants.glsl'
 
 uniform float focus;
 uniform float exposure;

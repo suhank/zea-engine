@@ -14,9 +14,6 @@ import envmapOctahedral from './envmap-octahedral.glsl'
 import GLSLBits from './GLSLBits.glsl'
 import GLSLUtils from './GLSLUtils.glsl'
 import Hammersley from './Hammersley.glsl'
-import imageAtlas from './imageAtlas.glsl'
-import imagePyramid from './imagePyramid.glsl'
-import ImageStream from './ImageStream.glsl'
 import ImportanceSampleGGX from './ImportanceSampleGGX.glsl'
 import materialparams from './materialparams.glsl'
 import modelMatrix from './modelMatrix.glsl'
@@ -27,9 +24,7 @@ import inverse from './inverse.glsl'
 import transpose from './transpose.glsl'
 import quadVertexFromID from './quadVertexFromID.glsl'
 import unpackHDR from './unpackHDR.glsl'
-import GLSLBinReader from './GLSLBinReader.glsl'
 
-shaderLibrary.setShaderModule('GLSLBinReader.glsl', GLSLBinReader)
 shaderLibrary.setShaderModule('computeViewNormal.glsl', computeViewNormal)
 shaderLibrary.setShaderModule('calcFatLinesViewPos.glsl', calcFatLinesViewPos)
 shaderLibrary.setShaderModule('constants.glsl', constants)
@@ -44,9 +39,6 @@ shaderLibrary.setShaderModule('envmap-octahedral.glsl', envmapOctahedral)
 shaderLibrary.setShaderModule('GLSLBits.glsl', GLSLBits)
 shaderLibrary.setShaderModule('GLSLUtils.glsl', GLSLUtils)
 shaderLibrary.setShaderModule('Hammersley.glsl', Hammersley)
-shaderLibrary.setShaderModule('imageAtlas.glsl', imageAtlas)
-shaderLibrary.setShaderModule('imagePyramid.glsl', imagePyramid)
-shaderLibrary.setShaderModule('ImageStream.glsl', ImageStream)
 shaderLibrary.setShaderModule('ImportanceSampleGGX.glsl', ImportanceSampleGGX)
 shaderLibrary.setShaderModule('materialparams.glsl', materialparams)
 shaderLibrary.setShaderModule('modelMatrix.glsl', modelMatrix)
