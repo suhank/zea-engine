@@ -139,12 +139,12 @@ void main(void) {
   // Hacky simple irradiance. 
   float ndotv = dot(normal, viewVector);
   if (ndotv < 0.0) {
-      normal = -normal;
-      ndotv = dot(normal, viewVector);
+    normal = -normal;
+    ndotv = dot(normal, viewVector);
 
-      // Note: these 2 lines can be used to debug inverted meshes.
-      //baseColor = vec4(1.0, 0.0, 0.0, 1.0);
-      //ndotv = 1.0;
+    // Note: these 2 lines can be used to debug inverted meshes.
+    //baseColor = vec4(1.0, 0.0, 0.0, 1.0);
+    //ndotv = 1.0;
   }
 
 #ifndef ENABLE_ES3

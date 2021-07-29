@@ -69,7 +69,7 @@ vec2 encode16BitFloatInto2xUInt8(float v) {
   c.y = float(lsb) / 255.;
 
   if (v >= 2048.) {
-      c.y = 1.;
+    c.y = 1.;
   }
 
   return c;
