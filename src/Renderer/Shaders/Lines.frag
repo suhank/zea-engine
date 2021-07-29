@@ -86,7 +86,7 @@ void main(void) {
     vec4 cutAwayData   = getCutaway(drawItemId);
     vec3 planeNormal = cutAwayData.xyz;
     float planeDist = cutAwayData.w;
-    if(cutaway(v_worldPos, planeNormal, planeDist)){
+    if(cutaway(v_worldPos, planeNormal, planeDist)) {
       discard;
       return;
     }

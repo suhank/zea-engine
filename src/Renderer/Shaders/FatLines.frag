@@ -18,7 +18,7 @@ void main(void) {
 #endif
 
   int debugLevel = 0;
-  if(debugLevel == 0){
+  if(debugLevel == 0) {
 
     vec3 viewVector = mat3(cameraMatrix) * normalize(-v_viewPos);
     vec3 normal = mat3(cameraMatrix) * v_viewNormal;

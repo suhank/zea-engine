@@ -4,7 +4,7 @@ import 'GLSLUtils.glsl'
 #define sum(value) dot(clamp((value), 1.0, 1.0), (value))
 
 
-vec2 dirToSphOctUv(vec3 normal){
+vec2 dirToSphOctUv(vec3 normal) {
   normal = normalize(normal);
   vec3 aNorm = abs(normal);
   vec3 sNorm = sectorize(normal);
@@ -17,7 +17,7 @@ vec2 dirToSphOctUv(vec3 normal){
 
   vec2 uv = vec2(sNorm.x*orient, sNorm.y*(1.0-orient))*pitch;
 
-  if(normal.z < 0.0){
+  if(normal.z < 0.0) {
     uv = sNorm.xy - abs(uv.ts)*sNorm.xy;
   }
   vec2 res = uv*0.5+0.5;
@@ -27,7 +27,7 @@ vec2 dirToSphOctUv(vec3 normal){
 }
 
 
-vec3 sphOctUvToDir(vec2 uv){
+vec3 sphOctUvToDir(vec2 uv) {
   uv = uv*2.0-1.0;
   // Flip-v
   uv.y = -uv.y;
@@ -41,7 +41,7 @@ vec3 sphOctUvToDir(vec2 uv){
   if (abs(pitch - PI) < 0.000001) {
     return vec3(0.0, 0.0, -1.0);
   }
-  if(sabsuv > 1.0){
+  if(sabsuv > 1.0) {
     uv = (1.0-abs(uv.ts))*suv;
   }
 

@@ -36,7 +36,7 @@ bool cutaway(vec3 worldPos, vec3 planeNormal, float planeDist) {
   vec3 planePos = planeNormal * planeDist;
   vec3 planeDir = worldPos + planePos;
   float planeOffset = dot(planeDir, planeNormal);
-  if(planeOffset > 0.0){
+  if(planeOffset > 0.0) {
     return true;
   }
   return false;

@@ -46,7 +46,7 @@ void main(void) {
   v_viewPos = -viewPos.xyz;
   
   gl_Position = projectionMatrix * viewPos;
-  if(Overlay > 0.0){
+  if(Overlay > 0.0) {
     gl_Position.z = mix(gl_Position.z, -gl_Position.w, Overlay);
   }
 }

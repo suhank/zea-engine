@@ -80,11 +80,11 @@ void main(void) {
     vec4 cutAwayData   = getCutaway(drawItemId);
     vec3 planeNormal = cutAwayData.xyz;
     float planeDist = cutAwayData.w;
-    if(cutaway(v_worldPos, planeNormal, planeDist)){
+    if(cutaway(v_worldPos, planeNormal, planeDist)) {
       discard;
       return;
     }
-    else if(!gl_FrontFacing){
+    else if(!gl_FrontFacing) {
 #ifdef ENABLE_ES3
   fragColor = cutColor;
 #else
@@ -138,7 +138,7 @@ void main(void) {
 
   // Hacky simple irradiance. 
   float ndotv = dot(normal, viewVector);
-  if(ndotv < 0.0){
+  if(ndotv < 0.0) {
       normal = -normal;
       ndotv = dot(normal, viewVector);
 

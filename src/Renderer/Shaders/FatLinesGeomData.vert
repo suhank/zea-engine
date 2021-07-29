@@ -52,7 +52,7 @@ void main(void) {
   
   v_worldPos      = (modelMatrix * vec4(pos, 1.0)).xyz;
 
-  if(Overlay > 0.0){
+  if(Overlay > 0.0) {
     gl_Position.z = mix(gl_Position.z, -gl_Position.w, Overlay);
   }
 

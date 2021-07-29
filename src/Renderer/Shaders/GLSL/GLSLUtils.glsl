@@ -1,7 +1,7 @@
 
 
 
-int ftoi(float val){
+int ftoi(float val) {
   return int(floor(val + 0.5));
 }
 ivec2 ftoi(vec2 v2) {
@@ -33,7 +33,7 @@ bool testFlag(int flags, int flag) {
 }
 
 // private function: Mangle me...
-ivec2 _pixelIndexToUV(int index, int textureWidth){
+ivec2 _pixelIndexToUV(int index, int textureWidth) {
   return ivec2(index % textureWidth, index / textureWidth);
 }
 
@@ -57,7 +57,7 @@ int min(int a, int b) {
 }
 
 
-float round(float val){
+float round(float val) {
   return floor(val + 0.4);
 }
 
@@ -77,7 +77,7 @@ bool testFlag(int flags, int flag) {
 }
 
 // private function: Mangle me...
-vec2 _pixelIndexToUV(int index, int textureSize){
+vec2 _pixelIndexToUV(int index, int textureSize) {
   float flTexSize = float(textureSize);
   float x = (float(imod(index, textureSize))+0.5)/flTexSize;
   float y = (floor(float(index / textureSize))+0.5)/flTexSize;
@@ -97,7 +97,7 @@ vec4 fetchTexel(sampler2D texture, ivec2 textureSize, ivec2 texCoord) {
 
 #endif // ENABLE_ES3
 
-int uvToPixelIndex(vec2 uv, int textureSize){
+int uvToPixelIndex(vec2 uv, int textureSize) {
   return int(uv.x * float(textureSize)) + (int(floor(uv.y * float(textureSize))) * textureSize);
 }
 

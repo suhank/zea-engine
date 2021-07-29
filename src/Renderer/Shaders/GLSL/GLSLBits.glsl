@@ -39,22 +39,22 @@ float DecodeFloatRGBA (vec4 v) {
 /////////////////////////////////////////////////////////////////
 // https://gist.github.com/Flexi23/1713774
 // 
-vec2 encode16BitFloatInto2xUInt8(float v){
+vec2 encode16BitFloatInto2xUInt8(float v) {
   vec2 c = vec2(0.);
 
   int signum = (v >= 0.) ? 128 : 0;
   v = abs(v);
   int exponent = 15;
   float limit = 1024.; // considering the bias from 2^-5 to 2^10 (==1024)
-  for(int exp = 15; exp > 0; exp--){
-    if( v < limit){
+  for(int exp = 15; exp > 0; exp--) {
+    if( v < limit) {
       limit /= 2.;
       exponent--;
     }
   }
 
   float rest;
-  if(exponent == 0){
+  if(exponent == 0) {
     rest = v / limit / 2.;      // "subnormalize" implicite preceding 0. 
   }else{
     rest = (v - limit)/limit;   // normalize accordingly to implicite preceding 1.
@@ -67,14 +67,14 @@ vec2 encode16BitFloatInto2xUInt8(float v){
   c.x = float(signum + exponent * 8 + msb) / 255.;    // color normalization for texture2D
   c.y = float(lsb) / 255.;
 
-  if(v >= 2048.){
+  if(v >= 2048.) {
       c.y = 1.;
   }
 
   return c;
 }
 
-float decode16BitFloatFrom2xUInt8(vec2 c){
+float decode16BitFloatFrom2xUInt8(vec2 c) {
   float v = 0.;
 
   int ix = int(c.x*255.); // 1st byte: 1 bit signum, 4 bits exponent, 3 bits mantissa (MSB)

@@ -45,7 +45,7 @@ void main(void) {
 #endif
 
   fragColor = samplePixels(gl_FragCoord.xy);
-  if(fragColor.a < 0.0001){
+  if(fragColor.a < 0.0001) {
     discard; 
   }
 
