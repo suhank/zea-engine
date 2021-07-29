@@ -241,6 +241,7 @@ class GLGeomItemLibrary extends EventEmitter {
     geomItem.on('cutAwayChanged', geomItemChanged)
     geomItem.on('highlightChanged', geomItemChanged)
     geomItem.on('selectabilityChanged', geomItemChanged)
+    geomItem.on('visibilityChanged', geomItemChanged)
 
     this.glGeomItems[index] = glGeomItem
     this.glGeomItemEventHandlers[index] = {
@@ -439,6 +440,7 @@ class GLGeomItemLibrary extends EventEmitter {
       boundingRadius,
       pos: pos.asArray(),
       cullable,
+      visible: geomItem.isVisible(),
     }
   }
 
