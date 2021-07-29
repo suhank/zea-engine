@@ -13,7 +13,7 @@ import 'modelMatrix.glsl'
 
 uniform int drawItemId;
 int getDrawItemId() {
-    return drawItemId;
+  return drawItemId;
 }
 
 uniform sampler2D positionsTexture;

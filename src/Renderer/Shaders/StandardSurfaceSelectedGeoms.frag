@@ -22,17 +22,17 @@ vec4 getHighlightColor(int id) {
 #endif
 
 #ifdef ENABLE_ES3
-    out vec4 fragColor;
+  out vec4 fragColor;
 #endif
 void main(void) {
 
 #ifndef ENABLE_ES3
-    vec4 fragColor;
+  vec4 fragColor;
 #endif
-    int drawItemId = int(v_drawItemId + 0.5);
-    fragColor = getHighlightColor(drawItemId);
+  int drawItemId = int(v_drawItemId + 0.5);
+  fragColor = getHighlightColor(drawItemId);
 
 #ifndef ENABLE_ES3
-    gl_FragColor = fragColor;
+  gl_FragColor = fragColor;
 #endif
 }

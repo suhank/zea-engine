@@ -83,13 +83,13 @@ void main(void) {
   // Cutaways
   if(testFlag(flags, GEOMITEM_FLAG_CUTAWAY)) 
   {
-      vec4 cutAwayData   = getCutaway(drawItemId);
-      vec3 planeNormal = cutAwayData.xyz;
-      float planeDist = cutAwayData.w;
-      if(cutaway(v_worldPos, planeNormal, planeDist)){
-          discard;
-          return;
-      }
+    vec4 cutAwayData   = getCutaway(drawItemId);
+    vec3 planeNormal = cutAwayData.xyz;
+    float planeDist = cutAwayData.w;
+    if(cutaway(v_worldPos, planeNormal, planeDist)){
+      discard;
+      return;
+    }
   }
 
   //////////////////////////////////////////////
