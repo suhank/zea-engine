@@ -79,7 +79,7 @@ void main(void) {
 
   float viewDist = length(v_viewPos);
 
-  if(floatGeomBuffer != 0) {
+  if (floatGeomBuffer != 0) {
     fragColor.r = float(passId); 
     fragColor.g = float(v_drawItemId);
     fragColor.b = 0.0;// TODO: store poly-id or something.

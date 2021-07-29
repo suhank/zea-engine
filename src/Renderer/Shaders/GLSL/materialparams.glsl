@@ -20,14 +20,14 @@ vec4 getMaterialValue(vec2 materialCoords, int valueIndex) {
 // Material Param Helpers.
 
 vec4 getColorParamValue(vec4 value, sampler2D tex, int texType, vec2 texCoord) {
-  if(texType == 0) {
+  if (texType == 0) {
     return toLinear(value);
   }
-  else if(texType == 1 || texType == 2) {
+  else if (texType == 1 || texType == 2) {
     // TODO: Use SRGB textures.
     return toLinear(texture2D(tex, texCoord));
   }
-  else if(texType == 3) {
+  else if (texType == 3) {
     // Float HDR Texture
     return texture2D(tex, texCoord);
   }
@@ -42,7 +42,7 @@ float luminanceFromRGB(vec3 rgb) {
 }
 
 float getLuminanceParamValue(float value, sampler2D tex, int texType, vec2 texCoord) {
-  if(texType == 0)
+  if (texType == 0)
     return value;
   else
     return luminanceFromRGB(texture2D(tex, texCoord).rgb);

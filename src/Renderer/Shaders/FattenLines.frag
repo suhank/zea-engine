@@ -11,7 +11,7 @@ varying vec2 v_texCoord;
 
 bool sampleNeiPixel(vec2 fragCoord, inout vec4 res) {
   res = texture2D(colorTexture, fragCoord/screenSize);
-  if(res.a > 0.0) {
+  if (res.a > 0.0) {
     return true;
   }
   return false;
@@ -45,7 +45,7 @@ void main(void) {
 #endif
 
   fragColor = samplePixels(gl_FragCoord.xy);
-  if(fragColor.a < 0.0001) {
+  if (fragColor.a < 0.0001) {
     discard; 
   }
 

@@ -44,16 +44,16 @@ void main(void) {
 
   int flags = int(v_geomItemData.r + 0.5);
   // Cutaways
-  if(testFlag(flags, GEOMITEM_FLAG_CUTAWAY)) {
+  if (testFlag(flags, GEOMITEM_FLAG_CUTAWAY)) {
     vec4 cutAwayData   = getCutaway(drawItemId);
     vec3 planeNormal = cutAwayData.xyz;
     float planeDist = cutAwayData.w;
-    if(cutaway(v_worldPos, planeNormal, planeDist)) {
+    if (cutaway(v_worldPos, planeNormal, planeDist)) {
         discard;
         return;
     }
   }
-  if(testFlag(flags, GEOMITEM_INVISIBLE_IN_GEOMDATA)) {
+  if (testFlag(flags, GEOMITEM_INVISIBLE_IN_GEOMDATA)) {
     discard;
     return;
   }
@@ -65,7 +65,7 @@ void main(void) {
       dist = length(v_viewPos);
     }
 
-    if(floatGeomBuffer != 0) {
+    if (floatGeomBuffer != 0) {
       fragColor.r = float(passId);
       fragColor.g = float(drawItemId) - 0.1;
       fragColor.b = 0.0;// TODO: store poly-id or something.

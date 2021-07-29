@@ -17,7 +17,7 @@ vec2 dirToSphOctUv(vec3 normal) {
 
   vec2 uv = vec2(sNorm.x*orient, sNorm.y*(1.0-orient))*pitch;
 
-  if(normal.z < 0.0) {
+  if (normal.z < 0.0) {
     uv = sNorm.xy - abs(uv.ts)*sNorm.xy;
   }
   vec2 res = uv*0.5+0.5;
@@ -41,7 +41,7 @@ vec3 sphOctUvToDir(vec2 uv) {
   if (abs(pitch - PI) < 0.000001) {
     return vec3(0.0, 0.0, -1.0);
   }
-  if(sabsuv > 1.0) {
+  if (sabsuv > 1.0) {
     uv = (1.0-abs(uv.ts))*suv;
   }
 

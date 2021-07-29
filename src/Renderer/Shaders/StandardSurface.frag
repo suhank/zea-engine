@@ -124,15 +124,15 @@ void main(void) {
 
   int flags = int(v_geomItemData.r + 0.5);
   // Cutaways
-  if(testFlag(flags, GEOMITEM_FLAG_CUTAWAY)) {
+  if (testFlag(flags, GEOMITEM_FLAG_CUTAWAY)) {
     vec4 cutAwayData   = getCutaway(drawItemId);
     vec3 planeNormal = cutAwayData.xyz;
     float planeDist = cutAwayData.w;
-    if(cutaway(v_worldPos, planeNormal, planeDist)) {
+    if (cutaway(v_worldPos, planeNormal, planeDist)) {
       discard;
       return;
     }
-    else if(!gl_FrontFacing) {
+    else if (!gl_FrontFacing) {
 #ifdef ENABLE_ES3
       fragColor = cutColor;
 #else
@@ -158,7 +158,7 @@ void main(void) {
   else 
     viewVector = vec3(-cameraMatrix[2][0], -cameraMatrix[2][1], -cameraMatrix[2][2]);
     
-  if(dot(normal, viewVector) < 0.0) {
+  if (dot(normal, viewVector) < 0.0) {
       normal = -normal;
       // Note: this line can be used to debug inverted meshes.
       //material.baseColor = vec3(1.0, 0.0, 0.0);
@@ -226,7 +226,7 @@ void main(void) {
 
 #ifdef ENABLE_TEXTURES
 #ifdef ENABLE_PBR
-  if(NormalTexType != 0) {
+  if (NormalTexType != 0) {
       mat3 tbn = cotangentFrame(normal, viewVector, texCoord);
       normal = normalize(tbn * (texture2D(NormalTex, texCoord).rgb * 2.0 - 1.0));
   }

@@ -21,7 +21,7 @@ varying float v_weight;
 void main(void) {
   mat4 modelMatrix = getModelMatrix(drawItemId);
   mat4 modelViewProjectionMatrix = projectionMatrix * viewMatrix * modelMatrix;
-  if(vertexIDs.x == 0.0) {
+  if (vertexIDs.x == 0.0) {
     gl_Position = modelViewProjectionMatrix * vec4(positions, 1.0);
     v_weight = 1.0;
   }

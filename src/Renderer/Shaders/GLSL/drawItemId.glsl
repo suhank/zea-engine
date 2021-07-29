@@ -31,7 +31,7 @@ attribute float instancedIds;    // instanced attribute..
 uniform int instancedDraw;
 
 int getDrawItemId() {
-  if(instancedDraw == 0) {
+  if (instancedDraw == 0) {
     return drawItemId;
   }
   else {

@@ -67,7 +67,7 @@ void main(void) {
     
     vec4 outlineColor = SobelSample(v_texCoord);
 
-    if(outlineColor.a > 0.0001) {
+    if (outlineColor.a > 0.0001) {
 #ifndef ENABLE_ES3
         gl_FragColor = outlineColor;
 #else

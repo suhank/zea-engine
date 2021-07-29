@@ -3,7 +3,7 @@ import 'GLSLUtils.glsl'
 vec3 getDebugColor(float id) {
   int sel = int(round(mod(round(id), 16.0)));
   
-  if(sel==0)
+  if (sel==0)
     return vec3(0.0, 1.0, 1.0);
   else if (sel==1)
     return vec3(0.0, 1.0, 0.0);

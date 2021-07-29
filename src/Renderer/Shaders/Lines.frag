@@ -81,12 +81,12 @@ void main(void) {
   int flags = int(v_geomItemData.r + 0.5);
 
   // Cutaways
-  if(testFlag(flags, GEOMITEM_FLAG_CUTAWAY)) 
+  if (testFlag(flags, GEOMITEM_FLAG_CUTAWAY)) 
   {
     vec4 cutAwayData   = getCutaway(drawItemId);
     vec3 planeNormal = cutAwayData.xyz;
     float planeDist = cutAwayData.w;
-    if(cutaway(v_worldPos, planeNormal, planeDist)) {
+    if (cutaway(v_worldPos, planeNormal, planeDist)) {
       discard;
       return;
     }
@@ -139,14 +139,14 @@ void main(void) {
   // GeomData
 #elif defined(DRAW_GEOMDATA)
 
-  if(testFlag(flags, GEOMITEM_INVISIBLE_IN_GEOMDATA)) {
+  if (testFlag(flags, GEOMITEM_INVISIBLE_IN_GEOMDATA)) {
     discard;
     return;
   }
   
   float viewDist = length(v_viewPos);
 
-  if(floatGeomBuffer != 0) {
+  if (floatGeomBuffer != 0) {
     fragColor.r = float(passId); 
     fragColor.g = float(v_drawItemId);
     // Note: to make lines visually stand out from triangles
