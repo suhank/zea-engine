@@ -10,7 +10,6 @@ uniform color BaseColor;
 import 'GLSLUtils.glsl'
 import 'drawItemTexture.glsl'
 import 'cutaways.glsl'
-import 'gamma.glsl'
 import 'materialparams.glsl'
 
 #if defined(DRAW_GEOMDATA)

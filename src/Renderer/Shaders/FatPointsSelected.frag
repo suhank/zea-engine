@@ -1,8 +1,6 @@
 
 precision highp float;
 
-import 'GLSLBits.glsl'
-
 uniform int floatGeomBuffer;
 uniform int passId;
 

@@ -1,5 +1,5 @@
 import 'constants.glsl'
-
+import 'GLSLUtils.glsl'
 #define sectorize(value) step(0.0, (value))*2.0-1.0
 #define sum(value) dot(clamp((value), 1.0, 1.0), (value))
 

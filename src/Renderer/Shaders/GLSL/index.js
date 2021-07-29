@@ -22,7 +22,6 @@ import materialparams from './materialparams.glsl'
 import modelMatrix from './modelMatrix.glsl'
 import PBRSurfaceRadiance from './PBRSurfaceRadiance.glsl'
 import SHCoeffs from './SHCoeffs.glsl'
-import exposure from './exposure.glsl'
 import gamma from './gamma.glsl'
 import inverse from './inverse.glsl'
 import transpose from './transpose.glsl'
@@ -53,7 +52,6 @@ shaderLibrary.setShaderModule('materialparams.glsl', materialparams)
 shaderLibrary.setShaderModule('modelMatrix.glsl', modelMatrix)
 shaderLibrary.setShaderModule('PBRSurfaceRadiance.glsl', PBRSurfaceRadiance)
 shaderLibrary.setShaderModule('SHCoeffs.glsl', SHCoeffs)
-shaderLibrary.setShaderModule('exposure.glsl', exposure)
 shaderLibrary.setShaderModule('gamma.glsl', gamma)
 shaderLibrary.setShaderModule('inverse.glsl', inverse)
 shaderLibrary.setShaderModule('transpose.glsl', transpose)

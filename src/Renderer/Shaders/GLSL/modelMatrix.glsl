@@ -1,6 +1,7 @@
 
 #ifdef ENABLE_FLOAT_TEXTURES
-
+import 'GLSLUtils.glsl'
+import 'transpose.glsl'
 mat4 getMatrix(sampler2D texture, int textureSize, int index) {
     // Unpack 3 x 4 matrix columns into a 4 x 4 matrix.
     vec4 col0 = fetchTexel(texture, textureSize, (index * pixelsPerItem) + 1);

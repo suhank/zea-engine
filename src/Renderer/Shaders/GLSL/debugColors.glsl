@@ -1,4 +1,4 @@
-
+import 'GLSLUtils.glsl'
 
 vec3 getDebugColor(float id) {
     int sel = int(round(mod(round(id), 16.0)));

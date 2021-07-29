@@ -1,5 +1,5 @@
 
-
+import 'GLSLUtils.glsl'
 vec3 calcFatLinesViewPos(int vertexID, mat4 modelViewMatrix, inout vec3 viewNormal, inout vec2 texCoord, inout vec3 pos) {
 
   int seqentialIndex_0 = int(mod(segmentIndices.x, 2.));

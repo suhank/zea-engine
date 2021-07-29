@@ -4,7 +4,6 @@ precision highp float;
 import 'GLSLUtils.glsl'
 import 'drawItemTexture.glsl'
 import 'cutaways.glsl'
-import 'gamma.glsl'
 import 'materialparams.glsl'
 
 

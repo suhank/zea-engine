@@ -3,6 +3,7 @@ precision highp float;
 
 varying vec2 v_texCoord;
 
+import 'GLSLUtils.glsl'
 import 'Hammersley.glsl'
 import 'ImportanceSampleGGX.glsl'
 

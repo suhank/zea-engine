@@ -7,7 +7,6 @@ uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
 
 import 'GLSLUtils.glsl'
-import 'transpose.glsl'
 import 'drawItemId.glsl'
 import 'drawItemTexture.glsl'
 import 'modelMatrix.glsl'
