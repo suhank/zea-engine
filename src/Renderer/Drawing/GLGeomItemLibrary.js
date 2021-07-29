@@ -262,10 +262,13 @@ class GLGeomItemLibrary extends EventEmitter {
    * @param {object} data - The object containing the newlyCulled and newlyUnCulled results.
    */
   applyCullResults(data) {
-    data.newlyCulled.forEach((index) => {
+    const { newlyCulled, newlyUnCulled } = data
+    if (newlyCulled.length == 0 && newlyUnCulled.length == 0) return
+    // console.log('applyCullResults newlyCulled', newlyCulled.length, 'newlyUnCulled', newlyUnCulled.length)
+    newlyCulled.forEach((index) => {
       this.glGeomItems[index].setCulled(true)
     })
-    data.newlyUnCulled.forEach((index) => {
+    newlyUnCulled.forEach((index) => {
       this.glGeomItems[index].setCulled(false)
     })
     this.renderer.requestRedraw()
