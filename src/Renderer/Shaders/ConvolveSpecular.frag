@@ -3,7 +3,9 @@ precision highp float;
 import 'GLSLUtils.glsl'
 import 'ImportanceSampleGGX.glsl'
 import 'convolve-helpers.glsl'
-
+import 'Hammersley.glsl'
+  
+  
 uniform float roughness;
 uniform int faceId;
 varying vec2 v_texCoord;
