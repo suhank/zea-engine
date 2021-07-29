@@ -38,7 +38,7 @@ vec4 getHighlightColor(int id) {
 uniform vec4 highlightColor;
 
 vec4 getHighlightColor() {
-    return highlightColor;
+  return highlightColor;
 }
 
 #endif // ENABLE_FLOAT_TEXTURES
@@ -48,7 +48,7 @@ vec4 getHighlightColor() {
 
 #ifdef ENABLE_FLOAT_TEXTURES
 vec4 getCutaway(int id) {
-    return fetchTexel(instancesTexture, instancesTextureSize, (id * pixelsPerItem) + 5);
+  return fetchTexel(instancesTexture, instancesTextureSize, (id * pixelsPerItem) + 5);
 }
 
 #else
@@ -56,7 +56,7 @@ vec4 getCutaway(int id) {
 uniform vec4 cutawayData;
 
 vec4 getCutaway(int id) {
-    return cutawayData;
+  return cutawayData;
 }
 
 #endif

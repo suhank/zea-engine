@@ -35,27 +35,27 @@ varying vec3 v_worldPos;
   out vec4 fragColor;
 #endif
 void main(void) {
- int drawItemId = int(v_drawItemId + 0.5);
+  int drawItemId = int(v_drawItemId + 0.5);
 
 #ifndef ENABLE_ES3
   vec4 fragColor;
 #endif
 
- int flags = int(v_geomItemData.r + 0.5);
+  int flags = int(v_geomItemData.r + 0.5);
  // Cutaways
- if (testFlag(flags, GEOMITEM_FLAG_CUTAWAY)) {
-   vec4 cutAwayData  = getCutaway(drawItemId);
-   vec3 planeNormal = cutAwayData.xyz;
-   float planeDist = cutAwayData.w;
-   if (cutaway(v_worldPos, planeNormal, planeDist)) {
-     discard;
-     return;
-   }
- }
- if (testFlag(flags, GEOMITEM_INVISIBLE_IN_GEOMDATA)) {
-  discard;
-  return;
- }
+  if (testFlag(flags, GEOMITEM_FLAG_CUTAWAY)) {
+    vec4 cutAwayData  = getCutaway(drawItemId);
+    vec3 planeNormal = cutAwayData.xyz;
+    float planeDist = cutAwayData.w;
+    if (cutaway(v_worldPos, planeNormal, planeDist)) {
+      discard;
+      return;
+    }
+  }
+  if (testFlag(flags, GEOMITEM_INVISIBLE_IN_GEOMDATA)) {
+    discard;
+    return;
+  }
 
   float dist = length(v_viewPos);
 

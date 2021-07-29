@@ -16,7 +16,7 @@ vec4 getHighlightColor(int id) {
 uniform vec4 highlightColor;
 
 vec4 getHighlightColor(int id) {
-    return highlightColor;
+  return highlightColor;
 }
 
 #endif

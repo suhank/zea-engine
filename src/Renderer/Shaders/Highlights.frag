@@ -65,17 +65,17 @@ out vec4 fragColor;
 
 void main(void) {
     
-    vec4 outlineColor = SobelSample(v_texCoord);
-
-    if (outlineColor.a > 0.0001) {
+  vec4 outlineColor = SobelSample(v_texCoord);
+  
+  if (outlineColor.a > 0.0001) {
 #ifndef ENABLE_ES3
-        gl_FragColor = outlineColor;
+    gl_FragColor = outlineColor;
 #else
-        fragColor = outlineColor;
+    fragColor = outlineColor;
 #endif
-    }
-    else {
-        discard;
-    }
+  }
+  else {
+      discard;
+  }
 }
 

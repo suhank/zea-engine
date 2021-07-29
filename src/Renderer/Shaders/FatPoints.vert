@@ -14,7 +14,7 @@ import 'quadVertexFromID.glsl'
 
 uniform int drawItemId;
 int getDrawItemId() {
-    return drawItemId;
+  return drawItemId;
 }
 
 uniform float PointSize;
