@@ -7,7 +7,6 @@ uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
 
 import 'GLSLUtils.glsl' 
-import 'transpose.glsl'
 import 'inverse.glsl'
 import 'drawItemTexture.glsl'
 import 'modelMatrix.glsl'
@@ -15,7 +14,7 @@ import 'quadVertexFromID.glsl'
 
 uniform int drawItemId;
 int getDrawItemId() {
-    return drawItemId;
+  return drawItemId;
 }
 
 uniform float PointSize;
@@ -47,7 +46,7 @@ void main(void) {
   v_viewPos = -viewPos.xyz;
   
   gl_Position = projectionMatrix * viewPos;
-  if(Overlay > 0.0){
+  if (Overlay > 0.0) {
     gl_Position.z = mix(gl_Position.z, -gl_Position.w, Overlay);
   }
 }

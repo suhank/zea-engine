@@ -2,7 +2,6 @@ export * from './GLSL/index'
 
 // export * from './AtlasLayoutShader.js' // adding this breaks the atlas shader!
 export * from './BillboardShader.js'
-export * from './DepthMapShader.js'
 export * from './EnvMapShader.js'
 export * from './EnvProjectionShader.js'
 export * from './FatLinesShader.js'

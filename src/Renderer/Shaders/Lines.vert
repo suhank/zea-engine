@@ -5,7 +5,6 @@ attribute vec3 positions;
 attribute vec3 positionsNext;
 
 import 'GLSLUtils.glsl'
-import 'transpose.glsl'
 import 'drawItemId.glsl'
 import 'drawItemTexture.glsl'
 import 'modelMatrix.glsl'
