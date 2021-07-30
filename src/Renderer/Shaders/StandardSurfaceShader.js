@@ -19,7 +19,6 @@ class StandardSurfaceShader extends GLShader {
   constructor(gl) {
     super(gl)
     this.setShaderStage('VERTEX_SHADER', vert)
-
     this.setShaderStage('FRAGMENT_SHADER', frag)
   }
 
@@ -94,14 +93,6 @@ class StandardSurfaceShader extends GLShader {
     matData[8] = material.getParameter('EmissiveStrength').getValue()
     matData[9] = material.getParameter('Opacity').getValue()
     return matData
-  }
-
-  static getGeomDataShaderName() {
-    return 'StandardSurfaceGeomDataShader'
-  }
-
-  static getSelectedShaderName() {
-    return 'StandardSurfaceSelectedGeomsShader'
   }
 }
 

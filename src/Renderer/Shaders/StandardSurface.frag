@@ -87,6 +87,11 @@ uniform int EmissiveStrengthTexType;
 #endif // ENABLE_TEXTURES
 #endif // ENABLE_MULTI_DRAW
 
+#if defined(DRAW_GEOMDATA)
+#elif defined(DRAW_HIGHLIGHT)
+#endif // DRAW_HIGHLIGHT
+
+
 import 'PBRSurfaceRadiance.glsl'
 
 #ifdef ENABLE_PBR
