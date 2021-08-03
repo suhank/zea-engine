@@ -172,7 +172,23 @@ void main(void) {
     } else {
       viewNormal = normalize(v_viewNormal);
     }
-    vec3 normal = normalize(mat3(cameraMatrix) * viewNormal);
+  }
+
+  //////////////////////////////////////////////
+  // Normals
+  vec3 viewNormal;
+  if (length(v_viewNormal) < 0.1) {
+    viewNormal = computeViewNormal(v_viewPos);
+  } else {
+    viewNormal = normalize(v_viewNormal);
+  }
+  vec3 normal = normalize(mat3(cameraMatrix) * viewNormal);
+  
+  vec3 viewVector;
+  if (isOrthographic == 0)
+    viewVector = normalize(mat3(cameraMatrix) * normalize(v_viewPos));
+  else 
+    viewVector = vec3(-cameraMatrix[2][0], -cameraMatrix[2][1], -cameraMatrix[2][2]);
     
     vec3 viewVector;
     if (isOrthographic == 0)
@@ -186,10 +202,10 @@ void main(void) {
         //material.baseColor = vec3(1.0, 0.0, 0.0);
     }
 
-    //////////////////////////////////////////////
-    // Material
+  //////////////////////////////////////////////
+  // Material
 
-    MaterialParams material;
+  MaterialParams material;
 
   #ifdef ENABLE_MULTI_DRAW
     vec2 materialCoords = v_geomItemData.zw;
@@ -197,14 +213,14 @@ void main(void) {
     vec4 matValue1      = getMaterialValue(materialCoords, 1);
     vec4 matValue2      = getMaterialValue(materialCoords, 2);
 
-    material.baseColor     = toLinear(matValue0.rgb);
-    material.ambientOcclusion      = matValue1.r;
-    material.metallic      = matValue1.g;
-    material.roughness     = matValue1.b;
-    material.reflectance   = matValue1.a;
+  material.baseColor     = toLinear(matValue0.rgb);
+  material.ambientOcclusion      = matValue1.r;
+  material.metallic      = matValue1.g;
+  material.roughness     = matValue1.b;
+  material.reflectance   = matValue1.a;
 
-    material.emission         = matValue2.r;
-    material.opacity          = matValue2.g * matValue0.a;
+  material.emission         = matValue2.r;
+  material.opacity          = matValue2.g * matValue0.a;
 
   #else // ENABLE_MULTI_DRAW
 
@@ -229,16 +245,16 @@ void main(void) {
     
   #ifdef ENABLE_PBR
 
-    material.metallic      = getLuminanceParamValue(Metallic, MetallicTex, MetallicTexType, texCoord);
-    material.roughness     = getLuminanceParamValue(Roughness, RoughnessTex, RoughnessTexType, texCoord);
+  material.metallic      = getLuminanceParamValue(Metallic, MetallicTex, MetallicTexType, texCoord);
+  material.roughness     = getLuminanceParamValue(Roughness, RoughnessTex, RoughnessTexType, texCoord);
 
-    // TODO: Communicate that this tex contains the roughness as well.
-    if (MetallicTexType != 0) {
-      vec4 metallicRoughness = vec4(Metallic, Roughness, 0.0, 1.0);
-      metallicRoughness     = texture2D(MetallicTex, texCoord);
-      material.roughness     = metallicRoughness.g;
-      material.metallic     = metallicRoughness.b;
-    }
+  // TODO: Communicate that this tex contains the roughness as well.
+  if (MetallicTexType != 0) {
+    vec4 metallicRoughness = vec4(Metallic, Roughness, 0.0, 1.0);
+    metallicRoughness     = texture2D(MetallicTex, texCoord);
+    material.roughness     = metallicRoughness.g;
+    material.metallic     = metallicRoughness.b;
+  }
 
     material.reflectance   = getLuminanceParamValue(Reflectance, ReflectanceTex, ReflectanceTexType, texCoord);
   #endif // ENABLE_PBR
