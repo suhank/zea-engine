@@ -36,8 +36,8 @@ varying vec3 v_worldPos;
 #endif // DRAW_HIGHLIGHT
 
 
-void main(void) {
 
+void main(void) {
 
   #if defined(DRAW_COLOR)
       int drawItemId = getDrawItemId();
@@ -58,7 +58,7 @@ void main(void) {
       v_textureCoord  = texCoords;
     #endif
 
-      v_worldPos      = (modelMatrix * pos).xyz;
+    v_worldPos      = (modelMatrix * pos).xyz;
   #elif defined(DRAW_GEOMDATA)
     int drawItemId = getDrawItemId();
     v_drawItemId = float(drawItemId);
@@ -80,6 +80,8 @@ void main(void) {
     mat4 modelViewMatrix = viewMatrix * modelMatrix;
     vec4 viewPos = modelViewMatrix * vec4(positions, 1.0);
     gl_Position = projectionMatrix * viewPos;
+
   #endif // DRAW_HIGHLIGHT
+
 
 }
