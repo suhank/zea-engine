@@ -318,4 +318,21 @@ class ResourceLoader extends EventEmitter {
 
 const resourceLoader = new ResourceLoader()
 
+import { ArchiveUnpackerPlugin } from './ResourceLoader/ArchiveUnpackerPlugin.js'
+import { JsonLoaderPlugin } from './ResourceLoader/JsonLoaderPlugin.js'
+import { TextLoaderPlugin } from './ResourceLoader/TextLoaderPlugin.js'
+import { BinaryLoaderPlugin } from './ResourceLoader/BinaryLoaderPlugin.js'
+
+const archiveUnpackerPlugin = new ArchiveUnpackerPlugin()
+resourceLoader.registerPlugin(archiveUnpackerPlugin)
+
+const jsonLoaderPlugin = new JsonLoaderPlugin()
+resourceLoader.registerPlugin(jsonLoaderPlugin)
+
+const textLoaderPlugin = new TextLoaderPlugin()
+resourceLoader.registerPlugin(textLoaderPlugin)
+
+const binaryLoaderPlugin = new BinaryLoaderPlugin()
+resourceLoader.registerPlugin(binaryLoaderPlugin)
+
 export { resourceLoader }
