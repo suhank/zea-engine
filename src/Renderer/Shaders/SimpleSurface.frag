@@ -70,104 +70,130 @@ import 'computeViewNormal.glsl'
     out vec4 fragColor;
 #endif
 
-void main(void) {
-  int drawItemId = int(v_drawItemId + 0.5);
+#if defined(DRAW_GEOMDATA)
 
-  int flags = int(v_geomItemData.r + 0.5);
-  // Cutaways
-  if (testFlag(flags, GEOMITEM_FLAG_CUTAWAY)) 
-  {
-    vec4 cutAwayData   = getCutaway(drawItemId);
-    vec3 planeNormal = cutAwayData.xyz;
-    float planeDist = cutAwayData.w;
-    if (cutaway(v_worldPos, planeNormal, planeDist)) {
+  uniform int floatGeomBuffer;
+  uniform int passId;
+
+#elif defined(DRAW_HIGHLIGHT)
+  import 'surfaceHighlight.glsl'
+#endif // DRAW_HIGHLIGHT
+
+void main(void) {
+
+
+#if defined(DRAW_COLOR)
+    int drawItemId = int(v_drawItemId + 0.5);
+
+    int flags = int(v_geomItemData.r + 0.5);
+    // Cutaways
+    if (testFlag(flags, GEOMITEM_FLAG_CUTAWAY)) 
+    {
+      vec4 cutAwayData   = getCutaway(drawItemId);
+      vec3 planeNormal = cutAwayData.xyz;
+      float planeDist = cutAwayData.w;
+      if (cutaway(v_worldPos, planeNormal, planeDist)) {
+        discard;
+        return;
+      }
+      else if (!gl_FrontFacing) {
+  #ifdef ENABLE_ES3
+    fragColor = cutColor;
+  #else
+    gl_FragColor = cutColor;
+  #endif
+        return;
+      }
+    }
+
+    //////////////////////////////////////////////
+    // Normals
+    
+    vec3 viewNormal;
+    if (length(v_viewNormal) < 0.1) {
+      viewNormal = computeViewNormal(v_viewPos);
+    } else {
+      viewNormal = normalize(v_viewNormal);
+    }
+    vec3 normal = normalize(mat3(cameraMatrix) * viewNormal);
+    
+    vec3 viewVector;
+    if (isOrthographic == 0)
+      viewVector = normalize(mat3(cameraMatrix) * normalize(v_viewPos));
+    else 
+      viewVector = vec3(-cameraMatrix[2][0], -cameraMatrix[2][1], -cameraMatrix[2][2]);
+    
+    //////////////////////////////////////////////
+    // Material
+
+  #ifdef ENABLE_MULTI_DRAW
+
+    vec2 materialCoords = v_geomItemData.zw;
+    vec4 baseColor = toLinear(getMaterialValue(materialCoords, 0));
+    vec4 matValue1 = getMaterialValue(materialCoords, 1);
+    float opacity       = baseColor.a * matValue1.r;
+    float emission      = matValue1.g;
+
+  #else // ENABLE_MULTI_DRAW
+
+  #ifndef ENABLE_TEXTURES
+    vec4 baseColor      = toLinear(BaseColor);
+    float emission      = EmissiveStrength;
+    float opacity       = baseColor.a * Opacity;
+  #else
+    vec4 baseColor      = getColorParamValue(BaseColor, BaseColorTex, BaseColorTexType, v_textureCoord);
+    float opacity       = baseColor.a * getLuminanceParamValue(Opacity, OpacityTex, OpacityTexType, v_textureCoord);
+    float emission      = getLuminanceParamValue(EmissiveStrength, EmissiveStrengthTex, EmissiveStrengthTexType, v_textureCoord);
+  #endif
+
+  #endif // ENABLE_MULTI_DRAW
+
+    // Hacky simple irradiance. 
+    float ndotv = dot(normal, viewVector);
+    if (ndotv < 0.0) {
+      normal = -normal;
+      ndotv = dot(normal, viewVector);
+
+      // Note: these 2 lines can be used to debug inverted meshes.
+      //baseColor = vec4(1.0, 0.0, 0.0, 1.0);
+      //ndotv = 1.0;
+    }
+
+  #ifndef ENABLE_ES3
+    vec4 fragColor;
+  #endif
+    fragColor = vec4((ndotv * baseColor.rgb) + (emission * baseColor.rgb), opacity);
+
+  #ifdef DEBUG_GEOM_ID
+    if (testFlag(flags, GEOMITEM_INVISIBLE_IN_GEOMDATA)) {
       discard;
       return;
     }
-    else if (!gl_FrontFacing) {
-#ifdef ENABLE_ES3
-  fragColor = cutColor;
-#else
-  gl_FragColor = cutColor;
-#endif
-      return;
-    }
+
+    // ///////////////////////
+    // Debug Draw ID (this correlates to GeomID within a GLGeomSet)
+    float geomId = v_geomItemData.w;
+    fragColor.rgb = getDebugColor(geomId);
+    // ///////////////////////
+  #endif
+
+  #ifdef ENABLE_INLINE_GAMMACORRECTION
+    fragColor.rgb = toGamma(fragColor.rgb);
+  #endif
+#elif defined(DRAW_GEOMDATA)
+  float viewDist = length(v_viewPos);
+
+  if (floatGeomBuffer != 0) {
+    fragColor.r = float(passId); 
+    fragColor.g = float(v_drawItemId);
+    fragColor.b = 0.0;// TODO: store poly-id or something.
+    fragColor.a = viewDist;
   }
-
-  //////////////////////////////////////////////
-  // Normals
-  
-  vec3 viewNormal;
-  if (length(v_viewNormal) < 0.1) {
-    viewNormal = computeViewNormal(v_viewPos);
-  } else {
-    viewNormal = normalize(v_viewNormal);
-  }
-  vec3 normal = normalize(mat3(cameraMatrix) * viewNormal);
-  
-  vec3 viewVector;
-  if (isOrthographic == 0)
-    viewVector = normalize(mat3(cameraMatrix) * normalize(v_viewPos));
-  else 
-    viewVector = vec3(-cameraMatrix[2][0], -cameraMatrix[2][1], -cameraMatrix[2][2]);
-  
-  //////////////////////////////////////////////
-  // Material
-
-#ifdef ENABLE_MULTI_DRAW
-
-  vec2 materialCoords = v_geomItemData.zw;
-  vec4 baseColor = toLinear(getMaterialValue(materialCoords, 0));
-  vec4 matValue1 = getMaterialValue(materialCoords, 1);
-  float opacity       = baseColor.a * matValue1.r;
-  float emission      = matValue1.g;
-
-#else // ENABLE_MULTI_DRAW
-
-#ifndef ENABLE_TEXTURES
-  vec4 baseColor      = toLinear(BaseColor);
-  float emission      = EmissiveStrength;
-  float opacity       = baseColor.a * Opacity;
-#else
-  vec4 baseColor      = getColorParamValue(BaseColor, BaseColorTex, BaseColorTexType, v_textureCoord);
-  float opacity       = baseColor.a * getLuminanceParamValue(Opacity, OpacityTex, OpacityTexType, v_textureCoord);
-  float emission      = getLuminanceParamValue(EmissiveStrength, EmissiveStrengthTex, EmissiveStrengthTexType, v_textureCoord);
+#elif defined(DRAW_HIGHLIGHT)
+  int drawItemId = int(v_drawItemId + 0.5);
+  fragColor =  getHighlightColor(drawItemId);
 #endif
 
-#endif // ENABLE_MULTI_DRAW
-
-  // Hacky simple irradiance. 
-  float ndotv = dot(normal, viewVector);
-  if (ndotv < 0.0) {
-    normal = -normal;
-    ndotv = dot(normal, viewVector);
-
-    // Note: these 2 lines can be used to debug inverted meshes.
-    //baseColor = vec4(1.0, 0.0, 0.0, 1.0);
-    //ndotv = 1.0;
-  }
-
-#ifndef ENABLE_ES3
-  vec4 fragColor;
-#endif
-  fragColor = vec4((ndotv * baseColor.rgb) + (emission * baseColor.rgb), opacity);
-
-#ifdef DEBUG_GEOM_ID
-  if (testFlag(flags, GEOMITEM_INVISIBLE_IN_GEOMDATA)) {
-    discard;
-    return;
-  }
-
-  // ///////////////////////
-  // Debug Draw ID (this correlates to GeomID within a GLGeomSet)
-  float geomId = v_geomItemData.w;
-  fragColor.rgb = getDebugColor(geomId);
-  // ///////////////////////
-#endif
-
-#ifdef ENABLE_INLINE_GAMMACORRECTION
-  fragColor.rgb = toGamma(fragColor.rgb);
-#endif
 
 #ifndef ENABLE_ES3
   gl_FragColor = fragColor;
