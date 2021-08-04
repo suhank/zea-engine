@@ -20,7 +20,7 @@
       const canvas = document.getElementById('renderer')
 
       const scene = new Scene()
-      scene.setupGrid(10.0, 10)
+      // scene.setupGrid(10.0, 10)
 
       const renderer = new GLRenderer(canvas, { hideSplash: true, antialias: false })
       renderer.setScene(scene)
@@ -63,6 +63,30 @@
           window.postMessage(`done-${data}`)
         }
       }
+
+      const urlParams = new URLSearchParams(window.location.search)
+      renderer.getViewport().debugGeomShader = urlParams.has('debugGeomShader')
+
+      /** HIGHLIGHT START */
+      let highlightedItem
+      renderer.getViewport().on('pointerOverGeom', (event) => {
+        const item = event.intersectionData.geomItem
+        if (item) {
+          highlightedItem = item
+          highlightedItem.addHighlight('pointerOverGeom', new Color(1.0, 0.7, 0, 0.3), true)
+        }
+      })
+      renderer.getViewport().on('pointerLeaveGeom', (event) => {
+        highlightedItem.removeHighlight('pointerOverGeom', true)
+        highlightedItem = null
+      })
+      renderer.getViewport().on('pointerUp', (event) => {
+        if (event.intersectionData) {
+          const geomItem = event.intersectionData.geomItem
+          console.log('', geomItem.getPath())
+        }
+      })
+      /** HIGHLIGHT END */
 
       window.addEventListener('message', handleMessage, false)
       // }}}
