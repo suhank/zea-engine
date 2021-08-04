@@ -31,3 +31,5 @@ export * from './SceneTree/index'
 export * from './Renderer/index'
 
 export { libsRegistry, packageJson, ZeaEngine }
+
+globalThis.zeaEngine = ZeaEngine
