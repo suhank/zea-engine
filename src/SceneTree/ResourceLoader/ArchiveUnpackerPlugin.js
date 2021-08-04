@@ -13,12 +13,7 @@ function checkStatus(response) {
   return response
 }
 
-let numCores = window.navigator.hardwareConcurrency
-if (!numCores) {
-  if (SystemDesc.isMobileDevice) numCores = 4
-  else numCores = 6
-}
-numCores-- // always leave one main thread code spare.
+const numCores = SystemDesc.hardwareConcurrency - 1 // always leave one main thread code spare.
 
 /**
  * Archive unpacker plugin.
