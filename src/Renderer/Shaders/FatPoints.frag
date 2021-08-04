@@ -18,28 +18,9 @@ out vec4 fragColor;
 #endif
 
 #if defined(DRAW_GEOMDATA)
-
-  uniform int floatGeomBuffer;
-  uniform int passId;
-
+  import 'surfaceGeomData.glsl'
 #elif defined(DRAW_HIGHLIGHT)
-
-  import 'GLSLUtils.glsl'
-  import 'drawItemTexture.glsl'
-
-  #ifdef ENABLE_FLOAT_TEXTURES
-  vec4 getHighlightColor(int id) {
-    return fetchTexel(instancesTexture, instancesTextureSize, (id * pixelsPerItem) + 4);
-  }
-  #else
-
-  uniform vec4 highlightColor;
-
-  vec4 getHighlightColor(int id) {
-      return highlightColor;
-  }
-
-  #endif
+  import 'surfaceHighlight.glsl'
 #endif // DRAW_HIGHLIGHT
 
 
@@ -65,32 +46,9 @@ if (dist > 0.5)
   }
 
 #elif defined(DRAW_GEOMDATA)
-
-  float viewDist = length(v_viewPos);
-
-  if (floatGeomBuffer != 0) {
-    fragColor.r = float(passId); 
-    fragColor.g = float(v_drawItemId);
-    fragColor.b = 0.0;// TODO: store poly-id or something.
-    fragColor.a = viewDist;
-  }
-  else {
-    ///////////////////////////////////
-    // UInt8 buffer
-    // fragColor.r = (mod(v_drawItemId, 256.) + 0.5) / 255.;
-    // fragColor.g = (floor(v_drawItemId / 256.) + 0.5) / 255.;
-
-    // encode the dist as a 16 bit float
-    // vec2 float16bits = encode16BitFloatInto2xUInt8(viewDist);
-    // fragColor.b = float16bits.x;
-    // fragColor.a = float16bits.y;
-  }
-
+  fragColor = setFragColor_geomData(v_viewPos, floatGeomBuffer, passId,v_drawItemId, 0);
 #elif defined(DRAW_HIGHLIGHT)
-  
-  int drawItemId = int(v_drawItemId + 0.5);
-  fragColor = getHighlightColor(drawItemId);
- 
+  fragColor = setFragColor_highlight(v_drawItemId);
 #endif // DRAW_HIGHLIGHT
 
 
