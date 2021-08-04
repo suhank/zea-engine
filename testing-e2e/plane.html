@@ -15,6 +15,30 @@
       const renderer = new GLRenderer(domElement, { hideSplash: true, antialias: false })
       renderer.setScene(scene)
 
+      const urlParams = new URLSearchParams(window.location.search)
+      renderer.getViewport().debugGeomShader = urlParams.has('debugGeomShader')
+
+      /** HIGHLIGHT START */
+      let highlightedItem
+      renderer.getViewport().on('pointerOverGeom', (event) => {
+        const item = event.intersectionData.geomItem
+        if (item) {
+          highlightedItem = item
+          highlightedItem.addHighlight('pointerOverGeom', new Color(1.0, 0.0, 0, 0.3), true)
+        }
+      })
+      renderer.getViewport().on('pointerLeaveGeom', (event) => {
+        highlightedItem.removeHighlight('pointerOverGeom', true)
+        highlightedItem = null
+      })
+      renderer.getViewport().on('pointerUp', (event) => {
+        if (event.intersectionData) {
+          const geomItem = event.intersectionData.geomItem
+          console.log('', geomItem.getPath())
+        }
+      })
+      /** HIGHLIGHT END */
+
       const standardMaterial = new Material('surfaces', 'SimpleSurfaceShader')
       standardMaterial.getParameter('BaseColor').setValue(new Color(89 / 255, 182 / 255, 92 / 255))
 
