@@ -24,6 +24,11 @@ import inverse from './inverse.glsl'
 import transpose from './transpose.glsl'
 import quadVertexFromID from './quadVertexFromID.glsl'
 import unpackHDR from './unpackHDR.glsl'
+import surfaceGeomData from './surfaceGeomData.glsl'
+import surfaceHighlight from './surfaceHighlight.glsl'
+
+shaderLibrary.setShaderModule('surfaceGeomData.glsl', surfaceGeomData)
+shaderLibrary.setShaderModule('surfaceHighlight.glsl', surfaceHighlight)
 
 shaderLibrary.setShaderModule('computeViewNormal.glsl', computeViewNormal)
 shaderLibrary.setShaderModule('calcFatLinesViewPos.glsl', calcFatLinesViewPos)
