@@ -11,8 +11,7 @@
   "author": "Zea Inc.",
   "license": "AGPL-3.0",
   "files": [
-    "dist/",
-    "dist/public-resources/"
+    "dist/"
   ],
   "scripts": {
     "build": "rollup -c",
