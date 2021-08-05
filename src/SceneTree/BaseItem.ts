@@ -18,7 +18,6 @@ let numBaseItems = 0
  * @extends {ParameterOwner}
  */
 class BaseItem extends ParameterOwner {
-
   protected __metaData: Record<string, any>
   protected __name: string
   protected __ownerItem?: BaseItem
@@ -167,7 +166,7 @@ class BaseItem extends ParameterOwner {
     if (this.__ownerItem !== ownerItem) {
       this.__ownerItem = ownerItem
       this.updatePath()
-    } else if(!ownerItem){
+    } else if (!ownerItem) {
       this.__ownerItem = undefined
       this.updatePath()
     }
@@ -295,7 +294,7 @@ class BaseItem extends ParameterOwner {
    * @param {object} j - The json object this item must decode.
    * @param {object} context - The context value.
    */
-  fromJSON(j: Record<string, any>, context?: Record<string, any>): void {
+  fromJSON(j: Record<string, any>, context?: Record<string, any>, onDone?: any): void {
     if (j.name) this.__name = j.name
     super.fromJSON(j, context)
   }

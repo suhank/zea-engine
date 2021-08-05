@@ -5,6 +5,8 @@ import { GeomLibrary } from './GeomLibrary'
 import { MaterialLibrary } from './MaterialLibrary'
 import { Registry } from '../Registry'
 import { EventEmitter } from '../Utilities/EventEmitter'
+import { GeomItem } from './GeomItem'
+import { BinReader } from './BinReader'
 
 /**
  * Provides a context for loading assets. This context can provide the units of the loading scene.
@@ -13,11 +15,26 @@ import { EventEmitter } from '../Utilities/EventEmitter'
  * to resolve the URL of an external reference that a given asset is expecting to find.
  */
 class AssetLoadContext extends EventEmitter {
+  units: string
+  protected assets: Record<any, any>
+  protected resources: Record<any, any>
+  versions: Record<any, any>
+  protected url: string
+  protected folder: string
+  protected sdk: string
+  assetItem: any
+  numTreeItems: number
+  numGeomItems: number
+  protected postLoadCallbacks: any[]
+  protected asyncCount: number
+
+  addGeomToLayer: any
+
   /**
    * Create a AssetLoadContext
    * @param {AssetLoadContext} context The source context to base this context on.
    */
-  constructor(context) {
+  constructor(context: AssetLoadContext) {
     super()
     this.units = context ? context.units : 'meters'
     this.assets = context ? context.assets : {}
@@ -29,7 +46,6 @@ class AssetLoadContext extends EventEmitter {
     this.assetItem = null
     this.numTreeItems = 0
     this.numGeomItems = 0
-
     this.postLoadCallbacks = [] // Post load callbacks.
     this.asyncCount = 0
   }
@@ -65,7 +81,7 @@ class AssetLoadContext extends EventEmitter {
    * @param {function} onSucceed called with the successful result of the path resolution.
    * @param {function} onFail called when the path resolution fails.
    */
-  resolvePath(path, onSucceed, onFail) {
+  resolvePath(path: any, onSucceed: any, onFail: any) {
     if (!path) throw new Error('Path not specified')
 
     // Note: Why not return a Promise here?
@@ -101,7 +117,7 @@ class AssetLoadContext extends EventEmitter {
    * e.g. an instance will
    * @param {function} postLoadCallback
    */
-  addPLCB(postLoadCallback) {
+  addPLCB(postLoadCallback: any) {
     this.postLoadCallbacks.push(postLoadCallback)
   }
 }
@@ -114,7 +130,7 @@ class AssetLoadContext extends EventEmitter {
  * Supports: ['millimeters', 'centimeters', 'decimeters', 'meters', 'kilometers', 'inches', 'feet', 'miles']
  * @return {number} Returns the factor relative to meters.
  */
-const getUnitsFactor = (units) => {
+const getUnitsFactor = (units: string) => {
   switch (units.toLowerCase()) {
     case 'millimeters':
       return 0.001
@@ -142,11 +158,19 @@ const getUnitsFactor = (units) => {
  * @extends TreeItem
  */
 class AssetItem extends TreeItem {
+  __geomLibrary: GeomLibrary
+  __materials: MaterialLibrary
+  loaded: boolean
+
+  protected __engineDataVersion: any
+  protected __unitsScale: any
+
+  protected __units: string
   /**
    * Create an asset item.
    * @param {string} name - The name of the asset item.
    */
-  constructor(name) {
+  constructor(name: string = '') {
     super(name)
 
     this.__geomLibrary = new GeomLibrary()
@@ -159,7 +183,7 @@ class AssetItem extends TreeItem {
    * @param {string} url - The URL of the asset to load
    * @return {Promise} - Returns a promise that resolves once the initial load is complete
    */
-  load(url) {
+  load(url: string) {
     return Promise.reject(`This method is not implemented for this Asset Item: ${url}`)
   }
 
@@ -212,10 +236,10 @@ class AssetItem extends TreeItem {
 
   /**
    * The readBinary method.
-   * @param {object} reader - The reader value.
+   * @param {Record<any,any>} reader - The reader value.
    * @param {AssetLoadContext} context - The context value.
    */
-  readBinary(reader, context) {
+  readBinary(reader: BinReader, context: AssetLoadContext) {
     context.assetItem = this
     context.numTreeItems = 0
 
@@ -253,9 +277,9 @@ class AssetItem extends TreeItem {
       loadUnits()
     }
 
-    let layerRoot
-    const layers = {}
-    context.addGeomToLayer = (geomItem, layer) => {
+    let layerRoot: any
+    const layers: Record<any, any> = {}
+    context.addGeomToLayer = (geomItem: GeomItem, layer: any) => {
       if (!layers[layer]) {
         if (!layerRoot) {
           layerRoot = new TreeItem('Layers')
@@ -268,7 +292,7 @@ class AssetItem extends TreeItem {
       layers[layer].addItem(geomItem)
     }
 
-    const postLoadCallbacks = [] // Post load callbacks.
+    const postLoadCallbacks: any[] = [] // Post load callbacks.
     context.resolvePath = (path, onSucceed, onFail) => {
       if (!path) throw new Error('Path not specified')
 
@@ -322,11 +346,11 @@ class AssetItem extends TreeItem {
   /**
    * The toJSON method encodes this type as a json object for persistence.
    *
-   * @param {object} context - The context value.
+   * @param {Record<any,any>} context - The context value.
    * @return {object} - Returns the json object.
    */
-  toJSON(context = {}) {
-    context.makeRelative = (path) => {
+  toJSON(context: Record<any, any> = {}) {
+    context.makeRelative = (path: any) => {
       const assetPath = this.getPath()
       const start = path.slice(0, assetPath.length)
       for (let i = 0; i < start.length - 1; i++) {
@@ -352,7 +376,7 @@ class AssetItem extends TreeItem {
    * @param {object} context - The context value.
    * @param {function} onDone - Callback function executed when everything is done.
    */
-  fromJSON(j, context = {}, onDone) {
+  fromJSON(j: Record<any, any>, context: Record<any, any> = {}, onDone?: any) {
     if (!context) context = {}
 
     context.assetItem = this
@@ -362,8 +386,8 @@ class AssetItem extends TreeItem {
 
     context.assetItem = this
 
-    const postLoadCallbacks = [] // Post load callbacks.
-    context.resolvePath = (path, cb) => {
+    const postLoadCallbacks: any[] = [] // Post load callbacks.
+    context.resolvePath = (path: any, cb: any) => {
       // Note: Why not return a Promise here?
       // Promise evaluation is always async, so
       // all promises will be resolved after the current call stack
@@ -386,7 +410,7 @@ class AssetItem extends TreeItem {
         })
       }
     }
-    context.addPLCB = (postLoadCallback) => postLoadCallbacks.push(postLoadCallback)
+    context.addPLCB = (postLoadCallback: any) => postLoadCallbacks.push(postLoadCallback)
 
     // Avoid loading the FilePath as we are already loading json data.
     // if (j.params && j.params.FilePath) {
@@ -409,10 +433,10 @@ class AssetItem extends TreeItem {
    * The clone method constructs a new tree item, copies its values
    * from this item and returns it.
    *
-   * @param {object} context - The context value.
+   * @param {Record<any,any>} context - The context value.
    * @return {TreeItem} - Returns a new cloned tree item.
    */
-  clone(context) {
+  clone(context?: Record<string, unknown>): TreeItem {
     const cloned = new AssetItem()
     cloned.copyFrom(this, context)
     return cloned
@@ -422,9 +446,9 @@ class AssetItem extends TreeItem {
    * Copies current TreeItem with all its children.
    *
    * @param {TreeItem} src - The tree item to copy from.
-   * @param {object} context - The context value.
+   * @param {Record<any,any>} context - The context value.
    */
-  copyFrom(src, context) {
+  copyFrom(src: AssetItem, context: Record<any, any>) {
     this.__geomLibrary = src.__geomLibrary
     this.__materials = src.__materials
     this.loaded = src.loaded
@@ -436,7 +460,7 @@ class AssetItem extends TreeItem {
         localXfo.sc = srcLocalXfo.sc.clone()
         this.getParameter('LocalXfo').setValue(localXfo)
 
-        src.getChildren().forEach((srcChildItem) => {
+        src.getChildren().forEach((srcChildItem: any) => {
           if (srcChildItem && srcChildItem != AssetItem) {
             this.addChild(srcChildItem.clone(context), false, false)
           }

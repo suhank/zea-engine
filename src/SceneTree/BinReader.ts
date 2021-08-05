@@ -8,6 +8,11 @@ import { MathFunctions } from '../Utilities/MathFunctions'
  * Reads binary data in a specific encoding. Used in loading binary data such as zcad files.
  */
 class BinReader {
+  protected __data: Buffer
+  protected __byteOffset: number
+  protected __dataView: DataView
+  protected __isMobileDevice: boolean
+  protected utf8decoder: TextDecoder
   /**
    * Create a bin reader.
    *
@@ -15,7 +20,7 @@ class BinReader {
    * @param {number} byteOffset - The byte offset value to start reading the buffer.
    * @param {boolean} isMobileDevice - The isMobileDevice value.
    */
-  constructor(data, byteOffset = 0, isMobileDevice = true) {
+  constructor(data: Buffer, byteOffset: number = 0, isMobileDevice: boolean = true) {
     this.__data = data
     this.__byteOffset = byteOffset
     this.__dataView = new DataView(this.__data)
@@ -71,7 +76,7 @@ class BinReader {
    * Sets the byte offset value.
    * @param {number} byteOffset - The byteOffset param.
    */
-  seek(byteOffset) {
+  seek(byteOffset: number) {
     this.__byteOffset = byteOffset
   }
 
@@ -80,7 +85,7 @@ class BinReader {
    *
    * @param {number} byteOffset - The byte Offset amount.
    */
-  advance(byteOffset) {
+  advance(byteOffset: number) {
     this.__byteOffset += byteOffset
   }
 
@@ -213,7 +218,7 @@ class BinReader {
    * @param {boolean} clone - The clone param.
    * @return {Uint8Array} - The return value.
    */
-  loadUInt8Array(size = undefined, clone = false) {
+  loadUInt8Array(size: number = undefined, clone = false) {
     if (size == undefined) size = this.loadUInt32()
     const result = new Uint8Array(this.__data, this.__byteOffset, size)
     this.__byteOffset += size
@@ -231,7 +236,7 @@ class BinReader {
    * @param {boolean} clone - The clone param.
    * @return {Uint16Array} - The return value.
    */
-  loadUInt16Array(size = undefined, clone = false) {
+  loadUInt16Array(size: number = undefined, clone = false) {
     if (size == undefined) size = this.loadUInt32()
     if (size == 0) return new Uint16Array()
     this.readPad(2)
@@ -259,7 +264,7 @@ class BinReader {
    * @param {boolean} clone - The clone param.
    * @return {Uint32Array} - The return value.
    */
-  loadUInt32Array(size = undefined, clone = false) {
+  loadUInt32Array(size: number = undefined, clone = false) {
     if (size == undefined) size = this.loadUInt32()
     if (size == 0) return new Uint32Array()
     this.readPad(4)
@@ -286,7 +291,7 @@ class BinReader {
    * @param {boolean} clone - The clone param.
    * @return {Float32Array} - The return value.
    */
-  loadFloat32Array(size = undefined, clone = false) {
+  loadFloat32Array(size: number = undefined, clone = false) {
     if (size == undefined) size = this.loadUInt32()
     if (size == 0) return new Float32Array()
     this.readPad(4)
@@ -494,7 +499,7 @@ class BinReader {
    * Given a stridee value, advance the pointer to the end of the current stride.
    * @param {number} stride - The stride param.
    */
-  readPad(stride) {
+  readPad(stride: number) {
     const pad = this.__byteOffset % stride
     if (pad != 0) this.__byteOffset += stride - pad
   }

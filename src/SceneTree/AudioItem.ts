@@ -28,18 +28,26 @@ import { TreeItem } from './TreeItem'
  * @extends TreeItem
  */
 class AudioItem extends TreeItem {
+  protected __loaded: any
+  protected isPlaying: any
+  protected play: any
+  protected pause: any
+  protected stop: any
+  protected getAudioSource: any
+  protected loaded: any
+  protected mute: any
   /**
    * Create an audio item.
    * @param {string} name - The name of the audio item.
    */
-  constructor(name) {
+  constructor(name: string) {
     super(name)
 
     this.__loaded = false
 
-    const fileParam = this.addParameter(new FilePathParameter('FilePath'))
-    let audioSource
-    let audioBuffer
+    const fileParam = <FilePathParameter>this.addParameter(new FilePathParameter('FilePath'))
+    let audioSource: any
+    let audioBuffer: any
     const startAudioPlayback = () => {
       audioSource = window.ZeaAudioaudioCtx.createBufferSource()
       audioSource.buffer = audioBuffer
@@ -50,7 +58,7 @@ class AudioItem extends TreeItem {
     }
     fileParam.on('valueChanged', () => {
       const request = new XMLHttpRequest()
-      request.open('GET', fileParam.getURL(), true)
+      request.open('GET', fileParam.getUrl(), true)
       request.responseType = 'arraybuffer'
 
       request.onload = () => {
@@ -60,13 +68,13 @@ class AudioItem extends TreeItem {
         // TODO: clean this up.
         window.ZeaAudioaudioCtx.decodeAudioData(
           audioData,
-          (buffer) => {
+          (buffer: any) => {
             audioBuffer = buffer
             this.__loaded = true
             this.emit('loaded', {})
             if (autoplayParam.getValue()) startAudioPlayback()
           },
-          (e) => {
+          (e: any) => {
             console.log('Error with decoding audio data' + e.err)
           }
         )
@@ -131,7 +139,7 @@ class AudioItem extends TreeItem {
       if (audioSource) audioSource.loop = loopParam.getValue()
     })
 
-    this.mute = (value) => {
+    this.mute = (value: any) => {
       muteParam.setValue(value)
     }
 
@@ -169,7 +177,9 @@ class FileAudioItem extends AudioItem {
    * Create a audio file item.
    * @param {string} name - The name of the audio file.
    */
-  constructor(name) {}
+  constructor(name: string) {
+    super(name)
+  }
 }
 
 export { AudioItem, FileAudioItem }
