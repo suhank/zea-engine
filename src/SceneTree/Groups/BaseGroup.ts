@@ -237,7 +237,7 @@ class BaseGroup extends TreeItem {
    * @param {Record<string, any>} context - The context value.
    * @return {Record<string, any>} - Returns the json object.
    */
-  toJSON(context: Record<string, any>): Record<string, any> {
+  toJSON(context?: Record<string, any>): Record<string, any> {
     const j = super.toJSON(context)
     const paramItems = this.__itemsParam.getValue()
     if (paramItems) {
@@ -259,7 +259,7 @@ class BaseGroup extends TreeItem {
    * @param {Record<string, any>} j - The json object this item must decode.
    * @param {Record<string, any>} context - The context value.
    */
-  fromJSON(j: Record<string, any>, context: Record<string, any>): void {
+  fromJSON(j: Record<string, any>, context?: Record<string, any>): void {
     super.fromJSON(j, context)
     if (!j.treeItems) {
       console.warn('Invalid Parameter JSON')

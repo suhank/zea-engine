@@ -3,6 +3,7 @@ import { TreeItem } from '../TreeItem'
 import { Material } from '../Material'
 import { GeomItem } from '../GeomItem'
 import { Vec3, Xfo } from '../../Math'
+import { ItemSetParameter } from '../Parameters'
 // TODO: enable test
 xdescribe('Group', () => {
   it('is visible by default.', () => {
@@ -22,7 +23,7 @@ xdescribe('Group', () => {
 
   test('Adding members using paths.', () => {
     const rootItem = new TreeItem('TreeItem')
-    const group = new Group('Foo')
+    const group: Group = new Group('Foo')
     const treeItem1 = new TreeItem('treeItem1')
     const treeItem2 = new TreeItem('treeItem2')
     treeItem1.addChild(treeItem2)
@@ -32,7 +33,7 @@ xdescribe('Group', () => {
 
     group.setPaths([['.', 'treeItem1', 'treeItem2']])
 
-    expect(group.getParameter('Items').getItem(0)).toBe(treeItem2)
+    expect((<ItemSetParameter>group.getParameter('Items')).getItem(0)).toBe(treeItem2)
   })
 
   test('Changing members visibility.', () => {
@@ -43,7 +44,7 @@ xdescribe('Group', () => {
 
     expect(treeItem.isVisible()).toBe(true)
 
-    group.setVisible(false)
+    group.setVisible(0)
 
     expect(treeItem.isVisible()).toBe(false)
   })
@@ -56,7 +57,7 @@ xdescribe('Group', () => {
     parent.addChild(child)
 
     group.addItem(parent)
-    group.setVisible(false)
+    group.setVisible(0)
 
     expect(child.isVisible()).toBe(false)
   })
