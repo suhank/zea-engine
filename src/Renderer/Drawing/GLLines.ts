@@ -9,12 +9,18 @@ import { Lines } from '../../SceneTree/Geometry/Lines'
  * @private
  */
 class GLLines extends GLGeom {
+  protected __numSegIndices: number
+  protected __numVertices: number
+  protected __fatBuffersNeedUpload: boolean
+  protected fatBuffers: any
+  protected __buffersNeedUpload: any
+  protected __indexDataType: any
   /**
    * Create a GL line.
    * @param {WebGLRenderingContext} gl - The webgl rendering context.
    * @param {any} lines - The geom value.
    */
-  constructor(gl, lines) {
+  constructor(gl: WebGLRenderingContext, lines: any) {
     super(gl, lines)
 
     this.__numSegIndices = 0
@@ -24,9 +30,9 @@ class GLLines extends GLGeom {
 
   /**
    * The dirtyBuffers method.
-   * @param {object} opts - options passed when geomDataChanged is emitted. (Currently ony used by the FreehandLines tool)
+   * @param {Record<any,any>} opts - options passed when geomDataChanged is emitted. (Currently ony used by the FreehandLines tool)
    */
-  dirtyBuffers(opts) {
+  dirtyBuffers(opts: Record<any, any>) {
     super.dirtyBuffers(opts)
     this.__fatBuffersNeedUpload = true
     this.emit('updated')
@@ -56,10 +62,10 @@ class GLLines extends GLGeom {
 
   /**
    * The genFatBuffers method.
-   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    */
-  genFatBuffers(renderstate) {
-    const gl = this.__gl
+  genFatBuffers(renderstate: Record<any, any>) {
+    const gl = <Record<any, any>>this.__gl
 
     const geomBuffers = this.__geom.genBuffers()
     const indices = geomBuffers.indices
@@ -98,7 +104,7 @@ class GLLines extends GLGeom {
       this.fatBuffers.positionsTexture = null
     }
     if (!this.fatBuffers.positionsTexture) {
-      this.fatBuffers.positionsTexture = new GLTexture2D(gl, {
+      this.fatBuffers.positionsTexture = new GLTexture2D(this.__gl, {
         format: 'RGBA',
         type: 'FLOAT',
         width: positions.length,
@@ -156,9 +162,9 @@ class GLLines extends GLGeom {
 
   /**
    * The genBuffers method.
-   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    */
-  genBuffers(renderstate) {
+  genBuffers(renderstate?: Record<any, any>) {
     const gl = this.__gl
 
     const geomBuffers = this.__geom.genBuffers()
@@ -220,14 +226,14 @@ class GLLines extends GLGeom {
 
   /**
    * The bind method.
-   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    * @return {any} - The return value.
    */
-  bind(renderstate) {
-    const gl = this.__gl
+  bind(renderstate: Record<any, any>) {
+    const gl = <Record<any, any>>this.__gl
     const unifs = renderstate.unifs
     if (unifs.LineThickness && gl.floatTexturesSupported) {
-      if (this.__fatBuffersNeedUpload) this.genFatBuffers(renderstate, true)
+      if (this.__fatBuffersNeedUpload) this.genFatBuffers(renderstate) // (renderstate, true)
 
       let shaderBinding = this.__shaderBindings[renderstate.shaderkey]
       if (!shaderBinding) {
@@ -270,10 +276,10 @@ class GLLines extends GLGeom {
 
   /**
    * The draw method.
-   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    */
-  draw(renderstate) {
-    const gl = this.__gl
+  draw(renderstate: Record<any, any>) {
+    const gl = <Record<any, any>>this.__gl
     if (renderstate.unifs.LineThickness && gl.floatTexturesSupported) {
       gl.drawElementsInstanced(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0, this.fatBuffers.drawCount)
 
@@ -285,21 +291,21 @@ class GLLines extends GLGeom {
 
   /**
    * The drawInstanced method.
-   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    * @param {number} instanceCount - The instanceCount value.
    */
-  drawInstanced(renderstate, instanceCount) {
-    const gl = this.__gl
+  drawInstanced(renderstate: Record<any, any>, instanceCount: number) {
+    const gl = <Record<any, any>>this.__gl
     const { occluded } = renderstate.unifs
     if (occluded) {
       gl.uniform1i(occluded.location, 0)
     }
-    this.__gl.drawElementsInstanced(this.__gl.LINES, this.__numSegIndices, this.__indexDataType, 0, instanceCount)
+    gl.drawElementsInstanced(this.__gl.LINES, this.__numSegIndices, this.__indexDataType, 0, instanceCount)
 
     if (occluded) {
       gl.uniform1i(occluded.location, 1)
       gl.depthFunc(gl.GREATER)
-      this.__gl.drawElementsInstanced(this.__gl.LINES, this.__numSegIndices, this.__indexDataType, 0, instanceCount)
+      gl.drawElementsInstanced(this.__gl.LINES, this.__numSegIndices, this.__indexDataType, 0, instanceCount)
       gl.depthFunc(gl.LEQUAL)
     }
   }

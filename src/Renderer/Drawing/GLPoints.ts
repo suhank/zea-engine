@@ -6,21 +6,23 @@ import { generateShaderGeomBinding } from './GeomShaderBinding'
  * @private
  */
 class GLPoints extends GLGeom {
+  protected __numVertices: number
+  protected __vboState: number
   /**
    * Create a GL point.
    * @param {WebGLRenderingContext} gl - The webgl rendering context.
    * @param {any} points - The points value.
    */
-  constructor(gl, points) {
+  constructor(gl: WebGLRenderingContext, points: any) {
     super(gl, points)
     this.genBuffers()
   }
 
   /**
    * The genBuffers method.
-   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    */
-  genBuffers(renderstate) {
+  genBuffers(renderstate?: Record<any, any>) {
     super.genBuffers(renderstate)
 
     const gl = this.__gl
@@ -48,9 +50,9 @@ class GLPoints extends GLGeom {
 
   /**
    * The updateBuffers method.
-   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    */
-  updateBuffers(renderstate) {
+  updateBuffers(renderstate: Record<any, any>) {
     const gl = this.__gl
     const geomBuffers = this.__geom.genBuffers()
 
@@ -74,12 +76,12 @@ class GLPoints extends GLGeom {
 
   /**
    * The bind method.
-   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    * @return {any} - The return value.
    */
-  bind(renderstate) {
+  bind(renderstate: Record<any, any>) {
     if (renderstate.unifs.PointSize) {
-      const gl = this.__gl
+      const gl = <Record<any, any>>this.__gl
       let shaderBinding = this.__shaderBindings[renderstate.shaderkey]
       if (!shaderBinding) {
         if (!gl.__quadVertexIdsBuffer) gl.setupInstancedQuad()
@@ -99,10 +101,10 @@ class GLPoints extends GLGeom {
 
   /**
    * The draw method.
-   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    */
-  draw(renderstate) {
-    const gl = this.__gl
+  draw(renderstate: Record<any, any>) {
+    const gl = <Record<any, any>>this.__gl
     if (renderstate.unifs.PointSize) {
       gl.drawElementsInstanced(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0, this.__numVertices)
     } else {
@@ -112,11 +114,12 @@ class GLPoints extends GLGeom {
 
   /**
    * The drawInstanced method.
-   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    * @param {number} instanceCount - The instanceCount value.
    */
-  drawInstanced(renderstate, instanceCount) {
-    this.__gl.drawArraysInstanced(this.__gl.POINTS, 0, this.__numVertices, instanceCount)
+  drawInstanced(renderstate: Record<any, any>, instanceCount: number) {
+    const gl = <Record<any, any>>this.__gl
+    gl.drawArraysInstanced(this.__gl.POINTS, 0, this.__numVertices, instanceCount)
   }
 }
 export { GLPoints }
