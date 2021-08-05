@@ -10,6 +10,9 @@ import { Material } from './Material'
 import { resourceLoader } from './resourceLoader'
 import { BooleanParameter, NumberParameter, StringParameter } from './Parameters/index'
 import { FilePathParameter } from './Parameters/FilePathParameter'
+import { FileImage } from './Images'
+import { Vec3Attribute } from './Geometry/Vec3Attribute'
+import { Vec2Attribute } from './Geometry/Vec2Attribute'
 
 // AssetItem.registerDataLoader('.obj', ObjDataLoader);
 
@@ -36,7 +39,7 @@ class ObjAsset extends AssetItem {
    * Create an obj asset.
    * @param {string} name - The name of the object asset.
    */
-  constructor(name) {
+  constructor(name: string) {
     super(name)
     this.addParameter(new BooleanParameter('splitObjects', false))
     this.addParameter(new BooleanParameter('splitGroupsIntoObjects', false))
@@ -44,7 +47,7 @@ class ObjAsset extends AssetItem {
     this.addParameter(new NumberParameter('unitsConversion', 1.0))
     this.addParameter(new StringParameter('defaultShader', ''))
 
-    const fileParam = this.addParameter(new FilePathParameter('FilePath'))
+    const fileParam = <FilePathParameter>this.addParameter(new FilePathParameter('FilePath'))
     fileParam.on('valueChanged', () => {
       this.loaded = false
       const url = fileParam.getUrl()
@@ -57,23 +60,23 @@ class ObjAsset extends AssetItem {
    * @param {string} url - The URL of the asset to load
    * @return {Promise} - Returns a promise that resolves once the initial load is complete
    */
-  load(url) {
+  load(url: string) {
     return new Promise((resolve, reject) => {
       const fileFolder = url.substring(0, url.lastIndexOf('/')) + '/'
       const filename = url.substring(url.lastIndexOf('/') + 1)
 
-      const parseMtlData = (mtlFileData) => {
+      const parseMtlData = (mtlFileData: any) => {
         const lines = mtlFileData.split('\n')
         const WHITESPACE_RE = /\s+/
         let material
 
-        const parseColor = function (elements) {
+        const parseColor = function (elements: any) {
           if (elements.length == 3)
             return new Color(parseFloat(elements[0]), parseFloat(elements[1]), parseFloat(elements[2]))
           else throw new Error('Unable to parse a color from the following parts:' + elements.join('_'))
         }
 
-        const parseMap = (elements) => {
+        const parseMap = (elements: any) => {
           return new FileImage(elements[0], fileFolder + elements[0])
         }
 
@@ -125,9 +128,9 @@ class ObjAsset extends AssetItem {
         }
       }
 
-      const loadMtlFile = (mtlFile) => {
+      const loadMtlFile = (mtlFile: any) => {
         return new Promise((resolve) => {
-          loadTextfile(mtlFile.url, (fileData) => {
+          loadTextfile(mtlFile.url, (fileData: any) => {
             resourceLoader.incrementWorkDone(1)
             parseMtlData(fileData)
             resourceLoader.incrementWorkDone(1)
@@ -142,17 +145,17 @@ class ObjAsset extends AssetItem {
 
       const geomDatas = {}
 
-      const parseObjData = async (fileData) => {
+      const parseObjData = async (fileData: any) => {
         // performance.mark("parseObjData");
 
         // array of lines separated by the newline
         const lines = fileData.split('\n')
         const WHITESPACE_RE = /\s+/
 
-        let currGeom = undefined
-        let currMtl = undefined
-        let numGeoms = 0
-        const newGeom = (name) => {
+        let currGeom: any = undefined
+        let currMtl: any = undefined
+        let numGeoms: any = 0
+        const newGeom = (name: string) => {
           if (name in geomDatas) {
             let suffix = 1
             while (name + String(suffix) in geomDatas) {
@@ -216,13 +219,13 @@ class ObjAsset extends AssetItem {
               }
               break
             case 'v':
-              vertices.push(elements.map((i) => parseFloat(i)))
+              vertices.push(elements.map((i: any) => parseFloat(i)))
               break
             case 'vt':
-              texCoords.push(elements.map((i) => parseFloat(i)))
+              texCoords.push(elements.map((i: any) => parseFloat(i)))
               break
             case 'vn':
-              normals.push(elements.map((i) => parseFloat(i)))
+              normals.push(elements.map((i: any) => parseFloat(i)))
               break
             case 'f': {
               const v_poly = []
@@ -230,7 +233,7 @@ class ObjAsset extends AssetItem {
               const vn_poly = []
               for (let j = 0, eleLen = elements.length; j < eleLen; j++) {
                 // v/vt/vn
-                const indices = elements[j].split('/').map((i) => parseInt(i) - 1)
+                const indices = elements[j].split('/').map((i: any) => parseInt(i) - 1)
                 const v = indices[0]
 
                 // v_poly.push(v);
@@ -286,7 +289,7 @@ class ObjAsset extends AssetItem {
         resolve()
       }
 
-      const buildChildItem = (geomName, geomData) => {
+      const buildChildItem = (geomName: any, geomData: any) => {
         for (let i = 0; i < geomData.faceCounts.length; i++) {
           if (geomData.faceCounts[i] == undefined) {
             geomData.faceCounts[i] = 0
@@ -294,10 +297,11 @@ class ObjAsset extends AssetItem {
         }
 
         const numVertices = geomData.numVertices
-        const mesh = new Mesh(geomName)
+        const mesh = new Mesh() // geomName
+        mesh.setDebugName(geomName)
         mesh.setFaceCounts(geomData.faceCounts)
         mesh.setNumVertices(numVertices)
-        const positionsAttr = mesh.getVertexAttribute('positions')
+        const positionsAttr = <Vec3Attribute>mesh.getVertexAttribute('positions')
         const unitsConversion = this.getParameter('unitsConversion').getValue()
 
         for (const vsrc in geomData.verticesRemapping) {
@@ -313,8 +317,10 @@ class ObjAsset extends AssetItem {
 
         let normalsAttr
         let texCoordsAttr
-        if (geomData.normalIndices.length > 0) normalsAttr = mesh.addVertexAttribute('normals', Vec3)
-        if (geomData.texCoordIndices.length > 0) texCoordsAttr = mesh.addVertexAttribute('texCoords', Vec2)
+        console.warn('returning void to initialize normalsAttr/texCoordsAttr')
+        if (geomData.normalIndices.length > 0) normalsAttr = mesh.addVertexAttribute('normals', new Vec3Attribute()) // TODO: this method returns void
+        if (geomData.texCoordIndices.length > 0)
+          texCoordsAttr = mesh.addVertexAttribute('texCoords', new Vec2Attribute())
 
         const loadedFaces = Array(geomData.faceCounts.length).fill(0)
         for (let i = 0; i < geomData.vertexIndices.length; i++) {
@@ -352,8 +358,8 @@ class ObjAsset extends AssetItem {
         const delta = mesh.getBoundingBox().center()
         {
           const offset = delta.negate()
-          const positions = mesh.getVertexAttribute('positions')
-          for (let i = 0; i < positions.length; i++) positions.getValueRef(i).addInPlace(offset)
+          const positions = <Vec3Attribute>mesh.getVertexAttribute('positions')
+          for (let i = 0; i < positions.getCount(); i++) positions.getValueRef(i).addInPlace(offset) // TODO: is getCount() == positions.length?
           mesh.setBoundingBoxDirty()
         }
         geomItem.getParameter('LocalXfo').setValue(new Xfo(delta))
@@ -362,7 +368,7 @@ class ObjAsset extends AssetItem {
           geomItem.getParameter('Material').setValue(this.__materials.getMaterial(geomData.material))
         } else {
           const defaultShader = this.getParameter('defaultShader').getValue()
-          const material = new Material(geomName + 'mat')
+          const material = new Material(geomName + ' mat')
           material.setShaderName(defaultShader != '' ? defaultShader : 'StandardSurfaceShader')
           this.__materials.addMaterial(material)
           geomItem.getParameter('Material').setValue(material)
@@ -375,14 +381,14 @@ class ObjAsset extends AssetItem {
         resourceLoader.incrementWorkload(2)
         loadTextfile(
           url,
-          (fileData) => {
+          (fileData: any) => {
             resourceLoader.incrementWorkDone(1)
             parseObjData(fileData).then(() => {
               buildChildItems()
               resourceLoader.incrementWorkDone(1)
             })
           },
-          (error) => {
+          (error: any) => {
             this.emit('error', error)
             reject(error)
           }

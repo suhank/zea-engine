@@ -19,11 +19,13 @@ import { Version } from './Version'
  * @extends AssetItem
  */
 class VLAAsset extends AssetItem {
+  protected __fileParam: any
+  protected __datafileLoaded: any
   /**
    * Create a VLA asset.
    * @param {string} name - The name value.
    */
-  constructor(name) {
+  constructor(name: string) {
     super(name)
 
     // A signal that is emitted once all the geometries are loaded.
@@ -51,10 +53,10 @@ class VLAAsset extends AssetItem {
    * Sets state of current asset using a binary reader object.
    *
    * @param {BinReader} reader - The reader value.
-   * @param {object} context - The context value.
+   * @param {AssetLoadContext } context - The context value.
    * @return {number} - The return value.
    */
-  readBinary(reader, context) {
+  readBinary(reader: BinReader, context: AssetLoadContext) {
     if (context.versions['zea-engine']) {
       // Necessary for the smart lok
     } else {
@@ -84,7 +86,7 @@ class VLAAsset extends AssetItem {
    * @param {AssetLoadContext} context - The load context object that provides additional data such as the units of the scene we are loading into.
    * @return {Promise} - Returns a promise that resolves once the initial load is complete
    */
-  load(url, context = new AssetLoadContext()) {
+  load(url: string, context: AssetLoadContext = new AssetLoadContext()) {
     return new Promise((resolve, reject) => {
       const folder = url.lastIndexOf('/') > -1 ? url.substring(0, url.lastIndexOf('/')) + '/' : ''
       const filename = url.lastIndexOf('/') > -1 ? url.substring(url.lastIndexOf('/') + 1) : ''
@@ -107,7 +109,7 @@ class VLAAsset extends AssetItem {
       })
 
       resourceLoader.loadFile('archive', url).then(
-        (entries) => {
+        (entries: any) => {
           // Load the tree file. This file contains
           // the scene tree of the asset, and also
           // tells us how many geom files will need to be loaded.
@@ -130,11 +132,11 @@ class VLAAsset extends AssetItem {
             this.__geomLibrary.readBinaryBuffer(filename, entries.geoms.buffer, context)
           } else {
             const basePath = folder + stem
-            this.__geomLibrary.loadGeomFilesStream(basePath, numGeomFiles, context)
+            this.__geomLibrary.loadGeomFilesStream(basePath, numGeomsFiles, context)
           }
           resolve()
         },
-        (error) => {
+        (error: any) => {
           this.emit('error', error)
           reject(error)
         }
@@ -145,11 +147,11 @@ class VLAAsset extends AssetItem {
   /**
    * The fromJSON method decodes a json object for this type.
    *
-   * @param {object} j - The json object this item must decode.
+   * @param {Record<any,any>} j - The json object this item must decode.
    * @param {AssetLoadContext} context - The load context object that provides additional data such as the units of the scene we are loading into.
    * @param {function} onDone - The onDone value.
    */
-  fromJSON(j, context, onDone) {
+  fromJSON(j: Record<any,any>, context?: Record<any,any>, onDone?: any) {
     if (!context) context = {}
     context.assetItem = this
 

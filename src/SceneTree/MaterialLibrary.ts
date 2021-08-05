@@ -3,11 +3,18 @@ import { EventEmitter } from '../Utilities/index'
 import { Registry } from '../Registry'
 import { Material } from './Material'
 import { FileImage } from './Images/index'
+import { BaseItem } from './BaseItem'
+import { BinReader } from '..'
 
 /** Class representing a material library in a scene tree.
  * @private
  */
 class MaterialLibrary extends EventEmitter {
+  protected lod: any
+  protected __name: any
+  protected __images: any
+  protected __materials: any
+  protected name: any
   /**
    * Create a material library.
    * @param {string} name - The name of the material library.
@@ -73,7 +80,7 @@ class MaterialLibrary extends EventEmitter {
    * @param {string} name - The name value.
    * @return {any} - The return value.
    */
-  hasMaterial(name) {
+  hasMaterial(name: string) {
     return name in this.__materials
   }
 
@@ -81,7 +88,7 @@ class MaterialLibrary extends EventEmitter {
    * Add a material.
    * @param {Material} material - The material value.
    */
-  addMaterial(material) {
+  addMaterial(material: Material) {
     material.setOwner(this)
     this.__materials[material.getName()] = material
   }
@@ -92,7 +99,7 @@ class MaterialLibrary extends EventEmitter {
    * @param {Boolean} assert - The assert value.
    * @return {any} - The return value.
    */
-  getMaterial(name, assert = true) {
+  getMaterial(name: string, assert = true) {
     const res = this.__materials[name]
     if (!res && assert) {
       throw new Error('Material:' + name + ' not found in library:' + this.getMaterialNames())
@@ -105,7 +112,7 @@ class MaterialLibrary extends EventEmitter {
    * @param {string} name - The material name.
    * @return {any} - The return value.
    */
-  hasImage(name) {
+  hasImage(name: string) {
     return name in this.__images
   }
 
@@ -113,7 +120,7 @@ class MaterialLibrary extends EventEmitter {
    * The addImage method.
    * @param {any} image - The image value.
    */
-  addImage(image) {
+  addImage(image: any) {
     image.setOwner(this)
     this.__images[image.getName()] = image
   }
@@ -124,7 +131,7 @@ class MaterialLibrary extends EventEmitter {
    * @param {boolean} assert - The assert value.
    * @return {any} - The return value.
    */
-  getImage(name, assert = true) {
+  getImage(name: string, assert = true) {
     const res = this.__images[name]
     if (!res && assert) {
       throw new Error('Image:' + name + ' not found in library:' + this.getImageNames())
@@ -152,7 +159,7 @@ class MaterialLibrary extends EventEmitter {
    * The load method.
    * @param {any} filePath - The file path.
    */
-  load(filePath) {
+  load(filePath: any) {
     const xhr = new XMLHttpRequest()
     xhr.open('GET', filePath, true)
     xhr.ontimeout = () => {
@@ -172,10 +179,10 @@ class MaterialLibrary extends EventEmitter {
 
   /**
    * The toJSON method encodes the current object as a json object.
-   * @param {object} context - The context value.
-   * @return {object} - Returns the json object.
+   * @param {Record<any,any>} context - The context value.
+   * @return {Record<any,any>} - Returns the json object.
    */
-  toJSON(context = {}) {
+  toJSON(context: Record<any, any> = {}) {
     return {
       numMaterials: this.getNumMaterials(),
     }
@@ -183,10 +190,10 @@ class MaterialLibrary extends EventEmitter {
 
   /**
    * The fromJSON method decodes a json object for this type.
-   * @param {object} j - The json object this item must decode.
-   * @param {object} context - The context value.
+   * @param {Record<any,any>} j - The json object this item must decode.
+   * @param {Record<any,any>} context - The context value.
    */
-  fromJSON(j, context = {}) {
+  fromJSON(j: Record<any, any>, context: Record<any, any> = {}) {
     context.lod = this.lod
     // eslint-disable-next-line guard-for-in
     for (const name in j.textures) {
@@ -204,10 +211,10 @@ class MaterialLibrary extends EventEmitter {
 
   /**
    * The readBinary method.
-   * @param {object} reader - The reader value.
-   * @param {object} context - The context value.
+   * @param {BinReader} reader - The reader value.
+   * @param {Record<any,any>} context - The context value.
    */
-  readBinary(reader, context = {}) {
+  readBinary(reader: BinReader, context: Record<any, any> = {}) {
     // if (context.version == undefined) context.version = 0
 
     this.name = reader.loadStr()
@@ -216,10 +223,10 @@ class MaterialLibrary extends EventEmitter {
     context.lod = this.lod
     context.materialLibrary = this
 
-    const numTextures = reader.loadUInt32()
+    const numTextures= reader.loadUInt32()
     for (let i = 0; i < numTextures; i++) {
       const type = reader.loadStr()
-      const texture = Registry.constructClass(type, undefined)
+      const texture = Registry.constructClass(type)
       texture.readBinary(reader, context)
       this.__images[texture.getName()] = texture
     }
@@ -229,7 +236,7 @@ class MaterialLibrary extends EventEmitter {
       for (let i = 0; i < numMaterials; i++) {
         const material = new Material('')
         reader.seek(toc[i]) // Reset the pointer to the start of the item data.
-        material.readBinary(reader, context, this.__images)
+        material.readBinary(reader, context) // (reader, context, this.__images)
         this.addMaterial(material)
       }
     }
