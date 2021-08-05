@@ -20,8 +20,14 @@ const GLGeomItemFlags = {
  * @extends EventEmitter
  */
 class GLGeomItem extends EventEmitter {
+  //referenced by other classes
+  material: any
+  GLGeomItemSet: any
+  geomItemParamChanged: any
+
+
   protected gl: WebGLContextAttributes
-  protected geomItem: GeomItem
+  geomItem: GeomItem
   protected drawItemId: number
   geomId: number
   materialId: number

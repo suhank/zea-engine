@@ -1,21 +1,34 @@
 /* eslint-disable guard-for-in */
 import { EventEmitter } from '../../Utilities/index'
-import { GeomItem, Points, Lines, Mesh, PointsProxy, LinesProxy, MeshProxy } from '../../SceneTree/index'
+import { GeomItem, Points, Lines, Mesh, PointsProxy, LinesProxy, MeshProxy, BaseGeom } from '../../SceneTree/index'
 import { GLLinesItemSet } from './GLLinesItemSet'
 import { GLPointsItemSet } from './GLPointsItemSet'
 import { GLMeshItemSet } from './GLMeshItemSet'
+import { GLPass } from '../Passes'
+import { GLGeomItem } from './GLGeomItem'
+import { Vec3 } from '../../Math/Vec3'
 
 /** Class representing GL shader materials.
  * @private
  */
 class GLShaderGeomSets extends EventEmitter {
+  protected pass: GLPass
+  protected gl: WebGL2RenderingContext
+  protected glShader: any
+  protected glGeomDataShader: any
+  protected glHighlightShader: any
+  protected glGeomItemSets: Record<any, any>
+
+  protected glShaderKey: string
+  protected glGeomDataShaderKey: string
+  protected glHighlightShaderKey: string
   /**
    * Create a GL shader material.
    * @param {GLPass} pass - The pass that owns this object.
    * @param {WebGL2RenderingContext} gl - The glShader value.
-   * @param {object} shaders - The shader value.
+   * @param {Record<any,any>} shaders - The shader value.
    */
-  constructor(pass, gl, shaders) {
+  constructor(pass: GLPass, gl: WebGL2RenderingContext, shaders: Record<any, any>) {
     super()
     this.pass = pass
     this.gl = gl
@@ -36,7 +49,7 @@ class GLShaderGeomSets extends EventEmitter {
    * @param {BaseGeom} geom - The geomitem value.
    * @return {GLGeomItemSet} - The return value.
    * */
-  getOrCreateGLGeomItemSet(geom) {
+  getOrCreateGLGeomItemSet(geom: BaseGeom) {
     let glGeomItemSet
     if (geom instanceof Mesh || geom instanceof MeshProxy) {
       if (this.glGeomItemSets['GLMesh']) return this.glGeomItemSets['GLMesh']
@@ -64,13 +77,13 @@ class GLShaderGeomSets extends EventEmitter {
    * The addGLGeomItem method.
    * @param {GLGeomItem} glGeomItem - The glGeomItem value.
    */
-  addGLGeomItem(glGeomItem) {
+  addGLGeomItem(glGeomItem: GLGeomItem) {
     const geomItem = glGeomItem.geomItem
     const geom = geomItem.getParameter('Geometry').getValue()
     const material = glGeomItem.geomItem.getParameter('Material').getValue()
     this.pass.renderer.glMaterialLibrary.addMaterial(material)
 
-    const geomItemParamChanged = (event) => {
+    const geomItemParamChanged = (event: Record<any, any>) => {
       this.pass.removeGeomItem(geomItem)
       this.pass.__renderer.assignTreeItemToGLPass(geomItem)
     }
@@ -89,7 +102,7 @@ class GLShaderGeomSets extends EventEmitter {
    *  Called by the GLPass to remove an item from this GLShaderGeomSets object.
    * @param {GLGeomItem} glGeomItem - The glGeomItem value.
    */
-  removeGLGeomItem(glGeomItem) {
+  removeGLGeomItem(glGeomItem: GLGeomItem) {
     const geomItem = glGeomItem.geomItem
     const material = glGeomItem.material
     const geomItemParamChanged = glGeomItem.geomItemParamChanged
@@ -106,14 +119,15 @@ class GLShaderGeomSets extends EventEmitter {
 
   /**
    * Binds one of its shaders for rendering, and also the other textures and values needed.
-   * @param {object} glShader - The shader to bind
-   * @param {object} renderstate - The render state for the current draw traversal
+   * @param {Record<any,any>} glShader - The shader to bind
+   * @param {Record<any,any>} renderstate - The render state for the current draw traversal
    * @param {string} key - The key to use to cache the shader binding.
    * @private
    */
-  bindShader(glShader, renderstate, key) {
+  bindShader(glShader: Record<any, any>, renderstate: Record<any, any>, key: string) {
+    const gl = <Record<any, any>>this.gl
     if (!glShader.isCompiledForTarget(key)) {
-      if (this.gl.multiDrawElements) {
+      if (gl.multiDrawElements) {
         renderstate.shaderopts.directives.push('#define ENABLE_MULTI_DRAW\n#extension GL_ANGLE_multi_draw : enable')
       } else {
         renderstate.shaderopts.directives.push('#define ENABLE_MULTI_DRAW')
@@ -133,9 +147,9 @@ class GLShaderGeomSets extends EventEmitter {
 
   /**
    * Draws all elements, binding the shader and continuing into the GLGLGeomSetGeomItemSets
-   * @param {object} renderstate - The render state for the current draw traversal
+   * @param {Record<any,any>} renderstate - The render state for the current draw traversal
    */
-  draw(renderstate) {
+  draw(renderstate: Record<any, any>) {
     this.bindShader(this.glShader, renderstate, this.glShaderKey)
 
     for (const elementType in this.glGeomItemSets) {
@@ -147,9 +161,9 @@ class GLShaderGeomSets extends EventEmitter {
 
   /**
    * The drawHighlightedGeoms method.
-   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    */
-  drawHighlightedGeoms(renderstate) {
+  drawHighlightedGeoms(renderstate: Record<any, any>) {
     if (!this.glHighlightShader) return
     this.bindShader(this.glHighlightShader, renderstate, this.glHighlightShaderKey)
 
@@ -161,9 +175,9 @@ class GLShaderGeomSets extends EventEmitter {
 
   /**
    * The drawGeomData method.
-   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    */
-  drawGeomData(renderstate) {
+  drawGeomData(renderstate: Record<any, any>) {
     this.bindShader(this.glGeomDataShader, renderstate, this.glGeomDataShaderKey)
 
     const gl = renderstate.gl
@@ -186,7 +200,7 @@ class GLShaderGeomSets extends EventEmitter {
    * Sorts the drawn items in order furthest to nearest when rendering transparent objects.
    * @param {Vec3} viewPos - The position of the camera that we are sorting relative to.
    */
-  sortItems(viewPos) {
+  sortItems(viewPos: Vec3) {
     // Note: sorting here will not sort geometries of different types.
     // this is a flawed solution that only sorts geomemtries of the same
     // time and same shader against each other. Given that this is the data 99% o

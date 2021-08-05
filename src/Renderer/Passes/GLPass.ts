@@ -13,12 +13,12 @@ const PassType = {
  * @extends ParameterOwner
  */
 class GLPass extends ParameterOwner {
-  protected renderer: GLBaseRenderer
+  renderer: GLBaseRenderer
   protected enabled: boolean
   protected passIndex: number
 
   protected __gl: WebGLRenderingContext | WebGL2RenderingContext
-  protected __renderer: GLBaseRenderer
+  __renderer: GLBaseRenderer
   protected __passIndex: number
   /**
    * Create a GL pass.
