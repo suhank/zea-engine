@@ -30,7 +30,7 @@ class GLBaseRenderer extends ParameterOwner {
   solidAngleLimit: number
   protected __div: any
 
-  protected __gl: Record<any, any>
+  __gl: WebGLRenderingContext
   protected __glcanvas: Record<any, any>
   protected __scene: any
   protected __gizmoContext: any
@@ -654,40 +654,40 @@ class GLBaseRenderer extends ParameterOwner {
 
     // Most applications of our engine will prefer the high-performance context by default.
     webglOptions.powerPreference = webglOptions.powerPreference || 'high-performance'
-
+    const gl = <Record<any,any>>this.__gl
     this.__gl = create3DContext(this.__glcanvas, webglOptions)
     if (!this.__gl) alert('Unable to create WebGL context. WebGL not supported.')
-    this.__gl.renderer = this
+    gl.renderer = this
 
-    if (this.__gl.name == 'webgl2') {
+    if (gl.name == 'webgl2') {
       this.addShaderPreprocessorDirective('ENABLE_ES3')
     }
-    if (this.__gl.floatTexturesSupported) {
+    if (gl.floatTexturesSupported) {
       this.addShaderPreprocessorDirective('ENABLE_FLOAT_TEXTURES')
     }
 
     {
-      const ext = this.__gl.name == 'webgl2' ? this.__gl.getExtension('WEBGL_multi_draw') : null
+      const ext = gl.name == 'webgl2' ? this.__gl.getExtension('WEBGL_multi_draw') : null
       if (ext && !webglOptions.disableMultiDraw) {
-        this.__gl.multiDrawArrays = ext.multiDrawArraysWEBGL.bind(ext)
-        this.__gl.multiDrawElements = ext.multiDrawElementsWEBGL.bind(ext)
-        this.__gl.multiDrawElementsInstanced = ext.multiDrawElementsInstancedWEBGL.bind(ext)
-        this.__gl.multiDrawArraysInstanced = ext.multiDrawArraysInstancedWEBGL.bind(ext)
+        gl.multiDrawArrays = ext.multiDrawArraysWEBGL.bind(ext)
+        gl.multiDrawElements = ext.multiDrawElementsWEBGL.bind(ext)
+        gl.multiDrawElementsInstanced = ext.multiDrawElementsInstancedWEBGL.bind(ext)
+        gl.multiDrawArraysInstanced = ext.multiDrawArraysInstancedWEBGL.bind(ext)
       } else {
         this.addShaderPreprocessorDirective('EMULATE_MULTI_DRAW')
       }
     }
 
-    this.__gl.screenQuad = new GLScreenQuad(<WebGLRenderingContext>this.__gl)
-    this.__screenQuad = this.__gl.screenQuad
+    gl.screenQuad = new GLScreenQuad(<WebGLRenderingContext>this.__gl)
+    this.__screenQuad = gl.screenQuad
 
     // Note: Mobile devices don't provide much support for reading data back from float textures,
     // and checking compatibility is patchy at best.
     // Note: We are now pushing on high-end mobile devices.
     // Galaxy and above. We need this. We need to accurately determine
     // if the float buffer is not supported.
-    this.__floatGeomBuffer = this.__gl.floatTexturesSupported && SystemDesc.browserName != 'Safari'
-    this.__gl.floatGeomBuffer = this.__floatGeomBuffer
+    this.__floatGeomBuffer = gl.floatTexturesSupported && SystemDesc.browserName != 'Safari'
+    gl.floatGeomBuffer = this.__floatGeomBuffer
     // Note: the following returns UNSIGNED_BYTE even if the browser supports float.
     // const implType = this.__gl.getParameter(this.__gl.IMPLEMENTATION_COLOR_READ_TYPE);
     // this.__floatGeomBuffer = (implType == this.__gl.FLOAT);

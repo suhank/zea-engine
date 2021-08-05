@@ -1,4 +1,6 @@
+import { Material } from '../../SceneTree/Material'
 import { EventEmitter } from '../../Utilities/index'
+import { GLShader } from '../GLShader'
 import { MaterialShaderBinding } from './MaterialShaderBinding'
 
 /** Class representing a GL material.
@@ -6,18 +8,22 @@ import { MaterialShaderBinding } from './MaterialShaderBinding'
  * @private
  */
 class GLMaterial extends EventEmitter {
+  protected __gl: WebGLRenderingContext
+  protected __material: Material
+  protected __glshader: GLShader
+  protected __shaderBindings: Record<any, any> = {}
+  protected __boundTexturesBeforeMaterial: any
   /**
    * Create a GL material.
    * @param {WebGLRenderingContext} gl - The webgl rendering context.
-   * @param {any} material - The material value.
-   * @param {any} glShader - The glShader value.
+   * @param {Material} material - The material value.
+   * @param {GLShader} glShader - The glShader value.
    */
-  constructor(gl, material, glShader) {
+  constructor(gl: WebGLRenderingContext, material: Material, glShader: GLShader) {
     super()
     this.__gl = gl
     this.__material = material
     this.__glshader = glShader
-
     this.__shaderBindings = {}
 
     material.on('parameterValueChanged', () => this.emit('updated'))
@@ -41,11 +47,11 @@ class GLMaterial extends EventEmitter {
 
   /**
    * The bind method.
-   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    * @param {any} warnMissingUnifs - The renderstate value.
    * @return {any} - The return value.
    */
-  bind(renderstate, warnMissingUnifs) {
+  bind(renderstate: Record<any, any>, warnMissingUnifs: any) {
     this.__boundTexturesBeforeMaterial = renderstate.boundTextures
 
     let shaderBinding = this.__shaderBindings[renderstate.shaderkey]
@@ -61,9 +67,9 @@ class GLMaterial extends EventEmitter {
 
   /**
    * The unbind method.
-   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    */
-  unbind(renderstate) {
+  unbind(renderstate: Record<any, any>) {
     // Enable texture units to be re-used by resetting the count back
     // to what it was.
     renderstate.boundTextures = this.__boundTexturesBeforeMaterial

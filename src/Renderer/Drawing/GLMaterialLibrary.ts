@@ -1,16 +1,29 @@
 ﻿import { GLTexture2D } from '../GLTexture2D'
 import { EventEmitter, MathFunctions, Allocator1D } from '../../Utilities/index'
 import { GLMaterial } from './GLMaterial'
+import { GLBaseRenderer } from '../GLBaseRenderer'
+import { Material } from '../../SceneTree'
 
 /** Class representing a GL CAD material library.
  * @ignore
  */
 class GLMaterialLibrary extends EventEmitter {
+  protected renderer: GLBaseRenderer
+  protected materials: any[] = []
+  protected materialIndices: Record<any, any> = {}
+  protected glMaterials: Record<any, any> = {}
+  protected freeIndices: any[] = []
+  protected dirtyIndices: Set<unknown> = new Set()
+  protected materialsAllocator = new Allocator1D()
+  protected materialsTexture: any
+
+  protected dirtyItemIndices: any
+  protected glGeomItemsTexture: any
   /**
    * Create a GL CAD material library.
    * @param {GLBaseRenderer} renderer - The renderer object
    */
-  constructor(renderer) {
+  constructor(renderer: GLBaseRenderer) {
     super()
     this.renderer = renderer
     this.materials = []
@@ -33,7 +46,7 @@ class GLMaterialLibrary extends EventEmitter {
    * @param {Material} material - The material object.
    * @return {number} - The index of GLMaterial
    */
-  addMaterial(material) {
+  addMaterial(material: Material) {
     let index = this.materialIndices[material.getId()]
     if (index != undefined) {
       // TODO: Track ref counts. Increment the ref count for the GLGeom
@@ -76,7 +89,7 @@ class GLMaterialLibrary extends EventEmitter {
    * @param {Material} material - The material value.
    * @return {GLMaterial} - The constructed GLMaterial.
    */
-  getGLMaterial(material) {
+  getGLMaterial(material: Material) {
     if (this.glMaterials[material.getId()]) {
       return this.glMaterials[material.getId()]
     }
@@ -94,7 +107,7 @@ class GLMaterialLibrary extends EventEmitter {
     return glMaterial
   }
 
-  getMaterialAllocation(material) {
+  getMaterialAllocation(material: Material) {
     const index = this.materialIndices[material.getId()]
     if (index != undefined) {
       return this.materialsAllocator.getAllocation(index)
@@ -105,7 +118,7 @@ class GLMaterialLibrary extends EventEmitter {
    * The removeMaterial method.
    * @param {Material} material - The material object.
    */
-  removeMaterial(material) {
+  removeMaterial(material: Material) {
     // if (!material.getMetadata('glmaterialcoords')) {
     //   throw new Error('Material not managed by this GLMaterialLibrary')
     // }
@@ -123,17 +136,17 @@ class GLMaterialLibrary extends EventEmitter {
 
   /**
    * The uploadMaterials method.
-   * @param {object} renderstate - The render state for the current draw traversal
+   * @param {Record<any,any>} renderstate - The render state for the current draw traversal
    */
-  uploadMaterials(renderstate) {
-    const gl = this.renderer.gl
+  uploadMaterials(renderstate: Record<any, any>) {
+    const gl = <Record<any, any>>this.renderer.__gl
 
     const materialsTextureSize = MathFunctions.nextPow2(Math.ceil(Math.sqrt(this.materialsAllocator.reservedSpace)))
     const unit = renderstate.boundTextures++
     gl.activeTexture(gl.TEXTURE0 + unit)
 
     if (!this.materialsTexture) {
-      this.materialsTexture = new GLTexture2D(gl, {
+      this.materialsTexture = new GLTexture2D(this.renderer.__gl, {
         format: 'RGBA',
         type: 'FLOAT',
         width: materialsTextureSize,
@@ -192,9 +205,9 @@ class GLMaterialLibrary extends EventEmitter {
 
   /**
    * Updates the GPU state if any update is needed.
-   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    */
-  update(renderstate) {
+  update(renderstate: Record<any, any>) {
     if (this.dirtyItemIndices.length > 0) this.uploadGeomItems(renderstate)
     renderstate.drawItemsTexture = this.glGeomItemsTexture
   }
@@ -204,7 +217,7 @@ class GLMaterialLibrary extends EventEmitter {
    * @param {any} renderstate - The renderstate param.
    * @return {any} - The return value.
    */
-  bind(renderstate) {
+  bind(renderstate: any) {
     if (this.dirtyIndices.size > 0) {
       this.uploadMaterials(renderstate)
     }
