@@ -22,14 +22,14 @@ class FatLinesShader extends GLShader {
     this.setShaderStage('FRAGMENT_SHADER', frag)
   }
 
-  bind(renderstate) {
-    if (super.bind(renderstate)) {
+  bind(renderstate, key) {
+    if (super.bind(renderstate, key)) {
       renderstate.supportsInstancing = false
       return true
     }
     return false
   }
-
+  
   static getParamDeclarations() {
     const paramDescs = super.getParamDeclarations()
     paramDescs.push({
