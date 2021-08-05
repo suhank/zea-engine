@@ -153,10 +153,10 @@ function getGPUDesc() {
   }
 }
 
-const SystemDesc = (function () {
+const SystemDesc: any = (function () {
   // Note: globalThis causes errors on Safari.
   if (!window.navigator) {
-    return {
+    return <Record<any, any>>{
       isMobileDevice: false,
       isIOSDevice: false,
       browserName: 'Node',
