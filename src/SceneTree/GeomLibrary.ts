@@ -20,15 +20,15 @@ if (!numCores) {
 }
 numCores-- // always leave one main thread code spare.
 let workerId = 0
-const workers = []
-const listeners = []
+const workers: any[] = []
+const listeners: any[] = []
 
-const getWorker = (geomLibraryId, fn) => {
+const getWorker = (geomLibraryId: any, fn: any) => {
   const __workerId = workerId
   if (!workers[__workerId]) {
     listeners[__workerId] = {}
     const worker = new GeomParserWorker()
-    worker.onmessage = (event) => {
+    worker.onmessage = (event: Record<any, any>) => {
       const data = event.data
       listeners[__workerId][data.geomLibraryId](data)
     }
@@ -48,6 +48,15 @@ const getWorker = (geomLibraryId, fn) => {
 /** Class representing a geometry library.
  */
 class GeomLibrary extends EventEmitter {
+  protected __streamInfos: Record<any, any>
+  protected __genBuffersOpts: Record<any, any>
+  protected loadCount: number
+  protected queue: any
+  protected loadContext: any
+  protected __numGeoms: number
+  protected geoms: any[]
+  protected basePath: string
+  protected __loadedCount: number
   /**
    * Create a geom library.
    */
@@ -107,15 +116,15 @@ class GeomLibrary extends EventEmitter {
    * @param {boolean} incrementProgress - If true, the progress bar is incremented and decremented.
    * @return {Promise} the promise resolves once the file is loaded, but not parsed.
    */
-  loadGeomFile(geomFileID, incrementProgress = false) {
+  loadGeomFile(geomFileID: number, incrementProgress = false) {
     if (incrementProgress) resourceLoader.incrementWorkload(1)
     return new Promise((resolve) => {
       const geomFileUrl = this.basePath + geomFileID + '.zgeoms'
 
-      resourceLoader.loadFile('archive', geomFileUrl).then((entries) => {
+      resourceLoader.loadFile('archive', geomFileUrl).then((entries: any) => {
         const geomsData = entries[Object.keys(entries)[0]]
 
-        const streamFileParsed = (event) => {
+        const streamFileParsed = (event: any) => {
           if (event.geomFileID == geomFileID) {
             resourceLoader.incrementWorkDone(1)
             this.off('streamFileParsed', streamFileParsed)
@@ -139,11 +148,11 @@ class GeomLibrary extends EventEmitter {
 
   /**
    * Loads the geometry files for this GeomLibrary.
-   * @param {number} geomLibraryJSON - The json data describing the data needed to be loaded by the geom library
+   * @param {Record<any,any>} geomLibraryJSON - The json data describing the data needed to be loaded by the geom library
    * @param {string} basePath - The base path of the file. (this is theURL of the zcad file without its extension.)
-   * @param {object} context - The value param.
+   * @param {Record<any,any>} context - The value param.
    */
-  loadGeomFilesStream(geomLibraryJSON, basePath, context) {
+  loadGeomFilesStream(geomLibraryJSON: Record<any, any>, basePath: string, context: Record<any, any>) {
     const numGeomFiles = geomLibraryJSON.numGeomsPerFile.length
     resourceLoader.incrementWorkload(numGeomFiles)
 
@@ -161,7 +170,7 @@ class GeomLibrary extends EventEmitter {
    * @param {string} key - The key value.
    * @param {any} value - The value param.
    */
-  setGenBufferOption(key, value) {
+  setGenBufferOption(key: string, value: any) {
     this.__genBuffersOpts[key] = value
   }
 
@@ -169,7 +178,7 @@ class GeomLibrary extends EventEmitter {
    * The setNumGeoms method.
    * @param {any} expectedNumGeoms - The expectedNumGeoms value.
    */
-  setNumGeoms(expectedNumGeoms) {
+  setNumGeoms(expectedNumGeoms: any) {
     this.__numGeoms = expectedNumGeoms
   }
 
@@ -186,7 +195,7 @@ class GeomLibrary extends EventEmitter {
    * @param {number} index - The index value.
    * @return {BaseGeom} - The stored geometry
    */
-  getGeom(index) {
+  getGeom(index: number) {
     if (index >= this.geoms.length) {
       // console.warn("Geom index invalid:" + index);
       return null
@@ -198,8 +207,8 @@ class GeomLibrary extends EventEmitter {
    * The loadArchive method.
    * @param {any} fileUrl - The fileUrl value.
    */
-  loadArchive(fileUrl) {
-    resourceLoader.loadArchive(fileUrl).then((entries) => {
+  loadArchive(fileUrl: any) {
+    resourceLoader.loadArchive(fileUrl).then((entries: any) => {
       this.loadBin(entries)
     })
   }
@@ -207,11 +216,11 @@ class GeomLibrary extends EventEmitter {
   /**
    * The readBinaryBuffer method.
    * @param {number} geomFileID - The key value.
-   * @param {ArrayBuffer} buffer - The buffer value.
-   * @param {object} context - The context value.
+   * @param {Buffer} buffer - The buffer value.
+   * @param {Record<any,any>} context - The context value.
    * @return {any} - The return value.
    */
-  readBinaryBuffer(geomFileID, buffer, context) {
+  readBinaryBuffer(geomFileID: number, buffer: Buffer, context: Record<any, any>) {
     const reader = new BinReader(buffer, 0, isMobile)
     const numGeoms = reader.loadUInt32()
 
@@ -319,7 +328,7 @@ class GeomLibrary extends EventEmitter {
           genBuffersOpts: this.__genBuffersOpts,
           context,
         },
-        (data) => {
+        (data: any) => {
           this.__receiveGeomDatas(data)
         }
       )
@@ -331,7 +340,7 @@ class GeomLibrary extends EventEmitter {
    * @param {any} data - The data received back from the web worker
    * @private
    */
-  __receiveGeomDatas(data) {
+  __receiveGeomDatas(data: any) {
     const { geomLibraryId, geomFileID, geomDatas, geomIndexOffset, geomsRange } = data
     if (geomLibraryId != this.getId()) throw new Error('Receiving workload for a different GeomLibrary')
     // We are storing a subset of the geoms from a binary file
@@ -396,7 +405,7 @@ class GeomLibrary extends EventEmitter {
    */
   toJSON() {
     return {
-      numGeoms: this.geoms.length(),
+      numGeoms: this.geoms.length,
     }
   }
 

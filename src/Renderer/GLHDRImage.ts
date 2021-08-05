@@ -94,7 +94,7 @@ class GLHDRImage extends GLTexture2D {
 
       this.__unpackHDRShader = new UnpackHDRShader(this.__gl)
       const shaderComp = this.__unpackHDRShader.compileForTarget('GLHDRImage')
-      this.__shaderBinding = generateShaderGeomBinding(gl, shaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer)
+      this.__shaderBinding = generateShaderGeomBinding(this.__gl, shaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer)
     } else {
       this.__srcLDRTex.bufferData(ldr)
       this.__srcCDMTex.bufferData(cdm)
@@ -161,7 +161,7 @@ class GLHDRImage extends GLTexture2D {
     if (this.__unpackHDRShader) this.__unpackHDRShader.destroy()
     if (this.__shaderBinding) this.__shaderBinding.destroy()
 
-    this.__hdrImage.loaded.disconnectScope(this) // TODO: these functions don't exist
+    this.__hdrImage.loaded.disconnectScope(this) // TODO: works because of 'any' these functions don't exist
     this.__hdrImage.updated.disconnectScope(this)
   }
 }

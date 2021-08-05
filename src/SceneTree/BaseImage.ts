@@ -24,7 +24,8 @@ class BaseImage extends BaseItem {
   protected wrapT: string
   protected minFilter: string
   protected magFilter: string
-  protected loaded: boolean
+  loaded: any
+  updated: any
   /**
    * Creates an instance of BaseImage.
    * @param {string} name - name of the item
