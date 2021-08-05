@@ -4,8 +4,30 @@
   import 'cutaways.glsl'
   import 'gamma.glsl'
   import 'materialparams.glsl'
+  import 'GLSLBits.glsl'
+
+  #ifdef ENABLE_FLOAT_TEXTURES
+    vec4 getCutaway(int id) {
+      return fetchTexel(instancesTexture, instancesTextureSize, (id * pixelsPerItem) + 5);
+    }
+
+  #else
+
+    uniform vec4 cutawayData;
+
+    vec4 getCutaway(int id) {
+      return cutawayData;
+    }
+
+  #endif
+
+  #ifdef ENABLE_ES3
+    out vec4 fragColor;
+  #endif
 
 #if defined(DRAW_COLOR)
+
+
 
   #ifdef ENABLE_MULTI_DRAW
   // #define DEBUG_GEOM_ID
@@ -28,57 +50,44 @@
 
   uniform color cutColor;
 
-  #ifdef ENABLE_FLOAT_TEXTURES
-  vec4 getCutaway(int id) {
-    return fetchTexel(instancesTexture, instancesTextureSize, (id * pixelsPerItem) + 5);
-  }
 
-  #else
-
-  uniform vec4 cutawayData;
-
-  vec4 getCutaway(int id) {
-    return cutawayData;
-  }
-
-  #endif
 
   #ifdef ENABLE_INLINE_GAMMACORRECTION
-  uniform float exposure;
+    uniform float exposure;
   #endif
 
-  uniform mat4 cameraMatrix;
-  uniform int isOrthographic;
+    uniform mat4 cameraMatrix;
+    uniform int isOrthographic;
 
   #ifndef ENABLE_MULTI_DRAW
 
-  uniform color BaseColor;
-  uniform float AmbientOcclusion;
-  uniform float Roughness;
-  uniform float Metallic;
-  uniform float Reflectance;
-  uniform float EmissiveStrength;
-  uniform float Opacity;
+    uniform color BaseColor;
+    uniform float AmbientOcclusion;
+    uniform float Roughness;
+    uniform float Metallic;
+    uniform float Reflectance;
+    uniform float EmissiveStrength;
+    uniform float Opacity;
 
   #ifdef ENABLE_TEXTURES
-  uniform sampler2D BaseColorTex;
-  uniform int BaseColorTexType;
+    uniform sampler2D BaseColorTex;
+    uniform int BaseColorTexType;
 
-  uniform sampler2D AmbientOcclusionTex;
-  uniform int AmbientOcclusionTexType;
+    uniform sampler2D AmbientOcclusionTex;
+    uniform int AmbientOcclusionTexType;
 
   #ifdef ENABLE_PBR
-  uniform sampler2D RoughnessTex;
-  uniform int RoughnessTexType;
+    uniform sampler2D RoughnessTex;
+    uniform int RoughnessTexType;
 
-  uniform sampler2D MetallicTex;
-  uniform int MetallicTexType;
+    uniform sampler2D MetallicTex;
+    uniform int MetallicTexType;
 
-  uniform sampler2D ReflectanceTex;
-  uniform int ReflectanceTexType;
+    uniform sampler2D ReflectanceTex;
+    uniform int ReflectanceTexType;
 
-  uniform sampler2D NormalTex;
-  uniform int NormalTexType;
+    uniform sampler2D NormalTex;
+    uniform int NormalTexType;
   #endif // ENABLE_PBR
 
   uniform sampler2D EmissiveStrengthTex;
@@ -90,62 +99,35 @@
   import 'PBRSurfaceRadiance.glsl'
 
   #ifdef ENABLE_PBR
-  mat3 cotangentFrame( in vec3 normal, in vec3 pos, in vec2 texCoord ) {
-    // https://stackoverflow.com/questions/5255806/how-to-calculate-tangent-and-binormal
-    vec3 n = normal;
-    // derivations of the fragment position
-    vec3 pos_dx = dFdx( pos );
-    vec3 pos_dy = dFdy( pos );
-    // derivations of the texture coordinate
-    vec2 texC_dx = dFdx( texCoord );
-    vec2 texC_dy = dFdy( texCoord );
-    // tangent vector and binormal vector
-    vec3 t = -(texC_dy.y * pos_dx - texC_dx.y * pos_dy);
-    vec3 b = -(texC_dx.x * pos_dy - texC_dy.x * pos_dx);
+    mat3 cotangentFrame( in vec3 normal, in vec3 pos, in vec2 texCoord ) {
+      // https://stackoverflow.com/questions/5255806/how-to-calculate-tangent-and-binormal
+      vec3 n = normal;
+      // derivations of the fragment position
+      vec3 pos_dx = dFdx( pos );
+      vec3 pos_dy = dFdy( pos );
+      // derivations of the texture coordinate
+      vec2 texC_dx = dFdx( texCoord );
+      vec2 texC_dy = dFdy( texCoord );
+      // tangent vector and binormal vector
+      vec3 t = -(texC_dy.y * pos_dx - texC_dx.y * pos_dy);
+      vec3 b = -(texC_dx.x * pos_dy - texC_dy.x * pos_dx);
 
-    t = t - n * dot( t, n ); // orthonormalization ot the tangent vectors
-    b = b - n * dot( b, n ); // orthonormalization of the binormal vectors to the normal vector
-    b = b - t * dot( b, t ); // orthonormalization of the binormal vectors to the tangent vector
-    mat3 tbn = mat3( normalize(t), normalize(b), n );
+      t = t - n * dot( t, n ); // orthonormalization ot the tangent vectors
+      b = b - n * dot( b, n ); // orthonormalization of the binormal vectors to the normal vector
+      b = b - t * dot( b, t ); // orthonormalization of the binormal vectors to the tangent vector
+      mat3 tbn = mat3( normalize(t), normalize(b), n );
 
-    return tbn;
-  }
+      return tbn;
+    }
   #endif
 
   import 'computeViewNormal.glsl'
 
 
-  #ifdef ENABLE_ES3
-  out vec4 fragColor;
-  #endif
-
 #elif defined(DRAW_GEOMDATA)
-  precision highp float;
-
-  import 'GLSLUtils.glsl'
-  import 'drawItemTexture.glsl'
-
-  import 'cutaways.glsl'
-  import 'GLSLBits.glsl'
-
   uniform int floatGeomBuffer;
   uniform int passId;
   uniform int isOrthographic;
-
-  #ifdef ENABLE_FLOAT_TEXTURES
-  vec4 getCutaway(int id) {
-    return fetchTexel(instancesTexture, instancesTextureSize, (id * pixelsPerItem) + 5);
-  }
-
-  #else
-
-  uniform vec4 cutawayData;
-
-  vec4 getCutaway(int id) {
-    return cutawayData;
-  }
-
-  #endif
 
   varying float v_drawItemId;
   varying vec4 v_geomItemData;
@@ -153,36 +135,28 @@
   varying vec3 v_worldPos;
 
 
-  #ifdef ENABLE_ES3
-    out vec4 fragColor;
-  #endif
-#elif defined(DRAW_HIGHLIGHT)
- precision highp float;
 
+#elif defined(DRAW_HIGHLIGHT)
   varying float v_drawItemId;
 
+  import 'surfaceHighlight.glsl'
+  // #ifdef ENABLE_FLOAT_TEXTURES
+  // vec4 getHighlightColor(int id) {
+  //   return fetchTexel(instancesTexture, instancesTextureSize, (id * pixelsPerItem) + 4);
+  // }
+  // #else
 
-  import 'GLSLUtils.glsl'
-  import 'drawItemTexture.glsl'
+  // uniform vec4 highlightColor;
 
-  #ifdef ENABLE_FLOAT_TEXTURES
-  vec4 getHighlightColor(int id) {
-    return fetchTexel(instancesTexture, instancesTextureSize, (id * pixelsPerItem) + 4);
-  }
-  #else
+  // vec4 getHighlightColor(int id) {
+  //   return highlightColor;
+  // }
 
-  uniform vec4 highlightColor;
+  // #endif
 
-  vec4 getHighlightColor(int id) {
-    return highlightColor;
-  }
 
-  #endif
-
-  #ifdef ENABLE_ES3
-    out vec4 fragColor;
-  #endif
 #endif // DRAW_HIGHLIGHT
+
 
 void main(void) {
 
