@@ -1,10 +1,11 @@
-import { Color, Xfo, Vec3 } from '../Math/index'
+import { Color, Xfo, Vec3, Box3 } from '../Math/index'
 import { TreeItem } from './TreeItem'
 import { Material } from './Material'
 import { GeomItem } from './GeomItem'
 import { Grid } from './Geometry/Shapes/Grid'
 import { Lines } from './Geometry/Lines'
 import { Registry } from '../Registry'
+import { Vec3Attribute } from './Geometry/Vec3Attribute'
 
 /**
  * The GridTreeItem displays a grid of a given size and resolution. The Grid is oriented on the XY plane
@@ -14,6 +15,7 @@ import { Registry } from '../Registry'
  * @extends {TreeItem}
  */
 class GridTreeItem extends TreeItem {
+  disableBoundingBox
   /**
    * Creates an instance of GridTree.
    *
@@ -41,7 +43,7 @@ class GridTreeItem extends TreeItem {
     axisLine.setNumVertices(2)
     axisLine.setNumSegments(1)
     axisLine.setSegmentVertexIndices(0, 0, 1)
-    const positions = axisLine.getVertexAttribute('positions')
+    const positions = <Vec3Attribute>axisLine.getVertexAttribute('positions')
     positions.getValueRef(0).set(gridSize * -0.5, 0.0, 0.0)
     positions.getValueRef(1).set(gridSize * 0.5, 0.0, 0.0)
 
@@ -79,7 +81,7 @@ class GridTreeItem extends TreeItem {
    * @param {Box3} bBox
    * @return {Box3} - Reset Bounding Box
    */
-  _cleanBoundingBox(bBox) {
+  _cleanBoundingBox(bBox: Box3) {
     bBox.reset()
     return bBox
   }

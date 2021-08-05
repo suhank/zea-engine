@@ -3,6 +3,7 @@
 import { Xfo } from '../Math/index'
 import { TreeItem } from './TreeItem'
 import { Registry } from '../Registry'
+import { BinReader } from './BinReader'
 
 /**
  * TreeItem type of class designed for making duplications of parts of the tree.
@@ -10,11 +11,12 @@ import { Registry } from '../Registry'
  * @extends {TreeItem}
  */
 class InstanceItem extends TreeItem {
+  protected __srcTree: TreeItem
   /**
    * Create an instance item.
    * @param {string} name - The name of the instance item.
    */
-  constructor(name) {
+  constructor(name: string) {
     super(name)
   }
 
@@ -23,7 +25,7 @@ class InstanceItem extends TreeItem {
    *
    * @param {TreeItem} treeItem - The treeItem value.
    */
-  setSrcTree(treeItem, context) {
+  setSrcTree(treeItem: TreeItem, context: Record<any, any>) {
     this.__srcTree = treeItem
 
     const numChildren = this.__srcTree.getNumChildren()
@@ -33,7 +35,7 @@ class InstanceItem extends TreeItem {
       this.addChild(clonedTree, false)
     } else {
       const children = this.__srcTree.getChildren()
-      children.forEach((child) => {
+      children.forEach((child: any) => {
         const clonedChild = child.clone(context)
         this.addChild(clonedChild, false)
       })
@@ -56,16 +58,16 @@ class InstanceItem extends TreeItem {
    * Sets state of current Item(Including cloned item) using a binary reader object.
    *
    * @param {BinReader} reader - The reader value.
-   * @param {object} context - The context value.
+   * @param {Record<any,any>} context - The context value.
    */
-  readBinary(reader, context = {}) {
+  readBinary(reader: BinReader, context: Record<any, any> = {}) {
     super.readBinary(reader, context)
 
     // console.log("numTreeItems:", context.numTreeItems, " numGeomItems:", context.numGeomItems)
     const path = reader.loadStrArray()
     // console.log("InstanceItem of:", path)
     try {
-      context.resolvePath(path, (treeItem) => {
+      context.resolvePath(path, (treeItem: TreeItem) => {
         this.setSrcTree(treeItem, context)
       })
     } catch (e) {
@@ -92,7 +94,7 @@ class InstanceItem extends TreeItem {
    * @param {object} context - The context value.
    * @param {function} onDone - The onDone value.
    */
-  fromJSON(j, context = {}, onDone) {}
+  fromJSON(j: Record<any, any>, context: Record<any, any> = {}, onDone: any) {}
 }
 
 Registry.register('InstanceItem', InstanceItem)

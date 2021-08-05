@@ -10,6 +10,9 @@ let counter = 0
  * @private
  */
 class RefCounted extends EventEmitter {
+  __id: any
+  protected __refs: any[]
+  protected __destroyed: boolean
   /**
    * Create a ref counted object.
    */
@@ -45,7 +48,7 @@ class RefCounted extends EventEmitter {
    * @param {any} referer - The referer value.
    * @return {boolean} - The return value.
    */
-  addRef(referer) {
+  addRef(referer: any) {
     if (!referer) throw new Error('Error in RefCounted.addRef: Must provide a referer')
 
     // Note: an object can be reffeed multiple times.
@@ -58,7 +61,7 @@ class RefCounted extends EventEmitter {
    * The removeRef method.
    * @param {any} referer - The referer value.
    */
-  removeRef(referer) {
+  removeRef(referer: any) {
     if (!referer) throw new Error('Error in RefCounted.removeRef: Must provide a referer')
     const index = this.__refs.indexOf(referer)
     if (index == -1) throw new Error('Error in RefCounted.removeRef: referer not found in refs list.')
@@ -74,7 +77,7 @@ class RefCounted extends EventEmitter {
    * @param {number} index - The index value.
    * @return {any} - The return value.
    */
-  getRefer(index) {
+  getRefer(index: number) {
     return this.__refs[index]
   }
 
@@ -83,7 +86,7 @@ class RefCounted extends EventEmitter {
    * @param {any} referer - The referer value.
    * @return {any} - The return value.
    */
-  getRefIndex(referer) {
+  getRefIndex(referer: any) {
     return this.__refs.indexOf(referer)
   }
 

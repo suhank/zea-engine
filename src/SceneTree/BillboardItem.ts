@@ -2,6 +2,7 @@ import { Color, Vec2 } from '../Math/index'
 import { BooleanParameter, NumberParameter, ColorParameter, ImageParameter, Vec2Parameter } from './Parameters/index'
 import { TreeItem } from './TreeItem'
 import { Registry } from '../Registry'
+import { BaseImage } from './BaseImage'
 
 /**
  * A special type of TreeItem(Item with hierarchical abilities) class that represents a banner in a 2D dimension.

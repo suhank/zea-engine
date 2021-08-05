@@ -2,6 +2,10 @@
  * Class designed to store version data. Widely used in the zea engine for backwards compatibility.
  */
 class Version {
+  protected major: number
+  protected minor: number
+  protected patch: number
+  protected branch: string
   /**
    * Creates a version.
    * The version string should have the following structure: <br>
@@ -9,7 +13,7 @@ class Version {
    *
    * @param {str} versionStr - The version string value.
    */
-  constructor(versionStr) {
+  constructor(versionStr: string = '') {
     if (versionStr) {
       const parts = versionStr.split('-')
       const numbers = parts[0].split('.')
@@ -27,10 +31,10 @@ class Version {
   /**
    * Compare a version object against a version numbers array.
    *
-   * @param {array} numbers - An array containing 3 version numbers. [Major, Minor, Patch]
+   * @param {number[]} numbers - An array containing 3 version numbers. [Major, Minor, Patch]
    * @return {number} - return positive: v1 > v2, zero:v1 == v2, negative: v1 < v2
    */
-  compare(numbers) {
+  compare(numbers: any[]) {
     // https://stackoverflow.com/questions/6832596/how-to-compare-software-version-number-using-js-only-number
     // 2nd answer.
     const v1 = [this.major, this.minor, this.patch]
@@ -44,10 +48,10 @@ class Version {
    * Compare a version object against a version numbers array.
    *
    * @deprecated
-   * @param {array} numbers - The numbers value.
+   * @param {number[]} numbers - The numbers value.
    * @return {boolean} - The return value.
    */
-  equals(numbers) {
+  equals(numbers: number[]) {
     console.log(`Version#equals method is deprecated, use 'compare' instead `)
     return !(this.patch == numbers[2] && this.minor == numbers[1] && this.major == numbers[0])
   }
@@ -56,10 +60,10 @@ class Version {
    * Compare a version object against a version numbers array.
    *
    * @deprecated
-   * @param {array} numbers - The numbers value.
+   * @param {number[]} numbers - The numbers value.
    * @return {boolean} - The return value.
    */
-  lessThan(numbers) {
+  lessThan(numbers: number[]) {
     console.log(`Version#lessThan method is deprecated, use 'compare' instead `)
     return !(this.major >= numbers[0] || this.minor >= numbers[1] || this.patch >= numbers[2])
     // if (this.major >= numbers[0]) return false
@@ -77,10 +81,10 @@ class Version {
    * Compare a version object against a version numbers array.
    *
    * @deprecated
-   * @param {array} numbers - The numbers value.
+   * @param {number[]} numbers - The numbers value.
    * @return {boolean} - The return value.
    */
-  greaterThan(numbers) {
+  greaterThan(numbers: number[]) {
     console.log(`Version#greaterThan method is deprecated, use 'compare' instead `)
     return this.major > numbers[0] || this.minor > numbers[1] || this.patch > numbers[2]
   }
@@ -88,10 +92,10 @@ class Version {
   /**
    * Compare a version object against a version numbers array.
    *
-   * @param {array} numbers - The numbers value.
+   * @param {number[]} numbers - The numbers value.
    * @return {boolean} - The return value.
    */
-  greaterOrEqualThan(numbers) {
+  greaterOrEqualThan(numbers: number[]) {
     console.log(`Version#greaterOrEqualThan method is deprecated, use 'compare' instead `)
     if (this.major < numbers[0]) return false
     if (this.major > numbers[0]) return true

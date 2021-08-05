@@ -19,8 +19,8 @@ class AssetLoadContext extends EventEmitter {
   protected assets: Record<any, any>
   protected resources: Record<any, any>
   versions: Record<any, any>
-  protected url: string
-  protected folder: string
+  url: string
+  folder: string
   protected sdk: string
   assetItem: any
   numTreeItems: number
