@@ -25,9 +25,11 @@
     out vec4 fragColor;
   #endif
 
+  /* VS Outputs */
+  varying float v_drawItemId;
+  /* VS Outputs */
+
 #if defined(DRAW_COLOR)
-
-
 
   #ifdef ENABLE_MULTI_DRAW
   // #define DEBUG_GEOM_ID
@@ -37,7 +39,6 @@
   #endif
 
   /* VS Outputs */
-  varying float v_drawItemId;
   varying vec4 v_geomItemData;
   varying vec3 v_viewPos;
   varying vec3 v_viewNormal;
@@ -47,10 +48,7 @@
   varying vec3 v_worldPos;
   /* VS Outputs */
 
-
   uniform color cutColor;
-
-
 
   #ifdef ENABLE_INLINE_GAMMACORRECTION
     uniform float exposure;
@@ -125,41 +123,21 @@
 
 
 #elif defined(DRAW_GEOMDATA)
-  uniform int floatGeomBuffer;
-  uniform int passId;
   uniform int isOrthographic;
-
-  varying float v_drawItemId;
   varying vec4 v_geomItemData;
   varying vec3 v_viewPos;
   varying vec3 v_worldPos;
-
-
-
+  import 'surfaceGeomData.glsl'
 #elif defined(DRAW_HIGHLIGHT)
-  varying float v_drawItemId;
-
   import 'surfaceHighlight.glsl'
-  // #ifdef ENABLE_FLOAT_TEXTURES
-  // vec4 getHighlightColor(int id) {
-  //   return fetchTexel(instancesTexture, instancesTextureSize, (id * pixelsPerItem) + 4);
-  // }
-  // #else
-
-  // uniform vec4 highlightColor;
-
-  // vec4 getHighlightColor(int id) {
-  //   return highlightColor;
-  // }
-
-  // #endif
-
-
 #endif // DRAW_HIGHLIGHT
 
 
 void main(void) {
-
+  #ifndef ENABLE_ES3
+    vec4 fragColor;
+  #endif
+  
 #if defined(DRAW_COLOR)
     int drawItemId = int(v_drawItemId + 0.5);
 
@@ -295,20 +273,14 @@ void main(void) {
     // ///////////////////////
   #endif
 
-
   #ifdef ENABLE_INLINE_GAMMACORRECTION
     fragColor.rgb = toGamma(fragColor.rgb * exposure);
   #endif
 
-  #ifndef ENABLE_ES3
-    gl_FragColor = fragColor;
-  #endif
 #elif defined(DRAW_GEOMDATA)
   int drawItemId = int(v_drawItemId + 0.5);
 
-  #ifndef ENABLE_ES3
-    vec4 fragColor;
-  #endif
+
 
     int flags = int(v_geomItemData.r + 0.5);
     // Cutaways
@@ -326,49 +298,16 @@ void main(void) {
       return;
     }
     
-    float dist;
-    if (isOrthographic > 0) {
-      dist = v_viewPos.z;
-    } else {
-      dist = length(v_viewPos);
-    }
-
-    if (floatGeomBuffer != 0) {
-      fragColor.r = float(passId);
-      fragColor.g = float(drawItemId) - 0.1;
-      fragColor.b = 0.0;// TODO: store poly-id or something.
-      fragColor.a = dist;
-    }
-    else {
-      ///////////////////////////////////
-      // UInt8 buffer
-      fragColor.r = mod(v_drawItemId, 256.) / 256.;
-      fragColor.g = (floor(v_drawItemId / 256.) + (float(passId) * 64.)) / 256.;
-
-
-      // encode the dist as a 16 bit float
-      vec2 float16bits = encode16BitFloatInto2xUInt8(dist);
-      fragColor.b = float16bits.x;
-      fragColor.a = float16bits.y;
-    }
-
-
-  #ifndef ENABLE_ES3
-    gl_FragColor = fragColor;
-  #endif
+    fragColor = setFragColor_geomData(v_viewPos, floatGeomBuffer, passId,v_drawItemId, isOrthographic);
+   
 #elif defined(DRAW_HIGHLIGHT)
-  #ifndef ENABLE_ES3
-    vec4 fragColor;
-  #endif
     int drawItemId = int(v_drawItemId + 0.5);
     fragColor = getHighlightColor(drawItemId);
+#endif // DRAW_HIGHLIGHT
 
   #ifndef ENABLE_ES3
     gl_FragColor = fragColor;
   #endif
-#endif // DRAW_HIGHLIGHT
-
-
 
 
 }
