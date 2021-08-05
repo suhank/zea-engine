@@ -4,6 +4,7 @@ import { BaseImage } from '../BaseImage'
 import { resourceLoader } from '../resourceLoader'
 
 import { FilePathParameter } from '../Parameters/FilePathParameter'
+import { BinReader } from '../BinReader'
 
 const imageDataLibrary = {}
 
@@ -11,15 +12,19 @@ const imageDataLibrary = {}
  * @extends BaseImage
  */
 class FileImage extends BaseImage {
+  __loaded: any
+  __crossOrigin: any
+  url: any
+  __data: any
   /**
    * Create a file image.
    * @param {string} name - The name value.
    * @param {string} filePath - The filePath value.
-   * @param {object} params - The params value.
+   * @param {Record<any,any>} params - The params value.
    */
-  constructor(name, filePath = '', params = {}) {
+  constructor(name: string, filePath: string = '', params: Record<any, any> = {}) {
     if (filePath.constructor == Object) {
-      params = filePath
+      params = { filePath }
     }
     if (name != undefined && name.includes('.')) {
       console.warn('Deprecated signature. Please provide a name and filepath to the image constructor')
@@ -32,7 +37,7 @@ class FileImage extends BaseImage {
     this.__crossOrigin = 'anonymous'
     this.__loaded = false
 
-    const fileParam = this.addParameter(new FilePathParameter('FilePath'))
+    const fileParam = <FilePathParameter>this.addParameter(new FilePathParameter('FilePath'))
     fileParam.on('valueChanged', () => {
       this.loaded = false
       if (this.getName() == '') {
@@ -77,7 +82,7 @@ class FileImage extends BaseImage {
    * @default anonymous
    * @param {string} crossOrigin - The crossOrigin value.
    */
-  setCrossOrigin(crossOrigin) {
+  setCrossOrigin(crossOrigin: string) {
     this.__crossOrigin = crossOrigin
   }
 
@@ -89,7 +94,7 @@ class FileImage extends BaseImage {
    * @param {string} format - The format value.
    * @return {Promise} Returns a promise that resolves once the image is loaded.
    */
-  load(url, format = 'RGB') {
+  load(url: string, format = 'RGB') {
     return new Promise((resolve, reject) => {
       if (!format) {
         const suffixSt = url.lastIndexOf('.')
@@ -104,7 +109,7 @@ class FileImage extends BaseImage {
       this.format = format
       this.__loaded = false
 
-      let imageElem
+      let imageElem: any
       const loaded = () => {
         this.getDOMElement = () => {
           return imageElem
@@ -142,7 +147,7 @@ class FileImage extends BaseImage {
    * @param {string} url - The url value.
    * @param {string} format - The format value. Can be 'RGB' or 'RGBA' for files that contain an alpha channel. This will cause objects to be drawn using the Transparent pass.
    */
-  setImageURL(url, format = 'RGB') {
+  setImageURL(url: string, format: string = 'RGB') {
     this.load(url, format)
   }
 
@@ -171,23 +176,25 @@ class FileImage extends BaseImage {
 
   /**
    * The toJSON method encodes this type as a json object for persistence.
-   * @param {object} context - The context value.
+   * @param {Record<any,any>} context - The context value.
    */
-  toJSON(context) {}
+  toJSON(context?: Record<any, any>) {
+    return {}
+  }
 
   /**
    * The fromJSON method decodes a json object for this type.
-   * @param {object} json - The json object this item must decode.
-   * @param {object} context - The context value.
+   * @param {Record<any,any>} json - The json object this item must decode.
+   * @param {Record<any,any>} context - The context value.
    */
-  fromJSON(json, context) {}
+  fromJSON(json: Record<any, any>, context: Record<any, any>) {}
 
   /**
    * The readBinary method.
-   * @param {object} reader - The reader param.
-   * @param {object} context - The context param.
+   * @param {Record<any,any>} reader - The reader param.
+   * @param {Record<any,any>} context - The context param.
    */
-  readBinary(reader, context) {
+  readBinary(reader: BinReader, context: Record<any, any>) {
     // super.readBinary(reader, context);
     this.setName(reader.loadStr())
 
@@ -202,7 +209,7 @@ class FileImage extends BaseImage {
           }
         }
       }
-      this.getParameter('FilePath').setFilepath(filePath)
+      ;(<FilePathParameter>this.getParameter('FilePath')).setFilepath(filePath)
     }
   }
 }
@@ -216,7 +223,7 @@ class FileImage2D extends FileImage {
    * @param {any} filePath - The filePath value.
    * @param {any} params - The params value.
    */
-  constructor(filePath, params = {}) {
+  constructor(filePath: any, params: any = {}) {
     console.warn('FileImage2D is becoming deprecated in favor of simple FileImage')
     super(filePath, params)
   }

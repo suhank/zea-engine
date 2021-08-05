@@ -10,6 +10,7 @@ import { Plane } from '../Geometry/Shapes/Plane'
 import { Rect } from '../Geometry/Shapes/Rect'
 import { BaseGeomItem } from '../BaseGeomItem'
 import { CuttingPlaneOperator } from '../Operators/CuttingPlaneOperator'
+import { BaseItem } from '../BaseItem'
 
 /**
  * Groups are a special type of `BaseGroup` that allows you to gather/classify/organize/modify
@@ -26,12 +27,13 @@ import { CuttingPlaneOperator } from '../Operators/CuttingPlaneOperator'
  * @extends BaseGroup
  */
 class CuttingPlane extends BaseGroup {
+  cutPlaneOp
   /**
    * Creates an instance of a group.
    *
    * @param {string} name - The name of the group.
    */
-  constructor(name) {
+  constructor(name: string = '') {
     super(name)
 
     this.__updateCutaway = this.__updateCutaway.bind(this)
@@ -61,7 +63,7 @@ class CuttingPlane extends BaseGroup {
    * @param {TreeITem} item - The item in the group.
    * @private
    */
-  __updateCutaway(item) {
+  __updateCutaway(item: TreeItem) {
     // Make this function async so that we don't pull on the
     // graph immediately when we receive a notification.
     // Note: propagating using an operator would be much better.
@@ -76,8 +78,8 @@ class CuttingPlane extends BaseGroup {
         item.setCutVector(cutAwayVector)
         item.setCutDist(cutAwayDist)
       } else {
-        Array.from(this.__itemsParam.getValue()).forEach((item) => {
-          item.traverse((item) => {
+        Array.from(this.__itemsParam.getValue()).forEach((item: any) => {
+          item.traverse((item: any) => {
             if (item instanceof BaseGeomItem) {
               item.setCutawayEnabled(cutEnabled)
               item.setCutVector(cutAwayVector)
@@ -99,7 +101,7 @@ class CuttingPlane extends BaseGroup {
    * @param {number} index - The index value.
    * @private
    */
-  __bindItem(item, index) {
+  __bindItem(item: BaseItem, index: number) {
     if (!(item instanceof TreeItem)) return
 
     // ///////////////////////////////
@@ -136,7 +138,7 @@ class CuttingPlane extends BaseGroup {
    * @param {number} index - The index value.
    * @private
    */
-  __unbindItem(item, index) {
+  __unbindItem(item: BaseItem, index: number) {
     if (!(item instanceof TreeItem)) return
 
     // ///////////////////////////////
@@ -155,10 +157,10 @@ class CuttingPlane extends BaseGroup {
    * The clone method constructs a new group,
    * copies its values and returns it.
    *
-   * @param {object} context - The context value.
+   * @param {Record<any,any>} context - The context value.
    * @return {CuttingPlane} - Returns a new cloned group.
    */
-  clone(context) {
+  clone(context: Record<any, any>) {
     const cloned = new CuttingPlane()
     cloned.copyFrom(this, context)
     return cloned
