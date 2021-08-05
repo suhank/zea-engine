@@ -8,9 +8,9 @@ import { UInt8, SInt8, UInt16, SInt16, UInt32, SInt32, Float32 } from '../../Uti
  * @param {WebGLRenderingContext} gl - The webgl context
  * @param {object} attrDataType - The geometry attribute value.
  *
- * @return {object}
+ * @return {Record<any,any>}
  */
-const genDataTypeDesc = (gl, attrDataType) => {
+const genDataTypeDesc = (gl: WebGLRenderingContext, attrDataType: any) => {
   let dimension
   let elementSize
   let dataType
@@ -86,6 +86,10 @@ const genDataTypeDesc = (gl, attrDataType) => {
  * @private
  */
 class GeomShaderBinding {
+  protected __gl: WebGLRenderingContext
+  protected __shaderAttrs: any
+  protected __glattrbuffers: any
+  protected __indexBuffer: any
   /**
    * Create a geom shader binding.
    * @param {WebGLRenderingContext} gl - The webgl rendering context.
@@ -93,7 +97,7 @@ class GeomShaderBinding {
    * @param {any} geomAttrBuffers - The geomAttrBuffers value.
    * @param {any} indexBuffer - The index buffer.
    */
-  constructor(gl, shaderAttrs, geomAttrBuffers, indexBuffer) {
+  constructor(gl: WebGLRenderingContext, shaderAttrs: any, geomAttrBuffers: any, indexBuffer: any) {
     this.__gl = gl
     this.__shaderAttrs = shaderAttrs
     this.__glattrbuffers = geomAttrBuffers
@@ -105,8 +109,8 @@ class GeomShaderBinding {
    * @param {any} renderstate - The render state.
    * @return {any} - The return value.
    */
-  bind(renderstate) {
-    const gl = this.__gl
+  bind(renderstate: any) {
+    const gl = <Record<any, any>>this.__gl
 
     for (const attrName in this.__shaderAttrs) {
       if (attrName == 'instancedIds') continue
@@ -119,7 +123,7 @@ class GeomShaderBinding {
         continue
       }
 
-      const geomAttrDesc = genDataTypeDesc(gl, geomAttrBuffer.dataType)
+      const geomAttrDesc = genDataTypeDesc(this.__gl, geomAttrBuffer.dataType)
 
       const stride = geomAttrDesc.dimension * geomAttrDesc.elementSize
       const offset =
@@ -153,7 +157,7 @@ class GeomShaderBinding {
    * The unbind method.
    */
   unbind() {
-    const gl = this.__gl
+    const gl = <Record<any, any>>this.__gl
     for (const attrName in this.__shaderAttrs) {
       const shaderAttrDesc = this.__shaderAttrs[attrName]
       const location = shaderAttrDesc.location
@@ -180,6 +184,9 @@ class GeomShaderBinding {
  * @private
  */
 class VAOGeomShaderBinding {
+  protected __vao: any
+  protected __gl: WebGLRenderingContext
+  protected __indexBuffer: any
   /**
    * Create VAO geom shader binding.
    * @param {WebGLRenderingContext} gl - The webgl rendering context.
@@ -187,10 +194,11 @@ class VAOGeomShaderBinding {
    * @param {any} geomAttrBuffers - The geomAttrBuffers value.
    * @param {any} indexBuffer - The indexBuffer value.
    */
-  constructor(gl, shaderAttrs, geomAttrBuffers, indexBuffer) {
+  constructor(gl: WebGLRenderingContext, shaderAttrs: any, geomAttrBuffers: any, indexBuffer: any) {
     this.__gl = gl
-    this.__vao = gl.createVertexArray()
-    gl.bindVertexArray(this.__vao)
+    const gl_casted = <Record<any, any>>gl
+    this.__vao = gl_casted.createVertexArray()
+    gl_casted.bindVertexArray(this.__vao)
 
     for (const attrName in shaderAttrs) {
       if (attrName == 'instancedIds') continue
@@ -226,11 +234,11 @@ class VAOGeomShaderBinding {
       gl.bindBuffer(gl.ARRAY_BUFFER, geomAttrBuffer.buffer)
       gl.vertexAttribPointer(location, geomAttrDesc.dimension, geomAttrDesc.dataType, normalized, stride, offset)
 
-      if (gl.vertexAttribDivisor) {
+      if (gl_casted.vertexAttribDivisor) {
         if (instanced == true) {
-          gl.vertexAttribDivisor(location, 1) // This makes it instanced
+          gl_casted.vertexAttribDivisor(location, 1) // This makes it instanced
         } else {
-          gl.vertexAttribDivisor(location, 0) // This makes it not-instanced
+          gl_casted.vertexAttribDivisor(location, 0) // This makes it not-instanced
         }
       }
       // console.log("Binding :" + attrName + " to attr:" + location + " count:" + geomAttrBuffer.count + " dimension:" + dimension  + " stride:" + stride  + " offset:" + offset + " normalized:" + normalized + " instanced:" + instanced);
@@ -247,8 +255,9 @@ class VAOGeomShaderBinding {
    * @param {any} renderstate - The render state.
    * @return {any} - The return value.
    */
-  bind(renderstate) {
-    this.__gl.bindVertexArray(this.__vao)
+  bind(renderstate: any) {
+    const gl = <Record<any, any>>this.__gl
+    gl.bindVertexArray(this.__vao)
     if (this.__indexBuffer) this.__gl.bindBuffer(this.__gl.ELEMENT_ARRAY_BUFFER, this.__indexBuffer)
     return true
   }
@@ -257,7 +266,7 @@ class VAOGeomShaderBinding {
    * The unbind method.
    */
   unbind() {
-    const gl = this.__gl
+    const gl = <Record<any, any>>this.__gl
     gl.bindVertexArray(null)
     if (this.__indexBuffer) gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null)
   }
@@ -267,13 +276,19 @@ class VAOGeomShaderBinding {
    * Users should never need to call this method directly.
    */
   destroy() {
-    this.__gl.deleteVertexArray(this.__vao)
-    if (this.__indexBuffer) this.__gl.deleteBuffer(this.__indexBuffe)
+    const gl = <Record<any, any>>this.__gl
+    gl.deleteVertexArray(this.__vao)
+    if (this.__indexBuffer) this.__gl.deleteBuffer(this.__indexBuffer)
   }
 }
 
-function generateShaderGeomBinding(gl, shaderAttrs, geomAttrBuffers, indexBuffer) {
-  if (gl.createVertexArray == null) {
+function generateShaderGeomBinding(
+  gl: WebGLRenderingContext,
+  shaderAttrs: any,
+  geomAttrBuffers: any,
+  indexBuffer: any
+) {
+  if ((<Record<any, any>>gl).createVertexArray == null) {
     return new GeomShaderBinding(gl, shaderAttrs, geomAttrBuffers, indexBuffer)
   } else {
     return new VAOGeomShaderBinding(gl, shaderAttrs, geomAttrBuffers, indexBuffer)

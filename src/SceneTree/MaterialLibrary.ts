@@ -199,7 +199,7 @@ class MaterialLibrary extends EventEmitter {
     for (const name in j.textures) {
       const image = new FileImage(name)
       image.fromJSON(j.textures[name])
-      this.__images[name] = texture
+      this.__images[name] = image // TODO: texture -> image
     }
     // eslint-disable-next-line guard-for-in
     for (const name in j.materials) {

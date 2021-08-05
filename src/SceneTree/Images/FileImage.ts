@@ -187,7 +187,7 @@ class FileImage extends BaseImage {
    * @param {Record<any,any>} json - The json object this item must decode.
    * @param {Record<any,any>} context - The context value.
    */
-  fromJSON(json: Record<any, any>, context: Record<any, any>) {}
+  fromJSON(json: Record<any, any>, context?: Record<any, any>) {}
 
   /**
    * The readBinary method.
