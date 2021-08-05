@@ -31,7 +31,7 @@ class FileImage extends BaseImage {
       name = name.substring(name.lastIndexOf('/') + 1, name.lastIndexOf('.'))
     }
 
-    super(name, params)
+    super(name) // used to be: super(name, params)
 
     this.type = 'UNSIGNED_BYTE'
     this.__crossOrigin = 'anonymous'

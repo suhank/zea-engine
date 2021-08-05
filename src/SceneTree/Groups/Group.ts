@@ -1,6 +1,6 @@
 /* eslint-disable require-jsdoc */
 /* eslint-disable no-unused-vars */
-import { Vec3, Color, Xfo } from '../../Math/index'
+import { Vec3, Color, Xfo, Box3 } from '../../Math/index'
 import { Registry } from '../../Registry'
 import {
   BooleanParameter,
@@ -16,6 +16,7 @@ import { TreeItem } from '../TreeItem'
 import { BaseGeomItem } from '../BaseGeomItem'
 import { GroupTransformXfoOperator, GroupMemberXfoOperator } from '../Operators/GroupMemberXfoOperator'
 import { BaseGroup } from './BaseGroup'
+import { BaseItem } from '../BaseItem'
 
 const GROUP_XFO_MODES = {
   disabled: 0,
@@ -45,12 +46,22 @@ const GROUP_XFO_MODES = {
  * @extends TreeItem
  */
 class Group extends BaseGroup {
+  protected groupXfoDirty: boolean
+  protected calculatingGroupXfo: boolean
+  protected dirty: boolean
+  protected _bindXfoDirty: boolean
+  protected memberXfoOps: any[]
+  protected __initialXfoModeParam: any
+  protected __highlightedParam: any
+  protected __materialParam: any
+  protected groupTransformOp: any
+  protected _setBoundingBoxDirty: any
   /**
    * Creates an instance of a group.
    *
    * @param {string} name - The name of the group.
    */
-  constructor(name) {
+  constructor(name: string = '') {
     super(name)
 
     // Items which can be constructed by a user (not loaded in binary data.)
@@ -112,7 +123,7 @@ class Group extends BaseGroup {
    * @private
    */
   __updateVisibility() {
-    if (super.__updateVisibility()) {
+    if (super.updateVisibility()) {
       const value = this.isVisible()
       Array.from(this.__itemsParam.getValue()).forEach((item) => {
         if (item instanceof TreeItem) item.propagateVisibility(value ? 1 : -1)
@@ -134,7 +145,7 @@ class Group extends BaseGroup {
     // Note: propagating using an operator would be much better.
     new Promise((resolve) => {
       let highlighted = false
-      let color
+      let color: Color
       if (this.getParameter('Highlighted').getValue() || this.isSelected()) {
         highlighted = true
         color = this.getParameter('HighlightColor').getValue()
@@ -157,7 +168,7 @@ class Group extends BaseGroup {
    *
    * @param {boolean} sel - Boolean indicating the new selection state.
    */
-  setSelected(sel) {
+  setSelected(sel: boolean) {
     super.setSelected(sel)
     this.__updateHighlight()
   }
@@ -179,7 +190,7 @@ class Group extends BaseGroup {
 
     // TODO: Disable the group operator?
     const initialXfoMode = this.__initialXfoModeParam.getValue()
-    let xfo
+    let xfo: Xfo
     if (initialXfoMode == GROUP_XFO_MODES.manual) {
       // The xfo is manually set by the current global xfo.
       xfo = this.getParameter('GlobalXfo').getValue()
@@ -245,8 +256,8 @@ class Group extends BaseGroup {
       const material = this.getParameter('Material').getValue()
 
       // TODO: Bind an operator
-      Array.from(this.__itemsParam.getValue()).forEach((item) => {
-        item.traverse((treeItem) => {
+      Array.from(this.__itemsParam.getValue()).forEach((item: TreeItem) => {
+        item.traverse((treeItem: TreeItem) => {
           if (treeItem instanceof TreeItem && treeItem.hasParameter('Material')) {
             const p = treeItem.getParameter('Material')
             if (material) {
@@ -284,8 +295,8 @@ class Group extends BaseGroup {
       const cutAwayVector = this.getParameter('CutPlaneNormal').getValue()
       const cutAwayDist = this.getParameter('CutPlaneDist').getValue()
 
-      Array.from(this.__itemsParam.getValue()).forEach((item) => {
-        item.traverse((treeItem) => {
+      Array.from(this.__itemsParam.getValue()).forEach((item: TreeItem) => {
+        item.traverse((treeItem: TreeItem) => {
           if (treeItem instanceof BaseGeomItem) {
             treeItem.setCutawayEnabled(cutEnabled)
             treeItem.setCutVector(cutAwayVector)
@@ -305,11 +316,11 @@ class Group extends BaseGroup {
    * @param {TreeItem} treeItem
    */
 
-  setSearchRoot(treeItem) {
+  setSearchRoot(treeItem: TreeItem) {
     this.searchRoot = treeItem
   }
 
-  setOwner(owner) {
+  setOwner(owner: any) {
     if (!this.searchRoot || this.searchRoot == this.getOwner()) this.searchRoot = owner
     super.setOwner(owner)
   }
@@ -322,7 +333,7 @@ class Group extends BaseGroup {
    * @param {array} paths - The paths value.
    * @private
    */
-  setPaths(paths) {
+  setPaths(paths: any[]) {
     this.clearItems(false)
 
     const searchRoot = this.getOwner()
@@ -330,7 +341,7 @@ class Group extends BaseGroup {
       console.warn('Group does not have an owner and so cannot resolve paths:', this.getName())
       return
     }
-    const items = []
+    const items: any[] = []
     paths.forEach((path) => {
       const treeItem = this.searchRoot.resolvePath(path)
       if (treeItem) items.push(treeItem)
@@ -346,7 +357,7 @@ class Group extends BaseGroup {
    *
    * @param {array} paths - The paths value.
    */
-  resolveItems(paths) {
+  resolveItems(paths: any[]) {
     this.setPaths(paths)
   }
 
@@ -356,8 +367,8 @@ class Group extends BaseGroup {
    * @param {number} index - The index value.
    * @private
    */
-  __bindItem(item, index) {
-    super.__bindItem(item, index)
+  __bindItem(item: BaseItem, index: number) {
+    super.bindItem(<TreeItem>item, index)
     if (!(item instanceof TreeItem)) return
 
     // ///////////////////////////////
@@ -427,8 +438,8 @@ class Group extends BaseGroup {
    * @param {number} index - The index value.
    * @private
    */
-  __unbindItem(item, index) {
-    super.__unbindItem(item, index)
+  __unbindItem(item: BaseItem, index: number) {
+    super.unbindItem(<TreeItem>item, index)
     if (!(item instanceof TreeItem)) return
 
     if (this.getParameter('Highlighted').getValue()) {
@@ -466,7 +477,7 @@ class Group extends BaseGroup {
    * @param {BaseItem} item - The item value.
    * @param {boolean} emit - The emit value.
    */
-  addItem(item, emit = true) {
+  addItem(item: BaseItem, emit = true) {
     if (!item) {
       console.warn('Error adding item to group. Item is null')
       return
@@ -484,7 +495,7 @@ class Group extends BaseGroup {
    * @param {BaseItem} item - The item value.
    * @param {boolean} emit - The emit value.
    */
-  removeItem(item, emit = true) {
+  removeItem(item: any, emit = true) {
     this.__itemsParam.removeItem(item, emit)
     if (emit) {
       this.calcGroupXfo()
@@ -525,7 +536,7 @@ class Group extends BaseGroup {
    *
    * @param {array} items - List of `BaseItem` you want to add to the group
    */
-  setItems(items) {
+  setItems(items: any) {
     this.clearItems(false)
     this.__itemsParam.setItems(items)
     this.calcGroupXfo()
@@ -537,7 +548,7 @@ class Group extends BaseGroup {
    * @return {Box3} - The return value.
    * @private
    */
-  _cleanBoundingBox(bbox) {
+  _cleanBoundingBox(bbox: Box3) {
     const result = super._cleanBoundingBox(bbox)
     const items = Array.from(this.__itemsParam.getValue())
     items.forEach((item) => {
@@ -560,7 +571,7 @@ class Group extends BaseGroup {
    * @private
    * @param {MouseEvent} event - The mouse event that occurs.
    */
-  onPointerDown(event) {
+  onPointerDown(event: MouseEvent) {
     super.onPointerDown(event)
   }
 
@@ -571,7 +582,7 @@ class Group extends BaseGroup {
    * @private
    * @param {MouseEvent} event - The mouse event that occurs.
    */
-  onPointerUp(event) {
+  onPointerUp(event: MouseEvent) {
     super.onPointerUp(event)
   }
 
@@ -581,7 +592,7 @@ class Group extends BaseGroup {
    * @private
    * @param {MouseEvent} event - The mouse event that occurs.
    */
-  onPointerMove(event) {
+  onPointerMove(event: MouseEvent) {
     super.onPointerMove(event)
   }
 
