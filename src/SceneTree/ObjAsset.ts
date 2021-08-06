@@ -129,12 +129,12 @@ class ObjAsset extends AssetItem {
       }
 
       const loadMtlFile = (mtlFile: any) => {
-        return new Promise((resolve) => {
+        const promise = new Promise((resolve) => {
           loadTextfile(mtlFile.url, (fileData: any) => {
             resourceLoader.incrementWorkDone(1)
             parseMtlData(fileData)
             resourceLoader.incrementWorkDone(1)
-            resolve()
+            resolve(promise)
           })
         })
       }
@@ -286,7 +286,7 @@ class ObjAsset extends AssetItem {
         this.emit('loaded')
         this.getGeometryLibrary().emit('loaded')
         this.emit('geomsLoaded')
-        resolve()
+        // TODO: (commented out) resolve()
       }
 
       const buildChildItem = (geomName: any, geomData: any) => {

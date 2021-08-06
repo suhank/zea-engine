@@ -30,13 +30,14 @@ import { FileImage } from './FileImage'
  * @extends FileImage
  */
 class LDRVideo extends FileImage {
+  protected getAudioSource: any
   /**
    * Create a LDR video.
    * @param {string} name - The name value.
    * @param {string} filePath - The filePath value.
    * @param {Record<any,any>} params - The params value.
    */
-  constructor(name: string, filePath: string, params: Record<any,any>) {
+  constructor(name: string, filePath: string, params: Record<any, any>) {
     super(name, filePath, params)
     this.format = 'RGB'
     this.type = 'UNSIGNED_BYTE'
@@ -62,7 +63,7 @@ class LDRVideo extends FileImage {
    * @return {Promise} Returns a promise that resolves once the image is loaded.
    */
   load(url: string, format = 'RGB') {
-    return new Promise((resolve, reject) => {
+    const promise = new Promise((resolve, reject) => {
       resourceLoader.incrementWorkload(1)
 
       const videoElem = document.createElement('video')
@@ -100,7 +101,7 @@ class LDRVideo extends FileImage {
           this.__loaded = true
           resourceLoader.incrementWorkDone(1)
           this.emit('loaded', {})
-          resolve()
+          resolve(promise)
 
           let prevFrame = 0
           const frameRate = 29.97

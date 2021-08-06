@@ -87,7 +87,7 @@ class VLAAsset extends AssetItem {
    * @return {Promise} - Returns a promise that resolves once the initial load is complete
    */
   load(url: string, context: AssetLoadContext = new AssetLoadContext()) {
-    return new Promise((resolve, reject) => {
+    const promise = new Promise((resolve, reject) => {
       const folder = url.lastIndexOf('/') > -1 ? url.substring(0, url.lastIndexOf('/')) + '/' : ''
       const filename = url.lastIndexOf('/') > -1 ? url.substring(url.lastIndexOf('/') + 1) : ''
       const stem = filename.substring(0, filename.lastIndexOf('.'))
@@ -134,7 +134,7 @@ class VLAAsset extends AssetItem {
             const basePath = folder + stem
             this.__geomLibrary.loadGeomFilesStream(basePath, numGeomsFiles, context)
           }
-          resolve()
+          resolve(promise)
         },
         (error: any) => {
           this.emit('error', error)

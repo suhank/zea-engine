@@ -119,7 +119,7 @@ class GeomLibrary extends EventEmitter {
    */
   loadGeomFile(geomFileID: number, incrementProgress = false) {
     if (incrementProgress) resourceLoader.incrementWorkload(1)
-    return new Promise((resolve) => {
+    const promise = new Promise((resolve) => {
       const geomFileUrl = this.basePath + geomFileID + '.zgeoms'
 
       resourceLoader.loadFile('archive', geomFileUrl).then((entries: any) => {
@@ -129,7 +129,7 @@ class GeomLibrary extends EventEmitter {
           if (event.geomFileID == geomFileID) {
             resourceLoader.incrementWorkDone(1)
             this.off('streamFileParsed', streamFileParsed)
-            resolve()
+            resolve(promise)
           }
         }
         this.on('streamFileParsed', streamFileParsed)

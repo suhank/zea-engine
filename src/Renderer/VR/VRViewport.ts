@@ -382,7 +382,7 @@ class VRViewport extends GLBaseViewport {
 
               this.loadHMDResources().then(() => {
                 this.__startSession()
-                resolve()
+                // TODO: (commented out) resolve() 
               })
             }
 

@@ -120,7 +120,7 @@ class FileImage extends BaseImage {
         this.__data = imageElem
         this.__loaded = true
         this.emit('loaded', {})
-        resolve()
+        // TODO: (commented out) resolve()
       }
       const imageDataLibrary = FileImage.__imageDataLibrary()
       if (url in imageDataLibrary) {
