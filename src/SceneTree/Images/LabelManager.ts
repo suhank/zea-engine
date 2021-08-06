@@ -15,7 +15,7 @@ function getLanguage() {
   let i
   let language
 
-  const clean = (language) => {
+  const clean = (language: string) => {
     if (language.startsWith('en')) return 'En'
     else if (language.startsWith('es')) return 'Es'
     else if (language.startsWith('fr')) return 'Fr'
@@ -48,6 +48,9 @@ function getLanguage() {
  * @private
  */
 class LabelManager extends EventEmitter {
+  protected __language: any
+  protected __foundLabelLibraries: Record<any, any>
+  protected __labelLibraries: Record<any, any>
   /**
    * Create a label manager.
    */
@@ -62,14 +65,14 @@ class LabelManager extends EventEmitter {
   /**
    * Load a label library into the manager.
    * @param {string} name - The name of the library.
-   * @param {json} json - The json data of of the library.
+   * @param {string} url- The json data of of the library.
    */
-  loadLibrary(name, url) {
+  loadLibrary(name: string, url: string) {
     const stem = name.substring(0, name.lastIndexOf('.'))
     this.__foundLabelLibraries[stem] = url
 
     if (name.endsWith('.labels')) {
-      loadTextfile(url, (text) => {
+      loadTextfile(url, (text: any) => {
         this.__labelLibraries[stem] = JSON.parse(text)
         this.emit('labelLibraryLoaded', { library: stem })
       })
@@ -78,16 +81,16 @@ class LabelManager extends EventEmitter {
       // https://stackoverflow.com/questions/8238407/how-to-parse-excel-file-in-javascript-html5
       // and here:
       // https://github.com/SheetJS/js-xlsx/tree/master/demos/xhr
-      loadBinfile(url, (data) => {
+      loadBinfile(url, (data: any) => {
         const unit8array = new Uint8Array(data)
         const workbook = XLSX.read(unit8array, {
           type: 'array',
         })
         const json = {}
-        workbook.SheetNames.forEach(function (sheetName) {
+        workbook.SheetNames.forEach(function (sheetName: any) {
           // Here is your object
           const rows = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheetName])
-          rows.forEach(function (row) {
+          rows.forEach(function (row: any) {
             const identifier = row.Identifier
             delete row.Identifier
             json[identifier] = row
@@ -105,7 +108,7 @@ class LabelManager extends EventEmitter {
    * @param {string} name - The name of the library.
    * @return {boolean} - Returns true if the library is found.
    */
-  isLibraryFound(name) {
+  isLibraryFound(name: string) {
     return name in this.__foundLabelLibraries
   }
 
@@ -114,7 +117,7 @@ class LabelManager extends EventEmitter {
    * @param {string} name - The name of the library.
    * @return {boolean} - Returns true if the library is loaded.
    */
-  isLibraryLoaded(name) {
+  isLibraryLoaded(name: string) {
     return name in this.__labelLibraries
   }
 
@@ -124,7 +127,7 @@ class LabelManager extends EventEmitter {
    * @param {string} labelName - The name of the label.
    * @return {string} - The return value.
    */
-  getLabelText(libraryName, labelName) {
+  getLabelText(libraryName: string, labelName: string) {
     const library = this.__labelLibraries[libraryName]
     if (!library) {
       throw new Error(
@@ -150,7 +153,7 @@ class LabelManager extends EventEmitter {
     const labelText = label[this.__language]
     if (!labelText) {
       if (label['En']) return label['En']
-      throw new Error("labelText: '" + language + "' not found in Label. Found: [" + Object.keys(label) + ']')
+      throw new Error("labelText: '" + this.__language + "' not found in Label. Found: [" + Object.keys(label) + ']')
     }
     return labelText
   }
@@ -161,7 +164,7 @@ class LabelManager extends EventEmitter {
    * @param {string} labelName - The name of the label.
    * @param {string} labelText - The text of the label.
    */
-  setLabelText(libraryName, labelName, labelText) {
+  setLabelText(libraryName: string, labelName: string, labelText: string) {
     let library = this.__labelLibraries[libraryName]
     if (!library) {
       library = {}
@@ -176,7 +179,7 @@ class LabelManager extends EventEmitter {
     // TODO: Push to server.
   }
 
-  setLanguage(ln) {
+  setLanguage(ln: any) {
     this.__language = ln
   }
 }
