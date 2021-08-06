@@ -54,6 +54,13 @@ class VRViewport extends GLBaseViewport {
 
   protected capturedItem: any
   protected stroke: any
+
+  protected capturedElement: any
+  protected __projectionMatrices: any[]
+
+  protected __hmdCanvasSize: any
+  protected __viewMatrices: any
+  protected __cameraMatrices: any
   /**
    * Create a VR viewport.
    * @param {GLBaseRenderer} renderer - The renderer value.
@@ -190,7 +197,7 @@ class VRViewport extends GLBaseViewport {
    * @private
    */
   __startSession() {
-    const onAnimationFrame = (t, frame) => {
+    const onAnimationFrame = (t: any, frame: any) => {
       if (this.session) {
         this.session.requestAnimationFrame(onAnimationFrame)
         this.drawXRFrame(frame)
@@ -277,7 +284,7 @@ class VRViewport extends GLBaseViewport {
 
       // https://github.com/immersive-web/webxr/blob/master/explainer.md
 
-      const gl = <Record<any,any>>this.__renderer.gl
+      const gl = <Record<any, any>>this.__renderer.gl
 
       const startPresenting = () => {
         navigator.xr
@@ -302,13 +309,13 @@ class VRViewport extends GLBaseViewport {
             stageXfo.ori.setFromDirectionAndUpvector(dir, new Vec3(0, 0, 1))
             this.setXfo(stageXfo)
 
-            session.addEventListener('end', (event) => {
+            session.addEventListener('end', (event: any) => {
               this.__stageTreeItem.setVisible(false)
               this.session = null
               this.emit('presentingChanged', { state: false })
             })
 
-            const onSelectStart = (ev) => {
+            const onSelectStart = (ev: any) => {
               const controller = this.controllersMap[ev.inputSource.handedness]
               if (controller) {
                 this.onPointerDown({
@@ -317,7 +324,7 @@ class VRViewport extends GLBaseViewport {
                 })
               }
             }
-            const onSelectEnd = (ev) => {
+            const onSelectEnd = (ev: any) => {
               const controller = this.controllersMap[ev.inputSource.handedness]
               if (controller) {
                 this.onPointerUp({
@@ -384,7 +391,7 @@ class VRViewport extends GLBaseViewport {
             // indicate where the user can safely walk.
             session
               .requestReferenceSpace(SystemDesc.isMobileDevice ? 'local' : 'bounded-floor')
-              .catch((e) => {
+              .catch((e: any) => {
                 // If a bounded reference space isn't supported, fall back to a
                 // local-floor reference space. This still provides a floor-relative
                 // space and will always be supported for immersive sessions. It
@@ -485,7 +492,7 @@ class VRViewport extends GLBaseViewport {
     const viewXfo = this.__vrhead.getTreeItem().getParameter('GlobalXfo').getValue()
 
     // Prepare the pointerMove event.
-    const event = { controllers: this.controllers, viewXfo }
+    const event: Record<any, any> = { controllers: this.controllers, viewXfo }
     this.preparePointerEvent(event)
     this.updateControllers(xrFrame, event)
     if (this.capturedElement && event.propagating) {
