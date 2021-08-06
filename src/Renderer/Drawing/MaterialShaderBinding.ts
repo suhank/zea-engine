@@ -23,14 +23,14 @@ class SimpleUniformBinding {
   protected val: any
   /**
    * Create simple uniform binding.
-   * @param {WebGLRenderingContext} gl - The webgl rendering context.
+   * @param {WebGL12RenderingContext} gl - The webgl rendering context.
    * @param {any} glMaterial - The glMaterial value.
    * @param {any} param - The param value.
    * @param {WebGLUniformLocation} unif - The WebGL uniform
    * @param {object} unifs - The dictionary of WebGL uniforms.
    */
   constructor(
-    gl: WebGLRenderingContext,
+    gl: WebGL12RenderingContext,
     glMaterial: any,
     param: any,
     unif: WebGLUniformLocation,
@@ -189,12 +189,12 @@ class ComplexUniformBinding {
   protected vals: any
   /**
    * Create complex uniform binding.
-   * @param {WebGLRenderingContext} gl - The webgl rendering context.
+   * @param {WebGL12RenderingContext} gl - The webgl rendering context.
    * @param {any} glMaterial - The glMaterial value.
    * @param {any} param - The param value.
    * @param {WebGLUniformLocation} unif - The WebGL uniform
    */
-  constructor(gl: WebGLRenderingContext, glMaterial: any, param: any, unif: WebGLUniformLocation) {
+  constructor(gl: WebGL12RenderingContext, glMaterial: any, param: any, unif: WebGLUniformLocation) {
     this.param = param
     this.unif = unif
 
@@ -251,12 +251,12 @@ class MatrixUniformBinding {
   protected val: any
   /**
    * Create material uniform binding.
-   * @param {WebGLRenderingContext} gl - The webgl rendering context.
+   * @param {WebGL12RenderingContext} gl - The webgl rendering context.
    * @param {any} glMaterial - The glMaterial value.
    * @param {any} param - The param value.
    * @param {WebGLUniformLocation} unif - The WebGL uniform
    */
-  constructor(gl: WebGLRenderingContext, glMaterial: any, param: any, unif: WebGLUniformLocation) {
+  constructor(gl: WebGL12RenderingContext, glMaterial: any, param: any, unif: WebGLUniformLocation) {
     this.param = param
     this.unif = unif
 
@@ -318,14 +318,14 @@ class ColorUniformBinding {
   protected uniform4fv: any
   /**
    * Create color uniform binding.
-   * @param {WebGLRenderingContext} gl - The webgl rendering context.
+   * @param {WebGL12RenderingContext} gl - The webgl rendering context.
    * @param {any} glMaterial - The glMaterial value.
    * @param {any} param - The param value.
    * @param {WebGLUniformLocation} unif - The WebGL uniform
    * @param {Record<any,any>} unifs - The dictionary of WebGL uniforms.
    */
   constructor(
-    gl: WebGLRenderingContext,
+    gl: WebGL12RenderingContext,
     glMaterial: any,
     param: any,
     unif: WebGLUniformLocation,
@@ -458,12 +458,12 @@ class MaterialShaderBinding {
   protected uniformBindings: any
   /**
    * Create material shader binding.
-   * @param {WebGLRenderingContext} gl - The webgl rendering context.
+   * @param {WebGL12RenderingContext} gl - The webgl rendering context.
    * @param {any} glMaterial - The glMaterial value.
    * @param {object} unifs - The dictionary of WebGL uniforms.
    * @param {any} warnMissingUnifs - The warnMissingUnifs value.
    */
-  constructor(gl: WebGLRenderingContext, glMaterial: any, unifs: Record<any, any>, warnMissingUnifs: any) {
+  constructor(gl: WebGL12RenderingContext, glMaterial: any, unifs: Record<any, any>, warnMissingUnifs: any) {
     this.uniformBindings = []
 
     const bindParam = (param: any) => {

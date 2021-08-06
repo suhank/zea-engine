@@ -8,18 +8,18 @@ import { MaterialShaderBinding } from './MaterialShaderBinding'
  * @private
  */
 class GLMaterial extends EventEmitter {
-  protected __gl: WebGLRenderingContext
+  protected __gl: WebGL12RenderingContext
   protected __material: Material
   protected __glshader: GLShader
   protected __shaderBindings: Record<any, any> = {}
   protected __boundTexturesBeforeMaterial: any
   /**
    * Create a GL material.
-   * @param {WebGLRenderingContext} gl - The webgl rendering context.
+   * @param {WebGL12RenderingContext} gl - The webgl rendering context.
    * @param {Material} material - The material value.
    * @param {GLShader} glShader - The glShader value.
    */
-  constructor(gl: WebGLRenderingContext, material: Material, glShader: GLShader) {
+  constructor(gl: WebGL12RenderingContext, material: Material, glShader: GLShader) {
     super()
     this.__gl = gl
     this.__material = material

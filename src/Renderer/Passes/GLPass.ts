@@ -17,7 +17,7 @@ class GLPass extends ParameterOwner {
   protected enabled: boolean
   protected passIndex: number
 
-  __gl: WebGLRenderingContext | WebGL2RenderingContext
+  __gl: WebGL12RenderingContext
   __renderer: GLBaseRenderer
   protected __passIndex: number
   /**

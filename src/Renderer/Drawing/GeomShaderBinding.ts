@@ -5,12 +5,12 @@ import { UInt8, SInt8, UInt16, SInt16, UInt32, SInt32, Float32 } from '../../Uti
 /**
  * Returns a descriptor for the provided geom attribute.
  * @private
- * @param {WebGLRenderingContext} gl - The webgl context
+ * @param {WebGL12RenderingContext} gl - The webgl context
  * @param {object} attrDataType - The geometry attribute value.
  *
  * @return {Record<any,any>}
  */
-const genDataTypeDesc = (gl: WebGLRenderingContext, attrDataType: any) => {
+const genDataTypeDesc = (gl: WebGL12RenderingContext, attrDataType: any) => {
   let dimension
   let elementSize
   let dataType
@@ -86,18 +86,18 @@ const genDataTypeDesc = (gl: WebGLRenderingContext, attrDataType: any) => {
  * @private
  */
 class GeomShaderBinding {
-  protected __gl: WebGLRenderingContext
+  protected __gl: WebGL12RenderingContext
   protected __shaderAttrs: any
   protected __glattrbuffers: any
   protected __indexBuffer: any
   /**
    * Create a geom shader binding.
-   * @param {WebGLRenderingContext} gl - The webgl rendering context.
+   * @param {WebGL12RenderingContext} gl - The webgl rendering context.
    * @param {any} shaderAttrs - The shader attributes.
    * @param {any} geomAttrBuffers - The geomAttrBuffers value.
    * @param {any} indexBuffer - The index buffer.
    */
-  constructor(gl: WebGLRenderingContext, shaderAttrs: any, geomAttrBuffers: any, indexBuffer: any) {
+  constructor(gl: WebGL12RenderingContext, shaderAttrs: any, geomAttrBuffers: any, indexBuffer: any) {
     this.__gl = gl
     this.__shaderAttrs = shaderAttrs
     this.__glattrbuffers = geomAttrBuffers
@@ -185,16 +185,16 @@ class GeomShaderBinding {
  */
 class VAOGeomShaderBinding {
   protected __vao: any
-  protected __gl: WebGLRenderingContext
+  protected __gl: WebGL12RenderingContext
   protected __indexBuffer: any
   /**
    * Create VAO geom shader binding.
-   * @param {WebGLRenderingContext} gl - The webgl rendering context.
+   * @param {WebGL12RenderingContext} gl - The webgl rendering context.
    * @param {any} shaderAttrs - The shaderAttrs value.
    * @param {any} geomAttrBuffers - The geomAttrBuffers value.
    * @param {any} indexBuffer - The indexBuffer value.
    */
-  constructor(gl: WebGLRenderingContext, shaderAttrs: any, geomAttrBuffers: any, indexBuffer: any) {
+  constructor(gl: WebGL12RenderingContext, shaderAttrs: any, geomAttrBuffers: any, indexBuffer: any) {
     this.__gl = gl
     const gl_casted = <Record<any, any>>gl
     this.__vao = gl_casted.createVertexArray()
@@ -283,7 +283,7 @@ class VAOGeomShaderBinding {
 }
 
 function generateShaderGeomBinding(
-  gl: WebGLRenderingContext,
+  gl: WebGL12RenderingContext,
   shaderAttrs: any,
   geomAttrBuffers: any,
   indexBuffer: any

@@ -11,7 +11,7 @@ import { GLTexture2D } from '../GLTexture2D'
  */
 class GLGeomItemSetMultiDraw extends EventEmitter {
   protected renderer: GLBaseRenderer
-  protected gl: WebGLRenderingContext
+  protected gl: WebGL12RenderingContext
   protected glGeomItems: any[]
   protected glGeomIdsMapping: Record<any, any>
   protected glgeomItemEventHandlers: any[]
@@ -38,7 +38,7 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
   constructor(renderer: GLBaseRenderer) {
     super()
     this.renderer = renderer
-    this.gl = <WebGLRenderingContext>renderer.gl
+    this.gl = <WebGL12RenderingContext>renderer.gl
     this.glGeomItems = []
     this.glGeomIdsMapping = {}
     this.glgeomItemEventHandlers = []

@@ -20,7 +20,7 @@ class SimpleSurfaceShader extends GLShader {
    * Create a SimpleSurfaceShader
    * @param {any} gl - gl context
    */
-  constructor(gl: WebGLRenderingContext) {
+  constructor(gl: WebGL12RenderingContext) {
     super(gl, 'SimpleSurfaceShader')
     this.setShaderStage('VERTEX_SHADER', vert)
     this.setShaderStage('FRAGMENT_SHADER', frag)

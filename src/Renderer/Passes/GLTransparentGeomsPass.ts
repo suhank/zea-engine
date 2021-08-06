@@ -92,10 +92,10 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
     const shader = this.__renderer.getOrCreateShader(shaderName)
 
     if (!material.isTextured()) {
-      if (shaders.glShader.supportsInstancing() && shaders.glShader.getPackedMaterialData) {
+      if (shader.glShader.supportsInstancing() && shader.glShader.getPackedMaterialData) {
         let glShaderGeomSets = this.__glShaderGeomSets[shaderName]
         if (!glShaderGeomSets) {
-          glShaderGeomSets = new GLShaderGeomSets(this, this.__gl, shaders) //TODO: check before cast?
+          glShaderGeomSets = new GLShaderGeomSets(this, this.__gl, shader) //TODO: check before cast?
           glShaderGeomSets.on('updated', () => {
             this.__renderer.requestRedraw()
           })

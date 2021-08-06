@@ -268,11 +268,11 @@ class ShaderLibrary {
     return result
   }
 
-  registerMaterialTemplate(shaderName, materialTemplate) {
+  registerMaterialTemplate(shaderName: string, materialTemplate: any) {
     this.materialTemplates[shaderName] = materialTemplate
   }
 
-  getMaterialTemplate(shaderName) {
+  getMaterialTemplate(shaderName: string) {
     return this.materialTemplates[shaderName]
   }
 }

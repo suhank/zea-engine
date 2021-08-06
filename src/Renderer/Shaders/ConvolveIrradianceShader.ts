@@ -12,9 +12,9 @@ import vert from './ConvolveIrradiance.vert'
 class ConvolveIrradianceShader extends GLShader {
   /**
    * Create a GL renderer.
-   * @param {WebGLRenderingContext} gl - The options value.
+   * @param {WebGL12RenderingContext} gl - The options value.
    */
-  constructor(gl: WebGLRenderingContext) {
+  constructor(gl: WebGL12RenderingContext) {
     super(gl, 'ConvolveIrradianceShader')
     this.setShaderStage('VERTEX_SHADER', vert)
     this.setShaderStage('FRAGMENT_SHADER', frag)

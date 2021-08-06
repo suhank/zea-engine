@@ -16,6 +16,7 @@ import { GLBaseRenderer } from '../GLBaseRenderer'
 class GLOpaqueGeomsPass extends GLStandardGeomsPass {
   protected __glshadermaterials: Record<any, any>
   protected __glShaderGeomSets: Record<any, any>
+  protected __drawItemsTexture: any
   /**
    * Create a GL opaque geoms pass.
    */

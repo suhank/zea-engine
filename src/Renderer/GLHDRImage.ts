@@ -9,7 +9,7 @@ import { VLHImage } from '../SceneTree/Images/VLHImage'
  * @private
  */
 class GLHDRImage extends GLTexture2D {
-  protected __gl: WebGLRenderingContext
+  protected __gl: WebGL12RenderingContext
   protected __hdrImage: VLHImage
   protected __fbo: any
   protected __srcLDRTex: any
@@ -18,10 +18,10 @@ class GLHDRImage extends GLTexture2D {
   protected __srcCDMTex: any
   /**
    * Create a GL HDR image.
-   * @param {WebGLRenderingContext} gl - The webgl rendering context.
+   * @param {WebGL12RenderingContext} gl - The webgl rendering context.
    * @param {VLHImage} hdrImage - The HDR image.
    */
-  constructor(gl: WebGLRenderingContext, hdrImage: VLHImage) {
+  constructor(gl: WebGL12RenderingContext, hdrImage: VLHImage) {
     super(gl)
 
     this.__hdrImage = hdrImage

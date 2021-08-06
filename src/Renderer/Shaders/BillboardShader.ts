@@ -8,9 +8,9 @@ import vert from './Billboard.vert'
 class BillboardShader extends GLShader {
   /**
    * Create a GL shader.
-   * @param {WebGLRenderingContext} gl - The webgl rendering context.
+   * @param {WebGL12RenderingContext} gl - The webgl rendering context.
    */
-  constructor(gl: WebGLRenderingContext) {
+  constructor(gl: WebGL12RenderingContext) {
     super(gl, 'BillboardShader')
     this.setShaderStage('VERTEX_SHADER', vert)
     this.setShaderStage('FRAGMENT_SHADER', frag)

@@ -26,10 +26,10 @@ class GLRenderTarget extends EventEmitter {
   protected __prevBoundFbo: any
   /**
    * Create a GL render target.
-   * @param {WebGLRenderingContext} gl - The webgl rendering context.
+   * @param {WebGL12RenderingContext} gl - The webgl rendering context.
    * @param {object} params - The params value.
    */
-  constructor(gl: WebGLRenderingContext, params?: Record<any, any>) {
+  constructor(gl: WebGL12RenderingContext, params?: Record<any, any>) {
     super()
     this.__gl = gl
     this.textureTargets = []
@@ -271,7 +271,7 @@ class GLRenderTarget extends EventEmitter {
   /**
    * The unbind method.
    */
-  unbind(renderstate?: Record<any,any> ) {
+  unbind(renderstate?: Record<any, any>) {
     this.unbindForWriting(renderstate)
   }
 

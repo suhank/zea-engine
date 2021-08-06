@@ -6,7 +6,7 @@ import './GLSL/index'
 import frag from './StandardSurfaceSelectedGeoms.frag'
 import vert from './StandardSurfaceSelectedGeoms.vert'
 class StandardSurfaceSelectedGeomsShader extends GLShader {
-  constructor(gl: WebGLRenderingContext) {
+  constructor(gl: WebGL12RenderingContext) {
     // floatGeomBuffer
     super(gl, 'StandardSurfaceSelectedGeomsShader')
     this.setShaderStage('VERTEX_SHADER', vert)

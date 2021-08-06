@@ -23,7 +23,7 @@ let shaderInstanceId = 0
  * @private
  */
 class GLShader extends BaseItem {
-  protected __gl: Record<any, any> //: WebGLRenderingContext // temporary solution since WebGLRenderingContext is augmented with more entries.
+  protected __gl: Record<any, any> //: WebGL12RenderingContext // temporary solution since WebGL12RenderingContext is augmented with more entries.
   protected __shaderStagesGLSL: Record<any, any>
   protected __shaderStages: Record<any, any>
   protected __shaderProgramHdls: Record<any, any>
@@ -33,9 +33,9 @@ class GLShader extends BaseItem {
   protected __shaderCompilationAttempted!: boolean
   /**
    * Create a GL shader.
-   * @param {WebGLRenderingContext} gl - The webgl rendering context.
+   * @param {WebGL12RenderingContext} gl - The webgl rendering context.
    */
-  constructor(gl: WebGLRenderingContext, name: string) {
+  constructor(gl: WebGL12RenderingContext, name: string) {
     super(name)
     if (!gl) {
       throw new Error('gl context must be passed to shader constructor')

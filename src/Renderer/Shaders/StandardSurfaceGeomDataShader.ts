@@ -6,7 +6,7 @@ import './GLSL/index'
 import frag from './StandardSurfaceGeomData.frag'
 import vert from './StandardSurfaceGeomData.vert'
 class StandardSurfaceGeomDataShader extends GLShader {
-  constructor(gl: WebGLRenderingContext) {
+  constructor(gl: WebGL12RenderingContext) {
     // , floatGeomBuffer
     super(gl, 'StandardSurfaceGeomDataShader')
     this.setShaderStage('VERTEX_SHADER', vert)

@@ -23,7 +23,7 @@ class GLEnvMap extends GLProbe {
    * @param {EnvMap} envMap - The environment map.
    */
   constructor(renderer: GLBaseRenderer, envMap: EnvMap) {
-    super(<WebGLRenderingContext>renderer.gl, 'EnvMap')
+    super(<WebGL12RenderingContext>renderer.gl, 'EnvMap')
     this.__renderer = renderer
     this.__envMap = envMap
     this.__backgroundFocus = 0.0

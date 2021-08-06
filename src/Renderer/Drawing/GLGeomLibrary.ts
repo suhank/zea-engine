@@ -16,7 +16,7 @@ const resizeIntArray = (intArray: Int32Array, newSize: number) => {
  */
 class GLGeomLibrary extends EventEmitter {
   protected renderer: GLBaseRenderer
-  protected __gl: WebGLRenderingContext
+  protected __gl: WebGL12RenderingContext
   protected shaderAttrSpec: Record<any, any>
   protected freeGeomIndices: any[]
   protected geoms: any[]
@@ -45,7 +45,7 @@ class GLGeomLibrary extends EventEmitter {
     super()
 
     this.renderer = renderer
-    this.__gl = <WebGLRenderingContext>renderer.gl
+    this.__gl = <WebGL12RenderingContext>renderer.gl
 
     this.shaderAttrSpec = {}
     this.freeGeomIndices = []

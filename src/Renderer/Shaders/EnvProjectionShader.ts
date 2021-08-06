@@ -11,9 +11,9 @@ import OctahedralEnvProjectionFrag from './OctahedralEnvProjection.frag'
 class EnvProjectionShader extends GLShader {
   /**
    * Create a GL shader.
-   * @param {WebGLRenderingContext} gl - The webgl rendering context.
+   * @param {WebGL12RenderingContext} gl - The webgl rendering context.
    */
-  constructor(gl: WebGLRenderingContext) {
+  constructor(gl: WebGL12RenderingContext) {
     super(gl, 'EnvProjectionShader')
     this.setShaderStage('VERTEX_SHADER', vert)
   }
@@ -31,9 +31,9 @@ class EnvProjectionShader extends GLShader {
 class OctahedralEnvProjectionShader extends EnvProjectionShader {
   /**
    * Create a GL shader.
-   * @param {WebGLRenderingContext} gl - The webgl rendering context.
+   * @param {WebGL12RenderingContext} gl - The webgl rendering context.
    */
-  constructor(gl: WebGLRenderingContext) {
+  constructor(gl: WebGL12RenderingContext) {
     super(gl)
     this.setShaderStage('FRAGMENT_SHADER', OctahedralEnvProjectionFrag)
   }
@@ -44,9 +44,9 @@ class OctahedralEnvProjectionShader extends EnvProjectionShader {
 class LatLongEnvProjectionShader extends EnvProjectionShader {
   /**
    * Create a GL shader.
-   * @param {WebGLRenderingContext} gl - The webgl rendering context.
+   * @param {WebGL12RenderingContext} gl - The webgl rendering context.
    */
-  constructor(gl: WebGLRenderingContext) {
+  constructor(gl: WebGL12RenderingContext) {
     super(gl)
     this.setShaderStage('FRAGMENT_SHADER', LatLongEnvProjectionFrag)
   }

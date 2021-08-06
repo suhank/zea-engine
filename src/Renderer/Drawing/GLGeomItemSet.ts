@@ -7,7 +7,7 @@ import { EventEmitter } from '../../Utilities/index'
  * @private
  */
 class GLGeomItemSet extends EventEmitter {
-  protected gl: WebGLRenderingContext
+  protected gl: WebGL12RenderingContext
   protected glGeom: any
   protected id: number
   protected glGeomItems: any[]
@@ -23,10 +23,10 @@ class GLGeomItemSet extends EventEmitter {
   protected highlightedItems: any[]
   /**
    * Create a GL geom item set.
-   * @param {WebGLRenderingContext} gl - The webgl rendering context.
+   * @param {WebGL12RenderingContext} gl - The webgl rendering context.
    * @param {any} glGeom - The glGeom value.
    */
-  constructor(gl: WebGLRenderingContext, glGeom: any) {
+  constructor(gl: WebGL12RenderingContext, glGeom: any) {
     super()
     this.gl = gl
     this.glGeom = glGeom

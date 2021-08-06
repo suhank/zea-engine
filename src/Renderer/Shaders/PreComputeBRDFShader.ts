@@ -12,9 +12,9 @@ import vert from './PreComputeBRDF.vert'
 class PreComputeBRDFShader extends GLShader {
   /**
    * Create a GL renderer.
-   * @param {WebGLRenderingContext} gl - The options value.
+   * @param {WebGL12RenderingContext} gl - The options value.
    */
-  constructor(gl: WebGLRenderingContext) {
+  constructor(gl: WebGL12RenderingContext) {
     super(gl, 'PreComputeBRDFShader')
     this.setShaderStage('VERTEX_SHADER', vert)
     this.setShaderStage('FRAGMENT_SHADER', frag)

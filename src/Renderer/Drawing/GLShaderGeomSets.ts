@@ -13,7 +13,7 @@ import { Vec3 } from '../../Math/Vec3'
  */
 class GLShaderGeomSets extends EventEmitter {
   protected pass: GLStandardGeomsPass
-  protected gl: WebGLRenderingContext | WebGL2RenderingContext
+  protected gl: WebGL12RenderingContext 
   protected glShader: any
   protected glGeomDataShader: any
   protected glHighlightShader: any
@@ -25,12 +25,12 @@ class GLShaderGeomSets extends EventEmitter {
   /**
    * Create a GL shader material.
    * @param {GLStandardGeomsPass} pass - The pass that owns this object.
-   * @param {WebGLRenderingContext | WebGL2RenderingContext} gl - The glShader value.
+   * @param {WebGL12RenderingContext } gl - The glShader value.
    * @param {Record<any,any>} shaders - The shader value.
    */
   constructor(
     pass: GLStandardGeomsPass,
-    gl: WebGLRenderingContext | WebGL2RenderingContext,
+    gl: WebGL12RenderingContext ,
     shaders: Record<any, any>
   ) {
     super()

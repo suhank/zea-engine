@@ -17,10 +17,10 @@ class GLLines extends GLGeom {
   protected __indexDataType: any
   /**
    * Create a GL line.
-   * @param {WebGLRenderingContext} gl - The webgl rendering context.
+   * @param {WebGL12RenderingContext} gl - The webgl rendering context.
    * @param {any} lines - The geom value.
    */
-  constructor(gl: WebGLRenderingContext, lines: any) {
+  constructor(gl: WebGL12RenderingContext, lines: any) {
     super(gl, lines)
 
     this.__numSegIndices = 0

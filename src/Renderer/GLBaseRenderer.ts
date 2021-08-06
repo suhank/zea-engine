@@ -30,7 +30,7 @@ class GLBaseRenderer extends ParameterOwner {
   solidAngleLimit: number
   protected __div: any
 
-  __gl: WebGLRenderingContext
+  __gl: WebGL12RenderingContext
   protected __glcanvas: Record<any, any>
   protected __scene: any
   protected __gizmoContext: any
@@ -173,7 +173,7 @@ class GLBaseRenderer extends ParameterOwner {
    * @param {string} value - The value param.
    */
   addShaderPreprocessorDirective(name: string, value?: string) {
-    const gl = <Record<any,any>>this.__gl
+    const gl = <Record<any, any>>this.__gl
     if (value) this.__shaderDirectives[name] = '#define ' + name + ' = ' + value
     else this.__shaderDirectives[name] = '#define ' + name
     const directives = []
@@ -513,7 +513,7 @@ class GLBaseRenderer extends ParameterOwner {
 
   /**
    * The getGL method.
-   * @return {WebGLRenderingContext} - The return value.
+   * @return {WebGL12RenderingContext} - The return value.
    */
   getGL() {
     return this.__gl
@@ -679,7 +679,7 @@ class GLBaseRenderer extends ParameterOwner {
       }
     }
 
-    gl.screenQuad = new GLScreenQuad(<WebGLRenderingContext>this.__gl)
+    gl.screenQuad = new GLScreenQuad(<WebGL12RenderingContext>this.__gl)
     this.__screenQuad = gl.screenQuad
 
     // Note: Mobile devices don't provide much support for reading data back from float textures,

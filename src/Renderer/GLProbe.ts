@@ -9,7 +9,7 @@ import { generateShaderGeomBinding } from './Drawing/GeomShaderBinding'
  * @private
  */
 class GLProbe extends EventEmitter {
-  protected __gl: WebGLRenderingContext | WebGL2RenderingContext
+  protected __gl: WebGL12RenderingContext
   // protected gl: Record<any,any>// to allow easier refactoring later
 
   protected maxFragmentShaderTextureUnits: any
@@ -22,10 +22,10 @@ class GLProbe extends EventEmitter {
   protected specularCubetex: any
   /**
    * Create a GL probe.
-   * @param {WebGLRenderingContext} gl - The webgl rendering context.
+   * @param {WebGL12RenderingContext} gl - The webgl rendering context.
    * @param {string} name - The name value.
    */
-  constructor(gl: WebGLRenderingContext | WebGL2RenderingContext, name: string) {
+  constructor(gl: WebGL12RenderingContext, name: string) {
     super()
     this.__gl = gl
     const gl_casted: Record<any, any> = gl
@@ -236,7 +236,7 @@ class GLProbe extends EventEmitter {
    * @param {WebGLUniformLocation} unif - The WebGL uniform
    * @return {boolean} - Returns true if the Probe was successfully bound.
    */
-  bind(renderstate: Record<any,any>) {
+  bind(renderstate: Record<any, any>) {
     const gl = this.__gl
     const { irradianceMap, prefilterMap, brdfLUT } = renderstate.unifs
 

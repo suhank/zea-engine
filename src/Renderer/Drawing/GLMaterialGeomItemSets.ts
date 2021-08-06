@@ -11,9 +11,9 @@ import { GLMaterial } from './GLMaterial'
  */
 class GLMaterialGeomItemSets extends EventEmitter {
   protected pass: GLPass
-  protected __gl: WebGLRenderingContext
+  protected __gl: WebGL12RenderingContext
   protected glMaterial: GLMaterial
-  protected glGeomItemSets:Record<any,any> = {}
+  protected glGeomItemSets: Record<any, any> = {}
   protected drawCount: number
   /**
    * Create a GL material geom item set.
@@ -30,7 +30,7 @@ class GLMaterialGeomItemSets extends EventEmitter {
     this.drawCountChanged = this.drawCountChanged.bind(this)
 
     const material = glMaterial.getMaterial()
-    const materialChanged = (event: Record<any,any>) => {
+    const materialChanged = (event: Record<any, any>) => {
       material.off('transparencyChanged', materialChanged)
       for (const key in this.glGeomItemSets) {
         const glGeomItemSet = this.glGeomItemSets[key]
@@ -73,7 +73,7 @@ class GLMaterialGeomItemSets extends EventEmitter {
    * @param {Record<any,any>} event - The change value.
    * @private
    */
-  drawCountChanged(event: Record<any,any>) {
+  drawCountChanged(event: Record<any, any>) {
     this.drawCount += event.change
     this.emit('updated')
   }
@@ -129,7 +129,7 @@ class GLMaterialGeomItemSets extends EventEmitter {
    * Draws all elements, binding the shader and continuing into the GLGeomItemSet
    * @param {Record<any,any>} renderstate - The render state for the current draw traversal
    */
-  draw(renderstate: Record<any,any>) {
+  draw(renderstate: Record<any, any>) {
     if (this.drawCount == 0) return
     const warnMissingUnifs = true
     this.glMaterial.bind(renderstate, warnMissingUnifs)
@@ -143,7 +143,7 @@ class GLMaterialGeomItemSets extends EventEmitter {
    * The drawHighlighted method.
    * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    */
-  drawHighlighted(renderstate: Record<any,any>) {
+  drawHighlighted(renderstate: Record<any, any>) {
     this.glMaterial.bind(renderstate, false)
     for (const key in this.glGeomItemSets) {
       const glGeomItemSet = this.glGeomItemSets[key]
@@ -155,7 +155,7 @@ class GLMaterialGeomItemSets extends EventEmitter {
    * The drawHighlightedGeoms method.
    * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    */
-  drawGeomData(renderstate: Record<any,any>) {
+  drawGeomData(renderstate: Record<any, any>) {
     this.glMaterial.bind(renderstate, false)
     for (const key in this.glGeomItemSets) {
       const glGeomItemSet = this.glGeomItemSets[key]

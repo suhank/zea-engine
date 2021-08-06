@@ -16,7 +16,7 @@ class GLFbo {
   /**
    * Creates a GL Framebuffer Object
    *
-   * @param {WebGLRenderingContext | WebGL2RenderingContext | undefined} gl - The Canvas 3D Context.
+   * @param {WebGL12RenderingContext} gl - The Canvas 3D Context.
    * @param {GLTexture2D} colorTexture - Represents 2D Texture in GL.
    * @param {boolean} createDepthTexture - The createDepthTexture value.
    */

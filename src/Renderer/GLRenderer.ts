@@ -18,7 +18,7 @@ const ALL_PASSES = PassType.OPAQUE | PassType.TRANSPARENT | PassType.OVERLAY
  * @extends GLBaseRenderer
  */
 class GLRenderer extends GLBaseRenderer {
-  protected __gl: Record<any, any> // can't use WebGLRenderingContext, ds may be augmented.
+  // __gl: Record<any, any> // can't use WebGL12RenderingContext, ds may be augmented.
   protected __exposure: number
   protected __tonemap: boolean
   protected __gamma: number
@@ -68,7 +68,7 @@ class GLRenderer extends GLBaseRenderer {
     this.rayCastDist = 0
     this.rayCastArea = 0
 
-    const gl = <WebGLRenderingContext>this.__gl
+    const gl = <WebGL12RenderingContext>this.__gl
     this.highlightsShader = new HighlightsShader(gl)
     this.silhouetteShader = new SilhouetteShader(gl)
     this.highlightOutlineThickness = 1.5
@@ -95,15 +95,14 @@ class GLRenderer extends GLBaseRenderer {
    * @private
    */
   __bindEnvMap(env: EnvMap | BaseImage) {
-    const gl = <WebGLRenderingContext>this.__gl
+    const gl = <Record<any, any>>this.__gl
     if (env instanceof EnvMap) {
       // Note: Safari doesn't support rendering to floating
       // point textures, so our PBR lighting pipeline doesn't work.
-      if (this.__gl.name !== 'webgl2') {
+      if (gl.name !== 'webgl2') {
         return
       }
 
-      
       this.__glEnvMap = env.getMetadata('gltexture')
       if (!this.__glEnvMap) {
         if (env.type === 'FLOAT') {
@@ -111,9 +110,9 @@ class GLRenderer extends GLBaseRenderer {
           this.__glEnvMap = new GLEnvMap(this, env)
         }
         // } else if (env.isStreamAtlas()) { // TODO: are these two lines still needed?
-        //   this.__glEnvMap = new GLImageStream(gl, env) 
+        //   this.__glEnvMap = new GLImageStream(gl, env)
         else {
-          this.__glEnvMap = new GLTexture2D(gl, env)
+          this.__glEnvMap = new GLTexture2D(this.__gl, env)
         }
       }
     } else {
@@ -124,16 +123,16 @@ class GLRenderer extends GLBaseRenderer {
       this.__glBackgroundMap = backgroundMap.getMetadata('gltexture')
       if (!this.__glBackgroundMap) {
         if (backgroundMap.type === 'FLOAT') {
-          this.__glBackgroundMap = new GLHDRImage(gl, backgroundMap)
+          this.__glBackgroundMap = new GLHDRImage(this.__gl, backgroundMap)
         } else {
-          this.__glBackgroundMap = new GLTexture2D(gl, backgroundMap)
+          this.__glBackgroundMap = new GLTexture2D(this.__gl, backgroundMap)
         }
       }
       this.__glBackgroundMap.on('loaded', this.requestRedraw)
       this.__glBackgroundMap.on('updated', this.requestRedraw)
       if (!this.__backgroundMapShader) {
-        if (!this.__gl.__quadVertexIdsBuffer) this.__gl.setupInstancedQuad()
-        this.__backgroundMapShader = new EnvMapShader(gl)
+        if (!gl.__quadVertexIdsBuffer) gl.setupInstancedQuad()
+        this.__backgroundMapShader = new EnvMapShader(this.__gl)
         // switch (backgroundMap.getMapping()) {
         //   case 'octahedral':
         //     break
@@ -149,10 +148,10 @@ class GLRenderer extends GLBaseRenderer {
         // }
         const shaderComp = this.__backgroundMapShader.compileForTarget()
         this.__backgroundMapShaderBinding = generateShaderGeomBinding(
-          gl,
+          this.__gl,
           shaderComp.attrs,
-          this.__gl.__quadattrbuffers,
-          this.__gl.__quadIndexBuffer
+          gl.__quadattrbuffers,
+          gl.__quadIndexBuffer
         )
       }
       // console.warn('Unsupported EnvMap:' + env)
@@ -295,7 +294,7 @@ class GLRenderer extends GLBaseRenderer {
    * @return {object} - The object containing the ray cast results.
    */
   raycast(xfo: Xfo, ray: Ray, dist: number, area = 0.01, mask = ALL_PASSES) {
-    const gl = <WebGLRenderingContext>this.__gl
+    const gl = <WebGL12RenderingContext>this.__gl
 
     if (!this.__rayCastRenderTarget) {
       this.__rayCastRenderTarget = new GLRenderTarget(gl, {
@@ -397,7 +396,7 @@ class GLRenderer extends GLBaseRenderer {
    * @return {object} - The object containing the ray cast results.
    */
   raycastCluster(xfo: Xfo, ray: Ray, dist: number, area = 0.01, mask = ALL_PASSES) {
-    const gl = <WebGLRenderingContext>this.__gl
+    const gl = <WebGL12RenderingContext>this.__gl
 
     if (!this.__rayCastRenderTarget) {
       this.__rayCastRenderTarget = new GLRenderTarget(gl, {
@@ -493,7 +492,7 @@ class GLRenderer extends GLBaseRenderer {
   drawBackground(renderstate: Record<any, any>) {
     if (this.__glBackgroundMap) {
       if (!this.__glBackgroundMap.isLoaded()) return
-      const gl = this.__gl
+      const gl = <Record<any, any>>this.__gl
       gl.depthMask(false)
       this.__backgroundMapShader.bind(renderstate)
       const unifs = renderstate.unifs

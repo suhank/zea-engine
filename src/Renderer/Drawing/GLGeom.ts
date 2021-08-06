@@ -5,7 +5,7 @@ import { generateShaderGeomBinding } from './GeomShaderBinding'
  * @private
  */
 class GLGeom extends RefCounted {
-  protected __gl: WebGLRenderingContext
+  protected __gl: WebGL12RenderingContext
   protected __geom: any
   protected __glattrbuffers: Record<any, any>
   protected __shaderBindings: Record<any, any>
@@ -14,10 +14,10 @@ class GLGeom extends RefCounted {
   protected __indexBuffer: any
   /**
    * Create a GL geom.
-   * @param {WebGLRenderingContext} gl - The webgl rendering context.
+   * @param {WebGL12RenderingContext} gl - The webgl rendering context.
    * @param {BaseGeom} geom - A geometry object
    */
-  constructor(gl: WebGLRenderingContext, geom: BaseGeom) {
+  constructor(gl: WebGL12RenderingContext, geom: BaseGeom) {
     super()
     this.__gl = gl
     this.__geom = geom

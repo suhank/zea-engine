@@ -10,10 +10,10 @@ class GLPoints extends GLGeom {
   protected __vboState: number
   /**
    * Create a GL point.
-   * @param {WebGLRenderingContext} gl - The webgl rendering context.
+   * @param {WebGL12RenderingContext} gl - The webgl rendering context.
    * @param {any} points - The points value.
    */
-  constructor(gl: WebGLRenderingContext, points: any) {
+  constructor(gl: WebGL12RenderingContext, points: any) {
     super(gl, points)
     this.genBuffers()
   }

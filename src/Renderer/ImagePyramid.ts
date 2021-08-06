@@ -22,13 +22,13 @@ class ImagePyramid extends GLImageAtlas {
 
   /**
    * Create an image pyramid.
-   * @param {WebGLRenderingContext} gl - The webgl rendering context.
+   * @param {WebGL12RenderingContext} gl - The webgl rendering context.
    * @param {string} name - The name value.
    * @param {any} srcGLTex - The srcGLTex value.
    * @param {boolean} destroySrcImage - The destroySrcImage value.
    * @param {number} minTileSize - The minTileSize value.
    */
-  constructor(gl: WebGLRenderingContext, name: string, srcGLTex: any, destroySrcImage = true, minTileSize = 16) {
+  constructor(gl: WebGL12RenderingContext, name: string, srcGLTex: any, destroySrcImage = true, minTileSize = 16) {
     super(gl, name)
 
     this.__srcGLTex = srcGLTex
@@ -69,7 +69,7 @@ class ImagePyramid extends GLImageAtlas {
       if (size < minTileSize) break
       // Create a target texture for this level of the pyramid.
       // and then render to it using the base level as a source image.
-      const level = new GLTexture2D(<WebGLRenderingContext>gl, {
+      const level = new GLTexture2D(<WebGL12RenderingContext>gl, {
         format: this.__srcGLTex.getFormat(),
         type: this.__srcGLTex.getType(),
         width: size * aspectRatio,
@@ -78,7 +78,7 @@ class ImagePyramid extends GLImageAtlas {
         wrap: 'CLAMP_TO_EDGE',
       })
       this.addSubImage(level.glTex)
-      this.__fbos.push(new GLFbo(<WebGLRenderingContext>gl, level))
+      this.__fbos.push(new GLFbo(<WebGL12RenderingContext>gl, level))
     }
 
     super.generateAtlasLayout()

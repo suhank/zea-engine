@@ -15,7 +15,7 @@ import { AtlasLayoutShader } from './Shaders/AtlasLayoutShader'
  * @private
  */
 class GLImageAtlas extends GLRenderTarget {
-  protected __gl: WebGLRenderingContext
+  protected __gl: WebGL12RenderingContext
   protected __name: string
   protected __formatParam: string
   protected __typeParam: string
@@ -30,12 +30,12 @@ class GLImageAtlas extends GLRenderTarget {
   protected __layoutVec4s: any
   /**
    * Create an image atlas..
-   * @param {WebGLRenderingContext} gl - The webgl rendering context.
+   * @param {WebGL12RenderingContext} gl - The webgl rendering context.
    * @param {string} name - The name value.
    * @param {string} format - The format value.
    * @param {string} type - The type value.
    */
-  constructor(gl: WebGLRenderingContext, name: string, format = 'RGBA', type = 'FLOAT') {
+  constructor(gl: WebGL12RenderingContext, name: string, format = 'RGBA', type = 'FLOAT') {
     super(gl)
     this.__name = name
     this.__formatParam = format
@@ -263,7 +263,7 @@ class GLImageAtlas extends GLRenderTarget {
         this.__atlasLayoutTexture.height != size
       ) {
         if (this.__atlasLayoutTexture) this.__atlasLayoutTexture.destroy()
-        this.__atlasLayoutTexture = new GLTexture2D(<WebGLRenderingContext>gl, {
+        this.__atlasLayoutTexture = new GLTexture2D(<WebGL12RenderingContext>gl, {
           format: 'RGBA',
           type: 'FLOAT',
           filter: 'NEAREST',

@@ -21,7 +21,7 @@ const FRAMEBUFFER = {
  * @private
  */
 class GLBaseViewport extends ParameterOwner {
-  protected __gl: WebGLRenderingContext
+  protected __gl: WebGL12RenderingContext
   protected renderer: Record<any, any>
   protected __renderer: Record<any, any>
   protected __doubleClickTimeMSParam = this.addParameter(new NumberParameter('DoubleClickTimeMS', 200))

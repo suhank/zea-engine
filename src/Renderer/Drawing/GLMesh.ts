@@ -20,10 +20,10 @@ class GLMesh extends GLGeom {
   protected __numEdgeIndices: any
   /**
    * Create a GL mesh.
-   * @param {WebGLRenderingContext} gl - The webgl rendering context.
+   * @param {WebGL12RenderingContext} gl - The webgl rendering context.
    * @param {any} mesh - The mesh value.
    */
-  constructor(gl: WebGLRenderingContext, mesh: any) {
+  constructor(gl: WebGL12RenderingContext, mesh: any) {
     super(gl, mesh)
   }
 
@@ -212,7 +212,7 @@ class GLMesh extends GLGeom {
    * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    * @return {any} - The return value.
    */
-  bindHardEdgesVAO(renderstate: Record<any,any>) {
+  bindHardEdgesVAO(renderstate: Record<any, any>) {
     if (this.__hardEdgesVao == undefined) return false
     this.__ext.bindVertexArrayOES(this.__hardEdgesVao)
     return true
@@ -249,7 +249,7 @@ class GLMesh extends GLGeom {
    * Draw an item to screen.
    * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    */
-  draw(renderstate: Record<any,any>) {
+  draw(renderstate: Record<any, any>) {
     this.__gl.drawElements(this.__gl.TRIANGLES, this.__numTriIndices, this.__indexDataType, 0)
   }
 
@@ -258,8 +258,8 @@ class GLMesh extends GLGeom {
    * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    * @param {number} instanceCount - The instanceCount value.
    */
-  drawInstanced(renderstate: Record<any,any>, instanceCount: number) {
-    const gl = <Record<any,any>>this.__gl
+  drawInstanced(renderstate: Record<any, any>, instanceCount: number) {
+    const gl = <Record<any, any>>this.__gl
     gl.drawElementsInstanced(this.__gl.TRIANGLES, this.__numTriIndices, this.__indexDataType, 0, instanceCount)
   }
 

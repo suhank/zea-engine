@@ -14,12 +14,12 @@ class GLScreenQuad {
   protected __glshader: ScreenQuadShader
   protected __quadVertexIdsBuffer: any[]
   protected __quadBinding: any // GeomShaderBinding | VAOGeomShaderBinding
-  protected ready:boolean
+  protected ready: boolean
   /**
    * Create a GL screen quad.
-   * @param {WebGLRenderingContext} gl - The webgl rendering context.
+   * @param {WebGL12RenderingContext} gl - The webgl rendering context.
    */
-  constructor(gl: WebGLRenderingContext) {
+  constructor(gl: WebGL12RenderingContext) {
     this.__gl = gl
 
     this.__pos = [0.0, 0.0]
@@ -30,7 +30,12 @@ class GLScreenQuad {
     if (!this.__gl.__quadVertexIdsBuffer) this.__gl.setupInstancedQuad()
 
     const shaderComp = this.__glshader.compileForTarget('GLScreenQuad')
-    this.__quadBinding = generateShaderGeomBinding(this.__gl, shaderComp.attrs, this.__gl.__quadattrbuffers,this.__gl.__quadIndexBuffer)
+    this.__quadBinding = generateShaderGeomBinding(
+      this.__gl,
+      shaderComp.attrs,
+      this.__gl.__quadattrbuffers,
+      this.__gl.__quadIndexBuffer
+    )
 
     this.ready = true
   }
@@ -86,7 +91,7 @@ class GLScreenQuad {
    * @param {Vec2} pos - The pos value.
    * @param {Vec2} size - The size value.
    */
-  draw(renderstate: Record<any, any>, texture: GLTexture2D, pos:Vec2 = undefined, size:Vec2 = undefined) {
+  draw(renderstate: Record<any, any>, texture: GLTexture2D, pos: Vec2 = undefined, size: Vec2 = undefined) {
     this.bind(renderstate, texture, pos, size)
 
     this.__gl.drawQuad()

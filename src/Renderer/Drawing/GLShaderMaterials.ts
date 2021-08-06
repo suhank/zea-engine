@@ -16,7 +16,7 @@ class GLShaderMaterials extends EventEmitter {
   protected glMaterialGeomItemSets: any[]
   /**
    * Create a GL shader material.
-   * @param {WebGLRenderingContext} gl - The WebGL Context value.
+   * @param {WebGL12RenderingContext} gl - The WebGL Context value.
    * @param {GLPass} pass - The pass that owns this GLShaderMaterials object.
    * @param {object} shaders - The shaders value.
    */
