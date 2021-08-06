@@ -3,7 +3,7 @@
 var count;
 // Stream object for reading off bytes from a byte array
 
-function ByteStream(data){
+function ByteStream(data: any){
 	this.data = data;
 	this.pos = 0;
 }
@@ -19,7 +19,7 @@ ByteStream.prototype.peekByte = function(){
 };
 
 // read an array of bytes
-ByteStream.prototype.readBytes = function(n){
+ByteStream.prototype.readBytes = function(n: any){
 	var bytes = new Array(n);
 	for(var i=0; i<n; i++){
 		bytes[i] = this.readByte();
@@ -28,7 +28,7 @@ ByteStream.prototype.readBytes = function(n){
 };
 
 // peek at an array of bytes without updating the stream position
-ByteStream.prototype.peekBytes = function(n){
+ByteStream.prototype.peekBytes = function(n: any){
 	var bytes = new Array(n);
 	for(var i=0; i<n; i++){
 		bytes[i] = this.data[this.pos + i];
@@ -37,7 +37,7 @@ ByteStream.prototype.peekBytes = function(n){
 };
 
 // read a string from a byte set
-ByteStream.prototype.readString = function(len){
+ByteStream.prototype.readString = function(len: any){
 	var str = '';
 	for(var i=0; i<len; i++){
 		str += String.fromCharCode(this.readByte());
@@ -56,7 +56,7 @@ ByteStream.prototype.readBitArray = function(){
 };
 
 // read an unsigned int with endian option
-ByteStream.prototype.readUnsigned = function(littleEndian){
+ByteStream.prototype.readUnsigned = function(littleEndian: any){
 	var a = this.readBytes(2);
 	if(littleEndian){
 		return (a[1] << 8) + a[0];	
@@ -66,27 +66,27 @@ ByteStream.prototype.readUnsigned = function(littleEndian){
 };
 
 
-function DataParser(data){
+function DataParser(data: any){
 	this.stream = new ByteStream(data);
 	// the final parsed object from the data
 	this.output = {};
 }
 
-DataParser.prototype.parse = function(schema){
+DataParser.prototype.parse = function(schema: any){
 	// the top level schema is just the top level parts array
 	this.parseParts(this.output, schema);	
 	return this.output;
 };
 
 // parse a set of hierarchy parts providing the parent object, and the subschema
-DataParser.prototype.parseParts = function(obj, schema){
+DataParser.prototype.parseParts = function(obj: any, schema: any){
 	for(var i=0; i<schema.length; i++){
 		var part = schema[i];
 		this.parsePart(obj, part); 
 	}
 };
 
-DataParser.prototype.parsePart = function(obj, part){
+DataParser.prototype.parsePart = function(obj: any, part: any){
 	var name = part.label;
 	var value;
 
@@ -122,12 +122,12 @@ DataParser.prototype.parsePart = function(obj, part){
 };
 
 // combine bits to calculate value
-function bitsToNum(bitArray){
-	return bitArray.reduce(function(s, n) { return s * 2 + n; }, 0);
+function bitsToNum(bitArray: any){
+	return bitArray.reduce(function(s: any, n: any) { return s * 2 + n; }, 0);
 }
 
 // parse a byte as a bit set (flags and values)
-DataParser.prototype.parseBits = function(details){
+DataParser.prototype.parseBits = function(details: any){
 	var out = {};
 	var bits = this.stream.readBitArray();
 	for(var key in details){
@@ -148,31 +148,31 @@ DataParser.prototype.parseBits = function(details){
 var Parsers = {
 	// read a byte
 	readByte: function(){
-		return function(stream){
+		return function(stream: any){
 			return stream.readByte();
 		};
 	},
 	// read an array of bytes
-	readBytes: function(length){
-		return function(stream){
+	readBytes: function(length: any){
+		return function(stream: any){
 			return stream.readBytes(length);
 		};
 	},
 	// read a string from bytes
-	readString: function(length){
-		return function(stream){
+	readString: function(length: any){
+		return function(stream: any){
 			return stream.readString(length);
 		};
 	},
 	// read an unsigned int (with endian)
-	readUnsigned: function(littleEndian){
-		return function(stream){
+	readUnsigned: function(littleEndian: any){
+		return function(stream: any){
 			return stream.readUnsigned(littleEndian);
 		};
 	},
 	// read an array of byte sets
-	readArray: function(size, countFunc){
-		return function(stream, obj, parent){
+	readArray: function(size: any, countFunc: any){
+		return function(stream: any, obj: any, parent: any){
 			var count = countFunc(stream, obj, parent);
 			var arr = new Array(count);
 			for(var i=0; i<count; i++){
@@ -191,8 +191,8 @@ var Parsers = {
 // a set of 0x00 terminated subblocks
 var subBlocks = {
 	label: 'blocks',
-	parser: function(stream){
-		var out = [];
+	parser: function(stream: any){
+		var out: any[] = [];
 		var terminator = 0x00;		
 		for(var size=stream.readByte(); size!==terminator; size=stream.readByte()){
 			out = out.concat(stream.readBytes(size));
@@ -204,7 +204,7 @@ var subBlocks = {
 // global control extension
 var gce = {
 	label: 'gce',
-	requires: function(stream){
+	requires: function(stream: any){
 		// just peek at the top two bytes, and if true do this
 		var codes = stream.peekBytes(2);
 		return codes[0] === 0x21 && codes[1] === 0xF9;
@@ -227,7 +227,7 @@ var gce = {
 // image pipeline block
 var image = {
 	label: 'image',
-	requires: function(stream){
+	requires: function(stream: any){
 		// peek at the next byte
 		var code = stream.peekByte();
 		return code === 0x2C;
@@ -251,10 +251,10 @@ var image = {
 			]
 		},{
 			label: 'lct', // optional local color table
-			requires: function(stream, obj, parent){
+			requires: function(stream: any, obj: any, parent: any){
 				return parent.descriptor.lct.exists;
 			},
-			parser: Parsers.readArray(3, function(stream, obj, parent){
+			parser: Parsers.readArray(3, function(stream: any, obj: any, parent: any){
 				return Math.pow(2, parent.descriptor.lct.size + 1);
 			})
 		},{
@@ -270,7 +270,7 @@ var image = {
 // plain text block
 var text = {
 	label: 'text',
-	requires: function(stream){
+	requires: function(stream: any){
 		// just peek at the top two bytes, and if true do this
 		var codes = stream.peekBytes(2);
 		return codes[0] === 0x21 && codes[1] === 0x01;
@@ -280,7 +280,7 @@ var text = {
 		{ label: 'blockSize', parser: Parsers.readByte() },
 		{ 
 			label: 'preData', 
-			parser: function(stream, obj, parent){
+			parser: function(stream: any, obj: any, parent: any){
 				return stream.readBytes(parent.text.blockSize);
 			}
 		},
@@ -291,7 +291,7 @@ var text = {
 // application block
 var application = {
 	label: 'application',
-	requires: function(stream, obj, parent){
+	requires: function(stream: any, obj: any, parent: any){
 		// make sure this frame doesn't already have a gce, text, comment, or image
 		// as that means this block should be attached to the next frame
 		//if(parent.gce || parent.text || parent.image || parent.comment){ return false; }
@@ -305,7 +305,7 @@ var application = {
 		{ label: 'blockSize', parser: Parsers.readByte() },
 		{ 
 			label: 'id', 
-			parser: function(stream, obj, parent){
+			parser: function(stream: any, obj: any, parent: any){
 				return stream.readString(parent.blockSize);
 			}
 		},
@@ -316,7 +316,7 @@ var application = {
 // comment block
 var comment = {
 	label: 'comment',
-	requires: function(stream, obj, parent){
+	requires: function(stream: any, obj: any, parent: any){
 		// make sure this frame doesn't already have a gce, text, comment, or image
 		// as that means this block should be attached to the next frame
 		//if(parent.gce || parent.text || parent.image || parent.comment){ return false; }
@@ -341,7 +341,7 @@ var frames = {
 		image,
 		text
 	],
-	loop: function(stream){
+	loop: function(stream: any){
 		var nextCode = stream.peekByte();
 		// rather than check for a terminator, we should check for the existence
 		// of an ext or image block to avoid infinite loops
@@ -375,10 +375,10 @@ var schemaGIF = [
 		]
 	},{
 		label: 'gct', // global color table
-		requires: function(stream, obj){
+		requires: function(stream: any, obj: any){
 			return obj.lsd.gct.exists;
 		},
-		parser: Parsers.readArray(3, function(stream, obj){
+		parser: Parsers.readArray(3, function(stream: any, obj: any){
 			return Math.pow(2, obj.lsd.gct.size + 1);
 		})
 	},
@@ -388,7 +388,7 @@ var schemaGIF = [
 
 var gifSchema = schemaGIF;
 
-function GIF(arrayBuffer){
+function GIF(arrayBuffer: any){
 	// convert to byte array
 	var byteData = new Uint8Array(arrayBuffer);
 	var parser = new DataParser(byteData);
@@ -408,7 +408,7 @@ function GIF(arrayBuffer){
 // process a single gif image frames data, decompressing it using LZW 
 // if buildPatch is true, the returned image will be a clamped 8 bit image patch
 // for use directly with a canvas.
-GIF.prototype.decompressFrame = function(index, buildPatch){
+GIF.prototype.decompressFrame = function(index: any, buildPatch: any){
 
 	// make sure a valid frame is requested
 	if(index >= this.raw.frames.length){ return null; }
@@ -427,7 +427,7 @@ GIF.prototype.decompressFrame = function(index, buildPatch){
 		}
 
 		// setup usable image object
-		var image = {
+		var image:Record<any,any> = {
 			pixels: pixels,
 			dims: {
 				top: frame.image.descriptor.top,
@@ -470,7 +470,7 @@ GIF.prototype.decompressFrame = function(index, buildPatch){
 	 * javascript port of java LZW decompression
 	 * Original java author url: https://gist.github.com/devunwired/4479231
 	 */	
-	function lzw(minCodeSize, data, pixelCount) {
+	function lzw(minCodeSize: any, data: any, pixelCount: any) {
  		
  		var MAX_STACK_SIZE = 4096;
 		var nullCode = -1;
@@ -572,11 +572,11 @@ GIF.prototype.decompressFrame = function(index, buildPatch){
 	}
 
 	// deinterlace function from https://github.com/shachaf/jsgif
-	function deinterlace(pixels, width) {
+	function deinterlace(pixels: any, width: any) {
 		
 		var newPixels = new Array(pixels.length);
 		var rows = pixels.length / width;
-		var cpRow = function(toRow, fromRow) {
+		var cpRow = function(toRow: any, fromRow: any) {
 			var fromPixels = pixels.slice(fromRow * width, (fromRow + 1) * width);
 			newPixels.splice.apply(newPixels, [toRow * width, width].concat(fromPixels));
 		};
@@ -598,7 +598,7 @@ GIF.prototype.decompressFrame = function(index, buildPatch){
 
 	// create a clamped byte array patch for the frame image to be used directly with a canvas
 	// TODO: could potentially squeeze some performance by doing a direct 32bit write per iteration
-	function generatePatch(image){
+	function generatePatch(image: any){
 
 		var totalPixels = image.pixels.length;
 		var patchData = new Uint8ClampedArray(totalPixels * 4);
@@ -617,7 +617,7 @@ GIF.prototype.decompressFrame = function(index, buildPatch){
 };
 
 // returns all frames decompressed
-GIF.prototype.decompressFrames = function(buildPatch){
+GIF.prototype.decompressFrames = function(buildPatch: any){
 	var frames = [];
 	for(var i=0; i<this.raw.frames.length; i++){
 		var frame = this.raw.frames[i];

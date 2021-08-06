@@ -9,7 +9,7 @@ var formatPattern = "FORMAT=32-bit_rle_rgbe";
 var widthHeightPattern = "-Y ([0-9]+) \\+X ([0-9]+)";
 
 //http://croquetweak.blogspot.co.uk/2014/08/deconstructing-floats-frexp-and-ldexp.html
-function ldexp(mantissa, exponent) {
+function ldexp(mantissa: any, exponent: any) {
     return exponent > 1023 // avoid multiplying by infinity
         ? mantissa * Math.pow(2, 1023) * Math.pow(2, exponent - 1023)
         : exponent < -1074 // avoid multiplying by zero
@@ -17,7 +17,7 @@ function ldexp(mantissa, exponent) {
         : mantissa * Math.pow(2, exponent);
 }
 
-function readPixelsRawRLE(buffer, data, offset, fileOffset, scanline_width, num_scanlines) {
+function readPixelsRawRLE(buffer: any, data: any, offset: any, fileOffset: any, scanline_width: any, num_scanlines: any) {
     var rgbe = new Array(4);
     var scanline_buffer = null;
     var ptr;
@@ -26,7 +26,7 @@ function readPixelsRawRLE(buffer, data, offset, fileOffset, scanline_width, num_
     var buf = new Array(2);
     var bufferLength = buffer.length;
 
-    function readBuf(buf) {
+    function readBuf(buf: any) {
       var bytesRead = 0;
       do {
         buf[bytesRead++] = buffer[fileOffset];
@@ -34,7 +34,7 @@ function readPixelsRawRLE(buffer, data, offset, fileOffset, scanline_width, num_
       return bytesRead;
     }
 
-    function readBufOffset(buf, offset, length) {
+    function readBufOffset(buf: any, offset: any, length: any) {
       var bytesRead = 0;
       do {
         buf[offset + bytesRead++] = buffer[fileOffset];
@@ -42,7 +42,7 @@ function readPixelsRawRLE(buffer, data, offset, fileOffset, scanline_width, num_
       return bytesRead;
     }
 
-    function readPixelsRaw(buffer, data, offset, numpixels) {
+    function readPixelsRaw(buffer: any, data: any, offset: any, numpixels: any) {
         var numExpected = 4 * numpixels;
         var numRead = readBufOffset(data, offset, numExpected);
         if (numRead < numExpected) {
@@ -122,7 +122,7 @@ function readPixelsRawRLE(buffer, data, offset, fileOffset, scanline_width, num_
 }
 
 //Returns data as floats and flipped along Y by default
-function parseHdr(buffer) {
+function parseHdr(buffer: any) {
     if (buffer instanceof ArrayBuffer) {
         buffer = new Uint8Array(buffer);
     }
