@@ -390,6 +390,8 @@ class GLBaseViewport extends ParameterOwner {
       gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, this.fb[FRAMEBUFFER.MSAA_RENDERBUFFER])
       renderstate.boundRendertarget = this.fb[FRAMEBUFFER.MSAA_RENDERBUFFER]
       gl.viewport(0, 0, this.__width, this.__height)
+
+      if (this.renderer.outlineThickness == 0) return
     } else {
       // Rebind the default RenderBuffer.
       gl.bindFramebuffer(gl.FRAMEBUFFER, null)
