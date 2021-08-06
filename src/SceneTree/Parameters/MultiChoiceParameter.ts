@@ -27,7 +27,7 @@ class MultiChoiceParameter extends NumberParameter {
    * @param {number} index - The index value.
    * @param {array} choices - The choices value.
    */
-  constructor(name: string = '', index: number, choices: any[]) {
+  constructor(name?: string, index?: number, choices?: any[]) {
     super(name, index, [0, choices.length], 1)
     this.choices = choices
   }
@@ -55,6 +55,6 @@ class MultiChoiceParameter extends NumberParameter {
   }
 }
 
-// Registry.register('MultiChoiceParameter', MultiChoiceParameter)
+Registry.register('MultiChoiceParameter', MultiChoiceParameter)
 
 export { MultiChoiceParameter }

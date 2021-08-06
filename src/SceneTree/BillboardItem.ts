@@ -26,7 +26,7 @@ class BillboardItem extends TreeItem {
    * @param {string} name - The name of the billboard item.
    * @param {BaseImage} image - The image value.
    */
-  constructor(name: string, image: BaseImage) {
+  constructor(name?: string, image?: BaseImage) {
     super(name)
     const imageParam = this.addParameter(new ImageParameter('Image'))
     if (image) imageParam.setValue(image) // Note: this dirties the param and will ensure it is saved to JSON

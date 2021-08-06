@@ -37,7 +37,7 @@ class LDRVideo extends FileImage {
    * @param {string} filePath - The filePath value.
    * @param {Record<any,any>} params - The params value.
    */
-  constructor(name: string, filePath: string, params: Record<any, any>) {
+  constructor(name?: string, filePath?: string, params?: Record<any, any>) {
     super(name, filePath, params)
     this.format = 'RGB'
     this.type = 'UNSIGNED_BYTE'

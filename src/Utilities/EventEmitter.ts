@@ -175,7 +175,7 @@ class EventEmitter extends BaseClass {
    * @param {BaseEvent} [event] - The data you want to pass down to all listener functions as parameter.
    *
    */
-  emit(eventName: string, event: BaseEvent): void {
+  emit(eventName: string, event: BaseEvent = new BaseEvent()): void {
     const listeners = this.listeners[eventName] || []
 
     listeners.forEach((fn: (event: BaseEvent) => void) => {

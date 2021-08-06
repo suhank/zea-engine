@@ -26,7 +26,7 @@ class StructParameter extends Parameter<Record<string, unknown>> {
    * Create a struct parameter.
    * @param {string} name - The name of the struct parameter.
    */
-  constructor(name: string) {
+  constructor(name?: string) {
     super(name, {}, 'Struct')
     this.members = []
   }
@@ -148,6 +148,6 @@ class StructParameter extends Parameter<Record<string, unknown>> {
   }
 }
 
-// Registry.register('StructParameter', StructParameter)
+Registry.register('StructParameter', StructParameter)
 
 export { StructParameter }

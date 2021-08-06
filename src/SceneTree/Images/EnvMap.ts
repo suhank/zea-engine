@@ -26,7 +26,7 @@ class EnvMap extends VLHImage {
    * @param {string} name - The name value.
    * @param {Record<any,any>} params - The params value.
    */
-  constructor(name: string, params: Record<any, any> = {}) {
+  constructor(name?: string, params: Record<any, any> = {}) {
     super(name, params)
 
     this.addParameter(new BooleanParameter('HeadLightMode', false))

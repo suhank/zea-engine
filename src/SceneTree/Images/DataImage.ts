@@ -18,7 +18,7 @@ class DataImage extends BaseImage {
    * Create a data image.
    * @param {string} name - The name value.
    */
-  constructor(name: string) {
+  constructor(name?: string) {
     super(name)
 
     if (name == undefined) name = this.constructor.name

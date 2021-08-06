@@ -9,6 +9,7 @@ import { GLRenderTarget } from './GLRenderTarget'
 import { generateShaderGeomBinding } from './Drawing/GeomShaderBinding'
 import { MathFunctions } from '../Utilities/MathFunctions'
 import { AtlasLayoutShader } from './Shaders/AtlasLayoutShader'
+import { BaseEvent } from '../Utilities/BaseEvent'
 
 /**
  * An Image Atlas lays out multiple smaller images within a larger image atlas, and tracks their positions.
@@ -59,7 +60,7 @@ class GLImageAtlas extends GLRenderTarget {
       this.__asyncCount--
       if (this.__asyncCount == 0) {
         this.loaded = true
-        this.emit('loaded', {})
+        this.emit('loaded', new BaseEvent())
       }
     }
   }
@@ -338,7 +339,7 @@ class GLImageAtlas extends GLRenderTarget {
 
     this.unbind(renderstate)
     // this.__fbo.unbind()
-    this.emit('updated', {})
+    this.emit('updated', new BaseEvent())
   }
 
   /**

@@ -25,7 +25,7 @@ class MaterialGroup extends BaseGroup {
    * @param {string} name - The name of the group.
    */
 
-  constructor(name: string) {
+  constructor(name?: string) {
     super(name)
     this.name = name
     this.__materialParam = this.addParameter(new MaterialParameter('Material'))
@@ -189,6 +189,6 @@ class MaterialGroup extends BaseGroup {
   }
 }
 
-// Registry.register('MaterialGroup', MaterialGroup) // TODO: MaterialGroup current doesn't extend baseclass
+Registry.register('MaterialGroup', MaterialGroup) 
 
 export { MaterialGroup }

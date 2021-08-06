@@ -22,7 +22,7 @@ class FileImage extends BaseImage {
    * @param {string} filePath - The filePath value.
    * @param {Record<any,any>} params - The params value.
    */
-  constructor(name: string, filePath: string = '', params: Record<any, any> = {}) {
+  constructor(name?: string, filePath: string = '', params: Record<any, any> = {}) {
     if (filePath.constructor == Object) {
       params = { filePath }
     }

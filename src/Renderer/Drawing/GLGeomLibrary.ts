@@ -562,7 +562,7 @@ class GLGeomLibrary extends EventEmitter {
     this.__destroyed = true
 
     //  Note: PoTree listens to this event. If moved up into RefCounted, make sure it is still emitted.
-    this.emit('destructing', {})
+    this.emit('destructing')
   }
 }
 

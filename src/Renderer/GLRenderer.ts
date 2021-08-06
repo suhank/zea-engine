@@ -11,6 +11,7 @@ import { EnvMapShader } from './Shaders/EnvMapShader'
 import { HighlightsShader } from './Shaders/HighlightsShader'
 import { SilhouetteShader } from './Shaders/SilhouetteShader'
 import { generateShaderGeomBinding } from './Drawing/GeomShaderBinding'
+import { BaseEvent } from '../Utilities/BaseEvent'
 
 const ALL_PASSES = PassType.OPAQUE | PassType.TRANSPARENT | PassType.OVERLAY
 
@@ -528,7 +529,7 @@ class GLRenderer extends GLBaseRenderer {
     super.drawScene(renderstate)
     // console.log("Draw Calls:" + renderstate['drawCalls']);
 
-    this.emit('redrawOccurred', {})
+    this.emit('redrawOccurred')
   }
 }
 

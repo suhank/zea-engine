@@ -13,6 +13,7 @@ import { GLGeomItemLibrary } from './Drawing/GLGeomItemLibrary'
 import { GLPass, PassType } from './Passes/GLPass'
 import { Color } from '../Math/Color'
 import { GLRenderer } from './GLRenderer'
+import { BaseEvent } from '../Utilities/BaseEvent'
 
 let activeGLRenderer: Record<any, any>
 let pointerIsDown = false
@@ -1086,7 +1087,7 @@ class GLBaseRenderer extends ParameterOwner {
         xrvp.on('viewChanged', emitViewChanged)
       } else {
         xrvp.off('viewChanged', emitViewChanged)
-        this.emit('updated', {})
+        this.emit('updated', new BaseEvent())
 
         for (const key in this.__passes) {
           const passSet = this.__passes[key]

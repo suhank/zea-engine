@@ -124,7 +124,7 @@ class Label extends DataImage {
    * @param {string} name - The name value.
    * @param {string} library - The library value.
    */
-  constructor(name: string, library: string) {
+  constructor(name?: string, library?: string) {
     super(name)
 
     this.__canvasElem = document.createElement('canvas')
@@ -226,7 +226,7 @@ class Label extends DataImage {
           resolve(promise)
         }
         if (!labelManager.isLibraryLoaded(library)) {
-          labelManager.on('labelLibraryLoaded', (event) => {
+          labelManager.on('labelLibraryLoaded', (event: any) => {
             const loadedLibrary = event.library
             if (loadedLibrary == library) getLibraryText()
           })
@@ -237,10 +237,10 @@ class Label extends DataImage {
     }
     const loadFont = () => {
       const promise = new Promise((resolve) => {
-        if (document.fonts != undefined) {
+        if ((document as any).fonts != undefined) {
           const font = this.getParameter('Font').getValue()
           const fontSize = this.getParameter('FontSize').getValue()
-          document.fonts.load(fontSize + 'px "' + font + '"').then(() => {
+          ;(document as any).fonts.load(fontSize + 'px "' + font + '"').then(() => {
             // console.log("Font Loaded:" + font);
             resolve(promise)
           })

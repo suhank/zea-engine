@@ -24,7 +24,7 @@ class SelectionSet extends BaseGroup {
    *
    * @param {string} name - The name of the group.
    */
-  constructor(name: string) {
+  constructor(name?: string) {
     super(name)
 
     this.__highlightedParam = this.addParameter(new BooleanParameter('Highlighted', false))

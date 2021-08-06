@@ -16,7 +16,7 @@ class InstanceItem extends TreeItem {
    * Create an instance item.
    * @param {string} name - The name of the instance item.
    */
-  constructor(name: string) {
+  constructor(name?: string) {
     super(name)
   }
 

@@ -25,7 +25,7 @@ class VLAAsset extends AssetItem {
    * Create a VLA asset.
    * @param {string} name - The name value.
    */
-  constructor(name: string) {
+  constructor(name?: string) {
     super(name)
 
     // A signal that is emitted once all the geometries are loaded.

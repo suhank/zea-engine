@@ -8,6 +8,7 @@ import { POINTER_TYPES } from '../Utilities/EnumUtils'
 import { BaseTool } from '../SceneTree/index'
 import { CameraManipulator } from '../SceneTree/index'
 import { GLRenderer } from './GLRenderer'
+import { BaseEvent } from '../Utilities/BaseEvent'
 
 /**
  * Class representing a GL viewport.
@@ -228,7 +229,7 @@ class GLViewport extends GLBaseViewport {
     globalXfoParam.on('valueChanged', () => {
       getCameraParams()
       this.invalidateGeomDataBuffer()
-      this.emit('updated')
+      this.emit('updated', new BaseEvent())
       this.emit('viewChanged', {
         interfaceType: 'CameraAndPointer',
         viewXfo: this.__cameraXfo,

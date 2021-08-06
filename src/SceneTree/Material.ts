@@ -35,7 +35,7 @@ class Material extends BaseItem {
    * @param {string} name - The name of the material.
    * @param {string} shaderName - Shader's class name.
    */
-  constructor(name: string, shaderName?: string) {
+  constructor(name?: string, shaderName?: string) {
     super(name)
     this.__isTransparent = false
     this.__isTextured = false
@@ -341,6 +341,6 @@ class Material extends BaseItem {
     super.copyFrom(src, context)
   }
 }
-// Registry.register('Material', Material)
+Registry.register('Material', Material)
 
 export { Material }

@@ -8,6 +8,7 @@ import { GLTexture2D } from './GLTexture2D'
 import { GLFbo } from './GLFbo'
 import { GLMesh } from './Drawing/GLMesh'
 import { GLRenderer } from './GLRenderer'
+import { BaseEvent } from '../Utilities/BaseEvent'
 
 const FRAMEBUFFER = {
   MSAA_RENDERBUFFER: 0,
@@ -125,7 +126,7 @@ class GLBaseViewport extends ParameterOwner {
         } else {
           console.warn('Invalid background:' + value)
         }
-        this.emit('updated', {})
+        this.emit('updated',  new BaseEvent())
       }
       processBGValue()
       bgColorParam.on('valueChanged', processBGValue)
@@ -181,7 +182,7 @@ class GLBaseViewport extends ParameterOwner {
     const settings = this.__renderer.getScene().settings
     const bgColorParam = settings.getParameter('BackgroundColor')
     bgColorParam.setValue(background)
-    this.emit('updated', {})
+    this.emit('updated', new BaseEvent())
   }
 
   /**

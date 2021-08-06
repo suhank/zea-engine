@@ -4,6 +4,7 @@ import { EnvMapShader } from './Shaders/EnvMapShader'
 import { generateShaderGeomBinding } from './Drawing/GeomShaderBinding'
 import { EnvMap } from '../SceneTree/Images/EnvMap'
 import { GLBaseRenderer } from './GLBaseRenderer'
+import { BaseEvent } from '../Utilities/BaseEvent'
 
 /** Class representing a GL environment map.
  * @extends GLProbe
@@ -67,12 +68,12 @@ class GLEnvMap extends GLProbe {
     updateHeadlightModeFlag()
     headlightParam.on('valueChanged', () => {
       updateHeadlightModeFlag()
-      this.emit('updated')
+      this.emit('updated', new BaseEvent())
     })
 
     this.convolveProbe(this.__srcGLTex)
 
-    this.emit('updated')
+    this.emit('updated', new BaseEvent())
   }
 
   /**

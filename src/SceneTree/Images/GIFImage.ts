@@ -41,7 +41,7 @@ class GIFImage extends FileImage {
    * @param {string|Record<any,any>} filePath - The filePath value.
    * @param {Record<any,any>} params - The params value.
    */
-  constructor(name: string, filePath = '', params = {}) {
+  constructor(name?: string, filePath = '', params = {}) {
     super(name, filePath, params)
 
     this.format = 'RGBA'

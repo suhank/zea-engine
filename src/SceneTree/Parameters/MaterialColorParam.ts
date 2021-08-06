@@ -58,7 +58,7 @@ class MaterialColorParam extends ColorParameter {
    * @param {string} name - The name of the material color parameter.
    * @param {Color} value - The value of the parameter.
    */
-  constructor(name: string, value?: Color) {
+  constructor(name?: string, value?: Color) {
     super(name, value)
     this.imageUpdated = this.imageUpdated.bind(this)
   }
@@ -150,6 +150,6 @@ class MaterialColorParam extends ColorParameter {
   }
 }
 
-// Registry.register('MaterialColorParam', MaterialColorParam)
+Registry.register('MaterialColorParam', MaterialColorParam)
 
 export { MaterialColorParam }

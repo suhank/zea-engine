@@ -3,6 +3,7 @@ import { UnpackHDRShader } from './Shaders/UnpackHDRShader'
 import { GLFbo } from './GLFbo'
 import { generateShaderGeomBinding } from './Drawing/GeomShaderBinding'
 import { VLHImage } from '../SceneTree/Images/VLHImage'
+import { BaseEvent } from '../Utilities/BaseEvent'
 
 /** Class representing a GL high dynamic range (HDR) image.
  * @extends GLTexture2D
@@ -133,7 +134,7 @@ class GLHDRImage extends GLTexture2D {
     //     this.__srcCDMTex = null;
     // }
 
-    this.emit('updated', {})
+    this.emit('updated', new BaseEvent())
   }
 
   /**

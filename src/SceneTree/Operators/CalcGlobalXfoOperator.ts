@@ -1,4 +1,5 @@
 import { Xfo } from '../../Math/Xfo'
+import { Registry } from '../../Registry'
 import { XfoParameter } from '../Parameters'
 import { Operator } from './Operator'
 import { OperatorInput } from './OperatorInput'
@@ -15,7 +16,7 @@ class CalcGlobalXfoOperator extends Operator {
    * @param {XfoParameter} groupGlobalXfoParam - The GlobalXfo param found on the Group.
    * @param {XfoParameter} cuttingPlaneParam - The parameter on the Group which defines the displacement to apply to the members.
    */
-  constructor(globalXfoParam: XfoParameter, localXfoParam: XfoParameter) {
+  constructor(globalXfoParam?: XfoParameter, localXfoParam?: XfoParameter) {
     super('CalcGlobalXfoOperator')
     this.addInput(new OperatorInput('ParentGlobal'))
     this.addInput(new OperatorInput('LocalXfo')).setParam(localXfoParam)
@@ -55,6 +56,6 @@ class CalcGlobalXfoOperator extends Operator {
   }
 }
 
-// Registry.register('CalcGlobalXfoOperator', CalcGlobalXfoOperator)
+Registry.register('CalcGlobalXfoOperator', CalcGlobalXfoOperator)
 
 export { CalcGlobalXfoOperator }
