@@ -5,6 +5,7 @@ import { GLLines } from '../Drawing/GLLines'
 import { GLPass, PassType } from './GLPass'
 import { GLTexture2D } from '../GLTexture2D'
 import { MathFunctions } from '../../Utilities/MathFunctions'
+import { GLBaseRenderer } from '../GLBaseRenderer'
 
 const pixelsPerItem = 6 // The number of pixels per draw item.
 
@@ -13,6 +14,24 @@ const pixelsPerItem = 6 // The number of pixels per draw item.
  * @private
  */
 class GLBoundingBoxPass extends GLPass {
+  protected boxes: any[]
+  protected dirtyBoxes: Set<any>
+  protected freeIndices: any[]
+  protected drawCount: number
+  protected indexArrayUpdateNeeded: boolean
+  protected __updateRequested: boolean
+  protected glgeom: any
+  protected glshader: any
+
+  protected __modelMatrixArray: any[]
+  protected __treeitemDataArray: any[]
+  protected __tintColorArray: any[]
+
+  protected __instanceIdsBuffer: any
+
+  protected __indexArray: any
+  protected __drawItemsTexture: any
+  protected __width: number
   /**
    * Create a GL treeitems pass.
    */
@@ -43,7 +62,7 @@ class GLBoundingBoxPass extends GLPass {
    * @param {GLBaseRenderer} renderer - The renderer value.
    * @param {number} passIndex - The index of the pass in the GLBAseRenderer
    */
-  init(renderer, passIndex) {
+  init(renderer: GLBaseRenderer, passIndex: number) {
     super.init(renderer, passIndex)
 
     const gl = this.__renderer.gl
@@ -56,12 +75,12 @@ class GLBoundingBoxPass extends GLPass {
    * is added to the scene, and the renderer must decide how to render it.
    * It allows Passes to select geometries to handle the drawing of.
    * @param {TreeItem} treeItem - The treeItem value.
-   * @param {object} rargs - Extra return values are passed back in this object.
+   * @param {Record<any, any>} rargs - Extra return values are passed back in this object.
    * The object contains a parameter 'continueInSubTree', which can be set to false,
    * so the subtree of this node will not be traversed after this node is handled.
    * @return {Boolean} - The return value.
    */
-  itemAddedToScene(treeItem, rargs) {
+  itemAddedToScene(treeItem: TreeItem, rargs: Record<any, any>) {
     // if (treeItem instanceof TreeItem) {
     //   this.bindTreeItem(treeItem)
     //   return false
@@ -73,10 +92,10 @@ class GLBoundingBoxPass extends GLPass {
    * The itemRemovedFromScene method is called on each pass when aa item
    * is removed to the scene, and the pass must handle cleaning up any resources.
    * @param {TreeItem} treeItem - The treeItem value.
-   * @param {object} rargs - Extra return values are passed back in this object.
+   * @param {Record<any,any>} rargs - Extra return values are passed back in this object.
    * @return {Boolean} - The return value.
    */
-  itemRemovedFromScene(treeItem, rargs) {
+  itemRemovedFromScene(treeItem: TreeItem, rargs: Record<any, any>) {
     // if (treeItem instanceof TreeItem) {
     //   this.unbindTreeItem(treeItem)
     //   return true
@@ -92,7 +111,7 @@ class GLBoundingBoxPass extends GLPass {
    *
    * @param {TreeItem} treeItem - The tree item to add.
    */
-  addTreeItem(treeItem, continueIntoSubTree = true) {
+  addTreeItem(treeItem: TreeItem, continueIntoSubTree = true) {
     // Note: we can have BaseItems in the tree now.
     if (!(treeItem instanceof TreeItem)) return
 
@@ -101,7 +120,7 @@ class GLBoundingBoxPass extends GLPass {
     if (continueIntoSubTree) {
       // Traverse the tree adding items until we hit the leaves (which are usually GeomItems.)
       for (const childItem of treeItem.getChildren()) {
-        if (childItem) this.addTreeItem(childItem)
+        if (childItem) this.addTreeItem(<TreeItem>childItem)
       }
 
       treeItem.on('childAdded', this.__childItemAdded)
@@ -113,7 +132,7 @@ class GLBoundingBoxPass extends GLPass {
    * @param {*} event -
    * @private
    */
-  __childItemAdded(event) {
+  __childItemAdded(event: Record<any, any>) {
     this.addTreeItem(event.childItem)
   }
 
@@ -121,7 +140,7 @@ class GLBoundingBoxPass extends GLPass {
    * @param {*} event -
    * @private
    */
-  __childItemRemoved(event) {
+  __childItemRemoved(event: Record<any, any>) {
     this.unbindTreeItem(event.childItem)
   }
 
@@ -129,8 +148,8 @@ class GLBoundingBoxPass extends GLPass {
    * The bindTreeItem method.
    * @param {any} treeitem - The treeitem value.
    */
-  bindTreeItem(treeitem) {
-    let index
+  bindTreeItem(treeitem: TreeItem) {
+    let index: number
     if (this.freeIndices.length > 0) index = this.freeIndices.pop()
     else index = this.boxes.length
     treeitem.setMetadata('GLBoundingBoxPass_Index', index)
@@ -172,8 +191,9 @@ class GLBoundingBoxPass extends GLPass {
    * The unbindTreeItem method.
    * @param {any} treeitem - The treeitem value.
    */
-  unbindTreeItem(treeitem) {
+  unbindTreeItem(treeitem: TreeItem) {
     const index = treeitem.getMetadata('GLBoundingBoxPass_Index')
+
     if (index == -1) {
       console.warn('Billboard already removed.')
       return
@@ -203,7 +223,7 @@ class GLBoundingBoxPass extends GLPass {
    * @param {any} dataArray - The dataArray value.
    * @private
    */
-  __populateBoxesDataArray(treeitemData, index, dataArray) {
+  __populateBoxesDataArray(treeitemData: any, index: number, dataArray: any) {
     const treeitem = treeitemData.treeitem
     const globalXfoParam = treeitem.getParameter('GlobalXfo')
     const geomMatParam = treeitem.getParameter('GeomMat')
@@ -258,12 +278,12 @@ class GLBoundingBoxPass extends GLPass {
   __updateBoxes() {
     if (this.indexArrayUpdateNeeded) this.__updateIndexArray()
 
-    const gl = this.__renderer.gl
+    const gl = <Record<any, any>>this.__renderer.gl
     if (!gl.floatTexturesSupported || !gl.drawElementsInstanced) {
       this.__modelMatrixArray = []
       this.__treeitemDataArray = []
       this.__tintColorArray = []
-      this.__indexArray.forEach((index) => {
+      this.__indexArray.forEach((index: number) => {
         const treeitemData = this.boxes[index]
         const treeitem = treeitemData.treeitem
         const mat4 = treeitem.getParameter('GlobalXfo').getValue().toMat4()
@@ -303,7 +323,7 @@ class GLBoundingBoxPass extends GLPass {
     //     this.__width -= (this.__width % pixelsPerItem);
 
     if (!this.__drawItemsTexture) {
-      this.__drawItemsTexture = new GLTexture2D(gl, {
+      this.__drawItemsTexture = new GLTexture2D(this.__gl, {
         format: 'RGBA',
         type: 'FLOAT',
         width: size,
@@ -317,7 +337,7 @@ class GLBoundingBoxPass extends GLPass {
       this.__drawItemsTexture.resize(size, size)
     }
 
-    this.__indexArray.forEach((index) => {
+    this.__indexArray.forEach((index: number) => {
       if (index != -1) this.__updateBox(index)
     })
 
@@ -329,7 +349,7 @@ class GLBoundingBoxPass extends GLPass {
    * @param {number} index - The index value.
    * @private
    */
-  __updateBox(index) {
+  __updateBox(index: number) {
     if (this.drawCount == 0 || !this.__drawItemsTexture) {
       return
     }
@@ -361,9 +381,9 @@ class GLBoundingBoxPass extends GLPass {
 
   /**
    * The sort method.
-   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    */
-  draw(renderstate) {
+  draw(renderstate: Record<any, any>) {
     if (this.drawCount == 0) {
       return
     }
@@ -380,7 +400,7 @@ class GLBoundingBoxPass extends GLPass {
 
     if (this.indexArrayUpdateNeeded) this.__updateIndexArray()
 
-    const gl = this.__gl
+    const gl = <Record<any, any>>this.__gl
 
     // gl.disable(gl.CULL_FACE)
     // gl.enable(gl.BLEND)

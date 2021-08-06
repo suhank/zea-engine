@@ -2,10 +2,10 @@
  * Class designed to store version data. Widely used in the zea engine for backwards compatibility.
  */
 class Version {
-  protected major: number
-  protected minor: number
-  protected patch: number
-  protected branch: string
+  major: number
+  minor: number
+  patch: number
+  branch: string
   /**
    * Creates a version.
    * The version string should have the following structure: <br>
