@@ -1,5 +1,5 @@
 import { Vec3, Vec4 } from '../../Math/index'
-import { BillboardItem } from '../../SceneTree/index'
+import { BillboardItem, TreeItem } from '../../SceneTree/index'
 import { BillboardShader } from '../Shaders/BillboardShader'
 import { GLPass, PassType } from './GLPass'
 import { GLImageAtlas } from '../GLImageAtlas'
@@ -7,6 +7,7 @@ import { GLTexture2D } from '../GLTexture2D'
 import { GLRenderer } from '../GLRenderer'
 import { generateShaderGeomBinding, GLMesh } from '../Drawing/index'
 import { MathFunctions } from '../../Utilities/MathFunctions'
+import { GLBaseRenderer } from '../GLBaseRenderer'
 
 const pixelsPerItem = 6 // The number of pixels per draw item.
 
@@ -15,6 +16,29 @@ const pixelsPerItem = 6 // The number of pixels per draw item.
  * @private
  */
 class GLBillboardsPass extends GLPass {
+  protected billboards: any[]
+  protected dirtyBillboards: Set<any>
+  protected freeIndices: any[]
+  protected drawCount: number
+  protected threshold: number
+  protected updateRequested: boolean
+  protected prevSortCameraPos: Vec3
+  protected atlas: any
+  protected indexArrayUpdateNeeded: any
+  protected instanceIdsBuffer: any
+  protected indexArray: any
+
+  protected glshader: any
+  protected shaderComp: any
+
+  protected shaderBinding: any
+
+  protected modelMatrixArray: any[]
+  protected billboardDataArray: any[]
+  protected tintColorArray: any[]
+
+  protected width: number
+  protected drawItemsTexture: any
   /**
    * Create a GL billboards pass.
    */
@@ -27,7 +51,7 @@ class GLBillboardsPass extends GLPass {
    * @param {GLBaseRenderer} renderer - The renderer value.
    * @param {number} passIndex - The index of the pass in the GLBAseRenderer
    */
-  init(renderer, passIndex) {
+  init(renderer: GLBaseRenderer, passIndex: number) {
     super.init(renderer, passIndex)
 
     this.billboards = []
@@ -40,7 +64,7 @@ class GLBillboardsPass extends GLPass {
     this.prevSortCameraPos = new Vec3()
 
     this.atlas = new GLImageAtlas(this.renderer.gl, 'Billboards', 'RGBA', 'UNSIGNED_BYTE', [1, 1, 1, 0])
-    const emitUpdated = (event) => this.emit('updated', event)
+    const emitUpdated = (event: Record<any, any>) => this.emit('updated', event)
     this.atlas.on('loaded', emitUpdated)
     this.atlas.on('updated', emitUpdated)
   }
@@ -58,12 +82,12 @@ class GLBillboardsPass extends GLPass {
    * is added to the scene, and the renderer must decide how to render it.
    * It allows Passes to select geometries to handle the drawing of.
    * @param {TreeItem} treeItem - The treeItem value.
-   * @param {object} rargs - Extra return values are passed back in this object.
+   * @param {Record<any,any>} rargs - Extra return values are passed back in this object.
    * The object contains a parameter 'continueInSubTree', which can be set to false,
    * so the subtree of this node will not be traversed after this node is handled.
    * @return {Boolean} - The return value.
    */
-  itemAddedToScene(treeItem, rargs) {
+  itemAddedToScene(treeItem: TreeItem, rargs: Record<any, any>) {
     if (treeItem instanceof BillboardItem) {
       this.addBillboard(treeItem)
       return true
@@ -78,7 +102,7 @@ class GLBillboardsPass extends GLPass {
    * @param {object} rargs - Extra return values are passed back in this object.
    * @return {Boolean} - The return value.
    */
-  itemRemovedFromScene(treeItem, rargs) {
+  itemRemovedFromScene(treeItem: TreeItem, rargs: Record<any, any>) {
     if (treeItem instanceof BillboardItem) {
       this.removeBillboard(treeItem)
       return true
@@ -98,14 +122,14 @@ class GLBillboardsPass extends GLPass {
    * The addBillboard method.
    * @param {any} billboard - The billboard value.
    */
-  addBillboard(billboard) {
+  addBillboard(billboard: any) {
     const imageParam = billboard.getParameter('Image')
     const image = imageParam.getValue()
     if (!image) {
       imageParam.on('valueChanged', () => this.addBillboard(billboard))
       return
     }
-    let index
+    let index: any
     if (this.freeIndices.length > 0) index = this.freeIndices.pop()
     else index = this.billboards.length
 
@@ -157,7 +181,7 @@ class GLBillboardsPass extends GLPass {
    * The removeBillboard method.
    * @param {any} billboard - The billboard value.
    */
-  removeBillboard(billboard) {
+  removeBillboard(billboard: any) {
     const index = billboard.getMetadata('GLBillboardsPass_Index')
     if (index == -1) {
       console.warn('Billboard already removed.')
@@ -194,7 +218,7 @@ class GLBillboardsPass extends GLPass {
    * @param {any} dataArray - The dataArray value.
    * @private
    */
-  populateBillboardDataArray(billboardData, index, dataArray) {
+  populateBillboardDataArray(billboardData: any, index: number, dataArray: any) {
     const billboard = billboardData.billboard
     const mat4 = billboard.getParameter('GlobalXfo').getValue().toMat4()
     const ppm = billboard.getParameter('PixelsPerMeter').getValue()
@@ -273,22 +297,27 @@ class GLBillboardsPass extends GLPass {
 
   /**
    * The updateBillboards method.
-   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {Record<any, any>} renderstate - The object tracking the current state of the renderer
    * @private
    */
-  updateBillboards(renderstate) {
+  updateBillboards(renderstate: Record<any, any>) {
     const doIt = () => {
       if (this.indexArrayUpdateNeeded) this.updateIndexArray()
 
-      const gl = this.__gl
+      const gl = <Record<any, any>>this.__gl
       if (!this.glshader) {
         if (!gl.__quadVertexIdsBuffer) {
           gl.setupInstancedQuad()
         }
-        this.glshader = new BillboardShader(gl)
+        this.glshader = new BillboardShader(this.__gl)
         const shaderComp = this.glshader.compileForTarget('GLBillboardsPass', renderstate.shaderopts)
 
-        this.shaderBinding = generateShaderGeomBinding(gl, shaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer)
+        this.shaderBinding = generateShaderGeomBinding(
+          this.__gl,
+          shaderComp.attrs,
+          gl.__quadattrbuffers,
+          gl.__quadIndexBuffer
+        )
       }
 
       // Note: Maybe the atlas is alreadu up to date. It should
@@ -299,7 +328,7 @@ class GLBillboardsPass extends GLPass {
         this.modelMatrixArray = []
         this.billboardDataArray = []
         this.tintColorArray = []
-        this.indexArray.forEach((index) => {
+        this.indexArray.forEach((index: any) => {
           // if (index == -1) return;
           const billboardData = this.billboards[index]
           const billboard = billboardData.billboard
@@ -340,7 +369,7 @@ class GLBillboardsPass extends GLPass {
       //     this.width -= (this.width % pixelsPerItem);
 
       if (!this.drawItemsTexture) {
-        this.drawItemsTexture = new GLTexture2D(gl, {
+        this.drawItemsTexture = new GLTexture2D(this.__gl, {
           format: 'RGBA',
           type: 'FLOAT',
           width: size,
@@ -354,7 +383,7 @@ class GLBillboardsPass extends GLPass {
         this.drawItemsTexture.resize(size, size)
       }
 
-      this.indexArray.forEach((index) => {
+      this.indexArray.forEach((index: any) => {
         if (index != -1) this.updateBillboard(index)
       })
 
@@ -373,7 +402,7 @@ class GLBillboardsPass extends GLPass {
    * @param {number} index - The index of the Billboard to update .
    * @private
    */
-  updateBillboard(index) {
+  updateBillboard(index: number) {
     if (this.drawCount == 0 || !this.drawItemsTexture) {
       return
     }
@@ -407,7 +436,7 @@ class GLBillboardsPass extends GLPass {
    * The sort method.
    * @param {any} cameraPos - The cameraPos value.
    */
-  sort(cameraPos) {
+  sort(cameraPos: any) {
     for (const billboardData of this.billboards) {
       const { billboard } = billboardData
       if (billboard && billboard.isVisible()) {
@@ -415,7 +444,7 @@ class GLBillboardsPass extends GLPass {
         billboardData.dist = xfo.tr.distanceTo(cameraPos)
       }
     }
-    this.indexArray.sort((a, b) => {
+    this.indexArray.sort((a: number, b: number) => {
       if (a == -1) return 1
       if (b == -1) return -1
       return this.billboards[a].dist > this.billboards[b].dist
@@ -425,7 +454,7 @@ class GLBillboardsPass extends GLPass {
         : 0
     })
 
-    const gl = this.__gl
+    const gl = <Record<any, any>>this.__gl
     if (gl.floatTexturesSupported && this.instanceIdsBuffer) {
       gl.bindBuffer(gl.ARRAY_BUFFER, this.instanceIdsBuffer)
       gl.bufferData(gl.ARRAY_BUFFER, this.indexArray, gl.STATIC_DRAW)
@@ -434,9 +463,9 @@ class GLBillboardsPass extends GLPass {
 
   /**
    * The sort method.
-   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    */
-  draw(renderstate) {
+  draw(renderstate: Record<any, any>) {
     if (this.drawCount == 0) return
     if (this.updateRequested) {
       this.updateBillboards(renderstate)
@@ -453,7 +482,7 @@ class GLBillboardsPass extends GLPass {
 
     if (!this.glshader) return
 
-    const gl = this.__gl
+    const gl = <Record<any, any>>this.__gl
 
     gl.disable(gl.CULL_FACE)
     gl.enable(gl.BLEND)
