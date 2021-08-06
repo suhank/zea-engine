@@ -288,7 +288,7 @@ class VRViewport extends GLBaseViewport {
       const gl = <Record<any, any>>this.__renderer.gl
 
       const startPresenting = () => {
-        navigator.xr
+        ;(navigator as any)?.xr
           .requestSession('immersive-vr', {
             requiredFeatures: ['local-floor'],
             optionalFeatures: ['bounded-floor'],

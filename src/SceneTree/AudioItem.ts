@@ -120,8 +120,7 @@ class AudioItem extends TreeItem {
       return audioSource
     }
     const muteParam = this.addParameter(new BooleanParameter('Mute', false))
-
-    this.addParameter(new NumberParameter('Gain', 1.0)).setRange([0, 5])
+    ;(<NumberParameter>this.addParameter(new NumberParameter('Gain', 1.0))).setRange([0, 5])
     const loopParam = this.addParameter(new BooleanParameter('Loop', false))
     this.addParameter(new BooleanParameter('SpatializeAudio', true))
     this.addParameter(new NumberParameter('refDistance', 2))

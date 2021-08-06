@@ -9,7 +9,7 @@ import { resourceLoader } from './resourceLoader'
 // by setting the following boolean to false, and uncommenting
 // the import of parseGeomsBinary
 const multiThreadParsing = true
-
+// @ts-ignore
 import GeomParserWorker from 'web-worker:./Geometry/GeomParserWorker'
 import { parseGeomsBinary } from './Geometry/parseGeomsBinary'
 

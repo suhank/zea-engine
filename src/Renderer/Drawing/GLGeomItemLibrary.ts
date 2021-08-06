@@ -6,6 +6,7 @@ import { MathFunctions } from '../../Utilities/MathFunctions'
 import { GLTexture2D } from '../GLTexture2D'
 
 // import { handleMessage } from './GLGeomItemLibraryCullingWorker'
+// @ts-ignore
 import GLGeomItemLibraryCullingWorker from 'web-worker:./GLGeomItemLibraryCullingWorker'
 import { GeomItem } from '../../SceneTree/GeomItem'
 import { GLBaseRenderer } from '../GLBaseRenderer'
@@ -127,7 +128,7 @@ class GLGeomItemLibrary extends EventEmitter {
     })
 
     let tick = 0
-    renderer.on('viewChanged', (event) => {
+    renderer.on('viewChanged', (event: any) => {
       // Calculate culling every Nth frame.
       if (workerReady) {
         if (tick % 5 == 0) {

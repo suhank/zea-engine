@@ -2,8 +2,10 @@ import { BaseEvent } from './BaseEvent'
 import { EventEmitter } from './EventEmitter'
 import { MathFunctions } from './MathFunctions'
 
+// TODO:
 class AllocatorResized extends BaseEvent {
-  
+  id: number
+  allocation: any
   constructor() {
     super()
   }

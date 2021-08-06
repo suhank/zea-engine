@@ -27,14 +27,14 @@ class KinematicGroupParameter extends ListParameter {
     this.__globalXfoParams = []
     this.__initialXfos = []
     this.__deltaXfos = []
-    this.on('elementAdded', (event) => {
+    this.on('elementAdded', (event: any) => {
       const globaXfoParam = event.elem.getParameter('GlobalXfo')
       this.__globalXfoParams[event.index] = globaXfoParam
       this.__initialXfos[event.index] = globaXfoParam.getValue()
       if (event.index > 0)
         this.__deltaXfos[event.index] = this.__initialXfos[0].inverse().multiply(this.__initialXfos[event.index])
     })
-    this.on('elementRemoved', (event) => {
+    this.on('elementRemoved', (event: any) => {
       this.__globalXfoParams.splice(event.index, 1)
       this.__initialXfos.splice(event.index, 1)
       this.__deltaXfos.splice(event.index, 1)

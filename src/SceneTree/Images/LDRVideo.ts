@@ -44,7 +44,7 @@ class LDRVideo extends FileImage {
 
     this.addParameter(new BooleanParameter('Mute', false))
     this.addParameter(new BooleanParameter('Loop', true))
-    this.addParameter(new NumberParameter('Gain', 2.0)).setRange([0, 5])
+    ;(<NumberParameter>this.addParameter(new NumberParameter('Gain', 2.0))).setRange([0, 5])
     this.addParameter(new BooleanParameter('SpatializeAudio', true))
     this.addParameter(new NumberParameter('refDistance', 2))
     this.addParameter(new NumberParameter('maxDistance', 10000))

@@ -14,7 +14,7 @@ import { GLPass, PassType } from './Passes/GLPass'
 import { Color } from '../Math/Color'
 import { GLRenderer } from './GLRenderer'
 import { BaseEvent } from '../Utilities/BaseEvent'
-
+import type { Navigator } from 'webxr'
 let activeGLRenderer: Record<any, any>
 let pointerIsDown = false
 let pointerLeft = false
@@ -135,7 +135,7 @@ class GLBaseRenderer extends ParameterOwner {
         // if(!navigator.xr && window.WebVRPolyfill != undefined) {
         //     this.__vrpolyfill = new WebVRPolyfill();
         // }
-        if (navigator.xr) {
+        if ((navigator as any)?.xr) {
           const setupXRViewport = () => {
             // Note: could cause a context loss on machines with
             // multi-gpus (integrated Intel).
@@ -151,7 +151,7 @@ class GLBaseRenderer extends ParameterOwner {
               resolve(this.__xrViewport)
             })
           }
-          navigator.xr
+          ;(navigator as any)?.xr
             .isSessionSupported('immersive-vr')
             .then((isSupported: boolean) => {
               if (isSupported) {
@@ -936,7 +936,7 @@ class GLBaseRenderer extends ParameterOwner {
       return false
     }
 
-    document.addEventListener('keydown', (event) => {
+    document.addEventListener('keydown', (event: any) => {
       if (activeGLRenderer != this || !isValidCanvas()) return
       prepareEvent(event)
       const vp = activeGLRenderer.getActiveViewport()
@@ -1055,7 +1055,7 @@ class GLBaseRenderer extends ParameterOwner {
    */
   supportsVR() {
     console.warn('@GLBaseRenderer#supportVR - Deprecated Method. Please instead connect to the vrViewportSetup signal.')
-    return this.__supportXR && navigator.xr != null
+    return this.__supportXR && (navigator as any)?.xr != null
   }
 
   /**
@@ -1071,7 +1071,7 @@ class GLBaseRenderer extends ParameterOwner {
       this.emit('viewChanged', event)
     }
 
-    xrvp.on('presentingChanged', (event) => {
+    xrvp.on('presentingChanged', (event: any) => {
       const state = event.state
       this.__xrViewportPresenting = state
       if (state) {
@@ -1272,7 +1272,8 @@ class GLBaseRenderer extends ParameterOwner {
 
       renderState.bindViewports = (unifs: Record<any, any>, cb: any) => {
         renderState.viewports.forEach((vp: any, index: number) => {
-          gl.viewport(...vp.region)
+          let vp_region = vp.region
+          gl.viewport(vp_region[0], vp_region[1], vp_region[2], vp_region[3])
 
           const { viewMatrix, projectionMatrix, eye, isOrthographic } = unifs
           if (viewMatrix) {

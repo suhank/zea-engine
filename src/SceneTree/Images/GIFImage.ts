@@ -52,7 +52,7 @@ class GIFImage extends FileImage {
     this.addParameter(new Vec4Parameter('StreamAtlasDesc'))
     this.addParameter(new NumberParameter('StreamAtlasIndex', 0))
 
-    const frameParam = this.getParameter('StreamAtlasIndex')
+    const frameParam = <NumberParameter>this.getParameter('StreamAtlasIndex')
     frameParam.setRange([0, 1])
 
     let playing: any

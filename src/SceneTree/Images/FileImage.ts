@@ -43,7 +43,7 @@ class FileImage extends BaseImage {
       if (this.getName() == '') {
         // Generate a name from the file path.
         const stem = fileParam.getStem()
-        const decorator = stem.substring(stem.length - 1)
+        const decorator: any = stem.substring(stem.length - 1) // TODO: check output
         if (!isNaN(decorator)) {
           // Note: ALL image names have an LOD specifier at the end.
           // remove that off when retrieving the name.

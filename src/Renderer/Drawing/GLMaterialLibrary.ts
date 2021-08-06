@@ -33,7 +33,7 @@ class GLMaterialLibrary extends EventEmitter {
     this.dirtyIndices = new Set()
     this.materialsAllocator = new Allocator1D()
 
-    this.materialsAllocator.on('dataReallocated', (event) => {
+    this.materialsAllocator.on('dataReallocated', (event: any) => {
       // during allocation, a defragment might occur, which means
       // we need to re-upload some of our data.
       const id = event.id

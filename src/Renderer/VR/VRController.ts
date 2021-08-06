@@ -1,5 +1,5 @@
 import { SystemDesc } from '../../SystemDesc'
-import { Vec3, Quat, Xfo, Mat4 } from '../../Math/index'
+import { Vec3, Quat, Xfo, Mat4, Vec4 } from '../../Math/index'
 import { TreeItem } from '../../SceneTree/index'
 
 /** Class representing a VR controller. */
@@ -114,7 +114,7 @@ class VRController {
             controllerTree.getParameter('LocalXfo').setValue(
               new Xfo(
                 new Vec3(0, 0.0, 0.0),
-                new Quat({ setFromAxisAndAngle: [new Vec3(0, 1, 0), Math.PI] }),
+                new Quat(0, 1, 0, Math.PI), // used to be:  new Quat({ setFromAxisAndAngle: [new Vec3(0, 1, 0), Math.PI] }),
                 new Vec3(0.001, 0.001, 0.001) // VRAsset units are in mm.
               )
             )

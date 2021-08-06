@@ -37,7 +37,7 @@ class VRHead {
         this.hmdGeomItem.getParameter('LocalXfo').setValue(
           new Xfo(
             new Vec3(0, -0.035, -0.03),
-            new Quat({ setFromAxisAndAngle: [new Vec3(0, 1, 0), Math.PI] }),
+            new Quat(0, 1, 0, Math.PI), // used to be: new Quat({ setFromAxisAndAngle: [new Vec3(0, 1, 0), Math.PI] }),
             new Vec3(0.001, 0.001, 0.001) // VRAsset units are in mm.
           )
         )

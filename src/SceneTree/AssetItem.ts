@@ -34,7 +34,7 @@ class AssetLoadContext extends EventEmitter {
    * Create a AssetLoadContext
    * @param {AssetLoadContext} context The source context to base this context on.
    */
-  constructor(context: AssetLoadContext) {
+  constructor(context?: AssetLoadContext) {
     super()
     this.units = context ? context.units : 'meters'
     this.assets = context ? context.assets : {}
