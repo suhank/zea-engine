@@ -70,16 +70,4 @@ export default [
     ],
     plugins,
   },
-
-  // Zea Engine default plugins.
-  {
-    input: 'src/index-plugins.js',
-    output: {
-      name: 'zeaEnginePlugins',
-      file: pkg.plugins,
-      format: 'umd',
-      sourcemap,
-    },
-    plugins,
-  },
 ]
