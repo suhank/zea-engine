@@ -34,9 +34,9 @@ class LDRVideo extends FileImage {
    * Create a LDR video.
    * @param {string} name - The name value.
    * @param {string} filePath - The filePath value.
-   * @param {object} params - The params value.
+   * @param {Record<any,any>} params - The params value.
    */
-  constructor(name, filePath, params) {
+  constructor(name: string, filePath: string, params: Record<any,any>) {
     super(name, filePath, params)
     this.format = 'RGB'
     this.type = 'UNSIGNED_BYTE'
@@ -61,7 +61,7 @@ class LDRVideo extends FileImage {
    * @param {string} format - The format value.
    * @return {Promise} Returns a promise that resolves once the image is loaded.
    */
-  load(url, format = 'RGB') {
+  load(url: string, format = 'RGB') {
     return new Promise((resolve, reject) => {
       resourceLoader.incrementWorkload(1)
 
