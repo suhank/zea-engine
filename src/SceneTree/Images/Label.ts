@@ -117,6 +117,7 @@ class Label extends DataImage {
   protected __needsRender: any
   protected __canvasElem: any
   protected __requestedReRender: any
+  protected __getLabelText: any
   /**
    * Creates a label instance. Creating a canvas element that hosts the specified text.
    *
@@ -372,7 +373,7 @@ class Label extends DataImage {
    */
   fromJSON(j: Record<any, any>, context: Record<any, any>) {
     super.fromJSON(j, context)
-    this.__getLabelText()
+    this.__getLabelText() // TODO: does this make sense? this is a protected member. no functions are added to it.
   }
 }
 

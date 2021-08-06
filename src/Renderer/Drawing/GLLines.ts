@@ -238,7 +238,7 @@ class GLLines extends GLGeom {
       let shaderBinding = this.__shaderBindings[renderstate.shaderkey]
       if (!shaderBinding) {
         shaderBinding = generateShaderGeomBinding(
-          gl,
+          this.__gl,
           renderstate.attrs,
           this.fatBuffers.glattrbuffers,
           gl.__quadIndexBuffer

@@ -300,7 +300,7 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
       this.highlightedIdsBufferDirty = false
     }
 
-    const gl = this.renderer.gl
+    const gl = <Record<any, any>>this.renderer.gl
     if (!gl.multiDrawElements) {
       return
     }
