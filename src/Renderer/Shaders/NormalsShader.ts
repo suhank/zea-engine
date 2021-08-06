@@ -14,7 +14,6 @@ class NormalsShader extends GLShader {
     super(gl, 'NormalsShader')
     this.setShaderStage('VERTEX_SHADER', vert)
     this.setShaderStage('FRAGMENT_SHADER', frag)
-    //  TODO: should a finalize() be here?
   }
 }
 

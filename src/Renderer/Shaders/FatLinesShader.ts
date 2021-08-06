@@ -5,6 +5,8 @@ import { GLShader } from '../GLShader'
 import './GLSL/index'
 import frag from './FatLines.frag'
 import vert from './FatLines.vert'
+import { shaderLibrary } from '..'
+import { Material, MaterialColorParam, NumberParameter } from '../..'
 
 /** Shader for drawing Fat lines
  * @extends GLShader
@@ -30,18 +32,6 @@ class FatLinesShader extends GLShader {
     return false
   }
 
-  static getParamDeclarations() {
-    const paramDescs = super.getParamDeclarations()
-    paramDescs.push({
-      name: 'BaseColor',
-      defaultValue: new Color(1.0, 1.0, 0.5),
-    })
-    paramDescs.push({ name: 'Opacity', defaultValue: 1.0 })
-    paramDescs.push({ name: 'LineThickness', defaultValue: 0.01 })
-    paramDescs.push({ name: 'Overlay', defaultValue: 0.0 })
-    return paramDescs
-  }
-
   static getGeomDataShaderName() {
     return 'FatLinesGeomDataShader'
   }
@@ -59,5 +49,10 @@ class FatLinesShader extends GLShader {
   }
 }
 
-// Registry.register('FatLinesShader', FatLinesShader)
 export { FatLinesShader }
+const material = new Material('FatLinesShader_template')
+material.addParameter(new MaterialColorParam('BaseColor', new Color(1.0, 1, 0.5)))
+material.addParameter(new NumberParameter('Opacity', 1.0))
+material.addParameter(new NumberParameter('LineThickness', 0.01))
+material.addParameter(new NumberParameter('Overlay', 0.0))
+shaderLibrary.registerMaterialTemplate('FatLinesShader', material)

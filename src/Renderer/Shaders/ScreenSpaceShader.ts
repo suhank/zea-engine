@@ -2,7 +2,9 @@
 import { Color } from '../../Math/Color'
 import { Registry } from '../../Registry'
 import { Material } from '../../SceneTree/Material'
+import { MaterialColorParam } from '../../SceneTree/Parameters/MaterialColorParam'
 import { GLShader } from '../GLShader'
+import { shaderLibrary } from '../ShaderLibrary'
 
 import './GLSL/index'
 import frag from './ScreenSpace.frag'
@@ -24,15 +26,6 @@ class ScreenSpaceShader extends GLShader {
     return true
   }
 
-  static getParamDeclarations() {
-    const paramDescs = super.getParamDeclarations()
-    paramDescs.push({
-      name: 'BaseColor',
-      defaultValue: new Color(1.0, 1.0, 0.5),
-    })
-    return paramDescs
-  }
-
   /**
    * The getPackedMaterialData method.
    * @param {Material} material - The material param.
@@ -51,3 +44,6 @@ class ScreenSpaceShader extends GLShader {
 
 // Registry.register('ScreenSpaceShader', ScreenSpaceShader)
 export { ScreenSpaceShader }
+const material = new Material('ScreenSpaceShader_template')
+material.addParameter(new MaterialColorParam('BaseColor', new Color(1.0, 1, 0.5)))
+shaderLibrary.registerMaterialTemplate('ScreenSpaceShader', material)

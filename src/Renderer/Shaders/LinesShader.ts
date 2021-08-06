@@ -7,6 +7,8 @@ import './GLSL/index'
 import vert from './Lines.vert'
 import frag from './Lines.frag'
 import { Material } from '../../SceneTree/Material'
+import { shaderLibrary } from '..'
+import { MaterialColorParam, MaterialFloatParam, NumberParameter } from '../..'
 class LinesShader extends GLShader {
   /**
    * Create a GL shader.
@@ -17,20 +19,6 @@ class LinesShader extends GLShader {
     this.setShaderStage('VERTEX_SHADER', vert)
     this.setShaderStage('FRAGMENT_SHADER', frag)
     this.finalize()
-  }
-
-  static getParamDeclarations() {
-    const paramDescs = super.getParamDeclarations()
-    paramDescs.push({ name: 'BaseColor', defaultValue: new Color(1.0, 1.0, 0.5) })
-    paramDescs.push({ name: 'Opacity', defaultValue: 0.7 })
-    paramDescs.push({ name: 'Overlay', defaultValue: 0.000001 }) // Provide a slight overlay so lines draw over meshes.
-    paramDescs.push({ name: 'StippleScale', defaultValue: 0.01 })
-
-    // Note: a value of 0.0, means no stippling (solid). A value of 1.0 means invisible.
-    // Any value in between determines how much of the solid line is removed.
-    paramDescs.push({ name: 'StippleValue', defaultValue: 0, range: [0, 1] })
-    paramDescs.push({ name: 'OccludedStippleValue', defaultValue: 1.0, range: [0, 1] })
-    return paramDescs
   }
 
   /**
@@ -57,5 +45,15 @@ class LinesShader extends GLShader {
   }
 }
 
-// Registry.register('LinesShader', LinesShader)
 export { LinesShader }
+const material = new Material('LinesShader_template')
+material.addParameter(new MaterialColorParam('BaseColor', new Color(1.0, 1, 0.5)))
+
+material.addParameter(new MaterialFloatParam('Opacity', 0.7, [0, 1]))
+material.addParameter(new NumberParameter('Overlay', 0.000001)) // Provide a slight overlay so lines draw over meshes.
+
+material.addParameter(new NumberParameter('StippleScale', 0.01))
+material.addParameter(new NumberParameter('StippleValue', 0, [0, 1]))
+
+material.addParameter(new NumberParameter('OccludedStippleValue', 1.0, [0, 1]))
+shaderLibrary.registerMaterialTemplate('LinesShader', material)

@@ -79,13 +79,12 @@ export { StandardSurfaceShader }
 
 const material = new Material('StandardSurfaceShader_template')
 material.addParameter(new MaterialColorParam('BaseColor', new Color(1.0, 1, 0.5)))
-material.addParameter(new MaterialColorParam('Normal', new Color(1.0, 1, 0.5)))
-
-material.addParameter(new MaterialFloatParam('Opacity', 0.5, [0, 1]))
+// material.addParameter(new MaterialColorParam('Normal', new Color(1.0, 1, 0.5)))
 material.addParameter(new MaterialFloatParam('AmbientOcclusion', 1, [0, 1]))
 material.addParameter(new MaterialFloatParam('Metallic', 0.5, [0, 1]))
-
 material.addParameter(new NumberParameter('Roughness', 0.5, [0, 1])) // added
 material.addParameter(new NumberParameter('Reflectance', 0.5, [0, 1]))
 material.addParameter(new NumberParameter('EmissiveStrength', 0.5, [0, 1]))
+material.addParameter(new MaterialFloatParam('Opacity', 0.5, [0, 1]))
+
 shaderLibrary.registerMaterialTemplate('StandardSurfaceShader', material)

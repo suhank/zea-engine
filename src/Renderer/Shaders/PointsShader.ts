@@ -2,7 +2,10 @@
 import { Color } from '../../Math/index'
 import { Registry } from '../../Registry'
 import { Material } from '../../SceneTree/Material'
+import { MaterialColorParam } from '../../SceneTree/Parameters/MaterialColorParam'
+import { NumberParameter } from '../../SceneTree/Parameters/NumberParameter'
 import { GLShader } from '../GLShader'
+import { shaderLibrary } from '../ShaderLibrary'
 
 import './GLSL/index'
 import frag from './Points.frag'
@@ -15,20 +18,7 @@ class PointsShader extends GLShader {
   constructor(gl: WebGL12RenderingContext) {
     super(gl, 'PointsShader')
     this.setShaderStage('VERTEX_SHADER', vert)
-
     this.setShaderStage('FRAGMENT_SHADER', frag)
-    //TODO: finalize needed here?
-  }
-
-  static getParamDeclarations() {
-    const paramDescs = super.getParamDeclarations()
-    paramDescs.push({
-      name: 'BaseColor',
-      defaultValue: new Color(1.0, 1.0, 0.5),
-    })
-    paramDescs.push({ name: 'PointSize', defaultValue: 2.0 })
-    paramDescs.push({ name: 'Overlay', defaultValue: 0.00002 })
-    return paramDescs
   }
 
   /**
@@ -49,6 +39,10 @@ class PointsShader extends GLShader {
   }
 }
 
-// Registry.register('PointsShader', PointsShader)
-
 export { PointsShader }
+
+const material = new Material('PointsShader_template')
+material.addParameter(new MaterialColorParam('BaseColor', new Color(1.0, 1, 0.5)))
+material.addParameter(new NumberParameter('PointSize', 2))
+material.addParameter(new NumberParameter('Overlay', 0.00002))
+shaderLibrary.registerMaterialTemplate('PointsShader', material)
