@@ -4,10 +4,20 @@
 import { ParameterOwner } from './ParameterOwner'
 import { BinReader } from './BinReader'
 import { Registry } from '../Registry'
+import { BaseEvent } from '../Utilities/BaseEvent'
 // TODO:(ss) use this: import { Parameter } from './Parameters'
 import { Parameter } from './Parameters/Parameter'
 let numBaseItems = 0
 
+class NameChangedEvent extends BaseEvent {
+  oldName: string
+  newName: string
+  constructor(oldName: string, newName: string) {
+    super()
+    this.oldName = oldName
+    this.newName = newName
+  }
+}
 /**
  * Base class for Items in the scene. It can be parameterized and can emit events.
  *
@@ -87,7 +97,8 @@ class BaseItem extends ParameterOwner {
       const oldName = this.__name
       this.__name = name
       this.updatePath()
-      this.emit('nameChanged', { newName: name, oldName })
+      const event = new NameChangedEvent(oldName, name)
+      this.emit('nameChanged', event)
     }
   }
 

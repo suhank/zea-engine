@@ -183,7 +183,7 @@ class AssetItem extends TreeItem {
    * @param {string} url - The URL of the asset to load
    * @return {Promise} - Returns a promise that resolves once the initial load is complete
    */
-  load(url: string) {
+  load(url: string): Promise<void> {
     return Promise.reject(`This method is not implemented for this Asset Item: ${url}`)
   }
 

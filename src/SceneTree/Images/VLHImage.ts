@@ -30,7 +30,7 @@ class VLHImage extends BaseImage {
    * @param {string} name - The name value.
    * @param {Record<any,any>} params - The params value.
    */
-  constructor(name: string, params: Record<any, any> = {}) {
+  constructor(name?: string, params: Record<any, any> = {}) {
     let filepath
     if (name != undefined && name.includes('.')) {
       filepath = name

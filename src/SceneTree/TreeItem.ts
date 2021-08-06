@@ -11,6 +11,7 @@ import { CalcGlobalXfoOperator } from './Operators/CalcGlobalXfoOperator'
 import { BoundingBoxParameter } from './Parameters/BoundingBoxParameter'
 import { BinReader } from './BinReader'
 import { BaseClass } from '../Utilities/BaseClass'
+import { Operator } from './Operators'
 
 let selectionOutlineColor = new Color('#03E3AC')
 selectionOutlineColor.a = 0.1
@@ -43,19 +44,23 @@ branchSelectionOutlineColor.a = 0.1
  * @extends {BaseItem}
  */
 class TreeItem extends BaseItem {
-  __disableBoundingBox = false
-  __boundingBoxParam: any
+  __disableBoundingBox: boolean
+  __boundingBoxParam: BoundingBoxParameter
   __childItems: BaseItem[]
-  __childItemsEventHandlers: any
-  __childItemsMapping: any
-  __globalXfoParam: any
-  __highlightMapping: any
-  __highlights: any
-  __localXfoParam: any
-  __visible: any
-  __visibleCounter: any
-  __visibleParam: any
-  globalXfoOp: any
+
+  __childItemsEventHandlers: Array<number>
+  __childItemsMapping: Record<string, number>
+
+  __globalXfoParam: XfoParameter
+  __localXfoParam: XfoParameter
+
+  __highlightMapping: Record<string, Color>
+  __highlights: Array<string>
+
+  __visible: boolean
+  __visibleCounter: number
+  __visibleParam: BooleanParameter
+  globalXfoOp: Operator
 
   // vars used in AssetItem.ts:
   // __geomLibrary: any
@@ -69,7 +74,7 @@ class TreeItem extends BaseItem {
    * It's included in the path that we use to access a particular item.
    * It's used to display it in the tree.
    */
-  constructor(name: string) {
+  constructor(name?: string) {
     super(name)
 
     // Controls if this TreeItem or its children contribute to the bounding boxes
@@ -97,7 +102,7 @@ class TreeItem extends BaseItem {
     this.__visibleParam = this.addParameter(new BooleanParameter('Visible', true))
     this.__localXfoParam = this.addParameter(new XfoParameter('LocalXfo', new Xfo()))
     this.__globalXfoParam = this.addParameter(new XfoParameter('GlobalXfo', new Xfo()))
-    this.__boundingBoxParam = this.addParameter(new BoundingBoxParameter('BoundingBox', this))
+    this.__boundingBoxParam = <BoundingBoxParameter>this.addParameter(new BoundingBoxParameter('BoundingBox', this))
 
     // Bind handlers
     this.setBoundingBoxDirty = this.setBoundingBoxDirty.bind(this)
@@ -248,10 +253,10 @@ class TreeItem extends BaseItem {
   /**
    * Sets visible parameter value.
    *
-   * @param {number} val - The val param.
+   * @param {boolean} val - The val param.
    */
-  setVisible(val: number): void {
-    this.__visibleParam.setValue(val)
+  setVisible(visible: boolean): void {
+    this.__visibleParam.setValue(visible)
   }
 
   /**
@@ -437,7 +442,7 @@ class TreeItem extends BaseItem {
   protected setBoundingBoxDirty(): void {
     if (this.__boundingBoxParam) {
       // Will cause boundingChanged to emit
-      this.__boundingBoxParam.setDirty()
+      this.__boundingBoxParam.setDirty(-1)
     }
   }
 
@@ -1141,6 +1146,6 @@ class TreeItem extends BaseItem {
   }
 }
 
-// Registry.register('TreeItem', TreeItem) TODO: ok?
+Registry.register('TreeItem', TreeItem)
 
 export { TreeItem }

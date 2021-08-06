@@ -43,7 +43,7 @@ class BoundingBoxParameter extends Parameter<Box3> implements IBinaryReader {
    * @memberof BoundingBoxParameter
    */
   setDirty(index: number): boolean {
-    const result = super.setDirty(index) // TODO: is appropriate to rename this?
+    const result = super.setDirty(index) 
     if (result) {
       this.dirty = true
     }

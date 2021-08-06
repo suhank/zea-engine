@@ -13,6 +13,7 @@ import { FilePathParameter } from './Parameters/FilePathParameter'
 import { FileImage } from './Images'
 import { Vec3Attribute } from './Geometry/Vec3Attribute'
 import { Vec2Attribute } from './Geometry/Vec2Attribute'
+import { BaseEvent } from '../Utilities/BaseEvent'
 
 // AssetItem.registerDataLoader('.obj', ObjDataLoader);
 
@@ -60,7 +61,7 @@ class ObjAsset extends AssetItem {
    * @param {string} url - The URL of the asset to load
    * @return {Promise} - Returns a promise that resolves once the initial load is complete
    */
-  load(url: string) {
+  load(url: string): Promise<void> {
     return new Promise((resolve, reject) => {
       const fileFolder = url.substring(0, url.lastIndexOf('/')) + '/'
       const filename = url.substring(url.lastIndexOf('/') + 1)
@@ -200,10 +201,8 @@ class ObjAsset extends AssetItem {
               if (!this.getParameter('loadMtlFile').getValue()) continue
               // Load and parse the mat lib.
               resourceLoader.incrementWorkload(2)
-              const mtlFile = resourceLoader.resolveFilepath(fileFolder + value)
-              if (mtlFile) {
-                await loadMtlFile(mtlFile)
-              }
+              const url = fileFolder + value
+              await loadMtlFile(url)
               break
             case 'o':
               newGeom(value)
@@ -282,9 +281,9 @@ class ObjAsset extends AssetItem {
         }
 
         // Done.
-        this.emit('loaded')
-        this.getGeometryLibrary().emit('loaded')
-        this.emit('geomsLoaded')
+        this.emit('loaded', new BaseEvent())
+        this.getGeometryLibrary().emit('loaded', new BaseEvent())
+        this.emit('geomsLoaded', new BaseEvent())
         // TODO: (commented out) resolve()
       }
 
@@ -317,9 +316,14 @@ class ObjAsset extends AssetItem {
         let normalsAttr
         let texCoordsAttr
         console.warn('returning void to initialize normalsAttr/texCoordsAttr')
-        if (geomData.normalIndices.length > 0) normalsAttr = mesh.addVertexAttribute('normals', new Vec3Attribute()) // TODO: this method returns void
-        if (geomData.texCoordIndices.length > 0)
-          texCoordsAttr = mesh.addVertexAttribute('texCoords', new Vec2Attribute())
+        if (geomData.normalIndices.length > 0) {
+          normalsAttr = new Vec3Attribute()
+          mesh.addVertexAttribute('normals', normalsAttr) // TODO: this method returns void
+        }
+        if (geomData.texCoordIndices.length > 0) {
+          texCoordsAttr = new Vec2Attribute()
+          mesh.addVertexAttribute('texCoords', texCoordsAttr)
+        }
 
         const loadedFaces = Array(geomData.faceCounts.length).fill(0)
         for (let i = 0; i < geomData.vertexIndices.length; i++) {

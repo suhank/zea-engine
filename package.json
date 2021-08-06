@@ -52,6 +52,7 @@
     "@types/jest": "^26.0.23",
     "@types/node": "^16.3.3",
     "@types/semver": "^7.3.7",
+    "@types/webxr": "^0.2.3",
     "@typescript-eslint/eslint-plugin": "^4.28.3",
     "@typescript-eslint/parser": "^4.28.3",
     "@zeainc/jsdocs2md": "^0.0.7",

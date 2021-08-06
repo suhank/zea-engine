@@ -1,13 +1,20 @@
+import { BaseEvent } from './BaseEvent'
 import { EventEmitter } from './EventEmitter'
 import { MathFunctions } from './MathFunctions'
 
+class AllocatorResized extends BaseEvent {
+  
+  constructor() {
+    super()
+  }
+}
 /**
  * An Allocation1D represents an allocated block of memory.
  *
  */
 class Allocation1D {
-  start: number;
-  size: number;
+  start: number
+  size: number
   /**
    * Initializes the allocation
    * @param {number} start - The start of the allocated block of memory.
@@ -47,13 +54,14 @@ class Allocation1D {
  * ```
  *
  */
-class Allocator1D extends EventEmitter { // TODO: types for freeList, allocations, allocationsMap
-  freeList: any[];
-  allocations: any[]; 
-  allocationsMap: Record<number, number>; // A mapping of id to index within the allocations list
-  allocatedSpace: number;
-  reservedSpace: number; 
-  freeSpace: number;
+class Allocator1D extends EventEmitter {
+  // TODO: types for freeList, allocations, allocationsMap
+  freeList: any[]
+  allocations: any[]
+  allocationsMap: Record<number, number> // A mapping of id to index within the allocations list
+  allocatedSpace: number
+  reservedSpace: number
+  freeSpace: number
   /**
    * Initializes the allocator ready to start work
    */
@@ -73,7 +81,7 @@ class Allocator1D extends EventEmitter { // TODO: types for freeList, allocation
    * @param {number} id - The unique numerical identifer for the block.
    * @return {Allocation1D} - The allocation
    */
-  getAllocation(id: number):  Allocation1D {
+  getAllocation(id: number): Allocation1D {
     return this.allocations[this.allocationsMap[id]]
   }
 
@@ -162,7 +170,7 @@ class Allocator1D extends EventEmitter { // TODO: types for freeList, allocation
         this.freeBlock(freeItemIndex + 1)
 
         // sort the free list from biggest to smallest
-        this.freeList.sort((a, b) => this.allocations[b].size - this.allocations[a].size) // TODO: order is untested. 
+        this.freeList.sort((a, b) => this.allocations[b].size - this.allocations[a].size) // TODO: order is untested.
 
         this.allocations[freeItemIndex].size = size
       }
@@ -209,7 +217,7 @@ class Allocator1D extends EventEmitter { // TODO: types for freeList, allocation
    *
    * @param {number} index - The index where the block should be removed
    */
-  removeBlock(index: number){
+  removeBlock(index: number) {
     this.allocations.splice(index, 1)
     for (const id in this.allocationsMap) {
       if (this.allocationsMap[id] > index) {

@@ -7,7 +7,7 @@ import { ICloneable } from '../../Utilities/ICloneable'
 import { ISerializable } from '../../Utilities/ISerializable'
 import { OperatorOutputMode } from './OperatorOutputMode'
 import { BinReader } from '../BinReader'
-import {Material} from '../../SceneTree/Material'
+import { Material } from '../../SceneTree/Material'
 /**
  * Represents a reactive type of attribute that can be owned by a `ParameterOwner` class.
  *
@@ -334,18 +334,12 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
 
   /**
    * Returns parameter's value.
-   *
-   * @param {number} mode - The mode value.
    * @return {T | undefined} - The return value.
    */
-  getValue(mode?: number): T  | undefined{
-    if (mode != undefined) {
-      console.warn("WARNING in Parameter.setValue: 'mode' is deprecated.")
-    }
+  getValue(): T | undefined {
     if (this.dirtyOpIndex < this.boundOps.length) {
       this._clean(this.boundOps.length)
     }
-
     return this.value
   }
 
@@ -353,16 +347,12 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
    * Sets value of the parameter.
    *
    * @param {T} value - The value param.
-   * @param {number} mode - This is deprecated now.
    */
-  setValue(value: T, mode?: number): void {
+  setValue(value: T): void {
     if (value == undefined) {
       // eslint-disable-next-line no-throw-literal
       throw 'undefined was passed into the set value for param:' + this.getName()
     }
-    //if (mode != undefined) {
-    //  console.warn("WARNING in Parameter.setValue: 'mode' is deprecated.")
-    //}
 
     if (this.boundOps.length > 0) {
       for (let i = this.boundOps.length - 1; i >= 0; i--) {
