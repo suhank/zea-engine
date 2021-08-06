@@ -11,6 +11,7 @@ import { resourceLoader } from './resourceLoader'
 const multiThreadParsing = true
 
 import GeomParserWorker from 'web-worker:./Geometry/GeomParserWorker'
+import { parseGeomsBinary } from './Geometry/parseGeomsBinary'
 
 const isMobile = SystemDesc.isMobileDevice
 let numCores = window.navigator.hardwareConcurrency
@@ -368,7 +369,7 @@ class GeomLibrary extends EventEmitter {
           proxy = new MeshProxy(geomData)
           break
         default:
-          throw new Error('Unsupported Geom type:' + className)
+          throw new Error('Unsupported Geom type:')
       }
       this.geoms[offset + i] = proxy
     }
