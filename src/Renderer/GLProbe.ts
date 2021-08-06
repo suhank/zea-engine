@@ -77,7 +77,7 @@ class GLProbe extends EventEmitter {
     const brdfShader = new PreComputeBRDFShader(this.__gl)
     const brdfShaderComp = brdfShader.compileForTarget('GLProbe', renderstate.shaderopts)
     const brdfShaderBinding = generateShaderGeomBinding(
-      gl,
+      this.__gl,
       brdfShaderComp.attrs,
       gl.__quadattrbuffers,
       gl.__quadIndexBuffer
@@ -106,7 +106,7 @@ class GLProbe extends EventEmitter {
       const convolveIrradianceShader = new ConvolveIrradianceShader(this.__gl)
       const convolveIrradianceShaderComp = convolveIrradianceShader.compileForTarget('GLProbe', renderstate.shaderopts)
       const convolveIrradianceShaderBinding = generateShaderGeomBinding(
-        gl,
+        this.__gl,
         convolveIrradianceShaderComp.attrs,
         gl.__quadattrbuffers,
         gl.__quadIndexBuffer
@@ -167,7 +167,7 @@ class GLProbe extends EventEmitter {
       const convolverShader = new ConvolveSpecularShader(this.__gl)
       const covolverShaderComp = convolverShader.compileForTarget('GLProbe', renderstate.shaderopts)
       const covolverShaderBinding = generateShaderGeomBinding(
-        gl,
+        this.__gl,
         covolverShaderComp.attrs,
         gl.__quadattrbuffers,
         gl.__quadIndexBuffer

@@ -7,7 +7,7 @@ import { GLTexture2D } from './GLTexture2D'
  * @private
  */
 class GLScreenQuad {
-  protected __gl: Record<any, any>
+  protected __gl: WebGL12RenderingContext
   protected __pos: number[]
   protected __size: number[]
   protected flipY: boolean
@@ -21,20 +21,20 @@ class GLScreenQuad {
    */
   constructor(gl: WebGL12RenderingContext) {
     this.__gl = gl
-
     this.__pos = [0.0, 0.0]
     this.__size = [1.0, 1.0]
     this.flipY = true
     this.__glshader = new ScreenQuadShader(gl)
 
-    if (!this.__gl.__quadVertexIdsBuffer) this.__gl.setupInstancedQuad()
+    const gl_casted = <Record<any, any>>gl
+    if (!gl_casted.__quadVertexIdsBuffer) gl_casted.setupInstancedQuad()
 
     const shaderComp = this.__glshader.compileForTarget('GLScreenQuad')
     this.__quadBinding = generateShaderGeomBinding(
       this.__gl,
       shaderComp.attrs,
-      this.__gl.__quadattrbuffers,
-      this.__gl.__quadIndexBuffer
+      gl_casted.__quadattrbuffers,
+      gl_casted.__quadIndexBuffer
     )
 
     this.ready = true
@@ -57,7 +57,7 @@ class GLScreenQuad {
     {
       const unif = unifs.pos
       if (unif) {
-        gl.uniform2fv(unif.location, pos ? (pos instanceof Vec2 ? pos.asArray() : pos) : this.__pos)
+        let arr = gl.uniform2fv(unif.location, pos ? (pos instanceof Vec2 ? pos.asArray() : pos) : this.__pos)
       }
     }
     {
@@ -93,8 +93,8 @@ class GLScreenQuad {
    */
   draw(renderstate: Record<any, any>, texture: GLTexture2D, pos: Vec2 = undefined, size: Vec2 = undefined) {
     this.bind(renderstate, texture, pos, size)
-
-    this.__gl.drawQuad()
+    const gl = <Record<any, any>>this.__gl
+    gl.drawQuad()
   }
 
   /**

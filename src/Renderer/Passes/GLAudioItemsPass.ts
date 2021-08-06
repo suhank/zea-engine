@@ -133,7 +133,7 @@ class GLAudioItemsPass extends GLPass {
 
     const spatializeParam = parameterOwner.getParameter('SpatializeAudio')
     if (spatializeParam && spatializeParam.getValue() == false) {
-      'ausource', dioCtx.destination
+      // TODO: (commented out) 'ausource', dioCtx.destination
     } else {
       const panner = audioCtx.createPanner()
       panner.panningModel = 'HRTF'

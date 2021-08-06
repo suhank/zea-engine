@@ -1,6 +1,7 @@
 /* eslint-disable require-jsdoc */
 import { Color } from '../../Math/index'
 import { Registry } from '../../Registry'
+import { Material } from '../../SceneTree/Material'
 import { GLShader } from '../GLShader'
 
 import './GLSL/index'

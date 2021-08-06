@@ -218,7 +218,7 @@ class Label extends DataImage {
             // console.log("Text Loaded:" + name);
             const text = labelManager.getLabelText(library, name)
             this.getParameter('Text').setValue(text)
-          } catch (e) {
+          } catch (e: any) {
             // Note: if the text is not found in the labels pack
             // an exception is thrown, and we catch it here.
             console.warn(e)

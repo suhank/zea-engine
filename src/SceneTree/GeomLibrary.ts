@@ -221,7 +221,7 @@ class GeomLibrary extends EventEmitter {
    * @param {Record<any,any>} context - The context value.
    * @return {any} - The return value.
    */
-  readBinaryBuffer(geomFileID: number, buffer: Buffer, context: Record<any, any>) {
+  readBinaryBuffer(geomFileID: any, buffer: Buffer, context: Record<any, any>) {
     const reader = new BinReader(buffer, 0, isMobile)
     const numGeoms = reader.loadUInt32()
 
