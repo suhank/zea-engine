@@ -1,18 +1,9 @@
 /* eslint-disable require-jsdoc */
 /* eslint-disable guard-for-in */
-import { Vec2, Vec3, Color } from '../Math/index'
+import { Color } from '../Math/index'
 import { BaseItem } from './BaseItem'
 import { Registry } from '../Registry'
-import {
-  Parameter,
-  NumberParameter,
-  Vec2Parameter,
-  Vec3Parameter,
-  ColorParameter,
-  BooleanParameter,
-  StringParameter,
-} from './Parameters/index'
-import { MathFunctions } from '../Utilities/MathFunctions'
+import { Parameter } from './Parameters/index'
 
 // Explicit export of parameters that are not included in the
 // module defined by the index file in the folder. (see Parameters/index.js)
@@ -21,32 +12,7 @@ import { MathFunctions } from '../Utilities/MathFunctions'
 import { MaterialFloatParam } from './Parameters/MaterialFloatParam'
 import { MaterialColorParam } from './Parameters/MaterialColorParam'
 import { BinReader } from './BinReader'
-import { GLShader } from '../Renderer/GLShader'
-import { FlatSurfaceShader, shaderLibrary, SimpleSurfaceShader } from '../Renderer'
-import { StandardSurfaceMaterial } from './Materials/StandardSurfaceMaterial'
-
-const generateParameterInstance = (paramName: string, defaultValue: any, range?: any, texturable?: any) => {
-  if (typeof defaultValue == 'boolean' || defaultValue === false || defaultValue === true) {
-    //return new Parameter(paramName, defaultValue, 'Boolean')
-    return new BooleanParameter(paramName, defaultValue) // TODO: check if equivalent
-  } else if (typeof defaultValue == 'string') {
-    // return new Parameter(paramName, defaultValue, 'String')
-    return new StringParameter(paramName, defaultValue) // TODO: check if equivalent
-  } else if (MathFunctions.isNumeric(defaultValue)) {
-    if (texturable) return new MaterialFloatParam(paramName, defaultValue, range)
-    else return new NumberParameter(paramName, defaultValue, range)
-  } else if (defaultValue instanceof Vec2) {
-    return new Vec2Parameter(paramName, defaultValue)
-  } else if (defaultValue instanceof Vec3) {
-    return new Vec3Parameter(paramName, defaultValue)
-  } else if (defaultValue instanceof Color) {
-    if (texturable) return new MaterialColorParam(paramName, defaultValue)
-    else return new ColorParameter(paramName, defaultValue)
-  } else {
-    // return new Parameter(paramName, defaultValue)
-    throw Error('no parameter instance created')
-  }
-}
+import { shaderLibrary } from '../Renderer/ShaderLibrary'
 
 /**
  * Represents a type of `BaseItem` class that holds material configuration.
@@ -69,7 +35,7 @@ class Material extends BaseItem {
    * @param {string} name - The name of the material.
    * @param {string} shaderName - Shader's class name.
    */
-  constructor(name: string, shaderName: string) {
+  constructor(name: string, shaderName?: string) {
     super(name)
     this.__isTransparent = false
     this.__isTextured = false
@@ -92,10 +58,35 @@ class Material extends BaseItem {
    *
    * @param {string} shaderName - The shader name.
    */
-  // TODO: make this abstract when Material class is abstract.
   setShaderName(shaderName: string) {
+    if (this.__shaderName == shaderName) return
     this.__shaderName = shaderName
-    console.warn('implement setShaderName in the subclass materials')
+
+    const materialTemplate = shaderLibrary.getMaterialTemplate(shaderName)
+    if (!materialTemplate) throw new Error('Error setting Shader. Material template not registered found:' + shaderName)
+
+    const paramMap = {}
+    let i = materialTemplate.getNumParameters()
+    while (i--) {
+      const srcParam = materialTemplate.getParameterByIndex(i)
+      const param = this.getParameter(srcParam.getName())
+      if (param) {
+      } else {
+        this.addParameter(srcParam.clone())
+      }
+      paramMap[srcParam.getName()] = true
+    }
+
+    // Remove redundant Params.
+    for (const param of this.__params) {
+      if (!paramMap[param.getName()]) {
+        this.removeParameter(param.getName())
+      }
+    }
+
+    this.__shaderName = shaderName
+    this.__checkTransparency({})
+    this.emit('shaderNameChanged', { shaderName })
   }
 
   /**
@@ -216,29 +207,6 @@ class Material extends BaseItem {
     return Registry.getBlueprint(this.getShaderName())
   }
 
-  /**
-   * Let you modify or set the shader and all the parameters of current material.
-   *
-   * @param {Record<any, any>} paramValues - The paramValues.
-   * @param {string} shaderName - The shader name.
-   */
-  modifyParams(paramValues: Record<any, any>, shaderName: string) {
-    if (shaderName) this.setShaderName(shaderName)
-    for (const paramName in paramValues) {
-      const param = this.getParameter(paramName)
-      if (param) {
-        if (paramValues[paramName] instanceof Parameter) {
-          this.replaceParameter(paramValues[paramName])
-        } else {
-          param.setValue(paramValues[paramName])
-        }
-      } else {
-        // Material Param not found....
-        // this.addParameter(paramName, paramValues[paramName]);
-      }
-    }
-  }
-
   // ////////////////////////////////////////
   // Persistence
 
@@ -294,12 +262,12 @@ class Material extends BaseItem {
       shaderName = 'StandardSurfaceShader'
     }
     if (shaderName == 'TransparentMaterial') {
-      shaderName = 'TransparentSurfaceShader'
+      shaderName = 'StandardSurfaceShader'
     }
     this.setShaderName(shaderName)
 
-    // if (context.version < 3) {
     if (context.versions['zea-engine'].compare([0, 0, 3]) < 0) {
+      throw `Loading zcad files of version ${context.versions['zea-engine']} is not longer support`
       this.setName(reader.loadStr())
 
       const capitalizeFirstLetter = function (string: string) {

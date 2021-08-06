@@ -1,3 +1,4 @@
+import { Material } from '../SceneTree'
 import { glslTypes } from './GLSLConstants'
 
 let GlslTypes = <GLSLTypes>glslTypes
@@ -22,11 +23,14 @@ const WHITESPACE_RE = /\s+/
  */
 class ShaderLibrary {
   __shaderModules: Record<string, string>
+  materialTemplates: Record<string, Material>
+
   /**
    * Create a shader library.
    */
   constructor() {
     this.__shaderModules = {}
+    this.materialTemplates = {}
   }
 
   /**
@@ -262,6 +266,14 @@ class ShaderLibrary {
     // console.log('length of shader: ' + result.numLines)
     // console.log(result.glsl)
     return result
+  }
+
+  registerMaterialTemplate(shaderName, materialTemplate) {
+    this.materialTemplates[shaderName] = materialTemplate
+  }
+
+  getMaterialTemplate(shaderName) {
+    return this.materialTemplates[shaderName]
   }
 }
 

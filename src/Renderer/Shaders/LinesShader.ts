@@ -34,10 +34,10 @@ class LinesShader extends GLShader {
 
   /**
    * The getPackedMaterialData method.
-   * @param {any} material - The material param.
-   * @return {any} - The return value.
+   * @param {Material} material - The material param.
+   * @return {Float32Array} - The return value.
    */
-  static getPackedMaterialData(material: any) {
+  getPackedMaterialData(material: Material): Float32Array {
     const matData = new Float32Array(12)
     const baseColor = material.getParameter('BaseColor').getValue()
     matData[0] = baseColor.r
