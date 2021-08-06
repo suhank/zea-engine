@@ -4,7 +4,7 @@ import { GeomItem, Points, Lines, Mesh, PointsProxy, LinesProxy, MeshProxy, Base
 import { GLLinesItemSet } from './GLLinesItemSet'
 import { GLPointsItemSet } from './GLPointsItemSet'
 import { GLMeshItemSet } from './GLMeshItemSet'
-import { GLPass } from '../Passes'
+import { GLStandardGeomsPass } from '../Passes'
 import { GLGeomItem } from './GLGeomItem'
 import { Vec3 } from '../../Math/Vec3'
 
@@ -12,8 +12,8 @@ import { Vec3 } from '../../Math/Vec3'
  * @private
  */
 class GLShaderGeomSets extends EventEmitter {
-  protected pass: GLPass
-  protected gl: WebGL2RenderingContext
+  protected pass: GLStandardGeomsPass
+  protected gl: WebGLRenderingContext | WebGL2RenderingContext
   protected glShader: any
   protected glGeomDataShader: any
   protected glHighlightShader: any
@@ -24,11 +24,15 @@ class GLShaderGeomSets extends EventEmitter {
   protected glHighlightShaderKey: string
   /**
    * Create a GL shader material.
-   * @param {GLPass} pass - The pass that owns this object.
-   * @param {WebGL2RenderingContext} gl - The glShader value.
+   * @param {GLStandardGeomsPass} pass - The pass that owns this object.
+   * @param {WebGLRenderingContext | WebGL2RenderingContext} gl - The glShader value.
    * @param {Record<any,any>} shaders - The shader value.
    */
-  constructor(pass: GLPass, gl: WebGL2RenderingContext, shaders: Record<any, any>) {
+  constructor(
+    pass: GLStandardGeomsPass,
+    gl: WebGLRenderingContext | WebGL2RenderingContext,
+    shaders: Record<any, any>
+  ) {
     super()
     this.pass = pass
     this.gl = gl
@@ -84,6 +88,7 @@ class GLShaderGeomSets extends EventEmitter {
     this.pass.renderer.glMaterialLibrary.addMaterial(material)
 
     const geomItemParamChanged = (event: Record<any, any>) => {
+      // Cast to GLStndardGeomsPass
       this.pass.removeGeomItem(geomItem)
       this.pass.__renderer.assignTreeItemToGLPass(geomItem)
     }

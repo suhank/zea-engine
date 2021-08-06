@@ -94,6 +94,18 @@ class GLStandardGeomsPass extends GLPass {
   }
 
   /**
+   * The addGeomItem method.
+   * @param {GeomItem} geomItem - The geomItem value.
+   */
+  addGeomItem(geomItem: GeomItem) {}
+
+  /**
+   * The removeGeomItem method.
+   * @param {GeomItem} geomItem - The geomItem value.
+   */
+  removeGeomItem(geomItem: GeomItem) {}
+
+  /**
    * The constructShaders method.
    * Given a material, generate the various shaders required to render objects
    * using this material. There should always be at least a single glShader

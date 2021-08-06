@@ -185,10 +185,8 @@ class GLGeomItemLibrary extends EventEmitter {
 
     // Add the material here so that when we populate the GeomItem texture.
     // the material already has an Id.
-    let matIndex = -1
-    if (material.getShaderClass().getPackedMaterialData) {
-      matIndex = this.renderer.glMaterialLibrary.addMaterial(material)
-    }
+    const matIndex = this.renderer.glMaterialLibrary.addMaterial(material)
+
     const materialChanged = (event: Record<any, any>) => {
       // TODO: Ref count the materials in the material library.
       // this.renderer.glMaterialLibrary.removeMaterial(material)
