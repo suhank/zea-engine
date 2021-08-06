@@ -6,6 +6,7 @@ import { GLShader } from '../GLShader'
 import './GLSL/index'
 import vert from './Lines.vert'
 import frag from './Lines.frag'
+import { Material } from '../../SceneTree/Material'
 class LinesShader extends GLShader {
   /**
    * Create a GL shader.

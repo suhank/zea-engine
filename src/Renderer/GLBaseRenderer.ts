@@ -142,7 +142,7 @@ class GLBaseRenderer extends ParameterOwner {
             // to the discrete GPU.
             // TODO: Provide a system to re-load the GPU data.
             // this.__gl.setCompatibleXRDevice(device);
-            this.__gl.makeXRCompatible().then(() => {
+            ;(<Record<any, any>>this.__gl).makeXRCompatible().then(() => {
               this.__xrViewport = this.__setupXRViewport()
               this.emit('xrViewportSetup', {
                 xrViewport: this.__xrViewport,

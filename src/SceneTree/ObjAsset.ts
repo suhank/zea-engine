@@ -101,7 +101,6 @@ class ObjAsset extends AssetItem {
               break
             case 'Ks':
               const specular = (parseFloat(elements[0]) + parseFloat(elements[1]) + parseFloat(elements[2])) / 3.0
-              material.roughness = 1.0 - specular
               material.getParameter('Roughness').setValue(1.0 - specular)
               material.getParameter('Reflectance').setValue(specular)
               break

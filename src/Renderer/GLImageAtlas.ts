@@ -219,7 +219,7 @@ class GLImageAtlas extends GLRenderTarget {
       gl.__atlasLayoutShader = new AtlasLayoutShader(this.__gl)
       const shaderComp = gl.__atlasLayoutShader.compileForTarget('GLImageAtlas')
       gl.__atlasLayoutShaderBinding = generateShaderGeomBinding(
-        gl,
+        this.__gl,
         shaderComp.attrs,
         gl.__quadattrbuffers,
         gl.__quadIndexBuffer

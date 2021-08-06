@@ -67,7 +67,7 @@ class CuttingPlane extends BaseGroup {
     // Make this function async so that we don't pull on the
     // graph immediately when we receive a notification.
     // Note: propagating using an operator would be much better.
-    new Promise((resolve) => {
+    const promise = new Promise((resolve) => {
       const cutEnabled = this.getParameter('CutAwayEnabled').getValue()
       const cutPlane = this.getParameter('CutPlane').getValue()
       const cutAwayVector = cutPlane.xyz
@@ -88,7 +88,7 @@ class CuttingPlane extends BaseGroup {
           }, true)
         })
       }
-      resolve()
+      resolve(promise)
     })
   }
 

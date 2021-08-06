@@ -294,9 +294,9 @@ class Material extends BaseItem {
         if (param) {
           param.setValue(<Color>value)
         } else {
-          param = <MaterialColorParam | MaterialFloatParam>(
-            this.addParameter(generateParameterInstance(paramName, value))
-          )
+          // param = <MaterialColorParam | MaterialFloatParam>(
+          //   // this.addParameter(generateParameterInstance(paramName, value))
+          // )
         }
         if (textureName != '' && param.setImage) {
           if (context.materialLibrary.hasImage(textureName)) {

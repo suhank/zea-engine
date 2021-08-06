@@ -89,7 +89,7 @@ class GLPoints extends GLGeom {
         // Merge the points attrs with the quad attrs.
         const attrbuffers = Object.assign(this.__glattrbuffers, gl.__quadattrbuffers)
 
-        shaderBinding = generateShaderGeomBinding(gl, renderstate.attrs, attrbuffers, gl.__quadIndexBuffer)
+        shaderBinding = generateShaderGeomBinding(this.__gl, renderstate.attrs, attrbuffers, gl.__quadIndexBuffer)
         this.__shaderBindings[renderstate.shaderkey] = shaderBinding
       }
       shaderBinding.bind(renderstate)

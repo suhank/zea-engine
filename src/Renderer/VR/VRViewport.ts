@@ -185,7 +185,8 @@ class VRViewport extends GLBaseViewport {
       const gl = this.__renderer.gl
       gl.bindFramebuffer(gl.FRAMEBUFFER, null)
       gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight)
-      gl.clearColor(...this.__backgroundColor.asArray())
+      let col = this.__backgroundColor.asArray()
+      gl.clearColor(col[0], col[1], col[2], col[3])
       gl.colorMask(true, true, true, true)
       gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
     }
@@ -382,7 +383,7 @@ class VRViewport extends GLBaseViewport {
 
               this.loadHMDResources().then(() => {
                 this.__startSession()
-                // TODO: (commented out) resolve() 
+                // TODO: (commented out) resolve()
               })
             }
 
@@ -521,8 +522,8 @@ class VRViewport extends GLBaseViewport {
 
     const gl = this.__renderer.gl
     gl.bindFramebuffer(gl.FRAMEBUFFER, layer.framebuffer)
-
-    gl.clearColor(...this.__backgroundColor.asArray())
+    let col = this.__backgroundColor.asArray()
+    gl.clearColor(col[0], col[1], col[2], col[3])
     gl.colorMask(true, true, true, true)
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 
