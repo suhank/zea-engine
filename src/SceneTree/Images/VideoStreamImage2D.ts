@@ -6,11 +6,14 @@ import { BaseImage } from '../BaseImage'
  * @extends BaseImage
  */
 class VideoStreamImage2D extends BaseImage {
+  __loaded: any
+  __data: any
+  __intervalId: any
   /**
    * Create a 2D video stream image.
    */
   constructor() {
-    super()
+    super('')
     this.__loaded = false
   }
 
@@ -20,8 +23,8 @@ class VideoStreamImage2D extends BaseImage {
    * @param {number} height - The height of the video.
    * @param {false} rearCamera - Boolean determining if it is a rear camera or not.
    */
-  connectWebcam(width, height, rearCamera = false) {
-    const video = {
+  connectWebcam(width: number, height: number, rearCamera = false) {
+    const video: Record<any, any> = {
       width,
       height,
       frameRate: {
@@ -106,7 +109,7 @@ class VideoStreamImage2D extends BaseImage {
    * The setVideoStream method.
    * @param {any} video - The video value.
    */
-  setVideoStream(video) {
+  setVideoStream(video: any) {
     this.__loaded = false
     this.width = video.videoWidth
     this.height = video.videoHeight

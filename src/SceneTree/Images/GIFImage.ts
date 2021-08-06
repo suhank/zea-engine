@@ -30,13 +30,18 @@ import { MathFunctions } from '../../Utilities/MathFunctions'
  * @extends FileImage
  */
 class GIFImage extends FileImage {
+  protected __streamAtlas: any
+  protected play: any
+  protected stop: any
+  protected __resourcePromise: any
+  protected __unpackedData: any
   /**
    * Create a GIF image.
    * @param {string} name - The name value.
-   * @param {string|object} filePath - The filePath value.
-   * @param {object} params - The params value.
+   * @param {string|Record<any,any>} filePath - The filePath value.
+   * @param {Record<any,any>} params - The params value.
    */
-  constructor(name, filePath = '', params = {}) {
+  constructor(name: string, filePath = '', params = {}) {
     super(name, filePath, params)
 
     this.format = 'RGBA'
@@ -50,9 +55,9 @@ class GIFImage extends FileImage {
     const frameParam = this.getParameter('StreamAtlasIndex')
     frameParam.setRange([0, 1])
 
-    let playing
+    let playing: any
     let frame = 0
-    const incrementFrame = (numFrames) => {
+    const incrementFrame = (numFrames: number) => {
       frameParam.setValue(frame)
       if (playing) setTimeout(() => incrementFrame(numFrames), this.getFrameDelay(frame))
       frame = (frame + 1) % numFrames
@@ -74,7 +79,7 @@ class GIFImage extends FileImage {
    * @param {number} index - The index value.
    * @return {number} - The return value.
    */
-  getFrameDelay(index) {
+  getFrameDelay(index: number) {
     // Note: Frame delays are in centisecs (not millisecs which the timers will require.)
     return this.__unpackedData.frameDelays[index] * 10
   }
@@ -87,7 +92,7 @@ class GIFImage extends FileImage {
    * @param {string} format - The format value.
    * @return {Promise} Returns a promise that resolves once the image is loaded.
    */
-  load(url, format = 'RGB') {
+  load(url: string, format = 'RGB') {
     // this.__streamAtlasDesc = new Vec4();
 
     const imageDataLibrary = FileImage.__imageDataLibrary()
@@ -118,7 +123,7 @@ class GIFImage extends FileImage {
 
         loadBinfile(
           url,
-          (data) => {
+          (data: any) => {
             console.warn('Unpacking Gif client side:' + url)
 
             const start = performance.now()
@@ -158,9 +163,9 @@ class GIFImage extends FileImage {
             atlasCanvas.width = atlasSize[0] * width
             atlasCanvas.height = atlasSize[1] * height
 
-            let frameImageData
-            const frameDelays = []
-            const renderFrame = (frame, index) => {
+            let frameImageData: any
+            const frameDelays: any[] = []
+            const renderFrame = (frame: any, index: any) => {
               const dims = frame.dims
 
               // Note: the server side library returns centisecs (1/100 second) for
@@ -210,7 +215,7 @@ class GIFImage extends FileImage {
               imageData,
             })
           },
-          (statusText) => {
+          (statusText: any) => {
             const msg = 'Unable to Load URL:' + statusText + ':' + url
             console.warn(msg)
             reject(msg)
@@ -221,7 +226,7 @@ class GIFImage extends FileImage {
       imageDataLibrary[url] = this.__resourcePromise
     }
 
-    this.__resourcePromise.then((unpackedData) => {
+    this.__resourcePromise.then((unpackedData: any) => {
       this.width = unpackedData.width
       this.height = unpackedData.height
 

@@ -2,7 +2,7 @@ import util from 'util'
 
 /* eslint-disable new-cap */
 /* eslint-disable require-jsdoc */
-import { Color } from '../../Math/index'
+import { Color, Vec3 } from '../../Math/index'
 import { Registry } from '../../Registry'
 import { VLHImage } from './VLHImage'
 import { BooleanParameter } from '../Parameters/BooleanParameter'
@@ -18,12 +18,15 @@ import { BooleanParameter } from '../Parameters/BooleanParameter'
  * @extends VLHImage
  */
 class EnvMap extends VLHImage {
+  protected utf8decoder: TextDecoder
+  protected shCoeffs: any[]
+  protected luminanceData: any
   /**
    * Create an env map.
    * @param {string} name - The name value.
-   * @param {object} params - The params value.
+   * @param {Record<any,any>} params - The params value.
    */
-  constructor(name, params = {}) {
+  constructor(name: string, params: Record<any, any> = {}) {
     super(name, params)
 
     this.addParameter(new BooleanParameter('HeadLightMode', false))
@@ -34,10 +37,10 @@ class EnvMap extends VLHImage {
 
   /**
    * The __decodeData method.
-   * @param {object} entries - The entries value.
+   * @param {Record<any,any>} entries - The entries value.
    * @private
    */
-  __decodeData(entries) {
+  __decodeData(entries: Record<any, any>) {
     super.__decodeData(entries)
 
     const samples = entries.samples
@@ -63,7 +66,7 @@ class EnvMap extends VLHImage {
    * @param {Vec3} dir - The dir value.
    * @return {number} - The return value.
    */
-  dirToLuminance(dir) {
+  dirToLuminance(dir: Vec3) {
     // normal is assumed to have unit length
     const x = dir.x
     const y = dir.y

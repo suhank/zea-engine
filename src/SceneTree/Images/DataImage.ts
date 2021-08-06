@@ -12,12 +12,14 @@ import { BaseImage } from '../BaseImage'
  * @extends BaseImage
  */
 class DataImage extends BaseImage {
+  protected __loaded: any
+  protected __data: any
   /**
    * Create a data image.
    * @param {string} name - The name value.
    */
-  constructor(name) {
-    super()
+  constructor(name: string) {
+    super(name)
 
     if (name == undefined) name = this.constructor.name
     this.__name = name
@@ -63,7 +65,7 @@ class DataImage extends BaseImage {
    * @param {number} height - The height value.
    * @param {Uint8Array} data - The data value.
    */
-  setData(width, height, data) {
+  setData(width: number, height: number, data: Uint8Array) {
     this.width = width
     this.height = height
     this.__data = data

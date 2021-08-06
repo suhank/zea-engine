@@ -15,18 +15,29 @@ import { labelManager } from './LabelManager'
  * @param {Number} y - The top left y coordinate
  * @param {Number} width - The width of the rectangle
  * @param {Number} height - The height of the rectangle
- * @param {Number} [radius = 5] - The corner radius; It can also be an object
- *                 to specify different radii for corners
+ *
+ * @param {Number} [radius = 5] - The corner radius; It can also be an object to specify different radii for corners
  * @param {Number} [radius.tl = 0] - Top left
  * @param {Number} [radius.tr = 0] - Top right
  * @param {Number} [radius.br = 0] - Bottom right
  * @param {Number} [radius.bl = 0] - Bottom left
+ *
  * @param {Boolean} [fill = false] - Whether to fill the rectangle.
  * @param {Boolean} [stroke = true] - Whether to stroke the rectangle.
  * @param {Number} [strokeWidth] - The strokeWidth param.
  * @private
  */
-function roundRect(ctx, x, y, width, height, radius, fill, stroke, strokeWidth) {
+function roundRect(
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+  radius: number | Record<any, number>,
+  fill: boolean = false,
+  stroke: boolean = true,
+  strokeWidth: number
+) {
   if (typeof stroke == 'undefined') {
     stroke = true
   }
@@ -103,13 +114,16 @@ function roundRect(ctx, x, y, width, height, radius, fill, stroke, strokeWidth) 
  * @extends DataImage
  */
 class Label extends DataImage {
+  protected __needsRender: any
+  protected __canvasElem: any
+  protected __requestedReRender: any
   /**
    * Creates a label instance. Creating a canvas element that hosts the specified text.
    *
    * @param {string} name - The name value.
    * @param {string} library - The library value.
    */
-  constructor(name, library) {
+  constructor(name: string, library: string) {
     super(name)
 
     this.__canvasElem = document.createElement('canvas')
@@ -135,7 +149,7 @@ class Label extends DataImage {
     this.addParameter(new NumberParameter('BorderWidth', 2))
     this.addParameter(new NumberParameter('BorderRadius', fontSize * 0.5))
     this.addParameter(new BooleanParameter('Outline', false))
-    this.addParameter(new BooleanParameter('OutlineColor', new Color(0, 0, 0)))
+    this.addParameter(new ColorParameter('OutlineColor', new Color(0, 0, 0)))
     this.addParameter(new BooleanParameter('Background', true))
     this.addParameter(new ColorParameter('BackgroundColor', new Color('#FBC02D')))
     this.addParameter(new BooleanParameter('FillBackground', true))
@@ -159,11 +173,11 @@ class Label extends DataImage {
    * This method can be overridden in derived classes
    * to perform general updates (see GLPass or BaseItem).
    *
-   * @param {object} event - The event object.
+   * @param {Record<any,any>} event - The event object.
    * @private
    */
-  __parameterValueChanged(event) {
-    super.__parameterValueChanged(event)
+  __parameterValueChanged(event: Record<any, any>) {
+    super.parameterValueChanged(event)
     if (!this.__requestedReRender) {
       this.__requestedReRender = true
       this.loadLabelData()
@@ -272,7 +286,7 @@ class Label extends DataImage {
     ctx2d.font = fontSize + 'px "' + font + '"'
     // console.log("renderLabelToImage:" + ctx2d.font);
     let width = 0
-    lines.forEach((line) => {
+    lines.forEach((line: any) => {
       width = Math.max(ctx2d.measureText(line).width, width)
     })
     const fontHeight = fontSize // parseInt(fontSize)
@@ -307,7 +321,7 @@ class Label extends DataImage {
     ctx2d.textAlign = textAlign
     ctx2d.fillStyle = fontColor.toHex()
     ctx2d.textBaseline = 'hanging'
-    lines.forEach((line, index) => {
+    lines.forEach((line: any, index: any) => {
       ctx2d.fillText(line, marginAndBorder, marginAndBorder + index * fontHeight)
     })
 
@@ -342,10 +356,10 @@ class Label extends DataImage {
   /**
    * The toJSON method encodes this type as a json object for persistence.
    *
-   * @param {object} context - The context value.
-   * @return {object} - Returns the json object.
+   * @param {Record<any,any>} context - The context value.
+   * @return {Record<any,any>} - Returns the json object.
    */
-  toJSON(context) {
+  toJSON(context: Record<any, any>) {
     const j = super.toJSON(context)
     return j
   }
@@ -353,10 +367,10 @@ class Label extends DataImage {
   /**
    * The fromJSON method decodes a json object for this type.
    *
-   * @param {object} j - The json object this item must decode.
-   * @param {object} context - The context value.
+   * @param {Record<any,any>} j - The json object this item must decode.
+   * @param {Record<any,any>} context - The context value.
    */
-  fromJSON(j, context) {
+  fromJSON(j: Record<any, any>, context: Record<any, any>) {
     super.fromJSON(j, context)
     this.__getLabelText()
   }
