@@ -48,7 +48,7 @@ class GLBaseRenderer extends ParameterOwner {
   protected __redrawRequested: boolean
   protected __isMobile: boolean
   protected __drawSuspensionLevel = 0
-  protected __xrViewportPresenting: boolean
+  __xrViewportPresenting: boolean
   protected __floatGeomBuffer: any
 
   protected __supportXR: boolean
@@ -173,6 +173,7 @@ class GLBaseRenderer extends ParameterOwner {
    * @param {string} value - The value param.
    */
   addShaderPreprocessorDirective(name: string, value?: string) {
+    const gl = <Record<any,any>>this.__gl
     if (value) this.__shaderDirectives[name] = '#define ' + name + ' = ' + value
     else this.__shaderDirectives[name] = '#define ' + name
     const directives = []
@@ -181,7 +182,7 @@ class GLBaseRenderer extends ParameterOwner {
       directives.push(this.__shaderDirectives[key])
     }
     this.directives = directives
-    this.__gl.shaderopts = { directives } // used by zea-cad.
+    gl.shaderopts = { directives } // used by zea-cad.
   }
 
   /**
@@ -654,7 +655,7 @@ class GLBaseRenderer extends ParameterOwner {
 
     // Most applications of our engine will prefer the high-performance context by default.
     webglOptions.powerPreference = webglOptions.powerPreference || 'high-performance'
-    const gl = <Record<any,any>>this.__gl
+    const gl = <Record<any, any>>this.__gl
     this.__gl = create3DContext(this.__glcanvas, webglOptions)
     if (!this.__gl) alert('Unable to create WebGL context. WebGL not supported.')
     gl.renderer = this

@@ -5,12 +5,17 @@ import { TreeItem } from '../../SceneTree/index'
  * @private
  */
 class VRHead {
+  protected __xrvp: any
+  protected __treeItem: TreeItem
+  protected __mat4: Mat4
+  protected __localXfo: Xfo
+  protected hmdGeomItem: any
   /**
    * Create a VR head.
    * @param {any} xrvp - The VR viewport.
    * @param {any} stageTreeItem - The stageTreeItem value.
    */
-  constructor(xrvp, stageTreeItem) {
+  constructor(xrvp: any, stageTreeItem: any) {
     this.__xrvp = xrvp
     this.__treeItem = new TreeItem('VRHead')
     stageTreeItem.addChild(this.__treeItem)
@@ -23,7 +28,7 @@ class VRHead {
    * The Set wether the HMB is visible in rendering or not. Used in spectator rendering.
    * @param {boolean} state - The visibility value.
    */
-  setVisible(state) {
+  setVisible(state: boolean) {
     if (state && !this.hmdGeomItem) {
       const assetItem = this.__xrvp.getAsset()
       if (!assetItem) return
@@ -48,7 +53,7 @@ class VRHead {
    * The update method.
    * @param {any} pose - The pose value.
    */
-  update(pose) {
+  update(pose: any) {
     // Old
     // this.__mat4.setDataArray(pose.poseModelMatrix);
 

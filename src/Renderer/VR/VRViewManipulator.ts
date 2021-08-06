@@ -5,15 +5,26 @@ import { Material } from '../../SceneTree/Material'
 
 import { BaseTool } from '../../SceneTree/Manipulators/BaseTool'
 import { POINTER_TYPES } from '../../Utilities/EnumUtils'
+import { AnyARecord } from 'dns'
 
 /**
  * Class representing a view tool
  * @extends BaseTool
  */
 class VRViewManipulator extends BaseTool {
+  protected __controllerTriggersHeld: any[]
+  protected xrvp: any
+  protected vrControllerToolTip: Sphere
+  protected vrControllerToolTipMat: Material
+  protected __grabPos: any
+  protected stageXfo__GrabStart: any
+  protected __grabDir: any
+  protected __grab_to_stage: any
+  protected __invOri: any
+  protected __grabDist: any
   /**
    */
-  constructor(xrvp) {
+  constructor(xrvp: any) {
     super()
 
     this.__controllerTriggersHeld = []
@@ -33,7 +44,7 @@ class VRViewManipulator extends BaseTool {
    * @param {object} event
    * @private
    */
-  addIconToController(event) {
+  addIconToController(event: Record<any, any>) {
     const { controller } = event
     const geomItem = new GeomItem('HandleToolTip', this.vrControllerToolTip, this.vrControllerToolTipMat)
     geomItem.setSelectable(false)
@@ -92,7 +103,7 @@ class VRViewManipulator extends BaseTool {
    * @param {any} event - The event param.
    * @return {any} The return value.
    */
-  onVRControllerButtonDown(event) {
+  onVRControllerButtonDown(event: Record<any, any>) {
     if (event.button != 1) return
     this.__controllerTriggersHeld.push(event.controller)
     this.__initMoveStage()
@@ -104,7 +115,7 @@ class VRViewManipulator extends BaseTool {
    * @param {any} event - The event param.
    * @return {any} The return value.
    */
-  onVRControllerButtonUp(event) {
+  onVRControllerButtonUp(event: Record<any, any>) {
     if (event.button != 1) return
     const index = this.__controllerTriggersHeld.indexOf(event.controller)
     this.__controllerTriggersHeld.splice(index, 1)
@@ -116,7 +127,7 @@ class VRViewManipulator extends BaseTool {
    * The onVRControllerDoubleClicked method.
    * @param {any} event - The event param.
    */
-  onVRControllerDoubleClicked(event) {
+  onVRControllerDoubleClicked(event: Record<any, any>) {
     console.log('onVRControllerDoubleClicked:', this.__controllerTriggersHeld.length)
 
     const stageXfo = this.xrvp.getXfo().clone()
@@ -128,7 +139,7 @@ class VRViewManipulator extends BaseTool {
    * The onVRPoseChanged method.
    * @param {any} event - The event param.
    */
-  onVRPoseChanged(event) {
+  onVRPoseChanged(event: Record<any, any>) {
     if (this.__controllerTriggersHeld.length == 1) {
       const grabPos = this.__controllerTriggersHeld[0].getControllerTipStageLocalXfo().tr
 
@@ -199,7 +210,7 @@ class VRViewManipulator extends BaseTool {
    *
    * @param {MouseEvent} event - The event param.
    */
-  onPointerDown(event) {
+  onPointerDown(event: Record<any, any>) {
     if (event.pointerType === POINTER_TYPES.xr) {
       this.onVRControllerButtonDown(event)
     }
@@ -210,7 +221,7 @@ class VRViewManipulator extends BaseTool {
    *
    * @param {MouseEvent} event - The event param.
    */
-  onPointerMove(event) {
+  onPointerMove(event: Record<any, any>) {
     if (event.pointerType === POINTER_TYPES.xr) {
       this.onVRPoseChanged(event)
     }
@@ -221,7 +232,7 @@ class VRViewManipulator extends BaseTool {
    *
    * @param {MouseEvent} event - The event param.
    */
-  onPointerUp(event) {
+  onPointerUp(event: Record<any, any>) {
     if (event.pointerType === POINTER_TYPES.xr) {
       this.onVRControllerButtonUp(event)
     }
@@ -232,7 +243,7 @@ class VRViewManipulator extends BaseTool {
    *
    * @param {MouseEvent} event - The event param.
    */
-  onPointerDoublePress(event) {
+  onPointerDoublePress(event: Record<any, any>) {
     if (event.pointerType === POINTER_TYPES.xr) {
       this.onVRControllerDoubleClicked(event)
     }

@@ -4,13 +4,28 @@ import { TreeItem } from '../../SceneTree/index'
 
 /** Class representing a VR controller. */
 class VRController {
+  protected xrvp: any
+  protected __inputSource: any
+  protected id: number
+  protected __mat4: Mat4
+  protected __xfo: Xfo
+  protected __treeItem: TreeItem
+  protected __tip: any
+  protected __activeVolumeSize: any
+  protected tick: any
+  protected __buttonPressed: any
+  protected __touchpadValue: any
+  protected __geomAtTip: any
+  protected __hitTested: any
+  protected pointerOverItem: any
+  protected __intersectionData: any
   /**
    * Create a VR controller.
    * @param {any} xrvp - The Vr viewport.
    * @param {any} inputSource - The input source.
    * @param {any} id - The id value.
    */
-  constructor(xrvp, inputSource, id) {
+  constructor(xrvp: any, inputSource: any, id: any) {
     this.xrvp = xrvp
     this.__inputSource = inputSource
     this.id = id
@@ -72,7 +87,7 @@ class VRController {
         //     // and only display a static mesh for simplicity.
         //     scene.inputRenderer.setControllerMesh(new Gltf2Node({ url: assetPath }), inputSource.handedness)
         //   })
-        xrvp.loadHMDResources().then((assetItem) => {
+        xrvp.loadHMDResources().then((assetItem: any) => {
           if (!assetItem) return
           let srcControllerTree
           if (inputSource.profiles[0] == 'htc-vive') {
@@ -193,7 +208,7 @@ class VRController {
    * @param {any} inputSource - The inputSource value.
    * @param {any} event - The event object.
    */
-  updatePose(refSpace, xrFrame, inputSource, event) {
+  updatePose(refSpace: any, xrFrame: any, inputSource: any, event: any) {
     const inputPose = xrFrame.getPose(inputSource.gripSpace, refSpace)
 
     // We may not get a inputPose back in cases where the input source has lost
