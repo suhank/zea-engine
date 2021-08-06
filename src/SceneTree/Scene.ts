@@ -12,7 +12,7 @@ const defaultGridColor = new Color('#DCDCDC')
  * Class representing the environment where all the displayed assets live.
  */
 class Scene {
-  protected settings: SceneSettings
+  settings: SceneSettings
   protected root: TreeItem
 
   /**

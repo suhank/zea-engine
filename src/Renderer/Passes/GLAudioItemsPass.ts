@@ -1,7 +1,9 @@
 import { GLPass, PassType } from './GLPass'
 import { GLRenderer } from '../GLRenderer'
 
-import { AudioItem, GeomItem } from '../../SceneTree/index'
+import { GeomItem, TreeItem } from '../../SceneTree/index'
+import { GLBaseRenderer } from '../GLBaseRenderer'
+import { AudioItem } from '../../SceneTree/AudioItem'
 
 const AudioContext =
   window.navigator &&
@@ -9,7 +11,7 @@ const AudioContext =
     window.webkitAudioContext || // Safari and old versions of Chrome
     false)
 
-let audioCtx
+let audioCtx: any
 if (AudioContext) {
   // Do whatever you want using the Web Audio API
   audioCtx = new AudioContext()
@@ -26,6 +28,7 @@ if (AudioContext) {
  * @extends GLPass
  */
 class GLAudioItemsPass extends GLPass {
+  protected __audioItems: any[]
   /**
    * Create a GL audio items pass.
    */
@@ -39,7 +42,7 @@ class GLAudioItemsPass extends GLPass {
    * @param {GLBaseRenderer} renderer - The renderer value.
    * @param {number} passIndex - The index of the pass in the GLBAseRenderer
    */
-  init(renderer, passIndex) {
+  init(renderer: GLBaseRenderer, passIndex: number) {
     super.init(renderer, passIndex)
 
     if (!audioCtx) return
@@ -50,14 +53,14 @@ class GLAudioItemsPass extends GLPass {
    * is added to the scene, and the renderer must decide how to render it.
    * It allows Passes to select geometries to handle the drawing of.
    * @param {TreeItem} treeItem - The treeItem value.
-   * @param {object} rargs - Extra return values are passed back in this object.
+   * @param {Record<any,any>} rargs - Extra return values are passed back in this object.
    * The object contains a parameter 'continueInSubTree', which can be set to false,
    * so the subtree of this node will not be traversed after this node is handled.
    * @return {Boolean} - The return value.
    */
-  itemAddedToScene(treeItem, rargs) {
+  itemAddedToScene(treeItem: TreeItem, rargs: Record<any, any>) {
     if (treeItem instanceof AudioItem) {
-      treeItem.on('audioSourceCreated', (event) => {
+      treeItem.on('audioSourceCreated', (event: any) => {
         const { audioSource } = event
         this.addAudioSource(treeItem, audioSource, treeItem)
       })
@@ -86,10 +89,13 @@ class GLAudioItemsPass extends GLPass {
    * The itemRemovedFromScene method is called on each pass when aa item
    * is removed to the scene, and the pass must handle cleaning up any resources.
    * @param {TreeItem} treeItem - The treeItem value.
-   * @param {object} rargs - Extra return values are passed back in this object.
+   * @param {Record<any,any>} rargs - Extra return values are passed back in this object.
    * @return {Boolean} - The return value.
    */
-  itemRemovedFromScene(treeItem, rargs) {}
+  itemRemovedFromScene(treeItem: TreeItem, rargs: Record<any, any>): boolean {
+    console.warn('returning false')
+    return false
+  }
 
   /**
    * The addAudioSource method.
@@ -97,7 +103,7 @@ class GLAudioItemsPass extends GLPass {
    * @param {any} audioSource - The audioSource value.
    * @param {any} parameterOwner - The parameterOwner value.
    */
-  addAudioSource(treeItem, audioSource, parameterOwner) {
+  addAudioSource(treeItem: TreeItem, audioSource: any, parameterOwner: any) {
     if (audioSource.addedToCollector) return
 
     let source
@@ -105,7 +111,7 @@ class GLAudioItemsPass extends GLPass {
     else if (audioSource instanceof AudioBufferSourceNode) source = audioSource
     else source = audioCtx.createMediaStreamSource(audioSource)
 
-    const connectVLParamToAudioNodeParam = (vlParam, param) => {
+    const connectVLParamToAudioNodeParam = (vlParam: any, param: any) => {
       if (!vlParam) return
       // Note: setting the gain has no effect. Not sure what to do.
       // param.value = vlParam.getValue();
@@ -123,7 +129,7 @@ class GLAudioItemsPass extends GLPass {
       connectVLParamToAudioNodeParam(gainParam, gainNode.gain)
     }
 
-    'gasource', inNode
+    // TODO: (commented out)  'gasource', inNode
 
     const spatializeParam = parameterOwner.getParameter('SpatializeAudio')
     if (spatializeParam && spatializeParam.getValue() == false) {
@@ -131,9 +137,9 @@ class GLAudioItemsPass extends GLPass {
     } else {
       const panner = audioCtx.createPanner()
       panner.panningModel = 'HRTF'
-      panner.distanceModel = 'inverse'('pasource', nner)('aupanner', dioCtx.destination)
+      // TODO: (commented out) panner.distanceModel = 'inverse'('pasource', nner)('aupanner', dioCtx.destination)
 
-      const connectVLParamToAudioNode = (paramName) => {
+      const connectVLParamToAudioNode = (paramName: any) => {
         const vlParam = parameterOwner.getParameter(paramName)
         if (!vlParam) return
         panner[paramName] = vlParam.getValue()
@@ -208,7 +214,7 @@ class GLAudioItemsPass extends GLPass {
    * @param {any} viewXfo - The viewXfo value.
    * @private
    */
-  __updateListenerPosition(viewXfo) {
+  __updateListenerPosition(viewXfo: any) {
     if (!audioCtx) return
 
     // Note: the new audio params are reccomended to be used, but cause audio stutter.
@@ -252,9 +258,9 @@ class GLAudioItemsPass extends GLPass {
 
   /**
    * The draw method.
-   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    */
-  draw(renderstate) {
+  draw(renderstate: Record<any, any>) {
     if (this.__audioItems.length == 0) return
     this.__updateListenerPosition(renderstate.viewXfo)
   }
