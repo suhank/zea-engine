@@ -244,12 +244,17 @@ class GLGeomItemLibrary extends EventEmitter {
     geomItem.on('cutAwayChanged', geomItemChanged)
     geomItem.on('highlightChanged', geomItemChanged)
     geomItem.on('selectabilityChanged', geomItemChanged)
-    geomItem.on('visibilityChanged', geomItemChanged)
+
     const workerItemDataChanged = () => {
-      this.dirtyWorkerItemIndices.add(index)
+      if (!this.dirtyWorkerItemIndices.has(index)) {
+        this.dirtyWorkerItemIndices.add(index)
+        this.renderer.drawItemChanged()
+      }
     }
     this.dirtyWorkerItemIndices.add(index)
 
+    geomItem.on('visibilityChanged', workerItemDataChanged)
+    geomItem.getParameter('GeomMat').on('valueChanged', workerItemDataChanged)
     geomParm.on('boundingBoxChanged', workerItemDataChanged)
 
     this.glGeomItems[index] = glGeomItem
