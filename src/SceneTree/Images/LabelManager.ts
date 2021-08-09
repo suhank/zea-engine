@@ -1,6 +1,6 @@
 import { EventEmitter } from '../../Utilities/index'
 import { loadTextfile, loadBinfile } from '../Utils'
-
+import XLSX from '../../../external/xlsx' // TODO
 // eslint-disable-next-line require-jsdoc
 function getLanguage() {
   // Note: globalThis causes errors on Safari.

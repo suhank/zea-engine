@@ -95,7 +95,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
       if (shader.glShader.supportsInstancing() && shader.glShader.getPackedMaterialData) {
         let glShaderGeomSets = this.__glShaderGeomSets[shaderName]
         if (!glShaderGeomSets) {
-          glShaderGeomSets = new GLShaderGeomSets(this, this.__gl, shader) //TODO: check before cast?
+          glShaderGeomSets = new GLShaderGeomSets(this, this.__gl, shader)
           glShaderGeomSets.on('updated', () => {
             this.__renderer.requestRedraw()
           })
@@ -189,7 +189,8 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
    * The removeGeomItem method.
    * @param {GeomItem} geomItem - The geomItem value.
    */
-  removeGeomItem(geomItem: GeomItem) {
+  // TODO: needs to return boolean
+  removeGeomItem(geomItem: GeomItem): any {
     this.itemCount--
 
     const glGeomItem = this.renderer.glGeomItemLibrary.getGLGeomItem(geomItem)
