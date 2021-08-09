@@ -34,9 +34,6 @@ varying vec4 v_geomItemData;
 varying float v_drawItemID;
 varying vec3 v_worldPos;
 
-// #if defined(DRAW_COLOR)
-// #elif defined(DRAW_GEOMDATA)
-// #endif
 
 void main(void) {
 
@@ -67,6 +64,3 @@ void main(void) {
   }
 
 }
-  // #if defined(DRAW_COLOR)
-  // #elif defined(DRAW_GEOMDATA)
-  // #endif // DRAW

@@ -42,8 +42,8 @@ vec4 getCutaway(int id) {
 
 #endif
 
-#if defined(DRAW_GEOMDATA)
-#elif defined(DRAW_HIGHLIGHT)
+
+#if defined(DRAW_HIGHLIGHT)
   import 'surfaceHighlight.glsl'
 #endif
 

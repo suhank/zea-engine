@@ -29,7 +29,7 @@ class FatLinesShader extends GLShader {
     }
     return false
   }
-  
+
   static getParamDeclarations() {
     const paramDescs = super.getParamDeclarations()
     paramDescs.push({
