@@ -74,13 +74,13 @@ class SimpleUniformBinding {
       }
       this.texBinding = gltexture.preBind(this.textureUnif, unifs)
       gltexture.on('updated', () => {
-        glMaterial.emit('updated', {})
+        glMaterial.emit('updated')
       })
       this.gltexture = gltexture
       this.gltexture.addRef(this)
       this.textureType = textureType
       this.bind = this.bindTexture
-      glMaterial.emit('updated', {})
+      glMaterial.emit('updated')
     }
 
     let boundImage: any
@@ -110,7 +110,7 @@ class SimpleUniformBinding {
       }
       boundImage = null
       imageLoaded = null
-      glMaterial.emit('updated', {})
+      glMaterial.emit('updated')
     }
 
     this.update = () => {
@@ -138,7 +138,7 @@ class SimpleUniformBinding {
     this.dirty = true
     param.on('valueChanged', () => {
       this.dirty = true
-      glMaterial.emit('updated', {})
+      glMaterial.emit('updated')
     })
   }
 
@@ -212,7 +212,7 @@ class ComplexUniformBinding {
     this.dirty = true
     param.on('valueChanged', () => {
       this.dirty = true
-      glMaterial.emit('updated', {})
+      glMaterial.emit('updated')
     })
   }
 
@@ -272,7 +272,7 @@ class MatrixUniformBinding {
     this.dirty = true
     param.on('valueChanged', () => {
       this.dirty = true
-      glMaterial.emit('updated', {})
+      glMaterial.emit('updated')
     })
   }
 
@@ -352,13 +352,13 @@ class ColorUniformBinding {
       }
       this.texBinding = gltexture.preBind(this.textureUnif, unifs)
       gltexture.on('updated', () => {
-        glMaterial.emit('updated', {})
+        glMaterial.emit('updated')
       })
       this.gltexture = gltexture
       this.gltexture.addRef(this)
       this.textureType = textureType
       this.bind = this.bindTexture
-      glMaterial.emit('updated', {})
+      glMaterial.emit('updated')
     }
 
     let boundImage: any
@@ -388,7 +388,7 @@ class ColorUniformBinding {
       }
       boundImage = null
       imageLoaded = null
-      glMaterial.emit('updated', {})
+      glMaterial.emit('updated')
     }
 
     this.update = () => {

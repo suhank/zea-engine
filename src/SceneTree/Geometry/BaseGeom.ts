@@ -160,7 +160,7 @@ class BaseGeom extends ParameterOwner {
    */
   setBoundingBoxDirty(): void {
     this.__boundingBoxDirty = true
-    this.emit('boundingBoxChanged', {})
+    this.emit('boundingBoxChanged')
   }
 
   /**

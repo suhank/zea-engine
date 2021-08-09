@@ -108,7 +108,7 @@ class RefCounted extends EventEmitter {
   destroy() {
     this.__destroyed = true
     // console.log(this.constructor.name + " destructing");
-    this.emit('destructing', {})
+    this.emit('destructing')
   }
 }
 export { RefCounted }

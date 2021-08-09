@@ -4,6 +4,7 @@ import { generateShaderGeomBinding, genDataTypeDesc } from './GeomShaderBinding'
 import { Points, Lines, Mesh, PointsProxy, LinesProxy, MeshProxy, BaseGeom } from '../../SceneTree/index'
 import { GLPoints, GLLines, GLMesh } from './index'
 import { GLBaseRenderer } from '../GLBaseRenderer'
+import { IndexEvent } from '../../Utilities/Events/IndexEvent'
 
 const resizeIntArray = (intArray: Int32Array, newSize: number) => {
   const newArray = new Int32Array(newSize)
@@ -386,7 +387,8 @@ class GLGeomLibrary extends EventEmitter {
       throw new Error('Invalid allocation for this geom')
     }
     if (numVerts == 0) {
-      this.emit('geomDataChanged', { index })
+      const event = new IndexEvent(index)
+      this.emit('geomDataChanged', event)
       return
     }
 
@@ -433,8 +435,8 @@ class GLGeomLibrary extends EventEmitter {
       gl.bufferSubData(gl.ELEMENT_ARRAY_BUFFER, dstByteOffsetInBytes, offsettedIndices)
       gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null)
     }
-
-    this.emit('geomDataChanged', { index })
+    let event = new IndexEvent(index)
+    this.emit('geomDataChanged', event)
   }
 
   /**

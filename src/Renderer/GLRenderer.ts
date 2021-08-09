@@ -13,6 +13,7 @@ import { SilhouetteShader } from './Shaders/SilhouetteShader'
 import { generateShaderGeomBinding } from './Drawing/GeomShaderBinding'
 import { BaseEvent } from '../Utilities/BaseEvent'
 import { VLHImage } from '../SceneTree/Images/VLHImage'
+import { EnvMapAssignedEvent } from '../Utilities/Events/EnvMapAssignedEvent'
 
 const ALL_PASSES = PassType.OPAQUE | PassType.TRANSPARENT | PassType.OVERLAY
 
@@ -162,7 +163,8 @@ class GLRenderer extends GLBaseRenderer {
     this.__glEnvMap.on('loaded', this.requestRedraw)
     this.__glEnvMap.on('updated', this.requestRedraw)
 
-    this.emit('envMapAssigned', { envMap: this.__glEnvMap })
+    const event = new EnvMapAssignedEvent(this.__glEnvMap)
+    this.emit('envMapAssigned', event)
   }
 
   /**

@@ -1,5 +1,6 @@
 import { BaseImage, RefCounted } from '../SceneTree/index'
 import { BaseEvent } from '../Utilities/BaseEvent'
+import { ResizedEvent } from '../Utilities/Events/ResizedEvent'
 import { MathFunctions } from '../Utilities/MathFunctions'
 import { processTextureParams } from './processTextureParams'
 
@@ -196,7 +197,7 @@ class GLTexture2D extends RefCounted {
       this.resize(width, height, false, false)
     }
     if (!this.__loaded) {
-      this.emit('ready', new BaseEvent())
+      this.emit('ready')
       this.__loaded = true
     }
   }
@@ -333,7 +334,7 @@ class GLTexture2D extends RefCounted {
     }
 
     if (emit) {
-      this.emit('updated', new BaseEvent())
+      this.emit('updated')
     }
   }
 
@@ -457,7 +458,8 @@ class GLTexture2D extends RefCounted {
       this.height = height
 
       if (emit) {
-        this.emit('resized', { width, height })
+        const event = new ResizedEvent(width, height)
+        this.emit('resized', event)
       }
     }
   }

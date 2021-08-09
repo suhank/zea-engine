@@ -1,6 +1,7 @@
 // Taken from here: https://github.com/jakesgordon/bin-packing/blob/master/js/packer.growing.js
 
 import { EventEmitter } from './EventEmitter'
+import { ResizedEvent } from './Events/ResizedEvent'
 
 /******************************************************************************
 
@@ -86,7 +87,8 @@ class GrowingPacker extends EventEmitter {
       resized = true
     }
     if (resized) {
-      this.emit('resized', { width: this.root.w, height: this.root.h })
+      const event = new ResizedEvent(this.root.w, this.root.h)
+      this.emit('resized', event)
     }
     const eachBlock = (block: Record<string, any>) => {
       block.fit = this.__addBlock(block)
@@ -111,7 +113,8 @@ class GrowingPacker extends EventEmitter {
       resized = true
     }
     if (resized) {
-      this.emit('resized', { width: this.root.w, height: this.root.h })
+      const event = new ResizedEvent(this.root.w, this.root.h)
+      this.emit('resized', event)
     }
     const node = this.findNode(this.root, block.w, block.h)
     if (node) return this.splitNode(node, block.w, block.h)
@@ -173,7 +176,8 @@ class GrowingPacker extends EventEmitter {
     const node = this.findNode(this.root, w, h)
     let res
     if (node) res = this.splitNode(node, w, h)
-    this.emit('resized', { width: this.root.w, height: this.root.h })
+    const event = new ResizedEvent(this.root.w, this.root.h)
+    this.emit('resized', event)
     return res
   }
 
@@ -195,7 +199,8 @@ class GrowingPacker extends EventEmitter {
     const node = this.findNode(this.root, w, h)
     let res
     if (node) res = this.splitNode(node, w, h)
-    this.emit('resized', { width: this.root.w, height: this.root.h })
+    const event = new ResizedEvent(this.root.w, this.root.h)
+    this.emit('resized', event)
     return res
   }
 }

@@ -32,7 +32,7 @@ class VLAAsset extends AssetItem {
     // Often the state machine will activate the
     // first state when this signal emits.
     this.__geomLibrary.on('loaded', () => {
-      this.emit('geomsLoaded', {})
+      this.emit('geomsLoaded')
     })
 
     this.__fileParam = this.addParameter(new FilePathParameter('FilePath'))

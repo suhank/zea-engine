@@ -15,10 +15,15 @@ import { Color } from '../Math/Color'
 import { GLRenderer } from './GLRenderer'
 import { BaseEvent } from '../Utilities/BaseEvent'
 import type { Navigator } from 'webxr'
+import { ResizedEvent } from '../Utilities/Events/ResizedEvent'
+import { SceneSetEvent } from '../Utilities/Events/SceneSetEvent'
+import { ViewChangedEvent } from '../Utilities/Events/ViewChangedEvent'
+import { XrViewportEvent } from '../Utilities/Events/XrViewportEvent'
 let activeGLRenderer: Record<any, any>
 let pointerIsDown = false
 let pointerLeft = false
 const registeredPasses: Record<any, any> = {}
+
 
 /**
  * Class representing a GL base renderer.
@@ -145,9 +150,8 @@ class GLBaseRenderer extends ParameterOwner {
             // this.__gl.setCompatibleXRDevice(device);
             ;(<Record<any, any>>this.__gl).makeXRCompatible().then(() => {
               this.__xrViewport = this.__setupXRViewport()
-              this.emit('xrViewportSetup', {
-                xrViewport: this.__xrViewport,
-              })
+              let event = new XrViewportEvent(this.__xrViewport)
+              this.emit('xrViewportSetup', event)
               resolve(this.__xrViewport)
             })
           }
@@ -360,7 +364,8 @@ class GLBaseRenderer extends ParameterOwner {
 
     if (this.__gizmoContext) this.__gizmoContext.setSelectionManager(scene.getSelectionManager())
 
-    this.emit('sceneSet', { scene: this.__scene })
+    let event = new SceneSetEvent(this.__scene)
+    this.emit('sceneSet', event)
   }
 
   /**
@@ -560,11 +565,8 @@ class GLBaseRenderer extends ParameterOwner {
       for (const vp of this.__viewports) {
         vp.resize(newWidth, newHeight)
       }
-
-      this.emit('resized', {
-        width: newWidth,
-        height: newHeight,
-      })
+      const event = new ResizedEvent(newWidth, newHeight)
+      this.emit('resized', event)
     }
     this.requestRedraw()
   }
@@ -1087,7 +1089,7 @@ class GLBaseRenderer extends ParameterOwner {
         xrvp.on('viewChanged', emitViewChanged)
       } else {
         xrvp.off('viewChanged', emitViewChanged)
-        this.emit('updated', new BaseEvent())
+        this.emit('updated')
 
         for (const key in this.__passes) {
           const passSet = this.__passes[key]
@@ -1095,10 +1097,9 @@ class GLBaseRenderer extends ParameterOwner {
             pass.stopPresenting()
           }
         }
-        const event = {
-          interfaceType: 'CameraAndPointer',
-          viewXfo: this.getViewport().getCamera().getParameter('GlobalXfo').getValue(),
-        }
+
+        const viewXfo = this.getViewport().getCamera().getParameter('GlobalXfo').getValue()
+        const event = new ViewChangedEvent('CameraAndPointer', viewXfo)
         this.emit('viewChanged', event)
 
         this.requestRedraw()

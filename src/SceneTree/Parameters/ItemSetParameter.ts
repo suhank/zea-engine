@@ -115,7 +115,7 @@ class ItemSetParameter extends Parameter<Set<BaseItem>> {
           this.addItem(item, false)
         }
       }
-      if (emit) this.emit('valueChanged', {})
+      if (emit) this.emit('valueChanged')
     }
   }
 

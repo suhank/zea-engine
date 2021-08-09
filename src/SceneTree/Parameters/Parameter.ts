@@ -369,7 +369,7 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
     this.value = value
 
     // Note: only users call 'setValue'. Operators call 'setCleanFromOp'
-    this.emit('valueChanged', {})
+    this.emit('valueChanged')
   }
 
   // ////////////////////////////////////////

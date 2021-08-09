@@ -134,7 +134,7 @@ class GLHDRImage extends GLTexture2D {
     //     this.__srcCDMTex = null;
     // }
 
-    this.emit('updated', new BaseEvent())
+    this.emit('updated')
   }
 
   /**

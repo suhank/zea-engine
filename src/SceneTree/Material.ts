@@ -13,6 +13,9 @@ import { MaterialFloatParam } from './Parameters/MaterialFloatParam'
 import { MaterialColorParam } from './Parameters/MaterialColorParam'
 import { BinReader } from './BinReader'
 import { shaderLibrary } from '../Renderer/ShaderLibrary'
+import { ShaderNameChangedEvent } from '../Utilities/Events/ShaderNameChangedEvent'
+import { TransparencyChangedEvent } from '../Utilities/Events/TransparencyChangedEvent'
+import { TexturedChangedEvent } from '../Utilities/Events/TexturedChangedEvent'
 
 /**
  * Represents a type of `BaseItem` class that holds material configuration.
@@ -86,7 +89,8 @@ class Material extends BaseItem {
 
     this.__shaderName = shaderName
     this.__checkTransparency({})
-    this.emit('shaderNameChanged', { shaderName })
+    const event = new ShaderNameChangedEvent(shaderName)
+    this.emit('shaderNameChanged', event)
   }
 
   /**
@@ -156,7 +160,8 @@ class Material extends BaseItem {
 
     if (isTransparent != this.__isTransparent) {
       this.__isTransparent = isTransparent
-      this.emit('transparencyChanged', { isTransparent })
+      const event = new TransparencyChangedEvent(isTransparent)
+      this.emit('transparencyChanged', event)
     }
   }
 
@@ -182,7 +187,8 @@ class Material extends BaseItem {
     }
     if (isTextured != this.__isTextured) {
       this.__isTextured = isTextured
-      this.emit('texturedChanged', { isTextured, param })
+      let event = new TexturedChangedEvent(isTextured, param)
+      this.emit('texturedChanged', event)
     }
   }
 

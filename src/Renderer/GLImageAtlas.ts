@@ -60,7 +60,7 @@ class GLImageAtlas extends GLRenderTarget {
       this.__asyncCount--
       if (this.__asyncCount == 0) {
         this.loaded = true
-        this.emit('loaded', new BaseEvent())
+        this.emit('loaded')
       }
     }
   }
@@ -339,7 +339,7 @@ class GLImageAtlas extends GLRenderTarget {
 
     this.unbind(renderstate)
     // this.__fbo.unbind()
-    this.emit('updated', new BaseEvent())
+    this.emit('updated')
   }
 
   /**

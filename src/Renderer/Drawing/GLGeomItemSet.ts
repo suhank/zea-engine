@@ -1,4 +1,5 @@
 import '../../SceneTree/GeomItem'
+import { CountChangedEvent, DrawCountChangedEvent } from '../../Utilities/Events/CountChangedEvent'
 
 import { EventEmitter } from '../../Utilities/index'
 
@@ -76,7 +77,8 @@ class GLGeomItemSet extends EventEmitter {
     }
     if (glGeomItem.geomItem.isVisible()) {
       this.visibleItems.push(index)
-      this.emit('drawCountChanged', { change: 1, count: this.visibleItems.length })
+      const event = new CountChangedEvent(1, this.visibleItems.length)
+      this.emit('drawCountChanged', event)
     }
     if (glGeomItem.geomItem.isHighlighted()) {
       this.highlightedItems.push(index)
@@ -92,10 +94,12 @@ class GLGeomItemSet extends EventEmitter {
         // adding the same index again here. (TODO: use Set?)
         if (this.highlightedItems.includes(index)) return
         this.highlightedItems.push(index)
-        this.emit('highlightedCountChanged', { change: 1, count: this.highlightedItems.length })
+        const event = new CountChangedEvent(1, this.highlightedItems.length)
+        this.emit('highlightedCountChanged', event)
       } else {
         this.highlightedItems.splice(this.highlightedItems.indexOf(index), 1)
-        this.emit('highlightedCountChanged', { change: -1, count: this.highlightedItems.length })
+        const event = new CountChangedEvent(-1, this.highlightedItems.length)
+        this.emit('highlightedCountChanged', event)
       }
       // console.log("highlightChanged:", glGeomItem.geomItem.getName(), glGeomItem.geomItem.isHighlighted(), this.highlightedItems)
       this.highlightedIdsBufferDirty = true
@@ -105,10 +109,12 @@ class GLGeomItemSet extends EventEmitter {
       const visible = event.visible
       if (visible) {
         this.visibleItems.push(index)
-        this.emit('drawCountChanged', { change: 1, count: this.visibleItems.length })
+        const event = new CountChangedEvent(1, this.visibleItems.length)
+        this.emit('drawCountChanged', event)
       } else {
         this.visibleItems.splice(this.visibleItems.indexOf(index), 1)
-        this.emit('drawCountChanged', { change: -1, count: this.visibleItems.length })
+        const event = new CountChangedEvent(-1, this.visibleItems.length)
+        this.emit('drawCountChanged', event)
       }
       this.drawIdsBufferDirty = true
     }
@@ -140,11 +146,13 @@ class GLGeomItemSet extends EventEmitter {
 
     if (glGeomItem.geomItem.isVisible()) {
       this.visibleItems.splice(this.visibleItems.indexOf(index), 1)
-      this.emit('drawCountChanged', { change: -1, count: this.visibleItems.length })
+      const event = new CountChangedEvent(-1, this.visibleItems.length)
+      this.emit('drawCountChanged', event)
     }
     if (glGeomItem.geomItem.isHighlighted()) {
       this.highlightedItems.splice(this.highlightedItems.indexOf(index), 1)
-      this.emit('highlightedCountChanged', { change: -1, count: this.highlightedItems.length })
+      const event = new CountChangedEvent(-1, this.highlightedItems.length)
+      this.emit('highlightedCountChanged', event)
     }
     this.drawIdsBufferDirty = true
     // console.log("removeGLGeomItem:", glGeomItem.geomItem.getName(), this.glGeomItems.length)

@@ -68,12 +68,12 @@ class GLEnvMap extends GLProbe {
     updateHeadlightModeFlag()
     headlightParam.on('valueChanged', () => {
       updateHeadlightModeFlag()
-      this.emit('updated', new BaseEvent())
+      this.emit('updated')
     })
 
     this.convolveProbe(this.__srcGLTex)
 
-    this.emit('updated', new BaseEvent())
+    this.emit('updated')
   }
 
   /**

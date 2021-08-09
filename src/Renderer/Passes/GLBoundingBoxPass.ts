@@ -168,7 +168,7 @@ class GLBoundingBoxPass extends GLPass {
     const xfoChanged = () => {
       if (treeitem.isVisible()) {
         this.dirtyBoxes.add(index)
-        this.emit('updated', {})
+        this.emit('updated')
       }
     }
     treeitem.getParameter('GlobalXfo').on('valueChanged', xfoChanged)

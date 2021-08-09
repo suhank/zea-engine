@@ -72,7 +72,7 @@ class ListParameter extends Parameter<any[]> {
     if (!this.value) this.value = []
 
     this.value[index] = value
-    this.emit('valueChanged', {})
+    this.emit('valueChanged')
   }
 
   /**
@@ -87,7 +87,7 @@ class ListParameter extends Parameter<any[]> {
 
     this.value.push(elem)
     this.emit('elementAdded', { elem, index: this.value.length - 1 })
-    this.emit('valueChanged', {})
+    this.emit('valueChanged')
     return elem
   }
 
@@ -101,7 +101,7 @@ class ListParameter extends Parameter<any[]> {
     const elem = this.value[index]
     this.value.splice(index, 1)
     this.emit('elementRemoved', { elem, index })
-    this.emit('valueChanged', {})
+    this.emit('valueChanged')
   }
 
   /**
@@ -114,7 +114,7 @@ class ListParameter extends Parameter<any[]> {
     if (!this.value || !this.filter(elem)) return
     this.value.splice(index, 0, elem)
     this.emit('elementAdded', { elem, index })
-    this.emit('valueChanged', {})
+    this.emit('valueChanged')
   }
 
   // ////////////////////////////////////////

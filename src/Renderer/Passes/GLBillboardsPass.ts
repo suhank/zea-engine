@@ -153,7 +153,7 @@ class GLBillboardsPass extends GLPass {
     const xfoChanged = () => {
       if (billboard.isVisible()) {
         this.dirtyBillboards.add(index)
-        this.emit('updated', {})
+        this.emit('updated')
       }
     }
     billboard.getParameter('GlobalXfo').on('valueChanged', xfoChanged)
@@ -161,7 +161,7 @@ class GLBillboardsPass extends GLPass {
     const alphaChanged = () => {
       if (billboard.isVisible()) {
         this.dirtyBillboards.add(index)
-        this.emit('updated', {})
+        this.emit('updated')
       }
     }
     billboard.getParameter('Alpha').on('valueChanged', alphaChanged)

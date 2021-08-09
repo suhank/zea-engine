@@ -7,6 +7,8 @@ import { Registry } from '../Registry'
 import { BaseEvent } from '../Utilities/BaseEvent'
 // TODO:(ss) use this: import { Parameter } from './Parameters'
 import { Parameter } from './Parameters/Parameter'
+import { SelectabilityChangedEvent } from '../Utilities/Events/SelectabilityChangedEvent'
+import { SelectedEvent } from '../Utilities/Events/SelectedEvent'
 let numBaseItems = 0
 
 class NameChangedEvent extends BaseEvent {
@@ -204,7 +206,8 @@ class BaseItem extends ParameterOwner {
   setSelectable(val: boolean): boolean {
     if (this.__selectable != val) {
       this.__selectable = val
-      this.emit('selectabilityChanged', { value: this.__selectable })
+      let event = new SelectabilityChangedEvent(this.__selectable)
+      this.emit('selectabilityChanged', event)
       return true
     }
     return false
@@ -237,7 +240,8 @@ class BaseItem extends ParameterOwner {
    */
   setSelected(sel: boolean): void {
     this.__selected = sel
-    this.emit('selectedChanged', { selected: this.__selected })
+    let event = new SelectedEvent(this.__selected)
+    this.emit('selectedChanged', event)
   }
 
   // ////////////////////////////////////////

@@ -88,7 +88,7 @@ class BaseGeomItem extends TreeItem {
    */
   setCutawayEnabled(state: boolean) {
     this.__cutAway = state
-    this.emit('cutAwayChanged', {})
+    this.emit('cutAwayChanged')
   }
 
   /**
@@ -107,7 +107,7 @@ class BaseGeomItem extends TreeItem {
    */
   setCutVector(cutAwayVector: Vec3) {
     this.__cutAwayVector = cutAwayVector
-    this.emit('cutAwayChanged', {})
+    this.emit('cutAwayChanged')
   }
 
   /**
@@ -126,7 +126,7 @@ class BaseGeomItem extends TreeItem {
    */
   setCutDist(cutAwayDist: number) {
     this.__cutAwayDist = cutAwayDist
-    this.emit('cutAwayChanged', {})
+    this.emit('cutAwayChanged')
   }
 
   // ///////////////////////////

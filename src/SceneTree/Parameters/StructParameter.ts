@@ -45,7 +45,7 @@ class StructParameter extends Parameter<Record<string, unknown>> {
     })
 
     this.members.push(parameter)
-    this.emit('valueChanged', {})
+    this.emit('valueChanged')
     return parameter
   }
 

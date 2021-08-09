@@ -207,7 +207,7 @@ class GLAudioItemsPass extends GLPass {
       parameterOwner,
     })
 
-    this.emit('updated', {})
+    this.emit('updated')
   }
 
   /**

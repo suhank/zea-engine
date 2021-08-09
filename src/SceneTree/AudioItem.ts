@@ -2,6 +2,7 @@
 import { BooleanParameter, NumberParameter } from './Parameters/index'
 import { FilePathParameter } from './Parameters/FilePathParameter'
 import { TreeItem } from './TreeItem'
+import { AudioSourceCreatedEvent } from '../Utilities/Events/AudioSourceCreatedEvent'
 
 /**
  * A special type of `TreeItem` that let you handle audio files.
@@ -54,7 +55,9 @@ class AudioItem extends TreeItem {
       audioSource.loop = loopParam.getValue()
       audioSource.muted = muteParam.getValue()
       audioSource.start(0)
-      this.emit('audioSourceCreated', { audioSource })
+
+      const event = new AudioSourceCreatedEvent(audioSource)
+      this.emit('audioSourceCreated', event)
     }
     fileParam.on('valueChanged', () => {
       const request = new XMLHttpRequest()
@@ -71,7 +74,7 @@ class AudioItem extends TreeItem {
           (buffer: any) => {
             audioBuffer = buffer
             this.__loaded = true
-            this.emit('loaded', {})
+            this.emit('loaded')
             if (autoplayParam.getValue()) startAudioPlayback()
           },
           (e: any) => {
@@ -158,12 +161,13 @@ class AudioItem extends TreeItem {
 
   /**
    * The setAudioStream method.
-   * @param {any} audio - The audio value.
+   * @param {any} audioSource - The audio value.
    */
-  setAudioStream() {
+  setAudioStream(audioSource: any) {
     this.__loaded = true
-    this.emit('loaded', {})
-    this.emit('audioSourceCreated', { audioSource })
+    this.emit('loaded')
+    const event = new AudioSourceCreatedEvent(audioSource)
+    this.emit('audioSourceCreated', event)
   }
 }
 

@@ -281,9 +281,9 @@ class ObjAsset extends AssetItem {
         }
 
         // Done.
-        this.emit('loaded', new BaseEvent())
-        this.getGeometryLibrary().emit('loaded', new BaseEvent())
-        this.emit('geomsLoaded', new BaseEvent())
+        this.emit('loaded')
+        this.getGeometryLibrary().emit('loaded')
+        this.emit('geomsLoaded')
         // TODO: (commented out) resolve()
       }
 

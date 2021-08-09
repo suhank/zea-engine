@@ -6,6 +6,8 @@ import { EventEmitter } from '../Utilities/EventEmitter'
 import { Registry } from '../Registry'
 import { BinReader } from './BinReader'
 import { Parameter } from './Parameters/Parameter'
+import { ParameterAddedEvent } from '../Utilities/Events/ParameterAddedEvent'
+import { ParameterRemovedEvent } from '../Utilities/Events/ParameterRemovedEvent'
 
 /**
  * Class that allows other classes to be parameterized by `Parameter` type of objects.
@@ -175,7 +177,8 @@ class ParameterOwner extends EventEmitter {
     for (let i = index; i < this.params.length; i++) {
       this.paramMapping[this.params[i].getName()] = i
     }
-    this.emit('parameterAdded', { name })
+    const event = new ParameterAddedEvent(name)
+    this.emit('parameterAdded', event)
     return param
   }
 
@@ -196,8 +199,8 @@ class ParameterOwner extends EventEmitter {
     for (let i = index; i < this.params.length; i++) {
       this.paramMapping[this.params[i].getName()] = i
     }
-
-    this.emit('parameterRemoved', { name })
+    const event = new ParameterRemovedEvent(name)
+    this.emit('parameterRemoved', event)
   }
 
   /**

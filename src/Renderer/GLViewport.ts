@@ -9,6 +9,8 @@ import { BaseTool } from '../SceneTree/index'
 import { CameraManipulator } from '../SceneTree/index'
 import { GLRenderer } from './GLRenderer'
 import { BaseEvent } from '../Utilities/BaseEvent'
+import { ResizedEvent } from '../Utilities/Events/ResizedEvent'
+import { ViewChangedEvent } from '../Utilities/Events/ViewChangedEvent'
 
 /**
  * Class representing a GL viewport.
@@ -181,7 +183,8 @@ class GLViewport extends GLBaseViewport {
 
     this.resizeRenderTargets(this.__width, this.__height)
     if (this.__camera) this.__updateProjectionMatrix()
-    this.emit('resized', { width: this.__width, height: this.__height })
+    const event = new ResizedEvent(this.__width, this.__height)
+    this.emit('resized', event)
   }
 
   /**
@@ -229,13 +232,12 @@ class GLViewport extends GLBaseViewport {
     globalXfoParam.on('valueChanged', () => {
       getCameraParams()
       this.invalidateGeomDataBuffer()
-      this.emit('updated', new BaseEvent())
-      this.emit('viewChanged', {
-        interfaceType: 'CameraAndPointer',
-        viewXfo: this.__cameraXfo,
-        focalDistance: this.__camera.getFocalDistance(),
-        fieldOfView: this.__camera.getFov(),
-      })
+      this.emit('updated')
+      
+      let focalDistance = this.__camera.getFocalDistance()
+      let fieldOfView = this.__camera.getFov()
+      const event = new ViewChangedEvent('CameraAndPointer', this.__cameraXfo, focalDistance, fieldOfView)
+      this.emit('viewChanged', event)
     })
     this.__camera.on('projectionParamChanged', () => {
       this.__updateProjectionMatrix()

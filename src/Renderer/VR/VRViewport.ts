@@ -9,6 +9,9 @@ import { resourceLoader } from '../../SceneTree/resourceLoader'
 import { POINTER_TYPES } from '../../Utilities/EnumUtils'
 import { GLBaseRenderer } from '../GLBaseRenderer'
 import { XRWebGLLayer } from 'webxr'
+import { ViewChangedEvent } from '../../Utilities/Events/ViewChangedEvent'
+import { ControllerAddedEvent } from '../../Utilities/Events/ControllerAddedEvent'
+import { StateChangedEvent } from '../../Utilities/Events/StateChangedEvent'
 /** This Viewport class is used for rendering stereoscopic views to VR controllers using the WebXR api.
  *  When the GLRenderer class detects a valid WebXF capable device is plugged in, this class is automatically
  *  instantiated ready for XR sessions
@@ -341,7 +344,9 @@ class VRViewport extends GLBaseViewport {
               const controller = new VRController(this, inputSource, id)
               this.controllersMap[inputSource.handedness] = controller
               this.controllers[id] = controller
-              this.emit('controllerAdded', { controller })
+
+              const event = new ControllerAddedEvent(controller)
+              this.emit('controllerAdded', event)
               return controller
             }
             const onInputSourcesChange = (event: Record<any, any>) => {
@@ -379,7 +384,8 @@ class VRViewport extends GLBaseViewport {
             const onRefSpaceCreated = (refSpace: any) => {
               this.__refSpace = refSpace
               this.__stageTreeItem.setVisible(true)
-              this.emit('presentingChanged', { state: true })
+              const event = new StateChangedEvent(true)
+              this.emit('presentingChanged', event)
 
               this.loadHMDResources().then(() => {
                 this.__startSession()
@@ -562,15 +568,15 @@ class VRViewport extends GLBaseViewport {
 
     // ///////////////////////
     // Emit a signal for the shared session.
-    const data = {
-      interfaceType: 'VR',
-      hmd: this.__hmd,
-      viewXfo: renderstate.viewXfo,
-      controllers: this.controllers,
-      viewport: this,
-      vrviewport: this,
-    }
-    this.emit('viewChanged', data)
+
+    const viewChangedEvent = new ViewChangedEvent('VR', renderstate.viewXfo)
+    // TODO: better solution than setting members individually?
+    viewChangedEvent.hmd = this.__hmd
+    viewChangedEvent.controllers = this.controllers
+    viewChangedEvent.viewport = this
+    viewChangedEvent.vrviewport = this
+
+    this.emit('viewChanged', viewChangedEvent)
 
     // If spectator mode is active, draw a 3rd person view of the scene to
     // the WebGL context's default backbuffer.

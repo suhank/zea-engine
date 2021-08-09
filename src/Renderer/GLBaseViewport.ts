@@ -10,6 +10,7 @@ import { GLMesh } from './Drawing/GLMesh'
 import { GLRenderer } from './GLRenderer'
 import { BaseEvent } from '../Utilities/BaseEvent'
 import { VLHImage } from '../SceneTree/Images/VLHImage'
+import { ResizedEvent } from '../Utilities/Events/ResizedEvent'
 
 const FRAMEBUFFER = {
   MSAA_RENDERBUFFER: 0,
@@ -127,7 +128,7 @@ class GLBaseViewport extends ParameterOwner {
         } else {
           console.warn('Invalid background:' + value)
         }
-        this.emit('updated',  new BaseEvent())
+        this.emit('updated')
       }
       processBGValue()
       bgColorParam.on('valueChanged', processBGValue)
@@ -183,7 +184,7 @@ class GLBaseViewport extends ParameterOwner {
     const settings = this.__renderer.getScene().settings
     const bgColorParam = settings.getParameter('BackgroundColor')
     bgColorParam.setValue(background)
-    this.emit('updated', new BaseEvent())
+    this.emit('updated')
   }
 
   /**
@@ -198,7 +199,8 @@ class GLBaseViewport extends ParameterOwner {
     this.__width = canvasWidth
     this.__height = canvasHeight
     this.resizeRenderTargets(canvasWidth, canvasHeight)
-    this.emit('resized', { width: this.__width, height: this.__height })
+    const event = new ResizedEvent(this.__width, this.__height)
+    this.emit('resized', event)
   }
 
   /**
@@ -548,7 +550,7 @@ class GLBaseViewport extends ParameterOwner {
    *
    * @param {MouseEvent|TouchEvent} event - The DOM event produced by a pointer
    */
-  onPointerDown(event: Record<any,any>) {
+  onPointerDown(event: Record<any, any>) {
     console.warn('@GLBaseViewport#onPointerDown - Implement me!')
   }
 
@@ -557,7 +559,7 @@ class GLBaseViewport extends ParameterOwner {
    *
    * @param {MouseEvent|TouchEvent} event - The DOM event produced by a pointer
    */
-  onPointerUp(event: Record<any,any>) {
+  onPointerUp(event: Record<any, any>) {
     console.warn('@GLBaseViewport#onPointerUp - Implement me!')
   }
 
@@ -566,7 +568,7 @@ class GLBaseViewport extends ParameterOwner {
    *
    * @param {MouseEvent|TouchEvent} event - The DOM event produced by a pointer
    */
-  onPointerMove(event: Record<any,any>) {
+  onPointerMove(event: Record<any, any>) {
     console.warn('@GLBaseViewport#onPointerMove - Implement me!')
   }
 
@@ -575,7 +577,7 @@ class GLBaseViewport extends ParameterOwner {
    *
    * @param {MouseEvent|TouchEvent} event - The DOM event produced by a pointer
    */
-  onPointerEnter(event: Record<any,any>) {
+  onPointerEnter(event: Record<any, any>) {
     console.warn('@GLBaseViewport#onPointerEnter - Implement me!')
   }
 
@@ -584,7 +586,7 @@ class GLBaseViewport extends ParameterOwner {
    *
    * @param {MouseEvent|TouchEvent} event - The DOM event produced by a pointer
    */
-  onPointerLeave(event: Record<any,any>) {
+  onPointerLeave(event: Record<any, any>) {
     console.warn('@GLBaseViewport#onPointerLeave - Implement me!')
   }
 
@@ -592,19 +594,19 @@ class GLBaseViewport extends ParameterOwner {
    * Invoked when the mouse pointer is moved out of an element.
    * @param {MouseEvent} event - The event that occurs.
    */
-  onMouseLeave(event: Record<any,any>) {}
+  onMouseLeave(event: Record<any, any>) {}
 
   /**
    * Invoked when the user is pressing a key on the keyboard.
    * @param {KeyboardEvent} event - The event that occurs.
    */
-  onKeyDown(event: Record<any,any>) {}
+  onKeyDown(event: Record<any, any>) {}
 
   /**
    * Causes an event to occur  when the user releases a key on the keyboard.
    * @param {KeyboardEvent} event - The event that occurs.
    */
-  onKeyUp(event: Record<any,any>) {}
+  onKeyUp(event: Record<any, any>) {}
 
   /**
    *

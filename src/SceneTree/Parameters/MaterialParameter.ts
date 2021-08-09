@@ -56,7 +56,7 @@ class MaterialParameter extends Parameter<Material> {
       }
 
       // During the cleaning process, we don't want notifications.
-      this.emit('valueChanged', {})
+      this.emit('valueChanged')
     }
   }
 

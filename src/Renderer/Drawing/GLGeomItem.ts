@@ -2,6 +2,7 @@ import { EventEmitter } from '../../Utilities/index'
 
 import '../../SceneTree/GeomItem'
 import { GeomItem } from '../../SceneTree/GeomItem'
+import { VisibilityChangedEvent } from '../../Utilities/Events/VisibilityChangedEvent'
 
 const GLGeomItemChangeType = {
   GEOMITEM_CHANGED: 0,
@@ -24,7 +25,6 @@ class GLGeomItem extends EventEmitter {
   material: any
   GLGeomItemSet: any
   geomItemParamChanged: any
-
 
   protected gl: WebGLContextAttributes
   geomItem: GeomItem
@@ -135,8 +135,9 @@ class GLGeomItem extends EventEmitter {
     const visible = this.geomVisible && !this.culled
     if (this.visible != visible) {
       this.visible = visible
-      this.emit('visibilityChanged', { visible })
-      this.emit('updated', {})
+      const event = new VisibilityChangedEvent(visible)
+      this.emit('visibilityChanged', event)
+      this.emit('updated')
     }
   }
 
@@ -149,7 +150,8 @@ class GLGeomItem extends EventEmitter {
     const visible = this.geomVisible && !this.culled
     if (this.visible != visible) {
       this.visible = visible
-      this.emit('visibilityChanged', { visible })
+      const event = new VisibilityChangedEvent(visible)
+      this.emit('visibilityChanged', event)
     }
   }
 

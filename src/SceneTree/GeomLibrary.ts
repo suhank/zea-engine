@@ -12,6 +12,8 @@ const multiThreadParsing = true
 // @ts-ignore
 import GeomParserWorker from 'web-worker:./Geometry/GeomParserWorker'
 import { parseGeomsBinary } from './Geometry/parseGeomsBinary'
+import { StreamFileParsedEvent } from '../Utilities/Events/StreamFileParsedEvent'
+import { RangeLoadedEvent } from '../Utilities/Events/RangeLoadedEvent'
 
 const isMobile = SystemDesc.isMobileDevice
 let numCores = window.navigator.hardwareConcurrency
@@ -234,7 +236,9 @@ class GeomLibrary extends EventEmitter {
     }
 
     if (numGeoms == 0) {
-      this.emit('streamFileParsed', { geomFileID, geomCount: 0 })
+      const event = new StreamFileParsedEvent(geomFileID, 0)
+      this.emit('streamFileParsed', event)
+
       return numGeoms
     }
     if (this.__numGeoms == -1) {
@@ -373,7 +377,8 @@ class GeomLibrary extends EventEmitter {
       }
       this.geoms[offset + i] = proxy
     }
-    this.emit('rangeLoaded', { range: storedRange })
+    const event = new RangeLoadedEvent(storedRange)
+    this.emit('rangeLoaded', event)
 
     const loaded = storedRange[1] - storedRange[0]
     // console.log("GeomLibrary Loaded:" + loaded);
@@ -384,7 +389,8 @@ class GeomLibrary extends EventEmitter {
     streamInfo.done += loaded
     // console.log('__receiveGeomDatas:', geomFileID + ' Loaded:' + streamInfo.done + ' of :' + streamInfo.total)
     if (streamInfo.done == streamInfo.total) {
-      this.emit('streamFileParsed', { geomFileID, geomCount: streamInfo.done })
+      const event = new StreamFileParsedEvent(geomFileID, streamInfo.done) // TODO: done returns an 'any' type
+      this.emit('streamFileParsed', event)
     }
 
     // Once all the geoms from all the files are loaded and parsed
