@@ -8,6 +8,7 @@ import { AudioItem } from '../../SceneTree/AudioItem'
 const AudioContext =
   window.navigator &&
   (window.AudioContext || // Default
+    // @ts-ignore
     window.webkitAudioContext || // Safari and old versions of Chrome
     false)
 

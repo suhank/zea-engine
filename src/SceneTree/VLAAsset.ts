@@ -86,7 +86,7 @@ class VLAAsset extends AssetItem {
    * @param {AssetLoadContext} context - The load context object that provides additional data such as the units of the scene we are loading into.
    * @return {Promise} - Returns a promise that resolves once the initial load is complete
    */
-  load(url: string, context: AssetLoadContext = new AssetLoadContext()) {
+  load(url: string, context: AssetLoadContext = new AssetLoadContext()): any {
     const promise = new Promise((resolve, reject) => {
       const folder = url.lastIndexOf('/') > -1 ? url.substring(0, url.lastIndexOf('/')) + '/' : ''
       const filename = url.lastIndexOf('/') > -1 ? url.substring(url.lastIndexOf('/') + 1) : ''
@@ -132,6 +132,7 @@ class VLAAsset extends AssetItem {
             this.__geomLibrary.readBinaryBuffer(filename, entries.geoms.buffer, context)
           } else {
             const basePath = folder + stem
+            //   loadGeomFilesStream(geomLibraryJSON: Record<any, any>, basePath: string, context: Record<any, any>)
             this.__geomLibrary.loadGeomFilesStream(basePath, numGeomsFiles, context)
           }
           resolve(promise)
@@ -151,7 +152,7 @@ class VLAAsset extends AssetItem {
    * @param {AssetLoadContext} context - The load context object that provides additional data such as the units of the scene we are loading into.
    * @param {function} onDone - The onDone value.
    */
-  fromJSON(j: Record<any,any>, context?: Record<any,any>, onDone?: any) {
+  fromJSON(j: Record<any, any>, context?: Record<any, any>, onDone?: any) {
     if (!context) context = {}
     context.assetItem = this
 

@@ -65,7 +65,7 @@ class BaseImage extends BaseItem {
    *
    * @return {object} - The return value.
    */
-  getParams() {
+  getParams(): Record<any,any> {
     return {
       type: this.type,
       format: this.format,

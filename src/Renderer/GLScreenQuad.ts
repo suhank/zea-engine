@@ -57,13 +57,15 @@ class GLScreenQuad {
     {
       const unif = unifs.pos
       if (unif) {
-        let arr = gl.uniform2fv(unif.location, pos ? (pos instanceof Vec2 ? pos.asArray() : pos) : this.__pos)
+        let list = pos ? (pos instanceof Vec2 ? pos.asArray() : pos) : this.__pos
+        gl.uniform2fv(unif.location, <Float32List>list)
       }
     }
     {
       const unif = unifs.size
       if (unif) {
-        gl.uniform2fv(unif.location, size ? (size instanceof Vec2 ? size.asArray() : size) : this.__size)
+        let list = size ? (size instanceof Vec2 ? size.asArray() : size) : this.__size
+        gl.uniform2fv(unif.location, <Float32List>list)
       }
     }
     // if ('flipY' in unifs)

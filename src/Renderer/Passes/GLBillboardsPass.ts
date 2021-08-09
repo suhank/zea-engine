@@ -63,7 +63,10 @@ class GLBillboardsPass extends GLPass {
 
     this.prevSortCameraPos = new Vec3()
 
-    this.atlas = new GLImageAtlas(this.renderer.gl, 'Billboards', 'RGBA', 'UNSIGNED_BYTE', [1, 1, 1, 0])
+    // TODO: this.atlas = new GLImageAtlas(this.renderer.gl, 'Billboards', 'RGBA', 'UNSIGNED_BYTE', [1, 1, 1, 0]) // TODO: Check if last arg was for color
+    this.atlas = new GLImageAtlas(this.renderer.gl, 'Billboards', 'RGBA', 'UNSIGNED_BYTE')
+    this.atlas.__clearColor = [1, 1, 1, 0]
+
     const emitUpdated = (event: Record<any, any>) => this.emit('updated', event)
     this.atlas.on('loaded', emitUpdated)
     this.atlas.on('updated', emitUpdated)

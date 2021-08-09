@@ -151,7 +151,7 @@ class VideoStreamImage2D extends BaseImage {
    * The getParams method.
    * @return {any} - The return value.
    */
-  getParams() {
+  getParams(): Record<any, any> {
     return {
       type: this.type,
       format: this.format,

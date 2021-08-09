@@ -20,7 +20,7 @@ class GLImageAtlas extends GLRenderTarget {
   protected __name: string
   protected __formatParam: string
   protected __typeParam: string
-  protected clearColor: Color
+  clearColor: Color
   protected __subImages: any[]
   protected __layoutNeedsRegeneration: boolean
   protected __asyncCount: number

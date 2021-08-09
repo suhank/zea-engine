@@ -8,7 +8,7 @@ import { VRViewManipulator } from './VRViewManipulator'
 import { resourceLoader } from '../../SceneTree/resourceLoader'
 import { POINTER_TYPES } from '../../Utilities/EnumUtils'
 import { GLBaseRenderer } from '../GLBaseRenderer'
-
+import { XRWebGLLayer } from 'webxr'
 /** This Viewport class is used for rendering stereoscopic views to VR controllers using the WebXR api.
  *  When the GLRenderer class detects a valid WebXF capable device is plugged in, this class is automatically
  *  instantiated ready for XR sessions
@@ -360,7 +360,7 @@ class VRViewport extends GLBaseViewport {
             this.session = session
 
             // ////////////////////////////
-            const glLayer = new XRWebGLLayer(session, gl)
+            const glLayer = new XRWebGLLayer(session, this.__gl)
             session.updateRenderState({
               baseLayer: glLayer /* 
               // Output canvas not working anymore
