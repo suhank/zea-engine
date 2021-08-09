@@ -9,42 +9,42 @@ uniform mat4 cameraMatrix;
   out vec4 fragColor;
 #endif
 
-#if defined(DRAW_COLOR)
-  /* VS Outputs */
-  varying vec3 v_viewPos;
-  varying vec3 v_viewNormal;
-  varying vec2 v_texCoord;
 
-#elif defined(DRAW_GEOMDATA)
-  varying float v_drawItemId;
-  varying vec4 v_geomItemData;
-  varying vec3 v_viewPos;
-  varying float v_drawItemID;
-  varying vec3 v_worldPos;
+/* VS Outputs */
+varying vec3 v_viewPos;
+varying vec3 v_viewNormal;
+varying vec2 v_texCoord;
+varying float v_drawItemId;
+varying vec4 v_geomItemData;
+varying float v_drawItemID;
+varying vec3 v_worldPos;
 
-  import 'GLSLUtils.glsl'
-  import 'drawItemTexture.glsl'
-  import 'cutaways.glsl'
-  import 'GLSLBits.glsl'
+import 'GLSLUtils.glsl'
+import 'drawItemTexture.glsl'
+import 'cutaways.glsl'
+import 'GLSLBits.glsl'
 
-  uniform int floatGeomBuffer;
-  uniform int passId;
+uniform int floatGeomBuffer;
+uniform int passId;
 
-  #ifdef ENABLE_FLOAT_TEXTURES
-  vec4 getCutaway(int id) {
-    return fetchTexel(instancesTexture, instancesTextureSize, (id * pixelsPerItem) + 5);
-  }
+#ifdef ENABLE_FLOAT_TEXTURES
+vec4 getCutaway(int id) {
+  return fetchTexel(instancesTexture, instancesTextureSize, (id * pixelsPerItem) + 5);
+}
+#else
 
-  #else
+uniform vec4 cutawayData;
 
-  uniform vec4 cutawayData;
-
-  vec4 getCutaway(int id) {
-    return cutawayData;
-  }
+vec4 getCutaway(int id) {
+  return cutawayData;
+}
 
 
-  #endif
+#endif
+
+#if defined(DRAW_GEOMDATA)
+#elif defined(DRAW_HIGHLIGHT)
+  import 'surfaceHighlight.glsl'
 #endif
 
 
@@ -96,18 +96,8 @@ void main(void) {
     fragColor.b = 0.0;// TODO: store poly-id or something.
     fragColor.a = dist;
   }
-  else {
-    ///////////////////////////////////
-    // UInt8 buffer
-    fragColor.r = (mod(v_drawItemID, 256.) + 0.5) / 255.;
-    fragColor.g = (floor(v_drawItemID / 256.) + 0.5) / 255.;
-
-    // encode the dist as a 16 bit float
-    vec2 float16bits = encode16BitFloatInto2xUInt8(dist);
-    fragColor.b = float16bits.x;
-    fragColor.a = float16bits.y;
-  }
-
+#elif defined(DRAW_HIGHLIGHT)
+  fragColor = setFragColor_highlight(v_drawItemId);
 #endif
 
 
