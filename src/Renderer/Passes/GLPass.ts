@@ -84,7 +84,7 @@ class GLPass extends ParameterOwner {
    * so the subtree of this node will not be traversed after this node is handled.
    * @return {Boolean} - The return value.
    */
-  itemAddedToScene(treeItem: TreeItem, rargs: Record<any, any>) {
+  itemAddedToScene(treeItem: TreeItem, rargs: Record<any, any>): boolean {
     throw Error(`${this.constructor.name} must implement itemAddedToScene and itemRemovedFromScene`)
     return false
   }

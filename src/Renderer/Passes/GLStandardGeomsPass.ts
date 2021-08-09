@@ -77,7 +77,7 @@ class GLStandardGeomsPass extends GLPass {
    * @param {object} rargs - Extra return values are passed back in this object.
    * @return {Boolean} - The return value.
    */
-  itemRemovedFromScene(treeItem: TreeItem, rargs: Record<any, any>) {
+  itemRemovedFromScene(treeItem: TreeItem, rargs: Record<any, any>): boolean {
     if (treeItem instanceof GeomItem && treeItem.getMetadata('glpass') == this) {
       return this.removeGeomItem(treeItem)
     }
@@ -103,7 +103,9 @@ class GLStandardGeomsPass extends GLPass {
    * The removeGeomItem method.
    * @param {GeomItem} geomItem - The geomItem value.
    */
-  removeGeomItem(geomItem: GeomItem) {}
+  removeGeomItem(geomItem: GeomItem): boolean {
+    return false
+  }
 
   /**
    * The constructShaders method.

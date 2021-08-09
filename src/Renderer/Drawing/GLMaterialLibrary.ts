@@ -169,7 +169,7 @@ class GLMaterialLibrary extends EventEmitter {
     const tex = this.materialsTexture
     const texWidth = this.materialsTexture.width
     gl.bindTexture(gl.TEXTURE_2D, tex.glTex)
-    this.dirtyIndices.forEach((index) => {
+    this.dirtyIndices.forEach((index: number) => {
       const allocation = this.materialsAllocator.getAllocation(index)
       const material = this.materials[index]
       const matData = material.getShaderClass().getPackedMaterialData(material)

@@ -12,6 +12,7 @@ import { HighlightsShader } from './Shaders/HighlightsShader'
 import { SilhouetteShader } from './Shaders/SilhouetteShader'
 import { generateShaderGeomBinding } from './Drawing/GeomShaderBinding'
 import { BaseEvent } from '../Utilities/BaseEvent'
+import { VLHImage } from '../SceneTree/Images/VLHImage'
 
 const ALL_PASSES = PassType.OPAQUE | PassType.TRANSPARENT | PassType.OVERLAY
 
@@ -124,7 +125,7 @@ class GLRenderer extends GLBaseRenderer {
       this.__glBackgroundMap = backgroundMap.getMetadata('gltexture')
       if (!this.__glBackgroundMap) {
         if (backgroundMap.type === 'FLOAT') {
-          this.__glBackgroundMap = new GLHDRImage(this.__gl, backgroundMap)
+          this.__glBackgroundMap = new GLHDRImage(this.__gl, <VLHImage>backgroundMap) // todo: is this cast ok?
         } else {
           this.__glBackgroundMap = new GLTexture2D(this.__gl, backgroundMap)
         }

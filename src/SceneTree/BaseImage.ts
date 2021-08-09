@@ -30,7 +30,7 @@ class BaseImage extends BaseItem {
    * Creates an instance of BaseImage.
    * @param {string} name - name of the item
    */
-  constructor(name: string) {
+  constructor(name?: string) {
     super(name)
     this.width = 0
     this.height = 0

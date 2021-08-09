@@ -61,7 +61,7 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
     this.highlightedIdsTexture = null
     this.highlightedIdsBufferDirty = true
 
-    this.renderer.glGeomLibrary.on('geomDataChanged', (event) => {
+    this.renderer.glGeomLibrary.on('geomDataChanged', (event: any) => {
       const geomItemIndices = this.glGeomIdsMapping[event.index]
       if (geomItemIndices != undefined) {
         geomItemIndices.forEach((index: number) => {

@@ -9,6 +9,7 @@ import { GLFbo } from './GLFbo'
 import { GLMesh } from './Drawing/GLMesh'
 import { GLRenderer } from './GLRenderer'
 import { BaseEvent } from '../Utilities/BaseEvent'
+import { VLHImage } from '../SceneTree/Images/VLHImage'
 
 const FRAMEBUFFER = {
   MSAA_RENDERBUFFER: 0,
@@ -107,7 +108,7 @@ class GLBaseViewport extends ParameterOwner {
         if (value instanceof BaseImage) {
           if (value.type === 'FLOAT') {
             this.__backgroundTexture = value
-            this.__backgroundGLTexture = new GLHDRImage(this.__gl, value) // TODO: 
+            this.__backgroundGLTexture = new GLHDRImage(this.__gl, <VLHImage>value) // TODO: is casting a baseimage to <VLHImage> ok?
           } else {
             this.__backgroundTexture = value
             this.__backgroundGLTexture = new GLTexture2D(this.__gl, value)

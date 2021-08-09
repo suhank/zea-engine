@@ -233,7 +233,7 @@ class GIFImage extends FileImage {
       this.getParameter('StreamAtlasDesc').setValue(
         new Vec4(unpackedData.atlasSize[0], unpackedData.atlasSize[1], 0, 0)
       )
-      this.getParameter('StreamAtlasIndex').setRange(unpackedData.frameRange)
+      ;(<NumberParameter>this.getParameter('StreamAtlasIndex')).setRange(unpackedData.frameRange)
 
       this.__unpackedData = unpackedData
       this.__data = unpackedData.imageData
