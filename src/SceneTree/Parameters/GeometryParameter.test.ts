@@ -1,7 +1,7 @@
 import { GeometryParameter } from './GeometryParameter'
 import { Cylinder } from '../Geometry/Shapes/Cylinder'
 import { Cuboid } from '../Geometry/Shapes/Cuboid'
-import { GeomItem } from '../../SceneTree/GeomItem'
+import { GeomItem } from '../GeomItem'
 
 // TODO: enable test -- cannot read bind of undefined and "bound " is not connected to "boundingBoxChanged" event
 xdescribe('GeometryParameter', () => {

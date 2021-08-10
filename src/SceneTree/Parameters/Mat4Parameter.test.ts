@@ -1,6 +1,6 @@
 import { Mat4Parameter } from './Mat4Parameter'
 import { Mat4 } from '../../Math'
-import { BinReader } from '../../SceneTree/BinReader'
+import { BinReader } from '../BinReader'
 
 describe('Mat4Parameter', () => {
   it('has an initial value.', () => {

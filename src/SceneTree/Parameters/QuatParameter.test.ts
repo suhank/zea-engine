@@ -1,6 +1,6 @@
 import { Quat } from '../../Math/Quat'
 import { QuatParameter } from './QuatParameter'
-import { BinReader } from '../../SceneTree/BinReader'
+import { BinReader } from '../BinReader'
 
 describe('QuatParameter', () => {
   it('has an initial value.', () => {

@@ -1,6 +1,6 @@
 import { Vec2 } from '../../Math/Vec2'
 import { Vec2Parameter } from './Vec2Parameter'
-import { BinReader } from '../../SceneTree/BinReader'
+import { BinReader } from '../BinReader'
 
 describe('Vec2Parameter', () => {
   it('has an initial value.', () => {

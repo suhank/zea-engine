@@ -1,5 +1,5 @@
 import { NumberParameter } from './NumberParameter'
-import { BinReader } from '../../SceneTree/BinReader'
+import { BinReader } from '../BinReader'
 
 describe('NumberParameter', () => {
   it('has an initial value.', () => {

@@ -1,6 +1,6 @@
 import { Xfo } from '../../Math/Xfo'
 import { XfoParameter } from './XfoParameter'
-import { BinReader } from '../../SceneTree/BinReader'
+import { BinReader } from '../BinReader'
 
 describe('XfoParameter', () => {
   it('has an initial value.', () => {

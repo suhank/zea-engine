@@ -1,6 +1,6 @@
 import { StringParameter } from './StringParameter'
 import { BaseItem } from '../BaseItem'
-import { BinReader } from '../../SceneTree/BinReader'
+import { BinReader } from '../BinReader'
 
 describe('StringParameter', () => {
   it('has name', () => {
