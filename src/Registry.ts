@@ -48,7 +48,7 @@ class Registry {
    * @param {BaseClass} classDef - Class representation(Class function, type)
    */
   static register(className: string, classDef: typeof BaseClass): void {
-    if (registeredClasses[className]) throw new Error(`There's a class registered with '${className}' name`)
+    if (className in registeredClasses) throw new Error(`There's a class registered with '${className}' name`)
 
     // Note: To provide backwards compatibility, same classDef can be stored under multiple names.
     // Thats the reason behind using indexes instead of the classDef.
@@ -65,7 +65,7 @@ class Registry {
    * @return {typeof BaseClass} - Class representation(Class function, type)
    */
   static getClassDefinition(className: string): typeof BaseClass {
-    if (!registeredClasses[className]) throw new Error(`${className} class is not registered`)
+    if (!(className in registeredClasses)) throw new Error(`${className} class is not registered`)
     return classDefinitions[registeredClasses[className]]
   }
 
@@ -140,7 +140,7 @@ class Registry {
    * @return {TypeDefinition} - Class describing a math type
    */
   static getMathTypeDefinition(typeName: string): TypeDefinition {
-    if (!registeredMathTypes[typeName]) throw new Error(`${typeName} Math type is not registered`)
+    if (!(typeName in registeredMathTypes)) throw new Error(`${typeName} Math type is not registered`)
     return mathTypeDefinitions[registeredMathTypes[typeName]]
   }
 
