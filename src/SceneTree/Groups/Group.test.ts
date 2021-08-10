@@ -44,7 +44,7 @@ xdescribe('Group', () => {
 
     expect(treeItem.isVisible()).toBe(true)
 
-    group.setVisible(0)
+    group.setVisible(false)
 
     expect(treeItem.isVisible()).toBe(false)
   })
@@ -57,7 +57,7 @@ xdescribe('Group', () => {
     parent.addChild(child)
 
     group.addItem(parent)
-    group.setVisible(0)
+    group.setVisible(false)
 
     expect(child.isVisible()).toBe(false)
   })
@@ -200,7 +200,7 @@ xdescribe('Group', () => {
 
     group.fromJSON(input, {
       numTreeItems: 0,
-      resolvePath: (path, cb) => {
+      resolvePath: (path: any, cb: any) => {
         cb(treeItem1.resolvePath(path))
       },
     })

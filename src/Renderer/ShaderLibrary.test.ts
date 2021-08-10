@@ -10,7 +10,7 @@ import { SInt32, UInt32, Float32 } from '../Utilities/MathFunctions'
  * @param {string} str - a string
  * @return {string} - The unparsed shader GLSL.
  */
-function miniParser(str) {
+function miniParser(str: string) {
   const lines = str.split('\n')
   let result = ''
   for (let i = 0; i < lines.length; i++) {

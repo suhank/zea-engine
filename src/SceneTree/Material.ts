@@ -222,7 +222,7 @@ class Material extends BaseItem {
    * @param {Record<any, any>} context - The context value.
    * @return {any} - Returns the json object.
    */
-  toJSON(context: Record<any, any>) {
+  toJSON(context?: Record<any, any>) {
     const j = super.toJSON(context)
     j.shader = this.__shaderName
 
@@ -330,7 +330,7 @@ class Material extends BaseItem {
    * @param {Record<any, any>} context - The context value.
    * @return {Material} - Returns a new cloned material.
    */
-  clone(context: Record<any, any>) {
+  clone(context?: Record<any, any>) {
     const cloned = new Material('clone', '') // TODO: what should the arguemnts be here?
     cloned.copyFrom(this, context)
     return cloned

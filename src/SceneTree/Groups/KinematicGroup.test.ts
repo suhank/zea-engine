@@ -105,7 +105,7 @@ xdescribe('KinematicGroup', () => {
 
     group.fromJSON(input, {
       numTreeItems: 0,
-      resolvePath: (path, cb) => {
+      resolvePath: (path: any, cb: any) => {
         cb(treeItem1.resolvePath(path))
       },
     })

@@ -1,5 +1,6 @@
 import { BaseGroup } from './BaseGroup'
 import { TreeItem } from '../TreeItem'
+import { ItemSetParameter } from '../Parameters'
 
 describe('BaseGroup', () => {
   it('is visible by default.', () => {
@@ -14,8 +15,8 @@ describe('BaseGroup', () => {
     const treeItem2 = new TreeItem('TreeItem')
     group.addItem(treeItem)
     group.addItem(treeItem2)
-
-    expect(group.getParameter('Items').getNumItems()).toBe(2)
+    const group_param = <ItemSetParameter>group.getParameter('Items')
+    expect(group_param.getNumItems()).toBe(2)
   })
 
   test('Adding members using paths.', () => {
@@ -28,9 +29,9 @@ describe('BaseGroup', () => {
     group.setSearchRoot(rootItem)
     rootItem.addChild(treeItem1)
 
-    group.setPaths([['.', 'treeItem1', 'treeItem2']])
-
-    expect(group.getParameter('Items').getItem(0)).toBe(treeItem2)
+    group.setPaths(['.', 'treeItem1', 'treeItem2'])
+    const group_parm = <ItemSetParameter>group.getParameter('Items')
+    expect(group_parm.getItem(0)).toBe(treeItem2)
   })
 
   test('Events propagating from members to the group.', () => {

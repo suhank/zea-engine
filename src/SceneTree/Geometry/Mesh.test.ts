@@ -113,6 +113,8 @@ describe('Mesh', () => {
   test('Check for setting up 2 neighboring quads', () => {
     const mesh = new Mesh()
     const numVertices = 6
+
+    mesh.addVertexAttribute('normals', new Vec3Attribute())
     mesh.setNumVertices(numVertices)
 
     const positions = <Vec3Attribute>mesh.getVertexAttribute('positions')
@@ -126,8 +128,6 @@ describe('Mesh', () => {
     mesh.setFaceCounts([0, 2])
     mesh.setFaceVertexIndices(0, [0, 1, 2, 3])
     mesh.setFaceVertexIndices(1, [3, 2, 4, 5])
-
-    mesh.addVertexAttribute('normals', new Vec3Attribute())
 
     const normals = <Vec3Attribute>mesh.getVertexAttribute('normals')
 
@@ -275,7 +275,7 @@ describe('Mesh', () => {
       attrBuffers: {
         positions: {
           count: 3,
-          dataType: Vec3,
+          dataType: 'Vec3',
           dimension: 3,
           normalized: false,
           values: new Float32Array([1, 2, 3, -1, -2, -3, 2, 1, -3]),

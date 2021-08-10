@@ -87,7 +87,7 @@ describe('Lines', () => {
       attrBuffers: {
         positions: {
           count: 3,
-          dataType: Vec3,
+          dataType: 'Vec3',
           normalized: false,
           values: new Float32Array([1, 2, 3, -1, -2, -3, 2, 1, -3]),
         },
