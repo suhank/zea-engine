@@ -46,7 +46,7 @@ class GLProbe extends EventEmitter {
    * @param {any} srcGLTex - The srcGLTex value.
    */
   convolveProbe(srcGLTex: any) {
-    const gl = <Record<any, any>>this.__gl
+    const gl = this.__gl
 
     const renderstate: Record<any, any> = {
       shaderopts: { directives: ['#define ENABLE_ES3', '#define ENABLE_FLOAT_TEXTURES'] },

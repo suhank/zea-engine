@@ -210,7 +210,7 @@ class GLImageAtlas extends GLRenderTarget {
       filter: 'LINEAR',
     })
 
-    const gl = <Record<any, any>>this.__gl
+    const gl = this.__gl
     // this.__fbo = new GLFbo(gl, this)
     // this.__fbo.setClearColor(this.__clearColor)
 
@@ -264,7 +264,7 @@ class GLImageAtlas extends GLRenderTarget {
         this.__atlasLayoutTexture.height != size
       ) {
         if (this.__atlasLayoutTexture) this.__atlasLayoutTexture.destroy()
-        this.__atlasLayoutTexture = new GLTexture2D(<WebGL12RenderingContext>gl, {
+        this.__atlasLayoutTexture = new GLTexture2D(gl, {
           format: 'RGBA',
           type: 'FLOAT',
           filter: 'NEAREST',
@@ -308,7 +308,7 @@ class GLImageAtlas extends GLRenderTarget {
     if (this.__layoutNeedsRegeneration) {
       this.generateAtlasLayout()
     }
-    const gl = <Record<any, any>>this.__gl
+    const gl = this.__gl
     const renderstate: Record<any, any> = {}
     this.bindForWriting(renderstate, true)
 

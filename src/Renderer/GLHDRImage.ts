@@ -52,8 +52,8 @@ class GLHDRImage extends GLTexture2D {
    * @param {Record<any,any>} hdrImageParams - The HDR image parameters.
    * @private
    */
-  __unpackHDRImage(hdrImageParams: Record<any,any>) {
-    const gl = <Record<any, any>>this.__gl
+  __unpackHDRImage(hdrImageParams: Record<any, any>) {
+    const gl = this.__gl
 
     const ldr = hdrImageParams.data.ldr
     const cdm = hdrImageParams.data.cdm
@@ -95,7 +95,12 @@ class GLHDRImage extends GLTexture2D {
 
       this.__unpackHDRShader = new UnpackHDRShader(this.__gl)
       const shaderComp = this.__unpackHDRShader.compileForTarget('GLHDRImage')
-      this.__shaderBinding = generateShaderGeomBinding(this.__gl, shaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer)
+      this.__shaderBinding = generateShaderGeomBinding(
+        this.__gl,
+        shaderComp.attrs,
+        gl.__quadattrbuffers,
+        gl.__quadIndexBuffer
+      )
     } else {
       this.__srcLDRTex.bufferData(ldr)
       this.__srcCDMTex.bufferData(cdm)
@@ -103,7 +108,7 @@ class GLHDRImage extends GLTexture2D {
 
     this.__fbo.bindAndClear()
 
-    const renderstate:Record<any,any> = {}
+    const renderstate: Record<any, any> = {}
     this.__unpackHDRShader.bind(renderstate, 'GLHDRImage')
     this.__shaderBinding.bind(renderstate)
 
@@ -144,7 +149,7 @@ class GLHDRImage extends GLTexture2D {
    * @param {Record<any,any>} bindings - The bindings value.
    * @return {boolean} - The return value.
    */
-  bindToUniform(renderstate: Record<any,any>, unif: WebGLUniformLocation, bindings: Record<any,any>) {
+  bindToUniform(renderstate: Record<any, any>, unif: WebGLUniformLocation, bindings: Record<any, any>) {
     return super.bindToUniform(renderstate, unif, bindings)
   }
 

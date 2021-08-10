@@ -26,7 +26,7 @@ class GLScreenQuad {
     this.flipY = true
     this.__glshader = new ScreenQuadShader(gl)
 
-    const gl_casted = <Record<any, any>>gl
+    const gl_casted = gl
     if (!gl_casted.__quadVertexIdsBuffer) gl_casted.setupInstancedQuad()
 
     const shaderComp = this.__glshader.compileForTarget('GLScreenQuad')
@@ -95,7 +95,7 @@ class GLScreenQuad {
    */
   draw(renderstate: Record<any, any>, texture: GLTexture2D, pos: Vec2 = undefined, size: Vec2 = undefined) {
     this.bind(renderstate, texture, pos, size)
-    const gl = <Record<any, any>>this.__gl
+    const gl = this.__gl
     gl.drawQuad()
   }
 

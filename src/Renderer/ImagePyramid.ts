@@ -89,7 +89,7 @@ class ImagePyramid extends GLImageAtlas {
    * @param {boolean} cleanup - The cleanup value.
    */
   renderAtlas(cleanup = true) {
-    const gl = <Record<any, any>>this.__gl
+    const gl = this.__gl
     const renderstate = {}
     gl.screenQuad.bindShader(renderstate)
 

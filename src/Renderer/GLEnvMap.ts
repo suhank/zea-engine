@@ -107,7 +107,7 @@ class GLEnvMap extends GLProbe {
    */
   draw(renderstate: Record<any, any>) {
     if (this.__envMap.isLoaded()) {
-      const gl = <Record<any,any>>this.__gl
+      const gl = this.__gl
       const debug = false
       if (debug) {
         const screenQuad = gl.screenQuad

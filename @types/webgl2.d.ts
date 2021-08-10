@@ -53,7 +53,7 @@ interface WebGL12RenderingContext extends WebGLRenderingContext {
   readonly STATIC_COPY: number // 0x88E6
   readonly DYNAMIC_READ: number // 0x88E9
   readonly DYNAMIC_COPY: number // 0x88EA
-  readonly MAX_DRAW_BUFFERS: number // 0x8824
+  MAX_DRAW_BUFFERS: number // 0x8824
   readonly DRAW_BUFFER0: number // 0x8825
   readonly DRAW_BUFFER1: number // 0x8826
   readonly DRAW_BUFFER2: number // 0x8827
@@ -169,7 +169,7 @@ interface WebGL12RenderingContext extends WebGLRenderingContext {
   readonly READ_FRAMEBUFFER_BINDING: number // 0x8CAA
   readonly RENDERBUFFER_SAMPLES: number // 0x8CAB
   readonly FRAMEBUFFER_ATTACHMENT_TEXTURE_LAYER: number // 0x8CD4
-  readonly MAX_COLOR_ATTACHMENTS: number // 0x8CDF
+  MAX_COLOR_ATTACHMENTS: number // 0x8CDF
   readonly COLOR_ATTACHMENT1: number // 0x8CE1
   readonly COLOR_ATTACHMENT2: number // 0x8CE2
   readonly COLOR_ATTACHMENT3: number // 0x8CE3
@@ -1069,7 +1069,7 @@ interface WebGL12RenderingContext extends WebGLRenderingContext {
   bindVertexArray(array: WebGLVertexArrayObject | null): void
 }
 
-declare var WebGL2RenderingContext: {
+declare var WebGL12RenderingContext: {
   prototype: WebGL2RenderingContext
   new (): WebGL2RenderingContext
 
@@ -1414,7 +1414,7 @@ declare var WebGL2RenderingContext: {
   readonly STATIC_COPY: number // 0x88E6
   readonly DYNAMIC_READ: number // 0x88E9
   readonly DYNAMIC_COPY: number // 0x88EA
-  readonly MAX_DRAW_BUFFERS: number // 0x8824
+  MAX_DRAW_BUFFERS: number // 0x8824
   readonly DRAW_BUFFER0: number // 0x8825
   readonly DRAW_BUFFER1: number // 0x8826
   readonly DRAW_BUFFER2: number // 0x8827

@@ -6,7 +6,7 @@ import { GLTexture2D } from './GLTexture2D'
  * This class abstracts the rendering of a collection of geometries to screen.
  */
 class GLFbo {
-  protected __gl: RenderingContext
+  protected __gl: WebGL12RenderingContext
   protected __colorTexture: GLTexture2D
   protected __createDepthTexture: boolean
   protected __clearColor: number[]
@@ -20,7 +20,7 @@ class GLFbo {
    * @param {GLTexture2D} colorTexture - Represents 2D Texture in GL.
    * @param {boolean} createDepthTexture - The createDepthTexture value.
    */
-  constructor(gl: RenderingContext, colorTexture: GLTexture2D, createDepthTexture = false) {
+  constructor(gl: WebGL12RenderingContext, colorTexture: GLTexture2D, createDepthTexture = false) {
     if (SystemDesc.isIOSDevice && (colorTexture.getType() == 'FLOAT' || colorTexture.getType() == 'HALF_FLOAT')) {
       // So iOS simply refuses to bind anything to a render target except a UNSIGNED_BYTE texture.
       // See the subtle error message here: "floating-point render targets not supported -- this is legal"
@@ -134,7 +134,7 @@ class GLFbo {
    * @param {GLTexture2D} colorTexture - The colorTexture value.
    */
   setColorTexture(colorTexture: GLTexture2D) {
-    const gl = <Record<any, any>>this.__gl
+    const gl = this.__gl
     this.__colorTexture = colorTexture
     gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.__colorTexture.glTex, 0)
   }
@@ -150,7 +150,7 @@ class GLFbo {
    * The setup method.
    */
   setup() {
-    const gl = <Record<any, any>>this.__gl
+    const gl = this.__gl
 
     this.__fbo = gl.createFramebuffer()
     if (gl.name == 'webgl2') gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, this.__fbo)
@@ -253,7 +253,7 @@ class GLFbo {
    * E.g. resizing and preserving data.
    */
   resize(width: number, height: number, resizeTexture: any) {
-    const gl = <Record<any, any>>this.__gl
+    const gl = this.__gl
 
     if (resizeTexture) {
       this.__colorTexture.resize(width, height, false, false)
@@ -304,7 +304,7 @@ class GLFbo {
    * @private
    */
   __checkFramebuffer() {
-    const gl = <Record<any, any>>this.__gl
+    const gl = this.__gl
 
     let check
     if (gl.name == 'webgl2') check = gl.checkFramebufferStatus(gl.DRAW_FRAMEBUFFER)
@@ -352,7 +352,7 @@ class GLFbo {
       this.__prevBoundFbo = renderstate.boundRendertarget
       renderstate.boundRendertarget = this.__fbo
     }
-    const gl = <Record<any, any>>this.__gl
+    const gl = this.__gl
     if (gl.name == 'webgl2') gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, this.__fbo)
     else gl.bindFramebuffer(gl.FRAMEBUFFER, this.__fbo)
     gl.viewport(0, 0, this.width, this.height) // Match the viewport to the texture size
@@ -365,7 +365,7 @@ class GLFbo {
    */
   unbindForWriting(renderstate: Record<any, any>) {
     if (renderstate) renderstate.boundRendertarget = this.__prevBoundFbo
-    const gl = <Record<any, any>>this.__gl
+    const gl = this.__gl
     if (gl.name == 'webgl2') gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, this.__prevBoundFbo)
     else gl.bindFramebuffer(gl.FRAMEBUFFER, this.__prevBoundFbo)
   }
@@ -389,7 +389,7 @@ class GLFbo {
       // For write operations
       this.unbindForWriting(renderstate)
     } else {
-      const gl = <Record<any, any>>this.__gl
+      const gl = this.__gl
       gl.bindFramebuffer(gl.FRAMEBUFFER, null)
     }
   }
@@ -399,7 +399,7 @@ class GLFbo {
    * @param {Record<any, any>} renderstate - The renderstate value.
    */
   bindForReading() {
-    const gl = <Record<any, any>>this.__gl
+    const gl = this.__gl
     if (gl.name == 'webgl2') gl.bindFramebuffer(gl.READ_FRAMEBUFFER, this.__fbo)
     else gl.bindFramebuffer(gl.FRAMEBUFFER, this.__fbo)
   }
@@ -410,7 +410,7 @@ class GLFbo {
    * @param {Record<any, any>} renderstate - The renderstate value.
    */
   unbindForReading() {
-    const gl = <Record<any, any>>this.__gl
+    const gl = this.__gl
     if (gl.name == 'webgl2') gl.bindFramebuffer(gl.READ_FRAMEBUFFER, null)
     else gl.bindFramebuffer(gl.FRAMEBUFFER, null)
   }
@@ -420,7 +420,7 @@ class GLFbo {
    * specifying the default color values when clearing color buffers and clears the buffers to preset values.
    */
   clear() {
-    const gl = <Record<any, any>>this.__gl
+    const gl = this.__gl
     gl.colorMask(true, true, true, true)
     gl.clearColor(...this.__clearColor)
     if (this.__createDepthTexture) {
@@ -444,7 +444,7 @@ class GLFbo {
    * Users should never need to call this method directly.
    */
   destroy() {
-    const gl = <Record<any, any>>this.__gl
+    const gl = this.__gl
     gl.bindFramebuffer(gl.FRAMEBUFFER, null)
     gl.deleteFramebuffer(this.__fbo)
     this.__fbo = null

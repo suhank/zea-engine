@@ -4,7 +4,7 @@ import { processTextureParams } from './processTextureParams'
 
 /** Class representing a GL render target. */
 class GLRenderTarget extends EventEmitter {
-  protected __gl: Record<any, any>
+  protected __gl: WebGL12RenderingContext
   protected textureTargets: any[]
   protected depthTexture: any
   protected textureDesc: number[]

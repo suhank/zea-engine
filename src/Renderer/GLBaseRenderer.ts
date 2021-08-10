@@ -146,7 +146,7 @@ class GLBaseRenderer extends ParameterOwner {
             // to the discrete GPU.
             // TODO: Provide a system to re-load the GPU data.
             // this.__gl.setCompatibleXRDevice(device);
-            ;(<Record<any, any>>this.__gl).makeXRCompatible().then(() => {
+            this.__gl.makeXRCompatible().then(() => {
               this.__xrViewport = this.__setupXRViewport()
               let event = new XrViewportEvent(this.__xrViewport)
               this.emit('xrViewportSetup', event)
@@ -176,7 +176,7 @@ class GLBaseRenderer extends ParameterOwner {
    * @param {string} value - The value param.
    */
   addShaderPreprocessorDirective(name: string, value?: string) {
-    const gl = <Record<any, any>>this.__gl
+    const gl = this.__gl
     if (value) this.__shaderDirectives[name] = '#define ' + name + ' = ' + value
     else this.__shaderDirectives[name] = '#define ' + name
     const directives = []
@@ -656,7 +656,7 @@ class GLBaseRenderer extends ParameterOwner {
 
     // Most applications of our engine will prefer the high-performance context by default.
     webglOptions.powerPreference = webglOptions.powerPreference || 'high-performance'
-    const gl = <Record<any, any>>this.__gl
+    const gl = this.__gl
     this.__gl = create3DContext(this.__glcanvas, webglOptions)
     if (!this.__gl) alert('Unable to create WebGL context. WebGL not supported.')
     gl.renderer = this

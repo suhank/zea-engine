@@ -400,7 +400,7 @@ class GLBoundingBoxPass extends GLPass {
 
     if (this.indexArrayUpdateNeeded) this.__updateIndexArray()
 
-    const gl = <Record<any, any>>this.__gl
+    const gl = this.__gl
 
     // gl.disable(gl.CULL_FACE)
     // gl.enable(gl.BLEND)

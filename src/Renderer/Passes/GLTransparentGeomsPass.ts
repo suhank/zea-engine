@@ -433,7 +433,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
    * @param {object} renderstate - The object tracking the current state of the renderer
    */
   drawGeomData(renderstate: Record<any, any>) {
-    const gl = <Record<any, any>>this.__gl
+    const gl = this.__gl
     gl.disable(gl.BLEND)
     gl.disable(gl.CULL_FACE)
     gl.enable(gl.DEPTH_TEST)

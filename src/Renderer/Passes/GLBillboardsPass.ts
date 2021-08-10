@@ -307,7 +307,7 @@ class GLBillboardsPass extends GLPass {
     const doIt = () => {
       if (this.indexArrayUpdateNeeded) this.updateIndexArray()
 
-      const gl = <Record<any, any>>this.__gl
+      const gl = this.__gl
       if (!this.glshader) {
         if (!gl.__quadVertexIdsBuffer) {
           gl.setupInstancedQuad()
@@ -457,7 +457,7 @@ class GLBillboardsPass extends GLPass {
         : 0
     })
 
-    const gl = <Record<any, any>>this.__gl
+    const gl = this.__gl
     if (gl.floatTexturesSupported && this.instanceIdsBuffer) {
       gl.bindBuffer(gl.ARRAY_BUFFER, this.instanceIdsBuffer)
       gl.bufferData(gl.ARRAY_BUFFER, this.indexArray, gl.STATIC_DRAW)
@@ -485,7 +485,7 @@ class GLBillboardsPass extends GLPass {
 
     if (!this.glshader) return
 
-    const gl = <Record<any, any>>this.__gl
+    const gl = this.__gl
 
     gl.disable(gl.CULL_FACE)
     gl.enable(gl.BLEND)

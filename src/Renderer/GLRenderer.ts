@@ -98,7 +98,7 @@ class GLRenderer extends GLBaseRenderer {
    * @private
    */
   __bindEnvMap(env: EnvMap | BaseImage) {
-    const gl = <Record<any, any>>this.__gl
+    const gl = this.__gl
     if (env instanceof EnvMap) {
       // Note: Safari doesn't support rendering to floating
       // point textures, so our PBR lighting pipeline doesn't work.
@@ -496,7 +496,7 @@ class GLRenderer extends GLBaseRenderer {
   drawBackground(renderstate: Record<any, any>) {
     if (this.__glBackgroundMap) {
       if (!this.__glBackgroundMap.isLoaded()) return
-      const gl = <Record<any, any>>this.__gl
+      const gl = this.__gl
       gl.depthMask(false)
       this.__backgroundMapShader.bind(renderstate)
       const unifs = renderstate.unifs

@@ -259,7 +259,7 @@ class GLMesh extends GLGeom {
    * @param {number} instanceCount - The instanceCount value.
    */
   drawInstanced(renderstate: Record<any, any>, instanceCount: number) {
-    const gl = <Record<any, any>>this.__gl
+    const gl = this.__gl
     gl.drawElementsInstanced(this.__gl.TRIANGLES, this.__numTriIndices, this.__indexDataType, 0, instanceCount)
   }
 

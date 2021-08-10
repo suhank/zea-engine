@@ -65,7 +65,7 @@ class GLLines extends GLGeom {
    * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    */
   genFatBuffers(renderstate: Record<any, any>) {
-    const gl = <Record<any, any>>this.__gl
+    const gl = this.__gl
 
     const geomBuffers = this.__geom.genBuffers()
     const indices = geomBuffers.indices
@@ -230,7 +230,7 @@ class GLLines extends GLGeom {
    * @return {any} - The return value.
    */
   bind(renderstate: Record<any, any>) {
-    const gl = <Record<any, any>>this.__gl
+    const gl = this.__gl
     const unifs = renderstate.unifs
     if (unifs.LineThickness && gl.floatTexturesSupported) {
       if (this.__fatBuffersNeedUpload) this.genFatBuffers(renderstate) // (renderstate, true)
@@ -279,7 +279,7 @@ class GLLines extends GLGeom {
    * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    */
   draw(renderstate: Record<any, any>) {
-    const gl = <Record<any, any>>this.__gl
+    const gl = this.__gl
     if (renderstate.unifs.LineThickness && gl.floatTexturesSupported) {
       gl.drawElementsInstanced(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0, this.fatBuffers.drawCount)
 
@@ -295,7 +295,7 @@ class GLLines extends GLGeom {
    * @param {number} instanceCount - The instanceCount value.
    */
   drawInstanced(renderstate: Record<any, any>, instanceCount: number) {
-    const gl = <Record<any, any>>this.__gl
+    const gl = this.__gl
     const { occluded } = renderstate.unifs
     if (occluded) {
       gl.uniform1i(occluded.location, 0)

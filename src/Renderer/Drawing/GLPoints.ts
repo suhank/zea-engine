@@ -81,7 +81,7 @@ class GLPoints extends GLGeom {
    */
   bind(renderstate: Record<any, any>) {
     if (renderstate.unifs.PointSize) {
-      const gl = <Record<any, any>>this.__gl
+      const gl = this.__gl
       let shaderBinding = this.__shaderBindings[renderstate.shaderkey]
       if (!shaderBinding) {
         if (!gl.__quadVertexIdsBuffer) gl.setupInstancedQuad()
@@ -104,7 +104,7 @@ class GLPoints extends GLGeom {
    * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    */
   draw(renderstate: Record<any, any>) {
-    const gl = <Record<any, any>>this.__gl
+    const gl = this.__gl
     if (renderstate.unifs.PointSize) {
       gl.drawElementsInstanced(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0, this.__numVertices)
     } else {
@@ -118,7 +118,7 @@ class GLPoints extends GLGeom {
    * @param {number} instanceCount - The instanceCount value.
    */
   drawInstanced(renderstate: Record<any, any>, instanceCount: number) {
-    const gl = <Record<any, any>>this.__gl
+    const gl = this.__gl
     gl.drawArraysInstanced(this.__gl.POINTS, 0, this.__numVertices, instanceCount)
   }
 }

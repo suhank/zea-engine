@@ -49,7 +49,7 @@ class GLLinesPass extends GLOpaqueGeomsPass {
    * @private
    */
   __checkFramebuffer(renderstate: Record<any, any>) {
-    const gl = <Record<any, any>>this.__gl
+    const gl = this.__gl
 
     let check
     if (gl.name == 'webgl2') check = gl.checkFramebufferStatus(gl.DRAW_FRAMEBUFFER)
@@ -103,7 +103,7 @@ class GLLinesPass extends GLOpaqueGeomsPass {
    * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    */
   drawGeomData(renderstate: Record<any, any>) {
-    const gl = <Record<any, any>>this.__gl
+    const gl = this.__gl
     //  Note: lines in VR are not fattened...
     if (renderstate.geomDataFbo) {
       if (!this.linesGeomDataBuffer) {

@@ -110,7 +110,7 @@ class GeomShaderBinding {
    * @return {any} - The return value.
    */
   bind(renderstate: any) {
-    const gl = <Record<any, any>>this.__gl
+    const gl = this.__gl
 
     for (const attrName in this.__shaderAttrs) {
       if (attrName == 'instancedIds') continue
@@ -157,7 +157,7 @@ class GeomShaderBinding {
    * The unbind method.
    */
   unbind() {
-    const gl = <Record<any, any>>this.__gl
+    const gl = this.__gl
     for (const attrName in this.__shaderAttrs) {
       const shaderAttrDesc = this.__shaderAttrs[attrName]
       const location = shaderAttrDesc.location
@@ -256,7 +256,7 @@ class VAOGeomShaderBinding {
    * @return {any} - The return value.
    */
   bind(renderstate: any) {
-    const gl = <Record<any, any>>this.__gl
+    const gl = this.__gl
     gl.bindVertexArray(this.__vao)
     if (this.__indexBuffer) this.__gl.bindBuffer(this.__gl.ELEMENT_ARRAY_BUFFER, this.__indexBuffer)
     return true
@@ -266,7 +266,7 @@ class VAOGeomShaderBinding {
    * The unbind method.
    */
   unbind() {
-    const gl = <Record<any, any>>this.__gl
+    const gl = this.__gl
     gl.bindVertexArray(null)
     if (this.__indexBuffer) gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null)
   }
@@ -276,7 +276,7 @@ class VAOGeomShaderBinding {
    * Users should never need to call this method directly.
    */
   destroy() {
-    const gl = <Record<any, any>>this.__gl
+    const gl = this.__gl
     gl.deleteVertexArray(this.__vao)
     if (this.__indexBuffer) this.__gl.deleteBuffer(this.__indexBuffer)
   }

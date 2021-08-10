@@ -142,7 +142,7 @@ class GLStandardGeomsPass extends GLPass {
   getGeomItemAndDist(geomData: Uint8Array) {
     let itemId
     let dist
-    const gl = <Record<any, any>>this.__gl // TODO: refactor to avoid casts?
+    const gl = this.__gl // TODO: refactor to avoid casts?
     if (gl.floatGeomBuffer) {
       itemId = Math.round(geomData[1])
       dist = geomData[3]
