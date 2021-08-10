@@ -42,7 +42,7 @@ class GLBaseViewport extends ParameterOwner {
     // Setup Offscreen Render Targets
     // Note: On low end devices, such as Oculus, blitting the multi-sampled depth buffer is throwing errors,
     // and so we are simply disabling silhouettes on all low end devices now.
-    if (SystemDesc.browserName != 'Safari' && SystemDesc.deviceCategory != 'Low') {
+    if (SystemDesc.browserName != 'Safari') {
       this.offscreenBuffer = new GLTexture2D(gl, {
         type: 'UNSIGNED_BYTE',
         format: 'RGBA',
@@ -51,9 +51,9 @@ class GLBaseViewport extends ParameterOwner {
         height: 4,
       })
       this.depthTexture = new GLTexture2D(gl, {
-        type: gl.UNSIGNED_SHORT,
-        format: gl.DEPTH_COMPONENT,
-        internalFormat: gl.name == 'webgl2' ? gl.DEPTH_COMPONENT16 : gl.DEPTH_COMPONENT,
+        type: gl.UNSIGNED_INT_24_8,
+        format: gl.DEPTH_STENCIL,
+        internalFormat: gl.name == 'webgl2' ? gl.DEPTH24_STENCIL8 : gl.DEPTH_COMPONENT,
         filter: gl.NEAREST,
         wrap: gl.CLAMP_TO_EDGE,
         width: 4,
@@ -185,7 +185,7 @@ class GLBaseViewport extends ParameterOwner {
   resizeRenderTargets(width, height) {
     // Note: On low end devices, such as Oculus, blitting the multi-sampled depth buffer is throwing errors,
     // and so we are simply disabling silhouettes on all low end devices now.
-    if (SystemDesc.browserName != 'Safari' && SystemDesc.deviceCategory != 'Low') {
+    if (SystemDesc.browserName != 'Safari') {
       const gl = this.__renderer.gl
 
       if (this.fb) {
@@ -213,7 +213,7 @@ class GLBaseViewport extends ParameterOwner {
 
         this.depthBuffer = gl.createRenderbuffer()
         gl.bindRenderbuffer(gl.RENDERBUFFER, this.depthBuffer)
-        gl.renderbufferStorageMultisample(gl.RENDERBUFFER, 4, gl.DEPTH_COMPONENT16, width, height)
+        gl.renderbufferStorageMultisample(gl.RENDERBUFFER, 4, gl.DEPTH24_STENCIL8, width, height)
         gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, this.depthBuffer)
 
         // //////////////////////////////////
