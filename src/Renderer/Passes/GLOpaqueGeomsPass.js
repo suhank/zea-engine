@@ -220,7 +220,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
     const gl = this.__gl
     gl.disable(gl.BLEND)
 
-    if (true)
+    if (false)
       // 2-sided rendering.
       gl.disable(gl.CULL_FACE)
     // 2-sided rendering.
