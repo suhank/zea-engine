@@ -94,7 +94,7 @@ class InstanceItem extends TreeItem {
    * @param {object} context - The context value.
    * @param {function} onDone - The onDone value.
    */
-  fromJSON(j: Record<any, any>, context: Record<any, any> = {}, onDone: any) {}
+  fromJSON(j: Record<any, any>, context: Record<any, any> = {}) {}
 }
 
 Registry.register('InstanceItem', InstanceItem)
