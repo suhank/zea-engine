@@ -47,7 +47,7 @@ class BoundingBoxParameter extends Parameter<Box3> implements IBinaryReader {
     if (result) {
       this.dirty = true
     }
-    console.warn('check this if this method needs to be overloaded')
+    // console.warn('check this if this method needs to be overloaded')
     return result
   }
 
