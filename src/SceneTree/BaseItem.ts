@@ -72,10 +72,6 @@ class BaseItem extends ParameterOwner {
     return numBaseItems
   }
 
-  getClassName(): string {
-    return 'BaseItem'
-  }
-
   // ////////////////////////////////////////
   // Name and Path
 
@@ -296,22 +292,21 @@ class BaseItem extends ParameterOwner {
    * @return {Record<string, any>} - Returns the json object.
    */
   toJSON(context?: Record<string, any>): Record<string, any> {
-    const j = super.toJSON(context)
-    ;(j as any).name = this.__name
-    ;(j as any).type = this.getClassName()
+    const json = super.toJSON(context)
+    json.name = this.__name
 
-    return j
+    return json
   }
 
   /**
    * Decodes a json object for this type.
    *
-   * @param {object} j - The json object this item must decode.
+   * @param {object} json - The json object this item must decode.
    * @param {object} context - The context value.
    */
-  fromJSON(j: Record<string, any>, context?: Record<string, any>, onDone?: any): void {
-    if (j.name) this.__name = j.name
-    super.fromJSON(j, context)
+  fromJSON(json: Record<string, any>, context?: Record<string, any>): void {
+    if (json.name) this.__name = json.name
+    super.fromJSON(json, context)
   }
 
   /**
