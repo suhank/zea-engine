@@ -43,7 +43,7 @@ describe('MaterialParameter', () => {
     materialParameter.setValue(material)
 
     let changedParam
-    materialParameter.on('valueParameterValueChanged', (event) => {
+    materialParameter.on('valueParameterValueChanged', (event: any) => {
       changedParam = event.param
     })
 

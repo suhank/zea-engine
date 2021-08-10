@@ -6,8 +6,7 @@ import { Sphere } from './Geometry/Shapes/Sphere'
 import '../Renderer/Shaders/SimpleSurfaceShader'
 import Fixtures from './_fixtures_/GeomItem.fixture'
 
-// TODO: enable test when GeomItem is typscript
-xdescribe('GeomItem', () => {
+describe('GeomItem', () => {
   it('tests default parameters', () => {
     const geoItem = new GeomItem()
 

@@ -45,7 +45,7 @@ describe('Mat4Parameter', () => {
     const mat4Parameter = new Mat4Parameter()
 
     const data = Float32Array.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16)
-    const reader = new BinReader(data.buffer)
+    const reader = new BinReader(<Buffer>data.buffer)
     mat4Parameter.readBinary(reader)
 
     expect(mat4Parameter.getValue().toJSON()).toEqual(

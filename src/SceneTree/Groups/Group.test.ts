@@ -4,8 +4,8 @@ import { Material } from '../Material'
 import { GeomItem } from '../GeomItem'
 import { Vec3, Xfo } from '../../Math'
 import { ItemSetParameter } from '../Parameters'
-// TODO: enable test
-xdescribe('Group', () => {
+
+describe('Group', () => {
   it('is visible by default.', () => {
     const group = new Group('Foo')
 

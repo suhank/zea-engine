@@ -101,7 +101,7 @@ describe('MathFunctions', () => {
   })
 
   it('Decodes 16 bit float from two unsigned Int8', () => {
-    const value = MathFunctions.decode16BitFloatFrom2xUInt8([150, 250])
+    const value = MathFunctions.decode16BitFloatFrom2xUInt8(new Uint8Array([150, 250]))
 
     expect(value).toBe(0.2340087890625)
   })

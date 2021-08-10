@@ -45,7 +45,7 @@ describe('NumberParameter', () => {
     const value = 1356
     const data = new Float32Array(1)
     data[0] = value
-    const reader = new BinReader(data.buffer)
+    const reader = new BinReader(<Buffer>data.buffer)
     numberParameter.readBinary(reader)
 
     expect(numberParameter.getValue()).toEqual(value)

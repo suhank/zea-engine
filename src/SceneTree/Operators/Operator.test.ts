@@ -8,7 +8,7 @@ import { OperatorOutputMode } from '../Parameters/OperatorOutputMode'
 import { Registry } from '../../Registry'
 
 class AddFloatsOperator extends Operator {
-  constructor(name) {
+  constructor(name?: string) {
     super(name)
     this.addInput(new OperatorInput('A'))
     this.addInput(new OperatorInput('B'))
@@ -16,8 +16,8 @@ class AddFloatsOperator extends Operator {
   }
 
   evaluate() {
-    const a = this.getInput('A').getValue()
-    const b = this.getInput('B').getValue()
+    const a = <number>this.getInput('A').getValue()
+    const b = <number>this.getInput('B').getValue()
     this.getOutput('C').setClean(a + b)
   }
 }
@@ -28,7 +28,7 @@ Registry.register('AddFloatsOperator', AddFloatsOperator)
 // By reading and then changing. This feature allows us to combine operators
 // to compute complex results. (See BoundingBox operators).
 class ScaleFloatOperator extends Operator {
-  constructor(name) {
+  constructor(name?: string) {
     super(name)
     this.addInput(new OperatorInput('ScaleValue'))
     this.addOutput(new OperatorOutput('Result', OperatorOutputMode.OP_READ_WRITE))
@@ -38,10 +38,10 @@ class ScaleFloatOperator extends Operator {
     let scaleValue = 1.0
     const inParam = this.getInput('ScaleValue').getParam()
     if (inParam) {
-      scaleValue = inParam.getValue()
+      scaleValue = <number>inParam.getValue()
     }
     // Read the value, modify and return.
-    const value = this.getOutput('Result').getValue()
+    const value = <number>this.getOutput('Result').getValue()
     this.getOutput('Result').setClean(value * scaleValue)
   }
 }
@@ -164,7 +164,8 @@ describe('Operator', () => {
   })
 
   class SetFloatOperator extends Operator {
-    constructor(name, value) {
+    value
+    constructor(name?: string, value?: any) {
       super(name)
       this.value = value
       this.addOutput(new OperatorOutput('Output', OperatorOutputMode.OP_WRITE))
@@ -176,7 +177,7 @@ describe('Operator', () => {
   }
 
   class ScaleFloatsOperator extends Operator {
-    constructor(name) {
+    constructor(name?: string) {
       super(name)
       this.addInput(new OperatorInput('ScaleValue'))
       this.addOutput(new OperatorOutput('OutputA', OperatorOutputMode.OP_READ_WRITE))
@@ -187,13 +188,13 @@ describe('Operator', () => {
       let scaleValue = 2.0
       const inParam = this.getInput('ScaleValue').getParam()
       if (inParam) {
-        scaleValue = inParam.getValue()
+        scaleValue = <number>inParam.getValue()
       }
       // Read the value, modify and return both values
       const valueA = this.getOutput('OutputA').getValue()
-      this.getOutput('OutputA').setClean(valueA * scaleValue)
+      this.getOutput('OutputA').setClean(<number>valueA * scaleValue)
       const valueB = this.getOutput('OutputB').getValue()
-      this.getOutput('OutputB').setClean(valueB * scaleValue)
+      this.getOutput('OutputB').setClean(<number>valueB * scaleValue)
 
       this.emit('evaluated')
     }
@@ -356,7 +357,7 @@ describe('Operator', () => {
   })
 
   class DoubleFloatsOperator extends Operator {
-    constructor(name) {
+    constructor(name?: string) {
       super(name)
       this.addInput(new OperatorInput('in'))
       this.addOutput(new OperatorOutput('out', OperatorOutputMode.OP_WRITE))
@@ -364,11 +365,11 @@ describe('Operator', () => {
 
     evaluate() {
       const a = this.getInput('in').getValue()
-      this.getOutput('out').setClean(a * 2)
+      this.getOutput('out').setClean(<number>a * 2)
     }
   }
   class MultiOutputOperator extends Operator {
-    constructor(name) {
+    constructor(name?: string) {
       super(name)
       this.addInput(new OperatorInput('in'))
       this.addOutput(new OperatorOutput('out0', OperatorOutputMode.OP_WRITE))
@@ -465,7 +466,7 @@ describe('Operator', () => {
       outputs: [{ name: 'C', paramPath: ['Foo', 'MyParam'], paramBindIndex: 0 }],
     }
     addOperator.fromJSON(input, {
-      resolvePath: (path, cb) => {
+      resolvePath: (path: any, cb: any) => {
         cb(parameterOwner.resolvePath(path))
       },
     })

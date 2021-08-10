@@ -45,7 +45,7 @@ describe('Vec2Parameter', () => {
     const vec2Parameter = new Vec2Parameter()
 
     const data = Float32Array.of(1, 2)
-    const reader = new BinReader(data.buffer)
+    const reader = new BinReader(<Buffer>data.buffer)
     vec2Parameter.readBinary(reader)
 
     expect(vec2Parameter.getValue().toJSON()).toEqual({ x: 1, y: 2 })

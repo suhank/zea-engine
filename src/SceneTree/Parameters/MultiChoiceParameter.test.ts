@@ -34,7 +34,7 @@ describe('MultiChoiceParameter', () => {
     const multiChoiceParameter = new MultiChoiceParameter('Foo', 1, [1, 2, 3])
 
     const data = Float32Array.of(1)
-    const reader = new BinReader(data.buffer)
+    const reader = new BinReader(<Buffer>data.buffer)
     multiChoiceParameter.readBinary(reader)
 
     expect(multiChoiceParameter.getValue()).toEqual(1)

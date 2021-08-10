@@ -40,7 +40,7 @@ class EventEmitter extends BaseClass {
    * @param {(event: BaseEvent) => void } listener - The listener function(callback).
    * @return {number} - Id to reference the listener.
    */
-  on(eventName: string, listener: (event: BaseEvent) => void): number {
+  on(eventName: string, listener?: (event: BaseEvent) => void): number {
     if (!listener) {
       throw new Error('Missing listener.')
     }
@@ -92,7 +92,7 @@ class EventEmitter extends BaseClass {
    * @param {string} eventName - The name of the event.
    * @param {((event: BaseEvent) => void)} listener - The listener function or the id number.
    */
-  off(eventName: string, listener: (event: BaseEvent) => void): void {
+  off(eventName: string, listener?: (event: BaseEvent) => void): void {
     if (!listener) {
       throw new Error('Missing callback function (listener).')
     }

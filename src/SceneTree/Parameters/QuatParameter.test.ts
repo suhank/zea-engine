@@ -49,7 +49,7 @@ describe('QuatParameter', () => {
     data[1] = 0
     data[2] = 0
     data[3] = 0
-    const reader = new BinReader(data.buffer)
+    const reader = new BinReader(<Buffer>data.buffer)
     quatParameter.readBinary(reader)
 
     expect(quatParameter.getValue().toJSON()).toEqual({ x: 1, y: 0, z: 0, w: 0 })

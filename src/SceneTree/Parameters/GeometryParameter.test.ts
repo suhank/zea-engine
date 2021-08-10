@@ -2,9 +2,9 @@ import { GeometryParameter } from './GeometryParameter'
 import { Cylinder } from '../Geometry/Shapes/Cylinder'
 import { Cuboid } from '../Geometry/Shapes/Cuboid'
 import { GeomItem } from '../GeomItem'
+import { BaseGeom } from '..'
 
-// TODO: enable test -- cannot read bind of undefined and "bound " is not connected to "boundingBoxChanged" event
-xdescribe('GeometryParameter', () => {
+describe('GeometryParameter', () => {
   it('has an initial value.', () => {
     const geometryParameter = new GeometryParameter()
 
@@ -74,7 +74,7 @@ xdescribe('GeometryParameter', () => {
     const parameter = new GeometryParameter('TestParameter')
     const cylinder = new Cylinder(5, 0.2, 32)
     const geomItem = new GeomItem('gear', cylinder)
-    parameter.setValue(geomItem)
+    parameter.setValue(<BaseGeom>(<unknown>geomItem))
 
     const parameter2 = parameter.clone()
 

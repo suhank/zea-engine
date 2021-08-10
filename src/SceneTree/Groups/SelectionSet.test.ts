@@ -2,8 +2,7 @@ import { SelectionSet } from './SelectionSet'
 import { TreeItem } from '../TreeItem'
 import { Color } from '../../Math'
 
-// TODO: enable test
-xdescribe('SelectionSet', () => {
+describe('SelectionSet', () => {
   it('is visible by default.', () => {
     const group = new SelectionSet('Foo')
 

@@ -23,8 +23,8 @@ describe('StringParameter', () => {
   })
 
   it('emits event on value change', () => {
-    const parameter = new StringParameter('param1', '', 'String')
-
+    //const parameter = new StringParameter('param1', '', 'String')
+    const parameter = new StringParameter('param1', 'String')
     const mockFn = jest.fn()
     parameter.on('valueChanged', mockFn)
 
@@ -87,11 +87,12 @@ describe('StringParameter', () => {
     view.setUint32(byteOffset, str.length, true)
     byteOffset += 4
     for (let i = 0; i < str.length; i++) {
-      view.setUint8(byteOffset, str.charCodeAt(i), true)
+      //view.setUint8(byteOffset, str.charCodeAt(i), true)
+      view.setUint8(byteOffset, str.charCodeAt(i)) // TODO check for correctness
       byteOffset += 1
     }
 
-    const reader = new BinReader(view.buffer)
+    const reader = new BinReader(<Buffer>view.buffer)
     parameter.readBinary(reader)
 
     expect(parameter.getValue()).toEqual(str)

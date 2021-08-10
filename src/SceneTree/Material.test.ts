@@ -1,8 +1,8 @@
 import { Material } from './Material'
 import '../Renderer/Shaders/SimpleSurfaceShader'
 import { Color } from '../Math/Color'
-// TODO: currently all tests fail. May need to migrate Material.js first
-xdescribe('Material', () => {
+
+describe('Material', () => {
   it('Calling set shaders name', () => {
     const material = new Material('foo', 'SimpleSurfaceShader')
     expect(material.hasParameter('BaseColor')).toBeTruthy()

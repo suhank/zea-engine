@@ -59,7 +59,7 @@ describe('XfoParameter', () => {
     data[7] = 2
     data[8] = 2
     data[9] = 2
-    const reader = new BinReader(data.buffer)
+    const reader = new BinReader(<Buffer>data.buffer)
     xfoParameter.readBinary(reader)
 
     expect(xfoParameter.getValue().toJSON()).toEqual({
@@ -71,7 +71,7 @@ describe('XfoParameter', () => {
 
   it('clones parameter object', () => {
     const parameter = new XfoParameter('TestParameter')
-    const value = new Xfo(1, 2, 3, 4)
+    const value = new Xfo(new Float32Array([1, 2, 3, 4])) //   const value = new Xfo(1, 2, 3, 4)
     parameter.setValue(value)
 
     const parameter2 = parameter.clone()

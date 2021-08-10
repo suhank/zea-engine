@@ -49,7 +49,7 @@ describe('Vec3Parameter', () => {
     data[0] = 1
     data[1] = 2
     data[2] = 3
-    const reader = new BinReader(data.buffer)
+    const reader = new BinReader(<Buffer>data.buffer)
     vec3Parameter.readBinary(reader)
 
     expect(vec3Parameter.getValue().toJSON()).toEqual({ x: 1, y: 2, z: 3 })

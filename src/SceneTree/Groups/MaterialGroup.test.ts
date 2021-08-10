@@ -3,8 +3,8 @@ import { TreeItem } from '../TreeItem'
 import { Material } from '../Material'
 import { GeomItem } from '../GeomItem'
 
-// TODO: enable test. Error: cannot read bind of undefined.
-xdescribe('MaterialGroup', () => {
+
+describe('MaterialGroup', () => {
   test('Changing GeomItem Material by the tree.', () => {
     const group = new MaterialGroup('Foo')
     const parent = new TreeItem('Parent')

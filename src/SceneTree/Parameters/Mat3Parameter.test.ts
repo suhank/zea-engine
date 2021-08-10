@@ -43,7 +43,7 @@ describe('Mat3Parameter', () => {
     const mat3Parameter = new Mat3Parameter()
 
     const data = Float32Array.of(1, 2, 3, 4, 5, 6, 7, 8, 9)
-    const reader = new BinReader(data.buffer)
+    const reader = new BinReader(<Buffer>data.buffer)
     mat3Parameter.readBinary(reader)
 
     expect(mat3Parameter.getValue().toJSON()).toEqual(Float32Array.of(1, 2, 3, 4, 5, 6, 7, 8, 9))
