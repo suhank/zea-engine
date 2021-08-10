@@ -107,6 +107,7 @@ class GLGeomItemLibrary extends EventEmitter {
       const xrvp = event.xrViewport
       xrvp.on('presentingChanged', (event) => {
         if (event.state) {
+          cullFreq = 10
           // Note: We approximate the culling viewport to be
           // a wider version of the 2 eye frustums merged together.
           // Wider, so that items are considered visible before the are in view.
@@ -121,19 +122,21 @@ class GLGeomItemLibrary extends EventEmitter {
             frustumHalfAngleX,
             frustumHalfAngleY,
             isOrthographic: false,
-            solidAngleLimit: renderer.solidAngleLimit,
+            solidAngleLimit: renderer.solidAngleLimit * 2,
           })
         } else {
+          cullFreq = 5
           viewportChanged()
         }
       })
     })
 
     let tick = 0
+    let cullFreq = 5
     renderer.on('viewChanged', (event) => {
       // Calculate culling every Nth frame.
       if (workerReady) {
-        if (tick % 5 == 0) {
+        if (tick % cullFreq == 0) {
           workerReady = false
           const pos = event.viewXfo.tr
           const ori = event.viewXfo.ori
@@ -211,6 +214,9 @@ class GLGeomItemLibrary extends EventEmitter {
       this.renderer.glGeomLibrary.removeGeom(geom)
       geom = geomParm.getValue()
       glGeomItem.geomId = this.renderer.glGeomLibrary.addGeom(geom)
+
+      this.dirtyWorkerItemIndices.add(index)
+
       geomItemChanged()
     }
     geomParm.on('valueChanged', geomChanged)
@@ -262,6 +268,7 @@ class GLGeomItemLibrary extends EventEmitter {
       geomItemChanged,
       materialChanged,
       geomChanged,
+      workerItemDataChanged,
     }
     this.glGeomItemsMap[geomItem.getId()] = index
 
@@ -315,11 +322,18 @@ class GLGeomItemLibrary extends EventEmitter {
     this.renderer.glGeomLibrary.removeGeom(geom)
 
     const handlers = this.glGeomItemEventHandlers[index]
+
     geomItem.getParameter('Material').off('valueChanged', handlers.materialChanged)
-    geomItem.getParameter('Geometry').off('valueChanged', handlers.geomChanged)
     geomItem.getParameter('GeomMat').off('valueChanged', handlers.geomItemChanged)
     geomItem.off('cutAwayChanged', handlers.geomItemChanged)
     geomItem.off('highlightChanged', handlers.geomItemChanged)
+
+    geomItem.off('visibilityChanged', handlers.workerItemDataChanged)
+    geomItem.getParameter('GeomMat').off('valueChanged', handlers.workerItemDataChanged)
+
+    const geomParm = geomItem.getParameter('Geometry')
+    geomParm.off('valueChanged', handlers.geomChanged)
+    geomParm.off('boundingBoxChanged', handlers.workerItemDataChanged)
 
     this.glGeomItems[index] = null
     this.glGeomItemsIndexFreeList.push(index)
