@@ -385,18 +385,17 @@ class BaseGeom extends ParameterOwner {
    * @return {object} - Returns the json object.
    */
   toJSON(context?: Record<string, any>): Record<string, unknown> {
-    let json = super.toJSON(context)
-    if (!json) json = {}
-    ;(json as any).type = this.getClassName()
+    const json = super.toJSON(context)
+
     if (!context || !context.skipTopology) {
-      ;(json as any).numVertices = this.__numVertices || 0
+      json.numVertices = this.__numVertices || 0
     }
     const vertexAttributes: Record<string, any> = {}
     for (const [key, attr] of this.__vertexAttributes.entries()) {
       if (!context || !('skipAttributes' in context) || !context.skipAttributes.includes(key))
         vertexAttributes[key] = attr.toJSON(context)
     }
-    ;(json as any).vertexAttributes = vertexAttributes
+    json.vertexAttributes = vertexAttributes
     return json
   }
 

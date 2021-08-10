@@ -71,16 +71,15 @@ class Registry {
 
   /**
    * Returns class name registered for the instantiated object.
-   * @deprecated
    * @param {typeof BaseClass} classDefinition - Class type definition.
    * @return {string} - Name of the registered class
    */
-  static getClassName(classDefinition: BaseClass): string {
-    throw new Error(`getClassName is deprecated`)
-    // const classId = classDefinitions.indexOf(classDefinition)
-    // if (classId >= 0 && classNames[classId]) return classNames[classId]
+  static getClassName(classDefinition: typeof BaseClass): string {
+    // throw new Error(`getClassName is deprecated`)
+    const classId = classDefinitions.indexOf(classDefinition)
+    if (classId >= 0 && classNames[classId]) return classNames[classId]
 
-    // throw new Error(`class is not registered`)
+    throw new Error(`class is not registered`)
   }
 
   /**
@@ -103,8 +102,7 @@ class Registry {
    * @return {string} - Name of the registered class
    */
   static getBlueprintName(classDefinition: typeof BaseClass): string {
-    throw new Error(`getBlueprintName is deprecated`)
-    // return this.getClassName(classDefinition)
+    return this.getClassName(classDefinition)
   }
 
   /**
