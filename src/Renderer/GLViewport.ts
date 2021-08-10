@@ -233,7 +233,7 @@ class GLViewport extends GLBaseViewport {
       getCameraParams()
       this.invalidateGeomDataBuffer()
       this.emit('updated')
-      
+
       let focalDistance = this.__camera.getFocalDistance()
       let fieldOfView = this.__camera.getFov()
       const event = new ViewChangedEvent('CameraAndPointer', this.__cameraXfo, focalDistance, fieldOfView)

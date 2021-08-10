@@ -2,7 +2,7 @@ import { SystemDesc } from '../SystemDesc'
 import { Color } from '../Math/index'
 import { Plane, ParameterOwner, BaseImage, NumberParameter, BaseTool, Scene } from '../SceneTree/index'
 import { GLRenderTarget } from './GLRenderTarget'
-import { GLBaseRenderer } from './GLBaseRenderer'
+import { GLRenderer } from './GLRenderer'
 import { GLHDRImage } from './GLHDRImage'
 import { GLTexture2D } from './GLTexture2D'
 import { GLFbo } from './GLFbo'
@@ -25,8 +25,8 @@ const FRAMEBUFFER = {
  */
 class GLBaseViewport extends ParameterOwner {
   protected __gl: WebGL12RenderingContext
-  protected renderer: Record<any, any>
-  protected __renderer: Record<any, any>
+  protected renderer: GLRenderer
+  protected __renderer: GLRenderer
   protected __doubleClickTimeMSParam = this.addParameter(new NumberParameter('DoubleClickTimeMS', 200))
   protected __fbo: any
   protected __ongoingPointers: any[]
@@ -62,7 +62,7 @@ class GLBaseViewport extends ParameterOwner {
     this.__ongoingPointers = []
     this.__backgroundColor = new Color(0.3, 0.3, 0.3, 1)
 
-    const gl = <Record<any, any>>this.__renderer.gl
+    const gl = this.__renderer.gl
 
     this.quad = new GLMesh(this.__gl, new Plane(1, 1))
 
@@ -142,7 +142,7 @@ class GLBaseViewport extends ParameterOwner {
 
   /**
    * The getRenderer method.
-   * @return {GLBaseRenderer} - The return value.
+   * @return {GLRenderer} - The return value.
    */
   getRenderer() {
     return this.__renderer
@@ -226,35 +226,36 @@ class GLBaseViewport extends ParameterOwner {
 
       this.fb = []
 
-      if (gl.renderbufferStorageMultisample) {
-        this.fb[FRAMEBUFFER.MSAA_RENDERBUFFER] = gl.createFramebuffer()
-        gl.bindFramebuffer(gl.FRAMEBUFFER, this.fb[FRAMEBUFFER.MSAA_RENDERBUFFER])
-        this.colorRenderbuffer = gl.createRenderbuffer()
+      if (gl.name == 'webgl2') {
+        const gl2 = <WebGL2RenderingContext>gl
+        this.fb[FRAMEBUFFER.MSAA_RENDERBUFFER] = gl2.createFramebuffer()
+        gl2.bindFramebuffer(gl2.FRAMEBUFFER, this.fb[FRAMEBUFFER.MSAA_RENDERBUFFER])
+        this.colorRenderbuffer = gl2.createRenderbuffer()
 
         // Create the color buffer
-        gl.bindRenderbuffer(gl.RENDERBUFFER, this.colorRenderbuffer)
-        gl.renderbufferStorageMultisample(gl.RENDERBUFFER, 4, gl.RGBA8, width, height)
-        gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.RENDERBUFFER, this.colorRenderbuffer)
+        gl2.bindRenderbuffer(gl2.RENDERBUFFER, this.colorRenderbuffer)
+        gl2.renderbufferStorageMultisample(gl2.RENDERBUFFER, 4, gl2.RGBA8, width, height)
+        gl2.framebufferRenderbuffer(gl2.FRAMEBUFFER, gl2.COLOR_ATTACHMENT0, gl2.RENDERBUFFER, this.colorRenderbuffer)
 
-        this.depthBuffer = gl.createRenderbuffer()
-        gl.bindRenderbuffer(gl.RENDERBUFFER, this.depthBuffer)
-        gl.renderbufferStorageMultisample(gl.RENDERBUFFER, 4, gl.DEPTH_COMPONENT16, width, height)
-        gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, this.depthBuffer)
+        this.depthBuffer = gl2.createRenderbuffer()
+        gl2.bindRenderbuffer(gl2.RENDERBUFFER, this.depthBuffer)
+        gl2.renderbufferStorageMultisample(gl2.RENDERBUFFER, 4, gl2.DEPTH_COMPONENT16, width, height)
+        gl2.framebufferRenderbuffer(gl2.FRAMEBUFFER, gl2.DEPTH_ATTACHMENT, gl2.RENDERBUFFER, this.depthBuffer)
 
         // //////////////////////////////////
         // COLORBUFFER
-        this.fb[FRAMEBUFFER.COLORBUFFER] = gl.createFramebuffer()
-        gl.bindFramebuffer(gl.FRAMEBUFFER, this.fb[FRAMEBUFFER.COLORBUFFER])
-        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.offscreenBuffer.glTex, 0)
-        gl.bindFramebuffer(gl.FRAMEBUFFER, null)
+        this.fb[FRAMEBUFFER.COLORBUFFER] = gl2.createFramebuffer()
+        gl2.bindFramebuffer(gl2.FRAMEBUFFER, this.fb[FRAMEBUFFER.COLORBUFFER])
+        gl2.framebufferTexture2D(gl2.FRAMEBUFFER, gl2.COLOR_ATTACHMENT0, gl2.TEXTURE_2D, this.offscreenBuffer.glTex, 0)
+        gl2.bindFramebuffer(gl2.FRAMEBUFFER, null)
 
         // //////////////////////////////////
         // DEPTHBUFFER
         // Create the depth texture that will be bitted to.
-        this.fb[FRAMEBUFFER.DEPTHBUFFER] = gl.createFramebuffer()
-        gl.bindFramebuffer(gl.FRAMEBUFFER, this.fb[FRAMEBUFFER.DEPTHBUFFER])
-        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.TEXTURE_2D, this.depthTexture.glTex, 0)
-        gl.bindFramebuffer(gl.FRAMEBUFFER, null)
+        this.fb[FRAMEBUFFER.DEPTHBUFFER] = gl2.createFramebuffer()
+        gl2.bindFramebuffer(gl2.FRAMEBUFFER, this.fb[FRAMEBUFFER.DEPTHBUFFER])
+        gl2.framebufferTexture2D(gl2.FRAMEBUFFER, gl2.DEPTH_ATTACHMENT, gl2.TEXTURE_2D, this.depthTexture.glTex, 0)
+        gl2.bindFramebuffer(gl2.FRAMEBUFFER, null)
       } else {
         this.EXT_frag_depth = gl.getExtension('EXT_frag_depth')
 
@@ -264,7 +265,9 @@ class GLBaseViewport extends ParameterOwner {
         gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.TEXTURE_2D, this.depthTexture.glTex, 0)
       }
 
-      const check = gl.checkFramebufferStatus(gl.name == 'webgl2' ? gl.DRAW_FRAMEBUFFER : gl.FRAMEBUFFER)
+      const check = gl.checkFramebufferStatus(
+        gl.name == 'webgl2' ? (<WebGL2RenderingContext>gl).DRAW_FRAMEBUFFER : gl.FRAMEBUFFER
+      )
       if (check !== gl.FRAMEBUFFER_COMPLETE) {
         switch (check) {
           case gl.FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
@@ -305,7 +308,7 @@ class GLBaseViewport extends ParameterOwner {
       // this.offscreenBufferFbo.clear()
       // render to our targetTexture by binding the framebuffer
       gl.bindFramebuffer(
-        gl.name == 'webgl2' ? gl.DRAW_FRAMEBUFFER : gl.FRAMEBUFFER,
+        gl.name == 'webgl2' ? (<WebGL2RenderingContext>gl).DRAW_FRAMEBUFFER : gl.FRAMEBUFFER,
         this.fb[FRAMEBUFFER.MSAA_RENDERBUFFER]
       )
       renderstate.boundRendertarget = this.fb[FRAMEBUFFER.MSAA_RENDERBUFFER]
@@ -318,7 +321,8 @@ class GLBaseViewport extends ParameterOwner {
       gl.bindFramebuffer(gl.FRAMEBUFFER, null)
     }
     gl.viewport(0, 0, this.__width, this.__height)
-    gl.clearColor(...this.__backgroundColor.asArray())
+    const bg = this.__backgroundColor.asArray()
+    gl.clearColor(bg[0], bg[1], bg[2], bg[3])
     // Note: in Chrome's macOS the alpha channel causes strange
     // compositing issues. Here where we disable the alpha channel
     // in the color mask which addresses the issues on MacOS.
@@ -341,13 +345,14 @@ class GLBaseViewport extends ParameterOwner {
 
     // //////////////////////////////////
     // Post processing.
-    if (this.fb && gl.renderbufferStorageMultisample) {
+    if (this.fb && gl.name == 'webgl2') {
       // "blit" the scene into the color buffer
-      gl.bindFramebuffer(gl.READ_FRAMEBUFFER, this.fb[FRAMEBUFFER.MSAA_RENDERBUFFER])
-      gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, this.fb[FRAMEBUFFER.COLORBUFFER])
-      gl.clearBufferfv(gl.COLOR, 0, [0.0, 0.0, 0.0, 0.0])
+      const gl2 = <WebGL2RenderingContext>gl
+      gl2.bindFramebuffer(gl2.READ_FRAMEBUFFER, this.fb[FRAMEBUFFER.MSAA_RENDERBUFFER])
+      gl2.bindFramebuffer(gl2.DRAW_FRAMEBUFFER, this.fb[FRAMEBUFFER.COLORBUFFER])
+      gl2.clearBufferfv(gl2.COLOR, 0, [0.0, 0.0, 0.0, 0.0])
 
-      gl.blitFramebuffer(
+      gl2.blitFramebuffer(
         0,
         0,
         this.__width,
@@ -356,14 +361,14 @@ class GLBaseViewport extends ParameterOwner {
         0,
         this.__width,
         this.__height,
-        gl.COLOR_BUFFER_BIT,
-        gl.LINEAR
+        gl2.COLOR_BUFFER_BIT,
+        gl2.LINEAR
       )
 
-      gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, renderstate.boundRendertarget)
-      gl.bindFramebuffer(gl.READ_FRAMEBUFFER, this.fb[FRAMEBUFFER.COLORBUFFER])
-      gl.clearBufferfv(gl.COLOR, 0, [0.0, 0.0, 0.0, 0.0])
-      gl.blitFramebuffer(
+      gl2.bindFramebuffer(gl2.DRAW_FRAMEBUFFER, renderstate.boundRendertarget)
+      gl2.bindFramebuffer(gl2.READ_FRAMEBUFFER, this.fb[FRAMEBUFFER.COLORBUFFER])
+      gl2.clearBufferfv(gl2.COLOR, 0, [0.0, 0.0, 0.0, 0.0])
+      gl2.blitFramebuffer(
         0,
         0,
         this.__width,
@@ -390,14 +395,15 @@ class GLBaseViewport extends ParameterOwner {
 
     const gl = this.__renderer.gl
 
-    if (gl.renderbufferStorageMultisample) {
-      gl.bindFramebuffer(gl.READ_FRAMEBUFFER, this.fb[FRAMEBUFFER.MSAA_RENDERBUFFER])
-      gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, this.fb[FRAMEBUFFER.DEPTHBUFFER])
-      gl.clearBufferfv(gl.COLOR, 0, [1, 1, 1, 1])
+    if (gl.name == 'webgl2') {
+      const gl2 = <WebGL2RenderingContext>gl
+      gl2.bindFramebuffer(gl2.READ_FRAMEBUFFER, this.fb[FRAMEBUFFER.MSAA_RENDERBUFFER])
+      gl2.bindFramebuffer(gl2.DRAW_FRAMEBUFFER, this.fb[FRAMEBUFFER.DEPTHBUFFER])
+      gl2.clearBufferfv(gl2.COLOR, 0, [1, 1, 1, 1])
 
       // Note: in Google SwiftShader this line generates the following error later on the code path.
       // GetShaderiv: <- error from previous GL command
-      gl.blitFramebuffer(
+      gl2.blitFramebuffer(
         0,
         0,
         this.__width,
@@ -410,15 +416,16 @@ class GLBaseViewport extends ParameterOwner {
         gl.NEAREST
       )
       // Rebind the MSAA RenderBuffer.
-      gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, this.fb[FRAMEBUFFER.MSAA_RENDERBUFFER])
+      gl2.bindFramebuffer(gl2.DRAW_FRAMEBUFFER, this.fb[FRAMEBUFFER.MSAA_RENDERBUFFER])
       renderstate.boundRendertarget = this.fb[FRAMEBUFFER.MSAA_RENDERBUFFER]
-      gl.viewport(0, 0, this.__width, this.__height)
+      gl2.viewport(0, 0, this.__width, this.__height)
     } else {
       // Rebind the default RenderBuffer.
       gl.bindFramebuffer(gl.FRAMEBUFFER, null)
       renderstate.boundRendertarget = null
 
-      gl.clearColor(...this.__backgroundColor.asArray())
+      const bg = this.__backgroundColor.asArray()
+      gl.clearColor(bg[0], bg[1], bg[2], bg[3])
       // Note: in Chrome's macOS the alpha channel causes strange
       // compositing issues. Here where we disable the alpha channel
       // in the color mask which addresses the issues on MacOS.
@@ -433,12 +440,13 @@ class GLBaseViewport extends ParameterOwner {
 
     // ////////////////////////////////////
     //
-    if (gl.renderbufferStorageMultisample) {
-      gl.enable(gl.BLEND)
-      gl.blendEquation(gl.FUNC_ADD)
-      gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA) // For add
-      gl.disable(gl.DEPTH_TEST)
-      gl.depthMask(false)
+    if (gl.name == 'webgl2') {
+      const gl2 = <WebGL2RenderingContext>gl
+      gl2.enable(gl2.BLEND)
+      gl2.blendEquation(gl2.FUNC_ADD)
+      gl2.blendFunc(gl2.SRC_ALPHA, gl2.ONE_MINUS_SRC_ALPHA) // For add
+      gl2.disable(gl2.DEPTH_TEST)
+      gl2.depthMask(false)
     }
 
     this.renderer.silhouetteShader.bind(renderstate)
@@ -447,13 +455,15 @@ class GLBaseViewport extends ParameterOwner {
 
     this.depthTexture.bindToUniform(renderstate, unifs.depthTexture)
 
-    if (!gl.renderbufferStorageMultisample) {
+    if (gl.name == 'webgl') {
       this.offscreenBuffer.bindToUniform(renderstate, unifs.colorTexture)
     }
 
     gl.uniform2f(unifs.screenSize.location, this.__width, this.__height)
     gl.uniform1f(unifs.outlineThickness.location, this.renderer.outlineThickness)
-    gl.uniform4f(unifs.outlineColor.location, ...this.renderer.outlineColor.asArray())
+
+    const oc = this.renderer.outlineColor.asArray()
+    gl.uniform4f(unifs.outlineColor.location, oc[0], oc[1], oc[2], oc[3])
     gl.uniform1f(unifs.outlineSensitivity.location, this.renderer.outlineSensitivity)
     gl.uniform1f(unifs.outlineDepthBias.location, this.renderer.outlineDepthBias)
 

@@ -13,17 +13,16 @@ import { GLGeomItemLibrary } from './Drawing/GLGeomItemLibrary'
 import { GLPass, PassType } from './Passes/GLPass'
 import { Color } from '../Math/Color'
 import { GLRenderer } from './GLRenderer'
-import { BaseEvent } from '../Utilities/BaseEvent'
-import type { Navigator } from 'webxr'
 import { ResizedEvent } from '../Utilities/Events/ResizedEvent'
 import { SceneSetEvent } from '../Utilities/Events/SceneSetEvent'
 import { ViewChangedEvent } from '../Utilities/Events/ViewChangedEvent'
 import { XrViewportEvent } from '../Utilities/Events/XrViewportEvent'
+import { XRViewport } from 'webxr'
+import { GLShader } from './GLShader'
 let activeGLRenderer: Record<any, any>
 let pointerIsDown = false
 let pointerLeft = false
 const registeredPasses: Record<any, any> = {}
-
 
 /**
  * Class representing a GL base renderer.
@@ -37,19 +36,18 @@ class GLBaseRenderer extends ParameterOwner {
   protected __div: any
 
   __gl: WebGL12RenderingContext
-  protected __glcanvas: Record<any, any>
-  protected __scene: any
-  protected __gizmoContext: any
+  protected __glcanvas: HTMLCanvasElement
+  protected __scene: Scene
 
   protected __shaderDirectives: Record<any, any>
   protected __renderGeomDataFbosRequested: boolean
-  protected __shaders: Record<any, any>
-  protected __passes: Record<any, any>
+  protected __shaders: Record<string, GLShader>
+  protected __passes: Record<number, GLPass[]>
   protected __passesRegistrationOrder: any[]
   protected __passCallbacks: any[]
 
-  protected __viewports: any[]
-  protected __activeViewport: any
+  protected __viewports: GLViewport[]
+  protected __activeViewport: GLViewport
   protected __continuousDrawing: boolean
   protected __redrawRequested: boolean
   protected __isMobile: boolean
@@ -58,15 +56,15 @@ class GLBaseRenderer extends ParameterOwner {
   protected __floatGeomBuffer: any
 
   protected __supportXR: boolean
-  protected __xrViewport: any
-  protected __xrViewportPromise: any
+  protected __xrViewport: VRViewport
+  protected __xrViewportPromise: Promise<VRViewport>
 
   glMaterialLibrary: GLMaterialLibrary
   glGeomItemLibrary: GLGeomItemLibrary
   glGeomLibrary: GLGeomLibrary
 
-  protected __screenQuad: any
-  protected resizeObserver: any
+  protected __screenQuad: GLScreenQuad
+  protected resizeObserver: ResizeObserver
   /**
    * Create a GL base renderer.
    * @param {HTMLElement|HTMLCanvasElement} $canvas - The canvas element.
@@ -217,7 +215,9 @@ class GLBaseRenderer extends ParameterOwner {
    * @return {GLViewport} - The return value.
    */
   addViewport(name: string) {
-    const vp = new GLViewport(this, name, this.getWidth(), this.getHeight())
+    // TODO: We may need to merge GLBaseRenderer into GLRenderer to avoid this nasty cast.
+    const renderer: GLRenderer = <GLRenderer>(<unknown>this)
+    const vp = new GLViewport(renderer, name, this.getWidth(), this.getHeight())
 
     const updated = () => {
       this.requestRedraw()
@@ -361,8 +361,6 @@ class GLBaseRenderer extends ParameterOwner {
   setScene(scene: Scene) {
     this.__scene = scene
     this.addTreeItem(this.__scene.getRoot())
-
-    if (this.__gizmoContext) this.__gizmoContext.setSelectionManager(scene.getSelectionManager())
 
     let event = new SceneSetEvent(this.__scene)
     this.emit('sceneSet', event)
@@ -682,7 +680,7 @@ class GLBaseRenderer extends ParameterOwner {
       }
     }
 
-    gl.screenQuad = new GLScreenQuad(<WebGL12RenderingContext>this.__gl)
+    gl.screenQuad = new GLScreenQuad(this.__gl)
     this.__screenQuad = gl.screenQuad
 
     // Note: Mobile devices don't provide much support for reading data back from float textures,
