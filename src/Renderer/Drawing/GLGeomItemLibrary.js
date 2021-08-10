@@ -280,9 +280,21 @@ class GLGeomItemLibrary extends EventEmitter {
     if (newlyCulled.length == 0 && newlyUnCulled.length == 0) return
     // console.log('applyCullResults newlyCulled', newlyCulled.length, 'newlyUnCulled', newlyUnCulled.length)
     newlyCulled.forEach((index) => {
+      if (!this.glGeomItems[index]) {
+        if (this.removedItemIndices.indexOf(index) == -1) {
+          console.warn('Culling worker has items that are deleted.')
+        }
+        return
+      }
       this.glGeomItems[index].setCulled(true)
     })
     newlyUnCulled.forEach((index) => {
+      if (!this.glGeomItems[index]) {
+        if (this.removedItemIndices.indexOf(index) == -1) {
+          console.warn('Culling worker has items that are deleted.')
+        }
+        return
+      }
       this.glGeomItems[index].setCulled(false)
     })
     this.renderer.requestRedraw()
