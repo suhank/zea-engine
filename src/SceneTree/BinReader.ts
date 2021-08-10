@@ -170,11 +170,12 @@ class BinReader {
    * @return {number} - The return value.
    */
   loadFloat16From2xUInt8() {
-    const result = this.__dataView.getFloat16(this.__byteOffset, true)
+    throw Error('loadFloat16From2xUInt8 not implemented!')
+    // const result = this.__dataView.getFloat16(this.__byteOffset, true)
     // const uint8s = this.loadUInt8Array(2);
     // return Math.decode16BitFloat(uint8s);
-    this.__byteOffset += 2
-    return result
+    // this.__byteOffset += 2
+    // return result
   }
 
   /**

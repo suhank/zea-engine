@@ -1,3 +1,3 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Operator save to JSON (serialization). 1`] = `"{\\"name\\":\\"\\",\\"type\\":\\"AddFloatsOperator\\",\\"inputs\\":[{\\"name\\":\\"A\\",\\"paramPath\\":[\\"Foo\\",\\"A\\"]},{\\"name\\":\\"B\\",\\"paramPath\\":[\\"Foo\\",\\"B\\"]}],\\"outputs\\":[{\\"name\\":\\"C\\",\\"paramPath\\":[\\"Foo\\",\\"MyParam\\"],\\"paramBindIndex\\":0}]}"`;
+exports[`Operator save to JSON (serialization). 1`] = `"{\\"type\\":\\"AddFloatsOperator\\",\\"name\\":\\"\\",\\"inputs\\":[{\\"name\\":\\"A\\",\\"paramPath\\":[\\"Foo\\",\\"A\\"]},{\\"name\\":\\"B\\",\\"paramPath\\":[\\"Foo\\",\\"B\\"]}],\\"outputs\\":[{\\"name\\":\\"C\\",\\"paramPath\\":[\\"Foo\\",\\"MyParam\\"],\\"paramBindIndex\\":0}]}"`;
