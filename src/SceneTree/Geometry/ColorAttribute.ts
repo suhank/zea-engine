@@ -8,8 +8,8 @@ class ColorAttribute extends Attribute {
   /**
    * Create a ColorAttribute.
    */
-  constructor() {
-    super('Color', 4)
+  constructor(defaultElementValue: number = 0) {
+    super('Color', 4, defaultElementValue)
     this.normalized = false
   }
 

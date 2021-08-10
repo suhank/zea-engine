@@ -7,10 +7,10 @@ import { Registry } from '../../Registry'
  */
 class Vec3Attribute extends Attribute {
   /**
-   * Create a Vec3Attribute.
+   * Create a Vec2Attribute.
    */
-  constructor() {
-    super('Vec3', 3)
+  constructor(defaultElementValue: number = 0) {
+    super('Vec3', 3, defaultElementValue)
     this.normalized = false
   }
 

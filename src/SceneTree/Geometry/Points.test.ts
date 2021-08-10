@@ -20,7 +20,7 @@ describe('Points', () => {
     const points = new Points()
     const numVertices = 10
     points.setNumVertices(numVertices)
-    points.addVertexAttribute('foo', new Vec2Attribute())
+    points.addVertexAttribute('foo', new Vec2Attribute(1))
     expect(points.getVertexAttribute('foo').getCount()).toBe(numVertices)
     expect((<Vec3Attribute>points.getVertexAttribute('foo')).getValueRef(0).toJSON()).toStrictEqual({ x: 1, y: 1 })
   })

@@ -8,8 +8,8 @@ class Vec2Attribute extends Attribute {
   /**
    * Create a Vec2Attribute.
    */
-  constructor() {
-    super('Vec2', 2)
+  constructor(defaultElementValue: number = 0) {
+    super('Vec2', 2, defaultElementValue)
     this.normalized = false
   }
 
