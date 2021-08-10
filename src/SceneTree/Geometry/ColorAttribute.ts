@@ -28,7 +28,7 @@ class ColorAttribute extends Attribute {
       throw new Error('Invalid vertex index:' + index + '. Num Vertices:' + this.data.length / 3)
 
     const offset = index * this.stride
-    const valueData = this.data.subarray(offset, this.stride)
+    const valueData = this.data.subarray(offset, offset + this.stride)
     return new Color(valueData)
   }
 
@@ -43,7 +43,7 @@ class ColorAttribute extends Attribute {
       throw new Error('Invalid vertex index:' + index + '. Num Vertices:' + this.data.length / 3)
 
     const offset = index * this.stride
-    const valueData = this.data.slice(offset, this.stride)
+    const valueData = this.data.slice(offset, offset + this.stride)
     return new Color(valueData)
   }
 
