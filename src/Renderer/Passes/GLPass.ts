@@ -12,7 +12,7 @@ const PassType = {
 /** This class abstracts the rendering of a collection of geometries to screen.
  * @extends ParameterOwner
  */
-class GLPass extends ParameterOwner {
+abstract class GLPass extends ParameterOwner {
   renderer: GLBaseRenderer
   enabled: boolean
   protected passIndex: number
@@ -104,12 +104,16 @@ class GLPass extends ParameterOwner {
   /**
    * The startPresenting method.
    */
-  startPresenting() {}
+  startPresenting(): any {
+    throw Error('startPresenting not implemented on GLPass')
+  }
 
   /**
    * The stopPresenting method.
    */
-  stopPresenting() {}
+  stopPresenting(): any {
+    throw Error('stopPresenting not implemented on GLPass')
+  }
 
   // ///////////////////////////////////
   // Rendering
@@ -118,25 +122,33 @@ class GLPass extends ParameterOwner {
    * The draw method.
    * @param {object} renderstate - The object tracking the current state of the renderer
    */
-  draw(renderstate: Record<any, any>) {}
+  draw(renderstate: Record<any, any>): any {
+    throw Error('draw not implemented on GLPass')
+  }
 
   /**
    * The drawHighlightedGeoms method.
    * @param {object} renderstate - The object tracking the current state of the renderer
    */
-  drawHighlightedGeoms(renderstate: Record<any, any>) {}
+  drawHighlightedGeoms(renderstate: Record<any, any>): any {
+    throw Error('drawHighlightedGeoms not implemented on GLPass')
+  }
 
   /**
    * The drawGeomData method.
    * @param {object} renderstate - The object tracking the current state of the renderer
    */
-  drawGeomData(renderstate: Record<any, any>) {}
+  drawGeomData(renderstate: Record<any, any>): any {
+    throw Error('drawGeomData not implemented on GLPass')
+  }
 
   /**
    * The getGeomItemAndDist method.
    * @param {any} geomData - The geomData value.
    */
-  getGeomItemAndDist(geomData: any) {}
+  getGeomItemAndDist(geomData: any): any {
+    throw Error('getGeomItemAndDist not implemented on GLPass')
+  }
 }
 
 export { GLPass, PassType }

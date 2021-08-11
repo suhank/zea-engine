@@ -11,6 +11,7 @@ import { GLMesh } from './Drawing/GLMesh'
 import { BaseEvent } from '../Utilities/BaseEvent'
 import { VLHImage } from '../SceneTree/Images/VLHImage'
 import { ResizedEvent } from '../Utilities/Events/ResizedEvent'
+import { GLBaseRenderer } from './GLBaseRenderer'
 
 const FRAMEBUFFER = {
   MSAA_RENDERBUFFER: 0,

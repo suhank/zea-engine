@@ -1037,7 +1037,7 @@ class GLBaseRenderer extends ParameterOwner {
    * @param {number} index - The index value.
    * @return {GLPass} - The return value.
    */
-  getPass(index: number) {
+  getPass(index: number): GLPass {
     let offset = 0
     for (const key in this.__passes) {
       const passSet = this.__passes[key]

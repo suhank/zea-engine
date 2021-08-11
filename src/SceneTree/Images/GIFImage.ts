@@ -129,6 +129,7 @@ class GIFImage extends FileImage {
             const start = performance.now()
 
             // Decompressing using: https://github.com/matt-way/gifuct-js
+            //@ts-ignore
             const gif = new GIF(data)
             const frames = gif.decompressFrames(true)
 
