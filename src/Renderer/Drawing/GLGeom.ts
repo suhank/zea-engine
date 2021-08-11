@@ -6,12 +6,12 @@ import { generateShaderGeomBinding } from './GeomShaderBinding'
  */
 class GLGeom extends RefCounted {
   protected __gl: WebGL12RenderingContext
-  protected __geom: any
+  protected __geom: BaseGeom
   protected __glattrbuffers: Record<any, any>
   protected __shaderBindings: Record<any, any>
   protected buffersDirty: boolean
-  protected genBufferOpts: any
-  protected __indexBuffer: any
+  protected genBufferOpts: Record<any, any>
+  protected __indexBuffer: WebGLBuffer
   /**
    * Create a GL geom.
    * @param {WebGL12RenderingContext} gl - The webgl rendering context.
@@ -42,7 +42,7 @@ class GLGeom extends RefCounted {
    * Returns the owned Geometry object
    * @return {BaseGeom} - The geometry object.
    */
-  getGeom() {
+  getGeom(): BaseGeom {
     return this.__geom
   }
 
@@ -63,7 +63,9 @@ class GLGeom extends RefCounted {
    * The genBuffers method.
    * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    */
-  genBuffers(renderstate?: Record<any, any>) {}
+  genBuffers(renderstate?: Record<any, any>) {
+    throw new Error('genBuffers Not implemented')
+  }
 
   /**
    * The updateBuffers method.

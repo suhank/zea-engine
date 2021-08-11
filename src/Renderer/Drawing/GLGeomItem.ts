@@ -33,7 +33,7 @@ class GLGeomItem extends EventEmitter {
   materialId: number
   protected supportInstancing: boolean
   protected geomVisible: boolean
-  protected visible: boolean
+  visible: boolean
   protected culled: boolean
   protected cutDataChanged: boolean
   protected cutData: number[]

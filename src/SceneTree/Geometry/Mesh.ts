@@ -34,7 +34,7 @@ class Mesh extends BaseGeom {
   protected __faceAttributes: Map<string, Attribute>
 
   protected numEdges: number
-  protected edgeVerts: Array<number>
+  edgeVerts: Array<number>
   protected edgeAngles: Float32Array
   protected edgeVecs: Array<Vec3>
   protected edgeFaces: Array<number>

@@ -4,6 +4,7 @@ import '../../SceneTree/GeomItem'
 import { EventEmitter, MathFunctions } from '../../Utilities/index'
 import { GLBaseRenderer } from '../GLBaseRenderer'
 import { GLTexture2D } from '../GLTexture2D'
+import { GLGeomItem } from './GLGeomItem'
 
 /** This class abstracts the rendering of a collection of geometries to screen.
  * @extends EventEmitter
@@ -12,7 +13,7 @@ import { GLTexture2D } from '../GLTexture2D'
 class GLGeomItemSetMultiDraw extends EventEmitter {
   protected renderer: GLBaseRenderer
   protected gl: WebGL12RenderingContext
-  protected glGeomItems: any[]
+  protected glGeomItems: GLGeomItem[]
   protected glGeomIdsMapping: Record<any, any>
   protected glgeomItemEventHandlers: any[]
   protected freeIndices: any[]
@@ -28,7 +29,7 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
   protected drawIdsTexture: any
   protected highlightedItems: any[]
   protected highlightedIdsArray: any
-  protected highlightedIdsTexture: any
+  protected highlightedIdsTexture: GLTexture2D
   protected highlightedIdsBufferDirty: boolean
 
   /**
@@ -85,10 +86,10 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
 
   /**
    * The addGLGeomItem method.
-   * @param {any} glGeomItem - The glGeomItem value.
+   * @param {GLGeomItem} glGeomItem - The glGeomItem value.
    */
-  addGLGeomItem(glGeomItem: any) {
-    const index = this.freeIndices.length > 0 ? this.freeIndices.pop() : this.glGeomItems.length
+  addGLGeomItem(glGeomItem: GLGeomItem) {
+    const index: number = this.freeIndices.length > 0 ? this.freeIndices.pop() : this.glGeomItems.length
 
     // Keep track of which geomitems use which geoms, so we can update the offset and count array if they change.
     if (!this.glGeomIdsMapping[glGeomItem.geomId]) {
@@ -148,9 +149,9 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
 
   /**
    * The removeGLGeomItem method.
-   * @param {any} glGeomItem - The glGeomItem value.
+   * @param {GLGeomItem} glGeomItem - The glGeomItem value.
    */
-  removeGLGeomItem(glGeomItem: any) {
+  removeGLGeomItem(glGeomItem: GLGeomItem) {
     const index = this.glGeomItems.indexOf(glGeomItem)
     const geomItemIndices = this.glGeomIdsMapping[glGeomItem.geomId]
     geomItemIndices.splice(geomItemIndices.indexOf(index), 1)
@@ -273,7 +274,7 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
 
   /**
    * The updateHighlightedIDsBuffer method.
-   * @param {object} renderstate - The object used to track state changes during rendering.
+   * @param {Record<any, any>} renderstate - The object used to track state changes during rendering.
    */
   updateHighlightedIDsBuffer(renderstate: Record<any, any>) {
     if (this.highlightedIdsBufferDirty) {

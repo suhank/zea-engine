@@ -23,8 +23,8 @@ class GLTexture2D extends RefCounted {
 
   protected __image: any
   protected __internalFormat: any
-  protected __type: any
-  protected __format: any
+  __type: any
+  __format: any
   protected __wrapParam: any
 
   protected params: Record<any, any>

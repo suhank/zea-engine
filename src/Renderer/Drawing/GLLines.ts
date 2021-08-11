@@ -3,6 +3,7 @@ import { GLGeom } from './GLGeom'
 import { generateShaderGeomBinding } from './GeomShaderBinding'
 import { GLTexture2D } from '../GLTexture2D'
 import { Lines } from '../../SceneTree/Geometry/Lines'
+import { Vec3Attribute } from '../../SceneTree/Geometry/Vec3Attribute'
 
 /** Class representing GL lines.
  * @extends GLGeom
@@ -85,12 +86,12 @@ class GLLines extends GLGeom {
     this.fatBuffers.drawCount = indices.length / 2
 
     const vertexAttributes = this.__geom.getVertexAttributes()
-    const positions = vertexAttributes.positions
+    const positions = <Vec3Attribute>vertexAttributes.positions
     const lineThicknessAttr = vertexAttributes.lineThickness
 
     const stride = 4 // The number of floats per draw item.
-    const dataArray = new Float32Array(positions.length * stride)
-    for (let i = 0; i < positions.length; i++) {
+    const dataArray = new Float32Array(positions.asArray().length * stride)
+    for (let i = 0; i < positions.asArray().length; i++) {
       const pos = Vec3.createFromBuffer(dataArray.buffer, i * stride * 4)
       pos.setFromOther(positions.getValueRef(i))
 
@@ -107,7 +108,7 @@ class GLLines extends GLGeom {
       this.fatBuffers.positionsTexture = new GLTexture2D(this.__gl, {
         format: 'RGBA',
         type: 'FLOAT',
-        width: positions.length,
+        width: positions.asArray().length,
         /* each pixel has 4 floats*/
         height: 1,
         filter: 'NEAREST',
@@ -116,7 +117,7 @@ class GLLines extends GLGeom {
         mipMapped: false,
       })
     } else {
-      this.fatBuffers.positionsTexture.bufferData(dataArray, positions.length, 1)
+      this.fatBuffers.positionsTexture.bufferData(dataArray, positions.asArray().length, 1)
     }
 
     const makeIndices = () => {

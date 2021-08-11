@@ -89,7 +89,7 @@ class GeomShaderBinding {
   protected __gl: WebGL12RenderingContext
   protected __shaderAttrs: any
   protected __glattrbuffers: any
-  protected __indexBuffer: any
+  protected __indexBuffer: WebGLBuffer
   /**
    * Create a geom shader binding.
    * @param {WebGL12RenderingContext} gl - The webgl rendering context.
@@ -97,7 +97,7 @@ class GeomShaderBinding {
    * @param {any} geomAttrBuffers - The geomAttrBuffers value.
    * @param {any} indexBuffer - The index buffer.
    */
-  constructor(gl: WebGL12RenderingContext, shaderAttrs: any, geomAttrBuffers: any, indexBuffer: any) {
+  constructor(gl: WebGL12RenderingContext, shaderAttrs: any, geomAttrBuffers: any, indexBuffer: WebGLBuffer) {
     this.__gl = gl
     this.__shaderAttrs = shaderAttrs
     this.__glattrbuffers = geomAttrBuffers
@@ -106,10 +106,10 @@ class GeomShaderBinding {
 
   /**
    * The bind method.
-   * @param {any} renderstate - The render state.
+   * @param {Record<any,any>} renderstate - The render state.
    * @return {any} - The return value.
    */
-  bind(renderstate: any) {
+  bind(renderstate: Record<any, any>) {
     const gl = this.__gl
 
     for (const attrName in this.__shaderAttrs) {
@@ -186,15 +186,15 @@ class GeomShaderBinding {
 class VAOGeomShaderBinding {
   protected __vao: any
   protected __gl: WebGL12RenderingContext
-  protected __indexBuffer: any
+  protected __indexBuffer: WebGLBuffer
   /**
    * Create VAO geom shader binding.
    * @param {WebGL12RenderingContext} gl - The webgl rendering context.
    * @param {any} shaderAttrs - The shaderAttrs value.
    * @param {any} geomAttrBuffers - The geomAttrBuffers value.
-   * @param {any} indexBuffer - The indexBuffer value.
+   * @param {WebGLBuffer} indexBuffer - The indexBuffer value.
    */
-  constructor(gl: WebGL12RenderingContext, shaderAttrs: any, geomAttrBuffers: any, indexBuffer: any) {
+  constructor(gl: WebGL12RenderingContext, shaderAttrs: any, geomAttrBuffers: any, indexBuffer: WebGLBuffer) {
     this.__gl = gl
     const gl_casted = <Record<any, any>>gl
     this.__vao = gl_casted.createVertexArray()
@@ -252,10 +252,10 @@ class VAOGeomShaderBinding {
 
   /**
    * The bind method.
-   * @param {any} renderstate - The render state.
+   * @param {Record<any,any>} renderstate - The render state.
    * @return {any} - The return value.
    */
-  bind(renderstate: any) {
+  bind(renderstate: Record<any, any>): boolean {
     const gl = this.__gl
     gl.bindVertexArray(this.__vao)
     if (this.__indexBuffer) this.__gl.bindBuffer(this.__gl.ELEMENT_ARRAY_BUFFER, this.__indexBuffer)
@@ -265,7 +265,7 @@ class VAOGeomShaderBinding {
   /**
    * The unbind method.
    */
-  unbind() {
+  unbind(): void {
     const gl = this.__gl
     gl.bindVertexArray(null)
     if (this.__indexBuffer) gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null)
@@ -275,7 +275,7 @@ class VAOGeomShaderBinding {
    * The destroy is called by the system to cause explicit resources cleanup.
    * Users should never need to call this method directly.
    */
-  destroy() {
+  destroy(): void {
     const gl = this.__gl
     gl.deleteVertexArray(this.__vao)
     if (this.__indexBuffer) this.__gl.deleteBuffer(this.__indexBuffer)
@@ -286,7 +286,7 @@ function generateShaderGeomBinding(
   gl: WebGL12RenderingContext,
   shaderAttrs: any,
   geomAttrBuffers: any,
-  indexBuffer: any
+  indexBuffer: WebGLBuffer
 ) {
   if ((<Record<any, any>>gl).createVertexArray == null) {
     return new GeomShaderBinding(gl, shaderAttrs, geomAttrBuffers, indexBuffer)

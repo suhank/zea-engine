@@ -1,5 +1,7 @@
 import { GLGeom } from './GLGeom'
 import '../../SceneTree/Geometry/Mesh'
+import { BaseGeom } from '../../SceneTree/Geometry/BaseGeom'
+import { Mesh } from '../../SceneTree/Geometry/Mesh'
 
 /** Class representing a GL mesh.
  * @extends GLGeom
@@ -12,7 +14,7 @@ class GLMesh extends GLGeom {
   protected __numTriangles: any
   protected __numRenderVerts: any
   protected __vao: any
-  protected __geom: Record<any, any>
+  protected __geom: Mesh
   protected __wireframesVao: any
   protected __ext: any
   protected __numWireIndices: any
