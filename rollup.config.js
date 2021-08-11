@@ -23,6 +23,7 @@ const glslOptions = {
 }
 
 const plugins = [
+  glslify(glslOptions),
   commonjs(),
   // commonjs({ extensions: ['.js', '.ts'] }), // note: this is not recommended
   nodePolyfills(),
@@ -37,7 +38,7 @@ const plugins = [
     tsconfig: 'tsconfig.json',
     include: 'src/**/*.{js,ts}',
   }),
-  glslify(glslOptions),
+
 ]
 
 const isProduction = !process.env.ROLLUP_WATCH
