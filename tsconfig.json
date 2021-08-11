@@ -6,8 +6,9 @@
     "outDir": "./tsc-output" /* Redirect output structure to the directory. */,
     "resolveJsonModule": true,
     // "strict": true /* Enable all strict type-checking options. */,
+    "skipLibCheck": true, // this should be removed when a build is working.
     "noImplicitAny": true,
-    "suppressImplicitAnyIndexErrors": true,
+    "suppressImplicitAnyIndexErrors": true, 
     "downlevelIteration": true,
     "moduleResolution": "node" /* Specify module resolution strategy: 'node' (Node.js) or 'classic' (TypeScript pre-1.6). */,
     "esModuleInterop": true /* Enables emit interoperability between CommonJS and ES Modules via creation of namespace objects for all imports. Implies 'allowSyntheticDefaultImports'. */
