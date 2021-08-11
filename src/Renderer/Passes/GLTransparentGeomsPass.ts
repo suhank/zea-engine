@@ -7,6 +7,7 @@ import { MathFunctions } from '../../Utilities/MathFunctions'
 import { GLShaderGeomSets } from '../Drawing/GLShaderGeomSets'
 import { Registry } from '../../Registry'
 import { GLBaseRenderer } from '../GLBaseRenderer'
+import { GLShader } from '../GLShader'
 
 /** Class representing a GL transparent geoms pass.
  * @extends GLStandardGeomsPass
@@ -89,10 +90,13 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
     const material = materialParam.getValue()
     const shaderName = material.getShaderName()
     // const shaders = this.constructShaders(shaderName)
-    const shader = this.__renderer.getOrCreateShader(shaderName)
+    const shader = <GLShader>this.__renderer.getOrCreateShader(shaderName)
 
     if (!material.isTextured()) {
-      if (shader.glShader.supportsInstancing() && shader.glShader.getPackedMaterialData) {
+      if (
+        (shader as any).constructor.supportsInstancing() &&
+        (shader as any).constructor.getPackedMaterialData(material)
+      ) {
         let glShaderGeomSets = this.__glShaderGeomSets[shaderName]
         if (!glShaderGeomSets) {
           glShaderGeomSets = new GLShaderGeomSets(this, this.__gl, shader)
