@@ -1,6 +1,6 @@
 /* eslint-disable guard-for-in */
 import { EventEmitter } from '../../Utilities/index'
-import { GLPass } from '../Passes'
+import { GLOpaqueGeomsPass, GLPass, GLStandardGeomsPass } from '../Passes'
 import { GLGeom } from './GLGeom'
 import { GLGeomItem } from './GLGeomItem'
 import { GLGeomItemSet } from './GLGeomItemSet'
@@ -10,7 +10,7 @@ import { GLMaterial } from './GLMaterial'
  * @private
  */
 class GLMaterialGeomItemSets extends EventEmitter {
-  protected pass: GLPass
+  protected pass: GLOpaqueGeomsPass // TODO: check, used to be GLPass
   protected __gl: WebGL12RenderingContext
   protected glMaterial: GLMaterial
   protected glGeomItemSets: Record<any, any> = {}
@@ -20,7 +20,7 @@ class GLMaterialGeomItemSets extends EventEmitter {
    * @param {GLPass} pass - The pass that owns the GLMaterialGeomItemSets.
    * @param {GLMaterial} glMaterial - The glMaterial value.
    */
-  constructor(pass: GLPass, glMaterial: GLMaterial = undefined) {
+  constructor(pass: GLOpaqueGeomsPass, glMaterial: GLMaterial = undefined) {
     super()
     this.pass = pass
     this.__gl = pass.__gl

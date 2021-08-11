@@ -216,7 +216,8 @@ class GeomLibrary extends EventEmitter {
    */
   loadArchive(fileUrl: any) {
     resourceLoader.loadArchive(fileUrl).then((entries: any) => {
-      this.loadBin(entries)
+      throw Error('Not yet implemented!')
+      // this.loadBin(entries)
     })
   }
 
