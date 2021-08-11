@@ -67,6 +67,7 @@ ByteStream.prototype.readUnsigned = function(littleEndian: any){
 
 
 function DataParser(data: any){
+  //@ts-ignore
 	this.stream = new ByteStream(data);
 	// the final parsed object from the data
 	this.output = {};
@@ -391,6 +392,7 @@ var gifSchema = schemaGIF;
 function GIF(arrayBuffer: any){
 	// convert to byte array
 	var byteData = new Uint8Array(arrayBuffer);
+  //@ts-ignore
 	var parser = new DataParser(byteData);
 	// parse the data
 	this.raw = parser.parse(gifSchema);
