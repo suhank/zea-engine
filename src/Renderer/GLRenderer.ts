@@ -35,10 +35,10 @@ class GLRenderer extends GLBaseRenderer {
   protected rayCastArea: number
   highlightsShader: HighlightsShader
   silhouetteShader: SilhouetteShader
-  protected highlightOutlineThickness: number
+  highlightOutlineThickness: number
   outlineThickness: number
   outlineColor: Color
-  protected outlineSensitivity: number
+  outlineSensitivity: number
   outlineDepthBias: number
   protected __debugTextures: any[]
 

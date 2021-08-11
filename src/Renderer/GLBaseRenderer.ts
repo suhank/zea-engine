@@ -70,7 +70,7 @@ class GLBaseRenderer extends ParameterOwner {
    * @param {HTMLElement|HTMLCanvasElement} $canvas - The canvas element.
    * @param {Record<any, any>} options - The options value.
    */
-  constructor($canvas: HTMLElement | HTMLCanvasElement, options: Record<any, any> = {}) {
+  constructor($canvas: HTMLCanvasElement, options: Record<any, any> = {}) {
     super()
 
     if (!SystemDesc.gpuDesc) {
@@ -584,7 +584,7 @@ class GLBaseRenderer extends ParameterOwner {
    * @param {HTMLCanvasElement|HTMLElement} $canvas - The $canvas element.
    * @param { Record<any, any>} webglOptions - The webglOptions value.
    */
-  setupWebGL($canvas: HTMLCanvasElement | HTMLElement, webglOptions: Record<any, any>) {
+  setupWebGL($canvas: HTMLCanvasElement, webglOptions: Record<any, any>) {
     const { tagName } = $canvas
 
     if (!['DIV', 'CANVAS'].includes(tagName)) {

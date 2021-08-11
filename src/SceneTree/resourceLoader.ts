@@ -137,6 +137,9 @@ class ResourceLoader extends EventEmitter {
     return value.split('/')[1]
   }
 
+  resolveFilepath(lodPath: string): boolean {
+    throw Error('resolveFilePath not implemented')
+  }
   /**
    * Given a file ID, returns a URL. The adaptor that is assigned is responsible for resolving the URL within the file system.
    * @param {string} value - The file value.

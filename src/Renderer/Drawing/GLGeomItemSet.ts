@@ -1,5 +1,5 @@
 import '../../SceneTree/GeomItem'
-import { CountChangedEvent, DrawCountChangedEvent } from '../../Utilities/Events/CountChangedEvent'
+import { CountChangedEvent } from '../../Utilities/Events/CountChangedEvent'
 
 import { EventEmitter } from '../../Utilities/index'
 

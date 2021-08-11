@@ -16,6 +16,8 @@ class FileImage extends BaseImage {
   __crossOrigin: any
   url: any
   __data: any
+
+  getDOMElement: any
   /**
    * Create a file image.
    * @param {string} name - The name value.

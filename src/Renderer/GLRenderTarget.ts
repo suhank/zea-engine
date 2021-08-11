@@ -1,3 +1,4 @@
+import { cpuUsage } from 'process'
 import { Color } from '../Math/Color'
 import { EventEmitter } from '../Utilities/index'
 import { processTextureParams } from './processTextureParams'
@@ -211,8 +212,10 @@ class GLRenderTarget extends EventEmitter {
    */
   clear(clearDepth = true) {
     const gl = this.__gl
-    gl.colorMask(...this.colorMask)
-    gl.clearColor(...this.clearColor.asArray())
+    const colMask = this.colorMask
+    gl.colorMask(colMask[0], colMask[1], colMask[2], colMask[3])
+    const clearCol = this.clearColor.asArray()
+    gl.clearColor(clearCol[0], clearCol[1], clearCol[2], clearCol[3])
     let flags = 0
     if (this.textureTargets.length > 0) flags |= gl.COLOR_BUFFER_BIT
     if (this.depthTexture) flags |= gl.DEPTH_BUFFER_BIT
