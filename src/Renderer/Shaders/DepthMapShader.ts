@@ -2,7 +2,9 @@
 import { GLShader } from '../GLShader'
 
 import './GLSL/index'
+// @ts-ignore
 import frag from './DepthMapShader.frag'
+// @ts-ignore
 import vert from './DepthMapShader.vert'
 
 class DepthMapShader extends GLShader {

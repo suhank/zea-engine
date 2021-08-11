@@ -2,8 +2,9 @@
 import { GLShader } from '../GLShader'
 
 import './GLSL/index'
-
+// @ts-ignore
 import frag from './UnpackHDR.frag'
+// @ts-ignore
 import vert from './UnpackHDR.vert'
 
 /** Shader for unpacking HDR images using Boost HDR algorithm.

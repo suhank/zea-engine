@@ -2,7 +2,9 @@
 import { GLShader } from '../GLShader'
 
 import './GLSL/index'
+// @ts-ignore
 import frag from './PreComputeBRDF.frag'
+// @ts-ignore
 import vert from './PreComputeBRDF.vert'
 
 /** Shader for convolving Environment maps.

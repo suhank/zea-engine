@@ -1,7 +1,9 @@
 /* eslint-disable require-jsdoc */
 import { GLShader } from '../GLShader'
 
+// @ts-ignore
 import frag from './Highlights.frag'
+// @ts-ignore
 import vert from './Highlights.vert'
 class HighlightsShader extends GLShader {
   /**

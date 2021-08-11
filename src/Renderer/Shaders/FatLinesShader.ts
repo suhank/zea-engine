@@ -3,7 +3,9 @@ import { Registry } from '../../Registry'
 import { GLShader } from '../GLShader'
 
 import './GLSL/index'
+// @ts-ignore
 import frag from './FatLines.frag'
+// @ts-ignore
 import vert from './FatLines.vert'
 import { shaderLibrary } from '..'
 import { Material, MaterialColorParam, NumberParameter } from '../..'

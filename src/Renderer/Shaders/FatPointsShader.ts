@@ -4,9 +4,13 @@ import { Registry } from '../../Registry'
 import { GLShader } from '../GLShader'
 
 import './GLSL/index'
+// @ts-ignore
 import vert from './FatPoints.vert'
+// @ts-ignore
 import frag from './FatPoints.frag'
+// @ts-ignore
 import GeomDataFrag from './FatPointsGeomData.frag'
+// @ts-ignore
 import SelectedFrag from './FatPointsSelected.frag'
 import { shaderLibrary } from '..'
 import { Material, MaterialColorParam, MaterialFloatParam, NumberParameter } from '../..'

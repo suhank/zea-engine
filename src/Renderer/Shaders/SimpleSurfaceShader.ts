@@ -5,7 +5,9 @@ import { GLShader } from '../GLShader'
 import { shaderLibrary } from '../ShaderLibrary'
 
 import './GLSL/index'
+// @ts-ignore
 import frag from './SimpleSurface.frag'
+// @ts-ignore
 import vert from './SimpleSurface.vert'
 import { MaterialColorParam } from '../../SceneTree/Parameters/MaterialColorParam'
 import { MaterialFloatParam } from '../../SceneTree/Parameters/MaterialFloatParam'

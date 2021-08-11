@@ -3,7 +3,9 @@ import { GLShader } from '../GLShader'
 import { Registry } from '../../Registry'
 
 import './GLSL/index'
+// @ts-ignore
 import frag from './StandardSurfaceSelectedGeoms.frag'
+// @ts-ignore
 import vert from './StandardSurfaceSelectedGeoms.vert'
 class StandardSurfaceSelectedGeomsShader extends GLShader {
   constructor(gl: WebGL12RenderingContext) {

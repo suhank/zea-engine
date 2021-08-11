@@ -2,7 +2,9 @@
 import { GLShader } from '../GLShader'
 
 import './GLSL/index'
+// @ts-ignore
 import frag from './ScreenQuad.frag'
+// @ts-ignore
 import vert from './ScreenQuad.vert'
 
 class ScreenQuadShader extends GLShader {

@@ -2,7 +2,9 @@
 import { GLShader } from '../GLShader'
 
 import './GLSL/index'
+// @ts-ignore
 import vert from './FattenLines.vert'
+// @ts-ignore
 import frag from './FattenLines.frag'
 
 class FattenLinesShader extends GLShader {

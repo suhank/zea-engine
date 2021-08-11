@@ -2,7 +2,9 @@
 import { GLShader } from '../GLShader'
 
 import './GLSL/index'
+// @ts-ignore
 import frag from './Normals.frag'
+// @ts-ignore
 import vert from './Normals.vert'
 
 class NormalsShader extends GLShader {

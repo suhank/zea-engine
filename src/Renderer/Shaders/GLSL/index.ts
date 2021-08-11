@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { shaderLibrary } from '../../ShaderLibrary'
 
 import computeViewNormal from './computeViewNormal.glsl'

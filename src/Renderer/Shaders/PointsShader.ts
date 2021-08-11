@@ -8,7 +8,9 @@ import { GLShader } from '../GLShader'
 import { shaderLibrary } from '../ShaderLibrary'
 
 import './GLSL/index'
+// @ts-ignore
 import frag from './Points.frag'
+// @ts-ignore
 import vert from './Points.vert'
 class PointsShader extends GLShader {
   /**

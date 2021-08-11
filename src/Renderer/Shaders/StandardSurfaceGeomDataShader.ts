@@ -3,7 +3,9 @@ import { GLShader } from '../GLShader'
 import { Registry } from '../../Registry'
 
 import './GLSL/index'
+// @ts-ignore
 import frag from './StandardSurfaceGeomData.frag'
+// @ts-ignore
 import vert from './StandardSurfaceGeomData.vert'
 class StandardSurfaceGeomDataShader extends GLShader {
   constructor(gl: WebGL12RenderingContext) {

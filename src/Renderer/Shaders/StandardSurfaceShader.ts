@@ -4,7 +4,9 @@ import { Registry } from '../../Registry'
 import { GLShader } from '../GLShader'
 
 import './GLSL/index'
+// @ts-ignore
 import vert from './StandardSurface.vert'
+// @ts-ignore
 import frag from './StandardSurface.frag'
 import { ColorParameter } from '../../SceneTree/Parameters/ColorParameter'
 import { Material } from '../../SceneTree/Material'

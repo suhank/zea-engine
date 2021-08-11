@@ -4,7 +4,9 @@ import { Color } from '../../Math/index'
 import { Registry } from '../../Registry'
 
 import './GLSL/index'
+// @ts-ignore
 import vert from './FatLinesGeomData.vert'
+// @ts-ignore
 import frag from './FatLinesGeomData.frag'
 
 import { FatLinesShader } from './FatLinesShader'

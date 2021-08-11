@@ -2,7 +2,9 @@
 import { GLShader } from '../GLShader'
 
 import './GLSL/index'
+// @ts-ignore
 import frag from './EnvMap.frag'
+// @ts-ignore
 import vert from './EnvMap.vert'
 class EnvMapShader extends GLShader {
   /**

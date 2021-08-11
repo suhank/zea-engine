@@ -7,7 +7,9 @@ import { GLShader } from '../GLShader'
 import { shaderLibrary } from '../ShaderLibrary'
 
 import './GLSL/index'
+// @ts-ignore
 import frag from './ScreenSpace.frag'
+// @ts-ignore
 import vert from './ScreenSpace.vert'
 
 class ScreenSpaceShader extends GLShader {

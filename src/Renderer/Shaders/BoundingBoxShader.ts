@@ -2,7 +2,9 @@
 import { GLShader } from '../GLShader'
 
 import './GLSL/index'
+// @ts-ignore
 import frag from './BoundingBox.frag'
+// @ts-ignore
 import vert from './BoundingBox.vert'
 
 class BoundingBoxShader extends GLShader {

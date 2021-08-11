@@ -2,7 +2,9 @@
 import { GLShader } from '../GLShader'
 
 import './GLSL/index'
+// @ts-ignore
 import frag from './Billboard.frag'
+// @ts-ignore
 import vert from './Billboard.vert'
 
 class BillboardShader extends GLShader {

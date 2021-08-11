@@ -2,8 +2,9 @@
 import { GLShader } from '../GLShader'
 
 import './GLSL/index'
-
+// @ts-ignore
 import frag from './Silhouette.frag'
+// @ts-ignore
 import vert from './Silhouette.vert'
 
 class SilhouetteShader extends GLShader {

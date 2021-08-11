@@ -2,7 +2,9 @@
 import { GLShader } from '../GLShader'
 
 import './GLSL/index'
+// @ts-ignore
 import frag from './PostProcessing.frag'
+// @ts-ignore
 import vert from './PostProcessing.vert'
 class PostProcessing extends GLShader {
   /**

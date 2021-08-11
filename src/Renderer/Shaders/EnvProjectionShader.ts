@@ -4,8 +4,11 @@ import { Registry } from '../../Registry'
 import { GLShader } from '../GLShader'
 
 import './GLSL/index'
+// @ts-ignore
 import vert from './EnvProjection.vert'
+// @ts-ignore
 import LatLongEnvProjectionFrag from './LatLongEnvProjection.frag'
+// @ts-ignore
 import OctahedralEnvProjectionFrag from './OctahedralEnvProjection.frag'
 import { shaderLibrary } from '..'
 import { Material, MaterialColorParam, NumberParameter } from '../..'

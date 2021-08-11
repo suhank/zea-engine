@@ -2,7 +2,9 @@
 import { GLShader } from '../GLShader'
 
 import './GLSL/index'
+// @ts-ignore
 import vert from './ConvolveSpecular.vert'
+// @ts-ignore
 import frag from './ConvolveSpecular.frag'
 
 /** Shader for convolving Environment maps.
