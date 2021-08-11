@@ -17,6 +17,7 @@ import { GLPoints, GLLines, GLMesh, GLMaterial, GLGeomItemChangeType, GLGeomItem
 import { GLTexture2D } from '../GLTexture2D'
 import { MathFunctions } from '../../Utilities/MathFunctions'
 import { GLBaseRenderer } from '../GLBaseRenderer'
+import { GLShader } from '../GLShader'
 
 const pixelsPerItem = 6 // The number of RGBA pixels per draw item.
 
@@ -121,11 +122,13 @@ class GLStandardGeomsPass extends GLPass {
     let glselectedshader
 
     const glShader = this.__renderer.getOrCreateShader(shaderName)
-    if (glShader.constructor.getGeomDataShaderName()) {
-      glgeomdatashader = this.__renderer.getOrCreateShader(glShader.constructor.getGeomDataShaderName())
+    const glShaderPrototype = Object.getPrototypeOf(glShader)
+
+    if (glShaderPrototype.hasOwnProperty('getGeomDataShaderName')) {
+      glgeomdatashader = this.__renderer.getOrCreateShader((glShader as any).constructor.getGeomDataShaderName())
     }
-    if (glShader.constructor.getSelectedShaderName()) {
-      glselectedshader = this.__renderer.getOrCreateShader(glShader.constructor.getSelectedShaderName())
+    if (glShaderPrototype.hasOwnProperty('getSelectedShaderName')) {
+      glselectedshader = this.__renderer.getOrCreateShader((glShader as any).constructor.getSelectedShaderName())
     }
     return {
       glShader,
