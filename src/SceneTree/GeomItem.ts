@@ -11,6 +11,7 @@ import { BaseProxy } from './Geometry/GeomProxies'
 import { BaseGeom } from './Geometry'
 import { Material } from './Material'
 import { BinReader } from './BinReader'
+import { BaseEvent } from '../Utilities/BaseEvent'
 
 let calculatePreciseBoundingBoxes = false
 
@@ -60,15 +61,15 @@ class CalcGeomMatOperator extends Operator {
  * @extends BaseGeomItem
  */
 class GeomItem extends BaseGeomItem {
-  protected geomBBox: any
-  protected __cleanGeomMat: any
+  protected geomBBox: Box3
+  protected __cleanGeomMat: number
   protected _setBoundingBoxDirty: any
   protected disableBoundingBox: boolean
   protected geomIndex: number
   protected assetItem: any
-  protected calcGeomMatOperator: any
+  protected calcGeomMatOperator: Operator
   cullable
-  protected __geomOffsetXfoParam: any
+  protected __geomOffsetXfoParam: XfoParameter
   protected __geomParam: Parameter<BaseGeom>
   protected __materialParam: Parameter<Material>
   protected __geomMatParam: Parameter<Mat4>

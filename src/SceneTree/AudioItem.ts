@@ -29,7 +29,7 @@ import { AudioSourceCreatedEvent } from '../Utilities/Events/AudioSourceCreatedE
  * @extends TreeItem
  */
 class AudioItem extends TreeItem {
-  protected __loaded: any
+  protected __loaded: boolean
   protected isPlaying: any
   protected play: any
   protected pause: any

@@ -15,7 +15,7 @@ import { Vec3Attribute } from './Geometry/Vec3Attribute'
  * @extends {TreeItem}
  */
 class GridTreeItem extends TreeItem {
-  disableBoundingBox
+  disableBoundingBox: boolean
   /**
    * Creates an instance of GridTree.
    *

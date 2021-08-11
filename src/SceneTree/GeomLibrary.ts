@@ -48,14 +48,18 @@ const getWorker = (geomLibraryId: any, fn: any) => {
 //     parseGeomsBinary
 // } from './Geometry/parseGeomsBinary.js';
 
+interface StreamInfo {
+  total: number
+  done: number
+}
 /** Class representing a geometry library.
  */
 class GeomLibrary extends EventEmitter {
-  protected __streamInfos: Record<any, any>
-  protected __genBuffersOpts: Record<any, any>
+  protected __streamInfos: Record<number, StreamInfo>
+  protected __genBuffersOpts: Record<string, any>
   protected loadCount: number
   protected queue: any
-  protected loadContext: any
+  protected loadContext: Record<any, any>
   protected __numGeoms: number
   protected geoms: any[]
   protected basePath: string
@@ -223,7 +227,7 @@ class GeomLibrary extends EventEmitter {
    * @param {Record<any,any>} context - The context value.
    * @return {any} - The return value.
    */
-  readBinaryBuffer(geomFileID: any, buffer: Buffer, context: Record<any, any>) {
+  readBinaryBuffer(geomFileID: number, buffer: Buffer, context: Record<any, any>) {
     const reader = new BinReader(buffer, 0, isMobile)
     const numGeoms = reader.loadUInt32()
 

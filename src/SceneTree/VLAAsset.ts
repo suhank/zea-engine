@@ -5,6 +5,7 @@ import { BinReader } from './BinReader'
 import { resourceLoader } from './resourceLoader'
 import { Registry } from '../Registry'
 import { Version } from './Version'
+import { Parameter } from './Parameters/Parameter'
 
 /**
  * Class designed to load and handle `.vla` files.
@@ -19,7 +20,7 @@ import { Version } from './Version'
  * @extends AssetItem
  */
 class VLAAsset extends AssetItem {
-  protected __fileParam: any
+  protected __fileParam: FilePathParameter
   protected __datafileLoaded: any
   /**
    * Create a VLA asset.
@@ -35,7 +36,7 @@ class VLAAsset extends AssetItem {
       this.emit('geomsLoaded')
     })
 
-    this.__fileParam = this.addParameter(new FilePathParameter('FilePath'))
+    this.__fileParam = <FilePathParameter>this.addParameter(new FilePathParameter('FilePath'))
 
     this.addParameterDeprecationMapping('DataFilePath', 'FilePath') // Note: migrating from 'DataFilePath' to 'FilePath'
 

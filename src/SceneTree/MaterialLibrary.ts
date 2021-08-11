@@ -10,11 +10,11 @@ import { BinReader } from '..'
  * @private
  */
 class MaterialLibrary extends EventEmitter {
-  protected lod: any
-  protected __name: any
-  protected __images: any
-  protected __materials: any
-  protected name: any
+  protected lod: number
+  protected __name: string
+  protected __images: Record<string, any>
+  protected __materials: Record<any, any>
+  protected name: string
   /**
    * Create a material library.
    * @param {string} name - The name of the material library.
@@ -223,7 +223,7 @@ class MaterialLibrary extends EventEmitter {
     context.lod = this.lod
     context.materialLibrary = this
 
-    const numTextures= reader.loadUInt32()
+    const numTextures = reader.loadUInt32()
     for (let i = 0; i < numTextures; i++) {
       const type = reader.loadStr()
       const texture = Registry.constructClass(type)

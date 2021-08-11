@@ -57,13 +57,13 @@ function checkStatus(response: any) {
  * * **allResourcesLoaded:** emitted when all outstanding resources are loaded. This event can be used to signal the completion of load.
  */
 class ResourceLoader extends EventEmitter {
-  protected __adapter: any
+  protected __adapter: Record<any, any>
   protected __totalWork: number
   protected __doneWork: number
   protected baseUrl: string
   protected plugins: Record<any, any>
-  protected systemUrls: Record<any, any>
-  protected __commonResources: Record<any, any>
+  protected systemUrls: Record<string, string>
+  protected __commonResources: Record<string, TreeItem>
   /**
    * Create a resource loader.
    */
