@@ -44,6 +44,14 @@
       .button:focus {
         background-color: #78b87a;
       }
+
+      .fps-display {
+        position: fixed;
+        bottom: 10px;
+        right: 10px;
+        color: #333333;
+        font-size: 45px;
+      }
     </style>
 
     <script type="module">
@@ -56,6 +64,7 @@
         Color,
         Sphere,
         Material,
+        TreeItem,
         GeomItem,
         ObjAsset,
         Cylinder,
@@ -68,11 +77,11 @@
       const renderer = new GLRenderer(canvas, {
         enableFrustumCulling: true,
         debugOcclusionBuffer: false,
+        outlineThickness: 0,
+        outlineSensitivity: 0.5,
       })
-      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(5, -5, 2), new Vec3(0, 1, 0.75))
+      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-15, -15, 2), new Vec3(0, 1, 10.75))
       renderer.setScene(scene)
-      renderer.outlineThickness = 1.5
-      renderer.outlineSensitivity = 0.5
 
       scene.setupGrid(10.0, 10, new Color())
 
@@ -108,43 +117,38 @@
       objAsset.on('loaded', () => {
         window.postMessage(`done-Loading`)
       })
+
+      // //////////////////////////////////////
+      // Setup Highlighting
       let geomItem
-      objAsset.on('pointerEnter', (event) => {
+      scene.getRoot().on('pointerEnter', (event) => {
         if (event.intersectionData && event.intersectionData.geomItem) {
           geomItem = event.intersectionData.geomItem
           if (geomItem) {
-            const material = geomItem.getParameter('Material').getValue()
-            defaultColor = material.getParameter('BaseColor').getValue()
-            material.getParameter('BaseColor').setValue(pointerOverColor)
+            geomItem.addHighlight('pointerEnter', new Color(1, 0, 0, 0.3))
           }
         }
       })
-      objAsset.on('pointerLeave', (event) => {
+      scene.getRoot().on('pointerLeave', (event) => {
         if (event.leftGeometry == geomItem) {
-          const material = geomItem.getParameter('Material').getValue()
-          material.getParameter('BaseColor').setValue(defaultColor)
+          geomItem.removeHighlight('pointerEnter')
         }
       })
-      objAsset.on('pointerDown', (event) => {
+      scene.getRoot().on('pointerDown', (event) => {
         if (event.intersectionData && event.intersectionData.geomItem) {
           event.setCapture(geomItem)
-          const material = geomItem.getParameter('Material').getValue()
-          if (event.intersectionData.geomItem != geomItem) defaultColor = material.getParameter('BaseColor').getValue()
-          material.getParameter('BaseColor').setValue(pointerDownColor)
+          geomItem.addHighlight('pointerDown', new Color(0, 1, 0, 0.3))
           geomItem = event.intersectionData.geomItem
         }
       })
-      objAsset.on('pointerUp', (event) => {
+      scene.getRoot().on('pointerUp', (event) => {
         if (event.getCapture() == geomItem) event.releaseCapture()
         const intersectionData = event.controller ? event.controller.getGeomItemAtTip() : event.intersectionData
-
-        const material = geomItem.getParameter('Material').getValue()
-        if (!intersectionData || intersectionData.geomItem != geomItem) {
-          material.getParameter('BaseColor').setValue(defaultColor)
-        } else {
-          material.getParameter('BaseColor').setValue(pointerOverColor)
-        }
+        geomItem.removeHighlight('pointerDown')
       })
+
+      // //////////////////////////////////////
+      // Setup VR
 
       const h = document.querySelector('#buttonHolder')
       const b = document.querySelector('#button')
@@ -174,6 +178,25 @@
           }
         })
       })
+
+      // //////////////////////////////////////
+      // Setup FPS Counter
+
+      let frameCounter = 0
+      let fps = 0
+      renderer.on('redrawOccurred', () => {
+        frameCounter++
+      })
+      // renderer.startContinuousDrawing()
+
+      const fpsElement = document.getElementById('fps')
+      setInterval(() => {
+        if (fps != frameCounter * 2) {
+          fps = frameCounter * 2
+          fpsElement.textContent = `FPS: ${fps}`
+        }
+        frameCounter = 0
+      }, 500)
     </script>
   </head>
   <body class="bg-blue-100 h-full">
@@ -181,6 +204,7 @@
       <canvas class="absolute" id="renderer"></canvas>
       <div class="label" id="buttonHolder"></div>
       <div class="button" id="button">XR Device Not Detected</div>
+      <div class="fps-display" id="fps"></div>
     </div>
   </body>
 </html>
