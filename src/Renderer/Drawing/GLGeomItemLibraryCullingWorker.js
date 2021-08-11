@@ -218,7 +218,7 @@ const onViewChanged = (data, postMessage) => {
 const onDone = (postMessage) => {
   // console.log('onDone newlyCulled:', newlyCulled.length, 'newlyUnCulled:', newlyUnCulled.length)
   if (newlyCulled.length > 0 || newlyUnCulled.length > 0) {
-    console.log('CullResults culled:', culledCount, 'visible:', geomItemsData.length - 1 - culledCount, cullReason)
+    // console.log('CullResults culled:', culledCount, 'visible:', geomItemsData.length - 1 - culledCount, cullReason)
     // console.log('CullResults culled:', culledCount, 'visible:', geomItemsData.length - 1 - culledCount)
     postMessage({ type: 'CullResults', newlyCulled, newlyUnCulled })
     newlyCulled = []
