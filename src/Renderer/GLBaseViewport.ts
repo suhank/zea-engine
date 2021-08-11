@@ -7,7 +7,7 @@ import { GLHDRImage } from './GLHDRImage'
 import { GLTexture2D } from './GLTexture2D'
 import { GLFbo } from './GLFbo'
 import { GLMesh } from './Drawing/GLMesh'
-import { GLRenderer } from './GLRenderer'
+
 import { BaseEvent } from '../Utilities/BaseEvent'
 import { VLHImage } from '../SceneTree/Images/VLHImage'
 import { ResizedEvent } from '../Utilities/Events/ResizedEvent'

@@ -38,7 +38,6 @@ const plugins = [
     tsconfig: 'tsconfig.json',
     include: 'src/**/*.{js,ts}',
   }),
-
 ]
 
 const isProduction = !process.env.ROLLUP_WATCH
@@ -69,7 +68,7 @@ export default [
   // an array for the `output` option, where we can specify
   // `file` and `format` for each target)
   {
-    input: 'src/index.js',
+    input: 'src/index.ts',
     output: [
       { file: pkg.main, format: 'cjs', sourcemap },
       { file: pkg.module, format: 'es', sourcemap },
@@ -79,7 +78,7 @@ export default [
 
   // Zea Engine default plugins.
   {
-    input: 'src/index-plugins.js',
+    input: 'src/index-plugins.ts',
     output: {
       name: 'zeaEnginePlugins',
       file: pkg.plugins,

@@ -984,7 +984,7 @@ class GLBaseRenderer extends ParameterOwner {
   getOrCreateShader(shaderName: string) {
     let glShader = this.__shaders[shaderName]
     if (!glShader) {
-      glShader = Registry.constructClass(shaderName) // , this.__gl
+      glShader = <GLShader>Registry.constructClass(shaderName) // , this.__gl
       if (!glShader)
         console.error('@GLBaseRenderer#getOrCreateShader - Shader not registered with the Registry:', shaderName)
       this.__shaders[shaderName] = glShader

@@ -1,6 +1,9 @@
 import { EventEmitter } from '../../Utilities/index'
 import { loadTextfile, loadBinfile } from '../Utils'
-import XLSX from '../../../external/xlsx' // TODO
+import xlsx_import from '../../../external/xlsx'
+
+let XLSX: Record<any, any> = xlsx_import // casting this, since the object is from a 10k loc js file
+
 // eslint-disable-next-line require-jsdoc
 function getLanguage() {
   // Note: globalThis causes errors on Safari.

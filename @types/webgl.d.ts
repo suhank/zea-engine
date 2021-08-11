@@ -1,5 +1,7 @@
 interface WebGL12RenderingContext extends WebGLRenderingContext {
   name: string
+  __atlasLayoutShaderBinding: any
+  __atlasLayoutShader: any
 
   // GLRenderTarget.ts
   __ext_draw_buffers: any

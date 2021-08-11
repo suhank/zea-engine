@@ -33,13 +33,13 @@ class GLRenderer extends GLBaseRenderer {
   protected __cutPlaneNormal: Vec3
   protected rayCastDist: number
   protected rayCastArea: number
-  protected highlightsShader: HighlightsShader
-  protected silhouetteShader: SilhouetteShader
+  highlightsShader: HighlightsShader
+  silhouetteShader: SilhouetteShader
   protected highlightOutlineThickness: number
-  protected outlineThickness: number
-  protected outlineColor: Color
+  outlineThickness: number
+  outlineColor: Color
   protected outlineSensitivity: number
-  protected outlineDepthBias: number
+  outlineDepthBias: number
   protected __debugTextures: any[]
 
   protected __rayCastRenderTarget: any

@@ -1,3 +1,4 @@
+import { GLViewport } from '../..'
 import { Xfo } from '../../Math/Xfo'
 import { GLBaseViewport } from '../../Renderer/GLBaseViewport'
 import { BaseEvent } from '../BaseEvent'
