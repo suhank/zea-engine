@@ -10,7 +10,7 @@ import { GLGeomItem } from './GLGeomItem'
  * @extends EventEmitter
  * @private
  */
-class GLGeomItemSetMultiDraw extends EventEmitter {
+abstract class GLGeomItemSetMultiDraw extends EventEmitter {
   protected renderer: GLBaseRenderer
   protected gl: WebGL12RenderingContext
   protected glGeomItems: GLGeomItem[]
@@ -433,6 +433,20 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
       this.multiDraw(renderstate, drawIdsArray, counts, offsets)
     })
   }
+
+  /**
+   * Draw an item to screen.
+   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
+   * @param {Float32Array} drawIds - the draw id for each element drawn in by this draw call.
+   * @param {Uint32Array} counts - the geom element count for each element drawn in by this draw call.
+   * @param {Uint32Array} offsets - the geom element offset for each element drawn in by this draw call.
+   */
+  abstract multiDraw(
+    renderstate: Record<any, any>,
+    drawIds: Float32Array,
+    counts: Uint32Array,
+    offsets: Uint32Array
+  ): void
 
   /**
    * Sorts the drawn items in order furthest to nearest when rendering transparent objects.
