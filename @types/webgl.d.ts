@@ -6,9 +6,9 @@ interface WebGL12RenderingContext extends WebGLRenderingContext {
   __ext_WEBGL_depth_texture: any
 
   // GLScreenQuad.ts
-  __quadVertexIdsBuffer: any
   setupInstancedQuad: any
-  __quadattrbuffers: any
+  __quadVertexIdsBuffer: any
+  __quadattrbuffers : any
   __quadIndexBuffer: WebGLBuffer
 
   // GLBaseRenderer.ts
@@ -18,11 +18,10 @@ interface WebGL12RenderingContext extends WebGLRenderingContext {
   multiDrawElements: any
   multiDrawElementsInstanced: any
   multiDrawArraysInstanced: any
-  screenQuad: any
+  screenQuad: GLScreenQuad
   floatGeomBuffer: any
-  makeXRCompatible(): any
   shaderopts: Record<any, any>
-
+  makeXRCompatible(): any
   // GLEnvMap.ts
   drawQuad(): void
 }

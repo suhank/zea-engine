@@ -12,6 +12,10 @@ import { AtlasLayoutShader } from './Shaders/AtlasLayoutShader'
 import { BaseEvent } from '../Utilities/BaseEvent'
 import { GLShader } from './GLShader'
 
+interface LayoutItem {
+  pos: Vec2
+  size: Vec2
+}
 /**
  * An Image Atlas lays out multiple smaller images within a larger image atlas, and tracks their positions.
  * @private
@@ -22,12 +26,12 @@ class GLImageAtlas extends GLRenderTarget {
   protected __formatParam: string
   protected __typeParam: string
   clearColor: Color
-  protected __subImages: any[]
+  protected __subImages: any[] // GLTexture2D
   protected __layoutNeedsRegeneration: boolean
   protected __asyncCount: number
   protected loaded: boolean
   protected ready: boolean
-  protected __layout: any
+  protected __layout: Array<LayoutItem>
   protected __atlasLayoutTexture: any
   protected __layoutVec4s: any
   protected __atlasLayoutShaderBinding: IGeomShaderBinding
@@ -241,7 +245,7 @@ class GLImageAtlas extends GLRenderTarget {
 
     if (!gl.floatTexturesSupported) {
       this.__layoutVec4s = []
-      this.__layout.forEach((layoutItem: any, index: number) => {
+      this.__layout.forEach((layoutItem: LayoutItem, index: number) => {
         this.__layoutVec4s[index] = [
           layoutItem.pos.x / width,
           layoutItem.pos.y / height,
@@ -328,8 +332,8 @@ class GLImageAtlas extends GLRenderTarget {
       gl.uniform2fv(unifs.pos.location, layoutItem.pos.multiply(scl).asArray())
       gl.uniform2fv(unifs.size.location, layoutItem.size.multiply(scl).asArray())
       gl.uniform2f(unifs.srctextureDim.location, glimage.width, glimage.height)
-      gl.uniform1i(unifs.alphaFromLuminance.location, glimage.alphaFromLuminance)
-      gl.uniform1i(unifs.invert.location, glimage.invert)
+      gl.uniform1i(unifs.alphaFromLuminance.location, glimage.alphaFromLuminance ? 1 : 0)
+      gl.uniform1i(unifs.invert.location, glimage.invert ? 1 : 0)
       gl.drawQuad()
 
       // After rendering the texture, we can reuse the texture unit.

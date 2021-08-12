@@ -13,10 +13,10 @@ class GLHDRImage extends GLTexture2D {
   protected __gl: WebGL12RenderingContext
   protected __hdrImage: VLHImage
   protected __fbo: GLFbo // TODO: rename? other __fbo members are type WebGLBuffer
-  protected __srcLDRTex: any
+  __srcLDRTex: any
   protected __unpackHDRShader: any
   protected __shaderBinding: any
-  protected __srcCDMTex: any
+  __srcCDMTex: any
   /**
    * Create a GL HDR image.
    * @param {WebGL12RenderingContext} gl - The webgl rendering context.
@@ -149,7 +149,7 @@ class GLHDRImage extends GLTexture2D {
    * @param {Record<any,any>} bindings - The bindings value.
    * @return {boolean} - The return value.
    */
-  bindToUniform(renderstate: Record<any, any>, unif: WebGLUniformLocation, bindings: Record<any, any>) {
+  bindToUniform(renderstate: Record<any, any>, unif: WebGLUniformLocation, bindings?: Record<any, any>) {
     return super.bindToUniform(renderstate, unif, bindings)
   }
 

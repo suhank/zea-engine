@@ -34,8 +34,8 @@ class GLTexture2D extends RefCounted {
   protected __wrapT: number
   protected __flipY: boolean
   protected __mipMapped: boolean
-  protected invert: boolean
-  protected alphaFromLuminance: boolean
+  invert: boolean
+  alphaFromLuminance: boolean
 
   protected __gltex: any
   protected __typeParam: any

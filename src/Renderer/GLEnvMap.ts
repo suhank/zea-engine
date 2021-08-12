@@ -5,17 +5,18 @@ import { generateShaderGeomBinding } from './Drawing/GeomShaderBinding'
 import { EnvMap } from '../SceneTree/Images/EnvMap'
 import { GLBaseRenderer } from './GLBaseRenderer'
 import { BaseEvent } from '../Utilities/BaseEvent'
+import { GLRenderer } from './GLRenderer'
 
 /** Class representing a GL environment map.
  * @extends GLProbe
  * @private
  */
 class GLEnvMap extends GLProbe {
-  protected __renderer: Record<any, any>
-  protected __envMap: any
+  protected __renderer: GLRenderer
+  protected __envMap: EnvMap
   protected __backgroundFocus: number
-  protected __srcGLTex: any
-  protected __envMapShader: any
+  protected __srcGLTex: GLHDRImage
+  protected __envMapShader: EnvMapShader
   protected __envMapShaderBinding: any
   protected __lodPyramid: any
   /**
@@ -23,8 +24,8 @@ class GLEnvMap extends GLProbe {
    * @param {GLBaseRenderer} renderer - The renderer value.
    * @param {EnvMap} envMap - The environment map.
    */
-  constructor(renderer: GLBaseRenderer, envMap: EnvMap) {
-    super(<WebGL12RenderingContext>renderer.gl, 'EnvMap')
+  constructor(renderer: GLRenderer, envMap: EnvMap) {
+    super(renderer.gl, 'EnvMap')
     this.__renderer = renderer
     this.__envMap = envMap
     this.__backgroundFocus = 0.0
@@ -112,7 +113,7 @@ class GLEnvMap extends GLProbe {
       if (debug) {
         const screenQuad = gl.screenQuad
         screenQuad.bindShader(renderstate)
-        const debugId = 2*1
+        const debugId = 2 * 1
         switch (debugId) {
           case 0:
             screenQuad.draw(renderstate, this.__srcGLTex.__srcLDRTex)

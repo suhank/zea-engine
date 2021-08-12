@@ -10,7 +10,7 @@ import { PassType } from './Passes/GLPass'
 import { EnvMapShader } from './Shaders/EnvMapShader'
 import { HighlightsShader } from './Shaders/HighlightsShader'
 import { SilhouetteShader } from './Shaders/SilhouetteShader'
-import { generateShaderGeomBinding } from './Drawing/GeomShaderBinding'
+import { generateShaderGeomBinding, IGeomShaderBinding } from './Drawing/GeomShaderBinding'
 import { BaseEvent } from '../Utilities/BaseEvent'
 import { VLHImage } from '../SceneTree/Images/VLHImage'
 import { EnvMapAssignedEvent } from '../Utilities/Events/EnvMapAssignedEvent'
@@ -42,10 +42,10 @@ class GLRenderer extends GLBaseRenderer {
   outlineDepthBias: number
   protected __debugTextures: any[]
 
-  protected __rayCastRenderTarget: any
-  protected __backgroundMapShader: any
-  protected __backgroundMapShaderBinding: any
-  protected __rayCastRenderTargetProjMatrix: any
+  protected __rayCastRenderTarget: GLRenderTarget
+  protected __backgroundMapShader: EnvMapShader
+  protected __backgroundMapShaderBinding: IGeomShaderBinding
+  protected __rayCastRenderTargetProjMatrix: Mat4
   /**
    * Create a GL renderer.
    * @param {HTMLCanvasElement} $canvas - The $canvas value.
