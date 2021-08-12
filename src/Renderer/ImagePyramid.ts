@@ -17,8 +17,8 @@ const Math_log2 = function (value: number) {
  */
 class ImagePyramid extends GLImageAtlas {
   protected size: number
-  protected __srcGLTex: any
-  protected __fbos: any[]
+  protected __srcGLTex: GLTexture2D
+  protected __fbos: GLFbo[]
 
   /**
    * Create an image pyramid.
@@ -47,7 +47,7 @@ class ImagePyramid extends GLImageAtlas {
       })
     }
     srcGLTex.on('destructing', () => {
-      console.log(this.__srcGLTex.getName() + ' ImagePyramid destructing')
+      console.log(this.__srcGLTex.__id + ' ImagePyramid destructing') // TODO: getName() doesn't exist on GLTexture2D
       this.destroy()
     })
   }
