@@ -23,6 +23,10 @@
       })
       renderer.setScene(scene)
       renderer.getViewport().debugGeomShader = urlParams.has('debugGeomShader')
+
+      renderer.outlineThickness = 1.5
+      renderer.outlineSensitivity = 0.5
+
       scene.setupGrid(10.0, 10)
 
       // const backgroundColor = new Color(0.5, 0.5, 0.5)
@@ -72,9 +76,6 @@
       const geomItem3 = new GeomItem('Cone', cone, material, new Xfo(new Vec3(2.2 * sceneScale, 0, 0)))
       geomItem3.addChild(createHardEdgesGeom(cone), false)
       scene.getRoot().addChild(geomItem3)
-
-      renderer.outlineThickness = 1.5
-      renderer.outlineSensitivity = 0.5
 
       renderer
         .getViewport()
@@ -127,6 +128,15 @@
 
       window.addEventListener('message', handleMessage, false)
       // }}}
+
+      renderer.getXRViewport().then((xrvp) => {
+        console.log('XR Device Detected')
+        document.addEventListener('keydown', (event) => {
+          if (event.key == ' ') {
+            xrvp.togglePresenting()
+          }
+        })
+      })
     </script>
   </head>
   <body class="bg-blue-100">
