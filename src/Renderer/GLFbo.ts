@@ -2,6 +2,7 @@ import { SystemDesc } from '../SystemDesc'
 import '../Math/index'
 import { GLTexture2D } from './GLTexture2D'
 import { BaseEvent } from '../Utilities/BaseEvent'
+import { Color } from '../Math/index'
 
 /**
  * This class abstracts the rendering of a collection of geometries to screen.
@@ -10,7 +11,7 @@ class GLFbo {
   protected __gl: WebGL12RenderingContext
   protected __colorTexture: GLTexture2D
   protected __createDepthTexture: boolean
-  protected __clearColor: number[]
+  protected __clearColor: Color
   protected __depthTexture: WebGLTexture
   protected __fbo: WebGLFramebuffer
   protected __prevBoundFbo: WebGLFramebuffer
@@ -34,7 +35,7 @@ class GLFbo {
     this.__gl = gl
     this.__colorTexture = colorTexture
     this.__createDepthTexture = createDepthTexture
-    this.__clearColor = [0, 0, 0, 0]
+    this.__clearColor = new Color(0, 0, 0, 0)
     this.__depthTexture = undefined
 
     this.setup = this.setup.bind(this)
@@ -58,9 +59,9 @@ class GLFbo {
   /**
    * Sets FBO clear color using RGBA array structure.
    *
-   * @param {any[]} clearColor - The clearColor value.
+   * @param {Color} clearColor - The clearColor value.
    */
-  setClearColor(clearColor: any[]) {
+  setClearColor(clearColor: Color) {
     this.__clearColor = clearColor
   }
 

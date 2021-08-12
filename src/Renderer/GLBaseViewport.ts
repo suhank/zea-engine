@@ -33,21 +33,21 @@ class GLBaseViewport extends ParameterOwner {
   protected __ongoingPointers: any[]
   protected __backgroundColor: Color
   protected quad: GLMesh
-  protected offscreenBuffer: any
-  protected depthTexture: any
-  protected highlightedGeomsBuffer: any
-  protected highlightedGeomsBufferFbo: any
-  protected __backgroundTexture: any
+  protected offscreenBuffer: GLTexture2D
+  protected depthTexture: GLTexture2D
+  protected highlightedGeomsBuffer: GLTexture2D
+  protected highlightedGeomsBufferFbo: GLFbo
+  protected __backgroundTexture: BaseImage
   protected __backgroundGLTexture: GLHDRImage | GLTexture2D
-  protected offscreenBufferFbo: any
+  protected offscreenBufferFbo: GLFbo
   protected __width: number
   protected __height: number
   protected __canvasWidth: number
   protected __canvasHeight: number
   protected fb: any
   protected colorRenderbuffer: any
-  protected depthBuffer: any
-  protected EXT_frag_depth: any
+  protected depthBuffer: WebGLRenderbuffer
+  protected EXT_frag_depth: EXT_frag_depth
   protected manipulator: any
   /**
    * Create a GL base viewport.
@@ -98,7 +98,7 @@ class GLBaseViewport extends ParameterOwner {
       height: 4,
     })
     this.highlightedGeomsBufferFbo = new GLFbo(this.__gl, this.highlightedGeomsBuffer, true)
-    this.highlightedGeomsBufferFbo.setClearColor([0, 0, 0, 0])
+    this.highlightedGeomsBufferFbo.setClearColor(new Color(0, 0, 0, 0))
 
     // //////////////////////////////////
     // Setup Camera Manipulator
@@ -124,7 +124,7 @@ class GLBaseViewport extends ParameterOwner {
           this.__backgroundColor = value
 
           if (this.offscreenBufferFbo) {
-            this.offscreenBufferFbo.setClearColor(value.asArray())
+            this.offscreenBufferFbo.setClearColor(new Color(value.asArray()))
           }
         } else {
           console.warn('Invalid background:' + value)

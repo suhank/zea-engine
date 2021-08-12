@@ -4,6 +4,7 @@ import { GLFbo } from './GLFbo'
 import { generateShaderGeomBinding } from './Drawing/GeomShaderBinding'
 import { VLHImage } from '../SceneTree/Images/VLHImage'
 import { BaseEvent } from '../Utilities/BaseEvent'
+import { Color } from '..'
 
 /** Class representing a GL high dynamic range (HDR) image.
  * @extends GLTexture2D
@@ -71,7 +72,7 @@ class GLHDRImage extends GLTexture2D {
         wrap: 'CLAMP_TO_EDGE',
       })
       this.__fbo = new GLFbo(this.__gl, this)
-      this.__fbo.setClearColor([0, 0, 0, 0])
+      this.__fbo.setClearColor(new Color(0, 0, 0, 0))
 
       this.__srcLDRTex = new GLTexture2D(this.__gl, {
         format: 'RGB',
