@@ -120,7 +120,7 @@ class BaseGroup extends TreeItem {
    * @param {number} index - The index value.
    * @private
    */
-  protected unbindItem(item: TreeItem, index: number): void {
+  protected unbindItem(item: TreeItem, index?: number): void {
     if (!(item instanceof TreeItem)) return
     item.off('pointerDown', this.onPointerDown)
     item.off('pointerUp', this.onPointerUp)

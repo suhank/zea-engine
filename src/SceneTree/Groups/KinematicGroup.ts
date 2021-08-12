@@ -28,9 +28,9 @@ const GROUP_XFO_MODES = {
  */
 class KinematicGroup extends BaseGroup {
   protected calculatingGroupXfo: boolean
-  protected memberXfoOps: any[]
-  protected __initialXfoModeParam: any
-  protected groupTransformOp: any
+  protected memberXfoOps: GroupMemberXfoOperator[]
+  protected __initialXfoModeParam: MultiChoiceParameter
+  protected groupTransformOp: GroupTransformXfoOperator
   /**
    * Creates an instance of a group.
    *
@@ -43,7 +43,7 @@ class KinematicGroup extends BaseGroup {
     this.calculatingGroupXfo = false
     this.memberXfoOps = []
 
-    this.__initialXfoModeParam = this.addParameter(
+    this.__initialXfoModeParam = <MultiChoiceParameter>this.addParameter(
       new MultiChoiceParameter('InitialXfoMode', GROUP_XFO_MODES.average, ['manual', 'first', 'average', 'global'])
     )
     this.__initialXfoModeParam.on('valueChanged', () => {

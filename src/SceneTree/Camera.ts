@@ -67,7 +67,7 @@ class Camera extends TreeItem {
    *
    * @param {string} name - The name of the camera.
    */
-  constructor(name: string = undefined) {
+  constructor(name?: string) {
     if (name == undefined) name = 'Camera'
     super(name)
 

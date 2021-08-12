@@ -17,6 +17,7 @@ import { BaseGeomItem } from '../BaseGeomItem'
 import { GroupTransformXfoOperator, GroupMemberXfoOperator } from '../Operators/GroupMemberXfoOperator'
 import { BaseGroup } from './BaseGroup'
 import { BaseItem } from '../BaseItem'
+import { Operator } from '../Operators'
 
 const GROUP_XFO_MODES = {
   disabled: 0,
@@ -50,7 +51,7 @@ class Group extends BaseGroup {
   protected calculatingGroupXfo: boolean
   protected dirty: boolean
   protected _bindXfoDirty: boolean
-  protected memberXfoOps: any[]
+  protected memberXfoOps: GroupMemberXfoOperator[]
   protected __initialXfoModeParam: MultiChoiceParameter // TODO: check
   protected __highlightedParam: BooleanParameter
   protected __materialParam: MaterialParameter

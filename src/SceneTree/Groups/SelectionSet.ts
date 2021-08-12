@@ -17,7 +17,7 @@ import { BaseItem } from '../BaseItem'
  * @extends BaseGroup
  */
 class SelectionSet extends BaseGroup {
-  protected __highlightedParam: Parameter<any>
+  protected __highlightedParam: BooleanParameter
 
   /**
    * Creates an instance of a group.

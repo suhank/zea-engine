@@ -219,7 +219,7 @@ class BinReader {
    * @param {boolean} clone - The clone param.
    * @return {Uint8Array} - The return value.
    */
-  loadUInt8Array(size: number = undefined, clone = false) {
+  loadUInt8Array(size?: number, clone = false) {
     if (size == undefined) size = this.loadUInt32()
     const result = new Uint8Array(this.__data, this.__byteOffset, size)
     this.__byteOffset += size
@@ -237,7 +237,7 @@ class BinReader {
    * @param {boolean} clone - The clone param.
    * @return {Uint16Array} - The return value.
    */
-  loadUInt16Array(size: number = undefined, clone = false) {
+  loadUInt16Array(size?: number, clone = false) {
     if (size == undefined) size = this.loadUInt32()
     if (size == 0) return new Uint16Array()
     this.readPad(2)
