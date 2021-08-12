@@ -81,11 +81,16 @@ const genDataTypeDesc = (gl: WebGL12RenderingContext, attrDataType: any) => {
     dataType,
   }
 }
+abstract class IGeomShaderBinding {
+  abstract bind(renderstate: Record<any, any>): void
+  abstract unbind(): void
+  abstract destroy(): void
+}
 
 /** Class representing a geom shader binding.
  * @private
  */
-class GeomShaderBinding {
+class GeomShaderBinding extends IGeomShaderBinding {
   protected __gl: WebGL12RenderingContext
   protected __shaderAttrs: any
   protected __glattrbuffers: any
@@ -98,6 +103,7 @@ class GeomShaderBinding {
    * @param {any} indexBuffer - The index buffer.
    */
   constructor(gl: WebGL12RenderingContext, shaderAttrs: any, geomAttrBuffers: any, indexBuffer: WebGLBuffer) {
+    super()
     this.__gl = gl
     this.__shaderAttrs = shaderAttrs
     this.__glattrbuffers = geomAttrBuffers
@@ -183,7 +189,7 @@ class GeomShaderBinding {
 /** Class representing vertex array objects (VAO) geom shader binding.
  * @private
  */
-class VAOGeomShaderBinding {
+class VAOGeomShaderBinding extends IGeomShaderBinding {
   protected __vao: any
   protected __gl: WebGL12RenderingContext
   protected __indexBuffer: WebGLBuffer
@@ -195,6 +201,7 @@ class VAOGeomShaderBinding {
    * @param {WebGLBuffer} indexBuffer - The indexBuffer value.
    */
   constructor(gl: WebGL12RenderingContext, shaderAttrs: any, geomAttrBuffers: any, indexBuffer: WebGLBuffer) {
+    super()
     this.__gl = gl
     const gl_casted = <Record<any, any>>gl
     this.__vao = gl_casted.createVertexArray()
@@ -287,7 +294,7 @@ function generateShaderGeomBinding(
   shaderAttrs: any,
   geomAttrBuffers: any,
   indexBuffer: WebGLBuffer
-) {
+): IGeomShaderBinding {
   if ((<Record<any, any>>gl).createVertexArray == null) {
     return new GeomShaderBinding(gl, shaderAttrs, geomAttrBuffers, indexBuffer)
   } else {
@@ -295,4 +302,4 @@ function generateShaderGeomBinding(
   }
 }
 
-export { generateShaderGeomBinding, genDataTypeDesc }
+export { generateShaderGeomBinding, genDataTypeDesc, IGeomShaderBinding }

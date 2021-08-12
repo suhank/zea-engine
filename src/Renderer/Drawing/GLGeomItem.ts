@@ -161,7 +161,7 @@ class GLGeomItem extends EventEmitter {
    * @return {any} - The return value.
    */
   bind(renderstate: Record<any, any>) {
-    const gl = <Record<any, any>>this.gl
+    const gl = this.gl
     const unifs = renderstate.unifs
 
     if (!this.supportInstancing) {

@@ -170,7 +170,7 @@ class GLGeomItemSet extends EventEmitter {
    * drawing.
    */
   updateDrawIDsBuffer() {
-    const gl = <Record<any, any>>this.gl
+    const gl = this.gl
     if (!gl.floatTexturesSupported) {
       this.drawIdsBufferDirty = false
       return
@@ -219,7 +219,7 @@ class GLGeomItemSet extends EventEmitter {
    * The updateHighlightedIDsBuffer method.
    */
   updateHighlightedIDsBuffer() {
-    const gl = <Record<any, any>>this.gl
+    const gl = this.gl
     if (!gl.floatTexturesSupported) {
       this.highlightedIdsBufferDirty = false
       return
@@ -300,7 +300,7 @@ class GLGeomItemSet extends EventEmitter {
    * @private
    */
   __bindAndRender(renderstate: Record<any, any>, itemIndices: any, drawIdsBuffer: any) {
-    const gl = <Record<any, any>>this.gl
+    const gl = this.gl
     const unifs = renderstate.unifs
 
     // Lazy unbinding. We can have situations where we have many materials

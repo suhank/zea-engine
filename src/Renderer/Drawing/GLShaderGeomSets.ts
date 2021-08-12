@@ -13,7 +13,7 @@ import { Vec3 } from '../../Math/Vec3'
  */
 class GLShaderGeomSets extends EventEmitter {
   protected pass: GLStandardGeomsPass
-  protected gl: WebGL12RenderingContext 
+  protected gl: WebGL12RenderingContext
   protected glShader: any
   protected glGeomDataShader: any
   protected glHighlightShader: any
@@ -28,11 +28,7 @@ class GLShaderGeomSets extends EventEmitter {
    * @param {WebGL12RenderingContext } gl - The glShader value.
    * @param {Record<any,any>} shaders - The shader value.
    */
-  constructor(
-    pass: GLStandardGeomsPass,
-    gl: WebGL12RenderingContext ,
-    shaders: Record<any, any>
-  ) {
+  constructor(pass: GLStandardGeomsPass, gl: WebGL12RenderingContext, shaders: Record<any, any>) {
     super()
     this.pass = pass
     this.gl = gl
@@ -130,7 +126,7 @@ class GLShaderGeomSets extends EventEmitter {
    * @private
    */
   bindShader(glShader: Record<any, any>, renderstate: Record<any, any>, key: string) {
-    const gl = <Record<any, any>>this.gl
+    const gl = this.gl
     if (!glShader.isCompiledForTarget(key)) {
       if (gl.multiDrawElements) {
         renderstate.shaderopts.directives.push('#define ENABLE_MULTI_DRAW\n#extension GL_ANGLE_multi_draw : enable')
