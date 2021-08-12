@@ -16,6 +16,7 @@ import { shaderLibrary } from '../Renderer/ShaderLibrary'
 import { ShaderNameChangedEvent } from '../Utilities/Events/ShaderNameChangedEvent'
 import { TransparencyChangedEvent } from '../Utilities/Events/TransparencyChangedEvent'
 import { TexturedChangedEvent } from '../Utilities/Events/TexturedChangedEvent'
+import { GLShader } from '../Renderer'
 
 /**
  * Represents a type of `BaseItem` class that holds material configuration.
@@ -209,8 +210,8 @@ class Material extends BaseItem {
    *
    * @return {string|undefined} - The return value.
    */
-  getShaderClass() {
-    return Registry.getBlueprint(this.getShaderName())
+  getShaderClass(): typeof GLShader {
+    return <typeof GLShader>Registry.getClassDefinition(this.getShaderName()).constructor
   }
 
   // ////////////////////////////////////////

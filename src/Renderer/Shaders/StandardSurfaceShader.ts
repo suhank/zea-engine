@@ -56,7 +56,7 @@ class StandardSurfaceShader extends GLShader {
    * @param {Material} material - The material param.
    * @return {Float32Array} - The return value.
    */
-  getPackedMaterialData(material: Material): Float32Array {
+  static getPackedMaterialData(material: Material): Float32Array {
     const matData = new Float32Array(12) // TODO: no extra space needed right?
 
     const baseColor = material.getParameter('BaseColor').getValue()

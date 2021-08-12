@@ -1,6 +1,6 @@
 /* eslint-disable valid-jsdoc */
 /* eslint-disable guard-for-in */
-import { BaseItem } from '../SceneTree/BaseItem'
+import { BaseItem, Material } from '../SceneTree'
 import { StringFunctions } from '../Utilities/StringFunctions'
 import { shaderLibrary } from './ShaderLibrary'
 
@@ -504,6 +504,16 @@ class GLShader extends BaseItem {
    */
   static supportsInstancing() {
     return true
+  }
+
+  /**
+   * The getPackedMaterialData method.
+   * @param {Material} material - The material param.
+   * @return {Float32Array} - The return value.
+   */
+  static getPackedMaterialData(material: Material): Float32Array {
+    const matData = new Float32Array(4)
+    return matData
   }
 
   // /////////////////////////////////

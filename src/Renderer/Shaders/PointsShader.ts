@@ -28,7 +28,7 @@ class PointsShader extends GLShader {
    * @param {Material} material - The material param.
    * @return {Float32Array} - The return value.
    */
-  getPackedMaterialData(material: Material): Float32Array {
+  static getPackedMaterialData(material: Material): Float32Array {
     const matData = new Float32Array(12)
     const baseColor = material.getParameter('BaseColor').getValue()
     matData[0] = baseColor.r
