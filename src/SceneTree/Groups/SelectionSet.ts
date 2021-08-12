@@ -44,7 +44,7 @@ class SelectionSet extends BaseGroup {
    * @return {boolean} - The return value.
    * @private
    */
-  __updateVisibility() {
+  __updateVisibility(): boolean {
     if (super.updateVisibility()) {
       const value = this.isVisible()
       Array.from(this.__itemsParam.getValue()).forEach((item) => {

@@ -27,7 +27,7 @@ import { BaseItem } from '../BaseItem'
  * @extends BaseGroup
  */
 class CuttingPlane extends BaseGroup {
-  cutPlaneOp
+  cutPlaneOp: CuttingPlaneOperator
   /**
    * Creates an instance of a group.
    *
@@ -63,7 +63,7 @@ class CuttingPlane extends BaseGroup {
    * @param {TreeITem} item - The item in the group.
    * @private
    */
-  __updateCutaway(item: TreeItem) {
+  __updateCutaway(item: TreeItem): void {
     // Make this function async so that we don't pull on the
     // graph immediately when we receive a notification.
     // Note: propagating using an operator would be much better.
@@ -160,7 +160,7 @@ class CuttingPlane extends BaseGroup {
    * @param {Record<any,any>} context - The context value.
    * @return {CuttingPlane} - Returns a new cloned group.
    */
-  clone(context: Record<any, any>) {
+  clone(context: Record<any, any>): CuttingPlane {
     const cloned = new CuttingPlane()
     cloned.copyFrom(this, context)
     return cloned

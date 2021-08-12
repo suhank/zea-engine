@@ -25,6 +25,9 @@ class VLHImage extends BaseImage {
   protected __stream: boolean
   protected __domElement: any
   protected __data: Record<any, any>
+
+  loaded: any
+  updated: any
   /**
    * Create a VLH image.
    * @param {string} name - The name value.

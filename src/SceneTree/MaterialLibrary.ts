@@ -15,8 +15,8 @@ import { Owner } from './Owner'
 class MaterialLibrary extends EventEmitter implements Owner {
   protected lod: number
   protected __name: string
-  protected __images: Record<string, any>
-  protected __materials: Record<any, any>
+  protected __images: Record<string, BaseImage>
+  protected __materials: Record<string, Material>
   protected name: string
   /**
    * Create a material library.

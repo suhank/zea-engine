@@ -24,8 +24,8 @@ class BaseImage extends BaseItem {
   protected wrapT: string
   protected minFilter: string
   protected magFilter: string
-  loaded: any
-  updated: any
+  protected loaded: boolean
+  // updated: any
   /**
    * Creates an instance of BaseImage.
    * @param {string} name - name of the item
@@ -65,7 +65,7 @@ class BaseImage extends BaseItem {
    *
    * @return {object} - The return value.
    */
-  getParams(): Record<any,any> {
+  getParams(): Record<any, any> {
     return {
       type: this.type,
       format: this.format,

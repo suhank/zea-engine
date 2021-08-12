@@ -51,10 +51,10 @@ class Group extends BaseGroup {
   protected dirty: boolean
   protected _bindXfoDirty: boolean
   protected memberXfoOps: any[]
-  protected __initialXfoModeParam: any
-  protected __highlightedParam: any
-  protected __materialParam: any
-  protected groupTransformOp: any
+  protected __initialXfoModeParam: MultiChoiceParameter // TODO: check
+  protected __highlightedParam: BooleanParameter
+  protected __materialParam: MaterialParameter
+  protected groupTransformOp: GroupTransformXfoOperator
   protected _setBoundingBoxDirty: any
   /**
    * Creates an instance of a group.
@@ -71,8 +71,10 @@ class Group extends BaseGroup {
     this._bindXfoDirty = false
     this.memberXfoOps = []
 
-    this.__initialXfoModeParam = this.addParameter(
-      new MultiChoiceParameter('InitialXfoMode', GROUP_XFO_MODES.average, ['manual', 'first', 'average', 'global'])
+    this.__initialXfoModeParam = <MultiChoiceParameter>(
+      this.addParameter(
+        new MultiChoiceParameter('InitialXfoMode', GROUP_XFO_MODES.average, ['manual', 'first', 'average', 'global'])
+      )
     )
     this.__initialXfoModeParam.on('valueChanged', () => {
       this.calcGroupXfo()
@@ -89,7 +91,7 @@ class Group extends BaseGroup {
     const highlightFillParam = this.addParameter(new NumberParameter('HighlightFill', 0.0, [0, 1]))
     highlightFillParam.on('valueChanged', this.__updateHighlight)
 
-    this.__materialParam = this.addParameter(new MaterialParameter('Material'))
+    this.__materialParam = <MaterialParameter>this.addParameter(new MaterialParameter('Material'))
     this.__materialParam.on('valueChanged', () => {
       this.__updateMaterial()
     })
@@ -275,7 +277,7 @@ class Group extends BaseGroup {
           }
         }, false)
       })
-      resolve(promise )
+      resolve(promise)
     })
   }
 
