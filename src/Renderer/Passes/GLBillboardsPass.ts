@@ -373,7 +373,7 @@ class GLBillboardsPass extends GLPass {
       //     this.width -= (this.width % pixelsPerItem);
 
       if (!this.drawItemsTexture) {
-        this.drawItemsTexture = new GLTexture2D(this.__gl, {
+        const params = {
           format: 'RGBA',
           type: 'FLOAT',
           width: size,
@@ -381,7 +381,8 @@ class GLBillboardsPass extends GLPass {
           filter: 'NEAREST',
           wrap: 'CLAMP_TO_EDGE',
           mipMapped: false,
-        })
+        }
+        this.drawItemsTexture = new GLTexture2D(this.__gl, params)
         this.drawItemsTexture.clear()
       } else {
         this.drawItemsTexture.resize(size, size)

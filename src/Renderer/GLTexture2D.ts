@@ -12,26 +12,26 @@ import { processTextureParams } from './processTextureParams'
  * @extends RefCounted
  */
 class GLTexture2D extends RefCounted {
-  protected __gl: Record<any, any>
+  protected __gl: WebGL12RenderingContext
   protected ready: boolean
   width: number
   height: number
-  protected textureType: number // Default 2d 24bit texture image texture. No alpha.
-  protected textureDesc: number[] // To be populated by derived classes.
+  protected textureType: number
+  protected textureDesc: number[]
   protected __loaded: boolean
   protected __bound: boolean
 
-  protected __image: any
-  protected __internalFormat: any
-  __type: any
-  __format: any
-  protected __wrapParam: any
+  protected __image: BaseImage
+  protected __internalFormat: number
+  __type: number
+  __format: number
+  protected __wrapParam: number
 
   protected params: Record<any, any>
-  protected __minFilter: any
-  protected __magFilter: any
-  protected __wrapS: any
-  protected __wrapT: any
+  protected __minFilter: number
+  protected __magFilter: number
+  protected __wrapS: number
+  protected __wrapT: number
   protected __flipY: boolean
   protected __mipMapped: boolean
   protected invert: boolean
@@ -155,7 +155,7 @@ class GLTexture2D extends RefCounted {
    *
    * @param {boolean} emit - The emit value.
    */
-  configure(params: Record<any, any>, emit = true) {
+  configure(params: Record<any, any>) {
     const gl = this.__gl
     const p: Record<any, any> = processTextureParams(gl, params) // TODO: check method
 
