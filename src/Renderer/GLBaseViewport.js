@@ -42,7 +42,7 @@ class GLBaseViewport extends ParameterOwner {
     // Setup Offscreen Render Targets
     // Note: On low end devices, such as Oculus, blitting the multi-sampled depth buffer is throwing errors,
     // and so we are simply disabling silhouettes on all low end devices now.
-    if (SystemDesc.browserName != 'Safari') {
+    if (gl.name == 'webgl2') {
       this.offscreenBuffer = new GLTexture2D(gl, {
         type: 'UNSIGNED_BYTE',
         format: 'RGBA',
@@ -185,9 +185,8 @@ class GLBaseViewport extends ParameterOwner {
   resizeRenderTargets(width, height) {
     // Note: On low end devices, such as Oculus, blitting the multi-sampled depth buffer is throwing errors,
     // and so we are simply disabling silhouettes on all low end devices now.
-    if (SystemDesc.browserName != 'Safari') {
-      const gl = this.__renderer.gl
-
+    const gl = this.__renderer.gl
+    if (gl.name == 'webgl2') {
       if (this.fb) {
         gl.deleteFramebuffer(this.fb[FRAMEBUFFER.MSAA_RENDERBUFFER])
         gl.deleteFramebuffer(this.fb[FRAMEBUFFER.COLORBUFFER])
@@ -363,9 +362,8 @@ class GLBaseViewport extends ParameterOwner {
     // and without it, we cannot draw lines over the top of geometries.
     // Note: On low end devices, such as Oculus, blitting the multi-sampled depth buffer is throwing errors,
     // and so we are simply disabling silhouettes on all low end devices now.
-    if (SystemDesc.browserName == 'Safari' || SystemDesc.deviceCategory == 'Low') return
-
     const gl = this.__renderer.gl
+    if (gl.name != 'webgl2') return
 
     if (gl.renderbufferStorageMultisample) {
       gl.bindFramebuffer(gl.READ_FRAMEBUFFER, this.fb[FRAMEBUFFER.MSAA_RENDERBUFFER])
