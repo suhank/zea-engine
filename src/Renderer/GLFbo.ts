@@ -21,9 +21,11 @@ class GLFbo {
    * @param {GLTexture2D} colorTexture - Represents 2D Texture in GL.
    * @param {boolean} createDepthTexture - The createDepthTexture value.
    */
+
   constructor(gl: WebGL12RenderingContext, colorTexture: GLTexture2D, createDepthTexture = false) {
-    if (SystemDesc.isIOSDevice && (colorTexture.getType() == 'FLOAT' || colorTexture.getType() == 'HALF_FLOAT')) {
+    if (SystemDesc.isIOSDevice && (colorTexture.getType() == gl.FLOAT || colorTexture.getType() == gl.HALF_FLOAT)) {
       // So iOS simply refuses to bind anything to a render target except a UNSIGNED_BYTE texture.
+
       // See the subtle error message here: "floating-point render targets not supported -- this is legal"
       // https://www.khronos.org/registry/webgl/conformance-suites/1.0.2/conformance/extensions/oes-texture-float.html
       console.error('IOS devices are unable to render to float textures.')
@@ -354,7 +356,7 @@ class GLFbo {
    *
    * @param {object} renderstate - The renderstate value.
    */
-  bindForWriting(renderstate: Record<any, any>) {
+  bindForWriting(renderstate?: Record<any, any>) {
     if (renderstate) {
       this.__prevBoundFbo = renderstate.boundRendertarget
       renderstate.boundRendertarget = this.__fbo
@@ -442,7 +444,7 @@ class GLFbo {
    * Runs [`bind`](#bind) then [`clear`](#clear) methods.
    * @param {Record<any,any>} renderstate - The renderstate value.
    */
-  bindAndClear(renderstate: Record<any, any>) {
+  bindAndClear(renderstate?: Record<any, any>) {
     this.bind(renderstate)
     this.clear()
   }

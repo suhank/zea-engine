@@ -29,7 +29,7 @@ class GLBaseViewport extends ParameterOwner {
   protected renderer: GLRenderer
   protected __renderer: GLRenderer
   protected __doubleClickTimeMSParam = this.addParameter(new NumberParameter('DoubleClickTimeMS', 200))
-  protected __fbo: any
+  protected __fbo: WebGLFramebuffer
   protected __ongoingPointers: any[]
   protected __backgroundColor: Color
   protected quad: GLMesh

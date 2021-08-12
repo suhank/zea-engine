@@ -16,7 +16,7 @@ class GLLinesPass extends GLOpaqueGeomsPass {
   protected linesGeomDataBuffer: GLTexture2D
   protected fattenLinesShader: FattenLinesShader
   protected quad: GLMesh
-  protected fbo: any
+  protected fbo: WebGLFramebuffer
   /**
    * Create a GL opaque geoms pass.
    */

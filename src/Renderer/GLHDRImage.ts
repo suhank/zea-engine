@@ -12,7 +12,7 @@ import { BaseEvent } from '../Utilities/BaseEvent'
 class GLHDRImage extends GLTexture2D {
   protected __gl: WebGL12RenderingContext
   protected __hdrImage: VLHImage
-  protected __fbo: any
+  protected __fbo: GLFbo // TODO: rename? other __fbo members are type WebGLBuffer
   protected __srcLDRTex: any
   protected __unpackHDRShader: any
   protected __shaderBinding: any
