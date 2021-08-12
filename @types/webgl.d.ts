@@ -23,11 +23,6 @@ interface WebGL12RenderingContext extends WebGLRenderingContext {
   makeXRCompatible(): any
   shaderopts: Record<any, any>
 
-  //GLFbo.ts
-  framebufferTexture2D(target: GLenum, attachment: GLenum, textarget: GLenum, texture: GLuint, level: GLint): void
-  bindFramebuffer(target: GLenum, framebuffer: GLuint): void
-  createFramebuffer(): any
-
   // GLEnvMap.ts
   drawQuad(): void
 }
