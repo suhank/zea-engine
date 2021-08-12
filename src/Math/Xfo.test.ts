@@ -140,7 +140,7 @@ describe('Xfo', () => {
 
   it('restores xfo from binary', () => {
     const data = Float32Array.of(1, 2, 3, 1, 0, 0, 0, 8, 9, 10)
-    const binReader = new BinReader(data.buffer)
+    const binReader = new BinReader(<Buffer>data.buffer)
     const xfo = new Xfo()
     xfo.readBinary(binReader)
 

@@ -1,8 +1,6 @@
 // import { AttrValue } from './AttrValue'
 describe.skip('AttrValue', () => {
-  xit('needs a callback.', () => {
-    expect(1).toBe(1)
-  })
+  test('remake tests', () => true)
 })
 // xdescribe.skip('AttrValue', () => {
 //   describe('#on', () => {
