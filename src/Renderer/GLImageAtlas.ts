@@ -93,7 +93,8 @@ class GLImageAtlas extends GLRenderTarget {
    * @param {BaseImage} subImage - The subImage value.
    * @return {number} - The return value.
    */
-  addSubImage(subImage: BaseImage) {
+  // TODO: WebGLTexture is not handled here
+  addSubImage(subImage: BaseImage | WebGLTexture) { 
     if (subImage instanceof BaseImage) {
       const gltexture: GLTexture2D = new GLTexture2D(this.__gl, subImage)
       if (!subImage.isLoaded()) {
@@ -116,8 +117,9 @@ class GLImageAtlas extends GLRenderTarget {
       subImage.on('updated', updated)
       this.__subImages.push(gltexture)
     } else {
-      ;(<GLTexture2D>subImage).addRef(this) // subImage is a GLTexture2D
-      this.__subImages.push(subImage)
+      const subImage_casted = <GLTexture2D>subImage
+      subImage_casted.addRef(this) // subImage is a GLTexture2D
+      this.__subImages.push(subImage_casted)
     }
 
     this.__layoutNeedsRegeneration = true

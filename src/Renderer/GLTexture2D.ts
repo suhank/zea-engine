@@ -37,9 +37,9 @@ class GLTexture2D extends RefCounted {
   invert: boolean
   alphaFromLuminance: boolean
 
-  protected __gltex: any
-  protected __typeParam: any
-  protected __formatParam: any
+  protected __gltex: WebGLTexture
+  protected __typeParam: string
+  protected __formatParam: string
   /**
    * Create a GL texture 2D.
    *
@@ -89,7 +89,7 @@ class GLTexture2D extends RefCounted {
    *
    * @return {boolean} - The return value.
    */
-  isLoaded() {
+  isLoaded(): boolean {
     return this.__loaded
   }
 
@@ -98,7 +98,7 @@ class GLTexture2D extends RefCounted {
    *
    * @return {BaseImage} - The return value.
    */
-  getImage() {
+  getImage(): BaseImage {
     return this.__image
   }
 
@@ -107,7 +107,7 @@ class GLTexture2D extends RefCounted {
    *
    * @return {GLenum | enum} - The return value.
    */
-  getInternalFormat() {
+  getInternalFormat(): number {
     return this.__internalFormat
   }
 
@@ -116,7 +116,7 @@ class GLTexture2D extends RefCounted {
    *
    * @return {GLenum | enum} - The return value.
    */
-  getType() {
+  getType(): number {
     return this.__type
   }
 
@@ -125,7 +125,7 @@ class GLTexture2D extends RefCounted {
    *
    * @return {GLenum | enum} - The return value.
    */
-  getFormat() {
+  getFormat(): number {
     return this.__format
   }
 
@@ -134,7 +134,7 @@ class GLTexture2D extends RefCounted {
    *
    * @return {GLenum | enum} - The return value.
    */
-  getWrap() {
+  getWrap(): number {
     return this.__wrapParam
   }
 
