@@ -80,11 +80,14 @@
         outlineThickness: 0,
         outlineSensitivity: 0.5,
       })
+      renderer.outlineThickness = 1.5
+      renderer.outlineSensitivity = 0.5
+
       renderer.setScene(scene)
 
       scene.setupGrid(10.0, 10, new Color())
 
-      if (true) {
+      if (false) {
         renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(5, -5, 2), new Vec3(0, 1, 0.75))
         let defaultColor
         const pointerOverColor = new Color(0, 1, 1)
