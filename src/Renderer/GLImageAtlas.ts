@@ -6,10 +6,11 @@ import { BaseImage } from '../SceneTree/index'
 
 import { GLTexture2D } from './GLTexture2D'
 import { GLRenderTarget } from './GLRenderTarget'
-import { generateShaderGeomBinding } from './Drawing/GeomShaderBinding'
+import { generateShaderGeomBinding, IGeomShaderBinding } from './Drawing/GeomShaderBinding'
 import { MathFunctions } from '../Utilities/MathFunctions'
 import { AtlasLayoutShader } from './Shaders/AtlasLayoutShader'
 import { BaseEvent } from '../Utilities/BaseEvent'
+import { GLShader } from './GLShader'
 
 /**
  * An Image Atlas lays out multiple smaller images within a larger image atlas, and tracks their positions.
@@ -29,6 +30,8 @@ class GLImageAtlas extends GLRenderTarget {
   protected __layout: any
   protected __atlasLayoutTexture: any
   protected __layoutVec4s: any
+  protected __atlasLayoutShaderBinding: IGeomShaderBinding
+  protected __atlasLayoutShader: GLShader
   /**
    * Create an image atlas..
    * @param {WebGL12RenderingContext} gl - The webgl rendering context.
@@ -216,10 +219,10 @@ class GLImageAtlas extends GLRenderTarget {
 
     if (!gl.__quadVertexIdsBuffer) gl.setupInstancedQuad()
 
-    if (!gl.__atlasLayoutShader) {
-      gl.__atlasLayoutShader = new AtlasLayoutShader(this.__gl)
-      const shaderComp = gl.__atlasLayoutShader.compileForTarget('GLImageAtlas')
-      gl.__atlasLayoutShaderBinding = generateShaderGeomBinding(
+    if (!this.__atlasLayoutShader) {
+      this.__atlasLayoutShader = new AtlasLayoutShader(this.__gl)
+      const shaderComp = this.__atlasLayoutShader.compileForTarget('GLImageAtlas')
+      this.__atlasLayoutShaderBinding = generateShaderGeomBinding(
         this.__gl,
         shaderComp.attrs,
         gl.__quadattrbuffers,
@@ -312,8 +315,8 @@ class GLImageAtlas extends GLRenderTarget {
     const renderstate: Record<any, any> = {}
     this.bindForWriting(renderstate, true)
 
-    gl.__atlasLayoutShader.bind(renderstate, 'GLImageAtlas')
-    gl.__atlasLayoutShaderBinding.bind(renderstate)
+    this.__atlasLayoutShader.bind(renderstate, 'GLImageAtlas')
+    this.__atlasLayoutShaderBinding.bind(renderstate)
     const scl = new Vec2(1.0 / this.width, 1.0 / this.height)
 
     const unifs = renderstate.unifs
