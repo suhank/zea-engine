@@ -36,7 +36,6 @@ class GLFbo {
     this.__colorTexture = colorTexture
     this.__createDepthTexture = createDepthTexture
     this.__clearColor = new Color(0, 0, 0, 0)
-    this.__depthTexture = undefined
 
     this.setup = this.setup.bind(this)
     this.resize = this.resize.bind(this)

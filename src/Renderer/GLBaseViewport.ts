@@ -58,26 +58,26 @@ class GLBaseViewport extends ParameterOwner {
     this.renderer = renderer
     this.__renderer = renderer
     this.__doubleClickTimeMSParam = this.addParameter(new NumberParameter('DoubleClickTimeMS', 200))
-    this.__fbo = undefined
     // Since there is not multi touch on `PointerEvent`, we need to store pointers pressed.
     this.__ongoingPointers = []
     this.__backgroundColor = new Color(0.3, 0.3, 0.3, 1)
 
     const gl = this.__renderer.gl
+    this.__gl = gl
 
-    this.quad = new GLMesh(this.__gl, new Plane(1, 1))
+    this.quad = new GLMesh(gl, new Plane(1, 1))
 
     // //////////////////////////////////
     // Setup Offscreen Render Targets
     if (SystemDesc.browserName != 'Safari') {
-      this.offscreenBuffer = new GLTexture2D(this.__gl, {
+      this.offscreenBuffer = new GLTexture2D(gl, {
         type: 'UNSIGNED_BYTE',
         format: 'RGBA',
         filter: 'LINEAR',
         width: 4,
         height: 4,
       })
-      this.depthTexture = new GLTexture2D(this.__gl, {
+      this.depthTexture = new GLTexture2D(gl, {
         type: gl.UNSIGNED_SHORT,
         format: gl.DEPTH_COMPONENT,
         internalFormat: gl.name == 'webgl2' ? gl.DEPTH_COMPONENT16 : gl.DEPTH_COMPONENT,
@@ -90,14 +90,14 @@ class GLBaseViewport extends ParameterOwner {
       // this.offscreenBufferFbo.setClearColor(this.__backgroundColor.asArray())
     }
 
-    this.highlightedGeomsBuffer = new GLTexture2D(this.__gl, {
+    this.highlightedGeomsBuffer = new GLTexture2D(gl, {
       type: 'UNSIGNED_BYTE',
       format: 'RGBA',
       filter: 'NEAREST',
       width: 4,
       height: 4,
     })
-    this.highlightedGeomsBufferFbo = new GLFbo(this.__gl, this.highlightedGeomsBuffer, true)
+    this.highlightedGeomsBufferFbo = new GLFbo(gl, this.highlightedGeomsBuffer, true)
     this.highlightedGeomsBufferFbo.setClearColor(new Color(0, 0, 0, 0))
 
     // //////////////////////////////////
@@ -110,10 +110,10 @@ class GLBaseViewport extends ParameterOwner {
         if (value instanceof BaseImage) {
           if (value.type === 'FLOAT') {
             this.__backgroundTexture = value
-            this.__backgroundGLTexture = new GLHDRImage(this.__gl, <VLHImage>value) // TODO: is casting a baseimage to <VLHImage> ok?
+            this.__backgroundGLTexture = new GLHDRImage(gl, <VLHImage>value) // TODO: is casting a baseimage to <VLHImage> ok?
           } else {
             this.__backgroundTexture = value
-            this.__backgroundGLTexture = new GLTexture2D(this.__gl, value)
+            this.__backgroundGLTexture = new GLTexture2D(gl, value)
           }
         } else if (value instanceof Color) {
           if (this.__backgroundGLTexture) {

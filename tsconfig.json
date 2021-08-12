@@ -5,7 +5,7 @@
     "allowJs": true /* Allow javascript files to be compiled. */,
     "outDir": "./tsc-output" /* Redirect output structure to the directory. */,
     "resolveJsonModule": true,
-    "strict": true /* Enable all strict type-checking options. */,
+    // "strict": true /* Enable all strict type-checking options. */,
     "skipLibCheck": true, // this should be removed when a build is working.
     "noImplicitAny": true,
     "suppressImplicitAnyIndexErrors": true, 
@@ -18,7 +18,5 @@
     "./node_modules",
     "**/*.test.ts",
     "**/*.test.js" // for migration
-    //"**/*.spec.ts",
-    //"dist"
   ]
 }

@@ -89,7 +89,6 @@ class GLBaseRenderer extends ParameterOwner {
     this.__childItemRemoved = this.__childItemRemoved.bind(this)
 
     this.__viewports = []
-    this.__activeViewport = undefined
     this.__continuousDrawing = false
     this.__redrawRequested = false
     this.__isMobile = SystemDesc.isMobileDevice

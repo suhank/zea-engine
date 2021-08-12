@@ -303,7 +303,6 @@ class DriveAdapter {
       if (part in curr.children) curr = curr.children[part]
       else {
         throw new Error('Unable to resolve key:' + part + ' of path:' + value)
-        return null
       }
     }
     return curr.id

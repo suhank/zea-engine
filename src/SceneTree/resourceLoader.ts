@@ -70,7 +70,7 @@ class ResourceLoader extends EventEmitter {
   constructor() {
     super()
 
-    this.__adapter = undefined
+
     this.__totalWork = 0
     this.__doneWork = 0
     this.baseUrl = Env.baseUrl

@@ -13,12 +13,13 @@ class ViewChangedEvent extends BaseEvent {
   controllers: any[]
   viewport: GLBaseViewport
   vrviewport: GLBaseViewport
-  
+
   constructor(interfaceType: string, viewXfo: Xfo, focalDistance?: number, fieldOfView?: number) {
     super()
     this.interfaceType = interfaceType
     this.viewXfo = viewXfo
 
+    this.controllers = []
     this.focalDistance = focalDistance
     this.fieldOfView = fieldOfView
   }
