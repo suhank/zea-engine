@@ -17,7 +17,7 @@ class ItemSetParameter extends Parameter<Set<BaseItem>> {
    */
   constructor(name: string = '', filterFn: (...args: any[]) => boolean) {
     super(name, new Set(), 'BaseItem')
-    // this.items = new Set() TODO:(refactor) necessary?
+    this.items = new Set()
     this.filterFn = filterFn // Note: the filter Fn indicates that users will edit the set.
   }
 
