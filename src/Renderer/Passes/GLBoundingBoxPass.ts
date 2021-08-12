@@ -6,6 +6,8 @@ import { GLPass, PassType } from './GLPass'
 import { GLTexture2D } from '../GLTexture2D'
 import { MathFunctions } from '../../Utilities/MathFunctions'
 import { GLBaseRenderer } from '../GLBaseRenderer'
+import { GLGeom } from '../Drawing'
+import { GLShader } from '../GLShader'
 
 const pixelsPerItem = 6 // The number of pixels per draw item.
 
@@ -16,21 +18,22 @@ const pixelsPerItem = 6 // The number of pixels per draw item.
 class GLBoundingBoxPass extends GLPass {
   protected boxes: any[]
   protected dirtyBoxes: Set<any>
-  protected freeIndices: any[]
+  protected freeIndices: Array<number>
+  protected idToIndex: Array<number>
   protected drawCount: number
   protected indexArrayUpdateNeeded: boolean
   protected __updateRequested: boolean
-  protected glgeom: any
-  protected glshader: any
+  protected glgeom: GLGeom
+  protected glshader: GLShader
 
-  protected __modelMatrixArray: any[]
-  protected __treeitemDataArray: any[]
-  protected __tintColorArray: any[]
+  protected __modelMatrixArray: Array<Array<number>>
+  protected __treeitemDataArray: Array<Array<number>>
+  protected __tintColorArray: Array<Array<number>>
 
-  protected __instanceIdsBuffer: any
+  protected __instanceIdsBuffer: WebGLBuffer
 
-  protected __indexArray: any
-  protected __drawItemsTexture: any
+  protected __indexArray: Float32Array
+  protected __drawItemsTexture: GLTexture2D
   protected __width: number
   /**
    * Create a GL treeitems pass.
@@ -152,7 +155,7 @@ class GLBoundingBoxPass extends GLPass {
     let index: number
     if (this.freeIndices.length > 0) index = this.freeIndices.pop()
     else index = this.boxes.length
-    treeitem.setMetadata('GLBoundingBoxPass_Index', index)
+    this.idToIndex[treeitem.getId()] = index
 
     const visibilityChanged = () => {
       if (treeitem.isVisible()) {
@@ -192,12 +195,11 @@ class GLBoundingBoxPass extends GLPass {
    * @param {any} treeitem - The treeitem value.
    */
   unbindTreeItem(treeitem: TreeItem) {
-    const index = treeitem.getMetadata('GLBoundingBoxPass_Index')
-
-    if (index == -1) {
+    if (!(treeitem.getId() in this.idToIndex)) {
       console.warn('Billboard already removed.')
       return
     }
+    const index = this.idToIndex[treeitem.getId()]
     const treeitemData = this.boxes[index]
 
     treeitem.off('visibilityChanged', treeitemData.visibilityChanged)
@@ -278,7 +280,7 @@ class GLBoundingBoxPass extends GLPass {
   __updateBoxes() {
     if (this.indexArrayUpdateNeeded) this.__updateIndexArray()
 
-    const gl = <Record<any, any>>this.__renderer.gl
+    const gl = this.__renderer.gl
     if (!gl.floatTexturesSupported || !gl.drawElementsInstanced) {
       this.__modelMatrixArray = []
       this.__treeitemDataArray = []

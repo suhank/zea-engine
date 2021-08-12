@@ -1249,8 +1249,8 @@ class GLBaseRenderer extends ParameterOwner {
         }
 
         if (eye) {
-          // Left or right eye, when rendering sterio VR.
-          gl.uniform1i(eye.location, index)
+          // for monocular rendering, we just render viewport 0
+          gl.uniform1i(eye.location, 0)
         }
         if (isOrthographic) {
           // Left or right eye, when rendering sterio VR.
@@ -1376,9 +1376,7 @@ class GLBaseRenderer extends ParameterOwner {
    * Users should never need to call this method directly.
    */
   destroy() {
-    super.destroy()
-
-    this.resizeObserver.unobserve()
+    this.resizeObserver.disconnect()
   }
 }
 

@@ -1,6 +1,7 @@
 import { SystemDesc } from '../SystemDesc'
 import '../Math/index'
 import { GLTexture2D } from './GLTexture2D'
+import { BaseEvent } from '../Utilities/BaseEvent'
 
 /**
  * This class abstracts the rendering of a collection of geometries to screen.
@@ -10,9 +11,9 @@ class GLFbo {
   protected __colorTexture: GLTexture2D
   protected __createDepthTexture: boolean
   protected __clearColor: number[]
-  protected __depthTexture: any
-  protected __fbo: any
-  protected __prevBoundFbo: any
+  protected __depthTexture: WebGLTexture
+  protected __fbo: WebGLFramebuffer
+  protected __prevBoundFbo: WebGLFramebuffer
   /**
    * Creates a GL Framebuffer Object
    *
@@ -38,12 +39,18 @@ class GLFbo {
     this.resize = this.resize.bind(this)
 
     if (this.__colorTexture) {
-      this.__colorTexture.on('resized', (event) => {
-        this.resize(this.__colorTexture.width, this.__colorTexture.height, false)
-      })
+      this.__colorTexture.on('resized', this.textureResized)
     }
 
     this.setup()
+  }
+
+  /**
+   * @private
+   * @param event The event object providing the event details
+   */
+  textureResized(event: BaseEvent) {
+    this.resize(this.__colorTexture.width, this.__colorTexture.height, false)
   }
 
   /**
@@ -449,7 +456,7 @@ class GLFbo {
     gl.bindFramebuffer(gl.FRAMEBUFFER, null)
     gl.deleteFramebuffer(this.__fbo)
     this.__fbo = null
-    this.__colorTexture.off('resized', this.resize)
+    this.__colorTexture.off('resized', this.textureResized)
   }
 }
 

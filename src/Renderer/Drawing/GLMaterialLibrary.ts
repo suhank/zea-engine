@@ -139,7 +139,7 @@ class GLMaterialLibrary extends EventEmitter {
    * @param {Record<any,any>} renderstate - The render state for the current draw traversal
    */
   uploadMaterials(renderstate: Record<any, any>) {
-    const gl = <Record<any, any>>this.renderer.__gl
+    const gl = this.renderer.__gl
 
     const materialsTextureSize = MathFunctions.nextPow2(Math.ceil(Math.sqrt(this.materialsAllocator.reservedSpace)))
     const unit = renderstate.boundTextures++
@@ -208,7 +208,7 @@ class GLMaterialLibrary extends EventEmitter {
    * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    */
   update(renderstate: Record<any, any>) {
-    if (this.dirtyItemIndices.length > 0) this.uploadGeomItems(renderstate)
+    if (this.dirtyItemIndices.length > 0) this.uploadMaterials(renderstate)
     renderstate.drawItemsTexture = this.glGeomItemsTexture
   }
 
@@ -218,9 +218,7 @@ class GLMaterialLibrary extends EventEmitter {
    * @return {any} - The return value.
    */
   bind(renderstate: any) {
-    if (this.dirtyIndices.size > 0) {
-      this.uploadMaterials(renderstate)
-    }
+    if (this.dirtyIndices.size > 0) this.uploadMaterials(renderstate)
 
     if (!this.materialsTexture) return
 

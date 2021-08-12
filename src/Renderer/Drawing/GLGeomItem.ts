@@ -26,7 +26,7 @@ class GLGeomItem extends EventEmitter {
   GLGeomItemSet: any
   geomItemParamChanged: any
 
-  protected gl: WebGLContextAttributes
+  protected gl: WebGL12RenderingContext
   geomItem: GeomItem
   protected drawItemId: number
   geomId: number
@@ -46,7 +46,7 @@ class GLGeomItem extends EventEmitter {
   protected highlightChanged: any
   /**
    * Create a GL geom item.
-   * @param {WebGLContextAttributes} gl - The gl value.
+   * @param {WebGL12RenderingContext} gl - The gl value.
    * @param {GeomItem} geomItem - The geomItem value.
    * @param {number} drawItemId - The drawItemId value.
    * @param {number} geomId - The geomId value.
@@ -54,7 +54,7 @@ class GLGeomItem extends EventEmitter {
    * @param {boolean} supportInstancing - a boolean to disable instancing support on some mobile platforms
    */
   constructor(
-    gl: WebGLContextAttributes,
+    gl: WebGL12RenderingContext,
     geomItem: GeomItem,
     drawItemId: number,
     geomId: number,

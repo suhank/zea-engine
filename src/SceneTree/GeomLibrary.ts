@@ -55,7 +55,7 @@ interface StreamInfo {
 /** Class representing a geometry library.
  */
 class GeomLibrary extends EventEmitter {
-  protected __streamInfos: Record<number, StreamInfo>
+  protected __streamInfos: Record<string, StreamInfo>
   protected __genBuffersOpts: Record<string, any>
   protected loadCount: number
   protected queue: any
@@ -142,7 +142,7 @@ class GeomLibrary extends EventEmitter {
 
         if (this.loadCount < numCores) {
           this.loadCount++
-          this.readBinaryBuffer(geomFileID, geomsData.buffer, this.loadContext)
+          this.readBinaryBuffer(geomFileUrl, geomsData.buffer, this.loadContext)
         } else {
           this.queue.splice(0, 0, {
             geomFileID,
@@ -223,12 +223,12 @@ class GeomLibrary extends EventEmitter {
 
   /**
    * The readBinaryBuffer method.
-   * @param {number} geomFileID - The key value.
+   * @param {string} geomFileID - The key value.
    * @param {Buffer} buffer - The buffer value.
    * @param {Record<any,any>} context - The context value.
    * @return {any} - The return value.
    */
-  readBinaryBuffer(geomFileID: number, buffer: Buffer, context: Record<any, any>) {
+  readBinaryBuffer(geomFileID: string, buffer: Buffer, context: Record<any, any>) {
     const reader = new BinReader(buffer, 0, isMobile)
     const numGeoms = reader.loadUInt32()
 

@@ -203,9 +203,8 @@ class VAOGeomShaderBinding extends IGeomShaderBinding {
   constructor(gl: WebGL12RenderingContext, shaderAttrs: any, geomAttrBuffers: any, indexBuffer: WebGLBuffer) {
     super()
     this.__gl = gl
-    const gl_casted = <Record<any, any>>gl
-    this.__vao = gl_casted.createVertexArray()
-    gl_casted.bindVertexArray(this.__vao)
+    this.__vao = gl.createVertexArray()
+    gl.bindVertexArray(this.__vao)
 
     for (const attrName in shaderAttrs) {
       if (attrName == 'instancedIds') continue
@@ -241,11 +240,11 @@ class VAOGeomShaderBinding extends IGeomShaderBinding {
       gl.bindBuffer(gl.ARRAY_BUFFER, geomAttrBuffer.buffer)
       gl.vertexAttribPointer(location, geomAttrDesc.dimension, geomAttrDesc.dataType, normalized, stride, offset)
 
-      if (gl_casted.vertexAttribDivisor) {
+      if (gl.vertexAttribDivisor) {
         if (instanced == true) {
-          gl_casted.vertexAttribDivisor(location, 1) // This makes it instanced
+          gl.vertexAttribDivisor(location, 1) // This makes it instanced
         } else {
-          gl_casted.vertexAttribDivisor(location, 0) // This makes it not-instanced
+          gl.vertexAttribDivisor(location, 0) // This makes it not-instanced
         }
       }
       // console.log("Binding :" + attrName + " to attr:" + location + " count:" + geomAttrBuffer.count + " dimension:" + dimension  + " stride:" + stride  + " offset:" + offset + " normalized:" + normalized + " instanced:" + instanced);
@@ -295,7 +294,7 @@ function generateShaderGeomBinding(
   geomAttrBuffers: any,
   indexBuffer: WebGLBuffer
 ): IGeomShaderBinding {
-  if ((<Record<any, any>>gl).createVertexArray == null) {
+  if (gl.createVertexArray == null) {
     return new GeomShaderBinding(gl, shaderAttrs, geomAttrBuffers, indexBuffer)
   } else {
     return new VAOGeomShaderBinding(gl, shaderAttrs, geomAttrBuffers, indexBuffer)

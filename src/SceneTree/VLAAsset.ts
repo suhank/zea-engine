@@ -132,9 +132,12 @@ class VLAAsset extends AssetItem {
           if (numGeomsFiles == 0 && entries.geoms) {
             this.__geomLibrary.readBinaryBuffer(filename, entries.geoms.buffer, context)
           } else {
-            const basePath = folder + stem
-            //   loadGeomFilesStream(geomLibraryJSON: Record<any, any>, basePath: string, context: Record<any, any>)
-            this.__geomLibrary.loadGeomFilesStream(basePath, numGeomsFiles, context)
+            const basePath = folder + this.setMetadata
+            const geomLibraryJSON = {
+              numGeomsPerFile: numGeomsFiles,
+              numGeoms: this.__geomLibrary.getNumGeoms(), // Note: was set during readBinary.Why do we need to provide this again?
+            }
+            this.__geomLibrary.loadGeomFilesStream(geomLibraryJSON, basePath, context)
           }
           resolve(promise)
         },

@@ -7,6 +7,7 @@ import { MathFunctions } from '../../Utilities/MathFunctions'
 import { Points, Lines, PointsProxy, LinesProxy, GeomItem, Material, TreeItem } from '../../SceneTree/index'
 import { GLShaderMaterials } from '../Drawing/GLShaderMaterials'
 import { GLShaderGeomSets } from '../Drawing/GLShaderGeomSets'
+import { GLMaterialGeomItemSets } from '../Drawing/GLMaterialGeomItemSets'
 import { GLBaseRenderer } from '../GLBaseRenderer'
 
 /** Class representing a GL opaque geoms pass.
@@ -14,9 +15,8 @@ import { GLBaseRenderer } from '../GLBaseRenderer'
  * @private
  */
 class GLOpaqueGeomsPass extends GLStandardGeomsPass {
-  protected __glshadermaterials: Record<any, any>
-  protected __glShaderGeomSets: Record<any, any>
-  protected __drawItemsTexture: any
+  protected __glshadermaterials: Record<string, GLShaderMaterials>
+  protected __glShaderGeomSets: Record<string, GLShaderGeomSets>
   /**
    * Create a GL opaque geoms pass.
    */
@@ -183,13 +183,14 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
    * @param {any} material - The material value.
    */
   removeMaterial(material: Material) {
-    const glshaderMaterials = this.__glshadermaterials[material.hash]
+    const shaderName = material.getShaderName()
+    const glshaderMaterials = this.__glshadermaterials[shaderName]
     if (!glshaderMaterials || glshaderMaterials != material.getMetadata('glshaderMaterials')) {
       console.warn('Material not found in pass')
       return
     }
 
-    const glMaterialGeomItemSets = material.getMetadata('glMaterialGeomItemSets')
+    const glMaterialGeomItemSets = <GLMaterialGeomItemSets>material.getMetadata('glMaterialGeomItemSets')
     glshaderMaterials.removeMaterialGeomItemSets(glMaterialGeomItemSets)
   }
 
@@ -199,8 +200,6 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
    * @private
    */
   __traverseTreeAndDraw(renderstate: Record<any, any>) {
-    // renderstate.drawItemsTexture = this.__drawItemsTexture
-
     // eslint-disable-next-line guard-for-in
     for (const shaderName in this.__glShaderGeomSets) {
       this.__glShaderGeomSets[shaderName].draw(renderstate)
@@ -248,8 +247,6 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
   drawHighlightedGeoms(renderstate: Record<any, any>) {
     const gl = this.__gl
     gl.disable(gl.CULL_FACE) // 2-sided rendering.
-
-    renderstate.drawItemsTexture = this.__drawItemsTexture
 
     // eslint-disable-next-line guard-for-in
     for (const shaderName in this.__glShaderGeomSets) {

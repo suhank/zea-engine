@@ -210,7 +210,7 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
       this.dirtyDrawGeomIds = []
     }
 
-    const gl = <Record<any, any>>this.renderer.gl
+    const gl = this.renderer.gl
     if (!gl.multiDrawElements) {
       return
     }
@@ -301,7 +301,7 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
       this.highlightedIdsBufferDirty = false
     }
 
-    const gl = <Record<any, any>>this.renderer.gl
+    const gl = this.renderer.gl
     if (!gl.multiDrawElements) {
       return
     }

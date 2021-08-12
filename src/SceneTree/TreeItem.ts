@@ -140,11 +140,14 @@ class TreeItem extends BaseItem {
 
     // this._setGlobalXfoDirty()
     if (this.__ownerItem) {
-      // The effect of the invisible owner is added.
-      if (!(<TreeItem>this.__ownerItem).isVisible()) this.__visibleCounter--
+      const owner_TreeItem = <TreeItem>this.__ownerItem
+      if (owner_TreeItem) {
+        // The effect of the invisible owner is added.
+        if (!owner_TreeItem.isVisible()) this.__visibleCounter--
 
-      this.globalXfoOp.getInput('ParentGlobal').setParam(this.__ownerItem.getParameter('GlobalXfo'))
-      // this.__ownerItem.on('globalXfoChanged', this._setGlobalXfoDirty)
+        this.globalXfoOp.getInput('ParentGlobal').setParam(owner_TreeItem.getParameter('GlobalXfo'))
+        // this.__ownerItem.on('globalXfoChanged', this._setGlobalXfoDirty)
+      }
     } else {
       this.globalXfoOp.getInput('ParentGlobal').setParam(null)
     }

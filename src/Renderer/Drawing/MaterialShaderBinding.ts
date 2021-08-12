@@ -49,7 +49,7 @@ class SimpleUniformBinding {
         this.uniformXX = gl.uniform1i.bind(gl)
         break
       case UInt32:
-        if ((<Record<any, any>>gl).name == 'webgl2') this.uniformXX = (<Record<any, any>>gl).uniform1ui.bind(gl)
+        if (gl.name == 'webgl2') this.uniformXX = gl.uniform1ui.bind(gl)
         else this.uniformXX = gl.uniform1i.bind(gl)
         break
       case SInt32:

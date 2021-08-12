@@ -288,8 +288,6 @@ class VRViewport extends GLBaseViewport {
 
       // https://github.com/immersive-web/webxr/blob/master/explainer.md
 
-      const gl = <Record<any, any>>this.__renderer.gl
-
       const startPresenting = () => {
         ;(navigator as any)?.xr
           .requestSession('immersive-vr', {
