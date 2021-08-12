@@ -5,11 +5,14 @@ import { Material } from './Material'
 import { FileImage } from './Images/index'
 import { BaseItem } from './BaseItem'
 import { BinReader } from '..'
+import { BaseImage } from './BaseImage'
+import { Parameter } from './Parameters/Parameter'
+import { Owner } from './Owner'
 
 /** Class representing a material library in a scene tree.
  * @private
  */
-class MaterialLibrary extends EventEmitter {
+class MaterialLibrary extends EventEmitter implements Owner {
   protected lod: number
   protected __name: string
   protected __images: Record<string, any>
@@ -44,6 +47,19 @@ class MaterialLibrary extends EventEmitter {
    */
   getPath() {
     return [this.__name]
+  }
+
+  /**
+   * The resolvePath method traverses the subtree from this item down
+   * matching each name in the path with a child until it reaches the
+   * end of the path.
+   *
+   * @param {array} path - The path value.
+   * @param {number} index - The index value.
+   * @return {BaseItem|Parameter} - The return value.
+   */
+  resolvePath(path: string | string[], index = 0): BaseItem | Parameter<any> | null {
+    return null
   }
 
   /**
@@ -118,9 +134,9 @@ class MaterialLibrary extends EventEmitter {
 
   /**
    * The addImage method.
-   * @param {any} image - The image value.
+   * @param {BaseImage} image - The image value.
    */
-  addImage(image: any) {
+  addImage(image: BaseImage) {
     image.setOwner(this)
     this.__images[image.getName()] = image
   }
@@ -226,7 +242,7 @@ class MaterialLibrary extends EventEmitter {
     const numTextures = reader.loadUInt32()
     for (let i = 0; i < numTextures; i++) {
       const type = reader.loadStr()
-      const texture = Registry.constructClass(type)
+      const texture = <BaseImage>Registry.constructClass(type)
       texture.readBinary(reader, context)
       this.__images[texture.getName()] = texture
     }

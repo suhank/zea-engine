@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ParameterOwner } from './ParameterOwner'
+import { Owner } from './Owner'
 import { BinReader } from './BinReader'
 import { Registry } from '../Registry'
 import { BaseEvent } from '../Utilities/BaseEvent'
@@ -9,6 +10,7 @@ import { BaseEvent } from '../Utilities/BaseEvent'
 import { Parameter } from './Parameters/Parameter'
 import { SelectabilityChangedEvent } from '../Utilities/Events/SelectabilityChangedEvent'
 import { SelectedEvent } from '../Utilities/Events/SelectedEvent'
+
 let numBaseItems = 0
 
 class NameChangedEvent extends BaseEvent {
@@ -29,10 +31,10 @@ class NameChangedEvent extends BaseEvent {
  *
  * @extends {ParameterOwner}
  */
-class BaseItem extends ParameterOwner {
+class BaseItem extends ParameterOwner implements Owner {
   protected __metaData: Record<string, any>
   protected __name: string
-  protected __ownerItem?: BaseItem
+  protected __ownerItem: Owner
   protected __path: string[]
   protected __selectable: boolean
   protected __selected: boolean
@@ -132,7 +134,7 @@ class BaseItem extends ParameterOwner {
    * @param {number} index - The index value.
    * @return {BaseItem|Parameter|null} - The return value.
    */
-  resolvePath(path: string[], index = 0): BaseItem | Parameter<any> | null {
+  resolvePath(path: string[], index: number = 0): BaseItem | Parameter<any> | null {
     if (index == 0) {
       if (path[0] == '.' || path[0] == this.__name) index++
     }
@@ -160,7 +162,7 @@ class BaseItem extends ParameterOwner {
    *
    * @return {BaseItem} - Returns the current owner.
    */
-  getOwner(): BaseItem | undefined {
+  getOwner(): Owner {
     // return this.__private.get('ownerItem');
     return this.__ownerItem
   }
@@ -170,7 +172,7 @@ class BaseItem extends ParameterOwner {
    *
    * @param {BaseItem} ownerItem - The new owner item.
    */
-  setOwner(ownerItem: BaseItem | undefined): void {
+  setOwner(ownerItem: BaseItem | Owner): void {
     // this.__private.set(ownerItem, ownerItem);
     if (this.__ownerItem !== ownerItem) {
       this.__ownerItem = ownerItem
