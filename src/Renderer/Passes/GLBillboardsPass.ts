@@ -1,13 +1,14 @@
-import { Vec3, Vec4 } from '../../Math/index'
+import { Color, Mat4, Vec3, Vec4 } from '../../Math/index'
 import { BillboardItem, TreeItem } from '../../SceneTree/index'
 import { BillboardShader } from '../Shaders/BillboardShader'
 import { GLPass, PassType } from './GLPass'
 import { GLImageAtlas } from '../GLImageAtlas'
 import { GLTexture2D } from '../GLTexture2D'
 import { GLRenderer } from '../GLRenderer'
-import { generateShaderGeomBinding, GLMesh } from '../Drawing/index'
+import { generateShaderGeomBinding, GLMesh, IGeomShaderBinding } from '../Drawing/index'
 import { MathFunctions } from '../../Utilities/MathFunctions'
 import { GLBaseRenderer } from '../GLBaseRenderer'
+import { GLShader } from '../GLShader'
 
 const pixelsPerItem = 6 // The number of pixels per draw item.
 
@@ -18,27 +19,27 @@ const pixelsPerItem = 6 // The number of pixels per draw item.
 class GLBillboardsPass extends GLPass {
   protected billboards: any[]
   protected dirtyBillboards: Set<any>
-  protected freeIndices: any[]
+  protected freeIndices: Array<number>
   protected drawCount: number
   protected threshold: number
   protected updateRequested: boolean
   protected prevSortCameraPos: Vec3
-  protected atlas: any
-  protected indexArrayUpdateNeeded: any
-  protected instanceIdsBuffer: any
-  protected indexArray: any
+  protected atlas: GLImageAtlas
+  protected indexArrayUpdateNeeded: boolean
+  protected instanceIdsBuffer: WebGLBuffer
+  protected indexArray: Float32Array
 
-  protected glshader: any
-  protected shaderComp: any
+  protected glshader: GLShader
+  protected shaderComp: Record<any, any>
 
-  protected shaderBinding: any
+  protected shaderBinding: IGeomShaderBinding
 
-  protected modelMatrixArray: any[]
-  protected billboardDataArray: any[]
-  protected tintColorArray: any[]
+  protected modelMatrixArray: Array<Float32Array>
+  protected billboardDataArray: Array<any[]> // TODO: map vs array? refactor
+  protected tintColorArray: Array<Array<number>>
 
   protected width: number
-  protected drawItemsTexture: any
+  protected drawItemsTexture: GLTexture2D
   /**
    * Create a GL billboards pass.
    */
@@ -65,7 +66,7 @@ class GLBillboardsPass extends GLPass {
 
     // TODO: this.atlas = new GLImageAtlas(this.renderer.gl, 'Billboards', 'RGBA', 'UNSIGNED_BYTE', [1, 1, 1, 0]) // TODO: Check if last arg was for color
     this.atlas = new GLImageAtlas(this.renderer.gl, 'Billboards', 'RGBA', 'UNSIGNED_BYTE')
-    this.atlas.__clearColor = [1, 1, 1, 0]
+    this.atlas.clearColor = new Color(1, 1, 1, 0)
 
     const emitUpdated = (event: Record<any, any>) => this.emit('updated', event)
     this.atlas.on('loaded', emitUpdated)
@@ -331,14 +332,14 @@ class GLBillboardsPass extends GLPass {
         this.modelMatrixArray = []
         this.billboardDataArray = []
         this.tintColorArray = []
-        this.indexArray.forEach((index: any) => {
+        this.indexArray.forEach((index: number) => {
           // if (index == -1) return;
           const billboardData = this.billboards[index]
           const billboard = billboardData.billboard
-          const mat4 = billboard.getParameter('GlobalXfo').getValue().toMat4()
+          const mat4: Mat4 = billboard.getParameter('GlobalXfo').getValue().toMat4()
           const ppm = billboard.getParameter('PixelsPerMeter').getValue()
-          const scale = 1 / ppm
-          let flags = 0
+          const scale: number = 1 / ppm
+          let flags: number = 0
           if (billboard.getParameter('AlignedToCamera').getValue()) flags |= 1 << 2
           if (billboard.getParameter('DrawOnTop').getValue()) flags |= 1 << 3
           if (billboard.getParameter('FixedSizeOnscreen').getValue()) flags |= 1 << 4

@@ -1,15 +1,16 @@
 /* eslint-disable valid-jsdoc */
 /* eslint-disable guard-for-in */
+import { AnyARecord } from 'dns'
 import { BaseItem, Material } from '../SceneTree'
 import { StringFunctions } from '../Utilities/StringFunctions'
 import { shaderLibrary } from './ShaderLibrary'
 
-interface Result {
-  attrs: Record<any, any>
-  unifs: Record<any, any>
-  shaderHdls: any
-  shaderProgramHdl: any
-}
+// interface Result {
+//   attrs: Record<any, any>
+//   unifs: Record<any, any>
+//   shaderHdls: any
+//   shaderProgramHdl: any
+// }
 // Every instance of every shader should have a unique id.
 // This is so that we can uniquely identify the bound shader during
 // rendering. Materials and geometries cache bindings to shaders.
@@ -23,11 +24,11 @@ let shaderInstanceId = 0
  * @private
  */
 class GLShader extends BaseItem {
-  protected __gl: Record<any, any> //: WebGL12RenderingContext // temporary solution since WebGL12RenderingContext is augmented with more entries.
-  protected __shaderStagesGLSL: Record<any, any>
-  protected __shaderStages: Record<any, any>
-  protected __shaderProgramHdls: Record<any, any>
-  protected __gltextures: Record<any, any>
+  protected __gl: WebGL12RenderingContext
+  protected __shaderStagesGLSL: Record<string, any>
+  protected __shaderStages: Record<string, any>
+  protected __shaderProgramHdls: Record<string, any>
+  protected __gltextures: Record<string, any>
   //protected __id: number
 
   protected __shaderCompilationAttempted!: boolean
