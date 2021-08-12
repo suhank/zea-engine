@@ -308,14 +308,9 @@ class GLBaseViewport extends ParameterOwner {
 
     this.drawHighlights(renderstate)
 
-    gl.bindFramebuffer(gl.FRAMEBUFFER, prevRendertarget)
-    renderstate.boundRendertarget = prevRendertarget
-
-    gl.viewport(0, 0, this.__width, this.__height)
-
     // //////////////////////////////////
-    // Post processing.
-    if (this.fb && gl.renderbufferStorageMultisample) {
+    // Post processing (only in webgl2)
+    if (this.fb) {
       // "blit" the scene into the color buffer
       gl.bindFramebuffer(gl.READ_FRAMEBUFFER, this.fb[FRAMEBUFFER.MSAA_RENDERBUFFER])
       gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, this.fb[FRAMEBUFFER.COLORBUFFER])
@@ -334,21 +329,13 @@ class GLBaseViewport extends ParameterOwner {
         gl.LINEAR
       )
 
-      gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, renderstate.boundRendertarget)
-      gl.bindFramebuffer(gl.READ_FRAMEBUFFER, this.fb[FRAMEBUFFER.COLORBUFFER])
-      gl.clearBufferfv(gl.COLOR, 0, [0.0, 0.0, 0.0, 0.0])
-      gl.blitFramebuffer(
-        0,
-        0,
-        this.__width,
-        this.__height,
-        0,
-        0,
-        this.__width,
-        this.__height,
-        gl.COLOR_BUFFER_BIT,
-        gl.LINEAR
-      )
+      gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, prevRendertarget)
+      renderstate.boundRendertarget = prevRendertarget
+      gl.viewport(0, 0, this.__width, this.__height)
+
+      gl.disable(gl.DEPTH_TEST)
+      gl.screenQuad.bindShader(renderstate)
+      gl.screenQuad.draw(renderstate, this.offscreenBuffer)
     }
   }
 
@@ -364,8 +351,10 @@ class GLBaseViewport extends ParameterOwner {
     // and so we are simply disabling silhouettes on all low end devices now.
     const gl = this.__renderer.gl
     if (gl.name != 'webgl2') return
+    if (!this.fb) return
 
-    if (gl.renderbufferStorageMultisample) {
+    // if (this.fb)
+    {
       gl.bindFramebuffer(gl.READ_FRAMEBUFFER, this.fb[FRAMEBUFFER.MSAA_RENDERBUFFER])
       gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, this.fb[FRAMEBUFFER.DEPTHBUFFER])
       gl.clearBufferfv(gl.COLOR, 0, [1, 1, 1, 1])
@@ -390,23 +379,24 @@ class GLBaseViewport extends ParameterOwner {
       gl.viewport(0, 0, this.__width, this.__height)
 
       if (this.renderer.outlineThickness == 0) return
-    } else {
-      // Rebind the default RenderBuffer.
-      gl.bindFramebuffer(gl.FRAMEBUFFER, null)
-      renderstate.boundRendertarget = null
-
-      gl.clearColor(...this.__backgroundColor.asArray())
-      // Note: in Chrome's macOS the alpha channel causes strange
-      // compositing issues. Here where we disable the alpha channel
-      // in the color mask which addresses the issues on MacOS.
-      // To see the artifacts, pass 'true' as the 4th parameter, and
-      // open a simple testing scene containing a grid. Moving the
-      // camera causes a ghosting effect to be left behind.
-      gl.colorMask(true, true, true, false)
-      gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
-
-      gl.viewport(0, 0, this.__width, this.__height)
     }
+    // else {
+    //   // Rebind the default RenderBuffer.
+    //   gl.bindFramebuffer(gl.FRAMEBUFFER, null)
+    //   renderstate.boundRendertarget = null
+
+    //   gl.clearColor(...this.__backgroundColor.asArray())
+    //   // Note: in Chrome's macOS the alpha channel causes strange
+    //   // compositing issues. Here where we disable the alpha channel
+    //   // in the color mask which addresses the issues on MacOS.
+    //   // To see the artifacts, pass 'true' as the 4th parameter, and
+    //   // open a simple testing scene containing a grid. Moving the
+    //   // camera causes a ghosting effect to be left behind.
+    //   gl.colorMask(true, true, true, false)
+    //   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
+
+    //   gl.viewport(0, 0, this.__width, this.__height)
+    // }
 
     // ////////////////////////////////////
     //
