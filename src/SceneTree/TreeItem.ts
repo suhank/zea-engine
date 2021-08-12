@@ -4,7 +4,7 @@ import { Xfo, Box3, Color } from '../Math/index'
 import { Registry } from '../Registry'
 // import { BooleanParameter, Parameter, XfoParameter } from './Parameters/index'
 import { BooleanParameter } from './Parameters/BooleanParameter'
-import { Parameter } from './Parameters/Parameter'
+
 import { XfoParameter } from './Parameters/XfoParameter'
 import { BaseItem } from './BaseItem'
 import { CalcGlobalXfoOperator } from './Operators/CalcGlobalXfoOperator'
@@ -12,6 +12,7 @@ import { BoundingBoxParameter } from './Parameters/BoundingBoxParameter'
 import { BinReader } from './BinReader'
 import { BaseClass } from '../Utilities/BaseClass'
 import { Operator } from './Operators'
+import { Parameter } from './Parameters'
 
 let selectionOutlineColor = new Color('#03E3AC')
 selectionOutlineColor.a = 0.1

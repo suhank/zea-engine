@@ -5,9 +5,10 @@
 import { EventEmitter } from '../Utilities/EventEmitter'
 import { Registry } from '../Registry'
 import { BinReader } from './BinReader'
-import { Parameter } from './Parameters/Parameter'
+
 import { ParameterAddedEvent } from '../Utilities/Events/ParameterAddedEvent'
 import { ParameterRemovedEvent } from '../Utilities/Events/ParameterRemovedEvent'
+import { Parameter } from './Parameters/Parameter'
 
 /**
  * Class that allows other classes to be parameterized by `Parameter` type of objects.
