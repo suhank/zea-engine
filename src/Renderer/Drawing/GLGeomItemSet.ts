@@ -2,6 +2,8 @@ import '../../SceneTree/GeomItem'
 import { CountChangedEvent } from '../../Utilities/Events/CountChangedEvent'
 
 import { EventEmitter } from '../../Utilities/index'
+import { GLGeom } from './GLGeom'
+import { GLGeomItem } from './GLGeomItem'
 
 /** This class abstracts the rendering of a collection of geometries to screen.
  * @extends EventEmitter
@@ -9,25 +11,25 @@ import { EventEmitter } from '../../Utilities/index'
  */
 class GLGeomItemSet extends EventEmitter {
   protected gl: WebGL12RenderingContext
-  protected glGeom: any
+  protected glGeom: GLGeom
   protected id: number
-  protected glGeomItems: any[]
-  protected glgeomItems_freeIndices: any[]
+  protected glGeomItems: GLGeomItem[]
+  protected glgeomItems_freeIndices: number[]
   protected glgeomItemEventHandlers: any[]
-  protected drawIdsArray: any
-  protected drawIdsBuffer: any
+  protected drawIdsArray: Float32Array
+  protected drawIdsBuffer: WebGLBuffer
   protected drawIdsBufferDirty: boolean
-  protected highlightedIdsArray: any
-  protected highlightedIdsBuffer: any
+  protected highlightedIdsArray: Float32Array
+  protected highlightedIdsBuffer: WebGLBuffer
   protected highlightedIdsBufferDirty: boolean
-  protected visibleItems: any[]
-  protected highlightedItems: any[]
+  protected visibleItems: number[]
+  protected highlightedItems: number[]
   /**
    * Create a GL geom item set.
    * @param {WebGL12RenderingContext} gl - The webgl rendering context.
    * @param {any} glGeom - The glGeom value.
    */
-  constructor(gl: WebGL12RenderingContext, glGeom: any) {
+  constructor(gl: WebGL12RenderingContext, glGeom: GLGeom) {
     super()
     this.gl = gl
     this.glGeom = glGeom
@@ -49,25 +51,25 @@ class GLGeomItemSet extends EventEmitter {
 
   /**
    * The getGLGeom method.
-   * @return {any} - The return value.
+   * @return {GLGeom} - The return value.
    */
-  getGLGeom() {
+  getGLGeom(): GLGeom {
     return this.glGeom
   }
 
   /**
    * The getDrawCount method.
-   * @return {any} - The return value.
+   * @return {number} - The return value.
    */
-  getDrawCount() {
+  getDrawCount(): number {
     return this.visibleItems.length
   }
 
   /**
    * The addGLGeomItem method.
-   * @param {any} glGeomItem - The glGeomItem value.
+   * @param {GLGeomItem} glGeomItem - The glGeomItem value.
    */
-  addGLGeomItem(glGeomItem: any) {
+  addGLGeomItem(glGeomItem: GLGeomItem) {
     let index: number
     if (this.glgeomItems_freeIndices.length > 0) {
       index = this.glgeomItems_freeIndices.pop()
@@ -130,9 +132,9 @@ class GLGeomItemSet extends EventEmitter {
 
   /**
    * The removeGLGeomItem method.
-   * @param {any} glGeomItem - The glGeomItem value.
+   * @param {GLGeomItem} glGeomItem - The glGeomItem value.
    */
-  removeGLGeomItem(glGeomItem: any) {
+  removeGLGeomItem(glGeomItem: GLGeomItem) {
     const index = this.glGeomItems.indexOf(glGeomItem)
     const eventHandlers = this.glgeomItemEventHandlers[index]
     glGeomItem.geomItem.off('highlightChanged', eventHandlers.highlightChanged)

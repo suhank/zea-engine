@@ -1,5 +1,4 @@
 import { Quat, Vec2, Vec3 } from '../../Math'
-import { GeomItem } from '../../SceneTree'
 
 /* eslint-disable camelcase */
 const vec3_normalize = (vec: Vec3): Vec3 => {

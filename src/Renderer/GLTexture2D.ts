@@ -474,7 +474,14 @@ class GLTexture2D extends RefCounted {
    * @param {number} offsetY - The offsetY value
    * @param {boolean} bind - The bind value
    */
-  populate(dataArray: Uint16Array, width: number, height: number, offsetX = 0, offsetY = 0, bind = true) {
+  populate(
+    dataArray: Uint16Array | Float32Array,
+    width: number,
+    height: number,
+    offsetX = 0,
+    offsetY = 0,
+    bind = true
+  ) {
     const gl = this.__gl
     if (bind) gl.bindTexture(gl.TEXTURE_2D, this.__gltex)
     gl.texSubImage2D(gl.TEXTURE_2D, 0, offsetX, offsetY, width, height, this.__format, this.__type, dataArray)

@@ -18,15 +18,15 @@ const pixelsPerItem = 6 // The number of RGBA pixels per draw item.
  * @private
  */
 class GLGeomItemLibrary extends EventEmitter {
-  protected renderer: any
-  protected glGeomItems: any[]
+  protected renderer: GLBaseRenderer
+  protected glGeomItems: GLGeomItem[]
   protected glGeomItemEventHandlers: any[]
-  protected glGeomItemsMap: Record<any, any>
-  protected glGeomItemsIndexFreeList: any[]
-  protected dirtyItemIndices: any[]
-  protected removedItemIndices: any[]
-  protected worker: any
-  protected glGeomItemsTexture: any
+  protected glGeomItemsMap: Record<number, number>
+  protected glGeomItemsIndexFreeList: number[]
+  protected dirtyItemIndices: number[]
+  protected removedItemIndices: number[]
+  protected worker: GLGeomItemLibraryCullingWorker
+  protected glGeomItemsTexture: GLTexture2D
   /**
    * Create a GLGeomItemLibrary.
    * @param {GLBaseRenderer} renderer - The renderer object
