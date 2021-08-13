@@ -1,8 +1,10 @@
 import { EventEmitter } from '../../Utilities/index'
 import { loadTextfile, loadBinfile } from '../Utils'
-import xlsx_import from '../../../external/xlsx'
 
-let XLSX: Record<any, any> = xlsx_import // casting this, since the object is from a 10k loc js file
+import XLSX from 'xlsx'
+function sheet_to_row_object_array(sheet: any, opts?: any) {
+  return XLSX.utils.sheet_to_json(sheet, opts != null ? opts : {})
+}
 
 // eslint-disable-next-line require-jsdoc
 function getLanguage() {
@@ -92,7 +94,8 @@ class LabelManager extends EventEmitter {
         const json = {}
         workbook.SheetNames.forEach(function (sheetName: any) {
           // Here is your object
-          const rows = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheetName])
+          // const rows = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheetName])
+          const rows = sheet_to_row_object_array(workbook.Sheets[sheetName])
           rows.forEach(function (row: any) {
             const identifier = row.Identifier
             delete row.Identifier
