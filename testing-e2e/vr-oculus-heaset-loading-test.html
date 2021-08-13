@@ -10,11 +10,8 @@
 
     <link rel="stylesheet" href="styles/tailwind.min.css" />
 
-    <script src="../dist/index.umd.js"></script>
-    <script src="../dist/plugins.umd.js"></script>
-
     <script type="module">
-      const { GLRenderer, Scene, Vec3, Xfo, VLAAsset } = window.zeaEngine
+      import { GLRenderer, Scene, Vec3, Xfo, VLAAsset } from '../dist/index.esm.js'
 
       const canvas = document.querySelector('#renderer')
 
@@ -27,7 +24,7 @@
       renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(0.5, 0.5, 0.5), new Vec3(0, 0, 0))
 
       const asset = new VLAAsset()
-      asset.load('/dist/public-resources/Oculus.vla')
+      asset.load('/public-resources/Oculus.vla')
       asset.getGeometryLibrary().on('loaded', () => {
         const HMD = asset.getChildByName('HMD')
         HMD.getParameter('LocalXfo').setValue(new Xfo(new Vec3(0, 0, 200)))

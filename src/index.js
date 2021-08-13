@@ -2,7 +2,6 @@ import packageJson from '../package.json'
 
 import { zeaDebug } from './helpers/zeaDebug'
 import { LibsRegistry } from './LibsRegistry'
-import { Env } from './Utilities/index'
 
 import { SystemDesc } from './SystemDesc'
 import { Registry } from './Registry'
@@ -23,7 +22,6 @@ const ZeaEngine = {
 const libsRegistry = new LibsRegistry(packageJson.version)
 
 zeaDebug('Zea Engine version %s', packageJson.version)
-zeaDebug('Zea Engine env %O', Env)
 
 export * from './SystemDesc'
 export * from './Registry'
@@ -33,3 +31,5 @@ export * from './SceneTree/index'
 export * from './Renderer/index'
 
 export { libsRegistry, packageJson, ZeaEngine }
+
+globalThis.zeaEngine = ZeaEngine

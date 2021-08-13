@@ -1,7 +1,6 @@
 import { Color } from '../Math/index'
 import { TreeItem } from './TreeItem.js'
 import { resourceLoader } from './resourceLoader.js'
-import { DriveAdapter } from './ResourceLoader/DriveAdapter.js'
 import { SceneSettings } from './SceneSettings.js'
 import { GridTreeItem } from './GridTreeItem'
 
@@ -13,12 +12,8 @@ const defaultGridColor = new Color('#DCDCDC')
 class Scene {
   /**
    * Create a scene.
-   * @param {object} resources - The resources value.
    */
-  constructor(resources) {
-    if (resources) {
-      resourceLoader.setAdapter(new DriveAdapter(resources))
-    }
+  constructor() {
     this.settings = new SceneSettings('Scene Settings')
     this.root = new TreeItem('root')
     this.root.addChild(this.settings)

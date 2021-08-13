@@ -42,7 +42,7 @@ class GLBaseViewport extends ParameterOwner {
     // Setup Offscreen Render Targets
     // Note: On low end devices, such as Oculus, blitting the multi-sampled depth buffer is throwing errors,
     // and so we are simply disabling silhouettes on all low end devices now.
-    if (SystemDesc.browserName != 'Safari' && SystemDesc.deviceCategory != 'Low') {
+    if (gl.name == 'webgl2') {
       this.offscreenBuffer = new GLTexture2D(gl, {
         type: 'UNSIGNED_BYTE',
         format: 'RGBA',
@@ -51,9 +51,9 @@ class GLBaseViewport extends ParameterOwner {
         height: 4,
       })
       this.depthTexture = new GLTexture2D(gl, {
-        type: gl.UNSIGNED_SHORT,
-        format: gl.DEPTH_COMPONENT,
-        internalFormat: gl.name == 'webgl2' ? gl.DEPTH_COMPONENT16 : gl.DEPTH_COMPONENT,
+        type: gl.UNSIGNED_INT_24_8,
+        format: gl.DEPTH_STENCIL,
+        internalFormat: gl.name == 'webgl2' ? gl.DEPTH24_STENCIL8 : gl.DEPTH_COMPONENT,
         filter: gl.NEAREST,
         wrap: gl.CLAMP_TO_EDGE,
         width: 4,
@@ -185,9 +185,8 @@ class GLBaseViewport extends ParameterOwner {
   resizeRenderTargets(width, height) {
     // Note: On low end devices, such as Oculus, blitting the multi-sampled depth buffer is throwing errors,
     // and so we are simply disabling silhouettes on all low end devices now.
-    if (SystemDesc.browserName != 'Safari' && SystemDesc.deviceCategory != 'Low') {
-      const gl = this.__renderer.gl
-
+    const gl = this.__renderer.gl
+    if (gl.name == 'webgl2') {
       if (this.fb) {
         gl.deleteFramebuffer(this.fb[FRAMEBUFFER.MSAA_RENDERBUFFER])
         gl.deleteFramebuffer(this.fb[FRAMEBUFFER.COLORBUFFER])
@@ -200,44 +199,34 @@ class GLBaseViewport extends ParameterOwner {
       this.depthTexture.resize(width, height)
 
       this.fb = []
+      this.fb[FRAMEBUFFER.MSAA_RENDERBUFFER] = gl.createFramebuffer()
+      gl.bindFramebuffer(gl.FRAMEBUFFER, this.fb[FRAMEBUFFER.MSAA_RENDERBUFFER])
+      this.colorRenderbuffer = gl.createRenderbuffer()
 
-      if (gl.renderbufferStorageMultisample) {
-        this.fb[FRAMEBUFFER.MSAA_RENDERBUFFER] = gl.createFramebuffer()
-        gl.bindFramebuffer(gl.FRAMEBUFFER, this.fb[FRAMEBUFFER.MSAA_RENDERBUFFER])
-        this.colorRenderbuffer = gl.createRenderbuffer()
+      // Create the color buffer
+      gl.bindRenderbuffer(gl.RENDERBUFFER, this.colorRenderbuffer)
+      gl.renderbufferStorageMultisample(gl.RENDERBUFFER, 4, gl.RGBA8, width, height)
+      gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.RENDERBUFFER, this.colorRenderbuffer)
 
-        // Create the color buffer
-        gl.bindRenderbuffer(gl.RENDERBUFFER, this.colorRenderbuffer)
-        gl.renderbufferStorageMultisample(gl.RENDERBUFFER, 4, gl.RGBA8, width, height)
-        gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.RENDERBUFFER, this.colorRenderbuffer)
+      this.depthBuffer = gl.createRenderbuffer()
+      gl.bindRenderbuffer(gl.RENDERBUFFER, this.depthBuffer)
+      gl.renderbufferStorageMultisample(gl.RENDERBUFFER, 4, gl.DEPTH24_STENCIL8, width, height)
+      gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, this.depthBuffer)
 
-        this.depthBuffer = gl.createRenderbuffer()
-        gl.bindRenderbuffer(gl.RENDERBUFFER, this.depthBuffer)
-        gl.renderbufferStorageMultisample(gl.RENDERBUFFER, 4, gl.DEPTH_COMPONENT16, width, height)
-        gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, this.depthBuffer)
+      // //////////////////////////////////
+      // COLORBUFFER
+      this.fb[FRAMEBUFFER.COLORBUFFER] = gl.createFramebuffer()
+      gl.bindFramebuffer(gl.FRAMEBUFFER, this.fb[FRAMEBUFFER.COLORBUFFER])
+      gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.offscreenBuffer.glTex, 0)
+      gl.bindFramebuffer(gl.FRAMEBUFFER, null)
 
-        // //////////////////////////////////
-        // COLORBUFFER
-        this.fb[FRAMEBUFFER.COLORBUFFER] = gl.createFramebuffer()
-        gl.bindFramebuffer(gl.FRAMEBUFFER, this.fb[FRAMEBUFFER.COLORBUFFER])
-        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.offscreenBuffer.glTex, 0)
-        gl.bindFramebuffer(gl.FRAMEBUFFER, null)
-
-        // //////////////////////////////////
-        // DEPTHBUFFER
-        // Create the depth texture that will be bitted to.
-        this.fb[FRAMEBUFFER.DEPTHBUFFER] = gl.createFramebuffer()
-        gl.bindFramebuffer(gl.FRAMEBUFFER, this.fb[FRAMEBUFFER.DEPTHBUFFER])
-        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.TEXTURE_2D, this.depthTexture.glTex, 0)
-        gl.bindFramebuffer(gl.FRAMEBUFFER, null)
-      } else {
-        this.EXT_frag_depth = gl.getExtension('EXT_frag_depth')
-
-        this.fb[FRAMEBUFFER.MSAA_RENDERBUFFER] = gl.createFramebuffer()
-        gl.bindFramebuffer(gl.FRAMEBUFFER, this.fb[FRAMEBUFFER.MSAA_RENDERBUFFER])
-        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.offscreenBuffer.glTex, 0)
-        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.TEXTURE_2D, this.depthTexture.glTex, 0)
-      }
+      // //////////////////////////////////
+      // DEPTHBUFFER
+      // Create the depth texture that will be bitted to.
+      this.fb[FRAMEBUFFER.DEPTHBUFFER] = gl.createFramebuffer()
+      gl.bindFramebuffer(gl.FRAMEBUFFER, this.fb[FRAMEBUFFER.DEPTHBUFFER])
+      gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.TEXTURE_2D, this.depthTexture.glTex, 0)
+      gl.bindFramebuffer(gl.FRAMEBUFFER, null)
 
       const check = gl.checkFramebufferStatus(gl.name == 'webgl2' ? gl.DRAW_FRAMEBUFFER : gl.FRAMEBUFFER)
       if (check !== gl.FRAMEBUFFER_COMPLETE) {
@@ -309,19 +298,15 @@ class GLBaseViewport extends ParameterOwner {
 
     this.drawHighlights(renderstate)
 
-    gl.bindFramebuffer(gl.FRAMEBUFFER, prevRendertarget)
-    renderstate.boundRendertarget = prevRendertarget
-
-    gl.viewport(0, 0, this.__width, this.__height)
-
     // //////////////////////////////////
-    // Post processing.
-    if (this.fb && gl.renderbufferStorageMultisample) {
+    // Post processing (only in webgl2)
+    if (this.fb) {
       // "blit" the scene into the color buffer
       gl.bindFramebuffer(gl.READ_FRAMEBUFFER, this.fb[FRAMEBUFFER.MSAA_RENDERBUFFER])
       gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, this.fb[FRAMEBUFFER.COLORBUFFER])
       gl.clearBufferfv(gl.COLOR, 0, [0.0, 0.0, 0.0, 0.0])
 
+      // Blit to the offscreenBuffer texture that we then render to screen.
       gl.blitFramebuffer(
         0,
         0,
@@ -335,21 +320,13 @@ class GLBaseViewport extends ParameterOwner {
         gl.LINEAR
       )
 
-      gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, renderstate.boundRendertarget)
-      gl.bindFramebuffer(gl.READ_FRAMEBUFFER, this.fb[FRAMEBUFFER.COLORBUFFER])
-      gl.clearBufferfv(gl.COLOR, 0, [0.0, 0.0, 0.0, 0.0])
-      gl.blitFramebuffer(
-        0,
-        0,
-        this.__width,
-        this.__height,
-        0,
-        0,
-        this.__width,
-        this.__height,
-        gl.COLOR_BUFFER_BIT,
-        gl.LINEAR
-      )
+      gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, prevRendertarget)
+      renderstate.boundRendertarget = prevRendertarget
+      gl.viewport(0, 0, this.__width, this.__height)
+
+      gl.disable(gl.DEPTH_TEST)
+      gl.screenQuad.bindShader(renderstate)
+      gl.screenQuad.draw(renderstate, this.offscreenBuffer)
     }
   }
 
@@ -363,70 +340,45 @@ class GLBaseViewport extends ParameterOwner {
     // and without it, we cannot draw lines over the top of geometries.
     // Note: On low end devices, such as Oculus, blitting the multi-sampled depth buffer is throwing errors,
     // and so we are simply disabling silhouettes on all low end devices now.
-    if (SystemDesc.browserName == 'Safari' || SystemDesc.deviceCategory == 'Low') return
-
     const gl = this.__renderer.gl
+    if (gl.name != 'webgl2' || !this.fb) return
 
-    if (gl.renderbufferStorageMultisample) {
-      gl.bindFramebuffer(gl.READ_FRAMEBUFFER, this.fb[FRAMEBUFFER.MSAA_RENDERBUFFER])
-      gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, this.fb[FRAMEBUFFER.DEPTHBUFFER])
-      gl.clearBufferfv(gl.COLOR, 0, [1, 1, 1, 1])
+    gl.bindFramebuffer(gl.READ_FRAMEBUFFER, this.fb[FRAMEBUFFER.MSAA_RENDERBUFFER])
+    gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, this.fb[FRAMEBUFFER.DEPTHBUFFER])
+    gl.clearBufferfv(gl.COLOR, 0, [1, 1, 1, 1])
 
-      // Note: in Google SwiftShader this line generates the following error later on the code path.
-      // GetShaderiv: <- error from previous GL command
-      gl.blitFramebuffer(
-        0,
-        0,
-        this.__width,
-        this.__height,
-        0,
-        0,
-        this.__width,
-        this.__height,
-        gl.DEPTH_BUFFER_BIT,
-        gl.NEAREST
-      )
-      // Rebind the MSAA RenderBuffer.
-      gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, this.fb[FRAMEBUFFER.MSAA_RENDERBUFFER])
-      renderstate.boundRendertarget = this.fb[FRAMEBUFFER.MSAA_RENDERBUFFER]
-      gl.viewport(0, 0, this.__width, this.__height)
-    } else {
-      // Rebind the default RenderBuffer.
-      gl.bindFramebuffer(gl.FRAMEBUFFER, null)
-      renderstate.boundRendertarget = null
+    gl.blitFramebuffer(
+      0,
+      0,
+      this.__width,
+      this.__height,
+      0,
+      0,
+      this.__width,
+      this.__height,
+      gl.DEPTH_BUFFER_BIT,
+      gl.NEAREST
+    )
+    // Rebind the MSAA RenderBuffer.
+    gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, this.fb[FRAMEBUFFER.MSAA_RENDERBUFFER])
+    renderstate.boundRendertarget = this.fb[FRAMEBUFFER.MSAA_RENDERBUFFER]
+    gl.viewport(0, 0, this.__width, this.__height)
 
-      gl.clearColor(...this.__backgroundColor.asArray())
-      // Note: in Chrome's macOS the alpha channel causes strange
-      // compositing issues. Here where we disable the alpha channel
-      // in the color mask which addresses the issues on MacOS.
-      // To see the artifacts, pass 'true' as the 4th parameter, and
-      // open a simple testing scene containing a grid. Moving the
-      // camera causes a ghosting effect to be left behind.
-      gl.colorMask(true, true, true, false)
-      gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
-
-      gl.viewport(0, 0, this.__width, this.__height)
-    }
+    if (this.renderer.outlineThickness == 0) return
 
     // ////////////////////////////////////
     //
-    if (gl.renderbufferStorageMultisample) {
-      gl.enable(gl.BLEND)
-      gl.blendEquation(gl.FUNC_ADD)
-      gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA) // For add
-      gl.disable(gl.DEPTH_TEST)
-      gl.depthMask(false)
-    }
+    gl.enable(gl.BLEND)
+    gl.blendEquation(gl.FUNC_ADD)
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA) // For add
+    gl.disable(gl.DEPTH_TEST)
+    gl.depthMask(false)
 
     this.renderer.silhouetteShader.bind(renderstate)
 
     const unifs = renderstate.unifs
 
     this.depthTexture.bindToUniform(renderstate, unifs.depthTexture)
-
-    if (!gl.renderbufferStorageMultisample) {
-      this.offscreenBuffer.bindToUniform(renderstate, unifs.colorTexture)
-    }
 
     gl.uniform2f(unifs.screenSize.location, this.__width, this.__height)
     gl.uniform1f(unifs.outlineThickness.location, this.renderer.outlineThickness)
@@ -438,10 +390,8 @@ class GLBaseViewport extends ParameterOwner {
 
     this.quad.bindAndDraw(renderstate)
 
-    if (gl.renderbufferStorageMultisample) {
-      gl.enable(gl.DEPTH_TEST)
-      gl.depthMask(true)
-    }
+    gl.enable(gl.DEPTH_TEST)
+    gl.depthMask(true)
   }
 
   /**
