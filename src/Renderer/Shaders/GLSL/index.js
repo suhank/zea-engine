@@ -26,7 +26,9 @@ import quadVertexFromID from './quadVertexFromID.glsl'
 import unpackHDR from './unpackHDR.glsl'
 import surfaceGeomData from './surfaceGeomData.glsl'
 import surfaceHighlight from './surfaceHighlight.glsl'
+import imageAtlas from './imageAtlas.glsl'
 
+shaderLibrary.setShaderModule('imageAtlas.glsl', imageAtlas)
 shaderLibrary.setShaderModule('surfaceGeomData.glsl', surfaceGeomData)
 shaderLibrary.setShaderModule('surfaceHighlight.glsl', surfaceHighlight)
 
