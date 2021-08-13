@@ -180,7 +180,7 @@ class GLRenderTarget extends EventEmitter {
 
   /**
    * The bindForWriting method.
-   * @param {Record<any, any>} renderstate - The object tracking the current state of the renderer
+   * @param {RenderState} renderstate - The object tracking the current state of the renderer
    * @param {boolean} clear - The clear value.
    */
   bindForWriting(renderstate?: RenderState, clear = false) {
@@ -197,7 +197,7 @@ class GLRenderTarget extends EventEmitter {
 
   /**
    * The unbindForWriting method.
-   * @param {Record<any, any>} renderstate - The object tracking the current state of the renderer
+   * @param {RenderState} renderstate - The object tracking the current state of the renderer
    */
   unbindForWriting(renderstate?: RenderState) {
     if (renderstate) renderstate.boundRendertarget = this.__prevBoundFbo
@@ -242,7 +242,7 @@ class GLRenderTarget extends EventEmitter {
 
   /**
    * The bindColorTexture method.
-   * @param {Record<any, any>} renderstate - The object tracking the current state of the renderer
+   * @param {RenderState} renderstate - The object tracking the current state of the renderer
    * @param {WebGLUniformLocation} unif - The WebGL uniform
    * @param {number} channelId - The channelId value.
    * @return {boolean} - The return value.
@@ -258,7 +258,7 @@ class GLRenderTarget extends EventEmitter {
 
   /**
    * The bindDepthTexture method.
-   * @param {Record<any, any>} renderstate - The object tracking the current state of the renderer
+   * @param {RenderState} renderstate - The object tracking the current state of the renderer
    * @param {WebGLUniformLocation} unif - The WebGL uniform
    * @return {boolean} - The return value.
    */

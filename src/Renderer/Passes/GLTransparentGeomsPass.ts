@@ -8,6 +8,7 @@ import { GLShaderGeomSets } from '../Drawing/GLShaderGeomSets'
 import { Registry } from '../../Registry'
 import { GLBaseRenderer } from '../GLBaseRenderer'
 import { GLShader } from '../GLShader'
+import { GLGeomItem } from '../Drawing'
 
 /** Class representing a GL transparent geoms pass.
  * @extends GLStandardGeomsPass
@@ -15,7 +16,7 @@ import { GLShader } from '../GLShader'
  */
 class GLTransparentGeomsPass extends GLStandardGeomsPass {
   protected itemCount: number
-  protected __glShaderGeomSets: Record<any, any>
+  protected __glShaderGeomSets: Record<any, any> // GLShaderGeomSets
   protected transparentItems: any[]
   protected transparentItemIndices: Record<any, any>
   protected freeList: any[]
@@ -81,7 +82,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
 
   /**
    * The addGeomItem method.
-   * @param {GeomItem} geomItem - The geomItem value.
+   * @param {GLGeomItem} geomItem - The geomItem value.
    */
   addGeomItem(geomItem: GeomItem) {
     this.itemCount++

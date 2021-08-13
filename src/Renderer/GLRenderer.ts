@@ -510,7 +510,7 @@ class GLRenderer extends GLBaseRenderer {
 
   /**
    * The bindGLRenderer method.
-   * @param {Record<any, any>} renderstate - The object tracking the current state of the renderer
+   * @param {RenderState} renderstate - The object tracking the current state of the renderer
    */
   bindGLRenderer(renderstate: RenderState) {
     super.bindGLBaseRenderer(renderstate)

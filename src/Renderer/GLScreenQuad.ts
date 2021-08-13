@@ -41,7 +41,7 @@ class GLScreenQuad {
 
   /**
    * The bind method.
-   * @param {Record<any, any>} renderstate - The object tracking the current state of the renderer
+   * @param {RenderState} renderstate - The object tracking the current state of the renderer
    * @param {GLTexture2D} texture - The texture param.
    * @param {Vec2} pos - The pos value.
    * @param {Vec2} size - The size value.
@@ -78,7 +78,7 @@ class GLScreenQuad {
 
   /**
    * The bindShader method.
-   * @param {Record<any, any>} renderstate - The object tracking the current state of the renderer
+   * @param {RenderState} renderstate - The object tracking the current state of the renderer
    * @return {any} - The return value.
    */
   bindShader(renderstate: RenderState) {
@@ -87,7 +87,7 @@ class GLScreenQuad {
 
   /**
    * The draw method.
-   * @param {Record<any, any>} renderstate - The object tracking the current state of the renderer
+   * @param {RenderState} renderstate - The object tracking the current state of the renderer
    * @param {GLTexture2D} texture - The texture value.
    * @param {Vec2} pos - The pos value.
    * @param {Vec2} size - The size value.

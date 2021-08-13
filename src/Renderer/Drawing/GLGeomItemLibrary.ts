@@ -319,7 +319,7 @@ class GLGeomItemLibrary extends EventEmitter {
    * @param {GeomItem} geomItem - The geomItem value.
    * @return {GLGeomItem} - The GLGeomItem that wraps the provided GeomItem
    */
-  getGLGeomItem(geomItem: GeomItem) {
+  getGLGeomItem(geomItem: GeomItem){
     const index = this.glGeomItemsMap[geomItem.getId()]
     if (index != undefined) {
       // Increment the ref count for the GLGeom

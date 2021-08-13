@@ -16,14 +16,14 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
   protected glGeomItems: GLGeomItem[]
   protected glGeomIdsMapping: Record<any, any>
   protected glgeomItemEventHandlers: any[]
-  protected freeIndices: any[]
-  protected dirtyDrawGeomIds: any[]
+  protected freeIndices: number[]
+  protected dirtyDrawGeomIds: number[]
   protected drawElementCounts: Uint32Array
   protected drawElementOffsets: Uint32Array
   protected highlightElementCounts: Uint32Array
   protected highlightElementOffsets: Uint32Array
   protected reserved: number
-  protected visibleItems: any[]
+  protected visibleItems: GLGeomItem[]
   protected drawIdsArray: Float32Array
   protected drawIdsBufferDirty: boolean
   protected drawIdsTexture: GLTexture2D

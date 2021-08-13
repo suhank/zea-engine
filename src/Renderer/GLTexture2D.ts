@@ -490,9 +490,9 @@ class GLTexture2D extends RefCounted {
   /**
    * Returns the `width`(Index 0) and the `height`(Index 1) of the GL Texture.
    *
-   * @return {array} - The return value.
+   * @return {number[]} - The return value.
    */
-  getSize() {
+  getSize(): number[] {
     return [this.width, this.height]
   }
 
@@ -501,7 +501,7 @@ class GLTexture2D extends RefCounted {
    *
    * @return {WebGLTexture} - The return value.
    */
-  get glTex() {
+  get glTex(): WebGLTexture {
     return this.__gltex
   }
 
@@ -510,7 +510,7 @@ class GLTexture2D extends RefCounted {
    *
    * @return {WebGLTexture} - The return value.
    */
-  getTexHdl() {
+  getTexHdl(): WebGLTexture {
     return this.__gltex
   }
 
@@ -518,10 +518,10 @@ class GLTexture2D extends RefCounted {
    * The bind method.
    * @param {RenderState} renderstate - The object tracking the current state of the renderer
    * @param {WebGLUniformLocation} unif - The WebGL uniform
-   * @return {any} - The return value.
+   * @return {boolean} - The return value.
    * @deprecated
    */
-  bind(renderstate: RenderState, unif: WebGLUniformLocation) {
+  bind(renderstate: RenderState, unif: WebGLUniformLocation): boolean {
     console.warn("'bind' is deprecated. Please use 'bindToUniform'")
     return this.bindToUniform(renderstate, unif)
   }

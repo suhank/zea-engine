@@ -491,7 +491,7 @@ class GLGeomLibrary extends EventEmitter {
 
   /**
    * The bind method.
-   * @param {Record<any, any>} renderstate - The renderstate value.
+   * @param {RenderState} renderstate - The renderstate value.
    * @return {boolean} - Returns true if binding was successful
    */
   bind(renderstate: RenderState) {

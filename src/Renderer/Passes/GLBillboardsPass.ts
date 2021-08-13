@@ -301,7 +301,7 @@ class GLBillboardsPass extends GLPass {
 
   /**
    * The updateBillboards method.
-   * @param {Record<any, any>} renderstate - The object tracking the current state of the renderer
+   * @param {RenderState} renderstate - The object tracking the current state of the renderer
    * @private
    */
   updateBillboards(renderstate: RenderState) {

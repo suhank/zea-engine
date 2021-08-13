@@ -370,7 +370,7 @@ class GLFbo {
   /**
    * Unbinds the Fbo to the canvas context for WRITE operations.
    *
-   * @param {Record<any, any>} renderstate - The renderstate value.
+   * @param {RenderState} renderstate - The renderstate value.
    */
   unbindForWriting(renderstate: RenderState) {
     if (renderstate) renderstate.boundRendertarget = this.__prevBoundFbo
@@ -382,7 +382,7 @@ class GLFbo {
   /**
    * Binds the Fbo to the canvas context, meaning that all WRITE operations will affect the current Fbo.
    *
-   * @param {Record<any, any>} renderstate - The renderstate value.
+   * @param {RenderState} renderstate - The renderstate value.
    */
   bind(renderstate: RenderState) {
     this.bindForWriting(renderstate)
@@ -391,7 +391,7 @@ class GLFbo {
   /**
    * Unbinds the Fbo to the canvas context for WRITE operations.
    *
-   * @param {Record<any, any>} renderstate - The renderstate value.
+   * @param {RenderState} renderstate - The renderstate value.
    */
   unbind(renderstate?: RenderState) {
     if (renderstate) {
@@ -416,7 +416,7 @@ class GLFbo {
   /**
    * Unbinds the Fbo to the canvas context for READ operations.
    *
-   * @param {Record<any, any>} renderstate - The renderstate value.
+   * @param {RenderState} renderstate - The renderstate value.
    */
   unbindForReading() {
     const gl = this.__gl
