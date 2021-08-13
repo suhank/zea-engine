@@ -514,7 +514,7 @@ class GLTexture2D extends RefCounted {
    * @return {any} - The return value.
    * @deprecated
    */
-  bind(renderstate: Record<any, any>, unif: WebGLUniformLocation) {
+  bind(renderstate: RenderState, unif: WebGLUniformLocation) {
     console.warn("'bind' is deprecated. Please use 'bindToUniform'")
     return this.bindToUniform(renderstate, unif)
   }
@@ -540,7 +540,7 @@ class GLTexture2D extends RefCounted {
    * @param {Record<any, any>} bindings - The bindings value.
    * @return {boolean} - The return value.
    */
-  bindToUniform(renderstate: Record<any, any>, unif: Record<any, any>, bindings?: Record<any, any>) {
+  bindToUniform(renderstate: RenderState, unif: Record<any, any>, bindings?: Record<any, any>) {
     if (!this.__loaded) {
       return false
     }

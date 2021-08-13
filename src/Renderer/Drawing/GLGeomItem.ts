@@ -160,7 +160,7 @@ class GLGeomItem extends EventEmitter {
    * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    * @return {any} - The return value.
    */
-  bind(renderstate: Record<any, any>) {
+  bind(renderstate: RenderState) {
     const gl = this.gl
     const unifs = renderstate.unifs
 

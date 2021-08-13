@@ -247,7 +247,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
    * @param {Record<any,any>} transparentItem - current item to render
    * @param {Record<any,any>} cache - cache tracking which material/shader is currently bound.
    */
-  _drawItem(renderstate: Record<any, any>, transparentItem: Record<any, any>, cache: Record<any, any>) {
+  _drawItem(renderstate: RenderState, transparentItem: Record<any, any>, cache: Record<any, any>) {
     if (cache.currentGLMaterial != transparentItem.glMaterial) {
       cache.currentGLMaterial = transparentItem.glMaterial
       if (!cache.currentGLMaterial.bind(renderstate)) {
@@ -275,7 +275,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
    * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    * @private
    */
-  _drawItems(renderstate: Record<any, any>) {
+  _drawItems(renderstate: RenderState) {
     // Note: sorting here will not sort geometries of different types.
     // this is a flawed solution that only sorts geomemtries of the same
     // time and same shader against each other. Given that this is the data 99% o
@@ -333,7 +333,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
    * The draw method.
    * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    */
-  draw(renderstate: Record<any, any>) {
+  draw(renderstate: RenderState) {
     if (this.itemCount == 0) return
 
     const gl = this.__gl
@@ -400,7 +400,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
    * The drawHighlightedGeoms method.
    * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    */
-  drawHighlightedGeoms(renderstate: Record<any, any>) {
+  drawHighlightedGeoms(renderstate: RenderState) {
     const gl = this.__gl
     gl.disable(gl.CULL_FACE) // 2-sided rendering.
 
@@ -436,7 +436,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
    * The drawGeomData method.
    * @param {object} renderstate - The object tracking the current state of the renderer
    */
-  drawGeomData(renderstate: Record<any, any>) {
+  drawGeomData(renderstate: RenderState) {
     const gl = this.__gl
     gl.disable(gl.BLEND)
     gl.disable(gl.CULL_FACE)

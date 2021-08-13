@@ -189,7 +189,7 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
    * The updateDrawIDsBuffer method.
    * @param {Record<any,any>} renderstate - The object used to track state changes during rendering.
    */
-  updateDrawIDsBuffer(renderstate: Record<any, any>) {
+  updateDrawIDsBuffer(renderstate: RenderState) {
     {
       if (!this.drawIdsArray || this.visibleItems.length > this.drawIdsArray.length) {
         this.drawIdsArray = new Float32Array(this.visibleItems.length)
@@ -276,7 +276,7 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
    * The updateHighlightedIDsBuffer method.
    * @param {Record<any, any>} renderstate - The object used to track state changes during rendering.
    */
-  updateHighlightedIDsBuffer(renderstate: Record<any, any>) {
+  updateHighlightedIDsBuffer(renderstate: RenderState) {
     if (this.highlightedIdsBufferDirty) {
       if (!this.highlightedIdsArray || this.highlightedItems.length > this.highlightedIdsArray.length) {
         this.highlightedIdsArray = new Float32Array(this.highlightedItems.length)
@@ -368,7 +368,7 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
    * The draw method.
    * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    */
-  draw(renderstate: Record<any, any>) {
+  draw(renderstate: RenderState) {
     if (this.visibleItems.length == 0) {
       return
     }
@@ -387,7 +387,7 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
    * The drawHighlighted method.
    * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    */
-  drawHighlighted(renderstate: Record<any, any>) {
+  drawHighlighted(renderstate: RenderState) {
     if (this.highlightedItems.length == 0) {
       return
     }
@@ -414,12 +414,7 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
    * @param {Array} offsets - the offsets for each element drawn in by this draw call.
    * @private
    */
-  __bindAndRender(
-    renderstate: Record<any, any>,
-    drawIdsArray: Float32Array,
-    counts: Uint32Array,
-    offsets: Uint32Array
-  ) {
+  __bindAndRender(renderstate: RenderState, drawIdsArray: Float32Array, counts: Uint32Array, offsets: Uint32Array) {
     const gl = this.gl
     const unifs = renderstate.unifs
 
@@ -441,12 +436,7 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
    * @param {Uint32Array} counts - the geom element count for each element drawn in by this draw call.
    * @param {Uint32Array} offsets - the geom element offset for each element drawn in by this draw call.
    */
-  abstract multiDraw(
-    renderstate: Record<any, any>,
-    drawIds: Float32Array,
-    counts: Uint32Array,
-    offsets: Uint32Array
-  ): void
+  abstract multiDraw(renderstate: RenderState, drawIds: Float32Array, counts: Uint32Array, offsets: Uint32Array): void
 
   /**
    * Sorts the drawn items in order furthest to nearest when rendering transparent objects.

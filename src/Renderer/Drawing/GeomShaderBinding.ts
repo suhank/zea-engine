@@ -82,7 +82,7 @@ const genDataTypeDesc = (gl: WebGL12RenderingContext, attrDataType: any) => {
   }
 }
 abstract class IGeomShaderBinding {
-  abstract bind(renderstate: Record<any, any>): void
+  abstract bind(renderstate: RenderState): void
   abstract unbind(): void
   abstract destroy(): void
 }
@@ -115,7 +115,7 @@ class GeomShaderBinding extends IGeomShaderBinding {
    * @param {Record<any,any>} renderstate - The render state.
    * @return {boolean} - The return value.
    */
-  bind(renderstate?: Record<any, any>): boolean {
+  bind(renderstate?: RenderState): boolean {
     const gl = this.__gl
 
     for (const attrName in this.__shaderAttrs) {
@@ -266,7 +266,7 @@ class VAOGeomShaderBinding extends IGeomShaderBinding {
    * @param {Record<any,any>} renderstate - The render state.
    * @return {boolean} - The return value.
    */
-  bind(renderstate?: Record<any, any>): boolean {
+  bind(renderstate?: RenderState): boolean {
     const gl = this.__gl
     gl.bindVertexArray(this.__vao)
     if (this.__indexBuffer) this.__gl.bindBuffer(this.__gl.ELEMENT_ARRAY_BUFFER, this.__indexBuffer)

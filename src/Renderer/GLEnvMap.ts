@@ -1,7 +1,7 @@
 import { GLProbe } from './GLProbe'
 import { GLHDRImage } from './GLHDRImage'
 import { EnvMapShader } from './Shaders/EnvMapShader'
-import { generateShaderGeomBinding } from './Drawing/GeomShaderBinding'
+import { generateShaderGeomBinding, IGeomShaderBinding } from './Drawing/GeomShaderBinding'
 import { EnvMap } from '../SceneTree/Images/EnvMap'
 import { GLBaseRenderer } from './GLBaseRenderer'
 import { BaseEvent } from '../Utilities/BaseEvent'
@@ -17,7 +17,7 @@ class GLEnvMap extends GLProbe {
   protected __backgroundFocus: number
   protected __srcGLTex: GLHDRImage
   protected __envMapShader: EnvMapShader
-  protected __envMapShaderBinding: any
+  protected __envMapShaderBinding: IGeomShaderBinding
   protected __lodPyramid: any
   /**
    * Create a GL env map.
@@ -97,7 +97,7 @@ class GLEnvMap extends GLProbe {
    * The setBackgroundFocus method.
    * @param {number} val - The val param.
    */
-  setBackgroundFocus(val: any) {
+  setBackgroundFocus(val: number) {
     this.__backgroundFocus = val
     this.__renderer.requestRedraw()
   }
@@ -106,7 +106,7 @@ class GLEnvMap extends GLProbe {
    * The draw method.
    * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    */
-  draw(renderstate: Record<any, any>) {
+  draw(renderstate: RenderState) {
     if (this.__envMap.isLoaded()) {
       const gl = this.__gl
       const debug = false

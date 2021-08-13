@@ -494,7 +494,7 @@ class GLGeomLibrary extends EventEmitter {
    * @param {Record<any, any>} renderstate - The renderstate value.
    * @return {boolean} - Returns true if binding was successful
    */
-  bind(renderstate: Record<any, any>) {
+  bind(renderstate: RenderState) {
     if (this.dirtyGeomIndices.size > 0) {
       this.cleanGeomBuffers()
     }
@@ -514,7 +514,7 @@ class GLGeomLibrary extends EventEmitter {
    * The unbind method.
    * @param {object} renderstate - The object tracking the current state of the renderer
    */
-  unbind(renderstate: Record<any, any>) {
+  unbind(renderstate: RenderState) {
     // Unbinding a geom is important as it puts back some important
     // GL state. (vertexAttribDivisor)
     const shaderBinding = this.shaderBindings[renderstate.shaderkey]

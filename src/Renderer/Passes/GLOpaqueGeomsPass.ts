@@ -199,7 +199,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
    * @param {object} renderstate - The renderstate value.
    * @private
    */
-  __traverseTreeAndDraw(renderstate: Record<any, any>) {
+  __traverseTreeAndDraw(renderstate: RenderState) {
     // eslint-disable-next-line guard-for-in
     for (const shaderName in this.__glShaderGeomSets) {
       this.__glShaderGeomSets[shaderName].draw(renderstate)
@@ -218,7 +218,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
    * The draw method.
    * @param {object} renderstate - The object tracking the current state of the renderer
    */
-  draw(renderstate: Record<any, any>) {
+  draw(renderstate: RenderState) {
     const gl = this.__gl
     gl.disable(gl.BLEND)
 
@@ -244,7 +244,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
    * The drawHighlightedGeoms method.
    * @param {object} renderstate - The object tracking the current state of the renderer
    */
-  drawHighlightedGeoms(renderstate: Record<any, any>) {
+  drawHighlightedGeoms(renderstate: RenderState) {
     const gl = this.__gl
     gl.disable(gl.CULL_FACE) // 2-sided rendering.
 
@@ -267,7 +267,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
    * The drawGeomData method.
    * @param {object} renderstate - The object tracking the current state of the renderer
    */
-  drawGeomData(renderstate: Record<any, any>) {
+  drawGeomData(renderstate: RenderState) {
     renderstate.passIndex = this.passIndex
 
     const gl = this.__gl

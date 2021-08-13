@@ -1224,21 +1224,21 @@ class GLBaseRenderer extends ParameterOwner {
 
   /**
    * The bindGLBaseRenderer method.
-   * @param {Record<any, any>} renderState - The renderState value.
+   * @param {Record<any, any>} renderstate - The renderstate value.
    */
-  bindGLBaseRenderer(renderState: Record<any, any>) {
-    renderState.gl = this.__gl
-    renderState.shaderopts = { directives: this.directives } // we will start deprecating this in favor os a simpler directives
+  bindGLBaseRenderer(renderstate: RenderState) {
+    renderstate.gl = this.__gl
+    renderstate.shaderopts = { directives: this.directives } // we will start deprecating this in favor os a simpler directives
 
     const gl = this.__gl
-    if (!renderState.viewports || renderState.viewports.length == 1) {
-      renderState.bindRendererUnifs = (unifs: any) => {
+    if (!renderstate.viewports || renderstate.viewports.length == 1) {
+      renderstate.bindRendererUnifs = (unifs: any) => {
         const { cameraMatrix, viewMatrix, projectionMatrix, eye, isOrthographic } = unifs
         if (cameraMatrix) {
-          gl.uniformMatrix4fv(cameraMatrix.location, false, renderState.cameraMatrix.asArray())
+          gl.uniformMatrix4fv(cameraMatrix.location, false, renderstate.cameraMatrix.asArray())
         }
 
-        const vp = renderState.viewports[0]
+        const vp = renderstate.viewports[0]
         if (viewMatrix) {
           gl.uniformMatrix4fv(viewMatrix.location, false, vp.viewMatrix.asArray())
         }
@@ -1256,20 +1256,20 @@ class GLBaseRenderer extends ParameterOwner {
           gl.uniform1i(isOrthographic.location, vp.isOrthographic)
         }
       }
-      renderState.bindViewports = (unifs: Record<any, any>, cb: any) => cb()
+      renderstate.bindViewports = (unifs: Record<any, any>, cb: any) => cb()
     } else {
-      renderState.bindRendererUnifs = (unifs: Record<any, any>) => {
+      renderstate.bindRendererUnifs = (unifs: Record<any, any>) => {
         // Note: the camera matrix should be the head position instead
         // of the eye position. The inverse(viewMatrix) can be used
         // when we want the eye pos.
         const { cameraMatrix } = unifs
         if (cameraMatrix) {
-          gl.uniformMatrix4fv(cameraMatrix.location, false, renderState.cameraMatrix.asArray())
+          gl.uniformMatrix4fv(cameraMatrix.location, false, renderstate.cameraMatrix.asArray())
         }
       }
 
-      renderState.bindViewports = (unifs: Record<any, any>, cb: any) => {
-        renderState.viewports.forEach((vp: any, index: number) => {
+      renderstate.bindViewports = (unifs: Record<any, any>, cb: any) => {
+        renderstate.viewports.forEach((vp: any, index: number) => {
           let vp_region = vp.region
           gl.viewport(vp_region[0], vp_region[1], vp_region[2], vp_region[3])
 
@@ -1298,50 +1298,50 @@ class GLBaseRenderer extends ParameterOwner {
 
   /**
    * The drawScene method.
-   * @param {Record<any,any>} renderState - The renderState value.
+   * @param {Record<any,any>} renderstate - The renderstate value.
    */
-  drawScene(renderState: Record<any, any>) {
+  drawScene(renderstate: RenderState) {
     // Bind already called by GLRenderer.
 
-    renderState.directives = [...this.directives, '#define DRAW_COLOR']
-    renderState.shaderopts.directives = renderState.directives
+    renderstate.directives = [...this.directives, '#define DRAW_COLOR']
+    renderstate.shaderopts.directives = renderstate.directives
 
     for (const key in this.__passes) {
       const passSet = this.__passes[key]
       for (const pass of passSet) {
-        if (pass.enabled) pass.draw(renderState)
+        if (pass.enabled) pass.draw(renderstate)
       }
     }
   }
 
   /**
    * The drawHighlightedGeoms method.
-   * @param {Record<any, any>} renderState - The renderState value.
+   * @param {Record<any, any>} renderstate - The renderstate value.
    */
-  drawHighlightedGeoms(renderState: Record<any, any>) {
-    this.bindGLBaseRenderer(renderState)
+  drawHighlightedGeoms(renderstate: RenderState) {
+    this.bindGLBaseRenderer(renderstate)
 
-    renderState.directives = [...this.directives, '#define DRAW_HIGHLIGHT']
-    renderState.shaderopts.directives = renderState.directives
+    renderstate.directives = [...this.directives, '#define DRAW_HIGHLIGHT']
+    renderstate.shaderopts.directives = renderstate.directives
 
     for (const key in this.__passes) {
       const passSet = this.__passes[key]
       for (const pass of passSet) {
-        if (pass.enabled) pass.drawHighlightedGeoms(renderState)
+        if (pass.enabled) pass.drawHighlightedGeoms(renderstate)
       }
     }
   }
 
   /**
    * The drawSceneGeomData method.
-   * @param {object} renderState - The renderState value.
+   * @param {object} renderstate - The renderstate value.
    * @param {number} [mask=255] - The mask value
    */
-  drawSceneGeomData(renderState: Record<any, any>, mask = 255) {
-    this.bindGLBaseRenderer(renderState)
+  drawSceneGeomData(renderstate: RenderState, mask = 255) {
+    this.bindGLBaseRenderer(renderstate)
 
-    renderState.directives = [...this.directives, '#define DRAW_GEOMDATA']
-    renderState.shaderopts.directives = renderState.directives
+    renderstate.directives = [...this.directives, '#define DRAW_GEOMDATA']
+    renderstate.shaderopts.directives = renderstate.directives
 
     for (const key in this.__passes) {
       // Skip pass categories that do not match
@@ -1352,7 +1352,7 @@ class GLBaseRenderer extends ParameterOwner {
       if ((Number.parseInt(key) & mask) == 0) continue
       const passSet = this.__passes[key]
       for (const pass of passSet) {
-        if (pass.enabled) pass.drawGeomData(renderState)
+        if (pass.enabled) pass.drawGeomData(renderstate)
       }
     }
   }

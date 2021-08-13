@@ -450,7 +450,7 @@ class GLGeomItemLibrary extends EventEmitter {
    * The uploadGeomItems method.
    * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    */
-  uploadGeomItems(renderstate: Record<any, any>) {
+  uploadGeomItems(renderstate: RenderState) {
     const gl = this.renderer.gl
     if (!gl.floatTexturesSupported) {
       // this.emit('renderTreeUpdated', {});
@@ -564,7 +564,7 @@ class GLGeomItemLibrary extends EventEmitter {
    * Updates the GPU state if any update is needed.
    * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    */
-  bind(renderstate: Record<any, any>) {
+  bind(renderstate: RenderState) {
     if (this.dirtyItemIndices.length > 0 || this.removedItemIndices.length > 0) {
       this.uploadGeomItems(renderstate)
     }

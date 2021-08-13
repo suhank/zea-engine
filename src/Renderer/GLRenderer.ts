@@ -25,7 +25,7 @@ class GLRenderer extends GLBaseRenderer {
   protected __exposure: number
   protected __tonemap: boolean
   protected __gamma: number
-  protected __glEnvMap: any
+  protected __glEnvMap: Record<any, any> // GLTexture2D | GLTexture2D |
   protected __glBackgroundMap: any
   protected __displayEnvironment: boolean
   protected __debugMode: number
@@ -493,7 +493,7 @@ class GLRenderer extends GLBaseRenderer {
    * The drawBackground method.
    * @param {object} renderstate - The object tracking the current state of the renderer
    */
-  drawBackground(renderstate: Record<any, any>) {
+  drawBackground(renderstate: RenderState) {
     if (this.__glBackgroundMap) {
       if (!this.__glBackgroundMap.isLoaded()) return
       const gl = this.__gl
@@ -512,7 +512,7 @@ class GLRenderer extends GLBaseRenderer {
    * The bindGLRenderer method.
    * @param {Record<any, any>} renderstate - The object tracking the current state of the renderer
    */
-  bindGLRenderer(renderstate: Record<any, any>) {
+  bindGLRenderer(renderstate: RenderState) {
     super.bindGLBaseRenderer(renderstate)
 
     renderstate.envMap = this.__glEnvMap
@@ -524,7 +524,7 @@ class GLRenderer extends GLBaseRenderer {
    * The drawScene method.
    * @param {object} renderstate - The object tracking the current state of the renderer
    */
-  drawScene(renderstate: Record<any, any>) {
+  drawScene(renderstate: RenderState) {
     this.bindGLRenderer(renderstate)
 
     if (this.__displayEnvironment) this.drawBackground(renderstate)

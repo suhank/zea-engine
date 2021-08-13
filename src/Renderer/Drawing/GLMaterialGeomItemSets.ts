@@ -129,7 +129,7 @@ class GLMaterialGeomItemSets extends EventEmitter {
    * Draws all elements, binding the shader and continuing into the GLGeomItemSet
    * @param {Record<any,any>} renderstate - The render state for the current draw traversal
    */
-  draw(renderstate: Record<any, any>) {
+  draw(renderstate: RenderState) {
     if (this.drawCount == 0) return
     const warnMissingUnifs = true
     this.glMaterial.bind(renderstate, warnMissingUnifs)
@@ -143,7 +143,7 @@ class GLMaterialGeomItemSets extends EventEmitter {
    * The drawHighlighted method.
    * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    */
-  drawHighlighted(renderstate: Record<any, any>) {
+  drawHighlighted(renderstate: RenderState) {
     this.glMaterial.bind(renderstate, false)
     for (const key in this.glGeomItemSets) {
       const glGeomItemSet = this.glGeomItemSets[key]
@@ -155,7 +155,7 @@ class GLMaterialGeomItemSets extends EventEmitter {
    * The drawHighlightedGeoms method.
    * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    */
-  drawGeomData(renderstate: Record<any, any>) {
+  drawGeomData(renderstate: RenderState) {
     this.glMaterial.bind(renderstate, false)
     for (const key in this.glGeomItemSets) {
       const glGeomItemSet = this.glGeomItemSets[key]

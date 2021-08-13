@@ -36,7 +36,7 @@ class StandardSurfaceShader extends GLShader {
    * @param {string} key - The key value.
    * @return {any} - The return value.
    */
-  bind(renderstate: Record<any, any>, key: string) {
+  bind(renderstate: RenderState, key: string) {
     super.bind(renderstate, key)
 
     const gl = this.__gl

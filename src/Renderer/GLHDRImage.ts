@@ -110,7 +110,7 @@ class GLHDRImage extends GLTexture2D {
 
     this.__fbo.bindAndClear()
 
-    const renderstate: Record<any, any> = {}
+    const renderstate: RenderState = {}
     this.__unpackHDRShader.bind(renderstate, 'GLHDRImage')
     this.__shaderBinding.bind(renderstate)
 
@@ -151,7 +151,7 @@ class GLHDRImage extends GLTexture2D {
    * @param {Record<any,any>} bindings - The bindings value.
    * @return {boolean} - The return value.
    */
-  bindToUniform(renderstate: Record<any, any>, unif: WebGLUniformLocation, bindings?: Record<any, any>) {
+  bindToUniform(renderstate: RenderState, unif: WebGLUniformLocation, bindings?: Record<any, any>) {
     return super.bindToUniform(renderstate, unif, bindings)
   }
 

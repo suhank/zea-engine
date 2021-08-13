@@ -12,6 +12,7 @@ import { XRWebGLLayer } from 'webxr'
 import { ViewChangedEvent } from '../../Utilities/Events/ViewChangedEvent'
 import { ControllerAddedEvent } from '../../Utilities/Events/ControllerAddedEvent'
 import { StateChangedEvent } from '../../Utilities/Events/StateChangedEvent'
+
 /** This Viewport class is used for rendering stereoscopic views to VR controllers using the WebXR api.
  *  When the GLRenderer class detects a valid WebXF capable device is plugged in, this class is automatically
  *  instantiated ready for XR sessions
@@ -484,7 +485,7 @@ class VRViewport extends GLBaseViewport {
   drawXRFrame(xrFrame: any) {
     const session = xrFrame.session
 
-    const layer = session.renderState.baseLayer
+    const layer = session.renderstate.baseLayer
 
     const pose = xrFrame.getViewerPose(this.__refSpace)
     if (!pose) {
@@ -531,9 +532,9 @@ class VRViewport extends GLBaseViewport {
     gl.colorMask(true, true, true, true)
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 
-    const renderstate: Record<any, any> = {
+    const renderstate: RenderState = {
       boundRendertarget: layer.framebuffer,
-      depthRange: [session.renderState.depthNear, session.renderState.depthFar],
+      depthRange: [session.renderstate.depthNear, session.renderstate.depthFar],
       region: this.__region,
       viewport: this,
       vrviewport: this,

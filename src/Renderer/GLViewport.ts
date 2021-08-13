@@ -1,5 +1,5 @@
 /* eslint-disable guard-for-in */
-import { Vec2, Vec3, Ray, Mat4, Xfo } from '../Math/index'
+import { Vec2, Vec3, Ray, Mat4, Xfo, Color } from '../Math/index'
 import { Camera, GeomItem, TreeItem } from '../SceneTree/index'
 import { GLBaseViewport } from './GLBaseViewport'
 import { GLFbo } from './GLFbo'
@@ -46,7 +46,7 @@ class GLViewport extends GLBaseViewport {
   protected __prevDownTime: number
   protected __geomDataBuffer: any
   protected __geomDataBufferSizeFactor: number
-  protected __geomDataBufferFbo: any
+  protected __geomDataBufferFbo: GLFbo
   protected debugGeomShader: boolean
 
   protected __x: number
@@ -100,7 +100,7 @@ class GLViewport extends GLBaseViewport {
       height: height <= 1 ? 1 : Math.floor(height / this.__geomDataBufferSizeFactor),
     })
     this.__geomDataBufferFbo = new GLFbo(gl, this.__geomDataBuffer, true)
-    this.__geomDataBufferFbo.setClearColor([0, 0, 0, 0])
+    this.__geomDataBufferFbo.setClearColor(new Color(0, 0, 0, 0))
 
     // //////////////////////////////////
     // Setup Camera Manipulator
@@ -352,7 +352,7 @@ class GLViewport extends GLBaseViewport {
    */
   renderGeomDataFbo() {
     if (this.__geomDataBufferFbo) {
-      const renderstate: Record<any, any> = {}
+      const renderstate: RenderState = {}
       this.__initRenderState(renderstate)
 
       // Note: GLLinesPass binds a new Fbo, but shares this ones depth buffer.
@@ -874,7 +874,7 @@ class GLViewport extends GLBaseViewport {
    * @param {object} renderstate - The object tracking the current state of the renderer
    * @private
    */
-  __initRenderState(renderstate: Record<any, any>) {
+  __initRenderState(renderstate: RenderState) {
     // console.log(this.__viewMat.toString())
     renderstate.viewXfo = this.__cameraXfo
     renderstate.viewScale = 1.0
@@ -897,7 +897,7 @@ class GLViewport extends GLBaseViewport {
   /**
    * The draw method.
    */
-  draw(renderstate = {}) {
+  draw(renderstate?: RenderState) {
     this.__initRenderState(renderstate)
 
     super.draw(renderstate)

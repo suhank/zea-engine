@@ -25,7 +25,7 @@ class FatLinesGeomDataShader extends FatLinesShader {
     this.setShaderStage('FRAGMENT_SHADER', frag)
   }
 
-  bind(renderstate: Record<any, any>) {
+  bind(renderstate: RenderState) {
     if (super.bind(renderstate)) {
       renderstate.supportsInstancing = false
       return true

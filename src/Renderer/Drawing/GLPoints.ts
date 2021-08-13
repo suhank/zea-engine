@@ -22,7 +22,7 @@ class GLPoints extends GLGeom {
    * The genBuffers method.
    * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    */
-  genBuffers(renderstate?: Record<any, any>) {
+  genBuffers(renderstate?: RenderState) {
     super.genBuffers(renderstate)
 
     const gl = this.__gl
@@ -52,7 +52,7 @@ class GLPoints extends GLGeom {
    * The updateBuffers method.
    * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    */
-  updateBuffers(renderstate: Record<any, any>) {
+  updateBuffers(renderstate: RenderState) {
     const gl = this.__gl
     const geomBuffers = this.__geom.genBuffers()
 
@@ -79,7 +79,7 @@ class GLPoints extends GLGeom {
    * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    * @return {any} - The return value.
    */
-  bind(renderstate: Record<any, any>) {
+  bind(renderstate: RenderState) {
     if (renderstate.unifs.PointSize) {
       const gl = this.__gl
       let shaderBinding = this.__shaderBindings[renderstate.shaderkey]
@@ -103,7 +103,7 @@ class GLPoints extends GLGeom {
    * The draw method.
    * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    */
-  draw(renderstate: Record<any, any>) {
+  draw(renderstate: RenderState) {
     const gl = this.__gl
     if (renderstate.unifs.PointSize) {
       gl.drawElementsInstanced(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0, this.__numVertices)
@@ -117,7 +117,7 @@ class GLPoints extends GLGeom {
    * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    * @param {number} instanceCount - The instanceCount value.
    */
-  drawInstanced(renderstate: Record<any, any>, instanceCount: number) {
+  drawInstanced(renderstate: RenderState, instanceCount: number) {
     const gl = this.__gl
     gl.drawArraysInstanced(this.__gl.POINTS, 0, this.__numVertices, instanceCount)
   }

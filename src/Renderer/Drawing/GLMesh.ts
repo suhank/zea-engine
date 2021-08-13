@@ -158,7 +158,7 @@ class GLMesh extends GLGeom {
    * @param {object} renderstate - The object tracking the current state of the renderer
    * @return {any} - The return value.
    */
-  bindWireframeVAO(renderstate?: Record<any, any>) {
+  bindWireframeVAO(renderstate?: RenderState) {
     if (this.__wireframesVao == undefined) return false
     this.__ext.bindVertexArrayOES(this.__wireframesVao)
     return true
@@ -214,7 +214,7 @@ class GLMesh extends GLGeom {
    * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    * @return {any} - The return value.
    */
-  bindHardEdgesVAO(renderstate: Record<any, any>) {
+  bindHardEdgesVAO(renderstate: RenderState) {
     if (this.__hardEdgesVao == undefined) return false
     this.__ext.bindVertexArrayOES(this.__hardEdgesVao)
     return true
@@ -251,7 +251,7 @@ class GLMesh extends GLGeom {
    * Draw an item to screen.
    * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    */
-  draw(renderstate: Record<any, any>) {
+  draw(renderstate: RenderState) {
     this.__gl.drawElements(this.__gl.TRIANGLES, this.__numTriIndices, this.__indexDataType, 0)
   }
 
@@ -260,7 +260,7 @@ class GLMesh extends GLGeom {
    * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    * @param {number} instanceCount - The instanceCount value.
    */
-  drawInstanced(renderstate: Record<any, any>, instanceCount: number) {
+  drawInstanced(renderstate: RenderState, instanceCount: number) {
     const gl = this.__gl
     gl.drawElementsInstanced(this.__gl.TRIANGLES, this.__numTriIndices, this.__indexDataType, 0, instanceCount)
   }

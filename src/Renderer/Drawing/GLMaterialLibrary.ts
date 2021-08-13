@@ -138,7 +138,7 @@ class GLMaterialLibrary extends EventEmitter {
    * The uploadMaterials method.
    * @param {Record<any,any>} renderstate - The render state for the current draw traversal
    */
-  uploadMaterials(renderstate: Record<any, any>) {
+  uploadMaterials(renderstate: RenderState) {
     const gl = this.renderer.__gl
 
     const materialsTextureSize = MathFunctions.nextPow2(Math.ceil(Math.sqrt(this.materialsAllocator.reservedSpace)))
@@ -207,7 +207,7 @@ class GLMaterialLibrary extends EventEmitter {
    * Updates the GPU state if any update is needed.
    * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    */
-  update(renderstate: Record<any, any>) {
+  update(renderstate: RenderState) {
     if (this.dirtyItemIndices.length > 0) this.uploadMaterials(renderstate)
     renderstate.drawItemsTexture = this.glGeomItemsTexture
   }

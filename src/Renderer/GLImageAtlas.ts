@@ -94,7 +94,7 @@ class GLImageAtlas extends GLRenderTarget {
    * @return {number} - The return value.
    */
   // TODO: WebGLTexture is not handled here
-  addSubImage(subImage: BaseImage | WebGLTexture) { 
+  addSubImage(subImage: BaseImage | WebGLTexture) {
     if (subImage instanceof BaseImage) {
       const gltexture: GLTexture2D = new GLTexture2D(this.__gl, subImage)
       if (!subImage.isLoaded()) {
@@ -318,7 +318,7 @@ class GLImageAtlas extends GLRenderTarget {
       this.generateAtlasLayout()
     }
     const gl = this.__gl
-    const renderstate: Record<any, any> = {}
+    const renderstate: RenderState = {}
     this.bindForWriting(renderstate, true)
 
     this.__atlasLayoutShader.bind(renderstate, 'GLImageAtlas')
@@ -365,7 +365,7 @@ class GLImageAtlas extends GLRenderTarget {
    * @param {WebGLUniformLocation} unif - The WebGL uniform
    * @return {boolean} - The return value.
    */
-  bindToUniform(renderstate: Record<any, any>, unif: Record<any, any>) {
+  bindToUniform(renderstate: RenderState, unif: Record<any, any>) {
     super.bindToUniform(renderstate, unif)
 
     const unifs: Record<any, any> = renderstate.unifs

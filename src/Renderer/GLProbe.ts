@@ -48,7 +48,7 @@ class GLProbe extends EventEmitter {
   convolveProbe(srcGLTex: any) {
     const gl = this.__gl
 
-    const renderstate: Record<any, any> = {
+    const renderstate: RenderState = {
       shaderopts: { directives: ['#define ENABLE_ES3', '#define ENABLE_FLOAT_TEXTURES'] },
     }
 
@@ -236,7 +236,7 @@ class GLProbe extends EventEmitter {
    * @param {WebGLUniformLocation} unif - The WebGL uniform
    * @return {boolean} - Returns true if the Probe was successfully bound.
    */
-  bind(renderstate: Record<any, any>) {
+  bind(renderstate: RenderState) {
     const gl = this.__gl
     const { irradianceMap, prefilterMap, brdfLUT } = renderstate.unifs
 

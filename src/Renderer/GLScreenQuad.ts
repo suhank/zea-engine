@@ -26,15 +26,14 @@ class GLScreenQuad {
     this.flipY = true
     this.__glshader = new ScreenQuadShader(gl)
 
-    const gl_casted = gl
-    if (!gl_casted.__quadVertexIdsBuffer) gl_casted.setupInstancedQuad()
+    if (!gl.__quadVertexIdsBuffer) gl.setupInstancedQuad()
 
     const shaderComp = this.__glshader.compileForTarget('GLScreenQuad')
     this.__quadBinding = generateShaderGeomBinding(
       this.__gl,
       shaderComp.attrs,
-      gl_casted.__quadattrbuffers,
-      gl_casted.__quadIndexBuffer
+      gl.__quadattrbuffers,
+      gl.__quadIndexBuffer
     )
 
     this.ready = true
@@ -47,7 +46,7 @@ class GLScreenQuad {
    * @param {Vec2} pos - The pos value.
    * @param {Vec2} size - The size value.
    */
-  bind(renderstate: Record<any, any>, texture: GLTexture2D, pos?: Vec2, size?: Vec2) {
+  bind(renderstate: RenderState, texture: GLTexture2D, pos?: Vec2, size?: Vec2) {
     const unifs = renderstate.unifs
     if (texture) {
       texture.bindToUniform(renderstate, renderstate.unifs.image)
@@ -82,7 +81,7 @@ class GLScreenQuad {
    * @param {Record<any, any>} renderstate - The object tracking the current state of the renderer
    * @return {any} - The return value.
    */
-  bindShader(renderstate: Record<any, any>) {
+  bindShader(renderstate: RenderState) {
     return this.__glshader.bind(renderstate, 'GLScreenQuad')
   }
 
@@ -93,7 +92,7 @@ class GLScreenQuad {
    * @param {Vec2} pos - The pos value.
    * @param {Vec2} size - The size value.
    */
-  draw(renderstate: Record<any, any>, texture: GLTexture2D, pos?: Vec2, size?: Vec2) {
+  draw(renderstate: RenderState, texture: GLTexture2D, pos?: Vec2, size?: Vec2) {
     this.bind(renderstate, texture, pos, size)
     const gl = this.__gl
     gl.drawQuad()

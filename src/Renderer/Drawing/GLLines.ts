@@ -4,6 +4,7 @@ import { generateShaderGeomBinding } from './GeomShaderBinding'
 import { GLTexture2D } from '../GLTexture2D'
 import { Lines } from '../../SceneTree/Geometry/Lines'
 import { Vec3Attribute } from '../../SceneTree/Geometry/Vec3Attribute'
+import { BaseGeom } from '../../SceneTree'
 
 /** Class representing GL lines.
  * @extends GLGeom
@@ -14,14 +15,14 @@ class GLLines extends GLGeom {
   protected __numVertices: number
   protected __fatBuffersNeedUpload: boolean
   protected fatBuffers: any
-  protected __buffersNeedUpload: any
-  protected __indexDataType: any
+  protected __buffersNeedUpload: boolean
+  protected __indexDataType: number
   /**
    * Create a GL line.
    * @param {WebGL12RenderingContext} gl - The webgl rendering context.
-   * @param {any} lines - The geom value.
+   * @param {BaseGeom} lines - The geom value.
    */
-  constructor(gl: WebGL12RenderingContext, lines: any) {
+  constructor(gl: WebGL12RenderingContext, lines: BaseGeom) {
     super(gl, lines)
 
     this.__numSegIndices = 0
@@ -65,7 +66,7 @@ class GLLines extends GLGeom {
    * The genFatBuffers method.
    * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    */
-  genFatBuffers(renderstate: Record<any, any>) {
+  genFatBuffers(renderstate: RenderState) {
     const gl = this.__gl
 
     const geomBuffers = this.__geom.genBuffers()
@@ -165,7 +166,7 @@ class GLLines extends GLGeom {
    * The genBuffers method.
    * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    */
-  genBuffers(renderstate?: Record<any, any>) {
+  genBuffers(renderstate?: RenderState) {
     const gl = this.__gl
 
     const geomBuffers = this.__geom.genBuffers()
@@ -230,7 +231,7 @@ class GLLines extends GLGeom {
    * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    * @return {any} - The return value.
    */
-  bind(renderstate: Record<any, any>) {
+  bind(renderstate: RenderState) {
     const gl = this.__gl
     const unifs = renderstate.unifs
     if (unifs.LineThickness && gl.floatTexturesSupported) {
@@ -279,7 +280,7 @@ class GLLines extends GLGeom {
    * The draw method.
    * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    */
-  draw(renderstate: Record<any, any>) {
+  draw(renderstate: RenderState) {
     const gl = this.__gl
     if (renderstate.unifs.LineThickness && gl.floatTexturesSupported) {
       gl.drawElementsInstanced(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0, this.fatBuffers.drawCount)
@@ -295,7 +296,7 @@ class GLLines extends GLGeom {
    * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    * @param {number} instanceCount - The instanceCount value.
    */
-  drawInstanced(renderstate: Record<any, any>, instanceCount: number) {
+  drawInstanced(renderstate: RenderState, instanceCount: number) {
     const gl = this.__gl
     const { occluded } = renderstate.unifs
     if (occluded) {

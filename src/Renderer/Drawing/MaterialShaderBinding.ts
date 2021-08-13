@@ -146,7 +146,7 @@ class SimpleUniformBinding {
    * The bindValue method.
    * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    */
-  bindValue(renderstate: Record<any, any>) {
+  bindValue(renderstate: RenderState) {
     if (this.dirty) {
       this.update()
       this.dirty = false
@@ -159,7 +159,7 @@ class SimpleUniformBinding {
    * The bindTexture method.
    * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    */
-  bindTexture(renderstate: Record<any, any>) {
+  bindTexture(renderstate: RenderState) {
     if (this.dirty) {
       this.update()
       this.dirty = false
@@ -220,7 +220,7 @@ class ComplexUniformBinding {
    * The bind method.
    * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    */
-  bind(renderstate: Record<any, any>) {
+  bind(renderstate: RenderState) {
     if (this.dirty) {
       this.vals = this.param.getValue().asArray()
       this.dirty = false
@@ -280,7 +280,7 @@ class MatrixUniformBinding {
    * The bind method.
    * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    */
-  bind(renderstate: Record<any, any>) {
+  bind(renderstate: RenderState) {
     if (this.dirty) {
       this.vals = this.param.getValue().asArray()
       this.dirty = false
@@ -427,7 +427,7 @@ class ColorUniformBinding {
    * The bindValue method.
    * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    */
-  bindValue(renderstate: Record<any, any>) {
+  bindValue(renderstate: RenderState) {
     if (this.dirty) {
       this.update()
       this.dirty = false
@@ -440,7 +440,7 @@ class ColorUniformBinding {
    * The bindTexture method.
    * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    */
-  bindTexture(renderstate: Record<any, any>) {
+  bindTexture(renderstate: RenderState) {
     if (this.dirty) {
       this.update()
       this.dirty = false
@@ -534,7 +534,7 @@ class MaterialShaderBinding {
    * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    * @return {any} - The return value.
    */
-  bind(renderstate: Record<any, any>) {
+  bind(renderstate: RenderState) {
     for (const uniformBinding of this.uniformBindings) {
       uniformBinding.bind(renderstate)
     }
@@ -544,7 +544,7 @@ class MaterialShaderBinding {
   /**
    * The unbind method.
    */
-  unbind(renderstate: Record<any, any>) {
+  unbind(renderstate: RenderState) {
     for (const uniformBinding of this.uniformBindings) {
       uniformBinding.unbind(renderstate)
     }
@@ -554,7 +554,7 @@ class MaterialShaderBinding {
    * The destroy is called by the system to cause explicit resources cleanup.
    * Users should never need to call this method directly.
    */
-  destroy(renderstate: Record<any, any>) {
+  destroy(renderstate: RenderState) {
     for (const uniformBinding of this.uniformBindings) {
       uniformBinding.destroy(renderstate)
     }

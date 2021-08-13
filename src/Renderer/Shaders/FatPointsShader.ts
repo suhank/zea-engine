@@ -14,6 +14,7 @@ import GeomDataFrag from './FatPointsGeomData.frag'
 import SelectedFrag from './FatPointsSelected.frag'
 import { shaderLibrary } from '..'
 import { Material, MaterialColorParam, MaterialFloatParam, NumberParameter } from '../..'
+
 class FatPointsShader extends GLShader {
   /**
    * Create a GL shader.
@@ -25,7 +26,7 @@ class FatPointsShader extends GLShader {
     this.setShaderStage('FRAGMENT_SHADER', frag)
   }
 
-  bind(renderstate: Record<any, any>) {
+  bind(renderstate: RenderState) {
     if (super.bind(renderstate, 'FatPointsShader')) {
       renderstate.supportsInstancing = false
       return true

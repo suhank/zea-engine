@@ -304,7 +304,7 @@ class GLBillboardsPass extends GLPass {
    * @param {Record<any, any>} renderstate - The object tracking the current state of the renderer
    * @private
    */
-  updateBillboards(renderstate: Record<any, any>) {
+  updateBillboards(renderstate: RenderState) {
     const doIt = () => {
       if (this.indexArrayUpdateNeeded) this.updateIndexArray()
 
@@ -470,7 +470,7 @@ class GLBillboardsPass extends GLPass {
    * The sort method.
    * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    */
-  draw(renderstate: Record<any, any>) {
+  draw(renderstate: RenderState) {
     if (this.drawCount == 0) return
     if (this.updateRequested) {
       this.updateBillboards(renderstate)

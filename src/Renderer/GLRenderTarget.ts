@@ -183,7 +183,7 @@ class GLRenderTarget extends EventEmitter {
    * @param {Record<any, any>} renderstate - The object tracking the current state of the renderer
    * @param {boolean} clear - The clear value.
    */
-  bindForWriting(renderstate?: Record<any, any>, clear = false) {
+  bindForWriting(renderstate?: RenderState, clear = false) {
     if (renderstate) {
       this.__prevBoundFbo = renderstate.boundRendertarget
       renderstate.boundRendertarget = this.frameBuffer
@@ -199,7 +199,7 @@ class GLRenderTarget extends EventEmitter {
    * The unbindForWriting method.
    * @param {Record<any, any>} renderstate - The object tracking the current state of the renderer
    */
-  unbindForWriting(renderstate?: Record<any, any>) {
+  unbindForWriting(renderstate?: RenderState) {
     if (renderstate) renderstate.boundRendertarget = this.__prevBoundFbo
     const gl = this.__gl
     if (gl.name == 'webgl2') gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, this.__prevBoundFbo)
@@ -247,7 +247,7 @@ class GLRenderTarget extends EventEmitter {
    * @param {number} channelId - The channelId value.
    * @return {boolean} - The return value.
    */
-  bindColorTexture(renderstate: Record<any, any>, unif: Record<any, any>, channelId = 0): boolean {
+  bindColorTexture(renderstate: RenderState, unif: Record<any, any>, channelId = 0): boolean {
     const gl = this.__gl
     const unit = renderstate.boundTextures++
     gl.uniform1i(unif.location, unit)
@@ -262,7 +262,7 @@ class GLRenderTarget extends EventEmitter {
    * @param {WebGLUniformLocation} unif - The WebGL uniform
    * @return {boolean} - The return value.
    */
-  bindDepthTexture(renderstate: Record<any, any>, unif: Record<any, any>) {
+  bindDepthTexture(renderstate: RenderState, unif: Record<any, any>) {
     const gl = this.__gl
     const unit = renderstate.boundTextures++
     gl.uniform1i(unif.location, unit)
@@ -274,7 +274,7 @@ class GLRenderTarget extends EventEmitter {
   /**
    * The unbind method.
    */
-  unbind(renderstate?: Record<any, any>) {
+  unbind(renderstate?: RenderState) {
     this.unbindForWriting(renderstate)
   }
 
@@ -422,7 +422,7 @@ class GLRenderTarget extends EventEmitter {
    * @param {any} bindings - The bindings param.
    * @return {any} - The return value.
    */
-  bindToUniform(renderstate: Record<any, any>, unif: Record<any, any>, bindings?: any) {
+  bindToUniform(renderstate: RenderState, unif: Record<any, any>, bindings?: any) {
     // if (!this.__loaded) {
     //   return false
     // }

@@ -125,7 +125,7 @@ class GLShaderGeomSets extends EventEmitter {
    * @param {string} key - The key to use to cache the shader binding.
    * @private
    */
-  bindShader(glShader: Record<any, any>, renderstate: Record<any, any>, key: string) {
+  bindShader(glShader: Record<any, any>, renderstate: RenderState, key: string) {
     const gl = this.gl
     if (!glShader.isCompiledForTarget(key)) {
       if (gl.multiDrawElements) {
@@ -150,7 +150,7 @@ class GLShaderGeomSets extends EventEmitter {
    * Draws all elements, binding the shader and continuing into the GLGLGeomSetGeomItemSets
    * @param {Record<any,any>} renderstate - The render state for the current draw traversal
    */
-  draw(renderstate: Record<any, any>) {
+  draw(renderstate: RenderState) {
     this.bindShader(this.glShader, renderstate, this.glShaderKey)
 
     for (const elementType in this.glGeomItemSets) {
@@ -164,7 +164,7 @@ class GLShaderGeomSets extends EventEmitter {
    * The drawHighlightedGeoms method.
    * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    */
-  drawHighlightedGeoms(renderstate: Record<any, any>) {
+  drawHighlightedGeoms(renderstate: RenderState) {
     if (!this.glHighlightShader) return
     this.bindShader(this.glHighlightShader, renderstate, this.glHighlightShaderKey)
 
@@ -178,7 +178,7 @@ class GLShaderGeomSets extends EventEmitter {
    * The drawGeomData method.
    * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    */
-  drawGeomData(renderstate: Record<any, any>) {
+  drawGeomData(renderstate: RenderState) {
     this.bindShader(this.glGeomDataShader, renderstate, this.glGeomDataShaderKey)
 
     const gl = renderstate.gl

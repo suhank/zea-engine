@@ -44,7 +44,7 @@ class GLBaseViewport extends ParameterOwner {
   protected __height: number
   protected __canvasWidth: number
   protected __canvasHeight: number
-  protected fb: any
+  protected fb: WebGLFramebuffer
   protected colorRenderbuffer: any
   protected depthBuffer: WebGLRenderbuffer
   protected EXT_frag_depth: EXT_frag_depth
@@ -299,7 +299,7 @@ class GLBaseViewport extends ParameterOwner {
    * The draw method.
    * @param {object} renderstate - The object tracking the current state of the renderer
    */
-  draw(renderstate: Record<any, any> = {}) {
+  draw(renderstate: RenderState) {
     const gl = this.__renderer.gl
 
     const prevRendertarget = renderstate.boundRendertarget
@@ -389,7 +389,7 @@ class GLBaseViewport extends ParameterOwner {
    * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    * @private
    */
-  drawSilhouettes(renderstate: Record<any, any>) {
+  drawSilhouettes(renderstate: RenderState) {
     // We cannot render silhouettes in iOS because EXT_frag_depth is not supported
     // and without it, we cannot draw lines over the top of geometries.
     if (SystemDesc.browserName == 'Safari') return
@@ -480,10 +480,10 @@ class GLBaseViewport extends ParameterOwner {
 
   /**
    * Draws the highlights around geometries.
-   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {RenderState} renderstate - The object tracking the current state of the renderer
    * @private
    */
-  drawHighlights(renderstate: Record<any, any>) {
+  drawHighlights(renderstate: RenderState) {
     if (this.highlightedGeomsBufferFbo) {
       const gl = this.__renderer.gl
 

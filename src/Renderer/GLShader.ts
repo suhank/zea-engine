@@ -424,7 +424,7 @@ class GLShader extends BaseItem {
    * @param {string} key - The key value.
    * @return {boolean} - The return value.
    */
-  bind(renderstate: Record<any, any>, key?: string) {
+  bind(renderstate: RenderState, key?: string) {
     const gl = this.__gl
 
     if (renderstate.glShader != this) {
@@ -461,7 +461,7 @@ class GLShader extends BaseItem {
    * @param {object} renderstate - The object tracking the current state of the renderer
    * @return {any} - The return value.
    */
-  unbind(renderstate: Record<any, any>) {
+  unbind(renderstate: RenderState) {
     delete renderstate.glShader
     delete renderstate.shaderkey
     delete renderstate.unifs

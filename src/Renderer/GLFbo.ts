@@ -356,7 +356,7 @@ class GLFbo {
    *
    * @param {object} renderstate - The renderstate value.
    */
-  bindForWriting(renderstate?: Record<any, any>) {
+  bindForWriting(renderstate?: RenderState) {
     if (renderstate) {
       this.__prevBoundFbo = renderstate.boundRendertarget
       renderstate.boundRendertarget = this.__fbo
@@ -372,7 +372,7 @@ class GLFbo {
    *
    * @param {Record<any, any>} renderstate - The renderstate value.
    */
-  unbindForWriting(renderstate: Record<any, any>) {
+  unbindForWriting(renderstate: RenderState) {
     if (renderstate) renderstate.boundRendertarget = this.__prevBoundFbo
     const gl = this.__gl
     if (gl.name == 'webgl2') gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, this.__prevBoundFbo)
@@ -384,7 +384,7 @@ class GLFbo {
    *
    * @param {Record<any, any>} renderstate - The renderstate value.
    */
-  bind(renderstate: Record<any, any>) {
+  bind(renderstate: RenderState) {
     this.bindForWriting(renderstate)
   }
 
@@ -393,7 +393,7 @@ class GLFbo {
    *
    * @param {Record<any, any>} renderstate - The renderstate value.
    */
-  unbind(renderstate?: Record<any, any>) {
+  unbind(renderstate?: RenderState) {
     if (renderstate) {
       // For write operations
       this.unbindForWriting(renderstate)
@@ -405,9 +405,9 @@ class GLFbo {
   /**
    * Binds the Fbo to the canvas context, meaning that all READ operations will affect the current Fbo.
    *
-   * @param {Record<any, any>} renderstate - The renderstate value.
+   * @param {RenderState} renderstate - The renderstate value.
    */
-  bindForReading() {
+  bindForReading(renderstate?: RenderState) {
     const gl = this.__gl
     if (gl.name == 'webgl2') gl.bindFramebuffer(gl.READ_FRAMEBUFFER, this.__fbo)
     else gl.bindFramebuffer(gl.FRAMEBUFFER, this.__fbo)
@@ -444,7 +444,7 @@ class GLFbo {
    * Runs [`bind`](#bind) then [`clear`](#clear) methods.
    * @param {Record<any,any>} renderstate - The renderstate value.
    */
-  bindAndClear(renderstate?: Record<any, any>) {
+  bindAndClear(renderstate?: RenderState) {
     this.bind(renderstate)
     this.clear()
   }

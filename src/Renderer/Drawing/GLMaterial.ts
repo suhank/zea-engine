@@ -11,7 +11,7 @@ class GLMaterial extends EventEmitter {
   protected __gl: WebGL12RenderingContext
   protected __material: Material
   protected __glshader: GLShader
-  protected __shaderBindings: Record<any, any> = {}
+  protected __shaderBindings: Record<string, any> = {}
   protected __boundTexturesBeforeMaterial: any
   /**
    * Create a GL material.
@@ -51,7 +51,7 @@ class GLMaterial extends EventEmitter {
    * @param {any} warnMissingUnifs - The renderstate value.
    * @return {any} - The return value.
    */
-  bind(renderstate: Record<any, any>, warnMissingUnifs: any) {
+  bind(renderstate: RenderState, warnMissingUnifs: any) {
     this.__boundTexturesBeforeMaterial = renderstate.boundTextures
 
     let shaderBinding = this.__shaderBindings[renderstate.shaderkey]
@@ -69,7 +69,7 @@ class GLMaterial extends EventEmitter {
    * The unbind method.
    * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
    */
-  unbind(renderstate: Record<any, any>) {
+  unbind(renderstate: RenderState) {
     // Enable texture units to be re-used by resetting the count back
     // to what it was.
     renderstate.boundTextures = this.__boundTexturesBeforeMaterial
