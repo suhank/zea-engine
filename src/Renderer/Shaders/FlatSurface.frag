@@ -37,6 +37,9 @@ out vec4 fragColor;
 #endif // DRAW_HIGHLIGHT
 
 void main(void) {
+#ifndef ENABLE_ES3
+  vec4 fragColor;
+#endif
 
 #if defined(DRAW_COLOR)
     //////////////////////////////////////////////
@@ -57,10 +60,6 @@ void main(void) {
 
   #endif // ENABLE_MULTI_DRAW
     //////////////////////////////////////////////
-
-  #ifndef ENABLE_ES3
-    vec4 fragColor;
-  #endif
     fragColor = baseColor;
 
   #ifdef ENABLE_INLINE_GAMMACORRECTION

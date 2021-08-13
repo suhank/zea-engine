@@ -253,9 +253,6 @@ void main(void) {
   #endif // ENABLE_TEXTURES
   #endif // ENABLE_MULTI_DRAW
 
-  #ifndef ENABLE_ES3
-    vec4 fragColor;
-  #endif
 
     fragColor = pbrSurfaceRadiance(material, normal, viewVector);
     // fragColor = vec4(texture2D(NormalTex, texCoord).rgb, 1.0);
