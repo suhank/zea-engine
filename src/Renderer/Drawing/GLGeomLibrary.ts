@@ -1,8 +1,8 @@
 /* eslint-disable guard-for-in */
 import { EventEmitter, Allocator1D } from '../../Utilities/index'
 import { generateShaderGeomBinding, genDataTypeDesc } from './GeomShaderBinding'
-import { Points, Lines, Mesh, PointsProxy, LinesProxy, MeshProxy, BaseGeom } from '../../SceneTree/index'
-import { GLPoints, GLLines, GLMesh } from './index'
+import { Points, Lines, Mesh, PointsProxy, LinesProxy, MeshProxy, BaseGeom, BaseGeomItem } from '../../SceneTree/index'
+import { GLPoints, GLLines, GLMesh, GLGeom } from './index'
 import { GLBaseRenderer } from '../GLBaseRenderer'
 import { IndexEvent } from '../../Utilities/Events/IndexEvent'
 
@@ -18,15 +18,15 @@ const resizeIntArray = (intArray: Int32Array, newSize: number) => {
 class GLGeomLibrary extends EventEmitter {
   protected renderer: GLBaseRenderer
   protected __gl: WebGL12RenderingContext
-  protected shaderAttrSpec: Record<any, any>
-  protected freeGeomIndices: any[]
-  protected geoms: any[]
-  protected geomRefCounts: any[]
-  protected geomsDict: Record<any, any>
-  protected glGeomsDict: Record<any, any>
+  protected shaderAttrSpec: Record<string, any>
+  protected freeGeomIndices: number[]
+  protected geoms: BaseGeom[]
+  protected geomRefCounts: number[]
+  protected geomsDict: Record<string, number>
+  protected glGeomsDict: Record<string, GLGeom>
   protected geomBuffersTmp: any[] // for each geom, these are the buffer
-  protected glattrbuffers: Record<any, any>
-  protected shaderBindings: Record<any, any>
+  protected glattrbuffers: Record<string, any>
+  protected shaderBindings: Record<string, any>
   protected bufferNeedsRealloc: boolean
   protected attributesAllocator: Allocator1D
   protected dirtyGeomIndices: Set<unknown>
@@ -46,7 +46,7 @@ class GLGeomLibrary extends EventEmitter {
     super()
 
     this.renderer = renderer
-    this.__gl = <WebGL12RenderingContext>renderer.gl
+    this.__gl = renderer.gl
 
     this.shaderAttrSpec = {}
     this.freeGeomIndices = []

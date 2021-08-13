@@ -6,7 +6,7 @@ import { UInt8, SInt8, UInt16, SInt16, UInt32, SInt32, Float32 } from '../../Uti
  * Returns a descriptor for the provided geom attribute.
  * @private
  * @param {WebGL12RenderingContext} gl - The webgl context
- * @param {object} attrDataType - The geometry attribute value.
+ * @param {any} attrDataType - The geometry attribute value.
  *
  * @return {Record<any,any>}
  */
@@ -113,9 +113,9 @@ class GeomShaderBinding extends IGeomShaderBinding {
   /**
    * The bind method.
    * @param {Record<any,any>} renderstate - The render state.
-   * @return {any} - The return value.
+   * @return {boolean} - The return value.
    */
-  bind(renderstate: Record<any, any>) {
+  bind(renderstate?: Record<any, any>): boolean {
     const gl = this.__gl
 
     for (const attrName in this.__shaderAttrs) {
@@ -190,17 +190,22 @@ class GeomShaderBinding extends IGeomShaderBinding {
  * @private
  */
 class VAOGeomShaderBinding extends IGeomShaderBinding {
-  protected __vao: any
+  protected __vao: WebGLVertexArrayObject
   protected __gl: WebGL12RenderingContext
   protected __indexBuffer: WebGLBuffer
   /**
    * Create VAO geom shader binding.
    * @param {WebGL12RenderingContext} gl - The webgl rendering context.
-   * @param {any} shaderAttrs - The shaderAttrs value.
-   * @param {any} geomAttrBuffers - The geomAttrBuffers value.
+   * @param {Record<string,any>} shaderAttrs - The shaderAttrs value.
+   * @param {Record<string,any>} geomAttrBuffers - The geomAttrBuffers value.
    * @param {WebGLBuffer} indexBuffer - The indexBuffer value.
    */
-  constructor(gl: WebGL12RenderingContext, shaderAttrs: any, geomAttrBuffers: any, indexBuffer: WebGLBuffer) {
+  constructor(
+    gl: WebGL12RenderingContext,
+    shaderAttrs: Record<string, any>,
+    geomAttrBuffers: Record<string, any>,
+    indexBuffer: WebGLBuffer
+  ) {
     super()
     this.__gl = gl
     this.__vao = gl.createVertexArray()
@@ -259,9 +264,9 @@ class VAOGeomShaderBinding extends IGeomShaderBinding {
   /**
    * The bind method.
    * @param {Record<any,any>} renderstate - The render state.
-   * @return {any} - The return value.
+   * @return {boolean} - The return value.
    */
-  bind(renderstate: Record<any, any>): boolean {
+  bind(renderstate?: Record<any, any>): boolean {
     const gl = this.__gl
     gl.bindVertexArray(this.__vao)
     if (this.__indexBuffer) this.__gl.bindBuffer(this.__gl.ELEMENT_ARRAY_BUFFER, this.__indexBuffer)
@@ -290,8 +295,8 @@ class VAOGeomShaderBinding extends IGeomShaderBinding {
 
 function generateShaderGeomBinding(
   gl: WebGL12RenderingContext,
-  shaderAttrs: any,
-  geomAttrBuffers: any,
+  shaderAttrs: Record<string, any>,
+  geomAttrBuffers: Record<string, any>,
   indexBuffer: WebGLBuffer
 ): IGeomShaderBinding {
   if (gl.createVertexArray == null) {
