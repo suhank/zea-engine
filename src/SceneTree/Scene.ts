@@ -1,6 +1,6 @@
 import { Color } from '../Math/index'
 import { TreeItem } from './TreeItem'
-import { resourceLoader } from './resourceLoader'
+import { ResourceLoader, resourceLoader } from './resourceLoader'
 import { DriveAdapter } from './ResourceLoader/DriveAdapter'
 import { SceneSettings } from './SceneSettings'
 import { GridTreeItem } from './GridTreeItem'
@@ -50,7 +50,7 @@ class Scene {
    *
    * @return {ResourceLoader} - The return value.
    */
-  getResourceLoader() {
+  getResourceLoader(): ResourceLoader {
     return resourceLoader
   }
 

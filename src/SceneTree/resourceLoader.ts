@@ -70,7 +70,6 @@ class ResourceLoader extends EventEmitter {
   constructor() {
     super()
 
-
     this.__totalWork = 0
     this.__doneWork = 0
     this.baseUrl = Env.baseUrl
@@ -331,4 +330,4 @@ class ResourceLoader extends EventEmitter {
 
 const resourceLoader = new ResourceLoader()
 
-export { resourceLoader }
+export { resourceLoader, ResourceLoader }
