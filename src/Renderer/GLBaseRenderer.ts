@@ -1224,7 +1224,7 @@ class GLBaseRenderer extends ParameterOwner {
 
   /**
    * The bindGLBaseRenderer method.
-   * @param {Record<any, any>} renderstate - The renderstate value.
+   * @param {RenderState} renderstate - The renderstate value.
    */
   bindGLBaseRenderer(renderstate: RenderState) {
     renderstate.gl = this.__gl
@@ -1316,7 +1316,7 @@ class GLBaseRenderer extends ParameterOwner {
 
   /**
    * The drawHighlightedGeoms method.
-   * @param {Record<any, any>} renderstate - The renderstate value.
+   * @param {RenderState} renderstate - The renderstate value.
    */
   drawHighlightedGeoms(renderstate: RenderState) {
     this.bindGLBaseRenderer(renderstate)

@@ -297,11 +297,11 @@ class GLGeomItemSet extends EventEmitter {
   /**
    * The __bindAndRender method.
    * @param {RenderState} renderstate - The object tracking the current state of the renderer
-   * @param {any} itemIndices - The itemIndices value.
-   * @param {any} drawIdsBuffer - The drawIdsBuffer value.
+   * @param {number[]} itemIndices - The itemIndices value.
+   * @param {WebGLBuffery} drawIdsBuffer - The drawIdsBuffer value.
    * @private
    */
-  __bindAndRender(renderstate: RenderState, itemIndices: any, drawIdsBuffer: any) {
+  __bindAndRender(renderstate: RenderState, itemIndices: number[], drawIdsBuffer: WebGLBuffer) {
     const gl = this.gl
     const unifs = renderstate.unifs
 

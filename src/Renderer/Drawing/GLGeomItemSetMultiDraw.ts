@@ -26,8 +26,8 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
   protected visibleItems: any[]
   protected drawIdsArray: Float32Array
   protected drawIdsBufferDirty: boolean
-  protected drawIdsTexture: any
-  protected highlightedItems: any[]
+  protected drawIdsTexture: GLTexture2D
+  protected highlightedItems: GLGeomItem[]
   protected highlightedIdsArray: any
   protected highlightedIdsTexture: GLTexture2D
   protected highlightedIdsBufferDirty: boolean
@@ -274,7 +274,7 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
 
   /**
    * The updateHighlightedIDsBuffer method.
-   * @param {Record<any, any>} renderstate - The object used to track state changes during rendering.
+   * @param {RenderState} renderstate - The object used to track state changes during rendering.
    */
   updateHighlightedIDsBuffer(renderstate: RenderState) {
     if (this.highlightedIdsBufferDirty) {
