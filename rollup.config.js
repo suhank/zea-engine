@@ -8,7 +8,9 @@ import webWorkerLoader from 'rollup-plugin-web-worker-loader'
 
 import glslify from 'rollup-plugin-glslify'
 
-import typescript from '@rollup/plugin-typescript'
+// import typescript from '@rollup/plugin-typescript' // TODO: remove if typescript2 is better
+import typescript from 'rollup-plugin-typescript2'
+
 import pkg from './package.json'
 
 const glslOptions = {
@@ -23,6 +25,10 @@ const glslOptions = {
 }
 
 const plugins = [
+  typescript({
+    tsconfig: 'tsconfig.json',
+    include: 'src/**/*.{js,ts}',
+  }),
   glslify(glslOptions),
   commonjs(),
   // commonjs({ extensions: ['.js', '.ts'] }), // note: this is not recommended
@@ -34,10 +40,6 @@ const plugins = [
   json(),
   webWorkerLoader(),
   svg(),
-  typescript({
-    tsconfig: 'tsconfig.json',
-    include: 'src/**/*.{js,ts}',
-  }),
 ]
 
 const isProduction = !process.env.ROLLUP_WATCH
