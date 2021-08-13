@@ -82,7 +82,7 @@ class GLLinesPass extends GLOpaqueGeomsPass {
 
   /**
    * The draw method.
-   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
+   * @param {RenderState} renderstate - The object tracking the current state of the renderer
    */
   draw(renderstate: RenderState) {
     const gl = this.__gl
@@ -100,7 +100,7 @@ class GLLinesPass extends GLOpaqueGeomsPass {
   }
   /**
    * The drawGeomData method.
-   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
+   * @param {RenderState} renderstate - The object tracking the current state of the renderer
    */
   drawGeomData(renderstate: RenderState) {
     const gl = this.__gl

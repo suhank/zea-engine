@@ -259,7 +259,7 @@ class GLAudioItemsPass extends GLPass {
 
   /**
    * The draw method.
-   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
+   * @param {RenderState} renderstate - The object tracking the current state of the renderer
    */
   draw(renderstate: RenderState) {
     if (this.__audioItems.length == 0) return

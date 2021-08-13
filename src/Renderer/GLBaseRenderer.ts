@@ -1298,7 +1298,7 @@ class GLBaseRenderer extends ParameterOwner {
 
   /**
    * The drawScene method.
-   * @param {Record<any,any>} renderstate - The renderstate value.
+   * @param {RenderState} renderstate - The renderstate value.
    */
   drawScene(renderstate: RenderState) {
     // Bind already called by GLRenderer.

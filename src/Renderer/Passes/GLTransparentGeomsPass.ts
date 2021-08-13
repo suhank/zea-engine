@@ -243,7 +243,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
 
   /**
    * Draw n individual item, binding the shader and material if necessary.
-   * @param {Record<any,any>} renderstate - current renderstad
+   * @param {RenderState} renderstate - current renderstad
    * @param {Record<any,any>} transparentItem - current item to render
    * @param {Record<any,any>} cache - cache tracking which material/shader is currently bound.
    */
@@ -272,7 +272,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
 
   /**
    * The _drawItems method.
-   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
+   * @param {RenderState} renderstate - The object tracking the current state of the renderer
    * @private
    */
   _drawItems(renderstate: RenderState) {
@@ -331,7 +331,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
 
   /**
    * The draw method.
-   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
+   * @param {RenderState} renderstate - The object tracking the current state of the renderer
    */
   draw(renderstate: RenderState) {
     if (this.itemCount == 0) return
@@ -398,7 +398,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
 
   /**
    * The drawHighlightedGeoms method.
-   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
+   * @param {RenderState} renderstate - The object tracking the current state of the renderer
    */
   drawHighlightedGeoms(renderstate: RenderState) {
     const gl = this.__gl

@@ -157,7 +157,7 @@ class GLGeomItem extends EventEmitter {
 
   /**
    * The bind method.
-   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
+   * @param {RenderState} renderstate - The object tracking the current state of the renderer
    * @return {any} - The return value.
    */
   bind(renderstate: RenderState) {

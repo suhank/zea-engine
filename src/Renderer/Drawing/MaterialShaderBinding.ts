@@ -144,7 +144,7 @@ class SimpleUniformBinding {
 
   /**
    * The bindValue method.
-   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
+   * @param {RenderState} renderstate - The object tracking the current state of the renderer
    */
   bindValue(renderstate: RenderState) {
     if (this.dirty) {
@@ -157,7 +157,7 @@ class SimpleUniformBinding {
 
   /**
    * The bindTexture method.
-   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
+   * @param {RenderState} renderstate - The object tracking the current state of the renderer
    */
   bindTexture(renderstate: RenderState) {
     if (this.dirty) {
@@ -218,7 +218,7 @@ class ComplexUniformBinding {
 
   /**
    * The bind method.
-   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
+   * @param {RenderState} renderstate - The object tracking the current state of the renderer
    */
   bind(renderstate: RenderState) {
     if (this.dirty) {
@@ -278,7 +278,7 @@ class MatrixUniformBinding {
 
   /**
    * The bind method.
-   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
+   * @param {RenderState} renderstate - The object tracking the current state of the renderer
    */
   bind(renderstate: RenderState) {
     if (this.dirty) {
@@ -425,7 +425,7 @@ class ColorUniformBinding {
 
   /**
    * The bindValue method.
-   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
+   * @param {RenderState} renderstate - The object tracking the current state of the renderer
    */
   bindValue(renderstate: RenderState) {
     if (this.dirty) {
@@ -438,7 +438,7 @@ class ColorUniformBinding {
 
   /**
    * The bindTexture method.
-   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
+   * @param {RenderState} renderstate - The object tracking the current state of the renderer
    */
   bindTexture(renderstate: RenderState) {
     if (this.dirty) {
@@ -531,7 +531,7 @@ class MaterialShaderBinding {
 
   /**
    * The bind method.
-   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
+   * @param {RenderState} renderstate - The object tracking the current state of the renderer
    * @return {any} - The return value.
    */
   bind(renderstate: RenderState) {

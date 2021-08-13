@@ -266,7 +266,7 @@ class GLGeomItemSet extends EventEmitter {
 
   /**
    * The draw method.
-   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
+   * @param {RenderState} renderstate - The object tracking the current state of the renderer
    */
   draw(renderstate: RenderState) {
     if (this.visibleItems.length == 0) {
@@ -281,7 +281,7 @@ class GLGeomItemSet extends EventEmitter {
 
   /**
    * The drawHighlighted method.
-   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
+   * @param {RenderState} renderstate - The object tracking the current state of the renderer
    */
   drawHighlighted(renderstate: RenderState) {
     if (this.highlightedItems.length == 0) {
@@ -296,7 +296,7 @@ class GLGeomItemSet extends EventEmitter {
 
   /**
    * The __bindAndRender method.
-   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
+   * @param {RenderState} renderstate - The object tracking the current state of the renderer
    * @param {any} itemIndices - The itemIndices value.
    * @param {any} drawIdsBuffer - The drawIdsBuffer value.
    * @private

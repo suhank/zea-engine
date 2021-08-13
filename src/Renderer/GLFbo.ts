@@ -442,7 +442,7 @@ class GLFbo {
 
   /**
    * Runs [`bind`](#bind) then [`clear`](#clear) methods.
-   * @param {Record<any,any>} renderstate - The renderstate value.
+   * @param {RenderState} renderstate - The renderstate value.
    */
   bindAndClear(renderstate?: RenderState) {
     this.bind(renderstate)

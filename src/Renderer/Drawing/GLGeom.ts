@@ -61,7 +61,7 @@ class GLGeom extends RefCounted {
 
   /**
    * The genBuffers method.
-   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
+   * @param {RenderState} renderstate - The object tracking the current state of the renderer
    */
   genBuffers(renderstate?: RenderState) {
     throw new Error('genBuffers Not implemented')
@@ -69,7 +69,7 @@ class GLGeom extends RefCounted {
 
   /**
    * The updateBuffers method.
-   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
+   * @param {RenderState} renderstate - The object tracking the current state of the renderer
    */
   updateBuffers(renderstate?: RenderState) {
     this.genBuffers(renderstate)
@@ -80,7 +80,7 @@ class GLGeom extends RefCounted {
 
   /**
    * The bind method.
-   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
+   * @param {RenderState} renderstate - The object tracking the current state of the renderer
    * @return {boolean} - returns false if the binding failed.
    */
   bind(renderstate: RenderState) {
@@ -100,7 +100,7 @@ class GLGeom extends RefCounted {
 
   /**
    * The unbind method.
-   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
+   * @param {RenderState} renderstate - The object tracking the current state of the renderer
    */
   unbind(renderstate: RenderState) {
     // Unbinding a geom is important as it puts back some important
@@ -117,7 +117,7 @@ class GLGeom extends RefCounted {
 
   /**
    * The draw method.
-   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
+   * @param {RenderState} renderstate - The object tracking the current state of the renderer
    */
   draw(renderstate: RenderState) {
     throw new Error('Not implemented. Implement this method in a derived class.')
@@ -134,7 +134,7 @@ class GLGeom extends RefCounted {
 
   /**
    * The bindAndDraw method.
-   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
+   * @param {RenderState} renderstate - The object tracking the current state of the renderer
    */
   bindAndDraw(renderstate: RenderState) {
     this.bind(renderstate)

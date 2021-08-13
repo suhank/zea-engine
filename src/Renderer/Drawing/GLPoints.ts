@@ -20,7 +20,7 @@ class GLPoints extends GLGeom {
 
   /**
    * The genBuffers method.
-   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
+   * @param {RenderState} renderstate - The object tracking the current state of the renderer
    */
   genBuffers(renderstate?: RenderState) {
     super.genBuffers(renderstate)
@@ -50,7 +50,7 @@ class GLPoints extends GLGeom {
 
   /**
    * The updateBuffers method.
-   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
+   * @param {RenderState} renderstate - The object tracking the current state of the renderer
    */
   updateBuffers(renderstate: RenderState) {
     const gl = this.__gl
@@ -76,7 +76,7 @@ class GLPoints extends GLGeom {
 
   /**
    * The bind method.
-   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
+   * @param {RenderState} renderstate - The object tracking the current state of the renderer
    * @return {any} - The return value.
    */
   bind(renderstate: RenderState) {
@@ -101,7 +101,7 @@ class GLPoints extends GLGeom {
 
   /**
    * The draw method.
-   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
+   * @param {RenderState} renderstate - The object tracking the current state of the renderer
    */
   draw(renderstate: RenderState) {
     const gl = this.__gl
@@ -114,7 +114,7 @@ class GLPoints extends GLGeom {
 
   /**
    * The drawInstanced method.
-   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
+   * @param {RenderState} renderstate - The object tracking the current state of the renderer
    * @param {number} instanceCount - The instanceCount value.
    */
   drawInstanced(renderstate: RenderState, instanceCount: number) {

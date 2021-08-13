@@ -448,7 +448,7 @@ class GLGeomItemLibrary extends EventEmitter {
 
   /**
    * The uploadGeomItems method.
-   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
+   * @param {RenderState} renderstate - The object tracking the current state of the renderer
    */
   uploadGeomItems(renderstate: RenderState) {
     const gl = this.renderer.gl
@@ -562,7 +562,7 @@ class GLGeomItemLibrary extends EventEmitter {
 
   /**
    * Updates the GPU state if any update is needed.
-   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
+   * @param {RenderState} renderstate - The object tracking the current state of the renderer
    */
   bind(renderstate: RenderState) {
     if (this.dirtyItemIndices.length > 0 || this.removedItemIndices.length > 0) {

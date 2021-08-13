@@ -8,7 +8,7 @@ import '../../SceneTree/Geometry/Mesh'
 class GLLinesItemSet extends GLGeomItemSetMultiDraw {
   /**
    * Draw an item to screen.
-   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
+   * @param {RenderState} renderstate - The object tracking the current state of the renderer
    * @param {Float32Array} drawIds - the draw id for each element drawn in by this draw call.
    * @param {Uint32Array} counts - the geom element count for each element drawn in by this draw call.
    * @param {Uint32Array} offsets - the geom element offset for each element drawn in by this draw call.

@@ -64,7 +64,7 @@ class GLLines extends GLGeom {
 
   /**
    * The genFatBuffers method.
-   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
+   * @param {RenderState} renderstate - The object tracking the current state of the renderer
    */
   genFatBuffers(renderstate: RenderState) {
     const gl = this.__gl
@@ -164,7 +164,7 @@ class GLLines extends GLGeom {
 
   /**
    * The genBuffers method.
-   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
+   * @param {RenderState} renderstate - The object tracking the current state of the renderer
    */
   genBuffers(renderstate?: RenderState) {
     const gl = this.__gl
@@ -228,7 +228,7 @@ class GLLines extends GLGeom {
 
   /**
    * The bind method.
-   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
+   * @param {RenderState} renderstate - The object tracking the current state of the renderer
    * @return {any} - The return value.
    */
   bind(renderstate: RenderState) {
@@ -278,7 +278,7 @@ class GLLines extends GLGeom {
 
   /**
    * The draw method.
-   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
+   * @param {RenderState} renderstate - The object tracking the current state of the renderer
    */
   draw(renderstate: RenderState) {
     const gl = this.__gl
@@ -293,7 +293,7 @@ class GLLines extends GLGeom {
 
   /**
    * The drawInstanced method.
-   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
+   * @param {RenderState} renderstate - The object tracking the current state of the renderer
    * @param {number} instanceCount - The instanceCount value.
    */
   drawInstanced(renderstate: RenderState, instanceCount: number) {

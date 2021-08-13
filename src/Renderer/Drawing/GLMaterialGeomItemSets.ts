@@ -127,7 +127,7 @@ class GLMaterialGeomItemSets extends EventEmitter {
 
   /**
    * Draws all elements, binding the shader and continuing into the GLGeomItemSet
-   * @param {Record<any,any>} renderstate - The render state for the current draw traversal
+   * @param {RenderState} renderstate - The render state for the current draw traversal
    */
   draw(renderstate: RenderState) {
     if (this.drawCount == 0) return
@@ -141,7 +141,7 @@ class GLMaterialGeomItemSets extends EventEmitter {
 
   /**
    * The drawHighlighted method.
-   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
+   * @param {RenderState} renderstate - The object tracking the current state of the renderer
    */
   drawHighlighted(renderstate: RenderState) {
     this.glMaterial.bind(renderstate, false)
@@ -153,7 +153,7 @@ class GLMaterialGeomItemSets extends EventEmitter {
 
   /**
    * The drawHighlightedGeoms method.
-   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
+   * @param {RenderState} renderstate - The object tracking the current state of the renderer
    */
   drawGeomData(renderstate: RenderState) {
     this.glMaterial.bind(renderstate, false)

@@ -211,7 +211,7 @@ class GLMesh extends GLGeom {
 
   /**
    * The bindHardEdgesVAO method.
-   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
+   * @param {RenderState} renderstate - The object tracking the current state of the renderer
    * @return {any} - The return value.
    */
   bindHardEdgesVAO(renderstate: RenderState) {
@@ -249,7 +249,7 @@ class GLMesh extends GLGeom {
 
   /**
    * Draw an item to screen.
-   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
+   * @param {RenderState} renderstate - The object tracking the current state of the renderer
    */
   draw(renderstate: RenderState) {
     this.__gl.drawElements(this.__gl.TRIANGLES, this.__numTriIndices, this.__indexDataType, 0)
@@ -257,7 +257,7 @@ class GLMesh extends GLGeom {
 
   /**
    * The drawInstanced method.
-   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
+   * @param {RenderState} renderstate - The object tracking the current state of the renderer
    * @param {number} instanceCount - The instanceCount value.
    */
   drawInstanced(renderstate: RenderState, instanceCount: number) {

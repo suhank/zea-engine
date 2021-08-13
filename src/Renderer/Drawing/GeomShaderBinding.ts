@@ -112,7 +112,7 @@ class GeomShaderBinding extends IGeomShaderBinding {
 
   /**
    * The bind method.
-   * @param {Record<any,any>} renderstate - The render state.
+   * @param {RenderState} renderstate - The render state.
    * @return {boolean} - The return value.
    */
   bind(renderstate?: RenderState): boolean {
@@ -263,7 +263,7 @@ class VAOGeomShaderBinding extends IGeomShaderBinding {
 
   /**
    * The bind method.
-   * @param {Record<any,any>} renderstate - The render state.
+   * @param {RenderState} renderstate - The render state.
    * @return {boolean} - The return value.
    */
   bind(renderstate?: RenderState): boolean {

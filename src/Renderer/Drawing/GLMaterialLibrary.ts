@@ -136,7 +136,7 @@ class GLMaterialLibrary extends EventEmitter {
 
   /**
    * The uploadMaterials method.
-   * @param {Record<any,any>} renderstate - The render state for the current draw traversal
+   * @param {RenderState} renderstate - The render state for the current draw traversal
    */
   uploadMaterials(renderstate: RenderState) {
     const gl = this.renderer.__gl
@@ -205,7 +205,7 @@ class GLMaterialLibrary extends EventEmitter {
 
   /**
    * Updates the GPU state if any update is needed.
-   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
+   * @param {RenderState} renderstate - The object tracking the current state of the renderer
    */
   update(renderstate: RenderState) {
     if (this.dirtyItemIndices.length > 0) this.uploadMaterials(renderstate)

@@ -47,7 +47,7 @@ class GLMaterial extends EventEmitter {
 
   /**
    * The bind method.
-   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
+   * @param {RenderState} renderstate - The object tracking the current state of the renderer
    * @param {any} warnMissingUnifs - The renderstate value.
    * @return {any} - The return value.
    */
@@ -67,7 +67,7 @@ class GLMaterial extends EventEmitter {
 
   /**
    * The unbind method.
-   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
+   * @param {RenderState} renderstate - The object tracking the current state of the renderer
    */
   unbind(renderstate: RenderState) {
     // Enable texture units to be re-used by resetting the count back

@@ -121,7 +121,7 @@ class GLShaderGeomSets extends EventEmitter {
   /**
    * Binds one of its shaders for rendering, and also the other textures and values needed.
    * @param {Record<any,any>} glShader - The shader to bind
-   * @param {Record<any,any>} renderstate - The render state for the current draw traversal
+   * @param {RenderState} renderstate - The render state for the current draw traversal
    * @param {string} key - The key to use to cache the shader binding.
    * @private
    */
@@ -148,7 +148,7 @@ class GLShaderGeomSets extends EventEmitter {
 
   /**
    * Draws all elements, binding the shader and continuing into the GLGLGeomSetGeomItemSets
-   * @param {Record<any,any>} renderstate - The render state for the current draw traversal
+   * @param {RenderState} renderstate - The render state for the current draw traversal
    */
   draw(renderstate: RenderState) {
     this.bindShader(this.glShader, renderstate, this.glShaderKey)
@@ -162,7 +162,7 @@ class GLShaderGeomSets extends EventEmitter {
 
   /**
    * The drawHighlightedGeoms method.
-   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
+   * @param {RenderState} renderstate - The object tracking the current state of the renderer
    */
   drawHighlightedGeoms(renderstate: RenderState) {
     if (!this.glHighlightShader) return
@@ -176,7 +176,7 @@ class GLShaderGeomSets extends EventEmitter {
 
   /**
    * The drawGeomData method.
-   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
+   * @param {RenderState} renderstate - The object tracking the current state of the renderer
    */
   drawGeomData(renderstate: RenderState) {
     this.bindShader(this.glGeomDataShader, renderstate, this.glGeomDataShaderKey)

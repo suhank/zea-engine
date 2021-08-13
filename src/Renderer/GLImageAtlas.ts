@@ -361,7 +361,7 @@ class GLImageAtlas extends GLRenderTarget {
 
   /**
    * The bindToUniform method.
-   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
+   * @param {RenderState} renderstate - The object tracking the current state of the renderer
    * @param {WebGLUniformLocation} unif - The WebGL uniform
    * @return {boolean} - The return value.
    */

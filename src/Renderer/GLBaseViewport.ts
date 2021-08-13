@@ -386,7 +386,7 @@ class GLBaseViewport extends ParameterOwner {
 
   /**
    * Draws the Silhouettes around geometries.
-   * @param {Record<any,any>} renderstate - The object tracking the current state of the renderer
+   * @param {RenderState} renderstate - The object tracking the current state of the renderer
    * @private
    */
   drawSilhouettes(renderstate: RenderState) {
