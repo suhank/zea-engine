@@ -106,7 +106,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
           })
           this.__glShaderGeomSets[shaderName] = glShaderGeomSets
         }
-        const glGeomItem = this.renderer.glGeomItemLibrary.getGLGeomItem(geomItem)
+        const glGeomItem = <Record<any, any>>this.renderer.glGeomItemLibrary.getGLGeomItem(geomItem)
         glShaderGeomSets.addGLGeomItem(glGeomItem)
 
         glGeomItem.on('visibilityChanged', this.resortNeeded)
@@ -198,7 +198,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
   removeGeomItem(geomItem: GeomItem): any {
     this.itemCount--
 
-    const glGeomItem = this.renderer.glGeomItemLibrary.getGLGeomItem(geomItem)
+    const glGeomItem = <Record<any, any>>this.renderer.glGeomItemLibrary.getGLGeomItem(geomItem)
     if (glGeomItem.GLShaderGeomSets) {
       const glShaderGeomSets = glGeomItem.GLShaderGeomSets
       glShaderGeomSets.removeGLGeomItem(glGeomItem)

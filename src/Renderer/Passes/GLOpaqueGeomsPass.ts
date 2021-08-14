@@ -9,6 +9,8 @@ import { GLShaderMaterials } from '../Drawing/GLShaderMaterials'
 import { GLShaderGeomSets } from '../Drawing/GLShaderGeomSets'
 import { GLMaterialGeomItemSets } from '../Drawing/GLMaterialGeomItemSets'
 import { GLBaseRenderer } from '../GLBaseRenderer'
+import { GLGeom } from '../Drawing/GLGeom'
+import { GLGeomItem } from '../Drawing'
 
 /** Class representing a GL opaque geoms pass.
  * @extends GLStandardGeomsPass
@@ -101,8 +103,8 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
         }
 
         // const glGeomItem = this.constructGLGeomItem(geomItem)
-        const glGeomItem = this.renderer.glGeomItemLibrary.getGLGeomItem(geomItem)
-        glShaderGeomSets.addGLGeomItem(glGeomItem)
+        const glGeomItem = <Record<any, any>>this.renderer.glGeomItemLibrary.getGLGeomItem(geomItem)
+        glShaderGeomSets.addGLGeomItem(<GLGeomItem>glGeomItem)
 
         glGeomItem.GLShaderGeomSets = glShaderGeomSets
         this.emit('updated')
@@ -111,7 +113,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
     }
 
     const glGeom = this.renderer.glGeomLibrary.constructGLGeom(geomItem.getParameter('Geometry').getValue())
-    const glGeomItem = this.renderer.glGeomItemLibrary.getGLGeomItem(geomItem)
+    const glGeomItem = <Record<any, any>>this.renderer.glGeomItemLibrary.getGLGeomItem(geomItem)
 
     // ////////////////////////////////////
     // Tracking Material Transparency changes...
@@ -152,7 +154,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
    * @return {boolean} - The return value.
    */
   removeGeomItem(geomItem: GeomItem) {
-    const glGeomItem = this.renderer.glGeomItemLibrary.getGLGeomItem(geomItem)
+    const glGeomItem = (<Record<any, any>>this).renderer.glGeomItemLibrary.getGLGeomItem(geomItem)
 
     if (glGeomItem.GLShaderGeomSets) {
       const glShaderGeomSets = glGeomItem.GLShaderGeomSets

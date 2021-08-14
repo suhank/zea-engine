@@ -112,7 +112,7 @@ class GLGeomLibrary extends EventEmitter {
     }
     const gl = this.__gl
     if (geom instanceof Mesh || geom instanceof MeshProxy) {
-      glgeom = new GLMesh(gl, geom)
+      glgeom = new GLMesh(gl, <Mesh>geom)
     } else if (geom instanceof Lines || geom instanceof LinesProxy) {
       glgeom = new GLLines(gl, geom)
     } else if (geom instanceof Points || geom instanceof PointsProxy) {
