@@ -8,24 +8,24 @@ import { Mesh } from '../../SceneTree/Geometry/Mesh'
  * @private
  */
 class GLMesh extends GLGeom {
-  protected __numTriIndices: any
-  protected __indexDataType: any
-  protected __numVertices: any
-  protected __numTriangles: any
-  protected __numRenderVerts: any
-  protected __vao: any
+  protected __numTriIndices: number
+  protected __indexDataType: number
+  protected __numVertices: number
+  protected __numTriangles: number
+  protected __numRenderVerts: number
+  protected __vao: WebGLVertexArrayObject
   protected __geom: Mesh
-  protected __wireframesVao: any
+  protected __wireframesVao: WebGLVertexArrayObject
   protected __ext: any
-  protected __numWireIndices: any
-  protected __hardEdgesVao: any
-  protected __numEdgeIndices: any
+  protected __numWireIndices: number
+  protected __hardEdgesVao: WebGLVertexArrayObject
+  protected __numEdgeIndices: number
   /**
    * Create a GL mesh.
    * @param {WebGL12RenderingContext} gl - The webgl rendering context.
-   * @param {any} mesh - The mesh value.
+   * @param {Mesh} mesh - The mesh value.
    */
-  constructor(gl: WebGL12RenderingContext, mesh: any) {
+  constructor(gl: WebGL12RenderingContext, mesh: Mesh) {
     super(gl, mesh)
   }
 

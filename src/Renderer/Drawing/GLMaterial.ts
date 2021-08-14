@@ -11,7 +11,7 @@ class GLMaterial extends EventEmitter {
   protected __gl: WebGL12RenderingContext
   protected __material: Material
   protected __glshader: GLShader
-  protected __shaderBindings: Record<string, any> = {}
+  protected __shaderBindings: Record<string, any>
   protected __boundTexturesBeforeMaterial: any
   /**
    * Create a GL material.

@@ -7,16 +7,16 @@ import { SInt32, UInt32, Float32 } from '../../Utilities/MathFunctions'
  * @private
  */
 class SimpleUniformBinding {
-  protected param: any
+  protected param: Record<any, any>
   protected unif: Record<any, any>
-  protected textureUnif: any
-  protected textureTypeUnif: any
+  protected textureUnif: Record<any, any>
+  protected textureTypeUnif: Record<any, any>
   protected uniform1i: any
   protected uniformXX: any
   protected bind: any
   protected texBinding: any
-  protected gltexture: any
-  protected textureType: any
+  protected gltexture: GLTexture2D
+  protected textureType: number
 
   protected update: any
   protected dirty: any
@@ -532,7 +532,7 @@ class MaterialShaderBinding {
   /**
    * The bind method.
    * @param {RenderState} renderstate - The object tracking the current state of the renderer
-   * @return {any} - The return value.
+   * @return {boolean} - The return value.
    */
   bind(renderstate: RenderState) {
     for (const uniformBinding of this.uniformBindings) {

@@ -12,7 +12,7 @@ import { GLMaterial } from './GLMaterial'
 class GLMaterialGeomItemSets extends EventEmitter {
   protected pass: GLOpaqueGeomsPass // TODO: check, used to be GLPass
   protected __gl: WebGL12RenderingContext
-  protected glMaterial: GLMaterial
+  glMaterial: GLMaterial
   protected glGeomItemSets: Record<any, any> = {}
   protected drawCount: number
   /**

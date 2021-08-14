@@ -52,7 +52,7 @@ class GLPoints extends GLGeom {
    * The updateBuffers method.
    * @param {RenderState} renderstate - The object tracking the current state of the renderer
    */
-  updateBuffers(renderstate: RenderState) {
+  updateBuffers(renderstate?: RenderState) {
     const gl = this.__gl
     const geomBuffers = this.__geom.genBuffers()
 

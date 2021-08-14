@@ -1,4 +1,6 @@
 import { EventEmitter } from '../../Utilities/index'
+import { GLShader } from '../GLShader'
+import { GLPass } from '../Passes'
 import { GLGeom } from './GLGeom'
 import { GLGeomItem } from './GLGeomItem'
 import { GLMaterial } from './GLMaterial'
@@ -8,9 +10,9 @@ import { GLMaterialGeomItemSets } from './GLMaterialGeomItemSets'
  * @private
  */
 class GLShaderMaterials extends EventEmitter {
-  protected gl: any
+  protected gl: WebGL12RenderingContext
   protected pass: any
-  protected glShader: any
+  protected glShader: GLShader
   protected glgeomdatashader: any
   protected glselectedshader: any
   protected glMaterialGeomItemSets: any[]
@@ -18,9 +20,9 @@ class GLShaderMaterials extends EventEmitter {
    * Create a GL shader material.
    * @param {WebGL12RenderingContext} gl - The WebGL Context value.
    * @param {GLPass} pass - The pass that owns this GLShaderMaterials object.
-   * @param {object} shaders - The shaders value.
+   * @param {Record<any,any>} shaders - The shaders value.
    */
-  constructor(gl: any, pass: any, shaders: any) {
+  constructor(gl: WebGL12RenderingContext, pass: GLPass, shaders: Record<any, any>) {
     super()
     this.gl = gl
     this.pass = pass
