@@ -36,10 +36,9 @@
     "to-cleanup": "rm -Rf dist/ node_modules/ yarn.lock"
   },
   "dependencies": {
-    "debug": "^4.1.1",
-    "semver": "^7.3.2",
-    "tslib": "^2.3.1",
-    "xlsx": "^0.17.0"
+    "debug": "^4.1.6",
+    "semver": "^7.3.5",
+    "tslib": "^2.3.1"
   },
   "devDependencies": {
     "@babel/core": "^7.14.6",
@@ -52,7 +51,7 @@
     "@types/debug": "^4.1.6",
     "@types/jest": "^26.0.23",
     "@types/node": "^16.3.3",
-    "@types/semver": "^7.3.7",
+    "@types/semver": "7.3.5",
     "@types/webxr": "^0.2.3",
     "@typescript-eslint/eslint-plugin": "^4.28.3",
     "@typescript-eslint/parser": "^4.28.3",

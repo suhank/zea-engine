@@ -1,11 +1,6 @@
 import { EventEmitter } from '../../Utilities/index'
 import { loadTextfile, loadBinfile } from '../Utils'
 
-import XLSX from 'xlsx'
-function sheet_to_row_object_array(sheet: any, opts?: any) {
-  return XLSX.utils.sheet_to_json(sheet, opts != null ? opts : {})
-}
-
 // eslint-disable-next-line require-jsdoc
 function getLanguage() {
   // Note: globalThis causes errors on Safari.
@@ -81,21 +76,25 @@ class LabelManager extends EventEmitter {
         this.__labelLibraries[stem] = JSON.parse(text)
         this.emit('labelLibraryLoaded', { library: stem })
       })
-    } else if (name.endsWith('.xlsx') && window.navigator && window.XLSX) {
+    } else if (name.endsWith('.xlsx')) {
+      // @ts-ignore
+      const XLSX = globalThis.XLSX
       // Note: example taken from here..
       // https://stackoverflow.com/questions/8238407/how-to-parse-excel-file-in-javascript-html5
       // and here:
       // https://github.com/SheetJS/js-xlsx/tree/master/demos/xhr
       loadBinfile(url, (data: any) => {
         const unit8array = new Uint8Array(data)
+        // @ts-ignore
         const workbook = XLSX.read(unit8array, {
           type: 'array',
         })
         const json = {}
         workbook.SheetNames.forEach(function (sheetName: any) {
           // Here is your object
-          // const rows = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheetName])
-          const rows = sheet_to_row_object_array(workbook.Sheets[sheetName])
+          // @ts-ignore
+          const rows = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], {})
+          // @ts-ignore
           rows.forEach(function (row: any) {
             const identifier = row.Identifier
             delete row.Identifier
