@@ -44,13 +44,13 @@ class FlatSurfaceShader extends GLShader {
     return matData
   }
 
-  static getGeomDataShaderName() {
-    return 'StandardSurfaceGeomDataShader'
-  }
+  // static getGeomDataShaderName() {
+  //   return 'StandardSurfaceGeomDataShader'
+  // }
 
-  static getSelectedShaderName() {
-    return 'StandardSurfaceSelectedGeomsShader'
-  }
+  // static getSelectedShaderName() {
+  //   return 'StandardSurfaceSelectedGeomsShader'
+  // }
 }
 
 Registry.register('FlatSurfaceShader', FlatSurfaceShader)

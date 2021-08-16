@@ -3,6 +3,7 @@ precision highp float;
 
 import 'constants.glsl'
 
+
 uniform color BaseColor;
 uniform float Rounded;
 uniform float BorderWidth;
@@ -16,15 +17,25 @@ varying float v_drawItemId;
 out vec4 fragColor;
 #endif
 
+#if defined(DRAW_GEOMDATA)
+  import 'surfaceGeomData.glsl'
+#elif defined(DRAW_HIGHLIGHT)
+  import 'surfaceHighlight.glsl'
+#endif // DRAW_HIGHLIGHT
+
+
 void main(void) {
 
 #ifndef ENABLE_ES3
   vec4 fragColor;
 #endif
 
-  float dist = length(v_texCoord - 0.5);
-  if (dist > 0.5)
-    discard;
+float dist = length(v_texCoord - 0.5);
+if (dist > 0.5)
+  discard;
+
+#if defined(DRAW_COLOR)
+
   if (dist > 0.5 - (BorderWidth * 0.5))
     fragColor = vec4(0.,0.,0.,1.);
   else {
@@ -33,6 +44,14 @@ void main(void) {
 
     fragColor = BaseColor * mix(1.0, NdotV, Rounded);
   }
+
+#elif defined(DRAW_GEOMDATA)
+  fragColor = setFragColor_geomData(v_viewPos, floatGeomBuffer, passId,v_drawItemId, 0);
+#elif defined(DRAW_HIGHLIGHT)
+  fragColor = setFragColor_highlight(v_drawItemId);
+#endif // DRAW_HIGHLIGHT
+
+
   
 
 #ifndef ENABLE_ES3
