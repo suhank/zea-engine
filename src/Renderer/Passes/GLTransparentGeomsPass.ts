@@ -90,14 +90,13 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
     const materialParam = geomItem.getParameter('Material')
     const material = materialParam.getValue()
     const shaderName = material.getShaderName()
-    // const shaders = this.constructShaders(shaderName)
-    const shader = <GLShader>this.__renderer.getOrCreateShader(shaderName)
+    const shaders = this.constructShaders(shaderName)
 
     if (!material.isTextured()) {
       if (material.getShaderClass().supportsInstancing()) {
         let glShaderGeomSets = this.__glShaderGeomSets[shaderName]
         if (!glShaderGeomSets) {
-          glShaderGeomSets = new GLShaderGeomSets(this, this.__gl, shader)
+          glShaderGeomSets = new GLShaderGeomSets(this, this.__gl, shaders)
           glShaderGeomSets.on('updated', () => {
             this.__renderer.requestRedraw()
           })
@@ -121,7 +120,6 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
 
     // const glGeomItem = this.constructGLGeomItem(geomItem)
     const glGeomItem = this.renderer.glGeomItemLibrary.getGLGeomItem(geomItem)
-    const shaders = this.constructShaders(shaderName)
 
     // @todo - make sure we remove materials and GeomItems from the base pass.
     // This code will leak memory for these classes as we are not cleaning them up.
