@@ -220,7 +220,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
    * The draw method.
    * @param {object} renderstate - The object tracking the current state of the renderer
    */
-  draw(renderstate: RenderState) {
+  draw(renderstate: RenderState): void {
     const gl = this.__gl
     gl.disable(gl.BLEND)
 
@@ -246,7 +246,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
    * The drawHighlightedGeoms method.
    * @param {object} renderstate - The object tracking the current state of the renderer
    */
-  drawHighlightedGeoms(renderstate: RenderState) {
+  drawHighlightedGeoms(renderstate: RenderState): void {
     const gl = this.__gl
     gl.disable(gl.CULL_FACE) // 2-sided rendering.
 
@@ -269,7 +269,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
    * The drawGeomData method.
    * @param {object} renderstate - The object tracking the current state of the renderer
    */
-  drawGeomData(renderstate: RenderState) {
+  drawGeomData(renderstate: RenderState): void {
     renderstate.passIndex = this.passIndex
 
     const gl = this.__gl

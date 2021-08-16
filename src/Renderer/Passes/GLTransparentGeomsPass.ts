@@ -192,7 +192,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
    * @param {GeomItem} geomItem - The geomItem value.
    */
   // TODO: needs to return boolean
-  removeGeomItem(geomItem: GeomItem): any {
+  removeGeomItem(geomItem: GeomItem): boolean {
     this.itemCount--
 
     const glGeomItem = <Record<any, any>>this.renderer.glGeomItemLibrary.getGLGeomItem(geomItem)
@@ -219,13 +219,14 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
     }
 
     this.emit('updated')
+    return true
   }
 
   /**
    * Sorts the drawn items in order furthest to nearest when rendering transparent objects.
    * @param {Vec3} viewPos - The position of the camera that we are sorting relative to.
    */
-  sortItems(viewPos: Vec3) {
+  sortItems(viewPos: Vec3): void {
     // eslint-disable-next-line guard-for-in
     for (const shaderName in this.__glShaderGeomSets) {
       this.__glShaderGeomSets[shaderName].sortItems(viewPos)
@@ -273,7 +274,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
    * @param {RenderState} renderstate - The object tracking the current state of the renderer
    * @private
    */
-  _drawItems(renderstate: RenderState) {
+  _drawItems(renderstate: RenderState): void {
     // Note: sorting here will not sort geometries of different types.
     // this is a flawed solution that only sorts geomemtries of the same
     // time and same shader against each other. Given that this is the data 99% o
@@ -331,7 +332,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
    * The draw method.
    * @param {RenderState} renderstate - The object tracking the current state of the renderer
    */
-  draw(renderstate: RenderState) {
+  draw(renderstate: RenderState): void {
     if (this.itemCount == 0) return
 
     const gl = this.__gl
@@ -398,7 +399,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
    * The drawHighlightedGeoms method.
    * @param {RenderState} renderstate - The object tracking the current state of the renderer
    */
-  drawHighlightedGeoms(renderstate: RenderState) {
+  drawHighlightedGeoms(renderstate: RenderState): void {
     const gl = this.__gl
     gl.disable(gl.CULL_FACE) // 2-sided rendering.
 
@@ -434,7 +435,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
    * The drawGeomData method.
    * @param {object} renderstate - The object tracking the current state of the renderer
    */
-  drawGeomData(renderstate: RenderState) {
+  drawGeomData(renderstate: RenderState): void {
     const gl = this.__gl
     gl.disable(gl.BLEND)
     gl.disable(gl.CULL_FACE)
