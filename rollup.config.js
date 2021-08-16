@@ -25,22 +25,21 @@ const glslOptions = {
 }
 
 const plugins = [
-  typescript({
-    tsconfig: 'tsconfig.json',
-    include: 'src/**/*.{js,ts}',
-  }),
-  glslify(glslOptions),
-  base64({ include: '**/*.wasm' }),
-  commonjs(),
-  // commonjs({ extensions: ['.js', '.ts'] }), // note: this is not recommended
-  nodePolyfills(),
   resolve({
     browser: true,
     preferBuiltins: false,
   }),
-  json(),
+  commonjs(),
   webWorkerLoader(),
+  json(),
   svg(),
+  glslify(glslOptions),
+  base64({ include: '**/*.wasm' }),
+  typescript({
+    tsconfig: 'tsconfig.json',
+    include: 'src/**/*.{js,ts}',
+  }),
+  nodePolyfills(),
 ]
 
 const isProduction = !process.env.ROLLUP_WATCH
