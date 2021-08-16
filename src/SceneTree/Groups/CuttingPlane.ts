@@ -63,11 +63,11 @@ class CuttingPlane extends BaseGroup {
    * @param {TreeITem} item - The item in the group.
    * @private
    */
-  __updateCutaway(item: TreeItem): void {
+  __updateCutaway(item: TreeItem): Promise<void> {
     // Make this function async so that we don't pull on the
     // graph immediately when we receive a notification.
     // Note: propagating using an operator would be much better.
-    const promise = new Promise((resolve) => {
+    return new Promise((resolve) => {
       const cutEnabled = this.getParameter('CutAwayEnabled').getValue()
       const cutPlane = this.getParameter('CutPlane').getValue()
       const cutAwayVector = cutPlane.xyz
@@ -88,7 +88,7 @@ class CuttingPlane extends BaseGroup {
           }, true)
         })
       }
-      resolve(promise)
+      resolve()
     })
   }
 

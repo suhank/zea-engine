@@ -43,8 +43,10 @@ class KinematicGroup extends BaseGroup {
     this.calculatingGroupXfo = false
     this.memberXfoOps = []
 
-    this.__initialXfoModeParam = <MultiChoiceParameter>this.addParameter(
-      new MultiChoiceParameter('InitialXfoMode', GROUP_XFO_MODES.average, ['manual', 'first', 'average', 'global'])
+    this.__initialXfoModeParam = <MultiChoiceParameter>(
+      this.addParameter(
+        new MultiChoiceParameter('InitialXfoMode', GROUP_XFO_MODES.average, ['manual', 'first', 'average', 'global'])
+      )
     )
     this.__initialXfoModeParam.on('valueChanged', () => {
       this.calcGroupXfo()
@@ -77,7 +79,7 @@ class KinematicGroup extends BaseGroup {
     // Make this function async so that we don't pull on the
     // graph immediately when we receive a notification.
     // Note: propagating using an operator would be much better.
-    const update = new Promise((resolve) => {
+    new Promise((resolve) => {
       let highlighted = false
       let color: Color
       if (this.isSelected()) {
@@ -93,7 +95,7 @@ class KinematicGroup extends BaseGroup {
           else item.removeHighlight(key, true)
         }
       })
-      resolve(update)
+      resolve()
     })
   }
 

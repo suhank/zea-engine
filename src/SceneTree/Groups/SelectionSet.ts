@@ -65,7 +65,7 @@ class SelectionSet extends BaseGroup {
     // Make this function async so that we don't pull on the
     // graph immediately when we receive a notification.
     // Note: propagating using an operator would be much better.
-    const update = new Promise((resolve) => {
+     new Promise((resolve) => {
       let highlighted = false
       let color: Color
       if (this.getParameter('Highlighted').getValue() || this.isSelected()) {
@@ -81,7 +81,7 @@ class SelectionSet extends BaseGroup {
           else item.removeHighlight(key, true)
         }
       })
-      resolve(update)
+      resolve()
     })
   }
 
