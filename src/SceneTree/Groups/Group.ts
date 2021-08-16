@@ -142,11 +142,11 @@ class Group extends BaseGroup {
    * The __updateHighlight method.
    * @private
    */
-  __updateHighlight() {
+  __updateHighlight(): Promise<void>{
     // Make this function async so that we don't pull on the
     // graph immediately when we receive a notification.
     // Note: propagating using an operator would be much better.
-    const promise = new Promise((resolve) => {
+    return new Promise((resolve) => {
       let highlighted = false
       let color: Color
       if (this.getParameter('Highlighted').getValue() || this.isSelected()) {
@@ -162,7 +162,7 @@ class Group extends BaseGroup {
           else item.removeHighlight(key, true)
         }
       })
-      resolve(promise)
+      resolve()
     })
   }
 
@@ -251,11 +251,11 @@ class Group extends BaseGroup {
    * The __updateMaterial method.
    * @private
    */
-  __updateMaterial() {
+  __updateMaterial():Promise<void> {
     // Make this function async so that we don't pull on the
     // graph immediately when we receive a notification.
     // Note: propagating using an operator would be much better.
-    const promise = new Promise((resolve) => {
+    return new Promise((resolve) => {
       const material = this.getParameter('Material').getValue()
 
       // TODO: Bind an operator
@@ -278,7 +278,7 @@ class Group extends BaseGroup {
           }
         }, false)
       })
-      resolve(promise)
+      resolve()
     })
   }
 
@@ -289,11 +289,11 @@ class Group extends BaseGroup {
    * The __updateCutaway method.
    * @private
    */
-  __updateCutaway() {
+  __updateCutaway(): any {
     // Make this function async so that we don't pull on the
     // graph immediately when we receive a notification.
     // Note: propagating using an operator would be much better.
-    const promise = new Promise((resolve) => {
+   new Promise((resolve) => {
       const cutEnabled = this.getParameter('CutAwayEnabled').getValue()
       const cutAwayVector = this.getParameter('CutPlaneNormal').getValue()
       const cutAwayDist = this.getParameter('CutPlaneDist').getValue()
@@ -307,7 +307,7 @@ class Group extends BaseGroup {
           }
         }, true)
       })
-      resolve(promise)
+      resolve()
     })
   }
 
