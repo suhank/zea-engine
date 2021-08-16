@@ -13,7 +13,7 @@ class FatPointsShader extends GLShader {
    * Create a GL shader.
    * @param {WebGL12RenderingContext} gl - The webgl rendering context.
    */
-  constructor(gl: WebGL12RenderingContext) {
+  constructor(gl?: WebGL12RenderingContext) {
     super(gl, 'FatPointsShader')
     this.setShaderStage('VERTEX_SHADER', vert)
     this.setShaderStage('FRAGMENT_SHADER', frag)

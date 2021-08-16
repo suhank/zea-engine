@@ -36,12 +36,8 @@ class GLShader extends BaseItem {
    * Create a GL shader.
    * @param {WebGL12RenderingContext} gl - The webgl rendering context.
    */
-  constructor(gl: WebGL12RenderingContext, name: string) {
+  constructor(gl?: WebGL12RenderingContext, name?: string) {
     super(name)
-    if (!gl) {
-      throw new Error('gl context must be passed to shader constructor')
-    }
-
     this.__gl = gl
     this.__shaderStagesGLSL = {}
     this.__shaderStages = {}
@@ -50,6 +46,15 @@ class GLShader extends BaseItem {
     this.__gltextures = {}
 
     this.__id = shaderInstanceId++
+  }
+
+  /**
+   * Sets the GL context to the shader.
+   * > Note: normally the context should be passed to the constructor. This method us used when using the Registry to construct shaders.
+   * @param {WebGL12RenderingContext} gl - The webgl rendering context.
+   */
+  setGLContext(gl: WebGL12RenderingContext) {
+    this.__gl = gl
   }
 
   /**
@@ -375,11 +380,6 @@ class GLShader extends BaseItem {
   }
 
   /**
-   * The finalize method.
-   */
-  finalize() {}
-
-  /**
    * Checks to see if the engine is compiled for the target specified by the key
    * @param {string} key - The key value.
    * @return {boolean} - The return value.
@@ -485,14 +485,14 @@ class GLShader extends BaseItem {
    * The getGeomDataShaderName method.
    * @return {string} - an array of param declarations that the shader expects the material tp provide.
    */
-  static getGeomDataShaderName(): any {
+  getGeomDataShaderName(): any {
     return ''
   }
 
   /**
    * The getSelectedShaderName method.
    */
-  static getSelectedShaderName() {
+  getSelectedShaderName() {
     return ''
   }
 

@@ -16,11 +16,10 @@ class LinesShader extends GLShader {
    * Create a GL shader.
    * @param {WebGL12RenderingContext} gl - The webgl rendering context.
    */
-  constructor(gl: WebGL12RenderingContext) {
+  constructor(gl?: WebGL12RenderingContext) {
     super(gl, 'LinesShader')
     this.setShaderStage('VERTEX_SHADER', vert)
     this.setShaderStage('FRAGMENT_SHADER', frag)
-    this.finalize()
   }
 
   /**
@@ -47,7 +46,6 @@ class LinesShader extends GLShader {
   }
 }
 
-export { LinesShader }
 const material = new Material('LinesShader_template')
 material.addParameter(new MaterialColorParam('BaseColor', new Color(1.0, 1, 0.5)))
 
@@ -59,3 +57,7 @@ material.addParameter(new NumberParameter('StippleValue', 0, [0, 1]))
 
 material.addParameter(new NumberParameter('OccludedStippleValue', 1.0, [0, 1]))
 shaderLibrary.registerMaterialTemplate('LinesShader', material)
+
+Registry.register('LinesShader', LinesShader)
+
+export { LinesShader }
