@@ -252,7 +252,7 @@ class Attribute extends BaseClass {
    * @param {array} faceGroup - The faceGroup value.
    * @param {any} value - The value value.
    */
-  setSplitVertexValues(vertex: number, faceGroup: number[], value: any): void {
+  setSplitVertexValues(vertex: number, faceGroup: number[], value: Float32Array): void {
     if (!(vertex in this.splits)) this.splits[vertex] = {}
     const splitIndex = this.splitValues.length
     this.splitValues.push(value)

@@ -603,7 +603,7 @@ class Mesh extends BaseGeom {
           setVertexNormal(i, normal)
           firstVertex = false
         } else {
-          normalsAttr.setSplitVertexValues(i, faceGroup, normal)
+          normalsAttr.setSplitVertexValues(i, faceGroup, normal.asArray())
         }
       }
     }
