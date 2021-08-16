@@ -14,14 +14,10 @@ import GeomParserWorker from 'web-worker:./Geometry/GeomParserWorker'
 import { parseGeomsBinary } from './Geometry/parseGeomsBinary'
 import { StreamFileParsedEvent } from '../Utilities/Events/StreamFileParsedEvent'
 import { RangeLoadedEvent } from '../Utilities/Events/RangeLoadedEvent'
+import { AnyARecord } from 'dns'
 
-const isMobile = SystemDesc.isMobileDevice
-let numCores = window.navigator.hardwareConcurrency
-if (!numCores) {
-  if (isMobile) numCores = 4
-  else numCores = 6
-}
-numCores-- // always leave one main thread code spare.
+const numCores = SystemDesc.hardwareConcurrency - 1 // always leave one main thread code spare.
+
 let workerId = 0
 const workers: any[] = []
 const listeners: any[] = []
@@ -228,8 +224,8 @@ class GeomLibrary extends EventEmitter {
    * @param {Record<any,any>} context - The context value.
    * @return {any} - The return value.
    */
-  readBinaryBuffer(geomFileID: string, buffer: Buffer, context: Record<any, any>) {
-    const reader = new BinReader(buffer, 0, isMobile)
+  readBinaryBuffer(geomFileID: string, buffer: Buffer, context: Record<any, any> ) {
+    const reader = new BinReader(buffer, 0, SystemDesc.isMobileDevice)
     const numGeoms = reader.loadUInt32()
 
     // Geoms within a given file are offset into the array of geometries of the library.
@@ -256,11 +252,6 @@ class GeomLibrary extends EventEmitter {
     const toc = reader.loadUInt32Array(numGeoms)
 
     if (multiThreadParsing) {
-      let numCores = window.navigator.hardwareConcurrency
-      if (!numCores) {
-        if (isMobile) numCores = 2
-        else numCores = 4
-      }
       const numGeomsPerWorkload = Math.max(1, Math.floor(numGeoms / numCores + 1))
 
       // TODO: Use SharedArrayBuffer once available.

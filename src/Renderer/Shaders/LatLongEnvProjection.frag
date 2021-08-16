@@ -1,7 +1,6 @@
 
 precision highp float;
 
-import 'constants.glsl'
 import 'GLSLUtils.glsl'
 import 'envmap-equirect.glsl'
 import 'gamma.glsl'

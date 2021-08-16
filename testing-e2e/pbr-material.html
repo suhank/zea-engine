@@ -11,7 +11,6 @@
     <link rel="stylesheet" href="styles/tailwind.min.css" />
 
     <script src="../dist/index.umd.js"></script>
-    <script src="../dist/plugins.umd.js"></script>
     <style>
       /* The slider itself */
       .slider {
@@ -69,6 +68,30 @@
       promises.push(new Promise((resolve) => envMap.on('loaded', resolve)))
       scene.setEnvMap(envMap)
       scene.getSettings().getParameter('Display EnvMap').setValue(true)
+
+      const urlParams = new URLSearchParams(window.location.search)
+      renderer.getViewport().debugGeomShader = urlParams.has('debugGeomShader')
+
+      /** HIGHLIGHT START */
+      let highlightedItem
+      renderer.getViewport().on('pointerOverGeom', (event) => {
+        const item = event.intersectionData.geomItem
+        if (item) {
+          highlightedItem = item
+          highlightedItem.addHighlight('pointerOverGeom', new Color(1.0, 1.0, 0, 0.3), true)
+        }
+      })
+      renderer.getViewport().on('pointerLeaveGeom', (event) => {
+        highlightedItem.removeHighlight('pointerOverGeom', true)
+        highlightedItem = null
+      })
+      renderer.getViewport().on('pointerUp', (event) => {
+        if (event.intersectionData) {
+          const geomItem = event.intersectionData.geomItem
+          console.log('', geomItem.getPath())
+        }
+      })
+      /** HIGHLIGHT END */
 
       let posX = -3
       const sphere = new Sphere(0.4, 90, 60)

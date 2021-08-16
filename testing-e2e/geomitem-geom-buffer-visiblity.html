@@ -11,7 +11,6 @@
     <link rel="stylesheet" href="styles/tailwind.min.css" />
 
     <script src="../dist/index.umd.js"></script>
-    <script src="../dist/plugins.umd.js"></script>
 
     <script type="module">
       const {
@@ -58,7 +57,7 @@
 
       for (let i = 0; i < 3; i++) {
         const geomItem = addMeshShape('Sphere' + i, sphere, new Vec3((i / 9) * 20, 0, 1.4), material)
-        if (i == 1) geomItem.visibleInGeomDataBuffer = false
+        if (i == 1) geomItem.setSelectable(false)
       }
       renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(10, 10, 7), new Vec3(2, 0, 1))
 

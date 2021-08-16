@@ -88,7 +88,7 @@ class VRViewport extends GLBaseViewport {
 
     this.controllersMap = {}
     this.controllers = []
-    this.prevControllerDownTime = []
+    this.controllerPointerDownTime = []
     this.spectatorMode = false
     this.tick = 0
 
@@ -264,9 +264,7 @@ class VRViewport extends GLBaseViewport {
             }
           }
           this.__vrAsset.traverse((item: any) => {
-            this.stroke.traverse((item: any) => {
-              item.setSelectable(false)
-            })
+            item.setSelectable(false)
           })
           resolve(this.__vrAsset)
         }
@@ -298,19 +296,21 @@ class VRViewport extends GLBaseViewport {
           .then((session: any) => {
             this.__renderer.__xrViewportPresenting = true
 
-            const viewport = this.__renderer.getActiveViewport()
-            const camera = viewport.getCamera()
-            const cameraXfo = camera.getParameter('GlobalXfo').getValue()
+            const viewport = this.__renderer.getViewport()
+            if (viewport) {
+              const camera = viewport.getCamera()
+              const cameraXfo = camera.getParameter('GlobalXfo').getValue()
 
-            // Convert Y-Up to Z-Up.
-            const stageXfo = new Xfo()
-            stageXfo.tr = cameraXfo.tr.clone()
-            stageXfo.tr.z -= 1.3 // assume sitting, and move the floor down a bit
-            const dir = cameraXfo.ori.getZaxis()
-            dir.z = 0
-            dir.normalizeInPlace()
-            stageXfo.ori.setFromDirectionAndUpvector(dir, new Vec3(0, 0, 1))
-            this.setXfo(stageXfo)
+              // Convert Y-Up to Z-Up.
+              const stageXfo = new Xfo()
+              stageXfo.tr = cameraXfo.tr.clone()
+              stageXfo.tr.z -= 1.3 // assume sitting, and move the floor down a bit
+              const dir = cameraXfo.ori.getZaxis()
+              dir.z = 0
+              dir.normalizeInPlace()
+              stageXfo.ori.setFromDirectionAndUpvector(dir, new Vec3(0, 0, 1))
+              this.setXfo(stageXfo)
+            }
 
             session.addEventListener('end', (event: any) => {
               this.__stageTreeItem.setVisible(false)
@@ -321,6 +321,7 @@ class VRViewport extends GLBaseViewport {
             const onSelectStart = (ev: any) => {
               const controller = this.controllersMap[ev.inputSource.handedness]
               if (controller) {
+                controller.buttonPressed = true
                 this.onPointerDown({
                   button: 1,
                   controller,
@@ -330,6 +331,7 @@ class VRViewport extends GLBaseViewport {
             const onSelectEnd = (ev: any) => {
               const controller = this.controllersMap[ev.inputSource.handedness]
               if (controller) {
+                controller.buttonPressed = false
                 this.onPointerUp({
                   button: 1,
                   controller,
@@ -561,7 +563,7 @@ class VRViewport extends GLBaseViewport {
     renderstate.viewScale = 1.0 / this.__stageScale
     renderstate.cameraMatrix = renderstate.viewXfo.toMat4()
     renderstate.region = this.__region
-    renderstate.vrPresenting = true // Some rendering is ajusted slightly in VR. e.g. Billboards
+    renderstate.vrPresenting = true // Some rendering is adjusted slightly in VR. e.g. Billboards
 
     this.draw(renderstate)
 
@@ -578,13 +580,15 @@ class VRViewport extends GLBaseViewport {
     this.emit('viewChanged', viewChangedEvent)
 
     // If spectator mode is active, draw a 3rd person view of the scene to
-    // the WebGL context's default backbuffer.
+    // the WebGL context's default back buffer.
     if (this.spectatorMode && !SystemDesc.isMobileDevice && this.tick % 5 == 0) {
-      const viewport = this.__renderer.getActiveViewport()
-      // display the head in spectator mode.
-      this.__vrhead.setVisible(true)
-      viewport.draw()
-      this.__vrhead.setVisible(false)
+      const viewport = this.__renderer.getViewport()
+      if (viewport) {
+        // display the head in spectator mode.
+        this.__vrhead.setVisible(true)
+        viewport.draw()
+        this.__vrhead.setVisible(false)
+      }
     }
 
     this.tick++
@@ -633,7 +637,7 @@ class VRViewport extends GLBaseViewport {
     // If the manipulator or the viewport handle that
     // then skip the 'pointerDown' event.
     const downTime = Date.now()
-    if (downTime - this.prevControllerDownTime[event.controller.id] < this.__doubleClickTimeMSParam.getValue()) {
+    if (downTime - this.controllerPointerDownTime[event.controller.id] < this.__doubleClickTimeMSParam.getValue()) {
       this.emit('pointerDoublePressed', event)
       if (!event.propagating) return
 
@@ -642,7 +646,7 @@ class VRViewport extends GLBaseViewport {
         if (!event.propagating) return
       }
     }
-    this.prevControllerDownTime[event.controller.id] = downTime
+    this.controllerPointerDownTime[event.controller.id] = downTime
 
     // //////////////////////////////////////
 
@@ -671,6 +675,7 @@ class VRViewport extends GLBaseViewport {
    */
   onPointerUp(event: Record<any, any>) {
     this.preparePointerEvent(event)
+    this.controllerPointerDownTime[event.controller.id] = 0
 
     if (this.capturedItem) {
       this.capturedItem.onPointerUp(event)

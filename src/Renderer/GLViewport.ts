@@ -87,7 +87,7 @@ class GLViewport extends GLBaseViewport {
     // //////////////////////////////////
     // Setup GeomData Fbo
     this.__geomDataBuffer = undefined
-    this.__geomDataBufferSizeFactor = 4
+    this.__geomDataBufferSizeFactor = 1
     this.__geomDataBufferFbo = undefined
     this.debugGeomShader = false
 
@@ -328,7 +328,9 @@ class GLViewport extends GLBaseViewport {
     let rayDirection
     if (this.__camera.isOrthographic()) {
       // Orthographic projections.
-      rayStart = cameraMat.transformVec3(projInv.transformVec3(new Vec3(sx, -sy, -1.0)))
+      const cameraSpaceOffset = projInv.transformVec3(new Vec3(sx, -sy, -1.0))
+      cameraSpaceOffset.z = 0
+      rayStart = cameraMat.transformVec3(cameraSpaceOffset)
       rayDirection = new Vec3(0.0, 0.0, -1.0)
     } else {
       rayStart = cameraMat.translation
@@ -906,26 +908,9 @@ class GLViewport extends GLBaseViewport {
     if (this.debugGeomShader) {
       this.renderGeomDataFbo()
       const gl = this.__renderer.gl
-      // gl.disable(gl.DEPTH_TEST)
-      // gl.screenQuad.bindShader(renderstate)
-      // console.log('here')
-      // gl.screenQuad.draw(renderstate, this.__geomDataBuffer, new Vec2(0.5, 0.5), new Vec2(2, 2))
-
-      gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, null)
-      this.__geomDataBufferFbo.bindForReading(renderstate)
-      gl.clearBufferfv(gl.COLOR, 0, [0.0, 0.0, 0.0, 0.0])
-      gl.blitFramebuffer(
-        0,
-        0,
-        this.__geomDataBufferFbo.width,
-        this.__geomDataBufferFbo.height,
-        0,
-        0,
-        this.__width,
-        this.__height,
-        gl.COLOR_BUFFER_BIT,
-        gl.NEAREST
-      )
+      gl.disable(gl.DEPTH_TEST)
+      gl.screenQuad.bindShader(renderstate)
+      gl.screenQuad.draw(renderstate, this.__geomDataBuffer, new Vec2(0, 0), new Vec2(1, 1))
     }
   }
 }

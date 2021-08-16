@@ -123,20 +123,27 @@ class VLHImage extends BaseImage {
       }
       this.type = 'FLOAT'
 
-      resourceLoader.loadFile('archive', url).then((entries: Record<any, any>) => {
-        if (!entries.ldr || !entries.cdm) {
-          for (const name in entries) {
-            if (name.endsWith('.jpg')) {
-              entries.ldr = entries[name]
-              delete entries[name]
-            } else if (name.endsWith('.bin')) {
-              entries.cdm = entries[name]
-              delete entries[name]
+      resourceLoader.loadFile('archive', url).then(
+        (entries: any) => {
+          if (!entries.ldr || !entries.cdm) {
+            for (const name in entries) {
+              if (name.endsWith('.jpg')) {
+                entries.ldr = entries[name]
+                delete entries[name]
+              } else if (name.endsWith('.bin')) {
+                entries.cdm = entries[name]
+                delete entries[name]
+              }
             }
           }
+          this.__decodeData(entries)
+          resolve()
+        },
+        (error: any) => {
+          this.emit('error', error)
+          reject(error)
         }
-        this.__decodeData(entries)
-      })
+      )
     })
   }
 

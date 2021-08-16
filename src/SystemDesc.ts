@@ -153,16 +153,17 @@ function getGPUDesc() {
   }
 }
 
-const SystemDesc: any = (function () {
-  // Note: globalThis causes errors on Safari.
-  if (!window.navigator) {
-    return <Record<any, any>>{
+const SystemDesc = (function () {
+  if (!globalThis.navigator) {
+    // When running in NodeJS
+    return {
       isMobileDevice: false,
       isIOSDevice: false,
       browserName: 'Node',
       webGLSupported: false,
       gpuDesc: null,
       deviceCategory: 'High',
+      hardwareConcurrency: 4,
     }
   }
   const isMobile = isMobileDevice()
@@ -265,6 +266,12 @@ const SystemDesc: any = (function () {
     }
   }
 
+  let hardwareConcurrency = globalThis.navigator.hardwareConcurrency
+  if (!hardwareConcurrency) {
+    if (SystemDesc.isMobileDevice) hardwareConcurrency = 4
+    else hardwareConcurrency = 6
+  }
+
   return {
     isMobileDevice: isMobile,
     isIOSDevice: isIOSDevice(),
@@ -276,10 +283,12 @@ const SystemDesc: any = (function () {
     webGLSupported: gpuDesc != undefined,
     gpuDesc,
     deviceCategory,
+    hardwareConcurrency,
   }
 })()
-if (!(window as any).ZeaSystemDesc) {
-  ;(window as any).ZeaSystemDesc = SystemDesc
+
+if (!globalThis.ZeaSystemDesc) {
+  globalThis.ZeaSystemDesc = SystemDesc
 }
 
 export { SystemDesc }

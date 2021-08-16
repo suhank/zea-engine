@@ -1,3 +1,4 @@
+/* eslint-disable require-jsdoc */
 import { Color } from '../../Math/index'
 import { Registry } from '../../Registry'
 import { GLShader } from '../GLShader'
@@ -22,25 +23,28 @@ class FatLinesShader extends GLShader {
   constructor(gl: WebGL12RenderingContext) {
     super(gl, 'FatLinesShader')
     this.setShaderStage('VERTEX_SHADER', vert)
-
     this.setShaderStage('FRAGMENT_SHADER', frag)
   }
 
-  bind(renderstate: RenderState) {
-    if (super.bind(renderstate, 'FatLinesShader')) {
+  bind(renderstate: RenderState, key: any) {
+    if (super.bind(renderstate, key)) {
       renderstate.supportsInstancing = false
       return true
     }
     return false
   }
 
-  static getGeomDataShaderName() {
-    return 'FatLinesGeomDataShader'
+  static getParamDeclarations() {
+    const paramDescs = super.getParamDeclarations()
+    paramDescs.push({
+      name: 'BaseColor',
+      defaultValue: new Color(1.0, 1.0, 0.5),
+    })
+    paramDescs.push({ name: 'Opacity', defaultValue: 1.0 })
+    paramDescs.push({ name: 'LineThickness', defaultValue: 0.01 }) // TODO: geoms shader had 1.0
+    paramDescs.push({ name: 'Overlay', defaultValue: 0.0 })
+    return paramDescs
   }
-
-  // static getSelectedShaderName() {
-  //   return 'FatLinesShaderHighlightShader'
-  // }
 
   /**
    * The supportsInstancing method.

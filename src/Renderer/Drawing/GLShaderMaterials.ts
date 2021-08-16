@@ -120,7 +120,7 @@ class GLShaderMaterials extends EventEmitter {
    * @param {RenderState} renderstate - The object tracking the current state of the renderer
    */
   drawHighlightedGeoms(renderstate: RenderState) {
-    if (!this.glselectedshader || !this.glselectedshader.bind(renderstate)) return
+    if (!this.glselectedshader || !this.glselectedshader.bind(renderstate, 'highlight')) return
 
     this.pass.renderer.glGeomItemLibrary.bind(renderstate)
 
@@ -134,7 +134,7 @@ class GLShaderMaterials extends EventEmitter {
    * @param {RenderState} renderstate - The object tracking the current state of the renderer
    */
   drawGeomData(renderstate: RenderState) {
-    if (!this.glgeomdatashader || !this.glgeomdatashader.bind(renderstate)) return
+    if (!this.glgeomdatashader || !this.glgeomdatashader.bind(renderstate, 'geomData')) return
 
     this.pass.renderer.glGeomItemLibrary.bind(renderstate)
 

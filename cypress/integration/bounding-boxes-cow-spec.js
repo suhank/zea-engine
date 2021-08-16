@@ -8,6 +8,7 @@ describe('bounding-boxes-cow', () => {
 
     cy.get('@postMessage').its('lastCall.args.0').should('equal', 'done-loading')
 
+    /* Eliminating redundant tests while our limit is 5k images per month
     cy.window().then((win) => {
       const variant = 'variant-01'
       win.postMessage(variant)
@@ -21,5 +22,6 @@ describe('bounding-boxes-cow', () => {
       cy.get('@postMessage').its('lastCall.args.0').should('equal', `done-${variant}`)
       cy.get('canvas').percySnapshot(`bounding-boxes-cow - ${variant}`)
     })
+    */
   })
 })

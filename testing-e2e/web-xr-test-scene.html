@@ -11,7 +11,6 @@
     <link rel="stylesheet" href="styles/tailwind.min.css" />
 
     <script src="../dist/index.umd.js"></script>
-    <script src="../dist/plugins.umd.js"></script>
     <style>
       .label {
         position: absolute;
@@ -45,6 +44,14 @@
       .button:focus {
         background-color: #78b87a;
       }
+
+      .fps-display {
+        position: fixed;
+        bottom: 10px;
+        right: 10px;
+        color: #333333;
+        font-size: 45px;
+      }
     </style>
 
     <script type="module">
@@ -57,84 +64,140 @@
         Color,
         Sphere,
         Material,
+        TreeItem,
         GeomItem,
         ObjAsset,
+        Cylinder,
+        Cuboid,
       } = window.zeaEngine
 
       const canvas = document.querySelector('#renderer')
 
       const scene = new Scene()
-      const renderer = new GLRenderer(canvas)
-      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(3, 3, 2), new Vec3(0, 0, 0.75))
+      const renderer = new GLRenderer(canvas, {
+        enableFrustumCulling: true,
+        debugOcclusionBuffer: false,
+      })
+      renderer.outlineThickness = 1.5
+      renderer.outlineSensitivity = 0.5
+
       renderer.setScene(scene)
 
       scene.setupGrid(10.0, 10, new Color())
 
-      let defaultColor
-      const pointerOverColor = new Color(0, 1, 1)
-      const pointerDownColor = new Color(1, 0, 0)
+      if (false) {
+        renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(5, -5, 2), new Vec3(0, 1, 0.75))
+        let defaultColor
+        const pointerOverColor = new Color(0, 1, 1)
+        const pointerDownColor = new Color(1, 0, 0)
 
-      const objAsset = new ObjAsset('cow')
-      objAsset.getParameter('FilePath').setValue('data/cow.obj')
-      objAsset.getParameter('splitGroupsIntoObjects').setValue(true)
-      scene.getRoot().addChild(objAsset)
+        const material = new Material('surfaces', 'StandardSurfaceShader')
+        material.getParameter('BaseColor').setValue(new Color(0.75, 0.75, 0.75))
 
-      const xfo = new Xfo()
-      xfo.tr.set(0, 0, 3.55 * 0.3048)
-      xfo.ori.setFromEulerAngles(new EulerAngles(90 * (Math.PI / 180), 0, 0))
-      xfo.sc.set(0.3048, 0.3048, 0.3048)
-      objAsset.getParameter('GlobalXfo').setValue(xfo)
-      objAsset.on('loaded', () => {
-        window.postMessage(`done-Loading`)
-      })
+        const cylinder = new Cylinder(1.5, 2.0, 6)
+        const geomItem1 = new GeomItem('Cylinder', cylinder, material, new Xfo(new Vec3(-2.2, 2, 1)))
+        scene.getRoot().addChild(geomItem1)
 
+        const cuboid = new Cuboid(1.5, 2.0, 3)
+        const geomItem2 = new GeomItem('Cuboid', cuboid, material, new Xfo(new Vec3(0.0, 2, 1)))
+        scene.getRoot().addChild(geomItem2)
+
+        const cone = new Sphere(1.4, 30)
+        const geomItem3 = new GeomItem('Cone', cone, material, new Xfo(new Vec3(2.2, 2, 0)))
+        scene.getRoot().addChild(geomItem3)
+
+        const objAsset = new ObjAsset('cow')
+        objAsset.getParameter('FilePath').setValue('data/cow.obj')
+        objAsset.getParameter('splitGroupsIntoObjects').setValue(true)
+        scene.getRoot().addChild(objAsset)
+
+        const xfo = new Xfo()
+        xfo.tr.set(0, 0, 3.55 * 0.3048)
+        xfo.ori.setFromEulerAngles(new EulerAngles(90 * (Math.PI / 180), 0, 0))
+        xfo.sc.set(0.3048, 0.3048, 0.3048)
+        objAsset.getParameter('GlobalXfo').setValue(xfo)
+        objAsset.on('loaded', () => {
+          window.postMessage(`done-Loading`)
+        })
+      } else {
+        const urlParams = new URLSearchParams(window.location.search)
+
+        const count = urlParams.has('count') ? urlParams.get('count') : 10000
+        const dim = Math.round(Math.cbrt(count))
+        console.log('Will render GeomItem count:', Math.pow(dim, 3))
+
+        renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-15, -15, 2), new Vec3(0, 1, 10.75))
+        const cuboid = new Cuboid(0.5, 0.5, 0.5)
+        const sphere = new Sphere(0.5, 12, 24)
+
+        // scene.getRoot().addChild(geomItem)
+        const simpleMaterial = new Material('mat', 'SimpleSurfaceShader')
+        const flatMaterial = new Material('mat', 'FlatSurfaceShader')
+
+        const addLayers = (layerId, treeItem) => {
+          for (let j = 0; j < dim; j += 1) {
+            // const material = new Material('mat', 'SimpleSurfaceShader')
+            // material.getParameter('BaseColor').setValue(new Color(layerId / dim, j / dim, 1))
+            const material = simpleMaterial //layerId > dim / 2 ? simpleMaterial : flatMaterial
+            const treeItemJ = new TreeItem('TreeItem' + j)
+            treeItem.addChild(treeItemJ)
+
+            for (let k = 0; k < dim; k += 1) {
+              const geomItem = new GeomItem('Geom' + k, k % 3 == 0 ? sphere : cuboid, material)
+              treeItemJ.addChild(geomItem)
+
+              const xfo = new Xfo()
+              xfo.tr.set(j, k, layerId)
+              geomItem.getParameter('GlobalXfo').setValue(xfo)
+            }
+          }
+        }
+
+        for (let i = 0; i < dim; i += 1) {
+          const treeItem = new TreeItem('TreeItem' + i)
+          scene.getRoot().addChild(treeItem)
+
+          addLayers(i, treeItem)
+        }
+      }
+
+      // //////////////////////////////////////
+      // Setup Highlighting
       let geomItem
-      objAsset.on('pointerEnter', (event) => {
+      scene.getRoot().on('pointerEnter', (event) => {
         if (event.intersectionData && event.intersectionData.geomItem) {
           geomItem = event.intersectionData.geomItem
           if (geomItem) {
-            const material = geomItem.getParameter('Material').getValue()
-            defaultColor = material.getParameter('BaseColor').getValue()
-            material.getParameter('BaseColor').setValue(pointerOverColor)
+            geomItem.addHighlight('pointerEnter', new Color(1, 0, 0, 0.3))
           }
         }
       })
-      objAsset.on('pointerLeave', (event) => {
+      scene.getRoot().on('pointerLeave', (event) => {
         if (event.leftGeometry == geomItem) {
-          const material = geomItem.getParameter('Material').getValue()
-          material.getParameter('BaseColor').setValue(defaultColor)
+          geomItem.removeHighlight('pointerEnter')
         }
       })
-      objAsset.on('pointerDown', (event) => {
+      scene.getRoot().on('pointerDown', (event) => {
         if (event.intersectionData && event.intersectionData.geomItem) {
           event.setCapture(geomItem)
-          const material = geomItem.getParameter('Material').getValue()
-          if (event.intersectionData.geomItem != geomItem) defaultColor = material.getParameter('BaseColor').getValue()
-          material.getParameter('BaseColor').setValue(pointerDownColor)
+          geomItem.addHighlight('pointerDown', new Color(0, 1, 0, 0.3))
           geomItem = event.intersectionData.geomItem
         }
       })
-      objAsset.on('pointerUp', (event) => {
+      scene.getRoot().on('pointerUp', (event) => {
         if (event.getCapture() == geomItem) event.releaseCapture()
         const intersectionData = event.controller ? event.controller.getGeomItemAtTip() : event.intersectionData
-
-        const material = geomItem.getParameter('Material').getValue()
-        if (!intersectionData || intersectionData.geomItem != geomItem) {
-          material.getParameter('BaseColor').setValue(defaultColor)
-        } else {
-          material.getParameter('BaseColor').setValue(pointerOverColor)
-        }
+        geomItem.removeHighlight('pointerDown')
       })
+
+      // //////////////////////////////////////
+      // Setup VR
 
       const h = document.querySelector('#buttonHolder')
       const b = document.querySelector('#button')
 
       renderer.getXRViewport().then((xrvp) => {
         h.textContent = 'XR Device Detected'
-
-        // Enable Spectator mode that causes the scene to be rendered again for the spectator view.
-        // this might be too expensive on big scenes.
-        xrvp.spectatorMode = true
         b.textContent = 'Launch VR'
 
         xrvp.on('presentingChanged', (event) => {
@@ -158,6 +221,25 @@
           }
         })
       })
+
+      // //////////////////////////////////////
+      // Setup FPS Counter
+
+      let frameCounter = 0
+      let fps = 0
+      renderer.on('redrawOccurred', () => {
+        frameCounter++
+      })
+      // renderer.startContinuousDrawing()
+
+      const fpsElement = document.getElementById('fps')
+      setInterval(() => {
+        if (fps != frameCounter * 2) {
+          fps = frameCounter * 2
+          fpsElement.textContent = `FPS: ${fps}`
+        }
+        frameCounter = 0
+      }, 500)
     </script>
   </head>
   <body class="bg-blue-100 h-full">
@@ -165,6 +247,7 @@
       <canvas class="absolute" id="renderer"></canvas>
       <div class="label" id="buttonHolder"></div>
       <div class="button" id="button">XR Device Not Detected</div>
+      <div class="fps-display" id="fps"></div>
     </div>
   </body>
 </html>

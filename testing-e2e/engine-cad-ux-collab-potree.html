@@ -10,17 +10,15 @@
 
     <link rel="stylesheet" href="styles/tailwind.min.css" />
 
-    <script src="../dist/index.umd.js"></script>
-    <script src="../dist/plugins.umd.js"></script>
+    <script type="module" src="../dist/index.esm.js"></script>
 
-    <script crossorigin src="https://cdn.jsdelivr.net/npm/@zeainc/zea-cad@3.3.0/dist/index.umd.js"></script>
-    <script crossorigin src="https://cdn.jsdelivr.net/npm/@zeainc/zea-ux/dist/index.umd.js"></script>
+    <script defer crossorigin src="https://cdn.jsdelivr.net/npm/@zeainc/zea-cad@3.3.0/dist/index.umd.js"></script>
+    <script defer crossorigin src="https://cdn.jsdelivr.net/npm/@zeainc/zea-ux/dist/index.umd.js"></script>
     <script src="https://websocket-staging.zea.live/socket.io/socket.io.js"></script>
-    <script crossorigin src="https://cdn.jsdelivr.net/npm/@zeainc/zea-collab/dist/index.umd.js"></script>
+    <script defer crossorigin src="https://cdn.jsdelivr.net/npm/@zeainc/zea-collab/dist/index.umd.js"></script>
     <script src="https://www.gstatic.com/draco/v1/decoders/draco_decoder_gltf.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@zeainc/gltf-loader/dist/index.umd.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/@zeainc/gltf-loader/dist/index.umd.js"></script>
 
-    <link rel="stylesheet" href="styles/tailwind.min.css" />
     <style>
       body {
         height: 100vh;
@@ -54,7 +52,7 @@
     <script type="module">
       const urlParams = new URLSearchParams(window.location.search)
 
-      const {
+      import {
         Color,
         Vec3,
         Xfo,
@@ -64,23 +62,27 @@
         EnvMap,
         InstanceItem,
         CameraManipulator,
-      } = window.zeaEngine
+        GLBoundingBoxPass,
+      } from '../dist/index.esm.js'
 
       const canvas = document.querySelector('#renderer')
 
       const scene = new Scene()
-      const renderer = new GLRenderer(canvas, { hideSplash: true, webglOptions: { antialias: false } })
+      const renderer = new GLRenderer(canvas, { debugGeomIds: false, antialias: false })
       renderer.setScene(scene)
-      renderer.outlineThickness = 1
+      renderer.outlineThickness = 0.5
       renderer.outlineColor = new Color(0.2, 0.2, 0.2, 1)
       scene.getSettings().getParameter('BackgroundColor').setValue(new Color(0.85, 0.85, 0.85, 1))
-      // renderer.getViewport().debugGeomShader = urlParams.has('debugGeomShader')
+      renderer.getViewport().debugGeomShader = urlParams.has('debugGeomShader')
 
       const envMap = new EnvMap()
       envMap.load('data/StudioG.zenv')
       scene.setEnvMap(envMap)
 
       scene.setupGrid(1.0, 10, new Color(0.2, 0.2, 0.2))
+
+      const boundingBoxPass = new GLBoundingBoxPass()
+      renderer.addPass(boundingBoxPass)
 
       /** UX START */
       const { SelectionManager, UndoRedoManager, ToolManager, SelectionTool, CreateFreehandLineTool } = window.zeaUx
@@ -90,6 +92,37 @@
       const cameraManipulator = renderer.getViewport().getManipulator()
       cameraManipulator.setDefaultManipulationMode(CameraManipulator.MANIPULATION_MODES.tumbler)
       appData.cameraManipulator = cameraManipulator
+
+      /** HIGHLIGHT START */
+      let highlightedItem
+      renderer.getViewport().on('pointerOverGeom', (event) => {
+        const item = event.intersectionData.geomItem
+        if (item) {
+          highlightedItem = item
+          highlightedItem.addHighlight('pointerOverGeom', new Color(0, 0.7, 0, 0.3), true)
+        }
+      })
+      renderer.getViewport().on('pointerLeaveGeom', (event) => {
+        highlightedItem.removeHighlight('pointerOverGeom', true)
+        highlightedItem = null
+      })
+      renderer.getViewport().on('keyDown', (event) => {
+        if (event.key == 'f') renderer.frameAll()
+      })
+      renderer.getViewport().on('pointerUp', (event) => {
+        if (event.intersectionData) {
+          const geomItem = event.intersectionData.geomItem
+          console.log('', geomItem.getPath())
+        }
+      })
+      renderer.getViewport().on('keyDown', (event) => {
+        if (event.key == 'f') renderer.frameAll()
+        else if (event.key == 'd') {
+          renderer.getViewport().debugGeomShader = !renderer.getViewport().debugGeomShader
+          renderer.requestRedraw()
+        }
+      })
+      /** HIGHLIGHT START */
 
       /** UNDO START */
       const undoRedoManager = UndoRedoManager.getInstance()
@@ -170,10 +203,6 @@
       })
 
       disableSelectedTools()
-
-      renderer.getViewport().on('keyDown', (event) => {
-        if (event.key == 'f') renderer.frameAll()
-      })
       /** TOOL MANAGER END */
 
       /** LOAD ASSETS START */
@@ -208,6 +237,7 @@
         } else if (filename.endsWith('gltf') || filename.endsWith('glb')) {
           res = loadGLTFAsset(url, filename)
         }
+        boundingBoxPass.addTreeItem(res, true)
         return res
       }
       let assetUrl = 'data/Dead_eye_bearing.zcad'
@@ -220,8 +250,9 @@
       /** LOAD ASSETS END */
 
       /** COLLAB START*/
-      const { Session, SessionSync } = window.zeaCollab
-      {
+
+      if (urlParams.has('collab')) {
+        const { Session, SessionSync } = window.zeaCollab
         const userData = {
           id: Math.random(),
         }

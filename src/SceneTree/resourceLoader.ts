@@ -1,7 +1,7 @@
 /* eslint-disable require-jsdoc */
 /* eslint-disable no-unused-vars */
 /* eslint-disable guard-for-in */
-import { Env, EventEmitter } from '../Utilities/index'
+import { EventEmitter } from '../Utilities/index'
 import { zeaDebug } from '../helpers/zeaDebug'
 import { TreeItem } from './TreeItem'
 
@@ -72,13 +72,14 @@ class ResourceLoader extends EventEmitter {
 
     this.__totalWork = 0
     this.__doneWork = 0
-    this.baseUrl = Env.baseUrl
 
     this.plugins = {}
 
     this.systemUrls = {}
-    this.systemUrls['ZeaEngine/Vive.vla'] = this.baseUrl + 'public-resources/Vive.vla'
-    this.systemUrls['ZeaEngine/Oculus.vla'] = this.baseUrl + 'public-resources/Oculus.vla'
+
+    const baseUrl = 'https://storage.googleapis.com/visualive-tmp/zea-engine-resources'
+    this.systemUrls['ZeaEngine/Vive.vla'] = baseUrl + '/Vive.vla'
+    this.systemUrls['ZeaEngine/Oculus.vla'] = baseUrl + '/Oculus.vla'
 
     // Common resources are used by systems such at the renderer and VR controllers.
     // Any asset that will probably be used my multiple different independent objects
@@ -330,4 +331,21 @@ class ResourceLoader extends EventEmitter {
 
 const resourceLoader = new ResourceLoader()
 
-export { resourceLoader, ResourceLoader }
+import { ArchiveUnpackerPlugin } from './ResourceLoader/ArchiveUnpackerPlugin.js'
+import { JsonLoaderPlugin } from './ResourceLoader/JsonLoaderPlugin.js'
+import { TextLoaderPlugin } from './ResourceLoader/TextLoaderPlugin.js'
+import { BinaryLoaderPlugin } from './ResourceLoader/BinaryLoaderPlugin.js'
+
+const archiveUnpackerPlugin = new ArchiveUnpackerPlugin()
+resourceLoader.registerPlugin(archiveUnpackerPlugin)
+
+const jsonLoaderPlugin = new JsonLoaderPlugin()
+resourceLoader.registerPlugin(jsonLoaderPlugin)
+
+const textLoaderPlugin = new TextLoaderPlugin()
+resourceLoader.registerPlugin(textLoaderPlugin)
+
+const binaryLoaderPlugin = new BinaryLoaderPlugin()
+resourceLoader.registerPlugin(binaryLoaderPlugin)
+
+export { resourceLoader }

@@ -8,7 +8,6 @@ uniform mat4 projectionMatrix;
 uniform vec3 projectionCenter;
 
 import 'inverse.glsl'
-import 'transpose.glsl'
 import 'drawItemTexture.glsl'
 import 'modelMatrix.glsl'
 

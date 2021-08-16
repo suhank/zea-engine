@@ -3,7 +3,6 @@ precision highp float;
 
 import 'GLSLUtils.glsl'
 #ifdef ENABLE_MULTI_DRAW
-import 'constants.glsl'
 import 'drawItemTexture.glsl'
 #endif // ENABLE_MULTI_DRAW
 
@@ -73,7 +72,7 @@ void main(void) {
   // GeomData
 #elif defined(DRAW_GEOMDATA)
 
-  if(true) {
+  if (true) {
     discard;
     return;
   }

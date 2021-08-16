@@ -1,10 +1,11 @@
 precision highp float;
 
-import 'constants.glsl'
 import 'GLSLUtils.glsl'
 import 'ImportanceSampleGGX.glsl'
 import 'convolve-helpers.glsl'
-
+import 'Hammersley.glsl'
+  
+  
 uniform float roughness;
 uniform int faceId;
 varying vec2 v_texCoord;
@@ -26,7 +27,7 @@ void main(void) {
     vec3 L  = normalize(2.0 * dot(V, H) * H - V);
 
     float NdotL = max(dot(N, L), 0.0);
-    if(NdotL > 0.0)
+    if (NdotL > 0.0)
     {
       prefilteredColor += sampleEnvMap(L).rgb * NdotL;
       totalWeight      += NdotL;

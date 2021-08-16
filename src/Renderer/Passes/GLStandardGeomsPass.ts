@@ -122,13 +122,15 @@ class GLStandardGeomsPass extends GLPass {
     let glselectedshader
 
     const glShader = this.__renderer.getOrCreateShader(shaderName)
-    const glShaderPrototype = Object.getPrototypeOf(glShader)
-
-    if (glShaderPrototype.hasOwnProperty('getGeomDataShaderName')) {
-      glgeomdatashader = this.__renderer.getOrCreateShader((glShader as any).constructor.getGeomDataShaderName())
+    if (glShader.constructor.getGeomDataShaderName()) {
+      glgeomdatashader = this.__renderer.getOrCreateShader(glShader.constructor.getGeomDataShaderName())
+    } else {
+      glgeomdatashader = glShader
     }
-    if (glShaderPrototype.hasOwnProperty('getSelectedShaderName')) {
-      glselectedshader = this.__renderer.getOrCreateShader((glShader as any).constructor.getSelectedShaderName())
+    if (glShader.constructor.getSelectedShaderName()) {
+      glselectedshader = this.__renderer.getOrCreateShader(glShader.constructor.getSelectedShaderName())
+    } else {
+      glselectedshader = glShader
     }
     return {
       glShader,

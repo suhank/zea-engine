@@ -27,11 +27,13 @@ class GLGeomItemLibrary extends EventEmitter {
   protected removedItemIndices: number[]
   protected worker: GLGeomItemLibraryCullingWorker
   protected glGeomItemsTexture: GLTexture2D
+  protected enableFrustumCulling: any
   /**
    * Create a GLGeomItemLibrary.
-   * @param {GLBaseRenderer} renderer - The renderer object
+   * @param {GLBaseRenderer} renderer - The renderer instance
+   * @param {object} options - The options object passed to the GLRenderer constructor.
    */
-  constructor(renderer: GLBaseRenderer) {
+  constructor(renderer: GLBaseRenderer, options: Record<any, any>) {
     super()
 
     this.renderer = renderer
@@ -41,7 +43,18 @@ class GLGeomItemLibrary extends EventEmitter {
     this.glGeomItemsIndexFreeList = []
     this.dirtyItemIndices = []
     this.removedItemIndices = []
+    this.enableFrustumCulling = options.enableFrustumCulling
 
+    if (this.enableFrustumCulling) {
+      this.setupCullingWorker(renderer)
+    }
+  }
+
+  /**
+   * Sets up the Culling Worker to start calculating frustum culling.
+   * @param {GLBaseRenderer} renderer - The renderer instance
+   */
+  setupCullingWorker(renderer: GLBaseRenderer) {
     // this.worker = {
     //   postMessage: (message) => {},
     // }
@@ -240,6 +253,7 @@ class GLGeomItemLibrary extends EventEmitter {
     geomItem.on('cutAwayChanged', geomItemChanged)
     geomItem.on('highlightChanged', geomItemChanged)
     geomItem.on('selectabilityChanged', geomItemChanged)
+    geomItem.on('visibilityChanged', geomItemChanged)
 
     this.glGeomItems[index] = glGeomItem
     this.glGeomItemEventHandlers[index] = {
@@ -260,10 +274,13 @@ class GLGeomItemLibrary extends EventEmitter {
    * @param {Record<any,any>} data - The object containing the newlyCulled and newlyUnCulled results.
    */
   applyCullResults(data: Record<any, any>) {
-    data.newlyCulled.forEach((index: number) => {
+    const { newlyCulled, newlyUnCulled } = data
+    if (newlyCulled.length == 0 && newlyUnCulled.length == 0) return
+    // console.log('applyCullResults newlyCulled', newlyCulled.length, 'newlyUnCulled', newlyUnCulled.length)
+    newlyCulled.forEach((index: number) => {
       this.glGeomItems[index].setCulled(true)
     })
-    data.newlyUnCulled.forEach((index: number) => {
+    newlyUnCulled.forEach((index: number) => {
       this.glGeomItems[index].setCulled(false)
     })
     this.renderer.requestRedraw()
@@ -319,7 +336,7 @@ class GLGeomItemLibrary extends EventEmitter {
    * @param {GeomItem} geomItem - The geomItem value.
    * @return {GLGeomItem} - The GLGeomItem that wraps the provided GeomItem
    */
-  getGLGeomItem(geomItem: GeomItem){
+  getGLGeomItem(geomItem: GeomItem) {
     const index = this.glGeomItemsMap[geomItem.getId()]
     if (index != undefined) {
       // Increment the ref count for the GLGeom
@@ -443,6 +460,7 @@ class GLGeomItemLibrary extends EventEmitter {
       boundingRadius,
       pos: pos.asArray(),
       cullable,
+      visible: geomItem.isVisible(),
     }
   }
 
@@ -465,13 +483,16 @@ class GLGeomItemLibrary extends EventEmitter {
         const material = geomItem.getParameter('Material').getValue()
         geomItemsUpdateToCullingWorker.push(this.getCullingWorkerData(geomItem, material, index))
       })
-      // /////////////////////////
-      // Update the culling worker
-      this.worker.postMessage({
-        type: 'UpdateGeomItems',
-        geomItems: geomItemsUpdateToCullingWorker,
-        removedItemIndices: this.removedItemIndices,
-      })
+
+      if (this.enableFrustumCulling) {
+        // /////////////////////////
+        // Update the culling worker
+        this.worker.postMessage({
+          type: 'UpdateGeomItems',
+          geomItems: geomItemsUpdateToCullingWorker,
+          removedItemIndices: this.removedItemIndices,
+        })
+      }
 
       // During rendering, the GeomMat will be Pplled.
       // This will trigger the lazy evaluation of the operators in the scene.
@@ -548,13 +569,15 @@ class GLGeomItemLibrary extends EventEmitter {
       i += uploadCount - 1
     }
 
-    // /////////////////////////
-    // Update the culling worker
-    this.worker.postMessage({
-      type: 'UpdateGeomItems',
-      geomItems: geomItemsUpdateToCullingWorker,
-      removedItemIndices: this.removedItemIndices,
-    })
+    if (this.enableFrustumCulling) {
+      // /////////////////////////
+      // Update the culling worker
+      this.worker.postMessage({
+        type: 'UpdateGeomItems',
+        geomItems: geomItemsUpdateToCullingWorker,
+        removedItemIndices: this.removedItemIndices,
+      })
+    }
 
     this.removedItemIndices = []
     this.dirtyItemIndices = []

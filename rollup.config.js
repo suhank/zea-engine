@@ -5,7 +5,7 @@ import nodePolyfills from 'rollup-plugin-node-polyfills'
 import svg from 'rollup-plugin-svg'
 import { terser } from 'rollup-plugin-terser'
 import webWorkerLoader from 'rollup-plugin-web-worker-loader'
-
+import { base64 } from 'rollup-plugin-base64'
 import glslify from 'rollup-plugin-glslify'
 
 // import typescript from '@rollup/plugin-typescript' // TODO: remove if typescript2 is better
@@ -30,6 +30,7 @@ const plugins = [
     include: 'src/**/*.{js,ts}',
   }),
   glslify(glslOptions),
+  base64({ include: '**/*.wasm' }),
   commonjs(),
   // commonjs({ extensions: ['.js', '.ts'] }), // note: this is not recommended
   nodePolyfills(),
@@ -75,18 +76,6 @@ export default [
       { file: pkg.main, format: 'cjs', sourcemap },
       { file: pkg.module, format: 'es', sourcemap },
     ],
-    plugins,
-  },
-
-  // Zea Engine default plugins.
-  {
-    input: 'src/index-plugins.ts',
-    output: {
-      name: 'zeaEnginePlugins',
-      file: pkg.plugins,
-      format: 'umd',
-      sourcemap,
-    },
     plugins,
   },
 ]

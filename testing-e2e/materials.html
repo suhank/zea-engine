@@ -51,7 +51,6 @@
     </style>
 
     <script src="../dist/index.umd.js"></script>
-    <script src="../dist/plugins.umd.js"></script>
 
     <script type="module">
       const {
@@ -177,16 +176,10 @@
         const camera = renderer.getViewport().getCamera()
         if (data === 'variant-01') {
           renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-35, 35, 20), new Vec3(0, 0, -10))
-          renderer.once('CullingUpdated', () => {
-            window.postMessage(`done-${data}`)
-          })
-          camera.emit('movementFinished', {})
+          window.postMessage(`done-${data}`)
         } else if (data === 'variant-02') {
           renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-35,-35, 20), new Vec3(0, 0, -10))
-          renderer.once('CullingUpdated', () => {
-            window.postMessage(`done-${data}`)
-          })
-          camera.emit('movementFinished', {})
+          window.postMessage(`done-${data}`)
         }
       }
 

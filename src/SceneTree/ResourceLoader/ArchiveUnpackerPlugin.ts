@@ -15,12 +15,7 @@ function checkStatus(response: any) {
   return response
 }
 
-let numCores = window.navigator.hardwareConcurrency
-if (!numCores) {
-  if (SystemDesc.isMobileDevice) numCores = 4
-  else numCores = 6
-}
-numCores-- // always leave one main thread code spare.
+const numCores = SystemDesc.hardwareConcurrency - 1 // always leave one main thread code spare.
 
 /**
  * Archive unpacker plugin.
@@ -40,7 +35,6 @@ class ArchiveUnpackerPlugin {
 
   init(resourceLoader: any) {
     this.resourceLoader = resourceLoader
-    this.wasmUrl = this.resourceLoader.baseUrl + 'public-resources/unpack.wasm'
   }
 
   /**
@@ -64,7 +58,6 @@ class ArchiveUnpackerPlugin {
 
         worker.postMessage({
           type: 'init',
-          wasmUrl: this.wasmUrl,
         })
         worker.onmessage = (event: Record<any, any>) => {
           if (event.data.type === 'WASM_LOADED') {

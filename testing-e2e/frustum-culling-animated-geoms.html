@@ -11,7 +11,6 @@
     <link rel="stylesheet" href="styles/tailwind.min.css" />
 
     <script src="../dist/index.umd.js"></script>
-    <script src="../dist/plugins.umd.js"></script>
 
     <script type="module">
       const { GLRenderer, Scene, Vec3, Xfo, Color, Sphere, Material, TreeItem, GeomItem, GLBoundingBoxPass } = zeaEngine
@@ -19,7 +18,7 @@
       const canvas = document.querySelector('#renderer')
 
       const scene = new Scene()
-      const renderer = new GLRenderer(canvas, { hideSplash: true, webglOptions: { antialias: false } })
+      const renderer = new GLRenderer(canvas, { enableFrustumCulling: true, antialias: false })
       renderer.setScene(scene)
 
       scene.setupGrid(10.0, 10)

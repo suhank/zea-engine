@@ -3,14 +3,13 @@ import { loadTextfile, loadBinfile } from '../Utils'
 
 // eslint-disable-next-line require-jsdoc
 function getLanguage() {
-  // Note: globalThis causes errors on Safari.
-  if (!window.navigator) return 'en'
+  if (!globalThis.navigator) return 'en'
 
   // Check if a language is explicitly selected.
   const searchParams = new URLSearchParams(window.location.search)
   if (searchParams.has('lang')) return searchParams.get('lang')
 
-  const nav = window.navigator
+  const nav = globalThis.navigator
   const browserLanguagePropertyKeys = ['language', 'browserLanguage', 'systemLanguage', 'userLanguage']
   let i
   let language

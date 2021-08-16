@@ -44,7 +44,6 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
     this.glGeomIdsMapping = {}
     this.glgeomItemEventHandlers = []
     this.freeIndices = []
-    this.dirtyDrawGeomIds = []
 
     this.drawElementCounts = new Uint32Array(0)
     this.drawElementOffsets = new Uint32Array(0)
@@ -111,8 +110,11 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
       } else {
         this.visibleItems.splice(this.visibleItems.indexOf(glGeomItem), 1)
       }
-      this.drawIdsBufferDirty = true
-      this.emit('updated')
+      // console.log(this.constructor.name, ' visibleItems', this.visibleItems.length)
+      if (!this.drawIdsBufferDirty) {
+        this.drawIdsBufferDirty = true
+        this.emit('updated')
+      }
     }
     glGeomItem.on('visibilityChanged', eventHandlers.visibilityChanged)
 
@@ -203,11 +205,6 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
         this.drawElementCounts[index] = offsetAndCount[1]
         this.drawIdsArray[index] = glGeomItem.drawItemId
       })
-      for (let i = this.visibleItems.length; i < this.drawElementCounts.length; i++) {
-        this.drawElementOffsets[i] = 0
-        this.drawElementCounts[i] = 0
-      }
-      this.dirtyDrawGeomIds = []
     }
 
     const gl = this.renderer.gl
@@ -241,10 +238,10 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
       const height = 1
       const format = tex.__format
       const type = tex.__type
-      const rows = Math.ceil((xoffset + this.drawIdsArray.length) / texWidth)
+      const rows = Math.ceil((xoffset + this.visibleItems.length) / texWidth)
 
       let consumed = 0
-      let remaining = this.drawIdsArray.length
+      let remaining = this.visibleItems.length
       let rowStart = xoffset
       for (let i = 0; i < rows; i++) {
         let width
@@ -380,7 +377,13 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
       this.drawIdsTexture.bindToUniform(renderstate, drawIdsTexture)
     }
 
-    this.__bindAndRender(renderstate, this.drawIdsArray, this.drawElementCounts, this.drawElementOffsets)
+    this.__bindAndRender(
+      renderstate,
+      this.drawIdsArray,
+      this.drawElementCounts,
+      this.drawElementOffsets,
+      this.visibleItems.length
+    )
   }
 
   /**
@@ -403,7 +406,8 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
       renderstate,
       this.highlightedIdsArray,
       this.highlightElementCounts,
-      this.highlightElementOffsets
+      this.highlightElementOffsets,
+      this.highlightedItems.length
     )
   }
 
@@ -414,7 +418,14 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
    * @param {Array} offsets - the offsets for each element drawn in by this draw call.
    * @private
    */
-  __bindAndRender(renderstate: RenderState, drawIdsArray: Float32Array, counts: Uint32Array, offsets: Uint32Array) {
+  //bindAndRender(renderstate: RenderState, drawIdsArray: Float32Array, counts: Uint32Array, offsets: Uint32Array) {
+  bindAndRender(
+    renderstate: RenderState,
+    drawIdsArray: Float32Array,
+    counts: Uint32Array,
+    offsets: Uint32Array,
+    drawCount: number
+  ) {
     const gl = this.gl
     const unifs = renderstate.unifs
 
@@ -425,7 +436,7 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
     }
 
     renderstate.bindViewports(unifs, () => {
-      this.multiDraw(renderstate, drawIdsArray, counts, offsets)
+      this.multiDraw(renderstate, drawIdsArray, counts, offsets, drawCount)
     })
   }
 

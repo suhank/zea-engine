@@ -52,6 +52,14 @@ class SimpleSurfaceShader extends GLShader {
     matData[5] = material.getParameter('EmissiveStrength').getValue()
     return matData
   }
+
+  // static getGeomDataShaderName() {
+  //   return 'StandardSurfaceGeomDataShader'
+  // }
+
+  // static getSelectedShaderName() {
+  //   return 'StandardSurfaceSelectedGeomsShader'
+  // }
 }
 
 export { SimpleSurfaceShader }

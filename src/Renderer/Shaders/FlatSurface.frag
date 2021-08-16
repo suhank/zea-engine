@@ -29,35 +29,49 @@ varying vec2 v_textureCoord;
 #ifdef ENABLE_ES3
 out vec4 fragColor;
 #endif
+
+#if defined(DRAW_GEOMDATA)
+  import 'surfaceGeomData.glsl'
+#elif defined(DRAW_HIGHLIGHT)
+  import 'surfaceHighlight.glsl'
+#endif // DRAW_HIGHLIGHT
+
 void main(void) {
-
-  //////////////////////////////////////////////
-  // Material
-
-#ifdef ENABLE_MULTI_DRAW
-
-  vec2 materialCoords = v_geomItemData.zw;
-  vec4 baseColor = toLinear(getMaterialValue(materialCoords, 0));
-
-#else // ENABLE_MULTI_DRAW
-
-#ifndef ENABLE_TEXTURES
-  vec4 baseColor = toLinear(BaseColor);
-#else
-  vec4 baseColor = getColorParamValue(BaseColor, BaseColorTex, BaseColorTexType, v_textureCoord);
-#endif // ENABLE_TEXTURES
-
-#endif // ENABLE_MULTI_DRAW
-  //////////////////////////////////////////////
-
 #ifndef ENABLE_ES3
   vec4 fragColor;
 #endif
-  fragColor = baseColor;
 
-#ifdef ENABLE_INLINE_GAMMACORRECTION
-  fragColor.rgb = toGamma(fragColor.rgb);
-#endif
+#if defined(DRAW_COLOR)
+    //////////////////////////////////////////////
+    // Material
+
+  #ifdef ENABLE_MULTI_DRAW
+
+    vec2 materialCoords = v_geomItemData.zw;
+    vec4 baseColor = toLinear(getMaterialValue(materialCoords, 0));
+
+  #else // ENABLE_MULTI_DRAW
+
+  #ifndef ENABLE_TEXTURES
+    vec4 baseColor = toLinear(BaseColor);
+  #else
+    vec4 baseColor = getColorParamValue(BaseColor, BaseColorTex, BaseColorTexType, v_textureCoord);
+  #endif // ENABLE_TEXTURES
+
+  #endif // ENABLE_MULTI_DRAW
+    //////////////////////////////////////////////
+    fragColor = baseColor;
+
+  #ifdef ENABLE_INLINE_GAMMACORRECTION
+    fragColor.rgb = toGamma(fragColor.rgb);
+  #endif
+
+#elif defined(DRAW_GEOMDATA)
+  fragColor = setFragColor_geomData(v_viewPos, floatGeomBuffer, passId,v_drawItemId, 0);
+#elif defined(DRAW_HIGHLIGHT)
+  fragColor = setFragColor_highlight(v_drawItemId);
+#endif // DRAW_HIGHLIGHT
+
 
 #ifndef ENABLE_ES3
   gl_FragColor = fragColor;

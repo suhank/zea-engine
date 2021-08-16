@@ -44,6 +44,14 @@ class FlatSurfaceShader extends GLShader {
     matData[3] = baseColor.a
     return matData
   }
+
+  // static getGeomDataShaderName() {
+  //   return 'StandardSurfaceGeomDataShader'
+  // }
+
+  // static getSelectedShaderName() {
+  //   return 'StandardSurfaceSelectedGeomsShader'
+  // }
 }
 
 export { FlatSurfaceShader }
