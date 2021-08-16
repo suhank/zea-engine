@@ -79,7 +79,7 @@ class KinematicGroup extends BaseGroup {
     // Make this function async so that we don't pull on the
     // graph immediately when we receive a notification.
     // Note: propagating using an operator would be much better.
-    new Promise((resolve) => {
+    setTimeout(() => {
       let highlighted = false
       let color: Color
       if (this.isSelected()) {
@@ -95,8 +95,7 @@ class KinematicGroup extends BaseGroup {
           else item.removeHighlight(key, true)
         }
       })
-      resolve()
-    })
+    }, 0)
   }
 
   /**
