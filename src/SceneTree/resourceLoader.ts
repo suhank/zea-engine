@@ -348,4 +348,4 @@ resourceLoader.registerPlugin(textLoaderPlugin)
 const binaryLoaderPlugin = new BinaryLoaderPlugin()
 resourceLoader.registerPlugin(binaryLoaderPlugin)
 
-export { resourceLoader }
+export { ResourceLoader, resourceLoader }

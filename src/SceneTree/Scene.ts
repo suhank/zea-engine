@@ -1,7 +1,6 @@
 import { Color } from '../Math/index'
 import { TreeItem } from './TreeItem'
 import { ResourceLoader, resourceLoader } from './resourceLoader'
-import { DriveAdapter } from './ResourceLoader/DriveAdapter'
 import { SceneSettings } from './SceneSettings'
 import { GridTreeItem } from './GridTreeItem'
 import { EnvMap } from './Images/EnvMap'
@@ -17,12 +16,8 @@ class Scene {
 
   /**
    * Create a scene.
-   * @param {Record<any,any>} resources - The resources value.
    */
-  constructor(resources: Record<any, any>) {
-    if (resources) {
-      resourceLoader.setAdapter(new DriveAdapter(resources))
-    }
+  constructor() {
     this.settings = new SceneSettings('Scene Settings')
     this.root = new TreeItem('root')
     this.root.addChild(this.settings)
