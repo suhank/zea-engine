@@ -15,7 +15,8 @@
     "sourceMap": true,
     "inlineSources": true
   },
-  "include": ["./src/**/*", "@types/**/*.d.ts"],
+
+  "include": ["./src/**/*", "@types/**/*.d.ts"] /* "typeRoots": ["node_modules/@types", "./@types"],*/,
   "exclude": [
     "./node_modules",
     "**/*.test.ts",

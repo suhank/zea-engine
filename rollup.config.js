@@ -30,7 +30,7 @@ const plugins = [
     preferBuiltins: false,
   }),
   commonjs(),
-  webWorkerLoader(),
+  webWorkerLoader({ extensions: ['.ts', '.js'], pattern: /.+\.worker\.(?:js|ts)$/ }),
   json(),
   svg(),
   glslify(glslOptions),
