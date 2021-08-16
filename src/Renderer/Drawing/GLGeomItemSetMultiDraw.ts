@@ -377,7 +377,7 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
       this.drawIdsTexture.bindToUniform(renderstate, drawIdsTexture)
     }
 
-    this.__bindAndRender(
+    this.bindAndRender(
       renderstate,
       this.drawIdsArray,
       this.drawElementCounts,
@@ -402,7 +402,7 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
       this.highlightedIdsTexture.bindToUniform(renderstate, drawIdsTexture)
     }
 
-    this.__bindAndRender(
+    this.bindAndRender(
       renderstate,
       this.highlightedIdsArray,
       this.highlightElementCounts,
@@ -412,13 +412,12 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
   }
 
   /**
-   * The __bindAndRender method.
+   * The bindAndRender method.
    * @param {RenderState} renderstate - The object tracking the current state of the renderer
    * @param {Array} counts - the counts for each element drawn in by this draw call.
    * @param {Array} offsets - the offsets for each element drawn in by this draw call.
    * @private
    */
-  //bindAndRender(renderstate: RenderState, drawIdsArray: Float32Array, counts: Uint32Array, offsets: Uint32Array) {
   bindAndRender(
     renderstate: RenderState,
     drawIdsArray: Float32Array,
@@ -446,8 +445,15 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
    * @param {Float32Array} drawIds - the draw id for each element drawn in by this draw call.
    * @param {Uint32Array} counts - the geom element count for each element drawn in by this draw call.
    * @param {Uint32Array} offsets - the geom element offset for each element drawn in by this draw call.
+   * @param {number} drawCount - the number of active draw calls for this invocation
    */
-  abstract multiDraw(renderstate: RenderState, drawIds: Float32Array, counts: Uint32Array, offsets: Uint32Array): void
+  abstract multiDraw(
+    renderstate: RenderState,
+    drawIds: Float32Array,
+    counts: Uint32Array,
+    offsets: Uint32Array,
+    drawCount: number
+  ): void
 
   /**
    * Sorts the drawn items in order furthest to nearest when rendering transparent objects.
