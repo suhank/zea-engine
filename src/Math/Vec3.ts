@@ -562,7 +562,7 @@ class Vec3 {
   /**
    * Returns the type as an array. Often used to pass types to the GPU.
    *
-   * @return {array} - Returns as an array.
+   * @return {Float32Array} - Returns as an array.
    */
   asArray(): Float32Array {
     return <Float32Array>this.__data // TODO: return type + cast is a temp fix
@@ -645,7 +645,7 @@ class Vec3 {
   /**
    * Encodes Vec3 Class as a JSON object for persistence.
    *
-   * @return {object} - The json object.
+   * @return {Record<string, number>} - The json object.
    */
   toJSON(): Record<string, number> {
     return {

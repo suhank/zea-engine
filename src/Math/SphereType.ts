@@ -29,7 +29,7 @@ class SphereType {
   /**
    * Clones this sphere and returns a new sphere.
    *
-   * @return {Sphere} - Returns a new sphere.
+   * @return {SphereType } - Returns a new sphere.
    */
   clone(): SphereType {
     return new SphereType(this.pos.clone(), this.radius)
@@ -41,7 +41,7 @@ class SphereType {
    * @param {Box3} box - The box value.
    * @return {boolean} - The return value.
    */
-  intersectsBox(box: Box3) {
+  intersectsBox(box: Box3): boolean {
     return box.intersectsSphere(this)
   }
 
@@ -51,7 +51,7 @@ class SphereType {
   /**
    * The toJSON method encodes this type as a json object for persistence.
    *
-   * @return {object} - The json object.
+   * @return {Record<string, number | Record<string, number>>} - The json object.
    */
   toJSON(): Record<string, number | Record<string, number>> {
     return {
@@ -76,7 +76,7 @@ class SphereType {
    * Creates a new sphere.
    *
    * @param {...args: any[]} ...args - The ...args param.
-   * @return {Sphere} - Returns a new sphere.
+   * @return {SphereType} - Returns a new sphere.
    * @private
    */
 

@@ -70,7 +70,7 @@ class GLFbo {
    *
    * @return {number} - The return value.
    */
-  getWidth() {
+  getWidth(): number {
     return this.__colorTexture.width
   }
 
@@ -79,16 +79,16 @@ class GLFbo {
    *
    * @return {number} - The return value.
    */
-  getHeight() {
+  getHeight(): number {
     return this.__colorTexture.height
   }
 
   /**
    * Returns the `width`(Index 0) and the `height`(Index 1) of the GL Texture.
    *
-   * @return {array} - The return value.
+   * @return {Array<number>} - The return value.
    */
-  getSize() {
+  getSize(): Array<number> {
     return [this.__colorTexture.width, this.__colorTexture.height]
   }
 
@@ -97,44 +97,44 @@ class GLFbo {
    *
    * @return {GLTexture2D} - The return value.
    */
-  getColorTexture() {
+  getColorTexture(): GLTexture2D {
     return this.__colorTexture
   }
 
   /**
    * Returns the value of the deptTexture property.
    *
-   * @return {boolean} - The return value.
+   * @return {WebGLTexture} - The return value.
    */
-  getDepthTextureGL() {
+  getDepthTextureGL(): WebGLTexture{
     return this.__depthTexture
   }
 
   /**
    * Returns the `width` of the GL Texture
    */
-  get width() {
+  get width(): number {
     return this.__colorTexture.width
   }
 
   /**
    * Returns the `height` of the GL Texture
    */
-  get height() {
+  get height(): number {
     return this.__colorTexture.height
   }
 
   /**
    * Returns the `width`(Index 0) and the `height`(Index 1) of the GL Texture.
    */
-  get size() {
+  get size(): Array<number> {
     return [this.__colorTexture.width, this.__colorTexture.height]
   }
 
   /**
    * Returns the ColorTexture of the Fbo
    */
-  get colorTexture() {
+  get colorTexture(): GLTexture2D{
     return this.__colorTexture
   }
 

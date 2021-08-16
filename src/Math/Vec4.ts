@@ -140,7 +140,7 @@ class Vec4 {
   /**
    * Getter for `xyz` swizzel.
    *
-   * @return {number} - Returns the z value.
+   * @return {Vec3 } - Returns the z value.
    */
   get xyz(): Vec3 {
     return new Vec3(this.__data[0], this.__data[1], this.__data[2])
@@ -503,7 +503,7 @@ class Vec4 {
   /**
    * Returns the type as an array. Often used to pass types to the GPU.
    *
-   * @return {array} - Returns as an array.
+   * @return {Float32Array | Uint32Array} - Returns as an array.
    */
   asArray() {
     return this.__data
@@ -604,7 +604,7 @@ class Vec4 {
    *
    * @return {boolean} - Returns the result as a boolean.
    */
-  isValid() {
+  isValid(): boolean {
     for (const v of this.__data) {
       if (v == Infinity || isNaN(v)) return false
     }

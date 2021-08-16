@@ -52,9 +52,9 @@ class Ray {
    *
    * @param {Vec3} p0 - The point in 3D space.
    * @param {Vec3} p1 - The point in 3D space.
-   * @return {array} - Returns an array containing 2 scalar values indicating 0: the fraction of the line segment, 1: distance along the Ray
+   * @return {Array<number>} - Returns an array containing 2 scalar values indicating 0: the fraction of the line segment, 1: distance along the Ray
    */
-  closestPointOnLineSegment(p0: Vec3, p1: Vec3) {
+  closestPointOnLineSegment(p0: Vec3, p1: Vec3) : Array<number>{
     const u = this.dir
     const v = p1.subtract(p0)
     const v_len = v.length()
@@ -184,7 +184,7 @@ class Ray {
    * @param {number} tolerance - The tolerance of the test.
    * @return {boolean} - The return value.
    */
-  intersectRayBox3(box3: Box3, tolerance = 0) {
+  intersectRayBox3(box3: Box3, tolerance = 0): boolean {
     // https://www.scratchapixel.com/lessons/3d-basic-rendering/minimal-ray-tracer-rendering-simple-shapes/ray-box-intersection
 
     const invDir = new Vec3(1 / this.dir.x, 1 / this.dir.y, 1 / this.dir.z)

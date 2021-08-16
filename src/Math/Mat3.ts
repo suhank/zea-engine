@@ -219,7 +219,7 @@ class Mat3 {
    *
    * @return {Vec3} - Returns the `x` axis as a Vec3.
    */
-  get xAxis() {
+  get xAxis(): Vec3 {
     return Vec3.createFromBuffer(this.__data.buffer, 0)
   }
 
@@ -236,7 +236,7 @@ class Mat3 {
    * Getter for the `y` axis.
    * * @return {Vec3} - Returns the `y` axis as a Vec3.
    */
-  get yAxis() {
+  get yAxis(): Vec3 {
     return Vec3.createFromBuffer(this.__data.buffer, 3 * 4)
   }
 
@@ -252,7 +252,7 @@ class Mat3 {
    * Getter for the `z` axis.
    * * @return {Vec3} - Returns the `z` axis as a Vec3.
    */
-  get zAxis() {
+  get zAxis(): Vec3 {
     return Vec3.createFromBuffer(this.__data.buffer, 6 * 4)
   }
 
@@ -350,7 +350,7 @@ class Mat3 {
    *
    * @return {Mat3} - Returns a new Mat3.
    */
-  inverse() {
+  inverse(): Mat3 {
     const a00 = this.__data[0]
     const a01 = this.__data[1]
     const a02 = this.__data[2]
@@ -551,7 +551,7 @@ class Mat3 {
   /**
    * The toJSON method encodes this type as a json object for persistence.
    *
-   * @return {object} - The json object.
+   * @return {Float32Array} - The json object.
    */
   toJSON(): Float32Array {
     return Float32Array.from(this.__data)
@@ -579,9 +579,9 @@ class Mat3 {
   /**
    * Returns current Math type data as array. Often used to pass types to the GPU.
    *
-   * @return {array} - Returns the result as an array.
+   * @return {Float32Array | Uint32Array} - Returns the result as an array.
    */
-  asArray() {
+  asArray(): Float32Array | Uint32Array{
     return this.__data
   }
 }

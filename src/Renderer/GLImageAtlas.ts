@@ -76,7 +76,7 @@ class GLImageAtlas extends GLRenderTarget {
    * The isLoaded method.
    * @return {boolean} - The return value.
    */
-  isLoaded() {
+  isLoaded(): boolean {
     return this.__asyncCount == 0
   }
 
@@ -84,7 +84,7 @@ class GLImageAtlas extends GLRenderTarget {
    * The getMainImage method.
    * @return {BaseImage} - The return value.
    */
-  getMainImage() {
+  getMainImage(): BaseImage {
     return this.frameBuffer // TODO: is this correct?
   }
 
@@ -94,7 +94,7 @@ class GLImageAtlas extends GLRenderTarget {
    * @return {number} - The return value.
    */
   // TODO: WebGLTexture is not handled here
-  addSubImage(subImage: BaseImage | WebGLTexture) {
+  addSubImage(subImage: BaseImage | WebGLTexture): number {
     if (subImage instanceof BaseImage) {
       const gltexture: GLTexture2D = new GLTexture2D(this.__gl, subImage)
       if (!subImage.isLoaded()) {
@@ -152,7 +152,7 @@ class GLImageAtlas extends GLRenderTarget {
    * @param {number} index - The index value.
    * @return {BaseImage} - The image value.
    */
-  getSubImage(index: number) {
+  getSubImage(index: number): any {
     return this.__subImages[index]
   }
 
@@ -160,7 +160,7 @@ class GLImageAtlas extends GLRenderTarget {
    * The numSubImages method.
    * @return {number} - The return value.
    */
-  numSubImages() {
+  numSubImages(): number {
     if (this.__layout) return this.__layout.length
     return this.__subImages.length
   }
@@ -355,7 +355,7 @@ class GLImageAtlas extends GLRenderTarget {
    * The isReady method.
    * @return {boolean} - The return value.
    */
-  isReady() {
+  isReady(): boolean {
     return this.__atlasLayoutTexture != undefined
   }
 
@@ -365,7 +365,7 @@ class GLImageAtlas extends GLRenderTarget {
    * @param {WebGLUniformLocation} unif - The WebGL uniform
    * @return {boolean} - The return value.
    */
-  bindToUniform(renderstate: RenderState, unif: Record<any, any>) {
+  bindToUniform(renderstate: RenderState, unif: Record<any, any>): boolean {
     super.bindToUniform(renderstate, unif)
 
     const unifs: Record<any, any> = renderstate.unifs

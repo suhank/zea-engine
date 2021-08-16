@@ -430,7 +430,7 @@ class Color {
    * @param {Color} other - The other Color to compare with.
    * @return {boolean} - Returns `true` if the values are the same, otherwise, `false`.
    */
-  isEqual(other: Color) {
+  isEqual(other: Color): boolean {
     return this.r == other.r && this.g == other.g && this.b == other.b && this.a == other.a
   }
 
@@ -613,19 +613,19 @@ class Color {
   /**
    * Returns the type as an array. Often used to pass types to the GPU.
    *
-   * @return {array} - Returns as an array.
+   * @return {Float32Array} - Returns as an array.
    */
-  asArray() {
+  asArray(): Float32Array {
     return this.__data
   }
 
   /**
    * Returns the type as a 3 component array. Often used to pass types to the GPU.
    *
-   * @return {array} - Returns as a 3 component array.
+   * @return {Array<number>} - Returns as a 3 component array.
    * @private
    */
-  as3ComponentArray(): Array<any> {
+  as3ComponentArray(): Array<number> {
     return [this.__data[0], this.__data[1], this.__data[2]]
   }
 

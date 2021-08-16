@@ -147,7 +147,7 @@ class GLBaseViewport extends ParameterOwner {
    * The getRenderer method.
    * @return {GLRenderer} - The return value.
    */
-  getRenderer() {
+  getRenderer(): GLRenderer {
     return this.__renderer
   }
 
@@ -155,7 +155,7 @@ class GLBaseViewport extends ParameterOwner {
    * The getWidth method.
    * @return {number} - The return value.
    */
-  getWidth() {
+  getWidth(): number {
     return this.__width
   }
 
@@ -163,7 +163,7 @@ class GLBaseViewport extends ParameterOwner {
    * The getHeight method.
    * @return {number} - The return value.
    */
-  getHeight() {
+  getHeight(): number{
     return this.__height
   }
 
@@ -171,7 +171,7 @@ class GLBaseViewport extends ParameterOwner {
    * The getBackground method.
    * @return {Color} - The return value.
    */
-  getBackground() {
+  getBackground(): Color | null{
     console.warn('Deprecated Function. Please access the Scene Settings object.')
     const settings = this.__renderer.getScene().settings
     const bgColorParam = settings.getParameter('BackgroundColor')
@@ -478,7 +478,7 @@ class GLBaseViewport extends ParameterOwner {
    * The getManipulator method.
    * @return {BaseTool} - The return value.
    */
-  getManipulator() {
+  getManipulator(): BaseTool{
     return this.manipulator
   }
 
@@ -568,7 +568,7 @@ class GLBaseViewport extends ParameterOwner {
    * @param {id} pointerId
    * @return {number} - index result of the find.
    */
-  _getOngoingPointerIndexById(pointerId: number) {
+  _getOngoingPointerIndexById(pointerId: number): number {
     return this.__ongoingPointers.findIndex((pointer) => pointer.pointerId === pointerId)
   }
 }

@@ -1,5 +1,5 @@
 /* eslint-disable guard-for-in */
-import { TreeItem, GeomItem, ParameterOwner, Scene } from '../SceneTree/index'
+import { TreeItem, GeomItem, ParameterOwner, Scene, GridTreeItem } from '../SceneTree/index'
 import { SystemDesc } from '../SystemDesc'
 import { create3DContext } from './GLContext'
 import { GLScreenQuad } from './GLScreenQuad'
@@ -213,7 +213,7 @@ class GLBaseRenderer extends ParameterOwner {
    * @param {string} name - The name of the viewport.
    * @return {GLViewport} - The return value.
    */
-  addViewport(name: string) {
+  addViewport(name: string): GLViewport {
     // TODO: We may need to merge GLBaseRenderer into GLRenderer to avoid this nasty cast.
     const renderer: GLRenderer = <GLRenderer>(<unknown>this)
     const vp = new GLViewport(renderer, name, this.getWidth(), this.getHeight())
@@ -239,7 +239,7 @@ class GLBaseRenderer extends ParameterOwner {
    * @param {number} index - The index value.
    * @return {GLViewport} - The return value.
    */
-  getViewport(index = 0) {
+  getViewport(index = 0): GLViewport {
     return this.__viewports[index]
   }
 
@@ -250,7 +250,7 @@ class GLBaseRenderer extends ParameterOwner {
    * @param {number} offsetY - The viewport offset in the Y axis.
    * @return {GLViewport} - The return value.
    */
-  getViewportAtPos(offsetX: number, offsetY: number) {
+  getViewportAtPos(offsetX: number, offsetY: number): GLViewport {
     for (const vp of this.__viewports) {
       const x = vp.getPosX()
       const y = vp.getPosY()
@@ -289,7 +289,7 @@ class GLBaseRenderer extends ParameterOwner {
    *
    * @return {GLViewport} - The return value.
    */
-  getActiveViewport() {
+  getActiveViewport(): GLViewport {
     return this.__activeViewport
   }
 
@@ -338,7 +338,7 @@ class GLBaseRenderer extends ParameterOwner {
    * @return {GridTreeItem} - The return value.
    * @deprecated
    */
-  setupGrid(gridSize: number, gridColor: Color, resolution: number, lineThickness: number) {
+  setupGrid(gridSize: number, gridColor: Color, resolution: number, lineThickness: number): GridTreeItem {
     console.warn('@GLBaseRenderer#setupGrid - Deprecated Method. Please use scene.setupGrid')
     return this.__scene.setupGrid(gridSize, resolution, gridColor)
   }
@@ -518,7 +518,7 @@ class GLBaseRenderer extends ParameterOwner {
    * The getGL method.
    * @return {WebGL12RenderingContext} - The return value.
    */
-  getGL() {
+  getGL(): WebGL12RenderingContext {
     return this.__gl
   }
 
@@ -573,7 +573,7 @@ class GLBaseRenderer extends ParameterOwner {
    *
    * @return {HTMLElement} - The return value.
    */
-  getDiv() {
+  getDiv(): HTMLElement | null {
     return this.__glcanvas.parentElement
   }
 
@@ -959,7 +959,7 @@ class GLBaseRenderer extends ParameterOwner {
    *
    * @return {HTMLCanvasElement} - The return value.
    */
-  getGLCanvas() {
+  getGLCanvas(): HTMLCanvasElement | null {
     return this.__glcanvas
   }
 
@@ -999,7 +999,7 @@ class GLBaseRenderer extends ParameterOwner {
    * @param {boolean} updateIndices - The updateIndices value.
    * @return {number} - The return value.
    */
-  addPass(pass: GLPass, passType = -1, updateIndices = true) {
+  addPass(pass: GLPass, passType = -1, updateIndices = true): number {
     if (passType == -1) passType = pass.getPassType()
     if (!this.__passes[passType]) this.__passes[passType] = []
 
@@ -1036,7 +1036,7 @@ class GLBaseRenderer extends ParameterOwner {
    * @param {number} index - The index value.
    * @return {GLPass} - The return value.
    */
-  getPass(index: number): GLPass {
+  getPass(index: number): GLPass | undefined {
     let offset = 0
     for (const key in this.__passes) {
       const passSet = this.__passes[key]
@@ -1052,7 +1052,7 @@ class GLBaseRenderer extends ParameterOwner {
    * The supportsVR method.
    * @return {boolean} - The return value.
    */
-  supportsVR() {
+  supportsVR(): boolean {
     console.warn('@GLBaseRenderer#supportVR - Deprecated Method. Please instead connect to the vrViewportSetup signal.')
     return this.__supportXR && (navigator as any)?.xr != null
   }
@@ -1062,7 +1062,7 @@ class GLBaseRenderer extends ParameterOwner {
    * @return {VRViewport} - The return value.
    * @private
    */
-  __setupXRViewport() {
+  __setupXRViewport(): VRViewport {
     // Always get the last display. Additional displays are added at the end.(e.g. [Polyfill, HMD])
     const xrvp = new VRViewport(this)
 
@@ -1109,7 +1109,7 @@ class GLBaseRenderer extends ParameterOwner {
    * The getVRViewport method.
    * @return {VRViewport} - The return value.
    */
-  getVRViewport() {
+  getVRViewport(): VRViewport {
     return this.__xrViewport
   }
 
@@ -1117,7 +1117,7 @@ class GLBaseRenderer extends ParameterOwner {
    * The getXRViewport method.
    * @return {Promise} - The return value.
    */
-  getXRViewport() {
+  getXRViewport(): Promise<VRViewport> {
     return this.__xrViewportPromise
   }
 
@@ -1125,7 +1125,7 @@ class GLBaseRenderer extends ParameterOwner {
    * The isXRViewportPresenting method.
    * @return {boolean} - The return value.
    */
-  isXRViewportPresenting() {
+  isXRViewportPresenting(): boolean {
     return this.__xrViewportPresenting
   }
 
@@ -1136,7 +1136,7 @@ class GLBaseRenderer extends ParameterOwner {
    * The isContinuouslyDrawing method.
    * @return {boolean} - The return value.
    */
-  isContinuouslyDrawing() {
+  isContinuouslyDrawing(): boolean {
     return this.__continuousDrawing
   }
 
@@ -1185,7 +1185,7 @@ class GLBaseRenderer extends ParameterOwner {
    * Request a single redraw, usually in response to a signal/event.
    * @return {boolean} - The return value.
    */
-  requestRedraw() {
+  requestRedraw(): boolean {
     // If a redraw has already been requested, then simply return and wait.
     if (
       this.__redrawRequested ||

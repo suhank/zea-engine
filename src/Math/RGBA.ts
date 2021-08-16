@@ -517,16 +517,16 @@ class RGBA {
   /**
    * Returns the type as an array. Often used to pass types to the GPU.
    *
-   * @return {array} - Returns as an array.
+   * @return {Uint8Array} - Returns as an array.
    */
-  asArray() {
+  asArray(): Uint8Array {
     return this.__data
   }
 
   /**
    * Returns the type as a 3 component array. Often used to pass types to the GPU.
    *
-   * @return {array} - Returns as a 3 component array.
+   * @return {number[]} - Returns as a 3 component array.
    */
   as3ComponentArray(): number[] {
     return [this.__data[0], this.__data[1], this.__data[2]]

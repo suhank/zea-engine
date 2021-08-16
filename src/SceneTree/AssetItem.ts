@@ -227,7 +227,7 @@ class AssetItem extends TreeItem {
    * Returns the scale factor of current item.
    * @return {number} - The return value.
    */
-  getUnitsConversion() {
+  getUnitsConversion(): number{
     return this.__unitsScale
   }
 
@@ -239,7 +239,7 @@ class AssetItem extends TreeItem {
    * @param {Record<any,any>} reader - The reader value.
    * @param {AssetLoadContext} context - The context value.
    */
-  readBinary(reader: BinReader, context: AssetLoadContext) {
+  readBinary(reader: BinReader, context: AssetLoadContext): void {
     context.assetItem = this
     context.numTreeItems = 0
 
@@ -448,7 +448,7 @@ class AssetItem extends TreeItem {
    * @param {TreeItem} src - The tree item to copy from.
    * @param {Record<any,any>} context - The context value.
    */
-  copyFrom(src: AssetItem, context: Record<any, any>) {
+  copyFrom(src: AssetItem, context: Record<any, any>): void {
     this.__geomLibrary = src.__geomLibrary
     this.__materials = src.__materials
     this.loaded = src.loaded

@@ -96,7 +96,7 @@ class PlaneType {
   /**
    * The toJSON method encodes this type as a json object for persistence.
    *
-   * @return {object} - The json object.
+   * @return {Record<string, unknown>} - The json object.
    */
   toJSON(): Record<string, unknown> {
     return {

@@ -281,7 +281,7 @@ class Xfo {
   /**
    * The toJSON method encodes this type as a json object for persistence.
    *
-   * @return {object} - The json object.
+   * @return {Record<string, any>} - The json object.
    */
   toJSON(): Record<string, any> {
     const j = {

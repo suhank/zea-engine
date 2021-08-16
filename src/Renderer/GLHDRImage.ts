@@ -151,7 +151,7 @@ class GLHDRImage extends GLTexture2D {
    * @param {Record<any,any>} bindings - The bindings value.
    * @return {boolean} - The return value.
    */
-  bindToUniform(renderstate: RenderState, unif: WebGLUniformLocation, bindings?: Record<any, any>) {
+  bindToUniform(renderstate: RenderState, unif: WebGLUniformLocation, bindings?: Record<any, any>): boolean{
     return super.bindToUniform(renderstate, unif, bindings)
   }
 

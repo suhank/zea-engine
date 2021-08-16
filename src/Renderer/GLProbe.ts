@@ -236,7 +236,7 @@ class GLProbe extends EventEmitter {
    * @param {WebGLUniformLocation} unif - The WebGL uniform
    * @return {boolean} - Returns true if the Probe was successfully bound.
    */
-  bind(renderstate: RenderState) {
+  bind(renderstate: RenderState): boolean {
     const gl = this.__gl
     const { irradianceMap, prefilterMap, brdfLUT, envMapFlags } = renderstate.unifs
 

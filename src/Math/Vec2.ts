@@ -464,9 +464,9 @@ class Vec2 {
   /**
    * Returns current Vec2 data as array. Often used to pass types to the GPU.
    *
-   * @return {array} - Returns as an array.
+   * @return {Float32Array | Uint32Array | Int32Array} - Returns as an array.
    */
-  asArray() {
+  asArray(): Float32Array | Uint32Array | Int32Array {
     return this.__data
   }
 
@@ -572,9 +572,9 @@ class Vec2 {
    * @param {Vec2} d0 - The direction of the first line
    * @param {Vec2} p1 - The point of the second line
    * @param {Vec2} d1 - The direction of the second line
-   * @return {array} - Returns an array containing 2 parameter values for the 2 lines.
+   * @return {Vec2 | null} - Returns an array containing 2 parameter values for the 2 lines.
    */
-  static intersectionOfLines(p1: Vec2, p2: Vec2, p3: Vec2, p4: Vec2) {
+  static intersectionOfLines(p1: Vec2, p2: Vec2, p3: Vec2, p4: Vec2): Vec2 | null {
     // https://dirask.com/posts/JavaScript-how-to-calculate-intersection-point-of-two-lines-for-given-4-points-VjvnAj
     // down part of intersection point formula
     const d1 = (p1.x - p2.x) * (p3.y - p4.y) // (x1 - x2) * (y3 - y4)

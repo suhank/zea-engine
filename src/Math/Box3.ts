@@ -149,16 +149,16 @@ class Box3 {
    *
    * @return {number} - Returns the distance.
    */
-  size() {
+  size(): number{
     return this.p1.distanceTo(this.p0)
   }
 
   /**
    * Returns the diagonal vector of the B=box from p0 to p1.
    *
-   * @return {Box3} - Returns a Box3.
+   * @return {Vec3} - Returns a Box3.
    */
-  diagonal() {
+  diagonal(): Vec3 {
     return this.p1.subtract(this.p0)
   }
 
@@ -219,7 +219,7 @@ class Box3 {
    * @param {Sphere} sphere - The sphere to check for intersection against.
    * @return {boolean} - Returns true if the shapes intersect.
    */
-  intersectsSphere(sphere: SphereType) {
+  intersectsSphere(sphere: SphereType): boolean {
     let closestPoint = new Vec3()
 
     // Find the point on the AABB closest to the sphere center.

@@ -81,7 +81,7 @@ class GLEnvMap extends GLProbe {
    * The getEnvMap method.
    * @return {EnvMap} - The return value.
    */
-  getEnvMap() {
+  getEnvMap(): EnvMap {
     return this.__envMap
   }
 
@@ -89,7 +89,7 @@ class GLEnvMap extends GLProbe {
    * The getBackgroundFocus method.
    * @return {number} - The return value.
    */
-  getBackgroundFocus() {
+  getBackgroundFocus():number {
     return this.__backgroundFocus
   }
 

@@ -1428,7 +1428,7 @@ class Mat4 {
   /**
    * The toJSON method encodes this type as a json object for persistence.
    *
-   * @return {object} - The json object.
+   * @return {Float32Array } - The json object.
    */
   toJSON(): Float32Array {
     return Float32Array.from(this.__data)
@@ -1455,9 +1455,9 @@ class Mat4 {
   /**
    * Returns current Math type data as array. Often used to pass types to the GPU.
    *
-   * @return {array} - Returns the result as an array.
+   * @return {Float32Array} - Returns the result as an array.
    */
-  asArray() {
+  asArray(): Float32Array {
     return this.__data
   }
 }
