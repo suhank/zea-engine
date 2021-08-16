@@ -46,7 +46,7 @@ class GLScreenQuad {
    * @param {Vec2} pos - The pos value.
    * @param {Vec2} size - The size value.
    */
-  bind(renderstate: RenderState, texture: GLTexture2D, pos?: Vec2, size?: Vec2) {
+  bind(renderstate: RenderState, texture?: GLTexture2D, pos?: Vec2, size?: Vec2) {
     const unifs = renderstate.unifs
     if (texture) {
       texture.bindToUniform(renderstate, renderstate.unifs.image)
@@ -92,10 +92,10 @@ class GLScreenQuad {
    * @param {Vec2} pos - The pos value.
    * @param {Vec2} size - The size value.
    */
-  draw(renderstate: RenderState, texture: GLTexture2D, pos?: Vec2, size?: Vec2) {
+  draw(renderstate: RenderState, texture?: GLTexture2D, pos?: Vec2, size?: Vec2) {
     this.bind(renderstate, texture, pos, size)
     const gl = this.__gl
-    gl.drawQuad()
+    gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0)
   }
 
   /**

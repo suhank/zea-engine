@@ -1,7 +1,7 @@
 import { SystemDesc } from '../SystemDesc'
 import { Float32 } from '../Utilities/MathFunctions'
 
-const create3DContext = function (canvas: HTMLCanvasElement, opt_attribs: Record<any,any>) {
+const create3DContext = function (canvas: HTMLCanvasElement, opt_attribs: Record<any, any>): WebGL12RenderingContext {
   let context: any = null
   if (opt_attribs.webglContextType != undefined) {
     try {
@@ -129,24 +129,6 @@ const create3DContext = function (canvas: HTMLCanvasElement, opt_attribs: Record
   }
   context.drawQuad = function () {
     this.drawElements(this.TRIANGLES, 6, this.UNSIGNED_SHORT, 0)
-  }
-
-  context.setupLineSegAttrBuffers = function () {
-    // ////////////////////////////
-    // Generate a buffer for drawing an instanced 2 point line
-    const vertexIDs = new Float32Array([0.0, 1.0])
-    const vertexIdsBuffer = context.createBuffer()
-    context.bindBuffer(context.ARRAY_BUFFER, vertexIdsBuffer)
-    context.bufferData(context.ARRAY_BUFFER, vertexIDs, context.STATIC_DRAW)
-
-    context.__linesegattrbuffers = {
-      vertexIDs: {
-        buffer: vertexIdsBuffer,
-        dimension: 1,
-        count: vertexIDs.length,
-        shared: true /*This buffer is shared between geoms. do not destroy */,
-      },
-    }
   }
 
   return context

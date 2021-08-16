@@ -364,7 +364,7 @@ class VRViewport extends GLBaseViewport {
             this.session = session
 
             // ////////////////////////////
-            const glLayer = new XRWebGLLayer(session, this.__gl)
+            const glLayer = new XRWebGLLayer(session, <WebGL2RenderingContext>this.__gl)
             session.updateRenderState({
               baseLayer: glLayer /* 
               // Output canvas not working anymore

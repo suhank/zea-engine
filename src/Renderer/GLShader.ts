@@ -225,9 +225,6 @@ class GLShader extends BaseItem {
       if (!vertexShader) {
         return false
       }
-      if (shaderProgramHdl) {
-        return
-      }
       gl.attachShader(shaderProgramHdl, vertexShader)
       shaderHdls[gl.VERTEX_SHADER] = vertexShader
     }
