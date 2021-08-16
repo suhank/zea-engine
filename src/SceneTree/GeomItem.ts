@@ -64,12 +64,11 @@ class CalcGeomMatOperator extends Operator {
 class GeomItem extends BaseGeomItem {
   protected geomBBox: Box3
   protected __cleanGeomMat: number
-  protected _setBoundingBoxDirty: any
   protected disableBoundingBox: boolean
   protected geomIndex: number
   protected assetItem: any
   protected calcGeomMatOperator: Operator
-  cullable
+  cullable: boolean
   protected __geomOffsetXfoParam: XfoParameter
   protected __geomParam: Parameter<BaseGeom>
   protected __materialParam: Parameter<Material>
@@ -86,9 +85,8 @@ class GeomItem extends BaseGeomItem {
     super(name)
     this.cullable = true
     this.__geomParam = this.addParameter(new GeometryParameter('Geometry'))
-    this._setBoundingBoxDirty = this._setBoundingBoxDirty.bind(this)
-    this.__geomParam.on('valueChanged', this._setBoundingBoxDirty)
-    this.__geomParam.on('boundingBoxChanged', this._setBoundingBoxDirty)
+    this.__geomParam.on('valueChanged', this.setBoundingBoxDirty)
+    this.__geomParam.on('boundingBoxChanged', this.setBoundingBoxDirty)
     this.__materialParam = this.addParameter(new MaterialParameter('Material'))
     this.addParameterDeprecationMapping('material', 'Material')
 

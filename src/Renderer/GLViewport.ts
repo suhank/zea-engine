@@ -909,8 +909,9 @@ class GLViewport extends GLBaseViewport {
       this.renderGeomDataFbo()
       const gl = this.__renderer.gl
       gl.disable(gl.DEPTH_TEST)
-      gl.screenQuad.bindShader(renderstate)
-      gl.screenQuad.draw(renderstate, this.__geomDataBuffer, new Vec2(0, 0), new Vec2(1, 1))
+      const screenQuad = this.__renderer.screenQuad
+      screenQuad.bindShader(renderstate)
+      screenQuad.draw(renderstate, this.__geomDataBuffer, new Vec2(0, 0), new Vec2(1, 1))
     }
   }
 }

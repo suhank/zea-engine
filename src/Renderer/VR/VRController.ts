@@ -13,7 +13,7 @@ class VRController {
   protected __tip: any
   protected __activeVolumeSize: any
   protected tick: any
-  protected __buttonPressed: any
+  protected buttonPressed: any
   protected __touchpadValue: any
   protected __geomAtTip: any
   protected __hitTested: any
@@ -90,11 +90,10 @@ class VRController {
         //   })
         xrvp.loadHMDResources().then((assetItem: any) => {
           if (!assetItem) return
-          const localXfo = new Xfo(
-            new Vec3(0, 0.0, 0.0),
-            new Quat({ setFromAxisAndAngle: [new Vec3(0, 1, 0), Math.PI] }),
-            new Vec3(0.001, 0.001, 0.001) // VRAsset units are in mm.
-          )
+          const localXfo = new Xfo()
+          localXfo.ori.setFromAxisAndAngle(new Vec3(0, 1, 0), Math.PI)
+          localXfo.sc.set(0.001, 0.001, 0.001) // VRAsset units are in mm.
+
           let srcControllerTree
           if (inputSource.profiles[0] == 'htc-vive') {
             srcControllerTree = assetItem.getChildByName('Controller')
@@ -108,6 +107,7 @@ class VRController {
                 srcControllerTree = assetItem.getChildByName('RightController')
                 break
               case 'none':
+                ;``
               case 'left-right':
               case 'left-right-none':
                 srcControllerTree = assetItem.getChildByName('Controller')
@@ -181,7 +181,7 @@ class VRController {
    * @return {boolean} - The return value.
    */
   isButtonPressed() {
-    return this.__buttonPressed
+    return this.buttonPressed
   }
 
   /**

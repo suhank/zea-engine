@@ -250,45 +250,6 @@ class GLBaseViewport extends ParameterOwner {
       gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.offscreenBuffer.glTex, 0)
       gl.bindFramebuffer(gl.FRAMEBUFFER, null)
 
-      if (gl.name == 'webgl2') {
-        const gl2 = <WebGL2RenderingContext>gl
-        this.fb[FRAMEBUFFER.MSAA_RENDERBUFFER] = gl2.createFramebuffer()
-        gl2.bindFramebuffer(gl2.FRAMEBUFFER, this.fb[FRAMEBUFFER.MSAA_RENDERBUFFER])
-        this.colorRenderbuffer = gl2.createRenderbuffer()
-
-        // Create the color buffer
-        gl2.bindRenderbuffer(gl2.RENDERBUFFER, this.colorRenderbuffer)
-        gl2.renderbufferStorageMultisample(gl2.RENDERBUFFER, 4, gl2.RGBA8, width, height)
-        gl2.framebufferRenderbuffer(gl2.FRAMEBUFFER, gl2.COLOR_ATTACHMENT0, gl2.RENDERBUFFER, this.colorRenderbuffer)
-
-        this.depthBuffer = gl2.createRenderbuffer()
-        gl2.bindRenderbuffer(gl2.RENDERBUFFER, this.depthBuffer)
-        gl2.renderbufferStorageMultisample(gl2.RENDERBUFFER, 4, gl2.DEPTH_COMPONENT16, width, height)
-        gl2.framebufferRenderbuffer(gl2.FRAMEBUFFER, gl2.DEPTH_ATTACHMENT, gl2.RENDERBUFFER, this.depthBuffer)
-
-        // //////////////////////////////////
-        // COLORBUFFER
-        this.fb[FRAMEBUFFER.COLORBUFFER] = gl2.createFramebuffer()
-        gl2.bindFramebuffer(gl2.FRAMEBUFFER, this.fb[FRAMEBUFFER.COLORBUFFER])
-        gl2.framebufferTexture2D(gl2.FRAMEBUFFER, gl2.COLOR_ATTACHMENT0, gl2.TEXTURE_2D, this.offscreenBuffer.glTex, 0)
-        gl2.bindFramebuffer(gl2.FRAMEBUFFER, null)
-
-        // //////////////////////////////////
-        // DEPTHBUFFER
-        // Create the depth texture that will be bitted to.
-        this.fb[FRAMEBUFFER.DEPTHBUFFER] = gl2.createFramebuffer()
-        gl2.bindFramebuffer(gl2.FRAMEBUFFER, this.fb[FRAMEBUFFER.DEPTHBUFFER])
-        gl2.framebufferTexture2D(gl2.FRAMEBUFFER, gl2.DEPTH_ATTACHMENT, gl2.TEXTURE_2D, this.depthTexture.glTex, 0)
-        gl2.bindFramebuffer(gl2.FRAMEBUFFER, null)
-      } else {
-        this.EXT_frag_depth = gl.getExtension('EXT_frag_depth')
-
-        this.fb[FRAMEBUFFER.MSAA_RENDERBUFFER] = gl.createFramebuffer()
-        gl.bindFramebuffer(gl.FRAMEBUFFER, this.fb[FRAMEBUFFER.MSAA_RENDERBUFFER])
-        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.offscreenBuffer.glTex, 0)
-        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.TEXTURE_2D, this.depthTexture.glTex, 0)
-      }
-
       const check = gl.checkFramebufferStatus(
         gl.name == 'webgl2' ? (<WebGL2RenderingContext>gl).DRAW_FRAMEBUFFER : gl.FRAMEBUFFER
       )
@@ -389,8 +350,9 @@ class GLBaseViewport extends ParameterOwner {
       gl.viewport(0, 0, this.__width, this.__height)
 
       gl.disable(gl.DEPTH_TEST)
-      gl.screenQuad.bindShader(renderstate)
-      gl.screenQuad.draw(renderstate, this.offscreenBuffer)
+      const screenQuad = this.__renderer.screenQuad
+      screenQuad.bindShader(renderstate)
+      screenQuad.draw(renderstate, this.offscreenBuffer)
     }
   }
 
@@ -443,10 +405,6 @@ class GLBaseViewport extends ParameterOwner {
     const unifs = renderstate.unifs
 
     this.depthTexture.bindToUniform(renderstate, unifs.depthTexture)
-
-    if (gl.name == 'webgl') {
-      this.offscreenBuffer.bindToUniform(renderstate, unifs.colorTexture)
-    }
 
     gl.uniform2f(unifs.screenSize.location, this.__width, this.__height)
     gl.uniform1f(unifs.outlineThickness.location, this.renderer.outlineThickness)

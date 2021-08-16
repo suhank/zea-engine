@@ -34,7 +34,7 @@ class VRViewport extends GLBaseViewport {
   protected __vrhead: VRHead
   protected controllersMap: Record<any, any>
   protected controllers: any[]
-  protected prevControllerDownTime: any[]
+  protected controllerPointerDownTime: any[]
   protected spectatorMode: boolean
   protected tick: number
 
