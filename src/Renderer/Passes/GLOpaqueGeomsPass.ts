@@ -90,8 +90,8 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
     const material = materialParam.getValue()
 
     if (!material.isTextured()) {
-      const shaderName = material.getShaderName()
-      if (material.supportsInstancing()) {
+      if (material.getShaderClass().supportsInstancing()) {
+        const shaderName = material.getShaderName()
         let glShaderGeomSets = this.__glShaderGeomSets[shaderName]
         if (!glShaderGeomSets) {
           const shaders = this.constructShaders(shaderName)
@@ -125,7 +125,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
       this.__renderer.assignTreeItemToGLPass(geomItem)
     }
     materialParam.on('valueChanged', materialChanged)
-    ;(<Record<any,any>>glGeomItem).materialChanged = materialChanged
+    ;(<Record<any, any>>glGeomItem).materialChanged = materialChanged
 
     // ////////////////////////////////////
     // Shaders

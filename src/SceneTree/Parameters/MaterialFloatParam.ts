@@ -49,9 +49,9 @@ class MaterialFloatParam extends NumberParameter implements IBinaryReader {
   /**
    * Sets `BaseImage` texture value in parameter.
    *
-   * @param {BaseImage} value - The value value.
+   * @param {BaseImage | undefined} value - The value value.
    */
-  setImage(value: BaseImage): void {
+  setImage(value: BaseImage | undefined): void {
     const disconnectImage = () => {
       // image.off('loaded', imageUpdated);
       // image.off('updated', imageUpdated);
@@ -80,7 +80,7 @@ class MaterialFloatParam extends NumberParameter implements IBinaryReader {
    *
    * @param {number} value - The value param.
    */
-  setValue(value: any) {
+  setValue(value: number | BaseImage) {
     if (value instanceof BaseImage) {
       this.setImage(value)
     } else {
@@ -92,7 +92,7 @@ class MaterialFloatParam extends NumberParameter implements IBinaryReader {
    * Extracts `number` and `Image` values from a buffer, updating current parameter state.
    *
    * @param {BinReader} reader - The reader value.
-   * @param { Record<string, any>} context - The context value.
+   * @param {Record<string, any>} context - The context value.
    */
   readBinary(reader: BinReader, context: Record<string, any>): void {
     super.readBinary(reader, context)

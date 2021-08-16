@@ -27,8 +27,7 @@ import { BinReader } from '../../SceneTree/BinReader'
  * @extends ColorParameter
  */
 
-
-// TODO: should MaterialColorParam have these parameters below? I'm assuming no. 
+// TODO: should MaterialColorParam have these parameters below? I'm assuming no.
 // class MaterialColorParam extends Parameter {
 //   constructor() {
 //     super()
@@ -50,7 +49,7 @@ import { BinReader } from '../../SceneTree/BinReader'
 //   }
 
 // }
-  
+
 class MaterialColorParam extends ColorParameter {
   protected image?: BaseImage
   /**
@@ -83,9 +82,9 @@ class MaterialColorParam extends ColorParameter {
   /**
    * Sets `BaseImage` texture value in parameter.
    *
-   * @param {BaseImage} value - The value param.
+   * @param {BaseImage | undefined} value - The value param.
    */
-  setImage(value: BaseImage): void {
+  setImage(value: BaseImage | undefined): void {
     const disconnectImage = () => {
       this.image?.off('loaded', this.imageUpdated)
       this.image?.off('updated', this.imageUpdated)
@@ -114,7 +113,7 @@ class MaterialColorParam extends ColorParameter {
    *
    * @param {BaseImage|Color} value - The value param.
    */
-  setValue(value: BaseImage|Color) {
+  setValue(value: BaseImage | Color) {
     // Note: instead of supporting images or colors, we should replace the ColorParameter with an ImageParameter when assigning textures
     // console.warn('@todo-review: Should we accept different type of values?')
     if (value instanceof BaseImage) {

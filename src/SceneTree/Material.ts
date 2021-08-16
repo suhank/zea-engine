@@ -3,7 +3,7 @@
 import { Color } from '../Math/index'
 import { BaseItem } from './BaseItem'
 import { Registry } from '../Registry'
-import { Parameter } from './Parameters/index'
+import { ColorParameter, Parameter } from './Parameters/index'
 
 // Explicit export of parameters that are not included in the
 // module defined by the index file in the folder. (see Parameters/index.js)
@@ -33,7 +33,6 @@ class Material extends BaseItem {
   protected __isTextured: boolean
 
   protected __shaderName: string
-  protected __params: any[]
   /**
    * Create a material
    * @param {string} name - The name of the material.
@@ -82,7 +81,7 @@ class Material extends BaseItem {
     }
 
     // Remove redundant Params.
-    for (const param of this.__params) {
+    for (const param of this.params) {
       if (!paramMap[param.getName()]) {
         this.removeParameter(param.getName())
       }
@@ -98,11 +97,11 @@ class Material extends BaseItem {
    * Remove all textures from Material's parameters.
    */
   removeAllTextures() {
-    for (const param of this.__params) {
-      if (param.getImage && param.getImage()) {
-        // emit a notification so the GLMaterial knows to
-        // Remove refs to GLTexture objects.
-        param.setImage(undefined)
+    for (const param of this.params) {
+      if (param instanceof MaterialColorParam) {
+        if ((<MaterialColorParam>param).getImage()) (<MaterialColorParam>param).setImage(null)
+      } else if (param instanceof MaterialFloatParam) {
+        if ((<MaterialFloatParam>param).getImage()) (<MaterialFloatParam>param).setImage(null)
       }
     }
   }
@@ -117,8 +116,12 @@ class Material extends BaseItem {
    */
   getParamTextures() {
     const textures: Record<any, any> = {}
-    for (const param of this.__params) {
-      if (param.getImage && param.getImage()) textures[param.getName()] = param.getImage()
+    for (const param of this.params) {
+      if (param instanceof MaterialColorParam) {
+        if ((<MaterialColorParam>param).getImage()) textures[param.getName()] = (<MaterialColorParam>param).getImage()
+      } else if (param instanceof MaterialFloatParam) {
+        if ((<MaterialFloatParam>param).getImage()) textures[param.getName()] = (<MaterialFloatParam>param).getImage()
+      }
     }
     return textures
   }
@@ -180,10 +183,17 @@ class Material extends BaseItem {
     const param = event ? event : {}
 
     let isTextured = false
-    for (const param of this.__params) {
-      if (param.getImage && param.getImage()) {
-        isTextured = true
-        break
+    for (const param of this.params) {
+      if (param instanceof MaterialColorParam) {
+        if ((<MaterialColorParam>param).getImage()) {
+          isTextured = true
+          break
+        }
+      } else if (param instanceof MaterialFloatParam) {
+        if ((<MaterialFloatParam>param).getImage()) {
+          isTextured = true
+          break
+        }
       }
     }
     if (isTextured != this.__isTextured) {
@@ -211,7 +221,7 @@ class Material extends BaseItem {
    * @return {string|undefined} - The return value.
    */
   getShaderClass(): typeof GLShader {
-    return <typeof GLShader>Registry.getClassDefinition(this.getShaderName()).constructor
+    return <typeof GLShader>Registry.getClassDefinition(this.getShaderName())
   }
 
   // ////////////////////////////////////////
@@ -243,7 +253,7 @@ class Material extends BaseItem {
     }
     this.setShaderName(j.shader)
     super.fromJSON(j, context)
-    // let props = this.__params;
+    // let props = this.params;
     // for (let key in j) {
     //     let value;
     //     if (j[key] instanceof Object) {
@@ -298,8 +308,8 @@ class Material extends BaseItem {
 
         // console.log(paramName +":" + value);
         let param = <MaterialColorParam | MaterialFloatParam>this.getParameter(paramName)
-        if (param) {
-          param.setValue(<Color>value)
+        if (param instanceof MaterialColorParam) {
+          ;(<MaterialColorParam>param).setValue(value)
         } else {
           // param = <MaterialColorParam | MaterialFloatParam>(
           //   // this.addParameter(generateParameterInstance(paramName, value))
