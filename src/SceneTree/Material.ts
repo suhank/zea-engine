@@ -138,11 +138,10 @@ class Material extends BaseItem {
   __checkTransparency(event?: Record<any, any>) {
     let isTransparent = false
     try {
-      const shaderClass = Registry.getBlueprint(this.__shaderName)
-      console.warn('Shaders are no longer registered, no transparency check possible')
-      // if (shaderClass.isTransparent()) { // TODO: shaders are no longer registered
-      //   isTransparent = true
-      // }
+      const shaderClass = this.getShaderClass()
+      if (shaderClass.isTransparent()) {
+        isTransparent = true
+      }
     } catch (e) {}
 
     if (!isTransparent) {

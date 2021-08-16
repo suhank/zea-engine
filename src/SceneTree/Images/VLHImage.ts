@@ -114,8 +114,8 @@ class VLHImage extends BaseImage {
    * @param {string} url - The URL of the vlh file to load
    * @return {Promise} - Returns a promise that resolves once the initial load is complete
    */
-  load(url: string) {
-    return new Promise((resolve, reject) => {
+  load(url: string): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
       const filename = url.lastIndexOf('/') > -1 ? url.substring(url.lastIndexOf('/') + 1) : ''
       const stem = filename.substring(0, filename.lastIndexOf('.'))
       if (this.getName() == '') {

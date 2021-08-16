@@ -15,15 +15,12 @@ class GeometryParameter extends Parameter<BaseGeom> {
    * @param {BaseGeom} value - The value of the parameter.
    */
   constructor(name: string = '', value?: BaseGeom) {
-    super(name, value, 'Geometry')
+    super(name, null, 'Geometry')
 
     this.emitBoundingBoxDirtied = this.emitBoundingBoxDirtied.bind(this)
-    if(value){
+    if (value) {
       this.setValue(value)
-    }else {
-      console.warn("no value set in the constructor")
     }
-    
   }
 
   protected emitBoundingBoxDirtied(event: Record<string, unknown>): void {
