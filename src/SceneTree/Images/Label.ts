@@ -200,16 +200,16 @@ class Label extends DataImage {
       }
     }
 
-    const loadText = () => {
-      const promise = new Promise((resolve) => {
+    const loadText = (): Promise<void> => {
+      return new Promise((resolve) => {
         const library = this.getParameter('Library').getValue()
         if (library == '') {
-          resolve(promise)
+          resolve()
           return
         }
         if (!labelManager.isLibraryFound(library)) {
           console.warn('Label Library not found:', library)
-          resolve(promise)
+          resolve()
           return
         }
         const getLibraryText = () => {
@@ -223,7 +223,7 @@ class Label extends DataImage {
             // an exception is thrown, and we catch it here.
             console.warn(e)
           }
-          resolve(promise)
+          resolve()
         }
         if (!labelManager.isLibraryLoaded(library)) {
           labelManager.on('labelLibraryLoaded', (event: any) => {
@@ -235,17 +235,17 @@ class Label extends DataImage {
         }
       })
     }
-    const loadFont = () => {
-      const promise = new Promise((resolve) => {
+    const loadFont = (): Promise<void> => {
+      return new Promise((resolve) => {
         if ((document as any).fonts != undefined) {
           const font = this.getParameter('Font').getValue()
           const fontSize = this.getParameter('FontSize').getValue()
           ;(document as any).fonts.load(fontSize + 'px "' + font + '"').then(() => {
             // console.log("Font Loaded:" + font);
-            resolve(promise)
+            resolve()
           })
         } else {
-          resolve(promise)
+          resolve()
         }
       })
     }

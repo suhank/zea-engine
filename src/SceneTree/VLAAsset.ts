@@ -87,8 +87,8 @@ class VLAAsset extends AssetItem {
    * @param {AssetLoadContext} context - The load context object that provides additional data such as the units of the scene we are loading into.
    * @return {Promise} - Returns a promise that resolves once the initial load is complete
    */
-  load(url: string, context: AssetLoadContext = new AssetLoadContext()): any {
-    const promise = new Promise((resolve, reject) => {
+  load(url: string, context: AssetLoadContext = new AssetLoadContext()): Promise<void> {
+    return new Promise((resolve, reject) => {
       const folder = url.lastIndexOf('/') > -1 ? url.substring(0, url.lastIndexOf('/')) + '/' : ''
       const filename = url.lastIndexOf('/') > -1 ? url.substring(url.lastIndexOf('/') + 1) : ''
       const stem = filename.substring(0, filename.lastIndexOf('.'))
@@ -139,7 +139,7 @@ class VLAAsset extends AssetItem {
             }
             this.__geomLibrary.loadGeomFilesStream(geomLibraryJSON, basePath, context)
           }
-          resolve(promise)
+          resolve()
         },
         (error: any) => {
           this.emit('error', error)

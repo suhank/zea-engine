@@ -62,8 +62,8 @@ class LDRVideo extends FileImage {
    * @param {string} format - The format value.
    * @return {Promise} Returns a promise that resolves once the image is loaded.
    */
-  load(url: string, format = 'RGB'): any {
-    const promise = new Promise((resolve, reject) => {
+  load(url: string, format = 'RGB'): Promise<void> {
+    return new Promise((resolve, reject) => {
       resourceLoader.incrementWorkload(1)
 
       const videoElem = document.createElement('video')

@@ -128,13 +128,13 @@ class ObjAsset extends AssetItem {
         }
       }
 
-      const loadMtlFile = (mtlFile: any) => {
-        const promise = new Promise((resolve) => {
+      const loadMtlFile = (mtlFile: any): Promise<void> => {
+        return new Promise((resolve) => {
           loadTextfile(mtlFile.url, (fileData: any) => {
             resourceLoader.incrementWorkDone(1)
             parseMtlData(fileData)
             resourceLoader.incrementWorkDone(1)
-            resolve(promise)
+            resolve()
           })
         })
       }

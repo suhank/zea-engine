@@ -119,9 +119,9 @@ class GeomLibrary extends EventEmitter {
    * @param {boolean} incrementProgress - If true, the progress bar is incremented and decremented.
    * @return {Promise} the promise resolves once the file is loaded, but not parsed.
    */
-  loadGeomFile(geomFileID: number, incrementProgress = false) {
+  loadGeomFile(geomFileID: number, incrementProgress = false): Promise<void> {
     if (incrementProgress) resourceLoader.incrementWorkload(1)
-    const promise = new Promise((resolve) => {
+    return new Promise((resolve) => {
       const geomFileUrl = this.basePath + geomFileID + '.zgeoms'
 
       resourceLoader.loadFile('archive', geomFileUrl).then((entries: any) => {
@@ -131,7 +131,7 @@ class GeomLibrary extends EventEmitter {
           if (event.geomFileID == geomFileID) {
             resourceLoader.incrementWorkDone(1)
             this.off('streamFileParsed', streamFileParsed)
-            resolve(promise)
+            resolve()
           }
         }
         this.on('streamFileParsed', streamFileParsed)
