@@ -28,7 +28,7 @@ class GLBaseViewport extends ParameterOwner {
   protected __gl: WebGL12RenderingContext
   protected renderer: GLRenderer
   protected __renderer: GLRenderer
-  protected __doubleClickTimeMSParam = this.addParameter(new NumberParameter('DoubleClickTimeMS', 200))
+  protected __doubleClickTimeMSParam: NumberParameter
   protected __fbo: WebGLFramebuffer
   protected __ongoingPointers: any[]
   protected __backgroundColor: Color
@@ -57,7 +57,7 @@ class GLBaseViewport extends ParameterOwner {
     super()
     this.renderer = renderer
     this.__renderer = renderer
-    this.__doubleClickTimeMSParam = this.addParameter(new NumberParameter('DoubleClickTimeMS', 200))
+    this.__doubleClickTimeMSParam = <NumberParameter>this.addParameter(new NumberParameter('DoubleClickTimeMS', 200))
     // Since there is not multi touch on `PointerEvent`, we need to store pointers pressed.
     this.__ongoingPointers = []
     this.__backgroundColor = new Color(0.3, 0.3, 0.3, 1)
