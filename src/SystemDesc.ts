@@ -161,7 +161,6 @@ const SystemDesc = (function () {
       isIOSDevice: false,
       browserName: 'Node',
       webGLSupported: false,
-      gpuDesc: null,
       deviceCategory: 'High',
       hardwareConcurrency: 4,
     }
@@ -287,7 +286,9 @@ const SystemDesc = (function () {
   }
 })()
 
+// @ts-ignore
 if (!globalThis.ZeaSystemDesc) {
+  // @ts-ignore
   globalThis.ZeaSystemDesc = SystemDesc
 }
 

@@ -125,19 +125,19 @@ class Box3 {
    * it proceeds to apply the transform for the Vec3.
    *
    * @param {Box3} box3 - A 3D box.
-   * @param {Xfo} xfo - A 3D transform.
+   * @param {Xfo | Mat4} xfo - A 3D transform.
    */
-  addBox3(box3: Box3, xfo?: Xfo): void {
-    if (xfo) {
+  addBox3(box3: Box3, transform?: Xfo | Mat4): void {
+    if (transform) {
       // Transform each corner of the Box3 into the new coordinate system.
-      this.addPoint(xfo.transformVec3(box3.p0))
-      this.addPoint(xfo.transformVec3(new Vec3(box3.p0.x, box3.p0.y, box3.p1.z)))
-      this.addPoint(xfo.transformVec3(new Vec3(box3.p0.x, box3.p1.y, box3.p0.z)))
-      this.addPoint(xfo.transformVec3(new Vec3(box3.p1.x, box3.p0.y, box3.p0.z)))
-      this.addPoint(xfo.transformVec3(new Vec3(box3.p0.x, box3.p1.y, box3.p1.z)))
-      this.addPoint(xfo.transformVec3(new Vec3(box3.p1.x, box3.p0.y, box3.p1.z)))
-      this.addPoint(xfo.transformVec3(new Vec3(box3.p1.x, box3.p1.y, box3.p0.z)))
-      this.addPoint(xfo.transformVec3(box3.p1))
+      this.addPoint(transform.transformVec3(box3.p0))
+      this.addPoint(transform.transformVec3(new Vec3(box3.p0.x, box3.p0.y, box3.p1.z)))
+      this.addPoint(transform.transformVec3(new Vec3(box3.p0.x, box3.p1.y, box3.p0.z)))
+      this.addPoint(transform.transformVec3(new Vec3(box3.p1.x, box3.p0.y, box3.p0.z)))
+      this.addPoint(transform.transformVec3(new Vec3(box3.p0.x, box3.p1.y, box3.p1.z)))
+      this.addPoint(transform.transformVec3(new Vec3(box3.p1.x, box3.p0.y, box3.p1.z)))
+      this.addPoint(transform.transformVec3(new Vec3(box3.p1.x, box3.p1.y, box3.p0.z)))
+      this.addPoint(transform.transformVec3(box3.p1))
     } else {
       this.addPoint(box3.p0)
       this.addPoint(box3.p1)
