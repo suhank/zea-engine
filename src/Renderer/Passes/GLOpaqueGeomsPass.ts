@@ -113,7 +113,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
     }
 
     const glGeom = this.renderer.glGeomLibrary.constructGLGeom(geomItem.getParameter('Geometry').getValue())
-    const glGeomItem = <Record<any, any>>this.renderer.glGeomItemLibrary.getGLGeomItem(geomItem)
+    const glGeomItem = this.renderer.glGeomItemLibrary.getGLGeomItem(geomItem)
 
     // ////////////////////////////////////
     // Tracking Material Transparency changes...
@@ -125,7 +125,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
       this.__renderer.assignTreeItemToGLPass(geomItem)
     }
     materialParam.on('valueChanged', materialChanged)
-    glGeomItem.materialChanged = materialChanged
+    ;(<Record<any,any>>glGeomItem).materialChanged = materialChanged
 
     // ////////////////////////////////////
     // Shaders
