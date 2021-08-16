@@ -152,6 +152,9 @@ class Cone extends ProceduralMesh {
       }
     }
 
+    // Note: this breaks an infinite loop where computeVertexNormals calls update which calls rebuild.
+    this.dirtyTopology = false
+    this.dirtyVertices = false
     this.computeVertexNormals()
   }
 }

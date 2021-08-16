@@ -86,6 +86,18 @@ class Mesh extends BaseGeom {
   }
 
   /**
+   * Adds a new vertex attribute to the geometry.
+   *
+   * @param {string} name - The name of the vertex attribute.
+   * @param {any} dataType - The dataType value. // TODO: is any ok vs. AttrValue | number. Unsure about how dataType is used
+   * @return {Attribute} - Returns an attribute.
+   */
+  addVertexAttribute(name: string, attr: Attribute): void {
+    super.addVertexAttribute(name, attr)
+    attr.setMesh(this)
+  }
+
+  /**
    * The getFaceCounts method.
    * @return {array} - The return value.
    */

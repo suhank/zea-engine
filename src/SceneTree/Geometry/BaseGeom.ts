@@ -67,11 +67,10 @@ class BaseGeom extends ParameterOwner {
    *
    * @param {string} name - The name of the vertex attribute.
    * @param {any} dataType - The dataType value. // TODO: is any ok vs. AttrValue | number. Unsure about how dataType is used
-   * @param {number} defaultScalarValue - The default scalar value.
    * @return {Attribute} - Returns an attribute.
    */
   addVertexAttribute(name: string, attr: Attribute): void {
-    attr.setCount(this.getNumVertices())
+    attr.setCount(this.__numVertices)
     this.__vertexAttributes.set(name, attr)
   }
 

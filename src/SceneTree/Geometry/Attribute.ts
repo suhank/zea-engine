@@ -37,6 +37,17 @@ class Attribute extends BaseClass {
   }
 
   /**
+   * Sets the Mesh reference to the VertexAttribute. This is needed for attributes
+   * assigned to meshes, and is used to calculate face vertex indices.
+   * > Note: the mesh automatically calls this method when a vertex attribute is assigned.
+   *
+   * @param {Mesh} mesh - The mesh object
+   */
+  setMesh(mesh: Mesh) {
+    this.mesh = mesh
+  }
+
+  /**
    * Returns the backing array for this attribute
    *
    * @return {string} - The return value.
