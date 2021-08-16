@@ -111,7 +111,7 @@ class GLEnvMap extends GLProbe {
       const gl = this.__gl
       const debug = false
       if (debug) {
-        const screenQuad = gl.screenQuad
+        const screenQuad = this.__renderer.screenQuad
         screenQuad.bindShader(renderstate)
         const debugId = 2 * 1
         switch (debugId) {
@@ -129,9 +129,6 @@ class GLEnvMap extends GLProbe {
             break
           case 4:
             screenQuad.draw(renderstate, this.__fbos[0].getColorTexture())
-            break
-          case 5:
-            screenQuad.draw(renderstate, this)
             break
         }
       } else {

@@ -507,9 +507,9 @@ class GLBaseViewport extends ParameterOwner {
       // Turn this on to debug the highlight data buffer.
       const debugHighlightBuffer = false
       if (debugHighlightBuffer) {
-        gl.screenQuad.bindShader(renderstate)
+        this.__renderer.screenQuad.bindShader(renderstate)
         this.highlightedGeomsBuffer.bindToUniform(renderstate, renderstate.unifs.image)
-        gl.screenQuad.draw(renderstate)
+        this.__renderer.screenQuad.draw(renderstate)
       } else {
         this.renderer.highlightsShader.bind(renderstate)
         gl.enable(gl.BLEND)

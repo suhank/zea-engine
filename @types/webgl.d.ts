@@ -8,7 +8,7 @@ interface WebGL12RenderingContext extends WebGLRenderingContext {
   // GLScreenQuad.ts
   setupInstancedQuad: any
   __quadVertexIdsBuffer: any
-  __quadattrbuffers : any
+  __quadattrbuffers: any
   __quadIndexBuffer: WebGLBuffer
 
   // GLBaseRenderer.ts
@@ -18,7 +18,6 @@ interface WebGL12RenderingContext extends WebGLRenderingContext {
   multiDrawElements: any
   multiDrawElementsInstanced: any
   multiDrawArraysInstanced: any
-  screenQuad: GLScreenQuad
   floatGeomBuffer: any
   shaderopts: Record<any, any>
   makeXRCompatible(): any

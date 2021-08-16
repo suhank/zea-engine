@@ -63,7 +63,7 @@ class GLBaseRenderer extends ParameterOwner {
   glGeomItemLibrary: GLGeomItemLibrary
   glGeomLibrary: GLGeomLibrary
 
-  protected __screenQuad: GLScreenQuad
+  public screenQuad: GLScreenQuad
   protected resizeObserver: ResizeObserver
   /**
    * Create a GL base renderer.
@@ -655,11 +655,10 @@ class GLBaseRenderer extends ParameterOwner {
 
     // Most applications of our engine will prefer the high-performance context by default.
     webglOptions.powerPreference = webglOptions.powerPreference || 'high-performance'
-    const gl = this.__gl
     this.__gl = create3DContext(this.__glcanvas, webglOptions)
     if (!this.__gl) alert('Unable to create WebGL context. WebGL not supported.')
-    gl.renderer = this
 
+    const gl = this.__gl
     if (gl.name == 'webgl2') {
       this.addShaderPreprocessorDirective('ENABLE_ES3')
     }
@@ -668,7 +667,7 @@ class GLBaseRenderer extends ParameterOwner {
     }
 
     {
-      const ext = gl.name == 'webgl2' ? this.__gl.getExtension('WEBGL_multi_draw') : null
+      const ext = gl.name == 'webgl2' ? gl.getExtension('WEBGL_multi_draw') : null
       if (ext && !webglOptions.disableMultiDraw) {
         gl.multiDrawArrays = ext.multiDrawArraysWEBGL.bind(ext)
         gl.multiDrawElements = ext.multiDrawElementsWEBGL.bind(ext)
@@ -679,8 +678,7 @@ class GLBaseRenderer extends ParameterOwner {
       }
     }
 
-    gl.screenQuad = new GLScreenQuad(this.__gl)
-    this.__screenQuad = gl.screenQuad
+    this.screenQuad = new GLScreenQuad(gl)
 
     // Note: Mobile devices don't provide much support for reading data back from float textures,
     // and checking compatibility is patchy at best.

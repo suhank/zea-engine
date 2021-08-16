@@ -1,6 +1,7 @@
 import { GLTexture2D } from './GLTexture2D'
 import { GLFbo } from './GLFbo'
 import { GLImageAtlas } from './GLImageAtlas'
+import { GLScreenQuad } from './GLScreenQuad'
 import { BaseImage } from '../SceneTree/BaseImage'
 
 // import './Shaders/GLSL/ImagePyramid'
@@ -19,6 +20,7 @@ class ImagePyramid extends GLImageAtlas {
   protected size: number
   protected __srcGLTex: GLTexture2D
   protected __fbos: GLFbo[]
+  protected screenQuad: GLScreenQuad
 
   /**
    * Create an image pyramid.
@@ -28,7 +30,14 @@ class ImagePyramid extends GLImageAtlas {
    * @param {boolean} destroySrcImage - The destroySrcImage value.
    * @param {number} minTileSize - The minTileSize value.
    */
-  constructor(gl: WebGL12RenderingContext, name: string, srcGLTex: any, destroySrcImage = true, minTileSize = 16) {
+  constructor(
+    gl: WebGL12RenderingContext,
+    name: string,
+    srcGLTex: GLTexture2D,
+    screenQuad: GLScreenQuad,
+    destroySrcImage = true,
+    minTileSize = 16
+  ) {
     super(gl, name)
 
     this.__srcGLTex = srcGLTex
@@ -91,11 +100,11 @@ class ImagePyramid extends GLImageAtlas {
   renderAtlas(cleanup = true) {
     const gl = this.__gl
     const renderstate = {}
-    gl.screenQuad.bindShader(renderstate)
+    this.screenQuad.bindShader(renderstate)
 
     for (let i = 0; i < this.__fbos.length; i++) {
       this.__fbos[i].bindAndClear()
-      gl.screenQuad.draw(renderstate, this.getSubImage(i)) // Note: we are binding the previous image. (we have 1 more images than fbos.)
+      this.screenQuad.draw(renderstate, this.getSubImage(i)) // Note: we are binding the previous image. (we have 1 more images than fbos.)
     }
 
     super.renderAtlas(cleanup)
