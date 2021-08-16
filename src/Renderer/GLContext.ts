@@ -120,7 +120,7 @@ const create3DContext = function (canvas: HTMLCanvasElement, opt_attribs: Record
     this.__quadattrbuffers = {
       vertexIDs: {
         buffer: this.__quadVertexIdsBuffer,
-        dataType: Float32,
+        dataType: 'Float32',
         dimension: 1,
         count: vertexIDs.length,
         shared: true /*This buffer is shared between geoms. do not destroy */,

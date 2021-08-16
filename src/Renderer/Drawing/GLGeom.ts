@@ -63,9 +63,7 @@ class GLGeom extends RefCounted {
    * The genBuffers method.
    * @param {RenderState} renderstate - The object tracking the current state of the renderer
    */
-  genBuffers(renderstate?: RenderState) {
-    throw new Error('genBuffers Not implemented')
-  }
+  genBuffers(renderstate?: RenderState) {}
 
   /**
    * The updateBuffers method.

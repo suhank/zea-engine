@@ -15,58 +15,58 @@ const genDataTypeDesc = (gl: WebGL12RenderingContext, attrDataType: any) => {
   let elementSize
   let dataType
   switch (attrDataType) {
-    case UInt8:
+    case 'UInt8':
       dimension = 1
       elementSize = 4
       dataType = gl.UNSIGNED_BYTE
       break
-    case SInt8:
+    case 'SInt8':
       dimension = 1
       elementSize = 4
       dataType = gl.BYTE
       break
-    case UInt16:
+    case 'UInt16':
       dimension = 1
       elementSize = 4
       dataType = gl.UNSIGNED_SHORT
       break
-    case SInt16:
+    case 'SInt16':
       dimension = 1
       elementSize = 4
       dataType = gl.SHORT
       break
-    case UInt32:
+    case 'UInt32':
       dimension = 1
       elementSize = 4
       dataType = gl.UNSIGNED_INT
       break
-    case SInt32:
+    case 'SInt32':
       dimension = 1
       elementSize = 4
       dataType = gl.INT
       break
-    case Float32:
+    case 'Float32':
       dimension = 1
       elementSize = 4
       dataType = gl.FLOAT
       break
-    case Vec2:
+    case 'Vec2':
       dimension = 2
       elementSize = 4
       dataType = gl.FLOAT
       break
-    case Vec3:
+    case 'Vec3':
       dimension = 3
       elementSize = 4
       dataType = gl.FLOAT
       break
-    case Vec4:
-    case Color:
+    case 'Vec4':
+    case 'Color':
       dimension = 4
       elementSize = 4
       dataType = gl.FLOAT
       break
-    case RGBA:
+    case 'RGBA':
       dimension = 4
       elementSize = 1
       dataType = gl.UNSIGNED_BYTE
