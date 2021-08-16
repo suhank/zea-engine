@@ -17,7 +17,7 @@ class PointsShader extends GLShader {
    * Create a GL shader.
    * @param {WebGL12RenderingContext} gl - The webgl rendering context.
    */
-  constructor(gl: WebGL12RenderingContext) {
+  constructor(gl?: WebGL12RenderingContext) {
     super(gl, 'PointsShader')
     this.setShaderStage('VERTEX_SHADER', vert)
     this.setShaderStage('FRAGMENT_SHADER', frag)
@@ -48,3 +48,5 @@ material.addParameter(new MaterialColorParam('BaseColor', new Color(1.0, 1, 0.5)
 material.addParameter(new NumberParameter('PointSize', 2))
 material.addParameter(new NumberParameter('Overlay', 0.00002))
 shaderLibrary.registerMaterialTemplate('PointsShader', material)
+
+Registry.register('PointsShader', PointsShader)

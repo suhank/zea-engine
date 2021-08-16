@@ -1,7 +1,9 @@
 /* eslint-disable require-jsdoc */
 import { Color } from '../../Math/index'
 import { Registry } from '../../Registry'
+import { Material, ColorParameter, NumberParameter } from '../../SceneTree'
 import { GLShader } from '../GLShader'
+import { shaderLibrary } from '../ShaderLibrary'
 
 import './GLSL/index'
 // @ts-ignore
@@ -48,6 +50,14 @@ class FatPointsShader extends GLShader {
     return false
   }
 }
+
+const material = new Material('LinesShader_template')
+material.addParameter(new ColorParameter('BaseColor', new Color(1.0, 1, 0.5)))
+material.addParameter(new NumberParameter('PointSize', 1.0, [0, 1]))
+material.addParameter(new NumberParameter('BorderWidth', 0.2))
+material.addParameter(new NumberParameter('Overlay', 0.0))
+
+shaderLibrary.registerMaterialTemplate('FatPointsShader', material)
 
 Registry.register('FatPointsShader', FatPointsShader)
 

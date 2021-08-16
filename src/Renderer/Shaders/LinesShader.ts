@@ -2,15 +2,16 @@
 import { Color } from '../../Math/Color'
 import { Registry } from '../../Registry'
 import { GLShader } from '../GLShader'
+import { Material } from '../../SceneTree/Material'
+import { shaderLibrary } from '../ShaderLibrary'
+import { MaterialColorParam, MaterialFloatParam, NumberParameter } from '../..'
 
 import './GLSL/index'
 // @ts-ignore
 import vert from './Lines.vert'
 // @ts-ignore
 import frag from './Lines.frag'
-import { Material } from '../../SceneTree/Material'
-import { shaderLibrary } from '..'
-import { MaterialColorParam, MaterialFloatParam, NumberParameter } from '../..'
+
 class LinesShader extends GLShader {
   /**
    * Create a GL shader.

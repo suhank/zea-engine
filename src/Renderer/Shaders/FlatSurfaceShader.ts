@@ -2,32 +2,24 @@
 import { Color } from '../../Math/Color'
 import { Registry } from '../../Registry'
 import { GLShader } from '../GLShader'
+import { Material, MaterialColorParam } from '../../SceneTree'
+import { shaderLibrary } from '../ShaderLibrary'
 
 import './GLSL/index'
 // @ts-ignore
 import vert from './FlatSurface.vert'
 // @ts-ignore
 import frag from './FlatSurface.frag'
-import { Material, MaterialColorParam } from '../../SceneTree'
-import { shaderLibrary } from '../ShaderLibrary'
 
 class FlatSurfaceShader extends GLShader {
   /**
    * Create a GL shader.
    * @param {WebGL12RenderingContext} gl - The webgl rendering context.
    */
-  constructor(gl: WebGL12RenderingContext) {
+  constructor(gl?: WebGL12RenderingContext) {
     super(gl, 'FlatSurfaceShader')
     this.setShaderStage('VERTEX_SHADER', vert)
     this.setShaderStage('FRAGMENT_SHADER', frag)
-  }
-
-  static getGeomDataShaderName() {
-    return 'StandardSurfaceGeomDataShader'
-  }
-
-  static getSelectedShaderName() {
-    return 'StandardSurfaceSelectedGeomsShader'
   }
 
   /**
@@ -44,14 +36,6 @@ class FlatSurfaceShader extends GLShader {
     matData[3] = baseColor.a
     return matData
   }
-
-  // static getGeomDataShaderName() {
-  //   return 'StandardSurfaceGeomDataShader'
-  // }
-
-  // static getSelectedShaderName() {
-  //   return 'StandardSurfaceSelectedGeomsShader'
-  // }
 }
 
 export { FlatSurfaceShader }
@@ -59,3 +43,5 @@ export { FlatSurfaceShader }
 const material = new Material('StandardSurfaceShader_template')
 material.addParameter(new MaterialColorParam('BaseColor', new Color(1.0, 1, 0.5)))
 shaderLibrary.registerMaterialTemplate('FlatSurfaceShader', material)
+
+Registry.register('FlatSurfaceShader', FlatSurfaceShader)
