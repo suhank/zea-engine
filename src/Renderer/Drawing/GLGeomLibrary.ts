@@ -29,7 +29,7 @@ class GLGeomLibrary extends EventEmitter {
   protected shaderBindings: Record<string, any>
   protected bufferNeedsRealloc: boolean
   protected attributesAllocator: Allocator1D
-  protected dirtyGeomIndices: Set<unknown>
+  protected dirtyGeomIndices: Set<number>
   protected geomVertexOffsets: Int32Array
   protected geomVertexCounts: Int32Array
   protected numIndices: number

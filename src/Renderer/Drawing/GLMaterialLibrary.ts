@@ -13,7 +13,7 @@ class GLMaterialLibrary extends EventEmitter {
   protected materialIndices: Record<any, any> = {}
   protected glMaterials: Record<any, any> = {}
   protected freeIndices: any[] = []
-  protected dirtyIndices: Set<unknown> = new Set()
+  protected dirtyIndices: Set<number>
   protected materialsAllocator = new Allocator1D()
   protected materialsTexture: any
 
