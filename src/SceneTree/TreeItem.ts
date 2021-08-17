@@ -150,7 +150,7 @@ class TreeItem extends BaseItem {
         // this.__ownerItem.on('globalXfoChanged', this._setGlobalXfoDirty)
       }
     } else {
-      this.globalXfoOp.getInput('ParentGlobal').setParam(null)
+      this.globalXfoOp.getInput('ParentGlobal').setParam(undefined)
     }
     this.updateVisibility()
   }
