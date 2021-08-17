@@ -49,9 +49,9 @@ class MaterialFloatParam extends NumberParameter implements IBinaryReader {
   /**
    * Sets `BaseImage` texture value in parameter.
    *
-   * @param {BaseImage | undefined} value - The value value.
+   * @param {BaseImage | null} value - The value value.
    */
-  setImage(value: BaseImage | undefined): void {
+  setImage(value: BaseImage | null): void {
     const disconnectImage = () => {
       // image.off('loaded', imageUpdated);
       // image.off('updated', imageUpdated);
