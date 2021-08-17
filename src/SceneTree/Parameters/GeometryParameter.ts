@@ -15,7 +15,7 @@ class GeometryParameter extends Parameter<BaseGeom> {
    * @param {BaseGeom} value - The value of the parameter.
    */
   constructor(name: string = '', value?: BaseGeom) {
-    super(name, null, 'Geometry')
+    super(name, undefined, 'Geometry')
 
     this.emitBoundingBoxDirtied = this.emitBoundingBoxDirtied.bind(this)
     if (value) {

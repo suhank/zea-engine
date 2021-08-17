@@ -34,7 +34,7 @@ class NameChangedEvent extends BaseEvent {
 class BaseItem extends ParameterOwner implements Owner {
   protected __metaData: Record<string, any>
   protected __name: string
-  protected __ownerItem: Owner
+  protected __ownerItem: Owner | undefined
   protected __path: string[]
   protected __selectable: boolean
   protected __selected: boolean
@@ -162,7 +162,7 @@ class BaseItem extends ParameterOwner implements Owner {
    *
    * @return {BaseItem} - Returns the current owner.
    */
-  getOwner(): Owner {
+  getOwner(): Owner | undefined {
     // return this.__private.get('ownerItem');
     return this.__ownerItem
   }
@@ -172,7 +172,7 @@ class BaseItem extends ParameterOwner implements Owner {
    *
    * @param {BaseItem} ownerItem - The new owner item.
    */
-  setOwner(ownerItem: BaseItem | Owner): void {
+  setOwner(ownerItem: BaseItem | Owner | undefined): void {
     // this.__private.set(ownerItem, ownerItem);
     if (this.__ownerItem !== ownerItem) {
       this.__ownerItem = ownerItem

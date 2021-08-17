@@ -13,7 +13,7 @@ class GLFbo {
   protected __createDepthTexture: boolean
   protected __clearColor: Color
   protected __depthTexture: WebGLTexture
-  protected __fbo: WebGLFramebuffer
+  protected __fbo: WebGLFramebuffer | null
   protected __prevBoundFbo: WebGLFramebuffer
   /**
    * Creates a GL Framebuffer Object
@@ -106,7 +106,7 @@ class GLFbo {
    *
    * @return {WebGLTexture} - The return value.
    */
-  getDepthTextureGL(): WebGLTexture{
+  getDepthTextureGL(): WebGLTexture {
     return this.__depthTexture
   }
 
@@ -134,7 +134,7 @@ class GLFbo {
   /**
    * Returns the ColorTexture of the Fbo
    */
-  get colorTexture(): GLTexture2D{
+  get colorTexture(): GLTexture2D {
     return this.__colorTexture
   }
 
