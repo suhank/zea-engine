@@ -12,9 +12,9 @@ class GLFbo {
   protected __colorTexture: GLTexture2D
   protected __createDepthTexture: boolean
   protected __clearColor: Color
-  protected __depthTexture: WebGLTexture
+  protected __depthTexture: WebGLTexture | null
   protected __fbo: WebGLFramebuffer | null
-  protected __prevBoundFbo: WebGLFramebuffer
+  protected __prevBoundFbo: WebGLFramebuffer | null
   /**
    * Creates a GL Framebuffer Object
    *
@@ -106,7 +106,7 @@ class GLFbo {
    *
    * @return {WebGLTexture} - The return value.
    */
-  getDepthTextureGL(): WebGLTexture {
+  getDepthTextureGL(): WebGLTexture | null {
     return this.__depthTexture
   }
 
@@ -385,7 +385,7 @@ class GLFbo {
    *
    * @param {RenderState} renderstate - The renderstate value.
    */
-  bind(renderstate: RenderState) {
+  bind(renderstate?: RenderState) {
     this.bindForWriting(renderstate)
   }
 

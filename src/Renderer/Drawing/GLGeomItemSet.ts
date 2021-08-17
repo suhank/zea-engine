@@ -17,10 +17,10 @@ class GLGeomItemSet extends EventEmitter {
   protected glgeomItems_freeIndices: number[]
   protected glgeomItemEventHandlers: any[]
   protected drawIdsArray: Float32Array
-  protected drawIdsBuffer: WebGLBuffer
+  protected drawIdsBuffer: WebGLBuffer | null
   protected drawIdsBufferDirty: boolean
   protected highlightedIdsArray: Float32Array
-  protected highlightedIdsBuffer: WebGLBuffer
+  protected highlightedIdsBuffer: WebGLBuffer | null
   protected highlightedIdsBufferDirty: boolean
   protected visibleItems: number[]
   protected highlightedItems: number[]
@@ -301,7 +301,7 @@ class GLGeomItemSet extends EventEmitter {
    * @param {WebGLBuffery} drawIdsBuffer - The drawIdsBuffer value.
    * @private
    */
-  __bindAndRender(renderstate: RenderState, itemIndices: number[], drawIdsBuffer: WebGLBuffer) {
+  __bindAndRender(renderstate: RenderState, itemIndices: number[], drawIdsBuffer: WebGLBuffer| null) {
     const gl = this.gl
     const unifs = renderstate.unifs
 

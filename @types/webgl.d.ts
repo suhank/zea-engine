@@ -9,7 +9,7 @@ interface WebGL12RenderingContext extends WebGLRenderingContext {
   setupInstancedQuad: any
   __quadVertexIdsBuffer: any
   __quadattrbuffers: any
-  __quadIndexBuffer: WebGLBuffer
+  __quadIndexBuffer: WebGLBuffer | null
 
   // GLBaseRenderer.ts
   renderer: any

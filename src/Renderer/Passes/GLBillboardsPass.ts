@@ -26,7 +26,7 @@ class GLBillboardsPass extends GLPass {
   protected prevSortCameraPos: Vec3
   protected atlas: GLImageAtlas
   protected indexArrayUpdateNeeded: boolean
-  protected instanceIdsBuffer: WebGLBuffer
+  protected instanceIdsBuffer: WebGLBuffer| null
   protected indexArray: Float32Array
 
   protected glshader: GLShader

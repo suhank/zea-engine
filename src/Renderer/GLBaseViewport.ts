@@ -29,7 +29,7 @@ class GLBaseViewport extends ParameterOwner {
   protected renderer: GLRenderer
   protected __renderer: GLRenderer
   protected __doubleClickTimeMSParam: NumberParameter
-  protected __fbo: WebGLFramebuffer
+  protected __fbo: WebGLFramebuffer | null
   protected __ongoingPointers: any[]
   protected __backgroundColor: Color
   protected quad: GLMesh
@@ -44,7 +44,7 @@ class GLBaseViewport extends ParameterOwner {
   protected __height: number
   protected __canvasWidth: number
   protected __canvasHeight: number
-  protected fb: WebGLFramebuffer
+  protected fb: WebGLFramebuffer | null
   protected colorRenderbuffer: any
   protected depthBuffer: WebGLRenderbuffer
   protected EXT_frag_depth: EXT_frag_depth

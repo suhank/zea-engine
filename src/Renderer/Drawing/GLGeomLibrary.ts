@@ -36,7 +36,7 @@ class GLGeomLibrary extends EventEmitter {
   protected indicesAllocator: Allocator1D
   protected indicesCounts: Int32Array
   protected indicesOffsets: Int32Array
-  protected indexBuffer: WebGLBuffer
+  protected indexBuffer: WebGLBuffer| null
   protected __destroyed: boolean
   /**
    * Create a GLGeomLibrary.

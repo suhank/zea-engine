@@ -11,7 +11,7 @@ class GLGeom extends RefCounted {
   protected __shaderBindings: Record<any, any>
   protected buffersDirty: boolean
   protected genBufferOpts: Record<any, any>
-  protected __indexBuffer: WebGLBuffer
+  protected __indexBuffer: WebGLBuffer | null
   /**
    * Create a GL geom.
    * @param {WebGL12RenderingContext} gl - The webgl rendering context.

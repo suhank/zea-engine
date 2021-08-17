@@ -30,7 +30,7 @@ class GLBoundingBoxPass extends GLPass {
   protected __treeitemDataArray: Array<Array<number>>
   protected __tintColorArray: Array<Array<number>>
 
-  protected __instanceIdsBuffer: WebGLBuffer
+  protected __instanceIdsBuffer: WebGLBuffer | null
 
   protected __indexArray: Float32Array
   protected __drawItemsTexture: GLTexture2D

@@ -94,7 +94,7 @@ class GeomShaderBinding extends IGeomShaderBinding {
   protected __gl: WebGL12RenderingContext
   protected __shaderAttrs: any
   protected __glattrbuffers: any
-  protected __indexBuffer: WebGLBuffer
+  protected __indexBuffer: WebGLBuffer | null
   /**
    * Create a geom shader binding.
    * @param {WebGL12RenderingContext} gl - The webgl rendering context.
@@ -102,7 +102,7 @@ class GeomShaderBinding extends IGeomShaderBinding {
    * @param {any} geomAttrBuffers - The geomAttrBuffers value.
    * @param {any} indexBuffer - The index buffer.
    */
-  constructor(gl: WebGL12RenderingContext, shaderAttrs: any, geomAttrBuffers: any, indexBuffer: WebGLBuffer) {
+  constructor(gl: WebGL12RenderingContext, shaderAttrs: any, geomAttrBuffers: any, indexBuffer: WebGLBuffer | null) {
     super()
     this.__gl = gl
     this.__shaderAttrs = shaderAttrs
@@ -190,9 +190,9 @@ class GeomShaderBinding extends IGeomShaderBinding {
  * @private
  */
 class VAOGeomShaderBinding extends IGeomShaderBinding {
-  protected __vao: WebGLVertexArrayObject
+  protected __vao: WebGLVertexArrayObject | null
   protected __gl: WebGL12RenderingContext
-  protected __indexBuffer: WebGLBuffer
+  protected __indexBuffer: WebGLBuffer | null
   /**
    * Create VAO geom shader binding.
    * @param {WebGL12RenderingContext} gl - The webgl rendering context.
@@ -204,7 +204,7 @@ class VAOGeomShaderBinding extends IGeomShaderBinding {
     gl: WebGL12RenderingContext,
     shaderAttrs: Record<string, any>,
     geomAttrBuffers: Record<string, any>,
-    indexBuffer: WebGLBuffer
+    indexBuffer: WebGLBuffer | null
   ) {
     super()
     this.__gl = gl
@@ -297,7 +297,7 @@ function generateShaderGeomBinding(
   gl: WebGL12RenderingContext,
   shaderAttrs: Record<string, any>,
   geomAttrBuffers: Record<string, any>,
-  indexBuffer: WebGLBuffer
+  indexBuffer: WebGLBuffer | null
 ): IGeomShaderBinding {
   if (gl.createVertexArray == null) {
     return new GeomShaderBinding(gl, shaderAttrs, geomAttrBuffers, indexBuffer)

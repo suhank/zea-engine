@@ -16,7 +16,7 @@ class GLLinesPass extends GLOpaqueGeomsPass {
   protected linesGeomDataBuffer: GLTexture2D
   protected fattenLinesShader: FattenLinesShader
   protected quad: GLMesh
-  protected fbo: WebGLFramebuffer
+  protected fbo: WebGLFramebuffer | null
   /**
    * Create a GL opaque geoms pass.
    */
@@ -42,6 +42,7 @@ class GLLinesPass extends GLOpaqueGeomsPass {
     if (geom instanceof Lines || geom instanceof LinesProxy || geom instanceof Points || geom instanceof PointsProxy) {
       return true
     }
+    return false
   }
 
   /**
