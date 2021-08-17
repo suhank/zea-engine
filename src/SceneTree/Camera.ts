@@ -539,6 +539,10 @@ class Camera extends TreeItem {
         const yP3 = yP2.add(new Vec2(-Math.sin(angleY), -Math.cos(angleY)))
         const yP = Vec2.intersectionOfLines(yP0, yP1, yP2, yP3)
 
+        if (xP === null || yP === null) {
+          console.warn('xP or yP === null')
+          return
+        }
         dolly = Math.max(xP.y, yP.y)
         const pan = new Vec3(xP.x, yP.x, dolly)
         globalXfo.tr.addInPlace(globalXfo.ori.rotateVec3(pan))

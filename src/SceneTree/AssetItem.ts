@@ -448,7 +448,7 @@ class AssetItem extends TreeItem {
    * @param {TreeItem} src - The tree item to copy from.
    * @param {Record<any,any>} context - The context value.
    */
-  copyFrom(src: AssetItem, context: Record<any, any>): void {
+  copyFrom(src: AssetItem, context?: Record<any, any>): void {
     this.__geomLibrary = src.__geomLibrary
     this.__materials = src.__materials
     this.loaded = src.loaded
