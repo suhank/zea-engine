@@ -11,6 +11,7 @@ import GLGeomItemLibraryCullingWorker from 'web-worker:./GLGeomItemLibraryCullin
 import { GeomItem } from '../../SceneTree/GeomItem'
 import { GLBaseRenderer } from '../GLBaseRenderer'
 import { Material } from '../../SceneTree/Material'
+import { GLGeom } from './GLGeom'
 
 const pixelsPerItem = 6 // The number of RGBA pixels per draw item.
 
@@ -19,7 +20,7 @@ const pixelsPerItem = 6 // The number of RGBA pixels per draw item.
  */
 class GLGeomItemLibrary extends EventEmitter {
   protected renderer: GLBaseRenderer
-  protected glGeomItems: GLGeomItem[]
+  protected glGeomItems: Array<GLGeomItem | null>
   protected glGeomItemEventHandlers: any[]
   protected glGeomItemsMap: Record<number, number>
   protected glGeomItemsIndexFreeList: number[]
@@ -37,8 +38,8 @@ class GLGeomItemLibrary extends EventEmitter {
     super()
 
     this.renderer = renderer
-    this.glGeomItems = [undefined]
-    this.glGeomItemEventHandlers = [undefined]
+    this.glGeomItems = []
+    this.glGeomItemEventHandlers = []
     this.glGeomItemsMap = {}
     this.glGeomItemsIndexFreeList = []
     this.dirtyItemIndices = []
@@ -186,7 +187,7 @@ class GLGeomItemLibrary extends EventEmitter {
    * @return {number} - The index of GLGeomItem
    */
   addGeomItem(geomItem: GeomItem) {
-    let index = this.glGeomItemsMap[geomItem.getId()]
+    let index = this.glGeomItemsMap[geomItem.getId()] //  number | undefined
     if (index != undefined) {
       // Increment the ref count for the GLGeom
       return this.glGeomItems[index]
@@ -278,10 +279,10 @@ class GLGeomItemLibrary extends EventEmitter {
     if (newlyCulled.length == 0 && newlyUnCulled.length == 0) return
     // console.log('applyCullResults newlyCulled', newlyCulled.length, 'newlyUnCulled', newlyUnCulled.length)
     newlyCulled.forEach((index: number) => {
-      this.glGeomItems[index].setCulled(true)
+      this.glGeomItems[index]?.setCulled(true)
     })
     newlyUnCulled.forEach((index: number) => {
-      this.glGeomItems[index].setCulled(false)
+      this.glGeomItems[index]?.setCulled(false)
     })
     this.renderer.requestRedraw()
     // Used mostly to make our uni testing robust.
@@ -323,12 +324,12 @@ class GLGeomItemLibrary extends EventEmitter {
    * @param {number} index - The index value.
    * @return {GLGeomItem} - The GLGeomItem that wraps the provided GeomItem
    */
-  getGeomItem(index: number) {
+  getGeomItem(index: number): GeomItem | undefined {
     if (index >= this.glGeomItems.length) {
       console.warn('Invalid Draw Item id:' + index + ' NumItems:' + (this.glGeomItems.length - 1))
       return undefined
     }
-    return this.glGeomItems[index].geomItem
+    return this.glGeomItems[index]?.geomItem
   }
 
   /**
