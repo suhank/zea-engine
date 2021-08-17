@@ -24,7 +24,7 @@ class PointGrid extends ProceduralPoints {
   protected __xDivisions: NumberParameter
   protected __y: NumberParameter
   protected __yDivisions: NumberParameter
-  topologyParams: string[]
+  // topologyParams: string[]
 
   /**
    * Creates an instance of PointGrid.

@@ -14,7 +14,6 @@ class GLMesh extends GLGeom {
   protected __numTriangles: number
   protected __numRenderVerts: number
   protected __vao: WebGLVertexArrayObject
-  protected __geom: Mesh
   protected __wireframesVao: WebGLVertexArrayObject
   protected __ext: any
   protected __numWireIndices: number
@@ -130,7 +129,8 @@ class GLMesh extends GLGeom {
   generateWireframesVAO() {
     if (!this.__vao) return false
 
-    if (!this.__geom.edgeVerts) this.__geom.genTopologyInfo()
+    const geomMesh = <Mesh>this.__geom
+    if (!geomMesh.edgeVerts) geomMesh.genTopologyInfo()
 
     // Generate the wireframes VAO.
     // It can share buffers with the regular VAO, but provide a different index buffer.
@@ -140,7 +140,7 @@ class GLMesh extends GLGeom {
 
     const gl = this.__gl
     const wireframeIndexBuffer = gl.createBuffer()
-    const wireframeIndices = Uint32Array.from(this.__geom.edgeVerts)
+    const wireframeIndices = Uint32Array.from(geomMesh.edgeVerts)
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, wireframeIndexBuffer)
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, wireframeIndices, gl.STATIC_DRAW)
 
@@ -188,6 +188,7 @@ class GLMesh extends GLGeom {
   generateHardEdgesVAO() {
     if (!this.__vao) return false
 
+    const geomMesh = <Mesh>this.__geom
     // generate the wireframes VAO.
     // It can share buffers with the regular VAO, but provide a different index buffer.
     if (this.__hardEdgesVao) this.__ext.deleteVertexArrayOES(this.__hardEdgesVao)
@@ -196,7 +197,7 @@ class GLMesh extends GLGeom {
 
     const gl = this.__gl
     const hardEdgeIndexBuffer = gl.createBuffer()
-    const hardEdgeIndices = this.__geom.computeHardEdgesIndices()
+    const hardEdgeIndices = geomMesh.computeHardEdgesIndices()
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, hardEdgeIndexBuffer)
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, hardEdgeIndices, gl.STATIC_DRAW)
 

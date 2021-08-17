@@ -12,7 +12,7 @@ import { BaseImage } from '../SceneTree/BaseImage'
  * @private
  */
 class GLHDRImage extends GLTexture2D {
-  protected __gl: WebGL12RenderingContext
+ //  protected __gl: WebGL12RenderingContext
   protected __hdrImage: VLHImage
   protected __fbo: GLFbo
   __srcLDRTex: any

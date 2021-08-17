@@ -21,11 +21,11 @@ interface LayoutItem {
  * @private
  */
 class GLImageAtlas extends GLRenderTarget {
-  protected __gl: WebGL12RenderingContext
+  // protected __gl: WebGL12RenderingContext
   protected __name: string
   protected __formatParam: string
   protected __typeParam: string
-  clearColor: Color
+  // clearColor: Color
   protected __subImages: any[] // GLTexture2D
   protected __layoutNeedsRegeneration: boolean
   protected __asyncCount: number

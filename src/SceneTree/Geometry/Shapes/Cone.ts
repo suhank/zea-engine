@@ -28,7 +28,7 @@ class Cone extends ProceduralMesh {
   protected __detailParam: NumberParameter
   protected __heightParam: NumberParameter
   protected __radiusParam: NumberParameter
-  topologyParams: string[]
+  // topologyParams: string[]
 
   /**
    * Create a cone.

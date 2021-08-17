@@ -24,7 +24,7 @@ class BaseImage extends BaseItem {
   protected wrapT: string
   protected minFilter: string
   protected magFilter: string
-  protected loaded: boolean
+  loaded: any // TODO: acts as a boolean and a class with method disconnect scope
   // updated: any
   /**
    * Creates an instance of BaseImage.

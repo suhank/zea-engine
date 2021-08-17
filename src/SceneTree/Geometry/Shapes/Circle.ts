@@ -21,7 +21,7 @@ class Circle extends ProceduralLines {
   protected __angle: NumberParameter
   protected __numSegments: NumberParameter
   protected __radius: NumberParameter
-  topologyParams: string[]
+  // topologyParams: string[]
 
   /**
    * Creates an instance of Circle.

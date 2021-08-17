@@ -30,7 +30,7 @@ class Cylinder extends ProceduralMesh {
   protected __loopsParam: NumberParameter
   protected __radiusParam: NumberParameter
   protected __sidesParam: NumberParameter
-  topologyParams: string[]
+  // topologyParams: string[]
 
   /**
    * Create a cylinder.

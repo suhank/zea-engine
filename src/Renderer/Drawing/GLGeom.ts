@@ -1,4 +1,4 @@
-import { BaseGeom, RefCounted } from '../../SceneTree/index'
+import { BaseGeom, Mesh, RefCounted } from '../../SceneTree/index'
 import { generateShaderGeomBinding } from './GeomShaderBinding'
 
 /** Class representing a GL geom.
@@ -6,7 +6,7 @@ import { generateShaderGeomBinding } from './GeomShaderBinding'
  */
 class GLGeom extends RefCounted {
   protected __gl: WebGL12RenderingContext
-  protected __geom: BaseGeom
+  protected __geom: BaseGeom | Mesh
   protected __glattrbuffers: Record<any, any>
   protected __shaderBindings: Record<any, any>
   protected buffersDirty: boolean
@@ -17,7 +17,7 @@ class GLGeom extends RefCounted {
    * @param {WebGL12RenderingContext} gl - The webgl rendering context.
    * @param {BaseGeom} geom - A geometry object
    */
-  constructor(gl: WebGL12RenderingContext, geom: BaseGeom) {
+  constructor(gl: WebGL12RenderingContext, geom: BaseGeom ) {
     super()
     this.__gl = gl
     this.__geom = geom

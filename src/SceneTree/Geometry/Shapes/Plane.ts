@@ -26,7 +26,7 @@ class Plane extends ProceduralMesh {
   protected __detailYParam: NumberParameter
   protected __sizeXParam: NumberParameter
   protected __sizeYParam: NumberParameter
-  topologyParams: string[]
+  // topologyParams: string[]
 
   /**
    * Create a plane.

@@ -25,7 +25,7 @@ class Grid extends ProceduralLines {
   protected __xParam: NumberParameter
   protected __yDivisionsParam: NumberParameter
   protected __yParam: NumberParameter
-  topologyParams: string[]
+  // topologyParams: string[]
 
   /**
    * Create a grid.

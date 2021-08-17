@@ -30,7 +30,7 @@ import { StateChangedEvent } from '../../Utilities/Events/StateChangedEvent'
 class VRViewport extends GLBaseViewport {
   protected __projectionMatricesUpdated: boolean
   protected __stageTreeItem: TreeItem
-  __renderer: any // GLBaseRenderer
+  // __renderer: any // GLBaseRenderer
   protected __vrhead: VRHead
   protected controllersMap: Record<any, any>
   protected controllers: any[]

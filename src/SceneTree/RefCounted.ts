@@ -10,7 +10,7 @@ let counter = 0
  * @private
  */
 class RefCounted extends EventEmitter {
-  __id: any
+  // __id: any
   protected __refs: any[]
   protected __destroyed: boolean
   /**

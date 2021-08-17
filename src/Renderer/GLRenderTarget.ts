@@ -20,7 +20,7 @@ class GLRenderTarget extends EventEmitter {
   protected flipY: any
   protected width: number
   protected height: number
-  protected clearColor: Color
+  clearColor: Color
   protected colorMask: any[]
   protected textureType: any
 

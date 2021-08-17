@@ -22,7 +22,7 @@ import { Vec3Attribute } from '../Vec3Attribute'
 class Disc extends ProceduralMesh {
   protected __radiusParam: NumberParameter
   protected __sidesParam: NumberParameter
-  topologyParams: string[]
+  // topologyParams: string[]
 
   /**
    * Creates an instance of Disc.
