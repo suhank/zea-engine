@@ -10,9 +10,9 @@ import vert from './EnvProjection.vert'
 import LatLongEnvProjectionFrag from './LatLongEnvProjection.frag'
 // @ts-ignore
 import OctahedralEnvProjectionFrag from './OctahedralEnvProjection.frag'
-import { shaderLibrary } from '..'
-import { Material, MaterialColorParam, NumberParameter } from '../..'
-import { Vec3Parameter } from '../../SceneTree'
+import { shaderLibrary } from '../ShaderLibrary'
+
+import { Material, Vec3Parameter } from '../../SceneTree'
 
 class EnvProjectionShader extends GLShader {
   /**

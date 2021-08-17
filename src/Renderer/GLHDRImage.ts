@@ -4,7 +4,8 @@ import { GLFbo } from './GLFbo'
 import { generateShaderGeomBinding } from './Drawing/GeomShaderBinding'
 import { VLHImage } from '../SceneTree/Images/VLHImage'
 import { BaseEvent } from '../Utilities/BaseEvent'
-import { Color } from '..'
+import { Color } from '../Math/Color'
+import { BaseImage } from '../SceneTree/BaseImage'
 
 /** Class representing a GL high dynamic range (HDR) image.
  * @extends GLTexture2D
@@ -13,7 +14,7 @@ import { Color } from '..'
 class GLHDRImage extends GLTexture2D {
   protected __gl: WebGL12RenderingContext
   protected __hdrImage: VLHImage
-  protected __fbo: GLFbo // TODO: rename? other __fbo members are type WebGLBuffer
+  protected __fbo: GLFbo
   __srcLDRTex: any
   protected __unpackHDRShader: any
   protected __shaderBinding: any
@@ -45,7 +46,7 @@ class GLHDRImage extends GLTexture2D {
    *
    * @return {BaseImage} - The return value.
    */
-  getImage() {
+  getImage(): BaseImage {
     return this.__hdrImage
   }
 
@@ -151,7 +152,7 @@ class GLHDRImage extends GLTexture2D {
    * @param {Record<any,any>} bindings - The bindings value.
    * @return {boolean} - The return value.
    */
-  bindToUniform(renderstate: RenderState, unif: WebGLUniformLocation, bindings?: Record<any, any>): boolean{
+  bindToUniform(renderstate: RenderState, unif: WebGLUniformLocation, bindings?: Record<any, any>): boolean {
     return super.bindToUniform(renderstate, unif, bindings)
   }
 
