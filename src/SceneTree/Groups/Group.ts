@@ -196,10 +196,8 @@ class Group extends BaseGroup {
     if (initialXfoMode == GROUP_XFO_MODES.manual) {
       // The xfo is manually set by the current global xfo.
       xfo = this.getParameter('GlobalXfo').getValue()
-    } else if (initialXfoMode == GROUP_XFO_MODES.first) {
-      if (items[0] instanceof TreeItem) {
-        xfo = items[0].getParameter('GlobalXfo').getValue()
-      }
+    } else if (initialXfoMode == GROUP_XFO_MODES.first && items[0] instanceof TreeItem) {
+      xfo = items[0].getParameter('GlobalXfo').getValue()
     } else if (initialXfoMode == GROUP_XFO_MODES.average) {
       xfo = new Xfo()
       xfo.ori.set(0, 0, 0, 0)
@@ -258,7 +256,7 @@ class Group extends BaseGroup {
       const material = this.getParameter('Material').getValue()
 
       // TODO: Bind an operator
-      Array.from(this.__itemsParam.getValue()).forEach((item: TreeItem) => {
+      Array.from(<Set<TreeItem>>this.__itemsParam.getValue()).forEach((item: TreeItem) => {
         item.traverse((treeItem: TreeItem) => {
           if (treeItem instanceof TreeItem && treeItem.hasParameter('Material')) {
             const p = treeItem.getParameter('Material')
@@ -296,7 +294,7 @@ class Group extends BaseGroup {
       const cutAwayVector = this.getParameter('CutPlaneNormal').getValue()
       const cutAwayDist = this.getParameter('CutPlaneDist').getValue()
 
-      Array.from(this.__itemsParam.getValue()).forEach((item: TreeItem) => {
+      Array.from(<Set<TreeItem>>this.__itemsParam.getValue()).forEach((item: TreeItem) => {
         item.traverse((treeItem: TreeItem) => {
           if (treeItem instanceof BaseGeomItem) {
             treeItem.setCutawayEnabled(cutEnabled)
