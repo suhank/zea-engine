@@ -292,7 +292,7 @@ class BinReader {
    * @param {boolean} clone - The clone param.
    * @return {Float32Array} - The return value.
    */
-  loadFloat32Array(size: number = undefined, clone = false) {
+  loadFloat32Array(size?: number, clone = false) {
     if (size == undefined) size = this.loadUInt32()
     if (size == 0) return new Float32Array()
     this.readPad(4)

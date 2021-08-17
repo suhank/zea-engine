@@ -44,7 +44,7 @@ class MaterialParameter extends Parameter<Material> {
    *
    * @param {Material} material - The material param.
    */
-  setValue(material: Material): void {
+  setValue(material?: Material): void {
     // 0 == normal set. 1 = changed via cleaner fn, 2 = change by loading/cloning code.
     if (this.value !== material) {
       if (this.value) {

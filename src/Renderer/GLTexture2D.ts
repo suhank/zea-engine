@@ -37,7 +37,7 @@ class GLTexture2D extends RefCounted {
   invert: boolean
   alphaFromLuminance: boolean
 
-  protected __gltex: WebGLTexture
+  protected __gltex: WebGLTexture | null
   protected __typeParam: string
   protected __formatParam: string
   /**
@@ -282,6 +282,10 @@ class GLTexture2D extends RefCounted {
           case gl.RGBA:
             numChannels = 4
             break
+          default:
+            console.warn("Reaching default case: numChannels:=1")
+            numChannels = 1
+            break
         }
         if (data.length != numPixels * numChannels) {
           console.warn(
@@ -501,7 +505,7 @@ class GLTexture2D extends RefCounted {
    *
    * @return {WebGLTexture} - The return value.
    */
-  get glTex(): WebGLTexture {
+  get glTex(): WebGLTexture | null {
     return this.__gltex
   }
 
@@ -510,8 +514,8 @@ class GLTexture2D extends RefCounted {
    *
    * @return {WebGLTexture} - The return value.
    */
-  getTexHdl(): WebGLTexture {
-    return this.__gltex
+  getTexHdl(): WebGLTexture | null {
+    return this.__gltex 
   }
 
   /**
@@ -584,7 +588,7 @@ class GLTexture2D extends RefCounted {
       this.__image.setMetadata('gltexture', undefined)
     }
     this.__gl.deleteTexture(this.__gltex)
-    this.__gltex = undefined
+    this.__gltex = null
   }
 }
 

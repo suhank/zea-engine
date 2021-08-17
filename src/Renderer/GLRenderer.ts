@@ -61,9 +61,6 @@ class GLRenderer extends GLBaseRenderer {
     this.__tonemap = true
     this.__gamma = 2.2
 
-    this.__glEnvMap = undefined
-    this.__glBackgroundMap = undefined
-
     this.__displayEnvironment = true
     this.__debugMode = 0
     this._planeDist = 0.0

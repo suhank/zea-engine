@@ -56,7 +56,7 @@ class GLViewport extends GLBaseViewport {
   protected depthRange: number[]
   protected __cameraXfo: Xfo
   protected __cameraMat: Mat4
-  protected __viewMat: Mat4
+  protected __viewMat: Mat4 | null
 
   protected __geomDataBufferInvalid: boolean
   protected __screenPos: Vec2
@@ -86,9 +86,8 @@ class GLViewport extends GLBaseViewport {
 
     // //////////////////////////////////
     // Setup GeomData Fbo
-    this.__geomDataBuffer = undefined
     this.__geomDataBufferSizeFactor = 1
-    this.__geomDataBufferFbo = undefined
+
     this.debugGeomShader = false
 
     const gl = this.__renderer.gl
@@ -525,7 +524,7 @@ class GLViewport extends GLBaseViewport {
           passId = Math.floor(geomData[1] / 64)
         }
 
-        const geomItemAndDist = this.__renderer.getPass(passId).getGeomItemAndDist(geomData)
+        const geomItemAndDist = this.__renderer.getPass(passId)?.getGeomItemAndDist(geomData)
         if (geomItemAndDist) {
           if (!geomItemAndDist.geomItem.getSelectable()) continue
 
