@@ -214,7 +214,7 @@ class DriveAdapter {
       parentId = key
     }
 
-    const key = StringFunctions.hashStr(filename)
+    const key = StringFunctions.hashStr('' + filename)
     const resource = {
       name: filename,
       url,
