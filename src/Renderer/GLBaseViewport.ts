@@ -46,7 +46,7 @@ class GLBaseViewport extends ParameterOwner {
   protected __canvasHeight: number
   protected fb: WebGLFramebuffer | null
   protected colorRenderbuffer: any
-  protected depthBuffer: WebGLRenderbuffer
+  protected depthBuffer: WebGLRenderbuffer | null
   protected EXT_frag_depth: EXT_frag_depth
   protected manipulator: any
   /**

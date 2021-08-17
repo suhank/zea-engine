@@ -3,7 +3,7 @@ interface RenderState {
   glShader?: GLShader
   shaderkey?: string
   shaderopts: Record<any, any> = {}
-  attrs: Record<any, any>= {}
+  attrs: Record<any, any> = {}
   unifs: Record<any, any> = {}
   directives?: any[]
 
@@ -22,13 +22,13 @@ interface RenderState {
 
   vrPresenting?: boolean
   supportsInstancing?: boolean
-  viewport?: GLBaseViewport
-  viewports?: GLBaseViewport[]
+  viewport?: Viewport
+  viewports?: Viewport[]
 
   bindViewports?: any
   bindRendererUnifs?: any
-  boundTextures: number = 0
-  boundRendertarget: WebGLFramebuffer | null = null
+  boundTextures: number
+  boundRendertarget: WebGLFramebuffer | null
 
 
   envMap?: GLEnvMap
@@ -42,7 +42,7 @@ interface RenderState {
   depthRange?: Record<any, any>
 }
 
-interface viewport {
+interface Viewport {
   region?: any
   viewMatrix?: Mat4
   projectionMatrix?: Mat4

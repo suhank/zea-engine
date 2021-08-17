@@ -335,13 +335,13 @@ class GLRenderer extends GLBaseRenderer {
       ],
     }
 
-    this.__rayCastRenderTarget.bindForWriting(renderstate, true)
+    this.__rayCastRenderTarget.bindForWriting(<RenderState>renderstate, true)
     gl.enable(gl.CULL_FACE)
     gl.enable(gl.DEPTH_TEST)
     gl.depthFunc(gl.LEQUAL)
     gl.depthMask(true)
 
-    this.drawSceneGeomData(renderstate, mask)
+    this.drawSceneGeomData(<RenderState>renderstate, mask)
     gl.finish()
     this.__rayCastRenderTarget.unbindForWriting()
     this.__rayCastRenderTarget.bindForReading()
@@ -370,7 +370,7 @@ class GLRenderer extends GLBaseRenderer {
 
     // Mask the pass id to be only the first 6 bits of the integer.
     const passId = Math.round(geomData[0]) & (64 - 1)
-    const geomItemAndDist = this.getPass(passId).getGeomItemAndDist(geomData)
+    const geomItemAndDist = this.getPass(passId)?.getGeomItemAndDist(geomData)
 
     if (geomItemAndDist) {
       const intersectionPos = ray.start.add(ray.dir.scale(geomItemAndDist.dist))
@@ -397,7 +397,7 @@ class GLRenderer extends GLBaseRenderer {
    * @return {object} - The object containing the ray cast results.
    */
   raycastCluster(xfo: Xfo, ray: Ray, dist: number, area = 0.01, mask = ALL_PASSES) {
-    const gl = <WebGL12RenderingContext>this.__gl
+    const gl = this.__gl
 
     if (!this.__rayCastRenderTarget) {
       this.__rayCastRenderTarget = new GLRenderTarget(gl, {
@@ -428,7 +428,7 @@ class GLRenderer extends GLBaseRenderer {
     const renderstate = {
       cameraMatrix: xfo.toMat4(),
       viewports: [
-        {
+        <Viewport>{
           region,
           viewMatrix: xfo.inverse().toMat4(),
           projectionMatrix: this.__rayCastRenderTargetProjMatrix,
@@ -437,13 +437,13 @@ class GLRenderer extends GLBaseRenderer {
       ],
     }
 
-    this.__rayCastRenderTarget.bindForWriting(renderstate, true)
+    this.__rayCastRenderTarget.bindForWriting(<RenderState>renderstate, true)
     gl.enable(gl.CULL_FACE)
     gl.enable(gl.DEPTH_TEST)
     gl.depthFunc(gl.LEQUAL)
     gl.depthMask(true)
 
-    this.drawSceneGeomData(renderstate, mask)
+    this.drawSceneGeomData(<RenderState>renderstate, mask)
     gl.finish()
     this.__rayCastRenderTarget.unbindForWriting()
     this.__rayCastRenderTarget.bindForReading()
