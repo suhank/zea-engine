@@ -352,7 +352,7 @@ class Material extends BaseItem {
    * @param {Material} src - The material to copy from.
    * @param {object} context - The context value.
    */
-  copyFrom(src: Material, context: Record<any, any>) {
+  copyFrom(src: Material, context?: Record<any, any>) {
     this.setShaderName(src.getShaderName())
     super.copyFrom(src, context)
   }
