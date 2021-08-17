@@ -220,7 +220,8 @@ class Cylinder extends ProceduralMesh {
         positions.getValueRef(numVertices - 2).set(0.0, 0.0, height * (baseZAtZero ? 1.0 : 0.5))
       }
     }
-
+    this.dirtyTopology = false
+    this.dirtyVertices = false
     this.computeVertexNormals()
   }
 }
