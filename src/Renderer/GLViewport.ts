@@ -533,8 +533,11 @@ class GLViewport extends GLBaseViewport {
         }
       }
 
-      return [...geomItems].filter((geomItem: GeomItem) => {
-        if (!geomItem.getSelectable()) return false
+      // TODO: remove any type
+      return [...geomItems].filter((geomItem: any) => {
+        if (geomItem) {
+          if (geomItem.getSelectable()) return false
+        }
 
         return true
       })
