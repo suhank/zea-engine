@@ -16,7 +16,7 @@ class Operator extends BaseItem {
    * Create an operator.
    * @param {string} name - The name value.
    */
-  constructor(name?: string) {
+  constructor(name: string = '') {
     super(name)
     this.__inputs = new Map()
     this.__outputs = new Map()
@@ -70,7 +70,7 @@ class Operator extends BaseItem {
     if (!(input instanceof OperatorInput)) {
       throw new Error(`removeInput only accepts string or OperatorInput`)
     }
-    if (input.getParam()) input.setParam(null)
+    if (input.getParam()) input.setParam()
     this.__inputs.delete(input.getName())
   }
 
@@ -131,7 +131,7 @@ class Operator extends BaseItem {
     if (!(output instanceof OperatorOutput)) {
       throw new Error(`removeOutput only accepts string or OperatorInput`)
     }
-    if (output.getParam()) output.setParam(null)
+    if (output.getParam()) output.setParam()
     this.__outputs.delete(output.getName())
   }
 

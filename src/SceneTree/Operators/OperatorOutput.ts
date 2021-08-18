@@ -84,7 +84,7 @@ class OperatorOutput extends EventEmitter {
    * @param {Parameter} param - The param value.
    * @param {number} index - The index to bind at in the Parameter.
    */
-  setParam(param: Parameter<unknown>, index = -1): void {
+  setParam(param?: Parameter<unknown>, index = -1): void {
     if (this._param) {
       this._param.unbindOperator(this)
     }
