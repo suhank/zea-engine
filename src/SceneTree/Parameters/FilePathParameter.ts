@@ -73,13 +73,14 @@ class FilePathParameter extends Parameter<string> {
    *
    * @return {string} - The return value.
    */
-  getStem(): string | undefined {
+  getStem(): string | null{
     const filename = this.getFilename()
     if (filename) {
       const parts = filename.split('.')
       if (parts.length == 2) return parts[0]
       else return filename
     }
+    return null
   }
 
   /**
