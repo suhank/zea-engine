@@ -9,3 +9,16 @@ type TypedArray =
   | Float32Array
   | Float64Array
 
+  interface SystemDescription {
+    isMobileDevice: boolean;
+    isIOSDevice: boolean;
+    browserName: string;
+    webGLSupported: boolean;
+    deviceCategory: string;
+    hardwareConcurrency: number;
+    fullVersion?: any;
+    majorVersion?:  any;
+    appName?:  any;
+    userAgent?:  any;
+    gpuDesc?:  any;
+  }

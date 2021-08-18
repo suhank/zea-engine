@@ -1,3 +1,5 @@
+// import { SystemDesc } from '.'
+
 // eslint-disable-next-line require-jsdoc
 function isIOSDevice() {
   return (
@@ -153,7 +155,7 @@ function getGPUDesc() {
   }
 }
 
-const SystemDesc = (function () {
+const SystemDesc: SystemDescription = (function () {
   if (!globalThis.navigator) {
     // When running in NodeJS
     return {
@@ -267,7 +269,7 @@ const SystemDesc = (function () {
 
   let hardwareConcurrency = globalThis.navigator.hardwareConcurrency
   if (!hardwareConcurrency) {
-    if (SystemDesc.isMobileDevice) hardwareConcurrency = 4
+    if (isMobile) hardwareConcurrency = 4
     else hardwareConcurrency = 6
   }
 
