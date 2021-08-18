@@ -103,7 +103,7 @@ class GLLinesPass extends GLOpaqueGeomsPass {
    * The drawGeomData method.
    * @param {RenderState} renderstate - The object tracking the current state of the renderer
    */
-  drawGeomData(renderstate: RenderState) {
+  drawGeomData(renderstate: GeomDataRenderState) {
     const gl = this.__gl
     //  Note: lines in VR are not fattened...
     if (renderstate.geomDataFbo) {

@@ -53,7 +53,6 @@ class GLViewport extends GLBaseViewport {
   protected __y: number
   protected region: any
 
-
   protected __cameraXfo: Xfo
   protected __cameraMat: Mat4
   protected __viewMat: Mat4 | null
@@ -353,15 +352,15 @@ class GLViewport extends GLBaseViewport {
    */
   renderGeomDataFbo() {
     if (this.__geomDataBufferFbo) {
-      const renderstate: RenderState = <RenderState>{}
-      this.__initRenderState(renderstate)
+      const geomDataRenderstate: GeomDataRenderState = <GeomDataRenderState>{}
+      this.__initRenderState(geomDataRenderstate)
 
       // Note: GLLinesPass binds a new Fbo, but shares this ones depth buffer.
-      renderstate.geomDataFbo = this.__geomDataBufferFbo
+      geomDataRenderstate.geomDataFbo = this.__geomDataBufferFbo
 
-      this.__geomDataBufferFbo.bindAndClear(renderstate)
+      this.__geomDataBufferFbo.bindAndClear(geomDataRenderstate)
 
-      this.__renderer.drawSceneGeomData(renderstate)
+      this.__renderer.drawSceneGeomData(geomDataRenderstate)
       this.__geomDataBufferInvalid = false
       this.__geomDataBufferFbo.unbind()
     }
@@ -884,7 +883,7 @@ class GLViewport extends GLBaseViewport {
     renderstate.viewScale = 1.0
     renderstate.region = this.region
     renderstate.cameraMatrix = this.__cameraMat
-    
+
     renderstate.viewport = this
     renderstate.viewports = [
       {

@@ -2,9 +2,9 @@ interface BaseRenderState {
   gl?: WebGL12RenderingContext
   glShader?: GLShader
   shaderkey?: string
-  shaderopts: Record<string, string> = {}
-  attrs: Record<string, Attribute> = {}
-  unifs: Record<string, Uniform> = {}
+  shaderopts: Record<string, string>
+  attrs: Record<string, Attribute>
+  unifs: Record<string, Uniform>
   directives?: string[]
 
   drawItemsTexture?: any
@@ -13,7 +13,7 @@ interface BaseRenderState {
 
   vrviewport?: any
 
-  passIndex?: number
+  passIndex: number
   pass?: string
 
   vrPresenting?: boolean
@@ -42,8 +42,8 @@ interface GeomDataRenderState extends BaseRenderState {
 interface RenderState extends BaseRenderState {
   envMap?: GLEnvMap
 
-  exposure?: number
-  gamma?: number
+  exposure: number // must initialize these
+  gamma: number
 }
 
 interface Viewport {
@@ -60,8 +60,8 @@ interface Uniform {
   location: number
   type: string
 }
-interface Attribute{
-  type: string,
+interface Attribute {
+  type: string
   instanced: boolean
 }
 interface ShaderParseResult {
@@ -70,5 +70,3 @@ interface ShaderParseResult {
   uniforms: Record<string, string>
   attributes: Record<string, Attribute>
 }
-
-
