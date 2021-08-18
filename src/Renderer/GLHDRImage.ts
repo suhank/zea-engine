@@ -176,3 +176,4 @@ class GLHDRImage extends GLTexture2D {
 }
 
 export { GLHDRImage }
+

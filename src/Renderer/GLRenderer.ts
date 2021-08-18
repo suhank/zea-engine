@@ -17,51 +17,7 @@ import { EnvMapAssignedEvent } from '../Utilities/Events/EnvMapAssignedEvent'
 
 const ALL_PASSES = PassType.OPAQUE | PassType.TRANSPARENT | PassType.OVERLAY
 // TODO: move this fn somewhere
-function initRenderState(): RenderState {
-  let result: RenderState = {
-    // gl: null,
-    glShader: '',
-    shaderkey: '',
-    shaderopts: {},
-    attrs: {},
-    unifs: {},
-    directives: [],
 
-    //drawItemsTexture:
-
-    //glGeom?: GLGeom
-    //geomDataFbo?: GLFbo
-
-    width: -1,
-    height: -1,
-
-    //vrviewport:
-
-    passIndex: 0,
-    pass: '',
-
-    vrPresenting: false,
-    supportsInstancing: false,
-    // viewport?: any // Viewport
-    // viewports?: any //Array<Viewport>
-
-    // bindViewports?: any
-    // bindRendererUnifs?: any
-    boundTextures: 0,
-    boundRendertarget: null,
-
-    // envMap?: GLEnvMap
-    exposure: -1,
-    gamma: -1,
-
-    // viewXfo?: Xfo,
-    viewScale: -1,
-    region: [],
-    cameraMatrix: null,
-    depthRange: {},
-  }
-  return result
-}
 /** Class representing a GL renderer.
  * @extends GLBaseRenderer
  */
@@ -368,7 +324,7 @@ class GLRenderer extends GLBaseRenderer {
     }
 
     const region = [0, 0, 3, 3]
-    const renderstate = initRenderState()
+    const renderstate = <RenderState>{}
     renderstate.cameraMatrix = xfo.toMat4()
     renderstate.viewports.push({
       region,
@@ -468,7 +424,7 @@ class GLRenderer extends GLBaseRenderer {
 
     const region = [0, 0, 3, 3]
 
-    const renderstate = initRenderState()
+    const renderstate = <RenderState>{}
     renderstate.viewports.push({
       region,
       viewMatrix: xfo.inverse().toMat4(),

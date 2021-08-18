@@ -2,9 +2,9 @@ interface RenderState {
   gl?: WebGL12RenderingContext
   glShader?: GLShader
   shaderkey?: string
-  shaderopts: Record<any, any> = {}
-  attrs: Record<any, any> = {}
-  unifs: Record<any, any> = {}
+  shaderopts: Record<any, any>
+  attrs: Record<any, any>
+  unifs: Record<any, any>
   directives?: any[]
 
   drawItemsTexture?: any
@@ -31,11 +31,11 @@ interface RenderState {
   boundRendertarget: WebGLFramebuffer | null
 
   envMap?: GLEnvMap
-  exposure?: number
-  gamma?: number
+  exposure: number
+  gamma: number
 
   viewXfo?: Xfo
-  viewScale: number = -1
+  viewScale: number
   region?: any[]
   cameraMatrix?: Mat4
   depthRange?: Record<any, any>
