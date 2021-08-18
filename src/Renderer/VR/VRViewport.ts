@@ -534,7 +534,7 @@ class VRViewport extends GLBaseViewport {
     gl.colorMask(true, true, true, true)
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 
-    const renderstate: RenderState = {
+    const renderstate: RenderState = <RenderState>{
       boundRendertarget: layer.framebuffer,
       depthRange: [session.renderstate.depthNear, session.renderstate.depthFar],
       region: this.__region,

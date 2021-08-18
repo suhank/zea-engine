@@ -59,7 +59,7 @@ class GLViewport extends GLBaseViewport {
   protected __viewMat: Mat4 | null
 
   protected __geomDataBufferInvalid: boolean
-  protected __screenPos: Vec2
+  protected __screenPos: Vec2 | null
   protected __intersectionData: any
 
   protected capturedItem: any
@@ -353,7 +353,7 @@ class GLViewport extends GLBaseViewport {
    */
   renderGeomDataFbo() {
     if (this.__geomDataBufferFbo) {
-      const renderstate: RenderState = {}
+      const renderstate: RenderState = <RenderState>{}
       this.__initRenderState(renderstate)
 
       // Note: GLLinesPass binds a new Fbo, but shares this ones depth buffer.

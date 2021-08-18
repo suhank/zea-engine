@@ -16,7 +16,52 @@ import { VLHImage } from '../SceneTree/Images/VLHImage'
 import { EnvMapAssignedEvent } from '../Utilities/Events/EnvMapAssignedEvent'
 
 const ALL_PASSES = PassType.OPAQUE | PassType.TRANSPARENT | PassType.OVERLAY
+// TODO: move this fn somewhere
+function initRenderState(): RenderState {
+  let result: RenderState = {
+    // gl: null,
+    glShader: '',
+    shaderkey: '',
+    shaderopts: {},
+    attrs: {},
+    unifs: {},
+    directives: [],
 
+    //drawItemsTexture:
+
+    //glGeom?: GLGeom
+    //geomDataFbo?: GLFbo
+
+    width: -1,
+    height: -1,
+
+    //vrviewport:
+
+    passIndex: 0,
+    pass: '',
+
+    vrPresenting: false,
+    supportsInstancing: false,
+    // viewport?: any // Viewport
+    // viewports?: any //Array<Viewport>
+
+    // bindViewports?: any
+    // bindRendererUnifs?: any
+    boundTextures: 0,
+    boundRendertarget: null,
+
+    // envMap?: GLEnvMap
+    exposure: -1,
+    gamma: -1,
+
+    // viewXfo?: Xfo,
+    viewScale: -1,
+    region: [],
+    cameraMatrix: null,
+    depthRange: {},
+  }
+  return result
+}
 /** Class representing a GL renderer.
  * @extends GLBaseRenderer
  */
@@ -295,7 +340,7 @@ class GLRenderer extends GLBaseRenderer {
    * @return {object} - The object containing the ray cast results.
    */
   raycast(xfo: Xfo, ray: Ray, dist: number, area = 0.01, mask = ALL_PASSES) {
-    const gl = <WebGL12RenderingContext>this.__gl
+    const gl = this.__gl
 
     if (!this.__rayCastRenderTarget) {
       this.__rayCastRenderTarget = new GLRenderTarget(gl, {
@@ -323,25 +368,22 @@ class GLRenderer extends GLBaseRenderer {
     }
 
     const region = [0, 0, 3, 3]
-    const renderstate = {
-      cameraMatrix: xfo.toMat4(),
-      viewports: [
-        {
-          region,
-          viewMatrix: xfo.inverse().toMat4(),
-          projectionMatrix: this.__rayCastRenderTargetProjMatrix,
-          isOrthographic: true,
-        },
-      ],
-    }
+    const renderstate = initRenderState()
+    renderstate.cameraMatrix = xfo.toMat4()
+    renderstate.viewports.push({
+      region,
+      viewMatrix: xfo.inverse().toMat4(),
+      projectionMatrix: this.__rayCastRenderTargetProjMatrix,
+      isOrthographic: true,
+    })
 
-    this.__rayCastRenderTarget.bindForWriting(<RenderState>renderstate, true)
+    this.__rayCastRenderTarget.bindForWriting(renderstate, true)
     gl.enable(gl.CULL_FACE)
     gl.enable(gl.DEPTH_TEST)
     gl.depthFunc(gl.LEQUAL)
     gl.depthMask(true)
 
-    this.drawSceneGeomData(<RenderState>renderstate, mask)
+    this.drawSceneGeomData(renderstate, mask)
     gl.finish()
     this.__rayCastRenderTarget.unbindForWriting()
     this.__rayCastRenderTarget.bindForReading()
@@ -425,25 +467,23 @@ class GLRenderer extends GLBaseRenderer {
     }
 
     const region = [0, 0, 3, 3]
-    const renderstate = {
-      cameraMatrix: xfo.toMat4(),
-      viewports: [
-        <Viewport>{
-          region,
-          viewMatrix: xfo.inverse().toMat4(),
-          projectionMatrix: this.__rayCastRenderTargetProjMatrix,
-          isOrthographic: true,
-        },
-      ],
-    }
 
-    this.__rayCastRenderTarget.bindForWriting(<RenderState>renderstate, true)
+    const renderstate = initRenderState()
+    renderstate.viewports.push({
+      region,
+      viewMatrix: xfo.inverse().toMat4(),
+      projectionMatrix: this.__rayCastRenderTargetProjMatrix,
+      isOrthographic: true,
+    })
+    renderstate.cameraMatrix = xfo.toMat4()
+
+    this.__rayCastRenderTarget.bindForWriting(renderstate, true)
     gl.enable(gl.CULL_FACE)
     gl.enable(gl.DEPTH_TEST)
     gl.depthFunc(gl.LEQUAL)
     gl.depthMask(true)
 
-    this.drawSceneGeomData(<RenderState>renderstate, mask)
+    this.drawSceneGeomData(renderstate, mask)
     gl.finish()
     this.__rayCastRenderTarget.unbindForWriting()
     this.__rayCastRenderTarget.bindForReading()
