@@ -49,7 +49,7 @@ class GLLinesPass extends GLOpaqueGeomsPass {
    * The __checkFramebuffer method.
    * @private
    */
-  __checkFramebuffer(renderstate: RenderState) {
+  __checkFramebuffer(width: number, height: number) {
     const gl = this.__gl
 
     let check
@@ -59,7 +59,7 @@ class GLLinesPass extends GLOpaqueGeomsPass {
       gl.bindTexture(gl.TEXTURE_2D, null)
       if (gl.name == 'webgl2') gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, null)
       else gl.bindFramebuffer(gl.FRAMEBUFFER, null)
-      console.warn('Error creating Fbo width:', renderstate.width, ', height:', renderstate.height)
+      console.warn('Error creating Fbo width:', width, ', height:', height)
       switch (check) {
         case gl.FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
           throw new Error(
@@ -144,7 +144,7 @@ class GLLinesPass extends GLOpaqueGeomsPass {
           gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, colorTex, 0)
           gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.TEXTURE_2D, depthBuffer, 0)
         }
-        this.__checkFramebuffer(renderstate)
+        this.__checkFramebuffer(width, height)
       } else {
         if (gl.name == 'webgl2') gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, this.fbo)
         else gl.bindFramebuffer(gl.FRAMEBUFFER, this.fbo)

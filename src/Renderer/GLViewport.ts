@@ -53,7 +53,7 @@ class GLViewport extends GLBaseViewport {
   protected __y: number
   protected region: any
 
-  protected depthRange: number[]
+
   protected __cameraXfo: Xfo
   protected __cameraMat: Mat4
   protected __viewMat: Mat4 | null
@@ -884,7 +884,7 @@ class GLViewport extends GLBaseViewport {
     renderstate.viewScale = 1.0
     renderstate.region = this.region
     renderstate.cameraMatrix = this.__cameraMat
-    renderstate.depthRange = this.depthRange
+    
     renderstate.viewport = this
     renderstate.viewports = [
       {

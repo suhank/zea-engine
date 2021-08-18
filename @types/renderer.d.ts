@@ -1,19 +1,15 @@
-interface RenderState {
+interface BaseRenderState {
   gl?: WebGL12RenderingContext
   glShader?: GLShader
   shaderkey?: string
-  shaderopts: Record<any, any>
-  attrs: Record<any, any>
-  unifs: Record<any, any>
-  directives?: any[]
+  shaderopts: Record<string, string> = {}
+  attrs: Record<string, Attribute> = {}
+  unifs: Record<string, Uniform> = {}
+  directives?: string[]
 
   drawItemsTexture?: any
 
   glGeom?: GLGeom
-  geomDataFbo?: GLFbo
-
-  width?: number
-  height?: number
 
   vrviewport?: any
 
@@ -22,30 +18,57 @@ interface RenderState {
 
   vrPresenting?: boolean
   supportsInstancing?: boolean
-  viewport?: any // Viewport
+  viewport?: GLBaseViewport // Viewport
   viewports?: any //Array<Viewport>
 
-  bindViewports?: any
-  bindRendererUnifs?: any
+  bindViewports(unifs: Record<string, Uniform>, cb: function): function
+  bindRendererUnifs(unifs: Record<string, Uniform>): function // TODO:
+
   boundTextures: number
   boundRendertarget: WebGLFramebuffer | null
 
-  envMap?: GLEnvMap
-  exposure: number
-  gamma: number
-
   viewXfo?: Xfo
   viewScale: number
-  region?: any[]
+  region?: number[4]
   cameraMatrix?: Mat4
-  depthRange?: Record<any, any>
+}
+
+//GeomDataRender
+interface GeomDataRenderState extends BaseRenderState {
+  geomDataFbo?: GLFbo // only used in geomdata buffer rendering
+}
+
+// only used in color rendering
+interface RenderState extends BaseRenderState {
+  envMap?: GLEnvMap
+
+  exposure?: number
+  gamma?: number
 }
 
 interface Viewport {
-  region?: any
+  region?: number[]
   viewMatrix?: Mat4
   projectionMatrix?: Mat4
   viewportFrustumSize?: Vec2
   isOrthographic?: boolean
   fovY?: number
 }
+
+interface Uniform {
+  name: string
+  location: number
+  type: string
+}
+interface Attribute{
+  type: string,
+  instanced: boolean
+}
+interface ShaderParseResult {
+  glsl: string
+  numLines: number
+  uniforms: Record<string, string>
+  attributes: Record<string, Attribute>
+}
+
+

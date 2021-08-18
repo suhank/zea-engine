@@ -49,6 +49,8 @@ class GLBaseViewport extends ParameterOwner {
   protected depthBuffer: WebGLRenderbuffer | null
   protected EXT_frag_depth: EXT_frag_depth
   protected manipulator: any
+
+  protected depthRange: number[]
   /**
    * Create a GL base viewport.
    * @param {GLRenderer} renderer - The renderer value.
@@ -163,7 +165,7 @@ class GLBaseViewport extends ParameterOwner {
    * The getHeight method.
    * @return {number} - The return value.
    */
-  getHeight(): number{
+  getHeight(): number {
     return this.__height
   }
 
@@ -171,7 +173,7 @@ class GLBaseViewport extends ParameterOwner {
    * The getBackground method.
    * @return {Color} - The return value.
    */
-  getBackground(): Color | null{
+  getBackground(): Color | null {
     console.warn('Deprecated Function. Please access the Scene Settings object.')
     const settings = this.__renderer.getScene().settings
     const bgColorParam = settings.getParameter('BackgroundColor')
@@ -414,7 +416,7 @@ class GLBaseViewport extends ParameterOwner {
     gl.uniform1f(unifs.outlineSensitivity.location, this.renderer.outlineSensitivity)
     gl.uniform1f(unifs.outlineDepthBias.location, this.renderer.outlineDepthBias)
 
-    gl.uniform2f(unifs.depthRange.location, renderstate.depthRange[0], renderstate.depthRange[1])
+    gl.uniform2f(unifs.depthRange.location, this.depthRange[0], this.depthRange[1])
 
     this.quad.bindAndDraw(renderstate)
 
@@ -478,7 +480,7 @@ class GLBaseViewport extends ParameterOwner {
    * The getManipulator method.
    * @return {BaseTool} - The return value.
    */
-  getManipulator(): BaseTool{
+  getManipulator(): BaseTool {
     return this.manipulator
   }
 

@@ -25,8 +25,8 @@ let shaderInstanceId = 0
  */
 class GLShader extends BaseItem {
   protected __gl: WebGL12RenderingContext
-  protected __shaderStagesGLSL: Record<string, any>
-  protected __shaderStages: Record<string, any>
+  protected __shaderStagesGLSL: Record<string, string>
+  protected __shaderStages: Record<string, ShaderParseResult>
   protected __shaderProgramHdls: Record<string, any>
   protected __gltextures: Record<string, any>
   //protected __id: number
@@ -214,7 +214,7 @@ class GLShader extends BaseItem {
     this.__shaderCompilationAttempted = true
     const shaderProgramHdl = gl.createProgram()
     if (!shaderProgramHdl) throw Error('shaderProgramHdl not defined')
-    const shaderHdls: Record<any, any> = {}
+    const shaderHdls: Record<string, WebGLShader> = {}
 
     if (!this.__shaderStages['VERTEX_SHADER']) {
       // preprocess the GLSL, including all shader snippets
@@ -295,8 +295,8 @@ class GLShader extends BaseItem {
    */
   __extractAttributeAndUniformLocations(shaderProgramHdl: WebGLProgram, shaderopts: Record<any, any>) {
     const gl = this.__gl
-    const attrs: Record<any, any> = this.getAttributes()
-    const result: Record<any, any> = {
+    const attrs: Record<string, any> = this.getAttributes()
+    const result: Record<string, any> = {
       attrs: {},
       unifs: {},
     }
@@ -306,7 +306,7 @@ class GLShader extends BaseItem {
         console.warn('Shader attribute not found:' + attrName)
         continue
       }
-      const attrDesc: Record<any, any> = attrs[attrName]
+      const attrDesc: Record<string, any> = attrs[attrName]
       result.attrs[attrName] = {
         name: attrName,
         location: location,
@@ -314,24 +314,25 @@ class GLShader extends BaseItem {
         instanced: attrDesc.instanced,
       }
     }
-    const unifs: Record<any, any> = this.getUniforms()
+    const unifs: Record<string, string> = this.getUniforms()
     for (let uniformName in unifs) {
       const unifType = unifs[uniformName]
-      if (unifType instanceof Array) {
-        for (const member of unifType) {
-          const structMemberName = uniformName + '.' + member.name
-          const location = gl.getUniformLocation(shaderProgramHdl, structMemberName)
-          if (location == undefined) {
-            // console.warn(this.constructor.name + " uniform found in shader code but not in compiled program:" + uniformName);
-            continue
-          }
-          result.unifs[structMemberName] = {
-            name: structMemberName,
-            location: location,
-            type: member.type,
-          }
-        }
-      }
+      // TODO: array uniform disabled during ts-migration
+      // if (unifType instanceof Array) {
+      //   for (const member of unifType) {
+      //     const structMemberName = uniformName + '.' + member.name
+      //     const location = gl.getUniformLocation(shaderProgramHdl, structMemberName)
+      //     if (location == undefined) {
+      //       // console.warn(this.constructor.name + " uniform found in shader code but not in compiled program:" + uniformName);
+      //       continue
+      //     }
+      //     result.unifs[structMemberName] = {
+      //       name: structMemberName,
+      //       location: location,
+      //       type: member.type,
+      //     }
+      //   }
+      // }
       if (shaderopts) {
         if (shaderopts.repl) {
           for (const key in shaderopts.repl) uniformName = uniformName.replace(key, shaderopts.repl[key])
@@ -370,8 +371,8 @@ class GLShader extends BaseItem {
    * The getUniforms method.
    * @return {object} - The dictionary of uniforms that this shader expects to be bound.
    */
-  getUniforms() {
-    const uniforms: Record<any, any> = {}
+  getUniforms(): Record<string, string> {
+    const uniforms: Record<string, string> = {}
     for (const stageName in this.__shaderStages) {
       const shaderStageBlock = this.__shaderStages[stageName]
       for (const unifName in shaderStageBlock['uniforms']) uniforms[unifName] = shaderStageBlock['uniforms'][unifName]
@@ -458,15 +459,11 @@ class GLShader extends BaseItem {
    * @param {RenderState}} renderstate - The object tracking the current state of the renderer
    * @return {boolean} - The return value.
    */
-  unbind(renderstate: RenderState): boolean {
-    delete renderstate.glShader
-    delete renderstate.shaderkey
-    //TODO: can only 'delete' optional attributes
-    // delete renderstate.unifs
-    // delete renderstate.attrs
+  unbind(renderstate: RenderState) {
+    renderstate.glShader = null
+    renderstate.shaderkey = ''
     renderstate.unifs = {}
     renderstate.attrs = {}
-
     return true
   }
 

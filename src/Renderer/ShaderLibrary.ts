@@ -4,13 +4,7 @@ import { glslTypes } from './GLSLConstants'
 let GlslTypes = <GLSLTypes>glslTypes
 
 interface GLSLTypes {
-  [key: string]: any // TODO: make a new type from glsl types
-}
-interface Result {
-  glsl: string
-  numLines: number
-  uniforms: Record<any, any>
-  attributes: Record<any, any>
+  [key: string]: string // TODO: make a new type from glsl types
 }
 
 /*
@@ -73,7 +67,7 @@ class ShaderLibrary {
    * @param {bool} instanced - instanced
    * @param {object} result - result object to store parsed data
    */
-  parseAttr(parts: string[], instanced: boolean, result: Result, line: string) {
+  parseAttr(parts: string[], instanced: boolean, result: ShaderParseResult, line: string) {
     // see if type is valid
     if (!(parts[1] in GlslTypes)) {
       throw new Error('Error while parsing \nType not recognized:' + parts[1])
@@ -100,7 +94,13 @@ class ShaderLibrary {
    * @param {array} includes - keep track of what was included
    * @param {number} lineNumber - keep track of what line we're on
    */
-  handleImport(result: Result, shaderName: string, includeFile: string, includes: string[], lineNumber: number) {
+  handleImport(
+    result: ShaderParseResult,
+    shaderName: string,
+    includeFile: string,
+    includes: string[],
+    lineNumber: number
+  ) {
     if (includeFile in this.__shaderModules) {
       const includedGLSL = this.__shaderModules[includeFile] // get glsl snippet code to add
       if (!includedGLSL) throw Error('snippet not loaded or does not exists!')
@@ -149,14 +149,14 @@ class ShaderLibrary {
    */
   parseShaderHelper(shaderName: string, glsl: string, includes: string[], lineNumber: number) {
     // console.log('parseShader:' + shaderName)
-    const addLine = (result: Result, line: string) => {
+    const addLine = (result: ShaderParseResult, line: string) => {
       result.glsl = result.glsl + line + '\n'
       result.numLines++
     }
 
     includes.push(shaderName)
     // result that is returned
-    const result: Result = {
+    const result: ShaderParseResult = {
       glsl: '',
       numLines: 0,
       uniforms: {},
@@ -229,34 +229,35 @@ class ShaderLibrary {
           addLine(result, line)
           break
         }
-        case 'struct': {
-          let membersStr = ''
-          if (trimmedLine.includes('}')) {
-            membersStr = trimmedLine.substring(trimmedLine.indexOf('{') + 1, trimmedLine.indexOf('}') - 1)
-          } else {
-            i++
-            while (true) {
-              line += lines[i] + '\n'
-              membersStr += line.trim()
-              i++
-              if (membersStr.includes('}')) break
-            }
-          }
-          const structMembers = membersStr.substring(membersStr.indexOf('{') + 1, membersStr.indexOf('}') - 1)
-          const members = structMembers.split(';')
-          const structDesc = []
-          for (const member of members) {
-            if (member.length == 0) continue
-            const memberparts = member.trim().split(WHITESPACE_RE)
-            structDesc.push({
-              name: memberparts[1],
-              type: GlslTypes[memberparts[0]],
-            })
-          }
-          GlslTypes[parts[1]] = structDesc
-          addLine(result, line)
-          break
-        }
+        // TODO: structs disabled in ts-migration
+        // case 'struct': {
+        //   let membersStr = ''
+        //   if (trimmedLine.includes('}')) {
+        //     membersStr = trimmedLine.substring(trimmedLine.indexOf('{') + 1, trimmedLine.indexOf('}') - 1)
+        //   } else {
+        //     i++
+        //     while (true) {
+        //       line += lines[i] + '\n'
+        //       membersStr += line.trim()
+        //       i++
+        //       if (membersStr.includes('}')) break
+        //     }
+        //   }
+        //   const structMembers = membersStr.substring(membersStr.indexOf('{') + 1, membersStr.indexOf('}') - 1)
+        //   const members = structMembers.split(';')
+        //   const structDesc = []
+        //   for (const member of members) {
+        //     if (member.length == 0) continue
+        //     const memberparts = member.trim().split(WHITESPACE_RE)
+        //     structDesc.push({
+        //       name: memberparts[1],
+        //       type: GlslTypes[memberparts[0]],
+        //     })
+        //   }
+        //   GlslTypes[parts[1]] = structDesc
+        //   addLine(result, line)
+        //   break
+        // }
         default: {
           // all other statements
           addLine(result, line)
