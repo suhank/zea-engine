@@ -972,7 +972,7 @@ class TreeItem extends BaseItem {
    * @param {Record<string, any>} j - The json object this item must decode.
    * @param {Record<string, any>} context - The context value.
    */
-  fromJSON(j: Record<string, any>, context: Record<string, any>, onDone?: any): void {
+  fromJSON(j: Record<string, any>, context?: Record<string, any>, onDone?: any): void {
     super.fromJSON(j, context)
 
     if (context && !Number.isNaN(context.numTreeItems)) context.numTreeItems++

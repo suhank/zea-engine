@@ -18,7 +18,7 @@ import { BaseItem } from '../BaseItem'
  */
 class MaterialGroup extends BaseGroup {
   protected __materialParam: MaterialParameter
-  protected name: string
+
   /**
    * Creates an instance of a group.
    *
@@ -27,7 +27,7 @@ class MaterialGroup extends BaseGroup {
 
   constructor(name?: string) {
     super(name)
-    this.name = name
+    
     this.__materialParam = <MaterialParameter>this.addParameter(new MaterialParameter('Material'))
     this.__materialParam.on('valueChanged', () => {
       this.__updateMaterial()
@@ -181,7 +181,7 @@ class MaterialGroup extends BaseGroup {
    * @return {MaterialGroup} - Returns a new cloned group.
    */
   clone(context: Record<string, unknown>) {
-    const cloned = new MaterialGroup(this.name + 'clone')
+    const cloned = new MaterialGroup(this.__name + 'clone')
     cloned.copyFrom(this, context)
     return cloned
   }
