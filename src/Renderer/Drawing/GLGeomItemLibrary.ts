@@ -229,7 +229,12 @@ class GLGeomItemLibrary extends EventEmitter {
     // GeomItem
     // Use recycled indices if there are any available...
     if (this.glGeomItemsIndexFreeList.length > 0) {
-      index = this.glGeomItemsIndexFreeList.pop()
+      let index_check = this.glGeomItemsIndexFreeList.pop()
+      if (!index_check) {
+        console.warn('No glGeomItems in array')
+        return
+      }
+      index = index_check
     } else {
       index = this.glGeomItems.length
       this.glGeomItems.push(null)
@@ -337,7 +342,7 @@ class GLGeomItemLibrary extends EventEmitter {
    * @param {GeomItem} geomItem - The geomItem value.
    * @return {GLGeomItem} - The GLGeomItem that wraps the provided GeomItem
    */
-  getGLGeomItem(geomItem: GeomItem) {
+  getGLGeomItem(geomItem: GeomItem): GLGeomItem | null {
     const index = this.glGeomItemsMap[geomItem.getId()]
     if (index != undefined) {
       // Increment the ref count for the GLGeom

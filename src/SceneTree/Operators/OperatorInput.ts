@@ -76,7 +76,7 @@ class OperatorInput extends EventEmitter {
    * Assigns the Paramter to be used to provide the input value.
    * @param {Parameter} param - The param value.
    */
-  setParam(param?: Parameter<unknown>): void {
+  setParam(param?: Parameter<unknown> | null): void {
     if (this._param) {
       this._param.off('valueChanged', this.paramValueChanged)
     }

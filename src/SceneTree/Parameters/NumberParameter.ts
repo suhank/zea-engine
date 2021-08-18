@@ -17,7 +17,7 @@ import { IBinaryReader } from '../../Utilities/IBinaryReader'
  * @extends Parameter
  */
 class NumberParameter extends Parameter<number> implements IBinaryReader {
-  protected range?: number[]
+  protected range?: Array<number> // TODO: should create type with two fields for range. Must change how range is used.
   protected step?: number
 
   /**

@@ -177,23 +177,23 @@ class GIFImage extends FileImage {
               if (!frameImageData || dims.width != frameImageData.width || dims.height != frameImageData.height) {
                 tempCanvas.width = dims.width
                 tempCanvas.height = dims.height
-                frameImageData = tempCtx.createImageData(dims.width, dims.height)
+                frameImageData = tempCtx?.createImageData(dims.width, dims.height)
               }
 
               // set the patch data as an override
               frameImageData.data.set(frame.patch)
-              tempCtx.putImageData(frameImageData, 0, 0)
+              tempCtx?.putImageData(frameImageData, 0, 0)
 
               // Note: undocumented disposal method.
               // See Ids here: https://github.com/theturtle32/Flash-Animated-GIF-Library/blob/master/AS3GifPlayer/src/com/worlize/gif/constants/DisposalType.as
               // From what I can gather, 2 means we should clear the background first.
               // this seems to work with Gifs featuring moving transparency.
               // For fully opaque gifs, we should avoid this.
-              if (frame.disposalType == 2) gifCtx.clearRect(0, 0, gifCanvas.width, gifCanvas.height)
+              if (frame.disposalType == 2) gifCtx?.clearRect(0, 0, gifCanvas.width, gifCanvas.height)
 
-              gifCtx.drawImage(tempCanvas, dims.left, dims.top)
+              gifCtx?.drawImage(tempCanvas, dims.left, dims.top)
 
-              atlasCtx.drawImage(gifCanvas, (index % atlasSize[0]) * width, Math.floor(index / atlasSize[0]) * height)
+              atlasCtx?.drawImage(gifCanvas, (index % atlasSize[0]) * width, Math.floor(index / atlasSize[0]) * height)
             }
 
             for (let i = 0; i < frames.length; i++) {
@@ -202,7 +202,7 @@ class GIFImage extends FileImage {
             }
             resourceLoader.incrementWorkDone(1)
 
-            const imageData = atlasCtx.getImageData(0, 0, atlasCanvas.width, atlasCanvas.height)
+            const imageData = atlasCtx?.getImageData(0, 0, atlasCanvas.width, atlasCanvas.height)
 
             const ms = performance.now() - start
             console.log(`Decode GIF '${url}' time:` + ms)
