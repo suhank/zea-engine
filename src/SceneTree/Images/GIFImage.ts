@@ -65,7 +65,13 @@ class GIFImage extends FileImage {
     this.play = () => {
       this.__resourcePromise.then(() => {
         playing = true
-        const numFrames = frameParam.getRange()[1]
+        let frameParam_check = frameParam.getRange()
+        if (!frameParam_check) {
+          // should range be always be intialized?
+          console.warn('numFrames is null')
+          return
+        }
+        const numFrames = frameParam_check[1]
         incrementFrame(numFrames)
       })
     }

@@ -152,7 +152,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
       }
       this.reSort = true
     }
-    glGeomItem.on('visibilityChanged', visibilityChanged)
+    glGeomItem?.on('visibilityChanged', visibilityChanged)
 
     // ////////////////////////////////////
     // Tracking GeomMat changes.
@@ -199,7 +199,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
       glShaderGeomSets.removeGLGeomItem(glGeomItem)
       glGeomItem.off('visibilityChanged', this.resortNeeded)
       glGeomItem.GLShaderGeomSets = null
-      return
+      return true // TODO: is returning true here correct?
     }
     {
       const itemindex = this.transparentItemIndices[geomItem.getId()]
