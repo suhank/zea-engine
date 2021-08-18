@@ -20,7 +20,7 @@ class BaseGeomItem extends TreeItem {
    * Create a base geometry item.
    * @param {string} name - The name of the base geom item.
    */
-  constructor(name: string) {
+  constructor(name?: string) {
     super(name)
     this.overlay = false
     this.__cutAway = false

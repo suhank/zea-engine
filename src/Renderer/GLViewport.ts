@@ -902,7 +902,7 @@ class GLViewport extends GLBaseViewport {
    * The draw method.
    */
   draw() {
-    const renderstate = {}
+    const renderstate: RenderState = <RenderState>{}
     this.__initRenderState(renderstate)
 
     super.draw(renderstate)

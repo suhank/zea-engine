@@ -94,7 +94,7 @@ class GLImageAtlas extends GLRenderTarget {
    * @return {number} - The return value.
    */
   // TODO: WebGLTexture is not handled here
-  addSubImage(subImage: BaseImage | WebGLTexture): number {
+  addSubImage(subImage: BaseImage | WebGLTexture | null): number {
     if (subImage instanceof BaseImage) {
       const gltexture: GLTexture2D = new GLTexture2D(this.__gl, subImage)
       if (!subImage.isLoaded()) {

@@ -22,21 +22,20 @@ interface RenderState {
 
   vrPresenting?: boolean
   supportsInstancing?: boolean
-  viewport?: Viewport
-  viewports?: Viewport[]
+  viewport?: any // Viewport
+  viewports?: any //Array<Viewport>
 
   bindViewports?: any
   bindRendererUnifs?: any
   boundTextures: number
   boundRendertarget: WebGLFramebuffer | null
 
-
   envMap?: GLEnvMap
   exposure?: number
   gamma?: number
 
   viewXfo?: Xfo
-  viewScale?: number
+  viewScale: number = -1
   region?: any[]
   cameraMatrix?: Mat4
   depthRange?: Record<any, any>

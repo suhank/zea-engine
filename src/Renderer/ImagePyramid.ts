@@ -87,7 +87,7 @@ class ImagePyramid extends GLImageAtlas {
         wrap: 'CLAMP_TO_EDGE',
       })
       this.addSubImage(level.glTex)
-      this.__fbos.push(new GLFbo(<WebGL12RenderingContext>gl, level))
+      this.__fbos.push(new GLFbo(gl, level))
     }
 
     super.generateAtlasLayout()
@@ -99,7 +99,7 @@ class ImagePyramid extends GLImageAtlas {
    */
   renderAtlas(cleanup = true) {
     const gl = this.__gl
-    const renderstate = {}
+    const renderstate: RenderState = <RenderState>{} // cast to allow empty initialization
     this.screenQuad.bindShader(renderstate)
 
     for (let i = 0; i < this.__fbos.length; i++) {

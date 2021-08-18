@@ -940,7 +940,7 @@ class TreeItem extends BaseItem {
    * @param {Record<string, any>} context - The context value.
    * @return {Record<string, any>} - Returns the json object.
    */
-  toJSON(context: Record<string, any>): Record<string, any> {
+  toJSON(context?: Record<string, any>): Record<string, any> {
     let j = super.toJSON(context)
 
     // Some Items, such as the SliderSceneWidget do not need their children
