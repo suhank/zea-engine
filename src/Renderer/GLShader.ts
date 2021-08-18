@@ -399,7 +399,7 @@ class GLShader extends BaseItem {
     const shaderkey = key ? key : this.getId()
     let shaderCompilationResult = this.__shaderProgramHdls[shaderkey]
     if (!shaderCompilationResult) {
-      if (shaderCompilationResult !== false) {
+      if (shaderCompilationResult !== false && shaderopts) {
         shaderCompilationResult = this.__createProgram(shaderopts)
         shaderCompilationResult.shaderkey = shaderkey
         this.__shaderProgramHdls[shaderkey] = shaderCompilationResult
@@ -455,14 +455,18 @@ class GLShader extends BaseItem {
 
   /**
    * The unbind method.
-   * @param {object} renderstate - The object tracking the current state of the renderer
-   * @return {any} - The return value.
+   * @param {RenderState}} renderstate - The object tracking the current state of the renderer
+   * @return {boolean} - The return value.
    */
-  unbind(renderstate: RenderState) {
+  unbind(renderstate: RenderState): boolean {
     delete renderstate.glShader
     delete renderstate.shaderkey
-    delete renderstate.unifs
-    delete renderstate.attrs
+    //TODO: can only 'delete' optional attributes
+    // delete renderstate.unifs
+    // delete renderstate.attrs
+    renderstate.unifs = {}
+    renderstate.attrs = {}
+
     return true
   }
 

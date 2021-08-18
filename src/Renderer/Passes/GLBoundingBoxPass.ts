@@ -153,7 +153,8 @@ class GLBoundingBoxPass extends GLPass {
    */
   bindTreeItem(treeitem: TreeItem) {
     let index: number
-    if (this.freeIndices.length > 0) index = this.freeIndices.pop()
+    let index_check = this.freeIndices.pop()
+    if (index_check) index = index_check
     else index = this.boxes.length
     this.idToIndex[treeitem.getId()] = index
 
