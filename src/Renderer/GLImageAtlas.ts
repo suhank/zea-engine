@@ -318,7 +318,7 @@ class GLImageAtlas extends GLRenderTarget {
       this.generateAtlasLayout()
     }
     const gl = this.__gl
-    const renderstate: RenderState = {}
+    const renderstate: RenderState = <RenderState>{}
     this.bindForWriting(renderstate, true)
 
     this.__atlasLayoutShader.bind(renderstate, 'GLImageAtlas')

@@ -111,7 +111,7 @@ class GLHDRImage extends GLTexture2D {
 
     this.__fbo.bindAndClear()
 
-    const renderstate: RenderState = {}
+    const renderstate: RenderState = <RenderState>{}
     this.__unpackHDRShader.bind(renderstate, 'GLHDRImage')
     this.__shaderBinding.bind(renderstate)
 
