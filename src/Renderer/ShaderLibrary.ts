@@ -133,9 +133,9 @@ class ShaderLibrary {
    * The parseShader method.
    * @param {string} shaderName - The shader name.
    * @param {string} glsl - The glsl param.
-   * @return {object} - returns the 'result' object
+   * @return {ShaderParseResult} - returns the 'result' object
    */
-  parseShader(shaderName: string, glsl: string) {
+  parseShader(shaderName: string, glsl: string): ShaderParseResult {
     return this.parseShaderHelper(shaderName, glsl, [], 0)
   }
 
@@ -147,7 +147,7 @@ class ShaderLibrary {
    * @param {int} lineNumber - keep track of what line we're on
    * @return {object} - The return value.
    */
-  parseShaderHelper(shaderName: string, glsl: string, includes: string[], lineNumber: number) {
+  parseShaderHelper(shaderName: string, glsl: string, includes: string[], lineNumber: number): ShaderParseResult {
     // console.log('parseShader:' + shaderName)
     const addLine = (result: ShaderParseResult, line: string) => {
       result.glsl = result.glsl + line + '\n'
@@ -217,7 +217,7 @@ class ShaderLibrary {
           } else {
             result.uniforms[name] = GlslTypes[typeName]
           }
-
+          console.log(result.uniforms)
           if (result.uniforms[name] == 'struct') {
             console.log(parts)
           }

@@ -101,14 +101,13 @@ describe('ShaderLibrary types', () => {
   it('checks attribute extraction -- simple', () => {
     const too = `
     attribute bool check;
-    uniform float oneUniform;
     int foo = 3;
     `
     const shader = `
     import 'too.glsl'
     `
 
-    const correctResult = '{"check":{"instanced":false}}'
+    const correctResult = '{"check":{"type":"Boolean","instanced":false}}'
     shaderLibrary.setShaderModule('too.glsl', too)
     const result = shaderLibrary.parseShader('shader.glsl', shader)
 
@@ -116,18 +115,18 @@ describe('ShaderLibrary types', () => {
   })
 
   it('checks uniforms extraction -- Float32', () => {
-    const too = `
-    attribute bool check;
+    const zoo = `
+    bool check;
     uniform float oneUniform;
     int foo = 3;
     `
 
     const shader = `
-    import 'too.glsl'
+    import 'zoo.glsl'
     `
 
-    const correctResult = { oneUniform: Float32 }
-    shaderLibrary.setShaderModule('too.glsl', too)
+    const correctResult = { oneUniform: 'Float32' }
+    shaderLibrary.setShaderModule('zoo.glsl', zoo)
     const result = shaderLibrary.parseShader('shader.glsl', shader)
 
     expect(result.uniforms).toEqual(correctResult)
@@ -142,7 +141,7 @@ describe('ShaderLibrary types', () => {
     const shader = `
     import 'boo.glsl'
     `
-    const correctResult = { check: { instanced: true, type: Boolean } }
+    const correctResult = { check: { instanced: true, type: 'Boolean' } }
     shaderLibrary.setShaderModule('boo.glsl', boo)
     const result = shaderLibrary.parseShader('shader.glsl', shader)
     console.log(result.attributes)
@@ -152,7 +151,7 @@ describe('ShaderLibrary types', () => {
     const code = `
     uniform vec4 x;
     `
-    const correctResult = { x: Vec4 }
+    const correctResult = { x: 'Vec4' }
     const result = shaderLibrary.parseShader('color.glsl', code)
     expect(result.uniforms).toEqual(correctResult)
   })
@@ -161,7 +160,7 @@ describe('ShaderLibrary types', () => {
     const code = `
     uniform color x;
     `
-    const correctResult = { x: Color }
+    const correctResult = { x: 'Color' }
     const result = shaderLibrary.parseShader('color.glsl', code)
     expect(result.uniforms).toEqual(correctResult)
   })
@@ -177,7 +176,7 @@ describe('ShaderLibrary types', () => {
     const code = `
     uniform color x;
     `
-    const correctResult = { x: Color }
+    const correctResult = { x: 'Color' }
     const result = shaderLibrary.parseShader('color.glsl', code)
     expect(result.uniforms).toEqual(correctResult)
   })
@@ -185,7 +184,7 @@ describe('ShaderLibrary types', () => {
     const code = `
     uniform sampler2D x;
     `
-    const correctResult = { x: BaseImage }
+    const correctResult = { x: 'BaseImage' }
     const result = shaderLibrary.parseShader('sampler2D.glsl', code)
     expect(result.uniforms).toEqual(correctResult)
   })
@@ -193,7 +192,7 @@ describe('ShaderLibrary types', () => {
     const code = `
     uniform samplerCube x;
     `
-    const correctResult = { x: BaseImage }
+    const correctResult = { x: 'BaseImage' }
     const result = shaderLibrary.parseShader('sampler2D.glsl', code)
     expect(result.uniforms).toEqual(correctResult)
   })
