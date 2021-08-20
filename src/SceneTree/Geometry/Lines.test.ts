@@ -18,7 +18,7 @@ describe('Lines', () => {
     positions.getValueRef(1).set(-1, -2, -3)
     positions.getValueRef(2).set(2, 1, -3)
 
-    lines.setNumSegments(2)
+    lines.setSides(2)
     lines.setSegmentVertexIndices(0, 0, 1)
     lines.setSegmentVertexIndices(1, 1, 2)
 
@@ -33,11 +33,11 @@ describe('Lines', () => {
     const numVertices = 3
     lines.setNumVertices(numVertices)
 
-    lines.setNumSegments(2)
+    lines.setSides(2)
     lines.setSegmentVertexIndices(0, 0, 1)
     lines.setSegmentVertexIndices(1, 1, 2)
 
-    lines.setNumSegments(3)
+    lines.setSides(3)
     lines.setSegmentVertexIndices(2, 2, 0)
 
     expect(lines.getSegmentVertexIndex(1, 0)).toBe(1)
@@ -54,12 +54,12 @@ describe('Lines', () => {
     const numVertices = 3
     lines.setNumVertices(numVertices)
 
-    lines.setNumSegments(3)
+    lines.setSides(3)
     lines.setSegmentVertexIndices(0, 0, 1)
     lines.setSegmentVertexIndices(1, 1, 2)
     lines.setSegmentVertexIndices(2, 2, 0)
 
-    lines.setNumSegments(2)
+    lines.setSides(2)
 
     expect(lines.getSegmentVertexIndex(1, 0)).toBe(1)
     expect(lines.getSegmentVertexIndex(1, 1)).toBe(2)
@@ -76,7 +76,7 @@ describe('Lines', () => {
     positions.getValueRef(1).set(-1, -2, -3)
     positions.getValueRef(2).set(2, 1, -3)
 
-    lines.setNumSegments(2)
+    lines.setSides(2)
     lines.setSegmentVertexIndices(0, 0, 1)
     lines.setSegmentVertexIndices(1, 1, 2)
 
@@ -106,7 +106,7 @@ describe('Lines', () => {
     positions.getValueRef(1).set(-1, -2, -3)
     positions.getValueRef(2).set(2, 1, -3)
 
-    lines.setNumSegments(2)
+    lines.setSides(2)
     lines.setSegmentVertexIndices(0, 0, 1)
     lines.setSegmentVertexIndices(1, 1, 2)
 

@@ -63,7 +63,7 @@ class Grid extends ProceduralLines {
 
     const skipCenterLines = this.__skipCenterLinesParam.getValue() && xDivisions % 2 == 0 && yDivisions % 2 == 0
     this.setNumVertices((xDivisions + yDivisions + 2 - (skipCenterLines ? 1 : 0)) * 2)
-    this.setNumSegments(xDivisions + yDivisions + 2 - (skipCenterLines ? 1 : 0))
+    this.setSides(xDivisions + yDivisions + 2 - (skipCenterLines ? 1 : 0))
     let idx = 0
     for (let i = 0; i <= xDivisions; i++) {
       if (skipCenterLines && i == xDivisions / 2) continue

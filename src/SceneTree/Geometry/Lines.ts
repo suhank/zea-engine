@@ -35,7 +35,7 @@ class Lines extends BaseGeom {
    * The clear method.
    */
   clear(): void {
-    this.setNumSegments(0)
+    this.setSides(0)
     this.setNumVertices(0)
 
     this.emit('geomDataTopologyChanged')
@@ -65,7 +65,7 @@ class Lines extends BaseGeom {
    *
    * @param {number} numOfSegments - The count value.
    */
-  setNumSegments(numOfSegments: number): void {
+  setSides(numOfSegments: number): void {
     if (numOfSegments > this.getNumSegments()) {
       const indices = new Uint32Array(numOfSegments * 2)
       indices.set(this.__indices)
@@ -149,7 +149,7 @@ class Lines extends BaseGeom {
   readBinary(reader: BinReader, context?: Record<string, any>): void {
     super.loadBaseGeomBinary(reader)
 
-    this.setNumSegments(reader.loadUInt32())
+    this.setSides(reader.loadUInt32())
 
     const bytes = reader.loadUInt8()
     if (bytes == 1) this.__indices = reader.loadUInt8Array()

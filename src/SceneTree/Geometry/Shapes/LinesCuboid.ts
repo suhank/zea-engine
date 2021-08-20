@@ -44,7 +44,7 @@ class LinesCuboid extends ProceduralLines {
    */
   rebuild(): void {
     this.setNumVertices(8)
-    this.setNumSegments(12)
+    this.setSides(12)
     this.setSegmentVertexIndices(0, 0, 1)
     this.setSegmentVertexIndices(1, 1, 2)
     this.setSegmentVertexIndices(2, 2, 3)

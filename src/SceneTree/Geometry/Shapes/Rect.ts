@@ -45,7 +45,7 @@ class Rect extends ProceduralLines {
    */
   rebuild(): void {
     this.setNumVertices(4)
-    this.setNumSegments(4)
+    this.setSides(4)
     this.setSegmentVertexIndices(0, 0, 1)
     this.setSegmentVertexIndices(1, 1, 2)
     this.setSegmentVertexIndices(2, 2, 3)
