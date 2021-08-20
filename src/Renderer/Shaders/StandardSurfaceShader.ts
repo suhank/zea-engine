@@ -37,16 +37,17 @@ class StandardSurfaceShader extends GLShader {
    * @return {any} - The return value.
    */
   bind(renderstate: RenderState, key: string) {
+    const colorRenderState = <ColorRenderState>renderstate
     super.bind(renderstate, key)
 
     const gl = this.__gl
-    if (renderstate.envMap) {
-      renderstate.envMap.bind(renderstate)
+    if (colorRenderState.envMap) {
+      colorRenderState.envMap.bind(colorRenderState)
     }
 
-    const { exposure } = renderstate.unifs
+    const { exposure } = colorRenderState.unifs
     if (exposure) {
-      gl.uniform1f(exposure.location, renderstate.exposure)
+      gl.uniform1f(exposure.location, colorRenderState.exposure)
     }
     return true
   }

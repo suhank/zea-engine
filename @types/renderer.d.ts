@@ -1,11 +1,9 @@
-
-
 interface BaseRenderState {
   gl?: WebGL12RenderingContext
   glShader?: GLShader
   shaderkey?: string
-  shaderopts: Record<string, string>
-  attrs: Record<string, Attribute>
+  shaderopts: Record<string, string[]>
+  attrs: Record<string, Record<any, any>> // not Attribute
   unifs: Record<string, Uniform>
   directives?: string[]
 

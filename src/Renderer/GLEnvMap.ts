@@ -89,7 +89,7 @@ class GLEnvMap extends GLProbe {
    * The getBackgroundFocus method.
    * @return {number} - The return value.
    */
-  getBackgroundFocus():number {
+  getBackgroundFocus(): number {
     return this.__backgroundFocus
   }
 
@@ -106,7 +106,7 @@ class GLEnvMap extends GLProbe {
    * The draw method.
    * @param {RenderState} renderstate - The object tracking the current state of the renderer
    */
-  draw(renderstate: RenderState) {
+  draw(renderstate: ColorRenderState) {
     if (this.__envMap.isLoaded()) {
       const gl = this.__gl
       const debug = false

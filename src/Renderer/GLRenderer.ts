@@ -505,7 +505,7 @@ class GLRenderer extends GLBaseRenderer {
    * The bindGLRenderer method.
    * @param {RenderState} renderstate - The object tracking the current state of the renderer
    */
-  bindGLRenderer(renderstate: RenderState) {
+  bindGLRenderer(renderstate: ColorRenderState) {
     super.bindGLBaseRenderer(renderstate)
 
     renderstate.envMap = this.__glEnvMap
@@ -517,7 +517,7 @@ class GLRenderer extends GLBaseRenderer {
    * The drawScene method.
    * @param {object} renderstate - The object tracking the current state of the renderer
    */
-  drawScene(renderstate: RenderState) {
+  drawScene(renderstate: ColorRenderState) {
     this.bindGLRenderer(renderstate)
 
     if (this.__displayEnvironment) this.drawBackground(renderstate)

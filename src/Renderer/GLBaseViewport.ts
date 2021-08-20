@@ -283,9 +283,9 @@ class GLBaseViewport extends ParameterOwner {
 
   /**
    * The draw method.
-   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {ColorRenderState} renderstate - The object tracking the current state of the renderer
    */
-  draw(renderstate: RenderState) {
+  draw(renderstate: ColorRenderState) {
     const gl = this.__renderer.gl
 
     const prevRendertarget = renderstate.boundRendertarget
