@@ -394,13 +394,13 @@ class GLShader extends BaseItem {
    * The compileForTarget method.
    * @param {string} key - The key value.
    * @param {object} shaderopts - The shaderopts value.
-   * @return {object} - The result of the shader compilation.
+   * @return {Record<any, any>} - The result of the shader compilation.
    */
-  compileForTarget(key?: string, shaderopts?: Record<any, any>) {
+  compileForTarget(key?: string, shaderopts?: Record<any, any>): Record<string, any> {
     const shaderkey = key ? key : this.getId()
     let shaderCompilationResult = this.__shaderProgramHdls[shaderkey]
     if (!shaderCompilationResult) {
-      if (shaderCompilationResult !== false && shaderopts) {
+      if (shaderCompilationResult !== false ) { // && shaderopts
         shaderCompilationResult = this.__createProgram(shaderopts)
         shaderCompilationResult.shaderkey = shaderkey
         this.__shaderProgramHdls[shaderkey] = shaderCompilationResult
@@ -427,7 +427,7 @@ class GLShader extends BaseItem {
 
     if (renderstate.glShader != this) {
       const shaderCompilationResult = this.compileForTarget(key, renderstate.shaderopts)
-      if (shaderCompilationResult === false) {
+      if (shaderCompilationResult === {}) { // TODO: compileForTarget should return null or empty
         console.warn(this.constructor.name + ' is not compiled for ' + key)
         return false
       }
