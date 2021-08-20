@@ -1,9 +1,3 @@
- 
-precision highp float;
-
-varying float v_drawItemId;
-
-
 import 'GLSLUtils.glsl'
 import 'drawItemTexture.glsl'
 
@@ -16,23 +10,15 @@ vec4 getHighlightColor(int id) {
 uniform vec4 highlightColor;
 
 vec4 getHighlightColor(int id) {
-  return highlightColor;
+    return highlightColor;
 }
 
 #endif
 
-#ifdef ENABLE_ES3
-  out vec4 fragColor;
-#endif
-void main(void) {
 
-#ifndef ENABLE_ES3
-  vec4 fragColor;
-#endif
+vec4 setFragColor_highlight(float v_drawItemId){
+  vec4 fragColor; 
   int drawItemId = int(v_drawItemId + 0.5);
   fragColor = getHighlightColor(drawItemId);
-
-#ifndef ENABLE_ES3
-  gl_FragColor = fragColor;
-#endif
+  return fragColor;
 }
