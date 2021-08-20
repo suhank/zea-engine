@@ -1,3 +1,5 @@
+
+
 interface BaseRenderState {
   gl?: WebGL12RenderingContext
   glShader?: GLShader
@@ -39,12 +41,14 @@ interface GeomDataRenderState extends BaseRenderState {
 }
 
 // only used in color rendering
-interface RenderState extends BaseRenderState {
+interface ColorRenderState extends BaseRenderState {
   envMap?: GLEnvMap
 
   exposure: number // must initialize these
   gamma: number
 }
+
+type RenderState = BaseRenderState | GeomDataRenderState | ColorRenderState
 
 interface Viewport {
   region?: number[]
