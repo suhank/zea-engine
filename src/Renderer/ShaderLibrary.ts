@@ -217,7 +217,7 @@ class ShaderLibrary {
           } else {
             result.uniforms[name] = GlslTypes[typeName]
           }
-          console.log(result.uniforms)
+
           if (result.uniforms[name] == 'struct') {
             console.log(parts)
           }

@@ -41,6 +41,7 @@ class Xfo {
     } else {
       this.tr = new Vec3()
     }
+
     if (ori instanceof Quat) {
       this.ori = ori
     } else {
@@ -236,19 +237,19 @@ class Xfo {
       this.ori = new Quat(float32array.buffer, float32array.byteOffset + 12)
       this.sc = new Vec3(1, 1, 1)
       return
-    }
-    if (float32array.length == 8) {
+    } else if (float32array.length == 8) {
       this.tr = new Vec3(float32array.buffer, float32array.byteOffset)
       this.ori = new Quat(float32array.buffer, float32array.byteOffset + 12)
       const scl = float32array[7]
       this.sc = new Vec3(scl, scl, scl)
       return
-    }
-    if (float32array.length == 10) {
+    } else if (float32array.length == 10) {
       this.tr = new Vec3(float32array.buffer, float32array.byteOffset)
       this.ori = new Quat(float32array.buffer, float32array.byteOffset + 12)
       this.sc = new Vec3(float32array.buffer, float32array.byteOffset + 21)
       return
+    } else {
+      console.warn('unitialized: float32array.length == ', float32array.length)
     }
   }
 
