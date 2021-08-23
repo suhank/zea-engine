@@ -71,7 +71,7 @@ describe('XfoParameter', () => {
 
   it('clones parameter object', () => {
     const parameter = new XfoParameter('TestParameter')
-    const value = new Xfo(new Float32Array([1, 2, 3, 4])) //   const value = new Xfo(1, 2, 3, 4)
+    const value = new Xfo(new Float32Array([1, 2, 3, 4, 1, 1, 1])) //   const value = new Xfo(1, 2, 3, 4)
     parameter.setValue(value)
 
     const parameter2 = parameter.clone()
