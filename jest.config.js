@@ -3,6 +3,7 @@ module.exports = {
   coverageReporters: ['json-summary', 'json', 'text', 'lcov', 'clover'],
   moduleNameMapper: {
     '\\.(glsl|vert|frag|vs|fs|geom|comp)$': '<rootDir>/__mocks__/fileMock.js',
+    'web-worker:.*': '<rootDir>/__mocks__/fileMock.js',
   },
   transform: {
     '.(ts|tsx)$': require.resolve('ts-jest'),
@@ -17,7 +18,4 @@ module.exports = {
   testEnvironment: 'jsdom',
   testRegex: '(/__tests__/.*|\\.(test|spec))\\.(js|ts)$',
   moduleFileExtensions: ['ts', 'js'],
-  moduleNameMapper: {
-    '\\.(glsl|vert|frag|vs|fs|geom|comp)$': '<rootDir>/__mocks__/fileMock.js',
-  },
 }
