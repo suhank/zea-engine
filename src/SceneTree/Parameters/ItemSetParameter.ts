@@ -9,7 +9,7 @@ import { BaseItem } from '../../SceneTree/BaseItem'
  */
 class ItemSetParameter extends Parameter<Set<BaseItem>> {
   protected filterFn: (...args: any) => boolean
-  protected items: Set<BaseItem>
+  // protected items: Set<BaseItem>
   /**
    * Create an item set parameter.
    * @param {string} name - The name of the item set parameter.
@@ -17,7 +17,7 @@ class ItemSetParameter extends Parameter<Set<BaseItem>> {
    */
   constructor(name: string = '', filterFn: (...args: any[]) => boolean) {
     super(name, new Set(), 'BaseItem')
-    this.items = new Set()
+    // this.items = new Set()
     this.filterFn = filterFn // Note: the filter Fn indicates that users will edit the set.
   }
 
@@ -58,9 +58,10 @@ class ItemSetParameter extends Parameter<Set<BaseItem>> {
       console.warn('ItemSet __filterFn rejecting item:', item.getPath())
       return
     }
-    if (!this.value) this.value = new Set()
 
     this.value.add(item)
+    //this.items.add(item)
+
     const index = Array.from(this.value).indexOf(item)
     this.emit('itemAdded', { item, index })
     if (emitValueChanged) this.emit('valueChanged', {})
@@ -139,10 +140,11 @@ class ItemSetParameter extends Parameter<Set<BaseItem>> {
   }
   /**
    * The getValue method.
-   * @return {any} - The return value.
+   * @return {Set<BaseItem>} - The return value.
    */
-  getValue() {
-    return this.items
+  getValue(): Set<BaseItem> {
+    //return this.items
+    return this.value
   }
 
   // ////////////////////////////////////////
