@@ -52,7 +52,10 @@ class KinematicGroup extends BaseGroup {
       this.calcGroupXfo()
     })
     const groupTransformParam = this.addParameter(new XfoParameter('GroupTransform', new Xfo()))
-    this.groupTransformOp = new GroupTransformXfoOperator(this.getParameter('GlobalXfo'), groupTransformParam)
+    this.groupTransformOp = new GroupTransformXfoOperator(
+      <XfoParameter>this.getParameter('GlobalXfo'),
+      <XfoParameter>groupTransformParam
+    )
   }
 
   /**
@@ -195,7 +198,10 @@ class KinematicGroup extends BaseGroup {
 
     {
       const memberGlobalXfoParam = item.getParameter('GlobalXfo')
-      const memberXfoOp = new GroupMemberXfoOperator(this.getParameter('GroupTransform'), memberGlobalXfoParam)
+      const memberXfoOp = new GroupMemberXfoOperator(
+        <XfoParameter>this.getParameter('GroupTransform'),
+        <XfoParameter>memberGlobalXfoParam
+      )
       this.memberXfoOps.splice(index, 0, memberXfoOp)
 
       item.getParameter('BoundingBox').on('valueChanged', this.setBoundingBoxDirty)

@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { Vec4, Color, Box3, Xfo } from '../../Math/index'
 import { Registry } from '../../Registry'
-import { BooleanParameter, Vec4Parameter } from '../Parameters/index'
+import { BooleanParameter, Vec4Parameter, XfoParameter } from '../Parameters/index'
 import { Material } from '../Material'
 import { GeomItem } from '../GeomItem'
 import { BaseGroup } from './BaseGroup'
@@ -39,7 +39,7 @@ class CuttingPlane extends BaseGroup {
     this.__updateCutaway = this.__updateCutaway.bind(this)
     this.addParameter(new BooleanParameter('CutAwayEnabled', false)).on('valueChanged', this.__updateCutaway)
     this.addParameter(new Vec4Parameter('CutPlane', new Vec4(1, 0, 0))).on('valueChanged', this.__updateCutaway)
-    this.cutPlaneOp = new CuttingPlaneOperator(this.getParameter('GlobalXfo'), this.getParameter('CutPlane'))
+    this.cutPlaneOp = new CuttingPlaneOperator(<XfoParameter>this.getParameter('GlobalXfo'), <XfoParameter>this.getParameter('CutPlane'))
 
     // Create the geometry to display the plane.
     const material = new Material('plane', 'FlatSurfaceShader')
