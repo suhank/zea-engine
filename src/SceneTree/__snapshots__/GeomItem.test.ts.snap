@@ -127,9 +127,17 @@ Object {
             },
           },
           "EmissiveStrength": Object {
+            "range": Array [
+              0,
+              1,
+            ],
             "value": 0,
           },
           "Opacity": Object {
+            "range": Array [
+              0,
+              1,
+            ],
             "value": 1,
           },
         },
