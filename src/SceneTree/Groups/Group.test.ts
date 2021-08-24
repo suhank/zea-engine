@@ -12,7 +12,7 @@ describe('Group', () => {
     expect(group.isVisible()).toBe(true)
   })
 
-  test('Changing members visibility.', () => {
+  test('Checking size of set after add.', () => {
     const group = new Group('Foo')
     const treeItem = new TreeItem('TreeItem')
 
