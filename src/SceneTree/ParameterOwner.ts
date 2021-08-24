@@ -234,7 +234,7 @@ class ParameterOwner extends EventEmitter {
    * @return {Record<string, unknown>} - Returns the json object.
    */
   toJSON(context?: Record<string, unknown>): Record<string, unknown> {
-    const json = super.toJSON(context)
+    const json: Record<string, unknown> = super.toJSON(context)
     const paramsJSON: Record<string, unknown> = {}
     let savedParams = 0
     for (const param of this.params) {
@@ -244,15 +244,15 @@ class ParameterOwner extends EventEmitter {
         savedParams++
       }
     }
-    if (savedParams > 0) (json as any).params = paramsJSON
+    if (savedParams > 0) json.params = paramsJSON
     return json
   }
 
   /**
    * The fromJSON method decodes a json object for this type.
    *
-   * @param {object} json - The json object this item must decode.
-   * @param {object} context - The context value.
+   * @param {Record<string, any>} json - The json object this item must decode.
+   * @param {Record<string, any>} context - The context value.
    */
   fromJSON(json: Record<string, any>, context?: Record<string, any>): void {
     if (json.params) {

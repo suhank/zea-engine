@@ -37,6 +37,11 @@ class MaterialFloatParam extends NumberParameter implements IBinaryReader {
     super(name, value, range)
   }
 
+  toJSON(context?: Record<string, unknown>): Record<string, unknown> {
+    const j = super.toJSON(context)
+
+    return j
+  }
   /**
    * Returns `BaseImage` texture of the Material.
    *

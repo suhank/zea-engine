@@ -90,7 +90,7 @@ class GeomItem extends BaseGeomItem {
     this.__materialParam = this.addParameter(new MaterialParameter('Material'))
     this.addParameterDeprecationMapping('material', 'Material')
 
-    this.__geomOffsetXfoParam = this.addParameter(new XfoParameter('GeomOffsetXfo'))
+    this.__geomOffsetXfoParam = <XfoParameter>this.addParameter(new XfoParameter('GeomOffsetXfo'))
     this.__geomMatParam = this.addParameter(new Mat4Parameter('GeomMat'))
 
     this.geomIndex = -1

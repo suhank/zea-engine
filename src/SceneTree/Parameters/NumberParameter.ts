@@ -79,10 +79,9 @@ class NumberParameter extends Parameter<number> implements IBinaryReader {
    * @return {object} - Returns the json object.
    */
   toJSON(context?: Record<string, unknown>): Record<string, unknown> {
-    const j: Record<string, unknown> = { value: this.value }
+    const json = super.toJSON(context)
     if (this.range) j.range = this.range
     if (this.step) j.step = this.step
-
     return j
   }
 
@@ -118,6 +117,7 @@ class NumberParameter extends Parameter<number> implements IBinaryReader {
    * @return {NumberParameter} - Returns a new number parameter.
    */
   clone(): NumberParameter {
+    console.log('clone:: ', this.range)
     return new NumberParameter(this.name, this.value, this.range, this.step)
   }
 }

@@ -100,9 +100,9 @@ class TreeItem extends BaseItem {
     // /////////////////////////////////////
     // Add parameters.
 
-    this.__visibleParam = this.addParameter(new BooleanParameter('Visible', true))
-    this.__localXfoParam = this.addParameter(new XfoParameter('LocalXfo', new Xfo()))
-    this.__globalXfoParam = this.addParameter(new XfoParameter('GlobalXfo', new Xfo()))
+    this.__visibleParam = <BooleanParameter>this.addParameter(new BooleanParameter('Visible', true))
+    this.__localXfoParam = <XfoParameter>this.addParameter(new XfoParameter('LocalXfo', new Xfo()))
+    this.__globalXfoParam = <XfoParameter>this.addParameter(new XfoParameter('GlobalXfo', new Xfo()))
     this.__boundingBoxParam = <BoundingBoxParameter>this.addParameter(new BoundingBoxParameter('BoundingBox', this))
 
     // Bind handlers

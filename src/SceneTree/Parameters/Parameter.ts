@@ -26,7 +26,7 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
   protected name: string
   protected value?: T
   protected dataType?: string
-  protected ownerItem: ParameterOwner
+  protected ownerItem?: ParameterOwner
 
   /**
    * When initializing a new parameter, the passed in value could be anything.
@@ -56,7 +56,7 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
     this.__backupMaterial = 0 // TODO: any type. __backmaterial is used elsewhere.
     this.dirty = false
     this.firstOP_WRITE = 0
-    this.ownerItem = new ParameterOwner() // TODO: should this be initialized by the constructor?
+    // this.ownerItem // TODO: should this be initialized by the constructor?
 
     this.name = name
     this.value = value
@@ -389,7 +389,7 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
 
   abstract fromJSON(j: Record<string, any>, context?: Record<string, any>): void
 
-  abstract clone(): any
+  abstract clone(): Parameter<unknown>
 
   /**
    * The readBinary method.
