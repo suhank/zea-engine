@@ -176,9 +176,10 @@ class ItemSetParameter extends Parameter<Set<BaseItem>> {
    */
   fromJSON(j: Record<string, any>, context?: Record<string, any>): void {
     if (!this.__items) this.__items = new Set()
-    for (const item of j.values) {
+
+    for (const item in j) {
       const baseItem = new BaseItem()
-      baseItem.fromJSON(item)
+      baseItem.fromJSON(j.item)
       this.__items.add(baseItem)
     }
   }
