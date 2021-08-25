@@ -1,6 +1,8 @@
 import { KinematicGroup } from './KinematicGroup'
 import { TreeItem } from '../TreeItem'
 import { Vec3, Xfo } from '../../Math'
+import { jsonCompare } from '../../../Utilities/test_utils'
+
 
 
 describe('KinematicGroup', () => {
@@ -89,7 +91,10 @@ describe('KinematicGroup', () => {
     const expOutput = `{"params":{"Visible":{"value":true},"LocalXfo":{"value":{"tr":{"x":0,"y":0,"z":0},"ori":{"x":0,"y":0,"z":0,"w":1}}},"GlobalXfo":{"value":{"tr":{"x":0,"y":0,"z":0},"ori":{"x":0,"y":0,"z":0,"w":1}}},"BoundingBox":{"value":{"p0":{"x":null,"y":null,"z":null},"p1":{"x":null,"y":null,"z":null}}},"Items":{},"InitialXfoMode":{"value":3,"range\":[0,4],"step":1},"GroupTransform":{"value":{"tr":{"x":0,"y":0,"z":0},"ori":{"x":0,"y":0,"z":0,"w":1}}}},"name":"Foo","type":"KinematicGroup","treeItems":[["treeItem1","treeItem2"]]}`
 
     const outputJSON = group.toJSON()
-    expect(JSON.stringify(outputJSON)).toEqual(expOutput)
+    // console.log(jsonCompare(JSON.parse(expOutput), group.toJSON()))
+    expect(jsonCompare(group.toJSON, JSON.parse(expOutput))).toEqual(true)
+
+    //expect(JSON.stringify(outputJSON)).toEqual(expOutput)
   })
 
   it('loads from JSON (serialization).', () => {
@@ -103,13 +108,15 @@ describe('KinematicGroup', () => {
     const inputStr = `{"params":{"Visible":{"value":true},"LocalXfo":{"value":{"tr":{"x":0,"y":0,"z":0},"ori":{"x":0,"y":0,"z":0,"w":1}}},"GlobalXfo":{"value":{"tr":{"x":0,"y":0,"z":0},"ori":{"x":0,"y":0,"z":0,"w":1}}},"BoundingBox":{"value":{"p0":{"x":null,"y":null,"z":null},"p1":{"x":null,"y":null,"z":null}}},"Items":{},"InitialXfoMode":{"value":3,"range\":[0,4],"step":1},"GroupTransform":{"value":{"tr":{"x":0,"y":0,"z":0},"ori":{"x":0,"y":0,"z":0,"w":1}}}},"name":"Foo","type":"KinematicGroup","treeItems":[["treeItem1","treeItem2"]]}`
     const input = JSON.parse(inputStr)
 
-    group.fromJSON(input, {
+    const a = {
       numTreeItems: 0,
       resolvePath: (path: any, cb: any) => {
         cb(treeItem1.resolvePath(path))
       },
-    })
-    expect(JSON.stringify(group.toJSON())).toEqual(inputStr)
+    }
+    group.fromJSON(input, a)
+    expect(jsonCompare(input, group.toJSON)).toEqual(true)
+    // expect(JSON.stringify(group.toJSON())).toEqual(inputStr)
   })
 
   it('fails when loading from JSON (serialization) with no context.', () => {
