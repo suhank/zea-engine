@@ -375,7 +375,9 @@ class Group extends BaseGroup {
    * @param {number} index - The index value.
    * @private
    */
-  bindItem(item: BaseItem, index: number) {
+  // TODO: BUG, in main, it looks like __bindItem isn't used,
+  // only bindItem ever gets called. __bindItem does not get used.
+  __bindItem(item: BaseItem, index: number) {
     super.bindItem(<TreeItem>item, index)
     if (!(item instanceof TreeItem)) return
 
