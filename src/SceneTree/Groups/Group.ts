@@ -128,7 +128,7 @@ class Group extends BaseGroup {
    * @return {boolean} - The return value.
    * @private
    */
-  __updateVisibility() {
+  updateVisibility() {
     if (super.updateVisibility()) {
       const value = this.isVisible()
       Array.from(this.__itemsParam.getValue()).forEach((item) => {
