@@ -252,35 +252,42 @@ class Group extends BaseGroup {
    * @private
    */
   __updateMaterial(): void {
+    console.warn('__updateMaterial is not async')
+    this.__updateMaterialHelper()
+    setTimeout(() => {}, 0) // TODO: unit tests are failing
+  }
+
+  /**
+   * The __updateMaterialHelper method.
+   * @private
+   */
+  __updateMaterialHelper(): void {
     // Make this function async so that we don't pull on the
     // graph immediately when we receive a notification.
     // Note: propagating using an operator would be much better.
-    setTimeout(() => {
-      const material = this.getParameter('Material').getValue()
+    const material = this.getParameter('Material').getValue()
 
-      // TODO: Bind an operator
-      Array.from(<Set<TreeItem>>this.__itemsParam.getValue()).forEach((item: TreeItem) => {
-        item.traverse((treeItem: TreeItem) => {
-          if (treeItem instanceof TreeItem && treeItem.hasParameter('Material')) {
-            const p = treeItem.getParameter('Material')
-            if (material) {
-              const m = p.getValue()
+    // TODO: Bind an operator
+    Array.from(<Set<TreeItem>>this.__itemsParam.getValue()).forEach((item: TreeItem) => {
+      item.traverse((treeItem: TreeItem) => {
+        if (treeItem instanceof TreeItem && treeItem.hasParameter('Material')) {
+          const p = treeItem.getParameter('Material')
+          if (material) {
+            const m = p.getValue()
 
-              // TODO: How do we filter material assignments? this is a nasty hack.
-              // but else we end up assigning surface materials to our edges.
-              if (m != material && (!m || m.getShaderName() != 'LinesShader')) {
-                p.__backupMaterial = m
-                p.loadValue(material)
-              }
-            } else if (p.__backupMaterial) {
-              p.loadValue(p.__backupMaterial)
+            // TODO: How do we filter material assignments? this is a nasty hack.
+            // but else we end up assigning surface materials to our edges.
+            if (m != material && (!m || m.getShaderName() != 'LinesShader')) {
+              p.__backupMaterial = m
+              p.loadValue(material)
             }
+          } else if (p.__backupMaterial) {
+            p.loadValue(p.__backupMaterial)
           }
-        }, false)
-      })
-    }, 0)
+        }
+      }, false)
+    })
   }
-
   // ////////////////////////////////////////
   // Cutaways
 
