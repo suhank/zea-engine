@@ -103,7 +103,7 @@ class SelectionSet extends BaseGroup {
    * @param {number} index - The index value.
    * @private
    */
-  __bindItem(item: BaseItem, index: number) {
+  bindItem(item: BaseItem, index: number) {
     super.bindItem(<TreeItem>item, index)
     if (!(item instanceof TreeItem)) return
 
