@@ -27,7 +27,7 @@ class MaterialGroup extends BaseGroup {
 
   constructor(name?: string) {
     super(name)
-    
+
     this.__materialParam = <MaterialParameter>this.addParameter(new MaterialParameter('Material'))
     this.__materialParam.on('valueChanged', () => {
       this.__updateMaterial()
@@ -44,25 +44,32 @@ class MaterialGroup extends BaseGroup {
     // Make this function async so that we don't pull on the
     // graph immediately when we receive a notification.
     // Note: propagating using an operator would be much better.
-    setTimeout(() => {
-      let highlighted = false
-      let color: Color
-      if (this.isSelected()) {
-        color = this.getHighlight()
-        highlighted = true
-        color.a = 0.2
-      }
 
-      const key = 'kinematicGroupItemHighlight' + this.getId()
-      Array.from(this.__itemsParam.getValue()).forEach((item) => {
-        if (item instanceof TreeItem) {
-          if (highlighted) item.addHighlight(key, color, true)
-          else item.removeHighlight(key, true)
-        }
-      })
-    }, 0)
+    // setTimeout(() => {}, 0)
+    // TODO: make this async
+    this.__updateHighlightHelper()
   }
+  /**
+   * The __updateHighlight method.
+   * @private
+   */
+  __updateHighlightHelper(): void {
+    let highlighted = false
+    let color: Color
+    if (this.isSelected()) {
+      color = this.getHighlight()
+      highlighted = true
+      color.a = 0.2
+    }
 
+    const key = 'kinematicGroupItemHighlight' + this.getId()
+    Array.from(this.__itemsParam.getValue()).forEach((item) => {
+      if (item instanceof TreeItem) {
+        if (highlighted) item.addHighlight(key, color, true)
+        else item.removeHighlight(key, true)
+      }
+    })
+  }
   /**
    * Changes selection's state of the group with all items it owns.
    *
@@ -84,31 +91,39 @@ class MaterialGroup extends BaseGroup {
     // Make this function async so that we don't pull on the
     // graph immediately when we receive a notification.
     // Note: propagating using an operator would be much better.
-    setTimeout(() => {
-      const material = this.getParameter('Material').getValue()
 
-      // TODO: Bind an operator
-      Array.from(this.__itemsParam.getValue()).forEach((item) => {
-        ;(<TreeItem>item).traverse((treeItem) => {
-          if (treeItem instanceof TreeItem && treeItem.hasParameter('Material')) {
-            const p: Parameter<Material> = treeItem.getParameter('Material')
-            if (material) {
-              const m = p.getValue()
-              // TODO: How do we filter material assignments? this is a nasty hack.
-              // but else we end up assigning surface materials to our edges.
-              if (m != material && (!m || m.getShaderName() != 'LinesShader')) {
-                p.__backupMaterial = m
-                p.setValue(material)
-              }
-            } else if (p.__backupMaterial) {
-              p.setValue(p.__backupMaterial)
-            }
-          }
-        })
-      })
-    }, 0)
+    // setTimeout(() => {}, 0)
+    // TODO: make async
+    this.__updateMaterialHelper()
   }
 
+  /**
+   * The __updateMaterial method.
+   * @private
+   */
+  __updateMaterialHelper() {
+    const material = this.getParameter('Material').getValue()
+
+    // TODO: Bind an operator
+    Array.from(this.__itemsParam.getValue()).forEach((item) => {
+      ;(<TreeItem>item).traverse((treeItem) => {
+        if (treeItem instanceof TreeItem && treeItem.hasParameter('Material')) {
+          const p: Parameter<Material> = treeItem.getParameter('Material')
+          if (material) {
+            const m = p.getValue()
+            // TODO: How do we filter material assignments? this is a nasty hack.
+            // but else we end up assigning surface materials to our edges.
+            if (m != material && (!m || m.getShaderName() != 'LinesShader')) {
+              p.__backupMaterial = m
+              p.setValue(material)
+            }
+          } else if (p.__backupMaterial) {
+            p.setValue(p.__backupMaterial)
+          }
+        }
+      })
+    })
+  }
   // ////////////////////////////////////////
   // Items
 

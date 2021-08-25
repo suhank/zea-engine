@@ -65,25 +65,33 @@ class SelectionSet extends BaseGroup {
     // Make this function async so that we don't pull on the
     // graph immediately when we receive a notification.
     // Note: propagating using an operator would be much better.
-    setTimeout(() => {
-      let highlighted = false
-      let color: Color
-      if (this.getParameter('Highlighted').getValue() || this.isSelected()) {
-        highlighted = true
-        color = this.getParameter('HighlightColor').getValue()
-        color.a = this.getParameter('HighlightFill').getValue()
-      }
 
-      const key = 'groupItemHighlight' + this.getId()
-      Array.from(this.__itemsParam.getValue()).forEach((item) => {
-        if (item instanceof TreeItem) {
-          if (highlighted) item.addHighlight(key, color, true)
-          else item.removeHighlight(key, true)
-        }
-      })
-    }, 0)
+    // setTimeout(() => {}, 0)
+    // TODO: make async
+    this.__updateHighlightHelper()
   }
 
+  /**
+   * The __updateHighlight method.
+   * @private
+   */
+  __updateHighlightHelper() {
+    let highlighted = false
+    let color: Color
+    if (this.getParameter('Highlighted').getValue() || this.isSelected()) {
+      highlighted = true
+      color = this.getParameter('HighlightColor').getValue()
+      color.a = this.getParameter('HighlightFill').getValue()
+    }
+
+    const key = 'groupItemHighlight' + this.getId()
+    Array.from(this.__itemsParam.getValue()).forEach((item) => {
+      if (item instanceof TreeItem) {
+        if (highlighted) item.addHighlight(key, color, true)
+        else item.removeHighlight(key, true)
+      }
+    })
+  }
   /**
    * Changes selection's state of the group with all items it owns.
    *

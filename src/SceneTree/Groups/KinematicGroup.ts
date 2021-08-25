@@ -82,25 +82,32 @@ class KinematicGroup extends BaseGroup {
     // Make this function async so that we don't pull on the
     // graph immediately when we receive a notification.
     // Note: propagating using an operator would be much better.
-    setTimeout(() => {
-      let highlighted = false
-      let color: Color
-      if (this.isSelected()) {
-        highlighted = true
-        color = this.getHighlight()
-        color.a = 0.2
-      }
+    // setTimeout(() => {}, 0)
 
-      const key = 'kinematicGroupItemHighlight' + this.getId()
-      Array.from(this.__itemsParam.getValue()).forEach((item) => {
-        if (item instanceof TreeItem) {
-          if (highlighted) item.addHighlight(key, color, true)
-          else item.removeHighlight(key, true)
-        }
-      })
-    }, 0)
+    // TODO: make this async
+    this.__updateHighlightHelper()
   }
+  /**
+   * The __updateHighlight method.
+   * @private
+   */
+  __updateHighlightHelper() {
+    let highlighted = false
+    let color: Color
+    if (this.isSelected()) {
+      highlighted = true
+      color = this.getHighlight()
+      color.a = 0.2
+    }
 
+    const key = 'kinematicGroupItemHighlight' + this.getId()
+    Array.from(this.__itemsParam.getValue()).forEach((item) => {
+      if (item instanceof TreeItem) {
+        if (highlighted) item.addHighlight(key, color, true)
+        else item.removeHighlight(key, true)
+      }
+    })
+  }
   /**
    * Changes selection's state of the group with all items it owns.
    *

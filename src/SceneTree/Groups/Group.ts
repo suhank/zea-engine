@@ -149,25 +149,32 @@ class Group extends BaseGroup {
     // Make this function async so that we don't pull on the
     // graph immediately when we receive a notification.
     // Note: propagating using an operator would be much better.
-    setTimeout(() => {
-      let highlighted = false
-      let color: Color
-      if (this.getParameter('Highlighted').getValue() || this.isSelected()) {
-        highlighted = true
-        color = this.getParameter('HighlightColor').getValue()
-        color.a = this.getParameter('HighlightFill').getValue()
-      }
 
-      const key = 'groupItemHighlight' + this.getId()
-      Array.from(this.__itemsParam.getValue()).forEach((item) => {
-        if (item instanceof TreeItem) {
-          if (highlighted) item.addHighlight(key, color, true)
-          else item.removeHighlight(key, true)
-        }
-      })
-    }, 0)
+    //setTimeout(() => {}, 0)
+    //TODO: make async
+    this.__updateHighlightHelper()
   }
+  /**
+   * The __updateHighlight method.
+   * @private
+   */
+  __updateHighlightHelper(): void {
+    let highlighted = false
+    let color: Color
+    if (this.getParameter('Highlighted').getValue() || this.isSelected()) {
+      highlighted = true
+      color = this.getParameter('HighlightColor').getValue()
+      color.a = this.getParameter('HighlightFill').getValue()
+    }
 
+    const key = 'groupItemHighlight' + this.getId()
+    Array.from(this.__itemsParam.getValue()).forEach((item) => {
+      if (item instanceof TreeItem) {
+        if (highlighted) item.addHighlight(key, color, true)
+        else item.removeHighlight(key, true)
+      }
+    })
+  }
   /**
    * Changes selection's state of the group with all items it owns.
    *
@@ -299,23 +306,31 @@ class Group extends BaseGroup {
     // Make this function async so that we don't pull on the
     // graph immediately when we receive a notification.
     // Note: propagating using an operator would be much better.
-    setTimeout(() => {
-      const cutEnabled = this.getParameter('CutAwayEnabled').getValue()
-      const cutAwayVector = this.getParameter('CutPlaneNormal').getValue()
-      const cutAwayDist = this.getParameter('CutPlaneDist').getValue()
 
-      Array.from(<Set<TreeItem>>this.__itemsParam.getValue()).forEach((item: TreeItem) => {
-        item.traverse((treeItem: TreeItem) => {
-          if (treeItem instanceof BaseGeomItem) {
-            treeItem.setCutawayEnabled(cutEnabled)
-            treeItem.setCutVector(cutAwayVector)
-            treeItem.setCutDist(cutAwayDist)
-          }
-        }, true)
-      })
-    }, 0)
+    // setTimeout(() => {}, 0)
+    // TODO: make async
+    this.__updateCutawayHelper()
   }
 
+  /**
+   * The __updateCutaway method.
+   * @private
+   */
+  __updateCutawayHelper(): any {
+    const cutEnabled = this.getParameter('CutAwayEnabled').getValue()
+    const cutAwayVector = this.getParameter('CutPlaneNormal').getValue()
+    const cutAwayDist = this.getParameter('CutPlaneDist').getValue()
+
+    Array.from(<Set<TreeItem>>this.__itemsParam.getValue()).forEach((item: TreeItem) => {
+      item.traverse((treeItem: TreeItem) => {
+        if (treeItem instanceof BaseGeomItem) {
+          treeItem.setCutawayEnabled(cutEnabled)
+          treeItem.setCutVector(cutAwayVector)
+          treeItem.setCutDist(cutAwayDist)
+        }
+      }, true)
+    })
+  }
   // ////////////////////////////////////////
   // Items
 
