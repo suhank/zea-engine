@@ -37,7 +37,7 @@ abstract class GLPass extends ParameterOwner {
    * @param {object} event - The event object.
    * @private
    */
-  __parameterValueChanged(event: Record<any, any>) {
+  parameterValueChanged(event: Record<any, any>) {
     super.parameterValueChanged(event)
     if (this.renderer) this.renderer.requestRedraw()
   }

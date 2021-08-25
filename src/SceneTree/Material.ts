@@ -208,7 +208,7 @@ class Material extends BaseItem {
    * @param {Record<any, any>} event - The event object emitted by the parameter.
    * @private
    */
-  __parameterValueChanged(event: Record<any, any>) {
+  parameterValueChanged(event: Record<any, any>) {
     this.__checkTransparency(event)
     this.__checkTextures(event)
     super.parameterValueChanged(event)

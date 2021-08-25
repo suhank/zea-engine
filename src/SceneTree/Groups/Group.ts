@@ -368,7 +368,7 @@ class Group extends BaseGroup {
    * @param {number} index - The index value.
    * @private
    */
-  __bindItem(item: BaseItem, index: number) {
+  bindItem(item: BaseItem, index: number) {
     super.bindItem(<TreeItem>item, index)
     if (!(item instanceof TreeItem)) return
 
@@ -442,7 +442,7 @@ class Group extends BaseGroup {
    * @param {number} index - The index value.
    * @private
    */
-  __unbindItem(item: BaseItem, index: number) {
+  unbindItem(item: BaseItem, index: number) {
     super.unbindItem(<TreeItem>item, index)
     if (!(item instanceof TreeItem)) return
 
@@ -516,7 +516,7 @@ class Group extends BaseGroup {
     // do not get changed during the unbind.
     const items = Array.from(this.__itemsParam.getValue())
     for (let i = items.length - 1; i >= 0; i--) {
-      this.__unbindItem(items[i], i)
+      this.unbindItem(items[i], i)
     }
     // this.__eventHandlers = []
     this.memberXfoOps = []

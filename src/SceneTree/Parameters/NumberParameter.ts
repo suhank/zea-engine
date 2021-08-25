@@ -117,7 +117,6 @@ class NumberParameter extends Parameter<number> implements IBinaryReader {
    * @return {NumberParameter} - Returns a new number parameter.
    */
   clone(): NumberParameter {
-    console.log('clone:: ', this.range)
     return new NumberParameter(this.name, this.value, this.range, this.step)
   }
 }
