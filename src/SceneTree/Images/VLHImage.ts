@@ -23,11 +23,11 @@ class VLHImage extends BaseImage {
   protected __ambientLightFactor: number
   protected __hdrTint: Color
   protected __stream: boolean
-  protected __domElement: any
+  protected __domElement: HTMLElement
   protected __data: Record<any, any>
 
   // loaded: any
-  updated: any
+  updated: any // TODO: treated as a boolean and function
   /**
    * Create a VLH image.
    * @param {string} name - The name value.
@@ -65,7 +65,7 @@ class VLHImage extends BaseImage {
    *
    * @return {HTMLElement} - The return value.
    */
-  getDOMElement() {
+  getDOMElement(): HTMLElement {
     return this.__domElement
   }
 
@@ -74,7 +74,7 @@ class VLHImage extends BaseImage {
    *
    * @return {string} - The return value.
    */
-  getResourcePath() {
+  getResourcePath(): string {
     return this.getParameter('FilePath').getValue()
   }
 
@@ -83,7 +83,7 @@ class VLHImage extends BaseImage {
    * @param {Record<any, any>} entries - The entries value.
    * @private
    */
-  __decodeData(entries: Record<any, any>) {
+  __decodeData(entries: Record<any, any>): void {
     const ldr = entries.ldr
     const cdm = entries.cdm
 
@@ -152,7 +152,7 @@ class VLHImage extends BaseImage {
    *
    * @return {boolean} - The return value.
    */
-  isStream() {
+  isStream(): boolean {
     return false
   }
 
@@ -161,16 +161,16 @@ class VLHImage extends BaseImage {
    *
    * @return {boolean} - The return value.
    */
-  isLoaded() {
+  isLoaded(): boolean {
     return this.__loaded
   }
 
   /**
    * Returns all parameters and class state values.
    *
-   * @return {object} - The return value.
+   * @return {Record<any,any>} - The return value.
    */
-  getParams() {
+  getParams(): Record<any, any> {
     const params = super.getParams()
     if (this.__loaded) {
       params['data'] = this.__data
@@ -193,7 +193,7 @@ class VLHImage extends BaseImage {
    * @private
    * @return {Color} - The return value.
    */
-  getHDRTint() {
+  getHDRTint(): Color {
     return this.__hdrTint
   }
 
@@ -205,7 +205,9 @@ class VLHImage extends BaseImage {
    *
    * @param {Record<any, any>} context - The context value.
    */
-  toJSON(context?: Record<any, any>): Record<any, any>{return {}}
+  toJSON(context?: Record<any, any>): Record<any, any> {
+    return {}
+  }
 
   /**
    * The fromJSON method decodes a json object for this type.
@@ -213,7 +215,9 @@ class VLHImage extends BaseImage {
    * @param {Record<any, any>} json - The json object this item must decode.
    * @param {Record<any, any>} context - The context value.
    */
-  fromJSON(json: Record<any, any>, context: Record<any, any>): Record<any, any>{return {}}
+  fromJSON(json: Record<any, any>, context: Record<any, any>): Record<any, any> {
+    return {}
+  }
 
   /**
    * Sets state of current Image using a binary reader object, and adds it to the resource loader.
@@ -221,7 +225,7 @@ class VLHImage extends BaseImage {
    * @param {BinReader} reader - The reader value.
    * @param {Record<any, any>} context - The context value.
    */
-  readBinary(reader: BinReader, context: Record<any, any>) {
+  readBinary(reader: BinReader, context: Record<any, any>): void {
     // super.readBinary(reader, context);
     this.setName(reader.loadStr())
     let resourcePath: string = reader.loadStr()
