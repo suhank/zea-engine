@@ -614,9 +614,9 @@ class Mesh extends BaseGeom {
   /**
    * The computeHardEdgesIndices method.
    * @param {number} hardAngle - The hardAngle value in radians.
-   * @return {array} - The return value.
+   * @return {Uint32Array} - The return value.
    */
-  computeHardEdgesIndices(hardAngle = 1.0): any {
+  computeHardEdgesIndices(hardAngle = 1.0): Uint32Array {
     if (this.edgeVerts.length == 0) this.calculateEdgeAngles()
 
     const hardEdges: number[] = []
@@ -677,13 +677,7 @@ class Mesh extends BaseGeom {
     // if (debugAttrValues)
     //     maxIndex = Math.max(...indices);
 
-    interface attrBuffer {
-      values: any
-      count: number
-      dimension: any
-      normalized: boolean
-      dataType: string
-    }
+
     const attrBuffers: Record<string, attrBuffer> = {}
     for (const [attrName, attr] of this.__vertexAttributes) {
       let values

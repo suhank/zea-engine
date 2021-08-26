@@ -72,3 +72,10 @@ interface ShaderParseResult {
   uniforms: Record<string, string>
   attributes: Record<string, Attribute>
 }
+interface attrBuffer {
+  values: any
+  count: number
+  dimension: any
+  normalized: boolean
+  dataType: string
+}

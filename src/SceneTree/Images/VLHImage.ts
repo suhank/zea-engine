@@ -205,7 +205,7 @@ class VLHImage extends BaseImage {
    *
    * @param {Record<any, any>} context - The context value.
    */
-  toJSON(context?: Record<any, any>): any {}
+  toJSON(context?: Record<any, any>): Record<any, any>{return {}}
 
   /**
    * The fromJSON method decodes a json object for this type.
@@ -213,7 +213,7 @@ class VLHImage extends BaseImage {
    * @param {Record<any, any>} json - The json object this item must decode.
    * @param {Record<any, any>} context - The context value.
    */
-  fromJSON(json: Record<any, any>, context: Record<any, any>) {}
+  fromJSON(json: Record<any, any>, context: Record<any, any>): Record<any, any>{return {}}
 
   /**
    * Sets state of current Image using a binary reader object, and adds it to the resource loader.

@@ -71,7 +71,7 @@ class Vec3Attribute extends Attribute {
    * @param {number} faceVertex - The index of vertex within the face. [0... num face vertices]
    * @return {Vec3} - The return value.
    */
-  getFaceVertexValueRef(face: number, faceVertex: number): any {
+  getFaceVertexValueRef(face: number, faceVertex: number): Vec3 {
     const array = this.getFaceVertexValueRef_array(face, faceVertex)
     return new Vec3(array)
   }

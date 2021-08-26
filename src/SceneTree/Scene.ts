@@ -137,7 +137,7 @@ class Scene {
     for (const cb of plcbs) cb()
   }
 
-  resolvePath(path: string): any {
+  resolvePath(path: string): void {
     console.warn('resolvePath is not implemented')
   }
 }

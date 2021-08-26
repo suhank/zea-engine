@@ -120,7 +120,7 @@ abstract class GLPass extends ParameterOwner {
 
   /**
    * The draw method.
-   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {RenderState} renderstate - The object tracking the current state of the renderer
    */
   draw(renderstate: RenderState): void {
     throw Error('draw not implemented on GLPass')
@@ -128,13 +128,13 @@ abstract class GLPass extends ParameterOwner {
 
   /**
    * The drawHighlightedGeoms method.
-   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {RenderState} renderstate - The object tracking the current state of the renderer
    */
   drawHighlightedGeoms(renderstate: RenderState): void {}
 
   /**
    * The drawGeomData method.
-   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {RenderState} renderstate - The object tracking the current state of the renderer
    */
   drawGeomData(renderstate: RenderState): void {}
 

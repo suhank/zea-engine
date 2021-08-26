@@ -166,7 +166,7 @@ class Attribute extends BaseClass {
    * @param {number} faceVertex - The index of vertex within the face. [0... num face vertices]
    * @return {Float32Array} - The return value.
    */
-  getFaceVertexValueRef_array(face: number, faceVertex: number): any {
+  getFaceVertexValueRef_array(face: number, faceVertex: number): Float32Array {
     const vertex = this.mesh.getFaceVertexIndex(face, faceVertex)
     if (vertex in this.splits && face in this.splits[vertex]) {
       return this.splitValues[this.splits[vertex][face]]
@@ -276,7 +276,7 @@ class Attribute extends BaseClass {
   generateSplitValues(
     splitIndices: Record<number, Record<number, number>>,
     splitCount: number
-  ): Float32Array | Int32Array | Int16Array | Int8Array | Uint8Array | Uint16Array | Uint32Array {
+  ): TypedArray {
     if (splitCount == 0) return this.data
 
     const numUnSplitValues = this.getCount()

@@ -9,6 +9,7 @@ type TypedArray =
   | Float32Array
   | Float64Array
 
+  
   interface SystemDescription {
     isMobileDevice: boolean;
     isIOSDevice: boolean;

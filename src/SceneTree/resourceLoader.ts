@@ -151,8 +151,9 @@ class ResourceLoader extends EventEmitter {
     return value
   }
 
-  resourceAvailable(resource: string): any {
+  resourceAvailable(resource: string): boolean{
     console.warn('ResourceAvailable not implemented on resourceLoader')
+    return false;
   }
   /**
    * The loadURL method.
