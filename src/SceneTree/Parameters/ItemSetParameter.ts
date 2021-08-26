@@ -44,7 +44,7 @@ class ItemSetParameter extends Parameter<Set<BaseItem>> {
    * @return {BaseItem} - The return value.
    */
   getItem(index: number): BaseItem | undefined {
-    if (!this.__items) return undefined
+    // if (!this.__items) return undefined
     return Array.from(this.__items)[index]
   }
 
@@ -59,8 +59,6 @@ class ItemSetParameter extends Parameter<Set<BaseItem>> {
       console.warn('ItemSet __filterFn rejecting item:', item.getPath())
       return
     }
-
-    if (!this.__items) this.__items = new Set() // may not be needed since initialized in constructor
 
     this.__items.add(item)
 
@@ -89,8 +87,6 @@ class ItemSetParameter extends Parameter<Set<BaseItem>> {
    * @return {BaseItem} - The return value.
    */
   removeItem(index: number, emitValueChanged = true): BaseItem | void {
-    if (!this.__items) return
-
     const item = Array.from(this.__items)[index]
     this.__items.delete(item)
     this.emit('itemRemoved', { item, index })
@@ -104,22 +100,18 @@ class ItemSetParameter extends Parameter<Set<BaseItem>> {
    * @param {boolean} emit - The emit param.
    */
   setItems(items: Set<BaseItem>, emit = true): void {
-    if (!this.__items) this.__items = items
-    else {
-      for (let i = this.__items.size - 1; i >= 0; i--) {
-        const item = Array.from(this.__items)[i]
-        if (!items.has(item)) {
-          this.removeItem(i, false)
-        }
+    for (let i = this.__items.size - 1; i >= 0; i--) {
+      const item = this.__items[i]
+      if (!items.has(item)) {
+        this.removeItem(item, false)
       }
-
-      for (const item of items) {
-        if (!this.__items.has(item)) {
-          this.addItem(item, false)
-        }
-      }
-      if (emit) this.emit('valueChanged')
     }
+    for (const item of items) {
+      if (!this.__items.has(item)) {
+        this.addItem(item, false)
+      }
+    }
+    if (emit) this.emit('valueChanged', {})
   }
 
   /**
@@ -127,7 +119,6 @@ class ItemSetParameter extends Parameter<Set<BaseItem>> {
    * @param {boolean} emit - The emit value.
    */
   clearItems(emitValueChanged = true): void {
-    if (!this.__items) this.__items = new Set()
     this.__items.clear()
     if (emitValueChanged) this.emit('valueChanged', {})
   }
@@ -137,8 +128,7 @@ class ItemSetParameter extends Parameter<Set<BaseItem>> {
    * @return {number} - The return value.
    */
   getNumItems(): number {
-    if (!this.__items) this.__items = new Set()
-    return Array.from(this.__items).length
+    return this.__items.size // might be faster
   }
   /**
    * The getValue method.
@@ -195,7 +185,6 @@ class ItemSetParameter extends Parameter<Set<BaseItem>> {
    */
   clone(): ItemSetParameter {
     const clonedParam = new ItemSetParameter(this.name, this.filterFn)
-    // if (this.__items) clonedParam.setItems(this.__items)
     return clonedParam
   }
 }
