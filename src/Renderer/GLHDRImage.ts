@@ -55,7 +55,7 @@ class GLHDRImage extends GLTexture2D {
    * @param {Record<any,any>} hdrImageParams - The HDR image parameters.
    * @private
    */
-  __unpackHDRImage(hdrImageParams: Record<any, any>) {
+  __unpackHDRImage(hdrImageParams: Record<any, any>): void {
     const gl = this.__gl
 
     const ldr = hdrImageParams.data.ldr
@@ -160,7 +160,7 @@ class GLHDRImage extends GLTexture2D {
    * The destroy is called by the system to cause explicit resources cleanup.
    * Users should never need to call this method directly.
    */
-  destroy() {
+  destroy(): void {
     super.destroy()
     if (this.__fbo) {
       this.__fbo.destroy()

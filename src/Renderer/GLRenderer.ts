@@ -14,6 +14,7 @@ import { generateShaderGeomBinding, IGeomShaderBinding } from './Drawing/GeomSha
 import { BaseEvent } from '../Utilities/BaseEvent'
 import { VLHImage } from '../SceneTree/Images/VLHImage'
 import { EnvMapAssignedEvent } from '../Utilities/Events/EnvMapAssignedEvent'
+import { GLViewport } from './GLViewport'
 
 const ALL_PASSES = PassType.OPAQUE | PassType.TRANSPARENT | PassType.OVERLAY
 // TODO: move this fn somewhere
@@ -95,7 +96,7 @@ class GLRenderer extends GLBaseRenderer {
    * @param {EnvMap|BaseImage} env - The env value.
    * @private
    */
-  __bindEnvMap(env: EnvMap | BaseImage) {
+  __bindEnvMap(env: EnvMap | BaseImage): void {
     const gl = this.__gl
     if (env instanceof EnvMap) {
       // Note: Safari doesn't support rendering to floating
@@ -169,7 +170,7 @@ class GLRenderer extends GLBaseRenderer {
    * The setScene method.
    * @param {Scene} scene - The scene value.
    */
-  setScene(scene: Scene) {
+  setScene(scene: Scene): void {
     const envMapParam = scene.settings.getParameter('EnvMap')
     if (envMapParam.getValue() != undefined) {
       this.__bindEnvMap(envMapParam.getValue())
@@ -193,7 +194,7 @@ class GLRenderer extends GLBaseRenderer {
    * @param {string} name - The name value.
    * @return {GLViewport} - The return value.
    */
-  addViewport(name: string) {
+  addViewport(name: string): GLViewport {
     const vp = super.addViewport(name)
     return vp
   }
@@ -204,7 +205,7 @@ class GLRenderer extends GLBaseRenderer {
   /**
    * Getter for exposure.
    */
-  get exposure() {
+  get exposure(): number {
     return this.__exposure
   }
 
@@ -220,7 +221,7 @@ class GLRenderer extends GLBaseRenderer {
   /**
    * Getter for gamma.
    */
-  get gamma() {
+  get gamma(): number {
     return this.__gamma
   }
 
@@ -236,7 +237,7 @@ class GLRenderer extends GLBaseRenderer {
   /**
    * Getter for displayEnvironment.
    */
-  get displayEnvironment() {
+  get displayEnvironment(): boolean {
     return this.__displayEnvironment
   }
 

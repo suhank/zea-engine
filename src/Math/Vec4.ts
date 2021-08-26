@@ -505,7 +505,7 @@ class Vec4 {
    *
    * @return {Float32Array | Uint32Array} - Returns as an array.
    */
-  asArray() {
+  asArray(): Float32Array | Uint32Array {
     return this.__data
   }
 

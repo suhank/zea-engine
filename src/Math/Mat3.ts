@@ -325,7 +325,7 @@ class Mat3 {
    * @param {Vec3} dir - The dir value.
    * @param {Vec3} up - The up value.
    */
-  setFromDirectionAndUpvector(dir: Vec3, up: Vec3) {
+  setFromDirectionAndUpvector(dir: Vec3, up: Vec3): void {
     const zAxis = dir
     const zLen = zAxis.length()
     if (zLen < Number.EPSILON) {

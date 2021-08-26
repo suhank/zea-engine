@@ -602,7 +602,7 @@ class Vec2 {
     return new Vec2(px, py)
   }
 
-  isValid() {
+  isValid(): boolean {
     for (const v of this.__data) {
       if (v == Infinity || isNaN(v)) return false
     }

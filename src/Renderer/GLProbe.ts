@@ -4,6 +4,7 @@ import { PreComputeBRDFShader } from './Shaders/PreComputeBRDFShader'
 import { ConvolveIrradianceShader } from './Shaders/ConvolveIrradianceShader'
 import { ConvolveSpecularShader } from './Shaders/ConvolveSpecularShader'
 import { generateShaderGeomBinding } from './Drawing/GeomShaderBinding'
+import { GLTexture2D } from './GLTexture2D'
 
 /** Class representing a GL probe.
  * @private
@@ -43,9 +44,9 @@ class GLProbe extends EventEmitter {
 
   /**
    * The convolveProbe method.
-   * @param {any} srcGLTex - The srcGLTex value.
+   * @param {GLTexture2D} srcGLTex - The srcGLTex value.
    */
-  convolveProbe(srcGLTex: any) {
+  convolveProbe(srcGLTex: GLTexture2D): void {
     const gl = this.__gl
 
     const renderstate: RenderState = <RenderState>{}
@@ -298,7 +299,7 @@ class GLProbe extends EventEmitter {
    * The destroy is called by the system to cause explicit resources cleanup.
    * Users should never need to call this method directly.
    */
-  destroy() {
+  destroy(): void {
     // super.destroy()
   }
 }

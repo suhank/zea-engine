@@ -677,7 +677,7 @@ class Vec3 {
     this.z = reader.loadFloat32()
   }
 
-  isValid() {
+  isValid(): boolean {
     for (const v of this.__data) {
       if (v == Infinity || isNaN(v)) return false
     }

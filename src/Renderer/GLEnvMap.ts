@@ -97,7 +97,7 @@ class GLEnvMap extends GLProbe {
    * The setBackgroundFocus method.
    * @param {number} val - The val param.
    */
-  setBackgroundFocus(val: number) {
+  setBackgroundFocus(val: number): void {
     this.__backgroundFocus = val
     this.__renderer.requestRedraw()
   }
@@ -106,7 +106,7 @@ class GLEnvMap extends GLProbe {
    * The draw method.
    * @param {RenderState} renderstate - The object tracking the current state of the renderer
    */
-  draw(renderstate: ColorRenderState) {
+  draw(renderstate: ColorRenderState): void {
     if (this.__envMap.isLoaded()) {
       const gl = this.__gl
       const debug = false
@@ -157,7 +157,7 @@ class GLEnvMap extends GLProbe {
    * The destroy is called by the system to cause explicit resources cleanup.
    * Users should never need to call this method directly.
    */
-  destroy() {
+  destroy(): void {
     super.destroy()
     this.__srcGLTex.destroy()
   }

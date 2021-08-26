@@ -296,14 +296,14 @@ class GLBaseRenderer extends ParameterOwner {
   /**
    * The suspendDrawing method.
    */
-  suspendDrawing() {
+  suspendDrawing(): void {
     this.__drawSuspensionLevel++
   }
 
   /**
    * The resumeDrawing method.
    */
-  resumeDrawing() {
+  resumeDrawing(): void {
     this.__drawSuspensionLevel--
     if (this.__drawSuspensionLevel == 0) {
       this.renderGeomDataFbos()
@@ -314,7 +314,7 @@ class GLBaseRenderer extends ParameterOwner {
   /**
    * The renderGeomDataFbos method. Frame buffer (FBO).
    */
-  renderGeomDataFbos() {
+  renderGeomDataFbos(): void {
     if (this.__renderGeomDataFbosRequested == true) return
 
     this.__renderGeomDataFbosRequested = true
@@ -357,7 +357,7 @@ class GLBaseRenderer extends ParameterOwner {
    *
    * @param {Scene} scene - The scene value.
    */
-  setScene(scene: Scene) {
+  setScene(scene: Scene): void {
     this.__scene = scene
     this.addTreeItem(this.__scene.getRoot())
 
@@ -369,7 +369,7 @@ class GLBaseRenderer extends ParameterOwner {
    * @param {Record<any,any>} event -
    * @private
    */
-  __childItemAdded(event: Record<any, any>) {
+  __childItemAdded(event: Record<any, any>): void {
     this.addTreeItem(event.childItem)
   }
 
@@ -377,7 +377,7 @@ class GLBaseRenderer extends ParameterOwner {
    * @param {Record<any, any>} event -
    * @private
    */
-  __childItemRemoved(event: Record<any, any>) {
+  __childItemRemoved(event: Record<any, any>): void {
     this.removeTreeItem(event.childItem)
   }
 
@@ -460,7 +460,7 @@ class GLBaseRenderer extends ParameterOwner {
    *
    * @param {TreeItem} treeItem - The tree item to remove.
    */
-  removeTreeItem(treeItem: TreeItem) {
+  removeTreeItem(treeItem: TreeItem): void {
     // Note: we can have BaseItems in the tree now.
     if (!(treeItem instanceof TreeItem)) return
 
@@ -530,7 +530,7 @@ class GLBaseRenderer extends ParameterOwner {
    *
    * @private
    */
-  handleResize(width: number, height: number) {
+  handleResize(width: number, height: number): void {
     if (this.__xrViewportPresenting) {
       return
     }
@@ -583,7 +583,7 @@ class GLBaseRenderer extends ParameterOwner {
    * @param {HTMLCanvasElement|HTMLElement} $canvas - The $canvas element.
    * @param { Record<any, any>} webglOptions - The webglOptions value.
    */
-  setupWebGL($canvas: HTMLCanvasElement, webglOptions: Record<any, any>) {
+  setupWebGL($canvas: HTMLCanvasElement, webglOptions: Record<any, any>): void {
     const { tagName } = $canvas
 
     if (!['DIV', 'CANVAS'].includes(tagName)) {
@@ -697,7 +697,7 @@ class GLBaseRenderer extends ParameterOwner {
   /**
    * Binds IO event handlers to the canvas
    */
-  bindEventHandlers() {
+  bindEventHandlers(): void {
     // ////////////////////////////////
     // Setup event handlers
     const isValidCanvas = () => this.getWidth() > 0 && this.getHeight()
@@ -968,7 +968,7 @@ class GLBaseRenderer extends ParameterOwner {
    * > See also: ${Viewport#frameView}
    * @param {number} viewportIndex - The viewportIndex value. If multiple viewports are configured, a viewport index will need to be provided.
    */
-  frameAll(viewportIndex = 0) {
+  frameAll(viewportIndex = 0): void {
     this.__viewports[viewportIndex].frameView([this.__scene.getRoot()])
   }
 
@@ -1158,14 +1158,14 @@ class GLBaseRenderer extends ParameterOwner {
   /**
    * The stopContinuousDrawing method.
    */
-  stopContinuousDrawing() {
+  stopContinuousDrawing(): void {
     this.__continuousDrawing = false
   }
 
   /**
    * The toggleContinuousDrawing method.
    */
-  toggleContinuousDrawing() {
+  toggleContinuousDrawing(): void {
     if (!this.__continuousDrawing) {
       this.startContinuousDrawing()
     } else {
@@ -1176,7 +1176,7 @@ class GLBaseRenderer extends ParameterOwner {
   /**
    * The drawItemChanged method.
    */
-  drawItemChanged() {
+  drawItemChanged(): void {
     for (const vp of this.__viewports) vp.invalidateGeomDataBuffer()
     this.requestRedraw()
   }
@@ -1210,7 +1210,7 @@ class GLBaseRenderer extends ParameterOwner {
   /**
    * Forces a redraw of the viewports
    */
-  forceRender() {
+  forceRender(): void {
     if (!this.__redrawRequested) {
       console.warn('@GlBaseRenderer#forceRender - Scene is not dirty')
       return
@@ -1226,7 +1226,7 @@ class GLBaseRenderer extends ParameterOwner {
    * The bindGLBaseRenderer method.
    * @param {RenderState} renderstate - The renderstate value.
    */
-  bindGLBaseRenderer(renderstate: RenderState) {
+  bindGLBaseRenderer(renderstate: RenderState): void {
     renderstate.gl = this.__gl
     renderstate.shaderopts = { directives: this.directives } // we will start deprecating this in favor os a simpler directives
 
@@ -1300,7 +1300,7 @@ class GLBaseRenderer extends ParameterOwner {
    * The drawScene method.
    * @param {RenderState} renderstate - The renderstate value.
    */
-  drawScene(renderstate: RenderState) {
+  drawScene(renderstate: RenderState): void {
     // Bind already called by GLRenderer.
 
     renderstate.directives = [...this.directives, '#define DRAW_COLOR']
@@ -1318,7 +1318,7 @@ class GLBaseRenderer extends ParameterOwner {
    * The drawHighlightedGeoms method.
    * @param {RenderState} renderstate - The renderstate value.
    */
-  drawHighlightedGeoms(renderstate: RenderState) {
+  drawHighlightedGeoms(renderstate: RenderState): void {
     this.bindGLBaseRenderer(renderstate)
 
     renderstate.directives = [...this.directives, '#define DRAW_HIGHLIGHT']
@@ -1337,7 +1337,7 @@ class GLBaseRenderer extends ParameterOwner {
    * @param {object} renderstate - The renderstate value.
    * @param {number} [mask=255] - The mask value
    */
-  drawSceneGeomData(renderstate: RenderState, mask = 255) {
+  drawSceneGeomData(renderstate: RenderState, mask = 255): void {
     this.bindGLBaseRenderer(renderstate)
 
     renderstate.directives = [...this.directives, '#define DRAW_GEOMDATA']
@@ -1365,7 +1365,7 @@ class GLBaseRenderer extends ParameterOwner {
    * @param {function} cls - The cls value.
    * @param {PassType} passType - The passType value.
    */
-  static registerPass(cls: any, passType: any) {
+  static registerPass(cls: any, passType: any): void {
     if (!registeredPasses[passType]) registeredPasses[passType] = []
     registeredPasses[passType].push(cls)
   }
@@ -1374,7 +1374,7 @@ class GLBaseRenderer extends ParameterOwner {
    * The destroy is called by the system to cause explicit resources cleanup.
    * Users should never need to call this method directly.
    */
-  destroy() {
+  destroy(): void {
     this.resizeObserver.disconnect()
   }
 }

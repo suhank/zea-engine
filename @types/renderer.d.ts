@@ -79,3 +79,8 @@ interface attrBuffer {
   normalized: boolean
   dataType: string
 }
+
+interface LayoutItem {
+  pos: Vec2
+  size: Vec2
+}

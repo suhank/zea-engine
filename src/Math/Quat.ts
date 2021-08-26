@@ -539,7 +539,7 @@ class Quat {
    *
    * @param {Quat} other - The other Quat to add.
    */
-  addInPlace(other: Quat) {
+  addInPlace(other: Quat): void {
     this.x += other.x
     this.y += other.y
     this.z += other.z

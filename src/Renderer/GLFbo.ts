@@ -52,7 +52,7 @@ class GLFbo {
    * @private
    * @param event The event object providing the event details
    */
-  textureResized(event: BaseEvent) {
+  textureResized(event: BaseEvent): void {
     this.resize(this.__colorTexture.width, this.__colorTexture.height, false)
   }
 
@@ -61,7 +61,7 @@ class GLFbo {
    *
    * @param {Color} clearColor - The clearColor value.
    */
-  setClearColor(clearColor: Color) {
+  setClearColor(clearColor: Color): void {
     this.__clearColor = clearColor
   }
 
@@ -143,7 +143,7 @@ class GLFbo {
    *
    * @param {GLTexture2D} colorTexture - The colorTexture value.
    */
-  setColorTexture(colorTexture: GLTexture2D) {
+  setColorTexture(colorTexture: GLTexture2D): void {
     const gl = this.__gl
     this.__colorTexture = colorTexture
     gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.__colorTexture.glTex, 0)
@@ -152,14 +152,14 @@ class GLFbo {
   /**
    * Returns the value of the deptTexture property.
    */
-  get depthTextureGL() {
+  get depthTextureGL(): WebGLTexture {
     return this.__depthTexture
   }
 
   /**
    * The setup method.
    */
-  setup() {
+  setup(): void {
     const gl = this.__gl
 
     this.__fbo = gl.createFramebuffer()
@@ -262,7 +262,7 @@ class GLFbo {
    * @todo: Fbos should manage the textures assigned to them.
    * E.g. resizing and preserving data.
    */
-  resize(width: number, height: number, resizeTexture: any) {
+  resize(width: number, height: number, resizeTexture: any): void {
     const gl = this.__gl
 
     if (resizeTexture) {
@@ -313,7 +313,7 @@ class GLFbo {
    * The __checkFramebuffer method.
    * @private
    */
-  __checkFramebuffer() {
+  __checkFramebuffer(): void {
     const gl = this.__gl
 
     let check
@@ -357,7 +357,7 @@ class GLFbo {
    *
    * @param {object} renderstate - The renderstate value.
    */
-  bindForWriting(renderstate?: RenderState) {
+  bindForWriting(renderstate?: RenderState): void {
     if (renderstate) {
       this.__prevBoundFbo = renderstate.boundRendertarget
       renderstate.boundRendertarget = this.__fbo
@@ -373,7 +373,7 @@ class GLFbo {
    *
    * @param {RenderState} renderstate - The renderstate value.
    */
-  unbindForWriting(renderstate: RenderState) {
+  unbindForWriting(renderstate: RenderState): void {
     if (renderstate) renderstate.boundRendertarget = this.__prevBoundFbo
     const gl = this.__gl
     if (gl.name == 'webgl2') gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, this.__prevBoundFbo)
@@ -385,7 +385,7 @@ class GLFbo {
    *
    * @param {RenderState} renderstate - The renderstate value.
    */
-  bind(renderstate?: RenderState) {
+  bind(renderstate?: RenderState): void {
     this.bindForWriting(renderstate)
   }
 
@@ -394,7 +394,7 @@ class GLFbo {
    *
    * @param {RenderState} renderstate - The renderstate value.
    */
-  unbind(renderstate?: RenderState) {
+  unbind(renderstate?: RenderState): void {
     if (renderstate) {
       // For write operations
       this.unbindForWriting(renderstate)
@@ -408,7 +408,7 @@ class GLFbo {
    *
    * @param {RenderState} renderstate - The renderstate value.
    */
-  bindForReading(renderstate?: RenderState) {
+  bindForReading(renderstate?: RenderState): void {
     const gl = this.__gl
     if (gl.name == 'webgl2') gl.bindFramebuffer(gl.READ_FRAMEBUFFER, this.__fbo)
     else gl.bindFramebuffer(gl.FRAMEBUFFER, this.__fbo)
@@ -419,7 +419,7 @@ class GLFbo {
    *
    * @param {RenderState} renderstate - The renderstate value.
    */
-  unbindForReading() {
+  unbindForReading(): void {
     const gl = this.__gl
     if (gl.name == 'webgl2') gl.bindFramebuffer(gl.READ_FRAMEBUFFER, null)
     else gl.bindFramebuffer(gl.FRAMEBUFFER, null)
@@ -429,7 +429,7 @@ class GLFbo {
    * Enables all color components of the rendering context of the Fbo,
    * specifying the default color values when clearing color buffers and clears the buffers to preset values.
    */
-  clear() {
+  clear(): void {
     const gl = this.__gl
     gl.colorMask(true, true, true, true)
     const col = this.__clearColor.asArray()
@@ -445,7 +445,7 @@ class GLFbo {
    * Runs [`bind`](#bind) then [`clear`](#clear) methods.
    * @param {RenderState} renderstate - The renderstate value.
    */
-  bindAndClear(renderstate?: RenderState) {
+  bindAndClear(renderstate?: RenderState): void {
     this.bind(renderstate)
     this.clear()
   }
@@ -454,7 +454,7 @@ class GLFbo {
    * The destroy is called by the system to cause explicit resources cleanup.
    * Users should never need to call this method directly.
    */
-  destroy() {
+  destroy(): void {
     const gl = this.__gl
     gl.bindFramebuffer(gl.FRAMEBUFFER, null)
     gl.deleteFramebuffer(this.__fbo)

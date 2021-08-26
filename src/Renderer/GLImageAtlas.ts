@@ -12,10 +12,6 @@ import { AtlasLayoutShader } from './Shaders/AtlasLayoutShader'
 import { BaseEvent } from '../Utilities/BaseEvent'
 import { GLShader } from './GLShader'
 
-interface LayoutItem {
-  pos: Vec2
-  size: Vec2
-}
 /**
  * An Image Atlas lays out multiple smaller images within a larger image atlas, and tracks their positions.
  * @private
@@ -33,7 +29,7 @@ class GLImageAtlas extends GLRenderTarget {
   protected ready: boolean
   protected __layout: Array<LayoutItem>
   protected __atlasLayoutTexture: any
-  protected __layoutVec4s: any
+  protected __layoutVec4s: Array<any>
   protected __atlasLayoutShaderBinding: IGeomShaderBinding
   protected __atlasLayoutShader: GLShader
   /**
@@ -130,7 +126,7 @@ class GLImageAtlas extends GLRenderTarget {
    * The removeSubImage method.
    * @param {BaseImage} subImage - The subImage value.
    */
-  removeSubImage(subImage: BaseImage) {
+  removeSubImage(subImage: BaseImage): void {
     let index
     if (subImage instanceof BaseImage) {
       const gltext = subImage.getMetadata('ImageAtlas_gltex')
@@ -168,7 +164,7 @@ class GLImageAtlas extends GLRenderTarget {
   /**
    * The generateAtlasLayout method.
    */
-  generateAtlasLayout(minTileSize?: any) {
+  generateAtlasLayout(minTileSize?: any): void {
     if (this.__subImages.length == 0) {
       this.__layoutNeedsRegeneration = false
       return
@@ -301,7 +297,7 @@ class GLImageAtlas extends GLRenderTarget {
    * @param {number} index - The index value.
    * @return {object} - The return value.
    */
-  getLayoutData(index: number) {
+  getLayoutData(index: number): any {
     return this.__layoutVec4s[index]
   }
 
@@ -310,7 +306,7 @@ class GLImageAtlas extends GLRenderTarget {
    * @param {boolean} cleanup - The cleanup value.
    * @param {number} off - The off value.
    */
-  renderAtlas(cleanup = false, off = 0) {
+  renderAtlas(cleanup = false, off = 0): void {
     if (this.__subImages.length == 0) {
       return
     }
@@ -388,7 +384,7 @@ class GLImageAtlas extends GLRenderTarget {
   /**
    * The cleanup method.
    */
-  cleanup() {
+  cleanup(): void {
     for (const glimage of this.__subImages) {
       glimage.removeRef(this)
     }
@@ -400,7 +396,7 @@ class GLImageAtlas extends GLRenderTarget {
    * The destroy is called by the system to cause explicit resources cleanup.
    * Users should never need to call this method directly.
    */
-  destroy() {
+  destroy(): void {
     this.cleanup()
     super.destroy()
   }

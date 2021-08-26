@@ -184,7 +184,7 @@ class GLBaseViewport extends ParameterOwner {
    * The setBackground method.
    * @param {Color} background - The background value.
    */
-  setBackground(background: Color) {
+  setBackground(background: Color): void {
     console.warn('Deprecated Function. Please access the Scene Settings object.')
     const settings = this.__renderer.getScene().settings
     const bgColorParam = settings.getParameter('BackgroundColor')
@@ -214,7 +214,7 @@ class GLBaseViewport extends ParameterOwner {
    * @param {number} width - The width used by this viewport.
    * @param {number} height - The height  used by this viewport.
    */
-  resizeRenderTargets(width: number, height: number) {
+  resizeRenderTargets(width: number, height: number): void {
     // Note: On low end devices, such as Oculus, blitting the multi-sampled depth buffer is throwing errors,
     // and so we are simply disabling silhouettes on all low end devices now.
     const gl = this.__renderer.gl
@@ -285,7 +285,7 @@ class GLBaseViewport extends ParameterOwner {
    * The draw method.
    * @param {ColorRenderState} renderstate - The object tracking the current state of the renderer
    */
-  draw(renderstate: ColorRenderState) {
+  draw(renderstate: ColorRenderState): void {
     const gl = this.__renderer.gl
 
     const prevRendertarget = renderstate.boundRendertarget
@@ -363,7 +363,7 @@ class GLBaseViewport extends ParameterOwner {
    * @param {RenderState} renderstate - The object tracking the current state of the renderer
    * @private
    */
-  drawSilhouettes(renderstate: RenderState) {
+  drawSilhouettes(renderstate: RenderState): void {
     // We cannot render silhouettes in iOS because EXT_frag_depth is not supported
     // and without it, we cannot draw lines over the top of geometries.
     // Note: On low end devices, such as Oculus, blitting the multi-sampled depth buffer is throwing errors,
@@ -429,7 +429,7 @@ class GLBaseViewport extends ParameterOwner {
    * @param {RenderState} renderstate - The object tracking the current state of the renderer
    * @private
    */
-  drawHighlights(renderstate: RenderState) {
+  drawHighlights(renderstate: RenderState): void {
     if (this.highlightedGeomsBufferFbo) {
       const gl = this.__renderer.gl
 
@@ -488,7 +488,7 @@ class GLBaseViewport extends ParameterOwner {
    * Sets the tool that will receive mouse, touch and keyboard events from the viewport.
    * @param {BaseTool} tool - The manipulator value.
    */
-  setManipulator(tool: BaseTool) {
+  setManipulator(tool: BaseTool): void {
     if (this.manipulator != tool) {
       if (this.manipulator && this.manipulator.deactivateTool) {
         this.manipulator.deactivateTool()
@@ -507,7 +507,7 @@ class GLBaseViewport extends ParameterOwner {
    *
    * @param {MouseEvent|TouchEvent} event - The DOM event produced by a pointer
    */
-  onPointerDown(event: Record<any, any>) {
+  onPointerDown(event: Record<any, any>): void {
     console.warn('@GLBaseViewport#onPointerDown - Implement me!')
   }
 
@@ -516,7 +516,7 @@ class GLBaseViewport extends ParameterOwner {
    *
    * @param {MouseEvent|TouchEvent} event - The DOM event produced by a pointer
    */
-  onPointerUp(event: Record<any, any>) {
+  onPointerUp(event: Record<any, any>): void {
     console.warn('@GLBaseViewport#onPointerUp - Implement me!')
   }
 
@@ -525,7 +525,7 @@ class GLBaseViewport extends ParameterOwner {
    *
    * @param {MouseEvent|TouchEvent} event - The DOM event produced by a pointer
    */
-  onPointerMove(event: Record<any, any>) {
+  onPointerMove(event: Record<any, any>): void {
     console.warn('@GLBaseViewport#onPointerMove - Implement me!')
   }
 
@@ -534,7 +534,7 @@ class GLBaseViewport extends ParameterOwner {
    *
    * @param {MouseEvent|TouchEvent} event - The DOM event produced by a pointer
    */
-  onPointerEnter(event: Record<any, any>) {
+  onPointerEnter(event: Record<any, any>): void {
     console.warn('@GLBaseViewport#onPointerEnter - Implement me!')
   }
 
@@ -543,7 +543,7 @@ class GLBaseViewport extends ParameterOwner {
    *
    * @param {MouseEvent|TouchEvent} event - The DOM event produced by a pointer
    */
-  onPointerLeave(event: Record<any, any>) {
+  onPointerLeave(event: Record<any, any>): void {
     console.warn('@GLBaseViewport#onPointerLeave - Implement me!')
   }
 
@@ -551,19 +551,19 @@ class GLBaseViewport extends ParameterOwner {
    * Invoked when the mouse pointer is moved out of an element.
    * @param {MouseEvent} event - The event that occurs.
    */
-  onMouseLeave(event: Record<any, any>) {}
+  onMouseLeave(event: Record<any, any>): void {}
 
   /**
    * Invoked when the user is pressing a key on the keyboard.
    * @param {KeyboardEvent} event - The event that occurs.
    */
-  onKeyDown(event: Record<any, any>) {}
+  onKeyDown(event: Record<any, any>): void {}
 
   /**
    * Causes an event to occur  when the user releases a key on the keyboard.
    * @param {KeyboardEvent} event - The event that occurs.
    */
-  onKeyUp(event: Record<any, any>) {}
+  onKeyUp(event: Record<any, any>): void {}
 
   /**
    *
