@@ -144,7 +144,7 @@ describe('ShaderLibrary types', () => {
     const correctResult = { check: { instanced: true, type: 'Boolean' } }
     shaderLibrary.setShaderModule('boo.glsl', boo)
     const result = shaderLibrary.parseShader('shader.glsl', shader)
-    console.log(result.attributes)
+    // console.log(result.attributes)
     expect(result.attributes).toStrictEqual(correctResult)
   })
   it('checks uniforms extraction -- vec4 type', () => {
