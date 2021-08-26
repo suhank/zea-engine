@@ -17,7 +17,7 @@ class CalcGlobalXfoOperator extends Operator {
    * @param {XfoParameter} cuttingPlaneParam - The parameter on the Group which defines the displacement to apply to the members.
    */
   // TODO: adding new XfoP... to make inheritence work
-  constructor(globalXfoParam: XfoParameter = new XfoParameter(), localXfoParam: XfoParameter = new XfoParameter()) {
+  constructor(globalXfoParam?: XfoParameter, localXfoParam?: XfoParameter) {
     super('CalcGlobalXfoOperator')
     this.addInput(new OperatorInput('ParentGlobal'))
     this.addInput(new OperatorInput('LocalXfo')).setParam(localXfoParam)
