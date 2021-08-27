@@ -32,7 +32,7 @@ class GLGeomItemLibrary extends EventEmitter {
   /**
    * Create a GLGeomItemLibrary.
    * @param {GLBaseRenderer} renderer - The renderer instance
-   * @param {object} options - The options object passed to the GLRenderer constructor.
+   * @param {Record<string, any>} options - The options object passed to the GLRenderer constructor.
    */
   constructor(renderer: GLBaseRenderer, options: Record<string, any>) {
     super()

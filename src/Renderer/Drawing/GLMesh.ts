@@ -155,7 +155,7 @@ class GLMesh extends GLGeom {
 
   /**
    * The bindWireframeVAO method.
-   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {RenderState} renderstate - The object tracking the current state of the renderer
    * @return {any} - The return value.
    */
   bindWireframeVAO(renderstate?: RenderState) {

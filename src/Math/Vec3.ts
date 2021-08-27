@@ -585,7 +585,7 @@ class Vec3 {
 
   /**
    * The createFromJSON method.
-   * @param {object} json - The json param.
+   * @param {Record<string, number>} json - The json param.
    * @return {Vec3} - The return value.
    * @private
    */
@@ -658,7 +658,7 @@ class Vec3 {
   /**
    * Decodes a JSON object to set the state of this class.
    *
-   * @param {object} j - The json object.
+   * @param {Record<string, number>} j - The json object.
    */
   fromJSON(j: Record<string, number>): void {
     this.x = j.x

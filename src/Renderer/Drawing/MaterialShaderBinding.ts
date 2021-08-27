@@ -29,7 +29,7 @@ class SimpleUniformBinding {
    * @param {any} glMaterial - The glMaterial value.
    * @param {any} param - The param value.
    * @param {WebGLUniformLocation} unif - The WebGL uniform
-   * @param {object} unifs - The dictionary of WebGL uniforms.
+   * @param {Uniforms} unifs - The dictionary of WebGL uniforms.
    */
   constructor(gl: WebGL12RenderingContext, glMaterial: any, param: any, unif: Uniform, unifs: Uniforms) {
     const name = param.getName()

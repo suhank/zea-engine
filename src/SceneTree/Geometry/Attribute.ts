@@ -316,8 +316,8 @@ class Attribute extends BaseClass {
   /**
    * The toJSON method encodes this type as a json object for persistence.
    *
-   * @param {object} context - The context value.
-   * @return {object} - Returns the json object.
+   * @param {Record<string, any>} context - The context value.
+   * @return {Record<string, any>} - Returns the json object.
    */
   toJSON(context?: Record<string, any>): Record<string, any> {
     return {
@@ -331,7 +331,7 @@ class Attribute extends BaseClass {
   /**
    * The fromJSON method decodes a json object for this type.
    *
-   * @param {object} j - The json object this item must decode.
+   * @param {Record<string, any>} j - The json object this item must decode.
    */
   fromJSON(j: Record<string, any>): void {
     const data = j.data.map((dataElement: any) =>

@@ -83,10 +83,10 @@ class Scene {
   /**
    * The toJSON method encodes this type as a json object for persistence.
    *
-   * @param {object} context - The context value.
-   * @return {object} - Returns the json object.
+   * @param {Record<string, any>} context - The context value.
+   * @return {Record<string, any>} - Returns the json object.
    */
-  toJSON(context: Record<string, any> = {}) {
+  toJSON(context: Record<string, any> = {}): Record<string, any> {
     context.makeRelative = (path: string) => path
     const json = {
       root: this.root.toJSON(context),

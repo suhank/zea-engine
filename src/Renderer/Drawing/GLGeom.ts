@@ -123,7 +123,7 @@ class GLGeom extends RefCounted {
 
   /**
    * The drawInstanced method.
-   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {RenderState} renderstate - The object tracking the current state of the renderer
    * @param {number} instanceCount - The instanceCount param.
    */
   drawInstanced(renderstate: RenderState, instanceCount: number) {

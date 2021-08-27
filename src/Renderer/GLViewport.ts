@@ -874,7 +874,7 @@ class GLViewport extends GLBaseViewport {
 
   /**
    * The __initRenderState method.
-   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {RenderState} renderstate - The object tracking the current state of the renderer
    * @private
    */
   __initRenderState(renderstate: RenderState) {

@@ -160,7 +160,7 @@ class Color {
   /**
    * Getter from an RGB dict.
    *
-   * @return {object} - The return value.
+   * @return {Record<string, number>} - The return value.
    */
   getAsRGBDict(): Record<string, number> {
     return {
@@ -200,7 +200,7 @@ class Color {
   /**
    * Setter from an RGB dict.
    *
-   * @param {object} vals - The vals param.
+   * @param {Record<string, number>} vals - The vals param.
    */
   setFromRGBDict(vals: Record<string, number>): void {
     this.r = vals.r / 255
@@ -683,7 +683,7 @@ class Color {
   /**
    * The toJSON method encodes this type as a json object for persistence.
    *
-   * @return {object} - The json object.
+   * @return {Record<string, number>} - The json object.
    */
   toJSON(): Record<string, number> {
     return {
@@ -697,7 +697,7 @@ class Color {
   /**
    * The fromJSON method decodes a json object for this type.
    *
-   * @param {object} j - The json object.
+   * @param {Record<string, number>} j - The json object.
    */
   fromJSON(j: Record<string, number>): void {
     this.r = j.r

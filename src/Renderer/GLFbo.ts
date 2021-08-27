@@ -355,7 +355,7 @@ class GLFbo {
   /**
    * Binds the Fbo to the canvas context, meaning that all WRITE operations will affect the current Fbo.
    *
-   * @param {object} renderstate - The renderstate value.
+   * @param {RenderState} renderstate - The renderstate value.
    */
   bindForWriting(renderstate?: RenderState): void {
     if (renderstate) {

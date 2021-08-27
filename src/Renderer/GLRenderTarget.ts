@@ -28,7 +28,7 @@ class GLRenderTarget extends EventEmitter {
   /**
    * Create a GL render target.
    * @param {WebGL12RenderingContext} gl - The webgl rendering context.
-   * @param {object} params - The params value.
+   * @param {Record<string, any>} params - The params value.
    */
   constructor(gl: WebGL12RenderingContext, params?: Record<string, any>) {
     super()

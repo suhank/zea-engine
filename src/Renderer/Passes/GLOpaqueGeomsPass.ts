@@ -198,7 +198,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
 
   /**
    * The __traverseTreeAndDraw method.
-   * @param {object} renderstate - The renderstate value.
+   * @param {RenderState} renderstate - The renderstate value.
    * @private
    */
   __traverseTreeAndDraw(renderstate: RenderState) {
@@ -218,7 +218,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
 
   /**
    * The draw method.
-   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {RenderState} renderstate - The object tracking the current state of the renderer
    */
   draw(renderstate: RenderState): void {
     const gl = this.__gl
@@ -244,7 +244,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
 
   /**
    * The drawHighlightedGeoms method.
-   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {RenderState} renderstate - The object tracking the current state of the renderer
    */
   drawHighlightedGeoms(renderstate: RenderState): void {
     const gl = this.__gl
@@ -267,7 +267,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
 
   /**
    * The drawGeomData method.
-   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {RenderState} renderstate - The object tracking the current state of the renderer
    */
   drawGeomData(renderstate: RenderState): void {
     renderstate.passIndex = this.passIndex

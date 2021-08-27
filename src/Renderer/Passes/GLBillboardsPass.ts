@@ -103,7 +103,7 @@ class GLBillboardsPass extends GLPass {
    * The itemRemovedFromScene method is called on each pass when aa item
    * is removed to the scene, and the pass must handle cleaning up any resources.
    * @param {TreeItem} treeItem - The treeItem value.
-   * @param {object} rargs - Extra return values are passed back in this object.
+   * @param {Record<string, any>} rargs - Extra return values are passed back in this object.
    * @return {Boolean} - The return value.
    */
   itemRemovedFromScene(treeItem: TreeItem, rargs: Record<string, any>): boolean {

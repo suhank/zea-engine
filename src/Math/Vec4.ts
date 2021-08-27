@@ -562,7 +562,7 @@ class Vec4 {
 
   /**
    * The toJSON method encodes this type as a json object for persistence.
-   * @return {object} - The json object.
+   * @return {Record<string, number>} - The json object.
    */
   toJSON(): Record<string, number> {
     return {
@@ -576,7 +576,7 @@ class Vec4 {
   /**
    * Decodes a JSON object to set the state of this class.
    *
-   * @param {object} j - The json object.
+   * @param {Record<string, number>} j - The json object.
    */
   fromJSON(j: Record<string, number>): void {
     this.x = j.x

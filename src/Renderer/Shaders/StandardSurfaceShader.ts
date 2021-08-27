@@ -32,7 +32,7 @@ class StandardSurfaceShader extends GLShader {
 
   /**
    * The bind method.
-   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {RenderState} renderstate - The object tracking the current state of the renderer
    * @param {string} key - The key value.
    * @return {any} - The return value.
    */

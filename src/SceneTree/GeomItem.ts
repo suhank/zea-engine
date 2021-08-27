@@ -265,10 +265,10 @@ class GeomItem extends BaseGeomItem {
   /**
    * The toJSON method encodes this type as a json object for persistence.
    *
-   * @param {object} context - The context value.
-   * @return {object} - Returns the json object.
+   * @param {Record<string, any>} context - The context value.
+   * @return {Record<string, any>} - Returns the json object.
    */
-  toJSON(context?: Record<string, any>) {
+  toJSON(context?: Record<string, any>): Record<string, any> {
     const json = super.toJSON(context)
     return json
   }
@@ -276,10 +276,10 @@ class GeomItem extends BaseGeomItem {
   /**
    * The fromJSON method decodes a json object for this type.
    *
-   * @param {object} json - The json object this item must decode.
-   * @param {object} context - The context value.
+   * @param {Record<string, any>} json - The json object this item must decode.
+   * @param {Record<string, any>} context - The context value.
    */
-  fromJSON(json: Record<string, any>, context: Record<string, any>) {
+  fromJSON(json: Record<string, any>, context: Record<string, any>): void {
     super.fromJSON(json, context)
     context.numGeomItems++
   }
@@ -288,7 +288,7 @@ class GeomItem extends BaseGeomItem {
    * Loads state of the Item from a binary object.
    *
    * @param {BinReader} reader - The reader value.
-   * @param {object} context - The context value.
+   * @param {Record<string, any>} context - The context value.
    */
   readBinary(reader: BinReader, context: Record<string, any>) {
     super.readBinary(reader, context)

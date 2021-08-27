@@ -78,10 +78,10 @@ class InstanceItem extends TreeItem {
   /**
    * The toJSON method encodes this type as a json object for persistence.
    *
-   * @param {object} context - The context value.
-   * @return {object} - Returns the json object.
+   * @param {Record<string, any>} context - The context value.
+   * @return {Record<string, any>} - Returns the json object.
    */
-  toJSON(context = {}) {
+  toJSON(context = {}): Record<string, any> {
     const j = super.toJSON(context)
     return j
   }
@@ -90,8 +90,8 @@ class InstanceItem extends TreeItem {
    * The fromJSON method decodes a json object for this type.
    *
    * @todo Needs to be implemented.
-   * @param {object} j - The json object this item must decode.
-   * @param {object} context - The context value.
+   * @param {Record<string, any>} j - The json object this item must decode.
+   * @param {Record<string, any>} context - The context value.
    * @param {function} onDone - The onDone value.
    */
   fromJSON(j: Record<string, any>, context: Record<string, any> = {}) {}

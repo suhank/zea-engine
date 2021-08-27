@@ -269,7 +269,7 @@ class BaseItem extends ParameterOwner implements Owner {
    * Assigns metadata to a given key.
    *
    * @param {string} key - The key value under which the metadata is is going to be saved.
-   * @param {object} metaData - The metaData value.
+   * @param {any} metaData - The metaData value.
    */
   setMetadata(key: string, metaData: any): void {
     this.__metaData[key] = metaData
@@ -303,8 +303,8 @@ class BaseItem extends ParameterOwner implements Owner {
   /**
    * Decodes a json object for this type.
    *
-   * @param {object} json - The json object this item must decode.
-   * @param {object} context - The context value.
+   * @param {Record<string, any>} json - The json object this item must decode.
+   * @param {Record<string, any>} context - The context value.
    */
   fromJSON(json: Record<string, any>, context?: Record<string, any>): void {
     if (json.name) this.__name = json.name

@@ -541,7 +541,7 @@ class TreeItem extends BaseItem {
 
   /**
    * The _childNameChanged event handler.
-   * @param {object} event - The start value.
+   * @param {Record<string, any} event - The start value.
    * @private
    */
   protected childNameChanged(event: Record<string, any>): void {

@@ -41,7 +41,7 @@ class VRViewManipulator extends BaseTool {
 
   /**
    * Adds the icon to the tip of the VR Controller
-   * @param {object} event
+   * @param {Record<string, any>} event
    * @private
    */
   addIconToController(event: Record<string, any>) {

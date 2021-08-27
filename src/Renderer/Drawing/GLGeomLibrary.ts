@@ -245,7 +245,6 @@ class GLGeomLibrary extends EventEmitter {
   /**
    * Allocates space for the geomBuffers for the specified geometry
    * @param {number} index - The index of the geom to upload
-   * @param {object} opts - The opts value.
    */
   allocateBuffers(index: number) {
     const geom = this.geoms[index]
@@ -512,7 +511,7 @@ class GLGeomLibrary extends EventEmitter {
 
   /**
    * The unbind method.
-   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {RenderState} renderstate - The object tracking the current state of the renderer
    */
   unbind(renderstate: RenderState) {
     // Unbinding a geom is important as it puts back some important

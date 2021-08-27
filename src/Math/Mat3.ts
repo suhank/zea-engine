@@ -559,7 +559,7 @@ class Mat3 {
   /**
    * The fromJSON method decodes a json object for this type.
    *
-   * @param {object} json - The json param.
+   * @param {number[]} json - The json param.
    */
   fromJSON(json: number[]): void {
     this.__data = new Float32Array(json)

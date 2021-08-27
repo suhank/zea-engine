@@ -1333,7 +1333,7 @@ class GLBaseRenderer extends ParameterOwner {
 
   /**
    * The drawSceneGeomData method.
-   * @param {object} renderstate - The renderstate value.
+   * @param {RenderState} renderstate - The renderstate value.
    * @param {number} [mask=255] - The mask value
    */
   drawSceneGeomData(renderstate: RenderState, mask = 255): void {

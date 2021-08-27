@@ -65,7 +65,7 @@ class ShaderLibrary {
    * The parseAttr
    * @param {string} parts - parts
    * @param {bool} instanced - instanced
-   * @param {object} result - result object to store parsed data
+   * @param {ShaderParseResult} result - result object to store parsed data
    */
   parseAttr(parts: string[], instanced: boolean, result: ShaderParseResult, line: string) {
     // see if type is valid
@@ -88,7 +88,7 @@ class ShaderLibrary {
 
   /**
    * The handleImport method -- takes the includeFile and if it exists, adds the parsed glsl, uniforms, and attributes to the result, recursively.
-   * @param {object} result - result object that stores the glsl, attribute, uniform
+   * @param {ShaderParseResult} result - result object that stores the glsl, attribute, uniform
    * @param {string} shaderName - shaderName
    * @param {string} includeFile - file name of the shader snippet/module
    * @param {array} includes - keep track of what was included

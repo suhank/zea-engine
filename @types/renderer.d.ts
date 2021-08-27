@@ -111,3 +111,5 @@ interface WebglOptions {
   preserveDrawingBuffer: boolean
   xrCompatible: boolean
 }
+
+type JSON = Record<string, any>
