@@ -155,7 +155,7 @@ class AudioItem extends TreeItem {
    *
    * @return {boolean} - `The return value`.
    */
-  isLoaded() {
+  isLoaded(): boolean {
     return this.__loaded
   }
 

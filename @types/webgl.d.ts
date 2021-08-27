@@ -19,7 +19,7 @@ interface WebGL12RenderingContext extends WebGLRenderingContext {
   multiDrawElementsInstanced: any
   multiDrawArraysInstanced: any
   floatGeomBuffer: any
-  shaderopts: Record<any, any>
+  shaderopts: Shaderopts
   makeXRCompatible(): any
   // GLEnvMap.ts
   drawQuad(): void

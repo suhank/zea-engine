@@ -94,9 +94,9 @@ class BaseGeomItem extends TreeItem {
   /**
    * Returns cutaway vector value.
    *
-   * @return {Vec3|boolean} - `Vec3` when it is set, `false` on default.
+   * @return {Vec3} - `Vec3` when it is set, `false` on default.
    */
-  getCutVector() {
+  getCutVector(): Vec3 {
     return this.__cutAwayVector
   }
 
@@ -105,7 +105,7 @@ class BaseGeomItem extends TreeItem {
    *
    * @param {Vec3} cutAwayVector - The cutAwayVector value.
    */
-  setCutVector(cutAwayVector: Vec3) {
+  setCutVector(cutAwayVector: Vec3): void {
     this.__cutAwayVector = cutAwayVector
     this.emit('cutAwayChanged')
   }
@@ -115,7 +115,7 @@ class BaseGeomItem extends TreeItem {
    *
    * @return {number} - The return value.
    */
-  getCutDist() {
+  getCutDist(): number {
     return this.__cutAwayDist
   }
 
@@ -124,7 +124,7 @@ class BaseGeomItem extends TreeItem {
    *
    * @param {number} cutAwayDist - The cutAwayDist value.
    */
-  setCutDist(cutAwayDist: number) {
+  setCutDist(cutAwayDist: number): void {
     this.__cutAwayDist = cutAwayDist
     this.emit('cutAwayChanged')
   }
@@ -136,9 +136,9 @@ class BaseGeomItem extends TreeItem {
    * Sets state of current Item(Including layers & material) using a binary reader object.
    *
    * @param {BinReader} reader - The reader value.
-   * @param {object} context - The context value.
+   * @param {Record<string, any>} context - The context value.
    */
-  readBinary(reader: BinReader, context: Record<any, any>) {
+  readBinary(reader: BinReader, context: Record<string, any>): void {
     super.readBinary(reader, context)
 
     if (context.versions['zea-engine'].compare([0, 0, 4]) >= 0) {

@@ -2,7 +2,7 @@ interface BaseRenderState {
   gl?: WebGL12RenderingContext
   glShader?: GLShader
   shaderkey?: string
-  shaderopts: Record<string, string[]>
+  shaderopts: Shaderopts
   attrs: Record<string, Record<string, any>> // not Attribute
   unifs: Uniforms
   directives?: string[]
@@ -32,6 +32,8 @@ interface BaseRenderState {
   region?: number[4]
   cameraMatrix?: Mat4
 }
+
+type Shaderopts = Record<string, string[]>
 
 //GeomDataRender
 interface GeomDataRenderState extends BaseRenderState {

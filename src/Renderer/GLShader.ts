@@ -116,11 +116,11 @@ class GLShader extends BaseItem {
    * @param {string} glsl - The glsl value.
    * @param {string} stageID - The stageID value.
    * @param {string} name - The name value.
-   * @param {object} shaderopts - The shaderopts value.
+   * @param {Shaderopts} shaderopts - The shaderopts value.
    * @return {WebGLShader} - The return value.
    * @private
    */
-  __compileShaderStage(glsl: string, stageID: number, name: string, shaderopts: Record<any, any>) {
+  __compileShaderStage(glsl: string, stageID: number, name: string, shaderopts: Shaderopts) {
     const gl = this.__gl
 
     // console.log("__compileShaderStage:" + this.name+"."+name + " glsl:\n" + glsl);
@@ -205,7 +205,7 @@ class GLShader extends BaseItem {
 
   /**
    * The __createProgram method.
-   * @param {object} shaderopts - The shaderopts value.
+   * @param {Shaderopts} shaderopts - The shaderopts value.
    * @return {WebGLProgram} - The program value.
    * @private
    */
@@ -289,11 +289,11 @@ class GLShader extends BaseItem {
   /**
    * The __extractAttributeAndUniformLocations method.
    * @param {WebGLProgram} shaderProgramHdl - The shaderProgramHdl value.
-   * @param {object} shaderopts - The shaderopts value.
-   * @return {object} - The dictionary of attributes and uniform values
+   * @param {Shaderopts} shaderopts - The shaderopts value.
+   * @return {Shaderopts} - The dictionary of attributes and uniform values
    * @private
    */
-  __extractAttributeAndUniformLocations(shaderProgramHdl: WebGLProgram, shaderopts: Record<any, any>) {
+  __extractAttributeAndUniformLocations(shaderProgramHdl: WebGLProgram, shaderopts: Shaderopts) {
     const gl = this.__gl
     const attrs: Record<string, any> = this.getAttributes()
     const result: Record<string, any> = {
@@ -393,14 +393,15 @@ class GLShader extends BaseItem {
   /**
    * The compileForTarget method.
    * @param {string} key - The key value.
-   * @param {object} shaderopts - The shaderopts value.
+   * @param {Shaderopts} shaderopts - The shaderopts value.
    * @return {Record<any, any>} - The result of the shader compilation.
    */
-  compileForTarget(key?: string, shaderopts?: Record<any, any>): Record<string, any> {
+  compileForTarget(key?: string, shaderopts?: Shaderopts): Record<string, any> {
     const shaderkey = key ? key : this.getId()
     let shaderCompilationResult = this.__shaderProgramHdls[shaderkey]
     if (!shaderCompilationResult) {
-      if (shaderCompilationResult !== false ) { // && shaderopts
+      if (shaderCompilationResult !== false) {
+        // && shaderopts
         shaderCompilationResult = this.__createProgram(shaderopts)
         shaderCompilationResult.shaderkey = shaderkey
         this.__shaderProgramHdls[shaderkey] = shaderCompilationResult
@@ -418,7 +419,7 @@ class GLShader extends BaseItem {
 
   /**
    * The bind method.
-   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {RednerState} renderstate - The object tracking the current state of the renderer
    * @param {string} key - The key value.
    * @return {boolean} - The return value.
    */
@@ -427,7 +428,8 @@ class GLShader extends BaseItem {
 
     if (renderstate.glShader != this) {
       const shaderCompilationResult = this.compileForTarget(key, renderstate.shaderopts)
-      if (shaderCompilationResult === {}) { // TODO: compileForTarget should return null or empty
+      if (shaderCompilationResult === {}) {
+        // TODO: compileForTarget should return null or empty
         console.warn(this.constructor.name + ' is not compiled for ' + key)
         return false
       }
@@ -486,7 +488,7 @@ class GLShader extends BaseItem {
    * The getGeomDataShaderName method.
    * @return {string} - an array of param declarations that the shader expects the material tp provide.
    */
-  getGeomDataShaderName(): any {
+  getGeomDataShaderName(): string {
     return ''
   }
 
@@ -501,7 +503,7 @@ class GLShader extends BaseItem {
    * The supportsInstancing method.
    * @return {boolean} - return false for shaders that cannot be rendered in instanced mode.
    */
-  static supportsInstancing() {
+  static supportsInstancing(): boolean {
     return true
   }
 
