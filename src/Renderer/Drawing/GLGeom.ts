@@ -53,7 +53,7 @@ class GLGeom extends RefCounted {
    * The dirtyBuffers method.
    * @param {Record<any,any>} opts - options passed when geomDataChanged is emitted. (Currently ony used by the FreehandLines tool)
    */
-  dirtyBuffers(opts: Record<string, any>) {
+  dirtyBuffers(opts: Record<string, any>): void {
     this.genBufferOpts = opts
     this.buffersDirty = true
     this.emit('updated')
@@ -63,7 +63,7 @@ class GLGeom extends RefCounted {
    * The genBuffers method.
    * @param {RenderState} renderstate - The object tracking the current state of the renderer
    */
-  genBuffers(renderstate?: RenderState) {}
+  genBuffers(renderstate?: RenderState): any {}
 
   /**
    * The updateBuffers method.
