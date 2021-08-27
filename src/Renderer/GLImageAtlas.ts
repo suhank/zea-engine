@@ -244,12 +244,12 @@ class GLImageAtlas extends GLRenderTarget {
     if (!gl.floatTexturesSupported) {
       this.__layoutVec4s = []
       this.__layout.forEach((layoutItem: LayoutItem, index: number) => {
-        this.__layoutVec4s[index] = [
+        this.__layoutVec4s[index] = new Vec4(
           layoutItem.pos.x / width,
           layoutItem.pos.y / height,
           layoutItem.size.x / width,
-          layoutItem.size.y / height,
-        ]
+          layoutItem.size.y / height
+        )
       })
     } else {
       const dataArray = new Float32Array(size * size * 4) /* each pixel has 4 floats*/
