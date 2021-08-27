@@ -16,8 +16,8 @@ import { BinReader } from './BinReader'
  */
 class AssetLoadContext extends EventEmitter {
   units: string
-  protected assets: Record<any, any>
-  protected resources: Record<any, any>
+  protected assets: Record<string, any>
+  protected resources: Record<string, any>
   versions: Record<string, Version>
   url: string
   folder: string
@@ -162,8 +162,8 @@ class AssetItem extends TreeItem {
   __materials: MaterialLibrary
   loaded: boolean
 
-  protected __engineDataVersion: any
-  protected __unitsScale: any
+  protected __engineDataVersion: Version
+  protected __unitsScale: number
 
   protected __units: string
   /**
@@ -192,16 +192,16 @@ class AssetItem extends TreeItem {
    *
    * @return {boolean} - Returns true if the asset has already loaded its data.
    */
-  isLoaded() {
+  isLoaded(): boolean {
     return this.loaded
   }
 
   /**
    * Returns the zea engine version as an array with major, minor, patch order.
    *
-   * @return {array} - The return value.
+   * @return {Version} - The return value.
    */
-  getEngineDataVersion() {
+  getEngineDataVersion(): Version {
     return this.__engineDataVersion
   }
 
@@ -210,7 +210,7 @@ class AssetItem extends TreeItem {
    *
    * @return {GeomLibrary} - The return value.
    */
-  getGeometryLibrary() {
+  getGeometryLibrary(): GeomLibrary {
     return this.__geomLibrary
   }
 
@@ -219,7 +219,7 @@ class AssetItem extends TreeItem {
    *
    * @return {MaterialLibrary} - The return value.
    */
-  getMaterialLibrary() {
+  getMaterialLibrary(): MaterialLibrary {
     return this.__materials
   }
 
@@ -227,7 +227,7 @@ class AssetItem extends TreeItem {
    * Returns the scale factor of current item.
    * @return {number} - The return value.
    */
-  getUnitsConversion(): number{
+  getUnitsConversion(): number {
     return this.__unitsScale
   }
 
@@ -236,7 +236,7 @@ class AssetItem extends TreeItem {
 
   /**
    * The readBinary method.
-   * @param {Record<any,any>} reader - The reader value.
+   * @param {Record<string,any>} reader - The reader value.
    * @param {AssetLoadContext} context - The context value.
    */
   readBinary(reader: BinReader, context: AssetLoadContext): void {
@@ -347,9 +347,9 @@ class AssetItem extends TreeItem {
    * The toJSON method encodes this type as a json object for persistence.
    *
    * @param {Record<any,any>} context - The context value.
-   * @return {object} - Returns the json object.
+   * @return {Record<string, any>} - Returns the json object.
    */
-  toJSON(context: Record<any, any> = {}) {
+  toJSON(context: Record<string, any> = {}): Record<string, any> {
     context.makeRelative = (path: any) => {
       const assetPath = this.getPath()
       const start = path.slice(0, assetPath.length)
@@ -372,11 +372,11 @@ class AssetItem extends TreeItem {
   /**
    * The fromJSON method decodes a json object for this type.
    *
-   * @param {object} j - The json object this item must decode.
-   * @param {object} context - The context value.
+   * @param {Record<string, any>} j - The json object this item must decode.
+   * @param {Record<string, any>} context - The context value.
    * @param {function} onDone - Callback function executed when everything is done.
    */
-  fromJSON(j: Record<any, any>, context: Record<any, any> = {}, onDone?: any) {
+  fromJSON(j: Record<string, any>, context: Record<string, any> = {}, onDone?: any): any {
     if (!context) context = {}
 
     context.assetItem = this
@@ -433,7 +433,7 @@ class AssetItem extends TreeItem {
    * The clone method constructs a new tree item, copies its values
    * from this item and returns it.
    *
-   * @param {Record<any,any>} context - The context value.
+   * @param {Record<string, unknown>} context - The context value.
    * @return {TreeItem} - Returns a new cloned tree item.
    */
   clone(context?: Record<string, unknown>): TreeItem {
@@ -448,7 +448,7 @@ class AssetItem extends TreeItem {
    * @param {TreeItem} src - The tree item to copy from.
    * @param {Record<any,any>} context - The context value.
    */
-  copyFrom(src: AssetItem, context?: Record<any, any>): void {
+  copyFrom(src: AssetItem, context?: Record<string, any>): void {
     this.__geomLibrary = src.__geomLibrary
     this.__materials = src.__materials
     this.loaded = src.loaded
