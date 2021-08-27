@@ -102,7 +102,7 @@ class GLBaseRenderer extends ParameterOwner {
     this.renderGeomDataFbos = this.renderGeomDataFbos.bind(this)
     this.requestRedraw = this.requestRedraw.bind(this)
 
-    this.setupWebGL($canvas, options.webglOptions ? { ...options, ...options.webglOptions } : options)
+    this.setupWebGL($canvas, options.webglOptions ? { ...options, ...options.webglOptions } : <any>options) 
     this.bindEventHandlers()
     this.addViewport('main')
 
@@ -582,7 +582,7 @@ class GLBaseRenderer extends ParameterOwner {
    * @param {HTMLCanvasElement|HTMLElement} $canvas - The $canvas element.
    * @param { Record<any, any>} webglOptions - The webglOptions value.
    */
-  setupWebGL($canvas: HTMLCanvasElement, webglOptions: Record<any, any>): void {
+  setupWebGL($canvas: HTMLCanvasElement, webglOptions: WebglOptions): void {
     const { tagName } = $canvas
 
     if (!['DIV', 'CANVAS'].includes(tagName)) {

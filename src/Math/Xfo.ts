@@ -297,7 +297,7 @@ class Xfo {
   /**
    * The fromJSON method decodes a json object for this type.
    *
-   * @param {object} j - The json object.
+   * @param {Record<string, any>} j - The json object.
    */
   fromJSON(j: Record<string, any>): void {
     this.tr.fromJSON(j.tr)

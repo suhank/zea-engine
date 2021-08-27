@@ -106,4 +106,6 @@ interface WebglOptions {
   disableMultiDraw: boolean
   webglContextType: string
   powerPreference: string
+  preserveDrawingBuffer: boolean
+  xrCompatible: boolean
 }

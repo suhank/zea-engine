@@ -548,7 +548,7 @@ class Vec2 {
   /**
    * Decodes a JSON object to set the state of this class.
    *
-   * @param {object} j - The json object.
+   * @param {Record<string, number>} j - The json object.
    */
   fromJSON(j: Record<string, number>): void {
     this.x = j.x
