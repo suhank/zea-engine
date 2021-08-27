@@ -93,11 +93,8 @@
       cameraManipulator.setDefaultManipulationMode(CameraManipulator.MANIPULATION_MODES.tumbler)
       appData.cameraManipulator = cameraManipulator
 
-
-
       /** LOAD ASSETS START */
       const { CADAsset, CADBody } = window.zeaCad
-      const { GLTFAsset } = gltfLoader
 
       const loadZCADAsset = (url, filename) => {
         const asset = new CADAsset()
@@ -105,15 +102,6 @@
           renderer.frameAll()
         })
         asset.getGeometryLibrary().on('loaded', () => {
-          postMessage('done-loading')
-        })
-        scene.getRoot().addChild(asset)
-        return asset
-      }
-      const loadGLTFAsset = (url, filename) => {
-        const asset = new GLTFAsset()
-        asset.load(url, filename).then(() => {
-          renderer.frameAll()
           postMessage('done-loading')
         })
         scene.getRoot().addChild(asset)
@@ -130,17 +118,29 @@
         boundingBoxPass.addTreeItem(res, true)
         return res
       }
-      let assetUrl = 'data/Dead_eye_bearing.zcad'
-      if (urlParams.has('zcad')) {
-        assetUrl = urlParams.get('zcad')
-      } else if (urlParams.has('gltf')) {
-        assetUrl = urlParams.get('gltf')
-      }
-      loadAsset(assetUrl, assetUrl)
+      // let assetUrl = 'data/HC_SRO4.zcad'
+      // if (urlParams.has('zcad')) {
+      //   assetUrl = urlParams.get('zcad')
+      // }
+      // loadAsset(assetUrl, assetUrl)
       /** LOAD ASSETS END */
 
-    
 
+
+    const cadAsset = new CADAsset()
+    cadAsset.load('data/HC_SRO4.zcad')
+    cadAsset.getGeometryLibrary().once('loaded', ()=>{
+    renderer.once('redrawOccured', ()=> {      
+        for(let i = 0; i < 10; i ++){
+          
+          scene.getRoot().removeChildByHandle(cadAsset)
+          // record heap size
+        }
+      })
+    })
+    scene.getRoot().addChild(cadAsset)
+
+  
       const postMessage = (msg) => {
         console.log(msg)
         window.postMessage(msg)
