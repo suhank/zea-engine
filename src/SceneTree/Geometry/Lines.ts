@@ -122,7 +122,7 @@ class Lines extends BaseGeom {
    *
    * @return {Record<string, any>} - The return value.
    */
-  genBuffers(): Record<string, any> {
+  genBuffers(opts?: Record<string, any>): Record<string, any> {
     const buffers = super.genBuffers()
 
     let indices

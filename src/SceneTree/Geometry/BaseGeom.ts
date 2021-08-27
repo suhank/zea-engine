@@ -227,7 +227,7 @@ class BaseGeom extends ParameterOwner {
    * Returns vertex attributes buffers and its count.
    * @return {Record<string, any>} - The return value.
    */
-  genBuffers(): Record<string, any> {
+  genBuffers(opts?: Record<string, any>): Record<string, any> {
     const attrBuffers: Record<string, any> = {}
     for (const [attrName, attr] of this.__vertexAttributes) {
       attrBuffers[attrName] = attr.genBuffer()

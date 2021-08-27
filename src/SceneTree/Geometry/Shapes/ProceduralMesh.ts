@@ -114,7 +114,7 @@ abstract class ProceduralMesh extends Mesh {
    * @param {Record<string, any>} opts - The opts value.
    * @return {Record<string, any>} - The return value.
    */
-  genBuffers(opts: Record<string, any>): Record<string, any> {
+  genBuffers(opts?: Record<string, any>): Record<string, any> {
     this.update()
     return super.genBuffers(opts)
   }

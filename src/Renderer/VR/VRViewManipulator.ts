@@ -6,6 +6,7 @@ import { Material } from '../../SceneTree/Material'
 import { BaseTool } from '../../SceneTree/Manipulators/BaseTool'
 import { POINTER_TYPES } from '../../Utilities/EnumUtils'
 import { AnyARecord } from 'dns'
+import { BaseGeom } from '../../SceneTree/Geometry/BaseGeom'
 
 /**
  * Class representing a view tool

@@ -94,7 +94,7 @@ abstract class ProceduralLines extends Lines {
    * @param {Record<string, any>} opts - The opts value.
    * @return {Record<string, any>} - The return value.
    */
-  genBuffers(): Record<string, any> {
+  genBuffers(opts?: Record<string, any>): Record<string, any> {
     this.update()
     return super.genBuffers()
   }
