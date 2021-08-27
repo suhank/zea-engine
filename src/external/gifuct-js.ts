@@ -426,7 +426,7 @@ GIF.prototype.decompressFrame = function (index: any, buildPatch: any) {
     }
 
     // setup usable image object
-    var image: Record<any, any> = {
+    var image: Record<string, any> = {
       pixels: pixels,
       dims: {
         top: frame.image.descriptor.top,

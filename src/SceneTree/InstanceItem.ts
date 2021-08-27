@@ -25,7 +25,7 @@ class InstanceItem extends TreeItem {
    *
    * @param {TreeItem} treeItem - The treeItem value.
    */
-  setSrcTree(treeItem: TreeItem, context: Record<any, any>) {
+  setSrcTree(treeItem: TreeItem, context: Record<string, any>) {
     this.__srcTree = treeItem
 
     const numChildren = this.__srcTree.getNumChildren()
@@ -60,7 +60,7 @@ class InstanceItem extends TreeItem {
    * @param {BinReader} reader - The reader value.
    * @param {Record<any,any>} context - The context value.
    */
-  readBinary(reader: BinReader, context: Record<any, any> = {}) {
+  readBinary(reader: BinReader, context: Record<string, any> = {}) {
     super.readBinary(reader, context)
 
     // console.log("numTreeItems:", context.numTreeItems, " numGeomItems:", context.numGeomItems)
@@ -94,7 +94,7 @@ class InstanceItem extends TreeItem {
    * @param {object} context - The context value.
    * @param {function} onDone - The onDone value.
    */
-  fromJSON(j: Record<any, any>, context: Record<any, any> = {}) {}
+  fromJSON(j: Record<string, any>, context: Record<string, any> = {}) {}
 }
 
 Registry.register('InstanceItem', InstanceItem)

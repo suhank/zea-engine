@@ -179,7 +179,7 @@ class SelectionSet extends BaseGroup {
    * @param {Record<any,any>} context - The context value.
    * @return {SelectionSet} - Returns a new cloned group.
    */
-  clone(context: Record<any, any>) {
+  clone(context: Record<string, any>) {
     const cloned = new SelectionSet(this.__name + ' clone')
     cloned.copyFrom(this, context)
     return cloned

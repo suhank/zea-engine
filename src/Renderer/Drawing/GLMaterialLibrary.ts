@@ -10,8 +10,8 @@ import { Material } from '../../SceneTree'
 class GLMaterialLibrary extends EventEmitter {
   protected renderer: GLBaseRenderer
   protected materials: any[] = []
-  protected materialIndices: Record<any, any> = {}
-  protected glMaterials: Record<any, any> = {}
+  protected materialIndices: Record<string, any> = {}
+  protected glMaterials: Record<string, any> = {}
   protected freeIndices: any[] = []
   protected dirtyIndices: Set<number>
   protected materialsAllocator = new Allocator1D()

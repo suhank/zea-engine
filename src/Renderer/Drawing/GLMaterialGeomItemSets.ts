@@ -13,7 +13,7 @@ class GLMaterialGeomItemSets extends EventEmitter {
   protected pass: GLOpaqueGeomsPass // TODO: check, used to be GLPass
   protected __gl: WebGL12RenderingContext
   glMaterial: GLMaterial
-  protected glGeomItemSets: Record<any, any> = {}
+  protected glGeomItemSets: Record<string, any> = {}
   protected drawCount: number
   /**
    * Create a GL material geom item set.
@@ -30,7 +30,7 @@ class GLMaterialGeomItemSets extends EventEmitter {
     this.drawCountChanged = this.drawCountChanged.bind(this)
 
     const material = glMaterial.getMaterial()
-    const materialChanged = (event: Record<any, any>) => {
+    const materialChanged = (event: Record<string, any>) => {
       material.off('transparencyChanged', materialChanged)
       for (const key in this.glGeomItemSets) {
         const glGeomItemSet = this.glGeomItemSets[key]
@@ -73,7 +73,7 @@ class GLMaterialGeomItemSets extends EventEmitter {
    * @param {Record<any,any>} event - The change value.
    * @private
    */
-  drawCountChanged(event: Record<any, any>) {
+  drawCountChanged(event: Record<string, any>) {
     this.drawCount += event.change
     this.emit('updated')
   }

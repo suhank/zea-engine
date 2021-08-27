@@ -24,7 +24,7 @@ class VLHImage extends BaseImage {
   protected __hdrTint: Color
   protected __stream: boolean
   protected __domElement: HTMLElement
-  protected __data: Record<any, any>
+  protected __data: Record<string, any>
 
   // loaded: any
   updated: any // TODO: treated as a boolean and function
@@ -33,7 +33,7 @@ class VLHImage extends BaseImage {
    * @param {string} name - The name value.
    * @param {Record<any,any>} params - The params value.
    */
-  constructor(name?: string, params: Record<any, any> = {}) {
+  constructor(name?: string, params: Record<string, any> = {}) {
     let filepath
     if (name != undefined && name.includes('.')) {
       filepath = name
@@ -80,10 +80,10 @@ class VLHImage extends BaseImage {
 
   /**
    * The __decodeData method.
-   * @param {Record<any, any>} entries - The entries value.
+   * @param {Record<string, any>} entries - The entries value.
    * @private
    */
-  __decodeData(entries: Record<any, any>): void {
+  __decodeData(entries: Record<string, any>): void {
     const ldr = entries.ldr
     const cdm = entries.cdm
 
@@ -170,7 +170,7 @@ class VLHImage extends BaseImage {
    *
    * @return {Record<any,any>} - The return value.
    */
-  getParams(): Record<any, any> {
+  getParams(): Record<string, any> {
     const params = super.getParams()
     if (this.__loaded) {
       params['data'] = this.__data
@@ -203,19 +203,19 @@ class VLHImage extends BaseImage {
   /**
    * The toJSON method encodes this type as a json object for persistence.
    *
-   * @param {Record<any, any>} context - The context value.
+   * @param {Record<string, any>} context - The context value.
    */
-  toJSON(context?: Record<any, any>): Record<any, any> {
+  toJSON(context?: Record<string, any>): Record<string, any> {
     return {}
   }
 
   /**
    * The fromJSON method decodes a json object for this type.
    *
-   * @param {Record<any, any>} json - The json object this item must decode.
-   * @param {Record<any, any>} context - The context value.
+   * @param {Record<string, any>} json - The json object this item must decode.
+   * @param {Record<string, any>} context - The context value.
    */
-  fromJSON(json: Record<any, any>, context: Record<any, any>): Record<any, any> {
+  fromJSON(json: Record<string, any>, context: Record<string, any>): Record<string, any> {
     return {}
   }
 
@@ -223,9 +223,9 @@ class VLHImage extends BaseImage {
    * Sets state of current Image using a binary reader object, and adds it to the resource loader.
    *
    * @param {BinReader} reader - The reader value.
-   * @param {Record<any, any>} context - The context value.
+   * @param {Record<string, any>} context - The context value.
    */
-  readBinary(reader: BinReader, context: Record<any, any>): void {
+  readBinary(reader: BinReader, context: Record<string, any>): void {
     // super.readBinary(reader, context);
     this.setName(reader.loadStr())
     let resourcePath: string = reader.loadStr()

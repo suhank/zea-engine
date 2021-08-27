@@ -4,8 +4,8 @@ import { BaseEvent } from '../BaseEvent'
 
 class TexturedChangedEvent extends BaseEvent {
   isTextured: boolean
-  param: Record<any, any>
-  constructor(isTextured: boolean, param: Record<any, any>) {
+  param: Record<string, any>
+  constructor(isTextured: boolean, param: Record<string, any>) {
     super()
     this.isTextured = isTextured
     this.param = param

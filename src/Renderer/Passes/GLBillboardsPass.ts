@@ -26,11 +26,11 @@ class GLBillboardsPass extends GLPass {
   protected prevSortCameraPos: Vec3
   protected atlas: GLImageAtlas
   protected indexArrayUpdateNeeded: boolean
-  protected instanceIdsBuffer: WebGLBuffer| null
+  protected instanceIdsBuffer: WebGLBuffer | null
   protected indexArray: Float32Array
 
   protected glshader: GLShader
-  protected shaderComp: Record<any, any>
+  protected shaderComp: Record<string, any>
 
   protected shaderBinding: IGeomShaderBinding
 
@@ -68,7 +68,7 @@ class GLBillboardsPass extends GLPass {
     this.atlas = new GLImageAtlas(this.renderer.gl, 'Billboards', 'RGBA', 'UNSIGNED_BYTE')
     this.atlas.clearColor = new Color(1, 1, 1, 0)
 
-    const emitUpdated = (event: Record<any, any>) => this.emit('updated', event)
+    const emitUpdated = (event: Record<string, any>) => this.emit('updated', event)
     this.atlas.on('loaded', emitUpdated)
     this.atlas.on('updated', emitUpdated)
   }
@@ -91,7 +91,7 @@ class GLBillboardsPass extends GLPass {
    * so the subtree of this node will not be traversed after this node is handled.
    * @return {Boolean} - The return value.
    */
-  itemAddedToScene(treeItem: TreeItem, rargs: Record<any, any>) {
+  itemAddedToScene(treeItem: TreeItem, rargs: Record<string, any>) {
     if (treeItem instanceof BillboardItem) {
       this.addBillboard(treeItem)
       return true
@@ -106,7 +106,7 @@ class GLBillboardsPass extends GLPass {
    * @param {object} rargs - Extra return values are passed back in this object.
    * @return {Boolean} - The return value.
    */
-  itemRemovedFromScene(treeItem: TreeItem, rargs: Record<any, any>): boolean {
+  itemRemovedFromScene(treeItem: TreeItem, rargs: Record<string, any>): boolean {
     if (treeItem instanceof BillboardItem) {
       this.removeBillboard(treeItem)
       return true

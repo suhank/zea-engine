@@ -51,7 +51,7 @@ class GLStandardGeomsPass extends GLPass {
    * so the subtree of this node will not be traversed after this node is handled.
    * @return {Boolean} - Returns true if the item is now added to the pass.
    */
-  itemAddedToScene(treeItem: TreeItem, rargs: Record<any, any>) {
+  itemAddedToScene(treeItem: TreeItem, rargs: Record<string, any>) {
     if (treeItem instanceof GeomItem) {
       const geomItem = treeItem
       {
@@ -78,7 +78,7 @@ class GLStandardGeomsPass extends GLPass {
    * @param {object} rargs - Extra return values are passed back in this object.
    * @return {Boolean} - The return value.
    */
-  itemRemovedFromScene(treeItem: TreeItem, rargs: Record<any, any>): boolean {
+  itemRemovedFromScene(treeItem: TreeItem, rargs: Record<string, any>): boolean {
     if (treeItem instanceof GeomItem && treeItem.getMetadata('glpass') == this) {
       return this.removeGeomItem(treeItem)
     }

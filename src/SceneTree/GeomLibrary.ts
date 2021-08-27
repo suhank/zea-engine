@@ -27,7 +27,7 @@ const getWorker = (geomLibraryId: any, fn: any) => {
   if (!workers[__workerId]) {
     listeners[__workerId] = {}
     const worker = new GeomParserWorker()
-    worker.onmessage = (event: Record<any, any>) => {
+    worker.onmessage = (event: Record<string, any>) => {
       const data = event.data
       listeners[__workerId][data.geomLibraryId](data)
     }
@@ -55,7 +55,7 @@ class GeomLibrary extends EventEmitter {
   protected __genBuffersOpts: Record<string, any>
   protected loadCount: number
   protected queue: any
-  protected loadContext: Record<any, any>
+  protected loadContext: Record<string, any>
   protected __numGeoms: number
   protected geoms: any[]
   protected basePath: string
@@ -155,7 +155,7 @@ class GeomLibrary extends EventEmitter {
    * @param {string} basePath - The base path of the file. (this is theURL of the zcad file without its extension.)
    * @param {Record<any,any>} context - The value param.
    */
-  loadGeomFilesStream(geomLibraryJSON: Record<any, any>, basePath: string, context: Record<any, any>) {
+  loadGeomFilesStream(geomLibraryJSON: Record<string, any>, basePath: string, context: Record<string, any>) {
     const numGeomFiles = geomLibraryJSON.numGeomsPerFile.length
     resourceLoader.incrementWorkload(numGeomFiles)
 
@@ -224,7 +224,7 @@ class GeomLibrary extends EventEmitter {
    * @param {Record<any,any>} context - The context value.
    * @return {any} - The return value.
    */
-  readBinaryBuffer(geomFileID: string, buffer: Buffer, context: Record<any, any> ) {
+  readBinaryBuffer(geomFileID: string, buffer: Buffer, context: Record<string, any>) {
     const reader = new BinReader(buffer, 0, SystemDesc.isMobileDevice)
     const numGeoms = reader.loadUInt32()
 

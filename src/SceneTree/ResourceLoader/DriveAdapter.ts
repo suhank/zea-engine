@@ -47,10 +47,10 @@ export function mergeDeep(target: any, ...sources: any[]): any {
  * @private
  */
 class DriveAdapter {
-  protected __resources: Record<any, any>
-  protected __resourcesTreeEntities: Record<any, any>
-  protected __resourcesTree: Record<any, any>
-  protected __resourceRegisterCallbacks: Record<any, any>
+  protected __resources: Record<string, any>
+  protected __resourcesTreeEntities: Record<string, any>
+  protected __resourcesTree: Record<string, any>
+  protected __resourceRegisterCallbacks: Record<string, any>
   /**
    * Create a resource loader.
    */
@@ -121,7 +121,7 @@ class DriveAdapter {
    * @param {Record<any,any>} resourcesDict - The resourcesDict value.
    * @private
    */
-  __applyCallbacks(resourcesDict: Record<any, any>) {
+  __applyCallbacks(resourcesDict: Record<string, any>) {
     const applyCallbacks = (resource: any) => {
       for (const filter in this.__resourceRegisterCallbacks) {
         if (resource.name.includes(filter)) this.__resourceRegisterCallbacks[filter](resource)
@@ -138,7 +138,7 @@ class DriveAdapter {
    * @param {Record<any,any>} resources - The resources param.
    * @private
    */
-  __buildTree(resources: Record<any, any>) {
+  __buildTree(resources: Record<string, any>) {
     const buildEntity = (resourceId: number) => {
       if (this.__resourcesTreeEntities[resourceId]) return
 
@@ -168,7 +168,7 @@ class DriveAdapter {
    * The setResources method.
    * @param {Record<any,any>} resources - The resources value.
    */
-  setResources(resources: Record<any, any>) {
+  setResources(resources: Record<string, any>) {
     this.__resources = Object.assign(this.__resources, resources)
     this.__buildTree(resources)
     this.__applyCallbacks(resources)
@@ -233,7 +233,7 @@ class DriveAdapter {
    * The updateFile method.
    * @param {Record<any,any>} file - The file value.
    */
-  updateFile(file: Record<any, any>) {
+  updateFile(file: Record<string, any>) {
     const newFile = !(file.id in this.__resources)
     this.__resources[file.id] = file
     if (newFile) {
@@ -245,7 +245,7 @@ class DriveAdapter {
     this.emit('fileUpdated', { fileId: file.id })
   }
 
-  emit(fileStatus: string, record: Record<any, any>) {
+  emit(fileStatus: string, record: Record<string, any>) {
     console.warn('emit() method for DriveAdapter not implemented')
   }
   /**
@@ -286,7 +286,7 @@ class DriveAdapter {
    * @param {string} resourceId - The resourceId value.
    * @return {Record<any,any>} - The return value.
    */
-  getFile(resourceId: string): Record<any, any> {
+  getFile(resourceId: string): Record<string, any> {
     return this.__resources[resourceId]
   }
 
@@ -295,7 +295,7 @@ class DriveAdapter {
    * @param {string} filePath - The filePath value.
    * @return {Record<any,any>} - The return value.
    */
-  resolveFileId(value: string): Record<any, any> {
+  resolveFileId(value: string): Record<string, any> {
     const parts = value.split('/')
     if (parts[0] == '.' || parts[0] == '') parts.shift()
     let curr = this.__resourcesTree

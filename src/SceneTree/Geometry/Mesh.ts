@@ -647,7 +647,7 @@ class Mesh extends BaseGeom {
     //     this.addVertexAttribute("normals", Vec3, 0.0);
     // }
 
-    const splitIndices: Record<any, Record<any, any>> = {}
+    const splitIndices: Record<any, Record<string, any>> = {}
     let splitCount = 0
     for (const [, attr] of this.__vertexAttributes) {
       const attrSplits = attr.getSplits()
@@ -676,7 +676,6 @@ class Mesh extends BaseGeom {
     // let maxIndex;
     // if (debugAttrValues)
     //     maxIndex = Math.max(...indices);
-
 
     const attrBuffers: Record<string, attrBuffer> = {}
     for (const [attrName, attr] of this.__vertexAttributes) {

@@ -103,7 +103,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
         }
 
         // const glGeomItem = this.constructGLGeomItem(geomItem)
-        const glGeomItem = <Record<any, any>>this.renderer.glGeomItemLibrary.getGLGeomItem(geomItem)
+        const glGeomItem = <Record<string, any>>this.renderer.glGeomItemLibrary.getGLGeomItem(geomItem)
         glShaderGeomSets.addGLGeomItem(<GLGeomItem>glGeomItem)
 
         glGeomItem.GLShaderGeomSets = glShaderGeomSets
@@ -125,7 +125,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
       this.__renderer.assignTreeItemToGLPass(geomItem)
     }
     materialParam.on('valueChanged', materialChanged)
-    ;(<Record<any, any>>glGeomItem).materialChanged = materialChanged
+    ;(<Record<string, any>>glGeomItem).materialChanged = materialChanged
 
     // ////////////////////////////////////
     // Shaders
@@ -154,7 +154,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
    * @return {boolean} - The return value.
    */
   removeGeomItem(geomItem: GeomItem) {
-    const glGeomItem = (<Record<any, any>>this).renderer.glGeomItemLibrary.getGLGeomItem(geomItem)
+    const glGeomItem = (<Record<string, any>>this).renderer.glGeomItemLibrary.getGLGeomItem(geomItem)
 
     if (glGeomItem.GLShaderGeomSets) {
       const glShaderGeomSets = glGeomItem.GLShaderGeomSets

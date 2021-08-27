@@ -24,7 +24,7 @@ class FileImage extends BaseImage {
    * @param {string} filePath - The filePath value.
    * @param {Record<any,any>} params - The params value.
    */
-  constructor(name?: string, filePath: string = '', params: Record<any, any> = {}) {
+  constructor(name?: string, filePath: string = '', params: Record<string, any> = {}) {
     if (filePath.constructor == Object) {
       params = { filePath }
     }
@@ -45,8 +45,8 @@ class FileImage extends BaseImage {
       if (this.getName() == '') {
         // Generate a name from the file path.
         const stem = fileParam.getStem()
-        if(!stem) {
-          console.warn("no fileName found")
+        if (!stem) {
+          console.warn('no fileName found')
           return
         }
         const decorator: any = stem.substring(stem.length - 1) // TODO: check output
@@ -184,7 +184,7 @@ class FileImage extends BaseImage {
    * The toJSON method encodes this type as a json object for persistence.
    * @param {Record<any,any>} context - The context value.
    */
-  toJSON(context?: Record<any, any>) {
+  toJSON(context?: Record<string, any>) {
     return {}
   }
 
@@ -193,14 +193,14 @@ class FileImage extends BaseImage {
    * @param {Record<any,any>} json - The json object this item must decode.
    * @param {Record<any,any>} context - The context value.
    */
-  fromJSON(json: Record<any, any>, context?: Record<any, any>) {}
+  fromJSON(json: Record<string, any>, context?: Record<string, any>) {}
 
   /**
    * The readBinary method.
    * @param {Record<any,any>} reader - The reader param.
    * @param {Record<any,any>} context - The context param.
    */
-  readBinary(reader: BinReader, context: Record<any, any>) {
+  readBinary(reader: BinReader, context: Record<string, any>) {
     // super.readBinary(reader, context);
     this.setName(reader.loadStr())
 

@@ -27,7 +27,7 @@ class LDRImage extends FileImage {
    * @param {string} filePath - The filePath value.
    * @param {object} params - The params value.
    */
-  constructor(name?: string, filePath?: string, params?: Record<any, any>) {
+  constructor(name?: string, filePath?: string, params?: Record<string, any>) {
     super(name, filePath, params)
   }
 }

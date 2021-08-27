@@ -115,7 +115,7 @@ class Material extends BaseItem {
    * @return {object} - The return value.
    */
   getParamTextures() {
-    const textures: Record<any, any> = {}
+    const textures: Record<string, any> = {}
     for (const param of this.params) {
       if (param instanceof MaterialColorParam) {
         if ((<MaterialColorParam>param).getImage()) textures[param.getName()] = (<MaterialColorParam>param).getImage()
@@ -135,7 +135,7 @@ class Material extends BaseItem {
     return this.__isTransparent
   }
 
-  __checkTransparency(event?: Record<any, any>) {
+  __checkTransparency(event?: Record<string, any>) {
     let isTransparent = false
     try {
       const shaderClass = this.getShaderClass()
@@ -177,7 +177,7 @@ class Material extends BaseItem {
     return this.__isTextured
   }
 
-  __checkTextures(event?: Record<any, any>) {
+  __checkTextures(event?: Record<string, any>) {
     // console.log('__checkTextures')
     const param = event ? event : {}
 
@@ -205,10 +205,10 @@ class Material extends BaseItem {
   /**
    * This method can be overridden in derived classes
    * to perform general updates (see GLPass or BaseItem).
-   * @param {Record<any, any>} event - The event object emitted by the parameter.
+   * @param {Record<string, any>} event - The event object emitted by the parameter.
    * @private
    */
-  parameterValueChanged(event: Record<any, any>) {
+  parameterValueChanged(event: Record<string, any>) {
     this.__checkTransparency(event)
     this.__checkTextures(event)
     super.parameterValueChanged(event)
@@ -229,10 +229,10 @@ class Material extends BaseItem {
   /**
    * The toJSON method encodes the current object as a json object.
    *
-   * @param {Record<any, any>} context - The context value.
+   * @param {Record<string, any>} context - The context value.
    * @return {any} - Returns the json object.
    */
-  toJSON(context?: Record<any, any>) {
+  toJSON(context?: Record<string, any>) {
     const j = super.toJSON(context)
     j.shader = this.__shaderName
 
@@ -242,10 +242,10 @@ class Material extends BaseItem {
   /**
    * The fromJSON method decodes a json object for this type.
    *
-   * @param {Record<any, any>} j - The json object this item must decode.
-   * @param {Record<any, any>} context - The context value.
+   * @param {Record<string, any>} j - The json object this item must decode.
+   * @param {Record<string, any>} context - The context value.
    */
-  fromJSON(j: Record<any, any>, context: Record<any, any> = {}) {
+  fromJSON(j: Record<string, any>, context: Record<string, any> = {}) {
     if (!j.shader) {
       console.warn('Invalid Material JSON')
       return
@@ -269,9 +269,9 @@ class Material extends BaseItem {
    * Sets state of current Item(Including Shaders and Materials) using a binary reader object.
    *
    * @param {BinReader} reader - The reader value.
-   * @param {Record<any, any>} context - The context value.
+   * @param {Record<string, any>} context - The context value.
    */
-  readBinary(reader: BinReader, context: Record<any, any>) {
+  readBinary(reader: BinReader, context: Record<string, any>) {
     let shaderName = reader.loadStr()
 
     if (shaderName == 'StandardMaterial') {
@@ -337,10 +337,10 @@ class Material extends BaseItem {
    * The clone method constructs a new material, copies its values
    * from this material and returns it.
    *
-   * @param {Record<any, any>} context - The context value.
+   * @param {Record<string, any>} context - The context value.
    * @return {Material} - Returns a new cloned material.
    */
-  clone(context?: Record<any, any>) {
+  clone(context?: Record<string, any>) {
     const cloned = new Material('clone', '') // TODO: what should the arguemnts be here?
     cloned.copyFrom(this, context)
     return cloned
@@ -352,7 +352,7 @@ class Material extends BaseItem {
    * @param {Material} src - The material to copy from.
    * @param {object} context - The context value.
    */
-  copyFrom(src: Material, context?: Record<any, any>) {
+  copyFrom(src: Material, context?: Record<string, any>) {
     this.setShaderName(src.getShaderName())
     super.copyFrom(src, context)
   }

@@ -41,7 +41,7 @@ class BaseImage extends BaseItem {
     this.minFilter = 'LINEAR'
     this.magFilter = 'LINEAR'
 
-    this.on('parameterValueChanged', (event: Record<any, any>) => {
+    this.on('parameterValueChanged', (event: Record<string, any>) => {
       this.emit('updated')
     })
 
@@ -56,7 +56,7 @@ class BaseImage extends BaseItem {
    * @private
    * @return {boolean} - Returns a boolean.
    */
-  isLoaded() {
+  isLoaded(): boolean {
     return true
   }
 
@@ -65,7 +65,7 @@ class BaseImage extends BaseItem {
    *
    * @return {object} - The return value.
    */
-  getParams(): Record<any, any> {
+  getParams(): Record<string, any> {
     return {
       type: this.type,
       format: this.format,

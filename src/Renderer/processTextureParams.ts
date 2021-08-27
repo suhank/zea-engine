@@ -1,4 +1,4 @@
-const processTextureParams = function (gl: Record<any,any>, params: any) {
+const processTextureParams = function (gl: Record<any, any>, params: any) {
   if (!params.width || !params.height) {
     if (!params.width) throw new Error(`Invalid texture params. 'width' not provided`)
     if (!params.height) throw new Error(`Invalid texture params. 'height' not provided`)
@@ -16,7 +16,7 @@ const processTextureParams = function (gl: Record<any,any>, params: any) {
     )
   }
 
-  const result: Record<any, any> = {
+  const result: Record<string, any> = {
     width: params.width,
     height: params.height,
   }

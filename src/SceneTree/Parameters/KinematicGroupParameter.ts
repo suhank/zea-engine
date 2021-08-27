@@ -114,7 +114,7 @@ class KinematicGroupParameter extends ListParameter {
    * @param {Record<any,any>} context - The context value.
    * @return {Record<any,any>} - Returns the json object.
    */
-  toJSON(context: Record<any, any>) {
+  toJSON(context: Record<string, any>) {
     // return super.toJSON(context);
     const treeItems = []
     for (const p of this.__value) treeItems.push(context.makeRelative(p.getPath()))
@@ -128,7 +128,7 @@ class KinematicGroupParameter extends ListParameter {
    * @param {Record<any,any>} j - The json object this item must decode.
    * @param {Record<any,any>} context - The context value.
    */
-  fromJSON(j: Record<any, any>, context: Record<any, any>) {
+  fromJSON(j: Record<string, any>, context: Record<string, any>) {
     if (j.treeItems == undefined) {
       console.warn('Invalid Parameter JSON')
       return

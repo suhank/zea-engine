@@ -36,7 +36,7 @@ class GLGeomLibrary extends EventEmitter {
   protected indicesAllocator: Allocator1D
   protected indicesCounts: Int32Array
   protected indicesOffsets: Int32Array
-  protected indexBuffer: WebGLBuffer| null
+  protected indexBuffer: WebGLBuffer | null
   protected __destroyed: boolean
   /**
    * Create a GLGeomLibrary.
@@ -270,7 +270,7 @@ class GLGeomLibrary extends EventEmitter {
     for (const attrName in geomBuffers.attrBuffers) {
       if (!this.shaderAttrSpec[attrName]) {
         const attrData = geomBuffers.attrBuffers[attrName]
-        const geomAttrDesc: Record<any, any> = genDataTypeDesc(this.__gl, attrData.dataType)
+        const geomAttrDesc: Record<string, any> = genDataTypeDesc(this.__gl, attrData.dataType)
 
         this.shaderAttrSpec[attrName] = {
           dataType: attrData.dataType,

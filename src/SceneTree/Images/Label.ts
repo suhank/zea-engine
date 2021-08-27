@@ -177,7 +177,7 @@ class Label extends DataImage {
    * @param {Record<any,any>} event - The event object.
    * @private
    */
-  __parameterValueChanged(event: Record<any, any>) {
+  __parameterValueChanged(event: Record<string, any>) {
     super.parameterValueChanged(event)
     if (!this.__requestedReRender) {
       this.__requestedReRender = true
@@ -360,7 +360,7 @@ class Label extends DataImage {
    * @param {Record<any,any>} context - The context value.
    * @return {Record<any,any>} - Returns the json object.
    */
-  toJSON(context: Record<any, any>) {
+  toJSON(context: Record<string, any>) {
     const j = super.toJSON(context)
     return j
   }
@@ -371,7 +371,7 @@ class Label extends DataImage {
    * @param {Record<any,any>} j - The json object this item must decode.
    * @param {Record<any,any>} context - The context value.
    */
-  fromJSON(j: Record<any, any>, context: Record<any, any>) {
+  fromJSON(j: Record<string, any>, context: Record<string, any>) {
     super.fromJSON(j, context)
     this.__getLabelText() // TODO: does this make sense? this is a protected member. no functions are added to it.
   }

@@ -16,9 +16,9 @@ import { GLGeomItem } from '../Drawing'
  */
 class GLTransparentGeomsPass extends GLStandardGeomsPass {
   protected itemCount: number
-  protected __glShaderGeomSets: Record<any, any> // GLShaderGeomSets
+  protected __glShaderGeomSets: Record<string, any> // GLShaderGeomSets
   protected transparentItems: any[]
-  protected transparentItemIndices: Record<any, any>
+  protected transparentItemIndices: Record<string, any>
   protected freeList: any[]
   protected visibleItems: any[]
   protected prevSortCameraPos: Vec3
@@ -102,7 +102,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
           })
           this.__glShaderGeomSets[shaderName] = glShaderGeomSets
         }
-        const glGeomItem = <Record<any, any>>this.renderer.glGeomItemLibrary.getGLGeomItem(geomItem)
+        const glGeomItem = <Record<string, any>>this.renderer.glGeomItemLibrary.getGLGeomItem(geomItem)
         glShaderGeomSets.addGLGeomItem(glGeomItem)
 
         glGeomItem.on('visibilityChanged', this.resortNeeded)
@@ -143,7 +143,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
 
     // ////////////////////////////////////
     // Tracking visibility changes.
-    const visibilityChanged = (event: Record<any, any>) => {
+    const visibilityChanged = (event: Record<string, any>) => {
       if (event.visible) {
         this.visibleItems.push(item)
       } else {
@@ -193,7 +193,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
   removeGeomItem(geomItem: GeomItem): boolean {
     this.itemCount--
 
-    const glGeomItem = <Record<any, any>>this.renderer.glGeomItemLibrary.getGLGeomItem(geomItem)
+    const glGeomItem = <Record<string, any>>this.renderer.glGeomItemLibrary.getGLGeomItem(geomItem)
     if (glGeomItem.GLShaderGeomSets) {
       const glShaderGeomSets = glGeomItem.GLShaderGeomSets
       glShaderGeomSets.removeGLGeomItem(glGeomItem)
@@ -244,7 +244,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
    * @param {Record<any,any>} transparentItem - current item to render
    * @param {Record<any,any>} cache - cache tracking which material/shader is currently bound.
    */
-  _drawItem(renderstate: RenderState, transparentItem: Record<any, any>, cache: Record<any, any>) {
+  _drawItem(renderstate: RenderState, transparentItem: Record<string, any>, cache: Record<string, any>) {
     if (cache.currentGLMaterial != transparentItem.glMaterial) {
       cache.currentGLMaterial = transparentItem.glMaterial
       if (!cache.currentGLMaterial.bind(renderstate)) {
@@ -282,7 +282,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
       this.__glShaderGeomSets[shaderName].draw(renderstate)
     }
 
-    const cache: Record<any, any> = {
+    const cache: Record<string, any> = {
       currentglShader: null,
       currentGLMaterial: null,
       currentGLGeom: null,
@@ -406,7 +406,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
       this.__glShaderGeomSets[shaderName].drawHighlightedGeoms(renderstate)
     }
 
-    const cache: Record<any, any> = {
+    const cache: Record<string, any> = {
       currentglShader: null,
       currentGLMaterial: null,
       currentGLGeom: null,
@@ -446,7 +446,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
       this.__glShaderGeomSets[shaderName].drawGeomData(renderstate)
     }
 
-    const cache: Record<any, any> = {
+    const cache: Record<string, any> = {
       currentglShader: null,
       currentGLMaterial: null,
       currentGLGeom: null,

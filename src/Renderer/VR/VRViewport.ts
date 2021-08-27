@@ -32,7 +32,7 @@ class VRViewport extends GLBaseViewport {
   protected __stageTreeItem: TreeItem
   // __renderer: any // GLBaseRenderer
   protected __vrhead: VRHead
-  protected controllersMap: Record<any, any>
+  protected controllersMap: Record<string, any>
   protected controllers: any[]
   protected controllerPointerDownTime: any[]
   protected spectatorMode: boolean
@@ -350,7 +350,7 @@ class VRViewport extends GLBaseViewport {
               this.emit('controllerAdded', event)
               return controller
             }
-            const onInputSourcesChange = (event: Record<any, any>) => {
+            const onInputSourcesChange = (event: Record<string, any>) => {
               // As input sources are connected if they are tracked-pointer devices
               // look up which meshes should be associated with their profile and
               // load as the controller model for that hand.
@@ -462,7 +462,7 @@ class VRViewport extends GLBaseViewport {
    * @param {XRFrame} xrFrame - The xrFrame value.
    * @param {Record<any,any>} event - The pose changed event object that will be emitted for observers such as collab.
    */
-  updateControllers(xrFrame: any, event: Record<any, any>) {
+  updateControllers(xrFrame: any, event: Record<string, any>) {
     const inputSources = this.session.inputSources
     for (let i = 0; i < inputSources.length; i++) {
       const inputSource = inputSources[i]
@@ -500,7 +500,7 @@ class VRViewport extends GLBaseViewport {
     const viewXfo = this.__vrhead.getTreeItem().getParameter('GlobalXfo').getValue()
 
     // Prepare the pointerMove event.
-    const event: Record<any, any> = { controllers: this.controllers, viewXfo }
+    const event: Record<string, any> = { controllers: this.controllers, viewXfo }
     this.preparePointerEvent(event)
     this.updateControllers(xrFrame, event)
     if (this.capturedElement && event.propagating) {
@@ -601,7 +601,7 @@ class VRViewport extends GLBaseViewport {
    * @param {XREvent} event - The event that occurs in the canvas
    * @private
    */
-  preparePointerEvent(event: Record<any, any>) {
+  preparePointerEvent(event: Record<string, any>) {
     event.viewport = this
     event.propagating = true
     event.pointerType = POINTER_TYPES.xr
@@ -628,7 +628,7 @@ class VRViewport extends GLBaseViewport {
    *
    * @param {MouseEvent|TouchEvent} event - The DOM event produced by a pointer
    */
-  onPointerDown(event: Record<any, any>) {
+  onPointerDown(event: Record<string, any>) {
     this.preparePointerEvent(event)
     event.intersectionData = event.controller.getGeomItemAtTip()
 
@@ -674,7 +674,7 @@ class VRViewport extends GLBaseViewport {
    *
    * @param {MouseEvent|TouchEvent} event - The event that occurs.
    */
-  onPointerUp(event: Record<any, any>) {
+  onPointerUp(event: Record<string, any>) {
     this.preparePointerEvent(event)
     this.controllerPointerDownTime[event.controller.id] = 0
 

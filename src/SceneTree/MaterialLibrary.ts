@@ -198,7 +198,7 @@ class MaterialLibrary extends EventEmitter implements Owner {
    * @param {Record<any,any>} context - The context value.
    * @return {Record<any,any>} - Returns the json object.
    */
-  toJSON(context: Record<any, any> = {}) {
+  toJSON(context: Record<string, any> = {}) {
     return {
       numMaterials: this.getNumMaterials(),
     }
@@ -209,7 +209,7 @@ class MaterialLibrary extends EventEmitter implements Owner {
    * @param {Record<any,any>} j - The json object this item must decode.
    * @param {Record<any,any>} context - The context value.
    */
-  fromJSON(j: Record<any, any>, context: Record<any, any> = {}) {
+  fromJSON(j: Record<string, any>, context: Record<string, any> = {}) {
     context.lod = this.lod
     // eslint-disable-next-line guard-for-in
     for (const name in j.textures) {
@@ -230,7 +230,7 @@ class MaterialLibrary extends EventEmitter implements Owner {
    * @param {BinReader} reader - The reader value.
    * @param {Record<any,any>} context - The context value.
    */
-  readBinary(reader: BinReader, context: Record<any, any> = {}) {
+  readBinary(reader: BinReader, context: Record<string, any> = {}) {
     // if (context.version == undefined) context.version = 0
 
     this.name = reader.loadStr()

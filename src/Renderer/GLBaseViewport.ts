@@ -507,7 +507,7 @@ class GLBaseViewport extends ParameterOwner {
    *
    * @param {MouseEvent|TouchEvent} event - The DOM event produced by a pointer
    */
-  onPointerDown(event: Record<any, any>): void {
+  onPointerDown(event: Record<string, any>): void {
     console.warn('@GLBaseViewport#onPointerDown - Implement me!')
   }
 
@@ -516,7 +516,7 @@ class GLBaseViewport extends ParameterOwner {
    *
    * @param {MouseEvent|TouchEvent} event - The DOM event produced by a pointer
    */
-  onPointerUp(event: Record<any, any>): void {
+  onPointerUp(event: Record<string, any>): void {
     console.warn('@GLBaseViewport#onPointerUp - Implement me!')
   }
 
@@ -525,7 +525,7 @@ class GLBaseViewport extends ParameterOwner {
    *
    * @param {MouseEvent|TouchEvent} event - The DOM event produced by a pointer
    */
-  onPointerMove(event: Record<any, any>): void {
+  onPointerMove(event: Record<string, any>): void {
     console.warn('@GLBaseViewport#onPointerMove - Implement me!')
   }
 
@@ -534,7 +534,7 @@ class GLBaseViewport extends ParameterOwner {
    *
    * @param {MouseEvent|TouchEvent} event - The DOM event produced by a pointer
    */
-  onPointerEnter(event: Record<any, any>): void {
+  onPointerEnter(event: Record<string, any>): void {
     console.warn('@GLBaseViewport#onPointerEnter - Implement me!')
   }
 
@@ -543,7 +543,7 @@ class GLBaseViewport extends ParameterOwner {
    *
    * @param {MouseEvent|TouchEvent} event - The DOM event produced by a pointer
    */
-  onPointerLeave(event: Record<any, any>): void {
+  onPointerLeave(event: Record<string, any>): void {
     console.warn('@GLBaseViewport#onPointerLeave - Implement me!')
   }
 
@@ -551,19 +551,19 @@ class GLBaseViewport extends ParameterOwner {
    * Invoked when the mouse pointer is moved out of an element.
    * @param {MouseEvent} event - The event that occurs.
    */
-  onMouseLeave(event: Record<any, any>): void {}
+  onMouseLeave(event: Record<string, any>): void {}
 
   /**
    * Invoked when the user is pressing a key on the keyboard.
    * @param {KeyboardEvent} event - The event that occurs.
    */
-  onKeyDown(event: Record<any, any>): void {}
+  onKeyDown(event: Record<string, any>): void {}
 
   /**
    * Causes an event to occur  when the user releases a key on the keyboard.
    * @param {KeyboardEvent} event - The event that occurs.
    */
-  onKeyUp(event: Record<any, any>): void {}
+  onKeyUp(event: Record<string, any>): void {}
 
   /**
    *

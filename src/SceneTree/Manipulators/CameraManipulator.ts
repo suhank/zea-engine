@@ -83,7 +83,7 @@ const MANIPULATION_MODES = {
  * @extends BaseTool
  */
 class CameraManipulator extends BaseTool {
-  protected appData: Record<any, any>
+  protected appData: Record<string, any>
   protected __defaultManipulationState: number
   protected __manipulationState: any
   protected __pointerDown: boolean
@@ -95,7 +95,7 @@ class CameraManipulator extends BaseTool {
   protected __keysPressed: any[]
   protected __velocity: Vec3
   protected __prevVelocityIntegrationTime: number
-  protected __ongoingTouches: Record<any, any>
+  protected __ongoingTouches: Record<string, any>
   protected __orbitRateParam: Parameter<number>
   protected __dollySpeedParam: Parameter<number>
   protected __mouseWheelDollySpeedParam: Parameter<number>
@@ -113,7 +113,7 @@ class CameraManipulator extends BaseTool {
    * Create a camera, mouse and keyboard
    * @param {Record<any,any>} appData - The object containing the scene and the renderer.
    */
-  constructor(appData: Record<any, any>) {
+  constructor(appData: Record<string, any>) {
     super()
 
     this.appData = appData
@@ -186,7 +186,7 @@ class CameraManipulator extends BaseTool {
    * @param {MouseEvent} event - The event value.
    * @param {Vec2} dragVec - The drag vector value.
    */
-  look(event: Record<any, any>, dragVec: Vec2) {
+  look(event: Record<string, any>, dragVec: Vec2) {
     const { viewport } = event
     const camera = viewport.getCamera()
 
@@ -213,7 +213,7 @@ class CameraManipulator extends BaseTool {
    * @param {MouseEvent} event - The event value.
    * @param {Vec2} dragVec - The drag vector value.
    */
-  turntable(event: Record<any, any>, dragVec: Vec2) {
+  turntable(event: Record<string, any>, dragVec: Vec2) {
     const { viewport } = event
     const camera = viewport.getCamera()
 
@@ -243,7 +243,7 @@ class CameraManipulator extends BaseTool {
    * @param {MouseEvent} event - The event value.
    * @param {Vec2} dragVec - The drag vector value.
    */
-  tumbler(event: Record<any, any>, dragVec: Vec2) {
+  tumbler(event: Record<string, any>, dragVec: Vec2) {
     const { viewport } = event
     const camera = viewport.getCamera()
     const orbitRate = this.__orbitRateParam.getValue()
@@ -275,7 +275,7 @@ class CameraManipulator extends BaseTool {
    * @param {MouseEvent} event - The event value.
    * @param {Vec2} dragVec - The drag vector value.
    */
-  trackball(event: Record<any, any>, dragVec: Vec2) {
+  trackball(event: Record<string, any>, dragVec: Vec2) {
     const { viewport } = event
     const camera = viewport.getCamera()
     const orbitRate = this.__orbitRateParam.getValue()
@@ -308,7 +308,7 @@ class CameraManipulator extends BaseTool {
    * @param {MouseEvent} event - The event value.
    * @param {Vec2} dragVec - The drag vector value.
    */
-  pan(event: Record<any, any>, dragVec: Vec2) {
+  pan(event: Record<string, any>, dragVec: Vec2) {
     const { viewport } = event
     const camera = viewport.getCamera()
 
@@ -341,7 +341,7 @@ class CameraManipulator extends BaseTool {
    * @param {MouseEvent} event - The event value.
    * @param {Vec2} dragVec - The drag vector value.
    */
-  dolly(event: Record<any, any>, dragVec: Vec2) {
+  dolly(event: Record<string, any>, dragVec: Vec2) {
     const { viewport } = event
     const camera = viewport.getCamera()
     const focalDistance = camera.getFocalDistance()
@@ -373,7 +373,7 @@ class CameraManipulator extends BaseTool {
    * @private
    * @param {PointerEvent} event - The event value.
    */
-  initDrag(event: Record<any, any>) {
+  initDrag(event: Record<string, any>) {
     const { pointerPos } = event
     event.setCapture(this)
 
@@ -401,7 +401,7 @@ class CameraManipulator extends BaseTool {
    * @private
    * @param {MouseEvent} event - The event value.
    */
-  endDrag(event: Record<any, any>) {
+  endDrag(event: Record<string, any>) {
     if (event.getCapture() == this) event.releaseCapture()
     this.__dragging = 0
     this.__pointerDown = false
@@ -557,7 +557,7 @@ class CameraManipulator extends BaseTool {
    * @param {MouseEvent|TouchEvent} event - The pointer event that occurs
    * @memberof CameraManipulator
    */
-  onPointerDoublePress(event: Record<any, any>) {
+  onPointerDoublePress(event: Record<string, any>) {
     if (event.intersectionData && this.aimFocusOnMouseClick) {
       if (
         (event.pointerType === POINTER_TYPES.mouse && this.aimFocusOnMouseClick == 2) ||
@@ -584,7 +584,7 @@ class CameraManipulator extends BaseTool {
    *
    * @param {PointerEvent} event - The mouse event that occurs.
    */
-  onPointerDown(event: Record<any, any>) {
+  onPointerDown(event: Record<string, any>) {
     if (event.pointerType === POINTER_TYPES.mouse) {
       if (this.__dragging == 1) {
         this.endDrag(event)
@@ -614,7 +614,7 @@ class CameraManipulator extends BaseTool {
    *
    * @param {MouseEvent} event - The mouse event that occurs.
    */
-  onPointerMove(event: Record<any, any>) {
+  onPointerMove(event: Record<string, any>) {
     if (this.__dragging != 0) {
       if (event.pointerType === POINTER_TYPES.mouse) this._onMouseMove(event)
       if (event.pointerType === POINTER_TYPES.touch) this._onTouchMove(event)
@@ -630,7 +630,7 @@ class CameraManipulator extends BaseTool {
    *
    * @param {MouseEvent} event -The event value
    */
-  _onMouseMove(event: Record<any, any>) {
+  _onMouseMove(event: Record<string, any>) {
     if (!this.__pointerDown) return
 
     const pointerPos = event.pointerPos
@@ -667,7 +667,7 @@ class CameraManipulator extends BaseTool {
    * @param {TouchEvent} event - The touch event that occurs.
    * @private
    */
-  _onTouchMove(event: Record<any, any>) {
+  _onTouchMove(event: Record<string, any>) {
     // this.__calculatingDragAction = true
 
     const touches = event.touches
@@ -768,7 +768,7 @@ class CameraManipulator extends BaseTool {
    *
    * @param {MouseEvent} event - The mouse event that occurs.
    */
-  onPointerUp(event: Record<any, any>) {
+  onPointerUp(event: Record<string, any>) {
     if (this.__dragging == 1) {
       // No dragging ocurred. Release the capture and let the event propagate like normal.
       this.endDrag(event)
@@ -826,13 +826,13 @@ class CameraManipulator extends BaseTool {
    * Causes an event to occur when the mouse pointer is moved into this viewport
    * @param {MouseEvent|TouchEvent} event - The event that occurs.
    */
-  onPointerEnter(event: Record<any, any>) {}
+  onPointerEnter(event: Record<string, any>) {}
 
   /**
    * Causes an event to occur when the mouse pointer is moved out of this viewport
    * @param {MouseEvent|TouchEvent} event - The event that occurs.
    */
-  onPointerLeave(event: Record<any, any>) {
+  onPointerLeave(event: Record<string, any>) {
     // If the pointer leaves the viewport, then we will no longer receive key up events,
     // so we must immediately disable movement here.
     if (this.__keysPressed.length > 0) {
@@ -847,7 +847,7 @@ class CameraManipulator extends BaseTool {
    *
    * @param {WheelEvent} event - The wheel event that occurs.
    */
-  onWheel(event: Record<any, any>) {
+  onWheel(event: Record<string, any>) {
     const { viewport } = event
     const camera = viewport.getCamera()
     const mouseWheelDollySpeed = this.__mouseWheelDollySpeedParam.getValue()
@@ -935,7 +935,7 @@ class CameraManipulator extends BaseTool {
    * @param {MouseEvent} event - The event value.
    * @private
    */
-  integrateVelocityChange(event: Record<any, any>) {
+  integrateVelocityChange(event: Record<string, any>) {
     const { viewport } = event
     const camera = viewport.getCamera()
 
@@ -991,7 +991,7 @@ class CameraManipulator extends BaseTool {
    * @param {KeyboardEvent} event - The keyboard event that occurs.
    * @private
    */
-  onKeyDown(event: Record<any, any>) {
+  onKeyDown(event: Record<string, any>) {
     if (!this.enabledWASDWalkMode) return
     const key = event.key.toLowerCase()
     // Note: onKeyPressed is called initially only once, and then we
@@ -1033,7 +1033,7 @@ class CameraManipulator extends BaseTool {
    *
    * @param {KeyboardEvent} event - The event that occurs.
    */
-  onKeyUp(event: Record<any, any>) {
+  onKeyUp(event: Record<string, any>) {
     const key = event.key.toLowerCase()
     if (!this.__keysPressed.includes(key)) return
     switch (key) {
@@ -1066,7 +1066,7 @@ class CameraManipulator extends BaseTool {
    * @param {TouchEvent} touch - The touch value.
    * @private
    */
-  __startTouch(touch: Record<any, any>) {
+  __startTouch(touch: Record<string, any>) {
     this.__ongoingTouches[touch.identifier] = {
       identifier: touch.identifier,
       pos: new Vec2(touch.clientX, touch.clientY),
@@ -1078,7 +1078,7 @@ class CameraManipulator extends BaseTool {
    * @param {TouchEvent} touch - The touch value.
    * @private
    */
-  __endTouch(touch: Record<any, any>) {
+  __endTouch(touch: Record<string, any>) {
     // let idx = this.__ongoingTouchIndexById(touch.identifier);
     // this.__ongoingTouches.splice(idx, 1); // remove it; we're done
     delete this.__ongoingTouches[touch.identifier]
@@ -1091,7 +1091,7 @@ class CameraManipulator extends BaseTool {
    *
    * @param {TouchEvent} event - The touch event that occurs.
    */
-  _onTouchStart(event: Record<any, any>) {
+  _onTouchStart(event: Record<string, any>) {
     const touches = event.changedTouches
     for (let i = 0; i < touches.length; i++) {
       this.__startTouch(touches[i])
@@ -1105,7 +1105,7 @@ class CameraManipulator extends BaseTool {
    *
    * @param {TouchEvent} event - The touch event that occurs.
    */
-  onTouchEnd(event: Record<any, any>) {
+  onTouchEnd(event: Record<string, any>) {
     event.preventDefault()
     event.stopPropagation()
     const touches = event.changedTouches
@@ -1121,7 +1121,7 @@ class CameraManipulator extends BaseTool {
    *
    * @param {TouchEvent} event - The touch event that occurs.
    */
-  onTouchCancel(event: Record<any, any>) {
+  onTouchCancel(event: Record<string, any>) {
     event.preventDefault()
     const touches = event.touches
     for (let i = 0; i < touches.length; i++) {

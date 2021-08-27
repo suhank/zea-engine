@@ -305,7 +305,7 @@ describe('Mesh', () => {
 
   test('loads from JSON (serialization).', () => {
     const mesh = new Mesh()
-    const input: Record<any, any> = {
+    const input: Record<string, any> = {
       type: 'Mesh',
       numVertices: 3,
       vertexAttributes: {

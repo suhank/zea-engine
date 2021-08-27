@@ -11,7 +11,7 @@ class GLRenderTarget extends EventEmitter {
   protected textureDesc: number[]
   protected frameBuffer: any
 
-  protected params: Record<any, any>
+  protected params: Record<string, any>
   protected type: any
   protected format: any
   protected internalFormat: any
@@ -30,7 +30,7 @@ class GLRenderTarget extends EventEmitter {
    * @param {WebGL12RenderingContext} gl - The webgl rendering context.
    * @param {object} params - The params value.
    */
-  constructor(gl: WebGL12RenderingContext, params?: Record<any, any>) {
+  constructor(gl: WebGL12RenderingContext, params?: Record<string, any>) {
     super()
     this.__gl = gl
     this.textureTargets = []
@@ -44,12 +44,12 @@ class GLRenderTarget extends EventEmitter {
 
   /**
    * The configure method.
-   * @param {Record<any, any>} params - The params param.
+   * @param {Record<string, any>} params - The params param.
    */
-  configure(params: Record<any, any>) {
+  configure(params: Record<string, any>) {
     const gl = this.__gl
 
-    const p: Record<any, any> = processTextureParams(gl, params) // TODO: review
+    const p: Record<string, any> = processTextureParams(gl, params) // TODO: review
 
     this.textureTargets.forEach((colorTexture) => {
       gl.deleteTexture(colorTexture)

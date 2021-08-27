@@ -278,7 +278,7 @@ class AssetItem extends TreeItem {
     }
 
     let layerRoot: any
-    const layers: Record<any, any> = {}
+    const layers: Record<string, any> = {}
     context.addGeomToLayer = (geomItem: GeomItem, layer: any) => {
       if (!layers[layer]) {
         if (!layerRoot) {

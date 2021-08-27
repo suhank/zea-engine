@@ -87,9 +87,9 @@ class GLGeomItemSet extends EventEmitter {
       this.highlightedIdsBufferDirty = true
     }
 
-    const eventHandlers: Record<any, any> = {}
+    const eventHandlers: Record<string, any> = {}
 
-    eventHandlers.highlightChanged = (event: Record<any, any>) => {
+    eventHandlers.highlightChanged = (event: Record<string, any>) => {
       if (glGeomItem.geomItem.isHighlighted()) {
         // Note: highlightChanged is fired when the color changes
         // or another highlight is added over the top. We avoid
@@ -107,7 +107,7 @@ class GLGeomItemSet extends EventEmitter {
       this.highlightedIdsBufferDirty = true
     }
     glGeomItem.geomItem.on('highlightChanged', eventHandlers.highlightChanged)
-    eventHandlers.visibilityChanged = (event: Record<any, any>) => {
+    eventHandlers.visibilityChanged = (event: Record<string, any>) => {
       const visible = event.visible
       if (visible) {
         this.visibleItems.push(index)
@@ -301,7 +301,7 @@ class GLGeomItemSet extends EventEmitter {
    * @param {WebGLBuffery} drawIdsBuffer - The drawIdsBuffer value.
    * @private
    */
-  __bindAndRender(renderstate: RenderState, itemIndices: number[], drawIdsBuffer: WebGLBuffer| null) {
+  __bindAndRender(renderstate: RenderState, itemIndices: number[], drawIdsBuffer: WebGLBuffer | null) {
     const gl = this.gl
     const unifs = renderstate.unifs
 

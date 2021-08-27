@@ -268,7 +268,7 @@ class GeomItem extends BaseGeomItem {
    * @param {object} context - The context value.
    * @return {object} - Returns the json object.
    */
-  toJSON(context?: Record<any, any>) {
+  toJSON(context?: Record<string, any>) {
     const json = super.toJSON(context)
     return json
   }
@@ -279,7 +279,7 @@ class GeomItem extends BaseGeomItem {
    * @param {object} json - The json object this item must decode.
    * @param {object} context - The context value.
    */
-  fromJSON(json: Record<any, any>, context: Record<any, any>) {
+  fromJSON(json: Record<string, any>, context: Record<string, any>) {
     super.fromJSON(json, context)
     context.numGeomItems++
   }
@@ -290,7 +290,7 @@ class GeomItem extends BaseGeomItem {
    * @param {BinReader} reader - The reader value.
    * @param {object} context - The context value.
    */
-  readBinary(reader: BinReader, context: Record<any, any>) {
+  readBinary(reader: BinReader, context: Record<string, any>) {
     super.readBinary(reader, context)
 
     context.numGeomItems++
@@ -306,7 +306,7 @@ class GeomItem extends BaseGeomItem {
     if (geom) {
       this.getParameter('Geometry').loadValue(geom)
     } else {
-      const onGeomLoaded = (event: Record<any, any>) => {
+      const onGeomLoaded = (event: Record<string, any>) => {
         const { range } = event
         if (geomIndex >= range[0] && geomIndex < range[1]) {
           const geom = geomLibrary.getGeom(geomIndex)
@@ -357,10 +357,10 @@ class GeomItem extends BaseGeomItem {
 
   /**
    * Returns string representation of current object's state.
-   * @param {Record<any, any>} context
+   * @param {Record<string, any>} context
    * @return {string} - The return value.
    */
-  toString(context: Record<any, any>) {
+  toString(context: Record<string, any>) {
     return JSON.stringify(this.toJSON(context), null, 2)
   }
 
@@ -374,7 +374,7 @@ class GeomItem extends BaseGeomItem {
    * @param {number} context - The context value.
    * @return {GeomItem} - Returns a new cloned geom item.
    */
-  clone(context?: Record<any, any>) {
+  clone(context?: Record<string, any>) {
     const cloned = new GeomItem()
     cloned.copyFrom(this, context)
     return cloned
@@ -384,9 +384,9 @@ class GeomItem extends BaseGeomItem {
    * Copies current GeomItem with all its children.
    *
    * @param {GeomItem} src - The geom item to copy from.
-   * @param {Record<any, any>} context - The context value.
+   * @param {Record<string, any>} context - The context value.
    */
-  copyFrom(src: GeomItem, context?: Record<any, any>) {
+  copyFrom(src: GeomItem, context?: Record<string, any>) {
     super.copyFrom(src, context)
 
     if (!src.getParameter('Geometry').getValue() && src.geomIndex != -1) {

@@ -38,7 +38,7 @@ class GLBaseRenderer extends ParameterOwner {
   protected __glcanvas: HTMLCanvasElement
   protected __scene: Scene
 
-  protected __shaderDirectives: Record<any, any>
+  protected __shaderDirectives: Record<string, any>
   protected __renderGeomDataFbosRequested: boolean
   protected __shaders: Record<string, GLShader>
   protected __passes: Record<number, GLPass[]>
@@ -102,7 +102,7 @@ class GLBaseRenderer extends ParameterOwner {
     this.renderGeomDataFbos = this.renderGeomDataFbos.bind(this)
     this.requestRedraw = this.requestRedraw.bind(this)
 
-    this.setupWebGL($canvas, options.webglOptions ? { ...options, ...options.webglOptions } : <any>options) 
+    this.setupWebGL($canvas, options.webglOptions ? { ...options, ...options.webglOptions } : <any>options)
     this.bindEventHandlers()
     this.addViewport('main')
 
@@ -368,15 +368,15 @@ class GLBaseRenderer extends ParameterOwner {
    * @param {Record<any,any>} event -
    * @private
    */
-  __childItemAdded(event: Record<any, any>): void {
+  __childItemAdded(event: Record<string, any>): void {
     this.addTreeItem(event.childItem)
   }
 
   /**
-   * @param {Record<any, any>} event -
+   * @param {Record<string, any>} event -
    * @private
    */
-  __childItemRemoved(event: Record<any, any>): void {
+  __childItemRemoved(event: Record<string, any>): void {
     this.removeTreeItem(event.childItem)
   }
 
@@ -580,7 +580,7 @@ class GLBaseRenderer extends ParameterOwner {
    * Setups the WebGL configuration for the renderer, specifying the canvas element where our
    *
    * @param {HTMLCanvasElement|HTMLElement} $canvas - The $canvas element.
-   * @param { Record<any, any>} webglOptions - The webglOptions value.
+   * @param { Record<string, any>} webglOptions - The webglOptions value.
    */
   setupWebGL($canvas: HTMLCanvasElement, webglOptions: WebglOptions): void {
     const { tagName } = $canvas
@@ -701,7 +701,7 @@ class GLBaseRenderer extends ParameterOwner {
     // Setup event handlers
     const isValidCanvas = () => this.getWidth() > 0 && this.getHeight()
 
-    const prepareEvent = (event: Record<any, any>) => {
+    const prepareEvent = (event: Record<string, any>) => {
       event.propagating = true
       const sp = event.stopPropagation
       event.stopPropagation = () => {
@@ -709,7 +709,7 @@ class GLBaseRenderer extends ParameterOwner {
         if (sp) sp.call(event)
       }
     }
-    const calcRendererCoords = (event: Record<any, any>) => {
+    const calcRendererCoords = (event: Record<string, any>) => {
       const rect = this.__glcanvas.getBoundingClientRect()
       // Disabling devicePixelRatio for now. See: __onResize
       const DPR = 1.0 // window.devicePixelRatio
@@ -724,7 +724,7 @@ class GLBaseRenderer extends ParameterOwner {
     }
 
     /** Mouse Events Start */
-    const isMobileSafariMouseEvent = (event: Record<any, any>) => {
+    const isMobileSafariMouseEvent = (event: Record<string, any>) => {
       if (SystemDesc.isMobileDevice && SystemDesc.browserName == 'Safari') {
         console.warn('Mobile Safari is triggering mouse event:', event.type)
         return true
@@ -733,7 +733,7 @@ class GLBaseRenderer extends ParameterOwner {
       return false
     }
 
-    this.__glcanvas.addEventListener('mousedown', (event: Record<any, any>) => {
+    this.__glcanvas.addEventListener('mousedown', (event: Record<string, any>) => {
       if (isMobileSafariMouseEvent(event)) {
         return
       }
@@ -753,7 +753,7 @@ class GLBaseRenderer extends ParameterOwner {
       return false
     })
 
-    document.addEventListener('mouseup', (event: Record<any, any>) => {
+    document.addEventListener('mouseup', (event: Record<string, any>) => {
       if (isMobileSafariMouseEvent(event)) {
         return
       }
@@ -781,7 +781,7 @@ class GLBaseRenderer extends ParameterOwner {
       return false
     })
 
-    document.addEventListener('mousemove', (event: Record<any, any>) => {
+    document.addEventListener('mousemove', (event: Record<string, any>) => {
       if (isMobileSafariMouseEvent(event)) {
         return
       }
@@ -800,7 +800,7 @@ class GLBaseRenderer extends ParameterOwner {
       return false
     })
 
-    this.__glcanvas.addEventListener('mouseenter', (event: Record<any, any>) => {
+    this.__glcanvas.addEventListener('mouseenter', (event: Record<string, any>) => {
       if (isMobileSafariMouseEvent(event)) {
         return
       }
@@ -826,7 +826,7 @@ class GLBaseRenderer extends ParameterOwner {
       }
     })
 
-    this.__glcanvas.addEventListener('mouseleave', (event: Record<any, any>) => {
+    this.__glcanvas.addEventListener('mouseleave', (event: Record<string, any>) => {
       if (isMobileSafariMouseEvent(event)) {
         return
       }
@@ -851,7 +851,7 @@ class GLBaseRenderer extends ParameterOwner {
     /** Touch Events Start */
     this.__glcanvas.addEventListener(
       'touchstart',
-      (event: Record<any, any>) => {
+      (event: Record<string, any>) => {
         event.stopPropagation()
 
         // Touch events are passive and so cannot call prevent default
@@ -871,7 +871,7 @@ class GLBaseRenderer extends ParameterOwner {
 
     this.__glcanvas.addEventListener(
       'touchend',
-      (event: Record<any, any>) => {
+      (event: Record<string, any>) => {
         event.stopPropagation()
 
         // Touch events are passive and so cannot call prevent default
@@ -891,7 +891,7 @@ class GLBaseRenderer extends ParameterOwner {
 
     this.__glcanvas.addEventListener(
       'touchmove',
-      (event: Record<any, any>) => {
+      (event: Record<string, any>) => {
         event.stopPropagation()
 
         // Touch events are passive and so cannot call prevent default
@@ -910,7 +910,7 @@ class GLBaseRenderer extends ParameterOwner {
     )
     /** Touch Events End */
 
-    const onWheel = (event: Record<any, any>) => {
+    const onWheel = (event: Record<string, any>) => {
       if (activeGLRenderer != this || !isValidCanvas()) return
       if (activeGLRenderer) {
         prepareEvent(event)
@@ -1065,7 +1065,7 @@ class GLBaseRenderer extends ParameterOwner {
     // Always get the last display. Additional displays are added at the end.(e.g. [Polyfill, HMD])
     const xrvp = new VRViewport(this)
 
-    const emitViewChanged = (event: Record<any, any>) => {
+    const emitViewChanged = (event: Record<string, any>) => {
       this.emit('viewChanged', event)
     }
 

@@ -27,7 +27,7 @@ class GLTexture2D extends RefCounted {
   __format: number
   protected __wrapParam: number
 
-  protected params: Record<any, any>
+  protected params: Record<string, any>
   protected __minFilter: number
   protected __magFilter: number
   protected __wrapS: number
@@ -46,7 +46,7 @@ class GLTexture2D extends RefCounted {
    * @param {WebGL12RenderingContext } gl - The gl value.
    * @param {BaseImage | Record<any,any>} params - The params value.
    */
-  constructor(gl: WebGL12RenderingContext, params?: BaseImage | Record<any, any>) {
+  constructor(gl: WebGL12RenderingContext, params?: BaseImage | Record<string, any>) {
     super()
     this.__gl = gl
 
@@ -155,9 +155,9 @@ class GLTexture2D extends RefCounted {
    *
    * @param {boolean} emit - The emit value.
    */
-  configure(params: Record<any, any>) {
+  configure(params: Record<string, any>) {
     const gl = this.__gl
-    const p: Record<any, any> = processTextureParams(gl, params) // TODO: check method
+    const p: Record<string, any> = processTextureParams(gl, params) // TODO: check method
 
     this.params = p
     this.__format = p.format
@@ -224,7 +224,7 @@ class GLTexture2D extends RefCounted {
   /**
    * Initializes and creates the buffer of the object's data store.
    *
-   * @param {Image | ImageData | HTMLCanvasElement | HTMLImageElement | HTMLVideoElement | Record<any, any>} data - The data value.
+   * @param {Image | ImageData | HTMLCanvasElement | HTMLImageElement | HTMLVideoElement | Record<string, any>} data - The data value.
    * @param {number} width - The width value.
    * @param {number} height - The height value.
    * @param {boolean} bind - The bind value.
@@ -283,7 +283,7 @@ class GLTexture2D extends RefCounted {
             numChannels = 4
             break
           default:
-            console.warn("Reaching default case: numChannels:=1")
+            console.warn('Reaching default case: numChannels:=1')
             numChannels = 1
             break
         }
@@ -515,7 +515,7 @@ class GLTexture2D extends RefCounted {
    * @return {WebGLTexture} - The return value.
    */
   getTexHdl(): WebGLTexture | null {
-    return this.__gltex 
+    return this.__gltex
   }
 
   /**
@@ -534,7 +534,7 @@ class GLTexture2D extends RefCounted {
    * The preBind method.
    * @param {Uniform} unif - The unif value.
    * @param {Uniforms} unifs - The unifs value.
-   * @return {Record<any, any>} - The return value.
+   * @return {Record<string, any>} - The return value.
    */
   preBind(unif: Uniform, unifs: Uniforms) {
     return {
@@ -548,10 +548,10 @@ class GLTexture2D extends RefCounted {
    *
    * @param {RenderState} renderstate - The renderstate value.
    * @param {Uniform} unif - The unif value.
-   * @param {Record<any, any>} bindings - The bindings value.
+   * @param {Record<string, any>} bindings - The bindings value.
    * @return {boolean} - The return value.
    */
-  bindToUniform(renderstate: RenderState, unif: Uniform, bindings?: Record<any, any>) {
+  bindToUniform(renderstate: RenderState, unif: Uniform, bindings?: Record<string, any>) {
     if (!this.__loaded) {
       return false
     }

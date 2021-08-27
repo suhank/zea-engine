@@ -48,8 +48,8 @@ function getLanguage() {
  */
 class LabelManager extends EventEmitter {
   protected __language: any
-  protected __foundLabelLibraries: Record<any, any>
-  protected __labelLibraries: Record<any, any>
+  protected __foundLabelLibraries: Record<string, any>
+  protected __labelLibraries: Record<string, any>
   /**
    * Create a label manager.
    */

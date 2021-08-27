@@ -14,7 +14,7 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
   protected renderer: GLBaseRenderer
   protected gl: WebGL12RenderingContext
   protected glGeomItems: GLGeomItem[]
-  protected glGeomIdsMapping: Record<any, any>
+  protected glGeomIdsMapping: Record<string, any>
   protected glgeomItemEventHandlers: any[]
   protected freeIndices: number[]
   protected dirtyDrawGeomIds: number[]
@@ -97,14 +97,14 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
       this.glGeomIdsMapping[glGeomItem.geomId].push(index)
     }
 
-    const eventHandlers: Record<any, any> = {}
+    const eventHandlers: Record<string, any> = {}
 
     // //////////////////////////////
     // Visibility
     if (glGeomItem.visible) {
       this.visibleItems.push(glGeomItem)
     }
-    eventHandlers.visibilityChanged = (event: Record<any, any>) => {
+    eventHandlers.visibilityChanged = (event: Record<string, any>) => {
       if (event.visible) {
         this.visibleItems.push(glGeomItem)
       } else {
@@ -125,7 +125,7 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
       this.highlightedIdsBufferDirty = true
     }
 
-    eventHandlers.highlightChanged = (event: Record<any, any>) => {
+    eventHandlers.highlightChanged = (event: Record<string, any>) => {
       if (event && event.name) {
         // Note: highlightChanged is fired when the color changes
         // or another highlight is added over the top. We avoid

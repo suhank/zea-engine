@@ -21,7 +21,7 @@ const numCores = SystemDesc.hardwareConcurrency - 1 // always leave one main thr
  * Archive unpacker plugin.
  */
 class ArchiveUnpackerPlugin {
-  protected __callbacks: Record<any, any>
+  protected __callbacks: Record<string, any>
   protected __workers: any[]
   protected __nextWorker: number
   protected resourceLoader: any
@@ -59,7 +59,7 @@ class ArchiveUnpackerPlugin {
         worker.postMessage({
           type: 'init',
         })
-        worker.onmessage = (event: Record<any, any>) => {
+        worker.onmessage = (event: Record<string, any>) => {
           if (event.data.type === 'WASM_LOADED') {
             resolve(worker)
           } else if (event.data.type === 'FINISHED') {
@@ -143,7 +143,7 @@ class ArchiveUnpackerPlugin {
    * @param {object} fileData - The fileData value.
    * @private
    */
-  __onFinishedReceiveFileData(fileData: Record<any, any>) {
+  __onFinishedReceiveFileData(fileData: Record<string, any>) {
     const resourceId = fileData.resourceId
     const callbacks = this.__callbacks[resourceId]
     if (callbacks) {

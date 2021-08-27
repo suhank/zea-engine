@@ -17,7 +17,7 @@ class GLShaderGeomSets extends EventEmitter {
   protected glShader: any
   protected glGeomDataShader: any
   protected glHighlightShader: any
-  protected glGeomItemSets: Record<any, any>
+  protected glGeomItemSets: Record<string, any>
 
   protected glShaderKey: string
   protected glGeomDataShaderKey: string
@@ -28,7 +28,7 @@ class GLShaderGeomSets extends EventEmitter {
    * @param {WebGL12RenderingContext } gl - The glShader value.
    * @param {Record<any,any>} shaders - The shader value.
    */
-  constructor(pass: GLStandardGeomsPass, gl: WebGL12RenderingContext, shaders: Record<any, any>) {
+  constructor(pass: GLStandardGeomsPass, gl: WebGL12RenderingContext, shaders: Record<string, any>) {
     super()
     this.pass = pass
     this.gl = gl
@@ -83,7 +83,7 @@ class GLShaderGeomSets extends EventEmitter {
     const material = glGeomItem.geomItem.getParameter('Material').getValue()
     this.pass.renderer.glMaterialLibrary.addMaterial(material)
 
-    const geomItemParamChanged = (event: Record<any, any>) => {
+    const geomItemParamChanged = (event: Record<string, any>) => {
       // Cast to GLStndardGeomsPass
       this.pass.removeGeomItem(geomItem)
       this.pass.__renderer.assignTreeItemToGLPass(geomItem)
@@ -125,7 +125,7 @@ class GLShaderGeomSets extends EventEmitter {
    * @param {string} key - The key to use to cache the shader binding.
    * @private
    */
-  bindShader(glShader: Record<any, any>, renderstate: RenderState, key: string) {
+  bindShader(glShader: Record<string, any>, renderstate: RenderState, key: string) {
     const gl = this.gl
     if (!glShader.isCompiledForTarget(key)) {
       if (gl.multiDrawElements) {

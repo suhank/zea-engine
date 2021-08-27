@@ -26,7 +26,7 @@ class EnvMap extends VLHImage {
    * @param {string} name - The name value.
    * @param {Record<any,any>} params - The params value.
    */
-  constructor(name?: string, params: Record<any, any> = {}) {
+  constructor(name?: string, params: Record<string, any> = {}) {
     super(name, params)
 
     this.addParameter(new BooleanParameter('HeadLightMode', false))
@@ -40,7 +40,7 @@ class EnvMap extends VLHImage {
    * @param {Record<any,any>} entries - The entries value.
    * @private
    */
-  __decodeData(entries: Record<any, any>) {
+  __decodeData(entries: Record<string, any>) {
     super.__decodeData(entries)
 
     const samples = entries.samples

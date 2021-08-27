@@ -312,10 +312,10 @@ class ParameterOwner extends EventEmitter {
 
   /**
    * Converts object's JSON value and converts it to a string.
-   * @param {Record<any, any>} context
+   * @param {Record<string, any>} context
    * @return {string} - String of object's parameter list state.
    */
-  toString(context: Record<any, any>): string {
+  toString(context: Record<string, any>): string {
     return JSON.stringify(this.toJSON(), null, 2)
   }
 

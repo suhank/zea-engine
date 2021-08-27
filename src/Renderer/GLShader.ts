@@ -6,8 +6,8 @@ import { StringFunctions } from '../Utilities/StringFunctions'
 import { shaderLibrary } from './ShaderLibrary'
 
 // interface Result {
-//   attrs: Record<any, any>
-//   unifs: Record<any, any>
+//   attrs: Record<string, any>
+//   unifs: Record<string, any>
 //   shaderHdls: any
 //   shaderProgramHdl: any
 // }
@@ -156,8 +156,8 @@ class GLShader extends BaseItem {
     // See if it compiled successfully
     if (!gl.getShaderParameter(shaderHdl, gl.COMPILE_STATUS)) {
       console.log('Errors in :' + this.constructor.name)
-      const errors: Record<any, any> = (<string>gl.getShaderInfoLog(shaderHdl)).split('\n')
-      const errorLines: Record<any, any> = {}
+      const errors: Record<string, any> = (<string>gl.getShaderInfoLog(shaderHdl)).split('\n')
+      const errorLines: Record<string, any> = {}
       for (let i = 0; i < errors.length; i++) {
         if (errors[i].startsWith("'")) {
           errors[i - 1] = errors[i - 1] + errors[i]
@@ -209,7 +209,7 @@ class GLShader extends BaseItem {
    * @return {WebGLProgram} - The program value.
    * @private
    */
-  __createProgram(shaderopts: Record<any, any>) {
+  __createProgram(shaderopts: Record<string, any>) {
     const gl = this.__gl
     this.__shaderCompilationAttempted = true
     const shaderProgramHdl = gl.createProgram()
@@ -358,7 +358,7 @@ class GLShader extends BaseItem {
    * @return {object} - The dictionary of attributes that this shader expects to be bound.
    */
   getAttributes() {
-    const attributes: Record<any, any> = {}
+    const attributes: Record<string, any> = {}
     for (const stageName in this.__shaderStages) {
       const shaderStageBlock = this.__shaderStages[stageName]
       for (const attrName in shaderStageBlock['attributes'])
@@ -394,7 +394,7 @@ class GLShader extends BaseItem {
    * The compileForTarget method.
    * @param {string} key - The key value.
    * @param {Shaderopts} shaderopts - The shaderopts value.
-   * @return {Record<any, any>} - The result of the shader compilation.
+   * @return {Record<string, any>} - The result of the shader compilation.
    */
   compileForTarget(key?: string, shaderopts?: Shaderopts): Record<string, any> {
     const shaderkey = key ? key : this.getId()

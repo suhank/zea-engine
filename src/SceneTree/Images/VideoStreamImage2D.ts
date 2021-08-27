@@ -24,7 +24,7 @@ class VideoStreamImage2D extends BaseImage {
    * @param {false} rearCamera - Boolean determining if it is a rear camera or not.
    */
   connectWebcam(width: number, height: number, rearCamera = false) {
-    const video: Record<any, any> = {
+    const video: Record<string, any> = {
       width,
       height,
       frameRate: {
@@ -151,7 +151,7 @@ class VideoStreamImage2D extends BaseImage {
    * The getParams method.
    * @return {any} - The return value.
    */
-  getParams(): Record<any, any> {
+  getParams(): Record<string, any> {
     return {
       type: this.type,
       format: this.format,

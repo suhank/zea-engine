@@ -34,7 +34,7 @@ class GLLines extends GLGeom {
    * The dirtyBuffers method.
    * @param {Record<any,any>} opts - options passed when geomDataChanged is emitted. (Currently ony used by the FreehandLines tool)
    */
-  dirtyBuffers(opts: Record<any, any>) {
+  dirtyBuffers(opts: Record<string, any>) {
     super.dirtyBuffers(opts)
     this.__fatBuffersNeedUpload = true
     this.emit('updated')

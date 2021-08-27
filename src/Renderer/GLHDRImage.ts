@@ -55,7 +55,7 @@ class GLHDRImage extends GLTexture2D {
    * @param {Record<any,any>} hdrImageParams - The HDR image parameters.
    * @private
    */
-  __unpackHDRImage(hdrImageParams: Record<any, any>): void {
+  __unpackHDRImage(hdrImageParams: Record<string, any>): void {
     const gl = this.__gl
 
     const ldr = hdrImageParams.data.ldr
@@ -152,7 +152,7 @@ class GLHDRImage extends GLTexture2D {
    * @param {Record<any,any>} bindings - The bindings value.
    * @return {boolean} - The return value.
    */
-  bindToUniform(renderstate: RenderState, unif: Uniform, bindings?: Record<any, any>): boolean {
+  bindToUniform(renderstate: RenderState, unif: Uniform, bindings?: Record<string, any>): boolean {
     return super.bindToUniform(renderstate, unif, bindings)
   }
 

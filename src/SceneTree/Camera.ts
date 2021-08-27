@@ -77,7 +77,7 @@ class Camera extends TreeItem {
     this.__farParam = this.addParameter(new NumberParameter('far', 1000.0))
     this.__focalDistanceParam = this.addParameter(new NumberParameter('focalDistance', 5.0))
 
-    const emitProjChanged = (event: Record<any, any>) => {
+    const emitProjChanged = (event: Record<string, any>) => {
       this.emit('projectionParamChanged', event)
     }
     this.__isOrthographicParam.on('valueChanged', emitProjChanged)
@@ -461,15 +461,15 @@ class Camera extends TreeItem {
 
       const angleX = this.isOrthographic() ? 0 : fovX / 2
       const angleY = this.isOrthographic() ? 0 : fovY / 2
-      const frustumPlaneNormals: Record<any, any> = {}
+      const frustumPlaneNormals: Record<string, any> = {}
       frustumPlaneNormals.XPos = new Vec3(Math.cos(angleX), 0, Math.sin(angleX))
       frustumPlaneNormals.XNeg = new Vec3(-Math.cos(angleX), 0, Math.sin(angleX))
       frustumPlaneNormals.YPos = new Vec3(0, Math.cos(angleY), Math.sin(angleY))
       frustumPlaneNormals.YNeg = new Vec3(0, -Math.cos(angleY), Math.sin(angleY))
       frustumPlaneNormals.ZPos = new Vec3(0, 0, 1)
       frustumPlaneNormals.ZNeg = new Vec3(0, 0, -1)
-      const frustumPlaneNormalsWs: Record<any, any> = {}
-      const frustumPlaneOffsets: Record<any, any> = {}
+      const frustumPlaneNormalsWs: Record<string, any> = {}
+      const frustumPlaneOffsets: Record<string, any> = {}
       // eslint-disable-next-line guard-for-in
       for (const key in frustumPlaneNormals) {
         frustumPlaneNormalsWs[key] = globalXfo.ori.rotateVec3(frustumPlaneNormals[key])

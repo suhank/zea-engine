@@ -22,7 +22,7 @@ class GLShaderMaterials extends EventEmitter {
    * @param {GLPass} pass - The pass that owns this GLShaderMaterials object.
    * @param {Record<any,any>} shaders - The shaders value.
    */
-  constructor(gl: WebGL12RenderingContext, pass: GLPass, shaders: Record<any, any>) {
+  constructor(gl: WebGL12RenderingContext, pass: GLPass, shaders: Record<string, any>) {
     super()
     this.gl = gl
     this.pass = pass

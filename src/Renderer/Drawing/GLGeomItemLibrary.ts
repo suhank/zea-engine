@@ -34,7 +34,7 @@ class GLGeomItemLibrary extends EventEmitter {
    * @param {GLBaseRenderer} renderer - The renderer instance
    * @param {object} options - The options object passed to the GLRenderer constructor.
    */
-  constructor(renderer: GLBaseRenderer, options: Record<any, any>) {
+  constructor(renderer: GLBaseRenderer, options: Record<string, any>) {
     super()
 
     this.renderer = renderer
@@ -70,7 +70,7 @@ class GLGeomItemLibrary extends EventEmitter {
     // }
 
     let workerReady = true
-    this.worker.onmessage = (message: Record<any, any>) => {
+    this.worker.onmessage = (message: Record<string, any>) => {
       if (message.data.type == 'CullResults') {
         this.applyCullResults(message.data)
       } else if (message.data.type == 'Done') {
@@ -108,16 +108,16 @@ class GLGeomItemLibrary extends EventEmitter {
     }
     renderer.on('resized', viewportChanged)
     const camera = renderer.getViewport().getCamera()
-    camera.on('projectionParamChanged', (event: Record<any, any>) => {
+    camera.on('projectionParamChanged', (event: Record<string, any>) => {
       if (camera.isOrthographic()) {
         viewportChanged()
       }
     })
     viewportChanged()
 
-    renderer.once('xrViewportSetup', (event: Record<any, any>) => {
+    renderer.once('xrViewportSetup', (event: Record<string, any>) => {
       const xrvp = event.xrViewport
-      xrvp.on('presentingChanged', (event: Record<any, any>) => {
+      xrvp.on('presentingChanged', (event: Record<string, any>) => {
         if (event.state) {
           // Note: We approximate the culling viewport to be
           // a wider version of the 2 eye frustums merged together.
@@ -202,7 +202,7 @@ class GLGeomItemLibrary extends EventEmitter {
     // the material already has an Id.
     const matIndex = this.renderer.glMaterialLibrary.addMaterial(material)
 
-    const materialChanged = (event: Record<any, any>) => {
+    const materialChanged = (event: Record<string, any>) => {
       // TODO: Ref count the materials in the material library.
       // this.renderer.glMaterialLibrary.removeMaterial(material)
       material = materialParam.getValue()
@@ -217,7 +217,7 @@ class GLGeomItemLibrary extends EventEmitter {
     let geom = geomParm.getValue()
     const geomIndex = this.renderer.glGeomLibrary.addGeom(geom)
 
-    const geomChanged = (event: Record<any, any>) => {
+    const geomChanged = (event: Record<string, any>) => {
       this.renderer.glGeomLibrary.removeGeom(geom)
       geom = geomParm.getValue()
       glGeomItem.geomId = this.renderer.glGeomLibrary.addGeom(geom)
@@ -279,7 +279,7 @@ class GLGeomItemLibrary extends EventEmitter {
    * Handles applyging the culling results recieved from the GLGeomItemLibraryCullingWorker
    * @param {Record<any,any>} data - The object containing the newlyCulled and newlyUnCulled results.
    */
-  applyCullResults(data: Record<any, any>) {
+  applyCullResults(data: Record<string, any>) {
     const { newlyCulled, newlyUnCulled } = data
     if (newlyCulled.length == 0 && newlyUnCulled.length == 0) return
     // console.log('applyCullResults newlyCulled', newlyCulled.length, 'newlyUnCulled', newlyUnCulled.length)
@@ -441,7 +441,7 @@ class GLGeomItemLibrary extends EventEmitter {
    * @param {number} index - The index of the item to gether the data for.
    * @return {object} - the JSON data that will be passed to the worker.
    */
-  getCullingWorkerData(geomItem: GeomItem, material: Material, index: number): Record<any, any> {
+  getCullingWorkerData(geomItem: GeomItem, material: Material, index: number): Record<string, any> {
     const bbox = geomItem.getParameter('BoundingBox').getValue()
     const boundingRadius = bbox.size() * 0.5
     const pos = bbox.center()

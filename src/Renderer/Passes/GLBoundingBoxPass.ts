@@ -78,12 +78,12 @@ class GLBoundingBoxPass extends GLPass {
    * is added to the scene, and the renderer must decide how to render it.
    * It allows Passes to select geometries to handle the drawing of.
    * @param {TreeItem} treeItem - The treeItem value.
-   * @param {Record<any, any>} rargs - Extra return values are passed back in this object.
+   * @param {Record<string, any>} rargs - Extra return values are passed back in this object.
    * The object contains a parameter 'continueInSubTree', which can be set to false,
    * so the subtree of this node will not be traversed after this node is handled.
    * @return {Boolean} - The return value.
    */
-  itemAddedToScene(treeItem: TreeItem, rargs: Record<any, any>) {
+  itemAddedToScene(treeItem: TreeItem, rargs: Record<string, any>) {
     // if (treeItem instanceof TreeItem) {
     //   this.bindTreeItem(treeItem)
     //   return false
@@ -98,7 +98,7 @@ class GLBoundingBoxPass extends GLPass {
    * @param {Record<any,any>} rargs - Extra return values are passed back in this object.
    * @return {Boolean} - The return value.
    */
-  itemRemovedFromScene(treeItem: TreeItem, rargs: Record<any, any>) {
+  itemRemovedFromScene(treeItem: TreeItem, rargs: Record<string, any>) {
     // if (treeItem instanceof TreeItem) {
     //   this.unbindTreeItem(treeItem)
     //   return true
@@ -135,7 +135,7 @@ class GLBoundingBoxPass extends GLPass {
    * @param {*} event -
    * @private
    */
-  __childItemAdded(event: Record<any, any>) {
+  __childItemAdded(event: Record<string, any>) {
     this.addTreeItem(event.childItem)
   }
 
@@ -143,7 +143,7 @@ class GLBoundingBoxPass extends GLPass {
    * @param {*} event -
    * @private
    */
-  __childItemRemoved(event: Record<any, any>) {
+  __childItemRemoved(event: Record<string, any>) {
     this.unbindTreeItem(event.childItem)
   }
 

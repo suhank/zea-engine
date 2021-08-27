@@ -90,7 +90,7 @@ class GLMesh extends GLGeom {
    * The updateBuffers method.
    * @param {Record<any,any>} opts - The options object.
    */
-  updateBuffers(opts: Record<any, any>) {
+  updateBuffers(opts: Record<string, any>) {
     const gl = this.__gl
 
     if (this.__numVertices != this.__geom.getNumVertices()) {

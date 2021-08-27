@@ -86,7 +86,7 @@ class Scene {
    * @param {object} context - The context value.
    * @return {object} - Returns the json object.
    */
-  toJSON(context: Record<any, any> = {}) {
+  toJSON(context: Record<string, any> = {}) {
     context.makeRelative = (path: string) => path
     const json = {
       root: this.root.toJSON(context),
@@ -100,7 +100,7 @@ class Scene {
    * @param {Record<any,any>} json - The json object this item must decode.
    * @param {Record<any,any>} context - The context value.
    */
-  fromJSON(json: Record<any, any>, context: Record<any, any> = {}) {
+  fromJSON(json: Record<string, any>, context: Record<string, any> = {}) {
     const plcbs: any[] = [] // Post load callbacks.
     context.resolvePath = (path: string, cb: any) => {
       // Note: Why not return a Promise here?

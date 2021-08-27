@@ -7,17 +7,17 @@ import { generateShaderGeomBinding } from './GeomShaderBinding'
 class GLGeom extends RefCounted {
   protected __gl: WebGL12RenderingContext
   protected __geom: BaseGeom | Mesh
-  protected __glattrbuffers: Record<any, any>
-  protected __shaderBindings: Record<any, any>
+  protected __glattrbuffers: Record<string, any>
+  protected __shaderBindings: Record<string, any>
   protected buffersDirty: boolean
-  protected genBufferOpts: Record<any, any>
+  protected genBufferOpts: Record<string, any>
   protected __indexBuffer: WebGLBuffer | null
   /**
    * Create a GL geom.
    * @param {WebGL12RenderingContext} gl - The webgl rendering context.
    * @param {BaseGeom} geom - A geometry object
    */
-  constructor(gl: WebGL12RenderingContext, geom: BaseGeom ) {
+  constructor(gl: WebGL12RenderingContext, geom: BaseGeom) {
     super()
     this.__gl = gl
     this.__geom = geom
@@ -26,12 +26,12 @@ class GLGeom extends RefCounted {
     this.__shaderBindings = {}
     this.buffersDirty = true
 
-    const geomDataChanged = (opts: Record<any, any>) => {
+    const geomDataChanged = (opts: Record<string, any>) => {
       this.dirtyBuffers(opts)
     }
     this.__geom.on('geomDataChanged', geomDataChanged)
 
-    const geomDataTopologyChanged = (opts: Record<any, any>) => {
+    const geomDataTopologyChanged = (opts: Record<string, any>) => {
       this.clearBuffers()
       this.dirtyBuffers(opts)
     }
@@ -53,7 +53,7 @@ class GLGeom extends RefCounted {
    * The dirtyBuffers method.
    * @param {Record<any,any>} opts - options passed when geomDataChanged is emitted. (Currently ony used by the FreehandLines tool)
    */
-  dirtyBuffers(opts: Record<any, any>) {
+  dirtyBuffers(opts: Record<string, any>) {
     this.genBufferOpts = opts
     this.buffersDirty = true
     this.emit('updated')

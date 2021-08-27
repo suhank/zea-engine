@@ -39,7 +39,10 @@ class CuttingPlane extends BaseGroup {
     this.__updateCutaway = this.__updateCutaway.bind(this)
     this.addParameter(new BooleanParameter('CutAwayEnabled', false)).on('valueChanged', this.__updateCutaway)
     this.addParameter(new Vec4Parameter('CutPlane', new Vec4(1, 0, 0))).on('valueChanged', this.__updateCutaway)
-    this.cutPlaneOp = new CuttingPlaneOperator(<XfoParameter>this.getParameter('GlobalXfo'), <XfoParameter>this.getParameter('CutPlane'))
+    this.cutPlaneOp = new CuttingPlaneOperator(
+      <XfoParameter>this.getParameter('GlobalXfo'),
+      <XfoParameter>this.getParameter('CutPlane')
+    )
 
     // Create the geometry to display the plane.
     const material = new Material('plane', 'FlatSurfaceShader')
@@ -67,39 +70,39 @@ class CuttingPlane extends BaseGroup {
     // Make this function async so that we don't pull on the
     // graph immediately when we receive a notification.
     // Note: propagating using an operator would be much better.
-    
+
     // TODO: make async
     this.__updateCutawayHelper(item)
     // setTimeout(() => {}, 0)
   }
 
-    /**
+  /**
    * The __updateCutaway method.
    * @param {TreeITem} item - The item in the group.
    * @private
    */
-    __updateCutawayHelper(item: TreeItem): void {
-      const cutEnabled = this.getParameter('CutAwayEnabled').getValue()
-      const cutPlane = this.getParameter('CutPlane').getValue()
-      const cutAwayVector = cutPlane.xyz
-      const cutAwayDist = cutPlane.w
+  __updateCutawayHelper(item: TreeItem): void {
+    const cutEnabled = this.getParameter('CutAwayEnabled').getValue()
+    const cutPlane = this.getParameter('CutPlane').getValue()
+    const cutAwayVector = cutPlane.xyz
+    const cutAwayDist = cutPlane.w
 
-      if (item instanceof BaseGeomItem) {
-        item.setCutawayEnabled(cutEnabled)
-        item.setCutVector(cutAwayVector)
-        item.setCutDist(cutAwayDist)
-      } else {
-        Array.from(this.__itemsParam.getValue()).forEach((item: any) => {
-          item.traverse((item: any) => {
-            if (item instanceof BaseGeomItem) {
-              item.setCutawayEnabled(cutEnabled)
-              item.setCutVector(cutAwayVector)
-              item.setCutDist(cutAwayDist)
-            }
-          }, true)
-        })
-      }
+    if (item instanceof BaseGeomItem) {
+      item.setCutawayEnabled(cutEnabled)
+      item.setCutVector(cutAwayVector)
+      item.setCutDist(cutAwayDist)
+    } else {
+      Array.from(this.__itemsParam.getValue()).forEach((item: any) => {
+        item.traverse((item: any) => {
+          if (item instanceof BaseGeomItem) {
+            item.setCutawayEnabled(cutEnabled)
+            item.setCutVector(cutAwayVector)
+            item.setCutDist(cutAwayDist)
+          }
+        }, true)
+      })
     }
+  }
   // ////////////////////////////////////////
   // Items
 
@@ -168,7 +171,7 @@ class CuttingPlane extends BaseGroup {
    * @param {Record<any,any>} context - The context value.
    * @return {CuttingPlane} - Returns a new cloned group.
    */
-  clone(context: Record<any, any>): CuttingPlane {
+  clone(context: Record<string, any>): CuttingPlane {
     const cloned = new CuttingPlane()
     cloned.copyFrom(this, context)
     return cloned

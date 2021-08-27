@@ -156,7 +156,7 @@ class VLAAsset extends AssetItem {
    * @param {AssetLoadContext} context - The load context object that provides additional data such as the units of the scene we are loading into.
    * @param {function} onDone - The onDone value.
    */
-  fromJSON(j: Record<any, any>, context?: Record<any, any>, onDone?: any) {
+  fromJSON(j: Record<string, any>, context?: Record<string, any>, onDone?: any) {
     if (!context) context = {}
     context.assetItem = this
 

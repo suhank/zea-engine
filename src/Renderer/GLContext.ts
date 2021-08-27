@@ -1,7 +1,10 @@
 import { SystemDesc } from '../SystemDesc'
 import { Float32 } from '../Utilities/MathFunctions'
 
-const create3DContext = function (canvas: HTMLCanvasElement, opt_attribs: Record<any, any>): WebGL12RenderingContext {
+const create3DContext = function (
+  canvas: HTMLCanvasElement,
+  opt_attribs: Record<string, any>
+): WebGL12RenderingContext {
   let context: any = null
   if (opt_attribs.webglContextType != undefined) {
     try {

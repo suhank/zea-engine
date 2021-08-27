@@ -29,7 +29,7 @@ class GLProbe extends EventEmitter {
   constructor(gl: WebGL12RenderingContext, name: string) {
     super()
     this.__gl = gl
-    const gl_casted: Record<any, any> = gl
+    const gl_casted: Record<string, any> = gl
 
     this.maxFragmentShaderTextureUnits = gl.getParameter(this.__gl.MAX_TEXTURE_IMAGE_UNITS)
 

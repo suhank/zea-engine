@@ -57,11 +57,11 @@ function checkStatus(response: any) {
  * * **allResourcesLoaded:** emitted when all outstanding resources are loaded. This event can be used to signal the completion of load.
  */
 class ResourceLoader extends EventEmitter {
-  protected __adapter: Record<any, any>
+  protected __adapter: Record<string, any>
   protected __totalWork: number
   protected __doneWork: number
   protected baseUrl: string
-  protected plugins: Record<any, any>
+  protected plugins: Record<string, any>
   protected systemUrls: Record<string, string>
   protected __commonResources: Record<string, TreeItem>
   /**
@@ -91,7 +91,7 @@ class ResourceLoader extends EventEmitter {
    * The setAdapter method.
    * @param {Record<any,any>} adapter - The adapter object.
    */
-  setAdapter(adapter: Record<any, any>) {
+  setAdapter(adapter: Record<string, any>) {
     this.__adapter = adapter
   }
 
@@ -151,9 +151,9 @@ class ResourceLoader extends EventEmitter {
     return value
   }
 
-  resourceAvailable(resource: string): boolean{
+  resourceAvailable(resource: string): boolean {
     console.warn('ResourceAvailable not implemented on resourceLoader')
-    return false;
+    return false
   }
   /**
    * The loadURL method.

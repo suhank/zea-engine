@@ -23,11 +23,11 @@ const ALL_PASSES = PassType.OPAQUE | PassType.TRANSPARENT | PassType.OVERLAY
  * @extends GLBaseRenderer
  */
 class GLRenderer extends GLBaseRenderer {
-  // __gl: Record<any, any> // can't use WebGL12RenderingContext, ds may be augmented.
+  // __gl: Record<string, any> // can't use WebGL12RenderingContext, ds may be augmented.
   protected __exposure: number
   protected __tonemap: boolean
   protected __gamma: number
-  protected __glEnvMap: Record<any, any> // GLTexture2D | GLTexture2D |
+  protected __glEnvMap: Record<string, any> // GLTexture2D | GLTexture2D |
   protected __glBackgroundMap: any
   protected __displayEnvironment: boolean
   protected __debugMode: number

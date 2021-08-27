@@ -37,7 +37,7 @@ abstract class GLPass extends ParameterOwner {
    * @param {object} event - The event object.
    * @private
    */
-  parameterValueChanged(event: Record<any, any>) {
+  parameterValueChanged(event: Record<string, any>) {
     super.parameterValueChanged(event)
     if (this.renderer) this.renderer.requestRedraw()
   }
@@ -84,7 +84,7 @@ abstract class GLPass extends ParameterOwner {
    * so the subtree of this node will not be traversed after this node is handled.
    * @return {Boolean} - The return value.
    */
-  itemAddedToScene(treeItem: TreeItem, rargs: Record<any, any>): boolean {
+  itemAddedToScene(treeItem: TreeItem, rargs: Record<string, any>): boolean {
     throw Error(`${this.constructor.name} must implement itemAddedToScene and itemRemovedFromScene`)
     return false
   }
@@ -96,7 +96,7 @@ abstract class GLPass extends ParameterOwner {
    * @param {object} rargs - Extra return values are passed back in this object.
    * @return {Boolean} - The return value.
    */
-  itemRemovedFromScene(treeItem: TreeItem, rargs: Record<any, any>) {
+  itemRemovedFromScene(treeItem: TreeItem, rargs: Record<string, any>) {
     throw Error(`${this.constructor.name} must implement itemAddedToScene and itemRemovedFromScene`)
     return false
   }

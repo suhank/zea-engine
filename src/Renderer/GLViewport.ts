@@ -578,7 +578,7 @@ class GLViewport extends GLBaseViewport {
    * @param {MouseEvent|TouchEvent} event - The event that occurs in the canvas
    * @private
    */
-  __preparePointerEvent(event: Record<any, any>) {
+  __preparePointerEvent(event: Record<string, any>) {
     event.viewport = this
 
     event.setCapture = (item: any) => {
@@ -599,7 +599,7 @@ class GLViewport extends GLBaseViewport {
    *
    * @param {MouseEvent|TouchEvent} event - The DOM event produced by a pointer
    */
-  onPointerDown(event: Record<any, any>) {
+  onPointerDown(event: Record<string, any>) {
     this.__preparePointerEvent(event)
 
     if (event.pointerType === POINTER_TYPES.mouse) {
@@ -661,7 +661,7 @@ class GLViewport extends GLBaseViewport {
    *
    * @param {MouseEvent|TouchEvent} event - The event that occurs.
    */
-  onPointerUp(event: Record<any, any>) {
+  onPointerUp(event: Record<string, any>) {
     this.__preparePointerEvent(event)
 
     if (event.pointerType === POINTER_TYPES.mouse) {
@@ -702,7 +702,7 @@ class GLViewport extends GLBaseViewport {
    *
    * @param {MouseEvent|TouchEvent} event - The event that occurs.
    */
-  onPointerMove(event: Record<any, any>) {
+  onPointerMove(event: Record<string, any>) {
     this.__preparePointerEvent(event)
 
     if (event.pointerType === POINTER_TYPES.mouse) {
@@ -773,7 +773,7 @@ class GLViewport extends GLBaseViewport {
    * Causes an event to occur when the mouse pointer is moved into this viewport
    * @param {MouseEvent|TouchEvent} event - The event that occurs.
    */
-  onPointerEnter(event: Record<any, any>) {
+  onPointerEnter(event: Record<string, any>) {
     this.__preparePointerEvent(event)
     this.emit('pointerEnter', event)
     if (!event.propagating) return
@@ -788,7 +788,7 @@ class GLViewport extends GLBaseViewport {
    * Causes an event to occur when the mouse pointer is moved out of this viewport
    * @param {MouseEvent|TouchEvent} event - The event that occurs.
    */
-  onPointerLeave(event: Record<any, any>) {
+  onPointerLeave(event: Record<string, any>) {
     this.__preparePointerEvent(event)
     this.emit('pointerLeave', event)
     if (!event.propagating) return
@@ -803,7 +803,7 @@ class GLViewport extends GLBaseViewport {
    * Causes an event to occur when the user is pressing a key on the keyboard.
    * @param {KeyboardEvent} event - The event that occurs.
    */
-  onKeyDown(event: Record<any, any>) {
+  onKeyDown(event: Record<string, any>) {
     this.__preparePointerEvent(event)
     if (this.manipulator) {
       this.manipulator.onKeyDown(event)
@@ -816,7 +816,7 @@ class GLViewport extends GLBaseViewport {
    * Causes an event to occur  when the user releases a key on the keyboard.
    * @param {KeyboardEvent} event - The event that occurs.
    */
-  onKeyUp(event: Record<any, any>) {
+  onKeyUp(event: Record<string, any>) {
     this.__preparePointerEvent(event)
     if (this.manipulator) {
       this.manipulator.onKeyUp(event)
@@ -829,7 +829,7 @@ class GLViewport extends GLBaseViewport {
    * Causes an event to occur when the mouse wheel is rolled up or down over an element.
    * @param {WheelEvent} event - The event that occurs.
    */
-  onWheel(event: Record<any, any>) {
+  onWheel(event: Record<string, any>) {
     this.__preparePointerEvent(event)
 
     event.pointerPos = this.__getPointerPos(event.rendererX, event.rendererY)
@@ -854,7 +854,7 @@ class GLViewport extends GLBaseViewport {
    * Causes an event to occur when the touch event gets interrupted.
    * @param {TouchEvent} event - The event that occurs.
    */
-  onTouchCancel(event: Record<any, any>) {
+  onTouchCancel(event: Record<string, any>) {
     this.__preparePointerEvent(event)
 
     if (this.capturedItem) {

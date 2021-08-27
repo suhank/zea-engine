@@ -59,7 +59,7 @@ class GLAudioItemsPass extends GLPass {
    * so the subtree of this node will not be traversed after this node is handled.
    * @return {Boolean} - The return value.
    */
-  itemAddedToScene(treeItem: TreeItem, rargs: Record<any, any>) {
+  itemAddedToScene(treeItem: TreeItem, rargs: Record<string, any>) {
     if (treeItem instanceof AudioItem) {
       treeItem.on('audioSourceCreated', (event: any) => {
         const { audioSource } = event
@@ -93,7 +93,7 @@ class GLAudioItemsPass extends GLPass {
    * @param {Record<any,any>} rargs - Extra return values are passed back in this object.
    * @return {Boolean} - The return value.
    */
-  itemRemovedFromScene(treeItem: TreeItem, rargs: Record<any, any>): boolean {
+  itemRemovedFromScene(treeItem: TreeItem, rargs: Record<string, any>): boolean {
     console.warn('returning false')
     return false
   }
