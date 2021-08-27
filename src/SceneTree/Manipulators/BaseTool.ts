@@ -194,36 +194,36 @@ class BaseTool extends ParameterOwner {
   /**
    * Event fired when a VR controller button is pressed over a tool.
    *
-   * @param {object} event - The event param.
+   * @param {Record<string, any>} event - The event param.
    */
-  onVRControllerButtonDown(event: object) {
+  onVRControllerButtonDown(event: object): any {
     // console.warn('Implement me')
   }
 
   /**
    * Event fired when a VR controller button is released over a tool.
    *
-   * @param {object} event - The event param.
+   * @param {Record<string, any>} event - The event param.
    */
-  onVRControllerButtonUp(event: object) {
+  onVRControllerButtonUp(event: Record<string, any>): any {
     // console.warn('Implement me')
   }
 
   /**
    * Event fired when a VR controller button is pressed twice over a tool.
    *
-   * @param {object} event - The event param.
+   * @param {Record<string, any>} event - The event param.
    */
-  onVRControllerDoubleClicked(event: object) {
+  onVRControllerDoubleClicked(event: Record<string, any>) {
     // console.warn('Implement me')
   }
 
   /**
    * Event fired when a VR controller...
    *
-   * @param {object} event - The event param.
+   * @param {Record<string, any>} event - The event param.
    */
-  onVRPoseChanged(event: object) {
+  onVRPoseChanged(event: Record<string, any>) {
     // console.warn('Implement me')
   }
 }

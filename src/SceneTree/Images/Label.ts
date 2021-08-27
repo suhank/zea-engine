@@ -344,9 +344,9 @@ class Label extends DataImage {
   /**
    *  Returns all parameters and class state values(Including data).
    *
-   * @return {object} - The return value.
+   * @return {Record<string, any>} - The return value.
    */
-  getParams() {
+  getParams(): Record<string, any> {
     if (this.__needsRender) this.renderLabelToImage()
     return super.getParams()
   }

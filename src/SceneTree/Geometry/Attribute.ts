@@ -355,7 +355,6 @@ class Attribute extends BaseClass {
   /**
    * Returns vertex attributes buffers and its count.
    *
-   * @param {object} opts - The opts value.
    * @return {Record<string, any>} - The return value.
    */
   genBuffer(): Record<string, any> {

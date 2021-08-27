@@ -115,9 +115,9 @@ class GLStandardGeomsPass extends GLPass {
    * and optionally a glgeomdatashader for rendering the goem data buffer
    * and a glselectedshader for rendering selection hilghlights
    * @param {string} shaderName - The name of the base shader.
-   * @return {object} - The object containing the shader instances.
+   * @return {Record<string, any>} - The object containing the shader instances.
    */
-  constructShaders(shaderName: string) {
+  constructShaders(shaderName: string): Record<string, any> {
     let glgeomdatashader
     let glselectedshader
 
@@ -141,10 +141,10 @@ class GLStandardGeomsPass extends GLPass {
 
   /**
    * The getGeomItemAndDist method.
-   * @param {any} geomData - The geomData value.
+   * @param {Uint8Array} geomData - The geomData value.
    * @return {any} - The return value.
    */
-  getGeomItemAndDist(geomData: Uint8Array) {
+  getGeomItemAndDist(geomData: Uint8Array): Record<string, any> {
     let itemId
     let dist
     const gl = this.__gl // TODO: refactor to avoid casts?

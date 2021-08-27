@@ -51,7 +51,7 @@ class StringParameter extends Parameter<string> implements IBinaryReader {
    * Extracts the string value from a buffer, updating current parameter state.
    *
    * @param {BinReader} reader - The reader value.
-   * @param {object} context - The context value.
+   * @param {Record<string, any>} context - The context value.
    */
   readBinary(reader: BinReader, context?: Record<string, unknown>): void {
     this.value = reader.loadStr()

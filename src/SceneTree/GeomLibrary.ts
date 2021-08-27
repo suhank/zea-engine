@@ -404,9 +404,9 @@ class GeomLibrary extends EventEmitter {
 
   /**
    * The toJSON method encodes this type as a json object for persistence.
-   * @return {object} - Returns the json object.
+   * @return {Record<string, any>} - Returns the json object.
    */
-  toJSON() {
+  toJSON(): Record<string, any> {
     return {
       numGeoms: this.geoms.length,
     }

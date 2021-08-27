@@ -377,9 +377,9 @@ class GLViewport extends GLBaseViewport {
    * The getGeomDataAtPos method.
    * @param {Vec2} screenPos - The screen position.
    * @param {Ray} pointerRay - The pointerRay value.
-   * @return {object} - The return value.
+   * @return {RayCast} - The return value.
    */
-  getGeomDataAtPos(screenPos: Vec2, pointerRay: Ray) {
+  getGeomDataAtPos(screenPos: Vec2, pointerRay: Ray): RayCast {
     if (this.__geomDataBufferFbo) {
       if (this.__geomDataBufferInvalid) {
         this.renderGeomDataFbo()

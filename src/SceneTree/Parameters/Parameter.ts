@@ -404,7 +404,7 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
   /**
    * The readBinary method.
    *
-   * @param {object} reader - The reader value.
+   * @param {Record<string, any>} reader - The reader value.
    * @param {Record<string, unknown>} context - The context value.
    */
   destroy() {

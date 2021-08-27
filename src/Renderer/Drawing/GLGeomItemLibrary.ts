@@ -439,7 +439,7 @@ class GLGeomItemLibrary extends EventEmitter {
    * @param {GeomItem} geomItem - The GeomItem to gether the data for.
    * @param {Material} material - The material of GeomItem.
    * @param {number} index - The index of the item to gether the data for.
-   * @return {object} - the JSON data that will be passed to the worker.
+   * @return {Record<string, any>} - the JSON data that will be passed to the worker.
    */
   getCullingWorkerData(geomItem: GeomItem, material: Material, index: number): Record<string, any> {
     const bbox = geomItem.getParameter('BoundingBox').getValue()

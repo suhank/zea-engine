@@ -112,9 +112,9 @@ class Material extends BaseItem {
   /**
    * Returns all texture parameters in current Material.
    *
-   * @return {object} - The return value.
+   * @return {Record<string, any>} - The return value.
    */
-  getParamTextures() {
+  getParamTextures(): Record<string, any> {
     const textures: Record<string, any> = {}
     for (const param of this.params) {
       if (param instanceof MaterialColorParam) {
@@ -135,7 +135,7 @@ class Material extends BaseItem {
     return this.__isTransparent
   }
 
-  __checkTransparency(event?: Record<string, any>) {
+  __checkTransparency(event?: Record<string, any>): void {
     let isTransparent = false
     try {
       const shaderClass = this.getShaderClass()
@@ -173,11 +173,11 @@ class Material extends BaseItem {
    *
    * @return {boolean} - Returns true if the material is textured.
    */
-  isTextured() {
+  isTextured(): boolean {
     return this.__isTextured
   }
 
-  __checkTextures(event?: Record<string, any>) {
+  __checkTextures(event?: Record<string, any>): void {
     // console.log('__checkTextures')
     const param = event ? event : {}
 
@@ -208,7 +208,7 @@ class Material extends BaseItem {
    * @param {Record<string, any>} event - The event object emitted by the parameter.
    * @private
    */
-  parameterValueChanged(event: Record<string, any>) {
+  parameterValueChanged(event: Record<string, any>): void {
     this.__checkTransparency(event)
     this.__checkTextures(event)
     super.parameterValueChanged(event)
@@ -230,9 +230,9 @@ class Material extends BaseItem {
    * The toJSON method encodes the current object as a json object.
    *
    * @param {Record<string, any>} context - The context value.
-   * @return {any} - Returns the json object.
+   * @return {Record<string, any>} - Returns the json object.
    */
-  toJSON(context?: Record<string, any>) {
+  toJSON(context?: Record<string, any>): Record<string, any> {
     const j = super.toJSON(context)
     j.shader = this.__shaderName
 
@@ -245,7 +245,7 @@ class Material extends BaseItem {
    * @param {Record<string, any>} j - The json object this item must decode.
    * @param {Record<string, any>} context - The context value.
    */
-  fromJSON(j: Record<string, any>, context: Record<string, any> = {}) {
+  fromJSON(j: Record<string, any>, context: Record<string, any> = {}): Record<string, any> {
     if (!j.shader) {
       console.warn('Invalid Material JSON')
       return
@@ -271,7 +271,7 @@ class Material extends BaseItem {
    * @param {BinReader} reader - The reader value.
    * @param {Record<string, any>} context - The context value.
    */
-  readBinary(reader: BinReader, context: Record<string, any>) {
+  readBinary(reader: BinReader, context: Record<string, any>): void {
     let shaderName = reader.loadStr()
 
     if (shaderName == 'StandardMaterial') {

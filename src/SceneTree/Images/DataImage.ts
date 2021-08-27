@@ -78,9 +78,9 @@ class DataImage extends BaseImage {
   /**
    * Returns all parameters and class state values(Including data).
    *
-   * @return {object} - The return value.
+   * @return {Record<string, any>} - The return value.
    */
-  getParams() {
+  getParams(): Record<string, any> {
     const params = super.getParams()
     params['data'] = this.__data
     return params

@@ -63,7 +63,7 @@ class BaseImage extends BaseItem {
   /**
    * Returns all parameters and class state values.
    *
-   * @return {object} - The return value.
+   * @return {Record<string, any>} - The return value.
    */
   getParams(): Record<string, any> {
     return {

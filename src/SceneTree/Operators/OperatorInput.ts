@@ -66,7 +66,7 @@ class OperatorInput extends EventEmitter {
   /**
    * @private
    * The handler function for when the input paramter changes.
-   * @param {object} event - The event object.
+   * @param {Record<string, any>} event - The event object.
    */
   protected paramValueChanged = (event: Record<string, any>): void => {
     if (this._op) this._op.setDirty()

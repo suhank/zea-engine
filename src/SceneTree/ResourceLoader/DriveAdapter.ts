@@ -96,9 +96,9 @@ class DriveAdapter {
   /**
    * Returns the resources tree object.
    *
-   * @return {object} - The return value.
+   * @return {Record<string, any>} - The return value.
    */
-  getRootFolder() {
+  getRootFolder(): Record<string, any> {
     return this.__resourcesTree
   }
 

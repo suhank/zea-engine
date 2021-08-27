@@ -261,9 +261,9 @@ class GLRenderer extends GLBaseRenderer {
    * @param {number} dist - The maximum distance to cast the ray
    * @param {number} area - The area to use for the ray
    * @param {number} mask - The mask to filter our certain pass types. Can be PassType.OPAQUE | PassType.TRANSPARENT | PassType.OVERLAY
-   * @return {object} - The object containing the ray cast results.
+   * @return {RayCast} - The object containing the ray cast results.
    */
-  raycastWithRay(ray: Ray, dist: number, area = 0.01, mask = ALL_PASSES) {
+  raycastWithRay(ray: Ray, dist: number, area = 0.01, mask = ALL_PASSES): RayCast {
     const xfo = new Xfo()
     xfo.setLookAt(ray.start, ray.start.add(ray.dir), new Vec3(0, 0, 1))
     return this.raycast(xfo, ray, dist, area, mask)
@@ -277,9 +277,9 @@ class GLRenderer extends GLBaseRenderer {
    * @param {number} dist - The maximum distance to cast the ray
    * @param {number} area - The area to use for the ray
    * @param {number} mask - The mask to filter our certain pass types. Can be PassType.OPAQUE | PassType.TRANSPARENT | PassType.OVERLAY
-   * @return {object} - The object containing the ray cast results.
+   * @return {RayCast} - The object containing the ray cast results.
    */
-  raycastWithXfo(xfo: Xfo, dist: number, area = 0.01, mask = ALL_PASSES) {
+  raycastWithXfo(xfo: Xfo, dist: number, area = 0.01, mask = ALL_PASSES): RayCast {
     const ray = new Ray(xfo.tr, xfo.ori.getZaxis().negate())
     return this.raycast(xfo, ray, dist, area, mask)
   }

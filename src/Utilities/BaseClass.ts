@@ -50,8 +50,8 @@ class BaseClass {
   /**
    * The fromJSON method decodes a json object for this type.
    *
-   * @param {object} j - The json object this item must decode.
-   * @param {object} context - The context value.
+   * @param {Record<string, any>} j - The json object this item must decode.
+   * @param {Record<string, any>} context - The context value.
    */
   fromJSON(j: Record<string, any>, context?: Record<string, any>): void {}
 }

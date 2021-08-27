@@ -32,7 +32,7 @@ abstract class ProceduralLines extends Lines {
   /**
    * This method can be overridden in derived classes
    * to perform general updates (see GLPass or BaseItem).
-   * @param {object} event - The event object emitted by the parameter.
+   * @param {Record<string, any>} event - The event object emitted by the parameter.
    * @private
    */
   protected parameterValueChanged(event: Record<string, any>): void {

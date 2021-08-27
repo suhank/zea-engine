@@ -37,7 +37,7 @@ class Operator extends BaseItem {
    * This method can be overridden in derived classes
    * to perform general updates (see GLPass or BaseItem).
    *
-   * @param {object} event
+   * @param {Record<string, any>} event
    * @private
    */
   protected parameterValueChanged(event: Record<string, unknown>): void {
@@ -85,9 +85,9 @@ class Operator extends BaseItem {
   /**
    * The getInputByIndex method.
    * @param {number} index - The index value.
-   * @return {object} - The return value.
+   * @return {Record<string, any>} - The return value.
    */
-  getInputByIndex(index: number): unknown {
+  getInputByIndex(index: number): Record<string, any> {
     return Array.from(this.__inputs.values())[index]
   }
 

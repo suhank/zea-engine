@@ -140,7 +140,7 @@ class ArchiveUnpackerPlugin {
 
   /**
    * The __onFinishedReceiveFileData method.
-   * @param {object} fileData - The fileData value.
+   * @param {Record<string, any>} fileData - The fileData value.
    * @private
    */
   __onFinishedReceiveFileData(fileData: Record<string, any>) {

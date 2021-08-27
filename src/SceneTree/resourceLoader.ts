@@ -97,15 +97,15 @@ class ResourceLoader extends EventEmitter {
 
   /**
    * The getAdapter method.
-   * @return {object} - The adapter object.
+   * @return {Record<string, any>} - The adapter object.
    */
-  getAdapter() {
+  getAdapter(): Record<string, any> {
     return this.__adapter
   }
 
   // /////////////////////////////////////////////////
   // Register plugins.
-  registerPlugin(plugin: any) {
+  registerPlugin(plugin: any): void {
     zeaDebug('Resource loader plugin registered: %s', plugin.getType())
 
     plugin.init(this)
@@ -165,9 +165,9 @@ class ResourceLoader extends EventEmitter {
    * @deprecated
    * @private
    */
-  loadURL(resourceId: string, url: string, callback: any, addLoadWork = true) {
+  loadURL(resourceId: string, url: string, callback: any, addLoadWork = true): any {
     console.warn('Deprecated. Use "#loadUrl".')
-    return this.loadUrl(resourceId, url, callback, addLoadWork)
+    return this.loadUrl(resourceId, url, callback, addLoadWork) // this returns void
   }
 
   /**
@@ -190,7 +190,7 @@ class ResourceLoader extends EventEmitter {
    * @param {string} url - The url of the data to load.
    * @return {Promise} - The promise value.
    */
-  loadArchive(url: string) {
+  loadArchive(url: string): Promise<any> {
     console.warn(`Deprecated. Use "#loadFile('archive', url)".`)
     return this.loadFile('archive', url)
   }
@@ -201,7 +201,7 @@ class ResourceLoader extends EventEmitter {
    * @param {string} url - The url of the data to load.
    * @return {Promise} - The promise value.
    */
-  loadJSON(url: string) {
+  loadJSON(url: string): Promise<any> {
     console.warn(`Deprecated. Use "#loadFile('json', url)".`)
     return this.loadFile('json', url)
   }
@@ -212,12 +212,12 @@ class ResourceLoader extends EventEmitter {
    * @param {string} url - The url of the data to load.
    * @return {Promise} - The promise value.
    */
-  loadText(url: string) {
+  loadText(url: string): Promise<any> {
     console.warn(`Deprecated. Use "#loadFile('text', url)".`)
     return this.loadFile('text', url)
   }
 
-  loadFile(type: any, url: string) {
+  loadFile(type: any, url: string): Promise<any> {
     const plugin = this.plugins[type]
 
     if (!plugin) {

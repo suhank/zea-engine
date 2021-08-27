@@ -145,7 +145,7 @@ class ShaderLibrary {
    * @param {string} glsl - The glsl param.
    * @param {array} includes - keep track of what was included
    * @param {int} lineNumber - keep track of what line we're on
-   * @return {object} - The return value.
+   * @return {ShaderParseResult} - The return value.
    */
   parseShaderHelper(shaderName: string, glsl: string, includes: string[], lineNumber: number): ShaderParseResult {
     // console.log('parseShader:' + shaderName)

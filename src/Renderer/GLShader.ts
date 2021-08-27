@@ -355,9 +355,9 @@ class GLShader extends BaseItem {
 
   /**
    * The getAttributes method.
-   * @return {object} - The dictionary of attributes that this shader expects to be bound.
+   * @return {Record<string, any>} - The dictionary of attributes that this shader expects to be bound.
    */
-  getAttributes() {
+  getAttributes(): Record<string, any> {
     const attributes: Record<string, any> = {}
     for (const stageName in this.__shaderStages) {
       const shaderStageBlock = this.__shaderStages[stageName]
@@ -369,7 +369,7 @@ class GLShader extends BaseItem {
 
   /**
    * The getUniforms method.
-   * @return {object} - The dictionary of uniforms that this shader expects to be bound.
+   * @return {Record<string, any>} - The dictionary of uniforms that this shader expects to be bound.
    */
   getUniforms(): Record<string, string> {
     const uniforms: Record<string, string> = {}
@@ -385,7 +385,7 @@ class GLShader extends BaseItem {
    * @param {string} key - The key value.
    * @return {boolean} - The return value.
    */
-  isCompiledForTarget(key: string) {
+  isCompiledForTarget(key: string): boolean {
     const shaderkey = key ? key : this.getId()
     return this.__shaderProgramHdls[shaderkey] != undefined
   }

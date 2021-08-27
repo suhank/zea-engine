@@ -56,7 +56,7 @@ class ImageParameter extends Parameter<BaseImage> {
    *
    * @param {Record<string, unknown>} j - The json object this item must decode.
    * @param {Record<string, any>} context - The context value.
-   * @return {object} - Returns the json object.
+   * @return {Record<string, any>} - Returns the json object.
    */
   fromJSON(j: Record<string, unknown>, context: Record<string, any>): void {
     if (j.imageType) {

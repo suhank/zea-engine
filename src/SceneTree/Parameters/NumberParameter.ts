@@ -75,8 +75,8 @@ class NumberParameter extends Parameter<number> implements IBinaryReader {
   /**
    * The toJSON method encodes this type as a json object for persistence.
    *
-   * @param {object} context - The context value.
-   * @return {object} - Returns the json object.
+   * @param {Record<string, any>} context - The context value.
+   * @return {Record<string, any>} - Returns the json object.
    */
   toJSON(context?: Record<string, unknown>): Record<string, unknown> {
     const j: Record<string, unknown> = { value: this.value }

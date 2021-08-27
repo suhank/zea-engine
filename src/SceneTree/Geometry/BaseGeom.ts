@@ -185,7 +185,7 @@ class BaseGeom extends ParameterOwner {
    * Returns metadata value of the specified name.
    *
    * @param {string} key - The key value.
-   * @return {object} - The return value.
+   * @return {any} - The return value.
    */
   getMetadata(key: string): any {
     return this.__metaData.get(key)
@@ -205,9 +205,9 @@ class BaseGeom extends ParameterOwner {
    * Sets metadata value to the geometry.
    *
    * @param {string} key - The key value.
-   * @param {object} metaData - The metaData value.
+   * @param {Record<string, any>} metaData - The metaData value.
    */
-  setMetadata(key: string, metaData: any): void {
+  setMetadata(key: string, metaData: Record<string, any>): void {
     this.__metaData.set(key, metaData)
   }
 
@@ -225,11 +225,9 @@ class BaseGeom extends ParameterOwner {
 
   /**
    * Returns vertex attributes buffers and its count.
-   *
-   * @param {object} opts - The opts value.
    * @return {Record<string, any>} - The return value.
    */
-  genBuffers(opts?: any): Record<string, any> {
+  genBuffers(): Record<string, any> {
     const attrBuffers: Record<string, any> = {}
     for (const [attrName, attr] of this.__vertexAttributes) {
       attrBuffers[attrName] = attr.genBuffer()
@@ -380,8 +378,8 @@ class BaseGeom extends ParameterOwner {
   /**
    * The toJSON method encodes this type as a json object for persistence.
    *
-   * @param {object} context - The context value.
-   * @return {object} - Returns the json object.
+   * @param {Record<string, any>} context - The context value.
+   * @return {Record<string, any>} - Returns the json object.
    */
   toJSON(context?: Record<string, any>): Record<string, unknown> {
     const json = super.toJSON(context)
@@ -401,8 +399,8 @@ class BaseGeom extends ParameterOwner {
   /**
    * The fromJSON method decodes a json object for this type.
    *
-   * @param {object} json - The json object this item must decode.
-   * @param {object} context - The context value.
+   * @param {Record<string, any>} json - The json object this item must decode.
+   * @param {Record<string, any>} context - The context value.
    */
   fromJSON(json: Record<string, any>, context?: Record<string, any>): void {
     super.fromJSON(json, context)

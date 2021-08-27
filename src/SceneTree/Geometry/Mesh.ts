@@ -878,7 +878,7 @@ class Mesh extends BaseGeom {
    * Restores mesh properties from a binary reader.
    *
    * @param {BinReader} reader - The reader value.
-   * @param {object} context - The context value.
+   * @param {Record<string, any>} context - The context value.
    */
   readBinary(reader: BinReader, context?: Record<string, any>): void {
     super.loadBaseGeomBinary(reader)
@@ -983,8 +983,8 @@ class Mesh extends BaseGeom {
    * }
    * ```
    *
-   * @param {object} j - The json object this item must decode.
-   * @param {object} context - The context value.
+   * @param {Record<string, any>} j - The json object this item must decode.
+   * @param {Record<string, any>} context - The context value.
    */
   fromJSON(j: Record<string, any>, context?: Record<string, any>): void {
     super.fromJSON(j, context)
