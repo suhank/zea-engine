@@ -294,9 +294,9 @@ class GLRenderer extends GLBaseRenderer {
    * @param {number} dist - The maximum distance to cast the ray
    * @param {number} area - The area to use for the ray
    * @param {number} mask - The mask to filter our certain pass types. Can be PassType.OPAQUE | PassType.TRANSPARENT | PassType.OVERLAY
-   * @return {object} - The object containing the ray cast results.
+   * @return {RayCast} - The object containing the ray cast results.
    */
-  raycast(xfo: Xfo, ray: Ray, dist: number, area = 0.01, mask = ALL_PASSES) {
+  raycast(xfo: Xfo, ray: Ray, dist: number, area = 0.01, mask = ALL_PASSES): RayCast{
     const gl = this.__gl
 
     if (!this.__rayCastRenderTarget) {
@@ -393,9 +393,9 @@ class GLRenderer extends GLBaseRenderer {
    * @param {number} dist - The maximum distance to cast the ray
    * @param {number} area - The area to use for the ray
    * @param {number} mask - The mask to filter our certain pass types. Can be PassType.OPAQUE | PassType.TRANSPARENT | PassType.OVERLAY
-   * @return {object} - The object containing the ray cast results.
+   * @return {RayCast} - The object containing the ray cast results.
    */
-  raycastCluster(xfo: Xfo, ray: Ray, dist: number, area = 0.01, mask = ALL_PASSES) {
+  raycastCluster(xfo: Xfo, ray: Ray, dist: number, area = 0.01, mask = ALL_PASSES): RayCast[] {
     const gl = this.__gl
 
     if (!this.__rayCastRenderTarget) {
@@ -487,7 +487,7 @@ class GLRenderer extends GLBaseRenderer {
    * The drawBackground method.
    * @param {RenderState} renderstate - The object tracking the current state of the renderer
    */
-  drawBackground(renderstate: RenderState) {
+  drawBackground(renderstate: RenderState): void {
     if (this.__glBackgroundMap) {
       if (!this.__glBackgroundMap.isLoaded()) return
       const gl = this.__gl
@@ -506,7 +506,7 @@ class GLRenderer extends GLBaseRenderer {
    * The bindGLRenderer method.
    * @param {RenderState} renderstate - The object tracking the current state of the renderer
    */
-  bindGLRenderer(renderstate: ColorRenderState) {
+  bindGLRenderer(renderstate: ColorRenderState): void {
     super.bindGLBaseRenderer(renderstate)
 
     renderstate.envMap = this.__glEnvMap
@@ -518,7 +518,7 @@ class GLRenderer extends GLBaseRenderer {
    * The drawScene method.
    * @param {RenderState} renderstate - The object tracking the current state of the renderer
    */
-  drawScene(renderstate: ColorRenderState) {
+  drawScene(renderstate: ColorRenderState): void {
     this.bindGLRenderer(renderstate)
 
     if (this.__displayEnvironment) this.drawBackground(renderstate)

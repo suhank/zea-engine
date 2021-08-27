@@ -113,3 +113,12 @@ interface WebglOptions {
 }
 
 type JSON = Record<string, any>
+
+interface RayCast {
+  ray: Ray
+  intersectionPos: Vec3
+  geomItem: any
+  dist: any
+  geomData: Float32Array
+}
+

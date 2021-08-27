@@ -29,7 +29,7 @@ class GLImageAtlas extends GLRenderTarget {
   protected ready: boolean
   protected __layout: Array<LayoutItem>
   protected __atlasLayoutTexture: any
-  protected __layoutVec4s: Array<Vec4>
+  protected __layoutVec4s: Array<number[]>
   protected __atlasLayoutShaderBinding: IGeomShaderBinding
   protected __atlasLayoutShader: GLShader
   /**
@@ -244,12 +244,12 @@ class GLImageAtlas extends GLRenderTarget {
     if (!gl.floatTexturesSupported) {
       this.__layoutVec4s = []
       this.__layout.forEach((layoutItem: LayoutItem, index: number) => {
-        this.__layoutVec4s[index] = new Vec4(
+        this.__layoutVec4s[index] = [
           layoutItem.pos.x / width,
           layoutItem.pos.y / height,
           layoutItem.size.x / width,
-          layoutItem.size.y / height
-        )
+          layoutItem.size.y / height,
+        ]
       })
     } else {
       const dataArray = new Float32Array(size * size * 4) /* each pixel has 4 floats*/
@@ -295,9 +295,9 @@ class GLImageAtlas extends GLRenderTarget {
   /**
    * The getLayoutData method.
    * @param {number} index - The index value.
-   * @return {object} - The return value.
+   * @return {Array<number>} - The return value.
    */
-  getLayoutData(index: number): any {
+  getLayoutData(index: number): Array<number> {
     return this.__layoutVec4s[index]
   }
 
