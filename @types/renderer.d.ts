@@ -3,7 +3,7 @@ interface BaseRenderState {
   glShader?: GLShader
   shaderkey?: string
   shaderopts: Record<string, string[]>
-  attrs: Record<string, Record<any, any>> // not Attribute
+  attrs: Record<string, Record<string, any>> // not Attribute
   unifs: Record<string, Uniform>
   directives?: string[]
 

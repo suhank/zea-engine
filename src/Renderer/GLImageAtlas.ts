@@ -29,7 +29,7 @@ class GLImageAtlas extends GLRenderTarget {
   protected ready: boolean
   protected __layout: Array<LayoutItem>
   protected __atlasLayoutTexture: any
-  protected __layoutVec4s: Array<any>
+  protected __layoutVec4s: Array<Vec4>
   protected __atlasLayoutShaderBinding: IGeomShaderBinding
   protected __atlasLayoutShader: GLShader
   /**
@@ -129,7 +129,7 @@ class GLImageAtlas extends GLRenderTarget {
   removeSubImage(subImage: BaseImage): void {
     let index
     if (subImage instanceof BaseImage) {
-      const gltext = subImage.getMetadata('ImageAtlas_gltex')
+      const gltext = subImage.getMetadata('ImageAtlas_gltex') // TODO: refactor
       index = this.__subImages.indexOf(gltext)
       subImage.deleteMetadata('ImageAtlas_gltex')
     } else {
@@ -148,7 +148,7 @@ class GLImageAtlas extends GLRenderTarget {
    * @param {number} index - The index value.
    * @return {BaseImage} - The image value.
    */
-  getSubImage(index: number): any {
+  getSubImage(index: number): GLTexture2D {
     return this.__subImages[index]
   }
 

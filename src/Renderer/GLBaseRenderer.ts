@@ -19,10 +19,10 @@ import { ViewChangedEvent } from '../Utilities/Events/ViewChangedEvent'
 import { XrViewportEvent } from '../Utilities/Events/XrViewportEvent'
 import { XRViewport } from 'webxr'
 import { GLShader } from './GLShader'
-let activeGLRenderer: Record<any, any>
+let activeGLRenderer: Record<string, any>
 let pointerIsDown = false
 let pointerLeft = false
-const registeredPasses: Record<any, any> = {}
+const registeredPasses: Record<string, any> = {}
 
 /**
  * Class representing a GL base renderer.
@@ -30,8 +30,7 @@ const registeredPasses: Record<any, any> = {}
  * @extends ParameterOwner
  */
 class GLBaseRenderer extends ParameterOwner {
-  // protected navigator: Record<any, any>
-  protected directives: any
+  protected directives: any // used in two ways -- requires refactor
   solidAngleLimit: number
   protected __div: any
 
