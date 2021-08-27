@@ -12,7 +12,7 @@ import { BaseImage } from '../SceneTree/BaseImage'
  * @private
  */
 class GLHDRImage extends GLTexture2D {
- //  protected __gl: WebGL12RenderingContext
+  //  protected __gl: WebGL12RenderingContext
   protected __hdrImage: VLHImage
   protected __fbo: GLFbo
   __srcLDRTex: any
@@ -152,7 +152,7 @@ class GLHDRImage extends GLTexture2D {
    * @param {Record<any,any>} bindings - The bindings value.
    * @return {boolean} - The return value.
    */
-  bindToUniform(renderstate: RenderState, unif:Uniform, bindings?: Record<any, any>): boolean {
+  bindToUniform(renderstate: RenderState, unif: Uniform, bindings?: Record<any, any>): boolean {
     return super.bindToUniform(renderstate, unif, bindings)
   }
 
@@ -176,4 +176,3 @@ class GLHDRImage extends GLTexture2D {
 }
 
 export { GLHDRImage }
-

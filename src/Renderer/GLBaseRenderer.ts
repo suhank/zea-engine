@@ -69,7 +69,7 @@ class GLBaseRenderer extends ParameterOwner {
    * @param {HTMLElement|HTMLCanvasElement} $canvas - The canvas element.
    * @param {Record<string, any>} options - The options value.
    */
-  constructor($canvas: HTMLCanvasElement, options: Record<string, any> = {}) {
+  constructor($canvas: HTMLCanvasElement, options: Options) {
     super()
 
     if (!SystemDesc.gpuDesc) {

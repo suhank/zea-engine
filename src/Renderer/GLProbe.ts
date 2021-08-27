@@ -232,7 +232,7 @@ class GLProbe extends EventEmitter {
 
   /**
    * The bind method.
-   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {RenderState} renderstate - The object tracking the current state of the renderer
    * @param {WebGLUniformLocation} unif - The WebGL uniform
    * @return {boolean} - Returns true if the Probe was successfully bound.
    */

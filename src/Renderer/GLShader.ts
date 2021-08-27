@@ -314,7 +314,7 @@ class GLShader extends BaseItem {
         instanced: attrDesc.instanced,
       }
     }
-    const unifs: Record<string, string> = this.getUniforms()
+    const unifs: Record<string, string> = this.getUniforms() // TODO: refactor type in fn()
     for (let uniformName in unifs) {
       const unifType = unifs[uniformName]
       // TODO: array uniform disabled during ts-migration

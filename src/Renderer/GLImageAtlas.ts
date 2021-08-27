@@ -361,7 +361,7 @@ class GLImageAtlas extends GLRenderTarget {
    * @param {WebGLUniformLocation} unif - The WebGL uniform
    * @return {boolean} - The return value.
    */
-  bindToUniform(renderstate: RenderState, unif: Uniforms): boolean {
+  bindToUniform(renderstate: RenderState, unif: Uniform): boolean {
     super.bindToUniform(renderstate, unif)
 
     const unifs: Uniforms = renderstate.unifs

@@ -53,7 +53,7 @@ class GLRenderer extends GLBaseRenderer {
    * @param {HTMLCanvasElement} $canvas - The $canvas value.
    * @param {Record<string, any>} options - The dictionary of options.
    */
-  constructor($canvas: any, options: Record<string, any> = {}) {
+  constructor($canvas: any, options: Options) {
     // use HTMLCanvasElement?
     super($canvas, options)
 
@@ -485,7 +485,7 @@ class GLRenderer extends GLBaseRenderer {
 
   /**
    * The drawBackground method.
-   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {RenderState} renderstate - The object tracking the current state of the renderer
    */
   drawBackground(renderstate: RenderState) {
     if (this.__glBackgroundMap) {
@@ -516,7 +516,7 @@ class GLRenderer extends GLBaseRenderer {
 
   /**
    * The drawScene method.
-   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {RenderState} renderstate - The object tracking the current state of the renderer
    */
   drawScene(renderstate: ColorRenderState) {
     this.bindGLRenderer(renderstate)

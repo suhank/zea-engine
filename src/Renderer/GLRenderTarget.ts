@@ -247,7 +247,7 @@ class GLRenderTarget extends EventEmitter {
    * @param {number} channelId - The channelId value.
    * @return {boolean} - The return value.
    */
-  bindColorTexture(renderstate: RenderState, unif: Record<any, any>, channelId = 0): boolean {
+  bindColorTexture(renderstate: RenderState, unif: Uniform, channelId = 0): boolean {
     const gl = this.__gl
     const unit = renderstate.boundTextures++
     gl.uniform1i(unif.location, unit)
@@ -262,7 +262,7 @@ class GLRenderTarget extends EventEmitter {
    * @param {WebGLUniformLocation} unif - The WebGL uniform
    * @return {boolean} - The return value.
    */
-  bindDepthTexture(renderstate: RenderState, unif: Record<any, any>) {
+  bindDepthTexture(renderstate: RenderState, unif: Uniform) {
     const gl = this.__gl
     const unit = renderstate.boundTextures++
     gl.uniform1i(unif.location, unit)
@@ -422,7 +422,7 @@ class GLRenderTarget extends EventEmitter {
    * @param {any} bindings - The bindings param.
    * @return {any} - The return value.
    */
-  bindToUniform(renderstate: RenderState, unif: Record<any, any>, bindings?: any) {
+  bindToUniform(renderstate: RenderState, unif: Uniform, bindings?: any) {
     // if (!this.__loaded) {
     //   return false
     // }

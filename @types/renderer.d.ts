@@ -87,5 +87,23 @@ interface LayoutItem {
 }
 
 interface Bindings {
-  WebGLUniformLocation
+  textureTypeUnif: WebGLUniformLocation
+}
+
+interface Options {
+  webglOptions: WebglOptions
+  supportXR: boolean
+  disableTextures: boolean
+  debugGeomIds: boolean
+}
+
+interface WebglOptions {
+  canvasPosition: string
+  antialias: boolean
+  depth: boolean
+  stencil: boolean
+  alpha: boolean
+  disableMultiDraw: boolean
+  webglContextType: string
+  powerPreference: string
 }

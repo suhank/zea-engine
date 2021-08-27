@@ -2,15 +2,17 @@ import { Vec2, Vec3, Vec4, Color, Mat4, Mat3 } from '../../Math/index'
 import { GLTexture2D } from '../GLTexture2D'
 import { GLHDRImage } from '../GLHDRImage'
 import { SInt32, UInt32, Float32 } from '../../Utilities/MathFunctions'
+import { Parameter } from '../../SceneTree/Parameters/Parameter'
+import { GLMaterial } from './GLMaterial'
 
 /** Class representing simple uniform binding.
  * @private
  */
 class SimpleUniformBinding {
-  protected param: Record<any, any>
-  protected unif: Record<any, any>
-  protected textureUnif: Record<any, any>
-  protected textureTypeUnif: Record<any, any>
+  protected param: Parameter<any>
+  protected unif: Uniform
+  protected textureUnif: Uniform
+  protected textureTypeUnif: Uniform
   protected uniform1i: any
   protected uniformXX: any
   protected bind: any
@@ -29,13 +31,7 @@ class SimpleUniformBinding {
    * @param {WebGLUniformLocation} unif - The WebGL uniform
    * @param {object} unifs - The dictionary of WebGL uniforms.
    */
-  constructor(
-    gl: WebGL12RenderingContext,
-    glMaterial: any,
-    param: any,
-    unif: WebGLUniformLocation,
-    unifs: Record<any, any>
-  ) {
+  constructor(gl: WebGL12RenderingContext, glMaterial: any, param: any, unif: Uniform, unifs: Uniforms) {
     const name = param.getName()
     this.param = param
     this.unif = unif
@@ -44,18 +40,18 @@ class SimpleUniformBinding {
     this.uniform1i = gl.uniform1i.bind(gl)
 
     switch (this.unif.type) {
-      case Boolean:
+      case 'Boolean':
         // gl.uniform1ui(unif.location, value);// WebGL 2
         this.uniformXX = gl.uniform1i.bind(gl)
         break
-      case UInt32:
+      case 'UInt32':
         if (gl.name == 'webgl2') this.uniformXX = gl.uniform1ui.bind(gl)
         else this.uniformXX = gl.uniform1i.bind(gl)
         break
-      case SInt32:
+      case 'SInt32':
         this.uniformXX = gl.uniform1i.bind(gl)
         break
-      case Float32:
+      case 'Float32':
         this.uniformXX = gl.uniform1f.bind(gl)
         break
     }
@@ -183,7 +179,7 @@ class SimpleUniformBinding {
  */
 class ComplexUniformBinding {
   protected param: any
-  protected unif: any
+  protected unif: Uniform
   protected dirty: any
   protected uniformXX: any
   protected vals: any
@@ -192,20 +188,20 @@ class ComplexUniformBinding {
    * @param {WebGL12RenderingContext} gl - The webgl rendering context.
    * @param {any} glMaterial - The glMaterial value.
    * @param {any} param - The param value.
-   * @param {WebGLUniformLocation} unif - The WebGL uniform
+   * @param {Uniform} unif - The WebGL uniform
    */
-  constructor(gl: WebGL12RenderingContext, glMaterial: any, param: any, unif: WebGLUniformLocation) {
+  constructor(gl: WebGL12RenderingContext, glMaterial: any, param: any, unif: Uniform) {
     this.param = param
     this.unif = unif
 
     switch (this.unif.type) {
-      case Vec2:
+      case 'Vec2':
         this.uniformXX = gl.uniform2fv.bind(gl)
         break
-      case Vec3:
+      case 'Vec3':
         this.uniformXX = gl.uniform3fv.bind(gl)
         break
-      case Vec4:
+      case 'Vec4':
         this.uniformXX = gl.uniform4fv.bind(gl)
         break
     }
@@ -244,7 +240,7 @@ class ComplexUniformBinding {
  */
 class MatrixUniformBinding {
   protected param: any
-  protected unif: any
+  protected unif: Uniform
   protected uniformMatrixXXX: any
   protected dirty: any
   protected vals: any
@@ -256,15 +252,15 @@ class MatrixUniformBinding {
    * @param {any} param - The param value.
    * @param {WebGLUniformLocation} unif - The WebGL uniform
    */
-  constructor(gl: WebGL12RenderingContext, glMaterial: any, param: any, unif: WebGLUniformLocation) {
+  constructor(gl: WebGL12RenderingContext, glMaterial: any, param: any, unif: Uniform) {
     this.param = param
     this.unif = unif
 
     switch (this.unif.type) {
-      case Mat3:
+      case 'Mat3':
         this.uniformMatrixXXX = gl.uniformMatrix3fv.bind(gl)
         break
-      case Mat4:
+      case 'Mat4':
         this.uniformMatrixXXX = gl.uniformMatrix4fv.bind(gl)
         break
     }
@@ -304,8 +300,8 @@ class MatrixUniformBinding {
  */
 class ColorUniformBinding {
   protected param: any
-  protected unif: any
-  protected textureUnif: any
+  protected unif: Uniform
+  protected textureUnif: Uniform
   protected textureTypeUnif: any
   protected vals: number[]
   protected bind: any
@@ -324,13 +320,7 @@ class ColorUniformBinding {
    * @param {WebGLUniformLocation} unif - The WebGL uniform
    * @param {Record<any,any>} unifs - The dictionary of WebGL uniforms.
    */
-  constructor(
-    gl: WebGL12RenderingContext,
-    glMaterial: any,
-    param: any,
-    unif: WebGLUniformLocation,
-    unifs: Record<any, any>
-  ) {
+  constructor(gl: WebGL12RenderingContext, glMaterial: any, param: any, unif: Uniform, unifs: Uniforms) {
     const name = param.getName()
     this.param = param
     this.unif = unif
@@ -454,11 +444,11 @@ class MaterialShaderBinding {
   /**
    * Create material shader binding.
    * @param {WebGL12RenderingContext} gl - The webgl rendering context.
-   * @param {any} glMaterial - The glMaterial value.
-   * @param {object} unifs - The dictionary of WebGL uniforms.
+   * @param {GLMaterial} glMaterial - The glMaterial value.
+   * @param {Uniforms} unifs - The dictionary of WebGL uniforms.
    * @param {any} warnMissingUnifs - The warnMissingUnifs value.
    */
-  constructor(gl: WebGL12RenderingContext, glMaterial: any, unifs: Record<any, any>, warnMissingUnifs: any) {
+  constructor(gl: WebGL12RenderingContext, glMaterial: any, unifs: Uniforms, warnMissingUnifs: any) {
     this.uniformBindings = []
 
     const bindParam = (param: any) => {
@@ -495,21 +485,21 @@ class MaterialShaderBinding {
         return
       }
       switch (unif.type) {
-        case Boolean:
-        case UInt32:
-        case SInt32:
-        case Float32:
+        case 'Boolean':
+        case 'UInt32':
+        case 'SInt32':
+        case 'Float32':
           this.uniformBindings.push(new SimpleUniformBinding(gl, glMaterial, param, unif, unifs))
           break
-        case Vec2:
-        case Vec3:
-        case Vec4:
+        case 'Vec2':
+        case 'Vec3':
+        case 'Vec4':
           this.uniformBindings.push(new ComplexUniformBinding(gl, glMaterial, param, unif))
           break
-        case Color:
+        case 'Color':
           this.uniformBindings.push(new ColorUniformBinding(gl, glMaterial, param, unif, unifs))
           break
-        case Mat4:
+        case 'Mat4':
           this.uniformBindings.push(new MatrixUniformBinding(gl, glMaterial, param, unif))
           break
         default:
