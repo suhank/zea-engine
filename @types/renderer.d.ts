@@ -4,7 +4,7 @@ interface BaseRenderState {
   shaderkey?: string
   shaderopts: Record<string, string[]>
   attrs: Record<string, Record<string, any>> // not Attribute
-  unifs: Record<string, Uniform>
+  unifs: Uniforms
   directives?: string[]
 
   drawItemsTexture?: any
@@ -21,8 +21,8 @@ interface BaseRenderState {
   viewport?: GLBaseViewport // Viewport
   viewports?: any //Array<Viewport>
 
-  bindViewports(unifs: Record<string, Uniform>, cb: function): function
-  bindRendererUnifs(unifs: Record<string, Uniform>): function // TODO:
+  bindViewports(unifs: Uniforms, cb: function): function
+  bindRendererUnifs(unifs: Uniforms): function // TODO:
 
   boundTextures: number
   boundRendertarget: WebGLFramebuffer | null
@@ -57,6 +57,7 @@ interface Viewport {
   fovY?: number
 }
 
+type Uniforms = Record<string, Uniform>
 interface Uniform {
   name: string
   location: number
@@ -83,4 +84,8 @@ interface attrBuffer {
 interface LayoutItem {
   pos: Vec2
   size: Vec2
+}
+
+interface Bindings {
+  WebGLUniformLocation
 }

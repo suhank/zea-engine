@@ -67,9 +67,9 @@ class GLBaseRenderer extends ParameterOwner {
   /**
    * Create a GL base renderer.
    * @param {HTMLElement|HTMLCanvasElement} $canvas - The canvas element.
-   * @param {Record<any, any>} options - The options value.
+   * @param {Record<string, any>} options - The options value.
    */
-  constructor($canvas: HTMLCanvasElement, options: Record<any, any> = {}) {
+  constructor($canvas: HTMLCanvasElement, options: Record<string, any> = {}) {
     super()
 
     if (!SystemDesc.gpuDesc) {
@@ -1231,7 +1231,7 @@ class GLBaseRenderer extends ParameterOwner {
 
     const gl = this.__gl
     if (!renderstate.viewports || renderstate.viewports.length == 1) {
-      renderstate.bindRendererUnifs = (unifs: any) => {
+      renderstate.bindRendererUnifs = (unifs: Uniforms) => {
         const { cameraMatrix, viewMatrix, projectionMatrix, eye, isOrthographic } = unifs
         if (cameraMatrix) {
           gl.uniformMatrix4fv(cameraMatrix.location, false, renderstate.cameraMatrix.asArray())
@@ -1255,9 +1255,9 @@ class GLBaseRenderer extends ParameterOwner {
           gl.uniform1i(isOrthographic.location, vp.isOrthographic)
         }
       }
-      renderstate.bindViewports = (unifs: Record<any, any>, cb: any) => cb()
+      renderstate.bindViewports = (unifs: Uniforms, cb: any) => cb()
     } else {
-      renderstate.bindRendererUnifs = (unifs: Record<any, any>) => {
+      renderstate.bindRendererUnifs = (unifs: Uniforms) => {
         // Note: the camera matrix should be the head position instead
         // of the eye position. The inverse(viewMatrix) can be used
         // when we want the eye pos.
@@ -1267,7 +1267,7 @@ class GLBaseRenderer extends ParameterOwner {
         }
       }
 
-      renderstate.bindViewports = (unifs: Record<any, any>, cb: any) => {
+      renderstate.bindViewports = (unifs: Uniforms, cb: any) => {
         renderstate.viewports.forEach((vp: any, index: number) => {
           let vp_region = vp.region
           gl.viewport(vp_region[0], vp_region[1], vp_region[2], vp_region[3])

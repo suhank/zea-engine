@@ -525,18 +525,18 @@ class GLTexture2D extends RefCounted {
    * @return {boolean} - The return value.
    * @deprecated
    */
-  bind(renderstate: RenderState, unif: WebGLUniformLocation): boolean {
+  bind(renderstate: RenderState, unif: Uniform): boolean {
     console.warn("'bind' is deprecated. Please use 'bindToUniform'")
     return this.bindToUniform(renderstate, unif)
   }
 
   /**
    * The preBind method.
-   * @param {Record<any, any>} unif - The unif value.
-   * @param {Record<any, any>} unifs - The unifs value.
+   * @param {Uniform} unif - The unif value.
+   * @param {Uniforms} unifs - The unifs value.
    * @return {Record<any, any>} - The return value.
    */
-  preBind(unif: Record<any, any>, unifs: Record<any, any>) {
+  preBind(unif: Uniform, unifs: Uniforms) {
     return {
       textureTypeUnif: unifs[unif.name + 'Type'],
       textureDescUnif: unifs[unif.name + 'Desc'],
@@ -547,11 +547,11 @@ class GLTexture2D extends RefCounted {
    * Binds Texture to the Uniform attribute.
    *
    * @param {RenderState} renderstate - The renderstate value.
-   * @param {Record<any, any>} unif - The unif value.
+   * @param {Uniform} unif - The unif value.
    * @param {Record<any, any>} bindings - The bindings value.
    * @return {boolean} - The return value.
    */
-  bindToUniform(renderstate: RenderState, unif: Record<any, any>, bindings?: Record<any, any>) {
+  bindToUniform(renderstate: RenderState, unif: Uniform, bindings?: Record<any, any>) {
     if (!this.__loaded) {
       return false
     }
