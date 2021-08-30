@@ -124,23 +124,34 @@
       // }
       // loadAsset(assetUrl, assetUrl)
       /** LOAD ASSETS END */
+      // const cadAsset = new CADAsset()
+      // cadAsset.load('data/HC_SRO4.zcad')
 
+      // cadAsset.getGeometryLibrary().once('loaded', () => {
+      //   renderer.once('redrawOccured', () => {
+      //     for (let i = 0; i < 10; i++) {
+      //       console.log("loaded/deleted")
+      //       const cadAsset = new CADAsset()
+      //       cadAsset.load('data/HC_SRO4.zcad')
+      //       scene.getRoot().removeChildByHandle(cadAsset)
+      //       // record heap size
+      //     }
+      //   })
+      // })
+      // scene.getRoot().addChild(cadAsset)
 
-
-    const cadAsset = new CADAsset()
-    cadAsset.load('data/HC_SRO4.zcad')
-    cadAsset.getGeometryLibrary().once('loaded', ()=>{
-    renderer.once('redrawOccured', ()=> {      
-        for(let i = 0; i < 10; i ++){
-          
+      // every click -> create/delete cadAsset.
+      renderer.getViewport().on('pointerDown', (event) => {
+        for (let i = 0; i < 10; i++) {
+          console.log('loaded/deleted')
+          const cadAsset = new CADAsset()
+          cadAsset.load('data/HC_SRO4.zcad')
+          scene.getRoot().addChild(cadAsset)
           scene.getRoot().removeChildByHandle(cadAsset)
           // record heap size
         }
       })
-    })
-    scene.getRoot().addChild(cadAsset)
 
-  
       const postMessage = (msg) => {
         console.log(msg)
         window.postMessage(msg)
