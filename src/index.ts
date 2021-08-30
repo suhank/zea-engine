@@ -1,4 +1,4 @@
-import packageJson from '../package.json'
+import packageJson from './package.json'
 
 import { zeaDebug } from './helpers/zeaDebug'
 import { LibsRegistry } from './LibsRegistry'
@@ -11,12 +11,12 @@ import * as SceneTree from './SceneTree/index'
 import * as Renderer from './Renderer/index'
 
 const ZeaEngine = {
-  SystemDesc,
+  SystemDesc: SystemDesc,
   Registry,
   ...Math,
   ...Utilities,
   ...SceneTree,
-  ...Renderer,
+  ...Renderer
 }
 
 const libsRegistry = new LibsRegistry(packageJson.version)
