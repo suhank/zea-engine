@@ -1,3 +1,4 @@
+/* eslint-disable require-jsdoc */
 import { SystemDesc } from '../../SystemDesc.js'
 import ArchiveUnpackerWorker from 'web-worker:./ArchiveUnpackerWorker.js'
 // For synchronous loading, uncomment these lines.
@@ -144,6 +145,14 @@ class ArchiveUnpackerPlugin {
       }
       delete this.__callbacks[resourceId]
     }
+  }
+
+  shutDownWorkers() {
+    this.__workers.forEach((workerPromise) => {
+      workerPromise.then((worker) => {
+        worker.terminate()
+      })
+    })
   }
 }
 

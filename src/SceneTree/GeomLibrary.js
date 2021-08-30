@@ -1,3 +1,4 @@
+/* eslint-disable require-jsdoc */
 import { SystemDesc } from '../SystemDesc.js'
 import { BinReader } from './BinReader.js'
 import { PointsProxy, LinesProxy, MeshProxy } from './Geometry/GeomProxies.js'
@@ -63,6 +64,7 @@ class GeomLibrary extends EventEmitter {
     })
 
     this.__receiveGeomDatas = this.__receiveGeomDatas.bind(this)
+
     // if (multiThreadParsing) {
     //   for (let i = 0; i < numCores; i++) {
     //     if (!workers[i]) {
@@ -396,6 +398,12 @@ class GeomLibrary extends EventEmitter {
    */
   toString() {
     return JSON.stringify(this.toJSON(), null, 2)
+  }
+
+  static shutDownWorkers() {
+    workers.forEach((worker) => {
+      worker.terminate()
+    })
   }
 }
 

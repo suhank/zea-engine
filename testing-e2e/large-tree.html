@@ -63,35 +63,21 @@
         InstanceItem,
         CameraManipulator,
         GLBoundingBoxPass,
+        GeomLibrary,
+        resourceLoader,
       } from '../dist/index.esm.js'
 
       const canvas = document.querySelector('#renderer')
 
       const scene = new Scene()
-      const renderer = new GLRenderer(canvas, { debugGeomIds: false, antialias: false })
-      renderer.setScene(scene)
-      renderer.outlineThickness = 0.5
-      renderer.outlineColor = new Color(0.2, 0.2, 0.2, 1)
-      scene.getSettings().getParameter('BackgroundColor').setValue(new Color(0.85, 0.85, 0.85, 1))
-      renderer.getViewport().debugGeomShader = urlParams.has('debugGeomShader')
+      // const renderer = new GLRenderer(canvas, { debugGeomIds: false, antialias: false })
+      // renderer.setScene(scene)
+      // renderer.outlineThickness = 0.5
+      // renderer.outlineColor = new Color(0.2, 0.2, 0.2, 1)
+      // scene.getSettings().getParameter('BackgroundColor').setValue(new Color(0.85, 0.85, 0.85, 1))
+      // renderer.getViewport().debugGeomShader = urlParams.has('debugGeomShader')
 
-      const envMap = new EnvMap()
-      envMap.load('data/StudioG.zenv')
-      scene.setEnvMap(envMap)
-
-      scene.setupGrid(1.0, 10, new Color(0.2, 0.2, 0.2))
-
-      const boundingBoxPass = new GLBoundingBoxPass()
-      renderer.addPass(boundingBoxPass)
-
-      /** UX START */
-      const { SelectionManager, UndoRedoManager, ToolManager, SelectionTool, CreateFreehandLineTool } = window.zeaUx
-
-      const appData = { scene, renderer }
-
-      const cameraManipulator = renderer.getViewport().getManipulator()
-      cameraManipulator.setDefaultManipulationMode(CameraManipulator.MANIPULATION_MODES.tumbler)
-      appData.cameraManipulator = cameraManipulator
+      // renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-2, -2, 2.7), new Vec3(0, 0, 3))
 
       /** LOAD ASSETS START */
       const { CADAsset, CADBody } = window.zeaCad
@@ -118,39 +104,26 @@
         boundingBoxPass.addTreeItem(res, true)
         return res
       }
-      // let assetUrl = 'data/HC_SRO4.zcad'
-      // if (urlParams.has('zcad')) {
-      //   assetUrl = urlParams.get('zcad')
-      // }
-      // loadAsset(assetUrl, assetUrl)
-      /** LOAD ASSETS END */
-      // const cadAsset = new CADAsset()
-      // cadAsset.load('data/HC_SRO4.zcad')
 
-      // cadAsset.getGeometryLibrary().once('loaded', () => {
-      //   renderer.once('redrawOccured', () => {
-      //     for (let i = 0; i < 10; i++) {
-      //       console.log("loaded/deleted")
-      //       const cadAsset = new CADAsset()
-      //       cadAsset.load('data/HC_SRO4.zcad')
-      //       scene.getRoot().removeChildByHandle(cadAsset)
-      //       // record heap size
-      //     }
-      //   })
-      // })
-      // scene.getRoot().addChild(cadAsset)
+      function createAndDestroyCadAsset(index) {
+        const cadAsset = new CADAsset()
+        cadAsset.load('data/hospital/Autodesk_Hospital_Structural.zcad')
+        // scene.getRoot().addChild(cadAsset)
+        cadAsset.getGeometryLibrary().once('loaded', () => {
+          // renderer.once('redrawOccurred', () => {
+          console.log('loaded/deleted', index)
+          // scene.getRoot().removeChildByHandle(cadAsset)
+          if (index > 0) createAndDestroyCadAsset(index - 1)
+          else {
+            GeomLibrary.shutDownWorkers()
+            resourceLoader.plugins['archive'].shutDownWorkers()
+          }
 
-      // every click -> create/delete cadAsset.
-      renderer.getViewport().on('pointerDown', (event) => {
-        for (let i = 0; i < 10; i++) {
-          console.log('loaded/deleted')
-          const cadAsset = new CADAsset()
-          cadAsset.load('data/HC_SRO4.zcad')
-          scene.getRoot().addChild(cadAsset)
-          scene.getRoot().removeChildByHandle(cadAsset)
-          // record heap size
-        }
-      })
+          // })
+        })
+      }
+
+      createAndDestroyCadAsset(2)
 
       const postMessage = (msg) => {
         console.log(msg)
