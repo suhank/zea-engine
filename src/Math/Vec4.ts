@@ -26,7 +26,7 @@ class Vec4 {
    * @param {number} t - The t value. Default is 0.
    */
 
-  __data
+  __data: Float32Array | Uint32Array | Int32Array
   constructor(x: number | Float32Array | ArrayBuffer = 0, y = 0, z = 0, t = 0) {
     if (x instanceof Float32Array || x instanceof Uint32Array) {
       this.__data = x
@@ -569,7 +569,7 @@ class Vec4 {
       x: this.x,
       y: this.y,
       z: this.z,
-      t: this.t,
+      t: this.t
     }
   }
 

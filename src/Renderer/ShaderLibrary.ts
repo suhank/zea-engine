@@ -284,4 +284,5 @@ class ShaderLibrary {
 }
 
 const shaderLibrary = new ShaderLibrary()
-export { shaderLibrary }
+
+export { ShaderLibrary, shaderLibrary }

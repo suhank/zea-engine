@@ -25,7 +25,6 @@ function isMobileDevice() {
 
 // eslint-disable-next-line require-jsdoc
 function getBrowserDesc() {
-  const nVer = navigator.appVersion
   const nAgt = navigator.userAgent
   let browserName = navigator.appName
   let fullVersion = '' + parseFloat(navigator.appVersion)
@@ -96,7 +95,7 @@ function getBrowserDesc() {
     fullVersion,
     majorVersion,
     appName: navigator.appName,
-    userAgent: navigator.userAgent,
+    userAgent: navigator.userAgent
   }
 }
 
@@ -120,7 +119,7 @@ function getGPUDesc() {
       renderer: 'Unknown',
       gpuVendor: 'Unknown',
       maxTextureSize: 'Unknown',
-      supportsWebGL2: webgl2 != undefined,
+      supportsWebGL2: webgl2 != undefined
     }
   }
 
@@ -151,11 +150,11 @@ function getGPUDesc() {
     renderer,
     gpuVendor,
     maxTextureSize,
-    supportsWebGL2: webgl2 != undefined,
+    supportsWebGL2: webgl2 != undefined
   }
 }
 
-const SystemDesc: SystemDescription = (function () {
+const SystemDesc: SystemDescription = (function() {
   if (!globalThis.navigator) {
     // When running in NodeJS
     return {
@@ -164,7 +163,7 @@ const SystemDesc: SystemDescription = (function () {
       browserName: 'Node',
       webGLSupported: false,
       deviceCategory: 'High',
-      hardwareConcurrency: 4,
+      hardwareConcurrency: 4
     }
   }
   const isMobile = isMobileDevice()
@@ -284,7 +283,7 @@ const SystemDesc: SystemDescription = (function () {
     webGLSupported: gpuDesc != undefined,
     gpuDesc,
     deviceCategory,
-    hardwareConcurrency,
+    hardwareConcurrency
   }
 })()
 

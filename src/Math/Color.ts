@@ -5,7 +5,7 @@ import { BinReader } from '../SceneTree/BinReader'
  * Class representing a color as 4 floating point values.
  */
 class Color {
-  __data
+  __data: Float32Array | Uint32Array | Int32Array
   /**
    * Creates a `Color` object with an RGBA structure.
    *
@@ -166,7 +166,7 @@ class Color {
     return {
       r: this.r * 255,
       g: this.g * 255,
-      b: this.b * 255,
+      b: this.b * 255
     }
   }
 
@@ -221,7 +221,7 @@ class Color {
         ? {
             r: parseInt(result[1], 16),
             g: parseInt(result[2], 16),
-            b: parseInt(result[3], 16),
+            b: parseInt(result[3], 16)
           }
         : null
     }
@@ -382,7 +382,7 @@ class Color {
         white: '#ffffff',
         whitesmoke: '#f5f5f5',
         yellow: '#ffff00',
-        yellowgreen: '#9acd32',
+        yellowgreen: '#9acd32'
       }
       return colors[colour.toLowerCase()]
       //  if (typeof colors[colour.toLowerCase()] != 'undefined') return colors[colour.toLowerCase()]
@@ -690,7 +690,7 @@ class Color {
       r: this.r,
       g: this.g,
       b: this.b,
-      a: this.a,
+      a: this.a
     }
   }
 

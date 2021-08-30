@@ -24,7 +24,7 @@ class Vec3 {
    * @param {number} z - The z value. Default is 0.
    */
 
-  __data
+  __data: Float32Array | Uint32Array | Int32Array
   constructor(x: number | Float32Array | Uint32Array | ArrayBuffer = 0, y = 0, z = 0) {
     if (x instanceof Float32Array || x instanceof Uint32Array) {
       this.__data = x
@@ -651,7 +651,7 @@ class Vec3 {
     return {
       x: this.x,
       y: this.y,
-      z: this.z,
+      z: this.z
     }
   }
 

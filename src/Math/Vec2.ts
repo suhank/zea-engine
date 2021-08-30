@@ -1,4 +1,3 @@
-import { Registry } from '../Registry'
 import { BinReader } from '../SceneTree/BinReader'
 /**
  * Representing a Vec2(two-dimensional floating point vector). A Vec2 is for representing 2 dimensional values, such as screen coordinates or pixel coordinates within an image.
@@ -59,7 +58,7 @@ class Vec2 {
    * @param {Number|Float32Array|Uint32Array|json} x - The x value. Default is 0.
    * @param {Number} y - The y value. Default is 0.
    */
-  __data
+  __data: Float32Array | Uint32Array | Int32Array
 
   constructor(x: any = 0, y = 0) {
     //x: number | Float32Array | Uint32Array | Record<string, any> = 0
@@ -541,7 +540,7 @@ class Vec2 {
   toJSON(): Record<string, number> {
     return {
       x: this.x,
-      y: this.y,
+      y: this.y
     }
   }
 
@@ -610,7 +609,5 @@ class Vec2 {
     return true
   }
 }
-
-// Registry.register('Vec2', Vec2)
 
 export { Vec2 }
