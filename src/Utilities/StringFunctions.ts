@@ -2,7 +2,7 @@
  * String functions
  *
  */
- class StringFunctions {
+class StringFunctions {
   /**
    * Replaces all matches in a string.
    *
@@ -28,10 +28,10 @@
   static stringifyJSONWithFixedPrecision(val: Record<string, any>, space = 0, precision = 5): string {
     return JSON.stringify(
       val,
-      (key, val) => {
+      (_, val) => {
         return val ? (val.toFixed ? Number(val.toFixed(precision)) : val) : val
       },
-      space,
+      space
     )
   }
 

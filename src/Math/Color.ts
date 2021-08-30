@@ -4,7 +4,7 @@ import { BinReader } from '../SceneTree/BinReader'
  * Class representing a color as 4 floating point values.
  */
 class Color {
-  __data: Float32Array | Uint32Array | Int32Array
+  __data: Float32Array
   /**
    * Creates a `Color` object with an RGBA structure.
    *

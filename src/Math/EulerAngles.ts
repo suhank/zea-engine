@@ -1,5 +1,3 @@
-import { Registry } from '../Registry'
-
 /**
  * Class representing euler angles. Euler angles describe rotating an object
  * around its various axis in a specified axis order.
@@ -130,7 +128,7 @@ class EulerAngles {
       x: this.__data[0],
       y: this.__data[1],
       z: this.__data[2],
-      order: this.order,
+      order: this.order
     }
   }
 
@@ -141,7 +139,5 @@ class EulerAngles {
     this.order = json.order
   }
 }
-
-// Registry.register('EulerAngles', EulerAngles)
 
 export { EulerAngles }
