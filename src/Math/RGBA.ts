@@ -7,14 +7,14 @@
 class RGBA {
   /**
    * Create a RGBA.
-   * @param {number | string | Float32Array | ArrayBuffer} r - The red channel of a color.
+   * @param {number | string | Uint8Array | ArrayBuffer} r - The red channel of a color.
    * @param {number} g - The green channel of a color.
    * @param {number} b - The blue channel of a color.
    * @param {number} a - The alpha (transparency) channel of a color.
    */
-  __data: Float32Array | Uint32Array | Int32Array
+  __data: Uint8Array
 
-  constructor(r: number | string | Float32Array | ArrayBuffer = 0, g = 0, b = 0, a = 255) {
+  constructor(r: number | string | Uint8Array | ArrayBuffer = 0, g = 0, b = 0, a = 255) {
     if (r instanceof Uint8Array) {
       this.__data = r
     } else if (r instanceof ArrayBuffer) {

@@ -1,5 +1,4 @@
 /* eslint-disable require-jsdoc */
-import { Registry } from '../Registry'
 import { BinReader } from '../SceneTree/BinReader'
 /**
  * Class representing a color as 4 floating point values.
@@ -737,7 +736,5 @@ class Color {
     )
   }
 }
-
-// Registry.register('Color', Color)
 
 export { Color }
