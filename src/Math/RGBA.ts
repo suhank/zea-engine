@@ -1,5 +1,4 @@
 /* eslint-disable require-jsdoc */
-import { Registry } from '../Registry'
 
 /**
  * Class representing the red, green, blue and alpha channel of a color as 8bit values.
@@ -13,7 +12,8 @@ class RGBA {
    * @param {number} b - The blue channel of a color.
    * @param {number} a - The alpha (transparency) channel of a color.
    */
-  __data
+  __data: Float32Array | Uint32Array | Int32Array
+
   constructor(r: number | string | Float32Array | ArrayBuffer = 0, g = 0, b = 0, a = 255) {
     if (r instanceof Uint8Array) {
       this.__data = r
@@ -161,7 +161,7 @@ class RGBA {
         ? {
             r: parseInt(result[1], 16),
             g: parseInt(result[2], 16),
-            b: parseInt(result[3], 16),
+            b: parseInt(result[3], 16)
           }
         : null
     }
@@ -322,7 +322,7 @@ class RGBA {
         white: '#ffffff',
         whitesmoke: '#f5f5f5',
         yellow: '#ffff00',
-        yellowgreen: '#9acd32',
+        yellowgreen: '#9acd32'
       }
 
       return colors[colour.toLowerCase()]
@@ -593,7 +593,7 @@ class RGBA {
       r: this.r,
       g: this.g,
       b: this.b,
-      a: this.a,
+      a: this.a
     }
   }
 
@@ -628,7 +628,5 @@ class RGBA {
     )
   }
 }
-
-// Registry.register('RGBA', RGBA)
 
 export { RGBA }

@@ -1,5 +1,4 @@
 /* eslint-disable new-cap */
-import { Registry } from '../Registry'
 import { Vec3 } from './Vec3'
 import { BinReader } from '../SceneTree/BinReader'
 /**
@@ -27,6 +26,7 @@ class Vec4 {
    */
 
   __data: Float32Array | Uint32Array | Int32Array
+
   constructor(x: number | Float32Array | ArrayBuffer = 0, y = 0, z = 0, t = 0) {
     if (x instanceof Float32Array || x instanceof Uint32Array) {
       this.__data = x
@@ -505,7 +505,7 @@ class Vec4 {
    *
    * @return {Float32Array | Uint32Array} - Returns as an array.
    */
-  asArray(): Float32Array | Uint32Array {
+  asArray(): Float32Array | Uint32Array | Int32Array {
     return this.__data
   }
 
@@ -612,7 +612,5 @@ class Vec4 {
     return true
   }
 }
-
-// Registry.register('Vec4', Vec4)
 
 export { Vec4 }

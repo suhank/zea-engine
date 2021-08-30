@@ -1,4 +1,3 @@
-import { Registry, TypeDefinition } from '../Registry'
 import { Vec2 } from './Vec2'
 import { BinReader } from '../SceneTree/BinReader'
 
@@ -685,7 +684,5 @@ class Vec3 {
     return true
   }
 }
-
-Registry.registerMathType('Vec3', new TypeDefinition(12, 4))
 
 export { Vec3 }
