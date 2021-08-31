@@ -14,7 +14,6 @@ class OperatorInput extends EventEmitter {
 
     this.__name = name
     this._param = undefined
-    // this._paramValueChanged = this._paramValueChanged.bind(this)
   }
 
   /**
@@ -150,7 +149,7 @@ class OperatorInput extends EventEmitter {
     // Once operators have persistent connections,
     // we will simply uninstall the output from the parameter.
     if (this._param) {
-      this._param.off('valueChanged', this._paramValueChanged)
+      this.__value.removeListenerById('valueChanged', this.listenerIDs['valueChanged'])
     }
   }
 

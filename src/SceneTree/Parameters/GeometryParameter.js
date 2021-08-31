@@ -108,7 +108,7 @@ class GeometryParameter extends Parameter {
     // e.g. freeing GPU Memory.
 
     if (this.__value) {
-      this.__value.off('boundingBoxChanged', this.__emitBoundingBoxDirtied)
+      this.__value.removeListenerById('boundingBoxChanged', this.listenerIDs['boundingBoxChanged'])
     }
   }
 }

@@ -133,7 +133,12 @@ class BaseGroup extends TreeItem {
     const listenerIDs = this.__itemsEventHandlers[index]
     // eslint-disable-next-line guard-for-in
     for (key in listenerIDs) {
-      childItem.removeListenerById(key, listenerIDs[key])
+      const parts = key.split('.')
+      if (parts.length > 1) {
+        childItem.getParameter(parts[0]).removeListenerById(parts[1], listenerIDs[key])
+      } else {
+        childItem.removeListenerById(key, listenerIDs[key])
+      }
     }
     this.__itemsEventHandlers.splice(index, 1)
   }

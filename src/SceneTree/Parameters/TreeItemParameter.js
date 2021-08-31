@@ -29,7 +29,6 @@ class TreeItemParameter extends Parameter {
   constructor(name, filterFn = undefined) {
     super(name, undefined, 'TreeItem')
     this.__filterFn = filterFn
-    this.__emitTreeItemGlobalXfoChanged = this.__emitTreeItemGlobalXfoChanged.bind(this)
   }
 
   __emitTreeItemGlobalXfoChanged(event) {
@@ -81,11 +80,13 @@ class TreeItemParameter extends Parameter {
     if (this.__filterFn && !this.__filterFn(treeItem)) return false
     if (this.__value !== treeItem) {
       if (this.__value) {
-        this.__value.off('globalXfoChanged', this.__emitTreeItemGlobalXfoChanged)
+        this.__value.removeListenerById('globalXfoChanged', this.listenerIDs['globalXfoChanged'])
       }
       this.__value = treeItem
       if (this.__value) {
-        this.__value.on('globalXfoChanged', this.__emitTreeItemGlobalXfoChanged)
+        this.listenerIDs['globalXfoChanged'] = this.__value.on('globalXfoChanged', (event) => {
+          this.__emitTreeItemGlobalXfoChanged(event)
+        })
       }
 
       this.emit('valueChanged', {})
@@ -149,7 +150,7 @@ class TreeItemParameter extends Parameter {
    */
   destroy() {
     if (this.__value) {
-      this.__value.off('globalXfoChanged', this.__emitTreeItemGlobalXfoChanged)
+      this.__value.removeListenerById('globalXfoChanged', this.listenerIDs['globalXfoChanged'])
     }
   }
 }

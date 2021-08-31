@@ -45,11 +45,6 @@ class Parameter extends EventEmitter {
     this.__boundOps = []
     this.__dirtyOpIndex = 0
     this.__cleaning = false
-
-    this.getName = this.getName.bind(this)
-    this.setName = this.setName.bind(this)
-    this.getValue = this.getValue.bind(this)
-    this.setValue = this.setValue.bind(this)
   }
 
   /**
