@@ -54,12 +54,6 @@ class TreeItem extends BaseItem {
     this.__childItemsEventHandlers = []
     this.__childItemsMapping = {}
 
-    this.onPointerDown = this.onPointerDown.bind(this)
-    this.onPointerUp = this.onPointerUp.bind(this)
-    this.onPointerMove = this.onPointerMove.bind(this)
-    this.onPointerEnter = this.onPointerEnter.bind(this)
-    this.onPointerLeave = this.onPointerLeave.bind(this)
-
     // /////////////////////////////////////
     // Add parameters.
 
@@ -67,10 +61,6 @@ class TreeItem extends BaseItem {
     this.__localXfoParam = this.addParameter(new XfoParameter('LocalXfo', new Xfo()))
     this.__globalXfoParam = this.addParameter(new XfoParameter('GlobalXfo', new Xfo()))
     this.__boundingBoxParam = this.addParameter(new BoundingBoxParameter('BoundingBox', this))
-
-    // Bind handlers
-    this._setBoundingBoxDirty = this._setBoundingBoxDirty.bind(this)
-    this._childNameChanged = this._childNameChanged.bind(this)
 
     this.globalXfoOp = new CalcGlobalXfoOperator(this.__globalXfoParam, this.__localXfoParam)
     this.__globalXfoParam.on('valueChanged', (event) => {
@@ -527,7 +517,10 @@ class TreeItem extends BaseItem {
       throw new Error('Object is is not a tree item :' + childItem.constructor.name)
     }
 
-    childItem.on('nameChanged', this._childNameChanged)
+    const listenerIDs = {}
+    listenerIDs['nameChanged'] = childItem.on('nameChanged', (event) => {
+      this._childNameChanged(event)
+    })
 
     let newLocalXfo
     if (childItem instanceof TreeItem) {
@@ -536,11 +529,17 @@ class TreeItem extends BaseItem {
         const childGlobalXfo = childItem.getParameter('GlobalXfo').getValue()
         newLocalXfo = globalXfo.inverse().multiply(childGlobalXfo)
       }
-      childItem.on('boundingChanged', this._setBoundingBoxDirty)
-      childItem.on('visibilityChanged', this._setBoundingBoxDirty)
+
+      listenerIDs['boundingChanged'] = childItem.on('boundingChanged', (event) => {
+        this._setBoundingBoxDirty(event)
+      })
+      listenerIDs['visibilityChanged'] = childItem.on('visibilityChanged', (event) => {
+        this._setBoundingBoxDirty(event)
+      })
     }
 
     this.__childItems.splice(index, 0, childItem)
+    this.__childItemsEventHandlers.splice(index, 0, listenerIDs)
     this.__childItemsMapping[childItem.getName()] = index
     this.__updateMapping(index)
 
@@ -629,11 +628,10 @@ class TreeItem extends BaseItem {
    * @private
    */
   __unbindChild(index, childItem) {
-    childItem.off('nameChanged', this._childNameChanged)
-
-    if (childItem instanceof TreeItem) {
-      childItem.off('boundingChanged', this._setBoundingBoxDirty)
-      childItem.off('visibilityChanged', this._setBoundingBoxDirty)
+    const listenerIDs = this.__childItemsEventHandlers[index]
+    // eslint-disable-next-line guard-for-in
+    for (key in listenerIDs) {
+      childItem.removeListenerById(key, listenerIDs[key])
     }
 
     this.__childItems.splice(index, 1)

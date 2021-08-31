@@ -31,6 +31,8 @@ class BaseGroup extends TreeItem {
     this.__itemsParam.on('itemRemoved', (event) => {
       this.__unbindItem(event.item, event.index)
     })
+
+    this.__itemsEventHandlers = []
   }
 
   // ////////////////////////////////////////
@@ -98,11 +100,25 @@ class BaseGroup extends TreeItem {
    */
   __bindItem(item, index) {
     if (!(item instanceof TreeItem)) return
-    item.on('pointerDown', this.onPointerDown)
-    item.on('pointerUp', this.onPointerUp)
-    item.on('pointerMove', this.onPointerMove)
-    item.on('pointerEnter', this.onPointerEnter)
-    item.on('pointerLeave', this.onPointerLeave)
+
+    const listenerIDs = {}
+    listenerIDs['pointerDown'] = childItem.on('pointerDown', (event) => {
+      this.onPointerDown(event)
+    })
+    listenerIDs['pointerUp'] = childItem.on('pointerUp', (event) => {
+      this.onPointerUp(event)
+    })
+    listenerIDs['pointerMove'] = childItem.on('pointerMove', (event) => {
+      this.onPointerMove(event)
+    })
+    listenerIDs['pointerEnter'] = childItem.on('pointerEnter', (event) => {
+      this.onPointerEnter(event)
+    })
+    listenerIDs['pointerLeave'] = childItem.on('pointerLeave', (event) => {
+      this.onPointerLeave(event)
+    })
+
+    this.__itemsEventHandlers.splice(index, 0, listenerIDs)
   }
 
   /**
@@ -113,11 +129,13 @@ class BaseGroup extends TreeItem {
    */
   __unbindItem(item, index) {
     if (!(item instanceof TreeItem)) return
-    item.off('pointerDown', this.onPointerDown)
-    item.off('pointerUp', this.onPointerUp)
-    item.off('pointerMove', this.onPointerMove)
-    item.off('pointerEnter', this.onPointerEnter)
-    item.off('pointerLeave', this.onPointerLeave)
+
+    const listenerIDs = this.__itemsEventHandlers[index]
+    // eslint-disable-next-line guard-for-in
+    for (key in listenerIDs) {
+      childItem.removeListenerById(key, listenerIDs[key])
+    }
+    this.__itemsEventHandlers.splice(index, 1)
   }
 
   /**
