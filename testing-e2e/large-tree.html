@@ -70,14 +70,14 @@
       const canvas = document.querySelector('#renderer')
 
       const scene = new Scene()
-      // const renderer = new GLRenderer(canvas, { debugGeomIds: false, antialias: false })
+      const renderer = new GLRenderer(canvas, { debugGeomIds: false, antialias: false })
       // renderer.setScene(scene)
-      // renderer.outlineThickness = 0.5
-      // renderer.outlineColor = new Color(0.2, 0.2, 0.2, 1)
-      // scene.getSettings().getParameter('BackgroundColor').setValue(new Color(0.85, 0.85, 0.85, 1))
-      // renderer.getViewport().debugGeomShader = urlParams.has('debugGeomShader')
+      renderer.outlineThickness = 0.5
+      renderer.outlineColor = new Color(0.2, 0.2, 0.2, 1)
+      scene.getSettings().getParameter('BackgroundColor').setValue(new Color(0.85, 0.85, 0.85, 1))
+      renderer.getViewport().debugGeomShader = urlParams.has('debugGeomShader')
 
-      // renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-2, -2, 2.7), new Vec3(0, 0, 3))
+      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-2, -2, 2.7), new Vec3(0, 0, 3))
 
       /** LOAD ASSETS START */
       const { CADAsset, CADBody } = window.zeaCad
@@ -108,13 +108,16 @@
       function createAndDestroyCadAsset(index) {
         const cadAsset = new CADAsset()
         cadAsset.load('data/hospital/Autodesk_Hospital_Structural.zcad')
-        // scene.getRoot().addChild(cadAsset)
+        scene.getRoot().addChild(cadAsset)
         cadAsset.getGeometryLibrary().once('loaded', () => {
           // renderer.once('redrawOccurred', () => {
           console.log('loaded/deleted', index)
-          // scene.getRoot().removeChildByHandle(cadAsset)
-          if (index > 0) createAndDestroyCadAsset(index - 1)
-          else {
+          scene.getRoot().removeChildByHandle(cadAsset)
+          if (index > 0) {
+            setTimeout(() => {
+              createAndDestroyCadAsset(index - 1)
+            }, 2000)
+          } else {
             GeomLibrary.shutDownWorkers()
             resourceLoader.plugins['archive'].shutDownWorkers()
           }
@@ -122,8 +125,10 @@
           // })
         })
       }
-
-      createAndDestroyCadAsset(2)
+      // createAndDestroyCadAsset(0)
+      renderer.getViewport().on('pointerUp', () => {
+        createAndDestroyCadAsset(0)
+      })
 
       const postMessage = (msg) => {
         console.log(msg)
