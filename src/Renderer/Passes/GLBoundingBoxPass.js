@@ -1,3 +1,4 @@
+/* eslint-disable valid-jsdoc */
 import { Color, Vec3, Vec4 } from '../../Math/index'
 import { LinesCuboid, TreeItem } from '../../SceneTree/index'
 import { BoundingBoxShader } from '../Shaders/BoundingBoxShader.js'
@@ -26,8 +27,6 @@ class GLBoundingBoxPass extends GLPass {
     this.indexArrayUpdateNeeded = false
     this.__updateRequested = false
 
-    this.__childItemAdded = this.__childItemAdded.bind(this)
-    this.__childItemRemoved = this.__childItemRemoved.bind(this)
   }
 
   /**
@@ -104,25 +103,13 @@ class GLBoundingBoxPass extends GLPass {
         if (childItem) this.addTreeItem(childItem)
       }
 
-      treeItem.on('childAdded', this.__childItemAdded)
-      treeItem.on('childRemoved', this.__childItemRemoved)
+      treeItem.on('childAdded', (event) => {
+        this.addTreeItem(event.childItem)
+      })
+      treeItem.on('childRemoved', (event) => {
+        this.unbindTreeItem(event.childItem)
+      })
     }
-  }
-
-  /**
-   * @param {*} event -
-   * @private
-   */
-  __childItemAdded(event) {
-    this.addTreeItem(event.childItem)
-  }
-
-  /**
-   * @param {*} event -
-   * @private
-   */
-  __childItemRemoved(event) {
-    this.unbindTreeItem(event.childItem)
   }
 
   /**
