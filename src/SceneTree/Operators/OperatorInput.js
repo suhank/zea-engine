@@ -10,9 +10,11 @@ class OperatorInput extends EventEmitter {
    */
   constructor(name) {
     super()
+    this.listenerIDs = {}
+
     this.__name = name
     this._param = undefined
-    this._paramValueChanged = this._paramValueChanged.bind(this)
+    // this._paramValueChanged = this._paramValueChanged.bind(this)
   }
 
   /**
@@ -70,11 +72,13 @@ class OperatorInput extends EventEmitter {
    */
   setParam(param) {
     if (this._param) {
-      this._param.off('valueChanged', this._paramValueChanged)
+      this._param.removeListenerById('valueChanged', this.listenerIDs['valueChanged'])
     }
     this._param = param
     if (this._param) {
-      this._param.on('valueChanged', this._paramValueChanged)
+      this.listenerIDs['valueChanged'] = this._param.on('valueChanged', (event) => {
+        this._paramValueChanged(event)
+      })
     }
     this.emit('paramSet', { param: this._param })
   }
@@ -156,7 +160,9 @@ class OperatorInput extends EventEmitter {
   reattach() {
     this.detached = false
     if (this._param) {
-      this._param.on('valueChanged', this._paramValueChanged)
+      this.listenerIDs['valueChanged'] = this._param.on('valueChanged', (event) => {
+        this._paramValueChanged(event)
+      })
     }
   }
 }
