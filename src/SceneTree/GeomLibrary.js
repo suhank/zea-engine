@@ -49,6 +49,8 @@ class GeomLibrary extends EventEmitter {
    */
   constructor() {
     super()
+    this.listenerIDs = {}
+
     this.__streamInfos = {}
     this.__genBuffersOpts = {}
 
@@ -63,7 +65,7 @@ class GeomLibrary extends EventEmitter {
       }
     })
 
-    this.__receiveGeomDatas = this.__receiveGeomDatas.bind(this)
+    // this.__receiveGeomDatas = this.__receiveGeomDatas.bind(this)
 
     // if (multiThreadParsing) {
     //   for (let i = 0; i < numCores; i++) {
@@ -115,11 +117,11 @@ class GeomLibrary extends EventEmitter {
         const streamFileParsed = (event) => {
           if (event.geomFileID == geomFileID) {
             resourceLoader.incrementWorkDone(1)
-            this.off('streamFileParsed', streamFileParsed)
+            this.removeListenerById('streamFileParsed', this.listenerIDs['streamFileParsed'])
             resolve()
           }
         }
-        this.on('streamFileParsed', streamFileParsed)
+        listenerIDs['streamFileParsed'] = this.on('streamFileParsed', streamFileParsed)
 
         if (this.loadCount < numCores) {
           this.loadCount++
@@ -256,7 +258,9 @@ class GeomLibrary extends EventEmitter {
 
         // ////////////////////////////////////////////
         // Multi Threaded Parsing
-        getWorker(this.getId(), this.__receiveGeomDatas).postMessage(
+        getWorker(this.getId(), (data) => {
+          this.__receiveGeomDatas(data)
+        }).postMessage(
           {
             geomLibraryId: this.getId(),
             geomFileID,
