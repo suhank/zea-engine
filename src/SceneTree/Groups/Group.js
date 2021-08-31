@@ -51,7 +51,6 @@ class Group extends BaseGroup {
    */
   constructor(name) {
     super(name)
-
     // Items which can be constructed by a user (not loaded in binary data.)
     this.groupXfoDirty = false
     this.calculatingGroupXfo = false
@@ -62,30 +61,38 @@ class Group extends BaseGroup {
     this.__initialXfoModeParam = this.addParameter(
       new MultiChoiceParameter('InitialXfoMode', GROUP_XFO_MODES.average, ['manual', 'first', 'average', 'global'])
     )
-    this.__initialXfoModeParam.on('valueChanged', () => {
+    this.__initialXfoModeParam.on('valueChanged', (event) => {
       this.calcGroupXfo()
     })
 
     this.__highlightedParam = this.addParameter(new BooleanParameter('Highlighted', false))
-    this.__highlightedParam.on('valueChanged', () => {
+    this.__highlightedParam.on('valueChanged', (event) => {
       this.__updateHighlight()
     })
 
-    this.__updateHighlight = this.__updateHighlight.bind(this)
     const highlightColorParam = this.addParameter(new ColorParameter('HighlightColor', new Color(0.5, 0.5, 1)))
-    highlightColorParam.on('valueChanged', this.__updateHighlight)
+    highlightColorParam.on('valueChanged', (event) => {
+      this.__updateHighlight()
+    })
     const highlightFillParam = this.addParameter(new NumberParameter('HighlightFill', 0.0, [0, 1]))
-    highlightFillParam.on('valueChanged', this.__updateHighlight)
+    highlightFillParam.on('valueChanged', (event) => {
+      this.__updateHighlight()
+    })
 
     this.__materialParam = this.addParameter(new MaterialParameter('Material'))
-    this.__materialParam.on('valueChanged', () => {
+    this.__materialParam.on('valueChanged', (event) => {
       this.__updateMaterial()
     })
 
-    this.__updateCutaway = this.__updateCutaway.bind(this)
-    this.addParameter(new BooleanParameter('CutAwayEnabled', false)).on('valueChanged', this.__updateCutaway)
-    this.addParameter(new Vec3Parameter('CutPlaneNormal', new Vec3(1, 0, 0))).on('valueChanged', this.__updateCutaway)
-    this.addParameter(new NumberParameter('CutPlaneDist', 0.0)).on('valueChanged', this.__updateCutaway)
+    this.addParameter(new BooleanParameter('CutAwayEnabled', false)).on('valueChanged', (event) => {
+      this.__updateCutaway()
+    })
+    this.addParameter(new Vec3Parameter('CutPlaneNormal', new Vec3(1, 0, 0))).on('valueChanged', (event) => {
+      this.__updateCutaway()
+    })
+    this.addParameter(new NumberParameter('CutPlaneDist', 0.0)).on('valueChanged', (event) => {
+      this.__updateCutaway()
+    })
 
     const groupTransformParam = this.addParameter(new XfoParameter('GroupTransform', new Xfo()))
     this.groupTransformOp = new GroupTransformXfoOperator(this.getParameter('GlobalXfo'), groupTransformParam)
@@ -358,7 +365,7 @@ class Group extends BaseGroup {
   __bindItem(item, index) {
     super.__bindItem(item, index)
     if (!(item instanceof TreeItem)) return
-
+    const listenerIDs = this.__itemsEventHandlers[index]
     // ///////////////////////////////
     // Update the Material
     const material = this.getParameter('Material').getValue()
@@ -415,7 +422,9 @@ class Group extends BaseGroup {
       const memberXfoOp = new GroupMemberXfoOperator(this.getParameter('GroupTransform'), memberGlobalXfoParam)
       this.memberXfoOps.splice(index, 0, memberXfoOp)
 
-      item.getParameter('BoundingBox').on('valueChanged', this._setBoundingBoxDirty)
+      listenerIDs['valueChanged'] = item.getParameter('BoundingBox').on('valueChanged', (event) => {
+        this._setBoundingBoxDirty(event)
+      })
       this._bindXfoDirty = true
     }
   }
@@ -454,7 +463,7 @@ class Group extends BaseGroup {
       this.memberXfoOps[index].detach()
       this.memberXfoOps.splice(index, 1)
       this._setBoundingBoxDirty()
-      item.getParameter('BoundingBox').off('valueChanged', this._setBoundingBoxDirty)
+      item.getParameter('BoundingBox').removeListenerById('valueChanged', this.listenerIDs['valueChanged'])
       this._bindXfoDirty = true
     }
   }
