@@ -102,19 +102,19 @@ class BaseGroup extends TreeItem {
     if (!(item instanceof TreeItem)) return
 
     const listenerIDs = {}
-    listenerIDs['pointerDown'] = childItem.on('pointerDown', (event) => {
+    listenerIDs['pointerDown'] = item.on('pointerDown', (event) => {
       this.onPointerDown(event)
     })
-    listenerIDs['pointerUp'] = childItem.on('pointerUp', (event) => {
+    listenerIDs['pointerUp'] = item.on('pointerUp', (event) => {
       this.onPointerUp(event)
     })
-    listenerIDs['pointerMove'] = childItem.on('pointerMove', (event) => {
+    listenerIDs['pointerMove'] = item.on('pointerMove', (event) => {
       this.onPointerMove(event)
     })
-    listenerIDs['pointerEnter'] = childItem.on('pointerEnter', (event) => {
+    listenerIDs['pointerEnter'] = item.on('pointerEnter', (event) => {
       this.onPointerEnter(event)
     })
-    listenerIDs['pointerLeave'] = childItem.on('pointerLeave', (event) => {
+    listenerIDs['pointerLeave'] = item.on('pointerLeave', (event) => {
       this.onPointerLeave(event)
     })
 

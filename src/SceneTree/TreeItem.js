@@ -628,7 +628,7 @@ class TreeItem extends BaseItem {
   __unbindChild(index, childItem) {
     const listenerIDs = this.__childItemsEventHandlers[index]
     // eslint-disable-next-line guard-for-in
-    for (key in listenerIDs) {
+    for (const key in listenerIDs) {
       childItem.removeListenerById(key, listenerIDs[key])
     }
 

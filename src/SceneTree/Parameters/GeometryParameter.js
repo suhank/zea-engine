@@ -13,10 +13,8 @@ class GeometryParameter extends Parameter {
    */
   constructor(name, value) {
     super(name, undefined, 'Geometry')
-
-    this.setValue(value)
-
     this.listenerIDs = {}
+    this.setValue(value)
   }
 
   // eslint-disable-next-line require-jsdoc
