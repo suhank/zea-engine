@@ -329,7 +329,9 @@ class GeomItem extends BaseGeomItem {
     // Note: deprecated value. Not sure if we need to load this here.
     // I think not, but need to test first.
     if (context.versions['zea-engine'].compare([3, 0, 0]) < 0) {
-      // const lightmapCoordOffset = reader.loadFloat32Vec2()
+      // Load the 'lightmapCoordOffset' value which we no longer use.
+      // Note: we need to load it to increment the file pointer.
+      reader.loadFloat32Vec2()
     } else {
       this.geomBBox = new Box3(reader.loadFloat32Vec3(), reader.loadFloat32Vec3())
     }
