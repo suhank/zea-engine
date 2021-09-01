@@ -292,10 +292,10 @@ class GeomItem extends BaseGeomItem {
           const geom = geomLibrary.getGeom(geomIndex)
           if (geom) this.getParameter('Geometry').setValue(geom)
           else console.warn('Geom not loaded:', this.getName())
-          geomLibrary.removeListenerById('rangeLoaded', this.listenerIDs['rangeLoaded'])
+          geomLibrary.removeListenerById('rangeLoaded', onGeomLoadedListenerID)
         }
       }
-      this.listenerIDs['rangeLoaded'] = geomLibrary.on('rangeLoaded', onGeomLoaded)
+      const onGeomLoadedListenerID = geomLibrary.on('rangeLoaded', onGeomLoaded)
     }
 
     // this.setVisibility(j.visibility);
