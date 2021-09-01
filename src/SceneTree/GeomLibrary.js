@@ -105,15 +105,18 @@ class GeomLibrary extends EventEmitter {
    * @return {Promise} the promise resolves once the file is loaded, but not parsed.
    */
   loadGeomFile(geomFileID, incrementProgress = false) {
+    console.log('load geom file', geomFileID)
     if (incrementProgress) resourceLoader.incrementWorkload(1)
     return new Promise((resolve) => {
       const geomFileUrl = this.basePath + geomFileID + '.zgeoms'
 
       resourceLoader.loadFile('archive', geomFileUrl).then((entries) => {
+        console.log('geom file loaded ', geomFileID)
         const geomsData = entries[Object.keys(entries)[0]]
 
         const streamFileParsedListenerID = this.on('streamFileParsed', (event) => {
           if (event.geomFileID == geomFileID) {
+            // console.log('load geom file ', geomFileID, 'streamFileParsedListenerID: ', streamFileParsedListenerID)
             resourceLoader.incrementWorkDone(1)
             this.removeListenerById('streamFileParsed', streamFileParsedListenerID)
             resolve()
@@ -333,6 +336,7 @@ class GeomLibrary extends EventEmitter {
     // geomsRange: the range of geoms in the bin file.
     const offset = geomIndexOffset + geomsRange[0]
     const storedRange = [offset, geomIndexOffset + geomsRange[1]]
+    // console.log('__receiveGeomDatas ', geomFileID, ' range: ', geomsRange)
 
     for (let i = 0; i < geomDatas.length; i++) {
       const geomData = geomDatas[i]

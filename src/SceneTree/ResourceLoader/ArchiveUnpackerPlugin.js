@@ -97,6 +97,7 @@ class ArchiveUnpackerPlugin {
    * @return {Promise} - The promise value.
    */
   loadFile(url) {
+    console.log('loadFile: ', url)
     this.resourceLoader.incrementWorkload(1) //  start loading.
 
     const promise = new Promise(
@@ -105,6 +106,7 @@ class ArchiveUnpackerPlugin {
         this.__callbacks[url].push(resolve)
         fetch(url)
           .then((response) => {
+            console.log('reached here ')
             this.resourceLoader.incrementWorkDone(1) // done loading
             if (checkStatus(response)) return response.arrayBuffer()
             else {
@@ -112,6 +114,7 @@ class ArchiveUnpackerPlugin {
             }
           })
           .then((buffer) => {
+            console.log('reached here buffer ', url)
             const resourceId = url
             if (!(resourceId in this.__callbacks)) this.__callbacks[resourceId] = []
             this.__callbacks[resourceId].push(resolve)
@@ -138,6 +141,7 @@ class ArchiveUnpackerPlugin {
    */
   __onFinishedReceiveFileData(fileData) {
     const resourceId = fileData.resourceId
+    console.log('__onFinishedReceiveFileData ', resourceId)
     const callbacks = this.__callbacks[resourceId]
     if (callbacks) {
       for (const callback of callbacks) {
