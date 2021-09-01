@@ -48,8 +48,6 @@ class GeomLibrary extends EventEmitter {
    */
   constructor() {
     super()
-    this.listenerIDs = {}
-
     this.__streamInfos = {}
     this.__genBuffersOpts = {}
 
