@@ -77,7 +77,7 @@
       scene.getSettings().getParameter('BackgroundColor').setValue(new Color(0.85, 0.85, 0.85, 1))
       renderer.getViewport().debugGeomShader = urlParams.has('debugGeomShader')
 
-      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-2, -2, 2.7), new Vec3(0, 0, 3))
+      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-2, -2, 2.7), new Vec3(40, 90, 3))
 
       /** LOAD ASSETS START */
       const { CADAsset, CADBody } = window.zeaCad
@@ -110,25 +110,16 @@
         cadAsset.load('data/hospital/Autodesk_Hospital_Structural.zcad')
         scene.getRoot().addChild(cadAsset)
         cadAsset.getGeometryLibrary().once('loaded', () => {
-          // renderer.once('redrawOccurred', () => {
           console.log('loaded/deleted', index)
           scene.getRoot().removeChildByHandle(cadAsset)
           if (index > 0) {
             setTimeout(() => {
               createAndDestroyCadAsset(index - 1)
             }, 2000)
-          } else {
-            GeomLibrary.shutDownWorkers()
-            resourceLoader.plugins['archive'].shutDownWorkers()
           }
-
-          // })
         })
       }
-      // createAndDestroyCadAsset(0)
-      renderer.getViewport().on('pointerUp', () => {
-        createAndDestroyCadAsset(0)
-      })
+      createAndDestroyCadAsset(1)
 
       const postMessage = (msg) => {
         console.log(msg)
