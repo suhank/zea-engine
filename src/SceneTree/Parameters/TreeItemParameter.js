@@ -29,6 +29,7 @@ class TreeItemParameter extends Parameter {
   constructor(name, filterFn = undefined) {
     super(name, undefined, 'TreeItem')
     this.__filterFn = filterFn
+    this.listenerIDs = {}
   }
 
   __emitTreeItemGlobalXfoChanged(event) {

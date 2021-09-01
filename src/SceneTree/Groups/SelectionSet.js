@@ -24,6 +24,8 @@ class SelectionSet extends BaseGroup {
   constructor(name) {
     super(name)
 
+    this.listenerIDs = {}
+
     this.__highlightedParam = this.addParameter(new BooleanParameter('Highlighted', false))
     this.__highlightedParam.on('valueChanged', () => {
       this.__updateHighlight()

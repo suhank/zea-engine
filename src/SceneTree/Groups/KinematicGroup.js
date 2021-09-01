@@ -33,7 +33,6 @@ class KinematicGroup extends BaseGroup {
    */
   constructor(name) {
     super(name)
-
     // Items which can be constructed by a user (not loaded in binary data.)
     this.calculatingGroupXfo = false
     this.memberXfoOps = []
@@ -180,7 +179,7 @@ class KinematicGroup extends BaseGroup {
    */
   __bindItem(item, index) {
     if (!(item instanceof TreeItem)) return
-    const listenerIDs = this.__itemsEventHandlers[index]
+
     // ///////////////////////////////
     // Update the highlight
     if (this.isSelected()) {
@@ -195,6 +194,8 @@ class KinematicGroup extends BaseGroup {
       const memberXfoOp = new GroupMemberXfoOperator(this.getParameter('GroupTransform'), memberGlobalXfoParam)
       this.memberXfoOps.splice(index, 0, memberXfoOp)
 
+      if (!this.__itemsEventHandlers[index]) this.__itemsEventHandlers[index] = {} // initialize
+      const listenerIDs = this.__itemsEventHandlers[index]
       listenerIDs['BoundingBox.valueChanged'] = item.getParameter('BoundingBox').on('valueChanged', (event) => {
         this._setBoundingBoxDirty()
       })
