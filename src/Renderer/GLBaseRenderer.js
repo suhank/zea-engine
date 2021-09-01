@@ -55,7 +55,6 @@ class GLBaseRenderer extends ParameterOwner {
 
     this.__xrViewportPresenting = false
 
-
     this.setupWebGL($canvas, options.webglOptions ? { ...options, ...options.webglOptions } : options)
     this.bindEventHandlers()
     this.addViewport('main')
@@ -72,7 +71,7 @@ class GLBaseRenderer extends ParameterOwner {
     this.glGeomItemLibrary.on('updated', () => {
       this.requestRedraw()
     })
-    s
+
     // eslint-disable-next-line guard-for-in
     for (const passType in registeredPasses) {
       for (const cls of registeredPasses[passType]) {
