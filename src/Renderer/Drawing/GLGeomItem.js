@@ -170,7 +170,7 @@ class GLGeomItem extends EventEmitter {
    * Users should never need to call this method directly.
    */
   destroy() {
-    this.geomItem.off('visibilityChanged', this.updateVisibility)
+    this.geomItem.removeListenerById('visibilityChanged', this.listenerIDs['visibilityChanged'])
     if (!this.supportInstancing) {
       this.geomItem.getParameter('GeomMat').removeListenerById('valueChanged', this.listenerIDs['GeomMat.valueChanged'])
       this.geomItem.removeListenerById('cutAwayChanged', this.listenerIDs['cutAwayChanged'])
