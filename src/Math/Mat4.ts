@@ -1,6 +1,5 @@
 import { Vec3 } from './Vec3'
 import { Mat3 } from './Mat3'
-import { Registry } from '../Registry'
 import { Vec4 } from './Vec4'
 import { BinReader } from '../SceneTree/BinReader'
 
@@ -30,7 +29,7 @@ class Mat4 {
    * @param {number} m32 - Row 3, column 2.
    * @param {number} m33 - Row 3, column 3.
    */
-  __data
+  __data: Float32Array
   constructor(
     m00: number | Float32Array | ArrayBuffer = 1,
     m01 = 0,
@@ -358,7 +357,7 @@ class Mat4 {
    * @return {Vec3} - Returns the `x` axis as a Vec3.
    */
   get xAxis(): Vec3 {
-    return Vec3.createFromBuffer(this.__data.buffer, 0)
+    return new Vec3(this.__data.buffer, 0)
   }
 
   /**
@@ -376,7 +375,7 @@ class Mat4 {
    * @return {Vec3} - Returns the `y` axis as a Vec3.
    */
   get yAxis(): Vec3 {
-    return Vec3.createFromBuffer(this.__data.buffer, 4 * 4)
+    return new Vec3(this.__data.buffer, 4 * 4)
   }
 
   /**
@@ -394,7 +393,7 @@ class Mat4 {
    * @return {Vec3} - Returns the `z` axis as a Vec3.
    */
   get zAxis(): Vec3 {
-    return Vec3.createFromBuffer(this.__data.buffer, 8 * 4)
+    return new Vec3(this.__data.buffer, 8 * 4)
   }
 
   /**
@@ -412,7 +411,7 @@ class Mat4 {
    * @return {Vec3} - Returns the translation.
    */
   get translation(): Vec3 {
-    return Vec3.createFromBuffer(this.__data.buffer, 12 * 4)
+    return new Vec3(this.__data.buffer, 12 * 4)
   }
 
   /**
@@ -602,7 +601,7 @@ class Mat4 {
    *
    * @return {Mat4} - Returns a new Mat4.
    */
-  inverse(): Mat4 | null {
+  inverse(): Mat4 {
     const a00 = this.__data[0]
     const a01 = this.__data[1]
     const a02 = this.__data[2]
@@ -638,7 +637,7 @@ class Mat4 {
 
     if (!det) {
       console.warn('Unable to invert Mat4')
-      return null
+      return this
     }
     det = 1.0 / det
 
@@ -1357,32 +1356,6 @@ class Mat4 {
   }
 
   /**
-   * Creates a new Mat4 to wrap existing memory in a buffer.
-   *
-   * @param {ArrayBuffer} buffer - The buffer value.
-   * @param {number} offset - The offset value.
-   * @return {Mat4} - Returns a new Mat4.
-   * @deprecated
-   * @private
-   */
-  static createFromFloat32Buffer(buffer: ArrayBuffer, offset = 0): Mat4 {
-    console.warn('Deprecated, use #createFromBuffer instead')
-    return this.createFromBuffer(buffer, offset * 4)
-  }
-
-  /**
-   * Creates an instance of a `Mat4` using an ArrayBuffer.
-   *
-   * @static
-   * @param {ArrayBuffer} buffer - The buffer value.
-   * @param {number} byteOffset - The offset value.
-   * @return {Mat4} - Returns a new Mat4.
-   */
-  static createFromBuffer(buffer: ArrayBuffer, byteOffset: number): Mat4 {
-    return new Mat4(new Float32Array(buffer, byteOffset, 16)) // 4 bytes per 32bit float
-  }
-
-  /**
    * Clones this Mat4 returning a new instance.
    *
    * @return {Mat4} - Returns a new Mat4.
@@ -1406,20 +1379,6 @@ class Mat4 {
       this.__data[14],
       this.__data[15]
     )
-  }
-
-  // ////////////////////////////////////////
-  // Static Methods
-
-  /**
-   * Creates a new Mat4.
-   * @param {...any[]} ...args - The ...args param.
-   * @return {Mat4} - Returns a new Mat4.
-   * @private
-   */
-
-  static create(...args: any[]): Mat4 {
-    return new Mat4(...args)
   }
 
   // ///////////////////////////
@@ -1461,7 +1420,5 @@ class Mat4 {
     return this.__data
   }
 }
-
-// Registry.register('Mat4', Mat4)
 
 export { Mat4 }

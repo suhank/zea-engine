@@ -3,7 +3,6 @@ import { Vec3 } from './Vec3'
 import { Mat3 } from './Mat3'
 import { Mat4 } from './Mat4'
 import { EulerAngles } from './EulerAngles'
-import { Registry } from '../Registry'
 import { BinReader } from '../SceneTree/BinReader'
 /**
  * Class representing a quaternion. Quaternions are used to represent 3 dimensional rotations.
@@ -25,7 +24,7 @@ class Quat {
    * @param {number} w - The w value. Default is 1.
    */
 
-  __data
+  __data: Float32Array
   constructor(x: number | ArrayBuffer = 0, y = 0, z = 0, w = 1) {
     if (x instanceof Float32Array) {
       this.__data = x
@@ -144,9 +143,9 @@ class Quat {
   /**
    * Sets the state of the Quat class using a Float32Array.
    *
-   * @param {Float32Array | Uint8Array | Uint32Array | Int32Array} float32Array - The float32Array value.
+   * @param {Float32Array} float32Array - The float32Array value.
    */
-  setDataArray(float32Array: Float32Array | Uint8Array | Uint32Array | Int32Array): void {
+  setDataArray(float32Array: Float32Array): void {
     this.__data = <Float32Array>float32Array // TODO: added cast
   }
 
@@ -1026,54 +1025,6 @@ class Quat {
     return result
   }
 
-  // ////////////////////////////////////////
-  // Static Methods
-
-  /**
-   * Creates a new Quat.
-   * @param {...args: any[]} ...args - The ...args param.
-   * @return {Quat} - Returns a new Quat.
-   * @private
-   */
-
-  static create(...args: any[]): Quat {
-    return new Quat(...args)
-  }
-
-  /**
-   * Creates a new Quat to wrap existing memory in a buffer.
-   * @param {ArrayBuffer} buffer - The buffer value.
-   * @param {number} offset - The offset value.
-   * @return {Quat} - Returns a new Quat.
-   * @deprecated
-   * @private
-   */
-  static createFromFloat32Buffer(buffer: ArrayBuffer, offset = 0): Quat {
-    console.warn('Deprecated, use #createFromBuffer instead')
-    return this.createFromBuffer(buffer, offset * 4)
-  }
-
-  /**
-   * Creates an instance of a `Quat` using an ArrayBuffer.
-   *
-   * @static
-   * @param {ArrayBuffer} buffer - The buffer value.
-   * @param {number} byteOffset - The offset value.
-   * @return {Quat} - Returns a new Quat.
-   */
-  static createFromBuffer(buffer: ArrayBuffer, byteOffset: number): Quat {
-    return new Quat(new Float32Array(buffer, byteOffset, 4)) // 4 bytes per 32bit float
-  }
-
-  /**
-   * Returns the number of Float32 elements used by this type. Used to calculate storage requirements for large arrays of this type.
-   * @return {number} - The return value.
-   * @private
-   */
-  static numElements(): number {
-    return 4
-  }
-
   /**
    * Clones this Quat and returns a new Quat.
    *
@@ -1096,7 +1047,7 @@ class Quat {
       x: this.x,
       y: this.y,
       z: this.z,
-      w: this.w,
+      w: this.w
     }
   }
 
@@ -1125,7 +1076,5 @@ class Quat {
     this.w = reader.loadFloat32()
   }
 }
-
-// Registry.register('Quat', Quat)
 
 export { Quat }

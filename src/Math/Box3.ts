@@ -3,9 +3,7 @@ import { MathFunctions } from '../Utilities/MathFunctions'
 import { Vec3 } from './Vec3'
 import { Mat4 } from './Mat4'
 import { SphereType } from './SphereType'
-import { Registry } from '../Registry'
 import { Xfo } from '../Math/index'
-import { Sphere } from '../SceneTree/Geometry/Shapes/Sphere'
 
 /**
  * Class representing a box in 3D space.
@@ -26,20 +24,21 @@ class Box3 {
    * @param {Vec3} p0 - A point representing the corners of a 3D box.
    * @param {Vec3} p1 - A point representing the corners of a 3D box.
    */
-  constructor(p0?: Vec3, p1?: Vec3) {
+  constructor(p0?: Vec3 | Float32Array, p1?: Vec3) {
     if (p0 instanceof Float32Array) {
-      this.setFromFloat32Array(p0)
-      return
-    }
-    if (p0 instanceof Vec3) {
-      this.p0 = p0
+      this.p0 = new Vec3(p0.buffer, p0.byteOffset)
+      this.p1 = new Vec3(p0.buffer, p0.byteOffset + 12)
     } else {
-      this.p0 = new Vec3(Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY)
-    }
-    if (p1 instanceof Vec3) {
-      this.p1 = p1
-    } else {
-      this.p1 = new Vec3(Number.NEGATIVE_INFINITY, Number.NEGATIVE_INFINITY, Number.NEGATIVE_INFINITY)
+      if (p0 instanceof Vec3) {
+        this.p0 = p0
+      } else {
+        this.p0 = new Vec3(Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY, Number.POSITIVE_INFINITY)
+      }
+      if (p1 instanceof Vec3) {
+        this.p1 = p1
+      } else {
+        this.p1 = new Vec3(Number.NEGATIVE_INFINITY, Number.NEGATIVE_INFINITY, Number.NEGATIVE_INFINITY)
+      }
     }
   }
 
@@ -149,7 +148,7 @@ class Box3 {
    *
    * @return {number} - Returns the distance.
    */
-  size(): number{
+  size(): number {
     return this.p1.distanceTo(this.p0)
   }
 
@@ -278,29 +277,6 @@ class Box3 {
   }
 
   // ////////////////////////////////////////
-  // Static Methods
-
-  /**
-   * Creates a new Box3.
-   * @param {...args: []} ...args - The ...args param.
-   * @return {Box3} - Returns a new Box3.
-   * @private
-   */
-
-  static create(...args: []): Box3 {
-    return new Box3(...args)
-  }
-
-  /**
-   * The sizeInBytes method.
-   * @return {number} - The return value.
-   * @private
-   */
-  static sizeInBytes(): number {
-    return 24
-  }
-
-  // ////////////////////////////////////////
   // Persistence
 
   /**
@@ -311,7 +287,7 @@ class Box3 {
   toJSON(): Record<string, Record<string, number>> {
     return {
       p0: this.p0.toJSON(),
-      p1: this.p1.toJSON(),
+      p1: this.p1.toJSON()
     }
   }
 
@@ -326,12 +302,12 @@ class Box3 {
     const p0 = {
       x: MathFunctions.isNumeric(j.p0.x) ? j.p0.x : Number.POSITIVE_INFINITY,
       y: MathFunctions.isNumeric(j.p0.y) ? j.p0.y : Number.POSITIVE_INFINITY,
-      z: MathFunctions.isNumeric(j.p0.z) ? j.p0.z : Number.POSITIVE_INFINITY,
+      z: MathFunctions.isNumeric(j.p0.z) ? j.p0.z : Number.POSITIVE_INFINITY
     }
     const p1 = {
       x: MathFunctions.isNumeric(j.p1.x) ? j.p1.x : Number.NEGATIVE_INFINITY,
       y: MathFunctions.isNumeric(j.p1.y) ? j.p1.y : Number.NEGATIVE_INFINITY,
-      z: MathFunctions.isNumeric(j.p1.z) ? j.p1.z : Number.NEGATIVE_INFINITY,
+      z: MathFunctions.isNumeric(j.p1.z) ? j.p1.z : Number.NEGATIVE_INFINITY
     }
     this.p0.fromJSON(p0)
     this.p1.fromJSON(p1)
@@ -357,7 +333,5 @@ class Box3 {
     return StringFunctions.stringifyJSONWithFixedPrecision(this.toJSON())
   }
 }
-
-// Registry.register('Box3', Box3)
 
 export { Box3 }

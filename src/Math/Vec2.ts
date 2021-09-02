@@ -469,66 +469,6 @@ class Vec2 {
     return this.__data
   }
 
-  // ////////////////////////////////////////
-  // Static Methods
-
-  /**
-   * Creates a new Vec2.
-   * @see `new Vec2`
-   *
-   * @param {...object} ...args - The ...args param.
-   * @return {Vec2} - Returns a new Vec2.
-   * @private
-   */
-
-  // static create(...args: any[]): Vec2 {
-  //   return new Vec2(...args)
-  // }
-
-  /**
-   * Creates a new Vec2 to wrap existing memory in a buffer.
-   * @param {ArrayBuffer} buffer - The buffer value.
-   * @param {number} offset - The offset value.
-   * @return {Vec2} - Returns a new Vec2.
-   * @deprecated
-   * @private
-   */
-  static createFromFloat32Buffer(buffer: ArrayBuffer, offset = 0): Vec2 {
-    console.warn('Deprecated, use #createFromBuffer instead')
-    return this.createFromBuffer(buffer, offset * 4)
-  }
-
-  /**
-   * Creates an instance of a `Vec2` using an ArrayBuffer.
-   *
-   * @static
-   * @param {ArrayBuffer} buffer - The buffer value.
-   * @param {number} byteOffset - The offset value.
-   * @return {Vec2} - Returns a new Vec2.
-   */
-  static createFromBuffer(buffer: ArrayBuffer, byteOffset: number): Vec2 {
-    return new Vec2(new Float32Array(buffer, byteOffset, 2)) // 4 bytes per 32bit float
-  }
-
-  /**
-   * The createFromFloat32Array method.
-   * @param {Float32Array} array - The array value.
-   * @return {Vec2} - Returns a new Vec2.
-   * @private
-   */
-  static createFromFloat32Array(array: Float32Array): Vec2 {
-    return new Vec2(array)
-  }
-
-  /**
-   * Returns the number of Float32 elements used by this type. Used to calculate storage requirements for large arrays of this type.
-   * @return {number} - The return value.
-   * @private
-   */
-  static numElements(): number {
-    return 2
-  }
-
   // ///////////////////////////
   // Persistence
 

@@ -1,6 +1,5 @@
 import { StringFunctions } from '../Utilities/StringFunctions'
 import { Vec2 } from './Vec2'
-import { Registry } from '../Registry'
 
 /**
  * Represents a box in 2D space. Needing two Vec2 vectors describing the corners
@@ -115,20 +114,6 @@ class Box2 {
   }
 
   // ////////////////////////////////////////
-  // Static Methods
-
-  /**
-   * Creates a new Box2.
-   * @param {...object} ...args - The ...args param.
-   * @return {Box2} - Returns a new Box2.
-   * @private
-   */
-
-  static create(...args: []): Box2 {
-    return new Box2(...args)
-  }
-
-  // ////////////////////////////////////////
   // Persistence
 
   /**
@@ -153,7 +138,5 @@ class Box2 {
     return StringFunctions.stringifyJSONWithFixedPrecision(this.toJSON())
   }
 }
-
-// Registry.register('Box2', Box2)
 
 export { Box2 }

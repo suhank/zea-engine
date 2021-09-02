@@ -5,7 +5,7 @@
  */
 class EulerAngles {
   order: number
-  __data
+  __data: Float32Array
   /**
    * Create a euler angle. Receives the xyz values in radians and the order that the rotations are applied.
    * <br>
@@ -128,7 +128,7 @@ class EulerAngles {
       x: this.__data[0],
       y: this.__data[1],
       z: this.__data[2],
-      order: this.order
+      order: this.order,
     }
   }
 

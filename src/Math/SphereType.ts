@@ -1,6 +1,5 @@
 /* eslint-disable new-cap */
 import { StringFunctions } from '../Utilities/StringFunctions'
-import { Registry } from '../Registry'
 import { Vec3 } from './Vec3'
 import { Box3 } from './Box3'
 
@@ -68,23 +67,6 @@ class SphereType {
   toString(): string {
     return StringFunctions.stringifyJSONWithFixedPrecision(this.toJSON())
   }
-
-  // ////////////////////////////////////////
-  // Static Methods
-
-  /**
-   * Creates a new sphere.
-   *
-   * @param {...args: any[]} ...args - The ...args param.
-   * @return {SphereType} - Returns a new sphere.
-   * @private
-   */
-
-  static create(...args: any[]): SphereType {
-    return new SphereType(...args)
-  }
 }
-
-// Registry.register('SphereType', SphereType)
 
 export { SphereType }

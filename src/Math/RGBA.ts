@@ -533,54 +533,6 @@ class RGBA {
   }
 
   // ////////////////////////////////////////
-  // Static Methods
-
-  /**
-   * Creates a new RGBA color.
-   * @param {...args: any[]} ...args - The ...args param.
-   * @return {RGBA} - Returns a new RGBA.
-   * @private
-   */
-  static create(...args: any[]): RGBA {
-    return new RGBA(...args)
-  }
-
-  /**
-   * The createFromFloat32Buffer method.
-   *
-   * @param {ArrayBuffer} buffer - The buffer value.
-   * @param {number} offset - The offset value.
-   * @return {RGBA} - Returns a new color.
-   * @deprecated
-   * @private
-   */
-  static createFromFloat32Buffer(buffer: ArrayBuffer, offset = 0): RGBA {
-    console.warn('Deprecated, use #createFromBuffer instead')
-    return this.createFromBuffer(buffer, offset * 4)
-  }
-
-  /**
-   * Creates an instance of a `RGBA` using an ArrayBuffer.
-   *
-   * @static
-   * @param {ArrayBuffer} buffer - The buffer value.
-   * @param {number} byteOffset - The offset value.
-   * @return {RGBA} - Returns a new RGBA.
-   */
-  static createFromBuffer(buffer: ArrayBuffer, byteOffset: number): RGBA {
-    return new RGBA(new Uint8Array(buffer, byteOffset, 4)) // 4 bytes per 32bit float
-  }
-
-  /**
-   * Returns the number of Float32 elements used by this type. Used to calculate storage requirements for large arrays of this type.
-   * @return {number} - The return value.
-   * @private
-   */
-  static numElements(): number {
-    return 4
-  }
-
-  // ////////////////////////////////////////
   // Persistence
 
   /**

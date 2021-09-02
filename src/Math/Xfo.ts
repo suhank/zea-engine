@@ -3,9 +3,7 @@ import { StringFunctions } from '../Utilities/StringFunctions'
 import { Vec3 } from './Vec3'
 import { Mat4 } from './Mat4'
 import { Quat } from './Quat'
-import { Registry } from '../Registry'
 import { BinReader } from '../SceneTree/BinReader'
-const sc_helper = new Vec3(1, 1, 1)
 
 /**
  * Class representing an Xfo transform, which is a transformation decomposed into 3 component values. Translation, Orientation, and Scaling.
@@ -262,20 +260,6 @@ class Xfo {
     return new Xfo(this.tr.clone(), this.ori.clone(), this.sc.clone())
   }
 
-  // ////////////////////////////////////////
-  // Static Methods
-
-  /**
-   * Creates a new Xfo.
-   * @param {...args: any[]} ...args - The ...args param.
-   * @return {Xfo} - returns a new Xfo.
-   * @private
-   */
-
-  static create(...args: any[]): Xfo {
-    return new Xfo(...args)
-  }
-
   // ///////////////////////////
   // Persistence
 
@@ -328,7 +312,5 @@ class Xfo {
     return StringFunctions.stringifyJSONWithFixedPrecision(this.toJSON())
   }
 }
-
-// Registry.register('Xfo', Xfo)
 
 export { Xfo }

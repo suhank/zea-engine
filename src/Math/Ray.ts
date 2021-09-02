@@ -2,7 +2,6 @@
 import { StringFunctions } from '../Utilities/StringFunctions'
 import { MathFunctions } from '../Utilities/MathFunctions'
 import { Vec3 } from './Vec3'
-import { Registry } from '../Registry'
 import { Box3 } from './Box3'
 
 /**
@@ -54,7 +53,7 @@ class Ray {
    * @param {Vec3} p1 - The point in 3D space.
    * @return {Array<number>} - Returns an array containing 2 scalar values indicating 0: the fraction of the line segment, 1: distance along the Ray
    */
-  closestPointOnLineSegment(p0: Vec3, p1: Vec3) : Array<number>{
+  closestPointOnLineSegment(p0: Vec3, p1: Vec3): Array<number> {
     const u = this.dir
     const v = p1.subtract(p0)
     const v_len = v.length()
@@ -233,20 +232,6 @@ class Ray {
     return new Ray(this.start.clone(), this.dir.clone())
   }
 
-  // ////////////////////////////////////////
-  // Static Methods
-
-  /**
-   * Creates a new Ray.
-   * @param {...args: any[]} ...args - The ...args param.
-   * @return {Ray} - Returns a new Ray.
-   * @private
-   */
-
-  static create(...args: any[]): Ray {
-    return new Ray(...args)
-  }
-
   // ///////////////////////////
   // Persistence
 
@@ -281,7 +266,5 @@ class Ray {
     return StringFunctions.stringifyJSONWithFixedPrecision(this.toJSON())
   }
 }
-
-// Registry.register('Ray', Ray)
 
 export { Ray }

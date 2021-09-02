@@ -1,6 +1,5 @@
 /* eslint-disable new-cap */
 import { StringFunctions } from '../Utilities/StringFunctions'
-import { Registry } from '../Registry'
 import { Vec3 } from './Vec3'
 
 /**
@@ -76,20 +75,6 @@ class PlaneType {
     return new PlaneType(this.normal.clone(), this.w)
   }
 
-  // ////////////////////////////////////////
-  // Static Methods
-
-  /**
-   * Creates a new plane.
-   * @param {...object} ...args - The ...args param.
-   * @return {Plane} - Returns a new plane.
-   * @private
-   */
-
-  static create(...args: any[]): PlaneType {
-    return new PlaneType(...args)
-  }
-
   // ///////////////////////////
   // Persistence
 
@@ -101,12 +86,12 @@ class PlaneType {
   toJSON(): Record<string, unknown> {
     return {
       normal: this.normal.toJSON(),
-      w: this.w,
+      w: this.w
     }
   }
 
   fromJSON(json: Record<string, any>): void {
-    this.normal = Vec3.createFromJSON(json.normal)
+    this.normal.fromJSON(json.normal)
     this.w = json.w
   }
 
@@ -119,7 +104,5 @@ class PlaneType {
     return StringFunctions.stringifyJSONWithFixedPrecision(this.toJSON())
   }
 }
-
-// Registry.register('PlaneType', PlaneType)
 
 export { PlaneType }

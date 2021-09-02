@@ -509,54 +509,6 @@ class Vec4 {
     return this.__data
   }
 
-  // ////////////////////////////////////////
-  // Static Methods
-
-  /**
-   * Creates a new Vec3.
-   * @param {...args: any[]} ...args - The ...args param.
-   * @return {Vec3} - Returns a new Vec3.
-   * @private
-   */
-
-  static create(...args: any[]): Vec3 {
-    return new Vec3(...args)
-  }
-
-  /**
-   * Creates a new Vec4 to wrap existing memory in a buffer.
-   * @param {ArrayBuffer} buffer - The buffer value.
-   * @param {number} offset - The offset value.
-   * @return {Vec4} - Returns a new Vec3.
-   * @deprecated
-   * @private
-   */
-  static createFromFloat32Buffer(buffer: ArrayBuffer, offset = 0): Vec4 {
-    console.warn('Deprecated, use #createFromBuffer instead')
-    return new Vec4(new Float32Array(buffer, offset * 4, 4)) // 4 bytes per 32bit float
-  }
-
-  /**
-   * Creates an instance of a `Vec4` using an ArrayBuffer.
-   *
-   * @static
-   * @param {ArrayBuffer} buffer - The buffer value.
-   * @param {number} byteOffset - The offset value.
-   * @return {Vec4} - Returns a new Vec4.
-   */
-  static createFromBuffer(buffer: ArrayBuffer, byteOffset: number): Vec4 {
-    return new Vec4(new Float32Array(buffer, byteOffset, 4)) // 4 bytes per 32bit float
-  }
-
-  /**
-   * Returns the number of Float32 elements used by this type. Used to calculate storage requirements for large arrays of this type.
-   * @return {number} - The return value.
-   * @private
-   */
-  static numElements(): number {
-    return 4
-  }
-
   // ///////////////////////////
   // Persistence
 

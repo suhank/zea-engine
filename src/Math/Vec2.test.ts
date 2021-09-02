@@ -48,7 +48,7 @@ describe('Vec2', () => {
 
   it('creates Vec2 from buffer', () => {
     const float32Array = Float32Array.of(8, 5)
-    const vec2 = Vec2.createFromBuffer(float32Array.buffer, 0)
+    const vec2 = new Vec2(float32Array.buffer, 0)
 
     expect(vec2).toEqual(new Vec2(8, 5))
   })

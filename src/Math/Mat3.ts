@@ -1,6 +1,5 @@
 /* eslint-disable new-cap */
 import { Vec3 } from './Vec3'
-import { Registry } from '../Registry'
 import { BinReader } from '../SceneTree/BinReader'
 
 /**
@@ -22,7 +21,7 @@ class Mat3 {
    * @param {number} m21 - Row 2, column 1.
    * @param {number} m22 - Row 2, column 2.
    */
-  __data
+  __data: Float32Array
   constructor(
     m00: number | any = 1,
     m01: number | any = 0,
@@ -37,7 +36,7 @@ class Mat3 {
     if (m00 instanceof Vec3 && m01 instanceof Vec3 && m02 instanceof Vec3) {
       this.__data = new Float32Array(9)
       this.set(m00.x, m00.y, m00.z, m01.x, m01.y, m01.z, m02.x, m02.y, m02.z)
-    } else if (m00 instanceof Float32Array || m00 instanceof Uint32Array) {
+    } else if (m00 instanceof Float32Array) {
       this.__data = m00
     } else if (m00 instanceof ArrayBuffer) {
       console.warn(`Deprecated, please use new Vec3(new Float32Array(buffer, byteOffset, 9))`)
@@ -220,7 +219,7 @@ class Mat3 {
    * @return {Vec3} - Returns the `x` axis as a Vec3.
    */
   get xAxis(): Vec3 {
-    return Vec3.createFromBuffer(this.__data.buffer, 0)
+    return new Vec3(new Float32Array(this.__data.buffer, 0, 3))
   }
 
   /**
@@ -237,7 +236,7 @@ class Mat3 {
    * * @return {Vec3} - Returns the `y` axis as a Vec3.
    */
   get yAxis(): Vec3 {
-    return Vec3.createFromBuffer(this.__data.buffer, 3 * 4)
+    return new Vec3(new Float32Array(this.__data.buffer, 3 * 4, 3)) // 4 bytes per 32bit float
   }
 
   /**
@@ -253,7 +252,7 @@ class Mat3 {
    * * @return {Vec3} - Returns the `z` axis as a Vec3.
    */
   get zAxis(): Vec3 {
-    return Vec3.createFromBuffer(this.__data.buffer, 6 * 4)
+    return new Vec3(new Float32Array(this.__data.buffer, 6 * 4, 3))
   }
 
   /**
@@ -368,7 +367,7 @@ class Mat3 {
 
     if (!det) {
       console.warn('Unable to invert Mat3')
-      return null
+      return new Mat3()
     }
     det = 1.0 / det
 
@@ -496,46 +495,6 @@ class Mat3 {
     )
   }
 
-  // ////////////////////////////////////////
-  // Static Methods
-
-  /**
-   * Create a new Mat3.
-   * @param {...args: any[]} ...args - The ...args param.
-   * @return {Mat3} - Returns a new Mat3.
-   * @private
-   */
-
-  static create(...args: any[]): Mat3 {
-    return new Mat3(...args)
-  }
-
-  /**
-   * Creates a new Mat3 to wrap existing memory in a buffer.
-   *
-   * @param {ArrayBuffer} buffer - The buffer value.
-   * @param {number} offset - The offset value.
-   * @return {Mat3} - Returns a new Mat3.
-   * @deprecated
-   * @private
-   */
-  static createFromFloat32Buffer(buffer: ArrayBuffer, offset = 0): Mat3 {
-    console.warn('Deprecated, use #createFromBuffer instead')
-    return this.createFromBuffer(buffer, offset * 4)
-  }
-
-  /**
-   * Creates an instance of a `Mat3` using an ArrayBuffer.
-   *
-   * @static
-   * @param {ArrayBuffer} buffer - The buffer value.
-   * @param {number} byteOffset - The offset value.
-   * @return {Mat3} - Returns a new Mat3.
-   */
-  static createFromBuffer(buffer: ArrayBuffer, byteOffset: number): Mat3 {
-    return new Mat3(new Float32Array(buffer, byteOffset, 9)) // 4 bytes per 32bit float
-  }
-
   // ///////////////////////////
   // Persistence
 
@@ -581,11 +540,9 @@ class Mat3 {
    *
    * @return {Float32Array | Uint32Array} - Returns the result as an array.
    */
-  asArray(): Float32Array | Uint32Array{
+  asArray(): Float32Array | Uint32Array {
     return this.__data
   }
 }
-
-// Registry.register('Mat3', Mat3)
 
 export { Mat3 }

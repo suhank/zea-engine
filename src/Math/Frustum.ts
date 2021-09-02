@@ -3,7 +3,6 @@
 import { StringFunctions } from '../Utilities/StringFunctions'
 import { Vec3 } from './Vec3'
 import { PlaneType } from './PlaneType'
-import { Registry } from '../Registry'
 import { Box3 } from './Box3'
 import { Mat4 } from './Mat4'
 
@@ -13,12 +12,6 @@ import { Mat4 } from './Mat4'
  * @private
  * */
 class Frustum {
-  p0: PlaneType
-  p1: PlaneType
-  p2: PlaneType
-  p3: PlaneType
-  p4: PlaneType
-  p5: PlaneType
   planes: PlaneType[]
   /**
    * Create a Frustum
@@ -91,12 +84,12 @@ class Frustum {
    */
   toJSON(): Record<string, unknown> {
     return {
-      p0: this.p0.toJSON(),
-      p1: this.p1.toJSON(),
-      p2: this.p2.toJSON(),
-      p3: this.p3.toJSON(),
-      p4: this.p4.toJSON(),
-      p5: this.p5.toJSON(),
+      p0: this.planes[0].toJSON(),
+      p1: this.planes[1].toJSON(),
+      p2: this.planes[2].toJSON(),
+      p3: this.planes[3].toJSON(),
+      p4: this.planes[4].toJSON(),
+      p5: this.planes[5].toJSON(),
     }
   }
 
@@ -106,12 +99,12 @@ class Frustum {
    * @param {Record<string, any>} j - The json object.
    */
   fromJSON(j: Record<string, any>): void {
-    this.p0.fromJSON(j.p0)
-    this.p1.fromJSON(j.p1)
-    this.p2.fromJSON(j.p2)
-    this.p3.fromJSON(j.p3)
-    this.p4.fromJSON(j.p4)
-    this.p5.fromJSON(j.p5)
+    this.planes[0].fromJSON(j.p0)
+    this.planes[1].fromJSON(j.p1)
+    this.planes[2].fromJSON(j.p2)
+    this.planes[3].fromJSON(j.p3)
+    this.planes[4].fromJSON(j.p4)
+    this.planes[5].fromJSON(j.p5)
   }
 
   /**
@@ -123,7 +116,5 @@ class Frustum {
     return StringFunctions.stringifyJSONWithFixedPrecision(this.toJSON())
   }
 }
-
-// Registry.register('Frustum', Frustum)
 
 export { Frustum }
