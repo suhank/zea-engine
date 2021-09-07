@@ -1,5 +1,3 @@
-import util from 'util'
-
 /* eslint-disable new-cap */
 /* eslint-disable require-jsdoc */
 import { Color, Vec3 } from '../../Math/index'
@@ -18,7 +16,7 @@ import { BooleanParameter } from '../Parameters/BooleanParameter'
  * @extends VLHImage
  */
 class EnvMap extends VLHImage {
-  protected utf8decoder: TextDecoder | util.TextDecoder
+  protected utf8decoder: TextDecoder
   protected shCoeffs: any[]
   protected luminanceData: any
   /**
@@ -31,7 +29,7 @@ class EnvMap extends VLHImage {
 
     this.addParameter(new BooleanParameter('HeadLightMode', false))
 
-    this.utf8decoder = util.TextDecoder ? new util.TextDecoder() : new TextDecoder()
+    this.utf8decoder = new TextDecoder()
     this.shCoeffs = []
   }
 

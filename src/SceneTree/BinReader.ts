@@ -1,5 +1,3 @@
-import util from 'util'
-
 /* eslint-disable no-unused-vars */
 import { Vec2, Vec3, Quat, Color, Box2, Box3 } from '../Math/index'
 import { MathFunctions } from '../Utilities/MathFunctions'
@@ -12,7 +10,7 @@ class BinReader {
   protected __byteOffset: number
   protected __dataView: DataView
   protected __isMobileDevice: boolean
-  protected utf8decoder: TextDecoder | util.TextDecoder
+  protected utf8decoder: TextDecoder
   /**
    * Create a bin reader.
    *
@@ -25,7 +23,7 @@ class BinReader {
     this.__byteOffset = byteOffset
     this.__dataView = new DataView(this.__data)
     this.__isMobileDevice = isMobileDevice
-    this.utf8decoder = util.TextDecoder ? new util.TextDecoder() : new TextDecoder()
+    this.utf8decoder = new TextDecoder()
   }
 
   /**
