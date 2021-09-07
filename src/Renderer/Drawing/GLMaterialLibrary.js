@@ -14,13 +14,14 @@ class GLMaterialLibrary extends EventEmitter {
     super()
     this.renderer = renderer
     this.materials = []
+    this.refCounts = [] // The number of times this material was added to the library.
     this.materialIndices = {}
     this.glMaterials = {}
     this.freeIndices = []
     this.dirtyIndices = new Set()
     this.materialsAllocator = new Allocator1D()
 
-    this.materialsAllocator.on('dataReallocated', (event) => {
+    this.materialsAllocator.on('dataReallocated', event => {
       // during allocation, a defragment might occur, which means
       // we need to re-upload some of our data.
       const id = event.id
@@ -36,7 +37,8 @@ class GLMaterialLibrary extends EventEmitter {
   addMaterial(material) {
     let index = this.materialIndices[material.getId()]
     if (index != undefined) {
-      // TODO: Track ref counts. Increment the ref count for the GLGeom
+      // Increment the ref count for the Material
+      this.refCounts[index]++
       return index
     }
 
@@ -47,11 +49,11 @@ class GLMaterialLibrary extends EventEmitter {
     }
 
     this.materials[index] = material
+    this.refCounts[index] = 1
     this.materialIndices[material.getId()] = index
 
     const matData = material.getShaderClass().getPackedMaterialData(material)
-    const allocation = this.materialsAllocator.allocate(index, matData.length / 4)
-    material.setMetadata('glmaterialcoords', { x: allocation.start, y: allocation.size })
+    this.materialsAllocator.allocate(index, matData.length / 4)
 
     const parameterValueChanged = () => {
       this.dirtyIndices.add(index)
@@ -106,11 +108,15 @@ class GLMaterialLibrary extends EventEmitter {
    * @param {Material} material - The material object.
    */
   removeMaterial(material) {
-    // if (!material.getMetadata('glmaterialcoords')) {
-    //   throw new Error('Material not managed by this GLMaterialLibrary')
-    // }
-    material.deleteMetadata('glmaterialcoords')
-    const index = this.materials.indexOf(material)
+    const index = this.materialIndices[material.getId()]
+    this.refCounts[index]--
+
+    // If there are still refs to this geom. (GeomItems that use it)
+    // then we keep it in the renderer.
+    if (this.refCounts[index] > 0) {
+      return
+    }
+
     this.freeIndices.push(index)
     this.materialsAllocator.deallocate(index)
     this.materials[index] = null
@@ -140,7 +146,7 @@ class GLMaterialLibrary extends EventEmitter {
         height: materialsTextureSize,
         filter: 'NEAREST',
         wrap: 'CLAMP_TO_EDGE',
-        mipMapped: false,
+        mipMapped: false
       })
       this.materialsTexture.clear()
     } else if (this.materialsTexture.width < materialsTextureSize) {
@@ -156,7 +162,7 @@ class GLMaterialLibrary extends EventEmitter {
     const tex = this.materialsTexture
     const texWidth = this.materialsTexture.width
     gl.bindTexture(gl.TEXTURE_2D, tex.glTex)
-    this.dirtyIndices.forEach((index) => {
+    this.dirtyIndices.forEach(index => {
       const allocation = this.materialsAllocator.getAllocation(index)
       const material = this.materials[index]
       const matData = material.getShaderClass().getPackedMaterialData(material)
