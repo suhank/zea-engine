@@ -1,7 +1,7 @@
 /* eslint-disable guard-for-in */
 import { EventEmitter, Allocator1D } from '../../Utilities/index'
 import { generateShaderGeomBinding, genDataTypeDesc } from './GeomShaderBinding'
-import { Points, Lines, Mesh, PointsProxy, LinesProxy, MeshProxy, BaseGeom, BaseGeomItem } from '../../SceneTree/index'
+import { Points, Lines, Mesh, PointsProxy, LinesProxy, MeshProxy, BaseGeom } from '../../SceneTree/index'
 import { GLPoints, GLLines, GLMesh, GLGeom } from './index'
 import { GLBaseRenderer } from '../GLBaseRenderer'
 import { IndexEvent } from '../../Utilities/Events/IndexEvent'
@@ -20,7 +20,7 @@ class GLGeomLibrary extends EventEmitter {
   protected __gl: WebGL12RenderingContext
   protected shaderAttrSpec: Record<string, any>
   protected freeGeomIndices: number[]
-  protected geoms: BaseGeom[]
+  protected geoms: Array<BaseGeom | null>
   protected geomRefCounts: number[]
   protected geomsDict: Record<string, number>
   protected glGeomsDict: Record<string, GLGeom>
@@ -36,8 +36,8 @@ class GLGeomLibrary extends EventEmitter {
   protected indicesAllocator: Allocator1D
   protected indicesCounts: Int32Array
   protected indicesOffsets: Int32Array
-  protected indexBuffer: WebGLBuffer | null
-  protected __destroyed: boolean
+  protected indexBuffer: WebGLBuffer | null = null
+  protected __destroyed: boolean = false
   /**
    * Create a GLGeomLibrary.
    * @param {GLBaseRenderer} renderer - The renderer object
@@ -142,7 +142,7 @@ class GLGeomLibrary extends EventEmitter {
       return index
     }
     if (this.freeGeomIndices.length) {
-      index = this.freeGeomIndices.pop()
+      index = this.freeGeomIndices.pop()!
     } else {
       index = this.geoms.length
       this.geomRefCounts[index] = 0
@@ -275,7 +275,7 @@ class GLGeomLibrary extends EventEmitter {
           dataType: attrData.dataType,
           normalized: attrData.normalized,
           dimension: geomAttrDesc.dimension,
-          elementSize: geomAttrDesc.elementSize,
+          elementSize: geomAttrDesc.elementSize
         }
       }
     }
@@ -336,7 +336,7 @@ class GLGeomLibrary extends EventEmitter {
         dataType: attrSpec.dataType,
         normalized: attrSpec.normalized,
         length: numValues,
-        dimension: attrSpec.dimension,
+        dimension: attrSpec.dimension
       }
 
       if (attrName == 'textureCoords') this.glattrbuffers['texCoords'] = this.glattrbuffers['textureCoords']
@@ -498,11 +498,11 @@ class GLGeomLibrary extends EventEmitter {
       this.cleanGeomBuffers()
     }
 
-    let shaderBinding = this.shaderBindings[renderstate.shaderkey]
+    let shaderBinding = this.shaderBindings[renderstate.shaderkey!]
     if (!shaderBinding) {
       const gl = this.__gl
       shaderBinding = generateShaderGeomBinding(gl, renderstate.attrs, this.glattrbuffers, this.indexBuffer)
-      this.shaderBindings[renderstate.shaderkey] = shaderBinding
+      this.shaderBindings[renderstate.shaderkey!] = shaderBinding
     } else {
       shaderBinding.bind(renderstate)
     }
@@ -516,7 +516,7 @@ class GLGeomLibrary extends EventEmitter {
   unbind(renderstate: RenderState) {
     // Unbinding a geom is important as it puts back some important
     // GL state. (vertexAttribDivisor)
-    const shaderBinding = this.shaderBindings[renderstate.shaderkey]
+    const shaderBinding = this.shaderBindings[renderstate.shaderkey!]
     if (shaderBinding) {
       shaderBinding.unbind(renderstate)
     }

@@ -10,8 +10,8 @@ class GLGeom extends RefCounted {
   protected __glattrbuffers: Record<string, any>
   protected __shaderBindings: Record<string, any>
   protected buffersDirty: boolean
-  protected genBufferOpts: Record<string, any>
-  protected __indexBuffer: WebGLBuffer | null
+  protected genBufferOpts: Record<string, any> = {}
+  protected __indexBuffer: WebGLBuffer | null = null
   /**
    * Create a GL geom.
    * @param {WebGL12RenderingContext} gl - The webgl rendering context.
@@ -86,11 +86,11 @@ class GLGeom extends RefCounted {
 
     if (this.buffersDirty) this.updateBuffers()
 
-    let shaderBinding = this.__shaderBindings[renderstate.shaderkey]
+    let shaderBinding = this.__shaderBindings[renderstate.shaderkey!]
     if (!shaderBinding) {
       const gl = this.__gl
       shaderBinding = generateShaderGeomBinding(gl, renderstate.attrs, this.__glattrbuffers, this.__indexBuffer)
-      this.__shaderBindings[renderstate.shaderkey] = shaderBinding
+      this.__shaderBindings[renderstate.shaderkey!] = shaderBinding
     }
     shaderBinding.bind(renderstate)
     return true
@@ -103,7 +103,7 @@ class GLGeom extends RefCounted {
   unbind(renderstate: RenderState) {
     // Unbinding a geom is important as it puts back some important
     // GL state. (vertexAttribDivisor)
-    const shaderBinding = this.__shaderBindings[renderstate.shaderkey]
+    const shaderBinding = this.__shaderBindings[renderstate.shaderkey!]
     if (shaderBinding) {
       shaderBinding.unbind(renderstate)
     }
@@ -154,7 +154,7 @@ class GLGeom extends RefCounted {
 
     // eslint-disable-next-line guard-for-in
     for (const shaderkey in this.__shaderBindings) {
-      const shaderBinding = this.__shaderBindings[shaderkey]
+      const shaderBinding = this.__shaderBindings[shaderkey!]
       shaderBinding.destroy()
     }
     this.__shaderBindings = {}

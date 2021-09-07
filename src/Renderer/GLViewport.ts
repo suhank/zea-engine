@@ -5,10 +5,8 @@ import { GLBaseViewport } from './GLBaseViewport'
 import { GLFbo } from './GLFbo'
 import { GLTexture2D } from './GLTexture2D'
 import { POINTER_TYPES } from '../Utilities/EnumUtils'
-import { BaseTool } from '../SceneTree/index'
 import { CameraManipulator } from '../SceneTree/index'
 import { GLRenderer } from './GLRenderer'
-import { BaseEvent } from '../Utilities/BaseEvent'
 import { ResizedEvent } from '../Utilities/Events/ResizedEvent'
 import { ViewChangedEvent } from '../Utilities/Events/ViewChangedEvent'
 
@@ -49,16 +47,16 @@ class GLViewport extends GLBaseViewport {
   protected __geomDataBufferFbo: GLFbo
   protected debugGeomShader: boolean
 
-  protected __x: number
-  protected __y: number
-  protected region: any
+  protected __x: number = 0
+  protected __y: number = 0
+  protected region: Array<number> = [0, 0, 0, 0]
 
-  protected __cameraXfo: Xfo
-  protected __cameraMat: Mat4
-  protected __viewMat: Mat4 | null
+  protected __cameraXfo: Xfo = new Xfo()
+  protected __cameraMat: Mat4 = new Mat4()
+  protected __viewMat: Mat4 = new Mat4()
 
-  protected __geomDataBufferInvalid: boolean
-  protected __screenPos: Vec2 | null
+  protected __geomDataBufferInvalid: boolean = true
+  protected __screenPos: Vec2 | null = null
   protected __intersectionData: any
 
   protected capturedItem: any
@@ -95,7 +93,7 @@ class GLViewport extends GLBaseViewport {
       format: 'RGBA',
       filter: 'NEAREST',
       width: width <= 1 ? 1 : Math.floor(width / this.__geomDataBufferSizeFactor),
-      height: height <= 1 ? 1 : Math.floor(height / this.__geomDataBufferSizeFactor),
+      height: height <= 1 ? 1 : Math.floor(height / this.__geomDataBufferSizeFactor)
     })
     this.__geomDataBufferFbo = new GLFbo(gl, this.__geomDataBuffer, true)
     this.__geomDataBufferFbo.setClearColor(new Color(0, 0, 0, 0))
@@ -105,7 +103,8 @@ class GLViewport extends GLBaseViewport {
 
     // Each user has a separate camera, and so the default
     //  camera cannot be part of the scene.
-    this.setCamera(new Camera('DefaultCamera'))
+    this.__camera = new Camera('DefaultCamera')
+    this.setCamera(this.__camera)
     this.setManipulator(new CameraManipulator({ renderer }))
 
     this.resize(width, height)
@@ -222,19 +221,17 @@ class GLViewport extends GLBaseViewport {
     this.depthRange = [this.__camera.getNear(), this.__camera.getFar()]
     const globalXfoParam = camera.getParameter('GlobalXfo')
     const getCameraParams = () => {
-      this.__cameraXfo = globalXfoParam.getValue()
+      this.__cameraXfo = globalXfoParam!.getValue()
       this.__cameraMat = this.__cameraXfo.toMat4()
       this.__viewMat = this.__cameraMat.inverse()
     }
     getCameraParams()
-    globalXfoParam.on('valueChanged', () => {
+    globalXfoParam!.on('valueChanged', () => {
       getCameraParams()
       this.invalidateGeomDataBuffer()
       this.emit('updated')
 
-      let focalDistance = this.__camera.getFocalDistance()
-      let fieldOfView = this.__camera.getFov()
-      const event = new ViewChangedEvent('CameraAndPointer', this.__cameraXfo, focalDistance, fieldOfView)
+      const event = new ViewChangedEvent('CameraAndPointer', this.__cameraXfo)
       this.emit('viewChanged', event)
     })
     this.__camera.on('projectionParamChanged', () => {
@@ -303,7 +300,7 @@ class GLViewport extends GLBaseViewport {
    * @param {Vec2} screenPos - The screen position.
    * @return {Ray} - The return value.
    */
-  calcRayFromScreenPos(screenPos: Vec2) {
+  calcRayFromScreenPos(screenPos: Vec2): Ray {
     // Convert the raster coordinates to screen space ([0,{w|h}] -> [-1,1]
     // - Note: The raster vertical is inverted wrt OGL screenspace Y
 
@@ -318,9 +315,11 @@ class GLViewport extends GLBaseViewport {
     const cameraMat = this.__cameraMat
 
     const projInv = this.__projectionMatrix.inverse()
-    if (projInv == null)
+    if (projInv == null) {
       // Sometimes this happens, not sure why...
-      return null
+      console.warn(`Unable to generate Ray from screen pos:${screenPos.toString()} in region ${this.region}`)
+      return new Ray()
+    }
 
     let rayStart
     let rayDirection
@@ -379,7 +378,7 @@ class GLViewport extends GLBaseViewport {
    * @param {Ray} pointerRay - The pointerRay value.
    * @return {RayCast} - The return value.
    */
-  getGeomDataAtPos(screenPos: Vec2, pointerRay: Ray): RayCast {
+  getGeomDataAtPos(screenPos: Vec2, pointerRay: Ray | undefined): RayCast | null {
     if (this.__geomDataBufferFbo) {
       if (this.__geomDataBufferInvalid) {
         this.renderGeomDataFbo()
@@ -430,7 +429,7 @@ class GLViewport extends GLBaseViewport {
       if (gl.floatGeomBuffer) {
         geomData = new Float32Array(4)
         gl.readPixels(x, bufferHeight - y - 1, 1, 1, gl.RGBA, gl.FLOAT, geomData)
-        if (geomData[3] == 0) return undefined
+        if (geomData[3] == 0) return null
 
         // Mask the pass id to be only the first 6 bits of the integer.
         passId = Math.round(geomData[0]) & (64 - 1)
@@ -438,20 +437,20 @@ class GLViewport extends GLBaseViewport {
         geomData = new Uint8Array(4)
         gl.readPixels(x, bufferHeight - y - 1, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, geomData)
         gl.bindFramebuffer(gl.FRAMEBUFFER, null)
-        if (geomData[0] == 0 && geomData[1] == 0) return undefined
+        if (geomData[0] == 0 && geomData[1] == 0) return null
         passId = Math.floor(geomData[1] / 64)
       }
       this.__geomDataBufferFbo.unbind()
       const pass = this.__renderer.getPass(passId)
       if (!pass) {
         console.warn('Geom data buffer returns invalid pass id:', passId)
-        return
+        return null
       }
 
       const geomItemAndDist = pass.getGeomItemAndDist(geomData)
 
       if (geomItemAndDist) {
-        if (!geomItemAndDist.geomItem.getSelectable()) return
+        if (!geomItemAndDist.geomItem.getSelectable()) return null
 
         if (!pointerRay) pointerRay = this.calcRayFromScreenPos(screenPos)
         const intersectionPos = pointerRay.start.add(pointerRay.dir.scale(geomItemAndDist.dist))
@@ -460,7 +459,7 @@ class GLViewport extends GLBaseViewport {
             screenPos,
             pointerRay,
             intersectionPos,
-            geomData,
+            geomData
           },
           geomItemAndDist
         )
@@ -468,6 +467,8 @@ class GLViewport extends GLBaseViewport {
 
       return this.__intersectionData
     }
+
+    return null
   }
 
   /**
@@ -477,7 +478,7 @@ class GLViewport extends GLBaseViewport {
    * @param {Vec2} br - The bottom right corner of the rectangle.
    * @return {Set} - The return value.
    */
-  getGeomItemsInRect(tl: Vec2, br: Vec2) {
+  getGeomItemsInRect(tl: Vec2, br: Vec2): Array<GeomItem> {
     // TODO: Use a Math.Rect instead
     if (this.__geomDataBufferFbo) {
       const gl = this.__renderer.gl
@@ -511,7 +512,7 @@ class GLViewport extends GLBaseViewport {
 
       gl.bindFramebuffer(gl.FRAMEBUFFER, null)
 
-      const geomItems = new Set()
+      const geomItems: Set<GeomItem> = new Set()
       for (let i = 0; i < numPixels; i++) {
         let passId
         const geomData = geomDatas.subarray(i * 4, (i + 1) * 4)
@@ -536,10 +537,11 @@ class GLViewport extends GLBaseViewport {
         if (geomItem) {
           if (geomItem.getSelectable()) return false
         }
-
         return true
       })
     }
+
+    return []
   }
 
   // ///////////////////////////
@@ -892,8 +894,8 @@ class GLViewport extends GLBaseViewport {
         projectionMatrix: this.__projectionMatrix,
         viewportFrustumSize: this.__frustumDim,
         isOrthographic: this.__camera.isOrthographic(),
-        fovY: this.__camera.getFov(),
-      },
+        fovY: this.__camera.getFov()
+      }
     ]
   }
 
@@ -911,7 +913,7 @@ class GLViewport extends GLBaseViewport {
       this.renderGeomDataFbo()
       const gl = this.__renderer.gl
       gl.disable(gl.DEPTH_TEST)
-      const screenQuad = this.__renderer.screenQuad
+      const screenQuad = this.__renderer.screenQuad!
       screenQuad.bindShader(renderstate)
       screenQuad.draw(renderstate, this.__geomDataBuffer, new Vec2(0, 0), new Vec2(1, 1))
     }

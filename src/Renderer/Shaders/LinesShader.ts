@@ -32,19 +32,19 @@ class LinesShader extends GLShader {
    */
   static getPackedMaterialData(material: Material): Float32Array {
     const matData = new Float32Array(12)
-    const baseColor = material.getParameter('BaseColor').getValue()
+    const baseColor = material.getParameter('BaseColor')!.getValue()
     matData[0] = baseColor.r
     matData[1] = baseColor.g
     matData[2] = baseColor.b
     matData[3] = baseColor.a
     // Note: By avoiding calling this value 'Opacity', the lines will not be considered 'Transparent'
     // Lines do not need to be depth sorted....
-    matData[4] = material.getParameter('Opacity').getValue()
-    matData[5] = material.getParameter('Overlay').getValue()
-    matData[6] = material.getParameter('StippleScale').getValue()
-    matData[7] = material.getParameter('StippleValue').getValue()
+    matData[4] = material.getParameter('Opacity')!.getValue()
+    matData[5] = material.getParameter('Overlay')!.getValue()
+    matData[6] = material.getParameter('StippleScale')!.getValue()
+    matData[7] = material.getParameter('StippleValue')!.getValue()
 
-    matData[8] = material.getParameter('OccludedStippleValue').getValue()
+    matData[8] = material.getParameter('OccludedStippleValue')!.getValue()
     return matData
   }
 }

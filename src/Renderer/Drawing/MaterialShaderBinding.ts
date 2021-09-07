@@ -1,9 +1,9 @@
-import { Vec2, Vec3, Vec4, Color, Mat4, Mat3 } from '../../Math/index'
 import { GLTexture2D } from '../GLTexture2D'
 import { GLHDRImage } from '../GLHDRImage'
-import { SInt32, UInt32, Float32 } from '../../Utilities/MathFunctions'
+import { Mat4 } from '../../Math/Mat4'
 import { Parameter } from '../../SceneTree/Parameters/Parameter'
-import { GLMaterial } from './GLMaterial'
+import { BaseImage } from '../..'
+import { VLHImage } from '../../SceneTree/Images/VLHImage'
 
 /** Class representing simple uniform binding.
  * @private
@@ -17,8 +17,8 @@ class SimpleUniformBinding {
   protected uniformXX: any
   protected bind: any
   protected texBinding: any
-  protected gltexture: GLTexture2D
-  protected textureType: number
+  protected gltexture: GLTexture2D | null = null
+  protected textureType: number = -1
 
   protected update: any
   protected dirty: any
@@ -58,12 +58,12 @@ class SimpleUniformBinding {
 
     this.bind = this.bindValue
 
-    const genGLTex = (image: any) => {
-      let gltexture = image.getMetadata('gltexture')
+    const genGLTex = (image: BaseImage) => {
+      let gltexture = <GLTexture2D>image.getMetadata('gltexture')
       const textureType = 1
       if (!gltexture) {
         if (image.type === 'FLOAT') {
-          gltexture = new GLHDRImage(gl, image)
+          gltexture = new GLHDRImage(gl, <VLHImage>image)
         } else {
           gltexture = new GLTexture2D(gl, image)
         }
@@ -98,7 +98,7 @@ class SimpleUniformBinding {
       gltexture.removeRef(this)
       this.texBinding = null
       this.gltexture = null
-      this.textureType = null
+      this.textureType = -1
       this.bind = this.bindValue
 
       if (imageLoaded) {
@@ -160,7 +160,7 @@ class SimpleUniformBinding {
       this.update()
       this.dirty = false
     }
-    this.gltexture.bindToUniform(renderstate, this.textureUnif, this.texBinding)
+    this.gltexture!.bindToUniform(renderstate, this.textureUnif, this.texBinding)
   }
 
   /**
@@ -242,8 +242,8 @@ class MatrixUniformBinding {
   protected param: any
   protected unif: Uniform
   protected uniformMatrixXXX: any
-  protected dirty: any
-  protected vals: any
+  protected dirty: boolean = false
+  protected vals: Float32Array = new Float32Array(0)
   protected val: any
   /**
    * Create material uniform binding.
@@ -278,7 +278,7 @@ class MatrixUniformBinding {
    */
   bind(renderstate: RenderState) {
     if (this.dirty) {
-      this.vals = this.param.getValue().asArray()
+      this.vals = (<Mat4>this.param.getValue()).asArray()
       this.dirty = false
     }
     this.uniformMatrixXXX(this.unif.location, false, this.val)
@@ -309,7 +309,7 @@ class ColorUniformBinding {
   protected textureType: any
   protected texBinding: any
   protected update: any
-  protected dirty
+  protected dirty: boolean = false
   protected uniform1i: any
   protected uniform4fv: any
   /**
@@ -434,7 +434,7 @@ class ColorUniformBinding {
   }
 }
 
-const logged = {}
+const logged: { [key: string]: { [key: string]: boolean } } = {}
 
 /** Class representing material shader binding.
  * @private

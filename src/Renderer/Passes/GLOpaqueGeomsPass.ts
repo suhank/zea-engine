@@ -1,15 +1,12 @@
 import { PassType } from './GLPass'
 import { GLStandardGeomsPass } from './GLStandardGeomsPass'
 import { GLRenderer } from '../GLRenderer'
-import { Registry } from '../../Registry'
 
-import { MathFunctions } from '../../Utilities/MathFunctions'
-import { Points, Lines, PointsProxy, LinesProxy, GeomItem, Material, TreeItem } from '../../SceneTree/index'
+import { GeomItem, Material } from '../../SceneTree/index'
 import { GLShaderMaterials } from '../Drawing/GLShaderMaterials'
 import { GLShaderGeomSets } from '../Drawing/GLShaderGeomSets'
 import { GLMaterialGeomItemSets } from '../Drawing/GLMaterialGeomItemSets'
 import { GLBaseRenderer } from '../GLBaseRenderer'
-import { GLGeom } from '../Drawing/GLGeom'
 import { GLGeomItem } from '../Drawing'
 
 /** Class representing a GL opaque geoms pass.
@@ -58,7 +55,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
    * @return {boolean} - The return value.
    */
   filterGeomItem(geomItem: GeomItem) {
-    const material = geomItem.getParameter('Material').getValue()
+    const material = geomItem.getParameter('Material')!.getValue()
     return this.checkMaterial(material)
   }
 
@@ -77,7 +74,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
    */
   removeAndReAddGeomItem(geomItem: GeomItem) {
     this.removeGeomItem(geomItem)
-    this.__renderer.assignTreeItemToGLPass(geomItem)
+    this.__renderer!.assignTreeItemToGLPass(geomItem)
   }
 
   /**
@@ -86,8 +83,10 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
    * @return {boolean} - The return value.
    */
   addGeomItem(geomItem: GeomItem) {
-    const materialParam = geomItem.getParameter('Material')
+    const materialParam = geomItem.getParameter('Material')!
     const material = materialParam.getValue()
+    const glGeomLibrary = this.renderer!.glGeomLibrary
+    const glGeomItemLibrary = this.renderer!.glGeomItemLibrary
 
     if (!material.isTextured()) {
       if (material.getShaderClass().supportsInstancing()) {
@@ -95,15 +94,15 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
         let glShaderGeomSets = this.__glShaderGeomSets[shaderName]
         if (!glShaderGeomSets) {
           const shaders = this.constructShaders(shaderName)
-          glShaderGeomSets = new GLShaderGeomSets(this, this.__gl, shaders)
+          glShaderGeomSets = new GLShaderGeomSets(this, this.__gl!, shaders)
           glShaderGeomSets.on('updated', () => {
-            this.__renderer.requestRedraw()
+            this.__renderer!.requestRedraw()
           })
           this.__glShaderGeomSets[shaderName] = glShaderGeomSets
         }
 
         // const glGeomItem = this.constructGLGeomItem(geomItem)
-        const glGeomItem = <Record<string, any>>this.renderer.glGeomItemLibrary.getGLGeomItem(geomItem)
+        const glGeomItem = <Record<string, any>>this.renderer!.glGeomItemLibrary.getGLGeomItem(geomItem)
         glShaderGeomSets.addGLGeomItem(<GLGeomItem>glGeomItem)
 
         glGeomItem.GLShaderGeomSets = glShaderGeomSets
@@ -112,8 +111,8 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
       }
     }
 
-    const glGeom = this.renderer.glGeomLibrary.constructGLGeom(geomItem.getParameter('Geometry').getValue())
-    const glGeomItem = this.renderer.glGeomItemLibrary.getGLGeomItem(geomItem)
+    const glGeom = glGeomLibrary.constructGLGeom(geomItem.getParameter('Geometry')!.getValue())
+    const glGeomItem = glGeomItemLibrary.getGLGeomItem(geomItem)!
 
     // ////////////////////////////////////
     // Tracking Material Transparency changes...
@@ -122,7 +121,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
 
     const materialChanged = () => {
       this.removeGeomItem(geomItem)
-      this.__renderer.assignTreeItemToGLPass(geomItem)
+      this.__renderer!.assignTreeItemToGLPass(geomItem)
     }
     materialParam.on('valueChanged', materialChanged)
     ;(<Record<string, any>>glGeomItem).materialChanged = materialChanged
@@ -130,16 +129,16 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
     // ////////////////////////////////////
     // Shaders
     const shaderName = material.getShaderName()
-    const glMaterial = this.renderer.glMaterialLibrary.getGLMaterial(material)
+    const glMaterial = this.renderer!.glMaterialLibrary.getGLMaterial(material)
 
     let glshaderMaterials = this.__glshadermaterials[shaderName]
     if (!glshaderMaterials) {
       const shaders = this.constructShaders(shaderName)
-      glshaderMaterials = new GLShaderMaterials(this.__gl, this, shaders)
+      glshaderMaterials = new GLShaderMaterials(this.__gl!, this, shaders)
       this.__glshadermaterials[shaderName] = glshaderMaterials
 
       glshaderMaterials.on('updated', () => {
-        this.__renderer.requestRedraw()
+        this.__renderer!.requestRedraw()
       })
     }
 
@@ -221,7 +220,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
    * @param {RenderState} renderstate - The object tracking the current state of the renderer
    */
   draw(renderstate: RenderState): void {
-    const gl = this.__gl
+    const gl = this.__gl!
     gl.disable(gl.BLEND)
 
     if (true)
@@ -247,7 +246,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
    * @param {RenderState} renderstate - The object tracking the current state of the renderer
    */
   drawHighlightedGeoms(renderstate: RenderState): void {
-    const gl = this.__gl
+    const gl = this.__gl!
     gl.disable(gl.CULL_FACE) // 2-sided rendering.
 
     // eslint-disable-next-line guard-for-in
@@ -272,7 +271,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
   drawGeomData(renderstate: RenderState): void {
     renderstate.passIndex = this.passIndex
 
-    const gl = this.__gl
+    const gl = this.__gl!
     gl.disable(gl.BLEND)
     gl.disable(gl.CULL_FACE)
     gl.enable(gl.DEPTH_TEST)

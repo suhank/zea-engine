@@ -1,4 +1,4 @@
-import { Color, Vec3, Vec4 } from '../../Math/index'
+import { Color, Vec4 } from '../../Math/index'
 import { LinesCuboid, TreeItem } from '../../SceneTree/index'
 import { BoundingBoxShader } from '../Shaders/BoundingBoxShader'
 import { GLLines } from '../Drawing/GLLines'
@@ -16,37 +16,30 @@ const pixelsPerItem = 6 // The number of pixels per draw item.
  * @private
  */
 class GLBoundingBoxPass extends GLPass {
-  protected boxes: any[]
-  protected dirtyBoxes: Set<any>
-  protected freeIndices: Array<number>
-  protected idToIndex: Array<number>
-  protected drawCount: number
-  protected indexArrayUpdateNeeded: boolean
-  protected __updateRequested: boolean
-  protected glgeom: GLGeom
-  protected glshader: GLShader
+  protected boxes: any[] = []
+  protected dirtyBoxes: Set<any> = new Set()
+  protected freeIndices: Array<number> = []
+  protected idToIndex: Array<number> = []
+  protected drawCount: number = 0
+  protected indexArrayUpdateNeeded: boolean = false
+  protected __updateRequested: boolean = false
+  protected glgeom?: GLGeom
+  protected glshader?: GLShader
 
-  protected __modelMatrixArray: Array<Array<number>>
-  protected __treeitemDataArray: Array<Array<number>>
-  protected __tintColorArray: Array<Array<number>>
+  protected __modelMatrixArray: Array<Float32Array> = []
+  protected __treeitemDataArray: Array<Array<number>> = []
+  protected __tintColorArray: Array<Array<number>> = []
 
-  protected __instanceIdsBuffer: WebGLBuffer | null
+  protected __instanceIdsBuffer?: WebGLBuffer
 
-  protected __indexArray: Float32Array
-  protected __drawItemsTexture: GLTexture2D
-  protected __width: number
+  protected __indexArray: Float32Array = new Float32Array(0)
+  protected __drawItemsTexture?: GLTexture2D
+  protected __width: number = 0
   /**
    * Create a GL treeitems pass.
    */
   constructor() {
     super()
-    this.boxes = []
-    this.dirtyBoxes = new Set()
-    this.freeIndices = []
-    this.drawCount = 0
-
-    this.indexArrayUpdateNeeded = false
-    this.__updateRequested = false
 
     this.__childItemAdded = this.__childItemAdded.bind(this)
     this.__childItemRemoved = this.__childItemRemoved.bind(this)
@@ -68,7 +61,7 @@ class GLBoundingBoxPass extends GLPass {
   init(renderer: GLBaseRenderer, passIndex: number) {
     super.init(renderer, passIndex)
 
-    const gl = this.__renderer.gl
+    const gl = this.__renderer!.gl
     this.glgeom = new GLLines(gl, new LinesCuboid(1, 1, 1))
     this.glshader = new BoundingBoxShader(gl)
   }
@@ -175,15 +168,15 @@ class GLBoundingBoxPass extends GLPass {
         this.emit('updated')
       }
     }
-    treeitem.getParameter('GlobalXfo').on('valueChanged', xfoChanged)
-    treeitem.getParameter('BoundingBox').on('valueChanged', xfoChanged)
+    treeitem.getParameter('GlobalXfo')!.on('valueChanged', xfoChanged)
+    treeitem.getParameter('BoundingBox')!.on('valueChanged', xfoChanged)
 
     if (treeitem.isVisible()) this.drawCount++
 
     this.boxes[index] = {
       treeitem,
       visibilityChanged,
-      xfoChanged,
+      xfoChanged
     }
 
     this.indexArrayUpdateNeeded = true
@@ -204,8 +197,8 @@ class GLBoundingBoxPass extends GLPass {
     const treeitemData = this.boxes[index]
 
     treeitem.off('visibilityChanged', treeitemData.visibilityChanged)
-    treeitem.getParameter('GlobalXfo').off('valueChanged', treeitemData.xfoChanged)
-    treeitem.getParameter('BoundingBox').off('valueChanged', treeitemData.xfoChanged)
+    treeitem.getParameter('GlobalXfo')!.off('valueChanged', treeitemData.xfoChanged)
+    treeitem.getParameter('BoundingBox')!.off('valueChanged', treeitemData.xfoChanged)
 
     this.boxes[index] = null
     this.freeIndices.push(index)
@@ -232,15 +225,15 @@ class GLBoundingBoxPass extends GLPass {
     const geomMatParam = treeitem.getParameter('GeomMat')
     const color = geomMatParam ? new Color(1, 0, 0, 1) : new Color(0, 0, 1, 1)
     const mat4 = geomMatParam ? geomMatParam.getValue() : globalXfoParam.getValue().toMat4()
-    const bbox = treeitem.getParameter('BoundingBox').getValue()
+    const bbox = treeitem.getParameter('BoundingBox')!.getValue()
 
     const offset = index * pixelsPerItem * 4
-    const pixel0 = Vec4.createFromBuffer(dataArray.buffer, offset * 4)
-    const pixel1 = Vec4.createFromBuffer(dataArray.buffer, (offset + 4) * 4)
-    const pixel2 = Vec4.createFromBuffer(dataArray.buffer, (offset + 8) * 4)
-    const pixel3 = Vec4.createFromBuffer(dataArray.buffer, (offset + 12) * 4)
-    const pixel4 = Vec4.createFromBuffer(dataArray.buffer, (offset + 16) * 4)
-    const pixel5 = Vec4.createFromBuffer(dataArray.buffer, (offset + 20) * 4)
+    const pixel0 = new Vec4(dataArray.buffer, offset * 4)
+    const pixel1 = new Vec4(dataArray.buffer, (offset + 4) * 4)
+    const pixel2 = new Vec4(dataArray.buffer, (offset + 8) * 4)
+    const pixel3 = new Vec4(dataArray.buffer, (offset + 12) * 4)
+    const pixel4 = new Vec4(dataArray.buffer, (offset + 16) * 4)
+    const pixel5 = new Vec4(dataArray.buffer, (offset + 20) * 4)
 
     pixel0.set(mat4.xAxis.x, mat4.yAxis.x, mat4.zAxis.x, mat4.translation.x)
     pixel1.set(mat4.xAxis.y, mat4.yAxis.y, mat4.zAxis.y, mat4.translation.y)
@@ -252,11 +245,11 @@ class GLBoundingBoxPass extends GLPass {
 
   // eslint-disable-next-line require-jsdoc
   __updateIndexArray() {
-    const gl = this.__gl
+    const gl = this.__gl!
     // Note: When the camera moves, this array is sorted and re-upload.
     if (this.__indexArray && this.__indexArray.length != this.drawCount) {
-      gl.deleteBuffer(this.__instanceIdsBuffer)
-      this.__instanceIdsBuffer = null
+      gl.deleteBuffer(this.__instanceIdsBuffer!)
+      this.__instanceIdsBuffer = undefined
     }
 
     this.__indexArray = new Float32Array(this.drawCount)
@@ -267,7 +260,7 @@ class GLBoundingBoxPass extends GLPass {
         offset++
       }
     }
-    if (!this.__instanceIdsBuffer) this.__instanceIdsBuffer = gl.createBuffer()
+    if (!this.__instanceIdsBuffer) this.__instanceIdsBuffer = gl.createBuffer()!
 
     gl.bindBuffer(gl.ARRAY_BUFFER, this.__instanceIdsBuffer)
     gl.bufferData(gl.ARRAY_BUFFER, this.__indexArray, gl.STATIC_DRAW)
@@ -281,7 +274,7 @@ class GLBoundingBoxPass extends GLPass {
   __updateBoxes() {
     if (this.indexArrayUpdateNeeded) this.__updateIndexArray()
 
-    const gl = this.__renderer.gl
+    const gl = this.__renderer!.gl
     if (!gl.floatTexturesSupported || !gl.drawElementsInstanced) {
       this.__modelMatrixArray = []
       this.__treeitemDataArray = []
@@ -289,15 +282,18 @@ class GLBoundingBoxPass extends GLPass {
       this.__indexArray.forEach((index: number) => {
         const treeitemData = this.boxes[index]
         const treeitem = treeitemData.treeitem
-        const mat4 = treeitem.getParameter('GlobalXfo').getValue().toMat4()
-        const ppm = treeitem.getParameter('PixelsPerMeter').getValue()
+        const mat4 = treeitem
+          .getParameter('GlobalXfo')!
+          .getValue()
+          .toMat4()
+        const ppm = treeitem.getParameter('PixelsPerMeter')!.getValue()
         const scale = 1 / ppm
         let flags = 0
-        if (treeitem.getParameter('AlignedToCamera').getValue()) flags |= 1 << 2
-        if (treeitem.getParameter('DrawOnTop').getValue()) flags |= 1 << 3
-        if (treeitem.getParameter('FixedSizeOnscreen').getValue()) flags |= 1 << 4
-        const alpha = treeitem.getParameter('Alpha').getValue()
-        const color = treeitem.getParameter('Color').getValue()
+        if (treeitem.getParameter('AlignedToCamera')!.getValue()) flags |= 1 << 2
+        if (treeitem.getParameter('DrawOnTop')!.getValue()) flags |= 1 << 3
+        if (treeitem.getParameter('FixedSizeOnscreen')!.getValue()) flags |= 1 << 4
+        const alpha = treeitem.getParameter('Alpha')!.getValue()
+        const color = treeitem.getParameter('Color')!.getValue()
 
         this.__modelMatrixArray[index] = mat4.asArray()
         this.__treeitemDataArray[index] = [scale, flags, treeitemData.imageIndex, alpha]
@@ -326,14 +322,14 @@ class GLBoundingBoxPass extends GLPass {
     //     this.__width -= (this.__width % pixelsPerItem);
 
     if (!this.__drawItemsTexture) {
-      this.__drawItemsTexture = new GLTexture2D(this.__gl, {
+      this.__drawItemsTexture = new GLTexture2D(gl, {
         format: 'RGBA',
         type: 'FLOAT',
         width: size,
         height: size,
         filter: 'NEAREST',
         wrap: 'CLAMP_TO_EDGE',
-        mipMapped: false,
+        mipMapped: false
       })
       this.__drawItemsTexture.clear()
     } else {
@@ -360,7 +356,7 @@ class GLBoundingBoxPass extends GLPass {
     const treeitemData = this.boxes[index]
     if (!treeitemData.treeitem.isVisible()) return
 
-    const gl = this.__gl
+    const gl = this.__gl!
 
     const dataArray = new Float32Array(pixelsPerItem * 4)
     this.__populateBoxesDataArray(treeitemData, 0, dataArray)
@@ -395,7 +391,7 @@ class GLBoundingBoxPass extends GLPass {
     }
 
     if (this.dirtyBoxes.size > 0) {
-      this.dirtyBoxes.forEach((index) => {
+      this.dirtyBoxes.forEach(index => {
         this.__updateBox(index)
       })
       this.dirtyBoxes.clear()
@@ -403,15 +399,15 @@ class GLBoundingBoxPass extends GLPass {
 
     if (this.indexArrayUpdateNeeded) this.__updateIndexArray()
 
-    const gl = this.__gl
+    const gl = this.__gl!
 
     // gl.disable(gl.CULL_FACE)
     // gl.enable(gl.BLEND)
     // gl.blendEquation(gl.FUNC_ADD)
     // gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
 
-    this.glshader.bind(renderstate)
-    this.glgeom.bind(renderstate)
+    this.glshader!.bind(renderstate)
+    this.glgeom!.bind(renderstate)
 
     const unifs = renderstate.unifs
 
@@ -427,20 +423,20 @@ class GLBoundingBoxPass extends GLPass {
         })
       }
     } else {
-      this.__drawItemsTexture.bindToUniform(renderstate, unifs.instancesTexture)
+      this.__drawItemsTexture!.bindToUniform(renderstate, unifs.instancesTexture)
       gl.uniform1i(unifs.instancesTextureSize.location, this.__width)
 
       {
         // The instance transform ids are bound as an instanced attribute.
         const location = renderstate.attrs.instanceIds.location
         gl.enableVertexAttribArray(location)
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.__instanceIdsBuffer)
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.__instanceIdsBuffer!)
         gl.vertexAttribPointer(location, 1, gl.FLOAT, false, 4, 0)
         gl.vertexAttribDivisor(location, 1) // This makes it instanced
       }
 
       renderstate.bindViewports(unifs, () => {
-        this.glgeom.drawInstanced(renderstate, this.drawCount)
+        this.glgeom!.drawInstanced(renderstate, this.drawCount)
       })
     }
 

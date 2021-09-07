@@ -8,12 +8,10 @@ import './GLSL/index'
 import vert from './StandardSurface.vert'
 // @ts-ignore
 import frag from './StandardSurface.frag'
-import { ColorParameter } from '../../SceneTree/Parameters/ColorParameter'
 import { Material } from '../../SceneTree/Material'
 import { shaderLibrary } from '../ShaderLibrary'
 import { MaterialColorParam } from '../../SceneTree/Parameters/MaterialColorParam'
 import { MaterialFloatParam } from '../../SceneTree/Parameters/MaterialFloatParam'
-import { NumberParameter } from '../../SceneTree/Parameters/NumberParameter'
 
 /** A standard shader handling Opaque and transparent items and PBR rendering.
  * @extends GLShader
@@ -40,7 +38,7 @@ class StandardSurfaceShader extends GLShader {
     const colorRenderState = <ColorRenderState>renderstate
     super.bind(renderstate, key)
 
-    const gl = this.__gl
+    const gl = this.__gl!
     if (colorRenderState.envMap) {
       colorRenderState.envMap.bind(colorRenderState)
     }
@@ -60,19 +58,19 @@ class StandardSurfaceShader extends GLShader {
   static getPackedMaterialData(material: Material): Float32Array {
     const matData = new Float32Array(12) // TODO: no extra space needed right?
 
-    const baseColor = material.getParameter('BaseColor').getValue()
+    const baseColor = material.getParameter('BaseColor')!.getValue()
     matData[0] = baseColor.r
     matData[1] = baseColor.g
     matData[2] = baseColor.b
     matData[3] = baseColor.a
 
-    matData[4] = material.getParameter('AmbientOcclusion').getValue()
-    matData[5] = material.getParameter('Metallic').getValue()
-    matData[6] = material.getParameter('Roughness').getValue()
-    matData[7] = material.getParameter('Reflectance').getValue()
+    matData[4] = material.getParameter('AmbientOcclusion')!.getValue()
+    matData[5] = material.getParameter('Metallic')!.getValue()
+    matData[6] = material.getParameter('Roughness')!.getValue()
+    matData[7] = material.getParameter('Reflectance')!.getValue()
 
-    matData[8] = material.getParameter('EmissiveStrength').getValue()
-    matData[9] = material.getParameter('Opacity').getValue()
+    matData[8] = material.getParameter('EmissiveStrength')!.getValue()
+    matData[9] = material.getParameter('Opacity')!.getValue()
 
     return matData
   }

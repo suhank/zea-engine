@@ -1,25 +1,8 @@
 import { GLPass } from './GLPass'
 
-import { Vec4 } from '../../Math/index'
-
-import {
-  GeomItem,
-  Points,
-  Lines,
-  Mesh,
-  PointsProxy,
-  LinesProxy,
-  MeshProxy,
-  TreeItem,
-  BaseGeomItem,
-} from '../../SceneTree/index'
-import { GLPoints, GLLines, GLMesh, GLMaterial, GLGeomItemChangeType, GLGeomItem } from '../Drawing/index'
-import { GLTexture2D } from '../GLTexture2D'
+import { GeomItem, TreeItem } from '../../SceneTree/index'
 import { MathFunctions } from '../../Utilities/MathFunctions'
 import { GLBaseRenderer } from '../GLBaseRenderer'
-import { GLShader } from '../GLShader'
-
-const pixelsPerItem = 6 // The number of RGBA pixels per draw item.
 
 /** This class abstracts the rendering of a collection of geometries to screen.
  * @extends GLPass
@@ -121,21 +104,21 @@ class GLStandardGeomsPass extends GLPass {
     let glgeomdatashader
     let glselectedshader
 
-    const glShader = this.__renderer.getOrCreateShader(shaderName)
+    const glShader = this.__renderer!.getOrCreateShader(shaderName)
     if (glShader.getGeomDataShaderName()) {
-      glgeomdatashader = this.__renderer.getOrCreateShader(glShader.getGeomDataShaderName())
+      glgeomdatashader = this.__renderer!.getOrCreateShader(glShader.getGeomDataShaderName())
     } else {
       glgeomdatashader = glShader
     }
     if (glShader.getSelectedShaderName()) {
-      glselectedshader = this.__renderer.getOrCreateShader(glShader.getSelectedShaderName())
+      glselectedshader = this.__renderer!.getOrCreateShader(glShader.getSelectedShaderName())
     } else {
       glselectedshader = glShader
     }
     return {
       glShader,
       glgeomdatashader,
-      glselectedshader,
+      glselectedshader
     }
   }
 
@@ -144,10 +127,10 @@ class GLStandardGeomsPass extends GLPass {
    * @param {Uint8Array} geomData - The geomData value.
    * @return {any} - The return value.
    */
-  getGeomItemAndDist(geomData: Uint8Array): Record<string, any> {
+  getGeomItemAndDist(geomData: Uint8Array): Record<string, any> | undefined {
     let itemId
     let dist
-    const gl = this.__gl // TODO: refactor to avoid casts?
+    const gl = this.__gl! // TODO: refactor to avoid casts?
     if (gl.floatGeomBuffer) {
       itemId = Math.round(geomData[1])
       dist = geomData[3]
@@ -156,13 +139,14 @@ class GLStandardGeomsPass extends GLPass {
       dist = MathFunctions.decode16BitFloatFrom2xUInt8(Uint8Array.from([geomData[2], geomData[3]]))
     }
 
-    const geomItem = this.renderer.glGeomItemLibrary.getGeomItem(itemId)
+    const geomItem = this.renderer!.glGeomItemLibrary.getGeomItem(itemId)
     if (geomItem) {
       return {
         geomItem,
-        dist,
+        dist
       }
     }
+    return undefined
   }
 }
 

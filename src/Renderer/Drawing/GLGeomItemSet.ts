@@ -13,14 +13,14 @@ class GLGeomItemSet extends EventEmitter {
   protected gl: WebGL12RenderingContext
   protected glGeom: GLGeom
   protected id: number
-  protected glGeomItems: GLGeomItem[]
+  protected glGeomItems: Array<GLGeomItem | null>
   protected glgeomItems_freeIndices: number[]
   protected glgeomItemEventHandlers: any[]
-  protected drawIdsArray: Float32Array
-  protected drawIdsBuffer: WebGLBuffer | null
+  protected drawIdsArray: Float32Array | null = null
+  protected drawIdsBuffer: WebGLBuffer | null = null
   protected drawIdsBufferDirty: boolean
-  protected highlightedIdsArray: Float32Array
-  protected highlightedIdsBuffer: WebGLBuffer | null
+  protected highlightedIdsArray: Float32Array | null = null
+  protected highlightedIdsBuffer: WebGLBuffer | null = null
   protected highlightedIdsBufferDirty: boolean
   protected visibleItems: number[]
   protected highlightedItems: number[]
@@ -72,7 +72,7 @@ class GLGeomItemSet extends EventEmitter {
   addGLGeomItem(glGeomItem: GLGeomItem) {
     let index: number
     if (this.glgeomItems_freeIndices.length > 0) {
-      index = this.glgeomItems_freeIndices.pop()
+      index = this.glgeomItems_freeIndices.pop()!
     } else {
       index = this.glGeomItems.length
       this.glGeomItems.push(null)
@@ -177,7 +177,7 @@ class GLGeomItemSet extends EventEmitter {
       this.drawIdsBufferDirty = false
       return
     }
-    if (this.drawIdsBuffer && this.glGeomItems.length != this.drawIdsArray.length) {
+    if (this.drawIdsBuffer && this.glGeomItems.length != this.drawIdsArray!.length) {
       this.gl.deleteBuffer(this.drawIdsBuffer)
       this.drawIdsBuffer = null
     }
@@ -206,7 +206,7 @@ class GLGeomItemSet extends EventEmitter {
       // Note: the draw count can be less than the number of instances
       // we re-use the same buffer and simply invoke fewer draw calls.
       this.visibleItems.forEach((index, tgtIndex) => {
-        this.drawIdsArray[tgtIndex] = this.glGeomItems[index].getDrawItemId()
+        this.drawIdsArray![tgtIndex] = this.glGeomItems[index]!.getDrawItemId()
       })
 
       this.drawIdsBufferDirty = false
@@ -226,7 +226,7 @@ class GLGeomItemSet extends EventEmitter {
       this.highlightedIdsBufferDirty = false
       return
     }
-    if (this.highlightedIdsBuffer && this.glGeomItems.length > this.highlightedIdsArray.length) {
+    if (this.highlightedIdsBuffer && this.glGeomItems.length > this.highlightedIdsArray!.length) {
       this.gl.deleteBuffer(this.highlightedIdsBuffer)
       this.highlightedIdsBuffer = null
     }
@@ -253,7 +253,7 @@ class GLGeomItemSet extends EventEmitter {
       // Note: the draw count can be less than the number of instances
       // we re-use the same buffer and simply invoke fewer draw calls.
       this.highlightedItems.forEach((index, tgtIndex) => {
-        this.highlightedIdsArray[tgtIndex] = this.glGeomItems[index].getDrawItemId()
+        this.highlightedIdsArray![tgtIndex] = this.glGeomItems[index]!.getDrawItemId()
       })
 
       this.highlightedIdsBufferDirty = false
@@ -318,7 +318,7 @@ class GLGeomItemSet extends EventEmitter {
         gl.uniform1i(renderstate.unifs.instancedDraw.location, 0)
       }
       itemIndices.forEach((index: number) => {
-        this.glGeomItems[index].bind(renderstate)
+        this.glGeomItems[index]!.bind(renderstate)
         renderstate.bindViewports(unifs, () => {
           this.glGeom.draw(renderstate)
         })

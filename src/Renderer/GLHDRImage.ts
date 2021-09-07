@@ -1,11 +1,11 @@
 import { GLTexture2D } from './GLTexture2D'
 import { UnpackHDRShader } from './Shaders/UnpackHDRShader'
 import { GLFbo } from './GLFbo'
-import { generateShaderGeomBinding } from './Drawing/GeomShaderBinding'
+import { generateShaderGeomBinding, IGeomShaderBinding } from './Drawing/GeomShaderBinding'
 import { VLHImage } from '../SceneTree/Images/VLHImage'
-import { BaseEvent } from '../Utilities/BaseEvent'
 import { Color } from '../Math/Color'
 import { BaseImage } from '../SceneTree/BaseImage'
+import { GLShader } from './GLShader'
 
 /** Class representing a GL high dynamic range (HDR) image.
  * @extends GLTexture2D
@@ -14,11 +14,11 @@ import { BaseImage } from '../SceneTree/BaseImage'
 class GLHDRImage extends GLTexture2D {
   //  protected __gl: WebGL12RenderingContext
   protected __hdrImage: VLHImage
-  protected __fbo: GLFbo
-  __srcLDRTex: any
-  protected __unpackHDRShader: any
-  protected __shaderBinding: any
-  __srcCDMTex: any
+  protected __fbo: GLFbo | null = null
+  protected __srcLDRTex: GLTexture2D | null = null
+  protected __srcCDMTex: GLTexture2D | null = null
+  protected __unpackHDRShader: GLShader | null = null
+  protected __shaderBinding: IGeomShaderBinding | null = null
 
   /**
    * Create a GL HDR image.
@@ -70,7 +70,7 @@ class GLHDRImage extends GLTexture2D {
         width: ldr.width,
         height: ldr.height,
         filter: 'LINEAR',
-        wrap: 'CLAMP_TO_EDGE',
+        wrap: 'CLAMP_TO_EDGE'
       })
       this.__fbo = new GLFbo(this.__gl, this)
       this.__fbo.setClearColor(new Color(0, 0, 0, 0))
@@ -83,7 +83,7 @@ class GLHDRImage extends GLTexture2D {
         filter: 'NEAREST',
         mipMapped: false,
         wrap: 'CLAMP_TO_EDGE',
-        data: ldr,
+        data: ldr
       })
       this.__srcCDMTex = new GLTexture2D(this.__gl, {
         format: gl.name == 'webgl2' ? 'RED' : 'ALPHA',
@@ -93,7 +93,7 @@ class GLHDRImage extends GLTexture2D {
         filter: 'NEAREST',
         mipMapped: false,
         wrap: 'CLAMP_TO_EDGE',
-        data: cdm,
+        data: cdm
       })
 
       this.__unpackHDRShader = new UnpackHDRShader(this.__gl)
@@ -105,19 +105,19 @@ class GLHDRImage extends GLTexture2D {
         gl.__quadIndexBuffer
       )
     } else {
-      this.__srcLDRTex.bufferData(ldr)
-      this.__srcCDMTex.bufferData(cdm)
+      this.__srcLDRTex!.bufferData(ldr)
+      this.__srcCDMTex!.bufferData(cdm)
     }
 
     this.__fbo.bindAndClear()
 
     const renderstate: RenderState = <RenderState>{}
-    this.__unpackHDRShader.bind(renderstate, 'GLHDRImage')
-    this.__shaderBinding.bind(renderstate)
+    this.__unpackHDRShader!.bind(renderstate, 'GLHDRImage')
+    this.__shaderBinding!.bind(renderstate)
 
     const unifs = renderstate.unifs
-    this.__srcLDRTex.bindToUniform(renderstate, unifs.ldrSampler)
-    this.__srcCDMTex.bindToUniform(renderstate, unifs.cdmSampler)
+    this.__srcLDRTex!.bindToUniform(renderstate, unifs.ldrSampler)
+    this.__srcCDMTex!.bindToUniform(renderstate, unifs.cdmSampler)
 
     gl.uniform4fv(unifs.srcRegion.location, [0, 0, 1, 1])
     gl.drawQuad()
@@ -164,8 +164,8 @@ class GLHDRImage extends GLTexture2D {
     super.destroy()
     if (this.__fbo) {
       this.__fbo.destroy()
-      this.__srcLDRTex.destroy()
-      this.__srcCDMTex.destroy()
+      this.__srcLDRTex!.destroy()
+      this.__srcCDMTex!.destroy()
     }
     if (this.__unpackHDRShader) this.__unpackHDRShader.destroy()
     if (this.__shaderBinding) this.__shaderBinding.destroy()

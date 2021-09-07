@@ -1,6 +1,5 @@
 /* eslint-disable valid-jsdoc */
 /* eslint-disable guard-for-in */
-import { AnyARecord } from 'dns'
 import { BaseItem, Material } from '../SceneTree'
 import { StringFunctions } from '../Utilities/StringFunctions'
 import { shaderLibrary } from './ShaderLibrary'
@@ -24,7 +23,7 @@ let shaderInstanceId = 0
  * @private
  */
 class GLShader extends BaseItem {
-  protected __gl: WebGL12RenderingContext
+  protected __gl: WebGL12RenderingContext | undefined
   protected __shaderStagesGLSL: Record<string, string>
   protected __shaderStages: Record<string, ShaderParseResult>
   protected __shaderProgramHdls: Record<string, any>
@@ -38,7 +37,7 @@ class GLShader extends BaseItem {
    */
   constructor(gl?: WebGL12RenderingContext, name?: string) {
     super(name)
-    this.__gl = gl
+    if (gl) this.__gl = gl
     this.__shaderStagesGLSL = {}
     this.__shaderStages = {}
 
@@ -80,7 +79,7 @@ class GLShader extends BaseItem {
    * Clears all cached shader compilations for this shader.
    */
   clearProgramsCache() {
-    const gl = this.__gl
+    const gl = this.__gl!
     for (const shaderProgramkey in this.__shaderProgramHdls) {
       const shaderCompilationResult = this.__shaderProgramHdls[shaderProgramkey]
 
@@ -121,7 +120,7 @@ class GLShader extends BaseItem {
    * @private
    */
   __compileShaderStage(glsl: string, stageID: number, name: string, shaderopts: Shaderopts) {
-    const gl = this.__gl
+    const gl = this.__gl!
 
     // console.log("__compileShaderStage:" + this.name+"."+name + " glsl:\n" + glsl);
     if (!shaderopts) shaderopts = gl.shaderopts // TODO: shaderopts doesn't exist on gl
@@ -210,7 +209,7 @@ class GLShader extends BaseItem {
    * @private
    */
   __createProgram(shaderopts: Record<string, any>) {
-    const gl = this.__gl
+    const gl = this.__gl!
     this.__shaderCompilationAttempted = true
     const shaderProgramHdl = gl.createProgram()
     if (!shaderProgramHdl) throw Error('shaderProgramHdl not defined')
@@ -294,11 +293,11 @@ class GLShader extends BaseItem {
    * @private
    */
   __extractAttributeAndUniformLocations(shaderProgramHdl: WebGLProgram, shaderopts: Shaderopts) {
-    const gl = this.__gl
+    const gl = this.__gl!
     const attrs: Record<string, any> = this.getAttributes()
     const result: Record<string, any> = {
       attrs: {},
-      unifs: {},
+      unifs: {}
     }
     for (const attrName in attrs) {
       const location = gl.getAttribLocation(shaderProgramHdl, attrName)
@@ -311,7 +310,7 @@ class GLShader extends BaseItem {
         name: attrName,
         location: location,
         type: attrDesc.type,
-        instanced: attrDesc.instanced,
+        instanced: attrDesc.instanced
       }
     }
     const unifs: Record<string, string> = this.getUniforms() // TODO: refactor type in fn()
@@ -347,7 +346,7 @@ class GLShader extends BaseItem {
       result.unifs[uniformName] = {
         name: uniformName,
         location: location,
-        type: unifType,
+        type: unifType
       }
     }
     return result
@@ -402,7 +401,7 @@ class GLShader extends BaseItem {
     if (!shaderCompilationResult) {
       if (shaderCompilationResult !== false) {
         // && shaderopts
-        shaderCompilationResult = this.__createProgram(shaderopts)
+        shaderCompilationResult = this.__createProgram(shaderopts || {})
         shaderCompilationResult.shaderkey = shaderkey
         this.__shaderProgramHdls[shaderkey] = shaderCompilationResult
       }
@@ -424,7 +423,7 @@ class GLShader extends BaseItem {
    * @return {boolean} - The return value.
    */
   bind(renderstate: RenderState, key?: string) {
-    const gl = this.__gl
+    const gl = this.__gl!
 
     if (renderstate.glShader != this) {
       const shaderCompilationResult = this.compileForTarget(key, renderstate.shaderopts)
@@ -525,7 +524,7 @@ class GLShader extends BaseItem {
    * Users should never need to call this method directly.
    */
   destroy() {
-    const gl = this.__gl
+    const gl = this.__gl!
     // eslint-disable-next-line guard-for-in
     for (const key in this.__shaderProgramHdls) {
       const shaderCompilationResult = this.__shaderProgramHdls[key]

@@ -1,5 +1,4 @@
 import { BaseImage, RefCounted } from '../SceneTree/index'
-import { BaseEvent } from '../Utilities/BaseEvent'
 import { ResizedEvent } from '../Utilities/Events/ResizedEvent'
 import { MathFunctions } from '../Utilities/MathFunctions'
 import { processTextureParams } from './processTextureParams'
@@ -21,25 +20,25 @@ class GLTexture2D extends RefCounted {
   protected __loaded: boolean
   protected __bound: boolean
 
-  protected __image: BaseImage
-  protected __internalFormat: number
-  __type: number
-  __format: number
-  protected __wrapParam: number
+  protected __image: BaseImage | null = null
+  protected __internalFormat: number = 0
+  protected __type: number = 0
+  protected __format: number = 0
+  protected __wrapParam: number = 0
 
-  protected params: Record<string, any>
-  protected __minFilter: number
-  protected __magFilter: number
-  protected __wrapS: number
-  protected __wrapT: number
-  protected __flipY: boolean
-  protected __mipMapped: boolean
-  invert: boolean
-  alphaFromLuminance: boolean
+  protected params: Record<string, any> = {}
+  protected __minFilter: number = 0
+  protected __magFilter: number = 0
+  protected __wrapS: number = 0
+  protected __wrapT: number = 0
+  protected __flipY: boolean = false
+  protected __mipMapped: boolean = false
+  invert: boolean = false
+  alphaFromLuminance: boolean = false
 
-  protected __gltex: WebGLTexture | null
-  protected __typeParam: string
-  protected __formatParam: string
+  protected __gltex: WebGLTexture | null = null
+  protected __typeParam: string = ''
+  protected __formatParam: string = ''
   /**
    * Create a GL texture 2D.
    *
@@ -64,7 +63,7 @@ class GLTexture2D extends RefCounted {
         this.__image.setMetadata('gltexture', this)
         const imageUpdated = () => {
           // this.bufferData(data);
-          const params = this.__image.getParams()
+          const params = this.__image!.getParams()
           const width = params.width
           const height = params.height
           const data = params.data
@@ -75,7 +74,7 @@ class GLTexture2D extends RefCounted {
           this.configure(this.__image.getParams())
         } else {
           this.__image.on('loaded', () => {
-            this.configure(this.__image.getParams())
+            this.configure(this.__image!.getParams())
           })
         }
       } else {
@@ -98,7 +97,7 @@ class GLTexture2D extends RefCounted {
    *
    * @return {BaseImage} - The return value.
    */
-  getImage(): BaseImage {
+  getImage(): BaseImage | null {
     return this.__image
   }
 
@@ -539,7 +538,7 @@ class GLTexture2D extends RefCounted {
   preBind(unif: Uniform, unifs: Uniforms) {
     return {
       textureTypeUnif: unifs[unif.name + 'Type'],
-      textureDescUnif: unifs[unif.name + 'Desc'],
+      textureDescUnif: unifs[unif.name + 'Desc']
     }
   }
 

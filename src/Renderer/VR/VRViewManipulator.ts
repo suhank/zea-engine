@@ -5,8 +5,6 @@ import { Material } from '../../SceneTree/Material'
 
 import { BaseTool } from '../../SceneTree/Manipulators/BaseTool'
 import { POINTER_TYPES } from '../../Utilities/EnumUtils'
-import { AnyARecord } from 'dns'
-import { BaseGeom } from '../../SceneTree/Geometry/BaseGeom'
 
 /**
  * Class representing a view tool
@@ -33,7 +31,7 @@ class VRViewManipulator extends BaseTool {
     this.xrvp = xrvp
     this.vrControllerToolTip = new Sphere(0.02 * 0.75)
     this.vrControllerToolTipMat = new Material('Cross', 'FlatSurfaceShader')
-    this.vrControllerToolTipMat.getParameter('BaseColor').setValue(new Color('#03E3AC'))
+    this.vrControllerToolTipMat.getParameter('BaseColor')!.setValue(new Color('#03E3AC'))
     this.addIconToController = this.addIconToController.bind(this)
   }
 

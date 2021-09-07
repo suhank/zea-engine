@@ -3,8 +3,6 @@ import { GLHDRImage } from './GLHDRImage'
 import { EnvMapShader } from './Shaders/EnvMapShader'
 import { generateShaderGeomBinding, IGeomShaderBinding } from './Drawing/GeomShaderBinding'
 import { EnvMap } from '../SceneTree/Images/EnvMap'
-import { GLBaseRenderer } from './GLBaseRenderer'
-import { BaseEvent } from '../Utilities/BaseEvent'
 import { GLRenderer } from './GLRenderer'
 
 /** Class representing a GL environment map.
@@ -15,9 +13,9 @@ class GLEnvMap extends GLProbe {
   protected __renderer: GLRenderer
   protected __envMap: EnvMap
   protected __backgroundFocus: number
-  protected __srcGLTex: GLHDRImage
-  protected __envMapShader: EnvMapShader
-  protected __envMapShaderBinding: IGeomShaderBinding
+  protected __srcGLTex: GLHDRImage | null = null
+  protected __envMapShader: EnvMapShader | null = null
+  protected __envMapShaderBinding: IGeomShaderBinding | null = null
   protected __lodPyramid: any
   /**
    * Create a GL env map.
@@ -56,7 +54,7 @@ class GLEnvMap extends GLProbe {
     )
 
     //
-    const headlightParam = this.__envMap.getParameter('HeadLightMode')
+    const headlightParam = this.__envMap.getParameter('HeadLightMode')!
 
     const updateHeadlightModeFlag = () => {
       const ENVMAP_FLAG_HEADLIGHT = 1 // 1<<0;
@@ -111,18 +109,18 @@ class GLEnvMap extends GLProbe {
       const gl = this.__gl
       const debug = false
       if (debug) {
-        const screenQuad = this.__renderer.screenQuad
+        const screenQuad = this.__renderer.screenQuad!
         screenQuad.bindShader(renderstate)
         const debugId = 2 * 1
         switch (debugId) {
-          case 0:
-            screenQuad.draw(renderstate, this.__srcGLTex.__srcLDRTex)
-            break
-          case 1:
-            screenQuad.draw(renderstate, this.__srcGLTex.__srcCDMTex)
-            break
+          // case 0:
+          //   screenQuad.draw(renderstate, this.__srcGLTex!.__srcLDRTex!)
+          //   break
+          // case 1:
+          //   screenQuad.draw(renderstate, this.__srcGLTex!.__srcCDMTex!)
+          //   break
           case 2:
-            screenQuad.draw(renderstate, this.__srcGLTex)
+            screenQuad.draw(renderstate, this.__srcGLTex!)
             break
           case 3:
             screenQuad.draw(renderstate, this.__lodPyramid)
@@ -133,17 +131,17 @@ class GLEnvMap extends GLProbe {
         }
       } else {
         // /////////////////
-        this.__envMapShader.bind(renderstate, 'GLEnvMap')
+        this.__envMapShader!.bind(renderstate, 'GLEnvMap')
         const unifs = renderstate.unifs
 
         const { envMap, focus, exposure } = renderstate.unifs
         if (envMap) {
-          this.__srcGLTex.bindToUniform(renderstate, envMap)
+          this.__srcGLTex!.bindToUniform(renderstate, envMap)
         }
         if (focus) gl.uniform1f(focus.location, this.__backgroundFocus)
         if (exposure) gl.uniform1f(exposure.location, renderstate.exposure)
 
-        this.__envMapShaderBinding.bind(renderstate)
+        this.__envMapShaderBinding!.bind(renderstate)
         gl.depthMask(false)
 
         renderstate.bindViewports(unifs, () => {
@@ -159,7 +157,7 @@ class GLEnvMap extends GLProbe {
    */
   destroy(): void {
     super.destroy()
-    this.__srcGLTex.destroy()
+    if (this.__srcGLTex) this.__srcGLTex.destroy()
   }
 }
 

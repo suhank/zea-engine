@@ -12,7 +12,6 @@ class GLScreenQuad {
   protected __size: number[]
   protected flipY: boolean
   protected __glshader: ScreenQuadShader
-  protected __quadVertexIdsBuffer: any[]
   protected __quadBinding: any // GeomShaderBinding | VAOGeomShaderBinding
   protected ready: boolean
   /**

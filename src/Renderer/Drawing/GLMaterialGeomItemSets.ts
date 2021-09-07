@@ -1,6 +1,6 @@
 /* eslint-disable guard-for-in */
 import { EventEmitter } from '../../Utilities/index'
-import { GLOpaqueGeomsPass, GLPass, GLStandardGeomsPass } from '../Passes'
+import { GLOpaqueGeomsPass } from '../Passes'
 import { GLGeom } from './GLGeom'
 import { GLGeomItem } from './GLGeomItem'
 import { GLGeomItemSet } from './GLGeomItemSet'
@@ -20,10 +20,10 @@ class GLMaterialGeomItemSets extends EventEmitter {
    * @param {GLPass} pass - The pass that owns the GLMaterialGeomItemSets.
    * @param {GLMaterial} glMaterial - The glMaterial value.
    */
-  constructor(pass: GLOpaqueGeomsPass, glMaterial: GLMaterial = undefined) {
+  constructor(pass: GLOpaqueGeomsPass, glMaterial: GLMaterial) {
     super()
     this.pass = pass
-    this.__gl = pass.__gl
+    this.__gl = pass.renderer!.gl
     this.glMaterial = glMaterial
     this.glGeomItemSets = {}
     this.drawCount = 0
@@ -37,7 +37,7 @@ class GLMaterialGeomItemSets extends EventEmitter {
         for (const glGeomItem of glGeomItemSet.glGeomItems) {
           const geomItem = glGeomItem.geomItem
           this.pass.removeGeomItem(geomItem)
-          this.pass.__renderer.assignTreeItemToGLPass(geomItem)
+          this.pass.renderer!.assignTreeItemToGLPass(geomItem)
         }
       }
     }
@@ -90,7 +90,7 @@ class GLMaterialGeomItemSets extends EventEmitter {
         for (const glGeomItem of glGeomItemSet.glGeomItems) {
           const geomItem = glGeomItem.geomItem
           this.pass.removeGeomItem(geomItem)
-          this.pass.__renderer.assignTreeItemToGLPass(geomItem)
+          this.pass.renderer!.assignTreeItemToGLPass(geomItem)
         }
       }
     }
@@ -101,7 +101,10 @@ class GLMaterialGeomItemSets extends EventEmitter {
    * @param {any} glGeomItemSet - The glGeomItemSet value.
    */
   addGeomItemSet(glGeomItemSet: any) {
-    const id = glGeomItemSet.getGLGeom().getGeom().getId()
+    const id = glGeomItemSet
+      .getGLGeom()
+      .getGeom()
+      .getId()
     this.glGeomItemSets[id] = glGeomItemSet
     glGeomItemSet.on('drawCountChanged', this.drawCountChanged)
     glGeomItemSet.on('destructing', () => {

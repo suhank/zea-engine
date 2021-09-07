@@ -1,5 +1,5 @@
 ﻿import { GLTexture2D } from '../GLTexture2D'
-import { EventEmitter, MathFunctions, Allocator1D } from '../../Utilities/index'
+import { EventEmitter, MathFunctions, Allocator1D, Allocation1D } from '../../Utilities/index'
 import { GLMaterial } from './GLMaterial'
 import { GLBaseRenderer } from '../GLBaseRenderer'
 import { Material } from '../../SceneTree'
@@ -107,11 +107,12 @@ class GLMaterialLibrary extends EventEmitter {
     return glMaterial
   }
 
-  getMaterialAllocation(material: Material) {
+  getMaterialAllocation(material: Material): Allocation1D | undefined {
     const index = this.materialIndices[material.getId()]
     if (index != undefined) {
       return this.materialsAllocator.getAllocation(index)
     }
+    return undefined
   }
 
   /**
@@ -153,7 +154,7 @@ class GLMaterialLibrary extends EventEmitter {
         height: materialsTextureSize,
         filter: 'NEAREST',
         wrap: 'CLAMP_TO_EDGE',
-        mipMapped: false,
+        mipMapped: false
       })
       this.materialsTexture.clear()
     } else if (this.materialsTexture.width < materialsTextureSize) {

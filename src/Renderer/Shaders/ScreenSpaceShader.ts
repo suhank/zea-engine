@@ -1,6 +1,5 @@
 /* eslint-disable require-jsdoc */
 import { Color } from '../../Math/Color'
-import { Registry } from '../../Registry'
 import { Material } from '../../SceneTree/Material'
 import { MaterialColorParam } from '../../SceneTree/Parameters/MaterialColorParam'
 import { GLShader } from '../GLShader'
@@ -35,7 +34,7 @@ class ScreenSpaceShader extends GLShader {
    */
   static getPackedMaterialData(material: Material): Float32Array {
     const matData = new Float32Array(8)
-    const baseColor = material.getParameter('BaseColor').getValue()
+    const baseColor = material.getParameter('BaseColor')!.getValue()
     matData[0] = baseColor.r
     matData[1] = baseColor.g
     matData[2] = baseColor.b

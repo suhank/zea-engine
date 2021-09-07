@@ -1,5 +1,5 @@
 import { SystemDesc } from '../../SystemDesc'
-import { Vec3, Quat, Xfo, Mat4, Vec4 } from '../../Math/index'
+import { Vec3, Xfo, Mat4 } from '../../Math/index'
 import { TreeItem } from '../../SceneTree/index'
 
 /** Class representing a VR controller. */
@@ -107,7 +107,6 @@ class VRController {
                 srcControllerTree = assetItem.getChildByName('RightController')
                 break
               case 'none':
-                ;``
               case 'left-right':
               case 'left-right-none':
                 srcControllerTree = assetItem.getChildByName('Controller')
@@ -165,7 +164,7 @@ class VRController {
    * @return {any} - The return value.
    */
   getTipXfo() {
-    return this.__tip.getParameter('GlobalXfo').getValue()
+    return this.__tip.getParameter('GlobalXfo')!.getValue()
   }
 
   /**
@@ -197,7 +196,7 @@ class VRController {
    * @return {any} - The return value.
    */
   getControllerTipStageLocalXfo() {
-    return this.__xfo.multiply(this.__tip.getParameter('LocalXfo').getValue())
+    return this.__xfo.multiply(this.__tip.getParameter('LocalXfo')!.getValue())
   }
 
   // ////////////////////////////////
@@ -228,7 +227,7 @@ class VRController {
     // this.__xfo.ori.set(ori.x, ori.y, ori.z, ori.x);
     // //////////////////////////////
 
-    this.__treeItem.getParameter('LocalXfo').setValue(this.__xfo)
+    this.__treeItem.getParameter('LocalXfo')!.setValue(this.__xfo)
 
     // Reset the geom at tip so it will be recomuted if necessary
     this.__geomAtTip = undefined
@@ -272,7 +271,7 @@ class VRController {
     this.__hitTested = true
 
     const renderer = this.xrvp.getRenderer()
-    const xfo = this.__tip.getParameter('GlobalXfo').getValue()
+    const xfo = this.__tip.getParameter('GlobalXfo')!.getValue()
     const vol = this.__activeVolumeSize
     this.__intersectionData = renderer.raycastWithXfo(xfo, vol, vol)
     return this.__intersectionData

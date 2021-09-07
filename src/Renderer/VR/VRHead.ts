@@ -69,7 +69,7 @@ class VRHead {
     // const ori = pose.transform.orientation;
     // this.__localXfo.ori.set(ori.x, ori.y, ori.z, ori.x);
 
-    this.__treeItem.getParameter('LocalXfo').setValue(this.__localXfo)
+    this.__treeItem.getParameter('LocalXfo')!.setValue(this.__localXfo)
   }
 
   /**

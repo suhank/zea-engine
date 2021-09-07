@@ -1,6 +1,6 @@
 /* eslint-disable guard-for-in */
 import { EventEmitter } from '../../Utilities/index'
-import { GeomItem, Points, Lines, Mesh, PointsProxy, LinesProxy, MeshProxy, BaseGeom } from '../../SceneTree/index'
+import { Points, Lines, Mesh, PointsProxy, LinesProxy, MeshProxy, BaseGeom } from '../../SceneTree/index'
 import { GLLinesItemSet } from './GLLinesItemSet'
 import { GLPointsItemSet } from './GLPointsItemSet'
 import { GLMeshItemSet } from './GLMeshItemSet'
@@ -20,8 +20,8 @@ class GLShaderGeomSets extends EventEmitter {
   protected glGeomItemSets: Record<string, any>
 
   protected glShaderKey: string
-  protected glGeomDataShaderKey: string
-  protected glHighlightShaderKey: string
+  protected glGeomDataShaderKey: string = ''
+  protected glHighlightShaderKey: string = ''
   /**
    * Create a GL shader material.
    * @param {GLStandardGeomsPass} pass - The pass that owns this object.
@@ -53,15 +53,15 @@ class GLShaderGeomSets extends EventEmitter {
     let glGeomItemSet
     if (geom instanceof Mesh || geom instanceof MeshProxy) {
       if (this.glGeomItemSets['GLMesh']) return this.glGeomItemSets['GLMesh']
-      glGeomItemSet = new GLMeshItemSet(this.pass.renderer)
+      glGeomItemSet = new GLMeshItemSet(this.pass.renderer!)
       this.glGeomItemSets['GLMesh'] = glGeomItemSet
     } else if (geom instanceof Lines || geom instanceof LinesProxy) {
       if (this.glGeomItemSets['GLLines']) return this.glGeomItemSets['GLLines']
-      glGeomItemSet = new GLLinesItemSet(this.pass.renderer)
+      glGeomItemSet = new GLLinesItemSet(this.pass.renderer!)
       this.glGeomItemSets['GLLines'] = glGeomItemSet
     } else if (geom instanceof Points || geom instanceof PointsProxy) {
       if (this.glGeomItemSets['GLPoints']) return this.glGeomItemSets['GLPoints']
-      glGeomItemSet = new GLPointsItemSet(this.pass.renderer)
+      glGeomItemSet = new GLPointsItemSet(this.pass.renderer!)
       this.glGeomItemSets['GLPoints'] = glGeomItemSet
     } else {
       throw new Error('Unsupported geom type:' + geom.constructor.name)
@@ -79,18 +79,18 @@ class GLShaderGeomSets extends EventEmitter {
    */
   addGLGeomItem(glGeomItem: GLGeomItem) {
     const geomItem = glGeomItem.geomItem
-    const geom = geomItem.getParameter('Geometry').getValue()
-    const material = glGeomItem.geomItem.getParameter('Material').getValue()
-    this.pass.renderer.glMaterialLibrary.addMaterial(material)
+    const geom = geomItem.getParameter('Geometry')!.getValue()
+    const material = glGeomItem.geomItem.getParameter('Material')!.getValue()
+    this.pass.renderer!.glMaterialLibrary.addMaterial(material)
 
     const geomItemParamChanged = (event: Record<string, any>) => {
       // Cast to GLStndardGeomsPass
       this.pass.removeGeomItem(geomItem)
-      this.pass.__renderer.assignTreeItemToGLPass(geomItem)
+      this.pass.renderer!.assignTreeItemToGLPass(geomItem)
     }
     material.on('transparencyChanged', geomItemParamChanged)
-    geomItem.getParameter('Material').on('valueChanged', geomItemParamChanged)
-    geomItem.getParameter('Geometry').on('valueChanged', geomItemParamChanged)
+    geomItem.getParameter('Material')!.on('valueChanged', geomItemParamChanged)
+    geomItem.getParameter('Geometry')!.on('valueChanged', geomItemParamChanged)
 
     const glGeomItemSet = this.getOrCreateGLGeomItemSet(geom)
     glGeomItem.material = material
@@ -108,8 +108,8 @@ class GLShaderGeomSets extends EventEmitter {
     const material = glGeomItem.material
     const geomItemParamChanged = glGeomItem.geomItemParamChanged
     material.off('transparencyChanged', geomItemParamChanged)
-    geomItem.getParameter('Material').off('valueChanged', geomItemParamChanged)
-    geomItem.getParameter('Geometry').off('valueChanged', geomItemParamChanged)
+    geomItem.getParameter('Material')!.off('valueChanged', geomItemParamChanged)
+    geomItem.getParameter('Geometry')!.off('valueChanged', geomItemParamChanged)
     glGeomItem.material = null
     glGeomItem.geomItemParamChanged = null
 
@@ -141,9 +141,9 @@ class GLShaderGeomSets extends EventEmitter {
       throw new Error('Unable to bind shader:' + glShader)
     }
 
-    this.pass.renderer.glGeomItemLibrary.bind(renderstate)
-    this.pass.renderer.glGeomLibrary.bind(renderstate)
-    this.pass.renderer.glMaterialLibrary.bind(renderstate)
+    this.pass.renderer!.glGeomItemLibrary.bind(renderstate)
+    this.pass.renderer!.glGeomLibrary.bind(renderstate)
+    this.pass.renderer!.glMaterialLibrary.bind(renderstate)
   }
 
   /**
@@ -181,7 +181,7 @@ class GLShaderGeomSets extends EventEmitter {
   drawGeomData(renderstate: RenderState) {
     this.bindShader(this.glGeomDataShader, renderstate, this.glGeomDataShaderKey)
 
-    const gl = renderstate.gl
+    const gl = this.gl
     const unifs = renderstate.unifs
     if (unifs.floatGeomBuffer) {
       gl.uniform1i(unifs.floatGeomBuffer.location, 1)

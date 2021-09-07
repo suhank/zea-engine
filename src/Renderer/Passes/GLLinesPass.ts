@@ -13,10 +13,10 @@ import { GLBaseRenderer } from '../GLBaseRenderer'
  * @private
  */
 class GLLinesPass extends GLOpaqueGeomsPass {
-  protected linesGeomDataBuffer: GLTexture2D
-  protected fattenLinesShader: FattenLinesShader
-  protected quad: GLMesh
-  protected fbo: WebGLFramebuffer | null
+  protected linesGeomDataBuffer: GLTexture2D | null = null
+  protected fattenLinesShader: FattenLinesShader | null = null
+  protected quad: GLMesh | null = null
+  protected fbo: WebGLFramebuffer | null = null
   /**
    * Create a GL opaque geoms pass.
    */
@@ -38,7 +38,7 @@ class GLLinesPass extends GLOpaqueGeomsPass {
    * @return {boolean} - The return value.
    */
   filterGeomItem(geomItem: GeomItem): boolean {
-    const geom = geomItem.getParameter('Geometry').getValue()
+    const geom = geomItem.getParameter('Geometry')!.getValue()
     if (geom instanceof Lines || geom instanceof LinesProxy || geom instanceof Points || geom instanceof PointsProxy) {
       return true
     }
@@ -50,7 +50,7 @@ class GLLinesPass extends GLOpaqueGeomsPass {
    * @private
    */
   __checkFramebuffer(width: number, height: number) {
-    const gl = this.__gl
+    const gl = this.__gl!
 
     let check
     if (gl.name == 'webgl2') check = gl.checkFramebufferStatus(gl.DRAW_FRAMEBUFFER)
@@ -86,7 +86,7 @@ class GLLinesPass extends GLOpaqueGeomsPass {
    * @param {RenderState} renderstate - The object tracking the current state of the renderer
    */
   draw(renderstate: RenderState) {
-    const gl = this.__gl
+    const gl = this.__gl!
 
     gl.enable(gl.BLEND)
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
@@ -104,19 +104,19 @@ class GLLinesPass extends GLOpaqueGeomsPass {
    * @param {RenderState} renderstate - The object tracking the current state of the renderer
    */
   drawGeomData(renderstate: GeomDataRenderState) {
-    const gl = this.__gl
+    const gl = this.__gl!
     //  Note: lines in VR are not fattened...
     if (renderstate.geomDataFbo) {
       if (!this.linesGeomDataBuffer) {
-        this.linesGeomDataBuffer = new GLTexture2D(this.__gl, {
+        this.linesGeomDataBuffer = new GLTexture2D(gl, {
           type: gl.floatGeomBuffer ? 'FLOAT' : 'UNSIGNED_BYTE',
           format: 'RGBA',
           filter: 'NEAREST',
           width: 1,
-          height: 2,
+          height: 2
         })
-        this.fattenLinesShader = new FattenLinesShader(this.__gl)
-        this.quad = new GLMesh(this.__gl, new Plane(1, 1))
+        this.fattenLinesShader = new FattenLinesShader(gl)
+        this.quad = new GLMesh(gl, new Plane(1, 1))
       }
 
       const geomDataFbo = renderstate.geomDataFbo
@@ -159,15 +159,15 @@ class GLLinesPass extends GLOpaqueGeomsPass {
     if (renderstate.geomDataFbo) {
       renderstate.geomDataFbo.bindForWriting(renderstate)
 
-      this.fattenLinesShader.bind(renderstate)
+      this.fattenLinesShader!.bind(renderstate)
 
       const { colorTexture, screenSize } = renderstate.unifs
-      this.linesGeomDataBuffer.bindToUniform(renderstate, colorTexture)
+      this.linesGeomDataBuffer!.bindToUniform(renderstate, colorTexture)
 
       const geomDataFbo = renderstate.geomDataFbo
       gl.uniform2f(screenSize.location, geomDataFbo.width, geomDataFbo.height)
 
-      this.quad.bindAndDraw(renderstate)
+      this.quad!.bindAndDraw(renderstate)
     }
   }
 }

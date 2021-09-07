@@ -8,12 +8,12 @@ const GLGeomItemChangeType = {
   GEOMITEM_CHANGED: 0,
   GEOM_CHANGED: 1,
   VISIBILITY_CHANGED: 2,
-  HIGHLIGHT_CHANGED: 3,
+  HIGHLIGHT_CHANGED: 3
 }
 
 const GLGeomItemFlags = {
   GEOMITEM_FLAG_CUTAWAY: 1, // 1<<0;
-  GEOMITEM_INVISIBLE_IN_GEOMDATA: 2, // 1<<0;
+  GEOMITEM_INVISIBLE_IN_GEOMDATA: 2 // 1<<0;
 }
 
 /** This class is responsible for managing a GeomItem within the renderer.
@@ -35,10 +35,10 @@ class GLGeomItem extends EventEmitter {
   protected geomVisible: boolean
   visible: boolean
   protected culled: boolean
-  protected cutDataChanged: boolean
-  protected cutData: number[]
+  protected cutDataChanged: boolean = false
+  protected cutData: number[] = []
   protected geomData: any
-  protected geomMatrixDirty: boolean
+  protected geomMatrixDirty: boolean = false
   protected modelMatrixArray: any
 
   protected geomMatrixChanged: any
@@ -92,7 +92,7 @@ class GLGeomItem extends EventEmitter {
       this.geomData = [flags, materialId, 0, 0]
 
       this.geomMatrixDirty = true
-      this.geomItem.getParameter('GeomMat').on('valueChanged', () => {
+      this.geomItem.getParameter('GeomMat')!.on('valueChanged', () => {
         this.geomMatrixDirty = true
         this.emit('updated')
       })
@@ -203,7 +203,7 @@ class GLGeomItem extends EventEmitter {
   destroy() {
     this.geomItem.off('visibilityChanged', this.updateVisibility)
     if (!this.supportInstancing) {
-      this.geomItem.getParameter('GeomMat').off('valueChanged', this.geomMatrixChanged)
+      this.geomItem.getParameter('GeomMat')!.off('valueChanged', this.geomMatrixChanged)
       this.geomItem.off('cutAwayChanged', this.cutAwayChanged)
       this.geomItem.off('highlightChanged', this.highlightChanged)
     }

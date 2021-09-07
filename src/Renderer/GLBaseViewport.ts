@@ -1,22 +1,19 @@
-import { SystemDesc } from '../SystemDesc'
 import { Color } from '../Math/index'
 import { Plane, ParameterOwner, BaseImage, NumberParameter, BaseTool, Scene } from '../SceneTree/index'
-import { GLRenderTarget } from './GLRenderTarget'
 import { GLRenderer } from './GLRenderer'
 import { GLHDRImage } from './GLHDRImage'
 import { GLTexture2D } from './GLTexture2D'
 import { GLFbo } from './GLFbo'
 import { GLMesh } from './Drawing/GLMesh'
 
-import { BaseEvent } from '../Utilities/BaseEvent'
 import { VLHImage } from '../SceneTree/Images/VLHImage'
 import { ResizedEvent } from '../Utilities/Events/ResizedEvent'
-import { GLBaseRenderer } from './GLBaseRenderer'
+import { SceneSetEvent } from '../Utilities/Events/SceneSetEvent'
 
 const FRAMEBUFFER = {
   MSAA_RENDERBUFFER: 0,
   COLORBUFFER: 1,
-  DEPTHBUFFER: 2,
+  DEPTHBUFFER: 2
 }
 
 /**
@@ -29,28 +26,28 @@ class GLBaseViewport extends ParameterOwner {
   protected renderer: GLRenderer
   protected __renderer: GLRenderer
   protected __doubleClickTimeMSParam: NumberParameter
-  protected __fbo: WebGLFramebuffer | null
+  protected __fbo: WebGLFramebuffer | null = null
   protected __ongoingPointers: any[]
   protected __backgroundColor: Color
   protected quad: GLMesh
-  protected offscreenBuffer: GLTexture2D
-  protected depthTexture: GLTexture2D
+  protected offscreenBuffer: GLTexture2D | null = null
+  protected depthTexture: GLTexture2D | null = null
   protected highlightedGeomsBuffer: GLTexture2D
   protected highlightedGeomsBufferFbo: GLFbo
-  protected __backgroundTexture: BaseImage
-  protected __backgroundGLTexture: GLHDRImage | GLTexture2D
-  protected offscreenBufferFbo: GLFbo
-  protected __width: number
-  protected __height: number
-  protected __canvasWidth: number
-  protected __canvasHeight: number
-  protected fb: WebGLFramebuffer | null
+  protected __backgroundTexture: BaseImage | null = null
+  protected __backgroundGLTexture: GLHDRImage | GLTexture2D | null = null
+  protected offscreenBufferFbo: GLFbo | null = null
+  protected __width: number = 0
+  protected __height: number = 0
+  protected __canvasWidth: number = 0
+  protected __canvasHeight: number = 0
+  protected fb: Array<WebGLFramebuffer | null> | null = null
   protected colorRenderbuffer: any
-  protected depthBuffer: WebGLRenderbuffer | null
-  protected EXT_frag_depth: EXT_frag_depth
+  protected depthBuffer: WebGLRenderbuffer | null = null
+  protected EXT_frag_depth: EXT_frag_depth | null = null
   protected manipulator: any
 
-  protected depthRange: number[]
+  protected depthRange: number[] = [0, 0]
   /**
    * Create a GL base viewport.
    * @param {GLRenderer} renderer - The renderer value.
@@ -79,7 +76,7 @@ class GLBaseViewport extends ParameterOwner {
         format: 'RGBA',
         filter: 'LINEAR',
         width: 4,
-        height: 4,
+        height: 4
       })
       this.depthTexture = new GLTexture2D(gl, {
         type: gl.UNSIGNED_INT_24_8,
@@ -88,7 +85,7 @@ class GLBaseViewport extends ParameterOwner {
         filter: gl.NEAREST,
         wrap: gl.CLAMP_TO_EDGE,
         width: 4,
-        height: 4,
+        height: 4
       })
       // this.offscreenBufferFbo = new GLFbo(gl, this.offscreenBuffer, true)
       // this.offscreenBufferFbo.setClearColor(this.__backgroundColor.asArray())
@@ -99,18 +96,18 @@ class GLBaseViewport extends ParameterOwner {
       format: 'RGBA',
       filter: 'NEAREST',
       width: 4,
-      height: 4,
+      height: 4
     })
     this.highlightedGeomsBufferFbo = new GLFbo(gl, this.highlightedGeomsBuffer, true)
     this.highlightedGeomsBufferFbo.setClearColor(new Color(0, 0, 0, 0))
 
     // //////////////////////////////////
     // Setup Camera Manipulator
-    const sceneSet = (scene?: Scene) => {
-      const settings = renderer.getScene().settings
+    const sceneSet = (scene: Scene) => {
+      const settings = scene.settings
       const bgColorParam = settings.getParameter('BackgroundColor')
       const processBGValue = () => {
-        const value = bgColorParam.getValue()
+        const value = bgColorParam!.getValue()
         if (value instanceof BaseImage) {
           if (value.type === 'FLOAT') {
             this.__backgroundTexture = value
@@ -122,8 +119,8 @@ class GLBaseViewport extends ParameterOwner {
         } else if (value instanceof Color) {
           if (this.__backgroundGLTexture) {
             this.__backgroundGLTexture.destroy()
-            this.__backgroundGLTexture = undefined
-            this.__backgroundTexture = undefined
+            this.__backgroundGLTexture = null
+            this.__backgroundTexture = null
           }
           this.__backgroundColor = value
 
@@ -136,12 +133,15 @@ class GLBaseViewport extends ParameterOwner {
         this.emit('updated')
       }
       processBGValue()
-      bgColorParam.on('valueChanged', processBGValue)
+      bgColorParam!.on('valueChanged', processBGValue)
     }
-    if (this.__renderer.getScene()) {
-      sceneSet(this.__renderer.getScene())
+    const scene = this.__renderer.getScene()
+    if (scene) {
+      sceneSet(scene)
     } else {
-      this.__renderer.on('sceneSet', sceneSet)
+      this.__renderer.once('sceneSet', event => {
+        sceneSet((<SceneSetEvent>event).scene)
+      })
     }
   }
 
@@ -175,9 +175,9 @@ class GLBaseViewport extends ParameterOwner {
    */
   getBackground(): Color | null {
     console.warn('Deprecated Function. Please access the Scene Settings object.')
-    const settings = this.__renderer.getScene().settings
+    const settings = this.__renderer.getScene()!.settings
     const bgColorParam = settings.getParameter('BackgroundColor')
-    return bgColorParam.getValue()
+    return bgColorParam!.getValue()
   }
 
   /**
@@ -186,9 +186,9 @@ class GLBaseViewport extends ParameterOwner {
    */
   setBackground(background: Color): void {
     console.warn('Deprecated Function. Please access the Scene Settings object.')
-    const settings = this.__renderer.getScene().settings
+    const settings = this.__renderer.getScene()!.settings
     const bgColorParam = settings.getParameter('BackgroundColor')
-    bgColorParam.setValue(background)
+    bgColorParam!.setValue(background)
     this.emit('updated')
   }
 
@@ -227,8 +227,8 @@ class GLBaseViewport extends ParameterOwner {
         if (this.depthBuffer) gl.deleteRenderbuffer(this.depthBuffer)
       }
       // Create and bind the framebuffer
-      this.offscreenBuffer.resize(width, height)
-      this.depthTexture.resize(width, height)
+      this.offscreenBuffer!.resize(width, height)
+      this.depthTexture!.resize(width, height)
 
       this.fb = []
       this.fb[FRAMEBUFFER.MSAA_RENDERBUFFER] = gl.createFramebuffer()
@@ -249,7 +249,7 @@ class GLBaseViewport extends ParameterOwner {
       // COLORBUFFER
       this.fb[FRAMEBUFFER.COLORBUFFER] = gl.createFramebuffer()
       gl.bindFramebuffer(gl.FRAMEBUFFER, this.fb[FRAMEBUFFER.COLORBUFFER])
-      gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.offscreenBuffer.glTex, 0)
+      gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.offscreenBuffer!.glTex, 0)
       gl.bindFramebuffer(gl.FRAMEBUFFER, null)
 
       const check = gl.checkFramebufferStatus(
@@ -352,9 +352,9 @@ class GLBaseViewport extends ParameterOwner {
       gl.viewport(0, 0, this.__width, this.__height)
 
       gl.disable(gl.DEPTH_TEST)
-      const screenQuad = this.__renderer.screenQuad
+      const screenQuad = this.__renderer.screenQuad!
       screenQuad.bindShader(renderstate)
-      screenQuad.draw(renderstate, this.offscreenBuffer)
+      screenQuad.draw(renderstate, this.offscreenBuffer!)
     }
   }
 
@@ -406,7 +406,7 @@ class GLBaseViewport extends ParameterOwner {
 
     const unifs = renderstate.unifs
 
-    this.depthTexture.bindToUniform(renderstate, unifs.depthTexture)
+    this.depthTexture!.bindToUniform(renderstate, unifs.depthTexture)
 
     gl.uniform2f(unifs.screenSize.location, this.__width, this.__height)
     gl.uniform1f(unifs.outlineThickness.location, this.renderer.outlineThickness)
@@ -453,9 +453,9 @@ class GLBaseViewport extends ParameterOwner {
       // Turn this on to debug the highlight data buffer.
       const debugHighlightBuffer = false
       if (debugHighlightBuffer) {
-        this.__renderer.screenQuad.bindShader(renderstate)
+        this.__renderer.screenQuad!.bindShader(renderstate)
         this.highlightedGeomsBuffer.bindToUniform(renderstate, renderstate.unifs.image)
-        this.__renderer.screenQuad.draw(renderstate)
+        this.__renderer.screenQuad!.draw(renderstate)
       } else {
         this.renderer.highlightsShader.bind(renderstate)
         gl.enable(gl.BLEND)
@@ -571,7 +571,7 @@ class GLBaseViewport extends ParameterOwner {
    * @return {number} - index result of the find.
    */
   _getOngoingPointerIndexById(pointerId: number): number {
-    return this.__ongoingPointers.findIndex((pointer) => pointer.pointerId === pointerId)
+    return this.__ongoingPointers.findIndex(pointer => pointer.pointerId === pointerId)
   }
 }
 

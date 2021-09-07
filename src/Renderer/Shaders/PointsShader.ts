@@ -30,13 +30,13 @@ class PointsShader extends GLShader {
    */
   static getPackedMaterialData(material: Material): Float32Array {
     const matData = new Float32Array(12)
-    const baseColor = material.getParameter('BaseColor').getValue()
+    const baseColor = material.getParameter('BaseColor')!.getValue()
     matData[0] = baseColor.r
     matData[1] = baseColor.g
     matData[2] = baseColor.b
     matData[3] = baseColor.a
-    matData[4] = material.getParameter('PointSize').getValue()
-    matData[5] = material.getParameter('Overlay').getValue()
+    matData[4] = material.getParameter('PointSize')!.getValue()
+    matData[5] = material.getParameter('Overlay')!.getValue()
     return matData
   }
 }

@@ -1,6 +1,5 @@
 import { GLGeom } from './GLGeom'
 import '../../SceneTree/Geometry/Mesh'
-import { BaseGeom } from '../../SceneTree/Geometry/BaseGeom'
 import { Mesh } from '../../SceneTree/Geometry/Mesh'
 
 /** Class representing a GL mesh.
@@ -8,17 +7,12 @@ import { Mesh } from '../../SceneTree/Geometry/Mesh'
  * @private
  */
 class GLMesh extends GLGeom {
-  protected __numTriIndices: number
-  protected __indexDataType: number
-  protected __numVertices: number
-  protected __numTriangles: number
-  protected __numRenderVerts: number
-  protected __vao: WebGLVertexArrayObject
-  protected __wireframesVao: WebGLVertexArrayObject
-  protected __ext: any
-  protected __numWireIndices: number
-  protected __hardEdgesVao: WebGLVertexArrayObject
-  protected __numEdgeIndices: number
+  protected __numTriIndices: number = 0
+  protected __indexDataType: number = 0
+  protected __numVertices: number = 0
+  protected __numTriangles: number = 0
+  protected __numRenderVerts: number = 0
+
   /**
    * Create a GL mesh.
    * @param {WebGL12RenderingContext} gl - The webgl rendering context.
@@ -79,7 +73,7 @@ class GLMesh extends GLGeom {
       this.__glattrbuffers[attrName] = {
         buffer: attrBuffer,
         dataType: attrData.dataType,
-        normalized: attrData.normalized,
+        normalized: attrData.normalized
       }
 
       if (attrName == 'textureCoords') this.__glattrbuffers['texCoords'] = this.__glattrbuffers['textureCoords']
@@ -90,7 +84,7 @@ class GLMesh extends GLGeom {
    * The updateBuffers method.
    * @param {Record<any,any>} opts - The options object.
    */
-  updateBuffers(opts: Record<string, any>) {
+  updateBuffers(renderstate?: RenderState) {
     const gl = this.__gl
 
     if (this.__numVertices != this.__geom.getNumVertices()) {
@@ -117,132 +111,6 @@ class GLMesh extends GLGeom {
     this.__indexBuffer = null
 
     super.clearBuffers()
-  }
-
-  // ////////////////////////////////
-  // Wireframes
-
-  /**
-   * The generateWireframesVAO method.
-   * @return {any} - The return value.
-   */
-  generateWireframesVAO() {
-    if (!this.__vao) return false
-
-    const geomMesh = <Mesh>this.__geom
-    if (!geomMesh.edgeVerts) geomMesh.genTopologyInfo()
-
-    // Generate the wireframes VAO.
-    // It can share buffers with the regular VAO, but provide a different index buffer.
-    if (this.__wireframesVao) this.__ext.deleteVertexArrayOES(this.__wireframesVao)
-    this.__wireframesVao = this.__ext.createVertexArrayOES()
-    this.__ext.bindVertexArrayOES(this.__wireframesVao)
-
-    const gl = this.__gl
-    const wireframeIndexBuffer = gl.createBuffer()
-    const wireframeIndices = Uint32Array.from(geomMesh.edgeVerts)
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, wireframeIndexBuffer)
-    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, wireframeIndices, gl.STATIC_DRAW)
-
-    const positionsBuffer = this.__glattrbuffers['positions'].buffer
-    gl.enableVertexAttribArray(0)
-    gl.bindBuffer(gl.ARRAY_BUFFER, positionsBuffer)
-    gl.vertexAttribPointer(0, 3, gl.FLOAT, false, 3 * 4, 0)
-
-    this.__numWireIndices = wireframeIndices.length
-    this.__ext.bindVertexArrayOES(null) // Note: is this necessary?
-  }
-
-  /**
-   * The bindWireframeVAO method.
-   * @param {RenderState} renderstate - The object tracking the current state of the renderer
-   * @return {any} - The return value.
-   */
-  bindWireframeVAO(renderstate?: RenderState) {
-    if (this.__wireframesVao == undefined) return false
-    this.__ext.bindVertexArrayOES(this.__wireframesVao)
-    return true
-  }
-
-  /**
-   * The unbindWireframeVAO method.
-   */
-  unbindWireframeVAO() {
-    this.__ext.bindVertexArrayOES(null) // Note: is this necessary?
-  }
-
-  /**
-   * Draw an item to screen.
-   */
-  drawWireframe() {
-    if (this.__wireframesVao) this.__gl.drawElements(this.__gl.LINES, this.__numWireIndices, this.__gl.UNSIGNED_INT, 0)
-  }
-
-  // ////////////////////////////////
-  // Hard Edges
-
-  /**
-   * The generateHardEdgesVAO method.
-   * @return {any} - The return value.
-   */
-  generateHardEdgesVAO() {
-    if (!this.__vao) return false
-
-    const geomMesh = <Mesh>this.__geom
-    // generate the wireframes VAO.
-    // It can share buffers with the regular VAO, but provide a different index buffer.
-    if (this.__hardEdgesVao) this.__ext.deleteVertexArrayOES(this.__hardEdgesVao)
-    this.__hardEdgesVao = this.__ext.createVertexArrayOES()
-    this.__ext.bindVertexArrayOES(this.__hardEdgesVao)
-
-    const gl = this.__gl
-    const hardEdgeIndexBuffer = gl.createBuffer()
-    const hardEdgeIndices = geomMesh.computeHardEdgesIndices()
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, hardEdgeIndexBuffer)
-    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, hardEdgeIndices, gl.STATIC_DRAW)
-
-    const positionsBuffer = this.__glattrbuffers['positions'].buffer
-    gl.enableVertexAttribArray(0)
-    gl.bindBuffer(gl.ARRAY_BUFFER, positionsBuffer)
-    gl.vertexAttribPointer(0, 3, gl.FLOAT, false, 3 * 4, 0)
-
-    this.__numEdgeIndices = hardEdgeIndices.length
-    this.__ext.bindVertexArrayOES(null) // Note: is this necessary?
-  }
-
-  /**
-   * The bindHardEdgesVAO method.
-   * @param {RenderState} renderstate - The object tracking the current state of the renderer
-   * @return {any} - The return value.
-   */
-  bindHardEdgesVAO(renderstate: RenderState) {
-    if (this.__hardEdgesVao == undefined) return false
-    this.__ext.bindVertexArrayOES(this.__hardEdgesVao)
-    return true
-  }
-
-  /**
-   * The unbindHardEdgesVAO method.
-   */
-  unbindHardEdgesVAO() {
-    this.__ext.bindVertexArrayOES(null) // Note: is this necessary?
-  }
-
-  /**
-   * Draw an item to screen.
-   */
-  drawHardEdges() {
-    if (this.__hardEdgesVao) this.__gl.drawElements(this.__gl.LINES, this.__numEdgeIndices, this.__gl.UNSIGNED_INT, 0)
-  }
-
-  // ////////////////////////////////
-  // Drawing Mesh Points.
-
-  /**
-   * The drawPoints method.
-   */
-  drawPoints() {
-    this.__gl.drawArrays(this.__gl.POINTS, 0, this.__geom.numVertices())
   }
 
   // ////////////////////////////////
@@ -274,7 +142,7 @@ class GLMesh extends GLGeom {
     super.destroy()
     const gl = this.__gl
     gl.deleteBuffer(this.__indexBuffer)
-    this.__indexBuffer = undefined
+    this.__indexBuffer = null
     // if (this.__wireframesVao)
     //     gl.deleteVertexArray(this.__wireframesVao);
     // if (this.__hardEdgesVao)

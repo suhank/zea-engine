@@ -54,11 +54,11 @@ class GLMaterial extends EventEmitter {
   bind(renderstate: RenderState, warnMissingUnifs: any) {
     this.__boundTexturesBeforeMaterial = renderstate.boundTextures
 
-    let shaderBinding = this.__shaderBindings[renderstate.shaderkey]
+    let shaderBinding = this.__shaderBindings[renderstate.shaderkey!]
     if (!shaderBinding) {
       const gl = this.__gl
       shaderBinding = new MaterialShaderBinding(gl, this, renderstate.unifs, warnMissingUnifs)
-      this.__shaderBindings[renderstate.shaderkey] = shaderBinding
+      this.__shaderBindings[renderstate.shaderkey!] = shaderBinding
     }
     return shaderBinding.bind(renderstate)
 

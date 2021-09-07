@@ -1,15 +1,14 @@
 import { SystemDesc } from '../../SystemDesc'
 import { Vec3, Mat4, Xfo } from '../../Math/index'
-import { GeomItem, GridTreeItem, TreeItem, VLAAsset } from '../../SceneTree/index'
+import { TreeItem, VLAAsset } from '../../SceneTree/index'
 import { GLBaseViewport } from '../GLBaseViewport'
 import { VRHead } from './VRHead'
 import { VRController } from './VRController'
 import { VRViewManipulator } from './VRViewManipulator'
 import { resourceLoader } from '../../SceneTree/resourceLoader'
 import { POINTER_TYPES } from '../../Utilities/EnumUtils'
-import { GLBaseRenderer } from '../GLBaseRenderer'
-import { XRWebGLLayer } from 'webxr'
-import { ViewChangedEvent } from '../../Utilities/Events/ViewChangedEvent'
+// import { XRWebGLLayer } from 'webxr'
+import { VRViewChangedEvent } from '../../Utilities/Events/VRViewChangedEvent'
 import { ControllerAddedEvent } from '../../Utilities/Events/ControllerAddedEvent'
 import { StateChangedEvent } from '../../Utilities/Events/StateChangedEvent'
 
@@ -42,16 +41,16 @@ class VRViewport extends GLBaseViewport {
   protected __leftProjectionMatrix: Mat4
   protected __rightViewMatrix: Mat4
   protected __rightProjectionMatrix: Mat4
-  protected __vrAsset: any
-  protected __stageXfo: Xfo
+  protected __vrAsset?: VLAAsset
+  protected __stageXfo: Xfo = new Xfo()
 
-  protected __stageMatrix: Mat4
+  protected __stageMatrix: Mat4 = new Mat4()
   protected __stageScale: any
   protected session: any
   protected __canPresent: any
 
-  protected __hmd: any
-  protected __hmdAssetPromise: any
+  protected __hmd: string = ''
+  protected __hmdAssetPromise?: Promise<VLAAsset | null>
   protected __region: any
 
   protected __refSpace: any
@@ -59,8 +58,8 @@ class VRViewport extends GLBaseViewport {
   protected capturedItem: any
   protected stroke: any
 
-  protected capturedElement: any
-  protected __projectionMatrices: any[]
+  protected capturedElement?: TreeItem
+  protected __projectionMatrices: Array<Mat4> = []
 
   protected __hmdCanvasSize: any
   protected __viewMatrices: any
@@ -71,7 +70,7 @@ class VRViewport extends GLBaseViewport {
    */
   constructor(renderer: any) {
     super(renderer)
-    this.getParameter('DoubleClickTimeMS').setValue(300)
+    this.getParameter('DoubleClickTimeMS')!.setValue(300)
 
     // ////////////////////////////////////////////
     // Viewport params
@@ -145,7 +144,7 @@ class VRViewport extends GLBaseViewport {
    */
   setXfo(xfo: Xfo) {
     this.__stageXfo = xfo
-    this.__stageTreeItem.getParameter('GlobalXfo').setValue(xfo)
+    this.__stageTreeItem.getParameter('GlobalXfo')!.setValue(xfo)
     this.__stageMatrix = xfo.inverse().toMat4()
     // this.__stageMatrix.multiplyInPlace(this.__sittingToStandingMatrix);
     this.__stageScale = xfo.sc.x
@@ -215,9 +214,9 @@ class VRViewport extends GLBaseViewport {
    * The loadHMDResources method.
    * @return {any} - The return value.
    */
-  loadHMDResources() {
+  loadHMDResources(): Promise<VLAAsset | null> {
     if (SystemDesc.isMobileDevice) {
-      return Promise.resolve()
+      return Promise.resolve(null)
     }
     // If the HMD has changed, reset it.
     let hmd = localStorage.getItem('ZeaEngine_XRDevice')
@@ -250,12 +249,12 @@ class VRViewport extends GLBaseViewport {
           // Cache the asset so if an avatar needs to display,
           // it can use the same asset.
           const asset = new VLAAsset(hmdAssetId)
-          asset.getParameter('FilePath').setValue(hmdAssetId)
+          asset.getParameter('FilePath')!.setValue(hmdAssetId)
           resourceLoader.setCommonResource(hmdAssetId, asset)
         }
-        this.__vrAsset = resourceLoader.getCommonResource(hmdAssetId)
+        this.__vrAsset = <VLAAsset>resourceLoader.getCommonResource(hmdAssetId)
         const bind = () => {
-          const materialLibrary = this.__vrAsset.getMaterialLibrary()
+          const materialLibrary = this.__vrAsset!.getMaterialLibrary()
           const materialNames = materialLibrary.getMaterialNames()
           for (const name of materialNames) {
             const material = materialLibrary.getMaterial(name, false)
@@ -263,10 +262,10 @@ class VRViewport extends GLBaseViewport {
               material.setShaderName('SimpleSurfaceShader')
             }
           }
-          this.__vrAsset.traverse((item: any) => {
+          this.__vrAsset!.traverse((item: any) => {
             item.setSelectable(false)
           })
-          resolve(this.__vrAsset)
+          resolve(this.__vrAsset!)
         }
         if (this.__vrAsset.isLoaded()) bind()
         else this.__vrAsset.once('loaded', bind)
@@ -291,7 +290,7 @@ class VRViewport extends GLBaseViewport {
         ;(navigator as any)?.xr
           .requestSession('immersive-vr', {
             requiredFeatures: ['local-floor'],
-            optionalFeatures: ['bounded-floor'],
+            optionalFeatures: ['bounded-floor']
           })
           .then((session: any) => {
             this.__renderer.__xrViewportPresenting = true
@@ -299,7 +298,7 @@ class VRViewport extends GLBaseViewport {
             const viewport = this.__renderer.getViewport()
             if (viewport) {
               const camera = viewport.getCamera()
-              const cameraXfo = camera.getParameter('GlobalXfo').getValue()
+              const cameraXfo = camera.getParameter('GlobalXfo')!.getValue()
 
               // Convert Y-Up to Z-Up.
               const stageXfo = new Xfo()
@@ -324,7 +323,7 @@ class VRViewport extends GLBaseViewport {
                 controller.buttonPressed = true
                 this.onPointerDown({
                   button: 1,
-                  controller,
+                  controller
                 })
               }
             }
@@ -334,7 +333,7 @@ class VRViewport extends GLBaseViewport {
                 controller.buttonPressed = false
                 this.onPointerUp({
                   button: 1,
-                  controller,
+                  controller
                 })
               }
             }
@@ -366,12 +365,13 @@ class VRViewport extends GLBaseViewport {
             this.session = session
 
             // ////////////////////////////
+            // @ts-ignore - Note: We could install the webxr type definitions and remove this ignore.
             const glLayer = new XRWebGLLayer(session, <WebGL2RenderingContext>this.__gl)
             session.updateRenderState({
               baseLayer: glLayer /* 
               // Output canvas not working anymore
               outputContext: mirrorCanvas ? mirrorCanvas.getContext('xrpresent') : null,
-              ,*/,
+              ,*/
             })
 
             this.__width = glLayer.framebufferWidth
@@ -497,7 +497,10 @@ class VRViewport extends GLBaseViewport {
     }
 
     this.__vrhead.update(pose)
-    const viewXfo = this.__vrhead.getTreeItem().getParameter('GlobalXfo').getValue()
+    const viewXfo = this.__vrhead
+      .getTreeItem()
+      .getParameter('GlobalXfo')!
+      .getValue()
 
     // Prepare the pointerMove event.
     const event: Record<string, any> = { controllers: this.controllers, viewXfo }
@@ -556,7 +559,7 @@ class VRViewport extends GLBaseViewport {
         viewMatrix: this.__viewMatrices[i],
         projectionMatrix: this.__projectionMatrices[i],
         region: [vp.x, vp.y, vp.width, vp.height],
-        isOrthographic: false,
+        isOrthographic: false
       })
     }
 
@@ -571,7 +574,7 @@ class VRViewport extends GLBaseViewport {
     // ///////////////////////
     // Emit a signal for the shared session.
 
-    const viewChangedEvent = new ViewChangedEvent('VR', renderstate.viewXfo)
+    const viewChangedEvent = new VRViewChangedEvent('VR', renderstate.viewXfo)
     // TODO: better solution than setting members individually?
     viewChangedEvent.hmd = this.__hmd
     viewChangedEvent.controllers = this.controllers

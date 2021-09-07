@@ -1,6 +1,5 @@
 /* eslint-disable require-jsdoc */
-import { Color, Vec3 } from '../../Math/index'
-import { Registry } from '../../Registry'
+import { Vec3 } from '../../Math/index'
 import { GLShader } from '../GLShader'
 
 import './GLSL/index'

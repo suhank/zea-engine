@@ -1,4 +1,3 @@
-import { cpuUsage } from 'process'
 import { Color } from '../Math/Color'
 import { EventEmitter } from '../Utilities/index'
 import { processTextureParams } from './processTextureParams'
@@ -11,17 +10,17 @@ class GLRenderTarget extends EventEmitter {
   protected textureDesc: number[]
   protected frameBuffer: any
 
-  protected params: Record<string, any>
+  protected params: Record<string, any> = {}
   protected type: any
   protected format: any
   protected internalFormat: any
   protected filter: any
   protected wrap: any
   protected flipY: any
-  protected width: number
-  protected height: number
+  protected width: number = 0
+  protected height: number = 0
   clearColor: Color
-  protected colorMask: any[]
+  protected colorMask: Array<boolean>
   protected textureType: any
 
   protected __prevBoundFbo: any
@@ -36,6 +35,8 @@ class GLRenderTarget extends EventEmitter {
     this.textureTargets = []
     this.depthTexture = null
     this.textureDesc = [0, 0, 0, 0]
+    this.clearColor = new Color(0, 0, 0, 0)
+    this.colorMask = [true, true, true, true]
 
     if (params) {
       this.configure(params)
@@ -51,7 +52,7 @@ class GLRenderTarget extends EventEmitter {
 
     const p: Record<string, any> = processTextureParams(gl, params) // TODO: review
 
-    this.textureTargets.forEach((colorTexture) => {
+    this.textureTargets.forEach(colorTexture => {
       gl.deleteTexture(colorTexture)
     })
     this.textureTargets = []
@@ -72,8 +73,6 @@ class GLRenderTarget extends EventEmitter {
     this.flipY = p.flipY
     this.width = p.width
     this.height = p.height
-    this.clearColor = new Color(0, 0, 0, 0)
-    this.colorMask = [true, true, true, true]
 
     this.textureType = 1 // Default 2d 8 bit texture image texture.
     this.textureDesc[0] = this.width
@@ -119,13 +118,14 @@ class GLRenderTarget extends EventEmitter {
     if (this.textureTargets.length > 0) {
       if (this.textureTargets.length > 1) {
         if (gl.name == 'webgl' && !gl.drawBuffers) {
-          gl.__ext_draw_buffers = gl.getExtension('WEBGL_draw_buffers')
-          gl.drawBuffers = gl.__ext_draw_buffers.drawBuffersWEBGL.bind(gl.__ext_draw_buffers)
-          for (let i = 1; i < 14; i++) {
-            gl['COLOR_ATTACHMENT' + i] = gl.__ext_draw_buffers['COLOR_ATTACHMENT' + i + '_WEBGL']
-          }
-          gl.MAX_COLOR_ATTACHMENTS = gl.__ext_draw_buffers.MAX_COLOR_ATTACHMENTS_WEBGL
-          gl.MAX_DRAW_BUFFERS = gl.__ext_draw_buffers.MAX_DRAW_BUFFERS_WEBGL
+          // Trying to support drawBuffers on webgl1 is just pointless
+          // gl.__ext_draw_buffers = gl.getExtension('WEBGL_draw_buffers')
+          // gl.drawBuffers = gl.__ext_draw_buffers.drawBuffersWEBGL.bind(gl.__ext_draw_buffers)
+          // for (let i = 1; i < 14; i++) {
+          //   gl['COLOR_ATTACHMENT' + i] = gl.__ext_draw_buffers['COLOR_ATTACHMENT' + i + '_WEBGL']
+          // }
+          // gl.MAX_COLOR_ATTACHMENTS = gl.__ext_draw_buffers.MAX_COLOR_ATTACHMENTS_WEBGL
+          // gl.MAX_DRAW_BUFFERS = gl.__ext_draw_buffers.MAX_DRAW_BUFFERS_WEBGL
         }
       }
 
@@ -381,13 +381,14 @@ class GLRenderTarget extends EventEmitter {
       if (this.textureTargets.length > 0) {
         if (this.textureTargets.length > 1) {
           if (gl.name == 'webgl' && !gl.drawBuffers) {
-            gl.__ext_draw_buffers = gl.getExtension('WEBGL_draw_buffers')
-            gl.drawBuffers = gl.__ext_draw_buffers.drawBuffersWEBGL.bind(gl.__ext_draw_buffers)
-            for (let i = 1; i < 14; i++) {
-              gl['COLOR_ATTACHMENT' + i] = gl.__ext_draw_buffers['COLOR_ATTACHMENT' + i + '_WEBGL']
-            }
-            gl.MAX_COLOR_ATTACHMENTS = gl.__ext_draw_buffers.MAX_COLOR_ATTACHMENTS_WEBGL
-            gl.MAX_DRAW_BUFFERS = gl.__ext_draw_buffers.MAX_DRAW_BUFFERS_WEBGL
+            // Trying to support drawBuffers on webgl1 is just pointless
+            // gl.__ext_draw_buffers = gl.getExtension('WEBGL_draw_buffers')
+            // gl.drawBuffers = gl.__ext_draw_buffers.drawBuffersWEBGL.bind(gl.__ext_draw_buffers)
+            // for (let i = 1; i < 14; i++) {
+            //   gl['COLOR_ATTACHMENT' + i] = gl.__ext_draw_buffers['COLOR_ATTACHMENT' + i + '_WEBGL']
+            // }
+            // gl.MAX_COLOR_ATTACHMENTS = gl.__ext_draw_buffers.MAX_COLOR_ATTACHMENTS_WEBGL
+            // gl.MAX_DRAW_BUFFERS = gl.__ext_draw_buffers.MAX_DRAW_BUFFERS_WEBGL
           }
         }
 
@@ -456,7 +457,7 @@ class GLRenderTarget extends EventEmitter {
    */
   destroy() {
     const gl = this.__gl
-    this.textureTargets.forEach((colorTexture) => {
+    this.textureTargets.forEach(colorTexture => {
       gl.deleteTexture(colorTexture)
     })
     this.textureTargets = []

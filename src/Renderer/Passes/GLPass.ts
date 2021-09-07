@@ -6,20 +6,20 @@ import { GLBaseRenderer } from '../GLBaseRenderer'
 const PassType = {
   OPAQUE: 1 << 0,
   TRANSPARENT: 1 << 1,
-  OVERLAY: 1 << 2,
+  OVERLAY: 1 << 2
 }
 
 /** This class abstracts the rendering of a collection of geometries to screen.
  * @extends ParameterOwner
  */
 abstract class GLPass extends ParameterOwner {
-  renderer: GLBaseRenderer
-  enabled: boolean
-  protected passIndex: number
+  enabled: boolean = true
+  protected passIndex: number = -1
 
-  __gl: WebGL12RenderingContext
-  __renderer: GLBaseRenderer
-  protected __passIndex: number
+  protected __gl: WebGL12RenderingContext | null = null
+  renderer: GLBaseRenderer | null = null
+  protected __renderer: GLBaseRenderer | null = null
+
   /**
    * Create a GL pass.
    */
@@ -54,7 +54,6 @@ abstract class GLPass extends ParameterOwner {
     this.renderer = renderer
     this.__renderer = renderer
     this.passIndex = passIndex
-    this.__passIndex = passIndex // for backwards compatibility
   }
 
   /**
@@ -63,7 +62,6 @@ abstract class GLPass extends ParameterOwner {
    */
   setPassIndex(passIndex: number) {
     this.passIndex = passIndex
-    this.__passIndex = passIndex // for backwards compatibility
   }
 
   /**

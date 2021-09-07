@@ -1,22 +1,32 @@
-import { Vec2, Vec3 } from '../../Math/index'
+import { Vec3 } from '../../Math/index'
 import { GLGeom } from './GLGeom'
 import { generateShaderGeomBinding } from './GeomShaderBinding'
 import { GLTexture2D } from '../GLTexture2D'
-import { Lines } from '../../SceneTree/Geometry/Lines'
 import { Vec3Attribute } from '../../SceneTree/Geometry/Vec3Attribute'
 import { BaseGeom } from '../../SceneTree'
 
+interface FatBuffers {
+  drawCount: number
+  positionsTexture: GLTexture2D | null
+  glattrbuffers: {
+    [key: string]: null | {
+      buffer: WebGLBuffer
+      dimension: number
+      dataType: string
+    }
+  }
+}
 /** Class representing GL lines.
  * @extends GLGeom
  * @private
  */
 class GLLines extends GLGeom {
-  protected __numSegIndices: number
-  protected __numVertices: number
-  protected __fatBuffersNeedUpload: boolean
-  protected fatBuffers: any
-  protected __buffersNeedUpload: boolean
-  protected __indexDataType: number
+  protected __numSegIndices: number = 0
+  protected __numVertices: number = 0
+  protected __fatBuffersNeedUpload: boolean = false
+  protected fatBuffers: FatBuffers | null = null
+  protected __buffersNeedUpload: boolean = false
+  protected __indexDataType: number = 0
   /**
    * Create a GL line.
    * @param {WebGL12RenderingContext} gl - The webgl rendering context.
@@ -53,8 +63,9 @@ class GLLines extends GLGeom {
         this.fatBuffers.positionsTexture.destroy()
         this.fatBuffers.positionsTexture = null
       }
-      if (this.fatBuffers.glattrbuffers.segmentIndices.buffer) {
-        gl.deleteBuffer(this.fatBuffers.glattrbuffers.segmentIndices.buffer)
+      const segmentIndices = this.fatBuffers.glattrbuffers.segmentIndices!
+      if (segmentIndices.buffer) {
+        gl.deleteBuffer(segmentIndices.buffer)
         this.fatBuffers.glattrbuffers.segmentIndices = null
       }
     }
@@ -77,7 +88,7 @@ class GLLines extends GLGeom {
       gl.setupInstancedQuad()
     }
     if (!this.fatBuffers) {
-      this.fatBuffers = { glattrbuffers: {} }
+      this.fatBuffers = { drawCount: 0, positionsTexture: null, glattrbuffers: {} }
       this.fatBuffers.glattrbuffers.vertexIDs = gl.__quadattrbuffers.vertexIDs
     }
 
@@ -93,7 +104,7 @@ class GLLines extends GLGeom {
     const stride = 4 // The number of floats per draw item.
     const dataArray = new Float32Array(positions.asArray().length * stride)
     for (let i = 0; i < positions.asArray().length; i++) {
-      const pos = Vec3.createFromBuffer(dataArray.buffer, i * stride * 4)
+      const pos = new Vec3(dataArray.buffer, i * stride * 4)
       pos.setFromOther(positions.getValueRef(i))
 
       // The thickness of the line.
@@ -115,7 +126,7 @@ class GLLines extends GLGeom {
         filter: 'NEAREST',
         wrap: 'CLAMP_TO_EDGE',
         data: dataArray,
-        mipMapped: false,
+        mipMapped: false
       })
     } else {
       this.fatBuffers.positionsTexture.bufferData(dataArray, positions.asArray().length, 1)
@@ -138,14 +149,14 @@ class GLLines extends GLGeom {
     }
 
     if (!this.fatBuffers.glattrbuffers.segmentIndices) {
-      const indexBuffer = gl.createBuffer()
+      const indexBuffer = gl.createBuffer()!
       gl.bindBuffer(gl.ARRAY_BUFFER, indexBuffer)
       gl.bufferData(gl.ARRAY_BUFFER, makeIndices(), gl.STATIC_DRAW)
 
       this.fatBuffers.glattrbuffers.segmentIndices = {
         buffer: indexBuffer,
         dimension: 2,
-        dataType: Vec2,
+        dataType: 'Vec2'
       }
     } else {
       if (!this.genBufferOpts || (this.genBufferOpts && this.genBufferOpts.topologyChanged)) {
@@ -202,7 +213,7 @@ class GLLines extends GLGeom {
           this.__glattrbuffers[attrName] = {
             buffer: attrBuffer,
             dataType: attrData.dataType,
-            normalized: attrData.normalized,
+            normalized: attrData.normalized
           }
         } else {
           const glattr = this.__glattrbuffers[attrName]
@@ -237,23 +248,24 @@ class GLLines extends GLGeom {
     if (unifs.LineThickness && gl.floatTexturesSupported) {
       if (this.__fatBuffersNeedUpload) this.genFatBuffers(renderstate) // (renderstate, true)
 
-      let shaderBinding = this.__shaderBindings[renderstate.shaderkey]
+      const fatBuffers = this.fatBuffers!
+      let shaderBinding = this.__shaderBindings[renderstate.shaderkey!]
       if (!shaderBinding) {
         shaderBinding = generateShaderGeomBinding(
           this.__gl,
           renderstate.attrs,
-          this.fatBuffers.glattrbuffers,
+          fatBuffers.glattrbuffers,
           gl.__quadIndexBuffer
         )
-        this.__shaderBindings[renderstate.shaderkey] = shaderBinding
+        this.__shaderBindings[renderstate.shaderkey!] = shaderBinding
       }
       shaderBinding.bind(renderstate)
 
       const usePositionsTexture = true
       if (usePositionsTexture) {
         if (unifs.positionsTexture) {
-          this.fatBuffers.positionsTexture.bindToUniform(renderstate, unifs.positionsTexture)
-          gl.uniform1i(unifs.positionsTextureSize.location, this.fatBuffers.positionsTexture.width)
+          fatBuffers.positionsTexture!.bindToUniform(renderstate, unifs.positionsTexture)
+          gl.uniform1i(unifs.positionsTextureSize.location, fatBuffers.positionsTexture!.width)
         }
       }
 
@@ -283,7 +295,7 @@ class GLLines extends GLGeom {
   draw(renderstate: RenderState) {
     const gl = this.__gl
     if (renderstate.unifs.LineThickness && gl.floatTexturesSupported) {
-      gl.drawElementsInstanced(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0, this.fatBuffers.drawCount)
+      gl.drawElementsInstanced(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0, this.fatBuffers!.drawCount)
 
       // Note: We don't have a solution for drawing fat lines to the geom data buffer.
     } else {

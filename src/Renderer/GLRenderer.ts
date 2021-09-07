@@ -1,6 +1,5 @@
 import { Vec3, Xfo, Mat4, Ray, Color } from '../Math/index'
-import { Plane, EnvMap, BaseImage, Scene } from '../SceneTree/index'
-import { GLFbo } from './GLFbo'
+import { EnvMap, BaseImage, Scene } from '../SceneTree/index'
 import { GLRenderTarget } from './GLRenderTarget'
 import { GLHDRImage } from './GLHDRImage'
 import { GLEnvMap } from './GLEnvMap'
@@ -11,7 +10,6 @@ import { EnvMapShader } from './Shaders/EnvMapShader'
 import { HighlightsShader } from './Shaders/HighlightsShader'
 import { SilhouetteShader } from './Shaders/SilhouetteShader'
 import { generateShaderGeomBinding, IGeomShaderBinding } from './Drawing/GeomShaderBinding'
-import { BaseEvent } from '../Utilities/BaseEvent'
 import { VLHImage } from '../SceneTree/Images/VLHImage'
 import { EnvMapAssignedEvent } from '../Utilities/Events/EnvMapAssignedEvent'
 import { GLViewport } from './GLViewport'
@@ -27,7 +25,7 @@ class GLRenderer extends GLBaseRenderer {
   protected __exposure: number
   protected __tonemap: boolean
   protected __gamma: number
-  protected __glEnvMap: Record<string, any> // GLTexture2D | GLTexture2D |
+  protected __glEnvMap: GLEnvMap | null = null
   protected __glBackgroundMap: any
   protected __displayEnvironment: boolean
   protected __debugMode: number
@@ -44,10 +42,10 @@ class GLRenderer extends GLBaseRenderer {
   outlineDepthBias: number
   protected __debugTextures: any[]
 
-  protected __rayCastRenderTarget: GLRenderTarget
-  protected __backgroundMapShader: EnvMapShader
-  protected __backgroundMapShaderBinding: IGeomShaderBinding
-  protected __rayCastRenderTargetProjMatrix: Mat4
+  protected __rayCastRenderTarget: GLRenderTarget | null = null
+  protected __backgroundMapShader: EnvMapShader | null = null
+  protected __backgroundMapShaderBinding: IGeomShaderBinding | null = null
+  protected __rayCastRenderTargetProjMatrix: Mat4 = new Mat4()
   /**
    * Create a GL renderer.
    * @param {HTMLCanvasElement} $canvas - The $canvas value.
@@ -105,7 +103,7 @@ class GLRenderer extends GLBaseRenderer {
         return
       }
 
-      this.__glEnvMap = env.getMetadata('gltexture')
+      this.__glEnvMap = <GLEnvMap>env.getMetadata('gltexture')
       if (!this.__glEnvMap) {
         if (env.type === 'FLOAT') {
           this.addShaderPreprocessorDirective('ENABLE_PBR')
@@ -113,9 +111,9 @@ class GLRenderer extends GLBaseRenderer {
         }
         // } else if (env.isStreamAtlas()) { // TODO: are these two lines still needed?
         //   this.__glEnvMap = new GLImageStream(gl, env)
-        else {
-          this.__glEnvMap = new GLTexture2D(this.__gl, env)
-        }
+        // else {
+        //   this.__glEnvMap = new GLTexture2D(this.__gl, env)
+        // }
       }
     } else {
       // Note: The difference between an EnvMap and a BackgroundMap, is that
@@ -172,17 +170,17 @@ class GLRenderer extends GLBaseRenderer {
    */
   setScene(scene: Scene): void {
     const envMapParam = scene.settings.getParameter('EnvMap')
-    if (envMapParam.getValue() != undefined) {
-      this.__bindEnvMap(envMapParam.getValue())
+    if (envMapParam!.getValue() != undefined) {
+      this.__bindEnvMap(envMapParam!.getValue())
     }
-    envMapParam.on('valueChanged', () => {
-      this.__bindEnvMap(envMapParam.getValue())
+    envMapParam!.on('valueChanged', () => {
+      this.__bindEnvMap(envMapParam!.getValue())
     })
 
     const displayEnvMapParam = scene.settings.getParameter('Display EnvMap')
-    this.__displayEnvironment = displayEnvMapParam.getValue()
-    displayEnvMapParam.on('valueChanged', () => {
-      this.__displayEnvironment = displayEnvMapParam.getValue()
+    this.__displayEnvironment = displayEnvMapParam!.getValue()
+    displayEnvMapParam!.on('valueChanged', () => {
+      this.__displayEnvironment = displayEnvMapParam!.getValue()
       this.requestRedraw()
     })
 
@@ -263,7 +261,7 @@ class GLRenderer extends GLBaseRenderer {
    * @param {number} mask - The mask to filter our certain pass types. Can be PassType.OPAQUE | PassType.TRANSPARENT | PassType.OVERLAY
    * @return {RayCast} - The object containing the ray cast results.
    */
-  raycastWithRay(ray: Ray, dist: number, area = 0.01, mask = ALL_PASSES): RayCast {
+  raycastWithRay(ray: Ray, dist: number, area = 0.01, mask = ALL_PASSES): RayCast | null {
     const xfo = new Xfo()
     xfo.setLookAt(ray.start, ray.start.add(ray.dir), new Vec3(0, 0, 1))
     return this.raycast(xfo, ray, dist, area, mask)
@@ -279,7 +277,7 @@ class GLRenderer extends GLBaseRenderer {
    * @param {number} mask - The mask to filter our certain pass types. Can be PassType.OPAQUE | PassType.TRANSPARENT | PassType.OVERLAY
    * @return {RayCast} - The object containing the ray cast results.
    */
-  raycastWithXfo(xfo: Xfo, dist: number, area = 0.01, mask = ALL_PASSES): RayCast {
+  raycastWithXfo(xfo: Xfo, dist: number, area = 0.01, mask = ALL_PASSES): RayCast | null {
     const ray = new Ray(xfo.tr, xfo.ori.getZaxis().negate())
     return this.raycast(xfo, ray, dist, area, mask)
   }
@@ -296,7 +294,7 @@ class GLRenderer extends GLBaseRenderer {
    * @param {number} mask - The mask to filter our certain pass types. Can be PassType.OPAQUE | PassType.TRANSPARENT | PassType.OVERLAY
    * @return {RayCast} - The object containing the ray cast results.
    */
-  raycast(xfo: Xfo, ray: Ray, dist: number, area = 0.01, mask = ALL_PASSES): RayCast{
+  raycast(xfo: Xfo, ray: Ray, dist: number, area = 0.01, mask = ALL_PASSES): RayCast | null {
     const gl = this.__gl
 
     if (!this.__rayCastRenderTarget) {
@@ -306,13 +304,12 @@ class GLRenderer extends GLBaseRenderer {
         filter: 'NEAREST',
         width: 3,
         height: 3,
-        numColorChannels: 1,
+        numColorChannels: 1
       })
-      this.__rayCastRenderTargetProjMatrix = new Mat4()
     }
 
     if (this.rayCastDist != dist || this.rayCastArea != area) {
-      this.__rayCastRenderTargetProjMatrix.setOrthographicMatrix(
+      this.__rayCastRenderTargetProjMatrix!.setOrthographicMatrix(
         area * -0.5,
         area * 0.5,
         area * -0.5,
@@ -331,7 +328,7 @@ class GLRenderer extends GLBaseRenderer {
       region,
       viewMatrix: xfo.inverse().toMat4(),
       projectionMatrix: this.__rayCastRenderTargetProjMatrix,
-      isOrthographic: true,
+      isOrthographic: true
     })
 
     this.__rayCastRenderTarget.bindForWriting(renderstate, true)
@@ -365,7 +362,7 @@ class GLRenderer extends GLBaseRenderer {
         break
       }
     }
-    if (!geomData) return
+    if (!geomData) return null
 
     // Mask the pass id to be only the first 6 bits of the integer.
     const passId = Math.round(geomData[0]) & (64 - 1)
@@ -379,8 +376,10 @@ class GLRenderer extends GLBaseRenderer {
         intersectionPos,
         geomItem: geomItemAndDist.geomItem,
         dist: geomItemAndDist.dist,
-        geomData,
+        geomData
       }
+    } else {
+      return null
     }
   }
 
@@ -405,7 +404,7 @@ class GLRenderer extends GLBaseRenderer {
         filter: 'NEAREST',
         width: 3,
         height: 3,
-        numColorChannels: 1,
+        numColorChannels: 1
       })
       this.__rayCastRenderTargetProjMatrix = new Mat4()
     }
@@ -430,7 +429,7 @@ class GLRenderer extends GLBaseRenderer {
       region,
       viewMatrix: xfo.inverse().toMat4(),
       projectionMatrix: this.__rayCastRenderTargetProjMatrix,
-      isOrthographic: true,
+      isOrthographic: true
     })
     renderstate.cameraMatrix = xfo.toMat4()
 
@@ -463,17 +462,20 @@ class GLRenderer extends GLBaseRenderer {
         const geomData = geomDatas.subarray(i * 4, i * 4 + 4)
         // Mask the pass id to be only the first 6 bits of the integer.
         const passId = Math.round(geomData[0]) & (64 - 1)
-        const geomItemAndDist = this.getPass(passId).getGeomItemAndDist(geomData)
+        const pass = this.getPass(passId)
+        if (pass) {
+          const geomItemAndDist = pass.getGeomItemAndDist(geomData)
 
-        if (geomItemAndDist) {
-          const intersectionPos = ray.start.add(ray.dir.scale(geomItemAndDist.dist))
-          result.push({
-            ray,
-            intersectionPos,
-            geomItem: geomItemAndDist.geomItem,
-            dist: geomItemAndDist.dist,
-            geomData,
-          })
+          if (geomItemAndDist) {
+            const intersectionPos = ray.start.add(ray.dir.scale(geomItemAndDist.dist))
+            result.push({
+              ray,
+              intersectionPos,
+              geomItem: geomItemAndDist.geomItem,
+              dist: geomItemAndDist.dist,
+              geomData
+            })
+          }
         }
       }
     }
@@ -485,10 +487,10 @@ class GLRenderer extends GLBaseRenderer {
 
   /**
    * The drawBackground method.
-   * @param {RenderState} renderstate - The object tracking the current state of the renderer
+   * @param {ColorRenderState} renderstate - The object tracking the current state of the renderer
    */
-  drawBackground(renderstate: RenderState): void {
-    if (this.__glBackgroundMap) {
+  drawBackground(renderstate: ColorRenderState): void {
+    if (this.__glBackgroundMap && this.__backgroundMapShader && this.__backgroundMapShaderBinding) {
       if (!this.__glBackgroundMap.isLoaded()) return
       const gl = this.__gl
       gl.depthMask(false)

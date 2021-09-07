@@ -6,8 +6,8 @@ import { generateShaderGeomBinding } from './GeomShaderBinding'
  * @private
  */
 class GLPoints extends GLGeom {
-  protected __numVertices: number
-  protected __vboState: number
+  protected __numVertices: number = 9
+  protected __vboState: number = -1
   /**
    * Create a GL point.
    * @param {WebGL12RenderingContext} gl - The webgl rendering context.
@@ -40,7 +40,7 @@ class GLPoints extends GLGeom {
       this.__glattrbuffers[attrName] = {
         buffer: attrBuffer,
         dataType: attrData.dataType,
-        normalized: attrData.normalized,
+        normalized: attrData.normalized
       }
     }
 
@@ -82,7 +82,7 @@ class GLPoints extends GLGeom {
   bind(renderstate: RenderState) {
     if (renderstate.unifs.PointSize) {
       const gl = this.__gl
-      let shaderBinding = this.__shaderBindings[renderstate.shaderkey]
+      let shaderBinding = this.__shaderBindings[renderstate.shaderkey!]
       if (!shaderBinding) {
         if (!gl.__quadVertexIdsBuffer) gl.setupInstancedQuad()
 
@@ -90,7 +90,7 @@ class GLPoints extends GLGeom {
         const attrbuffers = Object.assign(this.__glattrbuffers, gl.__quadattrbuffers)
 
         shaderBinding = generateShaderGeomBinding(this.__gl, renderstate.attrs, attrbuffers, gl.__quadIndexBuffer)
-        this.__shaderBindings[renderstate.shaderkey] = shaderBinding
+        this.__shaderBindings[renderstate.shaderkey!] = shaderBinding
       }
       shaderBinding.bind(renderstate)
       return true

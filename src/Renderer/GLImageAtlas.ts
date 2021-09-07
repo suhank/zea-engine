@@ -1,7 +1,5 @@
 import { Vec2, Vec4, Color } from '../Math/index'
-
 import { GrowingPacker } from '../Utilities/index'
-
 import { BaseImage } from '../SceneTree/index'
 
 import { GLTexture2D } from './GLTexture2D'
@@ -9,7 +7,6 @@ import { GLRenderTarget } from './GLRenderTarget'
 import { generateShaderGeomBinding, IGeomShaderBinding } from './Drawing/GeomShaderBinding'
 import { MathFunctions } from '../Utilities/MathFunctions'
 import { AtlasLayoutShader } from './Shaders/AtlasLayoutShader'
-import { BaseEvent } from '../Utilities/BaseEvent'
 import { GLShader } from './GLShader'
 
 /**
@@ -24,14 +21,14 @@ class GLImageAtlas extends GLRenderTarget {
   // clearColor: Color
   protected __subImages: any[] // GLTexture2D
   protected __layoutNeedsRegeneration: boolean
-  protected __asyncCount: number
-  protected loaded: boolean
-  protected ready: boolean
-  protected __layout: Array<LayoutItem>
+  protected __asyncCount: number = 0
+  protected loaded: boolean = false
+  protected ready: boolean = false
+  protected __layout: Array<LayoutItem> = []
   protected __atlasLayoutTexture: any
-  protected __layoutVec4s: Array<number[]>
-  protected __atlasLayoutShaderBinding: IGeomShaderBinding
-  protected __atlasLayoutShader: GLShader
+  protected __layoutVec4s: Array<number[]> = []
+  protected __atlasLayoutShaderBinding: IGeomShaderBinding | null = null
+  protected __atlasLayoutShader: GLShader | null = null
   /**
    * Create an image atlas..
    * @param {WebGL12RenderingContext} gl - The webgl rendering context.
@@ -179,7 +176,7 @@ class GLImageAtlas extends GLRenderTarget {
         w: subImage.width + border * 2,
         h: subImage.height + border * 2,
         area: subImage.width * subImage.height,
-        index,
+        index
       })
     })
 
@@ -194,7 +191,7 @@ class GLImageAtlas extends GLRenderTarget {
       if (block.fit) {
         this.__layout[block.index] = {
           pos: new Vec2(block.fit.x + border, block.fit.y + border),
-          size: new Vec2(block.w, block.h),
+          size: new Vec2(block.w, block.h)
         }
       } else {
         console.warn('Unable to fit image')
@@ -212,7 +209,7 @@ class GLImageAtlas extends GLRenderTarget {
       height,
       format: this.__typeParam == 'FLOAT' && this.__formatParam == 'RGB' ? 'RGBA' : this.__formatParam,
       type: this.__typeParam,
-      filter: 'LINEAR',
+      filter: 'LINEAR'
     })
 
     const gl = this.__gl
@@ -248,14 +245,14 @@ class GLImageAtlas extends GLRenderTarget {
           layoutItem.pos.x / width,
           layoutItem.pos.y / height,
           layoutItem.size.x / width,
-          layoutItem.size.y / height,
+          layoutItem.size.y / height
         ]
       })
     } else {
       const dataArray = new Float32Array(size * size * 4) /* each pixel has 4 floats*/
       for (let i = 0; i < this.__layout.length; i++) {
         const layoutItem = this.__layout[i]
-        const vec4 = Vec4.createFromBuffer(dataArray.buffer, i * 4 * 4)
+        const vec4 = new Vec4(dataArray.buffer, i * 4 * 4)
         vec4.set(
           layoutItem.pos.x / width,
           layoutItem.pos.y / height,
@@ -277,7 +274,7 @@ class GLImageAtlas extends GLRenderTarget {
           mipMapped: false,
           width: size,
           height: size,
-          data: dataArray,
+          data: dataArray
         })
       } else {
         this.__atlasLayoutTexture.bufferData(dataArray, size, size)
@@ -317,8 +314,8 @@ class GLImageAtlas extends GLRenderTarget {
     const renderstate: RenderState = <RenderState>{}
     this.bindForWriting(renderstate, true)
 
-    this.__atlasLayoutShader.bind(renderstate, 'GLImageAtlas')
-    this.__atlasLayoutShaderBinding.bind(renderstate)
+    this.__atlasLayoutShader!.bind(renderstate, 'GLImageAtlas')
+    this.__atlasLayoutShaderBinding!.bind(renderstate)
     const scl = new Vec2(1.0 / this.width, 1.0 / this.height)
 
     const unifs = renderstate.unifs

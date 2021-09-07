@@ -33,7 +33,10 @@ class GLOverlayPass extends GLOpaqueGeomsPass {
    */
   filterGeomItem(geomItem: GeomItem) {
     if (geomItem.isOverlay()) return true
-    const shaderClass = geomItem.getParameter('Material').getValue().getShaderClass()
+    const shaderClass = geomItem
+      .getParameter('Material')!
+      .getValue()
+      .getShaderClass()
     if (shaderClass) {
       if (shaderClass.isOverlay()) return true
     }
@@ -45,7 +48,7 @@ class GLOverlayPass extends GLOpaqueGeomsPass {
    * @param {RenderState} renderstate - The object tracking the current state of the renderer
    */
   draw(renderstate: RenderState) {
-    const gl = this.__gl
+    const gl = this.__gl!
 
     // Clear the depth buffer so handls are always drawn over the top.
     gl.clear(gl.DEPTH_BUFFER_BIT)
@@ -75,7 +78,7 @@ class GLOverlayPass extends GLOpaqueGeomsPass {
    * @param {RenderState} renderstate - The object tracking the current state of the renderer
    */
   drawGeomData(renderstate: RenderState) {
-    const gl = this.__gl
+    const gl = this.__gl!
 
     // Clear the depth buffer so handls are always drawn over the top.
     gl.clear(gl.DEPTH_BUFFER_BIT)

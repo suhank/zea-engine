@@ -13,11 +13,10 @@ import { GLGeomItem } from './GLGeomItem'
 abstract class GLGeomItemSetMultiDraw extends EventEmitter {
   protected renderer: GLBaseRenderer
   protected gl: WebGL12RenderingContext
-  protected glGeomItems: GLGeomItem[]
+  protected glGeomItems: Array<GLGeomItem | null>
   protected glGeomIdsMapping: Record<string, any>
   protected glgeomItemEventHandlers: any[]
   protected freeIndices: number[]
-  protected dirtyDrawGeomIds: number[]
   protected drawElementCounts: Uint32Array
   protected drawElementOffsets: Uint32Array
   protected highlightElementCounts: Uint32Array
@@ -26,10 +25,10 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
   protected visibleItems: GLGeomItem[]
   protected drawIdsArray: Float32Array
   protected drawIdsBufferDirty: boolean
-  protected drawIdsTexture: GLTexture2D
+  protected drawIdsTexture: GLTexture2D | null = null
   protected highlightedItems: GLGeomItem[]
   protected highlightedIdsArray: any
-  protected highlightedIdsTexture: GLTexture2D
+  protected highlightedIdsTexture: GLTexture2D | null = null
   protected highlightedIdsBufferDirty: boolean
 
   /**
@@ -65,7 +64,7 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
       const geomItemIndices = this.glGeomIdsMapping[event.index]
       if (geomItemIndices != undefined) {
         geomItemIndices.forEach((index: number) => {
-          const glGeomItem = this.glGeomItems[index]
+          const glGeomItem = this.glGeomItems[index]!
           if (glGeomItem.isVisible()) {
             const index = this.visibleItems.indexOf(glGeomItem)
             const offsetAndCount = this.renderer.glGeomLibrary.getGeomOffsetAndCount(glGeomItem.geomId)
@@ -88,7 +87,7 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
    * @param {GLGeomItem} glGeomItem - The glGeomItem value.
    */
   addGLGeomItem(glGeomItem: GLGeomItem) {
-    const index: number = this.freeIndices.length > 0 ? this.freeIndices.pop() : this.glGeomItems.length
+    const index: number = this.freeIndices.length > 0 ? this.freeIndices.pop()! : this.glGeomItems.length
 
     // Keep track of which geomitems use which geoms, so we can update the offset and count array if they change.
     if (!this.glGeomIdsMapping[glGeomItem.geomId]) {
@@ -224,7 +223,7 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
         height: drawIdsTextureSize,
         filter: 'NEAREST',
         wrap: 'CLAMP_TO_EDGE',
-        mipMapped: false,
+        mipMapped: false
       })
     } else if (this.drawIdsTexture.width < drawIdsTextureSize || this.drawIdsTexture.height < drawIdsTextureSize) {
       this.drawIdsTexture.resize(drawIdsTextureSize, drawIdsTextureSize)
@@ -236,8 +235,8 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
       const level = 0
       const xoffset = 0
       const height = 1
-      const format = tex.__format
-      const type = tex.__type
+      const format = tex.getFormat()
+      const type = tex.getType()
       const rows = Math.ceil((xoffset + this.visibleItems.length) / texWidth)
 
       let consumed = 0
@@ -315,7 +314,7 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
         height: highlightIdsTextureSize,
         filter: 'NEAREST',
         wrap: 'CLAMP_TO_EDGE',
-        mipMapped: false,
+        mipMapped: false
       })
     } else if (
       this.highlightedIdsTexture.width < highlightIdsTextureSize ||
@@ -331,8 +330,8 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
       const level = 0
       const xoffset = 0
       const height = 1
-      const format = tex.__format
-      const type = tex.__type
+      const format = tex.getFormat()
+      const type = tex.getType()
       const rows = Math.ceil((xoffset + this.highlightedIdsArray.length) / texWidth)
 
       let consumed = 0
