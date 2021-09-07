@@ -14,10 +14,6 @@
 
     <script defer crossorigin src="https://cdn.jsdelivr.net/npm/@zeainc/zea-cad@3.3.0/dist/index.umd.js"></script>
     <script defer crossorigin src="https://cdn.jsdelivr.net/npm/@zeainc/zea-ux/dist/index.umd.js"></script>
-    <script src="https://websocket-staging.zea.live/socket.io/socket.io.js"></script>
-    <script defer crossorigin src="https://cdn.jsdelivr.net/npm/@zeainc/zea-collab/dist/index.umd.js"></script>
-    <script src="https://www.gstatic.com/draco/v1/decoders/draco_decoder_gltf.js"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/@zeainc/gltf-loader/dist/index.umd.js"></script>
 
     <style>
       body {
@@ -64,22 +60,28 @@
         CameraManipulator,
         GLBoundingBoxPass,
         GeomLibrary,
-        resourceLoader,
+        resourceLoader
       } from '../dist/index.esm.js'
 
       const canvas = document.querySelector('#renderer')
 
       const scene = new Scene()
       const renderer = new GLRenderer(canvas, { debugGeomIds: false, antialias: false })
-      // renderer.setScene(scene)
+      renderer.setScene(scene)
       renderer.outlineThickness = 0.5
       renderer.outlineColor = new Color(0.2, 0.2, 0.2, 1)
-      scene.getSettings().getParameter('BackgroundColor').setValue(new Color(0.85, 0.85, 0.85, 1))
+      scene
+        .getSettings()
+        .getParameter('BackgroundColor')
+        .setValue(new Color(0.85, 0.85, 0.85, 1))
+
       renderer.getViewport().debugGeomShader = urlParams.has('debugGeomShader')
 
-      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-2, -2, 2.7), new Vec3(40, 90, 3))
+      renderer
+        .getViewport()
+        .getCamera()
+        .setPositionAndTarget(new Vec3(-2, -2, 2.7), new Vec3(40, 90, 3))
 
-      /** LOAD ASSETS START */
       const { CADAsset, CADBody } = window.zeaCad
 
       const loadZCADAsset = (url, filename) => {
@@ -121,21 +123,27 @@
       }
       createAndDestroyCadAsset(1)
 
-      const postMessage = (msg) => {
+      const postMessage = msg => {
         console.log(msg)
         window.postMessage(msg)
       }
 
       // {{{ Messages handler.
-      const handleMessage = (event) => {
+      const handleMessage = event => {
         const { data } = event
 
         if (data === 'variant-01') {
-          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, -2.7), new Vec3(0, 0, 0.4))
+          renderer
+            .getViewport()
+            .getCamera()
+            .setPositionAndTarget(new Vec3(2, 2, -2.7), new Vec3(0, 0, 0.4))
           renderer.frameAll()
           postMessage(`done-${data}`)
         } else if (data === 'variant-02') {
-          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-2, -2, 2.7), new Vec3(0, 0, 0.4))
+          renderer
+            .getViewport()
+            .getCamera()
+            .setPositionAndTarget(new Vec3(-2, -2, 2.7), new Vec3(0, 0, 0.4))
           renderer.frameAll()
           postMessage(`done-${data}`)
         }
@@ -147,18 +155,7 @@
   </head>
   <body class="bg-blue-100 h-full">
     <div class="main-wrapper grid h-screen">
-      <header class="border border-blue-400 flex justify-center items-center">
-        <div id="controllers">
-          <div>
-            <label for="camera">Camera Manipulator</label>
-            <input type="checkbox" id="camera" value="CameraManipulator" class="tool" />
-          </div>
-          <div>
-            <label for="selection">Selection Tool</label>
-            <input type="checkbox" id="selection" value="SelectionTool" class="tool" />
-          </div>
-        </div>
-      </header>
+      <header class="border border-blue-400 flex justify-center items-center"></header>
       <nav class="border border-blue-400 flex justify-center items-center">nav</nav>
       <main>
         <canvas class="absolute" id="renderer"></canvas>
