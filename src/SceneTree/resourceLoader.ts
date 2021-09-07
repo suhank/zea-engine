@@ -5,14 +5,6 @@ import { EventEmitter } from '../Utilities/index'
 import { zeaDebug } from '../helpers/zeaDebug'
 import { TreeItem } from './TreeItem'
 
-function checkStatus(response: any) {
-  if (!response.ok) {
-    return false
-  }
-
-  return response
-}
-
 /**
  * Class for delegating resource loading, enabling an abstraction of a cloud file system to be implemented.
  *
@@ -57,10 +49,9 @@ function checkStatus(response: any) {
  * * **allResourcesLoaded:** emitted when all outstanding resources are loaded. This event can be used to signal the completion of load.
  */
 class ResourceLoader extends EventEmitter {
-  protected __adapter: Record<string, any>
   protected __totalWork: number
   protected __doneWork: number
-  protected baseUrl: string
+  protected baseUrl: string = ''
   protected plugins: Record<string, any>
   protected systemUrls: Record<string, string>
   protected __commonResources: Record<string, TreeItem>
@@ -87,22 +78,6 @@ class ResourceLoader extends EventEmitter {
     this.__commonResources = {}
   }
 
-  /**
-   * The setAdapter method.
-   * @param {Record<any,any>} adapter - The adapter object.
-   */
-  setAdapter(adapter: Record<string, any>) {
-    this.__adapter = adapter
-  }
-
-  /**
-   * The getAdapter method.
-   * @return {Record<string, any>} - The adapter object.
-   */
-  getAdapter(): Record<string, any> {
-    return this.__adapter
-  }
-
   // /////////////////////////////////////////////////
   // Register plugins.
   registerPlugin(plugin: any): void {
@@ -121,7 +96,6 @@ class ResourceLoader extends EventEmitter {
    * @return {string} - The resolved fileId if an adapter is installed, else the original value.
    */
   resolveFileId(value: string): string {
-    if (this.__adapter) return this.__adapter.resolveFileId(value)
     return value
   }
 
@@ -132,7 +106,6 @@ class ResourceLoader extends EventEmitter {
    * @return {string} - The resolved URL if an adapter is installed, else the original value.
    */
   resolveFilename(value: string): string {
-    if (this.__adapter) return this.__adapter.resolveFilename(value)
     if (!value.includes('/')) return value
     return value.split('/')[1]
   }
@@ -140,13 +113,13 @@ class ResourceLoader extends EventEmitter {
   resolveFilepath(lodPath: string): boolean {
     throw Error('resolveFilePath not implemented')
   }
+
   /**
    * Given a file ID, returns a URL. The adaptor that is assigned is responsible for resolving the URL within the file system.
    * @param {string} value - The file value.
    * @return {string} - The resolved URL if an adapter is installed, else the original value.
    */
   resolveURL(value: string): string {
-    if (this.__adapter) return this.__adapter.resolveURL(value)
     if (this.systemUrls[value]) return this.systemUrls[value]
     return value
   }
@@ -155,6 +128,7 @@ class ResourceLoader extends EventEmitter {
     console.warn('ResourceAvailable not implemented on resourceLoader')
     return false
   }
+
   /**
    * The loadURL method.
    * @param {string} resourceId - The resourceId value.

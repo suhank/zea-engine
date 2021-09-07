@@ -12,7 +12,7 @@ import { Operator } from './Operator'
 class OperatorOutput extends EventEmitter {
   __name: string
   _mode: OperatorOutputMode
-  _op: Operator
+  _op: Operator | null = null
   private _param?: Parameter<unknown> // TODO: (design) I added <unknown> as a type argument here and elsewhere
   _paramBindIndex: number
   detached: boolean
@@ -52,7 +52,7 @@ class OperatorOutput extends EventEmitter {
    * @return {Operator} - The operator object.
    */
   getOperator(): Operator {
-    return this._op
+    return this._op!
   }
 
   /**
@@ -147,7 +147,7 @@ class OperatorOutput extends EventEmitter {
    */
   backPropagateValue(value: any): any {
     if (this._param) {
-      value = this._op.backPropagateValue(value)
+      value = this._op!.backPropagateValue(value)
     }
     return value
   }
@@ -175,7 +175,7 @@ class OperatorOutput extends EventEmitter {
     return {
       name: this.__name,
       paramPath: context && context.makeRelative ? context.makeRelative(paramPath) : paramPath,
-      paramBindIndex: this._paramBindIndex,
+      paramBindIndex: this._paramBindIndex
     }
   }
 

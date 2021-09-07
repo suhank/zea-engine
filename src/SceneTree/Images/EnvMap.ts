@@ -18,7 +18,7 @@ import { BooleanParameter } from '../Parameters/BooleanParameter'
  * @extends VLHImage
  */
 class EnvMap extends VLHImage {
-  protected utf8decoder: TextDecoder
+  protected utf8decoder: TextDecoder | util.TextDecoder
   protected shCoeffs: any[]
   protected luminanceData: any
   /**

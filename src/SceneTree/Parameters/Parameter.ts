@@ -1,13 +1,11 @@
 import { ParameterOwner } from '../ParameterOwner'
 import { BaseItem } from '../BaseItem'
 import { EventEmitter } from '../../Utilities/EventEmitter'
-import { Registry } from '../../Registry'
 import { OperatorOutput } from '../Operators/OperatorOutput'
 import { ICloneable } from '../../Utilities/ICloneable'
 import { ISerializable } from '../../Utilities/ISerializable'
 import { OperatorOutputMode } from './OperatorOutputMode'
 import { BinReader } from '../BinReader'
-import { Material } from '../../SceneTree/Material'
 /**
  * Represents a reactive type of attribute that can be owned by a `ParameterOwner` class.
  *
@@ -16,7 +14,6 @@ import { Material } from '../../SceneTree/Material'
  * * **valueChanged:** Triggered when the value of the parameter changes.
  */
 abstract class Parameter<T> extends EventEmitter implements ICloneable, ISerializable {
-  __backupMaterial: any // TODO:(check/refactor) this is used in MaterialGroup.ts and Group.js
   // TODO:(refactor) boundOps, cleaning, dirtyOpIndex, firstOP_WRITE, were private.
   protected dirty: boolean
   protected boundOps: OperatorOutput[]
@@ -24,8 +21,8 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
   protected dirtyOpIndex: number
   protected firstOP_WRITE: number
   protected name: string
-  protected value?: T
-  protected dataType?: string
+  protected value: T
+  protected dataType: string
   protected ownerItem?: ParameterOwner
 
   /**
@@ -50,10 +47,9 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
    * @param {T} value - The value of the parameter.
    * @param {string} dataType - The data type of the parameter.
    */
-  constructor(name: string = '', value?: T, dataType?: string) {
+  constructor(name: string = '', value: T, dataType: string) {
     super()
 
-    this.__backupMaterial = 0 // TODO: any type. __backmaterial is used elsewhere.
     this.dirty = false
     this.firstOP_WRITE = 0
     // this.ownerItem // TODO: should this be initialized by the constructor?
@@ -97,7 +93,7 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
    * @return {ParameterOwner} - The return value.
    */
   getOwner(): ParameterOwner {
-    return this.ownerItem
+    return this.ownerItem!
   }
 
   /**
@@ -128,7 +124,7 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
    *
    * @return {string} - The return value.
    */
-  getDataType(): string | undefined {
+  getDataType(): string {
     return this.dataType
   }
 
@@ -334,9 +330,9 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
 
   /**
    * Returns parameter's value.
-   * @return {T | undefined} - The return value.
+   * @return {T} - The return value.
    */
-  getValue(): T | undefined {
+  getValue(): T {
     if (this.dirtyOpIndex < this.boundOps.length) {
       this._clean(this.boundOps.length)
     }

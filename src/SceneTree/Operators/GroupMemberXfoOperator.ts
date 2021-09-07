@@ -10,8 +10,8 @@ import { OperatorOutputMode } from '../Parameters/OperatorOutputMode'
  *
  */
 class GroupTransformXfoOperator extends Operator {
-  bindXfo: Xfo
-  invBindXfo: Xfo
+  bindXfo: Xfo = new Xfo()
+  invBindXfo: Xfo = new Xfo()
 
   /**
    * Create a GroupMemberXfoOperator operator.
@@ -93,7 +93,9 @@ class GroupMemberXfoOperator extends Operator {
     const memberGlobalXfoOutput = this.getOutput('MemberGlobalXfo')
     const memberGlobalXfo = memberGlobalXfoOutput.getValue() as Xfo
     if (this._enabled) {
-      const groupTransformXfo = this.getInput('GroupTransformXfo').getParam()?.getValue() as Xfo
+      const groupTransformXfo = this.getInput('GroupTransformXfo')
+        .getParam()
+        ?.getValue() as Xfo
       memberGlobalXfoOutput.setClean(groupTransformXfo.multiply(memberGlobalXfo))
     } else {
       memberGlobalXfoOutput.setClean(memberGlobalXfo)

@@ -8,18 +8,18 @@ import { BaseGeom } from '../../SceneTree/Geometry/BaseGeom'
  * @extends Parameter
  * @private
  */
-class GeometryParameter extends Parameter<BaseGeom> {
+class GeometryParameter extends Parameter<BaseGeom | undefined> {
   /**
    * Create a geometry parameter.
    * @param {string} name - The name of the color parameter.
    * @param {BaseGeom} value - The value of the parameter.
    */
   constructor(name: string = '', value?: BaseGeom) {
-    super(name, undefined, 'Geometry')
+    super(name, value, 'Geometry')
 
     this.emitBoundingBoxDirtied = this.emitBoundingBoxDirtied.bind(this)
-    if (value) {
-      this.setValue(value)
+    if (this.value) {
+      this.value.on('boundingBoxChanged', this.emitBoundingBoxDirtied)
     }
   }
 
@@ -74,7 +74,7 @@ class GeometryParameter extends Parameter<BaseGeom> {
   toJSON(context?: Record<string, any>): Record<string, unknown> {
     return {
       name: this.name,
-      value: this.value?.toJSON(context),
+      value: this.value?.toJSON(context)
     }
   }
 
@@ -108,10 +108,6 @@ class GeometryParameter extends Parameter<BaseGeom> {
    * Users should never need to call this method directly.
    */
   destroy() {
-    // Note: some parameters hold refs to geoms/materials,
-    // which need to be explicitly cleaned up.
-    // e.g. freeing GPU Memory.
-
     if (this.value) {
       this.value.off('boundingBoxChanged', this.emitBoundingBoxDirtied)
     }

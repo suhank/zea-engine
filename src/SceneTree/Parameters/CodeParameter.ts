@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unused-vars * /
 import { Registry } from '../../Registry'
 import { StringParameter } from './StringParameter'
 
@@ -17,7 +17,7 @@ const DEFAULT_LANG = 'js'
  *
  * @deprecated
  * @extends StringParameter
- */
+ * /
 class CodeParameter extends StringParameter {
   protected lang: string
 
@@ -27,7 +27,7 @@ class CodeParameter extends StringParameter {
    *
    * @param {string} name - The name of the code parameter.
    * @param {string} value - The value of the parameter.
-   */
+   * /
   constructor(name: string = '', value = '') {
     super(name, value)
     this.lang = DEFAULT_LANG
@@ -37,7 +37,7 @@ class CodeParameter extends StringParameter {
    * Sets code language for parameter.
    *
    * @param {string} lang - The language value.
-   */
+   * /
   setLanguage(lang: string): void {
     this.lang = lang
   }
@@ -46,7 +46,7 @@ class CodeParameter extends StringParameter {
    * Returns code language of parameter.
    *
    * @return {string} - Returns the language.
-   */
+   * /
   getLanguage(): string {
     return this.lang
   }
@@ -57,7 +57,7 @@ class CodeParameter extends StringParameter {
    *
    * @param {Record<string, unknown>} context - The context value.
    * @return {Record<string, boolean | undefined>} - Returns the json object.
-   */
+   * /
   toJSON(context?: Record<string, unknown>): Record<string, string | undefined> {
     return { value: this.value, lang: this.lang }
   }
@@ -67,9 +67,9 @@ class CodeParameter extends StringParameter {
    *
    * @param {Record<string, boolean | undefined>} j - The json object this item must decode.
    * @param {Record<string, unknown>} context - The context value.
-   */
+   * /
   fromJSON(j: Record<string, string | undefined>, context?: Record<string, unknown>): void {
-    this.value = j.value
+    this.value = j.value ? <string>j.value : ''
     this.lang = j.lang || DEFAULT_LANG
 
     this.emit('valueChanged', { mode: 0 })
@@ -80,7 +80,7 @@ class CodeParameter extends StringParameter {
    * copies its values from this parameter and returns it.
    *
    * @return {CodeParameter} - Returns a new cloned code parameter.
-   */
+   * /
   clone(): CodeParameter {
     const clonedParam = new CodeParameter(this.name, this.value)
     clonedParam.setLanguage(this.lang)
@@ -91,3 +91,4 @@ class CodeParameter extends StringParameter {
 Registry.register('CodeParameter', CodeParameter)
 
 export { CodeParameter }
+*/

@@ -6,7 +6,7 @@ import { resourceLoader } from '../resourceLoader'
 import { FilePathParameter } from '../Parameters/FilePathParameter'
 import { BinReader } from '../BinReader'
 
-const imageDataLibrary = {}
+const imageDataLibrary: { [key: string]: any } = {}
 
 /** Class representing a file image.
  * @extends BaseImage
@@ -69,15 +69,6 @@ class FileImage extends BaseImage {
   }
 
   /**
-   * The __imageDataLibrary method.
-   * @return {any} - The return value.
-   * @private
-   */
-  static __imageDataLibrary() {
-    return imageDataLibrary
-  }
-
-  /**
    * Defines how to handle cross origin request.
    *
    * **Possible values:**
@@ -128,7 +119,7 @@ class FileImage extends BaseImage {
         this.emit('loaded', {})
         // TODO: (commented out) resolve()
       }
-      const imageDataLibrary = FileImage.__imageDataLibrary()
+
       if (url in imageDataLibrary) {
         imageElem = imageDataLibrary[url]
         if (imageElem.complete) {

@@ -10,6 +10,7 @@ import { resourceLoader } from '../resourceLoader'
 import { NumberParameter, Vec4Parameter } from '../Parameters/index'
 import { MathFunctions } from '../../Utilities/MathFunctions'
 
+const imageDataLibrary: { [key: string]: any } = {}
 /**
  * Class representing a GIF image.
  *
@@ -101,7 +102,6 @@ class GIFImage extends FileImage {
   load(url: string, format = 'RGB') {
     // this.__streamAtlasDesc = new Vec4();
 
-    const imageDataLibrary = FileImage.__imageDataLibrary()
     if (url in imageDataLibrary) {
       this.__resourcePromise = imageDataLibrary[url]
       return this.__resourcePromise
@@ -219,7 +219,7 @@ class GIFImage extends FileImage {
               atlasSize,
               frameRange: [0, frames.length],
               frameDelays,
-              imageData,
+              imageData
             })
           },
           (statusText: any) => {
@@ -237,7 +237,7 @@ class GIFImage extends FileImage {
       this.width = unpackedData.width
       this.height = unpackedData.height
 
-      this.getParameter('StreamAtlasDesc').setValue(
+      this.getParameter('StreamAtlasDesc')!.setValue(
         new Vec4(unpackedData.atlasSize[0], unpackedData.atlasSize[1], 0, 0)
       )
       ;(<NumberParameter>this.getParameter('StreamAtlasIndex')).setRange(unpackedData.frameRange)

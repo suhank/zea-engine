@@ -155,7 +155,7 @@ class BaseGeomItem extends TreeItem {
         material.getParameter('BaseColor').loadValue(Color.random(0.25))
         context.assetItem.getMaterialLibrary().addMaterial(material)
       }
-      this.getParameter('Material').loadValue(material)
+      this.getParameter('Material')!.loadValue(material)
 
       this.__layers = reader.loadStrArray()
       if (this.__layers.length > 0) {

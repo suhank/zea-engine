@@ -23,7 +23,7 @@ import { Parameter } from './Parameter'
  *
  * @extends Parameter
  */
-class TreeItemParameter extends Parameter<TreeItem> {
+class TreeItemParameter extends Parameter<TreeItem | undefined> {
   protected filterFn?: (...args: any[]) => unknown
   protected owner: TreeItem
 
@@ -85,7 +85,7 @@ class TreeItemParameter extends Parameter<TreeItem> {
    */
   setValue(treeItem: TreeItem) {
     // 0 == normal set. 1 = changed via cleaner fn, 2=change by loading/cloning code.
-    if (this.filterFn && !this.filterFn(treeItem)) return false
+    if (this.filterFn && !this.filterFn(treeItem)) return
     if (this.value !== treeItem) {
       if (this.value) {
         this.value.off('globalXfoChanged', this.emittreeItemGlobalXfoChanged)
@@ -110,7 +110,7 @@ class TreeItemParameter extends Parameter<TreeItem> {
    */
   toJSON(context: Record<string, any>): Record<string, unknown> {
     return {
-      value: context.makeRelative(this.value?.getPath()),
+      value: context.makeRelative(this.value?.getPath())
     }
   }
 

@@ -66,6 +66,7 @@ class FilePathParameter extends Parameter<string> {
     const filename = this.getFilename()
     const suffixSt = filename.lastIndexOf('.')
     if (suffixSt != -1) return filename.substring(suffixSt).toLowerCase()
+    return undefined
   }
 
   /**
@@ -73,7 +74,7 @@ class FilePathParameter extends Parameter<string> {
    *
    * @return {string} - The return value.
    */
-  getStem(): string | null{
+  getStem(): string | null {
     const filename = this.getFilename()
     if (filename) {
       const parts = filename.split('.')

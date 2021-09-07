@@ -1,4 +1,3 @@
-import { Vec2 } from '../../../Math/Vec2'
 import { ProceduralPoints } from './ProceduralPoints'
 import { NumberParameter } from '../../Parameters/NumberParameter'
 import { Registry } from '../../../Registry'

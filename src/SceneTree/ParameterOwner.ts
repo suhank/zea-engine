@@ -267,7 +267,7 @@ class ParameterOwner extends EventEmitter {
               (param: Parameter<any>) => {
                 this.replaceParameter(param)
               },
-              (reason: any): void => {
+              (): void => {
                 console.warn('Unable to resolve shared parameter:' + pj.paramPath)
               }
             )

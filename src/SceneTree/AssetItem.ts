@@ -1,4 +1,5 @@
 import { Version } from './Version'
+import { BaseItem } from './BaseItem'
 import { TreeItem } from './TreeItem'
 import { SelectionSet } from './Groups/SelectionSet'
 import { GeomLibrary } from './GeomLibrary'
@@ -7,6 +8,7 @@ import { Registry } from '../Registry'
 import { EventEmitter } from '../Utilities/EventEmitter'
 import { GeomItem } from './GeomItem'
 import { BinReader } from './BinReader'
+import { Parameter } from './Parameters/Parameter'
 
 /**
  * Provides a context for loading assets. This context can provide the units of the loading scene.
@@ -81,9 +83,7 @@ class AssetLoadContext extends EventEmitter {
    * @param {function} onSucceed called with the successful result of the path resolution.
    * @param {function} onFail called when the path resolution fails.
    */
-  resolvePath(path: any, onSucceed: any, onFail: any) {
-    if (!path) throw new Error('Path not specified')
-
+  resolvePath(path: Array<string>, onSucceed: (result: BaseItem | Parameter<any>) => void, onFail: () => void) {
     // Note: Why not return a Promise here?
     // Promise evaluation is always async, so
     // all promises will be resolved after the current call stack
@@ -162,10 +162,10 @@ class AssetItem extends TreeItem {
   __materials: MaterialLibrary
   loaded: boolean
 
-  protected __engineDataVersion: Version
-  protected __unitsScale: number
+  protected __engineDataVersion?: Version
+  protected __unitsScale: number = 1.0
+  protected __units: string = 'meters'
 
-  protected __units: string
   /**
    * Create an asset item.
    * @param {string} name - The name of the asset item.
@@ -201,7 +201,7 @@ class AssetItem extends TreeItem {
    *
    * @return {Version} - The return value.
    */
-  getEngineDataVersion(): Version {
+  getEngineDataVersion(): Version | undefined {
     return this.__engineDataVersion
   }
 
@@ -264,7 +264,7 @@ class AssetItem extends TreeItem {
       context.units = this.__units
 
       // Apply units change to existing Xfo (avoid changing tr).
-      const localXfoParam = this.getParameter('LocalXfo')
+      const localXfoParam = this.getParameter('LocalXfo')!
       const xfo = localXfoParam.getValue()
       xfo.sc.scaleInPlace(this.__unitsScale)
       localXfoParam.setValue(xfo)
@@ -304,14 +304,16 @@ class AssetItem extends TreeItem {
       // we can handle easily with callback functions.
       try {
         const item = this.resolvePath(path)
-        onSucceed(item)
+        if (item) onSucceed(item)
+        else onFail()
       } catch (e) {
         // Some paths resolve to items generated during load,
         // so push a callback to re-try after the load is complete.
         postLoadCallbacks.push(() => {
           try {
-            const param = this.resolvePath(path)
-            onSucceed(param)
+            const item = this.resolvePath(path)
+            if (item) onSucceed(item)
+            else onFail()
           } catch (e) {
             if (onFail) {
               onFail()
@@ -322,7 +324,7 @@ class AssetItem extends TreeItem {
         })
       }
     }
-    context.addPLCB = (postLoadCallback) => postLoadCallbacks.push(postLoadCallback)
+    context.addPLCB = postLoadCallback => postLoadCallbacks.push(postLoadCallback)
 
     this.__materials.readBinary(reader, context)
 
@@ -454,11 +456,12 @@ class AssetItem extends TreeItem {
     this.loaded = src.loaded
 
     if (!src.loaded) {
-      src.once('loaded', (event) => {
-        const srcLocalXfo = src.getParameter('LocalXfo').getValue()
-        const localXfo = this.getParameter('LocalXfo').getValue()
+      src.once('loaded', event => {
+        const srcLocalXfo = src.getParameter('LocalXfo')!.getValue()
+        const localXfoParam = this.getParameter('LocalXfo')
+        const localXfo = localXfoParam!.getValue()
         localXfo.sc = srcLocalXfo.sc.clone()
-        this.getParameter('LocalXfo').setValue(localXfo)
+        localXfoParam!.setValue(localXfo)
 
         src.getChildren().forEach((srcChildItem: any) => {
           if (srcChildItem && srcChildItem != AssetItem) {

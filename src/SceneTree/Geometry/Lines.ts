@@ -109,9 +109,10 @@ class Lines extends BaseGeom {
    * @return {number} - The return value.
    * @private
    */
-  getSegmentVertexIndex(line: number, lineVertex: number): number | undefined {
+  getSegmentVertexIndex(line: number, lineVertex: number): number {
     const numSegments = this.getNumSegments()
     if (line < numSegments) return this.__indices[line * 2 + lineVertex]
+    return -1
   }
 
   // ////////////////////////////////////////

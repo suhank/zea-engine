@@ -9,16 +9,14 @@ import { BaseItem } from '../../SceneTree/BaseItem'
  */
 class ItemSetParameter extends Parameter<Set<BaseItem>> {
   protected filterFn: (...args: any) => boolean
-  protected __items: Set<BaseItem>
-  // protected items: Set<BaseItem>
+
   /**
    * Create an item set parameter.
    * @param {string} name - The name of the item set parameter.
    * @param {(...args: any[]) => boolean} filterFn - The filterFn value.
    */
   constructor(name: string = '', filterFn: (...args: any[]) => boolean) {
-    super(name, undefined, 'BaseItem')
-    this.__items = new Set()
+    super(name, new Set(), 'BaseItem')
     this.filterFn = filterFn // Note: the filter Fn indicates that users will edit the set.
   }
 
@@ -45,7 +43,7 @@ class ItemSetParameter extends Parameter<Set<BaseItem>> {
    */
   getItem(index: number): BaseItem | undefined {
     // if (!this.__items) return undefined
-    return Array.from(this.__items)[index]
+    return Array.from(this.value)[index]
   }
 
   /**
@@ -60,9 +58,9 @@ class ItemSetParameter extends Parameter<Set<BaseItem>> {
       return
     }
 
-    this.__items.add(item)
+    this.value.add(item)
 
-    const index = Array.from(this.__items).indexOf(item)
+    const index = Array.from(this.value).indexOf(item)
     this.emit('itemAdded', { item, index })
     if (emitValueChanged) this.emit('valueChanged', {})
     return index
@@ -87,8 +85,8 @@ class ItemSetParameter extends Parameter<Set<BaseItem>> {
    * @return {BaseItem} - The return value.
    */
   removeItem(index: number, emitValueChanged = true): BaseItem | void {
-    const item = Array.from(this.__items)[index]
-    this.__items.delete(item)
+    const item = Array.from(this.value)[index]
+    this.value.delete(item)
     this.emit('itemRemoved', { item, index })
     if (emitValueChanged) this.emit('valueChanged', {})
     return item
@@ -100,14 +98,15 @@ class ItemSetParameter extends Parameter<Set<BaseItem>> {
    * @param {boolean} emit - The emit param.
    */
   setItems(items: Set<BaseItem>, emit = true): void {
-    for (let i = this.__items.size - 1; i >= 0; i--) {
-      const item = this.__items[i]
+    const values = Array.from(this.value)
+    for (let i = values.length - 1; i >= 0; i--) {
+      const item = values[i]
       if (!items.has(item)) {
-        this.removeItem(item, false)
+        this.removeItem(i, false)
       }
     }
     for (const item of items) {
-      if (!this.__items.has(item)) {
+      if (!this.value.has(item)) {
         this.addItem(item, false)
       }
     }
@@ -119,7 +118,7 @@ class ItemSetParameter extends Parameter<Set<BaseItem>> {
    * @param {boolean} emit - The emit value.
    */
   clearItems(emitValueChanged = true): void {
-    this.__items.clear()
+    this.value.clear()
     if (emitValueChanged) this.emit('valueChanged', {})
   }
 
@@ -128,14 +127,7 @@ class ItemSetParameter extends Parameter<Set<BaseItem>> {
    * @return {number} - The return value.
    */
   getNumItems(): number {
-    return this.__items.size // might be faster
-  }
-  /**
-   * The getValue method.
-   * @return {Set<BaseItem>} - The return value.
-   */
-  getValue(): Set<BaseItem> {
-    return this.__items
+    return this.value.size // might be faster
   }
 
   // ////////////////////////////////////////
@@ -147,15 +139,18 @@ class ItemSetParameter extends Parameter<Set<BaseItem>> {
    * @return {Record<string, any>} - The return value.
    */
   toJSON(context?: Record<string, any>): Record<string, any> {
-    if (!this.__items) this.__items = new Set()
+    if (!this.value) this.value = new Set()
 
     const items = []
-    for (const item of this.__items) {
-      items.push(item.toJSON())
+    if (context) {
+      for (const item of this.value) {
+        // TODO: Make relative path...
+        items.push(item.getPath())
+      }
     }
 
     return {
-      value: items,
+      value: items
     }
   }
 
@@ -165,12 +160,11 @@ class ItemSetParameter extends Parameter<Set<BaseItem>> {
    * @param {Record<string, any>} context - The context value.
    */
   fromJSON(j: Record<string, any>, context?: Record<string, any>): void {
-    if (!this.__items) this.__items = new Set()
-
-    for (const item in j) {
-      const baseItem = new BaseItem()
-      baseItem.fromJSON(j.item)
-      this.__items.add(baseItem)
+    if (context) {
+      for (const itemPath in j.value) {
+        const item = <BaseItem>context.resolvePath(itemPath)
+        this.value.add(item)
+      }
     }
   }
 

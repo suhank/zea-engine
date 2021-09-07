@@ -23,8 +23,7 @@ class VLHImage extends BaseImage {
   protected __ambientLightFactor: number
   protected __hdrTint: Color
   protected __stream: boolean
-  protected __domElement: HTMLElement
-  protected __data: Record<string, any>
+  protected __data: Record<string, any> = {}
 
   // loaded: any
   updated: any // TODO: treated as a boolean and function
@@ -34,13 +33,12 @@ class VLHImage extends BaseImage {
    * @param {Record<any,any>} params - The params value.
    */
   constructor(name?: string, params: Record<string, any> = {}) {
+    super(name) // TODO: used to be: super(name, params)
     let filepath
     if (name != undefined && name.includes('.')) {
       filepath = name
-      name = name.substring(name.lastIndexOf('/') + 1, name.lastIndexOf('.'))
+      this.setName(name.substring(name.lastIndexOf('/') + 1, name.lastIndexOf('.')))
     }
-    super(name) // TODO: used to be: super(name, params)
-
     this.__loaded = false
     this.__exposure = 1.0
     this.__ambientLightFactor = 0.0
@@ -61,21 +59,12 @@ class VLHImage extends BaseImage {
   }
 
   /**
-   * Returns DOM Element.
-   *
-   * @return {HTMLElement} - The return value.
-   */
-  getDOMElement(): HTMLElement {
-    return this.__domElement
-  }
-
-  /**
    * Returns `FilePath` parameter's value.
    *
    * @return {string} - The return value.
    */
   getResourcePath(): string {
-    return this.getParameter('FilePath').getValue()
+    return this.getParameter('FilePath')!.getValue()
   }
 
   /**
@@ -97,7 +86,7 @@ class VLHImage extends BaseImage {
       // console.log(resourcePath + ": [" + this.width + ", " + this.height + "]");
       this.__data = {
         ldr: ldrPic,
-        cdm: cdm,
+        cdm: cdm
       }
       if (!this.__loaded) {
         this.__loaded = true
@@ -239,7 +228,7 @@ class VLHImage extends BaseImage {
           }
         }
       }
-      this.getParameter('FilePath').setValue(resourcePath)
+      this.getParameter('FilePath')!.setValue(resourcePath)
     }
   }
 }

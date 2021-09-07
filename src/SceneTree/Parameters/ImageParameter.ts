@@ -18,7 +18,7 @@ import { BaseImage } from '../../SceneTree/BaseImage'
  *
  * @extends Parameter
  */
-class ImageParameter extends Parameter<BaseImage> {
+class ImageParameter extends Parameter<BaseImage | undefined> {
   /**
    * Create an image parameter.
    *
@@ -40,7 +40,7 @@ class ImageParameter extends Parameter<BaseImage> {
    */
   toJSON(context?: Record<string, any>): Record<string, unknown> {
     const j: Record<string, unknown> = {
-      name: this.name,
+      name: this.name
     }
 
     if (this.value) {

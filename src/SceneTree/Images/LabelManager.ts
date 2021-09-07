@@ -10,7 +10,6 @@ function getLanguage() {
   if (searchParams.has('lang')) return searchParams.get('lang')
 
   const nav = globalThis.navigator
-  const browserLanguagePropertyKeys = ['language', 'browserLanguage', 'systemLanguage', 'userLanguage']
   let i
   let language
 
@@ -33,12 +32,13 @@ function getLanguage() {
   }
 
   // support for other well known properties in browsers
-  for (i = 0; i < browserLanguagePropertyKeys.length; i++) {
-    language = nav[browserLanguagePropertyKeys[i]]
-    if (language && language.length) {
-      return clean(language)
-    }
-  }
+  // const browserLanguagePropertyKeys = ['language', 'browserLanguage', 'systemLanguage', 'userLanguage']
+  // for (i = 0; i < browserLanguagePropertyKeys.length; i++) {
+  //   language = nav[browserLanguagePropertyKeys[i]]
+  //   if (language && language.length) {
+  //     return clean(language)
+  //   }
+  // }
 
   return null
 }
@@ -88,7 +88,7 @@ class LabelManager extends EventEmitter {
         const workbook = XLSX.read(unit8array, {
           type: 'array'
         })
-        const json = {}
+        const json: { [key: string]: any } = {}
         workbook.SheetNames.forEach(function(sheetName: any) {
           // Here is your object
           // @ts-ignore

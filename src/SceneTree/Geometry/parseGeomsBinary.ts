@@ -4,7 +4,6 @@ import { Lines } from './Lines'
 import { Mesh } from './Mesh'
 import { BinReader } from '../BinReader'
 import { Version } from '../Version'
-import { Registry } from '../../Registry'
 
 // key, toc, geomIndexOffset, geomsRange, isMobileDevice, bufferSlice, genBuffersOpts, context
 const parseGeomsBinary = (data: any, callback: any) => {
@@ -77,7 +76,7 @@ const parseGeomsBinary = (data: any, callback: any) => {
       name: geom.name,
       type: className,
       geomBuffers,
-      bbox,
+      bbox
     })
   }
   callback(
@@ -86,7 +85,7 @@ const parseGeomsBinary = (data: any, callback: any) => {
       geomFileID: data.geomFileID,
       geomIndexOffset: data.geomIndexOffset,
       geomsRange: data.geomsRange,
-      geomDatas,
+      geomDatas
     },
     transferables
   )

@@ -75,7 +75,7 @@ class StringParameter extends Parameter<string> implements IBinaryReader {
    * @param {Record<string, unknown>} context - The context value.
    */
   fromJSON(j: Record<string, string | undefined>, context?: Record<string, unknown>): void {
-    this.value = j.value
+    this.value = j.value ? <string>j.value : ''
     this.emit('valueChanged', { mode: 0 })
   }
 

@@ -97,4 +97,6 @@ class Vec3Attribute extends Attribute {
   }
 }
 
+Registry.register('Vec3Attribute', Vec3Attribute)
+
 export { Vec3Attribute }

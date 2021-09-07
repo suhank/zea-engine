@@ -1,7 +1,5 @@
 import { BaseItem } from './BaseItem'
 
-import { BooleanParameter } from './Parameters/index'
-
 /**
  * Represents a 2D image item, containing width and height.
  *
@@ -74,7 +72,7 @@ class BaseImage extends BaseItem {
       wrapS: this.wrapS,
       wrapT: this.wrapT,
       minFilter: this.minFilter,
-      magFilter: this.magFilter,
+      magFilter: this.magFilter
     }
   }
 }

@@ -4,7 +4,6 @@ import { BaseGroup } from './BaseGroup'
 import { MaterialParameter } from '../Parameters/MaterialParameter'
 import { TreeItem } from '../TreeItem'
 
-import { Parameter } from '../Parameters/Parameter'
 import { Material } from '../../SceneTree/Material'
 import { Color } from '../../Math/Color'
 import { BaseItem } from '../BaseItem'
@@ -18,6 +17,7 @@ import { BaseItem } from '../BaseItem'
  */
 class MaterialGroup extends BaseGroup {
   protected __materialParam: MaterialParameter
+  private __backupMaterials: { [key: number]: Material } = {}
 
   /**
    * Creates an instance of a group.
@@ -63,7 +63,7 @@ class MaterialGroup extends BaseGroup {
     }
 
     const key = 'kinematicGroupItemHighlight' + this.getId()
-    Array.from(this.__itemsParam.getValue()).forEach((item) => {
+    Array.from(this.__itemsParam.getValue()).forEach(item => {
       if (item instanceof TreeItem) {
         if (highlighted) item.addHighlight(key, color, true)
         else item.removeHighlight(key, true)
@@ -102,23 +102,23 @@ class MaterialGroup extends BaseGroup {
    * @private
    */
   __updateMaterialHelper() {
-    const material = this.getParameter('Material').getValue()
+    const material = this.getParameter('Material')!.getValue()
 
     // TODO: Bind an operator
-    Array.from(this.__itemsParam.getValue()).forEach((item) => {
-      ;(<TreeItem>item).traverse((treeItem) => {
+    Array.from(this.__itemsParam.getValue()).forEach(item => {
+      ;(<TreeItem>item).traverse(treeItem => {
         if (treeItem instanceof TreeItem && treeItem.hasParameter('Material')) {
-          const p: Parameter<Material> = treeItem.getParameter('Material')
+          const p = treeItem.getParameter('Material')!
           if (material) {
             const m = p.getValue()
             // TODO: How do we filter material assignments? this is a nasty hack.
             // but else we end up assigning surface materials to our edges.
             if (m != material && (!m || m.getShaderName() != 'LinesShader')) {
-              p.__backupMaterial = m
+              this.__backupMaterials[p.getId()] = m
               p.setValue(material)
             }
-          } else if (p.__backupMaterial) {
-            p.setValue(p.__backupMaterial)
+          } else if (this.__backupMaterials[p.getId()]) {
+            p.setValue(this.__backupMaterials[p.getId()])
           }
         }
       })
@@ -149,18 +149,18 @@ class MaterialGroup extends BaseGroup {
 
     // ///////////////////////////////
     // Update the Material
-    const material = this.getParameter('Material').getValue()
+    const material = this.getParameter('Material')!.getValue()
     if (material) {
       // TODO: Bind an operator instead
-      item.traverse((treeItem) => {
+      item.traverse(treeItem => {
         if (treeItem instanceof TreeItem && treeItem.hasParameter('Material')) {
-          const p = treeItem.getParameter('Material')
+          const p = treeItem.getParameter('Material')!
           if (material) {
             const m = p.getValue()
             // TODO: How do we filter material assignments? this is a nasty hack.
             // but else we end up assigning surface materials to our edges.
             if (m != material && (!m || m.getShaderName() != 'LinesShader')) {
-              p.__backupMaterial = m
+              this.__backupMaterials[p.getId()] = m
               p.setValue(material)
             }
           }

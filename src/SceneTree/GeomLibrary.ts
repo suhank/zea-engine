@@ -14,7 +14,6 @@ import GeomParserWorker from 'web-worker:./Geometry/GeomParserWorker'
 import { parseGeomsBinary } from './Geometry/parseGeomsBinary'
 import { StreamFileParsedEvent } from '../Utilities/Events/StreamFileParsedEvent'
 import { RangeLoadedEvent } from '../Utilities/Events/RangeLoadedEvent'
-import { AnyARecord } from 'dns'
 
 const numCores = SystemDesc.hardwareConcurrency - 1 // always leave one main thread code spare.
 
@@ -55,11 +54,11 @@ class GeomLibrary extends EventEmitter {
   protected __genBuffersOpts: Record<string, any>
   protected loadCount: number
   protected queue: any
-  protected loadContext: Record<string, any>
-  protected __numGeoms: number
-  protected geoms: any[]
-  protected basePath: string
-  protected __loadedCount: number
+  protected loadContext: Record<string, any> = {}
+  protected __numGeoms: number = -1
+  protected geoms: any[] = []
+  protected basePath: string = ''
+  protected __loadedCount: number = 0
   /**
    * Create a geom library.
    */
@@ -71,7 +70,7 @@ class GeomLibrary extends EventEmitter {
     this.loadCount = 0
     this.queue = []
 
-    this.on('streamFileParsed', (event) => {
+    this.on('streamFileParsed', event => {
       this.loadCount--
       if (this.loadCount < numCores && this.queue.length) {
         const { geomFileID, geomsData } = this.queue.pop()
@@ -121,7 +120,7 @@ class GeomLibrary extends EventEmitter {
    */
   loadGeomFile(geomFileID: number, incrementProgress = false): Promise<void> {
     if (incrementProgress) resourceLoader.incrementWorkload(1)
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       const geomFileUrl = this.basePath + geomFileID + '.zgeoms'
 
       resourceLoader.loadFile('archive', geomFileUrl).then((entries: any) => {
@@ -142,7 +141,7 @@ class GeomLibrary extends EventEmitter {
         } else {
           this.queue.splice(0, 0, {
             geomFileID,
-            geomsData,
+            geomsData
           })
         }
       })
@@ -222,7 +221,6 @@ class GeomLibrary extends EventEmitter {
    * @param {string} geomFileID - The key value.
    * @param {Buffer} buffer - The buffer value.
    * @param {Record<any,any>} context - The context value.
-   * @return {any} - The return value.
    */
   readBinaryBuffer(geomFileID: string, buffer: Buffer, context: Record<string, any>) {
     const reader = new BinReader(buffer, 0, SystemDesc.isMobileDevice)
@@ -233,14 +231,13 @@ class GeomLibrary extends EventEmitter {
     const geomIndexOffset = reader.loadUInt32()
     this.__streamInfos[geomFileID] = {
       total: numGeoms,
-      done: 0,
+      done: 0
     }
 
     if (numGeoms == 0) {
       const event = new StreamFileParsedEvent(geomFileID, 0)
       this.emit('streamFileParsed', event)
-
-      return numGeoms
+      return
     }
     if (this.__numGeoms == -1) {
       // Note: for loading geom streams, we need to know the total number
@@ -285,8 +282,8 @@ class GeomLibrary extends EventEmitter {
             bufferSlice,
             genBuffersOpts: this.__genBuffersOpts,
             context: {
-              versions: context.versions,
-            },
+              versions: context.versions
+            }
           },
           [bufferSlice]
         )
@@ -327,7 +324,7 @@ class GeomLibrary extends EventEmitter {
           isMobileDevice: reader.isMobileDevice,
           bufferSlice,
           genBuffersOpts: this.__genBuffersOpts,
-          context,
+          context
         },
         (data: any) => {
           this.__receiveGeomDatas(data)
@@ -408,7 +405,7 @@ class GeomLibrary extends EventEmitter {
    */
   toJSON(): Record<string, any> {
     return {
-      numGeoms: this.geoms.length,
+      numGeoms: this.geoms.length
     }
   }
 

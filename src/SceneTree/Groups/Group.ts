@@ -8,23 +8,22 @@ import {
   Vec3Parameter,
   ColorParameter,
   XfoParameter,
-  ItemSetParameter,
-  MultiChoiceParameter,
+  MultiChoiceParameter
 } from '../Parameters/index'
 import { MaterialParameter } from '../Parameters/MaterialParameter'
 import { TreeItem } from '../TreeItem'
+import { Material } from '../Material'
 import { BaseGeomItem } from '../BaseGeomItem'
 import { GroupTransformXfoOperator, GroupMemberXfoOperator } from '../Operators/GroupMemberXfoOperator'
 import { BaseGroup } from './BaseGroup'
 import { BaseItem } from '../BaseItem'
-import { Operator } from '../Operators'
 
 const GROUP_XFO_MODES = {
   disabled: 0,
   manual: 1,
   first: 2,
   average: 3,
-  globalOri: 4,
+  globalOri: 4
 }
 
 /**
@@ -57,6 +56,8 @@ class Group extends BaseGroup {
   protected __materialParam: MaterialParameter
   protected groupTransformOp: GroupTransformXfoOperator
   protected _setBoundingBoxDirty: any
+  private __backupMaterials: { [key: number]: Material } = {}
+
   /**
    * Creates an instance of a group.
    *
@@ -131,7 +132,7 @@ class Group extends BaseGroup {
   updateVisibility() {
     if (super.updateVisibility()) {
       const value = this.isVisible()
-      Array.from(this.__itemsParam.getValue()).forEach((item) => {
+      Array.from(this.__itemsParam.getValue()).forEach(item => {
         if (item instanceof TreeItem) item.propagateVisibility(value ? 1 : -1)
       })
       return true
@@ -161,14 +162,14 @@ class Group extends BaseGroup {
   __updateHighlightHelper(): void {
     let highlighted = false
     let color: Color
-    if (this.getParameter('Highlighted').getValue() || this.isSelected()) {
+    if (this.getParameter('Highlighted')!.getValue() || this.isSelected()) {
       highlighted = true
-      color = this.getParameter('HighlightColor').getValue()
-      color.a = this.getParameter('HighlightFill').getValue()
+      color = this.getParameter('HighlightColor')!.getValue()
+      color.a = this.getParameter('HighlightFill')!.getValue()
     }
 
     const key = 'groupItemHighlight' + this.getId()
-    Array.from(this.__itemsParam.getValue()).forEach((item) => {
+    Array.from(this.__itemsParam.getValue()).forEach(item => {
       if (item instanceof TreeItem) {
         if (highlighted) item.addHighlight(key, color, true)
         else item.removeHighlight(key, true)
@@ -195,26 +196,26 @@ class Group extends BaseGroup {
    */
   calcGroupXfo() {
     const items = Array.from(this.__itemsParam.getValue())
-    if (items.length == 0) return new Xfo()
+    if (items.length == 0) return
     this.calculatingGroupXfo = true
 
-    this.memberXfoOps.forEach((op) => op.disable())
+    this.memberXfoOps.forEach(op => op.disable())
 
     // TODO: Disable the group operator?
     const initialXfoMode = this.__initialXfoModeParam.getValue()
     let xfo: Xfo
     if (initialXfoMode == GROUP_XFO_MODES.manual) {
       // The xfo is manually set by the current global xfo.
-      xfo = this.getParameter('GlobalXfo').getValue()
+      xfo = this.getParameter('GlobalXfo')!.getValue()
     } else if (initialXfoMode == GROUP_XFO_MODES.first && items[0] instanceof TreeItem) {
-      xfo = items[0].getParameter('GlobalXfo').getValue()
+      xfo = items[0].getParameter('GlobalXfo')!.getValue()
     } else if (initialXfoMode == GROUP_XFO_MODES.average) {
       xfo = new Xfo()
       xfo.ori.set(0, 0, 0, 0)
       let numTreeItems = 0
       items.forEach((item, index) => {
         if (item instanceof TreeItem) {
-          const itemXfo = item.getParameter('GlobalXfo').getValue()
+          const itemXfo = item.getParameter('GlobalXfo')!.getValue()
           xfo.tr.addInPlace(itemXfo.tr)
           xfo.ori.addInPlace(itemXfo.ori)
           numTreeItems++
@@ -228,7 +229,7 @@ class Group extends BaseGroup {
       let numTreeItems = 0
       items.forEach((item, index) => {
         if (item instanceof TreeItem) {
-          const itemXfo = item.getParameter('GlobalXfo').getValue()
+          const itemXfo = item.getParameter('GlobalXfo')!.getValue()
           xfo.tr.addInPlace(itemXfo.tr)
           numTreeItems++
         }
@@ -240,13 +241,13 @@ class Group extends BaseGroup {
 
     // Note: if the Group global param becomes dirty
     // then it stops propagating dirty to its members.
-    // const newGlobal = this.getParameter('GlobalXfo').getValue() // force a cleaning.
+    // const newGlobal = this.getParameter('GlobalXfo')!.getValue() // force a cleaning.
     // this.invGroupXfo = newGlobal.inverse()
 
-    this.getParameter('GlobalXfo').setValue(xfo)
+    this.getParameter('GlobalXfo')!.setValue(xfo)
     this.groupTransformOp.setBindXfo(xfo)
 
-    this.memberXfoOps.forEach((op) => op.enable())
+    this.memberXfoOps.forEach(op => op.enable())
     this.calculatingGroupXfo = false
     this.groupXfoDirty = false
   }
@@ -272,24 +273,24 @@ class Group extends BaseGroup {
     // Make this function async so that we don't pull on the
     // graph immediately when we receive a notification.
     // Note: propagating using an operator would be much better.
-    const material = this.getParameter('Material').getValue()
+    const material = this.getParameter('Material')!.getValue()
 
     // TODO: Bind an operator
     Array.from(<Set<TreeItem>>this.__itemsParam.getValue()).forEach((item: TreeItem) => {
       item.traverse((treeItem: TreeItem) => {
         if (treeItem instanceof TreeItem && treeItem.hasParameter('Material')) {
-          const p = treeItem.getParameter('Material')
+          const p = treeItem.getParameter('Material')!
           if (material) {
             const m = p.getValue()
 
             // TODO: How do we filter material assignments? this is a nasty hack.
             // but else we end up assigning surface materials to our edges.
             if (m != material && (!m || m.getShaderName() != 'LinesShader')) {
-              p.__backupMaterial = m
+              this.__backupMaterials[p.getId()] = m
               p.loadValue(material)
             }
-          } else if (p.__backupMaterial) {
-            p.loadValue(p.__backupMaterial)
+          } else if (this.__backupMaterials[p.getId()]) {
+            p.setValue(this.__backupMaterials[p.getId()])
           }
         }
       }, false)
@@ -317,9 +318,9 @@ class Group extends BaseGroup {
    * @private
    */
   __updateCutawayHelper(): any {
-    const cutEnabled = this.getParameter('CutAwayEnabled').getValue()
-    const cutAwayVector = this.getParameter('CutPlaneNormal').getValue()
-    const cutAwayDist = this.getParameter('CutPlaneDist').getValue()
+    const cutEnabled = this.getParameter('CutAwayEnabled')!.getValue()
+    const cutAwayVector = this.getParameter('CutPlaneNormal')!.getValue()
+    const cutAwayDist = this.getParameter('CutPlaneDist')!.getValue()
 
     Array.from(<Set<TreeItem>>this.__itemsParam.getValue()).forEach((item: TreeItem) => {
       item.traverse((treeItem: TreeItem) => {
@@ -359,14 +360,13 @@ class Group extends BaseGroup {
   setPaths(paths: any[]) {
     this.clearItems(false)
 
-    const searchRoot = this.getOwner()
     if (this.searchRoot == undefined) {
       console.warn('Group does not have an owner and so cannot resolve paths:', this.getName())
       return
     }
     const items: any[] = []
-    paths.forEach((path) => {
-      const treeItem = this.searchRoot.resolvePath(path)
+    paths.forEach(path => {
+      const treeItem = this.searchRoot!.resolvePath(path)
       if (treeItem) items.push(treeItem)
       else {
         console.warn('Path does not resolve to an Item:', path, ' group:', this.getName())
@@ -398,18 +398,18 @@ class Group extends BaseGroup {
 
     // ///////////////////////////////
     // Update the Material
-    const material = this.getParameter('Material').getValue()
+    const material = this.getParameter('Material')!.getValue()
     if (material) {
       // TODO: Bind an operator instead
-      item.traverse((treeItem) => {
+      item.traverse(treeItem => {
         if (treeItem instanceof TreeItem && treeItem.hasParameter('Material')) {
-          const p = treeItem.getParameter('Material')
+          const p = treeItem.getParameter('Material')!
           if (material) {
             const m = p.getValue()
             // TODO: How do we filter material assignments? this is a nasty hack.
             // but else we end up assigning surface materials to our edges.
             if (m != material && (!m || m.getShaderName() != 'LinesShader')) {
-              p.__backupMaterial = m
+              this.__backupMaterials[p.getId()] = m
               p.loadValue(material)
             }
           }
@@ -419,21 +419,21 @@ class Group extends BaseGroup {
 
     // ///////////////////////////////
     // Update the highlight
-    if (item instanceof TreeItem && this.getParameter('Highlighted').getValue()) {
-      const color = this.getParameter('HighlightColor').getValue()
-      color.a = this.getParameter('HighlightFill').getValue()
+    if (item instanceof TreeItem && this.getParameter('Highlighted')!.getValue()) {
+      const color = this.getParameter('HighlightColor')!.getValue()
+      color.a = this.getParameter('HighlightFill')!.getValue()
       item.addHighlight('groupItemHighlight' + this.getId(), color, true)
     }
 
     // ///////////////////////////////
     // Update the item cutaway
-    const cutEnabled = this.getParameter('CutAwayEnabled').getValue()
+    const cutEnabled = this.getParameter('CutAwayEnabled')!.getValue()
     if (cutEnabled) {
-      const cutAwayVector = this.getParameter('CutPlaneNormal').getValue()
-      const cutAwayDist = this.getParameter('CutPlaneDist').getValue()
-      item.traverse((treeItem) => {
+      const cutAwayVector = this.getParameter('CutPlaneNormal')!.getValue()
+      const cutAwayDist = this.getParameter('CutPlaneDist')!.getValue()
+      item.traverse(treeItem => {
         if (treeItem instanceof BaseGeomItem) {
-          // console.log("cutEnabled:", treeItem.getPath(), cutAwayVector.toString(), treeItem.getParameter('Material').getValue().getShaderName())
+          // console.log("cutEnabled:", treeItem.getPath(), cutAwayVector.toString(), treeItem.getParameter('Material')!.getValue().getShaderName())
           treeItem.setCutawayEnabled(cutEnabled)
           treeItem.setCutVector(cutAwayVector)
           treeItem.setCutDist(cutAwayDist)
@@ -455,7 +455,7 @@ class Group extends BaseGroup {
       )
       this.memberXfoOps.splice(index, 0, memberXfoOp)
 
-      item.getParameter('BoundingBox').on('valueChanged', this._setBoundingBoxDirty)
+      item.getParameter('BoundingBox')!.on('valueChanged', this._setBoundingBoxDirty)
       this._bindXfoDirty = true
     }
   }
@@ -470,7 +470,7 @@ class Group extends BaseGroup {
     super.unbindItem(<TreeItem>item, index)
     if (!(item instanceof TreeItem)) return
 
-    if (this.getParameter('Highlighted').getValue()) {
+    if (this.getParameter('Highlighted')!.getValue()) {
       item.removeHighlight('groupItemHighlight' + this.getId(), true)
     }
 
@@ -484,7 +484,7 @@ class Group extends BaseGroup {
 
     // ///////////////////////////////
     // Update the item cutaway
-    item.traverse((treeItem) => {
+    item.traverse(treeItem => {
       if (treeItem instanceof BaseGeomItem) {
         treeItem.setCutawayEnabled(false)
       }
@@ -494,7 +494,7 @@ class Group extends BaseGroup {
       this.memberXfoOps[index].detach()
       this.memberXfoOps.splice(index, 1)
       this._setBoundingBoxDirty()
-      item.getParameter('BoundingBox').off('valueChanged', this._setBoundingBoxDirty)
+      item.getParameter('BoundingBox')!.off('valueChanged', this._setBoundingBoxDirty)
       this._bindXfoDirty = true
     }
   }
@@ -579,10 +579,10 @@ class Group extends BaseGroup {
   _cleanBoundingBox(bbox: Box3) {
     const result = super._cleanBoundingBox(bbox)
     const items = Array.from(this.__itemsParam.getValue())
-    items.forEach((item) => {
+    items.forEach(item => {
       if (item instanceof TreeItem) {
         if (item.isVisible()) {
-          result.addBox3(item.getParameter('BoundingBox').getValue())
+          result.addBox3(item.getParameter('BoundingBox')!.getValue())
         }
       }
     })

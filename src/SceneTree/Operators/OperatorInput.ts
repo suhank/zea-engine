@@ -9,9 +9,9 @@ import { EventEmitter } from '../../Utilities/EventEmitter'
  */
 class OperatorInput extends EventEmitter {
   __name: string
-  _op: Operator
-  _param?: Parameter<any>
-  detached: boolean
+  _op?: Operator = undefined
+  _param?: Parameter<any> = undefined
+  detached: boolean = false
 
   /**
    * Create an operator input.
@@ -44,7 +44,7 @@ class OperatorInput extends EventEmitter {
    * @return {Operator} - The operator object.
    */
   getOperator(): Operator {
-    return this._op
+    return this._op!
   }
 
   /**
@@ -52,7 +52,7 @@ class OperatorInput extends EventEmitter {
    * @return {boolean} - The return value.
    */
   isConnected(): boolean {
-    return this._param != undefined
+    return this._param != null
   }
 
   /**
@@ -76,7 +76,7 @@ class OperatorInput extends EventEmitter {
    * Assigns the Paramter to be used to provide the input value.
    * @param {Parameter} param - The param value.
    */
-  setParam(param?: Parameter<unknown> | null): void {
+  setParam(param?: Parameter<unknown>): void {
     if (this._param) {
       this._param.off('valueChanged', this.paramValueChanged)
     }
@@ -93,6 +93,7 @@ class OperatorInput extends EventEmitter {
    */
   getValue(): unknown {
     if (this._param) return this._param.getValue()
+    throw new Error('Unable to getValue')
   }
 
   /**
@@ -118,7 +119,7 @@ class OperatorInput extends EventEmitter {
     const paramPath = this._param ? this._param.getPath() : ''
     return {
       name: this.__name,
-      paramPath: context && context.makeRelative ? context.makeRelative(paramPath) : paramPath,
+      paramPath: context && context.makeRelative ? context.makeRelative(paramPath) : paramPath
     }
   }
 

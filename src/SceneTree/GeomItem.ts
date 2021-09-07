@@ -11,7 +11,6 @@ import { BaseProxy } from './Geometry/GeomProxies'
 import { BaseGeom } from './Geometry'
 import { Material } from './Material'
 import { BinReader } from './BinReader'
-import { BaseEvent } from '../Utilities/BaseEvent'
 import { Vec3Attribute } from './Geometry/Vec3Attribute'
 
 let calculatePreciseBoundingBoxes = false
@@ -62,9 +61,8 @@ class CalcGeomMatOperator extends Operator {
  * @extends BaseGeomItem
  */
 class GeomItem extends BaseGeomItem {
-  protected geomBBox: Box3
-  protected __cleanGeomMat: number
-  protected disableBoundingBox: boolean
+  protected geomBBox: Box3 = new Box3()
+  protected disableBoundingBox: boolean = false
   protected geomIndex: number
   protected assetItem: any
   protected calcGeomMatOperator: Operator
@@ -102,9 +100,9 @@ class GeomItem extends BaseGeomItem {
       this.__geomMatParam
     )
 
-    if (geometry) this.getParameter('Geometry').loadValue(geometry)
-    if (material) this.getParameter('Material').loadValue(material)
-    if (xfo) this.getParameter('LocalXfo').setValue(xfo)
+    if (geometry) this.getParameter('Geometry')!.loadValue(geometry)
+    if (material) this.getParameter('Material')!.loadValue(material)
+    if (xfo) this.getParameter('LocalXfo')!.setValue(xfo)
   }
 
   // ////////////////////////////////////////
@@ -304,13 +302,13 @@ class GeomItem extends BaseGeomItem {
 
     const geom = geomLibrary.getGeom(geomIndex)
     if (geom) {
-      this.getParameter('Geometry').loadValue(geom)
+      this.getParameter('Geometry')!.loadValue(geom)
     } else {
       const onGeomLoaded = (event: Record<string, any>) => {
         const { range } = event
         if (geomIndex >= range[0] && geomIndex < range[1]) {
           const geom = geomLibrary.getGeom(geomIndex)
-          if (geom) this.getParameter('Geometry').setValue(geom)
+          if (geom) this.getParameter('Geometry')!.setValue(geom)
           else console.warn('Geom not loaded:', this.getName())
           geomLibrary.off('rangeLoaded', onGeomLoaded)
         }
@@ -339,17 +337,17 @@ class GeomItem extends BaseGeomItem {
           console.warn("Geom :'" + this.__name + "' Material not found:" + materialName)
           material = materialLibrary.getMaterial('Default')
         }
-        this.getParameter('Material').loadValue(material)
+        this.getParameter('Material')!.loadValue(material)
       } else {
         // Force nodes to have a material so we can see them.
-        this.getParameter('Material').loadValue(context.assetItem.getMaterialLibrary().getMaterial('Default'))
+        this.getParameter('Material')!.loadValue(context.assetItem.getMaterialLibrary().getMaterial('Default'))
       }
     }
 
     // Note: deprecated value. Not sure if we need to load this here.
     // I think not, but need to test first.
     if (context.versions['zea-engine'].compare([3, 0, 0]) < 0) {
-      const lightmapCoordOffset = reader.loadFloat32Vec2()
+      reader.loadFloat32Vec2()
     } else {
       this.geomBBox = new Box3(reader.loadFloat32Vec3(), reader.loadFloat32Vec3())
     }
@@ -389,7 +387,7 @@ class GeomItem extends BaseGeomItem {
   copyFrom(src: GeomItem, context?: Record<string, any>) {
     super.copyFrom(src, context)
 
-    if (!src.getParameter('Geometry').getValue() && src.geomIndex != -1) {
+    if (!src.getParameter('Geometry')!.getValue() && src.geomIndex != -1) {
       const geomLibrary = src.assetItem.getGeometryLibrary()
       this.assetItem = src.assetItem
       this.geomIndex = src.geomIndex
@@ -400,7 +398,7 @@ class GeomItem extends BaseGeomItem {
           const geom = geomLibrary.getGeom(this.geomIndex)
           // Note: we need the 'valueChanged' event to be received by the
           // renderer to then load the geometry into the GPU.
-          if (geom) this.getParameter('Geometry').setValue(geom)
+          if (geom) this.getParameter('Geometry')!.setValue(geom)
           else console.warn('Geom not loaded:', this.getName())
           geomLibrary.off('rangeLoaded', onGeomLoaded)
         }
@@ -411,7 +409,7 @@ class GeomItem extends BaseGeomItem {
     // Geom Xfo should be dirty after cloning.
     // Note: this might not be necessary. It should
     // always be dirty after cloning.
-    this.__geomMatParam.setDirty(this.__cleanGeomMat)
+    this.__geomMatParam.setDirty(0)
   }
 
   /**

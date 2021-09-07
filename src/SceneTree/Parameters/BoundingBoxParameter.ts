@@ -3,7 +3,6 @@ import { Parameter } from './Parameter'
 import { Box3 } from '../../Math/Box3'
 import { BinReader } from '../BinReader'
 import { TreeItem } from '../TreeItem'
-import { Registry } from '../../Registry'
 import { IBinaryReader } from '../../Utilities/IBinaryReader'
 
 /**
@@ -43,7 +42,7 @@ class BoundingBoxParameter extends Parameter<Box3> implements IBinaryReader {
    * @memberof BoundingBoxParameter
    */
   setDirty(index: number): boolean {
-    const result = super.setDirty(index) 
+    const result = super.setDirty(index)
     if (result) {
       this.dirty = true
     }
@@ -54,10 +53,10 @@ class BoundingBoxParameter extends Parameter<Box3> implements IBinaryReader {
   /**
    * Returns bounding box value
    *
-   * @return {Box3 | undefined} - The return value.
+   * @return {Box3} - The return value.
    */
-  getValue(): Box3 | undefined {
-    if (this.dirty && this.value) { // null check
+  getValue(): Box3 {
+    if (this.dirty) {
       this.value = this.treeItem._cleanBoundingBox(this.value)
     }
     return this.value
@@ -65,7 +64,7 @@ class BoundingBoxParameter extends Parameter<Box3> implements IBinaryReader {
 
   toJSON(context?: Record<string, unknown>): Record<string, any> {
     return {
-      value: this.value?.toJSON(),
+      value: this.value?.toJSON()
     }
   }
 

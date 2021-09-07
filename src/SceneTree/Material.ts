@@ -3,7 +3,6 @@
 import { Color } from '../Math/index'
 import { BaseItem } from './BaseItem'
 import { Registry } from '../Registry'
-import { ColorParameter, Parameter } from './Parameters/index'
 
 // Explicit export of parameters that are not included in the
 // module defined by the index file in the folder. (see Parameters/index.js)
@@ -32,7 +31,7 @@ class Material extends BaseItem {
   protected __isTransparent: boolean
   protected __isTextured: boolean
 
-  protected __shaderName: string
+  protected __shaderName: string = ''
   /**
    * Create a material
    * @param {string} name - The name of the material.
@@ -68,7 +67,7 @@ class Material extends BaseItem {
     const materialTemplate = shaderLibrary.getMaterialTemplate(shaderName)
     if (!materialTemplate) throw new Error('Error setting Shader. Material template not registered found:' + shaderName)
 
-    const paramMap = {}
+    const paramMap: { [key: string]: boolean } = {}
     let i = materialTemplate.getNumParameters()
     while (i--) {
       const srcParam = materialTemplate.getParameterByIndex(i)
@@ -149,13 +148,14 @@ class Material extends BaseItem {
       if (opacity && (opacity.getValue() < 0.99 || (opacity.getImage && opacity.getImage()))) {
         isTransparent = true
       } else {
-        const baseColor = <MaterialColorParam | MaterialFloatParam>this.getParameter('BaseColor')
-        if (baseColor) {
-          if (baseColor.getImage && baseColor.getImage() && baseColor.getImage().format == 'RGBA') {
+        const baseColorParam = <MaterialColorParam | MaterialFloatParam>this.getParameter('BaseColor')
+        if (baseColorParam) {
+          const image = baseColorParam.getImage()
+          if (image && image.format == 'RGBA') {
             isTransparent = true
-          } else if (baseColor.getValue()) {
-            const color_val = <Color>baseColor.getValue()
-            if (color_val.a < 1 && typeof baseColor.getValue() != 'number') isTransparent = true
+          } else if (baseColorParam.getValue()) {
+            const color_val = <Color>baseColorParam.getValue()
+            if (color_val.a < 1 && typeof baseColorParam.getValue() != 'number') isTransparent = true
           }
         }
       }
@@ -245,7 +245,7 @@ class Material extends BaseItem {
    * @param {Record<string, any>} j - The json object this item must decode.
    * @param {Record<string, any>} context - The context value.
    */
-  fromJSON(j: Record<string, any>, context: Record<string, any> = {}): Record<string, any> {
+  fromJSON(j: Record<string, any>, context: Record<string, any> = {}) {
     if (!j.shader) {
       console.warn('Invalid Material JSON')
       return
@@ -286,7 +286,7 @@ class Material extends BaseItem {
       throw `Loading zcad files of version ${context.versions['zea-engine']} is not longer support`
       this.setName(reader.loadStr())
 
-      const capitalizeFirstLetter = function (string: string) {
+      const capitalizeFirstLetter = function(string: string) {
         return string.charAt(0).toUpperCase() + string.slice(1)
       }
 

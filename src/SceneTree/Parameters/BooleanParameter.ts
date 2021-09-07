@@ -24,7 +24,7 @@ class BooleanParameter extends Parameter<boolean> implements IBinaryReader {
    * @param {boolean} value - The value of the parameter.
    */
   constructor(name: string = '', value?: boolean) {
-    super(name, value, 'Boolean')
+    super(name, value != undefined ? value : false, 'Boolean')
   }
 
   // ////////////////////////////////////////
@@ -45,20 +45,20 @@ class BooleanParameter extends Parameter<boolean> implements IBinaryReader {
    * It can be used for persistence, data transfer, etc.
    *
    * @param {Record<string, unknown>} context - The context value.
-   * @return {Record<string, boolean | undefined>} - Returns the json object.
+   * @return {Record<string, any>} - Returns the json object.
    */
-  toJSON(context?: Record<string, unknown>): Record<string, boolean | undefined> {
+  toJSON(context?: Record<string, unknown>): Record<string, any> {
     return { value: this.value }
   }
 
   /**
    * The fromJSON method takes a JSON and deserializes into an instance of this type.
    *
-   * @param {Record<string, boolean | undefined>} j - The json object this item must decode.
+   * @param {Record<string, any>} j - The json object this item must decode.
    * @param {Record<string, unknown>} context - The context value.
    */
-  fromJSON(j: Record<string, boolean | undefined>, context?: Record<string, unknown>): void {
-    this.value = j.value
+  fromJSON(j: Record<string, any>, context?: Record<string, unknown>): void {
+    this.value = <boolean>j.value
     this.emit('valueChanged', { mode: 0 })
   }
 

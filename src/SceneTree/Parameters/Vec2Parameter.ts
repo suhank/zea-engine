@@ -66,12 +66,11 @@ class Vec2Parameter extends Parameter<Vec2> implements IBinaryReader {
   readBinary(reader: BinReader, context?: Record<string, unknown>): void {
     this.value?.readBinary(reader)
   }
-  toJSON(context?: Record<string, unknown>): Record<string, unknown> {
-    let result: Record<string, any>
 
+  toJSON(context?: Record<string, unknown>): Record<string, unknown> {
     return {
       name: this.name,
-      value: this.value?.toJSON(),
+      value: this.value?.toJSON()
     }
   }
 

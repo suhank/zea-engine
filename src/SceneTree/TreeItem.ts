@@ -10,7 +10,6 @@ import { BaseItem } from './BaseItem'
 import { CalcGlobalXfoOperator } from './Operators/CalcGlobalXfoOperator'
 import { BoundingBoxParameter } from './Parameters/BoundingBoxParameter'
 import { BinReader } from './BinReader'
-import { BaseClass } from '../Utilities/BaseClass'
 import { Operator } from './Operators'
 import { Parameter } from './Parameters'
 
@@ -146,7 +145,7 @@ class TreeItem extends BaseItem {
         // The effect of the invisible owner is added.
         if (!owner_TreeItem.isVisible()) this.__visibleCounter--
 
-        this.globalXfoOp.getInput('ParentGlobal').setParam(owner_TreeItem.getParameter('GlobalXfo'))
+        this.globalXfoOp.getInput('ParentGlobal').setParam(owner_TreeItem.getParameter('GlobalXfo')!)
         // this.__ownerItem.on('globalXfoChanged', this._setGlobalXfoDirty)
       }
     } else {
@@ -839,7 +838,7 @@ class TreeItem extends BaseItem {
       }
     }
     const __t = (treeItem: any, depth: any) => {
-      if (callback(treeItem, depth) == false) return false
+      if (callback(treeItem, depth) == false) return
       if (treeItem instanceof TreeItem) __c(treeItem, depth)
     }
 
@@ -958,7 +957,7 @@ class TreeItem extends BaseItem {
       } else {
         j = {
           name: this.__name,
-          children: childItemsJSON,
+          children: childItemsJSON
         }
       }
     }

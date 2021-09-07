@@ -13,7 +13,6 @@ import { FilePathParameter } from './Parameters/FilePathParameter'
 import { FileImage } from './Images'
 import { Vec3Attribute } from './Geometry/Vec3Attribute'
 import { Vec2Attribute } from './Geometry/Vec2Attribute'
-import { BaseEvent } from '../Utilities/BaseEvent'
 
 // AssetItem.registerDataLoader('.obj', ObjDataLoader);
 
@@ -71,7 +70,7 @@ class ObjAsset extends AssetItem {
         const WHITESPACE_RE = /\s+/
         let material
 
-        const parseColor = function (elements: any) {
+        const parseColor = function(elements: any) {
           if (elements.length == 3)
             return new Color(parseFloat(elements[0]), parseFloat(elements[1]), parseFloat(elements[2]))
           else throw new Error('Unable to parse a color from the following parts:' + elements.join('_'))
@@ -90,7 +89,7 @@ class ObjAsset extends AssetItem {
           const value = elements.join(' ')
 
           if (material == undefined) throw Error('no material defined.')
-          
+
           switch (key) {
             case 'newmtl':
               material = new Material(value)
@@ -98,32 +97,32 @@ class ObjAsset extends AssetItem {
               this.__materials.addMaterial(material)
               break
             case 'Kd':
-              material.getParameter('BaseColor').setValue(parseColor(elements))
+              material.getParameter('BaseColor')!.setValue(parseColor(elements))
               break
             case 'map_Kd':
-              material.getParameter('BaseColor').setValue(parseMap(elements))
+              material.getParameter('BaseColor')!.setValue(parseMap(elements))
               break
             case 'Ks':
               const specular = (parseFloat(elements[0]) + parseFloat(elements[1]) + parseFloat(elements[2])) / 3.0
-              material.getParameter('Roughness').setValue(1.0 - specular)
-              material.getParameter('Reflectance').setValue(specular)
+              material.getParameter('Roughness')!.setValue(1.0 - specular)
+              material.getParameter('Reflectance')!.setValue(specular)
               break
             case 'map_Ks':
-              material.getParameter('Roughness').setValue(parseMap(elements /* flags=TEXTURE_INVERT */))
-              material.getParameter('Reflectance').setValue(0.2)
+              material.getParameter('Roughness')!.setValue(parseMap(elements /* flags=TEXTURE_INVERT */))
+              material.getParameter('Reflectance')!.setValue(0.2)
               break
             case 'd':
               const d = parseFloat(value)
               if (d < 1.0) {
                 material.setShaderName('TransparentSurfaceShader')
-                material.getParameter('Opacity').setValue(d)
+                material.getParameter('Opacity')!.setValue(d)
               }
               break
             case 'map_d':
-              material.getParameter('alpha').setValue(parseFloat(elements))
+              material.getParameter('alpha')!.setValue(parseFloat(elements))
               break
             case 'map_bump':
-              material.getParameter('normal').setValue(parseMap(elements /* flags=BUMP_TO_NORMAL */))
+              material.getParameter('normal')!.setValue(parseMap(elements /* flags=BUMP_TO_NORMAL */))
               break
             default:
             // console.warn("Unhandled material parameter: '" + key +"' in:" + filePath);
@@ -132,7 +131,7 @@ class ObjAsset extends AssetItem {
       }
 
       const loadMtlFile = (mtlFile: any): Promise<void> => {
-        return new Promise((resolve) => {
+        return new Promise(resolve => {
           loadTextfile(mtlFile.url, (fileData: any) => {
             resourceLoader.incrementWorkDone(1)
             parseMtlData(fileData)
@@ -142,11 +141,11 @@ class ObjAsset extends AssetItem {
         })
       }
 
-      const vertices = new Array()
-      const normals = new Array()
-      const texCoords = new Array()
+      const vertices: Array<Array<number>> = []
+      const normals: Array<Array<number>> = []
+      const texCoords: Array<Array<number>> = []
 
-      const geomDatas = {}
+      const geomDatas: { [key: string]: any } = {}
 
       const parseObjData = async (fileData: any) => {
         // performance.mark("parseObjData");
@@ -177,14 +176,14 @@ class ObjAsset extends AssetItem {
             numTexCoords: 0,
             numNormals: 0,
             faceCounts: [],
-            material: currMtl,
+            material: currMtl
           }
           geomDatas[name] = currGeom
           numGeoms++
         }
         newGeom(filename)
 
-        const splitGroupsIntoObjects = this.getParameter('splitGroupsIntoObjects').getValue()
+        const splitGroupsIntoObjects = this.getParameter('splitGroupsIntoObjects')!.getValue()
 
         const stop = false
         // let numPolys = 0;
@@ -201,7 +200,7 @@ class ObjAsset extends AssetItem {
               // ignore shading groups
               continue
             case 'mtllib':
-              if (!this.getParameter('loadMtlFile').getValue()) continue
+              if (!this.getParameter('loadMtlFile')!.getValue()) continue
               // Load and parse the mat lib.
               resourceLoader.incrementWorkload(2)
               const url = fileFolder + value
@@ -303,9 +302,10 @@ class ObjAsset extends AssetItem {
         mesh.setFaceCounts(geomData.faceCounts)
         mesh.setNumVertices(numVertices)
         const positionsAttr = <Vec3Attribute>mesh.getVertexAttribute('positions')
-        const unitsConversion = this.getParameter('unitsConversion').getValue()
+        const unitsConversion = this.getParameter('unitsConversion')!.getValue()
 
-        for (const vsrc in geomData.verticesRemapping) {
+        for (const vsrcKey in geomData.verticesRemapping) {
+          const vsrc = Number.parseInt(vsrcKey)
           const vtgt = geomData.verticesRemapping[vsrc]
           positionsAttr
             .getValueRef(vtgt)
@@ -368,16 +368,16 @@ class ObjAsset extends AssetItem {
           for (let i = 0; i < positions.getCount(); i++) positions.getValueRef(i).addInPlace(offset) // TODO: is getCount() == positions.length?
           mesh.setBoundingBoxDirty()
         }
-        geomItem.getParameter('LocalXfo').setValue(new Xfo(delta))
+        geomItem.getParameter('LocalXfo')!.setValue(new Xfo(delta))
 
         if (geomData.material != undefined && this.__materials.hasMaterial(geomData.material)) {
-          geomItem.getParameter('Material').setValue(this.__materials.getMaterial(geomData.material))
+          geomItem.getParameter('Material')!.setValue(this.__materials.getMaterial(geomData.material))
         } else {
-          const defaultShader = this.getParameter('defaultShader').getValue()
+          const defaultShader = this.getParameter('defaultShader')!.getValue()
           const material = new Material(geomName + ' mat')
           material.setShaderName(defaultShader != '' ? defaultShader : 'StandardSurfaceShader')
           this.__materials.addMaterial(material)
-          geomItem.getParameter('Material').setValue(material)
+          geomItem.getParameter('Material')!.setValue(material)
         }
 
         this.addChild(geomItem, false)

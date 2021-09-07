@@ -1,6 +1,5 @@
 import { Box3 } from '../../Math/index'
 import { EventEmitter } from '../../Utilities/EventEmitter'
-import { Registry } from '../../Registry'
 
 /** ProxyGeometries are pupulated from data unpacked using a webworker while loading zcad files.
  * These geometries represent readonly geometries with very basic topologies.
@@ -23,11 +22,11 @@ class BaseProxy extends EventEmitter {
     this.__buffers = data.geomBuffers
     if (this.__buffers.attrBuffers) {
       // eslint-disable-next-line guard-for-in
-      for (const attrName in this.__buffers.attrBuffers) {
-        const attrData = this.__buffers.attrBuffers[attrName]
-        const dataType = Registry.getBlueprint(attrData.dataType)
-        attrData.dataType = dataType
-      }
+      // for (const attrName in this.__buffers.attrBuffers) {
+      //   const attrData = this.__buffers.attrBuffers[attrName]
+      //   const dataType = Registry.getBlueprint(attrData.dataType)
+      //   attrData.dataType = dataType
+      // }
     }
 
     this.boundingBox = new Box3()

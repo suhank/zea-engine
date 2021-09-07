@@ -1,13 +1,10 @@
 /* eslint-disable no-unused-vars */
-import { Vec3, Box3, Xfo, Mat4, Vec2, Color } from '../Math/index'
-import { Lines } from './Geometry/Lines'
-import { Material } from './Material'
+import { Vec3, Box3, Xfo, Mat4, Vec2 } from '../Math/index'
 import { GeomItem } from './GeomItem'
 import { TreeItem } from './TreeItem'
 import { NumberParameter, Parameter } from './Parameters/index'
-import { MathFunctions, SInt16 } from '../Utilities/MathFunctions'
+import { MathFunctions } from '../Utilities/MathFunctions'
 import { Registry } from '../Registry'
-import { Points } from './Geometry'
 import { GLBaseViewport } from '../Renderer/GLBaseViewport'
 
 /**
@@ -59,16 +56,15 @@ class Camera extends TreeItem {
   protected farDistFactor: number
   protected frameOnBoundingSphere: boolean
 
-  protected viewHeight: number
-  protected __orthoIntervalId: any
-  protected __focusIntervalId: any
+  protected viewHeight: number = 0
+  protected __orthoIntervalId: number = -1
+  protected __focusIntervalId: number = -1
   /**
    * Instantiates a camera object, setting default configuration like zoom, target and positioning.
    *
    * @param {string} name - The name of the camera.
    */
-  constructor(name?: string) {
-    if (name == undefined) name = 'Camera'
+  constructor(name: string = 'Camera') {
     super(name)
 
     this.__isOrthographicParam = this.addParameter(new NumberParameter('isOrthographic', 0.0))
@@ -199,7 +195,7 @@ class Camera extends TreeItem {
    */
   setLensFocalLength(value: string) {
     // https://www.nikonians.org/reviews/fov-tables
-    const mapping = {
+    const mapping: { [key: string]: number } = {
       '10mm': 100.4,
       '11mm': 95.0,
       '12mm': 90.0,
@@ -235,7 +231,7 @@ class Camera extends TreeItem {
       '400mm': 3.4,
       '500mm': 2.7,
       '600mm': 2.3,
-      '800mm': 1.7,
+      '800mm': 1.7
     }
     if (!(value in mapping)) {
       console.warn('Camera lense focal length not supported:' + value)
@@ -308,9 +304,9 @@ class Camera extends TreeItem {
         this.__isOrthographicParam.setValue(lerpValue)
         i++
         if (i <= count) {
-          this.__focusIntervalId = setTimeout(applyMovement, 20)
+          this.__orthoIntervalId = window.setTimeout(applyMovement, 20)
         } else {
-          this.__focusIntervalId = undefined
+          this.__orthoIntervalId = -1
           this.emit('movementFinished')
         }
       }
@@ -332,7 +328,7 @@ class Camera extends TreeItem {
     this.setFocalDistance(position.distanceTo(target))
     const xfo = new Xfo()
     xfo.setLookAt(position, target, new Vec3(0.0, 0.0, 1.0))
-    this.getParameter('GlobalXfo').setValue(xfo)
+    this.getParameter('GlobalXfo')!.setValue(xfo)
     this.emit('movementFinished')
   }
 
@@ -342,7 +338,7 @@ class Camera extends TreeItem {
    */
   getTargetPosition() {
     const focalDistance = this.__focalDistanceParam.getValue()
-    const xfo = this.getParameter('GlobalXfo').getValue()
+    const xfo = this.getParameter('GlobalXfo')!.getValue()
     const target = xfo.ori.getZaxis()
     target.scaleInPlace(-focalDistance)
     target.addInPlace(xfo.tr)
@@ -362,7 +358,9 @@ class Camera extends TreeItem {
     const focalDistance = this.__focalDistanceParam.getValue()
     const fovY = this.__fovParam.getValue()
 
-    const globalXfo = this.getParameter('GlobalXfo').getValue().clone()
+    const globalXfo = this.getParameter('GlobalXfo')!
+      .getValue()
+      .clone()
     const aspectRatio = viewport.getWidth() / viewport.getHeight()
     const fovX = Math.atan(Math.tan(fovY * 0.5) * aspectRatio) * 2.0
 
@@ -416,11 +414,11 @@ class Camera extends TreeItem {
         boundaryPoints.push(box3.p1)
       } else {
         treeItems.forEach((treeItem: TreeItem) => {
-          treeItem.traverse((childItem) => {
-            if (!(childItem instanceof TreeItem)) return false
-            if (childItem.__disableBoundingBox) return false
+          treeItem.traverse(childItem => {
+            if (!(childItem instanceof TreeItem)) return
+            if (childItem.__disableBoundingBox) return
             if (childItem instanceof GeomItem) {
-              const geom = childItem.getParameter('Geometry').getValue()
+              const geom = childItem.getParameter('Geometry')!.getValue()
               if (geom) {
                 const box3 = geom.getBoundingBox()
                 if (box3.isValid()) {
@@ -433,12 +431,12 @@ class Camera extends TreeItem {
                   boundaryPoints.push(mat4.transformVec3(new Vec3(box3.p1.x, box3.p0.y, box3.p1.z)))
                   boundaryPoints.push(mat4.transformVec3(new Vec3(box3.p1.x, box3.p1.y, box3.p0.z)))
                   boundaryPoints.push(mat4.transformVec3(box3.p1))
-                  return false
+                  return
                 }
               }
             }
             if (childItem.getNumChildren() == 0) {
-              const box3 = childItem.getParameter('BoundingBox').getValue()
+              const box3 = childItem.getParameter('BoundingBox')!.getValue()
               if (box3.isValid()) {
                 // Note: passing box3.p0 into boundaryPoints caused corruption later on.
                 // I could not figure out how/why, but by constructing a new vector here,
@@ -451,7 +449,7 @@ class Camera extends TreeItem {
                 boundaryPoints.push(new Vec3(box3.p1.x, box3.p0.y, box3.p1.z))
                 boundaryPoints.push(new Vec3(box3.p1.x, box3.p1.y, box3.p0.z))
                 boundaryPoints.push(new Vec3(box3.p1.x, box3.p1.y, box3.p1.z))
-                return false
+                return
               }
             }
           })
@@ -567,7 +565,7 @@ class Camera extends TreeItem {
     }
 
     this.setFocalDistance(newFocalDistance)
-    this.getParameter('GlobalXfo').setValue(globalXfo)
+    this.getParameter('GlobalXfo')!.setValue(globalXfo)
     this.emit('movementFinished')
   }
 

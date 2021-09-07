@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { Color } from '../../Math/index'
 import { Registry } from '../../Registry'
-import { BooleanParameter, NumberParameter, ColorParameter, Parameter } from '../Parameters/index'
+import { BooleanParameter, NumberParameter, ColorParameter } from '../Parameters/index'
 import { BaseGroup } from './BaseGroup'
 import { TreeItem } from '../TreeItem'
 import { BaseGeomItem } from '../BaseGeomItem'
@@ -47,7 +47,7 @@ class SelectionSet extends BaseGroup {
   __updateVisibility(): boolean {
     if (super.updateVisibility()) {
       const value = this.isVisible()
-      Array.from(this.__itemsParam.getValue()).forEach((item) => {
+      Array.from(this.__itemsParam.getValue()).forEach(item => {
         if (item instanceof TreeItem) item.propagateVisibility(value ? 1 : -1)
       })
       return true
@@ -78,14 +78,14 @@ class SelectionSet extends BaseGroup {
   __updateHighlightHelper() {
     let highlighted = false
     let color: Color
-    if (this.getParameter('Highlighted').getValue() || this.isSelected()) {
+    if (this.getParameter('Highlighted')!.getValue() || this.isSelected()) {
       highlighted = true
-      color = this.getParameter('HighlightColor').getValue()
-      color.a = this.getParameter('HighlightFill').getValue()
+      color = this.getParameter('HighlightColor')!.getValue()
+      color.a = this.getParameter('HighlightFill')!.getValue()
     }
 
     const key = 'groupItemHighlight' + this.getId()
-    Array.from(this.__itemsParam.getValue()).forEach((item) => {
+    Array.from(this.__itemsParam.getValue()).forEach(item => {
       if (item instanceof TreeItem) {
         if (highlighted) item.addHighlight(key, color, true)
         else item.removeHighlight(key, true)
@@ -117,9 +117,9 @@ class SelectionSet extends BaseGroup {
 
     // ///////////////////////////////
     // Update the highlight
-    if (item instanceof TreeItem && this.getParameter('Highlighted').getValue()) {
-      const color = this.getParameter('HighlightColor').getValue()
-      color.a = this.getParameter('HighlightFill').getValue()
+    if (item instanceof TreeItem && this.getParameter('Highlighted')!.getValue()) {
+      const color = this.getParameter('HighlightColor')!.getValue()
+      color.a = this.getParameter('HighlightFill')!.getValue()
       item.addHighlight('groupItemHighlight' + this.getId(), color, true)
     }
 
@@ -130,7 +130,7 @@ class SelectionSet extends BaseGroup {
     }
 
     if (item instanceof TreeItem) {
-      item.getParameter('BoundingBox').on('valueChanged', this.setBoundingBoxDirty)
+      item.getParameter('BoundingBox')!.on('valueChanged', this.setBoundingBoxDirty)
     }
   }
 
@@ -144,7 +144,7 @@ class SelectionSet extends BaseGroup {
     super.unbindItem(<TreeItem>item, index)
     if (!(item instanceof TreeItem)) return
 
-    if (this.getParameter('Highlighted').getValue()) {
+    if (this.getParameter('Highlighted')!.getValue()) {
       item.removeHighlight('groupItemHighlight' + this.getId(), true)
     }
 
@@ -158,14 +158,14 @@ class SelectionSet extends BaseGroup {
 
     // ///////////////////////////////
     // Update the item cutaway
-    item.traverse((treeItem) => {
+    item.traverse(treeItem => {
       if (treeItem instanceof BaseGeomItem) {
         treeItem.setCutawayEnabled(false)
       }
     }, true)
 
     if (item instanceof TreeItem) {
-      item.getParameter('BoundingBox').off('valueChanged', this.setBoundingBoxDirty)
+      item.getParameter('BoundingBox')!.off('valueChanged', this.setBoundingBoxDirty)
     }
   }
 

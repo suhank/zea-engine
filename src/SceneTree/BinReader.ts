@@ -12,7 +12,7 @@ class BinReader {
   protected __byteOffset: number
   protected __dataView: DataView
   protected __isMobileDevice: boolean
-  protected utf8decoder: TextDecoder
+  protected utf8decoder: TextDecoder | util.TextDecoder
   /**
    * Create a bin reader.
    *
@@ -31,7 +31,7 @@ class BinReader {
   /**
    * Returns state of whether or not the `BinReader` object was instantiated from a mobile device.
    *
-   * @return {Boolean} - Returns true is a mobile device is detected.
+   * @return {boolean} - Returns true is a mobile device is detected.
    */
   get isMobileDevice() {
     return this.__isMobileDevice
@@ -223,8 +223,6 @@ class BinReader {
     if (size == undefined) size = this.loadUInt32()
     const result = new Uint8Array(this.__data, this.__byteOffset, size)
     this.__byteOffset += size
-    const pad = this.__byteOffset % 4
-    // this.readPad();
     return result
   }
 
@@ -252,7 +250,6 @@ class BinReader {
       result = new Uint16Array(this.__data, this.__byteOffset, size)
       this.__byteOffset += size * 2
     }
-    // this.readPad();
     return result
   }
 

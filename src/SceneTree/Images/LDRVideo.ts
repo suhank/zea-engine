@@ -83,13 +83,13 @@ class LDRVideo extends FileImage {
         () => {
           // videoElem.play();
 
-          const muteParam = this.getParameter('Mute')
+          const muteParam = this.getParameter('Mute')!
           videoElem.muted = muteParam.getValue()
           muteParam.on('valueChanged', () => {
             videoElem.muted = muteParam.getValue()
           })
 
-          const loopParam = this.getParameter('Loop')
+          const loopParam = this.getParameter('Loop')!
           videoElem.loop = loopParam.getValue()
           loopParam.on('valueChanged', () => {
             videoElem.loop = loopParam.getValue()
@@ -127,7 +127,7 @@ class LDRVideo extends FileImage {
       const promise = videoElem.play()
       if (promise !== undefined) {
         promise
-          .then((_) => {
+          .then(_ => {
             console.log('Autoplay started!')
             // Autoplay started!
           })

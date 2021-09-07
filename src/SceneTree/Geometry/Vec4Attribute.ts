@@ -1,5 +1,6 @@
 import { Attribute } from './Attribute'
 import { Vec4 } from '../../Math/Vec4'
+import { Registry } from '../../Registry'
 
 /**
  * Class representing an attribute.
@@ -95,5 +96,7 @@ class Vec4Attribute extends Attribute {
     this.setSplitVertexValue_array(vertex, face, <Float32Array>value.asArray())
   }
 }
+
+Registry.register('Vec4Attribute', Vec4Attribute)
 
 export { Vec4Attribute }

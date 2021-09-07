@@ -12,7 +12,7 @@ const GROUP_XFO_MODES = {
   manual: 1,
   first: 2,
   average: 3,
-  globalOri: 4,
+  globalOri: 4
 }
 
 /**
@@ -101,7 +101,7 @@ class KinematicGroup extends BaseGroup {
     }
 
     const key = 'kinematicGroupItemHighlight' + this.getId()
-    Array.from(this.__itemsParam.getValue()).forEach((item) => {
+    Array.from(this.__itemsParam.getValue()).forEach(item => {
       if (item instanceof TreeItem) {
         if (highlighted) item.addHighlight(key, color, true)
         else item.removeHighlight(key, true)
@@ -128,26 +128,26 @@ class KinematicGroup extends BaseGroup {
    */
   calcGroupXfo() {
     const items = Array.from(this.__itemsParam.getValue())
-    if (items.length == 0) return new Xfo()
+    if (items.length == 0) return
     this.calculatingGroupXfo = true
 
-    this.memberXfoOps.forEach((op) => op.disable())
+    this.memberXfoOps.forEach(op => op.disable())
 
     // TODO: Disable the group operator?
     const initialXfoMode = this.__initialXfoModeParam.getValue()
     let xfo: Xfo
     if (initialXfoMode == GROUP_XFO_MODES.manual) {
       // The xfo is manually set by the current global xfo.
-      xfo = this.getParameter('GlobalXfo').getValue()
+      xfo = this.getParameter('GlobalXfo')!.getValue()
     } else if (initialXfoMode == GROUP_XFO_MODES.first && items[0] instanceof TreeItem) {
-      xfo = items[0].getParameter('GlobalXfo').getValue()
+      xfo = items[0].getParameter('GlobalXfo')!.getValue()
     } else if (initialXfoMode == GROUP_XFO_MODES.average) {
       xfo = new Xfo()
       xfo.ori.set(0, 0, 0, 0)
       let numTreeItems = 0
       items.forEach((item, index) => {
         if (item instanceof TreeItem) {
-          const itemXfo = item.getParameter('GlobalXfo').getValue()
+          const itemXfo = item.getParameter('GlobalXfo')!.getValue()
           xfo.tr.addInPlace(itemXfo.tr)
           xfo.ori.addInPlace(itemXfo.ori)
           numTreeItems++
@@ -161,7 +161,7 @@ class KinematicGroup extends BaseGroup {
       let numTreeItems = 0
       items.forEach((item, index) => {
         if (item instanceof TreeItem) {
-          const itemXfo = item.getParameter('GlobalXfo').getValue()
+          const itemXfo = item.getParameter('GlobalXfo')!.getValue()
           xfo.tr.addInPlace(itemXfo.tr)
           numTreeItems++
         }
@@ -173,12 +173,12 @@ class KinematicGroup extends BaseGroup {
 
     // Note: if the KinematicGroup global param becomes dirty
     // then it stops propagating dirty to its members.
-    // const newGlobal = this.getParameter('GlobalXfo').getValue() // force a cleaning.
+    // const newGlobal = this.getParameter('GlobalXfo')!.getValue() // force a cleaning.
     // this.invGroupXfo = newGlobal.inverse()
-    this.getParameter('GlobalXfo').setValue(xfo)
+    this.getParameter('GlobalXfo')!.setValue(xfo)
     this.groupTransformOp.setBindXfo(xfo)
 
-    this.memberXfoOps.forEach((op) => op.enable())
+    this.memberXfoOps.forEach(op => op.enable())
     this.calculatingGroupXfo = false
   }
 
@@ -211,7 +211,7 @@ class KinematicGroup extends BaseGroup {
       )
       this.memberXfoOps.splice(index, 0, memberXfoOp)
 
-      item.getParameter('BoundingBox').on('valueChanged', this.setBoundingBoxDirty)
+      item.getParameter('BoundingBox')!.on('valueChanged', this.setBoundingBoxDirty)
     }
   }
 
@@ -235,7 +235,7 @@ class KinematicGroup extends BaseGroup {
       this.memberXfoOps.splice(index, 1)
       this.setBoundingBoxDirty()
 
-      item.getParameter('BoundingBox').off('valueChanged', this.setBoundingBoxDirty)
+      item.getParameter('BoundingBox')!.off('valueChanged', this.setBoundingBoxDirty)
     }
   }
 

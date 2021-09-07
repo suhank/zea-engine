@@ -4,7 +4,6 @@
 import { ParameterOwner } from './ParameterOwner'
 import { Owner } from './Owner'
 import { BinReader } from './BinReader'
-import { Registry } from '../Registry'
 import { BaseEvent } from '../Utilities/BaseEvent'
 // TODO:(ss) use this: import { Parameter } from './Parameters'
 import { Parameter } from './Parameters/Parameter'

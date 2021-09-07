@@ -1,5 +1,4 @@
 import { Vec2 } from '../../../Math/Vec2'
-import { Vec3 } from '../../../Math/Vec3'
 import { ProceduralMesh } from './ProceduralMesh'
 import { Registry } from '../../../Registry'
 import { NumberParameter } from '../../Parameters/NumberParameter'
@@ -37,7 +36,7 @@ class Torus extends ProceduralMesh {
     this.__innerRadiusParam = this.addParameter(new NumberParameter('InnerRadius', innerRadius)) as NumberParameter
     this.__outerRadiusParam = this.addParameter(new NumberParameter('OuterRadius', outerRadius)) as NumberParameter
     this.__detailParam = this.addParameter(
-      new NumberParameter('Detail', detail >= 3 ? detail : 3, [3, 200], 1),
+      new NumberParameter('Detail', detail >= 3 ? detail : 3, [3, 200], 1)
     ) as NumberParameter
     this.__arcAngleParam = this.addParameter(new NumberParameter('ArcAngle', arcAngle)) as NumberParameter
 

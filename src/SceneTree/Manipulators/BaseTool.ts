@@ -27,13 +27,12 @@ import { ParameterOwner } from '../ParameterOwner'
  * @extends ParameterOwner
  */
 class BaseTool extends ParameterOwner {
-  protected __activated: boolean
+  protected __activated: boolean = false
   /**
    * Creates an instance of BaseTool.
    */
   constructor() {
     super()
-    this.__activated = false
   }
 
   /**
@@ -144,86 +143,11 @@ class BaseTool extends ParameterOwner {
   // Touch events
 
   /**
-   * Event fired when one or more touch points are placed on the touch surface over a tool.
-   *
-   * @param {TouchEvent} event - The event param.
-   */
-  onTouchStart(event: TouchEvent) {
-    // console.warn('Implement me')
-  }
-
-  /**
-   * Event fired when the one or more touch points are moved along the touch surface over a tool.
-   *
-   * @param {TouchEvent} event - The event param.
-   */
-  onTouchMove(event: TouchEvent) {
-    // console.warn('Implement me')
-  }
-
-  /**
-   * Event fired when one or more touch points are removed from the touch surface over a tool.
-   *
-   * @param {TouchEvent} event - The event param.
-   */
-  onTouchEnd(event: TouchEvent) {
-    // console.warn('Implement me')
-  }
-
-  /**
    * Event fired when one or more touch points have been disrupted in an implementation-specific manner.
    *
    * @param {TouchEvent} event - The event param.
    */
   onTouchCancel(event: TouchEvent) {
-    // console.warn('Implement me')
-  }
-
-  /**
-   * Event fired when two continuos touch point are placed on the touch surface over a tool.
-   *
-   * @param {TouchEvent} event - The event param.
-   */
-  onDoubleTap(event: TouchEvent) {
-    // console.warn('Implement me')
-  }
-
-  // ///////////////////////////////////
-  // VRController events
-
-  /**
-   * Event fired when a VR controller button is pressed over a tool.
-   *
-   * @param {Record<string, any>} event - The event param.
-   */
-  onVRControllerButtonDown(event: object): any {
-    // console.warn('Implement me')
-  }
-
-  /**
-   * Event fired when a VR controller button is released over a tool.
-   *
-   * @param {Record<string, any>} event - The event param.
-   */
-  onVRControllerButtonUp(event: Record<string, any>): any {
-    // console.warn('Implement me')
-  }
-
-  /**
-   * Event fired when a VR controller button is pressed twice over a tool.
-   *
-   * @param {Record<string, any>} event - The event param.
-   */
-  onVRControllerDoubleClicked(event: Record<string, any>) {
-    // console.warn('Implement me')
-  }
-
-  /**
-   * Event fired when a VR controller...
-   *
-   * @param {Record<string, any>} event - The event param.
-   */
-  onVRPoseChanged(event: Record<string, any>) {
     // console.warn('Implement me')
   }
 }

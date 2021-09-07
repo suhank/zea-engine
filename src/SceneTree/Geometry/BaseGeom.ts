@@ -1,16 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Vec2, Vec3, Box2, Box3, Xfo } from '../../Math/index'
+import { Vec2, Vec3, Box2, Box3 } from '../../Math/index'
 import { ParameterOwner } from '../ParameterOwner'
 import { Attribute } from './Attribute'
 import { Vec3Attribute } from './Vec3Attribute'
 import { Vec2Attribute } from './Vec2Attribute'
-import { Registry } from '../../Registry'
 import { BinReader } from '../../SceneTree/BinReader'
-
-// Defines used to explicity specify types for WebGL.
-function isTypedArray(obj: any) {
-  return !!obj && obj.byteLength !== undefined
-}
 
 /**
  * Represents a base class for 3D geometry items.
@@ -234,7 +228,7 @@ class BaseGeom extends ParameterOwner {
     }
     return {
       numVertices: this.numVertices(),
-      attrBuffers,
+      attrBuffers
     }
   }
 
@@ -329,7 +323,7 @@ class BaseGeom extends ParameterOwner {
         const box3 = new Box3(reader.loadFloat32Vec3(), reader.loadFloat32Vec3())
         const clusterData = {
           range: [offset, offset + count],
-          bbox: box3,
+          bbox: box3
         }
         if (normalsAttr) {
           ;(clusterData as any).normalsRange = new Box3(reader.loadFloat32Vec3(), reader.loadFloat32Vec3())
@@ -412,7 +406,7 @@ class BaseGeom extends ParameterOwner {
         // switch(attrJSON.dataType) {
         //   case 'Vec3' attr = new Vec3Attribute( attrJSON.defaultScalarValue)
         // }
-        const dataType = Registry.getBlueprint(attrJSON.dataType)
+        // const dataType = Registry.getClassDefinition(attrJSON.dataType)
         // attr = new VertexAttribute(this, dataType, 0, attrJSON.defaultScalarValue)
         // if (attr) this.__vertexAttributes.set(name, attr)
       }

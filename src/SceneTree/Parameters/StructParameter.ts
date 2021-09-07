@@ -56,10 +56,11 @@ class StructParameter extends Parameter<Record<string, unknown>> {
    * @param {string} name - The parameter name.
    * @return {Parameter} - The return value.
    */
-  getParameter(name: string) {
+  getParameter(name: string): Parameter<unknown> | undefined {
     for (const p of this.members) {
       if (p.getName() == name) return p
     }
+    return undefined
   }
 
   /**

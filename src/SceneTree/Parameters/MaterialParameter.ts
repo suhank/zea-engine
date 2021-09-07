@@ -22,7 +22,7 @@ import { Material } from '../Material'
  *
  * @extends Parameter
  */
-class MaterialParameter extends Parameter<Material> {
+class MaterialParameter extends Parameter<Material | undefined> {
   /**
    * Create a material parameter.
    * @param {string} name - The name of the material parameter.
@@ -32,7 +32,7 @@ class MaterialParameter extends Parameter<Material> {
     super(name, value, 'Material')
 
     this.valueParameterValueChanged = this.valueParameterValueChanged.bind(this)
-    this.setValue(value)
+    if (this.value) this.value.on('parameterValueChanged', this.valueParameterValueChanged)
   }
 
   protected valueParameterValueChanged = (event: Record<string, unknown>): void => {
@@ -44,7 +44,7 @@ class MaterialParameter extends Parameter<Material> {
    *
    * @param {Material} material - The material param.
    */
-  setValue(material?: Material): void {
+  setValue(material: Material): void {
     // 0 == normal set. 1 = changed via cleaner fn, 2 = change by loading/cloning code.
     if (this.value !== material) {
       if (this.value) {
@@ -91,7 +91,7 @@ class MaterialParameter extends Parameter<Material> {
 
     if (this.value) {
       j = {
-        value: !context || !context.onlyPath ? this.value.toJSON(context) : this.value.getPath(),
+        value: !context || !context.onlyPath ? this.value.toJSON(context) : this.value.getPath()
       }
     }
 

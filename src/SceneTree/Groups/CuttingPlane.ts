@@ -46,13 +46,13 @@ class CuttingPlane extends BaseGroup {
 
     // Create the geometry to display the plane.
     const material = new Material('plane', 'FlatSurfaceShader')
-    material.getParameter('BaseColor').setValue(new Color(1, 1, 1, 0.2))
+    material.getParameter('BaseColor')!.setValue(new Color(1, 1, 1, 0.2))
     const plane = new GeomItem(`PlaneGeom`, new Plane(1, 1), material)
     plane.setSelectable(false) // used to be: plane.getSelectable(false)
     this.addChild(plane)
 
     const borderMaterial = new Material('border', 'LinesShader')
-    borderMaterial.getParameter('BaseColor').setValue(new Color(1, 0, 0, 1))
+    borderMaterial.getParameter('BaseColor')!.setValue(new Color(1, 0, 0, 1))
     const border = new GeomItem(`BorderGeom`, new Rect(1, 1), borderMaterial)
     border.setSelectable(false) // used to be: border.getSelectable(false)
     this.addChild(border)
@@ -82,8 +82,8 @@ class CuttingPlane extends BaseGroup {
    * @private
    */
   __updateCutawayHelper(item: TreeItem): void {
-    const cutEnabled = this.getParameter('CutAwayEnabled').getValue()
-    const cutPlane = this.getParameter('CutPlane').getValue()
+    const cutEnabled = this.getParameter('CutAwayEnabled')!.getValue()
+    const cutPlane = this.getParameter('CutPlane')!.getValue()
     const cutAwayVector = cutPlane.xyz
     const cutAwayDist = cutPlane.w
 
@@ -117,19 +117,19 @@ class CuttingPlane extends BaseGroup {
 
     // ///////////////////////////////
     // Update the item cutaway
-    const cutEnabled = this.getParameter('CutAwayEnabled').getValue()
+    const cutEnabled = this.getParameter('CutAwayEnabled')!.getValue()
     if (cutEnabled) {
       this.__updateCutaway(item)
     }
 
     const bbox = new Box3()
-    const xfo = this.getParameter('GlobalXfo').getValue()
-    const invxfo = xfo.inverse()
-    Array.from(this.__itemsParam.getValue()).forEach((item) => {
+    // const xfo = this.getParameter('GlobalXfo')!.getValue()
+    // const invxfo = xfo.inverse()
+    Array.from(this.__itemsParam.getValue()).forEach(item => {
       if (item instanceof TreeItem) {
-        // const itemxfo = invxfo.multiply(item.getParameter('GlobalXfo').getValue())
-        // bbox.addBox3(item.getParameter('BoundingBox').getValue(), itemxfo.toMat4())
-        bbox.addBox3(item.getParameter('BoundingBox').getValue())
+        // const itemxfo = invxfo.multiply(item.getParameter('GlobalXfo')!.getValue())
+        // bbox.addBox3(item.getParameter('BoundingBox')!.getValue(), itemxfo.toMat4())
+        bbox.addBox3(item.getParameter('BoundingBox')!.getValue())
       }
     })
     {
@@ -137,9 +137,13 @@ class CuttingPlane extends BaseGroup {
       const sizey = bbox.p1.y - bbox.p0.y
       const xfo = new Xfo()
       xfo.sc.set(sizex, sizey, 1)
-      this.getChild(0).getParameter('LocalXfo').setValue(xfo)
-      this.getChild(1).getParameter('LocalXfo').setValue(xfo)
-      // this.getParameter('GlobalXfo').setValue(xfo)
+      this.getChild(0)
+        .getParameter('LocalXfo')!
+        .setValue(xfo)
+      this.getChild(1)
+        .getParameter('LocalXfo')!
+        .setValue(xfo)
+      // this.getParameter('GlobalXfo')!.setValue(xfo)
     }
   }
 
@@ -154,7 +158,7 @@ class CuttingPlane extends BaseGroup {
 
     // ///////////////////////////////
     // Update the item cutaway
-    item.traverse((treeItem) => {
+    item.traverse(treeItem => {
       if (treeItem instanceof BaseGeomItem) {
         treeItem.setCutawayEnabled(false)
       }

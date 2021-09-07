@@ -5,7 +5,6 @@ import { BinReader } from './BinReader'
 import { resourceLoader } from './resourceLoader'
 import { Registry } from '../Registry'
 import { Version } from './Version'
-import { Parameter } from './Parameters/Parameter'
 
 /**
  * Class designed to load and handle `.vla` files.
@@ -41,7 +40,6 @@ class VLAAsset extends AssetItem {
     this.addParameterDeprecationMapping('DataFilePath', 'FilePath') // Note: migrating from 'DataFilePath' to 'FilePath'
 
     this.__fileParam.on('valueChanged', () => {
-      const fileId = this.__fileParam.getValue()
       const url = this.__fileParam.getUrl()
       this.load(url)
     })
@@ -74,7 +72,7 @@ class VLAAsset extends AssetItem {
       // Some data is no longer being read at the end of the buffer
       // so we skip to the end here.
       // The data was the atlas size of the lightmap that we no longer support.
-      const atlasSize = reader.loadFloat32Vec2()
+      reader.loadFloat32Vec2()
     }
     this.__geomLibrary.setNumGeoms(reader.loadUInt32())
 
@@ -132,10 +130,10 @@ class VLAAsset extends AssetItem {
           if (numGeomsFiles == 0 && entries.geoms) {
             this.__geomLibrary.readBinaryBuffer(filename, entries.geoms.buffer, context)
           } else {
-            const basePath = folder + this.setMetadata
+            const basePath = folder + stem
             const geomLibraryJSON = {
               numGeomsPerFile: numGeomsFiles,
-              numGeoms: this.__geomLibrary.getNumGeoms(), // Note: was set during readBinary.Why do we need to provide this again?
+              numGeoms: this.__geomLibrary.getNumGeoms() // Note: was set during readBinary.Why do we need to provide this again?
             }
             this.__geomLibrary.loadGeomFilesStream(geomLibraryJSON, basePath, context)
           }

@@ -15,9 +15,9 @@ import { Owner } from './Owner'
 class MaterialLibrary extends EventEmitter implements Owner {
   protected lod: number
   protected __name: string
-  protected __images: Record<string, BaseImage>
-  protected __materials: Record<string, Material>
-  protected name: string
+  protected __images: Record<string, BaseImage> = {}
+  protected __materials: Record<string, Material> = {}
+  protected name: string = ''
   /**
    * Create a material library.
    * @param {string} name - The name of the material library.
@@ -37,7 +37,7 @@ class MaterialLibrary extends EventEmitter implements Owner {
   clear() {
     this.__images = {}
     this.__materials = {
-      Default: new Material('Default', 'SimpleSurfaceShader'),
+      Default: new Material('Default', 'SimpleSurfaceShader')
     }
   }
 
@@ -200,7 +200,7 @@ class MaterialLibrary extends EventEmitter implements Owner {
    */
   toJSON(context: Record<string, any> = {}) {
     return {
-      numMaterials: this.getNumMaterials(),
+      numMaterials: this.getNumMaterials()
     }
   }
 

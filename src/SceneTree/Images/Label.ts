@@ -49,17 +49,17 @@ function roundRect(
       tl: radius,
       tr: radius,
       br: radius,
-      bl: radius,
+      bl: radius
     }
   } else {
-    const defaultRadius = {
+    const defaultRadius: { [key: string]: number } = {
       tl: 0,
       tr: 0,
       br: 0,
-      bl: 0,
+      bl: 0
     }
     for (const side in defaultRadius) {
-      radius[side] = radius[side] || defaultRadius[side]
+      radius[side] = radius[side] || <number>defaultRadius[side]
     }
   }
   ctx.beginPath()
@@ -201,8 +201,8 @@ class Label extends DataImage {
     }
 
     const loadText = (): Promise<void> => {
-      return new Promise((resolve) => {
-        const library = this.getParameter('Library').getValue()
+      return new Promise(resolve => {
+        const library = this.getParameter('Library')!.getValue()
         if (library == '') {
           resolve()
           return
@@ -217,8 +217,8 @@ class Label extends DataImage {
             const name = this.getName()
             // console.log("Text Loaded:" + name);
             const text = labelManager.getLabelText(library, name)
-            this.getParameter('Text').setValue(text)
-          } catch (e: any) {
+            this.getParameter('Text')!.setValue(text)
+          } catch (e) {
             // Note: if the text is not found in the labels pack
             // an exception is thrown, and we catch it here.
             console.warn(e)
@@ -236,11 +236,11 @@ class Label extends DataImage {
       })
     }
     const loadFont = (): Promise<void> => {
-      return new Promise((resolve) => {
+      return new Promise(resolve => {
         if ((document as any).fonts != undefined) {
-          const font = this.getParameter('Font').getValue()
-          const fontSize = this.getParameter('FontSize').getValue()
-          ;(document as any).fonts.load(fontSize + 'px "' + font + '"').then(() => {
+          const font = this.getParameter('Font')!.getValue()
+          const fontSize = this.getParameter('FontSize')!.getValue()
+          ;(document as any).fonts.load(fontSize + 'px "' + font + '"')!.then(() => {
             // console.log("Font Loaded:" + font);
             resolve()
           })
@@ -260,25 +260,25 @@ class Label extends DataImage {
   renderLabelToImage() {
     // console.log("renderLabelToImage")
     const ctx2d = this.__canvasElem.getContext('2d', {
-      alpha: true,
+      alpha: true
     })
 
-    let text = this.getParameter('Text').getValue()
+    let text = this.getParameter('Text')!.getValue()
     if (text == '') text = this.getName()
 
-    const font = this.getParameter('Font').getValue()
-    const fontColor = this.getParameter('FontColor').getValue()
-    const textAlign = 'left' // this.getParameter('TextAlign').getValue()
-    const fontSize = this.getParameter('FontSize').getValue()
-    const margin = this.getParameter('Margin').getValue()
-    const borderWidth = this.getParameter('BorderWidth').getValue()
-    const borderRadius = this.getParameter('BorderRadius').getValue()
-    const outline = this.getParameter('Outline').getValue()
-    const outlineColor = this.getParameter('OutlineColor').getValue()
-    const background = this.getParameter('Background').getValue()
-    const backgroundColor = this.getParameter('BackgroundColor').getValue()
-    const fillBackground = this.getParameter('FillBackground').getValue()
-    const strokeBackgroundOutline = this.getParameter('StrokeBackgroundOutline').getValue()
+    const font = this.getParameter('Font')!.getValue()
+    const fontColor = this.getParameter('FontColor')!.getValue()
+    const textAlign = 'left' // this.getParameter('TextAlign')!.getValue()
+    const fontSize = this.getParameter('FontSize')!.getValue()
+    const margin = this.getParameter('Margin')!.getValue()
+    const borderWidth = this.getParameter('BorderWidth')!.getValue()
+    const borderRadius = this.getParameter('BorderRadius')!.getValue()
+    const outline = this.getParameter('Outline')!.getValue()
+    const outlineColor = this.getParameter('OutlineColor')!.getValue()
+    const background = this.getParameter('Background')!.getValue()
+    const backgroundColor = this.getParameter('BackgroundColor')!.getValue()
+    const fillBackground = this.getParameter('FillBackground')!.getValue()
+    const strokeBackgroundOutline = this.getParameter('StrokeBackgroundOutline')!.getValue()
 
     // let ratio = devicePixelRatio / backingStoreRatio;
     const marginAndBorder = margin + borderWidth
@@ -337,7 +337,7 @@ class Label extends DataImage {
     this.emit('labelRendered', {
       width: this.width,
       height: this.height,
-      data: this.__data,
+      data: this.__data
     })
   }
 

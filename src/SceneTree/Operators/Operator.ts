@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Registry } from '../../Registry'
+
 import { BaseItem } from '../BaseItem'
 import { OperatorInput } from './OperatorInput'
 import { OperatorOutput } from './OperatorOutput'
@@ -70,7 +70,7 @@ class Operator extends BaseItem {
     if (!(input instanceof OperatorInput)) {
       throw new Error(`removeInput only accepts string or OperatorInput`)
     }
-    if (input.getParam()) input.setParam()
+    if (input.getParam()) input.setParam(undefined)
     this.__inputs.delete(input.getName())
   }
 
@@ -97,12 +97,9 @@ class Operator extends BaseItem {
    * @return {OperatorInput} - The return value.
    */
   getInput(name: string): OperatorInput {
-    //const input = this.__inputs.get(name)
-    //if (!input) throw `Couldn't find an Input with the name of '${name}'`
-
-    //return input
-
-    return this.__inputs.get(name)
+    const input = this.__inputs.get(name)
+    if (!input) throw `Couldn't find an Input with the name of '${name}'`
+    return input
   }
 
   /**
@@ -158,12 +155,9 @@ class Operator extends BaseItem {
    * @return {OperatorOutput} - The return value.
    */
   getOutput(name: string): OperatorOutput {
-    // TODO: guard breaks treeItem, but should it be here? (from first ts-migration)
-    //const output = this.__outputs.get(name)
-    //if (!output) throw `Couldn't find an Output with the name of '${name}'`
-    //return output
-
-    return this.__outputs.get(name)
+    const output = this.__outputs.get(name)
+    if (!output) throw `Couldn't find an Output with the name of '${name}'`
+    return output
   }
 
   /**

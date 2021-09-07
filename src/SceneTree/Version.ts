@@ -5,7 +5,7 @@ class Version {
   major: number
   minor: number
   patch: number
-  branch: string
+  branch: string = ''
   /**
    * Creates a version.
    * The version string should have the following structure: <br>

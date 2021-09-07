@@ -2,14 +2,14 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable require-jsdoc */
 import { BaseClass } from '../../Utilities/BaseClass'
-import { Float32, UInt32, SInt32, MathFunctions } from '../../Utilities/MathFunctions'
+import { MathFunctions } from '../../Utilities/MathFunctions'
 import { Mesh } from './Mesh'
 
 function approxEqual(a: Float32Array, b: Float32Array) {
   return a.some((value, index) => Math.abs(b[index] - value) > 0.001)
 }
 function isValid(a: Float32Array, defaultElementValue: number) {
-  return !a.some((value) => value == defaultElementValue)
+  return !a.some(value => value == defaultElementValue)
 }
 
 class Attribute extends BaseClass {
@@ -273,10 +273,7 @@ class Attribute extends BaseClass {
    * @param {number} splitCount - The splitCount value.
    * @return {Float32Array} - The return value.
    */
-  generateSplitValues(
-    splitIndices: Record<number, Record<number, number>>,
-    splitCount: number
-  ): TypedArray {
+  generateSplitValues(splitIndices: Record<number, Record<number, number>>, splitCount: number): TypedArray {
     if (splitCount == 0) return this.data
 
     const numUnSplitValues = this.getCount()
@@ -324,7 +321,7 @@ class Attribute extends BaseClass {
       data: this.data,
       dataType: this.dataTypeName,
       defaultValue: this.defaultElementValue,
-      length: this.data.length / this.stride,
+      length: this.data.length / this.stride
     }
   }
 
@@ -362,7 +359,7 @@ class Attribute extends BaseClass {
       values: this.data,
       count: this.getCount(),
       dataType: this.dataTypeName,
-      normalized: this.normalized,
+      normalized: this.normalized
     }
   }
 }

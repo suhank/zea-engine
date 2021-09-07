@@ -11,7 +11,7 @@ import { BinReader } from './BinReader'
  * @extends {TreeItem}
  */
 class InstanceItem extends TreeItem {
-  protected __srcTree: TreeItem
+  protected __srcTree: TreeItem | null = null
   /**
    * Create an instance item.
    * @param {string} name - The name of the instance item.
@@ -31,7 +31,7 @@ class InstanceItem extends TreeItem {
     const numChildren = this.__srcTree.getNumChildren()
     if (numChildren == 0) {
       const clonedTree = this.__srcTree.clone(context)
-      clonedTree.getParameter('LocalXfo').loadValue(new Xfo())
+      clonedTree.getParameter('LocalXfo')!.loadValue(new Xfo())
       this.addChild(clonedTree, false)
     } else {
       const children = this.__srcTree.getChildren()

@@ -1,5 +1,6 @@
 import { Attribute } from './Attribute'
 import { Color } from '../../Math/Color'
+import { Registry } from '../../Registry'
 
 /**
  * Class representing an attribute.
@@ -95,5 +96,7 @@ class ColorAttribute extends Attribute {
     this.setSplitVertexValue_array(vertex, face, value.asArray())
   }
 }
+
+Registry.register('ColorAttribute', ColorAttribute)
 
 export { ColorAttribute }
