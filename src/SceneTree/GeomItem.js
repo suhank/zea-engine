@@ -68,9 +68,15 @@ class GeomItem extends BaseGeomItem {
     super(name)
 
     this.__geomParam = this.addParameter(new GeometryParameter('Geometry'))
-    this._setBoundingBoxDirty = this._setBoundingBoxDirty.bind(this)
-    this.__geomParam.on('valueChanged', this._setBoundingBoxDirty)
-    this.__geomParam.on('boundingBoxChanged', this._setBoundingBoxDirty)
+
+    this.listenerIDs = {}
+    this.listenerIDs['valueChanged'] = this.__geomParam.on('valueChanged', event => {
+      this._setBoundingBoxDirty(event)
+    })
+    this.listenerIDs['boundingBoxChanged'] = this.__geomParam.on('boundingBoxChanged', event => {
+      this._setBoundingBoxDirty(event)
+    })
+
     this.__materialParam = this.addParameter(new MaterialParameter('Material'))
     this.addParameterDeprecationMapping('material', 'Material')
 
@@ -182,7 +188,7 @@ class GeomItem extends BaseGeomItem {
           const mat4 = this.getGeomMat4()
           if (geom instanceof BaseProxy) {
             const positions = geom.__buffers.attrBuffers['positions'].values
-            const getVertex = (index) => {
+            const getVertex = index => {
               const start = index * 3
               return new Vec3(positions.subarray(start, start + 3))
             }
@@ -280,16 +286,16 @@ class GeomItem extends BaseGeomItem {
     if (geom) {
       this.getParameter('Geometry').loadValue(geom)
     } else {
-      const onGeomLoaded = (event) => {
+      const onGeomLoaded = event => {
         const { range } = event
         if (geomIndex >= range[0] && geomIndex < range[1]) {
           const geom = geomLibrary.getGeom(geomIndex)
           if (geom) this.getParameter('Geometry').setValue(geom)
           else console.warn('Geom not loaded:', this.getName())
-          geomLibrary.off('rangeLoaded', onGeomLoaded)
+          geomLibrary.removeListenerById('rangeLoaded', onGeomLoadedListenerID)
         }
       }
-      geomLibrary.on('rangeLoaded', onGeomLoaded)
+      const onGeomLoadedListenerID = geomLibrary.on('rangeLoaded', onGeomLoaded)
     }
 
     // this.setVisibility(j.visibility);
@@ -323,7 +329,9 @@ class GeomItem extends BaseGeomItem {
     // Note: deprecated value. Not sure if we need to load this here.
     // I think not, but need to test first.
     if (context.versions['zea-engine'].compare([3, 0, 0]) < 0) {
-      const lightmapCoordOffset = reader.loadFloat32Vec2()
+      // Load the 'lightmapCoordOffset' value which we no longer use.
+      // Note: we need to load it to increment the file pointer.
+      reader.loadFloat32Vec2()
     } else {
       this.geomBBox = new Box3(reader.loadFloat32Vec3(), reader.loadFloat32Vec3())
     }
@@ -368,7 +376,7 @@ class GeomItem extends BaseGeomItem {
       this.assetItem = src.assetItem
       this.geomIndex = src.geomIndex
       this.geomBBox = src.geomBBox
-      const onGeomLoaded = (event) => {
+      const onGeomLoaded = event => {
         const { range } = event
         if (this.geomIndex >= range[0] && this.geomIndex < range[1]) {
           const geom = geomLibrary.getGeom(this.geomIndex)
@@ -376,10 +384,10 @@ class GeomItem extends BaseGeomItem {
           // renderer to then load the geometry into the GPU.
           if (geom) this.getParameter('Geometry').setValue(geom)
           else console.warn('Geom not loaded:', this.getName())
-          geomLibrary.off('rangeLoaded', onGeomLoaded)
+          geomLibrary.removeListenerById('rangeLoaded', this.listenerIDs['rangeLoaded'])
         }
       }
-      geomLibrary.on('rangeLoaded', onGeomLoaded)
+      this.listenerIDs['rangeLoaded'] = geomLibrary.on('rangeLoaded', onGeomLoaded)
     }
 
     // Geom Xfo should be dirty after cloning.

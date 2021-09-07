@@ -13,8 +13,7 @@ class GeometryParameter extends Parameter {
    */
   constructor(name, value) {
     super(name, undefined, 'Geometry')
-
-    this.__emitBoundingBoxDirtied = this.__emitBoundingBoxDirtied.bind(this)
+    this.listenerIDs = {}
     this.setValue(value)
   }
 
@@ -31,11 +30,13 @@ class GeometryParameter extends Parameter {
     // 0 == normal set. 1 = changed via cleaner fn, 2 = change by loading/cloning code.
     if (this.__value !== value) {
       if (this.__value) {
-        this.__value.off('boundingBoxChanged', this.__emitBoundingBoxDirtied)
+        this.__value.removeListenerById('boundingBoxChanged', this.listenerIDs['boundingBoxChanged'])
       }
       this.__value = value
       if (this.__value) {
-        this.__value.on('boundingBoxChanged', this.__emitBoundingBoxDirtied)
+        this.listenerIDs['boundingBoxChanged'] = this.__value.on('boundingBoxChanged', (event) => {
+          this.__emitBoundingBoxDirtied(event)
+        })
       }
 
       this.emit('valueChanged', {})
@@ -53,11 +54,13 @@ class GeometryParameter extends Parameter {
    */
   loadValue(value) {
     if (this.__value) {
-      this.__value.off('boundingBoxChanged', this.__emitBoundingBoxDirtied)
+      this.__value.removeListenerById('boundingBoxChanged', this.listenerIDs['boundingBoxChanged'])
     }
     this.__value = value
     if (this.__value) {
-      this.__value.on('boundingBoxChanged', this.__emitBoundingBoxDirtied)
+      this.listenerIDs['boundingBoxChanged'] = this.__value.on('boundingBoxChanged', (event) => {
+        this.__emitBoundingBoxDirtied(event)
+      })
     }
   }
 
@@ -103,7 +106,7 @@ class GeometryParameter extends Parameter {
     // e.g. freeing GPU Memory.
 
     if (this.__value) {
-      this.__value.off('boundingBoxChanged', this.__emitBoundingBoxDirtied)
+      this.__value.removeListenerById('boundingBoxChanged', this.listenerIDs['boundingBoxChanged'])
     }
   }
 }

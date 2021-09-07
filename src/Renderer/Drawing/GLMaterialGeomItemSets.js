@@ -18,7 +18,6 @@ class GLMaterialGeomItemSets extends EventEmitter {
     this.glMaterial = glMaterial
     this.glGeomItemSets = {}
     this.drawCount = 0
-    this.drawCountChanged = this.drawCountChanged.bind(this)
 
     const material = glMaterial.getMaterial()
     const materialChanged = (event) => {
@@ -94,10 +93,11 @@ class GLMaterialGeomItemSets extends EventEmitter {
   addGeomItemSet(glGeomItemSet) {
     const id = glGeomItemSet.getGLGeom().getGeom().getId()
     this.glGeomItemSets[id] = glGeomItemSet
-    glGeomItemSet.on('drawCountChanged', this.drawCountChanged)
-    glGeomItemSet.on('destructing', () => {
-      glGeomItemSet.off('drawCountChanged', this.drawCountChanged)
-
+    const listenerID = glGeomItemSet.on('drawCountChanged', (event) => {
+      this.drawCountChanged(event)
+    })
+    glGeomItemSet.once('destructing', () => {
+      glGeomItemSet.removeListenerById('drawCountChanged', listenerID)
       delete this.glGeomItemSets[id]
       if (Object.keys(this.glGeomItemSets).length == 0) {
         // Remove the listeners.

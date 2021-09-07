@@ -55,7 +55,7 @@ class GLGeomItemLibrary extends EventEmitter {
     // }
 
     let workerReady = true
-    this.worker.onmessage = (message) => {
+    this.worker.onmessage = message => {
       if (message.data.type == 'CullResults') {
         this.applyCullResults(message.data)
       } else if (message.data.type == 'Done') {
@@ -77,7 +77,7 @@ class GLGeomItemLibrary extends EventEmitter {
           frustumHeight,
           frustumWidth,
           isOrthographic: true,
-          solidAngleLimit: renderer.solidAngleLimit,
+          solidAngleLimit: renderer.solidAngleLimit
         })
       } else {
         const frustumHalfAngleY = camera.getFov() * 0.5
@@ -87,22 +87,22 @@ class GLGeomItemLibrary extends EventEmitter {
           frustumHalfAngleX,
           frustumHalfAngleY,
           isOrthographic: false,
-          solidAngleLimit: renderer.solidAngleLimit,
+          solidAngleLimit: renderer.solidAngleLimit
         })
       }
     }
     renderer.on('resized', viewportChanged)
     const camera = renderer.getViewport().getCamera()
-    camera.on('projectionParamChanged', (event) => {
+    camera.on('projectionParamChanged', event => {
       if (camera.isOrthographic()) {
         viewportChanged()
       }
     })
     viewportChanged()
 
-    renderer.once('xrViewportSetup', (event) => {
+    renderer.once('xrViewportSetup', event => {
       const xrvp = event.xrViewport
-      xrvp.on('presentingChanged', (event) => {
+      xrvp.on('presentingChanged', event => {
         if (event.state) {
           // Note: We approximate the culling viewport to be
           // a wider version of the 2 eye frustums merged together.
@@ -118,7 +118,7 @@ class GLGeomItemLibrary extends EventEmitter {
             frustumHalfAngleX,
             frustumHalfAngleY,
             isOrthographic: false,
-            solidAngleLimit: renderer.solidAngleLimit,
+            solidAngleLimit: renderer.solidAngleLimit
           })
         } else {
           viewportChanged()
@@ -127,7 +127,7 @@ class GLGeomItemLibrary extends EventEmitter {
     })
 
     let tick = 0
-    renderer.on('viewChanged', (event) => {
+    renderer.on('viewChanged', event => {
       // Calculate culling every Nth frame.
       if (workerReady) {
         if (tick % 5 == 0) {
@@ -138,7 +138,7 @@ class GLGeomItemLibrary extends EventEmitter {
             type: 'ViewChanged',
             cameraPos: pos.asArray(),
             cameraOri: ori.asArray(),
-            solidAngleLimit: renderer.solidAngleLimit,
+            solidAngleLimit: renderer.solidAngleLimit
           })
         }
         tick++
@@ -154,13 +154,16 @@ class GLGeomItemLibrary extends EventEmitter {
         type: 'ViewChanged',
         cameraPos: pos.asArray(),
         cameraOri: ori.asArray(),
-        solidAngleLimit: renderer.solidAngleLimit,
+        solidAngleLimit: renderer.solidAngleLimit
       })
     }
 
     // If a movement finishes, we should update the culling results
     // based on the last position. (we might have skipped it in the viewChanged handler above)
-    renderer.getViewport().getCamera().on('movementFinished', forceViewChanged)
+    renderer
+      .getViewport()
+      .getCamera()
+      .on('movementFinished', forceViewChanged)
 
     // Initialize the view values on the worker.
     forceViewChanged()
@@ -189,9 +192,9 @@ class GLGeomItemLibrary extends EventEmitter {
     if (material.getShaderClass().getPackedMaterialData) {
       matIndex = this.renderer.glMaterialLibrary.addMaterial(material)
     }
-    const materialChanged = (event) => {
-      // TODO: Ref count the materials in the material library.
-      // this.renderer.glMaterialLibrary.removeMaterial(material)
+    const materialChanged = event => {
+      // Ref count the materials in the material library.
+      this.renderer.glMaterialLibrary.removeMaterial(material)
       material = materialParam.getValue()
       glGeomItem.materialId = this.renderer.glMaterialLibrary.addMaterial(material)
       geomItemChanged()
@@ -204,7 +207,7 @@ class GLGeomItemLibrary extends EventEmitter {
     let geom = geomParm.getValue()
     const geomIndex = this.renderer.glGeomLibrary.addGeom(geom)
 
-    const geomChanged = (event) => {
+    const geomChanged = event => {
       this.renderer.glGeomLibrary.removeGeom(geom)
       geom = geomParm.getValue()
       glGeomItem.geomId = this.renderer.glGeomLibrary.addGeom(geom)
@@ -247,7 +250,7 @@ class GLGeomItemLibrary extends EventEmitter {
     this.glGeomItemEventHandlers[index] = {
       geomItemChanged,
       materialChanged,
-      geomChanged,
+      geomChanged
     }
     this.glGeomItemsMap[geomItem.getId()] = index
 
@@ -265,10 +268,10 @@ class GLGeomItemLibrary extends EventEmitter {
     const { newlyCulled, newlyUnCulled } = data
     if (newlyCulled.length == 0 && newlyUnCulled.length == 0) return
     // console.log('applyCullResults newlyCulled', newlyCulled.length, 'newlyUnCulled', newlyUnCulled.length)
-    newlyCulled.forEach((index) => {
+    newlyCulled.forEach(index => {
       this.glGeomItems[index].setCulled(true)
     })
-    newlyUnCulled.forEach((index) => {
+    newlyUnCulled.forEach(index => {
       this.glGeomItems[index].setCulled(false)
     })
     this.renderer.requestRedraw()
@@ -288,6 +291,9 @@ class GLGeomItemLibrary extends EventEmitter {
     const geom = geomItem.getParameter('Geometry').getValue()
     this.renderer.glGeomLibrary.removeGeom(geom)
 
+    const material = geomItem.getParameter('Material').getValue()
+    this.renderer.glMaterialLibrary.removeMaterial(material)
+
     const handlers = this.glGeomItemEventHandlers[index]
     geomItem.getParameter('Material').off('valueChanged', handlers.materialChanged)
     geomItem.getParameter('Geometry').off('valueChanged', handlers.geomChanged)
@@ -296,6 +302,7 @@ class GLGeomItemLibrary extends EventEmitter {
     geomItem.off('highlightChanged', handlers.geomItemChanged)
 
     this.glGeomItems[index] = null
+    this.glGeomItemEventHandlers[index] = null
     this.glGeomItemsIndexFreeList.push(index)
     delete this.glGeomItemsMap[geomItem.getId()]
 
@@ -368,7 +375,6 @@ class GLGeomItemLibrary extends EventEmitter {
     pix0.set(flags, 0, 0, 0)
 
     const material = geomItem.getParameter('Material').getValue()
-    // const coords = material.getMetadata('glmaterialcoords')
     const allocation = this.renderer.glMaterialLibrary.getMaterialAllocation(material)
     if (allocation) {
       pix0.z = allocation.start
@@ -443,7 +449,7 @@ class GLGeomItemLibrary extends EventEmitter {
       boundingRadius,
       pos: pos.asArray(),
       cullable,
-      visible: geomItem.isVisible(),
+      visible: geomItem.isVisible()
     }
   }
 
@@ -457,7 +463,7 @@ class GLGeomItemLibrary extends EventEmitter {
       // this.emit('renderTreeUpdated', {});
 
       const geomItemsUpdateToCullingWorker = []
-      this.dirtyItemIndices.forEach((index) => {
+      this.dirtyItemIndices.forEach(index => {
         const glGeomItem = this.glGeomItems[index]
         // When an item is deleted, we allocate its index to the free list
         // and null this item in the array. skip over null items.
@@ -473,7 +479,7 @@ class GLGeomItemLibrary extends EventEmitter {
         this.worker.postMessage({
           type: 'UpdateGeomItems',
           geomItems: geomItemsUpdateToCullingWorker,
-          removedItemIndices: this.removedItemIndices,
+          removedItemIndices: this.removedItemIndices
         })
       }
 
@@ -500,7 +506,7 @@ class GLGeomItemLibrary extends EventEmitter {
         height: size,
         filter: 'NEAREST',
         wrap: 'CLAMP_TO_EDGE',
-        mipMapped: false,
+        mipMapped: false
       })
       this.glGeomItemsTexture.clear()
     } else if (this.glGeomItemsTexture.width != size) {
@@ -558,7 +564,7 @@ class GLGeomItemLibrary extends EventEmitter {
       this.worker.postMessage({
         type: 'UpdateGeomItems',
         geomItems: geomItemsUpdateToCullingWorker,
-        removedItemIndices: this.removedItemIndices,
+        removedItemIndices: this.removedItemIndices
       })
     }
 

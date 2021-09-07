@@ -30,6 +30,7 @@ class GLBaseRenderer extends ParameterOwner {
   constructor($canvas, options = {}) {
     super()
 
+    this.listenerIDs = {}
     if (!SystemDesc.gpuDesc) {
       console.warn('Unable to create renderer')
       return
@@ -42,9 +43,6 @@ class GLBaseRenderer extends ParameterOwner {
     this.__passesRegistrationOrder = []
     this.__passCallbacks = []
 
-    this.__childItemAdded = this.__childItemAdded.bind(this)
-    this.__childItemRemoved = this.__childItemRemoved.bind(this)
-
     this.__viewports = []
     this.__activeViewport = undefined
     this.__continuousDrawing = false
@@ -56,10 +54,6 @@ class GLBaseRenderer extends ParameterOwner {
     this.directives = {}
 
     this.__xrViewportPresenting = false
-
-    // Function Bindings.
-    this.renderGeomDataFbos = this.renderGeomDataFbos.bind(this)
-    this.requestRedraw = this.requestRedraw.bind(this)
 
     this.setupWebGL($canvas, options.webglOptions ? { ...options, ...options.webglOptions } : options)
     this.bindEventHandlers()
@@ -323,22 +317,6 @@ class GLBaseRenderer extends ParameterOwner {
   }
 
   /**
-   * @param {*} event -
-   * @private
-   */
-  __childItemAdded(event) {
-    this.addTreeItem(event.childItem)
-  }
-
-  /**
-   * @param {*} event -
-   * @private
-   */
-  __childItemRemoved(event) {
-    this.removeTreeItem(event.childItem)
-  }
-
-  /**
    * Adds tree items to the renderer, selecting the correct pass to delegate rendering too, and listens to future changes in the tree.
    *
    * @param {TreeItem} treeItem - The tree item to add.
@@ -367,8 +345,13 @@ class GLBaseRenderer extends ParameterOwner {
       if (childItem) this.addTreeItem(childItem)
     }
 
-    treeItem.on('childAdded', this.__childItemAdded)
-    treeItem.on('childRemoved', this.__childItemRemoved)
+    const id = treeItem.getId()
+    this.listenerIDs[id + '.childAdded'] = treeItem.on('childAdded', (event) => {
+      this.addTreeItem(event.childItem)
+    })
+    this.listenerIDs[id + '.childRemoved'] = treeItem.on('childRemoved', (event) => {
+      this.removeTreeItem(event.childItem)
+    })
 
     this.renderGeomDataFbos()
   }
@@ -421,8 +404,9 @@ class GLBaseRenderer extends ParameterOwner {
     // Note: we can have BaseItems in the tree now.
     if (!(treeItem instanceof TreeItem)) return
 
-    treeItem.off('childAdded', this.__childItemAdded)
-    treeItem.off('childRemoved', this.__childItemRemoved)
+    const id = treeItem.getId()
+    treeItem.removeListenerById('childAdded', this.listenerIDs[id + '.childAdded'])
+    treeItem.removeListenerById('childRemoved', this.listenerIDs[id + '.childRemoved'])
 
     for (let i = this.__passesRegistrationOrder.length - 1; i >= 0; i--) {
       const pass = this.__passesRegistrationOrder[i]
@@ -972,7 +956,9 @@ class GLBaseRenderer extends ParameterOwner {
     }
     index += this.__passes[passType].length
 
-    pass.on('updated', this.requestRedraw)
+    pass.on('updated', (event) => {
+      this.requestRedraw()
+    })
     pass.init(this, index)
     this.__passes[passType].push(pass)
 

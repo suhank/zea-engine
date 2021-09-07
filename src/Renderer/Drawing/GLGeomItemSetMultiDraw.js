@@ -37,10 +37,10 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
     this.highlightedIdsTexture = null
     this.highlightedIdsBufferDirty = true
 
-    this.renderer.glGeomLibrary.on('geomDataChanged', (event) => {
+    this.renderer.glGeomLibrary.on('geomDataChanged', event => {
       const geomItemIndices = this.glGeomIdsMapping[event.index]
       if (geomItemIndices != undefined) {
-        geomItemIndices.forEach((index) => {
+        geomItemIndices.forEach(index => {
           const glGeomItem = this.glGeomItems[index]
           if (glGeomItem.isVisible()) {
             const index = this.visibleItems.indexOf(glGeomItem)
@@ -80,7 +80,7 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
     if (glGeomItem.visible) {
       this.visibleItems.push(glGeomItem)
     }
-    eventHandlers.visibilityChanged = (event) => {
+    eventHandlers.visibilityChanged = event => {
       if (event.visible) {
         this.visibleItems.push(glGeomItem)
       } else {
@@ -101,7 +101,7 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
       this.highlightedIdsBufferDirty = true
     }
 
-    eventHandlers.highlightChanged = (event) => {
+    eventHandlers.highlightChanged = event => {
       if (event && event.name) {
         // Note: highlightChanged is fired when the color changes
         // or another highlight is added over the top. We avoid
@@ -133,6 +133,9 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
     const index = this.glGeomItems.indexOf(glGeomItem)
     const geomItemIndices = this.glGeomIdsMapping[glGeomItem.geomId]
     geomItemIndices.splice(geomItemIndices.indexOf(index), 1)
+    if (geomItemIndices.length == 0) {
+      delete this.glGeomIdsMapping[glGeomItem.geomId]
+    }
 
     const eventHandlers = this.glgeomItemEventHandlers[index]
     glGeomItem.geomItem.off('highlightChanged', eventHandlers.highlightChanged)
@@ -140,6 +143,7 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
 
     this.glGeomItems[index] = null
     this.glgeomItemEventHandlers[index] = null
+    this.drawIdsArray[index] = 0
     this.drawElementOffsets[index] = 0
     this.drawElementCounts[index] = 0
     this.freeIndices.push(index)
@@ -200,7 +204,7 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
         height: drawIdsTextureSize,
         filter: 'NEAREST',
         wrap: 'CLAMP_TO_EDGE',
-        mipMapped: false,
+        mipMapped: false
       })
     } else if (this.drawIdsTexture.width < drawIdsTextureSize || this.drawIdsTexture.height < drawIdsTextureSize) {
       this.drawIdsTexture.resize(drawIdsTextureSize, drawIdsTextureSize)
@@ -291,7 +295,7 @@ class GLGeomItemSetMultiDraw extends EventEmitter {
         height: highlightIdsTextureSize,
         filter: 'NEAREST',
         wrap: 'CLAMP_TO_EDGE',
-        mipMapped: false,
+        mipMapped: false
       })
     } else if (
       this.highlightedIdsTexture.width < highlightIdsTextureSize ||
