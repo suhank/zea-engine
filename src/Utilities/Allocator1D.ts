@@ -334,4 +334,4 @@ class Allocator1D extends EventEmitter {
   }
 }
 
-export { Allocator1D }
+export { Allocator1D, Allocation1D }
