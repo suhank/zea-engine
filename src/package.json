@@ -1,1 +1,65 @@
-../package.json
+{
+  "name": "@zeainc/zea-engine",
+  "version": "3.10.7-xr.0",
+  "license": "AGPL-3.0",
+  "description": "Zea Engine",
+  "author": "Zea Inc.",
+  "module": "dist/enginefixme.esm.js",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "engines": {
+    "node": ">=10"
+  },
+  "scripts": {
+    "start": "tsdx watch",
+    "build": "tsdx build",
+    "dev": "npm-run-all --parallel copyPackageJson start",
+    "test": "jest",
+    "test:coverage": "jest --coverage",
+    "test:debug": "node --inspect ./node_modules/jest/bin/jest.js --runInBand --watch",
+    "test:watch": "jest --watch",
+    "test:e2e": "percy exec cypress run --browser chrome --headless",
+    "test:e2e:watch": "percy exec cypress open",
+    "lint": "tsdx lint",
+    "prepare": "tsdx build",
+    "size": "size-limit",
+    "analyze": "size-limit --why",
+    "copyPackageJson": "copyfiles -f \"./package.json\" src"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "tsdx lint"
+    }
+  },
+  "size-limit": [
+    {
+      "path": "dist/enginefixme.cjs.production.min.js",
+      "limit": "10 KB"
+    },
+    {
+      "path": "dist/enginefixme.esm.js",
+      "limit": "10 KB"
+    }
+  ],
+  "devDependencies": {
+    "@size-limit/preset-small-lib": "^5.0.3",
+    "@types/debug": "^4.1.7",
+    "@types/jest": "^26.0.23",
+    "@types/semver": "^7.3.8",
+    "babel-jest": "^27.0.5",
+    "husky": "^7.0.2",
+    "jest": "^27.0.6",
+    "jest-coverage-badges": "^1.1.2",
+    "rollup-plugin-glslify": "^1.2.0",
+    "size-limit": "^5.0.3",
+    "ts-jest": "^27.0.3",
+    "tsdx": "^0.14.1",
+    "tslib": "^2.3.1",
+    "typescript": "^4.4.2",
+    "copyfiles": "^2.4.1"
+  }
+}
