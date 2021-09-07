@@ -4,7 +4,7 @@
   "license": "AGPL-3.0",
   "description": "Zea Engine",
   "author": "Zea Inc.",
-  "module": "dist/enginefixme.esm.js",
+  "module": "dist/zea-engine.esm.js",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "files": [
@@ -37,12 +37,12 @@
   },
   "size-limit": [
     {
-      "path": "dist/enginefixme.cjs.production.min.js",
-      "limit": "10 KB"
+      "path": "dist/zea-engine.cjs.production.min.js",
+      "limit": "2100 KB"
     },
     {
-      "path": "dist/enginefixme.esm.js",
-      "limit": "10 KB"
+      "path": "dist/zea-engine.esm.js",
+      "limit": "2100 KB"
     }
   ],
   "devDependencies": {
