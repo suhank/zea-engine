@@ -10,7 +10,7 @@ import { resourceLoader } from './resourceLoader'
 // the import of parseGeomsBinary
 const multiThreadParsing = true
 // @ts-ignore
-import GeomParserWorker from 'web-worker:./Geometry/GeomParserWorker'
+import GeomParserWorker from './Geometry/GeomParser-worker'
 import { parseGeomsBinary } from './Geometry/parseGeomsBinary'
 import { StreamFileParsedEvent } from '../Utilities/Events/StreamFileParsedEvent'
 import { RangeLoadedEvent } from '../Utilities/Events/RangeLoadedEvent'

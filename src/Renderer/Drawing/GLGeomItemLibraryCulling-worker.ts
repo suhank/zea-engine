@@ -162,12 +162,12 @@ const checkGeomItem = (geomItemData: any) => {
     if (viewPos[2] > 0) {
       viewAngle = [
         Math.PI - Math.abs(Math.asin(viewVecNormXZ[0])) - solidAngleXZ,
-        Math.PI - Math.abs(Math.asin(viewVecNormYZ[0])) - solidAngleYZ,
+        Math.PI - Math.abs(Math.asin(viewVecNormYZ[0])) - solidAngleYZ
       ]
     } else {
       viewAngle = [
         Math.abs(Math.asin(viewVecNormXZ[0])) - solidAngleXZ,
-        Math.abs(Math.asin(viewVecNormYZ[0])) - solidAngleYZ,
+        Math.abs(Math.asin(viewVecNormYZ[0])) - solidAngleYZ
       ]
     }
     // console.log(geomItemData.id, 'angle To Item:', frustumHalfAngleX, viewAngle[0], frustumHalfAngleY, viewAngle[1])
@@ -237,8 +237,11 @@ const handleMessage = (data: any, postMessage: any) => {
   }
 }
 
-self.onmessage = function (event) {
+self.onmessage = function(event) {
   handleMessage(event.data, self.postMessage)
 }
+
+const foo: any = {}
+export default foo
 
 export { handleMessage }

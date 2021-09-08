@@ -8,9 +8,12 @@ const glslOptions = {
 module.exports = {
   rollup(config) {
     config.plugins = [
-      ...config.plugins,
       glslify(glslOptions),
-      webWorkerLoader({ extensions: ['.ts', '.js'], pattern: /.+\.worker\.(?:js|ts)$/ })
+      webWorkerLoader({
+        extensions: ['.ts', '.js'],
+        pattern: /.+?\.worker(?:\.ts)?$/g
+      }),
+      ...config.plugins
     ]
 
     return config // always return a config.

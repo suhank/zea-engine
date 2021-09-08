@@ -7,7 +7,7 @@ import { GLTexture2D } from '../GLTexture2D'
 
 // import { handleMessage } from './GLGeomItemLibraryCullingWorker'
 // @ts-ignore
-import GLGeomItemLibraryCullingWorker from 'web-worker:./GLGeomItemLibraryCullingWorker'
+import GLGeomItemLibraryCullingWorker from './GLGeomItemLibraryCulling-worker'
 import { GeomItem } from '../../SceneTree/GeomItem'
 import { GLBaseRenderer } from '../GLBaseRenderer'
 import { Material } from '../../SceneTree/Material'
@@ -25,7 +25,7 @@ class GLGeomItemLibrary extends EventEmitter {
   protected glGeomItemsIndexFreeList: number[]
   protected dirtyItemIndices: number[]
   protected removedItemIndices: number[]
-  protected worker: GLGeomItemLibraryCullingWorker
+  protected worker: typeof GLGeomItemLibraryCullingWorker
   protected glGeomItemsTexture: GLTexture2D | null = null
   protected enableFrustumCulling: any
   /**
