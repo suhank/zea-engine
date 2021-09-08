@@ -34,9 +34,17 @@ class CuttingPlane extends BaseGroup {
   constructor(name) {
     super(name)
 
-    this.__updateCutaway = this.__updateCutaway.bind(this)
-    this.addParameter(new BooleanParameter('CutAwayEnabled', false)).on('valueChanged', this.__updateCutaway)
-    this.addParameter(new Vec4Parameter('CutPlane', new Vec4(1, 0, 0))).on('valueChanged', this.__updateCutaway)
+    const booleanParam = new BooleanParameter('CutAwayEnabled', false)
+    const vec4Parameter = new Vec4Parameter('CutPlane', new Vec4(1, 0, 0))
+    booleanParam.on('valueChanged', (event) => {
+      this.__updateCutaway(event)
+    })
+    vec4Parameter.on('vec4Parameter', (event) => {
+      this.__updateCutaway(event)
+    })
+    this.addParameter(booleanParam)
+    this.addParameter(vec4Parameter)
+
     this.cutPlaneOp = new CuttingPlaneOperator(this.getParameter('GlobalXfo'), this.getParameter('CutPlane'))
 
     // Create the geometry to display the plane.

@@ -32,7 +32,7 @@ class MaterialColorParam extends ColorParameter {
    */
   constructor(name, value) {
     super(name, value)
-    this.__imageUpdated = this.__imageUpdated.bind(this)
+    this.listenerIDs = {}
   }
 
   /**
@@ -59,7 +59,7 @@ class MaterialColorParam extends ColorParameter {
    */
   setImage(value) {
     const disconnectImage = () => {
-      this.__image.off('updated', this.__imageUpdated)
+      this.__image.removeListenerById('updated', this.listenerIDs['updated'])
       this.__image = null
       this.emit('textureDisconnected', {})
     }
@@ -68,7 +68,9 @@ class MaterialColorParam extends ColorParameter {
         disconnectImage()
       }
       this.__image = value
-      this.__image.on('updated', this.__imageUpdated)
+      this.listenerIDs['updated'] = this.__image.on('updated', (event) => {
+        this.__imageUpdated(event)
+      })
       this.emit('textureConnected', {})
       this.emit('valueChanged')
     } else {

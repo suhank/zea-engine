@@ -17,6 +17,8 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
    */
   constructor() {
     super()
+
+    this.listenerIDs = {}
   }
 
   /**
@@ -36,7 +38,6 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
     this.prevSortCameraPos = new Vec3(999, 999, 999)
     this.sortCameraMovementDistance = 0.25 // meters
     this.reSort = false
-    this.resortNeeded = this.resortNeeded.bind(this)
   }
 
   /**
@@ -93,7 +94,9 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
         const glGeomItem = this.renderer.glGeomItemLibrary.getGLGeomItem(geomItem)
         glShaderGeomSets.addGLGeomItem(glGeomItem)
 
-        glGeomItem.on('visibilityChanged', this.resortNeeded)
+        this.listenerIDs['visibilityChanged'] = glGeomItem.on('visibilityChanged', (event) => {
+          this.resortNeeded()
+        })
         this.emit('updated')
 
         glGeomItem.GLShaderGeomSets = glShaderGeomSets
@@ -185,7 +188,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
     if (glGeomItem.GLShaderGeomSets) {
       const glShaderGeomSets = glGeomItem.GLShaderGeomSets
       glShaderGeomSets.removeGLGeomItem(glGeomItem)
-      glGeomItem.off('visibilityChanged', this.resortNeeded)
+      glGeomItem.removeListenerById('visibilityChanged', this.listenerIDs['visibilityChanged'])
       glGeomItem.GLShaderGeomSets = null
       return
     }

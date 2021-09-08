@@ -26,11 +26,8 @@ class GLFbo {
     this.__clearColor = [0, 0, 0, 0]
     this.__depthTexture = undefined
 
-    this.setup = this.setup.bind(this)
-    this.resize = this.resize.bind(this)
-
     if (this.__colorTexture) {
-      this.__colorTexture.on('resized', (event) => {
+      this.colorTextureResizeEventId = this.__colorTexture.on('resized', (event) => {
         this.resize(this.__colorTexture.width, this.__colorTexture.height, false)
       })
     }
@@ -442,7 +439,7 @@ class GLFbo {
     gl.bindFramebuffer(gl.FRAMEBUFFER, null)
     gl.deleteFramebuffer(this.__fbo)
     this.__fbo = null
-    this.__colorTexture.off('resized', this.resize)
+    this.__colorTexture.removeListenerById('resized', this.colorTextureResizeEventId)
   }
 }
 

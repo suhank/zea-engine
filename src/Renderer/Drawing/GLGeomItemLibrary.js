@@ -196,8 +196,8 @@ class GLGeomItemLibrary extends EventEmitter {
       matIndex = this.renderer.glMaterialLibrary.addMaterial(material)
     }
     const materialChanged = (event) => {
-      // TODO: Ref count the materials in the material library.
-      // this.renderer.glMaterialLibrary.removeMaterial(material)
+      // Ref count the materials in the material library.
+      this.renderer.glMaterialLibrary.removeMaterial(material)
       material = materialParam.getValue()
       glGeomItem.materialId = this.renderer.glMaterialLibrary.addMaterial(material)
       geomItemChanged()
@@ -321,6 +321,9 @@ class GLGeomItemLibrary extends EventEmitter {
     const geom = geomItem.getParameter('Geometry').getValue()
     this.renderer.glGeomLibrary.removeGeom(geom)
 
+    const material = geomItem.getParameter('Material').getValue()
+    this.renderer.glMaterialLibrary.removeMaterial(material)
+
     const handlers = this.glGeomItemEventHandlers[index]
 
     geomItem.getParameter('Material').off('valueChanged', handlers.materialChanged)
@@ -336,6 +339,7 @@ class GLGeomItemLibrary extends EventEmitter {
     geomParm.off('boundingBoxChanged', handlers.workerItemDataChanged)
 
     this.glGeomItems[index] = null
+    this.glGeomItemEventHandlers[index] = null
     this.glGeomItemsIndexFreeList.push(index)
     delete this.glGeomItemsMap[geomItem.getId()]
 
@@ -407,7 +411,6 @@ class GLGeomItemLibrary extends EventEmitter {
     pix0.set(flags, 0, 0, 0)
 
     const material = geomItem.getParameter('Material').getValue()
-    // const coords = material.getMetadata('glmaterialcoords')
     const allocation = this.renderer.glMaterialLibrary.getMaterialAllocation(material)
     if (allocation) {
       pix0.z = allocation.start
@@ -498,13 +501,15 @@ class GLGeomItemLibrary extends EventEmitter {
         geomItemsUpdateToCullingWorker.push(this.getCullingWorkerData(geomItem, material, index))
       })
 
-      // /////////////////////////
-      // Update the culling worker
-      this.worker.postMessage({
-        type: 'UpdateGeomItems',
-        geomItems: geomItemsUpdateToCullingWorker,
-        removedItemIndices: this.removedItemIndices,
-      })
+      if (this.enableFrustumCulling) {
+        // /////////////////////////
+        // Update the culling worker
+        this.worker.postMessage({
+          type: 'UpdateGeomItems',
+          geomItems: geomItemsUpdateToCullingWorker,
+          removedItemIndices: this.removedItemIndices,
+        })
+      }
 
       this.dirtyWorkerItemIndices.clear()
       this.removedItemIndices = []
@@ -587,6 +592,17 @@ class GLGeomItemLibrary extends EventEmitter {
       i += uploadCount - 1
     }
 
+    if (this.enableFrustumCulling) {
+      // /////////////////////////
+      // Update the culling worker
+      this.worker.postMessage({
+        type: 'UpdateGeomItems',
+        geomItems: geomItemsUpdateToCullingWorker,
+        removedItemIndices: this.removedItemIndices,
+      })
+    }
+
+    this.removedItemIndices = []
     this.dirtyItemIndices = []
   }
 

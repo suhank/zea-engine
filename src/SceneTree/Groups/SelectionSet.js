@@ -24,16 +24,22 @@ class SelectionSet extends BaseGroup {
   constructor(name) {
     super(name)
 
+    this.listenerIDs = {}
+
     this.__highlightedParam = this.addParameter(new BooleanParameter('Highlighted', false))
     this.__highlightedParam.on('valueChanged', () => {
       this.__updateHighlight()
     })
 
-    this.__updateHighlight = this.__updateHighlight.bind(this)
     const highlightColorParam = this.addParameter(new ColorParameter('HighlightColor', new Color(0.5, 0.5, 1)))
-    highlightColorParam.on('valueChanged', this.__updateHighlight)
+    this.listenerIDs['valueChanged'] = highlightColorParam.on('valueChanged', (event) => {
+      this.__updateHighlight()
+    })
+
     const highlightFillParam = this.addParameter(new NumberParameter('HighlightFill', 0.0, [0, 1]))
-    highlightFillParam.on('valueChanged', this.__updateHighlight)
+    highlightFillParam.on('valueChanged', () => {
+      this.__updateHighlight()
+    })
   }
 
   /**
@@ -103,6 +109,7 @@ class SelectionSet extends BaseGroup {
    */
   __bindItem(item, index) {
     super.__bindItem(item, index)
+    const listenerIDs = this.__itemsEventHandlers[index]
     if (!(item instanceof TreeItem)) return
 
     // ///////////////////////////////
@@ -120,7 +127,9 @@ class SelectionSet extends BaseGroup {
     }
 
     if (item instanceof TreeItem) {
-      item.getParameter('BoundingBox').on('valueChanged', this._setBoundingBoxDirty)
+      listenerIDs['BoundingBox.valueChanged'] = item.getParameter('BoundingBox').on('valueChanged', (event) => {
+        this._setBoundingBoxDirty(event)
+      })
     }
   }
 
@@ -153,10 +162,6 @@ class SelectionSet extends BaseGroup {
         treeItem.setCutawayEnabled(false)
       }
     }, true)
-
-    if (item instanceof TreeItem) {
-      item.getParameter('BoundingBox').off('valueChanged', this._setBoundingBoxDirty)
-    }
   }
 
   // ////////////////////////////////////////

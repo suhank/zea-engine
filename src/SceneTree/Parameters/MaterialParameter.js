@@ -30,7 +30,7 @@ class MaterialParameter extends Parameter {
   constructor(name, value) {
     super(name, undefined, 'Material')
 
-    this.__valueParameterValueChanged = this.__valueParameterValueChanged.bind(this)
+    this.listenerIDs = {}
     this.setValue(value)
   }
 
@@ -50,11 +50,13 @@ class MaterialParameter extends Parameter {
     // 0 == normal set. 1 = changed via cleaner fn, 2 = change by loading/cloning code.
     if (this.__value !== material) {
       if (this.__value) {
-        this.__value.off('parameterValueChanged', this.__valueParameterValueChanged)
+        this.__value.removeListenerById('parameterValueChanged', this.listenerIDs['parameterValueChanged'])
       }
       this.__value = material
       if (this.__value) {
-        this.__value.on('parameterValueChanged', this.__valueParameterValueChanged)
+        this.listenerIDs['parameterValueChanged'] = this.__value.on('parameterValueChanged', (event) => {
+          this.__valueParameterValueChanged(event)
+        })
       }
 
       // During the cleaning process, we don't want notifications.
@@ -71,7 +73,9 @@ class MaterialParameter extends Parameter {
   loadValue(value) {
     this.__value = value
     if (this.__value) {
-      this.__value.on('parameterValueChanged', this.__valueParameterValueChanged)
+      this.listenerIDs['parameterValueChanged'] = this.__value.on('parameterValueChanged', (event) => {
+        this.__valueParameterValueChanged(event)
+      })
     }
   }
 
@@ -86,11 +90,13 @@ class MaterialParameter extends Parameter {
    */
   loadValue(value) {
     if (this.__value) {
-      this.__value.off('parameterValueChanged', this.__valueParameterValueChanged)
+      this.__value.removeListenerById('parameterValueChanged', this.listenerIDs['parameterValueChanged'])
     }
     this.__value = value
     if (this.__value) {
-      this.__value.on('parameterValueChanged', this.__valueParameterValueChanged)
+      this.listenerIDs['parameterValueChanged'] = this.__value.on('parameterValueChanged', (event) => {
+        this.__valueParameterValueChanged(event)
+      })
     }
   }
 
@@ -162,7 +168,7 @@ class MaterialParameter extends Parameter {
     // E.g. freeing GPU Memory.
 
     if (this.__value) {
-      this.__value.off('parameterValueChanged', this.__valueParameterValueChanged)
+      this.__value.removeListenerById('parameterValueChanged', this.listenerIDs['parameterValueChanged'])
     }
   }
 }
