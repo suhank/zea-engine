@@ -165,6 +165,9 @@ onmessage = function(event) {
   }
 };
 
+const foo: any = {};
+export default foo;
+
 /**
  * When the WASM runtime has been initialized on the unpack.js module, send a message indicating
  * that the library is ready.

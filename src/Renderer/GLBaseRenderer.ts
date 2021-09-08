@@ -179,7 +179,7 @@ class GLBaseRenderer extends ParameterOwner {
    * @param {string} value - The value param.
    */
   addShaderPreprocessorDirective(name: string, value?: string) {
-    const gl = this.__gl
+    // const gl = this.__gl
     if (value) this.__shaderDirectives[name] = '#define ' + name + ' = ' + value
     else this.__shaderDirectives[name] = '#define ' + name
     const directives = []
@@ -188,7 +188,7 @@ class GLBaseRenderer extends ParameterOwner {
       directives.push(this.__shaderDirectives[key])
     }
     this.directives = directives
-    gl.shaderopts = { directives } // used by zea-cad.
+    // gl.shaderopts = { directives } // used by zea-cad.
   }
 
   /**

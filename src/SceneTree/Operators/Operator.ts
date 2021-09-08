@@ -113,7 +113,7 @@ class Operator extends BaseItem {
       throw new Error(`addOutput only accepts string or OperatorOutput`)
     }
     output.setOperator(this)
-    if (this.getOutput(output.getName())) throw new Error(`Operator output already exists ${output.getName()}`)
+    // if (this.getOutput(output.getName())) throw new Error(`Operator output already exists ${output.getName()}`)
     this.__outputs.set(output.getName(), output)
     this.setDirty()
     return output
@@ -156,7 +156,8 @@ class Operator extends BaseItem {
    */
   getOutput(name: string): OperatorOutput {
     const output = this.__outputs.get(name)
-    if (!output) throw `Couldn't find an Output with the name of '${name}'`
+    console.warn('hi1')
+    if (!output) throw new Error(`Couldn't find an Output with the name of '${name}'`)
     return output
   }
 
