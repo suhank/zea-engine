@@ -10,8 +10,8 @@ module.exports = {
     config.plugins = [
       glslify(glslOptions),
       webWorkerLoader({
-        extensions: ['.ts', '.js'],
-        pattern: /.+?\-worker(?:\.ts)?$/g
+        // extensions: ['.ts', '.js'],
+        pattern: /.+?\-worker(?:\.js)?$/g
       }),
       ...config.plugins
     ]
