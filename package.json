@@ -59,6 +59,7 @@
     "jest": "^27.0.6",
     "jest-coverage-badges": "^1.1.2",
     "rollup-plugin-glslify": "^1.2.0",
+    "rollup-plugin-base64": "^1.0.1",
     "rollup-plugin-web-worker-loader": "^1.6.1",
     "size-limit": "^5.0.3",
     "ts-jest": "^27.0.3",

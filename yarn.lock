@@ -10010,6 +10010,13 @@ ripemd160@^2.0.0, ripemd160@^2.0.1:
     hash-base "^3.0.0"
     inherits "^2.0.1"
 
+rollup-plugin-base64@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/rollup-plugin-base64/-/rollup-plugin-base64-1.0.1.tgz#b3529b94d23baeb66e1e3bffd04477fa792985eb"
+  integrity sha512-IbdX8fjuXO/Op3hYmRPjVo0VwcSenwsQDaDTFdoe+70B5ZGoLMtr96L2yhHXCfxv7HwZVvxZqLsuWj6VwzRt3g==
+  dependencies:
+    "@rollup/pluginutils" "^3.1.0"
+
 rollup-plugin-glslify@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/rollup-plugin-glslify/-/rollup-plugin-glslify-1.2.0.tgz"

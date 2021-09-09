@@ -165,7 +165,8 @@ onmessage = function(event) {
   }
 };
 
-const foo: any = {};
+
+const foo = {};
 export default foo;
 
 /**

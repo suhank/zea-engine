@@ -9,8 +9,10 @@ import { resourceLoader } from './resourceLoader'
 // by setting the following boolean to false, and uncommenting
 // the import of parseGeomsBinary
 const multiThreadParsing = true
+
 // @ts-ignore
-import GeomParserWorker from './Geometry/GeomParser-worker'
+import GeomParserWorker from './Geometry/GeomParser-worker.ts'
+
 import { parseGeomsBinary } from './Geometry/parseGeomsBinary'
 import { StreamFileParsedEvent } from '../Utilities/Events/StreamFileParsedEvent'
 import { RangeLoadedEvent } from '../Utilities/Events/RangeLoadedEvent'
@@ -70,7 +72,7 @@ class GeomLibrary extends EventEmitter {
     this.loadCount = 0
     this.queue = []
 
-    this.on('streamFileParsed', event => {
+    this.on('streamFileParsed', (event) => {
       this.loadCount--
       if (this.loadCount < numCores && this.queue.length) {
         const { geomFileID, geomsData } = this.queue.pop()
@@ -120,7 +122,7 @@ class GeomLibrary extends EventEmitter {
    */
   loadGeomFile(geomFileID: number, incrementProgress = false): Promise<void> {
     if (incrementProgress) resourceLoader.incrementWorkload(1)
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       const geomFileUrl = this.basePath + geomFileID + '.zgeoms'
 
       resourceLoader.loadFile('archive', geomFileUrl).then((entries: any) => {
@@ -141,7 +143,7 @@ class GeomLibrary extends EventEmitter {
         } else {
           this.queue.splice(0, 0, {
             geomFileID,
-            geomsData
+            geomsData,
           })
         }
       })
@@ -231,7 +233,7 @@ class GeomLibrary extends EventEmitter {
     const geomIndexOffset = reader.loadUInt32()
     this.__streamInfos[geomFileID] = {
       total: numGeoms,
-      done: 0
+      done: 0,
     }
 
     if (numGeoms == 0) {
@@ -282,8 +284,8 @@ class GeomLibrary extends EventEmitter {
             bufferSlice,
             genBuffersOpts: this.__genBuffersOpts,
             context: {
-              versions: context.versions
-            }
+              versions: context.versions,
+            },
           },
           [bufferSlice]
         )
@@ -324,7 +326,7 @@ class GeomLibrary extends EventEmitter {
           isMobileDevice: reader.isMobileDevice,
           bufferSlice,
           genBuffersOpts: this.__genBuffersOpts,
-          context
+          context,
         },
         (data: any) => {
           this.__receiveGeomDatas(data)
@@ -405,7 +407,7 @@ class GeomLibrary extends EventEmitter {
    */
   toJSON(): Record<string, any> {
     return {
-      numGeoms: this.geoms.length
+      numGeoms: this.geoms.length,
     }
   }
 
