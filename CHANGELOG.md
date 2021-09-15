@@ -2,6 +2,50 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.11.0](https://github.com/ZeaInc/zea-engine/compare/v3.10.7-orthographic-framing.2...v3.11.0) (2021-09-15)
+
+
+### Features
+
+* click to create/delete 10 cad assets ([1096b82](https://github.com/ZeaInc/zea-engine/commit/1096b82d9a238aac5e95d5a69a9c33d4b1be4966))
+* the unpack.wasm file is now bundled into the engine build, meaning ZeaEngine can now be loaded as an esm import. ([7696c09](https://github.com/ZeaInc/zea-engine/commit/7696c09b8ccbe4664db9b0342fce83d15531bedc))
+
+
+### Bug Fixes
+
+* [#482](https://github.com/ZeaInc/zea-engine/issues/482) - GeomData buffer can now be debugged on low end GPUs. ([#483](https://github.com/ZeaInc/zea-engine/issues/483)) ([0ded2f3](https://github.com/ZeaInc/zea-engine/commit/0ded2f39e6ee945be2033aa8dcaa3072d235f522))
+* A regression was fixed that means that GLRenderer now honors the 'antialias' value if provided in the options object. ([fa38277](https://github.com/ZeaInc/zea-engine/commit/fa3827791ee60161ae0c072ccc0fde9976d3f143))
+* Addressed an error where an XR session is started before any pointer events are sent to the viewport, meaning that no 'Active' viewport was set. Now simply defaulting to the first viewport. ([c5da48c](https://github.com/ZeaInc/zea-engine/commit/c5da48c074886f2100506c5a42fb4a7c339eea66))
+* Based on feedback from the Chromium team, we now use a DEPTH24_STENCIL8 texture and render buffer when rendering silhouettes ([1d9c76a](https://github.com/ZeaInc/zea-engine/commit/1d9c76a1c5346aed2b85fa0cf3e79f743ed41258))
+* Culling worker now knows when an items visibility is false, and can ignore from culling. ([4dbc545](https://github.com/ZeaInc/zea-engine/commit/4dbc5457be612d990595e5d57ee2b6aabf623e96))
+* disabling Silhouettes on all low end devices to make Oculus Quest work. ([2da7fad](https://github.com/ZeaInc/zea-engine/commit/2da7fad387453607d66cfb79d5333a2c6d305762))
+* FatPoints and FatLines now render correctly in XR sessions. The view scaling is now correctied to give the appropriate point size and line width. ([33e40c7](https://github.com/ZeaInc/zea-engine/commit/33e40c793bc4f5d202d2183c13a74e32e1b26c50))
+* Fixed memory leak in the GeomLibrary that caused memory to not be freed after loading zcad files. ([3fda57a](https://github.com/ZeaInc/zea-engine/commit/3fda57a8f7ed2aac41c992a11fde5bbc50a88b71))
+* fixed several bugs in unit tests ([469deb3](https://github.com/ZeaInc/zea-engine/commit/469deb39f3cfcc1c284fc49b34e7a1213eca32a6))
+* fixed several bugs in unit tests ([f272906](https://github.com/ZeaInc/zea-engine/commit/f272906026cf1426843f4c04b4a8c7074da68264))
+* GeomData size factor is now 1, as it makes picking more precise. ([4b70014](https://github.com/ZeaInc/zea-engine/commit/4b70014a4a5012dc1e9b53164f6e8ca26fe6966a))
+* GeomItems loaded from zcad files now contain a precise bounding box. Previously this bounding box was approximate, and not precise enough for many scenarios. ([a92a3af](https://github.com/ZeaInc/zea-engine/commit/a92a3afc5f242c1cde55201dab740d99d201bd29))
+* GLTexture2D now correctly infers the internalFormat for RGB format textures. ([7dcc181](https://github.com/ZeaInc/zea-engine/commit/7dcc181b26a81e27ea1072a8313aaa3ba118c51b))
+* label sorting was sometimes incorrect in small scenes  ([#495](https://github.com/ZeaInc/zea-engine/issues/495)) ([0100957](https://github.com/ZeaInc/zea-engine/commit/0100957979599fa9f7fd3577dff408744ab6a6bf))
+* non-multidraw merged shader fix ([5cafdae](https://github.com/ZeaInc/zea-engine/commit/5cafdae1f0abdd864d1876b0ae83c90f0d602bed))
+* Occulus Rift controllers are now correctly positioned and sized in VR. ([26bd25c](https://github.com/ZeaInc/zea-engine/commit/26bd25cbcae28ed518cd86af8809c570bab5f90c))
+* On some VR devices, an error is thrown the first time XR session is launched as it had not yet detected the correct HMD. ([4def1e9](https://github.com/ZeaInc/zea-engine/commit/4def1e9c50da3d9765a9d0309ade12dfc2bfec84))
+* re-added removed glsl snippet imageAtlas.glsl ([c3b1db1](https://github.com/ZeaInc/zea-engine/commit/c3b1db1653cbc4d481f3da28b2b233bfcfb1c46d))
+* re-added setup grid for percy ([35a0c6e](https://github.com/ZeaInc/zea-engine/commit/35a0c6e363b9360f6dbbd8bd7aa7faf8a6af4925))
+* removed redefinition of fragColor bug in standard and flat surface shaders ([37c846e](https://github.com/ZeaInc/zea-engine/commit/37c846e5b015e6023bd1bffc4a17f90e38abf97b))
+* Shader compiler now correctly handles diamond shaped import chain. ([#465](https://github.com/ZeaInc/zea-engine/issues/465)) ([eebf405](https://github.com/ZeaInc/zea-engine/commit/eebf405460f23c5975a31b996454d67eee3a25a4))
+* Sphere surface became inverted after a resize. ([c210a34](https://github.com/ZeaInc/zea-engine/commit/c210a34eabd5a531c430b0c666503dbff16a619f))
+* Surfaces no longer render black before EnvMap or textures have loaded. ([8e7f7e5](https://github.com/ZeaInc/zea-engine/commit/8e7f7e5eccf5a07928f8d7e6f04af7251a2ebf65))
+* The Promise returned from VLHImage.load is now being correctly resolved or rejected. ([1eb4b16](https://github.com/ZeaInc/zea-engine/commit/1eb4b16ac6c49dc5f6878ebcb18cdf29fd34ba86))
+* The Renderer would leak memory by not correctly releasing all handles to Materials, even after the material was removed from the Renderer. ([9964438](https://github.com/ZeaInc/zea-engine/commit/996443840dd37d4e5bcff85be77a762d82e0a3a1))
+
+### [3.10.7-xr.0](https://github.com/ZeaInc/zea-engine/compare/v3.10.5...v3.10.7-xr.0) (2021-07-03)
+
+
+### Features
+
+* the unpack.wasm file is now bundled into the engine build, meaning ZeaEngine can now be loaded as an esm import. ([329dc98](https://github.com/ZeaInc/zea-engine/commit/329dc981fdd3d704707c8ea3f2780cd278f5a630))
+
 ### [3.10.6](https://github.com/ZeaInc/zea-engine/compare/v3.10.5...v3.10.6) (2021-07-02)
 
 
