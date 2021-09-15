@@ -26,7 +26,7 @@ Example: Registering a listener for a custom event, and then emitting that event
     * [off(eventName, listener)](#off)
     * ~~[.addListener(eventName, listener)](#EventEmitter+addListener) ⇒ <code>number</code>~~
     * ~~[.removeListener(eventName, listener)](#EventEmitter+removeListener)~~
-    * ~~[.removeListenerById(eventName, id)](#EventEmitter+removeListenerById)~~
+    * [removeListenerById(eventName, id)](#removeListenerById)
     * [emit(eventName, event)](#emit)
 
 <a name="new_EventEmitter_new"></a>
@@ -109,8 +109,8 @@ Removes a listener function from the specified event, using either the function 
 
 <a name="EventEmitter+removeListenerById"></a>
 
-### ~~eventEmitter.removeListenerById(eventName, id)~~
-***Deprecated***
+### removeListenerById
+remove listener by ID returned from #on
 
 
 

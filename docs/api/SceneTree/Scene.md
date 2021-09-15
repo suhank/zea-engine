@@ -6,7 +6,7 @@ Class representing the environment where all the displayed assets live.
 
 
 * [Scene](#Scene)
-    * [new Scene(resources)](#new-Scene)
+    * [new Scene()](#new-Scene)
     * [getSettings() ⇒ <code>BaseItem</code>](#getSettings)
     * [getRoot() ⇒ <code>TreeItem</code>](#getRoot)
     * [getResourceLoader() ⇒ <code>ResourceLoader</code>](#getResourceLoader)
@@ -19,11 +19,6 @@ Class representing the environment where all the displayed assets live.
 
 ### new Scene
 Create a scene.
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| resources | <code>object</code> | The resources value. |
 
 <a name="Scene+getSettings"></a>
 
