@@ -584,13 +584,7 @@ class GLBaseRenderer extends ParameterOwner {
     this.resizeObserver.observe(this.__glcanvas.parentElement)
 
     webglOptions.preserveDrawingBuffer = true
-    // In webgl 2, we now render to a multi-sampled offscreen buffer, that we then resolve and blit to
-    // the onscreen buffer. This means we no longer need the default render target to be antialiased.
-    // In webgl 1 however we render surfaces to the offscreen buffer, and then lines to the default buffer.
-    // The default buffer should then be antialiased.
-    // Note: On low end devices, such as Oculus, blitting the multi-sampled depth buffer is throwing errors,
-    // and so we are simply disabling silhouettes on all low end devices now.
-    webglOptions.antialias = SystemDesc.isIOSDevice || webglOptions.webglContextType == 'webgl' ? true : false
+    webglOptions.antialias = webglOptions.antialias != undefined ? webglOptions.antialias : true
     webglOptions.depth = true
     webglOptions.stencil = false
     webglOptions.alpha = webglOptions.alpha ? webglOptions.alpha : false
