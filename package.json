@@ -14,7 +14,7 @@
     "node": ">=10"
   },
   "scripts": {
-    "build:watch": "tsdx watch --target web --format umd --name index",
+    "build:watch": "tsdx watch --target web --format umd --name index --transpileOnly",
     "start": "http-server --cors --port 8000 --silent",
     "start:watch": "es-dev-server --cors --app-index testing-e2e/index.html --open --watch",
     "build": "tsdx build --target web --format umd --name index",
