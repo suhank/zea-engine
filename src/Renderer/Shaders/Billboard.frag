@@ -25,6 +25,10 @@ void main(void) {
 
   // fragColor.r = 1.0;
   // fragColor.a = 1.0;
+  if(fragColor.a < 0.1)
+    discard;
+
+
   
 #ifndef ENABLE_ES3
   gl_FragColor = fragColor;

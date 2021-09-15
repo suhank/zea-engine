@@ -455,6 +455,7 @@ class GLBillboardsPass extends GLPass {
 
     const gl = this.__gl
 
+    gl.depthMask(false)
     gl.disable(gl.CULL_FACE)
     gl.enable(gl.BLEND)
     gl.blendEquation(gl.FUNC_ADD)
@@ -467,8 +468,12 @@ class GLBillboardsPass extends GLPass {
       this.sort(cameraPos)
       this.prevSortCameraPos = cameraPos.clone()
       if (this.drawCount > 1) {
-        const v0 = this.billboards[this.indexArray[0]].billboard.getParameter('GlobalXfo').getValue().tr
-        const v1 = this.billboards[this.indexArray[1]].billboard.getParameter('GlobalXfo').getValue().tr
+        const v0 = this.billboards[this.indexArray[this.indexArray.length - 1]].billboard
+          .getParameter('GlobalXfo')
+          .getValue().tr
+        const v1 = this.billboards[this.indexArray[this.indexArray.length - 2]].billboard
+          .getParameter('GlobalXfo')
+          .getValue().tr
         this.threshold = v0.distanceTo(v1)
       } else {
         this.threshold = 9999
@@ -515,6 +520,7 @@ class GLBillboardsPass extends GLPass {
     }
 
     gl.disable(gl.BLEND)
+    gl.depthMask(true)
   }
 }
 
