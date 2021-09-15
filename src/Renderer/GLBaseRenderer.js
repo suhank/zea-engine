@@ -1,5 +1,4 @@
 /* eslint-disable guard-for-in */
-import { Vec3, Color } from '../Math/index'
 import { TreeItem, GeomItem, ParameterOwner } from '../SceneTree/index'
 import { SystemDesc } from '../SystemDesc'
 import { create3DContext } from './GLContext'
@@ -11,8 +10,6 @@ import { POINTER_TYPES } from '../Utilities/EnumUtils'
 import { GLMaterialLibrary } from './Drawing/GLMaterialLibrary.js'
 import { GLGeomLibrary } from './Drawing/GLGeomLibrary.js'
 import { GLGeomItemLibrary } from './Drawing/GLGeomItemLibrary.js'
-import { HighlightsShader } from './Shaders/HighlightsShader.js'
-import { SilhouetteShader } from './Shaders/SilhouetteShader.js'
 
 let activeGLRenderer = undefined
 let pointerIsDown = false
@@ -58,53 +55,8 @@ class GLBaseRenderer extends ParameterOwner {
 
     this.__xrViewportPresenting = false
 
-    this.__exposure = 1.0
-    this.__tonemap = true
-    this.__gamma = 2.2
-
-    this.__glEnvMap = undefined
-    this.__glBackgroundMap = undefined
-
-    this.__displayEnvironment = true
-    this.__debugMode = 0
-    this._planeDist = 0.0
-    this.__cutPlaneNormal = new Vec3(1, 0, 0)
-    this.rayCastDist = 0
-    this.rayCastArea = 0
-
-    this.highlightOutlineThickness = 1.5
-
-    // We cannot render silhouettes in iOS because EXT_frag_depth is not supported
-    // and without it, we cannot draw lines over the top of geometries.
-    this.outlineThickness =
-      options.outlineThickness != undefined && SystemDesc.browserName != 'Safari' ? options.outlineThickness : 0
-
-    this.outlineColor = options.outlineColor || new Color(0.15, 0.15, 0.15, 1)
-    this.outlineSensitivity = options.outlineSensitivity || 2
-    this.outlineDepthBias = options.outlineDepthBias || 0.7
-
-    // ///////////////////////
-    // Renderer Setup
     this.setupWebGL($canvas, options.webglOptions ? { ...options, ...options.webglOptions } : options)
     this.bindEventHandlers()
-
-    const gl = this.__gl
-    this.highlightsShader = new HighlightsShader(gl)
-    this.silhouetteShader = new SilhouetteShader(gl)
-
-    this.addShaderPreprocessorDirective('ENABLE_INLINE_GAMMACORRECTION')
-    if (!options.disableTextures) {
-      this.addShaderPreprocessorDirective('ENABLE_TEXTURES')
-    }
-
-    if (options.debugGeomIds) {
-      this.addShaderPreprocessorDirective('DEBUG_GEOM_ID')
-    }
-
-    // Function Bindings.
-    this.renderGeomDataFbos = this.renderGeomDataFbos.bind(this)
-    this.requestRedraw = this.requestRedraw.bind(this)
-
     this.addViewport('main')
 
     this.glMaterialLibrary = new GLMaterialLibrary(this)
@@ -148,19 +100,19 @@ class GLBaseRenderer extends ParameterOwner {
             this.__gl.makeXRCompatible().then(() => {
               this.__xrViewport = this.__setupXRViewport()
               this.emit('xrViewportSetup', {
-                xrViewport: this.__xrViewport
+                xrViewport: this.__xrViewport,
               })
               resolve(this.__xrViewport)
             })
           }
           navigator.xr
             .isSessionSupported('immersive-vr')
-            .then(isSupported => {
+            .then((isSupported) => {
               if (isSupported) {
                 setupXRViewport()
               }
             })
-            .catch(reason => {
+            .catch((reason) => {
               console.warn('Unable to setup XR:' + reason)
             })
           // TODO:
@@ -219,7 +171,7 @@ class GLBaseRenderer extends ParameterOwner {
     const updated = () => {
       this.requestRedraw()
     }
-    const viewChanged = data => {
+    const viewChanged = (data) => {
       if (!this.__xrViewportPresenting) {
         this.emit('viewChanged', data)
       }
@@ -394,10 +346,10 @@ class GLBaseRenderer extends ParameterOwner {
     }
 
     const id = treeItem.getId()
-    this.listenerIDs[id + '.childAdded'] = treeItem.on('childAdded', event => {
+    this.listenerIDs[id + '.childAdded'] = treeItem.on('childAdded', (event) => {
       this.addTreeItem(event.childItem)
     })
-    this.listenerIDs[id + '.childRemoved'] = treeItem.on('childRemoved', event => {
+    this.listenerIDs[id + '.childRemoved'] = treeItem.on('childRemoved', (event) => {
       this.removeTreeItem(event.childItem)
     })
 
@@ -420,7 +372,7 @@ class GLBaseRenderer extends ParameterOwner {
       const pass = this.__passesRegistrationOrder[i]
 
       const rargs = {
-        continueInSubTree: true
+        continueInSubTree: true,
       }
       handled = pass.itemAddedToScene(treeItem, rargs)
       if (handled) {
@@ -432,7 +384,7 @@ class GLBaseRenderer extends ParameterOwner {
     if (!handled) {
       for (const passCbs of this.__passCallbacks) {
         const rargs = {
-          continueInSubTree: true
+          continueInSubTree: true,
         }
         const handled = passCbs.itemAddedFn(treeItem, rargs)
         if (handled) {
@@ -459,7 +411,7 @@ class GLBaseRenderer extends ParameterOwner {
     for (let i = this.__passesRegistrationOrder.length - 1; i >= 0; i--) {
       const pass = this.__passesRegistrationOrder[i]
       const rargs = {
-        continueInSubTree: true
+        continueInSubTree: true,
       }
       const handled = pass.itemRemovedFromScene(treeItem, rargs)
       if (handled) {
@@ -471,7 +423,7 @@ class GLBaseRenderer extends ParameterOwner {
     for (const passCbs of this.__passCallbacks) {
       if (!passCbs.itemRemovedFn) continue
       const rargs = {
-        continueInSubTree: true
+        continueInSubTree: true,
       }
       const handled = passCbs.itemRemovedFn(treeItem, rargs)
       if (handled) {
@@ -554,7 +506,7 @@ class GLBaseRenderer extends ParameterOwner {
 
       this.emit('resized', {
         width: newWidth,
-        height: newHeight
+        height: newHeight,
       })
     }
     this.requestRedraw()
@@ -618,7 +570,7 @@ class GLBaseRenderer extends ParameterOwner {
       this.__glcanvas.style.position = webglOptions.canvasPosition ? webglOptions.canvasPosition : 'absolute'
     }
 
-    this.resizeObserver = new ResizeObserver(entries => {
+    this.resizeObserver = new ResizeObserver((entries) => {
       for (const entry of entries) {
         if (!entry.contentRect) {
           return
@@ -632,10 +584,13 @@ class GLBaseRenderer extends ParameterOwner {
     this.resizeObserver.observe(this.__glcanvas.parentElement)
 
     webglOptions.preserveDrawingBuffer = true
-    // In webgl 2, we now render to a multi-sampled offscreen buffer, that we then resolve and draw to
+    // In webgl 2, we now render to a multi-sampled offscreen buffer, that we then resolve and blit to
     // the onscreen buffer. This means we no longer need the default render target to be antialiased.
-    // We can now dynamically turn on an off outline rendering, so we just have antialias on all the time.
-    webglOptions.antialias = webglOptions.antialias ? webglOptions.antialias : false
+    // In webgl 1 however we render surfaces to the offscreen buffer, and then lines to the default buffer.
+    // The default buffer should then be antialiased.
+    // Note: On low end devices, such as Oculus, blitting the multi-sampled depth buffer is throwing errors,
+    // and so we are simply disabling silhouettes on all low end devices now.
+    webglOptions.antialias = SystemDesc.isIOSDevice || webglOptions.webglContextType == 'webgl' ? true : false
     webglOptions.depth = true
     webglOptions.stencil = false
     webglOptions.alpha = webglOptions.alpha ? webglOptions.alpha : false
@@ -693,7 +648,7 @@ class GLBaseRenderer extends ParameterOwner {
     // Setup event handlers
     const isValidCanvas = () => this.getWidth() > 0 && this.getHeight()
 
-    const prepareEvent = event => {
+    const prepareEvent = (event) => {
       event.propagating = true
       const sp = event.stopPropagation
       event.stopPropagation = () => {
@@ -701,7 +656,7 @@ class GLBaseRenderer extends ParameterOwner {
         if (sp) sp.call(event)
       }
     }
-    const calcRendererCoords = event => {
+    const calcRendererCoords = (event) => {
       const rect = this.__glcanvas.getBoundingClientRect()
       // Disabling devicePixelRatio for now. See: __onResize
       const DPR = 1.0 // window.devicePixelRatio
@@ -716,7 +671,7 @@ class GLBaseRenderer extends ParameterOwner {
     }
 
     /** Mouse Events Start */
-    const isMobileSafariMouseEvent = event => {
+    const isMobileSafariMouseEvent = (event) => {
       if (SystemDesc.isMobileDevice && SystemDesc.browserName == 'Safari') {
         console.warn('Mobile Safari is triggering mouse event:', event.type)
         return true
@@ -725,7 +680,7 @@ class GLBaseRenderer extends ParameterOwner {
       return false
     }
 
-    this.__glcanvas.addEventListener('mousedown', event => {
+    this.__glcanvas.addEventListener('mousedown', (event) => {
       if (isMobileSafariMouseEvent(event)) {
         return
       }
@@ -745,7 +700,7 @@ class GLBaseRenderer extends ParameterOwner {
       return false
     })
 
-    document.addEventListener('mouseup', event => {
+    document.addEventListener('mouseup', (event) => {
       if (isMobileSafariMouseEvent(event)) {
         return
       }
@@ -773,7 +728,7 @@ class GLBaseRenderer extends ParameterOwner {
       return false
     })
 
-    document.addEventListener('mousemove', event => {
+    document.addEventListener('mousemove', (event) => {
       if (isMobileSafariMouseEvent(event)) {
         return
       }
@@ -792,7 +747,7 @@ class GLBaseRenderer extends ParameterOwner {
       return false
     })
 
-    this.__glcanvas.addEventListener('mouseenter', event => {
+    this.__glcanvas.addEventListener('mouseenter', (event) => {
       if (isMobileSafariMouseEvent(event)) {
         return
       }
@@ -818,7 +773,7 @@ class GLBaseRenderer extends ParameterOwner {
       }
     })
 
-    this.__glcanvas.addEventListener('mouseleave', event => {
+    this.__glcanvas.addEventListener('mouseleave', (event) => {
       if (isMobileSafariMouseEvent(event)) {
         return
       }
@@ -843,7 +798,7 @@ class GLBaseRenderer extends ParameterOwner {
     /** Touch Events Start */
     this.__glcanvas.addEventListener(
       'touchstart',
-      event => {
+      (event) => {
         event.stopPropagation()
 
         // Touch events are passive and so cannot call prevent default
@@ -863,7 +818,7 @@ class GLBaseRenderer extends ParameterOwner {
 
     this.__glcanvas.addEventListener(
       'touchend',
-      event => {
+      (event) => {
         event.stopPropagation()
 
         // Touch events are passive and so cannot call prevent default
@@ -883,7 +838,7 @@ class GLBaseRenderer extends ParameterOwner {
 
     this.__glcanvas.addEventListener(
       'touchmove',
-      event => {
+      (event) => {
         event.stopPropagation()
 
         // Touch events are passive and so cannot call prevent default
@@ -902,7 +857,7 @@ class GLBaseRenderer extends ParameterOwner {
     )
     /** Touch Events End */
 
-    const onWheel = event => {
+    const onWheel = (event) => {
       if (activeGLRenderer != this || !isValidCanvas()) return
       if (activeGLRenderer) {
         prepareEvent(event)
@@ -922,11 +877,11 @@ class GLBaseRenderer extends ParameterOwner {
       window.onmousewheel = document.onmousewheel = onWheel
     }
 
-    window.oncontextmenu = function() {
+    window.oncontextmenu = function () {
       return false
     }
 
-    document.addEventListener('keydown', event => {
+    document.addEventListener('keydown', (event) => {
       if (activeGLRenderer != this || !isValidCanvas()) return
       prepareEvent(event)
       const vp = activeGLRenderer.getActiveViewport()
@@ -935,7 +890,7 @@ class GLBaseRenderer extends ParameterOwner {
       }
     })
 
-    document.addEventListener('keyup', event => {
+    document.addEventListener('keyup', (event) => {
       if (activeGLRenderer != this || !isValidCanvas()) return
       prepareEvent(event)
       const vp = activeGLRenderer.getActiveViewport()
@@ -1001,7 +956,7 @@ class GLBaseRenderer extends ParameterOwner {
     }
     index += this.__passes[passType].length
 
-    pass.on('updated', event => {
+    pass.on('updated', (event) => {
       this.requestRedraw()
     })
     pass.init(this, index)
@@ -1059,11 +1014,11 @@ class GLBaseRenderer extends ParameterOwner {
     // Always get the last display. Additional displays are added at the end.(e.g. [Polyfill, HMD])
     const xrvp = new VRViewport(this)
 
-    const emitViewChanged = event => {
+    const emitViewChanged = (event) => {
       this.emit('viewChanged', event)
     }
 
-    xrvp.on('presentingChanged', event => {
+    xrvp.on('presentingChanged', (event) => {
       const state = event.state
       this.__xrViewportPresenting = state
       if (state) {
@@ -1089,10 +1044,7 @@ class GLBaseRenderer extends ParameterOwner {
         }
         const event = {
           interfaceType: 'CameraAndPointer',
-          viewXfo: this.getViewport()
-            .getCamera()
-            .getParameter('GlobalXfo')
-            .getValue()
+          viewXfo: this.getViewport().getCamera().getParameter('GlobalXfo').getValue(),
         }
         this.emit('viewChanged', event)
 
@@ -1229,7 +1181,7 @@ class GLBaseRenderer extends ParameterOwner {
 
     const gl = this.__gl
     if (!renderState.viewports || renderState.viewports.length == 1) {
-      renderState.bindRendererUnifs = unifs => {
+      renderState.bindRendererUnifs = (unifs) => {
         const { cameraMatrix, viewMatrix, projectionMatrix, eye, isOrthographic } = unifs
         if (cameraMatrix) {
           gl.uniformMatrix4fv(cameraMatrix.location, false, renderState.cameraMatrix.asArray())
@@ -1255,7 +1207,7 @@ class GLBaseRenderer extends ParameterOwner {
       }
       renderState.bindViewports = (unifs, cb) => cb()
     } else {
-      renderState.bindRendererUnifs = unifs => {
+      renderState.bindRendererUnifs = (unifs) => {
         // Note: the camera matrix should be the head position instead
         // of the eye position. The inverse(viewMatrix) can be used
         // when we want the eye pos.
