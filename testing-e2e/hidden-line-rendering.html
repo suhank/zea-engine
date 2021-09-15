@@ -24,7 +24,7 @@
       renderer.setScene(scene)
       renderer.getViewport().debugGeomShader = urlParams.has('debugGeomShader')
 
-      renderer.outlineThickness = 1.5
+      renderer.outlineThickness = 0
       renderer.outlineSensitivity = 0.5
 
       scene.setupGrid(10.0, 10)
@@ -116,12 +116,12 @@
         const { data } = event
 
         if (data === 'variant-01') {
-          renderer.outlineThickness = 0
+          renderer.outlineThickness = 1.5
           renderer.requestRedraw()
           postMessage(`done-${data}`)
         } else if (data === 'variant-02') {
-          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-2, -2, 2.7), new Vec3(0, 0, 0.4))
-          renderer.frameAll()
+          renderer.outlineThickness = 0
+          renderer.requestRedraw()
           postMessage(`done-${data}`)
         }
       }
