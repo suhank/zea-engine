@@ -222,11 +222,11 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
 
     // Note: our zcad files can contain surfaces with flipped normals.
     // This is due to re-using geoms on various sides of a mesh, while applying
-    // a -1 scale on one of the axes to flip.
-    if (false) {
+    // a -1 scale on one of the axes to flip. We need 2-sided rendering enabled
+    // by default.
+    if (true) {
       // 2-sided rendering.
       gl.disable(gl.CULL_FACE)
-      // 2-sided rendering.
     } else {
       gl.enable(gl.CULL_FACE)
       gl.cullFace(gl.BACK)
