@@ -501,15 +501,13 @@ class GLGeomItemLibrary extends EventEmitter {
         geomItemsUpdateToCullingWorker.push(this.getCullingWorkerData(geomItem, material, index))
       })
 
-      if (this.enableFrustumCulling) {
-        // /////////////////////////
-        // Update the culling worker
-        this.worker.postMessage({
-          type: 'UpdateGeomItems',
-          geomItems: geomItemsUpdateToCullingWorker,
-          removedItemIndices: this.removedItemIndices,
-        })
-      }
+      // /////////////////////////
+      // Update the culling worker
+      this.worker.postMessage({
+        type: 'UpdateGeomItems',
+        geomItems: geomItemsUpdateToCullingWorker,
+        removedItemIndices: this.removedItemIndices,
+      })
 
       this.dirtyWorkerItemIndices.clear()
       this.removedItemIndices = []
@@ -590,16 +588,6 @@ class GLGeomItemLibrary extends EventEmitter {
       }
 
       i += uploadCount - 1
-    }
-
-    if (this.enableFrustumCulling) {
-      // /////////////////////////
-      // Update the culling worker
-      this.worker.postMessage({
-        type: 'UpdateGeomItems',
-        geomItems: geomItemsUpdateToCullingWorker,
-        removedItemIndices: this.removedItemIndices,
-      })
     }
 
     this.removedItemIndices = []
