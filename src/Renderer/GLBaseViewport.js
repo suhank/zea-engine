@@ -186,7 +186,7 @@ class GLBaseViewport extends ParameterOwner {
     // Note: On low end devices, such as Oculus, blitting the multi-sampled depth buffer is throwing errors,
     // and so we are simply disabling silhouettes on all low end devices now.
     const gl = this.__renderer.gl
-    if (gl.name == 'webgl2') {
+    if (this.renderer.outlineThickness > 0 && gl.name == 'webgl2') {
       if (this.fb) {
         gl.deleteFramebuffer(this.fb[FRAMEBUFFER.MSAA_RENDERBUFFER])
         gl.deleteFramebuffer(this.fb[FRAMEBUFFER.COLORBUFFER])
@@ -264,14 +264,10 @@ class GLBaseViewport extends ParameterOwner {
 
     const prevRendertarget = renderstate.boundRendertarget
 
-    if (this.fb) {
-      // this.offscreenBufferFbo.bindForWriting(renderstate)
-      // this.offscreenBufferFbo.clear()
-      // render to our targetTexture by binding the framebuffer
-      gl.bindFramebuffer(
-        gl.name == 'webgl2' ? gl.DRAW_FRAMEBUFFER : gl.FRAMEBUFFER,
-        this.fb[FRAMEBUFFER.MSAA_RENDERBUFFER]
-      )
+    if (this.renderer.outlineThickness > 0 && gl.name == 'webgl2') {
+      if (!this.fb) this.resizeRenderTargets(this.__width, this.__height)
+
+      gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, this.fb[FRAMEBUFFER.MSAA_RENDERBUFFER])
       renderstate.boundRendertarget = this.fb[FRAMEBUFFER.MSAA_RENDERBUFFER]
     } else {
       // Make sure the default fbo is bound
@@ -341,7 +337,7 @@ class GLBaseViewport extends ParameterOwner {
     // Note: On low end devices, such as Oculus, blitting the multi-sampled depth buffer is throwing errors,
     // and so we are simply disabling silhouettes on all low end devices now.
     const gl = this.__renderer.gl
-    if (gl.name != 'webgl2' || !this.fb) return
+    if (this.renderer.outlineThickness == 0 || gl.name != 'webgl2' || !this.fb) return
 
     gl.bindFramebuffer(gl.READ_FRAMEBUFFER, this.fb[FRAMEBUFFER.MSAA_RENDERBUFFER])
     gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, this.fb[FRAMEBUFFER.DEPTHBUFFER])
