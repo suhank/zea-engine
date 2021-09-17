@@ -422,7 +422,7 @@ class Group extends BaseGroup {
       const memberXfoOp = new GroupMemberXfoOperator(this.getParameter('GroupTransform'), memberGlobalXfoParam)
       this.memberXfoOps.splice(index, 0, memberXfoOp)
 
-      listenerIDs['valueChanged'] = item.getParameter('BoundingBox').on('valueChanged', (event) => {
+      listenerIDs['boundingBoxChanged'] = item.on('boundingBoxChanged', (event) => {
         this._setBoundingBoxDirty(event)
       })
       this._bindXfoDirty = true
@@ -463,7 +463,7 @@ class Group extends BaseGroup {
       this.memberXfoOps[index].detach()
       this.memberXfoOps.splice(index, 1)
       this._setBoundingBoxDirty()
-      item.getParameter('BoundingBox').removeListenerById('valueChanged', this.listenerIDs['valueChanged'])
+      item.off('boundingBoxChanged', this.listenerIDs['boundingBoxChanged'])
       this._bindXfoDirty = true
     }
   }
@@ -541,21 +541,18 @@ class Group extends BaseGroup {
 
   /**
    * The _cleanBoundingBox method.
-   * @param {Box3} bbox - The bounding box value.
-   * @return {Box3} - The return value.
    * @private
    */
-  _cleanBoundingBox(bbox) {
-    const result = super._cleanBoundingBox(bbox)
+  _cleanBoundingBox() {
+    super._cleanBoundingBox()
     const items = Array.from(this.__itemsParam.getValue())
     items.forEach((item) => {
       if (item instanceof TreeItem) {
         if (item.isVisible()) {
-          result.addBox3(item.getParameter('BoundingBox').getValue())
+          this.__bbox.addBox3(item.boundingBox)
         }
       }
     })
-    return result
   }
 
   // ///////////////////////

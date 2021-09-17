@@ -3,7 +3,6 @@ import { Registry } from '../Registry'
 import { BooleanParameter, XfoParameter } from './Parameters/index'
 import { BaseItem } from './BaseItem.js'
 import { CalcGlobalXfoOperator } from './Operators/CalcGlobalXfoOperator.js'
-import { BoundingBoxParameter } from './Parameters/BoundingBoxParameter.js'
 
 /**
  * Class representing an Item in the scene tree with hierarchy capabilities (has children).
@@ -44,6 +43,7 @@ class TreeItem extends BaseItem {
     // Controls if this TreeItem or its children contribute to the bounding boxes
     // in the scene. If set to false, Camera framing will ignore this item,
     this.disableBoundingBox = false
+    this.boundingBoxDirty = true
 
     this.__visibleCounter = 1 // Visible by Default.
     this.__visible = true
@@ -60,7 +60,7 @@ class TreeItem extends BaseItem {
     this.__visibleParam = this.addParameter(new BooleanParameter('Visible', true))
     this.__localXfoParam = this.addParameter(new XfoParameter('LocalXfo', new Xfo()))
     this.__globalXfoParam = this.addParameter(new XfoParameter('GlobalXfo', new Xfo()))
-    this.__boundingBoxParam = this.addParameter(new BoundingBoxParameter('BoundingBox', this))
+    this.__bbox = new Box3()
 
     this.globalXfoOp = new CalcGlobalXfoOperator(this.__globalXfoParam, this.__localXfoParam)
     this.__globalXfoParam.on('valueChanged', (event) => {
@@ -339,46 +339,23 @@ class TreeItem extends BaseItem {
    * @private
    */
   get boundingBox() {
-    console.warn("getter is deprecated. Please use 'getBoundingBox'")
-    return this.getBoundingBox()
-  }
-
-  /**
-   * @deprecated
-   * Returns bounding box parameter value.
-   * @private
-   * @return {Box3} - The return value.
-   */
-  getBoundingBox() {
-    console.warn("getter is deprecated. Please use 'getParameter('BoundingBox').getValue()'")
-    return this.__boundingBoxParam.getValue()
+    if (this.boundingBoxDirty) this._cleanBoundingBox()
+    return this.__bbox
   }
 
   /**
    * The _cleanBoundingBox method.
-   * @param {Box3} bbox - The bounding box value.
-   * @return {Box3} - The return value.
    * @private
    */
-  _cleanBoundingBox(bbox) {
-    bbox.reset()
+  _cleanBoundingBox() {
+    this.__bbox.reset()
     this.__childItems.forEach((childItem) => {
       if (childItem instanceof TreeItem)
         if (childItem.isVisible()) {
           // console.log(" - ", childItem.constructor.name, childItem.getName(), childItem.getParameter('GlobalXfo').getValue().sc.x, childItem.getBoundingBox().toString())
-          bbox.addBox3(childItem.getParameter('BoundingBox').getValue())
+          this.__bbox.addBox3(childItem.boundingBox)
         }
     })
-    // console.log(this.getName(), bbox.toString())
-    return bbox
-  }
-
-  /**
-   * The _childBBoxChanged method.
-   * @private
-   */
-  _childBBoxChanged() {
-    this._setBoundingBoxDirty()
   }
 
   /**
@@ -386,10 +363,8 @@ class TreeItem extends BaseItem {
    * @private
    */
   _setBoundingBoxDirty() {
-    if (this.__boundingBoxParam) {
-      // Will cause boundingChanged to emit
-      this.__boundingBoxParam.setDirty()
-    }
+    this.boundingBoxDirty = true
+    this.emit('boundingBoxChanged')
   }
 
   // ////////////////////////////////////////
@@ -926,9 +901,7 @@ class TreeItem extends BaseItem {
     if (context && !Number.isNaN(context.numTreeItems)) context.numTreeItems++
 
     // if ('bbox' in j){
-    //     let box = new Box3();
-    //     box.fromJSON(j.bbox);
-    //     this.__boundingBoxParam.setValue(box);
+    //     this.boundingBox.fromJSON(j.bbox);
     // }
 
     if (j.children != null) {
@@ -1033,7 +1006,7 @@ class TreeItem extends BaseItem {
 
     const bboxFlag = 1 << 3
     if (itemFlags & bboxFlag) {
-      this.__boundingBoxParam.loadValue(new Box3(reader.loadFloat32Vec3(), reader.loadFloat32Vec3()))
+      this.__bbox.set(reader.loadFloat32Vec3(), reader.loadFloat32Vec3())
     }
 
     const numChildren = reader.loadUInt32()

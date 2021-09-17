@@ -123,8 +123,8 @@ class CuttingPlane extends BaseGroup {
     Array.from(this.__itemsParam.getValue()).forEach((item) => {
       if (item instanceof TreeItem) {
         // const itemxfo = invxfo.multiply(item.getParameter('GlobalXfo').getValue())
-        // bbox.addBox3(item.getParameter('BoundingBox').getValue(), itemxfo.toMat4())
-        bbox.addBox3(item.getParameter('BoundingBox').getValue())
+        // bbox.addBox3(item.boundingBox, itemxfo.toMat4())
+        bbox.addBox3(item.boundingBox)
       }
     })
     {

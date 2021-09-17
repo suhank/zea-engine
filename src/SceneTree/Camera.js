@@ -355,7 +355,7 @@ class Camera extends TreeItem {
     if (this.frameOnBoundingSphere) {
       const box3 = new Box3()
       for (const treeItem of treeItems) {
-        box3.addBox3(treeItem.getParameter('BoundingBox').getValue())
+        box3.addBox3(treeItem.boundingBox)
       }
 
       if (!box3.isValid()) {
@@ -383,7 +383,7 @@ class Camera extends TreeItem {
       if (false) {
         const box3 = new Box3()
         for (const treeItem of treeItems) {
-          box3.addBox3(treeItem.getParameter('BoundingBox').getValue())
+          box3.addBox3(treeItem.boundingBox)
         }
 
         if (!box3.isValid()) {
@@ -422,7 +422,7 @@ class Camera extends TreeItem {
               }
             }
             if (childItem.getNumChildren() == 0) {
-              const box3 = childItem.getParameter('BoundingBox').getValue()
+              const box3 = childItem.boundingBox
               if (box3.isValid()) {
                 // Note: passing box3.p0 into boundaryPoints caused corruption later on.
                 // I could not figure out how/why, but by constructing a new vector here,

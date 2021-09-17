@@ -196,7 +196,7 @@ class KinematicGroup extends BaseGroup {
 
       if (!this.__itemsEventHandlers[index]) this.__itemsEventHandlers[index] = {} // initialize
       const listenerIDs = this.__itemsEventHandlers[index]
-      listenerIDs['BoundingBox.valueChanged'] = item.getParameter('BoundingBox').on('valueChanged', (event) => {
+      listenerIDs['BoundingBox.valueChanged'] = item.on('boundingBoxChanged', (event) => {
         this._setBoundingBoxDirty()
       })
     }

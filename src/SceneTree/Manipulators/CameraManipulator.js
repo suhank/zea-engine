@@ -76,11 +76,15 @@ const MANIPULATION_MODES = {
  * ```
  *
  * **Events**
- * * **movementFinished:** Emitted when a camera movement is finished. E.g. when the user releases the mouse after a dolly, or after the focussing action has completed.
+ *
+ * * **dragStarted:** Emitted when a camera movement is is started using a pointer drag action. E.g. when the user presses the mouse to initiate a dolly or pan action.
+ * * **dragEnded:** Emitted when a camera movement is finished after a pointer drag action.
+ * * **movementFinished:** Emitted when a camera movement is finished. E.g. when the user rel eases the mouse after a dolly, or after the focussing action has completed.
  * * **aimingFocus:** Emitted when a camera is being focussed on a target. E.g. when the user double clicks the mouse on a geometry in the view.
  *
  * @extends BaseTool
  */
+
 class CameraManipulator extends BaseTool {
   /**
    * Create a camera, mouse and keyboard
@@ -366,6 +370,8 @@ class CameraManipulator extends BaseTool {
 
     this.__prevPointerPos = pointerPos
     this.__dragging = 1
+
+    this.emit('dragStarted', event)
   }
 
   /**
@@ -378,6 +384,8 @@ class CameraManipulator extends BaseTool {
     if (event.getCapture() == this) event.releaseCapture()
     this.__dragging = 0
     this.__pointerDown = false
+
+    this.emit('dragEnded', event)
   }
 
   /**

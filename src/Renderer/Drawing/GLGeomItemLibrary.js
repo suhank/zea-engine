@@ -457,7 +457,7 @@ class GLGeomItemLibrary extends EventEmitter {
    * @return {object} - the JSON data that will be passed to the worker.
    */
   getCullingWorkerData(geomItem, material, index) {
-    const bbox = geomItem.getParameter('BoundingBox').getValue()
+    const bbox = geomItem.boundingBox
     const boundingRadius = bbox.size() * 0.5
     const pos = bbox.center()
 

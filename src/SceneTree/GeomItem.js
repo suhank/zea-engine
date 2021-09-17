@@ -70,10 +70,10 @@ class GeomItem extends BaseGeomItem {
     this.__geomParam = this.addParameter(new GeometryParameter('Geometry'))
 
     this.listenerIDs = {}
-    this.listenerIDs['valueChanged'] = this.__geomParam.on('valueChanged', event => {
+    this.listenerIDs['valueChanged'] = this.__geomParam.on('valueChanged', (event) => {
       this._setBoundingBoxDirty(event)
     })
-    this.listenerIDs['boundingBoxChanged'] = this.__geomParam.on('boundingBoxChanged', event => {
+    this.listenerIDs['boundingBoxChanged'] = this.__geomParam.on('boundingBoxChanged', (event) => {
       this._setBoundingBoxDirty(event)
     })
 
@@ -165,20 +165,17 @@ class GeomItem extends BaseGeomItem {
 
   /**
    * The _cleanBoundingBox method.
-   * @param {Box3} bbox - The bounding box value.
-   * @return {Box3} - The return value.
    * @private
    */
-  _cleanBoundingBox(bbox) {
-    if (this.disableBoundingBox) return bbox
-    bbox = super._cleanBoundingBox(bbox)
+  _cleanBoundingBox() {
+    super._cleanBoundingBox()
     if (this.geomBBox) {
       // Note: this bbox is the global bounding box of the geomItem
       // transformed into the space of the geometry. We reapply
       // the geom matrix to get back the points in global space.
       const mat4 = this.getGeomMat4()
-      bbox.addPoint(mat4.transformVec3(this.geomBBox.p0))
-      bbox.addPoint(mat4.transformVec3(this.geomBBox.p1))
+      this.__bbox.addPoint(mat4.transformVec3(this.geomBBox.p0))
+      this.__bbox.addPoint(mat4.transformVec3(this.geomBBox.p1))
     } else {
       const geom = this.__geomParam.getValue()
       if (geom) {
@@ -188,7 +185,7 @@ class GeomItem extends BaseGeomItem {
           const mat4 = this.getGeomMat4()
           if (geom instanceof BaseProxy) {
             const positions = geom.__buffers.attrBuffers['positions'].values
-            const getVertex = index => {
+            const getVertex = (index) => {
               const start = index * 3
               return new Vec3(positions.subarray(start, start + 3))
             }
@@ -202,11 +199,10 @@ class GeomItem extends BaseGeomItem {
             }
           }
         } else {
-          bbox.addBox3(geom.getBoundingBox(), this.getGeomMat4())
+          this.__bbox.addBox3(geom.getBoundingBox(), this.getGeomMat4())
         }
       }
     }
-    return bbox
   }
 
   // ////////////////////////////////////////
@@ -286,7 +282,7 @@ class GeomItem extends BaseGeomItem {
     if (geom) {
       this.getParameter('Geometry').loadValue(geom)
     } else {
-      const onGeomLoaded = event => {
+      const onGeomLoaded = (event) => {
         const { range } = event
         if (geomIndex >= range[0] && geomIndex < range[1]) {
           const geom = geomLibrary.getGeom(geomIndex)
@@ -376,7 +372,7 @@ class GeomItem extends BaseGeomItem {
       this.assetItem = src.assetItem
       this.geomIndex = src.geomIndex
       this.geomBBox = src.geomBBox
-      const onGeomLoaded = event => {
+      const onGeomLoaded = (event) => {
         const { range } = event
         if (this.geomIndex >= range[0] && this.geomIndex < range[1]) {
           const geom = geomLibrary.getGeom(this.geomIndex)

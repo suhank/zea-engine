@@ -71,7 +71,7 @@ describe('GeomItem', () => {
     geomItem.getParameter('LocalXfo').setValue(new Xfo(new Vec3(2, 4, 0)))
     geomItem.getParameter('GeomOffsetXfo').setValue(new Xfo(new Vec3(2, 4, 0)))
     // To trigger a new calculation of the BBox we need to request its value
-    geomItem.getParameter('BoundingBox').getValue()
+    geomItem.boundingBox
     expect(geomItem.toJSON()).toMatchSnapshot()
   })
 
@@ -86,7 +86,7 @@ describe('GeomItem', () => {
     defaultItem.getParameter('LocalXfo').setValue(new Xfo(new Vec3(2, 4, 0)))
     defaultItem.getParameter('GeomOffsetXfo').setValue(new Xfo(new Vec3(2, 4, 0)))
     // To trigger a new calculation of the BBox we need to request its value
-    defaultItem.getParameter('BoundingBox').getValue()
+    defaultItem.boundingBox
 
     expect(geomItem.toJSON()).toEqual(defaultItem.toJSON())
   })

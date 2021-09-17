@@ -127,7 +127,7 @@ class SelectionSet extends BaseGroup {
     }
 
     if (item instanceof TreeItem) {
-      listenerIDs['BoundingBox.valueChanged'] = item.getParameter('BoundingBox').on('valueChanged', (event) => {
+      listenerIDs['BoundingBox.valueChanged'] = item.on('boundingBoxChanged', (event) => {
         this._setBoundingBoxDirty(event)
       })
     }

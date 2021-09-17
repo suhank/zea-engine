@@ -26,7 +26,6 @@ class GLBoundingBoxPass extends GLPass {
 
     this.indexArrayUpdateNeeded = false
     this.__updateRequested = false
-
   }
 
   /**
@@ -140,7 +139,7 @@ class GLBoundingBoxPass extends GLPass {
       }
     }
     treeitem.getParameter('GlobalXfo').on('valueChanged', xfoChanged)
-    treeitem.getParameter('BoundingBox').on('valueChanged', xfoChanged)
+    treeitem.on('boundingBoxChanged', xfoChanged)
 
     if (treeitem.isVisible()) this.drawCount++
 
@@ -169,7 +168,7 @@ class GLBoundingBoxPass extends GLPass {
 
     treeitem.off('visibilityChanged', treeitemData.visibilityChanged)
     treeitem.getParameter('GlobalXfo').off('valueChanged', treeitemData.xfoChanged)
-    treeitem.getParameter('BoundingBox').off('valueChanged', treeitemData.xfoChanged)
+    treeitem.off('boundingBoxChanged', treeitemData.xfoChanged)
 
     this.boxes[index] = null
     this.freeIndices.push(index)
@@ -196,7 +195,7 @@ class GLBoundingBoxPass extends GLPass {
     const geomMatParam = treeitem.getParameter('GeomMat')
     const color = geomMatParam ? new Color(1, 0, 0, 1) : new Color(0, 0, 1, 1)
     const mat4 = geomMatParam ? geomMatParam.getValue() : globalXfoParam.getValue().toMat4()
-    const bbox = treeitem.getParameter('BoundingBox').getValue()
+    const bbox = treeitem.boundingBox
 
     const offset = index * pixelsPerItem * 4
     const pixel0 = Vec4.createFromBuffer(dataArray.buffer, offset * 4)
@@ -351,6 +350,7 @@ class GLBoundingBoxPass extends GLPass {
    * @param {object} renderstate - The object tracking the current state of the renderer
    */
   draw(renderstate) {
+    console.log(this.drawCount)
     if (this.drawCount == 0) {
       return
     }
