@@ -45,7 +45,7 @@ class GLEnvMap extends GLProbe {
     this.__srcGLTex = new GLHDRImage(gl, this.__envMap)
     this.__envMapShader = new EnvMapShader(gl)
 
-    const envMapShaderComp = this.__envMapShader.compileForTarget('GLEnvMap')
+    const envMapShaderComp = this.__envMapShader.compileForTarget('GLEnvMap', { directives: ['#define ENABLE_ES3'] })
     this.__envMapShaderBinding = generateShaderGeomBinding(
       gl,
       envMapShaderComp.attrs,

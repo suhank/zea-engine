@@ -50,7 +50,7 @@ class GLProbe extends EventEmitter {
     const gl = this.__gl
 
     const renderstate: RenderState = <RenderState>{}
-    renderstate.shaderopts.directives = ['#define ENABLE_ES3', '#define ENABLE_FLOAT_TEXTURES']
+    renderstate.shaderopts = { directives: ['#define ENABLE_ES3', '#define ENABLE_FLOAT_TEXTURES'] }
 
     // Note: in testing we are running on the Google SwiftShader emulated GPU.
     if (SystemDesc.deviceCategory == 'Low') {

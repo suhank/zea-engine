@@ -18,7 +18,7 @@ class GLScreenQuad {
    * Create a GL screen quad.
    * @param {WebGL12RenderingContext} gl - The webgl rendering context.
    */
-  constructor(gl: WebGL12RenderingContext) {
+  constructor(gl: WebGL12RenderingContext, shaderopts: Record<string, any>) {
     this.__gl = gl
     this.__pos = [0.0, 0.0]
     this.__size = [1.0, 1.0]
@@ -27,7 +27,7 @@ class GLScreenQuad {
 
     if (!gl.__quadVertexIdsBuffer) gl.setupInstancedQuad()
 
-    const shaderComp = this.__glshader.compileForTarget('GLScreenQuad')
+    const shaderComp = this.__glshader.compileForTarget('GLScreenQuad', shaderopts)
     this.__quadBinding = generateShaderGeomBinding(
       this.__gl,
       shaderComp.attrs,

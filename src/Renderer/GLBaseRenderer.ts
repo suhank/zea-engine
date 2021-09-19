@@ -107,7 +107,7 @@ class GLBaseRenderer extends ParameterOwner {
 
     this.__gl = this.setupWebGL($canvas, options.webglOptions ? { ...options, ...options.webglOptions } : <any>options)
 
-    this.screenQuad = new GLScreenQuad(this.__gl)
+    this.screenQuad = new GLScreenQuad(this.__gl, { directives: this.directives })
     this.bindEventHandlers()
     this.addViewport('main')
 
@@ -188,7 +188,6 @@ class GLBaseRenderer extends ParameterOwner {
       directives.push(this.__shaderDirectives[key])
     }
     this.directives = directives
-    // gl.shaderopts = { directives } // used by zea-cad.
   }
 
   /**

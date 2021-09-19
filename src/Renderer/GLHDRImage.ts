@@ -97,7 +97,7 @@ class GLHDRImage extends GLTexture2D {
       })
 
       this.__unpackHDRShader = new UnpackHDRShader(this.__gl)
-      const shaderComp = this.__unpackHDRShader.compileForTarget('GLHDRImage')
+      const shaderComp = this.__unpackHDRShader.compileForTarget('GLHDRImage', { directives: ['#define ENABLE_ES3'] })
       this.__shaderBinding = generateShaderGeomBinding(
         this.__gl,
         shaderComp.attrs,
