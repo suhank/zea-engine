@@ -20,9 +20,9 @@ import { Vec2Attribute } from '../Vec2Attribute'
  */
 class Cuboid extends ProceduralMesh {
   protected __baseZAtZeroParam: BooleanParameter
-  protected __xParam: NumberParameter
-  protected __yParam: NumberParameter
-  protected __zParam: NumberParameter
+  protected sizeX: NumberParameter
+  protected sizeY: NumberParameter
+  protected sizeZ: NumberParameter
 
   /**
    * Create a cuboid.
@@ -36,9 +36,9 @@ class Cuboid extends ProceduralMesh {
 
     if (isNaN(x) || isNaN(y) || isNaN(z)) throw new Error('Invalid geom args')
 
-    this.__xParam = this.addParameter(new NumberParameter('X', x)) as NumberParameter
-    this.__yParam = this.addParameter(new NumberParameter('Y', y)) as NumberParameter
-    this.__zParam = this.addParameter(new NumberParameter('Z', z)) as NumberParameter
+    this.sizeX = this.addParameter(new NumberParameter('X', x)) as NumberParameter
+    this.sizeY = this.addParameter(new NumberParameter('Y', y)) as NumberParameter
+    this.sizeZ = this.addParameter(new NumberParameter('Z', z)) as NumberParameter
     this.__baseZAtZeroParam = this.addParameter(new BooleanParameter('BaseZAtZero', baseZAtZero)) as BooleanParameter
 
     this.setFaceCounts([0, 6])
@@ -51,8 +51,8 @@ class Cuboid extends ProceduralMesh {
     this.setFaceVertexIndices(4, [0, 3, 7, 4])
     this.setFaceVertexIndices(5, [2, 1, 5, 6])
     this.setNumVertices(8)
-    this.addVertexAttribute('texCoords', new Vec2Attribute())
     this.addVertexAttribute('normals', new Vec3Attribute())
+    // this.addVertexAttribute('texCoords', new Vec2Attribute())
   }
 
   /**
@@ -63,9 +63,9 @@ class Cuboid extends ProceduralMesh {
    * @param {number} z - The length of the edges along the Z axis.
    */
   setSize(x: number, y: number, z: number): void {
-    this.__xParam.setValue(x)
-    this.__yParam.setValue(y)
-    this.__zParam.setValue(z)
+    this.sizeX.setValue(x)
+    this.sizeY.setValue(y)
+    this.sizeZ.setValue(z)
   }
 
   /**
@@ -75,8 +75,8 @@ class Cuboid extends ProceduralMesh {
    * @param {number} y - The length of the edges along the Y axis.
    */
   setBaseSize(x: number, y: number): void {
-    this.__xParam.setValue(x)
-    this.__yParam.setValue(y)
+    this.sizeX.setValue(x)
+    this.sizeY.setValue(y)
   }
 
   /**
@@ -84,10 +84,10 @@ class Cuboid extends ProceduralMesh {
    * @private
    */
   rebuild(): void {
-    const normals: Vec3Attribute =  <Vec3Attribute>this.getVertexAttribute('normals')
+    const normals: Vec3Attribute = <Vec3Attribute>this.getVertexAttribute('normals')
     if (normals) {
       for (let i = 0; i < 6; i++) {
-        let normal:  Vec3
+        let normal: Vec3
         switch (i) {
           case 0:
             normal = new Vec3(0, 0, 1)
@@ -114,7 +114,7 @@ class Cuboid extends ProceduralMesh {
         normals.setFaceVertexValue(i, 2, normal)
         normals.setFaceVertexValue(i, 3, normal)
       }
-    }
+    } /*
     const texCoords = <Vec2Attribute>this.getVertexAttribute('texCoords')
     if (texCoords) {
       for (let i = 0; i < 6; i++) {
@@ -124,6 +124,7 @@ class Cuboid extends ProceduralMesh {
         texCoords.setFaceVertexValue(i, 3, new Vec2(0, 1))
       }
     }
+    */
     this.resize()
   }
 
@@ -132,12 +133,12 @@ class Cuboid extends ProceduralMesh {
    * @private
    */
   resize(): void {
-    const x = this.__xParam.getValue() || 1.0
-    const y = this.__yParam.getValue() || 1.0
-    const z = this.__zParam.getValue() || 1.0
+    const x = this.sizeX.getValue() || 1.0
+    const y = this.sizeY.getValue() || 1.0
+    const z = this.sizeZ.getValue() || 1.0
     const baseZAtZero = this.__baseZAtZeroParam.getValue()
     let zoff = 0.5
-    const positions =  <Vec3Attribute>this.getVertexAttribute('positions')
+    const positions = <Vec3Attribute>this.getVertexAttribute('positions')
     if (baseZAtZero) zoff = 1.0
     if (!positions) return
     positions.getValueRef(0).set(0.5 * x, -0.5 * y, zoff * z)

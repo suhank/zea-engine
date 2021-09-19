@@ -6,7 +6,7 @@ import { MathFunctions } from '../../Utilities/MathFunctions'
 import { Mesh } from './Mesh'
 
 function approxEqual(a: Float32Array, b: Float32Array) {
-  return a.some((value, index) => Math.abs(b[index] - value) > 0.001)
+  return !a.some((value, index) => Math.abs(b[index] - value) > 0.001)
 }
 function isValid(a: Float32Array, defaultElementValue: number) {
   return !a.some(value => value == defaultElementValue)
