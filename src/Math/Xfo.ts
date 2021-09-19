@@ -231,20 +231,20 @@ class Xfo {
    */
   setFromFloat32Array(float32array: Float32Array): void {
     if (float32array.length == 7) {
-      this.tr = new Vec3(float32array.buffer, float32array.byteOffset)
-      this.ori = new Quat(float32array.buffer, float32array.byteOffset + 12)
+      this.tr = new Vec3(new Float32Array(float32array.buffer, float32array.byteOffset, 3))
+      this.ori = new Quat(new Float32Array(float32array.buffer, float32array.byteOffset + 12, 4))
       this.sc = new Vec3(1, 1, 1)
       return
     } else if (float32array.length == 8) {
-      this.tr = new Vec3(float32array.buffer, float32array.byteOffset)
-      this.ori = new Quat(float32array.buffer, float32array.byteOffset + 12)
+      this.tr = new Vec3(new Float32Array(float32array.buffer, float32array.byteOffset, 3))
+      this.ori = new Quat(new Float32Array(float32array.buffer, float32array.byteOffset + 12, 4))
       const scl = float32array[7]
       this.sc = new Vec3(scl, scl, scl)
       return
     } else if (float32array.length == 10) {
-      this.tr = new Vec3(float32array.buffer, float32array.byteOffset)
-      this.ori = new Quat(float32array.buffer, float32array.byteOffset + 12)
-      this.sc = new Vec3(float32array.buffer, float32array.byteOffset + 21)
+      this.tr = new Vec3(new Float32Array(float32array.buffer, float32array.byteOffset, 3))
+      this.ori = new Quat(new Float32Array(float32array.buffer, float32array.byteOffset + 12, 4))
+      this.sc = new Vec3(new Float32Array(float32array.buffer, float32array.byteOffset + 21, 3))
       return
     } else {
       console.warn('unitialized: float32array.length == ', float32array.length)
@@ -271,7 +271,7 @@ class Xfo {
   toJSON(): Record<string, any> {
     const j = {
       tr: this.tr.toJSON(),
-      ori: this.ori.toJSON(),
+      ori: this.ori.toJSON()
     }
     if (!this.sc.is111()) (j as any).sc = this.sc.toJSON()
 

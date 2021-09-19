@@ -252,7 +252,7 @@ class GLImageAtlas extends GLRenderTarget {
       const dataArray = new Float32Array(size * size * 4) /* each pixel has 4 floats*/
       for (let i = 0; i < this.__layout.length; i++) {
         const layoutItem = this.__layout[i]
-        const vec4 = new Vec4(dataArray.buffer, i * 4 * 4)
+        const vec4 = new Vec4(new Float32Array(dataArray.buffer, i * 4 * 4, 4))
         vec4.set(
           layoutItem.pos.x / width,
           layoutItem.pos.y / height,

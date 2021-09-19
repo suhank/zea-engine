@@ -228,12 +228,12 @@ class GLBoundingBoxPass extends GLPass {
     const bbox = treeitem.getParameter('BoundingBox')!.getValue()
 
     const offset = index * pixelsPerItem * 4
-    const pixel0 = new Vec4(dataArray.buffer, offset * 4)
-    const pixel1 = new Vec4(dataArray.buffer, (offset + 4) * 4)
-    const pixel2 = new Vec4(dataArray.buffer, (offset + 8) * 4)
-    const pixel3 = new Vec4(dataArray.buffer, (offset + 12) * 4)
-    const pixel4 = new Vec4(dataArray.buffer, (offset + 16) * 4)
-    const pixel5 = new Vec4(dataArray.buffer, (offset + 20) * 4)
+    const pixel0 = new Vec4(new Float32Array(dataArray.buffer, offset * 4, 4))
+    const pixel1 = new Vec4(new Float32Array(dataArray.buffer, (offset + 4) * 4, 4))
+    const pixel2 = new Vec4(new Float32Array(dataArray.buffer, (offset + 8) * 4, 4))
+    const pixel3 = new Vec4(new Float32Array(dataArray.buffer, (offset + 12) * 4, 4))
+    const pixel4 = new Vec4(new Float32Array(dataArray.buffer, (offset + 16) * 4, 4))
+    const pixel5 = new Vec4(new Float32Array(dataArray.buffer, (offset + 20) * 4, 4))
 
     pixel0.set(mat4.xAxis.x, mat4.yAxis.x, mat4.zAxis.x, mat4.translation.x)
     pixel1.set(mat4.xAxis.y, mat4.yAxis.y, mat4.zAxis.y, mat4.translation.y)

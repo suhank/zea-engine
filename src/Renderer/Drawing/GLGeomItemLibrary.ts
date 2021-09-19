@@ -91,7 +91,7 @@ class GLGeomItemLibrary extends EventEmitter {
           frustumHeight,
           frustumWidth,
           isOrthographic: true,
-          solidAngleLimit: renderer.solidAngleLimit,
+          solidAngleLimit: renderer.solidAngleLimit
         })
       } else {
         const frustumHalfAngleY = camera.getFov() * 0.5
@@ -101,7 +101,7 @@ class GLGeomItemLibrary extends EventEmitter {
           frustumHalfAngleX,
           frustumHalfAngleY,
           isOrthographic: false,
-          solidAngleLimit: renderer.solidAngleLimit,
+          solidAngleLimit: renderer.solidAngleLimit
         })
       }
     }
@@ -132,7 +132,7 @@ class GLGeomItemLibrary extends EventEmitter {
             frustumHalfAngleX,
             frustumHalfAngleY,
             isOrthographic: false,
-            solidAngleLimit: renderer.solidAngleLimit,
+            solidAngleLimit: renderer.solidAngleLimit
           })
         } else {
           viewportChanged()
@@ -152,7 +152,7 @@ class GLGeomItemLibrary extends EventEmitter {
             type: 'ViewChanged',
             cameraPos: pos.asArray(),
             cameraOri: ori.asArray(),
-            solidAngleLimit: renderer.solidAngleLimit,
+            solidAngleLimit: renderer.solidAngleLimit
           })
         }
         tick++
@@ -168,13 +168,16 @@ class GLGeomItemLibrary extends EventEmitter {
         type: 'ViewChanged',
         cameraPos: pos.asArray(),
         cameraOri: ori.asArray(),
-        solidAngleLimit: renderer.solidAngleLimit,
+        solidAngleLimit: renderer.solidAngleLimit
       })
     }
 
     // If a movement finishes, we should update the culling results
     // based on the last position. (we might have skipped it in the viewChanged handler above)
-    renderer.getViewport().getCamera().on('movementFinished', forceViewChanged)
+    renderer
+      .getViewport()
+      .getCamera()
+      .on('movementFinished', forceViewChanged)
 
     // Initialize the view values on the worker.
     forceViewChanged()
@@ -264,7 +267,7 @@ class GLGeomItemLibrary extends EventEmitter {
     this.glGeomItemEventHandlers[index] = {
       geomItemChanged,
       materialChanged,
-      geomChanged,
+      geomChanged
     }
     this.glGeomItemsMap[geomItem.getId()] = index
 
@@ -386,7 +389,7 @@ class GLGeomItemLibrary extends EventEmitter {
       flags |= GLGeomItemFlags.GEOMITEM_INVISIBLE_IN_GEOMDATA
     }
 
-    const pix0 = new Vec4(dataArray.buffer, (offset + 0) * 4)
+    const pix0 = new Vec4(new Float32Array(dataArray.buffer, (offset + 0) * 4, 4))
     pix0.set(flags, 0, 0, 0)
 
     const material = geomItem.getParameter('Material')!.getValue()
@@ -403,16 +406,16 @@ class GLGeomItemLibrary extends EventEmitter {
     // /////////////////////////
     // Geom Matrix
     const mat4 = geomItem.getGeomMat4()
-    const pix1 = new Vec4(dataArray.buffer, (offset + 4) * 4)
-    const pix2 = new Vec4(dataArray.buffer, (offset + 8) * 4)
-    const pix3 = new Vec4(dataArray.buffer, (offset + 12) * 4)
+    const pix1 = new Vec4(new Float32Array(dataArray.buffer, (offset + 4) * 4, 4))
+    const pix2 = new Vec4(new Float32Array(dataArray.buffer, (offset + 8) * 4, 4))
+    const pix3 = new Vec4(new Float32Array(dataArray.buffer, (offset + 12) * 4, 4))
     pix1.set(mat4.xAxis.x, mat4.yAxis.x, mat4.zAxis.x, mat4.translation.x)
     pix2.set(mat4.xAxis.y, mat4.yAxis.y, mat4.zAxis.y, mat4.translation.y)
     pix3.set(mat4.xAxis.z, mat4.yAxis.z, mat4.zAxis.z, mat4.translation.z)
 
     // /////////////////////////
     // Hilight
-    const pix4 = new Vec4(dataArray.buffer, (offset + 16) * 4)
+    const pix4 = new Vec4(new Float32Array(dataArray.buffer, (offset + 16) * 4, 4))
     if (geomItem.isHighlighted()) {
       const highlight = geomItem.getHighlight()
       pix4.set(highlight.r, highlight.g, highlight.b, highlight.a)
@@ -420,7 +423,7 @@ class GLGeomItemLibrary extends EventEmitter {
 
     // /////////////////////////
     // Cutaway
-    const pix5 = new Vec4(dataArray.buffer, (offset + 20) * 4)
+    const pix5 = new Vec4(new Float32Array(dataArray.buffer, (offset + 20) * 4, 4))
     if (geomItem.isCutawayEnabled()) {
       const cutAwayVector = geomItem.getCutVector()
       const cutAwayDist = geomItem.getCutDist()
@@ -465,7 +468,7 @@ class GLGeomItemLibrary extends EventEmitter {
       boundingRadius,
       pos: pos.asArray(),
       cullable,
-      visible: geomItem.isVisible(),
+      visible: geomItem.isVisible()
     }
   }
 
@@ -479,7 +482,7 @@ class GLGeomItemLibrary extends EventEmitter {
       // this.emit('renderTreeUpdated', {});
 
       const geomItemsUpdateToCullingWorker: any[] = []
-      this.dirtyItemIndices.forEach((index) => {
+      this.dirtyItemIndices.forEach(index => {
         const glGeomItem = this.glGeomItems[index]
         // When an item is deleted, we allocate its index to the free list
         // and null this item in the array. skip over null items.
@@ -495,7 +498,7 @@ class GLGeomItemLibrary extends EventEmitter {
         this.worker.postMessage({
           type: 'UpdateGeomItems',
           geomItems: geomItemsUpdateToCullingWorker,
-          removedItemIndices: this.removedItemIndices,
+          removedItemIndices: this.removedItemIndices
         })
       }
 
@@ -522,7 +525,7 @@ class GLGeomItemLibrary extends EventEmitter {
         height: size,
         filter: 'NEAREST',
         wrap: 'CLAMP_TO_EDGE',
-        mipMapped: false,
+        mipMapped: false
       })
       this.glGeomItemsTexture.clear()
     } else if (this.glGeomItemsTexture.width != size) {
@@ -580,7 +583,7 @@ class GLGeomItemLibrary extends EventEmitter {
       this.worker.postMessage({
         type: 'UpdateGeomItems',
         geomItems: geomItemsUpdateToCullingWorker,
-        removedItemIndices: this.removedItemIndices,
+        removedItemIndices: this.removedItemIndices
       })
     }
 

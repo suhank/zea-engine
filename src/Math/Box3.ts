@@ -26,8 +26,8 @@ class Box3 {
    */
   constructor(p0?: Vec3 | Float32Array, p1?: Vec3) {
     if (p0 instanceof Float32Array) {
-      this.p0 = new Vec3(p0.buffer, p0.byteOffset)
-      this.p1 = new Vec3(p0.buffer, p0.byteOffset + 12)
+      this.p0 = new Vec3(new Float32Array(p0.buffer, p0.byteOffset, 3))
+      this.p1 = new Vec3(new Float32Array(p0.buffer, p0.byteOffset + 12, 3))
     } else {
       if (p0 instanceof Vec3) {
         this.p0 = p0

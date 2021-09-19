@@ -357,7 +357,7 @@ class Mat4 {
    * @return {Vec3} - Returns the `x` axis as a Vec3.
    */
   get xAxis(): Vec3 {
-    return new Vec3(this.__data.buffer, 0)
+    return new Vec3(new Float32Array(this.__data.buffer, 0, 3))
   }
 
   /**
@@ -375,7 +375,7 @@ class Mat4 {
    * @return {Vec3} - Returns the `y` axis as a Vec3.
    */
   get yAxis(): Vec3 {
-    return new Vec3(this.__data.buffer, 4 * 4)
+    return new Vec3(new Float32Array(this.__data.buffer, 4 * 4, 3))
   }
 
   /**
@@ -393,7 +393,7 @@ class Mat4 {
    * @return {Vec3} - Returns the `z` axis as a Vec3.
    */
   get zAxis(): Vec3 {
-    return new Vec3(this.__data.buffer, 8 * 4)
+    return new Vec3(new Float32Array(this.__data.buffer, 8 * 4, 3))
   }
 
   /**
@@ -411,7 +411,7 @@ class Mat4 {
    * @return {Vec3} - Returns the translation.
    */
   get translation(): Vec3 {
-    return new Vec3(this.__data.buffer, 12 * 4)
+    return new Vec3(new Float32Array(this.__data.buffer, 12 * 4, 3))
   }
 
   /**

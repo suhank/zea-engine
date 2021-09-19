@@ -104,7 +104,7 @@ class GLLines extends GLGeom {
     const stride = 4 // The number of floats per draw item.
     const dataArray = new Float32Array(positions.asArray().length * stride)
     for (let i = 0; i < positions.asArray().length; i++) {
-      const pos = new Vec3(dataArray.buffer, i * stride * 4)
+      const pos = new Vec3(new Float32Array(dataArray.buffer, i * stride * 4, 3))
       pos.setFromOther(positions.getValueRef(i))
 
       // The thickness of the line.
