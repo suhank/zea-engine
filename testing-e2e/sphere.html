@@ -9,7 +9,7 @@
       <canvas class="absolute" id="app"></canvas>
     </div>
 
-    <script src="../dist/index.umd.js"></script>
+    <script src="../dist/index.umd.development.js"></script>
 
     <script type="module">
       const { GLRenderer, Scene, Vec3, Color, Sphere, Material, GeomItem, GLBoundingBoxPass } = zeaEngine
@@ -22,7 +22,7 @@
       const standardMaterial = new Material('surfaces', 'SimpleSurfaceShader')
       standardMaterial.getParameter('BaseColor').setValue(new Color(89 / 255, 182 / 255, 92 / 255))
 
-      const sphere = new Sphere(1.5, 8, 5)
+      const sphere = new Sphere(1.5, 6, 3)
       const geomItem = new GeomItem('Sphere', sphere, standardMaterial)
       scene.getRoot().addChild(geomItem)
 
@@ -30,13 +30,16 @@
       // renderer.addPass(boundingBoxPass)
       // boundingBoxPass.addTreeItem(geomItem, true)
 
-      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, 2.7), new Vec3(0, 0, 0.4))
+      renderer
+        .getViewport()
+        .getCamera()
+        .setPositionAndTarget(new Vec3(2, 2, 2.7), new Vec3(0, 0, 0.4))
       renderer.frameAll()
 
       window.postMessage('done-loading')
 
       // {{{ Messages handler.
-      const handleMessage = (event) => {
+      const handleMessage = event => {
         const { data } = event
 
         if (data === 'variant-01') {

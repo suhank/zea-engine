@@ -10,7 +10,7 @@
       <canvas class="absolute" id="app"></canvas>
     </div>
 
-    <script src="../dist/index.umd.js"></script>
+    <script src="../dist/index.umd.development.js"></script>
 
     <script type="module">
       const { GLRenderer, Scene, Vec3, Color, Cylinder, Material, GeomItem } = zeaEngine
@@ -27,13 +27,16 @@
       const geomItem = new GeomItem('Cylinder', cylinder, standardMaterial)
       scene.getRoot().addChild(geomItem)
 
-      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, 2.7), new Vec3(0, 0, 0.4))
+      renderer
+        .getViewport()
+        .getCamera()
+        .setPositionAndTarget(new Vec3(2, 2, 2.7), new Vec3(0, 0, 0.4))
       renderer.frameAll()
 
       window.postMessage('done-loading')
 
       // {{{ Messages handler.
-      const handleMessage = (event) => {
+      const handleMessage = event => {
         const { data } = event
 
         if (data === 'variant-01') {
