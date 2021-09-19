@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file. See [standa
 
 ## [3.11.0](https://github.com/ZeaInc/zea-engine/compare/v3.10.7-orthographic-framing.2...v3.11.0) (2021-09-15)
 
+### Notes:
+
+For this release, the 'plugins' file is no longer being built and should be removed from your script tags.
+The plugins are now bundled into the engine library and so the plugins tag should be simply removed 
+
+```
+<script src="https://cdn.jsdelivr.net/npm/@zeainc/zea-engine@3/dist/plugins.umd.js"></script>
+```
 
 ### Features
 
