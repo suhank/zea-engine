@@ -686,7 +686,7 @@ class Mesh extends BaseGeom {
       if (splitCount == 0) values = attr.asArray()
       else values = attr.generateSplitValues(splitIndices, splitCount)
 
-      const dimension = attr.numElements
+      const dimension = attr.stride
       const count = values.length / dimension
 
       // if (debugAttrValues) {

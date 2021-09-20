@@ -9,28 +9,29 @@ import { BinReader } from '../../SceneTree/BinReader'
 function approxEqual(a: Float32Array, b: Float32Array) {
   return !a.some((value, index) => Math.abs(b[index] - value) > 0.001)
 }
-function isValid(a: Float32Array, defaultElementValue: number) {
-  return !a.some(value => value == defaultElementValue)
+function isInitialized(a: Float32Array) {
+  for (let i = 0; i < a.length; i++) {
+    if (!Number.isNaN(a[i])) return true
+  }
+  return false
 }
 
 class Attribute extends BaseClass {
+  public dataTypeName: string
+  public stride: number
   protected normalized!: boolean
   protected data: Float32Array
-  protected dataTypeName: string
-  protected stride: number
-  protected defaultElementValue: number
 
   protected mesh!: Mesh
   protected splitValues: Array<Float32Array>
   protected splits: Record<number, Record<number, number>>
 
-  constructor(dataTypeName: string, stride: number, defaultElementValue: number = 0) {
+  constructor(dataTypeName: string, stride: number) {
     super()
 
     this.data = new Float32Array(0)
     this.dataTypeName = dataTypeName
     this.stride = stride
-    this.defaultElementValue = defaultElementValue
     this.initRange(0)
 
     this.splits = {}
@@ -117,7 +118,7 @@ class Attribute extends BaseClass {
   private initRange(start: number): void {
     // Initialize the values to invalid values.
     for (let i = start; i < this.data.length; i++) {
-      this.data[i] = this.defaultElementValue
+      this.data[i] = Number.NaN
     }
   }
 
@@ -172,7 +173,7 @@ class Attribute extends BaseClass {
     if (vertex in this.splits && face in this.splits[vertex]) {
       return this.splitValues[this.splits[vertex][face]]
     }
-    return this.data.subarray(vertex * this.numElements, (vertex + 1) * this.numElements)
+    return this.data.subarray(vertex * this.stride, (vertex + 1) * this.stride)
   }
 
   /**
@@ -193,8 +194,8 @@ class Attribute extends BaseClass {
    * @param {any} value - The value value.
    */
   setFaceVertexValue_ByVertexIndex(face: number, vertex: number, value: Float32Array): void {
-    const currValue = this.data.subarray(vertex * this.numElements, (vertex + 1) * this.numElements)
-    if (!isValid(currValue, this.defaultElementValue)) {
+    const currValue = this.data.subarray(vertex * this.stride, (vertex + 1) * this.stride)
+    if (!isInitialized(currValue)) {
       // the value is uninitialized. Initialize it.
       currValue.set(value)
     } else if (approxEqual(currValue, value)) {
@@ -278,7 +279,7 @@ class Attribute extends BaseClass {
     if (splitCount == 0) return this.data
 
     const numUnSplitValues = this.getCount()
-    const data = new Float32Array(this.getCount() + splitCount * this.numElements)
+    const data = new Float32Array((numUnSplitValues + splitCount) * this.stride)
     data.set(this.data)
 
     // Now duplicate the split values to generate an attributes array
@@ -294,13 +295,13 @@ class Attribute extends BaseClass {
           // we must use that value...
           const src = this.splits[vertex][face]
           this.splitValues[src].forEach((value, index) => {
-            data[tgt * this.numElements + index] = value
+            data[tgt * this.stride + index] = value
           })
         } else {
           // Copy each scalar value to the new place in the array.
           const src = parseInt(vertex)
-          for (let e = 0; e < this.numElements; e++) {
-            data[tgt * this.numElements + e] = this.data[src * this.numElements + e]
+          for (let e = 0; e < this.stride; e++) {
+            data[tgt * this.stride + e] = this.data[src * this.stride + e]
           }
         }
       }
@@ -321,7 +322,6 @@ class Attribute extends BaseClass {
     return {
       data: this.data,
       dataType: this.dataTypeName,
-      defaultValue: this.defaultElementValue,
       length: this.data.length / this.stride
     }
   }
