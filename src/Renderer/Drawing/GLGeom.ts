@@ -71,6 +71,7 @@ class GLGeom extends RefCounted {
    */
   updateBuffers(renderstate?: RenderState) {
     this.genBuffers(renderstate)
+    this.buffersDirty = false
   }
 
   // /////////////////////////////////////
