@@ -252,13 +252,19 @@ class BaseGeom extends ParameterOwner {
     let texCoordsAttr: any
     if (flags & (1 << 1)) {
       normalsAttr = this.getVertexAttribute('normals')
-      if (!normalsAttr) normalsAttr = this.addVertexAttribute('normals', new Vec3Attribute())
+      if (!normalsAttr) {
+        normalsAttr = new Vec3Attribute()
+        this.addVertexAttribute('normals', normalsAttr)
+      }
     }
     if (flags & (1 << 2)) {
       texCoordsAttr = this.getVertexAttribute('texCoords')
-      if (!texCoordsAttr) texCoordsAttr = this.addVertexAttribute('texCoords', new Vec2Attribute())
+      if (!texCoordsAttr) {
+        texCoordsAttr = new Vec2Attribute()
+        this.addVertexAttribute('texCoords', texCoordsAttr)
+      }
     }
-    const parse8BitPositionsArray = (range: any, offset: any, sclVec: any, positions_8bit: any) => {
+    const parse8BitPositionsArray = (range: Array<number>, offset: Vec3, sclVec: Vec3, positions_8bit: Uint8Array) => {
       for (let i = range[0]; i < range[1]; i++) {
         const pos = new Vec3(
           positions_8bit[i * 3 + 0] / 255.0,
@@ -270,7 +276,7 @@ class BaseGeom extends ParameterOwner {
         if (positionsAttr) positionsAttr.setValue(i, pos)
       }
     }
-    const parse8BitNormalsArray = (range: any, offset: any, sclVec: any, normals_8bit: any) => {
+    const parse8BitNormalsArray = (range: Array<number>, offset: Vec3, sclVec: Vec3, normals_8bit: Uint8Array) => {
       if (sclVec.isNull()) sclVec.set(1, 1, 1)
       for (let i = range[0]; i < range[1]; i++) {
         const normal = new Vec3(
@@ -284,7 +290,12 @@ class BaseGeom extends ParameterOwner {
         normalsAttr.setValue(i, normal)
       }
     }
-    const parse8BitTextureCoordsArray = (range: any, offset: any, sclVec: any, texCoords_8bit: any) => {
+    const parse8BitTextureCoordsArray = (
+      range: Array<number>,
+      offset: Vec2,
+      sclVec: Vec2,
+      texCoords_8bit: Uint8Array
+    ) => {
       // if (sclVec.isNull())
       //     sclVec.set(1, 1, 1);
       for (let i = range[0]; i < range[1]; i++) {
@@ -320,24 +331,25 @@ class BaseGeom extends ParameterOwner {
       let offset = 0
       for (let i = 0; i < numClusters; i++) {
         const count = reader.loadUInt32()
-        const box3 = new Box3(reader.loadFloat32Vec3(), reader.loadFloat32Vec3())
         const clusterData = {
           range: [offset, offset + count],
-          bbox: box3
+          bbox: new Box3(reader.loadFloat32Vec3(), reader.loadFloat32Vec3()),
+          normalsRange: new Box3(),
+          texCoordsRange: new Box2()
         }
         if (normalsAttr) {
-          ;(clusterData as any).normalsRange = new Box3(reader.loadFloat32Vec3(), reader.loadFloat32Vec3())
+          clusterData.normalsRange.set(reader.loadFloat32Vec3(), reader.loadFloat32Vec3())
         }
         if (texCoordsAttr) {
-          ;(clusterData as any).texCoordsRange = new Box2(reader.loadFloat32Vec2(), reader.loadFloat32Vec2())
+          clusterData.texCoordsRange.set(reader.loadFloat32Vec2(), reader.loadFloat32Vec2())
         }
 
         clusters.push(clusterData)
         offset += count
       }
       const positions_8bit = reader.loadUInt8Array(numVerts * 3)
-      let normals_8bit
-      let texCoords_8bit
+      let normals_8bit: Uint8Array | null = null
+      let texCoords_8bit: Uint8Array | null = null
       if (normalsAttr) {
         normals_8bit = reader.loadUInt8Array(numVerts * 3)
       }
@@ -352,12 +364,12 @@ class BaseGeom extends ParameterOwner {
         }
 
         if (normalsAttr) {
-          const box3 = (clusters[i] as any).normalsRange
-          parse8BitNormalsArray(clusters[i].range, box3.p0, box3.diagonal(), normals_8bit)
+          const box3 = clusters[i].normalsRange
+          parse8BitNormalsArray(clusters[i].range, box3.p0, box3.diagonal(), normals_8bit!)
         }
         if (texCoordsAttr) {
-          const box2 = (clusters[i] as any).texCoordsRange
-          parse8BitTextureCoordsArray(clusters[i].range, box2.p0, box2.diagonal(), texCoords_8bit)
+          const box2 = clusters[i].texCoordsRange
+          parse8BitTextureCoordsArray(clusters[i].range, box2.p0, box2.diagonal(), texCoords_8bit!)
         }
       }
       if (normalsAttr) {

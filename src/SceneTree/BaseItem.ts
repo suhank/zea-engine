@@ -317,7 +317,9 @@ class BaseItem extends ParameterOwner implements Owner {
    * @param {Record<string, unknown>} context - The context value.
    */
   readBinary(reader: BinReader, context: Record<string, any>): void {
-    // const type = reader.loadStr()
+    // read the type, but don't use it. This line must not be removed.
+    // as the binary pointer is incremented.
+    /*const type = */ reader.loadStr()
     this.setName(reader.loadStr())
 
     // Note: parameters follow name...

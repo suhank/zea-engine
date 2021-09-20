@@ -21,7 +21,7 @@ import { BaseEvent } from './BaseEvent'
  *
  */
 class EventEmitter extends BaseClass {
-  listeners: Record<string, Array<(event: BaseEvent) => void>>
+  listeners: Record<string, Array<null | ((event: BaseEvent) => void)>>
 
   /**
    * Initializes an empty `listeners` map that will host all the events,
@@ -107,7 +107,7 @@ class EventEmitter extends BaseClass {
 
     const ids: Array<number> = []
 
-    listeners.forEach((e: (event: BaseEvent) => void, i: number) => {
+    listeners.forEach((e: null | ((event: BaseEvent) => void), i: number) => {
       if (e === listener) {
         ids.push(i)
       }
@@ -116,8 +116,9 @@ class EventEmitter extends BaseClass {
     if (ids.length == 0) {
       throw new Error(`Listener "${listener.name}" is not connected to "${eventName}" event`)
     } else {
+      // Note: do not splice the array as that would change the indexes of existing listeners.
       for (const id of ids) {
-        listeners.splice(id, 1)
+        listeners[id] = null
       }
     }
   }
@@ -164,8 +165,8 @@ class EventEmitter extends BaseClass {
     }
 
     if (!listeners[id]) throw new Error('Invalid ID')
-    // listeners[id] = undefined
-    listeners.splice(id, 1)
+    // Note: do not splice the array as that would change the indexes of existing listeners.
+    listeners[id] = null
   }
 
   /**
@@ -178,7 +179,7 @@ class EventEmitter extends BaseClass {
   emit(eventName: string, event: BaseEvent = new BaseEvent()): void {
     const listeners = this.listeners[eventName] || []
 
-    listeners.forEach((fn: (event: BaseEvent) => void) => {
+    listeners.forEach((fn: null | ((event: BaseEvent) => void)) => {
       // Skip disconnected listeners.
       if (fn) {
         fn(event)

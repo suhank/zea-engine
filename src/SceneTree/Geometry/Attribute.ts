@@ -4,6 +4,7 @@
 import { BaseClass } from '../../Utilities/BaseClass'
 import { MathFunctions } from '../../Utilities/MathFunctions'
 import { Mesh } from './Mesh'
+import { BinReader } from '../../SceneTree/BinReader'
 
 function approxEqual(a: Float32Array, b: Float32Array) {
   return !a.some((value, index) => Math.abs(b[index] - value) > 0.001)
@@ -335,6 +336,38 @@ class Attribute extends BaseClass {
       MathFunctions.isNumeric(dataElement) ? dataElement : Number.POSITIVE_INFINITY
     )
     this.data = Float32Array.from(data)
+  }
+
+  /**
+   * The loadSplitValues method.
+   * @param {BinReader} reader - The reader value.
+   */
+  loadSplitValues(reader: BinReader) {
+    const splitIndices = reader.loadUInt32Array()
+    if (splitIndices.length == 0) return
+    let offset = 0
+    let numSplitValues = 0
+    while (true) {
+      const vertexId = splitIndices[offset++]
+      const numSplits = splitIndices[offset++]
+
+      const splits: Record<number, number> = {}
+      for (let i = 0; i < numSplits; i++) {
+        const faceId = splitIndices[offset++]
+        const splitId = splitIndices[offset++]
+        splits[faceId] = splitId
+        if (splitId >= numSplitValues) numSplitValues = splitId + 1
+      }
+      this.splits[vertexId] = splits
+      if (offset >= splitIndices.length) break
+    }
+    const dim = this.stride
+    const splitValues = reader.loadFloat32Array(numSplitValues * dim)
+    this.splitValues = []
+    for (let i = 0; i < numSplitValues; i++) {
+      const val = splitValues.slice(i * dim, i * dim + dim)
+      this.splitValues.push(val)
+    }
   }
 
   /**
