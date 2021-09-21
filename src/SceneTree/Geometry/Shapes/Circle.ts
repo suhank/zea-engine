@@ -52,8 +52,8 @@ class Circle extends ProceduralLines {
     this.setNumVertices(segs)
     const angle = this.__angle.getValue() || Math.PI * 2
     const arc = angle < Math.PI * 2
-    if (arc) this.setSides(segs - 1)
-    else this.setSides(segs)
+    if (arc) this.setNumSegments(segs - 1)
+    else this.setNumSegments(segs)
     for (let i = 0; i < (arc ? segs - 1 : segs); i++) this.setSegmentVertexIndices(i, i, (i + 1) % segs)
     this.resize()
   }

@@ -41,7 +41,7 @@ class GridTreeItem extends TreeItem {
     this.addChild(gridItem, false)
     const axisLine = new Lines()
     axisLine.setNumVertices(2)
-    axisLine.setSides(1)
+    axisLine.setNumSegments(1)
     axisLine.setSegmentVertexIndices(0, 0, 1)
     const positions = <Vec3Attribute>axisLine.getVertexAttribute('positions')
     positions.getValueRef(0).set(gridSize * -0.5, 0.0, 0.0)

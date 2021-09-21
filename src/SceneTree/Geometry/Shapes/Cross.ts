@@ -38,7 +38,7 @@ class Cross extends ProceduralLines {
    */
   rebuild(): void {
     this.setNumVertices(6)
-    this.setSides(3)
+    this.setNumSegments(3)
     this.setSegmentVertexIndices(0, 0, 1)
     this.setSegmentVertexIndices(1, 2, 3)
     this.setSegmentVertexIndices(2, 4, 5)

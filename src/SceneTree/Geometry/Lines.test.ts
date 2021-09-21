@@ -18,7 +18,7 @@ describe('Lines', () => {
     positions.getValueRef(1).set(-1, -2, -3)
     positions.getValueRef(2).set(2, 1, -3)
 
-    lines.setSides(2)
+    lines.setNumSegments(2)
     lines.setSegmentVertexIndices(0, 0, 1)
     lines.setSegmentVertexIndices(1, 1, 2)
 
@@ -33,11 +33,11 @@ describe('Lines', () => {
     const numVertices = 3
     lines.setNumVertices(numVertices)
 
-    lines.setSides(2)
+    lines.setNumSegments(2)
     lines.setSegmentVertexIndices(0, 0, 1)
     lines.setSegmentVertexIndices(1, 1, 2)
 
-    lines.setSides(3)
+    lines.setNumSegments(3)
     lines.setSegmentVertexIndices(2, 2, 0)
 
     expect(lines.getSegmentVertexIndex(1, 0)).toBe(1)
@@ -54,12 +54,12 @@ describe('Lines', () => {
     const numVertices = 3
     lines.setNumVertices(numVertices)
 
-    lines.setSides(3)
+    lines.setNumSegments(3)
     lines.setSegmentVertexIndices(0, 0, 1)
     lines.setSegmentVertexIndices(1, 1, 2)
     lines.setSegmentVertexIndices(2, 2, 0)
 
-    lines.setSides(2)
+    lines.setNumSegments(2)
 
     expect(lines.getSegmentVertexIndex(1, 0)).toBe(1)
     expect(lines.getSegmentVertexIndex(1, 1)).toBe(2)
@@ -76,7 +76,7 @@ describe('Lines', () => {
     positions.getValueRef(1).set(-1, -2, -3)
     positions.getValueRef(2).set(2, 1, -3)
 
-    lines.setSides(2)
+    lines.setNumSegments(2)
     lines.setSegmentVertexIndices(0, 0, 1)
     lines.setSegmentVertexIndices(1, 1, 2)
 
@@ -89,11 +89,11 @@ describe('Lines', () => {
           count: 3,
           dataType: 'Vec3',
           normalized: false,
-          values: new Float32Array([1, 2, 3, -1, -2, -3, 2, 1, -3]),
-        },
+          values: new Float32Array([1, 2, 3, -1, -2, -3, 2, 1, -3])
+        }
       },
       indices: new Uint8Array([0, 1, 1, 2]),
-      numVertices: 3,
+      numVertices: 3
     })
   })
 
@@ -106,7 +106,7 @@ describe('Lines', () => {
     positions.getValueRef(1).set(-1, -2, -3)
     positions.getValueRef(2).set(2, 1, -3)
 
-    lines.setSides(2)
+    lines.setNumSegments(2)
     lines.setSegmentVertexIndices(0, 0, 1)
     lines.setSegmentVertexIndices(1, 1, 2)
 
@@ -119,9 +119,9 @@ describe('Lines', () => {
       type: 'Lines',
       numVertices: 3,
       vertexAttributes: {
-        positions: { data: [1, 2, 3, -1, -2, -3, 2, 1, -3], dataType: 'Vec3', defaultValue: 0, length: 3 },
+        positions: { data: [1, 2, 3, -1, -2, -3, 2, 1, -3], dataType: 'Vec3', defaultValue: 0, length: 3 }
       },
-      indices: [0, 1, 1, 2],
+      indices: [0, 1, 1, 2]
     }
     lines.fromJSON(input)
 
