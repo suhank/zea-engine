@@ -41,8 +41,6 @@ class GLBoundingBoxPass extends GLPass {
   constructor() {
     super()
 
-    this.__childItemAdded = this.__childItemAdded.bind(this)
-    this.__childItemRemoved = this.__childItemRemoved.bind(this)
   }
 
   /**
@@ -119,25 +117,13 @@ class GLBoundingBoxPass extends GLPass {
         if (childItem) this.addTreeItem(<TreeItem>childItem)
       }
 
-      treeItem.on('childAdded', this.__childItemAdded)
-      treeItem.on('childRemoved', this.__childItemRemoved)
+      treeItem.on('childAdded', (event) => {
+        this.addTreeItem(event.childItem)
+      })
+      treeItem.on('childRemoved', (event) => {
+        this.unbindTreeItem(event.childItem)
+      })
     }
-  }
-
-  /**
-   * @param {*} event -
-   * @private
-   */
-  __childItemAdded(event: Record<string, any>) {
-    this.addTreeItem(event.childItem)
-  }
-
-  /**
-   * @param {*} event -
-   * @private
-   */
-  __childItemRemoved(event: Record<string, any>) {
-    this.unbindTreeItem(event.childItem)
   }
 
   /**

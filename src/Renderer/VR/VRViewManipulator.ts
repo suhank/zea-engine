@@ -11,6 +11,7 @@ import { POINTER_TYPES } from '../../Utilities/EnumUtils'
  * @extends BaseTool
  */
 class VRViewManipulator extends BaseTool {
+  protected listenerIDs: Record<string, number> = {}
   protected __controllerTriggersHeld: any[]
   protected xrvp: any
   protected vrControllerToolTip: Sphere
@@ -32,7 +33,7 @@ class VRViewManipulator extends BaseTool {
     this.vrControllerToolTip = new Sphere(0.02 * 0.75)
     this.vrControllerToolTipMat = new Material('Cross', 'FlatSurfaceShader')
     this.vrControllerToolTipMat.getParameter('BaseColor')!.setValue(new Color('#03E3AC'))
-    this.addIconToController = this.addIconToController.bind(this)
+    this.listenerIDs = {}
   }
 
   // /////////////////////////////////////
@@ -60,7 +61,9 @@ class VRViewManipulator extends BaseTool {
     for (const controller of this.xrvp.getControllers()) {
       this.addIconToController({ controller })
     }
-    this.xrvp.on('controllerAdded', this.addIconToController)
+    this.listenerIDs['controllerAdded'] = this.xrvp.on('controllerAdded', (event) => {
+      this.addIconToController(event)
+    })
   }
 
   /**
@@ -72,7 +75,7 @@ class VRViewManipulator extends BaseTool {
     for (const controller of this.xrvp.getControllers()) {
       controller.getTipItem().removeAllChildren()
     }
-    this.xrvp.off('controllerAdded', this.addIconToController)
+    this.xrvp.removeListenerById('controllerAdded', this.listenerIDs['controllerAdded'])
   }
 
   // ///////////////////////////////////

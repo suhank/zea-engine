@@ -20,6 +20,7 @@ import { BaseItem } from '../../SceneTree/BaseItem'
  */
 class BaseGroup extends TreeItem {
   protected __itemsParam: ItemSetParameter
+  protected __itemsEventHandlers: Array<Record<string, number>> = []
   searchRoot?: TreeItem
 
   /**
@@ -106,26 +107,48 @@ class BaseGroup extends TreeItem {
    */
   protected bindItem(item: TreeItem, index: number): void {
     if (!(item instanceof TreeItem)) return
-    item.on('pointerDown', this.onPointerDown)
-    item.on('pointerUp', this.onPointerUp)
-    item.on('pointerMove', this.onPointerMove)
-    item.on('pointerEnter', this.onPointerEnter)
-    item.on('pointerLeave', this.onPointerLeave)
+
+    const listenerIDs: Record<string, number> = {}
+    listenerIDs['pointerDown'] = item.on('pointerDown', (event) => {
+      this.onPointerDown(event)
+    })
+    listenerIDs['pointerUp'] = item.on('pointerUp', (event) => {
+      this.onPointerUp(event)
+    })
+    listenerIDs['pointerMove'] = item.on('pointerMove', (event) => {
+      this.onPointerMove(event)
+    })
+    listenerIDs['pointerEnter'] = item.on('pointerEnter', (event) => {
+      this.onPointerEnter(event)
+    })
+    listenerIDs['pointerLeave'] = item.on('pointerLeave', (event) => {
+      this.onPointerLeave(event)
+    })
+
+    this.__itemsEventHandlers.splice(index, 0, listenerIDs)
   }
 
   /**
-   * The __unbindItem method.
+   * The unbindItem method.
    * @param {BaseItem} item - The item value.
    * @param {number} index - The index value.
    * @private
    */
-  protected unbindItem(item: TreeItem, index?: number): void {
+  protected unbindItem(item: TreeItem, index: number): void {
     if (!(item instanceof TreeItem)) return
-    item.off('pointerDown', this.onPointerDown)
-    item.off('pointerUp', this.onPointerUp)
-    item.off('pointerMove', this.onPointerMove)
-    item.off('pointerEnter', this.onPointerEnter)
-    item.off('pointerLeave', this.onPointerLeave)
+
+    const listenerIDs = this.__itemsEventHandlers[index]
+    // eslint-disable-next-line guard-for-in
+    for (let key in listenerIDs) {
+      const parts = key.split('.')
+      if (parts.length > 1) {
+        const param = item.getParameter(parts[0])
+        if (param) param.removeListenerById(parts[1], listenerIDs[key])
+      } else {
+        item.removeListenerById(key, listenerIDs[key])
+      }
+    }
+    this.__itemsEventHandlers.splice(index, 1)
   }
 
   /**

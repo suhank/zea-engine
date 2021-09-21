@@ -23,6 +23,7 @@ import { Material } from '../Material'
  * @extends Parameter
  */
 class MaterialParameter extends Parameter<Material | undefined> {
+  protected listenerIDs: Record<string, number> = {}
   /**
    * Create a material parameter.
    * @param {string} name - The name of the material parameter.
@@ -30,12 +31,10 @@ class MaterialParameter extends Parameter<Material | undefined> {
    */
   constructor(name: string = '', value?: Material) {
     super(name, value, 'Material')
-
-    this.valueParameterValueChanged = this.valueParameterValueChanged.bind(this)
-    if (this.value) this.value.on('parameterValueChanged', this.valueParameterValueChanged)
+    if (value) this.setValue(value)
   }
 
-  protected valueParameterValueChanged = (event: Record<string, unknown>): void => {
+  private valueParameterValueChanged(event: Record<string, unknown>): void {
     this.emit('valueParameterValueChanged', event)
   }
 
@@ -48,11 +47,13 @@ class MaterialParameter extends Parameter<Material | undefined> {
     // 0 == normal set. 1 = changed via cleaner fn, 2 = change by loading/cloning code.
     if (this.value !== material) {
       if (this.value) {
-        this.value.off('parameterValueChanged', this.valueParameterValueChanged)
+        this.value.removeListenerById('parameterValueChanged', this.listenerIDs['parameterValueChanged'])
       }
       this.value = material
       if (this.value) {
-        this.value.on('parameterValueChanged', this.valueParameterValueChanged)
+        this.listenerIDs['parameterValueChanged'] = this.value.on('parameterValueChanged', (event) => {
+          this.valueParameterValueChanged(event)
+        })
       }
 
       // During the cleaning process, we don't want notifications.
@@ -71,11 +72,13 @@ class MaterialParameter extends Parameter<Material | undefined> {
    */
   loadValue(value: Material): void {
     if (this.value) {
-      this.value.off('parameterValueChanged', this.valueParameterValueChanged)
+      this.value.removeListenerById('parameterValueChanged', this.listenerIDs['parameterValueChanged'])
     }
     this.value = value
     if (this.value) {
-      this.value.on('parameterValueChanged', this.valueParameterValueChanged)
+      this.listenerIDs['parameterValueChanged'] = this.value.on('parameterValueChanged', (event) => {
+        this.valueParameterValueChanged(event)
+      })
     }
   }
 
@@ -139,20 +142,6 @@ class MaterialParameter extends Parameter<Material | undefined> {
   clone(): MaterialParameter {
     const clonedParam = new MaterialParameter(this.name, this.value)
     return clonedParam
-  }
-
-  /**
-   * The destroy is called by the system to cause explicit resources cleanup.
-   * Users should never need to call this method directly.
-   */
-  destroy(): void {
-    // Note: Some parameters hold refs to geoms/materials,
-    // which need to be explicitly cleaned up.
-    // E.g. freeing GPU Memory.
-
-    if (this.value) {
-      this.value.off('parameterValueChanged', this.valueParameterValueChanged)
-    }
   }
 }
 

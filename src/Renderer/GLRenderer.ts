@@ -128,8 +128,12 @@ class GLRenderer extends GLBaseRenderer {
           this.__glBackgroundMap = new GLTexture2D(this.__gl, backgroundMap)
         }
       }
-      this.__glBackgroundMap.on('loaded', this.requestRedraw)
-      this.__glBackgroundMap.on('updated', this.requestRedraw)
+      this.__glBackgroundMap.on('loaded', (event) => {
+        this.requestRedraw()
+      })
+      this.__glBackgroundMap.on('updated', (event) => {
+        this.requestRedraw()
+      })
       if (!this.__backgroundMapShader) {
         if (!gl.__quadVertexIdsBuffer) gl.setupInstancedQuad()
         this.__backgroundMapShader = new EnvMapShader(this.__gl)
@@ -157,8 +161,12 @@ class GLRenderer extends GLBaseRenderer {
       // console.warn('Unsupported EnvMap:' + env)
       return
     }
-    this.__glEnvMap.on('loaded', this.requestRedraw)
-    this.__glEnvMap.on('updated', this.requestRedraw)
+    this.__glEnvMap.on('loaded', (event) => {
+      this.requestRedraw()
+    })
+    this.__glEnvMap.on('updated', (event) => {
+      this.requestRedraw()
+    })
 
     const event = new EnvMapAssignedEvent(this.__glEnvMap)
     this.emit('envMapAssigned', event)

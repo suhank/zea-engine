@@ -149,14 +149,12 @@ class EventEmitter extends BaseClass {
   }
 
   /**
-   * @deprecated Use #off, passing the listener itself instead of the id.
+   * remove listener by ID returned from #on
    *
    * @param {string} eventName - The name of the event.
    * @param {number} id - The id returned by addListener
    */
   removeListenerById(eventName: string, id: number): void {
-    console.warn('Deprecated. Use #off, passing the listener itself instead of the id.')
-
     const listeners = this.listeners[eventName]
 
     if (!listeners) {

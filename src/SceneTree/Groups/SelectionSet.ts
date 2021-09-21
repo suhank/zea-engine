@@ -17,6 +17,7 @@ import { BaseItem } from '../BaseItem'
  * @extends BaseGroup
  */
 class SelectionSet extends BaseGroup {
+  protected listenerIDs: Record<string, number> = {}
   protected __highlightedParam: BooleanParameter
 
   /**
@@ -32,11 +33,15 @@ class SelectionSet extends BaseGroup {
       this.__updateHighlight()
     })
 
-    this.__updateHighlight = this.__updateHighlight.bind(this)
     const highlightColorParam = this.addParameter(new ColorParameter('HighlightColor', new Color(0.5, 0.5, 1)))
-    highlightColorParam.on('valueChanged', this.__updateHighlight)
+    this.listenerIDs['valueChanged'] = highlightColorParam.on('valueChanged', (event) => {
+      this.__updateHighlight()
+    })
+
     const highlightFillParam = this.addParameter(new NumberParameter('HighlightFill', 0.0, [0, 1]))
-    highlightFillParam.on('valueChanged', this.__updateHighlight)
+    highlightFillParam.on('valueChanged', () => {
+      this.__updateHighlight()
+    })
   }
 
   /**
@@ -113,6 +118,7 @@ class SelectionSet extends BaseGroup {
    */
   bindItem(item: BaseItem, index: number) {
     super.bindItem(<TreeItem>item, index)
+    const listenerIDs = this.__itemsEventHandlers[index]
     if (!(item instanceof TreeItem)) return
 
     // ///////////////////////////////
@@ -130,17 +136,19 @@ class SelectionSet extends BaseGroup {
     }
 
     if (item instanceof TreeItem) {
-      item.getParameter('BoundingBox')!.on('valueChanged', this.setBoundingBoxDirty)
+      listenerIDs['BoundingBox.valueChanged'] = item.getParameter('BoundingBox')!.on('valueChanged', (event) => {
+        this.setBoundingBoxDirty()
+      })
     }
   }
 
   /**
-   * The __unbindItem method.
+   * The unbindItem method.
    * @param {BaseItem} item - The item value.
    * @param {number} index - The index value.
    * @private
    */
-  __unbindItem(item: BaseItem, index: number) {
+  unbindItem(item: BaseItem, index: number) {
     super.unbindItem(<TreeItem>item, index)
     if (!(item instanceof TreeItem)) return
 

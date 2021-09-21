@@ -76,6 +76,7 @@ class ArchiveUnpackerPlugin {
             this.__onFinishedReceiveFileData(event.data)
           } else if (event.data.type === 'ERROR') {
             const data = event.data
+            console.warn(`Unable to load Resource: ${data.resourceId}`, event.data)
             reject(new Error(`Unable to load Resource: ${data.resourceId}`))
           }
         }
@@ -152,6 +153,14 @@ class ArchiveUnpackerPlugin {
       }
       delete this.__callbacks[resourceId]
     }
+  }
+
+  shutDownWorkers() {
+    this.__workers.forEach((workerPromise) => {
+      workerPromise.then((worker) => {
+        worker.terminate()
+      })
+    })
   }
 }
 

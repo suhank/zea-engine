@@ -58,8 +58,6 @@ class MaterialFloatParam extends NumberParameter implements IBinaryReader {
    */
   setImage(value: BaseImage | null): void {
     const disconnectImage = () => {
-      // image.off('loaded', imageUpdated);
-      // image.off('updated', imageUpdated);
       this.emit('textureDisconnected')
     }
     if (value) {
@@ -67,8 +65,6 @@ class MaterialFloatParam extends NumberParameter implements IBinaryReader {
         disconnectImage()
       }
       this.image = value
-      // image.on('loaded', imageUpdated);
-      // image.on('updated', imageUpdated);
       this.emit('textureConnected')
       this.emit('valueChanged', { mode: 0 })
     } else {

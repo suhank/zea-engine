@@ -17,7 +17,7 @@ import { Parameter } from './Parameters/Parameter'
  * @extends {EventEmitter}
  */
 class ParameterOwner extends EventEmitter {
-  protected paramEventHandlers: Record<string, any>
+  protected paramEventListenerIDs: Record<string, number>
   protected paramMapping: Record<string, number>
   protected params: Parameter<any>[]
   deprecatedParamMapping: Record<string, any>
@@ -32,7 +32,7 @@ class ParameterOwner extends EventEmitter {
     this.params = []
     this.paramMapping = {}
     this.deprecatedParamMapping = {}
-    this.paramEventHandlers = {}
+    this.paramEventListenerIDs = {}
   }
 
   // --- Params ---
@@ -168,15 +168,12 @@ class ParameterOwner extends EventEmitter {
       this.removeParameter(name)
     }
     param.setOwner(this)
-    const paramChangedHandler = (event: Record<string, unknown>) => {
+    this.paramEventListenerIDs[name] = param.on('valueChanged', (event) => {
       // Note: spread operators cause errors on iOS 11.
       const newEvent: Record<string, unknown> = { param }
       for (const key in event) newEvent[key] = event[key]
       this.parameterValueChanged(newEvent)
-    }
-
-    param.on('valueChanged', paramChangedHandler)
-    this.paramEventHandlers[name] = paramChangedHandler
+    })
     this.params.splice(index, 0, param)
     for (let i = index; i < this.params.length; i++) {
       this.paramMapping[this.params[i].getName()] = i
@@ -197,7 +194,7 @@ class ParameterOwner extends EventEmitter {
     }
     const index = this.paramMapping[name]
     const param = this.params[this.paramMapping[name]]
-    param.off('valueChanged', this.paramEventHandlers[name])
+    param.removeListenerById('valueChanged', this.paramEventListenerIDs[name])
     this.params.splice(index, 1)
     delete this.paramMapping[name]
     for (let i = index; i < this.params.length; i++) {

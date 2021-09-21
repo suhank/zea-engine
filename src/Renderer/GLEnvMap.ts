@@ -31,7 +31,9 @@ class GLEnvMap extends GLProbe {
     if (this.__envMap.isLoaded()) {
       this.init()
     } else {
-      this.__envMap.once('loaded', this.init.bind(this))
+      this.__envMap.once('loaded', (event) => {
+        this.init()
+      })
     }
   }
 

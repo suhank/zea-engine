@@ -36,9 +36,17 @@ class CuttingPlane extends BaseGroup {
   constructor(name: string = '') {
     super(name)
 
-    this.__updateCutaway = this.__updateCutaway.bind(this)
-    this.addParameter(new BooleanParameter('CutAwayEnabled', false)).on('valueChanged', this.__updateCutaway)
-    this.addParameter(new Vec4Parameter('CutPlane', new Vec4(1, 0, 0))).on('valueChanged', this.__updateCutaway)
+    const booleanParam = new BooleanParameter('CutAwayEnabled', false)
+    const vec4Parameter = new Vec4Parameter('CutPlane', new Vec4(1, 0, 0))
+    booleanParam.on('valueChanged', (event) => {
+      this.__updateCutaway(event)
+    })
+    vec4Parameter.on('vec4Parameter', (event) => {
+      this.__updateCutaway(event)
+    })
+    this.addParameter(booleanParam)
+    this.addParameter(vec4Parameter)
+
     this.cutPlaneOp = new CuttingPlaneOperator(
       <XfoParameter>this.getParameter('GlobalXfo'),
       <XfoParameter>this.getParameter('CutPlane')
@@ -148,12 +156,12 @@ class CuttingPlane extends BaseGroup {
   }
 
   /**
-   * The __unbindItem method.
+   * The unbindItem method.
    * @param {BaseItem} item - The item value.
    * @param {number} index - The index value.
    * @private
    */
-  __unbindItem(item: BaseItem, index: number) {
+  unbindItem(item: BaseItem, index: number) {
     if (!(item instanceof TreeItem)) return
 
     // ///////////////////////////////

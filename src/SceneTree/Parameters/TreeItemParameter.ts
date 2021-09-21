@@ -26,6 +26,7 @@ import { Parameter } from './Parameter'
 class TreeItemParameter extends Parameter<TreeItem | undefined> {
   protected filterFn?: (...args: any[]) => unknown
   protected owner: TreeItem
+  protected listenerIDs: Record<string, number> = {}
 
   /**
    * Create a tree item parameter.
@@ -36,10 +37,9 @@ class TreeItemParameter extends Parameter<TreeItem | undefined> {
     super(name, undefined, 'TreeItem')
     this.owner = new TreeItem('') // TODO:(review) should this be initialize by arguments or is this ok?
     this.filterFn = filterFn
-    this.emittreeItemGlobalXfoChanged = this.emittreeItemGlobalXfoChanged.bind(this)
   }
 
-  protected emittreeItemGlobalXfoChanged(event: Record<string, unknown>): void {
+  private emitTreeItemGlobalXfoChanged(event: Record<string, unknown>): void {
     this.emit('treeItemGlobalXfoChanged', event)
   }
 
@@ -85,14 +85,16 @@ class TreeItemParameter extends Parameter<TreeItem | undefined> {
    */
   setValue(treeItem: TreeItem) {
     // 0 == normal set. 1 = changed via cleaner fn, 2=change by loading/cloning code.
-    if (this.filterFn && !this.filterFn(treeItem)) return
+    if (this.filterFn && !this.filterFn(treeItem)) return false
     if (this.value !== treeItem) {
       if (this.value) {
-        this.value.off('globalXfoChanged', this.emittreeItemGlobalXfoChanged)
+        this.value.removeListenerById('globalXfoChanged', this.listenerIDs['globalXfoChanged'])
       }
       this.value = treeItem
       if (this.value) {
-        this.value.on('globalXfoChanged', this.emittreeItemGlobalXfoChanged)
+        this.listenerIDs['globalXfoChanged'] = this.value.on('globalXfoChanged', (event) => {
+          this.emitTreeItemGlobalXfoChanged(event)
+        })
       }
 
       this.emit('valueChanged', {})
@@ -149,16 +151,6 @@ class TreeItemParameter extends Parameter<TreeItem | undefined> {
     const clonedParam = new TreeItemParameter(this.name, this.filterFn)
     if (this.value) clonedParam.setValue(this.value.clone(context))
     return clonedParam
-  }
-
-  /**
-   * The destroy is called by the system to cause explicit resources cleanup.
-   * Users should never need to call this method directly.
-   */
-  destroy() {
-    if (this.value) {
-      this.value.off('globalXfoChanged', this.emittreeItemGlobalXfoChanged)
-    }
   }
 }
 

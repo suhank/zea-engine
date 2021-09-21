@@ -27,7 +27,7 @@ class GLBillboardsPass extends GLPass {
   protected atlas: GLImageAtlas | null = null
   protected indexArrayUpdateNeeded: boolean = false
   protected instanceIdsBuffer: WebGLBuffer | null = null
-  protected indexArray: Float32Array | null = null
+  protected indexArray: Float32Array = new Float32Array(0)
 
   protected glshader: GLShader | null = null
   protected shaderComp: Record<string, any> = {}
@@ -282,7 +282,7 @@ class GLBillboardsPass extends GLPass {
   updateIndexArray() {
     const gl = this.__gl!
     // Note: When the camera moves, this array is sorted and re-upload.
-    if (this.indexArray && this.indexArray!.length != this.drawCount) {
+    if (this.indexArray && this.indexArray.length != this.drawCount) {
       gl.deleteBuffer(this.instanceIdsBuffer)
       this.instanceIdsBuffer = null
     }
@@ -291,7 +291,7 @@ class GLBillboardsPass extends GLPass {
     let offset = 0
     for (let i = 0; i < this.billboards.length; i++) {
       if (this.billboards[i] && this.billboards[i].billboard.isVisible()) {
-        this.indexArray![offset] = i
+        this.indexArray[offset] = i
         offset++
       }
     }
@@ -330,7 +330,7 @@ class GLBillboardsPass extends GLPass {
         this.modelMatrixArray = []
         this.billboardDataArray = []
         this.tintColorArray = []
-        this.indexArray!.forEach((index: number) => {
+        this.indexArray.forEach((index: number) => {
           // if (index == -1) return;
           const billboardData = this.billboards[index]
           const billboard = billboardData.billboard
@@ -389,7 +389,7 @@ class GLBillboardsPass extends GLPass {
         this.drawItemsTexture.resize(size, size)
       }
 
-      this.indexArray!.forEach((index: any) => {
+      this.indexArray.forEach((index: any) => {
         if (index != -1) this.updateBillboard(index)
       })
 
@@ -450,7 +450,7 @@ class GLBillboardsPass extends GLPass {
         billboardData.dist = xfo.tr.distanceTo(cameraPos)
       }
     }
-    this.indexArray!.sort((a: number, b: number) => {
+    this.indexArray.sort((a: number, b: number) => {
       if (a == -1) return 1
       if (b == -1) return -1
       return this.billboards[a].dist > this.billboards[b].dist
@@ -490,6 +490,7 @@ class GLBillboardsPass extends GLPass {
 
     const gl = this.__gl!
 
+    gl.depthMask(false)
     gl.disable(gl.CULL_FACE)
     gl.enable(gl.BLEND)
     gl.blendEquation(gl.FUNC_ADD)
@@ -502,9 +503,13 @@ class GLBillboardsPass extends GLPass {
       this.sort(cameraPos)
       this.prevSortCameraPos = cameraPos.clone()
       if (this.drawCount > 1) {
-        const v0 = this.billboards[this.indexArray![0]].billboard.getParameter('GlobalXfo')!.getValue().tr
-        const v1 = this.billboards[this.indexArray![1]].billboard.getParameter('GlobalXfo')!.getValue().tr
-        this.threshold = v0.distanceTo(v1)
+        const idx0 = this.indexArray[this.indexArray.length - 1]
+        const idx1 = this.indexArray[this.indexArray.length - 2]
+        const billboard0 = this.billboards[idx0].billboard
+        const billboard1 = this.billboards[idx1].billboard
+        const tr0 = billboard0.getParameter('GlobalXfo').getValue().tr
+        const tr1 = billboard1.getParameter('GlobalXfo').getValue().tr
+        this.threshold = tr0.distanceTo(tr1)
       } else {
         this.threshold = 9999
       }
@@ -520,7 +525,7 @@ class GLBillboardsPass extends GLPass {
     gl.uniform1i(unifs.inVR.location, inVR ? 1 : 0) // TODO: check
 
     if (!gl.floatTexturesSupported || !gl.drawElementsInstanced) {
-      const len = this.indexArray!.length
+      const len = this.indexArray.length
       for (let i = 0; i < len; i++) {
         gl.uniformMatrix4fv(unifs.modelMatrix.location, false, this.modelMatrixArray[i])
         gl.uniform4fv(unifs.billboardData.location, this.billboardDataArray[i])
@@ -550,6 +555,7 @@ class GLBillboardsPass extends GLPass {
     }
 
     gl.disable(gl.BLEND)
+    gl.depthMask(true)
   }
 }
 

@@ -9,6 +9,7 @@ import { BaseGeom } from '../../SceneTree/Geometry/BaseGeom'
  * @private
  */
 class GeometryParameter extends Parameter<BaseGeom | undefined> {
+  protected listenerIDs: Record<string, number> = {}
   /**
    * Create a geometry parameter.
    * @param {string} name - The name of the color parameter.
@@ -17,13 +18,10 @@ class GeometryParameter extends Parameter<BaseGeom | undefined> {
   constructor(name: string = '', value?: BaseGeom) {
     super(name, value, 'Geometry')
 
-    this.emitBoundingBoxDirtied = this.emitBoundingBoxDirtied.bind(this)
-    if (this.value) {
-      this.value.on('boundingBoxChanged', this.emitBoundingBoxDirtied)
-    }
+    if (value) this.setValue(value)
   }
 
-  protected emitBoundingBoxDirtied(event: Record<string, unknown>): void {
+  private emitBoundingBoxDirtied(event: Record<string, unknown>): void {
     this.emit('boundingBoxChanged', event)
   }
 
@@ -35,11 +33,13 @@ class GeometryParameter extends Parameter<BaseGeom | undefined> {
     // 0 == normal set. 1 = changed via cleaner fn, 2 = change by loading/cloning code.
     if (this.value !== value) {
       if (this.value) {
-        this.value.off('boundingBoxChanged', this.emitBoundingBoxDirtied)
+        this.value.removeListenerById('boundingBoxChanged', this.listenerIDs['boundingBoxChanged'])
       }
       this.value = value
       if (this.value) {
-        this.value.on('boundingBoxChanged', this.emitBoundingBoxDirtied)
+        this.listenerIDs['boundingBoxChanged'] = this.value.on('boundingBoxChanged', (event) => {
+          this.emitBoundingBoxDirtied(event)
+        })
       }
 
       this.emit('valueChanged', {})
@@ -57,12 +57,14 @@ class GeometryParameter extends Parameter<BaseGeom | undefined> {
    */
   loadValue(value: BaseGeom): void {
     if (this.value) {
-      this.value.off('boundingBoxChanged', this.emitBoundingBoxDirtied)
+      this.value.removeListenerById('boundingBoxChanged', this.listenerIDs['boundingBoxChanged'])
     }
 
     this.value = value
     if (this.value) {
-      this.value.on('boundingBoxChanged', this.emitBoundingBoxDirtied)
+      this.listenerIDs['boundingBoxChanged'] = this.value.on('boundingBoxChanged', (event) => {
+        this.emitBoundingBoxDirtied(event)
+      })
     }
   }
 
@@ -101,16 +103,6 @@ class GeometryParameter extends Parameter<BaseGeom | undefined> {
   clone() {
     const clonedParam = new GeometryParameter(this.name, this.value)
     return clonedParam
-  }
-
-  /**
-   * The destroy is called by the system to cause explicit resources cleanup.
-   * Users should never need to call this method directly.
-   */
-  destroy() {
-    if (this.value) {
-      this.value.off('boundingBoxChanged', this.emitBoundingBoxDirtied)
-    }
   }
 }
 

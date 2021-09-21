@@ -152,6 +152,3 @@ copies its values from this parameter and returns it.
 
 
 **Returns**: [<code>FilePathParameter</code>](#FilePathParameter) - - Returns a new cloned file path parameter.  
-
-
-### [Class Tests](api/SceneTree\Parameters/FilePathParameter.test)

@@ -38,7 +38,6 @@ class KinematicGroup extends BaseGroup {
    */
   constructor(name: string = '') {
     super(name)
-
     // Items which can be constructed by a user (not loaded in binary data.)
     this.calculatingGroupXfo = false
     this.memberXfoOps = []
@@ -48,7 +47,7 @@ class KinematicGroup extends BaseGroup {
         new MultiChoiceParameter('InitialXfoMode', GROUP_XFO_MODES.average, ['manual', 'first', 'average', 'global'])
       )
     )
-    this.__initialXfoModeParam.on('valueChanged', () => {
+    this.__initialXfoModeParam.on('valueChanged', (event) => {
       this.calcGroupXfo()
     })
     const groupTransformParam = this.addParameter(new XfoParameter('GroupTransform', new Xfo()))
@@ -211,17 +210,21 @@ class KinematicGroup extends BaseGroup {
       )
       this.memberXfoOps.splice(index, 0, memberXfoOp)
 
-      item.getParameter('BoundingBox')!.on('valueChanged', this.setBoundingBoxDirty)
+      if (!this.__itemsEventHandlers[index]) this.__itemsEventHandlers[index] = {} // initialize
+      const listenerIDs = this.__itemsEventHandlers[index]
+      listenerIDs['BoundingBox.valueChanged'] = item.getParameter('BoundingBox')!.on('valueChanged', (event) => {
+        this.setBoundingBoxDirty()
+      })
     }
   }
 
   /**
-   * The __unbindItem method.
+   * The unbindItem method.
    * @param {BaseItem} item - The item value.
    * @param {number} index - The index value.
    * @private
    */
-  __unbindItem(item: BaseItem, index: number) {
+  unbindItem(item: BaseItem, index: number) {
     super.unbindItem(<TreeItem>item, index)
     if (!(item instanceof TreeItem)) return
 
@@ -234,8 +237,6 @@ class KinematicGroup extends BaseGroup {
       this.memberXfoOps[index].detach()
       this.memberXfoOps.splice(index, 1)
       this.setBoundingBoxDirty()
-
-      item.getParameter('BoundingBox')!.off('valueChanged', this.setBoundingBoxDirty)
     }
   }
 

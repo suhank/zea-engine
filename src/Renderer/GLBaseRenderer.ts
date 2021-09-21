@@ -31,6 +31,7 @@ const registeredPasses: Record<string, any> = {}
  * @extends ParameterOwner
  */
 class GLBaseRenderer extends ParameterOwner {
+  protected listenerIDs: Record<string, number> = {}
   protected directives: any // used in two ways -- requires refactor
   solidAngleLimit: number
   protected __div: any
@@ -87,9 +88,6 @@ class GLBaseRenderer extends ParameterOwner {
     this.__passesRegistrationOrder = []
     this.__passCallbacks = []
 
-    this.__childItemAdded = this.__childItemAdded.bind(this)
-    this.__childItemRemoved = this.__childItemRemoved.bind(this)
-
     this.__viewports = []
     this.__continuousDrawing = false
     this.__redrawRequested = false
@@ -102,7 +100,6 @@ class GLBaseRenderer extends ParameterOwner {
     this.__xrViewportPresenting = false
 
     // Function Bindings.
-    this.renderGeomDataFbos = this.renderGeomDataFbos.bind(this)
     this.requestRedraw = this.requestRedraw.bind(this)
 
     this.__gl = this.setupWebGL($canvas, options)
@@ -369,22 +366,6 @@ class GLBaseRenderer extends ParameterOwner {
   }
 
   /**
-   * @param {Record<any,any>} event -
-   * @private
-   */
-  __childItemAdded(event: Record<string, any>): void {
-    this.addTreeItem(event.childItem)
-  }
-
-  /**
-   * @param {Record<string, any>} event -
-   * @private
-   */
-  __childItemRemoved(event: Record<string, any>): void {
-    this.removeTreeItem(event.childItem)
-  }
-
-  /**
    * Adds tree items to the renderer, selecting the correct pass to delegate rendering too, and listens to future changes in the tree.
    *
    * @param {TreeItem} treeItem - The tree item to add.
@@ -413,8 +394,13 @@ class GLBaseRenderer extends ParameterOwner {
       if (childItem) this.addTreeItem(<TreeItem>childItem)
     }
 
-    treeItem.on('childAdded', this.__childItemAdded)
-    treeItem.on('childRemoved', this.__childItemRemoved)
+    const id = treeItem.getId()
+    this.listenerIDs[id + '.childAdded'] = treeItem.on('childAdded', (event) => {
+      this.addTreeItem(event.childItem)
+    })
+    this.listenerIDs[id + '.childRemoved'] = treeItem.on('childRemoved', (event) => {
+      this.removeTreeItem(event.childItem)
+    })
 
     this.renderGeomDataFbos()
   }
@@ -467,8 +453,9 @@ class GLBaseRenderer extends ParameterOwner {
     // Note: we can have BaseItems in the tree now.
     if (!(treeItem instanceof TreeItem)) return
 
-    treeItem.off('childAdded', this.__childItemAdded)
-    treeItem.off('childRemoved', this.__childItemRemoved)
+    const id = treeItem.getId()
+    treeItem.removeListenerById('childAdded', this.listenerIDs[id + '.childAdded'])
+    treeItem.removeListenerById('childRemoved', this.listenerIDs[id + '.childRemoved'])
 
     for (let i = this.__passesRegistrationOrder.length - 1; i >= 0; i--) {
       const pass = this.__passesRegistrationOrder[i]
@@ -644,13 +631,7 @@ class GLBaseRenderer extends ParameterOwner {
     this.resizeObserver.observe(parentElement)
 
     webglOptions.preserveDrawingBuffer = true
-    // In webgl 2, we now render to a multi-sampled offscreen buffer, that we then resolve and blit to
-    // the onscreen buffer. This means we no longer need the default render target to be antialiased.
-    // In webgl 1 however we render surfaces to the offscreen buffer, and then lines to the default buffer.
-    // The default buffer should then be antialiased.
-    // Note: On low end devices, such as Oculus, blitting the multi-sampled depth buffer is throwing errors,
-    // and so we are simply disabling silhouettes on all low end devices now.
-    webglOptions.antialias = SystemDesc.isIOSDevice || webglOptions.webglContextType == 'webgl' ? true : false
+    webglOptions.antialias = webglOptions.antialias != undefined ? webglOptions.antialias : true
     webglOptions.depth = true
     webglOptions.stencil = false
     webglOptions.alpha = webglOptions.alpha ? webglOptions.alpha : false
@@ -1007,7 +988,9 @@ class GLBaseRenderer extends ParameterOwner {
     }
     index += this.__passes[passType].length
 
-    pass.on('updated', this.requestRedraw)
+    pass.on('updated', (event) => {
+      this.requestRedraw()
+    })
     pass.init(this, index)
     this.__passes[passType].push(pass)
 

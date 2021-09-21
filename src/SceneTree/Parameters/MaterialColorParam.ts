@@ -51,6 +51,7 @@ import { BinReader } from '../../SceneTree/BinReader'
 // }
 
 class MaterialColorParam extends ColorParameter {
+  protected listenerIDs: Record<string, number> = {}
   protected image?: BaseImage
   /**
    * Create a material color parameter.
@@ -59,7 +60,6 @@ class MaterialColorParam extends ColorParameter {
    */
   constructor(name?: string, value?: Color) {
     super(name, value)
-    this.imageUpdated = this.imageUpdated.bind(this)
   }
 
   /**
@@ -72,10 +72,10 @@ class MaterialColorParam extends ColorParameter {
   }
 
   /**
-   * The __imageUpdated method.
+   * The imageUpdated method.
    * @private
    */
-  protected imageUpdated = (): void => {
+   private imageUpdated = (): void => {
     this.emit('valueChanged')
   }
 
@@ -86,9 +86,11 @@ class MaterialColorParam extends ColorParameter {
    */
   setImage(value: BaseImage | null): void {
     const disconnectImage = () => {
-      this.image?.off('loaded', this.imageUpdated)
-      this.image?.off('updated', this.imageUpdated)
-      this.image = undefined
+      if (this.image) {
+        this.image.removeListenerById('loaded', this.listenerIDs['loaded'])
+        this.image.removeListenerById('updated', this.listenerIDs['updated'])
+        this.image = undefined
+      }
       this.emit('textureDisconnected')
     }
     if (value) {
@@ -96,9 +98,11 @@ class MaterialColorParam extends ColorParameter {
         disconnectImage()
       }
       this.image = value
-      this.image.on('updated', this.imageUpdated)
+      this.listenerIDs['updated'] = this.image.on('updated', (event) => {
+        this.imageUpdated(event)
+      })
       this.emit('textureConnected')
-      this.emit('valueChanged', { mode: 0 })
+      this.emit('valueChanged')
     } else {
       if (this.image != undefined) {
         disconnectImage()

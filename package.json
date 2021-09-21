@@ -1,6 +1,8 @@
 {
   "name": "@zeainc/zea-engine",
-  "version": "3.10.7-xr.0",
+  "fileName": "index",
+  "libraryName": "ZeaEngine",
+  "version": "3.11.0",
   "license": "AGPL-3.0",
   "description": "Zea Engine",
   "author": "Zea Inc.",

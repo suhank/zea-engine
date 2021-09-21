@@ -8,9 +8,10 @@ import { EventEmitter } from '../../Utilities/EventEmitter'
  * @extends EventEmitter
  */
 class OperatorInput extends EventEmitter {
-  __name: string
+  protected listenerIDs: Record<string, number> = {}
+  name: string
   _op?: Operator = undefined
-  _param?: Parameter<any> = undefined
+  param?: Parameter<any> = undefined
   detached: boolean = false
 
   /**
@@ -19,8 +20,7 @@ class OperatorInput extends EventEmitter {
    */
   constructor(name: string) {
     super()
-    this.__name = name
-    this.paramValueChanged = this.paramValueChanged.bind(this)
+    this.name = name
   }
 
   /**
@@ -28,7 +28,7 @@ class OperatorInput extends EventEmitter {
    * @return {string} - The return value.
    */
   getName(): string {
-    return this.__name
+    return this.name
   }
 
   /**
@@ -52,7 +52,7 @@ class OperatorInput extends EventEmitter {
    * @return {boolean} - The return value.
    */
   isConnected(): boolean {
-    return this._param != null
+    return this.param != null
   }
 
   /**
@@ -60,7 +60,7 @@ class OperatorInput extends EventEmitter {
    * @return {Parameter} - The return value.
    */
   getParam(): Parameter<unknown> | undefined {
-    return this._param
+    return this.param
   }
 
   /**
@@ -77,14 +77,16 @@ class OperatorInput extends EventEmitter {
    * @param {Parameter} param - The param value.
    */
   setParam(param?: Parameter<unknown>): void {
-    if (this._param) {
-      this._param.off('valueChanged', this.paramValueChanged)
+    if (this.param) {
+      this.param.removeListenerById('valueChanged', this.listenerIDs['valueChanged'])
     }
-    this._param = param
-    if (this._param) {
-      this._param.on('valueChanged', this.paramValueChanged)
+    this.param = param
+    if (this.param) {
+      this.listenerIDs['valueChanged'] = this.param.on('valueChanged', (event) => {
+        this.paramValueChanged(event)
+      })
     }
-    this.emit('paramSet', { param: this._param })
+    this.emit('paramSet', { param: this.param })
   }
 
   /**
@@ -92,7 +94,7 @@ class OperatorInput extends EventEmitter {
    * @return {unknown} - The return value.
    */
   getValue(): unknown {
-    if (this._param) return this._param.getValue()
+    if (this.param) return this.param.getValue()
     throw new Error('Unable to getValue')
   }
 
@@ -101,8 +103,8 @@ class OperatorInput extends EventEmitter {
    * @param {unknown} value - The value param.
    */
   setValue(value: unknown): void {
-    if (this._param) {
-      this._param.setValue(value)
+    if (this.param) {
+      this.param.setValue(value)
     }
   }
 
@@ -116,9 +118,9 @@ class OperatorInput extends EventEmitter {
    * @return {{ name: string; paramPath: any }} - Returns the json object.
    */
   toJSON(context?: Record<string, any>): { name: string; paramPath: any } {
-    const paramPath = this._param ? this._param.getPath() : ''
+    const paramPath = this.param ? this.param.getPath() : ''
     return {
-      name: this.__name,
+      name: this.name,
       paramPath: context && context.makeRelative ? context.makeRelative(paramPath) : paramPath
     }
   }
@@ -154,8 +156,8 @@ class OperatorInput extends EventEmitter {
     // from functioning because it is deleted and on the undo stack.
     // Once operators have persistent connections,
     // we will simply uninstall the output from the parameter.
-    if (this._param) {
-      this._param.off('valueChanged', this.paramValueChanged)
+    if (this.param) {
+      this.param.removeListenerById('valueChanged', this.listenerIDs['valueChanged'])
     }
   }
 
@@ -164,8 +166,10 @@ class OperatorInput extends EventEmitter {
    */
   reattach(): void {
     this.detached = false
-    if (this._param) {
-      this._param.on('valueChanged', this.paramValueChanged)
+    if (this.param) {
+      this.listenerIDs['valueChanged'] = this.param.on('valueChanged', (event) => {
+        this.paramValueChanged(event)
+      })
     }
   }
 }

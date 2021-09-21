@@ -156,6 +156,9 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
     const index = this.glGeomItems.indexOf(glGeomItem)
     const geomItemIndices = this.glGeomIdsMapping[glGeomItem.geomId]
     geomItemIndices.splice(geomItemIndices.indexOf(index), 1)
+    if (geomItemIndices.length == 0) {
+      delete this.glGeomIdsMapping[glGeomItem.geomId]
+    }
 
     const eventHandlers = this.glgeomItemEventHandlers[index]
     glGeomItem.geomItem.off('highlightChanged', eventHandlers.highlightChanged)
@@ -163,6 +166,7 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
 
     this.glGeomItems[index] = null
     this.glgeomItemEventHandlers[index] = null
+    this.drawIdsArray[index] = 0
     this.drawElementOffsets[index] = 0
     this.drawElementCounts[index] = 0
     this.freeIndices.push(index)

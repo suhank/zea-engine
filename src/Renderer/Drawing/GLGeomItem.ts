@@ -21,6 +21,7 @@ const GLGeomItemFlags = {
  * @extends EventEmitter
  */
 class GLGeomItem extends EventEmitter {
+  protected listenerIDs: Record<string, number> = {}
   //referenced by other classes
   material: any
   GLGeomItemSet: any
@@ -73,8 +74,9 @@ class GLGeomItem extends EventEmitter {
     this.visible = this.geomVisible
     this.culled = false
 
-    this.updateVisibility = this.updateVisibility.bind(this)
-    this.geomItem.on('visibilityChanged', this.updateVisibility)
+    this.listenerIDs['visibilityChanged'] = this.geomItem.on('visibilityChanged', (event) => {
+      this.updateVisibility()
+    })
 
     if (!this.supportInstancing) {
       this.cutDataChanged = false
@@ -92,11 +94,11 @@ class GLGeomItem extends EventEmitter {
       this.geomData = [flags, materialId, 0, 0]
 
       this.geomMatrixDirty = true
-      this.geomItem.getParameter('GeomMat')!.on('valueChanged', () => {
+      this.listenerIDs['GeomMat.valueChanged'] = this.geomItem.getParameter('GeomMat')!.on('valueChanged', () => {
         this.geomMatrixDirty = true
         this.emit('updated')
       })
-      this.geomItem.on('cutAwayChanged', () => {
+      this.listenerIDs['cutAwayChanged'] = this.geomItem.on('cutAwayChanged', () => {
         this.cutDataChanged = true
         this.emit('updated')
       })
@@ -201,13 +203,11 @@ class GLGeomItem extends EventEmitter {
    * Users should never need to call this method directly.
    */
   destroy() {
-    this.geomItem.off('visibilityChanged', this.updateVisibility)
+    this.geomItem.removeListenerById('visibilityChanged', this.listenerIDs['visibilityChanged'])
     if (!this.supportInstancing) {
-      this.geomItem.getParameter('GeomMat')!.off('valueChanged', this.geomMatrixChanged)
-      this.geomItem.off('cutAwayChanged', this.cutAwayChanged)
-      this.geomItem.off('highlightChanged', this.highlightChanged)
+      this.geomItem.getParameter('GeomMat')!.removeListenerById('valueChanged', this.listenerIDs['GeomMat.valueChanged'])
+      this.geomItem.removeListenerById('cutAwayChanged', this.listenerIDs['cutAwayChanged'])
     }
-    // this.glGeom.off('updated', this.glGeomUpdated)
   }
 }
 

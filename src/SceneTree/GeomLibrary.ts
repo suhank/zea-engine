@@ -1,6 +1,7 @@
-import { SystemDesc } from '../SystemDesc'
-import { BinReader } from './BinReader'
-import { PointsProxy, LinesProxy, MeshProxy } from './Geometry/GeomProxies'
+/* eslint-disable require-jsdoc */
+import { SystemDesc } from '../SystemDesc.js'
+import { BinReader } from './BinReader.js'
+import { PointsProxy, LinesProxy, MeshProxy } from './Geometry/GeomProxies.js'
 import { EventEmitter } from '../Utilities/index'
 import { resourceLoader } from './resourceLoader'
 
@@ -34,7 +35,32 @@ const getWorker = (geomLibraryId: any, fn: any) => {
     }
     workers[__workerId] = worker
   }
-  listeners[__workerId][geomLibraryId] = fn
+  listeners[__workerId][geomLibraryId] = (data) => {
+    // The callback should return true when the last data for this
+    // geom library is loaded.
+    const res = fn(data)
+    if (res) {
+      // If this geom library has finished loading, then we can check
+      // if we still need the worker. EAch worker keeps an array of listeners.
+      // One for each GeometryLibrary awaiting geoms to be processed.
+      // As we remove a GeometryLibrary callback from the list, once the list
+      // reaches zero, we can then terminate the worker and null the reference.
+      for (let i = 0; i < listeners.length; i++) {
+        if (listeners[i][geomLibraryId]) {
+          // remove the reference to the callback registered for this geom library.
+          delete listeners[i][geomLibraryId]
+          if (Object.keys(listeners[i]).length == 0) {
+            // no more files are loading, we can kill this worker.
+            // Note: this fixed a serious memory leak in our application caused
+            // by workers maintaining references to callbacks that then held refereces
+            // to the GeomLibrary.
+            workers[i].terminate()
+            workers[i] = null
+          }
+        }
+      }
+    }
+  }
 
   const worker = workers[__workerId]
   workerId = (__workerId + 1) % numCores
@@ -48,6 +74,7 @@ interface StreamInfo {
 /** Class representing a geometry library.
  */
 class GeomLibrary extends EventEmitter {
+  protected listenerIDs: Record<string, number> = {}
   protected __streamInfos: Record<string, StreamInfo>
   protected __genBuffersOpts: Record<string, any>
   protected loadCount: number
@@ -62,6 +89,7 @@ class GeomLibrary extends EventEmitter {
    */
   constructor() {
     super()
+
     this.__streamInfos = {}
     this.__genBuffersOpts = {}
 
@@ -76,7 +104,6 @@ class GeomLibrary extends EventEmitter {
       }
     })
 
-    this.__receiveGeomDatas = this.__receiveGeomDatas.bind(this)
     this.clear()
   }
 
@@ -114,14 +141,13 @@ class GeomLibrary extends EventEmitter {
       resourceLoader.loadFile('archive', geomFileUrl).then((entries: any) => {
         const geomsData = entries[Object.keys(entries)[0]]
 
-        const streamFileParsed = (event: any) => {
+        const streamFileParsedListenerID = this.on('streamFileParsed', (event: any) => {
           if (event.geomFileID == geomFileID) {
             resourceLoader.incrementWorkDone(1)
-            this.off('streamFileParsed', streamFileParsed)
+            this.removeListenerById('streamFileParsed', streamFileParsedListenerID)
             resolve()
           }
-        }
-        this.on('streamFileParsed', streamFileParsed)
+        })
 
         if (this.loadCount < numCores) {
           this.loadCount++
@@ -259,7 +285,9 @@ class GeomLibrary extends EventEmitter {
 
         // ////////////////////////////////////////////
         // Multi Threaded Parsing
-        getWorker(this.getId(), this.__receiveGeomDatas).postMessage(
+        getWorker(this.getId(), (data: any) => {
+          return this.__receiveGeomDatas(data)
+        }).postMessage(
           {
             geomLibraryId: this.getId(),
             geomFileID,
@@ -304,8 +332,9 @@ class GeomLibrary extends EventEmitter {
 
   /**
    * The __receiveGeomDatas method.
-   * @param {any} data - The data received back from the web worker
    * @private
+   * @param {any} data - The data received back from the web worker
+   * @return {boolean} - returns true once all data for this geom library has been loaded.
    */
   __receiveGeomDatas(data: any) {
     const { geomLibraryId, geomFileID, geomDatas, geomIndexOffset, geomsRange } = data
@@ -363,6 +392,10 @@ class GeomLibrary extends EventEmitter {
       // console.log("GeomLibrary Loaded:" + this.__name + " count:" + geomDatas.length + " loaded:" + this.__loadedCount);
       this.emit('loaded')
     }
+
+    // Return true if we are done loading geoms
+    // This allows the worker to be shut down and free up memory.
+    return this.__loadedCount == this.__numGeoms
   }
 
   // ////////////////////////////////////////
@@ -384,6 +417,12 @@ class GeomLibrary extends EventEmitter {
    */
   toString() {
     return JSON.stringify(this.toJSON(), null, 2)
+  }
+
+  static shutDownWorkers() {
+    workers.forEach((worker, index) => {
+      worker.terminate()
+    })
   }
 }
 

@@ -52,7 +52,6 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
 
     this.dirty = false
     this.firstOP_WRITE = 0
-    // this.ownerItem // TODO: should this be initialized by the constructor?
 
     this.name = name
     this.value = value

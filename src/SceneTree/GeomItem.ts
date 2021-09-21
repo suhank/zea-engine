@@ -61,12 +61,13 @@ class CalcGeomMatOperator extends Operator {
  * @extends BaseGeomItem
  */
 class GeomItem extends BaseGeomItem {
+  protected listenerIDs: Record<string, number> = {}
   protected geomBBox: Box3 = new Box3()
   protected disableBoundingBox: boolean = false
   protected geomIndex: number
   protected assetItem: any
   protected calcGeomMatOperator: Operator
-  cullable: boolean
+  public cullable: boolean = true
   protected __geomOffsetXfoParam: XfoParameter
   protected __geomParam: Parameter<BaseGeom>
   protected __materialParam: Parameter<Material>
@@ -83,8 +84,14 @@ class GeomItem extends BaseGeomItem {
     super(name)
     this.cullable = true
     this.__geomParam = this.addParameter(new GeometryParameter('Geometry'))
-    this.__geomParam.on('valueChanged', this.setBoundingBoxDirty)
-    this.__geomParam.on('boundingBoxChanged', this.setBoundingBoxDirty)
+
+    this.listenerIDs['valueChanged'] = this.__geomParam.on('valueChanged', event => {
+      this.setBoundingBoxDirty()
+    })
+    this.listenerIDs['boundingBoxChanged'] = this.__geomParam.on('boundingBoxChanged', event => {
+      this.setBoundingBoxDirty()
+    })
+
     this.__materialParam = this.addParameter(new MaterialParameter('Material'))
     this.addParameterDeprecationMapping('material', 'Material')
 
@@ -310,10 +317,10 @@ class GeomItem extends BaseGeomItem {
           const geom = geomLibrary.getGeom(geomIndex)
           if (geom) this.getParameter('Geometry')!.setValue(geom)
           else console.warn('Geom not loaded:', this.getName())
-          geomLibrary.off('rangeLoaded', onGeomLoaded)
+          geomLibrary.removeListenerById('rangeLoaded', onGeomLoadedListenerID)
         }
       }
-      geomLibrary.on('rangeLoaded', onGeomLoaded)
+      const onGeomLoadedListenerID = geomLibrary.on('rangeLoaded', onGeomLoaded)
     }
 
     // this.setVisibility(j.visibility);
@@ -347,6 +354,8 @@ class GeomItem extends BaseGeomItem {
     // Note: deprecated value. Not sure if we need to load this here.
     // I think not, but need to test first.
     if (context.versions['zea-engine'].compare([3, 0, 0]) < 0) {
+      // Load the 'lightmapCoordOffset' value which we no longer use.
+      // Note: we need to load it to increment the file pointer.
       reader.loadFloat32Vec2()
     } else {
       this.geomBBox = new Box3(reader.loadFloat32Vec3(), reader.loadFloat32Vec3())
@@ -400,10 +409,10 @@ class GeomItem extends BaseGeomItem {
           // renderer to then load the geometry into the GPU.
           if (geom) this.getParameter('Geometry')!.setValue(geom)
           else console.warn('Geom not loaded:', this.getName())
-          geomLibrary.off('rangeLoaded', onGeomLoaded)
+          geomLibrary.removeListenerById('rangeLoaded', this.listenerIDs['rangeLoaded'])
         }
       }
-      geomLibrary.on('rangeLoaded', onGeomLoaded)
+      this.listenerIDs['rangeLoaded'] = geomLibrary.on('rangeLoaded', onGeomLoaded)
     }
 
     // Geom Xfo should be dirty after cloning.

@@ -8,6 +8,7 @@ import { Color } from '../Math/index'
  * This class abstracts the rendering of a collection of geometries to screen.
  */
 class GLFbo {
+  protected colorTextureResizeEventId: number = -1
   protected __gl: WebGL12RenderingContext
   protected __colorTexture: GLTexture2D
   protected __createDepthTexture: boolean
@@ -37,12 +38,10 @@ class GLFbo {
     this.__createDepthTexture = createDepthTexture
     this.__clearColor = new Color(0, 0, 0, 0)
 
-    this.setup = this.setup.bind(this)
-    this.resize = this.resize.bind(this)
-    this.textureResized = this.textureResized.bind(this)
-
     if (this.__colorTexture) {
-      this.__colorTexture.on('resized', this.textureResized)
+      this.colorTextureResizeEventId = this.__colorTexture.on('resized', (event) => {
+        this.resize(this.__colorTexture.width, this.__colorTexture.height, false)
+      })
     }
 
     this.setup()
@@ -459,7 +458,7 @@ class GLFbo {
     gl.bindFramebuffer(gl.FRAMEBUFFER, null)
     gl.deleteFramebuffer(this.__fbo)
     this.__fbo = null
-    this.__colorTexture.off('resized', this.textureResized)
+    this.__colorTexture.removeListenerById('resized', this.colorTextureResizeEventId)
   }
 }
 

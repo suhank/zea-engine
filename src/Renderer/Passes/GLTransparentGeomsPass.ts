@@ -11,6 +11,7 @@ import { GLBaseRenderer } from '../GLBaseRenderer'
  * @private
  */
 class GLTransparentGeomsPass extends GLStandardGeomsPass {
+  protected listenerIDs: Record<string, number> = {}
   protected itemCount: number = 0
   protected __glShaderGeomSets: Record<string, any> = {} // GLShaderGeomSets
   protected transparentItems: any[] = []
@@ -26,15 +27,8 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
    */
   constructor() {
     super()
-    this.itemCount = 0
-    this.__glShaderGeomSets = {}
-    this.transparentItems = []
-    this.transparentItemIndices = {}
-    this.freeList = []
-    this.visibleItems = []
-    this.prevSortCameraPos = new Vec3(999, 999, 999)
-    this.sortCameraMovementDistance = 0.25 // meters
-    this.reSort = false
+
+    this.listenerIDs = {}
   }
 
   /**
@@ -44,7 +38,16 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
    */
   init(renderer: GLBaseRenderer, passIndex: number) {
     super.init(renderer, passIndex)
-    this.resortNeeded = this.resortNeeded.bind(this)
+
+    this.itemCount = 0
+    this.__glShaderGeomSets = {}
+    this.transparentItems = []
+    this.transparentItemIndices = {}
+    this.freeList = []
+    this.visibleItems = []
+    this.prevSortCameraPos = new Vec3(999, 999, 999)
+    this.sortCameraMovementDistance = 0.25 // meters
+    this.reSort = false
   }
 
   /**
@@ -100,7 +103,9 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
         const glGeomItem = <Record<string, any>>this.renderer!.glGeomItemLibrary.getGLGeomItem(geomItem)
         glShaderGeomSets.addGLGeomItem(glGeomItem)
 
-        glGeomItem.on('visibilityChanged', this.resortNeeded)
+        this.listenerIDs['visibilityChanged'] = glGeomItem.on('visibilityChanged', (event) => {
+          this.resortNeeded()
+        })
         this.emit('updated')
 
         glGeomItem.GLShaderGeomSets = glShaderGeomSets
@@ -192,7 +197,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
     if (glGeomItem.GLShaderGeomSets) {
       const glShaderGeomSets = glGeomItem.GLShaderGeomSets
       glShaderGeomSets.removeGLGeomItem(glGeomItem)
-      glGeomItem.off('visibilityChanged', this.resortNeeded)
+      glGeomItem.removeListenerById('visibilityChanged', this.listenerIDs['visibilityChanged'])
       glGeomItem.GLShaderGeomSets = null
       return true // TODO: is returning true here correct?
     }

@@ -81,10 +81,8 @@ class GLShaderGeomSets extends EventEmitter {
     const geomItem = glGeomItem.geomItem
     const geom = geomItem.getParameter('Geometry')!.getValue()
     const material = glGeomItem.geomItem.getParameter('Material')!.getValue()
-    this.pass.renderer!.glMaterialLibrary.addMaterial(material)
 
     const geomItemParamChanged = (event: Record<string, any>) => {
-      // Cast to GLStndardGeomsPass
       this.pass.removeGeomItem(geomItem)
       this.pass.renderer!.assignTreeItemToGLPass(geomItem)
     }
