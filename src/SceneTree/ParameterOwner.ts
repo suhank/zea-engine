@@ -303,6 +303,7 @@ class ParameterOwner extends EventEmitter {
             console.error('Unable to construct prop:' + propName + ' of type:' + propType)
             continue
           }
+          param.setName(propName)
           this.addParameter(param)
         }
         param.readBinary(reader, context)
