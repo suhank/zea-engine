@@ -1,5 +1,6 @@
 /* eslint-disable require-jsdoc */
 import { Color } from '../../Math/Color'
+import { Registry } from '../../Registry'
 import { Material } from '../../SceneTree/Material'
 import { MaterialColorParam } from '../../SceneTree/Parameters/MaterialColorParam'
 import { GLShader } from '../GLShader'
@@ -16,7 +17,7 @@ class ScreenSpaceShader extends GLShader {
    * Create a GL shader.
    * @param {WebGL12RenderingContext} gl - The webgl rendering context.
    */
-  constructor(gl: WebGL12RenderingContext) {
+  constructor(gl?: WebGL12RenderingContext) {
     super(gl, 'ScreenSpaceShader')
 
     this.setShaderStage('VERTEX_SHADER', vert)
@@ -43,8 +44,10 @@ class ScreenSpaceShader extends GLShader {
   }
 }
 
-// Registry.register('ScreenSpaceShader', ScreenSpaceShader)
-export { ScreenSpaceShader }
 const material = new Material('ScreenSpaceShader_template')
 material.addParameter(new MaterialColorParam('BaseColor', new Color(1.0, 1, 0.5)))
 shaderLibrary.registerMaterialTemplate('ScreenSpaceShader', material)
+
+Registry.register('ScreenSpaceShader', ScreenSpaceShader)
+
+export { ScreenSpaceShader }

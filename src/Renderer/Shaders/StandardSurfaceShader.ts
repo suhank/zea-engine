@@ -78,7 +78,7 @@ class StandardSurfaceShader extends GLShader {
 
 const material = new Material('StandardSurfaceShader_template')
 material.addParameter(new MaterialColorParam('BaseColor', new Color(1.0, 1, 0.5)))
-// material.addParameter(new MaterialColorParam('Normal', new Color(1.0, 1, 0.5)))
+material.addParameter(new MaterialColorParam('Normal', new Color(1.0, 1, 0.5)))
 material.addParameter(new MaterialFloatParam('AmbientOcclusion', 1, [0, 1]))
 material.addParameter(new MaterialFloatParam('Metallic', 0.05, [0, 1]))
 material.addParameter(new MaterialFloatParam('Roughness', 0.5, [0, 1])) // added

@@ -1,9 +1,7 @@
 import { GLTexture2D } from '../GLTexture2D'
 import { GLHDRImage } from '../GLHDRImage'
 import { Mat4 } from '../../Math/Mat4'
-import { Parameter } from '../../SceneTree/Parameters/Parameter'
-import { BaseImage } from '../..'
-import { VLHImage } from '../../SceneTree/Images/VLHImage'
+import { Parameter, MaterialFloatParam, BaseImage, VLHImage } from '../../SceneTree'
 
 /** Class representing simple uniform binding.
  * @private
@@ -81,33 +79,6 @@ class SimpleUniformBinding {
 
     let boundImage: any
     let imageLoaded: any
-    const connectImage = (image: any) => {
-      if (!image.isLoaded()) {
-        imageLoaded = () => {
-          genGLTex(boundImage)
-        }
-        image.on('loaded', imageLoaded)
-      } else {
-        genGLTex(image)
-      }
-      boundImage = image
-    }
-
-    const disconnectImage = () => {
-      const gltexture = boundImage.getMetadata('gltexture')
-      gltexture.removeRef(this)
-      this.texBinding = null
-      this.gltexture = null
-      this.textureType = -1
-      this.bind = this.bindValue
-
-      if (imageLoaded) {
-        boundImage.off('loaded', imageLoaded)
-      }
-      boundImage = null
-      imageLoaded = null
-      glMaterial.emit('updated')
-    }
 
     this.update = () => {
       try {
@@ -123,13 +94,43 @@ class SimpleUniformBinding {
     /**
      * The update method.
      */
-    if (param.getImage()) connectImage(param.getImage())
-    param.on('textureConnected', () => {
-      connectImage(param.getImage())
-    })
-    param.on('textureDisconnected', () => {
-      disconnectImage()
-    })
+    if (param instanceof MaterialFloatParam) {
+      const connectImage = (image: any) => {
+        if (!image.isLoaded()) {
+          imageLoaded = () => {
+            genGLTex(boundImage)
+          }
+          image.on('loaded', imageLoaded)
+        } else {
+          genGLTex(image)
+        }
+        boundImage = image
+      }
+
+      const disconnectImage = () => {
+        const gltexture = boundImage.getMetadata('gltexture')
+        gltexture.removeRef(this)
+        this.texBinding = null
+        this.gltexture = null
+        this.textureType = -1
+        this.bind = this.bindValue
+
+        if (imageLoaded) {
+          boundImage.off('loaded', imageLoaded)
+        }
+        boundImage = null
+        imageLoaded = null
+        glMaterial.emit('updated')
+      }
+
+      if (param.getImage()) connectImage(param.getImage())
+      param.on('textureConnected', () => {
+        connectImage(param.getImage())
+      })
+      param.on('textureDisconnected', () => {
+        disconnectImage()
+      })
+    }
 
     this.dirty = true
     param.on('valueChanged', () => {

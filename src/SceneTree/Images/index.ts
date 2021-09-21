@@ -1,6 +1,7 @@
 export * from './DataImage'
 export * from './FileImage'
 export * from './LDRImage'
+export * from './VLHImage'
 export * from './LDRVideo'
 export * from './GIFImage'
 export * from './EnvMap'

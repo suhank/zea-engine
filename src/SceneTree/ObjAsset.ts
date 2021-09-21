@@ -318,7 +318,6 @@ class ObjAsset extends AssetItem {
 
         let normalsAttr
         let texCoordsAttr
-        console.warn('returning void to initialize normalsAttr/texCoordsAttr')
         if (geomData.normalIndices.length > 0) {
           normalsAttr = new Vec3Attribute()
           mesh.addVertexAttribute('normals', normalsAttr) // TODO: this method returns void

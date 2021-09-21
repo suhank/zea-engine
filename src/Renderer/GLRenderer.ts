@@ -51,7 +51,7 @@ class GLRenderer extends GLBaseRenderer {
    * @param {HTMLCanvasElement} $canvas - The $canvas value.
    * @param {Record<string, any>} options - The dictionary of options.
    */
-  constructor($canvas: any, options: Options) {
+  constructor($canvas: any, options: Record<string, any> = {}) {
     // use HTMLCanvasElement?
     super($canvas, options)
 

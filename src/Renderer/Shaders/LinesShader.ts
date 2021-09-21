@@ -53,7 +53,7 @@ const material = new Material('LinesShader_template')
 material.addParameter(new MaterialColorParam('BaseColor', new Color(1.0, 1, 0.5)))
 
 material.addParameter(new MaterialFloatParam('Opacity', 0.7, [0, 1]))
-material.addParameter(new NumberParameter('Overlay', 0.000001)) // Provide a slight overlay so lines draw over meshes.
+material.addParameter(new MaterialFloatParam('Overlay', 0.000001)) // Provide a slight overlay so lines draw over meshes.
 
 material.addParameter(new NumberParameter('StippleScale', 0.01))
 material.addParameter(new NumberParameter('StippleValue', 0, [0, 1]))

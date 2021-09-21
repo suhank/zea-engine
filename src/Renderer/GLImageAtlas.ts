@@ -220,7 +220,10 @@ class GLImageAtlas extends GLRenderTarget {
 
     if (!this.__atlasLayoutShader) {
       this.__atlasLayoutShader = new AtlasLayoutShader(this.__gl)
-      const shaderComp = this.__atlasLayoutShader.compileForTarget('GLImageAtlas')
+      const directives: Array<string> = []
+      if (gl.name == 'webgl2') directives.push('#define ENABLE_ES3')
+
+      const shaderComp = this.__atlasLayoutShader.compileForTarget('GLImageAtlas', { directives })
       this.__atlasLayoutShaderBinding = generateShaderGeomBinding(
         this.__gl,
         shaderComp.attrs,

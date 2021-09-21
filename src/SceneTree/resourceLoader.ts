@@ -81,8 +81,6 @@ class ResourceLoader extends EventEmitter {
   // /////////////////////////////////////////////////
   // Register plugins.
   registerPlugin(plugin: any): void {
-    zeaDebug('Resource loader plugin registered: %s', plugin.getType())
-
     plugin.init(this)
     this.plugins[plugin.getType()] = plugin
   }
@@ -108,10 +106,6 @@ class ResourceLoader extends EventEmitter {
   resolveFilename(value: string): string {
     if (!value.includes('/')) return value
     return value.split('/')[1]
-  }
-
-  resolveFilepath(lodPath: string): boolean {
-    throw Error('resolveFilePath not implemented')
   }
 
   /**

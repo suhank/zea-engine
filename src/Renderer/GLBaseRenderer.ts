@@ -73,7 +73,7 @@ class GLBaseRenderer extends ParameterOwner {
    * @param {HTMLElement|HTMLCanvasElement} $canvas - The canvas element.
    * @param {Record<string, any>} options - The options value.
    */
-  constructor($canvas: HTMLCanvasElement, options: Options) {
+  constructor($canvas: HTMLCanvasElement, options: Record<string, any> = {}) {
     super()
 
     if (!SystemDesc.gpuDesc) {
@@ -105,7 +105,7 @@ class GLBaseRenderer extends ParameterOwner {
     this.renderGeomDataFbos = this.renderGeomDataFbos.bind(this)
     this.requestRedraw = this.requestRedraw.bind(this)
 
-    this.__gl = this.setupWebGL($canvas, options.webglOptions ? { ...options, ...options.webglOptions } : <any>options)
+    this.__gl = this.setupWebGL($canvas, options)
 
     this.screenQuad = new GLScreenQuad(this.__gl, { directives: this.directives })
     this.bindEventHandlers()
@@ -582,11 +582,11 @@ class GLBaseRenderer extends ParameterOwner {
 
   /**
    * Setups the WebGL configuration for the renderer, specifying the canvas element where our
-   *
+   * @private
    * @param {HTMLCanvasElement|HTMLElement} $canvas - The $canvas element.
    * @param { Record<string, any>} webglOptions - The webglOptions value.
    */
-  private setupWebGL($canvas: HTMLCanvasElement, webglOptions: WebglOptions): WebGL12RenderingContext {
+  private setupWebGL($canvas: HTMLCanvasElement, webglOptions: Record<string, any>): WebGL12RenderingContext {
     const { tagName } = $canvas
 
     if (!['DIV', 'CANVAS'].includes(tagName)) {
