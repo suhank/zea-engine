@@ -1034,6 +1034,15 @@ class Quat {
     return new Quat(this.__data[0], this.__data[1], this.__data[2], this.__data[3])
   }
 
+  /**
+   * Returns the type as an array. Often used to pass types to the GPU.
+   *
+   * @return {Float32Array} - Returns as an array.
+   */
+  asArray(): Float32Array {
+    return this.__data
+  }
+
   // ///////////////////////////
   // Persistence
 
