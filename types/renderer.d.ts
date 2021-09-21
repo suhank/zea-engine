@@ -93,14 +93,6 @@ interface Bindings {
 }
 
 interface Options {
-  webglOptions: WebglOptions
-  supportXR: boolean
-  disableTextures: boolean
-  debugGeomIds: boolean
-}
-
-interface WebglOptions {
-  canvasPosition: string
   antialias: boolean
   depth: boolean
   stencil: boolean
@@ -110,6 +102,8 @@ interface WebglOptions {
   powerPreference: string
   preserveDrawingBuffer: boolean
   xrCompatible: boolean
+  supportXR: boolean
+  debugGeomIds: boolean
 }
 
 type JSON = Record<string, any>
@@ -121,4 +115,3 @@ interface RayCast {
   dist: any
   geomData: Float32Array
 }
-

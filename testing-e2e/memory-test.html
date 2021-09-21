@@ -52,17 +52,14 @@
       renderer.solidAngleLimit = 0.0
 
       const scene = new Scene()
+      scene.setupGrid(10, 10)
+      renderer.setScene(scene)
 
       const cuboid = new Cuboid(0.3, 0.4, 0.5)
 
       const count = 160_000
       const dim = Math.round(Math.cbrt(count))
       console.log('Will render GeomItem count:', Math.pow(dim, 3))
-
-      renderer
-        .getViewport()
-        .getCamera()
-        .setPositionAndTarget(new Vec3(dim * 2, dim * 2, dim), new Vec3(dim * 0.5, dim * 0.5, dim * 0.5))
 
       renderer.getViewport().on('keyDown', event => {
         if (event.key == 'f') {
@@ -95,42 +92,52 @@
       }
 
       const run = () => {
-        document.querySelector('#wrapper').classList.remove('hidden')
+        renderer
+          .getViewport()
+          .getCamera()
+          .setPositionAndTarget(new Vec3(dim * 2, dim * 2, dim), new Vec3(dim * 0.5, dim * 0.5, dim * 0.5))
 
         const startTime = performance.now()
 
         console.time('Create scene')
+        const root = new TreeItem('Root')
         for (let i = 0; i < dim; i += 1) {
           const treeItem = new TreeItem('TreeItem' + i)
-          scene.getRoot().addChild(treeItem)
+          root.addChild(treeItem)
 
           addColumns(i, treeItem)
         }
+        scene.getRoot().addChild(root)
         console.timeEnd('Create scene')
 
         console.time('Load GPU')
-        renderer.setScene(scene)
-        console.timeEnd('Load GPU')
+        renderer.once('redrawOccurred', () => {
+          console.timeEnd('Load GPU')
 
-        const totalTime = performance.now() - startTime
+          const totalTime = performance.now() - startTime
 
-        const { usedJSHeapSize } = performance.memory
+          const { usedJSHeapSize } = performance.memory
 
-        const isGoodMemory = usedJSHeapSize <= MEMORY_LIMIT
-        const isGoodTime = totalTime <= TIME_LIMIT
+          const isGoodMemory = usedJSHeapSize <= MEMORY_LIMIT
+          const isGoodTime = totalTime <= TIME_LIMIT
 
-        const memoryStatus = isGoodMemory ? 'Good' : `Bad: ${usedJSHeapSize}`
-        const timeStatus = isGoodTime ? 'Good' : `Bad: ${Math.round(totalTime / 1000)} sec`
+          const memoryStatus = isGoodMemory ? 'Good' : `Bad: ${usedJSHeapSize}`
+          const timeStatus = isGoodTime ? 'Good' : `Bad: ${Math.round(totalTime / 1000)} sec`
 
-        console.log('Used Memory:', usedJSHeapSize)
+          console.log('Used Memory:', usedJSHeapSize)
+          console.log('Total Time:', totalTime)
 
-        document.querySelector('#memoryStatus').textContent = memoryStatus
-        document.querySelector('#usedJSHeapSize').textContent = usedJSHeapSize
-        document.querySelector('#timeStatus').textContent = timeStatus
+          document.querySelector('#memoryStatus').textContent = memoryStatus
+          document.querySelector('#usedJSHeapSize').textContent = usedJSHeapSize
+          document.querySelector('#timeStatus').textContent = timeStatus
+        })
       }
 
       const runAsync = () => {
-        document.querySelector('#wrapper').classList.remove('hidden')
+        renderer
+          .getViewport()
+          .getCamera()
+          .setPositionAndTarget(new Vec3(dim * 2, dim * 2, dim), new Vec3(dim * 0.5, dim * 0.5, dim * 0.5))
 
         const startTime = performance.now()
 
@@ -196,6 +203,24 @@
 
       document.querySelector('#runAsync').addEventListener('click', runAsync)
       document.querySelector('#run').addEventListener('click', run)
+
+      // //////////////////////////////////////
+      // Setup FPS Counter
+      let frameCounter = 0
+      let fps = 0
+      renderer.on('redrawOccurred', () => {
+        frameCounter++
+      })
+
+      const fpsElement = document.getElementById('fps')
+      setInterval(() => {
+        if (fps != frameCounter * 2) {
+          fps = frameCounter * 2
+          fpsElement.textContent = `FPS: ${fps}`
+        }
+        frameCounter = 0
+      }, 500)
+      // renderer.startContinuousDrawing()
     </script>
   </head>
   <body class="bg-blue-100 h-full">
@@ -222,7 +247,7 @@
         button to begin.
       </p>
 
-      <div class="flex flex-col flex-1 hidden" id="wrapper">
+      <div class="flex flex-col flex-1" id="wrapper">
         <dl>
           <dt>Memory:</dt>
           <dd>
@@ -236,6 +261,10 @@
           <dt>Progress:</dt>
           <dd>
             <p id="progressStatus"></p>
+          </dd>
+          <dt>Performance:</dt>
+          <dd>
+            <div class="fps-display" id="fps"></div>
           </dd>
         </dl>
 
