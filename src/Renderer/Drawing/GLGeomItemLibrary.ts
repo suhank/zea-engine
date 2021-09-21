@@ -137,7 +137,7 @@ class GLGeomItemLibrary extends EventEmitter {
             frustumHalfAngleX,
             frustumHalfAngleY,
             isOrthographic: false,
-            solidAngleLimit: renderer.solidAngleLimit * 2,
+            solidAngleLimit: renderer.solidAngleLimit * 2
           })
         } else {
           cullFreq = 5
@@ -148,7 +148,7 @@ class GLGeomItemLibrary extends EventEmitter {
 
     let tick = 0
     let cullFreq = 5
-    renderer.on('viewChanged', (event) => {
+    renderer.on('viewChanged', event => {
       // Calculate culling every Nth frame.
       if (workerReady) {
         if (tick % cullFreq == 0) {
@@ -209,7 +209,7 @@ class GLGeomItemLibrary extends EventEmitter {
 
     // Add the material here so that when we populate the GeomItem texture.
     // the material already has an Id.
-    let matIndex:number = -1
+    let matIndex: number = -1
     if (material.getShaderClass().getPackedMaterialData) {
       matIndex = this.renderer.glMaterialLibrary.addMaterial(material)
     }
@@ -233,7 +233,7 @@ class GLGeomItemLibrary extends EventEmitter {
       geom = geomParm.getValue()
       glGeomItem.geomId = this.renderer.glGeomLibrary.addGeom(geom)
 
-      this.dirtyWorkerItemIndices.add(index)
+      if (this.enableFrustumCulling) this.dirtyWorkerItemIndices.add(index)
 
       geomItemChanged()
     }
@@ -275,12 +275,16 @@ class GLGeomItemLibrary extends EventEmitter {
     geomItem.on('selectabilityChanged', geomItemChanged)
 
     const workerItemDataChanged = () => {
-      if (!this.dirtyWorkerItemIndices.has(index)) {
-        this.dirtyWorkerItemIndices.add(index)
-        this.renderer.drawItemChanged()
+      if (this.enableFrustumCulling) {
+        if (!this.dirtyWorkerItemIndices.has(index)) {
+          this.dirtyWorkerItemIndices.add(index)
+          this.renderer.drawItemChanged()
+        }
       }
     }
-    this.dirtyWorkerItemIndices.add(index)
+    if (this.enableFrustumCulling) {
+      this.dirtyWorkerItemIndices.add(index)
+    }
 
     geomItem.on('visibilityChanged', workerItemDataChanged)
     geomItem.getParameter('GeomMat')!.on('valueChanged', workerItemDataChanged)
@@ -291,7 +295,7 @@ class GLGeomItemLibrary extends EventEmitter {
       geomItemChanged,
       materialChanged,
       geomChanged,
-      workerItemDataChanged,
+      workerItemDataChanged
     }
     this.glGeomItemsMap[geomItem.getId()] = index
 
@@ -309,7 +313,7 @@ class GLGeomItemLibrary extends EventEmitter {
     const { newlyCulled, newlyUnCulled } = data
     if (newlyCulled.length == 0 && newlyUnCulled.length == 0) return
     // console.log('applyCullResults newlyCulled', newlyCulled.length, 'newlyUnCulled', newlyUnCulled.length)
-    newlyCulled.forEach((index:number) => {
+    newlyCulled.forEach((index: number) => {
       if (!this.glGeomItems[index]) {
         if (this.removedItemIndices.indexOf(index) == -1) {
           console.warn('Culling worker has items that are deleted.')
@@ -318,7 +322,7 @@ class GLGeomItemLibrary extends EventEmitter {
       }
       this.glGeomItems[index]!.setCulled(true)
     })
-    newlyUnCulled.forEach((index:number) => {
+    newlyUnCulled.forEach((index: number) => {
       if (!this.glGeomItems[index]) {
         if (this.removedItemIndices.indexOf(index) == -1) {
           console.warn('Culling worker has items that are deleted.')
@@ -410,11 +414,7 @@ class GLGeomItemLibrary extends EventEmitter {
    * @param {Float32Array} dataArray - The dataArray value.
    * @private
    */
-  populateDrawItemDataArray(
-    index: number,
-    subIndex: number,
-    dataArray: Float32Array
-  ) {
+  populateDrawItemDataArray(index: number, subIndex: number, dataArray: Float32Array) {
     const glGeomItem = this.glGeomItems[index]
     // When an item is deleted, we allocate its index to the free list
     // and null this item in the array. skip over null items.
@@ -518,7 +518,7 @@ class GLGeomItemLibrary extends EventEmitter {
   uploadGeomItemsToWorker() {
     if (this.enableFrustumCulling) {
       const geomItemsUpdateToCullingWorker: any[] = []
-      this.dirtyWorkerItemIndices.forEach((index) => {
+      this.dirtyWorkerItemIndices.forEach(index => {
         const glGeomItem = this.glGeomItems[index]
         // When an item is deleted, we allocate its index to the free list
         // and null this item in the array. skip over null items.
@@ -533,7 +533,7 @@ class GLGeomItemLibrary extends EventEmitter {
       this.worker.postMessage({
         type: 'UpdateGeomItems',
         geomItems: geomItemsUpdateToCullingWorker,
-        removedItemIndices: this.removedItemIndices,
+        removedItemIndices: this.removedItemIndices
       })
 
       this.dirtyWorkerItemIndices.clear()
