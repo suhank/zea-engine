@@ -10,7 +10,7 @@
 
     <link rel="stylesheet" href="styles/tailwind.min.css" />
 
-    <script type="module" src="../dist/index.esm.js"></script>
+    <script src="../dist/index.umd.development.js"></script>
 
     <script defer crossorigin src="https://cdn.jsdelivr.net/npm/@zeainc/zea-cad@3.3.0/dist/index.umd.js"></script>
     <script defer crossorigin src="https://cdn.jsdelivr.net/npm/@zeainc/zea-ux/dist/index.umd.js"></script>
@@ -52,7 +52,7 @@
     <script type="module">
       const urlParams = new URLSearchParams(window.location.search)
 
-      import {
+      const {
         Color,
         Vec3,
         Xfo,
@@ -62,8 +62,8 @@
         EnvMap,
         InstanceItem,
         CameraManipulator,
-        GLBoundingBoxPass,
-      } from '../dist/index.esm.js'
+        GLBoundingBoxPass
+      } = window.zeaEngine
 
       const canvas = document.querySelector('#renderer')
 
@@ -72,7 +72,10 @@
       renderer.setScene(scene)
       renderer.outlineThickness = 0.5
       renderer.outlineColor = new Color(0.2, 0.2, 0.2, 1)
-      scene.getSettings().getParameter('BackgroundColor').setValue(new Color(0.85, 0.85, 0.85, 1))
+      scene
+        .getSettings()
+        .getParameter('BackgroundColor')
+        .setValue(new Color(0.85, 0.85, 0.85, 1))
       renderer.getViewport().debugGeomShader = urlParams.has('debugGeomShader')
 
       const envMap = new EnvMap()
@@ -84,38 +87,29 @@
       const boundingBoxPass = new GLBoundingBoxPass()
       renderer.addPass(boundingBoxPass)
 
-      /** UX START */
-      const { SelectionManager, UndoRedoManager, ToolManager, SelectionTool, CreateFreehandLineTool } = window.zeaUx
-
-      const appData = { scene, renderer }
-
-      const cameraManipulator = renderer.getViewport().getManipulator()
-      cameraManipulator.setDefaultManipulationMode(CameraManipulator.MANIPULATION_MODES.tumbler)
-      appData.cameraManipulator = cameraManipulator
-
       /** HIGHLIGHT START */
       let highlightedItem
-      renderer.getViewport().on('pointerOverGeom', (event) => {
+      renderer.getViewport().on('pointerOverGeom', event => {
         const item = event.intersectionData.geomItem
         if (item) {
           highlightedItem = item
           highlightedItem.addHighlight('pointerOverGeom', new Color(0, 0.7, 0, 0.3), true)
         }
       })
-      renderer.getViewport().on('pointerLeaveGeom', (event) => {
+      renderer.getViewport().on('pointerLeaveGeom', event => {
         highlightedItem.removeHighlight('pointerOverGeom', true)
         highlightedItem = null
       })
-      renderer.getViewport().on('keyDown', (event) => {
+      renderer.getViewport().on('keyDown', event => {
         if (event.key == 'f') renderer.frameAll()
       })
-      renderer.getViewport().on('pointerUp', (event) => {
+      renderer.getViewport().on('pointerUp', event => {
         if (event.intersectionData) {
           const geomItem = event.intersectionData.geomItem
           console.log('', geomItem.getPath())
         }
       })
-      renderer.getViewport().on('keyDown', (event) => {
+      renderer.getViewport().on('keyDown', event => {
         if (event.key == 'f') renderer.frameAll()
         else if (event.key == 'd') {
           renderer.getViewport().debugGeomShader = !renderer.getViewport().debugGeomShader
@@ -124,15 +118,25 @@
       })
       /** HIGHLIGHT START */
 
-      /** UNDO START */
+      /** UX START * /
+      const { SelectionManager, UndoRedoManager, ToolManager, SelectionTool, CreateFreehandLineTool } = window.zeaUx
+
+      const appData = { scene, renderer }
+
+      const cameraManipulator = renderer.getViewport().getManipulator()
+      cameraManipulator.setDefaultManipulationMode(CameraManipulator.MANIPULATION_MODES.tumbler)
+      appData.cameraManipulator = cameraManipulator
+
+
+      /** UNDO START * /
       const undoRedoManager = UndoRedoManager.getInstance()
       appData.undoRedoManager = undoRedoManager
       /** UNDO END */
 
-      /** SELECTION START */
+      /** SELECTION START * /
 
       const selectionManager = new SelectionManager(appData, {
-        enableXfoHandles: true,
+        enableXfoHandles: true
       })
       appData.selectionManager = selectionManager
 
@@ -140,7 +144,7 @@
       selectionManager.showHandles(false)
 
       const selectionTool = new SelectionTool(appData)
-      const filterItemSelection = (item) => {
+      const filterItemSelection = item => {
         return item
       }
       selectionTool.setSelectionFilter(filterItemSelection)
@@ -154,19 +158,23 @@
 
       // Color the selection rect.
       const selectionRectColor = new Color(0, 0, 0, 1)
-      selectionTool.rectItem.getParameter('Material').getValue().getParameter('BaseColor').setValue(selectionRectColor)
+      selectionTool.rectItem
+        .getParameter('Material')
+        .getValue()
+        .getParameter('BaseColor')
+        .setValue(selectionRectColor)
 
-      /** SELECTION END */
+      /** SELECTION END * /
 
-      /** FREEHAND LINES TOOL START */
+      /** FREEHAND LINES TOOL START * /
       const freeHandLineTool = new CreateFreehandLineTool(appData)
       freeHandLineTool.getParameter('LineThickness').setValue(0.01)
 
-      /** FREEHAND LINES TOOL END */
+      /** FREEHAND LINES TOOL END * /
 
-      /** TOOL MANAGER START */
+      /** TOOL MANAGER START * /
 
-      /** TOOL MANAGER START */
+      /** TOOL MANAGER START * /
       const toolManager = new ToolManager()
       toolManager.registerTool('CameraManipulator', cameraManipulator)
       toolManager.registerTool('SelectionTool', selectionTool)
@@ -179,7 +187,7 @@
       const tools = document.querySelectorAll('.tool')
 
       const disableSelectedTools = () => {
-        tools.forEach((toolCbx) => (toolCbx.disabled = false))
+        tools.forEach(toolCbx => (toolCbx.disabled = false))
         for (let i = 0; i < toolStack.length; i++) {
           const chkBox = document.querySelector(`input[type='checkbox'][value='${toolStack[i]}']`)
           if (i === 0 || i < toolStack.length - 1) chkBox.disabled = true
@@ -187,8 +195,8 @@
         }
       }
 
-      tools.forEach((tool) => {
-        tool.addEventListener('change', (e) => {
+      tools.forEach(tool => {
+        tool.addEventListener('change', e => {
           if (e.target.checked) {
             const value = e.target.value
             toolStack.push(value)
@@ -249,12 +257,12 @@
       loadAsset(assetUrl, assetUrl)
       /** LOAD ASSETS END */
 
-      /** COLLAB START*/
+      /** COLLAB START* /
 
       if (urlParams.has('collab')) {
         const { Session, SessionSync } = window.zeaCollab
         const userData = {
-          id: Math.random(),
+          id: Math.random()
         }
         appData.userData = userData
 
@@ -264,10 +272,10 @@
         if (roomId) session.joinRoom(roomId)
 
         const sessionSync = new SessionSync(session, appData, userData, {
-          /* Avatars scale based on the distance to the target */
+          /* Avatars scale based on the distance to the target * /
           scaleAvatarWithFocalDistance: true,
-          /* The overal size multiplier of the avatar. */
-          avatarScale: 2.0,
+          /* The overal size multiplier of the avatar. * /
+          avatarScale: 2.0
         })
 
         appData.session = session
@@ -275,21 +283,27 @@
       }
       /** COLLAB END */
 
-      const postMessage = (msg) => {
+      const postMessage = msg => {
         console.log(msg)
         window.postMessage(msg)
       }
 
       // {{{ Messages handler.
-      const handleMessage = (event) => {
+      const handleMessage = event => {
         const { data } = event
 
         if (data === 'variant-01') {
-          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, -2.7), new Vec3(0, 0, 0.4))
+          renderer
+            .getViewport()
+            .getCamera()
+            .setPositionAndTarget(new Vec3(2, 2, -2.7), new Vec3(0, 0, 0.4))
           renderer.frameAll()
           postMessage(`done-${data}`)
         } else if (data === 'variant-02') {
-          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-2, -2, 2.7), new Vec3(0, 0, 0.4))
+          renderer
+            .getViewport()
+            .getCamera()
+            .setPositionAndTarget(new Vec3(-2, -2, 2.7), new Vec3(0, 0, 0.4))
           renderer.frameAll()
           postMessage(`done-${data}`)
         }

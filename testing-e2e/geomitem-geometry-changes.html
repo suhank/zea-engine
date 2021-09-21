@@ -10,7 +10,7 @@
 
     <link rel="stylesheet" href="styles/tailwind.min.css" />
 
-    <script src="../dist/index.umd.js"></script>
+    <script src="../dist/index.umd.development.js"></script>
 
     <script type="module">
       const { GLRenderer, Scene, Vec3, Cuboid, Sphere, GeomItem, Material, Color } = window.zeaEngine
@@ -29,16 +29,19 @@
       const geomItem = new GeomItem('Cuboid', cuboid, standardMaterial)
       scene.getRoot().addChild(geomItem)
 
-      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-5, -5, 3), new Vec3(0, 0, 0))
+      renderer
+        .getViewport()
+        .getCamera()
+        .setPositionAndTarget(new Vec3(-5, -5, 3), new Vec3(0, 0, 0))
 
-      const postMessage = (msg) => {
+      const postMessage = msg => {
         console.log(msg)
         window.postMessage(msg)
       }
       postMessage('done-loading')
 
       // {{{ Messages handler.
-      const handleMessage = (event) => {
+      const handleMessage = event => {
         const { data } = event
 
         if (data === 'variant-01') {

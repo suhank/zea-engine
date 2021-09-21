@@ -12,7 +12,7 @@
       <canvas class="absolute" id="app"></canvas>
     </div>
 
-    <script src="../dist/index.umd.js"></script>
+    <script src="../dist/index.umd.development.js"></script>
 
     <script type="module">
       const { GLRenderer, Scene, Vec3 } = zeaEngine
@@ -24,7 +24,10 @@
 
       scene.setupGrid(5.0, 50)
 
-      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, 1.7), new Vec3(0, 0, 0.4))
+      renderer
+        .getViewport()
+        .getCamera()
+        .setPositionAndTarget(new Vec3(2, 2, 1.7), new Vec3(0, 0, 0.4))
 
       window.postMessage('done-loading')
     </script>

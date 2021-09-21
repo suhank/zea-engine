@@ -10,7 +10,7 @@
 
     <link rel="stylesheet" href="styles/tailwind.min.css" />
 
-    <script src="../dist/index.umd.js"></script>
+    <script src="../dist/index.umd.development.js"></script>
 
     <script type="module">
       /*
@@ -44,7 +44,7 @@
         GeomItem,
         TreeItem,
         Scene,
-        GLRenderer,
+        GLRenderer
       } = window.zeaEngine
 
       const canvas = document.getElementById('renderer')
@@ -64,7 +64,7 @@
         .getCamera()
         .setPositionAndTarget(new Vec3(dim * 2, dim * 2, dim), new Vec3(dim * 0.5, dim * 0.5, dim * 0.5))
 
-      renderer.getViewport().on('keyDown', (event) => {
+      renderer.getViewport().on('keyDown', event => {
         if (event.key == 'f') {
           renderer.frameAll()
         }
@@ -138,7 +138,7 @@
 
         let t1 = performance.now()
 
-        const addRow = (i) => {
+        const addRow = i => {
           const t2 = performance.now()
 
           const progress = `${Math.round((i / dim) * 100)}%, ${Math.round(t2 - t1)} ms`
@@ -152,8 +152,8 @@
           addColumns(i, treeItem)
         }
 
-        const addRowAsync = (i) => {
-          return new Promise((resolve) => {
+        const addRowAsync = i => {
+          return new Promise(resolve => {
             setTimeout(() => {
               addRow(i)
               resolve()

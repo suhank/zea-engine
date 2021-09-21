@@ -9,7 +9,7 @@
       <canvas class="absolute" id="app"></canvas>
     </div>
 
-    <script src="../dist/index.umd.js"></script>
+    <script src="../dist/index.umd.development.js"></script>
 
     <script type="module">
       const { GLRenderer, Scene, Vec3, Color, Circle, Material, GeomItem, GLBoundingBoxPass } = zeaEngine
@@ -30,12 +30,15 @@
       // renderer.addPass(boundingBoxPass)
       // boundingBoxPass.addTreeItem(geomItem, true)
 
-      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(5, 5, 2.7), new Vec3(0, 0, 0))
+      renderer
+        .getViewport()
+        .getCamera()
+        .setPositionAndTarget(new Vec3(5, 5, 2.7), new Vec3(0, 0, 0))
 
       window.postMessage('done-loading')
 
       // {{{ Messages handler.
-      const handleMessage = (event) => {
+      const handleMessage = event => {
         const { data } = event
 
         if (data === 'variant-01') {

@@ -10,7 +10,7 @@
 
     <link rel="stylesheet" href="styles/tailwind.min.css" />
 
-    <script src="../dist/index.umd.js"></script>
+    <script src="../dist/index.umd.development.js"></script>
 
     <script type="module">
       const { GLRenderer, Scene, Xfo, Vec3, Points, Color, GeomItem, Material } = zeaEngine
@@ -50,15 +50,21 @@
       window.postMessage('done-loading')
 
       // {{{ Messages handler.
-      const handleMessage = (event) => {
+      const handleMessage = event => {
         const { data } = event
 
         if (data === 'variant-01') {
-          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, -2.7), new Vec3(0, 0, 0.4))
+          renderer
+            .getViewport()
+            .getCamera()
+            .setPositionAndTarget(new Vec3(2, 2, -2.7), new Vec3(0, 0, 0.4))
           renderer.frameAll()
           window.postMessage(`done-${data}`)
         } else if (data === 'variant-02') {
-          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-2, -2, 2.7), new Vec3(0, 0, 0.4))
+          renderer
+            .getViewport()
+            .getCamera()
+            .setPositionAndTarget(new Vec3(-2, -2, 2.7), new Vec3(0, 0, 0.4))
           renderer.frameAll()
           window.postMessage(`done-${data}`)
         }
@@ -69,18 +75,18 @@
 
       /** HIGHLIGHT START */
       let highlightedItem
-      renderer.getViewport().on('pointerOverGeom', (event) => {
+      renderer.getViewport().on('pointerOverGeom', event => {
         const item = event.intersectionData.geomItem
         if (item) {
           highlightedItem = item
           highlightedItem.addHighlight('pointerOverGeom', new Color(1.0, 0.7, 0, 0.3), true)
         }
       })
-      renderer.getViewport().on('pointerLeaveGeom', (event) => {
+      renderer.getViewport().on('pointerLeaveGeom', event => {
         highlightedItem.removeHighlight('pointerOverGeom', true)
         highlightedItem = null
       })
-      renderer.getViewport().on('pointerUp', (event) => {
+      renderer.getViewport().on('pointerUp', event => {
         if (event.intersectionData) {
           const geomItem = event.intersectionData.geomItem
           console.log('', geomItem.getPath())

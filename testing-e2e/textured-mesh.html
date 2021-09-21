@@ -10,7 +10,7 @@
 
     <link rel="stylesheet" href="styles/tailwind.min.css" />
 
-    <script src="../dist/index.umd.js"></script>
+    <script src="../dist/index.umd.development.js"></script>
 
     <script type="module">
       const { GLRenderer, Scene, Vec3, Color, Xfo, Disc, Plane, Material, GeomItem, Label, LDRImage } = window.zeaEngine
@@ -20,7 +20,10 @@
       const scene = new Scene()
       const renderer = new GLRenderer(canvas, { hideSplash: true, antialias: false })
       renderer.setScene(scene)
-      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-2, -2, 1.7), new Vec3(0, 0, 0.2))
+      renderer
+        .getViewport()
+        .getCamera()
+        .setPositionAndTarget(new Vec3(-2, -2, 1.7), new Vec3(0, 0, 0.2))
 
       scene.setupGrid(10.0, 10)
 
@@ -29,25 +32,25 @@
 
       /** HIGHLIGHT START */
       let highlightedItem
-      renderer.getViewport().on('pointerOverGeom', (event) => {
+      renderer.getViewport().on('pointerOverGeom', event => {
         const item = event.intersectionData.geomItem
         if (item) {
           highlightedItem = item
           highlightedItem.addHighlight('pointerOverGeom', new Color(1.0, 1.0, 0, 0.3), true)
         }
       })
-      renderer.getViewport().on('pointerLeaveGeom', (event) => {
+      renderer.getViewport().on('pointerLeaveGeom', event => {
         highlightedItem.removeHighlight('pointerOverGeom', true)
         highlightedItem = null
       })
-      renderer.getViewport().on('pointerUp', (event) => {
+      renderer.getViewport().on('pointerUp', event => {
         if (event.intersectionData) {
           const geomItem = event.intersectionData.geomItem
           console.log('', geomItem.getPath())
         }
       })
       /** HIGHLIGHT END */
-      
+
       const disc = new Disc(0.5, 64)
       const plane = new Plane(1, 1)
 
@@ -59,7 +62,7 @@
         material.getParameter('BaseColor').setValue(new Color(0.6, 0, 1))
         const image = new LDRImage('LDRImage')
         image.setImageURL('data/avatar1.jpg')
-        promises.push(new Promise((resolve) => image.on('loaded', resolve)))
+        promises.push(new Promise(resolve => image.on('loaded', resolve)))
         material.getParameter('BaseColor').setImage(image)
         const geomItem = new GeomItem('geomItem1', disc, material, new Xfo(new Vec3(-1, 0, 0.1)))
         scene.getRoot().addChild(geomItem)
@@ -70,7 +73,7 @@
         material.getParameter('BaseColor').setValue(new Color(0.6, 0, 1))
         const image = new LDRImage('LDRImage')
         image.setImageURL('data/zea-logo.png', 'RGBA')
-        promises.push(new Promise((resolve) => image.on('loaded', resolve)))
+        promises.push(new Promise(resolve => image.on('loaded', resolve)))
         material.getParameter('BaseColor').setImage(image)
         const geomItem = new GeomItem('geomItem2', plane, material, new Xfo(new Vec3(0, 0, 0.1)))
         scene.getRoot().addChild(geomItem)
@@ -87,7 +90,7 @@
         label.getParameter('Margin').setValue(12)
         label.getParameter('StrokeBackgroundOutline').setValue(false)
         label.getParameter('Text').setValue(`Hello World`)
-        promises.push(new Promise((resolve) => label.on('labelRendered', resolve)))
+        promises.push(new Promise(resolve => label.on('labelRendered', resolve)))
 
         material.getParameter('BaseColor').setImage(label)
         const geomItem = new GeomItem('geomItem3', plane, material, new Xfo(new Vec3(1, 0, 0.1)))

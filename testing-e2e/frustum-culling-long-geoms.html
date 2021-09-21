@@ -10,7 +10,7 @@
 
     <link rel="stylesheet" href="styles/tailwind.min.css" />
 
-    <script src="../dist/index.umd.js"></script>
+    <script src="../dist/index.umd.development.js"></script>
 
     <script type="module">
       const { GLRenderer, Scene, Vec3, Xfo, Color, Sphere, Cuboid, Material, GeomItem, GLBoundingBoxPass } = zeaEngine
@@ -42,14 +42,14 @@
       //   console.log(camera.getParameter('GlobalXfo').getValue().toString(), camera.getTargetPosition().toString())
       // })
 
-      const postMessage = (msg) => {
+      const postMessage = msg => {
         console.log(msg)
         window.postMessage(msg)
       }
       postMessage('done-loading')
 
       // {{{ Messages handler.
-      const handleMessage = (event) => {
+      const handleMessage = event => {
         const { data } = event
         if (data === 'variant-01') {
           camera.setPositionAndTarget(new Vec3(14.15735, 14.55242, -0.38921), new Vec3(3.49633, -2.18602, -1.41332))

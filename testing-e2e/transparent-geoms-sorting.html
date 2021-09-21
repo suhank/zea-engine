@@ -36,7 +36,7 @@
       </button>
     </div>
 
-    <script src="../dist/index.umd.js"></script>
+    <script src="../dist/index.umd.development.js"></script>
 
     <script type="module">
       const {
@@ -55,7 +55,7 @@
         TreeItem,
         Material,
         SelectionSet,
-        EnvMap,
+        EnvMap
       } = zeaEngine
 
       const scene = new Scene()
@@ -68,7 +68,10 @@
         postMessage('done-loading')
       })
       scene.setEnvMap(envMap)
-      scene.getSettings().getParameter('Display EnvMap').setValue(false)
+      scene
+        .getSettings()
+        .getParameter('Display EnvMap')
+        .setValue(false)
 
       // scene.setupGrid(60.0, 6)
       const tree1 = new TreeItem('tree1')
@@ -106,10 +109,13 @@
         }
       }
 
-      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(25, 25, 13), new Vec3(10, 0, 0))
+      renderer
+        .getViewport()
+        .getCamera()
+        .setPositionAndTarget(new Vec3(25, 25, 13), new Vec3(10, 0, 0))
       renderer.frameAll()
 
-      const postMessage = (msg) => {
+      const postMessage = msg => {
         console.log(msg)
         window.postMessage(msg)
       }
@@ -129,7 +135,10 @@
         postMessage(`done-variant-01`)
       })
       document.querySelector('#variant-02').addEventListener('click', () => {
-        renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-25, -25, 13), new Vec3(10, 0, 0))
+        renderer
+          .getViewport()
+          .getCamera()
+          .setPositionAndTarget(new Vec3(-25, -25, 13), new Vec3(10, 0, 0))
         renderer.frameAll()
         postMessage(`done-variant-02`)
       })
@@ -146,7 +155,10 @@
         postMessage(`done-variant-03`)
       })
       document.querySelector('#variant-04').addEventListener('click', () => {
-        renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(25, 25, 13), new Vec3(10, 0, 0))
+        renderer
+          .getViewport()
+          .getCamera()
+          .setPositionAndTarget(new Vec3(25, 25, 13), new Vec3(10, 0, 0))
         renderer.frameAll()
         postMessage(`done-variant-04`)
       })
