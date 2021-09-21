@@ -76,16 +76,16 @@ class GLGeomLibrary extends EventEmitter {
       this.geomVertexCounts[id] = allocation.size
     })
 
-    this.geomVertexCounts = new Int32Array(0)
-    this.geomVertexOffsets = new Int32Array(0)
+    this.geomVertexCounts = new Int32Array(1)
+    this.geomVertexOffsets = new Int32Array(1)
+    this.indicesCounts = new Int32Array(1)
+    this.indicesOffsets = new Int32Array(1)
+    this.freeGeomIndices.push(0)
 
     // //////////////////////////////////////
     // Indices
     this.numIndices = 0
-
     this.indicesAllocator = new Allocator1D()
-    this.indicesCounts = new Int32Array(0)
-    this.indicesOffsets = new Int32Array(0)
 
     this.indicesAllocator.on('resized', () => {
       this.bufferNeedsRealloc = true
@@ -141,18 +141,28 @@ class GLGeomLibrary extends EventEmitter {
       this.geomRefCounts[index]++
       return index
     }
-    if (this.freeGeomIndices.length) {
-      index = this.freeGeomIndices.pop()!
-    } else {
-      index = this.geoms.length
-      this.geomRefCounts[index] = 0
-
-      this.geomVertexCounts = resizeIntArray(this.geomVertexCounts, index + 1)
-      this.geomVertexOffsets = resizeIntArray(this.geomVertexOffsets, index + 1)
+    if (this.freeGeomIndices.length == 0) {
+      const prevSize = this.geomVertexCounts.length
+      const newSize = prevSize * 2
+      this.geomVertexCounts = resizeIntArray(this.geomVertexCounts, newSize)
+      this.geomVertexOffsets = resizeIntArray(this.geomVertexOffsets, newSize)
+      this.indicesCounts = resizeIntArray(this.indicesCounts, newSize)
+      this.indicesOffsets = resizeIntArray(this.indicesOffsets, newSize)
+      for (let i = newSize - 1; i >= prevSize; i--) {
+        this.freeGeomIndices.push(i)
+      }
     }
+    index = this.freeGeomIndices.pop()!
+
+    this.geoms[index] = geom
+    this.geomRefCounts[index] = 1
+    this.geomsDict[geom.getId()] = index
+    this.dirtyGeomIndices.add(index)
 
     this.geomVertexCounts[index] = 0
     this.geomVertexOffsets[index] = 0
+    this.indicesCounts[index] = 0
+    this.indicesOffsets[index] = 0
 
     const geomDataChanged = () => {
       this.dirtyGeomIndices.add(index)
@@ -164,20 +174,6 @@ class GLGeomLibrary extends EventEmitter {
     }
     geom.on('geomDataChanged', geomDataChanged)
     geom.on('geomDataTopologyChanged', geomDataTopologyChanged)
-
-    this.geoms[index] = geom
-    this.geomRefCounts[index]++
-    this.geomsDict[geom.getId()] = index
-    this.dirtyGeomIndices.add(index)
-
-    // //////////////////////////////////////
-    // Indices
-    if (index == this.indicesCounts.length) {
-      this.indicesCounts = resizeIntArray(this.indicesCounts, this.indicesCounts.length + 1)
-      this.indicesOffsets = resizeIntArray(this.indicesOffsets, this.indicesOffsets.length + 1)
-    }
-    this.indicesCounts[index] = 0
-    this.indicesOffsets[index] = 0
 
     return index
   }
@@ -476,13 +472,6 @@ class GLGeomLibrary extends EventEmitter {
 
     this.dirtyGeomIndices = new Set()
     this.geomBuffersTmp = []
-
-    // eslint-disable-next-line guard-for-in
-    for (const shaderkey in this.shaderBindings) {
-      const shaderBinding = this.shaderBindings[shaderkey]
-      shaderBinding.destroy()
-    }
-    this.shaderBindings = {}
   }
 
   // /////////////////////////////////////
