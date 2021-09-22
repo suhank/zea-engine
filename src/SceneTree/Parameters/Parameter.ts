@@ -15,11 +15,11 @@ import { BinReader } from '../BinReader'
  */
 abstract class Parameter<T> extends EventEmitter implements ICloneable, ISerializable {
   // TODO:(refactor) boundOps, cleaning, dirtyOpIndex, firstOP_WRITE, were private.
-  protected dirty: boolean
-  protected boundOps: OperatorOutput[]
-  protected cleaning: boolean
-  protected dirtyOpIndex: number
-  protected firstOP_WRITE: number
+  protected dirty: boolean = false
+  protected boundOps: OperatorOutput[] = []
+  protected cleaning: boolean = false
+  protected dirtyOpIndex: number = 0
+  protected firstOP_WRITE: number = 0
   protected name: string
   protected value: T
   protected dataType: string
@@ -49,16 +49,9 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
    */
   constructor(name: string = '', value: T, dataType: string) {
     super()
-
-    this.dirty = false
-    this.firstOP_WRITE = 0
-
     this.name = name
     this.value = value
     this.dataType = dataType
-    this.boundOps = []
-    this.dirtyOpIndex = 0
-    this.cleaning = false
   }
 
   /**
@@ -66,7 +59,7 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
    *
    * @return {string} - Returns the name.
    */
-  getName = (): string => {
+  getName(): string {
     return this.name
   }
 
@@ -76,7 +69,7 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
    * @param {string} name - The base parameter name.
    * @return {Parameter} - The instance itself.
    */
-  setName = (name: string): void => {
+  setName(name: string): void {
     if (name === this.name) {
       return
     }

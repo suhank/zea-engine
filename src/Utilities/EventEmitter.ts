@@ -21,7 +21,7 @@ import { BaseEvent } from './BaseEvent'
  *
  */
 class EventEmitter extends BaseClass {
-  listeners: Record<string, Array<null | ((event: BaseEvent) => void)>>
+  listeners: Record<string, Array<null | ((event: BaseEvent) => void)>> = {}
 
   /**
    * Initializes an empty `listeners` map that will host all the events,
@@ -30,7 +30,6 @@ class EventEmitter extends BaseClass {
    */
   constructor() {
     super()
-    this.listeners = {}
   }
 
   /**

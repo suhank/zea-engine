@@ -44,28 +44,26 @@ branchSelectionOutlineColor.a = 0.1
  * @extends {BaseItem}
  */
 class TreeItem extends BaseItem {
-  __disableBoundingBox: boolean
-  __boundingBoxParam: BoundingBoxParameter
-  __childItems: BaseItem[]
+  // Controls if this TreeItem or its children contribute to the bounding boxes
+  // in the scene. If set to false, Camera framing will ignore this item,
+  disableBoundingBox: boolean = false
 
-  __childItemsEventHandlers: Array<Record<string, number>>
-  __childItemsMapping: Record<string, number>
+  protected __childItems: BaseItem[] = []
+  protected __childItemsEventHandlers: Array<Record<string, number>> = []
+  protected __childItemsMapping: Record<string, number> = {}
 
-  __globalXfoParam: XfoParameter
-  __localXfoParam: XfoParameter
+  protected __globalXfoParam: XfoParameter = new XfoParameter('GlobalXfo', new Xfo())
+  protected __localXfoParam: XfoParameter = new XfoParameter('LocalXfo', new Xfo())
+  protected __boundingBoxParam: BoundingBoxParameter = new BoundingBoxParameter('BoundingBox', this)
 
-  __highlightMapping: Record<string, Color>
-  __highlights: Array<string>
+  protected __highlightMapping: Record<string, Color> = {}
+  protected __highlights: Array<string> = []
 
-  __visible: boolean
-  __visibleCounter: number
-  __visibleParam: BooleanParameter
-  globalXfoOp: Operator
+  protected __visible: boolean = true
+  protected __visibleCounter: number = 1 // Visible by Default.
+  protected __visibleParam: BooleanParameter = new BooleanParameter('Visible', true)
+  protected globalXfoOp: Operator
 
-  // vars used in AssetItem.ts:
-  // __geomLibrary: any
-  // __materials: any
-  // loaded: any
   /**
    * Creates a tree item with the specified name.
    *
@@ -77,26 +75,13 @@ class TreeItem extends BaseItem {
   constructor(name?: string) {
     super(name)
 
-    // Controls if this TreeItem or its children contribute to the bounding boxes
-    // in the scene. If set to false, Camera framing will ignore this item,
-    this.__disableBoundingBox = false
-
-    this.__visibleCounter = 1 // Visible by Default.
-    this.__visible = true
-    this.__highlightMapping = {}
-    this.__highlights = []
-
-    this.__childItems = []
-    this.__childItemsEventHandlers = []
-    this.__childItemsMapping = {}
-
     // /////////////////////////////////////
     // Add parameters.
 
-    this.__visibleParam = <BooleanParameter>this.addParameter(new BooleanParameter('Visible', true))
-    this.__localXfoParam = <XfoParameter>this.addParameter(new XfoParameter('LocalXfo', new Xfo()))
-    this.__globalXfoParam = <XfoParameter>this.addParameter(new XfoParameter('GlobalXfo', new Xfo()))
-    this.__boundingBoxParam = <BoundingBoxParameter>this.addParameter(new BoundingBoxParameter('BoundingBox', this))
+    this.addParameter(this.__visibleParam)
+    this.addParameter(this.__localXfoParam)
+    this.addParameter(this.__globalXfoParam)
+    this.addParameter(this.__boundingBoxParam)
 
     this.globalXfoOp = new CalcGlobalXfoOperator(this.__globalXfoParam, this.__localXfoParam)
     this.__globalXfoParam.on('valueChanged', (event: any) => {
@@ -561,7 +546,7 @@ class TreeItem extends BaseItem {
     }
 
     const listenerIDs: Record<string, number> = {}
-    listenerIDs['nameChanged'] = childItem.on('nameChanged', (event) => {
+    listenerIDs['nameChanged'] = childItem.on('nameChanged', event => {
       this.childNameChanged(event)
     })
 
@@ -573,10 +558,10 @@ class TreeItem extends BaseItem {
         newLocalXfo = globalXfo.inverse().multiply(childGlobalXfo)
       }
 
-      listenerIDs['boundingChanged'] = childItem.on('boundingChanged', (event) => {
+      listenerIDs['boundingChanged'] = childItem.on('boundingChanged', event => {
         this.setBoundingBoxDirty()
       })
-      listenerIDs['visibilityChanged'] = childItem.on('visibilityChanged', (event) => {
+      listenerIDs['visibilityChanged'] = childItem.on('visibilityChanged', event => {
         this.setBoundingBoxDirty()
       })
     }
