@@ -13,12 +13,6 @@ import { BinReader } from './BinReader'
 import { Operator } from './Operators'
 import { Parameter } from './Parameters'
 
-let selectionOutlineColor = new Color('#03E3AC')
-selectionOutlineColor.a = 0.1
-
-let branchSelectionOutlineColor = selectionOutlineColor.lerp(new Color('white'), 0.5)
-branchSelectionOutlineColor.a = 0.1
-
 /**
  * Class representing an Item in the scene tree with hierarchy capabilities (has children).
  * It has the capability to add and remove children.
@@ -31,9 +25,9 @@ branchSelectionOutlineColor.a = 0.1
  * * **BoundingBox(`BoundingBox`):** Provides the bounding box for the tree item and all of its children in the 3d scene.
  *
  * **Events**
- * * **globalXfoChanged:** Emitted when the value of GlobalXfo parameter changes. TODO
- * * **visibilityChanged:** Emitted when the visibility on the tree item changes. TODO
- * * **highlightChanged:** Emitted when the highlight on the tree item changes. TODO
+ * * **globalXfoChanged:** Emitted when the value of GlobalXfo parameter changes.
+ * * **visibilityChanged:** Emitted when the visibility on the tree item changes.
+ * * **highlightChanged:** Emitted when the highlight on the tree item changes.
  * * **childAdded:** Emitted when a item is added as a child.
  * * **childRemoved:** Emitted when an item is removed from the child nodes.
  * * **pointerDown:** Emitted when a pointerDown event happens in an item.
@@ -258,6 +252,13 @@ class TreeItem extends BaseItem {
         if (childItem instanceof TreeItem) childItem.propagateVisibility(this.__visible ? 1 : -1)
       }
       this.emit('visibilityChanged', { visible })
+
+      // Note: we used to handle this by listening to a 'valueChanged' event on the
+      // parameter.
+      const owner_TreeItem = <TreeItem>this.__ownerItem
+      if (owner_TreeItem && owner_TreeItem instanceof TreeItem) {
+        owner_TreeItem.setBoundingBoxDirty()
+      }
       return true
     }
     return false
@@ -420,6 +421,13 @@ class TreeItem extends BaseItem {
       // Will cause boundingChanged to emit
       this.__boundingBoxParam.setDirty(-1)
     }
+
+    // Note: we used to handle this by listening to a 'valueChanged' event on the
+    // parameter.
+    const owner_TreeItem = <TreeItem>this.__ownerItem
+    if (owner_TreeItem && owner_TreeItem instanceof TreeItem) {
+      owner_TreeItem.setBoundingBoxDirty()
+    }
   }
 
   // ////////////////////////////////////////
@@ -499,11 +507,11 @@ class TreeItem extends BaseItem {
   }
 
   /**
-   * The __updateMapping method.
+   * Updates the internal acceleration structure that speeds up looking up children by name.
    * @param {number} start - The start value.
    * @private
    */
-  protected updateMapping(start: number): void {
+  protected updateChildNameMapping(start: number): void {
     // If a child has been added or removed from the
     // tree item, we need to update the acceleration structure.
     for (let i = start; i < this.__childItems.length; i++) {
@@ -512,7 +520,7 @@ class TreeItem extends BaseItem {
   }
 
   /**
-   * The _childNameChanged event handler.
+   * When a child's name changed, we update our acceleration structure.
    * @param {Record<string, any} event - The start value.
    * @private
    */
@@ -550,30 +558,13 @@ class TreeItem extends BaseItem {
       this.childNameChanged(event)
     })
 
-    let newLocalXfo
     if (childItem instanceof TreeItem) {
       if (maintainXfo) {
         const globalXfo = this.getParameter('GlobalXfo')?.getValue()
         const childGlobalXfo = childItem.getParameter('GlobalXfo')?.getValue()
-        newLocalXfo = globalXfo.inverse().multiply(childGlobalXfo)
+        const newLocalXfo = globalXfo.inverse().multiply(childGlobalXfo)
+        childItem.getParameter('LocalXfo')?.setValue(newLocalXfo)
       }
-
-      listenerIDs['boundingChanged'] = childItem.on('boundingChanged', event => {
-        this.setBoundingBoxDirty()
-      })
-      listenerIDs['visibilityChanged'] = childItem.on('visibilityChanged', event => {
-        this.setBoundingBoxDirty()
-      })
-    }
-
-    this.__childItems.splice(index, 0, childItem)
-    this.__childItemsEventHandlers.splice(index, 0, listenerIDs)
-    this.__childItemsMapping[childItem.getName()] = index
-    this.updateMapping(index)
-    childItem.setOwner(this)
-
-    if (childItem instanceof TreeItem) {
-      if (maintainXfo) childItem.getParameter('LocalXfo')?.setValue(newLocalXfo)
       this.setBoundingBoxDirty()
 
       this.__highlights.forEach((name: string) => {
@@ -581,6 +572,12 @@ class TreeItem extends BaseItem {
         childItem.addHighlight(name, color, true)
       })
     }
+
+    this.__childItems.splice(index, 0, childItem)
+    this.__childItemsEventHandlers.splice(index, 0, listenerIDs)
+    this.__childItemsMapping[childItem.getName()] = index
+    this.updateChildNameMapping(index)
+    childItem.setOwner(this)
 
     this.emit('childAdded', { childItem, index })
 
@@ -664,7 +661,7 @@ class TreeItem extends BaseItem {
     this.__childItems.splice(index, 1)
     this.__childItemsEventHandlers.splice(index, 1)
     delete this.__childItemsMapping[childItem.getName()]
-    this.updateMapping(index)
+    this.updateChildNameMapping(index)
     if (childItem instanceof TreeItem) {
       this.setBoundingBoxDirty()
     }

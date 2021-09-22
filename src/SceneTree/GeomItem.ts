@@ -88,12 +88,11 @@ class GeomItem extends BaseGeomItem {
     this.addParameter(this.__geomOffsetXfoParam)
     this.addParameter(this.__geomMatParam)
 
-    this.listenerIDs['valueChanged'] = this.__geomParam.on('valueChanged', event => {
+    const geomChanged = () => {
       this.setBoundingBoxDirty()
-    })
-    this.listenerIDs['boundingBoxChanged'] = this.__geomParam.on('boundingBoxChanged', event => {
-      this.setBoundingBoxDirty()
-    })
+    }
+    this.__geomParam.on('valueChanged', geomChanged)
+    this.__geomParam.on('boundingBoxChanged', geomChanged)
 
     this.calcGeomMatOperator = new CalcGeomMatOperator(
       this.__globalXfoParam,
