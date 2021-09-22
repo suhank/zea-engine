@@ -25,19 +25,9 @@ class InstanceItem extends TreeItem {
    */
   setSrcTree(treeItem, context) {
     this.__srcTree = treeItem
-
-    const numChildren = this.__srcTree.getNumChildren()
-    if (numChildren == 0) {
-      const clonedTree = this.__srcTree.clone(context)
-      clonedTree.getParameter('LocalXfo').loadValue(new Xfo())
-      this.addChild(clonedTree, false)
-    } else {
-      const children = this.__srcTree.getChildren()
-      children.forEach((child) => {
-        const clonedChild = child.clone(context)
-        this.addChild(clonedChild, false)
-      })
-    }
+    const clonedTree = this.__srcTree.clone(context)
+    clonedTree.getParameter('LocalXfo').setValue(new Xfo())
+    this.addChild(clonedTree, false)
   }
 
   /**
@@ -65,7 +55,7 @@ class InstanceItem extends TreeItem {
     const path = reader.loadStrArray()
     // console.log("InstanceItem of:", path)
     try {
-      context.resolvePath(path, (treeItem) => {
+      context.resolvePath(path, treeItem => {
         this.setSrcTree(treeItem, context)
       })
     } catch (e) {
