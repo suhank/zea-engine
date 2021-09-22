@@ -17,12 +17,12 @@ import { BinReader } from '../../SceneTree/BinReader'
  * @extends ParameterOwner
  */
 class BaseGeom extends ParameterOwner {
-  protected __boundingBox: Box3
-  protected __boundingBoxDirty: boolean
-  protected __metaData: Map<string, any>
-  protected __name: string
-  protected __numVertices: number
-  protected __vertexAttributes: Map<string, Attribute>
+  protected __boundingBox: Box3 = new Box3()
+  protected __boundingBoxDirty: boolean = true
+  protected __metaData: Map<string, any> = new Map()
+  protected __name: string = ''
+  protected __numVertices: number = 0
+  protected __vertexAttributes: Map<string, Attribute> = new Map()
   debugColor: any
   name: any
 
@@ -31,12 +31,6 @@ class BaseGeom extends ParameterOwner {
    */
   constructor() {
     super()
-    this.__name = ''
-    this.__numVertices = 0
-    this.__boundingBox = new Box3()
-    this.__boundingBoxDirty = true
-    this.__vertexAttributes = new Map()
-    this.__metaData = new Map()
     this.addVertexAttribute('positions', new Vec3Attribute())
   }
 

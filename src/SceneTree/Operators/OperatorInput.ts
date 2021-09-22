@@ -8,7 +8,6 @@ import { EventEmitter } from '../../Utilities/EventEmitter'
  * @extends EventEmitter
  */
 class OperatorInput extends EventEmitter {
-  protected listenerIDs: Record<string, number> = {}
   name: string
   _op?: Operator = undefined
   param?: Parameter<any> = undefined
@@ -68,7 +67,7 @@ class OperatorInput extends EventEmitter {
    * The handler function for when the input paramter changes.
    * @param {Record<string, any>} event - The event object.
    */
-  protected paramValueChanged = (event: Record<string, any>): void => {
+  paramValueChanged(): void {
     if (this._op) this._op.setDirty()
   }
 
@@ -78,13 +77,11 @@ class OperatorInput extends EventEmitter {
    */
   setParam(param?: Parameter<unknown>): void {
     if (this.param) {
-      this.param.removeListenerById('valueChanged', this.listenerIDs['valueChanged'])
+      this.param.unbindOperatorInput(this)
     }
     this.param = param
     if (this.param) {
-      this.listenerIDs['valueChanged'] = this.param.on('valueChanged', (event) => {
-        this.paramValueChanged(event)
-      })
+      this.param.bindOperatorInput(this)
     }
     this.emit('paramSet', { param: this.param })
   }
@@ -157,7 +154,7 @@ class OperatorInput extends EventEmitter {
     // Once operators have persistent connections,
     // we will simply uninstall the output from the parameter.
     if (this.param) {
-      this.param.removeListenerById('valueChanged', this.listenerIDs['valueChanged'])
+      this.param.unbindOperatorInput(this)
     }
   }
 
@@ -167,9 +164,7 @@ class OperatorInput extends EventEmitter {
   reattach(): void {
     this.detached = false
     if (this.param) {
-      this.listenerIDs['valueChanged'] = this.param.on('valueChanged', (event) => {
-        this.paramValueChanged(event)
-      })
+      this.param.bindOperatorInput(this)
     }
   }
 }

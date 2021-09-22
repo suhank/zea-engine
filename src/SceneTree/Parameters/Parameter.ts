@@ -6,6 +6,7 @@ import { ICloneable } from '../../Utilities/ICloneable'
 import { ISerializable } from '../../Utilities/ISerializable'
 import { OperatorOutputMode } from './OperatorOutputMode'
 import { BinReader } from '../BinReader'
+import { OperatorInput } from '..'
 /**
  * Represents a reactive type of attribute that can be owned by a `ParameterOwner` class.
  *
@@ -14,9 +15,9 @@ import { BinReader } from '../BinReader'
  * * **valueChanged:** Triggered when the value of the parameter changes.
  */
 abstract class Parameter<T> extends EventEmitter implements ICloneable, ISerializable {
-  // TODO:(refactor) boundOps, cleaning, dirtyOpIndex, firstOP_WRITE, were private.
   protected dirty: boolean = false
-  protected boundOps: OperatorOutput[] = []
+  protected boundInputs: OperatorInput[] = []
+  protected boundOutputs: OperatorOutput[] = []
   protected cleaning: boolean = false
   protected dirtyOpIndex: number = 0
   protected firstOP_WRITE: number = 0
@@ -124,18 +125,45 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
   // Operator bindings
 
   /**
-   * Binds an OperatorOutput to this parameter.
+   * When an Operator is reading from a parameter, it must be dirtied when the parameter value
+   * changes. The Parameter maintains a list of bound inputs and will propagate dirty to
+   * them explicitly.
+   *
+   * @param {OperatorInput} operatorInput - The output that we are unbinding from the Parameter
+   * @param {number} index - The index(optional) that the output is being bound at.
+   * @return {number} - The index of the bound output.
+   */
+  bindOperatorInput(operatorInput: OperatorInput) {
+    this.boundInputs.push(operatorInput)
+  }
+
+  /**
+   * When an operator is being removed from reading from a Parameter, the Input is removed
+   * This means the operator will no longer receive updates when the operator changes.
+   *
+   * @param {OperatorInput} operatorInput - The output that we are unbinding from the Parameter
+   * @return {boolean} - The return value.
+   */
+  unbindOperatorInput(operatorInput: OperatorInput) {
+    const index = this.boundInputs.indexOf(operatorInput)
+    this.boundInputs.splice(index, 1)
+  }
+
+  /**
+   * When an Operator writes to a parameter, it binds its outputs to the parameter at a given
+   * index. Then when the operator is dirtied by one of its inputs, it explicitly dirties
+   * the output parameters.
    *
    * @param {OperatorOutput} operatorOutput - The output that we are unbinding from the Parameter
    * @param {number} index - The index(optional) that the output is being bound at.
    * @return {number} - The index of the bound output.
    */
   bindOperatorOutput(operatorOutput: OperatorOutput, index = -1): number {
-    if (index == -1) index = this.boundOps.length
-    this.boundOps.splice(index, 0, operatorOutput)
+    if (index == -1) index = this.boundOutputs.length
+    this.boundOutputs.splice(index, 0, operatorOutput)
     // Update the remaining binding indices
-    for (let i = index; i < this.boundOps.length; i++) {
-      this.boundOps[i].setParamBindIndex(i)
+    for (let i = index; i < this.boundOutputs.length; i++) {
+      this.boundOutputs[i].setParamBindIndex(i)
     }
     // If we weren't already dirty, make sure to emit a 'valueChanged' anyway.
     this.__findFirstOP_WRITE()
@@ -144,17 +172,18 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
   }
 
   /**
-   * The unbindOperator method.
+   * When an operator is unbinding from a parameter, it removes its self from the list maintained
+   * by the parameter.
    *
    * @param {OperatorOutput} operatorOutput - The output that we are unbinding from the Parameter
    * @return {boolean} - The return value.
    */
-  unbindOperator(operatorOutput: OperatorOutput): number {
+  unbindOperatorOutput(operatorOutput: OperatorOutput): number {
     const index = operatorOutput.getParamBindIndex()
-    this.boundOps.splice(index, 1)
+    this.boundOutputs.splice(index, 1)
     // Update the remaining binding indices
-    for (let i = index; i < this.boundOps.length; i++) {
-      this.boundOps[i].setParamBindIndex(i)
+    for (let i = index; i < this.boundOutputs.length; i++) {
+      this.boundOutputs[i].setParamBindIndex(i)
     }
     this.__findFirstOP_WRITE()
     this.setDirty(Math.max(0, index - 1))
@@ -166,12 +195,12 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
    * All operators before this op can be ignored during dirty propagation.
    * @private
    */
-  __findFirstOP_WRITE(): void {
-    this.firstOP_WRITE = this.boundOps.length
-    if (this.boundOps.length > 0) {
+  private __findFirstOP_WRITE(): void {
+    this.firstOP_WRITE = this.boundOutputs.length
+    if (this.boundOutputs.length > 0) {
       for (this.firstOP_WRITE--; this.firstOP_WRITE > 0; this.firstOP_WRITE--) {
         // Find the first OP_WRITE binding. (Note: we could cache this)
-        if (this.boundOps[this.firstOP_WRITE].getMode() == OperatorOutputMode.OP_WRITE) break
+        if (this.boundOutputs[this.firstOP_WRITE].getMode() == OperatorOutputMode.OP_WRITE) break
       }
     }
   }
@@ -191,11 +220,11 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
       let newDirtyIndex = this.firstOP_WRITE
       if (newDirtyIndex <= index) {
         this.dirtyOpIndex = newDirtyIndex
-        for (newDirtyIndex++; newDirtyIndex < this.boundOps.length; newDirtyIndex++) {
+        for (newDirtyIndex++; newDirtyIndex < this.boundOutputs.length; newDirtyIndex++) {
           // Dirty all the other bound ops from the OP_WRITE to the top of the stack.
           if (newDirtyIndex != index) {
             // This will cause the other outputs of the operator to become dirty.
-            this.boundOps[newDirtyIndex].getOperator().setDirty()
+            this.boundOutputs[newDirtyIndex].getOperator().setDirty()
           }
         }
         this.emit('valueChanged', { mode: 0 })
@@ -213,7 +242,7 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
    * @return {boolean} - Returns a boolean.
    */
   isDirty(): boolean {
-    return this.dirtyOpIndex < this.boundOps.length
+    return this.dirtyOpIndex < this.boundOutputs.length
   }
 
   /**
@@ -252,11 +281,11 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
         //   } with name: ${op.getName()} is being cleaned immediately, instead of lazily.`
         // )
         console.log(`Parameter is cleaned when it was already clean to that point in the stack:`, this.getPath())
-      } else if (this.boundOps[index].getMode() != OperatorOutputMode.OP_WRITE) {
+      } else if (this.boundOutputs[index].getMode() != OperatorOutputMode.OP_WRITE) {
         // A parameter can become dirty (so __dirtyOpIndex == 0), and then another operator bound on top.
         // if the next op is a WRITE op, then we can fast forward the dirty index.
         const thisClassName = this.getClassName()
-        const op = this.boundOps[index].getOperator()
+        const op = this.boundOutputs[index].getOperator()
         const opClassName = op.getClassName()
         throw new Error(
           `Parameter: ${thisClassName} with name: ${this.getName()} is not cleaning all outputs during evaluation of op: ${opClassName} with name: ${op.getName()}`
@@ -301,14 +330,14 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
 
     while (this.dirtyOpIndex < index) {
       const tmp = this.dirtyOpIndex
-      const operatorOutput = this.boundOps[this.dirtyOpIndex]
+      const operatorOutput = this.boundOutputs[this.dirtyOpIndex]
       // The op can get the current value and modify it in place
       // and set the output to clean.
       operatorOutput.getOperator().evaluate()
 
       if (tmp == this.dirtyOpIndex) {
         // During initial configuration of an operator, cleaning outputs might be disabled.
-        const op = this.boundOps[this.dirtyOpIndex].getOperator()
+        const op = this.boundOutputs[this.dirtyOpIndex].getOperator()
         const opClassName = op.getClassName()
         console.warn(
           `Operator: ${opClassName} with name: ${op.getName()} is not cleaning its outputs during evaluation`
@@ -325,8 +354,8 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
    * @return {T} - The return value.
    */
   getValue(): T {
-    if (this.dirtyOpIndex < this.boundOps.length) {
-      this._clean(this.boundOps.length)
+    if (this.dirtyOpIndex < this.boundOutputs.length) {
+      this._clean(this.boundOutputs.length)
     }
     return this.value
   }
@@ -342,9 +371,9 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
       throw 'undefined was passed into the set value for param:' + this.getName()
     }
 
-    if (this.boundOps.length > 0) {
-      for (let i = this.boundOps.length - 1; i >= 0; i--) {
-        const operatorOutput = this.boundOps[i]
+    if (this.boundOutputs.length > 0) {
+      for (let i = this.boundOutputs.length - 1; i >= 0; i--) {
+        const operatorOutput = this.boundOutputs[i]
         value = operatorOutput.backPropagateValue(value)
         if (operatorOutput.getMode() == 0 /* OP_WRITE */) return
       }
@@ -357,6 +386,10 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
     this.value = value
 
     // Note: only users call 'setValue'. Operators call 'setCleanFromOp'
+    for (let i = 0; i < this.boundInputs.length; i++) {
+      this.boundInputs[i].paramValueChanged()
+    }
+
     this.emit('valueChanged')
   }
 

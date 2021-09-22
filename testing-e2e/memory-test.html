@@ -20,17 +20,19 @@
           Stats:
             Create scene: 14765.61865234375 ms
             Load GPU: 11439.541748046875 ms
-            Used Memory: 1.56 GB
+            Used Memory: 1.56 Gb
+            after migration to TypeScript
+            Used Memory: 1.65 Gb
 
         Mauro's MacBook Pro:
           Stats:
             Create scene: 10588.175048828125 ms
             Load GPU: 7655.34765625 ms
-            Used Memory: 1.39 GB
+            Used Memory: 1.39 Gb
           Specs:
             2.6 GHz 6-Core Intel Core i7
-            16 GB 2667 MHz DDR4
-            AMD Radeon Pro 5300M 4 GB
+            16 Gb 2667 MHz DDR4
+            AMD Radeon Pro 5300M 4 Gb
             Intel UHD Graphics 630 1536 MB
       */
 
@@ -54,6 +56,7 @@
       const scene = new Scene()
       scene.setupGrid(10, 10)
       renderer.setScene(scene)
+      // window.scene = scene
 
       const cuboid = new Cuboid(0.3, 0.4, 0.5)
 
@@ -71,6 +74,8 @@
       const TIME_LIMIT = 45_000
 
       document.querySelector('#memoryLimit').textContent = MEMORY_LIMIT
+      // const material = new Material('mat', 'SimpleSurfaceShader')
+      // material.getParameter('BaseColor').setValue(new Color(1, 1, 0))
 
       const addColumns = (row, treeItem) => {
         for (let j = 0; j < dim; j += 1) {
@@ -131,6 +136,7 @@
           document.querySelector('#usedJSHeapSize').textContent = usedJSHeapSize
           document.querySelector('#timeStatus').textContent = timeStatus
         })
+        renderer.requestRedraw()
       }
 
       const runAsync = () => {
