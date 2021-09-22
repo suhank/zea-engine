@@ -12,6 +12,7 @@ import { BaseGeom } from './Geometry'
 import { Material } from './Material'
 import { BinReader } from './BinReader'
 import { Vec3Attribute } from './Geometry/Vec3Attribute'
+import { AssetItem } from '.'
 
 let calculatePreciseBoundingBoxes = false
 
@@ -62,16 +63,15 @@ class CalcGeomMatOperator extends Operator {
  */
 class GeomItem extends BaseGeomItem {
   protected listenerIDs: Record<string, number> = {}
-  protected geomBBox: Box3 = new Box3()
-  protected disableBoundingBox: boolean = false
-  protected geomIndex: number
-  protected assetItem: any
+  protected geomBBox?: Box3
+  protected geomIndex: number = -1
+  protected assetItem: AssetItem | null = null
   protected calcGeomMatOperator: Operator
   public cullable: boolean = true
-  protected __geomOffsetXfoParam: XfoParameter
-  protected __geomParam: Parameter<BaseGeom>
-  protected __materialParam: Parameter<Material>
-  protected __geomMatParam: Parameter<Mat4>
+  protected __geomOffsetXfoParam: XfoParameter = new XfoParameter('GeomOffsetXfo')
+  protected __geomParam: GeometryParameter = new GeometryParameter('Geometry')
+  protected __materialParam: MaterialParameter = new MaterialParameter('Material')
+  protected __geomMatParam: Mat4Parameter = new Mat4Parameter('GeomMat')
 
   /**
    * Creates a geometry item.
@@ -82,8 +82,11 @@ class GeomItem extends BaseGeomItem {
    */
   constructor(name?: string, geometry?: BaseGeom, material?: Material, xfo?: Xfo) {
     super(name)
-    this.cullable = true
-    this.__geomParam = this.addParameter(new GeometryParameter('Geometry'))
+    this.addParameter(this.__geomParam)
+    this.addParameter(this.__materialParam)
+    this.addParameterDeprecationMapping('material', 'Material')
+    this.addParameter(this.__geomOffsetXfoParam)
+    this.addParameter(this.__geomMatParam)
 
     this.listenerIDs['valueChanged'] = this.__geomParam.on('valueChanged', event => {
       this.setBoundingBoxDirty()
@@ -91,15 +94,6 @@ class GeomItem extends BaseGeomItem {
     this.listenerIDs['boundingBoxChanged'] = this.__geomParam.on('boundingBoxChanged', event => {
       this.setBoundingBoxDirty()
     })
-
-    this.__materialParam = this.addParameter(new MaterialParameter('Material'))
-    this.addParameterDeprecationMapping('material', 'Material')
-
-    this.__geomOffsetXfoParam = <XfoParameter>this.addParameter(new XfoParameter('GeomOffsetXfo'))
-    this.__geomMatParam = this.addParameter(new Mat4Parameter('GeomMat'))
-
-    this.geomIndex = -1
-    this.assetItem = null
 
     this.calcGeomMatOperator = new CalcGeomMatOperator(
       this.__globalXfoParam,

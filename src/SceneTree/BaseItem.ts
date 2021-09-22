@@ -31,12 +31,12 @@ class NameChangedEvent extends BaseEvent {
  * @extends {ParameterOwner}
  */
 class BaseItem extends ParameterOwner implements Owner {
-  protected __metaData: Record<string, any>
   protected __name: string
-  protected __ownerItem: Owner | undefined
+  protected __ownerItem: Owner | undefined = undefined
   protected __path: string[]
-  protected __selectable: boolean
-  protected __selected: boolean
+  protected __selectable: boolean = true
+  protected __selected: boolean = false
+  protected __metaData: Record<string, any> = {}
 
   /**
    * Create a base item by defining its name.
@@ -47,16 +47,6 @@ class BaseItem extends ParameterOwner implements Owner {
     super()
     this.__name = name
     this.__path = [this.__name]
-    this.__ownerItem = undefined // TODO: will create a circular ref. Figure out and use weak refs
-
-    // Note: one day we will remove the concept of 'selection' from the engine
-    // and keep it only in UX. to Select an item, we will add it to the selection
-    // in the selection manager. Then the selection group will apply a highlight.
-    this.__selectable = true
-    this.__selected = false
-
-    this.__metaData = {}
-
     numBaseItems++
   }
 

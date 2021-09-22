@@ -17,10 +17,10 @@ import { Parameter } from './Parameters/Parameter'
  * @extends {EventEmitter}
  */
 class ParameterOwner extends EventEmitter {
-  protected paramEventListenerIDs: Record<string, number>
-  protected paramMapping: Record<string, number>
-  protected params: Parameter<any>[]
-  deprecatedParamMapping: Record<string, any>
+  protected paramEventListenerIDs: Record<string, number> = {}
+  protected paramMapping: Record<string, number> = {}
+  protected params: Parameter<any>[] = []
+  deprecatedParamMapping: Record<string, any> = {}
 
   /**
    * Creates an instance of ParameterOwner by initializing parameter hosting mappings and events.
@@ -29,13 +29,7 @@ class ParameterOwner extends EventEmitter {
    */
   constructor() {
     super()
-    this.params = []
-    this.paramMapping = {}
-    this.deprecatedParamMapping = {}
-    this.paramEventListenerIDs = {}
   }
-
-  // --- Params ---
 
   /**
    * @deprecated
@@ -168,7 +162,7 @@ class ParameterOwner extends EventEmitter {
       this.removeParameter(name)
     }
     param.setOwner(this)
-    this.paramEventListenerIDs[name] = param.on('valueChanged', (event) => {
+    this.paramEventListenerIDs[name] = param.on('valueChanged', event => {
       // Note: spread operators cause errors on iOS 11.
       const newEvent: Record<string, unknown> = { param }
       for (const key in event) newEvent[key] = event[key]

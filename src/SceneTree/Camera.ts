@@ -416,7 +416,7 @@ class Camera extends TreeItem {
         treeItems.forEach((treeItem: TreeItem) => {
           treeItem.traverse(childItem => {
             if (!(childItem instanceof TreeItem)) return
-            if (childItem.__disableBoundingBox) return
+            if (childItem.disableBoundingBox) return
             if (childItem instanceof GeomItem) {
               const geom = childItem.getParameter('Geometry')!.getValue()
               if (geom) {
