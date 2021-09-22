@@ -121,7 +121,6 @@ class GLGeomLibrary extends EventEmitter {
       index = this.freeGeomIndices.pop()
     } else {
       index = this.geoms.length
-      this.geomRefCounts[index] = 0
 
       this.geomVertexCounts = resizeIntArray(this.geomVertexCounts, index + 1)
       this.geomVertexOffsets = resizeIntArray(this.geomVertexOffsets, index + 1)
@@ -142,7 +141,7 @@ class GLGeomLibrary extends EventEmitter {
     geom.on('geomDataTopologyChanged', geomDataTopologyChanged)
 
     this.geoms[index] = geom
-    this.geomRefCounts[index]++
+    this.geomRefCounts[index] = 1
     this.geomsDict[geom.getId()] = index
     this.dirtyGeomIndices.add(index)
 
@@ -453,13 +452,6 @@ class GLGeomLibrary extends EventEmitter {
 
     this.dirtyGeomIndices = new Set()
     this.geomBuffersTmp = []
-
-    // eslint-disable-next-line guard-for-in
-    for (const shaderkey in this.shaderBindings) {
-      const shaderBinding = this.shaderBindings[shaderkey]
-      shaderBinding.destroy()
-    }
-    this.shaderBindings = {}
   }
 
   // /////////////////////////////////////
