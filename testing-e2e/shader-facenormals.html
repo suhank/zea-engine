@@ -9,7 +9,7 @@
       <canvas class="absolute" id="app"></canvas>
     </div>
 
-    <script src="../dist/index.umd.js"></script>
+    <script src="../dist/index.umd.development.js"></script>
 
     <script type="module">
       const {
@@ -23,7 +23,7 @@
         Material,
         GeomItem,
         GLBoundingBoxPass,
-        EnvMap,
+        EnvMap
       } = zeaEngine
 
       const scene = new Scene()
@@ -35,9 +35,12 @@
 
       const envMap = new EnvMap()
       envMap.getParameter('FilePath').setValue('data/pisa-webp.zenv')
-      promises.push(new Promise((resolve) => envMap.on('loaded', resolve)))
+      promises.push(new Promise(resolve => envMap.on('loaded', resolve)))
       scene.setEnvMap(envMap)
-      scene.getSettings().getParameter('Display EnvMap').setValue(true)
+      scene
+        .getSettings()
+        .getParameter('Display EnvMap')
+        .setValue(true)
 
       const simpleMaterial = new Material('surfaces', 'SimpleSurfaceShader')
       const standardMaterial = new Material('surfaces', 'StandardSurfaceShader')
@@ -57,15 +60,18 @@
       const geomItem3 = new GeomItem('Cone1', cone, standardMaterial, new Xfo(new Vec3(4.5, 0, 0)))
       scene.getRoot().addChild(geomItem3)
 
-      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, 2.7), new Vec3(0, 0, 0.4))
+      renderer
+        .getViewport()
+        .getCamera()
+        .setPositionAndTarget(new Vec3(2, 2, 2.7), new Vec3(0, 0, 0.4))
       renderer.frameAll()
 
-      Promise.all(promises).then((results) => {
+      Promise.all(promises).then(results => {
         window.postMessage('done-loading')
       })
 
       // {{{ Messages handler.
-      const handleMessage = (event) => {
+      const handleMessage = event => {
         const { data } = event
 
         if (data === 'variant-01') {

@@ -10,7 +10,7 @@
 
     <link rel="stylesheet" href="styles/tailwind.min.css" />
 
-    <script src="../dist/index.umd.js"></script>
+    <script src="../dist/index.umd.development.js"></script>
 
     <script type="module">
       const { GLRenderer, Scene, Vec3, Color, Material, GeomItem, Lines } = zeaEngine
@@ -18,7 +18,7 @@
       const domElement = document.getElementById('webglcanvas')
 
       const scene = new Scene()
-      // scene.setupGrid(10, 10)
+      scene.setupGrid(10, 10)
 
       const renderer = new GLRenderer(domElement, { hideSplash: true, antialias: false })
       renderer.setScene(scene)
@@ -30,12 +30,15 @@
       const geomItem = new GeomItem('Lines', lines, standardMaterial)
       scene.getRoot().addChild(geomItem)
 
-      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(3, 3, 1.7), new Vec3(0, 0, 0))
+      renderer
+        .getViewport()
+        .getCamera()
+        .setPositionAndTarget(new Vec3(3, 3, 1.7), new Vec3(0, 0, 0))
 
       window.postMessage('done-loading')
 
       // {{{ Messages handler.
-      const handleMessage = (event) => {
+      const handleMessage = event => {
         const { data } = event
 
         if (data === 'variant-01') {
@@ -48,7 +51,7 @@
           positions.setValue(1, new Vec3(1, 1, 0.5))
           positions.setValue(2, new Vec3(0, 1, 0.5))
           lines.emit('geomDataTopologyChanged', {
-            indicesChanged: true,
+            indicesChanged: true
           })
           window.postMessage(`done-${data}`)
         } else if (data === 'variant-02') {
@@ -67,7 +70,7 @@
           positions.setValue(3, new Vec3(-1, -1, 0.5))
 
           lines.emit('geomDataTopologyChanged', {
-            indicesChanged: true,
+            indicesChanged: true
           })
           window.postMessage(`done-${data}`)
         }

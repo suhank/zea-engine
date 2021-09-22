@@ -10,7 +10,7 @@
 
     <link rel="stylesheet" href="styles/tailwind.min.css" />
 
-    <script src="../dist/index.umd.js"></script>
+    <script src="../dist/index.umd.development.js"></script>
 
     <script type="module">
       const { GLRenderer, Scene, Vec3, Xfo, Color, Cylinder, Material, GeomItem, Lines, Cuboid, Cone } = zeaEngine
@@ -19,7 +19,7 @@
       const scene = new Scene()
       const domElement = document.getElementById('renderer')
       const renderer = new GLRenderer(domElement, {
-        webglContextType: urlParams.has('webgl') ? urlParams.get('webgl') : undefined,
+        webglContextType: urlParams.has('webgl') ? urlParams.get('webgl') : undefined
       })
       renderer.setScene(scene)
       renderer.getViewport().debugGeomShader = urlParams.has('debugGeomShader')
@@ -44,7 +44,7 @@
       hardEdgesMaterial.getParameter('StippleValue').setValue(0)
       hardEdgesMaterial.getParameter('OccludedStippleValue').setValue(0.6)
 
-      const createHardEdgesGeom = (mesh) => {
+      const createHardEdgesGeom = mesh => {
         // Display all the hard edges as darker lines.
         const hardEdges = new Lines()
         hardEdges.__vertexAttributes.set('positions', mesh.getVertexAttribute('positions'))
@@ -89,30 +89,30 @@
       const pointerOverColor = new Color(1, 1, 1, 0.2)
       let prevMaterial
       let prevColor
-      renderer.getViewport().on('pointerOverGeom', (event) => {
+      renderer.getViewport().on('pointerOverGeom', event => {
         const pointerOverItem = event.intersectionData.geomItem
         pointerOverItem.addHighlight('pointerOverGeom', new Color(1, 0, 0, 0.1), true)
       })
-      renderer.getViewport().on('pointerLeaveGeom', (event) => {
+      renderer.getViewport().on('pointerLeaveGeom', event => {
         event.leftGeometry.removeHighlight('pointerOverGeom', true)
       })
-      renderer.getXRViewport().then((xrvp) => {
+      renderer.getXRViewport().then(xrvp => {
         console.log('XR Device Detected')
-        document.addEventListener('keydown', (event) => {
+        document.addEventListener('keydown', event => {
           if (event.key.toLowerCase() == 'v' && event.shiftKey) {
             xrvp.togglePresenting()
           }
         })
       })
 
-      const postMessage = (msg) => {
+      const postMessage = msg => {
         console.log(msg)
         window.postMessage(msg)
       }
       postMessage('done-loading')
 
       // {{{ Messages handler.
-      const handleMessage = (event) => {
+      const handleMessage = event => {
         const { data } = event
 
         if (data === 'variant-01') {
@@ -129,9 +129,9 @@
       window.addEventListener('message', handleMessage, false)
       // }}}
 
-      renderer.getXRViewport().then((xrvp) => {
+      renderer.getXRViewport().then(xrvp => {
         console.log('XR Device Detected')
-        document.addEventListener('keydown', (event) => {
+        document.addEventListener('keydown', event => {
           if (event.key == ' ') {
             xrvp.togglePresenting()
           }

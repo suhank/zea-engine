@@ -1,6 +1,0 @@
-export * from './BaseGroup.js'
-export * from './Group.js'
-export * from './SelectionSet.js'
-export * from './KinematicGroup.js'
-export * from './MaterialGroup.js'
-export * from './CuttingPlane.js'

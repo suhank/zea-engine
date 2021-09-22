@@ -8,6 +8,9 @@ import webWorkerLoader from 'rollup-plugin-web-worker-loader'
 import { base64 } from 'rollup-plugin-base64'
 import glslify from 'rollup-plugin-glslify'
 
+// import typescript from '@rollup/plugin-typescript' // TODO: remove if typescript2 is better
+import typescript from 'rollup-plugin-typescript2'
+
 import pkg from './package.json'
 
 const glslOptions = {
@@ -22,17 +25,21 @@ const glslOptions = {
 }
 
 const plugins = [
-  base64({ include: '**/*.wasm' }),
-  commonjs(),
-  nodePolyfills(),
   resolve({
     browser: true,
     preferBuiltins: false,
   }),
+  commonjs(),
+  webWorkerLoader({ extensions: ['.ts', '.js'], pattern: /.+\-worker\.(?:js|ts)$/ }),
   json(),
-  webWorkerLoader(),
   svg(),
   glslify(glslOptions),
+  base64({ include: '**/*.wasm' }),
+  typescript({
+    tsconfig: 'tsconfig.json',
+    include: 'src/**/*.{js,ts}',
+  }),
+  nodePolyfills(),
 ]
 
 const isProduction = !process.env.ROLLUP_WATCH
@@ -46,7 +53,7 @@ const sourcemap = true
 export default [
   // Browser-friendly UMD build.
   {
-    input: 'src/index.js',
+    input: 'src/index.ts',
     output: {
       name: 'zeaEngine',
       file: pkg.browser,
@@ -63,7 +70,7 @@ export default [
   // an array for the `output` option, where we can specify
   // `file` and `format` for each target)
   {
-    input: 'src/index.js',
+    input: 'src/index.ts',
     output: [
       { file: pkg.main, format: 'cjs', sourcemap },
       { file: pkg.module, format: 'es', sourcemap },

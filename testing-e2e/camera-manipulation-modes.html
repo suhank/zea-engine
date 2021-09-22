@@ -10,7 +10,7 @@
 
     <link rel="stylesheet" href="styles/tailwind.min.css" />
 
-    <script src="../dist/index.umd.js"></script>
+    <script src="../dist/index.umd.development.js"></script>
 
     <script type="module">
       const {
@@ -27,7 +27,7 @@
         PointGrid,
         Material,
         GeomItem,
-        CameraManipulator,
+        CameraManipulator
       } = zeaEngine
 
       const canvas = document.querySelector('#renderer')
@@ -80,21 +80,31 @@
       addShape('cone1', cone, new Vec3(4, -1, 0), material2)
       addShape('cone2', cone, new Vec3(4, 1, 0), material2)
 
-      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-2, -2, 2.7), new Vec3(0, 0, 0.4))
-      const postMessage = (msg) => {
+      renderer
+        .getViewport()
+        .getCamera()
+        .setPositionAndTarget(new Vec3(-2, -2, 2.7), new Vec3(0, 0, 0.4))
+      const postMessage = msg => {
         console.log(msg)
         window.postMessage(msg)
       }
       postMessage('done-loading')
 
-      renderer.getViewport().getManipulator().setDefaultManipulationMode(CameraManipulator.MANIPULATION_MODES.tumbler)
+      renderer
+        .getViewport()
+        .getManipulator()
+        .setDefaultManipulationMode(CameraManipulator.MANIPULATION_MODES.tumbler)
 
       // {{{ Messages handler.
-      const handleMessage = (event) => {
+      const handleMessage = event => {
         const { data } = event
 
         if (data === 'variant-01') {
-          renderer.getViewport().getManipulator().getParameter('OrbitAroundCursor').setValue(false)
+          renderer
+            .getViewport()
+            .getManipulator()
+            .getParameter('OrbitAroundCursor')
+            .setValue(false)
           postMessage(`done-${data}`)
         }
         if (data === 'variant-02') {

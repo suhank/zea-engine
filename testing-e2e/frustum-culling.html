@@ -10,7 +10,7 @@
 
     <link rel="stylesheet" href="styles/tailwind.min.css" />
 
-    <script src="../dist/index.umd.js"></script>
+    <script src="../dist/index.umd.development.js"></script>
 
     <script type="module">
       const { GLRenderer, Scene, Vec3, Xfo, Color, Sphere, Material, GeomItem, GLBoundingBoxPass } = zeaEngine
@@ -48,17 +48,20 @@
           )
       }
 
-      document.addEventListener('keydown', (event) => {
+      document.addEventListener('keydown', event => {
         if (event.key.toLowerCase() == 'f') {
           renderer.frameAll()
           event.stopPropagation()
         }
       })
 
-      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(20, 20, 10), new Vec3(0, 0, 0))
-      renderer.getXRViewport().then((xrvp) => {
+      renderer
+        .getViewport()
+        .getCamera()
+        .setPositionAndTarget(new Vec3(20, 20, 10), new Vec3(0, 0, 0))
+      renderer.getXRViewport().then(xrvp => {
         console.log('XR Device Detected')
-        document.addEventListener('keydown', (event) => {
+        document.addEventListener('keydown', event => {
           if (event.key.toLowerCase() == 'v' && event.shiftKey) {
             xrvp.togglePresenting()
             event.stopPropagation()
@@ -67,14 +70,14 @@
       })
       // renderer.frameAll()
 
-      const postMessage = (msg) => {
+      const postMessage = msg => {
         console.log(msg)
         window.postMessage(msg)
       }
       postMessage('done-loading')
 
       // {{{ Messages handler.
-      const handleMessage = (event) => {
+      const handleMessage = event => {
         const { data } = event
 
         const camera = renderer.getViewport().getCamera()

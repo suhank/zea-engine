@@ -6,13 +6,23 @@
 
     <title>grid - Zea Engine</title>
     <link rel="stylesheet" href="styles/tailwind.min.css" />
+    <style>
+      .fps-display {
+        position: fixed;
+        bottom: 10px;
+        right: 10px;
+        color: #333333;
+        font-size: 45px;
+      }
+    </style>
   </head>
   <body class="bg-blue-100 h-full">
     <div class="h-full">
       <canvas class="absolute" id="app"></canvas>
     </div>
+    <div class="fps-display" id="fps"></div>
 
-    <script src="../dist/index.umd.js"></script>
+    <script src="../dist/index.umd.development.js"></script>
 
     <script type="module">
       const { GLRenderer, Scene, Vec3 } = zeaEngine
@@ -24,9 +34,30 @@
 
       scene.setupGrid(5.0, 50)
 
-      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, 1.7), new Vec3(0, 0, 0.4))
+      renderer
+        .getViewport()
+        .getCamera()
+        .setPositionAndTarget(new Vec3(2, 2, 1.7), new Vec3(0, 0, 0.4))
 
       window.postMessage('done-loading')
+
+      // //////////////////////////////////////
+      // Setup FPS Counter
+      let frameCounter = 0
+      let fps = 0
+      renderer.on('redrawOccurred', () => {
+        frameCounter++
+      })
+
+      const fpsElement = document.getElementById('fps')
+      setInterval(() => {
+        if (fps != frameCounter * 2) {
+          fps = frameCounter * 2
+          fpsElement.textContent = `FPS: ${fps}`
+        }
+        frameCounter = 0
+      }, 500)
+      renderer.startContinuousDrawing()
     </script>
   </body>
 </html>

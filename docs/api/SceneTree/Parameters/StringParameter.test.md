@@ -5,7 +5,7 @@
 Use this code to guide yourself on how to implement this class.
 ```javascript
 import { StringParameter } from './StringParameter'
-import { BaseItem } from '../BaseItem'
+import { BaseItem } from '../BaseItem-temp'
 import { BinReader } from '../../SceneTree/BinReader'
 
 describe('StringParameter', () => {

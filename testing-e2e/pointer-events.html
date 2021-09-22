@@ -10,7 +10,7 @@
 
     <link rel="stylesheet" href="styles/tailwind.min.css" />
 
-    <script src="../dist/index.umd.js"></script>
+    <script src="../dist/index.umd.development.js"></script>
 
     <script type="module">
       const {
@@ -28,7 +28,7 @@
         Material,
         BillboardItem,
         Label,
-        SelectionSet,
+        SelectionSet
       } = window.zeaEngine
 
       const selfEventsIndicator = document.querySelector('#selfEventsIndicator')
@@ -62,27 +62,27 @@
       const INDICATORS_DEFAULT_TEXT = '(None)'
 
       // Register pointer event handlers directly to the geometry.
-      selfEventItem.on('pointerEnter', (event) => {
+      selfEventItem.on('pointerEnter', event => {
         selfEventsIndicator.textContent = 'pointerEnter'
         clearTimeout(goToDefaultTextTimeout)
         window.postMessage('done-enter-geometry')
       })
 
-      selfEventItem.on('pointerLeave', (event) => {
+      selfEventItem.on('pointerLeave', event => {
         selfEventsIndicator.textContent = 'pointerLeave'
         startBackToDefaultTextTimeout()
 
         window.postMessage('done-leave-geometry')
       })
 
-      selfEventItem.on('pointerDown', (event) => {
+      selfEventItem.on('pointerDown', event => {
         event.stopPropagation()
 
         selfEventsIndicator.textContent = 'pointerDown'
         clearTimeout(goToDefaultTextTimeout)
       })
 
-      selfEventItem.on('pointerUp', (event) => {
+      selfEventItem.on('pointerUp', event => {
         event.stopPropagation()
         selfEventsIndicator.textContent = 'pointerUp'
         startBackToDefaultTextTimeout()
@@ -126,21 +126,21 @@
         }
 
         // Register pointer event handlers directly to the geometry.
-        group.on('pointerEnter', (event) => {
+        group.on('pointerEnter', event => {
           event.stopPropagation()
 
           groupEventsIndicator.textContent = 'pointerEnter'
           clearTimeout(goToDefaultTextTimeout)
         })
 
-        group.on('pointerLeave', (event) => {
+        group.on('pointerLeave', event => {
           event.stopPropagation()
 
           groupEventsIndicator.textContent = 'pointerLeave'
           startBackToDefaultTextTimeout()
         })
 
-        group.on('pointerDown', (event) => {
+        group.on('pointerDown', event => {
           event.stopPropagation()
 
           group.getParameter('Highlighted').setValue(true)
@@ -149,7 +149,7 @@
           event.setCapture(group)
         })
 
-        group.on('pointerUp', (event) => {
+        group.on('pointerUp', event => {
           event.stopPropagation()
 
           group.getParameter('Highlighted').setValue(false)
@@ -174,27 +174,27 @@
 
         // Register pointer event handlers directly to the geometry.
 
-        renderer.getViewport().on('pointerLeaveGeom', (event) => {
+        renderer.getViewport().on('pointerLeaveGeom', event => {
           viewportEventsIndicator.textContent = 'pointerLeaveGeom'
           startBackToDefaultTextTimeout()
         })
 
-        renderer.getViewport().on('pointerOverGeom', (event) => {
+        renderer.getViewport().on('pointerOverGeom', event => {
           viewportEventsIndicator.textContent = 'pointerOverGeom'
           clearTimeout(goToDefaultTextTimeout)
         })
 
-        renderer.getViewport().on('pointerDownOnGeom', (event) => {
+        renderer.getViewport().on('pointerDownOnGeom', event => {
           viewportEventsIndicator.textContent = 'pointerDownOnGeom'
           clearTimeout(goToDefaultTextTimeout)
         })
 
-        renderer.getViewport().on('pointerUp', (event) => {
+        renderer.getViewport().on('pointerUp', event => {
           viewportEventsIndicator.textContent = 'pointerUp'
           startBackToDefaultTextTimeout()
         })
 
-        renderer.getViewport().on('pointerDown', (event) => {
+        renderer.getViewport().on('pointerDown', event => {
           viewportEventsIndicator.textContent = 'pointerDown'
           startBackToDefaultTextTimeout()
         })
@@ -202,17 +202,24 @@
       // }}}
 
       // Position the camera to a better perspective view.
-      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(0, 5, 3), new Vec3(0, 0, 0))
+      renderer
+        .getViewport()
+        .getCamera()
+        .setPositionAndTarget(new Vec3(0, 5, 3), new Vec3(0, 0, 0))
 
       // To make mouse wheel testing move the camera a decent amount, we increase the
       // mouse wheel movement by 10x. This is because the cypress will send only a single
       // wheel event instead of a sequence.
-      renderer.getViewport().getManipulator().getParameter('MouseWheelDollySpeed').setValue(1)
+      renderer
+        .getViewport()
+        .getManipulator()
+        .getParameter('MouseWheelDollySpeed')
+        .setValue(1)
 
       renderer
         .getViewport()
         .getCamera()
-        .on('movementFinished', (e) => {
+        .on('movementFinished', e => {
           if (!e.event) {
             return
           }
