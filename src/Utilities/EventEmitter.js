@@ -44,7 +44,7 @@ class EventEmitter {
    *
    * @param {string} eventName - The name of the event.
    * @param {function} listener - The listener function(callback).
-   * @return {number} - Id to reference the listener.
+   * @return {number} - the id that can be used to remove the listener.
    */
   on(eventName, listener) {
     if (!listener) {
@@ -82,6 +82,7 @@ class EventEmitter {
    *
    * @param {string} eventName - The eventName value
    * @param {function} listener - The listener value
+   * @return {number} - the id that can be used to remove the listener.
    */
   once(eventName, listener) {
     const cb = (event) => {
@@ -89,7 +90,7 @@ class EventEmitter {
       this.off(eventName, cb)
     }
 
-    this.on(eventName, cb)
+    return this.on(eventName, cb)
   }
 
   /**
@@ -133,7 +134,7 @@ class EventEmitter {
    *
    * @param {string} eventName - The name of the event.
    * @param {function} listener - The listener function(callback).
-   * @return {number} - Id to reference the listener.
+   * @return {number} - the id that can be used to remove the listener.
    */
   addListener(eventName, listener) {
     console.warn('Deprecated. Use #on instead.')
