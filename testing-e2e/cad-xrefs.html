@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>cad-xrefs - Zea Engine</title>
+
+    <link href="data/zea-logo.png" rel="shortcut icon" />
+
+    <link rel="stylesheet" href="styles/tailwind.min.css" />
+
+    <script type="module" src="../dist/index.esm.js"></script>
+    <!-- <script defer crossorigin src="https://cdn.jsdelivr.net/npm/@zeainc/zea-cad@3/dist/index.umd.js"></script> -->
+    <script defer crossorigin src="http://localhost:8001/dist/index.umd.js"></script>
+
+    <style>
+      body {
+        height: 100vh;
+        margin: 0;
+      }
+
+      .main-wrapper {
+        grid-template-areas:
+          'header header header'
+          'nav main right'
+          'footer footer footer';
+        grid-template-columns: 5px 1fr 5px;
+        grid-template-rows: 50px 1fr 20px;
+      }
+
+      header {
+        grid-area: header;
+      }
+
+      footer {
+        grid-area: footer;
+      }
+
+      #controllers {
+        display: flex;
+        align-items: center;
+        padding: 0.5em;
+        gap: 1em;
+      }
+    </style>
+    <script type="module">
+      const urlParams = new URLSearchParams(window.location.search)
+
+      import { Color, Vec3, Xfo, TreeItem, GLRenderer, Scene, EnvMap, AssetLoadContext } from '../dist/index.esm.js'
+
+      const canvas = document.querySelector('#renderer')
+
+      const scene = new Scene()
+      const renderer = new GLRenderer(canvas, { debugGeomIds: false, antialias: false })
+      renderer.setScene(scene)
+      renderer.outlineThickness = 0.5
+      renderer.outlineColor = new Color(0.2, 0.2, 0.2, 1)
+      scene.getSettings().getParameter('BackgroundColor').setValue(new Color(0.85, 0.85, 0.85, 1))
+      renderer.getViewport().debugGeomShader = urlParams.has('debugGeomShader')
+
+      const envMap = new EnvMap()
+      envMap.load('data/StudioG.zenv')
+      scene.setEnvMap(envMap)
+
+      scene.setupGrid(1.0, 10, new Color(0.2, 0.2, 0.2))
+
+      /** HIGHLIGHT START */
+      let highlightedItem
+      renderer.getViewport().on('pointerOverGeom', (event) => {
+        const item = event.intersectionData.geomItem
+        if (item) {
+          highlightedItem = item
+          highlightedItem.addHighlight('pointerOverGeom', new Color(0, 0.7, 0, 0.3), true)
+        }
+      })
+      renderer.getViewport().on('pointerLeaveGeom', (event) => {
+        highlightedItem.removeHighlight('pointerOverGeom', true)
+        highlightedItem = null
+      })
+      renderer.getViewport().on('keyDown', (event) => {
+        if (event.key == 'f') renderer.frameAll()
+      })
+      renderer.getViewport().on('pointerUp', (event) => {
+        if (event.intersectionData) {
+          const geomItem = event.intersectionData.geomItem
+          console.log('', geomItem.getPath())
+        }
+      })
+      renderer.getViewport().on('keyDown', (event) => {
+        if (event.key == 'f') renderer.frameAll()
+        else if (event.key == 'd') {
+          renderer.getViewport().debugGeomShader = !renderer.getViewport().debugGeomShader
+          renderer.requestRedraw()
+        }
+      })
+      /** HIGHLIGHT START */
+
+      /** LOAD ASSETS START */
+      const { CADAsset, CADBody } = window.zeaCad
+
+      const context = new AssetLoadContext()
+      context.resources = {
+        '2011.sldprt': 'data/Trailor/2011.sldprt.zcad',
+        '2012.sldprt': 'data/Trailor/2012.sldprt.zcad',
+        '2013.sldprt': 'data/Trailor/2013.sldprt.zcad',
+        '2014.sldprt': 'data/Trailor/2014.sldprt.zcad',
+        '2015.sldprt': 'data/Trailor/2015.sldprt.zcad',
+        '2016.sldprt': 'data/Trailor/2016.sldprt.zcad',
+        '2017.sldprt': 'data/Trailor/2017.sldprt.zcad',
+        '2018.sldprt': 'data/Trailor/2018.sldprt.zcad',
+        '2019.sldprt': 'data/Trailor/2019.sldprt.zcad',
+        '2020.sldprt': 'data/Trailor/2020.sldprt.zcad',
+        '2021.sldasm': 'data/Trailor/2021.sldasm.zcad',
+        '2022.sldprt': 'data/Trailor/2022.sldprt.zcad',
+        '2023.sldprt': 'data/Trailor/2023.sldprt.zcad',
+        '2024.sldprt': 'data/Trailor/2024.sldprt.zcad',
+        '2025.sldprt': 'data/Trailor/2025.sldprt.zcad',
+        '2026.sldprt': 'data/Trailor/2026.sldprt.zcad',
+        '2027.sldasm': 'data/Trailor/2027.sldasm.zcad',
+        '2028.sldprt': 'data/Trailor/2028.sldprt.zcad',
+        '2029.sldprt': 'data/Trailor/2029.sldprt.zcad',
+        '2030.sldprt': 'data/Trailor/2030.sldprt.zcad',
+        '2031.sldprt': 'data/Trailor/2031.sldprt.zcad',
+        '2032.sldprt': 'data/Trailor/2032.sldprt.zcad',
+        '2033.sldasm': 'data/Trailor/2033.sldasm.zcad',
+        '2034.sldasm': 'data/Trailor/2034.sldasm.zcad',
+        '2035.sldprt': 'data/Trailor/2035.sldprt.zcad',
+        '2036.sldprt': 'data/Trailor/2036.sldprt.zcad',
+        '2037.sldprt': 'data/Trailor/2037.sldprt.zcad',
+        '2038.sldprt': 'data/Trailor/2038.sldprt.zcad',
+        '2039.sldprt': 'data/Trailor/2039.sldprt.zcad',
+      }
+
+      const asset = new CADAsset()
+      asset.load('data/Trailor/2034.sldasm.zcad', context).then(() => {
+        renderer.frameAll()
+      })
+      asset.getGeometryLibrary().on('loaded', () => {
+        postMessage('done-loading')
+      })
+
+      const xfo = new Xfo()
+      xfo.ori.setFromAxisAndAngle(new Vec3(1, 0, 0), Math.PI * 0.5)
+      asset.getParameter('GlobalXfo').setValue(xfo)
+      scene.getRoot().addChild(asset)
+      /** LOAD ASSETS END */
+
+      const postMessage = (msg) => {
+        console.log(msg)
+        window.postMessage(msg)
+      }
+
+      // {{{ Messages handler.
+      const handleMessage = (event) => {
+        const { data } = event
+
+        if (data === 'variant-01') {
+          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, -2.7), new Vec3(0, 0, 0.4))
+          renderer.frameAll()
+          postMessage(`done-${data}`)
+        } else if (data === 'variant-02') {
+          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-2, -2, 2.7), new Vec3(0, 0, 0.4))
+          renderer.frameAll()
+          postMessage(`done-${data}`)
+        }
+      }
+
+      window.addEventListener('message', handleMessage, false)
+      // }}}
+    </script>
+  </head>
+  <body class="bg-blue-100 h-full">
+    <div class="main-wrapper grid h-screen">
+      <header class="border border-blue-400 flex justify-center items-center"></header>
+      <nav class="border border-blue-400 flex justify-center items-center">nav</nav>
+      <main>
+        <canvas class="absolute" id="renderer"></canvas>
+      </main>
+      <aside class="border border-blue-400 flex justify-center items-center"></aside>
+      <footer class="border border-blue-400 flex justify-center items-center"></footer>
+    </div>
+  </body>
+</html>
