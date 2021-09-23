@@ -570,13 +570,39 @@ class GLBaseRenderer extends ParameterOwner {
       this.__glcanvas.style.position = webglOptions.canvasPosition ? webglOptions.canvasPosition : 'absolute'
     }
 
+    let lastResize = performance.now()
+    let timoutId = 0
     this.resizeObserver = new ResizeObserver((entries) => {
       for (const entry of entries) {
         if (!entry.contentRect) {
           return
         }
 
-        this.handleResize(entry.contentRect.width, entry.contentRect.height)
+        // Note: Rapid resize events would cause WebGL to render black.
+        // There appeared nothing to indicate why we get black, but throttling
+        // the resizing of our canvas and buffers seems to work.
+        const now = performance.now()
+        if (now - lastResize > 100) {
+          lastResize = now
+          // If a delayed resize is scheduled, cancel it.
+          if (timoutId) {
+            clearTimeout(timoutId)
+            timoutId = 0
+          }
+          this.handleResize(entry.contentRect.width, entry.contentRect.height)
+        } else {
+          // Set a timer to see if we can delay this resize by a few ms.
+          // If a resize happens in the meantime that succeeds, then skip this one.
+          // This ensures that after a drag to resize, the final resize event
+          // should always eventually apply.
+          timoutId = setTimeout(() => {
+            const now = performance.now()
+            if (now - lastResize > 100) {
+              lastResize = now
+              this.handleResize(entry.contentRect.width, entry.contentRect.height)
+            }
+          }, 100)
+        }
       }
     })
 
