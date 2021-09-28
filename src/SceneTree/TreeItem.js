@@ -1032,7 +1032,6 @@ class TreeItem extends BaseItem {
       } else {
         xfo.sc.set(reader.loadFloat32())
       }
-      console.log(this.getPath() + ' TreeItem:' + xfo.sc.toString())
       this.__localXfoParam.loadValue(xfo)
     }
 
