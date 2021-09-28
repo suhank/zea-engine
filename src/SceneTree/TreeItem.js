@@ -1022,12 +1022,17 @@ class TreeItem extends BaseItem {
 
     // Note: to save space, some values are skipped if they are identity values
     const localXfoFlag = 1 << 2
+    const localXfoIndependentScFlag = 1 << 5
     if (itemFlags & localXfoFlag) {
       const xfo = new Xfo()
       xfo.tr = reader.loadFloat32Vec3()
       xfo.ori = reader.loadFloat32Quat()
-      xfo.sc.set(reader.loadFloat32())
-      // console.log(this.getPath() + " TreeItem:" + xfo.toString());
+      if (itemFlags & localXfoIndependentScFlag) {
+        xfo.sc = reader.loadFloat32Vec3()
+      } else {
+        xfo.sc.set(reader.loadFloat32())
+      }
+      console.log(this.getPath() + ' TreeItem:' + xfo.sc.toString())
       this.__localXfoParam.loadValue(xfo)
     }
 
@@ -1053,7 +1058,7 @@ class TreeItem extends BaseItem {
           reader.seek(toc[i]) // Reset the pointer to the start of the item data.
           childItem.readBinary(reader, context)
 
-          this.addChild(childItem, false, false)
+          this.addChild(childItem, false, true)
         } catch (e) {
           console.warn('Error loading tree item: ', e)
         }
