@@ -55,11 +55,17 @@ class InstanceItem extends TreeItem {
     const path = reader.loadStrArray()
     // console.log("InstanceItem of:", path)
     try {
-      context.resolvePath(path, treeItem => {
-        this.setSrcTree(treeItem, context)
-      })
-    } catch (e) {
-      console.warn(`Error loading InstanceItem: ${this.getPath()}: ` + e.message)
+      context.resolvePath(
+        path,
+        (treeItem) => {
+          this.setSrcTree(treeItem, context)
+        },
+        (error) => {
+          console.warn(`Error loading InstanceItem: ${this.getPath()}, unable to resolve: ${path}. ` + error.message)
+        }
+      )
+    } catch (error) {
+      console.warn(`Error loading InstanceItem: ${this.getPath()}: ` + error.message)
     }
   }
 

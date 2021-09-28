@@ -290,7 +290,7 @@ class AssetItem extends TreeItem {
             onSucceed(param)
           } catch (e) {
             if (onFail) {
-              onFail()
+              onFail(e)
             } else {
               throw new Error(e.message)
             }
