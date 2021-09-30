@@ -17,10 +17,10 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
   protected glGeomIdsMapping: Record<string, any>
   protected glgeomItemEventHandlers: any[]
   protected freeIndices: number[]
-  protected drawElementCounts: Uint32Array
-  protected drawElementOffsets: Uint32Array
-  protected highlightElementCounts: Uint32Array
-  protected highlightElementOffsets: Uint32Array
+  protected drawElementCounts: Int32Array
+  protected drawElementOffsets: Int32Array
+  protected highlightElementCounts: Int32Array
+  protected highlightElementOffsets: Int32Array
   protected reserved: number
   protected visibleItems: GLGeomItem[]
   protected drawIdsArray: Float32Array
@@ -44,10 +44,10 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
     this.glgeomItemEventHandlers = []
     this.freeIndices = []
 
-    this.drawElementCounts = new Uint32Array(0)
-    this.drawElementOffsets = new Uint32Array(0)
-    this.highlightElementCounts = new Uint32Array(0)
-    this.highlightElementOffsets = new Uint32Array(0)
+    this.drawElementCounts = new Int32Array(0)
+    this.drawElementOffsets = new Int32Array(0)
+    this.highlightElementCounts = new Int32Array(0)
+    this.highlightElementOffsets = new Int32Array(0)
 
     this.reserved = 0
     this.visibleItems = []
@@ -198,8 +198,8 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
     {
       if (!this.drawIdsArray || this.visibleItems.length > this.drawIdsArray.length) {
         this.drawIdsArray = new Float32Array(this.visibleItems.length)
-        this.drawElementOffsets = new Uint32Array(this.visibleItems.length)
-        this.drawElementCounts = new Uint32Array(this.visibleItems.length)
+        this.drawElementOffsets = new Int32Array(this.visibleItems.length)
+        this.drawElementCounts = new Int32Array(this.visibleItems.length)
       }
 
       this.visibleItems.forEach((glGeomItem, index) => {
@@ -280,8 +280,8 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
     if (this.highlightedIdsBufferDirty) {
       if (!this.highlightedIdsArray || this.highlightedItems.length > this.highlightedIdsArray.length) {
         this.highlightedIdsArray = new Float32Array(this.highlightedItems.length)
-        this.highlightElementOffsets = new Uint32Array(this.highlightedItems.length)
-        this.highlightElementCounts = new Uint32Array(this.highlightedItems.length)
+        this.highlightElementOffsets = new Int32Array(this.highlightedItems.length)
+        this.highlightElementCounts = new Int32Array(this.highlightedItems.length)
       }
 
       // Collect all visible geom ids into the instanceIds array.
@@ -424,8 +424,8 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
   bindAndRender(
     renderstate: RenderState,
     drawIdsArray: Float32Array,
-    counts: Uint32Array,
-    offsets: Uint32Array,
+    counts: Int32Array,
+    offsets: Int32Array,
     drawCount: number
   ) {
     const gl = this.gl
@@ -446,15 +446,15 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
    * Draw an item to screen.
    * @param {RenderState} renderstate - The object tracking the current state of the renderer
    * @param {Float32Array} drawIds - the draw id for each element drawn in by this draw call.
-   * @param {Uint32Array} counts - the geom element count for each element drawn in by this draw call.
-   * @param {Uint32Array} offsets - the geom element offset for each element drawn in by this draw call.
+   * @param {Int32Array} counts - the geom element count for each element drawn in by this draw call.
+   * @param {Int32Array} offsets - the geom element offset for each element drawn in by this draw call.
    * @param {number} drawCount - the number of active draw calls for this invocation
    */
   abstract multiDraw(
     renderstate: RenderState,
     drawIds: Float32Array,
-    counts: Uint32Array,
-    offsets: Uint32Array,
+    counts: Int32Array,
+    offsets: Int32Array,
     drawCount: number
   ): void
 
@@ -476,8 +476,8 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
     indices.sort((a, b) => distances[b] - distances[a])
 
     const visibleItems: any[] = []
-    const drawElementCounts = new Uint32Array(this.drawElementCounts.length)
-    const drawElementOffsets = new Uint32Array(this.drawElementOffsets.length)
+    const drawElementCounts = new Int32Array(this.drawElementCounts.length)
+    const drawElementOffsets = new Int32Array(this.drawElementOffsets.length)
     indices.forEach((tgtIndex, srcIndex) => {
       visibleItems[srcIndex] = this.visibleItems[tgtIndex]
       drawElementCounts[srcIndex] = this.drawElementCounts[tgtIndex]
