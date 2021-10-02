@@ -11,7 +11,7 @@ A 3D JavaScript library for innovative manufacturers and industry 4.0 supporters
 
 ## *Power*
 Designed with the highest requirements in mind, giving developers a suite of tools to address the toughest challenges in modern professional graphics app development.  
-Zea Engine pushes the limits of what a developer can achieve in the browser by focusing on power and performance.
+Zea Engine pushes the limits of what a developer can achieve in the browser by focusing on power and performance. Read more in our [CAD visualization on the web | 2021 benchmark report](https://blog.zea.live/en/blog/cad-visualization-on-the-web-2021-benchmark-report).
 
 ## *Versatility*
 No single solution can solve all problems out of the box. Therefore, the Zea Engine uses a modular architecture that enables developers to integrate new functionalities. Zea keeps the essential features in the core while allowing powerful extensions to be built, either by Zea, to expand the engine's scope, or by third parties who wish to develop specific solutions.
