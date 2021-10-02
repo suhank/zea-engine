@@ -64,11 +64,9 @@ Yes we would like to do that eventually, but there are a few issues holding us b
 
 We hope that these issues are resolved over time. If you have any suggestions on alternative methods to what we have presented, please feel free to reach out and let us know your thoughts.
 
-# Licensing
-The Zea Engine is distributed via NPM under the AGPLv3 license which gives developers the rights to evaluate the Zea Engine and build non-commercial applications. By downloading the Zea Engine, your agree to be bound by the terms and conditions of the AGPLv3 license, or the commercial license available on the Zea Website: [_zea.live_](https://www.zea.live/pricing)  
-To evaluate the engine with your proprietary content, you will need to access our server-side libraries and a restricted non-commercial evaluation license.
-
-To build a commercial application, you need a commercial licensing agreement.
+# Licensing Conflict?
+Please support our project by purchasing a [commercial license](https://www.zea.live/en/commercial-eula?hsLang=en) [here](https://www.zea.live/pricing/engine).
+You can also [contact us](https://www.zea.live/contact-us) for a custom and permissive license.
 
 
 [npm]: https://badge.fury.io/js/%40zeainc%2Fzea-engine.svg
