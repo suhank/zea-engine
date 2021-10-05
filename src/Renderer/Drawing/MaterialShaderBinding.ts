@@ -1,7 +1,8 @@
 import { GLTexture2D } from '../GLTexture2D'
 import { GLHDRImage } from '../GLHDRImage'
 import { Mat4 } from '../../Math/Mat4'
-import { Parameter, MaterialFloatParam, BaseImage, VLHImage } from '../../SceneTree'
+import { Parameter, MaterialFloatParam, BaseImage, VLHImage, MaterialColorParam } from '../../SceneTree'
+import { GLMaterial } from '.'
 
 /** Class representing simple uniform binding.
  * @private
@@ -300,13 +301,13 @@ class MatrixUniformBinding {
  * @private
  */
 class ColorUniformBinding {
-  protected param: any
+  protected param: MaterialColorParam
   protected unif: Uniform
   protected textureUnif: Uniform
   protected textureTypeUnif: any
   protected vals: number[]
   protected bind: any
-  protected gltexture: any
+  protected gltexture!: GLTexture2D
   protected textureType: any
   protected texBinding: any
   protected update: any
@@ -316,12 +317,18 @@ class ColorUniformBinding {
   /**
    * Create color uniform binding.
    * @param {WebGL12RenderingContext} gl - The webgl rendering context.
-   * @param {any} glMaterial - The glMaterial value.
-   * @param {any} param - The param value.
-   * @param {WebGLUniformLocation} unif - The WebGL uniform
-   * @param {Record<any,any>} unifs - The dictionary of WebGL uniforms.
+   * @param {GLMaterial} glMaterial - The glMaterial value.
+   * @param {MaterialColorParam} param - The param value.
+   * @param {Uniform} unif - The WebGL uniform
+   * @param {Uniforms} unifs - The dictionary of WebGL uniforms.
    */
-  constructor(gl: WebGL12RenderingContext, glMaterial: any, param: any, unif: Uniform, unifs: Uniforms) {
+  constructor(
+    gl: WebGL12RenderingContext,
+    glMaterial: GLMaterial,
+    param: MaterialColorParam,
+    unif: Uniform,
+    unifs: Uniforms
+  ) {
     const name = param.getName()
     this.param = param
     this.unif = unif
