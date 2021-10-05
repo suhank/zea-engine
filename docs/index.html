@@ -12,66 +12,8 @@
     <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@4/themes/vue.css" />
     <link rel="icon" type="image/png" sizes="16x16" href="_media/favicon-16x16.png" />
     <link rel="icon" type="image/png" sizes="32x32" href="_media/favicon-32x32.png" />
-
-    <style>
-      .cover-main {
-        color: #e0e0e0;
-      }
-
-      .download-section {
-        display: flex;
-        font-weight: bold;
-      }
-
-      .download-btn {
-        cursor: pointer;
-      }
-
-      section.cover .cover-main > p:last-child a:last-child {
-        background-color: #f9ce03;
-        border-color: #f9ce03;
-        color: #222323;
-        font-weight: bold;
-      }
-
-      section.cover .cover-main > p:last-child a:last-child:hover {
-        background-color: #fbe167;
-        border-color: #fbe167;
-        color: #222323;
-        font-weight: bold;
-        opacity: 1;
-      }
-
-      .cover-main .anchor span {
-        color: #e0e0e0;
-      }
-
-      .markdown-section a,
-      .sidebar ul li.active > a {
-        color: #965cb8;
-      }
-
-      footer div#copyright {
-        margin-bottom: 1rem;
-      }
-
-      footer div#cc {
-        display: flex;
-        align-items: center;
-      }
-
-      footer div#cc img {
-        margin-right: 1rem;
-      }
-
-      iframe {
-        border: none !important;
-      }
-
-      .screenshot {
-        box-shadow: 0 0 10px 0px grey;
-      }
-    </style>
+    <link rel="stylesheet" href="style.css" />
+    
   </head>
   <body>
     <div id="app"></div>
@@ -98,11 +40,12 @@
             }
 
             window.$docsify = {
-              name: 'Zea Engine Docs',
+              name: 'Zea Engine Manual',
               coverpage: true,
               loadSidebar: true,
-              subMaxLevel: 6,
+              subMaxLevel: 1,
               loadNavbar: false,
+              auto2top: true,
               alias: {
                 '/.*/_sidebar.md': '/_sidebar.md',
               },
@@ -112,7 +55,7 @@
                   var footer = [
                     '<hr/>',
                     '<footer>',
-                    '<div id="copyright">Copyright &copy;2020 <a href="http://zea.live/">Zea</a>. </div>',
+                    '<div id="copyright">Copyright &copy;2021 <a href="http://zea.live/">Zea</a>. </div>',
                     '<div id="cc">',
                     '<img src="_media/copyright.png" alt="copyright" />',
                     '<span>Except where otherwise noted, work provided on Zea Docs is licensed under a <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" target="_blank">Creative Commons Attribution-NonCommercial-ShareAlike 3.0</a> Unported License.</span>',

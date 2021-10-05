@@ -35,11 +35,10 @@ class EnvMap extends VLHImage {
   /**
    * The __decodeData method.
    * @param {object} entries - The entries value.
+   * @return {promise}
    * @private
    */
   __decodeData(entries) {
-    super.__decodeData(entries)
-
     const samples = entries.samples
 
     if (samples) {
@@ -55,6 +54,7 @@ class EnvMap extends VLHImage {
         }
       }
     }
+    return super.__decodeData(entries)
   }
 
   /**

@@ -22,7 +22,7 @@ Example: Registering a listener for a custom event, and then emitting that event
 * [EventEmitter](#EventEmitter)
     * [new EventEmitter()](#new-EventEmitter)
     * [on(eventName, listener) ⇒ <code>number</code>](#on)
-    * [once(eventName, listener)](#once)
+    * [once(eventName, listener) ⇒ <code>number</code>](#once)
     * [off(eventName, listener)](#off)
     * ~~[.addListener(eventName, listener)](#EventEmitter+addListener) ⇒ <code>number</code>~~
     * ~~[.removeListener(eventName, listener)](#EventEmitter+removeListener)~~
@@ -42,7 +42,7 @@ which implies that it doesn't allow multiple events with the same name.
 Adds a listener function for a given event name.
 
 
-**Returns**: <code>number</code> - - Id to reference the listener.  
+**Returns**: <code>number</code> - - the id that can be used to remove the listener.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -64,6 +64,7 @@ asset.once('loaded', () => {
 ```
 
 
+**Returns**: <code>number</code> - - the id that can be used to remove the listener.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -88,7 +89,7 @@ Removes a listener function from the specified event, using either the function 
 ***Deprecated***
 
 
-**Returns**: <code>number</code> - - Id to reference the listener.  
+**Returns**: <code>number</code> - - the id that can be used to remove the listener.  
 
 | Param | Type | Description |
 | --- | --- | --- |

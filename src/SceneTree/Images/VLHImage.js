@@ -73,29 +73,32 @@ class VLHImage extends BaseImage {
    * @private
    */
   __decodeData(entries) {
-    const ldr = entries.ldr
-    const cdm = entries.cdm
-
-    // ///////////////////////////////
-    // Parse the data.
-    const blob = new Blob([ldr.buffer])
-    const ldrPic = new Image()
-    ldrPic.onload = () => {
-      this.width = ldrPic.width
-      this.height = ldrPic.height
-      // console.log(resourcePath + ": [" + this.width + ", " + this.height + "]");
-      this.__data = {
-        ldr: ldrPic,
-        cdm: cdm,
+    return new Promise((resolve, reject) => {
+      const ldr = entries.ldr
+      const cdm = entries.cdm
+  
+      // ///////////////////////////////
+      // Parse the data.
+      const blob = new Blob([ldr.buffer])
+      const ldrPic = new Image()
+      ldrPic.onload = () => {
+        this.width = ldrPic.width
+        this.height = ldrPic.height
+        // console.log(resourcePath + ": [" + this.width + ", " + this.height + "]");
+        this.__data = {
+          ldr: ldrPic,
+          cdm: cdm,
+        }
+        if (!this.__loaded) {
+          this.__loaded = true
+          this.emit('loaded', {})
+        } else {
+          this.emit('updated', {})
+        }
+        resolve()
       }
-      if (!this.__loaded) {
-        this.__loaded = true
-        this.emit('loaded', {})
-      } else {
-        this.emit('updated', {})
-      }
-    }
-    ldrPic.src = URL.createObjectURL(blob)
+      ldrPic.src = URL.createObjectURL(blob)
+    })
   }
 
   /**
@@ -125,8 +128,9 @@ class VLHImage extends BaseImage {
               }
             }
           }
-          this.__decodeData(entries)
-          resolve()
+          this.__decodeData(entries).then(() => {
+            resolve()
+          })
         },
         (error) => {
           this.emit('error', error)

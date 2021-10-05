@@ -1,40 +1,58 @@
-# Zea Engine
-Zea Engine is a web-based 3D rendering solution designed from the ground up for CAD and professional graphics, which provides the best in class power, speed and reach for the next generation of web applications. A 3D JavaScript library for innovative manufacturers and industry 4.0 supporters who need to build web applications.
+# Manual Overview
 
-* Power <br>
-Designed with the highest requirements in mind, giving developers a suite of tools to address the toughest challenges in modern professional graphics app development. Zea Engine pushes the limits of what a developer can achieve in the browser by focusing on power and performance.
+The Zea User Manual helps you learn how to use the Zea Engine to build your next web-based 3D app.
 
-* Versatility <br>
-No single solution can solve all problems out of the box. Therefore, the Zea Engine uses a modular architecture that enables developers to integrate new functionalities. Zea keeps the essential features in the core while allowing powerful extensions to be built, either by Zea, to expand the engine's scope, or by third parties who wish to develop specific solutions.
+If it’s your first time using the Zea Engine, check out the [Getting Started](manual/getting-started.md) guide.
 
-* Reach <br>
-Applications that leverage the web browser are already available on all modern devices. These web applications provide a friction-free and straightforward way to deliver content without requiring users to install a player. Zea Engine is designed for the web and enables new categories of high performance and versatile web applications.
+## Manual Sections
 
-</br>
+<br>
 
-# Plugins and Tools
+<!-- card grid -->
+<section class="cards">
 
-![zea-hexagon-black](_media/zea-hexagon-black.png)
+<!-- Getting Started -->
+<div class="card" markdown="1">
 
-No one size fits all. The Zea Engine is designed around a plugin architecture that enables anyone to build and publish plugins that expand capabilities of the engine. We provide a range of plugins and tools to make working with the engine easier and  more productive.
+[![Getting Started](../_media/zea-images/zea2.png ':class=cardImg')](../manual/getting-started.md ':class=cardImg')
+[**Getting Started**](../manual/getting-started.md ':class=cardTitle')
 
-For more information on the templates and plugins see the page on [Templates and Plugins](plugins-and-tools.md)
+<p class="cardText"> Get started with Zea Engine.</p>
+</div>
 
-> [Templates and Plugins](plugins-and-tools.md)
+<!-- Tutorials -->
+<div class="card" markdown="1">
 
-# Licensing
-The Zea Engine is open-source. By downloading the Zea Engine, you agree to be bound by the [terms and conditions](https://www.zea.live/en/terms-of-service) of this license.
-</br>
-To evaluate the engine with your proprietary content, you will need to access our server-side libraries and a restricted non-commercial evaluation license.
+[![Tutorials](../_media/card-icons/car-asset.jpg ':class=cardImg')](../manual/tutorials.md ':class=cardImg')
+[**Tutorials**](../manual/tutorials.md ':class=cardTitle')
 
-To build a commercial application, you need a commercial licensing agreement.
-> For questions on licensing, please fill out the contact form on our website: [_zea.live_](https://www.zea.live/contact-us)
+<p class="cardText"> Explore tutorials covering various aspects of Zea Engine.</p>
+</div>
 
-# Get Started
+<!-- Zea Engine Architecture card -->
+<div class="card" markdown="1">
 
-To get started using Zea Engine, you can start by learning the basics of how to setup the engine yourself in the Getting Started guide, or you can jump straight into a full web application using the Svelte template.
+[![Zea Engine Architecture](../_media/zea-images/zea-engine.png ':class=cardImg')](../../manual/zea-engine-architecture.md ':class=cardImg')
+[**Zea Engine Architecture**](../../manual/zea-engine-architecture.md ':class=cardTitle')
 
-> [Getting started with the Zea Engine](getting-started/get-started-with-engine.md)
+<p class="cardText"> Learn how the Zea Engine works.</p>
+</div>
 
-> [Zea Svelte Template](https://github.com/ZeaInc/zea-svelte-template)
+</section>
+<br>
+
+## Other Manuals
+
+- [Zea Potree](https://docs.zea.live/zea-potree/) <br>
+  Visit the Zea Potree docs to learn about how to integrate point clouds into your scene.<br>
+
+- [Zea Collab](https://docs.zea.live/zea-collab/) <br>
+  Zea Collab enables multi-user sessions in real-time.<br>
+
+- [Zea UX](https://docs.zea.live/zea-ux/) <br>
+  Zea UX is a plugin library that enables you to add useful UX features, such as interactive gizmos, to your scene.<br>
+
+- [Zea CAD](https://docs.zea.live/zea-cad/) <br>
+  Zea CAD is a plugin that lets you import web friendly model formats such as ZCAD or GLTF.
+
 
