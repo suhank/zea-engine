@@ -16,6 +16,7 @@ import { ShaderNameChangedEvent } from '../Utilities/Events/ShaderNameChangedEve
 import { TransparencyChangedEvent } from '../Utilities/Events/TransparencyChangedEvent'
 import { TexturedChangedEvent } from '../Utilities/Events/TexturedChangedEvent'
 import { GLShader } from '../Renderer'
+import { ColorParameter, NumberParameter } from '..'
 
 /**
  * Represents a type of `BaseItem` class that holds material configuration.
@@ -144,18 +145,21 @@ class Material extends BaseItem {
     } catch (e) {}
 
     if (!isTransparent) {
-      const opacity = <MaterialColorParam | MaterialFloatParam>this.getParameter('Opacity')
-      if (opacity && (opacity.getValue() < 0.99 || (opacity.getImage && opacity.getImage()))) {
+      const opacity = <NumberParameter>this.getParameter('Opacity')
+      if (opacity && (opacity.getValue() < 0.99 || (opacity instanceof MaterialFloatParam && opacity.getImage()))) {
         isTransparent = true
       } else {
-        const baseColorParam = <MaterialColorParam | MaterialFloatParam>this.getParameter('BaseColor')
+        const baseColorParam = <ColorParameter>this.getParameter('BaseColor')
         if (baseColorParam) {
-          const image = baseColorParam.getImage()
-          if (image && image.format == 'RGBA') {
-            isTransparent = true
-          } else if (baseColorParam.getValue()) {
-            const color_val = <Color>baseColorParam.getValue()
-            if (color_val.a < 1 && typeof baseColorParam.getValue() != 'number') isTransparent = true
+          if(baseColorParam instanceof MaterialColorParam){
+            const image = baseColorParam.getImage()
+            if (image && image.format == 'RGBA') {
+              isTransparent = true
+            } 
+          }
+          if (!isTransparent && baseColorParam.getValue()) {
+            const color_val = baseColorParam.getValue()
+            if (color_val.a < 1) isTransparent = true
           }
         }
       }

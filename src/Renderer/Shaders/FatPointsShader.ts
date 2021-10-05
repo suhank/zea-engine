@@ -1,7 +1,7 @@
 /* eslint-disable require-jsdoc */
 import { Color } from '../../Math/index'
 import { Registry } from '../../Registry'
-import { Material, ColorParameter, NumberParameter } from '../../SceneTree'
+import { Material, ColorParameter, NumberParameter, MaterialColorParam } from '../../SceneTree'
 import { GLShader } from '../GLShader'
 import { shaderLibrary } from '../ShaderLibrary'
 
@@ -29,18 +29,6 @@ class FatPointsShader extends GLShader {
     return false
   }
 
-  static getParamDeclarations() {
-    const paramDescs = super.getParamDeclarations()
-    paramDescs.push({
-      name: 'BaseColor',
-      defaultValue: new Color(1.0, 1.0, 0.5),
-    })
-    paramDescs.push({ name: 'PointSize', defaultValue: 0.05 })
-    paramDescs.push({ name: 'Rounded', defaultValue: 1.0 })
-    paramDescs.push({ name: 'BorderWidth', defaultValue: 0.2 })
-    paramDescs.push({ name: 'Overlay', defaultValue: 0.0 })
-    return paramDescs
-  }
 
   /**
    * The supportsInstancing method.
@@ -52,8 +40,9 @@ class FatPointsShader extends GLShader {
 }
 
 const material = new Material('LinesShader_template')
-material.addParameter(new ColorParameter('BaseColor', new Color(1.0, 1, 0.5)))
+material.addParameter(new MaterialColorParam('BaseColor', new Color(1.0, 1, 0.5)))
 material.addParameter(new NumberParameter('PointSize', 1.0, [0, 1]))
+material.addParameter(new NumberParameter('Rounded', 1.0))
 material.addParameter(new NumberParameter('BorderWidth', 0.2))
 material.addParameter(new NumberParameter('Overlay', 0.0))
 
