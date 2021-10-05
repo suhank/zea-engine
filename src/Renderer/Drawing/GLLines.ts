@@ -102,8 +102,8 @@ class GLLines extends GLGeom {
     const lineThicknessAttr = vertexAttributes.lineThickness
 
     const stride = 4 // The number of floats per draw item.
-    const dataArray = new Float32Array(positions.asArray().length * stride)
-    for (let i = 0; i < positions.asArray().length; i++) {
+    const dataArray = new Float32Array(positions.getCount() * stride)
+    for (let i = 0; i < positions.getCount(); i++) {
       const pos = new Vec3(new Float32Array(dataArray.buffer, i * stride * 4, 3))
       pos.setFromOther(positions.getValueRef(i))
 
@@ -120,7 +120,7 @@ class GLLines extends GLGeom {
       this.fatBuffers.positionsTexture = new GLTexture2D(this.__gl, {
         format: 'RGBA',
         type: 'FLOAT',
-        width: positions.asArray().length,
+        width: positions.getCount(),
         /* each pixel has 4 floats*/
         height: 1,
         filter: 'NEAREST',
@@ -129,7 +129,7 @@ class GLLines extends GLGeom {
         mipMapped: false
       })
     } else {
-      this.fatBuffers.positionsTexture.bufferData(dataArray, positions.asArray().length, 1)
+      this.fatBuffers.positionsTexture.bufferData(dataArray, positions.getCount(), 1)
     }
 
     const makeIndices = () => {
