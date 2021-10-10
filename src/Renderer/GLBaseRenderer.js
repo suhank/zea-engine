@@ -992,6 +992,11 @@ class GLBaseRenderer extends ParameterOwner {
 
     pass.on('updated', (event) => {
       this.requestRedraw()
+
+      // If a pass is requesting an update, it is because geometry or
+      // visibility is changing and the geom data Fbo will also be out
+      // of date.
+      this.renderGeomDataFbos()
     })
     pass.init(this, index)
     this.__passes[passType].push(pass)
