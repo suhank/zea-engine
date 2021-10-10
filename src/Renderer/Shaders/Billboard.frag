@@ -5,19 +5,22 @@ precision highp int;
 import 'imageAtlas.glsl'
 
 uniform sampler2D atlasBillboards;
-uniform int isOrthographic;
 
 /* VS Outputs */
 varying float v_instanceID;
 varying vec2 v_texCoord;
 varying float v_alpha;
 varying vec4 v_tint;
-varying float v_viewDist;
+varying vec3 v_viewPos;
 
 
 uniform sampler2D instancesTexture;
 uniform int instancesTextureSize;
-uniform int passId;
+
+#if defined(DRAW_GEOMDATA)
+  uniform int isOrthographic;
+  import 'surfaceGeomData.glsl'
+#endif // DRAW_GEOMDATA
 
 const int cols_per_instance = 7;
 
@@ -45,10 +48,7 @@ void main(void) {
   // fragColor.r = 1.0;
   // fragColor.a = 1.0;
 #elif defined(DRAW_GEOMDATA)
-  fragColor.r = float(passId); 
-  fragColor.g = float(instanceID);
-  fragColor.b = 0.0;// TODO: store poly-id or something.
-  fragColor.a = v_viewDist;
+  fragColor = setFragColor_geomData(v_viewPos, floatGeomBuffer, passId, v_instanceID, isOrthographic);
 #elif defined(DRAW_HIGHLIGHT)
   fragColor = getHilightColor(instanceID);
   // Skip unhilighting labels.

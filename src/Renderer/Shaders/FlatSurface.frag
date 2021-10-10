@@ -31,6 +31,7 @@ out vec4 fragColor;
 #endif
 
 #if defined(DRAW_GEOMDATA)
+  uniform int isOrthographic;
   import 'surfaceGeomData.glsl'
 #elif defined(DRAW_HIGHLIGHT)
   import 'surfaceHighlight.glsl'
@@ -67,7 +68,7 @@ void main(void) {
   #endif
 
 #elif defined(DRAW_GEOMDATA)
-  fragColor = setFragColor_geomData(v_viewPos, floatGeomBuffer, passId,v_drawItemId, 0);
+  fragColor = setFragColor_geomData(v_viewPos, floatGeomBuffer, passId,v_drawItemId, isOrthographic);
 #elif defined(DRAW_HIGHLIGHT)
   fragColor = setFragColor_highlight(v_drawItemId);
 #endif // DRAW_HIGHLIGHT

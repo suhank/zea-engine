@@ -84,7 +84,7 @@ varying float v_instanceID;
 varying vec2 v_texCoord;
 varying float v_alpha;
 varying vec4 v_tint;
-varying float v_viewDist;
+varying vec3 v_viewPos;
 
 void main(void) {
 
@@ -124,11 +124,11 @@ void main(void) {
   bool fixedSizeOnscreen = testFlag(flags, 16); // flag = 1 << 4
 
   mat4 modelViewMatrix = viewMatrix * modelMatrix;
+
   // Note: items in front of the camera will have a negative value here.
-  v_viewDist = -modelViewMatrix[3][2];
   float sc = 1.0;
   if (fixedSizeOnscreen) {
-    sc = v_viewDist; 
+    sc = -modelViewMatrix[3][2];;
   }
   
   mat4 modelViewProjectionMatrix;
@@ -136,6 +136,7 @@ void main(void) {
     if (inVR == 0) {
       gl_Position = modelViewMatrix * vec4(0.0, 0.0, 0.0, 1.0);
       gl_Position += vec4(pos.x * width * sc, (pos.y + 0.5) * height * sc, 0.0, 0.0);
+      v_viewPos = gl_Position.xyz;
       gl_Position = projectionMatrix * gl_Position;
     } else {
       vec3 cameraPos = vec3(cameraMatrix[3][0], cameraMatrix[3][1], cameraMatrix[3][2]);
@@ -143,11 +144,13 @@ void main(void) {
       mat4 lookAt = calcLookAtMatrix(billboardPos, cameraPos, 0.0);
       mat4 modelViewProjectionMatrix = projectionMatrix * viewMatrix * lookAt;
       gl_Position = modelViewProjectionMatrix * vec4(pos.x * width * sc, (pos.y + 0.5) * height * sc, 0.0, 1.0);
+      v_viewPos = (modelViewMatrix * vec4(pos.x * width * sc, (pos.y + 0.5) * height * sc, 0.0, 1.0)).xyz;
     }
   }
   else {
     modelViewProjectionMatrix = projectionMatrix * viewMatrix * modelMatrix;
     gl_Position = modelViewProjectionMatrix * vec4(pos.x * width, (pos.y + 0.5) * height, 0.0, 1.0);
+    v_viewPos = (modelViewMatrix * vec4(pos.x * width, (pos.y + 0.5) * height, 0.0, 1.0)).xyz;
   }
 
   // Use cross platform bit flags methods

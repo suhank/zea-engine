@@ -456,17 +456,12 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
         cache.currentglShader = shaders.glgeomdatashader
       }
 
-      {
-        const unif = renderstate.unifs.floatGeomBuffer
-        if (unif) {
-          gl.uniform1i(unif.location, gl.floatGeomBuffer ? 1 : 0)
-        }
+      const { floatGeomBuffer, passId } = renderstate.unifs
+      if (floatGeomBuffer) {
+        gl.uniform1i(floatGeomBuffer.location, this.__renderer.floatGeomBuffer ? 1 : 0)
       }
-      {
-        const unif = renderstate.unifs.passId
-        if (unif) {
-          gl.uniform1i(unif.location, this.passIndex)
-        }
+      if (passId) {
+        gl.uniform1i(passId.location, this.passIndex)
       }
 
       this._drawItem(renderstate, transparentItem, cache)

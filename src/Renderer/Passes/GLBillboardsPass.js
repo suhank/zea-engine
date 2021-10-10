@@ -455,7 +455,7 @@ class GLBillboardsPass extends GLPass {
     }
 
     if (floatGeomBuffer) {
-      gl.uniform1i(floatGeomBuffer.location, gl.floatGeomBuffer ? 1 : 0)
+      gl.uniform1i(floatGeomBuffer.location, renderstate.floatGeomBuffer ? 1 : 0)
     }
     if (passId) {
       gl.uniform1i(passId.location, this.passIndex)
@@ -587,8 +587,7 @@ class GLBillboardsPass extends GLPass {
   getGeomItemAndDist(geomData) {
     let itemId
     let dist
-    const gl = this.__gl
-    if (gl.floatGeomBuffer) {
+    if (geomData instanceof Float32Array) {
       itemId = Math.round(geomData[1])
       dist = geomData[3]
     } else {

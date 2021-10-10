@@ -58,7 +58,7 @@ class GLViewport extends GLBaseViewport {
 
     const gl = this.__renderer.gl
     this.__geomDataBuffer = new GLTexture2D(gl, {
-      type: gl.floatGeomBuffer ? 'FLOAT' : 'UNSIGNED_BYTE',
+      type: renderer.__floatGeomBuffer ? 'FLOAT' : 'UNSIGNED_BYTE',
       format: 'RGBA',
       filter: 'NEAREST',
       width: width <= 1 ? 1 : Math.floor(width / this.__geomDataBufferSizeFactor),
@@ -391,7 +391,7 @@ class GLViewport extends GLBaseViewport {
       // const y = Math.floor(screenPos.y / this.__geomDataBufferSizeFactor)
       let passId
       let geomData
-      if (gl.floatGeomBuffer) {
+      if (this.__renderer.__floatGeomBuffer) {
         geomData = new Float32Array(4)
         gl.readPixels(x, bufferHeight - y - 1, 1, 1, gl.RGBA, gl.FLOAT, geomData)
         if (geomData[3] == 0) return undefined
@@ -465,7 +465,7 @@ class GLViewport extends GLBaseViewport {
       this.__geomDataBufferFbo.bindForReading()
 
       let geomDatas
-      if (gl.floatGeomBuffer) {
+      if (this.__renderer.__floatGeomBuffer) {
         geomDatas = new Float32Array(4 * numPixels)
         gl.readPixels(rectLeft, rectBottom, rectWidth, rectHeight, gl.RGBA, gl.FLOAT, geomDatas)
       } else {
@@ -479,7 +479,7 @@ class GLViewport extends GLBaseViewport {
       for (let i = 0; i < numPixels; i++) {
         let passId
         const geomData = geomDatas.subarray(i * 4, (i + 1) * 4)
-        if (gl.floatGeomBuffer) {
+        if (this.__renderer.__floatGeomBuffer) {
           if (geomData[3] == 0) continue
           passId = Math.round(geomData[0])
         } else {
@@ -870,9 +870,13 @@ class GLViewport extends GLBaseViewport {
     if (this.debugGeomShader) {
       this.renderGeomDataFbo()
       const gl = this.__renderer.gl
-      gl.disable(gl.DEPTH_TEST)
       gl.screenQuad.bindShader(renderstate)
       gl.screenQuad.draw(renderstate, this.__geomDataBuffer, new Vec2(0, 0), new Vec2(1, 1))
+    }
+    if (this.debugHighlightedGeomsBuffer) {
+      const gl = this.__renderer.gl
+      gl.screenQuad.bindShader(renderstate)
+      gl.screenQuad.draw(renderstate, this.highlightedGeomsBuffer, new Vec2(0, 0), new Vec2(1, 1))
     }
   }
 }
