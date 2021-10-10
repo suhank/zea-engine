@@ -35,12 +35,22 @@
         BillboardItem,
         Label,
         SelectionSet,
+        SimpleSurfaceShader,
+        Registry,
       } = window.zeaEngine
 
       const selfEventsIndicator = document.querySelector('#selfEventsIndicator')
       const groupEventsIndicator = document.querySelector('#groupEventsIndicator')
       const viewportEventsIndicator = document.querySelector('#viewportEventsIndicator')
       const urlParams = new URLSearchParams(window.location.search)
+
+      class OverlayShader extends SimpleSurfaceShader {
+        static isOverlay() {
+          return true
+        }
+      }
+
+      Registry.register('OverlayShader', OverlayShader)
 
       const canvas = document.querySelector('#viewport')
       const scene = new Scene()
@@ -111,7 +121,7 @@
 
         // ----------------------------------------------------------------------------------------
 
-        const material3 = new Material('cylinderMaterial', 'SimpleSurfaceShader')
+        const material3 = new Material('cylinderMaterial', 'OverlayShader')
         material3.getParameter('BaseColor').setValue(new Color('#F6B26B'))
 
         const groupItem2 = new GeomItem('CylinderGeometryItem', new Torus(0.1, 0.3), material3)
