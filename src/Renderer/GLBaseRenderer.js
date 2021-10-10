@@ -665,9 +665,7 @@ class GLBaseRenderer extends ParameterOwner {
     // Galaxy and above. We need this. We need to accurately determine
     // if the float buffer is not supported.
     this.__floatGeomBuffer =
-      webglOptions.floatGeomBuffer != undefined
-        ? webglOptions.floatGeomBuffer
-        : this.__gl.floatTexturesSupported && SystemDesc.browserName != 'Safari'
+      webglOptions.floatGeomBuffer != undefined ? webglOptions.floatGeomBuffer : this.__gl.floatTexturesSupported
     this.__gl.floatGeomBuffer = this.__floatGeomBuffer
     // Note: the following returns UNSIGNED_BYTE even if the browser supports float.
     // const implType = this.__gl.getParameter(this.__gl.IMPLEMENTATION_COLOR_READ_TYPE);
