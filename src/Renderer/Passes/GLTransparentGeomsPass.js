@@ -458,7 +458,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
 
       const { floatGeomBuffer, passId } = renderstate.unifs
       if (floatGeomBuffer) {
-        gl.uniform1i(floatGeomBuffer.location, this.__renderer.floatGeomBuffer ? 1 : 0)
+        gl.uniform1i(floatGeomBuffer.location, renderstate.floatGeomBuffer ? 1 : 0)
       }
       if (passId) {
         gl.uniform1i(passId.location, this.passIndex)
