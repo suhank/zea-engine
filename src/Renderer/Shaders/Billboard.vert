@@ -1,5 +1,6 @@
 
 precision highp float;
+precision highp int;
 
 import 'quadVertexFromID.glsl'
 
@@ -22,9 +23,9 @@ uniform vec4 atlasBillboards_desc;
 
 uniform sampler2D instancesTexture;
 uniform int instancesTextureSize;
+uniform int passId;
 
-
-const int cols_per_instance = 6;
+const int cols_per_instance = 7;
 
 mat4 getMatrix(sampler2D texture, int textureSize, int index) {
   // Unpack 3 x 4 matix columns into a 4 x 4 matrix.
@@ -45,7 +46,6 @@ vec4 getInstanceData(int id) {
 vec4 getPivot(int id) {
   return fetchTexel(instancesTexture, instancesTextureSize, (id * cols_per_instance) + 4);
 }
-
 vec4 getTintColor(int id) {
   return fetchTexel(instancesTexture, instancesTextureSize, (id * cols_per_instance) + 5);
 }
@@ -80,15 +80,18 @@ float map(float value, float inMin, float inMax, float outMin, float outMax) {
 }
 
 /* VS Outputs */
+varying float v_instanceID;
 varying vec2 v_texCoord;
 varying float v_alpha;
 varying vec4 v_tint;
+varying float v_viewDist;
 
 void main(void) {
 
 #ifdef ENABLE_FLOAT_TEXTURES
 
   int instanceID = int(instanceIds);
+  v_instanceID = float(instanceID) + 0.25;
 
   mat4 modelMatrix = getModelMatrix(instanceID);
   vec2 pivot = getPivot(instanceID).xy;
@@ -121,10 +124,11 @@ void main(void) {
   bool fixedSizeOnscreen = testFlag(flags, 16); // flag = 1 << 4
 
   mat4 modelViewMatrix = viewMatrix * modelMatrix;
+  // Note: items in front of the camera will have a negative value here.
+  v_viewDist = -modelViewMatrix[3][2];
   float sc = 1.0;
   if (fixedSizeOnscreen) {
-    float dist = modelViewMatrix[3][2];
-    sc = abs(dist); // Note: items in front of the camera will have a negative value here.
+    sc = v_viewDist; 
   }
   
   mat4 modelViewProjectionMatrix;
