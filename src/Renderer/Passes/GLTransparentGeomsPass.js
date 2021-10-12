@@ -413,6 +413,19 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
         cache.currentglShader = shaders.glselectedshader
       }
 
+      const { floatGeomBuffer, passId, instancedDraw } = renderstate.unifs
+      if (floatGeomBuffer) {
+        gl.uniform1i(floatGeomBuffer.location, gl.floatGeomBuffer ? 1 : 0)
+      }
+      if (passId) {
+        gl.uniform1i(passId.location, this.passIndex)
+      }
+      if (instancedDraw) {
+        gl.uniform1i(instancedDraw.location, 0)
+      }
+
+      this.renderer.glGeomItemLibrary.bind(renderstate)
+
       this._drawItem(renderstate, transparentItem, cache)
     }
 
