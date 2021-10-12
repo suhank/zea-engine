@@ -284,7 +284,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
         // Note: No 'unbind' here before binding the next shader.
         // That is to support a simple hack. LinesShader enables blend
         // each time it is bound, and then disables on unbind.
-        if (!glShader.bind(renderstate)) {
+        if (!glShader.bind(renderstate, 'color')) {
           continue
         }
 
@@ -407,7 +407,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
       const shaders = transparentItem.shaders
       if (cache.currentglShader != shaders.glselectedshader) {
         // Some passes, like the depth pass, bind custom uniforms.
-        if (!shaders.glselectedshader.bind(renderstate)) {
+        if (!shaders.glselectedshader.bind(renderstate, 'highlight')) {
           continue
         }
         cache.currentglShader = shaders.glselectedshader
@@ -450,24 +450,24 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
       }
       if (cache.currentglShader != shaders.glgeomdatashader) {
         // Some passes, like the depth pass, bind custom uniforms.
-        if (!shaders.glgeomdatashader.bind(renderstate)) {
+        if (!shaders.glgeomdatashader.bind(renderstate, 'geomdata')) {
           continue
         }
         cache.currentglShader = shaders.glgeomdatashader
       }
 
-      {
-        const unif = renderstate.unifs.floatGeomBuffer
-        if (unif) {
-          gl.uniform1i(unif.location, gl.floatGeomBuffer ? 1 : 0)
-        }
+      const { floatGeomBuffer, passId, instancedDraw } = renderstate.unifs
+      if (floatGeomBuffer) {
+        gl.uniform1i(floatGeomBuffer.location, gl.floatGeomBuffer ? 1 : 0)
       }
-      {
-        const unif = renderstate.unifs.passId
-        if (unif) {
-          gl.uniform1i(unif.location, this.passIndex)
-        }
+      if (passId) {
+        gl.uniform1i(passId.location, this.passIndex)
       }
+      if (instancedDraw) {
+        gl.uniform1i(instancedDraw.location, 0)
+      }
+
+      this.renderer.glGeomItemLibrary.bind(renderstate)
 
       this._drawItem(renderstate, transparentItem, cache)
     }
