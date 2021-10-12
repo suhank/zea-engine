@@ -20,6 +20,32 @@ class FlatSurfaceShader extends GLShader {
     this.setShaderStage('FRAGMENT_SHADER', frag)
   }
 
+  /**
+   * The bind method.
+   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {string} key - The key value.
+   * @return {boolean} - The return value.
+   */
+  bind(renderstate, key) {
+    super.bind(renderstate, key)
+
+    const gl = this.__gl
+    gl.disable(gl.CULL_FACE)
+
+    return true
+  }
+
+  /**
+   * The unbind method.
+   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @return {any} - The return value.
+   */
+  unbind(renderstate) {
+    super.unbind(renderstate)
+
+    return true
+  }
+
   static getParamDeclarations() {
     const paramDescs = super.getParamDeclarations()
     paramDescs.push({
