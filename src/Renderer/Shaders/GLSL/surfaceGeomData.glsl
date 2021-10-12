@@ -22,8 +22,7 @@
       ///////////////////////////////////
       // UInt8 buffer
       fragColor.r = mod(v_drawItemId, 256.) / 255.;
-      float g = 0.0;//floor(v_drawItemId / 256.);
-      fragColor.g = 128.0 / 255.;//((g < 32.0 ? g : 32.0) + float(passId) * 32.) / 255.;
+      fragColor.g = (floor(v_drawItemId / 256.) + float(passId) * 32.) / 255.;
 
       // encode the dist as a 16 bit float
       vec2 float16bits = encode16BitFloatInto2xUInt8(viewDist);
