@@ -1,6 +1,8 @@
 /* eslint-disable guard-for-in */
 import { EventEmitter } from '../../Utilities/index'
-import { Points, Lines, Mesh, PointsProxy, LinesProxy, MeshProxy, BaseGeom } from '../../SceneTree/index'
+import { Points, Lines, Mesh, CompoundGeom, PointsProxy, LinesProxy, MeshProxy, BaseGeom } from '../../SceneTree/index'
+import { GLGeomItemSetMultiDrawCompoundGeom } from './GLGeomItemSetMultiDrawCompoundGeom'
+import { GLGeomItemSetMultiDraw } from './GLGeomItemSetMultiDraw'
 import { GLLinesItemSet } from './GLLinesItemSet'
 import { GLPointsItemSet } from './GLPointsItemSet'
 import { GLMeshItemSet } from './GLMeshItemSet'
@@ -17,7 +19,7 @@ class GLShaderGeomSets extends EventEmitter {
   protected glShader: any
   protected glGeomDataShader: any
   protected glHighlightShader: any
-  protected glGeomItemSets: Record<string, any>
+  protected glGeomItemSets: Record<string, GLGeomItemSetMultiDraw | GLGeomItemSetMultiDrawCompoundGeom> = {}
 
   protected glShaderKey: string
   protected glGeomDataShaderKey: string = ''
@@ -36,7 +38,6 @@ class GLShaderGeomSets extends EventEmitter {
     this.glShader = shaders.glShader
     this.glGeomDataShader = shaders.glgeomdatashader ? shaders.glgeomdatashader : shaders.glShader
     this.glHighlightShader = shaders.glselectedshader ? shaders.glselectedshader : shaders.glShader
-    this.glGeomItemSets = {}
 
     this.glShaderKey = shaders.glShader.getId() + 'multidraw-draw'
 
@@ -51,7 +52,11 @@ class GLShaderGeomSets extends EventEmitter {
    * */
   getOrCreateGLGeomItemSet(geom: BaseGeom) {
     let glGeomItemSet
-    if (geom instanceof Mesh || geom instanceof MeshProxy) {
+    if (geom instanceof CompoundGeom) {
+      if (this.glGeomItemSets['CompoundGeom']) return this.glGeomItemSets['CompoundGeom']
+      glGeomItemSet = new GLGeomItemSetMultiDrawCompoundGeom(this.pass.renderer!)
+      this.glGeomItemSets['CompoundGeom'] = glGeomItemSet
+    } else if (geom instanceof Mesh || geom instanceof MeshProxy) {
       if (this.glGeomItemSets['GLMesh']) return this.glGeomItemSets['GLMesh']
       glGeomItemSet = new GLMeshItemSet(this.pass.renderer!)
       this.glGeomItemSets['GLMesh'] = glGeomItemSet

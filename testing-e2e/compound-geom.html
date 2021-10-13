@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html class="h-full">
+  <head>
+    <title>Compound Geom - Zea Engine</title>
+
+    <link rel="stylesheet" href="styles/tailwind.min.css" />
+    <meta charset="UTF-8" />
+  </head>
+  <body class="bg-blue-100 h-full">
+    <div class="h-full">
+      <canvas class="absolute" id="app"></canvas>
+    </div>
+
+    <script src="../dist/index.umd.development.js"></script>
+
+    <script type="module">
+      const { GLRenderer, Scene, Vec3, Color, CompoundGeom, Material, GeomItem, Sphere } = zeaEngine
+
+      const domElement = document.getElementById('app')
+
+      const scene = new Scene()
+
+      const renderer = new GLRenderer(domElement, { hideSplash: true, antialias: false })
+      renderer.setScene(scene)
+
+      const standardMaterial = new Material('surfaces', 'SimpleSurfaceShader')
+      standardMaterial.getParameter('BaseColor').setValue(new Color(200 / 255, 50 / 255, 50 / 255))
+
+      const compoundGeom = new CompoundGeom()
+      const positions = compoundGeom.getVertexAttribute('positions')
+      compoundGeom.setNumVertices(4)
+
+      //           0
+      //       .  * .
+      // 1 * .   .   . *3
+      //        *
+      //        2
+
+      compoundGeom.addSubGeomIndices('MESH', Uint32Array.from([0, 1, 2]))
+      compoundGeom.addSubGeomIndices('MESH', Uint32Array.from([0, 2, 3]))
+      compoundGeom.addSubGeomIndices('LINE', Uint32Array.from([0, 1]))
+      compoundGeom.addSubGeomIndices('LINE', Uint32Array.from([1, 2]))
+      compoundGeom.addSubGeomIndices('LINE', Uint32Array.from([0, 2]))
+      compoundGeom.addSubGeomIndices('LINE', Uint32Array.from([0, 3]))
+      compoundGeom.addSubGeomIndices('LINE', Uint32Array.from([2, 3]))
+      // compoundGeom.addSubGeomIndices('POINT', Uint32Array.from([0]))
+      // compoundGeom.addSubGeomIndices('POINT', Uint32Array.from([1]))
+      // compoundGeom.addSubGeomIndices('POINT', Uint32Array.from([2]))
+      // compoundGeom.addSubGeomIndices('POINT', Uint32Array.from([3]))
+
+      positions.getValueRef(0).set(0.1, 0.9, 0)
+      positions.getValueRef(1).set(0.1, 0.1, 0.5)
+      positions.getValueRef(2).set(0.9, 0.1, 0)
+      positions.getValueRef(3).set(0.9, 0.9, 0)
+
+      // compoundGeom.setSubGeomMetadata(0, 'surfaceType', 'Plane')
+      // compoundGeom.setSubGeomMetadata(1, 'surfaceType', 'Plane')
+      // compoundGeom.setSubGeomMetadata(2, 'surfaceType', 'Line')
+
+      ///////////////////////////////////
+      // const prevNumVertices = 4
+      // const sphere = new Sphere(0.5, 16, 13)
+      // const sphereBuffers = sphere.genBuffers()
+      // compoundGeom.setNumVertices(prevNumVertices + sphereBuffers.numRenderVerts)
+      // positions.data.set(sphereBuffers.attrBuffers.positions.values, prevNumVertices * positions.stride)
+      // const subGeomIndex = compoundGeom.addSubGeomIndices(
+      //   'MESH',
+      //   Uint32Array.from(sphereBuffers.indices),
+      //   prevNumVertices
+      // )
+      // compoundGeom.setSubGeomMetadata(subGeomIndex, 'surfaceType', 'Sphere')
+      // compoundGeom.setSubGeomMetadata(subGeomIndex, 'radius', 1.5)
+      // compoundGeom.setSubGeomMetadata(subGeomIndex, 'center', new Vec3(1, 2, 4))
+
+      const geomItem = new GeomItem('Cuboid', compoundGeom, standardMaterial)
+      scene.getRoot().addChild(geomItem)
+      renderer
+        .getViewport()
+        .getCamera()
+        .setPositionAndTarget(new Vec3(3, 3, 1.7), new Vec3(0, 0, 0.1))
+
+      window.postMessage('done-loading')
+
+      scene.setupGrid(10.0, 10)
+
+      // {{{ Messages handler.
+      const handleMessage = event => {
+        const { data } = event
+
+        if (data === 'variant-01') {
+          renderer
+            .getViewport()
+            .getCamera()
+            .setPositionAndTarget(new Vec3(2, 2, -2.7), new Vec3(0, 0, 0.4))
+          renderer.frameAll()
+          window.postMessage(`done-${data}`)
+        } else if (data === 'variant-02') {
+          cuboid.getParameter('Z').setValue(0.1)
+          renderer
+            .getViewport()
+            .getCamera()
+            .setPositionAndTarget(new Vec3(-2, -2, 2.7), new Vec3(0, 0, 0.4))
+          renderer.frameAll()
+          window.postMessage(`done-${data}`)
+        }
+      }
+
+      window.addEventListener('message', handleMessage, false)
+      // }}}
+    </script>
+  </body>
+</html>

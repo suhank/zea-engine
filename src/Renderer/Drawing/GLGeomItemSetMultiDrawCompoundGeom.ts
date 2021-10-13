@@ -10,7 +10,7 @@ import { GLGeomItem } from './GLGeomItem'
  * @extends EventEmitter
  * @private
  */
-abstract class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
+class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
   protected renderer: GLBaseRenderer
   protected gl: WebGL12RenderingContext
   protected glGeomItems: Array<GLGeomItem | null> = []
@@ -18,7 +18,7 @@ abstract class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
   protected glgeomItemEventHandlers: any[] = []
   protected freeIndices: number[] = []
   protected visibleItems: GLGeomItem[] = []
-  protected dirtyGeomItems: number[] = []
+  protected dirtyGeomItems: Set<number> = new Set()
   protected drawIdsBufferDirty: boolean = true
   protected highlightedItems: GLGeomItem[] = []
 
@@ -58,7 +58,7 @@ abstract class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
         throw new Error('We do not yet support compound geoms changing.')
         */
         geomItemIndices.forEach((index: number) => {
-          this.dirtyGeomItems.push(index)
+          this.dirtyGeomItems.add(index)
           if (!this.drawIdsBufferDirty) {
             this.drawIdsBufferDirty = true
             this.emit('updated')
@@ -139,7 +139,7 @@ abstract class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
     // Visibility
     if (glGeomItem.visible) {
       this.visibleItems.push(glGeomItem)
-      this.dirtyGeomItems.push(index)
+      this.dirtyGeomItems.add(index)
     }
     eventHandlers.visibilityChanged = (event: Record<string, any>) => {
       if (event.visible) {
@@ -147,7 +147,7 @@ abstract class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
       } else {
         this.visibleItems.splice(this.visibleItems.indexOf(glGeomItem), 1)
       }
-      this.dirtyGeomItems.push(index)
+      this.dirtyGeomItems.add(index)
       // console.log(this.constructor.name, ' visibleItems', this.visibleItems.length)
       if (!this.drawIdsBufferDirty) {
         this.drawIdsBufferDirty = true
@@ -241,7 +241,7 @@ abstract class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
         const index = this.visibleItems.indexOf(glGeomItem)
         const geomBuffers = this.renderer.glGeomLibrary.getGeomBuffers(glGeomItem.geomId)
         let drawCounts: Record<string, number> = {}
-        if (geomBuffers.subGeoms.length > 0) {
+        if (geomBuffers.subGeoms.length > 0 && false) {
           geomBuffers.subGeoms.forEach((subGeom: { start: number; count: number; type: string }) => {
             const count = subGeom.count
             if (!drawCounts[subGeom.type]) drawCounts[subGeom.type] = 0
@@ -286,14 +286,16 @@ abstract class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
         regen = true
       }
     }
-    if (regen) this.dirtyGeomItems = Array.from(Array(this.visibleItems.length).keys())
+    if (regen) {
+      for (let i = 0; i < this.visibleItems.length; i++) this.dirtyGeomItems.add(i)
+    }
 
     this.dirtyGeomItems.forEach(index => {
       const glGeomItem = this.glGeomItems[index]!
       const offsetAndCount = this.renderer.glGeomLibrary.getGeomOffsetAndCount(glGeomItem.geomId)
       const geomBuffers = this.renderer.glGeomLibrary.getGeomBuffers(glGeomItem.geomId)
 
-      if (geomBuffers.subGeoms.length > 0) {
+      if (geomBuffers.subGeoms.length > 0 && false) {
         geomBuffers.subGeoms.forEach((subGeom: { start: number; count: number; type: string }, subIndex: number) => {
           const allocator = this.allocators[subGeom.type]
           const allocation = allocator.getAllocation(index)
@@ -560,16 +562,16 @@ abstract class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
     }
 
     renderstate.bindViewports(unifs, () => {
-      if (drawIdsArray['MESH']) {
-        bindTex('MESH')
-        this.multiDrawMeshes(
-          renderstate,
-          drawIdsArray['MESH'],
-          counts['MESH'],
-          offsets['MESH'],
-          allocators['MESH'].allocatedSpace
-        )
-      }
+      // if (drawIdsArray['MESH']) {
+      //   bindTex('MESH')
+      //   this.multiDrawMeshes(
+      //     renderstate,
+      //     drawIdsArray['MESH'],
+      //     counts['MESH'],
+      //     offsets['MESH'],
+      //     allocators['MESH'].allocatedSpace
+      //   )
+      // }
       if (drawIdsArray['LINE']) {
         bindTex('LINE')
         this.multiDrawLines(
@@ -600,6 +602,7 @@ abstract class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
     offsets: Int32Array,
     drawCount: number
   ) {
+    this.renderer.glGeomLibrary.bind(renderstate)
     const gl = this.gl
     if (gl.multiDrawElements) {
       gl.multiDrawElements(gl.TRIANGLES, counts, 0, gl.UNSIGNED_INT, offsets, 0, drawCount)
@@ -619,8 +622,9 @@ abstract class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
     offsets: Int32Array,
     drawCount: number
   ) {
+    this.renderer.glGeomLibrary.bind(renderstate)
     const gl = this.gl
-    if (gl.multiDrawArrays) {
+    if (gl.multiDrawElements) {
       const { occluded } = renderstate.unifs
       if (occluded) {
         gl.uniform1i(occluded.location, 0)
@@ -664,9 +668,11 @@ abstract class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
     offsets: Int32Array,
     drawCount: number
   ) {
+    this.renderer.glGeomLibrary.bind(renderstate)
     const gl = this.gl
     if (gl.multiDrawElements) {
       gl.multiDrawElements(gl.POINTS, counts, 0, gl.UNSIGNED_INT, offsets, 0, drawCount)
+      // gl.multiDrawArrays(gl.POINTS, offsets, 0, counts, 0, drawCount)
     } else {
       const { drawId } = renderstate.unifs
       for (let i = 0; i < drawCount; i++) {

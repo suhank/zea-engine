@@ -481,7 +481,6 @@ class GLGeomLibrary extends EventEmitter {
     })
 
     this.dirtyGeomIndices = new Set()
-    this.geomBuffersTmp = []
   }
 
   // /////////////////////////////////////
