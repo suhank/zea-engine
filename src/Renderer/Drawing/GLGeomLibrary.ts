@@ -235,6 +235,15 @@ class GLGeomLibrary extends EventEmitter {
     return [this.indicesOffsets[index], this.indicesCounts[index]]
   }
 
+  /**
+   * Returns a Geom managed by this GLGeomLibrary.
+   * @param {number} index - The index of the geom to retrieve
+   * @return {array} - The return value.
+   */
+  getGeomBuffers(index: number) {
+    return this.geomBuffersTmp[index]
+  }
+
   // /////////////////////////////////////
   // Buffers
 
