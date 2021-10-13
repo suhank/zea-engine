@@ -514,6 +514,7 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
     renderstate.bindViewports(unifs, () => {
       if (drawIdsArray['MESH']) {
         bindTex('MESH')
+
         this.multiDrawMeshes(
           renderstate,
           drawIdsArray['MESH'],
@@ -554,6 +555,20 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
   ) {
     this.renderer.glGeomLibrary.bind(renderstate)
     const gl = this.gl
+
+    // enable stencil buffer test
+    gl.enable(gl.STENCIL_TEST)
+
+    // do it just for all mesh pixels
+    gl.stencilFunc(gl.ALWAYS, 1, 0xff)
+
+    // ... with no masking
+    gl.stencilMask(0xff)
+
+    // ... simply increment stencil buffer value for each draw call,
+    // (important, here we have
+    gl.stencilOp(gl.KEEP, gl.KEEP, gl.INCR)
+
     if (gl.multiDrawElements) {
       gl.multiDrawElements(gl.TRIANGLES, counts, 0, gl.UNSIGNED_INT, offsets, 0, drawCount)
     } else {
@@ -574,6 +589,18 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
   ) {
     this.renderer.glGeomLibrary.bind(renderstate)
     const gl = this.gl
+
+    // don't rely on z-Buffer for line, disable depth check
+    gl.disable(gl.DEPTH_TEST)
+
+    // enable stencil buffer check instead
+    gl.enable(gl.STENCIL_TEST)
+
+    gl.stencilMask(0x00)
+
+    // render line only where stencil buffer was incremented exactly twice
+    gl.stencilFunc(gl.EQUAL, 2, 0xff)
+
     if (gl.multiDrawElements) {
       const { occluded } = renderstate.unifs
       if (occluded) {
@@ -609,6 +636,10 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
         gl.depthFunc(gl.LEQUAL)
       }
     }
+
+    // restore flags to initial order
+    gl.disable(gl.STENCIL_TEST)
+    gl.enable(gl.DEPTH_TEST)
   }
 
   multiDrawPoints(
