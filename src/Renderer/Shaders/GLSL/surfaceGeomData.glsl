@@ -1,7 +1,7 @@
   uniform int floatGeomBuffer;
   uniform int passId;
   
-  vec4 setFragColor_geomData(vec3 v_viewPos, int floatGeomBuffer, int passId, float v_drawItemId, int isOrthographic){
+  vec4 setFragColor_geomData(vec3 v_viewPos, int floatGeomBuffer, int passId, float v_drawItemId, float elemItemId, int isOrthographic){
     vec4 fragColor;
 
     float viewDist;
@@ -13,7 +13,7 @@
     if (floatGeomBuffer != 0) {
       fragColor.r = float(passId); 
       fragColor.g = float(v_drawItemId);
-      fragColor.b = 0.0;// TODO: store poly-id or something.
+      fragColor.b = elemItemId;
       fragColor.a = viewDist;
     }
     else {

@@ -18,7 +18,7 @@ import 'drawItemTexture.glsl'
 import 'modelMatrix.glsl'
 
 /* VS Outputs */
-varying float v_drawItemId;
+varying vec3 v_drawItemIds;
 varying vec4 v_geomItemData;
 varying vec3 v_viewPos;
 varying vec3 v_viewNormal;
@@ -28,11 +28,11 @@ varying vec2 v_textureCoord;
 varying vec3 v_worldPos;
 
 void main(void) {
-  int drawItemId = getDrawItemId();
-  v_drawItemId = float(drawItemId);
-  v_geomItemData  = getInstanceData(drawItemId);
+  ivec3 drawItemIds = getDrawItemIds();
+  v_drawItemIds = vec3(drawItemIds);
+  v_geomItemData  = getInstanceData(drawItemIds.x);
 
-  mat4 modelMatrix = getModelMatrix(drawItemId);
+  mat4 modelMatrix = getModelMatrix(drawItemIds.x);
   mat4 modelViewMatrix = viewMatrix * modelMatrix;
 
   vec4 pos = vec4(positions, 1.);

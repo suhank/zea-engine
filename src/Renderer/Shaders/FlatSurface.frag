@@ -67,7 +67,7 @@ void main(void) {
   #endif
 
 #elif defined(DRAW_GEOMDATA)
-  fragColor = setFragColor_geomData(v_viewPos, floatGeomBuffer, passId,v_drawItemId, 0);
+  fragColor = setFragColor_geomData(v_viewPos, floatGeomBuffer, passId,v_drawItemId, 0, 0);
 #elif defined(DRAW_HIGHLIGHT)
   fragColor = setFragColor_highlight(v_drawItemId);
 #endif // DRAW_HIGHLIGHT

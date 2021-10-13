@@ -180,7 +180,7 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
         const index = this.visibleItems.indexOf(glGeomItem)
         const geomBuffers = this.renderer.glGeomLibrary.getGeomBuffers(glGeomItem.geomId)
         let drawCounts: Record<string, number> = {}
-        if (geomBuffers.subGeoms.length > 0 && false) {
+        if (geomBuffers.subGeoms.length > 0) {
           geomBuffers.subGeoms.forEach((subGeom: { start: number; count: number; type: string }) => {
             const count = subGeom.count
             if (!drawCounts[subGeom.type]) drawCounts[subGeom.type] = 0
@@ -235,7 +235,8 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
       const offsetAndCount = this.renderer.glGeomLibrary.getGeomOffsetAndCount(glGeomItem.geomId)
       const geomBuffers = this.renderer.glGeomLibrary.getGeomBuffers(glGeomItem.geomId)
 
-      if (geomBuffers.subGeoms.length > 0 && false) {
+      if (geomBuffers.subGeoms.length > 0) {
+        const counts: Record<string, number> = {}
         geomBuffers.subGeoms.forEach(
           (subGeom: { start: number; count: number; type: string; materialId: number }, subIndex: number) => {
             const allocator = this.allocators[subGeom.type]
@@ -244,11 +245,13 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
               offsetAndCount[0] + subGeom.start * elementSize
             this.drawElementCounts[subGeom.type][allocation.start + subIndex] = subGeom.count
 
-            const drawId = allocation.start + subIndex
+            if (!counts[subGeom.type]) counts[subGeom.type] = 0
+            const drawId = allocation.start + counts[subGeom.type]
             this.drawIdsArrays[subGeom.type][drawId * 4 + 0] = glGeomItem.drawItemId
             this.drawIdsArrays[subGeom.type][drawId * 4 + 1] = subIndex
             this.drawIdsArrays[subGeom.type][drawId * 4 + 3] = subGeom.materialId ? subGeom.materialId : -1.0
-            this.drawIdsArrays[subGeom.type][drawId * 4 + 3] = 0.0 // spare
+            this.drawIdsArrays[subGeom.type][drawId * 4 + 4] = 0.0 // spare
+            counts[subGeom.type]++
           }
         )
       } else {
