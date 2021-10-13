@@ -21,7 +21,7 @@ import { BinReader } from '../../SceneTree/BinReader'
  * @extends BaseGeom
  */
 class Lines extends BaseGeom {
-  protected __indices: Float32Array | Int32Array | Int16Array | Int8Array | Uint8Array | Uint16Array | Uint32Array
+  protected __indices: Uint8Array | Uint16Array | Uint32Array
 
   /**
    * Create lines.

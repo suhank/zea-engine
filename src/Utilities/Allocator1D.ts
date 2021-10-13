@@ -244,7 +244,7 @@ class Allocator1D extends EventEmitter {
     this.freeSpace += allocation.size
 
     // check for free blocks on either side of the allocated space
-    // and allow them to consume this block intead of adding a new smaller
+    // and allow them to consume this block instead of adding a new smaller
     // block.
     const prevIndex = index - 1
     if (this.freeList.includes(prevIndex)) {
