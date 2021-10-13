@@ -290,6 +290,7 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
       for (let i = 0; i < this.visibleItems.length; i++) this.dirtyGeomItems.add(i)
     }
 
+    const elementSize = 4 //  Uint32Array for UNSIGNED_INT
     this.dirtyGeomItems.forEach(index => {
       const glGeomItem = this.glGeomItems[index]!
       const offsetAndCount = this.renderer.glGeomLibrary.getGeomOffsetAndCount(glGeomItem.geomId)
@@ -299,7 +300,8 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
         geomBuffers.subGeoms.forEach((subGeom: { start: number; count: number; type: string }, subIndex: number) => {
           const allocator = this.allocators[subGeom.type]
           const allocation = allocator.getAllocation(index)
-          this.drawElementOffsets[subGeom.type][allocation.start + subIndex] = offsetAndCount[0] + subGeom.start
+          this.drawElementOffsets[subGeom.type][allocation.start + subIndex] =
+            offsetAndCount[0] + subGeom.start * elementSize
           this.drawElementCounts[subGeom.type][allocation.start + subIndex] = subGeom.count
           this.drawIdsArrays[subGeom.type][allocation.start + subIndex] = glGeomItem.drawItemId
         })
@@ -309,7 +311,7 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
           const count = geomBuffers.counts[key]
           const allocator = this.allocators[key]
           const allocation = allocator.getAllocation(index)
-          this.drawElementOffsets[key][allocation.start] = offsetAndCount[0] + offset
+          this.drawElementOffsets[key][allocation.start] = offsetAndCount[0] + offset * elementSize
           this.drawElementCounts[key][allocation.start] = count
           this.drawIdsArrays[key][allocation.start] = glGeomItem.drawItemId
         }
@@ -562,16 +564,16 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
     }
 
     renderstate.bindViewports(unifs, () => {
-      // if (drawIdsArray['MESH']) {
-      //   bindTex('MESH')
-      //   this.multiDrawMeshes(
-      //     renderstate,
-      //     drawIdsArray['MESH'],
-      //     counts['MESH'],
-      //     offsets['MESH'],
-      //     allocators['MESH'].allocatedSpace
-      //   )
-      // }
+      if (drawIdsArray['MESH']) {
+        bindTex('MESH')
+        this.multiDrawMeshes(
+          renderstate,
+          drawIdsArray['MESH'],
+          counts['MESH'],
+          offsets['MESH'],
+          allocators['MESH'].allocatedSpace
+        )
+      }
       if (drawIdsArray['LINE']) {
         bindTex('LINE')
         this.multiDrawLines(
