@@ -13,23 +13,24 @@ import { GLGeomItem } from './GLGeomItem'
 abstract class GLGeomItemSetMultiDraw extends EventEmitter {
   protected renderer: GLBaseRenderer
   protected gl: WebGL12RenderingContext
-  protected glGeomItems: Array<GLGeomItem | null>
-  protected glGeomIdsMapping: Record<string, any>
-  protected glgeomItemEventHandlers: any[]
-  protected freeIndices: number[]
-  protected drawElementCounts: Int32Array
-  protected drawElementOffsets: Int32Array
-  protected highlightElementCounts: Int32Array
-  protected highlightElementOffsets: Int32Array
-  protected reserved: number
-  protected visibleItems: GLGeomItem[]
-  protected drawIdsArray: Float32Array
-  protected drawIdsBufferDirty: boolean
+  protected glGeomItems: Array<GLGeomItem | null> = []
+  protected glGeomIdsMapping: Record<string, any> = {}
+  protected visibleItems: GLGeomItem[] = []
+  protected glgeomItemEventHandlers: any[] = []
+  protected freeIndices: number[] = []
+
+  protected drawElementCounts: Int32Array = new Int32Array(0)
+  protected drawElementOffsets: Int32Array = new Int32Array(0)
+  protected highlightElementCounts: Int32Array = new Int32Array(0)
+  protected highlightElementOffsets: Int32Array = new Int32Array(0)
+  protected drawIdsArray: Float32Array = new Float32Array(0)
+  protected drawIdsBufferDirty: boolean = true
   protected drawIdsTexture: GLTexture2D | null = null
-  protected highlightedItems: GLGeomItem[]
-  protected highlightedIdsArray: any
+
+  protected highlightedItems: GLGeomItem[] = []
+  protected highlightedIdsArray?: null | Float32Array = null
   protected highlightedIdsTexture: GLTexture2D | null = null
-  protected highlightedIdsBufferDirty: boolean
+  protected highlightedIdsBufferDirty: boolean = true
 
   /**
    * Create a GL geom item set.
@@ -39,26 +40,6 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
     super()
     this.renderer = renderer
     this.gl = <WebGL12RenderingContext>renderer.gl
-    this.glGeomItems = []
-    this.glGeomIdsMapping = {}
-    this.glgeomItemEventHandlers = []
-    this.freeIndices = []
-
-    this.drawElementCounts = new Int32Array(0)
-    this.drawElementOffsets = new Int32Array(0)
-    this.highlightElementCounts = new Int32Array(0)
-    this.highlightElementOffsets = new Int32Array(0)
-
-    this.reserved = 0
-    this.visibleItems = []
-    this.drawIdsArray = new Float32Array(0)
-    this.drawIdsBufferDirty = true
-    this.drawIdsTexture = null
-
-    this.highlightedItems = []
-    this.highlightedIdsArray = null
-    this.highlightedIdsTexture = null
-    this.highlightedIdsBufferDirty = true
 
     this.renderer.glGeomLibrary.on('geomDataChanged', (event: any) => {
       const geomItemIndices = this.glGeomIdsMapping[event.index]
@@ -177,7 +158,7 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
       this.drawIdsBufferDirty = true
     }
     if (glGeomItem.geomItem.isHighlighted()) {
-      const highlightIndex = this.visibleItems.indexOf(glGeomItem)
+      const highlightIndex = this.highlightedItems.indexOf(glGeomItem)
       this.highlightedItems.splice(highlightIndex, 1)
       this.highlightedIdsBufferDirty = true
     }
