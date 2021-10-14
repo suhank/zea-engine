@@ -28,11 +28,11 @@ varying vec2 v_textureCoord;
 varying vec3 v_worldPos;
 
 void main(void) {
-  ivec3 drawItemIds = getDrawItemIds();
-  v_drawItemIds = vec3(drawItemIds);
-  v_geomItemData  = getInstanceData(drawItemIds.x);
+  v_drawItemIds = getDrawItemIds();
+  int drawItemId = int(v_drawItemIds.x);
+  v_geomItemData  = getInstanceData(drawItemId);
 
-  mat4 modelMatrix = getModelMatrix(drawItemIds.x);
+  mat4 modelMatrix = getModelMatrix(drawItemId);
   mat4 modelViewMatrix = viewMatrix * modelMatrix;
 
   vec4 pos = vec4(positions, 1.);

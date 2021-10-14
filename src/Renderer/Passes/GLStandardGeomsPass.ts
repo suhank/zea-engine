@@ -129,10 +129,12 @@ class GLStandardGeomsPass extends GLPass {
    */
   getGeomItemAndDist(geomData: Uint8Array): Record<string, any> | undefined {
     let itemId
+    let componentId = -1
     let dist
     const gl = this.__gl! // TODO: refactor to avoid casts?
     if (gl.floatGeomBuffer) {
       itemId = Math.round(geomData[1])
+      componentId = Math.round(geomData[2])
       dist = geomData[3]
     } else {
       itemId = geomData[0] + ((geomData[1] & 63) << 8)
@@ -143,6 +145,7 @@ class GLStandardGeomsPass extends GLPass {
     if (geomItem) {
       return {
         geomItem,
+        componentId,
         dist
       }
     }

@@ -22,6 +22,8 @@
 
       const renderer = new GLRenderer(domElement, { hideSplash: true, antialias: false, debugGeomIds: false })
       renderer.setScene(scene)
+      renderer.getViewport().debugGeomShader = true
+
       // scene.setupGrid(10.0, 10)
 
       const standardMaterial = new Material('surfaces', 'SimpleSurfaceShader')
@@ -56,8 +58,7 @@
 
       ///////////////////////////////////
 
-      compoundGeom.addSubGeomIndices('MESH', Uint32Array.from([4 + 0, 4 + 1, 4 + 2]))
-      compoundGeom.addSubGeomIndices('MESH', Uint32Array.from([4 + 0, 4 + 2, 4 + 3]))
+      compoundGeom.addSubGeomIndices('MESH', Uint32Array.from([4 + 0, 4 + 1, 4 + 2, 4 + 0, 4 + 2, 4 + 3]))
       positions.getValueRef(4 + 0).set(1 + 0.1, 1 + 0.9, 0)
       positions.getValueRef(4 + 1).set(1 + 0.1, 1 + 0.1, 0)
       positions.getValueRef(4 + 2).set(1 + 0.9, 1 + 0.1, 0)
