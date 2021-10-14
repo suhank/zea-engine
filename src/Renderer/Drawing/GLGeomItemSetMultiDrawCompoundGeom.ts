@@ -177,14 +177,12 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
     this.dirtyGeomItems.forEach(index => {
       const glGeomItem = this.glGeomItems[index]!
       if (glGeomItem.isVisible()) {
-        const index = this.visibleItems.indexOf(glGeomItem)
         const geomBuffers = this.renderer.glGeomLibrary.getGeomBuffers(glGeomItem.geomId)
         let drawCounts: Record<string, number> = {}
         if (geomBuffers.subGeoms.length > 0) {
           geomBuffers.subGeoms.forEach((subGeom: { start: number; count: number; type: string }) => {
-            const count = subGeom.count
             if (!drawCounts[subGeom.type]) drawCounts[subGeom.type] = 0
-            drawCounts[subGeom.type] += count
+            drawCounts[subGeom.type]++
           })
         } else {
           for (let key in geomBuffers.offsets) {
@@ -241,16 +239,21 @@ class GLGeomItemSetMultiDrawCompoundGeom extends EventEmitter {
           (subGeom: { start: number; count: number; type: string; materialId: number }, subIndex: number) => {
             const allocator = this.allocators[subGeom.type]
             const allocation = allocator.getAllocation(index)
-            this.drawElementOffsets[subGeom.type][allocation.start + subIndex] =
-              offsetAndCount[0] + subGeom.start * elementSize
-            this.drawElementCounts[subGeom.type][allocation.start + subIndex] = subGeom.count
 
             if (!counts[subGeom.type]) counts[subGeom.type] = 0
             const drawId = allocation.start + counts[subGeom.type]
-            this.drawIdsArrays[subGeom.type][drawId * 4 + 0] = glGeomItem.drawItemId
-            this.drawIdsArrays[subGeom.type][drawId * 4 + 1] = subIndex
-            this.drawIdsArrays[subGeom.type][drawId * 4 + 3] = subGeom.materialId ? subGeom.materialId : -1.0
-            this.drawIdsArrays[subGeom.type][drawId * 4 + 4] = 0.0 // spare
+
+            const drawIdsArray = this.drawIdsArrays[subGeom.type]
+            const drawElementOffsets = this.drawElementOffsets[subGeom.type]
+            const drawElementCounts = this.drawElementCounts[subGeom.type]
+
+            drawElementOffsets[drawId] = offsetAndCount[0] + subGeom.start * elementSize
+            drawElementCounts[drawId] = subGeom.count
+            drawIdsArray[drawId * 4 + 0] = glGeomItem.drawItemId
+            drawIdsArray[drawId * 4 + 1] = subIndex
+            drawIdsArray[drawId * 4 + 3] = subGeom.materialId ? subGeom.materialId : -1.0
+            drawIdsArray[drawId * 4 + 4] = 0.0 // spare
+
             counts[subGeom.type]++
           }
         )

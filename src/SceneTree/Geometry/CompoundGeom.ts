@@ -64,11 +64,17 @@ class CompoundGeom extends BaseGeom {
         newMergedIndices[prevLength + i] += offset
       }
     }
+
+    let offsetWithinUnifiedIndices = 0
+    for (let key in this.indices) {
+      if (key == type) break
+      offsetWithinUnifiedIndices += this.indices[key].length
+    }
     this.indices[type] = newMergedIndices
     const subGeomIndex = this.subGeoms.length
     this.subGeoms.push({
       type,
-      start: prevLength,
+      start: offsetWithinUnifiedIndices + prevLength,
       count: indices.length,
       metadata: {}
     })
