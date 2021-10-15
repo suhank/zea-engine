@@ -35,7 +35,7 @@ const getWorker = (geomLibraryId: any, fn: any) => {
     }
     workers[__workerId] = worker
   }
-  listeners[__workerId][geomLibraryId] = (data) => {
+  listeners[__workerId][geomLibraryId] = (data: any) => {
     // The callback should return true when the last data for this
     // geom library is loaded.
     const res = fn(data)
@@ -233,10 +233,10 @@ class GeomLibrary extends EventEmitter {
   /**
    * The readBinaryBuffer method.
    * @param {string} geomFileID - The key value.
-   * @param {Buffer} buffer - The buffer value.
+   * @param {ArrayBuffer} buffer - The buffer value.
    * @param {Record<any,any>} context - The context value.
    */
-  readBinaryBuffer(geomFileID: string, buffer: Buffer, context: Record<string, any>) {
+  readBinaryBuffer(geomFileID: string, buffer: ArrayBuffer, context: Record<string, any>) {
     const reader = new BinReader(buffer, 0, SystemDesc.isMobileDevice)
     const numGeoms = reader.loadUInt32()
 

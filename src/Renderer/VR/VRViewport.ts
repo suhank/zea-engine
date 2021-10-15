@@ -559,7 +559,7 @@ class VRViewport extends GLBaseViewport {
 
     // ///////////////////////
     // Prepare the pointerMove event.
-    const event = { controllers: this.controllers, viewXfo }
+    const event = { controllers: this.controllers, viewXfo, propagating: true }
     this.preparePointerEvent(event)
     this.updateControllers(xrFrame, event)
     if (this.capturedElement && event.propagating) {

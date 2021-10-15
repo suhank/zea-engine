@@ -66,8 +66,8 @@ class InstanceItem extends TreeItem {
           console.warn(`Error loading InstanceItem: ${this.getPath()}, unable to resolve: ${path}. ` + error.message)
         }
       )
-    } catch (error: Error) {
-      console.warn(`Error loading InstanceItem: ${this.getPath()}: ` + error.message)
+    } catch (error) {
+      console.warn(`Error loading InstanceItem: ${this.getPath()}: ` + error)
     }
   }
 

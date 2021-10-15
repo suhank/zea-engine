@@ -1,4 +1,4 @@
-import { MaterialColorParam, MaterialFloatParam, NumberParameter } from '..'
+import { MaterialColorParam } from '..'
 import { Color } from '../../Math/Color'
 import { Material } from '../Material'
 

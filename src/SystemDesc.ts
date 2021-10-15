@@ -105,7 +105,16 @@ function getGPUDesc() {
   try {
     webgl = document.createElement('canvas').getContext('webgl')
   } catch (e) {}
-  if (!webgl) return
+  if (!webgl) {
+    return {
+      vendor: 'Unknown',
+      renderer: 'Unknown',
+      gpuVendor: 'Unknown',
+      maxTextureSize: 'Unknown',
+      supportsWebGL: false,
+      supportsWebGL2: false
+    }
+  }
   let webgl2
   try {
     webgl2 = document.createElement('canvas').getContext('webgl2')
@@ -119,7 +128,8 @@ function getGPUDesc() {
       renderer: 'Unknown',
       gpuVendor: 'Unknown',
       maxTextureSize: 'Unknown',
-      supportsWebGL2: webgl2 != undefined,
+      supportsWebGL: webgl != undefined,
+      supportsWebGL2: webgl2 != undefined
     }
   }
 
@@ -171,7 +181,7 @@ const SystemDesc: SystemDescription = (function () {
   const gpuDesc = getGPUDesc()
 
   let deviceCategory = 'Low'
-  if (gpuDesc) {
+  if (gpuDesc.supportsWebGL) {
     // We divide devices into 3 categories.
     // 0: low end, we dial everything down as much as possible
     // 1: mid-range, Enb maps and Textures go to mid-lods.
@@ -280,7 +290,7 @@ const SystemDesc: SystemDescription = (function () {
     majorVersion: browserDesc.majorVersion,
     appName: browserDesc.appName,
     userAgent: browserDesc.userAgent,
-    webGLSupported: gpuDesc != undefined,
+    webGLSupported: gpuDesc.supportsWebGL,
     gpuDesc,
     deviceCategory,
     hardwareConcurrency,

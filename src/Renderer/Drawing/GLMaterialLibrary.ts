@@ -225,10 +225,10 @@ class GLMaterialLibrary extends EventEmitter {
    * @param {any} renderstate - The renderstate param.
    * @return {any} - The return value.
    */
-  bind(renderstate: any) {
+  bind(renderstate: any): boolean {
     if (this.dirtyIndices.size > 0) this.uploadMaterials(renderstate)
 
-    if (!this.materialsTexture) return
+    if (!this.materialsTexture) return false
 
     const { materialsTexture, materialsTextureSize } = renderstate.unifs
     if (materialsTexture) {

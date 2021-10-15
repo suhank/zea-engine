@@ -2,11 +2,8 @@ import { GLTexture2D } from './GLTexture2D'
 import { GLFbo } from './GLFbo'
 import { GLImageAtlas } from './GLImageAtlas'
 import { GLScreenQuad } from './GLScreenQuad'
-import { BaseImage } from '../SceneTree/BaseImage'
 
-// import './Shaders/GLSL/ImagePyramid'
-
-const Math_log2 = function (value: number) {
+const Math_log2 = function(value: number) {
   // IE11 doesn't support Math.log2.
   return Math.log2(value)
   // return Math.log( value ) / Math.log( 2 ) - 2;
@@ -84,7 +81,7 @@ class ImagePyramid extends GLImageAtlas {
         width: size * aspectRatio,
         height: size,
         filter: 'LINEAR',
-        wrap: 'CLAMP_TO_EDGE',
+        wrap: 'CLAMP_TO_EDGE'
       })
       this.addSubImage(level.glTex)
       this.__fbos.push(new GLFbo(gl, level))
@@ -98,7 +95,6 @@ class ImagePyramid extends GLImageAtlas {
    * @param {boolean} cleanup - The cleanup value.
    */
   renderAtlas(cleanup = true) {
-    const gl = this.__gl
     const renderstate: RenderState = <RenderState>{} // cast to allow empty initialization
     this.screenQuad.bindShader(renderstate)
 

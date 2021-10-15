@@ -86,7 +86,7 @@ class OperatorOutput extends EventEmitter {
    */
   setParam(param?: Parameter<unknown>, index = -1): void {
     if (this._param) {
-      this._param.unbindOperator(this)
+      this._param.unbindOperatorOutput(this)
     }
     this._param = param
     if (this._param) {
@@ -211,7 +211,7 @@ class OperatorOutput extends EventEmitter {
     // Once operators have persistent connections,
     // we will simply uninstall the output from the parameter.
     this.detached = true
-    this._paramBindIndex = this._param ? this._param.unbindOperator(this) : -1
+    this._paramBindIndex = this._param ? this._param.unbindOperatorOutput(this) : -1
   }
 
   /**
@@ -229,7 +229,7 @@ class OperatorOutput extends EventEmitter {
    */
   rebind(): void {
     if (this._param) {
-      this._param.unbindOperator(this)
+      this._param.unbindOperatorOutput(this)
       this._paramBindIndex = this._param.bindOperatorOutput(this)
     }
   }

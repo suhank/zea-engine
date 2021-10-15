@@ -1,6 +1,5 @@
 /* eslint-disable require-jsdoc */
 /* eslint-disable guard-for-in */
-import { Color } from '../Math/index'
 import { BaseItem } from './BaseItem'
 import { Registry } from '../Registry'
 

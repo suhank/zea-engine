@@ -104,7 +104,7 @@ class AssetLoadContext extends EventEmitter {
           if (onFail) {
             onFail()
           } else {
-            throw new Error(e.message)
+            throw e
           }
         }
       })
@@ -316,9 +316,9 @@ class AssetItem extends TreeItem {
             else onFail()
           } catch (e) {
             if (onFail) {
-              onFail(e)
+              onFail()
             } else {
-              throw new Error(e.message)
+              throw e
             }
           }
         })
