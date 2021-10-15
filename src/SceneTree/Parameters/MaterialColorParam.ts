@@ -98,8 +98,8 @@ class MaterialColorParam extends ColorParameter {
         disconnectImage()
       }
       this.image = value
-      this.listenerIDs['updated'] = this.image.on('updated', event => {
-        this.imageUpdated(event)
+      this.listenerIDs['updated'] = this.image.on('updated', (event: any) => {
+        this.imageUpdated()
       })
       this.emit('textureConnected')
       this.emit('valueChanged')

@@ -305,7 +305,7 @@ class ColorUniformBinding {
   protected unif: Uniform
   protected textureUnif: Uniform
   protected textureTypeUnif: any
-  protected vals: number[]
+  protected vals: Float32Array
   protected bind: any
   protected gltexture!: GLTexture2D
   protected textureType: any
@@ -335,7 +335,7 @@ class ColorUniformBinding {
     this.textureUnif = unifs[name + 'Tex']
     this.textureTypeUnif = unifs[name + 'TexType']
 
-    this.vals = [0, 0, 0, 0]
+    this.vals = Float32Array.from([0, 0, 0, 0])
     this.bind = this.bindValue
 
     const genGLTex = (image: any) => {

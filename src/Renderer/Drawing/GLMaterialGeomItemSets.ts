@@ -105,7 +105,7 @@ class GLMaterialGeomItemSets extends EventEmitter {
       .getGeom()
       .getId()
     this.glGeomItemSets[id] = glGeomItemSet
-    const listenerID = glGeomItemSet.on('drawCountChanged', (event) => {
+    const listenerID = glGeomItemSet.on('drawCountChanged', (event: any) => {
       this.drawCountChanged(event)
     })
     glGeomItemSet.once('destructing', () => {

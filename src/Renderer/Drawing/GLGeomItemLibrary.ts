@@ -243,12 +243,7 @@ class GLGeomItemLibrary extends EventEmitter {
     // GeomItem
     // Use recycled indices if there are any available...
     if (this.glGeomItemsIndexFreeList.length > 0) {
-      let index_check = this.glGeomItemsIndexFreeList.pop()
-      if (!index_check) {
-        console.warn('No glGeomItems in array')
-        return
-      }
-      index = index_check
+      index = this.glGeomItemsIndexFreeList.pop()!
     } else {
       index = this.glGeomItems.length
       this.glGeomItems.push(null)
@@ -306,7 +301,7 @@ class GLGeomItemLibrary extends EventEmitter {
   }
 
   /**
-   * Handles applyging the culling results recieved from the GLGeomItemLibraryCullingWorker
+   * Handles applying the culling results received from the GLGeomItemLibraryCullingWorker
    * @param {Record<any,any>} data - The object containing the newlyCulled and newlyUnCulled results.
    */
   applyCullResults(data: Record<string, any>) {
@@ -341,13 +336,13 @@ class GLGeomItemLibrary extends EventEmitter {
    * @param {any} geomItem - The geomItem value.
    * @return {any} - The return value.
    */
-  removeGeomItem(geomItem: any) {
+  removeGeomItem(geomItem: any): GLGeomItem | null {
     const index = this.glGeomItemsMap[geomItem.getId()]
 
     // This GeomItem may not yet have been added to the Renderer.
     // This may be because it is part of an asset that is still loading
     // and has not yet received its geometry.
-    if (index == undefined) return
+    if (index == undefined) return null
 
     const glGeomItem = this.glGeomItems[index]
 

@@ -6,7 +6,7 @@ import { MathFunctions } from '../Utilities/MathFunctions'
  * Reads binary data in a specific encoding. Used in loading binary data such as zcad files.
  */
 class BinReader {
-  protected __data: Buffer
+  protected __data: ArrayBuffer
   protected __byteOffset: number
   protected __dataView: DataView
   protected __isMobileDevice: boolean
@@ -18,7 +18,7 @@ class BinReader {
    * @param {number} byteOffset - The byte offset value to start reading the buffer.
    * @param {boolean} isMobileDevice - The isMobileDevice value.
    */
-  constructor(data: Buffer, byteOffset: number = 0, isMobileDevice: boolean = true) {
+  constructor(data: ArrayBuffer, byteOffset: number = 0, isMobileDevice: boolean = true) {
     this.__data = data
     this.__byteOffset = byteOffset
     this.__dataView = new DataView(this.__data)

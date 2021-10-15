@@ -1,5 +1,4 @@
-import { GLPass, PassType } from './GLPass'
-import { GLRenderer } from '../GLRenderer'
+import { GLPass } from './GLPass'
 
 import { GeomItem, TreeItem } from '../../SceneTree/index'
 import { GLBaseRenderer } from '../GLBaseRenderer'
@@ -8,8 +7,8 @@ import { AudioItem } from '../../SceneTree/AudioItem'
 const AudioContext =
   window.navigator &&
   (window.AudioContext || // Default
-    // @ts-ignore
-    window.webkitAudioContext || // Safari and old versions of Chrome
+  // @ts-ignore
+  window.webkitAudioContext || // Safari and old versions of Chrome
     false)
 
 let audioCtx: any
@@ -82,9 +81,9 @@ class GLAudioItemsPass extends GLPass {
           })
         }
       }
-      // Let other passes handle this item.
-      return false
     }
+    // Let other passes handle this item.
+    return false
   }
   /**
    * The itemRemovedFromScene method is called on each pass when aa item
@@ -107,10 +106,10 @@ class GLAudioItemsPass extends GLPass {
   addAudioSource(treeItem: TreeItem, audioSource: any, parameterOwner: any) {
     if (audioSource.addedToCollector) return
 
-    let source
-    if (audioSource instanceof HTMLMediaElement) source = audioCtx.createMediaElementSource(audioSource)
-    else if (audioSource instanceof AudioBufferSourceNode) source = audioSource
-    else source = audioCtx.createMediaStreamSource(audioSource)
+    // let source
+    // if (audioSource instanceof HTMLMediaElement) source = audioCtx.createMediaElementSource(audioSource)
+    // else if (audioSource instanceof AudioBufferSourceNode) source = audioSource
+    // else source = audioCtx.createMediaStreamSource(audioSource)
 
     const connectVLParamToAudioNodeParam = (vlParam: any, param: any) => {
       if (!vlParam) return
@@ -166,7 +165,11 @@ class GLAudioItemsPass extends GLPass {
 
         let mat4
         if (treeItem instanceof GeomItem) mat4 = treeItem.getGeomMat4()
-        else mat4 = treeItem.getParameter('GlobalXfo').getValue().toMat4()
+        else
+          mat4 = treeItem
+            .getParameter('GlobalXfo')
+            .getValue()
+            .toMat4()
         const tr = mat4.translation
         // if (panner.positionX) {
         //     // panner.positionX.setTargetAtTime(xfo.tr.x, audioCtx.currentTime);
@@ -195,7 +198,7 @@ class GLAudioItemsPass extends GLPass {
         // setVelocity()
       }
       updatePannerNodePosition()
-      treeItem.on('globalXfoChanged', (event) => {
+      treeItem.on('globalXfoChanged', event => {
         updatePannerNodePosition()
       })
     }
@@ -204,7 +207,7 @@ class GLAudioItemsPass extends GLPass {
     this.__audioItems.push({
       treeItem,
       audioSource,
-      parameterOwner,
+      parameterOwner
     })
 
     this.emit('updated')

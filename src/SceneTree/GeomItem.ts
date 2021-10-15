@@ -1,5 +1,5 @@
 import { Xfo, Box3, Vec3, Mat4 } from '../Math/index'
-import { XfoParameter, Mat4Parameter, Parameter } from './Parameters/index'
+import { XfoParameter, Mat4Parameter } from './Parameters/index'
 import { MaterialParameter } from './Parameters/MaterialParameter'
 import { GeometryParameter } from './Parameters/GeometryParameter'
 import { Registry } from '../Registry'

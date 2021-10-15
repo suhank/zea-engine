@@ -1,6 +1,5 @@
 /* eslint-disable require-jsdoc */
 /* eslint-disable guard-for-in */
-import { Color } from '../Math/index'
 import { BaseItem } from './BaseItem'
 import { Registry } from '../Registry'
 
@@ -151,11 +150,11 @@ class Material extends BaseItem {
       } else {
         const baseColorParam = <ColorParameter>this.getParameter('BaseColor')
         if (baseColorParam) {
-          if(baseColorParam instanceof MaterialColorParam){
+          if (baseColorParam instanceof MaterialColorParam) {
             const image = baseColorParam.getImage()
             if (image && image.format == 'RGBA') {
               isTransparent = true
-            } 
+            }
           }
           if (!isTransparent && baseColorParam.getValue()) {
             const color_val = baseColorParam.getValue()

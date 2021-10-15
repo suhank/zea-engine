@@ -31,7 +31,7 @@ const registeredPasses: Record<string, any> = {}
  * @extends ParameterOwner
  */
 class GLBaseRenderer extends ParameterOwner {
-  protected listenerIDs: Record<string, number> = {}
+  protected listenerIDs: Record<number, Record<string, number>> = {}
   protected directives: any // used in two ways -- requires refactor
   solidAngleLimit: number
   protected __div: any
@@ -398,10 +398,10 @@ class GLBaseRenderer extends ParameterOwner {
       if (childItem) this.addTreeItem(<TreeItem>childItem)
     }
 
-    listenerIDs['childAdded'] = treeItem.on('childAdded', (event) => {
+    listenerIDs['childAdded'] = treeItem.on('childAdded', event => {
       this.addTreeItem(event.childItem)
     })
-    listenerIDs['childRemoved'] = treeItem.on('childRemoved', (event) => {
+    listenerIDs['childRemoved'] = treeItem.on('childRemoved', event => {
       this.removeTreeItem(event.childItem)
     })
 
@@ -630,7 +630,7 @@ class GLBaseRenderer extends ParameterOwner {
     let lastResize = performance.now()
     let timoutId = 0
     // @ts-ignore: semantic error TS2304:
-    this.resizeObserver = new ResizeObserver((entries) => {
+    this.resizeObserver = new ResizeObserver(entries => {
       for (const entry of entries) {
         if (!entry.contentRect) {
           return
@@ -653,6 +653,7 @@ class GLBaseRenderer extends ParameterOwner {
           // If a resize happens in the meantime that succeeds, then skip this one.
           // This ensures that after a drag to resize, the final resize event
           // should always eventually apply.
+          // @ts-ignore
           timoutId = setTimeout(() => {
             const now = performance.now()
             if (now - lastResize > 100) {
@@ -751,7 +752,6 @@ class GLBaseRenderer extends ParameterOwner {
         console.warn('Mobile Safari is triggering mouse event:', event.type)
         return true
       }
-
       return false
     }
 
@@ -772,7 +772,6 @@ class GLBaseRenderer extends ParameterOwner {
       }
 
       pointerLeft = false
-      return false
     })
 
     document.addEventListener('mouseup', (event: Record<string, any>) => {
@@ -798,8 +797,6 @@ class GLBaseRenderer extends ParameterOwner {
         }
         activeGLRenderer = undefined
       }
-
-      return false
     })
 
     document.addEventListener('mousemove', (event: Record<string, any>) => {
@@ -818,7 +815,6 @@ class GLBaseRenderer extends ParameterOwner {
         event.pointerType = POINTER_TYPES.mouse
         viewport.onPointerMove(event)
       }
-      return false
     })
 
     this.__glcanvas!.addEventListener('mouseenter', (event: Record<string, any>) => {
@@ -941,14 +937,11 @@ class GLBaseRenderer extends ParameterOwner {
           vp.onWheel(event)
         }
       }
-      return false
     }
     /** DOMMouseScroll is for mozilla. */
     window.addEventListener('wheel', onWheel, { passive: false })
 
-    window.oncontextmenu = function() {
-      return false
-    }
+    window.oncontextmenu = function() {}
 
     document.addEventListener('keydown', (event: any) => {
       if (activeGLRenderer != this || !isValidCanvas()) return
@@ -1025,7 +1018,7 @@ class GLBaseRenderer extends ParameterOwner {
     }
     index += this.__passes[passType].length
 
-    pass.on('updated', (event) => {
+    pass.on('updated', event => {
       this.requestRedraw()
     })
     pass.init(this, index)
