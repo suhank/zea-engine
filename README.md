@@ -11,18 +11,16 @@ A 3D JavaScript library for innovative manufacturers and industry 4.0 supporters
 
 ## *Power*
 Designed with the highest requirements in mind, giving developers a suite of tools to address the toughest challenges in modern professional graphics app development.  
-Zea Engine pushes the limits of what a developer can achieve in the browser by focusing on power and performance.
+Zea Engine pushes the limits of what a developer can achieve in the browser by focusing on power and performance. Read more in our [CAD visualization on the web | 2021 benchmark report](https://blog.zea.live/en/blog/cad-visualization-on-the-web-2021-benchmark-report).
 
 ## *Versatility*
-No single solution can solve all problems out of the box. Therefore, the Zea Engine uses a modular architecture that enables developers to integrate new functionalities. Zea keeps the essential features in the core while allowing powerful extensions to be built, either by Zea, to expand the engine's scope, or by third parties who wish to develop specific solutions.
+No single solution can solve all problems out of the box. That's why Zea Engine uses a modular architecture that enables developers to integrate new functionalities. All the essential features are in the engine. Anyone can build powerful extensions to expand the engine's capabilities to handle unique use-cases, like [this one from nTopology](https://ntopology.com/blog/2021/05/25/codereps-a-better-way-to-communicate/).
 
 ## *Reach*
 Applications that leverage the web browser are already available on all modern devices. These web applications provide a friction-free and straightforward way to deliver content without requiring users to install a player. Zea Engine is designed for the web and enables new categories of high performance and versatile web applications.
 
 # Documentation
 Full documentation with concepts, tutorials, live examples, API documentation and more; can be found at the zea engine docs site: [https://docs.zea.live/zea-engine/](https://docs.zea.live/zea-engine/)
-
-These docs allow developers to get started with the Zea Engine by downloading free and open-source demo content and using Zea's publicly distributed client-side libraries.
 
 # Add it to your project
 The process to add Zea Engine to your projects is very straight forward. 
@@ -64,11 +62,9 @@ Yes we would like to do that eventually, but there are a few issues holding us b
 
 We hope that these issues are resolved over time. If you have any suggestions on alternative methods to what we have presented, please feel free to reach out and let us know your thoughts.
 
-# Licensing
-The Zea Engine is distributed via NPM under the AGPLv3 license which gives developers the rights to evaluate the Zea Engine and build non-commercial applications. By downloading the Zea Engine, your agree to be bound by the terms and conditions of the AGPLv3 license, or the commercial license available on the Zea Website: [_zea.live_](https://www.zea.live/pricing)  
-To evaluate the engine with your proprietary content, you will need to access our server-side libraries and a restricted non-commercial evaluation license.
-
-To build a commercial application, you need a commercial licensing agreement.
+# Licensing Conflict?
+Please support our project by purchasing a [commercial license](https://www.zea.live/en/commercial-eula?hsLang=en) [here](https://www.zea.live/pricing/engine).
+You can also [contact us](https://www.zea.live/contact-us) for a custom and permissive license.
 
 
 [npm]: https://badge.fury.io/js/%40zeainc%2Fzea-engine.svg

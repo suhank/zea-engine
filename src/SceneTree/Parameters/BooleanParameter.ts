@@ -74,5 +74,6 @@ class BooleanParameter extends Parameter<boolean> implements IBinaryReader {
 }
 
 Registry.register('BooleanParameter', BooleanParameter)
+Registry.register('Property_Boolean', BooleanParameter)
 
 export { BooleanParameter }

@@ -177,7 +177,7 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
       this.drawIdsBufferDirty = true
     }
     if (glGeomItem.geomItem.isHighlighted()) {
-      const highlightIndex = this.visibleItems.indexOf(glGeomItem)
+      const highlightIndex = this.highlightedItems.indexOf(glGeomItem)
       this.highlightedItems.splice(highlightIndex, 1)
       this.highlightedIdsBufferDirty = true
     }
@@ -227,7 +227,7 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
         height: drawIdsTextureSize,
         filter: 'NEAREST',
         wrap: 'CLAMP_TO_EDGE',
-        mipMapped: false
+        mipMapped: false,
       })
     } else if (this.drawIdsTexture.width < drawIdsTextureSize || this.drawIdsTexture.height < drawIdsTextureSize) {
       this.drawIdsTexture.resize(drawIdsTextureSize, drawIdsTextureSize)
@@ -318,7 +318,7 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
         height: highlightIdsTextureSize,
         filter: 'NEAREST',
         wrap: 'CLAMP_TO_EDGE',
-        mipMapped: false
+        mipMapped: false,
       })
     } else if (
       this.highlightedIdsTexture.width < highlightIdsTextureSize ||

@@ -11,7 +11,7 @@ import { GLBaseRenderer } from '../GLBaseRenderer'
  * @private
  */
 class GLTransparentGeomsPass extends GLStandardGeomsPass {
-  protected listenerIDs: Record<string, number> = {}
+  protected listenerIDs: Record<number, Record<string, number>> = {}
   protected itemCount: number = 0
   protected __glShaderGeomSets: Record<string, any> = {} // GLShaderGeomSets
   protected transparentItems: any[] = []
@@ -27,8 +27,6 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
    */
   constructor() {
     super()
-
-    this.listenerIDs = {}
   }
 
   /**
@@ -85,6 +83,9 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
   addGeomItem(geomItem: GeomItem) {
     this.itemCount++
 
+    const listenerIDs:Record<string, number> = {}
+    this.listenerIDs[geomItem.getId()] = listenerIDs
+
     const materialParam = geomItem.getParameter('Material')!
     const material = materialParam.getValue()
     const shaderName = material.getShaderName()
@@ -103,7 +104,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
         const glGeomItem = <Record<string, any>>this.renderer!.glGeomItemLibrary.getGLGeomItem(geomItem)
         glShaderGeomSets.addGLGeomItem(glGeomItem)
 
-        this.listenerIDs['visibilityChanged'] = glGeomItem.on('visibilityChanged', (event) => {
+        listenerIDs['glGeomItem.visibilityChanged'] = glGeomItem.on('visibilityChanged', () => {
           this.resortNeeded()
         })
         this.emit('updated')
@@ -120,6 +121,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
 
     // const glGeomItem = this.constructGLGeomItem(geomItem)
     const glGeomItem = this.renderer!.glGeomItemLibrary.getGLGeomItem(geomItem)
+    if (!glGeomItem) throw new Error("glGeomItem not found for geomItem:" + geomItem.getName())
 
     // @todo - make sure we remove materials and GeomItems from the base pass.
     // This code will leak memory for these classes as we are not cleaning them up.
@@ -131,15 +133,15 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
     // select a different pass. e.g. if the new material is not transparent
     // then the object moves to the OpaqueGeomsPass
     const materialChanged = () => {
-      material.off('valueChanged', materialChanged)
-      material.off('transparencyChanged', materialChanged)
-      materialParam.off('valueChanged', materialChanged)
+      material.removeListenerById('valueChanged', listenerIDs['material.valueChanged'])
+      material.removeListenerById('transparencyChanged', listenerIDs['material.transparencyChanged'])
+      materialParam.removeListenerById('valueChanged', listenerIDs['materialParam.valueChanged'])
       this.removeGeomItem(geomItem)
       this.renderer!.assignTreeItemToGLPass(geomItem)
     }
-    material.on('valueChanged', materialChanged)
-    material.on('transparencyChanged', materialChanged)
-    materialParam.on('valueChanged', materialChanged)
+    listenerIDs['material.valueChanged'] = material.on('valueChanged', materialChanged)
+    listenerIDs['material.transparencyChanged'] = material.on('transparencyChanged', materialChanged)
+    listenerIDs['materialParam.valueChanged'] = materialParam.on('valueChanged', materialChanged)
 
     // ////////////////////////////////////
     // Tracking visibility changes.
@@ -152,14 +154,15 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
       }
       this.reSort = true
     }
-    glGeomItem?.on('visibilityChanged', visibilityChanged)
+    listenerIDs['glGeomItem.visibilityChanged'] = glGeomItem.on('visibilityChanged', visibilityChanged)
 
     // ////////////////////////////////////
     // Tracking GeomMat changes.
+    const geomMatParam = geomItem.getParameter('GeomMat')!
     const geomMatChanged = () => {
       this.reSort = true
     }
-    geomItem.getParameter('GeomMat')!.on('valueChanged', geomMatChanged)
+    listenerIDs['GeomMat.valueChanged'] = geomMatParam.on('valueChanged', geomMatChanged)
 
     const item = {
       geomItem,
@@ -168,9 +171,6 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
       glMaterial,
       glGeomItem,
       material,
-      materialChanged,
-      visibilityChanged,
-      geomMatChanged
     }
     let itemindex
     if (this.freeList.length > 0) itemindex = this.freeList.pop()
@@ -193,11 +193,19 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
   removeGeomItem(geomItem: GeomItem): boolean {
     this.itemCount--
 
-    const glGeomItem = <Record<string, any>>this.renderer!.glGeomItemLibrary.getGLGeomItem(geomItem)
+    const glGeomItem = this.renderer!.glGeomItemLibrary.getGLGeomItem(geomItem)
+    if (!glGeomItem) throw new Error("glGeomItem not found for geomItem:" + geomItem.getName())
+
+    const listenerIDs = this.listenerIDs[geomItem.getId()]
+    delete this.listenerIDs[geomItem.getId()]
+
+    const materialParam = geomItem.getParameter('Material')!
+    const material = materialParam.getValue()!
+    glGeomItem.removeListenerById('visibilityChanged', listenerIDs['glGeomItem.visibilityChanged'])
+
     if (glGeomItem.GLShaderGeomSets) {
-      const glShaderGeomSets = glGeomItem.GLShaderGeomSets
+      const glShaderGeomSets = <GLShaderGeomSets>glGeomItem.GLShaderGeomSets
       glShaderGeomSets.removeGLGeomItem(glGeomItem)
-      glGeomItem.removeListenerById('visibilityChanged', this.listenerIDs['visibilityChanged'])
       glGeomItem.GLShaderGeomSets = null
       return true // TODO: is returning true here correct?
     }
@@ -206,8 +214,10 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
       const item = this.transparentItems[itemindex]
       delete this.transparentItemIndices[geomItem.getId()]
 
-      glGeomItem.off('visibilityChanged', item.visibilityChanged)
-      geomItem.getParameter('GeomMat')!.off('valueChanged', item.geomMatChanged)
+      material.removeListenerById('valueChanged', listenerIDs['material.valueChanged'])
+      material.removeListenerById('transparencyChanged', listenerIDs['material.transparencyChanged'])
+      materialParam.removeListenerById('valueChanged', listenerIDs['materialParam.valueChanged'])
+      geomItem.getParameter('GeomMat')!.removeListenerById('valueChanged', listenerIDs['GeomMat.valueChanged'])
 
       this.transparentItems[itemindex] = null
       this.freeList.push(itemindex)
@@ -294,7 +304,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
         // Note: No 'unbind' here before binding the next shader.
         // That is to support a simple hack. LinesShader enables blend
         // each time it is bound, and then disables on unbind.
-        if (!glShader.bind(renderstate)) {
+        if (!glShader.bind(renderstate, 'color')) {
           continue
         }
 
@@ -417,11 +427,24 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
       const shaders = transparentItem.shaders
       if (cache.currentglShader != shaders.glselectedshader) {
         // Some passes, like the depth pass, bind custom uniforms.
-        if (!shaders.glselectedshader.bind(renderstate)) {
+        if (!shaders.glselectedshader.bind(renderstate, 'highlight')) {
           continue
         }
         cache.currentglShader = shaders.glselectedshader
       }
+
+      const { floatGeomBuffer, passId, instancedDraw } = renderstate.unifs
+      if (floatGeomBuffer) {
+        gl.uniform1i(floatGeomBuffer.location, gl.floatGeomBuffer ? 1 : 0)
+      }
+      if (passId) {
+        gl.uniform1i(passId.location, this.passIndex)
+      }
+      if (instancedDraw) {
+        gl.uniform1i(instancedDraw.location, 0)
+      }
+
+      this.renderer!.glGeomItemLibrary.bind(renderstate)
 
       this._drawItem(renderstate, transparentItem, cache)
     }
@@ -460,24 +483,24 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
       }
       if (cache.currentglShader != shaders.glgeomdatashader) {
         // Some passes, like the depth pass, bind custom uniforms.
-        if (!shaders.glgeomdatashader.bind(renderstate)) {
+        if (!shaders.glgeomdatashader.bind(renderstate, 'geomdata')) {
           continue
         }
         cache.currentglShader = shaders.glgeomdatashader
       }
 
-      {
-        const unif = renderstate.unifs.floatGeomBuffer
-        if (unif) {
-          gl.uniform1i(unif.location, gl.floatGeomBuffer ? 1 : 0)
-        }
+      const { floatGeomBuffer, passId, instancedDraw } = renderstate.unifs
+      if (floatGeomBuffer) {
+        gl.uniform1i(floatGeomBuffer.location, gl.floatGeomBuffer ? 1 : 0)
       }
-      {
-        const unif = renderstate.unifs.passId
-        if (unif) {
-          gl.uniform1i(unif.location, this.passIndex)
-        }
+      if (passId) {
+        gl.uniform1i(passId.location, this.passIndex)
       }
+      if (instancedDraw) {
+        gl.uniform1i(instancedDraw.location, 0)
+      }
+
+      this.renderer!.glGeomItemLibrary.bind(renderstate)
 
       this._drawItem(renderstate, transparentItem, cache)
     }

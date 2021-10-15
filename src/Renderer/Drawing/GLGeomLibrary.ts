@@ -141,7 +141,9 @@ class GLGeomLibrary extends EventEmitter {
       this.geomRefCounts[index]++
       return index
     }
-    if (this.freeGeomIndices.length == 0) {
+    if (this.freeGeomIndices.length) {
+      index = this.freeGeomIndices.pop()!
+    } else {
       const prevSize = this.geomVertexCounts.length
       const newSize = prevSize * 2
       this.geomVertexCounts = resizeIntArray(this.geomVertexCounts, newSize)

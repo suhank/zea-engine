@@ -27,19 +27,9 @@ class InstanceItem extends TreeItem {
    */
   setSrcTree(treeItem: TreeItem, context: Record<string, any>) {
     this.__srcTree = treeItem
-
-    const numChildren = this.__srcTree.getNumChildren()
-    if (numChildren == 0) {
-      const clonedTree = this.__srcTree.clone(context)
-      clonedTree.getParameter('LocalXfo')!.loadValue(new Xfo())
-      this.addChild(clonedTree, false)
-    } else {
-      const children = this.__srcTree.getChildren()
-      children.forEach((child: any) => {
-        const clonedChild = child.clone(context)
-        this.addChild(clonedChild, false)
-      })
-    }
+    const clonedTree = this.__srcTree.clone(context)
+    clonedTree.getParameter('LocalXfo')!.setValue(new Xfo())
+    this.addChild(clonedTree, false)
   }
 
   /**
@@ -67,11 +57,17 @@ class InstanceItem extends TreeItem {
     const path = reader.loadStrArray()
     // console.log("InstanceItem of:", path)
     try {
-      context.resolvePath(path, (treeItem: TreeItem) => {
-        this.setSrcTree(treeItem, context)
-      })
-    } catch (e) {
-      console.warn(`Error loading InstanceItem: ${this.getPath()}: ` + e.message)
+      context.resolvePath(
+        path,
+        (treeItem: TreeItem) => {
+          this.setSrcTree(treeItem, context)
+        },
+        (error: Error) => {
+          console.warn(`Error loading InstanceItem: ${this.getPath()}, unable to resolve: ${path}. ` + error.message)
+        }
+      )
+    } catch (error: Error) {
+      console.warn(`Error loading InstanceItem: ${this.getPath()}: ` + error.message)
     }
   }
 

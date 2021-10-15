@@ -2,7 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-## [3.11.0](https://github.com/ZeaInc/zea-engine/compare/v3.10.7-orthographic-framing.2...v3.11.0) (2021-09-15)
+## [3.11.1](https://github.com/ZeaInc/zea-engine/compare/v3.11.0...v3.11.1) (2021-09-22)
+
+### Bug Fixes
+
+* InstanceItem no longer clones the children of the source tree item. This means that CADPart or CADAssembly should always be found under an InstanceItem, where before you might find a CADBody or a GeomItem. 
+* To keep compatibility with version < 3.11.0, the plugins.umd.js script has been re-added to the build with a deprecation warning. This allows code to load the plugins file and generate a warning instead of an error.
+
+
+## [3.11.0](https://github.com/ZeaInc/zea-engine/compare/v3.10.6...v3.11.0) (2021-09-15)
 
 ### Notes:
 

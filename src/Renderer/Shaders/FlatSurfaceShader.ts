@@ -23,6 +23,37 @@ class FlatSurfaceShader extends GLShader {
   }
 
   /**
+   * The bind method.
+   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {string} key - The key value.
+   * @return {boolean} - The return value.
+   */
+  bind(renderstate: RenderState, key?: string) {
+    super.bind(renderstate, key)
+
+    // Note: The GLTransparentGeoms pass only  renders the font faces of objects because for complex geoms, this makes sense
+    // but flat surfaces should be double sided, as they are almost always labels, or UI elements.
+    const gl = this.__gl!
+    gl.disable(gl.CULL_FACE)
+
+    return true
+  }
+
+  /**
+   * The unbind method.
+   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @return {any} - The return value.
+   */
+  unbind(renderstate: RenderState) {
+    super.unbind(renderstate)
+
+    const gl = this.__gl!
+    gl.enable(gl.CULL_FACE)
+
+    return true
+  }
+
+  /**
    * The getPackedMaterialData method.
    * @param {Material} material - The material param.
    * @return {Float32Array} - The return value.

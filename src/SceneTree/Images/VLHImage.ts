@@ -72,30 +72,33 @@ class VLHImage extends BaseImage {
    * @param {Record<string, any>} entries - The entries value.
    * @private
    */
-  __decodeData(entries: Record<string, any>): void {
-    const ldr = entries.ldr
-    const cdm = entries.cdm
-
-    // ///////////////////////////////
-    // Parse the data.
-    const blob = new Blob([ldr.buffer])
-    const ldrPic = new Image()
-    ldrPic.onload = () => {
-      this.width = ldrPic.width
-      this.height = ldrPic.height
-      // console.log(resourcePath + ": [" + this.width + ", " + this.height + "]");
-      this.__data = {
-        ldr: ldrPic,
-        cdm: cdm
+  __decodeData(entries: Record<string, any>): Promise<void>{
+    return new Promise((resolve, reject) => {
+      const ldr = entries.ldr
+      const cdm = entries.cdm
+  
+      // ///////////////////////////////
+      // Parse the data.
+      const blob = new Blob([ldr.buffer])
+      const ldrPic = new Image()
+      ldrPic.onload = () => {
+        this.width = ldrPic.width
+        this.height = ldrPic.height
+        // console.log(resourcePath + ": [" + this.width + ", " + this.height + "]");
+        this.__data = {
+          ldr: ldrPic,
+          cdm: cdm,
+        }
+        if (!this.__loaded) {
+          this.__loaded = true
+          this.emit('loaded', {})
+        } else {
+          this.emit('updated', {})
+        }
+        resolve()
       }
-      if (!this.__loaded) {
-        this.__loaded = true
-        this.emit('loaded', {})
-      } else {
-        this.emit('updated', {})
-      }
-    }
-    ldrPic.src = URL.createObjectURL(blob)
+      ldrPic.src = URL.createObjectURL(blob)
+    })
   }
 
   /**
@@ -125,8 +128,9 @@ class VLHImage extends BaseImage {
               }
             }
           }
-          this.__decodeData(entries)
-          resolve()
+          this.__decodeData(entries).then(() => {
+            resolve()
+          })
         },
         (error: any) => {
           this.emit('error', error)

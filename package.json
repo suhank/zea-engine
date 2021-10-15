@@ -2,12 +2,13 @@
   "name": "@zeainc/zea-engine",
   "fileName": "index",
   "libraryName": "ZeaEngine",
-  "version": "3.11.0",
+  "version": "3.11.1",
   "license": "AGPL-3.0",
   "description": "Zea Engine",
   "author": "Zea Inc.",
   "module": "dist/zea-engine.esm.js",
-  "main": "dist/index.js",
+  "main": "index.d.ts",
+  "browser": "dist/index.umd.production.min.js",
   "typings": "dist/index.d.ts",
   "files": [
     "dist/"

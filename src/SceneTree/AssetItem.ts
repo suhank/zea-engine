@@ -316,7 +316,7 @@ class AssetItem extends TreeItem {
             else onFail()
           } catch (e) {
             if (onFail) {
-              onFail()
+              onFail(e)
             } else {
               throw new Error(e.message)
             }

@@ -374,6 +374,10 @@ class GLBaseRenderer extends ParameterOwner {
     // Note: we can have BaseItems in the tree now.
     if (!(treeItem instanceof TreeItem)) return
 
+    const id = treeItem.getId()
+    const listenerIDs = {}
+    this.listenerIDs[id] = listenerIDs
+
     if (treeItem instanceof GeomItem) {
       const geomParam = treeItem.getParameter('Geometry')!
       if (geomParam.getValue() == undefined) {
@@ -381,7 +385,7 @@ class GLBaseRenderer extends ParameterOwner {
         const geomAssigned = () => {
           this.assignTreeItemToGLPass(treeItem)
         }
-        geomParam.once('valueChanged', geomAssigned)
+        listenerIDs['Geometry.valueChanged'] = geomParam.once('valueChanged', geomAssigned)
       } else {
         this.assignTreeItemToGLPass(treeItem)
       }
@@ -394,11 +398,10 @@ class GLBaseRenderer extends ParameterOwner {
       if (childItem) this.addTreeItem(<TreeItem>childItem)
     }
 
-    const id = treeItem.getId()
-    this.listenerIDs[id + '.childAdded'] = treeItem.on('childAdded', (event) => {
+    listenerIDs['childAdded'] = treeItem.on('childAdded', (event) => {
       this.addTreeItem(event.childItem)
     })
-    this.listenerIDs[id + '.childRemoved'] = treeItem.on('childRemoved', (event) => {
+    listenerIDs['childRemoved'] = treeItem.on('childRemoved', (event) => {
       this.removeTreeItem(event.childItem)
     })
 
@@ -454,8 +457,11 @@ class GLBaseRenderer extends ParameterOwner {
     if (!(treeItem instanceof TreeItem)) return
 
     const id = treeItem.getId()
-    treeItem.removeListenerById('childAdded', this.listenerIDs[id + '.childAdded'])
-    treeItem.removeListenerById('childRemoved', this.listenerIDs[id + '.childRemoved'])
+    const listenerIDs = this.listenerIDs[id]
+    delete this.listenerIDs[id]
+
+    treeItem.removeListenerById('childAdded', listenerIDs['childAdded'])
+    treeItem.removeListenerById('childRemoved', listenerIDs['childRemoved'])
 
     for (let i = this.__passesRegistrationOrder.length - 1; i >= 0; i--) {
       const pass = this.__passesRegistrationOrder[i]
@@ -488,6 +494,11 @@ class GLBaseRenderer extends ParameterOwner {
 
     if (treeItem instanceof GeomItem) {
       const geomItem = treeItem
+      if (listenerIDs['Geometry.valueChanged']) {
+        const geomParam = treeItem.getParameter('Geometry')
+        geomParam.removeListenerById('valueChanged', listenerIDs['Geometry.valueChanged'])
+      }
+
       this.glGeomItemLibrary.removeGeomItem(geomItem)
     }
 
@@ -616,14 +627,40 @@ class GLBaseRenderer extends ParameterOwner {
       this.__glcanvas!.style.position = webglOptions.canvasPosition ? webglOptions.canvasPosition : 'absolute'
     }
 
+    let lastResize = performance.now()
+    let timoutId = 0
     // @ts-ignore: semantic error TS2304:
-    this.resizeObserver = new ResizeObserver(entries => {
+    this.resizeObserver = new ResizeObserver((entries) => {
       for (const entry of entries) {
         if (!entry.contentRect) {
           return
         }
 
-        this.handleResize(entry.contentRect.width, entry.contentRect.height)
+        // Note: Rapid resize events would cause WebGL to render black.
+        // There appeared nothing to indicate why we get black, but throttling
+        // the resizing of our canvas and buffers seems to work.
+        const now = performance.now()
+        if (now - lastResize > 100) {
+          lastResize = now
+          // If a delayed resize is scheduled, cancel it.
+          if (timoutId) {
+            clearTimeout(timoutId)
+            timoutId = 0
+          }
+          this.handleResize(entry.contentRect.width, entry.contentRect.height)
+        } else {
+          // Set a timer to see if we can delay this resize by a few ms.
+          // If a resize happens in the meantime that succeeds, then skip this one.
+          // This ensures that after a drag to resize, the final resize event
+          // should always eventually apply.
+          timoutId = setTimeout(() => {
+            const now = performance.now()
+            if (now - lastResize > 100) {
+              lastResize = now
+              this.handleResize(entry.contentRect.width, entry.contentRect.height)
+            }
+          }, 100)
+        }
       }
     })
     const parentElement = this.__glcanvas!.parentElement!

@@ -77,4 +77,15 @@ export default [
     ],
     plugins,
   },
+
+  // Building trivial deprecation script for compatibility.
+  {
+    input: 'src/index-plugins.js',
+    output: {
+      name: 'zeaEnginePlugins',
+      file: 'dist/plugins.umd.js',
+      format: 'umd',
+    },
+    plugins,
+  },
 ]

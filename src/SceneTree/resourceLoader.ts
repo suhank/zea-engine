@@ -2,7 +2,6 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable guard-for-in */
 import { EventEmitter } from '../Utilities/index'
-import { zeaDebug } from '../helpers/zeaDebug'
 import { TreeItem } from './TreeItem'
 
 /**

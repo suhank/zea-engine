@@ -27,6 +27,8 @@ class GLGeomItem extends EventEmitter {
   GLGeomItemSet: any
   geomItemParamChanged: any
 
+  GLShaderGeomSets?: any = null
+
   protected gl: WebGL12RenderingContext
   geomItem: GeomItem
   drawItemId: number

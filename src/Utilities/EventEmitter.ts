@@ -37,7 +37,7 @@ class EventEmitter extends BaseClass {
    *
    * @param {string} eventName - The name of the event.
    * @param {(event: BaseEvent) => void } listener - The listener function(callback).
-   * @return {number} - Id to reference the listener.
+   * @return {number} - the id that can be used to remove the listener.
    */
   on(eventName: string, listener?: (event: BaseEvent | any) => void): number {
     if (!listener) {
@@ -75,14 +75,15 @@ class EventEmitter extends BaseClass {
    *
    * @param {string} eventName - The eventName value
    * @param {(event: BaseEvent) => void} listener - The listener value
+   * @return {number} - the id that can be used to remove the listener.
    */
-  once(eventName: string, listener: (event: BaseEvent) => void): void {
+  once(eventName: string, listener: (event: BaseEvent) => void): number {
     const cb = (event: any) => {
       listener(event)
       this.off(eventName, cb)
     }
 
-    this.on(eventName, cb)
+    return this.on(eventName, cb)
   }
 
   /**
@@ -127,7 +128,7 @@ class EventEmitter extends BaseClass {
    *
    * @param {string} eventName - The name of the event.
    * @param {(event: BaseEvent) => void} listener - The listener function(callback).
-   * @return {number} - Id to reference the listener.
+   * @return {number} - the id that can be used to remove the listener.
    */
   addListener(eventName: string, listener: (event: BaseEvent) => void): number {
     console.warn('Deprecated. Use #on instead.')

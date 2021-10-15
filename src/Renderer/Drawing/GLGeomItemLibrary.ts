@@ -343,6 +343,12 @@ class GLGeomItemLibrary extends EventEmitter {
    */
   removeGeomItem(geomItem: any) {
     const index = this.glGeomItemsMap[geomItem.getId()]
+
+    // This GeomItem may not yet have been added to the Renderer.
+    // This may be because it is part of an asset that is still loading
+    // and has not yet received its geometry.
+    if (index == undefined) return
+
     const glGeomItem = this.glGeomItems[index]
 
     const geom = geomItem.getParameter('Geometry')!.getValue()

@@ -4,13 +4,12 @@
 ![logo](_media/logo-zea.svg)
 
 # Zea Engine
+
 [![NPM Package][npm]][npm-url]
 [![Build Size][build-size]][build-size-url]
 [![NPM Downloads][npm-downloads]][npmtrends-url]
 
-
 > We make 3D technical communication fast, easy, and open.
-
 
 <ul style="display:inline-block">
 
@@ -38,7 +37,7 @@ Open
 </li>
 </ul>
 
-[Get Started](README.md)
+[Get Started](manual/overview.md)
 
 <!-- background color -->
 
