@@ -29,6 +29,8 @@ class FlatSurfaceShader extends GLShader {
   bind(renderstate, key) {
     super.bind(renderstate, key)
 
+    // Note: The GLTransparentGeoms pass only  renders the font faces of objects because for complex geoms, this makes sense
+    // but flat surfaces should be double sided, as they are almost always labels, or UI elements.
     const gl = this.__gl
     gl.disable(gl.CULL_FACE)
 
@@ -42,6 +44,9 @@ class FlatSurfaceShader extends GLShader {
    */
   unbind(renderstate) {
     super.unbind(renderstate)
+
+    const gl = this.__gl
+    gl.enable(gl.CULL_FACE)
 
     return true
   }
