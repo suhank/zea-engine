@@ -41,30 +41,32 @@ void main(void) {
   vec4 fragColor;
 #endif
 
+  //////////////////////////////////////////////
+  // Material
+#ifdef ENABLE_MULTI_DRAW
+
+  vec2 materialCoords = v_geomItemData.zw;
+  vec4 baseColor = toLinear(getMaterialValue(materialCoords, 0));
+
+#else // ENABLE_MULTI_DRAW
+
+#ifndef ENABLE_TEXTURES
+  vec4 baseColor = toLinear(BaseColor);
+#else
+  vec4 baseColor = getColorParamValue(BaseColor, BaseColorTex, BaseColorTexType, v_textureCoord);
+#endif // ENABLE_TEXTURES
+
+#endif // ENABLE_MULTI_DRAW
+
+  if (baseColor.a < 0.001) discard;
+
 #if defined(DRAW_COLOR)
     //////////////////////////////////////////////
-    // Material
+  fragColor = baseColor;
 
-  #ifdef ENABLE_MULTI_DRAW
-
-    vec2 materialCoords = v_geomItemData.zw;
-    vec4 baseColor = toLinear(getMaterialValue(materialCoords, 0));
-
-  #else // ENABLE_MULTI_DRAW
-
-  #ifndef ENABLE_TEXTURES
-    vec4 baseColor = toLinear(BaseColor);
-  #else
-    vec4 baseColor = getColorParamValue(BaseColor, BaseColorTex, BaseColorTexType, v_textureCoord);
-  #endif // ENABLE_TEXTURES
-
-  #endif // ENABLE_MULTI_DRAW
-    //////////////////////////////////////////////
-    fragColor = baseColor;
-
-  #ifdef ENABLE_INLINE_GAMMACORRECTION
-    fragColor.rgb = toGamma(fragColor.rgb);
-  #endif
+#ifdef ENABLE_INLINE_GAMMACORRECTION
+  fragColor.rgb = toGamma(fragColor.rgb);
+#endif
 
 #elif defined(DRAW_GEOMDATA)
   fragColor = setFragColor_geomData(v_viewPos, floatGeomBuffer, passId,v_drawItemId, 0);
