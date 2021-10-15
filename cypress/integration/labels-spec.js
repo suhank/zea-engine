@@ -8,7 +8,7 @@ describe('Labels and Billboards', () => {
 
     cy.get('@postMessage').its('lastCall.args.0').should('equal', 'done-Loading')
 
-    cy.get('canvas').trigger('mousemove', 640, 500)
+    cy.get('canvas').trigger('mousemove', 500, 330)
     cy.get('canvas').percySnapshot(`MouseOverLabel`)
 
     cy.window().then((win) => {

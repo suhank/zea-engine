@@ -140,7 +140,6 @@ class GLBillboardsPass extends GLPass {
       imageIndex,
       visibilityChanged,
       updateBillboard,
-      updateBillboard,
     }
 
     this.indexArrayUpdateNeeded = true
