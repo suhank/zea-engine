@@ -41,8 +41,8 @@ void main(void) {
   vec4 fragColor;
 #endif
 
-    //////////////////////////////////////////////
-    // Material
+  //////////////////////////////////////////////
+  // Material
 #ifdef ENABLE_MULTI_DRAW
 
   vec2 materialCoords = v_geomItemData.zw;
