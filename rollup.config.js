@@ -9,7 +9,7 @@ import { base64 } from 'rollup-plugin-base64'
 import glslify from 'rollup-plugin-glslify'
 
 // import typescript from '@rollup/plugin-typescript' // TODO: remove if typescript2 is better
-import typescript from 'rollup-plugin-typescript2'
+// import typescript from 'rollup-plugin-typescript2'
 
 import pkg from './package.json'
 
@@ -21,13 +21,17 @@ const glslOptions = {
   exclude: 'node_modules/**',
 
   // Compress shader by default using logic from rollup-plugin-glsl -- need to update parser to use this option -- it removes newlines
-  compress: false,
+  compress: false
 }
 
 const plugins = [
+  // typescript({
+  //   tsconfig: 'tsconfig.json',
+  //   include: 'src/**/*.{js,ts}'
+  // }),
   resolve({
     browser: true,
-    preferBuiltins: false,
+    preferBuiltins: false
   }),
   commonjs(),
   webWorkerLoader({ extensions: ['.ts', '.js'], pattern: /.+\-worker\.(?:js|ts)$/ }),
@@ -35,11 +39,7 @@ const plugins = [
   svg(),
   glslify(glslOptions),
   base64({ include: '**/*.wasm' }),
-  typescript({
-    tsconfig: 'tsconfig.json',
-    include: 'src/**/*.{js,ts}',
-  }),
-  nodePolyfills(),
+  nodePolyfills()
 ]
 
 const isProduction = !process.env.ROLLUP_WATCH
@@ -53,14 +53,14 @@ const sourcemap = true
 export default [
   // Browser-friendly UMD build.
   {
-    input: 'src/index.ts',
+    input: 'dist/index.js',
     output: {
       name: 'zeaEngine',
       file: pkg.browser,
       format: 'umd',
-      sourcemap,
+      sourcemap
     },
-    plugins,
+    plugins
   },
 
   // CommonJS (for Node) and ES module (for bundlers) build.
@@ -70,22 +70,11 @@ export default [
   // an array for the `output` option, where we can specify
   // `file` and `format` for each target)
   {
-    input: 'src/index.ts',
+    input: 'dist/index.js',
     output: [
       { file: pkg.main, format: 'cjs', sourcemap },
-      { file: pkg.module, format: 'es', sourcemap },
+      { file: pkg.module, format: 'es', sourcemap }
     ],
-    plugins,
-  },
-
-  // Building trivial deprecation script for compatibility.
-  {
-    input: 'src/index-plugins.js',
-    output: {
-      name: 'zeaEnginePlugins',
-      file: 'dist/plugins.umd.js',
-      format: 'umd',
-    },
-    plugins,
-  },
+    plugins
+  }
 ]
