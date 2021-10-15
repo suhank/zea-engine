@@ -50,5 +50,6 @@ class BooleanParameter extends Parameter {
 }
 
 Registry.register('BooleanParameter', BooleanParameter)
+Registry.register('Property_Boolean', BooleanParameter)
 
 export { BooleanParameter }

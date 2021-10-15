@@ -10,7 +10,9 @@ import * as Utilities from './Utilities/index'
 import * as SceneTree from './SceneTree/index'
 import * as Renderer from './Renderer/index'
 
+const libsRegistry = new LibsRegistry(packageJson.version)
 const ZeaEngine = {
+  libsRegistry,
   SystemDesc,
   Registry,
   ...Math,
@@ -18,8 +20,6 @@ const ZeaEngine = {
   ...SceneTree,
   ...Renderer,
 }
-
-const libsRegistry = new LibsRegistry(packageJson.version)
 
 zeaDebug('Zea Engine version %s', packageJson.version)
 

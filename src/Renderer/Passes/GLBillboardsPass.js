@@ -480,7 +480,7 @@ class GLBillboardsPass extends GLPass {
       gl.uniform1i(instancesTextureSize.location, this.width)
 
       {
-        // The instance transform ids are bound as an instanced attribute.
+        // The instance billboard ids are bound as an instanced attribute.
         const location = renderstate.attrs.instanceIds.location
         gl.enableVertexAttribArray(location)
         gl.bindBuffer(gl.ARRAY_BUFFER, this.instanceIdsBuffer)
