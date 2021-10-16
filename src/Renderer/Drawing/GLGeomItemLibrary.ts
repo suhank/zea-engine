@@ -7,7 +7,7 @@ import { GLTexture2D } from '../GLTexture2D'
 
 // import { handleMessage } from './GLGeomItemLibraryCullingWorker'
 // @ts-ignore
-import GLGeomItemLibraryCullingWorker from './GLGeomItemLibraryCulling-worker.js'
+import GLGeomItemLibraryCullingWorker from 'web-worker:./GLGeomItemLibraryCulling-worker.js'
 import { GeomItem } from '../../SceneTree/GeomItem'
 import { GLBaseRenderer } from '../GLBaseRenderer'
 import { Material } from '../../SceneTree/Material'
