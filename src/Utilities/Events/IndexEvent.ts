@@ -7,4 +7,4 @@ class IndexEvent extends BaseEvent {
     this.index = index
   }
 }
-export {IndexEvent}
+export { IndexEvent }

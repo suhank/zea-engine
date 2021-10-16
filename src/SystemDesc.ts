@@ -1,5 +1,3 @@
-// import { SystemDesc } from '.'
-
 // eslint-disable-next-line require-jsdoc
 function isIOSDevice() {
   return (
