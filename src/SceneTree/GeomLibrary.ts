@@ -1,7 +1,7 @@
 /* eslint-disable require-jsdoc */
-import { SystemDesc } from '../SystemDesc.js'
-import { BinReader } from './BinReader.js'
-import { PointsProxy, LinesProxy, MeshProxy } from './Geometry/GeomProxies.js'
+import { SystemDesc } from '../SystemDesc'
+import { BinReader } from './BinReader'
+import { PointsProxy, LinesProxy, MeshProxy } from './Geometry/GeomProxies'
 import { EventEmitter } from '../Utilities/index'
 import { resourceLoader } from './resourceLoader'
 

@@ -12,7 +12,7 @@ const sgFactory: Record<any, any> = {
     console.warn(`'sgFactory' is deprecated, Please use 'Registry.constructClass'`)
     console.warn('...args not used in constructClass')
     Registry.constructClass(blueprintName) // TODO: , Registry.constructClass(blueprintName, ...args) --
-  },
+  }
 }
 
 export { sgFactory }
