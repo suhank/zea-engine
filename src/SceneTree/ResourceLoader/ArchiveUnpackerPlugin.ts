@@ -1,6 +1,6 @@
 import { SystemDesc } from '../../SystemDesc'
 // @ts-ignore
-import ArchiveUnpackerWorker from './ArchiveUnpacker-worker.js'
+import ArchiveUnpackerWorker from 'web-worker:./ArchiveUnpacker-worker.js'
 // import ArchiveUnpackerWorker from './ArchiveUnpackerWorker'
 // For synchronous loading, uncomment these lines.
 // import {
