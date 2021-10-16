@@ -161,10 +161,10 @@ class GLRenderer extends GLBaseRenderer {
       // console.warn('Unsupported EnvMap:' + env)
       return
     }
-    this.__glEnvMap.on('loaded', event => {
+    this.__glEnvMap.on('loaded', (event) => {
       this.requestRedraw()
     })
-    this.__glEnvMap.on('updated', event => {
+    this.__glEnvMap.on('updated', (event) => {
       this.requestRedraw()
     })
 

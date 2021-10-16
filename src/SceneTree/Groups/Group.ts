@@ -77,7 +77,7 @@ class Group extends BaseGroup {
         new MultiChoiceParameter('InitialXfoMode', GROUP_XFO_MODES.average, ['manual', 'first', 'average', 'global'])
       )
     )
-    this.__initialXfoModeParam.on('valueChanged', event => {
+    this.__initialXfoModeParam.on('valueChanged', (event) => {
       this.calcGroupXfo()
     })
 
@@ -87,11 +87,11 @@ class Group extends BaseGroup {
     })
 
     const highlightColorParam = this.addParameter(new ColorParameter('HighlightColor', new Color(0.5, 0.5, 1)))
-    highlightColorParam.on('valueChanged', event => {
+    highlightColorParam.on('valueChanged', (event) => {
       this.__updateHighlight()
     })
     const highlightFillParam = this.addParameter(new NumberParameter('HighlightFill', 0.0, [0, 1]))
-    highlightFillParam.on('valueChanged', event => {
+    highlightFillParam.on('valueChanged', (event) => {
       this.__updateHighlight()
     })
 
@@ -100,13 +100,13 @@ class Group extends BaseGroup {
       this.__updateMaterial()
     })
 
-    this.addParameter(new BooleanParameter('CutAwayEnabled', false)).on('valueChanged', event => {
+    this.addParameter(new BooleanParameter('CutAwayEnabled', false)).on('valueChanged', (event) => {
       this.__updateCutaway()
     })
-    this.addParameter(new Vec3Parameter('CutPlaneNormal', new Vec3(1, 0, 0))).on('valueChanged', event => {
+    this.addParameter(new Vec3Parameter('CutPlaneNormal', new Vec3(1, 0, 0))).on('valueChanged', (event) => {
       this.__updateCutaway()
     })
-    this.addParameter(new NumberParameter('CutPlaneDist', 0.0)).on('valueChanged', event => {
+    this.addParameter(new NumberParameter('CutPlaneDist', 0.0)).on('valueChanged', (event) => {
       this.__updateCutaway()
     })
 
@@ -462,7 +462,7 @@ class Group extends BaseGroup {
       )
       this.memberXfoOps.splice(index, 0, memberXfoOp)
 
-      listenerIDs['valueChanged'] = item.getParameter('BoundingBox')!.on('valueChanged', event => {
+      listenerIDs['valueChanged'] = item.getParameter('BoundingBox')!.on('valueChanged', (event) => {
         this.setBoundingBoxDirty(event)
       })
       this._bindXfoDirty = true

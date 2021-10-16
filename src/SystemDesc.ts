@@ -110,7 +110,7 @@ function getGPUDesc() {
       gpuVendor: 'Unknown',
       maxTextureSize: 'Unknown',
       supportsWebGL: false,
-      supportsWebGL2: false
+      supportsWebGL2: false,
     }
   }
   let webgl2
@@ -127,7 +127,7 @@ function getGPUDesc() {
       gpuVendor: 'Unknown',
       maxTextureSize: 'Unknown',
       supportsWebGL: webgl != undefined,
-      supportsWebGL2: webgl2 != undefined
+      supportsWebGL2: webgl2 != undefined,
     }
   }
 

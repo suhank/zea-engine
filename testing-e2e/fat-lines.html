@@ -81,9 +81,9 @@
       window.addEventListener('message', handleMessage, false)
       // }}}
 
-      renderer.getXRViewport().then(xrvp => {
+      renderer.getXRViewport().then((xrvp) => {
         console.log('XR Device Detected')
-        document.addEventListener('keydown', event => {
+        document.addEventListener('keydown', (event) => {
           if (event.key == ' ') {
             xrvp.togglePresenting()
           }

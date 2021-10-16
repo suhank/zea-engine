@@ -56,7 +56,7 @@ class ArchiveUnpackerPlugin {
         // const worker = new Worker(this.__resourceLoaderFile.url);
 
         worker.postMessage({
-          type: 'init'
+          type: 'init',
         })
         worker.onmessage = (event: Record<string, any>) => {
           if (event.data.type === 'WASM_LOADED') {
@@ -111,7 +111,7 @@ class ArchiveUnpackerPlugin {
         if (!(url in this.__callbacks)) this.__callbacks[url] = []
         this.__callbacks[url].push(resolve)
         fetch(url)
-          .then(response => {
+          .then((response) => {
             this.resourceLoader.incrementWorkDone(1) // done loading
             if (checkStatus(response)) return response.arrayBuffer()
             else {
@@ -119,7 +119,7 @@ class ArchiveUnpackerPlugin {
               return null
             }
           })
-          .then(buffer => {
+          .then((buffer) => {
             const resourceId = url
             if (!(resourceId in this.__callbacks)) this.__callbacks[resourceId] = []
             this.__callbacks[resourceId].push(resolve)
@@ -128,7 +128,7 @@ class ArchiveUnpackerPlugin {
               worker.postMessage({
                 type: 'unpack',
                 resourceId,
-                buffer
+                buffer,
               })
             })
           })
@@ -156,7 +156,7 @@ class ArchiveUnpackerPlugin {
   }
 
   shutDownWorkers() {
-    this.__workers.forEach(workerPromise => {
+    this.__workers.forEach((workerPromise) => {
       workerPromise.then((worker: Worker) => {
         worker.terminate()
       })

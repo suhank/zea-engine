@@ -91,7 +91,7 @@ class TreeItemParameter extends Parameter<TreeItem | undefined> {
       }
       this.value = treeItem
       if (this.value) {
-        this.listenerIDs['globalXfoChanged'] = this.value.on('globalXfoChanged', event => {
+        this.listenerIDs['globalXfoChanged'] = this.value.on('globalXfoChanged', (event) => {
           this.emitTreeItemGlobalXfoChanged(event)
         })
       }
