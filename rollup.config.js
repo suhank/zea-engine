@@ -46,7 +46,7 @@ if (isProduction) {
 
 const sourcemap = true
 
-export default [
+const result = [
   // Browser-friendly UMD build.
   {
     input: 'dist/index.js',
@@ -57,20 +57,31 @@ export default [
       sourcemap
     },
     plugins
-  },
-
-  // CommonJS (for Node) and ES module (for bundlers) build.
-  // (We could have three entries in the configuration array
-  // instead of two, but it's quicker to generate multiple
-  // builds from a single configuration where possible, using
-  // an array for the `output` option, where we can specify
-  // `file` and `format` for each target)
-  {
-    input: 'dist/index.js',
-    output: [
-      { file: pkg.main, format: 'cjs', sourcemap },
-      { file: pkg.module, format: 'es', sourcemap }
-    ],
-    plugins
   }
 ]
+
+if (isProduction) {
+  result.push(
+    // CommonJS (for Node) and ES module (for bundlers) build.
+    // (We could have three entries in the configuration array
+    // instead of two, but it's quicker to generate multiple
+    // builds from a single configuration where possible, using
+    // an array for the `output` option, where we can specify
+    // `file` and `format` for each target)
+    {
+      input: 'dist/index.js',
+      output: [
+        {
+          file: pkg.main,
+          format: 'cjs',
+          sourcemap
+        } /*,
+        // I don't think this build is currently usable, so disabling it for now.
+        { file: pkg.module, format: 'es', sourcemap }*/
+      ],
+      plugins
+    }
+  )
+}
+
+export default result
