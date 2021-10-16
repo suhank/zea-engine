@@ -10,7 +10,7 @@
 
     <link rel="stylesheet" href="styles/tailwind.min.css" />
 
-    <script src="../dist/index.umd.development.js"></script>
+    <script src="../dist/index.umd.js"></script>
 
     <script type="module">
       const { GLRenderer, Scene, Xfo, Vec3, Points, Color, GeomItem, Material } = zeaEngine
@@ -90,9 +90,9 @@
 
       window.addEventListener('message', handleMessage, false)
       // }}}
-      renderer.getXRViewport().then((xrvp) => {
+      renderer.getXRViewport().then(xrvp => {
         console.log('XR Device Detected')
-        document.addEventListener('keydown', (event) => {
+        document.addEventListener('keydown', event => {
           if (event.key == ' ') {
             xrvp.togglePresenting()
           }
