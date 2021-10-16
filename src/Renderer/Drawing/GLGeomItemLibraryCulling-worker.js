@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-const vec3_normalize = (vec) => {
+const vec3_normalize = vec => {
   let len = vec[0] * vec[0] + vec[1] * vec[1] + vec[2] * vec[2]
   if (len < Number.EPSILON) {
     return [0, 0, 0]
@@ -13,7 +13,7 @@ const vec3_subtract = (vec1, vec2) => {
 const vec3_dot = (vec1, vec2) => {
   return vec1[0] * vec2[0] + vec1[1] * vec2[1] + vec1[2] * vec2[2]
 }
-const vec3_length = (vec) => {
+const vec3_length = vec => {
   return Math.sqrt(vec[0] * vec[0] + vec[1] * vec[1] + vec[2] * vec[2])
 }
 const vec3_scale = (vec, scl) => {
@@ -22,11 +22,11 @@ const vec3_scale = (vec, scl) => {
 const vec2_scale = (vec, scl) => {
   return [vec[0] * scl, vec[1] * scl]
 }
-const vec2_length = (vec) => {
+const vec2_length = vec => {
   return Math.sqrt(vec[0] * vec[0] + vec[1] * vec[1])
 }
 
-const quat_conjugate = (quat) => {
+const quat_conjugate = quat => {
   return [-quat[0], -quat[1], -quat[2], quat[3]]
 }
 const quat_multiply = (quat1, quat2) => {
@@ -43,7 +43,7 @@ const quat_multiply = (quat1, quat2) => {
     ax * bw + aw * bx + ay * bz - az * by,
     ay * bw + aw * by + az * bx - ax * bz,
     az * bw + aw * bz + ax * by - ay * bx,
-    aw * bw - ax * bx - ay * by - az * bz,
+    aw * bw - ax * bx - ay * by - az * bz
   ]
 }
 const quat_rotateVec3 = (quat, vec3) => {
@@ -73,17 +73,17 @@ let cullReason = {
   solidAngle: 0,
   frustum: 0,
   tooClose: 0,
-  behind: 0,
+  behind: 0
 }
 
-const cull = (index) => {
+const cull = index => {
   if (!frustumCulled[index]) {
     frustumCulled[index] = true
     culledCount++
     newlyCulled.push(index)
   }
 }
-const unCull = (index) => {
+const unCull = index => {
   if (frustumCulled[index]) {
     frustumCulled[index] = false
     culledCount--
@@ -91,7 +91,7 @@ const unCull = (index) => {
   }
 }
 
-const checkGeomItem = (geomItemData) => {
+const checkGeomItem = geomItemData => {
   if (!geomItemData || !cameraPos) return
   if (!geomItemData.visible) return
 
@@ -170,12 +170,12 @@ const checkGeomItem = (geomItemData) => {
       cullReason.behind++
       viewAngle = [
         Math.PI - Math.abs(Math.asin(viewVecNormXZ[0])) - solidAngleXZ,
-        Math.PI - Math.abs(Math.asin(viewVecNormYZ[0])) - solidAngleYZ,
+        Math.PI - Math.abs(Math.asin(viewVecNormYZ[0])) - solidAngleYZ
       ]
     } else {
       viewAngle = [
         Math.abs(Math.asin(viewVecNormXZ[0])) - solidAngleXZ,
-        Math.abs(Math.asin(viewVecNormYZ[0])) - solidAngleYZ,
+        Math.abs(Math.asin(viewVecNormYZ[0])) - solidAngleYZ
       ]
     }
     // console.log(geomItemData.id, 'angle To Item:', frustumHalfAngleX, viewAngle[0], frustumHalfAngleY, viewAngle[1])
@@ -215,7 +215,7 @@ const onViewChanged = (data, postMessage) => {
   onDone(postMessage)
 }
 
-const onDone = (postMessage) => {
+const onDone = postMessage => {
   // console.log('onDone newlyCulled:', newlyCulled.length, 'newlyUnCulled:', newlyUnCulled.length)
   if (newlyCulled.length > 0 || newlyUnCulled.length > 0) {
     // console.log('CullResults culled:', culledCount, 'visible:', geomItemsData.length - 1 - culledCount, cullReason)
@@ -230,7 +230,7 @@ const onDone = (postMessage) => {
     solidAngle: 0,
     frustum: 0,
     tooClose: 0,
-    behind: 0,
+    behind: 0
   }
 }
 
@@ -240,10 +240,10 @@ const handleMessage = (data, postMessage) => {
   } else if (data.type == 'ViewChanged') {
     onViewChanged(data, postMessage)
   } else if (data.type == 'UpdateGeomItems') {
-    data.removedItemIndices.forEach((id) => {
+    data.removedItemIndices.forEach(id => {
       geomItemsData[id] = null
     })
-    data.geomItems.forEach((geomItem) => {
+    data.geomItems.forEach(geomItem => {
       // New geoms default to being un-culled
       if (!geomItemsData[geomItem.id]) frustumCulled[geomItem.id] = false
       geomItemsData[geomItem.id] = geomItem
@@ -253,8 +253,11 @@ const handleMessage = (data, postMessage) => {
   }
 }
 
-self.onmessage = function (event) {
+self.onmessage = function(event) {
   handleMessage(event.data, self.postMessage)
 }
 
 export { handleMessage }
+
+const foo = 3
+export default foo

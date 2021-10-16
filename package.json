@@ -17,8 +17,6 @@
     "node": ">=10"
   },
   "scripts": {
-    "__build:watch": "tsdx watch --target web --format umd --name index --transpileOnly --tsconfig ./tsconfig.json",
-    "___build:watch": "npx tsc --watch",
     "build:tsc": "npx tsc",
     "build:tsc:watch": "npx tsc --watch",
     "build:rollup": "rollup -c",
@@ -26,8 +24,7 @@
     "copyJSFilesToDist": "copyfiles -u 1 src/**/*.{js,wasm,glsl,vert,frag} dist",
     "start": "http-server --cors --port 8000 --silent",
     "start:watch": "es-dev-server --cors --app-index testing-e2e/index.html --open --watch",
-    "__build": "tsdx build --target web --format umd --name index",
-    "build": "rollup -c",
+    "build": "copyfiles -u 1 src/**/*.{js,wasm,glsl,vert,frag} dist && npx tsc && rollup -c",
     "dev": "npm-run-all --parallel copyJSFilesToDist build:tsc:watch build:rollup:watch start:watch",
     "test": "jest",
     "test:coverage": "jest --coverage",
