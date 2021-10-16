@@ -222,7 +222,7 @@ class BaseGeom extends ParameterOwner {
     }
     return {
       numVertices: this.numVertices(),
-      attrBuffers
+      attrBuffers,
     }
   }
 
@@ -329,7 +329,7 @@ class BaseGeom extends ParameterOwner {
           range: [offset, offset + count],
           bbox: new Box3(reader.loadFloat32Vec3(), reader.loadFloat32Vec3()),
           normalsRange: new Box3(),
-          texCoordsRange: new Box2()
+          texCoordsRange: new Box2(),
         }
         if (normalsAttr) {
           clusterData.normalsRange.set(reader.loadFloat32Vec3(), reader.loadFloat32Vec3())

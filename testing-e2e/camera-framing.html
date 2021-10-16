@@ -35,31 +35,16 @@
 
       scene.getRoot().addChild(geomItem)
 
-      renderer
-        .getViewport()
-        .getCamera()
-        .setPositionAndTarget(new Vec3(3, 3, 1.7), new Vec3(0, 0, 0.1))
+      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(3, 3, 1.7), new Vec3(0, 0, 0.1))
       renderer.frameAll()
 
-      renderer.getViewport().on('keyDown', event => {
+      renderer.getViewport().on('keyDown', (event) => {
         if (event.key == 'f') {
           renderer.frameAll()
         } else if (event.key == 'o') {
-          if (
-            renderer
-              .getViewport()
-              .getCamera()
-              .isOrthographic()
-          )
-            renderer
-              .getViewport()
-              .getCamera()
-              .setIsOrthographic(0, 400)
-          else
-            renderer
-              .getViewport()
-              .getCamera()
-              .setIsOrthographic(1, 400)
+          if (renderer.getViewport().getCamera().isOrthographic())
+            renderer.getViewport().getCamera().setIsOrthographic(0, 400)
+          else renderer.getViewport().getCamera().setIsOrthographic(1, 400)
         }
       })
 
@@ -67,7 +52,7 @@
       renderer.addPass(boundingBoxPass)
       boundingBoxPass.addTreeItem(geomItem, true)
 
-      const postMessage = msg => {
+      const postMessage = (msg) => {
         console.log(msg)
         window.postMessage(msg)
       }
@@ -76,7 +61,7 @@
       const camera = renderer.getViewport().getCamera()
 
       // {{{ Messages handler.
-      const handleMessage = event => {
+      const handleMessage = (event) => {
         const { data } = event
 
         if (data === 'variant-01') {

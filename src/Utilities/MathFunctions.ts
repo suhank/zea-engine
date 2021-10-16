@@ -114,7 +114,7 @@ class MathFunctions {
    * @param {number} value -
    * @return {number} -
    */
-   static nextPow2(value: number): number {
+  static nextPow2(value: number): number {
     if (this.fract(Math.log2(value)) == 0) {
       return value
     }

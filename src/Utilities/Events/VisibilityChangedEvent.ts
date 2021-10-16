@@ -8,4 +8,4 @@ class VisibilityChangedEvent extends BaseEvent {
   }
 }
 
-export {VisibilityChangedEvent}
+export { VisibilityChangedEvent }

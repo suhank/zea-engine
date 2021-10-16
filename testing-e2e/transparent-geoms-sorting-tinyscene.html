@@ -28,14 +28,14 @@
         GeomItem,
         TreeItem,
         Material,
-        SelectionSet
+        SelectionSet,
       } = zeaEngine
 
       const scene = new Scene()
       const domElement = document.getElementById('app')
       const renderer = new GLRenderer(domElement, {
         enableFrustumCulling: false,
-        antialias: false
+        antialias: false,
       })
       renderer.setScene(scene)
 
@@ -70,18 +70,12 @@
       window.postMessage('done-loading')
 
       document.querySelector('#back').addEventListener('click', () => {
-        renderer
-          .getViewport()
-          .getCamera()
-          .setPositionAndTarget(new Vec3(-0.01, -0.02, 0.005), new Vec3(0.01, 0, 0))
+        renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-0.01, -0.02, 0.005), new Vec3(0.01, 0, 0))
         window.postMessage(`done-back`)
       })
 
       document.querySelector('#front').addEventListener('click', () => {
-        renderer
-          .getViewport()
-          .getCamera()
-          .setPositionAndTarget(new Vec3(0.035, 0.02, 0.005), new Vec3(0.01, 0, 0))
+        renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(0.035, 0.02, 0.005), new Vec3(0.01, 0, 0))
         window.postMessage(`done-front`)
       })
     </script>
@@ -93,14 +87,34 @@
 
     <div class="fixed flex justify-center p-1 w-full top-0">
       <button
-        class="bg-yellow-300 rounded px-2 px-2 py-1 border border-yellow-400 shadow mr-1 hover:bg-yellow-200 cursor-default"
+        class="
+          bg-yellow-300
+          rounded
+          px-2 px-2
+          py-1
+          border border-yellow-400
+          shadow
+          mr-1
+          hover:bg-yellow-200
+          cursor-default
+        "
         id="front"
       >
         Front
       </button>
 
       <button
-        class="bg-yellow-300 rounded px-2 px-2 py-1 border border-yellow-400 shadow mr-1 hover:bg-yellow-200 cursor-default"
+        class="
+          bg-yellow-300
+          rounded
+          px-2 px-2
+          py-1
+          border border-yellow-400
+          shadow
+          mr-1
+          hover:bg-yellow-200
+          cursor-default
+        "
         id="back"
       >
         Back

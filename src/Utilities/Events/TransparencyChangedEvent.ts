@@ -8,4 +8,4 @@ class TransparencyChangedEvent extends BaseEvent {
   }
 }
 
-export {TransparencyChangedEvent}
+export { TransparencyChangedEvent }

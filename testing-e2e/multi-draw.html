@@ -28,7 +28,7 @@
         Circle,
         PointGrid,
         Material,
-        GeomItem
+        GeomItem,
       } = zeaEngine
 
       const urlParams = new URLSearchParams(window.location.search)
@@ -39,7 +39,7 @@
       const renderer = new GLRenderer(canvas, {
         hideSplash: true,
         webglContextType: urlParams.has('webgl') ? urlParams.get('webgl') : undefined,
-        disableMultiDraw: urlParams.has('disableMultiDraw')
+        disableMultiDraw: urlParams.has('disableMultiDraw'),
       })
       renderer.setScene(scene)
 
@@ -98,7 +98,7 @@
       const linesHighlightColor = new Color(0.0, 1.0, 1.0, 0.1)
       const meshHighlightColor = new Color(1.0, 1.0, 0.0, 0.1)
       let highlightedItem
-      renderer.getViewport().on('pointerOverGeom', event => {
+      renderer.getViewport().on('pointerOverGeom', (event) => {
         const geomItem = event.intersectionData.geomItem
         const geomParam = geomItem.getParameter('Geometry')
         if (geomParam) {
@@ -115,34 +115,25 @@
           }
         }
       })
-      renderer.getViewport().on('pointerLeaveGeom', event => {
+      renderer.getViewport().on('pointerLeaveGeom', (event) => {
         event.leftGeometry.removeHighlight('highlightItem')
       })
 
       // scene.setupGrid(10.0, 10)
-      renderer
-        .getViewport()
-        .getCamera()
-        .setPositionAndTarget(new Vec3(-15, -15, 5), new Vec3(0, 0, 0.4))
+      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-15, -15, 5), new Vec3(0, 0, 0.4))
 
       window.postMessage('done-loading')
 
       // {{{ Messages handler.
-      const handleMessage = event => {
+      const handleMessage = (event) => {
         const { data } = event
 
         if (data === 'variant-01') {
-          renderer
-            .getViewport()
-            .getCamera()
-            .setPositionAndTarget(new Vec3(2, 2, -2.7), new Vec3(0, 0, 0.4))
+          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, -2.7), new Vec3(0, 0, 0.4))
           renderer.frameAll()
           window.postMessage(`done-${data}`)
         } else if (data === 'variant-02') {
-          renderer
-            .getViewport()
-            .getCamera()
-            .setPositionAndTarget(new Vec3(-2, -2, 2.7), new Vec3(0, 0, 0.4))
+          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-2, -2, 2.7), new Vec3(0, 0, 0.4))
           renderer.frameAll()
           window.postMessage(`done-${data}`)
         }

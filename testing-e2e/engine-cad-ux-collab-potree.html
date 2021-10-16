@@ -62,7 +62,7 @@
         EnvMap,
         InstanceItem,
         CameraManipulator,
-        GLBoundingBoxPass
+        GLBoundingBoxPass,
       } = window.zeaEngine
 
       const canvas = document.querySelector('#renderer')
@@ -72,10 +72,7 @@
       renderer.setScene(scene)
       renderer.outlineThickness = 0.5
       renderer.outlineColor = new Color(0.2, 0.2, 0.2, 1)
-      scene
-        .getSettings()
-        .getParameter('BackgroundColor')
-        .setValue(new Color(0.85, 0.85, 0.85, 1))
+      scene.getSettings().getParameter('BackgroundColor').setValue(new Color(0.85, 0.85, 0.85, 1))
       renderer.getViewport().debugGeomShader = urlParams.has('debugGeomShader')
 
       const envMap = new EnvMap()
@@ -89,27 +86,27 @@
 
       /** HIGHLIGHT START */
       let highlightedItem
-      renderer.getViewport().on('pointerOverGeom', event => {
+      renderer.getViewport().on('pointerOverGeom', (event) => {
         const item = event.intersectionData.geomItem
         if (item) {
           highlightedItem = item
           highlightedItem.addHighlight('pointerOverGeom', new Color(0, 0.7, 0, 0.3), true)
         }
       })
-      renderer.getViewport().on('pointerLeaveGeom', event => {
+      renderer.getViewport().on('pointerLeaveGeom', (event) => {
         highlightedItem.removeHighlight('pointerOverGeom', true)
         highlightedItem = null
       })
-      renderer.getViewport().on('keyDown', event => {
+      renderer.getViewport().on('keyDown', (event) => {
         if (event.key == 'f') renderer.frameAll()
       })
-      renderer.getViewport().on('pointerUp', event => {
+      renderer.getViewport().on('pointerUp', (event) => {
         if (event.intersectionData) {
           const geomItem = event.intersectionData.geomItem
           console.log('', geomItem.getPath())
         }
       })
-      renderer.getViewport().on('keyDown', event => {
+      renderer.getViewport().on('keyDown', (event) => {
         if (event.key == 'f') renderer.frameAll()
         else if (event.key == 'd') {
           renderer.getViewport().debugGeomShader = !renderer.getViewport().debugGeomShader
@@ -283,27 +280,21 @@
       }
       /** COLLAB END */
 
-      const postMessage = msg => {
+      const postMessage = (msg) => {
         console.log(msg)
         window.postMessage(msg)
       }
 
       // {{{ Messages handler.
-      const handleMessage = event => {
+      const handleMessage = (event) => {
         const { data } = event
 
         if (data === 'variant-01') {
-          renderer
-            .getViewport()
-            .getCamera()
-            .setPositionAndTarget(new Vec3(2, 2, -2.7), new Vec3(0, 0, 0.4))
+          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, -2.7), new Vec3(0, 0, 0.4))
           renderer.frameAll()
           postMessage(`done-${data}`)
         } else if (data === 'variant-02') {
-          renderer
-            .getViewport()
-            .getCamera()
-            .setPositionAndTarget(new Vec3(-2, -2, 2.7), new Vec3(0, 0, 0.4))
+          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-2, -2, 2.7), new Vec3(0, 0, 0.4))
           renderer.frameAll()
           postMessage(`done-${data}`)
         }

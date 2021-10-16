@@ -3,8 +3,6 @@ import { TreeItem } from '../TreeItem'
 import { Vec3, Xfo } from '../../Math'
 import { jsonCompare } from '../../../Utilities/test_utils'
 
-
-
 describe('KinematicGroup', () => {
   test('Calculating the KinematicGroup Xfo using different INITIAL_XFO_MODES.', () => {
     const group = new KinematicGroup('Foo')

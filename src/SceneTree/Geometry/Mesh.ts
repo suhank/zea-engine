@@ -372,7 +372,7 @@ class Mesh extends BaseGeom {
       const edgeIndex = this.edgeFaces.length / 2
       const edgeData = {
         edgeIndex: edgeIndex,
-        edgeVec: edgeVec
+        edgeVec: edgeVec,
       }
       connectedVertices[key] = edgeData
 
@@ -699,7 +699,7 @@ class Mesh extends BaseGeom {
         count: count,
         dimension: dimension,
         normalized: attrName == 'normals',
-        dataType: attr.getDataTypeName()
+        dataType: attr.getDataTypeName(),
       }
     }
 
@@ -707,7 +707,7 @@ class Mesh extends BaseGeom {
       numVertices: this.numVertices(),
       numRenderVerts: totalNumVertices,
       indices,
-      attrBuffers
+      attrBuffers,
     }
 
     /* Disabled during TS migration.
@@ -853,7 +853,7 @@ class Mesh extends BaseGeom {
     else triangulatedIndices = new Uint32Array(trisCount * 3)
 
     let triangleVertex = 0
-    const addTriangleVertexIndex = function(vertex: any, faceIndex: any) {
+    const addTriangleVertexIndex = function (vertex: any, faceIndex: any) {
       if (vertex in splitIndices && faceIndex in splitIndices[vertex])
         vertex = numUnSplitVertices + splitIndices[vertex][faceIndex]
       triangulatedIndices[triangleVertex] = vertex

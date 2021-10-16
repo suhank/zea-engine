@@ -29,7 +29,7 @@
         GeomItem,
         TreeItem,
         Material,
-        MaterialGroup
+        MaterialGroup,
       } = zeaEngine
 
       const domElement = document.getElementById('app')
@@ -86,16 +86,13 @@
       // Once fixed, we should modify this test to show material changes.
       scene.getRoot().addChild(tree1)
 
-      renderer
-        .getViewport()
-        .getCamera()
-        .setPositionAndTarget(new Vec3(25, 25, 13), new Vec3(10, 0, 0))
+      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(25, 25, 13), new Vec3(10, 0, 0))
       renderer.frameAll()
 
       window.postMessage('done-loading')
 
       // {{{ Messages handler.
-      const handleMessage = event => {
+      const handleMessage = (event) => {
         const { data } = event
 
         // Note: changing materials on items is currently broken.

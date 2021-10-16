@@ -424,7 +424,7 @@ class GLBaseRenderer extends ParameterOwner {
       const pass = this.__passesRegistrationOrder[i]
 
       const rargs = {
-        continueInSubTree: true
+        continueInSubTree: true,
       }
       handled = pass.itemAddedToScene(treeItem, rargs)
       if (handled) {
@@ -436,7 +436,7 @@ class GLBaseRenderer extends ParameterOwner {
     if (!handled) {
       for (const passCbs of this.__passCallbacks) {
         const rargs = {
-          continueInSubTree: true
+          continueInSubTree: true,
         }
         const handled = passCbs.itemAddedFn(treeItem, rargs)
         if (handled) {
@@ -466,7 +466,7 @@ class GLBaseRenderer extends ParameterOwner {
     for (let i = this.__passesRegistrationOrder.length - 1; i >= 0; i--) {
       const pass = this.__passesRegistrationOrder[i]
       const rargs = {
-        continueInSubTree: true
+        continueInSubTree: true,
       }
       const handled = pass.itemRemovedFromScene(treeItem, rargs)
       if (handled) {
@@ -478,7 +478,7 @@ class GLBaseRenderer extends ParameterOwner {
     for (const passCbs of this.__passCallbacks) {
       if (!passCbs.itemRemovedFn) continue
       const rargs = {
-        continueInSubTree: true
+        continueInSubTree: true,
       }
       const handled = passCbs.itemRemovedFn(treeItem, rargs)
       if (handled) {
@@ -946,7 +946,7 @@ class GLBaseRenderer extends ParameterOwner {
     /** DOMMouseScroll is for mozilla. */
     window.addEventListener('wheel', onWheel, { passive: false })
 
-    window.oncontextmenu = function() {
+    window.oncontextmenu = function () {
       return false
     }
 
@@ -959,7 +959,7 @@ class GLBaseRenderer extends ParameterOwner {
       }
     })
 
-    document.addEventListener('keyup', event => {
+    document.addEventListener('keyup', (event) => {
       if (activeGLRenderer != this || !isValidCanvas()) return
       prepareEvent(event)
       const vp = activeGLRenderer.getActiveViewport()
@@ -1113,10 +1113,7 @@ class GLBaseRenderer extends ParameterOwner {
           }
         }
 
-        const viewXfo = this.getViewport()
-          .getCamera()
-          .getParameter('GlobalXfo')!
-          .getValue()
+        const viewXfo = this.getViewport().getCamera().getParameter('GlobalXfo')!.getValue()
         const event = new ViewChangedEvent('CameraAndPointer', viewXfo)
         this.emit('viewChanged', event)
 

@@ -34,10 +34,7 @@
       const crossItem = new GeomItem('Cross', new Cross(1.18), linesMaterial, new Xfo(new Vec3(2, 0, 0.5)))
       scene.getRoot().addChild(crossItem)
 
-      renderer
-        .getViewport()
-        .getCamera()
-        .setPositionAndTarget(new Vec3(5, 5, 2.7), new Vec3(0, 0, 0.0))
+      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(5, 5, 2.7), new Vec3(0, 0, 0.0))
 
       window.postMessage('done-loading')
 
@@ -45,7 +42,7 @@
       // the main point of this test is to move items between opaque and transparent passes multiple
       // times. Each sphere should be put into an opaque pass and removed more than once. The same
       // for the transparent pass.
-      const handleMessage = event => {
+      const handleMessage = (event) => {
         const { data } = event
 
         if (data === 'variant-01') {

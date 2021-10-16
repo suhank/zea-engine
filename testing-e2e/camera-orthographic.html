@@ -61,7 +61,7 @@
         MathFunctions,
         Cuboid,
         GeomItem,
-        Material
+        Material,
       } = window.zeaEngine
 
       const domElement = document.getElementById('renderer')
@@ -86,10 +86,7 @@
       treeItem.getParameter('GlobalXfo').setValue(xfo)
       scene.getRoot().addChild(treeItem)
 
-      renderer
-        .getViewport()
-        .getCamera()
-        .setPositionAndTarget(new Vec3(2, 2, 2.7), new Vec3(0, 0, 0.4))
+      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, 2.7), new Vec3(0, 0, 0.4))
       renderer.frameAll()
 
       // const objAsset = new ObjAsset('cow')
@@ -123,28 +120,28 @@
         renderer.frameAll()
       }
 
-      document.getElementById('camera-button-top').addEventListener('click', function(event) {
+      document.getElementById('camera-button-top').addEventListener('click', function (event) {
         const camera = renderer.getViewport().getCamera()
         camera.setIsOrthographic(1)
         setCameraXfo(camera, new Vec3(0, 0, -1), new Vec3(0, 1, 0))
       })
-      document.getElementById('camera-button-bottom').addEventListener('click', function(event) {
+      document.getElementById('camera-button-bottom').addEventListener('click', function (event) {
         const camera = renderer.getViewport().getCamera()
         camera.setIsOrthographic(1)
         setCameraXfo(camera, new Vec3(0, 0, 1), new Vec3(0, -1, 0))
       })
-      document.getElementById('camera-button-left').addEventListener('click', function(event) {
+      document.getElementById('camera-button-left').addEventListener('click', function (event) {
         const camera = renderer.getViewport().getCamera()
         camera.setIsOrthographic(1)
         setCameraXfo(camera, new Vec3(-1, 0, 0), new Vec3(0, 0, 1))
       })
-      document.getElementById('camera-button-right').addEventListener('click', function(event) {
+      document.getElementById('camera-button-right').addEventListener('click', function (event) {
         const camera = renderer.getViewport().getCamera()
         camera.setIsOrthographic(1)
         setCameraXfo(camera, new Vec3(1, 0, 0), new Vec3(0, 0, 1))
       })
 
-      document.getElementById('camera-button-persp').addEventListener('click', function(event) {
+      document.getElementById('camera-button-persp').addEventListener('click', function (event) {
         const camera = renderer.getViewport().getCamera()
         camera.setIsOrthographic(0, 0)
         camera.setPositionAndTarget(new Vec3(2, 2, 2.7), new Vec3(0, 0, 0.4))
@@ -153,7 +150,7 @@
         // setCameraXfo(camera, new Vec3(0, 0.707, -0.707), new Vec3(0, 0, 1))
       })
 
-      const postMessage = msg => {
+      const postMessage = (msg) => {
         console.log(msg)
         window.postMessage(msg)
       }

@@ -126,7 +126,7 @@ class GLLines extends GLGeom {
         filter: 'NEAREST',
         wrap: 'CLAMP_TO_EDGE',
         data: dataArray,
-        mipMapped: false
+        mipMapped: false,
       })
     } else {
       this.fatBuffers.positionsTexture.bufferData(dataArray, positions.getCount(), 1)
@@ -156,7 +156,7 @@ class GLLines extends GLGeom {
       this.fatBuffers.glattrbuffers.segmentIndices = {
         buffer: indexBuffer,
         dimension: 2,
-        dataType: 'Vec2'
+        dataType: 'Vec2',
       }
     } else {
       if (!this.genBufferOpts || (this.genBufferOpts && this.genBufferOpts.topologyChanged)) {
@@ -213,7 +213,7 @@ class GLLines extends GLGeom {
           this.__glattrbuffers[attrName] = {
             buffer: attrBuffer,
             dataType: attrData.dataType,
-            normalized: attrData.normalized
+            normalized: attrData.normalized,
           }
         } else {
           const glattr = this.__glattrbuffers[attrName]

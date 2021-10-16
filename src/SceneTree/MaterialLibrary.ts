@@ -37,7 +37,7 @@ class MaterialLibrary extends EventEmitter implements Owner {
   clear() {
     this.__images = {}
     this.__materials = {
-      Default: new Material('Default', 'SimpleSurfaceShader')
+      Default: new Material('Default', 'SimpleSurfaceShader'),
     }
   }
 
@@ -200,7 +200,7 @@ class MaterialLibrary extends EventEmitter implements Owner {
    */
   toJSON(context: Record<string, any> = {}) {
     return {
-      numMaterials: this.getNumMaterials()
+      numMaterials: this.getNumMaterials(),
     }
   }
 

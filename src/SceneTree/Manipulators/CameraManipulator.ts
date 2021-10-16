@@ -14,7 +14,7 @@ const MANIPULATION_MODES: { [key: string]: number } = {
   look: 3,
   turntable: 4,
   tumbler: 5,
-  trackball: 6
+  trackball: 6,
 }
 
 /**
@@ -1069,7 +1069,7 @@ class CameraManipulator extends BaseTool {
   __startTouch(touch: Record<string, any>) {
     this.__ongoingTouches[touch.identifier] = {
       identifier: touch.identifier,
-      pos: new Vec2(touch.clientX, touch.clientY)
+      pos: new Vec2(touch.clientX, touch.clientY),
     }
   }
 

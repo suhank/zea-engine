@@ -59,7 +59,7 @@
 
       let dragging = false
       let pointerDownPos
-      const onPointerDown = event => {
+      const onPointerDown = (event) => {
         if (event.pointerType === 'touch' || (event.button == 0 && !event.altKey)) {
           pointerDownPos = event.pointerPos
           dragging = false
@@ -74,7 +74,7 @@
        * @param {MouseEvent|TouchEvent|object} event - The event param.
        * @return {boolean} The return value.
        */
-      const onPointerMove = event => {
+      const onPointerMove = (event) => {
         if (pointerDownPos) {
           const delta = pointerDownPos.subtract(event.pointerPos)
           // if (dragging) {
@@ -99,7 +99,7 @@
        * @param {MouseEvent|TouchEvent|object} event - The event param.
        * @return {boolean} The return value.
        */
-      const onPointerUp = event => {
+      const onPointerUp = (event) => {
         if (pointerDownPos) {
           if (dragging) {
             rectItem.getParameter('Visible').setValue(false)
@@ -118,28 +118,22 @@
       renderer.getViewport().on('pointerMove', onPointerMove)
       renderer.getViewport().on('pointerUp', onPointerUp)
 
-      const postMessage = msg => {
+      const postMessage = (msg) => {
         console.log(msg)
         window.postMessage(msg)
       }
       postMessage('done-loading')
 
       // {{{ Messages handler.
-      const handleMessage = event => {
+      const handleMessage = (event) => {
         const { data } = event
 
         if (data === 'variant-01') {
-          renderer
-            .getViewport()
-            .getCamera()
-            .setPositionAndTarget(new Vec3(2, 2, -2.7), new Vec3(0, 0, 0.4))
+          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, -2.7), new Vec3(0, 0, 0.4))
           renderer.frameAll()
           postMessage(`done-${data}`)
         } else if (data === 'variant-02') {
-          renderer
-            .getViewport()
-            .getCamera()
-            .setPositionAndTarget(new Vec3(-2, -2, 2.7), new Vec3(0, 0, 0.4))
+          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-2, -2, 2.7), new Vec3(0, 0, 0.4))
           renderer.frameAll()
           postMessage(`done-${data}`)
         }

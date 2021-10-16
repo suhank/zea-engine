@@ -22,18 +22,12 @@
 
       const renderer = new GLRenderer(domElement, { hideSplash: true, antialias: false })
       renderer.setScene(scene)
-      renderer
-        .getViewport()
-        .getCamera()
-        .setPositionAndTarget(new Vec3(12, 12, 10), new Vec3(0, 0, 1.5))
+      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(12, 12, 10), new Vec3(0, 0, 1.5))
 
       const envMap = new EnvMap()
       envMap.getParameter('FilePath').setValue('data/pisa-webp.zenv')
       scene.setEnvMap(envMap)
-      scene
-        .getSettings()
-        .getParameter('Display EnvMap')
-        .setValue(true)
+      scene.getSettings().getParameter('Display EnvMap').setValue(true)
 
       const objAsset = new ObjAsset('cow')
       objAsset.load('data/cow.obj')
@@ -45,28 +39,22 @@
       objAsset.getParameter('GlobalXfo').setValue(xfo)
 
       const promises = []
-      promises.push(new Promise(resolve => envMap.once('loaded', resolve)))
-      promises.push(new Promise(resolve => objAsset.once('loaded', resolve)))
+      promises.push(new Promise((resolve) => envMap.once('loaded', resolve)))
+      promises.push(new Promise((resolve) => objAsset.once('loaded', resolve)))
       Promise.all(promises).then(() => {
         window.postMessage('done-loading')
       })
 
       // {{{ Messages handler.
-      const handleMessage = event => {
+      const handleMessage = (event) => {
         const { data } = event
 
         if (data === 'front') {
-          renderer
-            .getViewport()
-            .getCamera()
-            .setPositionAndTarget(new Vec3(1, 1, 0.1), new Vec3(0, 0, 0.4))
+          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(1, 1, 0.1), new Vec3(0, 0, 0.4))
           renderer.frameAll()
           window.postMessage(`done-${data}`)
         } else if (data === 'back') {
-          renderer
-            .getViewport()
-            .getCamera()
-            .setPositionAndTarget(new Vec3(-2, -2, 2.7), new Vec3(0, 0, 0.4))
+          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-2, -2, 2.7), new Vec3(0, 0, 0.4))
           renderer.frameAll()
           window.postMessage(`done-${data}`)
         }

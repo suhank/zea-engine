@@ -49,14 +49,14 @@ function roundRect(
       tl: radius,
       tr: radius,
       br: radius,
-      bl: radius
+      bl: radius,
     }
   } else {
     const defaultRadius: { [key: string]: number } = {
       tl: 0,
       tr: 0,
       br: 0,
-      bl: 0
+      bl: 0,
     }
     for (const side in defaultRadius) {
       radius[side] = radius[side] || <number>defaultRadius[side]
@@ -201,7 +201,7 @@ class Label extends DataImage {
     }
 
     const loadText = (): Promise<void> => {
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         const library = this.getParameter('Library')!.getValue()
         if (library == '') {
           resolve()
@@ -236,7 +236,7 @@ class Label extends DataImage {
       })
     }
     const loadFont = (): Promise<void> => {
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         if ((document as any).fonts != undefined) {
           const font = this.getParameter('Font')!.getValue()
           const fontSize = this.getParameter('FontSize')!.getValue()
@@ -260,7 +260,7 @@ class Label extends DataImage {
   renderLabelToImage() {
     // console.log("renderLabelToImage")
     const ctx2d = this.__canvasElem.getContext('2d', {
-      alpha: true
+      alpha: true,
     })
 
     let text = this.getParameter('Text')!.getValue()
@@ -337,7 +337,7 @@ class Label extends DataImage {
     this.emit('labelRendered', {
       width: this.width,
       height: this.height,
-      data: this.__data
+      data: this.__data,
     })
   }
 

@@ -324,7 +324,7 @@ class AssetItem extends TreeItem {
         })
       }
     }
-    context.addPLCB = postLoadCallback => postLoadCallbacks.push(postLoadCallback)
+    context.addPLCB = (postLoadCallback) => postLoadCallbacks.push(postLoadCallback)
 
     this.__materials.readBinary(reader, context)
 
@@ -456,7 +456,7 @@ class AssetItem extends TreeItem {
     this.loaded = src.loaded
 
     if (!src.loaded) {
-      src.once('loaded', event => {
+      src.once('loaded', (event) => {
         const srcLocalXfo = src.getParameter('LocalXfo')!.getValue()
         const localXfoParam = this.getParameter('LocalXfo')
         const localXfo = localXfoParam!.getValue()

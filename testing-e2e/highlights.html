@@ -27,7 +27,7 @@
         GeomItem,
         TreeItem,
         Material,
-        SelectionSet
+        SelectionSet,
       } = zeaEngine
 
       const scene = new Scene()
@@ -75,16 +75,13 @@
       selectionSet1.getParameter('Highlighted').setValue(true)
       selectionSet2.getParameter('Highlighted').setValue(true)
 
-      renderer
-        .getViewport()
-        .getCamera()
-        .setPositionAndTarget(new Vec3(25, 25, 13), new Vec3(10, 0, 0))
+      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(25, 25, 13), new Vec3(10, 0, 0))
       renderer.frameAll()
 
       window.postMessage('done-loading')
 
       // {{{ Messages handler.
-      const handleMessage = event => {
+      const handleMessage = (event) => {
         const { data } = event
 
         if (data === 'variant-01') {

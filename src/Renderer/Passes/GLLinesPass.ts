@@ -113,7 +113,7 @@ class GLLinesPass extends GLOpaqueGeomsPass {
           format: 'RGBA',
           filter: 'NEAREST',
           width: 1,
-          height: 2
+          height: 2,
         })
         this.fattenLinesShader = new FattenLinesShader(gl)
         this.quad = new GLMesh(gl, new Plane(1, 1))

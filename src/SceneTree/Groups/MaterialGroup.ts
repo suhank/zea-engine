@@ -63,7 +63,7 @@ class MaterialGroup extends BaseGroup {
     }
 
     const key = 'kinematicGroupItemHighlight' + this.getId()
-    Array.from(this.__itemsParam.getValue()).forEach(item => {
+    Array.from(this.__itemsParam.getValue()).forEach((item) => {
       if (item instanceof TreeItem) {
         if (highlighted) item.addHighlight(key, color, true)
         else item.removeHighlight(key, true)
@@ -105,8 +105,8 @@ class MaterialGroup extends BaseGroup {
     const material = this.getParameter('Material')!.getValue()
 
     // TODO: Bind an operator
-    Array.from(this.__itemsParam.getValue()).forEach(item => {
-      ;(<TreeItem>item).traverse(treeItem => {
+    Array.from(this.__itemsParam.getValue()).forEach((item) => {
+      ;(<TreeItem>item).traverse((treeItem) => {
         if (treeItem instanceof TreeItem && treeItem.hasParameter('Material')) {
           const p = treeItem.getParameter('Material')!
           if (material) {
@@ -152,7 +152,7 @@ class MaterialGroup extends BaseGroup {
     const material = this.getParameter('Material')!.getValue()
     if (material) {
       // TODO: Bind an operator instead
-      item.traverse(treeItem => {
+      item.traverse((treeItem) => {
         if (treeItem instanceof TreeItem && treeItem.hasParameter('Material')) {
           const p = treeItem.getParameter('Material')!
           if (material) {

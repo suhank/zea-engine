@@ -73,7 +73,7 @@ class GLMesh extends GLGeom {
       this.__glattrbuffers[attrName] = {
         buffer: attrBuffer,
         dataType: attrData.dataType,
-        normalized: attrData.normalized
+        normalized: attrData.normalized,
       }
 
       if (attrName == 'textureCoords') this.__glattrbuffers['texCoords'] = this.__glattrbuffers['textureCoords']

@@ -12,7 +12,8 @@
     <script src="../dist/index.umd.js"></script>
 
     <script type="module">
-      const { GLRenderer, Scene, Vec3, Xfo, Color, TreeItem, BillboardItem, Label, Material, Sphere, GeomItem } = zeaEngine
+      const { GLRenderer, Scene, Vec3, Xfo, Color, TreeItem, BillboardItem, Label, Material, Sphere, GeomItem } =
+        zeaEngine
 
       const scene = new Scene()
       const domElement = document.getElementById('app')
@@ -66,7 +67,6 @@
       promises.push(addLabel(new Vec3(0, 0, 0), new Vec3(0, 0.5, 1.5), new Color(1, 0, 0), '------ billboard 1 ------'))
 
       promises.push(addLabel(new Vec3(0, 0, 0), new Vec3(0, 10, 1.5), new Color(1, 1, 0), 'billboard 2'))
-
 
       Promise.all(promises).then(() => {
         window.postMessage(`done-Loading`)

@@ -86,7 +86,7 @@ class PlaneType {
   toJSON(): Record<string, unknown> {
     return {
       normal: this.normal.toJSON(),
-      w: this.w
+      w: this.w,
     }
   }
 

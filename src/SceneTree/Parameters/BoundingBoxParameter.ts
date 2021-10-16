@@ -64,7 +64,7 @@ class BoundingBoxParameter extends Parameter<Box3> implements IBinaryReader {
 
   toJSON(context?: Record<string, unknown>): Record<string, any> {
     return {
-      value: this.value?.toJSON()
+      value: this.value?.toJSON(),
     }
   }
 

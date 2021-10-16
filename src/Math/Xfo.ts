@@ -271,7 +271,7 @@ class Xfo {
   toJSON(): Record<string, any> {
     const j = {
       tr: this.tr.toJSON(),
-      ori: this.ori.toJSON()
+      ori: this.ori.toJSON(),
     }
     if (!this.sc.is111()) (j as any).sc = this.sc.toJSON()
 

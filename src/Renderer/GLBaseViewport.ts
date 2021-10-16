@@ -13,7 +13,7 @@ import { SceneSetEvent } from '../Utilities/Events/SceneSetEvent'
 const FRAMEBUFFER = {
   MSAA_RENDERBUFFER: 0,
   COLORBUFFER: 1,
-  DEPTHBUFFER: 2
+  DEPTHBUFFER: 2,
 }
 
 /**
@@ -76,7 +76,7 @@ class GLBaseViewport extends ParameterOwner {
         format: 'RGBA',
         filter: 'LINEAR',
         width: 4,
-        height: 4
+        height: 4,
       })
       this.depthTexture = new GLTexture2D(gl, {
         type: gl.UNSIGNED_INT_24_8,
@@ -85,7 +85,7 @@ class GLBaseViewport extends ParameterOwner {
         filter: gl.NEAREST,
         wrap: gl.CLAMP_TO_EDGE,
         width: 4,
-        height: 4
+        height: 4,
       })
       // this.offscreenBufferFbo = new GLFbo(gl, this.offscreenBuffer, true)
       // this.offscreenBufferFbo.setClearColor(this.__backgroundColor.asArray())
@@ -96,7 +96,7 @@ class GLBaseViewport extends ParameterOwner {
       format: 'RGBA',
       filter: 'NEAREST',
       width: 4,
-      height: 4
+      height: 4,
     })
     this.highlightedGeomsBufferFbo = new GLFbo(gl, this.highlightedGeomsBuffer, true)
     this.highlightedGeomsBufferFbo.setClearColor(new Color(0, 0, 0, 0))
@@ -139,7 +139,7 @@ class GLBaseViewport extends ParameterOwner {
     if (scene) {
       sceneSet(scene)
     } else {
-      this.__renderer.once('sceneSet', event => {
+      this.__renderer.once('sceneSet', (event) => {
         sceneSet((<SceneSetEvent>event).scene)
       })
     }
@@ -570,7 +570,7 @@ class GLBaseViewport extends ParameterOwner {
    * @return {number} - index result of the find.
    */
   _getOngoingPointerIndexById(pointerId: number): number {
-    return this.__ongoingPointers.findIndex(pointer => pointer.pointerId === pointerId)
+    return this.__ongoingPointers.findIndex((pointer) => pointer.pointerId === pointerId)
   }
 }
 

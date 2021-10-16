@@ -30,14 +30,14 @@
       const image0 = new LDRImage('LDRImage')
       image0.setImageURL('data/zea-logo.png', 'RGBA')
       texturedMaterial0.getParameter('BaseColor').setImage(image0)
-      promises.push(new Promise(resolve => image0.on('loaded', resolve)))
+      promises.push(new Promise((resolve) => image0.on('loaded', resolve)))
 
       const texturedMaterial1 = new Material('Material', 'FlatSurfaceShader')
       texturedMaterial1.getParameter('BaseColor').setValue(new Color(0.6, 0, 1))
       const image1 = new LDRImage('LDRImage')
       image1.setImageURL('data/avatar1.jpg')
       texturedMaterial1.getParameter('BaseColor').setImage(image1)
-      promises.push(new Promise(resolve => image1.on('loaded', resolve)))
+      promises.push(new Promise((resolve) => image1.on('loaded', resolve)))
 
       const material = new Material('surfaces', 'SimpleSurfaceShader')
       material.getParameter('BaseColor').setValue(new Color(1, 0, 1, 1))
@@ -57,15 +57,12 @@
       const geomItem3 = new GeomItem('Sphere3', sphere1, material, new Xfo(new Vec3(-4, 0, 0)))
       scene.getRoot().addChild(geomItem3)
 
-      renderer
-        .getViewport()
-        .getCamera()
-        .setPositionAndTarget(new Vec3(10, 10, 2.7), new Vec3(0, 0, 0.4))
+      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(10, 10, 2.7), new Vec3(0, 0, 0.4))
 
       window.postMessage('done-loading')
 
       // {{{ Messages handler.
-      const handleMessage = event => {
+      const handleMessage = (event) => {
         const { data } = event
 
         if (data === 'variant-01') {
@@ -77,17 +74,11 @@
           window.postMessage(`done-${data}`)
         } else if (data === 'variant-02') {
           // Now look away, so that the scene gets frustum culled.
-          renderer
-            .getViewport()
-            .getCamera()
-            .setPositionAndTarget(new Vec3(10, 10, 2.7), new Vec3(20, 20, 0.4))
+          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(10, 10, 2.7), new Vec3(20, 20, 0.4))
           window.postMessage(`done-${data}`)
         } else if (data === 'variant-03') {
           // Now look back, so that the scene gets frustum un-culled.
-          renderer
-            .getViewport()
-            .getCamera()
-            .setPositionAndTarget(new Vec3(10, 10, 2.7), new Vec3(0, 0, 0.4))
+          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(10, 10, 2.7), new Vec3(0, 0, 0.4))
           window.postMessage(`done-${data}`)
         } else if (data === 'variant-04') {
           scene.getRoot().removeChild(scene.getRoot().getChildIndex(geomItem2))

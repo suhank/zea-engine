@@ -19,12 +19,7 @@ describe('GeomItem', () => {
   it('updates parameters', () => {
     const geoItem = new GeomItem()
     geoItem.getParameter('Geometry').setValue(new Sphere(1.4, 13))
-    expect(
-      geoItem
-        .getParameter('Geometry')
-        .getValue()
-        .toJSON()
-    ).toEqual(new Sphere(1.4, 13).toJSON())
+    expect(geoItem.getParameter('Geometry').getValue().toJSON()).toEqual(new Sphere(1.4, 13).toJSON())
 
     const standardMaterial = new Material('myMaterial', 'SimpleSurfaceShader')
     standardMaterial.getParameter('BaseColor').setValue(new Color(89 / 255, 182 / 255, 92 / 255))
@@ -33,12 +28,7 @@ describe('GeomItem', () => {
 
     const xfo = new Xfo(new Vec3(1, 2, 3), new Quat(0, 0, 1, 0), new Vec3(8, 9, 10))
     geoItem.getParameter('GeomOffsetXfo').setValue(xfo)
-    expect(
-      geoItem
-        .getParameter('GeomOffsetXfo')
-        .getValue()
-        .toJSON()
-    ).toEqual(xfo.toJSON())
+    expect(geoItem.getParameter('GeomOffsetXfo').getValue().toJSON()).toEqual(xfo.toJSON())
 
     // This is computed, so the returned value is different
     const mat4 = new Mat4(-8, 0, 0, 0, 0, -9, 0, 0, 0, 0, 10, 0, 1, 2, 3, 1)
@@ -62,18 +52,15 @@ describe('GeomItem', () => {
         .approxEqual(
           {
             ori: { w: 1, x: 0, y: 0, z: 0 },
-            tr: { x: 7, y: 6, z: 0 }
+            tr: { x: 7, y: 6, z: 0 },
           },
           0.001
         )
     ).toBe(true)
 
-    expect(
-      child
-        .getParameter('GeomMat')
-        .getValue()
-        .asArray()
-    ).toEqual(Float32Array.of(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 9, 10, 0, 1))
+    expect(child.getParameter('GeomMat').getValue().asArray()).toEqual(
+      Float32Array.of(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 9, 10, 0, 1)
+    )
   })
 
   test('Saving to JSON (serialization).', () => {

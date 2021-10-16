@@ -94,7 +94,7 @@ class MaterialParameter extends Parameter<Material | undefined> {
 
     if (this.value) {
       j = {
-        value: !context || !context.onlyPath ? this.value.toJSON(context) : this.value.getPath()
+        value: !context || !context.onlyPath ? this.value.toJSON(context) : this.value.getPath(),
       }
     }
 

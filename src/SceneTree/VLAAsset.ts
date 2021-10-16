@@ -133,7 +133,7 @@ class VLAAsset extends AssetItem {
             const basePath = folder + stem
             const geomLibraryJSON = {
               numGeomsPerFile: numGeomsFiles,
-              numGeoms: this.__geomLibrary.getNumGeoms() // Note: was set during readBinary.Why do we need to provide this again?
+              numGeoms: this.__geomLibrary.getNumGeoms(), // Note: was set during readBinary.Why do we need to provide this again?
             }
             this.__geomLibrary.loadGeomFilesStream(geomLibraryJSON, basePath, context)
           }

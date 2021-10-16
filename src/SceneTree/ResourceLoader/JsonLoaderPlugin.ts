@@ -28,7 +28,7 @@ class JsonLoaderPlugin {
 
     const promise = new Promise(
       (resolve, reject) => {
-        fetch(url).then(response => {
+        fetch(url).then((response) => {
           this.resourceLoader.incrementWorkDone(1)
           if (checkStatus(response)) resolve(response.json())
           else reject(`loadJSON: ${response.status} - ${response.statusText} : ${url}`)

@@ -72,11 +72,11 @@ class VLHImage extends BaseImage {
    * @param {Record<string, any>} entries - The entries value.
    * @private
    */
-  __decodeData(entries: Record<string, any>): Promise<void>{
+  __decodeData(entries: Record<string, any>): Promise<void> {
     return new Promise((resolve, reject) => {
       const ldr = entries.ldr
       const cdm = entries.cdm
-  
+
       // ///////////////////////////////
       // Parse the data.
       const blob = new Blob([ldr.buffer])

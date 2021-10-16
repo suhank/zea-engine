@@ -18,7 +18,7 @@ const ZeaEngine = {
   ...Math,
   ...Utilities,
   ...SceneTree,
-  ...Renderer
+  ...Renderer,
 }
 
 zeaDebug('Zea Engine version %s', packageJson.version)

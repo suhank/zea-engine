@@ -175,7 +175,7 @@ class OperatorOutput extends EventEmitter {
     return {
       name: this.__name,
       paramPath: context && context.makeRelative ? context.makeRelative(paramPath) : paramPath,
-      paramBindIndex: this._paramBindIndex
+      paramBindIndex: this._paramBindIndex,
     }
   }
 

@@ -73,7 +73,7 @@ const parseGeomsBinary = (data: any, callback: any) => {
       name: geom.name,
       type: className,
       geomBuffers,
-      bbox
+      bbox,
     })
   }
   callback(
@@ -82,7 +82,7 @@ const parseGeomsBinary = (data: any, callback: any) => {
       geomFileID: data.geomFileID,
       geomIndexOffset: data.geomIndexOffset,
       geomsRange: data.geomsRange,
-      geomDatas
+      geomDatas,
     },
     transferables
   )

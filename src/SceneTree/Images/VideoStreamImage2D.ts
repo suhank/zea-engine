@@ -29,16 +29,16 @@ class VideoStreamImage2D extends BaseImage {
       height,
       frameRate: {
         ideal: 60,
-        max: 60
-      }
+        max: 60,
+      },
     }
     if (rearCamera) {
       video.facingMode = {
-        exact: 'environment'
+        exact: 'environment',
       }
     } else {
       video.facingMode = {
-        facingMode: 'user'
+        facingMode: 'user',
       }
     }
 
@@ -68,11 +68,11 @@ class VideoStreamImage2D extends BaseImage {
     navigator.mediaDevices
       .getUserMedia({
         audio: false,
-        video
+        video,
       })
-      .then(mediaStream => {
+      .then((mediaStream) => {
         domElement.srcObject = mediaStream
-        domElement.onloadedmetadata = e => {
+        domElement.onloadedmetadata = (e) => {
           domElement.play()
 
           this.width = domElement.videoWidth
@@ -100,7 +100,7 @@ class VideoStreamImage2D extends BaseImage {
           timerCallback()
         }
       })
-      .catch(function(err) {
+      .catch(function (err) {
         /* handle the error */
       })
   }
@@ -158,7 +158,7 @@ class VideoStreamImage2D extends BaseImage {
       width: this.width,
       height: this.height,
       data: this.__data,
-      flipY: this.getParameter('FlipY')!.getValue()
+      flipY: this.getParameter('FlipY')!.getValue(),
     }
   }
 }

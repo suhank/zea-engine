@@ -31,19 +31,8 @@
       }
     </style>
     <script type="module">
-      const {
-        GLRenderer,
-        Scene,
-        Vec3,
-        Xfo,
-        Color,
-        ObjAsset,
-        Sphere,
-        Material,
-        GeomItem,
-        TreeItem,
-        BaseTool
-      } = window.zeaEngine
+      const { GLRenderer, Scene, Vec3, Xfo, Color, ObjAsset, Sphere, Material, GeomItem, TreeItem, BaseTool } =
+        window.zeaEngine
 
       const canvas = document.querySelector('#renderer')
 
@@ -64,12 +53,9 @@
       xfo.tr.set(0, 0, 3.55)
       xfo.ori.setFromAxisAndAngle(new Vec3(1, 0, 0), Math.PI * 0.5)
       objAsset.getParameter('GlobalXfo').setValue(xfo)
-      renderer
-        .getViewport()
-        .getCamera()
-        .setPositionAndTarget(new Vec3(8, 8, 6), new Vec3(2, 0, 3))
+      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(8, 8, 6), new Vec3(2, 0, 3))
 
-      const postMessage = msg => {
+      const postMessage = (msg) => {
         console.log(msg)
         window.postMessage(msg)
       }
@@ -133,7 +119,7 @@
           }
         }
         onPointerUp(event) {
-          this.stroke.traverse(item => {
+          this.stroke.traverse((item) => {
             item.setSelectable(true)
           })
           this.viewport.releaseCapture(this)
@@ -141,7 +127,7 @@
       }
       const makeStrokeTool = new MakeStrokeTool(renderer.getViewport())
 
-      renderer.getViewport().on('pointerDown', event => {
+      renderer.getViewport().on('pointerDown', (event) => {
         if (event.intersectionData) {
           if (event.intersectionData.geomItem.getParameter('Geometry').getValue() == sphere) {
             movePointTool.startMove(event)

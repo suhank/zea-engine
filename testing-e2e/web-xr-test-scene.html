@@ -68,7 +68,7 @@
         GeomItem,
         ObjAsset,
         Cylinder,
-        Cuboid
+        Cuboid,
       } = window.zeaEngine
 
       const canvas = document.querySelector('#renderer')
@@ -88,10 +88,7 @@
       scene.setupGrid(10.0, 10, new Color())
 
       if (false) {
-        renderer
-          .getViewport()
-          .getCamera()
-          .setPositionAndTarget(new Vec3(5, -5, 2), new Vec3(0, 1, 0.75))
+        renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(5, -5, 2), new Vec3(0, 1, 0.75))
         let defaultColor
         const pointerOverColor = new Color(0, 1, 1)
         const pointerDownColor = new Color(1, 0, 0)
@@ -131,10 +128,7 @@
         const dim = Math.round(Math.cbrt(count))
         console.log('Will render GeomItem count:', Math.pow(dim, 3))
 
-        renderer
-          .getViewport()
-          .getCamera()
-          .setPositionAndTarget(new Vec3(-15, -15, 2), new Vec3(0, 1, 10.75))
+        renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-15, -15, 2), new Vec3(0, 1, 10.75))
         const cuboid = new Cuboid(0.5, 0.5, 0.5)
         const sphere = new Sphere(0.5, 12, 24)
 
@@ -172,7 +166,7 @@
       // //////////////////////////////////////
       // Setup Highlighting
       let geomItem
-      scene.getRoot().on('pointerEnter', event => {
+      scene.getRoot().on('pointerEnter', (event) => {
         if (event.intersectionData && event.intersectionData.geomItem) {
           geomItem = event.intersectionData.geomItem
           if (geomItem) {
@@ -180,19 +174,19 @@
           }
         }
       })
-      scene.getRoot().on('pointerLeave', event => {
+      scene.getRoot().on('pointerLeave', (event) => {
         if (event.leftGeometry == geomItem) {
           geomItem.removeHighlight('pointerEnter')
         }
       })
-      scene.getRoot().on('pointerDown', event => {
+      scene.getRoot().on('pointerDown', (event) => {
         if (event.intersectionData && event.intersectionData.geomItem) {
           event.setCapture(geomItem)
           geomItem.addHighlight('pointerDown', new Color(0, 1, 0, 0.3))
           geomItem = event.intersectionData.geomItem
         }
       })
-      scene.getRoot().on('pointerUp', event => {
+      scene.getRoot().on('pointerUp', (event) => {
         if (event.getCapture() == geomItem) event.releaseCapture()
         const intersectionData = event.controller ? event.controller.getGeomItemAtTip() : event.intersectionData
         geomItem.removeHighlight('pointerDown')
@@ -204,11 +198,11 @@
       const h = document.querySelector('#buttonHolder')
       const b = document.querySelector('#button')
 
-      renderer.getXRViewport().then(xrvp => {
+      renderer.getXRViewport().then((xrvp) => {
         h.textContent = 'XR Device Detected'
         b.textContent = 'Launch VR'
 
-        xrvp.on('presentingChanged', event => {
+        xrvp.on('presentingChanged', (event) => {
           const { state } = event
           if (state) {
             h.textContent = 'Session In Progress'
@@ -219,11 +213,11 @@
           }
         })
 
-        b.addEventListener('click', function(event) {
+        b.addEventListener('click', function (event) {
           xrvp.togglePresenting()
         })
 
-        document.addEventListener('keydown', event => {
+        document.addEventListener('keydown', (event) => {
           if (event.key == ' ') {
             xrvp.togglePresenting()
           }

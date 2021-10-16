@@ -112,7 +112,7 @@ class TreeItemParameter extends Parameter<TreeItem | undefined> {
    */
   toJSON(context: Record<string, any>): Record<string, unknown> {
     return {
-      value: context.makeRelative(this.value?.getPath())
+      value: context.makeRelative(this.value?.getPath()),
     }
   }
 

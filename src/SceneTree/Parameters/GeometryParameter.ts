@@ -76,7 +76,7 @@ class GeometryParameter extends Parameter<BaseGeom | undefined> {
   toJSON(context?: Record<string, any>): Record<string, unknown> {
     return {
       name: this.name,
-      value: this.value?.toJSON(context)
+      value: this.value?.toJSON(context),
     }
   }
 

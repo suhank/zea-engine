@@ -118,7 +118,7 @@ class OperatorInput extends EventEmitter {
     const paramPath = this.param ? this.param.getPath() : ''
     return {
       name: this.name,
-      paramPath: context && context.makeRelative ? context.makeRelative(paramPath) : paramPath
+      paramPath: context && context.makeRelative ? context.makeRelative(paramPath) : paramPath,
     }
   }
 

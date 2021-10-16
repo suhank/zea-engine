@@ -3,7 +3,7 @@ import { Registry } from '../Registry'
 /**
  * @private
  */
-const sgFactory: Record<any,any> = {
+const sgFactory: Record<any, any> = {
   registerClass: (blueprintName: any, blueprint: any) => {
     console.warn(`'sgFactory' is deprecated, Please use 'Registry.register'`)
     Registry.register(blueprintName, blueprint)

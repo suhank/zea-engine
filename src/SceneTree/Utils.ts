@@ -1,26 +1,26 @@
-const getFileFolder = function(filePath: string) {
+const getFileFolder = function (filePath: string) {
   return filePath.substring(0, filePath.lastIndexOf('/')) + '/'
 }
 
-const loadFile = function(url: string, responseType: any, onSucceed: any, onFail: any, onProgress: any = undefined) {
+const loadFile = function (url: string, responseType: any, onSucceed: any, onFail: any, onProgress: any = undefined) {
   try {
     const xhr = new XMLHttpRequest()
     xhr.responseType = responseType
-    xhr.addEventListener('timeout', event => {
+    xhr.addEventListener('timeout', (event) => {
       throw new Error('The request for ' + url + ' timed out.')
     })
-    xhr.addEventListener('error', event => {
+    xhr.addEventListener('error', (event) => {
       throw new Error('The request for ' + url + ': xhr.readyState:' + xhr.readyState)
       onFail(xhr.statusText)
     })
-    xhr.addEventListener('abort', event => {
+    xhr.addEventListener('abort', (event) => {
       throw new Error('The request for ' + url + ': xhr.readyState:' + xhr.readyState)
       onFail(xhr.statusText)
     })
-    xhr.addEventListener('progress', event => {
+    xhr.addEventListener('progress', (event) => {
       if (onProgress) onProgress(event.total, event.loaded)
     })
-    xhr.addEventListener('loadend', event => {
+    xhr.addEventListener('loadend', (event) => {
       if (xhr.status == 200) onSucceed(xhr)
       else onFail(xhr.statusText)
     })
@@ -32,7 +32,7 @@ const loadFile = function(url: string, responseType: any, onSucceed: any, onFail
   }
 }
 
-const loadTextfile = function(url: string, onSucceed: any, onFail: any = undefined, onProgress: any = undefined) {
+const loadTextfile = function (url: string, onSucceed: any, onFail: any = undefined, onProgress: any = undefined) {
   loadFile(
     url,
     'text',
@@ -49,7 +49,7 @@ const loadTextfile = function(url: string, onSucceed: any, onFail: any = undefin
   )
 }
 
-const loadJSONfile = function(url: any, onSucceed: any, onFail: any = undefined, onProgress: any = undefined) {
+const loadJSONfile = function (url: any, onSucceed: any, onFail: any = undefined, onProgress: any = undefined) {
   loadFile(
     url,
     'json',
@@ -66,7 +66,7 @@ const loadJSONfile = function(url: any, onSucceed: any, onFail: any = undefined,
   )
 }
 
-const loadXMLfile = function(url: any, onSucceed: any, onFail: any = undefined, onProgress: any = undefined) {
+const loadXMLfile = function (url: any, onSucceed: any, onFail: any = undefined, onProgress: any = undefined) {
   loadFile(
     url,
     'document',
@@ -83,7 +83,7 @@ const loadXMLfile = function(url: any, onSucceed: any, onFail: any = undefined, 
   )
 }
 
-const loadBinfile = function(url: any, onSucceed: any, onFail: any = undefined, onProgress: any = undefined) {
+const loadBinfile = function (url: any, onSucceed: any, onFail: any = undefined, onProgress: any = undefined) {
   loadFile(
     url,
     'arraybuffer',

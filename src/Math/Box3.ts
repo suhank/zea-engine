@@ -287,7 +287,7 @@ class Box3 {
   toJSON(): Record<string, Record<string, number>> {
     return {
       p0: this.p0.toJSON(),
-      p1: this.p1.toJSON()
+      p1: this.p1.toJSON(),
     }
   }
 
@@ -302,12 +302,12 @@ class Box3 {
     const p0 = {
       x: MathFunctions.isNumeric(j.p0.x) ? j.p0.x : Number.POSITIVE_INFINITY,
       y: MathFunctions.isNumeric(j.p0.y) ? j.p0.y : Number.POSITIVE_INFINITY,
-      z: MathFunctions.isNumeric(j.p0.z) ? j.p0.z : Number.POSITIVE_INFINITY
+      z: MathFunctions.isNumeric(j.p0.z) ? j.p0.z : Number.POSITIVE_INFINITY,
     }
     const p1 = {
       x: MathFunctions.isNumeric(j.p1.x) ? j.p1.x : Number.NEGATIVE_INFINITY,
       y: MathFunctions.isNumeric(j.p1.y) ? j.p1.y : Number.NEGATIVE_INFINITY,
-      z: MathFunctions.isNumeric(j.p1.z) ? j.p1.z : Number.NEGATIVE_INFINITY
+      z: MathFunctions.isNumeric(j.p1.z) ? j.p1.z : Number.NEGATIVE_INFINITY,
     }
     this.p0.fromJSON(p0)
     this.p1.fromJSON(p1)

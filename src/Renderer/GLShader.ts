@@ -297,7 +297,7 @@ class GLShader extends BaseItem {
     const attrs: Record<string, any> = this.getAttributes()
     const result: Record<string, any> = {
       attrs: {},
-      unifs: {}
+      unifs: {},
     }
     for (const attrName in attrs) {
       const location = gl.getAttribLocation(shaderProgramHdl, attrName)
@@ -310,7 +310,7 @@ class GLShader extends BaseItem {
         name: attrName,
         location: location,
         type: attrDesc.type,
-        instanced: attrDesc.instanced
+        instanced: attrDesc.instanced,
       }
     }
     const unifs: Record<string, string> = this.getUniforms() // TODO: refactor type in fn()
@@ -346,7 +346,7 @@ class GLShader extends BaseItem {
       result.unifs[uniformName] = {
         name: uniformName,
         location: location,
-        type: unifType
+        type: unifType,
       }
     }
     return result
@@ -470,7 +470,7 @@ class GLShader extends BaseItem {
 
   // /////////////////////////////
   // Parameters
-  
+
   /**
    * The getGeomDataShaderName method.
    * @return {string} - an array of param declarations that the shader expects the material tp provide.

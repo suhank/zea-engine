@@ -118,7 +118,7 @@ class GLStandardGeomsPass extends GLPass {
     return {
       glShader,
       glgeomdatashader,
-      glselectedshader
+      glselectedshader,
     }
   }
 
@@ -143,7 +143,7 @@ class GLStandardGeomsPass extends GLPass {
     if (geomItem) {
       return {
         geomItem,
-        dist
+        dist,
       }
     }
     return undefined

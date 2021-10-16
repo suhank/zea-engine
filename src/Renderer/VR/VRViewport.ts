@@ -290,7 +290,7 @@ class VRViewport extends GLBaseViewport {
         ;(navigator as any)?.xr
           .requestSession('immersive-vr', {
             requiredFeatures: ['local-floor'],
-            optionalFeatures: ['bounded-floor']
+            optionalFeatures: ['bounded-floor'],
           })
           .then((session: any) => {
             this.__renderer.__xrViewportPresenting = true
@@ -323,7 +323,7 @@ class VRViewport extends GLBaseViewport {
                 controller.buttonPressed = true
                 this.onPointerDown({
                   button: 1,
-                  controller
+                  controller,
                 })
               }
             }
@@ -333,7 +333,7 @@ class VRViewport extends GLBaseViewport {
                 controller.buttonPressed = false
                 this.onPointerUp({
                   button: 1,
-                  controller
+                  controller,
                 })
               }
             }
@@ -371,7 +371,7 @@ class VRViewport extends GLBaseViewport {
               baseLayer: glLayer /* 
               // Output canvas not working anymore
               outputContext: mirrorCanvas ? mirrorCanvas.getContext('xrpresent') : null,
-              ,*/
+              ,*/,
             })
 
             this.__width = glLayer.framebufferWidth
@@ -497,10 +497,7 @@ class VRViewport extends GLBaseViewport {
     }
 
     this.__vrhead.update(pose)
-    const viewXfo = this.__vrhead
-      .getTreeItem()
-      .getParameter('GlobalXfo')!
-      .getValue()
+    const viewXfo = this.__vrhead.getTreeItem().getParameter('GlobalXfo')!.getValue()
 
     const views = pose.views
 
@@ -548,7 +545,7 @@ class VRViewport extends GLBaseViewport {
         viewMatrix: this.__viewMatrices[i],
         projectionMatrix: this.__projectionMatrices[i],
         region: [vp.x, vp.y, vp.width, vp.height],
-        isOrthographic: false
+        isOrthographic: false,
       })
     }
 

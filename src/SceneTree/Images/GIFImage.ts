@@ -219,7 +219,7 @@ class GIFImage extends FileImage {
               atlasSize,
               frameRange: [0, frames.length],
               frameDelays,
-              imageData
+              imageData,
             })
           },
           (statusText: any) => {

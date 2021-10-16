@@ -72,7 +72,7 @@ class BaseImage extends BaseItem {
       wrapS: this.wrapS,
       wrapT: this.wrapT,
       minFilter: this.minFilter,
-      magFilter: this.magFilter
+      magFilter: this.magFilter,
     }
   }
 }

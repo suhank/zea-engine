@@ -29,7 +29,6 @@ class FatPointsShader extends GLShader {
     return false
   }
 
-
   /**
    * The supportsInstancing method.
    * @return {boolean} - return false for shaders that cannot be rendered in instanced mode.

@@ -521,7 +521,7 @@ class Vec4 {
       x: this.x,
       y: this.y,
       z: this.z,
-      t: this.t
+      t: this.t,
     }
   }
 

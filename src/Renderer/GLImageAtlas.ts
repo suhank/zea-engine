@@ -176,7 +176,7 @@ class GLImageAtlas extends GLRenderTarget {
         w: subImage.width + border * 2,
         h: subImage.height + border * 2,
         area: subImage.width * subImage.height,
-        index
+        index,
       })
     })
 
@@ -191,7 +191,7 @@ class GLImageAtlas extends GLRenderTarget {
       if (block.fit) {
         this.__layout[block.index] = {
           pos: new Vec2(block.fit.x + border, block.fit.y + border),
-          size: new Vec2(block.w, block.h)
+          size: new Vec2(block.w, block.h),
         }
       } else {
         console.warn('Unable to fit image')
@@ -209,7 +209,7 @@ class GLImageAtlas extends GLRenderTarget {
       height,
       format: this.__typeParam == 'FLOAT' && this.__formatParam == 'RGB' ? 'RGBA' : this.__formatParam,
       type: this.__typeParam,
-      filter: 'LINEAR'
+      filter: 'LINEAR',
     })
 
     const gl = this.__gl
@@ -248,7 +248,7 @@ class GLImageAtlas extends GLRenderTarget {
           layoutItem.pos.x / width,
           layoutItem.pos.y / height,
           layoutItem.size.x / width,
-          layoutItem.size.y / height
+          layoutItem.size.y / height,
         ]
       })
     } else {
@@ -277,7 +277,7 @@ class GLImageAtlas extends GLRenderTarget {
           mipMapped: false,
           width: size,
           height: size,
-          data: dataArray
+          data: dataArray,
         })
       } else {
         this.__atlasLayoutTexture.bufferData(dataArray, size, size)

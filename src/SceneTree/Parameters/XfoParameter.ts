@@ -44,7 +44,7 @@ class XfoParameter extends Parameter<Xfo> implements IBinaryReader {
   toJSON(context?: Record<string, unknown>): Record<string, unknown> {
     return {
       name: this.name,
-      value: this.value.toJSON()
+      value: this.value.toJSON(),
     }
   }
 

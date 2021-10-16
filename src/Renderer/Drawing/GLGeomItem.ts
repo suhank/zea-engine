@@ -8,12 +8,12 @@ const GLGeomItemChangeType = {
   GEOMITEM_CHANGED: 0,
   GEOM_CHANGED: 1,
   VISIBILITY_CHANGED: 2,
-  HIGHLIGHT_CHANGED: 3
+  HIGHLIGHT_CHANGED: 3,
 }
 
 const GLGeomItemFlags = {
   GEOMITEM_FLAG_CUTAWAY: 1, // 1<<0;
-  GEOMITEM_INVISIBLE_IN_GEOMDATA: 2 // 1<<0;
+  GEOMITEM_INVISIBLE_IN_GEOMDATA: 2, // 1<<0;
 }
 
 /** This class is responsible for managing a GeomItem within the renderer.
@@ -207,7 +207,9 @@ class GLGeomItem extends EventEmitter {
   destroy() {
     this.geomItem.removeListenerById('visibilityChanged', this.listenerIDs['visibilityChanged'])
     if (!this.supportInstancing) {
-      this.geomItem.getParameter('GeomMat')!.removeListenerById('valueChanged', this.listenerIDs['GeomMat.valueChanged'])
+      this.geomItem
+        .getParameter('GeomMat')!
+        .removeListenerById('valueChanged', this.listenerIDs['GeomMat.valueChanged'])
       this.geomItem.removeListenerById('cutAwayChanged', this.listenerIDs['cutAwayChanged'])
     }
   }

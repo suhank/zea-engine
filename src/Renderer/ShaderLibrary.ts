@@ -76,7 +76,7 @@ class ShaderLibrary {
     const name = parts[2].slice(0, parts[2].length - 1)
     result.attributes[name] = {
       type: GlslTypes[parts[1]],
-      instanced: instanced
+      instanced: instanced,
     }
 
     // console.log('attributes:' + name + ":" + parts[1]);
@@ -114,11 +114,11 @@ class ShaderLibrary {
       result.numLines += reursiveResult.numLines
       result.uniforms = {
         ...result.uniforms,
-        ...reursiveResult.uniforms
+        ...reursiveResult.uniforms,
       }
       result.attributes = {
         ...result.attributes,
-        ...reursiveResult.attributes
+        ...reursiveResult.attributes,
       }
 
       // console.log('\n glsl snippet: ' + reursiveResult.glsl) // print out snippets
@@ -160,7 +160,7 @@ class ShaderLibrary {
       glsl: '',
       numLines: 0,
       uniforms: {},
-      attributes: {}
+      attributes: {},
     }
 
     // go through each line of a GLSL file
@@ -179,10 +179,7 @@ class ShaderLibrary {
         case '<%include':
         case 'import': {
           // get the contents between quotes and then if there are '/' get the filename
-          const includeFile: string = <string>trimmedLine
-            .split(/'|"|`/)[1]
-            .split('/')
-            .pop() // can be undefined
+          const includeFile: string = <string>trimmedLine.split(/'|"|`/)[1].split('/').pop() // can be undefined
           if (!includes.includes(includeFile)) {
             this.handleImport(result, shaderName, includeFile, includes, lineNumber)
           } else {

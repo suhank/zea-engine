@@ -35,9 +35,9 @@
           positions: {
             dataType: 'Vec3',
             defaultScalarValue: 0.0,
-            data: [0, 0, 0, 0, 1, 0, 1, 1, 0, 1, 0, 0]
-          }
-        }
+            data: [0, 0, 0, 0, 1, 0, 1, 1, 0, 1, 0, 0],
+          },
+        },
       })
       mesh.computeVertexNormals()
 
@@ -65,15 +65,12 @@
       const hardEdgesItem = new GeomItem('hardEdges', hardEdges, hardEdgesMaterial)
       geomItem.addChild(hardEdgesItem)
 
-      renderer
-        .getViewport()
-        .getCamera()
-        .setPositionAndTarget(new Vec3(2, 1, 2.7), new Vec3(0, 0, 0.4))
+      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 1, 2.7), new Vec3(0, 0, 0.4))
       renderer.frameAll()
       window.postMessage('done-loading')
 
       // {{{ Messages handler.
-      const handleMessage = event => {
+      const handleMessage = (event) => {
         const { data } = event
 
         if (data === 'variant-01') {
@@ -85,9 +82,9 @@
               positions: {
                 dataType: 'Vec3',
                 defaultScalarValue: 0.0,
-                data: [0, 0, 0, 0, 1, 0, 0.7, 0.7, 0.2, 1, 0, 0, 0.7, 0.7, 0]
-              }
-            }
+                data: [0, 0, 0, 0, 1, 0, 0.7, 0.7, 0.2, 1, 0, 0, 0.7, 0.7, 0],
+              },
+            },
           })
           mesh.computeVertexNormals()
 
@@ -110,9 +107,9 @@
               positions: {
                 dataType: 'Vec3',
                 defaultScalarValue: 0.0,
-                data: [0, 0, 0, 0, 1, 0, 1, 1, 0, 1, 0, 0]
-              }
-            }
+                data: [0, 0, 0, 0, 1, 0, 1, 1, 0, 1, 0, 0],
+              },
+            },
           })
           mesh.computeVertexNormals()
 

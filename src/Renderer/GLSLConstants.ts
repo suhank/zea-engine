@@ -13,7 +13,7 @@ const glslTypes = {
   mat3: 'Mat3',
   mat4: 'Mat4',
   sampler2D: 'BaseImage',
-  samplerCube: 'BaseImage'
+  samplerCube: 'BaseImage',
 }
 
 export { glslTypes }
