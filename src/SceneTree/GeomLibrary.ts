@@ -13,7 +13,7 @@ import { resourceLoader } from './resourceLoader'
 const multiThreadParsing = true
 
 // @ts-ignore
-import GeomParserWorker from './Geometry/GeomParser-worker.ts'
+import GeomParserWorker from './Geometry/GeomParser-worker.js'
 
 import { StreamFileParsedEvent } from '../Utilities/Events/StreamFileParsedEvent'
 import { RangeLoadedEvent } from '../Utilities/Events/RangeLoadedEvent'
