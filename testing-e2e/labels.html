@@ -29,6 +29,7 @@
 
       const asset = new TreeItem('labels')
       scene.getRoot().addChild(asset)
+      let loaded = false
 
       let index = 0
       const addLabel = (lineEndPos, pos, color, name) => {
@@ -55,9 +56,11 @@
           billboard.on('pointerEnter', (event) => {
             billboard.addHighlight('pointerOver', new Color(1, 0, 0, 0.2), true)
             console.log('pointerEnter', event)
-            renderer.once('redrawOccurred', () => {
-              window.postMessage(`done-MouseOverLabel`)
-            })
+            if (loaded) {
+              renderer.once('redrawOccurred', () => {
+                window.postMessage(`done-MouseOverLabel`)
+              })
+            }
           })
           billboard.on('pointerLeave', (event) => {
             billboard.removeHighlight('pointerOver', true)
@@ -80,6 +83,7 @@
 
       Promise.all(promises).then(() => {
         window.postMessage(`done-Loading`)
+        loaded = true
       })
 
       // {{{ Messages handler.
