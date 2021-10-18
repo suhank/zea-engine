@@ -55,7 +55,9 @@
           billboard.on('pointerEnter', (event) => {
             billboard.addHighlight('pointerOver', new Color(1, 0, 0, 0.2), true)
             console.log('pointerEnter', event)
-            window.postMessage(`done-MouseOverLabel`)
+            renderer.once('redrawOccurred', () => {
+              window.postMessage(`done-MouseOverLabel`)
+            })
           })
           billboard.on('pointerLeave', (event) => {
             billboard.removeHighlight('pointerOver', true)
