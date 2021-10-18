@@ -33,7 +33,7 @@
     "test:e2e": "percy exec cypress run --browser chrome --headless",
     "test:e2e:watch": "percy exec cypress open",
     "lint": "tsdx lint",
-    "prepare": "tsdx build",
+    "prepare": "build",
     "size": "size-limit",
     "analyze": "size-limit --why",
     "copyPackageJson": "copyfiles -f \"./package.json\" src"
