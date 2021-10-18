@@ -52,7 +52,7 @@ class GLRenderTarget extends EventEmitter {
 
     const p: Record<string, any> = processTextureParams(gl, params) // TODO: review
 
-    this.textureTargets.forEach(colorTexture => {
+    this.textureTargets.forEach((colorTexture) => {
       gl.deleteTexture(colorTexture)
     })
     this.textureTargets = []
@@ -457,7 +457,7 @@ class GLRenderTarget extends EventEmitter {
    */
   destroy() {
     const gl = this.__gl
-    this.textureTargets.forEach(colorTexture => {
+    this.textureTargets.forEach((colorTexture) => {
       gl.deleteTexture(colorTexture)
     })
     this.textureTargets = []

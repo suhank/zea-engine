@@ -398,10 +398,10 @@ class GLBaseRenderer extends ParameterOwner {
       if (childItem) this.addTreeItem(<TreeItem>childItem)
     }
 
-    listenerIDs['childAdded'] = treeItem.on('childAdded', event => {
+    listenerIDs['childAdded'] = treeItem.on('childAdded', (event) => {
       this.addTreeItem(event.childItem)
     })
-    listenerIDs['childRemoved'] = treeItem.on('childRemoved', event => {
+    listenerIDs['childRemoved'] = treeItem.on('childRemoved', (event) => {
       this.removeTreeItem(event.childItem)
     })
 
@@ -424,7 +424,7 @@ class GLBaseRenderer extends ParameterOwner {
       const pass = this.__passesRegistrationOrder[i]
 
       const rargs = {
-        continueInSubTree: true
+        continueInSubTree: true,
       }
       handled = pass.itemAddedToScene(treeItem, rargs)
       if (handled) {
@@ -436,7 +436,7 @@ class GLBaseRenderer extends ParameterOwner {
     if (!handled) {
       for (const passCbs of this.__passCallbacks) {
         const rargs = {
-          continueInSubTree: true
+          continueInSubTree: true,
         }
         const handled = passCbs.itemAddedFn(treeItem, rargs)
         if (handled) {
@@ -466,7 +466,7 @@ class GLBaseRenderer extends ParameterOwner {
     for (let i = this.__passesRegistrationOrder.length - 1; i >= 0; i--) {
       const pass = this.__passesRegistrationOrder[i]
       const rargs = {
-        continueInSubTree: true
+        continueInSubTree: true,
       }
       const handled = pass.itemRemovedFromScene(treeItem, rargs)
       if (handled) {
@@ -478,7 +478,7 @@ class GLBaseRenderer extends ParameterOwner {
     for (const passCbs of this.__passCallbacks) {
       if (!passCbs.itemRemovedFn) continue
       const rargs = {
-        continueInSubTree: true
+        continueInSubTree: true,
       }
       const handled = passCbs.itemRemovedFn(treeItem, rargs)
       if (handled) {
@@ -630,7 +630,7 @@ class GLBaseRenderer extends ParameterOwner {
     let lastResize = performance.now()
     let timoutId = 0
     // @ts-ignore: semantic error TS2304:
-    this.resizeObserver = new ResizeObserver(entries => {
+    this.resizeObserver = new ResizeObserver((entries) => {
       for (const entry of entries) {
         if (!entry.contentRect) {
           return
@@ -941,7 +941,7 @@ class GLBaseRenderer extends ParameterOwner {
     /** DOMMouseScroll is for mozilla. */
     window.addEventListener('wheel', onWheel, { passive: false })
 
-    window.oncontextmenu = function() {}
+    window.oncontextmenu = function () {}
 
     document.addEventListener('keydown', (event: any) => {
       if (activeGLRenderer != this || !isValidCanvas()) return
@@ -952,7 +952,7 @@ class GLBaseRenderer extends ParameterOwner {
       }
     })
 
-    document.addEventListener('keyup', event => {
+    document.addEventListener('keyup', (event) => {
       if (activeGLRenderer != this || !isValidCanvas()) return
       prepareEvent(event)
       const vp = activeGLRenderer.getActiveViewport()
@@ -1018,7 +1018,7 @@ class GLBaseRenderer extends ParameterOwner {
     }
     index += this.__passes[passType].length
 
-    pass.on('updated', event => {
+    pass.on('updated', (event) => {
       this.requestRedraw()
     })
     pass.init(this, index)
@@ -1106,10 +1106,7 @@ class GLBaseRenderer extends ParameterOwner {
           }
         }
 
-        const viewXfo = this.getViewport()
-          .getCamera()
-          .getParameter('GlobalXfo')!
-          .getValue()
+        const viewXfo = this.getViewport().getCamera().getParameter('GlobalXfo')!.getValue()
         const event = new ViewChangedEvent('CameraAndPointer', viewXfo)
         this.emit('viewChanged', event)
 

@@ -12,7 +12,7 @@ const GROUP_XFO_MODES = {
   manual: 1,
   first: 2,
   average: 3,
-  globalOri: 4
+  globalOri: 4,
 }
 
 /**
@@ -100,7 +100,7 @@ class KinematicGroup extends BaseGroup {
     }
 
     const key = 'kinematicGroupItemHighlight' + this.getId()
-    Array.from(this.__itemsParam.getValue()).forEach(item => {
+    Array.from(this.__itemsParam.getValue()).forEach((item) => {
       if (item instanceof TreeItem) {
         if (highlighted) item.addHighlight(key, color, true)
         else item.removeHighlight(key, true)
@@ -130,7 +130,7 @@ class KinematicGroup extends BaseGroup {
     if (items.length == 0) return
     this.calculatingGroupXfo = true
 
-    this.memberXfoOps.forEach(op => op.disable())
+    this.memberXfoOps.forEach((op) => op.disable())
 
     // TODO: Disable the group operator?
     const initialXfoMode = this.__initialXfoModeParam.getValue()
@@ -177,7 +177,7 @@ class KinematicGroup extends BaseGroup {
     this.getParameter('GlobalXfo')!.setValue(xfo)
     this.groupTransformOp.setBindXfo(xfo)
 
-    this.memberXfoOps.forEach(op => op.enable())
+    this.memberXfoOps.forEach((op) => op.enable())
     this.calculatingGroupXfo = false
   }
 

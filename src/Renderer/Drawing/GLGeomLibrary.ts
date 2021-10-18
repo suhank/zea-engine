@@ -273,7 +273,7 @@ class GLGeomLibrary extends EventEmitter {
           dataType: attrData.dataType,
           normalized: attrData.normalized,
           dimension: geomAttrDesc.dimension,
-          elementSize: geomAttrDesc.elementSize
+          elementSize: geomAttrDesc.elementSize,
         }
       }
     }
@@ -334,7 +334,7 @@ class GLGeomLibrary extends EventEmitter {
         dataType: attrSpec.dataType,
         normalized: attrSpec.normalized,
         length: numValues,
-        dimension: attrSpec.dimension
+        dimension: attrSpec.dimension,
       }
 
       if (attrName == 'textureCoords') this.glattrbuffers['texCoords'] = this.glattrbuffers['textureCoords']

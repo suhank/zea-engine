@@ -231,7 +231,7 @@ class Camera extends TreeItem {
       '400mm': 3.4,
       '500mm': 2.7,
       '600mm': 2.3,
-      '800mm': 1.7
+      '800mm': 1.7,
     }
     if (!(value in mapping)) {
       console.warn('Camera lense focal length not supported:' + value)
@@ -358,9 +358,7 @@ class Camera extends TreeItem {
     const focalDistance = this.__focalDistanceParam.getValue()
     const fovY = this.__fovParam.getValue()
 
-    const globalXfo = this.getParameter('GlobalXfo')!
-      .getValue()
-      .clone()
+    const globalXfo = this.getParameter('GlobalXfo')!.getValue().clone()
     const aspectRatio = viewport.getWidth() / viewport.getHeight()
     const fovX = Math.atan(Math.tan(fovY * 0.5) * aspectRatio) * 2.0
 
@@ -414,7 +412,7 @@ class Camera extends TreeItem {
         boundaryPoints.push(box3.p1)
       } else {
         treeItems.forEach((treeItem: TreeItem) => {
-          treeItem.traverse(childItem => {
+          treeItem.traverse((childItem) => {
             if (!(childItem instanceof TreeItem)) return
             if (childItem.disableBoundingBox) return
             if (childItem instanceof GeomItem) {

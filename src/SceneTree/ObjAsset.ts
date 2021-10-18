@@ -70,7 +70,7 @@ class ObjAsset extends AssetItem {
         const WHITESPACE_RE = /\s+/
         let material
 
-        const parseColor = function(elements: any) {
+        const parseColor = function (elements: any) {
           if (elements.length == 3)
             return new Color(parseFloat(elements[0]), parseFloat(elements[1]), parseFloat(elements[2]))
           else throw new Error('Unable to parse a color from the following parts:' + elements.join('_'))
@@ -131,7 +131,7 @@ class ObjAsset extends AssetItem {
       }
 
       const loadMtlFile = (mtlFile: any): Promise<void> => {
-        return new Promise(resolve => {
+        return new Promise((resolve) => {
           loadTextfile(mtlFile.url, (fileData: any) => {
             resourceLoader.incrementWorkDone(1)
             parseMtlData(fileData)
@@ -176,7 +176,7 @@ class ObjAsset extends AssetItem {
             numTexCoords: 0,
             numNormals: 0,
             faceCounts: [],
-            material: currMtl
+            material: currMtl,
           }
           geomDatas[name] = currGeom
           numGeoms++

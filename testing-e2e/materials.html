@@ -10,7 +10,6 @@
 
     <link rel="stylesheet" href="styles/tailwind.min.css" />
     <style>
-
       /* The slider itself */
       .slider {
         position: absolute;
@@ -65,7 +64,7 @@
         EnvMap,
         Label,
         BillboardItem,
-        EulerAngles
+        EulerAngles,
       } = window.zeaEngine
 
       const canvas = document.querySelector('#renderer')
@@ -93,21 +92,21 @@
       }
 
       const addLabel = (name, xfo) => {
-          const label = new Label(name)
-          label.getParameter('FontSize').setValue(48)
-          // label.getParameter('FontColor').setValue(color)
-          label.getParameter('BackgroundColor').setValue(new Color(0.6, 0.6, 0.6))
+        const label = new Label(name)
+        label.getParameter('FontSize').setValue(48)
+        // label.getParameter('FontColor').setValue(color)
+        label.getParameter('BackgroundColor').setValue(new Color(0.6, 0.6, 0.6))
 
-          const billboard = new BillboardItem(name, label)
-          billboard.getParameter('LocalXfo').setValue(xfo)
-          billboard.getParameter('PixelsPerMeter').setValue(80)
-          billboard.getParameter('AlignedToCamera').setValue(false)
-          scene.getRoot().addChild(billboard)
+        const billboard = new BillboardItem(name, label)
+        billboard.getParameter('LocalXfo').setValue(xfo)
+        billboard.getParameter('PixelsPerMeter').setValue(80)
+        billboard.getParameter('AlignedToCamera').setValue(false)
+        scene.getRoot().addChild(billboard)
       }
 
-      let yoffset = -30;
+      let yoffset = -30
       const sphere = new Sphere(1.4, 80)
-      const addRow = (name, baseColor, metallic, reflectance, lerpOpacity=false) => {
+      const addRow = (name, baseColor, metallic, reflectance, lerpOpacity = false) => {
         {
           const xfo = new Xfo(new Vec3(0.5 * 35, yoffset, 0))
           xfo.ori.setFromEulerAngles(new EulerAngles(Math.PI * 0.5, 0, Math.PI * 0.5, 'ZYX'))
@@ -119,11 +118,7 @@
           material.getParameter('Metallic').setValue(metallic)
           material.getParameter('Reflectance').setValue(reflectance)
           material.getParameter('Roughness').setValue(i / 9)
-          addMeshShape(
-            name + i, sphere,
-            new Vec3((i / 9 - 0.5) * 30, yoffset, 1.4),
-            material
-          )
+          addMeshShape(name + i, sphere, new Vec3((i / 9 - 0.5) * 30, yoffset, 1.4), material)
         }
         {
           const xfo = new Xfo(new Vec3(-0.5 * 35, yoffset, 0))
@@ -160,12 +155,9 @@
         renderer.exposure = event.target.value / 100
       })
 
-
       renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(35, -35, 20), new Vec3(0, 0, -10))
 
-      Promise.all([
-        new Promise((resolve) => envMap.once('loaded', resolve)),
-      ]).then(() => {
+      Promise.all([new Promise((resolve) => envMap.once('loaded', resolve))]).then(() => {
         window.postMessage('done-loading')
       })
 
@@ -178,7 +170,7 @@
           renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-35, 35, 20), new Vec3(0, 0, -10))
           window.postMessage(`done-${data}`)
         } else if (data === 'variant-02') {
-          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-35,-35, 20), new Vec3(0, 0, -10))
+          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-35, -35, 20), new Vec3(0, 0, -10))
           window.postMessage(`done-${data}`)
         }
       }
@@ -189,7 +181,7 @@
   </head>
   <body class="bg-blue-100 h-full">
     <div class="h-full">
-      <canvas class="absolute" id="renderer"></canvas></canvas>
+      <canvas class="absolute" id="renderer"></canvas>
     </div>
 
     <input type="range" min="0" max="400" value="100" class="slider" id="exposureControl" />

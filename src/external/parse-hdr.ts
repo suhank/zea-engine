@@ -208,7 +208,7 @@ function parseHdr(buffer: any) {
     shape: [width, height],
     exposure: exposure,
     gamma: gamma,
-    data: floatData
+    data: floatData,
   }
 }
 

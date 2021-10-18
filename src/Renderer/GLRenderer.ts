@@ -161,10 +161,10 @@ class GLRenderer extends GLBaseRenderer {
       // console.warn('Unsupported EnvMap:' + env)
       return
     }
-    this.__glEnvMap.on('loaded', event => {
+    this.__glEnvMap.on('loaded', (event) => {
       this.requestRedraw()
     })
-    this.__glEnvMap.on('updated', event => {
+    this.__glEnvMap.on('updated', (event) => {
       this.requestRedraw()
     })
 
@@ -312,7 +312,7 @@ class GLRenderer extends GLBaseRenderer {
         filter: 'NEAREST',
         width: 3,
         height: 3,
-        numColorChannels: 1
+        numColorChannels: 1,
       })
     }
 
@@ -336,7 +336,7 @@ class GLRenderer extends GLBaseRenderer {
       region,
       viewMatrix: xfo.inverse().toMat4(),
       projectionMatrix: this.__rayCastRenderTargetProjMatrix,
-      isOrthographic: true
+      isOrthographic: true,
     })
 
     this.__rayCastRenderTarget.bindForWriting(renderstate, true)
@@ -384,7 +384,7 @@ class GLRenderer extends GLBaseRenderer {
         intersectionPos,
         geomItem: geomItemAndDist.geomItem,
         dist: geomItemAndDist.dist,
-        geomData
+        geomData,
       }
     } else {
       return null
@@ -412,7 +412,7 @@ class GLRenderer extends GLBaseRenderer {
         filter: 'NEAREST',
         width: 3,
         height: 3,
-        numColorChannels: 1
+        numColorChannels: 1,
       })
       this.__rayCastRenderTargetProjMatrix = new Mat4()
     }
@@ -437,7 +437,7 @@ class GLRenderer extends GLBaseRenderer {
       region,
       viewMatrix: xfo.inverse().toMat4(),
       projectionMatrix: this.__rayCastRenderTargetProjMatrix,
-      isOrthographic: true
+      isOrthographic: true,
     })
     renderstate.cameraMatrix = xfo.toMat4()
 
@@ -481,7 +481,7 @@ class GLRenderer extends GLBaseRenderer {
               intersectionPos,
               geomItem: geomItemAndDist.geomItem,
               dist: geomItemAndDist.dist,
-              geomData
+              geomData,
             })
           }
         }

@@ -76,7 +76,7 @@ const genDataTypeDesc = (gl: WebGL12RenderingContext, attrDataType: any) => {
   return {
     dimension,
     elementSize,
-    dataType
+    dataType,
   }
 }
 abstract class IGeomShaderBinding {

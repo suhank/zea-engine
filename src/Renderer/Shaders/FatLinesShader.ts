@@ -13,7 +13,6 @@ import { Material } from '../../SceneTree/Material'
 import { MaterialColorParam } from '../../SceneTree/Parameters/MaterialColorParam'
 import { NumberParameter } from '../../SceneTree/Parameters/NumberParameter'
 
-
 /** Shader for drawing Fat lines
  * @extends GLShader
  * @private
@@ -36,7 +35,6 @@ class FatLinesShader extends GLShader {
     }
     return false
   }
-
 
   /**
    * The supportsInstancing method.

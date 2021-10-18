@@ -34,10 +34,7 @@
 
       scene.setupGrid(5.0, 50)
 
-      renderer
-        .getViewport()
-        .getCamera()
-        .setPositionAndTarget(new Vec3(2, 2, 1.7), new Vec3(0, 0, 0.4))
+      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, 1.7), new Vec3(0, 0, 0.4))
 
       window.postMessage('done-loading')
 

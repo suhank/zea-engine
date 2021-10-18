@@ -40,7 +40,7 @@ class GLPoints extends GLGeom {
       this.__glattrbuffers[attrName] = {
         buffer: attrBuffer,
         dataType: attrData.dataType,
-        normalized: attrData.normalized
+        normalized: attrData.normalized,
       }
     }
 

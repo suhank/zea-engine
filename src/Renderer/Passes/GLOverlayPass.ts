@@ -33,10 +33,7 @@ class GLOverlayPass extends GLOpaqueGeomsPass {
    */
   filterGeomItem(geomItem: GeomItem) {
     if (geomItem.isOverlay()) return true
-    const shaderClass = geomItem
-      .getParameter('Material')!
-      .getValue()
-      .getShaderClass()
+    const shaderClass = geomItem.getParameter('Material')!.getValue().getShaderClass()
     if (shaderClass) {
       if (shaderClass.isOverlay()) return true
     }

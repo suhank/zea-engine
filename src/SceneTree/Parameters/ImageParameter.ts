@@ -40,7 +40,7 @@ class ImageParameter extends Parameter<BaseImage | undefined> {
    */
   toJSON(context?: Record<string, any>): Record<string, unknown> {
     const j: Record<string, unknown> = {
-      name: this.name
+      name: this.name,
     }
 
     if (this.value) {

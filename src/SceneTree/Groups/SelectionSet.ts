@@ -52,7 +52,7 @@ class SelectionSet extends BaseGroup {
   __updateVisibility(): boolean {
     if (super.updateVisibility()) {
       const value = this.isVisible()
-      Array.from(this.__itemsParam.getValue()).forEach(item => {
+      Array.from(this.__itemsParam.getValue()).forEach((item) => {
         if (item instanceof TreeItem) item.propagateVisibility(value ? 1 : -1)
       })
       return true
@@ -90,7 +90,7 @@ class SelectionSet extends BaseGroup {
     }
 
     const key = 'groupItemHighlight' + this.getId()
-    Array.from(this.__itemsParam.getValue()).forEach(item => {
+    Array.from(this.__itemsParam.getValue()).forEach((item) => {
       if (item instanceof TreeItem) {
         if (highlighted) item.addHighlight(key, color, true)
         else item.removeHighlight(key, true)
@@ -166,7 +166,7 @@ class SelectionSet extends BaseGroup {
 
     // ///////////////////////////////
     // Update the item cutaway
-    item.traverse(treeItem => {
+    item.traverse((treeItem) => {
       if (treeItem instanceof BaseGeomItem) {
         treeItem.setCutawayEnabled(false)
       }

@@ -480,7 +480,7 @@ class Vec2 {
   toJSON(): Record<string, number> {
     return {
       x: this.x,
-      y: this.y
+      y: this.y,
     }
   }
 

@@ -93,7 +93,7 @@ class GLViewport extends GLBaseViewport {
       format: 'RGBA',
       filter: 'NEAREST',
       width: width <= 1 ? 1 : Math.floor(width / this.__geomDataBufferSizeFactor),
-      height: height <= 1 ? 1 : Math.floor(height / this.__geomDataBufferSizeFactor)
+      height: height <= 1 ? 1 : Math.floor(height / this.__geomDataBufferSizeFactor),
     })
     this.__geomDataBufferFbo = new GLFbo(gl, this.__geomDataBuffer, true)
     this.__geomDataBufferFbo.setClearColor(new Color(0, 0, 0, 0))
@@ -459,7 +459,7 @@ class GLViewport extends GLBaseViewport {
             screenPos,
             pointerRay,
             intersectionPos,
-            geomData
+            geomData,
           },
           geomItemAndDist
         )
@@ -894,8 +894,8 @@ class GLViewport extends GLBaseViewport {
         projectionMatrix: this.__projectionMatrix,
         viewportFrustumSize: this.__frustumDim,
         isOrthographic: this.__camera.isOrthographic(),
-        fovY: this.__camera.getFov()
-      }
+        fovY: this.__camera.getFov(),
+      },
     ]
   }
 

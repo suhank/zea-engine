@@ -100,10 +100,7 @@ class GLMaterialGeomItemSets extends EventEmitter {
    * @param {any} glGeomItemSet - The glGeomItemSet value.
    */
   addGeomItemSet(glGeomItemSet: any) {
-    const id = glGeomItemSet
-      .getGLGeom()
-      .getGeom()
-      .getId()
+    const id = glGeomItemSet.getGLGeom().getGeom().getId()
     this.glGeomItemSets[id] = glGeomItemSet
     const listenerID = glGeomItemSet.on('drawCountChanged', (event: any) => {
       this.drawCountChanged(event)

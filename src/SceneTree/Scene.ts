@@ -89,7 +89,7 @@ class Scene {
   toJSON(context: Record<string, any> = {}): Record<string, any> {
     context.makeRelative = (path: string) => path
     const json = {
-      root: this.root.toJSON(context)
+      root: this.root.toJSON(context),
     }
     return json
   }

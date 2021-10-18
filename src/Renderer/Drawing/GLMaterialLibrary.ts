@@ -161,7 +161,7 @@ class GLMaterialLibrary extends EventEmitter {
         height: materialsTextureSize,
         filter: 'NEAREST',
         wrap: 'CLAMP_TO_EDGE',
-        mipMapped: false
+        mipMapped: false,
       })
       this.materialsTexture.clear()
     } else if (this.materialsTexture.width < materialsTextureSize) {

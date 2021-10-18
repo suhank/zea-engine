@@ -1,4 +1,7 @@
-const create3DContext = function(canvas: HTMLCanvasElement, opt_attribs: Record<string, any>): WebGL12RenderingContext {
+const create3DContext = function (
+  canvas: HTMLCanvasElement,
+  opt_attribs: Record<string, any>
+): WebGL12RenderingContext {
   let context: any = null
   if (opt_attribs.webglContextType != undefined) {
     try {
@@ -24,7 +27,7 @@ const create3DContext = function(canvas: HTMLCanvasElement, opt_attribs: Record<
 
   // context.setupInstancedQuad = setupInstancedQuad;
   // context.bindInstancedQuad = bindInstancedQuad;
-  context.sizeInBytes = function(type: any) {
+  context.sizeInBytes = function (type: any) {
     switch (type) {
       case this.BYTE:
       case this.UNSIGNED_BYTE:
@@ -101,7 +104,7 @@ const create3DContext = function(canvas: HTMLCanvasElement, opt_attribs: Record<
 
   context.__ext_frag_depth = context.getExtension('EXT_frag_depth')
 
-  context.setupInstancedQuad = function() {
+  context.setupInstancedQuad = function () {
     // ////////////////////////////
     // Generate a buffer for drawing a full screen quad.
     const vertexIDs = new Float32Array([0.0, 1.0, 2.0, 3.0])
@@ -121,11 +124,11 @@ const create3DContext = function(canvas: HTMLCanvasElement, opt_attribs: Record<
         dataType: 'Float32',
         dimension: 1,
         count: vertexIDs.length,
-        shared: true /*This buffer is shared between geoms. do not destroy */
-      }
+        shared: true /*This buffer is shared between geoms. do not destroy */,
+      },
     }
   }
-  context.drawQuad = function() {
+  context.drawQuad = function () {
     this.drawElements(this.TRIANGLES, 6, this.UNSIGNED_SHORT, 0)
   }
 

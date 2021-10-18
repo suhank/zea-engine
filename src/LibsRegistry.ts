@@ -7,8 +7,8 @@ const compare = (a: string, b: string) => {
   // 2nd answer.
   const aParts = a.split('-')
   const bParts = b.split('-')
-  const aNumbers = aParts.map(str => parseInt(str))
-  const bNumbers = bParts.map(str => parseInt(str))
+  const aNumbers = aParts.map((str) => parseInt(str))
+  const bNumbers = bParts.map((str) => parseInt(str))
   for (let i = 0; i < 3; i++) {
     if (aNumbers[i] !== bNumbers[i]) return aNumbers[i] - bNumbers[i]
   }

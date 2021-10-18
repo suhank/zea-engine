@@ -86,15 +86,15 @@ class LabelManager extends EventEmitter {
         const unit8array = new Uint8Array(data)
         // @ts-ignore
         const workbook = XLSX.read(unit8array, {
-          type: 'array'
+          type: 'array',
         })
         const json: { [key: string]: any } = {}
-        workbook.SheetNames.forEach(function(sheetName: any) {
+        workbook.SheetNames.forEach(function (sheetName: any) {
           // Here is your object
           // @ts-ignore
           const rows = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], {})
           // @ts-ignore
-          rows.forEach(function(row: any) {
+          rows.forEach(function (row: any) {
             const identifier = row.Identifier
             delete row.Identifier
             json[identifier] = row

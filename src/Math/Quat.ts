@@ -1056,7 +1056,7 @@ class Quat {
       x: this.x,
       y: this.y,
       z: this.z,
-      w: this.w
+      w: this.w,
     }
   }
 

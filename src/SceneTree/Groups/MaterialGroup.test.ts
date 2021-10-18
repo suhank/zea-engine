@@ -3,7 +3,6 @@ import { TreeItem } from '../TreeItem'
 import { Material } from '../Material'
 import { GeomItem } from '../GeomItem'
 
-
 describe('MaterialGroup', () => {
   test('Changing GeomItem Material by the tree.', () => {
     const group = new MaterialGroup('Foo')

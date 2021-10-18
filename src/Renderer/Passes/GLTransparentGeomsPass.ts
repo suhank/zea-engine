@@ -83,7 +83,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
   addGeomItem(geomItem: GeomItem) {
     this.itemCount++
 
-    const listenerIDs:Record<string, number> = {}
+    const listenerIDs: Record<string, number> = {}
     this.listenerIDs[geomItem.getId()] = listenerIDs
 
     const materialParam = geomItem.getParameter('Material')!
@@ -121,7 +121,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
 
     // const glGeomItem = this.constructGLGeomItem(geomItem)
     const glGeomItem = this.renderer!.glGeomItemLibrary.getGLGeomItem(geomItem)
-    if (!glGeomItem) throw new Error("glGeomItem not found for geomItem:" + geomItem.getName())
+    if (!glGeomItem) throw new Error('glGeomItem not found for geomItem:' + geomItem.getName())
 
     // @todo - make sure we remove materials and GeomItems from the base pass.
     // This code will leak memory for these classes as we are not cleaning them up.
@@ -194,7 +194,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
     this.itemCount--
 
     const glGeomItem = this.renderer!.glGeomItemLibrary.getGLGeomItem(geomItem)
-    if (!glGeomItem) throw new Error("glGeomItem not found for geomItem:" + geomItem.getName())
+    if (!glGeomItem) throw new Error('glGeomItem not found for geomItem:' + geomItem.getName())
 
     const listenerIDs = this.listenerIDs[geomItem.getId()]
     delete this.listenerIDs[geomItem.getId()]
@@ -295,7 +295,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
     const cache: Record<string, any> = {
       currentglShader: null,
       currentGLMaterial: null,
-      currentGLGeom: null
+      currentGLGeom: null,
     }
     for (const transparentItem of this.visibleItems) {
       const glShader = transparentItem.shaders.glShader
@@ -419,7 +419,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
     const cache: Record<string, any> = {
       currentglShader: null,
       currentGLMaterial: null,
-      currentGLGeom: null
+      currentGLGeom: null,
     }
     for (const transparentItem of this.visibleItems) {
       if (!transparentItem.geomItem.isHighlighted()) continue
@@ -472,7 +472,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
     const cache: Record<string, any> = {
       currentglShader: null,
       currentGLMaterial: null,
-      currentGLGeom: null
+      currentGLGeom: null,
     }
     for (const transparentItem of this.visibleItems) {
       if (!transparentItem.glGeomItem.geomItem.getSelectable()) continue

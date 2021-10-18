@@ -150,7 +150,7 @@ class ItemSetParameter extends Parameter<Set<BaseItem>> {
     }
 
     return {
-      value: items
+      value: items,
     }
   }
 

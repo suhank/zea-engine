@@ -20,18 +20,18 @@
 
       /** HIGHLIGHT START */
       let highlightedItem
-      renderer.getViewport().on('pointerOverGeom', event => {
+      renderer.getViewport().on('pointerOverGeom', (event) => {
         const item = event.intersectionData.geomItem
         if (item) {
           highlightedItem = item
           highlightedItem.addHighlight('pointerOverGeom', new Color(1.0, 0.0, 0, 0.3), true)
         }
       })
-      renderer.getViewport().on('pointerLeaveGeom', event => {
+      renderer.getViewport().on('pointerLeaveGeom', (event) => {
         highlightedItem.removeHighlight('pointerOverGeom', true)
         highlightedItem = null
       })
-      renderer.getViewport().on('pointerUp', event => {
+      renderer.getViewport().on('pointerUp', (event) => {
         if (event.intersectionData) {
           const geomItem = event.intersectionData.geomItem
           console.log('', geomItem.getPath())
@@ -44,10 +44,7 @@
 
       const geomItem = new GeomItem('Plane', new Plane(2.0, 1.5, 3, 3), standardMaterial)
       scene.getRoot().addChild(geomItem)
-      renderer
-        .getViewport()
-        .getCamera()
-        .setPositionAndTarget(new Vec3(2, 2, 2.7), new Vec3(0, 0, 0.4))
+      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, 2.7), new Vec3(0, 0, 0.4))
       renderer.frameAll()
 
       window.postMessage('done-loading')

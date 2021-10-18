@@ -289,7 +289,7 @@ class Material extends BaseItem {
       throw `Loading zcad files of version ${context.versions['zea-engine']} is not longer support`
       this.setName(reader.loadStr())
 
-      const capitalizeFirstLetter = function(string: string) {
+      const capitalizeFirstLetter = function (string: string) {
         return string.charAt(0).toUpperCase() + string.slice(1)
       }
 

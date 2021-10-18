@@ -95,7 +95,7 @@ class GLGeomItemLibrary extends EventEmitter {
           frustumHeight,
           frustumWidth,
           isOrthographic: true,
-          solidAngleLimit: renderer.solidAngleLimit
+          solidAngleLimit: renderer.solidAngleLimit,
         })
       } else {
         const frustumHalfAngleY = camera.getFov() * 0.5
@@ -105,7 +105,7 @@ class GLGeomItemLibrary extends EventEmitter {
           frustumHalfAngleX,
           frustumHalfAngleY,
           isOrthographic: false,
-          solidAngleLimit: renderer.solidAngleLimit
+          solidAngleLimit: renderer.solidAngleLimit,
         })
       }
     }
@@ -137,7 +137,7 @@ class GLGeomItemLibrary extends EventEmitter {
             frustumHalfAngleX,
             frustumHalfAngleY,
             isOrthographic: false,
-            solidAngleLimit: renderer.solidAngleLimit * 2
+            solidAngleLimit: renderer.solidAngleLimit * 2,
           })
         } else {
           cullFreq = 5
@@ -148,7 +148,7 @@ class GLGeomItemLibrary extends EventEmitter {
 
     let tick = 0
     let cullFreq = 5
-    renderer.on('viewChanged', event => {
+    renderer.on('viewChanged', (event) => {
       // Calculate culling every Nth frame.
       if (workerReady) {
         if (tick % cullFreq == 0) {
@@ -159,7 +159,7 @@ class GLGeomItemLibrary extends EventEmitter {
             type: 'ViewChanged',
             cameraPos: pos.asArray(),
             cameraOri: ori.asArray(),
-            solidAngleLimit: renderer.solidAngleLimit
+            solidAngleLimit: renderer.solidAngleLimit,
           })
         }
         tick++
@@ -175,16 +175,13 @@ class GLGeomItemLibrary extends EventEmitter {
         type: 'ViewChanged',
         cameraPos: pos.asArray(),
         cameraOri: ori.asArray(),
-        solidAngleLimit: renderer.solidAngleLimit
+        solidAngleLimit: renderer.solidAngleLimit,
       })
     }
 
     // If a movement finishes, we should update the culling results
     // based on the last position. (we might have skipped it in the viewChanged handler above)
-    renderer
-      .getViewport()
-      .getCamera()
-      .on('movementFinished', forceViewChanged)
+    renderer.getViewport().getCamera().on('movementFinished', forceViewChanged)
 
     // Initialize the view values on the worker.
     forceViewChanged()
@@ -290,7 +287,7 @@ class GLGeomItemLibrary extends EventEmitter {
       geomItemChanged,
       materialChanged,
       geomChanged,
-      workerItemDataChanged
+      workerItemDataChanged,
     }
     this.glGeomItemsMap[geomItem.getId()] = index
 
@@ -509,7 +506,7 @@ class GLGeomItemLibrary extends EventEmitter {
       boundingRadius,
       pos: pos.asArray(),
       cullable,
-      visible: geomItem.isVisible()
+      visible: geomItem.isVisible(),
     }
   }
 
@@ -519,7 +516,7 @@ class GLGeomItemLibrary extends EventEmitter {
   uploadGeomItemsToWorker() {
     if (this.enableFrustumCulling) {
       const geomItemsUpdateToCullingWorker: any[] = []
-      this.dirtyWorkerItemIndices.forEach(index => {
+      this.dirtyWorkerItemIndices.forEach((index) => {
         const glGeomItem = this.glGeomItems[index]
         // When an item is deleted, we allocate its index to the free list
         // and null this item in the array. skip over null items.
@@ -534,7 +531,7 @@ class GLGeomItemLibrary extends EventEmitter {
       this.worker.postMessage({
         type: 'UpdateGeomItems',
         geomItems: geomItemsUpdateToCullingWorker,
-        removedItemIndices: this.removedItemIndices
+        removedItemIndices: this.removedItemIndices,
       })
 
       this.dirtyWorkerItemIndices.clear()
@@ -568,7 +565,7 @@ class GLGeomItemLibrary extends EventEmitter {
         height: size,
         filter: 'NEAREST',
         wrap: 'CLAMP_TO_EDGE',
-        mipMapped: false
+        mipMapped: false,
       })
       this.glGeomItemsTexture.clear()
     } else if (this.glGeomItemsTexture.width != size) {

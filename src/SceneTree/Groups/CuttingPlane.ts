@@ -133,7 +133,7 @@ class CuttingPlane extends BaseGroup {
     const bbox = new Box3()
     // const xfo = this.getParameter('GlobalXfo')!.getValue()
     // const invxfo = xfo.inverse()
-    Array.from(this.__itemsParam.getValue()).forEach(item => {
+    Array.from(this.__itemsParam.getValue()).forEach((item) => {
       if (item instanceof TreeItem) {
         // const itemxfo = invxfo.multiply(item.getParameter('GlobalXfo')!.getValue())
         // bbox.addBox3(item.getParameter('BoundingBox')!.getValue(), itemxfo.toMat4())
@@ -145,12 +145,8 @@ class CuttingPlane extends BaseGroup {
       const sizey = bbox.p1.y - bbox.p0.y
       const xfo = new Xfo()
       xfo.sc.set(sizex, sizey, 1)
-      this.getChild(0)
-        .getParameter('LocalXfo')!
-        .setValue(xfo)
-      this.getChild(1)
-        .getParameter('LocalXfo')!
-        .setValue(xfo)
+      this.getChild(0).getParameter('LocalXfo')!.setValue(xfo)
+      this.getChild(1).getParameter('LocalXfo')!.setValue(xfo)
       // this.getParameter('GlobalXfo')!.setValue(xfo)
     }
   }
@@ -166,7 +162,7 @@ class CuttingPlane extends BaseGroup {
 
     // ///////////////////////////////
     // Update the item cutaway
-    item.traverse(treeItem => {
+    item.traverse((treeItem) => {
       if (treeItem instanceof BaseGeomItem) {
         treeItem.setCutawayEnabled(false)
       }

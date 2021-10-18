@@ -16,7 +16,7 @@ describe('SelectionSet', () => {
     group.addItem(treeItem)
 
     expect(treeItem.isVisible()).toBe(true)
-    
+
     group.setVisible(false)
 
     expect(treeItem.isVisible()).toBe(false)

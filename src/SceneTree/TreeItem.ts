@@ -554,7 +554,7 @@ class TreeItem extends BaseItem {
     }
 
     const listenerIDs: Record<string, number> = {}
-    listenerIDs['nameChanged'] = childItem.on('nameChanged', event => {
+    listenerIDs['nameChanged'] = childItem.on('nameChanged', (event) => {
       this.childNameChanged(event)
     })
 
@@ -938,7 +938,7 @@ class TreeItem extends BaseItem {
       } else {
         j = {
           name: this.__name,
-          children: childItemsJSON
+          children: childItemsJSON,
         }
       }
     }

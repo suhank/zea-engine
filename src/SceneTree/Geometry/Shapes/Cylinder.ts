@@ -58,7 +58,7 @@ class Cylinder extends ProceduralMesh {
     this.__baseZAtZeroParam = this.addParameter(new BooleanParameter('BaseZAtZero', baseZAtZero)) as BooleanParameter
 
     this.addVertexAttribute('texCoords', new Vec2Attribute())
-    this.addVertexAttribute('normals',new Vec3Attribute()) // TODO: review args/params. 
+    this.addVertexAttribute('normals', new Vec3Attribute()) // TODO: review args/params.
 
     this.topologyParams.push('Sides')
     this.topologyParams.push('Loops')
@@ -205,7 +205,7 @@ class Cylinder extends ProceduralMesh {
     let zoff = 0.5
     if (baseZAtZero) zoff = 0.0
 
-    const positions =  <Vec3Attribute>this.getVertexAttribute('positions')
+    const positions = <Vec3Attribute>this.getVertexAttribute('positions')
     if (positions) {
       for (let i = 0; i < nbLoops; i++) {
         const z = (i / (nbLoops - 1)) * height - height * zoff

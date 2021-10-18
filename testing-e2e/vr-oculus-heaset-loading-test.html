@@ -23,10 +23,7 @@
 
       scene.setupGrid(10.0, 10)
 
-      renderer
-        .getViewport()
-        .getCamera()
-        .setPositionAndTarget(new Vec3(0.5, 0.5, 0.5), new Vec3(0, 0, 0))
+      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(0.5, 0.5, 0.5), new Vec3(0, 0, 0))
 
       const asset = new VLAAsset()
       asset.load('/public-resources/Oculus.vla')
@@ -44,26 +41,20 @@
       })
       scene.getRoot().addChild(asset)
 
-      renderer.getViewport().on('mouseDownOnGeom', event => {
+      renderer.getViewport().on('mouseDownOnGeom', (event) => {
         console.log(event.intersectionData.geomItem.getName())
       })
 
       // {{{ Messages handler.
-      const handleMessage = event => {
+      const handleMessage = (event) => {
         const { data } = event
 
         if (data === 'variant-01') {
-          renderer
-            .getViewport()
-            .getCamera()
-            .setPositionAndTarget(new Vec3(0.5, 0.5, -0.5), new Vec3(0, 0, 0))
+          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(0.5, 0.5, -0.5), new Vec3(0, 0, 0))
           renderer.frameAll()
           window.postMessage(`done-${data}`)
         } else if (data === 'variant-02') {
-          renderer
-            .getViewport()
-            .getCamera()
-            .setPositionAndTarget(new Vec3(-0.5, -0.5, 0.5), new Vec3(0, 0, 0))
+          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-0.5, -0.5, 0.5), new Vec3(0, 0, 0))
           renderer.frameAll()
           window.postMessage(`done-${data}`)
         }

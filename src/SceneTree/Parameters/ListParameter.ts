@@ -136,7 +136,7 @@ class ListParameter extends Parameter<any[]> {
       }
     }
     return {
-      value: items
+      value: items,
     }
   }
 

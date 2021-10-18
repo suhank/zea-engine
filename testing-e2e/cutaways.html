@@ -29,7 +29,7 @@
         GeomItem,
         TreeItem,
         Material,
-        CuttingPlane
+        CuttingPlane,
       } = zeaEngine
 
       const scene = new Scene()
@@ -53,7 +53,7 @@
 
       let i = 0
 
-      const addMeshShape = shape => {
+      const addMeshShape = (shape) => {
         const geomItem = new GeomItem(`item-${i}`, shape, standardMaterial)
         geomItem.getParameter('LocalXfo').setValue(new Xfo(new Vec3(i * 3, 0, 0)))
         tree1.addChild(geomItem)
@@ -79,16 +79,13 @@
       //   cuttingPlane.getParameter('LocalXfo').setValue(cuttingPlaneXfo)
       // }, 50)
 
-      renderer
-        .getViewport()
-        .getCamera()
-        .setPositionAndTarget(new Vec3(25, 25, 13), new Vec3(10, 0, 0))
+      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(25, 25, 13), new Vec3(10, 0, 0))
       renderer.frameAll()
 
       window.postMessage('done-loading')
 
       // {{{ Messages handler.
-      const handleMessage = event => {
+      const handleMessage = (event) => {
         const { data } = event
 
         if (data === 'variant-01') {

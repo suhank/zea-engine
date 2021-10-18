@@ -36,18 +36,8 @@
             Intel UHD Graphics 630 1536 MB
       */
 
-      const {
-        Vec3,
-        EulerAngles,
-        Xfo,
-        Color,
-        Cuboid,
-        Material,
-        GeomItem,
-        TreeItem,
-        Scene,
-        GLRenderer
-      } = window.zeaEngine
+      const { Vec3, EulerAngles, Xfo, Color, Cuboid, Material, GeomItem, TreeItem, Scene, GLRenderer } =
+        window.zeaEngine
 
       const canvas = document.getElementById('renderer')
       const renderer = new GLRenderer(canvas, { hideSplash: true, antialias: false })
@@ -64,7 +54,7 @@
       const dim = Math.round(Math.cbrt(count))
       console.log('Will render GeomItem count:', Math.pow(dim, 3))
 
-      renderer.getViewport().on('keyDown', event => {
+      renderer.getViewport().on('keyDown', (event) => {
         if (event.key == 'f') {
           renderer.frameAll()
         }
@@ -151,7 +141,7 @@
 
         let t1 = performance.now()
 
-        const addRow = i => {
+        const addRow = (i) => {
           const t2 = performance.now()
 
           const progress = `${Math.round((i / dim) * 100)}%, ${Math.round(t2 - t1)} ms`
@@ -165,8 +155,8 @@
           addColumns(i, treeItem)
         }
 
-        const addRowAsync = i => {
-          return new Promise(resolve => {
+        const addRowAsync = (i) => {
+          return new Promise((resolve) => {
             setTimeout(() => {
               addRow(i)
               resolve()
@@ -238,14 +228,34 @@
       <p>
         Click the
         <button
-          class="bg-yellow-300 rounded px-2 px-2 py-1 border border-yellow-400 shadow mr-1 hover:bg-yellow-200 cursor-default"
+          class="
+            bg-yellow-300
+            rounded
+            px-2 px-2
+            py-1
+            border border-yellow-400
+            shadow
+            mr-1
+            hover:bg-yellow-200
+            cursor-default
+          "
           id="run"
         >
           Run
         </button>
         or the
         <button
-          class="bg-yellow-300 rounded px-2 px-2 py-1 border border-yellow-400 shadow mr-1 hover:bg-yellow-200 cursor-default"
+          class="
+            bg-yellow-300
+            rounded
+            px-2 px-2
+            py-1
+            border border-yellow-400
+            shadow
+            mr-1
+            hover:bg-yellow-200
+            cursor-default
+          "
           id="runAsync"
         >
           Run Async

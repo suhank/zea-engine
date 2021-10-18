@@ -10,26 +10,66 @@
     </div>
     <div class="fixed flex justify-center p-1 w-full top-0">
       <button
-        class="bg-yellow-300 rounded px-2 px-2 py-1 border border-yellow-400 shadow mr-1 hover:bg-yellow-200 cursor-default"
+        class="
+          bg-yellow-300
+          rounded
+          px-2 px-2
+          py-1
+          border border-yellow-400
+          shadow
+          mr-1
+          hover:bg-yellow-200
+          cursor-default
+        "
         id="variant-01"
       >
         variant-01
       </button>
 
       <button
-        class="bg-yellow-300 rounded px-2 px-2 py-1 border border-yellow-400 shadow mr-1 hover:bg-yellow-200 cursor-default"
+        class="
+          bg-yellow-300
+          rounded
+          px-2 px-2
+          py-1
+          border border-yellow-400
+          shadow
+          mr-1
+          hover:bg-yellow-200
+          cursor-default
+        "
         id="variant-02"
       >
         variant-02
       </button>
       <button
-        class="bg-yellow-300 rounded px-2 px-2 py-1 border border-yellow-400 shadow mr-1 hover:bg-yellow-200 cursor-default"
+        class="
+          bg-yellow-300
+          rounded
+          px-2 px-2
+          py-1
+          border border-yellow-400
+          shadow
+          mr-1
+          hover:bg-yellow-200
+          cursor-default
+        "
         id="variant-03"
       >
         variant-03
       </button>
       <button
-        class="bg-yellow-300 rounded px-2 px-2 py-1 border border-yellow-400 shadow mr-1 hover:bg-yellow-200 cursor-default"
+        class="
+          bg-yellow-300
+          rounded
+          px-2 px-2
+          py-1
+          border border-yellow-400
+          shadow
+          mr-1
+          hover:bg-yellow-200
+          cursor-default
+        "
         id="variant-04"
       >
         variant-04
@@ -55,7 +95,7 @@
         TreeItem,
         Material,
         SelectionSet,
-        EnvMap
+        EnvMap,
       } = zeaEngine
 
       const scene = new Scene()
@@ -68,10 +108,7 @@
         postMessage('done-loading')
       })
       scene.setEnvMap(envMap)
-      scene
-        .getSettings()
-        .getParameter('Display EnvMap')
-        .setValue(false)
+      scene.getSettings().getParameter('Display EnvMap').setValue(false)
 
       // scene.setupGrid(60.0, 6)
       const tree1 = new TreeItem('tree1')
@@ -109,13 +146,10 @@
         }
       }
 
-      renderer
-        .getViewport()
-        .getCamera()
-        .setPositionAndTarget(new Vec3(25, 25, 13), new Vec3(10, 0, 0))
+      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(25, 25, 13), new Vec3(10, 0, 0))
       renderer.frameAll()
 
-      const postMessage = msg => {
+      const postMessage = (msg) => {
         console.log(msg)
         window.postMessage(msg)
       }
@@ -135,10 +169,7 @@
         postMessage(`done-variant-01`)
       })
       document.querySelector('#variant-02').addEventListener('click', () => {
-        renderer
-          .getViewport()
-          .getCamera()
-          .setPositionAndTarget(new Vec3(-25, -25, 13), new Vec3(10, 0, 0))
+        renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-25, -25, 13), new Vec3(10, 0, 0))
         renderer.frameAll()
         postMessage(`done-variant-02`)
       })
@@ -155,10 +186,7 @@
         postMessage(`done-variant-03`)
       })
       document.querySelector('#variant-04').addEventListener('click', () => {
-        renderer
-          .getViewport()
-          .getCamera()
-          .setPositionAndTarget(new Vec3(25, 25, 13), new Vec3(10, 0, 0))
+        renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(25, 25, 13), new Vec3(10, 0, 0))
         renderer.frameAll()
         postMessage(`done-variant-04`)
       })

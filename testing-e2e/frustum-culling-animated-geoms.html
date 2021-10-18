@@ -26,7 +26,7 @@
       const standardMaterial = new Material('surfaces', 'SimpleSurfaceShader')
       const sphere = new Sphere(0.4, 20, 10)
 
-      const buildSubTree = xfo => {
+      const buildSubTree = (xfo) => {
         const treeItem = new TreeItem()
         treeItem.addChild(new GeomItem('Sphere1', sphere, standardMaterial, new Xfo(new Vec3(1, 0, 0))))
         treeItem.addChild(new GeomItem('Sphere2', sphere, standardMaterial, new Xfo(new Vec3(1, 1, 0))))
@@ -40,7 +40,7 @@
 
       const xfo1 = tree1.getParameter('GlobalXfo').getValue()
       const xfo2 = tree2.getParameter('GlobalXfo').getValue()
-      const updateTreePositions = t => {
+      const updateTreePositions = (t) => {
         xfo1.tr.x = Math.sin(t) * 5
         xfo2.tr.y = Math.sin(t) * 5
         tree1.getParameter('GlobalXfo').setValue(xfo1)
@@ -55,19 +55,16 @@
 
       scene.getRoot().addChild(tree1)
       scene.getRoot().addChild(tree2)
-      renderer
-        .getViewport()
-        .getCamera()
-        .setPositionAndTarget(new Vec3(4, 4, 2.7), new Vec3(0, 0, 1))
+      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(4, 4, 2.7), new Vec3(0, 0, 1))
 
-      const postMessage = msg => {
+      const postMessage = (msg) => {
         console.log(msg)
         window.postMessage(msg)
       }
       postMessage('done-loading')
 
       // {{{ Messages handler.
-      const handleMessage = event => {
+      const handleMessage = (event) => {
         const { data } = event
 
         if (data === 'variant-01') {

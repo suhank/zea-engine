@@ -174,7 +174,7 @@ class GLBillboardsPass extends GLPass {
       imageIndex,
       visibilityChanged,
       xfoChanged,
-      alphaChanged
+      alphaChanged,
     }
 
     this.indexArrayUpdateNeeded = true
@@ -224,10 +224,7 @@ class GLBillboardsPass extends GLPass {
    */
   populateBillboardDataArray(billboardData: any, index: number, dataArray: any) {
     const billboard = billboardData.billboard
-    const mat4 = billboard
-      .getParameter('GlobalXfo')!
-      .getValue()
-      .toMat4()
+    const mat4 = billboard.getParameter('GlobalXfo')!.getValue().toMat4()
     const ppm = billboard.getParameter('PixelsPerMeter')!.getValue()
     const pivot = billboard.getParameter('Pivot')!.getValue()
     const scale = 1 / ppm
@@ -334,10 +331,7 @@ class GLBillboardsPass extends GLPass {
           // if (index == -1) return;
           const billboardData = this.billboards[index]
           const billboard = billboardData.billboard
-          const mat4: Mat4 = billboard
-            .getParameter('GlobalXfo')!
-            .getValue()
-            .toMat4()
+          const mat4: Mat4 = billboard.getParameter('GlobalXfo')!.getValue().toMat4()
           const ppm = billboard.getParameter('PixelsPerMeter')!.getValue()
           const scale: number = 1 / ppm
           let flags: number = 0
@@ -381,7 +375,7 @@ class GLBillboardsPass extends GLPass {
           height: size,
           filter: 'NEAREST',
           wrap: 'CLAMP_TO_EDGE',
-          mipMapped: false
+          mipMapped: false,
         }
         this.drawItemsTexture = new GLTexture2D(gl, params)
         this.drawItemsTexture.clear()
@@ -478,7 +472,7 @@ class GLBillboardsPass extends GLPass {
     }
 
     if (this.dirtyBillboards.size > 0) {
-      this.dirtyBillboards.forEach(index => {
+      this.dirtyBillboards.forEach((index) => {
         this.updateBillboard(index)
       })
       this.dirtyBillboards.clear()

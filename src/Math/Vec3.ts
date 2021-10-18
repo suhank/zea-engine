@@ -579,7 +579,7 @@ class Vec3 {
     return {
       x: this.x,
       y: this.y,
-      z: this.z
+      z: this.z,
     }
   }
 

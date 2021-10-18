@@ -40,7 +40,6 @@ class GLBoundingBoxPass extends GLPass {
    */
   constructor() {
     super()
-
   }
 
   /**
@@ -162,7 +161,7 @@ class GLBoundingBoxPass extends GLPass {
     this.boxes[index] = {
       treeitem,
       visibilityChanged,
-      xfoChanged
+      xfoChanged,
     }
 
     this.indexArrayUpdateNeeded = true
@@ -268,10 +267,7 @@ class GLBoundingBoxPass extends GLPass {
       this.__indexArray.forEach((index: number) => {
         const treeitemData = this.boxes[index]
         const treeitem = treeitemData.treeitem
-        const mat4 = treeitem
-          .getParameter('GlobalXfo')!
-          .getValue()
-          .toMat4()
+        const mat4 = treeitem.getParameter('GlobalXfo')!.getValue().toMat4()
         const ppm = treeitem.getParameter('PixelsPerMeter')!.getValue()
         const scale = 1 / ppm
         let flags = 0
@@ -315,7 +311,7 @@ class GLBoundingBoxPass extends GLPass {
         height: size,
         filter: 'NEAREST',
         wrap: 'CLAMP_TO_EDGE',
-        mipMapped: false
+        mipMapped: false,
       })
       this.__drawItemsTexture.clear()
     } else {
@@ -377,7 +373,7 @@ class GLBoundingBoxPass extends GLPass {
     }
 
     if (this.dirtyBoxes.size > 0) {
-      this.dirtyBoxes.forEach(index => {
+      this.dirtyBoxes.forEach((index) => {
         this.__updateBox(index)
       })
       this.dirtyBoxes.clear()

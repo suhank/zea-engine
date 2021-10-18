@@ -161,7 +161,7 @@ class RGBA {
         ? {
             r: parseInt(result[1], 16),
             g: parseInt(result[2], 16),
-            b: parseInt(result[3], 16)
+            b: parseInt(result[3], 16),
           }
         : null
     }
@@ -322,7 +322,7 @@ class RGBA {
         white: '#ffffff',
         whitesmoke: '#f5f5f5',
         yellow: '#ffff00',
-        yellowgreen: '#9acd32'
+        yellowgreen: '#9acd32',
       }
 
       return colors[colour.toLowerCase()]
@@ -545,7 +545,7 @@ class RGBA {
       r: this.r,
       g: this.g,
       b: this.b,
-      a: this.a
+      a: this.a,
     }
   }
 

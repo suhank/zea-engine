@@ -538,7 +538,7 @@ class GLTexture2D extends RefCounted {
   preBind(unif: Uniform, unifs: Uniforms) {
     return {
       textureTypeUnif: unifs[unif.name + 'Type'],
-      textureDescUnif: unifs[unif.name + 'Desc']
+      textureDescUnif: unifs[unif.name + 'Desc'],
     }
   }
 

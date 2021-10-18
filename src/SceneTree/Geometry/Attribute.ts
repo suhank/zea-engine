@@ -322,7 +322,7 @@ class Attribute extends BaseClass {
     return {
       data: this.data,
       dataType: this.dataTypeName,
-      length: this.data.length / this.stride
+      length: this.data.length / this.stride,
     }
   }
 
@@ -392,7 +392,7 @@ class Attribute extends BaseClass {
       values: this.data,
       count: this.getCount(),
       dataType: this.dataTypeName,
-      normalized: this.normalized
+      normalized: this.normalized,
     }
   }
 }

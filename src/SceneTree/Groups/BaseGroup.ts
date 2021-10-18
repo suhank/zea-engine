@@ -265,7 +265,7 @@ class BaseGroup extends TreeItem {
     if (paramItems) {
       const items = Array.from(paramItems)
       const treeItems: any = []
-      items.forEach(p => {
+      items.forEach((p) => {
         const path = p.getPath()
         treeItems.push(context ? context.makeRelative(path) : path)
       })

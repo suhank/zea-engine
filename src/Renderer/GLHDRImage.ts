@@ -70,7 +70,7 @@ class GLHDRImage extends GLTexture2D {
         width: ldr.width,
         height: ldr.height,
         filter: 'LINEAR',
-        wrap: 'CLAMP_TO_EDGE'
+        wrap: 'CLAMP_TO_EDGE',
       })
       this.__fbo = new GLFbo(this.__gl, this)
       this.__fbo.setClearColor(new Color(0, 0, 0, 0))
@@ -83,7 +83,7 @@ class GLHDRImage extends GLTexture2D {
         filter: 'NEAREST',
         mipMapped: false,
         wrap: 'CLAMP_TO_EDGE',
-        data: ldr
+        data: ldr,
       })
       this.__srcCDMTex = new GLTexture2D(this.__gl, {
         format: gl.name == 'webgl2' ? 'RED' : 'ALPHA',
@@ -93,7 +93,7 @@ class GLHDRImage extends GLTexture2D {
         filter: 'NEAREST',
         mipMapped: false,
         wrap: 'CLAMP_TO_EDGE',
-        data: cdm
+        data: cdm,
       })
 
       this.__unpackHDRShader = new UnpackHDRShader(this.__gl)

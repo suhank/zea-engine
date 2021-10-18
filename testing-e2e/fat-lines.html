@@ -38,16 +38,13 @@
       const geomItem2 = new GeomItem('circle2', circle, material2, new Xfo(new Vec3(2, 0, 0)))
       scene.getRoot().addChild(geomItem2)
 
-      renderer
-        .getViewport()
-        .getCamera()
-        .setPositionAndTarget(new Vec3(2, 2, 2.7), new Vec3(0, 0, 0.4))
+      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 2, 2.7), new Vec3(0, 0, 0.4))
       renderer.frameAll()
 
       window.postMessage('done-loading')
 
       // {{{ Messages handler.
-      const handleMessage = event => {
+      const handleMessage = (event) => {
         const { data } = event
 
         if (data === 'variant-01') {
@@ -63,18 +60,18 @@
 
       /** HIGHLIGHT START */
       let highlightedItem
-      renderer.getViewport().on('pointerOverGeom', event => {
+      renderer.getViewport().on('pointerOverGeom', (event) => {
         const item = event.intersectionData.geomItem
         if (item) {
           highlightedItem = item
           highlightedItem.addHighlight('pointerOverGeom', new Color(1.0, 0.7, 0, 0.3), true)
         }
       })
-      renderer.getViewport().on('pointerLeaveGeom', event => {
+      renderer.getViewport().on('pointerLeaveGeom', (event) => {
         highlightedItem.removeHighlight('pointerOverGeom', true)
         highlightedItem = null
       })
-      renderer.getViewport().on('pointerUp', event => {
+      renderer.getViewport().on('pointerUp', (event) => {
         if (event.intersectionData) {
           const geomItem = event.intersectionData.geomItem
           console.log('', geomItem.getPath())
