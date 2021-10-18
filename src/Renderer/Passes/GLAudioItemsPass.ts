@@ -7,8 +7,8 @@ import { AudioItem } from '../../SceneTree/AudioItem'
 const AudioContext =
   window.navigator &&
   (window.AudioContext || // Default
-  // @ts-ignore
-  window.webkitAudioContext || // Safari and old versions of Chrome
+    // @ts-ignore
+    window.webkitAudioContext || // Safari and old versions of Chrome
     false)
 
 let audioCtx: any
@@ -165,11 +165,7 @@ class GLAudioItemsPass extends GLPass {
 
         let mat4
         if (treeItem instanceof GeomItem) mat4 = treeItem.getGeomMat4()
-        else
-          mat4 = treeItem
-            .getParameter('GlobalXfo')
-            .getValue()
-            .toMat4()
+        else mat4 = treeItem.getParameter('GlobalXfo').getValue().toMat4()
         const tr = mat4.translation
         // if (panner.positionX) {
         //     // panner.positionX.setTargetAtTime(xfo.tr.x, audioCtx.currentTime);
@@ -198,7 +194,7 @@ class GLAudioItemsPass extends GLPass {
         // setVelocity()
       }
       updatePannerNodePosition()
-      treeItem.on('globalXfoChanged', event => {
+      treeItem.on('globalXfoChanged', (event) => {
         updatePannerNodePosition()
       })
     }
@@ -207,7 +203,7 @@ class GLAudioItemsPass extends GLPass {
     this.__audioItems.push({
       treeItem,
       audioSource,
-      parameterOwner
+      parameterOwner,
     })
 
     this.emit('updated')

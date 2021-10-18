@@ -93,7 +93,7 @@ function getBrowserDesc() {
     fullVersion,
     majorVersion,
     appName: navigator.appName,
-    userAgent: navigator.userAgent
+    userAgent: navigator.userAgent,
   }
 }
 
@@ -110,7 +110,7 @@ function getGPUDesc() {
       gpuVendor: 'Unknown',
       maxTextureSize: 'Unknown',
       supportsWebGL: false,
-      supportsWebGL2: false
+      supportsWebGL2: false,
     }
   }
   let webgl2
@@ -127,7 +127,7 @@ function getGPUDesc() {
       gpuVendor: 'Unknown',
       maxTextureSize: 'Unknown',
       supportsWebGL: webgl != undefined,
-      supportsWebGL2: webgl2 != undefined
+      supportsWebGL2: webgl2 != undefined,
     }
   }
 
@@ -158,11 +158,11 @@ function getGPUDesc() {
     renderer,
     gpuVendor,
     maxTextureSize,
-    supportsWebGL2: webgl2 != undefined
+    supportsWebGL2: webgl2 != undefined,
   }
 }
 
-const SystemDesc: SystemDescription = (function() {
+const SystemDesc: SystemDescription = (function () {
   if (!globalThis.navigator) {
     // When running in NodeJS
     return {
@@ -171,7 +171,7 @@ const SystemDesc: SystemDescription = (function() {
       browserName: 'Node',
       webGLSupported: false,
       deviceCategory: 'High',
-      hardwareConcurrency: 4
+      hardwareConcurrency: 4,
     }
   }
   const isMobile = isMobileDevice()
@@ -291,7 +291,7 @@ const SystemDesc: SystemDescription = (function() {
     webGLSupported: gpuDesc.supportsWebGL,
     gpuDesc,
     deviceCategory,
-    hardwareConcurrency
+    hardwareConcurrency,
   }
 })()
 
