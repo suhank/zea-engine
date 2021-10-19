@@ -26,8 +26,8 @@ class BaseImage extends BaseItem {
     this.height = 0
     this.format = 'RGB'
     this.type = 'UNSIGNED_BYTE'
-    this.wrapS = 'CLAMP_TO_EDGE'
-    this.wrapT = 'CLAMP_TO_EDGE'
+    this.wrapS = 'REPEAT'
+    this.wrapT = 'REPEAT'
     this.minFilter = 'LINEAR'
     this.magFilter = 'LINEAR'
 
