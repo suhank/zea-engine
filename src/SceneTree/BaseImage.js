@@ -30,6 +30,7 @@ class BaseImage extends BaseItem {
     this.wrapT = 'REPEAT'
     this.minFilter = 'LINEAR'
     this.magFilter = 'LINEAR'
+    this.mipMapped = true
 
     this.on('parameterValueChanged', (event) => {
       this.emit('updated')
@@ -65,6 +66,7 @@ class BaseImage extends BaseItem {
       wrapT: this.wrapT,
       minFilter: this.minFilter,
       magFilter: this.magFilter,
+      mipMapped: this.mipMapped,
     }
   }
 }
