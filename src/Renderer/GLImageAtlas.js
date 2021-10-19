@@ -307,7 +307,8 @@ class GLImageAtlas extends GLRenderTarget {
       const glimage = this.__subImages[j]
 
       const layoutItem = this.__layout[j]
-      glimage.bindToUniform(renderstate, unifs.srctexture)
+      // Some images may not have fully loaded yet, so skip those.
+      if (!glimage.bindToUniform(renderstate, unifs.srctexture)) continue
       gl.uniform2fv(unifs.pos.location, layoutItem.pos.multiply(scl).asArray())
       gl.uniform2fv(unifs.size.location, layoutItem.size.multiply(scl).asArray())
       gl.uniform2f(unifs.srctextureDim.location, glimage.width, glimage.height)

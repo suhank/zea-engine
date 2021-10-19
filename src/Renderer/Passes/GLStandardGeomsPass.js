@@ -121,8 +121,7 @@ class GLStandardGeomsPass extends GLPass {
   getGeomItemAndDist(geomData) {
     let itemId
     let dist
-    const gl = this.__gl
-    if (gl.floatGeomBuffer) {
+    if (geomData instanceof Float32Array) {
       itemId = Math.round(geomData[1])
       dist = geomData[3]
     } else {

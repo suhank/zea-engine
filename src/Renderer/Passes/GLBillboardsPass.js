@@ -8,7 +8,7 @@ import { GLRenderer } from '../GLRenderer.js'
 import { generateShaderGeomBinding, GLMesh } from '../Drawing/index'
 import { MathFunctions } from '../../Utilities/MathFunctions'
 
-const pixelsPerItem = 6 // The number of pixels per draw item.
+const pixelsPerItem = 7 // The number of pixels per draw item.
 
 /** Class representing a GL billboards pass.
  * @extends GLPass
@@ -123,21 +123,15 @@ class GLBillboardsPass extends GLPass {
     }
     billboard.on('visibilityChanged', visibilityChanged)
 
-    const xfoChanged = () => {
+    const updateBillboard = () => {
       if (billboard.isVisible()) {
         this.dirtyBillboards.add(index)
         this.emit('updated', {})
       }
     }
-    billboard.getParameter('GlobalXfo').on('valueChanged', xfoChanged)
-
-    const alphaChanged = () => {
-      if (billboard.isVisible()) {
-        this.dirtyBillboards.add(index)
-        this.emit('updated', {})
-      }
-    }
-    billboard.getParameter('Alpha').on('valueChanged', alphaChanged)
+    billboard.getParameter('GlobalXfo').on('valueChanged', updateBillboard)
+    billboard.getParameter('Alpha').on('valueChanged', updateBillboard)
+    billboard.on('highlightChanged', updateBillboard)
 
     if (billboard.isVisible()) this.drawCount++
 
@@ -145,8 +139,7 @@ class GLBillboardsPass extends GLPass {
       billboard,
       imageIndex,
       visibilityChanged,
-      xfoChanged,
-      alphaChanged,
+      updateBillboard,
     }
 
     this.indexArrayUpdateNeeded = true
@@ -175,8 +168,9 @@ class GLBillboardsPass extends GLPass {
     this.atlas.removeSubImage(image)
 
     billboard.off('visibilityChanged', billboardData.visibilityChanged)
-    billboard.getParameter('GlobalXfo').off('valueChanged', billboardData.xfoChanged)
-    billboard.getParameter('Alpha').off('valueChanged', billboardData.alphaChanged)
+    billboard.off('highlightChanged', billboardData.updateBillboard)
+    billboard.getParameter('GlobalXfo').off('valueChanged', billboardData.updateBillboard)
+    billboard.getParameter('Alpha').off('valueChanged', billboardData.updateBillboard)
 
     this.billboards[index] = null
     this.freeIndices.push(index)
@@ -224,6 +218,14 @@ class GLBillboardsPass extends GLPass {
 
     const col5 = Vec4.createFromBuffer(dataArray.buffer, (offset + 20) * 4)
     col5.set(color.r, color.g, color.b, color.a)
+
+    // /////////////////////////
+    // Hilight
+    if (billboard.isHighlighted()) {
+      const highlight = billboard.getHighlight()
+      const col6 = Vec4.createFromBuffer(dataArray.buffer, (offset + 24) * 4)
+      col6.set(highlight.r, highlight.g, highlight.b, highlight.a)
+    }
   }
 
   /**
@@ -435,6 +437,66 @@ class GLBillboardsPass extends GLPass {
   /**
    * The sort method.
    * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param {string} key - The key to cache the compiler results against.
+   */
+  __draw(renderstate, key) {
+    const gl = this.__gl
+    if (!this.glshader) return
+    this.glshader.bind(renderstate, key)
+    this.shaderBinding.bind(renderstate)
+
+    const unifs = renderstate.unifs
+
+    const { atlasBillboards, passId, floatGeomBuffer, inVR } = renderstate.unifs
+
+    if (atlasBillboards) {
+      this.atlas.bindToUniform(renderstate, unifs.atlasBillboards)
+    }
+
+    if (floatGeomBuffer) {
+      gl.uniform1i(floatGeomBuffer.location, renderstate.floatGeomBuffer ? 1 : 0)
+    }
+    if (passId) {
+      gl.uniform1i(passId.location, this.passIndex)
+    }
+    if (inVR) gl.uniform1i(inVR.location, inVR)
+
+    if (!gl.floatTexturesSupported || !gl.drawElementsInstanced) {
+      const { modelMatrix, billboardData, tintColor, layoutData } = renderstate.unifs
+      const len = this.indexArray.length
+      for (let i = 0; i < len; i++) {
+        gl.uniformMatrix4fv(modelMatrix.location, false, this.modelMatrixArray[i])
+        gl.uniform4fv(billboardData.location, this.billboardDataArray[i])
+        gl.uniform4fv(tintColor.location, this.tintColorArray[i])
+        gl.uniform4fv(layoutData.location, this.atlas.getLayoutData(this.billboards[i].imageIndex))
+
+        renderstate.bindViewports(unifs, () => {
+          gl.drawQuad()
+        })
+      }
+    } else {
+      const { instancesTexture, instancesTextureSize } = renderstate.unifs
+      this.drawItemsTexture.bindToUniform(renderstate, instancesTexture)
+      gl.uniform1i(instancesTextureSize.location, this.width)
+
+      {
+        // The instance billboard ids are bound as an instanced attribute.
+        const location = renderstate.attrs.instanceIds.location
+        gl.enableVertexAttribArray(location)
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.instanceIdsBuffer)
+        gl.vertexAttribPointer(location, 1, gl.FLOAT, false, 4, 0)
+        gl.vertexAttribDivisor(location, 1) // This makes it instanced
+      }
+
+      renderstate.bindViewports(unifs, () => {
+        gl.drawElementsInstanced(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0, this.drawCount)
+      })
+    }
+  }
+
+  /**
+   * The sort method.
+   * @param {object} renderstate - The object tracking the current state of the renderer
    */
   draw(renderstate) {
     if (this.drawCount == 0) return
@@ -450,16 +512,6 @@ class GLBillboardsPass extends GLPass {
     }
 
     if (this.indexArrayUpdateNeeded) this.updateIndexArray()
-
-    if (!this.glshader) return
-
-    const gl = this.__gl
-
-    gl.depthMask(false)
-    gl.disable(gl.CULL_FACE)
-    gl.enable(gl.BLEND)
-    gl.blendEquation(gl.FUNC_ADD)
-    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
 
     const cameraPos = renderstate.viewXfo.tr
     const dist = cameraPos.distanceTo(this.prevSortCameraPos)
@@ -480,47 +532,76 @@ class GLBillboardsPass extends GLPass {
       }
     }
 
-    this.glshader.bind(renderstate)
-    this.shaderBinding.bind(renderstate)
+    const gl = this.__gl
 
-    const unifs = renderstate.unifs
-    this.atlas.bindToUniform(renderstate, unifs.atlasBillboards)
+    gl.depthMask(false)
+    gl.disable(gl.CULL_FACE)
 
-    const inVR = renderstate.vrPresenting == true
-    gl.uniform1i(unifs.inVR.location, inVR)
+    gl.enable(gl.BLEND)
+    gl.blendEquation(gl.FUNC_ADD)
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
 
-    if (!gl.floatTexturesSupported || !gl.drawElementsInstanced) {
-      const len = this.indexArray.length
-      for (let i = 0; i < len; i++) {
-        gl.uniformMatrix4fv(unifs.modelMatrix.location, false, this.modelMatrixArray[i])
-        gl.uniform4fv(unifs.billboardData.location, this.billboardDataArray[i])
-        gl.uniform4fv(unifs.tintColor.location, this.tintColorArray[i])
-        gl.uniform4fv(unifs.layoutData.location, this.atlas.getLayoutData(this.billboards[i].imageIndex))
-
-        renderstate.bindViewports(unifs, () => {
-          gl.drawQuad()
-        })
-      }
-    } else {
-      this.drawItemsTexture.bindToUniform(renderstate, unifs.instancesTexture)
-      gl.uniform1i(unifs.instancesTextureSize.location, this.width)
-
-      {
-        // The instance transform ids are bound as an instanced attribute.
-        const location = renderstate.attrs.instanceIds.location
-        gl.enableVertexAttribArray(location)
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.instanceIdsBuffer)
-        gl.vertexAttribPointer(location, 1, gl.FLOAT, false, 4, 0)
-        gl.vertexAttribDivisor(location, 1) // This makes it instanced
-      }
-
-      renderstate.bindViewports(unifs, () => {
-        gl.drawElementsInstanced(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0, this.drawCount)
-      })
-    }
+    this.__draw(renderstate, 'DRAW_COLOR')
 
     gl.disable(gl.BLEND)
     gl.depthMask(true)
+  }
+
+  /**
+   * The drawHighlightedGeoms method.
+   * @param {object} renderstate - The object tracking the current state of the renderer
+   */
+  drawHighlightedGeoms(renderstate) {
+    if (this.drawCount == 0) return
+    this.__draw(renderstate, 'DRAW_HIGHLIGHT')
+  }
+
+  /**
+   * The drawGeomData method.
+   * @param {object} renderstate - The object tracking the current state of the renderer
+   */
+  drawGeomData(renderstate) {
+    if (this.drawCount == 0) return
+    this.__draw(renderstate, 'DRAW_GEOMDATA')
+  }
+
+  /**
+   * The getGeomItem method.
+   * @param {number} index - The index value.
+   * @return {GLGeomItem} - The GLGeomItem that wraps the provided GeomItem
+   */
+  getGeomItem(index) {
+    if (index >= this.billboards.length) {
+      console.warn('Invalid Draw Item id:' + index + ' NumBillboards:' + (this.billboards.length - 1))
+      return undefined
+    }
+    return this.billboards[index].billboard
+  }
+
+  /**
+   * The getGeomItemAndDist method.
+   * @param {any} geomData - The geomData value.
+   * @return {any} - The return value.
+   */
+  getGeomItemAndDist(geomData) {
+    let itemId
+    let dist
+    if (geomData instanceof Float32Array) {
+      itemId = Math.round(geomData[1])
+      dist = geomData[3]
+    } else {
+      itemId = geomData[0] + ((geomData[1] & 63) << 8)
+      dist = MathFunctions.decode16BitFloatFrom2xUInt8([geomData[2], geomData[3]])
+    }
+
+    if (itemId >= this.billboards.length) {
+      console.warn('Invalid Draw Item id:' + itemId + ' NumBillboards:' + (this.billboards.length - 1))
+      return undefined
+    }
+    return {
+      geomItem: this.billboards[itemId].billboard,
+      dist,
+    }
   }
 }
 

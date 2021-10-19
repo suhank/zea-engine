@@ -69,7 +69,7 @@ class GLShaderGeomSets extends EventEmitter {
     const geom = geomItem.getParameter('Geometry').getValue()
     const material = glGeomItem.geomItem.getParameter('Material').getValue()
 
-    const geomItemParamChanged = event => {
+    const geomItemParamChanged = (event) => {
       this.pass.removeGeomItem(geomItem)
       this.pass.__renderer.assignTreeItemToGLPass(geomItem)
     }
@@ -166,12 +166,12 @@ class GLShaderGeomSets extends EventEmitter {
     this.bindShader(this.glGeomDataShader, renderstate, this.glGeomDataShaderKey)
 
     const gl = renderstate.gl
-    const unifs = renderstate.unifs
-    if (unifs.floatGeomBuffer) {
-      gl.uniform1i(unifs.floatGeomBuffer.location, 1)
+    const { floatGeomBuffer, passId } = renderstate.unifs
+    if (floatGeomBuffer) {
+      gl.uniform1i(floatGeomBuffer.location, renderstate.floatGeomBuffer ? 1 : 0)
     }
-    if (unifs.passId) {
-      gl.uniform1i(unifs.passId.location, renderstate.passIndex)
+    if (passId) {
+      gl.uniform1i(passId.location, renderstate.passIndex)
     }
 
     for (const elementType in this.glGeomItemSets) {
