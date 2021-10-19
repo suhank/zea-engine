@@ -47,7 +47,7 @@
         GLRenderer,
       } = window.zeaEngine
 
-      const canvas = document.getElementById('renderer')
+      const canvas = document.getElementById('viewport')
       const renderer = new GLRenderer(canvas, { hideSplash: true, antialias: false })
       renderer.solidAngleLimit = 0.0
 
@@ -95,8 +95,6 @@
       }
 
       const run = () => {
-        document.querySelector('#wrapper').classList.remove('hidden')
-
         const startTime = performance.now()
 
         console.time('Create scene')
@@ -222,7 +220,7 @@
         button to begin.
       </p>
 
-      <div class="flex flex-col flex-1 hidden" id="wrapper">
+      <div class="flex flex-col flex-1" id="wrapper">
         <dl>
           <dt>Memory:</dt>
           <dd>
@@ -240,7 +238,7 @@
         </dl>
 
         <div class="flex-1">
-          <canvas class="absolute" id="renderer" />
+          <canvas id="viewport"></canvas>
         </div>
       </div>
     </div>

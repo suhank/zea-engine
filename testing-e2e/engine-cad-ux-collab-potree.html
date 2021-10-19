@@ -65,7 +65,7 @@
         GLBoundingBoxPass,
       } from '../dist/index.esm.js'
 
-      const canvas = document.querySelector('#renderer')
+      const canvas = document.getElementById('viewport')
 
       const scene = new Scene()
       const renderer = new GLRenderer(canvas, { debugGeomIds: false, antialias: false })
@@ -315,7 +315,7 @@
       </header>
       <nav class="border border-blue-400 flex justify-center items-center">nav</nav>
       <main>
-        <canvas class="absolute" id="renderer"></canvas>
+        <canvas id="viewport"></canvas>
       </main>
       <aside class="border border-blue-400 flex justify-center items-center"></aside>
       <footer class="border border-blue-400 flex justify-center items-center"></footer>

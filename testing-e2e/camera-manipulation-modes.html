@@ -30,7 +30,7 @@
         CameraManipulator,
       } = zeaEngine
 
-      const canvas = document.querySelector('#renderer')
+      const canvas = document.getElementById('viewport')
 
       const scene = new Scene()
       const renderer = new GLRenderer(canvas, { hideSplash: true, webglOptions: { antialias: false } })
@@ -118,7 +118,7 @@
   </head>
   <body class="bg-blue-100 h-full">
     <div class="h-full">
-      <canvas class="absolute" id="renderer"></canvas>
+      <canvas id="viewport"></canvas>
     </div>
   </body>
 </html>

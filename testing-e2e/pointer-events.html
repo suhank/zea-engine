@@ -49,11 +49,10 @@
           return true
         }
       }
-
       Registry.register('OverlayShader', OverlayShader)
 
       const scene = new Scene()
-      const renderer = new GLRenderer(document.querySelector('#renderer'), {
+      const renderer = new GLRenderer(document.getElementById('viewport'), {
         floatGeomBuffer: urlParams.has('webgl') ? false : true,
         antialias: false,
       })
@@ -262,7 +261,7 @@
       </dl>
 
       <div class="flex-1">
-        <canvas class="absolute" id="renderer"></canvas>
+        <canvas id="viewport"></canvas>
       </div>
     </div>
   </body>

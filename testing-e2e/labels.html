@@ -6,7 +6,7 @@
   </head>
   <body class="bg-blue-100 h-full">
     <div class="h-full">
-      <canvas class="h-full w-full" id="app"></canvas>
+      <canvas class="h-full w-full" id="viewport"></canvas>
     </div>
 
     <script src="../dist/index.umd.js"></script>
@@ -16,8 +16,7 @@
 
       const urlParams = new URLSearchParams(window.location.search)
       const scene = new Scene()
-      const domElement = document.getElementById('app')
-      const renderer = new GLRenderer(domElement, {
+      const renderer = new GLRenderer(document.getElementById('viewport'), {
         floatGeomBuffer: urlParams.has('webgl') ? false : true,
         antialias: false,
       })

@@ -482,30 +482,10 @@ class GLBaseRenderer extends ParameterOwner {
    *
    * @private
    */
-  handleResize(width, height) {
+  handleResize(newWidth, newHeight) {
     if (this.__xrViewportPresenting) {
       return
     }
-    // We cannot allow Our offscreen buffers to be resized to zero.
-    // Limit the min size to 16.
-    if (width < 16 || height < 16) {
-      return
-    }
-    // Note: devicePixelRatio has already been factored into the clientWidth and clientHeight,
-    // meaning we do not need to multiply client values by devicePixelRatio to get real values.
-    // On some devices, this duplicate multiplication (when the meta tag was not present), caused
-    // very large offscreen buffers to be created, which crashed devices.
-    // (PT 15/10/2019 - Zahner project)
-    // In some cases I have seen this is disabled using a viewport meta tag in the DOM, which then
-    // requires that we multiply by devicePixelRatio to get the screen pixels size.
-    // By removing that tag, it seems like manual zooming now on desktop systems does _NOT_
-    // effect the clientWidth/clientHeight which causes blurry rendering(when zoomed).
-    // This is a minor issue IMO, and so am disabling devicePixelRatio until its value is clear.
-    // _Remove the meta name="viewport" from the HTML_
-    const DPR = 1.0 // window.devicePixelRatio
-
-    const newWidth = width * DPR
-    const newHeight = height * DPR
 
     if (newWidth != this.__glcanvas.width || newHeight != this.__glcanvas.height) {
       this.__glcanvas.width = newWidth
@@ -557,38 +537,52 @@ class GLBaseRenderer extends ParameterOwner {
       )
 
       this.__glcanvas = document.createElement('canvas')
-      this.__glcanvas.style.left = '0px'
-      this.__glcanvas.style.top = '0px'
-      this.__glcanvas.style.width = '100%'
-      this.__glcanvas.style.height = '100%'
 
       this.__div = $canvas
       this.__div.appendChild(this.__glcanvas)
     } else {
       this.__glcanvas = $canvas
     }
-
     this.__glcanvas.style['touch-action'] = 'none'
-    const canvasIsStatic = window.getComputedStyle(this.__glcanvas).position === 'static'
-
-    if (canvasIsStatic) {
-      console.warn(
-        '@GLBaseRenderer#setupWebGL.',
-        "The CANVAS element's position must be other than `static`.",
-        'See: https://docs.zea.live/zea-engine/#/getting-started/get-started-with-engine?id=basic-setup'
-      )
-
-      this.__glcanvas.style.position = webglOptions.canvasPosition ? webglOptions.canvasPosition : 'absolute'
-    }
+    this.__glcanvas.style.position = 'relative'
+    this.__glcanvas.style.width = 'auto'
+    this.__glcanvas.style.height = 'auto'
+    this.__glcanvas.style.margin = '0px'
 
     let lastResize = performance.now()
     let timoutId = 0
-    this.resizeObserver = new ResizeObserver((entries) => {
+    const resizeObserver = new ResizeObserver((entries) => {
       for (const entry of entries) {
         if (!entry.contentRect) {
           return
         }
-
+        const calcPixelsAndResize = () => {
+          let width
+          let height
+          let dpr = window.devicePixelRatio
+          if (entry.devicePixelContentBoxSize) {
+            // NOTE: Only this path gives the correct answer
+            // The other paths are imperfect fallbacks
+            // for browsers that don't provide anyway to do this
+            width = entry.devicePixelContentBoxSize[0].inlineSize
+            height = entry.devicePixelContentBoxSize[0].blockSize
+            dpr = 1 // it's already in width and height
+          } else if (entry.contentBoxSize) {
+            if (entry.contentBoxSize[0]) {
+              width = entry.contentBoxSize[0].inlineSize
+              height = entry.contentBoxSize[0].blockSize
+            } else {
+              width = entry.contentBoxSize.inlineSize
+              height = entry.contentBoxSize.blockSize
+            }
+          } else {
+            width = entry.contentRect.width
+            height = entry.contentRect.height
+          }
+          const displayWidth = Math.round(width * dpr)
+          const displayHeight = Math.round(height * dpr)
+          this.handleResize(displayWidth, displayHeight)
+        }
         // Note: Rapid resize events would cause WebGL to render black.
         // There appeared nothing to indicate why we get black, but throttling
         // the resizing of our canvas and buffers seems to work.
@@ -600,7 +594,7 @@ class GLBaseRenderer extends ParameterOwner {
             clearTimeout(timoutId)
             timoutId = 0
           }
-          this.handleResize(entry.contentRect.width, entry.contentRect.height)
+          calcPixelsAndResize()
         } else {
           // Set a timer to see if we can delay this resize by a few ms.
           // If a resize happens in the meantime that succeeds, then skip this one.
@@ -610,7 +604,7 @@ class GLBaseRenderer extends ParameterOwner {
             const now = performance.now()
             if (now - lastResize > 100) {
               lastResize = now
-              this.handleResize(entry.contentRect.width, entry.contentRect.height)
+              calcPixelsAndResize()
             }
           }, 100)
         }
@@ -618,7 +612,14 @@ class GLBaseRenderer extends ParameterOwner {
     })
 
     this.handleResize(this.__glcanvas.parentElement.clientWidth, this.__glcanvas.parentElement.clientHeight)
-    this.resizeObserver.observe(this.__glcanvas.parentElement)
+    // https://webglfundamentals.org/webgl/lessons/webgl-resizing-the-canvas.html
+    try {
+      // only call us of the number of device pixels changed
+      resizeObserver.observe(this.__glcanvas.parentNode, { box: 'device-pixel-content-box' })
+    } catch (ex) {
+      // device-pixel-content-box is not supported so fallback to this
+      resizeObserver.observe(this.__glcanvas.parentNode, { box: 'content-box' })
+    }
 
     webglOptions.preserveDrawingBuffer = true
     webglOptions.antialias = webglOptions.antialias != undefined ? webglOptions.antialias : true
