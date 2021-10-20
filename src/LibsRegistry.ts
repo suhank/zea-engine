@@ -1,19 +1,5 @@
-// import semver from 'semver'
-
+import semver from 'semver'
 import { zeaDebug } from './helpers/zeaDebug'
-
-const compare = (a: string, b: string) => {
-  // https://stackoverflow.com/questions/6832596/how-to-compare-software-version-number-using-js-only-number
-  // 2nd answer.
-  const aParts = a.split('-')
-  const bParts = b.split('-')
-  const aNumbers = aParts.map((str) => parseInt(str))
-  const bNumbers = bParts.map((str) => parseInt(str))
-  for (let i = 0; i < 3; i++) {
-    if (aNumbers[i] !== bNumbers[i]) return aNumbers[i] - bNumbers[i]
-  }
-  return 0
-}
 
 /**
  * Libraries registry.
@@ -40,10 +26,11 @@ class LibsRegistry {
     const libVersion = packageJson.version
     const expected = packageJson.dependencies['@zeainc/zea-engine']
 
-    // if (semver.satisfies(this.version, expected)) {
-    if (compare(this.version, expected)) {
+    if (semver.satisfies(this.version, expected)) {
+      // if (compare(this.version, expected)) {
       this.registry[libName] = libVersion
-      zeaDebug("Registered lib '%s' v%s", libName, libVersion)
+      // zeaDebug("Registered lib '%s' v%s", libName, libVersion)
+      console.log(`Registered lib '${libName}' v${libVersion}`)
       return
     }
 
