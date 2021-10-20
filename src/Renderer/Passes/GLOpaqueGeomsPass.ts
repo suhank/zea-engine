@@ -84,7 +84,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
    */
   addGeomItem(geomItem: GeomItem) {
     const materialParam = geomItem.materialParam
-    const material = materialParam.getValue()
+    const material = materialParam.value
     const glGeomLibrary = this.renderer!.glGeomLibrary
     const glGeomItemLibrary = this.renderer!.glGeomItemLibrary
 

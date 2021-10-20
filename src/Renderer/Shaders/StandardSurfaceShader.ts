@@ -58,19 +58,19 @@ class StandardSurfaceShader extends GLShader {
   static getPackedMaterialData(material: Material): Float32Array {
     const matData = new Float32Array(12) // TODO: no extra space needed right?
 
-    const baseColor = material.getParameter('BaseColor')!.getValue()
+    const baseColor = material.getParameter('BaseColor')!.value
     matData[0] = baseColor.r
     matData[1] = baseColor.g
     matData[2] = baseColor.b
     matData[3] = baseColor.a
 
-    matData[4] = material.getParameter('AmbientOcclusion')!.getValue()
-    matData[5] = material.getParameter('Metallic')!.getValue()
-    matData[6] = material.getParameter('Roughness')!.getValue()
-    matData[7] = material.getParameter('Reflectance')!.getValue()
+    matData[4] = material.getParameter('AmbientOcclusion')!.value
+    matData[5] = material.getParameter('Metallic')!.value
+    matData[6] = material.getParameter('Roughness')!.value
+    matData[7] = material.getParameter('Reflectance')!.value
 
-    matData[8] = material.getParameter('EmissiveStrength')!.getValue()
-    matData[9] = material.getParameter('Opacity')!.getValue()
+    matData[8] = material.getParameter('EmissiveStrength')!.value
+    matData[9] = material.getParameter('Opacity')!.value
 
     return matData
   }

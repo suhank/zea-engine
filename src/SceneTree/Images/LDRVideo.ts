@@ -98,9 +98,9 @@ class LDRVideo extends FileImage {
             this.videoElem.muted = this.muteParam.value
           })
 
-          this.videoElem.loop = this.loopParam.getValue()
+          this.videoElem.loop = this.loopParam.value
           this.loopParam.on('valueChanged', () => {
-            this.videoElem.loop = this.loopParam.getValue()
+            this.videoElem.loop = this.loopParam.value
           })
 
           this.width = this.videoElem.videoHeight

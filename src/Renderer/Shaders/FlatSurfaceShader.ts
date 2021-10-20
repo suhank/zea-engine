@@ -60,7 +60,7 @@ class FlatSurfaceShader extends GLShader {
    */
   static getPackedMaterialData(material: Material): Float32Array {
     const matData = new Float32Array(4)
-    const baseColor = material.getParameter('BaseColor')!.getValue()
+    const baseColor = material.getParameter('BaseColor')!.value
     matData[0] = baseColor.r
     matData[1] = baseColor.g
     matData[2] = baseColor.b

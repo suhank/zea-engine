@@ -91,7 +91,7 @@ class OperatorInput extends EventEmitter {
    * @return {unknown} - The return value.
    */
   getValue(): unknown {
-    if (this.param) return this.param.getValue()
+    if (this.param) return this.param.value
     throw new Error('Unable to getValue')
   }
 

@@ -332,7 +332,7 @@ class ParameterOwner extends EventEmitter {
       const param = this.getParameter(srcParam.getName())
       if (param) {
         // Note: we are not cloning the values.
-        param.loadValue(srcParam.getValue())
+        param.loadValue(srcParam.value)
       } else {
         this.addParameter(srcParam.clone())
       }

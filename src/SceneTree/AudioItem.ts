@@ -55,8 +55,8 @@ class AudioItem extends TreeItem {
     const startAudioPlayback = () => {
       audioSource = window.ZeaAudioaudioCtx.createBufferSource()
       audioSource.buffer = audioBuffer
-      audioSource.loop = loopParam.getValue()
-      audioSource.muted = muteParam.getValue()
+      audioSource.loop = loopParam.value
+      audioSource.muted = muteParam.value
       audioSource.start(0)
 
       const event = new AudioSourceCreatedEvent(audioSource)
@@ -78,7 +78,7 @@ class AudioItem extends TreeItem {
             audioBuffer = buffer
             this.__loaded = true
             this.emit('loaded')
-            if (autoplayParam.getValue()) startAudioPlayback()
+            if (autoplayParam.value) startAudioPlayback()
           },
           (e: any) => {
             console.log('Error with decoding audio data' + e.err)
@@ -90,8 +90,8 @@ class AudioItem extends TreeItem {
     })
     const autoplayParam = this.addParameter(new BooleanParameter('Autoplay', false))
     const playStateParam = this.addParameter(new NumberParameter('PlayState', 0))
-    playStateParam.on('valueChanged', event => {
-      switch (playStateParam.getValue()) {
+    playStateParam.on('valueChanged', (event) => {
+      switch (playStateParam.value) {
         case 0:
           if (this.__loaded) {
             if (audioSource) {
@@ -109,7 +109,7 @@ class AudioItem extends TreeItem {
     })
 
     this.isPlaying = () => {
-      return playStateParam.getValue() != 0
+      return playStateParam.value != 0
     }
 
     this.play = () => {
@@ -138,10 +138,10 @@ class AudioItem extends TreeItem {
     this.addParameter(new NumberParameter('coneOuterGain', 1))
 
     muteParam.on('valueChanged', () => {
-      if (audioSource) audioSource.muted = muteParam.getValue()
+      if (audioSource) audioSource.muted = muteParam.value
     })
     loopParam.on('valueChanged', () => {
-      if (audioSource) audioSource.loop = loopParam.getValue()
+      if (audioSource) audioSource.loop = loopParam.value
     })
 
     this.mute = (value: any) => {

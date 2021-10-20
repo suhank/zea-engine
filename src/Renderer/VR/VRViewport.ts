@@ -639,7 +639,7 @@ class VRViewport extends GLBaseViewport {
     // If the manipulator or the viewport handle that
     // then skip the 'pointerDown' event.
     const downTime = Date.now()
-    if (downTime - this.controllerPointerDownTime[event.controller.id] < this.__doubleClickTimeMSParam.getValue()) {
+    if (downTime - this.controllerPointerDownTime[event.controller.id] < this.__doubleClickTimeMSParam.value) {
       this.emit('pointerDoublePressed', event)
       if (!event.propagating) return
 

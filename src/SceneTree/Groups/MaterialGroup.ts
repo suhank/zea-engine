@@ -69,7 +69,7 @@ class MaterialGroup extends BaseGroup {
     }
 
     const key = 'kinematicGroupItemHighlight' + this.getId()
-    Array.from(this.itemsParam.getValue()).forEach((item) => {
+    Array.from(this.itemsParam.value).forEach((item) => {
       if (item instanceof TreeItem) {
         if (highlighted) item.addHighlight(key, color, true)
         else item.removeHighlight(key, true)

@@ -122,12 +122,12 @@ class GLAudioItemsPass extends GLPass {
     const connectVLParamToAudioNodeParam = (vlParam: any, param: any) => {
       if (!vlParam) return
       // Note: setting the gain has no effect. Not sure what to do.
-      // param.value = vlParam.getValue();
-      param.setValueAtTime(vlParam.getValue(), 0)
-      param.setValueAtTime(vlParam.getValue(), 5)
+      // param.value = vlParam.value;
+      param.setValueAtTime(vlParam.value, 0)
+      param.setValueAtTime(vlParam.value, 5)
       vlParam.on('valueChanged', () => {
-        // param.setTargetAtTime(vlParam.getValue(), audioCtx.currentTime);
-        param.value = vlParam.getValue()
+        // param.setTargetAtTime(vlParam.value, audioCtx.currentTime);
+        param.value = vlParam.value
       })
     }
 
@@ -150,9 +150,9 @@ class GLAudioItemsPass extends GLPass {
       const connectVLParamToAudioNode = (paramName: any) => {
         const vlParam = parameterOwner.getParameter(paramName)
         if (!vlParam) return
-        panner[paramName] = vlParam.getValue()
+        panner[paramName] = vlParam.value
         vlParam.on('valueChanged', () => {
-          panner[paramName] = vlParam.getValue()
+          panner[paramName] = vlParam.value
         })
       }
 

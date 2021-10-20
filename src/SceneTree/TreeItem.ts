@@ -104,7 +104,7 @@ class TreeItem extends BaseItem {
     })
 
     this.visibleParam.on('valueChanged', () => {
-      this.__visibleCounter += this.visibleParam.getValue() ? 1 : -1
+      this.__visibleCounter += this.visibleParam.value ? 1 : -1
       this.updateVisibility()
     })
   }

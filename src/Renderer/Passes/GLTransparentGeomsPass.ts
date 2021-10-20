@@ -87,7 +87,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
     this.listenerIDs[geomItem.getId()] = listenerIDs
 
     const materialParam = geomItem.materialParam
-    const material = materialParam.getValue()
+    const material = materialParam.value
     const shaderName = material.getShaderName()
     const shaders = this.constructShaders(shaderName)
 
@@ -198,7 +198,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
     delete this.listenerIDs[geomItem.getId()]
 
     const materialParam = geomItem.getParameter('Material')!
-    const material = materialParam.getValue()!
+    const material = materialParam.value!
     glGeomItem.removeListenerById('visibilityChanged', listenerIDs['glGeomItem.visibilityChanged'])
 
     if (glGeomItem.GLShaderGeomSets) {

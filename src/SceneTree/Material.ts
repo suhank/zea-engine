@@ -145,7 +145,7 @@ class Material extends BaseItem {
 
     if (!isTransparent) {
       const opacity = <NumberParameter>this.getParameter('Opacity')
-      if (opacity && (opacity.getValue() < 0.99 || (opacity instanceof MaterialFloatParam && opacity.getImage()))) {
+      if (opacity && (opacity.value < 0.99 || (opacity instanceof MaterialFloatParam && opacity.getImage()))) {
         isTransparent = true
       } else {
         const baseColorParam = <ColorParameter>this.getParameter('BaseColor')
@@ -156,8 +156,8 @@ class Material extends BaseItem {
               isTransparent = true
             }
           }
-          if (!isTransparent && baseColorParam.getValue()) {
-            const color_val = baseColorParam.getValue()
+          if (!isTransparent && baseColorParam.value) {
+            const color_val = baseColorParam.value
             if (color_val.a < 1) isTransparent = true
           }
         }

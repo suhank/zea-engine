@@ -34,13 +34,13 @@ class SimpleSurfaceShader extends GLShader {
    */
   static getPackedMaterialData(material: Material): Float32Array {
     const matData = new Float32Array(8)
-    const baseColor = material.getParameter('BaseColor')!.getValue()
+    const baseColor = material.getParameter('BaseColor')!.value
     matData[0] = baseColor.r
     matData[1] = baseColor.g
     matData[2] = baseColor.b
     matData[3] = baseColor.a
-    matData[4] = material.getParameter('Opacity')!.getValue()
-    matData[5] = material.getParameter('EmissiveStrength')!.getValue()
+    matData[4] = material.getParameter('Opacity')!.value
+    matData[5] = material.getParameter('EmissiveStrength')!.value
     return matData
   }
 }
