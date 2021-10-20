@@ -45,13 +45,13 @@ class MaterialParameter extends Parameter<Material | undefined> {
    */
   setValue(material: Material): void {
     // 0 == normal set. 1 = changed via cleaner fn, 2 = change by loading/cloning code.
-    if (this.value !== material) {
-      if (this.value) {
-        this.value.removeListenerById('parameterValueChanged', this.listenerIDs['parameterValueChanged'])
+    if (this.__value !== material) {
+      if (this.__value) {
+        this.__value.removeListenerById('parameterValueChanged', this.listenerIDs['parameterValueChanged'])
       }
-      this.value = material
-      if (this.value) {
-        this.listenerIDs['parameterValueChanged'] = this.value.on('parameterValueChanged', (event) => {
+      this.__value = material
+      if (this.__value) {
+        this.listenerIDs['parameterValueChanged'] = this.__value.on('parameterValueChanged', (event) => {
           this.valueParameterValueChanged(event)
         })
       }
@@ -70,13 +70,15 @@ class MaterialParameter extends Parameter<Material | undefined> {
    *
    * @param {Material} value - The context value.
    */
+
+  //TODO: remove?
   loadValue(value: Material): void {
-    if (this.value) {
-      this.value.removeListenerById('parameterValueChanged', this.listenerIDs['parameterValueChanged'])
+    if (this.__value) {
+      this.__value.removeListenerById('parameterValueChanged', this.listenerIDs['parameterValueChanged'])
     }
-    this.value = value
-    if (this.value) {
-      this.listenerIDs['parameterValueChanged'] = this.value.on('parameterValueChanged', (event) => {
+    this.__value = value
+    if (this.__value) {
+      this.listenerIDs['parameterValueChanged'] = this.__value.on('parameterValueChanged', (event) => {
         this.valueParameterValueChanged(event)
       })
     }
@@ -92,9 +94,9 @@ class MaterialParameter extends Parameter<Material | undefined> {
     let j: Record<string, unknown> = {}
     j.name = this.name
 
-    if (this.value) {
+    if (this.__value) {
       j = {
-        value: !context || !context.onlyPath ? this.value.toJSON(context) : this.value.getPath(),
+        value: !context || !context.onlyPath ? this.__value.toJSON(context) : this.__value.getPath(),
       }
     }
 
@@ -140,7 +142,7 @@ class MaterialParameter extends Parameter<Material | undefined> {
    * @return {MaterialParameter} - Returns a new material parameter.
    */
   clone(): MaterialParameter {
-    const clonedParam = new MaterialParameter(this.name, this.value)
+    const clonedParam = new MaterialParameter(this.name, this.__value)
     return clonedParam
   }
 }

@@ -39,18 +39,49 @@ class ObjAsset extends AssetItem {
    * Create an obj asset.
    * @param {string} name - The name of the object asset.
    */
+
+  /**
+   * @member {BooleanParameter} splitObjectsParam - TODO
+   */
+  splitObjectsParam: BooleanParameter = new BooleanParameter('splitObjects', false)
+
+  /**
+   * @member {BooleanParameter} splitGroupsIntoObjectsParam - TODO
+   */
+  splitGroupsIntoObjectsParam: BooleanParameter = new BooleanParameter('splitGroupsIntoObjects', false)
+
+  /**
+   * @member {BooleanParameter} loadMtlFileParam - TODO
+   */
+  loadMtlFileParam: BooleanParameter = new BooleanParameter('loadMtlFile', true)
+
+  /**
+   * @member {NumberParameter} unitsConversionParam - TODO
+   */
+  unitsConversionParam: NumberParameter = new NumberParameter('unitsConversion', 1.0)
+
+  /**
+   * @member {StringParameter} defaultShaderParam - The default shader to use.
+   */
+  defaultShaderParam: StringParameter = new StringParameter('defaultShader', '')
+
+  /**
+   * @member {FilePathParameter} fileParam - Used to specify the path to the file.
+   */
+  fileParam: FilePathParameter = new FilePathParameter('FilePath')
+
   constructor(name: string) {
     super(name)
-    this.addParameter(new BooleanParameter('splitObjects', false))
-    this.addParameter(new BooleanParameter('splitGroupsIntoObjects', false))
-    this.addParameter(new BooleanParameter('loadMtlFile', true))
-    this.addParameter(new NumberParameter('unitsConversion', 1.0))
-    this.addParameter(new StringParameter('defaultShader', ''))
+    this.addParameter(this.splitObjectsParam)
+    this.addParameter(this.splitGroupsIntoObjectsParam)
+    this.addParameter(this.loadMtlFileParam)
+    this.addParameter(this.unitsConversionParam)
+    this.addParameter(this.defaultShaderParam)
+    this.addParameter(this.fileParam)
 
-    const fileParam = <FilePathParameter>this.addParameter(new FilePathParameter('FilePath'))
-    fileParam.on('valueChanged', () => {
+    this.fileParam.on('valueChanged', () => {
       this.loaded = false
-      const url = fileParam.getUrl()
+      const url = this.fileParam.getUrl()
       this.load(url)
     })
   }
@@ -183,7 +214,7 @@ class ObjAsset extends AssetItem {
         }
         newGeom(filename)
 
-        const splitGroupsIntoObjects = this.getParameter('splitGroupsIntoObjects')!.getValue()
+        const splitGroupsIntoObjects = this.splitGroupsIntoObjectsParam.value
 
         const stop = false
         // let numPolys = 0;
@@ -200,7 +231,7 @@ class ObjAsset extends AssetItem {
               // ignore shading groups
               continue
             case 'mtllib':
-              if (!this.getParameter('loadMtlFile')!.getValue()) continue
+              if (!this.loadMtlFileParam.value) continue
               // Load and parse the mat lib.
               resourceLoader.incrementWorkload(2)
               const url = fileFolder + value
@@ -286,7 +317,7 @@ class ObjAsset extends AssetItem {
         this.emit('loaded')
         this.getGeometryLibrary().emit('loaded')
         this.emit('geomsLoaded')
-        // TODO: (commented out) resolve()
+        resolve()
       }
 
       const buildChildItem = (geomName: any, geomData: any) => {
@@ -302,7 +333,7 @@ class ObjAsset extends AssetItem {
         mesh.setFaceCounts(geomData.faceCounts)
         mesh.setNumVertices(numVertices)
         const positionsAttr = <Vec3Attribute>mesh.getVertexAttribute('positions')
-        const unitsConversion = this.getParameter('unitsConversion')!.getValue()
+        const unitsConversion = this.unitsConversionParam.value
 
         for (const vsrcKey in geomData.verticesRemapping) {
           const vsrc = Number.parseInt(vsrcKey)
@@ -367,16 +398,16 @@ class ObjAsset extends AssetItem {
           for (let i = 0; i < positions.getCount(); i++) positions.getValueRef(i).addInPlace(offset) // TODO: is getCount() == positions.length?
           mesh.setBoundingBoxDirty()
         }
-        geomItem.getParameter('LocalXfo')!.setValue(new Xfo(delta))
+        geomItem.localXfoParam.value = new Xfo(delta)
 
         if (geomData.material != undefined && this.__materials.hasMaterial(geomData.material)) {
-          geomItem.getParameter('Material')!.setValue(this.__materials.getMaterial(geomData.material))
+          geomItem.materialParam.value = this.__materials.getMaterial(geomData.material)
         } else {
-          const defaultShader = this.getParameter('defaultShader')!.getValue()
+          const defaultShader = this.defaultShaderParam.value
           const material = new Material(geomName + ' mat')
           material.setShaderName(defaultShader != '' ? defaultShader : 'StandardSurfaceShader')
           this.__materials.addMaterial(material)
-          geomItem.getParameter('Material')!.setValue(material)
+          geomItem.materialParam.value = material
         }
 
         this.addChild(geomItem, false)

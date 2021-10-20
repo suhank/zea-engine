@@ -37,19 +37,19 @@ class Mat4Parameter extends Parameter<Mat4> implements IBinaryReader {
    * @param {Record<string, unknown>} context - The context value.
    */
   readBinary(reader: BinReader, context?: Record<string, unknown>): void {
-    this.value?.readBinary(reader)
+    this.__value?.readBinary(reader)
   }
 
   toJSON(context?: Record<string, unknown>): Record<string, unknown> {
     return {
-      value: this.value?.toJSON(),
+      value: this.__value?.toJSON()
     }
   }
 
   fromJSON(j: Record<string, unknown>, context?: Record<string, unknown>): void {
     const mat4 = new Mat4()
     mat4.fromJSON(j.value as any)
-    this.value = mat4
+    this.__value = mat4
   }
 
   /**
@@ -59,7 +59,7 @@ class Mat4Parameter extends Parameter<Mat4> implements IBinaryReader {
    * @return {Mat4Parameter} - Returns a new cloned Mat4 parameter.
    */
   clone(): Mat4Parameter {
-    const clonedParam = new Mat4Parameter(this.name, this.value?.clone())
+    const clonedParam = new Mat4Parameter(this.name, this.__value?.clone())
     return clonedParam
   }
 }

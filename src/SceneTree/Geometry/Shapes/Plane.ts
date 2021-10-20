@@ -20,10 +20,25 @@ import { Vec2Attribute } from '../Vec2Attribute'
  * @extends {ProceduralMesh}
  */
 class Plane extends ProceduralMesh {
-  protected __detailXParam: NumberParameter
-  protected __detailYParam: NumberParameter
-  protected __sizeXParam: NumberParameter
-  protected __sizeYParam: NumberParameter
+  /**
+   * @member {NumberParameter} detailXParam - Length of the plane along `X` axis.
+   */
+  detailXParam: NumberParameter
+
+  /**
+   * @member {NumberParameter} detailYParam - Length of the plane along `Y` axis.
+   */
+  detailYParam: NumberParameter
+
+  /**
+   * @member {NumberParameter} sizeXParam - Number of divisions along `X`axis.
+   */
+  sizeXParam: NumberParameter
+
+  /**
+   * @member {NumberParameter} sizeYParam - Number of divisions along `Y`axis.
+   */
+  sizeYParam: NumberParameter
   // topologyParams: string[]
 
   /**
@@ -40,10 +55,10 @@ class Plane extends ProceduralMesh {
     this.topologyParams = []
     if (isNaN(SizeX) || isNaN(SizeY) || isNaN(DetailX) || isNaN(DetailY)) throw new Error('Invalid geom args')
 
-    this.__sizeXParam = this.addParameter(new NumberParameter('SizeX', SizeX)) as NumberParameter
-    this.__sizeYParam = this.addParameter(new NumberParameter('SizeY', SizeY)) as NumberParameter
-    this.__detailXParam = this.addParameter(new NumberParameter('DetailX', DetailX)) as NumberParameter
-    this.__detailYParam = this.addParameter(new NumberParameter('DetailY', DetailY)) as NumberParameter
+    this.sizeXParam = this.addParameter(new NumberParameter('SizeX', SizeX)) as NumberParameter
+    this.sizeYParam = this.addParameter(new NumberParameter('SizeY', SizeY)) as NumberParameter
+    this.detailXParam = this.addParameter(new NumberParameter('DetailX', DetailX)) as NumberParameter
+    this.detailYParam = this.addParameter(new NumberParameter('DetailY', DetailY)) as NumberParameter
     if (addNormals) this.addVertexAttribute('normals', new Vec3Attribute())
     if (addTextureCoords) this.addVertexAttribute('texCoords', new Vec2Attribute())
 
@@ -56,8 +71,8 @@ class Plane extends ProceduralMesh {
    * @private
    */
   rebuild(): void {
-    const detailX = this.__detailXParam.getValue() || 1
-    const detailY = this.__detailYParam.getValue() || 1
+    const detailX = this.detailXParam.value || 1
+    const detailY = this.detailYParam.value || 1
     this.setNumVertices((detailX + 1) * (detailY + 1))
     this.setFaceCounts([0, detailX * detailY])
 
@@ -106,10 +121,10 @@ class Plane extends ProceduralMesh {
    * @private
    */
   resize(): void {
-    const sizeX = this.__sizeXParam.getValue() || 1.0
-    const sizeY = this.__sizeYParam.getValue() || 1.0
-    const detailX = this.__detailXParam.getValue() || 1
-    const detailY = this.__detailYParam.getValue() || 1
+    const sizeX = this.sizeXParam.value || 1.0
+    const sizeY = this.sizeYParam.value || 1.0
+    const detailX = this.detailXParam.value || 1
+    const detailY = this.detailYParam.value || 1
     const positions = <Vec3Attribute>this.getVertexAttribute('positions')
     if (!positions) return
 

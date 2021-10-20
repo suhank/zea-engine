@@ -27,7 +27,7 @@ class ListParameter extends Parameter<any[]> {
    * @param {string} name - The name of the list parameter.
    * @param {string} dataType - The dataType value.
    */
-  constructor(name: string, dataType: string) {
+  constructor(name: string = '', dataType?: string) {
     super(name, [], dataType)
   }
 
@@ -48,7 +48,7 @@ class ListParameter extends Parameter<any[]> {
    * @return {number} - The return value.
    */
   getCount(): number {
-    return this.value?.length || 0
+    return this.__value?.length || 0
   }
 
   /**
@@ -58,8 +58,8 @@ class ListParameter extends Parameter<any[]> {
    * @return {unknown} - The return value.
    */
   getElement(index: number): unknown {
-    if (!this.value) return
-    return this.value[index]
+    if (!this.__value) return
+    return this.__value[index]
   }
 
   /**
@@ -69,9 +69,9 @@ class ListParameter extends Parameter<any[]> {
    * @param {unknown} value - The value value.
    */
   setElement(index: number, value: unknown): void {
-    if (!this.value) this.value = []
+    if (!this.__value) this.__value = []
 
-    this.value[index] = value
+    this.__value[index] = value
     this.emit('valueChanged')
   }
 
@@ -83,10 +83,10 @@ class ListParameter extends Parameter<any[]> {
    */
   addElement(elem: unknown): unknown {
     if ((!elem && elem != 0) || !this.filter(elem)) return
-    if (!this.value) this.value = []
+    if (!this.__value) this.__value = []
 
-    this.value.push(elem)
-    this.emit('elementAdded', { elem, index: this.value.length - 1 })
+    this.__value.push(elem)
+    this.emit('elementAdded', { elem, index: this.__value.length - 1 })
     this.emit('valueChanged')
     return elem
   }
@@ -97,9 +97,9 @@ class ListParameter extends Parameter<any[]> {
    * @param {number} index - The index value.
    */
   removeElement(index: number): void {
-    if (!this.value) this.value = []
-    const elem = this.value[index]
-    this.value.splice(index, 1)
+    if (!this.__value) this.__value = []
+    const elem = this.__value[index]
+    this.__value.splice(index, 1)
     this.emit('elementRemoved', { elem, index })
     this.emit('valueChanged')
   }
@@ -111,8 +111,8 @@ class ListParameter extends Parameter<any[]> {
    * @param {unknown} elem - The elem value.
    */
   insertElement(index: number, elem: unknown): void {
-    if (!this.value || !this.filter(elem)) return
-    this.value.splice(index, 0, elem)
+    if (!this.__value || !this.filter(elem)) return
+    this.__value.splice(index, 0, elem)
     this.emit('elementAdded', { elem, index })
     this.emit('valueChanged')
   }
@@ -129,8 +129,8 @@ class ListParameter extends Parameter<any[]> {
 
   toJSON(context: Record<string, any>): Record<string, any> {
     const items = []
-    if (this.value) {
-      for (const p of this.value) {
+    if (this.__value) {
+      for (const p of this.__value) {
         if (typeof this.dataType === 'string') items.push(p)
         else items.push(p.toJSON(context))
       }
@@ -152,7 +152,7 @@ class ListParameter extends Parameter<any[]> {
       return
     }
 
-    this.value = []
+    this.__value = []
     for (let i = 0; i < j.items.length; i++) {
       let elem
       if (typeof this.dataType === 'string') {
@@ -163,8 +163,8 @@ class ListParameter extends Parameter<any[]> {
         elem.fromJSON(j.items[i], context)
       }
 
-      this.value.push(elem)
-      this.emit('elementAdded', { elem, index: this.value.length - 1 })
+      this.__value.push(elem)
+      this.emit('elementAdded', { elem, index: this.__value.length - 1 })
     }
     this.emit('valueChanged', { mode: 0 })
   }
@@ -180,7 +180,7 @@ class ListParameter extends Parameter<any[]> {
    */
 
   clone(): ListParameter {
-    const clonedValue = this.value ? this.value.slice(0) : []
+    const clonedValue = this.__value ? this.__value.slice(0) : []
     if (!this.dataType) throw 'This parameter does not have a DataType'
     const clonedParam = new ListParameter(this.name, this.dataType)
 
@@ -193,9 +193,9 @@ class ListParameter extends Parameter<any[]> {
    * Users should never need to call this method directly.
    */
   destroy(): void {
-    if (!this.value) return
-    for (let i = 0; i < this.value.length; i++) {
-      if (this.value[i] instanceof Parameter) this.value[i].destroy()
+    if (!this.__value) return
+    for (let i = 0; i < this.__value.length; i++) {
+      if (this.__value[i] instanceof Parameter) this.__value[i].destroy()
       this.removeElement(i)
     }
   }

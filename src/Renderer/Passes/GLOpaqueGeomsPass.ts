@@ -55,7 +55,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
    * @return {boolean} - The return value.
    */
   filterGeomItem(geomItem: GeomItem) {
-    const material = geomItem.getParameter('Material')!.getValue()
+    const material = geomItem.materialParam.value
     return this.checkMaterial(material)
   }
 
@@ -83,7 +83,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
    * @return {boolean} - The return value.
    */
   addGeomItem(geomItem: GeomItem) {
-    const materialParam = geomItem.getParameter('Material')!
+    const materialParam = geomItem.materialParam
     const material = materialParam.getValue()
     const glGeomLibrary = this.renderer!.glGeomLibrary
     const glGeomItemLibrary = this.renderer!.glGeomItemLibrary
@@ -111,7 +111,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
       }
     }
 
-    const glGeom = glGeomLibrary.constructGLGeom(geomItem.getParameter('Geometry')!.getValue())
+    const glGeom = glGeomLibrary.constructGLGeom(geomItem.geomParam.value)
     const glGeomItem = glGeomItemLibrary.getGLGeomItem(geomItem)!
 
     // ////////////////////////////////////
@@ -162,7 +162,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
       return true
     }
 
-    const materialParam = geomItem.getParameter('Material')
+    const materialParam = geomItem.materialParam
     const materialChanged = glGeomItem.materialChanged
     if (materialParam && materialChanged) {
       materialParam.off('valueChanged', materialChanged)

@@ -10,7 +10,7 @@ describe('Material', () => {
 
   test('clone', () => {
     const material = new Material('myMaterial', 'SimpleSurfaceShader')
-    material.getParameter('BaseColor').setValue(new Color(89 / 255, 182 / 255, 92 / 255))
+    material.getParameter('BaseColor').value = new Color(89 / 255, 182 / 255, 92 / 255)
 
     const material2 = material.clone()
 
@@ -19,7 +19,7 @@ describe('Material', () => {
 
   test('Saving to JSON (serialization).', () => {
     const material = new Material('myMaterial', 'SimpleSurfaceShader')
-    material.getParameter('BaseColor').setValue(new Color(89 / 255, 182 / 255, 92 / 255))
+    material.getParameter('BaseColor').value = new Color(89 / 255, 182 / 255, 92 / 255)
 
     expect(material.toJSON()).toEqual({
       name: 'myMaterial',
@@ -29,20 +29,20 @@ describe('Material', () => {
             a: 1,
             b: 0.3607843220233917,
             g: 0.7137255072593689,
-            r: 0.3490196168422699,
-          },
+            r: 0.3490196168422699
+          }
         },
         EmissiveStrength: {
           range: [0, 1],
-          value: 0,
+          value: 0
         },
         Opacity: {
           range: [0, 1],
-          value: 1,
-        },
+          value: 1
+        }
       },
       shader: 'SimpleSurfaceShader',
-      type: 'Material',
+      type: 'Material'
     })
   })
 
@@ -56,25 +56,25 @@ describe('Material', () => {
             a: 1,
             b: 0.3607843220233917,
             g: 0.7137255072593689,
-            r: 0.3490196168422699,
-          },
+            r: 0.3490196168422699
+          }
         },
         EmissiveStrength: {
           range: [0, 1],
-          value: 0,
+          value: 0
         },
         Opacity: {
           range: [0, 1],
-          value: 1,
-        },
+          value: 1
+        }
       },
       shader: 'SimpleSurfaceShader',
-      type: 'Material',
+      type: 'Material'
     }
     material.fromJSON(inputJSON)
 
     const standardMaterial = new Material('myMaterial', 'SimpleSurfaceShader')
-    standardMaterial.getParameter('BaseColor').setValue(new Color(89 / 255, 182 / 255, 92 / 255))
+    standardMaterial.getParameter('BaseColor').value = new Color(89 / 255, 182 / 255, 92 / 255)
 
     expect(material.toJSON()).toEqual(standardMaterial.toJSON())
   })

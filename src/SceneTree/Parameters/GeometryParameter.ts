@@ -31,13 +31,13 @@ class GeometryParameter extends Parameter<BaseGeom | undefined> {
    */
   setValue(value: BaseGeom): void {
     // 0 == normal set. 1 = changed via cleaner fn, 2 = change by loading/cloning code.
-    if (this.value !== value) {
-      if (this.value) {
-        this.value.removeListenerById('boundingBoxChanged', this.listenerIDs['boundingBoxChanged'])
+    if (this.__value !== value) {
+      if (this.__value) {
+        this.__value.removeListenerById('boundingBoxChanged', this.listenerIDs['boundingBoxChanged'])
       }
-      this.value = value
-      if (this.value) {
-        this.listenerIDs['boundingBoxChanged'] = this.value.on('boundingBoxChanged', (event) => {
+      this.__value = value
+      if (this.__value) {
+        this.listenerIDs['boundingBoxChanged'] = this.__value.on('boundingBoxChanged', (event) => {
           this.emitBoundingBoxDirtied(event)
         })
       }
@@ -56,13 +56,13 @@ class GeometryParameter extends Parameter<BaseGeom | undefined> {
    * @param {BaseGeom} value - The context value.
    */
   loadValue(value: BaseGeom): void {
-    if (this.value) {
-      this.value.removeListenerById('boundingBoxChanged', this.listenerIDs['boundingBoxChanged'])
+    if (this.__value) {
+      this.__value.removeListenerById('boundingBoxChanged', this.listenerIDs['boundingBoxChanged'])
     }
 
-    this.value = value
-    if (this.value) {
-      this.listenerIDs['boundingBoxChanged'] = this.value.on('boundingBoxChanged', (event) => {
+    this.__value = value
+    if (this.__value) {
+      this.listenerIDs['boundingBoxChanged'] = this.__value.on('boundingBoxChanged', (event) => {
         this.emitBoundingBoxDirtied(event)
       })
     }
@@ -76,7 +76,7 @@ class GeometryParameter extends Parameter<BaseGeom | undefined> {
   toJSON(context?: Record<string, any>): Record<string, unknown> {
     return {
       name: this.name,
-      value: this.value?.toJSON(context),
+      value: this.__value?.toJSON(context),
     }
   }
 
@@ -89,7 +89,7 @@ class GeometryParameter extends Parameter<BaseGeom | undefined> {
     if (j.name) this.name = j.name as string
     const geometry = Registry.constructClass(j.value.type) as any
     geometry.fromJSON(j.value, context)
-    this.value = geometry
+    this.__value = geometry
   }
 
   // ////////////////////////////////////////
@@ -101,7 +101,7 @@ class GeometryParameter extends Parameter<BaseGeom | undefined> {
    * @return {GeometryParameter} - Returns a new geometry parameter.
    */
   clone() {
-    const clonedParam = new GeometryParameter(this.name, this.value)
+    const clonedParam = new GeometryParameter(this.name, this.__value)
     return clonedParam
   }
 }

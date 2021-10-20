@@ -19,10 +19,25 @@ import { Vec3Attribute } from '../Vec3Attribute'
  * @extends {ProceduralMesh}
  */
 class Cuboid extends ProceduralMesh {
-  protected __baseZAtZeroParam: BooleanParameter
-  protected sizeX: NumberParameter
-  protected sizeY: NumberParameter
-  protected sizeZ: NumberParameter
+  /**
+   * @member {BooleanParameter} baseZAtZeroParam - Property to start or not `Z` axis from position `0.
+   */
+  baseZAtZeroParam: BooleanParameter
+
+  /**
+   * @member {NumberParameter} sizeXParam - Length of the line cuboid along the `X` axis
+   */
+  sizeXParam: NumberParameter
+
+  /**
+   * @member {NumberParameter} sizeYParam - Length of the line cuboid along the `Y` axis
+   */
+  sizeYParam: NumberParameter
+
+  /**
+   * @member {NumberParameter} sizeZParam - Length of the line cuboid along the `Z` axis
+   */
+  sizeZParam: NumberParameter
 
   /**
    * Create a cuboid.
@@ -36,10 +51,10 @@ class Cuboid extends ProceduralMesh {
 
     if (isNaN(x) || isNaN(y) || isNaN(z)) throw new Error('Invalid geom args')
 
-    this.sizeX = this.addParameter(new NumberParameter('X', x)) as NumberParameter
-    this.sizeY = this.addParameter(new NumberParameter('Y', y)) as NumberParameter
-    this.sizeZ = this.addParameter(new NumberParameter('Z', z)) as NumberParameter
-    this.__baseZAtZeroParam = this.addParameter(new BooleanParameter('BaseZAtZero', baseZAtZero)) as BooleanParameter
+    this.sizeXParam = this.addParameter(new NumberParameter('X', x)) as NumberParameter
+    this.sizeYParam = this.addParameter(new NumberParameter('Y', y)) as NumberParameter
+    this.sizeZParam = this.addParameter(new NumberParameter('Z', z)) as NumberParameter
+    this.baseZAtZeroParam = this.addParameter(new BooleanParameter('BaseZAtZero', baseZAtZero)) as BooleanParameter
 
     this.setFaceCounts([0, 6])
     this.setFaceVertexIndices(0, [0, 1, 2, 3])
@@ -63,9 +78,9 @@ class Cuboid extends ProceduralMesh {
    * @param {number} z - The length of the edges along the Z axis.
    */
   setSize(x: number, y: number, z: number): void {
-    this.sizeX.setValue(x)
-    this.sizeY.setValue(y)
-    this.sizeZ.setValue(z)
+    this.sizeXParam.setValue(x)
+    this.sizeYParam.setValue(y)
+    this.sizeZParam.setValue(z)
   }
 
   /**
@@ -75,8 +90,8 @@ class Cuboid extends ProceduralMesh {
    * @param {number} y - The length of the edges along the Y axis.
    */
   setBaseSize(x: number, y: number): void {
-    this.sizeX.setValue(x)
-    this.sizeY.setValue(y)
+    this.sizeXParam.setValue(x)
+    this.sizeYParam.setValue(y)
   }
 
   /**
@@ -133,10 +148,10 @@ class Cuboid extends ProceduralMesh {
    * @private
    */
   resize(): void {
-    const x = this.sizeX.getValue() || 1.0
-    const y = this.sizeY.getValue() || 1.0
-    const z = this.sizeZ.getValue() || 1.0
-    const baseZAtZero = this.__baseZAtZeroParam.getValue()
+    const x = this.sizeXParam.value || 1.0
+    const y = this.sizeYParam.value || 1.0
+    const z = this.sizeZParam.value || 1.0
+    const baseZAtZero = this.baseZAtZeroParam.value
     let zoff = 0.5
     const positions = <Vec3Attribute>this.getVertexAttribute('positions')
     if (baseZAtZero) zoff = 1.0

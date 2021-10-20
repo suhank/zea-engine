@@ -30,7 +30,18 @@ import { FileImage } from './FileImage'
  * @extends FileImage
  */
 class LDRVideo extends FileImage {
-  protected getAudioSource: any
+  protected videoElem: HTMLVideoElement = new HTMLVideoElement()
+
+  muteParam = new BooleanParameter('Mute', false)
+  loopParam = new BooleanParameter('Loop', true)
+  spatializeAudioParam = new BooleanParameter('SpatializeAudio', true)
+  refDistanceParam = new NumberParameter('refDistance', 2)
+  maxDistanceParam = new NumberParameter('maxDistance', 10000)
+  rolloffFactorParam = new NumberParameter('rolloffFactor', 1)
+  coneInnerAngleParam = new NumberParameter('coneInnerAngle', 360)
+  coneOuterAngleParam = new NumberParameter('coneOuterAngle', 0)
+  coneOuterGainParam = new NumberParameter('coneOuterGain', 1)
+  gainParam = new NumberParameter('Gain', 2.0)
   /**
    * Create a LDR video.
    * @param {string} name - The name value.
@@ -42,16 +53,20 @@ class LDRVideo extends FileImage {
     this.format = 'RGB'
     this.type = 'UNSIGNED_BYTE'
 
-    this.addParameter(new BooleanParameter('Mute', false))
-    this.addParameter(new BooleanParameter('Loop', true))
-    ;(<NumberParameter>this.addParameter(new NumberParameter('Gain', 2.0))).setRange([0, 5])
-    this.addParameter(new BooleanParameter('SpatializeAudio', true))
-    this.addParameter(new NumberParameter('refDistance', 2))
-    this.addParameter(new NumberParameter('maxDistance', 10000))
-    this.addParameter(new NumberParameter('rolloffFactor', 1))
-    this.addParameter(new NumberParameter('coneInnerAngle', 360))
-    this.addParameter(new NumberParameter('coneOuterAngle', 0))
-    this.addParameter(new NumberParameter('coneOuterGain', 1))
+    this.addParameter(this.muteParam)
+    this.addParameter(this.loopParam)
+    this.addParameter(this.spatializeAudioParam)
+    this.addParameter(this.refDistanceParam)
+    this.addParameter(this.maxDistanceParam)
+    this.addParameter(this.rolloffFactorParam)
+    this.addParameter(this.coneInnerAngleParam)
+    this.addParameter(this.coneOuterAngleParam)
+    this.addParameter(this.coneOuterGainParam)
+    ;(<NumberParameter>this.addParameter(this.gainParam)).setRange([0, 5])
+  }
+
+  getAudioSource() {
+    return this.videoElem
   }
 
   /**
@@ -66,39 +81,31 @@ class LDRVideo extends FileImage {
     return new Promise((resolve, reject) => {
       resourceLoader.incrementWorkload(1)
 
-      const videoElem = document.createElement('video')
       // TODO - confirm its necessary to add to DOM
-      videoElem.style.display = 'none'
-      videoElem.preload = 'auto'
-      videoElem.crossOrigin = 'anonymous'
+      this.videoElem.style.display = 'none'
+      this.videoElem.preload = 'auto'
+      this.videoElem.crossOrigin = 'anonymous'
       // videoElem.crossorigin = true;
 
-      this.getAudioSource = () => {
-        return videoElem
-      }
-
-      document.body.appendChild(videoElem)
-      videoElem.addEventListener(
+      document.body.appendChild(this.videoElem)
+      this.videoElem.addEventListener(
         'loadedmetadata',
         () => {
           // videoElem.play();
 
-          const muteParam = this.getParameter('Mute')!
-          videoElem.muted = muteParam.getValue()
-          muteParam.on('valueChanged', () => {
-            videoElem.muted = muteParam.getValue()
+          this.videoElem.muted = this.muteParam.value
+          this.muteParam.on('valueChanged', () => {
+            this.videoElem.muted = this.muteParam.value
           })
 
-          const loopParam = this.getParameter('Loop')!
-          videoElem.loop = loopParam.getValue()
-          loopParam.on('valueChanged', () => {
-            videoElem.loop = loopParam.getValue()
+          this.videoElem.loop = this.loopParam.getValue()
+          this.loopParam.on('valueChanged', () => {
+            this.videoElem.loop = this.loopParam.getValue()
           })
 
-          this.width = videoElem.videoHeight
-          this.height = videoElem.videoWidth
-          this.__data = videoElem
-          this.__loaded = true
+          this.width = this.videoElem.videoHeight
+          this.height = this.videoElem.videoWidth
+          this.loaded = true
           resourceLoader.incrementWorkDone(1)
           this.emit('loaded', {})
           resolve(promise)
@@ -106,12 +113,12 @@ class LDRVideo extends FileImage {
           let prevFrame = 0
           const frameRate = 29.97
           const timerCallback = () => {
-            if (videoElem.paused || videoElem.ended) {
+            if (this.videoElem.paused || this.videoElem.ended) {
               return
             }
             // Check to see if the video has progressed to the next frame.
             // If so, then we emit and update, which will cause a redraw.
-            const currentFrame = Math.floor(videoElem.currentTime * frameRate)
+            const currentFrame = Math.floor(this.videoElem.currentTime * frameRate)
             if (prevFrame != currentFrame) {
               this.emit('updated', {})
               prevFrame = currentFrame
@@ -122,9 +129,9 @@ class LDRVideo extends FileImage {
         },
         false
       )
-      videoElem.src = url
-      // videoElem.load();
-      const promise = videoElem.play()
+      this.videoElem.src = url
+      // this.videoElem.load();
+      const promise = this.videoElem.play()
       if (promise !== undefined) {
         promise
           .then((_) => {
@@ -138,6 +145,17 @@ class LDRVideo extends FileImage {
           })
       }
     })
+  }
+  /**
+   * The getParams method.
+   * @return {any} - The return value.
+   */
+  getParams() {
+    const params = super.getParams()
+    if (this.loaded) {
+      params['data'] = this.videoElem
+    }
+    return params
   }
 }
 

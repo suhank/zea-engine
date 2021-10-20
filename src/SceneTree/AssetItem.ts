@@ -264,8 +264,8 @@ class AssetItem extends TreeItem {
       context.units = this.__units
 
       // Apply units change to existing Xfo (avoid changing tr).
-      const localXfoParam = this.getParameter('LocalXfo')!
-      const xfo = localXfoParam.getValue()
+      const localXfoParam = this.localXfoParam
+      const xfo = localXfoParam.value
       xfo.sc.scaleInPlace(this.__unitsScale)
       localXfoParam.setValue(xfo)
     }
@@ -457,11 +457,10 @@ class AssetItem extends TreeItem {
 
     if (!src.loaded) {
       src.once('loaded', (event) => {
-        const srcLocalXfo = src.getParameter('LocalXfo')!.getValue()
-        const localXfoParam = this.getParameter('LocalXfo')
-        const localXfo = localXfoParam!.getValue()
+        const srcLocalXfo = src.localXfoParam.value
+        const localXfo = this.localXfoParam.value
         localXfo.sc = srcLocalXfo.sc.clone()
-        localXfoParam!.setValue(localXfo)
+        this.localXfoParam.value = localXfo
 
         src.getChildren().forEach((srcChildItem: any) => {
           if (srcChildItem && srcChildItem != AssetItem) {

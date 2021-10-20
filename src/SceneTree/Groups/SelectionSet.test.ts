@@ -43,9 +43,9 @@ describe('SelectionSet', () => {
     parent.addChild(child)
 
     group.addItem(parent)
-    group.getParameter('Highlighted').setValue(true)
-    group.getParameter('HighlightColor').setValue(new Color(1, 0, 0))
-    group.getParameter('HighlightFill').setValue(0.5)
+    group.highlightedParam.value = true
+    group.highlightColorParam.value = new Color(1, 0, 0)
+    group.highlightFillParam.value = 0.5
 
     const expHighlight = new Color(1, 0, 0, 0.5)
     expect(child.getHighlight().toString()).toBe(expHighlight.toString())

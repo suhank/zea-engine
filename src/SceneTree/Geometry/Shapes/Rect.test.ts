@@ -4,17 +4,17 @@ describe('Rect', () => {
   it('tests default parameters', () => {
     const rect = new Rect()
 
-    expect(rect.getParameter('X').getValue()).toBe(1.0)
-    expect(rect.getParameter('Y').getValue()).toBe(1.0)
+    expect(rect.sizeXParam.value).toBe(1.0)
+    expect(rect.sizeYParam.value).toBe(1.0)
   })
 
   it('sets rectangle size', () => {
     const rect = new Rect()
-    rect.getParameter('X').setValue(3)
-    rect.getParameter('Y').setValue(4)
+    rect.sizeXParam.value = 3
+    rect.sizeYParam.value = 4
 
-    expect(rect.getParameter('X').getValue()).toBe(3)
-    expect(rect.getParameter('Y').getValue()).toBe(4)
+    expect(rect.sizeXParam.value).toBe(3)
+    expect(rect.sizeYParam.value).toBe(4)
   })
 
   it('saves to JSON (serialization).', () => {
@@ -24,14 +24,14 @@ describe('Rect', () => {
     const expectedOutput = {
       params: {
         X: {
-          value: 3,
+          value: 3
         },
         Y: {
-          value: 4,
-        },
+          value: 4
+        }
       },
       type: 'Rect',
-      vertexAttributes: {},
+      vertexAttributes: {}
     }
 
     expect(outputJSON).toEqual(expectedOutput)
@@ -41,7 +41,7 @@ describe('Rect', () => {
     const rect = new Rect()
     const json = {
       params: { X: { value: 3 }, Y: { value: 4 } },
-      type: 'Rect',
+      type: 'Rect'
     }
     rect.fromJSON(json)
 

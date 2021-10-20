@@ -39,7 +39,7 @@ class LibsRegistry {
 
   /**
    * List the registered libraries with their versions.
-   * Record<string, unknown>@return {} Libraries list.
+   * @return {Record<string, unknown>} Libraries list.
    */
   listLibs(): Record<string, unknown> {
     return this.registry

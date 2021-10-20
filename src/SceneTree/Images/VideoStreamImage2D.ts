@@ -6,7 +6,6 @@ import { BaseImage } from '../BaseImage'
  * @extends BaseImage
  */
 class VideoStreamImage2D extends BaseImage {
-  __loaded: any
   __data: any
   __intervalId: any
   /**
@@ -14,7 +13,7 @@ class VideoStreamImage2D extends BaseImage {
    */
   constructor() {
     super('')
-    this.__loaded = false
+    this.loaded = false
   }
 
   /**
@@ -79,7 +78,7 @@ class VideoStreamImage2D extends BaseImage {
           this.height = domElement.videoHeight
           console.log('Webcam:[' + this.width + ', ' + this.height + ']')
           this.__data = domElement
-          this.__loaded = true
+          this.loaded = true
           this.emit('loaded', {})
 
           let prevFrame = 0
@@ -109,13 +108,13 @@ class VideoStreamImage2D extends BaseImage {
    * The setVideoStream method.
    * @param {any} video - The video value.
    */
-  setVideoStream(video: any) {
-    this.__loaded = false
+  setVideoStream(video: HTMLVideoElement) {
+    this.loaded = false
     this.width = video.videoWidth
     this.height = video.videoHeight
     this.start()
     this.__data = video
-    this.__loaded = true
+    this.loaded = true
     this.emit('loaded', {})
   }
 
@@ -144,7 +143,7 @@ class VideoStreamImage2D extends BaseImage {
    * @return {boolean} - The return value.
    */
   isLoaded() {
-    return this.__loaded
+    return this.loaded
   }
 
   /**
@@ -158,7 +157,7 @@ class VideoStreamImage2D extends BaseImage {
       width: this.width,
       height: this.height,
       data: this.__data,
-      flipY: this.getParameter('FlipY')!.getValue(),
+      flipY: true,
     }
   }
 }

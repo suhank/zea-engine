@@ -81,7 +81,7 @@ function roundRect(
     ctx.stroke()
   }
 }
-
+// TODO: rewrite
 /**
  * Represents a 2D label item the scene.
  * Since displaying text in the scene is not an easy task,
@@ -114,59 +114,113 @@ function roundRect(
  * @extends DataImage
  */
 class Label extends DataImage {
-  protected __needsRender: any
-  protected __canvasElem: any
-  protected __requestedReRender: any
-  protected __getLabelText: any
+  protected needsRender: boolean
+  protected canvasElem: HTMLCanvasElement
+  protected requestedReRender: boolean = false
   /**
    * Creates a label instance. Creating a canvas element that hosts the specified text.
    *
    * @param {string} name - The name value.
    * @param {string} library - The library value.
    */
+
+  marginParam: NumberParameter
+  borderRadiusParam: NumberParameter
+
+  /**
+   * @member {StringParameter} libraryParam - Library you wan to use for your label, see **Library List** above.
+   */
+  libraryParam: StringParameter = new StringParameter('Library')
+
+  /**
+   * @member {StringParameter} textParam - text to display on the label
+   */
+  textParam: StringParameter = new StringParameter('Text', '')
+
+  /**
+   * @member {ColorParameter} fontColorParam - TODO
+   */
+  fontColorParam: ColorParameter = new ColorParameter('FontColor', new Color(0, 0, 0))
+
+  /**
+   * @member - TODO
+   */
+  fontSizeParam: NumberParameter = new NumberParameter('FontSize', 22)
+
+  /**
+   * @member {StringParameter} fontParam - TODO
+   */
+  fontParam: StringParameter = new StringParameter('Font', 'Helvetica')
+
+  /**
+   * @member {NumberParameter} borderWidthParam - Border around the label
+   */
+  borderWidthParam: NumberParameter = new NumberParameter('BorderWidth', 2)
+
+  /**
+   * @member {BooleanParameter} outlineParam - TODO
+   */
+  outlineParam: BooleanParameter = new BooleanParameter('Outline', false)
+
+  /**
+   * @member {ColorParameter} outlineColorParam - TODO
+   */
+  outlineColorParam: ColorParameter = new ColorParameter('OutlineColor', new Color(0, 0, 0))
+
+  /**
+   * @member {BooleanParameter} backgroundParam - TODO
+   */
+  backgroundParam: BooleanParameter = new BooleanParameter('Background', true)
+
+  /**
+   * @member {ColorParameter} backgroundColorParam - TODO
+   */
+  backgroundColorParam: ColorParameter = new ColorParameter('BackgroundColor', new Color('#FBC02D'))
+
+  /**
+   * @member {BooleanParameter} fillBackgroundParam - TODO
+   */
+  fillBackgroundParam: BooleanParameter = new BooleanParameter('FillBackground', true)
+
+  /**
+   * @member {BooleanParameter} strokeBackgroundOutlineParam - TODO
+   */
+  strokeBackgroundOutlineParam: BooleanParameter = new BooleanParameter('StrokeBackgroundOutline', true)
+
   constructor(name?: string, library?: string) {
     super(name)
 
-    this.__canvasElem = document.createElement('canvas')
+    this.canvasElem = document.createElement('canvas')
+
     const fontSize = 22
+    this.marginParam = new NumberParameter('Margin', fontSize * 0.5)
+    this.borderRadiusParam = new NumberParameter('BorderRadius', fontSize * 0.5)
 
-    const libraryParam = this.addParameter(new StringParameter('Library'))
-    this.addParameter(new StringParameter('Text', ''))
-    // or load the label when it is loaded.
+    this.addParameter(this.marginParam)
+    this.addParameter(this.borderRadiusParam)
 
-    // const setLabelTextToLibrary = ()=>{
-    //     const library = libraryParam.getValue();
-    //     const name = this.getName();
-    //     const text = textParam.getValue();
-    //     labelManager.setLabelTextToLibrary(library, name, text);
-    // }
-    // textParam.on('valueChanged', setLabelText);
-
-    this.addParameter(new ColorParameter('FontColor', new Color(0, 0, 0)))
-    // this.addParameter(new StringParameter('TextAlign', 'left'))
-    // this.addParameter(MultiChoiceParameter('TextAlign', 0, ['left', 'right']));
-    // this.addParameter(new BooleanParameter('FillText', true))
-    this.addParameter(new NumberParameter('Margin', fontSize * 0.5))
-    this.addParameter(new NumberParameter('BorderWidth', 2))
-    this.addParameter(new NumberParameter('BorderRadius', fontSize * 0.5))
-    this.addParameter(new BooleanParameter('Outline', false))
-    this.addParameter(new ColorParameter('OutlineColor', new Color(0, 0, 0)))
-    this.addParameter(new BooleanParameter('Background', true))
-    this.addParameter(new ColorParameter('BackgroundColor', new Color('#FBC02D')))
-    this.addParameter(new BooleanParameter('FillBackground', true))
-    this.addParameter(new BooleanParameter('StrokeBackgroundOutline', true))
-    this.addParameter(new NumberParameter('FontSize', 22))
-    this.addParameter(new StringParameter('Font', 'Helvetica'))
+    this.addParameter(this.libraryParam)
+    this.addParameter(this.textParam)
+    this.addParameter(this.fontColorParam)
+    this.addParameter(this.fontSizeParam)
+    this.addParameter(this.fontParam)
+    this.addParameter(this.borderWidthParam)
+    this.addParameter(this.outlineParam)
+    this.addParameter(this.outlineColorParam)
+    this.addParameter(this.backgroundParam)
+    this.addParameter(this.backgroundColorParam)
+    this.addParameter(this.fillBackgroundParam)
+    this.addParameter(this.strokeBackgroundOutlineParam)
 
     const reload = () => {
       this.loadLabelData()
     }
     this.on('nameChanged', reload)
 
-    if (library) libraryParam.setValue(library)
+    if (library) this.libraryParam.value = library
 
-    this.__requestedReRender = false
-    this.__needsRender = false
+    this.requestedReRender = false
+    this.needsRender = false
     this.loadLabelData()
   }
 
@@ -179,8 +233,8 @@ class Label extends DataImage {
    */
   __parameterValueChanged(event: Record<string, any>) {
     super.parameterValueChanged(event)
-    if (!this.__requestedReRender) {
-      this.__requestedReRender = true
+    if (!this.requestedReRender) {
+      this.requestedReRender = true
       this.loadLabelData()
     }
   }
@@ -190,8 +244,8 @@ class Label extends DataImage {
    */
   loadLabelData() {
     const onLoaded = () => {
-      this.__requestedReRender = false
-      this.__needsRender = true
+      this.requestedReRender = false
+      this.needsRender = true
       if (!this.__loaded) {
         this.__loaded = true
         this.emit('loaded', {})
@@ -202,7 +256,7 @@ class Label extends DataImage {
 
     const loadText = (): Promise<void> => {
       return new Promise((resolve) => {
-        const library = this.getParameter('Library')!.getValue()
+        const library = this.libraryParam.value
         if (library == '') {
           resolve()
           return
@@ -217,7 +271,7 @@ class Label extends DataImage {
             const name = this.getName()
             // console.log("Text Loaded:" + name);
             const text = labelManager.getLabelText(library, name)
-            this.getParameter('Text')!.setValue(text)
+            this.textParam.value = text
           } catch (e) {
             // Note: if the text is not found in the labels pack
             // an exception is thrown, and we catch it here.
@@ -238,8 +292,8 @@ class Label extends DataImage {
     const loadFont = (): Promise<void> => {
       return new Promise((resolve) => {
         if ((document as any).fonts != undefined) {
-          const font = this.getParameter('Font')!.getValue()
-          const fontSize = this.getParameter('FontSize')!.getValue()
+          const font = this.fontParam.value
+          const fontSize = this.fontSizeParam.value
           ;(document as any).fonts.load(fontSize + 'px "' + font + '"')!.then(() => {
             // console.log("Font Loaded:" + font);
             resolve()
@@ -259,26 +313,26 @@ class Label extends DataImage {
    */
   renderLabelToImage() {
     // console.log("renderLabelToImage")
-    const ctx2d = this.__canvasElem.getContext('2d', {
+    const ctx2d = this.canvasElem.getContext('2d', {
       alpha: true,
     })
 
-    let text = this.getParameter('Text')!.getValue()
+    let text = this.textParam.value
     if (text == '') text = this.getName()
 
-    const font = this.getParameter('Font')!.getValue()
-    const fontColor = this.getParameter('FontColor')!.getValue()
-    const textAlign = 'left' // this.getParameter('TextAlign')!.getValue()
-    const fontSize = this.getParameter('FontSize')!.getValue()
-    const margin = this.getParameter('Margin')!.getValue()
-    const borderWidth = this.getParameter('BorderWidth')!.getValue()
-    const borderRadius = this.getParameter('BorderRadius')!.getValue()
-    const outline = this.getParameter('Outline')!.getValue()
-    const outlineColor = this.getParameter('OutlineColor')!.getValue()
-    const background = this.getParameter('Background')!.getValue()
-    const backgroundColor = this.getParameter('BackgroundColor')!.getValue()
-    const fillBackground = this.getParameter('FillBackground')!.getValue()
-    const strokeBackgroundOutline = this.getParameter('StrokeBackgroundOutline')!.getValue()
+    const font = this.fontParam.value
+    const fontColor = this.fontColorParam.value
+    const textAlign = 'left' // this.textAlignParam.value
+    const fontSize = this.fontSizeParam.value
+    const margin = this.marginParam.value
+    const borderWidth = this.borderWidthParam.value
+    const borderRadius = this.borderRadiusParam.value
+    const outline = this.outlineParam.value
+    const outlineColor = this.outlineColorParam.value
+    const background = this.backgroundParam.value
+    const backgroundColor = this.backgroundColorParam.value
+    const fillBackground = this.fillBackgroundParam.value
+    const strokeBackgroundOutline = this.strokeBackgroundOutlineParam.value
 
     // let ratio = devicePixelRatio / backingStoreRatio;
     const marginAndBorder = margin + borderWidth
@@ -295,8 +349,8 @@ class Label extends DataImage {
     this.height = Math.ceil(fontHeight * lines.length + marginAndBorder * 2)
     ctx2d.canvas.width = this.width
     ctx2d.canvas.height = this.height
-    this.__canvasElem.width = this.width
-    this.__canvasElem.height = this.height
+    this.canvasElem.width = this.width
+    this.canvasElem.height = this.height
 
     // ctx2d.clearRect(0, 0, this.width, this.height);
     ctx2d.fillStyle = 'rgba(0, 0, 0, 0.0)'
@@ -333,7 +387,7 @@ class Label extends DataImage {
     }
 
     this.__data = ctx2d.getImageData(0, 0, this.width, this.height)
-    this.__needsRender = false
+    this.needsRender = false
     this.emit('labelRendered', {
       width: this.width,
       height: this.height,
@@ -347,7 +401,7 @@ class Label extends DataImage {
    * @return {Record<string, any>} - The return value.
    */
   getParams(): Record<string, any> {
-    if (this.__needsRender) this.renderLabelToImage()
+    if (this.needsRender) this.renderLabelToImage()
     return super.getParams()
   }
 
@@ -373,7 +427,6 @@ class Label extends DataImage {
    */
   fromJSON(j: Record<string, any>, context: Record<string, any>) {
     super.fromJSON(j, context)
-    this.__getLabelText() // TODO: does this make sense? this is a protected member. no functions are added to it.
   }
 }
 

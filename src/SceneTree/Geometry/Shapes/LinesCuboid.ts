@@ -16,10 +16,25 @@ import { Vec3Attribute } from '../Vec3Attribute'
  * @extends {ProceduralLines}
  */
 class LinesCuboid extends ProceduralLines {
-  __baseZAtZero: BooleanParameter
-  __x: NumberParameter
-  __y: NumberParameter
-  __z: NumberParameter
+  /**
+   * @member {BooleanParameter} baseZAtZeroParam - Property to start or not `Z` axis from position `0.
+   */
+  baseZAtZeroParam: BooleanParameter
+
+  /**
+   * @member {NumberParameter} sizeXParam - Length of the line cuboid along the `X` axis
+   */
+  sizeXParam: NumberParameter
+
+  /**
+   * @member {NumberParameter} sizeYParam - Length of the line cuboid along the `Y` axis
+   */
+  sizeYParam: NumberParameter
+
+  /**
+   * @member {NumberParameter} sizeZParam - Length of the line cuboid along the `Z` axis
+   */
+  sizeZParam: NumberParameter
 
   /**
    * Create a lines cuboid.
@@ -31,11 +46,11 @@ class LinesCuboid extends ProceduralLines {
   constructor(x = 1.0, y = 1.0, z = 1.0, baseZAtZero = false) {
     super()
 
-    this.__x = this.addParameter(new NumberParameter('X', x)) as NumberParameter
-    this.__y = this.addParameter(new NumberParameter('Y', y)) as NumberParameter
-    this.__z = this.addParameter(new NumberParameter('Z', z)) as NumberParameter
+    this.sizeXParam = this.addParameter(new NumberParameter('X', x)) as NumberParameter
+    this.sizeYParam = this.addParameter(new NumberParameter('Y', y)) as NumberParameter
+    this.sizeZParam = this.addParameter(new NumberParameter('Z', z)) as NumberParameter
 
-    this.__baseZAtZero = this.addParameter(new BooleanParameter('BaseZAtZero', baseZAtZero)) as BooleanParameter
+    this.baseZAtZeroParam = this.addParameter(new BooleanParameter('BaseZAtZero', baseZAtZero)) as BooleanParameter
   }
 
   /**
@@ -68,10 +83,10 @@ class LinesCuboid extends ProceduralLines {
    * @private
    */
   resize(): void {
-    const x = this.__x.getValue() || 1.0
-    const y = this.__y.getValue() || 1.0
-    const z = this.__z.getValue() || 1.0
-    const baseZAtZero = this.__baseZAtZero.getValue()
+    const x = this.sizeXParam.value || 1.0
+    const y = this.sizeYParam.value || 1.0
+    const z = this.sizeZParam.value || 1.0
+    const baseZAtZero = this.baseZAtZeroParam.value
 
     const positions = <Vec3Attribute>this.getVertexAttribute('positions')
     if (positions) {

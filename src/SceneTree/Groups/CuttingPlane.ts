@@ -33,23 +33,26 @@ class CuttingPlane extends BaseGroup {
    *
    * @param {string} name - The name of the group.
    */
+
+  cutAwayEnabledParam = new BooleanParameter('CutAwayEnabled', false)
+  cutPlaneParam = new Vec4Parameter('CutPlane', new Vec4(1, 0, 0))
+
   constructor(name: string = '') {
     super(name)
 
-    const booleanParam = new BooleanParameter('CutAwayEnabled', false)
-    const vec4Parameter = new Vec4Parameter('CutPlane', new Vec4(1, 0, 0))
-    booleanParam.on('valueChanged', (event) => {
+    this.cutAwayEnabledParam.on('valueChanged', (event) => {
       this.__updateCutaway(event)
     })
-    vec4Parameter.on('vec4Parameter', (event) => {
+    this.cutPlaneParam.on('vec4Parameter', (event) => {
       this.__updateCutaway(event)
     })
-    this.addParameter(booleanParam)
-    this.addParameter(vec4Parameter)
+    this.addParameter(this.cutAwayEnabledParam)
+    this.addParameter(this.cutPlaneParam)
 
     this.cutPlaneOp = new CuttingPlaneOperator(
-      <XfoParameter>this.getParameter('GlobalXfo'),
-      <XfoParameter>this.getParameter('CutPlane')
+      this.globalXfoParam,
+      this.cutPlaneParam
+      // <XfoParameter>this.getParameter('CutPlane') // TODO: should this method accept vec4Param or just xfo?
     )
 
     // Create the geometry to display the plane.
@@ -90,8 +93,8 @@ class CuttingPlane extends BaseGroup {
    * @private
    */
   __updateCutawayHelper(item: TreeItem): void {
-    const cutEnabled = this.getParameter('CutAwayEnabled')!.getValue()
-    const cutPlane = this.getParameter('CutPlane')!.getValue()
+    const cutEnabled = this.cutAwayEnabledParam.value
+    const cutPlane = this.cutPlaneParam.value
     const cutAwayVector = cutPlane.xyz
     const cutAwayDist = cutPlane.w
 
@@ -100,7 +103,7 @@ class CuttingPlane extends BaseGroup {
       item.setCutVector(cutAwayVector)
       item.setCutDist(cutAwayDist)
     } else {
-      Array.from(this.__itemsParam.getValue()).forEach((item: any) => {
+      Array.from(this.itemsParam.value).forEach((item: any) => {
         item.traverse((item: any) => {
           if (item instanceof BaseGeomItem) {
             item.setCutawayEnabled(cutEnabled)
@@ -125,19 +128,19 @@ class CuttingPlane extends BaseGroup {
 
     // ///////////////////////////////
     // Update the item cutaway
-    const cutEnabled = this.getParameter('CutAwayEnabled')!.getValue()
+    const cutEnabled = this.cutAwayEnabledParam.value
     if (cutEnabled) {
       this.__updateCutaway(item)
     }
 
     const bbox = new Box3()
-    // const xfo = this.getParameter('GlobalXfo')!.getValue()
+    // const xfo = this.globalXfoParam.value
     // const invxfo = xfo.inverse()
-    Array.from(this.__itemsParam.getValue()).forEach((item) => {
+    Array.from(this.itemsParam.value).forEach((item) => {
       if (item instanceof TreeItem) {
-        // const itemxfo = invxfo.multiply(item.getParameter('GlobalXfo')!.getValue())
-        // bbox.addBox3(item.getParameter('BoundingBox')!.getValue(), itemxfo.toMat4())
-        bbox.addBox3(item.getParameter('BoundingBox')!.getValue())
+        // const itemxfo = invxfo.multiply(item.globalXfoParam.value)
+        // bbox.addBox3(item.boundingBoxParam.value, itemxfo.toMat4())
+        bbox.addBox3(item.boundingBoxParam.value)
       }
     })
     {
@@ -145,9 +148,8 @@ class CuttingPlane extends BaseGroup {
       const sizey = bbox.p1.y - bbox.p0.y
       const xfo = new Xfo()
       xfo.sc.set(sizex, sizey, 1)
-      this.getChild(0).getParameter('LocalXfo')!.setValue(xfo)
-      this.getChild(1).getParameter('LocalXfo')!.setValue(xfo)
-      // this.getParameter('GlobalXfo')!.setValue(xfo)
+      ;(<TreeItem>this.getChild(0)).localXfoParam.value = xfo
+      ;(<TreeItem>this.getChild(1)).localXfoParam.value = xfo
     }
   }
 

@@ -18,15 +18,17 @@ import { BinReader } from '../BinReader'
  * @extends BaseImage
  */
 class VLHImage extends BaseImage {
-  protected __loaded: boolean
   protected __exposure: number
   protected __ambientLightFactor: number
   protected __hdrTint: Color
   protected __stream: boolean
   protected __data: Record<string, any> = {}
 
-  // loaded: any
-  updated: any // TODO: treated as a boolean and function
+  /**
+   * @member {FilePathParameter} fileParam - Used to specify the path to the file.
+   */
+  fileParam: FilePathParameter = new FilePathParameter('FilePath')
+
   /**
    * Create a VLH image.
    * @param {string} name - The name value.
@@ -39,22 +41,21 @@ class VLHImage extends BaseImage {
       filepath = name
       this.setName(name.substring(name.lastIndexOf('/') + 1, name.lastIndexOf('.')))
     }
-    this.__loaded = false
     this.__exposure = 1.0
     this.__ambientLightFactor = 0.0
     this.__hdrTint = new Color(1, 1, 1, 1)
     this.__stream = 'stream' in params ? params['stream'] : false
     this.type = 'FLOAT'
 
-    const fileParam = this.addParameter(new FilePathParameter('FilePath'))
-    fileParam.on('valueChanged', () => {
+    this.addParameter(this.fileParam)
+    this.fileParam.on('valueChanged', () => {
       this.loaded = false
-      const url = (<FilePathParameter>fileParam).getUrl()
+      const url = this.fileParam.getUrl()
       this.load(url)
     })
 
     if (filepath) {
-      ;(<FilePathParameter>this.getParameter('FilePath')).setFilepath(filepath)
+      this.fileParam.setFilepath(filepath)
     }
   }
 
@@ -64,7 +65,7 @@ class VLHImage extends BaseImage {
    * @return {string} - The return value.
    */
   getResourcePath(): string {
-    return this.getParameter('FilePath')!.getValue()
+    return this.fileParam.value
   }
 
   /**
@@ -89,8 +90,8 @@ class VLHImage extends BaseImage {
           ldr: ldrPic,
           cdm: cdm,
         }
-        if (!this.__loaded) {
-          this.__loaded = true
+        if (!this.loaded) {
+          this.loaded = true
           this.emit('loaded', {})
         } else {
           this.emit('updated', {})
@@ -150,22 +151,13 @@ class VLHImage extends BaseImage {
   }
 
   /**
-   * Returns the status of the data, whether is loaded or not.
-   *
-   * @return {boolean} - The return value.
-   */
-  isLoaded(): boolean {
-    return this.__loaded
-  }
-
-  /**
    * Returns all parameters and class state values.
    *
    * @return {Record<any,any>} - The return value.
    */
   getParams(): Record<string, any> {
     const params = super.getParams()
-    if (this.__loaded) {
+    if (this.loaded) {
       params['data'] = this.__data
       params['exposure'] = this.__exposure
     }
@@ -232,7 +224,7 @@ class VLHImage extends BaseImage {
           }
         }
       }
-      this.getParameter('FilePath')!.setValue(resourcePath)
+      this.fileParam.value = resourcePath
     }
   }
 }

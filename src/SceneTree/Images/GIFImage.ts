@@ -42,18 +42,20 @@ class GIFImage extends FileImage {
    * @param {string|Record<any,any>} filePath - The filePath value.
    * @param {Record<any,any>} params - The params value.
    */
+
+  streamAtlasDescParam = new Vec4Parameter('StreamAtlasDesc')
+  streamAtlasIndexParam = new NumberParameter('StreamAtlasIndex', 0)
   constructor(name?: string, filePath = '', params = {}) {
     super(name, filePath, params)
 
     this.format = 'RGBA'
     this.type = 'UNSIGNED_BYTE'
     this.__streamAtlas = true
-    // this.getParameter('FilePath').setSupportedExts('gif')
 
-    this.addParameter(new Vec4Parameter('StreamAtlasDesc'))
-    this.addParameter(new NumberParameter('StreamAtlasIndex', 0))
+    this.addParameter(this.streamAtlasDescParam)
+    this.addParameter(this.streamAtlasIndexParam)
 
-    const frameParam = <NumberParameter>this.getParameter('StreamAtlasIndex')
+    const frameParam = this.streamAtlasIndexParam
     frameParam.setRange([0, 1])
 
     let playing: any
@@ -99,7 +101,7 @@ class GIFImage extends FileImage {
    * @param {string} format - The format value.
    * @return {Promise} Returns a promise that resolves once the image is loaded.
    */
-  load(url: string, format = 'RGB') {
+  load(url: string, format = 'RGB'): Promise<void> {
     // this.__streamAtlasDesc = new Vec4();
 
     if (url in imageDataLibrary) {
@@ -237,17 +239,15 @@ class GIFImage extends FileImage {
       this.width = unpackedData.width
       this.height = unpackedData.height
 
-      this.getParameter('StreamAtlasDesc')!.setValue(
-        new Vec4(unpackedData.atlasSize[0], unpackedData.atlasSize[1], 0, 0)
-      )
-      ;(<NumberParameter>this.getParameter('StreamAtlasIndex')).setRange(unpackedData.frameRange)
+      this.streamAtlasDescParam.value = new Vec4(unpackedData.atlasSize[0], unpackedData.atlasSize[1], 0, 0)
+      this.streamAtlasIndexParam.setRange(unpackedData.frameRange)
 
       this.__unpackedData = unpackedData
       this.__data = unpackedData.imageData
 
       // ////////////////////////
       // Playback
-      this.__loaded = true
+      this.loaded = true
 
       this.emit('loaded', {})
     })

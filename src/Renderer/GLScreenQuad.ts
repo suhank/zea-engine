@@ -17,6 +17,7 @@ class GLScreenQuad {
   /**
    * Create a GL screen quad.
    * @param {WebGL12RenderingContext} gl - The webgl rendering context.
+   * @param {Record<string, any>} shaderopts - shader options
    */
   constructor(gl: WebGL12RenderingContext, shaderopts: Record<string, any>) {
     this.__gl = gl

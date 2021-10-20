@@ -37,6 +37,8 @@ class AudioItem extends TreeItem {
   protected getAudioSource: any
   protected loaded: any
   protected mute: any
+
+  fileParam = new FilePathParameter('FilePath')
   /**
    * Create an audio item.
    * @param {string} name - The name of the audio item.
@@ -46,7 +48,8 @@ class AudioItem extends TreeItem {
 
     this.__loaded = false
 
-    const fileParam = <FilePathParameter>this.addParameter(new FilePathParameter('FilePath'))
+    this.addParameter(this.fileParam)
+
     let audioSource: any
     let audioBuffer: any
     const startAudioPlayback = () => {
@@ -59,9 +62,9 @@ class AudioItem extends TreeItem {
       const event = new AudioSourceCreatedEvent(audioSource)
       this.emit('audioSourceCreated', event)
     }
-    fileParam.on('valueChanged', () => {
+    this.fileParam.on('valueChanged', () => {
       const request = new XMLHttpRequest()
-      request.open('GET', fileParam.getUrl(), true)
+      request.open('GET', this.fileParam.getUrl(), true)
       request.responseType = 'arraybuffer'
 
       request.onload = () => {
@@ -87,7 +90,7 @@ class AudioItem extends TreeItem {
     })
     const autoplayParam = this.addParameter(new BooleanParameter('Autoplay', false))
     const playStateParam = this.addParameter(new NumberParameter('PlayState', 0))
-    playStateParam.on('valueChanged', (event) => {
+    playStateParam.on('valueChanged', event => {
       switch (playStateParam.getValue()) {
         case 0:
           if (this.__loaded) {

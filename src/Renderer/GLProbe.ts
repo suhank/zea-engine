@@ -11,8 +11,6 @@ import { GLTexture2D } from './GLTexture2D'
  */
 class GLProbe extends EventEmitter {
   protected __gl: WebGL12RenderingContext
-  // protected gl: Record<any,any>// to allow easier refactoring later
-
   protected maxFragmentShaderTextureUnits: any
   protected textureType: number
   protected textureDesc: number[]
@@ -21,6 +19,7 @@ class GLProbe extends EventEmitter {
   protected brdfLUTTexture: any
   protected irradianceCubeTex: any
   protected specularCubetex: any
+  
   /**
    * Create a GL probe.
    * @param {WebGL12RenderingContext} gl - The webgl rendering context.

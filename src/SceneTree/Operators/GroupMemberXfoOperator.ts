@@ -93,7 +93,7 @@ class GroupMemberXfoOperator extends Operator {
     const memberGlobalXfoOutput = this.getOutput('MemberGlobalXfo')
     const memberGlobalXfo = memberGlobalXfoOutput.getValue() as Xfo
     if (this._enabled) {
-      const groupTransformXfo = this.getInput('GroupTransformXfo').getParam()?.getValue() as Xfo
+      const groupTransformXfo = this.getInput('GroupTransformXfo').getParam()?.value as Xfo
       memberGlobalXfoOutput.setClean(groupTransformXfo.multiply(memberGlobalXfo))
     } else {
       memberGlobalXfoOutput.setClean(memberGlobalXfo)

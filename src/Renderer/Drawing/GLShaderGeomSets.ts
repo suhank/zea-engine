@@ -79,16 +79,16 @@ class GLShaderGeomSets extends EventEmitter {
    */
   addGLGeomItem(glGeomItem: GLGeomItem) {
     const geomItem = glGeomItem.geomItem
-    const geom = geomItem.getParameter('Geometry')!.getValue()
-    const material = glGeomItem.geomItem.getParameter('Material')!.getValue()
+    const geom = geomItem.geomParam.value
+    const material = glGeomItem.geomItem.materialParam.value
 
     const geomItemParamChanged = () => {
       this.pass.removeGeomItem(geomItem)
       this.pass.renderer!.assignTreeItemToGLPass(geomItem)
     }
     material.on('transparencyChanged', geomItemParamChanged)
-    geomItem.getParameter('Material')!.on('valueChanged', geomItemParamChanged)
-    geomItem.getParameter('Geometry')!.on('valueChanged', geomItemParamChanged)
+    geomItem.materialParam.on('valueChanged', geomItemParamChanged)
+    geomItem.geomParam.on('valueChanged', geomItemParamChanged)
 
     const glGeomItemSet = this.getOrCreateGLGeomItemSet(geom)
     glGeomItem.material = material
@@ -106,8 +106,8 @@ class GLShaderGeomSets extends EventEmitter {
     const material = glGeomItem.material
     const geomItemParamChanged = glGeomItem.geomItemParamChanged
     material.off('transparencyChanged', geomItemParamChanged)
-    geomItem.getParameter('Material')!.off('valueChanged', geomItemParamChanged)
-    geomItem.getParameter('Geometry')!.off('valueChanged', geomItemParamChanged)
+    geomItem.materialParam.off('valueChanged', geomItemParamChanged)
+    geomItem.geomParam.off('valueChanged', geomItemParamChanged)
     glGeomItem.material = null
     glGeomItem.geomItemParamChanged = null
 

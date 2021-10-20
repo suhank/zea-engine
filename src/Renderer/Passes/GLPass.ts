@@ -20,6 +20,7 @@ abstract class GLPass extends ParameterOwner {
   renderer: GLBaseRenderer | null = null
   protected __renderer: GLBaseRenderer | null = null
 
+  enabledParam = new BooleanParameter('Enabled', true)
   /**
    * Create a GL pass.
    */
@@ -28,8 +29,8 @@ abstract class GLPass extends ParameterOwner {
     this.enabled = true
     this.passIndex = 0
 
-    const enabledParam = this.addParameter(new BooleanParameter('Enabled', true))
-    enabledParam.on('valueChanged', () => (this.enabled = enabledParam.getValue()))
+    this.addParameter(this.enabledParam)
+    this.enabledParam.on('valueChanged', () => (this.enabled = this.enabledParam.value))
   }
 
   /**

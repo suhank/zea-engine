@@ -17,8 +17,8 @@ describe('Vec2', () => {
   // it('set a value.', () => {
   //   const numberParameter = new NumberParameter()
   //   const value = 1356
-  //   numberParameter.setValue(value)
-  //   expect(numberParameter.getValue()).toEqual(value)
+  //   numberParameter.value =(value)
+  //   expect(numberParameter.value).toEqual(value)
   // })
 
   it('save to JSON (serialization).', () => {
@@ -35,7 +35,7 @@ describe('Vec2', () => {
   //   const input = { value: 1356 }
   //   numberParameter.fromJSON(input)
 
-  //   expect(numberParameter.getValue()).toEqual(input.value)
+  //   expect(numberParameter.value).toEqual(input.value)
   // })
 
   // it('check ranges -> set & get.', () => {})

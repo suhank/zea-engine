@@ -5,7 +5,7 @@ describe('MaterialFloatParam', () => {
   it('has an initial value.', () => {
     const materialParameter = new MaterialFloatParam()
 
-    expect(materialParameter.getValue()).toBe(0)
+    expect(materialParameter.value).toBe(0)
   })
 
   it('checks value type.', () => {
@@ -19,7 +19,7 @@ describe('MaterialFloatParam', () => {
     const baseImage = new BaseImage('Foo')
     materialParameter.setImage(baseImage)
 
-    expect(materialParameter.getValue()).toEqual(15)
+    expect(materialParameter.value).toEqual(15)
     expect(materialParameter.getImage()).toEqual(baseImage)
   })
 
@@ -38,7 +38,7 @@ describe('MaterialFloatParam', () => {
     const input = { value: 1 }
     materialParameter.fromJSON(input)
 
-    expect(materialParameter.getValue()).toEqual(input.value)
+    expect(materialParameter.value).toEqual(input.value)
   })
 
   /*
@@ -49,7 +49,7 @@ describe('MaterialFloatParam', () => {
     const reader = new BinReader(data.buffer)
     materialParameter.readBinary(reader)
 
-    expect(materialParameter.getValue()).toEqual(15)
+    expect(materialParameter.value).toEqual(15)
   })
 
   it('clones parameter object', () => {

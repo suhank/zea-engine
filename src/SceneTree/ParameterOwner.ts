@@ -19,7 +19,7 @@ import { Parameter } from './Parameters/Parameter'
 class ParameterOwner extends EventEmitter {
   protected paramEventListenerIDs: Record<string, number> = {}
   protected paramMapping: Record<string, number> = {}
-  protected params: Parameter<any>[] = []
+  params: Parameter<any>[] = []
   deprecatedParamMapping: Record<string, any> = {}
 
   /**

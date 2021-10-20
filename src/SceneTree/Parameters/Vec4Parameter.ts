@@ -39,20 +39,20 @@ class Vec4Parameter extends Parameter<Vec4> implements IBinaryReader {
    * @param {Record<string, unknown>} context - The context value.
    */
   readBinary(reader: BinReader, context?: Record<string, unknown>): void {
-    this.value?.readBinary(reader)
+    this.__value?.readBinary(reader)
   }
 
   toJSON(context?: Record<string, unknown>): Record<string, unknown> {
     return {
       name: this.name,
-      value: this.value?.toJSON(),
+      value: this.__value?.toJSON()
     }
   }
 
   fromJSON(j: Record<string, unknown>, context?: Record<string, unknown>): void {
     const vec4 = new Vec4()
     vec4.fromJSON(j.value as any)
-    this.value = vec4
+    this.__value = vec4
 
     if (j.name) this.name = j.name as string
   }
@@ -67,7 +67,7 @@ class Vec4Parameter extends Parameter<Vec4> implements IBinaryReader {
    * @return {Vec4Parameter} - Returns a new Vec4 parameter.
    */
   clone(): Vec4Parameter {
-    const clonedParam = new Vec4Parameter(this.name, this.value?.clone())
+    const clonedParam = new Vec4Parameter(this.name, this.__value?.clone())
     return clonedParam
   }
 }

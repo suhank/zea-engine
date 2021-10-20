@@ -25,7 +25,6 @@ class GLBaseViewport extends ParameterOwner {
   protected __gl: WebGL12RenderingContext
   protected renderer: GLRenderer
   protected __renderer: GLRenderer
-  protected __doubleClickTimeMSParam: NumberParameter
   protected __fbo: WebGLFramebuffer | null = null
   protected __ongoingPointers: any[]
   protected __backgroundColor: Color
@@ -46,8 +45,13 @@ class GLBaseViewport extends ParameterOwner {
   protected depthBuffer: WebGLRenderbuffer | null = null
   protected EXT_frag_depth: EXT_frag_depth | null = null
   protected manipulator: any
-
   protected depthRange: number[] = [0, 0]
+
+  /**
+   * @member {NumberParameter} __doubleClickTimeMSParam - The maximum time between clicks for a double click to be registered.
+   */
+  __doubleClickTimeMSParam: NumberParameter = new NumberParameter('DoubleClickTimeMS', 200)
+
   /**
    * Create a GL base viewport.
    * @param {GLRenderer} renderer - The renderer value.
@@ -56,7 +60,9 @@ class GLBaseViewport extends ParameterOwner {
     super()
     this.renderer = renderer
     this.__renderer = renderer
-    this.__doubleClickTimeMSParam = <NumberParameter>this.addParameter(new NumberParameter('DoubleClickTimeMS', 200))
+
+    this.addParameter(this.__doubleClickTimeMSParam)
+
     // Since there is not multi touch on `PointerEvent`, we need to store pointers pressed.
     this.__ongoingPointers = []
     this.__backgroundColor = new Color(0.3, 0.3, 0.3, 1)
@@ -105,13 +111,13 @@ class GLBaseViewport extends ParameterOwner {
     // Setup Camera Manipulator
     const sceneSet = (scene: Scene) => {
       const settings = scene.settings
-      const bgColorParam = settings.getParameter('BackgroundColor')
+      const bgColorParam = settings.backgroundColorParam
       const processBGValue = () => {
-        const value = bgColorParam!.getValue()
+        const value = bgColorParam.value
         if (value instanceof BaseImage) {
-          if (value.type === 'FLOAT') {
+          if (value instanceof VLHImage) {
             this.__backgroundTexture = value
-            this.__backgroundGLTexture = new GLHDRImage(gl, <VLHImage>value) // TODO: is casting a baseimage to <VLHImage> ok?
+            this.__backgroundGLTexture = new GLHDRImage(gl, value)
           } else {
             this.__backgroundTexture = value
             this.__backgroundGLTexture = new GLTexture2D(gl, value)
@@ -171,13 +177,13 @@ class GLBaseViewport extends ParameterOwner {
 
   /**
    * The getBackground method.
-   * @return {Color} - The return value.
+   * @return {Color | null} - The return value.
    */
   getBackground(): Color | null {
     console.warn('Deprecated Function. Please access the Scene Settings object.')
     const settings = this.__renderer.getScene()!.settings
-    const bgColorParam = settings.getParameter('BackgroundColor')
-    return bgColorParam!.getValue()
+    const bgColorParam = settings.backgroundColorParam
+    return bgColorParam.value
   }
 
   /**
@@ -187,8 +193,8 @@ class GLBaseViewport extends ParameterOwner {
   setBackground(background: Color): void {
     console.warn('Deprecated Function. Please access the Scene Settings object.')
     const settings = this.__renderer.getScene()!.settings
-    const bgColorParam = settings.getParameter('BackgroundColor')
-    bgColorParam!.setValue(background)
+    const bgColorParam = settings.backgroundColorParam
+    bgColorParam.value = background
     this.emit('updated')
   }
 

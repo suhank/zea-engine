@@ -12,8 +12,8 @@ import { BaseImage } from '../BaseImage'
  * @extends BaseImage
  */
 class DataImage extends BaseImage {
-  protected __loaded: any
-  protected __data: any
+  protected __loaded: boolean
+  protected __data: Uint8Array | ImageData = new Uint8Array(4)
   /**
    * Create a data image.
    * @param {string} name - The name value.
@@ -36,25 +36,17 @@ class DataImage extends BaseImage {
    * Returns an indicator of current item's loaded state.
    * @return {boolean} - `true` if bytes data is fully loaded, `false` otherwise.
    */
-  isLoaded() {
+  isLoaded(): boolean {
     return this.__loaded
   }
 
-  /**
-   * Returns the item's name.
-   *
-   * @return {string} - The return value.
-   */
-  getName() {
-    return this.__name
-  }
-
+  // TODO: video / webcam will return true.
   /**
    * Images are static content, so the value for this method is always going to be `false`
-   *
+   * 
    * @return {boolean} - The return value.
    */
-  isStream() {
+  isStream(): boolean {
     return false
   }
 

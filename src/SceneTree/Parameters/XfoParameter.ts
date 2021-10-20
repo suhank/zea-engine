@@ -38,20 +38,20 @@ class XfoParameter extends Parameter<Xfo> implements IBinaryReader {
    * @param {Record<string, unknown>} context - The context value.
    */
   readBinary(reader: BinReader, context?: Record<string, unknown>): void {
-    this.value.readBinary(reader)
+    this.__value.readBinary(reader)
   }
 
   toJSON(context?: Record<string, unknown>): Record<string, unknown> {
     return {
       name: this.name,
-      value: this.value.toJSON(),
+      value: this.__value.toJSON(),
     }
   }
 
   fromJSON(j: Record<string, unknown>, context?: Record<string, unknown>): void {
     const xfo = new Xfo()
     xfo.fromJSON(j.value as any)
-    this.value = xfo
+    this.__value = xfo
 
     if (j.name) this.name = j.name as string
   }
@@ -66,7 +66,7 @@ class XfoParameter extends Parameter<Xfo> implements IBinaryReader {
    * @return {XfoParameter} - Returns a new Xfo parameter.
    */
   clone(): XfoParameter {
-    const clonedParam = new XfoParameter(this.name, this.value.clone())
+    const clonedParam = new XfoParameter(this.name, this.__value.clone())
     return clonedParam
   }
 }

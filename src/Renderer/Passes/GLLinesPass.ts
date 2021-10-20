@@ -38,7 +38,7 @@ class GLLinesPass extends GLOpaqueGeomsPass {
    * @return {boolean} - The return value.
    */
   filterGeomItem(geomItem: GeomItem): boolean {
-    const geom = geomItem.getParameter('Geometry')!.getValue()
+    const geom = geomItem.geomParam.value
     if (geom instanceof Lines || geom instanceof LinesProxy || geom instanceof Points || geom instanceof PointsProxy) {
       return true
     }

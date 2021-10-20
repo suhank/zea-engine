@@ -127,8 +127,8 @@ class GLBillboardsPass extends GLPass {
    * @param {any} billboard - The billboard value.
    */
   addBillboard(billboard: any) {
-    const imageParam = billboard.getParameter('Image')
-    const image = imageParam.getValue()
+    const imageParam = billboard.imageParam
+    const image = imageParam.value
     if (!image) {
       imageParam.on('valueChanged', () => this.addBillboard(billboard))
       return
@@ -157,8 +157,8 @@ class GLBillboardsPass extends GLPass {
         this.emit('updated')
       }
     }
-    billboard.getParameter('GlobalXfo').on('valueChanged', updateBillboard)
-    billboard.getParameter('Alpha').on('valueChanged', updateBillboard)
+    billboard.globalXfoParam.on('valueChanged', updateBillboard)
+    billboard.alphaParam.on('valueChanged', updateBillboard)
     billboard.on('highlightChanged', updateBillboard)
 
     if (billboard.isVisible()) this.drawCount++
@@ -192,13 +192,13 @@ class GLBillboardsPass extends GLPass {
     // to the atlas. (for the Zahner demo)
     // Eventually we need to clean up the atlas, so debug this using the
     // survey-point-calibration 190528_Dummy_Srvy_Data.vlexe test
-    const image = billboardData.billboard.getParameter('Image')!.getValue()
+    const image = billboardData.billboard.imageParam.value
     this.atlas!.removeSubImage(image)
 
     billboard.off('visibilityChanged', billboardData.visibilityChanged)
     billboard.off('highlightChanged', billboardData.updateBillboard)
-    billboard.getParameter('GlobalXfo').off('valueChanged', billboardData.updateBillboard)
-    billboard.getParameter('Alpha').off('valueChanged', billboardData.updateBillboard)
+    billboard.globalXfoParam.off('valueChanged', billboardData.updateBillboard)
+    billboard.alphaParam.off('valueChanged', billboardData.updateBillboard)
 
     this.billboards[index] = null
     this.freeIndices.push(index)
@@ -218,19 +218,19 @@ class GLBillboardsPass extends GLPass {
    */
   populateBillboardDataArray(billboardData: any, index: number, dataArray: any) {
     const billboard = billboardData.billboard
-    const mat4 = billboard.getParameter('GlobalXfo')!.getValue().toMat4()
-    const ppm = billboard.getParameter('PixelsPerMeter')!.getValue()
-    const pivot = billboard.getParameter('Pivot')!.getValue()
+    const mat4 = billboard.globalXfoParam.value.toMat4()
+    const ppm = billboard.pixelsPerMeterParam.value
+    const pivot = billboard.pivotParam.value
     const scale = 1 / ppm
 
     // Until webgl2 is standard, we will avoid using bit flags.
     // instead, we will use decimals.
     let flags = 0
-    if (billboard.getParameter('AlignedToCamera')!.getValue()) flags |= 1 << 2
-    if (billboard.getParameter('DrawOnTop')!.getValue()) flags |= 1 << 3
-    if (billboard.getParameter('FixedSizeOnscreen')!.getValue()) flags |= 1 << 4
-    const alpha = billboard.getParameter('Alpha')!.getValue()
-    const color = billboard.getParameter('Color')!.getValue()
+    if (billboard.alignedToCameraParam.value) flags |= 1 << 2
+    if (billboard.drawOnTopParam.value) flags |= 1 << 3
+    if (billboard.fixedSizeOnscreenParam.value) flags |= 1 << 4
+    const alpha = billboard.alphaParam.value
+    const color = billboard.colorParam.value
     const offset = index * pixelsPerItem * 4
     const col0 = new Vec4(new Float32Array(dataArray.buffer, offset * 4, 4))
     const col1 = new Vec4(new Float32Array(dataArray.buffer, (offset + 4) * 4, 4))
@@ -333,15 +333,15 @@ class GLBillboardsPass extends GLPass {
           // if (index == -1) return;
           const billboardData = this.billboards[index]
           const billboard = billboardData.billboard
-          const mat4: Mat4 = billboard.getParameter('GlobalXfo')!.getValue().toMat4()
-          const ppm = billboard.getParameter('PixelsPerMeter')!.getValue()
+          const mat4: Mat4 = billboard.globalXfoParam.value.toMat4()
+          const ppm = billboard.pixelsPerMeterParam.value
           const scale: number = 1 / ppm
           let flags: number = 0
-          if (billboard.getParameter('AlignedToCamera')!.getValue()) flags |= 1 << 2
-          if (billboard.getParameter('DrawOnTop')!.getValue()) flags |= 1 << 3
-          if (billboard.getParameter('FixedSizeOnscreen')!.getValue()) flags |= 1 << 4
-          const alpha = billboard.getParameter('Alpha')!.getValue()
-          const color = billboard.getParameter('Color')!.getValue()
+          if (billboard.alignedToCameraParam.value) flags |= 1 << 2
+          if (billboard.drawOnTopParam.value) flags |= 1 << 3
+          if (billboard.fixedSizeOnscreenParam.value) flags |= 1 << 4
+          const alpha = billboard.alphaParam.value
+          const color = billboard.colorParam.value
 
           this.modelMatrixArray[index] = mat4.asArray()
           this.billboardDataArray[index] = [scale, flags, billboardData.imageIndex, alpha]
@@ -442,7 +442,7 @@ class GLBillboardsPass extends GLPass {
     for (const billboardData of this.billboards) {
       const { billboard } = billboardData
       if (billboard && billboard.isVisible()) {
-        const xfo = billboard.getParameter('GlobalXfo')!.getValue()
+        const xfo = billboard.globalXfoParam.value
         billboardData.dist = xfo.tr.distanceTo(cameraPos)
       }
     }
@@ -557,8 +557,8 @@ class GLBillboardsPass extends GLPass {
         const idx1 = this.indexArray[this.indexArray.length - 2]
         const billboard0 = this.billboards[idx0].billboard
         const billboard1 = this.billboards[idx1].billboard
-        const tr0 = billboard0.getParameter('GlobalXfo').getValue().tr
-        const tr1 = billboard1.getParameter('GlobalXfo').getValue().tr
+        const tr0 = billboard0.globalXfoParam.value.tr
+        const tr1 = billboard1.globalXfoParam.value.tr
         this.threshold = tr0.distanceTo(tr1)
       } else {
         this.threshold = 9999

@@ -20,11 +20,30 @@ import { Vec3Attribute } from '../Vec3Attribute'
  * @extends {ProceduralLines}
  */
 class Grid extends ProceduralLines {
-  protected __skipCenterLinesParam: BooleanParameter
-  protected __xDivisionsParam: NumberParameter
-  protected __xParam: NumberParameter
-  protected __yDivisionsParam: NumberParameter
-  protected __yParam: NumberParameter
+  /**
+   * @member {BooleanParameter} skipCenterLinesParam - Property that indicates whether to display the center grid lines or not
+   */
+  skipCenterLinesParam: BooleanParameter
+
+  /**
+   * @member {NumberParameter} xDivisionsParam - Number of divisions along `X` axis
+   */
+  xDivisionsParam: NumberParameter
+
+  /**
+   * @member {NumberParameter} xParam - Length of the grid along the `X` axis.
+   */
+  xParam: NumberParameter
+
+  /**
+   * @member {NumberParameter} yDivisionsParam - Number of divisions along `Y` axis
+   */
+  yDivisionsParam: NumberParameter
+
+  /**
+   * @member {NumberParameter} yParam - Length of the grid along the `Y` axis.
+   */
+  yParam: NumberParameter
   // topologyParams: string[]
 
   /**
@@ -40,11 +59,11 @@ class Grid extends ProceduralLines {
     this.topologyParams = []
     if (isNaN(x) || isNaN(y) || isNaN(xDivisions) || isNaN(yDivisions)) throw new Error('Invalid geom args')
 
-    this.__xParam = this.addParameter(new NumberParameter('X', x)) as NumberParameter
-    this.__yParam = this.addParameter(new NumberParameter('Y', y)) as NumberParameter
-    this.__xDivisionsParam = this.addParameter(new NumberParameter('XDivisions', xDivisions)) as NumberParameter
-    this.__yDivisionsParam = this.addParameter(new NumberParameter('YDivisions', yDivisions)) as NumberParameter
-    this.__skipCenterLinesParam = this.addParameter(
+    this.xParam = this.addParameter(new NumberParameter('X', x)) as NumberParameter
+    this.yParam = this.addParameter(new NumberParameter('Y', y)) as NumberParameter
+    this.xDivisionsParam = this.addParameter(new NumberParameter('XDivisions', xDivisions)) as NumberParameter
+    this.yDivisionsParam = this.addParameter(new NumberParameter('YDivisions', yDivisions)) as NumberParameter
+    this.skipCenterLinesParam = this.addParameter(
       new BooleanParameter('SkipCenterLines', skipCenterLines)
     ) as BooleanParameter
 
@@ -58,10 +77,10 @@ class Grid extends ProceduralLines {
    * @private
    */
   rebuild(): void {
-    const xDivisions = this.__xDivisionsParam.getValue() || 10
-    const yDivisions = this.__yDivisionsParam.getValue() || 10
+    const xDivisions = this.xDivisionsParam.value || 10
+    const yDivisions = this.yDivisionsParam.value || 10
 
-    const skipCenterLines = this.__skipCenterLinesParam.getValue() && xDivisions % 2 == 0 && yDivisions % 2 == 0
+    const skipCenterLines = this.skipCenterLinesParam.value && xDivisions % 2 == 0 && yDivisions % 2 == 0
     this.setNumVertices((xDivisions + yDivisions + 2 - (skipCenterLines ? 1 : 0)) * 2)
     this.setNumSegments(xDivisions + yDivisions + 2 - (skipCenterLines ? 1 : 0))
     let idx = 0
@@ -88,12 +107,12 @@ class Grid extends ProceduralLines {
    */
   resize(): void {
     const positions = <Vec3Attribute>this.getVertexAttribute('positions')
-    const xDivisions = this.__xDivisionsParam.getValue() || 10
-    const yDivisions = this.__yDivisionsParam.getValue() || 10
-    const xSize = this.__xParam.getValue() || 1.0
-    const ySize = this.__yParam.getValue() || 1.0
+    const xDivisions = this.xDivisionsParam.value || 10
+    const yDivisions = this.yDivisionsParam.value || 10
+    const xSize = this.xParam.value || 1.0
+    const ySize = this.yParam.value || 1.0
 
-    const skipCenterLines = this.__skipCenterLinesParam.getValue() && xDivisions % 2 == 0 && yDivisions % 2 == 0
+    const skipCenterLines = this.skipCenterLinesParam.value && xDivisions % 2 == 0 && yDivisions % 2 == 0
     let idx = 0
     for (let i = 0; i <= xDivisions; i++) {
       if (skipCenterLines && i == xDivisions / 2) continue

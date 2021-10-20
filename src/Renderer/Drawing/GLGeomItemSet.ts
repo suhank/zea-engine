@@ -27,7 +27,7 @@ class GLGeomItemSet extends EventEmitter {
   /**
    * Create a GL geom item set.
    * @param {WebGL12RenderingContext} gl - The webgl rendering context.
-   * @param {any} glGeom - The glGeom value.
+   * @param {GLGeom} glGeom - The glGeom value.
    */
   constructor(gl: WebGL12RenderingContext, glGeom: GLGeom) {
     super()

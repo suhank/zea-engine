@@ -40,18 +40,18 @@ class ColorParameter extends Parameter<Color> implements IBinaryReader {
     // Note: !! this should always be done in preprocessing...
     value.applyGamma(2.2)
 
-    this.value = value
+    this.__value = value
   }
 
   toJSON(context?: Record<string, unknown>): Record<string, any> {
     return {
-      value: this.value?.toJSON(),
+      value: this.__value?.toJSON()
     }
   }
 
   fromJSON(j: Record<string, any>, context?: Record<string, unknown>): void {
-    // if (j.value.type) this.value = Registry.constructClass('Color') as Color // TODO: commented out Registry.constructClass
-    this.value?.fromJSON(j.value)
+    // if (j.value.type) this.__value = Registry.constructClass('Color') as Color // TODO: commented out Registry.constructClass
+    this.__value?.fromJSON(j.value)
   }
 
   /**
@@ -61,7 +61,7 @@ class ColorParameter extends Parameter<Color> implements IBinaryReader {
    * @return {ColorParameter} - Returns a new cloned color parameter.
    */
   clone(): ColorParameter {
-    const clonedParam = new ColorParameter(this.name, this.value?.clone())
+    const clonedParam = new ColorParameter(this.name, this.__value?.clone())
     return clonedParam
   }
 }

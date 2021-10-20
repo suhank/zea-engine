@@ -95,7 +95,7 @@ class GLTexture2D extends RefCounted {
   /**
    * Returns the `BaseImage` of the GL Texture
    *
-   * @return {BaseImage} - The return value.
+   * @return {BaseImage | null} - The return value.
    */
   getImage(): BaseImage | null {
     return this.__image
@@ -104,7 +104,7 @@ class GLTexture2D extends RefCounted {
   /**
    * Returns the specified value of the color components in the texture.
    *
-   * @return {GLenum | enum} - The return value.
+   * @return {GLenum | enum | number} - The return value.
    */
   getInternalFormat(): number {
     return this.__internalFormat
@@ -113,7 +113,7 @@ class GLTexture2D extends RefCounted {
   /**
    * Returns the value of the specified data type of the texel data.
    *
-   * @return {GLenum | enum} - The return value.
+   * @return {GLenum | enum | number} - The return value.
    */
   getType(): number {
     return this.__type
@@ -470,7 +470,7 @@ class GLTexture2D extends RefCounted {
   /**
    * Upload data for the image to the GPU.
    *
-   * @param {Uint16Array} dataArray - The dataArray value.
+   * @param {Uint16Array | Float32Array} dataArray - The dataArray value.
    * @param {number} width - The width value
    * @param {number} height - The height value
    * @param {number} offsetX - The offsetX value
@@ -502,7 +502,7 @@ class GLTexture2D extends RefCounted {
   /**
    * Returns the value of the WebGLTexture value
    *
-   * @return {WebGLTexture} - The return value.
+   * @return {WebGLTexture | null} - The return value.
    */
   get glTex(): WebGLTexture | null {
     return this.__gltex
@@ -520,7 +520,7 @@ class GLTexture2D extends RefCounted {
   /**
    * The bind method.
    * @param {RenderState} renderstate - The object tracking the current state of the renderer
-   * @param {WebGLUniformLocation} unif - The WebGL uniform
+   * @param {Uniform} unif - The WebGL uniform
    * @return {boolean} - The return value.
    * @deprecated
    */

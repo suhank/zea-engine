@@ -361,8 +361,8 @@ class GLBaseRenderer extends ParameterOwner {
     this.listenerIDs[id] = listenerIDs
 
     if (treeItem instanceof GeomItem) {
-      const geomParam = treeItem.getParameter('Geometry')!
-      if (geomParam.getValue() == undefined) {
+      const geomParam = treeItem.geomParam
+      if (geomParam.value == undefined) {
         // we will add this geomItem once it receives its geom.
         const geomAssigned = () => {
           this.assignTreeItemToGLPass(treeItem)
@@ -1097,7 +1097,7 @@ class GLBaseRenderer extends ParameterOwner {
           }
         }
 
-        const viewXfo = this.getViewport().getCamera().getParameter('GlobalXfo')!.getValue()
+        const viewXfo = this.getViewport().getCamera().globalXfoParam.value
         const event = new ViewChangedEvent('CameraAndPointer', viewXfo)
         this.emit('viewChanged', event)
 

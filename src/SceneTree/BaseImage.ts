@@ -3,11 +3,6 @@ import { BaseItem } from './BaseItem'
 /**
  * Represents a 2D image item, containing width and height.
  *
- * **Parameters**
- * * **AlphaFromLuminance(`BooleanParameter`):** Sets alpha chanel to the luminance of the image and all color channels to `0`.
- * * **Invert(`BooleanParameter`):** Horizontally flips the image(Basically inverting X pixels).
- * * **FlipY(`BooleanParameter`):** Vertically flips the image, meaning that it would be upside down if enabled.
- *
  * **Events**
  * * **updated:** Triggered when the value of any of the parameters listed above changes.
  *
@@ -31,7 +26,16 @@ class BaseImage extends BaseItem {
    */
   constructor(name?: string) {
     super(name)
-    this.on('parameterValueChanged', (event: Record<string, any>) => {
+    this.width = 0
+    this.height = 0
+    this.format = 'RGB'
+    this.type = 'UNSIGNED_BYTE'
+    this.wrapS = 'CLAMP_TO_EDGE'
+    this.wrapT = 'CLAMP_TO_EDGE'
+    this.minFilter = 'LINEAR'
+    this.magFilter = 'LINEAR'
+
+    this.on('parameterValueChanged', () => {
       this.emit('updated')
     })
   }

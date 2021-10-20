@@ -46,16 +46,35 @@ class TreeItem extends BaseItem {
   protected __childItemsEventHandlers: Array<Record<string, number>> = []
   protected __childItemsMapping: Record<string, number> = {}
 
-  protected __globalXfoParam: XfoParameter = new XfoParameter('GlobalXfo', new Xfo())
-  protected __localXfoParam: XfoParameter = new XfoParameter('LocalXfo', new Xfo())
-  protected __boundingBoxParam: BoundingBoxParameter = new BoundingBoxParameter('BoundingBox', this)
+  /**
+   * @member {XfoParameter} globalXfoParam - Stores the global Xfo for this tree item.
+   * global xfos are calculated from the localXfo and parentXfo.
+   */
+  globalXfoParam: XfoParameter = new XfoParameter('GlobalXfo', new Xfo())
+
+  /**
+   * @member {XfoParameter} localXfoParam - Stores the local Xfo for this tree item.
+   * local Xfos are the offset from the parent's coordinate frame.
+   */
+  localXfoParam: XfoParameter = new XfoParameter('LocalXfo', new Xfo())
+
+  /**
+   * @member {BoundingBoxParameter} boundingBoxParam - Stores the bounding box for this tree item
+   */
+  boundingBoxParam: BoundingBoxParameter = new BoundingBoxParameter('BoundingBox', this)
+
+  /**
+   * @member {BooleanParameter} visibleParam - Whether this tree item is visible or not.
+   * Any given tree item is also is affected by parent's visibility.
+   */
+  visibleParam: BooleanParameter = new BooleanParameter('Visible', true)
 
   protected __highlightMapping: Record<string, Color> = {}
   protected __highlights: Array<string> = []
 
   protected __visible: boolean = true
   protected __visibleCounter: number = 1 // Visible by Default.
-  protected __visibleParam: BooleanParameter = new BooleanParameter('Visible', true)
+
   protected globalXfoOp: Operator
 
   /**
@@ -72,20 +91,20 @@ class TreeItem extends BaseItem {
     // /////////////////////////////////////
     // Add parameters.
 
-    this.addParameter(this.__visibleParam)
-    this.addParameter(this.__localXfoParam)
-    this.addParameter(this.__globalXfoParam)
-    this.addParameter(this.__boundingBoxParam)
+    this.addParameter(this.visibleParam)
+    this.addParameter(this.localXfoParam)
+    this.addParameter(this.globalXfoParam)
+    this.addParameter(this.boundingBoxParam)
 
-    this.globalXfoOp = new CalcGlobalXfoOperator(this.__globalXfoParam, this.__localXfoParam)
-    this.__globalXfoParam.on('valueChanged', (event: any) => {
+    this.globalXfoOp = new CalcGlobalXfoOperator(this.globalXfoParam, this.localXfoParam)
+    this.globalXfoParam.on('valueChanged', (event: any) => {
       this.setBoundingBoxDirty()
       // Note: deprecate this event.
       this.emit('globalXfoChanged', event)
     })
 
-    this.__visibleParam.on('valueChanged', () => {
-      this.__visibleCounter += this.__visibleParam.getValue() ? 1 : -1
+    this.visibleParam.on('valueChanged', () => {
+      this.__visibleCounter += this.visibleParam.getValue() ? 1 : -1
       this.updateVisibility()
     })
   }
@@ -113,7 +132,7 @@ class TreeItem extends BaseItem {
         // The effect of the invisible owner is added.
         if (!owner_TreeItem.isVisible()) this.__visibleCounter--
 
-        this.globalXfoOp.getInput('ParentGlobal').setParam(owner_TreeItem.getParameter('GlobalXfo')!)
+        this.globalXfoOp.getInput('ParentGlobal').setParam(owner_TreeItem.globalXfoParam)
       }
     } else {
       this.globalXfoOp.getInput('ParentGlobal').setParam(undefined)
@@ -160,8 +179,9 @@ class TreeItem extends BaseItem {
    * @return {Xfo} - Returns the local Xfo.
    */
   getLocalXfo(): Xfo {
-    console.warn(`Deprecated. use "getParameter('LocalXfo').getValue()"`)
-    return this.__localXfoParam.getValue()
+    console.warn(`Deprecated. use member variable and getter: "localXfoParam.value"`)
+
+    return this.localXfoParam.value
   }
 
   /**
@@ -171,8 +191,8 @@ class TreeItem extends BaseItem {
    * @param {Xfo} xfo - The local xfo transform.
    */
   setLocalXfo(xfo: Xfo): void {
-    console.warn(`Deprecated. use "getParameter('LocalXfo').setValue(xfo)"`)
-    this.__localXfoParam.setValue(xfo)
+    console.warn(`Deprecated. use "localXfoParam.value = xfo"`)
+    this.localXfoParam.value = xfo
   }
 
   /**
@@ -182,8 +202,8 @@ class TreeItem extends BaseItem {
    * @return {Xfo} - Returns the global Xfo.
    */
   getGlobalXfo(): Xfo {
-    console.warn(`Deprecated. use "getParameter('GlobalXfo').getValue()"`)
-    return this.__globalXfoParam.getValue()
+    console.warn(`Deprecated. use "globalXfoParam.value"`)
+    return this.globalXfoParam.value
   }
 
   /**
@@ -192,8 +212,8 @@ class TreeItem extends BaseItem {
    * @param {Xfo} xfo - The global xfo transform.
    */
   setGlobalXfo(xfo: Xfo): void {
-    console.warn(`Deprecated. use "getParameter('GlobalXfo').setValue(xfo)"`)
-    this.__globalXfoParam.setValue(xfo)
+    console.warn(`Deprecated. use "globalXfoParam.value = xfo"`)
+    this.globalXfoParam.value = xfo
   }
 
   // ////////////////////////////////////////
@@ -226,7 +246,7 @@ class TreeItem extends BaseItem {
    * @param {boolean} val - The val param.
    */
   setVisible(visible: boolean): void {
-    this.__visibleParam.setValue(visible)
+    this.visibleParam.value = visible
   }
 
   /**
@@ -380,8 +400,8 @@ class TreeItem extends BaseItem {
    * @return {Box3} - The return value.
    */
   getBoundingBox(): Box3 {
-    console.warn("getter is deprecated. Please use 'getParameter('BoundingBox').getValue()'")
-    return this.__boundingBoxParam.getValue()
+    console.warn("getter is deprecated. Please use 'boundingBoxParam.value'")
+    return this.boundingBoxParam.value
   }
 
   /**
@@ -395,8 +415,8 @@ class TreeItem extends BaseItem {
     this.__childItems.forEach((childItem: any) => {
       if (childItem instanceof TreeItem)
         if (childItem.isVisible()) {
-          // console.log(" - ", childItem.constructor.name, childItem.getName(), childItem.getParameter('GlobalXfo').getValue().sc.x, childItem.getBoundingBox().toString())
-          const box3 = childItem.getParameter('BoundingBox')?.getValue()
+          // console.log(" - ", childItem.constructor.name, childItem.getName(), childItem.globalXfoParam.value.sc.x, childItem.getBoundingBox().toString())
+          const box3 = childItem.boundingBoxParam.value
           if (box3) bbox.addBox3(box3)
         }
     })
@@ -417,9 +437,9 @@ class TreeItem extends BaseItem {
    * @private
    */
   protected setBoundingBoxDirty(): void {
-    if (this.__boundingBoxParam) {
+    if (this.boundingBoxParam) {
       // Will cause boundingChanged to emit
-      this.__boundingBoxParam.setDirty(-1)
+      this.boundingBoxParam.setDirty(-1)
     }
 
     // Note: we used to handle this by listening to a 'valueChanged' event on the
@@ -560,10 +580,10 @@ class TreeItem extends BaseItem {
 
     if (childItem instanceof TreeItem) {
       if (maintainXfo) {
-        const globalXfo = this.getParameter('GlobalXfo')?.getValue()
-        const childGlobalXfo = childItem.getParameter('GlobalXfo')?.getValue()
+        const globalXfo = this.globalXfoParam.value
+        const childGlobalXfo = childItem.globalXfoParam.value
         const newLocalXfo = globalXfo.inverse().multiply(childGlobalXfo)
-        childItem.getParameter('LocalXfo')?.setValue(newLocalXfo)
+        childItem.localXfoParam.value = newLocalXfo
       }
       this.setBoundingBoxDirty()
 
@@ -960,7 +980,7 @@ class TreeItem extends BaseItem {
     // if ('bbox' in j){
     //     let box = new Box3();
     //     box.fromJSON(j.bbox);
-    //     this.__boundingBoxParam.setValue(box);
+    //     this.boundingBoxParam.setValue(box);
     // }
 
     if (j.children != null) {
@@ -1065,12 +1085,12 @@ class TreeItem extends BaseItem {
         const sc = reader.loadFloat32()
         xfo.sc.set(sc, sc, sc)
       }
-      this.__localXfoParam.loadValue(xfo)
+      this.localXfoParam.value = xfo
     }
 
     const bboxFlag = 1 << 3
     if (itemFlags & bboxFlag) {
-      this.__boundingBoxParam.loadValue(new Box3(reader.loadFloat32Vec3(), reader.loadFloat32Vec3()))
+      this.boundingBoxParam.loadValue(new Box3(reader.loadFloat32Vec3(), reader.loadFloat32Vec3()))
     }
 
     const numChildren = reader.loadUInt32()

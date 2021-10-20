@@ -4,7 +4,7 @@ describe('FilePathParameter', () => {
   it('Has an initial value.', () => {
     const param = new FilePathParameter()
 
-    expect(param.getValue()).toBe('')
+    expect(param.value).toBe('')
   })
 
   it('Has the correct value type.', () => {
@@ -15,14 +15,14 @@ describe('FilePathParameter', () => {
 
   it("Can set it's value.", () => {
     const param = new FilePathParameter()
-    param.setValue('foo')
+    param.value = 'foo'
 
-    expect(param.getValue()).toBe('foo')
+    expect(param.value).toBe('foo')
   })
 
   it('Can be saved to JSON (serialization).', () => {
     const param = new FilePathParameter()
-    param.setValue('foo')
+    param.value = 'foo'
 
     expect(JSON.stringify(param.toJSON())).toMatchSnapshot()
   })
@@ -31,12 +31,12 @@ describe('FilePathParameter', () => {
     const param = new FilePathParameter()
     param.fromJSON({ value: 'foo' })
 
-    expect(param.getValue()).toBe('foo')
+    expect(param.value).toBe('foo')
   })
 
   it('Can be cloned.', () => {
     const parameter = new FilePathParameter('TestParameter')
-    parameter.setValue('foo')
+    parameter.value = 'foo'
 
     const clone = parameter.clone()
 

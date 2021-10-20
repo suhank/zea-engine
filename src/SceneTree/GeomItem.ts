@@ -1,6 +1,5 @@
 import { Xfo, Box3, Vec3, Mat4 } from '../Math/index'
 import { XfoParameter, Mat4Parameter } from './Parameters/index'
-import { MaterialParameter } from './Parameters/MaterialParameter'
 import { GeometryParameter } from './Parameters/GeometryParameter'
 import { Registry } from '../Registry'
 import { BaseGeomItem } from './BaseGeomItem'
@@ -68,10 +67,21 @@ class GeomItem extends BaseGeomItem {
   protected assetItem: AssetItem | null = null
   protected calcGeomMatOperator: Operator
   public cullable: boolean = true
-  protected __geomOffsetXfoParam: XfoParameter = new XfoParameter('GeomOffsetXfo')
-  protected __geomParam: GeometryParameter = new GeometryParameter('Geometry')
-  protected __materialParam: MaterialParameter = new MaterialParameter('Material')
-  protected __geomMatParam: Mat4Parameter = new Mat4Parameter('GeomMat')
+
+  /**
+   * @member {XfoParameter} geomOffsetXfoParam - Provides an offset transformation that is applied only to the geometry and not inherited by child items.
+   */
+  geomOffsetXfoParam: XfoParameter = new XfoParameter('GeomOffsetXfo')
+
+  /**
+   * @member {GeometryParameter} geomParam - The geometry to be rendered for this GeomItem
+   */
+  geomParam: GeometryParameter = new GeometryParameter('Geometry')
+
+  /**
+   * @member {Mat4Parameter} geomMatParam - Calculated from the GlobalXfo and the GeomOffsetXfo, this matrix is provided to the renderer for rendering.
+   */
+  geomMatParam: Mat4Parameter = new Mat4Parameter('GeomMat')
 
   /**
    * Creates a geometry item.
@@ -82,93 +92,23 @@ class GeomItem extends BaseGeomItem {
    */
   constructor(name?: string, geometry?: BaseGeom, material?: Material, xfo?: Xfo) {
     super(name)
-    this.addParameter(this.__geomParam)
-    this.addParameter(this.__materialParam)
+    this.addParameter(this.geomParam)
+    this.addParameter(this.materialParam)
     this.addParameterDeprecationMapping('material', 'Material')
-    this.addParameter(this.__geomOffsetXfoParam)
-    this.addParameter(this.__geomMatParam)
+    this.addParameter(this.geomOffsetXfoParam)
+    this.addParameter(this.geomMatParam)
 
     const geomChanged = () => {
       this.setBoundingBoxDirty()
     }
-    this.__geomParam.on('valueChanged', geomChanged)
-    this.__geomParam.on('boundingBoxChanged', geomChanged)
+    this.geomParam.on('valueChanged', geomChanged)
+    this.geomParam.on('boundingBoxChanged', geomChanged)
 
-    this.calcGeomMatOperator = new CalcGeomMatOperator(
-      this.__globalXfoParam,
-      this.__geomOffsetXfoParam,
-      this.__geomMatParam
-    )
+    this.calcGeomMatOperator = new CalcGeomMatOperator(this.globalXfoParam, this.geomOffsetXfoParam, this.geomMatParam)
 
-    if (geometry) this.getParameter('Geometry')!.loadValue(geometry)
-    if (material) this.getParameter('Material')!.loadValue(material)
-    if (xfo) this.getParameter('LocalXfo')!.setValue(xfo)
-  }
-
-  // ////////////////////////////////////////
-  // Geometry
-
-  /**
-   * Returns `Geometry` parameter value.
-   *
-   * @return {BaseGeom} - The return value.
-   */
-  getGeometry(): BaseGeom {
-    console.warn(`deprecated. please use 'getParameter('Geometry').getValue`)
-    return this.__geomParam.getValue()
-  }
-
-  /**
-   * Sets geometry object to `Geometry` parameter.
-   *
-   * @param {BaseGeom} geom - The geom value.
-   */
-  setGeometry(geom: BaseGeom) {
-    console.warn(`deprecated. please use 'getParameter('Geometry').setValue`)
-    this.__geomParam.setValue(geom)
-  }
-
-  /**
-   * Getter for geometry (getGeom is deprecated. Please use getGeometry).
-   *
-   * @deprecated
-   * @return {BaseGeom} - The return value.
-   */
-  getGeom() {
-    console.warn(`deprecated. please use 'getParameter('Geometry').getValue`)
-    return this.__geomParam.getValue()
-  }
-
-  /**
-   * Setter for geometry. (setGeom is deprecated. Please use setGeometry).
-   *
-   * @deprecated
-   * @param {BaseGeom} geom - The geom value.
-   * @return {number} - The return value.
-   */
-  setGeom(geom: BaseGeom) {
-    console.warn("setGeom is deprecated. Please use 'getParameter('Geometry').setValue'")
-    return this.__geomParam.setValue(geom)
-  }
-
-  /**
-   * Returns the specified value of `Material`parameter.
-   *
-   * @return {Material} - The return value.
-   */
-  getMaterial(): Material {
-    console.warn(`deprecated. please use 'getParameter('Material').getValue`)
-    return this.__materialParam.getValue()
-  }
-
-  /**
-   * Sets material object to `Material` parameter.
-   *
-   * @param {Material} material - The material value.
-   */
-  setMaterial(material: Material) {
-    console.warn(`deprecated. please use 'getParameter('Material').setValue`)
-    this.__materialParam.setValue(material)
+    if (geometry) this.geomParam.loadValue(geometry)
+    if (material) this.materialParam.loadValue(material)
+    if (xfo) this.localXfoParam.value = xfo
   }
 
   /**
@@ -184,16 +124,16 @@ class GeomItem extends BaseGeomItem {
       // Note: this bbox is the global bounding box of the geomItem
       // transformed into the space of the geometry. We reapply
       // the geom matrix to get back the points in global space.
-      const mat4 = this.getGeomMat4()
+      const mat4 = this.geomMatParam.value
       bbox.addPoint(mat4.transformVec3(this.geomBBox.p0))
       bbox.addPoint(mat4.transformVec3(this.geomBBox.p1))
     } else {
-      const geom = this.__geomParam.getValue()
+      const geom = this.geomParam.value
       if (geom) {
         if (calculatePreciseBoundingBoxes) {
           // Note: compting the precise bounding box is much slower and
           // can make loading big scenes take a bit longer.
-          const mat4 = this.getGeomMat4()
+          const mat4 = this.geomMatParam.value
           if (geom instanceof BaseProxy) {
             const positions = geom.__buffers.attrBuffers['positions'].values
             const getVertex = (index: number) => {
@@ -210,53 +150,13 @@ class GeomItem extends BaseGeomItem {
             }
           }
         } else {
-          bbox.addBox3(geom.getBoundingBox(), this.getGeomMat4())
+          bbox.addBox3(geom.getBoundingBox(), this.geomMatParam.value)
         }
       }
     }
     return bbox
   }
 
-  // ////////////////////////////////////////
-  // Xfos
-
-  /**
-   * Returns the offset `Xfo` object specified in `GeomOffsetXfo` parameter.
-   *
-   * @return {Xfo} - Returns the geom offset Xfo.
-   */
-  getGeomOffsetXfo() {
-    return this.__geomOffsetXfoParam.getValue()
-  }
-
-  /**
-   * Sets `Xfo` object to `GeomOffsetXfo` parameter.
-   *
-   * @param {Xfo} xfo - The Xfo value.
-   */
-  setGeomOffsetXfo(xfo: Xfo) {
-    this.__geomOffsetXfoParam.setValue(xfo)
-  }
-
-  /**
-   * Returns `Mat4` object value of `GeomMat` parameter.
-   *
-   * @return {Mat4} - Returns the geom Xfo.
-   */
-  getGeomMat4(): Mat4 {
-    return this.__geomMatParam.getValue()
-  }
-
-  /**
-   * Returns `Xfo` object value of `GeomMat` parameter.
-   *
-   * @return {Xfo} - Returns the geom Xfo.
-   */
-  getGeomXfo(): Xfo {
-    let temp: Xfo = new Xfo()
-    temp.setFromMat4(this.__geomMatParam.getValue())
-    return temp
-  }
   // ///////////////////////////
   // Debugging
 
@@ -302,13 +202,13 @@ class GeomItem extends BaseGeomItem {
 
     const geom = geomLibrary.getGeom(geomIndex)
     if (geom) {
-      this.getParameter('Geometry')!.loadValue(geom)
+      this.geomParam.loadValue(geom)
     } else {
       const onGeomLoaded = (event: Record<string, any>) => {
         const { range } = event
         if (geomIndex >= range[0] && geomIndex < range[1]) {
           const geom = geomLibrary.getGeom(geomIndex)
-          if (geom) this.getParameter('Geometry')!.setValue(geom)
+          if (geom) this.geomParam.value = geom
           else console.warn('Geom not loaded:', this.getName())
           geomLibrary.removeListenerById('rangeLoaded', onGeomLoadedListenerID)
         }
@@ -320,8 +220,10 @@ class GeomItem extends BaseGeomItem {
     // Note: to save space, some values are skipped if they are identity values
     const geomOffsetXfoFlag = 1 << 2
     if (itemFlags & geomOffsetXfoFlag) {
-      this.__geomOffsetXfoParam.setValue(
-        new Xfo(reader.loadFloat32Vec3(), reader.loadFloat32Quat(), reader.loadFloat32Vec3())
+      this.geomOffsetXfoParam.value = new Xfo(
+        reader.loadFloat32Vec3(),
+        reader.loadFloat32Quat(),
+        reader.loadFloat32Vec3()
       )
     }
 
@@ -336,10 +238,10 @@ class GeomItem extends BaseGeomItem {
           console.warn("Geom :'" + this.__name + "' Material not found:" + materialName)
           material = materialLibrary.getMaterial('Default')
         }
-        this.getParameter('Material')!.loadValue(material)
+        this.materialParam.loadValue(material)
       } else {
         // Force nodes to have a material so we can see them.
-        this.getParameter('Material')!.loadValue(context.assetItem.getMaterialLibrary().getMaterial('Default'))
+        this.materialParam.loadValue(context.assetItem.getMaterialLibrary().getMaterial('Default'))
       }
     }
 
@@ -388,7 +290,7 @@ class GeomItem extends BaseGeomItem {
   copyFrom(src: GeomItem, context?: Record<string, any>) {
     super.copyFrom(src, context)
 
-    if (!src.getParameter('Geometry')!.getValue() && src.geomIndex != -1) {
+    if (!src.geomParam.value && src.geomIndex != -1) {
       const geomLibrary = src.assetItem.getGeometryLibrary()
       this.assetItem = src.assetItem
       this.geomIndex = src.geomIndex
@@ -399,7 +301,7 @@ class GeomItem extends BaseGeomItem {
           const geom = geomLibrary.getGeom(this.geomIndex)
           // Note: we need the 'valueChanged' event to be received by the
           // renderer to then load the geometry into the GPU.
-          if (geom) this.getParameter('Geometry')!.setValue(geom)
+          if (geom) this.geomParam.value = geom
           else console.warn('Geom not loaded:', this.getName())
           geomLibrary.removeListenerById('rangeLoaded', this.listenerIDs['rangeLoaded'])
         }
@@ -410,7 +312,7 @@ class GeomItem extends BaseGeomItem {
     // Geom Xfo should be dirty after cloning.
     // Note: this might not be necessary. It should
     // always be dirty after cloning.
-    this.__geomMatParam.setDirty(0)
+    this.geomMatParam.setDirty(0)
   }
 
   /**

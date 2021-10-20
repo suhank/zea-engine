@@ -19,7 +19,11 @@ import { BaseItem } from '../../SceneTree/BaseItem'
  * @extends TreeItem
  */
 class BaseGroup extends TreeItem {
-  protected __itemsParam: ItemSetParameter
+  /**
+   * @member {ItemSetParameter} itemsParam - TODO
+   */
+  itemsParam: ItemSetParameter = new ItemSetParameter('Items', (item: any) => item instanceof TreeItem)
+
   protected __itemsEventHandlers: Array<Record<string, number>> = []
   searchRoot?: TreeItem
 
@@ -31,14 +35,12 @@ class BaseGroup extends TreeItem {
   constructor(name?: string) {
     super(name)
 
-    this.__itemsParam = this.addParameter(
-      new ItemSetParameter('Items', (item: any) => item instanceof TreeItem)
-    ) as ItemSetParameter
+    this.addParameter(this.itemsParam)
 
-    this.__itemsParam.on('itemAdded', (event: any) => {
+    this.itemsParam.on('itemAdded', (event: any) => {
       this.bindItem(event.item, event.index)
     })
-    this.__itemsParam.on('itemRemoved', (event: any) => {
+    this.itemsParam.on('itemRemoved', (event: any) => {
       this.unbindItem(event.item, event.index)
     })
   }
@@ -109,19 +111,19 @@ class BaseGroup extends TreeItem {
     if (!(item instanceof TreeItem)) return
 
     const listenerIDs: Record<string, number> = {}
-    listenerIDs['pointerDown'] = item.on('pointerDown', (event) => {
+    listenerIDs['pointerDown'] = item.on('pointerDown', event => {
       this.onPointerDown(event)
     })
-    listenerIDs['pointerUp'] = item.on('pointerUp', (event) => {
+    listenerIDs['pointerUp'] = item.on('pointerUp', event => {
       this.onPointerUp(event)
     })
-    listenerIDs['pointerMove'] = item.on('pointerMove', (event) => {
+    listenerIDs['pointerMove'] = item.on('pointerMove', event => {
       this.onPointerMove(event)
     })
-    listenerIDs['pointerEnter'] = item.on('pointerEnter', (event) => {
+    listenerIDs['pointerEnter'] = item.on('pointerEnter', event => {
       this.onPointerEnter(event)
     })
-    listenerIDs['pointerLeave'] = item.on('pointerLeave', (event) => {
+    listenerIDs['pointerLeave'] = item.on('pointerLeave', event => {
       this.onPointerLeave(event)
     })
 
@@ -162,7 +164,7 @@ class BaseGroup extends TreeItem {
       console.warn('Error adding item to group. Item is null')
       return
     }
-    this.__itemsParam.addItem(item, emit)
+    this.itemsParam.addItem(item, emit)
   }
 
   /**
@@ -172,11 +174,11 @@ class BaseGroup extends TreeItem {
    * @param {boolean} emit - The emit value.
    */
   removeItem(item: TreeItem, emit = true): void {
-    const paramItems = this.__itemsParam.getValue()
+    const paramItems = this.itemsParam.value
     if (!paramItems) return
 
     const itemIndex = Array.from(paramItems).indexOf(item)
-    if (itemIndex) this.__itemsParam.removeItem(itemIndex, emit)
+    if (itemIndex) this.itemsParam.removeItem(itemIndex, emit)
   }
 
   /**
@@ -187,13 +189,13 @@ class BaseGroup extends TreeItem {
   clearItems(emit = true): void {
     // Note: Unbind reversed so that indices
     // do not get changed during the unbind.
-    const paramItems = this.__itemsParam.getValue()
+    const paramItems = this.itemsParam.value
     if (!paramItems) return
     const items = Array.from(paramItems)
     for (let i = items.length - 1; i >= 0; i--) {
       this.unbindItem(<TreeItem>items[i], i)
     }
-    this.__itemsParam.clearItems(emit)
+    this.itemsParam.clearItems(emit)
   }
 
   /**
@@ -202,7 +204,7 @@ class BaseGroup extends TreeItem {
    * @return {Set<BaseItem>|undefined} - The return value.
    */
   getItems(): Set<BaseItem> | undefined {
-    return this.__itemsParam.getValue()
+    return this.itemsParam.value
   }
 
   /**
@@ -212,7 +214,7 @@ class BaseGroup extends TreeItem {
    */
   setItems(items: Set<BaseItem>): void {
     this.clearItems(false)
-    this.__itemsParam.setItems(items)
+    this.itemsParam.setItems(items)
   }
 
   // ///////////////////////
@@ -261,7 +263,7 @@ class BaseGroup extends TreeItem {
    */
   toJSON(context?: Record<string, any>): Record<string, any> {
     const j = super.toJSON(context)
-    const paramItems = this.__itemsParam.getValue()
+    const paramItems = this.itemsParam.value
     if (paramItems) {
       const items = Array.from(paramItems)
       const treeItems: any = []

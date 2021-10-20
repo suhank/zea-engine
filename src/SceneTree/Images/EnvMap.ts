@@ -19,6 +19,8 @@ class EnvMap extends VLHImage {
   protected utf8decoder: TextDecoder
   protected shCoeffs: any[]
   protected luminanceData: any
+
+  headlightModeParam = new BooleanParameter('HeadLightMode', false)
   /**
    * Create an env map.
    * @param {string} name - The name value.
@@ -27,7 +29,7 @@ class EnvMap extends VLHImage {
   constructor(name?: string, params: Record<string, any> = {}) {
     super(name, params)
 
-    this.addParameter(new BooleanParameter('HeadLightMode', false))
+    this.addParameter(this.headlightModeParam)
 
     this.utf8decoder = new TextDecoder()
     this.shCoeffs = []

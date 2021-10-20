@@ -1,6 +1,6 @@
-import { GLPass } from './GLPass'
+import { GLPass, PassType } from './GLPass'
 
-import { GeomItem, TreeItem } from '../../SceneTree/index'
+import { GeomItem, TreeItem, MaterialColorParam, LDRVideo } from '../../SceneTree/index'
 import { GLBaseRenderer } from '../GLBaseRenderer'
 import { AudioItem } from '../../SceneTree/AudioItem'
 
@@ -49,6 +49,14 @@ class GLAudioItemsPass extends GLPass {
   }
 
   /**
+   * Returns the pass type. OPAQUE passes are always rendered first, followed by TRANSPARENT passes, and finally OVERLAY.
+   * @return {number} - The pass type value.
+   */
+  getPassType() {
+    return PassType.OVERLAY
+  }
+
+  /**
    * The itemAddedToScene method is called on each pass when a new item
    * is added to the scene, and the renderer must decide how to render it.
    * It allows Passes to select geometries to handle the drawing of.
@@ -67,16 +75,15 @@ class GLAudioItemsPass extends GLPass {
       return true
     }
     if (treeItem instanceof GeomItem) {
-      const material = treeItem.getParameter('Material').getValue()
+      const material = treeItem.materialParam.value
       if (material) {
         const baseColorParam = material.getParameter('BaseColor')
-        if (baseColorParam && baseColorParam.getImage && baseColorParam.getImage()) {
+        if (baseColorParam instanceof MaterialColorParam) {
           const image = baseColorParam.getImage()
           image.on('loaded', () => {
-            if (image.getAudioSource) {
+            if (image instanceof LDRVideo) {
               const audioSource = image.getAudioSource()
-              if (audioSource instanceof HTMLMediaElement || audioSource instanceof AudioBufferSourceNode)
-                this.addAudioSource(treeItem, audioSource, image)
+              if (audioSource instanceof HTMLMediaElement) this.addAudioSource(treeItem, audioSource, image)
             }
           })
         }
@@ -103,7 +110,8 @@ class GLAudioItemsPass extends GLPass {
    * @param {any} audioSource - The audioSource value.
    * @param {any} parameterOwner - The parameterOwner value.
    */
-  addAudioSource(treeItem: TreeItem, audioSource: any, parameterOwner: any) {
+  addAudioSource(treeItem: TreeItem, audioSource: HTMLMediaElement | AudioBufferSourceNode, parameterOwner: any) {
+    // @ts-ignore
     if (audioSource.addedToCollector) return
 
     // let source
@@ -132,7 +140,7 @@ class GLAudioItemsPass extends GLPass {
     // TODO: (commented out)  'gasource', inNode
 
     const spatializeParam = parameterOwner.getParameter('SpatializeAudio')
-    if (spatializeParam && spatializeParam.getValue() == false) {
+    if (spatializeParam && spatializeParam.value == false) {
       // TODO: (commented out) 'ausource', dioCtx.destination
     } else {
       const panner = audioCtx.createPanner()
@@ -164,8 +172,8 @@ class GLAudioItemsPass extends GLPass {
         // https://developer.mozilla.org/en-US/docs/Web/API/AudioListener/setPosition
 
         let mat4
-        if (treeItem instanceof GeomItem) mat4 = treeItem.getGeomMat4()
-        else mat4 = treeItem.getParameter('GlobalXfo').getValue().toMat4()
+        if (treeItem instanceof GeomItem) mat4 = treeItem.geomMatParam.value
+        else mat4 = treeItem.globalXfoParam.value.toMat4()
         const tr = mat4.translation
         // if (panner.positionX) {
         //     // panner.positionX.setTargetAtTime(xfo.tr.x, audioCtx.currentTime);
@@ -199,6 +207,7 @@ class GLAudioItemsPass extends GLPass {
       })
     }
 
+    // @ts-ignore
     audioSource.addedToCollector = true
     this.__audioItems.push({
       treeItem,

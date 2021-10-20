@@ -35,19 +35,19 @@ class Mat3Parameter extends Parameter<Mat3> implements IBinaryReader {
    * @param {Record<string, unknown>} context - The context value.
    */
   readBinary(reader: BinReader, context?: Record<string, unknown>): void {
-    this.value?.readBinary(reader)
+    this.__value?.readBinary(reader)
   }
 
   toJSON(context?: Record<string, unknown>): Record<string, unknown> {
     return {
-      value: this.value?.toJSON(),
+      value: this.__value?.toJSON()
     }
   }
 
   fromJSON(j: Record<string, unknown>, context?: Record<string, unknown>): void {
     const mat3 = new Mat3()
     mat3.fromJSON(j.value as any)
-    this.value = mat3
+    this.__value = mat3
   }
 
   /**
@@ -57,7 +57,7 @@ class Mat3Parameter extends Parameter<Mat3> implements IBinaryReader {
    * @return {Mat3Parameter} - Returns a new cloned Mat3 parameter.
    */
   clone(): Mat3Parameter {
-    const clonedParam = new Mat3Parameter(this.name, this.value?.clone())
+    const clonedParam = new Mat3Parameter(this.name, this.__value?.clone())
     return clonedParam
   }
 }

@@ -23,7 +23,7 @@ xdescribe('Parameter', () => {
   //   const parameter = new Parameter('param1', '', 'String')
   //   const mockFn = jest.fn()
   //   parameter.on('valueChanged', mockFn)
-  //   parameter.setValue('Test')
+  //   parameter.value =('Test')
   //   expect(mockFn).toHaveBeenCalled()
   // })
   // it('sets owner item', () => {
@@ -47,7 +47,7 @@ xdescribe('Parameter', () => {
   //   const parameter = new Parameter('name', 'value')
   //   parameter.fromJSON(json)
   //   // TODO: test that the USER_EDITED flag was set.
-  //   expect(parameter.getValue()).toEqual(edited)
+  //   expect(parameter.value).toEqual(edited)
   // })
   // it('Has path to parameter when owned', () => {
   //   const item = new BaseItem('item1')
@@ -68,7 +68,7 @@ xdescribe('Parameter', () => {
   //   const parameter = new Parameter('TestParameter', '', 'String')
   //   const input = { value: 'test' }
   //   parameter.fromJSON(input)
-  //   expect(parameter.getValue()).toEqual(input.value)
+  //   expect(parameter.value).toEqual(input.value)
   // })
   // it('clones parameter object', () => {
   //   const parameter = new Parameter('TestParameter', '', 'String')

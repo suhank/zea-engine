@@ -7,7 +7,7 @@ describe('Vec2Parameter', () => {
     const vec2Parameter = new Vec2Parameter()
     const vec2 = new Vec2()
 
-    expect(vec2Parameter.getValue().isEqual(vec2)).toBe(true)
+    expect(vec2Parameter.value.isEqual(vec2)).toBe(true)
   })
 
   it('checks value type.', () => {
@@ -19,14 +19,14 @@ describe('Vec2Parameter', () => {
   it('sets value.', () => {
     const vec2Parameter = new Vec2Parameter()
     const value = new Vec2()
-    vec2Parameter.setValue(value)
-    expect(vec2Parameter.getValue()).toEqual(value)
+    vec2Parameter.value = value
+    expect(vec2Parameter.value).toEqual(value)
   })
 
   it('saves to JSON (serialization).', () => {
     const vec2Parameter = new Vec2Parameter()
     const value = new Vec2(1, 2)
-    vec2Parameter.setValue(value)
+    vec2Parameter.value = value
 
     const expOutput = '{"name":"","value":{"x":1,"y":2}}'
 
@@ -38,7 +38,7 @@ describe('Vec2Parameter', () => {
     const input = { value: { x: 1, y: 2 } }
     vec2Parameter.fromJSON(input)
 
-    expect(vec2Parameter.getValue().toJSON()).toEqual(input.value)
+    expect(vec2Parameter.value.toJSON()).toEqual(input.value)
   })
 
   it('loads from binary (serialization).', () => {
@@ -48,13 +48,13 @@ describe('Vec2Parameter', () => {
     const reader = new BinReader(<Buffer>data.buffer)
     vec2Parameter.readBinary(reader)
 
-    expect(vec2Parameter.getValue().toJSON()).toEqual({ x: 1, y: 2 })
+    expect(vec2Parameter.value.toJSON()).toEqual({ x: 1, y: 2 })
   })
 
   it('clones parameter object', () => {
     const parameter = new Vec2Parameter('TestParameter')
     const value = new Vec2(1, 2)
-    parameter.setValue(value)
+    parameter.value = value
 
     const parameter2 = parameter.clone()
 

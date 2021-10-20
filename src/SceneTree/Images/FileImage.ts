@@ -3,18 +3,22 @@ import { BaseImage } from '../BaseImage'
 import { FilePathParameter } from '../Parameters/FilePathParameter'
 import { BinReader } from '../BinReader'
 
-const imageDataLibrary: { [key: string]: any } = {}
+// Cache of any images already loaded.
+const imageDataLibrary: Record<string, HTMLImageElement> = {}
 
 /** Class representing a file image.
  * @extends BaseImage
  */
 class FileImage extends BaseImage {
-  __loaded: any
-  __crossOrigin: any
-  url: any
-  __data: any
+  crossOrigin: string
+  url: string
+  protected __data: HTMLImageElement | null = null
 
-  getDOMElement: any
+  /**
+   * @member {FilePathParameter} fileParam - Used to specify the path to the file.
+   */
+  fileParam: FilePathParameter = new FilePathParameter('FilePath')
+
   /**
    * Create a file image.
    * @param {string} name - The name value.
@@ -22,47 +26,22 @@ class FileImage extends BaseImage {
    * @param {Record<any,any>} params - The params value.
    */
   constructor(name?: string, filePath: string = '', params: Record<string, any> = {}) {
-    if (filePath.constructor == Object) {
-      params = { filePath }
-    }
-    if (name != undefined && name.includes('.')) {
-      console.warn('Deprecated signature. Please provide a name and filepath to the image constructor')
-      name = name.substring(name.lastIndexOf('/') + 1, name.lastIndexOf('.'))
-    }
-
-    super(name) // used to be: super(name, params)
-
+    super(name)
     this.type = 'UNSIGNED_BYTE'
-    this.__crossOrigin = 'anonymous'
-    this.__loaded = false
+    this.crossOrigin = 'anonymous'
+    this.loaded = false
 
-    const fileParam = <FilePathParameter>this.addParameter(new FilePathParameter('FilePath'))
-    fileParam.on('valueChanged', () => {
+    this.addParameter(this.fileParam)
+    this.fileParam.on('valueChanged', () => {
       this.loaded = false
-      if (this.getName() == '') {
-        // Generate a name from the file path.
-        const stem = fileParam.getStem()
-        if (!stem) {
-          console.warn('no fileName found')
-          return
-        }
-        const decorator: any = stem.substring(stem.length - 1) // TODO: check output
-        if (!isNaN(decorator)) {
-          // Note: ALL image names have an LOD specifier at the end.
-          // remove that off when retrieving the name.
-          this.setName(stem.substring(0, stem.length - 1))
-        } else {
-          this.setName(stem)
-        }
-      }
 
-      if (fileParam.getValue()) {
-        const url = fileParam.getUrl()
+      if (this.fileParam.value) {
+        const url = this.fileParam.getUrl()
         this.load(url)
       }
     })
 
-    if (filePath && filePath != '') fileParam.setFilepath(filePath)
+    if (filePath && filePath != '') this.fileParam.setFilepath(filePath)
   }
 
   /**
@@ -77,7 +56,16 @@ class FileImage extends BaseImage {
    * @param {string} crossOrigin - The crossOrigin value.
    */
   setCrossOrigin(crossOrigin: string) {
-    this.__crossOrigin = crossOrigin
+    this.crossOrigin = crossOrigin
+  }
+
+  /**
+   * Returns the HTML DOM element used to load the image file.
+   * Be
+   * @returns { HTMLImageElement | null }
+   */
+  getDOMElement(): HTMLImageElement | null {
+    return this.__data
   }
 
   /**
@@ -88,9 +76,10 @@ class FileImage extends BaseImage {
    * @param {string} format - The format value.
    * @return {Promise} Returns a promise that resolves once the image is loaded.
    */
-  load(url: string, format = 'RGB') {
+  load(url: string, format = 'RGB'): Promise<void> {
     return new Promise((resolve, reject) => {
       if (!format) {
+        // Try to guess the format from the
         const suffixSt = url.lastIndexOf('.')
         if (suffixSt != -1) {
           const ext = url.substring(suffixSt).toLowerCase()
@@ -101,36 +90,33 @@ class FileImage extends BaseImage {
         }
       }
       this.format = format
-      this.__loaded = false
+      this.loaded = false
 
-      let imageElem: any
       const loaded = () => {
-        this.getDOMElement = () => {
-          return imageElem
-        }
         this.url = url
-        this.width = imageElem.width
-        this.height = imageElem.height
-        this.__data = imageElem
-        this.__loaded = true
+        this.width = this.__data.width
+        this.height = this.__data.height
+        this.loaded = true
         this.emit('loaded', {})
-        // TODO: (commented out) resolve()
+        resolve()
       }
 
       if (url in imageDataLibrary) {
-        imageElem = imageDataLibrary[url]
-        if (imageElem.complete) {
+        this.__data = imageDataLibrary[url]
+        if (this.__data.complete) {
           loaded()
         } else {
-          imageElem.addEventListener('load', loaded)
+          this.__data.addEventListener('load', loaded)
+          this.__data.addEventListener('error', reject)
         }
       } else {
-        imageElem = new Image()
-        imageElem.crossOrigin = this.__crossOrigin
-        imageElem.src = url
+        this.__data = new Image()
+        this.__data.crossOrigin = this.crossOrigin
+        this.__data.src = url
 
-        imageElem.addEventListener('load', loaded)
-        imageDataLibrary[url] = imageElem
+        this.__data.addEventListener('load', loaded)
+        this.__data.addEventListener('error', reject)
+        imageDataLibrary[url] = this.__data
       }
     })
   }
@@ -146,20 +132,12 @@ class FileImage extends BaseImage {
   }
 
   /**
-   * The isLoaded method.
-   * @return {any} - The return value.
-   */
-  isLoaded() {
-    return this.__loaded
-  }
-
-  /**
    * The getParams method.
    * @return {any} - The return value.
    */
   getParams() {
     const params = super.getParams()
-    if (this.__loaded) {
+    if (this.loaded) {
       params['data'] = this.__data
     }
     return params

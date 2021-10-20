@@ -58,7 +58,7 @@ class VRController {
       tipXfo.tr.set(0.0, -0.05, -0.13)
       // Flip the tip around so +z is forwards.
       // tipXfo.ori.setFromAxisAndAngle(new Vec3(0, 1, 0), Math.PI)
-      this.__tip.getParameter('LocalXfo').setValue(tipXfo)
+      this.__tip.localXfoParam.value = tipXfo
       this.__treeItem.addChild(this.__tip, false)
       xrvp.getTreeItem().addChild(this.__treeItem)
 
@@ -121,7 +121,7 @@ class VRController {
           }
           if (srcControllerTree) {
             const controllerTree = srcControllerTree.clone({ assetItem })
-            controllerTree.getParameter('LocalXfo').setValue(localXfo)
+            controllerTree.localXfoParam.value = localXfo
             this.__treeItem.addChild(controllerTree, false)
           }
         })
@@ -168,7 +168,7 @@ class VRController {
    * @return {any} - The return value.
    */
   getTipXfo() {
-    return this.__tip.getParameter('GlobalXfo')!.getValue()
+    return this.__tip.globalXfoParam.value
   }
 
   /**
@@ -200,7 +200,7 @@ class VRController {
    * @return {any} - The return value.
    */
   getControllerTipStageLocalXfo() {
-    return this.__xfo.multiply(this.__tip.getParameter('LocalXfo')!.getValue())
+    return this.__xfo.multiply(this.__tip.localXfoParam.value)
   }
 
   // ////////////////////////////////
@@ -231,7 +231,7 @@ class VRController {
     // this.__xfo.ori.set(ori.x, ori.y, ori.z, ori.x);
     // //////////////////////////////
 
-    this.__treeItem.getParameter('LocalXfo')!.setValue(this.__xfo)
+    this.__treeItem.localXfoParam.value = this.__xfo
 
     // Reset the geom at tip so it will be recomuted if necessary
     this.__geomAtTip = undefined
@@ -275,7 +275,7 @@ class VRController {
     this.__hitTested = true
 
     const renderer = this.xrvp.getRenderer()
-    const xfo = this.__tip.getParameter('GlobalXfo')!.getValue()
+    const xfo = this.__tip.globalXfoParam.value
     const vol = this.__activeVolumeSize
     this.__intersectionData = renderer.raycastWithXfo(xfo, vol, vol)
     return this.__intersectionData

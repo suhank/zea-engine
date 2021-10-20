@@ -1,7 +1,9 @@
-import { Color, Vec3 } from '../Math/index'
+import { Color } from '../Math/Color'
+import { Vec3 } from '../Math/Vec3'
 import { TreeItem } from './TreeItem'
 import { Material } from './Material'
 import { BinReader } from './BinReader'
+import { MaterialParameter } from '../SceneTree/Parameters/MaterialParameter'
 
 /**
  * Base class that represents geometry items with layering, overlaying and cut away features.
@@ -16,6 +18,12 @@ class BaseGeomItem extends TreeItem {
   protected __cutAwayVector: Vec3
   protected __cutAwayDist: number
   protected __layers: string[]
+
+  /**
+   * @member {MaterialParameter} materialParam - The Material to use when rendering this GeomItem
+   */
+  materialParam: MaterialParameter = new MaterialParameter('Material')
+
   /**
    * Create a base geometry item.
    * @param {string} name - The name of the base geom item.
@@ -155,7 +163,7 @@ class BaseGeomItem extends TreeItem {
         material.getParameter('BaseColor').loadValue(Color.random(0.25))
         context.assetItem.getMaterialLibrary().addMaterial(material)
       }
-      this.getParameter('Material')!.loadValue(material)
+      this.materialParam.loadValue(material)
 
       this.__layers = reader.loadStrArray()
       if (this.__layers.length > 0) {

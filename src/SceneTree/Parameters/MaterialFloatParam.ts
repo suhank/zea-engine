@@ -112,7 +112,7 @@ class MaterialFloatParam extends NumberParameter implements IBinaryReader {
    * @return {MaterialFloatParam} - Returns a new cloned material float parameter.
    */
   clone(): MaterialFloatParam {
-    const clonedParam = new MaterialFloatParam(this.name, this.value, this.range)
+    const clonedParam = new MaterialFloatParam(this.name, this.__value, this.range)
     return clonedParam
   }
 }

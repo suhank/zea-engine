@@ -40,19 +40,19 @@ class QuatParameter extends Parameter<Quat> implements IBinaryReader {
    * @param {Record<string, unknown>} context - The context value.
    */
   readBinary(reader: BinReader, context?: Record<string, unknown>): void {
-    this.value?.readBinary(reader)
+    this.__value?.readBinary(reader)
   }
 
   toJSON(context?: Record<string, unknown>): Record<string, unknown> {
     return {
-      value: this.value?.toJSON(),
+      value: this.__value?.toJSON()
     }
   }
 
   fromJSON(j: Record<string, unknown>, context?: Record<string, unknown>): void {
     const quat = new Quat()
     quat.fromJSON(j.value as any)
-    this.value = quat
+    this.__value = quat
   }
 
   // ////////////////////////////////////////
@@ -65,7 +65,7 @@ class QuatParameter extends Parameter<Quat> implements IBinaryReader {
    * @return {QuatParameter} - Returns a new Quat parameter.
    */
   clone() {
-    const clonedParam = new QuatParameter(this.name, this.value?.clone())
+    const clonedParam = new QuatParameter(this.name, this.__value?.clone())
     return clonedParam
   }
 }

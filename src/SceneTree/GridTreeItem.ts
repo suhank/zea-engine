@@ -15,7 +15,6 @@ import { Vec3Attribute } from './Geometry/Vec3Attribute'
  * @extends {TreeItem}
  */
 class GridTreeItem extends TreeItem {
-  disableBoundingBox: boolean = true
   /**
    * Creates an instance of GridTree.
    *
@@ -68,11 +67,11 @@ class GridTreeItem extends TreeItem {
 
     const geomOffset = new Xfo()
     geomOffset.ori.setFromAxisAndAngle(new Vec3(0, 0, 1), Math.PI * 0.5)
-    zAxisLineItem.setGeomOffsetXfo(geomOffset)
+    zAxisLineItem.geomOffsetXfoParam.value = geomOffset
     this.addChild(zAxisLineItem, false)
 
-    const bBox = this._cleanBoundingBox(this.__boundingBoxParam.getValue())
-    this.__boundingBoxParam.setValue(bBox)
+    const bBox = this._cleanBoundingBox(this.boundingBoxParam.value)
+    this.boundingBoxParam.value = bBox
   }
 
   /**

@@ -70,7 +70,7 @@ class VRViewport extends GLBaseViewport {
    */
   constructor(renderer: any) {
     super(renderer)
-    this.getParameter('DoubleClickTimeMS')!.setValue(300)
+    this.__doubleClickTimeMSParam.value = 300
 
     // ////////////////////////////////////////////
     // Viewport params
@@ -144,7 +144,7 @@ class VRViewport extends GLBaseViewport {
    */
   setXfo(xfo: Xfo) {
     this.__stageXfo = xfo
-    this.__stageTreeItem.getParameter('GlobalXfo')!.setValue(xfo)
+    this.__stageTreeItem.globalXfoParam.value = xfo
     this.__stageMatrix = xfo.inverse().toMat4()
     // this.__stageMatrix.multiplyInPlace(this.__sittingToStandingMatrix);
     this.__stageScale = xfo.sc.x
@@ -249,7 +249,7 @@ class VRViewport extends GLBaseViewport {
           // Cache the asset so if an avatar needs to display,
           // it can use the same asset.
           const asset = new VLAAsset(hmdAssetId)
-          asset.getParameter('FilePath')!.setValue(hmdAssetId)
+          asset.fileParam.value = hmdAssetId
           resourceLoader.setCommonResource(hmdAssetId, asset)
         }
         this.__vrAsset = <VLAAsset>resourceLoader.getCommonResource(hmdAssetId)
@@ -277,7 +277,7 @@ class VRViewport extends GLBaseViewport {
   /**
    * The startPresenting method.
    */
-  startPresenting() {
+  startPresenting(): Promise<void> {
     return new Promise((resolve, reject) => {
       if (!this.spectatorMode) {
         // clear the main viewport if spectator mode is off.
@@ -298,7 +298,7 @@ class VRViewport extends GLBaseViewport {
             const viewport = this.__renderer.getViewport()
             if (viewport) {
               const camera = viewport.getCamera()
-              const cameraXfo = camera.getParameter('GlobalXfo')!.getValue()
+              const cameraXfo = camera.globalXfoParam.value
 
               // Convert Y-Up to Z-Up.
               const stageXfo = new Xfo()
@@ -390,7 +390,7 @@ class VRViewport extends GLBaseViewport {
 
               this.loadHMDResources().then(() => {
                 this.__startSession()
-                // TODO: (commented out) resolve()
+                resolve()
               })
             }
 
@@ -497,7 +497,7 @@ class VRViewport extends GLBaseViewport {
     }
 
     this.__vrhead.update(pose)
-    const viewXfo = this.__vrhead.getTreeItem().getParameter('GlobalXfo')!.getValue()
+    const viewXfo = this.__vrhead.getTreeItem().globalXfoParam.value
 
     const views = pose.views
 

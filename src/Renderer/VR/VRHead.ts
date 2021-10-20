@@ -36,18 +36,17 @@ class VRHead {
       if (!hmdGeomItem) return
       this.hmdGeomItem = hmdGeomItem.clone({ assetItem })
       if (this.hmdGeomItem) {
-        this.hmdGeomItem.getParameter('LocalXfo').setValue(
-          new Xfo(
-            new Vec3(0, -0.035, -0.03),
-            new Quat(0, 1, 0, Math.PI), // used to be: new Quat({ setFromAxisAndAngle: [new Vec3(0, 1, 0), Math.PI] }),
-            new Vec3(0.001, 0.001, 0.001) // VRAsset units are in mm.
-          )
+        this.hmdGeomItem.localXfoParam.value = new Xfo(
+          new Vec3(0, -0.035, -0.03),
+          new Quat(0, 1, 0, Math.PI), // used to be: new Quat({ setFromAxisAndAngle: [new Vec3(0, 1, 0), Math.PI] }),
+          new Vec3(0.001, 0.001, 0.001) // VRAsset units are in mm.
         )
+
         this.__treeItem.addChild(this.hmdGeomItem, false)
       }
     }
     if (this.hmdGeomItem) {
-      this.hmdGeomItem.getParameter('Visible').setValue(state)
+      this.hmdGeomItem.visibleParam.value = state
     }
   }
 
@@ -69,7 +68,7 @@ class VRHead {
     // const ori = pose.transform.orientation;
     // this.__localXfo.ori.set(ori.x, ori.y, ori.z, ori.x);
 
-    this.__treeItem.getParameter('LocalXfo')!.setValue(this.__localXfo)
+    this.__treeItem.localXfoParam.value = this.__localXfo
   }
 
   /**

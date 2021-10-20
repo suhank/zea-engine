@@ -22,7 +22,7 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
   protected dirtyOpIndex: number = 0
   protected firstOP_WRITE: number = 0
   protected name: string
-  protected value: T
+  __value: T
   protected dataType: string
   protected ownerItem?: ParameterOwner
 
@@ -51,7 +51,7 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
   constructor(name: string = '', value: T, dataType: string) {
     super()
     this.name = name
-    this.value = value
+    this.__value = value
     this.dataType = dataType
   }
 
@@ -298,7 +298,7 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
       // console.log(`cleaned:`, this.getPath())
     }
 
-    this.value = value
+    this.__value = value
 
     // As each operator writes its value, the dirty value is incremented
     this.dirtyOpIndex = index + 1
@@ -317,7 +317,7 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
     if (this.dirtyOpIndex < index) {
       this._clean(index)
     }
-    return this.value
+    return this.__value
   }
 
   /**
@@ -360,8 +360,9 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
     if (this.dirtyOpIndex < this.boundOutputs.length) {
       this._clean(this.boundOutputs.length)
     }
-    return this.value
+    return this.__value
   }
+
 
   /**
    * Sets value of the parameter.
@@ -384,9 +385,9 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
 
     if (typeof value !== 'object') {
       // Note: equality tests on anything but simple values is going to be super expensive.
-      if (this.value == value) return
+      if (this.__value == value) return
     }
-    this.value = value
+    this.__value = value
 
     // Note: only users call 'setValue'. Operators call 'setCleanFromOp'
     for (let i = 0; i < this.boundInputs.length; i++) {
@@ -396,6 +397,13 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
     this.emit('valueChanged')
   }
 
+  get value(): T {
+    return this.getValue()
+  }
+  
+  set value(value: T) {
+    this.setValue(value)
+  }
   // ////////////////////////////////////////
   // Persistence
 
@@ -406,7 +414,7 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
    * @param {T} value - The context value.
    */
   loadValue(value: T): void {
-    this.value = value
+    this.__value = value
   }
 
   abstract toJSON(context?: Record<string, any>): Record<string, any>

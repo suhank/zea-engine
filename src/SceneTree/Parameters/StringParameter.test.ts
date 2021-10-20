@@ -28,7 +28,7 @@ describe('StringParameter', () => {
     const mockFn = jest.fn()
     parameter.on('valueChanged', mockFn)
 
-    parameter.setValue('Test')
+    parameter.value = 'Test'
 
     expect(mockFn).toHaveBeenCalled()
   })
@@ -75,7 +75,7 @@ describe('StringParameter', () => {
     const input = { value: 'test' }
     parameter.fromJSON(input)
 
-    expect(parameter.getValue()).toEqual(input.value)
+    expect(parameter.value).toEqual(input.value)
   })
 
   it('loads from binary (serialization).', () => {
@@ -95,7 +95,7 @@ describe('StringParameter', () => {
     const reader = new BinReader(<Buffer>view.buffer)
     parameter.readBinary(reader)
 
-    expect(parameter.getValue()).toEqual(str)
+    expect(parameter.value).toEqual(str)
   })
 
   it('clones parameter object', () => {

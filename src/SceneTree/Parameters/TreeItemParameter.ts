@@ -85,13 +85,14 @@ class TreeItemParameter extends Parameter<TreeItem | undefined> {
    */
   setValue(treeItem: TreeItem) {
     // 0 == normal set. 1 = changed via cleaner fn, 2=change by loading/cloning code.
-    if (this.value !== treeItem) {
-      if (this.value) {
-        this.value.removeListenerById('globalXfoChanged', this.listenerIDs['globalXfoChanged'])
+    if (this.filterFn && !this.filterFn(treeItem)) return
+    if (this.__value !== treeItem) {
+      if (this.__value) {
+        this.__value.removeListenerById('globalXfoChanged', this.listenerIDs['globalXfoChanged'])
       }
-      this.value = treeItem
-      if (this.value) {
-        this.listenerIDs['globalXfoChanged'] = this.value.on('globalXfoChanged', (event) => {
+      this.__value = treeItem
+      if (this.__value) {
+        this.listenerIDs['globalXfoChanged'] = this.__value.on('globalXfoChanged', (event) => {
           this.emitTreeItemGlobalXfoChanged(event)
         })
       }
@@ -111,7 +112,7 @@ class TreeItemParameter extends Parameter<TreeItem | undefined> {
    */
   toJSON(context: Record<string, any>): Record<string, unknown> {
     return {
-      value: context.makeRelative(this.value?.getPath()),
+      value: context.makeRelative(this.__value?.getPath()),
     }
   }
 
@@ -148,7 +149,7 @@ class TreeItemParameter extends Parameter<TreeItem | undefined> {
    */
   clone(context?: Record<string, unknown>) {
     const clonedParam = new TreeItemParameter(this.name, this.filterFn)
-    if (this.value) clonedParam.setValue(this.value.clone(context))
+    if (this.__value) clonedParam.setValue(this.__value.clone(context))
     return clonedParam
   }
 }

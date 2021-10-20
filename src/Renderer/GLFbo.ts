@@ -103,7 +103,7 @@ class GLFbo {
   /**
    * Returns the value of the deptTexture property.
    *
-   * @return {WebGLTexture} - The return value.
+   * @return {WebGLTexture | null} - The return value.
    */
   getDepthTextureGL(): WebGLTexture | null {
     return this.__depthTexture
@@ -111,6 +111,8 @@ class GLFbo {
 
   /**
    * Returns the `width` of the GL Texture
+   * 
+   * @return {number} - width of GLTexture
    */
   get width(): number {
     return this.__colorTexture.width
@@ -118,13 +120,17 @@ class GLFbo {
 
   /**
    * Returns the `height` of the GL Texture
+   * 
+   * @return {number} - height of GLTexture
    */
   get height(): number {
     return this.__colorTexture.height
   }
 
   /**
-   * Returns the `width`(Index 0) and the `height`(Index 1) of the GL Texture.
+   * Returns the [width, height] of the GL Texture.
+   * 
+   * @return {Array<number>} - returns [width, height] of the __colorTexture
    */
   get size(): Array<number> {
     return [this.__colorTexture.width, this.__colorTexture.height]
@@ -132,6 +138,8 @@ class GLFbo {
 
   /**
    * Returns the ColorTexture of the Fbo
+   * 
+   * @returns {GLTexture2D} - returns this.__colorTexture
    */
   get colorTexture(): GLTexture2D {
     return this.__colorTexture
@@ -149,7 +157,9 @@ class GLFbo {
   }
 
   /**
-   * Returns the value of the deptTexture property.
+   * Returns the value of the depthTexture property.
+   * 
+   * @return {WebGLTexture | null}
    */
   get depthTextureGL(): WebGLTexture | null {
     return this.__depthTexture

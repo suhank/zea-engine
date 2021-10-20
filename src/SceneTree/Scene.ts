@@ -56,7 +56,7 @@ class Scene {
    * @param {EnvMap} envMap - The envMap value.
    */
   setEnvMap(envMap: EnvMap) {
-    this.settings.getParameter('EnvMap')!.setValue(envMap)
+    this.settings.envMapParam.value = envMap
   }
 
   /**

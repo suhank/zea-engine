@@ -59,7 +59,7 @@ class CodeParameter extends StringParameter {
    * @return {Record<string, boolean | undefined>} - Returns the json object.
    * /
   toJSON(context?: Record<string, unknown>): Record<string, string | undefined> {
-    return { value: this.value, lang: this.lang }
+    return { value: this.__value, lang: this.lang }
   }
 
   /**
@@ -69,7 +69,7 @@ class CodeParameter extends StringParameter {
    * @param {Record<string, unknown>} context - The context value.
    * /
   fromJSON(j: Record<string, string | undefined>, context?: Record<string, unknown>): void {
-    this.value = j.value ? <string>j.value : ''
+    this.__value = j.value ? <string>j.value : ''
     this.lang = j.lang || DEFAULT_LANG
 
     this.emit('valueChanged', { mode: 0 })
@@ -82,7 +82,7 @@ class CodeParameter extends StringParameter {
    * @return {CodeParameter} - Returns a new cloned code parameter.
    * /
   clone(): CodeParameter {
-    const clonedParam = new CodeParameter(this.name, this.value)
+    const clonedParam = new CodeParameter(this.name, this.__value)
     clonedParam.setLanguage(this.lang)
     return clonedParam
   }

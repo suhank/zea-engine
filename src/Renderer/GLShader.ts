@@ -113,13 +113,13 @@ class GLShader extends BaseItem {
   /**
    * The __compileShaderStage method.
    * @param {string} glsl - The glsl value.
-   * @param {string} stageID - The stageID value.
+   * @param {number} stageID - The stageID value.
    * @param {string} name - The name value.
    * @param {Shaderopts} shaderopts - The shaderopts value.
    * @return {WebGLShader} - The return value.
    * @private
    */
-  __compileShaderStage(glsl: string, stageID: number, name: string, shaderopts: Shaderopts) {
+  __compileShaderStage(glsl: string, stageID: number, name: string, shaderopts: Shaderopts): WebGLShader {
     const gl = this.__gl!
 
     // console.log("__compileShaderStage:" + this.name+"."+name + " glsl:\n" + glsl);
@@ -197,7 +197,6 @@ class GLShader extends BaseItem {
           ': \n\n' +
           numberedLinesWithErrors.join('\n')
       )
-      return null
     }
     return shaderHdl
   }
@@ -208,6 +207,7 @@ class GLShader extends BaseItem {
    * @return {WebGLProgram} - The program value.
    * @private
    */
+  // TODO: can't use shaderopt tpye
   __createProgram(shaderopts: Record<string, any>) {
     const gl = this.__gl!
     this.__shaderCompilationAttempted = true
@@ -460,7 +460,7 @@ class GLShader extends BaseItem {
    * @param {RenderState}} renderstate - The object tracking the current state of the renderer
    * @return {boolean} - The return value.
    */
-  unbind(renderstate: RenderState) {
+  unbind(renderstate: RenderState): boolean {
     renderstate.glShader = null
     renderstate.shaderkey = ''
     renderstate.unifs = {}

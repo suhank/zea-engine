@@ -1,4 +1,4 @@
-import { Registry, TypeDefinition } from './Registry'
+import { Registry } from './Registry'
 import { BaseItem } from './SceneTree/BaseItem'
 
 class Foo extends BaseItem {}
@@ -34,14 +34,6 @@ describe('Registry', () => {
 
     const foo = new Foo()
     expect(foo.getClassName()).toEqual('Foo')
-  })
-
-  it('instantiates the class if registered', () => {
-    const typeDef = new TypeDefinition(12, 4)
-    Registry.registerMathType('MyMathType', typeDef)
-
-    const result = Registry.getMathTypeDefinition('MyMathType')
-    expect(result).toEqual(typeDef)
   })
 
   it('throws on unregistered class construction', () => {

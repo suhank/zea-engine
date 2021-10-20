@@ -4,7 +4,7 @@ import { Material } from '../Material'
 import { GeomItem } from '../GeomItem'
 import { Vec3, Xfo } from '../../Math'
 import { ItemSetParameter } from '../Parameters'
-import { jsonCompare } from '../../../Utilities/test_utils'
+// import { jsonCompare } from '../../../Utilities/test_utils'
 
 describe('Group', () => {
   // it('is visible by default.', () => {
@@ -19,7 +19,7 @@ describe('Group', () => {
 
   //   group.addItem(treeItem)
 
-  //   expect(group.getParameter('Items').getValue().size).toBe(1)
+  //   expect(group.getParameter('Items').value.size).toBe(1)
   // })
 
   // test('Adding members using paths.', () => {
@@ -73,9 +73,9 @@ describe('Group', () => {
   //   group.addItem(parent)
 
   //   const material = new Material('MyMaterial')
-  //   group.getParameter('Material').setValue(material)
+  //   group.getParameter('Material').value =(material)
 
-  //   expect(geomItem.getParameter('Material').getValue()).toBe(material)
+  //   expect(geomItem.getParameter('Material').value).toBe(material)
   // })
 
   // test('Events propagating from members to the group.', () => {
@@ -105,25 +105,25 @@ describe('Group', () => {
   //   const treeItem2 = new TreeItem('treeItem2')
   //   const treeItem3 = new TreeItem('treeItem3')
   //   const treeItem4 = new TreeItem('treeItem4')
-  //   treeItem1.getParameter('LocalXfo').setValue(new Xfo(new Vec3(2, 4, 0)))
-  //   treeItem2.getParameter('LocalXfo').setValue(new Xfo(new Vec3(4, 4, 0)))
-  //   treeItem3.getParameter('LocalXfo').setValue(new Xfo(new Vec3(2, 2, 0)))
-  //   treeItem4.getParameter('LocalXfo').setValue(new Xfo(new Vec3(4, 2, 0)))
+  //   treeItem1.localXfoParam.value =(new Xfo(new Vec3(2, 4, 0)))
+  //   treeItem2.localXfoParam.value =(new Xfo(new Vec3(4, 4, 0)))
+  //   treeItem3.localXfoParam.value =(new Xfo(new Vec3(2, 2, 0)))
+  //   treeItem4.localXfoParam.value =(new Xfo(new Vec3(4, 2, 0)))
 
   //   group.addItem(treeItem1)
   //   group.addItem(treeItem2)
   //   group.addItem(treeItem3)
   //   group.addItem(treeItem4)
-  //   group.getParameter('InitialXfoMode').setValue(Group.INITIAL_XFO_MODES.average)
+  //   group.initialXfoModeParam.value =(Group.INITIAL_XFO_MODES.average)
 
-  //   expect(group.getParameter('GlobalXfo').getValue().toJSON()).toStrictEqual({
+  //   expect(group.__globalXfoParam.value.toJSON()).toStrictEqual({
   //     tr: { x: 3, y: 3, z: 0 },
   //     ori: { w: 1, x: 0, y: 0, z: 0 },
   //   })
 
-  //   group.getParameter('InitialXfoMode').setValue(Group.INITIAL_XFO_MODES.first)
+  //   group.initialXfoModeParam.value =(Group.INITIAL_XFO_MODES.first)
 
-  //   expect(group.getParameter('GlobalXfo').getValue().toJSON()).toStrictEqual({
+  //   expect(group.__globalXfoParam.value.toJSON()).toStrictEqual({
   //     tr: { x: 2, y: 4, z: 0 },
   //     ori: { w: 1, x: 0, y: 0, z: 0 },
   //   })
@@ -135,10 +135,10 @@ describe('Group', () => {
   //   const treeItem2 = new TreeItem('treeItem2')
   //   const treeItem3 = new TreeItem('treeItem3')
   //   const treeItem4 = new TreeItem('treeItem4')
-  //   treeItem1.getParameter('LocalXfo').setValue(new Xfo(new Vec3(2, 4, 0)))
-  //   treeItem2.getParameter('LocalXfo').setValue(new Xfo(new Vec3(4, 4, 0)))
-  //   treeItem3.getParameter('LocalXfo').setValue(new Xfo(new Vec3(2, 2, 0)))
-  //   treeItem4.getParameter('LocalXfo').setValue(new Xfo(new Vec3(4, 2, 0)))
+  //   treeItem1.localXfoParam.value =(new Xfo(new Vec3(2, 4, 0)))
+  //   treeItem2.localXfoParam.value =(new Xfo(new Vec3(4, 4, 0)))
+  //   treeItem3.localXfoParam.value =(new Xfo(new Vec3(2, 2, 0)))
+  //   treeItem4.localXfoParam.value =(new Xfo(new Vec3(4, 2, 0)))
 
   //   group.addChild(treeItem1)
   //   group.addChild(treeItem2)
@@ -146,53 +146,53 @@ describe('Group', () => {
   //   group.addChild(treeItem4)
 
   //   // Move and rotate the group by _modifying_ its global Xfo.
-  //   const xfo = group.getParameter('GlobalXfo').getValue()
+  //   const xfo = group.__globalXfoParam.value
 
   //   xfo.tr.x += 10
   //   xfo.tr.y += 10
 
   //   xfo.ori.setFromAxisAndAngle(new Vec3(0, 0, 1), Math.PI * 0.5)
 
-  //   group.getParameter('GlobalXfo').setValue(xfo)
+  //   group.globalXfoParam.value = (xfo)
 
   //   // Now the group is rotated around its new center.
-  //   expect(treeItem1.getParameter('GlobalXfo').getValue().tr.toJSON()).toStrictEqual({ x: 12, y: 12, z: 0 })
-  //   expect(treeItem2.getParameter('GlobalXfo').getValue().tr.toJSON()).toStrictEqual({ x: 12, y: 14, z: 0 })
-  //   expect(treeItem3.getParameter('GlobalXfo').getValue().tr.toJSON()).toStrictEqual({ x: 14, y: 12, z: 0 })
-  //   expect(treeItem4.getParameter('GlobalXfo').getValue().tr.toJSON()).toStrictEqual({ x: 14, y: 14, z: 0 })
+  //   expect(treeItem1.__globalXfoParam.value.tr.toJSON()).toStrictEqual({ x: 12, y: 12, z: 0 })
+  //   expect(treeItem2.__globalXfoParam.value.tr.toJSON()).toStrictEqual({ x: 12, y: 14, z: 0 })
+  //   expect(treeItem3.__globalXfoParam.value.tr.toJSON()).toStrictEqual({ x: 14, y: 12, z: 0 })
+  //   expect(treeItem4.__globalXfoParam.value.tr.toJSON()).toStrictEqual({ x: 14, y: 14, z: 0 })
 
-  //   group.getParameter('InitialXfoMode').setValue(Group.INITIAL_XFO_MODES.first)
-  //   const xfo2 = group.getParameter('GlobalXfo').getValue()
+  //   group.initialXfoModeParam.value =(Group.INITIAL_XFO_MODES.first)
+  //   const xfo2 = group.__globalXfoParam.value
   //   xfo2.tr.x += 10
   //   xfo2.tr.y += 10
   //   xfo2.ori.setFromAxisAndAngle(new Vec3(0, 0, 1), Math.PI * 0.5)
-  //   group.getParameter('GlobalXfo').setValue(xfo2)
+  //   group.globalXfoParam.value = (xfo2)
   //   // Now the group is rotated around its new center.
-  //   expect(treeItem1.getParameter('GlobalXfo').getValue().tr.approxEqual({ x: 2, y: 24, z: 0 }, 0.001)).toBe(true)
-  //   expect(treeItem2.getParameter('GlobalXfo').getValue().tr.approxEqual({ x: 12, y: 16, z: 0 }, 0.001)).toBe(true)
-  //   expect(treeItem3.getParameter('GlobalXfo').getValue().tr.approxEqual({ x: 14, y: 14, z: 0 }, 0.001)).toBe(true)
-  //   expect(treeItem4.getParameter('GlobalXfo').getValue().tr.approxEqual({ x: 14, y: 16, z: 0 }, 0.001)).toBe(true)
+  //   expect(treeItem1.__globalXfoParam.value.tr.approxEqual({ x: 2, y: 24, z: 0 }, 0.001)).toBe(true)
+  //   expect(treeItem2.__globalXfoParam.value.tr.approxEqual({ x: 12, y: 16, z: 0 }, 0.001)).toBe(true)
+  //   expect(treeItem3.__globalXfoParam.value.tr.approxEqual({ x: 14, y: 14, z: 0 }, 0.001)).toBe(true)
+  //   expect(treeItem4.__globalXfoParam.value.tr.approxEqual({ x: 14, y: 16, z: 0 }, 0.001)).toBe(true)
   // })
 
   test('Changing Group Xfo to move its items -- simple.', () => {
     const group = new Group('Foo')
     const treeItem1 = new TreeItem('treeItem1')
 
-    treeItem1.getParameter('LocalXfo').setValue(new Xfo(new Vec3(2, 4, 0)))
+    treeItem1.localXfoParam.value = new Xfo(new Vec3(2, 4, 0))
 
     group.addItem(treeItem1)
     // group.addChild(treeItem1)
 
     // Move and rotate the group by _modifying_ its global Xfo.
-    const xfo = group.getParameter('GlobalXfo').getValue()
+    const xfo = group.globalXfoParam.value
 
     xfo.tr.x += 10
     xfo.tr.y += 10
 
-    group.getParameter('GlobalXfo').setValue(xfo)
+    group.globalXfoParam.value = xfo
 
-    console.log('getValue(): ', group.getParameter('GlobalXfo').getValue())
-    expect(treeItem1.getParameter('GlobalXfo').getValue().tr.toJSON()).toStrictEqual({ x: 12, y: 12, z: 0 })
+    console.log('getValue(): ', group.globalXfoParam.value)
+    expect(treeItem1.globalXfoParam.value.tr.toJSON()).toStrictEqual({ x: 12, y: 12, z: 0 })
   })
 
   // test('Changing Group Xfo to move its items.', () => {
@@ -201,10 +201,10 @@ describe('Group', () => {
   //   const treeItem2 = new TreeItem('treeItem2')
   //   const treeItem3 = new TreeItem('treeItem3')
   //   const treeItem4 = new TreeItem('treeItem4')
-  //   treeItem1.getParameter('LocalXfo').setValue(new Xfo(new Vec3(2, 4, 0)))
-  //   treeItem2.getParameter('LocalXfo').setValue(new Xfo(new Vec3(4, 4, 0)))
-  //   treeItem3.getParameter('LocalXfo').setValue(new Xfo(new Vec3(2, 2, 0)))
-  //   treeItem4.getParameter('LocalXfo').setValue(new Xfo(new Vec3(4, 2, 0)))
+  //   treeItem1.localXfoParam.value =(new Xfo(new Vec3(2, 4, 0)))
+  //   treeItem2.localXfoParam.value =(new Xfo(new Vec3(4, 4, 0)))
+  //   treeItem3.localXfoParam.value =(new Xfo(new Vec3(2, 2, 0)))
+  //   treeItem4.localXfoParam.value =(new Xfo(new Vec3(4, 2, 0)))
 
   //   group.addItem(treeItem1)
   //   group.addItem(treeItem2)
@@ -216,36 +216,36 @@ describe('Group', () => {
   //   // group.addChild(treeItem4)
 
   //   // Move and rotate the group by _modifying_ its global Xfo.
-  //   const xfo = group.getParameter('GlobalXfo').getValue()
+  //   const xfo = group.__globalXfoParam.value
 
   //   xfo.tr.x += 10
   //   xfo.tr.y += 10
 
   //   xfo.ori.setFromAxisAndAngle(new Vec3(0, 0, 1), Math.PI * 0.5)
 
-  //   group.getParameter('GlobalXfo').setValue(xfo)
+  //   group.globalXfoParam.value = (xfo)
 
-  //   // console.log('globalXfoParam: ', treeItem1.__globalXfoParam.getValue())
-  //   // console.log('localXfoParam: ', treeItem2.__localXfoParam.getValue())
+  //   // console.log('globalXfoParam: ', treeItem1.__globalXfoParam.value)
+  //   // console.log('localXfoParam: ', treeItem2.__localXfoParam.value)
   //   // console.log(treeItem1.__ownerItem)
 
   //   // Now the group is rotated around its new center.
-  //   expect(treeItem1.getParameter('GlobalXfo').getValue().tr.toJSON()).toStrictEqual({ x: 12, y: 12, z: 0 })
-  //   expect(treeItem2.getParameter('GlobalXfo').getValue().tr.toJSON()).toStrictEqual({ x: 12, y: 14, z: 0 })
-  //   expect(treeItem3.getParameter('GlobalXfo').getValue().tr.toJSON()).toStrictEqual({ x: 14, y: 12, z: 0 })
-  //   expect(treeItem4.getParameter('GlobalXfo').getValue().tr.toJSON()).toStrictEqual({ x: 14, y: 14, z: 0 })
+  //   expect(treeItem1.__globalXfoParam.value.tr.toJSON()).toStrictEqual({ x: 12, y: 12, z: 0 })
+  //   expect(treeItem2.__globalXfoParam.value.tr.toJSON()).toStrictEqual({ x: 12, y: 14, z: 0 })
+  //   expect(treeItem3.__globalXfoParam.value.tr.toJSON()).toStrictEqual({ x: 14, y: 12, z: 0 })
+  //   expect(treeItem4.__globalXfoParam.value.tr.toJSON()).toStrictEqual({ x: 14, y: 14, z: 0 })
 
-  //   group.getParameter('InitialXfoMode').setValue(Group.INITIAL_XFO_MODES.first)
-  //   const xfo2 = group.getParameter('GlobalXfo').getValue()
+  //   group.initialXfoModeParam.value =(Group.INITIAL_XFO_MODES.first)
+  //   const xfo2 = group.__globalXfoParam.value
   //   xfo2.tr.x += 10
   //   xfo2.tr.y += 10
   //   xfo2.ori.setFromAxisAndAngle(new Vec3(0, 0, 1), Math.PI * 0.5)
-  //   group.getParameter('GlobalXfo').setValue(xfo2)
+  //   group.globalXfoParam.value = (xfo2)
   //   // Now the group is rotated around its new center.
-  //   expect(treeItem1.getParameter('GlobalXfo').getValue().tr.approxEqual({ x: 2, y: 24, z: 0 }, 0.001)).toBe(true)
-  //   expect(treeItem2.getParameter('GlobalXfo').getValue().tr.approxEqual({ x: 12, y: 16, z: 0 }, 0.001)).toBe(true)
-  //   expect(treeItem3.getParameter('GlobalXfo').getValue().tr.approxEqual({ x: 14, y: 14, z: 0 }, 0.001)).toBe(true)
-  //   expect(treeItem4.getParameter('GlobalXfo').getValue().tr.approxEqual({ x: 14, y: 16, z: 0 }, 0.001)).toBe(true)
+  //   expect(treeItem1.__globalXfoParam.value.tr.approxEqual({ x: 2, y: 24, z: 0 }, 0.001)).toBe(true)
+  //   expect(treeItem2.__globalXfoParam.value.tr.approxEqual({ x: 12, y: 16, z: 0 }, 0.001)).toBe(true)
+  //   expect(treeItem3.__globalXfoParam.value.tr.approxEqual({ x: 14, y: 14, z: 0 }, 0.001)).toBe(true)
+  //   expect(treeItem4.__globalXfoParam.value.tr.approxEqual({ x: 14, y: 16, z: 0 }, 0.001)).toBe(true)
   // })
 
   // test('Saving to JSON (serialization).', () => {

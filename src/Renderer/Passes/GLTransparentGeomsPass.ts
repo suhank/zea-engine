@@ -62,10 +62,10 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
    * @return {boolean} - The return value.
    */
   filterGeomItem(geomItem: GeomItem) {
-    const geom = geomItem.getParameter('Geometry')!.getValue()
+    const geom = geomItem.geomParam.value
     if (geom instanceof Lines || geom instanceof Points || geom instanceof PointsProxy || geom instanceof LinesProxy)
       return false
-    const material = geomItem.getParameter('Material')!.getValue()
+    const material = geomItem.materialParam.value
     return material.isTransparent()
   }
 
@@ -86,7 +86,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
     const listenerIDs: Record<string, number> = {}
     this.listenerIDs[geomItem.getId()] = listenerIDs
 
-    const materialParam = geomItem.getParameter('Material')!
+    const materialParam = geomItem.materialParam
     const material = materialParam.getValue()
     const shaderName = material.getShaderName()
     const shaders = this.constructShaders(shaderName)
@@ -117,7 +117,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
       }
     }
 
-    const glGeom = this.renderer!.glGeomLibrary.constructGLGeom(geomItem.getParameter('Geometry')!.getValue())
+    const glGeom = this.renderer!.glGeomLibrary.constructGLGeom(geomItem.geomParam.value)
 
     // const glGeomItem = this.constructGLGeomItem(geomItem)
     const glGeomItem = this.renderer!.glGeomItemLibrary.getGLGeomItem(geomItem)
@@ -158,11 +158,9 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
 
     // ////////////////////////////////////
     // Tracking GeomMat changes.
-    const geomMatParam = geomItem.getParameter('GeomMat')!
-    const geomMatChanged = () => {
+    listenerIDs['GeomMat.valueChanged'] = geomItem.geomMatParam.on('valueChanged', () => {
       this.reSort = true
-    }
-    listenerIDs['GeomMat.valueChanged'] = geomMatParam.on('valueChanged', geomMatChanged)
+    })
 
     const item = {
       geomItem,
@@ -241,7 +239,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
     }
 
     for (const transparentItem of this.visibleItems) {
-      const mat4 = transparentItem.glGeomItem.geomItem.getGeomMat4()
+      const mat4 = transparentItem.glGeomItem.geomItem.geomMatParam.value
       transparentItem.dist = mat4.translation.distanceTo(viewPos)
     }
     this.visibleItems.sort((a, b) => (a.dist > b.dist ? -1 : a.dist < b.dist ? 1 : 0))

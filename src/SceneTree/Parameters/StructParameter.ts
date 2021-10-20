@@ -20,7 +20,7 @@ import { Parameter } from './Parameter'
  * @extends Parameter
  */
 class StructParameter extends Parameter<Record<string, unknown>> {
-  protected members: Parameter<unknown>[]
+  members: Parameter<unknown>[]
 
   /**
    * Create a struct parameter.
@@ -38,10 +38,10 @@ class StructParameter extends Parameter<Record<string, unknown>> {
    * @private
    */
   protected addMember(parameter: Parameter<any>) {
-    if (this.value) this.value[parameter.getName()] = parameter.getValue()
+    if (this.__value) this.__value[parameter.getName()] = parameter.value
 
     parameter.on('valueChanged', () => {
-      if (this.value) this.value[parameter.getName()] = parameter.getValue()
+      if (this.__value) this.__value[parameter.getName()] = parameter.value
     })
 
     this.members.push(parameter)

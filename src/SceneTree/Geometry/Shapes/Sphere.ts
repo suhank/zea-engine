@@ -20,9 +20,20 @@ import { Vec2Attribute } from '../Vec2Attribute'
  * @extends {ProceduralMesh}
  */
 class Sphere extends ProceduralMesh {
-  __loopsParam: NumberParameter
-  __radiusParam: NumberParameter
-  __sidesParam: NumberParameter
+  /**
+   * @member {NumberParameter} loopsParam - Specifies the number of subdivisions(stacks) along the `Z` axis.
+   */
+  loopsParam: NumberParameter
+
+  /**
+   * @member {NumberParameter} radiusParam - Radius of the sphere.
+   */
+  radiusParam: NumberParameter
+
+  /**
+   * @member {NumberParameter} sidesParam - Specifies the number of subdivisions around the `Z` axis.
+   */
+  sidesParam: NumberParameter
 
   /**
    * Creates an instance of Sphere.
@@ -37,11 +48,11 @@ class Sphere extends ProceduralMesh {
 
     if (isNaN(radius) || isNaN(sides) || isNaN(loops)) throw new Error('Invalid geom args')
 
-    this.__radiusParam = this.addParameter(new NumberParameter('Radius', radius)) as NumberParameter
-    this.__sidesParam = this.addParameter(
+    this.radiusParam = this.addParameter(new NumberParameter('Radius', radius)) as NumberParameter
+    this.sidesParam = this.addParameter(
       new NumberParameter('Sides', sides >= 3 ? sides : 3, [3, 200], 1)
     ) as NumberParameter
-    this.__loopsParam = this.addParameter(
+    this.loopsParam = this.addParameter(
       new NumberParameter('Loops', loops >= 3 ? loops : 3, [3, 200], 1)
     ) as NumberParameter
 
@@ -57,9 +68,9 @@ class Sphere extends ProceduralMesh {
    * @private
    */
   rebuild(): void {
-    const radius = this.__radiusParam.getValue() || 1.0
-    const nbSides = this.__sidesParam.getValue() || 12
-    const nbLoops = this.__loopsParam.getValue() || 12
+    const radius = this.radiusParam.value || 1.0
+    const nbSides = this.sidesParam.value || 12
+    const nbLoops = this.loopsParam.value || 12
 
     const numVertices = 2 + nbSides * nbLoops
     const numTris = nbSides * 2
@@ -161,9 +172,9 @@ class Sphere extends ProceduralMesh {
    * @private
    */
   resize() {
-    const radius = this.__radiusParam.getValue()
-    const nbSides = this.__sidesParam.getValue()
-    const nbLoops = this.__loopsParam.getValue()
+    const radius = this.radiusParam.value
+    const nbSides = this.sidesParam.value
+    const nbLoops = this.loopsParam.value
     if (!radius || !nbSides || !nbLoops) {
       console.warn('resize() failed')
       return

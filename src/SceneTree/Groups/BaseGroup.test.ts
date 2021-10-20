@@ -15,7 +15,7 @@ describe('BaseGroup', () => {
     const treeItem2 = new TreeItem('TreeItem')
     group.addItem(treeItem)
     group.addItem(treeItem2)
-    const group_param = <ItemSetParameter>group.getParameter('Items')
+    const group_param = group.itemsParam
     expect(group_param.getNumItems()).toBe(2)
   })
 
@@ -30,7 +30,7 @@ describe('BaseGroup', () => {
     rootItem.addChild(treeItem1)
 
     group.setPaths(['.', 'treeItem1', 'treeItem2'])
-    const group_parm = <ItemSetParameter>group.getParameter('Items')
+    const group_parm = group.itemsParam
     expect(group_parm.getItem(0)).toBe(treeItem2)
   })
 
@@ -48,7 +48,7 @@ describe('BaseGroup', () => {
 
     const event = {
       detail: 'foo',
-      propagating: true,
+      propagating: true
     }
     child.onPointerDown(event)
 

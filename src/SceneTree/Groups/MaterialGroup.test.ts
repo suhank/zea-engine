@@ -14,8 +14,8 @@ describe('MaterialGroup', () => {
     group.addItem(parent)
 
     const material = new Material('MyMaterial')
-    group.getParameter('Material').setValue(material)
+    group.materialParam.value = (material)
 
-    expect(geomItem.getParameter('Material').getValue()).toBe(material)
+    expect(geomItem.materialParam.value).toBe(material)
   })
 })

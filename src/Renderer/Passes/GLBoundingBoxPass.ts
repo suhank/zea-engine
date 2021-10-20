@@ -153,11 +153,11 @@ class GLBoundingBoxPass extends GLPass {
         this.emit('updated')
       }
     }
-    treeitem.getParameter('GlobalXfo')!.on('valueChanged', xfoChanged)
-    treeitem.getParameter('BoundingBox')!.on('valueChanged', xfoChanged)
+    treeitem.globalXfoParam.on('valueChanged', xfoChanged)
+    treeitem.boundingBoxParam.on('valueChanged', xfoChanged)
 
     if (treeitem.isVisible()) this.drawCount++
-
+    // TODO: make this a type
     this.boxes[index] = {
       treeitem,
       visibilityChanged,
@@ -182,8 +182,8 @@ class GLBoundingBoxPass extends GLPass {
     const treeitemData = this.boxes[index]
 
     treeitem.off('visibilityChanged', treeitemData.visibilityChanged)
-    treeitem.getParameter('GlobalXfo')!.off('valueChanged', treeitemData.xfoChanged)
-    treeitem.getParameter('BoundingBox')!.off('valueChanged', treeitemData.xfoChanged)
+    treeitem.globalXfoParam.off('valueChanged', treeitemData.xfoChanged)
+    treeitem.boundingBoxParam.off('valueChanged', treeitemData.xfoChanged)
 
     this.boxes[index] = null
     this.freeIndices.push(index)
@@ -206,11 +206,11 @@ class GLBoundingBoxPass extends GLPass {
    */
   __populateBoxesDataArray(treeitemData: any, index: number, dataArray: any) {
     const treeitem = treeitemData.treeitem
-    const globalXfoParam = treeitem.getParameter('GlobalXfo')
-    const geomMatParam = treeitem.getParameter('GeomMat')
+    const globalXfoParam = treeitem.globalXfoParam
+    const geomMatParam = treeitem.geomMatParam
     const color = geomMatParam ? new Color(1, 0, 0, 1) : new Color(0, 0, 1, 1)
-    const mat4 = geomMatParam ? geomMatParam.getValue() : globalXfoParam.getValue().toMat4()
-    const bbox = treeitem.getParameter('BoundingBox')!.getValue()
+    const mat4 = geomMatParam ? geomMatParam.value : globalXfoParam.value.toMat4()
+    const bbox = treeitem.boundingBoxParam.value
 
     const offset = index * pixelsPerItem * 4
     const pixel0 = new Vec4(new Float32Array(dataArray.buffer, offset * 4, 4))
@@ -260,30 +260,6 @@ class GLBoundingBoxPass extends GLPass {
     if (this.indexArrayUpdateNeeded) this.__updateIndexArray()
 
     const gl = this.__renderer!.gl
-    if (!gl.floatTexturesSupported || !gl.drawElementsInstanced) {
-      this.__modelMatrixArray = []
-      this.__treeitemDataArray = []
-      this.__tintColorArray = []
-      this.__indexArray.forEach((index: number) => {
-        const treeitemData = this.boxes[index]
-        const treeitem = treeitemData.treeitem
-        const mat4 = treeitem.getParameter('GlobalXfo')!.getValue().toMat4()
-        const ppm = treeitem.getParameter('PixelsPerMeter')!.getValue()
-        const scale = 1 / ppm
-        let flags = 0
-        if (treeitem.getParameter('AlignedToCamera')!.getValue()) flags |= 1 << 2
-        if (treeitem.getParameter('DrawOnTop')!.getValue()) flags |= 1 << 3
-        if (treeitem.getParameter('FixedSizeOnscreen')!.getValue()) flags |= 1 << 4
-        const alpha = treeitem.getParameter('Alpha')!.getValue()
-        const color = treeitem.getParameter('Color')!.getValue()
-
-        this.__modelMatrixArray[index] = mat4.asArray()
-        this.__treeitemDataArray[index] = [scale, flags, treeitemData.imageIndex, alpha]
-        this.__tintColorArray[index] = [color.r, color.g, color.b, color.a]
-      })
-      this.__updateRequested = false
-      return
-    }
 
     let size = Math.round(Math.sqrt((this.boxes.length - this.freeIndices.length) * pixelsPerItem) + 0.5)
     // Note: the following few lines need a cleanup.

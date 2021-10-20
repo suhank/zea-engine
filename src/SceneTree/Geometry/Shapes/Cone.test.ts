@@ -4,23 +4,23 @@ describe('Cone', () => {
   it('tests default parameters', () => {
     const cone = new Cone()
 
-    expect(cone.getParameter('Radius').getValue()).toBe(0.5)
-    expect(cone.getParameter('Height').getValue()).toBe(1)
-    expect(cone.getParameter('Detail').getValue()).toBe(32)
-    expect(cone.getParameter('Cap').getValue()).toBe(true)
+    expect(cone.radiusParam.value).toBe(0.5)
+    expect(cone.heightParam.value).toBe(1)
+    expect(cone.detailParam.value).toBe(32)
+    expect(cone.capParam.value).toBe(true)
   })
 
   it('updates parameters', () => {
     const cone = new Cone()
-    cone.getParameter('Radius').setValue(1)
-    cone.getParameter('Height').setValue(2)
-    cone.getParameter('Detail').setValue(16)
-    cone.getParameter('Cap').setValue(false)
+    cone.radiusParam.value = 1
+    cone.heightParam.value = 2
+    cone.detailParam.value = 16
+    cone.capParam.value = false
 
-    expect(cone.getParameter('Radius').getValue()).toBe(1)
-    expect(cone.getParameter('Height').getValue()).toBe(2)
-    expect(cone.getParameter('Detail').getValue()).toBe(16)
-    expect(cone.getParameter('Cap').getValue()).toBe(false)
+    expect(cone.radiusParam.value).toBe(1)
+    expect(cone.heightParam.value).toBe(2)
+    expect(cone.detailParam.value).toBe(16)
+    expect(cone.capParam.value).toBe(false)
   })
 
   it('saves to JSON (serialization).', () => {
@@ -35,22 +35,22 @@ describe('Cone', () => {
     const expectedOutput = {
       params: {
         Cap: {
-          value: true,
+          value: true
         },
         Detail: {
           range: [3, 200],
           step: 1,
-          value: 8,
+          value: 8
         },
         Height: {
-          value: 5,
+          value: 5
         },
         Radius: {
-          value: 2,
-        },
+          value: 2
+        }
       },
       type: 'Cone',
-      vertexAttributes: {},
+      vertexAttributes: {}
     }
 
     cone.fromJSON(expectedOutput)

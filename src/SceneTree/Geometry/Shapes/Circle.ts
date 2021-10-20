@@ -18,9 +18,20 @@ import { Vec3Attribute } from '../Vec3Attribute'
  * @extends {ProceduralLines}
  */
 class Circle extends ProceduralLines {
-  protected __angle: NumberParameter
-  protected __sides: NumberParameter
-  protected __radius: NumberParameter
+  /**
+   * @member {NumberParameter} angleParam - TODO
+   */
+  angleParam: NumberParameter
+
+  /**
+   * @member {NumberParameter} sidesParam - The number of sides that compose the circle (e.g. 3 creates a triangle)
+   */
+  sidesParam: NumberParameter
+
+  /**
+   * @member {NumberParameter} radiusParam - The radius of the circle
+   */
+  radiusParam: NumberParameter
   // topologyParams: string[]
 
   /**
@@ -34,9 +45,9 @@ class Circle extends ProceduralLines {
     this.topologyParams = []
     if (isNaN(radius) || isNaN(sides)) throw new Error('Invalid geom args')
 
-    this.__radius = this.addParameter(new NumberParameter('Radius', radius)) as NumberParameter
-    this.__angle = this.addParameter(new NumberParameter('Angle', angle)) as NumberParameter
-    this.__sides = this.addParameter(
+    this.radiusParam = this.addParameter(new NumberParameter('Radius', radius)) as NumberParameter
+    this.angleParam = this.addParameter(new NumberParameter('Angle', angle)) as NumberParameter
+    this.sidesParam = this.addParameter(
       new NumberParameter('Sides', sides >= 3 ? sides : 3, [3, 200], 1)
     ) as NumberParameter
 
@@ -48,9 +59,9 @@ class Circle extends ProceduralLines {
    * @private
    */
   rebuild(): void {
-    const segs = this.__sides.getValue() || 32
+    const segs = this.sidesParam.value || 32
     this.setNumVertices(segs)
-    const angle = this.__angle.getValue() || Math.PI * 2
+    const angle = this.angleParam.value || Math.PI * 2
     const arc = angle < Math.PI * 2
     if (arc) this.setNumSegments(segs - 1)
     else this.setNumSegments(segs)
@@ -63,9 +74,9 @@ class Circle extends ProceduralLines {
    * @private
    */
   resize(): void {
-    const radius = this.__radius.getValue() || 1.0
-    const segs = this.__sides.getValue() || 32
-    const angle = this.__angle.getValue() || Math.PI * 2
+    const radius = this.radiusParam.value || 1.0
+    const segs = this.sidesParam.value || 32
+    const angle = this.angleParam.value || Math.PI * 2
     const step = angle / segs
     const positions = <Vec3Attribute>this.getVertexAttribute('positions')
     if (positions) {

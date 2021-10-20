@@ -18,7 +18,21 @@ import { BaseItem } from '../BaseItem'
  */
 class SelectionSet extends BaseGroup {
   protected listenerIDs: Record<string, number> = {}
-  protected __highlightedParam: BooleanParameter
+
+  /**
+   * @member {BooleanParameter} highlightedParam - Whether or not the TreeItem should be highlighted.
+   */
+  highlightedParam: BooleanParameter = new BooleanParameter('Highlighted', false)
+
+  /**
+   * @member {ColorParameter} highlightColorParam - The color of the highlight.
+   */
+  highlightColorParam: ColorParameter = new ColorParameter('HighlightColor', new Color(0.5, 0.5, 1))
+
+  /**
+   * @member {NumberParameter} highlightFillParam - TODO
+   */
+  highlightFillParam: NumberParameter = new NumberParameter('HighlightFill', 0.0, [0, 1])
 
   /**
    * Creates an instance of a group.
@@ -28,18 +42,16 @@ class SelectionSet extends BaseGroup {
   constructor(name?: string) {
     super(name)
 
-    this.__highlightedParam = <BooleanParameter>this.addParameter(new BooleanParameter('Highlighted', false))
-    this.__highlightedParam.on('valueChanged', () => {
+    this.addParameter(this.highlightedParam)
+    this.highlightedParam.on('valueChanged', () => {
       this.__updateHighlight()
     })
-
-    const highlightColorParam = this.addParameter(new ColorParameter('HighlightColor', new Color(0.5, 0.5, 1)))
-    this.listenerIDs['valueChanged'] = highlightColorParam.on('valueChanged', (event) => {
+    this.addParameter(this.highlightColorParam)
+    this.listenerIDs['valueChanged'] = this.highlightColorParam.on('valueChanged', (event) => {
       this.__updateHighlight()
     })
-
-    const highlightFillParam = this.addParameter(new NumberParameter('HighlightFill', 0.0, [0, 1]))
-    highlightFillParam.on('valueChanged', () => {
+    this.addParameter(this.highlightFillParam)
+    this.highlightFillParam.on('valueChanged', () => {
       this.__updateHighlight()
     })
   }
@@ -52,7 +64,7 @@ class SelectionSet extends BaseGroup {
   __updateVisibility(): boolean {
     if (super.updateVisibility()) {
       const value = this.isVisible()
-      Array.from(this.__itemsParam.getValue()).forEach((item) => {
+      Array.from(this.itemsParam.value).forEach((item) => {
         if (item instanceof TreeItem) item.propagateVisibility(value ? 1 : -1)
       })
       return true
@@ -83,14 +95,14 @@ class SelectionSet extends BaseGroup {
   __updateHighlightHelper() {
     let highlighted = false
     let color: Color
-    if (this.getParameter('Highlighted')!.getValue() || this.isSelected()) {
+    if (this.highlightedParam.value || this.isSelected()) {
       highlighted = true
-      color = this.getParameter('HighlightColor')!.getValue()
-      color.a = this.getParameter('HighlightFill')!.getValue()
+      color = this.highlightColorParam.value
+      color.a = this.highlightFillParam.value
     }
 
     const key = 'groupItemHighlight' + this.getId()
-    Array.from(this.__itemsParam.getValue()).forEach((item) => {
+    Array.from(this.itemsParam.value).forEach((item) => {
       if (item instanceof TreeItem) {
         if (highlighted) item.addHighlight(key, color, true)
         else item.removeHighlight(key, true)
@@ -123,9 +135,9 @@ class SelectionSet extends BaseGroup {
 
     // ///////////////////////////////
     // Update the highlight
-    if (item instanceof TreeItem && this.getParameter('Highlighted')!.getValue()) {
-      const color = this.getParameter('HighlightColor')!.getValue()
-      color.a = this.getParameter('HighlightFill')!.getValue()
+    if (item instanceof TreeItem && this.highlightedParam.value) {
+      const color = this.highlightColorParam.value
+      color.a = this.highlightFillParam.value
       item.addHighlight('groupItemHighlight' + this.getId(), color, true)
     }
 
@@ -136,7 +148,7 @@ class SelectionSet extends BaseGroup {
     }
 
     if (item instanceof TreeItem) {
-      listenerIDs['BoundingBox.valueChanged'] = item.getParameter('BoundingBox')!.on('valueChanged', (event) => {
+      listenerIDs['BoundingBox.valueChanged'] = item.boundingBoxParam.on('valueChanged', (event) => {
         this.setBoundingBoxDirty()
       })
     }
@@ -152,7 +164,7 @@ class SelectionSet extends BaseGroup {
     super.unbindItem(<TreeItem>item, index)
     if (!(item instanceof TreeItem)) return
 
-    if (this.getParameter('Highlighted')!.getValue()) {
+    if (this.highlightedParam.value) {
       item.removeHighlight('groupItemHighlight' + this.getId(), true)
     }
 
@@ -173,7 +185,7 @@ class SelectionSet extends BaseGroup {
     }, true)
 
     if (item instanceof TreeItem) {
-      item.getParameter('BoundingBox')!.off('valueChanged', this.setBoundingBoxDirty)
+      item.boundingBoxParam.off('valueChanged', this.setBoundingBoxDirty)
     }
   }
 

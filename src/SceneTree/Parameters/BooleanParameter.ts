@@ -37,7 +37,7 @@ class BooleanParameter extends Parameter<boolean> implements IBinaryReader {
    * @param {Record<string, unknown>} context - The context value.
    */
   readBinary(reader: BinReader, context?: Record<string, unknown>): void {
-    this.value = reader.loadUInt8() != 0
+    this.__value = reader.loadUInt8() != 0
   }
 
   /**
@@ -48,7 +48,7 @@ class BooleanParameter extends Parameter<boolean> implements IBinaryReader {
    * @return {Record<string, any>} - Returns the json object.
    */
   toJSON(context?: Record<string, unknown>): Record<string, any> {
-    return { value: this.value }
+    return { value: this.__value}
   }
 
   /**
@@ -58,7 +58,7 @@ class BooleanParameter extends Parameter<boolean> implements IBinaryReader {
    * @param {Record<string, unknown>} context - The context value.
    */
   fromJSON(j: Record<string, any>, context?: Record<string, unknown>): void {
-    this.value = <boolean>j.value
+    this.__value = <boolean>j.value
     this.emit('valueChanged', { mode: 0 })
   }
 
@@ -69,7 +69,7 @@ class BooleanParameter extends Parameter<boolean> implements IBinaryReader {
    * @return {BooleanParameter} - Returns a new cloned parameter.
    */
   clone(): BooleanParameter {
-    return new BooleanParameter(this.name, this.value)
+    return new BooleanParameter(this.name, this.__value)
   }
 }
 

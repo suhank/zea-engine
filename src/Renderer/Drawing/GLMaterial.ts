@@ -1,5 +1,5 @@
 import { Material } from '../../SceneTree/Material'
-import { EventEmitter } from '../../Utilities/index'
+import { EventEmitter } from '../../Utilities/EventEmitter'
 import { GLShader } from '../GLShader'
 import { MaterialShaderBinding } from './MaterialShaderBinding'
 

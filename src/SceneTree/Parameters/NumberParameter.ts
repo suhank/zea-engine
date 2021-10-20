@@ -79,7 +79,7 @@ class NumberParameter extends Parameter<number> implements IBinaryReader {
    * @return {Record<string, any>} - Returns the json object.
    */
   toJSON(context?: Record<string, unknown>): Record<string, unknown> {
-    const j: Record<string, unknown> = { value: this.value }
+    const j: Record<string, unknown> = { value: this.__value }
     if (this.range) j.range = this.range
     if (this.step) j.step = this.step
     return j
@@ -92,7 +92,7 @@ class NumberParameter extends Parameter<number> implements IBinaryReader {
    * @param {Record<string, unknown>} context - The context value.
    */
   fromJSON(j: Record<string, unknown>, context?: Record<string, unknown>): void {
-    this.value = j.value as number
+    this.__value = j.value as number
     if (j.range) this.range = j.range as number[]
     if (j.step) this.step = j.step as number
   }
@@ -104,7 +104,7 @@ class NumberParameter extends Parameter<number> implements IBinaryReader {
    * @param {Record<string, unknown>} context - The context value.
    */
   readBinary(reader: BinReader, context?: Record<string, unknown>): void {
-    this.value = reader.loadFloat32()
+    this.__value = reader.loadFloat32()
   }
 
   // ////////////////////////////////////////
@@ -117,7 +117,7 @@ class NumberParameter extends Parameter<number> implements IBinaryReader {
    * @return {NumberParameter} - Returns a new number parameter.
    */
   clone(): NumberParameter {
-    return new NumberParameter(this.name, this.value, this.range, this.step)
+    return new NumberParameter(this.name, this.__value, this.range, this.step)
   }
 }
 

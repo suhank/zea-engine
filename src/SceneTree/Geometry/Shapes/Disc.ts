@@ -19,8 +19,15 @@ import { Vec3Attribute } from '../Vec3Attribute'
  * @extends {ProceduralMesh}
  */
 class Disc extends ProceduralMesh {
-  protected __radiusParam: NumberParameter
-  protected __sidesParam: NumberParameter
+  /**
+   * @member {NumberParameter} radiusParam - Specifies the radius of the disc.
+   */
+  radiusParam: NumberParameter
+
+  /**
+   * @member {NumberParameter} sidesParam - Specifies the resolution, or the disc subdivisions around `Z` axis.
+   */
+  sidesParam: NumberParameter
   // topologyParams: string[]
 
   /**
@@ -34,8 +41,8 @@ class Disc extends ProceduralMesh {
     this.topologyParams = []
     if (isNaN(radius) || isNaN(sides)) throw new Error('Invalid geom args')
 
-    this.__radiusParam = this.addParameter(new NumberParameter('Radius', radius)) as NumberParameter
-    this.__sidesParam = this.addParameter(
+    this.radiusParam = this.addParameter(new NumberParameter('Radius', radius)) as NumberParameter
+    this.sidesParam = this.addParameter(
       new NumberParameter('Sides', sides >= 3 ? sides : 3, [3, 200], 1)
     ) as NumberParameter
 
@@ -50,7 +57,7 @@ class Disc extends ProceduralMesh {
    * @private
    */
   rebuild(): void {
-    const nbSides = this.__sidesParam.getValue() || 32
+    const nbSides = this.sidesParam.value || 32
 
     this.setNumVertices(nbSides + 1)
     this.setFaceCounts([nbSides])
@@ -99,8 +106,8 @@ class Disc extends ProceduralMesh {
    * @private
    */
   resize(): void {
-    const nbSides = this.__sidesParam.getValue() || 32
-    const radius = this.__radiusParam.getValue() || 0.5
+    const nbSides = this.sidesParam.value || 32
+    const radius = this.radiusParam.value || 0.5
     const positions = <Vec3Attribute>this.getVertexAttribute('positions')
     if (positions) {
       for (let i = 0; i < nbSides; i++) {

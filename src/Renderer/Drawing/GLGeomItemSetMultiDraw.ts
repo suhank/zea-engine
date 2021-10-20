@@ -467,7 +467,7 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
     const indices: any[] = []
     this.visibleItems.forEach((glGeomItem, index) => {
       if (glGeomItem) {
-        const mat4 = glGeomItem.geomItem.getGeomMat4()
+        const mat4 = glGeomItem.geomItem.geomMatParam.value
         const dist = mat4.translation.distanceTo(viewPos)
         distances.push(dist)
         indices.push(index)

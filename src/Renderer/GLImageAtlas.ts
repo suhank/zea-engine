@@ -143,7 +143,7 @@ class GLImageAtlas extends GLRenderTarget {
   /**
    * The getSubImage method.
    * @param {number} index - The index value.
-   * @return {BaseImage} - The image value.
+   * @return {GLTexture2D} - The image value.
    */
   getSubImage(index: number): GLTexture2D {
     return this.__subImages[index]

@@ -19,7 +19,10 @@ import { Version } from './Version'
  * @extends AssetItem
  */
 class VLAAsset extends AssetItem {
-  protected __fileParam: FilePathParameter
+  /**
+   * @member {FilePathParameter} fileParam - Used to specify the path to the file.
+   */
+  fileParam: FilePathParameter = new FilePathParameter('FilePath')
   protected __datafileLoaded: any
   /**
    * Create a VLA asset.
@@ -35,12 +38,11 @@ class VLAAsset extends AssetItem {
       this.emit('geomsLoaded')
     })
 
-    this.__fileParam = <FilePathParameter>this.addParameter(new FilePathParameter('FilePath'))
-
     this.addParameterDeprecationMapping('DataFilePath', 'FilePath') // Note: migrating from 'DataFilePath' to 'FilePath'
 
-    this.__fileParam.on('valueChanged', () => {
-      const url = this.__fileParam.getUrl()
+    this.addParameter(this.fileParam)
+    this.fileParam.on('valueChanged', () => {
+      const url = this.fileParam.getUrl()
       this.load(url)
     })
   }
@@ -168,7 +170,7 @@ class VLAAsset extends AssetItem {
       this.__datafileLoaded = loadAssetJSON
       const filePathJSON = j.params.DataFilePath
       delete j.params.DataFilePath
-      this.__fileParam.fromJSON(filePathJSON, context)
+      this.fileParam.fromJSON(filePathJSON, context)
     } else {
       loadAssetJSON()
     }

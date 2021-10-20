@@ -19,10 +19,25 @@ import { Vec3Attribute } from '../Vec3Attribute'
  * @extends {ProceduralPoints}
  */
 class PointGrid extends ProceduralPoints {
-  protected __x: NumberParameter
-  protected __xDivisions: NumberParameter
-  protected __y: NumberParameter
-  protected __yDivisions: NumberParameter
+  /**
+   * @member {NumberParameter} sizeXParam - Length of the grid along the `X` axis.
+   */
+  sizeXParam: NumberParameter
+
+  /**
+   * @member {NumberParameter} divisionsXParam - Number of divisions along `X` axis
+   */
+  divisionsXParam: NumberParameter
+
+  /**
+   * @member {NumberParameter} sizeYParam - Length of the grid along the `Y` axis.
+   */
+  sizeYParam: NumberParameter
+
+  /**
+   * @member {NumberParameter} divisionsYParam - Number of divisions along `Y` axis
+   */
+  divisionsYParam: NumberParameter
   // topologyParams: string[]
 
   /**
@@ -38,10 +53,10 @@ class PointGrid extends ProceduralPoints {
     super()
     this.topologyParams = []
     if (isNaN(x) || isNaN(y) || isNaN(xDivisions) || isNaN(yDivisions)) throw new Error('Invalid geom args')
-    this.__x = this.addParameter(new NumberParameter('X', x)) as NumberParameter
-    this.__y = this.addParameter(new NumberParameter('Y', y)) as NumberParameter
-    this.__xDivisions = this.addParameter(new NumberParameter('XDivisions', xDivisions)) as NumberParameter
-    this.__yDivisions = this.addParameter(new NumberParameter('YDivisions', yDivisions)) as NumberParameter
+    this.sizeXParam = this.addParameter(new NumberParameter('X', x)) as NumberParameter
+    this.sizeYParam = this.addParameter(new NumberParameter('Y', y)) as NumberParameter
+    this.divisionsXParam = this.addParameter(new NumberParameter('XDivisions', xDivisions)) as NumberParameter
+    this.divisionsYParam = this.addParameter(new NumberParameter('YDivisions', yDivisions)) as NumberParameter
 
     if (addTextureCoords) this.addVertexAttribute('texCoords', new Vec2Attribute())
 
@@ -54,8 +69,8 @@ class PointGrid extends ProceduralPoints {
    * @private
    */
   rebuild(): void {
-    const xDivisions = this.__xDivisions.getValue() || 1
-    const yDivisions = this.__yDivisions.getValue() || 1
+    const xDivisions = this.divisionsXParam.value || 1
+    const yDivisions = this.divisionsYParam.value || 1
     this.setNumVertices(xDivisions * yDivisions)
 
     const texCoords = <Vec2Attribute>this.getVertexAttribute('texCoords')
@@ -76,10 +91,10 @@ class PointGrid extends ProceduralPoints {
    * @private
    */
   resize(): void {
-    const xDivisions = this.__xDivisions.getValue() || 1
-    const yDivisions = this.__yDivisions.getValue() || 1
-    const x = this.__x.getValue() || 1.0
-    const y = this.__y.getValue() || 1.0
+    const xDivisions = this.divisionsXParam.value || 1
+    const yDivisions = this.divisionsYParam.value || 1
+    const x = this.sizeXParam.value || 1.0
+    const y = this.sizeYParam.value || 1.0
 
     const positions = <Vec3Attribute>this.getVertexAttribute('positions')
     if (!positions) return

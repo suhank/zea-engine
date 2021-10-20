@@ -4,24 +4,24 @@ describe('PointGrid', () => {
   it('tests default parameters', () => {
     const pointGrid = new PointGrid()
 
-    expect(pointGrid.getParameter('X').getValue()).toBe(1)
-    expect(pointGrid.getParameter('Y').getValue()).toBe(1)
-    expect(pointGrid.getParameter('XDivisions').getValue()).toBe(1)
-    expect(pointGrid.getParameter('YDivisions').getValue()).toBe(1)
+    expect(pointGrid.sizeXParam.value).toBe(1)
+    expect(pointGrid.sizeYParam.value).toBe(1)
+    expect(pointGrid.divisionsXParam.value).toBe(1)
+    expect(pointGrid.divisionsYParam.value).toBe(1)
   })
 
   it('updates parameters', () => {
     const pointGrid = new PointGrid()
 
-    pointGrid.getParameter('X').setValue(5)
-    pointGrid.getParameter('Y').setValue(5)
-    pointGrid.getParameter('XDivisions').setValue(10)
-    pointGrid.getParameter('YDivisions').setValue(10)
+    pointGrid.sizeXParam.value = 5
+    pointGrid.sizeYParam.value = 5
+    pointGrid.divisionsXParam.value = 10
+    pointGrid.divisionsYParam.value = 10
 
-    expect(pointGrid.getParameter('X').getValue()).toBe(5)
-    expect(pointGrid.getParameter('Y').getValue()).toBe(5)
-    expect(pointGrid.getParameter('XDivisions').getValue()).toBe(10)
-    expect(pointGrid.getParameter('YDivisions').getValue()).toBe(10)
+    expect(pointGrid.sizeXParam.value).toBe(5)
+    expect(pointGrid.sizeYParam.value).toBe(5)
+    expect(pointGrid.divisionsXParam.value).toBe(10)
+    expect(pointGrid.divisionsYParam.value).toBe(10)
   })
 
   // There's an issue with flags, that are preventing parameters to be exported.
@@ -37,20 +37,20 @@ describe('PointGrid', () => {
     const inputJSON = {
       params: {
         X: {
-          value: 3,
+          value: 3
         },
         XDivisions: {
-          value: 6,
+          value: 6
         },
         Y: {
-          value: 3,
+          value: 3
         },
         YDivisions: {
-          value: 6,
-        },
+          value: 6
+        }
       },
       type: 'PointGrid',
-      vertexAttributes: {},
+      vertexAttributes: {}
     }
     pointGrid.fromJSON(inputJSON)
 

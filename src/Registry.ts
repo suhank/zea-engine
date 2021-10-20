@@ -72,7 +72,7 @@ class Registry {
    * The factory function that construct the class registered under the given name.
    *
    * @param {string} className - Name of the registered class
-   * @return { Record<string, unknown> | unknown } - Instantiated object of the specified class
+   * @return {BaseClass} - Instantiated object of the specified class
    */
   static constructClass(className: string): BaseClass {
     const classDefinition = classDefinitions[registeredClasses[className]]

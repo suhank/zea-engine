@@ -96,9 +96,6 @@ class CameraManipulator extends BaseTool {
   protected __velocity: Vec3
   protected __prevVelocityIntegrationTime: number
   protected __ongoingTouches: Record<string, any>
-  protected __orbitRateParam: Parameter<number>
-  protected __dollySpeedParam: Parameter<number>
-  protected __mouseWheelDollySpeedParam: Parameter<number>
 
   protected __orbitTarget: any
   protected prevCursor: any
@@ -109,6 +106,38 @@ class CameraManipulator extends BaseTool {
 
   protected __mouseWheelZoomCount: number = 0
   protected __mouseWheelZoomId: number = -1
+
+  
+  /**
+   * @member {NumberParameter} __orbitRateParam - The rate at which mouse or touch interactions are translated camera orientation changes.
+  */
+  __orbitRateParam: NumberParameter = new NumberParameter('OrbitRate', SystemDesc.isMobileDevice ? 0.5 : 1)
+  
+  /**
+   * @member {NumberParameter} __dollySpeedParam - The rate at which the mouse button or touch interactions are translated camera dolly movement.
+  */
+  __dollySpeedParam: NumberParameter = new NumberParameter('DollySpeed', 0.02)
+  
+  /**
+   * @member {NumberParameter} __mouseWheelDollySpeedParam - The rate at which the mouse wheel interactions are translated camera dolly movement.
+  */
+  __mouseWheelDollySpeedParam: NumberParameter = new NumberParameter('MouseWheelDollySpeed', 0.1)
+  
+  /**
+   * @member {BooleanParameter} OrbitAroundCursor - TODO
+  */
+  OrbitAroundCursor: BooleanParameter = new BooleanParameter('OrbitAroundCursor', true)
+  
+  /**
+   * @member {NumberParameter} walkSpeedParam - TODO
+  */
+  walkSpeedParam: NumberParameter = new NumberParameter('WalkSpeed', 5) // Value is in meters/second
+  
+  /**
+   * @member {BooleanParameter} walkModeCollisionDetection - TODO
+  */
+  walkModeCollisionDetection: BooleanParameter = new BooleanParameter('WalkModeCollisionDetection', false)
+
   /**
    * Create a camera, mouse and keyboard
    * @param {Record<any,any>} appData - The object containing the scene and the renderer.
@@ -132,12 +161,12 @@ class CameraManipulator extends BaseTool {
     this.__prevVelocityIntegrationTime = -1
     this.__ongoingTouches = {}
 
-    this.__orbitRateParam = this.addParameter(new NumberParameter('OrbitRate', SystemDesc.isMobileDevice ? 0.5 : 1))
-    this.__dollySpeedParam = this.addParameter(new NumberParameter('DollySpeed', 0.02))
-    this.addParameter(new BooleanParameter('OrbitAroundCursor', true))
-    this.__mouseWheelDollySpeedParam = this.addParameter(new NumberParameter('MouseWheelDollySpeed', 0.1))
-    this.addParameter(new NumberParameter('WalkSpeed', 5)) // Value is in meters/second
-    this.addParameter(new BooleanParameter('WalkModeCollisionDetection', false))
+    this.addParameter(this.__orbitRateParam)
+    this.addParameter(this.__dollySpeedParam)
+    this.addParameter(this.__mouseWheelDollySpeedParam)
+    this.addParameter(this.OrbitAroundCursor)
+    this.addParameter(this.walkSpeedParam)
+    this.addParameter(this.walkModeCollisionDetection)
 
     this.addParameterDeprecationMapping('orbitRate', 'OrbitRate')
     this.addParameterDeprecationMapping('dollySpeed', 'DollySpeed')
@@ -190,9 +219,9 @@ class CameraManipulator extends BaseTool {
     const { viewport } = event
     const camera = viewport.getCamera()
 
-    const orbitRate = this.__orbitRateParam.getValue()
+    const orbitRate = this.__orbitRateParam.value
 
-    const globalXfo = camera.getParameter('GlobalXfo')!.getValue()
+    const globalXfo = camera.globalXfoParam.value
 
     // Orbit
     const orbit = new Quat()
@@ -204,7 +233,7 @@ class CameraManipulator extends BaseTool {
     pitch.rotateX((dragVec.y / viewport.getHeight()) * Math.PI * orbitRate)
     globalXfo.ori.multiplyInPlace(pitch)
 
-    camera.getParameter('GlobalXfo').setValue(globalXfo)
+    camera.globalXfoParam.value = globalXfo
   }
 
   /**
@@ -217,9 +246,9 @@ class CameraManipulator extends BaseTool {
     const { viewport } = event
     const camera = viewport.getCamera()
 
-    const orbitRate = this.__orbitRateParam.getValue()
+    const orbitRate = this.__orbitRateParam.value
 
-    const globalXfo = camera.getParameter('GlobalXfo')!.getValue()
+    const globalXfo = camera.globalXfoParam.value
     const cameraTargetOffset = globalXfo.ori.inverse().rotateVec3(globalXfo.tr.subtract(this.__orbitTarget))
 
     // Orbit
@@ -234,7 +263,7 @@ class CameraManipulator extends BaseTool {
 
     globalXfo.tr = this.__orbitTarget.add(globalXfo.ori.rotateVec3(cameraTargetOffset))
 
-    camera.getParameter('GlobalXfo').setValue(globalXfo)
+    camera.globalXfoParam.value = globalXfo
   }
 
   /**
@@ -246,9 +275,9 @@ class CameraManipulator extends BaseTool {
   tumbler(event: Record<string, any>, dragVec: Vec2) {
     const { viewport } = event
     const camera = viewport.getCamera()
-    const orbitRate = this.__orbitRateParam.getValue()
+    const orbitRate = this.__orbitRateParam.value
 
-    const globalXfo = camera.getParameter('GlobalXfo')!.getValue()
+    const globalXfo = camera.globalXfoParam.value
     const xVec = globalXfo.ori.getXaxis()
     const yVec = globalXfo.ori.getYaxis()
     const zVec = globalXfo.ori.getZaxis()
@@ -266,7 +295,7 @@ class CameraManipulator extends BaseTool {
 
     globalXfo.tr = this.__orbitTarget.add(globalXfo.ori.rotateVec3(cameraTargetOffset))
 
-    camera.getParameter('GlobalXfo').setValue(globalXfo)
+    camera.globalXfoParam.value = globalXfo
   }
 
   /**
@@ -278,9 +307,9 @@ class CameraManipulator extends BaseTool {
   trackball(event: Record<string, any>, dragVec: Vec2) {
     const { viewport } = event
     const camera = viewport.getCamera()
-    const orbitRate = this.__orbitRateParam.getValue()
+    const orbitRate = this.__orbitRateParam.value
 
-    const globalXfo = camera.getParameter('GlobalXfo')!.getValue()
+    const globalXfo = camera.globalXfoParam.value
     const xVec = globalXfo.ori.getXaxis()
     const yVec = globalXfo.ori.getYaxis()
     const zVec = globalXfo.ori.getZaxis()
@@ -299,7 +328,7 @@ class CameraManipulator extends BaseTool {
 
     globalXfo.tr = this.__orbitTarget.add(globalXfo.ori.rotateVec3(cameraTargetOffset))
 
-    camera.getParameter('GlobalXfo').setValue(globalXfo)
+    camera.globalXfoParam.value = globalXfo
   }
 
   /**
@@ -332,8 +361,8 @@ class CameraManipulator extends BaseTool {
       delta.tr.addInPlace(yAxis.scale((dragVec.y / viewport.getHeight()) * cameraPlaneHeight))
     }
 
-    const cameraXfo = camera.getParameter('GlobalXfo')!.getValue()
-    camera.getParameter('GlobalXfo').setValue(cameraXfo.multiply(delta))
+    const cameraXfo = camera.globalXfoParam.value
+    camera.globalXfoParam.value = cameraXfo.multiply(delta)
   }
 
   /**
@@ -347,14 +376,14 @@ class CameraManipulator extends BaseTool {
     const focalDistance = camera.getFocalDistance()
 
     const applyMovement = () => {
-      const dollyDist = dragVec.y * this.__dollySpeedParam.getValue() * focalDistance
+      const dollyDist = dragVec.y * this.__dollySpeedParam.value * focalDistance
       const delta = new Xfo()
       delta.tr.set(0, 0, dollyDist)
-      const globalXfo = camera.getParameter('GlobalXfo')!.getValue()
-      camera.getParameter('GlobalXfo').setValue(globalXfo.multiply(delta))
+      const globalXfo = camera.globalXfoParam.value
+      camera.globalXfoParam.value = globalXfo.multiply(delta)
     }
     const applyViewScale = () => {
-      const dollyDist = dragVec.y * this.__dollySpeedParam.getValue()
+      const dollyDist = dragVec.y * this.__dollySpeedParam.value
       const viewHeight = camera.getFrustumHeight()
       const zoomDist = viewHeight * dollyDist
       camera.setFrustumHeight(viewHeight + zoomDist)
@@ -381,8 +410,8 @@ class CameraManipulator extends BaseTool {
 
     const { viewport } = event
     const camera = viewport.getCamera()
-    const xfo = camera.getParameter('GlobalXfo')!.getValue()
-    const orbitAroundCursor = this.getParameter('OrbitAroundCursor')!.getValue()
+    const xfo = camera.globalXfoParam.value
+    const orbitAroundCursor = this.OrbitAroundCursor.value
     if (event.intersectionData != undefined && orbitAroundCursor) {
       this.__orbitTarget = event.intersectionData.intersectionPos
       const vec = xfo.inverse().transformVec3(event.intersectionData.intersectionPos)
@@ -423,7 +452,7 @@ class CameraManipulator extends BaseTool {
     const initalMode = this.__manipulationState
     let i = 0
     const applyMovement = () => {
-      const prevGlobalXfo = camera.getParameter('GlobalXfo')!.getValue()
+      const prevGlobalXfo = camera.globalXfoParam.value
       const initialDist = camera.getFocalDistance()
       const dir = target.subtract(prevGlobalXfo.tr)
       const currDist = <number>dir.normalizeInPlace()
@@ -489,7 +518,7 @@ class CameraManipulator extends BaseTool {
       }
 
       camera.setFocalDistance(initialDist + (currDist - initialDist) * t)
-      camera.getParameter('GlobalXfo')!.setValue(globalXfo)
+      camera.globalXfoParam.value = globalXfo
 
       i++
       if (i <= count) {
@@ -520,7 +549,7 @@ class CameraManipulator extends BaseTool {
     const count = Math.round(duration / 20) // each step is 20ms
     let i = 0
     const applyMovement = () => {
-      const initialGlobalXfo = camera.getParameter('GlobalXfo')!.getValue()
+      const initialGlobalXfo = camera.globalXfoParam.value
       const initialTarget = camera.getTargetPosition()
 
       // With each iteration we get closer to our goal
@@ -565,7 +594,7 @@ class CameraManipulator extends BaseTool {
       ) {
         const { viewport } = event
         const camera = viewport.getCamera()
-        const cameraGlobalXfo = camera.getParameter('GlobalXfo')!.getValue()
+        const cameraGlobalXfo = camera.globalXfoParam.value
         const aimTarget = cameraGlobalXfo.tr.add(event.pointerRay.dir.scale(event.intersectionData.dist))
         this.aimFocus(camera, aimTarget)
         // Note: Collab can use these events to guide users attention.
@@ -753,8 +782,8 @@ class CameraManipulator extends BaseTool {
           break
       }
 
-      const globalXfo = camera.getParameter('GlobalXfo')!.getValue()
-      camera.getParameter('GlobalXfo').setValue(globalXfo.multiply(delta))
+      const globalXfo = camera.globalXfoParam.value
+      camera.globalXfoParam.value = globalXfo.multiply(delta)
 
       touchData0.pos = touch0Pos
       touchData1.pos = touch1Pos
@@ -780,7 +809,7 @@ class CameraManipulator extends BaseTool {
         ) {
           const { viewport } = event
           const camera = viewport.getCamera()
-          const cameraGlobalXfo = camera.getParameter('GlobalXfo')!.getValue()
+          const cameraGlobalXfo = camera.globalXfoParam.value
           const aimTarget = cameraGlobalXfo.tr.add(event.pointerRay.dir.scale(event.intersectionData.dist))
           this.aimFocus(camera, aimTarget)
 
@@ -850,9 +879,9 @@ class CameraManipulator extends BaseTool {
   onWheel(event: Record<string, any>) {
     const { viewport } = event
     const camera = viewport.getCamera()
-    const mouseWheelDollySpeed = this.__mouseWheelDollySpeedParam.getValue()
+    const mouseWheelDollySpeed = this.__mouseWheelDollySpeedParam.value
     const modulator = event.shiftKey ? 0.1 : 0.5
-    const xfo = camera.getParameter('GlobalXfo')!.getValue()
+    const xfo = camera.globalXfoParam.value
 
     let dir: Vec3
     if (!camera.isOrthographic()) {
@@ -876,7 +905,7 @@ class CameraManipulator extends BaseTool {
       xfo.tr.addInPlace(dir.scale(zoomDist))
 
       camera.setFocalDistance(focalDistance + zoomDist)
-      camera.getParameter('GlobalXfo').setValue(xfo)
+      camera.globalXfoParam.value = xfo
 
       this.__mouseWheelZoomCount++
       if (this.__mouseWheelZoomCount < steps) {
@@ -898,7 +927,7 @@ class CameraManipulator extends BaseTool {
         dir.subtractInPlace(zAxis.scale(dir.dot(zAxis)))
 
         xfo.tr.addInPlace(dir.scale(zoomDist / (frustumHeight + zoomDist)))
-        camera.getParameter('GlobalXfo').setValue(xfo)
+        camera.globalXfoParam.value = xfo
       }
 
       this.__mouseWheelZoomCount++
@@ -942,7 +971,7 @@ class CameraManipulator extends BaseTool {
     const time = performance.now()
     if (this.__prevVelocityIntegrationTime > 0) {
       const timeDelta = (time - this.__prevVelocityIntegrationTime) / 1000
-      const speed = this.getParameter('WalkSpeed')!.getValue()
+      const speed = this.walkSpeedParam.value
       // movement.tr = this.__velocity.normalize().scale(speed * timeDelta)
 
       if (speed > 0.0) {
@@ -952,11 +981,11 @@ class CameraManipulator extends BaseTool {
         // Calculate where we might be soon
         const movement = new Xfo()
         movement.tr = this.__velocity.normalize().scale(speed * timeDelta)
-        const cameraXfo = camera.getParameter('GlobalXfo')!.getValue()
+        const cameraXfo = camera.globalXfoParam.value
 
         const newXfo = cameraXfo.multiply(movement)
 
-        const collisionDetection = this.getParameter('WalkModeCollisionDetection')!.getValue()
+        const collisionDetection = this.walkModeCollisionDetection.value
         if (collisionDetection) {
           // Raycast from 1.5 meter up
           const headHeight = 1.5
@@ -978,7 +1007,7 @@ class CameraManipulator extends BaseTool {
             newXfo.tr = ray.start.add(ray.dir.scale(avgDist - headHeight))
           }
         }
-        camera.getParameter('GlobalXfo').setValue(newXfo)
+        camera.globalXfoParam.value = newXfo
       }
     }
 

@@ -4,34 +4,34 @@ describe('Cylinder', () => {
   it('tests default parameters', () => {
     const cylinder = new Cylinder()
 
-    expect(cylinder.getParameter('Radius').getValue()).toBe(0.5)
-    expect(cylinder.getParameter('Height').getValue()).toBe(1)
-    expect(cylinder.getParameter('Sides').getValue()).toBe(32)
-    expect(cylinder.getParameter('Loops').getValue()).toBe(2)
-    expect(cylinder.getParameter('Caps').getValue()).toBeTruthy()
-    expect(cylinder.getParameter('BaseZAtZero').getValue()).toBeFalsy()
+    expect(cylinder.radiusParam.value).toBe(0.5)
+    expect(cylinder.heightParam.value).toBe(1)
+    expect(cylinder.sidesParam.value).toBe(32)
+    expect(cylinder.loopsParam.value).toBe(2)
+    expect(cylinder.capsParam.value).toBeTruthy()
+    expect(cylinder.baseZAtZeroParam.value).toBeFalsy()
   })
 
   it.skip('updates parameters', () => {
     const cylinder = new Cylinder()
 
-    cylinder.getParameter('Sides').setValue(16)
-    expect(cylinder.getParameter('Sides').getValue()).toBe(16)
+    cylinder.sidesParam.value = 16
+    expect(cylinder.sidesParam.value).toBe(16)
 
-    cylinder.getParameter('Radius').setValue(3)
-    expect(cylinder.getParameter('Radius').getValue()).toBe(3)
+    cylinder.radiusParam.value = 3
+    expect(cylinder.radiusParam.value).toBe(3)
 
-    cylinder.getParameter('Height').setValue(6)
-    expect(cylinder.getParameter('Height').getValue()).toBe(6)
+    cylinder.heightParam.value = 6
+    expect(cylinder.heightParam.value).toBe(6)
 
-    cylinder.getParameter('Loops').setValue(3)
-    expect(cylinder.getParameter('Loops').getValue()).toBe(3)
+    cylinder.loopsParam.value = 3
+    expect(cylinder.loopsParam.value).toBe(3)
 
-    cylinder.getParameter('Caps').setValue(false)
-    expect(cylinder.getParameter('Caps').getValue()).toBeFalsy()
+    cylinder.capsParam.value = false
+    expect(cylinder.capsParam.value).toBeFalsy()
 
-    cylinder.getParameter('BaseZAtZero').setValue(true)
-    expect(cylinder.getParameter('BaseZAtZero').getValue()).toBeTruthy()
+    cylinder.baseZAtZeroParam.value = true
+    expect(cylinder.baseZAtZeroParam.value).toBeTruthy()
   })
 
   it('saves to JSON (serialization).', () => {
@@ -41,30 +41,30 @@ describe('Cylinder', () => {
     expect(outputJSON).toEqual({
       params: {
         BaseZAtZero: {
-          value: false,
+          value: false
         },
         Caps: {
-          value: true,
+          value: true
         },
         Height: {
-          value: 0.2,
+          value: 0.2
         },
         Loops: {
           range: [1, 200],
           step: 1,
-          value: 2,
+          value: 2
         },
         Radius: {
-          value: 5,
+          value: 5
         },
         Sides: {
           range: [3, 200],
           step: 1,
-          value: 32,
-        },
+          value: 32
+        }
       },
       type: 'Cylinder',
-      vertexAttributes: {},
+      vertexAttributes: {}
     })
   })
 
@@ -73,30 +73,30 @@ describe('Cylinder', () => {
     const inputJSON = {
       params: {
         BaseZAtZero: {
-          value: false,
+          value: false
         },
         Caps: {
-          value: true,
+          value: true
         },
         Height: {
-          value: 0.2,
+          value: 0.2
         },
         Loops: {
           range: [1, 200],
           step: 1,
-          value: 2,
+          value: 2
         },
         Radius: {
-          value: 5,
+          value: 5
         },
         Sides: {
           range: [3, 200],
           step: 1,
-          value: 32,
-        },
+          value: 32
+        }
       },
       type: 'Cylinder',
-      vertexAttributes: {},
+      vertexAttributes: {}
     }
     cylinder.fromJSON(inputJSON)
 

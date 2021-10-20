@@ -4,14 +4,14 @@ describe('Cross', () => {
   it('tests default parameters', () => {
     const cross = new Cross()
 
-    expect(cross.getParameter('Size').getValue()).toBe(1)
+    expect(cross.sizeParam.value).toBe(1)
   })
 
   it('updates parameters', () => {
     const cross = new Cross()
-    cross.getParameter('Size').setValue(5)
+    cross.sizeParam.value = 5
 
-    expect(cross.getParameter('Size').getValue()).toBe(5)
+    expect(cross.sizeParam.value).toBe(5)
   })
 
   it('saves to JSON (serialization).', () => {
@@ -21,7 +21,7 @@ describe('Cross', () => {
     expect(outputJSON).toEqual({
       params: { Size: { value: 4 } },
       type: 'Cross',
-      vertexAttributes: {},
+      vertexAttributes: {}
     })
   })
 
@@ -30,7 +30,7 @@ describe('Cross', () => {
     cross.fromJSON({
       params: { Size: { value: 4 } },
       type: 'Cross',
-      vertexAttributes: {},
+      vertexAttributes: {}
     })
 
     const newCross = new Cross(4)

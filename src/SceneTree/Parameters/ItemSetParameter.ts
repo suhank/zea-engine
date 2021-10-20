@@ -43,7 +43,7 @@ class ItemSetParameter extends Parameter<Set<BaseItem>> {
    */
   getItem(index: number): BaseItem | undefined {
     // if (!this.__items) return undefined
-    return Array.from(this.value)[index]
+    return Array.from(this.__value)[index]
   }
 
   /**
@@ -58,9 +58,9 @@ class ItemSetParameter extends Parameter<Set<BaseItem>> {
       return
     }
 
-    this.value.add(item)
+    this.__value.add(item)
 
-    const index = Array.from(this.value).indexOf(item)
+    const index = Array.from(this.__value).indexOf(item)
     this.emit('itemAdded', { item, index })
     if (emitValueChanged) this.emit('valueChanged', {})
     return index
@@ -85,8 +85,8 @@ class ItemSetParameter extends Parameter<Set<BaseItem>> {
    * @return {BaseItem} - The return value.
    */
   removeItem(index: number, emitValueChanged = true): BaseItem | void {
-    const item = Array.from(this.value)[index]
-    this.value.delete(item)
+    const item = Array.from(this.__value)[index]
+    this.__value.delete(item)
     this.emit('itemRemoved', { item, index })
     if (emitValueChanged) this.emit('valueChanged', {})
     return item
@@ -98,7 +98,7 @@ class ItemSetParameter extends Parameter<Set<BaseItem>> {
    * @param {boolean} emit - The emit param.
    */
   setItems(items: Set<BaseItem>, emit = true): void {
-    const values = Array.from(this.value)
+    const values = Array.from(this.__value)
     for (let i = values.length - 1; i >= 0; i--) {
       const item = values[i]
       if (!items.has(item)) {
@@ -106,7 +106,7 @@ class ItemSetParameter extends Parameter<Set<BaseItem>> {
       }
     }
     for (const item of items) {
-      if (!this.value.has(item)) {
+      if (!this.__value.has(item)) {
         this.addItem(item, false)
       }
     }
@@ -118,7 +118,7 @@ class ItemSetParameter extends Parameter<Set<BaseItem>> {
    * @param {boolean} emit - The emit value.
    */
   clearItems(emitValueChanged = true): void {
-    this.value.clear()
+    this.__value.clear()
     if (emitValueChanged) this.emit('valueChanged', {})
   }
 
@@ -127,7 +127,7 @@ class ItemSetParameter extends Parameter<Set<BaseItem>> {
    * @return {number} - The return value.
    */
   getNumItems(): number {
-    return this.value.size // might be faster
+    return this.__value.size // might be faster
   }
 
   // ////////////////////////////////////////
@@ -139,11 +139,11 @@ class ItemSetParameter extends Parameter<Set<BaseItem>> {
    * @return {Record<string, any>} - The return value.
    */
   toJSON(context?: Record<string, any>): Record<string, any> {
-    if (!this.value) this.value = new Set()
+    if (!this.__value) this.__value = new Set()
 
     const items = []
     if (context) {
-      for (const item of this.value) {
+      for (const item of this.__value) {
         // TODO: Make relative path...
         items.push(item.getPath())
       }
@@ -163,7 +163,7 @@ class ItemSetParameter extends Parameter<Set<BaseItem>> {
     if (context) {
       for (const itemPath in j.value) {
         const item = <BaseItem>context.resolvePath(itemPath)
-        this.value.add(item)
+        this.__value.add(item)
       }
     }
   }

@@ -8,7 +8,7 @@ import { GLMaterial } from '.'
  * @private
  */
 class SimpleUniformBinding {
-  protected param: Parameter<any>
+  param: Parameter<any>
   protected unif: Uniform
   protected textureUnif: Uniform
   protected textureTypeUnif: Uniform
@@ -86,7 +86,7 @@ class SimpleUniformBinding {
         // Sometimes the value of a color param is an image.
         if (boundImage) {
         } else {
-          this.val = param.getValue()
+          this.val = param.value
         }
       } catch (e) {}
       glMaterial.emit('updated')
@@ -220,7 +220,7 @@ class ComplexUniformBinding {
    */
   bind(renderstate: RenderState) {
     if (this.dirty) {
-      this.vals = this.param.getValue().asArray()
+      this.vals = this.param.value.asArray()
       this.dirty = false
     }
     this.uniformXX(this.unif.location, this.vals)
@@ -280,7 +280,7 @@ class MatrixUniformBinding {
    */
   bind(renderstate: RenderState) {
     if (this.dirty) {
-      this.vals = (<Mat4>this.param.getValue()).asArray()
+      this.vals = (<Mat4>this.param.value).asArray()
       this.dirty = false
     }
     this.uniformMatrixXXX(this.unif.location, false, this.val)
@@ -389,7 +389,7 @@ class ColorUniformBinding {
         // Sometimes the value of a color param is an image.
         if (boundImage) {
         } else if (this.unif) {
-          this.vals = param.getValue().asArray()
+          this.vals = param.value.asArray()
         }
       } catch (e) {}
       glMaterial.emit('updated')

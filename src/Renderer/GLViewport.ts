@@ -220,9 +220,9 @@ class GLViewport extends GLBaseViewport {
   setCamera(camera: Camera) {
     this.__camera = camera
     this.depthRange = [this.__camera.getNear(), this.__camera.getFar()]
-    const globalXfoParam = camera.getParameter('GlobalXfo')
+    const globalXfoParam = camera.globalXfoParam
     const getCameraParams = () => {
-      this.__cameraXfo = globalXfoParam!.getValue()
+      this.__cameraXfo = globalXfoParam.value
       this.__cameraMat = this.__cameraXfo.toMat4()
       this.__viewMat = this.__cameraMat.inverse()
     }
@@ -284,7 +284,7 @@ class GLViewport extends GLBaseViewport {
    * Calculates a new camera position that frames all the items passed in `treeItems` array, moving
    * the camera to a point where we can see all of them.
    * > See Camera.frameView
-   * @param {array} treeItems - The array of TreeItem.
+   * @param {TreeItem[]} treeItems - The array of TreeItem.
    */
   frameView(treeItems?: TreeItem[]) {
     if (this.__width > 0 && this.__height > 0) {
@@ -376,8 +376,8 @@ class GLViewport extends GLBaseViewport {
   /**
    * The getGeomDataAtPos method.
    * @param {Vec2} screenPos - The screen position.
-   * @param {Ray} pointerRay - The pointerRay value.
-   * @return {RayCast} - The return value.
+   * @param {Ray | undefined} pointerRay - The pointerRay value.
+   * @return {RayCast | null} - The return value.
    */
   getGeomDataAtPos(screenPos: Vec2, pointerRay: Ray | undefined): RayCast | null {
     if (this.__geomDataBufferFbo) {
@@ -477,7 +477,7 @@ class GLViewport extends GLBaseViewport {
    * Gathers all the geoms renders in a given rectangle of the viewport.
    * @param {Vec2} tl - The top left value of the rectangle.
    * @param {Vec2} br - The bottom right corner of the rectangle.
-   * @return {Set} - The return value.
+   * @return {Array<GeomItem>} - The return value.
    */
   getGeomItemsInRect(tl: Vec2, br: Vec2): Array<GeomItem> {
     // TODO: Use a Math.Rect instead

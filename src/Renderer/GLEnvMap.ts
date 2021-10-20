@@ -31,7 +31,7 @@ class GLEnvMap extends GLProbe {
     if (this.__envMap.isLoaded()) {
       this.init()
     } else {
-      this.__envMap.once('loaded', (event) => {
+      this.__envMap.once('loaded', event => {
         this.init()
       })
     }
@@ -55,12 +55,11 @@ class GLEnvMap extends GLProbe {
       gl.__quadIndexBuffer
     )
 
-    //
-    const headlightParam = this.__envMap.getParameter('HeadLightMode')!
+    const headlightParam = this.__envMap.headlightModeParam
 
     const updateHeadlightModeFlag = () => {
       const ENVMAP_FLAG_HEADLIGHT = 1 // 1<<0;
-      if (headlightParam.getValue()) {
+      if (headlightParam.value) {
         this.textureDesc[3] |= ENVMAP_FLAG_HEADLIGHT
       } else {
         this.textureDesc[3] &= ~ENVMAP_FLAG_HEADLIGHT

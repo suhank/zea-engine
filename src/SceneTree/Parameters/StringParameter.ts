@@ -54,7 +54,7 @@ class StringParameter extends Parameter<string> implements IBinaryReader {
    * @param {Record<string, any>} context - The context value.
    */
   readBinary(reader: BinReader, context?: Record<string, unknown>): void {
-    this.value = reader.loadStr()
+    this.__value = reader.loadStr()
   }
 
   /**
@@ -65,7 +65,7 @@ class StringParameter extends Parameter<string> implements IBinaryReader {
    * @return {Record<string, boolean | undefined>} - Returns the json object.
    */
   toJSON(context?: Record<string, unknown>): Record<string, string | undefined> {
-    return { value: this.value }
+    return { value: this.__value }
   }
 
   /**
@@ -75,7 +75,7 @@ class StringParameter extends Parameter<string> implements IBinaryReader {
    * @param {Record<string, unknown>} context - The context value.
    */
   fromJSON(j: Record<string, string | undefined>, context?: Record<string, unknown>): void {
-    this.value = j.value ? <string>j.value : ''
+    this.__value = j.value ? <string>j.value : ''
     this.emit('valueChanged', { mode: 0 })
   }
 
@@ -86,7 +86,7 @@ class StringParameter extends Parameter<string> implements IBinaryReader {
    * @return {StringParameter} - Returns a new string parameter.
    */
   clone(): StringParameter {
-    return new StringParameter(this.name, this.value)
+    return new StringParameter(this.name, this.__value)
   }
 }
 

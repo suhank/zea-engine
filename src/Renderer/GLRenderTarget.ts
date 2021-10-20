@@ -243,7 +243,6 @@ class GLRenderTarget extends EventEmitter {
   /**
    * The bindColorTexture method.
    * @param {RenderState} renderstate - The object tracking the current state of the renderer
-   * @param {WebGLUniformLocation} unif - The WebGL uniform
    * @param {number} channelId - The channelId value.
    * @return {boolean} - The return value.
    */
@@ -259,10 +258,10 @@ class GLRenderTarget extends EventEmitter {
   /**
    * The bindDepthTexture method.
    * @param {RenderState} renderstate - The object tracking the current state of the renderer
-   * @param {WebGLUniformLocation} unif - The WebGL uniform
+   * @param {Uniform} unif - The WebGL uniform
    * @return {boolean} - The return value.
    */
-  bindDepthTexture(renderstate: RenderState, unif: Uniform) {
+  bindDepthTexture(renderstate: RenderState, unif: Uniform): boolean {
     const gl = this.__gl
     const unit = renderstate.boundTextures++
     gl.uniform1i(unif.location, unit)

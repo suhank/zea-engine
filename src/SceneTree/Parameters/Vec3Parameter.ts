@@ -39,20 +39,20 @@ class Vec3Parameter extends Parameter<Vec3> implements IBinaryReader {
    * @param {Record<string, unknown>} context - The context value.
    */
   readBinary(reader: BinReader, context?: Record<string, unknown>): void {
-    this.value?.readBinary(reader)
+    this.__value?.readBinary(reader)
   }
 
   toJSON(context?: Record<string, unknown>): Record<string, unknown> {
     return {
       name: this.name,
-      value: this.value?.toJSON(),
+      value: this.__value?.toJSON()
     }
   }
 
   fromJSON(j: Record<string, unknown>, context?: Record<string, unknown>): void {
     const vec3 = new Vec3()
     vec3.fromJSON(j.value as any)
-    this.value = vec3
+    this.__value = vec3
 
     if (j.name) this.name = j.name as string
   }
@@ -67,7 +67,7 @@ class Vec3Parameter extends Parameter<Vec3> implements IBinaryReader {
    * @return {Vec3Parameter} - Returns a new Vec3 parameter.
    */
   clone(): Vec3Parameter {
-    const clonedParam = new Vec3Parameter(this.name, this.value?.clone())
+    const clonedParam = new Vec3Parameter(this.name, this.__value?.clone())
     return clonedParam
   }
 }

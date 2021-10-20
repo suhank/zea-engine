@@ -98,7 +98,7 @@ class MaterialColorParam extends ColorParameter {
         disconnectImage()
       }
       this.image = value
-      this.listenerIDs['updated'] = this.image.on('updated', (event: any) => {
+      this.listenerIDs['updated'] = this.image.on('updated', () => {
         this.imageUpdated()
       })
       this.emit('textureConnected')
@@ -148,7 +148,7 @@ class MaterialColorParam extends ColorParameter {
    * @return {MaterialColorParam} - Returns a new cloned material color parameter.
    */
   clone(): MaterialColorParam {
-    const clonedParam = new MaterialColorParam(this.name, this.value?.clone())
+    const clonedParam = new MaterialColorParam(this.name, this.__value?.clone())
     return clonedParam
   }
 }

@@ -3,7 +3,7 @@ import { Operator } from './Operator'
 import { OperatorOutput } from './OperatorOutput'
 import { OperatorInput } from './OperatorInput'
 import { Xfo } from '../../Math/Xfo'
-import { XfoParameter } from '../Parameters'
+import { Vec4Parameter, XfoParameter } from '../Parameters'
 
 /**
  * An operator that calculates the delta transform of the group since items were bound to it.
@@ -14,9 +14,9 @@ class CuttingPlaneOperator extends Operator {
   /**
    * Create a GroupMemberXfoOperator operator.
    * @param {XfoParameter} groupGlobalXfoParam - The GlobalXfo param found on the Group.
-   * @param {XfoParameter} cuttingPlaneParam - The parameter on the Group which defines the displacement to apply to the members.
+   * @param {Vec4Parameter} cuttingPlaneParam - The parameter on the Group which defines the displacement to apply to the members.
    */
-  constructor(groupGlobalXfoParam: XfoParameter, cuttingPlaneParam: XfoParameter) {
+  constructor(groupGlobalXfoParam: XfoParameter, cuttingPlaneParam: Vec4Parameter) {
     super()
     this.addInput(new OperatorInput('GroupGlobalXfo')).setParam(groupGlobalXfoParam)
     this.addOutput(new OperatorOutput('CuttingPlane')).setParam(cuttingPlaneParam)

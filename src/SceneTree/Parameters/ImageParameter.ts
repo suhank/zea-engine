@@ -43,9 +43,9 @@ class ImageParameter extends Parameter<BaseImage | undefined> {
       name: this.name,
     }
 
-    if (this.value) {
-      j.imageType = this.value.getClassName()
-      j.value = this.value.toJSON()
+    if (this.__value) {
+      j.imageType = this.__value.getClassName()
+      j.value = this.__value.toJSON()
     }
 
     return j
@@ -60,8 +60,8 @@ class ImageParameter extends Parameter<BaseImage | undefined> {
    */
   fromJSON(j: Record<string, unknown>, context: Record<string, any>): void {
     if (j.imageType) {
-      this.value = Registry.constructClass(j.imageType as string) as any
-      if (j.value) this.value?.fromJSON(j.value as any, context)
+      this.__value = Registry.constructClass(j.imageType as string) as any
+      if (j.value) this.__value?.fromJSON(j.value as any, context)
     }
   }
 
@@ -75,7 +75,7 @@ class ImageParameter extends Parameter<BaseImage | undefined> {
    * @return {ImageParameter} - Returns a new cloned image parameter.
    */
   clone(): ImageParameter {
-    const clonedParam = new ImageParameter(this.name, this.value)
+    const clonedParam = new ImageParameter(this.name, this.__value)
     return clonedParam
   }
 }

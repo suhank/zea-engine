@@ -146,8 +146,8 @@ class OperatorOutput extends EventEmitter {
    * @return {any} - The modified value.
    */
   backPropagateValue(value: any): any {
-    if (this._param) {
-      value = this._op!.backPropagateValue(value)
+    if (this._op) {
+      value = this._op.backPropagateValue(value)
     }
     return value
   }

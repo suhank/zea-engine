@@ -4,20 +4,20 @@ describe('Torus', () => {
   test('test default parameters.', () => {
     const torus = new Torus()
 
-    expect(torus.getParameter('InnerRadius').getValue()).toBe(0.5)
-    expect(torus.getParameter('OuterRadius').getValue()).toBe(3)
-    expect(torus.getParameter('Detail').getValue()).toBe(32)
+    expect(torus.innerRadiusParam.value).toBe(0.5)
+    expect(torus.outerRadiusParam.value).toBe(3)
+    expect(torus.detailParam.value).toBe(32)
   })
 
   test('test update parameters.', () => {
     const torus = new Torus()
-    torus.getParameter('InnerRadius').setValue(3)
-    torus.getParameter('OuterRadius').setValue(5)
-    torus.getParameter('Detail').setValue(16)
+    torus.innerRadiusParam.value = 3
+    torus.outerRadiusParam.value = 5
+    torus.detailParam.value = 16
 
-    expect(torus.getParameter('InnerRadius').getValue()).toBe(3)
-    expect(torus.getParameter('OuterRadius').getValue()).toBe(5)
-    expect(torus.getParameter('Detail').getValue()).toBe(16)
+    expect(torus.innerRadiusParam.value).toBe(3)
+    expect(torus.outerRadiusParam.value).toBe(5)
+    expect(torus.detailParam.value).toBe(16)
   })
 
   it('saves to JSON (serialization).', () => {
@@ -34,17 +34,17 @@ describe('Torus', () => {
         Detail: {
           range: [3, 200],
           step: 1,
-          value: 8,
+          value: 8
         },
         InnerRadius: {
-          value: 3,
+          value: 3
         },
         OuterRadius: {
-          value: 5,
-        },
+          value: 5
+        }
       },
       type: 'Torus',
-      vertexAttributes: {},
+      vertexAttributes: {}
     }
     torus.fromJSON(inputJSON)
 

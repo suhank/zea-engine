@@ -30,8 +30,8 @@ class FilePathParameter extends Parameter<string> {
    * @return {string} - The return value.
    */
   getFilepath(): string {
-    if (this.value) {
-      return (resourceLoader as any).getFilepath(this.value)
+    if (this.__value) {
+      return (resourceLoader as any).getFilepath(this.__value)
     }
 
     return ''
@@ -52,9 +52,9 @@ class FilePathParameter extends Parameter<string> {
    * @return {string} - The return value.
    */
   getFilename(): string {
-    if (!this.value) throw 'No file value'
+    if (!this.__value) throw 'No file value'
 
-    return resourceLoader.resolveFilename(this.value)
+    return resourceLoader.resolveFilename(this.__value)
   }
 
   /**
@@ -99,7 +99,7 @@ class FilePathParameter extends Parameter<string> {
    * @return {Record<string, string | undefined>} - The return value.
    */
   getFile(): Record<string, string | undefined> {
-    return { id: this.value, url: this.getUrl(), name: this.getFilename() }
+    return { id: this.__value, url: this.getUrl(), name: this.getFilename() }
   }
 
   /**
@@ -118,8 +118,8 @@ class FilePathParameter extends Parameter<string> {
    * @return {string} - The return value.
    */
   getUrl(): string {
-    if (!this.value) throw 'No file value'
-    return resourceLoader.resolveURL(this.value)
+    if (!this.__value) throw 'No file value'
+    return resourceLoader.resolveURL(this.__value)
   }
 
   /**
@@ -134,11 +134,11 @@ class FilePathParameter extends Parameter<string> {
 
     // Important here because file changes cause reloads.
     // Note: equality tests only work on simple types.
-    if (value == this.value) {
+    if (value == this.__value) {
       return
     }
 
-    this.value = value
+    this.__value = value
 
     this.emit('valueChanged', {})
   }
@@ -152,7 +152,7 @@ class FilePathParameter extends Parameter<string> {
    * @return {Record<string, unknown>} - Returns the json object.
    */
   toJSON(context?: Record<string, any>): Record<string, unknown> {
-    return { value: this.value }
+    return { value: this.__value }
   }
 
   /**
@@ -163,7 +163,7 @@ class FilePathParameter extends Parameter<string> {
    */
   fromJSON(j: Record<string, unknown>, context?: Record<string, any>): void {
     if (j.value) {
-      this.value = j.value as string
+      this.__value = j.value as string
     }
   }
 
@@ -178,7 +178,7 @@ class FilePathParameter extends Parameter<string> {
    */
   clone(): FilePathParameter {
     const clone = new FilePathParameter(this.name)
-    if (this.value) clone.setValue(this.value)
+    if (this.__value) clone.setValue(this.__value)
 
     return clone
   }

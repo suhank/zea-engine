@@ -96,7 +96,7 @@ class GLGeomItem extends EventEmitter {
       this.geomData = [flags, materialId, 0, 0]
 
       this.geomMatrixDirty = true
-      this.listenerIDs['GeomMat.valueChanged'] = this.geomItem.getParameter('GeomMat')!.on('valueChanged', () => {
+      this.listenerIDs['GeomMat.valueChanged'] = this.geomItem.geomMatParam.on('valueChanged', () => {
         this.geomMatrixDirty = true
         this.emit('updated')
       })
@@ -172,7 +172,7 @@ class GLGeomItem extends EventEmitter {
       const modelMatrixunif = unifs.modelMatrix
       if (modelMatrixunif) {
         if (this.geomMatrixDirty) {
-          this.modelMatrixArray = this.geomItem.getGeomMat4().asArray()
+          this.modelMatrixArray = this.geomItem.geomMatParam.value.asArray()
         }
         gl.uniformMatrix4fv(modelMatrixunif.location, false, this.modelMatrixArray)
       }
@@ -207,9 +207,7 @@ class GLGeomItem extends EventEmitter {
   destroy() {
     this.geomItem.removeListenerById('visibilityChanged', this.listenerIDs['visibilityChanged'])
     if (!this.supportInstancing) {
-      this.geomItem
-        .getParameter('GeomMat')!
-        .removeListenerById('valueChanged', this.listenerIDs['GeomMat.valueChanged'])
+      this.geomItem.geomMatParam.removeListenerById('valueChanged', this.listenerIDs['GeomMat.valueChanged'])
       this.geomItem.removeListenerById('cutAwayChanged', this.listenerIDs['cutAwayChanged'])
     }
   }

@@ -18,7 +18,10 @@ import { Vec3Attribute } from '../Vec3Attribute'
  * @extends {ProceduralLines}
  */
 class Cross extends ProceduralLines {
-  protected __sizeParam: NumberParameter
+  /**
+   * @member {NumberParameter} sizeParam - Specifies the size of the cross.
+   */
+  sizeParam: NumberParameter
 
   /**
    * Create a cross.
@@ -29,7 +32,7 @@ class Cross extends ProceduralLines {
 
     if (isNaN(size)) throw new Error('Invalid geom args')
 
-    this.__sizeParam = this.addParameter(new NumberParameter('Size', size)) as NumberParameter
+    this.sizeParam = this.addParameter(new NumberParameter('Size', size)) as NumberParameter
   }
 
   /**
@@ -50,7 +53,7 @@ class Cross extends ProceduralLines {
    * @private
    */
   resize(): void {
-    const size = this.__sizeParam.getValue() || 1.0
+    const size = this.sizeParam.value || 1.0
     const positions = <Vec3Attribute>this.getVertexAttribute('positions')
     if (!positions) return
     positions.getValueRef(0).set(-0.5 * size, 0, 0)
