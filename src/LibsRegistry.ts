@@ -27,10 +27,8 @@ class LibsRegistry {
     const expected = packageJson.dependencies['@zeainc/zea-engine']
 
     if (semver.satisfies(this.version, expected)) {
-      // if (compare(this.version, expected)) {
       this.registry[libName] = libVersion
-      // zeaDebug("Registered lib '%s' v%s", libName, libVersion)
-      console.log(`Registered lib '${libName}' v${libVersion}`)
+      zeaDebug(`Registered lib '${libName}' v${libVersion}`)
       return
     }
 
