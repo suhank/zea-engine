@@ -449,7 +449,7 @@ class Mesh extends BaseGeom {
         const pn = positions.getValueRef(faceVerts[j])
         const v0 = prev.subtract(p0)
         const v1 = pn.subtract(p0)
-        faceNormal.addInPlace(v1.cross(v0).normalize())
+        faceNormal.addInPlace(v0.cross(v1).normalize())
         prev = pn
       }
       if (faceNormal.lengthSquared() < Number.EPSILON) {
