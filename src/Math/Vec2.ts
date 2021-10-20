@@ -1,4 +1,5 @@
 import { BinReader } from '../SceneTree/BinReader'
+import { StringFunctions } from '../Utilities/StringFunctions'
 /**
  * Representing a Vec2(two-dimensional floating point vector). A Vec2 is for representing 2 dimensional values, such as screen coordinates or pixel coordinates within an image.
  *
@@ -471,6 +472,16 @@ class Vec2 {
 
   // ///////////////////////////
   // Persistence
+
+  /**
+   * Converts this Vec3 to a string in JSON format.
+   *
+   * @return {string} - The return value.
+   */
+  toString() {
+    // eslint-disable-next-line new-cap
+    return StringFunctions.stringifyJSONWithFixedPrecision(this.toJSON())
+  }
 
   /**
    * Encodes Vec2 Class as a JSON object for persistence.

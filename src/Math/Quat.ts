@@ -4,6 +4,8 @@ import { Mat3 } from './Mat3'
 import { Mat4 } from './Mat4'
 import { EulerAngles } from './EulerAngles'
 import { BinReader } from '../SceneTree/BinReader'
+import { StringFunctions } from '../Utilities/StringFunctions'
+
 /**
  * Class representing a quaternion. Quaternions are used to represent 3 dimensional rotations.
  *
@@ -1045,6 +1047,16 @@ class Quat {
 
   // ///////////////////////////
   // Persistence
+
+  /**
+   * Converts this Vec3 to a string in JSON format.
+   *
+   * @return {string} - The return value.
+   */
+  toString() {
+    // eslint-disable-next-line new-cap
+    return StringFunctions.stringifyJSONWithFixedPrecision(this.toJSON())
+  }
 
   /**
    * The toJSON method encodes this type as a json object for persistence.

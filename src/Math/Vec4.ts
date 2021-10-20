@@ -1,6 +1,7 @@
 /* eslint-disable new-cap */
 import { Vec3 } from './Vec3'
 import { BinReader } from '../SceneTree/BinReader'
+import { StringFunctions } from '../Utilities/StringFunctions'
 /**
  * Represents a four-dimensional coordinate.
  * Math types internally store values in {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array|Float32Array} and
@@ -511,6 +512,16 @@ class Vec4 {
 
   // ///////////////////////////
   // Persistence
+
+  /**
+   * Converts this Vec3 to a string in JSON format.
+   *
+   * @return {string} - The return value.
+   */
+  toString() {
+    // eslint-disable-next-line new-cap
+    return StringFunctions.stringifyJSONWithFixedPrecision(this.toJSON())
+  }
 
   /**
    * The toJSON method encodes this type as a json object for persistence.

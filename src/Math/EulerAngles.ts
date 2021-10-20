@@ -1,3 +1,5 @@
+import { StringFunctions } from '../Utilities/StringFunctions'
+
 /**
  * Class representing euler angles. Euler angles describe rotating an object
  * around its various axis in a specified axis order.
@@ -121,6 +123,19 @@ class EulerAngles {
     this.__data[0] = x
     this.__data[1] = y
     this.__data[2] = z
+  }
+
+  // ///////////////////////////
+  // Persistence
+
+  /**
+   * Converts this Vec3 to a string in JSON format.
+   *
+   * @return {string} - The return value.
+   */
+  toString() {
+    // eslint-disable-next-line new-cap
+    return StringFunctions.stringifyJSONWithFixedPrecision(this.toJSON())
   }
 
   toJSON(): Record<string, number> {

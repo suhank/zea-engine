@@ -1,6 +1,7 @@
 /* eslint-disable new-cap */
 import { Vec3 } from './Vec3'
 import { BinReader } from '../SceneTree/BinReader'
+import { StringFunctions } from '../Utilities/StringFunctions'
 
 /**
  * A class representing a 3x3 matrix.
@@ -510,10 +511,10 @@ class Mat3 {
   /**
    * The toJSON method encodes this type as a json object for persistence.
    *
-   * @return {Float32Array} - The json object.
+   * @return {number[] } - The json object.
    */
-  toJSON(): Float32Array {
-    return Float32Array.from(this.__data)
+  toJSON(): number[] {
+    return Array.from(this.__data)
   }
   /**
    * The fromJSON method decodes a json object for this type.
@@ -528,13 +529,15 @@ class Mat3 {
   // Debugging
 
   /**
-   * Calls `toJSON` method and stringifies it.
+   * Converts this Vec3 to a string in JSON format.
    *
    * @return {string} - The return value.
    */
-  toString(): string {
-    return this.toJSON().toString()
+  toString() {
+    // eslint-disable-next-line new-cap
+    return StringFunctions.stringifyJSONWithFixedPrecision(this.toJSON())
   }
+
   /**
    * Returns current Math type data as array. Often used to pass types to the GPU.
    *

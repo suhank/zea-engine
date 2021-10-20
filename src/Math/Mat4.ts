@@ -2,6 +2,7 @@ import { Vec3 } from './Vec3'
 import { Mat3 } from './Mat3'
 import { Vec4 } from './Vec4'
 import { BinReader } from '../SceneTree/BinReader'
+import { StringFunctions } from '../Utilities/StringFunctions'
 
 /**
  * A class representing a 4x4 matrix.
@@ -1385,12 +1386,22 @@ class Mat4 {
   // Persistence
 
   /**
+   * Converts this Vec3 to a string in JSON format.
+   *
+   * @return {string} - The return value.
+   */
+  toString() {
+    // eslint-disable-next-line new-cap
+    return StringFunctions.stringifyJSONWithFixedPrecision(this.toJSON())
+  }
+
+  /**
    * The toJSON method encodes this type as a json object for persistence.
    *
-   * @return {Float32Array } - The json object.
+   * @return {number[] } - The json object.
    */
-  toJSON(): Float32Array {
-    return Float32Array.from(this.__data)
+  toJSON(): number[] {
+    return Array.from(this.__data)
   }
 
   /**

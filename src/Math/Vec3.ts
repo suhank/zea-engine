@@ -1,4 +1,5 @@
 import { Vec2 } from './Vec2'
+import { StringFunctions } from '../Utilities/StringFunctions'
 import { BinReader } from '../SceneTree/BinReader'
 
 /**
@@ -569,6 +570,16 @@ class Vec3 {
 
   // ///////////////////////////
   // Persistence
+
+  /**
+   * Converts this Vec3 to a string in JSON format.
+   *
+   * @return {string} - The return value.
+   */
+  toString() {
+    // eslint-disable-next-line new-cap
+    return StringFunctions.stringifyJSONWithFixedPrecision(this.toJSON())
+  }
 
   /**
    * Encodes Vec3 Class as a JSON object for persistence.
