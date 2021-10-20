@@ -20,7 +20,7 @@
     "build:tsc": "npx tsc",
     "build:tsc:watch": "npx tsc --watch",
     "build:rollup": "rollup -c",
-    "build:rollup:watch": "rollup -c",
+    "build:rollup:watch": "rollup -w -c",
     "copyJSFilesToDist": "copyfiles -u 1 src/**/*.{js,wasm,glsl,vert,frag} dist",
     "start": "http-server --cors --port 8000 --silent",
     "start:watch": "es-dev-server --cors --app-index testing-e2e/index.html --open --watch",
