@@ -170,65 +170,7 @@ class TreeItem extends BaseItem {
   }
 
   // ////////////////////////////////////////
-  // Global Matrix
-
-  /**
-   * @deprecated
-   * Returns the value of local Xfo transform parameter.
-   *
-   * @return {Xfo} - Returns the local Xfo.
-   */
-  getLocalXfo(): Xfo {
-    console.warn(`Deprecated. use member variable and getter: "localXfoParam.value"`)
-
-    return this.localXfoParam.value
-  }
-
-  /**
-   * @deprecated
-   * Sets the local Xfo transform parameter.
-   *
-   * @param {Xfo} xfo - The local xfo transform.
-   */
-  setLocalXfo(xfo: Xfo): void {
-    console.warn(`Deprecated. use "localXfoParam.value = xfo"`)
-    this.localXfoParam.value = xfo
-  }
-
-  /**
-   * @deprecated
-   * Returns the global Xfo transform.
-   *
-   * @return {Xfo} - Returns the global Xfo.
-   */
-  getGlobalXfo(): Xfo {
-    console.warn(`Deprecated. use "globalXfoParam.value"`)
-    return this.globalXfoParam.value
-  }
-
-  /**
-   * @deprecated
-   * Sets the global Xfo transform.
-   * @param {Xfo} xfo - The global xfo transform.
-   */
-  setGlobalXfo(xfo: Xfo): void {
-    console.warn(`Deprecated. use "globalXfoParam.value = xfo"`)
-    this.globalXfoParam.value = xfo
-  }
-
-  // ////////////////////////////////////////
   // Visibility
-
-  /**
-   * @deprecated
-   * Returns visible parameter value for current TreeItem.
-   *
-   * @return {boolean} - The visible param value.
-   */
-  getVisible(): boolean {
-    console.warn('Deprecated. Use #isVisible')
-    return this.isVisible()
-  }
 
   /**
    * Returns visible parameter value for current TreeItem.
@@ -385,26 +327,6 @@ class TreeItem extends BaseItem {
   // Bounding Box
 
   /**
-   * Getter for a bounding box.
-   * @private
-   */
-  get boundingBox(): Box3 {
-    console.warn("getter is deprecated. Please use 'getBoundingBox'")
-    return this.getBoundingBox()
-  }
-
-  /**
-   * @deprecated
-   * Returns bounding box parameter value.
-   * @private
-   * @return {Box3} - The return value.
-   */
-  getBoundingBox(): Box3 {
-    console.warn("getter is deprecated. Please use 'boundingBoxParam.value'")
-    return this.boundingBoxParam.value
-  }
-
-  /**
    * The _cleanBoundingBox method.
    * @param {Box3} bbox - The bounding box value.
    * @return {Box3} - The return value.
@@ -463,17 +385,6 @@ class TreeItem extends BaseItem {
    */
   getChildren(): BaseItem[] {
     return this.__childItems
-  }
-
-  /**
-   * Returns the number of child elements current `TreeItem` has.
-   *
-   * @deprecated since version 0.0.80
-   * @return {number} - The return value.
-   */
-  numChildren(): number {
-    console.warn('Deprecated. Use #getNumChildren')
-    return this.__childItems.length
   }
 
   /**
@@ -749,18 +660,6 @@ class TreeItem extends BaseItem {
    */
   getChildIndex(childItem: BaseItem): number {
     return this.__childItems.indexOf(childItem)
-  }
-
-  /**
-   * @deprecated
-   * Returns index position of the specified item.
-   *
-   * @param {BaseItem} childItem - The child TreeItem value.
-   * @return {number} - The return value.
-   */
-  indexOfChild(childItem: BaseItem): number {
-    console.warn('Deprecated Use #getChildIndex')
-    return this.getChildIndex(childItem)
   }
 
   // ////////////////////////////////////////

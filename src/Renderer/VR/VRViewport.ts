@@ -70,7 +70,7 @@ class VRViewport extends GLBaseViewport {
    */
   constructor(renderer: any) {
     super(renderer)
-    this.__doubleClickTimeMSParam.value = 300
+    this.doubleClickTimeParam.value = 300
 
     // ////////////////////////////////////////////
     // Viewport params
@@ -245,12 +245,12 @@ class VRViewport extends GLBaseViewport {
             hmdAssetId = 'ZeaEngine/Vive.vla'
             break
         }
-        if (!resourceLoader.getCommonResource(hmdAssetId)) {
+        if (!resourceLoader.commonResources[hmdAssetId]) {
           // Cache the asset so if an avatar needs to display,
           // it can use the same asset.
           const asset = new VLAAsset(hmdAssetId)
-          asset.fileParam.value = hmdAssetId
-          resourceLoader.setCommonResource(hmdAssetId, asset)
+          asset.load(resourceLoader.systemUrls[hmdAssetId])
+          resourceLoader.commonResources[hmdAssetId] = asset
         }
         this.__vrAsset = <VLAAsset>resourceLoader.getCommonResource(hmdAssetId)
         const bind = () => {
@@ -639,7 +639,7 @@ class VRViewport extends GLBaseViewport {
     // If the manipulator or the viewport handle that
     // then skip the 'pointerDown' event.
     const downTime = Date.now()
-    if (downTime - this.controllerPointerDownTime[event.controller.id] < this.__doubleClickTimeMSParam.value) {
+    if (downTime - this.controllerPointerDownTime[event.controller.id] < this.doubleClickTimeParam.value) {
       this.emit('pointerDoublePressed', event)
       if (!event.propagating) return
 

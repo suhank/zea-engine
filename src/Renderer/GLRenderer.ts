@@ -177,7 +177,7 @@ class GLRenderer extends GLBaseRenderer {
    * @param {Scene} scene - The scene value.
    */
   setScene(scene: Scene): void {
-    const envMapParam = scene.settings.envMapParam
+    const envMapParam = scene.envMapParam
     if (envMapParam.value != undefined) {
       this.__bindEnvMap(<EnvMap>envMapParam.value)
     }
@@ -185,7 +185,7 @@ class GLRenderer extends GLBaseRenderer {
       this.__bindEnvMap(<EnvMap>envMapParam.value)
     })
 
-    const displayEnvMapParam = scene.settings.displayEnvMapParam
+    const displayEnvMapParam = scene.displayEnvMapParam
     this.__displayEnvironment = displayEnvMapParam.value
     displayEnvMapParam!.on('valueChanged', () => {
       this.__displayEnvironment = displayEnvMapParam.value

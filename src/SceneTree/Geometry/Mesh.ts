@@ -196,10 +196,6 @@ class Mesh extends BaseGeom {
    * @param {array} vertexIndices - The array of vertex indices for this face value.
    */
   setFaceVertexIndices(faceIndex: number, vertexIndices: Array<number>): void {
-    if (arguments.length != 2) {
-      console.warn(`deprecated interface. Please pass vertexIndices as an array`)
-      vertexIndices = Array.prototype.slice.call(arguments, 1)
-    }
     const faceVertexCount = this.getFaceVertexCount(faceIndex)
     if (vertexIndices.length != faceVertexCount) {
       throw new Error(

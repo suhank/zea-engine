@@ -61,7 +61,6 @@ class Registry {
    * @return {string} - Name of the registered class
    */
   static getClassName(classDefinition: typeof BaseClass): string {
-    // throw new Error(`getClassName is deprecated`)
     const classId = classDefinitions.indexOf(classDefinition)
     if (classId >= 0 && classNames[classId]) return classNames[classId]
 

@@ -90,18 +90,6 @@ class Lines extends BaseGeom {
   }
 
   /**
-   * Sets segment values in the specified index.
-   *
-   * @param {number} index - The index value.
-   * @param {number} p0 - The p0 value.
-   * @param {number} p1 - The p1 value.
-   */
-  setSegment(index: number, p0: number, p1: number): void {
-    console.warn(`deprecated use #setSegmentVertexIndices`)
-    this.setSegmentVertexIndices(index, p0, p1)
-  }
-
-  /**
    * The getSegmentVertexIndex method.
    *
    * @param {number} line - The line value.

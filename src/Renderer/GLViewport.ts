@@ -626,7 +626,7 @@ class GLViewport extends GLBaseViewport {
     // If the manipulator or the viewport handle that
     // then skip the 'pointerDown' event.
     const downTime = Date.now()
-    if (downTime - this.__prevDownTime < this.__doubleClickTimeMSParam.value) {
+    if (downTime - this.__prevDownTime < this.doubleClickTimeParam.value) {
       if (this.manipulator) {
         this.manipulator.onPointerDoublePress(event)
         if (!event.propagating) return

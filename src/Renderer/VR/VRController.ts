@@ -223,7 +223,7 @@ class VRController {
     }
 
     this.__mat4.setDataArray(inputPose.transform.matrix)
-    this.__xfo.fromMat4(this.__mat4)
+    this.__xfo.setFromMat4(this.__mat4)
 
     // const pos = inputPose.transform.position;
     // this.__xfo.tr.set(pos.x, pos.y,pos.z);

@@ -411,19 +411,6 @@ class Color {
   }
 
   /**
-   * @deprecated
-   * Returns true if this color contains the same values as the other.
-   * Deprecated. Use #isEqual instead.
-   *
-   * @param {Color} other - The other color to compare with.
-   * @return {boolean} - Returns true or false.
-   */
-  equal(other: Color): boolean {
-    console.warn('Deprecated. Use #isEqual instead.')
-    return this.isEqual(other)
-  }
-
-  /**
    * Checks if this Color  contains the same values as the other.
    *
    * @param {Color} other - The other Color to compare with.

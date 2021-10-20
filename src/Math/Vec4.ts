@@ -177,35 +177,11 @@ class Vec4 {
   /**
    * Checks if this Vec4 contains the same values as the other Vec4.
    *
-   * @deprecated
-   * @param {Vec4} other - The other Vec4 to compare with.
-   * @return {boolean} - Returns true or false.
-   */
-  equal(other: Vec4): boolean {
-    console.warn('Deprecated. Use #isEqual instead.')
-    return this.isEqual(other)
-  }
-
-  /**
-   * Checks if this Vec4 contains the same values as the other Vec4.
-   *
    * @param {Vec4} other - The other Vec4 to compare with.
    * @return {boolean} - Returns true or false.
    */
   isEqual(other: Vec4): boolean {
     return this.x == other.x && this.y == other.y && this.z == other.z && this.t == other.t
-  }
-
-  /**
-   * Checks if this Vec4 is different from another Vec4.
-   *
-   * @deprecated
-   * @param {Vec4} other - The other Vec4 to compare with.
-   * @return {boolean} - Returns true or false.
-   */
-  notEquals(other: Vec4): boolean {
-    console.warn('Deprecated. Use #notEqual instead.')
-    return this.notEqual(other)
   }
 
   /**

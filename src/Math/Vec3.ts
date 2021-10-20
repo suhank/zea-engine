@@ -172,19 +172,6 @@ class Vec3 {
   }
 
   /**
-   * @deprecated
-   * Checks if this Vec3 contains the same values as the other Vec3.
-   * Deprecated. Use #isEqual instead.
-   *
-   * @param {Vec3} other - The other Vec3 to compare with.
-   * @return {boolean} - Returns `true` if the values are the same, otherwise, `false`.
-   */
-  equal(other: Vec3): boolean {
-    console.warn('Deprecated. Use #isEqual instead.')
-    return this.isEqual(other)
-  }
-
-  /**
    * Checks if this Vec3 contains the same values as the other Vec3.
    *
    * @param {Vec3} other - The other Vec3 to compare with.
@@ -192,18 +179,6 @@ class Vec3 {
    */
   isEqual(other: Vec3): boolean {
     return this.x == other.x && this.y == other.y && this.z == other.z
-  }
-
-  /**
-   * @deprecated
-   * Checks if this Vec2 is different from another Vec2.
-   *
-   * @param {Vec3} other - The other Vec3 to compare with.
-   * @return {boolean} - Returns `true` if the Vec3s are different, otherwise, `false`.
-   */
-  notEquals(other: Vec3): boolean {
-    console.warn('Deprecated. Use #notEqual instead.')
-    return this.notEqual(other)
   }
 
   /**

@@ -477,19 +477,6 @@ class Quat {
   }
 
   /**
-   * @deprecated
-   * Returns true if this Quat contains the same values as the other.
-   * Deprecated. Use #isEqual instead.
-   *
-   * @param {Quat} other - The other Quat to compare with.
-   * @return {boolean} - Returns true or false.
-   */
-  equal(other: Quat): boolean {
-    console.warn('Deprecated. Use #isEqual instead.')
-    return this.isEqual(other)
-  }
-
-  /**
    * Checks if this Quat contains the same values as the other Quat.
    *
    * @param {Quat} other - The other Quat to compare with.

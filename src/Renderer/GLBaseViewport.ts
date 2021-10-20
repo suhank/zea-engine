@@ -1,5 +1,5 @@
 import { Color } from '../Math/index'
-import { Plane, ParameterOwner, BaseImage, NumberParameter, BaseTool, Scene } from '../SceneTree/index'
+import { Plane, ParameterOwner, BaseImage, NumberParameter, ColorParameter, BaseTool, Scene } from '../SceneTree/index'
 import { GLRenderer } from './GLRenderer'
 import { GLHDRImage } from './GLHDRImage'
 import { GLTexture2D } from './GLTexture2D'
@@ -48,9 +48,14 @@ class GLBaseViewport extends ParameterOwner {
   protected depthRange: number[] = [0, 0]
 
   /**
-   * @member {NumberParameter} __doubleClickTimeMSParam - The maximum time between clicks for a double click to be registered.
+   * @member {ColorParameter} backgroundColorParam - Changes background color of the scene
    */
-  __doubleClickTimeMSParam: NumberParameter = new NumberParameter('DoubleClickTimeMS', 200)
+  backgroundColorParam: ColorParameter = new ColorParameter('BackgroundColor', new Color('#eeeeee')) // owned by viewport
+
+  /**
+   * @member {NumberParameter} doubleClickTimeParam - The maximum time between clicks for a double click to be registered.
+   */
+  doubleClickTimeParam: NumberParameter = new NumberParameter('DoubleClickTimeMS', 200)
 
   /**
    * Create a GL base viewport.
@@ -61,7 +66,7 @@ class GLBaseViewport extends ParameterOwner {
     this.renderer = renderer
     this.__renderer = renderer
 
-    this.addParameter(this.__doubleClickTimeMSParam)
+    this.addParameter(this.doubleClickTimeParam)
 
     // Since there is not multi touch on `PointerEvent`, we need to store pointers pressed.
     this.__ongoingPointers = []
@@ -110,8 +115,7 @@ class GLBaseViewport extends ParameterOwner {
     // //////////////////////////////////
     // Setup Camera Manipulator
     const sceneSet = (scene: Scene) => {
-      const settings = scene.settings
-      const bgColorParam = settings.backgroundColorParam
+      const bgColorParam = this.backgroundColorParam
       const processBGValue = () => {
         const value = bgColorParam.value
         if (value instanceof BaseImage) {
@@ -173,29 +177,6 @@ class GLBaseViewport extends ParameterOwner {
    */
   getHeight(): number {
     return this.__height
-  }
-
-  /**
-   * The getBackground method.
-   * @return {Color | null} - The return value.
-   */
-  getBackground(): Color | null {
-    console.warn('Deprecated Function. Please access the Scene Settings object.')
-    const settings = this.__renderer.getScene()!.settings
-    const bgColorParam = settings.backgroundColorParam
-    return bgColorParam.value
-  }
-
-  /**
-   * The setBackground method.
-   * @param {Color} background - The background value.
-   */
-  setBackground(background: Color): void {
-    console.warn('Deprecated Function. Please access the Scene Settings object.')
-    const settings = this.__renderer.getScene()!.settings
-    const bgColorParam = settings.backgroundColorParam
-    bgColorParam.value = background
-    this.emit('updated')
   }
 
   /**

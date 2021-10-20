@@ -1,9 +1,9 @@
 import { Color } from '../Math/index'
 import { TreeItem } from './TreeItem'
 import { ResourceLoader, resourceLoader } from './resourceLoader'
-import { SceneSettings } from './SceneSettings'
 import { GridTreeItem } from './GridTreeItem'
 import { EnvMap } from './Images/EnvMap'
+import { BooleanParameter, NumberParameter, ColorParameter, ImageParameter } from './Parameters/index'
 
 const defaultGridColor = new Color('#DCDCDC')
 
@@ -11,25 +11,27 @@ const defaultGridColor = new Color('#DCDCDC')
  * Class representing the environment where all the displayed assets live.
  */
 class Scene {
-  settings: SceneSettings
-  protected root: TreeItem
+  /**
+   * @member {ImageParameter} envMapParam - The image displayed and used for the environment map.
+   */
+  envMapParam: ImageParameter = new ImageParameter('EnvMap')
+
+  /**
+   * @member {BooleanParameter} displayEnvMapParam - Boolean that determines whether or not the environment map should be displayed.
+   */
+  displayEnvMapParam: BooleanParameter = new BooleanParameter('Display EnvMap', false)
+
+  /**
+   * @member {NumberParameter} envMapLODParam - TODO
+   */
+  envMapLODParam: NumberParameter = new NumberParameter('EnvMapLOD', 0)
+
+  protected root: TreeItem = new TreeItem('root')
 
   /**
    * Create a scene.
    */
-  constructor() {
-    this.settings = new SceneSettings('Scene Settings')
-    this.root = new TreeItem('root')
-    this.root.addChild(this.settings)
-  }
-
-  /**
-   * The getRoot method.
-   * @return {BaseItem} - The return value.
-   */
-  getSettings() {
-    return this.settings
-  }
+  constructor() {}
 
   /**
    * Returns the scene's root item(`TreeItem`) that owns every item in the scene.
@@ -52,11 +54,10 @@ class Scene {
   /**
    * Sets Environment Map with the BaseImage you'd like to display in your scene background.
    *
-   * @deprecated
    * @param {EnvMap} envMap - The envMap value.
    */
   setEnvMap(envMap: EnvMap) {
-    this.settings.envMapParam.value = envMap
+    this.envMapParam.value = envMap
   }
 
   /**
@@ -126,7 +127,6 @@ class Scene {
       }
     }
     context.addPLCB = (plcb: any) => plcbs.push(plcb)
-    context.settings = this.settings
 
     if (json.root) {
       this.root.fromJSON(json.root, context)

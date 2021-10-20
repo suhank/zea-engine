@@ -101,7 +101,7 @@ describe('Xfo', () => {
     const mat4 = xfo.toMat4()
 
     const restoredXfo = new Xfo()
-    restoredXfo.fromMat4(mat4)
+    restoredXfo.setFromMat4(mat4)
 
     expect(restoredXfo).toEqual(xfo)
   })

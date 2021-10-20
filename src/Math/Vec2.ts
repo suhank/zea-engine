@@ -135,37 +135,12 @@ class Vec2 {
 
   /**
    * Checks if this Vec2 contains the same values as the other Vec2.
-   * Deprecated. Use #isEqual instead.
-   *
-   * @deprecated
-   * @param {Vec2} other - The other Vec2 to compare with.
-   * @return {boolean} - Returns `true` if are the same Vector, otherwise, `false`.
-   */
-  equal(other: Vec2): boolean {
-    console.warn('Deprecated. Use #isEqual instead.')
-    return this.isEqual(other)
-  }
-
-  /**
-   * Checks if this Vec2 contains the same values as the other Vec2.
    *
    * @param {Vec2} other - The other Vec2 to compare with.
    * @return {boolean} - Returns `true` if are the same Vector, otherwise, `false`.
    */
   isEqual(other: Vec2): boolean {
     return this.x == other.x && this.y == other.y
-  }
-
-  /**
-   * Checks if this Vec2 is different from another Vec2.
-   *
-   * @deprecated
-   * @param {Vec2} other - The other Vec2 to compare with.
-   * @return {boolean} - Returns `true` if the Vec2s are different, otherwise, `false`.
-   */
-  notEquals(other: Vec2): boolean {
-    console.warn('Deprecated. Use #notEqual instead.')
-    return this.notEqual(other)
   }
 
   /**

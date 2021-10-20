@@ -94,7 +94,6 @@ class GeomItem extends BaseGeomItem {
     super(name)
     this.addParameter(this.geomParam)
     this.addParameter(this.materialParam)
-    this.addParameterDeprecationMapping('material', 'Material')
     this.addParameter(this.geomOffsetXfoParam)
     this.addParameter(this.geomMatParam)
 

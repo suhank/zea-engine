@@ -32,17 +32,6 @@ class ParameterOwner extends EventEmitter {
   }
 
   /**
-   * @deprecated
-   * Returns the number of parameters current object has.
-   *
-   * @return {number} - Amount of parameters in current object.
-   */
-  numParameters(): number {
-    console.warn('Deprecated. Use #getNumParameters instead.')
-    return this.getNumParameters()
-  }
-
-  /**
    * Returns the number of parameters current object has.
    *
    * @return {number} - Amount of parameters in current object.

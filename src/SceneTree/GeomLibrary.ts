@@ -221,17 +221,6 @@ class GeomLibrary extends EventEmitter {
   }
 
   /**
-   * The loadArchive method.
-   * @param {any} fileUrl - The fileUrl value.
-   */
-  loadArchive(fileUrl: any) {
-    resourceLoader.loadArchive(fileUrl).then((entries: any) => {
-      throw Error('Not yet implemented!')
-      // this.loadBin(entries)
-    })
-  }
-
-  /**
    * The readBinaryBuffer method.
    * @param {string} geomFileID - The key value.
    * @param {ArrayBuffer} buffer - The buffer value.

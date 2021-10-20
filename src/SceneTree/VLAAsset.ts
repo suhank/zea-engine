@@ -1,5 +1,4 @@
 import { SystemDesc } from '../SystemDesc'
-import { FilePathParameter } from './Parameters/FilePathParameter'
 import { AssetItem, AssetLoadContext } from './AssetItem'
 import { BinReader } from './BinReader'
 import { resourceLoader } from './resourceLoader'
@@ -9,9 +8,6 @@ import { Version } from './Version'
 /**
  * Class designed to load and handle `.vla` files.
  *
- * **Parameters**
- * * **DataFilePath(`FilePathParameter`):** Used to specify the path to the file.
- *
  * **Events**
  * * **loaded:** Triggered once the tree is loaded. Note: the tree bounding box is valid once the tree is loaded.
  * * **geomsLoaded:** Triggered once all geometries are loaded.
@@ -19,11 +15,6 @@ import { Version } from './Version'
  * @extends AssetItem
  */
 class VLAAsset extends AssetItem {
-  /**
-   * @member {FilePathParameter} fileParam - Used to specify the path to the file.
-   */
-  fileParam: FilePathParameter = new FilePathParameter('FilePath')
-  protected __datafileLoaded: any
   /**
    * Create a VLA asset.
    * @param {string} name - The name value.
@@ -36,14 +27,6 @@ class VLAAsset extends AssetItem {
     // first state when this signal emits.
     this.__geomLibrary.on('loaded', () => {
       this.emit('geomsLoaded')
-    })
-
-    this.addParameterDeprecationMapping('DataFilePath', 'FilePath') // Note: migrating from 'DataFilePath' to 'FilePath'
-
-    this.addParameter(this.fileParam)
-    this.fileParam.on('valueChanged', () => {
-      const url = this.fileParam.getUrl()
-      this.load(url)
     })
   }
 
@@ -147,33 +130,6 @@ class VLAAsset extends AssetItem {
         }
       )
     })
-  }
-
-  /**
-   * The fromJSON method decodes a json object for this type.
-   *
-   * @param {Record<any,any>} j - The json object this item must decode.
-   * @param {AssetLoadContext} context - The load context object that provides additional data such as the units of the scene we are loading into.
-   * @param {function} onDone - The onDone value.
-   */
-  fromJSON(j: Record<string, any>, context?: Record<string, any>, onDone?: any) {
-    if (!context) context = {}
-    context.assetItem = this
-
-    const loadAssetJSON = () => {
-      super.fromJSON(j, context, onDone)
-      if (onDone) onDone()
-    }
-
-    if (j.params && j.params.DataFilePath) {
-      // Save the callback function for later.
-      this.__datafileLoaded = loadAssetJSON
-      const filePathJSON = j.params.DataFilePath
-      delete j.params.DataFilePath
-      this.fileParam.fromJSON(filePathJSON, context)
-    } else {
-      loadAssetJSON()
-    }
   }
 }
 

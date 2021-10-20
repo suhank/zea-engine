@@ -202,20 +202,9 @@ class BaseItem extends ParameterOwner implements Owner {
 
   /**
    * The isSelected method.
-   * @deprecated
-   * @see `getSelected` method
    * @return {boolean} - The return value.
    */
   isSelected(): boolean {
-    return this.__selected
-  }
-
-  /**
-   * Returns `true` if this item has been selected.
-   *
-   * @return {boolean} - The current selection state.
-   */
-  getSelected(): boolean {
     return this.__selected
   }
 

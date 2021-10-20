@@ -158,9 +158,9 @@ const getUnitsFactor = (units: string) => {
  * @extends TreeItem
  */
 class AssetItem extends TreeItem {
-  __geomLibrary: GeomLibrary
-  __materials: MaterialLibrary
-  loaded: boolean
+  __geomLibrary: GeomLibrary = new GeomLibrary()
+  __materials: MaterialLibrary = new MaterialLibrary()
+  loaded: boolean = false
 
   protected __engineDataVersion?: Version
   protected __unitsScale: number = 1.0
@@ -172,10 +172,6 @@ class AssetItem extends TreeItem {
    */
   constructor(name: string = '') {
     super(name)
-
-    this.__geomLibrary = new GeomLibrary()
-    this.__materials = new MaterialLibrary()
-    this.loaded = false
   }
 
   /**

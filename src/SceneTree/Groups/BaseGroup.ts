@@ -67,41 +67,6 @@ class BaseGroup extends TreeItem {
   }
 
   /**
-   * This method is mostly used in our demos,
-   * and should be removed from the interface.
-   *
-   * @deprecated
-   * @param {array} paths - The paths value.
-   * @private
-   */
-  setPaths(paths: string[]): void {
-    this.clearItems(false)
-
-    if (this.searchRoot == undefined) {
-      console.warn('BaseGroup does not have an owner and so cannot resolve paths:', this.getName())
-      return
-    }
-    const items: any = []
-    paths.forEach((path: any) => {
-      const treeItem = this.searchRoot!.resolvePath(path)
-      if (treeItem) items.push(treeItem)
-      else {
-        console.warn('Path does not resolve to an Item:', path, ' group:', this.getName())
-      }
-    })
-    this.setItems(items)
-  }
-
-  /**
-   * Uses the specified list of paths to look and get each `BaseItem` object and add it to BaseGroup's `Items` parameter.
-   *
-   * @param {array} paths - The paths value.
-   */
-  resolveItems(paths: string[]): void {
-    this.setPaths(paths)
-  }
-
-  /**
    * The __bindItem method.
    * @param {TreeItem} item - The item value.
    * @param {number} index - The index value.

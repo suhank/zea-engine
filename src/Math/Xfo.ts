@@ -18,7 +18,7 @@ class Xfo {
    * <br>
    * **Note:** You can leave it empty and use other methods ti set the state of the class.
    *
-   * @see [`setFromOther`](#setFromOther) [`fromMat4`](#fromMat4) [`setFromFloat32Array`](#setFromFloat32Array) [`fromJSON`](#fromJSON)
+   * @see [`setFromOther`](#setFromOther) [`setFromMat4`](#setFromMat4) [`setFromFloat32Array`](#setFromFloat32Array) [`fromJSON`](#fromJSON)
    *
    * @param {Float32Array | Vec3} [tr] - The translation value.
    * @param {Quat} [ori] - The orientation value.
@@ -205,16 +205,6 @@ class Xfo {
 
   /**
    * Sets the state of the Xfo object using Mat4.
-   * @deprecated
-   * @param {Mat4} mat4 - The mat4 value.
-   */
-  fromMat4(mat4: Mat4): void {
-    this.setFromMat4(mat4)
-  }
-
-  /**
-   * Sets the state of the Xfo object using Mat4.
-   * @deprecated
    * @param {Mat4} mat4 - The mat4 value.
    */
   setFromMat4(mat4: Mat4): void {

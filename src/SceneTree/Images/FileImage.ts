@@ -1,6 +1,5 @@
 import { Registry } from '../../Registry'
 import { BaseImage } from '../BaseImage'
-import { FilePathParameter } from '../Parameters/FilePathParameter'
 import { BinReader } from '../BinReader'
 
 // Cache of any images already loaded.
@@ -15,11 +14,6 @@ class FileImage extends BaseImage {
   protected __data: HTMLImageElement | null = null
 
   /**
-   * @member {FilePathParameter} fileParam - Used to specify the path to the file.
-   */
-  fileParam: FilePathParameter = new FilePathParameter('FilePath')
-
-  /**
    * Create a file image.
    * @param {string} name - The name value.
    * @param {string} filePath - The filePath value.
@@ -31,17 +25,7 @@ class FileImage extends BaseImage {
     this.crossOrigin = 'anonymous'
     this.loaded = false
 
-    this.addParameter(this.fileParam)
-    this.fileParam.on('valueChanged', () => {
-      this.loaded = false
-
-      if (this.fileParam.value) {
-        const url = this.fileParam.getUrl()
-        this.load(url)
-      }
-    })
-
-    if (filePath && filePath != '') this.fileParam.setFilepath(filePath)
+    if (filePath && filePath != '') this.load(filePath)
   }
 
   /**
@@ -172,16 +156,6 @@ class FileImage extends BaseImage {
 
     const filePath = reader.loadStr()
     if (typeof filePath === 'string' && filePath != '') {
-      // if (context.lod >= 0) {
-      //   const suffixSt = filePath.lastIndexOf('.')
-      //   if (suffixSt != -1) {
-      //     const lodPath = filePath.substring(0, suffixSt) + context.lod + filePath.substring(suffixSt)
-      //     if (resourceLoader.resolveFilepath(lodPath)) {
-      //       filePath = lodPath
-      //     }
-      //   }
-      // }
-      // this.getParameter('FilePath').setFilepath(filePath)
       const basePath = context.url.substring(0, context.url.lastIndexOf('/'))
       this.load(basePath + '/' + filePath)
     }

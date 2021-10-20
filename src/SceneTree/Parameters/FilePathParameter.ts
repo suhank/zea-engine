@@ -25,36 +25,13 @@ class FilePathParameter extends Parameter<string> {
   }
 
   /**
-   * Returns complete file path.
-   *
-   * @return {string} - The return value.
-   */
-  getFilepath(): string {
-    if (this.__value) {
-      return (resourceLoader as any).getFilepath(this.__value)
-    }
-
-    return ''
-  }
-
-  /**
-   * Resolves resourceId using the specified path and sets its value to the parameter.
-   *
-   * @param {string} filePath - The filePath value.
-   */
-  setFilepath(filePath: string): void {
-    this.setValue(resourceLoader.resolveFileId(filePath))
-  }
-
-  /**
    * Returns parameter's file name
    *
    * @return {string} - The return value.
    */
   getFilename(): string {
     if (!this.__value) throw 'No file value'
-
-    return resourceLoader.resolveFilename(this.__value)
+    return this.__value.lastIndexOf('/') > -1 ? this.__value.substring(this.__value.lastIndexOf('/') + 1) : ''
   }
 
   /**
@@ -82,44 +59,6 @@ class FilePathParameter extends Parameter<string> {
       else return filename
     }
     return null
-  }
-
-  /**
-   * Returns file object, which contains the url, resourceId and the name.
-   *
-   * @return {Record<string, string | undefined>} - The return value.
-   */
-  getFileDesc(): Record<string, string | undefined> {
-    return this.getFile()
-  }
-
-  /**
-   * Returns file object, which contains the url, resourceId and the name.
-   *
-   * @return {Record<string, string | undefined>} - The return value.
-   */
-  getFile(): Record<string, string | undefined> {
-    return { id: this.__value, url: this.getUrl(), name: this.getFilename() }
-  }
-
-  /**
-   * Sets file data.
-   *
-   * @param {string} url - the url value of the
-   * @param {string} name - (optional) the name of the file that the Url points to.
-   */
-  setUrl(url: string, name: string): void {
-    this.setValue(resourceLoader.resolveFileId(url))
-  }
-
-  /**
-   * Returns the file url string.
-   *
-   * @return {string} - The return value.
-   */
-  getUrl(): string {
-    if (!this.__value) throw 'No file value'
-    return resourceLoader.resolveURL(this.__value)
   }
 
   /**

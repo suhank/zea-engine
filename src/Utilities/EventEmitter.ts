@@ -124,31 +124,6 @@ class EventEmitter extends BaseClass {
   }
 
   /**
-   * @deprecated Use #on instead.
-   *
-   * @param {string} eventName - The name of the event.
-   * @param {(event: BaseEvent) => void} listener - The listener function(callback).
-   * @return {number} - the id that can be used to remove the listener.
-   */
-  addListener(eventName: string, listener: (event: BaseEvent) => void): number {
-    console.warn('Deprecated. Use #on instead.')
-
-    return this.on(eventName, listener)
-  }
-
-  /**
-   * @deprecated Use #off instead.
-   *
-   * @param {string} eventName - The name of the event.
-   * @param {(event: BaseEvent) => void} listener - The listener function.
-   */
-  removeListener(eventName: string, listener: (event: BaseEvent) => void): void {
-    console.warn('Deprecated. Use #off instead.')
-
-    this.off(eventName, listener)
-  }
-
-  /**
    * remove listener by ID returned from #on
    *
    * @param {string} eventName - The name of the event.

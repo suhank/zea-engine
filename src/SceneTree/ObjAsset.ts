@@ -9,7 +9,6 @@ import { loadTextfile } from './Utils'
 import { Material } from './Material'
 import { resourceLoader } from './resourceLoader'
 import { BooleanParameter, NumberParameter, StringParameter } from './Parameters/index'
-import { FilePathParameter } from './Parameters/FilePathParameter'
 import { FileImage } from './Images'
 import { Vec3Attribute } from './Geometry/Vec3Attribute'
 import { Vec2Attribute } from './Geometry/Vec2Attribute'
@@ -26,7 +25,6 @@ import { Vec2Attribute } from './Geometry/Vec2Attribute'
  * * **loadMtlFile(`BooleanParameter`):** _todo_
  * * **unitsConversion(`NumberParameter`):** _todo_
  * * **defaultShader(`StringParameter`):** _todo_
- * * **ObjFilePath(`FilePathParameter`):** Used to specify the path to the file.
  *
  * **Events**
  * * **loaded:** Triggered once everything is loaded.
@@ -35,6 +33,11 @@ import { Vec2Attribute } from './Geometry/Vec2Attribute'
  * @extends AssetItem
  */
 class ObjAsset extends AssetItem {
+  splitObjects: BooleanParameter = new BooleanParameter('splitObjects', false)
+  splitGroupsIntoObjects: BooleanParameter = new BooleanParameter('splitGroupsIntoObjects', false)
+  loadMtlFile: BooleanParameter = new BooleanParameter('loadMtlFile', true)
+  unitsConversion: NumberParameter = new NumberParameter('unitsConversion', 1.0)
+  defaultShader: StringParameter = new StringParameter('defaultShader', '')
   /**
    * Create an obj asset.
    * @param {string} name - The name of the object asset.
@@ -65,11 +68,6 @@ class ObjAsset extends AssetItem {
    */
   defaultShaderParam: StringParameter = new StringParameter('defaultShader', '')
 
-  /**
-   * @member {FilePathParameter} fileParam - Used to specify the path to the file.
-   */
-  fileParam: FilePathParameter = new FilePathParameter('FilePath')
-
   constructor(name: string) {
     super(name)
     this.addParameter(this.splitObjectsParam)
@@ -77,13 +75,6 @@ class ObjAsset extends AssetItem {
     this.addParameter(this.loadMtlFileParam)
     this.addParameter(this.unitsConversionParam)
     this.addParameter(this.defaultShaderParam)
-    this.addParameter(this.fileParam)
-
-    this.fileParam.on('valueChanged', () => {
-      this.loaded = false
-      const url = this.fileParam.getUrl()
-      this.load(url)
-    })
   }
 
   /**
@@ -92,6 +83,7 @@ class ObjAsset extends AssetItem {
    * @return {Promise} - Returns a promise that resolves once the initial load is complete
    */
   load(url: string): Promise<void> {
+    this.loaded = false
     return new Promise((resolve, reject) => {
       const fileFolder = url.substring(0, url.lastIndexOf('/')) + '/'
       const filename = url.substring(url.lastIndexOf('/') + 1)

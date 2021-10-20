@@ -518,18 +518,6 @@ class GLTexture2D extends RefCounted {
   }
 
   /**
-   * The bind method.
-   * @param {RenderState} renderstate - The object tracking the current state of the renderer
-   * @param {Uniform} unif - The WebGL uniform
-   * @return {boolean} - The return value.
-   * @deprecated
-   */
-  bind(renderstate: RenderState, unif: Uniform): boolean {
-    console.warn("'bind' is deprecated. Please use 'bindToUniform'")
-    return this.bindToUniform(renderstate, unif)
-  }
-
-  /**
    * The preBind method.
    * @param {Uniform} unif - The unif value.
    * @param {Uniforms} unifs - The unifs value.

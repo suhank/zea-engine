@@ -2,14 +2,10 @@ import { Color } from '../../Math/index'
 import { Registry } from '../../Registry'
 import { BaseImage } from '../BaseImage'
 import { resourceLoader } from '../resourceLoader'
-import { FilePathParameter } from '../Parameters/FilePathParameter'
 import { BinReader } from '../BinReader'
 
 /**
  * Class representing a VLH image.
- *
- * **Parameters**
- * * **FilePath(`FilePathParameter`):** Used to specify the path to the file.
  *
  * **Events**
  * * **loaded:** Triggered when image data is loaded.
@@ -23,11 +19,6 @@ class VLHImage extends BaseImage {
   protected __hdrTint: Color
   protected __stream: boolean
   protected __data: Record<string, any> = {}
-
-  /**
-   * @member {FilePathParameter} fileParam - Used to specify the path to the file.
-   */
-  fileParam: FilePathParameter = new FilePathParameter('FilePath')
 
   /**
    * Create a VLH image.
@@ -47,25 +38,9 @@ class VLHImage extends BaseImage {
     this.__stream = 'stream' in params ? params['stream'] : false
     this.type = 'FLOAT'
 
-    this.addParameter(this.fileParam)
-    this.fileParam.on('valueChanged', () => {
-      this.loaded = false
-      const url = this.fileParam.getUrl()
-      this.load(url)
-    })
-
     if (filepath) {
-      this.fileParam.setFilepath(filepath)
+      this.load(filepath)
     }
-  }
-
-  /**
-   * Returns `FilePath` parameter's value.
-   *
-   * @return {string} - The return value.
-   */
-  getResourcePath(): string {
-    return this.fileParam.value
   }
 
   /**
@@ -108,6 +83,7 @@ class VLHImage extends BaseImage {
    * @return {Promise} - Returns a promise that resolves once the initial load is complete
    */
   load(url: string): Promise<void> {
+    this.loaded = false
     return new Promise<void>((resolve, reject) => {
       const filename = url.lastIndexOf('/') > -1 ? url.substring(url.lastIndexOf('/') + 1) : ''
       const stem = filename.substring(0, filename.lastIndexOf('.'))
@@ -213,18 +189,9 @@ class VLHImage extends BaseImage {
   readBinary(reader: BinReader, context: Record<string, any>): void {
     // super.readBinary(reader, context);
     this.setName(reader.loadStr())
-    let resourcePath: string = reader.loadStr()
-    if (typeof resourcePath === 'string' && resourcePath != '') {
-      if (context.lod >= 0) {
-        const suffixSt = resourcePath.lastIndexOf('.')
-        if (suffixSt != -1) {
-          const lodPath = resourcePath.substring(0, suffixSt) + context.lod + resourcePath.substring(suffixSt)
-          if (resourceLoader.resourceAvailable(lodPath)) {
-            resourcePath = lodPath
-          }
-        }
-      }
-      this.fileParam.value = resourcePath
+    let url: string = reader.loadStr()
+    if (typeof url === 'string' && url != '') {
+      this.load(url)
     }
   }
 }

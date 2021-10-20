@@ -311,21 +311,6 @@ class GLBaseRenderer extends ParameterOwner {
   // Scene
 
   /**
-   * Sets up and displays the scene grid of a given size and resolution.
-   *
-   * @param {number} gridSize - The size of the grid.
-   * @param {Color} gridColor - The color of the grid.
-   * @param {number} resolution - The resolution of the grid.
-   * @param {number} lineThickness - The thickness of the grid lines.
-   * @return {GridTreeItem} - The return value.
-   * @deprecated
-   */
-  setupGrid(gridSize: number, gridColor: Color, resolution: number, lineThickness: number): GridTreeItem {
-    console.warn('@GLBaseRenderer#setupGrid - Deprecated Method. Please use scene.setupGrid')
-    return this.__scene!.setupGrid(gridSize, resolution, gridColor)
-  }
-
-  /**
    * Returns current scene(Environment where all assets live) object.
    *
    * @return {Scene} - The return value.

@@ -16,7 +16,6 @@ export * from './Parameters/MaterialParameter'
 export * from './Parameters/MaterialFloatParam'
 export * from './Parameters/MaterialColorParam'
 // export * from './Parameters/GeometryParameter'
-export * from './Parameters/FilePathParameter'
 export * from './Geometry/index'
 export * from './Images/index'
 
@@ -45,6 +44,3 @@ export * from './ObjAsset'
 
 export * from './Operators/index'
 export * from './Manipulators/index'
-
-// Added this for backwards compatibility, removing later on
-export * from './SGFactory'

@@ -101,16 +101,6 @@ class Attribute extends BaseClass {
   }
 
   /**
-   * Resizes current data array to to a new size.
-   * In case the new size is bigger than current size, the new values are filled up with default ones.
-   * @deprecated
-   * @param {number} size - The size value.
-   */
-  resize(size: number): void {
-    this.setCount(size)
-  }
-
-  /**
    * Fills up data values with default ones starting from the specified index.
    *
    * @param {number} start - The start value.
