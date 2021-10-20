@@ -6,8 +6,6 @@
   "license": "AGPL-3.0",
   "description": "Zea Engine",
   "author": "Zea Inc.",
-  "main": "index.d.ts",
-  "module": "dist/index.esm.js",
   "browser": "dist/index.umd.js",
   "typings": "dist/index.d.ts",
   "files": [

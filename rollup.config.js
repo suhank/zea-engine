@@ -21,7 +21,7 @@ const glslOptions = {
   exclude: 'node_modules/**',
 
   // Compress shader by default using logic from rollup-plugin-glsl -- need to update parser to use this option -- it removes newlines
-  compress: false
+  compress: false,
 }
 
 const plugins = [
@@ -30,12 +30,12 @@ const plugins = [
   nodePolyfills(),
   resolve({
     browser: true,
-    preferBuiltins: false
+    preferBuiltins: false,
   }),
   json(),
   webWorkerLoader(),
   svg(),
-  glslify(glslOptions)
+  glslify(glslOptions),
 ]
 
 const isProduction = !process.env.ROLLUP_WATCH
@@ -47,41 +47,16 @@ if (isProduction) {
 const sourcemap = true
 
 const result = [
-  // Browser-friendly UMD build.
   {
     input: 'dist/index.js',
     output: {
       name: 'zeaEngine',
       file: pkg.browser,
       format: 'umd',
-      sourcemap
+      sourcemap,
     },
-    plugins
-  }
+    plugins,
+  },
 ]
-
-if (isProduction) {
-  result.push(
-    // CommonJS (for Node) and ES module (for bundlers) build.
-    // (We could have three entries in the configuration array
-    // instead of two, but it's quicker to generate multiple
-    // builds from a single configuration where possible, using
-    // an array for the `output` option, where we can specify
-    // `file` and `format` for each target)
-    {
-      input: 'dist/index.js',
-      output: [
-        {
-          file: pkg.main,
-          format: 'cjs',
-          sourcemap
-        } /*,
-        // I don't think this build is currently usable, so disabling it for now.
-        { file: pkg.module, format: 'es', sourcemap }*/
-      ],
-      plugins
-    }
-  )
-}
 
 export default result
