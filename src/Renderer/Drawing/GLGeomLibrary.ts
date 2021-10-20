@@ -141,9 +141,7 @@ class GLGeomLibrary extends EventEmitter {
       this.geomRefCounts[index]++
       return index
     }
-    if (this.freeGeomIndices.length) {
-      index = this.freeGeomIndices.pop()!
-    } else {
+    if (this.freeGeomIndices.length == 0) {
       const prevSize = this.geomVertexCounts.length
       const newSize = prevSize * 2
       this.geomVertexCounts = resizeIntArray(this.geomVertexCounts, newSize)
@@ -209,7 +207,6 @@ class GLGeomLibrary extends EventEmitter {
     this.geomVertexCounts[index] = 0
     this.geomVertexOffsets[index] = 0
 
-    // geom.deleteMetadata(this.glgeomset_indexKey)
     this.geoms[index] = null
     this.freeGeomIndices.push(index)
     delete this.geomsDict[geom.getId()]
