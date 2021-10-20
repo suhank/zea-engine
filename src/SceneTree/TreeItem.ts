@@ -980,7 +980,7 @@ class TreeItem extends BaseItem {
     // if ('bbox' in j){
     //     let box = new Box3();
     //     box.fromJSON(j.bbox);
-    //     this.boundingBoxParam.setValue(box);
+    //     this.boundingBoxParam.value = box)
     // }
 
     if (j.children != null) {

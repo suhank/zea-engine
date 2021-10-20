@@ -49,21 +49,17 @@ class CuttingPlane extends BaseGroup {
     this.addParameter(this.cutAwayEnabledParam)
     this.addParameter(this.cutPlaneParam)
 
-    this.cutPlaneOp = new CuttingPlaneOperator(
-      this.globalXfoParam,
-      this.cutPlaneParam
-      // <XfoParameter>this.getParameter('CutPlane') // TODO: should this method accept vec4Param or just xfo?
-    )
+    this.cutPlaneOp = new CuttingPlaneOperator(this.globalXfoParam, this.cutPlaneParam)
 
     // Create the geometry to display the plane.
     const material = new Material('plane', 'FlatSurfaceShader')
-    material.getParameter('BaseColor')!.setValue(new Color(1, 1, 1, 0.2))
+    material.getParameter('BaseColor')!.value = new Color(1, 1, 1, 0.2)
     const plane = new GeomItem(`PlaneGeom`, new Plane(1, 1), material)
     plane.setSelectable(false) // used to be: plane.getSelectable(false)
     this.addChild(plane)
 
     const borderMaterial = new Material('border', 'LinesShader')
-    borderMaterial.getParameter('BaseColor')!.setValue(new Color(1, 0, 0, 1))
+    borderMaterial.getParameter('BaseColor')!.value = new Color(1, 0, 0, 1)
     const border = new GeomItem(`BorderGeom`, new Rect(1, 1), borderMaterial)
     border.setSelectable(false) // used to be: border.getSelectable(false)
     this.addChild(border)

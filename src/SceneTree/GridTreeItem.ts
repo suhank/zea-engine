@@ -29,10 +29,10 @@ class GridTreeItem extends TreeItem {
     this.setSelectable(false)
 
     const gridMaterial = new Material('gridMaterial', 'LinesShader')
-    gridMaterial.getParameter('BaseColor')!.setValue(gridColor)
-    gridMaterial.getParameter('Overlay')!.setValue(0.0)
-    gridMaterial.getParameter('StippleValue')!.setValue(0)
-    gridMaterial.getParameter('OccludedStippleValue')!.setValue(1)
+    gridMaterial.getParameter('BaseColor')!.value = gridColor
+    gridMaterial.getParameter('Overlay')!.value = 0.0
+    gridMaterial.getParameter('StippleValue')!.value = 0
+    gridMaterial.getParameter('OccludedStippleValue')!.value = 1
 
     const grid = new Grid(gridSize, gridSize, resolution, resolution, true)
     const gridItem = new GeomItem('GridItem', grid, gridMaterial)
@@ -47,19 +47,19 @@ class GridTreeItem extends TreeItem {
     positions.getValueRef(1).set(gridSize * 0.5, 0.0, 0.0)
 
     const gridXAxisMaterial = new Material('gridXAxisMaterial', 'LinesShader')
-    gridXAxisMaterial.getParameter('BaseColor')!.setValue(new Color(gridColor.luminance(), 0, 0))
-    gridXAxisMaterial.getParameter('Overlay')!.setValue(0.0)
-    gridXAxisMaterial.getParameter('StippleValue')!.setValue(0)
-    gridXAxisMaterial.getParameter('OccludedStippleValue')!.setValue(1)
+    gridXAxisMaterial.getParameter('BaseColor')!.value = new Color(gridColor.luminance(), 0, 0)
+    gridXAxisMaterial.getParameter('Overlay')!.value = 0.0
+    gridXAxisMaterial.getParameter('StippleValue')!.value = 0
+    gridXAxisMaterial.getParameter('OccludedStippleValue')!.value = 1
     const gridXAxis = new GeomItem('xAxisLine', axisLine, gridXAxisMaterial)
     gridXAxis.setSelectable(false)
     this.addChild(gridXAxis, false)
 
     const gridYAxisMaterial = new Material('gridYAxisMaterial', 'LinesShader')
-    gridYAxisMaterial.getParameter('BaseColor')!.setValue(new Color(0, gridColor.luminance(), 0))
-    gridYAxisMaterial.getParameter('Overlay')!.setValue(0.0)
-    gridYAxisMaterial.getParameter('StippleValue')!.setValue(0)
-    gridYAxisMaterial.getParameter('OccludedStippleValue')!.setValue(1)
+    gridYAxisMaterial.getParameter('BaseColor')!.value = new Color(0, gridColor.luminance(), 0)
+    gridYAxisMaterial.getParameter('Overlay')!.value = 0.0
+    gridYAxisMaterial.getParameter('StippleValue')!.value = 0
+    gridYAxisMaterial.getParameter('OccludedStippleValue')!.value = 1
     gridYAxisMaterial.setSelectable(false)
 
     const zAxisLineItem = new GeomItem('yAxisLine', axisLine, gridYAxisMaterial)

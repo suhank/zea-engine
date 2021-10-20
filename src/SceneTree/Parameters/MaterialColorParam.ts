@@ -10,7 +10,7 @@ import { BinReader } from '../../SceneTree/BinReader'
  * i.e.:
  * ```javascript
  * const image = new LDRImage();
- * image.getParameter('FilePath').setUrl("https://storage.googleapis.com/zea-playground-assets/zea-engine/texture.png")
+ * image.load("https://storage.googleapis.com/zea-playground-assets/zea-engine/texture.png")
  *
  * const matColorParam = new MaterialColorParam('MyMaterialColor', new Color(0, 254, 2))
  * matColorParam.setImage(image)

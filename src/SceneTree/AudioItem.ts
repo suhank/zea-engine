@@ -113,13 +113,13 @@ class AudioItem extends TreeItem {
     }
 
     this.play = () => {
-      playStateParam.setValue(1)
+      playStateParam.value = 1
     }
     this.stop = () => {
-      playStateParam.setValue(0)
+      playStateParam.value = 0
     }
     this.pause = () => {
-      playStateParam.setValue(0)
+      playStateParam.value = 0
     }
 
     this.getAudioSource = () => {
@@ -145,7 +145,7 @@ class AudioItem extends TreeItem {
     })
 
     this.mute = (value: any) => {
-      muteParam.setValue(value)
+      muteParam.value = value
     }
 
     // Note: Many parts of the code assume a 'loaded' signal.

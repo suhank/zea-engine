@@ -267,7 +267,7 @@ class AssetItem extends TreeItem {
       const localXfoParam = this.localXfoParam
       const xfo = localXfoParam.value
       xfo.sc.scaleInPlace(this.__unitsScale)
-      localXfoParam.setValue(xfo)
+      localXfoParam.value = xfo
     }
 
     if (context.versions['zea-engine'].compare([0, 0, 6]) > 0) {

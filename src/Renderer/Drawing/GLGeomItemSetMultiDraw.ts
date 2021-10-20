@@ -369,11 +369,13 @@ abstract class GLGeomItemSetMultiDraw extends EventEmitter {
    * @param {RenderState} renderstate - The object tracking the current state of the renderer
    */
   draw(renderstate: RenderState) {
-    if (this.visibleItems.length == 0) {
-      return
-    }
     if (this.drawIdsBufferDirty) {
       this.updateDrawIDsBuffer(renderstate)
+    }
+    // Note: updateDrawIDsBuffer first, as this avoids a case where the buffers stay dirty
+    // because the last item was removed.
+    if (this.visibleItems.length == 0) {
+      return
     }
     if (this.drawIdsTexture) {
       const { drawIdsTexture } = renderstate.unifs

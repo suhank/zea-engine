@@ -10,7 +10,7 @@ import { FileImage } from './FileImage'
  *
  * ```
  * const video = new LDRVideo()
- * video.getParameter('FilePath').setUrl("https://storage.googleapis.com/zea-playground-assets/zea-engine/video.mp4")
+ * video.load("https://storage.googleapis.com/zea-playground-assets/zea-engine/video.mp4")
  * ```
  *
  * **Parameters**

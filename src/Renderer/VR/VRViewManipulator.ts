@@ -32,7 +32,7 @@ class VRViewManipulator extends BaseTool {
     this.xrvp = xrvp
     this.vrControllerToolTip = new Sphere(0.02 * 0.75)
     this.vrControllerToolTipMat = new Material('Cross', 'FlatSurfaceShader')
-    this.vrControllerToolTipMat.getParameter('BaseColor')!.setValue(new Color('#03E3AC'))
+    this.vrControllerToolTipMat.getParameter('BaseColor')!.value = new Color('#03E3AC')
     this.listenerIDs = {}
   }
 

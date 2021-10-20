@@ -122,10 +122,10 @@ class MaterialGroup extends BaseGroup {
             // but else we end up assigning surface materials to our edges.
             if (m != material && (!m || m.getShaderName() != 'LinesShader')) {
               this.__backupMaterials[p.getId()] = m
-              p.setValue(material)
+              p.value = material
             }
           } else if (this.__backupMaterials[p.getId()]) {
-            p.setValue(this.__backupMaterials[p.getId()])
+            p.value = this.__backupMaterials[p.getId()]
           }
         }
       })
@@ -169,7 +169,7 @@ class MaterialGroup extends BaseGroup {
             // but else we end up assigning surface materials to our edges.
             if (m != material && (!m || m.getShaderName() != 'LinesShader')) {
               this.__backupMaterials[p.getId()] = m
-              p.setValue(material)
+              p.value = material
             }
           }
         }

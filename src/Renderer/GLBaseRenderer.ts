@@ -477,7 +477,7 @@ class GLBaseRenderer extends ParameterOwner {
     if (treeItem instanceof GeomItem) {
       const geomItem = treeItem
       if (listenerIDs['Geometry.valueChanged']) {
-        const geomParam = treeItem.getParameter('Geometry')
+        const geomParam = treeItem.geomParam
         geomParam.removeListenerById('valueChanged', listenerIDs['Geometry.valueChanged'])
       }
 

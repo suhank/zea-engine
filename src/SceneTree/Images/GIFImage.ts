@@ -16,7 +16,7 @@ const imageDataLibrary: { [key: string]: any } = {}
  *
  * ```
  * const image = new GIFImage()
- * image.getParameter('FilePath').setUrl("https://storage.googleapis.com/zea-playground-assets/zea-engine/texture.gif")
+ * image.load("https://storage.googleapis.com/zea-playground-assets/zea-engine/texture.gif")
  * ```
  *
  * **Parameters**
@@ -61,7 +61,7 @@ class GIFImage extends FileImage {
     let playing: any
     let frame = 0
     const incrementFrame = (numFrames: number) => {
-      frameParam.setValue(frame)
+      frameParam.value = frame
       if (playing) setTimeout(() => incrementFrame(numFrames), this.getFrameDelay(frame))
       frame = (frame + 1) % numFrames
     }

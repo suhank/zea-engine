@@ -128,32 +128,32 @@ class ObjAsset extends AssetItem {
               this.__materials.addMaterial(material)
               break
             case 'Kd':
-              material.getParameter('BaseColor')!.setValue(parseColor(elements))
+              material.getParameter('BaseColor')!.value = parseColor(elements)
               break
             case 'map_Kd':
-              material.getParameter('BaseColor')!.setValue(parseMap(elements))
+              material.getParameter('BaseColor')!.value = parseMap(elements)
               break
             case 'Ks':
               const specular = (parseFloat(elements[0]) + parseFloat(elements[1]) + parseFloat(elements[2])) / 3.0
-              material.getParameter('Roughness')!.setValue(1.0 - specular)
-              material.getParameter('Reflectance')!.setValue(specular)
+              material.getParameter('Roughness')!.value = 1.0 - specular
+              material.getParameter('Reflectance')!.value = specular
               break
             case 'map_Ks':
-              material.getParameter('Roughness')!.setValue(parseMap(elements /* flags=TEXTURE_INVERT */))
-              material.getParameter('Reflectance')!.setValue(0.2)
+              material.getParameter('Roughness')!.value = parseMap(elements /* flags=TEXTURE_INVERT */)
+              material.getParameter('Reflectance')!.value = 0.2
               break
             case 'd':
               const d = parseFloat(value)
               if (d < 1.0) {
                 material.setShaderName('TransparentSurfaceShader')
-                material.getParameter('Opacity')!.setValue(d)
+                material.getParameter('Opacity')!.value = d
               }
               break
             case 'map_d':
-              material.getParameter('alpha')!.setValue(parseFloat(elements))
+              material.getParameter('alpha')!.value = parseFloat(elements)
               break
             case 'map_bump':
-              material.getParameter('normal')!.setValue(parseMap(elements /* flags=BUMP_TO_NORMAL */))
+              material.getParameter('normal')!.value = parseMap(elements /* flags=BUMP_TO_NORMAL */)
               break
             default:
             // console.warn("Unhandled material parameter: '" + key +"' in:" + filePath);

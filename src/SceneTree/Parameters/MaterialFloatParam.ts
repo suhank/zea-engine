@@ -9,7 +9,7 @@ import { BinReader } from '../../SceneTree/BinReader'
  * i.e.:
  * ```javascript
  * const image = new LDRImage();
- * image.getParameter('FilePath').setUrl("https://storage.googleapis.com/zea-playground-assets/zea-engine/texture.png")
+ * image.load("https://storage.googleapis.com/zea-playground-assets/zea-engine/texture.png")
  *
  * const numberParam = new MaterialFloatParam('MyMaterialFloat', 15.5)
  * numberParam.setImage(image)

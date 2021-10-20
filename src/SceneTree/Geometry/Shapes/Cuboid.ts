@@ -71,30 +71,6 @@ class Cuboid extends ProceduralMesh {
   }
 
   /**
-   * Setter for the size of the cuboid.
-   *
-   * @param {number} x - The length of the edges along the X axis.
-   * @param {number} y - The length of the edges along the Y axis.
-   * @param {number} z - The length of the edges along the Z axis.
-   */
-  setSize(x: number, y: number, z: number): void {
-    this.sizeXParam.setValue(x)
-    this.sizeYParam.setValue(y)
-    this.sizeZParam.setValue(z)
-  }
-
-  /**
-   * Setter for the base size of the cuboid.
-   *
-   * @param {number} x - The length of the edges along the X axis.
-   * @param {number} y - The length of the edges along the Y axis.
-   */
-  setBaseSize(x: number, y: number): void {
-    this.sizeXParam.setValue(x)
-    this.sizeYParam.setValue(y)
-  }
-
-  /**
    * The rebuild method.
    * @private
    */
