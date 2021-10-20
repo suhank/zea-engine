@@ -107,35 +107,34 @@ class CameraManipulator extends BaseTool {
   protected __mouseWheelZoomCount: number = 0
   protected __mouseWheelZoomId: number = -1
 
-  
   /**
    * @member {NumberParameter} __orbitRateParam - The rate at which mouse or touch interactions are translated camera orientation changes.
-  */
+   */
   __orbitRateParam: NumberParameter = new NumberParameter('OrbitRate', SystemDesc.isMobileDevice ? 0.5 : 1)
-  
+
   /**
    * @member {NumberParameter} __dollySpeedParam - The rate at which the mouse button or touch interactions are translated camera dolly movement.
-  */
+   */
   __dollySpeedParam: NumberParameter = new NumberParameter('DollySpeed', 0.02)
-  
+
   /**
    * @member {NumberParameter} __mouseWheelDollySpeedParam - The rate at which the mouse wheel interactions are translated camera dolly movement.
-  */
+   */
   __mouseWheelDollySpeedParam: NumberParameter = new NumberParameter('MouseWheelDollySpeed', 0.1)
-  
+
   /**
    * @member {BooleanParameter} OrbitAroundCursor - TODO
-  */
+   */
   OrbitAroundCursor: BooleanParameter = new BooleanParameter('OrbitAroundCursor', true)
-  
+
   /**
    * @member {NumberParameter} walkSpeedParam - TODO
-  */
+   */
   walkSpeedParam: NumberParameter = new NumberParameter('WalkSpeed', 5) // Value is in meters/second
-  
+
   /**
    * @member {BooleanParameter} walkModeCollisionDetection - TODO
-  */
+   */
   walkModeCollisionDetection: BooleanParameter = new BooleanParameter('WalkModeCollisionDetection', false)
 
   /**
