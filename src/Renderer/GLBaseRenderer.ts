@@ -32,32 +32,31 @@ const registeredPasses: Record<string, any> = {}
  */
 class GLBaseRenderer extends ParameterOwner {
   protected listenerIDs: Record<number, Record<string, number>> = {}
-  protected directives: any // used in two ways -- requires refactor
-  solidAngleLimit: number
-  protected __div: any
+  protected directives: string[] = []
+  solidAngleLimit: number = 0.004
 
   __gl: WebGL12RenderingContext
   protected __glcanvas: HTMLCanvasElement | null = null
   protected __scene: Scene | null = null
 
-  protected __shaderDirectives: Record<string, any>
+  protected __shaderDirectives: Record<string, string> = {}
   protected __renderGeomDataFbosRequested: boolean = false
-  protected __shaders: Record<string, GLShader>
-  protected __passes: Record<number, GLPass[]>
-  protected __passesRegistrationOrder: any[]
-  protected __passCallbacks: any[]
+  protected __shaders: Record<string, GLShader> = {}
+  protected __passes: Record<number, GLPass[]> = {}
+  protected __passesRegistrationOrder: GLPass[] = []
+  protected __passCallbacks: any[] = []
 
-  protected __viewports: GLViewport[]
+  protected __viewports: GLViewport[] = []
   protected __activeViewport: GLViewport | undefined = undefined
-  protected __continuousDrawing: boolean
-  protected __redrawRequested: boolean
-  protected __isMobile: boolean
+  protected __continuousDrawing: boolean = false
+  protected __redrawRequested: boolean = false
+  protected __isMobile: boolean = false
   protected __drawSuspensionLevel = 0
-  __xrViewportPresenting: boolean
-  protected __floatGeomBuffer: any
+  __xrViewportPresenting: boolean = false
+  floatGeomBuffer: boolean = true
 
-  protected __supportXR: boolean
-  protected __xrViewport: VRViewport | undefined
+  protected __supportXR: boolean = false
+  protected __xrViewport: VRViewport | undefined = undefined
   protected __xrViewportPromise: Promise<VRViewport>
 
   glMaterialLibrary: GLMaterialLibrary
@@ -81,23 +80,7 @@ class GLBaseRenderer extends ParameterOwner {
       throw new Error('Unable to create renderer. WebGL not Supported')
     }
 
-    this.solidAngleLimit = 0.004
-
-    this.__shaders = {}
-    this.__passes = {}
-    this.__passesRegistrationOrder = []
-    this.__passCallbacks = []
-
-    this.__viewports = []
-    this.__continuousDrawing = false
-    this.__redrawRequested = false
     this.__isMobile = SystemDesc.isMobileDevice
-
-    this.__drawSuspensionLevel = 0
-    this.__shaderDirectives = {}
-    this.directives = {}
-
-    this.__xrViewportPresenting = false
 
     // Function Bindings.
     this.requestRedraw = this.requestRedraw.bind(this)
@@ -132,7 +115,6 @@ class GLBaseRenderer extends ParameterOwner {
     // ////////////////////////////////////////////
     // WebXR
     this.__supportXR = options.supportXR !== undefined ? options.supportXR : true
-    this.__xrViewport = undefined
     this.__xrViewportPromise = new Promise((resolve, reject) => {
       if (this.__supportXR) {
         // if(!navigator.xr && window.WebVRPolyfill != undefined) {
@@ -535,35 +517,15 @@ class GLBaseRenderer extends ParameterOwner {
     if (this.__xrViewportPresenting) {
       return
     }
-    // We cannot allow Our offscreen buffers to be resized to zero.
-    // Limit the min size to 16.
-    if (width < 16 || height < 16) {
-      return
-    }
-    // Note: devicePixelRatio has already been factored into the clientWidth and clientHeight,
-    // meaning we do not need to multiply client values by devicePixelRatio to get real values.
-    // On some devices, this duplicate multiplication (when the meta tag was not present), caused
-    // very large offscreen buffers to be created, which crashed devices.
-    // (PT 15/10/2019 - Zahner project)
-    // In some cases I have seen this is disabled using a viewport meta tag in the DOM, which then
-    // requires that we multiply by devicePixelRatio to get the screen pixels size.
-    // By removing that tag, it seems like manual zooming now on desktop systems does _NOT_
-    // effect the clientWidth/clientHeight which causes blurry rendering(when zoomed).
-    // This is a minor issue IMO, and so am disabling devicePixelRatio until its value is clear.
-    // _Remove the meta name="viewport" from the HTML_
-    const DPR = 1.0 // window.devicePixelRatio
 
-    const newWidth = width * DPR
-    const newHeight = height * DPR
-
-    if (newWidth != this.__glcanvas!.width || newHeight != this.__glcanvas!.height) {
-      this.__glcanvas!.width = newWidth
-      this.__glcanvas!.height = newHeight
+    if (width != this.__glcanvas!.width || height != this.__glcanvas!.height) {
+      this.__glcanvas!.width = width
+      this.__glcanvas!.height = height
 
       for (const vp of this.__viewports) {
-        vp.resize(newWidth, newHeight)
+        vp.resize(width, height)
       }
-      const event = new ResizedEvent(newWidth, newHeight)
+      const event = new ResizedEvent(width, height)
       this.emit('resized', event)
     }
     this.requestRedraw()
@@ -603,39 +565,56 @@ class GLBaseRenderer extends ParameterOwner {
       )
 
       this.__glcanvas = document.createElement('canvas')
-      this.__glcanvas!.style.left = '0px'
-      this.__glcanvas!.style.top = '0px'
-      this.__glcanvas!.style.width = '100%'
-      this.__glcanvas!.style.height = '100%'
 
-      this.__div = $canvas
-      this.__div.appendChild(this.__glcanvas)
+      $canvas.appendChild(this.__glcanvas)
     } else {
       this.__glcanvas = $canvas
     }
-
-    this.__glcanvas!.style.setProperty('touch-action', 'none')
-    const canvasIsStatic = window.getComputedStyle(<Element>this.__glcanvas).position === 'static' // TODO: is casting this to Element ok?
-
-    if (canvasIsStatic) {
-      console.warn(
-        '@GLBaseRenderer#setupWebGL.',
-        "The CANVAS element's position must be other than `static`.",
-        'See: https://docs.zea.live/zea-engine/#/getting-started/get-started-with-engine?id=basic-setup'
-      )
-
-      this.__glcanvas!.style.position = webglOptions.canvasPosition ? webglOptions.canvasPosition : 'absolute'
-    }
+    this.__glcanvas.style['touch-action'] = 'none'
+    this.__glcanvas.style.position = 'relative'
+    this.__glcanvas.style.width = 'auto'
+    this.__glcanvas.style.height = 'auto'
+    this.__glcanvas.style.margin = '0px'
 
     let lastResize = performance.now()
     let timoutId = 0
-    // @ts-ignore: semantic error TS2304:
-    this.resizeObserver = new ResizeObserver((entries) => {
+    const resizeObserver = new ResizeObserver((entries) => {
       for (const entry of entries) {
         if (!entry.contentRect) {
           return
         }
-
+        const calcPixelsAndResize = () => {
+          let width
+          let height
+          let dpr = window.devicePixelRatio
+          // @ts-ignore
+          if (entry.devicePixelContentBoxSize) {
+            // NOTE: Only this path gives the correct answer
+            // The other paths are imperfect fallbacks
+            // for browsers that don't provide anyway to do this
+            // @ts-ignore
+            width = entry.devicePixelContentBoxSize[0].inlineSize
+            // @ts-ignore
+            height = entry.devicePixelContentBoxSize[0].blockSize
+            dpr = 1 // it's already in width and height
+          } else if (entry.contentBoxSize) {
+            if (entry.contentBoxSize[0]) {
+              width = entry.contentBoxSize[0].inlineSize
+              height = entry.contentBoxSize[0].blockSize
+            } else {
+              // @ts-ignore
+              width = entry.contentBoxSize.inlineSize
+              // @ts-ignore
+              height = entry.contentBoxSize.blockSize
+            }
+          } else {
+            width = entry.contentRect.width
+            height = entry.contentRect.height
+          }
+          const displayWidth = Math.round(width * dpr)
+          const displayHeight = Math.round(height * dpr)
+          this.handleResize(displayWidth, displayHeight)
+        }
         // Note: Rapid resize events would cause WebGL to render black.
         // There appeared nothing to indicate why we get black, but throttling
         // the resizing of our canvas and buffers seems to work.
@@ -647,7 +626,7 @@ class GLBaseRenderer extends ParameterOwner {
             clearTimeout(timoutId)
             timoutId = 0
           }
-          this.handleResize(entry.contentRect.width, entry.contentRect.height)
+          calcPixelsAndResize()
         } else {
           // Set a timer to see if we can delay this resize by a few ms.
           // If a resize happens in the meantime that succeeds, then skip this one.
@@ -658,15 +637,24 @@ class GLBaseRenderer extends ParameterOwner {
             const now = performance.now()
             if (now - lastResize > 100) {
               lastResize = now
-              this.handleResize(entry.contentRect.width, entry.contentRect.height)
+              calcPixelsAndResize()
             }
           }, 100)
         }
       }
     })
-    const parentElement = this.__glcanvas!.parentElement!
-    this.handleResize(parentElement.clientWidth, parentElement.clientHeight)
-    this.resizeObserver.observe(parentElement)
+
+    this.handleResize(this.__glcanvas.parentElement.clientWidth, this.__glcanvas.parentElement.clientHeight)
+    // https://webglfundamentals.org/webgl/lessons/webgl-resizing-the-canvas.html
+    try {
+      // only call us of the number of device pixels changed
+      // @ts-ignore
+      resizeObserver.observe(this.__glcanvas.parentNode, { box: 'device-pixel-content-box' })
+    } catch (ex) {
+      // device-pixel-content-box is not supported so fallback to this
+      // @ts-ignore
+      resizeObserver.observe(this.__glcanvas.parentNode, { box: 'content-box' })
+    }
 
     webglOptions.preserveDrawingBuffer = true
     webglOptions.antialias = webglOptions.antialias != undefined ? webglOptions.antialias : true
@@ -707,11 +695,9 @@ class GLBaseRenderer extends ParameterOwner {
     // Note: We are now pushing on high-end mobile devices.
     // Galaxy and above. We need this. We need to accurately determine
     // if the float buffer is not supported.
-    this.__floatGeomBuffer = gl.floatTexturesSupported && SystemDesc.browserName != 'Safari'
-    gl.floatGeomBuffer = this.__floatGeomBuffer
-    // Note: the following returns UNSIGNED_BYTE even if the browser supports float.
-    // const implType = this.__gl.getParameter(this.__gl.IMPLEMENTATION_COLOR_READ_TYPE);
-    // this.__floatGeomBuffer = (implType == this.__gl.FLOAT);
+    this.floatGeomBuffer =
+      webglOptions.floatGeomBuffer != undefined ? webglOptions.floatGeomBuffer : gl.floatTexturesSupported
+    gl.floatGeomBuffer = this.floatGeomBuffer
 
     return gl
   }
@@ -1020,6 +1006,11 @@ class GLBaseRenderer extends ParameterOwner {
 
     pass.on('updated', (event) => {
       this.requestRedraw()
+
+      // If a pass is requesting an update, it is because geometry or
+      // visibility is changing and the geom data Fbo will also be out
+      // of date.
+      this.renderGeomDataFbos()
     })
     pass.init(this, index)
     this.__passes[passType].push(pass)
@@ -1237,7 +1228,7 @@ class GLBaseRenderer extends ParameterOwner {
    * The bindGLBaseRenderer method.
    * @param {RenderState} renderstate - The renderstate value.
    */
-  bindGLBaseRenderer(renderstate: RenderState): void {
+  bindGLBaseRenderer(renderstate: RenderState) {
     renderstate.gl = this.__gl
     renderstate.shaderopts = { directives: this.directives } // we will start deprecating this in favor os a simpler directives
 
@@ -1348,11 +1339,12 @@ class GLBaseRenderer extends ParameterOwner {
    * @param {RenderState} renderstate - The renderstate value.
    * @param {number} [mask=255] - The mask value
    */
-  drawSceneGeomData(renderstate: RenderState, mask = 255): void {
+  drawSceneGeomData(renderstate: GeomDataRenderState, mask = 255): void {
     this.bindGLBaseRenderer(renderstate)
 
     renderstate.directives = [...this.directives, '#define DRAW_GEOMDATA']
     renderstate.shaderopts.directives = renderstate.directives
+    renderstate.floatGeomBuffer = this.floatGeomBuffer
 
     for (const key in this.__passes) {
       // Skip pass categories that do not match

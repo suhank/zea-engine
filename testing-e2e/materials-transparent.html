@@ -67,7 +67,7 @@
         EulerAngles,
       } = window.zeaEngine
 
-      const canvas = document.querySelector('#renderer')
+      const canvas = document.getElementById('viewport')
 
       const scene = new Scene()
       const renderer = new GLRenderer(canvas, { hideSplash: true, antialias: false })
@@ -145,7 +145,7 @@
   </head>
   <body class="bg-blue-100 h-full">
     <div class="h-full">
-      <canvas class="absolute" id="renderer"></canvas>
+      <canvas id="viewport"></canvas>
     </div>
 
     <input type="range" min="0" max="400" value="100" class="slider" id="exposureControl" />

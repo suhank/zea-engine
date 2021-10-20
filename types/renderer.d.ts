@@ -38,6 +38,7 @@ type Shaderopts = Record<string, string[]>
 //GeomDataRender
 interface GeomDataRenderState extends BaseRenderState {
   geomDataFbo?: GLFbo // only used in geomdata buffer rendering
+  floatGeomBuffer: boolean = true
 }
 
 // only used in color rendering

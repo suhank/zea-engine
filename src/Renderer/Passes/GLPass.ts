@@ -134,13 +134,13 @@ abstract class GLPass extends ParameterOwner {
    * The drawGeomData method.
    * @param {RenderState} renderstate - The object tracking the current state of the renderer
    */
-  drawGeomData(renderstate: RenderState): void {}
+  drawGeomData(renderstate: GeomDataRenderState): void {}
 
   /**
    * The getGeomItemAndDist method.
    * @param {any} geomData - The geomData value.
    */
-  getGeomItemAndDist(geomData: any): any {
+  getGeomItemAndDist(geomData: Float32Array | Uint8Array): Record<string, any> | undefined {
     throw Error('getGeomItemAndDist not implemented on GLPass')
   }
 }

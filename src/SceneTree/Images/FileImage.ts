@@ -1,8 +1,5 @@
 import { Registry } from '../../Registry'
 import { BaseImage } from '../BaseImage'
-
-import { resourceLoader } from '../resourceLoader'
-
 import { FilePathParameter } from '../Parameters/FilePathParameter'
 import { BinReader } from '../BinReader'
 
@@ -195,19 +192,20 @@ class FileImage extends BaseImage {
     // super.readBinary(reader, context);
     this.setName(reader.loadStr())
 
-    let filePath = reader.loadStr()
+    const filePath = reader.loadStr()
     if (typeof filePath === 'string' && filePath != '') {
-      if (context.lod >= 0) {
-        const suffixSt = filePath.lastIndexOf('.')
-        if (suffixSt != -1) {
-          const lodPath = filePath.substring(0, suffixSt) + context.lod + filePath.substring(suffixSt)
-          // @ts-ignore
-          if (resourceLoader.resolveFilepath(lodPath)) {
-            filePath = lodPath
-          }
-        }
-      }
-      ;(<FilePathParameter>this.getParameter('FilePath')).setFilepath(filePath)
+      // if (context.lod >= 0) {
+      //   const suffixSt = filePath.lastIndexOf('.')
+      //   if (suffixSt != -1) {
+      //     const lodPath = filePath.substring(0, suffixSt) + context.lod + filePath.substring(suffixSt)
+      //     if (resourceLoader.resolveFilepath(lodPath)) {
+      //       filePath = lodPath
+      //     }
+      //   }
+      // }
+      // this.getParameter('FilePath').setFilepath(filePath)
+      const basePath = context.url.substring(0, context.url.lastIndexOf('/'))
+      this.load(basePath + '/' + filePath)
     }
   }
 }

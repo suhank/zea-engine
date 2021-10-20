@@ -133,23 +133,19 @@ class GLShaderMaterials extends EventEmitter {
    * The drawGeomData method.
    * @param {RenderState} renderstate - The object tracking the current state of the renderer
    */
-  drawGeomData(renderstate: RenderState) {
+  drawGeomData(renderstate: GeomDataRenderState) {
     if (!this.glgeomdatashader || !this.glgeomdatashader.bind(renderstate, 'geomData')) return
 
     this.pass.renderer.glGeomItemLibrary.bind(renderstate)
 
     const gl = this.gl
-    {
-      const unif = renderstate.unifs.floatGeomBuffer
-      if (unif) {
-        gl.uniform1i(unif.location, gl.floatGeomBuffer ? 1 : 0)
-      }
+
+    const { floatGeomBuffer, passId } = renderstate.unifs
+    if (floatGeomBuffer) {
+      gl.uniform1i(floatGeomBuffer.location, renderstate.floatGeomBuffer ? 1 : 0)
     }
-    {
-      const unif = renderstate.unifs.passId
-      if (unif) {
-        gl.uniform1i(unif.location, renderstate.passIndex)
-      }
+    if (passId) {
+      gl.uniform1i(passId.location, renderstate.passIndex)
     }
 
     for (const glMaterialGeomItemSet of this.glMaterialGeomItemSets) {

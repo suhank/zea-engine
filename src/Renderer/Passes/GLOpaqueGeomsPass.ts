@@ -271,7 +271,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
    * The drawGeomData method.
    * @param {RenderState} renderstate - The object tracking the current state of the renderer
    */
-  drawGeomData(renderstate: RenderState): void {
+  drawGeomData(renderstate: GeomDataRenderState): void {
     renderstate.passIndex = this.passIndex
 
     const gl = this.__gl!

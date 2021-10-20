@@ -6,7 +6,7 @@
   </head>
   <body class="bg-blue-100">
     <div class="h-screen">
-      <canvas class="absolute" id="app"></canvas>
+      <canvas id="viewport"></canvas>
     </div>
 
     <script src="../dist/index.umd.js"></script>
@@ -15,7 +15,7 @@
       const { GLRenderer, Scene, Vec2, Vec3, Xfo, Color, TreeItem, BillboardItem, FileImage } = zeaEngine
 
       const scene = new Scene()
-      const domElement = document.getElementById('app')
+      const domElement = document.getElementById('viewport')
       const renderer = new GLRenderer(domElement, { hideSplash: true, antialias: false })
       renderer.setScene(scene)
 

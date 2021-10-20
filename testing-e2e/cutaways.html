@@ -33,7 +33,7 @@
       } = zeaEngine
 
       const scene = new Scene()
-      const domElement = document.getElementById('renderer')
+      const domElement = document.getElementById('viewport')
       const renderer = new GLRenderer(domElement, { hideSplash: true, antialias: false })
       renderer.setScene(scene)
 
@@ -112,7 +112,7 @@
   </head>
   <body class="bg-blue-100 h-full">
     <div class="h-full">
-      <canvas class="absolute" id="renderer"></canvas>
+      <canvas id="viewport"></canvas>
     </div>
   </body>
 </html>

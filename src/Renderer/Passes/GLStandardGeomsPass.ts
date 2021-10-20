@@ -127,16 +127,15 @@ class GLStandardGeomsPass extends GLPass {
    * @param {Uint8Array} geomData - The geomData value.
    * @return {any} - The return value.
    */
-  getGeomItemAndDist(geomData: Uint8Array): Record<string, any> | undefined {
+  getGeomItemAndDist(geomData: Float32Array | Uint8Array): Record<string, any> | undefined {
     let itemId
     let dist
-    const gl = this.__gl! // TODO: refactor to avoid casts?
-    if (gl.floatGeomBuffer) {
+    if (geomData instanceof Float32Array) {
       itemId = Math.round(geomData[1])
       dist = geomData[3]
     } else {
       itemId = geomData[0] + ((geomData[1] & 63) << 8)
-      dist = MathFunctions.decode16BitFloatFrom2xUInt8(Uint8Array.from([geomData[2], geomData[3]]))
+      dist = MathFunctions.decode16BitFloatFrom2xUInt8(geomData.slice(2, 3))
     }
 
     const geomItem = this.renderer!.glGeomItemLibrary.getGeomItem(itemId)

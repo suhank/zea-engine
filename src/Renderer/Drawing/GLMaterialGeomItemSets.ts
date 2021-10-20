@@ -155,7 +155,7 @@ class GLMaterialGeomItemSets extends EventEmitter {
    * The drawHighlightedGeoms method.
    * @param {RenderState} renderstate - The object tracking the current state of the renderer
    */
-  drawGeomData(renderstate: RenderState) {
+  drawGeomData(renderstate: GeomDataRenderState) {
     this.glMaterial.bind(renderstate, false)
     for (const key in this.glGeomItemSets) {
       const glGeomItemSet = this.glGeomItemSets[key]

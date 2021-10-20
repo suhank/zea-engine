@@ -330,7 +330,7 @@ class GLRenderer extends GLBaseRenderer {
     }
 
     const region = [0, 0, 3, 3]
-    const renderstate = <RenderState>{}
+    const renderstate = <GeomDataRenderState>{}
     renderstate.cameraMatrix = xfo.toMat4()
     renderstate.viewports.push({
       region,
@@ -432,7 +432,7 @@ class GLRenderer extends GLBaseRenderer {
 
     const region = [0, 0, 3, 3]
 
-    const renderstate = <RenderState>{}
+    const renderstate = <GeomDataRenderState>{}
     renderstate.viewports.push({
       region,
       viewMatrix: xfo.inverse().toMat4(),

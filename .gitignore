@@ -16,3 +16,4 @@ package-lock.json
 tsc-output/
 
 buildcache
+tsconfig.tsbuildinfo

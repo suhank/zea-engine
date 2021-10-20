@@ -100,6 +100,7 @@ class GLMesh extends GLGeom {
       gl.bindBuffer(gl.ARRAY_BUFFER, glattr.buffer)
       gl.bufferData(gl.ARRAY_BUFFER, attrData.values, gl.STATIC_DRAW)
     }
+    this.buffersDirty = false
   }
 
   /**

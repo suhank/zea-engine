@@ -74,7 +74,7 @@ class GLOverlayPass extends GLOpaqueGeomsPass {
    * The drawGeomData method.
    * @param {RenderState} renderstate - The object tracking the current state of the renderer
    */
-  drawGeomData(renderstate: RenderState) {
+  drawGeomData(renderstate: GeomDataRenderState) {
     const gl = this.__gl!
 
     // Clear the depth buffer so handls are always drawn over the top.

@@ -17,7 +17,7 @@
 
       const urlParams = new URLSearchParams(window.location.search)
       const scene = new Scene()
-      const domElement = document.getElementById('renderer')
+      const domElement = document.getElementById('viewport')
       const renderer = new GLRenderer(domElement, {
         webglContextType: urlParams.has('webgl') ? urlParams.get('webgl') : undefined,
       })
@@ -141,7 +141,7 @@
   </head>
   <body class="bg-blue-100">
     <div class="h-screen">
-      <canvas class="absolute" id="renderer"></canvas>
+      <canvas id="viewport"></canvas>
     </div>
   </body>
 </html>

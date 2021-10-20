@@ -12,7 +12,7 @@
     <style>
       html,
       body,
-      #renderer {
+      #viewport {
         height: 100%;
         width: 100%;
         padding: 0;
@@ -22,7 +22,7 @@
       .camera-buttons {
         top: 10px;
         display: block;
-        position: relative;
+        position: fixed;
       }
 
       .camera-button {
@@ -64,13 +64,11 @@
         Material,
       } = window.zeaEngine
 
-      const domElement = document.getElementById('renderer')
-
       const sceneScale = 1.0
       const scene = new Scene()
       scene.setupGrid(20 * sceneScale, 10)
 
-      const renderer = new GLRenderer(domElement)
+      const renderer = new GLRenderer(document.getElementById('viewport'))
       renderer.setScene(scene)
 
       const treeItem = new TreeItem('TreeItem')
@@ -157,7 +155,7 @@
     </script>
   </head>
   <body>
-    <canvas id="renderer"></canvas>
+    <canvas id="viewport"></canvas>
     <div class="camera-buttons">
       <div class="camera-button" id="camera-button-top">Top</div>
       <div class="camera-button" id="camera-button-bottom">Bottom</div>

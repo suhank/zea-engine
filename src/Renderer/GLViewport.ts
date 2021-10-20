@@ -46,6 +46,7 @@ class GLViewport extends GLBaseViewport {
   protected __geomDataBufferSizeFactor: number
   protected __geomDataBufferFbo: GLFbo
   protected debugGeomShader: boolean
+  protected debugHighlightedGeomsBuffer: boolean = false
 
   protected __x: number = 0
   protected __y: number = 0
@@ -89,7 +90,7 @@ class GLViewport extends GLBaseViewport {
 
     const gl = this.__renderer.gl
     this.__geomDataBuffer = new GLTexture2D(gl, {
-      type: gl.floatGeomBuffer ? 'FLOAT' : 'UNSIGNED_BYTE',
+      type: renderer.floatGeomBuffer ? 'FLOAT' : 'UNSIGNED_BYTE',
       format: 'RGBA',
       filter: 'NEAREST',
       width: width <= 1 ? 1 : Math.floor(width / this.__geomDataBufferSizeFactor),
@@ -426,7 +427,7 @@ class GLViewport extends GLBaseViewport {
       // const y = Math.floor(screenPos.y / this.__geomDataBufferSizeFactor)
       let passId
       let geomData
-      if (gl.floatGeomBuffer) {
+      if (this.__renderer.floatGeomBuffer) {
         geomData = new Float32Array(4)
         gl.readPixels(x, bufferHeight - y - 1, 1, 1, gl.RGBA, gl.FLOAT, geomData)
         if (geomData[3] == 0) return null
@@ -437,8 +438,8 @@ class GLViewport extends GLBaseViewport {
         geomData = new Uint8Array(4)
         gl.readPixels(x, bufferHeight - y - 1, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, geomData)
         gl.bindFramebuffer(gl.FRAMEBUFFER, null)
-        if (geomData[0] == 0 && geomData[1] == 0) return null
-        passId = Math.floor(geomData[1] / 64)
+        if (geomData[0] == 0 && geomData[1] == 0) return undefined
+        passId = Math.floor(geomData[1] / 32)
       }
       this.__geomDataBufferFbo.unbind()
       const pass = this.__renderer.getPass(passId)
@@ -502,7 +503,7 @@ class GLViewport extends GLBaseViewport {
       this.__geomDataBufferFbo.bindForReading()
 
       let geomDatas
-      if (gl.floatGeomBuffer) {
+      if (this.__renderer.floatGeomBuffer) {
         geomDatas = new Float32Array(4 * numPixels)
         gl.readPixels(rectLeft, rectBottom, rectWidth, rectHeight, gl.RGBA, gl.FLOAT, geomDatas)
       } else {
@@ -516,7 +517,7 @@ class GLViewport extends GLBaseViewport {
       for (let i = 0; i < numPixels; i++) {
         let passId
         const geomData = geomDatas.subarray(i * 4, (i + 1) * 4)
-        if (gl.floatGeomBuffer) {
+        if (this.__renderer.floatGeomBuffer) {
           if (geomData[3] == 0) continue
           passId = Math.round(geomData[0])
         } else {
@@ -911,11 +912,14 @@ class GLViewport extends GLBaseViewport {
     // Turn this on to debug the geom data buffer.
     if (this.debugGeomShader) {
       this.renderGeomDataFbo()
-      const gl = this.__renderer.gl
-      gl.disable(gl.DEPTH_TEST)
       const screenQuad = this.__renderer.screenQuad!
       screenQuad.bindShader(renderstate)
       screenQuad.draw(renderstate, this.__geomDataBuffer, new Vec2(0, 0), new Vec2(1, 1))
+    }
+    if (this.debugHighlightedGeomsBuffer) {
+      const screenQuad = this.__renderer.screenQuad!
+      screenQuad.bindShader(renderstate)
+      screenQuad.draw(renderstate, this.highlightedGeomsBuffer, new Vec2(0, 0), new Vec2(1, 1))
     }
   }
 }
