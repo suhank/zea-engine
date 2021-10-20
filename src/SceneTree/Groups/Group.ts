@@ -476,6 +476,7 @@ class Group extends BaseGroup {
    * @private
    */
   unbindItem(item: BaseItem, index: number) {
+    const listenerIDs = this.__itemsEventHandlers[index]
     super.unbindItem(<TreeItem>item, index)
     if (!(item instanceof TreeItem)) return
 
@@ -503,7 +504,7 @@ class Group extends BaseGroup {
       this.memberXfoOps[index].detach()
       this.memberXfoOps.splice(index, 1)
       this.setBoundingBoxDirty()
-      item.getParameter('BoundingBox')!.removeListenerById('valueChanged', this.listenerIDs['valueChanged'])
+      item.getParameter('BoundingBox')!.removeListenerById('valueChanged', listenerIDs['valueChanged'])
       this._bindXfoDirty = true
     }
   }

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Vec2, Vec3, Box2, Box3 } from '../../Math/index'
+import { Vec2, Vec3, Box2, Box3, Color } from '../../Math/index'
 import { ParameterOwner } from '../ParameterOwner'
 import { Attribute } from './Attribute'
 import { Vec3Attribute } from './Vec3Attribute'
@@ -23,8 +23,8 @@ class BaseGeom extends ParameterOwner {
   protected __name: string = ''
   protected __numVertices: number = 0
   protected __vertexAttributes: Map<string, Attribute> = new Map()
-  debugColor: any
-  name: any
+  debugColor: Color = new Color(1, 0, 0, 1)
+  name: string = ''
 
   /**
    * Create a base geom.
@@ -47,7 +47,7 @@ class BaseGeom extends ParameterOwner {
    * @param {string} name - The debug name value.
    */
   setDebugName(name: string): void {
-    this.__name = name
+    this.name = name
   }
 
   /**

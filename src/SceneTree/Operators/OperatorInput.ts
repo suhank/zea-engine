@@ -105,6 +105,15 @@ class OperatorInput extends EventEmitter {
     }
   }
 
+  /**
+   * Propagates from the upstream parameter to the connected operator.
+   */
+  setDirty(): void {
+    if (this._op) {
+      this._op.setDirty()
+    }
+  }
+
   // ////////////////////////////////////////
   // Persistence
 

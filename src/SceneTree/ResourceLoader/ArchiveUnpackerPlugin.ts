@@ -1,6 +1,6 @@
 import { SystemDesc } from '../../SystemDesc'
 // @ts-ignore
-import ArchiveUnpackerWorker from './ArchiveUnpacker-worker.js'
+import ArchiveUnpackerWorker from 'web-worker:./ArchiveUnpacker-worker.js'
 // import ArchiveUnpackerWorker from './ArchiveUnpackerWorker'
 // For synchronous loading, uncomment these lines.
 // import {
@@ -157,7 +157,7 @@ class ArchiveUnpackerPlugin {
 
   shutDownWorkers() {
     this.__workers.forEach((workerPromise) => {
-      workerPromise.then((worker) => {
+      workerPromise.then((worker: Worker) => {
         worker.terminate()
       })
     })

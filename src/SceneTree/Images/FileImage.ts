@@ -201,6 +201,7 @@ class FileImage extends BaseImage {
         const suffixSt = filePath.lastIndexOf('.')
         if (suffixSt != -1) {
           const lodPath = filePath.substring(0, suffixSt) + context.lod + filePath.substring(suffixSt)
+          // @ts-ignore
           if (resourceLoader.resolveFilepath(lodPath)) {
             filePath = lodPath
           }

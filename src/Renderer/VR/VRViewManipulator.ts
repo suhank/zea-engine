@@ -61,7 +61,7 @@ class VRViewManipulator extends BaseTool {
     for (const controller of this.xrvp.getControllers()) {
       this.addIconToController({ controller })
     }
-    this.listenerIDs['controllerAdded'] = this.xrvp.on('controllerAdded', (event) => {
+    this.listenerIDs['controllerAdded'] = this.xrvp.on('controllerAdded', (event: any) => {
       this.addIconToController(event)
     })
   }

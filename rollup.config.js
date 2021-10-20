@@ -9,7 +9,7 @@ import { base64 } from 'rollup-plugin-base64'
 import glslify from 'rollup-plugin-glslify'
 
 // import typescript from '@rollup/plugin-typescript' // TODO: remove if typescript2 is better
-import typescript from 'rollup-plugin-typescript2'
+// import typescript from 'rollup-plugin-typescript2'
 
 import pkg from './package.json'
 
@@ -25,21 +25,17 @@ const glslOptions = {
 }
 
 const plugins = [
+  base64({ include: '**/*.wasm' }),
+  commonjs(),
+  nodePolyfills(),
   resolve({
     browser: true,
     preferBuiltins: false,
   }),
-  commonjs(),
-  webWorkerLoader({ extensions: ['.ts', '.js'], pattern: /.+\-worker\.(?:js|ts)$/ }),
   json(),
+  webWorkerLoader(),
   svg(),
   glslify(glslOptions),
-  base64({ include: '**/*.wasm' }),
-  typescript({
-    tsconfig: 'tsconfig.json',
-    include: 'src/**/*.{js,ts}',
-  }),
-  nodePolyfills(),
 ]
 
 const isProduction = !process.env.ROLLUP_WATCH
@@ -50,10 +46,9 @@ if (isProduction) {
 
 const sourcemap = true
 
-export default [
-  // Browser-friendly UMD build.
+const result = [
   {
-    input: 'src/index.ts',
+    input: 'dist/index.js',
     output: {
       name: 'zeaEngine',
       file: pkg.browser,
@@ -62,30 +57,6 @@ export default [
     },
     plugins,
   },
-
-  // CommonJS (for Node) and ES module (for bundlers) build.
-  // (We could have three entries in the configuration array
-  // instead of two, but it's quicker to generate multiple
-  // builds from a single configuration where possible, using
-  // an array for the `output` option, where we can specify
-  // `file` and `format` for each target)
-  {
-    input: 'src/index.ts',
-    output: [
-      { file: pkg.main, format: 'cjs', sourcemap },
-      { file: pkg.module, format: 'es', sourcemap },
-    ],
-    plugins,
-  },
-
-  // Building trivial deprecation script for compatibility.
-  {
-    input: 'src/index-plugins.js',
-    output: {
-      name: 'zeaEnginePlugins',
-      file: 'dist/plugins.umd.js',
-      format: 'umd',
-    },
-    plugins,
-  },
 ]
+
+export default result

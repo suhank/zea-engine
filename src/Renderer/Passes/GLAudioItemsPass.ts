@@ -1,5 +1,4 @@
-import { GLPass, PassType } from './GLPass'
-import { GLRenderer } from '../GLRenderer'
+import { GLPass } from './GLPass'
 
 import { GeomItem, TreeItem } from '../../SceneTree/index'
 import { GLBaseRenderer } from '../GLBaseRenderer'
@@ -82,9 +81,9 @@ class GLAudioItemsPass extends GLPass {
           })
         }
       }
-      // Let other passes handle this item.
-      return false
     }
+    // Let other passes handle this item.
+    return false
   }
   /**
    * The itemRemovedFromScene method is called on each pass when aa item
@@ -107,10 +106,10 @@ class GLAudioItemsPass extends GLPass {
   addAudioSource(treeItem: TreeItem, audioSource: any, parameterOwner: any) {
     if (audioSource.addedToCollector) return
 
-    let source
-    if (audioSource instanceof HTMLMediaElement) source = audioCtx.createMediaElementSource(audioSource)
-    else if (audioSource instanceof AudioBufferSourceNode) source = audioSource
-    else source = audioCtx.createMediaStreamSource(audioSource)
+    // let source
+    // if (audioSource instanceof HTMLMediaElement) source = audioCtx.createMediaElementSource(audioSource)
+    // else if (audioSource instanceof AudioBufferSourceNode) source = audioSource
+    // else source = audioCtx.createMediaStreamSource(audioSource)
 
     const connectVLParamToAudioNodeParam = (vlParam: any, param: any) => {
       if (!vlParam) return

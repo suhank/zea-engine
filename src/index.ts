@@ -21,7 +21,7 @@ const ZeaEngine = {
   ...Renderer,
 }
 
-zeaDebug('Zea Engine version %s', packageJson.version)
+zeaDebug(`Zea Engine version: ${packageJson.version}`)
 
 export * from './SystemDesc'
 export * from './Registry'
@@ -31,8 +31,3 @@ export * from './SceneTree/index'
 export * from './Renderer/index'
 
 export { libsRegistry, packageJson, ZeaEngine }
-
-// Note: Needed if we try to load tne engine as an ESM module.
-// TODO: Remove this. We should just use a bundler or umd.
-// @ts-ignore
-globalThis.zeaEngine = ZeaEngine

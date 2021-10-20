@@ -1,5 +1,5 @@
 import { Xfo, Box3, Vec3, Mat4 } from '../Math/index'
-import { XfoParameter, Mat4Parameter, Parameter } from './Parameters/index'
+import { XfoParameter, Mat4Parameter } from './Parameters/index'
 import { MaterialParameter } from './Parameters/MaterialParameter'
 import { GeometryParameter } from './Parameters/GeometryParameter'
 import { Registry } from '../Registry'
@@ -326,7 +326,6 @@ class GeomItem extends BaseGeomItem {
     }
 
     // BaseGeomItem now handles loading materials.
-    // if (context.version < 4) {
     if (context.versions['zea-engine'].compare([0, 0, 4]) < 0) {
       const materialFlag = 1 << 3
       if (itemFlags & materialFlag) {

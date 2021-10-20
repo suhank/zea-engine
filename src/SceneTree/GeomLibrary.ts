@@ -1,7 +1,7 @@
 /* eslint-disable require-jsdoc */
-import { SystemDesc } from '../SystemDesc.js'
-import { BinReader } from './BinReader.js'
-import { PointsProxy, LinesProxy, MeshProxy } from './Geometry/GeomProxies.js'
+import { SystemDesc } from '../SystemDesc'
+import { BinReader } from './BinReader'
+import { PointsProxy, LinesProxy, MeshProxy } from './Geometry/GeomProxies'
 import { EventEmitter } from '../Utilities/index'
 import { resourceLoader } from './resourceLoader'
 
@@ -9,11 +9,11 @@ import { resourceLoader } from './resourceLoader'
 // This can be difficult to debug, so you can disable this
 // by setting the following boolean to false, and uncommenting
 // the import of parseGeomsBinary
-// import { parseGeomsBinary } from './Geometry/parseGeomsBinary'
-const multiThreadParsing = true
+import { parseGeomsBinary } from './Geometry/parseGeomsBinary'
 
 // @ts-ignore
-import GeomParserWorker from './Geometry/GeomParser-worker.ts'
+import GeomParserWorker from 'web-worker:./Geometry/GeomParser-worker.js'
+const workerParsing = true
 
 import { StreamFileParsedEvent } from '../Utilities/Events/StreamFileParsedEvent'
 import { RangeLoadedEvent } from '../Utilities/Events/RangeLoadedEvent'
@@ -24,7 +24,7 @@ let workerId = 0
 const workers: any[] = []
 const listeners: any[] = []
 
-const getWorker = (geomLibraryId: any, fn: any) => {
+const getWorker = (geomLibraryId: number, fn: (data: any) => boolean) => {
   const __workerId = workerId
   if (!workers[__workerId]) {
     listeners[__workerId] = {}
@@ -35,7 +35,8 @@ const getWorker = (geomLibraryId: any, fn: any) => {
     }
     workers[__workerId] = worker
   }
-  listeners[__workerId][geomLibraryId] = (data) => {
+
+  listeners[__workerId][geomLibraryId] = (data: any) => {
     // The callback should return true when the last data for this
     // geom library is loaded.
     const res = fn(data)
@@ -233,10 +234,10 @@ class GeomLibrary extends EventEmitter {
   /**
    * The readBinaryBuffer method.
    * @param {string} geomFileID - The key value.
-   * @param {Buffer} buffer - The buffer value.
+   * @param {ArrayBuffer} buffer - The buffer value.
    * @param {Record<any,any>} context - The context value.
    */
-  readBinaryBuffer(geomFileID: string, buffer: Buffer, context: Record<string, any>) {
+  readBinaryBuffer(geomFileID: string, buffer: ArrayBuffer, context: Record<string, any>) {
     const reader = new BinReader(buffer, 0, SystemDesc.isMobileDevice)
     const numGeoms = reader.loadUInt32()
 
@@ -262,27 +263,27 @@ class GeomLibrary extends EventEmitter {
 
     const toc = reader.loadUInt32Array(numGeoms)
 
-    if (multiThreadParsing) {
-      const numGeomsPerWorkload = Math.max(1, Math.floor(numGeoms / numCores + 1))
+    const numGeomsPerWorkload = Math.max(1, Math.floor(numGeoms / numCores + 1))
 
-      // TODO: Use SharedArrayBuffer once available.
-      // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SharedArrayBuffer
+    // TODO: Use SharedArrayBuffer once available.
+    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SharedArrayBuffer
 
-      let offset = 0
-      while (offset < numGeoms) {
-        const bufferSliceStart = toc[offset]
-        let bufferSliceEnd
-        let geomsRange
-        if (offset + numGeomsPerWorkload >= numGeoms) {
-          geomsRange = [offset, numGeoms]
-          bufferSliceEnd = buffer.byteLength
-        } else {
-          geomsRange = [offset, offset + numGeomsPerWorkload]
-          bufferSliceEnd = toc[geomsRange[1]]
-        }
-        const bufferSlice = buffer.slice(bufferSliceStart, bufferSliceEnd)
-        offset += numGeomsPerWorkload
+    let offset = 0
+    while (offset < numGeoms) {
+      const bufferSliceStart = toc[offset]
+      let bufferSliceEnd
+      let geomsRange
+      if (offset + numGeomsPerWorkload >= numGeoms) {
+        geomsRange = [offset, numGeoms]
+        bufferSliceEnd = buffer.byteLength
+      } else {
+        geomsRange = [offset, offset + numGeomsPerWorkload]
+        bufferSliceEnd = toc[geomsRange[1]]
+      }
+      const bufferSlice = buffer.slice(bufferSliceStart, bufferSliceEnd)
+      offset += numGeomsPerWorkload
 
+      if (workerParsing) {
         // ////////////////////////////////////////////
         // Multi Threaded Parsing
         getWorker(this.getId(), (data: any) => {
@@ -303,30 +304,28 @@ class GeomLibrary extends EventEmitter {
           },
           [bufferSlice]
         )
+      } else {
+        // ////////////////////////////////////////////
+        // Main Threaded Parsing. Use this to debug the parsing of geoms.
+        // const bufferSlice = buffer.slice(toc[0], buffer.byteLength)
+        // const geomsRange = [0, numGeoms]
+        parseGeomsBinary(
+          {
+            geomLibraryId: this.getId(),
+            geomFileID,
+            toc,
+            geomIndexOffset,
+            geomsRange,
+            isMobileDevice: reader.isMobileDevice,
+            bufferSlice,
+            genBuffersOpts: this.__genBuffersOpts,
+            context,
+          },
+          (data: any) => {
+            this.__receiveGeomDatas(data)
+          }
+        )
       }
-    } else {
-      // ////////////////////////////////////////////
-      // Main Threaded Parsing. Use this to debug the parsing of geoms.
-      // const bufferSlice = buffer.slice(toc[0], buffer.byteLength)
-      // const geomsRange = [0, numGeoms]
-      // // const geomsRange = [3, 4]
-      // // const bufferSlice = buffer.slice(toc[3], toc[4])
-      // parseGeomsBinary(
-      //   {
-      //     geomLibraryId: this.getId(),
-      //     geomFileID,
-      //     toc,
-      //     geomIndexOffset,
-      //     geomsRange,
-      //     isMobileDevice: reader.isMobileDevice,
-      //     bufferSlice,
-      //     genBuffersOpts: this.__genBuffersOpts,
-      //     context
-      //   },
-      //   (data: any) => {
-      //     this.__receiveGeomDatas(data)
-      //   }
-      // )
     }
   }
 

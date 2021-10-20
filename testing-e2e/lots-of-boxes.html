@@ -63,7 +63,7 @@
       }
     </style>
 
-    <script src="../dist/index.umd.development.js"></script>
+    <script src="../dist/index.umd.js"></script>
     <script type="module">
       const { Vec3, Xfo, Color, Cuboid, Material, GeomItem, Scene, GLRenderer, TreeItem } = window.zeaEngine
 
@@ -74,6 +74,7 @@
 
       const renderer = new GLRenderer(domElement, {
         outlineThickness: 1.5,
+        enableFrustumCulling: true,
       })
       renderer.setScene(scene)
       renderer.solidAngleLimit = 0.0

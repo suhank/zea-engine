@@ -1,11 +1,11 @@
-import { Vec2 } from '../../../Math/Vec2'
 import { BooleanParameter } from '../../../SceneTree/Parameters/BooleanParameter'
 import { NumberParameter } from '../../../SceneTree/Parameters/NumberParameter'
 import { Vec3 } from '../../../Math/Vec3'
 import { ProceduralMesh } from './ProceduralMesh'
 import { Registry } from '../../../Registry'
 import { Vec3Attribute } from '../Vec3Attribute'
-import { Vec2Attribute } from '../Vec2Attribute'
+// import { Vec2 } from '../../../Math/Vec2'
+// import { Vec2Attribute } from '../Vec2Attribute'
 
 /**
  * A class for generating a cuboid geometry.

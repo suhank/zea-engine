@@ -128,10 +128,10 @@ class GLRenderer extends GLBaseRenderer {
           this.__glBackgroundMap = new GLTexture2D(this.__gl, backgroundMap)
         }
       }
-      this.__glBackgroundMap.on('loaded', (event) => {
+      this.__glBackgroundMap.on('loaded', (event: any) => {
         this.requestRedraw()
       })
-      this.__glBackgroundMap.on('updated', (event) => {
+      this.__glBackgroundMap.on('updated', (event: any) => {
         this.requestRedraw()
       })
       if (!this.__backgroundMapShader) {

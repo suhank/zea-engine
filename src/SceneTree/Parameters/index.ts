@@ -18,7 +18,6 @@ export * from './StructParameter'
 export * from './TreeItemParameter'
 export * from './ItemSetParameter'
 export * from './OperatorOutputMode'
-// export * from './KinematicGroupParameter';
 
 // Note: can't be imported, because ParameterOwner imports these Parameters
 // export * from './MaterialParameter';

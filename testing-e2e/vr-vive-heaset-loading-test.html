@@ -11,7 +11,8 @@
     <link rel="stylesheet" href="styles/tailwind.min.css" />
 
     <script type="module">
-      import { GLRenderer, Scene, Vec3, Xfo, VLAAsset } from '../dist/index.esm.js'
+      import '../dist/index.umd.js'
+      const { GLRenderer, Scene, Vec3, Xfo, VLAAsset } = window.zeaEngine
 
       const canvas = document.querySelector('#renderer')
 

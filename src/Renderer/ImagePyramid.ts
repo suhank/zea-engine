@@ -2,9 +2,6 @@ import { GLTexture2D } from './GLTexture2D'
 import { GLFbo } from './GLFbo'
 import { GLImageAtlas } from './GLImageAtlas'
 import { GLScreenQuad } from './GLScreenQuad'
-import { BaseImage } from '../SceneTree/BaseImage'
-
-// import './Shaders/GLSL/ImagePyramid'
 
 const Math_log2 = function (value: number) {
   // IE11 doesn't support Math.log2.
@@ -98,7 +95,6 @@ class ImagePyramid extends GLImageAtlas {
    * @param {boolean} cleanup - The cleanup value.
    */
   renderAtlas(cleanup = true) {
-    const gl = this.__gl
     const renderstate: RenderState = <RenderState>{} // cast to allow empty initialization
     this.screenQuad.bindShader(renderstate)
 

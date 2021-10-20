@@ -1,4 +1,4 @@
-import { parseGeomsBinary } from './parseGeomsBinary'
+import { parseGeomsBinary } from './Geometry/parseGeomsBinary'
 
 self.onmessage = function (event: MessageEvent) {
   parseGeomsBinary(event.data, (data: any, transferables: any) => {

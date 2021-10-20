@@ -3,19 +3,19 @@
 //https://code.google.com/r/cys12345-research/source/browse/hdr/image_processor/RGBE.java?r=7d84e9fd866b24079dbe61fa0a966ce8365f5726
 var radiancePattern = '#\\?RADIANCE'
 var commentPattern = '#.*'
-var gammaPattern = 'GAMMA='
+// var gammaPattern = "GAMMA=";
 var exposurePattern = 'EXPOSURE=\\s*([0-9]*[.][0-9]*)'
 var formatPattern = 'FORMAT=32-bit_rle_rgbe'
 var widthHeightPattern = '-Y ([0-9]+) \\+X ([0-9]+)'
 
 //http://croquetweak.blogspot.co.uk/2014/08/deconstructing-floats-frexp-and-ldexp.html
-function ldexp(mantissa: any, exponent: any) {
-  return exponent > 1023 // avoid multiplying by infinity
-    ? mantissa * Math.pow(2, 1023) * Math.pow(2, exponent - 1023)
-    : exponent < -1074 // avoid multiplying by zero
-    ? mantissa * Math.pow(2, -1074) * Math.pow(2, exponent + 1074)
-    : mantissa * Math.pow(2, exponent)
-}
+// function ldexp(mantissa: any, exponent: any) {
+//   return exponent > 1023 // avoid multiplying by infinity
+//     ? mantissa * Math.pow(2, 1023) * Math.pow(2, exponent - 1023)
+//     : exponent < -1074 // avoid multiplying by zero
+//     ? mantissa * Math.pow(2, -1074) * Math.pow(2, exponent + 1074)
+//     : mantissa * Math.pow(2, exponent)
+// }
 
 function readPixelsRawRLE(
   buffer: any,
