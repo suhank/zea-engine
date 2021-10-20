@@ -9,7 +9,11 @@
   "browser": "dist/index.umd.js",
   "typings": "dist/index.d.ts",
   "files": [
-    "dist/"
+    "dist/**/*.ts",
+    "dist/**/*.map",
+    "dist/index-plugins.js",
+    "dist/index.js",
+    "dist/index.umd.js"
   ],
   "engines": {
     "node": ">=10"
@@ -34,7 +38,8 @@
     "prepare": "build",
     "size": "size-limit",
     "analyze": "size-limit --why",
-    "copyPackageJson": "copyfiles -f \"./package.json\" src"
+    "copyPackageJson": "copyfiles -f \"./package.json\" src",
+    "to-cleanup": "rm -Rf dist/ node_modules/ buildcache yarn.lock"
   },
   "husky": {
     "hooks": {
