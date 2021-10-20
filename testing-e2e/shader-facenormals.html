@@ -23,10 +23,10 @@
       const promises = []
 
       const envMap = new EnvMap()
-      envMap.getParameter('FilePath').setValue('data/pisa-webp.zenv')
+      envMap.load('data/pisa-webp.zenv')
       promises.push(new Promise((resolve) => envMap.on('loaded', resolve)))
       scene.setEnvMap(envMap)
-      scene.getSettings().getParameter('Display EnvMap').setValue(true)
+      scene.getSettings().getParameter('Display EnvMap').value = true
 
       const simpleMaterial = new Material('surfaces', 'SimpleSurfaceShader')
       const standardMaterial = new Material('surfaces', 'StandardSurfaceShader')
@@ -58,11 +58,11 @@
         const { data } = event
 
         if (data === 'variant-01') {
-          sphere.getParameter('Radius').setValue(2.5)
+          sphere.radiusParam.value = 2.5
           window.postMessage(`done-${data}`)
         } else if (data === 'variant-02') {
-          sphere.getParameter('Loops').setValue(25)
-          sphere.getParameter('Sides').setValue(15)
+          sphere.loopsParam.value = 25
+          sphere.sidesParam.value = 15
           window.postMessage(`done-${data}`)
         }
       }

@@ -65,7 +65,7 @@
       const envMap = new EnvMap()
       envMap.load('data/HDR_041_Path_Ref-webp.zenv')
       scene.setEnvMap(envMap)
-      scene.getSettings().getParameter('Display EnvMap').setValue(true)
+      scene.getSettings().getParameter('Display EnvMap').value = true
 
       renderer.getViewport().getCamera().setLensFocalLength('20mm')
       renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2, 0, 0), new Vec3(0, 0, 0))

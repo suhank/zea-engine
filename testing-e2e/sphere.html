@@ -21,7 +21,7 @@
       scene.setupGrid(5, 10)
 
       const standardMaterial = new Material('surfaces', 'SimpleSurfaceShader')
-      standardMaterial.getParameter('BaseColor').setValue(new Color(89 / 255, 182 / 255, 92 / 255))
+      standardMaterial.getParameter('BaseColor').value = new Color(89 / 255, 182 / 255, 92 / 255)
 
       const sphere = new Sphere(1.5, 6, 3)
       const geomItem = new GeomItem('Sphere', sphere, standardMaterial)
@@ -41,11 +41,11 @@
         const { data } = event
 
         if (data === 'variant-01') {
-          sphere.getParameter('Radius').setValue(2.5)
+          sphere.radiusParam.value = 2.5
           window.postMessage(`done-${data}`)
         } else if (data === 'variant-02') {
-          sphere.getParameter('Loops').setValue(25)
-          sphere.getParameter('Sides').setValue(15)
+          sphere.loopsParam.value = 25
+          sphere.sidesParam.value = 15
           window.postMessage(`done-${data}`)
         }
       }

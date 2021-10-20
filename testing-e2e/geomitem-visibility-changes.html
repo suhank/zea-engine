@@ -24,7 +24,7 @@
       scene.setupGrid(10.0, 10)
 
       const material = new Material('surfaces', 'SimpleSurfaceShader')
-      material.getParameter('BaseColor').setValue(new Color(1, 0, 1, 1))
+      material.getParameter('BaseColor').value = new Color(1, 0, 1, 1)
 
       const treeItem = new TreeItem('Parent')
       const geomItem = new GeomItem('Sphere', new Sphere(1.5, 46), material)
@@ -40,13 +40,13 @@
         const { data } = event
 
         if (data === 'variant-01') {
-          treeItem.getParameter('Visible').setValue(false)
+          treeItem.visibleParam.value = false
           window.postMessage(`done-${data}`)
         } else if (data === 'variant-02') {
-          treeItem.getParameter('Visible').setValue(true)
+          treeItem.visibleParam.value = true
           window.postMessage(`done-${data}`)
         } else if (data === 'variant-03') {
-          geomItem.getParameter('Visible').setValue(false)
+          geomItem.visibleParam.value = false
           window.postMessage(`done-${data}`)
         }
       }

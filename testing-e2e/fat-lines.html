@@ -26,15 +26,15 @@
       const color = new Color(89 / 255, 182 / 255, 92 / 255)
 
       const material1 = new Material('thinlines', 'LinesShader')
-      material1.getParameter('BaseColor').setValue(color)
+      material1.getParameter('BaseColor').value = color
 
       const circle = new Circle(1.5, 8)
       const geomItem1 = new GeomItem('circle1', circle, material1, new Xfo(new Vec3(-2, 0, 0)))
       scene.getRoot().addChild(geomItem1)
 
       const material2 = new Material('fatlines', 'FatLinesShader')
-      material2.getParameter('BaseColor').setValue(color)
-      material2.getParameter('LineThickness').setValue(0.1)
+      material2.getParameter('BaseColor').value = color
+      material2.getParameter('LineThickness').value = 0.1
       const geomItem2 = new GeomItem('circle2', circle, material2, new Xfo(new Vec3(2, 0, 0)))
       scene.getRoot().addChild(geomItem2)
 
@@ -48,10 +48,10 @@
         const { data } = event
 
         if (data === 'variant-01') {
-          circle.getParameter('Sides').setValue(32)
+          circle.sidesParam.value = 32
           window.postMessage(`done-${data}`)
         } else if (data === 'variant-02') {
-          circle.getParameter('Sides').setValue(6)
+          circle.sidesParam.value = 6
           window.postMessage(`done-${data}`)
         }
       }

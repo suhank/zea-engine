@@ -24,7 +24,7 @@
       scene.setupGrid(10.0, 10)
 
       const material = new Material('surfaces', 'SimpleSurfaceShader')
-      material.getParameter('BaseColor').setValue(new Color(1, 0, 1, 1))
+      material.getParameter('BaseColor').value = new Color(1, 0, 1, 1)
 
       const geomItem = new GeomItem('Sphere', new Sphere(1.5, 46), material)
       scene.getRoot().addChild(geomItem)
@@ -38,18 +38,18 @@
         const { data } = event
 
         if (data === 'variant-01') {
-          const material = geomItem.getParameter('Material').getValue()
-          material.getParameter('BaseColor').setValue(new Color(1, 0, 1, 0.2))
+          const material = geomItem.materialParam.getValue()
+          material.getParameter('BaseColor').value = new Color(1, 0, 1, 0.2)
           window.postMessage(`done-${data}`)
         } else if (data === 'variant-02') {
           const material = new Material('surfaces', 'SimpleSurfaceShader')
-          material.getParameter('BaseColor').setValue(new Color(1, 1, 0, 1))
-          geomItem.getParameter('Material').setValue(material)
+          material.getParameter('BaseColor').value = new Color(1, 1, 0, 1)
+          geomItem.materialParam.value = material
 
           window.postMessage(`done-${data}`)
         } else if (data === 'variant-03') {
-          const material = geomItem.getParameter('Material').getValue()
-          material.getParameter('Opacity').setValue(0.3)
+          const material = geomItem.materialParam.getValue()
+          material.getParameter('Opacity').value = 0.3
           window.postMessage(`done-${data}`)
         }
       }

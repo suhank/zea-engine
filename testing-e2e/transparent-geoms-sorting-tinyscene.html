@@ -44,14 +44,14 @@
       scene.getRoot().addChild(tree1)
 
       const standardMaterial = new Material('surfaces', 'SimpleSurfaceShader')
-      standardMaterial.getParameter('BaseColor').setValue(new Color(1, 1, 0, 1))
+      standardMaterial.getParameter('BaseColor').value = new Color(1, 1, 0, 1)
 
       const transparentMaterial = new Material('surfaces', 'SimpleSurfaceShader')
-      transparentMaterial.getParameter('BaseColor').setValue(new Color(1, 0, 0, 0.5))
+      transparentMaterial.getParameter('BaseColor').value = new Color(1, 0, 0, 0.5)
 
       const addGeomItem = (shape, row, count, i) => {
         const geomItem = new GeomItem('Item' + row + '-' + i, shape, transparentMaterial)
-        geomItem.getParameter('LocalXfo').setValue(new Xfo(new Vec3(i * 0.003, row * 0.003, 0)))
+        geomItem.localXfoParam.value = new Xfo(new Vec3(i * 0.003, row * 0.003, 0))
         tree1.addChild(geomItem)
       }
       const addMeshShape = (shape, row, count) => {

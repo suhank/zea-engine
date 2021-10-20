@@ -71,7 +71,7 @@
       renderer.setScene(scene)
       renderer.outlineThickness = 0.5
       renderer.outlineColor = new Color(0.2, 0.2, 0.2, 1)
-      scene.getSettings().getParameter('BackgroundColor').setValue(new Color(0.85, 0.85, 0.85, 1))
+      scene.getSettings().backgroundColorParam.value = new Color(0.85, 0.85, 0.85, 1))
       renderer.getViewport().debugGeomShader = urlParams.has('debugGeomShader')
 
       const envMap = new EnvMap()
@@ -149,22 +149,22 @@
       const selectionColor = new Color('#F9CE03')
       selectionColor.a = 0.1
       const subtreeColor = selectionColor //.lerp(new Color(1, 1, 1, 0), 0.5)
-      selectionManager.selectionGroup.getParameter('HighlightColor').setValue(selectionColor)
-      selectionManager.selectionGroup.getParameter('SubtreeHighlightColor').setValue(subtreeColor)
+      selectionManager.selectionGroup.highlightColorParam.value = selectionColor
+      selectionManager.selectionGroup.subtreeHighlightColorParam.value = subtreeColor
 
       // Color the selection rect.
       const selectionRectColor = new Color(0, 0, 0, 1)
       selectionTool.rectItem
-        .getParameter('Material')
+        .materialParam
         .getValue()
         .getParameter('BaseColor')
-        .setValue(selectionRectColor)
+        .value = selectionRectColor
 
       /** SELECTION END * /
 
       /** FREEHAND LINES TOOL START * /
       const freeHandLineTool = new CreateFreehandLineTool(appData)
-      freeHandLineTool.getParameter('LineThickness').setValue(0.01)
+      freeHandLineTool.getParameter('LineThickness').value = 0.01
 
       /** FREEHAND LINES TOOL END * /
 

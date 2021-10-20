@@ -108,7 +108,7 @@
         postMessage('done-loading')
       })
       scene.setEnvMap(envMap)
-      scene.getSettings().getParameter('Display EnvMap').setValue(false)
+      scene.getSettings().getParameter('Display EnvMap').value = false
 
       // scene.setupGrid(60.0, 6)
       const tree1 = new TreeItem('tree1')
@@ -124,22 +124,22 @@
       const sphere = new Sphere(1.4, 80)
       const baseColor = new Color(0.8, 0, 0)
       const material = new Material('surfaces', 'StandardSurfaceShader')
-      material.getParameter('BaseColor').setValue(baseColor)
-      material.getParameter('Metallic').setValue(0.0)
-      material.getParameter('Reflectance').setValue(0.6)
+      material.getParameter('BaseColor').value = baseColor
+      material.getParameter('Metallic').value = 0.0
+      material.getParameter('Reflectance').value = 0.6
 
       const transparentMaterial = new Material('surfaces', 'StandardSurfaceShader')
-      transparentMaterial.getParameter('BaseColor').setValue(baseColor)
-      transparentMaterial.getParameter('Metallic').setValue(0.0)
-      transparentMaterial.getParameter('Reflectance').setValue(0.1)
-      transparentMaterial.getParameter('Opacity').setValue(0.01)
-      transparentMaterial.getParameter('EmissiveStrength').setValue(0.5)
+      transparentMaterial.getParameter('BaseColor').value = baseColor
+      transparentMaterial.getParameter('Metallic').value = 0.0
+      transparentMaterial.getParameter('Reflectance').value = 0.1
+      transparentMaterial.getParameter('Opacity').value = 0.01
+      transparentMaterial.getParameter('EmissiveStrength').value = 0.5
 
-      material.getParameter('Roughness').setValue(0.5)
+      material.getParameter('Roughness').value = 0.5
       for (let i = 0; i < 3; i++) {
         for (let j = 0; j < 3; j++) {
           for (let k = 0; k < 3; k++) {
-            // material.getParameter('Opacity').setValue(i / 10)
+            // material.getParameter('Opacity').value = i / 10
 
             addMeshShape('Sphere' + i, sphere, new Vec3((i / 9) * 20, (j / 9) * 20, 1.4 + (k / 9) * 20), material)
           }
@@ -161,9 +161,9 @@
             geomItem.removeHighlight('Foo')
           }
           if (index != 3) {
-            geomItem.getParameter('Material').setValue(transparentMaterial)
+            geomItem.materialParam.value = transparentMaterial
           } else {
-            geomItem.getParameter('Material').setValue(material)
+            geomItem.materialParam.value = material
           }
         })
         postMessage(`done-variant-01`)
@@ -177,10 +177,10 @@
         items.forEach((geomItem, index) => {
           if (index % 2 == 0) {
             geomItem.addHighlight('Foo', new Color(0.8, 0, 0, 0.1))
-            geomItem.getParameter('Material').setValue(transparentMaterial)
+            geomItem.materialParam.value = transparentMaterial
           } else {
             geomItem.removeHighlight('Foo')
-            geomItem.getParameter('Material').setValue(material)
+            geomItem.materialParam.value = material
           }
         })
         postMessage(`done-variant-03`)

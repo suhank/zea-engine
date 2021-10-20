@@ -36,15 +36,15 @@
       }
 
       const material = new Material('points', 'FatPointsShader')
-      // material.getParameter("BaseColor").setValue(new Color(1,0,0));
-      material.getParameter('PointSize').setValue(0.05)
-      material.getParameter('Rounded').setValue(0.2)
-      material.getParameter('BaseColor').setValue(new Color(1, 0, 1))
+      // material.getParameter("BaseColor").value = new Color(1,0,0))
+      material.getParameter('PointSize').value = 0.05
+      material.getParameter('Rounded').value = 0.2
+      material.getParameter('BaseColor').value = new Color(1, 0, 1)
 
       const geomItem = new GeomItem('geomItem', points, material)
       const xfo = new Xfo()
       xfo.tr.set(0, 0, 1)
-      geomItem.getParameter('GlobalXfo').setValue(xfo)
+      geomItem.globalXfoParam.value = xfo
       scene.getRoot().addChild(geomItem)
 
       window.postMessage('done-loading')

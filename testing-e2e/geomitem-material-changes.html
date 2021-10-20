@@ -24,13 +24,13 @@
       scene.setupGrid(10.0, 10)
 
       const material = new Material('surfaces', 'SimpleSurfaceShader')
-      material.getParameter('BaseColor').setValue(new Color(1, 0, 1))
+      material.getParameter('BaseColor').value = new Color(1, 0, 1)
 
       const geomItem = new GeomItem('Sphere', new Sphere(1.5, 46), material, new Xfo(new Vec3(-2, 0, 1)))
       scene.getRoot().addChild(geomItem)
 
       const linesMaterial = new Material('linesMaterial', 'LinesShader')
-      linesMaterial.getParameter('BaseColor').setValue(new Color(0.2, 0.2, 0))
+      linesMaterial.getParameter('BaseColor').value = new Color(0.2, 0.2, 0)
       const crossItem = new GeomItem('Cross', new Cross(1.18), linesMaterial, new Xfo(new Vec3(2, 0, 0.5)))
       scene.getRoot().addChild(crossItem)
 
@@ -47,42 +47,42 @@
 
         if (data === 'variant-01') {
           const material = new Material('surfaces', 'SimpleSurfaceShader')
-          material.getParameter('BaseColor').setValue(new Color(0, 0, 1))
-          geomItem.getParameter('Material').setValue(material)
+          material.getParameter('BaseColor').value = new Color(0, 0, 1)
+          geomItem.materialParam.value = material
 
           const linesMaterial = new Material('linesMaterial2', 'LinesShader')
-          linesMaterial.getParameter('BaseColor').setValue(new Color(0, 1, 1))
-          crossItem.getParameter('Material').setValue(linesMaterial)
+          linesMaterial.getParameter('BaseColor').value = new Color(0, 1, 1)
+          crossItem.materialParam.value = linesMaterial
 
           window.postMessage(`done-${data}`)
         } else if (data === 'variant-02') {
           const material = new Material('surfaces', 'StandardSurfaceShader')
-          material.getParameter('BaseColor').setValue(new Color(1, 1, 0))
-          geomItem.getParameter('Material').setValue(material)
+          material.getParameter('BaseColor').value = new Color(1, 1, 0)
+          geomItem.materialParam.value = material
 
           const linesMaterial = new Material('linesMaterial3', 'LinesShader')
-          linesMaterial.getParameter('BaseColor').setValue(new Color(0, 1, 1, 0.2))
-          crossItem.getParameter('Material').setValue(linesMaterial)
+          linesMaterial.getParameter('BaseColor').value = new Color(0, 1, 1, 0.2)
+          crossItem.materialParam.value = linesMaterial
 
           window.postMessage(`done-${data}`)
         } else if (data === 'variant-03') {
           const material = new Material('surfaces', 'SimpleSurfaceShader')
-          material.getParameter('BaseColor').setValue(new Color(0, 0, 1))
-          geomItem.getParameter('Material').setValue(material)
+          material.getParameter('BaseColor').value = new Color(0, 0, 1)
+          geomItem.materialParam.value = material
 
           const linesMaterial = new Material('linesMaterial2', 'LinesShader')
-          linesMaterial.getParameter('BaseColor').setValue(new Color(0, 1, 1))
-          crossItem.getParameter('Material').setValue(linesMaterial)
+          linesMaterial.getParameter('BaseColor').value = new Color(0, 1, 1)
+          crossItem.materialParam.value = linesMaterial
 
           window.postMessage(`done-${data}`)
         } else if (data === 'variant-04') {
           const material = new Material('surfaces', 'StandardSurfaceShader')
-          material.getParameter('BaseColor').setValue(new Color(1, 1, 0))
-          geomItem.getParameter('Material').setValue(material)
+          material.getParameter('BaseColor').value = new Color(1, 1, 0)
+          geomItem.materialParam.value = material
 
           const linesMaterial = new Material('linesMaterial3', 'LinesShader')
-          linesMaterial.getParameter('BaseColor').setValue(new Color(0, 1, 1, 0.2))
-          crossItem.getParameter('Material').setValue(linesMaterial)
+          linesMaterial.getParameter('BaseColor').value = new Color(0, 1, 1, 0.2)
+          crossItem.materialParam.value = linesMaterial
 
           window.postMessage(`done-${data}`)
         }

@@ -24,7 +24,7 @@
       scene.setupGrid(10.0, 10)
 
       const material = new Material('surfaces', 'ScreenSpaceShader')
-      material.getParameter('BaseColor').setValue(new Color(89 / 255, 182 / 255, 92 / 255))
+      material.getParameter('BaseColor').value = new Color(89 / 255, 182 / 255, 92 / 255)
 
       const sphere = new Circle(0.5, 30)
       const geomItem1 = new GeomItem('Circle', sphere, material, new Xfo(new Vec3(0.0, 0.0, 0)))
@@ -36,12 +36,12 @@
 
       const selectionRect = new Rect(1, 1)
       const selectionRectMat = new Material('marker', 'ScreenSpaceShader')
-      selectionRectMat.getParameter('BaseColor').setValue(new Color(0.2, 0.2, 0.2))
+      selectionRectMat.getParameter('BaseColor').value = new Color(0.2, 0.2, 0.2)
       const selectionRectXfo = new Xfo()
       selectionRectXfo.tr.set(0, 0, 0)
       // selectionRectXfo.sc.set(0, 0, 0)
       const rectItem = new GeomItem('selectionRect', selectionRect, selectionRectMat)
-      rectItem.getParameter('Visible').setValue(false)
+      rectItem.getParameter('Visible').value = false
       renderer.addTreeItem(rectItem)
       // rectItem.cullable = false
       const __resizeRect = (viewport, delta) => {
@@ -54,7 +54,7 @@
 
         selectionRectXfo.tr.x = tr.x
         selectionRectXfo.tr.y = -tr.y
-        rectItem.getParameter('GlobalXfo').setValue(selectionRectXfo)
+        rectItem.globalXfoParam.value = selectionRectXfo
       }
 
       let dragging = false
@@ -86,7 +86,7 @@
           if (dist > 4) {
             dragging = true
             // Start drawing the selection rectangle on screen.
-            rectItem.getParameter('Visible').setValue(true)
+            rectItem.getParameter('Visible').value = true
             __resizeRect(event.viewport, delta)
           }
           event.stopPropagation()
@@ -102,7 +102,7 @@
       const onPointerUp = (event) => {
         if (pointerDownPos) {
           if (dragging) {
-            rectItem.getParameter('Visible').setValue(false)
+            rectItem.getParameter('Visible').value = false
             const pointerUpPos = event.pointerPos
             const tl = new Vec2(Math.min(pointerDownPos.x, pointerUpPos.x), Math.min(pointerDownPos.y, pointerUpPos.y))
             const br = new Vec2(Math.max(pointerDownPos.x, pointerUpPos.x), Math.max(pointerDownPos.y, pointerUpPos.y))

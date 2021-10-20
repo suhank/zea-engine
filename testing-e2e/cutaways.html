@@ -45,17 +45,17 @@
       const cuttingPlaneXfo = new Xfo()
       cuttingPlaneXfo.tr.set(6, 0, 0)
       cuttingPlaneXfo.ori.setFromAxisAndAngle(new Vec3(1, 0, 0), -1)
-      cuttingPlane.getParameter('LocalXfo').setValue(cuttingPlaneXfo)
+      cuttingPlane.localXfoParam.value = cuttingPlaneXfo
       scene.getRoot().addChild(cuttingPlane)
 
       const standardMaterial = new Material('surfaces', 'SimpleSurfaceShader')
-      standardMaterial.getParameter('BaseColor').setValue(new Color(89 / 255, 182 / 255, 92 / 255))
+      standardMaterial.getParameter('BaseColor').value = new Color(89 / 255, 182 / 255, 92 / 255)
 
       let i = 0
 
       const addMeshShape = (shape) => {
         const geomItem = new GeomItem(`item-${i}`, shape, standardMaterial)
-        geomItem.getParameter('LocalXfo').setValue(new Xfo(new Vec3(i * 3, 0, 0)))
+        geomItem.localXfoParam.value = new Xfo(new Vec3(i * 3, 0, 0))
         tree1.addChild(geomItem)
 
         cuttingPlane.addItem(geomItem)
@@ -69,14 +69,14 @@
       addMeshShape(new Cone(1, 2), 4)
       addMeshShape(new Cylinder(1, 2, 20, 2, true))
 
-      cuttingPlane.getParameter('CutAwayEnabled').setValue(true)
+      cuttingPlane.cutAwayEnabledParam.value = true
 
       // let angle = -1
       // setInterval(() => {
       //   angle += 0.1
       //   cuttingPlaneXfo.tr.set(6, Math.cos(angle) * 2, 0)
       //   cuttingPlaneXfo.ori.setFromAxisAndAngle(new Vec3(1, 0, 0), angle)
-      //   cuttingPlane.getParameter('LocalXfo').setValue(cuttingPlaneXfo)
+      //   cuttingPlane.localXfoParam.value = cuttingPlaneXfo
       // }, 50)
 
       renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(25, 25, 13), new Vec3(10, 0, 0))
@@ -93,14 +93,14 @@
           const xfo = new Xfo()
           xfo.tr.set(6, Math.cos(angle) * 2, 0)
           xfo.ori.setFromAxisAndAngle(new Vec3(1, 0, 0), angle)
-          cuttingPlane.getParameter('LocalXfo').setValue(xfo)
+          cuttingPlane.localXfoParam.value = xfo
           window.postMessage(`done-${data}`)
         } else if (data === 'variant-02') {
           const angle = 3
           const xfo = new Xfo()
           xfo.tr.set(6, Math.cos(angle) * 2, 0)
           xfo.ori.setFromAxisAndAngle(new Vec3(1, 0, 0), angle)
-          cuttingPlane.getParameter('LocalXfo').setValue(xfo)
+          cuttingPlane.localXfoParam.value = xfo
           renderer.frameAll()
           window.postMessage(`done-${data}`)
         }

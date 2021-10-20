@@ -29,13 +29,13 @@
       asset.load('/public-resources/Oculus.vla')
       asset.getGeometryLibrary().on('loaded', () => {
         const HMD = asset.getChildByName('HMD')
-        HMD.getParameter('LocalXfo').setValue(new Xfo(new Vec3(0, 0, 200)))
+        HMD.localXfoParam.value = new Xfo(new Vec3(0, 0, 200))
 
         const LeftController = asset.getChildByName('LeftController')
-        LeftController.getParameter('LocalXfo').setValue(new Xfo(new Vec3(-200, 0, 0)))
+        LeftController.localXfoParam.value = new Xfo(new Vec3(-200, 0, 0))
 
         const RightController = asset.getChildByName('RightController')
-        RightController.getParameter('LocalXfo').setValue(new Xfo(new Vec3(200, 0, 0)))
+        RightController.localXfoParam.value = new Xfo(new Vec3(200, 0, 0))
 
         window.postMessage('done-loading')
       })

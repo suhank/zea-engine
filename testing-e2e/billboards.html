@@ -28,17 +28,17 @@
       const addBillboard = (name, pos, color, alignToCamera, url) => {
         return new Promise((resolve, reject) => {
           const image = new FileImage()
-          image.getParameter('FilePath').setUrl(url)
-          image.getParameter('Invert').setValue(true)
-          image.getParameter('AlphaFromLuminance').setValue(true)
+          image.load(url)
+          image.invertParam.value = true
+          // image.getParameter('AlphaFromLuminance').value = true
           const billboard = new BillboardItem(name, image)
           const xfo = new Xfo()
           xfo.tr = pos
           xfo.ori.setFromAxisAndAngle(new Vec3(1, 0, 0), Math.PI * 0.5)
-          billboard.getParameter('LocalXfo').setValue(xfo)
-          billboard.getParameter('PixelsPerMeter').setValue(300)
-          billboard.getParameter('AlignedToCamera').setValue(alignToCamera)
-          billboard.getParameter('Color').setValue(color)
+          billboard.localXfoParam.value = xfo
+          billboard.pixelsPerMeterParam.value = 300
+          billboard.alignedToCameraParam.value = alignToCamera
+          billboard.getParameter('Color').value = color
           scene.getRoot().addChild(billboard)
           index++
 

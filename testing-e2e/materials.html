@@ -78,13 +78,13 @@
       //////////////////////////////
 
       const envMap = new EnvMap()
-      envMap.getParameter('FilePath').setValue('data/pisa-webp.zenv')
-      // envMap.getParameter('FilePath').setValue('data/AutomnRoad-webp.zenv')
-      // envMap.getParameter('FilePath').setValue('data/StudioG.zenv')
-      // envMap.getParameter('FilePath').setValue('data/StudioD.zenv')
-      // envMap.getParameter('FilePath').setValue('data/HDR_041_Path_Ref-webp.zenv')
+      envMap.load('data/pisa-webp.zenv')
+      // envMap.load('data/AutomnRoad-webp.zenv')
+      // envMap.load('data/StudioG.zenv')
+      // envMap.load('data/StudioD.zenv')
+      // envMap.load('data/HDR_041_Path_Ref-webp.zenv')
       scene.setEnvMap(envMap)
-      scene.getSettings().getParameter('Display EnvMap').setValue(true)
+      scene.getSettings().getParameter('Display EnvMap').value = true
 
       const addMeshShape = (name, shape, pos, mat) => {
         const geomItem = new GeomItem(name, shape, mat, new Xfo(pos))
@@ -93,14 +93,14 @@
 
       const addLabel = (name, xfo) => {
         const label = new Label(name)
-        label.getParameter('FontSize').setValue(48)
-        // label.getParameter('FontColor').setValue(color)
-        label.getParameter('BackgroundColor').setValue(new Color(0.6, 0.6, 0.6))
+        label.fontSizeParam.value = 48
+        // label.fontColorParam.value = color
+        label.backgroundColorParam.value = new Color(0.6, 0.6, 0.6)
 
         const billboard = new BillboardItem(name, label)
-        billboard.getParameter('LocalXfo').setValue(xfo)
-        billboard.getParameter('PixelsPerMeter').setValue(80)
-        billboard.getParameter('AlignedToCamera').setValue(false)
+        billboard.localXfoParam.value = xfo
+        billboard.pixelsPerMeterParam.value = 80
+        billboard.alignedToCameraParam.value = false
         scene.getRoot().addChild(billboard)
       }
 
@@ -114,10 +114,10 @@
         }
         for (let i = 0; i < 10; i++) {
           const material = new Material('surfaces', 'StandardSurfaceShader')
-          material.getParameter('BaseColor').setValue(baseColor)
-          material.getParameter('Metallic').setValue(metallic)
-          material.getParameter('Reflectance').setValue(reflectance)
-          material.getParameter('Roughness').setValue(i / 9)
+          material.getParameter('BaseColor').value = baseColor
+          material.getParameter('Metallic').value = metallic
+          material.getParameter('Reflectance').value = reflectance
+          material.getParameter('Roughness').value = i / 9
           addMeshShape(name + i, sphere, new Vec3((i / 9 - 0.5) * 30, yoffset, 1.4), material)
         }
         {

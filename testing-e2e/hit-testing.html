@@ -43,7 +43,7 @@
       scene.setupGrid(10.0, 10)
 
       const objAsset = new ObjAsset('cow')
-      objAsset.getParameter('splitGroupsIntoObjects').setValue(true)
+      objAsset.splitGroupsIntoObjectsParam.value = true
       objAsset.load('data/cow.obj').then(() => {
         postMessage('done-loading')
       })
@@ -52,7 +52,7 @@
       const xfo = new Xfo()
       xfo.tr.set(0, 0, 3.55)
       xfo.ori.setFromAxisAndAngle(new Vec3(1, 0, 0), Math.PI * 0.5)
-      objAsset.getParameter('GlobalXfo').setValue(xfo)
+      objAsset.globalXfoParam.value = xfo
       renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(8, 8, 6), new Vec3(2, 0, 3))
 
       const postMessage = (msg) => {
@@ -62,7 +62,7 @@
 
       const sphere = new Sphere(0.1)
       const material = new Material('foo', 'SimpleSurfaceShader')
-      material.getParameter('BaseColor').setValue(new Color(1, 0, 0))
+      material.getParameter('BaseColor').value = new Color(1, 0, 0)
 
       class MovePointTool extends BaseTool {
         constructor(viewport) {
@@ -82,7 +82,7 @@
           const intersectionData = this.viewport.getGeomDataAtPos(event.pointerPos, event.pointerRay)
           if (intersectionData) {
             const pos = event.pointerRay.start.add(event.pointerRay.dir.scale(intersectionData.dist))
-            this.point.getParameter('GlobalXfo').setValue(new Xfo(pos))
+            this.point.globalXfoParam.value = new Xfo(pos)
           }
         }
         onPointerUp(event) {
@@ -129,7 +129,7 @@
 
       renderer.getViewport().on('pointerDown', (event) => {
         if (event.intersectionData) {
-          if (event.intersectionData.geomItem.getParameter('Geometry').getValue() == sphere) {
+          if (event.intersectionData.geomItem.geomParam.getValue() == sphere) {
             movePointTool.startMove(event)
           } else {
             makeStrokeTool.startStroke(event)

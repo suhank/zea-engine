@@ -64,10 +64,10 @@
       const promises = []
 
       const envMap = new EnvMap()
-      envMap.getParameter('FilePath').setValue('data/pisa-webp.zenv')
+      envMap.load('data/pisa-webp.zenv')
       promises.push(new Promise((resolve) => envMap.on('loaded', resolve)))
       scene.setEnvMap(envMap)
-      scene.getSettings().getParameter('Display EnvMap').setValue(true)
+      scene.getSettings().getParameter('Display EnvMap').value = true
 
       const urlParams = new URLSearchParams(window.location.search)
       renderer.getViewport().debugGeomShader = urlParams.has('debugGeomShader')

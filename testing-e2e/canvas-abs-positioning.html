@@ -33,7 +33,7 @@
       scene.setupGrid(3.0, 20)
 
       const standardMaterial = new Material('surfaces', 'SimpleSurfaceShader')
-      standardMaterial.getParameter('BaseColor').setValue(new Color(89 / 255, 182 / 255, 92 / 255))
+      standardMaterial.getParameter('BaseColor').value = new Color(89 / 255, 182 / 255, 92 / 255)
 
       const sphere = new Sphere(1.5, 8, 5)
       const geomItem = new GeomItem('Sphere', sphere, standardMaterial)

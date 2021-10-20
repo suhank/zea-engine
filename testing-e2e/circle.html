@@ -20,7 +20,7 @@
       renderer.setScene(scene)
 
       const material = new Material('surfaces', 'LinesShader')
-      material.getParameter('BaseColor').setValue(new Color(89 / 255, 182 / 255, 92 / 255))
+      material.getParameter('BaseColor').value = new Color(89 / 255, 182 / 255, 92 / 255)
 
       const sphere = new Circle(1.5, 30)
       const geomItem = new GeomItem('Circle', sphere, material)
@@ -39,11 +39,11 @@
         const { data } = event
 
         if (data === 'variant-01') {
-          sphere.getParameter('Radius').setValue(2.5)
+          sphere.radiusParam.value = 2.5
           window.postMessage(`done-${data}`)
         } else if (data === 'variant-02') {
-          sphere.getParameter('Radius').setValue(1)
-          sphere.getParameter('Sides').setValue(8)
+          sphere.radiusParam.value = 1
+          sphere.sidesParam.value = 8
           window.postMessage(`done-${data}`)
         }
       }
