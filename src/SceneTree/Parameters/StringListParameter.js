@@ -1,4 +1,5 @@
-import { Parameter, Registry, Vec3Parameter } from '@zeainc/zea-engine'
+import { Parameter } from './Parameter.js'
+import { Registry } from '../../Registry'
 
 /**
  * A parameter for storing an array of string values.
@@ -40,6 +41,5 @@ class StringListParameter extends Parameter {
 
 Registry.register('StringListParameter', StringListParameter)
 Registry.register('Property_StringList', StringListParameter)
-Registry.register('Property_Vec3_32f', Vec3Parameter)
 
 export { StringListParameter }
