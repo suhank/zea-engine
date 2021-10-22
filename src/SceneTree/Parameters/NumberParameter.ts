@@ -121,9 +121,33 @@ class NumberParameter extends Parameter<number> implements IBinaryReader {
   }
 }
 
+// eslint-disable-next-line require-jsdoc
+class Float32Parameter extends NumberParameter {
+  // eslint-disable-next-line require-jsdoc
+  readBinary(reader, context) {
+    this.__value = reader.loadFloat32()
+  }
+}
+
+// eslint-disable-next-line require-jsdoc
+class SInt32Parameter extends NumberParameter {
+  // eslint-disable-next-line require-jsdoc
+  readBinary(reader, context) {
+    this.__value = reader.loadSInt32()
+  }
+}
+
+// eslint-disable-next-line require-jsdoc
+class UInt32Parameter extends NumberParameter {
+  // eslint-disable-next-line require-jsdoc
+  readBinary(reader, context) {
+    this.__value = reader.loadUInt32()
+  }
+}
+
 Registry.register('NumberParameter', NumberParameter)
-Registry.register('Property_SInt32', NumberParameter)
-Registry.register('Property_UInt32', NumberParameter)
-Registry.register('Property_Float32', NumberParameter)
+Registry.register('Property_SInt32', SInt32Parameter)
+Registry.register('Property_UInt32', UInt32Parameter)
+Registry.register('Property_Float32', Float32Parameter)
 
 export { NumberParameter }
