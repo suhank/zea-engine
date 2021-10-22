@@ -236,7 +236,15 @@ class GLBaseViewport extends ParameterOwner {
       // COLORBUFFER
       this.fb[FRAMEBUFFER.COLORBUFFER] = gl.createFramebuffer()
       gl.bindFramebuffer(gl.FRAMEBUFFER, this.fb[FRAMEBUFFER.COLORBUFFER])
-      gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.offscreenBuffer!.glTex, 0)
+      gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.offscreenBuffer.glTex, 0)
+      gl.bindFramebuffer(gl.FRAMEBUFFER, null)
+
+      // //////////////////////////////////
+      // DEPTHBUFFER
+      // Create the depth texture that will be bitted to.
+      this.fb[FRAMEBUFFER.DEPTHBUFFER] = gl.createFramebuffer()
+      gl.bindFramebuffer(gl.FRAMEBUFFER, this.fb[FRAMEBUFFER.DEPTHBUFFER])
+      gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.TEXTURE_2D, this.depthTexture.glTex, 0)
       gl.bindFramebuffer(gl.FRAMEBUFFER, null)
 
       const check = gl.checkFramebufferStatus(
@@ -357,11 +365,12 @@ class GLBaseViewport extends ParameterOwner {
     const gl = this.__renderer.gl
     if (this.renderer.outlineThickness == 0 || gl.name != 'webgl2' || !this.fb) return
 
-    gl.bindFramebuffer(gl.READ_FRAMEBUFFER, this.fb[FRAMEBUFFER.MSAA_RENDERBUFFER])
-    gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, this.fb[FRAMEBUFFER.DEPTHBUFFER])
-    gl.clearBufferfv(gl.COLOR, 0, [1, 1, 1, 1])
+    const gl2 = <WebGL2RenderingContext>gl
+    gl2.bindFramebuffer(gl2.READ_FRAMEBUFFER, this.fb[FRAMEBUFFER.MSAA_RENDERBUFFER])
+    gl2.bindFramebuffer(gl2.DRAW_FRAMEBUFFER, this.fb[FRAMEBUFFER.DEPTHBUFFER])
+    gl2.clearBufferfv(gl2.COLOR, 0, [1, 1, 1, 1])
 
-    gl.blitFramebuffer(
+    gl2.blitFramebuffer(
       0,
       0,
       this.__width,
@@ -370,44 +379,44 @@ class GLBaseViewport extends ParameterOwner {
       0,
       this.__width,
       this.__height,
-      gl.DEPTH_BUFFER_BIT,
-      gl.NEAREST
+      gl2.DEPTH_BUFFER_BIT,
+      gl2.NEAREST
     )
     // Rebind the MSAA RenderBuffer.
-    gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, this.fb[FRAMEBUFFER.MSAA_RENDERBUFFER])
+    gl2.bindFramebuffer(gl2.DRAW_FRAMEBUFFER, this.fb[FRAMEBUFFER.MSAA_RENDERBUFFER])
     renderstate.boundRendertarget = this.fb[FRAMEBUFFER.MSAA_RENDERBUFFER]
-    gl.viewport(0, 0, this.__width, this.__height)
+    gl2.viewport(0, 0, this.__width, this.__height)
 
     if (this.renderer.outlineThickness == 0) return
 
     // ////////////////////////////////////
     //
-    gl.enable(gl.BLEND)
-    gl.blendEquation(gl.FUNC_ADD)
-    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA) // For add
-    gl.disable(gl.DEPTH_TEST)
-    gl.depthMask(false)
+    gl2.enable(gl2.BLEND)
+    gl2.blendEquation(gl2.FUNC_ADD)
+    gl2.blendFunc(gl2.SRC_ALPHA, gl2.ONE_MINUS_SRC_ALPHA) // For add
+    gl2.disable(gl2.DEPTH_TEST)
+    gl2.depthMask(false)
 
     this.renderer.silhouetteShader.bind(renderstate)
 
     const unifs = renderstate.unifs
 
-    this.depthTexture!.bindToUniform(renderstate, unifs.depthTexture)
+    this.depthTexture.bindToUniform(renderstate, unifs.depthTexture)
 
-    gl.uniform2f(unifs.screenSize.location, this.__width, this.__height)
-    gl.uniform1f(unifs.outlineThickness.location, this.renderer.outlineThickness)
+    gl2.uniform2f(unifs.screenSize.location, this.__width, this.__height)
+    gl2.uniform1f(unifs.outlineThickness.location, this.renderer.outlineThickness)
 
     const oc = this.renderer.outlineColor.asArray()
-    gl.uniform4f(unifs.outlineColor.location, oc[0], oc[1], oc[2], oc[3])
-    gl.uniform1f(unifs.outlineSensitivity.location, this.renderer.outlineSensitivity)
-    gl.uniform1f(unifs.outlineDepthBias.location, this.renderer.outlineDepthBias)
+    gl2.uniform4f(unifs.outlineColor.location, oc[0], oc[1], oc[2], oc[3])
+    gl2.uniform1f(unifs.outlineSensitivity.location, this.renderer.outlineSensitivity)
+    gl2.uniform1f(unifs.outlineDepthBias.location, this.renderer.outlineDepthBias)
 
-    gl.uniform2f(unifs.depthRange.location, this.depthRange[0], this.depthRange[1])
+    gl2.uniform2f(unifs.depthRange.location, this.depthRange[0], this.depthRange[1])
 
     this.quad.bindAndDraw(renderstate)
 
-    gl.enable(gl.DEPTH_TEST)
-    gl.depthMask(true)
+    gl2.enable(gl2.DEPTH_TEST)
+    gl2.depthMask(true)
   }
 
   /**
