@@ -27,7 +27,7 @@
 
       const scene = new Scene()
       const canvasEl = document.getElementById('viewport')
-      const renderer = new GLRenderer(canvasEl, { hideSplash: true, antialias: false })
+      const renderer = new GLRenderer(canvasEl, { antialias: false })
       renderer.setScene(scene)
 
       scene.setupGrid(3.0, 20)

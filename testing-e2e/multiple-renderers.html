@@ -92,7 +92,7 @@
         const domelement = document.getElementById('londonapp')
         const scene = new Scene()
         const color = new Color('#e6f9ff')
-        scene.getSettings().backgroundColorParam.value = color
+        renderer.getViewport().backgroundColorParam.value = color
 
         scene.setupGrid(30, 60)
 
@@ -108,7 +108,7 @@
         const domelement = document.getElementById('parisapp')
         const scene = new Scene()
         const color2 = new Color('#e6f9ff')
-        scene.getSettings().backgroundColorParam.value = color2
+        renderer.getViewport().backgroundColorParam.value = color2
 
         const colorGrid = new Color('#999999')
         scene.setupGrid(30, 60, colorGrid)

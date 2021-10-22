@@ -16,7 +16,7 @@
 
       const scene = new Scene()
       const domElement = document.getElementById('viewport')
-      const renderer = new GLRenderer(domElement, { hideSplash: true, antialias: true })
+      const renderer = new GLRenderer(domElement, { antialias: true })
       renderer.setScene(scene)
 
       const material = new Material('surfaces', 'LinesShader')

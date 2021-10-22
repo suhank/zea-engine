@@ -10,15 +10,14 @@
 
     <link rel="stylesheet" href="styles/tailwind.min.css" />
 
-    <script src="../dist/index.umd.js"></script>
     <script type="module">
-      // import { GLRenderer, Scene, Vec3, Xfo, VLAAsset } from '../dist/index.esm.js'
+      import '../dist/index.umd.js'
       const { GLRenderer, Scene, Vec3, Xfo, VLAAsset } = zeaEngine
 
       const canvas = document.getElementById('viewport')
 
       const scene = new Scene()
-      const renderer = new GLRenderer(canvas, { hideSplash: true, antialias: false })
+      const renderer = new GLRenderer(canvas, { antialias: false })
       renderer.setScene(scene)
 
       scene.setupGrid(10.0, 10)

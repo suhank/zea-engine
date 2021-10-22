@@ -18,13 +18,13 @@
       const canvas = document.getElementById('viewport')
 
       const scene = new Scene()
-      const renderer = new GLRenderer(canvas, { hideSplash: true, antialias: false })
+      const renderer = new GLRenderer(canvas, { antialias: false })
       renderer.setScene(scene)
 
       const envMap = new EnvMap()
       envMap.load('data/pisa-webp.zenv')
       scene.setEnvMap(envMap)
-      scene.getSettings().getParameter('Display EnvMap').value = false
+      scene.displayEnvMapParam.value = false
 
       scene.setupGrid(10.0, 10)
 
