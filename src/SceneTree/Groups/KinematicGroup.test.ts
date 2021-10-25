@@ -1,12 +1,13 @@
-
 // import { KinematicGroup } from './KinematicGroup'
 // import { TreeItem } from '../TreeItem'
 // import { Vec3, Xfo } from '../../Math'
 // import { jsonCompare } from '../../../Utilities/test_utils'
 
 describe('KinematicGroup', () => {
-  test('empty', ()=>{expect(1).toBe(1)})
-}
+  test('empty', () => {
+    expect(1).toBe(1)
+  })
+})
 /*
 describe('KinematicGroup', () => {
   test('Calculating the KinematicGroup Xfo using different INITIAL_XFO_MODES.', () => {

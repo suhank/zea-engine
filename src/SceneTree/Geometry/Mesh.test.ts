@@ -167,7 +167,7 @@ describe('Mesh', () => {
     mesh.computeVertexNormals()
 
     // Now check that the 2 faces have normals
-    const faceNormals = mesh.getFaceAttribute('normals')
+    const faceNormals = <Vec3Attribute>mesh.getFaceAttribute('normals')
     expect(faceNormals.getValueRef(0)).toEqual(new Vec3(1, 0, 0))
     expect(faceNormals.getValueRef(1)).toEqual(new Vec3(0, -1, 0))
 
