@@ -33,7 +33,10 @@ const Registry = {
    * @param {function|number|any} blueprint - Blueprint representation(Class function, type)
    */
   register: (blueprintName, blueprint) => {
-    if (_registeredBlueprints[blueprintName]) throw new Error(`There's a class registered with '${blueprintName}' name`)
+    if (_registeredBlueprints[blueprintName]) {
+      console.warn(`There's a class registered with '${blueprintName}' name`)
+      return
+    }
     _registeredBlueprints[blueprintName] = { blueprint, callbacks: [] }
 
     // Note: To provide backwards compatibility, same blueprint can be stored under multiple names.

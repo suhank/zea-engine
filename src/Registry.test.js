@@ -17,14 +17,14 @@ describe('Registry', () => {
     expect(typeResult).toBe(UInt32)
   })
 
-  test('throws on duplicated class/type name registration', () => {
-    Registry.register('FooClass', Float32Array)
-    const UInt32 = 4
-    Registry.register('FooType', UInt32)
+  // test('throws on duplicated class/type name registration', () => {
+  //   Registry.register('FooClass', Float32Array)
+  //   const UInt32 = 4
+  //   Registry.register('FooType', UInt32)
 
-    expect(() => Registry.register('FooClass', Float32Array)).toThrow()
-    expect(() => Registry.register('FooType', Float32Array)).toThrow()
-  })
+  //   expect(() => Registry.register('FooClass', Float32Array)).toThrow()
+  //   expect(() => Registry.register('FooType', Float32Array)).toThrow()
+  // })
 
   it('returns blueprint name for class/type', () => {
     Registry.register('FooClass', Float64Array)
