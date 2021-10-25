@@ -15,7 +15,7 @@ module.exports = {
       tsconfig: 'tsconfig.json',
     },
   },
-  testEnvironment: 'jsdom',
+  testEnvironment: 'node',
   testRegex: '(/__tests__/.*|\\.(test|spec))\\.(js|ts)$',
   moduleFileExtensions: ['ts', 'js'],
 }
