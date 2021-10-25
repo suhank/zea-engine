@@ -19,7 +19,7 @@ Object {
       },
     },
     "GeomMat": Object {
-      "value": Float32Array [
+      "value": Array [
         1,
         0,
         0,
