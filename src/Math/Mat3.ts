@@ -511,10 +511,10 @@ class Mat3 {
   /**
    * The toJSON method encodes this type as a json object for persistence.
    *
-   * @return {number[] } - The json object.
+   * @return {Float32Array} - The json object.
    */
-  toJSON(): number[] {
-    return Array.from(this.__data)
+  toJSON(): Float32Array {
+    return this.__data
   }
   /**
    * The fromJSON method decodes a json object for this type.
