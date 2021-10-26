@@ -36,7 +36,7 @@ class Points extends BaseGeom {
   /**
    * Loads and populates `Points` object from a binary reader.
    *
-   * @param {BinReader} reader - The reader value.
+   * @param reader - The reader value.
    */
   loadBin(reader: BinReader) {
     this.name = reader.loadStr()
@@ -93,8 +93,8 @@ class Points extends BaseGeom {
   /**
    * Sets state of current geometry(Including line segments) using a binary reader object.
    *
-   * @param {BinReader} reader - The reader value.
-   * @param {Record<string, unknown>} context - The context value.
+   * @param reader - The reader value.
+   * @param context - The context value.
    */
   readBinary(reader: BinReader, context: Record<string, unknown>) {
     super.loadBaseGeomBinary(reader)

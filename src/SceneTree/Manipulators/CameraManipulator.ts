@@ -108,38 +108,38 @@ class CameraManipulator extends BaseTool {
   protected __mouseWheelZoomId: number = -1
 
   /**
-   * @member {NumberParameter} __orbitRateParam - The rate at which mouse or touch interactions are translated camera orientation changes.
+   * @member __orbitRateParam - The rate at which mouse or touch interactions are translated camera orientation changes.
    */
   __orbitRateParam: NumberParameter = new NumberParameter('OrbitRate', SystemDesc.isMobileDevice ? 0.5 : 1)
 
   /**
-   * @member {NumberParameter} __dollySpeedParam - The rate at which the mouse button or touch interactions are translated camera dolly movement.
+   * @member __dollySpeedParam - The rate at which the mouse button or touch interactions are translated camera dolly movement.
    */
   __dollySpeedParam: NumberParameter = new NumberParameter('DollySpeed', 0.02)
 
   /**
-   * @member {NumberParameter} __mouseWheelDollySpeedParam - The rate at which the mouse wheel interactions are translated camera dolly movement.
+   * @member __mouseWheelDollySpeedParam - The rate at which the mouse wheel interactions are translated camera dolly movement.
    */
   __mouseWheelDollySpeedParam: NumberParameter = new NumberParameter('MouseWheelDollySpeed', 0.1)
 
   /**
-   * @member {BooleanParameter} OrbitAroundCursor - TODO
+   * @member OrbitAroundCursor - TODO
    */
   OrbitAroundCursor: BooleanParameter = new BooleanParameter('OrbitAroundCursor', true)
 
   /**
-   * @member {NumberParameter} walkSpeedParam - TODO
+   * @member walkSpeedParam - TODO
    */
   walkSpeedParam: NumberParameter = new NumberParameter('WalkSpeed', 5) // Value is in meters/second
 
   /**
-   * @member {BooleanParameter} walkModeCollisionDetection - TODO
+   * @member walkModeCollisionDetection - TODO
    */
   walkModeCollisionDetection: BooleanParameter = new BooleanParameter('WalkModeCollisionDetection', false)
 
   /**
    * Create a camera, mouse and keyboard
-   * @param {Record<any,any>} appData - The object containing the scene and the renderer.
+   * @param appData - The object containing the scene and the renderer.
    */
   constructor(appData: Record<string, any>) {
     super()
@@ -197,7 +197,7 @@ class CameraManipulator extends BaseTool {
    * Sets default manipulation mode.
    * The value can be on of the keys in #CameraManipulator.MANIPULATION_MODES
    *
-   * @param {string} manipulationMode - The manipulation mode value.
+   * @param manipulationMode - The manipulation mode value.
    */
   setDefaultManipulationMode(manipulationMode: string) {
     if (typeof manipulationMode == 'string') {
@@ -211,8 +211,8 @@ class CameraManipulator extends BaseTool {
 
   /**
    * The look method.
-   * @param {MouseEvent} event - The event value.
-   * @param {Vec2} dragVec - The drag vector value.
+   * @param event - The event value.
+   * @param dragVec - The drag vector value.
    */
   look(event: Record<string, any>, dragVec: Vec2) {
     const { viewport } = event
@@ -238,8 +238,8 @@ class CameraManipulator extends BaseTool {
   /**
    * Rotates viewport camera about the target.
    *
-   * @param {MouseEvent} event - The event value.
-   * @param {Vec2} dragVec - The drag vector value.
+   * @param event - The event value.
+   * @param dragVec - The drag vector value.
    */
   turntable(event: Record<string, any>, dragVec: Vec2) {
     const { viewport } = event
@@ -268,8 +268,8 @@ class CameraManipulator extends BaseTool {
   /**
    * Rotates viewport camera about the target.
    *
-   * @param {MouseEvent} event - The event value.
-   * @param {Vec2} dragVec - The drag vector value.
+   * @param event - The event value.
+   * @param dragVec - The drag vector value.
    */
   tumbler(event: Record<string, any>, dragVec: Vec2) {
     const { viewport } = event
@@ -300,8 +300,8 @@ class CameraManipulator extends BaseTool {
   /**
    * Rotates viewport camera about the target.
    *
-   * @param {MouseEvent} event - The event value.
-   * @param {Vec2} dragVec - The drag vector value.
+   * @param event - The event value.
+   * @param dragVec - The drag vector value.
    */
   trackball(event: Record<string, any>, dragVec: Vec2) {
     const { viewport } = event
@@ -333,8 +333,8 @@ class CameraManipulator extends BaseTool {
   /**
    * Rotates the camera around its own `X`,`Y` axes.
    *
-   * @param {MouseEvent} event - The event value.
-   * @param {Vec2} dragVec - The drag vector value.
+   * @param event - The event value.
+   * @param dragVec - The drag vector value.
    */
   pan(event: Record<string, any>, dragVec: Vec2) {
     const { viewport } = event
@@ -366,8 +366,8 @@ class CameraManipulator extends BaseTool {
 
   /**
    * The dolly method.
-   * @param {MouseEvent} event - The event value.
-   * @param {Vec2} dragVec - The drag vector value.
+   * @param event - The event value.
+   * @param dragVec - The drag vector value.
    */
   dolly(event: Record<string, any>, dragVec: Vec2) {
     const { viewport } = event
@@ -399,7 +399,7 @@ class CameraManipulator extends BaseTool {
    * The initDrag method.
    *
    * @private
-   * @param {PointerEvent} event - The event value.
+   * @param event - The event value.
    */
   initDrag(event: Record<string, any>) {
     const { pointerPos } = event
@@ -427,7 +427,7 @@ class CameraManipulator extends BaseTool {
    * The initDrag method.
    *
    * @private
-   * @param {MouseEvent} event - The event value.
+   * @param event - The event value.
    */
   endDrag(event: Record<string, any>) {
     if (event.getCapture() == this) event.releaseCapture()
@@ -439,10 +439,10 @@ class CameraManipulator extends BaseTool {
    * The aimFocus method.
    *
    * @private
-   * @param {Camera} camera - The camera that we are aiming
-   * @param {Vec3} target - The target to focus on.
-   * @param {Number} distance - The distance from the target to get to.
-   * @param {Number} duration - The duration in milliseconds to aim the focus.
+   * @param camera - The camera that we are aiming
+   * @param target - The target to focus on.
+   * @param distance - The distance from the target to get to.
+   * @param duration - The duration in milliseconds to aim the focus.
    */
   aimFocus(camera: Camera, target: Vec3, distance: number = -1, duration: number = 400) {
     if (this.__focusIntervalId) clearInterval(this.__focusIntervalId)
@@ -536,11 +536,11 @@ class CameraManipulator extends BaseTool {
    * The orientPointOfView method.
    *
    * @private
-   * @param {Camera} camera - The camera that we are orienting
-   * @param {Vec3} position - The target to focus on.
-   * @param {Vec3} target - The target to focus on.
-   * @param {number} distance - The distance to the specified we want the user to be moved to
-   * @param {number} duration - The duration in milliseconds to aim the focus.
+   * @param camera - The camera that we are orienting
+   * @param position - The target to focus on.
+   * @param target - The target to focus on.
+   * @param distance - The distance to the specified we want the user to be moved to
+   * @param duration - The duration in milliseconds to aim the focus.
    */
   orientPointOfView(camera: Camera, position: Vec3, target: Vec3, distance: number = 0, duration: number = 400) {
     if (this.__focusIntervalId) clearInterval(this.__focusIntervalId)
@@ -582,7 +582,7 @@ class CameraManipulator extends BaseTool {
   /**
    * Invoked when a user double presses a pointer over an element.
    *
-   * @param {MouseEvent|TouchEvent} event - The pointer event that occurs
+   * @param event - The pointer event that occurs
    * @memberof CameraManipulator
    */
   onPointerDoublePress(event: Record<string, any>) {
@@ -610,7 +610,7 @@ class CameraManipulator extends BaseTool {
   /**
    * Event fired when either the mouse button is pressed, or a touch start event occurs.
    *
-   * @param {PointerEvent} event - The mouse event that occurs.
+   * @param event - The mouse event that occurs.
    */
   onPointerDown(event: Record<string, any>) {
     if (event.pointerType === POINTER_TYPES.mouse) {
@@ -640,7 +640,7 @@ class CameraManipulator extends BaseTool {
   /**
    * Event fired when either the mouse cursor is moved, or a touch point moves.
    *
-   * @param {MouseEvent} event - The mouse event that occurs.
+   * @param event - The mouse event that occurs.
    */
   onPointerMove(event: Record<string, any>) {
     if (this.__dragging != 0) {
@@ -656,7 +656,7 @@ class CameraManipulator extends BaseTool {
   /**
    * The event that occurs when the user moves the pointer across a screen.
    *
-   * @param {MouseEvent} event -The event value
+   * @param event -The event value
    */
   _onMouseMove(event: Record<string, any>) {
     if (!this.__pointerDown) return
@@ -692,7 +692,7 @@ class CameraManipulator extends BaseTool {
   /**
    * The event that occurs when the user moves pointer across a touch screen.
    *
-   * @param {TouchEvent} event - The touch event that occurs.
+   * @param event - The touch event that occurs.
    * @private
    */
   _onTouchMove(event: Record<string, any>) {
@@ -794,7 +794,7 @@ class CameraManipulator extends BaseTool {
   /**
    * Event fired when either the mouse button is released, or a touch end event occurs.
    *
-   * @param {MouseEvent} event - The mouse event that occurs.
+   * @param event - The mouse event that occurs.
    */
   onPointerUp(event: Record<string, any>) {
     if (this.__dragging == 1) {
@@ -852,13 +852,13 @@ class CameraManipulator extends BaseTool {
 
   /**
    * Causes an event to occur when the mouse pointer is moved into this viewport
-   * @param {MouseEvent|TouchEvent} event - The event that occurs.
+   * @param event - The event that occurs.
    */
   onPointerEnter(event: Record<string, any>) {}
 
   /**
    * Causes an event to occur when the mouse pointer is moved out of this viewport
-   * @param {MouseEvent|TouchEvent} event - The event that occurs.
+   * @param event - The event that occurs.
    */
   onPointerLeave(event: Record<string, any>) {
     // If the pointer leaves the viewport, then we will no longer receive key up events,
@@ -873,7 +873,7 @@ class CameraManipulator extends BaseTool {
   /**
    * Invoked when the mouse wheel is rolled up or down over an element.
    *
-   * @param {WheelEvent} event - The wheel event that occurs.
+   * @param event - The wheel event that occurs.
    */
   onWheel(event: Record<string, any>) {
     const { viewport } = event
@@ -960,7 +960,7 @@ class CameraManipulator extends BaseTool {
 
   /**
    * The integrateVelocityChange method.
-   * @param {MouseEvent} event - The event value.
+   * @param event - The event value.
    * @private
    */
   integrateVelocityChange(event: Record<string, any>) {
@@ -1016,7 +1016,7 @@ class CameraManipulator extends BaseTool {
   /**
    * Invoked when the user is pressing a key on the keyboard.
    *
-   * @param {KeyboardEvent} event - The keyboard event that occurs.
+   * @param event - The keyboard event that occurs.
    * @private
    */
   onKeyDown(event: Record<string, any>) {
@@ -1059,7 +1059,7 @@ class CameraManipulator extends BaseTool {
   /**
    * Invoked when the user releases a key on the keyboard.
    *
-   * @param {KeyboardEvent} event - The event that occurs.
+   * @param event - The event that occurs.
    */
   onKeyUp(event: Record<string, any>) {
     const key = event.key.toLowerCase()
@@ -1091,7 +1091,7 @@ class CameraManipulator extends BaseTool {
 
   /**
    * The __startTouch method.
-   * @param {TouchEvent} touch - The touch value.
+   * @param touch - The touch value.
    * @private
    */
   __startTouch(touch: Record<string, any>) {
@@ -1103,7 +1103,7 @@ class CameraManipulator extends BaseTool {
 
   /**
    * The __endTouch method.
-   * @param {TouchEvent} touch - The touch value.
+   * @param touch - The touch value.
    * @private
    */
   __endTouch(touch: Record<string, any>) {
@@ -1117,7 +1117,7 @@ class CameraManipulator extends BaseTool {
   /**
    * Invoked when the user touches an element on a touch screen.
    *
-   * @param {TouchEvent} event - The touch event that occurs.
+   * @param event - The touch event that occurs.
    */
   _onTouchStart(event: Record<string, any>) {
     const touches = event.changedTouches
@@ -1131,7 +1131,7 @@ class CameraManipulator extends BaseTool {
   /**
    * Invoked when the user removes his/her finger from the touch pad.
    *
-   * @param {TouchEvent} event - The touch event that occurs.
+   * @param event - The touch event that occurs.
    */
   onTouchEnd(event: Record<string, any>) {
     event.preventDefault()
@@ -1147,7 +1147,7 @@ class CameraManipulator extends BaseTool {
   /**
    * Invoked when the touch event gets interrupted.
    *
-   * @param {TouchEvent} event - The touch event that occurs.
+   * @param event - The touch event that occurs.
    */
   onTouchCancel(event: Record<string, any>) {
     event.preventDefault()
@@ -1161,7 +1161,7 @@ class CameraManipulator extends BaseTool {
   /**
    * Returns a dictionary of support manipulation modes.
    *
-   * @param {TouchEvent} event - The touch event that occurs.
+   * @param event - The touch event that occurs.
    */
   static get MANIPULATION_MODES() {
     return MANIPULATION_MODES

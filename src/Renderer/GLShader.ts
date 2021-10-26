@@ -33,7 +33,7 @@ class GLShader extends BaseItem {
   protected __shaderCompilationAttempted!: boolean
   /**
    * Create a GL shader.
-   * @param {WebGL12RenderingContext} gl - The webgl rendering context.
+   * @param gl - The webgl rendering context.
    */
   constructor(gl?: WebGL12RenderingContext, name?: string) {
     super(name)
@@ -50,7 +50,7 @@ class GLShader extends BaseItem {
   /**
    * Sets the GL context to the shader.
    * > Note: normally the context should be passed to the constructor. This method us used when using the Registry to construct shaders.
-   * @param {WebGL12RenderingContext} gl - The webgl rendering context.
+   * @param gl - The webgl rendering context.
    */
   setGLContext(gl: WebGL12RenderingContext) {
     this.__gl = gl
@@ -58,8 +58,8 @@ class GLShader extends BaseItem {
 
   /**
    * Sets the GLSL code for a given shader stage.
-   * @param {string} stageName - The name of the stage. currently only 'VERTEX_SHADER' or 'FRAGMENT_SHADER' are supported.
-   * @param {string} glsl - The GLSL code for the shader stage.
+   * @param stageName - The name of the stage. currently only 'VERTEX_SHADER' or 'FRAGMENT_SHADER' are supported.
+   * @param glsl - The GLSL code for the shader stage.
    */
   setShaderStage(stageName: string, glsl: string) {
     this.__shaderStagesGLSL[stageName] = glsl
@@ -68,8 +68,8 @@ class GLShader extends BaseItem {
 
   /**
    * Gets the GLSL code for a given shader stage.
-   * @param {string} stageName - The name of the stage. currently only 'VERTEX_SHADER' or 'FRAGMENT_SHADER' are supported.
-   * @return {string} - The GLSL code for the shader stage.
+   * @param stageName - The name of the stage. currently only 'VERTEX_SHADER' or 'FRAGMENT_SHADER' are supported.
+   * @return - The GLSL code for the shader stage.
    */
   getShaderStage(stageName: string) {
     return this.__shaderStagesGLSL[stageName]
@@ -93,7 +93,7 @@ class GLShader extends BaseItem {
 
   /**
    * The isTransparent method.
-   * @return {boolean} - The return value.
+   * @return - The return value.
    */
   static isTransparent() {
     return false
@@ -101,7 +101,7 @@ class GLShader extends BaseItem {
 
   /**
    * The isOverlay method.
-   * @return {boolean} - The return value.
+   * @return - The return value.
    */
   static isOverlay() {
     return false
@@ -112,11 +112,11 @@ class GLShader extends BaseItem {
 
   /**
    * The __compileShaderStage method.
-   * @param {string} glsl - The glsl value.
-   * @param {number} stageID - The stageID value.
-   * @param {string} name - The name value.
-   * @param {Shaderopts} shaderopts - The shaderopts value.
-   * @return {WebGLShader} - The return value.
+   * @param glsl - The glsl value.
+   * @param stageID - The stageID value.
+   * @param name - The name value.
+   * @param shaderopts - The shaderopts value.
+   * @return - The return value.
    * @private
    */
   __compileShaderStage(glsl: string, stageID: number, name: string, shaderopts: Shaderopts): WebGLShader {
@@ -203,8 +203,8 @@ class GLShader extends BaseItem {
 
   /**
    * The __createProgram method.
-   * @param {Shaderopts} shaderopts - The shaderopts value.
-   * @return {WebGLProgram} - The program value.
+   * @param shaderopts - The shaderopts value.
+   * @return - The program value.
    * @private
    */
   // TODO: can't use shaderopt tpye
@@ -287,9 +287,9 @@ class GLShader extends BaseItem {
 
   /**
    * The __extractAttributeAndUniformLocations method.
-   * @param {WebGLProgram} shaderProgramHdl - The shaderProgramHdl value.
-   * @param {Shaderopts} shaderopts - The shaderopts value.
-   * @return {Shaderopts} - The dictionary of attributes and uniform values
+   * @param shaderProgramHdl - The shaderProgramHdl value.
+   * @param shaderopts - The shaderopts value.
+   * @return - The dictionary of attributes and uniform values
    * @private
    */
   __extractAttributeAndUniformLocations(shaderProgramHdl: WebGLProgram, shaderopts: Shaderopts) {
@@ -354,7 +354,7 @@ class GLShader extends BaseItem {
 
   /**
    * The getAttributes method.
-   * @return {Record<string, any>} - The dictionary of attributes that this shader expects to be bound.
+   * @return - The dictionary of attributes that this shader expects to be bound.
    */
   getAttributes(): Record<string, any> {
     const attributes: Record<string, any> = {}
@@ -368,7 +368,7 @@ class GLShader extends BaseItem {
 
   /**
    * The getUniforms method.
-   * @return {Record<string, any>} - The dictionary of uniforms that this shader expects to be bound.
+   * @return - The dictionary of uniforms that this shader expects to be bound.
    */
   getUniforms(): Record<string, string> {
     const uniforms: Record<string, string> = {}
@@ -381,8 +381,8 @@ class GLShader extends BaseItem {
 
   /**
    * Checks to see if the engine is compiled for the target specified by the key
-   * @param {string} key - The key value.
-   * @return {boolean} - The return value.
+   * @param key - The key value.
+   * @return - The return value.
    */
   isCompiledForTarget(key: string): boolean {
     const shaderkey = key ? key : this.getId()
@@ -391,9 +391,9 @@ class GLShader extends BaseItem {
 
   /**
    * The compileForTarget method.
-   * @param {string} key - The key value.
-   * @param {Shaderopts} shaderopts - The shaderopts value.
-   * @return {Record<string, any>} - The result of the shader compilation.
+   * @param key - The key value.
+   * @param shaderopts - The shaderopts value.
+   * @return - The result of the shader compilation.
    */
   compileForTarget(key?: string, shaderopts?: Shaderopts): Record<string, any> {
     const shaderkey = key ? key : this.getId()
@@ -418,9 +418,9 @@ class GLShader extends BaseItem {
 
   /**
    * The bind method.
-   * @param {RednerState} renderstate - The object tracking the current state of the renderer
-   * @param {string} key - The key value.
-   * @return {boolean} - The return value.
+   * @param renderstate - The object tracking the current state of the renderer
+   * @param key - The key value.
+   * @return - The return value.
    */
   bind(renderstate: RenderState, key?: string) {
     const gl = this.__gl!
@@ -457,8 +457,8 @@ class GLShader extends BaseItem {
 
   /**
    * The unbind method.
-   * @param {RenderState}} renderstate - The object tracking the current state of the renderer
-   * @return {boolean} - The return value.
+   * @param renderstate - The object tracking the current state of the renderer
+   * @return - The return value.
    */
   unbind(renderstate: RenderState): boolean {
     renderstate.glShader = null
@@ -473,7 +473,7 @@ class GLShader extends BaseItem {
 
   /**
    * The getGeomDataShaderName method.
-   * @return {string} - an array of param declarations that the shader expects the material tp provide.
+   * @return - an array of param declarations that the shader expects the material tp provide.
    */
   getGeomDataShaderName(): string {
     return ''
@@ -488,7 +488,7 @@ class GLShader extends BaseItem {
 
   /**
    * The supportsInstancing method.
-   * @return {boolean} - return false for shaders that cannot be rendered in instanced mode.
+   * @return - return false for shaders that cannot be rendered in instanced mode.
    */
   static supportsInstancing(): boolean {
     return true
@@ -496,8 +496,8 @@ class GLShader extends BaseItem {
 
   /**
    * The getPackedMaterialData method.
-   * @param {Material} material - The material param.
-   * @return {Float32Array} - The return value.
+   * @param material - The material param.
+   * @return - The return value.
    */
   static getPackedMaterialData(material: Material): Float32Array {
     const matData = new Float32Array(4)

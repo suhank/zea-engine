@@ -13,8 +13,8 @@ class CalcGlobalXfoOperator extends Operator {
   /**
    * Create a CalcGlobalXfoOperator operator.
    *
-   * @param {XfoParameter} groupGlobalXfoParam - The GlobalXfo param found on the Group.
-   * @param {XfoParameter} cuttingPlaneParam - The parameter on the Group which defines the displacement to apply to the members.
+   * @param groupGlobalXfoParam - The GlobalXfo param found on the Group.
+   * @param cuttingPlaneParam - The parameter on the Group which defines the displacement to apply to the members.
    */
   // TODO: adding new XfoP... to make inheritence work
   constructor(globalXfoParam?: XfoParameter, localXfoParam?: XfoParameter) {
@@ -27,7 +27,7 @@ class CalcGlobalXfoOperator extends Operator {
   /**
    * The backPropagateValue method inverts the mathematics of the 'evaluate'
    * method so it can propagate the value backwards to its inputs.
-   * @param {Xfo} value - the new value being set on the output GlobalXfo
+   * @param value - the new value being set on the output GlobalXfo
    */
   backPropagateValue(value: Xfo): void {
     const localXfoParam = this.getInput('LocalXfo').getParam()

@@ -55,8 +55,8 @@ class MaterialColorParam extends ColorParameter {
   protected image?: BaseImage
   /**
    * Create a material color parameter.
-   * @param {string} name - The name of the material color parameter.
-   * @param {Color} value - The value of the parameter.
+   * @param name - The name of the material color parameter.
+   * @param value - The value of the parameter.
    */
   constructor(name?: string, value?: Color) {
     super(name, value)
@@ -65,7 +65,7 @@ class MaterialColorParam extends ColorParameter {
   /**
    * Returns `BaseImage` texture of the Material.
    *
-   * @return {BaseImage|undefined} - The return value.
+   * @return - The return value.
    */
   getImage(): BaseImage | undefined {
     return this.image
@@ -82,7 +82,7 @@ class MaterialColorParam extends ColorParameter {
   /**
    * Sets `BaseImage` texture value in parameter.
    *
-   * @param {BaseImage | null} value - The value param.
+   * @param value - The value param.
    */
   setImage(value: BaseImage | null): void {
     const disconnectImage = () => {
@@ -115,7 +115,7 @@ class MaterialColorParam extends ColorParameter {
   /**
    * Sets `Color` or the `BaseImage` texture value in parameter.
    *
-   * @param {BaseImage|Color} value - The value param.
+   * @param value - The value param.
    */
   setValue(value: BaseImage | Color) {
     // Note: instead of supporting images or colors, we should replace the ColorParameter with an ImageParameter when assigning textures
@@ -129,8 +129,8 @@ class MaterialColorParam extends ColorParameter {
   /**
    * Extracts `Color` and `Image` values from a buffer, updating current parameter state.
    *
-   * @param {BinReader} reader - The reader value.
-   * @param {Record<string, unknown>} context - The context value.
+   * @param reader - The reader value.
+   * @param context - The context value.
    */
   readBinary(reader: BinReader, context: Record<string, any>): void {
     super.readBinary(reader, context)
@@ -145,7 +145,7 @@ class MaterialColorParam extends ColorParameter {
    * The clone method constructs a new material color parameter,
    * copies its values from this parameter and returns it.
    *
-   * @return {MaterialColorParam} - Returns a new cloned material color parameter.
+   * @return - Returns a new cloned material color parameter.
    */
   clone(): MaterialColorParam {
     const clonedParam = new MaterialColorParam(this.name, this.__value?.clone())

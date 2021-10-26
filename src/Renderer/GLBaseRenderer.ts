@@ -70,8 +70,8 @@ class GLBaseRenderer extends ParameterOwner {
 
   /**
    * Create a GL base renderer.
-   * @param {HTMLElement|HTMLCanvasElement} $canvas - The canvas element.
-   * @param {Record<string, any>} options - The options value.
+   * @param $canvas - The canvas element.
+   * @param options - The options value.
    */
   constructor($canvas: HTMLCanvasElement, options: Record<string, any> = {}) {
     super()
@@ -154,8 +154,8 @@ class GLBaseRenderer extends ParameterOwner {
 
   /**
    * The addShaderPreprocessorDirective method.
-   * @param {string} name - The name value.
-   * @param {string} value - The value param.
+   * @param name - The name value.
+   * @param value - The value param.
    */
   addShaderPreprocessorDirective(name: string, value?: string) {
     // const gl = this.__gl
@@ -172,7 +172,7 @@ class GLBaseRenderer extends ParameterOwner {
   /**
    * Returns HTMLCanvasElement's width
    *
-   * @return {number} - The return value.
+   * @return - The return value.
    */
   getWidth(): number {
     return this.__glcanvas!.width
@@ -180,7 +180,7 @@ class GLBaseRenderer extends ParameterOwner {
 
   /**
    * Returns HTMLCanvasElement's Height
-   * @return {number} - The return value.
+   * @return - The return value.
    */
   getHeight(): number {
     return this.__glcanvas!.height
@@ -192,8 +192,8 @@ class GLBaseRenderer extends ParameterOwner {
   /**
    * Adds a new viewport(viewing region) to the scene.
    *
-   * @param {string} name - The name of the viewport.
-   * @return {GLViewport} - The return value.
+   * @param name - The name of the viewport.
+   * @return - The return value.
    */
   addViewport(name: string): GLViewport {
     // TODO: We may need to merge GLBaseRenderer into GLRenderer to avoid this nasty cast.
@@ -218,8 +218,8 @@ class GLBaseRenderer extends ParameterOwner {
   /**
    * Returns a viewport element by specifying its index in the list of viewports.
    *
-   * @param {number} index - The index value.
-   * @return {GLViewport} - The return value.
+   * @param index - The index value.
+   * @return - The return value.
    */
   getViewport(index = 0): GLViewport {
     return this.__viewports[index]
@@ -228,9 +228,9 @@ class GLBaseRenderer extends ParameterOwner {
   /**
    * Returns a viewport element under the specified XY coordinates.
    *
-   * @param {number} offsetX - The viewport offset in the X axis.
-   * @param {number} offsetY - The viewport offset in the Y axis.
-   * @return {GLViewport} - The return value.
+   * @param offsetX - The viewport offset in the X axis.
+   * @param offsetY - The viewport offset in the Y axis.
+   * @return - The return value.
    */
   getViewportAtPos(offsetX: number, offsetY: number): GLViewport | undefined {
     for (const vp of this.__viewports) {
@@ -246,7 +246,7 @@ class GLBaseRenderer extends ParameterOwner {
   /**
    * Sets as `active` the specified viewport.
    *
-   * @param {GLViewport} vp - The viewport.
+   * @param vp - The viewport.
    */
   activateViewport(vp: GLViewport) {
     if (this.__activeViewport == vp) return
@@ -257,8 +257,8 @@ class GLBaseRenderer extends ParameterOwner {
   /**
    * Sets as àctive` the viewport under the specified XY coordinates.
    *
-   * @param {number} offsetX - The viewport offset in the X axis.
-   * @param {number} offsetY - The viewport offset in the Y axis.
+   * @param offsetX - The viewport offset in the X axis.
+   * @param offsetY - The viewport offset in the Y axis.
    */
   activateViewportAtPos(offsetX: number, offsetY: number) {
     if (this.__xrViewportPresenting) return
@@ -269,7 +269,7 @@ class GLBaseRenderer extends ParameterOwner {
   /**
    * Returns current active viewport.
    *
-   * @return {GLViewport} - The return value.
+   * @return - The return value.
    */
   getActiveViewport(): GLViewport | undefined {
     return this.__activeViewport
@@ -313,7 +313,7 @@ class GLBaseRenderer extends ParameterOwner {
   /**
    * Returns current scene(Environment where all assets live) object.
    *
-   * @return {Scene} - The return value.
+   * @return - The return value.
    */
   getScene() {
     return this.__scene
@@ -322,7 +322,7 @@ class GLBaseRenderer extends ParameterOwner {
   /**
    * Sets scene to the renderer.
    *
-   * @param {Scene} scene - The scene value.
+   * @param scene - The scene value.
    */
   setScene(scene: Scene): void {
     this.__scene = scene
@@ -335,7 +335,7 @@ class GLBaseRenderer extends ParameterOwner {
   /**
    * Adds tree items to the renderer, selecting the correct pass to delegate rendering too, and listens to future changes in the tree.
    *
-   * @param {TreeItem} treeItem - The tree item to add.
+   * @param treeItem - The tree item to add.
    */
   addTreeItem(treeItem: TreeItem) {
     // Note: we can have BaseItems in the tree now.
@@ -378,7 +378,7 @@ class GLBaseRenderer extends ParameterOwner {
   /**
    * Searches through the passes and finds the appropriate pass to draw the given tree items.
    *
-   * @param {TreeItem} treeItem - The tree item to assign.
+   * @param treeItem - The tree item to assign.
    */
   assignTreeItemToGLPass(treeItem: TreeItem) {
     if (treeItem instanceof GeomItem) {
@@ -417,7 +417,7 @@ class GLBaseRenderer extends ParameterOwner {
   /**
    * Remove tree items from the scene.
    *
-   * @param {TreeItem} treeItem - The tree item to remove.
+   * @param treeItem - The tree item to remove.
    */
   removeTreeItem(treeItem: TreeItem): void {
     // Note: we can have BaseItems in the tree now.
@@ -484,7 +484,7 @@ class GLBaseRenderer extends ParameterOwner {
 
   /**
    * The getGL method.
-   * @return {WebGL12RenderingContext} - The return value.
+   * @return - The return value.
    */
   getGL(): WebGL12RenderingContext {
     return this.__gl
@@ -493,8 +493,8 @@ class GLBaseRenderer extends ParameterOwner {
   /**
    * Handle the canvas's parent resizing.
    *
-   * @param {number} width - The new width of the canvas.
-   * @param {number} height - The new height of the canvas.
+   * @param width - The new width of the canvas.
+   * @param height - The new height of the canvas.
    *
    * @private
    */
@@ -519,7 +519,7 @@ class GLBaseRenderer extends ParameterOwner {
   /**
    * Returns host div of the canvas element.
    *
-   * @return {HTMLElement} - The return value.
+   * @return - The return value.
    */
   getDiv(): HTMLElement | null {
     return this.__glcanvas!.parentElement
@@ -528,8 +528,8 @@ class GLBaseRenderer extends ParameterOwner {
   /**
    * Setups the WebGL configuration for the renderer, specifying the canvas element where our
    * @private
-   * @param {HTMLCanvasElement|HTMLElement} $canvas - The $canvas element.
-   * @param { Record<string, any>} webglOptions - The webglOptions value.
+   * @param $canvas - The $canvas element.
+   * @param webglOptions - The webglOptions value.
    */
   private setupWebGL($canvas: HTMLCanvasElement, webglOptions: Record<string, any>): WebGL12RenderingContext {
     const { tagName } = $canvas
@@ -937,7 +937,7 @@ class GLBaseRenderer extends ParameterOwner {
   /**
    * Returns canvas that was used to generate the gl context.
    *
-   * @return {HTMLCanvasElement} - The return value.
+   * @return - The return value.
    */
   getGLCanvas(): HTMLCanvasElement | null {
     return this.__glcanvas
@@ -946,7 +946,7 @@ class GLBaseRenderer extends ParameterOwner {
   /**
    * Frames the specified viewport to the entire scene.
    * > See also: ${Viewport#frameView}
-   * @param {number} viewportIndex - The viewportIndex value. If multiple viewports are configured, a viewport index will need to be provided.
+   * @param viewportIndex - The viewportIndex value. If multiple viewports are configured, a viewport index will need to be provided.
    */
   frameAll(viewportIndex = 0): void {
     this.__viewports[viewportIndex].frameView([this.__scene!.getRoot()])
@@ -957,8 +957,8 @@ class GLBaseRenderer extends ParameterOwner {
 
   /**
    * A factory function used to construct new shader objects. If that specified shader has already been constructed, it returns the existing shader.
-   * @param {string} shaderName - The shader name.
-   * @return {GLShader} - The return value.
+   * @param shaderName - The shader name.
+   * @return - The return value.
    */
   getOrCreateShader(shaderName: string): GLShader {
     let glShader = this.__shaders[shaderName]
@@ -974,10 +974,10 @@ class GLBaseRenderer extends ParameterOwner {
 
   /**
    * The addPass method.
-   * @param {GLPass} pass - The pass value.
-   * @param {number} passType - The passType value.
-   * @param {boolean} updateIndices - The updateIndices value.
-   * @return {number} - The return value.
+   * @param pass - The pass value.
+   * @param passType - The passType value.
+   * @param updateIndices - The updateIndices value.
+   * @return - The return value.
    */
   addPass(pass: GLPass, passType = -1, updateIndices = true): number {
     if (passType == -1) passType = pass.getPassType()
@@ -1020,8 +1020,8 @@ class GLBaseRenderer extends ParameterOwner {
 
   /**
    * The getPass method.
-   * @param {number} index - The index value.
-   * @return {GLPass} - The return value.
+   * @param index - The index value.
+   * @return - The return value.
    */
   getPass(index: number): GLPass | undefined {
     let offset = 0
@@ -1038,7 +1038,7 @@ class GLBaseRenderer extends ParameterOwner {
 
   /**
    * The supportsVR method.
-   * @return {boolean} - The return value.
+   * @return - The return value.
    */
   supportsVR(): boolean {
     console.warn('@GLBaseRenderer#supportVR - Deprecated Method. Please instead connect to the vrViewportSetup signal.')
@@ -1047,7 +1047,7 @@ class GLBaseRenderer extends ParameterOwner {
 
   /**
    * The __setupXRViewport method.
-   * @return {VRViewport} - The return value.
+   * @return - The return value.
    * @private
    */
   __setupXRViewport(): VRViewport {
@@ -1095,7 +1095,7 @@ class GLBaseRenderer extends ParameterOwner {
 
   /**
    * The getVRViewport method.
-   * @return {VRViewport} - The return value.
+   * @return - The return value.
    */
   getVRViewport(): VRViewport | undefined {
     return this.__xrViewport
@@ -1103,7 +1103,7 @@ class GLBaseRenderer extends ParameterOwner {
 
   /**
    * The getXRViewport method.
-   * @return {Promise} - The return value.
+   * @return - The return value.
    */
   getXRViewport(): Promise<VRViewport> {
     return this.__xrViewportPromise
@@ -1111,7 +1111,7 @@ class GLBaseRenderer extends ParameterOwner {
 
   /**
    * The isXRViewportPresenting method.
-   * @return {boolean} - The return value.
+   * @return - The return value.
    */
   isXRViewportPresenting(): boolean {
     return this.__xrViewportPresenting
@@ -1122,7 +1122,7 @@ class GLBaseRenderer extends ParameterOwner {
 
   /**
    * The isContinuouslyDrawing method.
-   * @return {boolean} - The return value.
+   * @return - The return value.
    */
   isContinuouslyDrawing(): boolean {
     return this.__continuousDrawing
@@ -1171,7 +1171,7 @@ class GLBaseRenderer extends ParameterOwner {
 
   /**
    * Request a single redraw, usually in response to a signal/event.
-   * @return {boolean} - The return value.
+   * @return - The return value.
    */
   requestRedraw(): boolean {
     // If a redraw has already been requested, then simply return and wait.
@@ -1212,7 +1212,7 @@ class GLBaseRenderer extends ParameterOwner {
 
   /**
    * The bindGLBaseRenderer method.
-   * @param {RenderState} renderstate - The renderstate value.
+   * @param renderstate - The renderstate value.
    */
   bindGLBaseRenderer(renderstate: RenderState) {
     renderstate.gl = this.__gl
@@ -1286,7 +1286,7 @@ class GLBaseRenderer extends ParameterOwner {
 
   /**
    * The drawScene method.
-   * @param {RenderState} renderstate - The renderstate value.
+   * @param renderstate - The renderstate value.
    */
   drawScene(renderstate: RenderState): void {
     // Bind already called by GLRenderer.
@@ -1304,7 +1304,7 @@ class GLBaseRenderer extends ParameterOwner {
 
   /**
    * The drawHighlightedGeoms method.
-   * @param {RenderState} renderstate - The renderstate value.
+   * @param renderstate - The renderstate value.
    */
   drawHighlightedGeoms(renderstate: RenderState): void {
     this.bindGLBaseRenderer(renderstate)
@@ -1322,8 +1322,8 @@ class GLBaseRenderer extends ParameterOwner {
 
   /**
    * The drawSceneGeomData method.
-   * @param {RenderState} renderstate - The renderstate value.
-   * @param {number} [mask=255] - The mask value
+   * @param renderstate - The renderstate value.
+   * @param mask - The mask value
    */
   drawSceneGeomData(renderstate: GeomDataRenderState, mask = 255): void {
     this.bindGLBaseRenderer(renderstate)
@@ -1351,8 +1351,8 @@ class GLBaseRenderer extends ParameterOwner {
 
   /**
    * The registerPass method.
-   * @param {function} cls - The cls value.
-   * @param {PassType} passType - The passType value.
+   * @param cls - The cls value.
+   * @param passType - The passType value.
    */
   static registerPass(cls: any, passType: any): void {
     if (!registeredPasses[passType]) registeredPasses[passType] = []

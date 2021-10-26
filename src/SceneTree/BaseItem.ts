@@ -41,7 +41,7 @@ class BaseItem extends ParameterOwner implements Owner {
   /**
    * Create a base item by defining its name.
    *
-   * @param {string} [name=''] - The name of the base item.
+   * @param name - The name of the base item.
    */
   constructor(name = '') {
     super()
@@ -57,7 +57,7 @@ class BaseItem extends ParameterOwner implements Owner {
    * The getNumBaseItems method returns the total number of base items created.
    * This method is used in debugging memory consumption.
    *
-   * @return {number} - Returns the total number of base items created.
+   * @return - Returns the total number of base items created.
    */
   static getNumBaseItems(): number {
     return numBaseItems
@@ -69,7 +69,7 @@ class BaseItem extends ParameterOwner implements Owner {
   /**
    * Returns the name of the base item.
    *
-   * @return {string} - Returns the base item name.
+   * @return - Returns the base item name.
    */
   getName(): string {
     return this.__name
@@ -79,7 +79,7 @@ class BaseItem extends ParameterOwner implements Owner {
    * Sets the name of the base item(Updates path).
    *
    * @emits `nameChanged` with `newName` and `oldName` data.
-   * @param {string} name - The base item name.
+   * @param name - The base item name.
    */
   setName(name: string): void {
     if (this.__name != name) {
@@ -106,7 +106,7 @@ class BaseItem extends ParameterOwner implements Owner {
   /**
    * Returns the current path of the item in the tree as an array of names.
    *
-   * @return {string[]} - Returns an array.
+   * @return - Returns an array.
    */
   getPath(): string[] {
     return this.__path
@@ -119,9 +119,9 @@ class BaseItem extends ParameterOwner implements Owner {
    * matching each name in the path with a child until it reaches the
    * end of the path.
    *
-   * @param {array} path - The path value.
-   * @param {number} index - The index value.
-   * @return {BaseItem|Parameter|null} - The return value.
+   * @param path - The path value.
+   * @param index - The index value.
+   * @return - The return value.
    */
   resolvePath(path: string[], index: number = 0): BaseItem | Parameter<any> | null {
     if (index == 0) {
@@ -149,7 +149,7 @@ class BaseItem extends ParameterOwner implements Owner {
    * The getOwner method returns the current owner of the item.
    * The item is a child of the current owner.
    *
-   * @return {BaseItem} - Returns the current owner.
+   * @return - Returns the current owner.
    */
   getOwner(): Owner | undefined {
     // return this.__private.get('ownerItem');
@@ -159,7 +159,7 @@ class BaseItem extends ParameterOwner implements Owner {
   /**
    * The setOwner method assigns a new owner to the item.
    *
-   * @param {BaseItem} ownerItem - The new owner item.
+   * @param ownerItem - The new owner item.
    */
   setOwner(ownerItem: BaseItem | Owner | undefined): void {
     // this.__private.set(ownerItem, ownerItem);
@@ -178,7 +178,7 @@ class BaseItem extends ParameterOwner implements Owner {
   /**
    * Returns a boolean indicating if this item is selectable.
    *
-   * @return {boolean} - Returns a boolean indicating if the item is selectable.
+   * @return - Returns a boolean indicating if the item is selectable.
    */
   getSelectable(): boolean {
     return this.__selectable
@@ -187,8 +187,8 @@ class BaseItem extends ParameterOwner implements Owner {
   /**
    * Modifies the selectability of this item.
    *
-   * @param {boolean} val - A boolean indicating the selectability of the item.
-   * @return {boolean} - Returns true if value changed.
+   * @param val - A boolean indicating the selectability of the item.
+   * @return - Returns true if value changed.
    */
   setSelectable(val: boolean): boolean {
     if (this.__selectable != val) {
@@ -202,7 +202,7 @@ class BaseItem extends ParameterOwner implements Owner {
 
   /**
    * The isSelected method.
-   * @return {boolean} - The return value.
+   * @return - The return value.
    */
   isSelected(): boolean {
     return this.__selected
@@ -212,7 +212,7 @@ class BaseItem extends ParameterOwner implements Owner {
    * Changes the current state of the selection of this item.
    *
    * @emits `selectedChanged` with selected state
-   * @param {boolean} sel - Boolean indicating the new selection state.
+   * @param sel - Boolean indicating the new selection state.
    */
   setSelected(sel: boolean): void {
     this.__selected = sel
@@ -226,8 +226,8 @@ class BaseItem extends ParameterOwner implements Owner {
   /**
    * Gets Item's meta-data value by passing the `key` string.
    *
-   * @param {string} key - The key value under which to check for metadata.
-   * @return {Record<string, any>} - Returns the metadata associated with the given key.
+   * @param key - The key value under which to check for metadata.
+   * @return - Returns the metadata associated with the given key.
    */
   getMetadata(key: string): Record<string, any> {
     return this.__metaData[key]
@@ -236,8 +236,8 @@ class BaseItem extends ParameterOwner implements Owner {
   /**
    * Checks to see if there is metadata for a given key.
    *
-   * @param {string} key - The key value under which to check for metadata.
-   * @return {boolean} - Returns `true` if metadata exists under the given key, otherwise returns `false`.
+   * @param key - The key value under which to check for metadata.
+   * @return - Returns `true` if metadata exists under the given key, otherwise returns `false`.
    */
   hasMetadata(key: string): boolean {
     return key in this.__metaData
@@ -246,8 +246,8 @@ class BaseItem extends ParameterOwner implements Owner {
   /**
    * Assigns metadata to a given key.
    *
-   * @param {string} key - The key value under which the metadata is is going to be saved.
-   * @param {any} metaData - The metaData value.
+   * @param key - The key value under which the metadata is is going to be saved.
+   * @param metaData - The metaData value.
    */
   setMetadata(key: string, metaData: any): void {
     this.__metaData[key] = metaData
@@ -256,7 +256,7 @@ class BaseItem extends ParameterOwner implements Owner {
   /**
    * Removes metadata for a given key.
    *
-   * @param {string} key - The key value.
+   * @param key - The key value.
    */
   deleteMetadata(key: string): void {
     delete this.__metaData[key]
@@ -268,8 +268,8 @@ class BaseItem extends ParameterOwner implements Owner {
   /**
    * Encodes the current object as a json object.
    *
-   * @param {Record<string, any>} context - The context value.
-   * @return {Record<string, any>} - Returns the json object.
+   * @param context - The context value.
+   * @return - Returns the json object.
    */
   toJSON(context?: Record<string, any>): Record<string, any> {
     const json = super.toJSON(context)
@@ -281,8 +281,8 @@ class BaseItem extends ParameterOwner implements Owner {
   /**
    * Decodes a json object for this type.
    *
-   * @param {Record<string, any>} json - The json object this item must decode.
-   * @param {Record<string, any>} context - The context value.
+   * @param json - The json object this item must decode.
+   * @param context - The context value.
    */
   fromJSON(json: Record<string, any>, context?: Record<string, any>): void {
     if (json.name) this.__name = json.name
@@ -292,8 +292,8 @@ class BaseItem extends ParameterOwner implements Owner {
   /**
    * Sets state of current Item(Including parameters) using a binary reader object.
    *
-   * @param {BinReader} reader - The reader value.
-   * @param {Record<string, unknown>} context - The context value.
+   * @param reader - The reader value.
+   * @param context - The context value.
    */
   readBinary(reader: BinReader, context: Record<string, any>): void {
     // read the type, but don't use it. This line must not be removed.
@@ -310,9 +310,9 @@ class BaseItem extends ParameterOwner implements Owner {
 
   /**
    * Clones this base item and returns a new base item.
-   * <br>
+   *
    * **Note:** Each class should implement clone to be clonable.
-   * @param {Record<string, any>} context - The context value.
+   * @param context - The context value.
    */
   clone(context?: Record<string, any>): void {
     throw new Error(this.constructor.name + ' does not implement its clone method')
@@ -327,8 +327,8 @@ class BaseItem extends ParameterOwner implements Owner {
    * Derived classes override this method to copy any relevant
    * data from the source object.
    *
-   * @param {BaseItem} src - The BaseItem to copy from.
-   * @param {Record<string, any>} [context] - The context value
+   * @param src - The BaseItem to copy from.
+   * @param context - The context value
    */
   copyFrom(src: BaseItem, context?: Record<string, any>): void {
     super.copyFrom(src, context)

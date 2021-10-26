@@ -15,9 +15,9 @@ class FileImage extends BaseImage {
 
   /**
    * Create a file image.
-   * @param {string} name - The name value.
-   * @param {string} filePath - The filePath value.
-   * @param {Record<any,any>} params - The params value.
+   * @param name - The name value.
+   * @param filePath - The filePath value.
+   * @param params - The params value.
    */
   constructor(name?: string, filePath: string = '', params: Record<string, any> = {}) {
     super(name)
@@ -37,7 +37,7 @@ class FileImage extends BaseImage {
    * * **""** - Setting the attribute name to an empty value, like crossorigin or crossorigin="", is the same as anonymous.
    *
    * @default anonymous
-   * @param {string} crossOrigin - The crossOrigin value.
+   * @param crossOrigin - The crossOrigin value.
    */
   setCrossOrigin(crossOrigin: string) {
     this.crossOrigin = crossOrigin
@@ -56,9 +56,9 @@ class FileImage extends BaseImage {
    * Uses the specify url to load an Image element and adds it to the data library.
    * Sets the state of the current object.
    *
-   * @param {string} url - The url value.
-   * @param {string} format - The format value.
-   * @return {Promise} Returns a promise that resolves once the image is loaded.
+   * @param url - The url value.
+   * @param format - The format value.
+   * @return Returns a promise that resolves once the image is loaded.
    */
   load(url: string, format = 'RGB'): Promise<void> {
     return new Promise((resolve, reject) => {
@@ -108,8 +108,8 @@ class FileImage extends BaseImage {
   /**
    * Loads in Image file using the given URL
    *
-   * @param {string} url - The url value.
-   * @param {string} format - The format value. Can be 'RGB' or 'RGBA' for files that contain an alpha channel. This will cause objects to be drawn using the Transparent pass.
+   * @param url - The url value.
+   * @param format - The format value. Can be 'RGB' or 'RGBA' for files that contain an alpha channel. This will cause objects to be drawn using the Transparent pass.
    */
   setImageURL(url: string, format: string = 'RGB') {
     this.load(url, format)
@@ -117,7 +117,7 @@ class FileImage extends BaseImage {
 
   /**
    * The getParams method.
-   * @return {any} - The return value.
+   * @return - The return value.
    */
   getParams() {
     const params = super.getParams()
@@ -132,7 +132,7 @@ class FileImage extends BaseImage {
 
   /**
    * The toJSON method encodes this type as a json object for persistence.
-   * @param {Record<any,any>} context - The context value.
+   * @param context - The context value.
    */
   toJSON(context?: Record<string, any>) {
     return {}
@@ -140,15 +140,15 @@ class FileImage extends BaseImage {
 
   /**
    * The fromJSON method decodes a json object for this type.
-   * @param {Record<any,any>} json - The json object this item must decode.
-   * @param {Record<any,any>} context - The context value.
+   * @param json - The json object this item must decode.
+   * @param context - The context value.
    */
   fromJSON(json: Record<string, any>, context?: Record<string, any>) {}
 
   /**
    * The readBinary method.
-   * @param {Record<any,any>} reader - The reader param.
-   * @param {Record<any,any>} context - The context param.
+   * @param reader - The reader param.
+   * @param context - The context param.
    */
   readBinary(reader: BinReader, context: Record<string, any>) {
     // super.readBinary(reader, context);
@@ -168,8 +168,8 @@ class FileImage extends BaseImage {
 class FileImage2D extends FileImage {
   /**
    * Create a file image 2D.
-   * @param {any} filePath - The filePath value.
-   * @param {any} params - The params value.
+   * @param filePath - The filePath value.
+   * @param params - The params value.
    */
   constructor(filePath: any, params: any = {}) {
     console.warn('FileImage2D is becoming deprecated in favor of simple FileImage')

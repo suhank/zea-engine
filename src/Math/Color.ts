@@ -8,10 +8,10 @@ class Color {
   /**
    * Creates a `Color` object with an RGBA structure.
    *
-   * @param {number | string | Float32Array | ArrayBuffer} r - The red channel of a color.
-   * @param {number} g - The green channel of a color.
-   * @param {number} b - The blue channel of a color.
-   * @param {number} a - The alpha (transparency) channel of a color.
+   * @param r - The red channel of a color.
+   * @param g - The green channel of a color.
+   * @param b - The blue channel of a color.
+   * @param a - The alpha (transparency) channel of a color.
    */
   constructor(r: number | string | Float32Array | ArrayBuffer = 0, g = 0, b = 0, a = 1.0) {
     if (r instanceof Float32Array) {
@@ -41,7 +41,7 @@ class Color {
   /**
    * Getter for red channel.
    *
-   * @return {number} - Returns the red channel.
+   * @return - Returns the red channel.
    */
   get r(): number {
     return this.__data[0]
@@ -50,7 +50,7 @@ class Color {
   /**
    * Setter for red channel.
    *
-   * @param {number} val - The val param.
+   * @param val - The val param.
    */
   set r(val: number) {
     this.__data[0] = val
@@ -59,7 +59,7 @@ class Color {
   /**
    * Getter for green channel.
    *
-   * @return {number} - Returns the green channel.
+   * @return - Returns the green channel.
    */
   get g(): number {
     return this.__data[1]
@@ -67,7 +67,7 @@ class Color {
 
   /**
    * Setter for green channel.
-   * @param {number} val - The val param.
+   * @param val - The val param.
    */
   set g(val: number) {
     this.__data[1] = val
@@ -76,7 +76,7 @@ class Color {
   /**
    * Getter for blue channel.
    *
-   * @return {number} - Returns the blue channel.
+   * @return - Returns the blue channel.
    */
   get b(): number {
     return this.__data[2]
@@ -85,7 +85,7 @@ class Color {
   /**
    * Setter for blue channel.
    *
-   * @param {number} val - The val param.
+   * @param val - The val param.
    */
   set b(val: number) {
     this.__data[2] = val
@@ -94,7 +94,7 @@ class Color {
   /**
    * Getter for alpha channel.
    *
-   * @return {number} - Returns the alpha channel.
+   * @return - Returns the alpha channel.
    */
   get a(): number {
     return this.__data[3]
@@ -102,7 +102,7 @@ class Color {
   /**
    * Setter for alpha value.
    *
-   * @param {number} val - The val param.
+   * @param val - The val param.
    */
   set a(val: number) {
     this.__data[3] = val
@@ -111,10 +111,10 @@ class Color {
   /**
    * Setter from scalar components.
    *
-   * @param {number} r - The red channel.
-   * @param {number} g  - The green channel.
-   * @param {number} b  - The blue channel.
-   * @param {number} a  - The alpha channel.
+   * @param r - The red channel.
+   * @param g  - The green channel.
+   * @param b  - The blue channel.
+   * @param a  - The alpha channel.
    */
   set(r: number, g: number, b: number, a = 1.0): void {
     this.r = r
@@ -126,7 +126,7 @@ class Color {
   /**
    * Sets current color state with another `Color` object.
    *
-   * @param {Color} other - The other color to set from.
+   * @param other - The other color to set from.
    */
   setFromOther(other: Color): void {
     this.r = other.r
@@ -138,7 +138,7 @@ class Color {
   /**
    * Setter from a scalar array.
    *
-   * @param {Float32Array} vals - The vals param.
+   * @param vals - The vals param.
    */
   setFromScalarArray(vals: Float32Array): void {
     this.r = vals[0]
@@ -150,7 +150,7 @@ class Color {
   /**
    * Getter from an RGB array.
    *
-   * @return {number[]} - The return value.
+   * @return - The return value.
    */
   getAsRGBArray(): number[] {
     return [this.r * 255, this.g * 255, this.b * 255]
@@ -159,7 +159,7 @@ class Color {
   /**
    * Getter from an RGB dict.
    *
-   * @return {Record<string, number>} - The return value.
+   * @return - The return value.
    */
   getAsRGBDict(): Record<string, number> {
     return {
@@ -172,10 +172,10 @@ class Color {
   /**
    * Setter from a RGB value.
    *
-   * @param {number} r - The red channel.
-   * @param {number} g  - The green channel.
-   * @param {number} b  - The blue channel.
-   * @param {number} a  - The alpha channel.
+   * @param r - The red channel.
+   * @param g  - The green channel.
+   * @param b  - The blue channel.
+   * @param a  - The alpha channel.
    */
   setFromRGB(r: number, g: number, b: number, a?: number): void {
     this.r = r / 255
@@ -187,7 +187,7 @@ class Color {
   /**
    * Setter from an RGB array.
    *
-   * @param {Float32Array} vals - The vals param.
+   * @param vals - The vals param.
    */
   setFromRGBArray(vals: Float32Array): void {
     this.r = vals[0] / 255
@@ -199,7 +199,7 @@ class Color {
   /**
    * Setter from an RGB dict.
    *
-   * @param {Record<string, number>} vals - The vals param.
+   * @param vals - The vals param.
    */
   setFromRGBDict(vals: Record<string, number>): void {
     this.r = vals.r / 255
@@ -211,7 +211,7 @@ class Color {
   /**
    * Setter from a hexadecimal value.
    * E.g. #ff0000
-   * @param {number} hex - The hex value.
+   * @param hex - The hex value.
    */
   setFromHex(hex: string): void {
     function hexToRgb(hex: string) {
@@ -236,7 +236,7 @@ class Color {
   /**
    * Sets the Color values from a CSS color name.
    * E.g. "red"
-   * @param {string} name - The CSS color name.
+   * @param name - The CSS color name.
    */
   setFromCSSColorName(name: string): void {
     const colourNameToHex = (colour: string): string | undefined => {
@@ -399,7 +399,7 @@ class Color {
   /**
    * Returns the hexadecimal value of this color, including the leading "#" character.
    *
-   * @return {string} - Returns the hex value.
+   * @return - Returns the hex value.
    */
   toHex(): string {
     function componentToHex(c: number) {
@@ -413,8 +413,8 @@ class Color {
   /**
    * Checks if this Color  contains the same values as the other.
    *
-   * @param {Color} other - The other Color to compare with.
-   * @return {boolean} - Returns `true` if the values are the same, otherwise, `false`.
+   * @param other - The other Color to compare with.
+   * @return - Returns `true` if the values are the same, otherwise, `false`.
    */
   isEqual(other: Color): boolean {
     return this.r == other.r && this.g == other.g && this.b == other.b && this.a == other.a
@@ -423,8 +423,8 @@ class Color {
   /**
    * Returns true if this color is NOT exactly the same as other.
    *
-   * @param {Color} other - The other color to compare with.
-   * @return {boolean} - Returns true or false.
+   * @param other - The other color to compare with.
+   * @return - Returns true or false.
    */
   notEquals(other: Color): boolean {
     return this.r != other.r && this.g != other.g && this.b != other.b && this.a != other.a
@@ -433,9 +433,9 @@ class Color {
   /**
    * Returns true if this color is approximately the same as other.
    *
-   * @param {Color} other - The other color to compare with.
-   * @param {number} precision - The precision to which the values must match.
-   * @return {boolean} - Returns true or false.
+   * @param other - The other color to compare with.
+   * @param precision - The precision to which the values must match.
+   * @return - Returns true or false.
    */
   approxEqual(other: Color, precision: number = Number.EPSILON): boolean {
     return (
@@ -449,8 +449,8 @@ class Color {
   /**
    * Returns a new Color which is this Color added to other.
    *
-   * @param {Color} other - The other color to add.
-   * @return {Color} - Returns a new color.
+   * @param other - The other color to add.
+   * @return - Returns a new color.
    */
   add(other: Color): Color {
     return new Color(this.r + other.r, this.g + other.g, this.b + other.b, this.a + other.a)
@@ -459,7 +459,7 @@ class Color {
   /**
    * Updates this Color by adding the values from the other color.
    *
-   * @param {Color} other - The other color to add.
+   * @param other - The other color to add.
    */
   addInPlace(other: Color) {
     this.r += other.r
@@ -471,8 +471,8 @@ class Color {
   /**
    * Returns a new color which is this color subtracted from other.
    *
-   * @param {Color} other - The other color to subtract.
-   * @return {Color} - Returns a new color.
+   * @param other - The other color to subtract.
+   * @return - Returns a new color.
    */
   subtract(other: Color): Color {
     return new Color(this.r - other.r, this.g - other.g, this.b - other.b, this.a - other.a)
@@ -481,8 +481,8 @@ class Color {
   /**
    * Scales this color by scalar and return the result as a new Vec4.
    *
-   * @param {number} scalar - The scalar value.
-   * @return {Color} - Returns a new color.
+   * @param scalar - The scalar value.
+   * @return - Returns a new color.
    */
   scale(scalar: number): Color {
     return new Color(this.r * scalar, this.g * scalar, this.b * scalar, this.a * scalar)
@@ -491,7 +491,7 @@ class Color {
   /**
    * Scales this color by scalar.
    *
-   * @param {number} scalar - The scalar value.
+   * @param scalar - The scalar value.
    */
   scaleInPlace(scalar: number): void {
     this.r *= scalar
@@ -503,7 +503,7 @@ class Color {
   /**
    * Apply gamma correction to this color
    *
-   * @param {number} gamma - The gamma value.
+   * @param gamma - The gamma value.
    */
   applyGamma(gamma: number): void {
     this.set(Math.pow(this.r, gamma), Math.pow(this.g, gamma), Math.pow(this.b, gamma), this.a)
@@ -512,8 +512,8 @@ class Color {
   /**
    * Converts to linear color space and returns a new color
    *
-   * @param {number} gamma - The gamma value.
-   * @return {Color} - Returns a new color.
+   * @param gamma - The gamma value.
+   * @return - Returns a new color.
    */
   toLinear(gamma = 2.2): Color {
     return new Color(Math.pow(this.r, gamma), Math.pow(this.g, gamma), Math.pow(this.b, gamma), this.a)
@@ -522,8 +522,8 @@ class Color {
   /**
    * returns a new color value value is mapped into a gamma curve
    *
-   * @param {number} gamma - The gamma value.
-   * @return {Color} - Returns a new color.
+   * @param gamma - The gamma value.
+   * @return - Returns a new color.
    */
   toGamma(gamma = 2.2): Color {
     return new Color(
@@ -537,7 +537,7 @@ class Color {
   /**
    * Calculates and returns the luminance of the linear RGB components.
    *
-   * @return {number} - The return value.
+   * @return - The return value.
    */
   luminance(): number {
     return 0.2126 * this.r + 0.7152 * this.g + 0.0722 * this.b
@@ -546,9 +546,9 @@ class Color {
   /**
    * Performs a linear interpolation between this color and other.
    *
-   * @param {Color} other - The other color to interpolate between.
-   * @param {number} t - Interpolation amount between the two inputs.
-   * @return {Color} - Returns a new color.
+   * @param other - The other color to interpolate between.
+   * @param t - Interpolation amount between the two inputs.
+   * @return - Returns a new color.
    */
   lerp(other: Color, t: number): Color {
     const ar = this.r
@@ -561,9 +561,9 @@ class Color {
   /**
    * Creates a random color.
    *
-   * @param {number} gammaOffset - The gamma offset. Values between 0 and 1 increase the average brightness of the generated color. Values between 0 and -1 darken the generated color values.
-   * @param {boolean} randomAlpha - Determines whether the alpha channel is random. If not, the alpha values will be 1.0.
-   * @return {Color} - The new random color.
+   * @param gammaOffset - The gamma offset. Values between 0 and 1 increase the average brightness of the generated color. Values between 0 and -1 darken the generated color values.
+   * @param randomAlpha - Determines whether the alpha channel is random. If not, the alpha values will be 1.0.
+   * @return - The new random color.
    */
   static random(gammaOffset = 0.0, randomAlpha = false): Color {
     if (gammaOffset > 0.0) {
@@ -590,7 +590,7 @@ class Color {
   /**
    * Clones this color and returns a new color.
    *
-   * @return {Color} - Returns a new color.
+   * @return - Returns a new color.
    */
   clone(): Color {
     return new Color(this.__data[0], this.__data[1], this.__data[2], this.__data[3])
@@ -599,7 +599,7 @@ class Color {
   /**
    * Returns the type as an array. Often used to pass types to the GPU.
    *
-   * @return {Float32Array} - Returns as an array.
+   * @return - Returns as an array.
    */
   asArray(): Float32Array {
     return this.__data
@@ -608,7 +608,7 @@ class Color {
   /**
    * Returns the type as a 3 component array. Often used to pass types to the GPU.
    *
-   * @return {Array<number>} - Returns as a 3 component array.
+   * @return - Returns as a 3 component array.
    * @private
    */
   as3ComponentArray(): Array<number> {
@@ -621,7 +621,7 @@ class Color {
   /**
    * The toJSON method encodes this type as a json object for persistence.
    *
-   * @return {Record<string, number>} - The json object.
+   * @return - The json object.
    */
   toJSON(): Record<string, number> {
     return {
@@ -635,7 +635,7 @@ class Color {
   /**
    * The fromJSON method decodes a json object for this type.
    *
-   * @param {Record<string, number>} j - The json object.
+   * @param j - The json object.
    */
   fromJSON(j: Record<string, number>): void {
     this.r = j.r
@@ -647,7 +647,7 @@ class Color {
   /**
    * Loads the state of the value from a binary reader.
    *
-   * @param {BinReader} reader - The reader value.
+   * @param reader - The reader value.
    */
   readBinary(reader: BinReader): void {
     this.r = reader.loadFloat32()
@@ -659,7 +659,7 @@ class Color {
   /**
    * Returns the CSS rgba string.
    *
-   * @return {string} - The return value.
+   * @return - The return value.
    */
   toCSSString(): string {
     return (

@@ -9,7 +9,7 @@ import { GeomItem } from '../../SceneTree/GeomItem'
 class GLOverlayPass extends GLOpaqueGeomsPass {
   /**
    * Create a GL overlay pass.
-   * @param {string} name - The name value.
+   * @param name - The name value.
    */
   constructor() {
     super()
@@ -17,7 +17,7 @@ class GLOverlayPass extends GLOpaqueGeomsPass {
 
   /**
    * Returns the pass type. OPAQUE passes are always rendered first, followed by TRANSPARENT passes, and finally OVERLAY.
-   * @return {number} - The pass type value.
+   * @return - The pass type value.
    */
   getPassType() {
     return PassType.OVERLAY
@@ -28,8 +28,8 @@ class GLOverlayPass extends GLOpaqueGeomsPass {
 
   /**
    * The filterGeomItem method.
-   * @param {GeomItem} geomItem - The geomItem value.
-   * @return {any} - The return value.
+   * @param geomItem - The geomItem value.
+   * @return - The return value.
    */
   filterGeomItem(geomItem: GeomItem) {
     if (geomItem.isOverlay()) return true
@@ -42,7 +42,7 @@ class GLOverlayPass extends GLOpaqueGeomsPass {
 
   /**
    * The draw method.
-   * @param {RenderState} renderstate - The object tracking the current state of the renderer
+   * @param renderstate - The object tracking the current state of the renderer
    */
   draw(renderstate: RenderState) {
     const gl = this.__gl!
@@ -72,7 +72,7 @@ class GLOverlayPass extends GLOpaqueGeomsPass {
 
   /**
    * The drawGeomData method.
-   * @param {RenderState} renderstate - The object tracking the current state of the renderer
+   * @param renderstate - The object tracking the current state of the renderer
    */
   drawGeomData(renderstate: GeomDataRenderState) {
     const gl = this.__gl!

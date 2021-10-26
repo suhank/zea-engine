@@ -12,17 +12,17 @@ const defaultGridColor = new Color('#DCDCDC')
  */
 class Scene {
   /**
-   * @member {ImageParameter} envMapParam - The image displayed and used for the environment map.
+   * @member envMapParam - The image displayed and used for the environment map.
    */
   envMapParam: ImageParameter = new ImageParameter('EnvMap')
 
   /**
-   * @member {BooleanParameter} displayEnvMapParam - Boolean that determines whether or not the environment map should be displayed.
+   * @member displayEnvMapParam - Boolean that determines whether or not the environment map should be displayed.
    */
   displayEnvMapParam: BooleanParameter = new BooleanParameter('Display EnvMap', false)
 
   /**
-   * @member {NumberParameter} envMapLODParam - TODO
+   * @member envMapLODParam - TODO
    */
   envMapLODParam: NumberParameter = new NumberParameter('EnvMapLOD', 0)
 
@@ -36,7 +36,7 @@ class Scene {
   /**
    * Returns the scene's root item(`TreeItem`) that owns every item in the scene.
    *
-   * @return {TreeItem} - The return value.
+   * @return - The return value.
    */
   getRoot() {
     return this.root
@@ -45,7 +45,7 @@ class Scene {
   /**
    * Returns resourceLoader object set on class initialization.
    *
-   * @return {ResourceLoader} - The return value.
+   * @return - The return value.
    */
   getResourceLoader(): ResourceLoader {
     return resourceLoader
@@ -54,7 +54,7 @@ class Scene {
   /**
    * Sets Environment Map with the BaseImage you'd like to display in your scene background.
    *
-   * @param {EnvMap} envMap - The envMap value.
+   * @param envMap - The envMap value.
    */
   setEnvMap(envMap: EnvMap) {
     this.envMapParam.value = envMap
@@ -67,10 +67,10 @@ class Scene {
    * The GridTreeItem display a grid of a given size and resolution. The Grid is oriented on the XY plane
    * and highlights the X and Y axes with Red and Green lines.
    *
-   * @param {number} gridSize - The size of the grid.
-   * @param {number} resolution - The resolution of the grid.
-   * @param {Color} gridColor - The color of the grid.
-   * @return {GridTreeItem} - The return value.
+   * @param gridSize - The size of the grid.
+   * @param resolution - The resolution of the grid.
+   * @param gridColor - The color of the grid.
+   * @return - The return value.
    */
   setupGrid(gridSize = 5, resolution = 50, gridColor = defaultGridColor) {
     const gridTreeItem = new GridTreeItem(gridSize, resolution, gridColor)
@@ -84,8 +84,8 @@ class Scene {
   /**
    * The toJSON method encodes this type as a json object for persistence.
    *
-   * @param {Record<string, any>} context - The context value.
-   * @return {Record<string, any>} - Returns the json object.
+   * @param context - The context value.
+   * @return - Returns the json object.
    */
   toJSON(context: Record<string, any> = {}): Record<string, any> {
     context.makeRelative = (path: string) => path
@@ -98,8 +98,8 @@ class Scene {
   /**
    * The fromJSON method decodes a json object for this type.
    *
-   * @param {Record<any,any>} json - The json object this item must decode.
-   * @param {Record<any,any>} context - The context value.
+   * @param json - The json object this item must decode.
+   * @param context - The context value.
    */
   fromJSON(json: Record<string, any>, context: Record<string, any> = {}) {
     const plcbs: any[] = [] // Post load callbacks.

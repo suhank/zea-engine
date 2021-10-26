@@ -15,12 +15,12 @@ class Frustum {
   planes: PlaneType[]
   /**
    * Create a Frustum
-   * @param {PlaneType} p0 - the p0 value.
-   * @param {PlaneType} p1 - the p1 value.
-   * @param {PlaneType} p2 - the p2 value.
-   * @param {PlaneType} p3 - the p3 value.
-   * @param {PlaneType} p4 - the p4 value.
-   * @param {PlaneType} p5 - the p5 value.
+   * @param p0 - the p0 value.
+   * @param p1 - the p1 value.
+   * @param p2 - the p2 value.
+   * @param p3 - the p3 value.
+   * @param p4 - the p4 value.
+   * @param p5 - the p5 value.
    */
   constructor(p0: PlaneType, p1: PlaneType, p2: PlaneType, p3: PlaneType, p4: PlaneType, p5: PlaneType) {
     this.planes = [
@@ -36,7 +36,7 @@ class Frustum {
   /**
    * The setFromMatrix configures a Frustum object using a matrix.
    * Typically the matrix is a model view projection matrix.
-   * @param {Mat4} mat4 - The matrix to use.
+   * @param mat4 - The matrix to use.
    */
   setFromMatrix(mat4: Mat4): void {
     const m = mat4
@@ -53,8 +53,8 @@ class Frustum {
 
   /**
    * Tests a box to see if it is entirely within the frustum.
-   * @param {Box3} box3 - The box to test.
-   * @return {boolean} - True if the frustum intersects the box.
+   * @param box3 - The box to test.
+   * @return - True if the frustum intersects the box.
    */
   intersectsBox(box3: Box3): boolean {
     const p = new Vec3()
@@ -80,7 +80,7 @@ class Frustum {
   /**
    * The toJSON method encodes this type as a json object for persistence.
    *
-   * @return {Record<string, unknown>} - The json object.
+   * @return - The json object.
    */
   toJSON(): Record<string, unknown> {
     return {
@@ -96,7 +96,7 @@ class Frustum {
   /**
    * The fromJSON method decodes a json object for this type.
    *
-   * @param {Record<string, any>} j - The json object.
+   * @param j - The json object.
    */
   fromJSON(j: Record<string, any>): void {
     this.planes[0].fromJSON(j.p0)
@@ -110,7 +110,7 @@ class Frustum {
   /**
    * Calls `toJSON` method and stringifies it.
    *
-   * @return {string} - The return value.
+   * @return - The return value.
    */
   toString(): string {
     return StringFunctions.stringifyJSONWithFixedPrecision(this.toJSON())

@@ -29,7 +29,7 @@ class RefCounted extends EventEmitter {
   /**
    * Returns the unique id of the object. Every Object has a unique
    * identifier which is based on a counter that is incremented.
-   * @return {any} - The return value.
+   * @return - The return value.
    */
   getId() {
     return this.__id
@@ -37,7 +37,7 @@ class RefCounted extends EventEmitter {
 
   /**
    * The numRefs method.
-   * @return {number} - The return value.
+   * @return - The return value.
    */
   numRefs() {
     return this.__refs.length
@@ -45,8 +45,8 @@ class RefCounted extends EventEmitter {
 
   /**
    * The addRef method.
-   * @param {any} referer - The referer value.
-   * @return {boolean} - The return value.
+   * @param referer - The referer value.
+   * @return - The return value.
    */
   addRef(referer: any) {
     if (!referer) throw new Error('Error in RefCounted.addRef: Must provide a referer')
@@ -59,7 +59,7 @@ class RefCounted extends EventEmitter {
 
   /**
    * The removeRef method.
-   * @param {any} referer - The referer value.
+   * @param referer - The referer value.
    */
   removeRef(referer: any) {
     if (!referer) throw new Error('Error in RefCounted.removeRef: Must provide a referer')
@@ -74,8 +74,8 @@ class RefCounted extends EventEmitter {
 
   /**
    * The getRefer method.
-   * @param {number} index - The index value.
-   * @return {any} - The return value.
+   * @param index - The index value.
+   * @return - The return value.
    */
   getRefer(index: number) {
     return this.__refs[index]
@@ -83,8 +83,8 @@ class RefCounted extends EventEmitter {
 
   /**
    * The getRefIndex method.
-   * @param {any} referer - The referer value.
-   * @return {any} - The return value.
+   * @param referer - The referer value.
+   * @return - The return value.
    */
   getRefIndex(referer: any) {
     return this.__refs.indexOf(referer)
@@ -92,7 +92,7 @@ class RefCounted extends EventEmitter {
 
   /**
    * Returns true if this object has already been destroyed.
-   * @return {boolean} - Returns true or false.
+   * @return - Returns true or false.
    */
   isDestroyed() {
     return this.__destroyed

@@ -13,7 +13,7 @@ import frag from './FatPoints.frag'
 class FatPointsShader extends GLShader {
   /**
    * Create a GL shader.
-   * @param {WebGL12RenderingContext} gl - The webgl rendering context.
+   * @param gl - The webgl rendering context.
    */
   constructor(gl?: WebGL12RenderingContext) {
     super(gl, 'FatPointsShader')
@@ -31,7 +31,7 @@ class FatPointsShader extends GLShader {
 
   /**
    * The supportsInstancing method.
-   * @return {boolean} - return false for shaders that cannot be rendered in instanced mode.
+   * @return - return false for shaders that cannot be rendered in instanced mode.
    */
   static supportsInstancing() {
     return false

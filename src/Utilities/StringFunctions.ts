@@ -7,10 +7,10 @@ class StringFunctions {
    * Replaces all matches in a string.
    *
    * @static
-   * @param {string} str -
-   * @param {(string | RegExp)} pattern -
-   * @param {string} replacement -
-   * @return {string} -
+   * @param str -
+   * @param pattern -
+   * @param replacement -
+   * @return -
    */
   static replaceAll(str: string, pattern: string | RegExp, replacement: string): string {
     return str.replace(new RegExp(pattern, 'g'), replacement)
@@ -20,10 +20,10 @@ class StringFunctions {
    * Returns JSON object as a formatted string, but the numeric values are fixed to the specified precision.
    *
    * @static
-   * @param {Record<string, any>} val -
-   * @param {number} [space=0] -
-   * @param {number} [precision=5] -
-   * @return {string} -
+   * @param val -
+   * @param space -
+   * @param precision -
+   * @return -
    */
   static stringifyJSONWithFixedPrecision(val: Record<string, any>, space = 0, precision = 5): string {
     return JSON.stringify(
@@ -39,8 +39,8 @@ class StringFunctions {
    * Transforms the given string into a numeric value.
    *
    * @static
-   * @param {string} str -
-   * @return {number} -
+   * @param str -
+   * @return -
    */
   static hashStr(str: string): number {
     let hash = 0

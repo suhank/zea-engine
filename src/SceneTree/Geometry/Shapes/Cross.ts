@@ -19,13 +19,13 @@ import { Vec3Attribute } from '../Vec3Attribute'
  */
 class Cross extends ProceduralLines {
   /**
-   * @member {NumberParameter} sizeParam - Specifies the size of the cross.
+   * @member sizeParam - Specifies the size of the cross.
    */
   sizeParam: NumberParameter
 
   /**
    * Create a cross.
-   * @param {number} size - The size of the cross.
+   * @param size - The size of the cross.
    */
   constructor(size = 1.0) {
     super()

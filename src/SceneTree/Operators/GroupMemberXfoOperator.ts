@@ -15,8 +15,8 @@ class GroupTransformXfoOperator extends Operator {
 
   /**
    * Create a GroupMemberXfoOperator operator.
-   * @param {XfoParameter} groupGlobalXfoParam - The GlobalXfo param found on the Group.
-   * @param {XfoParameter} groupTransformXfoParam - The parameter on the Group which defines the displacement to apply to the members.
+   * @param groupGlobalXfoParam - The GlobalXfo param found on the Group.
+   * @param groupTransformXfoParam - The parameter on the Group which defines the displacement to apply to the members.
    */
   constructor(groupGlobalXfoParam: XfoParameter, groupTransformXfoParam: XfoParameter) {
     super()
@@ -26,7 +26,7 @@ class GroupTransformXfoOperator extends Operator {
 
   /**
    * Create a GroupMemberXfoOperator operator.
-   * @param {Xfo} bindXfo - The Bind Xfo calculated from the initial Transforms of the Group Members.
+   * @param bindXfo - The Bind Xfo calculated from the initial Transforms of the Group Members.
    */
   setBindXfo(bindXfo: Xfo): void {
     this.bindXfo = bindXfo
@@ -58,8 +58,8 @@ class GroupMemberXfoOperator extends Operator {
 
   /**
    * Create a GroupMemberXfoOperator operator.
-   * @param {XfoParameter} groupTransformXfoParam - The parameter on the Group which defines the displacement to apply to the members.
-   * @param {XfoParameter} memberXfoGlobalParam - The GlobalXfo param found on the Member.
+   * @param groupTransformXfoParam - The parameter on the Group which defines the displacement to apply to the members.
+   * @param memberXfoGlobalParam - The GlobalXfo param found on the Member.
    */
   constructor(groupTransformXfoParam: XfoParameter, memberXfoGlobalParam: XfoParameter) {
     super()

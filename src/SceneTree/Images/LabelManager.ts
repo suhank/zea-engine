@@ -63,8 +63,8 @@ class LabelManager extends EventEmitter {
 
   /**
    * Load a label library into the manager.
-   * @param {string} name - The name of the library.
-   * @param {string} url- The json data of of the library.
+   * @param name - The name of the library.
+   * @param url- The json data of of the library.
    */
   loadLibrary(name: string, url: string) {
     const stem = name.substring(0, name.lastIndexOf('.'))
@@ -109,8 +109,8 @@ class LabelManager extends EventEmitter {
 
   /**
    * Checks if the library is found.
-   * @param {string} name - The name of the library.
-   * @return {boolean} - Returns true if the library is found.
+   * @param name - The name of the library.
+   * @return - Returns true if the library is found.
    */
   isLibraryFound(name: string) {
     return name in this.__foundLabelLibraries
@@ -118,8 +118,8 @@ class LabelManager extends EventEmitter {
 
   /**
    * Checks if the library is loaded.
-   * @param {string} name - The name of the library.
-   * @return {boolean} - Returns true if the library is loaded.
+   * @param name - The name of the library.
+   * @return - Returns true if the library is loaded.
    */
   isLibraryLoaded(name: string) {
     return name in this.__labelLibraries
@@ -127,9 +127,9 @@ class LabelManager extends EventEmitter {
 
   /**
    * The getLabelText method.
-   * @param {string} libraryName - The name of the library.
-   * @param {string} labelName - The name of the label.
-   * @return {string} - The return value.
+   * @param libraryName - The name of the library.
+   * @param labelName - The name of the label.
+   * @return - The return value.
    */
   getLabelText(libraryName: string, labelName: string) {
     const library = this.__labelLibraries[libraryName]
@@ -164,9 +164,9 @@ class LabelManager extends EventEmitter {
 
   /**
    * The setLabelText method.
-   * @param {string} libraryName - The name of the library.
-   * @param {string} labelName - The name of the label.
-   * @param {string} labelText - The text of the label.
+   * @param libraryName - The name of the library.
+   * @param labelName - The name of the label.
+   * @param labelText - The text of the label.
    */
   setLabelText(libraryName: string, labelName: string, labelText: string) {
     let library = this.__labelLibraries[libraryName]

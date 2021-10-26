@@ -5,7 +5,7 @@ interface Owner {
   /**
    * Returns the current path of the item in the tree as an array of names.
    *
-   * @return {string[]} - Returns an array.
+   * @return - Returns an array.
    */
   getPath(): string[]
 

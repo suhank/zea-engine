@@ -29,8 +29,8 @@ class GLLines extends GLGeom {
   protected __indexDataType: number = 0
   /**
    * Create a GL line.
-   * @param {WebGL12RenderingContext} gl - The webgl rendering context.
-   * @param {BaseGeom} lines - The geom value.
+   * @param gl - The webgl rendering context.
+   * @param lines - The geom value.
    */
   constructor(gl: WebGL12RenderingContext, lines: BaseGeom) {
     super(gl, lines)
@@ -42,7 +42,7 @@ class GLLines extends GLGeom {
 
   /**
    * The dirtyBuffers method.
-   * @param {Record<any,any>} opts - options passed when geomDataChanged is emitted. (Currently ony used by the FreehandLines tool)
+   * @param opts - options passed when geomDataChanged is emitted. (Currently ony used by the FreehandLines tool)
    */
   dirtyBuffers(opts: Record<string, any>) {
     super.dirtyBuffers(opts)
@@ -75,7 +75,7 @@ class GLLines extends GLGeom {
 
   /**
    * The genFatBuffers method.
-   * @param {RenderState} renderstate - The object tracking the current state of the renderer
+   * @param renderstate - The object tracking the current state of the renderer
    */
   genFatBuffers(renderstate: RenderState) {
     const gl = this.__gl
@@ -175,7 +175,7 @@ class GLLines extends GLGeom {
 
   /**
    * The genBuffers method.
-   * @param {RenderState} renderstate - The object tracking the current state of the renderer
+   * @param renderstate - The object tracking the current state of the renderer
    */
   genBuffers(renderstate?: RenderState) {
     const gl = this.__gl
@@ -239,8 +239,8 @@ class GLLines extends GLGeom {
 
   /**
    * The bind method.
-   * @param {RenderState} renderstate - The object tracking the current state of the renderer
-   * @return {any} - The return value.
+   * @param renderstate - The object tracking the current state of the renderer
+   * @return - The return value.
    */
   bind(renderstate: RenderState) {
     const gl = this.__gl
@@ -290,7 +290,7 @@ class GLLines extends GLGeom {
 
   /**
    * The draw method.
-   * @param {RenderState} renderstate - The object tracking the current state of the renderer
+   * @param renderstate - The object tracking the current state of the renderer
    */
   draw(renderstate: RenderState) {
     const gl = this.__gl
@@ -305,8 +305,8 @@ class GLLines extends GLGeom {
 
   /**
    * The drawInstanced method.
-   * @param {RenderState} renderstate - The object tracking the current state of the renderer
-   * @param {number} instanceCount - The instanceCount value.
+   * @param renderstate - The object tracking the current state of the renderer
+   * @param instanceCount - The instanceCount value.
    */
   drawInstanced(renderstate: RenderState, instanceCount: number) {
     const gl = this.__gl

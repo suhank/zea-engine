@@ -11,11 +11,13 @@ import { BaseEvent } from './BaseEvent'
  * ```javascript
  *  const ee = new EventEmitter()
  *
- *  ee.on('myEvent', (event) => {
+ *  const eventID = ee.on('myEvent', (event) => {
  *    console.log('My Event was emitted:', event)
  *  })
  *
  *  ee.emit('myEvent', { data: 42 })
+ *  // We no longer want to listen to this event, so let's remove the listener.
+ *  ee.removeListenerById('myEvent', eventID)
  * ```
  *
  *
@@ -26,7 +28,7 @@ class EventEmitter extends BaseClass {
   /**
    * Initializes an empty `listeners` map that will host all the events,
    * which implies that it doesn't allow multiple events with the same name.
-   * <br>
+   *
    */
   constructor() {
     super()
@@ -35,9 +37,9 @@ class EventEmitter extends BaseClass {
   /**
    * Adds a listener function for a given event name.
    *
-   * @param {string} eventName - The name of the event.
-   * @param {(event: BaseEvent) => void } listener - The listener function(callback).
-   * @return {number} - the id that can be used to remove the listener.
+   * @param eventName - The name of the event.
+   * @param listener - The listener function(callback).
+   * @return - the id that can be used to remove the listener.
    */
   on(eventName: string, listener?: (event: BaseEvent | any) => void): number {
     if (!listener) {
@@ -73,9 +75,9 @@ class EventEmitter extends BaseClass {
    * })
    * ```
    *
-   * @param {string} eventName - The eventName value
-   * @param {(event: BaseEvent) => void} listener - The listener value
-   * @return {number} - the id that can be used to remove the listener.
+   * @param eventName - The eventName value
+   * @param listener - The listener value
+   * @return - the id that can be used to remove the listener.
    */
   once(eventName: string, listener: (event: BaseEvent) => void): number {
     const cb = (event: any) => {
@@ -89,8 +91,8 @@ class EventEmitter extends BaseClass {
   /**
    * Removes a listener function from the specified event, using either the function or the index id. Depends on what is passed in.
    *
-   * @param {string} eventName - The name of the event.
-   * @param {((event: BaseEvent) => void)} listener - The listener function or the id number.
+   * @param eventName - The name of the event.
+   * @param listener - The listener function or the id number.
    */
   off(eventName: string, listener?: (event: BaseEvent | any) => void): void {
     if (!listener) {
@@ -126,8 +128,8 @@ class EventEmitter extends BaseClass {
   /**
    * remove listener by ID returned from #on
    *
-   * @param {string} eventName - The name of the event.
-   * @param {number} id - The id returned by addListener
+   * @param eventName - The name of the event.
+   * @param id - The id returned by addListener
    */
   removeListenerById(eventName: string, id: number): void {
     const listeners = this.listeners[eventName]
@@ -145,8 +147,8 @@ class EventEmitter extends BaseClass {
   /**
    * Triggers all listener functions in an event.
    *
-   * @param {string} eventName - The name of the event.
-   * @param {BaseEvent} [event] - The data you want to pass down to all listener functions as parameter.
+   * @param eventName - The name of the event.
+   * @param event - The data you want to pass down to all listener functions as parameter.
    *
    */
   emit(eventName: string, event: BaseEvent = new BaseEvent()): void {

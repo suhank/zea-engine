@@ -20,22 +20,22 @@ import { Vec3Attribute } from '../Vec3Attribute'
  */
 class PointGrid extends ProceduralPoints {
   /**
-   * @member {NumberParameter} sizeXParam - Length of the grid along the `X` axis.
+   * @member sizeXParam - Length of the grid along the `X` axis.
    */
   sizeXParam: NumberParameter
 
   /**
-   * @member {NumberParameter} divisionsXParam - Number of divisions along `X` axis
+   * @member divisionsXParam - Number of divisions along `X` axis
    */
   divisionsXParam: NumberParameter
 
   /**
-   * @member {NumberParameter} sizeYParam - Length of the grid along the `Y` axis.
+   * @member sizeYParam - Length of the grid along the `Y` axis.
    */
   sizeYParam: NumberParameter
 
   /**
-   * @member {NumberParameter} divisionsYParam - Number of divisions along `Y` axis
+   * @member divisionsYParam - Number of divisions along `Y` axis
    */
   divisionsYParam: NumberParameter
   // topologyParams: string[]
@@ -43,11 +43,11 @@ class PointGrid extends ProceduralPoints {
   /**
    * Creates an instance of PointGrid.
    *
-   * @param {number} [x=1.0] - The length of the point grid along the X axis.
-   * @param {number} [y=1.0] - The length of the point grid along the Y axis.
-   * @param {number} [xDivisions=1] - The number of divisions along the X axis.
-   * @param {number} [yDivisions=1] - The number of divisions along the Y axis.
-   * @param {boolean} [addTextureCoords=false] - The addTextureCoords value.
+   * @param x - The length of the point grid along the X axis.
+   * @param y - The length of the point grid along the Y axis.
+   * @param xDivisions - The number of divisions along the X axis.
+   * @param yDivisions - The number of divisions along the Y axis.
+   * @param addTextureCoords - The addTextureCoords value.
    */
   constructor(x = 1.0, y = 1.0, xDivisions = 1, yDivisions = 1, addTextureCoords = false) {
     super()

@@ -15,7 +15,7 @@ class OperatorInput extends EventEmitter {
 
   /**
    * Create an operator input.
-   * @param {string} name - The name value.
+   * @param name - The name value.
    */
   constructor(name: string) {
     super()
@@ -24,7 +24,7 @@ class OperatorInput extends EventEmitter {
 
   /**
    * The getName method.
-   * @return {string} - The return value.
+   * @return - The return value.
    */
   getName(): string {
     return this.name
@@ -32,7 +32,7 @@ class OperatorInput extends EventEmitter {
 
   /**
    * Sets operator that owns this input. Called by the operator when adding inputs
-   * @param {Operator} op - The operator object.
+   * @param op - The operator object.
    */
   setOperator(op: Operator): void {
     this._op = op
@@ -40,7 +40,7 @@ class OperatorInput extends EventEmitter {
 
   /**
    * Returns operator that owns this input.
-   * @return {Operator} - The operator object.
+   * @return - The operator object.
    */
   getOperator(): Operator {
     return this._op!
@@ -48,7 +48,7 @@ class OperatorInput extends EventEmitter {
 
   /**
    * Returns true if this input is connected to a parameter.
-   * @return {boolean} - The return value.
+   * @return - The return value.
    */
   isConnected(): boolean {
     return this.param != null
@@ -56,7 +56,7 @@ class OperatorInput extends EventEmitter {
 
   /**
    * The getParam method.
-   * @return {Parameter} - The return value.
+   * @return - The return value.
    */
   getParam(): Parameter<unknown> | undefined {
     return this.param
@@ -65,7 +65,7 @@ class OperatorInput extends EventEmitter {
   /**
    * @private
    * The handler function for when the input paramter changes.
-   * @param {Record<string, any>} event - The event object.
+   * @param event - The event object.
    */
   paramValueChanged(): void {
     if (this._op) this._op.setDirty()
@@ -73,7 +73,7 @@ class OperatorInput extends EventEmitter {
 
   /**
    * Assigns the Paramter to be used to provide the input value.
-   * @param {Parameter} param - The param value.
+   * @param param - The param value.
    */
   setParam(param?: Parameter<unknown>): void {
     if (this.param) {
@@ -88,7 +88,7 @@ class OperatorInput extends EventEmitter {
 
   /**
    * The getValue method.
-   * @return {unknown} - The return value.
+   * @return - The return value.
    */
   getValue(): unknown {
     if (this.param) return this.param.value
@@ -97,7 +97,7 @@ class OperatorInput extends EventEmitter {
 
   /**
    * The setValue method.
-   * @param {unknown} value - The value param.
+   * @param value - The value param.
    */
   setValue(value: unknown): void {
     if (this.param) {
@@ -120,8 +120,8 @@ class OperatorInput extends EventEmitter {
   /**
    * The toJSON method encodes this type as a json object for persistence.
    *
-   * @param {Record<string, any>} context - The context value.
-   * @return {{ name: string; paramPath: any }} - Returns the json object.
+   * @param context - The context value.
+   * @return - Returns the json object.
    */
   toJSON(context?: Record<string, any>): { name: string; paramPath: any } {
     const paramPath = this.param ? this.param.getPath() : ''
@@ -133,8 +133,8 @@ class OperatorInput extends EventEmitter {
 
   /**
    * The fromJSON method decodes a json object for this type.
-   * @param {Record<string, any>} j - The json object this item must decode.
-   * @param {Record<string, any>} context - The context value.
+   * @param j - The json object this item must decode.
+   * @param context - The context value.
    */
   fromJSON(j: Record<string, any>, context?: Record<string, any>): void {
     if (j.paramPath) {

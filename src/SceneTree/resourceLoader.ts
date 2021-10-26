@@ -87,8 +87,8 @@ class ResourceLoader extends EventEmitter {
   /**
    * Loads a  file, returning a promise that resolves to the JSON data value.
    * Note: using the resource loader to centralize data loading enables progress to be tracked and displayed
-   * @param {string} url - The url of the data to load.
-   * @return {Promise} - The promise value.
+   * @param url - The url of the data to load.
+   * @return - The promise value.
    */
   loadFile(type: any, url: string): Promise<any> {
     const plugin = this.plugins[type]
@@ -120,8 +120,8 @@ class ResourceLoader extends EventEmitter {
   /**
    * Returns a previously stored common resource. Typically this would be a VR asset.
    *
-   * @param {string} resourceId - The resourceId value.
-   * @return {TreeItem|null} - The common resource if it exists
+   * @param resourceId - The resourceId value.
+   * @return - The common resource if it exists
    */
   getCommonResource(resourceId: string): TreeItem | null {
     return this.commonResources[resourceId]
@@ -130,8 +130,8 @@ class ResourceLoader extends EventEmitter {
   /**
    * Saves a common resource for reuse by other tools. Typically this would be a VR asset.
    *
-   * @param {string} resourceId - The resourceId value.
-   * @param {TreeItem} resource - The common resource to store
+   * @param resourceId - The resourceId value.
+   * @param resource - The common resource to store
    */
   setCommonResource(resourceId: string, resource: TreeItem) {
     this.commonResources[resourceId] = resource
@@ -146,7 +146,7 @@ class ResourceLoader extends EventEmitter {
    * is then considered done. Only once this work is completed, and the 'incrementWorkDone', the
    * progress will increment.
    *
-   * @param {number} amount - The amount value.
+   * @param amount - The amount value.
    */
   incrementWorkload(amount = 1) {
     this.__totalWork += amount
@@ -159,7 +159,7 @@ class ResourceLoader extends EventEmitter {
    * If 5 items of work have been added using #incrementWorkload, and subsequently 3 items have
    * been completed and #incrementWorkDone called. The progress will be at 3/5, or 60%
    *
-   * @param {number} amount - The amount value.
+   * @param amount - The amount value.
    */
   incrementWorkDone(amount = 1) {
     this.__doneWork += amount

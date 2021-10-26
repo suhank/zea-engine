@@ -15,9 +15,9 @@ class GLMaterial extends EventEmitter {
   protected __boundTexturesBeforeMaterial: any
   /**
    * Create a GL material.
-   * @param {WebGL12RenderingContext} gl - The webgl rendering context.
-   * @param {Material} material - The material value.
-   * @param {GLShader} glShader - The glShader value.
+   * @param gl - The webgl rendering context.
+   * @param material - The material value.
+   * @param glShader - The glShader value.
    */
   constructor(gl: WebGL12RenderingContext, material: Material, glShader: GLShader) {
     super()
@@ -31,7 +31,7 @@ class GLMaterial extends EventEmitter {
 
   /**
    * The getMaterial method.
-   * @return {any} - The return value.
+   * @return - The return value.
    */
   getMaterial() {
     return this.__material
@@ -39,7 +39,7 @@ class GLMaterial extends EventEmitter {
 
   /**
    * The getGLShader method.
-   * @return {any} - The return value.
+   * @return - The return value.
    */
   getGLShader() {
     return this.__glshader
@@ -47,9 +47,9 @@ class GLMaterial extends EventEmitter {
 
   /**
    * The bind method.
-   * @param {RenderState} renderstate - The object tracking the current state of the renderer
-   * @param {any} warnMissingUnifs - The renderstate value.
-   * @return {any} - The return value.
+   * @param renderstate - The object tracking the current state of the renderer
+   * @param warnMissingUnifs - The renderstate value.
+   * @return - The return value.
    */
   bind(renderstate: RenderState, warnMissingUnifs: any) {
     this.__boundTexturesBeforeMaterial = renderstate.boundTextures
@@ -67,7 +67,7 @@ class GLMaterial extends EventEmitter {
 
   /**
    * The unbind method.
-   * @param {RenderState} renderstate - The object tracking the current state of the renderer
+   * @param renderstate - The object tracking the current state of the renderer
    */
   unbind(renderstate: RenderState) {
     // Enable texture units to be re-used by resetting the count back

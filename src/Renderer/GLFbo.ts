@@ -19,9 +19,9 @@ class GLFbo {
   /**
    * Creates a GL Framebuffer Object
    *
-   * @param {WebGL12RenderingContext} gl - The Canvas 3D Context.
-   * @param {GLTexture2D} colorTexture - Represents 2D Texture in GL.
-   * @param {boolean} createDepthTexture - The createDepthTexture value.
+   * @param gl - The Canvas 3D Context.
+   * @param colorTexture - Represents 2D Texture in GL.
+   * @param createDepthTexture - The createDepthTexture value.
    */
 
   constructor(gl: WebGL12RenderingContext, colorTexture: GLTexture2D, createDepthTexture = false) {
@@ -58,7 +58,7 @@ class GLFbo {
   /**
    * Sets FBO clear color using RGBA array structure.
    *
-   * @param {Color} clearColor - The clearColor value.
+   * @param clearColor - The clearColor value.
    */
   setClearColor(clearColor: Color): void {
     this.__clearColor = clearColor
@@ -67,7 +67,7 @@ class GLFbo {
   /**
    * Returns the `width` of the GL Texture
    *
-   * @return {number} - The return value.
+   * @return - The return value.
    */
   getWidth(): number {
     return this.__colorTexture.width
@@ -76,7 +76,7 @@ class GLFbo {
   /**
    * Returns the `height` of the GL Texture
    *
-   * @return {number} - The return value.
+   * @return - The return value.
    */
   getHeight(): number {
     return this.__colorTexture.height
@@ -85,7 +85,7 @@ class GLFbo {
   /**
    * Returns the `width`(Index 0) and the `height`(Index 1) of the GL Texture.
    *
-   * @return {Array<number>} - The return value.
+   * @return - The return value.
    */
   getSize(): Array<number> {
     return [this.__colorTexture.width, this.__colorTexture.height]
@@ -94,7 +94,7 @@ class GLFbo {
   /**
    * Returns the ColorTexture of the Fbo
    *
-   * @return {GLTexture2D} - The return value.
+   * @return - The return value.
    */
   getColorTexture(): GLTexture2D {
     return this.__colorTexture
@@ -103,7 +103,7 @@ class GLFbo {
   /**
    * Returns the value of the deptTexture property.
    *
-   * @return {WebGLTexture | null} - The return value.
+   * @return - The return value.
    */
   getDepthTextureGL(): WebGLTexture | null {
     return this.__depthTexture
@@ -111,8 +111,8 @@ class GLFbo {
 
   /**
    * Returns the `width` of the GL Texture
-   * 
-   * @return {number} - width of GLTexture
+   *
+   * @return - width of GLTexture
    */
   get width(): number {
     return this.__colorTexture.width
@@ -120,8 +120,8 @@ class GLFbo {
 
   /**
    * Returns the `height` of the GL Texture
-   * 
-   * @return {number} - height of GLTexture
+   *
+   * @return - height of GLTexture
    */
   get height(): number {
     return this.__colorTexture.height
@@ -129,8 +129,8 @@ class GLFbo {
 
   /**
    * Returns the [width, height] of the GL Texture.
-   * 
-   * @return {Array<number>} - returns [width, height] of the __colorTexture
+   *
+   * @return - returns [width, height] of the __colorTexture
    */
   get size(): Array<number> {
     return [this.__colorTexture.width, this.__colorTexture.height]
@@ -138,7 +138,7 @@ class GLFbo {
 
   /**
    * Returns the ColorTexture of the Fbo
-   * 
+   *
    * @returns {GLTexture2D} - returns this.__colorTexture
    */
   get colorTexture(): GLTexture2D {
@@ -148,7 +148,7 @@ class GLFbo {
   /**
    * Sets ColorTexture of the Fbo.
    *
-   * @param {GLTexture2D} colorTexture - The colorTexture value.
+   * @param colorTexture - The colorTexture value.
    */
   setColorTexture(colorTexture: GLTexture2D): void {
     const gl = this.__gl
@@ -158,8 +158,8 @@ class GLFbo {
 
   /**
    * Returns the value of the depthTexture property.
-   * 
-   * @return {WebGLTexture | null}
+   *
+   * @return
    */
   get depthTextureGL(): WebGLTexture | null {
     return this.__depthTexture
@@ -364,7 +364,7 @@ class GLFbo {
   /**
    * Binds the Fbo to the canvas context, meaning that all WRITE operations will affect the current Fbo.
    *
-   * @param {RenderState} renderstate - The renderstate value.
+   * @param renderstate - The renderstate value.
    */
   bindForWriting(renderstate?: RenderState): void {
     if (renderstate) {
@@ -380,7 +380,7 @@ class GLFbo {
   /**
    * Unbinds the Fbo to the canvas context for WRITE operations.
    *
-   * @param {RenderState} renderstate - The renderstate value.
+   * @param renderstate - The renderstate value.
    */
   unbindForWriting(renderstate: RenderState): void {
     if (renderstate) renderstate.boundRendertarget = this.__prevBoundFbo
@@ -392,7 +392,7 @@ class GLFbo {
   /**
    * Binds the Fbo to the canvas context, meaning that all WRITE operations will affect the current Fbo.
    *
-   * @param {RenderState} renderstate - The renderstate value.
+   * @param renderstate - The renderstate value.
    */
   bind(renderstate?: RenderState): void {
     this.bindForWriting(renderstate)
@@ -401,7 +401,7 @@ class GLFbo {
   /**
    * Unbinds the Fbo to the canvas context for WRITE operations.
    *
-   * @param {RenderState} renderstate - The renderstate value.
+   * @param renderstate - The renderstate value.
    */
   unbind(renderstate?: RenderState): void {
     if (renderstate) {
@@ -415,7 +415,7 @@ class GLFbo {
   /**
    * Binds the Fbo to the canvas context, meaning that all READ operations will affect the current Fbo.
    *
-   * @param {RenderState} renderstate - The renderstate value.
+   * @param renderstate - The renderstate value.
    */
   bindForReading(renderstate?: RenderState): void {
     const gl = this.__gl
@@ -426,7 +426,7 @@ class GLFbo {
   /**
    * Unbinds the Fbo to the canvas context for READ operations.
    *
-   * @param {RenderState} renderstate - The renderstate value.
+   * @param renderstate - The renderstate value.
    */
   unbindForReading(): void {
     const gl = this.__gl
@@ -452,7 +452,7 @@ class GLFbo {
 
   /**
    * Runs [`bind`](#bind) then [`clear`](#clear) methods.
-   * @param {RenderState} renderstate - The renderstate value.
+   * @param renderstate - The renderstate value.
    */
   bindAndClear(renderstate?: RenderState): void {
     this.bind(renderstate)

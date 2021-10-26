@@ -5,15 +5,14 @@
  *
  */
 class RGBA {
+  __data: Uint8Array
   /**
    * Create a RGBA.
-   * @param {number | string | Uint8Array | ArrayBuffer} r - The red channel of a color.
-   * @param {number} g - The green channel of a color.
-   * @param {number} b - The blue channel of a color.
-   * @param {number} a - The alpha (transparency) channel of a color.
+   * @param r - The red channel of a color.
+   * @param g - The green channel of a color.
+   * @param b - The blue channel of a color.
+   * @param a - The alpha (transparency) channel of a color.
    */
-  __data: Uint8Array
-
   constructor(r: number | string | Uint8Array | ArrayBuffer = 0, g = 0, b = 0, a = 255) {
     if (r instanceof Uint8Array) {
       this.__data = r
@@ -41,7 +40,7 @@ class RGBA {
   /**
    * Getter for red channel.
    *
-   * @return {number} - Returns the red channel.
+   * @return - Returns the red channel.
    */
   get r(): number {
     return this.__data[0]
@@ -50,7 +49,7 @@ class RGBA {
   /**
    * Setter for red channel.
    *
-   * @param {number} val - The val param.
+   * @param val - The val param.
    */
   set r(val: number) {
     this.__data[0] = val
@@ -59,7 +58,7 @@ class RGBA {
   /**
    * Getter for green channel.
    *
-   * @return {number} - Returns the green channel.
+   * @return - Returns the green channel.
    */
   get g(): number {
     return this.__data[1]
@@ -68,7 +67,7 @@ class RGBA {
   /**
    * Setter for green channel.
    *
-   * @param {number} val - The val param.
+   * @param val - The val param.
    */
   set g(val: number) {
     this.__data[1] = val
@@ -77,7 +76,7 @@ class RGBA {
   /**
    * Getter for blue channel.
    *
-   * @return {number} - Returns the blue channel.
+   * @return - Returns the blue channel.
    */
   get b(): number {
     return this.__data[2]
@@ -86,7 +85,7 @@ class RGBA {
   /**
    * Setter for blue channel.
    *
-   * @param {number} val - The val param.
+   * @param val - The val param.
    */
   set b(val: number) {
     this.__data[2] = val
@@ -95,7 +94,7 @@ class RGBA {
   /**
    * Getter for alpha channel.
    *
-   * @return {number} - Returns the alpha channel.
+   * @return - Returns the alpha channel.
    */
   get a(): number {
     return this.__data[3]
@@ -103,7 +102,7 @@ class RGBA {
   /**
    * Setter for alpha value.
    *
-   * @param {number} val - The val param.
+   * @param val - The val param.
    */
   set a(val: number) {
     this.__data[3] = val
@@ -112,10 +111,10 @@ class RGBA {
   /**
    * Setter from scalar components.
    *
-   * @param {number} r - The red channel.
-   * @param {number} g  - The green channel.
-   * @param {number} b  - The blue channel.
-   * @param {number} a  - The alpha channel.
+   * @param r - The red channel.
+   * @param g  - The green channel.
+   * @param b  - The blue channel.
+   * @param a  - The alpha channel.
    */
   set(r: number, g: number, b: number, a = 255): void {
     this.r = r
@@ -127,7 +126,7 @@ class RGBA {
   /**
    * Setter from another RGBA color.
    *
-   * @param {RGBA} other - The other RGBA to set from.
+   * @param other - The other RGBA to set from.
    */
   setFromOther(other: RGBA): void {
     this.r = other.r
@@ -139,7 +138,7 @@ class RGBA {
   /**
    * Setter from a scalar array.
    *
-   * @param {array} values - The array of values.
+   * @param values - The array of values.
    */
   setFromArray(values: number[]): void {
     this.r = values[0]
@@ -152,7 +151,7 @@ class RGBA {
    * Setter from a hexadecimal value.
    * E.g. #ff0000
    *
-   * @param {string} hex - The hex value.
+   * @param hex - The hex value.
    */
   setFromHex(hex: string): void {
     function hexToRgb(hex: string) {
@@ -177,7 +176,7 @@ class RGBA {
    * Setter from a CSS color name.
    * E.g. "red"
    *
-   * @param {string} name - The CSS color name.
+   * @param name - The CSS color name.
    */
   setFromCSSColorName(name: string): void {
     const colourNameToHex = (colour: string): string | undefined => {
@@ -338,7 +337,7 @@ class RGBA {
   /**
    * Returns the hexadecimal value of this RGBA color.
    *
-   * @return {string} - Returns the hex value.
+   * @return - Returns the hex value.
    */
   toHex(): string {
     function componentToHex(int: number) {
@@ -351,8 +350,8 @@ class RGBA {
   /**
    * Returns true if this RGBA color is exactly the same as other.
    *
-   * @param {RGBA} other - The other RGBA to compare with.
-   * @return {boolean} - Returns true or false.
+   * @param other - The other RGBA to compare with.
+   * @return - Returns true or false.
    */
   equal(other: RGBA): boolean {
     return this.r == other.r && this.g == other.g && this.b == other.b && this.a == other.a
@@ -361,8 +360,8 @@ class RGBA {
   /**
    * Returns true if this RGBA color is NOT exactly the same as other.
    *
-   * @param {RGBA} other -  The other RGBA to compare with.
-   * @return {boolean} - Returns true or false.
+   * @param other -  The other RGBA to compare with.
+   * @return - Returns true or false.
    */
   notEquals(other: RGBA): boolean {
     return this.r != other.r && this.g != other.g && this.b != other.b && this.a != other.a
@@ -371,9 +370,9 @@ class RGBA {
   /**
    * Returns true if this RGBA color is approximately the same as other.
    *
-   * @param {RGBA} other - The other RGBA to compare with.
-   * @param {number} precision - The precision to which the values must match.
-   * @return {boolean} - Returns true or false.
+   * @param other - The other RGBA to compare with.
+   * @param precision - The precision to which the values must match.
+   * @return - Returns true or false.
    */
   approxEqual(other: RGBA, precision: number = Number.EPSILON): boolean {
     return (
@@ -387,8 +386,8 @@ class RGBA {
   /**
    * Returns a new RGBA color which is this RGBA color added to other.
    *
-   * @param {RGBA} other - The other RGBA to add.
-   * @return {RGBA} - Returns a new RGBA.
+   * @param other - The other RGBA to add.
+   * @return - Returns a new RGBA.
    */
   add(other: RGBA): RGBA {
     return new RGBA(this.r + other.r, this.g + other.g, this.b + other.b, this.a + other.a)
@@ -397,8 +396,8 @@ class RGBA {
   /**
    * Returns a new RGBA color which is this RGBA color subtracted from other.
    *
-   * @param {RGBA} other - The other RGBA to subtract.
-   * @return {RGBA} - Returns a new RGBA.
+   * @param other - The other RGBA to subtract.
+   * @return - Returns a new RGBA.
    */
   subtract(other: RGBA): RGBA {
     return new RGBA(this.r - other.r, this.g - other.g, this.b - other.b, this.a - other.a)
@@ -407,8 +406,8 @@ class RGBA {
   /**
    * Returns a new RGBA color which is this vector scaled by scalar.
    *
-   * @param {number} scalar - The scalar value.
-   * @return {RGBA} - Returns a new RGBA.
+   * @param scalar - The scalar value.
+   * @return - Returns a new RGBA.
    */
   scale(scalar: number): RGBA {
     return new RGBA(this.r * scalar, this.g * scalar, this.b * scalar, this.a * scalar)
@@ -417,7 +416,7 @@ class RGBA {
   /**
    * Scales this RGBA color by scalar.
    *
-   * @param {number} scalar - The scalar value.
+   * @param scalar - The scalar value.
    */
   scaleInPlace(scalar: number): void {
     this.r *= scalar
@@ -429,7 +428,7 @@ class RGBA {
   /**
    * Apply gamma correction to this RGBA color.
    *
-   * @param {number} gamma - The gamma value.
+   * @param gamma - The gamma value.
    */
   applyGamma(gamma: number): void {
     this.set(Math.pow(this.r, gamma), Math.pow(this.g, gamma), Math.pow(this.b, gamma), this.a)
@@ -437,8 +436,8 @@ class RGBA {
 
   /**
    * Converts to linear color space and returns a new color.
-   * @param {number} gamma - The gamma value.
-   * @return {RGBA} - Returns a new RGBA.
+   * @param gamma - The gamma value.
+   * @return - Returns a new RGBA.
    */
   toLinear(gamma = 2.2): RGBA {
     return new RGBA(Math.pow(this.r, gamma), Math.pow(this.g, gamma), Math.pow(this.b, gamma), this.a)
@@ -447,8 +446,8 @@ class RGBA {
   /**
    * Converts to gamma color space and returns a new RGBA color.
    *
-   * @param {number} gamma - The gamma value.
-   * @return {RGBA} - Returns a new RGBA.
+   * @param gamma - The gamma value.
+   * @return - Returns a new RGBA.
    */
   toGamma(gamma = 2.2): RGBA {
     return new RGBA(Math.pow(this.r, 1.0 / gamma), Math.pow(this.g, 1.0 / gamma), Math.pow(this.b, 1.0 / gamma), this.a)
@@ -457,7 +456,7 @@ class RGBA {
   /**
    * Calculates and returns the relative luminance of the linear RGB component.
    *
-   * @return {number} - The return value.
+   * @return - The return value.
    */
   luminance(): number {
     return 0.2126 * this.r + 0.7152 * this.g + 0.0722 * this.b
@@ -466,9 +465,9 @@ class RGBA {
   /**
    * Performs a linear interpolation between this RGBA color and other.
    *
-   * @param {RGBA} other - The other RGBA to interpolate between.
-   * @param {number} t - Interpolation amount between the two inputs.
-   * @return {RGBA} - Returns a new RGBA.
+   * @param other - The other RGBA to interpolate between.
+   * @param t - Interpolation amount between the two inputs.
+   * @return - Returns a new RGBA.
    */
   lerp(other: RGBA, t: number): RGBA {
     const ar = this.r
@@ -481,9 +480,9 @@ class RGBA {
   /**
    * Creates a random RGBA.
    *
-   * @param {number} gammaOffset - The gamma offset.
-   * @param {boolean} randomAlpha - Determines whether the alpha channel is random.
-   * @return {RGBA} - Returns a new random RGBA.
+   * @param gammaOffset - The gamma offset.
+   * @param randomAlpha - Determines whether the alpha channel is random.
+   * @return - Returns a new random RGBA.
    */
   static random(gammaOffset = 0.0, randomAlpha = false): RGBA {
     if (gammaOffset > 0.0) {
@@ -508,7 +507,7 @@ class RGBA {
   /**
    * Clones this RGBA color and returns a new RGBA color.
    *
-   * @return {RGBA} - Returns a new RGBA.
+   * @return - Returns a new RGBA.
    */
   clone(): RGBA {
     return new RGBA(this.__data[0], this.__data[1], this.__data[2], this.__data[3])
@@ -517,7 +516,7 @@ class RGBA {
   /**
    * Returns the type as an array. Often used to pass types to the GPU.
    *
-   * @return {Uint8Array} - Returns as an array.
+   * @return - Returns as an array.
    */
   asArray(): Uint8Array {
     return this.__data
@@ -526,7 +525,7 @@ class RGBA {
   /**
    * Returns the type as a 3 component array. Often used to pass types to the GPU.
    *
-   * @return {number[]} - Returns as a 3 component array.
+   * @return - Returns as a 3 component array.
    */
   as3ComponentArray(): number[] {
     return [this.__data[0], this.__data[1], this.__data[2]]
@@ -538,7 +537,7 @@ class RGBA {
   /**
    * The toJSON method encodes this type as a json object for persistence.
    *
-   * @return {Record<string, number>} - The json object.
+   * @return - The json object.
    */
   toJSON(): Record<string, number> {
     return {
@@ -552,7 +551,7 @@ class RGBA {
   /**
    * The fromJSON method decodes a json object for this type.
    *
-   * @param {Record<string, number>} j - The json object.
+   * @param j - The json object.
    */
   fromJSON(j: Record<string, number>): void {
     this.r = j.r
@@ -564,7 +563,7 @@ class RGBA {
   /**
    * Returns the CSS rgba string.
    *
-   * @return {string} - The return value.
+   * @return - The return value.
    */
   toCSSString(): string {
     return (

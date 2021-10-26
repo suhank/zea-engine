@@ -21,34 +21,34 @@ import { Vec2Attribute } from '../Vec2Attribute'
  */
 class Plane extends ProceduralMesh {
   /**
-   * @member {NumberParameter} detailXParam - Length of the plane along `X` axis.
+   * @member detailXParam - Length of the plane along `X` axis.
    */
   detailXParam: NumberParameter
 
   /**
-   * @member {NumberParameter} detailYParam - Length of the plane along `Y` axis.
+   * @member detailYParam - Length of the plane along `Y` axis.
    */
   detailYParam: NumberParameter
 
   /**
-   * @member {NumberParameter} sizeXParam - Number of divisions along `X`axis.
+   * @member sizeXParam - Number of divisions along `X`axis.
    */
   sizeXParam: NumberParameter
 
   /**
-   * @member {NumberParameter} sizeYParam - Number of divisions along `Y`axis.
+   * @member sizeYParam - Number of divisions along `Y`axis.
    */
   sizeYParam: NumberParameter
   // topologyParams: string[]
 
   /**
    * Create a plane.
-   * @param {number} [SizeX=1.0] - The length of the plane along the X axis.
-   * @param {number} [SizeY=1.0] - The length of the plane along the Y axis.
-   * @param {number} [DetailX=1] - The number of divisions along the X axis.
-   * @param {number} [DetailY=1] - The number of divisions along the Y axis.
-   * @param {boolean} [addNormals=true] - The addNormals value.
-   * @param {boolean} [addTextureCoords=true] - The addTextureCoords value.
+   * @param SizeX - The length of the plane along the X axis.
+   * @param SizeY - The length of the plane along the Y axis.
+   * @param DetailX - The number of divisions along the X axis.
+   * @param DetailY - The number of divisions along the Y axis.
+   * @param addNormals - The addNormals value.
+   * @param addTextureCoords - The addTextureCoords value.
    */
   constructor(SizeX = 1.0, SizeY = 1.0, DetailX = 1, DetailY = 1, addNormals = true, addTextureCoords = true) {
     super()

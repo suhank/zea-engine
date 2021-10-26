@@ -10,7 +10,7 @@ import frag from './AtlasLayout.frag'
 class AtlasLayoutShader extends GLShader {
   /**
    * Create an atlas layout shader.
-   * @param {WebGL12RenderingContext} gl - The webgl rendering context.
+   * @param gl - The webgl rendering context.
    */
   constructor(gl: WebGL12RenderingContext) {
     super(gl, 'AtlasLayoutShader')

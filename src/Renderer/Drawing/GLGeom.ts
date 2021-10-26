@@ -14,8 +14,8 @@ class GLGeom extends RefCounted {
   protected __indexBuffer: WebGLBuffer | null = null
   /**
    * Create a GL geom.
-   * @param {WebGL12RenderingContext} gl - The webgl rendering context.
-   * @param {BaseGeom} geom - A geometry object
+   * @param gl - The webgl rendering context.
+   * @param geom - A geometry object
    */
   constructor(gl: WebGL12RenderingContext, geom: BaseGeom) {
     super()
@@ -40,7 +40,7 @@ class GLGeom extends RefCounted {
 
   /**
    * Returns the owned Geometry object
-   * @return {BaseGeom} - The geometry object.
+   * @return - The geometry object.
    */
   getGeom(): BaseGeom {
     return this.__geom
@@ -51,7 +51,7 @@ class GLGeom extends RefCounted {
 
   /**
    * The dirtyBuffers method.
-   * @param {Record<any,any>} opts - options passed when geomDataChanged is emitted. (Currently ony used by the FreehandLines tool)
+   * @param opts - options passed when geomDataChanged is emitted. (Currently ony used by the FreehandLines tool)
    */
   dirtyBuffers(opts: Record<string, any>): void {
     this.genBufferOpts = opts
@@ -61,13 +61,13 @@ class GLGeom extends RefCounted {
 
   /**
    * The genBuffers method.
-   * @param {RenderState} renderstate - The object tracking the current state of the renderer
+   * @param renderstate - The object tracking the current state of the renderer
    */
   genBuffers(renderstate?: RenderState): any {}
 
   /**
    * The updateBuffers method.
-   * @param {RenderState} renderstate - The object tracking the current state of the renderer
+   * @param renderstate - The object tracking the current state of the renderer
    */
   updateBuffers(renderstate?: RenderState) {
     this.genBuffers(renderstate)
@@ -79,8 +79,8 @@ class GLGeom extends RefCounted {
 
   /**
    * The bind method.
-   * @param {RenderState} renderstate - The object tracking the current state of the renderer
-   * @return {boolean} - returns false if the binding failed.
+   * @param renderstate - The object tracking the current state of the renderer
+   * @return - returns false if the binding failed.
    */
   bind(renderstate: RenderState) {
     if (this.__destroyed) throw new Error('Error binding a destroyed geom')
@@ -99,7 +99,7 @@ class GLGeom extends RefCounted {
 
   /**
    * The unbind method.
-   * @param {RenderState} renderstate - The object tracking the current state of the renderer
+   * @param renderstate - The object tracking the current state of the renderer
    */
   unbind(renderstate: RenderState) {
     // Unbinding a geom is important as it puts back some important
@@ -116,7 +116,7 @@ class GLGeom extends RefCounted {
 
   /**
    * The draw method.
-   * @param {RenderState} renderstate - The object tracking the current state of the renderer
+   * @param renderstate - The object tracking the current state of the renderer
    */
   draw(renderstate: RenderState) {
     throw new Error('Not implemented. Implement this method in a derived class.')
@@ -124,8 +124,8 @@ class GLGeom extends RefCounted {
 
   /**
    * The drawInstanced method.
-   * @param {RenderState} renderstate - The object tracking the current state of the renderer
-   * @param {number} instanceCount - The instanceCount param.
+   * @param renderstate - The object tracking the current state of the renderer
+   * @param instanceCount - The instanceCount param.
    */
   drawInstanced(renderstate: RenderState, instanceCount: number) {
     throw new Error('Not implemented. Implement this method in a derived class.')
@@ -133,7 +133,7 @@ class GLGeom extends RefCounted {
 
   /**
    * The bindAndDraw method.
-   * @param {RenderState} renderstate - The object tracking the current state of the renderer
+   * @param renderstate - The object tracking the current state of the renderer
    */
   bindAndDraw(renderstate: RenderState) {
     this.bind(renderstate)

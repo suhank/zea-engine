@@ -21,38 +21,38 @@ import { Vec3Attribute } from '../Vec3Attribute'
  */
 class Grid extends ProceduralLines {
   /**
-   * @member {BooleanParameter} skipCenterLinesParam - Property that indicates whether to display the center grid lines or not
+   * @member skipCenterLinesParam - Property that indicates whether to display the center grid lines or not
    */
   skipCenterLinesParam: BooleanParameter
 
   /**
-   * @member {NumberParameter} xDivisionsParam - Number of divisions along `X` axis
+   * @member xDivisionsParam - Number of divisions along `X` axis
    */
   xDivisionsParam: NumberParameter
 
   /**
-   * @member {NumberParameter} xParam - Length of the grid along the `X` axis.
+   * @member xParam - Length of the grid along the `X` axis.
    */
   xParam: NumberParameter
 
   /**
-   * @member {NumberParameter} yDivisionsParam - Number of divisions along `Y` axis
+   * @member yDivisionsParam - Number of divisions along `Y` axis
    */
   yDivisionsParam: NumberParameter
 
   /**
-   * @member {NumberParameter} yParam - Length of the grid along the `Y` axis.
+   * @member yParam - Length of the grid along the `Y` axis.
    */
   yParam: NumberParameter
   // topologyParams: string[]
 
   /**
    * Create a grid.
-   * @param {number} x - The length of the grid along the `X` axis.
-   * @param {number} y - The length of the grid along the `Y` axis.
-   * @param {number} xDivisions - The number of divisions along `X` axis.
-   * @param {number} yDivisions - The number of divisions along `Y` axis.
-   * @param {boolean} skipCenterLines - A boolean indicating whether to display the center grid lines or not.
+   * @param x - The length of the grid along the `X` axis.
+   * @param y - The length of the grid along the `Y` axis.
+   * @param xDivisions - The number of divisions along `X` axis.
+   * @param yDivisions - The number of divisions along `Y` axis.
+   * @param skipCenterLines - A boolean indicating whether to display the center grid lines or not.
    */
   constructor(x = 1.0, y = 1.0, xDivisions = 10, yDivisions = 10, skipCenterLines = false) {
     super()

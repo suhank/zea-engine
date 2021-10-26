@@ -21,8 +21,8 @@ import { BinReader } from '../../SceneTree/BinReader'
 class Mat3Parameter extends Parameter<Mat3> implements IBinaryReader {
   /**
    * Create a Mat3 parameter.
-   * @param {string} name - The name of the Mat3 parameter.
-   * @param {Vec3} value - The value of the parameter.
+   * @param name - The name of the Mat3 parameter.
+   * @param value - The value of the parameter.
    */
   constructor(name: string = '', value?: Mat3) {
     super(name, value ? value : new Mat3(), 'Mat3')
@@ -31,8 +31,8 @@ class Mat3Parameter extends Parameter<Mat3> implements IBinaryReader {
   /**
    * Extracts a number value from a buffer, updating current parameter state.
    *
-   * @param {BinReader} reader - The reader value.
-   * @param {Record<string, unknown>} context - The context value.
+   * @param reader - The reader value.
+   * @param context - The context value.
    */
   readBinary(reader: BinReader, context?: Record<string, unknown>): void {
     this.__value?.readBinary(reader)
@@ -40,7 +40,7 @@ class Mat3Parameter extends Parameter<Mat3> implements IBinaryReader {
 
   toJSON(context?: Record<string, unknown>): Record<string, unknown> {
     return {
-      value: this.__value?.toJSON()
+      value: this.__value?.toJSON(),
     }
   }
 
@@ -54,7 +54,7 @@ class Mat3Parameter extends Parameter<Mat3> implements IBinaryReader {
    * The clone method constructs a new Mat3 parameter,
    * copies its values from this parameter and returns it.
    *
-   * @return {Mat3Parameter} - Returns a new cloned Mat3 parameter.
+   * @return - Returns a new cloned Mat3 parameter.
    */
   clone(): Mat3Parameter {
     const clonedParam = new Mat3Parameter(this.name, this.__value?.clone())

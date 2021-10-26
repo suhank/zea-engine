@@ -48,18 +48,18 @@ class GLBaseViewport extends ParameterOwner {
   protected depthRange: number[] = [0, 0]
 
   /**
-   * @member {ColorParameter} backgroundColorParam - Changes background color of the scene
+   * @member backgroundColorParam - Changes background color of the scene
    */
   backgroundColorParam: ColorParameter = new ColorParameter('BackgroundColor', new Color('#eeeeee')) // owned by viewport
 
   /**
-   * @member {NumberParameter} doubleClickTimeParam - The maximum time between clicks for a double click to be registered.
+   * @member doubleClickTimeParam - The maximum time between clicks for a double click to be registered.
    */
   doubleClickTimeParam: NumberParameter = new NumberParameter('DoubleClickTimeMS', 200)
 
   /**
    * Create a GL base viewport.
-   * @param {GLRenderer} renderer - The renderer value.
+   * @param renderer - The renderer value.
    */
   constructor(renderer: GLRenderer) {
     super()
@@ -157,7 +157,7 @@ class GLBaseViewport extends ParameterOwner {
 
   /**
    * The getRenderer method.
-   * @return {GLRenderer} - The return value.
+   * @return - The return value.
    */
   getRenderer(): GLRenderer {
     return this.__renderer
@@ -165,7 +165,7 @@ class GLBaseViewport extends ParameterOwner {
 
   /**
    * The getWidth method.
-   * @return {number} - The return value.
+   * @return - The return value.
    */
   getWidth(): number {
     return this.__width
@@ -173,7 +173,7 @@ class GLBaseViewport extends ParameterOwner {
 
   /**
    * The getHeight method.
-   * @return {number} - The return value.
+   * @return - The return value.
    */
   getHeight(): number {
     return this.__height
@@ -181,8 +181,8 @@ class GLBaseViewport extends ParameterOwner {
 
   /**
    * The resize method.
-   * @param {number} canvasWidth - The canvasWidth value.
-   * @param {number} canvasHeight - The canvasHeight value.
+   * @param canvasWidth - The canvasWidth value.
+   * @param canvasHeight - The canvasHeight value.
    */
   resize(canvasWidth: number, canvasHeight: number) {
     if (this.__canvasWidth == canvasWidth && this.__canvasHeight == canvasHeight) return
@@ -198,8 +198,8 @@ class GLBaseViewport extends ParameterOwner {
   /**
    * Resize any offscreen render targets.
    * > Note: Values ,ay not be the entire canvas with if multiple viewports exists.
-   * @param {number} width - The width used by this viewport.
-   * @param {number} height - The height  used by this viewport.
+   * @param width - The width used by this viewport.
+   * @param height - The height  used by this viewport.
    */
   resizeRenderTargets(width: number, height: number): void {
     // Note: On low end devices, such as Oculus, blitting the multi-sampled depth buffer is throwing errors,
@@ -278,7 +278,7 @@ class GLBaseViewport extends ParameterOwner {
 
   /**
    * The draw method.
-   * @param {ColorRenderState} renderstate - The object tracking the current state of the renderer
+   * @param renderstate - The object tracking the current state of the renderer
    */
   draw(renderstate: ColorRenderState): void {
     const gl = this.__renderer.gl
@@ -354,7 +354,7 @@ class GLBaseViewport extends ParameterOwner {
 
   /**
    * Draws the Silhouettes around geometries.
-   * @param {RenderState} renderstate - The object tracking the current state of the renderer
+   * @param renderstate - The object tracking the current state of the renderer
    * @private
    */
   drawSilhouettes(renderstate: RenderState): void {
@@ -421,7 +421,7 @@ class GLBaseViewport extends ParameterOwner {
 
   /**
    * Draws the highlights around geometries.
-   * @param {RenderState} renderstate - The object tracking the current state of the renderer
+   * @param renderstate - The object tracking the current state of the renderer
    * @private
    */
   drawHighlights(renderstate: RenderState): void {
@@ -473,7 +473,7 @@ class GLBaseViewport extends ParameterOwner {
 
   /**
    * The getManipulator method.
-   * @return {BaseTool} - The return value.
+   * @return - The return value.
    */
   getManipulator(): BaseTool {
     return this.manipulator
@@ -481,7 +481,7 @@ class GLBaseViewport extends ParameterOwner {
 
   /**
    * Sets the tool that will receive mouse, touch and keyboard events from the viewport.
-   * @param {BaseTool} tool - The manipulator value.
+   * @param tool - The manipulator value.
    */
   setManipulator(tool: BaseTool): void {
     if (this.manipulator != tool) {
@@ -500,7 +500,7 @@ class GLBaseViewport extends ParameterOwner {
   /**
    * Handler of the `pointerdown` event fired when the pointer device is initially pressed.
    *
-   * @param {MouseEvent|TouchEvent} event - The DOM event produced by a pointer
+   * @param event - The DOM event produced by a pointer
    */
   onPointerDown(event: Record<string, any>): void {
     console.warn('@GLBaseViewport#onPointerDown - Implement me!')
@@ -509,7 +509,7 @@ class GLBaseViewport extends ParameterOwner {
   /**
    * Handler of the `pointerup` event fired when the pointer device is finally released.
    *
-   * @param {MouseEvent|TouchEvent} event - The DOM event produced by a pointer
+   * @param event - The DOM event produced by a pointer
    */
   onPointerUp(event: Record<string, any>): void {
     console.warn('@GLBaseViewport#onPointerUp - Implement me!')
@@ -518,7 +518,7 @@ class GLBaseViewport extends ParameterOwner {
   /**
    * Handler of the `pointermove` event fired when the pointer device changes coordinates, and the pointer has not been cancelled
    *
-   * @param {MouseEvent|TouchEvent} event - The DOM event produced by a pointer
+   * @param event - The DOM event produced by a pointer
    */
   onPointerMove(event: Record<string, any>): void {
     console.warn('@GLBaseViewport#onPointerMove - Implement me!')
@@ -527,7 +527,7 @@ class GLBaseViewport extends ParameterOwner {
   /**
    * Invoked when the mouse pointer is moved into this viewport.
    *
-   * @param {MouseEvent|TouchEvent} event - The DOM event produced by a pointer
+   * @param event - The DOM event produced by a pointer
    */
   onPointerEnter(event: Record<string, any>): void {
     console.warn('@GLBaseViewport#onPointerEnter - Implement me!')
@@ -536,7 +536,7 @@ class GLBaseViewport extends ParameterOwner {
   /**
    * Invoked when the mouse pointer is moved out of this viewport.
    *
-   * @param {MouseEvent|TouchEvent} event - The DOM event produced by a pointer
+   * @param event - The DOM event produced by a pointer
    */
   onPointerLeave(event: Record<string, any>): void {
     console.warn('@GLBaseViewport#onPointerLeave - Implement me!')
@@ -544,26 +544,26 @@ class GLBaseViewport extends ParameterOwner {
 
   /**
    * Invoked when the mouse pointer is moved out of an element.
-   * @param {MouseEvent} event - The event that occurs.
+   * @param event - The event that occurs.
    */
   onMouseLeave(event: Record<string, any>): void {}
 
   /**
    * Invoked when the user is pressing a key on the keyboard.
-   * @param {KeyboardEvent} event - The event that occurs.
+   * @param event - The event that occurs.
    */
   onKeyDown(event: Record<string, any>): void {}
 
   /**
    * Causes an event to occur  when the user releases a key on the keyboard.
-   * @param {KeyboardEvent} event - The event that occurs.
+   * @param event - The event that occurs.
    */
   onKeyUp(event: Record<string, any>): void {}
 
   /**
    *
-   * @param {id} pointerId
-   * @return {number} - index result of the find.
+   * @param pointerId
+   * @return - index result of the find.
    */
   _getOngoingPointerIndexById(pointerId: number): number {
     return this.__ongoingPointers.findIndex((pointer) => pointer.pointerId === pointerId)

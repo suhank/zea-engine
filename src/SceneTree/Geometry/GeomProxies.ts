@@ -14,7 +14,7 @@ class BaseProxy extends EventEmitter {
 
   /**
    * Create a base proxy.
-   * @param {any} data - The data value.
+   * @param data - The data value.
    */
   constructor(data: any) {
     super()
@@ -39,7 +39,7 @@ class BaseProxy extends EventEmitter {
   /**
    * Returns the number of vertex attributes.
    *
-   * @return {number} - The return value.
+   * @return - The return value.
    */
   getNumVertices() {
     return this.__buffers.numVertices
@@ -47,7 +47,7 @@ class BaseProxy extends EventEmitter {
 
   /**
    * Returns the bounding box for geometry.
-   * @return {Vec3} - The return value.
+   * @return - The return value.
    */
   getBoundingBox() {
     return this.boundingBox
@@ -55,7 +55,7 @@ class BaseProxy extends EventEmitter {
 
   /**
    * The genBuffers method.
-   * @return {any} - The return value.
+   * @return - The return value.
    */
   genBuffers() {
     return this.__buffers
@@ -66,8 +66,8 @@ class BaseProxy extends EventEmitter {
 
   /**
    * The getMetadata method.
-   * @param {string} key - The key value.
-   * @return {any} - The return value.
+   * @param key - The key value.
+   * @return - The return value.
    */
   getMetadata(key: string) {
     return this.__metaData.get(key)
@@ -75,8 +75,8 @@ class BaseProxy extends EventEmitter {
 
   /**
    * The hasMetadata method.
-   * @param {string} key - The key value.
-   * @return {any} - The return value.
+   * @param key - The key value.
+   * @return - The return value.
    */
   hasMetadata(key: string) {
     return this.__metaData.has(key)
@@ -84,8 +84,8 @@ class BaseProxy extends EventEmitter {
 
   /**
    * The setMetadata method.
-   * @param {string} key - The key value.
-   * @param {any} metaData - The metaData value.
+   * @param key - The key value.
+   * @param metaData - The metaData value.
    */
   setMetadata(key: string, metaData: any) {
     this.__metaData.set(key, metaData)
@@ -94,7 +94,7 @@ class BaseProxy extends EventEmitter {
   /**
    * Removes metadata for a given key.
    *
-   * @param {string} key - The key value.
+   * @param key - The key value.
    */
   deleteMetadata(key: string) {
     this.__metaData.delete(key)
@@ -108,7 +108,7 @@ class BaseProxy extends EventEmitter {
 class PointsProxy extends BaseProxy {
   /**
    * Create a points proxy.
-   * @param {any} data - The data value.
+   * @param data - The data value.
    */
   constructor(data: any) {
     super(data)
@@ -122,7 +122,7 @@ class PointsProxy extends BaseProxy {
 class LinesProxy extends BaseProxy {
   /**
    * Create a lines proxy.
-   * @param {any} data - The data value.
+   * @param data - The data value.
    */
   constructor(data: any) {
     super(data)
@@ -131,7 +131,7 @@ class LinesProxy extends BaseProxy {
   /**
    * Returns the number line segments in this lines proxy geometry
    *
-   * @return {number} - The return value.
+   * @return - The return value.
    */
   getNumLineSegments() {
     return this.__buffers.indices.length / 2
@@ -145,7 +145,7 @@ class LinesProxy extends BaseProxy {
 class MeshProxy extends BaseProxy {
   /**
    * Create a mesh proxy.
-   * @param {any} data - The data value.
+   * @param data - The data value.
    */
   constructor(data: any) {
     super(data)
@@ -154,7 +154,7 @@ class MeshProxy extends BaseProxy {
   /**
    * Returns the number of triangles in this mesh proxy geometry.
    *
-   * @return {number} - The return value.
+   * @return - The return value.
    */
   getNumTriangles() {
     return this.__buffers.indices.length / 3

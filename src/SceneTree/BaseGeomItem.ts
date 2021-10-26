@@ -20,13 +20,13 @@ class BaseGeomItem extends TreeItem {
   protected __layers: string[]
 
   /**
-   * @member {MaterialParameter} materialParam - The Material to use when rendering this GeomItem
+   * @member materialParam - The Material to use when rendering this GeomItem
    */
   materialParam: MaterialParameter = new MaterialParameter('Material')
 
   /**
    * Create a base geometry item.
-   * @param {string} name - The name of the base geom item.
+   * @param name - The name of the base geom item.
    */
   constructor(name?: string) {
     super(name)
@@ -41,7 +41,7 @@ class BaseGeomItem extends TreeItem {
    * Sets overlay value.
    *
    * @todo Need to find the layer and add this item to it.
-   * @param {boolean} val - `true` to enable it.
+   * @param val - `true` to enable it.
    */
   setOverlay(val: boolean) {
     // TODO: need to find the layer and add this item to it.
@@ -51,7 +51,7 @@ class BaseGeomItem extends TreeItem {
   /**
    * Returns `true` if overlay is enabled for current item.
    *
-   * @return {boolean} - The return value.
+   * @return - The return value.
    */
   isOverlay(): boolean {
     return this.overlay
@@ -61,7 +61,7 @@ class BaseGeomItem extends TreeItem {
    * Adds a layer to current item.
    *
    * @todo Need to find the layer and add this item to it.
-   * @param {string} name - The name of the layer.
+   * @param name - The name of the layer.
    */
   addLayer(name: string) {
     // TODO: need to find the layer and add this item to it.
@@ -71,7 +71,7 @@ class BaseGeomItem extends TreeItem {
   /**
    * Returns all layers in current item.
    *
-   * @return {string[]} - The return value.
+   * @return - The return value.
    */
   getLayers(): string[] {
     return this.__layers
@@ -83,7 +83,7 @@ class BaseGeomItem extends TreeItem {
   /**
    * Checks if cutaway is enabled.
    *
-   * @return {boolean} - Returns `true` if enabled.
+   * @return - Returns `true` if enabled.
    */
   isCutawayEnabled(): boolean {
     return this.__cutAway
@@ -92,7 +92,7 @@ class BaseGeomItem extends TreeItem {
   /**
    * Sets cutaway state.
    *
-   * @param {boolean} state - `true` to enable it, otherwise `false`.
+   * @param state - `true` to enable it, otherwise `false`.
    */
   setCutawayEnabled(state: boolean) {
     this.__cutAway = state
@@ -102,7 +102,7 @@ class BaseGeomItem extends TreeItem {
   /**
    * Returns cutaway vector value.
    *
-   * @return {Vec3} - `Vec3` when it is set, `false` on default.
+   * @return - `Vec3` when it is set, `false` on default.
    */
   getCutVector(): Vec3 {
     return this.__cutAwayVector
@@ -111,7 +111,7 @@ class BaseGeomItem extends TreeItem {
   /**
    * Sets cutaway vector value.
    *
-   * @param {Vec3} cutAwayVector - The cutAwayVector value.
+   * @param cutAwayVector - The cutAwayVector value.
    */
   setCutVector(cutAwayVector: Vec3): void {
     this.__cutAwayVector = cutAwayVector
@@ -121,7 +121,7 @@ class BaseGeomItem extends TreeItem {
   /**
    * Getter for the cutaway distance.
    *
-   * @return {number} - The return value.
+   * @return - The return value.
    */
   getCutDist(): number {
     return this.__cutAwayDist
@@ -130,7 +130,7 @@ class BaseGeomItem extends TreeItem {
   /**
    * Sets cutaway distance value.
    *
-   * @param {number} cutAwayDist - The cutAwayDist value.
+   * @param cutAwayDist - The cutAwayDist value.
    */
   setCutDist(cutAwayDist: number): void {
     this.__cutAwayDist = cutAwayDist
@@ -143,8 +143,8 @@ class BaseGeomItem extends TreeItem {
   /**
    * Sets state of current Item(Including layers & material) using a binary reader object.
    *
-   * @param {BinReader} reader - The reader value.
-   * @param {Record<string, any>} context - The context value.
+   * @param reader - The reader value.
+   * @param context - The context value.
    */
   readBinary(reader: BinReader, context: Record<string, any>): void {
     super.readBinary(reader, context)

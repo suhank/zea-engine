@@ -22,10 +22,10 @@ class NumberParameter extends Parameter<number> implements IBinaryReader {
 
   /**
    * Create a number parameter.
-   * @param {string} name - The name of the number parameter.
-   * @param {number} value - The value of the parameter.
-   * @param {number[]} range - An array with two numbers. If defined, the parameter value will be clamped.
-   * @param {number} step - The step value. If defined, the parameter value will be rounded to the nearest integer.
+   * @param name - The name of the number parameter.
+   * @param value - The value of the parameter.
+   * @param range - An array with two numbers. If defined, the parameter value will be clamped.
+   * @param step - The step value. If defined, the parameter value will be rounded to the nearest integer.
    */
   constructor(name: string = '', value = 0, range?: number[], step?: number) {
     super(name, value, 'Number')
@@ -36,7 +36,7 @@ class NumberParameter extends Parameter<number> implements IBinaryReader {
   /**
    * Returns the range to which the parameter is restrained.
    *
-   * @return {number[]} - The return value.
+   * @return - The return value.
    */
   getRange(): number[] | undefined {
     return this.range
@@ -45,7 +45,7 @@ class NumberParameter extends Parameter<number> implements IBinaryReader {
   /**
    * Sets the range to which the parameter is restrained.
    *
-   * @param {number[]} range - The range value.
+   * @param range - The range value.
    */
   setRange(range: number[]): void {
     this.range = range
@@ -54,7 +54,7 @@ class NumberParameter extends Parameter<number> implements IBinaryReader {
   /**
    * Returns the step number, which is the one used for rounding.
    *
-   * @return {number} - The return value.
+   * @return - The return value.
    */
   getStep(): number | undefined {
     return this.step
@@ -63,7 +63,7 @@ class NumberParameter extends Parameter<number> implements IBinaryReader {
   /**
    * Returns step value.
    *
-   * @param {number} step - The step value.
+   * @param step - The step value.
    */
   setStep(step: number): void {
     this.step = step
@@ -75,8 +75,8 @@ class NumberParameter extends Parameter<number> implements IBinaryReader {
   /**
    * The toJSON method encodes this type as a json object for persistence.
    *
-   * @param {Record<string, any>} context - The context value.
-   * @return {Record<string, any>} - Returns the json object.
+   * @param context - The context value.
+   * @return - Returns the json object.
    */
   toJSON(context?: Record<string, unknown>): Record<string, unknown> {
     const j: Record<string, unknown> = { value: this.__value }
@@ -88,8 +88,8 @@ class NumberParameter extends Parameter<number> implements IBinaryReader {
   /**
    * The fromJSON method decodes a json object for this type.
    *
-   * @param {Record<string, unknown>} j - The json object this item must decode.
-   * @param {Record<string, unknown>} context - The context value.
+   * @param j - The json object this item must decode.
+   * @param context - The context value.
    */
   fromJSON(j: Record<string, unknown>, context?: Record<string, unknown>): void {
     this.__value = j.value as number
@@ -100,8 +100,8 @@ class NumberParameter extends Parameter<number> implements IBinaryReader {
   /**
    * Extracts a number value from a buffer, updating current parameter state.
    *
-   * @param {BinReader} reader - The reader value.
-   * @param {Record<string, unknown>} context - The context value.
+   * @param reader - The reader value.
+   * @param context - The context value.
    */
   readBinary(reader: BinReader, context?: Record<string, unknown>): void {
     this.__value = reader.loadFloat32()
@@ -114,7 +114,7 @@ class NumberParameter extends Parameter<number> implements IBinaryReader {
    * The clone method constructs a new number parameter, copies its values
    * from this parameter and returns it.
    *
-   * @return {NumberParameter} - Returns a new number parameter.
+   * @return - Returns a new number parameter.
    */
   clone(): NumberParameter {
     return new NumberParameter(this.name, this.__value, this.range, this.step)

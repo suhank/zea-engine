@@ -17,8 +17,8 @@ class GLStandardGeomsPass extends GLPass {
 
   /**
    * The init method.
-   * @param {GLBaseRenderer} renderer - The renderer value.
-   * @param {number} passIndex - The index of the pass in the GLBAseRenderer
+   * @param renderer - The renderer value.
+   * @param passIndex - The index of the pass in the GLBAseRenderer
    */
   init(renderer: GLBaseRenderer, passIndex: number) {
     super.init(renderer, passIndex)
@@ -28,11 +28,11 @@ class GLStandardGeomsPass extends GLPass {
    * The itemAddedToScene method is called on each pass when a new item
    * is added to the scene, and the renderer must decide how to render it.
    * It allows Passes to select geometries to handle the drawing of.
-   * @param {TreeItem} treeItem - The treeItem value.
-   * @param {Record<string, any>} rargs - Extra return values are passed back in this object.
+   * @param treeItem - The treeItem value.
+   * @param rargs - Extra return values are passed back in this object.
    * The object contains a parameter 'continueInSubTree', which can be set to false,
    * so the subtree of this node will not be traversed after this node is handled.
-   * @return {Boolean} - Returns true if the item is now added to the pass.
+   * @return - Returns true if the item is now added to the pass.
    */
   itemAddedToScene(treeItem: TreeItem, rargs: Record<string, any>) {
     if (treeItem instanceof GeomItem) {
@@ -57,9 +57,9 @@ class GLStandardGeomsPass extends GLPass {
   /**
    * The itemRemovedFromScene method is called on each pass when aa item
    * is removed to the scene, and the pass must handle cleaning up any resources.
-   * @param {TreeItem} treeItem - The treeItem value.
-   * @param {Record<string, any>} rargs - Extra return values are passed back in this object.
-   * @return {Boolean} - The return value.
+   * @param treeItem - The treeItem value.
+   * @param rargs - Extra return values are passed back in this object.
+   * @return - The return value.
    */
   itemRemovedFromScene(treeItem: TreeItem, rargs: Record<string, any>): boolean {
     if (treeItem instanceof GeomItem && treeItem.getMetadata('glpass') == this) {
@@ -70,8 +70,8 @@ class GLStandardGeomsPass extends GLPass {
 
   /**
    * The filterGeomItem method.
-   * @param {GeomItem} geomItem - The geomItem value.
-   * @return {any} - The return value.
+   * @param geomItem - The geomItem value.
+   * @return - The return value.
    */
   filterGeomItem(geomItem: GeomItem) {
     return true
@@ -79,13 +79,13 @@ class GLStandardGeomsPass extends GLPass {
 
   /**
    * The addGeomItem method.
-   * @param {GeomItem} geomItem - The geomItem value.
+   * @param geomItem - The geomItem value.
    */
   addGeomItem(geomItem: GeomItem) {}
 
   /**
    * The removeGeomItem method.
-   * @param {GeomItem} geomItem - The geomItem value.
+   * @param geomItem - The geomItem value.
    */
   removeGeomItem(geomItem: GeomItem): boolean {
     return false
@@ -97,8 +97,8 @@ class GLStandardGeomsPass extends GLPass {
    * using this material. There should always be at least a single glShader
    * and optionally a glgeomdatashader for rendering the goem data buffer
    * and a glselectedshader for rendering selection hilghlights
-   * @param {string} shaderName - The name of the base shader.
-   * @return {Record<string, any>} - The object containing the shader instances.
+   * @param shaderName - The name of the base shader.
+   * @return - The object containing the shader instances.
    */
   constructShaders(shaderName: string): Record<string, any> {
     let glgeomdatashader
@@ -124,8 +124,8 @@ class GLStandardGeomsPass extends GLPass {
 
   /**
    * The getGeomItemAndDist method.
-   * @param {Uint8Array} geomData - The geomData value.
-   * @return {any} - The return value.
+   * @param geomData - The geomData value.
+   * @return - The return value.
    */
   getGeomItemAndDist(geomData: Float32Array | Uint8Array): Record<string, any> | undefined {
     let itemId

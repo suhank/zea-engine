@@ -10,8 +10,8 @@ class GLPoints extends GLGeom {
   protected __vboState: number = -1
   /**
    * Create a GL point.
-   * @param {WebGL12RenderingContext} gl - The webgl rendering context.
-   * @param {any} points - The points value.
+   * @param gl - The webgl rendering context.
+   * @param points - The points value.
    */
   constructor(gl: WebGL12RenderingContext, points: any) {
     super(gl, points)
@@ -20,7 +20,7 @@ class GLPoints extends GLGeom {
 
   /**
    * The genBuffers method.
-   * @param {RenderState} renderstate - The object tracking the current state of the renderer
+   * @param renderstate - The object tracking the current state of the renderer
    */
   genBuffers(renderstate?: RenderState) {
     super.genBuffers(renderstate)
@@ -50,7 +50,7 @@ class GLPoints extends GLGeom {
 
   /**
    * The updateBuffers method.
-   * @param {RenderState} renderstate - The object tracking the current state of the renderer
+   * @param renderstate - The object tracking the current state of the renderer
    */
   updateBuffers(renderstate?: RenderState) {
     const gl = this.__gl
@@ -76,8 +76,8 @@ class GLPoints extends GLGeom {
 
   /**
    * The bind method.
-   * @param {RenderState} renderstate - The object tracking the current state of the renderer
-   * @return {any} - The return value.
+   * @param renderstate - The object tracking the current state of the renderer
+   * @return - The return value.
    */
   bind(renderstate: RenderState) {
     if (renderstate.unifs.PointSize) {
@@ -101,7 +101,7 @@ class GLPoints extends GLGeom {
 
   /**
    * The draw method.
-   * @param {RenderState} renderstate - The object tracking the current state of the renderer
+   * @param renderstate - The object tracking the current state of the renderer
    */
   draw(renderstate: RenderState) {
     const gl = this.__gl
@@ -114,8 +114,8 @@ class GLPoints extends GLGeom {
 
   /**
    * The drawInstanced method.
-   * @param {RenderState} renderstate - The object tracking the current state of the renderer
-   * @param {number} instanceCount - The instanceCount value.
+   * @param renderstate - The object tracking the current state of the renderer
+   * @param instanceCount - The instanceCount value.
    */
   drawInstanced(renderstate: RenderState, instanceCount: number) {
     const gl = this.__gl

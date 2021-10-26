@@ -17,7 +17,7 @@ class JsonLoaderPlugin {
 
   /**
    * The type of file this plugin handles.
-   * @return {string} The type of file.
+   * @return The type of file.
    */
   getType() {
     return 'json'

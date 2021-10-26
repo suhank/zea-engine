@@ -17,31 +17,31 @@ import { Vec3Attribute } from '../Vec3Attribute'
  */
 class LinesCuboid extends ProceduralLines {
   /**
-   * @member {BooleanParameter} baseZAtZeroParam - Property to start or not `Z` axis from position `0.
+   * @member baseZAtZeroParam - Property to start or not `Z` axis from position `0.
    */
   baseZAtZeroParam: BooleanParameter
 
   /**
-   * @member {NumberParameter} sizeXParam - Length of the line cuboid along the `X` axis
+   * @member sizeXParam - Length of the line cuboid along the `X` axis
    */
   sizeXParam: NumberParameter
 
   /**
-   * @member {NumberParameter} sizeYParam - Length of the line cuboid along the `Y` axis
+   * @member sizeYParam - Length of the line cuboid along the `Y` axis
    */
   sizeYParam: NumberParameter
 
   /**
-   * @member {NumberParameter} sizeZParam - Length of the line cuboid along the `Z` axis
+   * @member sizeZParam - Length of the line cuboid along the `Z` axis
    */
   sizeZParam: NumberParameter
 
   /**
    * Create a lines cuboid.
-   * @param {number} x - The length of the line cuboid along the X axis.
-   * @param {number} y - The length of the line cuboid along the Y axis.
-   * @param {number} z - The length of the line cuboid along the Z axis.
-   * @param {boolean} baseZAtZero - The baseZAtZero value.
+   * @param x - The length of the line cuboid along the X axis.
+   * @param y - The length of the line cuboid along the Y axis.
+   * @param z - The length of the line cuboid along the Z axis.
+   * @param baseZAtZero - The baseZAtZero value.
    */
   constructor(x = 1.0, y = 1.0, z = 1.0, baseZAtZero = false) {
     super()

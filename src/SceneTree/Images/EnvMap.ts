@@ -7,8 +7,8 @@ import { BooleanParameter } from '../Parameters/BooleanParameter'
 
 /**
  * An EnvMap can load High Dynamic Range environment map images, necessary for high quality PBR lighting.
- * <br>
- * <br>
+ *
+ *
  * **Parameters**
  * * **HeadLightMode(`BooleanParameter`):** Enables Headlight mode so that the environment lighting is aligned with the camera.
  * With Headlight mode on, the top of the env map is aligned with the direction of the camera, so a the view is generally well lit.
@@ -23,8 +23,8 @@ class EnvMap extends VLHImage {
   headlightModeParam = new BooleanParameter('HeadLightMode', false)
   /**
    * Create an env map.
-   * @param {string} name - The name value.
-   * @param {Record<any,any>} params - The params value.
+   * @param name - The name value.
+   * @param params - The params value.
    */
   constructor(name?: string, params: Record<string, any> = {}) {
     super(name, params)
@@ -37,8 +37,8 @@ class EnvMap extends VLHImage {
 
   /**
    * The __decodeData method.
-   * @param {object} entries - The entries value.
-   * @return {promise}
+   * @param entries - The entries value.
+   * @return
    * @private
    */
   __decodeData(entries: Record<string, any>): Promise<void> {
@@ -63,8 +63,8 @@ class EnvMap extends VLHImage {
   /**
    * Calculate the luminance of the Environment in the direction.
    *
-   * @param {Vec3} dir - The dir value.
-   * @return {number} - The return value.
+   * @param dir - The dir value.
+   * @return - The return value.
    */
   dirToLuminance(dir: Vec3) {
     // normal is assumed to have unit length

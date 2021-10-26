@@ -21,7 +21,7 @@ class ColorAttribute extends Attribute {
    * > The components of the value can be changed causing the attributes data is changed.
    * > No need to call 'setValue'.
    *
-   * @param {number} index - The index value.
+   * @param index - The index value.
    * @returns Color - The value at the specified index.
    */
   getValueRef(index: number): Color {
@@ -36,7 +36,7 @@ class ColorAttribute extends Attribute {
   /**
    * Returns a copy of the Color value at the specified index.
    *
-   * @param {number} index - The index value.
+   * @param index - The index value.
    * @return Color - The return value.
    */
   getValue(index: number): Color {
@@ -51,8 +51,8 @@ class ColorAttribute extends Attribute {
   /**
    * Sets Color at the specified index.
    *
-   * @param {number} index - The index value.
-   * @param {Color} value - The value param.
+   * @param index - The index value.
+   * @param value - The value param.
    */
   setValue(index: number, value: Color): void {
     if (index >= this.data.length / this.stride)
@@ -67,9 +67,9 @@ class ColorAttribute extends Attribute {
    * > Note: 'Ref' means that the value contains a reference to the data in the attribute.
    * > The components of the value can be changed causing the attributes data is changed.
    * > No need to call 'setFaceVertexValue'.
-   * @param {number} face - The face index.
-   * @param {number} faceVertex - The index of vertex within the face. [0... num face vertices]
-   * @return {Color} - The return value.
+   * @param face - The face index.
+   * @param faceVertex - The index of vertex within the face. [0... num face vertices]
+   * @return - The return value.
    */
   getFaceVertexValueRef(face: number, faceVertex: number): Color {
     const array = this.getFaceVertexValueRef_array(face, faceVertex)
@@ -78,9 +78,9 @@ class ColorAttribute extends Attribute {
 
   /**
    * Sets the value of a corner vertex of a face.
-   * @param {number} face - The face index.
-   * @param {number} faceVertex - The index of vertex within the face. [0... num face vertices]
-   * @param {Color} value - The value value.
+   * @param face - The face index.
+   * @param faceVertex - The index of vertex within the face. [0... num face vertices]
+   * @param value - The value value.
    */
   setFaceVertexValue(face: number, faceVertex: number, value: Color): void {
     this.setFaceVertexValue_array(face, faceVertex, value.asArray())
@@ -88,9 +88,9 @@ class ColorAttribute extends Attribute {
 
   /**
    * The setSplitVertexValue method.
-   * @param {number} vertex - The vertex value.
-   * @param {number} face - The face index.
-   * @param {any} value - The value value.
+   * @param vertex - The vertex value.
+   * @param face - The face index.
+   * @param value - The value value.
    */
   setSplitVertexValue(vertex: number, face: number, value: Color): void {
     this.setSplitVertexValue_array(vertex, face, value.asArray())

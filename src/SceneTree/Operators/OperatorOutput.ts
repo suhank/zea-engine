@@ -19,8 +19,8 @@ class OperatorOutput extends EventEmitter {
 
   /**
    * Create an operator output.
-   * @param {string} name - The name value.
-   * @param {OperatorOutputMode} operatorOutputMode - The mode which the OperatorOutput uses to bind to its target parameter.
+   * @param name - The name value.
+   * @param operatorOutputMode - The mode which the OperatorOutput uses to bind to its target parameter.
    */
   constructor(name: string, operatorOutputMode = OperatorOutputMode.OP_WRITE) {
     super()
@@ -33,7 +33,7 @@ class OperatorOutput extends EventEmitter {
 
   /**
    * Returns name of the output.
-   * @return {string} - The name string.
+   * @return - The name string.
    */
   getName(): string {
     return this.__name
@@ -41,7 +41,7 @@ class OperatorOutput extends EventEmitter {
 
   /**
    * Sets operator that owns this output. Called by the operator when adding outputs
-   * @param {Operator} op - The operator object.
+   * @param op - The operator object.
    */
   setOperator(op: Operator): void {
     this._op = op
@@ -49,7 +49,7 @@ class OperatorOutput extends EventEmitter {
 
   /**
    * Returns operator that owns this output.
-   * @return {Operator} - The operator object.
+   * @return - The operator object.
    */
   getOperator(): Operator {
     return this._op!
@@ -57,7 +57,7 @@ class OperatorOutput extends EventEmitter {
 
   /**
    * Returns mode that the output writes to be parameter. Must be a number from OperatorOutputMode
-   * @return {OperatorOutputMode} - The mode value.
+   * @return - The mode value.
    */
   getMode(): OperatorOutputMode {
     return this._mode
@@ -65,7 +65,7 @@ class OperatorOutput extends EventEmitter {
 
   /**
    * Returns true if this output is connected to a parameter.
-   * @return {boolean} - The return value.
+   * @return - The return value.
    */
   isConnected(): boolean {
     return this._param != undefined
@@ -73,7 +73,7 @@ class OperatorOutput extends EventEmitter {
 
   /**
    * The getParam method.
-   * @return {Parameter} - The return value.
+   * @return - The return value.
    */
   getParam(): Parameter<unknown> | undefined {
     return this._param
@@ -81,8 +81,8 @@ class OperatorOutput extends EventEmitter {
 
   /**
    * Sets the Parameter for this output to write to.
-   * @param {Parameter} param - The param value.
-   * @param {number} index - The index to bind at in the Parameter.
+   * @param param - The param value.
+   * @param index - The index to bind at in the Parameter.
    */
   setParam(param?: Parameter<unknown>, index = -1): void {
     if (this._param) {
@@ -98,7 +98,7 @@ class OperatorOutput extends EventEmitter {
   /**
    * Returns the index of the binding on the parameter of this OperatorOutput
    * up to date.
-   * @return {number} index - The index of the binding on the parameter.
+   * @return index - The index of the binding on the parameter.
    */
   getParamBindIndex(): number {
     return this._paramBindIndex
@@ -107,7 +107,7 @@ class OperatorOutput extends EventEmitter {
   /**
    * If bindings change on a Parameter, it will call this method to ensure the output index is
    * up to date.
-   * @param {number} index - The index of the binding on the parameter.
+   * @param index - The index of the binding on the parameter.
    */
   setParamBindIndex(index: number): void {
     this._paramBindIndex = index
@@ -124,7 +124,7 @@ class OperatorOutput extends EventEmitter {
 
   /**
    * The getValue method.
-   * @return {unknown} - The return value.
+   * @return - The return value.
    */
   getValue(): unknown {
     if (this._param) {
@@ -142,8 +142,8 @@ class OperatorOutput extends EventEmitter {
    * 'backPropagateValue' on the Operator to cause the Operator to handle propagating
    * the value to one or more of its inputs.
    * to its inputs.
-   * @param {any} value - The value param.
-   * @return {any} - The modified value.
+   * @param value - The value param.
+   * @return - The modified value.
    */
   backPropagateValue(value: any): any {
     if (this._op) {
@@ -154,7 +154,7 @@ class OperatorOutput extends EventEmitter {
 
   /**
    * The setClean method.
-   * @param {unknown} value - The value param.
+   * @param value - The value param.
    */
   setClean(value: unknown): void {
     if (this._param) {
@@ -167,8 +167,8 @@ class OperatorOutput extends EventEmitter {
 
   /**
    * The toJSON method encodes this type as a json object for persistence.
-   * @param {Record<string, any>} context - The context value.
-   * @return {{ name: string; paramPath: any; paramBindIndex: number }} - Returns the json object.
+   * @param context - The context value.
+   * @return - Returns the json object.
    */
   toJSON(context?: Record<string, any>): { name: string; paramPath: any; paramBindIndex: number } {
     const paramPath = this._param ? this._param.getPath() : ''
@@ -181,8 +181,8 @@ class OperatorOutput extends EventEmitter {
 
   /**
    * The fromJSON method decodes a json object for this type.
-   * @param {Record<string, any>} j - The json object this item must decode.
-   * @param {Record<string, any>} context - The context value.
+   * @param j - The json object this item must decode.
+   * @param context - The context value.
    */
   fromJSON(j: Record<string, any>, context?: Record<string, any>): void {
     if (j.paramPath) {

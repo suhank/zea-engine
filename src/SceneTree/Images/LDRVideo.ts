@@ -44,9 +44,9 @@ class LDRVideo extends FileImage {
   gainParam = new NumberParameter('Gain', 2.0)
   /**
    * Create a LDR video.
-   * @param {string} name - The name value.
-   * @param {string} filePath - The filePath value.
-   * @param {Record<any,any>} params - The params value.
+   * @param name - The name value.
+   * @param filePath - The filePath value.
+   * @param params - The params value.
    */
   constructor(name?: string, filePath?: string, params?: Record<string, any>) {
     super(name, filePath, params)
@@ -73,9 +73,9 @@ class LDRVideo extends FileImage {
    * Uses the specify url to load an Image element and adds it to the data library.
    * Sets the state of the current object.
    *
-   * @param {string} url - The url value.
-   * @param {string} format - The format value.
-   * @return {Promise} Returns a promise that resolves once the image is loaded.
+   * @param url - The url value.
+   * @param format - The format value.
+   * @return Returns a promise that resolves once the image is loaded.
    */
   load(url: string, format = 'RGB'): Promise<void> {
     return new Promise((resolve, reject) => {
@@ -148,7 +148,7 @@ class LDRVideo extends FileImage {
   }
   /**
    * The getParams method.
-   * @return {any} - The return value.
+   * @return - The return value.
    */
   getParams() {
     const params = super.getParams()

@@ -22,8 +22,8 @@ class VLHImage extends BaseImage {
 
   /**
    * Create a VLH image.
-   * @param {string} name - The name value.
-   * @param {Record<any,any>} params - The params value.
+   * @param name - The name value.
+   * @param params - The params value.
    */
   constructor(name?: string, params: Record<string, any> = {}) {
     super(name) // TODO: used to be: super(name, params)
@@ -45,7 +45,7 @@ class VLHImage extends BaseImage {
 
   /**
    * The __decodeData method.
-   * @param {Record<string, any>} entries - The entries value.
+   * @param entries - The entries value.
    * @private
    */
   __decodeData(entries: Record<string, any>): Promise<void> {
@@ -79,8 +79,8 @@ class VLHImage extends BaseImage {
 
   /**
    * Loads a vlh file given a URL.
-   * @param {string} url - The URL of the vlh file to load
-   * @return {Promise} - Returns a promise that resolves once the initial load is complete
+   * @param url - The URL of the vlh file to load
+   * @return - Returns a promise that resolves once the initial load is complete
    */
   load(url: string): Promise<void> {
     this.loaded = false
@@ -120,7 +120,7 @@ class VLHImage extends BaseImage {
   /**
    * Returns if the data is a stream or not.
    *
-   * @return {boolean} - The return value.
+   * @return - The return value.
    */
   isStream(): boolean {
     return false
@@ -129,7 +129,7 @@ class VLHImage extends BaseImage {
   /**
    * Returns all parameters and class state values.
    *
-   * @return {Record<any,any>} - The return value.
+   * @return - The return value.
    */
   getParams(): Record<string, any> {
     const params = super.getParams()
@@ -143,7 +143,7 @@ class VLHImage extends BaseImage {
   /**
    * The setHDRTint method.
    * @private
-   * @param {Color} hdrTint - The hdrTint value.
+   * @param hdrTint - The hdrTint value.
    */
   setHDRTint(hdrTint: Color) {
     this.__hdrTint = hdrTint
@@ -152,7 +152,7 @@ class VLHImage extends BaseImage {
   /**
    * The getHDRTint method.
    * @private
-   * @return {Color} - The return value.
+   * @return - The return value.
    */
   getHDRTint(): Color {
     return this.__hdrTint
@@ -164,7 +164,7 @@ class VLHImage extends BaseImage {
   /**
    * The toJSON method encodes this type as a json object for persistence.
    *
-   * @param {Record<string, any>} context - The context value.
+   * @param context - The context value.
    */
   toJSON(context?: Record<string, any>): Record<string, any> {
     return {}
@@ -173,8 +173,8 @@ class VLHImage extends BaseImage {
   /**
    * The fromJSON method decodes a json object for this type.
    *
-   * @param {Record<string, any>} json - The json object this item must decode.
-   * @param {Record<string, any>} context - The context value.
+   * @param json - The json object this item must decode.
+   * @param context - The context value.
    */
   fromJSON(json: Record<string, any>, context: Record<string, any>): Record<string, any> {
     return {}
@@ -183,8 +183,8 @@ class VLHImage extends BaseImage {
   /**
    * Sets state of current Image using a binary reader object, and adds it to the resource loader.
    *
-   * @param {BinReader} reader - The reader value.
-   * @param {Record<string, any>} context - The context value.
+   * @param reader - The reader value.
+   * @param context - The context value.
    */
   readBinary(reader: BinReader, context: Record<string, any>): void {
     // super.readBinary(reader, context);

@@ -32,7 +32,7 @@ abstract class ProceduralMesh extends Mesh {
   /**
    * This method can be overridden in derived classes
    * to perform general updates (see GLPass or BaseItem).
-   * @param {Record<string, any>} event - The event object emitted by the parameter.
+   * @param event - The event object emitted by the parameter.
    * @private
    */
   protected parameterValueChanged(event: Record<string, any>): void {
@@ -70,7 +70,7 @@ abstract class ProceduralMesh extends Mesh {
 
   /**
    * Returns the bounding box for geometry.
-   * @return {Box3} - The return value.
+   * @return - The return value.
    */
   getBoundingBox(): Box3 {
     this.update()
@@ -80,7 +80,7 @@ abstract class ProceduralMesh extends Mesh {
   /**
    * Returns the number of vertex attributes.
    *
-   * @return {number} - The return value.
+   * @return - The return value.
    */
   getNumVertices(): number {
     this.update()
@@ -89,8 +89,8 @@ abstract class ProceduralMesh extends Mesh {
 
   /**
    * Compute vertex normals.
-   * @param {number} hardAngle - The hardAngle value in radians.
-   * @return {Vec3Attribute} - The return value.
+   * @param hardAngle - The hardAngle value in radians.
+   * @return - The return value.
    */
   computeVertexNormals(hardAngle = 1.0 /* radians */) {
     this.update()
@@ -99,8 +99,8 @@ abstract class ProceduralMesh extends Mesh {
 
   /**
    * The computeHardEdgesIndices method.
-   * @param {number} hardAngle - The hardAngle value in radians.
-   * @return {array} - The return value.
+   * @param hardAngle - The hardAngle value in radians.
+   * @return - The return value.
    */
   computeHardEdgesIndices(hardAngle = 1.0) {
     this.update()
@@ -111,8 +111,8 @@ abstract class ProceduralMesh extends Mesh {
 
   /**
    * The genBuffers method.
-   * @param {Record<string, any>} opts - The opts value.
-   * @return {Record<string, any>} - The return value.
+   * @param opts - The opts value.
+   * @return - The return value.
    */
   genBuffers(opts?: Record<string, any>): Record<string, any> {
     this.update()
@@ -125,8 +125,8 @@ abstract class ProceduralMesh extends Mesh {
   /**
    * The toJSON method encodes this type as a json object for persistence.
    *
-   * @param {Record<string, any>} context - The context value.
-   * @return {Record<string, any>} - Returns the json object.
+   * @param context - The context value.
+   * @return - Returns the json object.
    */
   toJSON(context?: Record<string, any>): Record<string, unknown> {
     if (!context) context = {}

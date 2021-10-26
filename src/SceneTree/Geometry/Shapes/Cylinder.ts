@@ -25,44 +25,44 @@ import { Vec2Attribute } from '../Vec2Attribute'
  */
 class Cylinder extends ProceduralMesh {
   /**
-   * @member {BooleanParameter} baseZAtZeroParam - Property to start or not `Z` axis from position `0.
+   * @member baseZAtZeroParam - Property to start or not `Z` axis from position `0.
    */
   baseZAtZeroParam: BooleanParameter
 
   /**
-   * @member {BooleanParameter} capsParam - Specifies whether the ends of the cylinder are capped or open.
+   * @member capsParam - Specifies whether the ends of the cylinder are capped or open.
    */
   capsParam: BooleanParameter
 
   /**
-   * @member {NumberParameter} heightParam - Specifies the height of the cone.
+   * @member heightParam - Specifies the height of the cone.
    */
   heightParam: NumberParameter
 
   /**
-   * @member {NumberParameter} loopsParam - Specifies the number of subdivisions(stacks) on the `Z` axis.
+   * @member loopsParam - Specifies the number of subdivisions(stacks) on the `Z` axis.
    */
   loopsParam: NumberParameter
 
   /**
-   * @member {NumberParameter} radiusParam - Specifies the radius of the cylinder.
+   * @member radiusParam - Specifies the radius of the cylinder.
    */
   radiusParam: NumberParameter
 
   /**
-   * @member {NumberParameter} sidesParam - Specifies the number of subdivisions around the `Z` axis.
+   * @member sidesParam - Specifies the number of subdivisions around the `Z` axis.
    */
   sidesParam: NumberParameter
   // topologyParams: string[]
 
   /**
    * Create a cylinder.
-   * @param {number} radius - The radius of the cylinder.
-   * @param {number} height - The height of the cylinder.
-   * @param {number} sides - The number of sides.
-   * @param {number} loops - The number of loops.
-   * @param {boolean} caps - A boolean indicating whether the ends of the cylinder are capped or open.
-   * @param {boolean} baseZAtZero - The baseZAtZero value.
+   * @param radius - The radius of the cylinder.
+   * @param height - The height of the cylinder.
+   * @param sides - The number of sides.
+   * @param loops - The number of loops.
+   * @param caps - A boolean indicating whether the ends of the cylinder are capped or open.
+   * @param baseZAtZero - The baseZAtZero value.
    */
   constructor(radius = 0.5, height = 1.0, sides = 32, loops = 2, caps = true, baseZAtZero = false) {
     super()

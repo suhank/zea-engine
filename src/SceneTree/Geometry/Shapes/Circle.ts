@@ -19,26 +19,26 @@ import { Vec3Attribute } from '../Vec3Attribute'
  */
 class Circle extends ProceduralLines {
   /**
-   * @member {NumberParameter} angleParam - TODO
+   * @member angleParam - TODO
    */
   angleParam: NumberParameter
 
   /**
-   * @member {NumberParameter} sidesParam - The number of sides that compose the circle (e.g. 3 creates a triangle)
+   * @member sidesParam - The number of sides that compose the circle (e.g. 3 creates a triangle)
    */
   sidesParam: NumberParameter
 
   /**
-   * @member {NumberParameter} radiusParam - The radius of the circle
+   * @member radiusParam - The radius of the circle
    */
   radiusParam: NumberParameter
   // topologyParams: string[]
 
   /**
    * Creates an instance of Circle.
-   * @param {number} radius - The radius of the circle.
-   * @param {number} sides - The number of segments.
-   * @param {number} angle - Arc segments angle(radians)
+   * @param radius - The radius of the circle.
+   * @param sides - The number of segments.
+   * @param angle - Arc segments angle(radians)
    */
   constructor(radius = 1.0, sides = 32, angle = Math.PI * 2) {
     super()

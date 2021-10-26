@@ -48,8 +48,8 @@ class GLRenderer extends GLBaseRenderer {
   protected __rayCastRenderTargetProjMatrix: Mat4 = new Mat4()
   /**
    * Create a GL renderer.
-   * @param {HTMLCanvasElement} $canvas - The $canvas value.
-   * @param {Record<string, any>} options - The dictionary of options.
+   * @param $canvas - The $canvas value.
+   * @param options - The dictionary of options.
    */
   constructor($canvas: any, options: Record<string, any> = {}) {
     // use HTMLCanvasElement?
@@ -91,7 +91,7 @@ class GLRenderer extends GLBaseRenderer {
 
   /**
    * The __bindEnvMap method.
-   * @param {EnvMap | BaseImage} env - The env value.
+   * @param env - The env value.
    * @private
    */
   __bindEnvMap(env: EnvMap | BaseImage): void {
@@ -174,7 +174,7 @@ class GLRenderer extends GLBaseRenderer {
 
   /**
    * The setScene method.
-   * @param {Scene} scene - The scene value.
+   * @param scene - The scene value.
    */
   setScene(scene: Scene): void {
     const envMapParam = scene.envMapParam
@@ -197,8 +197,8 @@ class GLRenderer extends GLBaseRenderer {
 
   /**
    * The addViewport method.
-   * @param {string} name - The name value.
-   * @return {GLViewport} - The return value.
+   * @param name - The name value.
+   * @return - The return value.
    */
   addViewport(name: string): GLViewport {
     const vp = super.addViewport(name)
@@ -210,7 +210,7 @@ class GLRenderer extends GLBaseRenderer {
 
   /**
    * Getter for exposure.
-   * @return {number} exposure
+   * @return exposure
    */
   get exposure(): number {
     return this.__exposure
@@ -218,7 +218,7 @@ class GLRenderer extends GLBaseRenderer {
 
   /**
    * Setter for exposure.
-   * @param {number} val - The val value.
+   * @param val - The val value.
    */
   set exposure(val) {
     this.__exposure = val
@@ -234,7 +234,7 @@ class GLRenderer extends GLBaseRenderer {
 
   /**
    * Setter for gamma.
-   * @param {number} val - The val value.
+   * @param val - The val value.
    */
   set gamma(val) {
     this.__gamma = val
@@ -250,7 +250,7 @@ class GLRenderer extends GLBaseRenderer {
 
   /**
    * Setter for displayEnvironment.
-   * @param {number} val - The val value.
+   * @param val - The val value.
    */
   set displayEnvironment(val) {
     this.__displayEnvironment = val
@@ -264,11 +264,11 @@ class GLRenderer extends GLBaseRenderer {
    * Ray casting is implemented by rendering a small image from the position of the ray, and capturing geometries detected in the resulting image.
    * This method takes a Ray value, and uses that base the ray cast operation.
    *
-   * @param {Ray} ray - The ray to use in the raycast.
-   * @param {number} dist - The maximum distance to cast the ray
-   * @param {number} area - The area to use for the ray
-   * @param {number} mask - The mask to filter our certain pass types. Can be PassType.OPAQUE | PassType.TRANSPARENT | PassType.OVERLAY
-   * @return {RayCast | null} - The object containing the ray cast results.
+   * @param ray - The ray to use in the raycast.
+   * @param dist - The maximum distance to cast the ray
+   * @param area - The area to use for the ray
+   * @param mask - The mask to filter our certain pass types. Can be PassType.OPAQUE | PassType.TRANSPARENT | PassType.OVERLAY
+   * @return - The object containing the ray cast results.
    */
   raycastWithRay(ray: Ray, dist: number, area = 0.01, mask = ALL_PASSES): RayCast | null {
     const xfo = new Xfo()
@@ -280,11 +280,11 @@ class GLRenderer extends GLBaseRenderer {
    * Ray casting is implemented by rendering a small image from the position of the ray, and capturing geometries detected in the resulting image.
    * This method takes an Xfo value, and uses that base the ray cast operation.
    *
-   * @param {Xfo} xfo - The xfo to use in the raycast.
-   * @param {number} dist - The maximum distance to cast the ray
-   * @param {number} area - The area to use for the ray
-   * @param {number} mask - The mask to filter our certain pass types. Can be PassType.OPAQUE | PassType.TRANSPARENT | PassType.OVERLAY
-   * @return {RayCast | null} - The object containing the ray cast results.
+   * @param xfo - The xfo to use in the raycast.
+   * @param dist - The maximum distance to cast the ray
+   * @param area - The area to use for the ray
+   * @param mask - The mask to filter our certain pass types. Can be PassType.OPAQUE | PassType.TRANSPARENT | PassType.OVERLAY
+   * @return - The object containing the ray cast results.
    */
   raycastWithXfo(xfo: Xfo, dist: number, area = 0.01, mask = ALL_PASSES): RayCast | null {
     const ray = new Ray(xfo.tr, xfo.ori.getZaxis().negate())
@@ -296,12 +296,12 @@ class GLRenderer extends GLBaseRenderer {
    *
    * @private
    *
-   * @param {Xfo} xfo - The ray to use in the raycast.
-   * @param {Ray} ray - The ray to use in the raycast.
-   * @param {number} dist - The maximum distance to cast the ray
-   * @param {number} area - The area to use for the ray
-   * @param {number} mask - The mask to filter our certain pass types. Can be PassType.OPAQUE | PassType.TRANSPARENT | PassType.OVERLAY
-   * @return {RayCast | null} - The object containing the ray cast results.
+   * @param xfo - The ray to use in the raycast.
+   * @param ray - The ray to use in the raycast.
+   * @param dist - The maximum distance to cast the ray
+   * @param area - The area to use for the ray
+   * @param mask - The mask to filter our certain pass types. Can be PassType.OPAQUE | PassType.TRANSPARENT | PassType.OVERLAY
+   * @return - The object containing the ray cast results.
    */
   raycast(xfo: Xfo, ray: Ray, dist: number, area = 0.01, mask = ALL_PASSES): RayCast | null {
     const gl = this.__gl
@@ -396,12 +396,12 @@ class GLRenderer extends GLBaseRenderer {
    *
    * @private
    *
-   * @param {Xfo} xfo - The ray to use in the raycast.
-   * @param {Ray} ray - The ray to use in the raycast.
-   * @param {number} dist - The maximum distance to cast the ray
-   * @param {number} area - The area to use for the ray
-   * @param {number} mask - The mask to filter our certain pass types. Can be PassType.OPAQUE | PassType.TRANSPARENT | PassType.OVERLAY
-   * @return {RayCast[]} - The object containing the ray cast results.
+   * @param xfo - The ray to use in the raycast.
+   * @param ray - The ray to use in the raycast.
+   * @param dist - The maximum distance to cast the ray
+   * @param area - The area to use for the ray
+   * @param mask - The mask to filter our certain pass types. Can be PassType.OPAQUE | PassType.TRANSPARENT | PassType.OVERLAY
+   * @return - The object containing the ray cast results.
    */
   raycastCluster(xfo: Xfo, ray: Ray, dist: number, area = 0.01, mask = ALL_PASSES): RayCast[] {
     const gl = this.__gl
@@ -496,7 +496,7 @@ class GLRenderer extends GLBaseRenderer {
 
   /**
    * The drawBackground method.
-   * @param {ColorRenderState} renderstate - The object tracking the current state of the renderer
+   * @param renderstate - The object tracking the current state of the renderer
    */
   drawBackground(renderstate: ColorRenderState): void {
     if (this.__glBackgroundMap && this.__backgroundMapShader && this.__backgroundMapShaderBinding) {
@@ -515,7 +515,7 @@ class GLRenderer extends GLBaseRenderer {
 
   /**
    * The bindGLRenderer method.
-   * @param {RenderState} renderstate - The object tracking the current state of the renderer
+   * @param renderstate - The object tracking the current state of the renderer
    */
   bindGLRenderer(renderstate: ColorRenderState): void {
     super.bindGLBaseRenderer(renderstate)
@@ -527,7 +527,7 @@ class GLRenderer extends GLBaseRenderer {
 
   /**
    * The drawScene method.
-   * @param {RenderState} renderstate - The object tracking the current state of the renderer
+   * @param renderstate - The object tracking the current state of the renderer
    */
   drawScene(renderstate: ColorRenderState): void {
     this.bindGLRenderer(renderstate)

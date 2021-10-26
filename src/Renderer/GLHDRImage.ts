@@ -23,8 +23,8 @@ class GLHDRImage extends GLTexture2D {
 
   /**
    * Create a GL HDR image.
-   * @param {WebGL12RenderingContext} gl - The webgl rendering context.
-   * @param {VLHImage} hdrImage - The HDR image.
+   * @param gl - The webgl rendering context.
+   * @param hdrImage - The HDR image.
    */
   constructor(gl: WebGL12RenderingContext, hdrImage: VLHImage) {
     super(gl)
@@ -45,7 +45,7 @@ class GLHDRImage extends GLTexture2D {
   /**
    * Returns the `BaseImage` of the GL Texture
    *
-   * @return {BaseImage} - The return value.
+   * @return - The return value.
    */
   getImage(): BaseImage {
     return this.hdrImage
@@ -53,7 +53,7 @@ class GLHDRImage extends GLTexture2D {
 
   /**
    * The __unpackHDRImage method.
-   * @param {Record<any,any>} hdrImageParams - The HDR image parameters.
+   * @param hdrImageParams - The HDR image parameters.
    * @private
    */
   __unpackHDRImage(hdrImageParams: Record<string, any>): void {
@@ -148,10 +148,10 @@ class GLHDRImage extends GLTexture2D {
 
   /**
    * The bindToUniform method.
-   * @param {RenderState} renderstate - The object tracking the current state of the renderer
-   * @param {Uniform} unif - The WebGL uniform
-   * @param {Record<any,any>} bindings - The bindings value.
-   * @return {boolean} - The return value.
+   * @param renderstate - The object tracking the current state of the renderer
+   * @param unif - The WebGL uniform
+   * @param bindings - The bindings value.
+   * @return - The return value.
    */
   bindToUniform(renderstate: RenderState, unif: Uniform, bindings?: Record<string, any>): boolean {
     return super.bindToUniform(renderstate, unif, bindings)

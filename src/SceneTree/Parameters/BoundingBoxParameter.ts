@@ -22,8 +22,8 @@ class BoundingBoxParameter extends Parameter<Box3> implements IBinaryReader {
   protected treeItem: TreeItem
   /**
    * Creates an instance of BoundingBoxParameter.
-   * @param {string} name - Name of the parameter
-   * @param {TreeItem} treeItem - `TreeItem` that contains `Box3` representing the Bounding Box
+   * @param name - Name of the parameter
+   * @param treeItem - `TreeItem` that contains `Box3` representing the Bounding Box
    */
   constructor(name: string = '', treeItem: TreeItem) {
     super(name, new Box3(), 'Box3')
@@ -53,7 +53,7 @@ class BoundingBoxParameter extends Parameter<Box3> implements IBinaryReader {
   /**
    * Returns bounding box value
    *
-   * @return {Box3} - The return value.
+   * @return - The return value.
    */
   getValue(): Box3 {
     if (this.dirty) {

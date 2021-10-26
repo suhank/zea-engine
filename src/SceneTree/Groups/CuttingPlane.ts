@@ -28,15 +28,14 @@ import { BaseItem } from '../BaseItem'
  */
 class CuttingPlane extends BaseGroup {
   cutPlaneOp: CuttingPlaneOperator
-  /**
-   * Creates an instance of a group.
-   *
-   * @param {string} name - The name of the group.
-   */
-
   cutAwayEnabledParam = new BooleanParameter('CutAwayEnabled', false)
   cutPlaneParam = new Vec4Parameter('CutPlane', new Vec4(1, 0, 0))
 
+  /**
+   * Creates an instance of a group.
+   *
+   * @param name - The name of the group.
+   */
   constructor(name: string = '') {
     super(name)
 
@@ -70,7 +69,7 @@ class CuttingPlane extends BaseGroup {
 
   /**
    * The __updateCutaway method.
-   * @param {TreeITem} item - The item in the group.
+   * @param item - The item in the group.
    * @private
    */
   __updateCutaway(item: TreeItem): void {
@@ -85,7 +84,7 @@ class CuttingPlane extends BaseGroup {
 
   /**
    * The __updateCutaway method.
-   * @param {TreeITem} item - The item in the group.
+   * @param item - The item in the group.
    * @private
    */
   __updateCutawayHelper(item: TreeItem): void {
@@ -115,8 +114,8 @@ class CuttingPlane extends BaseGroup {
 
   /**
    * The __bindItem method.
-   * @param {BaseItem} item - The item value.
-   * @param {number} index - The index value.
+   * @param item - The item value.
+   * @param index - The index value.
    * @private
    */
   bindItem(item: BaseItem, index: number) {
@@ -151,8 +150,8 @@ class CuttingPlane extends BaseGroup {
 
   /**
    * The unbindItem method.
-   * @param {BaseItem} item - The item value.
-   * @param {number} index - The index value.
+   * @param item - The item value.
+   * @param index - The index value.
    * @private
    */
   unbindItem(item: BaseItem, index: number) {
@@ -174,8 +173,8 @@ class CuttingPlane extends BaseGroup {
    * The clone method constructs a new group,
    * copies its values and returns it.
    *
-   * @param {Record<any,any>} context - The context value.
-   * @return {CuttingPlane} - Returns a new cloned group.
+   * @param context - The context value.
+   * @return - Returns a new cloned group.
    */
   clone(context: Record<string, any>): CuttingPlane {
     const cloned = new CuttingPlane()

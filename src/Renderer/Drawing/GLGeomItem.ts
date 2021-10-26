@@ -49,12 +49,12 @@ class GLGeomItem extends EventEmitter {
   protected highlightChanged: any
   /**
    * Create a GL geom item.
-   * @param {WebGL12RenderingContext} gl - The gl value.
-   * @param {GeomItem} geomItem - The geomItem value.
-   * @param {number} drawItemId - The drawItemId value.
-   * @param {number} geomId - The geomId value.
-   * @param {number} materialId - The materialId value.
-   * @param {boolean} supportInstancing - a boolean to disable instancing support on some mobile platforms
+   * @param gl - The gl value.
+   * @param geomItem - The geomItem value.
+   * @param drawItemId - The drawItemId value.
+   * @param geomId - The geomId value.
+   * @param materialId - The materialId value.
+   * @param supportInstancing - a boolean to disable instancing support on some mobile platforms
    */
   constructor(
     gl: WebGL12RenderingContext,
@@ -109,7 +109,7 @@ class GLGeomItem extends EventEmitter {
 
   /**
    * The getGeomItem method.
-   * @return {any} - The return value.
+   * @return - The return value.
    */
   getGeomItem() {
     return this.geomItem
@@ -117,7 +117,7 @@ class GLGeomItem extends EventEmitter {
 
   /**
    * The isVisible method.
-   * @return {any} - The return value.
+   * @return - The return value.
    */
   isVisible() {
     return this.visible
@@ -125,7 +125,7 @@ class GLGeomItem extends EventEmitter {
 
   /**
    * The getId method.
-   * @return {any} - The return value.
+   * @return - The return value.
    */
   getDrawItemId() {
     return this.drawItemId
@@ -147,7 +147,7 @@ class GLGeomItem extends EventEmitter {
 
   /**
    * Sets the additional culled value which controls visiblity
-   * @param {boolean} culled - True if culled, else false.
+   * @param culled - True if culled, else false.
    */
   setCulled(culled: boolean) {
     this.culled = culled
@@ -161,8 +161,8 @@ class GLGeomItem extends EventEmitter {
 
   /**
    * The bind method.
-   * @param {RenderState} renderstate - The object tracking the current state of the renderer
-   * @return {any} - The return value.
+   * @param renderstate - The object tracking the current state of the renderer
+   * @return - The return value.
    */
   bind(renderstate: RenderState) {
     const gl = this.gl

@@ -88,8 +88,8 @@ class Mesh extends BaseGeom {
   /**
    * Adds a new vertex attribute to the geometry.
    *
-   * @param {string} name - The name of the vertex attribute.
-   * @param {Attribute} attr - The attribute to add to the geometry
+   * @param name - The name of the vertex attribute.
+   * @param attr - The attribute to add to the geometry
    */
   addVertexAttribute(name: string, attr: Attribute): void {
     super.addVertexAttribute(name, attr)
@@ -98,7 +98,7 @@ class Mesh extends BaseGeom {
 
   /**
    * The getFaceCounts method.
-   * @return {array} - The return value.
+   * @return - The return value.
    */
   getFaceCounts(): Array<number> {
     return this.faceCounts
@@ -106,7 +106,7 @@ class Mesh extends BaseGeom {
 
   /**
    * The getNumFaces method.
-   * @return {number} - The return value.
+   * @return - The return value.
    */
   getNumFaces(): number {
     return this.faceCounts.length == 0 ? 0 : this.faceCounts.reduce((numFaces: number, fc: number) => (numFaces += fc))
@@ -116,7 +116,7 @@ class Mesh extends BaseGeom {
    * Sets the number of faces on the mesh using an array specifying the counts per polygon size.
    * The first item in the array specifies the number of triangles, the second, the number of quads, the 3rd, the number of 5 sided polygons etc..
    * e.g. to specify 2 triangles, and 7 quads, we would pass [2, 7]
-   * @param {array} faceCounts - The faceCounts value.
+   * @param faceCounts - The faceCounts value.
    */
   setFaceCounts(faceCounts: Array<number>): void {
     // let numFaces = 0
@@ -153,8 +153,8 @@ class Mesh extends BaseGeom {
 
   /**
    * Returns the number of vertices indexed by this face
-   * @param {number} faceIndex - The faceIndex value.
-   * @return {number} - The return value.
+   * @param faceIndex - The faceIndex value.
+   * @return - The return value.
    */
   getFaceVertexCount(faceIndex: number): number {
     let idx = 0
@@ -172,8 +172,8 @@ class Mesh extends BaseGeom {
 
   /**
    * Returns the offset of the face indices within the entire index array.
-   * @param {number} faceIndex - The faceIndex value.
-   * @return {number} - The return value.
+   * @param faceIndex - The faceIndex value.
+   * @return - The return value.
    */
   getFaceVertexOffset(faceIndex: number): number {
     let idx = 0
@@ -192,8 +192,8 @@ class Mesh extends BaseGeom {
 
   /**
    * The setFaceVertexIndices method.
-   * @param {number} faceIndex - The faceIndex value.
-   * @param {array} vertexIndices - The array of vertex indices for this face value.
+   * @param faceIndex - The faceIndex value.
+   * @param vertexIndices - The array of vertex indices for this face value.
    */
   setFaceVertexIndices(faceIndex: number, vertexIndices: Array<number>): void {
     const faceVertexCount = this.getFaceVertexCount(faceIndex)
@@ -208,8 +208,8 @@ class Mesh extends BaseGeom {
 
   /**
    * Adds a new face to the mesh
-   * @param {array} vertexIndices - The vertex indices of the face.
-   * @return {number} - The index of the face in the mesh.
+   * @param vertexIndices - The vertex indices of the face.
+   * @return - The index of the face in the mesh.
    */
   addFace(vertexIndices: number[]): number {
     const faceCounts = [...this.faceCounts]
@@ -240,8 +240,8 @@ class Mesh extends BaseGeom {
 
   /**
    * Returns the vertex indices of the specified face.
-   * @param {number} faceIndex - The index of the specified face
-   * @return {array} - An array of indices into the vertex attributes
+   * @param faceIndex - The index of the specified face
+   * @return - An array of indices into the vertex attributes
    */
   getFaceVertexIndices(faceIndex: number): number[] {
     const vertexIndices = []
@@ -255,9 +255,9 @@ class Mesh extends BaseGeom {
 
   /**
    * Returns a single vertex index for a given face and faceVertex.
-   * @param {number} faceIndex - The faceIndex value.
-   * @param {number} faceVertex - The face vertex is the index within the face. So the first vertex index is 0.
-   * @return {number} - The vertex index
+   * @param faceIndex - The faceIndex value.
+   * @param faceVertex - The face vertex is the index within the face. So the first vertex index is 0.
+   * @return - The vertex index
    */
   getFaceVertexIndex(faceIndex: number, faceVertex: number) {
     const offset = this.getFaceVertexOffset(faceIndex)
@@ -269,8 +269,8 @@ class Mesh extends BaseGeom {
 
   /**
    * The addFaceAttribute method.
-   * @param {string} name - The name of the face attribute to add.
-   * @param {Attribute} attr - The attr value
+   * @param name - The name of the face attribute to add.
+   * @param attr - The attr value
    */
   addFaceAttribute(name: string, attr: Attribute) {
     attr.setCount(this.getNumFaces())
@@ -280,8 +280,8 @@ class Mesh extends BaseGeom {
 
   /**
    * The hasFaceAttribute method.
-   * @param {string} name - The name of the face attribute.
-   * @return {boolean} - The return value.
+   * @param name - The name of the face attribute.
+   * @return - The return value.
    */
   hasFaceAttribute(name: string) {
     return this.__faceAttributes.has(name)
@@ -289,8 +289,8 @@ class Mesh extends BaseGeom {
 
   /**
    * The getFaceAttribute method.
-   * @param {string} name - The name of the face attribute.
-   * @return {Attribute} - The return value.
+   * @param name - The name of the face attribute.
+   * @return - The return value.
    */
   getFaceAttribute(name: string): Attribute {
     return this.__faceAttributes.get(name)
@@ -301,8 +301,8 @@ class Mesh extends BaseGeom {
 
   /**
    * The addEdgeAttribute method.
-   * @param {string} name - The name of the edge attribute to add.
-   * @param {Attribute} attr - The attr value
+   * @param name - The name of the edge attribute to add.
+   * @param attr - The attr value
    */
   addEdgeAttribute(name: string, attr: Attribute) {
     attr.setCount(this.numEdges)
@@ -311,8 +311,8 @@ class Mesh extends BaseGeom {
 
   /**
    * The hasEdgeAttribute method.
-   * @param {string} name - The name of the edge attribute.
-   * @return {boolean} - The return value.
+   * @param name - The name of the edge attribute.
+   * @return - The return value.
    */
   hasEdgeAttribute(name: string): boolean {
     return this.__edgeAttributes.has(name)
@@ -320,8 +320,8 @@ class Mesh extends BaseGeom {
 
   /**
    * The getEdgeAttribute method.
-   * @param {string} name - The name of the edge attribute.
-   * @return {Attribute} - The return value.
+   * @param name - The name of the edge attribute.
+   * @return - The return value.
    */
   getEdgeAttribute(name: string): Attribute | undefined {
     return this.__edgeAttributes.get(name)
@@ -493,8 +493,8 @@ class Mesh extends BaseGeom {
 
   /**
    * Compute vertex normals.
-   * @param {number} hardAngle - The hardAngle value in radians.
-   * @return {Vec3Attribute} - The return value.
+   * @param hardAngle - The hardAngle value in radians.
+   * @return - The return value.
    */
   computeVertexNormals(hardAngle = 1.0 /* radians */) {
     this.calculateEdgeAngles()
@@ -611,8 +611,8 @@ class Mesh extends BaseGeom {
 
   /**
    * The computeHardEdgesIndices method.
-   * @param {number} hardAngle - The hardAngle value in radians.
-   * @return {Uint32Array} - The return value.
+   * @param hardAngle - The hardAngle value in radians.
+   * @return - The return value.
    */
   computeHardEdgesIndices(hardAngle = 1.0): Uint32Array {
     if (this.edgeVerts.length == 0) this.calculateEdgeAngles()
@@ -635,8 +635,8 @@ class Mesh extends BaseGeom {
 
   /**
    * The genBuffers method.
-   * @param {Record<string, any>} opts - The opts value.
-   * @return {Record<string, any>} - The return value.
+   * @param opts - The opts value.
+   * @return - The return value.
    */
   genBuffers(opts?: Record<string, any>): Record<string, any> {
     // Compute the normals on demand.
@@ -818,7 +818,7 @@ class Mesh extends BaseGeom {
 
   /**
    * Compute the number of triangles. For higher degree polygons, they are divided into multiple triangles for rendering.
-   * @return {number} - Returns the number of triangles.
+   * @return - Returns the number of triangles.
    */
   computeNumTriangles(): number {
     let numVertsPerFace = 3
@@ -834,10 +834,10 @@ class Mesh extends BaseGeom {
    * To prepare data for rendering, the indices for the polygons is used to compute a new index buffer based on
    * only triangles. This is used during rendering and the resulting indices uploaded ot the GPU  by GLMesh class.
    *
-   * @param {number} totalNumVertices - The total number of vertices.
-   * @param {number} numUnSplitVertices - The total number of un-split vertices.
-   * @param {array} splitIndices - The splitIndices value.
-   * @return {TypedArray} - Returns a typed array containing the triangulated indices.
+   * @param totalNumVertices - The total number of vertices.
+   * @param numUnSplitVertices - The total number of un-split vertices.
+   * @param splitIndices - The splitIndices value.
+   * @return - Returns a typed array containing the triangulated indices.
    */
   generateTriangulatedIndices(
     totalNumVertices: number,
@@ -879,8 +879,8 @@ class Mesh extends BaseGeom {
   /**
    * Restores mesh properties from a binary reader.
    *
-   * @param {BinReader} reader - The reader value.
-   * @param {Record<string, any>} context - The context value.
+   * @param reader - The reader value.
+   * @param context - The context value.
    */
   readBinary(reader: BinReader, context?: Record<string, any>): void {
     super.loadBaseGeomBinary(reader)
@@ -949,8 +949,8 @@ class Mesh extends BaseGeom {
   /**
    * The toJSON method encodes this type as a json object for persistence.
    *
-   * @param {Record<string, any>} context - The context value.
-   * @return {Record<string, any>} - Returns the json object.
+   * @param context - The context value.
+   * @return - Returns the json object.
    */
   toJSON(context?: Record<string, any>): Record<string, unknown> {
     const j = super.toJSON(context)
@@ -985,8 +985,8 @@ class Mesh extends BaseGeom {
    * }
    * ```
    *
-   * @param {Record<string, any>} j - The json object this item must decode.
-   * @param {Record<string, any>} context - The context value.
+   * @param j - The json object this item must decode.
+   * @param context - The context value.
    */
   fromJSON(j: Record<string, any>, context?: Record<string, any>): void {
     super.fromJSON(j, context)

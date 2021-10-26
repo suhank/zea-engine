@@ -26,16 +26,16 @@ class GLLinesPass extends GLOpaqueGeomsPass {
 
   /**
    * The init method.
-   * @param {GLBaseRenderer} renderer - The renderer value.
-   * @param {number} passIndex - The index of the pass in the GLBAseRenderer
+   * @param renderer - The renderer value.
+   * @param passIndex - The index of the pass in the GLBAseRenderer
    */
   init(renderer: GLBaseRenderer, passIndex: number) {
     super.init(renderer, passIndex)
   }
   /**
    * The filterGeomItem method.
-   * @param {GeomItem} geomItem - The geomItem value.
-   * @return {boolean} - The return value.
+   * @param geomItem - The geomItem value.
+   * @return - The return value.
    */
   filterGeomItem(geomItem: GeomItem): boolean {
     const geom = geomItem.geomParam.value
@@ -83,7 +83,7 @@ class GLLinesPass extends GLOpaqueGeomsPass {
 
   /**
    * The draw method.
-   * @param {RenderState} renderstate - The object tracking the current state of the renderer
+   * @param renderstate - The object tracking the current state of the renderer
    */
   draw(renderstate: RenderState) {
     const gl = this.__gl!
@@ -101,7 +101,7 @@ class GLLinesPass extends GLOpaqueGeomsPass {
   }
   /**
    * The drawGeomData method.
-   * @param {RenderState} renderstate - The object tracking the current state of the renderer
+   * @param renderstate - The object tracking the current state of the renderer
    */
   drawGeomData(renderstate: GeomDataRenderState) {
     const gl = this.__gl!

@@ -29,9 +29,9 @@ class MaterialFloatParam extends NumberParameter implements IBinaryReader {
   protected image?: BaseImage
   /**
    * Create a material float parameter.
-   * @param {string} name - The name of the material color parameter.
-   * @param {number} [value] - The value of the parameter.
-   * @param {number[]} [range] - An array with two numbers. If defined, the parameter value will be clamped.
+   * @param name - The name of the material color parameter.
+   * @param value - The value of the parameter.
+   * @param range - An array with two numbers. If defined, the parameter value will be clamped.
    */
   constructor(name: string = '', value?: number, range?: number[]) {
     super(name, value, range)
@@ -45,7 +45,7 @@ class MaterialFloatParam extends NumberParameter implements IBinaryReader {
   /**
    * Returns `BaseImage` texture of the Material.
    *
-   * @return {BaseImage} - The return value.
+   * @return - The return value.
    */
   getImage(): BaseImage | undefined {
     return this.image
@@ -54,7 +54,7 @@ class MaterialFloatParam extends NumberParameter implements IBinaryReader {
   /**
    * Sets `BaseImage` texture value in parameter.
    *
-   * @param {BaseImage | null} value - The value value.
+   * @param value - The value value.
    */
   setImage(value: BaseImage | null): void {
     const disconnectImage = () => {
@@ -79,7 +79,7 @@ class MaterialFloatParam extends NumberParameter implements IBinaryReader {
   /**
    * Sets `number` or the `BaseImage` texture value in parameter.
    *
-   * @param {number} value - The value param.
+   * @param value - The value param.
    */
   setValue(value: number | BaseImage) {
     if (value instanceof BaseImage) {
@@ -92,8 +92,8 @@ class MaterialFloatParam extends NumberParameter implements IBinaryReader {
   /**
    * Extracts `number` and `Image` values from a buffer, updating current parameter state.
    *
-   * @param {BinReader} reader - The reader value.
-   * @param {Record<string, any>} context - The context value.
+   * @param reader - The reader value.
+   * @param context - The context value.
    */
   readBinary(reader: BinReader, context: Record<string, any>): void {
     super.readBinary(reader, context)
@@ -109,7 +109,7 @@ class MaterialFloatParam extends NumberParameter implements IBinaryReader {
    * The clone method constructs a new material float parameter,
    * copies its values from this parameter and returns it.
    *
-   * @return {MaterialFloatParam} - Returns a new cloned material float parameter.
+   * @return - Returns a new cloned material float parameter.
    */
   clone(): MaterialFloatParam {
     const clonedParam = new MaterialFloatParam(this.name, this.__value, this.range)

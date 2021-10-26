@@ -26,8 +26,8 @@ class GLGeomItemSet extends EventEmitter {
   protected highlightedItems: number[]
   /**
    * Create a GL geom item set.
-   * @param {WebGL12RenderingContext} gl - The webgl rendering context.
-   * @param {GLGeom} glGeom - The glGeom value.
+   * @param gl - The webgl rendering context.
+   * @param glGeom - The glGeom value.
    */
   constructor(gl: WebGL12RenderingContext, glGeom: GLGeom) {
     super()
@@ -51,7 +51,7 @@ class GLGeomItemSet extends EventEmitter {
 
   /**
    * The getGLGeom method.
-   * @return {GLGeom} - The return value.
+   * @return - The return value.
    */
   getGLGeom(): GLGeom {
     return this.glGeom
@@ -59,7 +59,7 @@ class GLGeomItemSet extends EventEmitter {
 
   /**
    * The getDrawCount method.
-   * @return {number} - The return value.
+   * @return - The return value.
    */
   getDrawCount(): number {
     return this.visibleItems.length
@@ -67,7 +67,7 @@ class GLGeomItemSet extends EventEmitter {
 
   /**
    * The addGLGeomItem method.
-   * @param {GLGeomItem} glGeomItem - The glGeomItem value.
+   * @param glGeomItem - The glGeomItem value.
    */
   addGLGeomItem(glGeomItem: GLGeomItem) {
     let index: number
@@ -132,7 +132,7 @@ class GLGeomItemSet extends EventEmitter {
 
   /**
    * The removeGLGeomItem method.
-   * @param {GLGeomItem} glGeomItem - The glGeomItem value.
+   * @param glGeomItem - The glGeomItem value.
    */
   removeGLGeomItem(glGeomItem: GLGeomItem) {
     const index = this.glGeomItems.indexOf(glGeomItem)
@@ -194,7 +194,7 @@ class GLGeomItemSet extends EventEmitter {
 
   /**
    * The getDrawIdsArray method.
-   * @return {Float32Array} - The drawIds for each GeomItem packed into a Float32Array
+   * @return - The drawIds for each GeomItem packed into a Float32Array
    */
   getDrawIdsArray() {
     if (this.drawIdsBufferDirty) {
@@ -241,7 +241,7 @@ class GLGeomItemSet extends EventEmitter {
 
   /**
    * The getHighlightedIdsArray method.
-   * @return {Float32Array} - The drawIds for each GeomItem packed into a Float32Array
+   * @return - The drawIds for each GeomItem packed into a Float32Array
    */
   getHighlightedIdsArray() {
     if (this.highlightedIdsBufferDirty) {
@@ -266,7 +266,7 @@ class GLGeomItemSet extends EventEmitter {
 
   /**
    * The draw method.
-   * @param {RenderState} renderstate - The object tracking the current state of the renderer
+   * @param renderstate - The object tracking the current state of the renderer
    */
   draw(renderstate: RenderState) {
     if (this.visibleItems.length == 0) {
@@ -281,7 +281,7 @@ class GLGeomItemSet extends EventEmitter {
 
   /**
    * The drawHighlighted method.
-   * @param {RenderState} renderstate - The object tracking the current state of the renderer
+   * @param renderstate - The object tracking the current state of the renderer
    */
   drawHighlighted(renderstate: RenderState) {
     if (this.highlightedItems.length == 0) {
@@ -296,9 +296,9 @@ class GLGeomItemSet extends EventEmitter {
 
   /**
    * The __bindAndRender method.
-   * @param {RenderState} renderstate - The object tracking the current state of the renderer
-   * @param {number[]} itemIndices - The itemIndices value.
-   * @param {WebGLBuffery} drawIdsBuffer - The drawIdsBuffer value.
+   * @param renderstate - The object tracking the current state of the renderer
+   * @param itemIndices - The itemIndices value.
+   * @param drawIdsBuffer - The drawIdsBuffer value.
    * @private
    */
   __bindAndRender(renderstate: RenderState, itemIndices: number[], drawIdsBuffer: WebGLBuffer | null) {

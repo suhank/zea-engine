@@ -19,7 +19,7 @@ import { BaseGeomItem } from '../BaseGeomItem'
 class MaterialGroup extends BaseGroup {
   // TODO: should BaseGroup have the materialParam?
   /**
-   * @member {MaterialParameter} materialParam - The Material to use when rendering this GeomItem
+   * @member materialParam - The Material to use when rendering this GeomItem
    */
   materialParam: MaterialParameter = new MaterialParameter('Material')
 
@@ -28,9 +28,8 @@ class MaterialGroup extends BaseGroup {
   /**
    * Creates an instance of a group.
    *
-   * @param {string} name - The name of the group.
+   * @param name - The name of the group.
    */
-
   constructor(name?: string) {
     super(name)
 
@@ -79,7 +78,7 @@ class MaterialGroup extends BaseGroup {
   /**
    * Changes selection's state of the group with all items it owns.
    *
-   * @param {boolean} sel - Boolean indicating the new selection state.
+   * @param sel - Boolean indicating the new selection state.
    */
   setSelected(sel: boolean) {
     super.setSelected(sel)
@@ -136,8 +135,8 @@ class MaterialGroup extends BaseGroup {
 
   /**
    * The __bindItem method.
-   * @param {BaseItem} item - The item value.
-   * @param {number} index - The index value.
+   * @param item - The item value.
+   * @param index - The index value.
    * @private
    */
   bindItem(item: BaseItem, index: number) {
@@ -179,8 +178,8 @@ class MaterialGroup extends BaseGroup {
 
   /**
    * The __unbindItem method.
-   * @param {BaseItem} item - The item value.
-   * @param {number} index - The index value.
+   * @param item - The item value.
+   * @param index - The index value.
    * @private
    */
   __unbindItem(item: BaseItem, index: number) {
@@ -200,8 +199,8 @@ class MaterialGroup extends BaseGroup {
    * The clone method constructs a new group,
    * copies its values and returns it.
    *
-   * @param {Record<string, unknown>} context - The context value.
-   * @return {MaterialGroup} - Returns a new cloned group.
+   * @param context - The context value.
+   * @return - Returns a new cloned group.
    */
   clone(context: Record<string, unknown>) {
     const cloned = new MaterialGroup(this.__name + 'clone')

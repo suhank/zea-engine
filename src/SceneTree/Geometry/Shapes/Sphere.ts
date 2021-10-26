@@ -21,27 +21,27 @@ import { Vec2Attribute } from '../Vec2Attribute'
  */
 class Sphere extends ProceduralMesh {
   /**
-   * @member {NumberParameter} radiusParam - Radius of the sphere.
+   * @member radiusParam - Radius of the sphere.
    */
   radiusParam: NumberParameter = new NumberParameter('Radius', 1.0)
 
   /**
-   * @member {NumberParameter} sidesParam - Specifies the number of subdivisions around the `Z` axis.
+   * @member sidesParam - Specifies the number of subdivisions around the `Z` axis.
    */
   sidesParam: NumberParameter = new NumberParameter('Sides', 12, [3, 200], 1)
 
   /**
-   * @member {NumberParameter} loopsParam - Specifies the number of subdivisions(stacks) along the `Z` axis.
+   * @member loopsParam - Specifies the number of subdivisions(stacks) along the `Z` axis.
    */
   loopsParam: NumberParameter = new NumberParameter('Loops', 6, [3, 200], 1)
 
   /**
    * Creates an instance of Sphere.
-   * @param {number} [radius=1.0] - The radius of the sphere.
-   * @param {number} [sides=12] - The number of sides.
-   * @param {number} [loops=12] - The number of loops.
-   * @param {boolean} [addNormals=true] - Compute vertex normals for the geometry
-   * @param {boolean} [addTextureCoords=true] - Compute texture coordinates for the geometry
+   * @param radius - The radius of the sphere.
+   * @param sides - The number of sides.
+   * @param loops - The number of loops.
+   * @param addNormals - Compute vertex normals for the geometry
+   * @param addTextureCoords - Compute texture coordinates for the geometry
    */
   constructor(radius = 1.0, sides = 12, loops = 12) {
     super()

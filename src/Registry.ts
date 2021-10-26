@@ -12,7 +12,7 @@ let classDefinitions: Array<typeof BaseClass> = []
  * Note: className is required because on minification process
  * the name of classes change and we can't simply use '....constructor.name'.
  * So, we need a way of relating minified class names to the one stored for persistency.
- * <br>
+ *
  * i.e.
  * ```javascript
  * // Import registry class
@@ -30,8 +30,8 @@ class Registry {
   /**
    * Registers a new class to the factory.
    *
-   * @param {string} className - Name of the registered class
-   * @param {BaseClass} classDef - Class representation(Class function, type)
+   * @param className - Name of the registered class
+   * @param classDef - Class representation(Class function, type)
    */
   static register(className: string, classDef: typeof BaseClass): void {
     if (className in registeredClasses) {
@@ -49,8 +49,8 @@ class Registry {
   /**
    * Returns class definition using the name it was registered with.
    *
-   * @param {string} className - Name of the registered class
-   * @return {typeof BaseClass} - Class representation(Class function, type)
+   * @param className - Name of the registered class
+   * @return - Class representation(Class function, type)
    */
   static getClassDefinition(className: string): typeof BaseClass {
     if (!(className in registeredClasses)) throw new Error(`${className} class is not registered`)
@@ -59,8 +59,8 @@ class Registry {
 
   /**
    * Returns class name registered for the instantiated object.
-   * @param {typeof BaseClass} classDefinition - Class type definition.
-   * @return {string} - Name of the registered class
+   * @param classDefinition - Class type definition.
+   * @return - Name of the registered class
    */
   static getClassName(classDefinition: typeof BaseClass): string {
     const classId = classDefinitions.indexOf(classDefinition)
@@ -72,8 +72,8 @@ class Registry {
   /**
    * The factory function that construct the class registered under the given name.
    *
-   * @param {string} className - Name of the registered class
-   * @return {BaseClass} - Instantiated object of the specified class
+   * @param className - Name of the registered class
+   * @return - Instantiated object of the specified class
    */
   static constructClass(className: string): BaseClass {
     const classDefinition = classDefinitions[registeredClasses[className]]

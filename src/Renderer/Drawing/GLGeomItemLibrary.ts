@@ -31,8 +31,8 @@ class GLGeomItemLibrary extends EventEmitter {
   protected enableFrustumCulling: any
   /**
    * Create a GLGeomItemLibrary.
-   * @param {GLBaseRenderer} renderer - The renderer instance
-   * @param {Record<string, any>} options - The options object passed to the GLRenderer constructor.
+   * @param renderer - The renderer instance
+   * @param options - The options object passed to the GLRenderer constructor.
    */
   constructor(renderer: GLBaseRenderer, options: Record<string, any>) {
     super()
@@ -56,7 +56,7 @@ class GLGeomItemLibrary extends EventEmitter {
 
   /**
    * Sets up the Culling Worker to start calculating frustum culling.
-   * @param {GLBaseRenderer} renderer - The renderer instance
+   * @param renderer - The renderer instance
    */
   setupCullingWorker(renderer: GLBaseRenderer) {
     // this.worker = {
@@ -189,8 +189,8 @@ class GLGeomItemLibrary extends EventEmitter {
 
   /**
    * The addGeomItem method.
-   * @param {GeomItem} geomItem - The geomItem value.
-   * @return {number} - The index of GLGeomItem
+   * @param geomItem - The geomItem value.
+   * @return - The index of GLGeomItem
    */
   addGeomItem(geomItem: GeomItem) {
     let index = this.glGeomItemsMap[geomItem.getId()] //  number | undefined
@@ -299,7 +299,7 @@ class GLGeomItemLibrary extends EventEmitter {
 
   /**
    * Handles applying the culling results received from the GLGeomItemLibraryCullingWorker
-   * @param {Record<any,any>} data - The object containing the newlyCulled and newlyUnCulled results.
+   * @param data - The object containing the newlyCulled and newlyUnCulled results.
    */
   applyCullResults(data: Record<string, any>) {
     const { newlyCulled, newlyUnCulled } = data
@@ -330,8 +330,8 @@ class GLGeomItemLibrary extends EventEmitter {
 
   /**
    * The removeGeomItem method.
-   * @param {GeomItem} geomItem - The geomItem value.
-   * @return {any} - The return value.
+   * @param geomItem - The geomItem value.
+   * @return - The return value.
    */
   removeGeomItem(geomItem: GeomItem): GLGeomItem {
     const index = this.glGeomItemsMap[geomItem.getId()]
@@ -377,8 +377,8 @@ class GLGeomItemLibrary extends EventEmitter {
 
   /**
    * The getGeomItem method.
-   * @param {number} index - The index value.
-   * @return {GeomItem | undefined} - The GLGeomItem that wraps the provided GeomItem
+   * @param index - The index value.
+   * @return - The GLGeomItem that wraps the provided GeomItem
    */
   getGeomItem(index: number): GeomItem | undefined {
     if (index >= this.glGeomItems.length) {
@@ -390,8 +390,8 @@ class GLGeomItemLibrary extends EventEmitter {
 
   /**
    * The getGeomItem method.
-   * @param {GeomItem} geomItem - The geomItem value.
-   * @return {GLGeomItem | null} - The GLGeomItem that wraps the provided GeomItem
+   * @param geomItem - The geomItem value.
+   * @return - The GLGeomItem that wraps the provided GeomItem
    */
   getGLGeomItem(geomItem: GeomItem): GLGeomItem | null {
     const index = this.glGeomItemsMap[geomItem.getId()]
@@ -407,9 +407,9 @@ class GLGeomItemLibrary extends EventEmitter {
 
   /**
    * The populateDrawItemDataArray method.
-   * @param {number} index - The index of the item in the library.
-   * @param {number} subIndex - The index of the item within the block being uploaded.
-   * @param {Float32Array} dataArray - The dataArray value.
+   * @param index - The index of the item in the library.
+   * @param subIndex - The index of the item within the block being uploaded.
+   * @param dataArray - The dataArray value.
    * @private
    */
   populateDrawItemDataArray(index: number, subIndex: number, dataArray: Float32Array) {
@@ -476,10 +476,10 @@ class GLGeomItemLibrary extends EventEmitter {
 
   /**
    * Gathers data to pass to the culling worker.
-   * @param {GeomItem} geomItem - The GeomItem to gether the data for.
-   * @param {Material} material - The material of GeomItem.
-   * @param {number} index - The index of the item to gether the data for.
-   * @return {Record<string, any>} - the JSON data that will be passed to the worker.
+   * @param geomItem - The GeomItem to gether the data for.
+   * @param material - The material of GeomItem.
+   * @param index - The index of the item to gether the data for.
+   * @return - the JSON data that will be passed to the worker.
    */
   getCullingWorkerData(geomItem: GeomItem, material: Material, index: number): Record<string, any> {
     const bbox = geomItem.boundingBoxParam.value
@@ -541,7 +541,7 @@ class GLGeomItemLibrary extends EventEmitter {
 
   /**
    * The uploadGeomItems method.
-   * @param {RenderState} renderstate - The object tracking the current state of the renderer
+   * @param renderstate - The object tracking the current state of the renderer
    */
   uploadGeomItems(renderstate: RenderState) {
     const gl = this.renderer.gl
@@ -621,7 +621,7 @@ class GLGeomItemLibrary extends EventEmitter {
 
   /**
    * Updates the GPU state if any update is needed.
-   * @param {RenderState} renderstate - The object tracking the current state of the renderer
+   * @param renderstate - The object tracking the current state of the renderer
    */
   bind(renderstate: RenderState) {
     if (this.dirtyWorkerItemIndices.size > 0 || this.removedItemIndices.length > 0) {

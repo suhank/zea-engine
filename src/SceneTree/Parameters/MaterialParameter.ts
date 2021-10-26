@@ -26,8 +26,8 @@ class MaterialParameter extends Parameter<Material | undefined> {
   protected listenerIDs: Record<string, number> = {}
   /**
    * Create a material parameter.
-   * @param {string} name - The name of the material parameter.
-   * @param {Material} value - The value of the parameter.
+   * @param name - The name of the material parameter.
+   * @param value - The value of the parameter.
    */
   constructor(name: string = '', value?: Material) {
     super(name, value, 'Material')
@@ -41,7 +41,7 @@ class MaterialParameter extends Parameter<Material | undefined> {
   /**
    * Sets `Material` value of the parameter.
    *
-   * @param {Material} material - The material param.
+   * @param material - The material param.
    */
   setValue(material: Material): void {
     // 0 == normal set. 1 = changed via cleaner fn, 2 = change by loading/cloning code.
@@ -68,7 +68,7 @@ class MaterialParameter extends Parameter<Material | undefined> {
    * The loadValue is used to change the value of a parameter, without triggering a
    * valueChanges, or setting the USER_EDITED state.
    *
-   * @param {Material} value - The context value.
+   * @param value - The context value.
    */
 
   //TODO: remove?
@@ -87,8 +87,8 @@ class MaterialParameter extends Parameter<Material | undefined> {
   /**
    * The toJSON method encodes this type as a json object for persistence.
    *
-   * @param {Record<string, any>} context - The context value.
-   * @return {Record<string, unknown>} - Returns the json object.
+   * @param context - The context value.
+   * @return - Returns the json object.
    */
   toJSON(context?: Record<string, any>): Record<string, unknown> {
     let j: Record<string, unknown> = {}
@@ -106,8 +106,8 @@ class MaterialParameter extends Parameter<Material | undefined> {
   /**
    * The fromJSON method decodes a json object for this type.
    *
-   * @param {Record<string, any>} j - The json object this item must decode.
-   * @param {Record<string, any>} context - The context value.
+   * @param j - The json object this item must decode.
+   * @param context - The context value.
    */
   fromJSON(j: Record<string, any>, context: Record<string, any>): void {
     if (j.value == undefined) {
@@ -139,7 +139,7 @@ class MaterialParameter extends Parameter<Material | undefined> {
    * The clone method constructs a new material parameter, copies its values
    * from this parameter and returns it.
    *
-   * @return {MaterialParameter} - Returns a new material parameter.
+   * @return - Returns a new material parameter.
    */
   clone(): MaterialParameter {
     const clonedParam = new MaterialParameter(this.name, this.__value)

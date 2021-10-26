@@ -24,8 +24,8 @@ import { Parameter } from './Parameter'
 class ListParameter extends Parameter<any[]> {
   /**
    * Create a list parameter.
-   * @param {string} name - The name of the list parameter.
-   * @param {string} dataType - The dataType value.
+   * @param name - The name of the list parameter.
+   * @param dataType - The dataType value.
    */
   constructor(name: string = '', dataType?: string) {
     super(name, [], dataType)
@@ -33,8 +33,8 @@ class ListParameter extends Parameter<any[]> {
 
   /**
    * The filter method.
-   * @param {string|Parameter} item - The item value.
-   * @return {boolean} - The return value.
+   * @param item - The item value.
+   * @return - The return value.
    *
    * @private
    */
@@ -45,7 +45,7 @@ class ListParameter extends Parameter<any[]> {
   /**
    * Returns the count of items in the array.
    *
-   * @return {number} - The return value.
+   * @return - The return value.
    */
   getCount(): number {
     return this.__value?.length || 0
@@ -54,8 +54,8 @@ class ListParameter extends Parameter<any[]> {
   /**
    * Returns value from the array in the specified index.
    *
-   * @param {number} index - The index value.
-   * @return {unknown} - The return value.
+   * @param index - The index value.
+   * @return - The return value.
    */
   getElement(index: number): unknown {
     if (!this.__value) return
@@ -65,8 +65,8 @@ class ListParameter extends Parameter<any[]> {
   /**
    * Sets a value in the specified array's index.
    *
-   * @param {number} index - The index value.
-   * @param {unknown} value - The value value.
+   * @param index - The index value.
+   * @param value - The value value.
    */
   setElement(index: number, value: unknown): void {
     if (!this.__value) this.__value = []
@@ -78,8 +78,8 @@ class ListParameter extends Parameter<any[]> {
   /**
    * Adds a new element at the end of the array pile.
    *
-   * @param {unknown} elem - The elem value.
-   * @return {unknown} - The return value.
+   * @param elem - The elem value.
+   * @return - The return value.
    */
   addElement(elem: unknown): unknown {
     if ((!elem && elem != 0) || !this.filter(elem)) return
@@ -94,7 +94,7 @@ class ListParameter extends Parameter<any[]> {
   /**
    * Removes an array element from the specified index
    *
-   * @param {number} index - The index value.
+   * @param index - The index value.
    */
   removeElement(index: number): void {
     if (!this.__value) this.__value = []
@@ -107,8 +107,8 @@ class ListParameter extends Parameter<any[]> {
   /**
    * Inserts a new element in the specified index.
    *
-   * @param {number} index - The index value.
-   * @param {unknown} elem - The elem value.
+   * @param index - The index value.
+   * @param elem - The elem value.
    */
   insertElement(index: number, elem: unknown): void {
     if (!this.__value || !this.filter(elem)) return
@@ -123,8 +123,8 @@ class ListParameter extends Parameter<any[]> {
   /**
    * The toJSON method encodes this type as a json object for persistence.
    *
-   * @param {Record<string, any>} context - The context value.
-   * @return {Record<string, any>} - Returns the json object.
+   * @param context - The context value.
+   * @return - Returns the json object.
    */
 
   toJSON(context: Record<string, any>): Record<string, any> {
@@ -143,8 +143,8 @@ class ListParameter extends Parameter<any[]> {
   /**
    * The fromJSON method decodes a json object for this type.
    *
-   * @param {Record<string, any>} j - The json object this item must decode.
-   * @param {Record<string, any>} context - The context value.
+   * @param j - The json object this item must decode.
+   * @param context - The context value.
    */
   fromJSON(j: Record<string, any>, context?: Record<string, any>): void {
     if (j.items == undefined) {
@@ -176,7 +176,7 @@ class ListParameter extends Parameter<any[]> {
    * The clone method constructs a new list parameter, copies its values
    * from this parameter and returns it.
    *
-   * @return {ListParameter} - Returns a new list parameter.
+   * @return - Returns a new list parameter.
    */
 
   clone(): ListParameter {

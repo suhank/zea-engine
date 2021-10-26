@@ -31,10 +31,10 @@ class GLImageAtlas extends GLRenderTarget {
   protected __atlasLayoutShader: GLShader | null = null
   /**
    * Create an image atlas..
-   * @param {WebGL12RenderingContext} gl - The webgl rendering context.
-   * @param {string} name - The name value.
-   * @param {string} format - The format value.
-   * @param {string} type - The type value.
+   * @param gl - The webgl rendering context.
+   * @param name - The name value.
+   * @param format - The format value.
+   * @param type - The type value.
    */
   constructor(gl: WebGL12RenderingContext, name: string, format = 'RGBA', type = 'FLOAT') {
     super(gl)
@@ -67,7 +67,7 @@ class GLImageAtlas extends GLRenderTarget {
 
   /**
    * The isLoaded method.
-   * @return {boolean} - The return value.
+   * @return - The return value.
    */
   isLoaded(): boolean {
     return this.__asyncCount == 0
@@ -75,7 +75,7 @@ class GLImageAtlas extends GLRenderTarget {
 
   /**
    * The getMainImage method.
-   * @return {BaseImage} - The return value.
+   * @return - The return value.
    */
   getMainImage(): BaseImage {
     return this.frameBuffer // TODO: is this correct?
@@ -83,8 +83,8 @@ class GLImageAtlas extends GLRenderTarget {
 
   /**
    * The addSubImage method.
-   * @param {BaseImage} subImage - The subImage value.
-   * @return {number} - The return value.
+   * @param subImage - The subImage value.
+   * @return - The return value.
    */
   // TODO: WebGLTexture is not handled here
   addSubImage(subImage: BaseImage | WebGLTexture | null): number {
@@ -121,7 +121,7 @@ class GLImageAtlas extends GLRenderTarget {
 
   /**
    * The removeSubImage method.
-   * @param {BaseImage} subImage - The subImage value.
+   * @param subImage - The subImage value.
    */
   removeSubImage(subImage: BaseImage): void {
     let index
@@ -142,8 +142,8 @@ class GLImageAtlas extends GLRenderTarget {
 
   /**
    * The getSubImage method.
-   * @param {number} index - The index value.
-   * @return {GLTexture2D} - The image value.
+   * @param index - The index value.
+   * @return - The image value.
    */
   getSubImage(index: number): GLTexture2D {
     return this.__subImages[index]
@@ -151,7 +151,7 @@ class GLImageAtlas extends GLRenderTarget {
 
   /**
    * The numSubImages method.
-   * @return {number} - The return value.
+   * @return - The return value.
    */
   numSubImages(): number {
     if (this.__layout) return this.__layout.length
@@ -294,8 +294,8 @@ class GLImageAtlas extends GLRenderTarget {
 
   /**
    * The getLayoutData method.
-   * @param {number} index - The index value.
-   * @return {Array<number>} - The return value.
+   * @param index - The index value.
+   * @return - The return value.
    */
   getLayoutData(index: number): Array<number> {
     return this.__layoutVec4s[index]
@@ -303,8 +303,8 @@ class GLImageAtlas extends GLRenderTarget {
 
   /**
    * The renderAtlas method.
-   * @param {boolean} cleanup - The cleanup value.
-   * @param {number} off - The off value.
+   * @param cleanup - The cleanup value.
+   * @param off - The off value.
    */
   renderAtlas(cleanup = false, off = 0): void {
     if (this.__subImages.length == 0) {
@@ -350,7 +350,7 @@ class GLImageAtlas extends GLRenderTarget {
 
   /**
    * The isReady method.
-   * @return {boolean} - The return value.
+   * @return - The return value.
    */
   isReady(): boolean {
     return this.__atlasLayoutTexture != undefined
@@ -358,9 +358,9 @@ class GLImageAtlas extends GLRenderTarget {
 
   /**
    * The bindToUniform method.
-   * @param {RenderState} renderstate - The object tracking the current state of the renderer
-   * @param {Uniform} unif - The WebGL uniform
-   * @return {boolean} - The return value.
+   * @param renderstate - The object tracking the current state of the renderer
+   * @param unif - The WebGL uniform
+   * @return - The return value.
    */
   bindToUniform(renderstate: RenderState, unif: Uniform): boolean {
     super.bindToUniform(renderstate, unif)

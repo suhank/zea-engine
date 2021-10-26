@@ -12,8 +12,8 @@ class GeometryParameter extends Parameter<BaseGeom | undefined> {
   protected listenerIDs: Record<string, number> = {}
   /**
    * Create a geometry parameter.
-   * @param {string} name - The name of the color parameter.
-   * @param {BaseGeom} value - The value of the parameter.
+   * @param name - The name of the color parameter.
+   * @param value - The value of the parameter.
    */
   constructor(name: string = '', value?: BaseGeom) {
     super(name, value, 'Geometry')
@@ -27,7 +27,7 @@ class GeometryParameter extends Parameter<BaseGeom | undefined> {
 
   /**
    * The setValue method.
-   * @param {BaseGeom} value - The geom value.
+   * @param value - The geom value.
    */
   setValue(value: BaseGeom): void {
     // 0 == normal set. 1 = changed via cleaner fn, 2 = change by loading/cloning code.
@@ -53,7 +53,7 @@ class GeometryParameter extends Parameter<BaseGeom | undefined> {
    * The loadValue is used to change the value of a parameter, without triggering a
    * valueChanges, or setting the USER_EDITED state.
    *
-   * @param {BaseGeom} value - The context value.
+   * @param value - The context value.
    */
   loadValue(value: BaseGeom): void {
     if (this.__value) {
@@ -70,8 +70,8 @@ class GeometryParameter extends Parameter<BaseGeom | undefined> {
 
   /**
    * The toJSON method encodes this type as a json object for persistence.
-   * @param {Record<string, any>} context - The context value.
-   * @return {Record<string, unknown>} - Returns the json object.
+   * @param context - The context value.
+   * @return - Returns the json object.
    */
   toJSON(context?: Record<string, any>): Record<string, unknown> {
     return {
@@ -82,8 +82,8 @@ class GeometryParameter extends Parameter<BaseGeom | undefined> {
 
   /**
    * The fromJSON method decodes a json object for this type.
-   * @param {Record<string, unknown>} j - The json object this item must decode.
-   * @param {Record<string, unknown>} context - The context value.
+   * @param j - The json object this item must decode.
+   * @param context - The context value.
    */
   fromJSON(j: any, context?: Record<string, unknown>): void {
     if (j.name) this.name = j.name as string
@@ -98,7 +98,7 @@ class GeometryParameter extends Parameter<BaseGeom | undefined> {
   /**
    * The clone method constructs a new geometry parameter, copies its values
    * from this parameter and returns it.
-   * @return {GeometryParameter} - Returns a new geometry parameter.
+   * @return - Returns a new geometry parameter.
    */
   clone() {
     const clonedParam = new GeometryParameter(this.name, this.__value)

@@ -3,10 +3,10 @@
 /**
  * Returns a descriptor for the provided geom attribute.
  * @private
- * @param {WebGL12RenderingContext} gl - The webgl context
- * @param {any} attrDataType - The geometry attribute value.
+ * @param gl - The webgl context
+ * @param attrDataType - The geometry attribute value.
  *
- * @return {Record<any,any>}
+ * @return
  */
 const genDataTypeDesc = (gl: WebGL12RenderingContext, attrDataType: any) => {
   let dimension
@@ -95,10 +95,10 @@ class GeomShaderBinding extends IGeomShaderBinding {
   protected __indexBuffer: WebGLBuffer | null
   /**
    * Create a geom shader binding.
-   * @param {WebGL12RenderingContext} gl - The webgl rendering context.
-   * @param {any} shaderAttrs - The shader attributes.
-   * @param {any} geomAttrBuffers - The geomAttrBuffers value.
-   * @param {any} indexBuffer - The index buffer.
+   * @param gl - The webgl rendering context.
+   * @param shaderAttrs - The shader attributes.
+   * @param geomAttrBuffers - The geomAttrBuffers value.
+   * @param indexBuffer - The index buffer.
    */
   constructor(gl: WebGL12RenderingContext, shaderAttrs: any, geomAttrBuffers: any, indexBuffer: WebGLBuffer | null) {
     super()
@@ -110,8 +110,8 @@ class GeomShaderBinding extends IGeomShaderBinding {
 
   /**
    * The bind method.
-   * @param {RenderState} renderstate - The render state.
-   * @return {boolean} - The return value.
+   * @param renderstate - The render state.
+   * @return - The return value.
    */
   bind(renderstate?: RenderState): boolean {
     const gl = this.__gl
@@ -193,10 +193,10 @@ class VAOGeomShaderBinding extends IGeomShaderBinding {
   protected __indexBuffer: WebGLBuffer | null
   /**
    * Create VAO geom shader binding.
-   * @param {WebGL12RenderingContext} gl - The webgl rendering context.
-   * @param {Record<string,any>} shaderAttrs - The shaderAttrs value.
-   * @param {Record<string,any>} geomAttrBuffers - The geomAttrBuffers value.
-   * @param {WebGLBuffer} indexBuffer - The indexBuffer value.
+   * @param gl - The webgl rendering context.
+   * @param shaderAttrs - The shaderAttrs value.
+   * @param geomAttrBuffers - The geomAttrBuffers value.
+   * @param indexBuffer - The indexBuffer value.
    */
   constructor(
     gl: WebGL12RenderingContext,
@@ -261,8 +261,8 @@ class VAOGeomShaderBinding extends IGeomShaderBinding {
 
   /**
    * The bind method.
-   * @param {RenderState} renderstate - The render state.
-   * @return {boolean} - The return value.
+   * @param renderstate - The render state.
+   * @return - The return value.
    */
   bind(renderstate?: RenderState): boolean {
     const gl = this.__gl

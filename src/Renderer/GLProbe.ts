@@ -19,11 +19,11 @@ class GLProbe extends EventEmitter {
   protected brdfLUTTexture: any
   protected irradianceCubeTex: any
   protected specularCubetex: any
-  
+
   /**
    * Create a GL probe.
-   * @param {WebGL12RenderingContext} gl - The webgl rendering context.
-   * @param {string} name - The name value.
+   * @param gl - The webgl rendering context.
+   * @param name - The name value.
    */
   constructor(gl: WebGL12RenderingContext, name: string) {
     super()
@@ -43,7 +43,7 @@ class GLProbe extends EventEmitter {
 
   /**
    * The convolveProbe method.
-   * @param {GLTexture2D} srcGLTex - The srcGLTex value.
+   * @param srcGLTex - The srcGLTex value.
    */
   convolveProbe(srcGLTex: GLTexture2D): void {
     const gl = this.__gl
@@ -231,9 +231,9 @@ class GLProbe extends EventEmitter {
 
   /**
    * The bind method.
-   * @param {RenderState} renderstate - The object tracking the current state of the renderer
-   * @param {WebGLUniformLocation} unif - The WebGL uniform
-   * @return {boolean} - Returns true if the Probe was successfully bound.
+   * @param renderstate - The object tracking the current state of the renderer
+   * @param unif - The WebGL uniform
+   * @return - Returns true if the Probe was successfully bound.
    */
   bind(renderstate: RenderState): boolean {
     const gl = this.__gl

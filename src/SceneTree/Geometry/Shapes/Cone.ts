@@ -23,32 +23,32 @@ import { Vec2Attribute } from '../Vec2Attribute'
  */
 class Cone extends ProceduralMesh {
   /**
-   * @member {BooleanParameter} capParam - Specifies whether the base of the cone is capped or open.
+   * @member capParam - Specifies whether the base of the cone is capped or open.
    */
   capParam: BooleanParameter
 
   /**
-   * @member {NumberParameter} detailParam - Specifies the number of subdivisions around the `Z` axis.
+   * @member detailParam - Specifies the number of subdivisions around the `Z` axis.
    */
   detailParam: NumberParameter
 
   /**
-   * @member {NumberParameter} heightParam - Specifies the height of the cone.
+   * @member heightParam - Specifies the height of the cone.
    */
   heightParam: NumberParameter
 
   /**
-   * @member {NumberParameter} radiusParam - Specifies the radius of the base of the cone.
+   * @member radiusParam - Specifies the radius of the base of the cone.
    */
   radiusParam: NumberParameter
   // topologyParams: string[]
 
   /**
    * Create a cone.
-   * @param {number} radius - The radius of the base of the cone.
-   * @param {number} height - The height of the cone.
-   * @param {number} detail - The detail of the cone.
-   * @param {boolean} cap -  A boolean indicating whether the base of the cone is capped or open.
+   * @param radius - The radius of the base of the cone.
+   * @param height - The height of the cone.
+   * @param detail - The detail of the cone.
+   * @param cap -  A boolean indicating whether the base of the cone is capped or open.
    */
   constructor(radius = 0.5, height = 1.0, detail = 32, cap = true) {
     super()

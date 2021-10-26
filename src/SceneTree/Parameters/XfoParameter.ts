@@ -21,8 +21,8 @@ import { IBinaryReader } from '../../Utilities/IBinaryReader'
 class XfoParameter extends Parameter<Xfo> implements IBinaryReader {
   /**
    * Create a Xfo parameter.
-   * @param {string} name - The name of the Xfo parameter.
-   * @param {Xfo} value - The value of the parameter.
+   * @param name - The name of the Xfo parameter.
+   * @param value - The value of the parameter.
    */
   constructor(name: string = '', value?: Xfo) {
     super(name, value ? value : new Xfo(), 'Xfo')
@@ -34,8 +34,8 @@ class XfoParameter extends Parameter<Xfo> implements IBinaryReader {
   /**
    * Extracts a number value from a buffer, updating current parameter state.
    *
-   * @param {BinReader} reader - The reader value.
-   * @param {Record<string, unknown>} context - The context value.
+   * @param reader - The reader value.
+   * @param context - The context value.
    */
   readBinary(reader: BinReader, context?: Record<string, unknown>): void {
     this.__value.readBinary(reader)
@@ -63,7 +63,7 @@ class XfoParameter extends Parameter<Xfo> implements IBinaryReader {
    * The clone method constructs a new Xfo parameter, copies its values
    * from this parameter and returns it.
    *
-   * @return {XfoParameter} - Returns a new Xfo parameter.
+   * @return - Returns a new Xfo parameter.
    */
   clone(): XfoParameter {
     const clonedParam = new XfoParameter(this.name, this.__value.clone())

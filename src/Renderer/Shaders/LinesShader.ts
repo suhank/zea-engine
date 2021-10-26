@@ -17,7 +17,7 @@ import { NumberParameter } from '../../SceneTree/Parameters/NumberParameter'
 class LinesShader extends GLShader {
   /**
    * Create a GL shader.
-   * @param {WebGL12RenderingContext} gl - The webgl rendering context.
+   * @param gl - The webgl rendering context.
    */
   constructor(gl?: WebGL12RenderingContext) {
     super(gl, 'LinesShader')
@@ -27,8 +27,8 @@ class LinesShader extends GLShader {
 
   /**
    * The getPackedMaterialData method.
-   * @param {Material} material - The material param.
-   * @return {Float32Array} - The return value.
+   * @param material - The material param.
+   * @return - The return value.
    */
   static getPackedMaterialData(material: Material): Float32Array {
     const matData = new Float32Array(12)

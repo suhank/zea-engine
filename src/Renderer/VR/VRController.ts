@@ -21,9 +21,9 @@ class VRController {
   protected __intersectionData: any
   /**
    * Create a VR controller.
-   * @param {any} xrvp - The Vr viewport.
-   * @param {any} inputSource - The input source.
-   * @param {any} id - The id value.
+   * @param xrvp - The Vr viewport.
+   * @param inputSource - The input source.
+   * @param id - The id value.
    */
   constructor(xrvp: any, inputSource: any, id: any) {
     this.xrvp = xrvp
@@ -133,7 +133,7 @@ class VRController {
 
   /**
    * The getHandedness method.
-   * @return {any} - The return value.
+   * @return - The return value.
    */
   getHandedness() {
     return this.__inputSource.handedness
@@ -141,7 +141,7 @@ class VRController {
 
   /**
    * The getId method.
-   * @return {any} - The return value.
+   * @return - The return value.
    */
   getId() {
     return this.id
@@ -149,7 +149,7 @@ class VRController {
 
   /**
    * The getTreeItem method.
-   * @return {any} - The return value.
+   * @return - The return value.
    */
   getTreeItem() {
     return this.__treeItem
@@ -157,7 +157,7 @@ class VRController {
 
   /**
    * The getTipItem method.
-   * @return {any} - The return value.
+   * @return - The return value.
    */
   getTipItem() {
     return this.__tip
@@ -165,7 +165,7 @@ class VRController {
 
   /**
    * The getTipXfo method.
-   * @return {any} - The return value.
+   * @return - The return value.
    */
   getTipXfo() {
     return this.__tip.globalXfoParam.value
@@ -173,7 +173,7 @@ class VRController {
 
   /**
    * The getTouchPadValue method.
-   * @return {any} - The return value.
+   * @return - The return value.
    */
   getTouchPadValue() {
     return this.__touchpadValue
@@ -181,7 +181,7 @@ class VRController {
 
   /**
    * The isButtonPressed method.
-   * @return {boolean} - The return value.
+   * @return - The return value.
    */
   isButtonPressed() {
     return this.buttonPressed
@@ -189,7 +189,7 @@ class VRController {
 
   /**
    * The getControllerStageLocalXfo method.
-   * @return {any} - The return value.
+   * @return - The return value.
    */
   getControllerStageLocalXfo() {
     return this.__xfo
@@ -197,7 +197,7 @@ class VRController {
 
   /**
    * The getControllerTipStageLocalXfo method.
-   * @return {any} - The return value.
+   * @return - The return value.
    */
   getControllerTipStageLocalXfo() {
     return this.__xfo.multiply(this.__tip.localXfoParam.value)
@@ -207,10 +207,10 @@ class VRController {
 
   /**
    * The updatePose method.
-   * @param {any} refSpace - The refSpace value.
-   * @param {any} xrFrame - The xrFrame value.
-   * @param {any} inputSource - The inputSource value.
-   * @param {any} event - The event object.
+   * @param refSpace - The refSpace value.
+   * @param xrFrame - The xrFrame value.
+   * @param inputSource - The inputSource value.
+   * @param event - The event object.
    */
   updatePose(refSpace: any, xrFrame: any, inputSource: any, event: any) {
     const inputPose = xrFrame.getPose(inputSource.gripSpace, refSpace)
@@ -268,7 +268,7 @@ class VRController {
 
   /**
    * The getGeomItemAtTip method.
-   * @return {any} - The return value.
+   * @return - The return value.
    */
   getGeomItemAtTip() {
     if (this.__hitTested) return this.__intersectionData

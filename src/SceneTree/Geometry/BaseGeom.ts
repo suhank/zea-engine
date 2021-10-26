@@ -44,7 +44,7 @@ class BaseGeom extends ParameterOwner {
   /**
    * Establishes a name for the geometry.
    *
-   * @param {string} name - The debug name value.
+   * @param name - The debug name value.
    */
   setDebugName(name: string): void {
     this.name = name
@@ -53,9 +53,9 @@ class BaseGeom extends ParameterOwner {
   /**
    * Adds a new vertex attribute to the geometry.
    *
-   * @param {string} name - The name of the vertex attribute.
-   * @param {any} dataType - The dataType value. // TODO: is any ok vs. AttrValue | number. Unsure about how dataType is used
-   * @return {Attribute} - Returns an attribute.
+   * @param name - The name of the vertex attribute.
+   * @param dataType - The dataType value. // TODO: is any ok vs. AttrValue | number. Unsure about how dataType is used
+   * @return - Returns an attribute.
    */
   addVertexAttribute(name: string, attr: Attribute): void {
     attr.setCount(this.__numVertices)
@@ -65,8 +65,8 @@ class BaseGeom extends ParameterOwner {
   /**
    * Checks if the the geometry has an attribute with the specified name.
    *
-   * @param {string} name - The name of the vertex attribute.
-   * @return {boolean} - The return value.
+   * @param name - The name of the vertex attribute.
+   * @return - The return value.
    */
   hasVertexAttribute(name: string): boolean {
     return this.__vertexAttributes.has(name)
@@ -75,8 +75,8 @@ class BaseGeom extends ParameterOwner {
   /**
    * Returns vertex attribute with the specified name.
    *
-   * @param {string} name - The name of the vertex attribute.
-   * @return {Attribute} - The return value.
+   * @param name - The name of the vertex attribute.
+   * @return - The return value.
    */
   getVertexAttribute(name: string): Attribute | undefined {
     return this.__vertexAttributes.get(name)
@@ -85,7 +85,7 @@ class BaseGeom extends ParameterOwner {
   /**
    * Returns all vertex attributes in an object with their names.
    *
-   * @return {Record<string, Attribute>} - The return value.
+   * @return - The return value.
    */
   getVertexAttributes(): Record<string, Attribute> {
     const vertexAttributes: Record<string, Attribute> = {}
@@ -104,7 +104,7 @@ class BaseGeom extends ParameterOwner {
   /**
    * Returns the number of vertex attributes.
    *
-   * @return {number} - The return value.
+   * @return - The return value.
    */
   numVertices(): number {
     return this.__numVertices
@@ -113,7 +113,7 @@ class BaseGeom extends ParameterOwner {
   /**
    * Returns the number of vertex attributes.
    *
-   * @return {number} - The return value.
+   * @return - The return value.
    */
   getNumVertices(): number {
     return this.__numVertices
@@ -122,7 +122,7 @@ class BaseGeom extends ParameterOwner {
   /**
    * Sets the number of vertices the geometry has.
    *
-   * @param {number} count - The count value.
+   * @param count - The count value.
    */
   setNumVertices(count: number): void {
     this.__numVertices = count
@@ -135,7 +135,7 @@ class BaseGeom extends ParameterOwner {
 
   /**
    * Returns the bounding box for geometry.
-   * @return {Box3} - The return value.
+   * @return - The return value.
    */
   getBoundingBox(): Box3 {
     if (this.__boundingBoxDirty) this.updateBoundingBox()
@@ -172,8 +172,8 @@ class BaseGeom extends ParameterOwner {
   /**
    * Returns metadata value of the specified name.
    *
-   * @param {string} key - The key value.
-   * @return {any} - The return value.
+   * @param key - The key value.
+   * @return - The return value.
    */
   getMetadata(key: string): any {
     return this.__metaData.get(key)
@@ -182,8 +182,8 @@ class BaseGeom extends ParameterOwner {
   /**
    * Verifies if geometry's metadata contains a value with the specified key.
    *
-   * @param {string} key - The key value.
-   * @return {boolean} - The return value.
+   * @param key - The key value.
+   * @return - The return value.
    */
   hasMetadata(key: string): boolean {
     return this.__metaData.has(key)
@@ -192,8 +192,8 @@ class BaseGeom extends ParameterOwner {
   /**
    * Sets metadata value to the geometry.
    *
-   * @param {string} key - The key value.
-   * @param {Record<string, any>} metaData - The metaData value.
+   * @param key - The key value.
+   * @param metaData - The metaData value.
    */
   setMetadata(key: string, metaData: Record<string, any>): void {
     this.__metaData.set(key, metaData)
@@ -202,7 +202,7 @@ class BaseGeom extends ParameterOwner {
   /**
    * Removes metadata value from the geometry with the specified key.
    *
-   * @param {string} key - The key value.
+   * @param key - The key value.
    */
   deleteMetadata(key: string): void {
     this.__metaData.delete(key)
@@ -213,7 +213,7 @@ class BaseGeom extends ParameterOwner {
 
   /**
    * Returns vertex attributes buffers and its count.
-   * @return {Record<string, any>} - The return value.
+   * @return - The return value.
    */
   genBuffers(opts?: Record<string, any>): Record<string, any> {
     const attrBuffers: Record<string, any> = {}
@@ -231,7 +231,7 @@ class BaseGeom extends ParameterOwner {
   /**
    * Sets state of current Geometry(Including Vertices and Bounding Box) using a binary reader object.
    *
-   * @param {BinReader} reader - The reader value.
+   * @param reader - The reader value.
    */
   loadBaseGeomBinary(reader: BinReader): void {
     this.name = reader.loadStr()
@@ -378,8 +378,8 @@ class BaseGeom extends ParameterOwner {
   /**
    * The toJSON method encodes this type as a json object for persistence.
    *
-   * @param {Record<string, any>} context - The context value.
-   * @return {Record<string, any>} - Returns the json object.
+   * @param context - The context value.
+   * @return - Returns the json object.
    */
   toJSON(context?: Record<string, any>): Record<string, unknown> {
     const json = super.toJSON(context)
@@ -399,8 +399,8 @@ class BaseGeom extends ParameterOwner {
   /**
    * The fromJSON method decodes a json object for this type.
    *
-   * @param {Record<string, any>} json - The json object this item must decode.
-   * @param {Record<string, any>} context - The context value.
+   * @param json - The json object this item must decode.
+   * @param context - The context value.
    */
   fromJSON(json: Record<string, any>, context?: Record<string, any>): void {
     this.clear()
@@ -429,7 +429,7 @@ class BaseGeom extends ParameterOwner {
   /**
    * Returns geometry data value in json format.
    *
-   * @return {string} - The return value.
+   * @return - The return value.
    */
   toString(): string {
     return JSON.stringify(this.toJSON(), null, 2)

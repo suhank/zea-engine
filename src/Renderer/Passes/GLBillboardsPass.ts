@@ -58,8 +58,8 @@ class GLBillboardsPass extends GLPass {
 
   /**
    * The init method.
-   * @param {GLBaseRenderer} renderer - The renderer value.
-   * @param {number} passIndex - The index of the pass in the GLBAseRenderer
+   * @param renderer - The renderer value.
+   * @param passIndex - The index of the pass in the GLBAseRenderer
    */
   init(renderer: GLBaseRenderer, passIndex: number) {
     super.init(renderer, passIndex)
@@ -75,7 +75,7 @@ class GLBillboardsPass extends GLPass {
 
   /**
    * Returns the pass type. OPAQUE passes are always rendered first, followed by TRANSPARENT passes, and finally OVERLAY.
-   * @return {number} - The pass type value.
+   * @return - The pass type value.
    */
   getPassType() {
     return PassType.TRANSPARENT
@@ -85,11 +85,11 @@ class GLBillboardsPass extends GLPass {
    * The itemAddedToScene method is called on each pass when a new item
    * is added to the scene, and the renderer must decide how to render it.
    * It allows Passes to select geometries to handle the drawing of.
-   * @param {TreeItem} treeItem - The treeItem value.
-   * @param {Record<any,any>} rargs - Extra return values are passed back in this object.
+   * @param treeItem - The treeItem value.
+   * @param rargs - Extra return values are passed back in this object.
    * The object contains a parameter 'continueInSubTree', which can be set to false,
    * so the subtree of this node will not be traversed after this node is handled.
-   * @return {Boolean} - The return value.
+   * @return - The return value.
    */
   itemAddedToScene(treeItem: TreeItem, rargs: Record<string, any>) {
     if (treeItem instanceof BillboardItem) {
@@ -102,9 +102,9 @@ class GLBillboardsPass extends GLPass {
   /**
    * The itemRemovedFromScene method is called on each pass when aa item
    * is removed to the scene, and the pass must handle cleaning up any resources.
-   * @param {TreeItem} treeItem - The treeItem value.
-   * @param {Record<string, any>} rargs - Extra return values are passed back in this object.
-   * @return {Boolean} - The return value.
+   * @param treeItem - The treeItem value.
+   * @param rargs - Extra return values are passed back in this object.
+   * @return - The return value.
    */
   itemRemovedFromScene(treeItem: TreeItem, rargs: Record<string, any>): boolean {
     if (treeItem instanceof BillboardItem) {
@@ -124,7 +124,7 @@ class GLBillboardsPass extends GLPass {
 
   /**
    * The addBillboard method.
-   * @param {any} billboard - The billboard value.
+   * @param billboard - The billboard value.
    */
   addBillboard(billboard: any) {
     const imageParam = billboard.imageParam
@@ -176,7 +176,7 @@ class GLBillboardsPass extends GLPass {
 
   /**
    * The removeBillboard method.
-   * @param {any} billboard - The billboard value.
+   * @param billboard - The billboard value.
    */
   removeBillboard(billboard: any) {
     const index = billboard.getMetadata('GLBillboardsPass_Index')
@@ -211,9 +211,9 @@ class GLBillboardsPass extends GLPass {
 
   /**
    * The populateBillboardDataArray method.
-   * @param {any} billboardData - The billboardData value.
-   * @param {number} index - The index value.
-   * @param {any} dataArray - The dataArray value.
+   * @param billboardData - The billboardData value.
+   * @param index - The index value.
+   * @param dataArray - The dataArray value.
    * @private
    */
   populateBillboardDataArray(billboardData: any, index: number, dataArray: any) {
@@ -303,7 +303,7 @@ class GLBillboardsPass extends GLPass {
 
   /**
    * The updateBillboards method.
-   * @param {RenderState} renderstate - The object tracking the current state of the renderer
+   * @param renderstate - The object tracking the current state of the renderer
    * @private
    */
   updateBillboards(renderstate: RenderState) {
@@ -401,7 +401,7 @@ class GLBillboardsPass extends GLPass {
 
   /**
    * The updateBillboard method.
-   * @param {number} index - The index of the Billboard to update .
+   * @param index - The index of the Billboard to update .
    * @private
    */
   updateBillboard(index: number) {
@@ -436,7 +436,7 @@ class GLBillboardsPass extends GLPass {
 
   /**
    * The sort method.
-   * @param {any} cameraPos - The cameraPos value.
+   * @param cameraPos - The cameraPos value.
    */
   sort(cameraPos: any) {
     for (const billboardData of this.billboards) {
@@ -465,8 +465,8 @@ class GLBillboardsPass extends GLPass {
 
   /**
    * Invoke the drawing of each item, compiling the shader using the provided key.
-   * @param {object} renderstate - The object tracking the current state of the renderer
-   * @param {string} key - The key to cache the compiler results against.
+   * @param renderstate - The object tracking the current state of the renderer
+   * @param key - The key to cache the compiler results against.
    */
   __draw(renderstate: RenderState, key: string) {
     const gl = this.__gl
@@ -527,7 +527,7 @@ class GLBillboardsPass extends GLPass {
 
   /**
    * The sort method.
-   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param renderstate - The object tracking the current state of the renderer
    */
   draw(renderstate: RenderState) {
     if (this.drawCount == 0) return
@@ -582,7 +582,7 @@ class GLBillboardsPass extends GLPass {
 
   /**
    * The drawHighlightedGeoms method.
-   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param renderstate - The object tracking the current state of the renderer
    */
   drawHighlightedGeoms(renderstate: RenderState) {
     if (this.drawCount == 0) return
@@ -591,7 +591,7 @@ class GLBillboardsPass extends GLPass {
 
   /**
    * The drawGeomData method.
-   * @param {object} renderstate - The object tracking the current state of the renderer
+   * @param renderstate - The object tracking the current state of the renderer
    */
   drawGeomData(renderstate: GeomDataRenderState) {
     if (this.drawCount == 0) return
@@ -600,8 +600,8 @@ class GLBillboardsPass extends GLPass {
 
   /**
    * The getGeomItemAndDist method.
-   * @param {any} geomData - The geomData value.
-   * @return {any} - The return value.
+   * @param geomData - The geomData value.
+   * @return - The return value.
    */
   getGeomItemAndDist(geomData: Float32Array | Uint8Array): Record<string, any> | undefined {
     let itemId

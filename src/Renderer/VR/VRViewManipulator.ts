@@ -41,7 +41,7 @@ class VRViewManipulator extends BaseTool {
 
   /**
    * Adds the icon to the tip of the VR Controller
-   * @param {Record<string, any>} event
+   * @param event
    * @private
    */
   addIconToController(event: Record<string, any>) {
@@ -102,8 +102,8 @@ class VRViewManipulator extends BaseTool {
 
   /**
    * The onVRControllerButtonDown method.
-   * @param {any} event - The event param.
-   * @return {any} The return value.
+   * @param event - The event param.
+   * @return The return value.
    */
   onVRControllerButtonDown(event: Record<string, any>) {
     if (event.button != 1) return
@@ -114,8 +114,8 @@ class VRViewManipulator extends BaseTool {
 
   /**
    * The onVRControllerButtonUp method.
-   * @param {any} event - The event param.
-   * @return {any} The return value.
+   * @param event - The event param.
+   * @return The return value.
    */
   onVRControllerButtonUp(event: Record<string, any>) {
     if (event.button != 1) return
@@ -127,7 +127,7 @@ class VRViewManipulator extends BaseTool {
 
   /**
    * The onVRControllerDoubleClicked method.
-   * @param {any} event - The event param.
+   * @param event - The event param.
    */
   onVRControllerDoubleClicked(event: Record<string, any>) {
     console.log('onVRControllerDoubleClicked:', this.__controllerTriggersHeld.length)
@@ -139,7 +139,7 @@ class VRViewManipulator extends BaseTool {
 
   /**
    * The onVRPoseChanged method.
-   * @param {any} event - The event param.
+   * @param event - The event param.
    */
   onVRPoseChanged(event: Record<string, any>) {
     if (this.__controllerTriggersHeld.length == 1) {
@@ -210,7 +210,7 @@ class VRViewManipulator extends BaseTool {
   /**
    * Event fired when a pointing device button is pressed while the pointer is over the tool.
    *
-   * @param {MouseEvent} event - The event param.
+   * @param event - The event param.
    */
   onPointerDown(event: Record<string, any>) {
     if (event.pointerType === POINTER_TYPES.xr) {
@@ -221,7 +221,7 @@ class VRViewManipulator extends BaseTool {
   /**
    * Event fired when a pointing device is moved while the cursor's hotspot is inside it.
    *
-   * @param {MouseEvent} event - The event param.
+   * @param event - The event param.
    */
   onPointerMove(event: Record<string, any>) {
     if (event.pointerType === POINTER_TYPES.xr) {
@@ -232,7 +232,7 @@ class VRViewManipulator extends BaseTool {
   /**
    * Event fired when a pointing device button is released while the pointer is over the tool.
    *
-   * @param {MouseEvent} event - The event param.
+   * @param event - The event param.
    */
   onPointerUp(event: Record<string, any>) {
     if (event.pointerType === POINTER_TYPES.xr) {
@@ -243,7 +243,7 @@ class VRViewManipulator extends BaseTool {
   /**
    * Event fired when a pointing device button is double clicked on the tool.
    *
-   * @param {MouseEvent} event - The event param.
+   * @param event - The event param.
    */
   onPointerDoublePress(event: Record<string, any>) {
     if (event.pointerType === POINTER_TYPES.xr) {

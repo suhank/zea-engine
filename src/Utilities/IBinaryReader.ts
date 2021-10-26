@@ -4,8 +4,8 @@ export interface IBinaryReader {
   /**
    * The readBinary method.
    *
-   * @param {BinReader} reader - The reader value.
-   * @param {Record<string, unknown>} [context] - The context value.
+   * @param reader - The reader value.
+   * @param context - The context value.
    */
   readBinary(reader: BinReader, context?: Record<string, unknown>): void
 }

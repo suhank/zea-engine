@@ -23,9 +23,9 @@ class MultiChoiceParameter extends NumberParameter {
 
   /**
    * Create a multi choice parameter.
-   * @param {string} name - The name of the multi choice parameter.
-   * @param {number} index - The index value.
-   * @param {array} choices - The choices value.
+   * @param name - The name of the multi choice parameter.
+   * @param index - The index value.
+   * @param choices - The choices value.
    */
   constructor(name?: string, index?: number, choices: any[] = []) {
     super(name, index, [0, choices.length], 1)
@@ -35,7 +35,7 @@ class MultiChoiceParameter extends NumberParameter {
   /**
    * Returns choices array.
    *
-   * @return {array} - The return value.
+   * @return - The return value.
    */
   getChoices(): Array<any> {
     return this.choices
@@ -44,7 +44,7 @@ class MultiChoiceParameter extends NumberParameter {
   /**
    * Sets parameter index value.
    *
-   * @param {string|number} value - The value param.
+   * @param value - The value param.
    */
   setValue(value: any) {
     if (typeof value === 'string') {

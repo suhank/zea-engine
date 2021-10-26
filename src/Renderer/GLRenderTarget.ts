@@ -26,8 +26,8 @@ class GLRenderTarget extends EventEmitter {
   protected __prevBoundFbo: any
   /**
    * Create a GL render target.
-   * @param {WebGL12RenderingContext} gl - The webgl rendering context.
-   * @param {Record<string, any>} params - The params value.
+   * @param gl - The webgl rendering context.
+   * @param params - The params value.
    */
   constructor(gl: WebGL12RenderingContext, params?: Record<string, any>) {
     super()
@@ -45,7 +45,7 @@ class GLRenderTarget extends EventEmitter {
 
   /**
    * The configure method.
-   * @param {Record<string, any>} params - The params param.
+   * @param params - The params param.
    */
   configure(params: Record<string, any>) {
     const gl = this.__gl
@@ -180,8 +180,8 @@ class GLRenderTarget extends EventEmitter {
 
   /**
    * The bindForWriting method.
-   * @param {RenderState} renderstate - The object tracking the current state of the renderer
-   * @param {boolean} clear - The clear value.
+   * @param renderstate - The object tracking the current state of the renderer
+   * @param clear - The clear value.
    */
   bindForWriting(renderstate?: RenderState, clear = false) {
     if (renderstate) {
@@ -197,7 +197,7 @@ class GLRenderTarget extends EventEmitter {
 
   /**
    * The unbindForWriting method.
-   * @param {RenderState} renderstate - The object tracking the current state of the renderer
+   * @param renderstate - The object tracking the current state of the renderer
    */
   unbindForWriting(renderstate?: RenderState) {
     if (renderstate) renderstate.boundRendertarget = this.__prevBoundFbo
@@ -208,7 +208,7 @@ class GLRenderTarget extends EventEmitter {
 
   /**
    * The clear method.
-   * @param {boolean} clearDepth - The clearDepth value.
+   * @param clearDepth - The clearDepth value.
    */
   clear(clearDepth = true) {
     const gl = this.__gl
@@ -242,9 +242,9 @@ class GLRenderTarget extends EventEmitter {
 
   /**
    * The bindColorTexture method.
-   * @param {RenderState} renderstate - The object tracking the current state of the renderer
-   * @param {number} channelId - The channelId value.
-   * @return {boolean} - The return value.
+   * @param renderstate - The object tracking the current state of the renderer
+   * @param channelId - The channelId value.
+   * @return - The return value.
    */
   bindColorTexture(renderstate: RenderState, unif: Uniform, channelId = 0): boolean {
     const gl = this.__gl
@@ -257,9 +257,9 @@ class GLRenderTarget extends EventEmitter {
 
   /**
    * The bindDepthTexture method.
-   * @param {RenderState} renderstate - The object tracking the current state of the renderer
-   * @param {Uniform} unif - The WebGL uniform
-   * @return {boolean} - The return value.
+   * @param renderstate - The object tracking the current state of the renderer
+   * @param unif - The WebGL uniform
+   * @return - The return value.
    */
   bindDepthTexture(renderstate: RenderState, unif: Uniform): boolean {
     const gl = this.__gl
@@ -279,9 +279,9 @@ class GLRenderTarget extends EventEmitter {
 
   /**
    * The resize method.
-   * @param {number} width - The width value.
-   * @param {number} height - The height value.
-   * @param {boolean} preserveData - The preserveData value.
+   * @param width - The width value.
+   * @param height - The height value.
+   * @param preserveData - The preserveData value.
    */
   resize(width: number, height: number, preserveData = false) {
     const gl = this.__gl
@@ -417,10 +417,10 @@ class GLRenderTarget extends EventEmitter {
 
   /**
    * The bindToUniform method.
-   * @param {any} renderstate - The renderstate param.
-   * @param {WebGLUniformLocation} unif - The WebGL uniform
-   * @param {any} bindings - The bindings param.
-   * @return {any} - The return value.
+   * @param renderstate - The renderstate param.
+   * @param unif - The WebGL uniform
+   * @param bindings - The bindings param.
+   * @return - The return value.
    */
   bindToUniform(renderstate: RenderState, unif: Uniform, bindings?: any) {
     // if (!this.__loaded) {

@@ -20,12 +20,12 @@ import { Vec3Attribute } from '../Vec3Attribute'
  */
 class Disc extends ProceduralMesh {
   /**
-   * @member {NumberParameter} radiusParam - Specifies the radius of the disc.
+   * @member radiusParam - Specifies the radius of the disc.
    */
   radiusParam: NumberParameter
 
   /**
-   * @member {NumberParameter} sidesParam - Specifies the resolution, or the disc subdivisions around `Z` axis.
+   * @member sidesParam - Specifies the resolution, or the disc subdivisions around `Z` axis.
    */
   sidesParam: NumberParameter
   // topologyParams: string[]
@@ -33,8 +33,8 @@ class Disc extends ProceduralMesh {
   /**
    * Creates an instance of Disc.
    *
-   * @param {number} [radius=0.5] - The radius of the disc.
-   * @param {number} [sides=32] - The number of sides.
+   * @param radius - The radius of the disc.
+   * @param sides - The number of sides.
    */
   constructor(radius = 0.5, sides = 32) {
     super()

@@ -19,7 +19,7 @@ import vert from './SimpleSurface.vert'
 class SimpleSurfaceShader extends GLShader {
   /**
    * Create a SimpleSurfaceShader
-   * @param {any} gl - gl context
+   * @param gl - gl context
    */
   constructor(gl?: WebGL12RenderingContext) {
     super(gl, 'SimpleSurfaceShader')
@@ -29,8 +29,8 @@ class SimpleSurfaceShader extends GLShader {
 
   /**
    * The getPackedMaterialData method.
-   * @param {Material} material - The material param.
-   * @return {Float32Array} - The return value.
+   * @param material - The material param.
+   * @return - The return value.
    */
   static getPackedMaterialData(material: Material): Float32Array {
     const matData = new Float32Array(8)

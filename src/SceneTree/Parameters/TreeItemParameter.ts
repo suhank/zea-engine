@@ -30,8 +30,8 @@ class TreeItemParameter extends Parameter<TreeItem | undefined> {
 
   /**
    * Create a tree item parameter.
-   * @param {string} name - The name of the tree item parameter.
-   * @param {function} filterFn - The filterFn value.
+   * @param name - The name of the tree item parameter.
+   * @param filterFn - The filterFn value.
    */
   constructor(name: string = '', filterFn?: (...args: []) => unknown) {
     super(name, undefined, 'TreeItem')
@@ -46,7 +46,7 @@ class TreeItemParameter extends Parameter<TreeItem | undefined> {
   /**
    * Sets parameter value's owner `TreeItem`.
    *
-   * @param {TreeItem} owner - The owner value.
+   * @param owner - The owner value.
    */
   setOwner(owner: TreeItem) {
     this.owner = owner
@@ -55,7 +55,7 @@ class TreeItemParameter extends Parameter<TreeItem | undefined> {
   /**
    * Returns parameter value's owner `TreeItem`.
    *
-   * @return {TreeItem} - The return value.
+   * @return - The return value.
    */
   getOwner() {
     return this.owner
@@ -63,7 +63,7 @@ class TreeItemParameter extends Parameter<TreeItem | undefined> {
 
   /**
    * The setFilterFn method.
-   * @param {(...args: []) => unknown} filterFn - The filterFn value.
+   * @param filterFn - The filterFn value.
    */
   setFilterFn(filterFn: (...args: []) => unknown) {
     this.filterFn = filterFn
@@ -71,7 +71,7 @@ class TreeItemParameter extends Parameter<TreeItem | undefined> {
 
   /**
    * The getFilterFn method.
-   * @return {function} - The return value.
+   * @return - The return value.
    */
   getFilterFn() {
     return this.filterFn
@@ -80,8 +80,8 @@ class TreeItemParameter extends Parameter<TreeItem | undefined> {
   /**
    * Sets parameter's `TreeItem` value.
    *
-   * @param {TreeItem} treeItem - The treeItem value
-   * @return {boolean} - The return value.
+   * @param treeItem - The treeItem value
+   * @return - The return value.
    */
   setValue(treeItem: TreeItem) {
     // 0 == normal set. 1 = changed via cleaner fn, 2=change by loading/cloning code.
@@ -107,8 +107,8 @@ class TreeItemParameter extends Parameter<TreeItem | undefined> {
   /**
    * The toJSON method encodes this type as a json object for persistence.
    *
-   * @param {Record<string, any>} context - The context value.
-   * @return {Record<string, unknown>} - Returns the json object.
+   * @param context - The context value.
+   * @return - Returns the json object.
    */
   toJSON(context: Record<string, any>): Record<string, unknown> {
     return {
@@ -119,8 +119,8 @@ class TreeItemParameter extends Parameter<TreeItem | undefined> {
   /**
    * The fromJSON method decodes a json object for this type.
    *
-   * @param {Record<string, unknown>} j - The json object this item must decode.
-   * @param {Record<string, any>} context - The context value.
+   * @param j - The json object this item must decode.
+   * @param context - The context value.
    */
   fromJSON(j: Record<string, unknown>, context: Record<string, any>) {
     if (j.value == undefined) {
@@ -145,7 +145,7 @@ class TreeItemParameter extends Parameter<TreeItem | undefined> {
    * The clone method constructs a new tree item parameter, copies its values
    * from this parameter and returns it.
    *
-   * @return {TreeItemParameter} - Returns a new tree item parameter.
+   * @return - Returns a new tree item parameter.
    */
   clone(context?: Record<string, unknown>) {
     const clonedParam = new TreeItemParameter(this.name, this.filterFn)

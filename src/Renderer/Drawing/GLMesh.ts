@@ -15,8 +15,8 @@ class GLMesh extends GLGeom {
 
   /**
    * Create a GL mesh.
-   * @param {WebGL12RenderingContext} gl - The webgl rendering context.
-   * @param {Mesh} mesh - The mesh value.
+   * @param gl - The webgl rendering context.
+   * @param mesh - The mesh value.
    */
   constructor(gl: WebGL12RenderingContext, mesh: Mesh) {
     super(gl, mesh)
@@ -82,7 +82,7 @@ class GLMesh extends GLGeom {
 
   /**
    * The updateBuffers method.
-   * @param {Record<any,any>} opts - The options object.
+   * @param opts - The options object.
    */
   updateBuffers(renderstate?: RenderState) {
     const gl = this.__gl
@@ -119,7 +119,7 @@ class GLMesh extends GLGeom {
 
   /**
    * Draw an item to screen.
-   * @param {RenderState} renderstate - The object tracking the current state of the renderer
+   * @param renderstate - The object tracking the current state of the renderer
    */
   draw(renderstate: RenderState) {
     this.__gl.drawElements(this.__gl.TRIANGLES, this.__numTriIndices, this.__indexDataType, 0)
@@ -127,8 +127,8 @@ class GLMesh extends GLGeom {
 
   /**
    * The drawInstanced method.
-   * @param {RenderState} renderstate - The object tracking the current state of the renderer
-   * @param {number} instanceCount - The instanceCount value.
+   * @param renderstate - The object tracking the current state of the renderer
+   * @param instanceCount - The instanceCount value.
    */
   drawInstanced(renderstate: RenderState, instanceCount: number) {
     const gl = this.__gl

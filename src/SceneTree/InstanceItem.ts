@@ -14,7 +14,7 @@ class InstanceItem extends TreeItem {
   protected srcTree: TreeItem | null = null
   /**
    * Create an instance item.
-   * @param {string} name - The name of the instance item.
+   * @param name - The name of the instance item.
    */
   constructor(name?: string) {
     super(name)
@@ -23,7 +23,7 @@ class InstanceItem extends TreeItem {
   /**
    * Clones passed in `TreeItem` all the way down and adds it as a child of current item.
    *
-   * @param {TreeItem} treeItem - The treeItem value.
+   * @param treeItem - The treeItem value.
    */
   setSrcTree(treeItem: TreeItem, context: Record<string, any>) {
     this.srcTree = treeItem
@@ -35,7 +35,7 @@ class InstanceItem extends TreeItem {
   /**
    * Returns the last `TreeItem` cloned.
    *
-   * @return {TreeItem} - The return value.
+   * @return - The return value.
    */
   getSrcTree() {
     return this.srcTree
@@ -47,8 +47,8 @@ class InstanceItem extends TreeItem {
   /**
    * Sets state of current Item(Including cloned item) using a binary reader object.
    *
-   * @param {BinReader} reader - The reader value.
-   * @param {Record<any,any>} context - The context value.
+   * @param reader - The reader value.
+   * @param context - The context value.
    */
   readBinary(reader: BinReader, context: Record<string, any> = {}) {
     super.readBinary(reader, context)
@@ -74,8 +74,8 @@ class InstanceItem extends TreeItem {
   /**
    * The toJSON method encodes this type as a json object for persistence.
    *
-   * @param {Record<string, any>} context - The context value.
-   * @return {Record<string, any>} - Returns the json object.
+   * @param context - The context value.
+   * @return - Returns the json object.
    */
   toJSON(context = {}): Record<string, any> {
     const j = super.toJSON(context)
@@ -86,9 +86,9 @@ class InstanceItem extends TreeItem {
    * The fromJSON method decodes a json object for this type.
    *
    * @todo Needs to be implemented.
-   * @param {Record<string, any>} j - The json object this item must decode.
-   * @param {Record<string, any>} context - The context value.
-   * @param {function} onDone - The onDone value.
+   * @param j - The json object this item must decode.
+   * @param context - The context value.
+   * @param onDone - The onDone value.
    */
   fromJSON(j: Record<string, any>, context: Record<string, any> = {}) {}
 }

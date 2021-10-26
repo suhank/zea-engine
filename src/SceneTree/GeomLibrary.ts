@@ -119,7 +119,7 @@ class GeomLibrary extends EventEmitter {
 
   /**
    * The returns true if all the geometries have been loaded and the loaded event has already been emitted.
-   * @return {Boolean} - True if all geometries are already loaded, else false.
+   * @return - True if all geometries are already loaded, else false.
    */
   isLoaded() {
     return this.__loadedCount == this.__numGeoms
@@ -130,9 +130,9 @@ class GeomLibrary extends EventEmitter {
    *
    * @private
    *
-   * @param {number} geomFileID - The index of the file to load
-   * @param {boolean} incrementProgress - If true, the progress bar is incremented and decremented.
-   * @return {Promise} the promise resolves once the file is loaded, but not parsed.
+   * @param geomFileID - The index of the file to load
+   * @param incrementProgress - If true, the progress bar is incremented and decremented.
+   * @return the promise resolves once the file is loaded, but not parsed.
    */
   loadGeomFile(geomFileID: number, incrementProgress = false): Promise<void> {
     if (incrementProgress) resourceLoader.incrementWorkload(1)
@@ -165,9 +165,9 @@ class GeomLibrary extends EventEmitter {
 
   /**
    * Loads the geometry files for this GeomLibrary.
-   * @param {Record<any,any>} geomLibraryJSON - The json data describing the data needed to be loaded by the geom library
-   * @param {string} basePath - The base path of the file. (this is theURL of the zcad file without its extension.)
-   * @param {Record<any,any>} context - The value param.
+   * @param geomLibraryJSON - The json data describing the data needed to be loaded by the geom library
+   * @param basePath - The base path of the file. (this is theURL of the zcad file without its extension.)
+   * @param context - The value param.
    */
   loadGeomFilesStream(geomLibraryJSON: Record<string, any>, basePath: string, context: Record<string, any>) {
     const numGeomFiles = geomLibraryJSON.numGeomsPerFile.length
@@ -184,8 +184,8 @@ class GeomLibrary extends EventEmitter {
 
   /**
    * The setGenBufferOption method.
-   * @param {string} key - The key value.
-   * @param {any} value - The value param.
+   * @param key - The key value.
+   * @param value - The value param.
    */
   setGenBufferOption(key: string, value: any) {
     this.__genBuffersOpts[key] = value
@@ -193,7 +193,7 @@ class GeomLibrary extends EventEmitter {
 
   /**
    * The setNumGeoms method.
-   * @param {any} expectedNumGeoms - The expectedNumGeoms value.
+   * @param expectedNumGeoms - The expectedNumGeoms value.
    */
   setNumGeoms(expectedNumGeoms: any) {
     this.__numGeoms = expectedNumGeoms
@@ -201,7 +201,7 @@ class GeomLibrary extends EventEmitter {
 
   /**
    * Returns the number of geometries the GeomLibrary has, or will have at the end of loading.
-   * @return {number} - The number of geometries.
+   * @return - The number of geometries.
    */
   getNumGeoms() {
     return this.__numGeoms
@@ -209,8 +209,8 @@ class GeomLibrary extends EventEmitter {
 
   /**
    * The getGeom method.
-   * @param {number} index - The index value.
-   * @return {BaseGeom} - The stored geometry
+   * @param index - The index value.
+   * @return - The stored geometry
    */
   getGeom(index: number) {
     if (index >= this.geoms.length) {
@@ -222,9 +222,9 @@ class GeomLibrary extends EventEmitter {
 
   /**
    * The readBinaryBuffer method.
-   * @param {string} geomFileID - The key value.
-   * @param {ArrayBuffer} buffer - The buffer value.
-   * @param {Record<any,any>} context - The context value.
+   * @param geomFileID - The key value.
+   * @param buffer - The buffer value.
+   * @param context - The context value.
    */
   readBinaryBuffer(geomFileID: string, buffer: ArrayBuffer, context: Record<string, any>) {
     const reader = new BinReader(buffer, 0, SystemDesc.isMobileDevice)
@@ -321,8 +321,8 @@ class GeomLibrary extends EventEmitter {
   /**
    * The __receiveGeomDatas method.
    * @private
-   * @param {any} data - The data received back from the web worker
-   * @return {boolean} - returns true once all data for this geom library has been loaded.
+   * @param data - The data received back from the web worker
+   * @return - returns true once all data for this geom library has been loaded.
    */
   __receiveGeomDatas(data: any) {
     const { geomLibraryId, geomFileID, geomDatas, geomIndexOffset, geomsRange } = data
@@ -391,7 +391,7 @@ class GeomLibrary extends EventEmitter {
 
   /**
    * The toJSON method encodes this type as a json object for persistence.
-   * @return {Record<string, any>} - Returns the json object.
+   * @return - Returns the json object.
    */
   toJSON(): Record<string, any> {
     return {
@@ -401,7 +401,7 @@ class GeomLibrary extends EventEmitter {
 
   /**
    * The toString method.
-   * @return {any} - The return value.
+   * @return - The return value.
    */
   toString() {
     return JSON.stringify(this.toJSON(), null, 2)

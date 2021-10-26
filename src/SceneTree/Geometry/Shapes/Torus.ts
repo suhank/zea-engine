@@ -16,32 +16,32 @@ import { Vec2Attribute } from '../Vec2Attribute'
  */
 class Torus extends ProceduralMesh {
   /**
-   * @member {NumberParameter} arcAngleParam - TODO
+   * @member arcAngleParam - TODO
    */
   arcAngleParam: NumberParameter
 
   /**
-   * @member {NumberParameter} detailParam - TODO
+   * @member detailParam - TODO
    */
   detailParam: NumberParameter
 
   /**
-   * @member {NumberParameter} innerRadiusParam - TODO
+   * @member innerRadiusParam - TODO
    */
   innerRadiusParam: NumberParameter
 
   /**
-   * @member {NumberParameter} outerRadiusParam - TODO
+   * @member outerRadiusParam - TODO
    */
   outerRadiusParam: NumberParameter
 
   /**
    * Creates an instance of Torus.
    *
-   * @param {number} [innerRadius=0.5] - The inner radius of the torus.
-   * @param {number} [outerRadius=3] - The outer radius of the torus.
-   * @param {number} [detail=32] - The detail of the cone.
-   * @param {number} [arcAngle=Math.PI * 2.0] - The angle of the arc.
+   * @param innerRadius - The inner radius of the torus.
+   * @param outerRadius - The outer radius of the torus.
+   * @param detail - The detail of the cone.
+   * @param arcAngle - The angle of the arc.
    */
   constructor(innerRadius = 0.5, outerRadius = 3, detail = 32, arcAngle = Math.PI * 2.0) {
     super()

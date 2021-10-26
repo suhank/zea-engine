@@ -31,7 +31,7 @@ class KinematicGroup extends BaseGroup {
   protected memberXfoOps: GroupMemberXfoOperator[]
 
   /**
-   * @member {MultiChoiceParameter} initialXfoModeParam - TODO
+   * @member initialXfoModeParam - TODO
    */
   initialXfoModeParam: MultiChoiceParameter = new MultiChoiceParameter('InitialXfoMode', GROUP_XFO_MODES.average, [
     'manual',
@@ -41,7 +41,7 @@ class KinematicGroup extends BaseGroup {
   ])
 
   /**
-   * @member {XfoParameter} groupTransformParam - TODO
+   * @member groupTransformParam - TODO
    */
   groupTransformParam: XfoParameter = new XfoParameter('GroupTransform', new Xfo())
 
@@ -49,7 +49,7 @@ class KinematicGroup extends BaseGroup {
   /**
    * Creates an instance of a group.
    *
-   * @param {string} name - The name of the group.
+   * @param name - The name of the group.
    */
   constructor(name: string = '') {
     super(name)
@@ -118,7 +118,7 @@ class KinematicGroup extends BaseGroup {
   /**
    * Changes selection's state of the group with all items it owns.
    *
-   * @param {boolean} sel - Boolean indicating the new selection state.
+   * @param sel - Boolean indicating the new selection state.
    */
   setSelected(sel: boolean) {
     super.setSelected(sel)
@@ -131,7 +131,7 @@ class KinematicGroup extends BaseGroup {
   /**
    * Calculate the group Xfo translate.
    * @private
-   * @return {Xfo} - Returns a new Xfo.
+   * @return - Returns a new Xfo.
    */
   calcGroupXfo() {
     const items = Array.from(this.itemsParam.value)
@@ -194,8 +194,8 @@ class KinematicGroup extends BaseGroup {
 
   /**
    * The __bindItem method.
-   * @param {BaseItem} item - The item value.
-   * @param {number} index - The index value.
+   * @param item - The item value.
+   * @param index - The index value.
    * @private
    */
   bindItem(item: BaseItem, index: number) {
@@ -225,8 +225,8 @@ class KinematicGroup extends BaseGroup {
 
   /**
    * The unbindItem method.
-   * @param {BaseItem} item - The item value.
-   * @param {number} index - The index value.
+   * @param item - The item value.
+   * @param index - The index value.
    * @private
    */
   unbindItem(item: BaseItem, index: number) {
@@ -248,8 +248,8 @@ class KinematicGroup extends BaseGroup {
   /**
    * Adds an item to the group(See `Items` parameter).
    *
-   * @param {BaseItem} item - The item value.
-   * @param {boolean} emit - The emit value.
+   * @param item - The item value.
+   * @param emit - The emit value.
    */
   addItem(item: BaseItem, emit = true) {
     super.addItem(<TreeItem>item, emit)
@@ -261,8 +261,8 @@ class KinematicGroup extends BaseGroup {
   /**
    * Removes an item from the group(See `Items` parameter).
    *
-   * @param {BaseItem} item - The item value.
-   * @param {boolean} emit - The emit value.
+   * @param item - The item value.
+   * @param emit - The emit value.
    */
   removeItem(item: BaseItem, emit = true) {
     super.removeItem(<TreeItem>item, emit)
@@ -274,7 +274,7 @@ class KinematicGroup extends BaseGroup {
   /**
    * Sets an entire new array of items to the BaseGroup replacing any previous items.
    *
-   * @param {array} items - List of `BaseItem` you want to add to the group
+   * @param items - List of `BaseItem` you want to add to the group
    */
   setItems(items: Set<BaseItem>) {
     super.setItems(items) // TODO: originally: super.setItems(emit) -- should emit be done here?
@@ -284,7 +284,7 @@ class KinematicGroup extends BaseGroup {
   /**
    * Removes all items from the group.
    *
-   * @param {boolean} emit - `true` triggers `valueChanged` event.
+   * @param emit - `true` triggers `valueChanged` event.
    */
   clearItems(emit = true) {
     super.clearItems(emit)
@@ -314,8 +314,8 @@ class KinematicGroup extends BaseGroup {
    * The clone method constructs a new group,
    * copies its values and returns it.
    *
-   * @param {Record<string, unknown>} context - The context value.
-   * @return {KinematicGroup} - Returns a new cloned group.
+   * @param context - The context value.
+   * @return - Returns a new cloned group.
    */
   clone(context: Record<string, unknown>) {
     const cloned = new KinematicGroup()

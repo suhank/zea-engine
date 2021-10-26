@@ -16,13 +16,13 @@ class Box3 {
   /**
    * Creates a Box3 object using Vec3s.
    * In case the parameters are not passed by, their values are pre-defined:
-   * <br>
+   *
    * p0 is a Vec2 with {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/POSITIVE_INFINITY|`Number.POSITIVE_INFINITY`}
-   * <br>
+   *
    * p1 is a Vec2 with {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/NEGATIVE_INFINITY|`Number.NEGATIVE_INFINITY`}
    *
-   * @param {Vec3} p0 - A point representing the corners of a 3D box.
-   * @param {Vec3} p1 - A point representing the corners of a 3D box.
+   * @param p0 - A point representing the corners of a 3D box.
+   * @param p1 - A point representing the corners of a 3D box.
    */
   constructor(p0?: Vec3 | Float32Array, p1?: Vec3) {
     if (p0 instanceof Float32Array) {
@@ -45,7 +45,7 @@ class Box3 {
   /**
    * Getter for the lower (x, y, z) boundary of the box.
    *
-   * @return {Vec3} - Returns the minimum Vec3.
+   * @return - Returns the minimum Vec3.
    */
   get min(): Vec3 {
     return this.p0
@@ -54,7 +54,7 @@ class Box3 {
   /**
    * Getter for the upper (x, y, z) boundary of the box.
    *
-   * @return {Vec3} - Returns the maximum Vec3.
+   * @return - Returns the maximum Vec3.
    */
   get max(): Vec3 {
     return this.p1
@@ -63,8 +63,8 @@ class Box3 {
   /**
    * Sets both Vec3 points
    *
-   * @param {Vec3} p0 - A point representing the corners of a 3D box.
-   * @param {Vec3} p1 - A point representing the corners of a 3D box.
+   * @param p0 - A point representing the corners of a 3D box.
+   * @param p1 - A point representing the corners of a 3D box.
    */
   set(p0: Vec3, p1: Vec3): void {
     this.p0 = p0
@@ -86,7 +86,7 @@ class Box3 {
   /**
    * Returns `true` if the box has been expanded to contain a point.
    *
-   * @return {boolean} - The return value.
+   * @return - The return value.
    */
   isValid(): boolean {
     return (
@@ -102,7 +102,7 @@ class Box3 {
   /**
    * Expands the Box3 to contain the new point.
    *
-   * @param {Vec3} point - A point represents the corners of a 3D box.
+   * @param point - A point represents the corners of a 3D box.
    */
   addPoint(point: Vec3): void {
     if (point.x != Number.POSITIVE_INFINITY && point.x != Number.NEGATIVE_INFINITY) {
@@ -123,8 +123,8 @@ class Box3 {
    * Adds `Box3` to this `Box3`, of the Xfo instance is passed in the parameters
    * it proceeds to apply the transform for the Vec3.
    *
-   * @param {Box3} box3 - A 3D box.
-   * @param {Xfo | Mat4} xfo - A 3D transform.
+   * @param box3 - A 3D box.
+   * @param xfo - A 3D transform.
    */
   addBox3(box3: Box3, transform?: Xfo | Mat4): void {
     if (transform) {
@@ -146,7 +146,7 @@ class Box3 {
   /**
    * Returns the length of the diagonal of the box.
    *
-   * @return {number} - Returns the distance.
+   * @return - Returns the distance.
    */
   size(): number {
     return this.p1.distanceTo(this.p0)
@@ -155,7 +155,7 @@ class Box3 {
   /**
    * Returns the diagonal vector of the B=box from p0 to p1.
    *
-   * @return {Vec3} - Returns a Box3.
+   * @return - Returns a Box3.
    */
   diagonal(): Vec3 {
     return this.p1.subtract(this.p0)
@@ -164,7 +164,7 @@ class Box3 {
   /**
    * Returns the center point of a Box3.
    *
-   * @return {Vec3} - Returns a Vec3.
+   * @return - Returns a Vec3.
    */
   center(): Vec3 {
     const result = this.p1.subtract(this.p0)
@@ -176,7 +176,7 @@ class Box3 {
   /**
    * Converts this Box3 to a Mat4 (a 4x4 matrix). The returned mat4 would transform a unit cube into the shape of the Bounding box.
    *
-   * @return {Mat4} - Returns a new Mat4.
+   * @return - Returns a new Mat4.
    */
   toMat4(): Mat4 {
     const scx = this.p1.x - this.p0.x
@@ -188,7 +188,7 @@ class Box3 {
   /**
    * Calculates and returns the bounding Sphere of the Box3
    *
-   * @return {SphereType} - The return value.
+   * @return - The return value.
    */
   getBoundingSphere(): SphereType {
     return new SphereType(this.center(), this.diagonal().length() * 0.5)
@@ -197,8 +197,8 @@ class Box3 {
   /**
    * Determines if this Box3 intersects a given box value.
    *
-   * @param {Box3} box - The box to check for intersection against.
-   * @return {boolean} - Returns true if the shapes intersect.
+   * @param box - The box to check for intersection against.
+   * @return - Returns true if the shapes intersect.
    */
   intersectsBox(box: Box3): boolean {
     // Using 6 splitting planes to rule out intersections.
@@ -215,8 +215,8 @@ class Box3 {
   /**
    * Determines if this Box3 intersects a sphere.
    *
-   * @param {Sphere} sphere - The sphere to check for intersection against.
-   * @return {boolean} - Returns true if the shapes intersect.
+   * @param sphere - The sphere to check for intersection against.
+   * @return - Returns true if the shapes intersect.
    */
   intersectsSphere(sphere: SphereType): boolean {
     let closestPoint = new Vec3()
@@ -231,8 +231,8 @@ class Box3 {
   /**
    * Determines if this Box3 intersects a plane.
    *
-   * @param {Plane} plane - The plane to check for intersection against.
-   * @return {boolean} - The return value.
+   * @param plane - The plane to check for intersection against.
+   * @return - The return value.
    */
   intersectsPlane(plane: any): boolean {
     // We compute the minimum and maximum dot product values. If those values
@@ -270,7 +270,7 @@ class Box3 {
 
   /**
    * Clones this Box3 and returns a new Box3.
-   * @return {Box3} - Returns a new Box3.
+   * @return - Returns a new Box3.
    */
   clone(): Box3 {
     return new Box3(this.p0.clone(), this.p1.clone())
@@ -282,7 +282,7 @@ class Box3 {
   /**
    * Encodes `Box3` Class as a JSON object for persistence.
    *
-   * @return {Record<string, Record<string, number>>} - The json object.
+   * @return - The json object.
    */
   toJSON(): Record<string, Record<string, number>> {
     return {
@@ -294,7 +294,7 @@ class Box3 {
   /**
    * Decodes a JSON object to set the state of this class.
    *
-   * @param {Record<string, Record<string, number>>} j - The json object.
+   * @param j - The json object.
    */
   fromJSON(j: Record<string, Record<string, number>>): void {
     // We need to verify that p0 and p1 axes are numeric, so in case they are not, we restore them to their default values.
@@ -315,7 +315,7 @@ class Box3 {
 
   /**
    * The setFromFloat32Array method.
-   * @param {Float32Array} float32array - The float32array value.
+   * @param float32array - The float32array value.
    * @private
    */
   setFromFloat32Array(float32array: Float32Array): void {
@@ -326,7 +326,7 @@ class Box3 {
   /**
    * Calls `toJSON` method and stringifies it.
    *
-   * @return {string} - The return value.
+   * @return - The return value.
    */
   toString(): string {
     // eslint-disable-next-line new-cap

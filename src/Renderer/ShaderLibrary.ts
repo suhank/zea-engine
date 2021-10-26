@@ -29,8 +29,8 @@ class ShaderLibrary {
 
   /**
    * The setShaderModule method. Shader must be set before parsing.
-   * @param {string} shaderName - The shader name.
-   * @param {string} shader - The unparsed shader GLSL.
+   * @param shaderName - The shader name.
+   * @param shader - The unparsed shader GLSL.
    */
   setShaderModule(shaderName: string, shader: string) {
     if (!(shaderName in this.__shaderModules)) {
@@ -43,8 +43,8 @@ class ShaderLibrary {
 
   /**
    * The getShaderModule method. Access specific uniforms, attributes of a particular module.
-   * @param {string} shaderName - The shader name.
-   * @return {any} - The return value.
+   * @param shaderName - The shader name.
+   * @return - The return value.
    */
   getShaderModule(shaderName: string) {
     return this.__shaderModules[shaderName]
@@ -52,7 +52,7 @@ class ShaderLibrary {
 
   /**
    * The getShaderModuleNames method.
-   * @return {array} - The return value.
+   * @return - The return value.
    */
   getShaderModuleNames() {
     const shaderNames = []
@@ -63,9 +63,9 @@ class ShaderLibrary {
 
   /**
    * The parseAttr
-   * @param {string} parts - parts
-   * @param {bool} instanced - instanced
-   * @param {ShaderParseResult} result - result object to store parsed data
+   * @param parts - parts
+   * @param instanced - instanced
+   * @param result - result object to store parsed data
    */
   parseAttr(parts: string[], instanced: boolean, result: ShaderParseResult, line: string) {
     // see if type is valid
@@ -88,11 +88,11 @@ class ShaderLibrary {
 
   /**
    * The handleImport method -- takes the includeFile and if it exists, adds the parsed glsl, uniforms, and attributes to the result, recursively.
-   * @param {ShaderParseResult} result - result object that stores the glsl, attribute, uniform
-   * @param {string} shaderName - shaderName
-   * @param {string} includeFile - file name of the shader snippet/module
-   * @param {array} includes - keep track of what was included
-   * @param {number} lineNumber - keep track of what line we're on
+   * @param result - result object that stores the glsl, attribute, uniform
+   * @param shaderName - shaderName
+   * @param includeFile - file name of the shader snippet/module
+   * @param includes - keep track of what was included
+   * @param lineNumber - keep track of what line we're on
    */
   handleImport(
     result: ShaderParseResult,
@@ -131,9 +131,9 @@ class ShaderLibrary {
 
   /**
    * The parseShader method.
-   * @param {string} shaderName - The shader name.
-   * @param {string} glsl - The glsl param.
-   * @return {ShaderParseResult} - returns the 'result' object
+   * @param shaderName - The shader name.
+   * @param glsl - The glsl param.
+   * @return - returns the 'result' object
    */
   parseShader(shaderName: string, glsl: string): ShaderParseResult {
     return this.parseShaderHelper(shaderName, glsl, [], 0)
@@ -141,11 +141,11 @@ class ShaderLibrary {
 
   /**
    * The parseShader recursive helper method
-   * @param {string} shaderName - The shader name.
-   * @param {string} glsl - The glsl param.
-   * @param {array} includes - keep track of what was included
-   * @param {int} lineNumber - keep track of what line we're on
-   * @return {ShaderParseResult} - The return value.
+   * @param shaderName - The shader name.
+   * @param glsl - The glsl param.
+   * @param includes - keep track of what was included
+   * @param lineNumber - keep track of what line we're on
+   * @return - The return value.
    */
   parseShaderHelper(shaderName: string, glsl: string, includes: string[], lineNumber: number): ShaderParseResult {
     // console.log('parseShader:' + shaderName)

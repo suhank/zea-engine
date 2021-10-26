@@ -44,7 +44,7 @@ class GLBoundingBoxPass extends GLPass {
 
   /**
    * The getPassType method.
-   * @return {number} - The pass type value.
+   * @return - The pass type value.
    */
   getPassType() {
     return PassType.OPAQUE
@@ -52,8 +52,8 @@ class GLBoundingBoxPass extends GLPass {
 
   /**
    * The init method.
-   * @param {GLBaseRenderer} renderer - The renderer value.
-   * @param {number} passIndex - The index of the pass in the GLBAseRenderer
+   * @param renderer - The renderer value.
+   * @param passIndex - The index of the pass in the GLBAseRenderer
    */
   init(renderer: GLBaseRenderer, passIndex: number) {
     super.init(renderer, passIndex)
@@ -67,11 +67,11 @@ class GLBoundingBoxPass extends GLPass {
    * The itemAddedToScene method is called on each pass when a new item
    * is added to the scene, and the renderer must decide how to render it.
    * It allows Passes to select geometries to handle the drawing of.
-   * @param {TreeItem} treeItem - The treeItem value.
-   * @param {Record<string, any>} rargs - Extra return values are passed back in this object.
+   * @param treeItem - The treeItem value.
+   * @param rargs - Extra return values are passed back in this object.
    * The object contains a parameter 'continueInSubTree', which can be set to false,
    * so the subtree of this node will not be traversed after this node is handled.
-   * @return {Boolean} - The return value.
+   * @return - The return value.
    */
   itemAddedToScene(treeItem: TreeItem, rargs: Record<string, any>) {
     // if (treeItem instanceof TreeItem) {
@@ -84,9 +84,9 @@ class GLBoundingBoxPass extends GLPass {
   /**
    * The itemRemovedFromScene method is called on each pass when aa item
    * is removed to the scene, and the pass must handle cleaning up any resources.
-   * @param {TreeItem} treeItem - The treeItem value.
-   * @param {Record<any,any>} rargs - Extra return values are passed back in this object.
-   * @return {Boolean} - The return value.
+   * @param treeItem - The treeItem value.
+   * @param rargs - Extra return values are passed back in this object.
+   * @return - The return value.
    */
   itemRemovedFromScene(treeItem: TreeItem, rargs: Record<string, any>) {
     // if (treeItem instanceof TreeItem) {
@@ -102,7 +102,7 @@ class GLBoundingBoxPass extends GLPass {
   /**
    * Adds tree items to the renderer, selecting the correct pass to delegate rendering too, and listens to future changes in the tree.
    *
-   * @param {TreeItem} treeItem - The tree item to add.
+   * @param treeItem - The tree item to add.
    */
   addTreeItem(treeItem: TreeItem, continueIntoSubTree = true) {
     // Note: we can have BaseItems in the tree now.
@@ -127,7 +127,7 @@ class GLBoundingBoxPass extends GLPass {
 
   /**
    * The bindTreeItem method.
-   * @param {any} treeitem - The treeitem value.
+   * @param treeitem - The treeitem value.
    */
   bindTreeItem(treeitem: TreeItem) {
     let index: number
@@ -171,7 +171,7 @@ class GLBoundingBoxPass extends GLPass {
 
   /**
    * The unbindTreeItem method.
-   * @param {any} treeitem - The treeitem value.
+   * @param treeitem - The treeitem value.
    */
   unbindTreeItem(treeitem: TreeItem) {
     if (!(treeitem.getId() in this.idToIndex)) {
@@ -199,9 +199,9 @@ class GLBoundingBoxPass extends GLPass {
 
   /**
    * The __populateBoxesDataArray method.
-   * @param {any} treeitemData - The treeitemData value.
-   * @param {number} index - The index value.
-   * @param {any} dataArray - The dataArray value.
+   * @param treeitemData - The treeitemData value.
+   * @param index - The index value.
+   * @param dataArray - The dataArray value.
    * @private
    */
   __populateBoxesDataArray(treeitemData: any, index: number, dataArray: any) {
@@ -303,7 +303,7 @@ class GLBoundingBoxPass extends GLPass {
 
   /**
    * The __updateBoxes method.
-   * @param {number} index - The index value.
+   * @param index - The index value.
    * @private
    */
   __updateBox(index: number) {
@@ -338,7 +338,7 @@ class GLBoundingBoxPass extends GLPass {
 
   /**
    * The sort method.
-   * @param {RenderState} renderstate - The object tracking the current state of the renderer
+   * @param renderstate - The object tracking the current state of the renderer
    */
   draw(renderstate: RenderState) {
     if (this.drawCount == 0) {

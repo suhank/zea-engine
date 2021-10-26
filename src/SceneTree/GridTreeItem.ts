@@ -18,9 +18,9 @@ class GridTreeItem extends TreeItem {
   /**
    * Creates an instance of GridTree.
    *
-   * @param {number} [gridSize=5]
-   * @param {number} [resolution=50]
-   * @param {Color} [gridColor=new Color('#DCDCDC')]
+   * @param gridSize
+   * @param resolution
+   * @param gridColor
    */
   constructor(gridSize = 5, resolution = 50, gridColor = new Color('#DCDCDC')) {
     super('GridTree')
@@ -77,8 +77,8 @@ class GridTreeItem extends TreeItem {
   /**
    *
    * @private
-   * @param {Box3} bBox
-   * @return {Box3} - Reset Bounding Box
+   * @param bBox
+   * @return - Reset Bounding Box
    */
   _cleanBoundingBox(bBox: Box3) {
     bBox.reset()

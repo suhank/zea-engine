@@ -17,7 +17,7 @@ import { Version } from './Version'
 class VLAAsset extends AssetItem {
   /**
    * Create a VLA asset.
-   * @param {string} name - The name value.
+   * @param name - The name value.
    */
   constructor(name?: string) {
     super(name)
@@ -36,9 +36,9 @@ class VLAAsset extends AssetItem {
   /**
    * Sets state of current asset using a binary reader object.
    *
-   * @param {BinReader} reader - The reader value.
-   * @param {AssetLoadContext } context - The context value.
-   * @return {number} - The return value.
+   * @param reader - The reader value.
+   * @param context - The context value.
+   * @return - The return value.
    */
   readBinary(reader: BinReader, context: AssetLoadContext) {
     if (context.versions['zea-engine']) {
@@ -66,9 +66,9 @@ class VLAAsset extends AssetItem {
 
   /**
    * Loads all the geometries and metadata from the asset file.
-   * @param {string} url - The URL of the asset to load
-   * @param {AssetLoadContext} context - The load context object that provides additional data such as the units of the scene we are loading into.
-   * @return {Promise} - Returns a promise that resolves once the initial load is complete
+   * @param url - The URL of the asset to load
+   * @param context - The load context object that provides additional data such as the units of the scene we are loading into.
+   * @return - Returns a promise that resolves once the initial load is complete
    */
   load(url: string, context: AssetLoadContext = new AssetLoadContext()): Promise<void> {
     return new Promise((resolve, reject) => {

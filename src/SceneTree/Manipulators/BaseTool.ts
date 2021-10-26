@@ -58,7 +58,7 @@ class BaseTool extends ParameterOwner {
   /**
    * Event fired when either the mouse button is pressed, or a touch start event occurs.
    *
-   * @param {MouseEvent} event - The event param.
+   * @param event - The event param.
    */
   onPointerDown(event: MouseEvent) {
     // console.warn('Implement me')
@@ -67,7 +67,7 @@ class BaseTool extends ParameterOwner {
   /**
    * Event fired when either the mouse cursor is moved, or a touch point moves.
    *
-   * @param {MouseEvent} event - The event param.
+   * @param event - The event param.
    */
   onPointerMove(event: MouseEvent) {
     // console.warn('Implement me')
@@ -76,7 +76,7 @@ class BaseTool extends ParameterOwner {
   /**
    * Event fired when either the mouse button is released, or a touch end event occurs.
    *
-   * @param {MouseEvent} event - The event param.
+   * @param event - The event param.
    */
   onPointerUp(event: MouseEvent) {
     // console.warn('Implement me')
@@ -85,7 +85,7 @@ class BaseTool extends ParameterOwner {
   /**
    * Event fired when a pointing device button is double clicked.
    *
-   * @param {MouseEvent} event - The event param.
+   * @param event - The event param.
    */
   onPointerDoublePress(event: MouseEvent) {
     // console.warn('Implement me')
@@ -94,7 +94,7 @@ class BaseTool extends ParameterOwner {
   /**
    * Event fired when a mouse pointer enters the viewport
    *
-   * @param {MouseEvent} event - The event param.
+   * @param event - The event param.
    */
   onPointerEnter(event: MouseEvent) {
     // console.warn('Implement me')
@@ -103,7 +103,7 @@ class BaseTool extends ParameterOwner {
   /**
    * Event fired when a mouse pointer leaves the viewport
    *
-   * @param {MouseEvent} event - The event param.
+   * @param event - The event param.
    */
   onPointerLeave(event: MouseEvent) {
     // console.warn('Implement me')
@@ -112,7 +112,7 @@ class BaseTool extends ParameterOwner {
   /**
    * Event fired when the user rotates the pointing device wheel.
    *
-   * @param {MouseEvent} event - The event param.
+   * @param event - The event param.
    */
   onWheel(event: MouseEvent) {
     // console.warn('Implement me')
@@ -124,7 +124,7 @@ class BaseTool extends ParameterOwner {
   /**
    * Event fired when the user presses down a key on the keyboard.
    *
-   * @param {KeyboardEvent} event - The event param.
+   * @param event - The event param.
    */
   onKeyDown(event: KeyboardEvent) {
     // console.warn('Implement me')
@@ -133,7 +133,7 @@ class BaseTool extends ParameterOwner {
   /**
    * Event fired when the user releases a key on the keyboard.
    *
-   * @param {KeyboardEvent} event - The event param.
+   * @param event - The event param.
    */
   onKeyUp(event: KeyboardEvent) {
     // console.warn('Implement me')
@@ -145,7 +145,7 @@ class BaseTool extends ParameterOwner {
   /**
    * Event fired when one or more touch points have been disrupted in an implementation-specific manner.
    *
-   * @param {TouchEvent} event - The event param.
+   * @param event - The event param.
    */
   onTouchCancel(event: TouchEvent) {
     // console.warn('Implement me')

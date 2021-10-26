@@ -10,7 +10,7 @@ class LibsRegistry {
 
   /**
    * Construct a new libraries registry for the specific version.
-   * @param {string} version - The version of the Zea Engine that will be validated against the registered libraries.
+   * @param version - The version of the Zea Engine that will be validated against the registered libraries.
    */
   constructor(version: string) {
     this.version = version
@@ -19,7 +19,7 @@ class LibsRegistry {
 
   /**
    * Validate and register a library.
-   * @param {Record<string, unknown>} packageJson - The package.json of the library to register.
+   * @param packageJson - The package.json of the library to register.
    */
   registerLib(packageJson: Record<string, any>): void {
     const libName = packageJson.name
@@ -39,7 +39,7 @@ class LibsRegistry {
 
   /**
    * List the registered libraries with their versions.
-   * @return {Record<string, unknown>} Libraries list.
+   * @return Libraries list.
    */
   listLibs(): Record<string, unknown> {
     return this.registry

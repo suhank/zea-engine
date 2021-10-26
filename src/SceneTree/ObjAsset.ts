@@ -40,31 +40,31 @@ class ObjAsset extends AssetItem {
   defaultShader: StringParameter = new StringParameter('defaultShader', '')
   /**
    * Create an obj asset.
-   * @param {string} name - The name of the object asset.
+   * @param name - The name of the object asset.
    */
 
   /**
-   * @member {BooleanParameter} splitObjectsParam - TODO
+   * @member splitObjectsParam - TODO
    */
   splitObjectsParam: BooleanParameter = new BooleanParameter('splitObjects', false)
 
   /**
-   * @member {BooleanParameter} splitGroupsIntoObjectsParam - TODO
+   * @member splitGroupsIntoObjectsParam - TODO
    */
   splitGroupsIntoObjectsParam: BooleanParameter = new BooleanParameter('splitGroupsIntoObjects', false)
 
   /**
-   * @member {BooleanParameter} loadMtlFileParam - TODO
+   * @member loadMtlFileParam - TODO
    */
   loadMtlFileParam: BooleanParameter = new BooleanParameter('loadMtlFile', true)
 
   /**
-   * @member {NumberParameter} unitsConversionParam - TODO
+   * @member unitsConversionParam - TODO
    */
   unitsConversionParam: NumberParameter = new NumberParameter('unitsConversion', 1.0)
 
   /**
-   * @member {StringParameter} defaultShaderParam - The default shader to use.
+   * @member defaultShaderParam - The default shader to use.
    */
   defaultShaderParam: StringParameter = new StringParameter('defaultShader', '')
 
@@ -79,8 +79,8 @@ class ObjAsset extends AssetItem {
 
   /**
    * Loads all the geometries and metadata from the Obj file.
-   * @param {string} url - The URL of the asset to load
-   * @return {Promise} - Returns a promise that resolves once the initial load is complete
+   * @param url - The URL of the asset to load
+   * @return - Returns a promise that resolves once the initial load is complete
    */
   load(url: string): Promise<void> {
     this.loaded = false

@@ -39,8 +39,8 @@ class GLAudioItemsPass extends GLPass {
 
   /**
    * The init method.
-   * @param {GLBaseRenderer} renderer - The renderer value.
-   * @param {number} passIndex - The index of the pass in the GLBAseRenderer
+   * @param renderer - The renderer value.
+   * @param passIndex - The index of the pass in the GLBAseRenderer
    */
   init(renderer: GLBaseRenderer, passIndex: number) {
     super.init(renderer, passIndex)
@@ -50,7 +50,7 @@ class GLAudioItemsPass extends GLPass {
 
   /**
    * Returns the pass type. OPAQUE passes are always rendered first, followed by TRANSPARENT passes, and finally OVERLAY.
-   * @return {number} - The pass type value.
+   * @return - The pass type value.
    */
   getPassType() {
     return PassType.OVERLAY
@@ -60,11 +60,11 @@ class GLAudioItemsPass extends GLPass {
    * The itemAddedToScene method is called on each pass when a new item
    * is added to the scene, and the renderer must decide how to render it.
    * It allows Passes to select geometries to handle the drawing of.
-   * @param {TreeItem} treeItem - The treeItem value.
-   * @param {Record<any,any>} rargs - Extra return values are passed back in this object.
+   * @param treeItem - The treeItem value.
+   * @param rargs - Extra return values are passed back in this object.
    * The object contains a parameter 'continueInSubTree', which can be set to false,
    * so the subtree of this node will not be traversed after this node is handled.
-   * @return {Boolean} - The return value.
+   * @return - The return value.
    */
   itemAddedToScene(treeItem: TreeItem, rargs: Record<string, any>) {
     if (treeItem instanceof AudioItem) {
@@ -95,9 +95,9 @@ class GLAudioItemsPass extends GLPass {
   /**
    * The itemRemovedFromScene method is called on each pass when aa item
    * is removed to the scene, and the pass must handle cleaning up any resources.
-   * @param {TreeItem} treeItem - The treeItem value.
-   * @param {Record<any,any>} rargs - Extra return values are passed back in this object.
-   * @return {Boolean} - The return value.
+   * @param treeItem - The treeItem value.
+   * @param rargs - Extra return values are passed back in this object.
+   * @return - The return value.
    */
   itemRemovedFromScene(treeItem: TreeItem, rargs: Record<string, any>): boolean {
     console.warn('returning false')
@@ -106,9 +106,9 @@ class GLAudioItemsPass extends GLPass {
 
   /**
    * The addAudioSource method.
-   * @param {any} treeItem - The treeItem value.
-   * @param {any} audioSource - The audioSource value.
-   * @param {any} parameterOwner - The parameterOwner value.
+   * @param treeItem - The treeItem value.
+   * @param audioSource - The audioSource value.
+   * @param parameterOwner - The parameterOwner value.
    */
   addAudioSource(treeItem: TreeItem, audioSource: HTMLMediaElement | AudioBufferSourceNode, parameterOwner: any) {
     // @ts-ignore
@@ -220,7 +220,7 @@ class GLAudioItemsPass extends GLPass {
 
   /**
    * The __updateListenerPosition method.
-   * @param {any} viewXfo - The viewXfo value.
+   * @param viewXfo - The viewXfo value.
    * @private
    */
   __updateListenerPosition(viewXfo: any) {
@@ -267,7 +267,7 @@ class GLAudioItemsPass extends GLPass {
 
   /**
    * The draw method.
-   * @param {RenderState} renderstate - The object tracking the current state of the renderer
+   * @param renderstate - The object tracking the current state of the renderer
    */
   draw(renderstate: RenderState) {
     if (this.__audioItems.length == 0) return

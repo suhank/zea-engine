@@ -34,7 +34,7 @@ class AssetLoadContext extends EventEmitter {
 
   /**
    * Create a AssetLoadContext
-   * @param {AssetLoadContext} context The source context to base this context on.
+   * @param context The source context to base this context on.
    */
   constructor(context?: AssetLoadContext) {
     super()
@@ -79,9 +79,9 @@ class AssetLoadContext extends EventEmitter {
    * Resolves a path within the loading asset. This is used to connect
    * items within the tree to other items. e.g. a Group can find its members.
    * or an instance can find its source tree.
-   * @param {array} path the path within the tree relative to the loading asset
-   * @param {function} onSucceed called with the successful result of the path resolution.
-   * @param {function} onFail called when the path resolution fails.
+   * @param path the path within the tree relative to the loading asset
+   * @param onSucceed called with the successful result of the path resolution.
+   * @param onFail called when the path resolution fails.
    */
   resolvePath(path: Array<string>, onSucceed: (result: BaseItem | Parameter<any>) => void, onFail: () => void) {
     // Note: Why not return a Promise here?
@@ -100,7 +100,7 @@ class AssetLoadContext extends EventEmitter {
         try {
           const param = this.assetItem.resolvePath(path)
           onSucceed(param)
-        } catch (e) {
+        } catch (e: any) {
           if (onFail) {
             onFail()
           } else {
@@ -115,7 +115,7 @@ class AssetLoadContext extends EventEmitter {
    * Adds a function to be called back once the main load call stack exists.
    * This is used to connect parts of the tree together after loading.
    * e.g. an instance will
-   * @param {function} postLoadCallback
+   * @param postLoadCallback
    */
   addPLCB(postLoadCallback: any) {
     this.postLoadCallbacks.push(postLoadCallback)
@@ -126,9 +126,9 @@ class AssetLoadContext extends EventEmitter {
  * Given a units string, load returns a factor relative to meters
  * e.g. for Millimeters, returns 0.001, for Meters, returns 1.0
  * Given 2 different units, the factors are combined together to calculate the conversion between the 2 units.
- * @param {string} units the name of the units value for the load context.
+ * @param units the name of the units value for the load context.
  * Supports: ['millimeters', 'centimeters', 'decimeters', 'meters', 'kilometers', 'inches', 'feet', 'miles']
- * @return {number} Returns the factor relative to meters.
+ * @return Returns the factor relative to meters.
  */
 const getUnitsFactor = (units: string) => {
   switch (units.toLowerCase()) {
@@ -168,7 +168,7 @@ class AssetItem extends TreeItem {
 
   /**
    * Create an asset item.
-   * @param {string} name - The name of the asset item.
+   * @param name - The name of the asset item.
    */
   constructor(name: string = '') {
     super(name)
@@ -176,8 +176,8 @@ class AssetItem extends TreeItem {
 
   /**
    * Loads all the geometries and metadata from the asset file.
-   * @param {string} url - The URL of the asset to load
-   * @return {Promise} - Returns a promise that resolves once the initial load is complete
+   * @param url - The URL of the asset to load
+   * @return - Returns a promise that resolves once the initial load is complete
    */
   load(url: string): Promise<void> {
     return Promise.reject(`This method is not implemented for this Asset Item: ${url}`)
@@ -186,7 +186,7 @@ class AssetItem extends TreeItem {
   /**
    * Returns the loaded status of current item.
    *
-   * @return {boolean} - Returns true if the asset has already loaded its data.
+   * @return - Returns true if the asset has already loaded its data.
    */
   isLoaded(): boolean {
     return this.loaded
@@ -195,7 +195,7 @@ class AssetItem extends TreeItem {
   /**
    * Returns the zea engine version as an array with major, minor, patch order.
    *
-   * @return {Version} - The return value.
+   * @return - The return value.
    */
   getEngineDataVersion(): Version | undefined {
     return this.__engineDataVersion
@@ -204,7 +204,7 @@ class AssetItem extends TreeItem {
   /**
    * Returns asset `GeomLibrary` that is in charge of rendering geometry data using workers.
    *
-   * @return {GeomLibrary} - The return value.
+   * @return - The return value.
    */
   getGeometryLibrary(): GeomLibrary {
     return this.__geomLibrary
@@ -213,7 +213,7 @@ class AssetItem extends TreeItem {
   /**
    * Returns `MaterialLibrary` that is in charge of storing all materials of current Item.
    *
-   * @return {MaterialLibrary} - The return value.
+   * @return - The return value.
    */
   getMaterialLibrary(): MaterialLibrary {
     return this.__materials
@@ -221,7 +221,7 @@ class AssetItem extends TreeItem {
 
   /**
    * Returns the scale factor of current item.
-   * @return {number} - The return value.
+   * @return - The return value.
    */
   getUnitsConversion(): number {
     return this.__unitsScale
@@ -232,8 +232,8 @@ class AssetItem extends TreeItem {
 
   /**
    * The readBinary method.
-   * @param {Record<string,any>} reader - The reader value.
-   * @param {AssetLoadContext} context - The context value.
+   * @param reader - The reader value.
+   * @param context - The context value.
    */
   readBinary(reader: BinReader, context: AssetLoadContext): void {
     context.assetItem = this
@@ -310,7 +310,7 @@ class AssetItem extends TreeItem {
             const item = this.resolvePath(path)
             if (item) onSucceed(item)
             else onFail()
-          } catch (e) {
+          } catch (e: any) {
             if (onFail) {
               onFail()
             } else {
@@ -344,8 +344,8 @@ class AssetItem extends TreeItem {
   /**
    * The toJSON method encodes this type as a json object for persistence.
    *
-   * @param {Record<any,any>} context - The context value.
-   * @return {Record<string, any>} - Returns the json object.
+   * @param context - The context value.
+   * @return - Returns the json object.
    */
   toJSON(context: Record<string, any> = {}): Record<string, any> {
     context.makeRelative = (path: any) => {
@@ -370,9 +370,9 @@ class AssetItem extends TreeItem {
   /**
    * The fromJSON method decodes a json object for this type.
    *
-   * @param {Record<string, any>} j - The json object this item must decode.
-   * @param {Record<string, any>} context - The context value.
-   * @param {function} onDone - Callback function executed when everything is done.
+   * @param j - The json object this item must decode.
+   * @param context - The context value.
+   * @param onDone - Callback function executed when everything is done.
    */
   fromJSON(j: Record<string, any>, context: Record<string, any> = {}, onDone?: any): any {
     if (!context) context = {}
@@ -431,8 +431,8 @@ class AssetItem extends TreeItem {
    * The clone method constructs a new tree item, copies its values
    * from this item and returns it.
    *
-   * @param {Record<string, unknown>} context - The context value.
-   * @return {TreeItem} - Returns a new cloned tree item.
+   * @param context - The context value.
+   * @return - Returns a new cloned tree item.
    */
   clone(context?: Record<string, unknown>): TreeItem {
     const cloned = new AssetItem()
@@ -443,8 +443,8 @@ class AssetItem extends TreeItem {
   /**
    * Copies current TreeItem with all its children.
    *
-   * @param {TreeItem} src - The tree item to copy from.
-   * @param {Record<any,any>} context - The context value.
+   * @param src - The tree item to copy from.
+   * @param context - The context value.
    */
   copyFrom(src: AssetItem, context?: Record<string, any>): void {
     this.__geomLibrary = src.__geomLibrary

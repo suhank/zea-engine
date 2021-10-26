@@ -16,8 +16,8 @@ class MathFunctions {
    * Converts Radians to Degrees
    *
    * @static
-   * @param {number} rad - Radians value
-   * @return {number} - Degrees equivalent
+   * @param rad - Radians value
+   * @return - Degrees equivalent
    */
   static radToDeg(rad: number): number {
     return rad / (Math.PI / 180)
@@ -27,8 +27,8 @@ class MathFunctions {
    * Converts Degrees to Radiants
    *
    * @static
-   * @param {number} deg - Degrees value
-   * @return {number} -  Radians equivalent
+   * @param deg - Degrees value
+   * @return -  Radians equivalent
    */
   static degToRad(deg: number): number {
     return deg * (Math.PI / 180)
@@ -38,8 +38,8 @@ class MathFunctions {
    * Verifies if the specified parameter is numeric.
    *
    * @static
-   * @param {number|any} number - Number to test
-   * @return {boolean} - `true` when is a valid number
+   * @param number - Number to test
+   * @return - `true` when is a valid number
    */
   static isNumeric(number: any): boolean {
     return !isNaN(parseFloat(number)) && isFinite(number)
@@ -49,9 +49,9 @@ class MathFunctions {
    * Generates and returns a random integer within the specified range.
    *
    * @static
-   * @param {number} min - Lower value random int can be.
-   * @param {number} max - Highest value random int can be.
-   * @return {number} - Random number inside range.
+   * @param min - Lower value random int can be.
+   * @param max - Highest value random int can be.
+   * @return - Random number inside range.
    */
   static randomInt(min: number, max: number): number {
     min = Math.ceil(min)
@@ -63,10 +63,10 @@ class MathFunctions {
    * Calculates a lineal interpolation between two inputs for the specified parameter(t).
    *
    * @static
-   * @param {number} v0 -
-   * @param {number} v1 -
-   * @param {number} t -
-   * @return {number} -
+   * @param v0 -
+   * @param v1 -
+   * @param t -
+   * @return -
    */
   static lerp(v0: number, v1: number, t: number): number {
     return v0 + t * (v1 - v0)
@@ -76,10 +76,10 @@ class MathFunctions {
    * Restricts the specified value between two numbers
    *
    * @static
-   * @param {number} value
-   * @param {number} min
-   * @param {number} max
-   * @return {number}
+   * @param value
+   * @param min
+   * @param max
+   * @return
    */
   static clamp(value: number, min: number, max: number): number {
     return Math.min(Math.max(value, min), max)
@@ -89,8 +89,8 @@ class MathFunctions {
    * Returns the nearest pow of two value of the specified number.
    *
    * @static
-   * @param {number} value -
-   * @return {number} -
+   * @param value -
+   * @return -
    */
   static nearestPow2(value: number): number {
     return Math.pow(2, Math.round(Math.log(value) / Math.log(2)))
@@ -100,8 +100,8 @@ class MathFunctions {
    * Returns the nearest pow of ten value of the specified number.
    *
    * @static
-   * @param {number} value -
-   * @return {number} -
+   * @param value -
+   * @return -
    */
   static nearestPow10(value: number): number {
     return Math.pow(10, Math.round(Math.log10(value) / Math.log10(10)))
@@ -111,8 +111,8 @@ class MathFunctions {
    * Returns the next pow of two value of the specified number.
    *
    * @static
-   * @param {number} value -
-   * @return {number} -
+   * @param value -
+   * @return -
    */
   static nextPow2(value: number): number {
     if (this.fract(Math.log2(value)) == 0) {
@@ -132,8 +132,8 @@ class MathFunctions {
    * Returns the fractional component of a number
    *
    * @static
-   * @param {number} value -
-   * @return {number} -
+   * @param value -
+   * @return -
    */
   static fract(value: number): number {
     if (value == 0) return 0
@@ -149,12 +149,12 @@ class MathFunctions {
    * Moves the specified value from one numeric domain(range) to another.
    *
    * @static
-   * @param {number} value -
-   * @param {number} start1 -
-   * @param {number} end1 -
-   * @param {number} start2 -
-   * @param {number} end2 -
-   * @return {number} -
+   * @param value -
+   * @param start1 -
+   * @param end1 -
+   * @param start2 -
+   * @param end2 -
+   * @return -
    */
   static remap(value: number, start1: number, end1: number, start2: number, end2: number): number {
     return start2 + (end2 - start2) * ((value - start1) / (end1 - start1))
@@ -164,10 +164,10 @@ class MathFunctions {
    * Perform Hermite interpolation between two values
    *
    * @static
-   * @param {number} edge0 -
-   * @param {number} edge1 -
-   * @param {number} x -
-   * @return {number} -
+   * @param edge0 -
+   * @param edge1 -
+   * @param x -
+   * @return -
    */
   static smoothStep(edge0: number, edge1: number, x: number): number {
     const t = this.clamp((x - edge0) / (edge1 - edge0), 0.0, 1.0)
@@ -178,10 +178,10 @@ class MathFunctions {
    * Performs - interpolation between two values
    *
    * @static
-   * @param {number} edge0 -
-   * @param {number} edge1 -
-   * @param {number} x -
-   * @return {number} -
+   * @param edge0 -
+   * @param edge1 -
+   * @param x -
+   * @return -
    */
   static linStep(edge0: number, edge1: number, x: number): number {
     return this.clamp((x - edge0) / (edge1 - edge0), 0.0, 1.0)
@@ -191,8 +191,8 @@ class MathFunctions {
    * Decodes a Float16 from two unsigned Int8
    *
    * @static
-   * @param {Uint8Array} c - Array with the two UInt8
-   * @return {number} - Decoded Float16
+   * @param c - Array with the two UInt8
+   * @return - Decoded Float16
    */
   static decode16BitFloatFrom2xUInt8(c: Uint8Array): number {
     const ix = c[0] // 1st byte: 1 bit signed num, 4 bits exponent, 3 bits mantissa (MSB)
@@ -215,8 +215,8 @@ class MathFunctions {
    * Encodes an array of two unsigned Int8 to a Float16
    *
    * @static
-   * @param {number} v - Float16 number
-   * @return {Uint8Array} - Encoded Unsigned Int8 array
+   * @param v - Float16 number
+   * @return - Encoded Unsigned Int8 array
    */
   static encode16BitFloatInto2xUInt8(v: number): Uint8Array {
     const c = new Uint8Array(2)
@@ -257,8 +257,8 @@ class MathFunctions {
    * Transforms a 16 bit float to an encoded integer.
    *
    * @static
-   * @param {number} v - Float16 number to encode
-   * @return {number} - Encoded number
+   * @param v - Float16 number to encode
+   * @return - Encoded number
    */
   static encode16BitFloat(v: number): number {
     const float32Array = new Float32Array(1)
@@ -310,8 +310,8 @@ class MathFunctions {
    * and returns the 16 bit float.
    *
    * @static
-   * @param {number} h - Encoded integer
-   * @return {number} - Decoded 16 bit float.
+   * @param h - Encoded integer
+   * @return - Decoded 16 bit float.
    */
   static decode16BitFloat(h: number): number {
     const s = (h & 0x8000) >> 15
@@ -331,8 +331,8 @@ class MathFunctions {
    * Transforms an array of Float 32 to an array of unsigned Int16.
    *
    * @static
-   * @param {Float32Array} float32Array -
-   * @return {Uint16Array} - Unsigned Int16 array representative of the Float32Array
+   * @param float32Array -
+   * @return - Unsigned Int16 array representative of the Float32Array
    */
   static convertFloat32ArrayToUInt16Array(float32Array: Float32Array): Uint16Array {
     const unit16s = new Uint16Array(float32Array.length)

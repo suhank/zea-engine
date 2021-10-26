@@ -36,15 +36,16 @@ class GIFImage extends FileImage {
   protected stop: any
   protected __resourcePromise: any
   protected __unpackedData: any
-  /**
-   * Create a GIF image.
-   * @param {string} name - The name value.
-   * @param {string|Record<any,any>} filePath - The filePath value.
-   * @param {Record<any,any>} params - The params value.
-   */
 
   streamAtlasDescParam = new Vec4Parameter('StreamAtlasDesc')
   streamAtlasIndexParam = new NumberParameter('StreamAtlasIndex', 0)
+
+  /**
+   * Create a GIF image.
+   * @param name - The name value.
+   * @param filePath - The filePath value.
+   * @param params - The params value.
+   */
   constructor(name?: string, filePath = '', params = {}) {
     super(name, filePath, params)
 
@@ -85,8 +86,8 @@ class GIFImage extends FileImage {
 
   /**
    * The getFrameDelay method.
-   * @param {number} index - The index value.
-   * @return {number} - The return value.
+   * @param index - The index value.
+   * @return - The return value.
    */
   getFrameDelay(index: number) {
     // Note: Frame delays are in centisecs (not millisecs which the timers will require.)
@@ -97,9 +98,9 @@ class GIFImage extends FileImage {
    * Uses the specify url to load an Image element and adds it to the data library.
    * Sets the state of the current object.
    *
-   * @param {string} url - The url value.
-   * @param {string} format - The format value.
-   * @return {Promise} Returns a promise that resolves once the image is loaded.
+   * @param url - The url value.
+   * @param format - The format value.
+   * @return Returns a promise that resolves once the image is loaded.
    */
   load(url: string, format = 'RGB'): Promise<void> {
     // this.__streamAtlasDesc = new Vec4();

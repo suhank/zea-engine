@@ -10,21 +10,21 @@ import { labelManager } from './LabelManager'
  * Draws a rounded rectangle using the current state of the canvas.
  * If you omit the last three params, it will draw a rectangle
  * outline with a 5 pixel border radius
- * @param {CanvasRenderingContext2D} ctx
- * @param {Number} x - The top left x coordinate
- * @param {Number} y - The top left y coordinate
- * @param {Number} width - The width of the rectangle
- * @param {Number} height - The height of the rectangle
+ * @param ctx
+ * @param x - The top left x coordinate
+ * @param y - The top left y coordinate
+ * @param width - The width of the rectangle
+ * @param height - The height of the rectangle
  *
- * @param {Number} [radius = 5] - The corner radius; It can also be an object to specify different radii for corners
- * @param {Number} [radius.tl = 0] - Top left
- * @param {Number} [radius.tr = 0] - Top right
- * @param {Number} [radius.br = 0] - Bottom right
- * @param {Number} [radius.bl = 0] - Bottom left
+ * @param radius - The corner radius; It can also be an object to specify different radii for corners
+ * @param radius.tl - Top left
+ * @param radius.tr - Top right
+ * @param radius.br - Bottom right
+ * @param radius.bl - Bottom left
  *
- * @param {Boolean} [fill = false] - Whether to fill the rectangle.
- * @param {Boolean} [stroke = true] - Whether to stroke the rectangle.
- * @param {Number} [strokeWidth] - The strokeWidth param.
+ * @param fill - Whether to fill the rectangle.
+ * @param stroke - Whether to stroke the rectangle.
+ * @param strokeWidth - The strokeWidth param.
  * @private
  */
 function roundRect(
@@ -120,25 +120,25 @@ class Label extends DataImage {
   /**
    * Creates a label instance. Creating a canvas element that hosts the specified text.
    *
-   * @param {string} name - The name value.
-   * @param {string} library - The library value.
+   * @param name - The name value.
+   * @param library - The library value.
    */
 
   marginParam: NumberParameter
   borderRadiusParam: NumberParameter
 
   /**
-   * @member {StringParameter} libraryParam - Library you wan to use for your label, see **Library List** above.
+   * @member libraryParam - Library you wan to use for your label, see **Library List** above.
    */
   libraryParam: StringParameter = new StringParameter('Library')
 
   /**
-   * @member {StringParameter} textParam - text to display on the label
+   * @member textParam - text to display on the label
    */
   textParam: StringParameter = new StringParameter('Text', '')
 
   /**
-   * @member {ColorParameter} fontColorParam - TODO
+   * @member fontColorParam - TODO
    */
   fontColorParam: ColorParameter = new ColorParameter('FontColor', new Color(0, 0, 0))
 
@@ -148,42 +148,42 @@ class Label extends DataImage {
   fontSizeParam: NumberParameter = new NumberParameter('FontSize', 22)
 
   /**
-   * @member {StringParameter} fontParam - TODO
+   * @member fontParam - TODO
    */
   fontParam: StringParameter = new StringParameter('Font', 'Helvetica')
 
   /**
-   * @member {NumberParameter} borderWidthParam - Border around the label
+   * @member borderWidthParam - Border around the label
    */
   borderWidthParam: NumberParameter = new NumberParameter('BorderWidth', 2)
 
   /**
-   * @member {BooleanParameter} outlineParam - TODO
+   * @member outlineParam - TODO
    */
   outlineParam: BooleanParameter = new BooleanParameter('Outline', false)
 
   /**
-   * @member {ColorParameter} outlineColorParam - TODO
+   * @member outlineColorParam - TODO
    */
   outlineColorParam: ColorParameter = new ColorParameter('OutlineColor', new Color(0, 0, 0))
 
   /**
-   * @member {BooleanParameter} backgroundParam - TODO
+   * @member backgroundParam - TODO
    */
   backgroundParam: BooleanParameter = new BooleanParameter('Background', true)
 
   /**
-   * @member {ColorParameter} backgroundColorParam - TODO
+   * @member backgroundColorParam - TODO
    */
   backgroundColorParam: ColorParameter = new ColorParameter('BackgroundColor', new Color('#FBC02D'))
 
   /**
-   * @member {BooleanParameter} fillBackgroundParam - TODO
+   * @member fillBackgroundParam - TODO
    */
   fillBackgroundParam: BooleanParameter = new BooleanParameter('FillBackground', true)
 
   /**
-   * @member {BooleanParameter} strokeBackgroundOutlineParam - TODO
+   * @member strokeBackgroundOutlineParam - TODO
    */
   strokeBackgroundOutlineParam: BooleanParameter = new BooleanParameter('StrokeBackgroundOutline', true)
 
@@ -228,7 +228,7 @@ class Label extends DataImage {
    * This method can be overridden in derived classes
    * to perform general updates (see GLPass or BaseItem).
    *
-   * @param {Record<any,any>} event - The event object.
+   * @param event - The event object.
    * @private
    */
   __parameterValueChanged(event: Record<string, any>) {
@@ -398,7 +398,7 @@ class Label extends DataImage {
   /**
    *  Returns all parameters and class state values(Including data).
    *
-   * @return {Record<string, any>} - The return value.
+   * @return - The return value.
    */
   getParams(): Record<string, any> {
     if (this.needsRender) this.renderLabelToImage()
@@ -411,8 +411,8 @@ class Label extends DataImage {
   /**
    * The toJSON method encodes this type as a json object for persistence.
    *
-   * @param {Record<any,any>} context - The context value.
-   * @return {Record<any,any>} - Returns the json object.
+   * @param context - The context value.
+   * @return - Returns the json object.
    */
   toJSON(context: Record<string, any>) {
     const j = super.toJSON(context)
@@ -422,8 +422,8 @@ class Label extends DataImage {
   /**
    * The fromJSON method decodes a json object for this type.
    *
-   * @param {Record<any,any>} j - The json object this item must decode.
-   * @param {Record<any,any>} context - The context value.
+   * @param j - The json object this item must decode.
+   * @param context - The context value.
    */
   fromJSON(j: Record<string, any>, context: Record<string, any>) {
     super.fromJSON(j, context)

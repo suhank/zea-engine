@@ -23,9 +23,9 @@ class CalcGeomMatOperator extends Operator {
   /**
    *Creates an instance of CalcGeomMatOperator.
    *
-   * @param {*} globalXfoParam
-   * @param {*} geomOffsetXfoParam
-   * @param {*} geomMatParam
+   * @param globalXfoParam
+   * @param geomOffsetXfoParam
+   * @param geomMatParam
    * @memberof CalcGeomMatOperator
    */
   constructor(globalXfoParam: XfoParameter, geomOffsetXfoParam: XfoParameter, geomMatParam: any) {
@@ -69,26 +69,26 @@ class GeomItem extends BaseGeomItem {
   public cullable: boolean = true
 
   /**
-   * @member {XfoParameter} geomOffsetXfoParam - Provides an offset transformation that is applied only to the geometry and not inherited by child items.
+   * @member geomOffsetXfoParam - Provides an offset transformation that is applied only to the geometry and not inherited by child items.
    */
   geomOffsetXfoParam: XfoParameter = new XfoParameter('GeomOffsetXfo')
 
   /**
-   * @member {GeometryParameter} geomParam - The geometry to be rendered for this GeomItem
+   * @member geomParam - The geometry to be rendered for this GeomItem
    */
   geomParam: GeometryParameter = new GeometryParameter('Geometry')
 
   /**
-   * @member {Mat4Parameter} geomMatParam - Calculated from the GlobalXfo and the GeomOffsetXfo, this matrix is provided to the renderer for rendering.
+   * @member geomMatParam - Calculated from the GlobalXfo and the GeomOffsetXfo, this matrix is provided to the renderer for rendering.
    */
   geomMatParam: Mat4Parameter = new Mat4Parameter('GeomMat')
 
   /**
    * Creates a geometry item.
-   * @param {string} name - The name of the geom item.
-   * @param {BaseGeom} geometry - The geometry value.
-   * @param {Material} material - The material value.
-   * @param {Xfo} xfo - The initial Xfo of the new GeomItem.
+   * @param name - The name of the geom item.
+   * @param geometry - The geometry value.
+   * @param material - The material value.
+   * @param xfo - The initial Xfo of the new GeomItem.
    */
   constructor(name?: string, geometry?: BaseGeom, material?: Material, xfo?: Xfo) {
     super(name)
@@ -112,8 +112,8 @@ class GeomItem extends BaseGeomItem {
 
   /**
    * The _cleanBoundingBox method.
-   * @param {Box3} bbox - The bounding box value.
-   * @return {Box3} - The return value.
+   * @param bbox - The bounding box value.
+   * @return - The return value.
    * @private
    */
   _cleanBoundingBox(bbox: Box3) {
@@ -162,8 +162,8 @@ class GeomItem extends BaseGeomItem {
   /**
    * The toJSON method encodes this type as a json object for persistence.
    *
-   * @param {Record<string, any>} context - The context value.
-   * @return {Record<string, any>} - Returns the json object.
+   * @param context - The context value.
+   * @return - Returns the json object.
    */
   toJSON(context?: Record<string, any>): Record<string, any> {
     const json = super.toJSON(context)
@@ -173,8 +173,8 @@ class GeomItem extends BaseGeomItem {
   /**
    * The fromJSON method decodes a json object for this type.
    *
-   * @param {Record<string, any>} json - The json object this item must decode.
-   * @param {Record<string, any>} context - The context value.
+   * @param json - The json object this item must decode.
+   * @param context - The context value.
    */
   fromJSON(json: Record<string, any>, context: Record<string, any>): void {
     super.fromJSON(json, context)
@@ -184,8 +184,8 @@ class GeomItem extends BaseGeomItem {
   /**
    * Loads state of the Item from a binary object.
    *
-   * @param {BinReader} reader - The reader value.
-   * @param {Record<string, any>} context - The context value.
+   * @param reader - The reader value.
+   * @param context - The context value.
    */
   readBinary(reader: BinReader, context: Record<string, any>) {
     super.readBinary(reader, context)
@@ -257,8 +257,8 @@ class GeomItem extends BaseGeomItem {
 
   /**
    * Returns string representation of current object's state.
-   * @param {Record<string, any>} context
-   * @return {string} - The return value.
+   * @param context
+   * @return - The return value.
    */
   toString(context: Record<string, any>) {
     return JSON.stringify(this.toJSON(context), null, 2)
@@ -271,8 +271,8 @@ class GeomItem extends BaseGeomItem {
    * The clone method constructs a new geom item, copies its values
    * from this item and returns it.
    *
-   * @param {number} context - The context value.
-   * @return {GeomItem} - Returns a new cloned geom item.
+   * @param context - The context value.
+   * @return - Returns a new cloned geom item.
    */
   clone(context?: Record<string, any>) {
     const cloned = new GeomItem()
@@ -283,8 +283,8 @@ class GeomItem extends BaseGeomItem {
   /**
    * Copies current GeomItem with all its children.
    *
-   * @param {GeomItem} src - The geom item to copy from.
-   * @param {Record<string, any>} context - The context value.
+   * @param src - The geom item to copy from.
+   * @param context - The context value.
    */
   copyFrom(src: GeomItem, context?: Record<string, any>) {
     super.copyFrom(src, context)
@@ -320,7 +320,7 @@ class GeomItem extends BaseGeomItem {
    * Note: computing the precise bounding box is much slower and can make loading
    * big scenes take a bit longer. This setting is only relevant to geometries loaded
    * from zcad files.
-   * @param {boolean} value - true for precise bounding boxes, else false for faster approximate bounding boxes.
+   * @param value - true for precise bounding boxes, else false for faster approximate bounding boxes.
    */
   static setCalculatePreciseBoundingBoxes(value: boolean) {
     calculatePreciseBoundingBoxes = value

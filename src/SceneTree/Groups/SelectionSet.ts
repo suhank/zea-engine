@@ -20,24 +20,24 @@ class SelectionSet extends BaseGroup {
   protected listenerIDs: Record<string, number> = {}
 
   /**
-   * @member {BooleanParameter} highlightedParam - Whether or not the TreeItem should be highlighted.
+   * @member highlightedParam - Whether or not the TreeItem should be highlighted.
    */
   highlightedParam: BooleanParameter = new BooleanParameter('Highlighted', false)
 
   /**
-   * @member {ColorParameter} highlightColorParam - The color of the highlight.
+   * @member highlightColorParam - The color of the highlight.
    */
   highlightColorParam: ColorParameter = new ColorParameter('HighlightColor', new Color(0.5, 0.5, 1))
 
   /**
-   * @member {NumberParameter} highlightFillParam - TODO
+   * @member highlightFillParam - TODO
    */
   highlightFillParam: NumberParameter = new NumberParameter('HighlightFill', 0.0, [0, 1])
 
   /**
    * Creates an instance of a group.
    *
-   * @param {string} name - The name of the group.
+   * @param name - The name of the group.
    */
   constructor(name?: string) {
     super(name)
@@ -58,7 +58,7 @@ class SelectionSet extends BaseGroup {
 
   /**
    * The __updateVisibility method.
-   * @return {boolean} - The return value.
+   * @return - The return value.
    * @private
    */
   __updateVisibility(): boolean {
@@ -112,7 +112,7 @@ class SelectionSet extends BaseGroup {
   /**
    * Changes selection's state of the group with all items it owns.
    *
-   * @param {boolean} sel - Boolean indicating the new selection state.
+   * @param sel - Boolean indicating the new selection state.
    */
   setSelected(sel: boolean) {
     super.setSelected(sel)
@@ -124,8 +124,8 @@ class SelectionSet extends BaseGroup {
 
   /**
    * The __bindItem method.
-   * @param {BaseItem} item - The item value.
-   * @param {number} index - The index value.
+   * @param item - The item value.
+   * @param index - The index value.
    * @private
    */
   bindItem(item: BaseItem, index: number) {
@@ -156,8 +156,8 @@ class SelectionSet extends BaseGroup {
 
   /**
    * The unbindItem method.
-   * @param {BaseItem} item - The item value.
-   * @param {number} index - The index value.
+   * @param item - The item value.
+   * @param index - The index value.
    * @private
    */
   unbindItem(item: BaseItem, index: number) {
@@ -196,8 +196,8 @@ class SelectionSet extends BaseGroup {
    * The clone method constructs a new group,
    * copies its values and returns it.
    *
-   * @param {Record<any,any>} context - The context value.
-   * @return {SelectionSet} - Returns a new cloned group.
+   * @param context - The context value.
+   * @return - Returns a new cloned group.
    */
   clone(context: Record<string, any>) {
     const cloned = new SelectionSet(this.__name + ' clone')

@@ -66,7 +66,7 @@ class VRViewport extends GLBaseViewport {
   protected __cameraMatrices: any
   /**
    * Create a VR viewport.
-   * @param {GLBaseRenderer} renderer - The renderer value.
+   * @param renderer - The renderer value.
    */
   constructor(renderer: any) {
     super(renderer)
@@ -108,7 +108,7 @@ class VRViewport extends GLBaseViewport {
 
   /**
    * The getAsset method.
-   * @return {any} - The return value.
+   * @return - The return value.
    */
   getAsset() {
     return this.__vrAsset
@@ -116,7 +116,7 @@ class VRViewport extends GLBaseViewport {
 
   /**
    * The getTreeItem method.
-   * @return {any} - The return value.
+   * @return - The return value.
    */
   getTreeItem() {
     return this.__stageTreeItem
@@ -124,7 +124,7 @@ class VRViewport extends GLBaseViewport {
 
   /**
    * The getVRHead method.
-   * @return {any} - The return value.
+   * @return - The return value.
    */
   getVRHead() {
     return this.__vrhead
@@ -132,7 +132,7 @@ class VRViewport extends GLBaseViewport {
 
   /**
    * The getXfo method.
-   * @return {Xfo} - The return value.
+   * @return - The return value.
    */
   getXfo() {
     return this.__stageXfo
@@ -140,7 +140,7 @@ class VRViewport extends GLBaseViewport {
 
   /**
    * The setXfo method.
-   * @param {Xfo} xfo - The xfo value.
+   * @param xfo - The xfo value.
    */
   setXfo(xfo: Xfo) {
     this.__stageXfo = xfo
@@ -152,7 +152,7 @@ class VRViewport extends GLBaseViewport {
 
   /**
    * The getControllers method.
-   * @return {any} - The return value.
+   * @return - The return value.
    */
   getControllers() {
     return this.controllers
@@ -163,7 +163,7 @@ class VRViewport extends GLBaseViewport {
 
   /**
    * The canPresent method.
-   * @return {any} - The return value.
+   * @return - The return value.
    */
   canPresent() {
     return this.__canPresent
@@ -171,7 +171,7 @@ class VRViewport extends GLBaseViewport {
 
   /**
    * The isPresenting method.
-   * @return {boolean} - The return value.
+   * @return - The return value.
    */
   isPresenting() {
     return this.session
@@ -180,7 +180,7 @@ class VRViewport extends GLBaseViewport {
   /**
    * Turns on and off the spectator mode.
    * Note: specator mode renders the scene an extra time to our regular viewport.
-   * @param {boolean} state -  true for enabling spectator mode, else false
+   * @param state -  true for enabling spectator mode, else false
    */
   setSpectatorMode(state: boolean) {
     if (!state) {
@@ -212,7 +212,7 @@ class VRViewport extends GLBaseViewport {
 
   /**
    * The loadHMDResources method.
-   * @return {any} - The return value.
+   * @return - The return value.
    */
   loadHMDResources(): Promise<VLAAsset | null> {
     if (SystemDesc.isMobileDevice) {
@@ -448,7 +448,7 @@ class VRViewport extends GLBaseViewport {
 
   /**
    * The getHMDCanvasSize method.
-   * @return {any} - The return value.
+   * @return - The return value.
    */
   getHMDCanvasSize() {
     return this.__hmdCanvasSize
@@ -459,8 +459,8 @@ class VRViewport extends GLBaseViewport {
 
   /**
    * The updateControllers method.
-   * @param {XRFrame} xrFrame - The xrFrame value.
-   * @param {Record<any,any>} event - The pose changed event object that will be emitted for observers such as collab.
+   * @param xrFrame - The xrFrame value.
+   * @param event - The pose changed event object that will be emitted for observers such as collab.
    */
   updateControllers(xrFrame: any, event: Record<string, any>) {
     const inputSources = this.session.inputSources
@@ -482,7 +482,7 @@ class VRViewport extends GLBaseViewport {
 
   /**
    * The drawXRFrame method.
-   * @param {XRFrame} xrFrame - The xrFrame value.
+   * @param xrFrame - The xrFrame value.
    */
   drawXRFrame(xrFrame: any) {
     const session = xrFrame.session
@@ -599,7 +599,7 @@ class VRViewport extends GLBaseViewport {
   /**
    * Prepares pointer event by adding properties of the engine to it.
    *
-   * @param {XREvent} event - The event that occurs in the canvas
+   * @param event - The event that occurs in the canvas
    * @private
    */
   preparePointerEvent(event: Record<string, any>) {
@@ -627,7 +627,7 @@ class VRViewport extends GLBaseViewport {
   /**
    * Handler of the `pointerdown` event fired when the pointer device is initially pressed.
    *
-   * @param {MouseEvent|TouchEvent} event - The DOM event produced by a pointer
+   * @param event - The DOM event produced by a pointer
    */
   onPointerDown(event: Record<string, any>) {
     this.preparePointerEvent(event)
@@ -673,7 +673,7 @@ class VRViewport extends GLBaseViewport {
   /**
    * Causes an event to occur when a user releases a mouse button over a element.
    *
-   * @param {MouseEvent|TouchEvent} event - The event that occurs.
+   * @param event - The event that occurs.
    */
   onPointerUp(event: Record<string, any>) {
     this.preparePointerEvent(event)

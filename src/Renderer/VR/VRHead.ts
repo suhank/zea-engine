@@ -12,8 +12,8 @@ class VRHead {
   protected hmdGeomItem: any
   /**
    * Create a VR head.
-   * @param {any} xrvp - The VR viewport.
-   * @param {any} stageTreeItem - The stageTreeItem value.
+   * @param xrvp - The VR viewport.
+   * @param stageTreeItem - The stageTreeItem value.
    */
   constructor(xrvp: any, stageTreeItem: any) {
     this.__xrvp = xrvp
@@ -26,7 +26,7 @@ class VRHead {
 
   /**
    * The Set wether the HMB is visible in rendering or not. Used in spectator rendering.
-   * @param {boolean} state - The visibility value.
+   * @param state - The visibility value.
    */
   setVisible(state: boolean) {
     if (state && !this.hmdGeomItem) {
@@ -52,7 +52,7 @@ class VRHead {
 
   /**
    * The update method.
-   * @param {any} pose - The pose value.
+   * @param pose - The pose value.
    */
   update(pose: any) {
     // Old
@@ -73,7 +73,7 @@ class VRHead {
 
   /**
    * The getTreeItem method.
-   * @return {any} - The return value.
+   * @return - The return value.
    */
   getTreeItem() {
     return this.__treeItem
@@ -81,7 +81,7 @@ class VRHead {
 
   /**
    * The getXfo method.
-   * @return {Xfo} - The return value.
+   * @return - The return value.
    */
   getXfo() {
     return this.__localXfo

@@ -13,7 +13,7 @@ class RouterOperator extends Operator {
 
   /**
    * Create a router operator.
-   * @param {string} name - The name value.
+   * @param name - The name value.
    */
   constructor(name?: string) {
     super(name)
@@ -22,8 +22,8 @@ class RouterOperator extends Operator {
 
   /**
    * The addRoute method.
-   * @param {Parameter} param - The parameter to router values to.
-   * @return {OperatorOutput} - The added output.
+   * @param param - The parameter to router values to.
+   * @return - The added output.
    */
   addRoute(param: Parameter<unknown>): OperatorOutput {
     const output = this.addOutput(new OperatorOutput('Output' + this.__outputs.size))

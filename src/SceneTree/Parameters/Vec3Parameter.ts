@@ -21,9 +21,9 @@ import { BinReader } from '../../SceneTree/BinReader'
 class Vec3Parameter extends Parameter<Vec3> implements IBinaryReader {
   /**
    * Create a Vec3 parameter.
-   * @param {string} name - The name of the Vec3 parameter.
-   * @param {Vec3} value - The value of the parameter.
-   * @param {array} range - The range value is an array of two `Vec2` objects.
+   * @param name - The name of the Vec3 parameter.
+   * @param value - The value of the parameter.
+   * @param range - The range value is an array of two `Vec2` objects.
    */
   constructor(name: string = '', value?: Vec3) {
     super(name, value ? value : new Vec3(), 'Vec3')
@@ -35,8 +35,8 @@ class Vec3Parameter extends Parameter<Vec3> implements IBinaryReader {
   /**
    * Extracts a number value from a buffer, updating current parameter state.
    *
-   * @param {BinReader} reader - The reader value.
-   * @param {Record<string, unknown>} context - The context value.
+   * @param reader - The reader value.
+   * @param context - The context value.
    */
   readBinary(reader: BinReader, context?: Record<string, unknown>): void {
     this.__value?.readBinary(reader)
@@ -45,7 +45,7 @@ class Vec3Parameter extends Parameter<Vec3> implements IBinaryReader {
   toJSON(context?: Record<string, unknown>): Record<string, unknown> {
     return {
       name: this.name,
-      value: this.__value?.toJSON()
+      value: this.__value?.toJSON(),
     }
   }
 
@@ -64,7 +64,7 @@ class Vec3Parameter extends Parameter<Vec3> implements IBinaryReader {
    * The clone method constructs a new Vec3 parameter, copies its values
    * from this parameter and returns it.
    *
-   * @return {Vec3Parameter} - Returns a new Vec3 parameter.
+   * @return - Returns a new Vec3 parameter.
    */
   clone(): Vec3Parameter {
     const clonedParam = new Vec3Parameter(this.name, this.__value?.clone())

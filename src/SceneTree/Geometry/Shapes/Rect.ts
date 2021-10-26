@@ -19,19 +19,19 @@ import { Vec3Attribute } from '../Vec3Attribute'
  */
 class Rect extends ProceduralLines {
   /**
-   * @member {NumberParameter} sizeXParam - Length of the rectangle along the `X` axis.
+   * @member sizeXParam - Length of the rectangle along the `X` axis.
    */
   sizeXParam: NumberParameter
 
   /**
-   * @member {NumberParameter} sizeYParam - Length of the rectangle along the `Y` axis.
+   * @member sizeYParam - Length of the rectangle along the `Y` axis.
    */
   sizeYParam: NumberParameter
 
   /**
    * Create a rect.
-   * @param {number} x - The length of the rect along the `X` axis.
-   * @param {number} y - The length of the rect along the `Y` axis.
+   * @param x - The length of the rect along the `X` axis.
+   * @param y - The length of the rect along the `Y` axis.
    */
   constructor(x = 1.0, y = 1.0) {
     super()

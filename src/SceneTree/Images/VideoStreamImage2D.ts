@@ -18,9 +18,9 @@ class VideoStreamImage2D extends BaseImage {
 
   /**
    * The connectWebcam method.
-   * @param {number} width - The width of the video.
-   * @param {number} height - The height of the video.
-   * @param {false} rearCamera - Boolean determining if it is a rear camera or not.
+   * @param width - The width of the video.
+   * @param height - The height of the video.
+   * @param rearCamera - Boolean determining if it is a rear camera or not.
    */
   connectWebcam(width: number, height: number, rearCamera = false) {
     const video: Record<string, any> = {
@@ -106,7 +106,7 @@ class VideoStreamImage2D extends BaseImage {
 
   /**
    * The setVideoStream method.
-   * @param {any} video - The video value.
+   * @param video - The video value.
    */
   setVideoStream(video: HTMLVideoElement) {
     this.loaded = false
@@ -140,7 +140,7 @@ class VideoStreamImage2D extends BaseImage {
 
   /**
    * The isLoaded method.
-   * @return {boolean} - The return value.
+   * @return - The return value.
    */
   isLoaded() {
     return this.loaded
@@ -148,7 +148,7 @@ class VideoStreamImage2D extends BaseImage {
 
   /**
    * The getParams method.
-   * @return {any} - The return value.
+   * @return - The return value.
    */
   getParams(): Record<string, any> {
     return {

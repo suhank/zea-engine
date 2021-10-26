@@ -14,7 +14,7 @@ import frag from './FlatSurface.frag'
 class FlatSurfaceShader extends GLShader {
   /**
    * Create a GL shader.
-   * @param {WebGL12RenderingContext} gl - The webgl rendering context.
+   * @param gl - The webgl rendering context.
    */
   constructor(gl?: WebGL12RenderingContext) {
     super(gl, 'FlatSurfaceShader')
@@ -24,9 +24,9 @@ class FlatSurfaceShader extends GLShader {
 
   /**
    * The bind method.
-   * @param {object} renderstate - The object tracking the current state of the renderer
-   * @param {string} key - The key value.
-   * @return {boolean} - The return value.
+   * @param renderstate - The object tracking the current state of the renderer
+   * @param key - The key value.
+   * @return - The return value.
    */
   bind(renderstate: RenderState, key?: string) {
     super.bind(renderstate, key)
@@ -41,8 +41,8 @@ class FlatSurfaceShader extends GLShader {
 
   /**
    * The unbind method.
-   * @param {object} renderstate - The object tracking the current state of the renderer
-   * @return {any} - The return value.
+   * @param renderstate - The object tracking the current state of the renderer
+   * @return - The return value.
    */
   unbind(renderstate: RenderState) {
     super.unbind(renderstate)
@@ -55,8 +55,8 @@ class FlatSurfaceShader extends GLShader {
 
   /**
    * The getPackedMaterialData method.
-   * @param {Material} material - The material param.
-   * @return {Float32Array} - The return value.
+   * @param material - The material param.
+   * @return - The return value.
    */
   static getPackedMaterialData(material: Material): Float32Array {
     const matData = new Float32Array(4)

@@ -16,7 +16,7 @@ import { Material, Vec3Parameter } from '../../SceneTree'
 class EnvProjectionShader extends GLShader {
   /**
    * Create a GL shader.
-   * @param {WebGL12RenderingContext} gl - The webgl rendering context.
+   * @param gl - The webgl rendering context.
    */
   constructor(gl: WebGL12RenderingContext) {
     super(gl, 'EnvProjectionShader')
@@ -27,7 +27,7 @@ class EnvProjectionShader extends GLShader {
 class OctahedralEnvProjectionShader extends EnvProjectionShader {
   /**
    * Create a GL shader.
-   * @param {WebGL12RenderingContext} gl - The webgl rendering context.
+   * @param gl - The webgl rendering context.
    */
   constructor(gl: WebGL12RenderingContext) {
     super(gl)
@@ -40,7 +40,7 @@ class OctahedralEnvProjectionShader extends EnvProjectionShader {
 class LatLongEnvProjectionShader extends EnvProjectionShader {
   /**
    * Create a GL shader.
-   * @param {WebGL12RenderingContext} gl - The webgl rendering context.
+   * @param gl - The webgl rendering context.
    */
   constructor(gl: WebGL12RenderingContext) {
     super(gl)

@@ -43,7 +43,7 @@ class Attribute extends BaseClass {
    * assigned to meshes, and is used to calculate face vertex indices.
    * > Note: the mesh automatically calls this method when a vertex attribute is assigned.
    *
-   * @param {Mesh} mesh - The mesh object
+   * @param mesh - The mesh object
    */
   setMesh(mesh: Mesh) {
     this.mesh = mesh
@@ -52,7 +52,7 @@ class Attribute extends BaseClass {
   /**
    * Returns the backing array for this attribute
    *
-   * @return {string} - The return value.
+   * @return - The return value.
    */
   asArray() {
     return this.data
@@ -61,7 +61,7 @@ class Attribute extends BaseClass {
   /**
    * Returns the name of the math type this attribute stores.
    *
-   * @return {string} - The return value.
+   * @return - The return value.
    */
   getDataTypeName() {
     return this.dataTypeName
@@ -70,7 +70,7 @@ class Attribute extends BaseClass {
   /**
    * Returns the count of attribute values in the data.
    *
-   * @return {number} - The return value.
+   * @return - The return value.
    */
   getCount(): number {
     return this.data.length / this.stride
@@ -79,7 +79,7 @@ class Attribute extends BaseClass {
   /**
    * Sets the count of attribute values in the data.
    *
-   * @param {number} size - The size value.
+   * @param size - The size value.
    */
   setCount(count: number): void {
     const prevLength = this.data.length
@@ -103,7 +103,7 @@ class Attribute extends BaseClass {
   /**
    * Fills up data values with default ones starting from the specified index.
    *
-   * @param {number} start - The start value.
+   * @param start - The start value.
    */
   private initRange(start: number): void {
     // Initialize the values to invalid values.
@@ -115,7 +115,7 @@ class Attribute extends BaseClass {
   /**
    * Returns the number of elements stored in each `T`.
    *
-   * @return {number} - The return value.
+   * @return - The return value.
    */
   get numElements(): number {
     return this.stride
@@ -124,8 +124,8 @@ class Attribute extends BaseClass {
   /**
    * Returns data value of the specified index.
    *
-   * @param {number} index - The index value.
-   * @return {number} - The return value.
+   * @param index - The index value.
+   * @return - The return value.
    */
   getFloat32Value(index: number): number {
     return this.data[index]
@@ -134,8 +134,8 @@ class Attribute extends BaseClass {
   /**
    * Sets data value in the specified index.
    *
-   * @param {number} index - The index value.
-   * @param {number} value - The value param.
+   * @param index - The index value.
+   * @param value - The value param.
    */
   setFloat32Value(index: number, value: number): void {
     this.data[index] = value
@@ -146,7 +146,7 @@ class Attribute extends BaseClass {
 
   /**
    * The getSplits method.
-   * @return {array} - The return value.
+   * @return - The return value.
    */
   getSplits(): Record<number, Record<number, number>> {
     return this.splits
@@ -154,9 +154,9 @@ class Attribute extends BaseClass {
 
   /**
    * Gets the value of a corner vertex of a face.
-   * @param {number} face - The face index.
-   * @param {number} faceVertex - The index of vertex within the face. [0... num face vertices]
-   * @return {Float32Array} - The return value.
+   * @param face - The face index.
+   * @param faceVertex - The index of vertex within the face. [0... num face vertices]
+   * @return - The return value.
    */
   getFaceVertexValueRef_array(face: number, faceVertex: number): Float32Array {
     const vertex = this.mesh.getFaceVertexIndex(face, faceVertex)
@@ -168,9 +168,9 @@ class Attribute extends BaseClass {
 
   /**
    * Sets the value of a corner vertex of a face.
-   * @param {number} face - The face index.
-   * @param {number} faceVertex - The index of vertex within the face. [0... num face vertices]
-   * @param {Float32Array} value - The value value.
+   * @param face - The face index.
+   * @param faceVertex - The index of vertex within the face. [0... num face vertices]
+   * @param value - The value value.
    */
   setFaceVertexValue_array(face: number, faceVertex: number, value: Float32Array): void {
     const vertex = this.mesh.getFaceVertexIndex(face, faceVertex)
@@ -179,9 +179,9 @@ class Attribute extends BaseClass {
 
   /**
    * The setFaceVertexValue_ByVertexIndex method.
-   * @param {number} face - The face index.
-   * @param {number} vertex - The vertex value.
-   * @param {any} value - The value value.
+   * @param face - The face index.
+   * @param vertex - The vertex value.
+   * @param value - The value value.
    */
   setFaceVertexValue_ByVertexIndex(face: number, vertex: number, value: Float32Array): void {
     const currValue = this.data.subarray(vertex * this.stride, (vertex + 1) * this.stride)
@@ -223,9 +223,9 @@ class Attribute extends BaseClass {
 
   /**
    * The setSplitVertexValue method.
-   * @param {number} vertex - The vertex value.
-   * @param {number} face - The face index.
-   * @param {any} value - The value value.
+   * @param vertex - The vertex value.
+   * @param face - The face index.
+   * @param value - The value value.
    */
   setSplitVertexValue_array(vertex: number, face: number, value: Float32Array): void {
     if (!(vertex in this.splits)) this.splits[vertex] = {}
@@ -240,9 +240,9 @@ class Attribute extends BaseClass {
 
   /**
    * The setSplitVertexValues method.
-   * @param {number} vertex - The vertex value.
-   * @param {array} faceGroup - The faceGroup value.
-   * @param {any} value - The value value.
+   * @param vertex - The vertex value.
+   * @param faceGroup - The faceGroup value.
+   * @param value - The value value.
    */
   setSplitVertexValues(vertex: number, faceGroup: number[], value: Float32Array): void {
     if (!(vertex in this.splits)) this.splits[vertex] = {}
@@ -261,9 +261,9 @@ class Attribute extends BaseClass {
 
   /**
    * The generateSplitValues method.
-   * @param {Record<number, Record<number, number>>} splitIndices - The splitIndices value.
-   * @param {number} splitCount - The splitCount value.
-   * @return {Float32Array} - The return value.
+   * @param splitIndices - The splitIndices value.
+   * @param splitCount - The splitCount value.
+   * @return - The return value.
    */
   generateSplitValues(splitIndices: Record<number, Record<number, number>>, splitCount: number): TypedArray {
     if (splitCount == 0) return this.data
@@ -305,8 +305,8 @@ class Attribute extends BaseClass {
   /**
    * The toJSON method encodes this type as a json object for persistence.
    *
-   * @param {Record<string, any>} context - The context value.
-   * @return {Record<string, any>} - Returns the json object.
+   * @param context - The context value.
+   * @return - Returns the json object.
    */
   toJSON(context?: Record<string, any>): Record<string, any> {
     return {
@@ -319,7 +319,7 @@ class Attribute extends BaseClass {
   /**
    * The fromJSON method decodes a json object for this type.
    *
-   * @param {Record<string, any>} j - The json object this item must decode.
+   * @param j - The json object this item must decode.
    */
   fromJSON(j: Record<string, any>): void {
     const data = j.data.map((dataElement: any) =>
@@ -330,7 +330,7 @@ class Attribute extends BaseClass {
 
   /**
    * The loadSplitValues method.
-   * @param {BinReader} reader - The reader value.
+   * @param reader - The reader value.
    */
   loadSplitValues(reader: BinReader) {
     const splitIndices = reader.loadUInt32Array()
@@ -363,7 +363,7 @@ class Attribute extends BaseClass {
   /**
    * Returns the string representation of the object's state.
    *
-   * @return {string} - The return value.
+   * @return - The return value.
    */
   toString(): string {
     return JSON.stringify(this.toJSON(), null, 2)
@@ -375,7 +375,7 @@ class Attribute extends BaseClass {
   /**
    * Returns vertex attributes buffers and its count.
    *
-   * @return {Record<string, any>} - The return value.
+   * @return - The return value.
    */
   genBuffer(): Record<string, any> {
     return {

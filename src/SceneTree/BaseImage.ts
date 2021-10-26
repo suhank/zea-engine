@@ -22,7 +22,7 @@ class BaseImage extends BaseItem {
   loaded: boolean = false
   /**
    * Creates an instance of BaseImage.
-   * @param {string} name - name of the item
+   * @param name - name of the item
    */
   constructor(name?: string) {
     super(name)
@@ -43,7 +43,7 @@ class BaseImage extends BaseItem {
   /**
    * Returns true if loaded.
    * @private
-   * @return {boolean} - Returns a boolean.
+   * @return - Returns a boolean.
    */
   isLoaded(): boolean {
     return this.loaded
@@ -52,7 +52,7 @@ class BaseImage extends BaseItem {
   /**
    * Returns all parameters and class state values.
    *
-   * @return {Record<string, any>} - The return value.
+   * @return - The return value.
    */
   getParams(): Record<string, any> {
     return {

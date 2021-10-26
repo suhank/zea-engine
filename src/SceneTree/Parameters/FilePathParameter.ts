@@ -17,8 +17,8 @@ class FilePathParameter extends Parameter<string> {
   /**
    * Create a file path parameter.
    *
-   * @param {string} name - The name of the file path parameter.
-   * @param {string} exts - The exts value.
+   * @param name - The name of the file path parameter.
+   * @param exts - The exts value.
    */
   constructor(name: string = '') {
     super(name, '', 'FilePath')
@@ -27,7 +27,7 @@ class FilePathParameter extends Parameter<string> {
   /**
    * Returns parameter's file name
    *
-   * @return {string} - The return value.
+   * @return - The return value.
    */
   getFilename(): string {
     if (!this.__value) throw 'No file value'
@@ -37,7 +37,7 @@ class FilePathParameter extends Parameter<string> {
   /**
    * Returns parameter's file extension
    *
-   * @return {string} - The return value.
+   * @return - The return value.
    */
   getExt(): string | undefined {
     const filename = this.getFilename()
@@ -49,7 +49,7 @@ class FilePathParameter extends Parameter<string> {
   /**
    * Returns parameter's file name without extension
    *
-   * @return {string} - The return value.
+   * @return - The return value.
    */
   getStem(): string | null {
     const filename = this.getFilename()
@@ -64,7 +64,7 @@ class FilePathParameter extends Parameter<string> {
   /**
    * Sets file parameter value
    *
-   * @param {string} value - The value param.
+   * @param value - The value param.
    */
   setValue(value: string): void {
     if (!value) {
@@ -87,8 +87,8 @@ class FilePathParameter extends Parameter<string> {
   /**
    * The toJSON method encodes this type as a json object for persistence.
    *
-   * @param {Record<string, any>} [context] - The context value.
-   * @return {Record<string, unknown>} - Returns the json object.
+   * @param context - The context value.
+   * @return - Returns the json object.
    */
   toJSON(context?: Record<string, any>): Record<string, unknown> {
     return { value: this.__value }
@@ -97,8 +97,8 @@ class FilePathParameter extends Parameter<string> {
   /**
    * The fromJSON method decodes a json object for this type.
    *
-   * @param {Record<string, unknown>} j - The json object this item must decode.
-   * @param {Record<string, any>} [context] - The context value.
+   * @param j - The json object this item must decode.
+   * @param context - The context value.
    */
   fromJSON(j: Record<string, unknown>, context?: Record<string, any>): void {
     if (j.value) {
@@ -113,7 +113,7 @@ class FilePathParameter extends Parameter<string> {
    * The clone method constructs a new file path parameter,
    * copies its values from this parameter and returns it.
    *
-   * @return {FilePathParameter} - Returns a new cloned file path parameter.
+   * @return - Returns a new cloned file path parameter.
    */
   clone(): FilePathParameter {
     const clone = new FilePathParameter(this.name)

@@ -44,9 +44,9 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
    *  // As result the console log code will execute: Value Changed!
    * ```
    *
-   * @param {string} name - The name of the parameter.
-   * @param {T} value - The value of the parameter.
-   * @param {string} dataType - The data type of the parameter.
+   * @param name - The name of the parameter.
+   * @param value - The value of the parameter.
+   * @param dataType - The data type of the parameter.
    */
   constructor(name: string = '', value: T, dataType: string) {
     super()
@@ -58,7 +58,7 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
   /**
    * Returns specified name of the parameter.
    *
-   * @return {string} - Returns the name.
+   * @return - Returns the name.
    */
   getName(): string {
     return this.name
@@ -67,8 +67,8 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
   /**
    * Sets the name of the current parameter.
    *
-   * @param {string} name - The base parameter name.
-   * @return {Parameter} - The instance itself.
+   * @param name - The base parameter name.
+   * @return - The instance itself.
    */
   setName(name: string): void {
     if (name === this.name) {
@@ -83,7 +83,7 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
   /**
    * Returns the owner item of the current parameter.
    *
-   * @return {ParameterOwner} - The return value.
+   * @return - The return value.
    */
   getOwner(): ParameterOwner {
     return this.ownerItem!
@@ -92,7 +92,7 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
   /**
    * Sets the owner item of the current parameter.
    *
-   * @param {ParameterOwner} ownerItem - The ownerItem value.
+   * @param ownerItem - The ownerItem value.
    */
   setOwner(ownerItem: ParameterOwner): void {
     this.ownerItem = ownerItem
@@ -102,7 +102,7 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
    * Returns the parameter's path as an array of strings.
    * Includes owner's path in case it is owned by a `ParameterOwner`.
    *
-   * @return {string[]} - The return value.
+   * @return - The return value.
    */
   getPath(): string[] {
     if (this.ownerItem && this.ownerItem instanceof BaseItem) {
@@ -115,7 +115,7 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
   /**
    * Returns parameter's data type.
    *
-   * @return {string} - The return value.
+   * @return - The return value.
    */
   getDataType(): string {
     return this.dataType
@@ -129,9 +129,9 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
    * changes. The Parameter maintains a list of bound inputs and will propagate dirty to
    * them explicitly.
    *
-   * @param {OperatorInput} operatorInput - The output that we are unbinding from the Parameter
-   * @param {number} index - The index(optional) that the output is being bound at.
-   * @return {number} - The index of the bound output.
+   * @param operatorInput - The output that we are unbinding from the Parameter
+   * @param index - The index(optional) that the output is being bound at.
+   * @return - The index of the bound output.
    */
   bindOperatorInput(operatorInput: OperatorInput) {
     this.boundInputs.push(operatorInput)
@@ -141,8 +141,8 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
    * When an operator is being removed from reading from a Parameter, the Input is removed
    * This means the operator will no longer receive updates when the operator changes.
    *
-   * @param {OperatorInput} operatorInput - The output that we are unbinding from the Parameter
-   * @return {boolean} - The return value.
+   * @param operatorInput - The output that we are unbinding from the Parameter
+   * @return - The return value.
    */
   unbindOperatorInput(operatorInput: OperatorInput) {
     const index = this.boundInputs.indexOf(operatorInput)
@@ -154,9 +154,9 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
    * index. Then when the operator is dirtied by one of its inputs, it explicitly dirties
    * the output parameters.
    *
-   * @param {OperatorOutput} operatorOutput - The output that we are unbinding from the Parameter
-   * @param {number} index - The index(optional) that the output is being bound at.
-   * @return {number} - The index of the bound output.
+   * @param operatorOutput - The output that we are unbinding from the Parameter
+   * @param index - The index(optional) that the output is being bound at.
+   * @return - The index of the bound output.
    */
   bindOperatorOutput(operatorOutput: OperatorOutput, index = -1): number {
     if (index == -1) index = this.boundOutputs.length
@@ -175,8 +175,8 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
    * When an operator is unbinding from a parameter, it removes its self from the list maintained
    * by the parameter.
    *
-   * @param {OperatorOutput} operatorOutput - The output that we are unbinding from the Parameter
-   * @return {boolean} - The return value.
+   * @param operatorOutput - The output that we are unbinding from the Parameter
+   * @return - The return value.
    */
   unbindOperatorOutput(operatorOutput: OperatorOutput): number {
     const index = operatorOutput.getParamBindIndex()
@@ -208,8 +208,8 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
   /**
    * Dirties this Parameter so subsequent calls to `getValue` will cause an evaluation of its bound operators.
    *
-   * @param {number} index - Index of the operator
-   * @return {boolean} - `true` if the Parameter was made dirty, else `false` if it was already dirty.
+   * @param index - Index of the operator
+   * @return - `true` if the Parameter was made dirty, else `false` if it was already dirty.
    */
   setDirty(index: number): boolean {
     // Determine the first operator in the stack that must evaluate to clean the parameter.
@@ -242,7 +242,7 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
    * Returns true if this parameter is currently dirty and will evaluate its bound
    * operators if its value is requested by a call to getValue.
    *
-   * @return {boolean} - Returns a boolean.
+   * @return - Returns a boolean.
    */
   isDirty(): boolean {
     return this.dirtyOpIndex < this.boundOutputs.length
@@ -252,7 +252,7 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
    * Returns the index of the first 'dirty' binding in the stack. This will be the index of the
    * first operator that will evaluate when the parameter needs to be cleaned.
    *
-   * @return {number} - The index of the dirty binding in the binding stack.
+   * @return - The index of the dirty binding in the binding stack.
    */
   getDirtyBindingIndex(): number {
     return this.dirtyOpIndex
@@ -260,8 +260,8 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
 
   /**
    * The setCleanFromOp method.
-   * @param {T} value - The computed value to be stored in the Parameter.
-   * @param {number} index - The index of the bound OperatorOutput.
+   * @param value - The computed value to be stored in the Parameter.
+   * @param index - The index of the bound OperatorOutput.
    */
   setCleanFromOp(value: T, index: number): void {
     if (index != this.dirtyOpIndex) {
@@ -307,8 +307,8 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
   /**
    * During operator evaluation, operators can use this method to retrieve the existing
    * value of one of their outputs.
-   * @param {number} index - The index of the bound OperatorOutput to evaluate up to.
-   * @return {T | undefined} - The return value.
+   * @param index - The index of the bound OperatorOutput to evaluate up to.
+   * @return - The return value.
    */
   getValueFromOp(index: number): T | undefined {
     // Note: during evaluation of an Operator that writes to multiple outputs,
@@ -323,7 +323,7 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
   /**
    * Cleans the parameter up tp the index of the specified index of the bound OperatorOutput
    *
-   * @param {number} index - The index of the bound OperatorOutput to evaluate up to.
+   * @param index - The index of the bound OperatorOutput to evaluate up to.
    */
   _clean(index: number): void {
     if (this.cleaning) {
@@ -354,7 +354,7 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
 
   /**
    * Returns parameter's value.
-   * @return {T} - The return value.
+   * @return - The return value.
    */
   getValue(): T {
     if (this.dirtyOpIndex < this.boundOutputs.length) {
@@ -363,11 +363,10 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
     return this.__value
   }
 
-
   /**
    * Sets value of the parameter.
    *
-   * @param {T} value - The value param.
+   * @param value - The value param.
    */
   setValue(value: T): void {
     if (value == undefined) {
@@ -400,7 +399,7 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
   get value(): T {
     return this.getValue()
   }
-  
+
   set value(value: T) {
     this.setValue(value)
   }
@@ -411,7 +410,7 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
    * The loadValue is used to change the value of a parameter, without triggering a
    * valueChanges, or setting the USER_EDITED state.
    *
-   * @param {T} value - The context value.
+   * @param value - The context value.
    */
   loadValue(value: T): void {
     this.__value = value
@@ -426,8 +425,8 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
   /**
    * The readBinary method.
    *
-   * @param {BinReader} reader - The reader value.
-   * @param {Record<string, unknown>} context - The context value.
+   * @param reader - The reader value.
+   * @param context - The context value.
    */
   readBinary(reader: BinReader, context: Record<string, unknown>) {
     console.warn(`TODO: Parameter: ${this.constructor.name} with name: ${this.name} does not implement readBinary`)
@@ -436,8 +435,8 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
   /**
    * The readBinary method.
    *
-   * @param {Record<string, any>} reader - The reader value.
-   * @param {Record<string, unknown>} context - The context value.
+   * @param reader - The reader value.
+   * @param context - The context value.
    */
   destroy() {
     console.warn('nothing destroyed. This method was not overwritten in subclass')

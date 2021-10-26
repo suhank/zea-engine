@@ -18,9 +18,9 @@ class GLShaderMaterials extends EventEmitter {
   protected glMaterialGeomItemSets: any[]
   /**
    * Create a GL shader material.
-   * @param {WebGL12RenderingContext} gl - The WebGL Context value.
-   * @param {GLPass} pass - The pass that owns this GLShaderMaterials object.
-   * @param {Record<any,any>} shaders - The shaders value.
+   * @param gl - The WebGL Context value.
+   * @param pass - The pass that owns this GLShaderMaterials object.
+   * @param shaders - The shaders value.
    */
   constructor(gl: WebGL12RenderingContext, pass: GLPass, shaders: Record<string, any>) {
     super()
@@ -34,8 +34,8 @@ class GLShaderMaterials extends EventEmitter {
 
   /**
    * The findMaterialGeomItemSets method.
-   * @param {GLMaterial} glMaterial - The glMaterial value.
-   * @return {boolean} - The return value.
+   * @param glMaterial - The glMaterial value.
+   * @return - The return value.
    */
   findMaterialGeomItemSets(glMaterial: GLMaterial) {
     for (const matGeomItemSet of this.glMaterialGeomItemSets) {
@@ -45,9 +45,9 @@ class GLShaderMaterials extends EventEmitter {
 
   /**
    * The addGLGeomItem method.
-   * @param {GLGeomItem} glGeomItem - The glGeomItem value.
-   * @param {GLGeom} glGeom - The glGeomItem value.
-   * @param {GLMaterial} glMaterial - The glMaterial value.
+   * @param glGeomItem - The glGeomItem value.
+   * @param glGeom - The glGeomItem value.
+   * @param glMaterial - The glMaterial value.
    */
   addGLGeomItem(glGeomItem: GLGeomItem, glGeom: GLGeom, glMaterial: GLMaterial) {
     let glMaterialGeomItemSets = this.findMaterialGeomItemSets(glMaterial)
@@ -61,7 +61,7 @@ class GLShaderMaterials extends EventEmitter {
 
   /**
    * The addMaterialGeomItemSets method.
-   * @param {any} glMaterialGeomItemSets - The glMaterialGeomItemSets value.
+   * @param glMaterialGeomItemSets - The glMaterialGeomItemSets value.
    */
   addMaterialGeomItemSets(glMaterialGeomItemSets: any) {
     this.glMaterialGeomItemSets.push(glMaterialGeomItemSets)
@@ -84,7 +84,7 @@ class GLShaderMaterials extends EventEmitter {
 
   /**
    * The removeMaterialGeomItemSets method.
-   * @param {GLMaterialGeomItemSets} glMaterialGeomItemSets - The glMaterialGeomItemSets value.
+   * @param glMaterialGeomItemSets - The glMaterialGeomItemSets value.
    */
   removeMaterialGeomItemSets(glMaterialGeomItemSets: GLMaterialGeomItemSets) {
     const index = this.glMaterialGeomItemSets.indexOf(glMaterialGeomItemSets)
@@ -93,7 +93,7 @@ class GLShaderMaterials extends EventEmitter {
 
   /**
    * The getMaterialGeomItemSets method.
-   * @return {GLMaterialGeomItemSets} - The return value.
+   * @return - The return value.
    */
   getMaterialGeomItemSets() {
     return this.glMaterialGeomItemSets
@@ -101,7 +101,7 @@ class GLShaderMaterials extends EventEmitter {
 
   /**
    * Draws all elements, binding the shader and continuing into the GLMaterialGeomItemSets
-   * @param {RenderState} renderstate - The render state for the current draw traversal
+   * @param renderstate - The render state for the current draw traversal
    */
   draw(renderstate: RenderState) {
     const glShader = this.glShader
@@ -117,7 +117,7 @@ class GLShaderMaterials extends EventEmitter {
 
   /**
    * The drawHighlightedGeoms method.
-   * @param {RenderState} renderstate - The object tracking the current state of the renderer
+   * @param renderstate - The object tracking the current state of the renderer
    */
   drawHighlightedGeoms(renderstate: RenderState) {
     if (!this.glselectedshader || !this.glselectedshader.bind(renderstate, 'highlight')) return
@@ -131,7 +131,7 @@ class GLShaderMaterials extends EventEmitter {
 
   /**
    * The drawGeomData method.
-   * @param {RenderState} renderstate - The object tracking the current state of the renderer
+   * @param renderstate - The object tracking the current state of the renderer
    */
   drawGeomData(renderstate: GeomDataRenderState) {
     if (!this.glgeomdatashader || !this.glgeomdatashader.bind(renderstate, 'geomData')) return

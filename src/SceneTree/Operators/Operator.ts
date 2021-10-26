@@ -14,7 +14,7 @@ class Operator extends BaseItem {
   __outputs: Map<string, OperatorOutput>
   /**
    * Create an operator.
-   * @param {string} name - The name value.
+   * @param name - The name value.
    */
   constructor(name: string = '') {
     super(name)
@@ -37,7 +37,7 @@ class Operator extends BaseItem {
    * This method can be overridden in derived classes
    * to perform general updates (see GLPass or BaseItem).
    *
-   * @param {Record<string, any>} event
+   * @param event
    * @private
    */
   protected parameterValueChanged(event: Record<string, unknown>): void {
@@ -47,8 +47,8 @@ class Operator extends BaseItem {
 
   /**
    * The addInput method.
-   * @param {string|OperatorInput} input - The name of the input, or the input object
-   * @return {array} - The return value.
+   * @param input - The name of the input, or the input object
+   * @return - The return value.
    */
   addInput(input: OperatorInput): OperatorInput {
     if (typeof input == 'string') input = new OperatorInput(input)
@@ -63,7 +63,7 @@ class Operator extends BaseItem {
 
   /**
    * The removeInput method.
-   * @param {string|OperatorInput} input - The name of the input, or the input object
+   * @param input - The name of the input, or the input object
    */
   removeInput(input: OperatorInput): void {
     if (typeof input == 'string') input = this.getInput(input)
@@ -76,7 +76,7 @@ class Operator extends BaseItem {
 
   /**
    * Getter for the number of inputs in this operator.
-   * @return {number} - Returns the number of inputs.
+   * @return - Returns the number of inputs.
    */
   getNumInputs(): number {
     return this.__inputs.size
@@ -84,8 +84,8 @@ class Operator extends BaseItem {
 
   /**
    * The getInputByIndex method.
-   * @param {number} index - The index value.
-   * @return {Record<string, any>} - The return value.
+   * @param index - The index value.
+   * @return - The return value.
    */
   getInputByIndex(index: number): Record<string, any> {
     return Array.from(this.__inputs.values())[index]
@@ -93,8 +93,8 @@ class Operator extends BaseItem {
 
   /**
    * The getInput method.
-   * @param {string} name - The name value.
-   * @return {OperatorInput} - The return value.
+   * @param name - The name value.
+   * @return - The return value.
    */
   getInput(name: string): OperatorInput {
     const input = this.__inputs.get(name)
@@ -104,8 +104,8 @@ class Operator extends BaseItem {
 
   /**
    * The addOutput method.
-   * @param {string|OperatorOutput} output - The name of the output, or the output object
-   * @return {array} - The return value.
+   * @param output - The name of the output, or the output object
+   * @return - The return value.
    */
   addOutput(output: OperatorOutput | string): OperatorOutput {
     if (typeof output == 'string') output = new OperatorOutput(output)
@@ -121,7 +121,7 @@ class Operator extends BaseItem {
 
   /**
    * The removeOutput method.
-   * @param {string|OperatorOutput} output - The name of the output, or the output object
+   * @param output - The name of the output, or the output object
    */
   removeOutput(output: OperatorOutput | string): void {
     if (typeof output == 'string') output = this.getOutput(output)
@@ -134,7 +134,7 @@ class Operator extends BaseItem {
 
   /**
    * Getter for the number of outputs in this operator.
-   * @return {number} - Returns the number of outputs.
+   * @return - Returns the number of outputs.
    */
   getNumOutputs(): number {
     return this.__outputs.size
@@ -142,8 +142,8 @@ class Operator extends BaseItem {
 
   /**
    * The getOutputByIndex method.
-   * @param {number} index - The index value.
-   * @return {OperatorOutput} - The return value.
+   * @param index - The index value.
+   * @return - The return value.
    */
   getOutputByIndex(index: number): OperatorOutput {
     return Array.from(this.__outputs.values())[index]
@@ -151,8 +151,8 @@ class Operator extends BaseItem {
 
   /**
    * The getOutput method.
-   * @param {string} name - The name value.
-   * @return {OperatorOutput} - The return value.
+   * @param name - The name value.
+   * @return - The return value.
    */
   getOutput(name: string): OperatorOutput {
     const output = this.__outputs.get(name)
@@ -177,8 +177,8 @@ class Operator extends BaseItem {
    * 'backPropagateValue' on the Operator to cause the Operator to handle propagating
    * the value to one or more of its inputs.
    * to its inputs.
-   * @param {unknown} value - The value param.
-   * @return {unknown} - The modified value.
+   * @param value - The value param.
+   * @return - The modified value.
    */
   backPropagateValue(value: unknown): unknown {
     // TODO: Implement me for custom manipulations.
@@ -191,8 +191,8 @@ class Operator extends BaseItem {
   /**
    * The toJSON method encodes this type as a json object for persistence.
    *
-   * @param {Record<string, any>} [context] - The context value.
-   * @return {Record<string, any>} - Returns the json object.
+   * @param context - The context value.
+   * @return - Returns the json object.
    */
   toJSON(context?: Record<string, any>): Record<string, any> {
     const j = super.toJSON(context)
@@ -213,8 +213,8 @@ class Operator extends BaseItem {
   /**
    * The fromJSON method decodes a json object for this type.
    *
-   * @param {Record<string, any>} j - The json object this item must decode.
-   * @param {Record<string, any>} context - The context value.
+   * @param j - The json object this item must decode.
+   * @param context - The context value.
    */
   fromJSON(j: Record<string, any>, context?: Record<string, any>): void {
     super.fromJSON(j, context)

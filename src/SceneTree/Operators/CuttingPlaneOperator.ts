@@ -13,8 +13,8 @@ import { Vec4Parameter, XfoParameter } from '../Parameters'
 class CuttingPlaneOperator extends Operator {
   /**
    * Create a GroupMemberXfoOperator operator.
-   * @param {XfoParameter} groupGlobalXfoParam - The GlobalXfo param found on the Group.
-   * @param {Vec4Parameter} cuttingPlaneParam - The parameter on the Group which defines the displacement to apply to the members.
+   * @param groupGlobalXfoParam - The GlobalXfo param found on the Group.
+   * @param cuttingPlaneParam - The parameter on the Group which defines the displacement to apply to the members.
    */
   constructor(groupGlobalXfoParam: XfoParameter, cuttingPlaneParam: Vec4Parameter) {
     super()

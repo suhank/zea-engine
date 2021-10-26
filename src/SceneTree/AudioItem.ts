@@ -5,8 +5,6 @@ import { AudioSourceCreatedEvent } from '../Utilities/Events/AudioSourceCreatedE
 
 /**
  * A special type of `TreeItem` that let you handle audio files.
- * <br>
- * <br>
  * **Parameters**
  * * **Autoplay(`BooleanParameter`):**
  * * **PlayState(`NumberParameter`):**
@@ -45,7 +43,7 @@ class AudioItem extends TreeItem {
   coneOuterGainParam = new NumberParameter('coneOuterGain', 1)
   /**
    * Create an audio item.
-   * @param {string} name - The name of the audio item.
+   * @param name - The name of the audio item.
    */
   constructor(name: string) {
     super(name)
@@ -163,7 +161,7 @@ class AudioItem extends TreeItem {
   /**
    * Returns loaded status of the audio item
    *
-   * @return {boolean} - `The return value`.
+   * @return - `The return value`.
    */
   isLoaded(): boolean {
     return this.loaded
@@ -171,7 +169,7 @@ class AudioItem extends TreeItem {
 
   /**
    * The setAudioStream method.
-   * @param {any} audioSource - The audio value.
+   * @param audioSource - The audio value.
    */
   setAudioStream(audioSource: any) {
     this.loaded = true
@@ -188,7 +186,7 @@ class AudioItem extends TreeItem {
 class FileAudioItem extends AudioItem {
   /**
    * Create a audio file item.
-   * @param {string} name - The name of the audio file.
+   * @param name - The name of the audio file.
    */
   constructor(name: string) {
     super(name)

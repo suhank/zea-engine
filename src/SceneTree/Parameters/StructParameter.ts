@@ -24,7 +24,7 @@ class StructParameter extends Parameter<Record<string, unknown>> {
 
   /**
    * Create a struct parameter.
-   * @param {string} name - The name of the struct parameter.
+   * @param name - The name of the struct parameter.
    */
   constructor(name?: string) {
     super(name, {}, 'Struct')
@@ -33,8 +33,8 @@ class StructParameter extends Parameter<Record<string, unknown>> {
 
   /**
    * The _addMember method.
-   * @param {Parameter} parameter - The parameter value.
-   * @return {Parameter} - The return value.
+   * @param parameter - The parameter value.
+   * @return - The return value.
    * @private
    */
   protected addMember(parameter: Parameter<any>) {
@@ -53,8 +53,8 @@ class StructParameter extends Parameter<Record<string, unknown>> {
    * The getParameter method.
    *
    * @private
-   * @param {string} name - The parameter name.
-   * @return {Parameter} - The return value.
+   * @param name - The parameter name.
+   * @return - The return value.
    */
   getParameter(name: string): Parameter<unknown> | undefined {
     for (const p of this.members) {
@@ -66,8 +66,8 @@ class StructParameter extends Parameter<Record<string, unknown>> {
   /**
    * Looks for a member parameter with the specified name and returns it.
    *
-   * @param {string} name - The parameter name.
-   * @return {Parameter} - The return value.
+   * @param name - The parameter name.
+   * @return - The return value.
    */
   getMember(name: string) {
     return this.getParameter(name)
@@ -76,7 +76,7 @@ class StructParameter extends Parameter<Record<string, unknown>> {
   /**
    * Returns the name of all parameters in StructParameter.
    *
-   * @return {array} - The return value.
+   * @return - The return value.
    */
   getMemberNames(): Array<any> {
     const names = []
@@ -93,8 +93,8 @@ class StructParameter extends Parameter<Record<string, unknown>> {
   /**
    * The toJSON method encodes this type as a json object for persistence.
    *
-   * @param {Record<string, any>} [context] - The context value.
-   * @return {Record<string, any>} - Returns the json object.
+   * @param context - The context value.
+   * @return - Returns the json object.
    */
   toJSON(context?: Record<string, any>): Record<string, any> {
     const j: Record<string, any> = {}
@@ -109,8 +109,8 @@ class StructParameter extends Parameter<Record<string, unknown>> {
   /**
    * The fromJSON method decodes a json object for this type.
    *
-   * @param {Record<string, any>} j - The json object this item must decode.
-   * @param {Record<string, any>} [context] - The context value.
+   * @param j - The json object this item must decode.
+   * @param context - The context value.
    */
   fromJSON(j: Record<string, any>, context: Record<string, any>): void {
     if (j.members == undefined) {
