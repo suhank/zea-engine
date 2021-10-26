@@ -1,4 +1,4 @@
-import { Parameter } from './Parameter.js'
+import { Parameter } from './Parameter'
 import { BinReader } from '../BinReader'
 import { IBinaryReader } from '../../Utilities/IBinaryReader'
 import { Registry } from '../../Registry'
@@ -14,7 +14,7 @@ class StringListParameter extends Parameter<Array<string>> implements IBinaryRea
    * @param {string} name - The name of the material color parameter.
    * @param {string} value - The value of the parameter.
    */
-  constructor(name: string, value: Array<string> = []) {
+  constructor(name: string = '', value: Array<string> = []) {
     super(name, value, 'String[]')
   }
 
@@ -57,7 +57,7 @@ class StringListParameter extends Parameter<Array<string>> implements IBinaryRea
    * @return {StringListParameter} - Returns a new string parameter.
    */
   clone() {
-    const clonedParam = new StringListParameter(this.__name, this.__value)
+    const clonedParam = new StringListParameter(this.name, this.__value)
     return clonedParam
   }
 }
