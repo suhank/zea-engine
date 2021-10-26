@@ -556,7 +556,6 @@ class GLBaseRenderer extends ParameterOwner {
       this.__glcanvas = $canvas
     }
     this.__glcanvas.style['touch-action'] = 'none'
-    this.__glcanvas.style.position = 'relative'
     this.__glcanvas.style.width = 'auto'
     this.__glcanvas.style.height = 'auto'
     this.__glcanvas.style.margin = '0px'

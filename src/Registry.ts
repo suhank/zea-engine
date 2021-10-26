@@ -34,7 +34,9 @@ class Registry {
    * @param {BaseClass} classDef - Class representation(Class function, type)
    */
   static register(className: string, classDef: typeof BaseClass): void {
-    if (className in registeredClasses) throw new Error(`There's a class registered with '${className}' name`)
+    if (className in registeredClasses) {
+      console.warn(`There's a class registered with '${className}' name`)
+    }
 
     // Note: To provide backwards compatibility, same classDef can be stored under multiple names.
     // Thats the reason behind using indexes instead of the classDef.
