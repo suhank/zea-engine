@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html class="h-full">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>add-remove-items-from-renderer - Zea Engine</title>
+
+    <link href="data/zea-logo.png" rel="shortcut icon" />
+
+    <link rel="stylesheet" href="styles/tailwind.min.css" />
+
+    <script type="module">
+      import '../dist/index.umd.js'
+      import 'https://cdn.jsdelivr.net/npm/@zeainc/zea-cad@3/dist/index.umd.js'
+      const { GLRenderer, Scene, Vec3, Color, Xfo, Sphere, Material, GeomItem, LDRImage, TreeItem } = zeaEngine
+      const { CADAsset, CADBody } = window.zeaCad
+
+      const canvas = document.getElementById('viewport')
+
+      const scene = new Scene()
+      const renderer = new GLRenderer(canvas, { hideSplash: true, antialias: false })
+      renderer.setScene(scene)
+
+      scene.setupGrid(10.0, 10)
+
+      const url = 'data/Dead_eye_bearing.zcad'
+      const asset = new CADAsset()
+      asset.load(url).then(() => {
+        renderer.frameAll()
+      })
+      asset.getGeometryLibrary().on('loaded', () => {
+        postMessage('done-loading')
+      })
+      scene.getRoot().addChild(asset)
+
+      renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(10, 10, 2.7), new Vec3(0, 0, 0.4))
+
+      const postMessage = (msg) => {
+        console.log(msg)
+        window.postMessage(msg)
+      }
+      // {{{ Messages handler.
+      const handleMessage = (event) => {
+        const { data } = event
+
+        if (data === 'variant-01') {
+          scene.getRoot().removeAllChildren()
+          window.postMessage(`done-${data}`)
+        } else if (data === 'variant-02') {
+          // Now look away, so that the scene gets frustum culled.
+          const asset = new CADAsset()
+          asset.load(url).then(() => {
+            renderer.frameAll()
+          })
+          asset.getGeometryLibrary().on('loaded', () => {
+            window.postMessage(`done-${data}`)
+          })
+          scene.getRoot().addChild(asset)
+        }
+      }
+      window.addEventListener('message', handleMessage, false)
+      // }}}
+    </script>
+  </head>
+  <body class="bg-blue-100 h-full">
+    <div class="h-full">
+      <canvas id="viewport"></canvas>
+    </div>
+  </body>
+</html>
