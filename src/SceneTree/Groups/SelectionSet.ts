@@ -57,11 +57,11 @@ class SelectionSet extends BaseGroup {
   }
 
   /**
-   * The __updateVisibility method.
+   * The updateVisibility method.
    * @return - The return value.
    * @private
    */
-  __updateVisibility(): boolean {
+  updateVisibility(): boolean {
     if (super.updateVisibility()) {
       const value = this.isVisible()
       Array.from(this.itemsParam.value).forEach((item) => {

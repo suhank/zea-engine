@@ -301,7 +301,7 @@ class KinematicGroup extends BaseGroup {
    * called once loading is done.
    * @private
    */
-  __loadDone() {
+  loadDone() {
     this.calculatingGroupXfo = true
     this.calcGroupXfo()
     this.calculatingGroupXfo = false

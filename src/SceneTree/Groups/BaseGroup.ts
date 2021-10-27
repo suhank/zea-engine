@@ -279,7 +279,7 @@ class BaseGroup extends TreeItem {
   }
 
   /**
-   * called once loading is done.
+   * called once loading is done. Some derived classes override this method.
    * @private
    */
   protected loadDone(): void {}
