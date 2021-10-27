@@ -46,11 +46,9 @@ describe('Vec2', () => {
     expect(vec2.length()).toBeCloseTo(2.236)
   })
 
-  it('creates Vec2 from buffer', () => {
- 
+  it('creates Vec2 from Float32Array', () => {
     const float32Array = Float32Array.from([8, 5])
-    const vec2 = new Vec2(float32Array.buffer, 0)
-
+    const vec2 = new Vec2(float32Array)
     expect(vec2).toEqual(new Vec2(8, 5))
   })
 

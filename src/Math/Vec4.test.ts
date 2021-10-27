@@ -42,16 +42,14 @@ describe('Vec4', () => {
 
   // it('check ranges -> set & get.', () => {})
 
-  it('check the lenght of the vector.', () => {
+  it('check the length of the vector.', () => {
     const vec4 = new Vec4(1, 2, 3, 4)
-
     expect(vec4.length()).toBeCloseTo(4.795)
   })
 
-  it('creates Vec4 from buffer', () => {
+  it('creates Vec4 from Float32Array', () => {
     const float32Array = Float32Array.from([8, 5, 9, 1])
-    const vec4 = new Vec4(float32Array.buffer, 0)
-
+    const vec4 = new Vec4(float32Array)
     expect(vec4).toEqual(new Vec4(8, 5, 9, 1))
   })
 })
