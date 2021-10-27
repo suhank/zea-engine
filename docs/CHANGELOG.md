@@ -2,8 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-## [3.12.0](https://github.com/ZeaInc/zea-engine/compare/v3.11.1...v3.12.0) (2021-10-19)
+## [3.12.1](https://github.com/ZeaInc/zea-engine/compare/v3.12.0...v3.12.1) (2021-10-27)
 
+
+### Features
+
+* Added support for parsing 'Property_SInt32', 'Property_UInt32', 'Property_Float32', values from zcad files. ([88b751e](https://github.com/ZeaInc/zea-engine/commit/88b751e435088ae32af24c2050d1d1487b957015))
+* zcad files can now contain String Lists, used to store PMI Linked Entitiy paths. ([39f43c6](https://github.com/ZeaInc/zea-engine/commit/39f43c64a7414e034eb3d2710411923d91833064))
+* zcad files can now contain BooleanParameters ([f4f0761](https://github.com/ZeaInc/zea-engine/commit/f4f0761795b6cfca446106331c0c031259c9a05d))
+
+
+### Bug Fixes
+
+* InstanceItem no longer tries to resolve an empty path. ([7fc1274](https://github.com/ZeaInc/zea-engine/commit/7fc127466f704c5d352cdade7b963ffe67315556))
+* Prevent Safari iOS 14 from generating a float geom buffer. ([9d48867](https://github.com/ZeaInc/zea-engine/commit/9d48867bd5d1f550a1da657ce1fd33da803aace8))
+* Removed explicit 'position: relative' style value applied to the Canvas as it broke layout of sibling elements. ([170c487](https://github.com/ZeaInc/zea-engine/commit/170c48753a29c1f6787c6fa9c12781cdeb615958))
+* revert change to calculating canvas width to not use devicePixelRatio ([7df6bed](https://github.com/ZeaInc/zea-engine/commit/7df6bed817ab3622eea9ee07676a0bd678517d80))
+
+## [3.12.0](https://github.com/ZeaInc/zea-engine/compare/v3.11.1...v3.12.0) (2021-10-19)
 
 ### Features
 

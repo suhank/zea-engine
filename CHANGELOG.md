@@ -2,39 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-## [3.13.0](https://github.com/ZeaInc/zea-engine/compare/v3.11.1...v3.13.0) (2021-10-27)
+## [3.12.1](https://github.com/ZeaInc/zea-engine/compare/v3.12.0...v3.12.1) (2021-10-27)
 
 
 ### Features
 
-* 'FlatSurfaceShader' is now always rendering double-sided. ([f295714](https://github.com/ZeaInc/zea-engine/commit/f2957149f63b4ec3144fe0230a8e27d93e53b269))
 * Added support for parsing 'Property_SInt32', 'Property_UInt32', 'Property_Float32', values from zcad files. ([88b751e](https://github.com/ZeaInc/zea-engine/commit/88b751e435088ae32af24c2050d1d1487b957015))
-* The engine now supports loading zcad files that contain non-orthogonal and uniform scaling within the tree. ([aaafa71](https://github.com/ZeaInc/zea-engine/commit/aaafa71a9a2e1dfa60b73d99d2d6de2ee1fe0b15))
 * zcad files can now contain String Lists, used to store PMI Linked Entitiy paths. ([39f43c6](https://github.com/ZeaInc/zea-engine/commit/39f43c64a7414e034eb3d2710411923d91833064))
+* zcad files can now contain BooleanParameters ([f4f0761](https://github.com/ZeaInc/zea-engine/commit/f4f0761795b6cfca446106331c0c031259c9a05d))
 
 
 ### Bug Fixes
 
-* Always re-render the geomdata fbe after a pass updates. ([b26f905](https://github.com/ZeaInc/zea-engine/commit/b26f905fcae47f90049b2565da3994b9d6a43b35))
-* as billboard atlas is being re-generated. Skip images that have not loaded. ([684c712](https://github.com/ZeaInc/zea-engine/commit/684c7126c87ae6fdabce5b1ffcc262930b06b394))
-* BillboardItems now correctly generate pointer events allowing mouse interactions on labels and billboards. ([26c854f](https://github.com/ZeaInc/zea-engine/commit/26c854f8739e420208c7a538c559b54d295a564c))
-* During rapid resizing, the canvas element would be drawn black. This is now fixed by throttling the frequency we can resize the WebGL buffers. ([#501](https://github.com/ZeaInc/zea-engine/issues/501)) ([49d8aba](https://github.com/ZeaInc/zea-engine/commit/49d8aba7035b4c3547a508c57cf2ec5d463e5b12))
-* FlatSurfaceShader now correctly masks the rasterized area when rendering Geomdata and highlight buffer. ([f8e76ae](https://github.com/ZeaInc/zea-engine/commit/f8e76aeb563d25e18d6ab978f4acc6407d1a7b8b))
-* Hilighting of transparent textured items now works reliably. ([7378f60](https://github.com/ZeaInc/zea-engine/commit/7378f60076ce6b7f482a3218125e2e916a775565))
 * InstanceItem no longer tries to resolve an empty path. ([7fc1274](https://github.com/ZeaInc/zea-engine/commit/7fc127466f704c5d352cdade7b963ffe67315556))
-* Mouse interactions work correctly again on Safari. ([df8d38e](https://github.com/ZeaInc/zea-engine/commit/df8d38e2dd6dad0ea2567c2ed621b2fcc08e98e1))
-* prevent 	Safari iOS 14 from generating a float geom buffer. ([9d48867](https://github.com/ZeaInc/zea-engine/commit/9d48867bd5d1f550a1da657ce1fd33da803aace8))
+* Prevent Safari iOS 14 from generating a float geom buffer. ([9d48867](https://github.com/ZeaInc/zea-engine/commit/9d48867bd5d1f550a1da657ce1fd33da803aace8))
 * Removed explicit 'position: relative' style value applied to the Canvas as it broke layout of sibling elements. ([170c487](https://github.com/ZeaInc/zea-engine/commit/170c48753a29c1f6787c6fa9c12781cdeb615958))
-* removing an item from the renderer when it was highlighted could cause corruption. ([368c57f](https://github.com/ZeaInc/zea-engine/commit/368c57f8ac764e4a329c8cc08094c7073165d6cf))
 * revert change to calculating canvas width to not use devicePixelRatio ([7df6bed](https://github.com/ZeaInc/zea-engine/commit/7df6bed817ab3622eea9ee07676a0bd678517d80))
-* Safari now supports up to 8 passes. ([bc1bd81](https://github.com/ZeaInc/zea-engine/commit/bc1bd818955ff961a76a3a7d0e29346a4d449da3))
-* textured geoms would continuously upload thier data to the GPU as a 'clean' flag was not correctly being set. ([7814aa7](https://github.com/ZeaInc/zea-engine/commit/7814aa7093eb5621564c40e63c8b1c6d25435ed7))
-* transparent geometries now correctly generate pointer events when the mouse or vr controller interacts with them. ([3068acb](https://github.com/ZeaInc/zea-engine/commit/3068acb0831ec80d9d26769b1dc19747600a7b09))
-* when removing transparent items from the renderer, an exception was thrown as event listeners were unregistered. ([#517](https://github.com/ZeaInc/zea-engine/issues/517)) ([ce15e4a](https://github.com/ZeaInc/zea-engine/commit/ce15e4a394c87e6d063c0468513d75a1bf1c9c86))
-* zcad files can not contain BooleanParameters ([f4f0761](https://github.com/ZeaInc/zea-engine/commit/f4f0761795b6cfca446106331c0c031259c9a05d))
 
 ## [3.12.0](https://github.com/ZeaInc/zea-engine/compare/v3.11.1...v3.12.0) (2021-10-19)
-
 
 ### Features
 
