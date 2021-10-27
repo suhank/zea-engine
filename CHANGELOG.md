@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.12.2](https://github.com/ZeaInc/zea-engine/compare/v3.11.1...v3.12.2) (2021-10-27)
+
+### Features
+
+### Bug Fixes
+
+* Prevent GLBaseRenderer from resizing buffers to zero width or height. ([33983aa](https://github.com/ZeaInc/zea-engine/commit/33983aaf3c828437dbaca8532d8b4446a9b0c0c1))
+
 ## [3.12.1](https://github.com/ZeaInc/zea-engine/compare/v3.12.0...v3.12.1) (2021-10-27)
 
 
