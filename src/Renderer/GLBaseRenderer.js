@@ -649,9 +649,6 @@ class GLBaseRenderer extends ParameterOwner {
         webglOptions.floatGeomBuffer != undefined ? webglOptions.floatGeomBuffer : this.__gl.floatTexturesSupported
     }
     this.__gl.floatGeomBuffer = this.__floatGeomBuffer
-    // Note: the following returns UNSIGNED_BYTE even if the browser supports float.
-    // const implType = this.__gl.getParameter(this.__gl.IMPLEMENTATION_COLOR_READ_TYPE);
-    // this.__floatGeomBuffer = (implType == this.__gl.FLOAT);
   }
 
   /**
