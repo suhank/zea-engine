@@ -488,17 +488,20 @@ class GLBaseRenderer extends ParameterOwner {
       return
     }
 
-    if (newWidth != this.__glcanvas.width || newHeight != this.__glcanvas.height) {
-      this.__glcanvas.width = newWidth
-      this.__glcanvas.height = newHeight
+    const width = Math.max(4, newWidth)
+    const height = Math.max(4, newHeight)
+
+    if ((width != this.__glcanvas.width && width) || height != this.__glcanvas.height) {
+      this.__glcanvas.width = width
+      this.__glcanvas.height = height
 
       for (const vp of this.__viewports) {
-        vp.resize(newWidth, newHeight)
+        vp.resize(width, height)
       }
 
       this.emit('resized', {
-        width: newWidth,
-        height: newHeight,
+        width: width,
+        height: height,
       })
     }
     this.requestRedraw()
