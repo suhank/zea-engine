@@ -19,21 +19,6 @@ describe('BaseGroup', () => {
     expect(group_param.getNumItems()).toBe(2)
   })
 
-  test('Adding members using paths.', () => {
-    const rootItem = new TreeItem('TreeItem')
-    const group = new BaseGroup('Foo')
-    const treeItem1 = new TreeItem('treeItem1')
-    const treeItem2 = new TreeItem('treeItem2')
-    treeItem1.addChild(treeItem2)
-    // rootItem.addChild(group)
-    group.setSearchRoot(rootItem)
-    rootItem.addChild(treeItem1)
-
-    group.setPaths(['.', 'treeItem1', 'treeItem2'])
-    const group_parm = group.itemsParam
-    expect(group_parm.getItem(0)).toBe(treeItem2)
-  })
-
   test('Events propagating from members to the group.', () => {
     const group = new BaseGroup('Foo')
     const parent = new TreeItem('Parent')
@@ -48,7 +33,7 @@ describe('BaseGroup', () => {
 
     const event = {
       detail: 'foo',
-      propagating: true
+      propagating: true,
     }
     child.onPointerDown(event)
 
