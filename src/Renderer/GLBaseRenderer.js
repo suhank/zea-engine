@@ -334,6 +334,7 @@ class GLBaseRenderer extends ParameterOwner {
       if (geomParam.getValue() == undefined) {
         // we will add this geomItem once it receives its geom.
         const geomAssigned = () => {
+          delete listenerIDs['Geometry.valueChanged']
           this.assignTreeItemToGLPass(treeItem)
         }
         listenerIDs['Geometry.valueChanged'] = geomParam.once('valueChanged', geomAssigned)
