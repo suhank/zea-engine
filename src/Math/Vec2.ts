@@ -1,5 +1,6 @@
 import { BinReader } from '../SceneTree/BinReader'
 import { StringFunctions } from '../Utilities/StringFunctions'
+
 /**
  * Representing a Vec2(two-dimensional floating point vector). A Vec2 is for representing 2 dimensional values, such as screen coordinates or pixel coordinates within an image.
  *
@@ -66,17 +67,19 @@ class Vec2 {
     if (x instanceof Float32Array || x instanceof Uint32Array || x instanceof Int32Array) {
       this.__data = x
     } else if (x instanceof ArrayBuffer) {
-      console.warn(`deprecated, please use new Vec4(new Float32Array(buffer, byteOffset, 4))`)
+      console.warn(`deprecated, please use new Vec2(new Float32Array(buffer, byteOffset, 2))`)
       const buffer = x
       const byteOffset = y
       this.__data = new Float32Array(buffer, byteOffset, 2)
-    } else if (x != null && typeof x == 'object') {
+    } else if (typeof x == 'number' && typeof y == 'number') {
+      this.__data = new Float32Array(2)
+      this.__data[0] = x
+      this.__data[1] = y
+    } else if (typeof x == 'object') {
       this.__data = new Float32Array(2)
       this.fromJSON(x)
     } else {
       this.__data = new Float32Array(2)
-      this.__data[0] = x
-      this.__data[1] = y
     }
   }
 

@@ -33,15 +33,17 @@ class Vec4 {
       const buffer = x
       const byteOffset = y
       this.__data = new Float32Array(buffer, byteOffset, 4)
-    } else if (x != null && typeof x == 'object') {
-      this.__data = new Float32Array(4)
-      this.fromJSON(x)
-    } else {
+    } else if (typeof x == 'number' && typeof y == 'number' && typeof z == 'number' && typeof t == 'number') {
       this.__data = new Float32Array(4)
       this.__data[0] = x
       this.__data[1] = y
       this.__data[2] = z
       this.__data[3] = t
+    } else if (x != null && typeof x == 'object') {
+      this.__data = new Float32Array(4)
+      this.fromJSON(x)
+    } else {
+      this.__data = new Float32Array(4)
     }
   }
 

@@ -32,14 +32,16 @@ class Vec3 {
       const buffer = x
       const byteOffset = y
       this.__data = new Float32Array(buffer, byteOffset, 3)
+    } else if (typeof x == 'number' && typeof y == 'number' && typeof z == 'number') {
+      this.__data = new Float32Array(3)
+      this.__data[0] = x
+      this.__data[1] = y
+      this.__data[2] = z
     } else if (x != null && typeof x == 'object') {
       this.__data = new Float32Array(3)
       this.fromJSON(x)
     } else {
       this.__data = new Float32Array(3)
-      this.__data[0] = x
-      this.__data[1] = y
-      this.__data[2] = z
     }
   }
 
