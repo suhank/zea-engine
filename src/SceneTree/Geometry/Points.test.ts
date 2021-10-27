@@ -76,7 +76,6 @@ describe('Points', () => {
     points.setNumVertices(numVertices)
     const positions = <Vec3Attribute>points.getVertexAttribute('positions')
     positions.getValueRef(0).set(1, 2, 3)
-    console.log()
     positions.getValueRef(1).set(-1, -2, -3)
     positions.getValueRef(2).set(2, 1, -3)
 
@@ -86,10 +85,10 @@ describe('Points', () => {
           count: 3,
           dataType: 'Vec3',
           normalized: false,
-          values: new Float32Array([1, 2, 3, -1, -2, -3, 2, 1, -3])
-        }
+          values: new Float32Array([1, 2, 3, -1, -2, -3, 2, 1, -3]),
+        },
       },
-      numVertices: 3
+      numVertices: 3,
     })
   })
 
@@ -111,8 +110,8 @@ describe('Points', () => {
       type: 'Points',
       numVertices: 3,
       vertexAttributes: {
-        positions: { data: [1, 2, 3, -1, -2, -3, 2, 1, -3], dataType: 'Vec3', defaultValue: 0, length: 3 }
-      }
+        positions: { data: [1, 2, 3, -1, -2, -3, 2, 1, -3], dataType: 'Vec3', defaultValue: 0, length: 3 },
+      },
     }
     points.fromJSON(input)
 
