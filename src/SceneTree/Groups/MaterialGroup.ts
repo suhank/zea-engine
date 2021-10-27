@@ -42,10 +42,10 @@ class MaterialGroup extends BaseGroup {
   // /////////////////////////////
 
   /**
-   * The __updateHighlight method.
+   * The updateHighlight method.
    * @private
    */
-  __updateHighlight(): void {
+  updateHighlight(): void {
     // Make this function async so that we don't pull on the
     // graph immediately when we receive a notification.
     // Note: propagating using an operator would be much better.
@@ -55,7 +55,7 @@ class MaterialGroup extends BaseGroup {
     this.__updateHighlightHelper()
   }
   /**
-   * The __updateHighlight method.
+   * The updateHighlight method.
    * @private
    */
   __updateHighlightHelper(): void {
@@ -82,7 +82,7 @@ class MaterialGroup extends BaseGroup {
    */
   setSelected(sel: boolean) {
     super.setSelected(sel)
-    this.__updateHighlight()
+    this.updateHighlight()
   }
 
   // ////////////////////////////////////////

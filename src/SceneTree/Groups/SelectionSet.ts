@@ -44,15 +44,15 @@ class SelectionSet extends BaseGroup {
 
     this.addParameter(this.highlightedParam)
     this.highlightedParam.on('valueChanged', () => {
-      this.__updateHighlight()
+      this.updateHighlight()
     })
     this.addParameter(this.highlightColorParam)
     this.listenerIDs['valueChanged'] = this.highlightColorParam.on('valueChanged', (event) => {
-      this.__updateHighlight()
+      this.updateHighlight()
     })
     this.addParameter(this.highlightFillParam)
     this.highlightFillParam.on('valueChanged', () => {
-      this.__updateHighlight()
+      this.updateHighlight()
     })
   }
 
@@ -75,10 +75,10 @@ class SelectionSet extends BaseGroup {
   // /////////////////////////////
 
   /**
-   * The __updateHighlight method.
+   * The updateHighlight method.
    * @private
    */
-  __updateHighlight() {
+  updateHighlight() {
     // Make this function async so that we don't pull on the
     // graph immediately when we receive a notification.
     // Note: propagating using an operator would be much better.
@@ -89,7 +89,7 @@ class SelectionSet extends BaseGroup {
   }
 
   /**
-   * The __updateHighlight method.
+   * The updateHighlight method.
    * @private
    */
   __updateHighlightHelper() {
@@ -116,7 +116,7 @@ class SelectionSet extends BaseGroup {
    */
   setSelected(sel: boolean) {
     super.setSelected(sel)
-    this.__updateHighlight()
+    this.updateHighlight()
   }
 
   // ////////////////////////////////////////
