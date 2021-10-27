@@ -124,9 +124,7 @@ class MaterialParameter extends Parameter<Material | undefined> {
         }
       }
     } else {
-      console.warn('Commented out code. JavaScript code did not have the required args')
-      // @ts-ignore
-      const material = new Material() // TODO: what are the correct arguments in this case?
+      const material = new Material()
       if (j.value) material.fromJSON(j.value, context)
       this.loadValue(material)
     }

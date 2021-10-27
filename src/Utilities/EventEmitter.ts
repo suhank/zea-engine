@@ -135,7 +135,7 @@ class EventEmitter extends BaseClass {
     const listeners = this.listeners[eventName]
 
     if (!listeners) {
-      console.warn('callback :' + id + ' was not connected to this signal:' + eventName)
+      console.warn('callback :' + id + ' was not connected to this event:' + eventName)
       return
     }
 

@@ -200,7 +200,7 @@ class TreeItem extends BaseItem {
   }
 
   /**
-   * The __updateVisibility method.
+   * The updateVisibility method.
    * @return - Returns a boolean.
    * @private
    */
