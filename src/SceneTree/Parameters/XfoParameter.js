@@ -53,5 +53,6 @@ class XfoParameter extends Parameter {
 }
 
 Registry.register('XfoParameter', XfoParameter)
+Registry.register('Property_Xfo_32f', XfoParameter)
 
 export { XfoParameter }

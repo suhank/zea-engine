@@ -53,5 +53,6 @@ class ColorParameter extends Parameter {
 }
 
 Registry.register('ColorParameter', ColorParameter)
+Registry.register('Property_Color_32f', ColorParameter)
 
 export { ColorParameter }

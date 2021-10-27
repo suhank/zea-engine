@@ -49,5 +49,6 @@ class Mat4Parameter extends Parameter {
 }
 
 Registry.register('Mat4Parameter', Mat4Parameter)
+Registry.register('Property_Mat4_32f', Mat4Parameter)
 
 export { Mat4Parameter }
