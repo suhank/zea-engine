@@ -549,8 +549,8 @@ class GLBaseRenderer extends ParameterOwner {
       this.__glcanvas = $canvas
     }
     this.__glcanvas.style['touch-action'] = 'none'
-    this.__glcanvas.style.width = 'auto'
-    this.__glcanvas.style.height = 'auto'
+    this.__glcanvas.style.width = '100%'
+    this.__glcanvas.style.height = '100%'
     this.__glcanvas.style.margin = '0px'
 
     // Rapid resizing of the canvas would cause issues with WebGL.
