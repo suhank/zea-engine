@@ -10,8 +10,7 @@
 
     <link rel="stylesheet" href="styles/tailwind.min.css" />
 
-    <script type="module" src="../dist/index.esm.js"></script>
-
+    <script src="../dist/index.umd.js"></script>
     <script defer crossorigin src="https://cdn.jsdelivr.net/npm/@zeainc/zea-cad@3.3.0/dist/index.umd.js"></script>
     <script defer crossorigin src="https://cdn.jsdelivr.net/npm/@zeainc/zea-ux/dist/index.umd.js"></script>
 
@@ -48,7 +47,7 @@
     <script type="module">
       const urlParams = new URLSearchParams(window.location.search)
 
-      import {
+      const {
         Color,
         Vec3,
         Xfo,
@@ -61,7 +60,7 @@
         GLBoundingBoxPass,
         GeomLibrary,
         resourceLoader,
-      } from '../dist/index.esm.js'
+      } = zeaEngine
 
       const canvas = document.getElementById('viewport')
 
