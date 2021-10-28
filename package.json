@@ -2,7 +2,7 @@
   "name": "@zeainc/zea-engine",
   "fileName": "index",
   "libraryName": "ZeaEngine",
-  "version": "3.12.3",
+  "version": "3.12.4",
   "description": "Zea Engine",
   "browser": "dist/index.umd.js",
   "main": "dist/index.cjs.js",
