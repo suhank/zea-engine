@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.12.4](https://github.com/ZeaInc/zea-engine/compare/v3.12.3...v3.12.4) (2021-10-28)
+
+
+### Bug Fixes
+
+* Fixed warning in React and error in Svelte by forcing the webWorkerLoader to assume a browser environment. ([3308c13](https://github.com/ZeaInc/zea-engine/commit/3308c13f3ebf9fc2cba19c9e3417b341bd891096))
+* Removed dependency on 'semver' ([1ce5a0d](https://github.com/ZeaInc/zea-engine/commit/1ce5a0deebf64ae7a47e67891d467b5707a2f9dd))
+
 ## [3.12.2](https://github.com/ZeaInc/zea-engine/compare/v3.11.1...v3.12.2) (2021-10-27)
 
 ### Features
