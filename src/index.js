@@ -30,10 +30,3 @@ export * from './SceneTree/index'
 export * from './Renderer/index'
 
 export { libsRegistry, packageJson, ZeaEngine }
-
-// Zea Engine plugins assume this global Variable is available
-// when importing the engine, the
-// import { ... } from "@zeainc/zea-engine";
-// is replaced with
-// const { ... } = ZeaEngine
-globalThis.zeaEngine = ZeaEngine
