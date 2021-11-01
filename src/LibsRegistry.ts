@@ -1,6 +1,3 @@
-import semver from 'semver'
-import { zeaDebug } from './helpers/zeaDebug'
-
 /**
  * Libraries registry.
  */
@@ -24,17 +21,13 @@ class LibsRegistry {
   registerLib(packageJson: Record<string, any>): void {
     const libName = packageJson.name
     const libVersion = packageJson.version
-    const expected = packageJson.dependencies['@zeainc/zea-engine']
 
-    if (semver.satisfies(this.version, expected)) {
-      this.registry[libName] = libVersion
-      zeaDebug(`Registered lib '${libName}' v${libVersion}`)
-      return
+    if (this.registry[libName]) {
+      console.warn("Library already registered:" + libName)
     }
 
-    throw new Error(
-      `The library '${libName}' is not compatible with this version of the Zea Engine (${this.version}). It expects version '${expected}'.`
-    )
+    this.registry[libName] = libVersion
+    console.log(`Registered lib '${libName}' v${libVersion}`)
   }
 
   /**

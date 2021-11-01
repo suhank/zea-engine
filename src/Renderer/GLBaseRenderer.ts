@@ -350,6 +350,7 @@ class GLBaseRenderer extends ParameterOwner {
       if (geomParam.value == undefined) {
         // we will add this geomItem once it receives its geom.
         const geomAssigned = () => {
+          delete listenerIDs['Geometry.valueChanged']
           this.assignTreeItemToGLPass(treeItem)
         }
         listenerIDs['Geometry.valueChanged'] = geomParam.once('valueChanged', geomAssigned)
@@ -493,19 +494,22 @@ class GLBaseRenderer extends ParameterOwner {
   /**
    * Handle the canvas's parent resizing.
    *
-   * @param width - The new width of the canvas.
-   * @param height - The new height of the canvas.
+   * @param newWidth - The new width of the canvas.
+   * @param newHeight - The new height of the canvas.
    *
    * @private
    */
-  handleResize(width: number, height: number): void {
+  handleResize(newWidth: number, newHeight: number): void {
     if (this.__xrViewportPresenting) {
       return
     }
 
-    if (width != this.__glcanvas!.width || height != this.__glcanvas!.height) {
-      this.__glcanvas!.width = width
-      this.__glcanvas!.height = height
+    const width = Math.max(4, newWidth)
+    const height = Math.max(4, newHeight)
+
+    if ((width != this.__glcanvas.width && width) || height != this.__glcanvas.height) {
+      this.__glcanvas.width = width
+      this.__glcanvas.height = height
 
       for (const vp of this.__viewports) {
         vp.resize(width, height)
@@ -568,35 +572,8 @@ class GLBaseRenderer extends ParameterOwner {
           return
         }
         const calcPixelsAndResize = () => {
-          let width
-          let height
-          let dpr = window.devicePixelRatio
-          // @ts-ignore
-          if (entry.devicePixelContentBoxSize) {
-            // NOTE: Only this path gives the correct answer
-            // The other paths are imperfect fallbacks
-            // for browsers that don't provide anyway to do this
-            // @ts-ignore
-            width = entry.devicePixelContentBoxSize[0].inlineSize
-            // @ts-ignore
-            height = entry.devicePixelContentBoxSize[0].blockSize
-            dpr = 1 // it's already in width and height
-          } else if (entry.contentBoxSize) {
-            if (entry.contentBoxSize[0]) {
-              width = entry.contentBoxSize[0].inlineSize
-              height = entry.contentBoxSize[0].blockSize
-            } else {
-              // @ts-ignore
-              width = entry.contentBoxSize.inlineSize
-              // @ts-ignore
-              height = entry.contentBoxSize.blockSize
-            }
-          } else {
-            width = entry.contentRect.width
-            height = entry.contentRect.height
-          }
-          const displayWidth = Math.round(width * dpr)
-          const displayHeight = Math.round(height * dpr)
+          const displayWidth = Math.round(entry.contentRect.width)
+          const displayHeight = Math.round(entry.contentRect.height)
           this.handleResize(displayWidth, displayHeight)
         }
         // Note: Rapid resize events would cause WebGL to render black.
@@ -679,10 +656,13 @@ class GLBaseRenderer extends ParameterOwner {
     // Note: We are now pushing on high-end mobile devices.
     // Galaxy and above. We need this. We need to accurately determine
     // if the float buffer is not supported.
-    this.floatGeomBuffer =
-      webglOptions.floatGeomBuffer != undefined ? webglOptions.floatGeomBuffer : gl.floatTexturesSupported
+    if (SystemDesc.browserName == 'Safari' && this.__gl.name == 'webgl') {
+      this.floatGeomBuffer = false
+    } else {
+      this.floatGeomBuffer =
+        webglOptions.floatGeomBuffer != undefined ? webglOptions.floatGeomBuffer : this.__gl.floatTexturesSupported
+    }
     gl.floatGeomBuffer = this.floatGeomBuffer
-
     return gl
   }
 

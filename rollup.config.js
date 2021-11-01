@@ -33,7 +33,9 @@ const plugins = [
     preferBuiltins: false,
   }),
   json(),
-  webWorkerLoader(),
+  webWorkerLoader({
+    targetPlatform: 'browser',
+  }),
   svg(),
   glslify(glslOptions),
 ]
