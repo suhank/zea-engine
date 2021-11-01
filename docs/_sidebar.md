@@ -248,6 +248,7 @@
     * [Parameter.test](api/SceneTree/Parameters/Parameter.test)
     * [QuatParameter](api/SceneTree/Parameters/QuatParameter)
     * [QuatParameter.test](api/SceneTree/Parameters/QuatParameter.test)
+    * [StringListParameter](api/SceneTree/Parameters/StringListParameter)
     * [StringParameter](api/SceneTree/Parameters/StringParameter)
     * [StringParameter.test](api/SceneTree/Parameters/StringParameter.test)
     * [StructParameter](api/SceneTree/Parameters/StructParameter)

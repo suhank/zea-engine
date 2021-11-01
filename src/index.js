@@ -1,6 +1,5 @@
 import packageJson from '../package.json'
 
-import { zeaDebug } from './helpers/zeaDebug'
 import { LibsRegistry } from './LibsRegistry'
 
 import { SystemDesc } from './SystemDesc'
@@ -21,7 +20,7 @@ const ZeaEngine = {
   ...Renderer,
 }
 
-zeaDebug('Zea Engine version %s', packageJson.version)
+console.log(`Zea Engine v${packageJson.version}`)
 
 export * from './SystemDesc'
 export * from './Registry'
@@ -31,5 +30,3 @@ export * from './SceneTree/index'
 export * from './Renderer/index'
 
 export { libsRegistry, packageJson, ZeaEngine }
-
-globalThis.zeaEngine = ZeaEngine

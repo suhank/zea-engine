@@ -334,6 +334,7 @@ class GLBaseRenderer extends ParameterOwner {
       if (geomParam.getValue() == undefined) {
         // we will add this geomItem once it receives its geom.
         const geomAssigned = () => {
+          delete listenerIDs['Geometry.valueChanged']
           this.assignTreeItemToGLPass(treeItem)
         }
         listenerIDs['Geometry.valueChanged'] = geomParam.once('valueChanged', geomAssigned)
@@ -477,8 +478,8 @@ class GLBaseRenderer extends ParameterOwner {
   /**
    * Handle the canvas's parent resizing.
    *
-   * @param {number} width - The new width of the canvas.
-   * @param {number} height - The new height of the canvas.
+   * @param {number} newWidth - The new width of the canvas.
+   * @param {number} newHeight - The new height of the canvas.
    *
    * @private
    */
@@ -487,17 +488,20 @@ class GLBaseRenderer extends ParameterOwner {
       return
     }
 
-    if (newWidth != this.__glcanvas.width || newHeight != this.__glcanvas.height) {
-      this.__glcanvas.width = newWidth
-      this.__glcanvas.height = newHeight
+    const width = Math.max(4, newWidth)
+    const height = Math.max(4, newHeight)
+
+    if ((width != this.__glcanvas.width && width) || height != this.__glcanvas.height) {
+      this.__glcanvas.width = width
+      this.__glcanvas.height = height
 
       for (const vp of this.__viewports) {
-        vp.resize(newWidth, newHeight)
+        vp.resize(width, height)
       }
 
       this.emit('resized', {
-        width: newWidth,
-        height: newHeight,
+        width: width,
+        height: height,
       })
     }
     this.requestRedraw()
@@ -556,30 +560,8 @@ class GLBaseRenderer extends ParameterOwner {
           return
         }
         const calcPixelsAndResize = () => {
-          let width
-          let height
-          let dpr = window.devicePixelRatio
-          if (entry.devicePixelContentBoxSize) {
-            // NOTE: Only this path gives the correct answer
-            // The other paths are imperfect fallbacks
-            // for browsers that don't provide anyway to do this
-            width = entry.devicePixelContentBoxSize[0].inlineSize
-            height = entry.devicePixelContentBoxSize[0].blockSize
-            dpr = 1 // it's already in width and height
-          } else if (entry.contentBoxSize) {
-            if (entry.contentBoxSize[0]) {
-              width = entry.contentBoxSize[0].inlineSize
-              height = entry.contentBoxSize[0].blockSize
-            } else {
-              width = entry.contentBoxSize.inlineSize
-              height = entry.contentBoxSize.blockSize
-            }
-          } else {
-            width = entry.contentRect.width
-            height = entry.contentRect.height
-          }
-          const displayWidth = Math.round(width * dpr)
-          const displayHeight = Math.round(height * dpr)
+          const displayWidth = Math.round(entry.contentRect.width)
+          const displayHeight = Math.round(entry.contentRect.height)
           this.handleResize(displayWidth, displayHeight)
         }
         // Note: Rapid resize events would cause WebGL to render black.
@@ -664,12 +646,13 @@ class GLBaseRenderer extends ParameterOwner {
     // Note: We are now pushing on high-end mobile devices.
     // Galaxy and above. We need this. We need to accurately determine
     // if the float buffer is not supported.
-    this.__floatGeomBuffer =
-      webglOptions.floatGeomBuffer != undefined ? webglOptions.floatGeomBuffer : this.__gl.floatTexturesSupported
+    if ((SystemDesc.browserName = 'Safari' && this.__gl.name == 'webgl')) {
+      this.__floatGeomBuffer = false
+    } else {
+      this.__floatGeomBuffer =
+        webglOptions.floatGeomBuffer != undefined ? webglOptions.floatGeomBuffer : this.__gl.floatTexturesSupported
+    }
     this.__gl.floatGeomBuffer = this.__floatGeomBuffer
-    // Note: the following returns UNSIGNED_BYTE even if the browser supports float.
-    // const implType = this.__gl.getParameter(this.__gl.IMPLEMENTATION_COLOR_READ_TYPE);
-    // this.__floatGeomBuffer = (implType == this.__gl.FLOAT);
   }
 
   /**
