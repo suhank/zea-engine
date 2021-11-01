@@ -61,7 +61,6 @@ class ObjAsset extends AssetItem {
   load(url) {
     return new Promise((resolve, reject) => {
       const fileFolder = url.substring(0, url.lastIndexOf('/')) + '/'
-      const filename = url.substring(url.lastIndexOf('/') + 1)
 
       const parseMtlData = (mtlFileData) => {
         const lines = mtlFileData.split('\n')
@@ -179,7 +178,7 @@ class ObjAsset extends AssetItem {
           geomDatas[name] = currGeom
           numGeoms++
         }
-        newGeom(filename)
+        newGeom('geom')
 
         const splitGroupsIntoObjects = this.getParameter('splitGroupsIntoObjects').getValue()
 
