@@ -63,6 +63,7 @@
         InstanceItem,
         CameraManipulator,
         GLBoundingBoxPass,
+        AssetLoadContext,
       } = zeaEngine
 
       const canvas = document.getElementById('viewport')
@@ -211,7 +212,10 @@
 
       const loadZCADAsset = (url, filename) => {
         const asset = new CADAsset()
-        asset.load(url).then(() => {
+        const context = new AssetLoadContext()
+        context.units = 'millimeters'
+        context.camera = context
+        asset.load(url, context).then(() => {
           renderer.frameAll()
         })
         asset.getGeometryLibrary().on('loaded', () => {
