@@ -2,7 +2,13 @@ const getFileFolder = function (filePath: string) {
   return filePath.substring(0, filePath.lastIndexOf('/')) + '/'
 }
 
-const loadFile = function (url: string, responseType: any, onSucceed: any, onFail: any, onProgress: any = undefined) {
+const loadFile = function (
+  url: string,
+  responseType: XMLHttpRequestResponseType,
+  onSucceed: (xhr: XMLHttpRequest) => void,
+  onFail: (statusTest: string) => void,
+  onProgress: (total: number, loaded: number) => void = undefined
+) {
   try {
     const xhr = new XMLHttpRequest()
     xhr.responseType = responseType
@@ -32,14 +38,19 @@ const loadFile = function (url: string, responseType: any, onSucceed: any, onFai
   }
 }
 
-const loadTextfile = function (url: string, onSucceed: any, onFail: any = undefined, onProgress: any = undefined) {
+const loadTextfile = function (
+  url: string,
+  onSucceed: (result: string) => void,
+  onFail: (statusTest: string) => void = undefined,
+  onProgress: (total: number, loaded: number) => void = undefined
+) {
   loadFile(
     url,
     'text',
-    (xhr: any) => {
+    (xhr: XMLHttpRequest) => {
       onSucceed(xhr.responseText)
     },
-    (statusText: any) => {
+    (statusText: string) => {
       if (onFail != undefined) onFail(statusText)
       else {
         throw new Error('Unable to XHR File:' + url)
@@ -49,14 +60,19 @@ const loadTextfile = function (url: string, onSucceed: any, onFail: any = undefi
   )
 }
 
-const loadJSONfile = function (url: any, onSucceed: any, onFail: any = undefined, onProgress: any = undefined) {
+const loadJSONfile = function (
+  url: string,
+  onSucceed: (result: object, xhr: XMLHttpRequest) => void,
+  onFail: (statusTest: string) => void = undefined,
+  onProgress: (total: number, loaded: number) => void = undefined
+) {
   loadFile(
     url,
     'json',
-    (xhr: any) => {
+    (xhr: XMLHttpRequest) => {
       onSucceed(xhr.response, xhr)
     },
-    (statusText: any) => {
+    (statusText: string) => {
       if (onFail != undefined) onFail(statusText)
       else {
         throw new Error('Unable to XHR File:' + url)
@@ -66,14 +82,19 @@ const loadJSONfile = function (url: any, onSucceed: any, onFail: any = undefined
   )
 }
 
-const loadXMLfile = function (url: any, onSucceed: any, onFail: any = undefined, onProgress: any = undefined) {
+const loadXMLfile = function (
+  url: string,
+  onSucceed: (result: Document) => void,
+  onFail: (statusTest: string) => void = undefined,
+  onProgress: (total: number, loaded: number) => void = undefined
+) {
   loadFile(
     url,
     'document',
-    (xhr: any) => {
+    (xhr: XMLHttpRequest) => {
       onSucceed(xhr.responseXML)
     },
-    (statusText: any) => {
+    (statusText: string) => {
       if (onFail != undefined) onFail(statusText)
       else {
         throw new Error('Unable to XHR File:' + url)
@@ -83,14 +104,19 @@ const loadXMLfile = function (url: any, onSucceed: any, onFail: any = undefined,
   )
 }
 
-const loadBinfile = function (url: any, onSucceed: any, onFail: any = undefined, onProgress: any = undefined) {
+const loadBinfile = function (
+  url: string,
+  onSucceed: (result: ArrayBuffer) => void,
+  onFail: (statusTest: string) => void = undefined,
+  onProgress: (total: number, loaded: number) => void = undefined
+) {
   loadFile(
     url,
     'arraybuffer',
-    (xhr: any) => {
+    (xhr: XMLHttpRequest) => {
       onSucceed(xhr.response)
     },
-    (statusText: any) => {
+    (statusText: string) => {
       if (onFail != undefined) onFail(statusText)
       else {
         throw new Error('Unable to XHR File:' + url)
