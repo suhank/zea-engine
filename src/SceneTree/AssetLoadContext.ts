@@ -2,6 +2,7 @@ import { EventEmitter } from '../Utilities/EventEmitter.js'
 import { Version } from './Version'
 import { BaseItem } from './BaseItem'
 import { Parameter } from './Parameters/Parameter'
+import { AssetItem } from './AssetItem'
 
 /**
  * Provides a context for loading assets. This context can provide the units of the loading scene.
@@ -17,13 +18,13 @@ export class AssetLoadContext extends EventEmitter {
   url: string
   folder: string
   protected sdk: string
-  assetItem: any
+  assetItem: AssetItem
   numTreeItems: number
   numGeomItems: number
-  protected postLoadCallbacks: any[]
+  protected postLoadCallbacks: Array<() => void>
   protected asyncCount: number
 
-  addGeomToLayer: any
+  addGeomToLayer: (geomItem: GeomItem, layer: string) => void
 
   /**
    * Create a AssetLoadContext
@@ -110,7 +111,7 @@ export class AssetLoadContext extends EventEmitter {
    * e.g. an instance will
    * @param postLoadCallback
    */
-  addPLCB(postLoadCallback: any) {
+  addPLCB(postLoadCallback: () => void) {
     this.postLoadCallbacks.push(postLoadCallback)
   }
 }

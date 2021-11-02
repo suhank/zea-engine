@@ -7,6 +7,7 @@ import { Registry } from '../Registry'
 import { GeomItem } from './GeomItem'
 import { BinReader } from './BinReader'
 import { AssetLoadContext } from './AssetLoadContext'
+import { Parameter } from '.'
 
 /**
  * Given a units string, load returns a factor relative to meters
@@ -158,9 +159,9 @@ class AssetItem extends TreeItem {
       loadUnits()
     }
 
-    let layerRoot: any
+    let layerRoot: TreeItem
     const layers: Record<string, any> = {}
-    context.addGeomToLayer = (geomItem: GeomItem, layer: any) => {
+    context.addGeomToLayer = (geomItem: GeomItem, layer: string) => {
       if (!layers[layer]) {
         if (!layerRoot) {
           layerRoot = new TreeItem('Layers')
@@ -173,7 +174,7 @@ class AssetItem extends TreeItem {
       layers[layer].addItem(geomItem)
     }
 
-    const postLoadCallbacks: any[] = [] // Post load callbacks.
+    const postLoadCallbacks: Array<() => void> = [] // Post load callbacks.
     context.resolvePath = (path, onSucceed, onFail) => {
       if (!path) throw new Error('Path not specified')
 
@@ -195,7 +196,7 @@ class AssetItem extends TreeItem {
             const item = this.resolvePath(path)
             if (item) onSucceed(item)
             else onFail()
-          } catch (e: any) {
+          } catch (e: Error) {
             if (onFail) {
               onFail()
             } else {
@@ -233,7 +234,7 @@ class AssetItem extends TreeItem {
    * @return - Returns the json object.
    */
   toJSON(context: Record<string, any> = {}): Record<string, any> {
-    context.makeRelative = (path: any) => {
+    context.makeRelative = (path: string[]) => {
       const assetPath = this.getPath()
       const start = path.slice(0, assetPath.length)
       for (let i = 0; i < start.length - 1; i++) {
@@ -257,9 +258,8 @@ class AssetItem extends TreeItem {
    *
    * @param j - The json object this item must decode.
    * @param context - The context value.
-   * @param onDone - Callback function executed when everything is done.
    */
-  fromJSON(j: Record<string, any>, context: Record<string, any> = {}, onDone?: any): any {
+  fromJSON(j: Record<string, any>, context: Record<string, any> = {}): any {
     if (!context) context = {}
 
     context.assetItem = this
@@ -269,8 +269,8 @@ class AssetItem extends TreeItem {
 
     context.assetItem = this
 
-    const postLoadCallbacks: any[] = [] // Post load callbacks.
-    context.resolvePath = (path: any, cb: any) => {
+    const postLoadCallbacks: Array<() => void> = [] // Post load callbacks.
+    context.resolvePath = (path: string[], cb: (TreeItem|Parameter<any>) => void) => {
       // Note: Why not return a Promise here?
       // Promise evaluation is always async, so
       // all promises will be resolved after the current call stack
@@ -293,7 +293,7 @@ class AssetItem extends TreeItem {
         })
       }
     }
-    context.addPLCB = (postLoadCallback: any) => postLoadCallbacks.push(postLoadCallback)
+    context.addPLCB = (postLoadCallback: () => void) => postLoadCallbacks.push(postLoadCallback)
 
     // Avoid loading the FilePath as we are already loading json data.
     // if (j.params && j.params.FilePath) {
@@ -305,8 +305,6 @@ class AssetItem extends TreeItem {
     // Invoke all the post-load callbacks to resolve any
     // remaining references.
     for (const cb of postLoadCallbacks) cb()
-
-    if (onDone) onDone()
   }
 
   // ////////////////////////////////////////
