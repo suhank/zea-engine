@@ -1,6 +1,7 @@
 import { SystemDesc } from '../SystemDesc.js'
 import { FilePathParameter } from './Parameters/FilePathParameter'
-import { AssetItem, AssetLoadContext } from './AssetItem.js'
+import { AssetLoadContext } from './AssetLoadContext.js'
+import { AssetItem } from './AssetItem.js'
 import { BinReader } from './BinReader.js'
 import { resourceLoader } from './resourceLoader.js'
 import { Registry } from '../Registry'
