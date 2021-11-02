@@ -549,8 +549,6 @@ class GLBaseRenderer extends ParameterOwner {
       this.__glcanvas = $canvas
     }
     this.__glcanvas.style['touch-action'] = 'none'
-    this.__glcanvas.style.width = 'auto'
-    this.__glcanvas.style.height = 'auto'
     this.__glcanvas.style.margin = '0px'
 
     // Rapid resizing of the canvas would cause issues with WebGL.
@@ -623,7 +621,7 @@ class GLBaseRenderer extends ParameterOwner {
     // Note: We are now pushing on high-end mobile devices.
     // Galaxy and above. We need this. We need to accurately determine
     // if the float buffer is not supported.
-    if ((SystemDesc.browserName = 'Safari' && this.__gl.name == 'webgl')) {
+    if (SystemDesc.browserName == 'Safari' && this.__gl.name == 'webgl') {
       this.__floatGeomBuffer = false
     } else {
       this.__floatGeomBuffer =
