@@ -171,7 +171,7 @@ class FileImage2D extends FileImage {
    * @param filePath - The filePath value.
    * @param params - The params value.
    */
-  constructor(filePath: any, params: any = {}) {
+  constructor(filePath: string, params: any = {}) {
     console.warn('FileImage2D is becoming deprecated in favor of simple FileImage')
     super(filePath, params)
   }

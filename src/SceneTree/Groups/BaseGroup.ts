@@ -258,10 +258,10 @@ class BaseGroup extends TreeItem {
       throw new Error('Unable to load JSON on a BaseGroup without a load context')
     }
     let count = j.treeItems.length
-    const addItem = (path: any) => {
+    const addItem = (path: string[]) => {
       context.resolvePath(
         path,
-        (treeItem: any) => {
+        (treeItem: TreeItem) => {
           this.addItem(treeItem)
           count--
           if (count == 0) {

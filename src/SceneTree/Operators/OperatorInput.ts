@@ -123,7 +123,7 @@ class OperatorInput extends EventEmitter {
    * @param context - The context value.
    * @return - Returns the json object.
    */
-  toJSON(context?: Record<string, any>): { name: string; paramPath: any } {
+  toJSON(context?: Record<string, any>): { name: string; parampath: string[] } {
     const paramPath = this.param ? this.param.getPath() : ''
     return {
       name: this.name,

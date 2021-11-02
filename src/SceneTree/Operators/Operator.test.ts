@@ -466,7 +466,7 @@ describe('Operator', () => {
       outputs: [{ name: 'C', paramPath: ['Foo', 'MyParam'], paramBindIndex: 0 }],
     }
     addOperator.fromJSON(input, {
-      resolvePath: (path: any, cb: any) => {
+      resolvePath: (path: string[], cb: any) => {
         cb(parameterOwner.resolvePath(path))
       },
     })
