@@ -2070,10 +2070,10 @@
   resolved "https://registry.yarnpkg.com/@xtuc/long/-/long-4.2.2.tgz#d291c6a4e97989b5c61d9acf396ae4fe133a718d"
   integrity sha512-NuHqBY1PB/D8xU6s/thBgOAiAP7HOYDQ32+BFZILJ8ivkUkAHQnWfn6WhL79Owj1qmUnoN/YPhktdIoucipkAQ==
 
-"@zeainc/gltf-loader@^3.2.1":
-  version "3.2.1"
-  resolved "https://registry.yarnpkg.com/@zeainc/gltf-loader/-/gltf-loader-3.2.1.tgz#4c19ba58336979d4a55f6056cc65d982811dcb66"
-  integrity sha512-IhWr3FjMNNG0+YCIUghmy+WZzfM+MA3dpNSmvPqDWJ+7Z1doAGG4CvOErhidTU+r8ebFeJv6+Cnr6HIJ/mEEig==
+"@zeainc/gltf-loader@latest":
+  version "3.2.2"
+  resolved "https://registry.yarnpkg.com/@zeainc/gltf-loader/-/gltf-loader-3.2.2.tgz#bd9c9caaf3d3b958d311e703b5b0acb2e30fb3b5"
+  integrity sha512-CcqSUz2mX5KtnrDOakFB2uZ5y0ptOh7GwjjJEi9fKqXbGpSTC6y0ZOA3l6AWPY80o3hD0SXLLLUyVwLT3aq+yw==
   dependencies:
     "@zeainc/zea-engine" "^3"
 
@@ -8838,7 +8838,7 @@ lodash.uniq@^4.5.0:
   resolved "https://registry.yarnpkg.com/lodash.uniq/-/lodash.uniq-4.5.0.tgz#d0225373aeb652adc1bc82e4945339a842754773"
   integrity sha1-0CJTc662Uq3BvILklFM5qEJ1R3M=
 
-lodash@^4.17.11, lodash@^4.17.13, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.19, lodash@^4.7.0:
+lodash@^4.17.11, lodash@^4.17.13, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.19, lodash@^4.17.21, lodash@^4.7.0:
   version "4.17.21"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
   integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==

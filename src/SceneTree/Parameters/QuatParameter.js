@@ -54,5 +54,6 @@ class QuatParameter extends Parameter {
 }
 
 Registry.register('QuatParameter', QuatParameter)
+Registry.register('Property_Quat_32f', QuatParameter)
 
 export { QuatParameter }
