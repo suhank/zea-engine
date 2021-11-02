@@ -7,6 +7,7 @@ import { AssetItem } from './AssetItem'
 import { Mesh } from './Geometry/Mesh.js'
 import { loadTextfile } from './Utils.js'
 import { Material } from './Material.js'
+import { FileImage } from './Images/FileImage.js'
 import { resourceLoader } from './resourceLoader.js'
 import { BooleanParameter, NumberParameter, StringParameter } from './Parameters/index'
 import { FilePathParameter } from './Parameters/FilePathParameter'
@@ -60,7 +61,6 @@ class ObjAsset extends AssetItem {
   load(url) {
     return new Promise((resolve, reject) => {
       const fileFolder = url.substring(0, url.lastIndexOf('/')) + '/'
-      const filename = url.substring(url.lastIndexOf('/') + 1)
 
       const parseMtlData = (mtlFileData) => {
         const lines = mtlFileData.split('\n')
@@ -73,8 +73,10 @@ class ObjAsset extends AssetItem {
           else throw new Error('Unable to parse a color from the following parts:' + elements.join('_'))
         }
 
-        const parseMap = (elements) => {
-          return new FileImage(elements[0], fileFolder + elements[0])
+        const parseMap = (name, elements) => {
+          const fileImage = new FileImage(name)
+          fileImage.load(fileFolder + elements[0])
+          return fileImage
         }
 
         for (let i = 0; i < lines.length; i++) {
@@ -94,7 +96,7 @@ class ObjAsset extends AssetItem {
               material.getParameter('BaseColor').setValue(parseColor(elements))
               break
             case 'map_Kd':
-              material.getParameter('BaseColor').setValue(parseMap(elements))
+              material.getParameter('BaseColor').setValue(parseMap('map_Kd', elements))
               break
             case 'Ks':
               const specular = (parseFloat(elements[0]) + parseFloat(elements[1]) + parseFloat(elements[2])) / 3.0
@@ -103,7 +105,7 @@ class ObjAsset extends AssetItem {
               material.getParameter('Reflectance').setValue(specular)
               break
             case 'map_Ks':
-              material.getParameter('Roughness').setValue(parseMap(elements /* flags=TEXTURE_INVERT */))
+              material.getParameter('Roughness').setValue(parseMap('map_Ks', elements /* flags=TEXTURE_INVERT */))
               material.getParameter('Reflectance').setValue(0.2)
               break
             case 'd':
@@ -117,7 +119,7 @@ class ObjAsset extends AssetItem {
               material.getParameter('alpha').setValue(parseFloat(elements))
               break
             case 'map_bump':
-              material.getParameter('normal').setValue(parseMap(elements /* flags=BUMP_TO_NORMAL */))
+              material.getParameter('normal').setValue(parseMap('map_Ks', elements /* flags=BUMP_TO_NORMAL */))
               break
             default:
             // console.warn("Unhandled material parameter: '" + key +"' in:" + filePath);
@@ -127,7 +129,7 @@ class ObjAsset extends AssetItem {
 
       const loadMtlFile = (mtlFile) => {
         return new Promise((resolve) => {
-          loadTextfile(mtlFile.url, (fileData) => {
+          loadTextfile(mtlFile, (fileData) => {
             resourceLoader.incrementWorkDone(1)
             parseMtlData(fileData)
             resourceLoader.incrementWorkDone(1)
@@ -176,7 +178,7 @@ class ObjAsset extends AssetItem {
           geomDatas[name] = currGeom
           numGeoms++
         }
-        newGeom(filename)
+        newGeom('geom')
 
         const splitGroupsIntoObjects = this.getParameter('splitGroupsIntoObjects').getValue()
 
@@ -198,7 +200,7 @@ class ObjAsset extends AssetItem {
               if (!this.getParameter('loadMtlFile').getValue()) continue
               // Load and parse the mat lib.
               resourceLoader.incrementWorkload(2)
-              const mtlFile = resourceLoader.resolveFilepath(fileFolder + value)
+              const mtlFile = fileFolder + value
               if (mtlFile) {
                 await loadMtlFile(mtlFile)
               }

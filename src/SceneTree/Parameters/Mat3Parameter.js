@@ -48,5 +48,6 @@ class Mat3Parameter extends Parameter {
 }
 
 Registry.register('Mat3Parameter', Mat3Parameter)
+Registry.register('Property_Mat3_32f', Mat3Parameter)
 
 export { Mat3Parameter }

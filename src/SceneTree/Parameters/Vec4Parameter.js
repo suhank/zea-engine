@@ -54,5 +54,6 @@ class Vec4Parameter extends Parameter {
 }
 
 Registry.register('Vec4Parameter', Vec4Parameter)
+Registry.register('Property_Vec4_32f', Vec4Parameter)
 
 export { Vec4Parameter }
