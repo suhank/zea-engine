@@ -2070,7 +2070,7 @@
   resolved "https://registry.yarnpkg.com/@xtuc/long/-/long-4.2.2.tgz#d291c6a4e97989b5c61d9acf396ae4fe133a718d"
   integrity sha512-NuHqBY1PB/D8xU6s/thBgOAiAP7HOYDQ32+BFZILJ8ivkUkAHQnWfn6WhL79Owj1qmUnoN/YPhktdIoucipkAQ==
 
-"@zeainc/gltf-loader@latest":
+"@zeainc/gltf-loader@^3.2.2":
   version "3.2.2"
   resolved "https://registry.yarnpkg.com/@zeainc/gltf-loader/-/gltf-loader-3.2.2.tgz#bd9c9caaf3d3b958d311e703b5b0acb2e30fb3b5"
   integrity sha512-CcqSUz2mX5KtnrDOakFB2uZ5y0ptOh7GwjjJEi9fKqXbGpSTC6y0ZOA3l6AWPY80o3hD0SXLLLUyVwLT3aq+yw==
@@ -2088,7 +2088,7 @@
     meow "^7.0.1"
     rimraf "^3.0.2"
 
-"@zeainc/zea-cad@^3.3.0", "@zeainc/zea-cad@latest":
+"@zeainc/zea-cad@^3.3.0", "@zeainc/zea-cad@^3.4.3":
   version "3.4.3"
   resolved "https://registry.yarnpkg.com/@zeainc/zea-cad/-/zea-cad-3.4.3.tgz#63fb5963d9f6a3f83380569cefc838a659a37609"
   integrity sha512-c+c/+sQWBacj0Ab8WxcIM35CVxUbXn+3zfd4vq3s+lb5TXfv47asT4Bls3N5hbe2eTiTxoeIscEZ4iKeW+ovnQ==
@@ -2096,7 +2096,7 @@
     "@rollup/plugin-json" "^4.1.0"
     "@zeainc/zea-engine" "^3.12.4"
 
-"@zeainc/zea-collab@latest":
+"@zeainc/zea-collab@^5.2.0":
   version "5.2.1"
   resolved "https://registry.yarnpkg.com/@zeainc/zea-collab/-/zea-collab-5.2.1.tgz#dcba59e6237631c35d631dcd46cc09c03397498d"
   integrity sha512-+5TFRTExPOIfMysTNzSDk9HNK0Musxh7W8HLzBSosSo7MYREcSMtbnakXjXhZqaFe+JS5DVRzL+HyuQ2i8J0TA==
@@ -2115,7 +2115,7 @@
     debug "^4.1.1"
     rollup-plugin-base64 "^1.0.1"
 
-"@zeainc/zea-potree@latest":
+"@zeainc/zea-potree@^3.2.1":
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/@zeainc/zea-potree/-/zea-potree-3.2.1.tgz#874dd2f7f80e0132e5b55bb1e4f238a07231de12"
   integrity sha512-AA2Q5eMfinhds96nUVjnYCt7NsMA2BmGoPr6eyN1bg0z93GyU1qfoeDjbvIyyaNg5HVSytswv65pX/NKpd7sLA==
@@ -2131,7 +2131,7 @@
     webpack "^4.41.2"
     worker-loader "^2.0.0"
 
-"@zeainc/zea-ux@^3.2.0", "@zeainc/zea-ux@latest":
+"@zeainc/zea-ux@^3.2.0":
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/@zeainc/zea-ux/-/zea-ux-3.2.1.tgz#d794d7193bdf945fea10e0a59e55995b17c40abc"
   integrity sha512-Tfb42E9XKJagu/EbUsAlnlu/KldSyakUyWYOmFOTXk23cBWd0B2zJ8sbD1/gwkMK4XV2LE5//Zesd2R31a3NVA==
