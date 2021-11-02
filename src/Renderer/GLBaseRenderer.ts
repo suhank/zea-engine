@@ -656,11 +656,11 @@ class GLBaseRenderer extends ParameterOwner {
     // Note: We are now pushing on high-end mobile devices.
     // Galaxy and above. We need this. We need to accurately determine
     // if the float buffer is not supported.
-    if (SystemDesc.browserName == 'Safari' && this.__gl.name == 'webgl') {
+    if (SystemDesc.browserName == 'Safari' && gl.name == 'webgl') {
       this.floatGeomBuffer = false
     } else {
       this.floatGeomBuffer =
-        webglOptions.floatGeomBuffer != undefined ? webglOptions.floatGeomBuffer : this.__gl.floatTexturesSupported
+        webglOptions.floatGeomBuffer != undefined ? webglOptions.floatGeomBuffer : gl.floatTexturesSupported
     }
     gl.floatGeomBuffer = this.floatGeomBuffer
     return gl
