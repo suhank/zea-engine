@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Parameter } from './Parameter'
-import { BaseItem } from '../../SceneTree/BaseItem'
+import { TreeItem } from '../../SceneTree/TreeItem'
 
 /** Class representing an item set parameter.
  * @extends Parameter
  * @private
  */
-class ItemSetParameter extends Parameter<Set<BaseItem>> {
-  protected filterFn: (...args: any) => boolean
+class ItemSetParameter extends Parameter<Set<TreeItem>> {
+  protected filterFn: (item: TreeItem) => boolean
 
   /**
    * Create an item set parameter.
@@ -16,7 +16,7 @@ class ItemSetParameter extends Parameter<Set<BaseItem>> {
    * @param filterFn - The filterFn value.
    */
   constructor(name: string = '', filterFn: (...args: any[]) => boolean) {
-    super(name, new Set(), 'BaseItem')
+    super(name, new Set(), 'TreeItem')
     this.filterFn = filterFn // Note: the filter Fn indicates that users will edit the set.
   }
 
@@ -24,7 +24,7 @@ class ItemSetParameter extends Parameter<Set<BaseItem>> {
    * The setFilterFn method.
    * @param filterFn - The filterFn value.
    */
-  setFilterFn(filterFn: (...args: any) => boolean): void {
+  setFilterFn(filterFn: (item: TreeItem) => boolean): void {
     this.filterFn = filterFn
   }
 
@@ -32,7 +32,7 @@ class ItemSetParameter extends Parameter<Set<BaseItem>> {
    * The getFilterFn method.
    * @return - The return value.
    */
-  getFilterFn(): (...args: any) => boolean {
+  getFilterFn(): (item: TreeItem) => boolean {
     return this.filterFn
   }
 
@@ -41,7 +41,7 @@ class ItemSetParameter extends Parameter<Set<BaseItem>> {
    * @param index - The index param.
    * @return - The return value.
    */
-  getItem(index: number): BaseItem | undefined {
+  getItem(index: number): TreeItem | undefined {
     // if (!this.__items) return undefined
     return Array.from(this.__value)[index]
   }
@@ -52,7 +52,7 @@ class ItemSetParameter extends Parameter<Set<BaseItem>> {
    * @param emitValueChanged - The emit value.
    * @return - The return value.
    */
-  addItem(item: BaseItem, emitValueChanged = true): number | void {
+  addItem(item: TreeItem, emitValueChanged = true): number | void {
     if (this.filterFn && !this.filterFn(item)) {
       console.warn('ItemSet __filterFn rejecting item:', item.getPath())
       return
@@ -73,8 +73,8 @@ class ItemSetParameter extends Parameter<Set<BaseItem>> {
    * @param emitValueChanged
    * @memberof ItemSetParameter
    */
-  addItems(items: Set<BaseItem>, emitValueChanged = true): void {
-    items.forEach((item: BaseItem) => this.addItem(item, false))
+  addItems(items: Set<TreeItem>, emitValueChanged = true): void {
+    items.forEach((item: TreeItem) => this.addItem(item, false))
     if (emitValueChanged) this.emit('valueChanged', {})
   }
 
@@ -84,7 +84,7 @@ class ItemSetParameter extends Parameter<Set<BaseItem>> {
    * @param emitValueChanged - The emit param.
    * @return - The return value.
    */
-  removeItem(index: number, emitValueChanged = true): BaseItem | void {
+  removeItem(index: number, emitValueChanged = true): TreeItem | void {
     const item = Array.from(this.__value)[index]
     this.__value.delete(item)
     this.emit('itemRemoved', { item, index })
@@ -97,7 +97,7 @@ class ItemSetParameter extends Parameter<Set<BaseItem>> {
    * @param items - The item param.
    * @param emit - The emit param.
    */
-  setItems(items: Set<BaseItem>, emit = true): void {
+  setItems(items: Set<TreeItem>, emit = true): void {
     const values = Array.from(this.__value)
     for (let i = values.length - 1; i >= 0; i--) {
       const item = values[i]
@@ -162,7 +162,7 @@ class ItemSetParameter extends Parameter<Set<BaseItem>> {
   fromJSON(j: Record<string, any>, context?: Record<string, any>): void {
     if (context) {
       for (const itemPath in j.value) {
-        const item = <BaseItem>context.resolvePath(itemPath)
+        const item = <TreeItem>context.resolvePath(itemPath)
         this.__value.add(item)
       }
     }
