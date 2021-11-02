@@ -30,7 +30,9 @@
       scene.displayEnvMapParam.value = true
 
       const objAsset = new ObjAsset('cow')
-      objAsset.load('data/cow.obj')
+      objAsset.load('data/rifle/rifle.obj').then(() => {
+        renderer.frameAll()
+      })
       scene.getRoot().addChild(objAsset)
 
       const xfo = new Xfo()

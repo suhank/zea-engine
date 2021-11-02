@@ -71,5 +71,6 @@ class QuatParameter extends Parameter<Quat> implements IBinaryReader {
 }
 
 Registry.register('QuatParameter', QuatParameter)
+Registry.register('Property_Quat_32f', QuatParameter)
 
 export { QuatParameter }

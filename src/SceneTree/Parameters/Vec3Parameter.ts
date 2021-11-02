@@ -19,14 +19,18 @@ import { BinReader } from '../../SceneTree/BinReader'
  * @extends Parameter
  */
 class Vec3Parameter extends Parameter<Vec3> implements IBinaryReader {
+  protected range?: Vec3[]
+
   /**
    * Create a Vec3 parameter.
+   *
    * @param name - The name of the Vec3 parameter.
    * @param value - The value of the parameter.
-   * @param range - The range value is an array of two `Vec2` objects.
+   * @param range - The range value is an array of two `Vec3` objects.
    */
-  constructor(name: string = '', value?: Vec3) {
+  constructor(name: string = '', value?: Vec3, range?: Vec3[]) {
     super(name, value ? value : new Vec3(), 'Vec3')
+    this.range = range
   }
 
   // ////////////////////////////////////////
@@ -50,15 +54,12 @@ class Vec3Parameter extends Parameter<Vec3> implements IBinaryReader {
   }
 
   fromJSON(j: Record<string, unknown>, context?: Record<string, unknown>): void {
-    const vec3 = new Vec3()
-    vec3.fromJSON(j.value as any)
-    this.__value = vec3
+    const vec4 = new Vec3()
+    vec4.fromJSON(j.value as any)
+    this.__value = vec4
 
     if (j.name) this.name = j.name as string
   }
-
-  // ////////////////////////////////////////
-  // Clone
 
   /**
    * The clone method constructs a new Vec3 parameter, copies its values
@@ -73,5 +74,6 @@ class Vec3Parameter extends Parameter<Vec3> implements IBinaryReader {
 }
 
 Registry.register('Vec3Parameter', Vec3Parameter)
+Registry.register('Property_Vec3_32f', Vec3Parameter)
 
 export { Vec3Parameter }

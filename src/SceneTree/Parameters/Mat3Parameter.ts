@@ -63,5 +63,6 @@ class Mat3Parameter extends Parameter<Mat3> implements IBinaryReader {
 }
 
 Registry.register('Mat3Parameter', Mat3Parameter)
+Registry.register('Property_Mat3_32f', Mat3Parameter)
 
 export { Mat3Parameter }

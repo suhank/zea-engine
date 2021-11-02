@@ -72,5 +72,7 @@ class XfoParameter extends Parameter<Xfo> implements IBinaryReader {
 }
 
 Registry.register('XfoParameter', XfoParameter)
+Registry.register('Property_Xfo_32f', XfoParameter)
+
 
 export { XfoParameter }

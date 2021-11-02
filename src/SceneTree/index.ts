@@ -25,6 +25,7 @@ export * from './InstanceItem'
 export * from './BaseGeomItem'
 export * from './GeomItem'
 export * from './AssetItem'
+export * from './AssetLoadContext.js'
 export * from './BillboardItem'
 export * from './Camera'
 

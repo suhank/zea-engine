@@ -96,5 +96,6 @@ class Vec2Parameter extends Parameter<Vec2> implements IBinaryReader {
 }
 
 Registry.register('Vec2Parameter', Vec2Parameter)
+Registry.register('Property_Vec2_32f', Vec2Parameter)
 
 export { Vec2Parameter }

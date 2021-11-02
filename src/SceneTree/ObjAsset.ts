@@ -7,9 +7,9 @@ import { AssetItem } from './AssetItem'
 import { Mesh } from './Geometry/Mesh'
 import { loadTextfile } from './Utils'
 import { Material } from './Material'
+import { FileImage } from './Images/FileImage'
 import { resourceLoader } from './resourceLoader'
 import { BooleanParameter, NumberParameter, StringParameter } from './Parameters/index'
-import { FileImage } from './Images'
 import { Vec3Attribute } from './Geometry/Vec3Attribute'
 import { Vec2Attribute } from './Geometry/Vec2Attribute'
 
@@ -86,9 +86,8 @@ class ObjAsset extends AssetItem {
     this.loaded = false
     return new Promise((resolve, reject) => {
       const fileFolder = url.substring(0, url.lastIndexOf('/')) + '/'
-      const filename = url.substring(url.lastIndexOf('/') + 1)
 
-      const parseMtlData = (mtlFileData: any) => {
+      const parseMtlData = (mtlFileData: string) => {
         const lines = mtlFileData.split('\n')
         const WHITESPACE_RE = /\s+/
         let material
@@ -99,15 +98,17 @@ class ObjAsset extends AssetItem {
           else throw new Error('Unable to parse a color from the following parts:' + elements.join('_'))
         }
 
-        const parseMap = (elements: any) => {
-          return new FileImage(elements[0], fileFolder + elements[0])
+        const parseMap = (name: string, filename: string) => {
+          const fileImage = new FileImage(name)
+          fileImage.load(fileFolder + filename)
+          return fileImage
         }
 
         for (let i = 0; i < lines.length; i++) {
           let line = lines[i].trim()
           if (line.startsWith('#')) continue
           if (line.includes('#')) line = line.substring(0, line.indexOf('#')).trim()
-          const elements = line.split(WHITESPACE_RE)
+          const elements: string[] = line.split(WHITESPACE_RE)
           const key = elements.shift()
           const value = elements.join(' ')
 
@@ -123,7 +124,7 @@ class ObjAsset extends AssetItem {
               material.getParameter('BaseColor')!.value = parseColor(elements)
               break
             case 'map_Kd':
-              material.getParameter('BaseColor')!.value = parseMap(elements)
+              material.getParameter('BaseColor')!.value = parseMap('map_Kd', elements[0])
               break
             case 'Ks':
               const specular = (parseFloat(elements[0]) + parseFloat(elements[1]) + parseFloat(elements[2])) / 3.0
@@ -131,7 +132,7 @@ class ObjAsset extends AssetItem {
               material.getParameter('Reflectance')!.value = specular
               break
             case 'map_Ks':
-              material.getParameter('Roughness')!.value = parseMap(elements /* flags=TEXTURE_INVERT */)
+              material.getParameter('Roughness')!.value = parseMap('map_Ks', elements[0] /* flags=TEXTURE_INVERT */)
               material.getParameter('Reflectance')!.value = 0.2
               break
             case 'd':
@@ -142,10 +143,10 @@ class ObjAsset extends AssetItem {
               }
               break
             case 'map_d':
-              material.getParameter('alpha')!.value = parseFloat(elements)
+              material.getParameter('alpha')!.value = parseFloat(elements[0])
               break
             case 'map_bump':
-              material.getParameter('normal')!.value = parseMap(elements /* flags=BUMP_TO_NORMAL */)
+              material.getParameter('normal')!.value = parseMap('map_Ks', elements[0] /* flags=BUMP_TO_NORMAL */)
               break
             default:
             // console.warn("Unhandled material parameter: '" + key +"' in:" + filePath);
@@ -155,7 +156,7 @@ class ObjAsset extends AssetItem {
 
       const loadMtlFile = (mtlFile: any): Promise<void> => {
         return new Promise((resolve) => {
-          loadTextfile(mtlFile.url, (fileData: any) => {
+          loadTextfile(mtlFile, (fileData) => {
             resourceLoader.incrementWorkDone(1)
             parseMtlData(fileData)
             resourceLoader.incrementWorkDone(1)
@@ -204,7 +205,7 @@ class ObjAsset extends AssetItem {
           geomDatas[name] = currGeom
           numGeoms++
         }
-        newGeom(filename)
+        newGeom('geom')
 
         const splitGroupsIntoObjects = this.splitGroupsIntoObjectsParam.value
 
@@ -226,8 +227,10 @@ class ObjAsset extends AssetItem {
               if (!this.loadMtlFileParam.value) continue
               // Load and parse the mat lib.
               resourceLoader.incrementWorkload(2)
-              const url = fileFolder + value
-              await loadMtlFile(url)
+              const mtlFile = fileFolder + value
+              if (mtlFile) {
+                await loadMtlFile(mtlFile)
+              }
               break
             case 'o':
               newGeom(value)

@@ -1,5 +1,6 @@
 /* eslint-disable guard-for-in */
-import { TreeItem, GeomItem, ParameterOwner, Scene, GridTreeItem } from '../SceneTree/index'
+import throttle from 'lodash/throttle'
+import { TreeItem, GeomItem, ParameterOwner, Scene } from '../SceneTree/index'
 import { SystemDesc } from '../SystemDesc'
 import { create3DContext } from './GLContext'
 import { GLScreenQuad } from './GLScreenQuad'
@@ -11,7 +12,6 @@ import { GLMaterialLibrary } from './Drawing/GLMaterialLibrary'
 import { GLGeomLibrary } from './Drawing/GLGeomLibrary'
 import { GLGeomItemLibrary } from './Drawing/GLGeomItemLibrary'
 import { GLPass } from './Passes/GLPass'
-import { Color } from '../Math/Color'
 import { GLRenderer } from './GLRenderer'
 import { ResizedEvent } from '../Utilities/Events/ResizedEvent'
 import { SceneSetEvent } from '../Utilities/Events/SceneSetEvent'
@@ -560,50 +560,23 @@ class GLBaseRenderer extends ParameterOwner {
       this.__glcanvas = $canvas
     }
     this.__glcanvas.style['touch-action'] = 'none'
-    this.__glcanvas.style.width = 'auto'
-    this.__glcanvas.style.height = 'auto'
     this.__glcanvas.style.margin = '0px'
 
-    let lastResize = performance.now()
-    let timoutId = 0
-    const resizeObserver = new ResizeObserver((entries) => {
+    // Rapid resizing of the canvas would cause issues with WebGL.
+    // FrameBuffer objects would end up all black. So here we throttle
+    // the resizing of the canvas to ensure 2 resize commands are not
+    // closer than 100ms appart.
+    const throttledResize = throttle((entries) => {
       for (const entry of entries) {
         if (!entry.contentRect) {
           return
         }
-        const calcPixelsAndResize = () => {
-          const displayWidth = Math.round(entry.contentRect.width)
-          const displayHeight = Math.round(entry.contentRect.height)
-          this.handleResize(displayWidth, displayHeight)
-        }
-        // Note: Rapid resize events would cause WebGL to render black.
-        // There appeared nothing to indicate why we get black, but throttling
-        // the resizing of our canvas and buffers seems to work.
-        const now = performance.now()
-        if (now - lastResize > 100) {
-          lastResize = now
-          // If a delayed resize is scheduled, cancel it.
-          if (timoutId) {
-            clearTimeout(timoutId)
-            timoutId = 0
-          }
-          calcPixelsAndResize()
-        } else {
-          // Set a timer to see if we can delay this resize by a few ms.
-          // If a resize happens in the meantime that succeeds, then skip this one.
-          // This ensures that after a drag to resize, the final resize event
-          // should always eventually apply.
-          // @ts-ignore
-          timoutId = setTimeout(() => {
-            const now = performance.now()
-            if (now - lastResize > 100) {
-              lastResize = now
-              calcPixelsAndResize()
-            }
-          }, 100)
-        }
+        const displayWidth = Math.round(entry.contentRect.width)
+        const displayHeight = Math.round(entry.contentRect.height)
+        this.handleResize(displayWidth, displayHeight)
       }
-    })
+    }, 100)
+    const resizeObserver = new ResizeObserver(throttledResize)
 
     this.handleResize(this.__glcanvas.parentElement.clientWidth, this.__glcanvas.parentElement.clientHeight)
     // https://webglfundamentals.org/webgl/lessons/webgl-resizing-the-canvas.html

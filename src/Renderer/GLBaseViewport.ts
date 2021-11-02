@@ -5,7 +5,6 @@ import { GLHDRImage } from './GLHDRImage'
 import { GLTexture2D } from './GLTexture2D'
 import { GLFbo } from './GLFbo'
 import { GLMesh } from './Drawing/GLMesh'
-
 import { VLHImage } from '../SceneTree/Images/VLHImage'
 import { ResizedEvent } from '../Utilities/Events/ResizedEvent'
 import { SceneSetEvent } from '../Utilities/Events/SceneSetEvent'
@@ -153,14 +152,6 @@ class GLBaseViewport extends ParameterOwner {
         sceneSet((<SceneSetEvent>event).scene)
       })
     }
-  }
-
-  /**
-   * The getRenderer method.
-   * @return - The return value.
-   */
-  getRenderer(): GLRenderer {
-    return this.__renderer
   }
 
   /**
