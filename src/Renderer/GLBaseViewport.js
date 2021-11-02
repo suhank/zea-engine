@@ -2,7 +2,6 @@ import { SystemDesc } from '../SystemDesc.js'
 import { Color } from '../Math/index'
 import { Plane, ParameterOwner, BaseImage, NumberParameter, BaseTool } from '../SceneTree/index'
 import { GLRenderTarget } from './GLRenderTarget.js'
-import { GLBaseRenderer } from './GLBaseRenderer'
 import { GLHDRImage } from './GLHDRImage.js'
 import { GLTexture2D } from './GLTexture2D.js'
 import { GLFbo } from './GLFbo.js'
@@ -112,14 +111,6 @@ class GLBaseViewport extends ParameterOwner {
     } else {
       this.__renderer.on('sceneSet', sceneSet)
     }
-  }
-
-  /**
-   * The getRenderer method.
-   * @return {GLBaseRenderer} - The return value.
-   */
-  getRenderer() {
-    return this.__renderer
   }
 
   /**
