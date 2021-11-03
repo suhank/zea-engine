@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.13.0](https://github.com/ZeaInc/zea-engine/compare/v3.12.3...v3.13.0) (2021-11-03)
+
+
+### Features
+
+* Vec2, Vec3, Vec4, Quat, Color, Xfo, Mat3 and Mat4 parameters can now be encoded in zcad files. ([1b17f76](https://github.com/ZeaInc/zea-engine/commit/1b17f76c9cf390433d84232cbaaa1dc4c7235729))
+
+
+### Bug Fixes
+
+* A bug in our resize throttling caused incorrect canvas size. ([8d23702](https://github.com/ZeaInc/zea-engine/commit/8d23702b8b3834a0af81ef1fb4b070242dec062e))
+* Fixed loading Obj files that contain a reference to a mtl file. Fixed parsing mtl files. ([b0ec4fe](https://github.com/ZeaInc/zea-engine/commit/b0ec4fe953989fa193bddaa2a043b9012c0b14d9))
+* fixed regression causing cavas size on to fix parent ([9522192](https://github.com/ZeaInc/zea-engine/commit/9522192f543885a217e0419374fb2666dfb74ad8))
+* Fixed warning in React and error in Svelte by forcing the webWorkerLoader to assume a browser environment. ([3308c13](https://github.com/ZeaInc/zea-engine/commit/3308c13f3ebf9fc2cba19c9e3417b341bd891096))
+* Picking lines was broken after version 3.12.0. This is now addressed. ([952dadb](https://github.com/ZeaInc/zea-engine/commit/952dadb9e4402080869d8e909638be20a6e65073))
+* Removed dependency on 'semver' ([1ce5a0d](https://github.com/ZeaInc/zea-engine/commit/1ce5a0deebf64ae7a47e67891d467b5707a2f9dd))
+
 ### [3.12.4](https://github.com/ZeaInc/zea-engine/compare/v3.12.3...v3.12.4) (2021-10-28)
 
 
