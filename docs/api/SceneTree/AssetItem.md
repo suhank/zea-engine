@@ -1,12 +1,6 @@
 ### Classes
 
 <dl>
-<dt><a href="#AssetLoadContext">AssetLoadContext</a></dt>
-<dd><p>Provides a context for loading assets. This context can provide the units of the loading scene.
-E.g. you can specify the scene units as &#39;millimeters&#39; in the context object.
-To load external references, you can also provide a dictionary that maps filenames to URLs that are used
-to resolve the URL of an external reference that a given asset is expecting to find.</p>
-</dd>
 <dt><a href="#AssetItem">AssetItem</a> ⇐ <code>TreeItem</code></dt>
 <dd><p>Represents a TreeItem with rendering and material capabilities.</p>
 </dd>
@@ -21,78 +15,6 @@ e.g. for Millimeters, returns 0.001, for Meters, returns 1.0
 Given 2 different units, the factors are combined together to calculate the conversion between the 2 units.</p>
 </dd>
 </dl>
-
-<a name="AssetLoadContext"></a>
-
-### AssetLoadContext
-Provides a context for loading assets. This context can provide the units of the loading scene.
-E.g. you can specify the scene units as 'millimeters' in the context object.
-To load external references, you can also provide a dictionary that maps filenames to URLs that are used
-to resolve the URL of an external reference that a given asset is expecting to find.
-
-
-
-* [AssetLoadContext](#AssetLoadContext)
-    * [new AssetLoadContext(context)](#new-AssetLoadContext)
-    * [incrementAsync()](#incrementAsync)
-    * [decrementAsync()](#decrementAsync)
-    * [resolvePath(path, onSucceed, onFail)](#resolvePath)
-    * [addPLCB(postLoadCallback)](#addPLCB)
-
-<a name="new_AssetLoadContext_new"></a>
-
-### new AssetLoadContext
-Create a AssetLoadContext
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| context | [<code>AssetLoadContext</code>](#AssetLoadContext) | The source context to base this context on. |
-
-<a name="AssetLoadContext+incrementAsync"></a>
-
-### incrementAsync
-During loading, asynchronous processes may be launched, and subsequently completed.
-These method helps the Asset track how many asynchronous loading operations may be
-occurring with the tree during load.
-As each external reference starts to load, it increments this counter, letting the owning
-Asset know to wait till the children are loaded before emitting its own 'loaded' event.
-
-
-<a name="AssetLoadContext+decrementAsync"></a>
-
-### decrementAsync
-As each external reference completes loading, it decrements this counter allowing the owning
-asset to know that the subtrees are loaded.
-
-
-<a name="AssetLoadContext+resolvePath"></a>
-
-### resolvePath
-Resolves a path within the loading asset. This is used to connect
-items within the tree to other items. e.g. a Group can find its members.
-or an instance can find its source tree.
-
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| path | <code>array</code> | the path within the tree relative to the loading asset |
-| onSucceed | <code>function</code> | called with the successful result of the path resolution. |
-| onFail | <code>function</code> | called when the path resolution fails. |
-
-<a name="AssetLoadContext+addPLCB"></a>
-
-### addPLCB
-Adds a function to be called back once the main load call stack exists.
-This is used to connect parts of the tree together after loading.
-e.g. an instance will
-
-
-
-| Param | Type |
-| --- | --- |
-| postLoadCallback | <code>function</code> | 
 
 <a name="AssetItem"></a>
 
@@ -183,7 +105,7 @@ The readBinary method.
 | Param | Type | Description |
 | --- | --- | --- |
 | reader | <code>object</code> | The reader value. |
-| context | [<code>AssetLoadContext</code>](#AssetLoadContext) | The context value. |
+| context | <code>[AssetLoadContext](api/SceneTree\AssetLoadContext.md)</code> | The context value. |
 
 <a name="AssetItem+toJSON"></a>
 
