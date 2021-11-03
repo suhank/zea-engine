@@ -227,7 +227,7 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
             this.boundOutputs[newDirtyIndex].getOperator().setDirty()
           }
         }
-        for (let i = index; i < this.boundInputs.length; i++) {
+        for (let i = 0; i < this.boundInputs.length; i++) {
           this.boundInputs[i].setDirty()
         }
         this.emit('valueChanged', { mode: 0 })
