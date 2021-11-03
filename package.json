@@ -2,7 +2,7 @@
   "name": "@zeainc/zea-engine",
   "fileName": "index",
   "libraryName": "ZeaEngine",
-  "version": "3.12.4",
+  "version": "3.13.0",
   "description": "Zea Engine",
   "browser": "dist/index.umd.js",
   "main": "dist/index.cjs.js",
@@ -51,7 +51,6 @@
     }
   },
   "dependencies": {
-    "debug": "^4.1.1",
     "lodash": "^4.17.21",
     "rollup-plugin-base64": "^1.0.1"
   },
@@ -70,12 +69,12 @@
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^9.0.0",
     "@rollup/plugin-replace": "^3.0.0",
+    "@zeainc/gltf-loader": "^3.2.2",
     "@zeainc/jsdocs2md": "^0.0.8",
     "@zeainc/zea-cad": "^3.4.3",
     "@zeainc/zea-collab": "^5.2.0",
     "@zeainc/zea-potree": "^3.2.1",
     "@zeainc/zea-ux": "^3.2.0",
-    "@zeainc/gltf-loader": "^3.2.2",
     "cypress": "^5.1.0",
     "@percy/cypress": "^2.3.1",
     "@size-limit/preset-small-lib": "^5.0.3",
