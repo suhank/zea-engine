@@ -128,6 +128,7 @@ class BaseGeom extends ParameterOwner {
     this.__numVertices = count
     // Resizes each of the vertex attributes to match the new count.
     this.__vertexAttributes.forEach((attr: Attribute) => attr.setCount(this.__numVertices))
+    this.setBoundingBoxDirty()
   }
 
   // ////////////////////////////////////////
