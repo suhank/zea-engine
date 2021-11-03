@@ -7,9 +7,9 @@
     "**/*.test.js" // for migration
   ],
   "compilerOptions": {
-    "target": "esnext",
-    "module": "esnext",
-    "lib": ["dom", "esnext"],
+    "target": "es6",
+    "module": "es6",
+    "lib": ["dom", "es6"],
     "importHelpers": true,
     // output .d.ts declaration files for consumers
     "declaration": true,
