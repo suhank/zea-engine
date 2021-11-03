@@ -1,6 +1,6 @@
 import { SystemDesc } from '../SystemDesc'
 import { AssetItem } from './AssetItem'
-import { AssetLoadContext } from './AssetLoadContext.js'
+import { AssetLoadContext } from './AssetLoadContext'
 import { BinReader } from './BinReader'
 import { resourceLoader } from './resourceLoader'
 import { Registry } from '../Registry'

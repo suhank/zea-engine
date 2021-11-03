@@ -1,4 +1,4 @@
-import { EventEmitter } from '../Utilities/EventEmitter.js'
+import { EventEmitter } from '../Utilities/EventEmitter'
 import { Version } from './Version'
 import { BaseItem } from './BaseItem'
 import { Parameter } from './Parameters/Parameter'
