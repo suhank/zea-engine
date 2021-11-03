@@ -49,8 +49,10 @@ class Cone extends ProceduralMesh {
    * @param height - The height of the cone.
    * @param detail - The detail of the cone.
    * @param cap -  A boolean indicating whether the base of the cone is capped or open.
+   * @param addNormals - Compute vertex normals for the geometry
+   * @param addTextureCoords - Compute texture coordinates for the geometry
    */
-  constructor(radius = 0.5, height = 1.0, detail = 32, cap = true) {
+  constructor(radius = 0.5, height = 1.0, detail = 32, cap = true, addNormals = true, addTextureCoords = true) {
     super()
     this.topologyParams = []
     if (isNaN(radius) || isNaN(height) || isNaN(detail)) throw new Error('Invalid geom args')
@@ -62,8 +64,8 @@ class Cone extends ProceduralMesh {
     ) as NumberParameter
     this.capParam = this.addParameter(new BooleanParameter('Cap', cap)) as BooleanParameter
 
-    this.addVertexAttribute('texCoords', new Vec2Attribute())
-    this.addVertexAttribute('normals', new Vec3Attribute())
+    if (addNormals) this.addVertexAttribute('normals', new Vec3Attribute())
+    if (addTextureCoords) this.addVertexAttribute('texCoords', new Vec2Attribute())
 
     this.topologyParams.push('Detail')
     this.topologyParams.push('Cap')
@@ -168,7 +170,10 @@ class Cone extends ProceduralMesh {
     // Note: this breaks an infinite loop where computeVertexNormals calls update which calls rebuild.
     this.dirtyTopology = false
     this.dirtyVertices = false
-    this.computeVertexNormals()
+    const normals = this.getVertexAttribute('normals')
+    if (normals) {
+      this.computeVertexNormals()
+    }
   }
 }
 

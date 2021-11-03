@@ -43,7 +43,7 @@ class Sphere extends ProceduralMesh {
    * @param addNormals - Compute vertex normals for the geometry
    * @param addTextureCoords - Compute texture coordinates for the geometry
    */
-  constructor(radius = 1.0, sides = 12, loops = 12) {
+  constructor(radius = 1.0, sides = 12, loops = 12, addNormals = true, addTextureCoords = true) {
     super()
 
     if (isNaN(radius) || isNaN(sides) || isNaN(loops)) throw new Error('Invalid geom args')
@@ -56,8 +56,8 @@ class Sphere extends ProceduralMesh {
     this.sidesParam.value = sides
     this.loopsParam.value = loops
 
-    this.addVertexAttribute('texCoords', new Vec2Attribute())
-    this.addVertexAttribute('normals', new Vec3Attribute())
+    if (addNormals) this.addVertexAttribute('normals', new Vec3Attribute())
+    if (addTextureCoords) this.addVertexAttribute('texCoords', new Vec2Attribute())
 
     this.topologyParams.push('Sides')
     this.topologyParams.push('Loops')
@@ -99,7 +99,7 @@ class Sphere extends ProceduralMesh {
 
         // Set positions and normals at the same time.
         positions.getValueRef(vertex).setFromOther(normal.scale(radius))
-        normals.getValueRef(vertex).setFromOther(normal)
+        if (normals) normals.getValueRef(vertex).setFromOther(normal)
         vertex++
       }
     }
