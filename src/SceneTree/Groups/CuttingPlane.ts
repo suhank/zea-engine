@@ -98,8 +98,8 @@ class CuttingPlane extends BaseGroup {
       item.setCutVector(cutAwayVector)
       item.setCutDist(cutAwayDist)
     } else {
-      Array.from(this.itemsParam.value).forEach((item: any) => {
-        item.traverse((item: any) => {
+      Array.from(this.itemsParam.value).forEach((item: TreeItem) => {
+        item.traverse((item: TreeItem) => {
           if (item instanceof BaseGeomItem) {
             item.setCutawayEnabled(cutEnabled)
             item.setCutVector(cutAwayVector)
