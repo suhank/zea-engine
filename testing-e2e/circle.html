@@ -12,7 +12,7 @@
     <script src="../dist/index.umd.js"></script>
 
     <script type="module">
-      const { GLRenderer, Scene, Vec3, Color, Circle, Material, GeomItem, GLBoundingBoxPass } = zeaEngine
+      const { GLRenderer, Scene, Vec3, Color, Circle, Sphere, Material, GeomItem, GLBoundingBoxPass } = zeaEngine
 
       const scene = new Scene()
       const domElement = document.getElementById('viewport')
@@ -22,9 +22,22 @@
       const material = new Material('surfaces', 'LinesShader')
       material.getParameter('BaseColor').setValue(new Color(89 / 255, 182 / 255, 92 / 255))
 
-      const sphere = new Circle(1.5, 30)
-      const geomItem = new GeomItem('Circle', sphere, material)
+      scene.setupGrid(10, 10)
+
+      const circle = new Circle(1.5, 30)
+      const geomItem = new GeomItem('Circle', circle, material)
       scene.getRoot().addChild(geomItem)
+
+      const circle2 = new Circle(0.5, 30)
+      const geomItem2 = new GeomItem('Circle', circle2, material)
+      scene.getRoot().addChild(geomItem2)
+
+      renderer.getViewport().on('pointerOverGeom', (event) => {
+        event.intersectionData.geomItem.addHighlight('pointerOver', new Color(1, 0, 0, 0.2), true)
+      })
+      renderer.getViewport().on('pointerLeaveGeom', (event) => {
+        event.leftGeometry.removeHighlight('pointerOver', true)
+      })
 
       // const boundingBoxPass = new GLBoundingBoxPass()
       // renderer.addPass(boundingBoxPass)
