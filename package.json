@@ -35,7 +35,6 @@
     "to-cleanup": "rm -Rf dist/ node_modules/ yarn.lock"
   },
   "dependencies": {
-    "debug": "^4.1.1",
     "lodash": "^4.17.21",
     "rollup-plugin-base64": "^1.0.1"
   },
@@ -45,12 +44,12 @@
     "@rollup/plugin-commonjs": "^15.1.0",
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^9.0.0",
+    "@zeainc/gltf-loader": "^3.2.2",
     "@zeainc/jsdocs2md": "^0.0.8",
     "@zeainc/zea-cad": "^3.4.3",
     "@zeainc/zea-collab": "^5.2.0",
     "@zeainc/zea-potree": "^3.2.1",
     "@zeainc/zea-ux": "^3.2.0",
-    "@zeainc/gltf-loader": "^3.2.2",
     "cypress": "^5.1.0",
     "docsify-cli": "^4.4.1",
     "es-dev-server": "^1.57.8",
