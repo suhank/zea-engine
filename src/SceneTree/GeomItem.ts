@@ -28,7 +28,7 @@ class CalcGeomMatOperator extends Operator {
    * @param geomMatParam
    * @memberof CalcGeomMatOperator
    */
-  constructor(globalXfoParam: XfoParameter, geomOffsetXfoParam: XfoParameter, geomMatParam: any) {
+  constructor(globalXfoParam: XfoParameter, geomOffsetXfoParam: XfoParameter, geomMatParam: Mat4Parameter) {
     super('CalcGeomMatOperator')
     this.addInput(new OperatorInput('GlobalXfo')).setParam(globalXfoParam)
     this.addInput(new OperatorInput('GeomOffsetXfo')).setParam(geomOffsetXfoParam)
