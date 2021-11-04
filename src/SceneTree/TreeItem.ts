@@ -17,6 +17,7 @@ import { KeyboardEvent } from '../Utilities/Events/KeyboardEvent'
 import { MouseEvent } from '../Utilities/Events/MouseEvent'
 import { WheelEvent } from '../Utilities/Events/WheelEvent'
 import { BaseEvent } from '../Utilities/BaseEvent'
+import { TouchEvent } from '../Utilities/Events/TouchEvent'
 
 /**
  * Class representing an Item in the scene tree with hierarchy capabilities (has children).
@@ -824,6 +825,20 @@ class TreeItem extends BaseItem {
     const owner_TreeItem = <TreeItem>this.__ownerItem
     if (event.propagating && owner_TreeItem) {
       owner_TreeItem.onWheel(event)
+    }
+  }
+
+  /**
+   * Called by the Viewport when the touch cancel event is received by the canvas element.
+   * Emits the TouchEvent with the key 'touchCancel', and Propagates is up to the TreeItem's owner.
+   *
+   * @param event - The wheel event that occurs.
+   */
+  onTouchCancel(event: TouchEvent) {
+    this.emit('touchCancel', event)
+    const owner_TreeItem = <TreeItem>this.__ownerItem
+    if (event.propagating && owner_TreeItem) {
+      owner_TreeItem.onTouchCancel(event)
     }
   }
 

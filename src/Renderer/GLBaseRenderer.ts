@@ -785,6 +785,15 @@ class GLBaseRenderer extends ParameterOwner {
       },
       { passive: true }
     )
+    this.__glcanvas!.addEventListener(
+      'touchcancel',
+      (event: globalThis.TouchEvent) => {
+        const viewport = this.getActiveViewport()
+        const pointerEvent = new TouchEvent(event, this.__glcanvas!.getBoundingClientRect())
+        viewport.onTouchCancel(pointerEvent)
+      },
+      { passive: true }
+    )
     /** Touch Events End */
 
     const onWheel = (event: globalThis.WheelEvent) => {
