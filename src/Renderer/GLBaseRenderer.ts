@@ -7,7 +7,6 @@ import { GLScreenQuad } from './GLScreenQuad'
 import { GLViewport } from './GLViewport'
 import { Registry } from '../Registry'
 import { VRViewport } from './VR/VRViewport'
-import { POINTER_TYPES } from '../Utilities/EnumUtils'
 import { GLMaterialLibrary } from './Drawing/GLMaterialLibrary'
 import { GLGeomLibrary } from './Drawing/GLGeomLibrary'
 import { GLGeomItemLibrary } from './Drawing/GLGeomItemLibrary'
@@ -17,6 +16,10 @@ import { ResizedEvent } from '../Utilities/Events/ResizedEvent'
 import { SceneSetEvent } from '../Utilities/Events/SceneSetEvent'
 import { ViewChangedEvent } from '../Utilities/Events/ViewChangedEvent'
 import { XrViewportEvent } from '../Utilities/Events/XrViewportEvent'
+import { MouseEvent } from '../Utilities/Events/MouseEvent'
+import { WheelEvent } from '../Utilities/Events/WheelEvent'
+import { TouchEvent } from '../Utilities/Events/TouchEvent'
+import { KeyboardEvent } from '../Utilities/Events/KeyboardEvent'
 
 import { GLShader } from './GLShader'
 
@@ -647,28 +650,6 @@ class GLBaseRenderer extends ParameterOwner {
     // Setup event handlers
     const isValidCanvas = () => this.getWidth() > 0 && this.getHeight()
 
-    const prepareEvent = (event: Record<string, any>) => {
-      event.propagating = true
-      const sp = event.stopPropagation
-      event.stopPropagation = () => {
-        event.propagating = false
-        if (sp) sp.call(event)
-      }
-    }
-    const calcRendererCoords = (event: Record<string, any>) => {
-      const rect = this.__glcanvas!.getBoundingClientRect()
-      // Disabling devicePixelRatio for now. See: __onResize
-      const DPR = 1.0 // window.devicePixelRatio
-      // Note: the rendererX/Y values are relative to the viewport,
-      // but are available outside the viewport. So when a mouse
-      // drag occurs, and drags outside the viewport, these values
-      // provide consistent coords.
-      // offsetX/Y are only valid inside the viewport and so cause
-      // jumps when the mouse leaves the viewport.
-      event.rendererX = (event.clientX - rect.left) * DPR
-      event.rendererY = (event.clientY - rect.top) * DPR
-    }
-
     /** Mouse Events Start */
     const isMobileSafariMouseEvent = (event: Record<string, any>) => {
       if (SystemDesc.isMobileDevice && SystemDesc.browserName == 'Safari') {
@@ -678,87 +659,74 @@ class GLBaseRenderer extends ParameterOwner {
       return false
     }
 
-    this.__glcanvas!.addEventListener('mousedown', (event: Record<string, any>) => {
+    this.__glcanvas!.addEventListener('mousedown', (event: globalThis.MouseEvent) => {
       if (isMobileSafariMouseEvent(event)) {
         return
       }
-
-      prepareEvent(event)
-      calcRendererCoords(event)
+      const pointerEvent = new MouseEvent(event, this.__glcanvas!.getBoundingClientRect())
       pointerIsDown = true
       activeGLRenderer = this
-      this.activateViewportAtPos(event.rendererX, event.rendererY)
+      this.activateViewportAtPos(pointerEvent.rendererX, pointerEvent.rendererY)
       const viewport = this.getActiveViewport()
       if (viewport) {
-        event.pointerType = POINTER_TYPES.mouse
-        viewport.onPointerDown(event)
+        viewport.onPointerDown(pointerEvent)
       }
 
       pointerLeft = false
     })
 
-    document.addEventListener('mouseup', (event: Record<string, any>) => {
+    document.addEventListener('mouseup', (event: globalThis.MouseEvent) => {
       if (isMobileSafariMouseEvent(event)) {
         return
       }
 
       if (activeGLRenderer != this || !isValidCanvas()) return
 
-      prepareEvent(event)
-      calcRendererCoords(event)
+      const pointerEvent = new MouseEvent(event, this.__glcanvas!.getBoundingClientRect())
       pointerIsDown = false
       const viewport = this.getActiveViewport()
       if (viewport) {
-        event.pointerType = POINTER_TYPES.mouse
-        viewport.onPointerUp(event)
+        viewport.onPointerUp(pointerEvent)
       }
 
       if (pointerLeft) {
         if (viewport) {
-          event.pointerType = POINTER_TYPES.mouse
-          viewport.onPointerLeave(event)
+          viewport.onPointerLeave(pointerEvent)
         }
         activeGLRenderer = undefined
       }
     })
 
-    document.addEventListener('mousemove', (event: Record<string, any>) => {
+    document.addEventListener('mousemove', (event: globalThis.MouseEvent) => {
       if (isMobileSafariMouseEvent(event)) {
         return
       }
 
       if (activeGLRenderer != this || !isValidCanvas()) return
 
-      prepareEvent(event)
-      calcRendererCoords(event)
-      if (!pointerIsDown) this.activateViewportAtPos(event.rendererX, event.rendererY)
+      const pointerEvent = new MouseEvent(event, this.__glcanvas!.getBoundingClientRect())
+      if (!pointerIsDown) this.activateViewportAtPos(pointerEvent.rendererX, pointerEvent.rendererY)
 
       const viewport = this.getActiveViewport()
       if (viewport) {
-        event.pointerType = POINTER_TYPES.mouse
-        viewport.onPointerMove(event)
+        viewport.onPointerMove(pointerEvent)
       }
     })
 
-    this.__glcanvas!.addEventListener('mouseenter', (event: Record<string, any>) => {
+    this.__glcanvas!.addEventListener('mouseenter', (event: globalThis.MouseEvent) => {
       if (isMobileSafariMouseEvent(event)) {
         return
       }
 
       if (!pointerIsDown) {
         activeGLRenderer = this
-        event.pointerType = POINTER_TYPES.mouse
 
-        prepareEvent(event)
-        calcRendererCoords(event)
-        // TODO: Check mouse pos.
-        this.activateViewportAtPos(event.rendererX, event.rendererY)
+        const pointerEvent = new MouseEvent(event, this.__glcanvas!.getBoundingClientRect())
 
         if (!pointerIsDown) {
           const viewport = this.getActiveViewport()
           if (viewport) {
-            event.pointerType = POINTER_TYPES.mouse
-            viewport.onPointerEnter(event)
+            viewport.onPointerEnter(pointerEvent)
           }
         }
 
@@ -766,19 +734,18 @@ class GLBaseRenderer extends ParameterOwner {
       }
     })
 
-    this.__glcanvas!.addEventListener('mouseleave', (event: Record<string, any>) => {
+    this.__glcanvas!.addEventListener('mouseleave', (event: globalThis.MouseEvent) => {
       if (isMobileSafariMouseEvent(event)) {
         return
       }
 
       if (activeGLRenderer != this || !isValidCanvas()) return
 
-      prepareEvent(event)
+      const pointerEvent = new MouseEvent(event, this.__glcanvas!.getBoundingClientRect())
       if (!pointerIsDown) {
         const viewport = this.getActiveViewport()
         if (viewport) {
-          event.pointerType = POINTER_TYPES.mouse
-          viewport.onPointerLeave(event)
+          viewport.onPointerLeave(pointerEvent)
         }
         activeGLRenderer = undefined
       } else {
@@ -791,73 +758,42 @@ class GLBaseRenderer extends ParameterOwner {
     /** Touch Events Start */
     this.__glcanvas!.addEventListener(
       'touchstart',
-      (event: Record<string, any>) => {
-        event.stopPropagation()
-
-        // Touch events are passive and so cannot call prevent default
-        // replace with a stub here...
-        event.preventDefault = () => {}
-
-        prepareEvent(event)
-        for (let i = 0; i < event.touches.length; i++) {
-          calcRendererCoords(event.touches[i])
-        }
-
-        event.pointerType = POINTER_TYPES.touch
-        this.getViewport().onPointerDown(event)
+      (event: globalThis.TouchEvent) => {
+        const viewport = this.getActiveViewport()
+        const pointerEvent = new TouchEvent(event, this.__glcanvas!.getBoundingClientRect())
+        viewport.onPointerDown(pointerEvent)
       },
       { passive: true }
     )
 
     this.__glcanvas!.addEventListener(
       'touchend',
-      (event: Record<string, any>) => {
-        event.stopPropagation()
-
-        // Touch events are passive and so cannot call prevent default
-        // replace with a stub here...
-        event.preventDefault = () => {}
-
-        prepareEvent(event)
-        for (let i = 0; i < event.changedTouches.length; i++) {
-          calcRendererCoords(event.changedTouches[i])
-        }
-
-        event.pointerType = POINTER_TYPES.touch
-        this.getViewport().onPointerUp(event)
+      (event: globalThis.TouchEvent) => {
+        const viewport = this.getActiveViewport()
+        const pointerEvent = new TouchEvent(event, this.__glcanvas!.getBoundingClientRect())
+        viewport.onPointerUp(pointerEvent)
       },
       { passive: true }
     )
 
     this.__glcanvas!.addEventListener(
       'touchmove',
-      (event: Record<string, any>) => {
-        event.stopPropagation()
-
-        // Touch events are passive and so cannot call prevent default
-        // replace with a stub here...
-        event.preventDefault = () => {}
-
-        prepareEvent(event)
-        for (let i = 0; i < event.touches.length; i++) {
-          calcRendererCoords(event.touches[i])
-        }
-
-        event.pointerType = POINTER_TYPES.touch
-        this.getViewport().onPointerMove(event)
+      (event: globalThis.TouchEvent) => {
+        const viewport = this.getActiveViewport()
+        const pointerEvent = new TouchEvent(event, this.__glcanvas!.getBoundingClientRect())
+        viewport.onPointerMove(pointerEvent)
       },
       { passive: true }
     )
     /** Touch Events End */
 
-    const onWheel = (event: Record<string, any>) => {
+    const onWheel = (event: globalThis.WheelEvent) => {
       if (activeGLRenderer != this || !isValidCanvas()) return
       if (activeGLRenderer) {
-        prepareEvent(event)
-        calcRendererCoords(event)
+        const pointerEvent = new WheelEvent(event, this.__glcanvas!.getBoundingClientRect())
         const vp = activeGLRenderer.getActiveViewport()
         if (vp) {
-          vp.onWheel(event)
+          vp.onWheel(pointerEvent)
         }
       }
     }
@@ -868,21 +804,21 @@ class GLBaseRenderer extends ParameterOwner {
       return false
     }
 
-    document.addEventListener('keydown', (event: any) => {
+    document.addEventListener('keydown', (event: globalThis.KeyboardEvent) => {
       if (activeGLRenderer != this || !isValidCanvas()) return
-      prepareEvent(event)
+      const keyboardEvent = new KeyboardEvent(event)
       const vp = activeGLRenderer.getActiveViewport()
       if (vp) {
-        vp.onKeyDown(event)
+        vp.onKeyDown(keyboardEvent)
       }
     })
 
     document.addEventListener('keyup', (event) => {
       if (activeGLRenderer != this || !isValidCanvas()) return
-      prepareEvent(event)
+      const keyboardEvent = new KeyboardEvent(event)
       const vp = activeGLRenderer.getActiveViewport()
       if (vp) {
-        vp.onKeyUp(event)
+        vp.onKeyUp(keyboardEvent)
       }
     })
   }

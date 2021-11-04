@@ -4,11 +4,16 @@ import { Camera, GeomItem, TreeItem } from '../SceneTree/index'
 import { GLBaseViewport } from './GLBaseViewport'
 import { GLFbo } from './GLFbo'
 import { GLTexture2D } from './GLTexture2D'
-import { POINTER_TYPES } from '../Utilities/EnumUtils'
 import { CameraManipulator } from '../SceneTree/index'
 import { GLRenderer } from './GLRenderer'
 import { ResizedEvent } from '../Utilities/Events/ResizedEvent'
 import { ViewChangedEvent } from '../Utilities/Events/ViewChangedEvent'
+import { IntersectionData, POINTER_TYPES } from '../Utilities/Events/PointerEvent'
+import { KeyboardEvent } from '../Utilities/Events/KeyboardEvent'
+import { WheelEvent } from '../Utilities/Events/WheelEvent'
+import { TouchEvent } from '../Utilities/Events/TouchEvent'
+import { MouseEvent } from '../Utilities/Events/MouseEvent'
+import { UIEvent } from '../Utilities/Events/UIEvent'
 
 /**
  * Class representing a GL viewport.
@@ -58,7 +63,7 @@ class GLViewport extends GLBaseViewport {
 
   protected __geomDataBufferInvalid: boolean = true
   protected __screenPos: Vec2 | null = null
-  protected __intersectionData: any
+  protected __intersectionData: IntersectionData
 
   protected capturedItem: any
   protected pointerOverItem: any
@@ -379,7 +384,7 @@ class GLViewport extends GLBaseViewport {
    * @param pointerRay - The pointerRay value.
    * @return - The return value.
    */
-  getGeomDataAtPos(screenPos: Vec2, pointerRay: Ray | undefined): RayCast | null {
+  getGeomDataAtPos(screenPos: Vec2, pointerRay: Ray | undefined): IntersectionData | null {
     if (this.__geomDataBufferFbo) {
       if (this.__geomDataBufferInvalid) {
         this.renderGeomDataFbo()
@@ -455,13 +460,11 @@ class GLViewport extends GLBaseViewport {
 
         if (!pointerRay) pointerRay = this.calcRayFromScreenPos(screenPos)
         const intersectionPos = pointerRay.start.add(pointerRay.dir.scale(geomItemAndDist.dist))
-        this.__intersectionData = Object.assign(
-          {
-            screenPos,
-            pointerRay,
-            intersectionPos,
-            geomData,
-          },
+        this.__intersectionData = new IntersectionData(
+          screenPos,
+          pointerRay,
+          intersectionPos,
+          geomData,
           geomItemAndDist
         )
       }
@@ -479,7 +482,7 @@ class GLViewport extends GLBaseViewport {
    * @param br - The bottom right corner of the rectangle.
    * @return - The return value.
    */
-  getGeomItemsInRect(tl: Vec2, br: Vec2): Array<GeomItem> {
+  getGeomItemsInRect(tl: Vec2, br: Vec2): Set<TreeItem> {
     // TODO: Use a Math.Rect instead
     if (this.__geomDataBufferFbo) {
       const gl = this.__renderer.gl
@@ -513,7 +516,7 @@ class GLViewport extends GLBaseViewport {
 
       gl.bindFramebuffer(gl.FRAMEBUFFER, null)
 
-      const geomItems: Set<GeomItem> = new Set()
+      const geomItems: Set<TreeItem> = new Set()
       for (let i = 0; i < numPixels; i++) {
         let passId
         const geomData = geomDatas.subarray(i * 4, (i + 1) * 4)
@@ -532,17 +535,9 @@ class GLViewport extends GLBaseViewport {
           geomItems.add(geomItemAndDist.geomItem)
         }
       }
-
-      // TODO: remove any type
-      return [...geomItems].filter((geomItem: any) => {
-        if (geomItem) {
-          if (geomItem.getSelectable()) return false
-        }
-        return true
-      })
+      return geomItems
     }
-
-    return []
+    return new Set()
   }
 
   // ///////////////////////////
@@ -581,20 +576,8 @@ class GLViewport extends GLBaseViewport {
    * @param event - The event that occurs in the canvas
    * @private
    */
-  __preparePointerEvent(event: Record<string, any>) {
+  prepareUIEvent(event: UIEvent) {
     event.viewport = this
-
-    event.setCapture = (item: any) => {
-      this.capturedItem = item
-    }
-
-    event.getCapture = (item: any) => {
-      return this.capturedItem
-    }
-
-    event.releaseCapture = () => {
-      this.capturedItem = null
-    }
   }
 
   /**
@@ -602,21 +585,22 @@ class GLViewport extends GLBaseViewport {
    *
    * @param event - The DOM event produced by a pointer
    */
-  onPointerDown(event: Record<string, any>) {
-    this.__preparePointerEvent(event)
+  onPointerDown(event: UIEvent) {
+    this.prepareUIEvent(event)
 
+    const uiEvent = <UIEvent>event
     if (event.pointerType === POINTER_TYPES.mouse) {
-      event.pointerPos = this.__getPointerPos(event.rendererX, event.rendererY)
-
-      event.pointerRay = this.calcRayFromScreenPos(event.pointerPos)
-      event.intersectionData = this.getGeomDataAtPos(event.pointerPos, event.pointerRay)
+      const mouseEvent = <MouseEvent>event
+      mouseEvent.pointerPos = this.__getPointerPos(mouseEvent.rendererX, mouseEvent.rendererY)
+      mouseEvent.pointerRay = this.calcRayFromScreenPos(mouseEvent.pointerPos)
+      mouseEvent.intersectionData = this.getGeomDataAtPos(mouseEvent.pointerPos, mouseEvent.pointerRay)
     } else if (event.pointerType === POINTER_TYPES.touch) {
-      if (event.touches.length == 1) {
-        const touch = event.touches[0]
-        event.pointerPos = this.__getPointerPos(touch.rendererX, touch.rendererY)
-
-        event.pointerRay = this.calcRayFromScreenPos(event.pointerPos)
-        event.intersectionData = this.getGeomDataAtPos(event.pointerPos, event.pointerRay)
+      const touchEvent = <TouchEvent>event
+      if (touchEvent.touches.length == 1) {
+        const touch = touchEvent.touches[0]
+        touchEvent.pointerPos = this.__getPointerPos(touch.rendererX, touch.rendererY)
+        touchEvent.pointerRay = this.calcRayFromScreenPos(touchEvent.pointerPos)
+        touchEvent.intersectionData = this.getGeomDataAtPos(touchEvent.pointerPos, touchEvent.pointerRay)
       }
     }
 
@@ -664,19 +648,21 @@ class GLViewport extends GLBaseViewport {
    *
    * @param event - The event that occurs.
    */
-  onPointerUp(event: Record<string, any>) {
-    this.__preparePointerEvent(event)
+  onPointerUp(event: UIEvent) {
+    this.prepareUIEvent(event)
 
     if (event.pointerType === POINTER_TYPES.mouse) {
-      event.pointerPos = this.__getPointerPos(event.rendererX, event.rendererY)
-      event.pointerRay = this.calcRayFromScreenPos(event.pointerPos)
-      event.intersectionData = this.getGeomDataAtPos(event.pointerPos, event.pointerRay)
+      const mouseEvent = <MouseEvent>event
+      mouseEvent.pointerPos = this.__getPointerPos(mouseEvent.rendererX, mouseEvent.rendererY)
+      mouseEvent.pointerRay = this.calcRayFromScreenPos(mouseEvent.pointerPos)
+      mouseEvent.intersectionData = this.getGeomDataAtPos(mouseEvent.pointerPos, mouseEvent.pointerRay)
     } else if (event.pointerType === POINTER_TYPES.touch) {
-      if (event.touches.length == 0 && event.changedTouches.length == 1) {
-        const touch = event.changedTouches[0]
-        event.pointerPos = this.__getPointerPos(touch.rendererX, touch.rendererY)
-        event.pointerRay = this.calcRayFromScreenPos(event.pointerPos)
-        event.intersectionData = this.getGeomDataAtPos(event.pointerPos, event.pointerRay)
+      const touchEvent = <TouchEvent>event
+      if (touchEvent.touches.length == 0 && touchEvent.changedTouches.length == 1) {
+        const touch = touchEvent.changedTouches[0]
+        touchEvent.pointerPos = this.__getPointerPos(touch.rendererX, touch.rendererY)
+        touchEvent.pointerRay = this.calcRayFromScreenPos(touchEvent.pointerPos)
+        touchEvent.intersectionData = this.getGeomDataAtPos(touchEvent.pointerPos, touchEvent.pointerRay)
       }
     }
 
@@ -705,25 +691,24 @@ class GLViewport extends GLBaseViewport {
    *
    * @param event - The event that occurs.
    */
-  onPointerMove(event: Record<string, any>) {
-    this.__preparePointerEvent(event)
+  onPointerMove(event: UIEvent) {
+    this.prepareUIEvent(event)
 
     if (event.pointerType === POINTER_TYPES.mouse) {
-      const pointerPos = this.__getPointerPos(event.rendererX, event.rendererY)
-      event.pointerPos = pointerPos
-      event.pointerRay = this.calcRayFromScreenPos(pointerPos)
+      const mouseEvent = <MouseEvent>event
+      const pointerPos = this.__getPointerPos(mouseEvent.rendererX, mouseEvent.rendererY)
+      mouseEvent.pointerPos = pointerPos
+      mouseEvent.pointerRay = this.calcRayFromScreenPos(pointerPos)
     } else if (event.pointerType === POINTER_TYPES.touch) {
-      event.touchPos = []
-      event.touchRay = []
-      for (let index = 0; index < event.touches.length; index++) {
-        const touch = event.touches[index]
-        const touchPos = this.__getPointerPos(touch.rendererX, touch.rendererY)
-        event.touchPos[index] = touchPos
-        event.touchRay[index] = this.calcRayFromScreenPos(touchPos)
+      const touchEvent = <TouchEvent>event
+      for (let index = 0; index < touchEvent.touches.length; index++) {
+        const touch = touchEvent.touches[index]
+        touch.touchPos = this.__getPointerPos(touch.rendererX, touch.rendererY)
+        touch.touchRay = this.calcRayFromScreenPos(touch.touchPos)
       }
 
-      event.pointerPos = event.touchPos[0]
-      event.pointerRay = event.touchRay[0]
+      touchEvent.pointerPos = touchEvent.touches[0].touchPos
+      touchEvent.pointerRay = touchEvent.touches[0].touchRay
     }
 
     // Note: the Captured item might be a tool, which might not need to have
@@ -776,8 +761,8 @@ class GLViewport extends GLBaseViewport {
    * Causes an event to occur when the mouse pointer is moved into this viewport
    * @param event - The event that occurs.
    */
-  onPointerEnter(event: Record<string, any>) {
-    this.__preparePointerEvent(event)
+  onPointerEnter(event: UIEvent) {
+    this.prepareUIEvent(event)
     this.emit('pointerEnter', event)
     if (!event.propagating) return
 
@@ -791,8 +776,8 @@ class GLViewport extends GLBaseViewport {
    * Causes an event to occur when the mouse pointer is moved out of this viewport
    * @param event - The event that occurs.
    */
-  onPointerLeave(event: Record<string, any>) {
-    this.__preparePointerEvent(event)
+  onPointerLeave(event: UIEvent) {
+    this.prepareUIEvent(event)
     this.emit('pointerLeave', event)
     if (!event.propagating) return
 
@@ -806,8 +791,8 @@ class GLViewport extends GLBaseViewport {
    * Causes an event to occur when the user is pressing a key on the keyboard.
    * @param event - The event that occurs.
    */
-  onKeyDown(event: Record<string, any>) {
-    this.__preparePointerEvent(event)
+  onKeyDown(event: KeyboardEvent) {
+    // this.prepareUIEvent(event)
     if (this.manipulator) {
       this.manipulator.onKeyDown(event)
       if (!event.propagating) return
@@ -819,8 +804,8 @@ class GLViewport extends GLBaseViewport {
    * Causes an event to occur  when the user releases a key on the keyboard.
    * @param event - The event that occurs.
    */
-  onKeyUp(event: Record<string, any>) {
-    this.__preparePointerEvent(event)
+  onKeyUp(event: KeyboardEvent) {
+    // this.prepareUIEvent(event)
     if (this.manipulator) {
       this.manipulator.onKeyUp(event)
       if (!event.propagating) return
@@ -832,8 +817,8 @@ class GLViewport extends GLBaseViewport {
    * Causes an event to occur when the mouse wheel is rolled up or down over an element.
    * @param event - The event that occurs.
    */
-  onWheel(event: Record<string, any>) {
-    this.__preparePointerEvent(event)
+  onWheel(event: WheelEvent) {
+    this.prepareUIEvent(event)
 
     event.pointerPos = this.__getPointerPos(event.rendererX, event.rendererY)
     event.pointerRay = this.calcRayFromScreenPos(event.pointerPos)
@@ -857,8 +842,8 @@ class GLViewport extends GLBaseViewport {
    * Causes an event to occur when the touch event gets interrupted.
    * @param event - The event that occurs.
    */
-  onTouchCancel(event: Record<string, any>) {
-    this.__preparePointerEvent(event)
+  onTouchCancel(event: TouchEvent) {
+    this.prepareUIEvent(event)
 
     if (this.capturedItem) {
       this.capturedItem.onTouchCancel(event)

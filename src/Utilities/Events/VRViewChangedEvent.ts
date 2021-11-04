@@ -8,8 +8,8 @@ class VRViewChangedEvent extends ViewChangedEvent {
   controllers: Array<VRController> = []
   vrviewport?: VRViewport
 
-  constructor(interfaceType: string, viewXfo: Xfo) {
-    super(interfaceType, viewXfo)
+  constructor(viewXfo: Xfo) {
+    super('VR', viewXfo)
   }
 }
 
