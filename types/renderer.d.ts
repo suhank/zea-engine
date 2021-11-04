@@ -76,10 +76,10 @@ interface ShaderParseResult {
   uniforms: Record<string, string>
   attributes: Record<string, Attribute>
 }
-interface attrBuffer {
-  values: any
+interface AttrBuffer {
+  values: Float32Array
   count: number
-  dimension: any
+  dimension: number
   normalized: boolean
   dataType: string
 }
@@ -108,11 +108,3 @@ interface Options {
 }
 
 type JSON = Record<string, any>
-
-interface RayCast {
-  ray: Ray
-  intersectionPos: Vec3
-  geomItem: any
-  dist: any
-  geomData: Float32Array
-}

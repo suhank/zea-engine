@@ -3,6 +3,7 @@ import { GLPass } from './GLPass'
 import { GeomItem, TreeItem } from '../../SceneTree/index'
 import { MathFunctions } from '../../Utilities/MathFunctions'
 import { GLBaseRenderer } from '../GLBaseRenderer'
+import { GeomItemAndDist } from '../../Utilities/IntersectionData'
 
 /** This class abstracts the rendering of a collection of geometries to screen.
  * @extends GLPass
@@ -127,7 +128,7 @@ class GLStandardGeomsPass extends GLPass {
    * @param geomData - The geomData value.
    * @return - The return value.
    */
-  getGeomItemAndDist(geomData: Float32Array | Uint8Array): Record<string, any> | undefined {
+  getGeomItemAndDist(geomData: Float32Array | Uint8Array): GeomItemAndDist | undefined {
     let itemId
     let dist
     if (geomData instanceof Float32Array) {

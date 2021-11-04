@@ -5,6 +5,7 @@
 import { ItemSetParameter } from '../Parameters/index'
 import { TreeItem } from '../TreeItem'
 import { BaseItem } from '../../SceneTree/BaseItem'
+import { PointerEvent } from '../../Utilities/Events/PointerEvent'
 
 /**
  * BaseGroup are a special type of `TreeItem` that allows you to gather/classify/organize/modify
@@ -76,19 +77,19 @@ class BaseGroup extends TreeItem {
     if (!(item instanceof TreeItem)) return
 
     const listenerIDs: Record<string, number> = {}
-    listenerIDs['pointerDown'] = item.on('pointerDown', (event) => {
+    listenerIDs['pointerDown'] = item.on('pointerDown', (event: PointerEvent) => {
       this.onPointerDown(event)
     })
-    listenerIDs['pointerUp'] = item.on('pointerUp', (event) => {
+    listenerIDs['pointerUp'] = item.on('pointerUp', (event: PointerEvent) => {
       this.onPointerUp(event)
     })
-    listenerIDs['pointerMove'] = item.on('pointerMove', (event) => {
+    listenerIDs['pointerMove'] = item.on('pointerMove', (event: PointerEvent) => {
       this.onPointerMove(event)
     })
-    listenerIDs['pointerEnter'] = item.on('pointerEnter', (event) => {
+    listenerIDs['pointerEnter'] = item.on('pointerEnter', (event: PointerEvent) => {
       this.onPointerEnter(event)
     })
-    listenerIDs['pointerLeave'] = item.on('pointerLeave', (event) => {
+    listenerIDs['pointerLeave'] = item.on('pointerLeave', (event: PointerEvent) => {
       this.onPointerLeave(event)
     })
 
@@ -180,41 +181,6 @@ class BaseGroup extends TreeItem {
   setItems(items: Set<BaseItem>): void {
     this.clearItems(false)
     this.itemsParam.setItems(items)
-  }
-
-  // ///////////////////////
-  // Events
-
-  /**
-   * Occurs when a user presses a mouse button over an element.
-   * Note: these methods are useful for debugging mouse event propagation to groups
-   *
-   * @private
-   * @param event - The mouse event that occurs.
-   */
-  onPointerDown(event: MouseEvent | TouchEvent): void {
-    super.onPointerDown(event)
-  }
-
-  /**
-   * Occurs when a user releases a mouse button over an element.
-   * Note: these methods are useful for debugging mouse event propagation to groups
-   *
-   * @private
-   * @param event - The mouse event that occurs.
-   */
-  onPointerUp(event: MouseEvent | TouchEvent): void {
-    super.onPointerUp(event)
-  }
-
-  /**
-   * Occur when the mouse pointer is moving  while over an element.
-   * Note: these methods are useful for debugging mouse event propagation to groups
-   * @private
-   * @param event - The mouse event that occurs.
-   */
-  onPointerMove(event: MouseEvent | TouchEvent): void {
-    super.onPointerMove(event)
   }
 
   // ////////////////////////////////////////

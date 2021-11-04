@@ -248,9 +248,9 @@ class Label extends DataImage {
       this.needsRender = true
       if (!this.__loaded) {
         this.__loaded = true
-        this.emit('loaded', {})
+        this.emit('loaded')
       } else {
-        this.emit('updated', {})
+        this.emit('updated')
       }
     }
 

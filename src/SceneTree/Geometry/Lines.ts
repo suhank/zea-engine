@@ -145,7 +145,7 @@ class Lines extends BaseGeom {
     else if (bytes == 2) this.__indices = reader.loadUInt16Array()
     else if (bytes == 4) this.__indices = reader.loadUInt32Array()
 
-    this.emit('geomDataChanged', {})
+    this.emit('geomDataChanged')
   }
   /**
    * The toJSON method encodes this type as a json object for persistence.

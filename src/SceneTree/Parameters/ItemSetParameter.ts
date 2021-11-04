@@ -62,7 +62,7 @@ class ItemSetParameter extends Parameter<Set<TreeItem>> {
 
     const index = Array.from(this.__value).indexOf(item)
     this.emit('itemAdded', { item, index })
-    if (emitValueChanged) this.emit('valueChanged', {})
+    if (emitValueChanged) this.emit('valueChanged')
     return index
   }
 
@@ -88,7 +88,7 @@ class ItemSetParameter extends Parameter<Set<TreeItem>> {
     const item = Array.from(this.__value)[index]
     this.__value.delete(item)
     this.emit('itemRemoved', { item, index })
-    if (emitValueChanged) this.emit('valueChanged', {})
+    if (emitValueChanged) this.emit('valueChanged')
     return item
   }
 
@@ -110,7 +110,7 @@ class ItemSetParameter extends Parameter<Set<TreeItem>> {
         this.addItem(item, false)
       }
     }
-    if (emit) this.emit('valueChanged', {})
+    if (emit) this.emit('valueChanged')
   }
 
   /**
@@ -119,7 +119,7 @@ class ItemSetParameter extends Parameter<Set<TreeItem>> {
    */
   clearItems(emitValueChanged = true): void {
     this.__value.clear()
-    if (emitValueChanged) this.emit('valueChanged', {})
+    if (emitValueChanged) this.emit('valueChanged')
   }
 
   /**

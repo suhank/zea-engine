@@ -1,3 +1,6 @@
+import { KeyboardEvent } from '../../Utilities/Events/KeyboardEvent'
+import { PointerEvent } from '../../Utilities/Events/PointerEvent'
+import { TouchEvent } from '../../Utilities/Events/TouchEvent'
 import { ParameterOwner } from '../ParameterOwner'
 
 /**
@@ -60,7 +63,7 @@ class BaseTool extends ParameterOwner {
    *
    * @param event - The event param.
    */
-  onPointerDown(event: MouseEvent) {
+  onPointerDown(event: PointerEvent) {
     // console.warn('Implement me')
   }
 
@@ -69,7 +72,7 @@ class BaseTool extends ParameterOwner {
    *
    * @param event - The event param.
    */
-  onPointerMove(event: MouseEvent) {
+  onPointerMove(event: PointerEvent) {
     // console.warn('Implement me')
   }
 
@@ -78,7 +81,7 @@ class BaseTool extends ParameterOwner {
    *
    * @param event - The event param.
    */
-  onPointerUp(event: MouseEvent) {
+  onPointerUp(event: PointerEvent) {
     // console.warn('Implement me')
   }
 
@@ -87,7 +90,7 @@ class BaseTool extends ParameterOwner {
    *
    * @param event - The event param.
    */
-  onPointerDoublePress(event: MouseEvent) {
+  onPointerDoublePress(event: PointerEvent) {
     // console.warn('Implement me')
   }
 
@@ -96,7 +99,7 @@ class BaseTool extends ParameterOwner {
    *
    * @param event - The event param.
    */
-  onPointerEnter(event: MouseEvent) {
+  onPointerEnter(event: PointerEvent) {
     // console.warn('Implement me')
   }
 
@@ -105,7 +108,7 @@ class BaseTool extends ParameterOwner {
    *
    * @param event - The event param.
    */
-  onPointerLeave(event: MouseEvent) {
+  onPointerLeave(event: PointerEvent) {
     // console.warn('Implement me')
   }
 
@@ -114,7 +117,7 @@ class BaseTool extends ParameterOwner {
    *
    * @param event - The event param.
    */
-  onWheel(event: MouseEvent) {
+  onWheel(event: PointerEvent) {
     // console.warn('Implement me')
   }
 

@@ -287,7 +287,6 @@ class VAOGeomShaderBinding extends IGeomShaderBinding {
   destroy(): void {
     const gl = this.__gl
     gl.deleteVertexArray(this.__vao)
-    if (this.__indexBuffer) this.__gl.deleteBuffer(this.__indexBuffer)
   }
 }
 

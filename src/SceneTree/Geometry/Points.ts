@@ -100,7 +100,7 @@ class Points extends BaseGeom {
     super.loadBaseGeomBinary(reader)
 
     // this.computeVertexNormals();
-    this.emit('geomDataChanged', {})
+    this.emit('geomDataChanged')
   }
 }
 
