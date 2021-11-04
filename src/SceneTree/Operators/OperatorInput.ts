@@ -75,7 +75,7 @@ class OperatorInput extends EventEmitter {
    * Assigns the Paramter to be used to provide the input value.
    * @param param - The param value.
    */
-  setParam(param?: Parameter<unknown>): void {
+  setParam(param?: Parameter<any>): void {
     if (this.param) {
       this.param.unbindOperatorInput(this)
     }
@@ -123,11 +123,12 @@ class OperatorInput extends EventEmitter {
    * @param context - The context value.
    * @return - Returns the json object.
    */
-  toJSON(context?: Record<string, any>): { name: string; parampath: string[] } {
-    const paramPath = this.param ? this.param.getPath() : ''
+  toJSON(context?: Record<string, any>): { name: string; paramPath: string[] } {
+    const absPath = this.param ? this.param.getPath() : []
+    const paramPath = <string[]>(context && context.makeRelative ? context.makeRelative(absPath) : absPath)
     return {
       name: this.name,
-      paramPath: context && context.makeRelative ? context.makeRelative(paramPath) : paramPath,
+      paramPath: paramPath,
     }
   }
 
@@ -143,10 +144,10 @@ class OperatorInput extends EventEmitter {
       // are loaded last.
       context?.resolvePath(
         j.paramPath,
-        (param: any) => {
+        (param: Parameter<any>) => {
           this.setParam(param)
         },
-        (reason: any) => {
+        () => {
           console.warn("OperatorInput: '" + this.getName() + "'. Unable to connect to:" + j.paramPath)
         }
       )

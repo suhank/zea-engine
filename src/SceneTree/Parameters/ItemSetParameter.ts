@@ -2,6 +2,17 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Parameter } from './Parameter'
 import { TreeItem } from '../../SceneTree/TreeItem'
+import { BaseEvent } from '../../Utilities/BaseEvent'
+
+class ItemEvent extends BaseEvent {
+  item: TreeItem
+  index: number
+  constructor(item: TreeItem, index: number) {
+    super()
+    this.index = index
+    this.item = item
+  }
+}
 
 /** Class representing an item set parameter.
  * @extends Parameter
@@ -15,7 +26,7 @@ class ItemSetParameter extends Parameter<Set<TreeItem>> {
    * @param name - The name of the item set parameter.
    * @param filterFn - The filterFn value.
    */
-  constructor(name: string = '', filterFn: (...args: any[]) => boolean) {
+  constructor(name: string = '', filterFn: (item: TreeItem) => boolean) {
     super(name, new Set(), 'TreeItem')
     this.filterFn = filterFn // Note: the filter Fn indicates that users will edit the set.
   }
@@ -61,7 +72,7 @@ class ItemSetParameter extends Parameter<Set<TreeItem>> {
     this.__value.add(item)
 
     const index = Array.from(this.__value).indexOf(item)
-    this.emit('itemAdded', { item, index })
+    this.emit('itemAdded', new ItemEvent(item, index))
     if (emitValueChanged) this.emit('valueChanged')
     return index
   }
@@ -75,7 +86,7 @@ class ItemSetParameter extends Parameter<Set<TreeItem>> {
    */
   addItems(items: Set<TreeItem>, emitValueChanged = true): void {
     items.forEach((item: TreeItem) => this.addItem(item, false))
-    if (emitValueChanged) this.emit('valueChanged', {})
+    if (emitValueChanged) this.emit('valueChanged')
   }
 
   /**
@@ -87,7 +98,7 @@ class ItemSetParameter extends Parameter<Set<TreeItem>> {
   removeItem(index: number, emitValueChanged = true): TreeItem | void {
     const item = Array.from(this.__value)[index]
     this.__value.delete(item)
-    this.emit('itemRemoved', { item, index })
+    this.emit('itemRemoved', new ItemEvent(item, index))
     if (emitValueChanged) this.emit('valueChanged')
     return item
   }

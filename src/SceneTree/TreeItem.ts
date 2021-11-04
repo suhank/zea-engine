@@ -16,6 +16,7 @@ import { PointerEvent } from '../Utilities/Events/PointerEvent'
 import { KeyboardEvent } from '../Utilities/Events/KeyboardEvent'
 import { MouseEvent } from '../Utilities/Events/MouseEvent'
 import { WheelEvent } from '../Utilities/Events/WheelEvent'
+import { BaseEvent } from '../Utilities/BaseEvent'
 
 /**
  * Class representing an Item in the scene tree with hierarchy capabilities (has children).
@@ -99,7 +100,7 @@ class TreeItem extends BaseItem {
     this.addParameter(this.boundingBoxParam)
 
     this.globalXfoOp = new CalcGlobalXfoOperator(this.globalXfoParam, this.localXfoParam)
-    this.globalXfoParam.on('valueChanged', (event: any) => {
+    this.globalXfoParam.on('valueChanged', (event: BaseEvent) => {
       this.setBoundingBoxDirty()
       // Note: deprecate this event.
       this.emit('globalXfoChanged', event)
@@ -262,7 +263,7 @@ class TreeItem extends BaseItem {
     }
 
     if (propagateToChildren) {
-      this.__childItems.forEach((childItem: any) => {
+      this.__childItems.forEach((childItem: BaseItem) => {
         if (childItem instanceof TreeItem) childItem.addHighlight(name, color, propagateToChildren)
       })
     }
@@ -296,7 +297,7 @@ class TreeItem extends BaseItem {
         this.emit('highlightChanged')
       }
       if (propagateToChildren) {
-        this.__childItems.forEach((childItem: any) => {
+        this.__childItems.forEach((childItem: BaseItem) => {
           if (childItem instanceof TreeItem) childItem.removeHighlight(name, propagateToChildren)
         })
       }
@@ -336,7 +337,7 @@ class TreeItem extends BaseItem {
    */
   _cleanBoundingBox(bbox: Box3): Box3 {
     bbox.reset()
-    this.__childItems.forEach((childItem: any) => {
+    this.__childItems.forEach((childItem: BaseItem) => {
       if (childItem instanceof TreeItem)
         if (childItem.isVisible()) {
           // console.log(" - ", childItem.constructor.name, childItem.getName(), childItem.globalXfoParam.value.sc.x, childItem.getBoundingBox().toString())
@@ -1049,7 +1050,7 @@ class TreeItem extends BaseItem {
     // When cloning instanced trees, the root item should
     // have a unique LocalXfoParam, as it must be re-set.
     // (The root of the tree is a cloned and attached to an Instance node that provides the transform)
-    src.getChildren().forEach((srcChildItem: any) => {
+    src.getChildren().forEach((srcChildItem: BaseItem) => {
       if (srcChildItem) this.addChild(srcChildItem.clone(), false, false)
     })
   }

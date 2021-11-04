@@ -23,7 +23,7 @@ class BaseGroup extends TreeItem {
   /**
    * @member itemsParam - TODO
    */
-  itemsParam: ItemSetParameter = new ItemSetParameter('Items', (item: any) => item instanceof TreeItem)
+  itemsParam: ItemSetParameter = new ItemSetParameter('Items', (item: TreeItem) => item instanceof TreeItem)
 
   protected __itemsEventHandlers: Array<Record<string, number>> = []
   searchRoot?: TreeItem
@@ -38,7 +38,7 @@ class BaseGroup extends TreeItem {
 
     this.addParameter(this.itemsParam)
 
-    this.itemsParam.on('itemAdded', (event: any) => {
+    this.itemsParam.on('itemAdded', (event: Item) => {
       this.bindItem(event.item, event.index)
     })
     this.itemsParam.on('itemRemoved', (event: any) => {
@@ -197,7 +197,7 @@ class BaseGroup extends TreeItem {
     const paramItems = this.itemsParam.value
     if (paramItems) {
       const items = Array.from(paramItems)
-      const treeItems: any = []
+      const treeItems: TreeItem[] = []
       items.forEach((p) => {
         const path = p.getPath()
         treeItems.push(context ? context.makeRelative(path) : path)
@@ -234,7 +234,7 @@ class BaseGroup extends TreeItem {
             this.loadDone()
           }
         },
-        (reason: any) => {
+        () => {
           console.warn("BaseGroup: '" + this.getName() + "'. Unable to load item:" + path)
         }
       )

@@ -197,12 +197,12 @@ class Operator extends BaseItem {
   toJSON(context?: Record<string, any>): Record<string, any> {
     const j = super.toJSON(context)
     ;(j as any).type = this.getClassName()
-    const inputs: any = []
+    const inputs: Record<string, any>[] = []
     this.__inputs.forEach((input: any) => {
       inputs.push(input.toJSON(context))
     })
     ;(j as any).inputs = inputs
-    const outputs: any = []
+    const outputs: Record<string, any>[] = []
     this.__outputs.forEach((output: any) => {
       outputs.push(output.toJSON(context))
     })

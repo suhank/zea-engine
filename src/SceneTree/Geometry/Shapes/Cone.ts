@@ -170,7 +170,7 @@ class Cone extends ProceduralMesh {
     // Note: this breaks an infinite loop where computeVertexNormals calls update which calls rebuild.
     this.dirtyTopology = false
     this.dirtyVertices = false
-    const normals = this.getVertexAttribute('normals')
+    const normals = <Vec3Attribute>this.getVertexAttribute('normals')
     if (normals) {
       this.computeVertexNormals()
     }

@@ -243,17 +243,17 @@ class BaseGeom extends ParameterOwner {
 
     this.setNumVertices(numVerts)
     const positionsAttr = this.positions
-    let normalsAttr: any
-    let texCoordsAttr: any
+    let normalsAttr: Vec3Attribute
+    let texCoordsAttr: Vec2Attribute
     if (flags & (1 << 1)) {
-      normalsAttr = this.getVertexAttribute('normals')
+      normalsAttr = <Vec3Attribute>this.getVertexAttribute('normals')
       if (!normalsAttr) {
         normalsAttr = new Vec3Attribute()
         this.addVertexAttribute('normals', normalsAttr)
       }
     }
     if (flags & (1 << 2)) {
-      texCoordsAttr = this.getVertexAttribute('texCoords')
+      texCoordsAttr = <Vec2Attribute>this.getVertexAttribute('texCoords')
       if (!texCoordsAttr) {
         texCoordsAttr = new Vec2Attribute()
         this.addVertexAttribute('texCoords', texCoordsAttr)

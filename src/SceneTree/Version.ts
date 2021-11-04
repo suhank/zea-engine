@@ -34,7 +34,7 @@ class Version {
    * @param numbers - An array containing 3 version numbers. [Major, Minor, Patch]
    * @return - return positive: v1 > v2, zero:v1 == v2, negative: v1 < v2
    */
-  compare(numbers: any[]) {
+  compare(numbers: number[]) {
     // https://stackoverflow.com/questions/6832596/how-to-compare-software-version-number-using-js-only-number
     // 2nd answer.
     const v1 = [this.major, this.minor, this.patch]
