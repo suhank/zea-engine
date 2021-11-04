@@ -314,7 +314,7 @@ class BaseItem extends ParameterOwner implements Owner {
    * **Note:** Each class should implement clone to be clonable.
    * @param context - The context value.
    */
-  clone(context?: Record<string, any>): void {
+  clone(context?: Record<string, any>): BaseItem {
     throw new Error(this.constructor.name + ' does not implement its clone method')
   }
 

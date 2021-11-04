@@ -1,4 +1,4 @@
-import { BaseItem } from '.'
+import { BaseClass } from '../Utilities/BaseClass'
 import { EventEmitter } from '../Utilities/index'
 
 let counter = 0
@@ -11,7 +11,7 @@ let counter = 0
  * @private
  */
 class RefCounted extends EventEmitter {
-  protected __refs: BaseItem[]
+  protected __refs: BaseClass[]
   protected __destroyed: boolean
   /**
    * Create a ref counted object.
@@ -48,7 +48,7 @@ class RefCounted extends EventEmitter {
    * @param referer - The referer value.
    * @return - The return value.
    */
-  addRef(referer: BaseItem) {
+  addRef(referer: BaseClass) {
     if (!referer) throw new Error('Error in RefCounted.addRef: Must provide a referer')
 
     // Note: an object can be reffeed multiple times.
@@ -61,7 +61,7 @@ class RefCounted extends EventEmitter {
    * The removeRef method.
    * @param referer - The referer value.
    */
-  removeRef(referer: BaseItem) {
+  removeRef(referer: BaseClass) {
     if (!referer) throw new Error('Error in RefCounted.removeRef: Must provide a referer')
     const index = this.__refs.indexOf(referer)
     if (index == -1) throw new Error('Error in RefCounted.removeRef: referer not found in refs list.')
@@ -86,7 +86,7 @@ class RefCounted extends EventEmitter {
    * @param referer - The referer value.
    * @return - The return value.
    */
-  getRefIndex(referer: BaseItem) {
+  getRefIndex(referer: BaseClass) {
     return this.__refs.indexOf(referer)
   }
 

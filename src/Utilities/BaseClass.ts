@@ -33,30 +33,6 @@ class BaseClass {
   getClassName(): string {
     return Registry.getClassName(Object.getPrototypeOf(this).constructor)
   }
-
-  // ////////////////////////////////////////
-  // Persistence
-
-  /**
-   * The toJSON method encodes this type as a json object for persistence.
-   *
-   * @param context - The context value.
-   * @return - Returns the json object.
-   */
-  toJSON(context?: Record<string, unknown>): Record<string, unknown> {
-    const json = {
-      type: this.getClassName(),
-    }
-    return json
-  }
-
-  /**
-   * The fromJSON method decodes a json object for this type.
-   *
-   * @param j - The json object this item must decode.
-   * @param context - The context value.
-   */
-  fromJSON(j: Record<string, any>, context?: Record<string, any>): void {}
 }
 
 export { BaseClass }

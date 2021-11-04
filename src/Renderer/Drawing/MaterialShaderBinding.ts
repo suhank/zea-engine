@@ -13,14 +13,16 @@ import {
   BooleanParameter,
 } from '../../SceneTree'
 import { GLMaterial } from '.'
+import { BaseClass } from '../../Utilities/BaseClass'
 
-class ParamUniformBinding {
+class ParamUniformBinding extends BaseClass {
   protected unif: Uniform
   protected dirty: boolean = false
   // bind: (renderstate?: RenderState) => void
   // unbind: (renderstate?: RenderState) => void
   // destroy: () => void
   constructor(unif: Uniform) {
+    super()
     this.unif = unif
   }
 

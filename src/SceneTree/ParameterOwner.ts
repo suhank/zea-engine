@@ -214,7 +214,9 @@ class ParameterOwner extends EventEmitter {
    * @return - Returns the json object.
    */
   toJSON(context?: Record<string, unknown>): Record<string, unknown> {
-    const json: Record<string, unknown> = super.toJSON(context)
+    const json: Record<string, unknown> = {
+      type: this.getClassName(),
+    }
     const paramsJSON: Record<string, unknown> = {}
     let savedParams = 0
     for (const param of this.params) {

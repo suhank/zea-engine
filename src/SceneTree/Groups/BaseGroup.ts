@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-unused-vars */
-import { ItemSetParameter } from '../Parameters/index'
+import { ItemSetParameter, ItemEvent } from '../Parameters/index'
 import { TreeItem } from '../TreeItem'
 import { BaseItem } from '../../SceneTree/BaseItem'
 import { PointerEvent } from '../../Utilities/Events/PointerEvent'
@@ -38,10 +38,10 @@ class BaseGroup extends TreeItem {
 
     this.addParameter(this.itemsParam)
 
-    this.itemsParam.on('itemAdded', (event: Item) => {
+    this.itemsParam.on('itemAdded', (event: ItemEvent) => {
       this.bindItem(event.item, event.index)
     })
-    this.itemsParam.on('itemRemoved', (event: any) => {
+    this.itemsParam.on('itemRemoved', (event: ItemEvent) => {
       this.unbindItem(event.item, event.index)
     })
   }

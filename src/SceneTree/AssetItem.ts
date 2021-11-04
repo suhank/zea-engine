@@ -196,7 +196,7 @@ class AssetItem extends TreeItem {
             const item = this.resolvePath(path)
             if (item) onSucceed(item)
             else onFail()
-          } catch (e: Error) {
+          } catch (e: any) {
             if (onFail) {
               onFail()
             } else {

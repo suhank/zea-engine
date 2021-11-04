@@ -266,7 +266,7 @@ class Box3 {
       max += plane.normal.z * this.min.z
     }
 
-    return min <= -plane.constant && max >= -plane.constant
+    return min <= -plane.w && max >= -plane.w
   }
 
   /**

@@ -13,7 +13,6 @@ import { ControllerAddedEvent } from '../../Utilities/Events/ControllerAddedEven
 import { StateChangedEvent } from '../../Utilities/Events/StateChangedEvent'
 import { XRControllerEvent } from '../../Utilities/Events/XRControllerEvent'
 import { XRPoseEvent } from '../../Utilities/Events/XRPoseEvent'
-import { PresentingChangedEvent } from '../../Utilities/Events/PresentingChangedEvent'
 
 /** This Viewport class is used for rendering stereoscopic views to VR controllers using the WebXR api.
  *  When the GLRenderer class detects a valid WebXF capable device is plugged in, this class is automatically
@@ -195,7 +194,7 @@ class VRViewport extends GLBaseViewport {
       const gl = this.__renderer.gl
       gl.bindFramebuffer(gl.FRAMEBUFFER, null)
       gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight)
-      let col = this.__backgroundColor.asArray()
+      let col = this.backgroundColorParam.value.asArray()
       gl.clearColor(col[0], col[1], col[2], col[3])
       gl.colorMask(true, true, true, true)
       gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
@@ -518,7 +517,7 @@ class VRViewport extends GLBaseViewport {
 
     const gl = this.__renderer.gl
     gl.bindFramebuffer(gl.FRAMEBUFFER, layer.framebuffer)
-    let col = this.__backgroundColor.asArray()
+    let col = this.backgroundColorParam.value.asArray()
     gl.clearColor(col[0], col[1], col[2], col[3])
     gl.colorMask(true, true, true, true)
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)

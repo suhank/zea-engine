@@ -3,6 +3,7 @@ import { Version } from './Version'
 import { BaseItem } from './BaseItem'
 import { Parameter } from './Parameters/Parameter'
 import { AssetItem } from './AssetItem'
+import { GeomItem } from './GeomItem'
 
 /**
  * Provides a context for loading assets. This context can provide the units of the loading scene.

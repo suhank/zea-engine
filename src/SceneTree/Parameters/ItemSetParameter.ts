@@ -194,4 +194,4 @@ class ItemSetParameter extends Parameter<Set<TreeItem>> {
   }
 }
 
-export { ItemSetParameter }
+export { ItemSetParameter, ItemEvent }

@@ -64,11 +64,6 @@ class Vec2 {
   constructor(x: number | Float32Array | Uint32Array | Int32Array = 0, y = 0) {
     if (x instanceof Float32Array || x instanceof Uint32Array || x instanceof Int32Array) {
       this.__data = x
-    } else if (x instanceof ArrayBuffer) {
-      console.warn(`deprecated, please use new Vec2(new Float32Array(buffer, byteOffset, 2))`)
-      const buffer = x
-      const byteOffset = y
-      this.__data = new Float32Array(buffer, byteOffset, 2)
     } else if (typeof x == 'number' && typeof y == 'number') {
       this.__data = new Float32Array(2)
       this.__data[0] = x
