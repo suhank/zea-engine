@@ -896,7 +896,6 @@ class CameraManipulator extends BaseTool {
    * @param event - The wheel event that occurs.
    */
   onWheel(event: WheelEvent) {
-    console.log(event)
     const viewport = <GLViewport>event.viewport
     const camera = viewport.getCamera()
     const mouseWheelDollySpeed = this.mouseWheelDollySpeedParam.value
