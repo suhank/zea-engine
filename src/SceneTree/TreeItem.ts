@@ -752,7 +752,11 @@ class TreeItem extends BaseItem {
   // Events
 
   /**
-   * Causes an event to occur when a user presses a pointer(mouse, touch, pencil, etc.) over an element.
+   * Called by the Viewport when events are received by the canvas element.
+   * The event is propagated to a TreeItem if it is under the pointer at the time.
+   * The PointerEvent abstracts the Mouse, touch and our custom XR events.
+   * This method emits the PointerEvent with the key 'pointerDown', and
+   * propagates it up to the TreeItem's owner.
    *
    * @param event - The event value
    */
@@ -765,9 +769,13 @@ class TreeItem extends BaseItem {
   }
 
   /**
-   * Causes an event to occur when a user releases a mouse button over a element.
+   * Called by the Viewport when events are received by the canvas element.
+   * The event is propagated to a TreeItem if it is under the pointer at the time.
+   * The PointerEvent abstracts the Mouse, touch and our custom XR events.
+   * This method emits the PointerEvent with the key 'pointerDown', and
+   * propagates it up to the TreeItem's owner.
    *
-   * @param event - The mouse event that occurs.
+   * @param event - The pointer event that was generated from the user interaction
    */
   onPointerUp(event: PointerEvent) {
     this.emit('pointerUp', event)
@@ -778,9 +786,13 @@ class TreeItem extends BaseItem {
   }
 
   /**
-   * Causes an event to occur when the pointer is moving while over an element.
+   * Called by the Viewport when events are received by the canvas element.
+   * The event is propagated to a TreeItem if it is under the pointer at the time.
+   * The PointerEvent abstracts the Mouse, touch and our custom XR events.
+   * This method emits the PointerEvent with the key 'pointerMove', and
+   * propagates it up to the TreeItem's owner.
    *
-   * @param event - The mouse event that occurs.
+   * @param event - The pointer event that was generated from the user interaction
    */
   onPointerMove(event: PointerEvent) {
     this.emit('pointerMove', event)
@@ -791,9 +803,13 @@ class TreeItem extends BaseItem {
   }
 
   /**
-   * Causes an event to occur when the mouse pointer is moved onto an element.
+   * Called by the Viewport when the mouse or other pointer enters the canvas element.
+   * The event is propagated to a TreeItem if it is under the pointer at the time.
+   * The PointerEvent abstracts the Mouse, touch and our custom XR events.
+   * This method emits the PointerEvent with the key 'pointerEnter', and
+   * propagates it up to the TreeItem's owner.
    *
-   * @param event - The mouse event that occurs.
+   * @param event - The pointer event that was generated from the user interaction
    */
   onPointerEnter(event: PointerEvent) {
     this.emit('pointerEnter', event)
@@ -804,9 +820,13 @@ class TreeItem extends BaseItem {
   }
 
   /**
-   * Causes an event to occur when the mouse pointer is moved out of an element.
+   * Called by the Viewport when the mouse or other pointer leaves the canvas element.
+   * The event is propagated to a TreeItem if it is under the pointer at the time.
+   * The PointerEvent abstracts the Mouse, touch and our custom XR events.
+   * This method emits the PointerEvent with the key 'pointerLeave', and
+   * propagates it up to the TreeItem's owner.
    *
-   * @param event - The mouse event that occurs.
+   * @param event - The pointer event that was generated from the user interaction
    */
   onPointerLeave(event: PointerEvent) {
     this.emit('pointerLeave', event)
@@ -817,11 +837,13 @@ class TreeItem extends BaseItem {
   }
 
   /**
-   * Causes an event to occur when the mouse wheel is rolled up or down over an element.
+   * Called by the Viewport when the mouse wheel event is received by the canvas element.
+   * Emits the WheelEvent with the key 'mouseWheel', and Propagates is up to the TreeItem's owner.
    *
    * @param event - The wheel event that occurs.
    */
   onWheel(event: WheelEvent) {
+    this.emit('mouseWheel', event)
     const owner_TreeItem = <TreeItem>this.__ownerItem
     if (event.propagating && owner_TreeItem) {
       owner_TreeItem.onWheel(event)
