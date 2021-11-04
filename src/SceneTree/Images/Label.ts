@@ -341,7 +341,7 @@ class Label extends DataImage {
     ctx2d.font = fontSize + 'px "' + font + '"'
     // console.log("renderLabelToImage:" + ctx2d.font);
     let width = 0
-    lines.forEach((line: any) => {
+    lines.forEach((line) => {
       width = Math.max(ctx2d.measureText(line).width, width)
     })
     const fontHeight = fontSize // parseInt(fontSize)
@@ -376,7 +376,7 @@ class Label extends DataImage {
     ctx2d.textAlign = textAlign
     ctx2d.fillStyle = fontColor.toHex()
     ctx2d.textBaseline = 'hanging'
-    lines.forEach((line: any, index: any) => {
+    lines.forEach((line, index) => {
       ctx2d.fillText(line, marginAndBorder, marginAndBorder + index * fontHeight)
     })
 

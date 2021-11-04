@@ -353,7 +353,7 @@ class Camera extends TreeItem {
    * @param viewport - The viewport value.
    * @param treeItems - The treeItems value.
    */
-  frameView(viewport: GLBaseViewport, treeItems: any) {
+  frameView(viewport: GLBaseViewport, treeItems: TreeItem[]) {
     const focalDistance = this.focalDistanceParam.value
     const fovY = this.fovParam.value
 
@@ -390,7 +390,7 @@ class Camera extends TreeItem {
       // Based on the solution described here:
       // https://stackoverflow.com/a/66113254/5546902
 
-      const boundaryPoints: any[] = []
+      const boundaryPoints: Vec3[] = []
       if (false) {
         const box3 = new Box3()
         for (const treeItem of treeItems) {

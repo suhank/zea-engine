@@ -61,9 +61,7 @@ class Vec2 {
    * @param x - The x value. Default is 0.
    * @param y - The y value. Default is 0.
    */
-  constructor(x: any = 0, y = 0) {
-    //x: number | Float32Array | Uint32Array | Record<string, any> = 0
-
+  constructor(x: number | Float32Array | Uint32Array | Int32Array = 0, y = 0) {
     if (x instanceof Float32Array || x instanceof Uint32Array || x instanceof Int32Array) {
       this.__data = x
     } else if (x instanceof ArrayBuffer) {

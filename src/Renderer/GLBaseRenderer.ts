@@ -206,7 +206,7 @@ class GLBaseRenderer extends ParameterOwner {
     const updated = () => {
       this.requestRedraw()
     }
-    const viewChanged = (data: any) => {
+    const viewChanged = (data: ViewChangedEvent) => {
       if (!this.__xrViewportPresenting) {
         this.emit('viewChanged', data)
       }

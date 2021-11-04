@@ -13,6 +13,7 @@ import { ControllerAddedEvent } from '../../Utilities/Events/ControllerAddedEven
 import { StateChangedEvent } from '../../Utilities/Events/StateChangedEvent'
 import { XRControllerEvent } from '../../Utilities/Events/XRControllerEvent'
 import { XRPoseEvent } from '../../Utilities/Events/XRPoseEvent'
+import { PresentingChangedEvent } from '../../Utilities/Events/PresentingChangedEvent'
 
 /** This Viewport class is used for rendering stereoscopic views to VR controllers using the WebXR api.
  *  When the GLRenderer class detects a valid WebXF capable device is plugged in, this class is automatically
@@ -320,7 +321,7 @@ class VRViewport extends GLBaseViewport {
             session.addEventListener('end', (event: any) => {
               this.__stageTreeItem.setVisible(false)
               this.session = null
-              this.emit('presentingChanged', { state: false })
+              this.emit('presentingChanged', new StateChangedEvent(false))
             })
 
             const onSelectStart = (ev: any) => {
@@ -385,8 +386,7 @@ class VRViewport extends GLBaseViewport {
             const onRefSpaceCreated = (refSpace: any) => {
               this.__refSpace = refSpace
               this.__stageTreeItem.setVisible(true)
-              const event = new StateChangedEvent(true)
-              this.emit('presentingChanged', event)
+              this.emit('presentingChanged', new StateChangedEvent(true))
 
               this.loadHMDResources().then(() => {
                 this.__startSession()

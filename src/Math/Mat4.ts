@@ -506,7 +506,7 @@ class Mat4 {
    *
    * @param mat4 - The mat4 value.
    */
-  setFromMat4(mat4: any): void {
+  setFromMat4(mat4: Mat4): void {
     this.__data[0] = mat4.m00
     this.__data[1] = mat4.m01
     this.__data[2] = mat4.m02

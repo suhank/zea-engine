@@ -175,7 +175,7 @@ class MaterialLibrary extends EventEmitter implements Owner {
    * The load method.
    * @param filePath - The file path.
    */
-  load(filePath: any) {
+  load(filePath: string) {
     const xhr = new XMLHttpRequest()
     xhr.open('GET', filePath, true)
     xhr.ontimeout = () => {

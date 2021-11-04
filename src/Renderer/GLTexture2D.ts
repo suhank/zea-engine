@@ -522,7 +522,7 @@ class GLTexture2D extends RefCounted {
    * @param unifs - The unifs value.
    * @return - The return value.
    */
-  preBind(unif: Uniform, unifs: Uniforms): Record<string, any> {
+  preBind(unif: Uniform, unifs: Uniforms): Record<string, Uniform> {
     return {
       textureTypeUnif: unifs[unif.name + 'Type'],
       textureDescUnif: unifs[unif.name + 'Desc'],

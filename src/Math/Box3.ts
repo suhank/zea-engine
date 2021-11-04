@@ -3,7 +3,8 @@ import { MathFunctions } from '../Utilities/MathFunctions'
 import { Vec3 } from './Vec3'
 import { Mat4 } from './Mat4'
 import { SphereType } from './SphereType'
-import { Xfo } from '../Math/index'
+import { Xfo } from './Xfo'
+import { PlaneType } from './PlaneType'
 
 /**
  * Class representing a box in 3D space.
@@ -234,7 +235,7 @@ class Box3 {
    * @param plane - The plane to check for intersection against.
    * @return - The return value.
    */
-  intersectsPlane(plane: any): boolean {
+  intersectsPlane(plane: PlaneType): boolean {
     // We compute the minimum and maximum dot product values. If those values
     // are on the same side (back or front) of the plane, then there is no intersection.
 

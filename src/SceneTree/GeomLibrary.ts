@@ -17,17 +17,19 @@ const workerParsing = true
 
 import { StreamFileParsedEvent } from '../Utilities/Events/StreamFileParsedEvent'
 import { RangeLoadedEvent } from '../Utilities/Events/RangeLoadedEvent'
+import { BaseGeom } from './Geometry/BaseGeom'
+import { AssetLoadContext } from './AssetLoadContext'
 
 const numCores = SystemDesc.hardwareConcurrency - 1 // always leave one main thread code spare.
 
 let workerId = 0
-const workers: any[] = []
-const listeners: any[] = []
+const workers: GeomParserWorker[] = []
+const listeners: Array<Map<string, (data: object) => void>> = []
 
-const getWorker = (geomLibraryId: number, fn: (data: any) => boolean) => {
+const getWorker = (geomLibraryId: number, fn: (data: object) => boolean) => {
   const __workerId = workerId
   if (!workers[__workerId]) {
-    listeners[__workerId] = {}
+    listeners[__workerId] = new Map<string, (data: object) => void>()
     const worker = new GeomParserWorker()
     worker.onmessage = (event: Record<string, any>) => {
       const data = event.data
@@ -36,7 +38,7 @@ const getWorker = (geomLibraryId: number, fn: (data: any) => boolean) => {
     workers[__workerId] = worker
   }
 
-  listeners[__workerId][geomLibraryId] = (data: any) => {
+  listeners[__workerId][geomLibraryId] = (data: object) => {
     // The callback should return true when the last data for this
     // geom library is loaded.
     const res = fn(data)
@@ -79,10 +81,10 @@ class GeomLibrary extends EventEmitter {
   protected __streamInfos: Record<string, StreamInfo>
   protected __genBuffersOpts: Record<string, any>
   protected loadCount: number
-  protected queue: any
-  protected loadContext: Record<string, any> = {}
+  protected queue: any[]
+  protected loadContext?: AssetLoadContext
   protected __numGeoms: number = -1
-  protected geoms: any[] = []
+  protected geoms: BaseGeom[] = []
   protected basePath: string = ''
   protected __loadedCount: number = 0
   /**
@@ -142,7 +144,7 @@ class GeomLibrary extends EventEmitter {
       resourceLoader.loadFile('archive', geomFileUrl).then((entries: any) => {
         const geomsData = entries[Object.keys(entries)[0]]
 
-        const streamFileParsedListenerID = this.on('streamFileParsed', (event: any) => {
+        const streamFileParsedListenerID = this.on('streamFileParsed', (event: StreamFileParsedEvent) => {
           if (event.geomFileID == geomFileID) {
             resourceLoader.incrementWorkDone(1)
             this.removeListenerById('streamFileParsed', streamFileParsedListenerID)
@@ -169,7 +171,7 @@ class GeomLibrary extends EventEmitter {
    * @param basePath - The base path of the file. (this is theURL of the zcad file without its extension.)
    * @param context - The value param.
    */
-  loadGeomFilesStream(geomLibraryJSON: Record<string, any>, basePath: string, context: Record<string, any>) {
+  loadGeomFilesStream(geomLibraryJSON: Record<string, any>, basePath: string, context: AssetLoadContext) {
     const numGeomFiles = geomLibraryJSON.numGeomsPerFile.length
     resourceLoader.incrementWorkload(numGeomFiles)
 
@@ -195,7 +197,7 @@ class GeomLibrary extends EventEmitter {
    * The setNumGeoms method.
    * @param expectedNumGeoms - The expectedNumGeoms value.
    */
-  setNumGeoms(expectedNumGeoms: any) {
+  setNumGeoms(expectedNumGeoms: number) {
     this.__numGeoms = expectedNumGeoms
   }
 
@@ -275,7 +277,7 @@ class GeomLibrary extends EventEmitter {
       if (workerParsing) {
         // ////////////////////////////////////////////
         // Multi Threaded Parsing
-        getWorker(this.getId(), (data: any) => {
+        getWorker(this.getId(), (data: object) => {
           return this.__receiveGeomDatas(data)
         }).postMessage(
           {
@@ -310,7 +312,7 @@ class GeomLibrary extends EventEmitter {
             genBuffersOpts: this.__genBuffersOpts,
             context,
           },
-          (data: any) => {
+          (data: object) => {
             this.__receiveGeomDatas(data)
           }
         )
@@ -324,8 +326,8 @@ class GeomLibrary extends EventEmitter {
    * @param data - The data received back from the web worker
    * @return - returns true once all data for this geom library has been loaded.
    */
-  __receiveGeomDatas(data: any) {
-    const { geomLibraryId, geomFileID, geomDatas, geomIndexOffset, geomsRange } = data
+  __receiveGeomDatas(data: object) {
+    const { geomLibraryId, geomFileID, geomDatas, geomIndexOffset, geomsRange } = <any>data
     if (geomLibraryId != this.getId()) throw new Error('Receiving workload for a different GeomLibrary')
     // We are storing a subset of the geoms from a binary file
     // which is a subset of the geoms in an asset.

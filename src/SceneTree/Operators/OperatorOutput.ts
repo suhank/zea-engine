@@ -170,7 +170,7 @@ class OperatorOutput extends EventEmitter {
    * @param context - The context value.
    * @return - Returns the json object.
    */
-  toJSON(context?: Record<string, any>): { name: string; paramPath: any; paramBindIndex: number } {
+  toJSON(context?: Record<string, any>): { name: string; paramPath: string[]; paramBindIndex: number } {
     const paramPath = this._param ? this._param.getPath() : ''
     return {
       name: this.__name,

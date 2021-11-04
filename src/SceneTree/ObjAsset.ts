@@ -92,7 +92,7 @@ class ObjAsset extends AssetItem {
         const WHITESPACE_RE = /\s+/
         let material
 
-        const parseColor = function (elements: any) {
+        const parseColor = function (elements: string[]) {
           if (elements.length == 3)
             return new Color(parseFloat(elements[0]), parseFloat(elements[1]), parseFloat(elements[2]))
           else throw new Error('Unable to parse a color from the following parts:' + elements.join('_'))
@@ -154,7 +154,7 @@ class ObjAsset extends AssetItem {
         }
       }
 
-      const loadMtlFile = (mtlFile: any): Promise<void> => {
+      const loadMtlFile = (mtlFile: string): Promise<void> => {
         return new Promise((resolve) => {
           loadTextfile(mtlFile, (fileData) => {
             resourceLoader.incrementWorkDone(1)
@@ -171,7 +171,7 @@ class ObjAsset extends AssetItem {
 
       const geomDatas: { [key: string]: any } = {}
 
-      const parseObjData = async (fileData: any) => {
+      const parseObjData = async (fileData: string) => {
         // performance.mark("parseObjData");
 
         // array of lines separated by the newline
@@ -180,7 +180,7 @@ class ObjAsset extends AssetItem {
 
         let currGeom: any = undefined
         let currMtl: any = undefined
-        let numGeoms: any = 0
+        let numGeoms: number = 0
         const newGeom = (name: string) => {
           if (name in geomDatas) {
             let suffix = 1
@@ -245,13 +245,13 @@ class ObjAsset extends AssetItem {
               }
               break
             case 'v':
-              vertices.push(elements.map((i: any) => parseFloat(i)))
+              vertices.push(elements.map((i) => parseFloat(i)))
               break
             case 'vt':
-              texCoords.push(elements.map((i: any) => parseFloat(i)))
+              texCoords.push(elements.map((i) => parseFloat(i)))
               break
             case 'vn':
-              normals.push(elements.map((i: any) => parseFloat(i)))
+              normals.push(elements.map((i) => parseFloat(i)))
               break
             case 'f': {
               const v_poly = []
@@ -315,7 +315,7 @@ class ObjAsset extends AssetItem {
         resolve()
       }
 
-      const buildChildItem = (geomName: any, geomData: any) => {
+      const buildChildItem = (geomName: string, geomData: any) => {
         for (let i = 0; i < geomData.faceCounts.length; i++) {
           if (geomData.faceCounts[i] == undefined) {
             geomData.faceCounts[i] = 0
@@ -412,14 +412,14 @@ class ObjAsset extends AssetItem {
         resourceLoader.incrementWorkload(2)
         loadTextfile(
           url,
-          (fileData: any) => {
+          (fileData) => {
             resourceLoader.incrementWorkDone(1)
             parseObjData(fileData).then(() => {
               buildChildItems()
               resourceLoader.incrementWorkDone(1)
             })
           },
-          (error: any) => {
+          (error) => {
             this.emit('error', error)
             reject(error)
           }

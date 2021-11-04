@@ -24,9 +24,9 @@ class Mat3 {
    * @param m22 - Row 2, column 2.
    */
   constructor(
-    m00: number | any = 1,
-    m01: number | any = 0,
-    m02: number | any = 0,
+    m00: number | Vec3 | Float32Array = 1,
+    m01: number | Vec3 = 0,
+    m02: number | Vec3 = 0,
     m10 = 0,
     m11 = 1,
     m12 = 0,
@@ -42,11 +42,11 @@ class Mat3 {
     } else if (m00 instanceof ArrayBuffer) {
       console.warn(`Deprecated, please use new Vec3(new Float32Array(buffer, byteOffset, 9))`)
       const buffer = m00
-      const byteOffset = m01
+      const byteOffset = <number>m01
       this.__data = new Float32Array(buffer, byteOffset, 9)
     } else {
       this.__data = new Float32Array(9)
-      this.set(m00, m01, m02, m10, m11, m12, m20, m21, m22)
+      this.set(<number>m00, <number>m01, <number>m02, m10, m11, m12, m20, m21, m22)
     }
   }
 

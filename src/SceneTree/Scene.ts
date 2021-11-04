@@ -3,7 +3,8 @@ import { TreeItem } from './TreeItem'
 import { ResourceLoader, resourceLoader } from './resourceLoader'
 import { GridTreeItem } from './GridTreeItem'
 import { EnvMap } from './Images/EnvMap'
-import { BooleanParameter, NumberParameter, ColorParameter, ImageParameter } from './Parameters/index'
+import { BooleanParameter, NumberParameter, ImageParameter, Parameter } from './Parameters/index'
+import { BaseItem } from '.'
 
 const defaultGridColor = new Color('#DCDCDC')
 
@@ -118,7 +119,7 @@ class Scene {
         // Some paths resolve to items generated during load,
         // so push a callback to re-try after the load is complete.
         plcbs.push(() => {
-          const param: any = this.resolvePath(path)
+          const param: Parameter<any> = <Parameter<any>>this.resolvePath(path)
           if (param) cb(param)
           else {
             console.warn('Path unable to be resolved:' + path)
@@ -137,8 +138,9 @@ class Scene {
     for (const cb of plcbs) cb()
   }
 
-  resolvePath(path: string): void {
+  resolvePath(path: string): BaseItem | null {
     console.warn('resolvePath is not implemented')
+    return null
   }
 }
 
