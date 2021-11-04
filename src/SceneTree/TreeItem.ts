@@ -45,7 +45,7 @@ class TreeItem extends BaseItem {
   // in the scene. If set to false, Camera framing will ignore this item,
   disableBoundingBox: boolean = false
 
-  protected __childItems: BaseItem[] = []
+  protected __childItems: TreeItem[] = []
   protected __childItemsEventHandlers: Array<Record<string, number>> = []
   protected __childItemsMapping: Record<string, number> = {}
 
@@ -150,7 +150,7 @@ class TreeItem extends BaseItem {
   protected updatePath(): void {
     super.updatePath()
     for (const childItem of this.__childItems) {
-      if (childItem) (<TreeItem>childItem).updatePath()
+      if (childItem) childItem.updatePath()
     }
   }
 
@@ -214,7 +214,7 @@ class TreeItem extends BaseItem {
     if (visible != this.__visible) {
       this.__visible = visible
       for (const childItem of this.__childItems) {
-        if (childItem instanceof TreeItem) childItem.propagateVisibility(this.__visible ? 1 : -1)
+        childItem.propagateVisibility(this.__visible ? 1 : -1)
       }
       this.emit('visibilityChanged', { visible })
 
@@ -263,8 +263,8 @@ class TreeItem extends BaseItem {
     }
 
     if (propagateToChildren) {
-      this.__childItems.forEach((childItem: BaseItem) => {
-        if (childItem instanceof TreeItem) childItem.addHighlight(name, color, propagateToChildren)
+      this.__childItems.forEach((childItem: TreeItem) => {
+        childItem.addHighlight(name, color, propagateToChildren)
       })
     }
   }
@@ -297,8 +297,8 @@ class TreeItem extends BaseItem {
         this.emit('highlightChanged')
       }
       if (propagateToChildren) {
-        this.__childItems.forEach((childItem: BaseItem) => {
-          if (childItem instanceof TreeItem) childItem.removeHighlight(name, propagateToChildren)
+        this.__childItems.forEach((childItem: TreeItem) => {
+          childItem.removeHighlight(name, propagateToChildren)
         })
       }
     }
@@ -337,13 +337,12 @@ class TreeItem extends BaseItem {
    */
   _cleanBoundingBox(bbox: Box3): Box3 {
     bbox.reset()
-    this.__childItems.forEach((childItem: BaseItem) => {
-      if (childItem instanceof TreeItem)
-        if (childItem.isVisible()) {
-          // console.log(" - ", childItem.constructor.name, childItem.getName(), childItem.globalXfoParam.value.sc.x, childItem.getBoundingBox().toString())
-          const box3 = childItem.boundingBoxParam.value
-          if (box3) bbox.addBox3(box3)
-        }
+    this.__childItems.forEach((childItem: TreeItem) => {
+      if (childItem.isVisible()) {
+        // console.log(" - ", childItem.constructor.name, childItem.getName(), childItem.globalXfoParam.value.sc.x, childItem.getBoundingBox().toString())
+        const box3 = childItem.boundingBoxParam.value
+        if (box3) bbox.addBox3(box3)
+      }
     })
     // console.log(this.getName(), bbox.toString())
     return bbox
@@ -384,9 +383,9 @@ class TreeItem extends BaseItem {
    *
    * i.e. **BaseImage**
    *
-   * @return - List of `BaseItem` owned by current TreeItem.
+   * @return - List of `TreeItem` owned by current TreeItem.
    */
-  getChildren(): BaseItem[] {
+  getChildren(): TreeItem[] {
     return this.__childItems
   }
 
@@ -466,16 +465,16 @@ class TreeItem extends BaseItem {
   }
 
   /**
-   * Inserts a child. It accepts all kind of `BaseItem`, not only `TreeItem`.
+   * Inserts a child. It accepts all kind of `TreeItem`, not only `TreeItem`.
    *
-   * @param childItem - The child BaseItem to insert.
+   * @param childItem - The child TreeItem to insert.
    * @param index - The index to add the child item.
    * @param maintainXfo - Boolean that determines if the Xfo value is maintained.
    * @param fixCollisions - Modify the name of the item to avoid name collisions.
    * If false, an exception wll be thrown instead if a name collision occurs.
    * @return - The index of the child item in this items children array.
    */
-  insertChild(childItem: BaseItem, index: number, maintainXfo = false, fixCollisions = true): BaseItem {
+  insertChild(childItem: TreeItem, index: number, maintainXfo = false, fixCollisions = true): TreeItem {
     if (childItem.getName() in this.__childItemsMapping) {
       if (fixCollisions) {
         childItem.setName(this.generateUniqueName(childItem.getName()))
@@ -483,7 +482,7 @@ class TreeItem extends BaseItem {
         throw new Error("Item '" + childItem.getName() + "' is already a child of :" + this.getPath())
       }
     }
-    if (!(childItem instanceof BaseItem)) {
+    if (!(childItem instanceof TreeItem)) {
       throw new Error('Object is is not a tree item :' + childItem) // TODO: need better output here+ childItem.constructor.name)
     }
 
@@ -492,20 +491,18 @@ class TreeItem extends BaseItem {
       this.childNameChanged(event)
     })
 
-    if (childItem instanceof TreeItem) {
-      if (maintainXfo) {
-        const globalXfo = this.globalXfoParam.value
-        const childGlobalXfo = childItem.globalXfoParam.value
-        const newLocalXfo = globalXfo.inverse().multiply(childGlobalXfo)
-        childItem.localXfoParam.value = newLocalXfo
-      }
-      this.setBoundingBoxDirty()
-
-      this.__highlights.forEach((name: string) => {
-        const color = this.__highlightMapping[name]
-        childItem.addHighlight(name, color, true)
-      })
+    if (maintainXfo) {
+      const globalXfo = this.globalXfoParam.value
+      const childGlobalXfo = childItem.globalXfoParam.value
+      const newLocalXfo = globalXfo.inverse().multiply(childGlobalXfo)
+      childItem.localXfoParam.value = newLocalXfo
     }
+    this.setBoundingBoxDirty()
+
+    this.__highlights.forEach((name: string) => {
+      const color = this.__highlightMapping[name]
+      childItem.addHighlight(name, color, true)
+    })
 
     this.__childItems.splice(index, 0, childItem)
     this.__childItemsEventHandlers.splice(index, 0, listenerIDs)
@@ -519,9 +516,9 @@ class TreeItem extends BaseItem {
   }
 
   /**
-   * Adds a child. It accepts all kind of `BaseItem`, not only `TreeItem`.
+   * Adds a child.
    *
-   * @param childItem - The child BaseItem to add.
+   * @param childItem - The child TreeItem to add.
    * @param maintainXfo - Boolean that determines if
    * the Global Xfo value is maintained. If true, when moving
    * items in the hierarchy from one parent to another, the local Xfo
@@ -532,9 +529,9 @@ class TreeItem extends BaseItem {
    * @param fixCollisions - Modify the name of the item to avoid
    * name collisions with other children of the same parent.
    * If false, an exception wll be thrown instead if a name collision occurs.
-   * @return childItem - The child BaseItem that was added.
+   * @return childItem - The child TreeItem that was added.
    */
-  addChild(childItem: BaseItem, maintainXfo = true, fixCollisions = true): BaseItem {
+  addChild(childItem: TreeItem, maintainXfo = true, fixCollisions = true): TreeItem {
     const index = this.__childItems.length
     this.insertChild(childItem, index, maintainXfo, fixCollisions)
     return childItem
@@ -546,7 +543,7 @@ class TreeItem extends BaseItem {
    * @param index - The index to remove the child TreeItem.
    * @return - Return the child TreeItem.
    */
-  getChild(index: number): BaseItem {
+  getChild(index: number): TreeItem {
     return this.__childItems[index]
   }
 
@@ -554,9 +551,9 @@ class TreeItem extends BaseItem {
    * Returns child element with the specified name.
    *
    * @param name - The name value.
-   * @return - Return the child BaseItem.
+   * @return - Return the child TreeItem.
    */
-  getChildByName(name: string): BaseItem | null {
+  getChildByName(name: string): TreeItem | null {
     const index = this.__childItemsMapping[name]
     if (index != undefined) {
       return this.__childItems[index]
@@ -585,7 +582,7 @@ class TreeItem extends BaseItem {
    * @param childItem - item to unbind.
    * @private
    */
-  protected unbindChild(index: number, childItem: BaseItem): void {
+  protected unbindChild(index: number, childItem: TreeItem): void {
     const listenerIDs = this.__childItemsEventHandlers[index]
     // eslint-disable-next-line guard-for-in
     for (const key in listenerIDs) {
@@ -596,15 +593,13 @@ class TreeItem extends BaseItem {
     this.__childItemsEventHandlers.splice(index, 1)
     delete this.__childItemsMapping[childItem.getName()]
     this.updateChildNameMapping(index)
-    if (childItem instanceof TreeItem) {
-      this.setBoundingBoxDirty()
-    }
+    this.setBoundingBoxDirty()
 
     this.emit('childRemoved', { childItem, index })
   }
 
   /**
-   * Removes a child BaseItem by specifying its index.
+   * Removes a child TreeItem by specifying its index.
    *
    * @param index - The index value.
    */
@@ -619,7 +614,7 @@ class TreeItem extends BaseItem {
   }
 
   /**
-   * Removes a child BaseItem by specifying its name.
+   * Removes a child TreeItem by specifying its name.
    *
    * @param name - The name param.
    * @return - Return the child TreeItem.
@@ -637,7 +632,7 @@ class TreeItem extends BaseItem {
    *
    * @param childItem - The child TreeItem to remove.
    */
-  removeChildByHandle(childItem: BaseItem): void {
+  removeChildByHandle(childItem: TreeItem): void {
     console.warn('Deprecated. Use #removeChild')
     const index = this.__childItems.indexOf(childItem)
     if (index == -1) throw new Error('Error in removeChildByHandle. Child not found:' + childItem.getName())
@@ -661,7 +656,7 @@ class TreeItem extends BaseItem {
    * @param childItem - The child TreeItem value.
    * @return - Child index in children array.
    */
-  getChildIndex(childItem: BaseItem): number {
+  getChildIndex(childItem: TreeItem): number {
     return this.__childItems.indexOf(childItem)
   }
 
@@ -733,11 +728,11 @@ class TreeItem extends BaseItem {
    * @param callback - The callback value.
    * @param includeThis - Fire the callback for this item.
    */
-  traverse(callback: (...args: any[]) => unknown, includeThis = true): void {
+  traverse(callback: (treeItem: TreeItem, depth: number) => unknown, includeThis = true): void {
     const __c = (treeItem: TreeItem, depth: number) => {
       const children = treeItem.getChildren()
       for (const childItem of children) {
-        if (childItem) __t(childItem, depth + 1)
+        if (childItem && childItem instanceof TreeItem) __t(childItem, depth + 1)
       }
     }
     const __t = (treeItem: TreeItem, depth: number) => {
@@ -891,12 +886,12 @@ class TreeItem extends BaseItem {
         for (const childJson of childrenJson) {
           // Note: During loading of asset trees, we have an
           // existing tree generated by loading a bin data file.
-          let childItem: BaseItem | null = this.getChildByName(childJson.name)
+          let childItem: TreeItem | null = this.getChildByName(childJson.name)
           if (childItem) {
             childItem.fromJSON(childJson, context)
           } else {
             if (childJson.type) {
-              childItem = <BaseItem>Registry.constructClass(childJson.type)
+              childItem = <TreeItem>Registry.constructClass(childJson.type)
               if (childItem) {
                 // Note: we should load the json first, as it
                 // may contain the unique name of the item.
@@ -917,11 +912,11 @@ class TreeItem extends BaseItem {
           const childJson = childrenJson[childName]
           // Note: During loading of asset trees, we have an
           // existing tree generated by loading a bin data file.
-          let childItem: BaseItem | null = this.getChildByName(childName)
+          let childItem: TreeItem | null = this.getChildByName(childName)
           if (childItem) {
             childItem.fromJSON(childJson, context)
           } else if (childJson.type) {
-            childItem = <BaseItem>Registry.constructClass(childJson.type)
+            childItem = <TreeItem>Registry.constructClass(childJson.type)
             if (childItem) {
               // Note: we add the child now before loading.
               // This is because certain items. (e.g. Groups)
@@ -1003,7 +998,7 @@ class TreeItem extends BaseItem {
           reader.seek(toc[i]) // Reset the pointer to the start of the item data.
           let childType = reader.loadStr()
 
-          const childItem = <BaseItem>Registry.constructClass(childType)
+          const childItem = <TreeItem>Registry.constructClass(childType)
           if (!childItem) {
             const childName = reader.loadStr()
             console.warn('Unable to construct child:' + childName + ' of type:' + childType)
@@ -1050,7 +1045,7 @@ class TreeItem extends BaseItem {
     // When cloning instanced trees, the root item should
     // have a unique LocalXfoParam, as it must be re-set.
     // (The root of the tree is a cloned and attached to an Instance node that provides the transform)
-    src.getChildren().forEach((srcChildItem: BaseItem) => {
+    src.getChildren().forEach((srcChildItem: TreeItem) => {
       if (srcChildItem) this.addChild(srcChildItem.clone(), false, false)
     })
   }

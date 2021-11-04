@@ -89,7 +89,7 @@
           // Now put the moved point back to selectable so that we can click on it again
           // or move a another point over the surface of this one.
           this.point.setSelectable(true)
-          this.viewport.releaseCapture(this)
+          event.releaseCapture(this)
         }
       }
       const movePointTool = new MovePointTool(renderer.getViewport())
@@ -122,7 +122,7 @@
           this.stroke.traverse((item) => {
             item.setSelectable(true)
           })
-          this.viewport.releaseCapture(this)
+          event.releaseCapture(this)
         }
       }
       const makeStrokeTool = new MakeStrokeTool(renderer.getViewport())

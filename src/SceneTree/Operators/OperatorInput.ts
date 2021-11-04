@@ -7,10 +7,10 @@ import { EventEmitter } from '../../Utilities/EventEmitter'
 /** Class representing an operator input.
  * @extends EventEmitter
  */
-class OperatorInput extends EventEmitter {
+abstract class OperatorInput<T> extends EventEmitter {
   name: string
-  _op?: Operator = undefined
-  param?: Parameter<any> = undefined
+  _op?: Operator
+  param?: Parameter<T>
   detached: boolean = false
 
   /**
@@ -58,7 +58,7 @@ class OperatorInput extends EventEmitter {
    * The getParam method.
    * @return - The return value.
    */
-  getParam(): Parameter<unknown> | undefined {
+  getParam(): Parameter<T> | undefined {
     return this.param
   }
 
@@ -75,7 +75,7 @@ class OperatorInput extends EventEmitter {
    * Assigns the Paramter to be used to provide the input value.
    * @param param - The param value.
    */
-  setParam(param?: Parameter<any>): void {
+  setParam(param?: Parameter<T>): void {
     if (this.param) {
       this.param.unbindOperatorInput(this)
     }
@@ -90,7 +90,7 @@ class OperatorInput extends EventEmitter {
    * The getValue method.
    * @return - The return value.
    */
-  getValue(): unknown {
+  getValue(): T {
     if (this.param) return this.param.value
     throw new Error('Unable to getValue')
   }
@@ -99,7 +99,7 @@ class OperatorInput extends EventEmitter {
    * The setValue method.
    * @param value - The value param.
    */
-  setValue(value: unknown): void {
+  setValue(value: T): void {
     if (this.param) {
       this.param.setValue(value)
     }
@@ -179,4 +179,28 @@ class OperatorInput extends EventEmitter {
   }
 }
 
-export { OperatorInput }
+import { Vec2, Vec3, Vec4, Color, Quat, Xfo, Mat3, Mat4 } from '../../Math'
+class BooleanOperatorInput extends OperatorInput<boolean> {}
+class NumberOperatorInput extends OperatorInput<number> {}
+class Vec2OperatorInput extends OperatorInput<Vec2> {}
+class Vec3OperatorInput extends OperatorInput<Vec3> {}
+class Vec4OperatorInput extends OperatorInput<Vec4> {}
+class ColorOperatorInput extends OperatorInput<Color> {}
+class QuatOperatorInput extends OperatorInput<Quat> {}
+class XfoOperatorInput extends OperatorInput<Xfo> {}
+class Mat3OperatorInput extends OperatorInput<Mat3> {}
+class Mat4OperatorInput extends OperatorInput<Mat4> {}
+
+export {
+  OperatorInput,
+  BooleanOperatorInput,
+  NumberOperatorInput,
+  Vec2OperatorInput,
+  Vec3OperatorInput,
+  Vec4OperatorInput,
+  ColorOperatorInput,
+  QuatOperatorInput,
+  XfoOperatorInput,
+  Mat3OperatorInput,
+  Mat4OperatorInput,
+}

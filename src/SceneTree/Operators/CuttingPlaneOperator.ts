@@ -1,7 +1,7 @@
 import { Vec4 } from '../../Math/Vec4'
 import { Operator } from './Operator'
-import { OperatorOutput } from './OperatorOutput'
-import { OperatorInput } from './OperatorInput'
+import { Vec4OperatorOutput } from './OperatorOutput'
+import { XfoOperatorInput } from './OperatorInput'
 import { Xfo } from '../../Math/Xfo'
 import { Vec4Parameter, XfoParameter } from '../Parameters'
 
@@ -11,6 +11,8 @@ import { Vec4Parameter, XfoParameter } from '../Parameters'
  *
  */
 class CuttingPlaneOperator extends Operator {
+  groupGlobalXfo: XfoOperatorInput = new XfoOperatorInput('GroupGlobalXfo')
+  cuttingPlane: Vec4OperatorOutput = new Vec4OperatorOutput('CuttingPlane')
   /**
    * Create a GroupMemberXfoOperator operator.
    * @param groupGlobalXfoParam - The GlobalXfo param found on the Group.
@@ -18,21 +20,22 @@ class CuttingPlaneOperator extends Operator {
    */
   constructor(groupGlobalXfoParam: XfoParameter, cuttingPlaneParam: Vec4Parameter) {
     super()
-    this.addInput(new OperatorInput('GroupGlobalXfo')).setParam(groupGlobalXfoParam)
-    this.addOutput(new OperatorOutput('CuttingPlane')).setParam(cuttingPlaneParam)
+    this.groupGlobalXfo.setParam(groupGlobalXfoParam)
+    this.cuttingPlane.setParam(cuttingPlaneParam)
+    this.addInput(this.groupGlobalXfo)
+    this.addOutput(this.cuttingPlane)
   }
 
   /**
    * The evaluate method.
    */
   evaluate(): void {
-    const cuttingPlaneOutput = this.getOutput('CuttingPlane')
-    const groupGlobalXfo = this.getInput('GroupGlobalXfo').getValue() as Xfo
+    const groupGlobalXfo = this.groupGlobalXfo.getValue()
 
     const vec = groupGlobalXfo.ori.getZaxis()
     const dist = groupGlobalXfo.tr.dot(vec)
 
-    cuttingPlaneOutput.setClean(new Vec4(vec.x, vec.y, vec.z, -dist))
+    this.cuttingPlane.setClean(new Vec4(vec.x, vec.y, vec.z, -dist))
   }
 }
 

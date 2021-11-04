@@ -4,8 +4,8 @@ import { GeometryParameter } from './Parameters/GeometryParameter'
 import { Registry } from '../Registry'
 import { BaseGeomItem } from './BaseGeomItem'
 import { Operator } from './Operators/Operator'
-import { OperatorInput } from './Operators/OperatorInput'
-import { OperatorOutput } from './Operators/OperatorOutput'
+import { XfoOperatorInput } from './Operators/OperatorInput'
+import { Mat4OperatorOutput } from './Operators/OperatorOutput'
 import { BaseProxy } from './Geometry/GeomProxies'
 import { BaseGeom } from './Geometry'
 import { Material } from './Material'
@@ -21,6 +21,10 @@ let calculatePreciseBoundingBoxes = false
  * @private
  */
 class CalcGeomMatOperator extends Operator {
+  globalXfo: XfoOperatorInput = new XfoOperatorInput('GlobalXfo')
+  geomOffsetXfo: XfoOperatorInput = new XfoOperatorInput('GeomOffsetXfo')
+  geomMat: Mat4OperatorOutput = new Mat4OperatorOutput('GeomMat')
+
   /**
    *Creates an instance of CalcGeomMatOperator.
    *
@@ -31,22 +35,21 @@ class CalcGeomMatOperator extends Operator {
    */
   constructor(globalXfoParam: XfoParameter, geomOffsetXfoParam: XfoParameter, geomMatParam: Mat4Parameter) {
     super('CalcGeomMatOperator')
-    this.addInput(new OperatorInput('GlobalXfo')).setParam(globalXfoParam)
-    this.addInput(new OperatorInput('GeomOffsetXfo')).setParam(geomOffsetXfoParam)
-    this.addOutput(new OperatorOutput('GeomMat')).setParam(geomMatParam)
+    this.globalXfo.setParam(globalXfoParam)
+    this.geomOffsetXfo.setParam(geomOffsetXfoParam)
+    this.geomMat.setParam(geomMatParam)
+    this.addInput(this.globalXfo)
+    this.addInput(this.geomOffsetXfo)
+    this.addOutput(this.geomMat)
   }
 
   /**
    * The evaluate method.
    */
   evaluate() {
-    const globalXfo = <Xfo>this.getInput('GlobalXfo').getValue()
-    const geomOffsetXfo = <Xfo>this.getInput('GeomOffsetXfo').getValue()
-    const geomMatOutput = this.getOutput('GeomMat')
-
-    const globalMat4 = globalXfo.toMat4()
-    const geomOffsetMat4 = geomOffsetXfo.toMat4()
-    geomMatOutput.setClean(globalMat4.multiply(geomOffsetMat4))
+    const globalMat4 = this.globalXfo.getValue().toMat4()
+    const geomOffsetMat4 = this.geomOffsetXfo.getValue().toMat4()
+    this.geomMat.setClean(globalMat4.multiply(geomOffsetMat4))
   }
 }
 

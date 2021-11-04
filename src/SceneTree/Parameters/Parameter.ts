@@ -16,8 +16,8 @@ import { OperatorInput } from '..'
  */
 abstract class Parameter<T> extends EventEmitter implements ICloneable, ISerializable {
   protected dirty: boolean = false
-  protected boundInputs: OperatorInput[] = []
-  protected boundOutputs: OperatorOutput[] = []
+  protected boundInputs: OperatorInput<any>[] = []
+  protected boundOutputs: OperatorOutput<any>[] = []
   protected cleaning: boolean = false
   protected dirtyOpIndex: number = 0
   protected firstOP_WRITE: number = 0
@@ -133,7 +133,7 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
    * @param index - The index(optional) that the output is being bound at.
    * @return - The index of the bound output.
    */
-  bindOperatorInput(operatorInput: OperatorInput) {
+  bindOperatorInput(operatorInput: OperatorInput<any>) {
     this.boundInputs.push(operatorInput)
   }
 
@@ -144,7 +144,7 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
    * @param operatorInput - The output that we are unbinding from the Parameter
    * @return - The return value.
    */
-  unbindOperatorInput(operatorInput: OperatorInput) {
+  unbindOperatorInput(operatorInput: OperatorInput<any>) {
     const index = this.boundInputs.indexOf(operatorInput)
     this.boundInputs.splice(index, 1)
   }
@@ -158,7 +158,7 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
    * @param index - The index(optional) that the output is being bound at.
    * @return - The index of the bound output.
    */
-  bindOperatorOutput(operatorOutput: OperatorOutput, index = -1): number {
+  bindOperatorOutput(operatorOutput: OperatorOutput<any>, index = -1): number {
     if (index == -1) index = this.boundOutputs.length
     this.boundOutputs.splice(index, 0, operatorOutput)
     // Update the remaining binding indices
@@ -178,7 +178,7 @@ abstract class Parameter<T> extends EventEmitter implements ICloneable, ISeriali
    * @param operatorOutput - The output that we are unbinding from the Parameter
    * @return - The return value.
    */
-  unbindOperatorOutput(operatorOutput: OperatorOutput): number {
+  unbindOperatorOutput(operatorOutput: OperatorOutput<any>): number {
     const index = operatorOutput.getParamBindIndex()
     this.boundOutputs.splice(index, 1)
     // Update the remaining binding indices
