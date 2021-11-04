@@ -10,8 +10,8 @@ import { OperatorOutput } from './OperatorOutput'
  * @extends BaseItem
  */
 class Operator extends BaseItem {
-  __inputs: Map<string, OperatorInput>
-  __outputs: Map<string, OperatorOutput>
+  __inputs: Map<string, OperatorInput<any>>
+  __outputs: Map<string, OperatorOutput<any>>
   /**
    * Create an operator.
    * @param name - The name value.
@@ -30,7 +30,7 @@ class Operator extends BaseItem {
    * @private
    */
   setDirty(): void {
-    this.__outputs.forEach((output: OperatorOutput) => output.setDirty())
+    this.__outputs.forEach((output: OperatorOutput<any>) => output.setDirty())
   }
 
   /**
@@ -50,11 +50,7 @@ class Operator extends BaseItem {
    * @param input - The name of the input, or the input object
    * @return - The return value.
    */
-  addInput(input: OperatorInput): OperatorInput {
-    if (typeof input == 'string') input = new OperatorInput(input)
-    else if (!(input instanceof OperatorInput)) {
-      throw new Error(`addInput only accepts string or OperatorInput`)
-    }
+  addInput(input: OperatorInput<any>): OperatorInput<any> {
     input.setOperator(this)
     this.__inputs.set(input.getName(), input)
     this.setDirty()
@@ -65,11 +61,8 @@ class Operator extends BaseItem {
    * The removeInput method.
    * @param input - The name of the input, or the input object
    */
-  removeInput(input: OperatorInput): void {
+  removeInput(input: OperatorInput<any>): void {
     if (typeof input == 'string') input = this.getInput(input)
-    if (!(input instanceof OperatorInput)) {
-      throw new Error(`removeInput only accepts string or OperatorInput`)
-    }
     if (input.getParam()) input.setParam(undefined)
     this.__inputs.delete(input.getName())
   }
@@ -96,7 +89,7 @@ class Operator extends BaseItem {
    * @param name - The name value.
    * @return - The return value.
    */
-  getInput(name: string): OperatorInput {
+  getInput(name: string): OperatorInput<any> {
     const input = this.__inputs.get(name)
     if (!input) throw `Couldn't find an Input with the name of '${name}'`
     return input
@@ -107,11 +100,7 @@ class Operator extends BaseItem {
    * @param output - The name of the output, or the output object
    * @return - The return value.
    */
-  addOutput(output: OperatorOutput | string): OperatorOutput {
-    if (typeof output == 'string') output = new OperatorOutput(output)
-    else if (!(output instanceof OperatorOutput)) {
-      throw new Error(`addOutput only accepts string or OperatorOutput`)
-    }
+  addOutput(output: OperatorOutput<any>): OperatorOutput<any> {
     output.setOperator(this)
     // if (this.getOutput(output.getName())) throw new Error(`Operator output already exists ${output.getName()}`)
     this.__outputs.set(output.getName(), output)
@@ -123,7 +112,7 @@ class Operator extends BaseItem {
    * The removeOutput method.
    * @param output - The name of the output, or the output object
    */
-  removeOutput(output: OperatorOutput | string): void {
+  removeOutput(output: OperatorOutput<any> | string): void {
     if (typeof output == 'string') output = this.getOutput(output)
     if (!(output instanceof OperatorOutput)) {
       throw new Error(`removeOutput only accepts string or OperatorInput`)
@@ -145,7 +134,7 @@ class Operator extends BaseItem {
    * @param index - The index value.
    * @return - The return value.
    */
-  getOutputByIndex(index: number): OperatorOutput {
+  getOutputByIndex(index: number): OperatorOutput<any> {
     return Array.from(this.__outputs.values())[index]
   }
 
@@ -154,7 +143,7 @@ class Operator extends BaseItem {
    * @param name - The name value.
    * @return - The return value.
    */
-  getOutput(name: string): OperatorOutput {
+  getOutput(name: string): OperatorOutput<any> {
     const output = this.__outputs.get(name)
     if (!output) throw new Error(`Couldn't find an Output with the name of '${name}'`)
     return output
@@ -229,7 +218,7 @@ class Operator extends BaseItem {
         } else {
           input = this.getInputByIndex(index)
         }
-        ;(input as OperatorInput).fromJSON(inputJson, context)
+        ;(input as OperatorInput<any>).fromJSON(inputJson, context)
       })
     }
     if (j.outputs) {
@@ -243,7 +232,7 @@ class Operator extends BaseItem {
         } else {
           output = this.getOutputByIndex(index)
         }
-        ;(output as OperatorOutput).fromJSON(outputJson, context)
+        ;(output as OperatorOutput<any>).fromJSON(outputJson, context)
       })
     }
   }
@@ -252,23 +241,23 @@ class Operator extends BaseItem {
    * The detach method.
    */
   detach(): void {
-    this.__inputs.forEach((input: OperatorInput) => input.detach())
-    this.__outputs.forEach((output: OperatorOutput) => output.detach())
+    this.__inputs.forEach((input: OperatorInput<any>) => input.detach())
+    this.__outputs.forEach((output: OperatorOutput<any>) => output.detach())
   }
 
   /**
    * The reattach method.
    */
   reattach(): void {
-    this.__inputs.forEach((input: OperatorInput) => input.reattach())
-    this.__outputs.forEach((output: OperatorOutput) => output.reattach())
+    this.__inputs.forEach((input: OperatorInput<any>) => input.reattach())
+    this.__outputs.forEach((output: OperatorOutput<any>) => output.reattach())
   }
 
   /**
    * The rebind method.
    */
   rebind(): void {
-    this.__outputs.forEach((output: OperatorOutput) => output.rebind())
+    this.__outputs.forEach((output: OperatorOutput<any>) => output.rebind())
   }
 }
 

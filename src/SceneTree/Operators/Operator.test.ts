@@ -2,23 +2,27 @@
 import { Operator } from './Operator'
 import { NumberParameter } from '../Parameters/NumberParameter'
 import { BaseItem } from '../BaseItem'
-import { OperatorInput } from './OperatorInput'
-import { OperatorOutput } from './OperatorOutput'
+import { NumberOperatorInput } from './OperatorInput'
+import { NumberOperatorOutput } from './OperatorOutput'
 import { OperatorOutputMode } from '../Parameters/OperatorOutputMode'
 import { Registry } from '../../Registry'
+import { Parameter } from '..'
 
 class AddFloatsOperator extends Operator {
+  inputA: NumberOperatorInput = new NumberOperatorInput('A')
+  inputB: NumberOperatorInput = new NumberOperatorInput('B')
+  outputC: NumberOperatorOutput = new NumberOperatorOutput('C')
   constructor(name?: string) {
     super(name)
-    this.addInput(new OperatorInput('A'))
-    this.addInput(new OperatorInput('B'))
-    this.addOutput(new OperatorOutput('C'))
+    this.addInput(this.inputA)
+    this.addInput(this.inputB)
+    this.addOutput(this.outputC)
   }
 
   evaluate() {
-    const a = <number>this.getInput('A').getValue()
-    const b = <number>this.getInput('B').getValue()
-    this.getOutput('C').setClean(a + b)
+    const a = this.inputA.getValue()
+    const b = this.inputB.getValue()
+    this.outputC.setClean(a + b)
   }
 }
 
@@ -28,21 +32,23 @@ Registry.register('AddFloatsOperator', AddFloatsOperator)
 // By reading and then changing. This feature allows us to combine operators
 // to compute complex results. (See BoundingBox operators).
 class ScaleFloatOperator extends Operator {
+  scaleValue: NumberOperatorInput = new NumberOperatorInput('ScaleValue')
+  result: NumberOperatorOutput = new NumberOperatorOutput('Result', OperatorOutputMode.OP_READ_WRITE)
   constructor(name?: string) {
     super(name)
-    this.addInput(new OperatorInput('ScaleValue'))
-    this.addOutput(new OperatorOutput('Result', OperatorOutputMode.OP_READ_WRITE))
+    this.addInput(this.scaleValue)
+    this.addOutput(this.result)
   }
 
   evaluate() {
     let scaleValue = 1.0
-    const inParam = this.getInput('ScaleValue').getParam()
+    const inParam = this.scaleValue.getParam()
     if (inParam) {
-      scaleValue = <number>inParam.getValue()
+      scaleValue = inParam.getValue()
     }
     // Read the value, modify and return.
-    const value = <number>this.getOutput('Result').getValue()
-    this.getOutput('Result').setClean(value * scaleValue)
+    const value = this.result.getValue()
+    this.result.setClean(value * scaleValue)
   }
 }
 
@@ -114,87 +120,42 @@ describe('Operator', () => {
     expect(myParam.isDirty()).toBe(false)
   })
 
-  test('dynamically changing inputs and outputs', () => {
-    const operator = new Operator()
-    const aParam = new NumberParameter('A', 2)
-    const bParam = new NumberParameter('B', 3.5)
-    const cParam = new NumberParameter('C')
-
-    operator.addInput(new OperatorInput('A')).setParam(aParam)
-    operator.addInput(new OperatorInput('B')).setParam(bParam)
-    operator.addOutput(new OperatorOutput('C')).setParam(cParam)
-
-    expect(operator.getNumInputs()).toBe(2)
-    expect(operator.getNumOutputs()).toBe(1)
-
-    expect(aParam.isDirty()).toBe(false)
-    expect(bParam.isDirty()).toBe(false)
-    expect(cParam.isDirty()).toBe(true)
-
-    operator.getInput('A').setParam(null)
-    operator.getInput('B').setParam(null)
-    operator.getOutput('C').setParam(null)
-
-    expect(aParam.isDirty()).toBe(false)
-    expect(bParam.isDirty()).toBe(false)
-    expect(cParam.isDirty()).toBe(false)
-
-    operator.removeInput(operator.getInput('A'))
-    operator.removeInput(operator.getInput('B'))
-    operator.removeOutput(operator.getOutput('C'))
-
-    expect(operator.getNumInputs()).toBe(0)
-    expect(operator.getNumOutputs()).toBe(0)
-
-    operator.addInput(new OperatorInput('A')).setParam(aParam)
-    operator.addInput(new OperatorInput('B')).setParam(bParam)
-    operator.addOutput(new OperatorOutput('C')).setParam(cParam)
-
-    expect(aParam.isDirty()).toBe(false)
-    expect(bParam.isDirty()).toBe(false)
-    expect(cParam.isDirty()).toBe(true)
-
-    operator.removeInput(operator.getInput('A'))
-    operator.removeInput(operator.getInput('B'))
-    operator.removeOutput(operator.getOutput('C'))
-
-    expect(aParam.isDirty()).toBe(false)
-    expect(bParam.isDirty()).toBe(false)
-    expect(cParam.isDirty()).toBe(false)
-  })
-
   class SetFloatOperator extends Operator {
     value
+    output: NumberOperatorOutput = new NumberOperatorOutput('Output', OperatorOutputMode.OP_WRITE)
     constructor(name?: string, value?: any) {
       super(name)
       this.value = value
-      this.addOutput(new OperatorOutput('Output', OperatorOutputMode.OP_WRITE))
+      this.addOutput(this.output)
     }
 
     evaluate() {
-      this.getOutput('Output').setClean(this.value)
+      this.output.setClean(this.value)
     }
   }
 
   class ScaleFloatsOperator extends Operator {
+    scaleValue: NumberOperatorInput = new NumberOperatorInput('ScaleValue')
+    outputA: NumberOperatorOutput = new NumberOperatorOutput('OutputA', OperatorOutputMode.OP_READ_WRITE)
+    outputB: NumberOperatorOutput = new NumberOperatorOutput('OutputB', OperatorOutputMode.OP_READ_WRITE)
     constructor(name?: string) {
       super(name)
-      this.addInput(new OperatorInput('ScaleValue'))
-      this.addOutput(new OperatorOutput('OutputA', OperatorOutputMode.OP_READ_WRITE))
-      this.addOutput(new OperatorOutput('OutputB', OperatorOutputMode.OP_READ_WRITE))
+      this.addInput(this.scaleValue)
+      this.addOutput(this.outputA)
+      this.addOutput(this.outputB)
     }
 
     evaluate() {
       let scaleValue = 2.0
       const inParam = this.getInput('ScaleValue').getParam()
       if (inParam) {
-        scaleValue = <number>inParam.getValue()
+        scaleValue = inParam.getValue()
       }
       // Read the value, modify and return both values
-      const valueA = this.getOutput('OutputA').getValue()
-      this.getOutput('OutputA').setClean(<number>valueA * scaleValue)
-      const valueB = this.getOutput('OutputB').getValue()
-      this.getOutput('OutputB').setClean(<number>valueB * scaleValue)
+      const valueA = this.outputA.getValue()
+      this.outputA.setClean(valueA * scaleValue)
+      const valueB = this.outputB.getValue()
+      this.outputB.setClean(valueB * scaleValue)
 
       this.emit('evaluated')
     }
@@ -222,13 +183,13 @@ describe('Operator', () => {
     setC.getOutput('Output').setParam(cParam)
 
     const scaleAB = new ScaleFloatsOperator('scaleAB')
-    scaleAB.getOutput('OutputA').setParam(aParam)
-    scaleAB.getOutput('OutputB').setParam(bParam)
+    scaleAB.outputA.setParam(aParam)
+    scaleAB.outputB.setParam(bParam)
     scaleAB.getInput('ScaleValue').setParam(scaleABParam)
 
     const scaleBC = new ScaleFloatsOperator('scaleBC')
-    scaleBC.getOutput('OutputA').setParam(bParam)
-    scaleBC.getOutput('OutputB').setParam(cParam)
+    scaleBC.outputA.setParam(bParam)
+    scaleBC.outputB.setParam(cParam)
     scaleBC.getInput('ScaleValue').setParam(scaleBCParam)
 
     expect(aParam.isDirty()).toBe(true)
@@ -294,12 +255,12 @@ describe('Operator', () => {
     // scaleAB1 should write the value of
 
     // Bind aParam: > ['scaleAB1', 'scaleAB2']
-    scaleAB1.getOutput('OutputA').setParam(aParam)
-    scaleAB2.getOutput('OutputA').setParam(aParam)
+    scaleAB1.outputA.setParam(aParam)
+    scaleAB2.outputA.setParam(aParam)
 
     // Bind bParam: > ['scaleAB2', 'scaleAB1']
-    scaleAB2.getOutput('OutputB').setParam(bParam)
-    scaleAB1.getOutput('OutputB').setParam(bParam)
+    scaleAB2.outputB.setParam(bParam)
+    scaleAB1.outputB.setParam(bParam)
 
     expect(aParam.isDirty()).toBe(true)
     expect(bParam.isDirty()).toBe(true)
@@ -332,12 +293,12 @@ describe('Operator', () => {
     // scaleAB1 should write the value of
 
     // Bind aParam: > ['scaleAB1', 'scaleAB2']
-    scaleAB1.getOutput('OutputA').setParam(aParam)
-    scaleAB2.getOutput('OutputA').setParam(aParam)
+    scaleAB1.outputA.setParam(aParam)
+    scaleAB2.outputA.setParam(aParam)
 
     // Bind bParam: > ['scaleAB2', 'scaleAB1']
-    scaleAB2.getOutput('OutputB').setParam(bParam)
-    scaleAB1.getOutput('OutputB').setParam(bParam)
+    scaleAB2.outputB.setParam(bParam)
+    scaleAB1.outputB.setParam(bParam)
 
     expect(aParam.isDirty()).toBe(true)
     expect(bParam.isDirty()).toBe(true)
@@ -357,31 +318,37 @@ describe('Operator', () => {
   })
 
   class DoubleFloatsOperator extends Operator {
+    input: NumberOperatorInput = new NumberOperatorInput('input')
+    out: NumberOperatorOutput = new NumberOperatorOutput('out', OperatorOutputMode.OP_WRITE)
     constructor(name?: string) {
       super(name)
-      this.addInput(new OperatorInput('in'))
-      this.addOutput(new OperatorOutput('out', OperatorOutputMode.OP_WRITE))
+      this.addInput(this.input)
+      this.addOutput(this.out)
     }
 
     evaluate() {
-      const a = this.getInput('in').getValue()
-      this.getOutput('out').setClean(<number>a * 2)
+      const a = this.input.getValue()
+      this.out.setClean(a * 2)
     }
   }
   class MultiOutputOperator extends Operator {
+    input: NumberOperatorInput = new NumberOperatorInput('input')
+    out0: NumberOperatorOutput = new NumberOperatorOutput('out0', OperatorOutputMode.OP_WRITE)
+    out1: NumberOperatorOutput = new NumberOperatorOutput('out1', OperatorOutputMode.OP_WRITE)
+    out2: NumberOperatorOutput = new NumberOperatorOutput('out2', OperatorOutputMode.OP_WRITE)
     constructor(name?: string) {
       super(name)
-      this.addInput(new OperatorInput('in'))
-      this.addOutput(new OperatorOutput('out0', OperatorOutputMode.OP_WRITE))
-      this.addOutput(new OperatorOutput('out1', OperatorOutputMode.OP_WRITE))
-      this.addOutput(new OperatorOutput('out2', OperatorOutputMode.OP_WRITE))
+      this.addInput(this.input)
+      this.addOutput(this.out0)
+      this.addOutput(this.out1)
+      this.addOutput(this.out2)
     }
 
     evaluate() {
-      const value = this.getInput('in').getParam().getValue()
-      this.getOutput('out0').setClean(value)
-      this.getOutput('out1').setClean(value)
-      this.getOutput('out2').setClean(value)
+      const value = this.input.getParam().getValue()
+      this.out0.setClean(value)
+      this.out1.setClean(value)
+      this.out2.setClean(value)
     }
   }
 
@@ -392,16 +359,16 @@ describe('Operator', () => {
     const cParam = new NumberParameter('B')
 
     const doubleOperator0 = new DoubleFloatsOperator()
-    doubleOperator0.getInput('in').setParam(inAParam)
-    doubleOperator0.getOutput('out').setParam(aParam)
+    doubleOperator0.input.setParam(inAParam)
+    doubleOperator0.out.setParam(aParam)
 
     const doubleOperator1 = new DoubleFloatsOperator()
-    doubleOperator1.getInput('in').setParam(aParam)
-    doubleOperator1.getOutput('out').setParam(bParam)
+    doubleOperator1.input.setParam(aParam)
+    doubleOperator1.out.setParam(bParam)
 
     const doubleOperator2 = new DoubleFloatsOperator()
-    doubleOperator2.getInput('in').setParam(bParam)
-    doubleOperator2.getOutput('out').setParam(cParam)
+    doubleOperator2.input.setParam(bParam)
+    doubleOperator2.out.setParam(cParam)
 
     inAParam.setValue(2)
     aParam.setValue(2.5)
@@ -412,10 +379,10 @@ describe('Operator', () => {
 
     const multiOutputOperator = new MultiOutputOperator()
     const inBParam = new NumberParameter('inB', 3)
-    multiOutputOperator.getInput('in').setParam(inBParam)
-    multiOutputOperator.getOutput('out0').setParam(aParam)
-    multiOutputOperator.getOutput('out1').setParam(bParam)
-    multiOutputOperator.getOutput('out2').setParam(cParam)
+    multiOutputOperator.input.setParam(inBParam)
+    multiOutputOperator.out0.setParam(aParam)
+    multiOutputOperator.out1.setParam(bParam)
+    multiOutputOperator.out2.setParam(cParam)
 
     expect(aParam.getValue()).toBe(3)
     expect(bParam.getValue()).toBe(3)
@@ -466,7 +433,7 @@ describe('Operator', () => {
       outputs: [{ name: 'C', paramPath: ['Foo', 'MyParam'], paramBindIndex: 0 }],
     }
     addOperator.fromJSON(input, {
-      resolvePath: (path: string[], cb: (result: BaseItem) => void) => {
+      resolvePath: (path: string[], cb: (result: BaseItem | Parameter<any> | null) => void) => {
         cb(parameterOwner.resolvePath(path))
       },
     })

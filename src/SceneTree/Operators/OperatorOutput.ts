@@ -9,11 +9,11 @@ import { Operator } from './Operator'
 /** Class representing an operator output.
  * @extends EventEmitter
  */
-class OperatorOutput extends EventEmitter {
+abstract class OperatorOutput<T> extends EventEmitter {
   __name: string
   _mode: OperatorOutputMode
   _op: Operator | null = null
-  private _param?: Parameter<unknown> // TODO: (design) I added <unknown> as a type argument here and elsewhere
+  private _param?: Parameter<T>
   _paramBindIndex: number
   detached: boolean
 
@@ -75,7 +75,7 @@ class OperatorOutput extends EventEmitter {
    * The getParam method.
    * @return - The return value.
    */
-  getParam(): Parameter<unknown> | undefined {
+  getParam(): Parameter<T> | undefined {
     return this._param
   }
 
@@ -84,7 +84,7 @@ class OperatorOutput extends EventEmitter {
    * @param param - The param value.
    * @param index - The index to bind at in the Parameter.
    */
-  setParam(param?: Parameter<unknown>, index = -1): void {
+  setParam(param?: Parameter<T>, index = -1): void {
     if (this._param) {
       this._param.unbindOperatorOutput(this)
     }
@@ -126,7 +126,7 @@ class OperatorOutput extends EventEmitter {
    * The getValue method.
    * @return - The return value.
    */
-  getValue(): unknown {
+  getValue(): T {
     if (this._param) {
       return this._param.getValueFromOp(this._paramBindIndex)
     } else {
@@ -156,7 +156,7 @@ class OperatorOutput extends EventEmitter {
    * The setClean method.
    * @param value - The value param.
    */
-  setClean(value: unknown): void {
+  setClean(value: T): void {
     if (this._param) {
       this._param.setCleanFromOp(value, this._paramBindIndex)
     }
@@ -235,4 +235,28 @@ class OperatorOutput extends EventEmitter {
   }
 }
 
-export { OperatorOutput }
+import { Vec2, Vec3, Vec4, Color, Quat, Xfo, Mat3, Mat4 } from '../../Math'
+class BooleanOperatorOutput extends OperatorOutput<boolean> {}
+class NumberOperatorOutput extends OperatorOutput<number> {}
+class Vec2OperatorOutput extends OperatorOutput<Vec2> {}
+class Vec3OperatorOutput extends OperatorOutput<Vec3> {}
+class Vec4OperatorOutput extends OperatorOutput<Vec4> {}
+class ColorOperatorOutput extends OperatorOutput<Color> {}
+class QuatOperatorOutput extends OperatorOutput<Quat> {}
+class XfoOperatorOutput extends OperatorOutput<Xfo> {}
+class Mat3OperatorOutput extends OperatorOutput<Mat3> {}
+class Mat4OperatorOutput extends OperatorOutput<Mat4> {}
+
+export {
+  OperatorOutput,
+  BooleanOperatorOutput,
+  NumberOperatorOutput,
+  Vec2OperatorOutput,
+  Vec3OperatorOutput,
+  Vec4OperatorOutput,
+  ColorOperatorOutput,
+  QuatOperatorOutput,
+  XfoOperatorOutput,
+  Mat3OperatorOutput,
+  Mat4OperatorOutput,
+}
