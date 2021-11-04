@@ -27,8 +27,6 @@ class GLBaseViewport extends ParameterOwner {
   protected renderer: GLRenderer
   protected __renderer: GLRenderer
   protected __fbo: WebGLFramebuffer | null = null
-  protected __ongoingPointers: any[]
-  protected __backgroundColor: Color
   protected quad: GLMesh
   protected offscreenBuffer: GLTexture2D | null = null
   protected depthTexture: GLTexture2D | null = null
@@ -69,10 +67,6 @@ class GLBaseViewport extends ParameterOwner {
 
     this.addParameter(this.doubleClickTimeParam)
 
-    // Since there is not multi touch on `PointerEvent`, we need to store pointers pressed.
-    this.__ongoingPointers = []
-    this.__backgroundColor = new Color(0.3, 0.3, 0.3, 1)
-
     const gl = this.__renderer.gl
     this.__gl = gl
 
@@ -100,7 +94,7 @@ class GLBaseViewport extends ParameterOwner {
         height: 4,
       })
       // this.offscreenBufferFbo = new GLFbo(gl, this.offscreenBuffer, true)
-      // this.offscreenBufferFbo.setClearColor(this.__backgroundColor.asArray())
+      // this.offscreenBufferFbo.setClearColor(this.backgroundColorParam.value.asArray())
     }
 
     this.highlightedGeomsBuffer = new GLTexture2D(gl, {
@@ -115,45 +109,32 @@ class GLBaseViewport extends ParameterOwner {
 
     // //////////////////////////////////
     // Setup Camera Manipulator
-    const sceneSet = (scene: Scene) => {
-      const bgColorParam = this.backgroundColorParam
-      const processBGValue = () => {
-        const value = bgColorParam.value
-        if (value instanceof BaseImage) {
-          if (value instanceof VLHImage) {
-            this.__backgroundTexture = value
-            this.__backgroundGLTexture = new GLHDRImage(gl, value)
-          } else {
-            this.__backgroundTexture = value
-            this.__backgroundGLTexture = new GLTexture2D(gl, value)
-          }
-        } else if (value instanceof Color) {
-          if (this.__backgroundGLTexture) {
-            this.__backgroundGLTexture.destroy()
-            this.__backgroundGLTexture = null
-            this.__backgroundTexture = null
-          }
-          this.__backgroundColor = value
-
-          if (this.offscreenBufferFbo) {
-            this.offscreenBufferFbo.setClearColor(new Color(value.asArray()))
-          }
+    const processBGValue = () => {
+      const value = this.backgroundColorParam.value
+      if (value instanceof BaseImage) {
+        if (value instanceof VLHImage) {
+          this.__backgroundTexture = value
+          this.__backgroundGLTexture = new GLHDRImage(gl, value)
         } else {
-          console.warn('Invalid background:' + value)
+          this.__backgroundTexture = value
+          this.__backgroundGLTexture = new GLTexture2D(gl, value)
         }
-        this.emit('updated')
+      } else if (value instanceof Color) {
+        if (this.__backgroundGLTexture) {
+          this.__backgroundGLTexture.destroy()
+          this.__backgroundGLTexture = null
+          this.__backgroundTexture = null
+        }
+        if (this.offscreenBufferFbo) {
+          this.offscreenBufferFbo.setClearColor(new Color(value.asArray()))
+        }
+      } else {
+        console.warn('Invalid background:' + value)
       }
-      processBGValue()
-      bgColorParam!.on('valueChanged', processBGValue)
+      this.emit('updated')
     }
-    const scene = this.__renderer.getScene()
-    if (scene) {
-      sceneSet(scene)
-    } else {
-      this.__renderer.once('sceneSet', (event) => {
-        sceneSet((<SceneSetEvent>event).scene)
-      })
-    }
+    processBGValue()
+    this.backgroundColorParam!.on('valueChanged', processBGValue)
   }
 
   /**
@@ -295,7 +276,7 @@ class GLBaseViewport extends ParameterOwner {
       if (!renderstate.boundRendertarget) gl.bindFramebuffer(gl.FRAMEBUFFER, null)
     }
     gl.viewport(0, 0, this.__width, this.__height)
-    const bg = this.__backgroundColor.asArray()
+    const bg = this.backgroundColorParam.value.asArray()
     gl.clearColor(bg[0], bg[1], bg[2], bg[3])
     // Note: in Chrome's macOS the alpha channel causes strange
     // compositing issues. Here where we disable the alpha channel
@@ -552,15 +533,6 @@ class GLBaseViewport extends ParameterOwner {
    * @param event - The event that occurs.
    */
   onKeyUp(event: KeyboardEvent): void {}
-
-  /**
-   *
-   * @param pointerId
-   * @return - index result of the find.
-   */
-  _getOngoingPointerIndexById(pointerId: number): number {
-    return this.__ongoingPointers.findIndex((pointer) => pointer.pointerId === pointerId)
-  }
 }
 
 export { GLBaseViewport, FRAMEBUFFER }
