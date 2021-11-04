@@ -535,8 +535,8 @@ class CameraManipulator extends BaseTool {
       } else {
         this.__focusIntervalId = undefined
 
-        this.emit('movementFinished', {})
-        camera.emit('movementFinished', {})
+        this.emit('movementFinished')
+        camera.emit('movementFinished')
       }
     }
     applyMovement()
@@ -849,9 +849,9 @@ class CameraManipulator extends BaseTool {
       if (event.pointerType === POINTER_TYPES.mouse) {
         this.endDrag(event)
 
-        this.emit('movementFinished', {})
+        this.emit('movementFinished')
         const viewport = <GLViewport>event.viewport
-        viewport.getCamera().emit('movementFinished', {})
+        viewport.getCamera().emit('movementFinished')
       } else if (event.pointerType === POINTER_TYPES.touch) {
         const touchEvent = <TouchEvent>event
         const { changedTouches, touches } = touchEvent
@@ -934,8 +934,8 @@ class CameraManipulator extends BaseTool {
         this.__mouseWheelZoomId = window.setTimeout(applyMovement, 10)
       } else {
         this.__mouseWheelZoomId = -1
-        this.emit('movementFinished', {})
-        camera.emit('movementFinished', { event: 'onWheel' })
+        this.emit('movementFinished')
+        camera.emit('movementFinished')
       }
     }
     const applyViewScale = () => {
@@ -957,8 +957,8 @@ class CameraManipulator extends BaseTool {
         this.__mouseWheelZoomId = window.setTimeout(applyViewScale, 10)
       } else {
         this.__mouseWheelZoomId = -1
-        this.emit('movementFinished', {})
-        camera.emit('movementFinished', { event: 'onWheel' })
+        this.emit('movementFinished')
+        camera.emit('movementFinished')
       }
     }
 

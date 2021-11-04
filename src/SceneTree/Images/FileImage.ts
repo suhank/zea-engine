@@ -81,7 +81,7 @@ class FileImage extends BaseImage {
         this.width = this.__data.width
         this.height = this.__data.height
         this.loaded = true
-        this.emit('loaded', {})
+        this.emit('loaded')
         resolve()
       }
 

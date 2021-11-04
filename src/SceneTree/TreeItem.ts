@@ -286,14 +286,14 @@ class TreeItem extends BaseItem {
           this.emit('highlightChanged', { name: nextName, color: nextColor })
         } else {
           // The last highlight was removed, so emit an event saying we are no longer highlighted.
-          this.emit('highlightChanged', {})
+          this.emit('highlightChanged')
         }
       } else {
         // The removed highlight was not the current highlight, so no change needs to be shown.
         const id = this.__highlights.indexOf(name)
         this.__highlights.splice(id, 1)
         delete this.__highlightMapping[name]
-        this.emit('highlightChanged', {})
+        this.emit('highlightChanged')
       }
       if (propagateToChildren) {
         this.__childItems.forEach((childItem: any) => {
