@@ -11,6 +11,7 @@ import { MouseEvent } from '../../Utilities/Events/MouseEvent'
 import { WheelEvent } from '../../Utilities/Events/WheelEvent'
 import { Touch, TouchEvent } from '../../Utilities/Events/TouchEvent'
 import { KeyboardEvent } from '../../Utilities/Events/KeyboardEvent'
+import { BaseEvent } from '../../Utilities/BaseEvent'
 
 const MANIPULATION_MODES: { [key: string]: number } = {
   pan: 0,
@@ -118,24 +119,24 @@ class CameraManipulator extends BaseTool {
   protected __mouseWheelZoomId: number = -1
 
   /**
-   * @member __orbitRateParam - The rate at which mouse or touch interactions are translated camera orientation changes.
+   * @member orbitRateParam - The rate at which mouse or touch interactions are translated camera orientation changes.
    */
-  __orbitRateParam: NumberParameter = new NumberParameter('OrbitRate', SystemDesc.isMobileDevice ? 0.5 : 1)
+  orbitRateParam: NumberParameter = new NumberParameter('OrbitRate', SystemDesc.isMobileDevice ? 0.5 : 1)
 
   /**
-   * @member __dollySpeedParam - The rate at which the mouse button or touch interactions are translated camera dolly movement.
+   * @member dollySpeedParam - The rate at which the mouse button or touch interactions are translated camera dolly movement.
    */
-  __dollySpeedParam: NumberParameter = new NumberParameter('DollySpeed', 0.02)
+  dollySpeedParam: NumberParameter = new NumberParameter('DollySpeed', 0.02)
 
   /**
-   * @member __mouseWheelDollySpeedParam - The rate at which the mouse wheel interactions are translated camera dolly movement.
+   * @member mouseWheelDollySpeedParam - The rate at which the mouse wheel interactions are translated camera dolly movement.
    */
-  __mouseWheelDollySpeedParam: NumberParameter = new NumberParameter('MouseWheelDollySpeed', 0.1)
+  mouseWheelDollySpeedParam: NumberParameter = new NumberParameter('MouseWheelDollySpeed', 0.1)
 
   /**
-   * @member OrbitAroundCursor - TODO
+   * @member orbitAroundCursor - TODO
    */
-  OrbitAroundCursor: BooleanParameter = new BooleanParameter('OrbitAroundCursor', true)
+  orbitAroundCursor: BooleanParameter = new BooleanParameter('OrbitAroundCursor', true)
 
   /**
    * @member walkSpeedParam - TODO
@@ -170,16 +171,12 @@ class CameraManipulator extends BaseTool {
     this.__prevVelocityIntegrationTime = -1
     this.__ongoingTouches = {}
 
-    this.addParameter(this.__orbitRateParam)
-    this.addParameter(this.__dollySpeedParam)
-    this.addParameter(this.__mouseWheelDollySpeedParam)
-    this.addParameter(this.OrbitAroundCursor)
+    this.addParameter(this.orbitRateParam)
+    this.addParameter(this.dollySpeedParam)
+    this.addParameter(this.mouseWheelDollySpeedParam)
+    this.addParameter(this.orbitAroundCursor)
     this.addParameter(this.walkSpeedParam)
     this.addParameter(this.walkModeCollisionDetection)
-
-    this.addParameterDeprecationMapping('orbitRate', 'OrbitRate')
-    this.addParameterDeprecationMapping('dollySpeed', 'DollySpeed')
-    this.addParameterDeprecationMapping('mouseWheelDollySpeed', 'MouseWheelDollySpeed')
   }
 
   /**
@@ -228,7 +225,7 @@ class CameraManipulator extends BaseTool {
     const { viewport } = event
     const camera = viewport.getCamera()
 
-    const orbitRate = this.__orbitRateParam.value
+    const orbitRate = this.orbitRateParam.value
 
     const globalXfo = camera.globalXfoParam.value
 
@@ -255,7 +252,7 @@ class CameraManipulator extends BaseTool {
     const { viewport } = event
     const camera = viewport.getCamera()
 
-    const orbitRate = this.__orbitRateParam.value
+    const orbitRate = this.orbitRateParam.value
 
     const globalXfo = camera.globalXfoParam.value
     const cameraTargetOffset = globalXfo.ori.inverse().rotateVec3(globalXfo.tr.subtract(this.__orbitTarget))
@@ -284,7 +281,7 @@ class CameraManipulator extends BaseTool {
   tumbler(event: Record<string, any>, dragVec: Vec2) {
     const { viewport } = event
     const camera = viewport.getCamera()
-    const orbitRate = this.__orbitRateParam.value
+    const orbitRate = this.orbitRateParam.value
 
     const globalXfo = camera.globalXfoParam.value
     const xVec = globalXfo.ori.getXaxis()
@@ -316,7 +313,7 @@ class CameraManipulator extends BaseTool {
   trackball(event: Record<string, any>, dragVec: Vec2) {
     const { viewport } = event
     const camera = viewport.getCamera()
-    const orbitRate = this.__orbitRateParam.value
+    const orbitRate = this.orbitRateParam.value
 
     const globalXfo = camera.globalXfoParam.value
     const xVec = globalXfo.ori.getXaxis()
@@ -385,14 +382,14 @@ class CameraManipulator extends BaseTool {
     const focalDistance = camera.getFocalDistance()
 
     const applyMovement = () => {
-      const dollyDist = dragVec.y * this.__dollySpeedParam.value * focalDistance
+      const dollyDist = dragVec.y * this.dollySpeedParam.value * focalDistance
       const delta = new Xfo()
       delta.tr.set(0, 0, dollyDist)
       const globalXfo = camera.globalXfoParam.value
       camera.globalXfoParam.value = globalXfo.multiply(delta)
     }
     const applyViewScale = () => {
-      const dollyDist = dragVec.y * this.__dollySpeedParam.value
+      const dollyDist = dragVec.y * this.dollySpeedParam.value
       const viewHeight = camera.getFrustumHeight()
       const zoomDist = viewHeight * dollyDist
       camera.setFrustumHeight(viewHeight + zoomDist)
@@ -420,7 +417,7 @@ class CameraManipulator extends BaseTool {
     const { viewport } = event
     const camera = viewport.getCamera()
     const xfo = camera.globalXfoParam.value
-    const orbitAroundCursor = this.OrbitAroundCursor.value
+    const orbitAroundCursor = this.orbitAroundCursor.value
     if (event.intersectionData != undefined && orbitAroundCursor) {
       this.__orbitTarget = event.intersectionData.intersectionPos
       const vec = xfo.inverse().transformVec3(event.intersectionData.intersectionPos)
@@ -899,9 +896,10 @@ class CameraManipulator extends BaseTool {
    * @param event - The wheel event that occurs.
    */
   onWheel(event: WheelEvent) {
+    console.log(event)
     const viewport = <GLViewport>event.viewport
     const camera = viewport.getCamera()
-    const mouseWheelDollySpeed = this.__mouseWheelDollySpeedParam.value
+    const mouseWheelDollySpeed = this.mouseWheelDollySpeedParam.value
     const modulator = event.shiftKey ? 0.1 : 0.5
     const xfo = camera.globalXfoParam.value
 
@@ -920,7 +918,7 @@ class CameraManipulator extends BaseTool {
     // To normalize mouse wheel speed across vendors and OSs, it is recommended to simply convert scroll value to -1 or 1
     // See here: https://stackoverflow.com/questions/5527601/normalizing-mousewheel-speed-across-browsers
     const steps = 6
-    const direction = event.deltaY < 0 || event.wheelDelta > 0 || event.deltaY < 0 ? -1 : 1
+    const direction = event.deltaY < 0 ? -1 : 1
     const applyMovement = () => {
       const focalDistance = camera.getFocalDistance()
       const zoomDist = focalDistance * this.__mouseWheelMovementDist
