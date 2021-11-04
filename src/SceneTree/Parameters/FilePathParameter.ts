@@ -79,7 +79,7 @@ class FilePathParameter extends Parameter<string> {
 
     this.__value = value
 
-    this.emit('valueChanged', {})
+    this.emit('valueChanged')
   }
   // ////////////////////////////////////////
   // Persistence

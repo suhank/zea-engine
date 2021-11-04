@@ -107,7 +107,7 @@ class LDRVideo extends FileImage {
           this.height = this.videoElem.videoWidth
           this.loaded = true
           resourceLoader.incrementWorkDone(1)
-          this.emit('loaded', {})
+          this.emit('loaded')
           resolve(promise)
 
           let prevFrame = 0
@@ -120,7 +120,7 @@ class LDRVideo extends FileImage {
             // If so, then we emit and update, which will cause a redraw.
             const currentFrame = Math.floor(this.videoElem.currentTime * frameRate)
             if (prevFrame != currentFrame) {
-              this.emit('updated', {})
+              this.emit('updated')
               prevFrame = currentFrame
             }
             setTimeout(timerCallback, 20) // Sample at 50fps.

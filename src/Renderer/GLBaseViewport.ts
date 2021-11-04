@@ -8,6 +8,8 @@ import { GLMesh } from './Drawing/GLMesh'
 import { VLHImage } from '../SceneTree/Images/VLHImage'
 import { ResizedEvent } from '../Utilities/Events/ResizedEvent'
 import { SceneSetEvent } from '../Utilities/Events/SceneSetEvent'
+import { PointerEvent } from '../Utilities/Events/PointerEvent'
+import { KeyboardEvent } from '../Utilities/Events/KeyboardEvent'
 
 const FRAMEBUFFER = {
   MSAA_RENDERBUFFER: 0,
@@ -493,7 +495,7 @@ class GLBaseViewport extends ParameterOwner {
    *
    * @param event - The DOM event produced by a pointer
    */
-  onPointerDown(event: Record<string, any>): void {
+  onPointerDown(event: PointerEvent): void {
     console.warn('@GLBaseViewport#onPointerDown - Implement me!')
   }
 
@@ -502,7 +504,7 @@ class GLBaseViewport extends ParameterOwner {
    *
    * @param event - The DOM event produced by a pointer
    */
-  onPointerUp(event: Record<string, any>): void {
+  onPointerUp(event: PointerEvent): void {
     console.warn('@GLBaseViewport#onPointerUp - Implement me!')
   }
 
@@ -511,7 +513,7 @@ class GLBaseViewport extends ParameterOwner {
    *
    * @param event - The DOM event produced by a pointer
    */
-  onPointerMove(event: Record<string, any>): void {
+  onPointerMove(event: PointerEvent): void {
     console.warn('@GLBaseViewport#onPointerMove - Implement me!')
   }
 
@@ -520,7 +522,7 @@ class GLBaseViewport extends ParameterOwner {
    *
    * @param event - The DOM event produced by a pointer
    */
-  onPointerEnter(event: Record<string, any>): void {
+  onPointerEnter(event: PointerEvent): void {
     console.warn('@GLBaseViewport#onPointerEnter - Implement me!')
   }
 
@@ -529,7 +531,7 @@ class GLBaseViewport extends ParameterOwner {
    *
    * @param event - The DOM event produced by a pointer
    */
-  onPointerLeave(event: Record<string, any>): void {
+  onPointerLeave(event: PointerEvent): void {
     console.warn('@GLBaseViewport#onPointerLeave - Implement me!')
   }
 
@@ -537,19 +539,19 @@ class GLBaseViewport extends ParameterOwner {
    * Invoked when the mouse pointer is moved out of an element.
    * @param event - The event that occurs.
    */
-  onMouseLeave(event: Record<string, any>): void {}
+  onMouseLeave(event: PointerEvent): void {}
 
   /**
    * Invoked when the user is pressing a key on the keyboard.
    * @param event - The event that occurs.
    */
-  onKeyDown(event: Record<string, any>): void {}
+  onKeyDown(event: KeyboardEvent): void {}
 
   /**
    * Causes an event to occur  when the user releases a key on the keyboard.
    * @param event - The event that occurs.
    */
-  onKeyUp(event: Record<string, any>): void {}
+  onKeyUp(event: KeyboardEvent): void {}
 
   /**
    *

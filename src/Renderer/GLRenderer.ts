@@ -13,6 +13,7 @@ import { generateShaderGeomBinding, IGeomShaderBinding } from './Drawing/GeomSha
 import { VLHImage } from '../SceneTree/Images/VLHImage'
 import { EnvMapAssignedEvent } from '../Utilities/Events/EnvMapAssignedEvent'
 import { GLViewport } from './GLViewport'
+import { IntersectionData } from '../Utilities/IntersectionData'
 
 const ALL_PASSES = PassType.OPAQUE | PassType.TRANSPARENT | PassType.OVERLAY
 // TODO: move this fn somewhere
@@ -270,7 +271,7 @@ class GLRenderer extends GLBaseRenderer {
    * @param mask - The mask to filter our certain pass types. Can be PassType.OPAQUE | PassType.TRANSPARENT | PassType.OVERLAY
    * @return - The object containing the ray cast results.
    */
-  raycastWithRay(ray: Ray, dist: number, area = 0.01, mask = ALL_PASSES): RayCast | null {
+  raycastWithRay(ray: Ray, dist: number, area = 0.01, mask = ALL_PASSES): IntersectionData | null {
     const xfo = new Xfo()
     xfo.setLookAt(ray.start, ray.start.add(ray.dir), new Vec3(0, 0, 1))
     return this.raycast(xfo, ray, dist, area, mask)
@@ -286,7 +287,7 @@ class GLRenderer extends GLBaseRenderer {
    * @param mask - The mask to filter our certain pass types. Can be PassType.OPAQUE | PassType.TRANSPARENT | PassType.OVERLAY
    * @return - The object containing the ray cast results.
    */
-  raycastWithXfo(xfo: Xfo, dist: number, area = 0.01, mask = ALL_PASSES): RayCast | null {
+  raycastWithXfo(xfo: Xfo, dist: number, area = 0.01, mask = ALL_PASSES): IntersectionData | null {
     const ray = new Ray(xfo.tr, xfo.ori.getZaxis().negate())
     return this.raycast(xfo, ray, dist, area, mask)
   }
@@ -303,7 +304,7 @@ class GLRenderer extends GLBaseRenderer {
    * @param mask - The mask to filter our certain pass types. Can be PassType.OPAQUE | PassType.TRANSPARENT | PassType.OVERLAY
    * @return - The object containing the ray cast results.
    */
-  raycast(xfo: Xfo, ray: Ray, dist: number, area = 0.01, mask = ALL_PASSES): RayCast | null {
+  raycast(xfo: Xfo, ray: Ray, dist: number, area = 0.01, mask = ALL_PASSES): IntersectionData | null {
     const gl = this.__gl
 
     if (!this.__rayCastRenderTarget) {
@@ -381,7 +382,7 @@ class GLRenderer extends GLBaseRenderer {
       const intersectionPos = ray.start.add(ray.dir.scale(geomItemAndDist.dist))
 
       return {
-        ray,
+        pointerRay: ray,
         intersectionPos,
         geomItem: geomItemAndDist.geomItem,
         dist: geomItemAndDist.dist,
@@ -403,7 +404,7 @@ class GLRenderer extends GLBaseRenderer {
    * @param mask - The mask to filter our certain pass types. Can be PassType.OPAQUE | PassType.TRANSPARENT | PassType.OVERLAY
    * @return - The object containing the ray cast results.
    */
-  raycastCluster(xfo: Xfo, ray: Ray, dist: number, area = 0.01, mask = ALL_PASSES): RayCast[] {
+  raycastCluster(xfo: Xfo, ray: Ray, dist: number, area = 0.01, mask = ALL_PASSES): IntersectionData[] {
     const gl = this.__gl
 
     if (!this.__rayCastRenderTarget) {

@@ -675,7 +675,7 @@ class Mesh extends BaseGeom {
     // if (debugAttrValues)
     //     maxIndex = Math.max(...indices);
 
-    const attrBuffers: Record<string, attrBuffer> = {}
+    const attrBuffers: Record<string, AttrBuffer> = {}
     for (const [attrName, attr] of this.__vertexAttributes) {
       let values
       if (splitCount == 0) values = attr.asArray()
@@ -943,7 +943,7 @@ class Mesh extends BaseGeom {
     }
 
     // this.computeVertexNormals();
-    this.emit('geomDataChanged', {})
+    this.emit('geomDataChanged')
   }
 
   /**

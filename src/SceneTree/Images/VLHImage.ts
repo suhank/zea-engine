@@ -67,9 +67,9 @@ class VLHImage extends BaseImage {
         }
         if (!this.loaded) {
           this.loaded = true
-          this.emit('loaded', {})
+          this.emit('loaded')
         } else {
-          this.emit('updated', {})
+          this.emit('updated')
         }
         resolve()
       }

@@ -83,13 +83,13 @@
           renderer.once('CullingUpdated', () => {
             postMessage(`done-${data}`)
           })
-          camera.emit('movementFinished', {})
+          camera.emit('movementFinished')
         } else if (data === 'variant-02') {
           camera.setPositionAndTarget(new Vec3(20, 20, 10), new Vec3(0, 0, 0))
           renderer.once('CullingUpdated', () => {
             postMessage(`done-${data}`)
           })
-          camera.emit('movementFinished', {})
+          camera.emit('movementFinished')
         }
       }
 

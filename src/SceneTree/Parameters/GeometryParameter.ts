@@ -42,7 +42,7 @@ class GeometryParameter extends Parameter<BaseGeom | undefined> {
         })
       }
 
-      this.emit('valueChanged', {})
+      this.emit('valueChanged')
     }
   }
 

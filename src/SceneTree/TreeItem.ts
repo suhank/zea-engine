@@ -12,6 +12,10 @@ import { BoundingBoxParameter } from './Parameters/BoundingBoxParameter'
 import { BinReader } from './BinReader'
 import { Operator } from './Operators'
 import { Parameter } from './Parameters'
+import { PointerEvent } from '../Utilities/Events/PointerEvent'
+import { KeyboardEvent } from '../Utilities/Events/KeyboardEvent'
+import { MouseEvent } from '../Utilities/Events/MouseEvent'
+import { WheelEvent } from '../Utilities/Events/WheelEvent'
 
 /**
  * Class representing an Item in the scene tree with hierarchy capabilities (has children).
@@ -282,14 +286,14 @@ class TreeItem extends BaseItem {
           this.emit('highlightChanged', { name: nextName, color: nextColor })
         } else {
           // The last highlight was removed, so emit an event saying we are no longer highlighted.
-          this.emit('highlightChanged', {})
+          this.emit('highlightChanged')
         }
       } else {
         // The removed highlight was not the current highlight, so no change needs to be shown.
         const id = this.__highlights.indexOf(name)
         this.__highlights.splice(id, 1)
         delete this.__highlightMapping[name]
-        this.emit('highlightChanged', {})
+        this.emit('highlightChanged')
       }
       if (propagateToChildren) {
         this.__childItems.forEach((childItem: any) => {
@@ -755,7 +759,7 @@ class TreeItem extends BaseItem {
    *
    * @param event - The event value
    */
-  onPointerDown(event: any) {
+  onPointerDown(event: PointerEvent) {
     this.emit('pointerDown', event)
     const owner_TreeItem = <TreeItem>this.__ownerItem
     if (event.propagating && owner_TreeItem) {
@@ -768,7 +772,7 @@ class TreeItem extends BaseItem {
    *
    * @param event - The mouse event that occurs.
    */
-  onPointerUp(event: any) {
+  onPointerUp(event: PointerEvent) {
     this.emit('pointerUp', event)
     const owner_TreeItem = <TreeItem>this.__ownerItem
     if (event.propagating && owner_TreeItem) {
@@ -781,7 +785,7 @@ class TreeItem extends BaseItem {
    *
    * @param event - The mouse event that occurs.
    */
-  onPointerMove(event: any) {
+  onPointerMove(event: PointerEvent) {
     this.emit('pointerMove', event)
     const owner_TreeItem = <TreeItem>this.__ownerItem
     if (event.propagating && owner_TreeItem) {
@@ -794,7 +798,7 @@ class TreeItem extends BaseItem {
    *
    * @param event - The mouse event that occurs.
    */
-  onPointerEnter(event: any) {
+  onPointerEnter(event: PointerEvent) {
     this.emit('pointerEnter', event)
     const owner_TreeItem = <TreeItem>this.__ownerItem
     if (event.propagating && owner_TreeItem) {
@@ -807,7 +811,7 @@ class TreeItem extends BaseItem {
    *
    * @param event - The mouse event that occurs.
    */
-  onPointerLeave(event: any) {
+  onPointerLeave(event: PointerEvent) {
     this.emit('pointerLeave', event)
     const owner_TreeItem = <TreeItem>this.__ownerItem
     if (event.propagating && owner_TreeItem) {
@@ -820,7 +824,7 @@ class TreeItem extends BaseItem {
    *
    * @param event - The wheel event that occurs.
    */
-  onWheel(event: any) {
+  onWheel(event: WheelEvent) {
     const owner_TreeItem = <TreeItem>this.__ownerItem
     if (event.propagating && owner_TreeItem) {
       owner_TreeItem.onWheel(event)

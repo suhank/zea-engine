@@ -9,6 +9,7 @@ import { generateShaderGeomBinding, IGeomShaderBinding } from '../Drawing/index'
 import { MathFunctions } from '../../Utilities/MathFunctions'
 import { GLBaseRenderer } from '../GLBaseRenderer'
 import { GLShader } from '../GLShader'
+import { GeomItemAndDist } from '../../Utilities/IntersectionData'
 
 const pixelsPerItem = 7 // The number of pixels per draw item.
 
@@ -603,7 +604,7 @@ class GLBillboardsPass extends GLPass {
    * @param geomData - The geomData value.
    * @return - The return value.
    */
-  getGeomItemAndDist(geomData: Float32Array | Uint8Array): Record<string, any> | undefined {
+  getGeomItemAndDist(geomData: Float32Array | Uint8Array): GeomItemAndDist | undefined {
     let itemId
     let dist
     if (geomData instanceof Float32Array) {

@@ -6,11 +6,13 @@ import { VRHead } from './VRHead'
 import { VRController } from './VRController'
 import { VRViewManipulator } from './VRViewManipulator'
 import { resourceLoader } from '../../SceneTree/resourceLoader'
-import { POINTER_TYPES } from '../../Utilities/EnumUtils'
+
 // import { XRWebGLLayer } from 'webxr'
 import { VRViewChangedEvent } from '../../Utilities/Events/VRViewChangedEvent'
 import { ControllerAddedEvent } from '../../Utilities/Events/ControllerAddedEvent'
 import { StateChangedEvent } from '../../Utilities/Events/StateChangedEvent'
+import { XRControllerEvent } from '../../Utilities/Events/XRControllerEvent'
+import { XRPoseEvent } from '../../Utilities/Events/XRPoseEvent'
 
 /** This Viewport class is used for rendering stereoscopic views to VR controllers using the WebXR api.
  *  When the GLRenderer class detects a valid WebXF capable device is plugged in, this class is automatically
@@ -31,9 +33,9 @@ class VRViewport extends GLBaseViewport {
   protected __stageTreeItem: TreeItem
   // __renderer: any // GLBaseRenderer
   protected __vrhead: VRHead
-  protected controllersMap: Record<string, any>
-  protected controllers: any[]
-  protected controllerPointerDownTime: any[]
+  protected controllersMap: Record<string, VRController>
+  protected controllers: VRController[]
+  protected controllerPointerDownTime: number[]
   protected spectatorMode: boolean
   protected tick: number
 
@@ -106,6 +108,10 @@ class VRViewport extends GLBaseViewport {
     this.setManipulator(new VRViewManipulator(this))
   }
 
+  getRenderer() {
+    return this.renderer
+  }
+
   /**
    * The getAsset method.
    * @return - The return value.
@@ -154,7 +160,7 @@ class VRViewport extends GLBaseViewport {
    * The getControllers method.
    * @return - The return value.
    */
-  getControllers() {
+  getControllers(): VRController[] {
     return this.controllers
   }
 
@@ -292,7 +298,7 @@ class VRViewport extends GLBaseViewport {
             requiredFeatures: ['local-floor'],
             optionalFeatures: ['bounded-floor'],
           })
-          .then((session: any) => {
+          .then((session) => {
             this.__renderer.__xrViewportPresenting = true
 
             const viewport = this.__renderer.getViewport()
@@ -321,20 +327,14 @@ class VRViewport extends GLBaseViewport {
               const controller = this.controllersMap[ev.inputSource.handedness]
               if (controller) {
                 controller.buttonPressed = true
-                this.onPointerDown({
-                  button: 1,
-                  controller,
-                })
+                this.onPointerDown(new XRControllerEvent(1, controller))
               }
             }
             const onSelectEnd = (ev: any) => {
               const controller = this.controllersMap[ev.inputSource.handedness]
               if (controller) {
                 controller.buttonPressed = false
-                this.onPointerUp({
-                  button: 1,
-                  controller,
-                })
+                this.onPointerUp(new XRControllerEvent(1, controller))
               }
             }
 
@@ -462,7 +462,7 @@ class VRViewport extends GLBaseViewport {
    * @param xrFrame - The xrFrame value.
    * @param event - The pose changed event object that will be emitted for observers such as collab.
    */
-  updateControllers(xrFrame: any, event: Record<string, any>) {
+  updateControllers(xrFrame: any, event: XRPoseEvent) {
     const inputSources = this.session.inputSources
     for (let i = 0; i < inputSources.length; i++) {
       const inputSource = inputSources[i]
@@ -559,8 +559,7 @@ class VRViewport extends GLBaseViewport {
 
     // ///////////////////////
     // Prepare the pointerMove event.
-    const event = { controllers: this.controllers, viewXfo, propagating: true }
-    this.preparePointerEvent(event)
+    const event = new XRPoseEvent(this, viewXfo, this.controllers)
     this.updateControllers(xrFrame, event)
     if (this.capturedElement && event.propagating) {
       this.capturedElement.onPointerMove(event)
@@ -572,7 +571,7 @@ class VRViewport extends GLBaseViewport {
     // ///////////////////////
     // Emit a signal for the shared session.
 
-    const viewChangedEvent = new VRViewChangedEvent('VR', renderstate.viewXfo)
+    const viewChangedEvent = new VRViewChangedEvent(renderstate.viewXfo)
     // TODO: better solution than setting members individually?
     viewChangedEvent.hmd = this.__hmd
     viewChangedEvent.controllers = this.controllers
@@ -597,40 +596,11 @@ class VRViewport extends GLBaseViewport {
   }
 
   /**
-   * Prepares pointer event by adding properties of the engine to it.
-   *
-   * @param event - The event that occurs in the canvas
-   * @private
-   */
-  preparePointerEvent(event: Record<string, any>) {
-    event.viewport = this
-    event.propagating = true
-    event.pointerType = POINTER_TYPES.xr
-
-    event.stopPropagation = () => {
-      event.propagating = false
-    }
-
-    event.setCapture = (item: any) => {
-      this.capturedItem = item
-    }
-
-    event.getCapture = (item: any) => {
-      return this.capturedItem
-    }
-
-    event.releaseCapture = () => {
-      this.capturedItem = null
-    }
-  }
-
-  /**
    * Handler of the `pointerdown` event fired when the pointer device is initially pressed.
    *
    * @param event - The DOM event produced by a pointer
    */
-  onPointerDown(event: Record<string, any>) {
-    this.preparePointerEvent(event)
+  onPointerDown(event: XRControllerEvent) {
     event.intersectionData = event.controller.getGeomItemAtTip()
 
     // //////////////////////////////////////
@@ -675,8 +645,7 @@ class VRViewport extends GLBaseViewport {
    *
    * @param event - The event that occurs.
    */
-  onPointerUp(event: Record<string, any>) {
-    this.preparePointerEvent(event)
+  onPointerUp(event: XRControllerEvent) {
     this.controllerPointerDownTime[event.controller.id] = 0
 
     if (this.capturedItem) {

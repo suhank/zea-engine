@@ -97,7 +97,7 @@ class TreeItemParameter extends Parameter<TreeItem | undefined> {
         })
       }
 
-      this.emit('valueChanged', {})
+      this.emit('valueChanged')
     }
   }
 

@@ -1,6 +1,7 @@
 import { ParameterOwner } from '../../SceneTree/ParameterOwner'
 import { BooleanParameter } from '../../SceneTree/Parameters/index'
 import { TreeItem } from '../../SceneTree/TreeItem'
+import { GeomItemAndDist } from '../../Utilities/IntersectionData'
 import { GLBaseRenderer } from '../GLBaseRenderer'
 
 const PassType = {
@@ -141,7 +142,7 @@ abstract class GLPass extends ParameterOwner {
    * The getGeomItemAndDist method.
    * @param geomData - The geomData value.
    */
-  getGeomItemAndDist(geomData: Float32Array | Uint8Array): Record<string, any> | undefined {
+  getGeomItemAndDist(geomData: Float32Array | Uint8Array): GeomItemAndDist | undefined {
     throw Error('getGeomItemAndDist not implemented on GLPass')
   }
 }

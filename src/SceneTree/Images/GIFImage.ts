@@ -250,7 +250,7 @@ class GIFImage extends FileImage {
       // Playback
       this.loaded = true
 
-      this.emit('loaded', {})
+      this.emit('loaded')
     })
     return this.__resourcePromise
   }
