@@ -16,6 +16,7 @@ import { TouchEvent } from '../Utilities/Events/TouchEvent'
 import { MouseEvent } from '../Utilities/Events/MouseEvent'
 import { UIEvent } from '../Utilities/Events/UIEvent'
 
+let activeViewport: GLViewport = null
 /**
  * Class representing a GL viewport.
  *
@@ -38,8 +39,6 @@ import { UIEvent } from '../Utilities/Events/UIEvent'
  * @extends GLBaseViewport
  */
 class GLViewport extends GLBaseViewport {
-  protected activeViewport: any
-
   protected __name: string
   protected __projectionMatrix: Mat4
   protected __frustumDim: Vec2
@@ -48,7 +47,7 @@ class GLViewport extends GLBaseViewport {
   protected __bl: Vec2
   protected __tr: Vec2
   protected __prevDownTime: number
-  protected __geomDataBuffer: any
+  protected __geomDataBuffer: GLTexture2D
   protected __geomDataBufferSizeFactor: number
   protected __geomDataBufferFbo: GLFbo
   protected debugGeomShader: boolean
@@ -66,8 +65,7 @@ class GLViewport extends GLBaseViewport {
   protected __screenPos: Vec2 | null = null
   protected __intersectionData: IntersectionData
 
-  protected capturedItem: any
-  protected pointerOverItem: any
+  protected pointerOverItem: TreeItem
 
   /**
    * Create a GL viewport.
@@ -274,16 +272,6 @@ class GLViewport extends GLBaseViewport {
    */
   getViewMatrix() {
     return this.__viewMat
-  }
-
-  /**
-   * The setActive method.
-   * @param state - The state value.
-   */
-  setActive(state: boolean) {
-    if (state) this.activeViewport = this
-    // TODO: check -- before this was 'activeViewport = this), not this.activiewport
-    else this.activeViewport = undefined
   }
 
   /**
@@ -557,21 +545,6 @@ class GLViewport extends GLBaseViewport {
   }
 
   /**
-   * The getCapture method.
-   * @return - The return value.
-   */
-  getCapture() {
-    return this.capturedItem
-  }
-
-  /**
-   * The releaseCapture method.
-   */
-  releaseCapture() {
-    this.capturedItem = null
-  }
-
-  /**
    * Prepares pointer event by adding properties of the engine to it.
    *
    * @param event - The event that occurs in the canvas
@@ -623,18 +596,18 @@ class GLViewport extends GLBaseViewport {
 
     // //////////////////////////////////////
 
-    if (this.capturedItem) {
-      this.capturedItem.onPointerDown(event)
+    if (event.getCapture()) {
+      event.getCapture().onPointerDown(event)
       return
     }
 
     if (event.intersectionData != undefined) {
       event.intersectionData.geomItem.onPointerDown(event)
-      if (!event.propagating || this.capturedItem) return
+      if (!event.propagating || event.getCapture()) return
     }
 
     this.emit('pointerDown', event)
-    if (!event.propagating || this.capturedItem) return
+    if (!event.propagating || event.getCapture()) return
 
     if (this.manipulator) {
       this.manipulator.onPointerDown(event)
@@ -666,8 +639,8 @@ class GLViewport extends GLBaseViewport {
       }
     }
 
-    if (this.capturedItem) {
-      this.capturedItem.onPointerUp(event)
+    if (event.getCapture()) {
+      event.getCapture().onPointerUp(event)
       if (!event.propagating) return
     }
 
@@ -713,8 +686,8 @@ class GLViewport extends GLBaseViewport {
 
     // Note: the Captured item might be a tool, which might not need to have
     // the geom under the pointer. e.g. the CameraManipulator during a drag.
-    if (this.capturedItem) {
-      this.capturedItem.onPointerMove(event)
+    if (event.getCapture()) {
+      event.getCapture().onPointerMove(event)
       if (!event.propagating) return
     }
 
@@ -737,7 +710,7 @@ class GLViewport extends GLBaseViewport {
       }
 
       event.intersectionData.geomItem.onPointerMove(event)
-      if (!event.propagating || this.capturedItem) return
+      if (!event.propagating || event.getCapture()) return
     } else if (this.pointerOverItem) {
       event.leftGeometry = this.pointerOverItem
       this.pointerOverItem.onPointerLeave(event)
@@ -845,8 +818,8 @@ class GLViewport extends GLBaseViewport {
   onTouchCancel(event: TouchEvent) {
     this.prepareUIEvent(event)
 
-    if (this.capturedItem) {
-      this.capturedItem.onTouchCancel(event)
+    if (event.getCapture()) {
+      event.getCapture().onTouchCancel(event)
       return
     }
 

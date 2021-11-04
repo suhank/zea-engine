@@ -1,4 +1,4 @@
-import { BaseItem, GLBaseViewport, GLViewport, Ray, TreeItem, Vec2, Vec3 } from '../..'
+import { BaseItem, BaseTool, GLBaseViewport, GLViewport, Ray, TreeItem, Vec2, Vec3 } from '../..'
 import { BaseEvent } from '../BaseEvent'
 import { IntersectionData } from '../IntersectionData'
 
@@ -8,9 +8,10 @@ const POINTER_TYPES = {
   xr: 'xr',
 }
 
+let capturedItem: TreeItem | BaseTool = null
+
 class PointerEvent extends BaseEvent {
   pointerType: string
-  capturedItem: BaseItem
   viewport: GLBaseViewport
   propagating = true
 
@@ -26,16 +27,16 @@ class PointerEvent extends BaseEvent {
     this.propagating = false
   }
 
-  setCapture(item: BaseItem) {
-    this.capturedItem = item
+  setCapture(item: TreeItem | BaseTool) {
+    capturedItem = item
   }
 
   getCapture() {
-    return this.capturedItem
+    return capturedItem
   }
 
   releaseCapture() {
-    this.capturedItem = null
+    capturedItem = null
   }
 }
 export { PointerEvent, POINTER_TYPES }
