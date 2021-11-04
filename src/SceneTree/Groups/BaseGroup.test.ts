@@ -1,6 +1,6 @@
 import { BaseGroup } from './BaseGroup'
 import { TreeItem } from '../TreeItem'
-import { ItemSetParameter } from '../Parameters'
+import { PointerEvent } from '../../Utilities/Events/PointerEvent'
 
 describe('BaseGroup', () => {
   it('is visible by default.', () => {
@@ -31,10 +31,7 @@ describe('BaseGroup', () => {
     const mockFn = jest.fn()
     group.on('pointerDown', mockFn)
 
-    const event = {
-      detail: 'foo',
-      propagating: true,
-    }
+    const event = new PointerEvent('mouse')
     child.onPointerDown(event)
 
     expect(mockFn).toHaveBeenCalledWith(event)

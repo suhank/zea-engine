@@ -733,11 +733,11 @@ class TreeItem extends BaseItem {
    * @param callback - The callback value.
    * @param includeThis - Fire the callback for this item.
    */
-  traverse(callback: (...args: any[]) => unknown, includeThis = true): void {
+  traverse(callback: (treeItem: TreeItem, depth: number) => unknown, includeThis = true): void {
     const __c = (treeItem: TreeItem, depth: number) => {
       const children = treeItem.getChildren()
       for (const childItem of children) {
-        if (childItem) __t(childItem, depth + 1)
+        if (childItem && childItem instanceof TreeItem) __t(childItem, depth + 1)
       }
     }
     const __t = (treeItem: TreeItem, depth: number) => {

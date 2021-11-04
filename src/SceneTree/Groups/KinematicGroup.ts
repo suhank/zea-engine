@@ -5,7 +5,6 @@ import { XfoParameter, MultiChoiceParameter } from '../Parameters/index'
 import { BaseGroup } from './BaseGroup'
 import { TreeItem } from '../TreeItem'
 import { GroupTransformXfoOperator, GroupMemberXfoOperator } from '../Operators/GroupMemberXfoOperator'
-import { BaseItem } from '../BaseItem'
 
 const GROUP_XFO_MODES = {
   disabled: 0,
@@ -190,7 +189,7 @@ class KinematicGroup extends BaseGroup {
    * @param index - The index value.
    * @private
    */
-  bindItem(item: BaseItem, index: number) {
+  bindItem(item: TreeItem, index: number) {
     if (!(item instanceof TreeItem)) return
 
     // ///////////////////////////////
@@ -221,7 +220,7 @@ class KinematicGroup extends BaseGroup {
    * @param index - The index value.
    * @private
    */
-  unbindItem(item: BaseItem, index: number) {
+  unbindItem(item: TreeItem, index: number) {
     super.unbindItem(<TreeItem>item, index)
     if (!(item instanceof TreeItem)) return
 
@@ -243,7 +242,7 @@ class KinematicGroup extends BaseGroup {
    * @param item - The item value.
    * @param emit - The emit value.
    */
-  addItem(item: BaseItem, emit = true) {
+  addItem(item: TreeItem, emit = true) {
     super.addItem(<TreeItem>item, emit)
     if (emit) {
       this.calcGroupXfo()
@@ -256,7 +255,7 @@ class KinematicGroup extends BaseGroup {
    * @param item - The item value.
    * @param emit - The emit value.
    */
-  removeItem(item: BaseItem, emit = true) {
+  removeItem(item: TreeItem, emit = true) {
     super.removeItem(<TreeItem>item, emit)
     if (emit) {
       this.calcGroupXfo()
@@ -266,9 +265,9 @@ class KinematicGroup extends BaseGroup {
   /**
    * Sets an entire new array of items to the BaseGroup replacing any previous items.
    *
-   * @param items - List of `BaseItem` you want to add to the group
+   * @param items - List of `TreeItem` you want to add to the group
    */
-  setItems(items: Set<BaseItem>) {
+  setItems(items: Set<TreeItem>) {
     super.setItems(items) // TODO: originally: super.setItems(emit) -- should emit be done here?
     this.calcGroupXfo()
   }

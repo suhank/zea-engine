@@ -4,7 +4,6 @@
 /* eslint-disable no-unused-vars */
 import { ItemSetParameter, ItemEvent } from '../Parameters/index'
 import { TreeItem } from '../TreeItem'
-import { BaseItem } from '../../SceneTree/BaseItem'
 import { PointerEvent } from '../../Utilities/Events/PointerEvent'
 
 /**
@@ -165,20 +164,20 @@ class BaseGroup extends TreeItem {
   }
 
   /**
-   * Returns the list of `BaseItem` objects owned by the group.
+   * Returns the list of `TreeItem` objects owned by the group.
    *
    * @return - The return value.
    */
-  getItems(): Set<BaseItem> | undefined {
+  getItems(): Set<TreeItem> | undefined {
     return this.itemsParam.value
   }
 
   /**
    * Sets an entire new array of items to the BaseGroup replacing any previous items.
    *
-   * @param items - List of `BaseItem` you want to add to the group
+   * @param items - List of `TreeItem` you want to add to the group
    */
-  setItems(items: Set<BaseItem>): void {
+  setItems(items: Set<TreeItem>): void {
     this.clearItems(false)
     this.itemsParam.setItems(items)
   }
