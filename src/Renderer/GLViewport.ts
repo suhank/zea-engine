@@ -8,7 +8,8 @@ import { CameraManipulator } from '../SceneTree/index'
 import { GLRenderer } from './GLRenderer'
 import { ResizedEvent } from '../Utilities/Events/ResizedEvent'
 import { ViewChangedEvent } from '../Utilities/Events/ViewChangedEvent'
-import { IntersectionData, POINTER_TYPES } from '../Utilities/Events/PointerEvent'
+import { POINTER_TYPES } from '../Utilities/Events/PointerEvent'
+import { IntersectionData } from '../Utilities/IntersectionData'
 import { KeyboardEvent } from '../Utilities/Events/KeyboardEvent'
 import { WheelEvent } from '../Utilities/Events/WheelEvent'
 import { TouchEvent } from '../Utilities/Events/TouchEvent'
@@ -588,7 +589,6 @@ class GLViewport extends GLBaseViewport {
   onPointerDown(event: UIEvent) {
     this.prepareUIEvent(event)
 
-    const uiEvent = <UIEvent>event
     if (event.pointerType === POINTER_TYPES.mouse) {
       const mouseEvent = <MouseEvent>event
       mouseEvent.pointerPos = this.__getPointerPos(mouseEvent.rendererX, mouseEvent.rendererY)

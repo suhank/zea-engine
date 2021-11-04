@@ -1,7 +1,7 @@
 import { SystemDesc } from '../../SystemDesc'
 import { Vec3, Xfo, Mat4 } from '../../Math/index'
 import { TreeItem } from '../../SceneTree/index'
-import { IntersectionData } from '../../Utilities/Events/PointerEvent'
+import { IntersectionData } from '../../Utilities/IntersectionData'
 import { VRViewport } from '.'
 import { XRPoseEvent } from '../../Utilities/Events/XRPoseEvent'
 

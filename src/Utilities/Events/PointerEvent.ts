@@ -38,4 +38,4 @@ class PointerEvent extends BaseEvent {
     this.capturedItem = null
   }
 }
-export { PointerEvent, IntersectionData, POINTER_TYPES }
+export { PointerEvent, POINTER_TYPES }

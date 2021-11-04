@@ -13,7 +13,7 @@ import { generateShaderGeomBinding, IGeomShaderBinding } from './Drawing/GeomSha
 import { VLHImage } from '../SceneTree/Images/VLHImage'
 import { EnvMapAssignedEvent } from '../Utilities/Events/EnvMapAssignedEvent'
 import { GLViewport } from './GLViewport'
-import { IntersectionData } from '../Utilities/Events/PointerEvent'
+import { IntersectionData } from '../Utilities/IntersectionData'
 
 const ALL_PASSES = PassType.OPAQUE | PassType.TRANSPARENT | PassType.OVERLAY
 // TODO: move this fn somewhere
