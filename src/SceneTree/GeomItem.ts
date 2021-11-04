@@ -12,6 +12,7 @@ import { Material } from './Material'
 import { BinReader } from './BinReader'
 import { Vec3Attribute } from './Geometry/Vec3Attribute'
 import { AssetItem } from '.'
+import { RangeLoadedEvent } from '../Utilities/Events/RangeLoadedEvent'
 
 let calculatePreciseBoundingBoxes = false
 
@@ -294,7 +295,7 @@ class GeomItem extends BaseGeomItem {
       this.assetItem = src.assetItem
       this.geomIndex = src.geomIndex
       this.geomBBox = src.geomBBox
-      const onGeomLoaded = (event: any) => {
+      const onGeomLoaded = (event: RangeLoadedEvent) => {
         const { range } = event
         if (this.geomIndex >= range[0] && this.geomIndex < range[1]) {
           const geom = geomLibrary.getGeom(this.geomIndex)

@@ -17,7 +17,8 @@ const workerParsing = true
 
 import { StreamFileParsedEvent } from '../Utilities/Events/StreamFileParsedEvent'
 import { RangeLoadedEvent } from '../Utilities/Events/RangeLoadedEvent'
-import { BaseGeom } from '.'
+import { BaseGeom } from './Geometry/BaseGeom'
+import { AssetLoadContext } from './AssetLoadContext'
 
 const numCores = SystemDesc.hardwareConcurrency - 1 // always leave one main thread code spare.
 
@@ -80,8 +81,8 @@ class GeomLibrary extends EventEmitter {
   protected __streamInfos: Record<string, StreamInfo>
   protected __genBuffersOpts: Record<string, any>
   protected loadCount: number
-  protected queue: any
-  protected loadContext: Record<string, any> = {}
+  protected queue: any[]
+  protected loadContext?: AssetLoadContext
   protected __numGeoms: number = -1
   protected geoms: BaseGeom[] = []
   protected basePath: string = ''
@@ -143,7 +144,7 @@ class GeomLibrary extends EventEmitter {
       resourceLoader.loadFile('archive', geomFileUrl).then((entries: any) => {
         const geomsData = entries[Object.keys(entries)[0]]
 
-        const streamFileParsedListenerID = this.on('streamFileParsed', (event: any) => {
+        const streamFileParsedListenerID = this.on('streamFileParsed', (event: StreamFileParsedEvent) => {
           if (event.geomFileID == geomFileID) {
             resourceLoader.incrementWorkDone(1)
             this.removeListenerById('streamFileParsed', streamFileParsedListenerID)
@@ -170,7 +171,7 @@ class GeomLibrary extends EventEmitter {
    * @param basePath - The base path of the file. (this is theURL of the zcad file without its extension.)
    * @param context - The value param.
    */
-  loadGeomFilesStream(geomLibraryJSON: Record<string, any>, basePath: string, context: Record<string, any>) {
+  loadGeomFilesStream(geomLibraryJSON: Record<string, any>, basePath: string, context: AssetLoadContext) {
     const numGeomFiles = geomLibraryJSON.numGeomsPerFile.length
     resourceLoader.incrementWorkload(numGeomFiles)
 
@@ -196,7 +197,7 @@ class GeomLibrary extends EventEmitter {
    * The setNumGeoms method.
    * @param expectedNumGeoms - The expectedNumGeoms value.
    */
-  setNumGeoms(expectedNumGeoms: any) {
+  setNumGeoms(expectedNumGeoms: number) {
     this.__numGeoms = expectedNumGeoms
   }
 

@@ -7,7 +7,7 @@ import { Registry } from '../Registry'
 import { GeomItem } from './GeomItem'
 import { BinReader } from './BinReader'
 import { AssetLoadContext } from './AssetLoadContext'
-import { Parameter } from '.'
+import { BaseItem, Parameter } from '.'
 
 /**
  * Given a units string, load returns a factor relative to meters
@@ -270,7 +270,7 @@ class AssetItem extends TreeItem {
     context.assetItem = this
 
     const postLoadCallbacks: Array<() => void> = [] // Post load callbacks.
-    context.resolvePath = (path: string[], cb: (TreeItem|Parameter<any>) => void) => {
+    context.resolvePath = (path: string[], cb: (value: BaseItem | Parameter<any>) => void) => {
       // Note: Why not return a Promise here?
       // Promise evaluation is always async, so
       // all promises will be resolved after the current call stack

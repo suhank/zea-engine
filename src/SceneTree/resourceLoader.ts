@@ -90,7 +90,7 @@ class ResourceLoader extends EventEmitter {
    * @param url - The url of the data to load.
    * @return - The promise value.
    */
-  loadFile(type: any, url: string): Promise<any> {
+  loadFile(type: string, url: string): Promise<any> {
     const plugin = this.plugins[type]
 
     if (!plugin) {
