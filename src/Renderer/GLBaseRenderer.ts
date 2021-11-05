@@ -215,6 +215,7 @@ class GLBaseRenderer extends ParameterOwner {
     vp.on('viewChanged', viewChanged)
 
     this.__viewports.push(vp)
+    this.__activeViewport = vp
     return vp
   }
 
@@ -723,6 +724,7 @@ class GLBaseRenderer extends ParameterOwner {
 
         const pointerEvent = new MouseEvent(event, this.__glcanvas!.getBoundingClientRect())
 
+        this.activateViewportAtPos(pointerEvent.rendererX, pointerEvent.rendererY)
         if (!pointerIsDown) {
           const viewport = this.getActiveViewport()
           if (viewport) {
@@ -759,6 +761,7 @@ class GLBaseRenderer extends ParameterOwner {
     this.__glcanvas!.addEventListener(
       'touchstart',
       (event: globalThis.TouchEvent) => {
+        activeGLRenderer = this
         const viewport = this.getActiveViewport()
         const pointerEvent = new TouchEvent(event, this.__glcanvas!.getBoundingClientRect())
         viewport.onPointerDown(pointerEvent)
