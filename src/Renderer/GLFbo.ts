@@ -25,7 +25,11 @@ class GLFbo {
    */
 
   constructor(gl: WebGL12RenderingContext, colorTexture: GLTexture2D, createDepthTexture = false) {
-    if (SystemDesc.isIOSDevice && (colorTexture.getType() == gl.FLOAT || colorTexture.getType() == gl.HALF_FLOAT)) {
+    if (
+      SystemDesc.isIOSDevice &&
+      gl.name == 'webgl' &&
+      (colorTexture.getType() == gl.FLOAT || colorTexture.getType() == gl.HALF_FLOAT)
+    ) {
       // So iOS simply refuses to bind anything to a render target except a UNSIGNED_BYTE texture.
 
       // See the subtle error message here: "floating-point render targets not supported -- this is legal"
