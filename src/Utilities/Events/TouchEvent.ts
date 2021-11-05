@@ -56,13 +56,13 @@ class Touch {
 }
 
 class TouchEvent extends UIEvent {
-  touches: Touch[]
-  changedTouches: Touch[]
-  targetTouches: Touch[]
-  altKey: boolean
-  metaKey: boolean
-  ctrlKey: boolean
-  shiftKey: boolean
+  touches: Touch[] = []
+  changedTouches: Touch[] = []
+  targetTouches: Touch[] = []
+  altKey: boolean = false
+  metaKey: boolean = false
+  ctrlKey: boolean = false
+  shiftKey: boolean = false
 
   private sourceEvent: globalThis.TouchEvent
 
