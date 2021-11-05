@@ -98,7 +98,7 @@ function getBrowserDesc() {
 }
 
 // eslint-disable-next-line require-jsdoc
-function getGPUDesc() {
+function getGPUDesc(): GPUDescription {
   let webgl
   try {
     webgl = document.createElement('canvas').getContext('webgl')
@@ -108,7 +108,7 @@ function getGPUDesc() {
       vendor: 'Unknown',
       renderer: 'Unknown',
       gpuVendor: 'Unknown',
-      maxTextureSize: 'Unknown',
+      maxTextureSize: 0,
       supportsWebGL: false,
       supportsWebGL2: false,
     }
@@ -125,15 +125,15 @@ function getGPUDesc() {
       vendor: 'Unknown',
       renderer: 'Unknown',
       gpuVendor: 'Unknown',
-      maxTextureSize: 'Unknown',
+      maxTextureSize: 0,
       supportsWebGL: webgl != undefined,
       supportsWebGL2: webgl2 != undefined,
     }
   }
 
-  const vendor = webgl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL)
-  const renderer = webgl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL)
-  const maxTextureSize = webgl.getParameter(webgl.MAX_TEXTURE_SIZE)
+  const vendor = <string>webgl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL)
+  const renderer = <string>webgl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL)
+  const maxTextureSize = <number>webgl.getParameter(webgl.MAX_TEXTURE_SIZE)
   let gpuVendor
   if (renderer.match(/NVIDIA/i)) {
     gpuVendor = 'NVidia'
@@ -158,6 +158,7 @@ function getGPUDesc() {
     renderer,
     gpuVendor,
     maxTextureSize,
+    supportsWebGL: true,
     supportsWebGL2: webgl2 != undefined,
   }
 }
