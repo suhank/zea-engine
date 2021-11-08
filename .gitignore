@@ -13,3 +13,7 @@ Resources/Cache/
 .tmuxp.json
 package-lock.json
 .envrc*
+tsc-output/
+
+buildcache
+tsconfig.tsbuildinfo

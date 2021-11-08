@@ -29,20 +29,20 @@
 
       scene.setupGrid(10.0, 10)
 
-      // const backgroundColor = new Color(0.5, 0.5, 0.5)
-      // renderer.getScene().settings.getParameter('BackgroundColor').setValue(backgroundColor)
+      renderer.getViewport().backgroundColorParam.value = new Color(0.85, 0.85, 0.85, 1)
+
 
       const material = new Material('surfaces', 'FlatSurfaceShader')
-      material.getParameter('BaseColor').setValue(new Color(0.75, 0.75, 0.75))
+      material.getParameter('BaseColor').value = new Color(0.75, 0.75, 0.75)
 
       const hardEdgesMaterial = new Material('hardEdgesMaterial', 'LinesShader')
-      hardEdgesMaterial.getParameter('BaseColor').setValue(new Color(0.1, 0.1, 0.1))
-      hardEdgesMaterial.getParameter('Opacity').setValue(1)
-      hardEdgesMaterial.getParameter('Overlay').setValue(0.00001)
+      hardEdgesMaterial.getParameter('BaseColor').value = new Color(0.1, 0.1, 0.1)
+      hardEdgesMaterial.getParameter('Opacity').value = 1
+      hardEdgesMaterial.getParameter('Overlay').value = 0.00001
 
-      hardEdgesMaterial.getParameter('StippleScale').setValue(0.02)
-      hardEdgesMaterial.getParameter('StippleValue').setValue(0)
-      hardEdgesMaterial.getParameter('OccludedStippleValue').setValue(0.6)
+      hardEdgesMaterial.getParameter('StippleScale').value = 0.02
+      hardEdgesMaterial.getParameter('StippleValue').value = 0
+      hardEdgesMaterial.getParameter('OccludedStippleValue').value = 0.6
 
       const createHardEdgesGeom = (mesh) => {
         // Display all the hard edges as darker lines.

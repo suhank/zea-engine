@@ -44,21 +44,21 @@
       renderer.setScene(scene)
 
       const material1 = new Material('surfaces', 'StandardSurfaceShader')
-      material1.getParameter('BaseColor').setValue(new Color(1, 1, 0))
+      material1.getParameter('BaseColor').value = new Color(1, 1, 0)
 
       const material2 = new Material('surfaces', 'StandardSurfaceShader')
-      material2.getParameter('BaseColor').setValue(new Color(0, 1, 0))
+      material2.getParameter('BaseColor').value = new Color(0, 1, 0)
 
       const material3 = new Material('surfaces', 'SimpleSurfaceShader')
-      material3.getParameter('BaseColor').setValue(new Color(1, 0, 1))
+      material3.getParameter('BaseColor').value = new Color(1, 0, 1)
 
       const material4 = new Material('surfaces', 'PointsShader')
-      material4.getParameter('BaseColor').setValue(new Color(1, 0, 1))
-      material4.getParameter('PointSize').setValue(2)
+      material4.getParameter('BaseColor').value = new Color(1, 0, 1)
+      material4.getParameter('PointSize').value = 2
 
       const addShape = (name, shape, pos, material) => {
         const geomItem = new GeomItem(name + 'Item', shape, material)
-        geomItem.getParameter('LocalXfo').setValue(new Xfo(pos))
+        geomItem.localXfoParam.value = new Xfo(pos)
         scene.getRoot().addChild(geomItem)
 
         return geomItem
@@ -100,7 +100,7 @@
       let highlightedItem
       renderer.getViewport().on('pointerOverGeom', (event) => {
         const geomItem = event.intersectionData.geomItem
-        const geomParam = geomItem.getParameter('Geometry')
+        const geomParam = geomItem.geomParam
         if (geomParam) {
           const geom = geomParam.getValue()
           if (geom instanceof Lines) {

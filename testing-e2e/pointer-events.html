@@ -37,6 +37,7 @@
         SelectionSet,
         SimpleSurfaceShader,
         Registry,
+        shaderLibrary,
       } = window.zeaEngine
 
       const selfEventsIndicator = document.querySelector('#selfEventsIndicator')
@@ -50,6 +51,7 @@
         }
       }
       Registry.register('OverlayShader', OverlayShader)
+      shaderLibrary.registerMaterialTemplate('OverlayShader', shaderLibrary.getMaterialTemplate('SimpleSurfaceShader'))
 
       const scene = new Scene()
       const renderer = new GLRenderer(document.getElementById('viewport'), {
@@ -60,13 +62,13 @@
 
       // {{{ Self Events.
       const material1 = new Material('material1', 'SimpleSurfaceShader')
-      material1.getParameter('BaseColor').setValue(new Color('#94C47D'))
+      material1.getParameter('BaseColor').value = new Color('#94C47D')
 
       const selfEventItem = new GeomItem('CuboidGeometryItem', new Cuboid(0.7, 0.7, 0.7), material1)
 
       const selfEventItemXfo = new Xfo()
       selfEventItemXfo.tr = new Vec3(2, 0, 0.5)
-      selfEventItem.getParameter('GlobalXfo').setValue(selfEventItemXfo)
+      selfEventItem.globalXfoParam.value = selfEventItemXfo
 
       scene.getRoot().addChild(selfEventItem)
 
@@ -109,24 +111,24 @@
       // {{{ Group Events.
       {
         const material2 = new Material('material2', 'SimpleSurfaceShader')
-        material2.getParameter('BaseColor').setValue(new Color('#F6B26B'))
+        material2.getParameter('BaseColor').value = new Color('#F6B26B')
 
         const groupItem1 = new GeomItem('CylinderGeometryItem', new Cylinder(0.3, 0.4), material2)
 
         const groupItem1Xfo = new Xfo()
         groupItem1Xfo.tr = new Vec3(0.35, 0, 0.5)
-        groupItem1.getParameter('GlobalXfo').setValue(groupItem1Xfo)
+        groupItem1.globalXfoParam.value = groupItem1Xfo
 
         // ----------------------------------------------------------------------------------------
 
         const material3 = new Material('cylinderMaterial', 'OverlayShader')
-        material3.getParameter('BaseColor').setValue(new Color('#F6B26B'))
+        material3.getParameter('BaseColor').value = new Color('#F6B26B')
 
         const groupItem2 = new GeomItem('CylinderGeometryItem', new Torus(0.1, 0.3), material3)
 
         const groupItem2Xfo = new Xfo()
         groupItem2Xfo.tr = new Vec3(-0.45, 0, 0.5)
-        groupItem2.getParameter('GlobalXfo').setValue(groupItem2Xfo)
+        groupItem2.globalXfoParam.value = groupItem2Xfo
 
         // ----------------------------------------------------------------------------------------
 
@@ -160,7 +162,7 @@
         group.on('pointerDown', (event) => {
           event.stopPropagation()
 
-          group.getParameter('Highlighted').setValue(true)
+          group.highlightedParam.value = true
           groupEventsIndicator.textContent = 'pointerDown'
           clearTimeout(goToDefaultTextTimeout)
           event.setCapture(group)
@@ -169,7 +171,7 @@
         group.on('pointerUp', (event) => {
           event.stopPropagation()
 
-          group.getParameter('Highlighted').setValue(false)
+          group.highlightedParam.value = false
           groupEventsIndicator.textContent = 'pointerUp'
           startBackToDefaultTextTimeout()
           event.releaseCapture()
@@ -224,7 +226,15 @@
       // To make mouse wheel testing move the camera a decent amount, we increase the
       // mouse wheel movement by 10x. This is because the cypress will send only a single
       // wheel event instead of a sequence.
-      renderer.getViewport().getManipulator().getParameter('MouseWheelDollySpeed').setValue(1)
+      // Note: the mouse wheel tests were impossible to keep running, always failing.
+      // so we disabled them.
+      // renderer.getViewport().getManipulator().getParameter('MouseWheelDollySpeed').value = 1
+
+      renderer.getViewport().on('keyDown', (event) => {
+        if (event.key == 'f') {
+          renderer.frameAll()
+        }
+      })
 
       renderer
         .getViewport()

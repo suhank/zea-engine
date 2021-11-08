@@ -18,7 +18,7 @@
       const canvas = document.getElementById('viewport')
 
       const scene = new Scene()
-      const renderer = new GLRenderer(canvas, { hideSplash: true, antialias: false })
+      const renderer = new GLRenderer(canvas, { antialias: false })
       renderer.setScene(scene)
       renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-2, -2, 1.7), new Vec3(0, 0, 0.2))
 
@@ -56,7 +56,7 @@
       {
         const material = new Material('Material', 'FlatSurfaceShader')
 
-        material.getParameter('BaseColor').setValue(new Color(0.6, 0, 1))
+        material.getParameter('BaseColor').value = new Color(0.6, 0, 1)
         const image = new LDRImage('LDRImage')
         image.setImageURL('data/avatar1.jpg')
         promises.push(new Promise((resolve) => image.on('loaded', resolve)))
@@ -67,7 +67,7 @@
       {
         const material = new Material('Material', 'FlatSurfaceShader')
 
-        material.getParameter('BaseColor').setValue(new Color(0.6, 0, 1))
+        material.getParameter('BaseColor').value = new Color(0.6, 0, 1)
         const image = new LDRImage('LDRImage')
         image.setImageURL('data/zea-logo.png', 'RGBA')
         promises.push(new Promise((resolve) => image.on('loaded', resolve)))
@@ -79,14 +79,14 @@
       {
         const material = new Material('Material', 'FlatSurfaceShader')
         const label = new Label('Name')
-        label.getParameter('FontColor').setValue(new Color(0.6, 0, 0))
-        label.getParameter('BackgroundColor').setValue(new Color(1, 1, 1))
-        label.getParameter('FontSize').setValue(42)
-        label.getParameter('BorderRadius').setValue(0)
-        label.getParameter('BorderWidth').setValue(0)
-        label.getParameter('Margin').setValue(12)
-        label.getParameter('StrokeBackgroundOutline').setValue(false)
-        label.getParameter('Text').setValue(`Hello World`)
+        label.fontColorParam.value = new Color(0.6, 0, 0)
+        label.backgroundColorParam.value = new Color(1, 1, 1)
+        label.fontSizeParam.value = 42
+        label.borderRadiusParam.value = 0
+        label.borderWidthParam.value = 0
+        label.marginParam.value = 12
+        label.strokeBackgroundOutlineParam.value = false
+        label.textParam.value = `Hello World`
         promises.push(new Promise((resolve) => label.on('labelRendered', resolve)))
 
         material.getParameter('BaseColor').setImage(label)

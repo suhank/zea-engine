@@ -9,32 +9,21 @@
       <canvas id="viewport"></canvas>
     </div>
 
-    <script src="../dist/index.umd.js"></script>
+    <script src="../dist/index.umd.development.js"></script>
 
     <script type="module">
-      const {
-        GLRenderer,
-        Scene,
-        Vec3,
-        Xfo,
-        Color,
-        TreeItem,
-        BillboardItem,
-        Label,
-        Material,
-        Sphere,
-        GeomItem,
-      } = zeaEngine
+      const { GLRenderer, Scene, Vec3, Xfo, Color, TreeItem, BillboardItem, Label, Material, Sphere, GeomItem } =
+        zeaEngine
 
       const scene = new Scene()
       const domElement = document.getElementById('viewport')
-      const renderer = new GLRenderer(domElement, { hideSplash: true, antialias: false })
+      const renderer = new GLRenderer(domElement, { antialias: false })
       renderer.setScene(scene)
 
       scene.setupGrid(4, 4)
 
       const standardMaterial = new Material('surfaces', 'SimpleSurfaceShader')
-      standardMaterial.getParameter('BaseColor').setValue(new Color(89 / 255, 182 / 255, 92 / 255))
+      standardMaterial.getParameter('BaseColor').value = new Color(89 / 255, 182 / 255, 92 / 255)
 
       const sphere = new Sphere(1.5, 8, 1)
       const geomItem = new GeomItem('Sphere', sphere, standardMaterial)
@@ -47,20 +36,20 @@
       const addLabel = (lineEndPos, pos, color, name) => {
         return new Promise((resolve, reject) => {
           const label = new Label(name)
-          label.getParameter('FontSize').setValue(48)
-          label.getParameter('FontColor').setValue(color)
-          label.getParameter('BackgroundColor').setValue(new Color(0.3, 0.3, 0.3))
+          label.fontSizeParam.value = 48
+          label.fontColorParam.value = color
+          label.backgroundColorParam.value = new Color(0.3, 0.3, 0.3)
 
           const billboard = new BillboardItem('billboard' + index, label)
           const xfo = new Xfo(pos)
-          billboard.getParameter('LocalXfo').setValue(xfo)
-          billboard.getParameter('PixelsPerMeter').setValue(300)
-          // billboard.getParameter('AlignedToCamera').setValue(false)
-          billboard.getParameter('AlignedToCamera').setValue(true)
-          billboard.getParameter('DrawOnTop').setValue(false)
-          billboard.getParameter('Alpha').setValue(0.5)
+          billboard.localXfoParam.value = xfo
+          billboard.pixelsPerMeterParam.value = 300
+          // billboard.alignedToCameraParam.value = false
+          billboard.alignedToCameraParam.value = true
+          billboard.drawOnTopParam.value = false
+          billboard.alphaParam.value = 0.5
           // billboard.getParameter('lineEnd').addElement(lineEndPos)
-          // billboard.getChildByName('line0').getMaterial().getParameter('Color').setValue(new Color(.7, .7, .7))
+          // billboard.getChildByName('line0').getMaterial().getParameter('Color').value = new Color(.7, .7, .7)
           asset.addChild(billboard)
 
           index++

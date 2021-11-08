@@ -13,12 +13,12 @@
     <script src="../dist/index.umd.js"></script>
 
     <script type="module">
-      const { GLRenderer, Scene, Vec3, Color, Xfo, Sphere, Material, GeomItem, LDRImage, TreeItem } = zeaEngine
+      const { GLRenderer, Scene, Vec3, Color, Xfo, Sphere, Material, GeomItem, FileImage, TreeItem } = zeaEngine
 
       const canvas = document.getElementById('viewport')
 
       const scene = new Scene()
-      const renderer = new GLRenderer(canvas, { hideSplash: true, antialias: false })
+      const renderer = new GLRenderer(canvas, { antialias: false })
       renderer.setScene(scene)
 
       scene.setupGrid(10.0, 10)
@@ -26,21 +26,19 @@
       const promises = []
 
       const texturedMaterial0 = new Material('Material', 'FlatSurfaceShader')
-      texturedMaterial0.getParameter('BaseColor').setValue(new Color(0.6, 0, 1))
-      const image0 = new LDRImage('LDRImage')
-      image0.setImageURL('data/zea-logo.png', 'RGBA')
+      texturedMaterial0.getParameter('BaseColor').value = new Color(0.6, 0, 1)
+      const image0 = new FileImage('logo')
+      promises.push(image0.load('data/zea-logo.png', 'RGBA'))
       texturedMaterial0.getParameter('BaseColor').setImage(image0)
-      promises.push(new Promise((resolve) => image0.on('loaded', resolve)))
 
       const texturedMaterial1 = new Material('Material', 'FlatSurfaceShader')
-      texturedMaterial1.getParameter('BaseColor').setValue(new Color(0.6, 0, 1))
-      const image1 = new LDRImage('LDRImage')
-      image1.setImageURL('data/avatar1.jpg')
+      texturedMaterial1.getParameter('BaseColor').value = new Color(0.6, 0, 1)
+      const image1 = new FileImage('avatar1')
+      promises.push(image1.load('data/avatar1.jpg'))
       texturedMaterial1.getParameter('BaseColor').setImage(image1)
-      promises.push(new Promise((resolve) => image1.on('loaded', resolve)))
 
       const material = new Material('surfaces', 'SimpleSurfaceShader')
-      material.getParameter('BaseColor').setValue(new Color(1, 0, 1, 1))
+      material.getParameter('BaseColor').value = new Color(1, 0, 1, 1)
 
       const sphere0 = new Sphere(1, 46)
       const sphere1 = new Sphere(1, 46)
@@ -70,7 +68,7 @@
           scene.getRoot().removeChild(scene.getRoot().getChildIndex(geomItem1))
           // Modify the item that is not being removed.
           // Note: this used to cause a crash because indices were confused in the multi-draw class.
-          sphere1.getParameter('Loops').setValue(100)
+          sphere1.loopsParam.value = 100
           window.postMessage(`done-${data}`)
         } else if (data === 'variant-02') {
           // Now look away, so that the scene gets frustum culled.
@@ -85,7 +83,7 @@
           // Modify the class again, after it has been removed from the renderer.
           // Note: Our GLGeomLibrary still updates the buffers. It doesn't know that
           // no GeomItems track this geom. We need to add ref counting...
-          sphere1.getParameter('Loops').setValue(12)
+          sphere1.loopsParam.value = 12
           window.postMessage(`done-${data}`)
         } else if (data === 'variant-05') {
           scene.getRoot().addChild(geomItem0)
@@ -104,12 +102,12 @@
           treeItem.addChild(geomItem3)
 
           const material = new Material('surfaces', 'SimpleSurfaceShader')
-          material.getParameter('BaseColor').setValue(new Color(1, 1, 0, 0.2))
-          geomItem2.getParameter('Material').setValue(material)
+          material.getParameter('BaseColor').value = new Color(1, 1, 0, 0.2)
+          geomItem2.materialParam.value = material
 
           const material2 = new Material('surfaces', 'SimpleSurfaceShader')
-          material2.getParameter('BaseColor').setValue(new Color(1, 1, 0, 1))
-          geomItem3.getParameter('Material').setValue(material2)
+          material2.getParameter('BaseColor').value = new Color(1, 1, 0, 1)
+          geomItem3.materialParam.value = material2
 
           window.postMessage(`done-${data}`)
         }

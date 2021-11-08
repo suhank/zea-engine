@@ -70,7 +70,7 @@
       const canvas = document.getElementById('viewport')
 
       const scene = new Scene()
-      const renderer = new GLRenderer(canvas, { hideSplash: true, antialias: false })
+      const renderer = new GLRenderer(canvas, { antialias: false })
       renderer.setScene(scene)
 
       scene.setupGrid(10.0, 10)
@@ -78,9 +78,9 @@
       //////////////////////////////
 
       const envMap = new EnvMap()
-      envMap.getParameter('FilePath').setValue('data/pisa-webp.zenv')
+      envMap.load('data/pisa-webp.zenv')
       scene.setEnvMap(envMap)
-      scene.getSettings().getParameter('Display EnvMap').setValue(true)
+      scene.displayEnvMapParam.value = true
 
       const addMeshShape = (name, shape, pos, mat) => {
         const geomItem = new GeomItem(name, shape, mat, new Xfo(pos))
@@ -93,12 +93,12 @@
         for (let i = 0; i < 10; i++) {
           for (let j = 0; j < 10; j++) {
             const material = new Material('surfaces', 'StandardSurfaceShader')
-            material.getParameter('BaseColor').setValue(baseColor)
-            material.getParameter('Metallic').setValue(metallic)
-            material.getParameter('Reflectance').setValue(reflectance)
+            material.getParameter('BaseColor').value = baseColor
+            material.getParameter('Metallic').value = metallic
+            material.getParameter('Reflectance').value = reflectance
 
-            material.getParameter('Roughness').setValue(j / 9)
-            material.getParameter('Opacity').setValue(i / 10)
+            material.getParameter('Roughness').value = j / 9
+            material.getParameter('Opacity').value = i / 10
 
             addMeshShape(name + i, sphere, new Vec3((i / 9 - 0.5) * 30, (j / 9 - 0.5) * 30, 1.4 + zoffset), material)
           }

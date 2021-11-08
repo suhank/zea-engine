@@ -33,27 +33,27 @@
       const canvas = document.getElementById('viewport')
 
       const scene = new Scene()
-      const renderer = new GLRenderer(canvas, { hideSplash: true, webglOptions: { antialias: false } })
+      const renderer = new GLRenderer(canvas, { antialias: false })
       renderer.setScene(scene)
 
       scene.setupGrid(10.0, 10)
 
       const material1 = new Material('surfaces', 'StandardSurfaceShader')
-      material1.getParameter('BaseColor').setValue(new Color(1, 1, 0))
+      material1.getParameter('BaseColor').value = new Color(1, 1, 0)
 
       const material2 = new Material('surfaces', 'StandardSurfaceShader')
-      material2.getParameter('BaseColor').setValue(new Color(0, 1, 0))
+      material2.getParameter('BaseColor').value = new Color(0, 1, 0)
 
       const material3 = new Material('surfaces', 'SimpleSurfaceShader')
-      material3.getParameter('BaseColor').setValue(new Color(1, 0, 1))
+      material3.getParameter('BaseColor').value = new Color(1, 0, 1)
 
       const material4 = new Material('surfaces', 'PointsShader')
-      material4.getParameter('BaseColor').setValue(new Color(1, 0, 1))
-      material4.getParameter('PointSize').setValue(2)
+      material4.getParameter('BaseColor').value = new Color(1, 0, 1)
+      material4.getParameter('PointSize').value = 2
 
       const addShape = (name, shape, pos, material) => {
         const geomItem = new GeomItem(name + 'Item', shape, material)
-        geomItem.getParameter('LocalXfo').setValue(new Xfo(pos))
+        geomItem.localXfoParam.value = new Xfo(pos)
         scene.getRoot().addChild(geomItem)
 
         return geomItem
@@ -94,7 +94,7 @@
         const { data } = event
 
         if (data === 'variant-01') {
-          renderer.getViewport().getManipulator().getParameter('OrbitAroundCursor').setValue(false)
+          renderer.getViewport().getManipulator().orbitAroundCursorParam.value = false
           postMessage(`done-${data}`)
         }
         if (data === 'variant-02') {

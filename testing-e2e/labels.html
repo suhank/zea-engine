@@ -34,19 +34,19 @@
       const addLabel = (lineEndPos, pos, color, name) => {
         return new Promise((resolve, reject) => {
           const label = new Label(name)
-          label.getParameter('FontSize').setValue(48)
-          label.getParameter('FontColor').setValue(color)
-          label.getParameter('BackgroundColor').setValue(new Color(0.3, 0.3, 0.3))
+          label.fontSizeParam.value = 48
+          label.fontColorParam.value = color
+          label.backgroundColorParam.value = new Color(0.3, 0.3, 0.3)
 
           const billboard = new BillboardItem('billboard' + index, label)
           const xfo = new Xfo(pos)
-          billboard.getParameter('LocalXfo').setValue(xfo)
-          billboard.getParameter('PixelsPerMeter').setValue(300)
-          billboard.getParameter('AlignedToCamera').setValue(true)
-          billboard.getParameter('DrawOnTop').setValue(true)
-          billboard.getParameter('Alpha').setValue(1)
+          billboard.localXfoParam.value = xfo
+          billboard.pixelsPerMeterParam.value = 300
+          billboard.alignedToCameraParam.value = true
+          billboard.drawOnTopParam.value = true
+          billboard.alphaParam.value = 1
           // billboard.getParameter('lineEnd').addElement(lineEndPos)
-          // billboard.getChildByName('line0').getMaterial().getParameter('Color').setValue(new Color(.7, .7, .7))
+          // billboard.getChildByName('line0').getMaterial().getParameter('Color').value  = new Color(.7, .7, .7)
           asset.addChild(billboard)
 
           index++

@@ -1,0 +1,73 @@
+{
+  "name": "@zeainc/zea-engine",
+  "fileName": "index",
+  "libraryName": "ZeaEngine",
+  "version": "3.11.0",
+  "license": "AGPL-3.0",
+  "description": "Zea Engine",
+  "author": "Zea Inc.",
+  "module": "dist/zea-engine.esm.js",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "files": [
+    "dist/"
+  ],
+  "engines": {
+    "node": ">=10"
+  },
+  "scripts": {
+    "build:watch": "tsdx watch --target web --format umd --name index --transpileOnly",
+    "start": "http-server --cors --port 8000 --silent",
+    "start:watch": "es-dev-server --cors --app-index testing-e2e/index.html --open --watch",
+    "build": "tsdx build --target web --format umd --name index",
+    "dev": "npm-run-all --parallel build:watch start:watch",
+    "test": "jest",
+    "test:coverage": "jest --coverage",
+    "test:debug": "node --inspect ./node_modules/jest/bin/jest.js --runInBand --watch",
+    "test:watch": "jest --watch",
+    "test:e2e": "percy exec cypress run --browser chrome --headless",
+    "test:e2e:watch": "percy exec cypress open",
+    "lint": "tsdx lint",
+    "prepare": "tsdx build",
+    "size": "size-limit",
+    "analyze": "size-limit --why",
+    "copyPackageJson": "copyfiles -f \"./package.json\" src"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "tsdx lint"
+    }
+  },
+  "size-limit": [
+    {
+      "path": "dist/zea-engine.cjs.production.min.js",
+      "limit": "2100 KB"
+    },
+    {
+      "path": "dist/zea-engine.esm.js",
+      "limit": "2100 KB"
+    }
+  ],
+  "devDependencies": {
+    "@size-limit/preset-small-lib": "^5.0.3",
+    "@types/debug": "^4.1.7",
+    "@types/jest": "^26.0.23",
+    "@types/semver": "^7.3.8",
+    "babel-jest": "^27.0.5",
+    "copyfiles": "^2.4.1",
+    "es-dev-server": "^2.1.0",
+    "http-server": "^13.0.1",
+    "husky": "^7.0.2",
+    "jest": "^27.0.6",
+    "jest-coverage-badges": "^1.1.2",
+    "rollup-plugin-glslify": "^1.2.0",
+    "rollup-plugin-base64": "^1.0.1",
+    "rollup-plugin-web-worker-loader": "^1.6.1",
+    "size-limit": "^5.0.3",
+    "ts-jest": "^27.0.3",
+    "tsdx": "^0.14.1",
+    "tslib": "^2.3.1",
+    "typescript": "^4.4.2",
+    "npm-run-all": "^4.1.5"
+  }
+}

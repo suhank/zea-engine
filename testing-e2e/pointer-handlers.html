@@ -22,14 +22,14 @@
       }
     </style>
 
-    <script crossorigin src="../dist/index.umd.js"></script>
+    <script src="../dist/index.umd.development.js"></script>
 
     <script>
       const { GLRenderer, Scene, Vec3, Color, Cuboid, Material, GeomItem, Xfo } = zeaEngine
 
       const scene = new Scene()
       const domElement = document.getElementById('canvas')
-      const renderer = new GLRenderer(domElement, { hideSplash: true, antialias: false })
+      const renderer = new GLRenderer(domElement, { antialias: false })
       renderer.setScene(scene)
 
       const standardMaterial1 = new Material('surfaces', 'SimpleSurfaceShader')
@@ -40,38 +40,38 @@
       const geomItem2 = new GeomItem('Geom2', new Cuboid(0.5, 0.5, 0.5), standardMaterial2)
       const xfo1 = new Xfo()
       xfo1.tr = new Vec3(1, 1, 0)
-      geomItem2.getParameter('GlobalXfo').setValue(xfo1)
+      geomItem2.globalXfoParam.value = xfo1
 
       const standardMaterial3 = new Material('surfaces', 'SimpleSurfaceShader')
       const geomItem3 = new GeomItem('Geom2', new Cuboid(0.5, 0.5, 0.5), standardMaterial3)
       const xfo2 = new Xfo()
       xfo2.tr = new Vec3(-1, -1, 0)
-      geomItem3.getParameter('GlobalXfo').setValue(xfo2)
+      geomItem3.globalXfoParam.value = xfo2
 
       renderer.getViewport().on('pointerDownOnGeom', (event) => {
         const geomItem = event?.intersectionData?.geomItem
-        geomItem.getParameter('Material').getValue().getParameter('BaseColor').setValue(new Color(0, 1, 0))
+        geomItem.materialParam.getValue().getParameter('BaseColor').value = new Color(0, 1, 0)
         console.log(event.intersectionData.geomItem.getPath())
         event.stopPropagation()
       })
 
       const material = new Material('pointerDownOnGeom', 'SimpleSurfaceShader')
-      material.getParameter('BaseColor').setValue(new Color(1, 0, 0))
+      material.getParameter('BaseColor').value = new Color(1, 0, 0)
 
       renderer.getViewport().on('pointerOverGeom', (event) => {
         const geomItem = event?.intersectionData?.geomItem
-        geomItem.getParameter('Material').getValue().getParameter('BaseColor').setValue(new Color(1, 0, 0))
+        geomItem.materialParam.getValue().getParameter('BaseColor').value = new Color(1, 0, 0)
         //
 
-        // geomItem.getParameter('Material').setValue(material)
+        // geomItem.materialParam.value = material
         console.log('Enter')
       })
 
       renderer.getViewport().on('pointerLeaveGeom', (event) => {
         const geomItem = event?.geomItem
-        geomItem.getParameter('Material').getValue().getParameter('BaseColor').setValue(initialColor)
-        // standardMaterial.getParameter('BaseColor').setValue(initialColor)
-        // geomItem.getParameter('Material').setValue(standardMaterial)
+        geomItem.materialParam.getValue().getParameter('BaseColor').value = initialColor
+        // standardMaterial.getParameter('BaseColor').value = initialColor
+        // geomItem.materialParam.value = standardMaterial
 
         console.log('Leave')
       })

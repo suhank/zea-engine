@@ -32,19 +32,19 @@
         treeItem.addChild(new GeomItem('Sphere2', sphere, standardMaterial, new Xfo(new Vec3(1, 1, 0))))
         treeItem.addChild(new GeomItem('Sphere3', sphere, standardMaterial, new Xfo(new Vec3(0, 1, 0))))
         treeItem.addChild(new GeomItem('Sphere4', sphere, standardMaterial, new Xfo(new Vec3(0, 0, 1))))
-        treeItem.getParameter('GlobalXfo').setValue(xfo)
+        treeItem.globalXfoParam.value = xfo
         return treeItem
       }
       const tree1 = buildSubTree(new Xfo(new Vec3(0, -1, 1)))
       const tree2 = buildSubTree(new Xfo(new Vec3(0, 1, 1)))
 
-      const xfo1 = tree1.getParameter('GlobalXfo').getValue()
-      const xfo2 = tree2.getParameter('GlobalXfo').getValue()
+      const xfo1 = tree1.globalXfoParam.getValue()
+      const xfo2 = tree2.globalXfoParam.getValue()
       const updateTreePositions = (t) => {
         xfo1.tr.x = Math.sin(t) * 5
         xfo2.tr.y = Math.sin(t) * 5
-        tree1.getParameter('GlobalXfo').setValue(xfo1)
-        tree2.getParameter('GlobalXfo').setValue(xfo2)
+        tree1.globalXfoParam.value = xfo1
+        tree2.globalXfoParam.value = xfo2
       }
       // let t = 0
       // setInterval(() => {

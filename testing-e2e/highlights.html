@@ -32,7 +32,7 @@
 
       const scene = new Scene()
       const domElement = document.getElementById('viewport')
-      const renderer = new GLRenderer(domElement, { hideSplash: true, antialias: false })
+      const renderer = new GLRenderer(domElement, { antialias: false })
       renderer.setScene(scene)
       renderer.getViewport().outlineThickness = 1.5
 
@@ -41,19 +41,19 @@
       scene.getRoot().addChild(tree1)
 
       const selectionSet1 = new SelectionSet('selectionSet1')
-      selectionSet1.getParameter('HighlightColor').setValue(new Color('#FF0000'))
+      selectionSet1.highlightColorParam.value = new Color('#FF0000')
       scene.getRoot().addChild(selectionSet1)
 
       const selectionSet2 = new SelectionSet('selectionSet2')
-      selectionSet2.getParameter('HighlightColor').setValue(new Color('mediumblue'))
+      selectionSet2.highlightColorParam.value = new Color('mediumblue')
       scene.getRoot().addChild(selectionSet2)
 
       const standardMaterial = new Material('surfaces', 'SimpleSurfaceShader')
-      standardMaterial.getParameter('BaseColor').setValue(new Color(89 / 255, 182 / 255, 92 / 255))
+      standardMaterial.getParameter('BaseColor').value = new Color(89 / 255, 182 / 255, 92 / 255)
 
       const addGeomItem = (shape, row, count, i) => {
         const geomItem = new GeomItem('Item' + row + '-' + i, shape, standardMaterial)
-        geomItem.getParameter('LocalXfo').setValue(new Xfo(new Vec3(i * 3, row * 3, 0)))
+        geomItem.localXfoParam.value = new Xfo(new Vec3(i * 3, row * 3, 0))
         tree1.addChild(geomItem)
 
         selectionSet1.addItem(geomItem)
@@ -72,8 +72,8 @@
       addMeshShape(new Cylinder(1.2, 4.0, 32, 2, true), -2, 8)
       addMeshShape(new Torus(0.4, 1.3), -3, 4)
 
-      selectionSet1.getParameter('Highlighted').setValue(true)
-      selectionSet2.getParameter('Highlighted').setValue(true)
+      selectionSet1.highlightedParam.value = true
+      selectionSet2.highlightedParam.value = true
 
       renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(25, 25, 13), new Vec3(10, 0, 0))
       renderer.frameAll()
@@ -85,12 +85,12 @@
         const { data } = event
 
         if (data === 'variant-01') {
-          selectionSet1.getParameter('Highlighted').setValue(true)
-          selectionSet2.getParameter('Highlighted').setValue(false)
+          selectionSet1.highlightedParam.value = true
+          selectionSet2.highlightedParam.value = false
           window.postMessage(`done-${data}`)
         } else if (data === 'variant-02') {
-          selectionSet1.getParameter('Highlighted').setValue(false)
-          selectionSet2.getParameter('Highlighted').setValue(true)
+          selectionSet1.highlightedParam.value = false
+          selectionSet2.highlightedParam.value = true
           window.postMessage(`done-${data}`)
         }
       }
