@@ -78,11 +78,15 @@ class TouchEvent extends UIEvent {
     for (let i = 0; i < sourceEvent.touches.length; i++) {
       this.touches.push(new Touch(sourceEvent.touches[i], rect))
     }
-    for (let i = 0; i < sourceEvent.changedTouches.length; i++) {
-      this.changedTouches.push(new Touch(sourceEvent.changedTouches[i], rect))
+    if (sourceEvent.changedTouches) {
+      for (let i = 0; i < sourceEvent.changedTouches.length; i++) {
+        this.changedTouches.push(new Touch(sourceEvent.changedTouches[i], rect))
+      }
     }
-    for (let i = 0; i < sourceEvent.targetTouches.length; i++) {
-      this.targetTouches.push(new Touch(sourceEvent.targetTouches[i], rect))
+    if (sourceEvent.targetTouches) {
+      for (let i = 0; i < sourceEvent.targetTouches.length; i++) {
+        this.targetTouches.push(new Touch(sourceEvent.targetTouches[i], rect))
+      }
     }
   }
 
