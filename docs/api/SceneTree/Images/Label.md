@@ -1,0 +1,98 @@
+<a name="Label"></a>
+
+### Label 
+Represents a 2D label item the scene.
+Since displaying text in the scene is not an easy task,
+we've abstracted the complicated logic behind this class, transforming any text into a 2D image(`DataImage`).
+
+**Library List**
+* LabelPack
+
+**Parameters**
+* **Library([`StringParameter`](api/SceneTree\Parameters\StringParameter.md)):** Library you wan to use for your label, see **Library List** above.
+* **Text([`StringParameter`](api/SceneTree\Parameters\StringParameter.md)):**
+* **FontColor([`ColorParameter`](api/SceneTree\Parameters\ColorParameter.md)):**
+* **Margin([`NumberParameter`](api/SceneTree\Parameters\NumberParameter.md)):**
+* **BorderWidth([`NumberParameter`](api/SceneTree\Parameters\NumberParameter.md)):**
+* **BorderRadius([`NumberParameter`](api/SceneTree\Parameters\NumberParameter.md)):**
+* **Outline([`BooleanParameter`](api/SceneTree\Parameters\BooleanParameter.md)):**
+* **OutlineColor([`BooleanParameter`](api/SceneTree\Parameters\BooleanParameter.md)):**
+* **Background([`BooleanParameter`](api/SceneTree\Parameters\BooleanParameter.md)):**
+* **ColorParameter(`BackgroundColor`):**
+* **FillBackground([`BooleanParameter`](api/SceneTree\Parameters\BooleanParameter.md)):**
+* **StrokeBackgroundOutline([`BooleanParameter`](api/SceneTree\Parameters\BooleanParameter.md)):**
+* **FontSize([`NumberParameter`](api/SceneTree\Parameters\NumberParameter.md)):** Represents FontSize of the label
+* **Font([`StringParameter`](api/SceneTree\Parameters\StringParameter.md)):**
+
+**Events**
+* **loaded:** Triggered when label's data is loaded.
+* **updated:** Triggered when label's data changes.
+* **labelRendered:** Triggered when the text image is rendered. Contains `width`, `height` and data of the image.
+
+
+**Extends**: <code>[DataImage](api/SceneTree\Images\DataImage.md)</code>  
+
+* [Label ⇐ <code>DataImage</code>](#Label)
+    * [new Label(name, library)](#new-Label)
+    * [loadLabelData()](#loadLabelData)
+    * [renderLabelToImage()](#renderLabelToImage)
+    * [getParams() ⇒ <code>object</code>](#getParams)
+    * [toJSON(context) ⇒ <code>object</code>](#toJSON)
+    * [fromJSON(j, context)](#fromJSON)
+
+<a name="new_Label_new"></a>
+
+### new Label
+Creates a label instance. Creating a canvas element that hosts the specified text.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| name | <code>string</code> | The name value. |
+| library | <code>string</code> | The library value. |
+
+<a name="Label+loadLabelData"></a>
+
+### loadLabelData
+Method in charge of basically do everything, set text, load/update it, get the library, load the font, etc.
+
+
+<a name="Label+renderLabelToImage"></a>
+
+### renderLabelToImage
+Renders the label text to a canvas element ready to display.
+Here is where all parameters are applied to the canvas containing the text,
+then the image data is extracted from the canvas context.
+
+
+<a name="Label+getParams"></a>
+
+### getParams
+Returns all parameters and class state values(Including data).
+
+
+**Returns**: <code>object</code> - - The return value.  
+<a name="Label+toJSON"></a>
+
+### toJSON
+The toJSON method encodes this type as a json object for persistence.
+
+
+**Returns**: <code>object</code> - - Returns the json object.  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| context | <code>object</code> | The context value. |
+
+<a name="Label+fromJSON"></a>
+
+### fromJSON
+The fromJSON method decodes a json object for this type.
+
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| j | <code>object</code> | The json object this item must decode. |
+| context | <code>object</code> | The context value. |
+
