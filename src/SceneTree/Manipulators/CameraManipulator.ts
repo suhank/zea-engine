@@ -6,10 +6,10 @@ import { SystemDesc } from '../../SystemDesc'
 import { PassType } from '../../Renderer/Passes/GLPass'
 import { Camera } from '../Camera'
 import { GLViewport } from '../..'
-import { PointerEvent, POINTER_TYPES } from '../../Utilities/Events/PointerEvent'
-import { MouseEvent } from '../../Utilities/Events/MouseEvent'
-import { WheelEvent } from '../../Utilities/Events/WheelEvent'
-import { Touch, TouchEvent } from '../../Utilities/Events/TouchEvent'
+import { ZeaPointerEvent, POINTER_TYPES } from '../../Utilities/Events/ZeaPointerEvent'
+import { ZeaMouseEvent } from '../../Utilities/Events/ZeaMouseEvent'
+import { ZeaWheelEvent } from '../../Utilities/Events/ZeaWheelEvent'
+import { Touch, ZeaTouchEvent } from '../../Utilities/Events/ZeaTouchEvent'
 import { KeyboardEvent } from '../../Utilities/Events/KeyboardEvent'
 import { BaseEvent } from '../../Utilities/BaseEvent'
 
@@ -592,7 +592,7 @@ class CameraManipulator extends BaseTool {
    * @param event - The pointer event that occurs
    * @memberof CameraManipulator
    */
-  onPointerDoublePress(event: PointerEvent) {
+  onPointerDoublePress(event: ZeaPointerEvent) {
     const aimFocus = (pointerRay) => {
       const viewport = <GLViewport>event.viewport
       const camera = viewport.getCamera()
@@ -610,12 +610,12 @@ class CameraManipulator extends BaseTool {
     }
     if (event.intersectionData && this.aimFocusOnMouseClick) {
       if (event.pointerType === POINTER_TYPES.mouse && this.aimFocusOnMouseClick == 2) {
-        const mouseEvent = <MouseEvent>event
+        const mouseEvent = <ZeaMouseEvent>event
         aimFocus(mouseEvent.pointerRay)
         mouseEvent.preventDefault()
       }
       if (event.pointerType === POINTER_TYPES.touch && this.aimFocusOnTouchTap == 2) {
-        const pointerEvent = <TouchEvent>event
+        const pointerEvent = <ZeaTouchEvent>event
         aimFocus(pointerEvent.pointerRay)
       }
     }
@@ -626,7 +626,7 @@ class CameraManipulator extends BaseTool {
    *
    * @param event - The mouse event that occurs.
    */
-  onPointerDown(event: PointerEvent) {
+  onPointerDown(event: ZeaPointerEvent) {
     if (event.pointerType === POINTER_TYPES.mouse) {
       if (this.__dragging == 1) {
         this.endDrag(event)
@@ -634,7 +634,7 @@ class CameraManipulator extends BaseTool {
 
       this.initDrag(event)
 
-      const mouseEvent = <MouseEvent>event
+      const mouseEvent = <ZeaMouseEvent>event
       if (mouseEvent.button == 2) {
         this.__manipulationState = MANIPULATION_MODES.pan
       } else if (mouseEvent.ctrlKey && mouseEvent.altKey) {
@@ -646,7 +646,7 @@ class CameraManipulator extends BaseTool {
       }
       mouseEvent.preventDefault()
     } else if (event.pointerType === POINTER_TYPES.touch) {
-      this._onTouchStart(<TouchEvent>event)
+      this._onTouchStart(<ZeaTouchEvent>event)
     }
 
     event.stopPropagation()
@@ -657,10 +657,10 @@ class CameraManipulator extends BaseTool {
    *
    * @param event - The mouse event that occurs.
    */
-  onPointerMove(event: PointerEvent) {
+  onPointerMove(event: ZeaPointerEvent) {
     if (this.__dragging != 0) {
-      if (event.pointerType === POINTER_TYPES.mouse) this._onMouseMove(<MouseEvent>event)
-      if (event.pointerType === POINTER_TYPES.touch) this._onTouchMove(<TouchEvent>event)
+      if (event.pointerType === POINTER_TYPES.mouse) this._onMouseMove(<ZeaMouseEvent>event)
+      if (event.pointerType === POINTER_TYPES.touch) this._onTouchMove(<ZeaTouchEvent>event)
 
       this.__dragging = 2
       event.stopPropagation()
@@ -672,7 +672,7 @@ class CameraManipulator extends BaseTool {
    *
    * @param event -The event value
    */
-  _onMouseMove(event: MouseEvent) {
+  _onMouseMove(event: ZeaMouseEvent) {
     if (!this.__pointerDown) return
 
     const pointerPos = event.pointerPos
@@ -710,7 +710,7 @@ class CameraManipulator extends BaseTool {
    * @param event - The touch event that occurs.
    * @private
    */
-  _onTouchMove(event: TouchEvent) {
+  _onTouchMove(event: ZeaTouchEvent) {
     // this.__calculatingDragAction = true
 
     const touches = event.touches
@@ -811,7 +811,7 @@ class CameraManipulator extends BaseTool {
    *
    * @param event - The mouse event that occurs.
    */
-  onPointerUp(event: PointerEvent) {
+  onPointerUp(event: ZeaPointerEvent) {
     if (this.__dragging == 1) {
       // No dragging ocurred. Release the capture and let the event propagate like normal.
       this.endDrag(event)
@@ -825,7 +825,9 @@ class CameraManipulator extends BaseTool {
           const camera = viewport.getCamera()
           const cameraGlobalXfo = camera.globalXfoParam.value
           const pointerRay =
-            event.pointerType === POINTER_TYPES.mouse ? (<MouseEvent>event).pointerRay : (<TouchEvent>event).pointerRay
+            event.pointerType === POINTER_TYPES.mouse
+              ? (<ZeaMouseEvent>event).pointerRay
+              : (<ZeaTouchEvent>event).pointerRay
           const aimTarget = cameraGlobalXfo.tr.add(pointerRay.dir.scale(event.intersectionData.dist))
           this.aimFocus(camera, aimTarget)
 
@@ -839,7 +841,7 @@ class CameraManipulator extends BaseTool {
 
           // Note: for a single click (no-drag) we don't want to stop the propagation of the event.
           event.stopPropagation()
-          if (event.pointerType === POINTER_TYPES.mouse) (<MouseEvent>event).preventDefault()
+          if (event.pointerType === POINTER_TYPES.mouse) (<ZeaMouseEvent>event).preventDefault()
         }
       }
     } else if (this.__dragging == 2) {
@@ -850,7 +852,7 @@ class CameraManipulator extends BaseTool {
         const viewport = <GLViewport>event.viewport
         viewport.getCamera().emit('movementFinished')
       } else if (event.pointerType === POINTER_TYPES.touch) {
-        const touchEvent = <TouchEvent>event
+        const touchEvent = <ZeaTouchEvent>event
         const { changedTouches, touches } = touchEvent
 
         for (let i = 0; i < changedTouches.length; i++) {
@@ -874,13 +876,13 @@ class CameraManipulator extends BaseTool {
    * Causes an event to occur when the mouse pointer is moved into this viewport
    * @param event - The event that occurs.
    */
-  onPointerEnter(event: PointerEvent) {}
+  onPointerEnter(event: ZeaPointerEvent) {}
 
   /**
    * Causes an event to occur when the mouse pointer is moved out of this viewport
    * @param event - The event that occurs.
    */
-  onPointerLeave(event: PointerEvent) {
+  onPointerLeave(event: ZeaPointerEvent) {
     // If the pointer leaves the viewport, then we will no longer receive key up events,
     // so we must immediately disable movement here.
     if (this.__keysPressed.length > 0) {
@@ -895,7 +897,7 @@ class CameraManipulator extends BaseTool {
    *
    * @param event - The wheel event that occurs.
    */
-  onWheel(event: WheelEvent) {
+  onWheel(event: ZeaWheelEvent) {
     const viewport = <GLViewport>event.viewport
     const camera = viewport.getCamera()
     const mouseWheelDollySpeed = this.mouseWheelDollySpeedParam.value
@@ -1139,7 +1141,7 @@ class CameraManipulator extends BaseTool {
    *
    * @param event - The touch event that occurs.
    */
-  _onTouchStart(event: TouchEvent) {
+  _onTouchStart(event: ZeaTouchEvent) {
     const touches = event.changedTouches
     for (let i = 0; i < touches.length; i++) {
       this.__startTouch(touches[i])
@@ -1153,7 +1155,7 @@ class CameraManipulator extends BaseTool {
    *
    * @param event - The touch event that occurs.
    */
-  onTouchEnd(event: TouchEvent) {
+  onTouchEnd(event: ZeaTouchEvent) {
     event.preventDefault()
     event.stopPropagation()
     const touches = event.changedTouches
@@ -1169,7 +1171,7 @@ class CameraManipulator extends BaseTool {
    *
    * @param event - The touch event that occurs.
    */
-  onTouchCancel(event: TouchEvent) {
+  onTouchCancel(event: ZeaTouchEvent) {
     event.preventDefault()
     const touches = event.touches
     for (let i = 0; i < touches.length; i++) {

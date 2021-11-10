@@ -8,13 +8,13 @@ import { CameraManipulator } from '../SceneTree/index'
 import { GLRenderer } from './GLRenderer'
 import { ResizedEvent } from '../Utilities/Events/ResizedEvent'
 import { ViewChangedEvent } from '../Utilities/Events/ViewChangedEvent'
-import { POINTER_TYPES } from '../Utilities/Events/PointerEvent'
+import { POINTER_TYPES } from '../Utilities/Events/ZeaPointerEvent'
 import { IntersectionData } from '../Utilities/IntersectionData'
 import { KeyboardEvent } from '../Utilities/Events/KeyboardEvent'
-import { WheelEvent } from '../Utilities/Events/WheelEvent'
-import { TouchEvent } from '../Utilities/Events/TouchEvent'
-import { MouseEvent } from '../Utilities/Events/MouseEvent'
-import { UIEvent } from '../Utilities/Events/UIEvent'
+import { ZeaWheelEvent } from '../Utilities/Events/ZeaWheelEvent'
+import { ZeaTouchEvent } from '../Utilities/Events/ZeaTouchEvent'
+import { ZeaMouseEvent } from '../Utilities/Events/ZeaMouseEvent'
+import { ZeaUIEvent } from '../Utilities/Events/ZeaUIEvent'
 
 let activeViewport: GLViewport = null
 /**
@@ -550,7 +550,7 @@ class GLViewport extends GLBaseViewport {
    * @param event - The event that occurs in the canvas
    * @private
    */
-  prepareUIEvent(event: UIEvent) {
+  prepareUIEvent(event: ZeaUIEvent) {
     event.viewport = this
   }
 
@@ -559,16 +559,16 @@ class GLViewport extends GLBaseViewport {
    *
    * @param event - The DOM event produced by a pointer
    */
-  onPointerDown(event: UIEvent) {
+  onPointerDown(event: ZeaUIEvent) {
     this.prepareUIEvent(event)
 
     if (event.pointerType === POINTER_TYPES.mouse) {
-      const mouseEvent = <MouseEvent>event
+      const mouseEvent = <ZeaMouseEvent>event
       mouseEvent.pointerPos = this.__getPointerPos(mouseEvent.rendererX, mouseEvent.rendererY)
       mouseEvent.pointerRay = this.calcRayFromScreenPos(mouseEvent.pointerPos)
       mouseEvent.intersectionData = this.getGeomDataAtPos(mouseEvent.pointerPos, mouseEvent.pointerRay)
     } else if (event.pointerType === POINTER_TYPES.touch) {
-      const touchEvent = <TouchEvent>event
+      const touchEvent = <ZeaTouchEvent>event
       if (touchEvent.touches.length == 1) {
         const touch = touchEvent.touches[0]
         touchEvent.pointerPos = this.__getPointerPos(touch.rendererX, touch.rendererY)
@@ -621,16 +621,16 @@ class GLViewport extends GLBaseViewport {
    *
    * @param event - The event that occurs.
    */
-  onPointerUp(event: UIEvent) {
+  onPointerUp(event: ZeaUIEvent) {
     this.prepareUIEvent(event)
 
     if (event.pointerType === POINTER_TYPES.mouse) {
-      const mouseEvent = <MouseEvent>event
+      const mouseEvent = <ZeaMouseEvent>event
       mouseEvent.pointerPos = this.__getPointerPos(mouseEvent.rendererX, mouseEvent.rendererY)
       mouseEvent.pointerRay = this.calcRayFromScreenPos(mouseEvent.pointerPos)
       mouseEvent.intersectionData = this.getGeomDataAtPos(mouseEvent.pointerPos, mouseEvent.pointerRay)
     } else if (event.pointerType === POINTER_TYPES.touch) {
-      const touchEvent = <TouchEvent>event
+      const touchEvent = <ZeaTouchEvent>event
       if (touchEvent.touches.length == 0 && touchEvent.changedTouches.length == 1) {
         const touch = touchEvent.changedTouches[0]
         touchEvent.pointerPos = this.__getPointerPos(touch.rendererX, touch.rendererY)
@@ -664,16 +664,16 @@ class GLViewport extends GLBaseViewport {
    *
    * @param event - The event that occurs.
    */
-  onPointerMove(event: UIEvent) {
+  onPointerMove(event: ZeaUIEvent) {
     this.prepareUIEvent(event)
 
     if (event.pointerType === POINTER_TYPES.mouse) {
-      const mouseEvent = <MouseEvent>event
+      const mouseEvent = <ZeaMouseEvent>event
       const pointerPos = this.__getPointerPos(mouseEvent.rendererX, mouseEvent.rendererY)
       mouseEvent.pointerPos = pointerPos
       mouseEvent.pointerRay = this.calcRayFromScreenPos(pointerPos)
     } else if (event.pointerType === POINTER_TYPES.touch) {
-      const touchEvent = <TouchEvent>event
+      const touchEvent = <ZeaTouchEvent>event
       for (let index = 0; index < touchEvent.touches.length; index++) {
         const touch = touchEvent.touches[index]
         touch.touchPos = this.__getPointerPos(touch.rendererX, touch.rendererY)
@@ -734,7 +734,7 @@ class GLViewport extends GLBaseViewport {
    * Causes an event to occur when the mouse pointer is moved into this viewport
    * @param event - The event that occurs.
    */
-  onPointerEnter(event: UIEvent) {
+  onPointerEnter(event: ZeaUIEvent) {
     this.prepareUIEvent(event)
     this.emit('pointerEnter', event)
     if (!event.propagating) return
@@ -749,7 +749,7 @@ class GLViewport extends GLBaseViewport {
    * Causes an event to occur when the mouse pointer is moved out of this viewport
    * @param event - The event that occurs.
    */
-  onPointerLeave(event: UIEvent) {
+  onPointerLeave(event: ZeaUIEvent) {
     this.prepareUIEvent(event)
     this.emit('pointerLeave', event)
     if (!event.propagating) return
@@ -790,7 +790,7 @@ class GLViewport extends GLBaseViewport {
    * Causes an event to occur when the mouse wheel is rolled up or down over an element.
    * @param event - The event that occurs.
    */
-  onWheel(event: WheelEvent) {
+  onWheel(event: ZeaWheelEvent) {
     this.prepareUIEvent(event)
 
     event.pointerPos = this.__getPointerPos(event.rendererX, event.rendererY)
@@ -815,7 +815,7 @@ class GLViewport extends GLBaseViewport {
    * Causes an event to occur when the touch event gets interrupted.
    * @param event - The event that occurs.
    */
-  onTouchCancel(event: TouchEvent) {
+  onTouchCancel(event: ZeaTouchEvent) {
     this.prepareUIEvent(event)
 
     if (event.getCapture()) {

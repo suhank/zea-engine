@@ -1,6 +1,6 @@
 import { KeyboardEvent } from '../../Utilities/Events/KeyboardEvent'
-import { PointerEvent } from '../../Utilities/Events/PointerEvent'
-import { TouchEvent } from '../../Utilities/Events/TouchEvent'
+import { ZeaPointerEvent } from '../../Utilities/Events/ZeaPointerEvent'
+import { ZeaTouchEvent } from '../../Utilities/Events/ZeaTouchEvent'
 import { ParameterOwner } from '../ParameterOwner'
 
 /**
@@ -63,7 +63,7 @@ class BaseTool extends ParameterOwner {
    *
    * @param event - The event param.
    */
-  onPointerDown(event: PointerEvent) {
+  onPointerDown(event: ZeaPointerEvent) {
     // console.warn('Implement me')
   }
 
@@ -72,7 +72,7 @@ class BaseTool extends ParameterOwner {
    *
    * @param event - The event param.
    */
-  onPointerMove(event: PointerEvent) {
+  onPointerMove(event: ZeaPointerEvent) {
     // console.warn('Implement me')
   }
 
@@ -81,7 +81,7 @@ class BaseTool extends ParameterOwner {
    *
    * @param event - The event param.
    */
-  onPointerUp(event: PointerEvent) {
+  onPointerUp(event: ZeaPointerEvent) {
     // console.warn('Implement me')
   }
 
@@ -90,7 +90,7 @@ class BaseTool extends ParameterOwner {
    *
    * @param event - The event param.
    */
-  onPointerDoublePress(event: PointerEvent) {
+  onPointerDoublePress(event: ZeaPointerEvent) {
     // console.warn('Implement me')
   }
 
@@ -99,7 +99,7 @@ class BaseTool extends ParameterOwner {
    *
    * @param event - The event param.
    */
-  onPointerEnter(event: PointerEvent) {
+  onPointerEnter(event: ZeaPointerEvent) {
     // console.warn('Implement me')
   }
 
@@ -108,7 +108,7 @@ class BaseTool extends ParameterOwner {
    *
    * @param event - The event param.
    */
-  onPointerLeave(event: PointerEvent) {
+  onPointerLeave(event: ZeaPointerEvent) {
     // console.warn('Implement me')
   }
 
@@ -117,7 +117,7 @@ class BaseTool extends ParameterOwner {
    *
    * @param event - The event param.
    */
-  onWheel(event: PointerEvent) {
+  onWheel(event: ZeaPointerEvent) {
     // console.warn('Implement me')
   }
 
@@ -150,7 +150,7 @@ class BaseTool extends ParameterOwner {
    *
    * @param event - The event param.
    */
-  onTouchCancel(event: TouchEvent) {
+  onTouchCancel(event: ZeaTouchEvent) {
     // console.warn('Implement me')
   }
 }

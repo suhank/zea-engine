@@ -4,7 +4,7 @@
 /* eslint-disable no-unused-vars */
 import { ItemSetParameter, ItemEvent } from '../Parameters/index'
 import { TreeItem } from '../TreeItem'
-import { PointerEvent } from '../../Utilities/Events/PointerEvent'
+import { ZeaPointerEvent } from '../../Utilities/Events/ZeaPointerEvent'
 
 /**
  * BaseGroup are a special type of `TreeItem` that allows you to gather/classify/organize/modify
@@ -76,19 +76,19 @@ class BaseGroup extends TreeItem {
     if (!(item instanceof TreeItem)) return
 
     const listenerIDs: Record<string, number> = {}
-    listenerIDs['pointerDown'] = item.on('pointerDown', (event: PointerEvent) => {
+    listenerIDs['pointerDown'] = item.on('pointerDown', (event: ZeaPointerEvent) => {
       this.onPointerDown(event)
     })
-    listenerIDs['pointerUp'] = item.on('pointerUp', (event: PointerEvent) => {
+    listenerIDs['pointerUp'] = item.on('pointerUp', (event: ZeaPointerEvent) => {
       this.onPointerUp(event)
     })
-    listenerIDs['pointerMove'] = item.on('pointerMove', (event: PointerEvent) => {
+    listenerIDs['pointerMove'] = item.on('pointerMove', (event: ZeaPointerEvent) => {
       this.onPointerMove(event)
     })
-    listenerIDs['pointerEnter'] = item.on('pointerEnter', (event: PointerEvent) => {
+    listenerIDs['pointerEnter'] = item.on('pointerEnter', (event: ZeaPointerEvent) => {
       this.onPointerEnter(event)
     })
-    listenerIDs['pointerLeave'] = item.on('pointerLeave', (event: PointerEvent) => {
+    listenerIDs['pointerLeave'] = item.on('pointerLeave', (event: ZeaPointerEvent) => {
       this.onPointerLeave(event)
     })
 

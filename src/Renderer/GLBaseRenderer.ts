@@ -16,9 +16,9 @@ import { ResizedEvent } from '../Utilities/Events/ResizedEvent'
 import { SceneSetEvent } from '../Utilities/Events/SceneSetEvent'
 import { ViewChangedEvent } from '../Utilities/Events/ViewChangedEvent'
 import { XrViewportEvent } from '../Utilities/Events/XrViewportEvent'
-import { MouseEvent } from '../Utilities/Events/MouseEvent'
-import { WheelEvent } from '../Utilities/Events/WheelEvent'
-import { TouchEvent } from '../Utilities/Events/TouchEvent'
+import { ZeaMouseEvent } from '../Utilities/Events/ZeaMouseEvent'
+import { ZeaWheelEvent } from '../Utilities/Events/ZeaWheelEvent'
+import { ZeaTouchEvent } from '../Utilities/Events/ZeaTouchEvent'
 import { KeyboardEvent } from '../Utilities/Events/KeyboardEvent'
 
 import { GLShader } from './GLShader'
@@ -664,7 +664,7 @@ class GLBaseRenderer extends ParameterOwner {
       if (isMobileSafariMouseEvent(event)) {
         return
       }
-      const pointerEvent = new MouseEvent(event, this.__glcanvas!.getBoundingClientRect())
+      const pointerEvent = new ZeaMouseEvent(event, this.__glcanvas!.getBoundingClientRect())
       pointerIsDown = true
       activeGLRenderer = this
       this.activateViewportAtPos(pointerEvent.rendererX, pointerEvent.rendererY)
@@ -683,7 +683,7 @@ class GLBaseRenderer extends ParameterOwner {
 
       if (activeGLRenderer != this || !isValidCanvas()) return
 
-      const pointerEvent = new MouseEvent(event, this.__glcanvas!.getBoundingClientRect())
+      const pointerEvent = new ZeaMouseEvent(event, this.__glcanvas!.getBoundingClientRect())
       pointerIsDown = false
       const viewport = this.getActiveViewport()
       if (viewport) {
@@ -705,7 +705,7 @@ class GLBaseRenderer extends ParameterOwner {
 
       if (activeGLRenderer != this || !isValidCanvas()) return
 
-      const pointerEvent = new MouseEvent(event, this.__glcanvas!.getBoundingClientRect())
+      const pointerEvent = new ZeaMouseEvent(event, this.__glcanvas!.getBoundingClientRect())
       if (!pointerIsDown) this.activateViewportAtPos(pointerEvent.rendererX, pointerEvent.rendererY)
 
       const viewport = this.getActiveViewport()
@@ -722,7 +722,7 @@ class GLBaseRenderer extends ParameterOwner {
       if (!pointerIsDown) {
         activeGLRenderer = this
 
-        const pointerEvent = new MouseEvent(event, this.__glcanvas!.getBoundingClientRect())
+        const pointerEvent = new ZeaMouseEvent(event, this.__glcanvas!.getBoundingClientRect())
 
         this.activateViewportAtPos(pointerEvent.rendererX, pointerEvent.rendererY)
         if (!pointerIsDown) {
@@ -743,7 +743,7 @@ class GLBaseRenderer extends ParameterOwner {
 
       if (activeGLRenderer != this || !isValidCanvas()) return
 
-      const pointerEvent = new MouseEvent(event, this.__glcanvas!.getBoundingClientRect())
+      const pointerEvent = new ZeaMouseEvent(event, this.__glcanvas!.getBoundingClientRect())
       if (!pointerIsDown) {
         const viewport = this.getActiveViewport()
         if (viewport) {
@@ -763,7 +763,7 @@ class GLBaseRenderer extends ParameterOwner {
       (event: globalThis.TouchEvent) => {
         activeGLRenderer = this
         const viewport = this.getActiveViewport()
-        const pointerEvent = new TouchEvent(event, this.__glcanvas!.getBoundingClientRect())
+        const pointerEvent = new ZeaTouchEvent(event, this.__glcanvas!.getBoundingClientRect())
         viewport.onPointerDown(pointerEvent)
       },
       { passive: true }
@@ -773,7 +773,7 @@ class GLBaseRenderer extends ParameterOwner {
       'touchend',
       (event: globalThis.TouchEvent) => {
         const viewport = this.getActiveViewport()
-        const pointerEvent = new TouchEvent(event, this.__glcanvas!.getBoundingClientRect())
+        const pointerEvent = new ZeaTouchEvent(event, this.__glcanvas!.getBoundingClientRect())
         viewport.onPointerUp(pointerEvent)
       },
       { passive: true }
@@ -783,7 +783,7 @@ class GLBaseRenderer extends ParameterOwner {
       'touchmove',
       (event: globalThis.TouchEvent) => {
         const viewport = this.getActiveViewport()
-        const pointerEvent = new TouchEvent(event, this.__glcanvas!.getBoundingClientRect())
+        const pointerEvent = new ZeaTouchEvent(event, this.__glcanvas!.getBoundingClientRect())
         viewport.onPointerMove(pointerEvent)
       },
       { passive: true }
@@ -792,7 +792,7 @@ class GLBaseRenderer extends ParameterOwner {
       'touchcancel',
       (event: globalThis.TouchEvent) => {
         const viewport = this.getActiveViewport()
-        const pointerEvent = new TouchEvent(event, this.__glcanvas!.getBoundingClientRect())
+        const pointerEvent = new ZeaTouchEvent(event, this.__glcanvas!.getBoundingClientRect())
         viewport.onTouchCancel(pointerEvent)
       },
       { passive: true }
@@ -802,7 +802,7 @@ class GLBaseRenderer extends ParameterOwner {
     const onWheel = (event: globalThis.WheelEvent) => {
       if (activeGLRenderer != this || !isValidCanvas()) return
       if (activeGLRenderer) {
-        const pointerEvent = new WheelEvent(event, this.__glcanvas!.getBoundingClientRect())
+        const pointerEvent = new ZeaWheelEvent(event, this.__glcanvas!.getBoundingClientRect())
         const vp = activeGLRenderer.getActiveViewport()
         if (vp) {
           vp.onWheel(pointerEvent)

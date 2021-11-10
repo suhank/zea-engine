@@ -1,8 +1,8 @@
 import { Ray, Vec2 } from '../../Math'
-import { POINTER_TYPES } from './PointerEvent'
-import { UIEvent } from './UIEvent'
+import { POINTER_TYPES } from './ZeaPointerEvent'
+import { ZeaUIEvent } from './ZeaUIEvent'
 
-class MouseEvent extends UIEvent {
+class ZeaMouseEvent extends ZeaUIEvent {
   button: number
   clientX: number
   clientY: number
@@ -46,4 +46,4 @@ class MouseEvent extends UIEvent {
     if (this.sourceEvent) this.sourceEvent.preventDefault()
   }
 }
-export { MouseEvent }
+export { ZeaMouseEvent }

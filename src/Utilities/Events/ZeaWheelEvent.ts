@@ -1,6 +1,6 @@
-import { MouseEvent } from './MouseEvent'
+import { ZeaMouseEvent } from './ZeaMouseEvent'
 
-class WheelEvent extends MouseEvent {
+class ZeaWheelEvent extends ZeaMouseEvent {
   wheelDelta: number
   deltaMode: number
   deltaX: number
@@ -16,4 +16,4 @@ class WheelEvent extends MouseEvent {
     this.deltaZ = sourceEvent.deltaZ
   }
 }
-export { WheelEvent }
+export { ZeaWheelEvent }
