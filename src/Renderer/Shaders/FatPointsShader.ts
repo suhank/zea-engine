@@ -38,7 +38,7 @@ class FatPointsShader extends GLShader {
   }
 }
 
-const material = new Material('LinesShader_template')
+const material = new Material('FatPointsShader_template')
 material.addParameter(new MaterialColorParam('BaseColor', new Color(1.0, 1, 0.5)))
 material.addParameter(new NumberParameter('PointSize', 1.0, [0, 1]))
 material.addParameter(new NumberParameter('Rounded', 1.0))

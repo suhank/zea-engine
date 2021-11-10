@@ -18,6 +18,7 @@ export * from './Parameters/MaterialColorParam'
 // export * from './Parameters/GeometryParameter'
 export * from './Geometry/index'
 export * from './Images/index'
+export * from './Materials/index'
 
 export * from './TreeItem'
 export * from './InstanceItem'

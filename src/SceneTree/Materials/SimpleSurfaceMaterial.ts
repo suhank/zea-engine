@@ -1,26 +1,17 @@
-import { MaterialColorParam, MaterialFloatParam, NumberParameter } from '..'
+import { MaterialColorParam } from '../Parameters/MaterialColorParam'
+import { MaterialFloatParam } from '../Parameters/MaterialFloatParam'
 import { Color } from '../../Math/Color'
 import { Material } from '../Material'
 
 export class SimpleSurfaceMaterial extends Material {
-  constructor() {
-    super('SimpleSurfaceShader', 'SimpleSurfaceShader') // TODO: check
+  baseColorParam: MaterialColorParam = new MaterialColorParam('BaseColor', new Color(1.0, 1, 0.5))
+  opacityParam: MaterialFloatParam = new MaterialFloatParam('Opacity', 1, [0, 1])
+  emissiveStrengthParam: MaterialFloatParam = new MaterialFloatParam('EmissiveStrength', 0, [0, 1])
+  constructor(name?: string) {
+    super(name)
     this.__shaderName = 'SimpleSurfaceShader'
-    this.addParameter(new MaterialColorParam('BaseColor', new Color(1.0, 1, 0.5)))
-    this.addParameter(new MaterialFloatParam('Opacity', 0.5, [0, 1]))
-    this.addParameter(new NumberParameter('EmissiveStrength', 0.5, [0, 1]))
-
-    this.__checkTransparency({})
-  }
-
-  get BaseColor(): MaterialColorParam {
-    return <MaterialColorParam>this.getParameter('BaseColor')
-  }
-
-  get Opacity(): MaterialFloatParam {
-    return <MaterialFloatParam>this.getParameter('Opacity')
-  }
-  get EmissiveStrength(): NumberParameter {
-    return <NumberParameter>this.getParameter('EmissiveStrength')
+    this.addParameter(this.baseColorParam)
+    this.addParameter(this.opacityParam)
+    this.addParameter(this.emissiveStrengthParam)
   }
 }
