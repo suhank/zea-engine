@@ -1,5 +1,4 @@
 /* eslint-disable require-jsdoc */
-import { Color } from '../../Math/Color'
 import { Registry } from '../../Registry'
 import { GLShader } from '../GLShader'
 import { Material } from '../../SceneTree/Material'
@@ -11,9 +10,6 @@ import './GLSL/index'
 import vert from './Lines.vert'
 // @ts-ignore
 import frag from './Lines.frag'
-import { MaterialColorParam } from '../../SceneTree/Parameters/MaterialColorParam'
-import { MaterialFloatParam } from '../../SceneTree/Parameters/MaterialFloatParam'
-import { NumberParameter } from '../../SceneTree/Parameters/NumberParameter'
 
 class LinesShader extends GLShader {
   /**
@@ -51,9 +47,7 @@ class LinesShader extends GLShader {
 }
 
 const material = new LinesMaterial('LinesShader_template')
-
 shaderLibrary.registerMaterialTemplate('LinesShader', material)
-
 Registry.register('LinesShader', LinesShader)
 
 export { LinesShader }

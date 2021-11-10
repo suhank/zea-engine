@@ -1,10 +1,7 @@
 /* eslint-disable require-jsdoc */
-import { Color } from '../../Math/index'
 import { Registry } from '../../Registry'
 import { GLShader } from '../GLShader'
 import { shaderLibrary } from '../ShaderLibrary'
-import { MaterialColorParam } from '../../SceneTree/Parameters/MaterialColorParam'
-import { MaterialFloatParam } from '../../SceneTree/Parameters/MaterialFloatParam'
 import { Material } from '../../SceneTree/Material'
 
 import './GLSL/index'
@@ -12,6 +9,7 @@ import './GLSL/index'
 import frag from './SimpleSurface.frag'
 // @ts-ignore
 import vert from './SimpleSurface.vert'
+import { SimpleSurfaceMaterial } from '../../SceneTree/Materials/SimpleSurfaceMaterial'
 
 /** A simple shader with no support for PBR or textures
  * @ignore
@@ -45,12 +43,9 @@ class SimpleSurfaceShader extends GLShader {
   }
 }
 
-export { SimpleSurfaceShader }
 
-const material = new Material('StandardSurfaceShader_template')
-material.addParameter(new MaterialColorParam('BaseColor', new Color(1.0, 1, 0.5)))
-material.addParameter(new MaterialFloatParam('Opacity', 1, [0, 1]))
-material.addParameter(new MaterialFloatParam('EmissiveStrength', 0, [0, 1]))
+const material = new SimpleSurfaceMaterial('SimpleSurfaceShader_template')
 shaderLibrary.registerMaterialTemplate('SimpleSurfaceShader', material)
-
 Registry.register('SimpleSurfaceShader', SimpleSurfaceShader)
+
+export { SimpleSurfaceShader }
