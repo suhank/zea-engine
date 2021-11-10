@@ -39,28 +39,29 @@ class CuttingPlane extends BaseGroup {
   constructor(name: string = '') {
     super(name)
 
-    this.cutAwayEnabledParam.on('valueChanged', (event) => {
-      this.__updateCutaway(event)
-    })
-    this.cutPlaneParam.on('vec4Parameter', (event) => {
-      this.__updateCutaway(event)
-    })
     this.addParameter(this.cutAwayEnabledParam)
     this.addParameter(this.cutPlaneParam)
 
     this.cutPlaneOp = new CuttingPlaneOperator(this.globalXfoParam, this.cutPlaneParam)
 
+    this.cutAwayEnabledParam.on('valueChanged', (event) => {
+      this.updateCutaway(event)
+    })
+    this.cutPlaneParam.on('valueChanged', (event) => {
+      this.updateCutaway(event)
+    })
+
     // Create the geometry to display the plane.
     const material = new Material('plane', 'FlatSurfaceShader')
     material.getParameter('BaseColor')!.value = new Color(1, 1, 1, 0.2)
     const plane = new GeomItem(`PlaneGeom`, new Plane(1, 1), material)
-    plane.setSelectable(false) // used to be: plane.getSelectable(false)
+    plane.setSelectable(false)
     this.addChild(plane)
 
     const borderMaterial = new Material('border', 'LinesShader')
     borderMaterial.getParameter('BaseColor')!.value = new Color(1, 0, 0, 1)
     const border = new GeomItem(`BorderGeom`, new Rect(1, 1), borderMaterial)
-    border.setSelectable(false) // used to be: border.getSelectable(false)
+    border.setSelectable(false)
     this.addChild(border)
   }
 
@@ -68,26 +69,16 @@ class CuttingPlane extends BaseGroup {
   // Cutaways
 
   /**
-   * The __updateCutaway method.
+   * The updateCutaway method.
    * @param item - The item in the group.
    * @private
    */
-  __updateCutaway(item: TreeItem): void {
+  updateCutaway(item: TreeItem): void {
     // Make this function async so that we don't pull on the
     // graph immediately when we receive a notification.
+    // Note: making this async broke the tests.
     // Note: propagating using an operator would be much better.
-
-    // TODO: make async
-    this.__updateCutawayHelper(item)
-    // setTimeout(() => {}, 0)
-  }
-
-  /**
-   * The __updateCutaway method.
-   * @param item - The item in the group.
-   * @private
-   */
-  __updateCutawayHelper(item: TreeItem): void {
+    // setTimeout(() => {
     const cutEnabled = this.cutAwayEnabledParam.value
     const cutPlane = this.cutPlaneParam.value
     const cutAwayVector = cutPlane.xyz
@@ -108,7 +99,9 @@ class CuttingPlane extends BaseGroup {
         }, true)
       })
     }
+    // }, 0)
   }
+
   // ////////////////////////////////////////
   // Items
 
@@ -125,7 +118,7 @@ class CuttingPlane extends BaseGroup {
     // Update the item cutaway
     const cutEnabled = this.cutAwayEnabledParam.value
     if (cutEnabled) {
-      this.__updateCutaway(item)
+      this.updateCutaway(item)
     }
 
     const bbox = new Box3()
