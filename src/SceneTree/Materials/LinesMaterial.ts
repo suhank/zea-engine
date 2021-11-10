@@ -19,7 +19,7 @@ export class LinesMaterial extends Material {
     this.__shaderName = 'LinesShader'
     this.addParameter(this.baseColorParam)
     this.addParameter(this.opacityParam)
-    this.addParameter(this.opacityParam)
+    this.addParameter(this.overlayParam)
     this.addParameter(this.stippleScaleParam)
     this.addParameter(this.stippleValueParam)
     this.addParameter(this.occludedStippleValueParam)
