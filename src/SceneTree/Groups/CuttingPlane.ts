@@ -39,16 +39,17 @@ class CuttingPlane extends BaseGroup {
   constructor(name: string = '') {
     super(name)
 
+    this.addParameter(this.cutAwayEnabledParam)
+    this.addParameter(this.cutPlaneParam)
+
+    this.cutPlaneOp = new CuttingPlaneOperator(this.globalXfoParam, this.cutPlaneParam)
+
     this.cutAwayEnabledParam.on('valueChanged', (event) => {
       this.updateCutaway(event)
     })
     this.cutPlaneParam.on('valueChanged', (event) => {
       this.updateCutaway(event)
     })
-    this.addParameter(this.cutAwayEnabledParam)
-    this.addParameter(this.cutPlaneParam)
-
-    this.cutPlaneOp = new CuttingPlaneOperator(this.globalXfoParam, this.cutPlaneParam)
 
     // Create the geometry to display the plane.
     const material = new Material('plane', 'FlatSurfaceShader')
@@ -75,29 +76,30 @@ class CuttingPlane extends BaseGroup {
   updateCutaway(item: TreeItem): void {
     // Make this function async so that we don't pull on the
     // graph immediately when we receive a notification.
+    // Note: making this async broke the tests.
     // Note: propagating using an operator would be much better.
-    setTimeout(() => {
-      const cutEnabled = this.cutAwayEnabledParam.value
-      const cutPlane = this.cutPlaneParam.value
-      const cutAwayVector = cutPlane.xyz
-      const cutAwayDist = cutPlane.w
+    // setTimeout(() => {
+    const cutEnabled = this.cutAwayEnabledParam.value
+    const cutPlane = this.cutPlaneParam.value
+    const cutAwayVector = cutPlane.xyz
+    const cutAwayDist = cutPlane.w
 
-      if (item instanceof BaseGeomItem) {
-        item.setCutawayEnabled(cutEnabled)
-        item.setCutVector(cutAwayVector)
-        item.setCutDist(cutAwayDist)
-      } else {
-        Array.from(this.itemsParam.value).forEach((item: TreeItem) => {
-          item.traverse((item: TreeItem) => {
-            if (item instanceof BaseGeomItem) {
-              item.setCutawayEnabled(cutEnabled)
-              item.setCutVector(cutAwayVector)
-              item.setCutDist(cutAwayDist)
-            }
-          }, true)
-        })
-      }
-    }, 0)
+    if (item instanceof BaseGeomItem) {
+      item.setCutawayEnabled(cutEnabled)
+      item.setCutVector(cutAwayVector)
+      item.setCutDist(cutAwayDist)
+    } else {
+      Array.from(this.itemsParam.value).forEach((item: TreeItem) => {
+        item.traverse((item: TreeItem) => {
+          if (item instanceof BaseGeomItem) {
+            item.setCutawayEnabled(cutEnabled)
+            item.setCutVector(cutAwayVector)
+            item.setCutDist(cutAwayDist)
+          }
+        }, true)
+      })
+    }
+    // }, 0)
   }
 
   // ////////////////////////////////////////
