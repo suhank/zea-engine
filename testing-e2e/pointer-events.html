@@ -36,6 +36,8 @@
         Label,
         SelectionSet,
         SimpleSurfaceShader,
+        Material,
+        SimpleSurfaceMaterial,
         Registry,
         shaderLibrary,
       } = window.zeaEngine
@@ -121,8 +123,8 @@
 
         // ----------------------------------------------------------------------------------------
 
-        const material3 = new OverlayMaterial('cylinderMaterial')
-        material3.baseColorParam.value = new Color('#F6B26B')
+        const material3 = new Material('cylinderMaterial', 'OverlayShader')
+        material3.getParameter('BaseColor').value = new Color('#F6B26B')
 
         const groupItem2 = new GeomItem('CylinderGeometryItem', new Torus(0.1, 0.3), material3)
 
