@@ -47,6 +47,5 @@ const material = new Material('PointsShader_template')
 material.addParameter(new MaterialColorParam('BaseColor', new Color(1.0, 1, 0.5)))
 material.addParameter(new NumberParameter('PointSize', 2))
 material.addParameter(new NumberParameter('Overlay', 0.00002))
-shaderLibrary.registerMaterialTemplate('PointsShader', material)
 
 Registry.register('PointsShader', PointsShader)

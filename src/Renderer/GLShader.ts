@@ -504,6 +504,16 @@ class GLShader extends BaseItem {
     return matData
   }
 
+  /**
+   * Each shader provides a template material that each material instance is
+   * based on. The shader specifies the parameters needed by the shader, and
+   * the material provides values to the shader during rendering.
+   * @return - The template material value.
+   */
+  static getMaterialTemplate(): Material {
+    return materialTemplate
+  }
+
   // /////////////////////////////////
   // Destroy
 
@@ -521,5 +531,6 @@ class GLShader extends BaseItem {
     this.__shaderProgramHdls = {}
   }
 }
+const materialTemplate = new Material()
 
 export { GLShader }

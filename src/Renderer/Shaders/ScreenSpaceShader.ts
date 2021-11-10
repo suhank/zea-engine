@@ -46,7 +46,6 @@ class ScreenSpaceShader extends GLShader {
 
 const material = new Material('ScreenSpaceShader_template')
 material.addParameter(new MaterialColorParam('BaseColor', new Color(1.0, 1, 0.5)))
-shaderLibrary.registerMaterialTemplate('ScreenSpaceShader', material)
 
 Registry.register('ScreenSpaceShader', ScreenSpaceShader)
 

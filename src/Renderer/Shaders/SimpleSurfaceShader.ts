@@ -43,14 +43,23 @@ class SimpleSurfaceShader extends GLShader {
     matData[5] = material.getParameter('EmissiveStrength')!.value
     return matData
   }
-}
 
-export { SimpleSurfaceShader }
+  /**
+   * Each shader provides a template material that each material instance is
+   * based on. The shader specifies the parameters needed by the shader, and
+   * the material provides values to the shader during rendering.
+   * @return - The template material value.
+   */
+  static getMaterialTemplate(): Material {
+    return material
+  }
+}
 
 const material = new Material('StandardSurfaceShader_template')
 material.addParameter(new MaterialColorParam('BaseColor', new Color(1.0, 1, 0.5)))
 material.addParameter(new MaterialFloatParam('Opacity', 1, [0, 1]))
 material.addParameter(new MaterialFloatParam('EmissiveStrength', 0, [0, 1]))
-shaderLibrary.registerMaterialTemplate('SimpleSurfaceShader', material)
 
 Registry.register('SimpleSurfaceShader', SimpleSurfaceShader)
+
+export { SimpleSurfaceShader }

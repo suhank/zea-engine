@@ -36,6 +36,16 @@ class FatPointsShader extends GLShader {
   static supportsInstancing() {
     return false
   }
+
+  /**
+   * Each shader provides a template material that each material instance is
+   * based on. The shader specifies the parameters needed by the shader, and
+   * the material provides values to the shader during rendering.
+   * @return - The template material value.
+   */
+  static getMaterialTemplate(): Material {
+    return material
+  }
 }
 
 const material = new Material('LinesShader_template')
@@ -44,8 +54,6 @@ material.addParameter(new NumberParameter('PointSize', 1.0, [0, 1]))
 material.addParameter(new NumberParameter('Rounded', 1.0))
 material.addParameter(new NumberParameter('BorderWidth', 0.2))
 material.addParameter(new NumberParameter('Overlay', 0.0))
-
-shaderLibrary.registerMaterialTemplate('FatPointsShader', material)
 
 Registry.register('FatPointsShader', FatPointsShader)
 
