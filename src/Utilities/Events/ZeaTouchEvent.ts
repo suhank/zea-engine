@@ -1,6 +1,6 @@
 import { Ray, Vec2 } from '../../Math'
-import { POINTER_TYPES } from './PointerEvent'
-import { UIEvent } from './UIEvent'
+import { POINTER_TYPES } from './ZeaPointerEvent'
+import { ZeaUIEvent } from './ZeaUIEvent'
 
 class Touch {
   identifier: number
@@ -55,7 +55,7 @@ class Touch {
   }
 }
 
-class TouchEvent extends UIEvent {
+class ZeaTouchEvent extends ZeaUIEvent {
   touches: Touch[] = []
   changedTouches: Touch[] = []
   targetTouches: Touch[] = []
@@ -99,4 +99,4 @@ class TouchEvent extends UIEvent {
   // replace with a stub here...
   preventDefault() {}
 }
-export { TouchEvent, Touch }
+export { ZeaTouchEvent, Touch }

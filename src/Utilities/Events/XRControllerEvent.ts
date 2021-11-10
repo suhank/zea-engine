@@ -1,7 +1,7 @@
 import { VRController } from '../../Renderer/VR/VRController'
-import { PointerEvent, POINTER_TYPES } from './PointerEvent'
+import { ZeaPointerEvent, POINTER_TYPES } from './ZeaPointerEvent'
 
-class XRControllerEvent extends PointerEvent {
+class XRControllerEvent extends ZeaPointerEvent {
   controller: VRController
   button: number
   buttonPressed: boolean

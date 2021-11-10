@@ -4,7 +4,7 @@ import { GeomItem } from '../../SceneTree/GeomItem'
 import { Material } from '../../SceneTree/Material'
 
 import { BaseTool } from '../../SceneTree/Manipulators/BaseTool'
-import { PointerEvent, POINTER_TYPES } from '../../Utilities/Events/PointerEvent'
+import { ZeaPointerEvent, POINTER_TYPES } from '../../Utilities/Events/ZeaPointerEvent'
 import { XRControllerEvent } from '../../Utilities/Events/XRControllerEvent'
 import { XRPoseEvent } from '../../Utilities/Events/XRPoseEvent'
 import { VRController } from './VRController'
@@ -214,7 +214,7 @@ class VRViewManipulator extends BaseTool {
    *
    * @param event - The event param.
    */
-  onPointerDown(event: PointerEvent) {
+  onPointerDown(event: ZeaPointerEvent) {
     if (event.pointerType === POINTER_TYPES.xr) {
       this.onVRControllerButtonDown(<XRControllerEvent>event)
     }
@@ -225,7 +225,7 @@ class VRViewManipulator extends BaseTool {
    *
    * @param event - The event param.
    */
-  onPointerMove(event: PointerEvent) {
+  onPointerMove(event: ZeaPointerEvent) {
     if (event.pointerType === POINTER_TYPES.xr) {
       this.onVRPoseChanged(<XRPoseEvent>event)
     }
@@ -236,7 +236,7 @@ class VRViewManipulator extends BaseTool {
    *
    * @param event - The event param.
    */
-  onPointerUp(event: PointerEvent) {
+  onPointerUp(event: ZeaPointerEvent) {
     if (event.pointerType === POINTER_TYPES.xr) {
       this.onVRControllerButtonUp(<XRControllerEvent>event)
     }
@@ -247,7 +247,7 @@ class VRViewManipulator extends BaseTool {
    *
    * @param event - The event param.
    */
-  onPointerDoublePress(event: PointerEvent) {
+  onPointerDoublePress(event: ZeaPointerEvent) {
     if (event.pointerType === POINTER_TYPES.xr) {
       this.onVRControllerDoubleClicked(<XRControllerEvent>event)
     }

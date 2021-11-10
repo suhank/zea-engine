@@ -1,9 +1,9 @@
 import { GLViewport } from '../../Renderer'
 import { Ray, Vec2 } from '../../Math'
 
-import { PointerEvent } from './PointerEvent'
+import { ZeaPointerEvent } from './ZeaPointerEvent'
 
-class UIEvent extends PointerEvent {
+class ZeaUIEvent extends ZeaPointerEvent {
   viewport: GLViewport
   detail: number
   pointerPos: Vec2
@@ -13,4 +13,4 @@ class UIEvent extends PointerEvent {
     super(pointerType)
   }
 }
-export { UIEvent }
+export { ZeaUIEvent }

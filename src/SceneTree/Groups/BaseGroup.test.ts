@@ -1,6 +1,6 @@
 import { BaseGroup } from './BaseGroup'
 import { TreeItem } from '../TreeItem'
-import { PointerEvent } from '../../Utilities/Events/PointerEvent'
+import { ZeaPointerEvent } from '../../Utilities/Events/ZeaPointerEvent'
 
 describe('BaseGroup', () => {
   it('is visible by default.', () => {
@@ -31,7 +31,7 @@ describe('BaseGroup', () => {
     const mockFn = jest.fn()
     group.on('pointerDown', mockFn)
 
-    const event = new PointerEvent('mouse')
+    const event = new ZeaPointerEvent('mouse')
     child.onPointerDown(event)
 
     expect(mockFn).toHaveBeenCalledWith(event)

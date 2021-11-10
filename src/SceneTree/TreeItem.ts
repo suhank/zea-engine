@@ -12,12 +12,12 @@ import { BoundingBoxParameter } from './Parameters/BoundingBoxParameter'
 import { BinReader } from './BinReader'
 import { Operator } from './Operators'
 import { Parameter } from './Parameters'
-import { PointerEvent } from '../Utilities/Events/PointerEvent'
+import { ZeaPointerEvent } from '../Utilities/Events/ZeaPointerEvent'
 import { KeyboardEvent } from '../Utilities/Events/KeyboardEvent'
-import { MouseEvent } from '../Utilities/Events/MouseEvent'
-import { WheelEvent } from '../Utilities/Events/WheelEvent'
+import { ZeaMouseEvent } from '../Utilities/Events/ZeaMouseEvent'
+import { ZeaWheelEvent } from '../Utilities/Events/ZeaWheelEvent'
 import { BaseEvent } from '../Utilities/BaseEvent'
-import { TouchEvent } from '../Utilities/Events/TouchEvent'
+import { ZeaTouchEvent } from '../Utilities/Events/ZeaTouchEvent'
 
 /**
  * Class representing an Item in the scene tree with hierarchy capabilities (has children).
@@ -754,13 +754,13 @@ class TreeItem extends BaseItem {
   /**
    * Called by the Viewport when events are received by the canvas element.
    * The event is propagated to a TreeItem if it is under the pointer at the time.
-   * The PointerEvent abstracts the Mouse, touch and our custom XR events.
-   * This method emits the PointerEvent with the key 'pointerDown', and
+   * The ZeaPointerEvent abstracts the Mouse, touch and our custom XR events.
+   * This method emits the ZeaPointerEvent with the key 'pointerDown', and
    * propagates it up to the TreeItem's owner.
    *
    * @param event - The event value
    */
-  onPointerDown(event: PointerEvent) {
+  onPointerDown(event: ZeaPointerEvent) {
     this.emit('pointerDown', event)
     const owner_TreeItem = <TreeItem>this.__ownerItem
     if (event.propagating && owner_TreeItem) {
@@ -771,13 +771,13 @@ class TreeItem extends BaseItem {
   /**
    * Called by the Viewport when events are received by the canvas element.
    * The event is propagated to a TreeItem if it is under the pointer at the time.
-   * The PointerEvent abstracts the Mouse, touch and our custom XR events.
-   * This method emits the PointerEvent with the key 'pointerDown', and
+   * The ZeaPointerEvent abstracts the Mouse, touch and our custom XR events.
+   * This method emits the ZeaPointerEvent with the key 'pointerDown', and
    * propagates it up to the TreeItem's owner.
    *
    * @param event - The pointer event that was generated from the user interaction
    */
-  onPointerUp(event: PointerEvent) {
+  onPointerUp(event: ZeaPointerEvent) {
     this.emit('pointerUp', event)
     const owner_TreeItem = <TreeItem>this.__ownerItem
     if (event.propagating && owner_TreeItem) {
@@ -788,13 +788,13 @@ class TreeItem extends BaseItem {
   /**
    * Called by the Viewport when events are received by the canvas element.
    * The event is propagated to a TreeItem if it is under the pointer at the time.
-   * The PointerEvent abstracts the Mouse, touch and our custom XR events.
-   * This method emits the PointerEvent with the key 'pointerMove', and
+   * The ZeaPointerEvent abstracts the Mouse, touch and our custom XR events.
+   * This method emits the ZeaPointerEvent with the key 'pointerMove', and
    * propagates it up to the TreeItem's owner.
    *
    * @param event - The pointer event that was generated from the user interaction
    */
-  onPointerMove(event: PointerEvent) {
+  onPointerMove(event: ZeaPointerEvent) {
     this.emit('pointerMove', event)
     const owner_TreeItem = <TreeItem>this.__ownerItem
     if (event.propagating && owner_TreeItem) {
@@ -805,13 +805,13 @@ class TreeItem extends BaseItem {
   /**
    * Called by the Viewport when the mouse or other pointer enters the canvas element.
    * The event is propagated to a TreeItem if it is under the pointer at the time.
-   * The PointerEvent abstracts the Mouse, touch and our custom XR events.
-   * This method emits the PointerEvent with the key 'pointerEnter', and
+   * The ZeaPointerEvent abstracts the Mouse, touch and our custom XR events.
+   * This method emits the ZeaPointerEvent with the key 'pointerEnter', and
    * propagates it up to the TreeItem's owner.
    *
    * @param event - The pointer event that was generated from the user interaction
    */
-  onPointerEnter(event: PointerEvent) {
+  onPointerEnter(event: ZeaPointerEvent) {
     this.emit('pointerEnter', event)
     const owner_TreeItem = <TreeItem>this.__ownerItem
     if (event.propagating && owner_TreeItem) {
@@ -822,13 +822,13 @@ class TreeItem extends BaseItem {
   /**
    * Called by the Viewport when the mouse or other pointer leaves the canvas element.
    * The event is propagated to a TreeItem if it is under the pointer at the time.
-   * The PointerEvent abstracts the Mouse, touch and our custom XR events.
-   * This method emits the PointerEvent with the key 'pointerLeave', and
+   * The ZeaPointerEvent abstracts the Mouse, touch and our custom XR events.
+   * This method emits the ZeaPointerEvent with the key 'pointerLeave', and
    * propagates it up to the TreeItem's owner.
    *
    * @param event - The pointer event that was generated from the user interaction
    */
-  onPointerLeave(event: PointerEvent) {
+  onPointerLeave(event: ZeaPointerEvent) {
     this.emit('pointerLeave', event)
     const owner_TreeItem = <TreeItem>this.__ownerItem
     if (event.propagating && owner_TreeItem) {
@@ -838,11 +838,11 @@ class TreeItem extends BaseItem {
 
   /**
    * Called by the Viewport when the mouse wheel event is received by the canvas element.
-   * Emits the WheelEvent with the key 'mouseWheel', and Propagates is up to the TreeItem's owner.
+   * Emits the ZeaWheelEvent with the key 'mouseWheel', and Propagates is up to the TreeItem's owner.
    *
    * @param event - The wheel event that occurs.
    */
-  onWheel(event: WheelEvent) {
+  onWheel(event: ZeaWheelEvent) {
     this.emit('mouseWheel', event)
     const owner_TreeItem = <TreeItem>this.__ownerItem
     if (event.propagating && owner_TreeItem) {
@@ -852,11 +852,11 @@ class TreeItem extends BaseItem {
 
   /**
    * Called by the Viewport when the touch cancel event is received by the canvas element.
-   * Emits the TouchEvent with the key 'touchCancel', and Propagates is up to the TreeItem's owner.
+   * Emits the ZeaTouchEvent with the key 'touchCancel', and Propagates is up to the TreeItem's owner.
    *
    * @param event - The wheel event that occurs.
    */
-  onTouchCancel(event: TouchEvent) {
+  onTouchCancel(event: ZeaTouchEvent) {
     this.emit('touchCancel', event)
     const owner_TreeItem = <TreeItem>this.__ownerItem
     if (event.propagating && owner_TreeItem) {

@@ -8,7 +8,7 @@ import { GLMesh } from './Drawing/GLMesh'
 import { VLHImage } from '../SceneTree/Images/VLHImage'
 import { ResizedEvent } from '../Utilities/Events/ResizedEvent'
 import { SceneSetEvent } from '../Utilities/Events/SceneSetEvent'
-import { PointerEvent } from '../Utilities/Events/PointerEvent'
+import { ZeaPointerEvent } from '../Utilities/Events/ZeaPointerEvent'
 import { KeyboardEvent } from '../Utilities/Events/KeyboardEvent'
 
 const FRAMEBUFFER = {
@@ -476,7 +476,7 @@ class GLBaseViewport extends ParameterOwner {
    *
    * @param event - The DOM event produced by a pointer
    */
-  onPointerDown(event: PointerEvent): void {
+  onPointerDown(event: ZeaPointerEvent): void {
     console.warn('@GLBaseViewport#onPointerDown - Implement me!')
   }
 
@@ -485,7 +485,7 @@ class GLBaseViewport extends ParameterOwner {
    *
    * @param event - The DOM event produced by a pointer
    */
-  onPointerUp(event: PointerEvent): void {
+  onPointerUp(event: ZeaPointerEvent): void {
     console.warn('@GLBaseViewport#onPointerUp - Implement me!')
   }
 
@@ -494,7 +494,7 @@ class GLBaseViewport extends ParameterOwner {
    *
    * @param event - The DOM event produced by a pointer
    */
-  onPointerMove(event: PointerEvent): void {
+  onPointerMove(event: ZeaPointerEvent): void {
     console.warn('@GLBaseViewport#onPointerMove - Implement me!')
   }
 
@@ -503,7 +503,7 @@ class GLBaseViewport extends ParameterOwner {
    *
    * @param event - The DOM event produced by a pointer
    */
-  onPointerEnter(event: PointerEvent): void {
+  onPointerEnter(event: ZeaPointerEvent): void {
     console.warn('@GLBaseViewport#onPointerEnter - Implement me!')
   }
 
@@ -512,7 +512,7 @@ class GLBaseViewport extends ParameterOwner {
    *
    * @param event - The DOM event produced by a pointer
    */
-  onPointerLeave(event: PointerEvent): void {
+  onPointerLeave(event: ZeaPointerEvent): void {
     console.warn('@GLBaseViewport#onPointerLeave - Implement me!')
   }
 
@@ -520,7 +520,7 @@ class GLBaseViewport extends ParameterOwner {
    * Invoked when the mouse pointer is moved out of an element.
    * @param event - The event that occurs.
    */
-  onMouseLeave(event: PointerEvent): void {}
+  onMouseLeave(event: ZeaPointerEvent): void {}
 
   /**
    * Invoked when the user is pressing a key on the keyboard.

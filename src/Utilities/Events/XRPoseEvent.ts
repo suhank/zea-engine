@@ -1,7 +1,7 @@
 import { GeomItem, VRViewport, Xfo } from '../..'
 import { VRController } from '../../Renderer/VR/VRController'
 import { IntersectionData } from '../IntersectionData'
-import { PointerEvent, POINTER_TYPES } from './PointerEvent'
+import { ZeaPointerEvent, POINTER_TYPES } from './ZeaPointerEvent'
 
 class XRControllerPose {
   controller: VRController
@@ -10,7 +10,7 @@ class XRControllerPose {
   }
 }
 
-class XRPoseEvent extends PointerEvent {
+class XRPoseEvent extends ZeaPointerEvent {
   viewXfo: Xfo
   controllers: XRControllerPose[]
   intersectionData: IntersectionData

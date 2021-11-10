@@ -10,7 +10,7 @@ const POINTER_TYPES = {
 
 let capturedItem: TreeItem | BaseTool = null
 
-class PointerEvent extends BaseEvent {
+class ZeaPointerEvent extends BaseEvent {
   pointerType: string
   viewport: GLBaseViewport
   propagating = true
@@ -39,4 +39,4 @@ class PointerEvent extends BaseEvent {
     capturedItem = null
   }
 }
-export { PointerEvent, POINTER_TYPES }
+export { ZeaPointerEvent, POINTER_TYPES }
