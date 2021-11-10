@@ -118,7 +118,7 @@ class ObjAsset extends AssetItem {
             case 'newmtl':
               material = new Material(value)
               material.setShaderName('StandardSurfaceShader')
-              this.__materials.addMaterial(material)
+              this.materialLibrary.addMaterial(material)
               break
             case 'Kd':
               material.getParameter('BaseColor')!.value = parseColor(elements)
@@ -395,13 +395,13 @@ class ObjAsset extends AssetItem {
         }
         geomItem.localXfoParam.value = new Xfo(delta)
 
-        if (geomData.material != undefined && this.__materials.hasMaterial(geomData.material)) {
-          geomItem.materialParam.value = this.__materials.getMaterial(geomData.material)
+        if (geomData.material != undefined && this.materialLibrary.hasMaterial(geomData.material)) {
+          geomItem.materialParam.value = this.materialLibrary.getMaterial(geomData.material)
         } else {
           const defaultShader = this.defaultShaderParam.value
           const material = new Material(geomName + ' mat')
           material.setShaderName(defaultShader != '' ? defaultShader : 'StandardSurfaceShader')
-          this.__materials.addMaterial(material)
+          this.materialLibrary.addMaterial(material)
           geomItem.materialParam.value = material
         }
 

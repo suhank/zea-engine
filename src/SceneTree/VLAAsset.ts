@@ -26,7 +26,7 @@ class VLAAsset extends AssetItem {
     // A signal that is emitted once all the geometries are loaded.
     // Often the state machine will activate the
     // first state when this signal emits.
-    this.__geomLibrary.on('loaded', () => {
+    this.geomLibrary.on('loaded', () => {
       this.emit('geomsLoaded')
     })
   }
@@ -60,7 +60,7 @@ class VLAAsset extends AssetItem {
       // The data was the atlas size of the lightmap that we no longer support.
       reader.loadFloat32Vec2()
     }
-    this.__geomLibrary.setNumGeoms(reader.loadUInt32())
+    this.geomLibrary.setNumGeoms(reader.loadUInt32())
 
     return numGeomsFiles
   }
@@ -88,7 +88,7 @@ class VLAAsset extends AssetItem {
       // To ensure that the resource loader knows when
       // parsing is done, we listen to the GeomLibrary streamFileLoaded
       // signal. This is fired once the entire stream is parsed.
-      this.__geomLibrary.on('loaded', () => {
+      this.geomLibrary.on('loaded', () => {
         // A chunk of geoms are now parsed, so update the resource loader.
         resourceLoader.incrementWorkDone(1)
       })
@@ -114,14 +114,14 @@ class VLAAsset extends AssetItem {
           this.emit('loaded')
 
           if (numGeomsFiles == 0 && entries.geoms) {
-            this.__geomLibrary.readBinaryBuffer(filename, entries.geoms.buffer, context)
+            this.geomLibrary.readBinaryBuffer(filename, entries.geoms.buffer, context)
           } else {
             const basePath = folder + stem
             const geomLibraryJSON = {
               numGeomsPerFile: numGeomsFiles,
-              numGeoms: this.__geomLibrary.getNumGeoms(), // Note: was set during readBinary.Why do we need to provide this again?
+              numGeoms: this.geomLibrary.getNumGeoms(), // Note: was set during readBinary.Why do we need to provide this again?
             }
-            this.__geomLibrary.loadGeomFilesStream(geomLibraryJSON, basePath, context)
+            this.geomLibrary.loadGeomFilesStream(geomLibraryJSON, basePath, context)
           }
           resolve()
         },

@@ -44,13 +44,13 @@ const getUnitsFactor = (units: string) => {
  * @extends TreeItem
  */
 class AssetItem extends TreeItem {
-  __geomLibrary: GeomLibrary = new GeomLibrary()
-  __materials: MaterialLibrary = new MaterialLibrary()
+  geomLibrary: GeomLibrary = new GeomLibrary()
+  materialLibrary: MaterialLibrary = new MaterialLibrary()
   loaded: boolean = false
 
-  protected __engineDataVersion?: Version
-  protected __unitsScale: number = 1.0
-  protected __units: string = 'meters'
+  protected engineDataVersion?: Version
+  protected unitsScale: number = 1.0
+  protected units: string = 'meters'
 
   /**
    * Create an asset item.
@@ -84,7 +84,7 @@ class AssetItem extends TreeItem {
    * @return - The return value.
    */
   getEngineDataVersion(): Version | undefined {
-    return this.__engineDataVersion
+    return this.engineDataVersion
   }
 
   /**
@@ -93,7 +93,7 @@ class AssetItem extends TreeItem {
    * @return - The return value.
    */
   getGeometryLibrary(): GeomLibrary {
-    return this.__geomLibrary
+    return this.geomLibrary
   }
 
   /**
@@ -102,7 +102,7 @@ class AssetItem extends TreeItem {
    * @return - The return value.
    */
   getMaterialLibrary(): MaterialLibrary {
-    return this.__materials
+    return this.materialLibrary
   }
 
   /**
@@ -110,7 +110,7 @@ class AssetItem extends TreeItem {
    * @return - The return value.
    */
   getUnitsConversion(): number {
-    return this.__unitsScale
+    return this.unitsScale
   }
 
   // ////////////////////////////////////////
@@ -131,24 +131,24 @@ class AssetItem extends TreeItem {
     if (!context.versions['zea-engine']) {
       context.versions['zea-engine'] = new Version(reader.loadStr())
     }
-    this.__engineDataVersion = context.versions['zea-engine']
+    this.engineDataVersion = context.versions['zea-engine']
 
     const loadUnits = () => {
-      this.__units = reader.loadStr()
+      this.units = reader.loadStr()
       // Calculate a scale factor to convert
       // the asset units to meters(the scene units)
-      const unitsFactor = getUnitsFactor(this.__units)
+      const unitsFactor = getUnitsFactor(this.units)
       const contextUnitsFactor = getUnitsFactor(context.units)
-      this.__unitsScale = unitsFactor / contextUnitsFactor
+      this.unitsScale = unitsFactor / contextUnitsFactor
 
       // The context propagates the new units to children assets.
       // This means that a child asset applies a unitsScale relative to this asset.
-      context.units = this.__units
+      context.units = this.units
 
       // Apply units change to existing Xfo (avoid changing tr).
       const localXfoParam = this.localXfoParam
       const xfo = localXfoParam.value
-      xfo.sc.scaleInPlace(this.__unitsScale)
+      xfo.sc.scaleInPlace(this.unitsScale)
       localXfoParam.value = xfo
     }
 
@@ -208,7 +208,7 @@ class AssetItem extends TreeItem {
     }
     context.addPLCB = (postLoadCallback) => postLoadCallbacks.push(postLoadCallback)
 
-    this.__materials.readBinary(reader, context)
+    this.materialLibrary.readBinary(reader, context)
 
     super.readBinary(reader, context)
 
@@ -330,8 +330,8 @@ class AssetItem extends TreeItem {
    * @param context - The context value.
    */
   copyFrom(src: AssetItem, context?: Record<string, any>): void {
-    this.__geomLibrary = src.__geomLibrary
-    this.__materials = src.__materials
+    this.geomLibrary = src.geomLibrary
+    this.materialLibrary = src.materialLibrary
     this.loaded = src.loaded
 
     if (!src.loaded) {
