@@ -78,7 +78,7 @@ export class AssetLoadContext extends EventEmitter {
    * @param onSucceed called with the successful result of the path resolution.
    * @param onFail called when the path resolution fails.
    */
-  resolvePath(path: Array<string>, onSucceed: (result: BaseItem | Parameter<any>) => void, onFail: () => void) {
+  resolvePath(path: Array<string>, onSucceed: (result: BaseItem | Parameter<any>) => void, onFail: (e: Error) => void) {
     // Note: Why not return a Promise here?
     // Promise evaluation is always async, so
     // all promises will be resolved after the current call stack
@@ -97,7 +97,7 @@ export class AssetLoadContext extends EventEmitter {
           onSucceed(param)
         } catch (e: any) {
           if (onFail) {
-            onFail()
+            onFail(e)
           } else {
             throw new Error(e.message)
           }

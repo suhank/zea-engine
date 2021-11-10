@@ -1064,7 +1064,7 @@ class TreeItem extends BaseItem {
    */
   clone(context?: Record<string, unknown>): TreeItem {
     const cloned = new TreeItem('')
-    cloned.copyFrom(this)
+    cloned.copyFrom(this, context)
     return cloned
   }
 

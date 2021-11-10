@@ -66,7 +66,7 @@ class BinReader {
    * Returns current byte offset in the buffer.
    * @return - The current offset in the binary buffer
    */
-  pos() {
+  pos(): number {
     return this.__byteOffset
   }
 
@@ -74,7 +74,7 @@ class BinReader {
    * Sets the byte offset value.
    * @param byteOffset - The byteOffset param.
    */
-  seek(byteOffset: number) {
+  seek(byteOffset: number): void {
     this.__byteOffset = byteOffset
   }
 
@@ -83,7 +83,7 @@ class BinReader {
    *
    * @param byteOffset - The byte Offset amount.
    */
-  advance(byteOffset: number) {
+  advance(byteOffset: number): void {
     this.__byteOffset += byteOffset
   }
 
@@ -93,7 +93,7 @@ class BinReader {
    *
    * @return - The return value.
    */
-  loadUInt8() {
+  loadUInt8(): number {
     const result = this.__dataView.getUint8(this.__byteOffset)
     this.__byteOffset += 1
     return result
@@ -105,7 +105,7 @@ class BinReader {
    *
    * @return - The return value.
    */
-  loadUInt16() {
+  loadUInt16(): number {
     const result = this.__dataView.getUint16(this.__byteOffset, true)
     this.__byteOffset += 2
     return result
@@ -117,7 +117,7 @@ class BinReader {
    *
    * @return - The return value.
    */
-  loadUInt32() {
+  loadUInt32(): number {
     const result = this.__dataView.getUint32(this.__byteOffset, true)
     this.__byteOffset += 4
     return result
@@ -129,7 +129,7 @@ class BinReader {
    *
    * @return - The return value.
    */
-  loadSInt32() {
+  loadSInt32(): number {
     const result = this.__dataView.getInt32(this.__byteOffset, true)
     this.__byteOffset += 4
     return result
@@ -141,7 +141,7 @@ class BinReader {
    *
    * @return - The return value.
    */
-  loadFloat16() {
+  loadFloat16(): number {
     const uint16 = this.loadUInt16()
     return MathFunctions.decode16BitFloat(uint16)
   }
@@ -152,7 +152,7 @@ class BinReader {
    *
    * @return - The return value.
    */
-  loadUFloat16() {
+  loadUFloat16(): number {
     const result = this.loadFloat16()
     if (result < 0.0) {
       return 2048.0 - result // Note: subtract a negative number to add it.
@@ -180,7 +180,7 @@ class BinReader {
    * Loads and returns a single Signed integer value from 2 Unsigned Float16 values.
    * @return - The return value.
    */
-  loadUInt32From2xUFloat16() {
+  loadUInt32From2xUFloat16(): number {
     const partA = this.loadUFloat16()
     const partB = this.loadUFloat16()
     return partA + partB * 4096
@@ -190,7 +190,7 @@ class BinReader {
    * Loads and returns a single Signed integer value from 2 signed Float16 values.
    * @return - The return value.
    */
-  loadSInt32From2xFloat16() {
+  loadSInt32From2xFloat16(): number {
     const partA = this.loadFloat16()
     const partB = this.loadFloat16()
     return partA + partB * 2048
@@ -202,7 +202,7 @@ class BinReader {
    *
    * @return - The return value.
    */
-  loadFloat32() {
+  loadFloat32(): number {
     const result = this.__dataView.getFloat32(this.__byteOffset, true)
     this.__byteOffset += 4
     return result
@@ -217,7 +217,7 @@ class BinReader {
    * @param clone - The clone param.
    * @return - The return value.
    */
-  loadUInt8Array(size?: number, clone = false) {
+  loadUInt8Array(size?: number, clone = false): Uint8Array {
     if (size == undefined) size = this.loadUInt32()
     const result = new Uint8Array(this.__data, this.__byteOffset, size)
     this.__byteOffset += size
@@ -233,7 +233,7 @@ class BinReader {
    * @param clone - The clone param.
    * @return - The return value.
    */
-  loadUInt16Array(size?: number, clone = false) {
+  loadUInt16Array(size?: number, clone = false): Uint16Array {
     if (size == undefined) size = this.loadUInt32()
     if (size == 0) return new Uint16Array()
     this.readPad(2)
@@ -260,7 +260,7 @@ class BinReader {
    * @param clone - The clone param.
    * @return - The return value.
    */
-  loadUInt32Array(size?: number, clone = false) {
+  loadUInt32Array(size?: number, clone = false): Uint32Array {
     if (size == undefined) size = this.loadUInt32()
     if (size == 0) return new Uint32Array()
     this.readPad(4)
@@ -287,7 +287,7 @@ class BinReader {
    * @param clone - The clone param.
    * @return - The return value.
    */
-  loadFloat32Array(size?: number, clone = false) {
+  loadFloat32Array(size?: number, clone = false): Float32Array {
     if (size == undefined) size = this.loadUInt32()
     if (size == 0) return new Float32Array()
     this.readPad(4)
@@ -311,7 +311,7 @@ class BinReader {
    *
    * @return - The return value.
    */
-  loadStr() {
+  loadStr(): string {
     const numChars = this.loadUInt32()
     const chars = new Uint8Array(this.__data, this.__byteOffset, numChars)
     this.__byteOffset += numChars
@@ -324,7 +324,7 @@ class BinReader {
    *
    * @return - The return value.
    */
-  loadStrArray() {
+  loadStrArray(): string[] {
     const size = this.loadUInt32()
     const result = []
     for (let i = 0; i < size; i++) {
@@ -338,7 +338,7 @@ class BinReader {
    *
    * @return - Returns a Vec2.
    */
-  loadSInt32Vec2() {
+  loadSInt32Vec2(): Vec2 {
     const x = this.loadSInt32()
     const y = this.loadSInt32()
     return new Vec2(x, y)
@@ -348,7 +348,7 @@ class BinReader {
    * Creates and returns a `Vec2` object with the next two unsigned Int32 values in the buffer.
    * @return - Returns a Vec2.
    */
-  loadUInt32Vec2() {
+  loadUInt32Vec2(): Vec2 {
     const x = this.loadUInt32()
     const y = this.loadUInt32()
     return new Vec2(x, y)
@@ -359,7 +359,7 @@ class BinReader {
    *
    * @return - Returns a Vec2.
    */
-  loadFloat16Vec2() {
+  loadFloat16Vec2(): Vec2 {
     const x = this.loadFloat16()
     const y = this.loadFloat16()
     return new Vec2(x, y)
@@ -369,7 +369,7 @@ class BinReader {
    * Creates and returns a `Vec2` object with the next two Float32 values in the buffer.
    * @return - Returns a Vec2.
    */
-  loadFloat32Vec2() {
+  loadFloat32Vec2(): Vec2 {
     const x = this.loadFloat32()
     const y = this.loadFloat32()
     return new Vec2(x, y)
@@ -380,7 +380,7 @@ class BinReader {
    *
    * @return - Returns a Vec3.
    */
-  loadFloat16Vec3() {
+  loadFloat16Vec3(): Vec3 {
     const x = this.loadFloat16()
     const y = this.loadFloat16()
     const z = this.loadFloat16()
@@ -392,7 +392,7 @@ class BinReader {
    *
    * @return - Returns a Vec3.
    */
-  loadFloat32Vec3() {
+  loadFloat32Vec3(): Vec3 {
     const x = this.loadFloat32()
     const y = this.loadFloat32()
     const z = this.loadFloat32()
@@ -404,7 +404,7 @@ class BinReader {
    *
    * @return - Returns a Quat.
    */
-  loadFloat16Quat() {
+  loadFloat16Quat(): Quat {
     const x = this.loadFloat16()
     const y = this.loadFloat16()
     const z = this.loadFloat16()
@@ -416,7 +416,7 @@ class BinReader {
    * Creates and returns a `Quat` object with the next four Float32 values in the buffer.
    * @return - Returns a Quat.
    */
-  loadFloat32Quat() {
+  loadFloat32Quat(): Quat {
     const x = this.loadFloat32()
     const y = this.loadFloat32()
     const z = this.loadFloat32()
@@ -429,7 +429,7 @@ class BinReader {
    *
    * @return - Returns a Color.
    */
-  loadRGBFloat32Color() {
+  loadRGBFloat32Color(): Color {
     const r = this.loadFloat32()
     const g = this.loadFloat32()
     const b = this.loadFloat32()
@@ -440,7 +440,7 @@ class BinReader {
    * Creates and returns a RGBA `Color` object with the next four Float32 values in the buffer.
    * @return - Returns a Color.
    */
-  loadRGBAFloat32Color() {
+  loadRGBAFloat32Color(): Color {
     const r = this.loadFloat32()
     const g = this.loadFloat32()
     const b = this.loadFloat32()
@@ -452,7 +452,7 @@ class BinReader {
    * Creates and returns a `Color` object with the next three unsigned Int8 values in the buffer.
    * @return - Returns a Color.
    */
-  loadRGBUInt8Color() {
+  loadRGBUInt8Color(): Color {
     const r = this.loadUInt8()
     const g = this.loadUInt8()
     const b = this.loadUInt8()
@@ -463,7 +463,7 @@ class BinReader {
    * Creates and returns a RGBA `Color` object with the next four unsigned Int8 values in the buffer.
    * @return - Returns a Color.
    */
-  loadRGBAUInt8Color() {
+  loadRGBAUInt8Color(): Color {
     const r = this.loadUInt8()
     const g = this.loadUInt8()
     const b = this.loadUInt8()
@@ -477,7 +477,7 @@ class BinReader {
    *
    * @return - Returns a Box2.
    */
-  loadBox2() {
+  loadBox2(): Box2 {
     return new Box2(this.loadFloat32Vec2(), this.loadFloat32Vec2())
   }
 
@@ -487,7 +487,7 @@ class BinReader {
    *
    * @return - Returns a Box3.
    */
-  loadBox3() {
+  loadBox3(): Box3 {
     return new Box3(this.loadFloat32Vec3(), this.loadFloat32Vec3())
   }
 
@@ -495,7 +495,7 @@ class BinReader {
    * Given a stridee value, advance the pointer to the end of the current stride.
    * @param stride - The stride param.
    */
-  readPad(stride: number) {
+  readPad(stride: number): void {
     const pad = this.__byteOffset % stride
     if (pad != 0) this.__byteOffset += stride - pad
   }
