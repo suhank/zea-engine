@@ -13,7 +13,7 @@
     <script src="../dist/index.umd.js"></script>
 
     <script type="module">
-      const { GLRenderer, Scene, Xfo, Vec3, Points, Color, GeomItem, Material } = zeaEngine
+      const { GLRenderer, Scene, Xfo, Vec3, Points, Color, GeomItem, FatPointsMaterial } = zeaEngine
 
       import { hammersley, sphereSample_uniform } from './Hammersley.js'
 
@@ -35,11 +35,11 @@
         sphereSample_uniform(coords[0], coords[1], v)
       }
 
-      const material = new Material('points', 'FatPointsShader')
+      const material = new FatPointsMaterial('points')
       // material.getParameter("BaseColor").value = new Color(1,0,0))
-      material.getParameter('PointSize').value = 0.05
-      material.getParameter('Rounded').value = 0.2
-      material.getParameter('BaseColor').value = new Color(1, 0, 1)
+      material.pointSizeParam.value = 0.05
+      material.roundedParam.value = 0.2
+      material.baseColorParam.value = new Color(1, 0, 1)
 
       const geomItem = new GeomItem('geomItem', points, material)
       const xfo = new Xfo()

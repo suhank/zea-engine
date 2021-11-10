@@ -12,7 +12,8 @@
     <script src="../dist/index.umd.js"></script>
 
     <script type="module">
-      const { GLRenderer, Scene, Vec3, Color, Sphere, Plane, Material, GeomItem, GLBoundingBoxPass } = zeaEngine
+      const { GLRenderer, Scene, Vec3, Color, Sphere, Plane, SimpleSurfaceMaterial, GeomItem, GLBoundingBoxPass } =
+        zeaEngine
 
       const scene = new Scene()
       const domElement = document.getElementById('viewport')
@@ -20,8 +21,8 @@
       renderer.setScene(scene)
       scene.setupGrid(5, 10)
 
-      const standardMaterial = new Material('surfaces', 'SimpleSurfaceShader')
-      standardMaterial.getParameter('BaseColor').value = new Color(89 / 255, 182 / 255, 92 / 255)
+      const standardMaterial = new SimpleSurfaceMaterial('surfaces')
+      standardMaterial.baseColorParam.value = new Color(89 / 255, 182 / 255, 92 / 255)
 
       const sphere = new Sphere(1.5, 6, 3)
       const geomItem = new GeomItem('Sphere', sphere, standardMaterial)

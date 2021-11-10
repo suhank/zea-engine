@@ -31,7 +31,7 @@
         Xfo,
         Vec3,
         Color,
-        Material,
+        OverlayMaterial,
         BillboardItem,
         Label,
         SelectionSet,
@@ -61,8 +61,8 @@
       renderer.setScene(scene)
 
       // {{{ Self Events.
-      const material1 = new Material('material1', 'SimpleSurfaceShader')
-      material1.getParameter('BaseColor').value = new Color('#94C47D')
+      const material1 = new SimpleSurfaceMaterial('material1')
+      material1.baseColorParam.value = new Color('#94C47D')
 
       const selfEventItem = new GeomItem('CuboidGeometryItem', new Cuboid(0.7, 0.7, 0.7), material1)
 
@@ -110,8 +110,8 @@
 
       // {{{ Group Events.
       {
-        const material2 = new Material('material2', 'SimpleSurfaceShader')
-        material2.getParameter('BaseColor').value = new Color('#F6B26B')
+        const material2 = new SimpleSurfaceMaterial('material2')
+        material2.baseColorParam.value = new Color('#F6B26B')
 
         const groupItem1 = new GeomItem('CylinderGeometryItem', new Cylinder(0.3, 0.4), material2)
 
@@ -121,8 +121,8 @@
 
         // ----------------------------------------------------------------------------------------
 
-        const material3 = new Material('cylinderMaterial', 'OverlayShader')
-        material3.getParameter('BaseColor').value = new Color('#F6B26B')
+        const material3 = new OverlayMaterial('cylinderMaterial')
+        material3.baseColorParam.value = new Color('#F6B26B')
 
         const groupItem2 = new GeomItem('CylinderGeometryItem', new Torus(0.1, 0.3), material3)
 

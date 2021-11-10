@@ -13,7 +13,8 @@
     <script src="../dist/index.umd.js"></script>
 
     <script type="module">
-      const { GLRenderer, Scene, Vec3, Vec2, Xfo, Color, Circle, Rect, GeomItem, Material } = window.zeaEngine
+      const { GLRenderer, Scene, Vec3, Vec2, Xfo, Color, Circle, Rect, GeomItem, ScreenSpaceMaterial } =
+        window.zeaEngine
 
       const canvas = document.getElementById('viewport')
 
@@ -23,8 +24,8 @@
 
       scene.setupGrid(10.0, 10)
 
-      const material = new Material('surfaces', 'ScreenSpaceShader')
-      material.getParameter('BaseColor').value = new Color(89 / 255, 182 / 255, 92 / 255)
+      const material = new ScreenSpaceMaterial('surfaces')
+      material.baseColorParam.value = new Color(89 / 255, 182 / 255, 92 / 255)
 
       const sphere = new Circle(0.5, 30)
       const geomItem1 = new GeomItem('Circle', sphere, material, new Xfo(new Vec3(0.0, 0.0, 0)))
@@ -35,8 +36,8 @@
       renderer.addTreeItem(geomItem2)
 
       const selectionRect = new Rect(1, 1)
-      const selectionRectMat = new Material('marker', 'ScreenSpaceShader')
-      selectionRectMat.getParameter('BaseColor').value = new Color(0.2, 0.2, 0.2)
+      const selectionRectMat = new ScreenSpaceMaterial('marker')
+      selectionRectMat.baseColorParam.value = new Color(0.2, 0.2, 0.2)
       const selectionRectXfo = new Xfo()
       selectionRectXfo.tr.set(0, 0, 0)
       // selectionRectXfo.sc.set(0, 0, 0)

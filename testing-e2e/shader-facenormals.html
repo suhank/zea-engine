@@ -12,8 +12,20 @@
     <script src="../dist/index.umd.js"></script>
 
     <script type="module">
-      const { GLRenderer, Scene, Xfo, Vec3, Color, Sphere, Cone, Material, GeomItem, GLBoundingBoxPass, EnvMap } =
-        zeaEngine
+      const {
+        GLRenderer,
+        Scene,
+        Xfo,
+        Vec3,
+        Color,
+        Sphere,
+        Cone,
+        SimpleSurfaceMaterial,
+        StandardSurfaceMaterial,
+        GeomItem,
+        GLBoundingBoxPass,
+        EnvMap,
+      } = zeaEngine
 
       const scene = new Scene()
       const domElement = document.getElementById('viewport')
@@ -28,8 +40,8 @@
       scene.setEnvMap(envMap)
       scene.displayEnvMapParam.value = true
 
-      const simpleMaterial = new Material('surfaces', 'SimpleSurfaceShader')
-      const standardMaterial = new Material('surfaces', 'StandardSurfaceShader')
+      const simpleMaterial = new SimpleSurfaceMaterial('surfaces')
+      const standardMaterial = new StandardSurfaceMaterial('surfaces')
 
       const sphere = new Sphere(1.5, 8, 5, false, false)
       const cone = new Cone(1.5, 3, 8, false, false)

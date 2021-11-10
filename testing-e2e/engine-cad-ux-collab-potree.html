@@ -46,7 +46,7 @@
       import '../node_modules/@zeainc/zea-ux/dist/index.umd.js'
       import '../node_modules/@zeainc/zea-potree/dist/index.umd.js'
 
-      import "https://websocket-staging.zea.live/socket.io/socket.io.js"
+      import 'https://websocket-staging.zea.live/socket.io/socket.io.js'
       import '../node_modules/@zeainc/zea-collab/dist/index.umd.js'
 
       import 'https://www.gstatic.com/draco/v1/decoders/draco_decoder_gltf.js'
@@ -168,14 +168,14 @@
       selectionTool.rectItem
         .materialParam
         .getValue()
-        .getParameter('BaseColor')
+        .baseColorParam
         .value = selectionRectColor
 
       /** SELECTION END * /
 
       /** FREEHAND LINES TOOL START * /
       const freeHandLineTool = new CreateFreehandLineTool(appData)
-      freeHandLineTool.getParameter('LineThickness').value = 0.01
+      freeHandLineTool.lineThicknessParam.value = 0.01
 
       /** FREEHAND LINES TOOL END * /
 

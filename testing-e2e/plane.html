@@ -8,7 +8,7 @@
     <script src="../dist/index.umd.js"></script>
 
     <script type="module">
-      const { GLRenderer, Scene, Vec3, Color, Plane, Material, GeomItem } = zeaEngine
+      const { GLRenderer, Scene, Vec3, Color, Plane, SimpleSurfaceMaterial, GeomItem } = zeaEngine
 
       const scene = new Scene()
       const domElement = document.getElementById('viewport')
@@ -39,8 +39,8 @@
       })
       /** HIGHLIGHT END */
 
-      const standardMaterial = new Material('surfaces', 'SimpleSurfaceShader')
-      standardMaterial.getParameter('BaseColor').value = new Color(89 / 255, 182 / 255, 92 / 255)
+      const standardMaterial = new SimpleSurfaceMaterial('surfaces')
+      standardMaterial.baseColorParam.value = new Color(89 / 255, 182 / 255, 92 / 255)
 
       const geomItem = new GeomItem('Plane', new Plane(2.0, 1.5, 3, 3), standardMaterial)
       scene.getRoot().addChild(geomItem)

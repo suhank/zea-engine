@@ -13,7 +13,7 @@
     <script src="../dist/index.umd.js"></script>
 
     <script type="module">
-      const { GLRenderer, Scene, Vec3, Color, Sphere, Material, GeomItem } = zeaEngine
+      const { GLRenderer, Scene, Vec3, Color, Sphere, SimpleSurfaceMaterial, GeomItem } = zeaEngine
 
       const canvas = document.getElementById('viewport')
 
@@ -23,8 +23,8 @@
 
       scene.setupGrid(10.0, 10)
 
-      const material = new Material('surfaces', 'SimpleSurfaceShader')
-      material.getParameter('BaseColor').value = new Color(1, 0, 1, 1)
+      const material = new SimpleSurfaceMaterial('surfaces')
+      material.baseColorParam.value = new Color(1, 0, 1, 1)
 
       const geomItem = new GeomItem('Sphere', new Sphere(1.5, 46), material)
       scene.getRoot().addChild(geomItem)
@@ -39,17 +39,17 @@
 
         if (data === 'variant-01') {
           const material = geomItem.materialParam.getValue()
-          material.getParameter('BaseColor').value = new Color(1, 0, 1, 0.2)
+          material.baseColorParam.value = new Color(1, 0, 1, 0.2)
           window.postMessage(`done-${data}`)
         } else if (data === 'variant-02') {
-          const material = new Material('surfaces', 'SimpleSurfaceShader')
-          material.getParameter('BaseColor').value = new Color(1, 1, 0, 1)
+          const material = new SimpleSurfaceMaterial('surfaces')
+          material.baseColorParam.value = new Color(1, 1, 0, 1)
           geomItem.materialParam.value = material
 
           window.postMessage(`done-${data}`)
         } else if (data === 'variant-03') {
           const material = geomItem.materialParam.getValue()
-          material.getParameter('Opacity').value = 0.3
+          material.opacityParam.value = 0.3
           window.postMessage(`done-${data}`)
         }
       }

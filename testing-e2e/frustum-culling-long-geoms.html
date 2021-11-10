@@ -13,7 +13,18 @@
     <script src="../dist/index.umd.js"></script>
 
     <script type="module">
-      const { GLRenderer, Scene, Vec3, Xfo, Color, Sphere, Cuboid, Material, GeomItem, GLBoundingBoxPass } = zeaEngine
+      const {
+        GLRenderer,
+        Scene,
+        Vec3,
+        Xfo,
+        Color,
+        Sphere,
+        Cuboid,
+        SimpleSurfaceMaterial,
+        GeomItem,
+        GLBoundingBoxPass,
+      } = zeaEngine
 
       const canvas = document.getElementById('viewport')
 
@@ -24,7 +35,7 @@
       scene.setupGrid(10.0, 10)
       const beam = new Cuboid(25, 0.5, 0.5)
 
-      const material = new Material('surfaces', 'SimpleSurfaceShader')
+      const material = new SimpleSurfaceMaterial('surfaces')
       let count = 10
       for (let i = 0; i < count; i++) {
         const longGeom = new GeomItem(
