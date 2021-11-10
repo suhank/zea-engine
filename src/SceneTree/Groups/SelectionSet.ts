@@ -147,11 +147,9 @@ class SelectionSet extends BaseGroup {
       item.propagateVisibility(-1)
     }
 
-    if (item instanceof TreeItem) {
-      listenerIDs['BoundingBox.valueChanged'] = item.boundingBoxParam.on('valueChanged', (event) => {
-        this.setBoundingBoxDirty()
-      })
-    }
+    listenerIDs['BoundingBox.valueChanged'] = item.boundingBoxParam.on('valueChanged', (event) => {
+      this.setBoundingBoxDirty()
+    })
   }
 
   /**
@@ -183,10 +181,6 @@ class SelectionSet extends BaseGroup {
         treeItem.setCutawayEnabled(false)
       }
     }, true)
-
-    if (item instanceof TreeItem) {
-      item.boundingBoxParam.off('valueChanged', this.setBoundingBoxDirty)
-    }
   }
 
   // ////////////////////////////////////////
