@@ -93,6 +93,23 @@ class InstanceItem extends TreeItem {
    * @param onDone - The onDone value.
    */
   fromJSON(j: Record<string, any>, context: Record<string, any> = {}) {}
+
+  // ////////////////////////////////////////
+  // Clone and Destroy
+
+  /**
+   * The clone method constructs a new instance item, copies its values
+   * from this item and returns it.
+   *
+   * @param context - The context value.
+   * @return - Returns a new cloned geom item.
+   */
+  clone(context?: Record<string, any>) {
+    const cloned = new InstanceItem()
+    cloned.copyFrom(this, context)
+    return cloned
+  }
+
 }
 
 Registry.register('InstanceItem', InstanceItem)
