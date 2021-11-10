@@ -186,19 +186,17 @@ class AssetItem extends TreeItem {
       // we can handle easily with callback functions.
       try {
         const item = this.resolvePath(path)
-        if (item) onSucceed(item)
-        else onFail()
+        onSucceed(item)
       } catch (e) {
         // Some paths resolve to items generated during load,
         // so push a callback to re-try after the load is complete.
         postLoadCallbacks.push(() => {
           try {
             const item = this.resolvePath(path)
-            if (item) onSucceed(item)
-            else onFail()
+            onSucceed(item)
           } catch (e: any) {
             if (onFail) {
-              onFail()
+              onFail(e)
             } else {
               throw e
             }
