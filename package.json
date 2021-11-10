@@ -12,7 +12,6 @@
   "files": [
     "dist/**/*.ts",
     "dist/**/*.map",
-    "dist/index-plugins.js",
     "dist/index.js",
     "dist/index.umd.js"
   ],
