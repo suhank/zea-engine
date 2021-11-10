@@ -2,6 +2,81 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [4.0.0](https://github.com/ZeaInc/zea-engine/compare/v3.12.3...v4.0.0) (2021-11-10)
+
+
+### ⚠ BREAKING CHANGES
+
+* Added Zea prefix to pointer event classes
+* GLHDRImage
+* GLBaseRenderer rename commit
+* Material types and Material refactor
+
+### Features
+
+* Vec2, Vec3, Vec4, Quat, Color, Xfo, Mat3 and Mat4 parameters can now be encoded in zcad files. ([1b17f76](https://github.com/ZeaInc/zea-engine/commit/1b17f76c9cf390433d84232cbaaa1dc4c7235729))
+
+
+### Bug Fixes
+
+* A bug in our resize throttling caused incorrect canvas size. ([8d23702](https://github.com/ZeaInc/zea-engine/commit/8d23702b8b3834a0af81ef1fb4b070242dec062e))
+* added //[@ts-ignore](https://github.com/ts-ignore) for frag and vert file imports ([d42b83f](https://github.com/ZeaInc/zea-engine/commit/d42b83fa7702075ea53a313e2cbbf1e7ffeee63b))
+* added cone.ts infinite loop fix to cylinder.ts ([f197890](https://github.com/ZeaInc/zea-engine/commit/f1978900b697d78494fbf9030a4c1d297810faf7))
+* casting to Vec3Attribute ([c5db04a](https://github.com/ZeaInc/zea-engine/commit/c5db04aff2d7e53bddc795c6134985f9a6d117ed))
+* changed method name, was not ([dfbf6f6](https://github.com/ZeaInc/zea-engine/commit/dfbf6f665b4364f21b60979eae530c33ecae5974))
+* Cleaned up silly bug in renderer. Geometries were continuously being uploaded to the GPU. ([c131a96](https://github.com/ZeaInc/zea-engine/commit/c131a96e9db624dfac2dc9ca8f066bbf202eae07))
+* cleanedup perfromance regression in multi-draw. ([df91d7c](https://github.com/ZeaInc/zea-engine/commit/df91d7c03112356c59bb4154cffba87ab2e11a0e))
+* finally fixed webworker issue ([b4690df](https://github.com/ZeaInc/zea-engine/commit/b4690df8602821d7987e2ddf32dee93a9eaeeb6f))
+* finally: fixed toJSON problem ([80d4b4a](https://github.com/ZeaInc/zea-engine/commit/80d4b4a4eae7dfdf8e1b73c54c80a0467681f283))
+* fixed bug in BaseGroup adding test ([2109f00](https://github.com/ZeaInc/zea-engine/commit/2109f0004323f092f52b0d3d082a18c58150686f))
+* fixed circular dependencies ([3b5048c](https://github.com/ZeaInc/zea-engine/commit/3b5048ca2a4f36ccfba74b897aba6eda9b3799c4))
+* fixed html.context error ([dddddaa](https://github.com/ZeaInc/zea-engine/commit/dddddaa1fb27a158d4c2660b8c145beac24b1237))
+* fixed inconsistent naming of subclass methods ([7a12d26](https://github.com/ZeaInc/zea-engine/commit/7a12d26d0544bfcd5aa80e3bd3199e4ea75afaf4))
+* Fixed loading Obj files that contain a reference to a mtl file. Fixed parsing mtl files. ([b0ec4fe](https://github.com/ZeaInc/zea-engine/commit/b0ec4fe953989fa193bddaa2a043b9012c0b14d9))
+* fixed mionr issue in PointerEvents. ([231a56f](https://github.com/ZeaInc/zea-engine/commit/231a56f14c6d0666320056ab5f063454bb97cfb0))
+* fixed regression causing cavas size on to fix parent ([9522192](https://github.com/ZeaInc/zea-engine/commit/9522192f543885a217e0419374fb2666dfb74ad8))
+* fixed regressions due to GLSL type improvement ([4cb444c](https://github.com/ZeaInc/zea-engine/commit/4cb444cf8437c3dca5330ee96af362e2ed9cb14a))
+* fixed stack overflow - was initializing a mesh in attribute.ts ([3b35af6](https://github.com/ZeaInc/zea-engine/commit/3b35af632992f34a987ad34376f3e2bb1a7416a7))
+* fixed typescript errors ([53f898c](https://github.com/ZeaInc/zea-engine/commit/53f898c4b93be6df83ad01c631dd120ede2d430a))
+* fixed typescript errors for BaseGroup.ts ([d9b7a9f](https://github.com/ZeaInc/zea-engine/commit/d9b7a9ff5dccfc2fc93990bf70623a3dfc21f178))
+* Fixed warning in React and error in Svelte by forcing the webWorkerLoader to assume a browser environment. ([3308c13](https://github.com/ZeaInc/zea-engine/commit/3308c13f3ebf9fc2cba19c9e3417b341bd891096))
+* fixed XfoParameter test ([30c8b6d](https://github.com/ZeaInc/zea-engine/commit/30c8b6d89f09b80b329cc374cbf8b473e28b7283))
+* fixing typescript errors in various files ([3f8a427](https://github.com/ZeaInc/zea-engine/commit/3f8a427be1ad92fb991b1bf6a467e3d7d08ec8a5))
+* gradually fixing emitted typescript errors from rollup typescript-plugin ([59ff478](https://github.com/ZeaInc/zea-engine/commit/59ff478975c787c328468349e8259f57fd2987bb))
+* Implemented InstanceItem.clone so that as a tree is cloned, the instances are kept. ([8981248](https://github.com/ZeaInc/zea-engine/commit/89812483a37da89783a5217cb8d1706dd4cb0de3))
+* many small typescript errors fixed ([183f734](https://github.com/ZeaInc/zea-engine/commit/183f734f249cd9d40aff70e0d1c3d85f62fc1387))
+* MaterialParameter.test.js 'replace value' test now works ([32fa81f](https://github.com/ZeaInc/zea-engine/commit/32fa81f0c2ddd26863dba108f78a57aff6cacb98))
+* migrated vertex attribute, fixes build error ([634a06c](https://github.com/ZeaInc/zea-engine/commit/634a06c93f9c83b4dbc8cbbe28d470ebf4e4b526))
+* minor type inheritance error ([16ae64a](https://github.com/ZeaInc/zea-engine/commit/16ae64a99fdc04edbd2e8f526720375ca2e6904e))
+* multiDrawElements expects arrays of Int32Array instead of Uint32Array, so now we use that. ([#512](https://github.com/ZeaInc/zea-engine/issues/512)) ([6573214](https://github.com/ZeaInc/zea-engine/commit/6573214bedc84eb7a51c8318716a609c42edc264))
+* optimized memory used by the typescript build. Mostly by avoiding use of closures. ([c84ef65](https://github.com/ZeaInc/zea-engine/commit/c84ef65d1e48da96a7e5f46b0d183e04b8458360))
+* Picking lines was broken after version 3.12.0. This is now addressed. ([952dadb](https://github.com/ZeaInc/zea-engine/commit/952dadb9e4402080869d8e909638be20a6e65073))
+* removed .js ending to imports ([6341b4b](https://github.com/ZeaInc/zea-engine/commit/6341b4b06d6e4d0d86436cf656e919b91209df92))
+* removed added guard ([6f85646](https://github.com/ZeaInc/zea-engine/commit/6f85646ef6c9d3ecfd9d099da2c82a78dc10db25))
+* Removed dependency on 'semver' ([1ce5a0d](https://github.com/ZeaInc/zea-engine/commit/1ce5a0deebf64ae7a47e67891d467b5707a2f9dd))
+* removed guard from ts-migration-1 ([ee5aff7](https://github.com/ZeaInc/zea-engine/commit/ee5aff72adeae739481fb07695398ad68fadc494))
+* removed redundant items member ([b81bd8d](https://github.com/ZeaInc/zea-engine/commit/b81bd8d7151dba38fa331398383b06f5532f23ca))
+* removed update() call from helpers in ProceduralMesh to avoid loops ([4fbabae](https://github.com/ZeaInc/zea-engine/commit/4fbabaeca5cfc3faaf9061fd71e883729fe59443))
+* removing more errors ([03e0e1d](https://github.com/ZeaInc/zea-engine/commit/03e0e1d8635fe3096953364ba17bee8956ef6fc8))
+* resolveJSON compiler option ([fbdfb34](https://github.com/ZeaInc/zea-engine/commit/fbdfb34a84325f0e1b8c428041e9df16eb341a46))
+* revert rename commit geometry/index ([f134e51](https://github.com/ZeaInc/zea-engine/commit/f134e51b50d0fbae6f3d4f8ec5970ce823302543))
+* reverted materialGroupTest ([f27a4b8](https://github.com/ZeaInc/zea-engine/commit/f27a4b85bec84cca98f5688c819b742a77f394e8))
+* SystemDesc was checking SystemDesc.isMobileDevice in initialization code ([d12cd51](https://github.com/ZeaInc/zea-engine/commit/d12cd51c861d20549d637a7cf7695eade5b5707a))
+* temporarily changing renaming index files with .js extension ([04a7d1c](https://github.com/ZeaInc/zea-engine/commit/04a7d1ca48b3e79ba637fa3f8a0a17710d0975c2))
+* temporary fix -- updateMaterials is no longer async ([0722336](https://github.com/ZeaInc/zea-engine/commit/072233662bbad8bc9c6acd53e4dae2374ae6b330))
+* The Plane preimitive faces were facking backwards which is  now fixed. ([d85a3d7](https://github.com/ZeaInc/zea-engine/commit/d85a3d715ad8bc77e6d6180286fbaf6746fd75ac))
+* typescript type casting fixes ([f4a30fb](https://github.com/ZeaInc/zea-engine/commit/f4a30fbc1d3cdb293e5461948887a9841742b6fc))
+* updated import statement to fix Operator.test.js ([9ae5dd3](https://github.com/ZeaInc/zea-engine/commit/9ae5dd343011b2d6595bc0a38cabdc180f35fdce))
+* updated test to reflect default toJSON output ([da27d86](https://github.com/ZeaInc/zea-engine/commit/da27d86771f95d05be0749edec5bfb9f78b755c1))
+* Vec2,3 & 4 classes now more robustly check that constructor parameters are numeric ([26a07fb](https://github.com/ZeaInc/zea-engine/commit/26a07fbb9ec709ee7f240ad47f60792ac5e4a3c4))
+* xlsx import fix ([d5c7782](https://github.com/ZeaInc/zea-engine/commit/d5c77823c9d90645acb9a65874da9192637d0ad0))
+
+
+* Added Zea prefix to pointer event classes ([c13aae9](https://github.com/ZeaInc/zea-engine/commit/c13aae9322efcf8c758fa25af2f75022c2ad48cc))
+* GLBaseRenderer rename commit ([f9d2cfd](https://github.com/ZeaInc/zea-engine/commit/f9d2cfd78f3a7ce2afc2e518bd8deabd541a140f))
+* GLHDRImage ([a673d4a](https://github.com/ZeaInc/zea-engine/commit/a673d4a0624c6d0cc682df42bdbf4b9339b71904))
+* Material types and Material refactor ([55c58fb](https://github.com/ZeaInc/zea-engine/commit/55c58fb6091de94f2f7dca3d6c3465514a1240cb))
+
 ## [3.12.5](https://github.com/ZeaInc/zea-engine/compare/v3.12.3...v3.12.5) (2021-11-03)
 
 ### Bug Fixes
