@@ -511,7 +511,7 @@ class GLShader extends BaseItem {
    * @return - The template material value.
    */
   static getMaterialTemplate(): Material {
-    return materialTemplate
+    throw new Error('Shader does not provide a material template.')
   }
 
   // /////////////////////////////////
