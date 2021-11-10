@@ -5,14 +5,11 @@
   "version": "3.13.0",
   "description": "Zea Engine",
   "browser": "dist/index.umd.js",
-  "main": "dist/index.cjs.js",
-  "module": "dist/index.esm.js",
   "author": "Zea Inc.",
   "typings": "dist/index.d.ts",
   "files": [
     "dist/**/*.ts",
-    "dist/**/*.map",
-    "dist/index.js",
+    "dist/index.umd.js.map",
     "dist/index.umd.js"
   ],
   "engines": {
