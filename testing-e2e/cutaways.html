@@ -94,6 +94,7 @@
           xfo.tr.set(6, Math.cos(angle) * 2, 0)
           xfo.ori.setFromAxisAndAngle(new Vec3(1, 0, 0), angle)
           cuttingPlane.localXfoParam.value = xfo
+          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(15, -15, -5), new Vec3(8, 0, 0))
           window.postMessage(`done-${data}`)
         } else if (data === 'variant-02') {
           const angle = 3
@@ -101,7 +102,8 @@
           xfo.tr.set(6, Math.cos(angle) * 2, 0)
           xfo.ori.setFromAxisAndAngle(new Vec3(1, 0, 0), angle)
           cuttingPlane.localXfoParam.value = xfo
-          renderer.frameAll()
+
+          renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(15, -15, -5), new Vec3(8, 0, 0))
           window.postMessage(`done-${data}`)
         }
       }
