@@ -22,6 +22,7 @@ varying vec3 v_viewPos;
 #ifdef ENABLE_TEXTURES
 varying vec2 v_textureCoord;
 #endif
+varying vec3 v_worldPos;
 
 
 void main(void) {
@@ -32,7 +33,8 @@ void main(void) {
   mat4 modelMatrix = getModelMatrix(drawItemId);
   mat4 modelViewMatrix = viewMatrix * modelMatrix;
 
-  vec4 viewPos = (modelViewMatrix * vec4(positions, 1.0));
+  vec4 pos = vec4(positions, 1.);
+  vec4 viewPos = (modelViewMatrix * pos);
   gl_Position = projectionMatrix * viewPos;
 
   v_viewPos = viewPos.xyz;
@@ -40,4 +42,6 @@ void main(void) {
   v_textureCoord = texCoords;
   v_textureCoord.y = 1.0 - v_textureCoord.y;// Flip y
 #endif
+
+  v_worldPos      = (modelMatrix * pos).xyz;
 }
